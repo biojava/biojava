@@ -96,6 +96,14 @@ public class Calc {
         }
     }
     
+    public static Atom invert(Atom a) throws StructureException{
+    	 double[] coords = new double[]{0.0,0.0,0.0} ;
+    	 Atom zero = new AtomImpl();
+    	 zero.setCoords(coords);
+    	 return substract(zero, a);
+    }
+    
+    
     /** add two atoms ( a + b).
      *
      * @param a  an Atom object
