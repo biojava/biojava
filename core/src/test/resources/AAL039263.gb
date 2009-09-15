@@ -1,0 +1,65 @@
+LOCUS       AAL39263                 370 aa            linear   INV 17-DEC-2001
+DEFINITION  GH13089p [Drosophila melanogaster].
+ACCESSION   AAL39263
+VERSION     AAL39263.1  GI:17861572
+DBSOURCE    accession AY069118.1
+KEYWORDS    .
+SOURCE      Drosophila melanogaster (fruit fly)
+  ORGANISM  Drosophila melanogaster
+            Eukaryota; Metazoa; Arthropoda; Hexapoda; Insecta; Pterygota;
+            Neoptera; Endopterygota; Diptera; Brachycera; Muscomorpha;
+            Ephydroidea; Drosophilidae; Drosophila.
+REFERENCE   1  (residues 1 to 370)
+  AUTHORS   Stapleton,M., Brokstein,P., Hong,L., Agbayani,A., Carlson,J.,
+            Champe,M., Chavez,C., Dorsett,V., Farfan,D., Frise,E., George,R.,
+            Gonzalez,M., Guarin,H., Li,P., Liao,G., Miranda,A., Mungall,C.J.,
+            Nunoo,J., Pacleb,J., Paragas,V., Park,S., Phouanenavong,S., Wan,K.,
+            Yu,C., Lewis,S.E., Rubin,G.M. and Celniker,S.
+  TITLE     Direct Submission
+  JOURNAL   Submitted (10-DEC-2001) Berkeley Drosophila Genome Project,
+            Lawrence Berkeley National Laboratory, One Cyclotron Road,
+            Berkeley, CA 94720, USA
+COMMENT     Sequence submitted by:
+            Berkeley Drosophila Genome Project
+            Lawrence Berkeley National Laboratory
+            Berkeley, CA 94720
+            This clone was sequenced as part of a high-throughput process to
+            sequence clones from Drosophila Gene Collection 1 (Rubin et al.,
+            Science 2000). The sequence has been subjected to integrity checks
+            for sequence accuracy, presence of a polyA tail and contiguity
+            within 100 kb in the genome. Thus we believe the sequence to
+            reflect accurately this particular cDNA clone.  However, there are
+            artifacts associated with the generation of cDNA clones that may
+            have not been detected in our initial analyses such as internal
+            priming, priming from contaminating genomic DNA, retained introns
+            due to reverse transcription of unspliced precursor RNAs, and
+            reverse transcriptase errors that result in single base changes.
+            For further information about this sequence, including its location
+            and relationship to other sequences, please visit our Web site
+            (http://fruitfly.berkeley.edu) or send email to
+            cdna@fruitfly.berkeley.edu.
+            Method: conceptual translation.
+FEATURES             Location/Qualifiers
+     source          1..370
+                     /organism="Drosophila melanogaster"
+                     /strain="y; cn bw sp"
+                     /db_xref="taxon:7227"
+                     /map="39B3-39B3"
+     Protein         1..370
+                     /product="GH13089p"
+                     /name="GH13089p"
+     CDS             1..370
+                     /gene="E2f2"
+                     /coded_by="AY069118.1:189..1301"
+                     /note="Longest ORF"
+                     /db_xref="FLYBASE:FBgn0024371"
+ORIGIN      
+        1 mykrktasiv krdssaagtt ssammmkvds aetsvrsqsy estpvsmdts pdpptpiksp
+       61 snsqsqsqpg qqrsvgslvl ltqkfvdlvk anegsidlka atkildvqkr riyditnvle
+      121 giglidkgrh cslvrwrggg fnnakdqeny dlarsrtnhl kmleddldrq leyaqrnlry
+      181 vmqdpsnrsy ayvtrddlld ifgddsvfti pnydeevdik rnhyelavsl dngsaidirl
+      241 vtnqgksttn phdvdgffdy hrldtpspst sshssedgna pacagnvitd ehgyscnpgm
+      301 kdemkllene ltakiifqny lsghslrrfy pddpnlenpp llqlnppqed fnfalksdeg
+      361 icelfdvqcs
+//
+

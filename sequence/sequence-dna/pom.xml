@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.biojava</groupId>
+  <artifactId>sequence-dna</artifactId>
+  <version>3.0-SNAPSHOT</version>
+  <name>sequence-dna</name>
+  <packaging>jar</packaging>
+  <parent>
+    <groupId>org.biojava</groupId>
+    <artifactId>sequence</artifactId>
+    <version>3.0-SNAPSHOT</version>
+  </parent>
+  <build>
+        <plugins>
+            <plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>2.0.2</version>
+                <configuration>
+                    <source>1.5</source>
+                    <target>1.5</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+  <dependencies>
+  	<dependency>
+  		<groupId>org.biojava</groupId>
+  		<artifactId>sequence-core</artifactId>
+  		<version>3.0-SNAPSHOT</version>
+  		<type>jar</type>
+  		<scope>compile</scope>
+  	</dependency>
+    </dependencies>
+</project>

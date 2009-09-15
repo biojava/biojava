@@ -1,0 +1,78 @@
+-- These are carefully ordered to avoid foreign key constraint problems
+DROP TABLE term_relationship_term;
+DROP TABLE term_synonym;
+DROP TABLE term_relationship;
+DROP TABLE term_path;
+DROP TABLE term_dbxref;
+DROP TABLE taxon_name;
+DROP TABLE seqfeature_relationship;
+DROP TABLE seqfeature_qualifier_value;
+DROP TABLE seqfeature_path;
+DROP TABLE seqfeature_dbxref;
+DROP TABLE location_qualifier_value;
+DROP TABLE location;
+DROP TABLE seqfeature;
+DROP TABLE dbxref_qualifier_value;
+DROP TABLE biosequence; 
+DROP TABLE bioentry_relationship;
+DROP TABLE bioentry_reference;
+DROP TABLE reference;
+DROP TABLE bioentry_qualifier_value;
+DROP TABLE bioentry_path;
+DROP TABLE bioentry_dbxref;
+DROP TABLE dbxref;
+DROP TABLE anncomment;
+DROP TABLE bioentry;
+DROP TABLE biodatabase;
+DROP TABLE taxon;
+DROP TABLE term;
+DROP TABLE ontology;
+
+
+-- Hsqldb complains about indexes not existing -- maybe it automatically
+-- deletes them when you remove the table?
+--DROP INDEX bioentrypath_parent ON bioentry_pathobject_bioentry_id);
+--DROP INDEX bioentryrel_parent;
+--DROP INDEX ontrel_subjectid ON term_relationshipsubject_term_id);
+--DROP INDEX seqfeature_bioentryid ON seqfeaturebioentry_id);
+--DROP INDEX seqfeaturerel_parent ON seqfeature_pathobject_seqfeature_id);
+--DROP INDEX seqfeaturerel_parent ON seqfeature_relationshipobject_seqfeature_id);
+--DROP INDEX trmpath_subjectid ON term_pathsubject_term_id);
+-- DROP INDEX bioentry_db;
+-- DROP INDEX bioentry_name;
+-- DROP INDEX bioentry_tax;
+-- DROP INDEX bioentrypath_child;
+-- DROP INDEX bioentrypath_trm;
+-- DROP INDEX bioentryqual_trm;
+-- DROP INDEX bioentryref_ref;
+-- DROP INDEX bioentryrel_child;
+-- DROP INDEX bioentryrel_trm;
+-- DROP INDEX db_auth;
+-- DROP INDEX dblink_dbx;
+-- DROP INDEX dbxref_db;
+-- DROP INDEX dbxrefqual_dbx;
+-- DROP INDEX dbxrefqual_trm;
+-- DROP INDEX feadblink_dbx;
+-- DROP INDEX locationqual_trm;
+-- DROP INDEX seqfeature_fsrc;
+-- DROP INDEX seqfeature_trm;
+-- DROP INDEX seqfeatureloc_dbx;
+-- DROP INDEX seqfeatureloc_start;
+-- DROP INDEX seqfeatureloc_trm;
+-- DROP INDEX seqfeaturepath_child;
+-- DROP INDEX seqfeaturepath_trm;
+-- DROP INDEX seqfeaturequal_trm;
+-- DROP INDEX seqfeaturerel_child;
+-- DROP INDEX seqfeaturerel_trm;
+-- DROP INDEX taxnamename;
+-- DROP INDEX taxnametaxonid;
+-- DROP INDEX taxparent;
+-- DROP INDEX term_ont;
+-- DROP INDEX trmdbxref_dbxrefid;
+-- DROP INDEX trmpath_objectid;
+-- DROP INDEX trmpath_ontid;
+-- DROP INDEX trmpath_predicateid;
+-- DROP INDEX trmrel_objectid;
+-- DROP INDEX trmrel_ontid;
+-- DROP INDEX trmrel_predicateid;
+

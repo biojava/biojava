@@ -1,0 +1,116 @@
+<?xml version="1.0"?>
+
+
+
+<!DOCTYPE proteaseManager [
+
+  <!ELEMENT proteaseManager (protease)*>
+
+
+
+  <!ELEMENT protease (cleaveRes, endo, exceptRes?, description?)>
+
+  <!ATTLIST protease name ID #IMPLIED>
+
+
+
+  <!ELEMENT cleaveRes (#PCDATA)>
+
+  <!ELEMENT endo (#PCDATA)>
+
+  <!ELEMENT exceptRes (#PCDATA)>
+
+  <!ELEMENT description (#PCDATA)>
+
+]>
+
+
+
+<proteaseManager>
+
+  <protease name="Trypsin">
+
+    <cleaveRes>RK</cleaveRes>
+
+    <endo>true</endo>
+
+	<exceptRes>P</exceptRes>							
+
+  </protease>
+
+  <protease name="Lys-C">
+
+    <cleaveRes>K</cleaveRes>
+
+    <endo>true</endo>
+
+	<exceptRes>P</exceptRes>							
+
+  </protease>
+
+  <protease name="Arg-C">
+
+    <cleaveRes>R</cleaveRes>
+
+    <endo>true</endo>
+
+	<exceptRes>P</exceptRes>							
+
+    <description>Endo Protease</description>
+
+  </protease>
+
+  <protease name="Asp-N">
+
+    <cleaveRes>D</cleaveRes>
+
+    <endo>false</endo>						
+
+  </protease>
+
+<!--I am not sure if the G exception should be before or after the cleavage residue -->
+
+  <protease name="Glu-C-bicarbonate">
+
+    <cleaveRes>E</cleaveRes>
+
+    <endo>true</endo>
+
+	<exceptRes>G</exceptRes>							
+
+  </protease>
+
+<!--I am not sure if the G exception should be before or after the cleavage residue -->
+
+  <protease name="Glu-C-phosphate">
+
+    <cleaveRes>DE</cleaveRes>
+
+    <endo>true</endo>
+
+	<exceptRes>G</exceptRes>							
+
+  </protease>
+
+  <protease name="Chymotrypsin">
+
+    <cleaveRes>FWYLM</cleaveRes>
+
+    <endo>true</endo>
+
+	<exceptRes>P</exceptRes>							
+
+  </protease>
+
+  <protease name="CNBr">
+
+    <cleaveRes>M
+
+</cleaveRes>
+
+    <endo>true</endo>						
+
+  </protease>
+
+</proteaseManager>  
+

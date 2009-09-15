@@ -1,0 +1,27 @@
+<?xml version="1.0"?><project>
+  <parent>
+    <artifactId>biojava</artifactId>
+    <groupId>org.biojava</groupId>
+    <version>3.0-SNAPSHOT</version>
+  </parent>
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.biojava</groupId>
+  <artifactId>alignment</artifactId>
+  <name>alignment</name>
+  <version>3.0-SNAPSHOT</version>
+  <url>http://maven.apache.org</url>
+  <dependencies>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>3.8.1</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+    	<groupId>org.biojava</groupId>
+    	<artifactId>core</artifactId>
+    	<version>3.0-SNAPSHOT</version>
+    	<scope>compile</scope>
+    </dependency>
+  </dependencies>
+</project>

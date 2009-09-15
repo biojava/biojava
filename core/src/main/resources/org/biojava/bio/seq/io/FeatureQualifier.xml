@@ -1,0 +1,933 @@
+<?xml version="1.0"?>
+<!DOCTYPE features [
+  <!ELEMENT features (feature)*>
+
+  <!ELEMENT feature (qualifier*, description?)>
+  <!ATTLIST feature key CDATA #REQUIRED>
+
+  <!ELEMENT qualifier (description)?>
+  <!ATTLIST qualifier name CDATA #REQUIRED
+                      mandatory (true|false) "false"
+                      form (empty|bare|quoted|paren) "quoted">
+
+  <!ELEMENT description (#PCDATA)>
+]>
+
+<features>
+  <feature key="-">
+    <qualifier name="citation" form="quoted" mandatory="false"/>
+    <qualifier name="db_xref" form="quoted" mandatory="false"/>
+    <qualifier name="evidence" form="bare" mandatory="false"/>
+    <qualifier name="function" form="quoted" mandatory="false"/>
+    <qualifier name="gene" form="quoted" mandatory="false"/>
+    <qualifier name="label" form="bare" mandatory="false"/>
+    <qualifier name="map" form="quoted" mandatory="false"/>
+    <qualifier name="note" form="quoted" mandatory="false"/>
+    <qualifier name="partial" form="empty" mandatory="false"/>
+    <qualifier name="number" form="bare" mandatory="false"/>
+    <qualifier name="phenotype" form="quoted" mandatory="false"/>
+    <qualifier name="product" form="quoted" mandatory="false"/>
+    <qualifier name="pseudo" form="empty" mandatory="false"/>
+    <qualifier name="standard_name" form="quoted" mandatory="false"/>
+    <qualifier name="usedin" form="bare" mandatory="false"/>
+  </feature>
+  <feature key="-10_signal">
+    <qualifier name="citation" form="quoted" mandatory="false"/>
+    <qualifier name="db_xref" form="quoted" mandatory="false"/>
+    <qualifier name="evidence" form="bare" mandatory="false"/>
+    <qualifier name="gene" form="quoted" mandatory="false"/>
+    <qualifier name="label" form="bare" mandatory="false"/>
+    <qualifier name="map" form="quoted" mandatory="false"/>
+    <qualifier name="partial" form="empty" mandatory="false"/>
+    <qualifier name="note" form="quoted" mandatory="false"/>
+    <qualifier name="standard_name" form="quoted" mandatory="false"/>
+    <qualifier name="usedin" form="bare" mandatory="false"/>
+  </feature>
+  <feature key="-35_signal">
+    <qualifier name="citation" form="quoted" mandatory="false"/>
+    <qualifier name="db_xref" form="quoted" mandatory="false"/>
+    <qualifier name="evidence" form="bare" mandatory="false"/>
+    <qualifier name="gene" form="quoted" mandatory="false"/>
+    <qualifier name="label" form="bare" mandatory="false"/>
+    <qualifier name="map" form="quoted" mandatory="false"/>
+    <qualifier name="note" form="quoted" mandatory="false"/>
+    <qualifier name="partial" form="empty" mandatory="false"/>
+    <qualifier name="standard_name" form="quoted" mandatory="false"/>
+    <qualifier name="usedin" form="bare" mandatory="false"/>
+  </feature>
+  <feature key="3'UTR">
+    <qualifier name="citation" form="quoted" mandatory="false"/>
+    <qualifier name="db_xref" form="quoted" mandatory="false"/>
+    <qualifier name="evidence" form="bare" mandatory="false"/>
+    <qualifier name="function" form="quoted" mandatory="false"/>
+    <qualifier name="gene" form="quoted" mandatory="false"/>
+    <qualifier name="label" form="bare" mandatory="false"/>
+    <qualifier name="map" form="quoted" mandatory="false"/>
+    <qualifier name="note" form="quoted" mandatory="false"/>
+    <qualifier name="partial" form="empty" mandatory="false"/>
+    <qualifier name="standard_name" form="quoted" mandatory="false"/>
+    <qualifier name="usedin" form="bare" mandatory="false"/>
+  </feature>
+  <feature key="3'clip">
+    <qualifier name="citation" form="quoted" mandatory="false"/>
+    <qualifier name="db_xref" form="quoted" mandatory="false"/>
+    <qualifier name="evidence" form="bare" mandatory="false"/>
+    <qualifier name="function" form="quoted" mandatory="false"/>
+    <qualifier name="gene" form="quoted" mandatory="false"/>
+    <qualifier name="label" form="bare" mandatory="false"/>
+    <qualifier name="map" form="quoted" mandatory="false"/>
+    <qualifier name="note" form="quoted" mandatory="false"/>
+    <qualifier name="partial" form="empty" mandatory="false"/>
+    <qualifier name="standard_name" form="quoted" mandatory="false"/>
+    <qualifier name="usedin" form="bare" mandatory="false"/>
+  </feature>
+  <feature key="5'UTR">
+    <qualifier name="citation" form="quoted" mandatory="false"/>
+    <qualifier name="db_xref" form="quoted" mandatory="false"/>
+    <qualifier name="evidence" form="bare" mandatory="false"/>
+    <qualifier name="function" form="quoted" mandatory="false"/>
+    <qualifier name="gene" form="quoted" mandatory="false"/>
+    <qualifier name="label" form="bare" mandatory="false"/>
+    <qualifier name="map" form="quoted" mandatory="false"/>
+    <qualifier name="note" form="quoted" mandatory="false"/>
+    <qualifier name="partial" form="empty" mandatory="false"/>
+    <qualifier name="standard_name" form="quoted" mandatory="false"/>
+    <qualifier name="usedin" form="bare" mandatory="false"/>
+  </feature>
+  <feature key="5'clip">
+    <qualifier name="citation" form="quoted" mandatory="false"/>
+    <qualifier name="db_xref" form="quoted" mandatory="false"/>
+    <qualifier name="evidence" form="bare" mandatory="false"/>
+    <qualifier name="function" form="quoted" mandatory="false"/>
+    <qualifier name="gene" form="quoted" mandatory="false"/>
+    <qualifier name="label" form="bare" mandatory="false"/>
+    <qualifier name="map" form="quoted" mandatory="false"/>
+    <qualifier name="note" form="quoted" mandatory="false"/>
+    <qualifier name="partial" form="empty" mandatory="false"/>
+    <qualifier name="standard_name" form="quoted" mandatory="false"/>
+    <qualifier name="usedin" form="bare" mandatory="false"/>
+  </feature>
+  <feature key="CAAT_signal">
+    <qualifier name="citation" form="quoted" mandatory="false"/>
+    <qualifier name="db_xref" form="quoted" mandatory="false"/>
+    <qualifier name="evidence" form="bare" mandatory="false"/>
+    <qualifier name="gene" form="quoted" mandatory="false"/>
+    <qualifier name="label" form="bare" mandatory="false"/>
+    <qualifier name="map" form="quoted" mandatory="false"/>
+    <qualifier name="note" form="quoted" mandatory="false"/>
+    <qualifier name="partial" form="empty" mandatory="false"/>
+    <qualifier name="usedin" form="bare" mandatory="false"/>
+  </feature>
+  <feature key="CDS">
+    <qualifier name="citation" form="quoted" mandatory="false"/>
+    <qualifier name="codon" form="bare" mandatory="false"/>
+    <qualifier name="codon_start" form="bare" mandatory="false"/>
+    <qualifier name="db_xref" form="quoted" mandatory="false"/>
+    <qualifier name="EC_number" form="quoted" mandatory="false"/>
+    <qualifier name="evidence" form="bare" mandatory="false"/>
+    <qualifier name="exception" form="quoted" mandatory="false"/>
+    <qualifier name="function" form="quoted" mandatory="false"/>
+    <qualifier name="gene" form="quoted" mandatory="false"/>
+    <qualifier name="label" form="bare" mandatory="false"/>
+    <qualifier name="map" form="quoted" mandatory="false"/>
+    <qualifier name="note" form="quoted" mandatory="false"/>
+    <qualifier name="number" form="bare" mandatory="false"/>
+    <qualifier name="partial" form="empty" mandatory="false"/>
+    <qualifier name="product" form="quoted" mandatory="false"/>
+    <qualifier name="protein_id" form="quoted" mandatory="false"/>
+    <qualifier name="pseudo" form="empty" mandatory="false"/>
+    <qualifier name="standard_name" form="quoted" mandatory="false"/>
+    <qualifier name="translation" form="quoted" mandatory="false"/>
+    <qualifier name="transl_except" form="bare" mandatory="false"/>
+    <qualifier name="transl_table" form="bare" mandatory="false"/>
+    <qualifier name="usedin" form="bare" mandatory="false"/>
+  </feature>
+  <feature key="C_region">
+    <qualifier name="citation" form="quoted" mandatory="false"/>
+    <qualifier name="db_xref" form="quoted" mandatory="false"/>
+    <qualifier name="evidence" form="bare" mandatory="false"/>
+    <qualifier name="gene" form="quoted" mandatory="false"/>
+    <qualifier name="label" form="bare" mandatory="false"/>
+    <qualifier name="map" form="quoted" mandatory="false"/>
+    <qualifier name="note" form="quoted" mandatory="false"/>
+    <qualifier name="partial" form="empty" mandatory="false"/>
+    <qualifier name="product" form="quoted" mandatory="false"/>
+    <qualifier name="pseudo" form="empty" mandatory="false"/>
+    <qualifier name="standard_name" form="quoted" mandatory="false"/>
+    <qualifier name="usedin" form="bare" mandatory="false"/>
+  </feature>
+  <feature key="D-loop">
+    <qualifier name="citation" form="quoted" mandatory="false"/>
+    <qualifier name="db_xref" form="quoted" mandatory="false"/>
+    <qualifier name="evidence" form="bare" mandatory="false"/>
+    <qualifier name="gene" form="quoted" mandatory="false"/>
+    <qualifier name="label" form="bare" mandatory="false"/>
+    <qualifier name="map" form="quoted" mandatory="false"/>
+    <qualifier name="note" form="quoted" mandatory="false"/>
+    <qualifier name="partial" form="empty" mandatory="false"/>
+    <qualifier name="usedin" form="bare" mandatory="false"/>
+  </feature>
+  <feature key="D_segment">
+    <qualifier name="citation" form="quoted" mandatory="false"/>
+    <qualifier name="db_xref" form="quoted" mandatory="false"/>
+    <qualifier name="evidence" form="bare" mandatory="false"/>
+    <qualifier name="gene" form="quoted" mandatory="false"/>
+    <qualifier name="label" form="bare" mandatory="false"/>
+    <qualifier name="map" form="quoted" mandatory="false"/>
+    <qualifier name="note" form="quoted" mandatory="false"/>
+    <qualifier name="partial" form="empty" mandatory="false"/>
+    <qualifier name="product" form="quoted" mandatory="false"/>
+    <qualifier name="pseudo" form="empty" mandatory="false"/>
+    <qualifier name="standard_name" form="quoted" mandatory="false"/>
+    <qualifier name="usedin" form="bare" mandatory="false"/>
+  </feature>
+  <feature key="GC_signal">
+    <qualifier name="citation" form="quoted" mandatory="false"/>
+    <qualifier name="db_xref" form="quoted" mandatory="false"/>
+    <qualifier name="evidence" form="bare" mandatory="false"/>
+    <qualifier name="gene" form="quoted" mandatory="false"/>
+    <qualifier name="label" form="bare" mandatory="false"/>
+    <qualifier name="map" form="quoted" mandatory="false"/>
+    <qualifier name="note" form="quoted" mandatory="false"/>
+    <qualifier name="partial" form="empty" mandatory="false"/>
+    <qualifier name="usedin" form="bare" mandatory="false"/>
+  </feature>
+  <feature key="J_segment">
+    <qualifier name="citation" form="quoted" mandatory="false"/>
+    <qualifier name="db_xref" form="quoted" mandatory="false"/>
+    <qualifier name="evidence" form="bare" mandatory="false"/>
+    <qualifier name="gene" form="quoted" mandatory="false"/>
+    <qualifier name="map" form="quoted" mandatory="false"/>
+    <qualifier name="note" form="quoted" mandatory="false"/>
+    <qualifier name="partial" form="empty" mandatory="false"/>
+    <qualifier name="product" form="quoted" mandatory="false"/>
+    <qualifier name="pseudo" form="empty" mandatory="false"/>
+    <qualifier name="standard_name" form="quoted" mandatory="false"/>
+    <qualifier name="usedin" form="bare" mandatory="false"/>
+  </feature>
+  <feature key="LTR">
+    <qualifier name="citation" form="quoted" mandatory="false"/>
+    <qualifier name="db_xref" form="quoted" mandatory="false"/>
+    <qualifier name="evidence" form="bare" mandatory="false"/>
+    <qualifier name="function" form="quoted" mandatory="false"/>
+    <qualifier name="gene" form="quoted" mandatory="false"/>
+    <qualifier name="label" form="bare" mandatory="false"/>
+    <qualifier name="map" form="quoted" mandatory="false"/>
+    <qualifier name="note" form="quoted" mandatory="false"/>
+    <qualifier name="partial" form="empty" mandatory="false"/>
+    <qualifier name="standard_name" form="quoted" mandatory="false"/>
+    <qualifier name="usedin" form="bare" mandatory="false"/>
+  </feature>
+  <feature key="N_region">
+    <qualifier name="citation" form="quoted" mandatory="false"/>
+    <qualifier name="db_xref" form="quoted" mandatory="false"/>
+    <qualifier name="evidence" form="bare" mandatory="false"/>
+    <qualifier name="gene" form="quoted" mandatory="false"/>
+    <qualifier name="label" form="bare" mandatory="false"/>
+    <qualifier name="map" form="quoted" mandatory="false"/>
+    <qualifier name="note" form="quoted" mandatory="false"/>
+    <qualifier name="partial" form="empty" mandatory="false"/>
+    <qualifier name="product" form="quoted" mandatory="false"/>
+    <qualifier name="pseudo" form="empty" mandatory="false"/>
+    <qualifier name="standard_name" form="quoted" mandatory="false"/>
+    <qualifier name="usedin" form="bare" mandatory="false"/>
+  </feature>
+  <feature key="RBS">
+    <qualifier name="citation" form="quoted" mandatory="false"/>
+    <qualifier name="db_xref" form="quoted" mandatory="false"/>
+    <qualifier name="evidence" form="bare" mandatory="false"/>
+    <qualifier name="gene" form="quoted" mandatory="false"/>
+    <qualifier name="label" form="bare" mandatory="false"/>
+    <qualifier name="map" form="quoted" mandatory="false"/>
+    <qualifier name="note" form="quoted" mandatory="false"/>
+    <qualifier name="partial" form="empty" mandatory="false"/>
+    <qualifier name="standard_name" form="quoted" mandatory="false"/>
+    <qualifier name="usedin" form="bare" mandatory="false"/>
+  </feature>
+  <feature key="STS">
+    <qualifier name="citation" form="quoted" mandatory="false"/>
+    <qualifier name="db_xref" form="quoted" mandatory="false"/>
+    <qualifier name="evidence" form="bare" mandatory="false"/>
+    <qualifier name="standard_name" form="quoted" mandatory="false"/>
+    <qualifier name="gene" form="quoted" mandatory="false"/>
+    <qualifier name="label" form="bare" mandatory="false"/>
+    <qualifier name="usedin" form="bare" mandatory="false"/>
+    <qualifier name="note" form="quoted" mandatory="false"/>
+    <qualifier name="partial" form="empty" mandatory="false"/>
+    <qualifier name="map" form="quoted" mandatory="false"/>
+  </feature>
+  <feature key="S_region">
+    <qualifier name="citation" form="quoted" mandatory="false"/>
+    <qualifier name="db_xref" form="quoted" mandatory="false"/>
+    <qualifier name="evidence" form="bare" mandatory="false"/>
+    <qualifier name="gene" form="quoted" mandatory="false"/>
+    <qualifier name="label" form="bare" mandatory="false"/>
+    <qualifier name="map" form="quoted" mandatory="false"/>
+    <qualifier name="note" form="quoted" mandatory="false"/>
+    <qualifier name="partial" form="empty" mandatory="false"/>
+    <qualifier name="product" form="quoted" mandatory="false"/>
+    <qualifier name="pseudo" form="empty" mandatory="false"/>
+    <qualifier name="standard_name" form="quoted" mandatory="false"/>
+    <qualifier name="usedin" form="bare" mandatory="false"/>
+  </feature>
+  <feature key="TATA_signal">
+    <qualifier name="citation" form="quoted" mandatory="false"/>
+    <qualifier name="db_xref" form="quoted" mandatory="false"/>
+    <qualifier name="evidence" form="bare" mandatory="false"/>
+    <qualifier name="gene" form="quoted" mandatory="false"/>
+    <qualifier name="label" form="bare" mandatory="false"/>
+    <qualifier name="map" form="quoted" mandatory="false"/>
+    <qualifier name="note" form="quoted" mandatory="false"/>
+    <qualifier name="partial" form="empty" mandatory="false"/>
+    <qualifier name="usedin" form="bare" mandatory="false"/>
+  </feature>
+  <feature key="V_region">
+    <qualifier name="citation" form="quoted" mandatory="false"/>
+    <qualifier name="db_xref" form="quoted" mandatory="false"/>
+    <qualifier name="evidence" form="bare" mandatory="false"/>
+    <qualifier name="gene" form="quoted" mandatory="false"/>
+    <qualifier name="label" form="bare" mandatory="false"/>
+    <qualifier name="map" form="quoted" mandatory="false"/>
+    <qualifier name="note" form="quoted" mandatory="false"/>
+    <qualifier name="partial" form="empty" mandatory="false"/>
+    <qualifier name="product" form="quoted" mandatory="false"/>
+    <qualifier name="pseudo" form="empty" mandatory="false"/>
+    <qualifier name="standard_name" form="quoted" mandatory="false"/>
+    <qualifier name="usedin" form="bare" mandatory="false"/>
+  </feature>
+  <feature key="V_segment">
+    <qualifier name="citation" form="quoted" mandatory="false"/>
+    <qualifier name="db_xref" form="quoted" mandatory="false"/>
+    <qualifier name="evidence" form="bare" mandatory="false"/>
+    <qualifier name="gene" form="quoted" mandatory="false"/>
+    <qualifier name="label" form="bare" mandatory="false"/>
+    <qualifier name="map" form="quoted" mandatory="false"/>
+    <qualifier name="note" form="quoted" mandatory="false"/>
+    <qualifier name="partial" form="empty" mandatory="false"/>
+    <qualifier name="product" form="quoted" mandatory="false"/>
+    <qualifier name="pseudo" form="empty" mandatory="false"/>
+    <qualifier name="standard_name" form="quoted" mandatory="false"/>
+    <qualifier name="usedin" form="bare" mandatory="false"/>
+  </feature>
+  <feature key="allele">
+    <qualifier name="citation" form="quoted" mandatory="false"/>
+    <qualifier name="db_xref" form="quoted" mandatory="false"/>
+    <qualifier name="frequency" form="bare" mandatory="false"/>
+    <qualifier name="gene" form="quoted" mandatory="false"/>
+    <qualifier name="label" form="bare" mandatory="false"/>
+    <qualifier name="map" form="quoted" mandatory="false"/>
+    <qualifier name="note" form="quoted" mandatory="false"/>
+    <qualifier name="partial" form="empty" mandatory="false"/>
+    <qualifier name="phenotype" form="quoted" mandatory="false"/>
+    <qualifier name="product" form="quoted" mandatory="false"/>
+    <qualifier name="replace" form="quoted" mandatory="false"/>
+    <qualifier name="standard_name" form="quoted" mandatory="false"/>
+    <qualifier name="usedin" form="bare" mandatory="false"/>
+  </feature>
+  <feature key="attenuator">
+    <qualifier name="citation" form="quoted" mandatory="false"/>
+    <qualifier name="db_xref" form="quoted" mandatory="false"/>
+    <qualifier name="evidence" form="bare" mandatory="false"/>
+    <qualifier name="gene" form="quoted" mandatory="false"/>
+    <qualifier name="label" form="bare" mandatory="false"/>
+    <qualifier name="map" form="quoted" mandatory="false"/>
+    <qualifier name="note" form="quoted" mandatory="false"/>
+    <qualifier name="partial" form="empty" mandatory="false"/>
+    <qualifier name="phenotype" form="quoted" mandatory="false"/>
+    <qualifier name="usedin" form="bare" mandatory="false"/>
+  </feature>
+  <feature key="conflict">
+    <qualifier name="citation" form="quoted" mandatory="true"/>
+    <qualifier name="db_xref" form="quoted" mandatory="false"/>
+    <qualifier name="evidence" form="bare" mandatory="false"/>
+    <qualifier name="gene" form="quoted" mandatory="false"/>
+    <qualifier name="label" form="bare" mandatory="false"/>
+    <qualifier name="map" form="quoted" mandatory="false"/>
+    <qualifier name="note" form="quoted" mandatory="false"/>
+    <qualifier name="replace" form="quoted" mandatory="false"/>
+    <qualifier name="usedin" form="bare" mandatory="false"/>
+  </feature>
+  <feature key="enhancer">
+    <qualifier name="citation" form="quoted" mandatory="false"/>
+    <qualifier name="db_xref" form="quoted" mandatory="false"/>
+    <qualifier name="evidence" form="bare" mandatory="false"/>
+    <qualifier name="gene" form="quoted" mandatory="false"/>
+    <qualifier name="label" form="bare" mandatory="false"/>
+    <qualifier name="map" form="quoted" mandatory="false"/>
+    <qualifier name="note" form="quoted" mandatory="false"/>
+    <qualifier name="partial" form="empty" mandatory="false"/>
+    <qualifier name="standard_name" form="quoted" mandatory="false"/>
+    <qualifier name="usedin" form="bare" mandatory="false"/>
+  </feature>
+  <feature key="exon">
+    <qualifier name="citation" form="quoted" mandatory="false"/>
+    <qualifier name="db_xref" form="quoted" mandatory="false"/>
+    <qualifier name="EC_number" form="quoted" mandatory="false"/>
+    <qualifier name="evidence" form="bare" mandatory="false"/>
+    <qualifier name="function" form="quoted" mandatory="false"/>
+    <qualifier name="gene" form="quoted" mandatory="false"/>
+    <qualifier name="label" form="bare" mandatory="false"/>
+    <qualifier name="map" form="quoted" mandatory="false"/>
+    <qualifier name="note" form="quoted" mandatory="false"/>
+    <qualifier name="number" form="bare" mandatory="false"/>
+    <qualifier name="partial" form="empty" mandatory="false"/>
+    <qualifier name="product" form="quoted" mandatory="false"/>
+    <qualifier name="pseudo" form="empty" mandatory="false"/>
+    <qualifier name="standard_name" form="quoted" mandatory="false"/>
+    <qualifier name="usedin" form="bare" mandatory="false"/>
+  </feature>
+  <feature key="gene">
+    <qualifier name="allele" form="quoted" mandatory="false"/>
+    <qualifier name="citation" form="quoted" mandatory="false"/>
+    <qualifier name="db_xref" form="quoted" mandatory="false"/>
+    <qualifier name="evidence" form="bare" mandatory="false"/>
+    <qualifier name="function" form="quoted" mandatory="false"/>
+    <qualifier name="label" form="bare" mandatory="false"/>
+    <qualifier name="map" form="quoted" mandatory="false"/>
+    <qualifier name="note" form="quoted" mandatory="false"/>
+    <qualifier name="partial" form="empty" mandatory="false"/>
+    <qualifier name="product" form="quoted" mandatory="false"/>
+    <qualifier name="pseudo" form="empty" mandatory="false"/>
+    <qualifier name="phenotype" form="quoted" mandatory="false"/>
+    <qualifier name="standard_name" form="quoted" mandatory="false"/>
+    <qualifier name="usedin" form="bare" mandatory="false"/>
+  </feature>
+  <feature key="iDNA">
+    <qualifier name="citation" form="quoted" mandatory="false"/>
+    <qualifier name="db_xref" form="quoted" mandatory="false"/>
+    <qualifier name="evidence" form="bare" mandatory="false"/>
+    <qualifier name="function" form="quoted" mandatory="false"/>
+    <qualifier name="gene" form="quoted" mandatory="false"/>
+    <qualifier name="label" form="bare" mandatory="false"/>
+    <qualifier name="map" form="quoted" mandatory="false"/>
+    <qualifier name="note" form="quoted" mandatory="false"/>
+    <qualifier name="number" form="bare" mandatory="false"/>
+    <qualifier name="partial" form="empty" mandatory="false"/>
+    <qualifier name="standard_name" form="quoted" mandatory="false"/>
+    <qualifier name="usedin" form="bare" mandatory="false"/>
+  </feature>
+  <feature key="intron">
+    <qualifier name="citation" form="quoted" mandatory="false"/>
+    <qualifier name="cons_splice" form="bare" mandatory="false"/>
+    <qualifier name="db_xref" form="quoted" mandatory="false"/>
+    <qualifier name="evidence" form="bare" mandatory="false"/>
+    <qualifier name="function" form="quoted" mandatory="false"/>
+    <qualifier name="gene" form="quoted" mandatory="false"/>
+    <qualifier name="label" form="bare" mandatory="false"/>
+    <qualifier name="map" form="quoted" mandatory="false"/>
+    <qualifier name="note" form="quoted" mandatory="false"/>
+    <qualifier name="number" form="bare" mandatory="false"/>
+    <qualifier name="partial" form="empty" mandatory="false"/>
+    <qualifier name="standard_name" form="quoted" mandatory="false"/>
+    <qualifier name="usedin" form="bare" mandatory="false"/>
+  </feature>
+  <feature key="mRNA">
+    <qualifier name="citation" form="quoted" mandatory="false"/>
+    <qualifier name="db_xref" form="quoted" mandatory="false"/>
+    <qualifier name="evidence" form="bare" mandatory="false"/>
+    <qualifier name="function" form="quoted" mandatory="false"/>
+    <qualifier name="gene" form="quoted" mandatory="false"/>
+    <qualifier name="label" form="bare" mandatory="false"/>
+    <qualifier name="map" form="quoted" mandatory="false"/>
+    <qualifier name="note" form="quoted" mandatory="false"/>
+    <qualifier name="partial" form="empty" mandatory="false"/>
+    <qualifier name="product" form="quoted" mandatory="false"/>
+    <qualifier name="pseudo" form="empty" mandatory="false"/>
+    <qualifier name="standard_name" form="quoted" mandatory="false"/>
+    <qualifier name="usedin" form="bare" mandatory="false"/>
+  </feature>
+  <feature key="mat_peptide">
+    <qualifier name="citation" form="quoted" mandatory="false"/>
+    <qualifier name="db_xref" form="quoted" mandatory="false"/>
+    <qualifier name="EC_number" form="quoted" mandatory="false"/>
+    <qualifier name="evidence" form="bare" mandatory="false"/>
+    <qualifier name="function" form="quoted" mandatory="false"/>
+    <qualifier name="gene" form="quoted" mandatory="false"/>
+    <qualifier name="label" form="bare" mandatory="false"/>
+    <qualifier name="map" form="quoted" mandatory="false"/>
+    <qualifier name="note" form="quoted" mandatory="false"/>
+    <qualifier name="partial" form="empty" mandatory="false"/>
+    <qualifier name="product" form="quoted" mandatory="false"/>
+    <qualifier name="pseudo" form="empty" mandatory="false"/>
+    <qualifier name="standard_name" form="quoted" mandatory="false"/>
+    <qualifier name="usedin" form="bare" mandatory="false"/>
+  </feature>
+  <feature key="misc_RNA">
+    <qualifier name="citation" form="quoted" mandatory="false"/>
+    <qualifier name="db_xref" form="quoted" mandatory="false"/>
+    <qualifier name="evidence" form="bare" mandatory="false"/>
+    <qualifier name="function" form="quoted" mandatory="false"/>
+    <qualifier name="gene" form="quoted" mandatory="false"/>
+    <qualifier name="label" form="bare" mandatory="false"/>
+    <qualifier name="map" form="quoted" mandatory="false"/>
+    <qualifier name="note" form="quoted" mandatory="false"/>
+    <qualifier name="partial" form="empty" mandatory="false"/>
+    <qualifier name="product" form="quoted" mandatory="false"/>
+    <qualifier name="standard_name" form="quoted" mandatory="false"/>
+    <qualifier name="usedin" form="bare" mandatory="false"/>
+  </feature>
+  <feature key="misc_binding">
+    <qualifier name="bound_moiety" form="quoted" mandatory="true"/>
+    <qualifier name="citation" form="quoted" mandatory="false"/>
+    <qualifier name="db_xref" form="quoted" mandatory="false"/>
+    <qualifier name="evidence" form="bare" mandatory="false"/>
+    <qualifier name="function" form="quoted" mandatory="false"/>
+    <qualifier name="gene" form="quoted" mandatory="false"/>
+    <qualifier name="label" form="bare" mandatory="false"/>
+    <qualifier name="map" form="quoted" mandatory="false"/>
+    <qualifier name="note" form="quoted" mandatory="false"/>
+    <qualifier name="partial" form="empty" mandatory="false"/>
+    <qualifier name="usedin" form="bare" mandatory="false"/>
+  </feature>
+  <feature key="misc_difference">
+    <qualifier name="citation" form="quoted" mandatory="false"/>
+    <qualifier name="clone" form="quoted" mandatory="false"/>
+    <qualifier name="db_xref" form="quoted" mandatory="false"/>
+    <qualifier name="evidence" form="bare" mandatory="false"/>
+    <qualifier name="gene" form="quoted" mandatory="false"/>
+    <qualifier name="label" form="bare" mandatory="false"/>
+    <qualifier name="map" form="quoted" mandatory="false"/>
+    <qualifier name="note" form="quoted" mandatory="false"/>
+    <qualifier name="partial" form="empty" mandatory="false"/>
+    <qualifier name="replace" form="quoted" mandatory="false"/>
+    <qualifier name="standard_name" form="quoted" mandatory="false"/>
+    <qualifier name="usedin" form="bare" mandatory="false"/>
+  </feature>
+  <feature key="misc_feature">
+    <qualifier name="citation" form="quoted" mandatory="false"/>
+    <qualifier name="db_xref" form="quoted" mandatory="false"/>
+    <qualifier name="evidence" form="bare" mandatory="false"/>
+    <qualifier name="function" form="quoted" mandatory="false"/>
+    <qualifier name="gene" form="quoted" mandatory="false"/>
+    <qualifier name="label" form="bare" mandatory="false"/>
+    <qualifier name="map" form="quoted" mandatory="false"/>
+    <qualifier name="note" form="quoted" mandatory="false"/>
+    <qualifier name="partial" form="empty" mandatory="false"/>
+    <qualifier name="number" form="bare" mandatory="false"/>
+    <qualifier name="phenotype" form="quoted" mandatory="false"/>
+    <qualifier name="product" form="quoted" mandatory="false"/>
+    <qualifier name="pseudo" form="empty" mandatory="false"/>
+    <qualifier name="standard_name" form="quoted" mandatory="false"/>
+    <qualifier name="usedin" form="bare" mandatory="false"/>
+  </feature>
+  <feature key="misc_recomb">
+    <qualifier name="organism" form="quoted" mandatory="true"/>
+    <qualifier name="citation" form="quoted" mandatory="false"/>
+    <qualifier name="db_xref" form="quoted" mandatory="false"/>
+    <qualifier name="evidence" form="bare" mandatory="false"/>
+    <qualifier name="gene" form="quoted" mandatory="false"/>
+    <qualifier name="label" form="bare" mandatory="false"/>
+    <qualifier name="map" form="quoted" mandatory="false"/>
+    <qualifier name="note" form="quoted" mandatory="false"/>
+    <qualifier name="partial" form="empty" mandatory="false"/>
+    <qualifier name="standard_name" form="quoted" mandatory="false"/>
+    <qualifier name="usedin" form="bare" mandatory="false"/>
+  </feature>
+  <feature key="misc_signal">
+    <qualifier name="citation" form="quoted" mandatory="false"/>
+    <qualifier name="db_xref" form="quoted" mandatory="false"/>
+    <qualifier name="evidence" form="bare" mandatory="false"/>
+    <qualifier name="function" form="quoted" mandatory="false"/>
+    <qualifier name="gene" form="quoted" mandatory="false"/>
+    <qualifier name="label" form="bare" mandatory="false"/>
+    <qualifier name="map" form="quoted" mandatory="false"/>
+    <qualifier name="note" form="quoted" mandatory="false"/>
+    <qualifier name="partial" form="empty" mandatory="false"/>
+    <qualifier name="phenotype" form="quoted" mandatory="false"/>
+    <qualifier name="standard_name" form="quoted" mandatory="false"/>
+    <qualifier name="usedin" form="bare" mandatory="false"/>
+  </feature>
+  <feature key="misc_structure">
+    <qualifier name="citation" form="quoted" mandatory="false"/>
+    <qualifier name="db_xref" form="quoted" mandatory="false"/>
+    <qualifier name="evidence" form="bare" mandatory="false"/>
+    <qualifier name="function" form="quoted" mandatory="false"/>
+    <qualifier name="gene" form="quoted" mandatory="false"/>
+    <qualifier name="label" form="bare" mandatory="false"/>
+    <qualifier name="map" form="quoted" mandatory="false"/>
+    <qualifier name="note" form="quoted" mandatory="false"/>
+    <qualifier name="partial" form="empty" mandatory="false"/>
+    <qualifier name="standard_name" form="quoted" mandatory="false"/>
+    <qualifier name="usedin" form="bare" mandatory="false"/>
+  </feature>
+  <feature key="modified_base">
+    <qualifier name="mod_base" form="bare" mandatory="true"/>
+    <qualifier name="citation" form="quoted" mandatory="false"/>
+    <qualifier name="db_xref" form="quoted" mandatory="false"/>
+    <qualifier name="evidence" form="bare" mandatory="false"/>
+    <qualifier name="frequency" form="bare" mandatory="false"/>
+    <qualifier name="gene" form="quoted" mandatory="false"/>
+    <qualifier name="label" form="bare" mandatory="false"/>
+    <qualifier name="map" form="quoted" mandatory="false"/>
+    <qualifier name="note" form="quoted" mandatory="false"/>
+    <qualifier name="usedin" form="bare" mandatory="false"/>
+  </feature>
+  <feature key="mutation">
+    <qualifier name="citation" form="quoted" mandatory="false"/>
+    <qualifier name="db_xref" form="quoted" mandatory="false"/>
+    <qualifier name="frequency" form="bare" mandatory="false"/>
+    <qualifier name="gene" form="quoted" mandatory="false"/>
+    <qualifier name="label" form="bare" mandatory="false"/>
+    <qualifier name="map" form="quoted" mandatory="false"/>
+    <qualifier name="note" form="quoted" mandatory="false"/>
+    <qualifier name="phenotype" form="quoted" mandatory="false"/>
+    <qualifier name="product" form="quoted" mandatory="false"/>
+    <qualifier name="replace" form="quoted" mandatory="false"/>
+    <qualifier name="standard_name" form="quoted" mandatory="false"/>
+    <qualifier name="usedin" form="bare" mandatory="false"/>
+  </feature>
+  <feature key="old_sequence">
+    <qualifier name="citation" form="quoted" mandatory="true"/>
+    <qualifier name="db_xref" form="quoted" mandatory="false"/>
+    <qualifier name="evidence" form="bare" mandatory="false"/>
+    <qualifier name="gene" form="quoted" mandatory="false"/>
+    <qualifier name="label" form="bare" mandatory="false"/>
+    <qualifier name="map" form="quoted" mandatory="false"/>
+    <qualifier name="note" form="quoted" mandatory="false"/>
+    <qualifier name="partial" form="empty" mandatory="false"/>
+    <qualifier name="replace" form="quoted" mandatory="false"/>
+    <qualifier name="usedin" form="bare" mandatory="false"/>
+  </feature>
+  <feature key="polyA_signal">
+    <qualifier name="citation" form="quoted" mandatory="false"/>
+    <qualifier name="db_xref" form="quoted" mandatory="false"/>
+    <qualifier name="evidence" form="bare" mandatory="false"/>
+    <qualifier name="gene" form="quoted" mandatory="false"/>
+    <qualifier name="label" form="bare" mandatory="false"/>
+    <qualifier name="map" form="quoted" mandatory="false"/>
+    <qualifier name="note" form="quoted" mandatory="false"/>
+    <qualifier name="partial" form="empty" mandatory="false"/>
+    <qualifier name="usedin" form="bare" mandatory="false"/>
+  </feature>
+  <feature key="polyA_site">
+    <qualifier name="citation" form="quoted" mandatory="false"/>
+    <qualifier name="db_xref" form="quoted" mandatory="false"/>
+    <qualifier name="evidence" form="bare" mandatory="false"/>
+    <qualifier name="gene" form="quoted" mandatory="false"/>
+    <qualifier name="label" form="bare" mandatory="false"/>
+    <qualifier name="map" form="quoted" mandatory="false"/>
+    <qualifier name="note" form="quoted" mandatory="false"/>
+    <qualifier name="usedin" form="bare" mandatory="false"/>
+  </feature>
+  <feature key="precursor_RNA">
+    <qualifier name="citation" form="quoted" mandatory="false"/>
+    <qualifier name="db_xref" form="quoted" mandatory="false"/>
+    <qualifier name="evidence" form="bare" mandatory="false"/>
+    <qualifier name="function" form="quoted" mandatory="false"/>
+    <qualifier name="gene" form="quoted" mandatory="false"/>
+    <qualifier name="label" form="bare" mandatory="false"/>
+    <qualifier name="map" form="quoted" mandatory="false"/>
+    <qualifier name="note" form="quoted" mandatory="false"/>
+    <qualifier name="partial" form="empty" mandatory="false"/>
+    <qualifier name="standard_name" form="quoted" mandatory="false"/>
+    <qualifier name="usedin" form="bare" mandatory="false"/>
+  </feature>
+  <feature key="prim_transcript">
+    <qualifier name="citation" form="quoted" mandatory="false"/>
+    <qualifier name="db_xref" form="quoted" mandatory="false"/>
+    <qualifier name="evidence" form="bare" mandatory="false"/>
+    <qualifier name="function" form="quoted" mandatory="false"/>
+    <qualifier name="gene" form="quoted" mandatory="false"/>
+    <qualifier name="label" form="bare" mandatory="false"/>
+    <qualifier name="map" form="quoted" mandatory="false"/>
+    <qualifier name="note" form="quoted" mandatory="false"/>
+    <qualifier name="partial" form="empty" mandatory="false"/>
+    <qualifier name="standard_name" form="quoted" mandatory="false"/>
+    <qualifier name="usedin" form="bare" mandatory="false"/>
+  </feature>
+  <feature key="primer_bind">
+    <qualifier name="citation" form="quoted" mandatory="false"/>
+    <qualifier name="db_xref" form="quoted" mandatory="false"/>
+    <qualifier name="evidence" form="bare" mandatory="false"/>
+    <qualifier name="gene" form="quoted" mandatory="false"/>
+    <qualifier name="label" form="bare" mandatory="false"/>
+    <qualifier name="map" form="quoted" mandatory="false"/>
+    <qualifier name="note" form="quoted" mandatory="false"/>
+    <qualifier name="partial" form="empty" mandatory="false"/>
+    <qualifier name="standard_name" form="quoted" mandatory="false"/>
+    <qualifier name="PCR_conditions" form="quoted" mandatory="false"/>
+    <qualifier name="usedin" form="bare" mandatory="false"/>
+  </feature>
+  <feature key="promoter">
+    <qualifier name="citation" form="quoted" mandatory="false"/>
+    <qualifier name="db_xref" form="quoted" mandatory="false"/>
+    <qualifier name="evidence" form="bare" mandatory="false"/>
+    <qualifier name="function" form="quoted" mandatory="false"/>
+    <qualifier name="gene" form="quoted" mandatory="false"/>
+    <qualifier name="label" form="bare" mandatory="false"/>
+    <qualifier name="map" form="quoted" mandatory="false"/>
+    <qualifier name="note" form="quoted" mandatory="false"/>
+    <qualifier name="partial" form="empty" mandatory="false"/>
+    <qualifier name="phenotype" form="quoted" mandatory="false"/>
+    <qualifier name="pseudo" form="empty" mandatory="false"/>
+    <qualifier name="standard_name" form="quoted" mandatory="false"/>
+    <qualifier name="usedin" form="bare" mandatory="false"/>
+  </feature>
+  <feature key="protein_bind">
+    <qualifier name="bound_moiety" form="quoted" mandatory="true"/>
+    <qualifier name="citation" form="quoted" mandatory="false"/>
+    <qualifier name="db_xref" form="quoted" mandatory="false"/>
+    <qualifier name="evidence" form="bare" mandatory="false"/>
+    <qualifier name="function" form="quoted" mandatory="false"/>
+    <qualifier name="gene" form="quoted" mandatory="false"/>
+    <qualifier name="label" form="bare" mandatory="false"/>
+    <qualifier name="map" form="quoted" mandatory="false"/>
+    <qualifier name="partial" form="empty" mandatory="false"/>
+    <qualifier name="note" form="quoted" mandatory="false"/>
+    <qualifier name="standard_name" form="quoted" mandatory="false"/>
+    <qualifier name="usedin" form="bare" mandatory="false"/>
+  </feature>
+  <feature key="rRNA">
+    <qualifier name="citation" form="quoted" mandatory="false"/>
+    <qualifier name="db_xref" form="quoted" mandatory="false"/>
+    <qualifier name="evidence" form="bare" mandatory="false"/>
+    <qualifier name="function" form="quoted" mandatory="false"/>
+    <qualifier name="gene" form="quoted" mandatory="false"/>
+    <qualifier name="label" form="bare" mandatory="false"/>
+    <qualifier name="map" form="quoted" mandatory="false"/>
+    <qualifier name="note" form="quoted" mandatory="false"/>
+    <qualifier name="partial" form="empty" mandatory="false"/>
+    <qualifier name="product" form="quoted" mandatory="false"/>
+    <qualifier name="pseudo" form="empty" mandatory="false"/>
+    <qualifier name="standard_name" form="quoted" mandatory="false"/>
+    <qualifier name="usedin" form="bare" mandatory="false"/>
+  </feature>
+  <feature key="rep_origin">
+    <qualifier name="citation" form="quoted" mandatory="false"/>
+    <qualifier name="db_xref" form="quoted" mandatory="false"/>
+    <qualifier name="direction" form="bare" mandatory="false"/>
+    <qualifier name="evidence" form="bare" mandatory="false"/>
+    <qualifier name="gene" form="quoted" mandatory="false"/>
+    <qualifier name="label" form="bare" mandatory="false"/>
+    <qualifier name="map" form="quoted" mandatory="false"/>
+    <qualifier name="note" form="quoted" mandatory="false"/>
+    <qualifier name="partial" form="empty" mandatory="false"/>
+    <qualifier name="standard_name" form="quoted" mandatory="false"/>
+    <qualifier name="usedin" form="bare" mandatory="false"/>
+  </feature>
+  <feature key="repeat_region">
+    <qualifier name="citation" form="quoted" mandatory="false"/>
+    <qualifier name="db_xref" form="quoted" mandatory="false"/>
+    <qualifier name="evidence" form="bare" mandatory="false"/>
+    <qualifier name="function" form="quoted" mandatory="false"/>
+    <qualifier name="gene" form="quoted" mandatory="false"/>
+    <qualifier name="label" form="bare" mandatory="false"/>
+    <qualifier name="map" form="quoted" mandatory="false"/>
+    <qualifier name="note" form="quoted" mandatory="false"/>
+    <qualifier name="partial" form="empty" mandatory="false"/>
+    <qualifier name="rpt_family" form="quoted" mandatory="false"/>
+    <qualifier name="rpt_type" form="bare" mandatory="false"/>
+    <qualifier name="rpt_unit" form="bare" mandatory="false"/>
+    <qualifier name="standard_name" form="quoted" mandatory="false"/>
+    <qualifier name="usedin" form="bare" mandatory="false"/>
+  </feature>
+  <feature key="repeat_unit">
+    <qualifier name="citation" form="quoted" mandatory="false"/>
+    <qualifier name="db_xref" form="quoted" mandatory="false"/>
+    <qualifier name="evidence" form="bare" mandatory="false"/>
+    <qualifier name="function" form="quoted" mandatory="false"/>
+    <qualifier name="gene" form="quoted" mandatory="false"/>
+    <qualifier name="label" form="bare" mandatory="false"/>
+    <qualifier name="map" form="quoted" mandatory="false"/>
+    <qualifier name="note" form="quoted" mandatory="false"/>
+    <qualifier name="partial" form="empty" mandatory="false"/>
+    <qualifier name="rpt_family" form="quoted" mandatory="false"/>
+    <qualifier name="rpt_type" form="bare" mandatory="false"/>
+    <qualifier name="rpt_unit" form="bare" mandatory="false"/>
+    <qualifier name="usedin" form="bare" mandatory="false"/>
+  </feature>
+  <feature key="satellite">
+    <qualifier name="citation" form="quoted" mandatory="false"/>
+    <qualifier name="db_xref" form="quoted" mandatory="false"/>
+    <qualifier name="evidence" form="bare" mandatory="false"/>
+    <qualifier name="gene" form="quoted" mandatory="false"/>
+    <qualifier name="label" form="bare" mandatory="false"/>
+    <qualifier name="map" form="quoted" mandatory="false"/>
+    <qualifier name="note" form="quoted" mandatory="false"/>
+    <qualifier name="partial" form="empty" mandatory="false"/>
+    <qualifier name="rpt_type" form="bare" mandatory="false"/>
+    <qualifier name="rpt_family" form="quoted" mandatory="false"/>
+    <qualifier name="rpt_unit" form="bare" mandatory="false"/>
+    <qualifier name="standard_name" form="quoted" mandatory="false"/>
+    <qualifier name="usedin" form="bare" mandatory="false"/>
+  </feature>
+  <feature key="scRNA">
+    <qualifier name="citation" form="quoted" mandatory="false"/>
+    <qualifier name="db_xref" form="quoted" mandatory="false"/>
+    <qualifier name="evidence" form="bare" mandatory="false"/>
+    <qualifier name="function" form="quoted" mandatory="false"/>
+    <qualifier name="gene" form="quoted" mandatory="false"/>
+    <qualifier name="label" form="bare" mandatory="false"/>
+    <qualifier name="map" form="quoted" mandatory="false"/>
+    <qualifier name="note" form="quoted" mandatory="false"/>
+    <qualifier name="partial" form="empty" mandatory="false"/>
+    <qualifier name="product" form="quoted" mandatory="false"/>
+    <qualifier name="pseudo" form="empty" mandatory="false"/>
+    <qualifier name="standard_name" form="quoted" mandatory="false"/>
+    <qualifier name="usedin" form="bare" mandatory="false"/>
+  </feature>
+  <feature key="sig_peptide">
+    <qualifier name="citation" form="quoted" mandatory="false"/>
+    <qualifier name="db_xref" form="quoted" mandatory="false"/>
+    <qualifier name="evidence" form="bare" mandatory="false"/>
+    <qualifier name="function" form="quoted" mandatory="false"/>
+    <qualifier name="gene" form="quoted" mandatory="false"/>
+    <qualifier name="label" form="bare" mandatory="false"/>
+    <qualifier name="map" form="quoted" mandatory="false"/>
+    <qualifier name="note" form="quoted" mandatory="false"/>
+    <qualifier name="partial" form="empty" mandatory="false"/>
+    <qualifier name="product" form="quoted" mandatory="false"/>
+    <qualifier name="pseudo" form="empty" mandatory="false"/>
+    <qualifier name="standard_name" form="quoted" mandatory="false"/>
+    <qualifier name="usedin" form="bare" mandatory="false"/>
+  </feature>
+  <feature key="snRNA">
+    <qualifier name="citation" form="quoted" mandatory="false"/>
+    <qualifier name="db_xref" form="quoted" mandatory="false"/>
+    <qualifier name="evidence" form="bare" mandatory="false"/>
+    <qualifier name="function" form="quoted" mandatory="false"/>
+    <qualifier name="gene" form="quoted" mandatory="false"/>
+    <qualifier name="label" form="bare" mandatory="false"/>
+    <qualifier name="map" form="quoted" mandatory="false"/>
+    <qualifier name="note" form="quoted" mandatory="false"/>
+    <qualifier name="partial" form="empty" mandatory="false"/>
+    <qualifier name="product" form="quoted" mandatory="false"/>
+    <qualifier name="pseudo" form="empty" mandatory="false"/>
+    <qualifier name="standard_name" form="quoted" mandatory="false"/>
+    <qualifier name="usedin" form="bare" mandatory="false"/>
+  </feature>
+  <feature key="source">
+    <qualifier name="organism" form="quoted" mandatory="true"/>
+    <qualifier name="cell_line" form="quoted" mandatory="false"/>
+    <qualifier name="cell_type" form="quoted" mandatory="false"/>
+    <qualifier name="chloroplast" form="empty" mandatory="false"/>
+    <qualifier name="chromoplast" form="empty" mandatory="false"/>
+    <qualifier name="chromosome" form="quoted" mandatory="false"/>
+    <qualifier name="citation" form="quoted" mandatory="false"/>
+    <qualifier name="clone" form="quoted" mandatory="false"/>
+    <qualifier name="clone_lib" form="quoted" mandatory="false"/>
+    <qualifier name="country" form="quoted" mandatory="false"/>
+    <qualifier name="cultivar" form="quoted" mandatory="false"/>
+    <qualifier name="cyanelle" form="empty" mandatory="false"/>
+    <qualifier name="db_xref" form="quoted" mandatory="false"/>
+    <qualifier name="dev_stage" form="quoted" mandatory="false"/>
+    <qualifier name="evidence" form="bare" mandatory="false"/>
+    <qualifier name="focus" form="empty" mandatory="false"/>
+    <qualifier name="frequency" form="bare" mandatory="false"/>
+    <qualifier name="germline" form="empty" mandatory="false"/>
+    <qualifier name="haplotype" form="quoted" mandatory="false"/>
+    <qualifier name="lab_host" form="quoted" mandatory="false"/>
+    <qualifier name="insertion_seq" form="quoted" mandatory="false"/>
+    <qualifier name="isolate" form="quoted" mandatory="false"/>
+    <qualifier name="kinetoplast" form="empty" mandatory="false"/>
+    <qualifier name="label" form="bare" mandatory="false"/>
+    <qualifier name="macronuclear" form="empty" mandatory="false"/>
+    <qualifier name="map" form="quoted" mandatory="false"/>
+    <qualifier name="mitochondrion" form="empty" mandatory="false"/>
+    <qualifier name="note" form="quoted" mandatory="false"/>
+    <qualifier name="organelle" form="quoted" mandatory="false"/>
+    <qualifier name="plasmid" form="quoted" mandatory="false"/>
+    <qualifier name="pop_variant" form="quoted" mandatory="false"/>
+    <qualifier name="proviral" form="empty" mandatory="false"/>
+    <qualifier name="rearranged" form="empty" mandatory="false"/>
+    <qualifier name="sequenced_mol" form="quoted" mandatory="false"/>
+    <qualifier name="serotype" form="quoted" mandatory="false"/>
+    <qualifier name="sex" form="quoted" mandatory="false"/>
+    <qualifier name="specimen_voucher" form="quoted" mandatory="false"/>
+    <qualifier name="specific_host" form="quoted" mandatory="false"/>
+    <qualifier name="strain" form="quoted" mandatory="false"/>
+    <qualifier name="sub_clone" form="quoted" mandatory="false"/>
+    <qualifier name="sub_species" form="quoted" mandatory="false"/>
+    <qualifier name="sub_strain" form="quoted" mandatory="false"/>
+    <qualifier name="tissue_lib" form="quoted" mandatory="false"/>
+    <qualifier name="tissue_type" form="quoted" mandatory="false"/>
+    <qualifier name="transposon" form="quoted" mandatory="false"/>
+    <qualifier name="usedin" form="bare" mandatory="false"/>
+    <qualifier name="variety" form="quoted" mandatory="false"/>
+    <qualifier name="virion" form="bare" mandatory="false"/>
+  </feature>
+  <feature key="stem_loop">
+    <qualifier name="citation" form="quoted" mandatory="false"/>
+    <qualifier name="db_xref" form="quoted" mandatory="false"/>
+    <qualifier name="evidence" form="bare" mandatory="false"/>
+    <qualifier name="function" form="quoted" mandatory="false"/>
+    <qualifier name="gene" form="quoted" mandatory="false"/>
+    <qualifier name="label" form="bare" mandatory="false"/>
+    <qualifier name="map" form="quoted" mandatory="false"/>
+    <qualifier name="note" form="quoted" mandatory="false"/>
+    <qualifier name="partial" form="empty" mandatory="false"/>
+    <qualifier name="standard_name" form="quoted" mandatory="false"/>
+    <qualifier name="usedin" form="bare" mandatory="false"/>
+  </feature>
+  <feature key="tRNA">
+    <qualifier name="anticodon" form="bare" mandatory="false"/>
+    <qualifier name="citation" form="quoted" mandatory="false"/>
+    <qualifier name="db_xref" form="quoted" mandatory="false"/>
+    <qualifier name="evidence" form="bare" mandatory="false"/>
+    <qualifier name="function" form="quoted" mandatory="false"/>
+    <qualifier name="gene" form="quoted" mandatory="false"/>
+    <qualifier name="label" form="bare" mandatory="false"/>
+    <qualifier name="map" form="quoted" mandatory="false"/>
+    <qualifier name="note" form="quoted" mandatory="false"/>
+    <qualifier name="partial" form="empty" mandatory="false"/>
+    <qualifier name="product" form="quoted" mandatory="false"/>
+    <qualifier name="pseudo" form="empty" mandatory="false"/>
+    <qualifier name="standard_name" form="quoted" mandatory="false"/>
+    <qualifier name="usedin" form="bare" mandatory="false"/>
+  </feature>
+  <feature key="terminator">
+    <qualifier name="citation" form="quoted" mandatory="false"/>
+    <qualifier name="db_xref" form="quoted" mandatory="false"/>
+    <qualifier name="evidence" form="bare" mandatory="false"/>
+    <qualifier name="gene" form="quoted" mandatory="false"/>
+    <qualifier name="label" form="bare" mandatory="false"/>
+    <qualifier name="map" form="quoted" mandatory="false"/>
+    <qualifier name="note" form="quoted" mandatory="false"/>
+    <qualifier name="partial" form="empty" mandatory="false"/>
+    <qualifier name="standard_name" form="quoted" mandatory="false"/>
+    <qualifier name="usedin" form="bare" mandatory="false"/>
+  </feature>
+  <feature key="transit_peptide">
+    <qualifier name="citation" form="quoted" mandatory="false"/>
+    <qualifier name="db_xref" form="quoted" mandatory="false"/>
+    <qualifier name="evidence" form="bare" mandatory="false"/>
+    <qualifier name="function" form="quoted" mandatory="false"/>
+    <qualifier name="gene" form="quoted" mandatory="false"/>
+    <qualifier name="label" form="bare" mandatory="false"/>
+    <qualifier name="map" form="quoted" mandatory="false"/>
+    <qualifier name="note" form="quoted" mandatory="false"/>
+    <qualifier name="partial" form="empty" mandatory="false"/>
+    <qualifier name="product" form="quoted" mandatory="false"/>
+    <qualifier name="pseudo" form="empty" mandatory="false"/>
+    <qualifier name="standard_name" form="quoted" mandatory="false"/>
+    <qualifier name="usedin" form="bare" mandatory="false"/>
+  </feature>
+  <feature key="unsure">
+    <qualifier name="citation" form="quoted" mandatory="false"/>
+    <qualifier name="db_xref" form="quoted" mandatory="false"/>
+    <qualifier name="evidence" form="bare" mandatory="false"/>
+    <qualifier name="gene" form="quoted" mandatory="false"/>
+    <qualifier name="label" form="bare" mandatory="false"/>
+    <qualifier name="map" form="quoted" mandatory="false"/>
+    <qualifier name="note" form="quoted" mandatory="false"/>
+    <qualifier name="replace" form="quoted" mandatory="false"/>
+    <qualifier name="usedin" form="bare" mandatory="false"/>
+  </feature>
+  <feature key="variation">
+    <qualifier name="allele" form="quoted" mandatory="false"/>
+    <qualifier name="citation" form="quoted" mandatory="false"/>
+    <qualifier name="db_xref" form="quoted" mandatory="false"/>
+    <qualifier name="evidence" form="bare" mandatory="false"/>
+    <qualifier name="frequency" form="bare" mandatory="false"/>
+    <qualifier name="gene" form="quoted" mandatory="false"/>
+    <qualifier name="label" form="bare" mandatory="false"/>
+    <qualifier name="map" form="quoted" mandatory="false"/>
+    <qualifier name="note" form="quoted" mandatory="false"/>
+    <qualifier name="partial" form="empty" mandatory="false"/>
+    <qualifier name="phenotype" form="quoted" mandatory="false"/>
+    <qualifier name="product" form="quoted" mandatory="false"/>
+    <qualifier name="replace" form="quoted" mandatory="false"/>
+    <qualifier name="standard_name" form="quoted" mandatory="false"/>
+    <qualifier name="usedin" form="bare" mandatory="false"/>
+  </feature>
+</features>

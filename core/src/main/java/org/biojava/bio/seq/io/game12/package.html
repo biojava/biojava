@@ -1,0 +1,26 @@
+<body>
+<p>
+Event-driven parsing system for the Gene Annotation Markup Elements (GAME).  It
+uses the StAX API developed by Thomase Down and is extensively derived
+from code he and others wrote for the XFF parser. This is an update that is targetted 
+at the GAME 1.2 proposal.  It was written specifically to parse annotation files from
+the Gadfly Drosophila Genome Annotation Project although it can probably be
+readily extended to other GAME files.
+</p>
+<p>
+You should be aware that this parser doesn't set locations in the templates for
+<annotation> and <feature_set> elements.  These are inferred from the exons
+represented in <feature_span> elements and the data is not readily available to
+the parent element during the parser run.  In my only implementation, I have a
+pass in the makeSequence method of the SeqIOListener class that goes thru' to 
+resolve these details.
+</p>
+<p>
+There are two base classes in this release.  The first is the StAXFeatureHandler
+which is the base class for elements that intend to create new Feature 
+objects.  Then there is the StAXPropertyHandler class that is base class 
+for element handlers that only extend properties of the existing feature. All
+classes should be subclassed from one of these.
+</p>
+</body>
+

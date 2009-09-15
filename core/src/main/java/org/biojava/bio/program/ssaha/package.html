@@ -1,0 +1,18 @@
+<body>
+SSAHA sequence searching API.
+
+<h2>Overview</h2>
+
+<p>
+SSAHA is <u>S</u>equence <u>S</u>earching <u>A</u>lgorithm by
+<u>Ha</u>shing. The idea is to take a sequence database, such as EMBL,
+walk over all of the sequences using a window size and step size, represent
+each of these same-sized fragments as a bit-string, and use the bit-string
+as an index into a hash-table. The hash-table is used to store the location
+of every window (sequence and position). Search sequences are encoded as
+bit-patterns in the same manner, and then this is used as an index into the
+table to fetch all hits. Finaly, these hits are sorted and potentialy
+merged to produce HSPs.
+</p>
+
+</body>
