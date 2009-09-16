@@ -319,7 +319,7 @@ public class StructureTools {
 			} else {
 				// does not seem to be so let's assume it is
 				//  nonstandard aminoacid and label it "X"
-				logger.warning("unknown group name "+groupCode3 );
+				//logger.warning("unknown group name "+groupCode3 );
 				aminoCode1 = UNKNOWN_GROUP_LABEL;
 			}
 		}
