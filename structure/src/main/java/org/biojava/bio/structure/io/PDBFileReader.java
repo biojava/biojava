@@ -112,28 +112,28 @@ import org.biojava.utils.io.InputStreamProvider;
  */
 public class PDBFileReader implements StructureIOFile {
 
-// a list of big pdb files for testing
-//  "1htq",
-//  "1c2w",
-//  "1ffk",
-//  "1giy",
-//  "1j5a",
-//  "1jj2",
-//  "1jzx",
-//  "1jzy",
-//  "1jzz",
-//  "1k01",
-//  "1k73",
-//  "1k8a",
-//  "1k9m",
-//  "1kc8",
-//  "1kd1",
-//  "1kqs",
-//  "1m1k",
-//  "1m90",
-//  "1mkz",
-//  "1ml5",
-//  "1n8r",
+	// a list of big pdb files for testing
+	//  "1htq",
+	//  "1c2w",
+	//  "1ffk",
+	//  "1giy",
+	//  "1j5a",
+	//  "1jj2",
+	//  "1jzx",
+	//  "1jzy",
+	//  "1jzz",
+	//  "1k01",
+	//  "1k73",
+	//  "1k8a",
+	//  "1k9m",
+	//  "1kc8",
+	//  "1kd1",
+	//  "1kqs",
+	//  "1m1k",
+	//  "1m90",
+	//  "1mkz",
+	//  "1ml5",
+	//  "1n8r",
 
 
 
@@ -143,10 +143,10 @@ public class PDBFileReader implements StructureIOFile {
 	boolean parseSecStruc;
 	boolean autoFetch;
 	boolean parseCAOnly;
-    boolean alignSeqRes;
-    boolean pdbDirectorySplit;
-    
-    public static final String lineSplit = System.getProperty("file.separator");
+	boolean alignSeqRes;
+	boolean pdbDirectorySplit;
+
+	public static final String lineSplit = System.getProperty("file.separator");
 
 
 	public static void main(String[] args){
@@ -193,47 +193,47 @@ public class PDBFileReader implements StructureIOFile {
 		extensions.add(".pdb.Z");
 		parseSecStruc = false;
 		autoFetch     = false;
-        parseCAOnly   = false;
-        alignSeqRes   = true;
-        pdbDirectorySplit = false;
+		parseCAOnly   = false;
+		alignSeqRes   = true;
+		pdbDirectorySplit = false;
 	}
 
 
-    /** return the flag if only the CA atoms should be parsed
-     *
-     * @return flag if CA only should be read
-     */
+	/** return the flag if only the CA atoms should be parsed
+	 *
+	 * @return flag if CA only should be read
+	 */
 	public boolean isParseCAOnly() {
-        return parseCAOnly;
-    }
+		return parseCAOnly;
+	}
 
 	/** only the CA atoms should be parsed from the PDB file
-     *
-     * @param parseCAOnly
+	 *
+	 * @param parseCAOnly
 	 */
-    public void setParseCAOnly(boolean parseCAOnly) {
-        this.parseCAOnly = parseCAOnly;
-    }
+	public void setParseCAOnly(boolean parseCAOnly) {
+		this.parseCAOnly = parseCAOnly;
+	}
 
-    /** get the flag if the SEQRES and ATOM amino acids are going to be aligned
-     *
-     * @return flag
-     */
-    public boolean isAlignSeqRes() {
-        return alignSeqRes;
-    }
-
-
-    /** set the flag if the SEQRES and ATOM amino acids should be aligned and linked
-     *
-     * @param alignSeqRes
-     */
-    public void setAlignSeqRes(boolean alignSeqRes) {
-        this.alignSeqRes = alignSeqRes;
-    }
+	/** get the flag if the SEQRES and ATOM amino acids are going to be aligned
+	 *
+	 * @return flag
+	 */
+	public boolean isAlignSeqRes() {
+		return alignSeqRes;
+	}
 
 
-    /** should the parser to fetch missing PDB files from the EBI FTP server automatically?
+	/** set the flag if the SEQRES and ATOM amino acids should be aligned and linked
+	 *
+	 * @param alignSeqRes
+	 */
+	public void setAlignSeqRes(boolean alignSeqRes) {
+		this.alignSeqRes = alignSeqRes;
+	}
+
+
+	/** should the parser to fetch missing PDB files from the EBI FTP server automatically?
 	 *  default is false
 	 * @return flag
 	 */
@@ -300,7 +300,7 @@ public class PDBFileReader implements StructureIOFile {
 	public void clearExtensions(){
 		extensions.clear();
 	}
-	
+
 	/** Flag that defines if the PDB directory is containing all PDB files or is split into sub dirs (like the FTP site).
 	 *  
 	 * @return boolean. default is false (all files in one directory)
@@ -328,6 +328,10 @@ public class PDBFileReader implements StructureIOFile {
 	private InputStream getInputStream(String pdbId)
 	throws IOException
 	{
+
+		if ( pdbId.length() < 4)
+			throw new IOException("the provided ID does not look like a PDB ID : " + pdbId);
+
 		//System.out.println("checking file");
 
 		// compression formats supported
@@ -345,20 +349,16 @@ public class PDBFileReader implements StructureIOFile {
 		String fpath ;
 		String ppath ;
 
-		// pdb files are split into subdirectories based on their middle position...
-		
 		if ( pdbDirectorySplit){
-			if ( pdbId.length() < 4)
-				throw new IOException("the provided ID does not look like a PDB ID : " + pdbId);
-					
+			// pdb files are split into subdirectories based on their middle position...
 			String middle = pdbId.substring(1,3).toLowerCase();
 			fpath = path+lineSplit + middle + lineSplit + pdbId;
-			 ppath = path +lineSplit +  middle + lineSplit + "pdb"+pdbId;
+			ppath = path +lineSplit +  middle + lineSplit + "pdb"+pdbId;
 		} else {
-				fpath = path+lineSplit + pdbId;
-			 ppath = path +lineSplit + "pdb"+pdbId;
+			fpath = path+lineSplit + pdbId;
+			ppath = path +lineSplit + "pdb"+pdbId;
 		}
-		
+
 		String[] paths = new String[]{fpath,ppath};
 
 		for ( int p=0;p<paths.length;p++ ){
@@ -403,9 +403,9 @@ public class PDBFileReader implements StructureIOFile {
 			path = ".";
 		}
 
-		
+
 		File tempFile ;
-		
+
 		if ( pdbDirectorySplit) {
 			String middle = pdbId.substring(1,3).toLowerCase();
 			String dir = path+lineSplit+middle;
@@ -413,11 +413,11 @@ public class PDBFileReader implements StructureIOFile {
 			if ( ! directoryCheck.exists()){
 				directoryCheck.mkdir();
 			}
-			
+
 			tempFile =new File(dir+lineSplit+"pdb"+ pdbId.toLowerCase()+".ent.gz");
-			
+
 		} else {
-			
+
 			tempFile = new File(path+lineSplit+"pdb"+pdbId.toLowerCase()+".ent.gz");
 		}
 		File pdbHome = new File(path);
@@ -431,7 +431,7 @@ public class PDBFileReader implements StructureIOFile {
 		String ftp = String.format("ftp://ftp.wwpdb.org/pub/pdb/data/structures/all/pdb/pdb%s.ent.gz", pdbId.toLowerCase());
 
 		System.out.println("Fetching " + ftp);
-		
+
 		try {
 			URL url = new URL(ftp);
 			InputStream conn = new GZIPInputStream(url.openStream());
@@ -495,9 +495,9 @@ public class PDBFileReader implements StructureIOFile {
 
 		PDBFileParser pdbpars = new PDBFileParser();
 		pdbpars.setParseSecStruc(parseSecStruc);
-        pdbpars.setAlignSeqRes(alignSeqRes);
+		pdbpars.setAlignSeqRes(alignSeqRes);
 
-        pdbpars.setParseCAOnly(parseCAOnly);
+		pdbpars.setParseCAOnly(parseCAOnly);
 
 
 		Structure struc = pdbpars.parsePDBFile(inStream) ;
@@ -532,8 +532,8 @@ public class PDBFileReader implements StructureIOFile {
 
 		PDBFileParser pdbpars = new PDBFileParser();
 		pdbpars.setParseSecStruc(parseSecStruc);
-        pdbpars.setAlignSeqRes(alignSeqRes);
-        pdbpars.setParseCAOnly(parseCAOnly);
+		pdbpars.setAlignSeqRes(alignSeqRes);
+		pdbpars.setParseCAOnly(parseCAOnly);
 		Structure struc = pdbpars.parsePDBFile(inStream) ;
 		return struc ;
 
