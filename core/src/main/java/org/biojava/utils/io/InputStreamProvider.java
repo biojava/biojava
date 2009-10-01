@@ -25,6 +25,7 @@ package org.biojava.utils.io;
 import java.io.EOFException;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Enumeration;
@@ -59,10 +60,19 @@ public class InputStreamProvider {
      * The magic number found at the start of a GZIP stream.
      */
     public static final int GZIP_MAGIC = 0x1f8b;
+    public static final String CACHE_PROPERTY = "biojava.cache.files";
+    boolean cacheRawFiles ;
     
-    
+    FlatFileCache cache ;
     public InputStreamProvider() {
         super();
+        cacheRawFiles = false;
+        
+        String prop = System.getProperty(CACHE_PROPERTY);
+        if ( prop != null && prop.equals("true")) {
+        	cacheRawFiles = true;
+        	cache = FlatFileCache.getInstance();
+        }
         
     }
     
@@ -112,13 +122,14 @@ public class InputStreamProvider {
     public InputStream getInputStream(File f) 
     throws IOException
     {
+    	
         // use the magic numbers to determine the compression type, 
         // use file extension only as 2nd choice 
         
         int magic = 0;
-        
+                     
         try {
-            InputStream test = new FileInputStream(f);
+        	 InputStream test = getInputStreamFromFile(f);
             magic = getMagicNumber(test);
             test.close();
         } catch (Exception e){
@@ -184,18 +195,41 @@ public class InputStreamProvider {
         else {
            
             // no particular extension found, assume that it is an uncompressed file
-            inputStream = new FileInputStream(f);
+            inputStream = getInputStreamFromFile(f);
         }
         
         return inputStream;
     }
     
 
+    /** Wrapper for new FileInputStream. if System.property biojava.cache.files is set, will try to load files from memory cache.
+     * 
+     * @param f
+     * @return
+     * @throws FileNotFoundException
+     */
+    private InputStream getInputStreamFromFile(File f) throws FileNotFoundException{
+    	InputStream stream ;
+    
+    	   if ( cacheRawFiles ){
+    		   stream = cache.getInputStream(f.getAbsolutePath());
+    		   
+    		   if ( stream == null){
+    			   cache.addToCache(f.getAbsolutePath(),f);
+    			   stream = cache.getInputStream(f.getAbsolutePath());
+    		   }
+    		   
+    	   } else {
+    		   stream = new FileInputStream(f);    		   
+    	   }
+    	   return stream;
+    }
+    
     
     private InputStream openCompressedFile(File f)
     throws IOException{
         
-        InputStream is           = new FileInputStream(f);
+        InputStream is           =  getInputStreamFromFile(f);
         InputStream inputStream =  new UncompressInputStream(is);
         return inputStream;
     }
@@ -203,7 +237,7 @@ public class InputStreamProvider {
     private InputStream openGZIPFile(File f) 
     throws IOException{
         
-        FileInputStream is      = new FileInputStream(f);
+        InputStream is      = getInputStreamFromFile(f);
         InputStream inputStream = new GZIPInputStream(is);
         return inputStream;
     }
