@@ -94,6 +94,8 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 
 	String current_nmr_model ;
 
+	private boolean headerOnly;
+
 	public static Logger logger =  Logger.getLogger("org.biojava.bio.structure");
 
 	public  SimpleMMcifConsumer(){
@@ -102,6 +104,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 
 		alignSeqRes = true;
 		parseCAOnly = false;
+		headerOnly  = false;
 
 	}
 
@@ -172,7 +175,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		Group group;
 		if ( recordName.equals("ATOM") ) {
 			if (aminoCode1 == null)  {
-				// it is a nucleotidee
+				// it is a nucleotide
 				NucleotideImpl nu = new NucleotideImpl();
 				group = nu;
 				nu.setId(seq_id);
@@ -255,11 +258,144 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 
 	public void newAtomSite(AtomSite atom) {
 
-		atomCount++;
+		// Warning: getLabel_asym_id is not the "chain id" in the PDB file
+		// it is the internally used chain id.
+		// later on we will fix this...
+
+		// later one needs to map the asym id to the pdb_strand_id
 
 		//TODO: add support for MAX_ATOMS
-		String fullname = fixFullAtomName(atom.getLabel_atom_id());
 
+		boolean startOfNewChain = false;
+
+		String chain_id      = atom.getLabel_asym_id();		
+		String fullname      = fixFullAtomName(atom.getLabel_atom_id());
+		String recordName    = atom.getGroup_PDB();
+		String residueNumber = atom.getAuth_seq_id();
+		// the 3-letter name of the group:
+		String groupCode3    = atom.getLabel_comp_id();
+
+		Character aminoCode1 = null;
+		if ( recordName.equals("ATOM") )
+			aminoCode1 = StructureTools.get1LetterCode(groupCode3);
+
+		String insCode = atom.getPdbx_PDB_ins_code();
+		if (!  insCode.equals("?")) {
+			residueNumber += insCode;
+		}
+		// we store the internal seq id in the Atom._id field
+		// this is not a PDB file field but we need this to internally assign the insertion codes later
+		// from the pdbx_poly_seq entries..
+
+		long seq_id = -1;
+		try {
+			seq_id = Long.parseLong(atom.getLabel_seq_id());
+		} catch (NumberFormatException e){
+
+		}
+
+		if (current_chain == null) {
+			current_chain = new ChainImpl();
+			current_chain.setName(chain_id);
+			current_model.add(current_chain);
+			startOfNewChain = true;
+		}
+
+		if ( ! chain_id.equals(current_chain.getName()) ) {
+			startOfNewChain = true;
+			// end up old chain...
+			current_chain.addGroup(current_group);
+
+			// see if old chain is known ...
+			Chain testchain ;
+			testchain = isKnownChain(current_chain.getName(),current_model);
+			if ( testchain == null) {
+				//System.out.println("new chain, adding to current model..." + current_chain.getName());
+				current_model.add(current_chain);
+			}
+
+
+			//see if chain_id of new residue is one of the previous chains ...
+			testchain = isKnownChain(chain_id,current_model);
+			if (testchain != null) {
+				//System.out.println("already known..."+ chain_id);
+				current_chain = (ChainImpl)testchain ;
+
+			} else {
+				//System.out.println("creating new chain..."+ chain_id);
+
+				//current_model.add(current_chain);
+				current_chain = new ChainImpl();
+				current_chain.setName(chain_id);
+			}
+		}
+
+		String nmrModel = atom.getPdbx_PDB_model_num();
+
+		if ( current_nmr_model == null) {
+			current_nmr_model = nmrModel;
+		}
+
+		if (! current_nmr_model.equals(nmrModel)){
+			current_nmr_model = nmrModel;
+
+			// add previous data
+			if ( current_chain != null ) {
+				current_chain.addGroup(current_group);
+			}
+
+			// we came to the beginning of a new NMR model
+			structure.setNmr(true);
+			structure.addModel(current_model);
+			current_model = new ArrayList<Chain>();
+			current_chain = null;
+			current_group = null;
+		}
+
+		if (current_group == null) {
+
+			current_group = getNewGroup(recordName,aminoCode1,seq_id);
+
+			current_group.setPDBCode(residueNumber);
+			try { 
+				current_group.setPDBName(groupCode3);
+			} catch (PDBParseException e){
+				System.err.println(e.getMessage());
+			}
+		}
+
+		if ( startOfNewChain){
+			current_group = getNewGroup(recordName,aminoCode1,seq_id);
+
+			current_group.setPDBCode(residueNumber);
+			try {
+				current_group.setPDBName(groupCode3);
+			} catch (PDBParseException e){
+				e.printStackTrace();
+			}
+		}
+
+		// check if residue number is the same ...
+		// insertion code is part of residue number
+		if ( ! residueNumber.equals(current_group.getPDBCode())) {
+			//System.out.println("end of residue: "+current_group.getPDBCode()+" "+residueNumber);
+			current_chain.addGroup(current_group);
+
+			current_group = getNewGroup(recordName,aminoCode1,seq_id);
+
+			current_group.setPDBCode(residueNumber);
+			try {
+				current_group.setPDBName(groupCode3);
+			} catch (PDBParseException e){
+				e.printStackTrace();
+			}
+
+		}
+		
+		if ( headerOnly)
+			return;
+
+		atomCount++;
 		//System.out.println("fixing atom name for  >" + atom.getLabel_atom_id() + "< >" + fullname + "<");
 
 		if ( parseCAOnly ){
@@ -273,151 +409,14 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		}
 
 
-		// Warning: getLabel_asym_id is not the "chain id" in the PDB file
-		// it is the internally used chain id.
-		// later on we will fix this...
+		
 
-		// later one needs to map the asym id to the pdb_strand_id
-		String chain_id      = atom.getLabel_asym_id();
+		//see if chain_id is one of the previous chains ...
 
-		// we store the internal seq id in the Atom._id field
-		// this is not a PDB file field but we need this to internally assign the insertion codes later
-		// from the pdbx_poly_seq entries..
+		Atom a = convertAtom(atom);
 
-		long seq_id = -1;
-		try {
-			seq_id = Long.parseLong(atom.getLabel_seq_id());
-		} catch (NumberFormatException e){
-
-		}
-
-		String nmrModel = atom.getPdbx_PDB_model_num();
-
-		String recordName    = atom.getGroup_PDB();
-		String residueNumber = atom.getAuth_seq_id();
-		//String residueNumber = atom.getLabel_seq_id();
-
-		String insCode = atom.getPdbx_PDB_ins_code();
-		if (!  insCode.equals("?")) {
-			residueNumber += insCode;
-		}
-
-		// the 3-letter name of the group:
-		String groupCode3    = atom.getLabel_comp_id();
-
-		Character aminoCode1 = null;
-		if ( recordName.equals("ATOM") )
-			aminoCode1 = StructureTools.get1LetterCode(groupCode3);
-
-
-
-		/*System.out.println(atom);
-        System.out.print("chain " + chain_id);
-        System.out.print(" record:" + recordName);
-        System.out.print(" nr:"+ residueNumber);
-        System.out.print(" group3:"+ groupCode3 );
-        System.out.println(" amino1:"+aminoCode1);
-		 */
-
-		try {
-			if ( current_nmr_model == null) {
-				current_nmr_model = nmrModel;
-			}
-
-			if (! current_nmr_model.equals(nmrModel)){
-				current_nmr_model = nmrModel;
-
-				// add previous data
-				if ( current_chain != null ) {
-					current_chain.addGroup(current_group);
-				}
-
-				// we came to the beginning of a new NMR model
-				structure.setNmr(true);
-				structure.addModel(current_model);
-				current_model = new ArrayList<Chain>();
-				current_chain = null;
-				current_group = null;
-			}
-
-
-			if (current_chain == null) {
-				current_chain = new ChainImpl();
-				current_chain.setName(chain_id);
-				current_model.add(current_chain);
-			}
-			if (current_group == null) {
-
-				current_group = getNewGroup(recordName,aminoCode1,seq_id);
-
-				current_group.setPDBCode(residueNumber);
-				current_group.setPDBName(groupCode3);
-			}
-
-			//System.out.println("chainid: >"+chain_id+"<, current_chain.id:"+ current_chain.getName() );
-			// check if chain id is the same
-			if ( ! chain_id.equals(current_chain.getName())){
-				//System.out.println("end of chain: "+current_chain.getName()+" >"+chain_id+"<");
-
-				// end up old chain...
-				current_chain.addGroup(current_group);
-
-				// see if old chain is known ...
-				Chain testchain ;
-				testchain = isKnownChain(current_chain.getName(),current_model);
-				if ( testchain == null) {
-					//System.out.println("new chain, adding to current model..." + current_chain.getName());
-					current_model.add(current_chain);
-				}
-
-
-				//see if chain_id of new residue is one of the previous chains ...
-				testchain = isKnownChain(chain_id,current_model);
-				if (testchain != null) {
-					//System.out.println("already known..."+ chain_id);
-					current_chain = (ChainImpl)testchain ;
-
-				} else {
-					//System.out.println("creating new chain..."+ chain_id);
-
-					//current_model.add(current_chain);
-					current_chain = new ChainImpl();
-					current_chain.setName(chain_id);
-				}
-
-				current_group = getNewGroup(recordName,aminoCode1,seq_id);
-
-				current_group.setPDBCode(residueNumber);
-
-				current_group.setPDBName(groupCode3);
-
-			}
-
-
-			// check if residue number is the same ...
-			// insertion code is part of residue number
-			if ( ! residueNumber.equals(current_group.getPDBCode())) {
-				//System.out.println("end of residue: "+current_group.getPDBCode()+" "+residueNumber);
-				current_chain.addGroup(current_group);
-
-				current_group = getNewGroup(recordName,aminoCode1,seq_id);
-
-				current_group.setPDBCode(residueNumber);
-				current_group.setPDBName(groupCode3);
-
-			}
-
-			//see if chain_id is one of the previous chains ...
-
-			Atom a = convertAtom(atom);
-
-			current_group.addAtom(a);
-			//System.out.println(current_group);
-
-		} catch (PDBParseException e){
-			logger.warning("could not parse AtomSite record " + atom + " due to: " + e.getMessage());
-			//e.printStackTrace();
-		}
+		current_group.addAtom(a);
+		//System.out.println(current_group);
 
 	}
 
@@ -504,9 +503,14 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		// a problem occurred earlier so current_chain = null ...
 		// most likely the buffered reader did not provide data ...
 		if ( current_chain != null ) {
+
 			current_chain.addGroup(current_group);
 			if (isKnownChain(current_chain.getName(),current_model) == null) {
 				current_model.add(current_chain);
+			}
+		} else {
+			if ( DEBUG){
+				System.err.println("current chain is null at end of document.");
 			}
 		}
 
@@ -538,9 +542,6 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		//structure.setConnections(connects);
 		//structure.setCompounds(compounds);
 		//linkChains2Compound(structure);
-
-
-
 		// fix the chain IDS in the current model:
 
 		Set<String> asymIds = asymStrandId.keySet();
@@ -672,38 +673,38 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 
 	public void newAuditAuthor(AuditAuthor aa){
 
-	   String name =  aa.getName();
+		String name =  aa.getName();
 
-	   StringBuffer famName = new StringBuffer();
-	   StringBuffer initials = new StringBuffer();
-	   boolean afterComma = false;
-	   for ( char c: name.toCharArray()) {
-	      if ( c == ' ')
-	         continue;
-	      if ( c == ','){
-	         afterComma = true;
-	         continue;
-	      }
+		StringBuffer famName = new StringBuffer();
+		StringBuffer initials = new StringBuffer();
+		boolean afterComma = false;
+		for ( char c: name.toCharArray()) {
+			if ( c == ' ')
+				continue;
+			if ( c == ','){
+				afterComma = true;
+				continue;
+			}
 
-	      if ( afterComma)
-	         initials.append(c);
-	      else
-	         famName.append(c);
-	   }
+			if ( afterComma)
+				initials.append(c);
+			else
+				famName.append(c);
+		}
 
-	   StringBuffer newaa = new StringBuffer();
-	   newaa.append(initials);
-	   newaa.append(famName);
+		StringBuffer newaa = new StringBuffer();
+		newaa.append(initials);
+		newaa.append(famName);
 
-	   PDBHeader header = structure.getPDBHeader();
-	   String auth = header.getAuthors();
-	   if (auth == null) {
-	      header.setAuthors(newaa.toString());
-	   }else {
-	      auth += "," + newaa.toString();
-	      header.setAuthors(auth);
+		PDBHeader header = structure.getPDBHeader();
+		String auth = header.getAuthors();
+		if (auth == null) {
+			header.setAuthors(newaa.toString());
+		}else {
+			auth += "," + newaa.toString();
+			header.setAuthors(auth);
 
-	   }
+		}
 	}
 
 	@SuppressWarnings("deprecation")
@@ -863,6 +864,9 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 	 */
 	public void newEntityPolySeq(EntityPolySeq epolseq) {
 
+		//if ( headerOnly)
+		//	return;
+
 		Entity e = getEntity(epolseq.getEntity_id());
 
 		if (e == null){
@@ -979,6 +983,9 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 	}
 	public void newPdbxPolySeqScheme(PdbxPolySeqScheme ppss) {
 
+		//if ( headerOnly)
+		//	return;
+
 		// replace the group asym ids with the real PDB ids!
 		replaceGroupSeqPos(ppss);
 
@@ -1001,6 +1008,9 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 
 
 	public void newPdbxNonPolyScheme(PdbxNonPolyScheme ppss) {
+
+		//if (headerOnly)
+		//	return;
 
 		// merge the EntityPolySeq info and the AtomSite chains into one...
 		//already known ignore:
@@ -1029,9 +1039,18 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 	public void newGenericData(String category, List<String> loopFields,
 			List<String> lineData) {
 
-	   if (DEBUG) {
-	      System.err.println("unhandled category so far: " + category);
-	   }
+		if (DEBUG) {
+			System.err.println("unhandled category so far: " + category);
+		}
+	}
+
+	public void setHeaderOnly(boolean headerOnly) {
+
+		this.headerOnly = headerOnly;
+	}
+
+	public boolean isHeaderOnly(){
+		return headerOnly;
 	}
 
 }

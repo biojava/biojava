@@ -69,6 +69,8 @@ public class MMCIFFileReader implements StructureIOFile {
 	boolean pdbDirectorySplit;
 	public static final String lineSplit = System.getProperty("file.separator");
 	
+	boolean headerOnly;
+	
 	public static void main(String[] args){
 		String filename =  "/Users/andreas/WORK/PDB/mmcif_files/a9/2a9w.cif.gz" ;
 
@@ -96,6 +98,7 @@ public class MMCIFFileReader implements StructureIOFile {
 		extensions.add(".mmcif.gz");
 
 		autoFetch     = false;
+		headerOnly    = false;
 
 	}
 
@@ -145,10 +148,11 @@ public class MMCIFFileReader implements StructureIOFile {
 
 		SimpleMMcifConsumer consumer = new SimpleMMcifConsumer();
 
+		consumer.setHeaderOnly(headerOnly);
+		
 		// The Consumer builds up the BioJava - structure object.
 		// you could also hook in your own and build up you own data model.
 		parser.addMMcifConsumer(consumer);
-
 
 		parser.parse(new BufferedReader(new InputStreamReader(inStream)));
 
@@ -341,6 +345,17 @@ public class MMCIFFileReader implements StructureIOFile {
 	 */
 	public void setPdbDirectorySplit(boolean pdbDirectorySplit) {
 		this.pdbDirectorySplit = pdbDirectorySplit;
+	}
+
+
+	public boolean isHeaderOnly() {
+		return headerOnly;
+	}
+
+
+	public void setHeaderOnly(boolean flag) {
+		headerOnly = flag;
+		
 	}
 
 

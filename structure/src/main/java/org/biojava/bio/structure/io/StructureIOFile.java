@@ -109,4 +109,16 @@ public interface StructureIOFile extends StructureIO {
 	 */
 	public Structure getStructureById(String pdbId) throws IOException;
 
+	
+	/** Get the flag to set to read only the header of the file during parsing.
+	 * 
+	 * @return
+	 */
+	public boolean isHeaderOnly();
+	
+	/** Set the flag to set to read only the header of the file during parsing.
+	 * 
+	 * @param flag
+	 */
+	public void setHeaderOnly(boolean flag);
 }

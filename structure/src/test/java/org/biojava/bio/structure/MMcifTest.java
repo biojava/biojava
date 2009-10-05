@@ -36,8 +36,27 @@ import junit.framework.TestCase;
 
 public class MMcifTest extends TestCase {
 
-	public void testLoad(){
+	protected boolean headerOnly;
 
+	public MMcifTest(){
+		super();
+		setHeaderOnly(false);
+	}
+
+
+
+	public boolean isHeaderOnly() {
+		return headerOnly;
+	}
+
+
+
+	public void setHeaderOnly(boolean headerOnly) {
+		this.headerOnly = headerOnly;
+	}
+
+	public void testLoad(){
+		
 
 		// test a simple protein
 		comparePDB2cif("5pti","A");
@@ -61,7 +80,7 @@ public class MMcifTest extends TestCase {
 	}
 
 
-	private void comparePDB2cif(String id, String chainId){
+	protected void comparePDB2cif(String id, String chainId){
 		String fileName = "/"+id+".cif";
 		InputStream inStream = this.getClass().getResourceAsStream(fileName);
 		assertNotNull(inStream);
@@ -69,7 +88,7 @@ public class MMcifTest extends TestCase {
 		MMcifParser parser = new SimpleMMcifParser();
 
 		SimpleMMcifConsumer consumer = new SimpleMMcifConsumer();
-
+		consumer.setHeaderOnly(headerOnly);
 		parser.addMMcifConsumer(consumer);
 
 		try {
@@ -89,6 +108,7 @@ public class MMcifTest extends TestCase {
 		assertNotNull(inStream);
 
 		PDBFileParser pdbpars = new PDBFileParser();
+		pdbpars.setHeaderOnly(headerOnly);
 		try {
 			pdbStructure = pdbpars.parsePDBFile(pinStream) ;
 		} catch (IOException e) {
@@ -116,22 +136,30 @@ public class MMcifTest extends TestCase {
 			Chain a_pdb = pdbStructure.getChainByPDB(chainId);
 			Chain a_cif = cifStructure.getChainByPDB(chainId);
 			//System.out.println(a_pdb.getAtomGroups());
-			//System.out.println(a_cif.getAtomGroups());
-
+			
+			//	System.out.println("pdb atom groups: " + a_cif.getAtomGroups(GroupType.AMINOACID).size());
+			//	System.out.println("cif atom groups: " + a_cif.getAtomGroups(GroupType.AMINOACID).size());
+			
 			//for (Group g: a_cif.getAtomGroups()){
 			//	System.out.println(g);
 			//}
 			//System.out.println("--");
 			String pdb_SEQseq = a_pdb.getSeqResSequence();
+			
 			String cif_SEQseq = a_cif.getSeqResSequence();
+			
 			assertEquals("the SEQRES sequences don;t match!", pdb_SEQseq,cif_SEQseq);
-
+			
+			assertEquals(" The nr of ATOM groups does not match!",a_pdb.getAtomGroups(GroupType.AMINOACID).size(),a_cif.getAtomGroups(GroupType.AMINOACID).size()  );
+			
 			// actually this check not necessarily works, since there can be waters in PDB that we don;t deal with yet in cif...
 			//assertEquals("the nr of ATOM record groups is not the same!" , a_pdb.getAtomLength(),a_cif.getAtomLength());
-			for (int i = 0 ; i < a_pdb.getAtomGroups(GroupType.AMINOACID).size(); i++){
+			for (int i = 0 ; i < a_pdb.getAtomGroups(GroupType.AMINOACID).size(); i++){				
 				Group gp = a_pdb.getAtomGroups(GroupType.AMINOACID).get(i);
-				Group gc = a_cif.getAtomGroups(GroupType.AMINOACID).get(i);
-				checkGroups(gp,gc);
+				
+				List<Group> cifGroups = a_cif.getAtomGroups(GroupType.AMINOACID);					
+				Group gc = cifGroups.get(i);
+				checkGroups(gp, gc);
 			}
 
 
@@ -165,9 +193,9 @@ public class MMcifTest extends TestCase {
 			//System.out.println(h1.toPDB());
 			//System.out.println(h2.toPDB());
 			if ( ! h1.toPDB().toUpperCase().equals(h2.toPDB().toUpperCase()) ){
-			   System.err.println(h1.toPDB());
-			   System.err.println(h2.toPDB());
-			  compareString(h1.toPDB(), h2.toPDB());
+				System.err.println(h1.toPDB());
+				System.err.println(h2.toPDB());
+				compareString(h1.toPDB(), h2.toPDB());
 			}
 			assertEquals("the PDBHeader.toPDB representation is not equivalent", h1.toPDB().toUpperCase(),h2.toPDB().toUpperCase());
 
@@ -184,7 +212,7 @@ public class MMcifTest extends TestCase {
 
 	private void checkGroups(Group g1, Group g2){
 
-	   //System.out.println("comparing " +g1 + " " + g2);
+		//System.out.print("comparing " +g1 + " " + g2);
 
 		assertEquals(g1.getType(),g2.getType());
 		assertEquals(g1.getPDBCode(),g2.getPDBCode());
@@ -193,18 +221,18 @@ public class MMcifTest extends TestCase {
 		assertEquals(g1.getAtoms().size(), g2.getAtoms().size());
 		if ( g1.has3D()){
 			try {
-			Atom a1 = g1.getAtom(0);
-			Atom a2 = g2.getAtom(0);
-			assertEquals(a1.getX(),a2.getX());
-			assertEquals(a1.getOccupancy(),a2.getOccupancy());
-			assertEquals(a1.getTempFactor(),a2.getTempFactor());
-			assertEquals(a1.getFullName(),a2.getFullName());
+				Atom a1 = g1.getAtom(0);
+				Atom a2 = g2.getAtom(0);
+				assertEquals(a1.getX(),a2.getX());
+				assertEquals(a1.getOccupancy(),a2.getOccupancy());
+				assertEquals(a1.getTempFactor(),a2.getTempFactor());
+				assertEquals(a1.getFullName(),a2.getFullName());
 			} catch (StructureException e){
 				fail(e.getMessage());
 			}
 
 		}
-
+		//System.out.println(" ... done");
 
 	}
 
@@ -244,7 +272,7 @@ public class MMcifTest extends TestCase {
 		for (int i =0 ; i < t.length() ; i++){
 			System.out.println(">"+t.charAt(i)+":"+ pdb.charAt(i)+"<");
 			if ( Character.toUpperCase(t.charAt(i)) != Character.toUpperCase(pdb.charAt(i))){
-			   System.out.println("Mismatch!");
+				System.out.println("Mismatch!");
 				break;
 			}
 		}

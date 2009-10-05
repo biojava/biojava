@@ -145,7 +145,8 @@ public class PDBFileReader implements StructureIOFile {
 	boolean parseCAOnly;
 	boolean alignSeqRes;
 	boolean pdbDirectorySplit;
-
+	boolean headerOnly;
+	
 	public static final String lineSplit = System.getProperty("file.separator");
 
 
@@ -196,6 +197,7 @@ public class PDBFileReader implements StructureIOFile {
 		parseCAOnly   = false;
 		alignSeqRes   = true;
 		pdbDirectorySplit = false;
+		headerOnly    = false;
 	}
 
 
@@ -496,7 +498,7 @@ public class PDBFileReader implements StructureIOFile {
 		PDBFileParser pdbpars = new PDBFileParser();
 		pdbpars.setParseSecStruc(parseSecStruc);
 		pdbpars.setAlignSeqRes(alignSeqRes);
-
+		pdbpars.setHeaderOnly(headerOnly);
 		pdbpars.setParseCAOnly(parseCAOnly);
 
 
@@ -534,9 +536,21 @@ public class PDBFileReader implements StructureIOFile {
 		pdbpars.setParseSecStruc(parseSecStruc);
 		pdbpars.setAlignSeqRes(alignSeqRes);
 		pdbpars.setParseCAOnly(parseCAOnly);
+		pdbpars.setHeaderOnly(headerOnly);
 		Structure struc = pdbpars.parsePDBFile(inStream) ;
 		return struc ;
 
+	}
+
+
+	public boolean isHeaderOnly() {
+		return headerOnly;
+	}
+
+
+	public void setHeaderOnly(boolean flag) {
+		headerOnly = flag;
+		
 	}
 
 }
