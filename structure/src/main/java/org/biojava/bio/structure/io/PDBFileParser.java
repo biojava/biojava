@@ -1524,11 +1524,12 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 			current_chain = new ChainImpl();
 			current_chain.setName(chain_id);
 			startOfNewChain = true;
+			current_model.add(current_chain);		
 		}
 
-		//System.out.println("chainid: >"+chain_id+"<, current_chain.id:"+ current_chain.getName() );
+
 		if ( ! chain_id.equals(current_chain.getName()) ) {
-			
+
 			startOfNewChain = true;
 
 			// end up old chain...
@@ -1537,13 +1538,30 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 			// see if old chain is known ...
 			Chain testchain ;
 			testchain = isKnownChain(current_chain.getName(),current_model);
+		
+			//System.out.println("trying to re-using known chain " + current_chain.getName() + " " + chain_id);		
+			if ( testchain != null && testchain.getName().equals(chain_id)){
+				//System.out.println("re-using known chain " + current_chain.getName() + " " + chain_id);				
+				
+			} else {
+				
+				testchain = isKnownChain(chain_id,current_model);
+			}
+			
 			if ( testchain == null) {
-				current_model.add(current_chain);
+				//System.out.println("unknown chain. creating new chain.");
+								
 				current_chain = new ChainImpl();
 				current_chain.setName(chain_id);
-			}  else {
+				
+			}   else {
 				current_chain = testchain;
 			}
+			
+			if ( ! current_model.contains(current_chain))
+				current_model.add(current_chain);
+			
+			
 		} 
 		
 		// process group data:
@@ -1588,7 +1606,7 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 			current_group.setPDBName(groupCode3);
 
 		}
-		
+
 		if ( headerOnly)
 			return;
 
@@ -1600,7 +1618,7 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 			seqResChains.clear();
 
 			switchCAOnly();
-			
+
 		}
 
 		if ( atomCount == MAX_ATOMS){
@@ -1650,7 +1668,7 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 			}
 		}
 		// create new atom
-		
+
 		int pdbnumber = Integer.parseInt (line.substring (6, 11).trim ());
 		AtomImpl atom = new AtomImpl() ;
 		atom.setPDBserial(pdbnumber) ;
@@ -1687,7 +1705,7 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 
 			atom.setOccupancy(  occu  );
 			atom.setTempFactor( tempf );
-		
+
 			//see if chain_id is one of the previous chains ...
 			current_group.addAtom(atom);
 			//System.out.println(current_group);
@@ -2226,7 +2244,7 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 
 		}
 
-		// a problem occured earlier so current_chain = null ...
+		// a problem occurred earlier so current_chain = null ...
 		// most likely the buffered reader did not provide data ...
 		if ( current_chain != null ) {			
 			current_chain.addGroup(current_group);
@@ -2255,7 +2273,7 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 			aligner.align(structure,seqResChains);
 		}
 
-		
+
 		linkChains2Compound(structure);
 
 	}

@@ -268,6 +268,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 
 		boolean startOfNewChain = false;
 
+		//String chain_id      = atom.getAuth_asym_id();
 		String chain_id      = atom.getLabel_asym_id();		
 		String fullname      = fixFullAtomName(atom.getLabel_atom_id());
 		String recordName    = atom.getGroup_PDB();
@@ -294,42 +295,6 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 
 		}
 
-		if (current_chain == null) {
-			current_chain = new ChainImpl();
-			current_chain.setName(chain_id);
-			current_model.add(current_chain);
-			startOfNewChain = true;
-		}
-
-		if ( ! chain_id.equals(current_chain.getName()) ) {
-			startOfNewChain = true;
-			// end up old chain...
-			current_chain.addGroup(current_group);
-
-			// see if old chain is known ...
-			Chain testchain ;
-			testchain = isKnownChain(current_chain.getName(),current_model);
-			if ( testchain == null) {
-				//System.out.println("new chain, adding to current model..." + current_chain.getName());
-				current_model.add(current_chain);
-			}
-
-
-			//see if chain_id of new residue is one of the previous chains ...
-			testchain = isKnownChain(chain_id,current_model);
-			if (testchain != null) {
-				//System.out.println("already known..."+ chain_id);
-				current_chain = (ChainImpl)testchain ;
-
-			} else {
-				//System.out.println("creating new chain..."+ chain_id);
-
-				//current_model.add(current_chain);
-				current_chain = new ChainImpl();
-				current_chain.setName(chain_id);
-			}
-		}
-
 		String nmrModel = atom.getPdbx_PDB_model_num();
 
 		if ( current_nmr_model == null) {
@@ -351,6 +316,52 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 			current_chain = null;
 			current_group = null;
 		}
+
+
+		if (current_chain == null) {
+			current_chain = new ChainImpl();
+			current_chain.setName(chain_id);
+			current_model.add(current_chain);
+			startOfNewChain = true;
+		}
+
+		//System.out.println("BEFORE: " + chain_id + " " + current_chain.getName());
+		if ( ! chain_id.equals(current_chain.getName()) ) {
+
+			startOfNewChain = true;
+
+			// end up old chain...
+			current_chain.addGroup(current_group);
+
+			// see if old chain is known ...
+			Chain testchain ;
+			testchain = isKnownChain(current_chain.getName(),current_model);
+
+			//System.out.println("trying to re-using known chain " + current_chain.getName() + " " + chain_id);		
+			if ( testchain != null && testchain.getName().equals(chain_id)){
+				//System.out.println("re-using known chain " + current_chain.getName() + " " + chain_id);				
+
+			} else {
+
+				testchain = isKnownChain(chain_id,current_model);
+			}
+
+			if ( testchain == null) {
+				//System.out.println("unknown chain. creating new chain.");
+
+				current_chain = new ChainImpl();
+				current_chain.setName(chain_id);
+
+			}   else {
+				current_chain = testchain;
+			}
+
+			if ( ! current_model.contains(current_chain))
+				current_model.add(current_chain);
+
+		} 
+
+
 
 		if (current_group == null) {
 
@@ -391,7 +402,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 			}
 
 		}
-		
+
 		if ( headerOnly)
 			return;
 
@@ -409,7 +420,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		}
 
 
-		
+
 
 		//see if chain_id is one of the previous chains ...
 
@@ -520,6 +531,8 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		// What has to be done is to use the auth_mon_id for the assignment. For this
 
 		// map entities to Chains and Compound objects...
+
+
 		for (StructAsym asym : structAsyms) {
 			if ( DEBUG )
 				System.out.println("entity " + asym.getEntity_id() + " matches asym id:" + asym.getId() );
@@ -527,9 +540,13 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 			Chain s = getEntityChain(asym.getEntity_id());
 			Chain seqres = (Chain)s.clone();
 			seqres.setName(asym.getId());
+
 			seqResChains.add(seqres);
+			if ( DEBUG )
+				System.out.println(" seqres: " + asym.getId() + " " + seqres + "<") ;
 
 		}
+
 
 		if ( alignSeqRes ){
 
@@ -537,17 +554,23 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 			aligner.align(structure,seqResChains);
 		}
 
+
 		//TODO: add support for these:
 
 		//structure.setConnections(connects);
 		//structure.setCompounds(compounds);
 		//linkChains2Compound(structure);
+
+		// mismatching Author assigned chain IDS and PDB internal chain ids:
 		// fix the chain IDS in the current model:
 
 		Set<String> asymIds = asymStrandId.keySet();
 
 		for (int i =0; i< structure.nrModels() ; i++){
 			List<Chain>model = structure.getModel(i);
+
+			List<Chain> pdbChains = new ArrayList<Chain>();
+
 			for (Chain chain : model) {
 				for (String asym : asymIds) {
 					if ( chain.getName().equals(asym)){
@@ -556,11 +579,25 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 
 						chain.setName(asymStrandId.get(asym));
 
+						Chain known =  isKnownChain(chain.getName(), pdbChains);
+						if ( known == null ){
+							pdbChains.add(chain);
+						} else {
+							// and now we join the 2 chains together again, because in cif files the data can be split up...
+							for ( Group g : chain.getAtomGroups()){
+								known.addGroup(g);
+							}
+						}
+
 						break;
 					}
 				}
 			}
+			structure.setModel(i,pdbChains);
 		}
+
+
+
 
 
 	}
@@ -864,8 +901,8 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 	 */
 	public void newEntityPolySeq(EntityPolySeq epolseq) {
 
-		//if ( headerOnly)
-		//	return;
+		if (DEBUG)
+			System.out.println("NEW entity poly seq " + epolseq);
 
 		Entity e = getEntity(epolseq.getEntity_id());
 
@@ -879,8 +916,11 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 
 		// create group from epolseq;
 		// by default this are the SEQRES records...
+
 		AminoAcid g = new AminoAcidImpl();
+
 		g.setRecordType(AminoAcid.SEQRESRECORD);
+
 		try {
 			g.setPDBName(epolseq.getMon_id());
 
@@ -899,11 +939,31 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 				entityChain.addGroup(n);
 			}
 			else {
-				logger.warning(ex.getMessage());
+				logger.warning(ex.getMessage() + " creating a hetatom called XXX ");
+				HetatomImpl h = new HetatomImpl();
+				try {
+					h.setPDBName(epolseq.getMon_id());
+					//h.setAminoType('X');
+					h.setPDBCode(epolseq.getNum());
+					entityChain.addGroup(h);
+
+				} catch (PDBParseException exc) {
+					System.err.println("this is a helpless case and I am dropping group " + epolseq.getMon_id());
+				}
 				//ex.printStackTrace();
 			}
 		} catch (IllegalSymbolException ex){
-			logger.warning(ex.getMessage());
+			//logger.warning("no sure what to do with:" + epolseq.getMon_id()+ " " + ex.getMessage());
+			HetatomImpl h = new HetatomImpl();
+			try {
+				h.setPDBName(epolseq.getMon_id());
+				//h.setAminoType('X');
+				h.setPDBCode(epolseq.getNum());
+				entityChain.addGroup(h);
+
+			} catch (PDBParseException exc) {
+				System.err.println("this is a helpless case and I am dropping group " + epolseq.getMon_id() + " " + ex.getMessage());
+			}
 			//System.err.println(ex.getMessage());
 		}
 	}

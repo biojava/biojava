@@ -334,13 +334,6 @@ public class PDBFileReader implements StructureIOFile {
 		if ( pdbId.length() < 4)
 			throw new IOException("the provided ID does not look like a PDB ID : " + pdbId);
 
-		//System.out.println("checking file");
-
-		// compression formats supported
-		// this has been moved to InputStreamProvider ...
-
-		//String[] str = {".gz",".zip",".Z"};
-		//ArrayList  compressions = new ArrayList( Arrays.asList( str ) );
 
 		InputStream inputStream =null;
 
