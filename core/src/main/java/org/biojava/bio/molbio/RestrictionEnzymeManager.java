@@ -667,8 +667,8 @@ public final class RestrictionEnzymeManager
                 if (site == null)
                 {
                     usCutPositions = new int [2];
-                    usCutPositions[0] = forIdx;
-                    usCutPositions[1] = revIdx;
+                    usCutPositions[0] = -forIdx;
+                    usCutPositions[1] = -revIdx;
                 }
                 else
                 {

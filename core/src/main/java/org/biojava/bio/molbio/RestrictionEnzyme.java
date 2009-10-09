@@ -35,11 +35,12 @@ import org.biojava.bio.symbol.SymbolList;
  * <code>RestrictionEnzyme</code> represents a restriction enzyme
  * according to the REBASE standard. The cut positions are indicated
  * relative to the 5' end of the recognition site and occur downstream
- * of the given residue. Note that some enzmyes cut in more than one
+ * of the given residue. Note that some enzymes cut in more than one
  * position and that cut positions may occur outside the recognition
  * site.
  *
  * @author Keith James
+ * @author George Waldon - fix cutsites
  * @since 1.3
  */
 public class RestrictionEnzyme implements Serializable
@@ -59,13 +60,15 @@ public class RestrictionEnzyme implements Serializable
 
     /**
      * <code>OVERHANG_5PRIME</code> the sticky end type created by
-     * enzymes which leave a 5' overhang.
+     * enzymes which leave a 5' overhang (e.g. a stretch of single-stranded
+     * DNA with a free 5' end).
      */
     public static final int OVERHANG_5PRIME = 0;
 
     /**
      * <code>OVERHANG_3PRIME</code> the sticky end type created by
-     * enzymes which leave a 3' overhang.
+     * enzymes which leave a 3' overhang (e.g. a stretch of single-stranded
+     * DNA with a free 3' end).
      */
     public static final int OVERHANG_3PRIME = 1;
 
@@ -304,7 +307,7 @@ public class RestrictionEnzyme implements Serializable
      * downstream of the recognition site.
      *
      * @return an <code>int []</code> array with the position in the
-     * 5'- strand at index 0 and the 3'- strand at index 1.
+     * 5'-strand at index 0 and the 3'-strand at index 1.
      */
     public int [] getDownstreamCut()
     {
@@ -316,7 +319,11 @@ public class RestrictionEnzyme implements Serializable
      * the recognition site.
      *
      * @return an <code>int []</code> array with the position in the
-     * 5'- strand at index 0 and the 3'- strand at index 1.
+     * 5'-strand at index 0 and the 3'-strand at index 1. For example,
+     * Bsp24I will return -8 and -13:
+     *
+     *          5'      ^NNNNNNNNGACNNNNNNTGGNNNNNNNNNNNN^   3'
+     *          3' ^NNNNNNNNNNNNNCTGNNNNNNACCNNNNNNN^        5'
      *
      * @exception BioException if the enzyme does not cleave on both
      * sides of its recognition site.
@@ -340,9 +347,9 @@ public class RestrictionEnzyme implements Serializable
     public int getDownstreamEndType()
     {
         if (dsCutPositions[0] > dsCutPositions[1])
-            return OVERHANG_5PRIME;
-        else if (dsCutPositions[0] < dsCutPositions[1])
             return OVERHANG_3PRIME;
+        else if (dsCutPositions[0] < dsCutPositions[1])
+            return OVERHANG_5PRIME;
         else
             return BLUNT;
     }
@@ -363,9 +370,9 @@ public class RestrictionEnzyme implements Serializable
             throw new BioException(name + " does not cut upstream of the recognition site");
 
         if (usCutPositions[0] > usCutPositions[1])
-            return OVERHANG_5PRIME;
-        else if (usCutPositions[0] < usCutPositions[1])
             return OVERHANG_3PRIME;
+        else if (usCutPositions[0] < usCutPositions[1])
+            return OVERHANG_5PRIME;
         else
             return BLUNT;
     }

@@ -33,6 +33,7 @@ import org.biojava.bio.symbol.SymbolList;
  * <code>RestrictionEnzymeTest</code> tests enzyme functionality.
  *
  * @author Keith James
+ * @author George Waldon - fix upstream cutsites
  */
 public class RestrictionEnzymeTest extends TestCase
 {
@@ -100,8 +101,8 @@ public class RestrictionEnzymeTest extends TestCase
         RestrictionEnzyme bsp24I = RestrictionEnzymeManager.getEnzyme("Bsp24I");
         int [] us = bsp24I.getUpstreamCut();
 
-        assertEquals(8,  us[0]);
-        assertEquals(13, us[1]);
+        assertEquals(-8,  us[0]);
+        assertEquals(-13, us[1]);
 
         RestrictionEnzyme ecoRI = RestrictionEnzymeManager.getEnzyme("EcoRI");
         try
@@ -119,11 +120,11 @@ public class RestrictionEnzymeTest extends TestCase
     public void testGetDownstreamEndType() throws BioException
     {
         RestrictionEnzyme ecoRI = RestrictionEnzymeManager.getEnzyme("EcoRI");
-        assertEquals(RestrictionEnzyme.OVERHANG_3PRIME,
+        assertEquals(RestrictionEnzyme.OVERHANG_5PRIME,
                      ecoRI.getDownstreamEndType());
 
         RestrictionEnzyme apaI = RestrictionEnzymeManager.getEnzyme("ApaI");
-        assertEquals(RestrictionEnzyme.OVERHANG_5PRIME,
+        assertEquals(RestrictionEnzyme.OVERHANG_3PRIME,
                      apaI.getDownstreamEndType());
 
         RestrictionEnzyme smaI = RestrictionEnzymeManager.getEnzyme("SmaI");
