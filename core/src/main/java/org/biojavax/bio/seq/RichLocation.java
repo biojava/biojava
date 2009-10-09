@@ -44,6 +44,7 @@ import org.biojavax.ontology.ComparableTerm;
  * annotations, and cross-references to other databases. Also includes strands.
  * 
  * @author Richard Holland
+ * @author George Waldon - bug fix
  * @since 1.5
  */
 public interface RichLocation extends Location, RichAnnotatable, Comparable {
@@ -366,9 +367,10 @@ public interface RichLocation extends Location, RichAnnotatable, Comparable {
 		public static RichLocation construct(Collection<Location> members) {
 			if (members.size() == 0)
 				return RichLocation.EMPTY_LOCATION;
-			else if (members.size() == 1)
-				return members.toArray(new SimpleRichLocation[0])[0];
-			else if (isMultiSource(members))
+			else if (members.size() == 1){
+                            Location loc =  members.toArray(new Location[0])[0];
+                            return RichLocation.Tools.enrich(loc);
+                        } else if (isMultiSource(members))
 				return new MultiSourceCompoundRichLocation(members);
 			else
 				return new CompoundRichLocation(members);
