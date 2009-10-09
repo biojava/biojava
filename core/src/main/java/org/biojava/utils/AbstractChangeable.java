@@ -25,10 +25,12 @@ package org.biojava.utils;
  *
  * @author Matthew Pocock
  * @author Thomas Down
+ * @author George Waldon - private lock on synchronization
  */
  
 public abstract class AbstractChangeable implements Changeable {
   private transient ChangeSupport changeSupport = null;
+  private final Object changeLock = new Object();
 
   /**
    * Discover if we have any listeners registered.
@@ -87,7 +89,7 @@ public abstract class AbstractChangeable implements Changeable {
   
   protected ChangeSupport getChangeSupport(ChangeType ct) {
 
-    synchronized(this) {
+    synchronized(changeLock) {
       if(changeSupport == null) {
         changeSupport = generateChangeSupport();
       }
