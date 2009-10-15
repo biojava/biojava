@@ -398,7 +398,7 @@ public class PDBFileReader implements StructureIOFile {
 			path = ".";
 		}
 
-
+		
 		File tempFile ;
 
 		if ( pdbDirectorySplit) {
@@ -413,28 +413,23 @@ public class PDBFileReader implements StructureIOFile {
 
 		} else {
 
+			
 			tempFile = new File(path+lineSplit+"pdb"+pdbId.toLowerCase()+".ent.gz");
 		}
-		File pdbHome = new File(path);
-
-		if ( ! pdbHome.canWrite() ){
-			System.err.println("can not write to " + pdbHome);
-			return null;
-		}
-
-
+		
+	
 		String ftp = String.format("ftp://ftp.wwpdb.org/pub/pdb/data/structures/all/pdb/pdb%s.ent.gz", pdbId.toLowerCase());
 
 		System.out.println("Fetching " + ftp);
+
+		// prepare destination
+		System.out.println("writing to " + tempFile);
 
 		try {
 			URL url = new URL(ftp);
 			InputStream conn = new GZIPInputStream(url.openStream());
 
-			// prepare destination
-			System.out.println("writing to " + tempFile);
-
-
+			
 			FileOutputStream outPut = new FileOutputStream(tempFile);
 			GZIPOutputStream gzOutPut = new GZIPOutputStream(outPut);
 			PrintWriter pw = new PrintWriter(gzOutPut);
@@ -471,8 +466,6 @@ public class PDBFileReader implements StructureIOFile {
 
 
 	}
-
-
 
 
 	/** load a structure from local file system and return a PDBStructure object

@@ -72,14 +72,15 @@ public class MMCIFFileReader implements StructureIOFile {
 	boolean headerOnly;
 	
 	public static void main(String[] args){
-		String filename =  "/Users/andreas/WORK/PDB/mmcif_files/a9/2a9w.cif.gz" ;
+		//String filename =  "/Users/andreas/WORK/PDB/mmcif_files/a9/2a9w.cif.gz" ;
 
 		StructureIOFile reader = new MMCIFFileReader();
+		reader.setPath("/Users/ap3/WORK/PDB/");
 		reader.setAutoFetch(true);
 		try{
-			Structure struc = reader.getStructure(filename);
+			Structure struc = reader.getStructureById("1gng");
 			System.out.println(struc);
-
+			System.out.println(struc.toPDB());
 
 
 		} catch (Exception e) {
@@ -284,13 +285,6 @@ public class MMCIFFileReader implements StructureIOFile {
 		}
 		
 		
-		File pdbHome = new File(path);
-
-		if ( ! pdbHome.canWrite() ){
-			System.err.println("can not write to " + pdbHome);
-			return null;
-		}
-
 		String ftp = String.format("ftp://ftp.wwpdb.org/pub/pdb/data/structures/all/mmCIF/%s.cif.gz", pdbId.toLowerCase());
 
 		System.out.println("Fetching " + ftp);
