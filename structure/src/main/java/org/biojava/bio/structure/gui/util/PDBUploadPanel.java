@@ -70,9 +70,6 @@ implements StructurePairSelector {
 	
 	private JComboBox fileType ;
 	
-	
-	
-	
 	JTextField filePath1;
 	JTextField filePath2;
 	JTextField chain1;
@@ -172,7 +169,15 @@ implements StructurePairSelector {
 		
 		if ( chainId != null && ( ! chainId.equals(""))) {
 			
-			Chain c = s.getChainByPDB(chainId);
+			
+			Chain c =  null;
+			try {
+				c = s.getChainByPDB(chainId);
+			} catch (StructureException e){
+				System.err.println(e.getMessage() + " trying upper case Chain id...");
+				c = s.getChainByPDB(chainId.toUpperCase());
+				
+			}
 			newS.addChain(c);
 		} else {
 			newS.setModel(0,s.getModel(0));
