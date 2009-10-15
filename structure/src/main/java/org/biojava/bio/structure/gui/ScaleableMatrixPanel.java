@@ -190,6 +190,9 @@ implements ChangeListener{
 		
 	}
 
+	public JMatrixPanel getMatrixPanel(){
+		return mPanel;
+	}
 	
 	public FragmentPair[] getFragmentPairs(){
 		return mPanel.getFragmentPairs();
