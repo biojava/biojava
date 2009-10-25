@@ -9,6 +9,11 @@
 	<name>biojava</name>
 	<description>BioJava is an open-source project dedicated to providing a Java framework for processing biological data. It provides analytical and statistical routines, parsers for common file formats and allows the manipulation of sequences and 3D structures. The goal of the biojava project is to facilitate rapid application development for bioinformatics.</description>
 	<url>http://www.biojava.org</url>
+	<scm>
+		<connection>scm:svn:svn://code.open-bio.org/biojava/biojava-live/trunk</connection>
+		<url>http://code.open-bio.org/svnweb/index.cgi/biojava/browse/biojava-live/trunk</url>
+	</scm>
+
 	<repositories>
 		<repository>
 			<id>maven2-repository.dev.java.net</id>
@@ -48,6 +53,15 @@
 		<url>http://www.biojava.org</url>
 	</organization>
 	<build>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>net.sf</groupId>
+					<artifactId>stat-scm</artifactId>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+
 		<plugins>
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
@@ -61,6 +75,16 @@
 				<artifactId>maven-dependency-plugin</artifactId>
 				<version>2.0</version>
 			</plugin>
+			<plugin>
+				<groupId>net.sf</groupId>
+				<artifactId>stat-scm</artifactId>
+				<version>1.2.0</version>
+			</plugin>
+		<plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-scm-plugin</artifactId>
+        <version>1.0</version>        
+      </plugin>
 
 		</plugins>
 	</build>
@@ -80,11 +104,17 @@
 	<reporting>
 		<plugins>
 			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-project-info-reports-plugin</artifactId>
+				<version>2.0.1</version>
+			</plugin>
+
+			<plugin>
 				<artifactId>maven-javadoc-plugin</artifactId>
 				<configuration>
 					<aggregate>true</aggregate>
-					<minmemory>128m</minmemory>
-					<maxmemory>512</maxmemory>
+					<minmemory>180m</minmemory>
+					<maxmemory>180m</maxmemory>
 					<breakiterator>true</breakiterator>
 					<quiet>true</quiet>
 					<source>1.5</source>
@@ -113,6 +143,26 @@
 					</links>
 				</configuration>
 			</plugin>
+			<plugin>
+				<groupId>net.sf</groupId>
+				<artifactId>stat-scm</artifactId>
+				<configuration>
+					<includes>
+						<include>**/*.java</include>
+					</includes>
+					<excludes>
+						<exclude>**/test/**/*.java</exclude>
+					</excludes>
+
+					<tags>3.0</tags>
+					<tagsDir>/releases/</tagsDir>
+					<cacheDir>/statsvn/</cacheDir>
+					<title>BioJava SVN statistics</title>					
+					
+				</configuration>
+
+			</plugin>
+
 		</plugins>
 	</reporting>
 </project>
