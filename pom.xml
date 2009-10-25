@@ -1,78 +1,118 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-    <modelVersion>4.0.0</modelVersion>
-    <groupId>org.biojava</groupId>
-    <artifactId>biojava</artifactId>
-    <packaging>pom</packaging>
-    <version>3.0-SNAPSHOT</version>
-    <name>biojava</name>
-    <description>BioJava is an open-source project dedicated to providing a Java framework for processing biological data. It provides analytical and statistical routines, parsers for common file formats and allows the manipulation of sequences and 3D structures. The goal of the biojava project is to facilitate rapid application development for bioinformatics.</description>
-    <url>http://www.biojava.org</url>
-<repositories>
-  <repository>
-    <id>maven2-repository.dev.java.net</id>
-    <name>Java.net Maven 2 Repository</name>
-    <url>http://download.java.net/maven/2</url>
-    </repository>
-  <repository>
-    <id>maven-repository.dev.java.net</id>
-    <name>Java.net Maven 1 Repository (legacy)</name>
-    <url>http://download.java.net/maven/1</url>
-    <layout>legacy</layout>
-    </repository>
-</repositories>
-<pluginRepositories>
-  <pluginRepository>
-    <id>maven2-repository.dev.java.net</id>
-    <name>Java.net Maven 2 Repository</name>
-    <url>http://download.java.net/maven/2</url>
-    </pluginRepository>
-  <pluginRepository>
-    <id>maven-repository.dev.java.net</id>
-    <name>Java.net Maven 1 Repository (legacy)</name>
-    <url>http://download.java.net/maven/1</url>
-    <layout>legacy</layout>
-    </pluginRepository>
-</pluginRepositories>
-    <dependencies>        
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>3.8.1</version>
-            <scope>test</scope>
-        </dependency>
-    </dependencies>
-    <organization>
-    	<name>BioJava</name>
-    	<url>http://www.biojava.org</url>
-    </organization>
-    <build>
-        <plugins>
-            <plugin>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>2.0.2</version>
-                <configuration>
-                    <source>1.5</source>
-                    <target>1.5</target>
-                </configuration>
-            </plugin>
-            <plugin>
-                <artifactId>maven-dependency-plugin</artifactId>
-                <version>2.0</version>
-            </plugin>
-        </plugins>
-    </build>
-    <modules>
-    	<module>core</module>
-    	<module>alignment</module>
-    	<module>blast</module>
-    	<module>das</module>
-    	<module>sequence</module>
-    	<module>sequencing</module>
-    	<module>structure</module>
-    	<module>phylo</module>
-    	<module>biosql</module>
-    	<module>gui</module>
-    <module>bytecode</module>
-  </modules>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>org.biojava</groupId>
+	<artifactId>biojava</artifactId>
+	<packaging>pom</packaging>
+	<version>3.0-SNAPSHOT</version>
+	<name>biojava</name>
+	<description>BioJava is an open-source project dedicated to providing a Java framework for processing biological data. It provides analytical and statistical routines, parsers for common file formats and allows the manipulation of sequences and 3D structures. The goal of the biojava project is to facilitate rapid application development for bioinformatics.</description>
+	<url>http://www.biojava.org</url>
+	<repositories>
+		<repository>
+			<id>maven2-repository.dev.java.net</id>
+			<name>Java.net Maven 2 Repository</name>
+			<url>http://download.java.net/maven/2</url>
+		</repository>
+		<repository>
+			<id>maven-repository.dev.java.net</id>
+			<name>Java.net Maven 1 Repository (legacy)</name>
+			<url>http://download.java.net/maven/1</url>
+			<layout>legacy</layout>
+		</repository>
+	</repositories>
+	<pluginRepositories>
+		<pluginRepository>
+			<id>maven2-repository.dev.java.net</id>
+			<name>Java.net Maven 2 Repository</name>
+			<url>http://download.java.net/maven/2</url>
+		</pluginRepository>
+		<pluginRepository>
+			<id>maven-repository.dev.java.net</id>
+			<name>Java.net Maven 1 Repository (legacy)</name>
+			<url>http://download.java.net/maven/1</url>
+			<layout>legacy</layout>
+		</pluginRepository>
+	</pluginRepositories>
+	<dependencies>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>3.8.1</version>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+	<organization>
+		<name>BioJava</name>
+		<url>http://www.biojava.org</url>
+	</organization>
+	<build>
+		<plugins>
+			<plugin>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>2.0.2</version>
+				<configuration>
+					<source>1.5</source>
+					<target>1.5</target>
+				</configuration>
+			</plugin>
+			<plugin>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<version>2.0</version>
+			</plugin>
+
+		</plugins>
+	</build>
+	<modules>
+		<module>core</module>
+		<module>alignment</module>
+		<module>blast</module>
+		<module>das</module>
+		<module>sequence</module>
+		<module>sequencing</module>
+		<module>structure</module>
+		<module>phylo</module>
+		<module>biosql</module>
+		<module>gui</module>
+		<module>bytecode</module>
+	</modules>
+	<reporting>
+		<plugins>
+			<plugin>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<configuration>
+					<aggregate>true</aggregate>
+					<minmemory>128m</minmemory>
+					<maxmemory>512</maxmemory>
+					<breakiterator>true</breakiterator>
+					<quiet>true</quiet>
+					<source>1.5</source>
+					<verbose>false</verbose>
+					<linksource>true</linksource>
+					<links>
+						<!-- JSE -->
+						<link>http://java.sun.com/j2se/1.6.0/docs/api/</link>
+						<link>http://java.sun.com/j2se/1.5.0/docs/api/</link>
+						<link>http://java.sun.com/j2se/1.4.2/docs/api/</link>
+						<link>http://java.sun.com/j2se/1.3/docs/api/</link>
+
+						<!-- JEE -->
+						<link>http://java.sun.com/j2ee/1.4/docs/api/</link>
+						<link>http://java.sun.com/j2ee/sdk_1.3/techdocs/api/</link>
+
+						<!-- Libraries -->
+						<!--
+							<link>http://jakarta.apache.org/commons/collections/apidocs</link>
+							<link>http://jakarta.apache.org/commons/logging/apidocs/</link>
+							<link>http://www.junit.org/junit/javadoc/</link>
+						-->
+						<link>http://logging.apache.org/log4j/docs/api/</link>
+						<link>http://jakarta.apache.org/regexp/apidocs/</link>
+						<link>http://jakarta.apache.org/velocity/api/</link>
+					</links>
+				</configuration>
+			</plugin>
+		</plugins>
+	</reporting>
 </project>
