@@ -113,8 +113,8 @@
 				<artifactId>maven-javadoc-plugin</artifactId>
 				<configuration>
 					<aggregate>true</aggregate>
-					<minmemory>180m</minmemory>
-					<maxmemory>180m</maxmemory>
+					<minmemory>100m</minmemory>
+					<maxmemory>100m</maxmemory>
 					<breakiterator>true</breakiterator>
 					<quiet>true</quiet>
 					<source>1.5</source>
