@@ -39,10 +39,9 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import org.biojava.bio.structure.Chain;
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureException;
-import org.biojava.bio.structure.StructureImpl;
+import org.biojava.bio.structure.StructureTools;
 import org.biojava.bio.structure.io.MMCIFFileReader;
 import org.biojava.bio.structure.io.PDBFileReader;
 import org.biojava.bio.structure.io.StructureIOFile;
@@ -147,45 +146,11 @@ implements StructurePairSelector {
 			throw new StructureException(e);
 		}
 		
-		return getReducedStructure(s, chainId.getText());
+		return StructureTools.getReducedStructure(s, chainId.getText());
 
 	}
 
-	/** only return the first model of the structure. If chainId is provided only return a structure containing that Chain ID.
-	 * 
-	 * @param s
-	 * @param chainId
-	 * @return
-	 */
-	public static Structure getReducedStructure(Structure s, String chainId) throws StructureException{
-		// since we deal here with structure alignments,
-		// only use Model 1...
-		
-		Structure newS = new StructureImpl();
-		newS.setHeader(s.getHeader());
-		newS.setPDBCode(s.getPDBCode());
-		newS.setPDBHeader(s.getPDBHeader());
-		
-		
-		if ( chainId != null && ( ! chainId.equals(""))) {
-			
-			
-			Chain c =  null;
-			try {
-				c = s.getChainByPDB(chainId);
-			} catch (StructureException e){
-				System.err.println(e.getMessage() + " trying upper case Chain id...");
-				c = s.getChainByPDB(chainId.toUpperCase());
-				
-			}
-			newS.addChain(c);
-		} else {
-			newS.setModel(0,s.getModel(0));
-		}
-		
-		
-		return newS;
-	}
+	
 
 	private JPanel getLocalFilePanel(int pos ,JTextField filePath, JTextField  chainId){
 
