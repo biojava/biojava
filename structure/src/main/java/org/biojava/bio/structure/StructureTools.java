@@ -404,7 +404,6 @@ public class StructureTools {
 		// since we deal here with structure alignments,
 		// only use Model 1...
 
-		System.out.println("get chain nr " + chainNr + " " + s.getPDBCode());
 		Structure newS = new StructureImpl();
 		newS.setHeader(s.getHeader());
 		newS.setPDBCode(s.getPDBCode());
