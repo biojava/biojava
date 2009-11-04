@@ -392,6 +392,45 @@ public class StructureTools {
 
 		return newS;
 	}
+	
+
+	/** Reduce a structure to provide a smaller representation . Only takes the first model of the structure. If chainNr >=0 only takes the chain at that position into account.	 * 
+	 * @param s
+	 * @param chainNr
+	 * @return
+	 * @since 3.0
+	 */
+	public static Structure getReducedStructure(Structure s, int chainNr) throws StructureException{
+		// since we deal here with structure alignments,
+		// only use Model 1...
+
+		System.out.println("get chain nr " + chainNr + " " + s.getPDBCode());
+		Structure newS = new StructureImpl();
+		newS.setHeader(s.getHeader());
+		newS.setPDBCode(s.getPDBCode());
+		newS.setPDBHeader(s.getPDBHeader());
+
+		if ( chainNr < 0 ) {
+				
+			// only get model 0
+			List<Chain> model0 = s.getModel(0);
+			for (Chain c : model0){
+				newS.addChain(c);
+			}
+			return newS;
+
+		}
+
+		
+		Chain c =  null;
+		
+		c = s.getChain(chainNr);
+		
+		newS.addChain(c);
+
+
+		return newS;
+	}
 
 	/** In addition to the functionality provided by getReducedStructure also provides a way to specify sub-regions of a structure with the following 
 	 * specification:
