@@ -83,7 +83,9 @@ implements StructurePairSelector {
 		return fileType;
 	}
 	public PDBUploadPanel(){
-
+		this(true);
+	}
+	public PDBUploadPanel(boolean show2boxes){
 		Box vBox = Box.createVerticalBox();
 
 		filePath1 = new JTextField(20);
@@ -95,7 +97,8 @@ implements StructurePairSelector {
 		JPanel p2 = getLocalFilePanel(2,filePath2,chain2);
 
 		vBox.add(p1);
-		vBox.add(p2);
+		if ( show2boxes)
+			vBox.add(p2);
 		
 		JLabel ftype = new JLabel("File format:");
 		Box hBox = Box.createHorizontalBox();
