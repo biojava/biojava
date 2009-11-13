@@ -129,6 +129,13 @@ public class JmolAlignedPositionListener implements AlignmentPositionListener{
 		
 	}
 
+
+
+	public void toggleSelection(AlignedPosition p) {
+		// TODO Auto-generated method stub
+		
+	}
+
 	
 	
 }
