@@ -56,6 +56,7 @@ import org.biojavax.bio.seq.RichSequence;
  * @author Lukas Kall
  * @author Richard Holland
  * @author Mark Schreiber
+ * @author Carl Masak
  * @since 1.5
  */
 
@@ -77,7 +78,7 @@ public class FastaFormat extends RichSequenceFormat.HeaderlessFormat {
 	protected static final Pattern dp = Pattern.compile( "^(gi\\|(\\d+)\\|)?(\\w+)\\|(\\w+?)(\\.(\\d+))?\\|(\\w+)?$");
 
 	protected static final Pattern readableFiles = Pattern.compile(".*(fa|fas)$");
-	protected static final Pattern aminoAcids = Pattern.compile(".*[FLIPQE].*");
+	protected static final Pattern aminoAcids = Pattern.compile("[FLIPQE]", Pattern.CASE_INSENSITIVE);
 
 	private FastaHeader header = new FastaHeader();
 
@@ -104,7 +105,7 @@ public class FastaFormat extends RichSequenceFormat.HeaderlessFormat {
 	public SymbolTokenization guessSymbolTokenization(File file) throws IOException {
 		BufferedReader br = new BufferedReader(new FileReader(file));
 		br.readLine(); // discard first line
-		boolean aa = aminoAcids.matcher(br.readLine()).matches();
+		boolean aa = aminoAcids.matcher(br.readLine()).find();
 		br.close();
 		if (aa) return RichSequence.IOTools.getProteinParser();
 		else return RichSequence.IOTools.getDNAParser();
@@ -134,7 +135,7 @@ public class FastaFormat extends RichSequenceFormat.HeaderlessFormat {
 		stream.mark(2000); // some streams may not support this
 		BufferedReader br = new BufferedReader(new InputStreamReader(stream));
 		br.readLine(); // discard first line
-		boolean aa = aminoAcids.matcher(br.readLine()).matches();
+		boolean aa = aminoAcids.matcher(br.readLine()).find();
 		// don't close the reader as it'll close the stream too.
 		// br.close();
 		stream.reset();
