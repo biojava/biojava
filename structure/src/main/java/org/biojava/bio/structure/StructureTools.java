@@ -105,8 +105,6 @@ public class StructureTools {
 			nucleotides23.put(n,1);
 		}
 
-
-
 		try {
 			Alphabet alpha_prot = ProteinTools.getAlphabet();
 			threeLetter = alpha_prot.getTokenization("name");
@@ -126,7 +124,7 @@ public class StructureTools {
 	 * @param s the structure object
 	 * @return the number of Atoms in this Structure
 	 */
-	public static int getNrAtoms(Structure s){
+	public static final int getNrAtoms(Structure s){
 
 		int nrAtoms = 0;
 
@@ -146,7 +144,7 @@ public class StructureTools {
 	 * @param s the structure object
 	 * @return the number of groups in the structure
 	 */
-	public static int getNrGroups(Structure s){
+	public static final int getNrGroups(Structure s){
 		int nrGroups = 0;
 
 		List<Chain> chains = s.getChains(0);
@@ -168,7 +166,7 @@ public class StructureTools {
 	 * @param atomNames  contains the atom names to be used.
 	 * @return an Atom[] array
 	 */
-	public static Atom[] getAtomArray(Structure s, String[] atomNames){
+	public static final Atom[] getAtomArray(Structure s, String[] atomNames){
 		Iterator<Group> iter = new GroupIterator(s);
 		List<Atom> atoms = new ArrayList<Atom>();
 		while ( iter.hasNext()){
@@ -212,7 +210,7 @@ public class StructureTools {
 	 * @param atomNames  contains the atom names to be used.
 	 * @return an Atom[] array
 	 */
-	public static Atom[] getAtomArray(Chain c, String[] atomNames){
+	public static final Atom[] getAtomArray(Chain c, String[] atomNames){
 
 		List<Group> groups = c.getAtomGroups();
 
@@ -253,7 +251,7 @@ public class StructureTools {
 	 * @param c the structure object
 	 * @return an Atom[] array
 	 */
-	public static Atom[] getAtomCAArray(Chain c){
+	public static final Atom[] getAtomCAArray(Chain c){
 		String[] atomNames = {caAtomName};
 		return getAtomArray(c,atomNames);
 	}
@@ -288,7 +286,7 @@ public class StructureTools {
 	 *  @throws IllegalSymbolException
 	 */
 
-	public static Character convert_3code_1code(String code3)
+	public static final Character convert_3code_1code(String code3)
 	throws IllegalSymbolException
 	{
 		Symbol sym   =  threeLetter.parseToken(code3) ;
@@ -304,7 +302,7 @@ public class StructureTools {
 	 * @param groupCode3 three letter representation
 	 * @return null if group is a nucleotide code
 	 */
-	public static Character get1LetterCode(String groupCode3){
+	public static final Character get1LetterCode(String groupCode3){
 
 		Character aminoCode1 = null;
 		try {
@@ -334,7 +332,7 @@ public class StructureTools {
 	 * @param a 3-character code for a group.
 	 *
 	 */
-	public static boolean isNucleotide(String groupCode3){
+	public static final boolean isNucleotide(String groupCode3){
 
 		String code = groupCode3.trim();
 		if ( nucleotides30.containsKey(code)){
@@ -356,7 +354,7 @@ public class StructureTools {
 	 * @return
 	 * @since 3.0
 	 */
-	public static Structure getReducedStructure(Structure s, String chainId) throws StructureException{
+	public static final Structure getReducedStructure(Structure s, String chainId) throws StructureException{
 		// since we deal here with structure alignments,
 		// only use Model 1...
 
@@ -400,7 +398,7 @@ public class StructureTools {
 	 * @return
 	 * @since 3.0
 	 */
-	public static Structure getReducedStructure(Structure s, int chainNr) throws StructureException{
+	public static final Structure getReducedStructure(Structure s, int chainNr) throws StructureException{
 		// since we deal here with structure alignments,
 		// only use Model 1...
 
@@ -453,7 +451,7 @@ public class StructureTools {
 	 * @param range
 	 * @return
 	 */
-	public static Structure getSubRanges(Structure s, String ranges ) 
+	public static final Structure getSubRanges(Structure s, String ranges ) 
 	throws StructureException
 	{
 		Structure struc = getReducedStructure(s, null);
@@ -527,4 +525,27 @@ public class StructureTools {
 		return newS;
 	}
 
+	public static final String convertAtomsToSeq(Atom[] atoms) {
+		
+		StringBuffer buf = new StringBuffer();
+		Group prevGroup  = null;
+		for (Atom a : atoms){
+			Group g = a.getParent();
+			if ( prevGroup != null) {
+				if ( prevGroup.equals(g)) {
+					// we add each group only once.
+					continue;
+				}
+			}
+			String code3 = g.getPDBName();
+			try {
+				buf.append(convert_3code_1code(code3) );
+			} catch (IllegalSymbolException e){
+				buf.append('X');
+			}
+			prevGroup = g;
+			
+		}
+		return buf.toString();
+	}
 }
