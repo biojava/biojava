@@ -67,7 +67,7 @@ public class NeedlemanWunsch extends SequenceAlignment {
 	/**
 	 * The result of a successful alignment
 	 */
-	protected Alignment pairalign;
+	protected SimpleAlignment pairalign;
 
 	/**
 	 * The result of a successful alignment as a simple String.
@@ -350,6 +350,9 @@ public class NeedlemanWunsch extends SequenceAlignment {
 		return alignment;
 	}
 
+	public Alignment getAlignment() {
+		return pairalign;
+	}
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -644,7 +647,9 @@ public class NeedlemanWunsch extends SequenceAlignment {
 			// System.out.println(printCostMatrix(CostMatrix,
 			// query.seqString().toCharArray(),
 			// subject.seqString().toCharArray()));
-			return getEditDistance();
+			int score = getEditDistance();
+			pairalign.setScore(score);
+			return score;
 		} else
 			throw new BioException(
 					"Alphabet missmatch occured: sequences with different alphabet cannot be aligned.");
