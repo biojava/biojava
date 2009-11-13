@@ -57,10 +57,11 @@ public class SimpleAlignment extends AbstractSymbolList implements Alignment,
 		Serializable {
 	private static final long serialVersionUID = -1760075176220928440L;
 
-	private LinkedHashMap labelToSymbolList;
+	private LinkedHashMap<Object, SymbolList> labelToSymbolList;
 	private List labels;
 	private Alphabet alphabet;
 	private int length;
+	private int score;
 
 	protected void finalize() throws Throwable {
 		super.finalize();
@@ -120,7 +121,7 @@ public class SimpleAlignment extends AbstractSymbolList implements Alignment,
 
 	public SymbolList symbolListForLabel(Object label)
 			throws NoSuchElementException {
-		SymbolList rl = (SymbolList) labelToSymbolList.get(label);
+		SymbolList rl =  labelToSymbolList.get(label);
 		if (rl == null) {
 			throw new NoSuchElementException(
 					"No symbol list associated with label " + label);
@@ -146,7 +147,7 @@ public class SimpleAlignment extends AbstractSymbolList implements Alignment,
 
 		this.labels = Collections.unmodifiableList(new ArrayList(labelToResList
 				.keySet()));
-		this.labelToSymbolList = new LinkedHashMap(labelToResList);
+		this.labelToSymbolList = new LinkedHashMap<Object,SymbolList>(labelToResList);
 
 		int length = -1;
 		List alphaList = new ArrayList();
@@ -215,4 +216,13 @@ public class SimpleAlignment extends AbstractSymbolList implements Alignment,
 			return labels.size();
 		}
 	}
+
+	public int getScore() {
+		return score;
+	}
+
+	public void setScore(int score) {
+		this.score = score;
+	}
+	
 }
