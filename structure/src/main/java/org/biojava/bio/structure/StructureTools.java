@@ -256,8 +256,76 @@ public class StructureTools {
 		return getAtomArray(c,atomNames);
 	}
 
+	/** Provides an equivalent copy of Atoms in a new array. Clones everything, starting with parent 
+	 * groups and chains. The chain will only contain groups that are part of the CA array.
+	 * 
+	 * @param ca array of CA atoms
+	 * @return
+	 */
+	public static final Atom[] cloneCAArray(Atom[] ca) throws StructureException{
+		Atom[] newCA = new Atom[ca.length];
 
+		List<Chain> model = new ArrayList<Chain>();
+		int apos = -1;
+		for(Atom a: ca){
+			apos++;
+			Group parentG = a.getParent();
+			Chain parentC = parentG.getParent();
 
+			Chain newChain = null;
+			for ( Chain c : model){
+				if ( c.getName().equals(parentC.getName())){
+					newChain = c;
+					break;
+				}
+			}
+			if ( newChain == null){
+				newChain = new ChainImpl();
+				newChain.setName(parentC.getName());
+				model.add(newChain);
+			}
+
+			Group parentN = (Group)parentG.clone();
+			newCA[apos] = parentN.getAtom("CA");
+			newChain.addGroup(parentN);
+		}
+		return newCA;
+	}
+
+	/** Clone a set of CA Atoms, but returns the parent groups
+	 *  
+	 * @param optTwistPdb
+	 * @return
+	 */
+	public static Group[] cloneGroups(Atom[] ca) {
+		Group[] newGroup = new Group[ca.length]; 
+	
+		List<Chain> model = new ArrayList<Chain>();
+		int apos = -1;
+		for(Atom a: ca){
+			apos++;
+			Group parentG = a.getParent();
+			Chain parentC = parentG.getParent();
+
+			Chain newChain = null;
+			for ( Chain c : model){
+				if ( c.getName().equals(parentC.getName())){
+					newChain = c;
+					break;
+				}
+			}
+			if ( newChain == null){
+				newChain = new ChainImpl();
+				newChain.setName(parentC.getName());
+				model.add(newChain);
+			}
+
+			Group ng = (Group)parentG.clone();
+			newGroup[apos] = ng;
+			newChain.addGroup(ng);
+		}
+		return newGroup;
+	}
 
 	/** Returns an Atom array of the CA atoms.
 	 * @param s the structure object
@@ -390,7 +458,7 @@ public class StructureTools {
 
 		return newS;
 	}
-	
+
 
 	/** Reduce a structure to provide a smaller representation . Only takes the first model of the structure. If chainNr >=0 only takes the chain at that position into account.	 * 
 	 * @param s
@@ -408,7 +476,7 @@ public class StructureTools {
 		newS.setPDBHeader(s.getPDBHeader());
 
 		if ( chainNr < 0 ) {
-				
+
 			// only get model 0
 			List<Chain> model0 = s.getModel(0);
 			for (Chain c : model0){
@@ -418,11 +486,11 @@ public class StructureTools {
 
 		}
 
-		
+
 		Chain c =  null;
-		
+
 		c = s.getChain(chainNr);
-		
+
 		newS.addChain(c);
 
 
@@ -455,44 +523,44 @@ public class StructureTools {
 	throws StructureException
 	{
 		Structure struc = getReducedStructure(s, null);
-		
+
 		if ( ranges == null || ranges.equals(""))
 			throw new IllegalArgumentException("ranges can't be null or empty");
-		
+
 		ranges = ranges.trim();
-		
+
 		if ( ranges.startsWith("("))
 			ranges = ranges.substring(1);
 		if ( ranges.endsWith(")")) {
 			ranges = ranges.substring(0,ranges.length()-1);
 		}
-		
+
 		Structure newS = new StructureImpl();
 		newS.setHeader(s.getHeader());
 		newS.setPDBCode(s.getPDBCode());
 		newS.setPDBHeader(s.getPDBHeader());
-				
+
 		String[] rangS =ranges.split(",");
 
-		
+
 		String prevChainId = null;
-		
+
 		for ( String r: rangS){
 			String[] coords = r.split(":");
 			if ( coords.length != 2){
 				throw new StructureException("wrong range specification, should be provided as chainID:pdbResnum1=pdbRensum2");
 			}
-			
+
 			Chain chain = struc.getChainByPDB(coords[0]);
-			
+
 			String[] pdbRanges = coords[1].split("-");
 			if ( pdbRanges.length!= 2)
 				throw new StructureException("wrong range specification, should be provided as chainID:pdbResnum1=pdbRensum2");
 			String pdbresnumStart = pdbRanges[0].trim();
 			String pdbresnumEnd   = pdbRanges[1].trim();
-			
+
 			Group[] groups = chain.getGroupsByPDB(pdbresnumStart, pdbresnumEnd);
-			
+
 			Chain c = null;
 			if ( prevChainId == null) {
 				// first chain...
@@ -500,8 +568,8 @@ public class StructureTools {
 				c.setName(chain.getName());
 				newS.addChain(c);
 			} else if ( prevChainId.equals(chain.getName())) {
-					c = newS.getChainByPDB(prevChainId);
-				
+				c = newS.getChainByPDB(prevChainId);
+
 			} else {
 				try {
 					c = newS.getChainByPDB(chain.getName());
@@ -512,12 +580,12 @@ public class StructureTools {
 					newS.addChain(c);
 				}
 			}
-			
+
 			// add the groups to the chain:
 			for ( Group g: groups) {
 				c.addGroup(g);
 			}
-			
+
 			prevChainId = c.getName();
 		}
 
@@ -526,7 +594,7 @@ public class StructureTools {
 	}
 
 	public static final String convertAtomsToSeq(Atom[] atoms) {
-		
+
 		StringBuffer buf = new StringBuffer();
 		Group prevGroup  = null;
 		for (Atom a : atoms){
@@ -544,8 +612,11 @@ public class StructureTools {
 				buf.append('X');
 			}
 			prevGroup = g;
-			
+
 		}
 		return buf.toString();
 	}
+
+
+	
 }
