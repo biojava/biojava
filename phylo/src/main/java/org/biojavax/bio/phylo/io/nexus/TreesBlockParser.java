@@ -29,6 +29,7 @@ import org.biojavax.bio.phylo.io.nexus.TreesBlock.NewickTreeString;
  * @author Richard Holland
  * @author Tobias Thierer
  * @author Jim Balhoff
+ * @author Tiago Antao
  * @since 1.6
  */
 public class TreesBlockParser extends NexusBlockParser.Abstract {
@@ -103,9 +104,16 @@ public class TreesBlockParser extends NexusBlockParser.Abstract {
 	}
 
 	public void parseToken(String token) throws ParseException {
-		if (token.trim().length() == 0)
+		if (token.trim().length() == 0) {
 			return;
-		else if (this.expectingTranslate && "TRANSLATE".equalsIgnoreCase(token)) {
+		}
+		if ( token != null) {
+			if (this.expectingTaxLabel == true && "tree".equalsIgnoreCase(token)) {
+				this.expectingTaxLabel = false;
+				this.expectingTree = true;
+			}
+		}
+		if (this.expectingTranslate && "TRANSLATE".equalsIgnoreCase(token)) {
 			this.expectingTranslate = false;
 			this.expectingTaxLabel = true;
 			this.expectingTree = false;
@@ -120,10 +128,11 @@ public class TreesBlockParser extends NexusBlockParser.Abstract {
 			((TreesBlockListener) this.getBlockListener()).addTranslation(
 					this.currentTaxLabel, taxName);
 			this.expectingTaxName = false;
-			if (!endsWithComma)
+			if (!endsWithComma) {
 				this.expectingTree = true;
-			else 
+			} else {
 				this.expectingTaxLabel = true;
+			}
 		} else if (this.expectingTree && "TREE".equalsIgnoreCase(token)) {
 			this.expectingTree = false;
 			this.expectingTreeName = true;

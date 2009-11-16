@@ -49,7 +49,8 @@ import org.jgrapht.graph.DefaultWeightedEdge;
  * @author Tiago Antao
  */
 public class TreesBlockTest extends TestCase {
-    NexusFile nexus;
+    NexusFile nexus1;
+    NexusFile nexus2;
 
     public TreesBlockTest(String name) {
         super(name);
@@ -59,21 +60,21 @@ public class TreesBlockTest extends TestCase {
      * Tests a binary tree.
      */
     public void testSimple() {
-        doVertexCount("test1", 3);
+        doVertexCount(nexus1, "test1", 3);
     }
 
     /*
      * Tests more than binary.
      */
     public void testThreeOffspring() {
-        doVertexCount("test2", 4);
+        doVertexCount(nexus1, "test2", 4);
     }
 
     /*
      * Tests depth >1.
      */
     public void testMoreDepth() {
-        doVertexCount("test3", 5);
+        doVertexCount(nexus1, "test3", 5);
     }
 
 
@@ -81,53 +82,61 @@ public class TreesBlockTest extends TestCase {
      * Tests parsing distance.
      */
     public void testDistanceParsing() {
-        doVertexCount("test4", 5);
+        doVertexCount(nexus1, "test4", 5);
     }
 
     /*
      * Tests complex tree, no distance.
      */
     public void testComplex() {
-        doVertexCount("test5", 28);
+        doVertexCount(nexus1, "test5", 28);
     }
 
     /*
      * Tests complex tree, with distance.
      */
     public void testComplexWithDistance() {
-        doVertexCount("test6", 28);
+        doVertexCount(nexus1, "test6", 28);
     }
 
     /*
      * Tests complex tree with name clashing, no distance.
      */
     public void testClash() {
-        doVertexCount("test7", 28);
+        doVertexCount(nexus1, "test7", 28);
     }
 
     /*
      * Tests complex tree, name clashing, with distance.
      */
     public void testClashWithDistance() {
-        doVertexCount("test8", 28);
+        doVertexCount(nexus1, "test8", 28);
     }
 
+    /*
+     * Tests resiliency to comma after last translate info.
+     */
+    public void testParseIncorrectTranslation() {
+        doVertexCount(nexus2, "test1", 3);
+    }
 
 
     protected void setUp() {
         try {
             NexusFileBuilder builder = new NexusFileBuilder();
-            NexusFileFormat.parseInputStream(builder, this.getClass().getResourceAsStream("/test1.nex"));
-            nexus = builder.getNexusFile();
+            NexusFileFormat.parseInputStream(builder, this.getClass().getResourceAsStream("/files/test1.nex"));
+            nexus1 = builder.getNexusFile();
+            NexusFileFormat.parseInputStream(builder, this.getClass().getResourceAsStream("/files/test2.nex"));
+            nexus2 = builder.getNexusFile();
         }
         catch (Exception e) {
             //Should not happen
         }
     }
 
-    private void doVertexCount(String tree, int count) {
+    private void doVertexCount(NexusFile nexus, String tree, int count) {
         try {
-            getTree(tree);
+            getTree(nexus, tree);
             assertEquals(countVertexes(), count);
         }
         catch (ParseException pe) {
@@ -161,7 +170,7 @@ public class TreesBlockTest extends TestCase {
 
     private WeightedGraph<String, DefaultWeightedEdge> tree;
 
-    private void getTree(String name)
+    private void getTree(NexusFile nexus, String name)
     throws ParseException {
         TreesBlock node = getTreeNode(nexus);
         tree = node.getTreeAsWeightedJGraphT(name);
