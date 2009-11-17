@@ -124,9 +124,9 @@ public class TreesBlockTest extends TestCase {
     protected void setUp() {
         try {
             NexusFileBuilder builder = new NexusFileBuilder();
-            NexusFileFormat.parseInputStream(builder, this.getClass().getResourceAsStream("/files/test1.nex"));
+            NexusFileFormat.parseInputStream(builder, this.getClass().getResourceAsStream("/test1.nex"));
             nexus1 = builder.getNexusFile();
-            NexusFileFormat.parseInputStream(builder, this.getClass().getResourceAsStream("/files/test2.nex"));
+            NexusFileFormat.parseInputStream(builder, this.getClass().getResourceAsStream("/test2.nex"));
             nexus2 = builder.getNexusFile();
         }
         catch (Exception e) {
