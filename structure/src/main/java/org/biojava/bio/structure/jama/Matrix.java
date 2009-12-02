@@ -911,7 +911,7 @@ public class Matrix implements Cloneable, java.io.Serializable {
    public String toString(){
 	   StringWriter writer = new StringWriter();
 	   PrintWriter printWriter = new PrintWriter(writer);
-	   print(printWriter,getRowDimension(),getColumnDimension());
+	   print(printWriter,getColumnDimension(),3);
 	   return writer.toString();
    }
    
