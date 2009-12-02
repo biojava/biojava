@@ -3,6 +3,7 @@ package org.biojava.bio.structure.jama;
 import java.io.BufferedReader;
 import java.io.PrintWriter;
 import java.io.StreamTokenizer;
+import java.io.StringWriter;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
@@ -907,6 +908,13 @@ public class Matrix implements Cloneable, java.io.Serializable {
       return A;
    }
 
+   public String toString(){
+	   StringWriter writer = new StringWriter();
+	   PrintWriter printWriter = new PrintWriter(writer);
+	   print(printWriter,getRowDimension(),getColumnDimension());
+	   return writer.toString();
+   }
+   
 
    /** Print the matrix to stdout.   Line the elements up in columns
      * with a Fortran-like 'Fw.d' style format.
