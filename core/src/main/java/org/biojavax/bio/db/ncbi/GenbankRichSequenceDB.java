@@ -66,6 +66,9 @@ import org.biojavax.bio.seq.io.RichSequenceBuilderFactory;
 public class GenbankRichSequenceDB extends AbstractRichSequenceDB implements RichSequenceDBLite {
     
     protected static final String urlBatchSequences = "http://www.ncbi.nlm.nih.gov:80/entrez/eutils/efetch.fcgi";
+
+    private String email = "anonymous@biojava.org";
+    private String tool = "biojavax";
     
     /**
      * The default constructor delegates to the parent class. The constructor refers
@@ -87,7 +90,7 @@ public class GenbankRichSequenceDB extends AbstractRichSequenceDB implements Ric
         FetchURL seqURL = new FetchURL("Genbank", "text");
         String baseurl = seqURL.getbaseURL();
         String db = seqURL.getDB();
-        String url = baseurl+db+"&id="+id+"&rettype=gb";
+        String url = baseurl+db+"&id="+id+"&rettype=gb&tool="+getTool()+"&email="+getEmail();
         return new URL(url);
     }
     
@@ -107,6 +110,8 @@ public class GenbankRichSequenceDB extends AbstractRichSequenceDB implements Ric
             params.append(idSequence);
             if(i.hasNext()) params.append(",");
         }
+
+        params.append("&email="+getEmail()+"&tool="+getTool());
         
         StringBuffer header = new StringBuffer();
         header.append("POST ");
@@ -319,5 +324,37 @@ public class GenbankRichSequenceDB extends AbstractRichSequenceDB implements Ric
     public void setNamespace(Namespace namespace) {
         
         this.namespace = namespace;
+    }
+
+    /** 
+     * Set the tool identifier for Entrez. Defaults to 'biojavax'.
+     * @param tool the new identifier.
+     */
+    public void setTool(String tool) {
+        this.tool = tool;
+    }
+
+    /** 
+     * Get the tool identifier for Entrez. Defaults to 'biojavax'.
+     * @return the identifier.
+     */
+    public String getTool() {
+        return this.tool;
+    }
+
+    /** 
+     * Set the email for Entrez. Defaults to 'anonymous@biojava.org'.
+     * @param email the new email.
+     */
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    /** 
+     * Get the email for Entrez. Defaults to 'anonymous@biojava.org'.
+     * @return the email.
+     */
+    public String getEmail() {
+        return this.email;
     }
 }
