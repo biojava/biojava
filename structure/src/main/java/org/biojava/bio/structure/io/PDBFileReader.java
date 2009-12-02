@@ -61,7 +61,7 @@ import org.biojava.utils.io.InputStreamProvider;
  * <li> {@link #setAlignSeqRes(boolean)} - should the AminoAcid sequences from the SEQRES
  *      and ATOM records of a PDB file be aligned? (default:true)</li>
  * <li> {@link #setAutoFetch(boolean)} - if the PDB file can not be found locally, should it be fetched
- *  from the EBI - ftp server? (default:false)</li>
+ *  from the PDB ftp servers? (default:false)</li>
  *  </ul>
  *  </p>
  *
@@ -235,7 +235,7 @@ public class PDBFileReader implements StructureIOFile {
 	}
 
 
-	/** should the parser to fetch missing PDB files from the EBI FTP server automatically?
+	/** should the parser to fetch missing PDB files from the PDB FTP server automatically?
 	 *  default is false
 	 * @return flag
 	 */
@@ -243,7 +243,7 @@ public class PDBFileReader implements StructureIOFile {
 		return autoFetch;
 	}
 
-	/** tell the parser to fetch missing PDB files from the EBI FTP server automatically.
+	/** Tell the parser to fetch missing PDB files from the PDB FTP servers automatically.
 	 *
 	 * default is false. If true, new PDB files will be automatically stored in the Path and gzip compressed.
 	 *
