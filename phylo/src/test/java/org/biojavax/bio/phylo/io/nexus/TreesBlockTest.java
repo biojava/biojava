@@ -21,12 +21,7 @@
 
 package org.biojavax.bio.phylo.io.nexus;
 
-//import java.io.BufferedReader;
-//import java.io.ByteArrayOutputStream;
 import java.io.File;
-//import java.io.IOException;
-//import java.io.InputStream;
-//import java.io.InputStreamReader;
 import java.util.Iterator;
 import java.util.Set;
 
@@ -51,6 +46,7 @@ import org.jgrapht.graph.DefaultWeightedEdge;
 public class TreesBlockTest extends TestCase {
     NexusFile nexus1;
     NexusFile nexus2;
+    NexusFile nexus3;
 
     public TreesBlockTest(String name) {
         super(name);
@@ -120,6 +116,28 @@ public class TreesBlockTest extends TestCase {
         doVertexCount(nexus2, "test1", 3);
     }
 
+    /*
+     * Tests resiliency to newline in the middle of a tree.
+     */
+    public void testParseNewline() {
+        doVertexCount(nexus3, "test1", 3);
+    }
+    /*
+     * Tests ability to read inner node names.
+     */
+    public void testInnerNodeName() {
+        doVertexCount(nexus3, "test2", 5);
+    }
+    /*
+     * Tests ability to read inner node names and newlines.
+     *
+     * This is a bug based on a Felsenstein example.
+     */
+    public void testInnerNodeNameAncestor1() {
+        doVertexCount(nexus3, "test3", 7);
+    }
+
+
 
     protected void setUp() {
         try {
@@ -128,6 +146,8 @@ public class TreesBlockTest extends TestCase {
             nexus1 = builder.getNexusFile();
             NexusFileFormat.parseInputStream(builder, this.getClass().getResourceAsStream("/test2.nex"));
             nexus2 = builder.getNexusFile();
+            NexusFileFormat.parseInputStream(builder, this.getClass().getResourceAsStream("/test3.nex"));
+            nexus3 = builder.getNexusFile();
         }
         catch (Exception e) {
             //Should not happen

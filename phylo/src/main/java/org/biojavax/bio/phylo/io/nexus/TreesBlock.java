@@ -351,9 +351,8 @@ public class TreesBlock extends NexusBlock.Abstract {
 	/**
 	 * Renames a vertex of the weighted graph.
 	 *
-	 * @param v vertex name.
-	 * @param p_index the current suffix.
-	 * @return the new p_index.
+	 * @param oldName old name.
+	 * @param newName new name.
 	 */
 	private void renameVertex(String oldName, String newName) {
 		Set<DefaultWeightedEdge> oldEdges = this.weighted.edgesOf(oldName);
@@ -428,6 +427,25 @@ public class TreesBlock extends NexusBlock.Abstract {
 		}
 		return false;
 	}
+
+       /**
+         * Processes the weight part (if it exists).#
+         *
+         * @param tokens
+         */
+        void processWeight(Vector<String> tokens, String parent, String myNode) {
+            if (tokens.size() == 0) {
+                return;
+            }
+            if (tokens.get(0).equals(":")) {
+                    tokens.remove(0);
+                    this.weighted.setEdgeWeight(
+                                    this.weighted.getEdge(parent, myNode),
+                                    Double.parseDouble(tokens.get(0)));
+                    tokens.remove(0);
+            }
+        }
+
 	/**
 	 * Parses a Newick tree.
 	 * 
@@ -471,13 +489,15 @@ public class TreesBlock extends NexusBlock.Abstract {
 			}
 			tokens.remove(0);
 			if (tokens.size() > 0) {
-				if (tokens.get(0).equals(":")) {
-					tokens.remove(0);
-					this.weighted.setEdgeWeight(
-							this.weighted.getEdge(parent, myNode),
-							Double.parseDouble(tokens.get(0)));
+				String nextToken = tokens.get(0);
+				char firstChar = nextToken.charAt(0);
+				if (Character.isLetter(firstChar)) {
+					uuids.remove(myNode);
+					renameVertex(myNode, nextToken);
+					myNode = nextToken;
 					tokens.remove(0);
 				}
+				processWeight(tokens, parent, myNode);
 			}
 			if (parent == null) {
 				String finalName;
