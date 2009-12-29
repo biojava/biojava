@@ -69,8 +69,10 @@ public class HetatomImpl implements Group,Serializable {
 
     protected List<Atom> atoms ;
 
-    //WeakReference parent;
     Chain parent;
+    
+    Map<String,Atom> atomLookup = new HashMap<String,Atom>();
+    
     /* Construct a Hetatom instance. */
     public HetatomImpl() {
         super();
@@ -157,6 +159,7 @@ public class HetatomImpl implements Group,Serializable {
             // we have got coordinates!
             setPDBFlag(true);
         }
+        atomLookup.put(atom.getName(),atom);
     };
 
 
@@ -166,6 +169,7 @@ public class HetatomImpl implements Group,Serializable {
     public void clearAtoms() {
         atoms.clear();
         setPDBFlag(false);
+        atomLookup.clear();
     }
 
     /** getnumber of atoms.
@@ -191,6 +195,7 @@ public class HetatomImpl implements Group,Serializable {
     public void setAtoms(List<Atom> atoms){
     	for (Atom a: atoms){
     		a.setParent(this);
+    		atomLookup.put(a.getName(), a);
     	}
     	this.atoms = atoms;
     	if ( atoms.size() > 0) {
@@ -208,7 +213,15 @@ public class HetatomImpl implements Group,Serializable {
     public Atom getAtom(String name)
     throws StructureException
     {
+    	// todo: add speedup by internal hashmap...
 
+    	Atom a = atomLookup.get(name);
+    	if ( a != null)
+    		return a;
+    	
+    	// something is deeply wrong...
+    	
+    	
         for (int i=0;i<atoms.size();i++){
             Atom atom = atoms.get(i);
             if (atom.getName().equals(name)){
