@@ -21,5 +21,7 @@
 
 /**
  * FASTQ and variants sequence format IO.
+ *
+ * @since 1.7.1
  */
 package org.biojava.bio.program.fastq;

@@ -22,6 +22,8 @@ package org.biojava.bio.program.fastq;
 
 /**
  * FASTQ formatted sequence.
+ *
+ * @since 1.7.1
  */
 public final class Fastq
 {

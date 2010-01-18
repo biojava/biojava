@@ -22,6 +22,8 @@ package org.biojava.bio.program.fastq;
 
 /**
  * Fluent builder API for creating FASTQ formatted sequences.
+ *
+ * @since 1.7.1
  */
 public final class FastqBuilder
 {

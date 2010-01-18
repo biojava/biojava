@@ -32,6 +32,8 @@ import java.util.Arrays;
 
 /**
  * Abstract writer implementation for FASTQ formatted sequences.
+ *
+ * @since 1.7.1
  */
 abstract class AbstractFastqWriter
     implements FastqWriter

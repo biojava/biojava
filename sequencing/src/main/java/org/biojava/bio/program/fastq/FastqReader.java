@@ -28,6 +28,8 @@ import java.io.IOException;
 
 /**
  * Reader for FASTQ formatted sequences.
+ *
+ * @since 1.7.1
  */
 public interface FastqReader
 {

@@ -24,6 +24,8 @@ import java.io.IOException;
 
 /**
  * Writer for {@link FastqVariant#FASTQ_ILLUMINA} formatted sequences.
+ *
+ * @since 1.7.1
  */
 public final class IlluminaFastqWriter
     extends AbstractFastqWriter

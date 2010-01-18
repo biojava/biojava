@@ -34,6 +34,8 @@ import java.util.List;
 
 /**
  * Abstract reader implementation for FASTQ formatted sequences.
+ *
+ * @since 1.7.1
  */
 abstract class AbstractFastqReader
     implements FastqReader

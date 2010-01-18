@@ -24,6 +24,8 @@ import java.io.IOException;
 
 /**
  * Reader for {@link FastqVariant#FASTQ_SOLEXA} formatted sequences.
+ *
+ * @since 1.7.1
  */
 public final class SolexaFastqReader
     extends AbstractFastqReader
