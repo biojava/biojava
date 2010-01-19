@@ -48,11 +48,18 @@ public class StructureTools {
 	 *
 	 */
 	public static final String   caAtomName         = "CA" ;
+	
+	public static final String nAtomName = "N";
+	
+	public static final String oAtomName = "O";
 
+	public static final String cbAtomName = "CB";
+
+	
 	/** The names of the Atoms that form the backbone.
 	 *
 	 */
-	public static final String[] backboneAtomNames = {"N","CA","C","O","CB"};
+	public static final String[] backboneAtomNames = {nAtomName,caAtomName,"C",oAtomName, cbAtomName};
 
 	public static final Character UNKNOWN_GROUP_LABEL = new Character('x');;
 
