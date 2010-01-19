@@ -234,7 +234,8 @@ abstract class AbstractFastqReader
                     }
                     catch (IllegalStateException e)
                     {
-                        throw new IOException("caught an IllegalStateException at line " + lineNumber, e);
+                        throw new IOException("caught an IllegalStateException at line " + lineNumber + " " + e.getMessage());
+                        //throw new IOException("caught an IllegalStateException at line " + lineNumber, e);  jdk 1.6+
                     }
                     validateDescription(builder, line, lineNumber);
                     builder.withDescription(line.substring(1).trim());
@@ -255,7 +256,8 @@ abstract class AbstractFastqReader
             }
             catch (IllegalStateException e)
             {
-                throw new IOException("caught an IllegalStateException at line " + lineNumber, e);
+                throw new IOException("caught an IllegalStateException at line " + lineNumber + " " + e.getMessage());
+                //throw new IOException("caught an IllegalStateException at line " + lineNumber, e);  jdk 1.6+
             }
         }
         if (state != State.DESCRIPTION)
