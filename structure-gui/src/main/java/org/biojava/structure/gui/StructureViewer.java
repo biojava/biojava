@@ -21,9 +21,9 @@ public interface StructureViewer {
 	
 	/** Apply this style to the current selection
 	 * 
-	 * @param wireframe
+	 * @param RenderStyle
 	 */
-	public void setStyle(int wireframe);
+	public void setStyle(RenderStyle wireframe);
 	
 	/** Clear the current display
 	 * 

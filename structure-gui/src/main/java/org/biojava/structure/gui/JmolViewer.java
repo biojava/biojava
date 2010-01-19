@@ -41,7 +41,7 @@ public class JmolViewer implements StructureViewer {
 		
 	}
 
-	public void setStyle(int wireframe) {
+	public void setStyle(RenderStyle wireframe) {
 		// TODO Auto-generated method stub
 		
 	}

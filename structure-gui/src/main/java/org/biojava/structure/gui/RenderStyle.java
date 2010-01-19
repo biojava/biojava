@@ -1,8 +1,6 @@
 package org.biojava.structure.gui;
 
-// TODO make an enum
-public class RenderStyle {
-
-	public static final int WIREFRAME = 1;
-
+public enum RenderStyle {
+    WIREFRAME, STICKS, BALL_AND_STICK, SURFACE, RIBBON, CARTOON, SPHERES, MESH
+	
 }
