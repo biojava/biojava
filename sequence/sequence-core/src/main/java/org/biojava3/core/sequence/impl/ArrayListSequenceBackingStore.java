@@ -59,11 +59,17 @@ public class ArrayListSequenceBackingStore<C extends Compound> implements
 		// Horrendously inefficient - pretty much the way the old BJ did things. 
 		// TODO Should be optimised.
 		this.parsedCompounds.clear();
-		for (int i = 0; i < charSequence.length(); i++) {
-			CharSequence compoundStr = charSequence.subSequence(i,i+1);
-			C compound = compoundSet.getCompoundForCharSequence(compoundStr);
+		for (int i = 0; i < charSequence.length(); ) {
+			CharSequence compoundStr = null;
+			C compound = null;
+			for (int compoundStrLength = 1; compound==null && compoundStrLength<=compoundSet.getMaxSingleCompoundCharSequenceLength(); compoundStrLength++) {
+				compoundStr = charSequence.subSequence(i,i+compoundStrLength);
+				compound = compoundSet.getCompoundForCharSequence(compoundStr);
+			}
 			if (compound==null) {
 				throw new CompoundNotFoundError(compoundStr);
+			} else {
+				i+=compoundStr.length();
 			}
 			this.parsedCompounds.add(compound);
 		}
