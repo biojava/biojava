@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.biojava3.core.sequence.AbstractSequenceView;
 import org.biojava3.core.sequence.Compound;
+import org.biojava3.core.sequence.CompoundNotFoundError;
 import org.biojava3.core.sequence.CompoundSet;
 import org.biojava3.core.sequence.Sequence;
 import org.biojava3.core.sequence.SequenceBackingStore;
@@ -59,7 +60,12 @@ public class ArrayListSequenceBackingStore<C extends Compound> implements
 		// TODO Should be optimised.
 		this.parsedCompounds.clear();
 		for (int i = 0; i < charSequence.length(); i++) {
-			this.parsedCompounds.add(compoundSet.getCompoundForCharSequence(charSequence.subSequence(i,i+1)));
+			CharSequence compoundStr = charSequence.subSequence(i,i+1);
+			C compound = compoundSet.getCompoundForCharSequence(compoundStr);
+			if (compound==null) {
+				throw new CompoundNotFoundError(compoundStr);
+			}
+			this.parsedCompounds.add(compound);
 		}
 	}
 
