@@ -176,6 +176,7 @@
       <plugin>
         <groupId>net.sf</groupId>
         <artifactId>stat-scm</artifactId>
+        <version>1.2.0</version>
         <configuration>
           <includes>
             <include>**/*.java</include>
