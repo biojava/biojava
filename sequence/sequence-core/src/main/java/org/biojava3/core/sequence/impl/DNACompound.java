@@ -4,14 +4,17 @@ import org.biojava3.core.sequence.Compound;
 
 public class DNACompound implements Compound {
 	private char base;
-	private char complement;
+	private DNACompoundSet compoundSet;
+	private CharSequence complementStr;
 	
-	public DNACompound(char base, char complement) {
+	public DNACompound(char base, DNACompoundSet compoundSet, CharSequence complementStr) {
 		this.base = base;
+		this.compoundSet = compoundSet;
+		this.complementStr = complementStr;
 	}
 	
-	public char getComplement() {
-		return this.complement;
+	public DNACompound getComplement() {
+		return this.compoundSet.getCompoundForCharSequence(this.complementStr);
 	}
 	
 	public String toString() {
