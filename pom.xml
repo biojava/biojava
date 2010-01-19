@@ -204,6 +204,6 @@
     <module>biosql</module>
     <module>gui</module>
     <module>bytecode</module>
-    <module>biojava-structure-gui</module>
+    <module>structure-gui</module>
   </modules>
 </project>
