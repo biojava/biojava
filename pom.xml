@@ -9,11 +9,14 @@
   <name>biojava</name>
   <description>BioJava is an open-source project dedicated to providing a Java framework for processing biological data. It provides analytical and statistical routines, parsers for common file formats and allows the manipulation of sequences and 3D structures. The goal of the biojava project is to facilitate rapid application development for bioinformatics.</description>
   <url>http://www.biojava.org</url>
+  <organization>
+    <name>BioJava</name>
+    <url>http://www.biojava.org</url>
+  </organization>
   <scm>
     <connection>scm:svn:svn://code.open-bio.org/biojava/biojava-live/trunk</connection>
     <url>http://code.open-bio.org/svnweb/index.cgi/biojava/browse/biojava-live/trunk</url>
   </scm>
-
   <repositories>
     <repository>
       <id>maven2-repository.dev.java.net</id>
@@ -40,77 +43,103 @@
       <layout>legacy</layout>
     </pluginRepository>
   </pluginRepositories>
-  <dependencies>
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>3.8.1</version>
-      <scope>test</scope>
-    </dependency>
-  </dependencies>
-  <organization>
-    <name>BioJava</name>
-    <url>http://www.biojava.org</url>
-  </organization>
+  <properties>
+    <jdk.version>1.5</jdk.version>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.build.targetEncoding>UTF-8</project.build.targetEncoding>
+  </properties>
   <build>
     <pluginManagement>
       <plugins>
         <plugin>
+          <artifactId>maven-clean-plugin</artifactId>
+          <version>2.4</version>
+        </plugin>
+        <plugin>
+          <artifactId>maven-compiler-plugin</artifactId>
+          <version>2.0.2</version>
+          <configuration>
+            <source>${jdk.version}</source>
+            <target>${jdk.version}</target>
+          </configuration>
+        </plugin>
+        <plugin>
+          <artifactId>maven-dependency-plugin</artifactId>
+          <version>2.0</version>
+        </plugin>
+        <plugin>
+          <artifactId>maven-jar-plugin</artifactId>
+          <version>2.3</version>
+        </plugin>
+        <plugin>
+          <artifactId>maven-scm-plugin</artifactId>
+          <version>1.0</version>
+        </plugin>
+        <plugin>
+          <artifactId>maven-site-plugin</artifactId>
+          <version>2.1</version>
+        </plugin>
+        <plugin>
+          <artifactId>maven-surefire-plugin</artifactId>
+          <version>2.5</version>
+        </plugin>
+        <plugin>
           <groupId>net.sf</groupId>
           <artifactId>stat-scm</artifactId>
+          <version>1.2.0</version>
+        </plugin>
+        <plugin>
+          <groupId>org.jvnet.jaxb2.maven2</groupId>
+          <artifactId>maven-jaxb2-plugin</artifactId>
+          <version>0.7.2</version>
         </plugin>
       </plugins>
     </pluginManagement>
-
-    <plugins>
-      <plugin>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <version>2.0.2</version>
-        <configuration>
-          <source>1.5</source>
-          <target>1.5</target>
-        </configuration>
-      </plugin>
-      <plugin>
-        <artifactId>maven-dependency-plugin</artifactId>
-        <version>2.0</version>
-      </plugin>
-      <plugin>
-        <groupId>net.sf</groupId>
-        <artifactId>stat-scm</artifactId>
-        <version>1.2.0</version>
-      </plugin>
-    <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-scm-plugin</artifactId>
-        <version>1.0</version>        
-      </plugin>
-
-    </plugins>
   </build>
-  <modules>
-    <module>core</module>
-    <module>alignment</module>
-    <module>blast</module>
-    <module>das</module>
-    <module>sequence</module>
-    <module>sequencing</module>
-    <module>structure</module>
-    <module>phylo</module>
-    <module>biosql</module>
-    <module>gui</module>
-    <module>bytecode</module>
-  </modules>
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>junit</groupId>
+        <artifactId>junit</artifactId>
+        <version>3.8.2</version>
+      </dependency>
+      <dependency>
+        <groupId>commons-dbcp</groupId>
+        <artifactId>commons-dbcp</artifactId>
+        <version>1.2.2</version>
+      </dependency>
+      <dependency>
+        <groupId>javax.persistence</groupId>
+        <artifactId>persistence-api</artifactId>
+        <version>1.0</version>
+      </dependency>
+      <dependency>
+        <groupId>javax.xml.bind</groupId>
+        <artifactId>jaxb-api</artifactId>
+        <version>2.2</version>
+      </dependency>
+      <dependency>
+        <groupId>org.jgrapht</groupId>
+        <artifactId>jgrapht-jdk1.5</artifactId>
+        <version>0.7.3</version>
+      </dependency>
+      <dependency>
+        <groupId>xerces</groupId>
+        <artifactId>xercesImpl</artifactId>
+        <version>2.4.0</version>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
   <reporting>
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-project-info-reports-plugin</artifactId>
-        <version>2.0.1</version>
+        <version>2.1.2</version>
       </plugin>
-
       <plugin>
         <artifactId>maven-javadoc-plugin</artifactId>
+	<version>2.6.1</version>
         <configuration>
           <aggregate>true</aggregate>
           <minmemory>100m</minmemory>
@@ -120,6 +149,7 @@
           <source>1.5</source>
           <verbose>false</verbose>
           <linksource>true</linksource>
+	  <!-- <detectLinks>true</detectLinks> -->
           <links>
             <!-- JSE -->
             <link>http://java.sun.com/j2se/1.6.0/docs/api/</link>
@@ -153,16 +183,25 @@
           <excludes>
             <exclude>**/test/**/*.java</exclude>
           </excludes>
-
           <tags>3.0</tags>
           <tagsDir>/releases/</tagsDir>
           <cacheDir>/statsvn/</cacheDir>
           <title>BioJava SVN statistics</title>          
-          
         </configuration>
-
       </plugin>
-
     </plugins>
   </reporting>
+  <modules>
+    <module>core</module>
+    <module>alignment</module>
+    <module>blast</module>
+    <module>das</module>
+    <module>sequence</module>
+    <module>sequencing</module>
+    <module>structure</module>
+    <module>phylo</module>
+    <module>biosql</module>
+    <module>gui</module>
+    <module>bytecode</module>
+  </modules>
 </project>
