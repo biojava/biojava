@@ -52,7 +52,7 @@ public class IndexToolsTest extends TestCase
         location = System.getProperty("java.io.tmpdir")
             + System.getProperty("file.separator")
             + "IndexToolsTest."
-            + System.currentTimeMillis()
+            + System.nanoTime()
             + ".idx";
     }
 
