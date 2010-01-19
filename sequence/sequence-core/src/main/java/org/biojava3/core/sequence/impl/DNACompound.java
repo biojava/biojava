@@ -3,11 +3,11 @@ package org.biojava3.core.sequence.impl;
 import org.biojava3.core.sequence.Compound;
 
 public class DNACompound implements Compound {
-	private char base;
+	private CharSequence base;
 	private DNACompoundSet compoundSet;
 	private CharSequence complementStr;
 	
-	public DNACompound(char base, DNACompoundSet compoundSet, CharSequence complementStr) {
+	public DNACompound(CharSequence base, DNACompoundSet compoundSet, CharSequence complementStr) {
 		this.base = base;
 		this.compoundSet = compoundSet;
 		this.complementStr = complementStr;
@@ -18,7 +18,7 @@ public class DNACompound implements Compound {
 	}
 	
 	public String toString() {
-		return ""+base;
+		return base.toString();
 	}
 	
 	public boolean equals(Object obj) {
@@ -29,11 +29,11 @@ public class DNACompound implements Compound {
 			return false;
 		}
 		DNACompound them = (DNACompound)obj;
-		return this.base == them.base;
+		return this.base.equals(them.base);
 	}
 	
 	public int hashCode() {
-		return this.base;
+		return this.base.hashCode();
 	}
 	
 	public boolean equalsIgnoreCase(Compound compound) {
@@ -44,6 +44,6 @@ public class DNACompound implements Compound {
 			return false;
 		}
 		DNACompound them = (DNACompound)compound;
-		return this.toString().equalsIgnoreCase(them.toString());
+		return this.base.toString().equalsIgnoreCase(them.base.toString());
 	}
 }

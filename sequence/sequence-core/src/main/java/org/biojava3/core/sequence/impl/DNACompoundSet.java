@@ -10,14 +10,14 @@ public class DNACompoundSet implements CompoundSet<DNACompound> {
 	private final Map<CharSequence,DNACompound> dnaCompoundCache = new HashMap<CharSequence,DNACompound>();
 	
 	public DNACompoundSet() {
-		dnaCompoundCache.put("A", new DNACompound('A',this,"T"));
-		dnaCompoundCache.put("T", new DNACompound('T',this,"A"));
-		dnaCompoundCache.put("C", new DNACompound('C',this,"G"));
-		dnaCompoundCache.put("G", new DNACompound('G',this,"C"));
-		dnaCompoundCache.put("a", new DNACompound('a',this,"t"));
-		dnaCompoundCache.put("t", new DNACompound('t',this,"a"));
-		dnaCompoundCache.put("c", new DNACompound('c',this,"g"));
-		dnaCompoundCache.put("g", new DNACompound('g',this,"c"));
+		dnaCompoundCache.put("A", new DNACompound("A",this,"T"));
+		dnaCompoundCache.put("T", new DNACompound("T",this,"A"));
+		dnaCompoundCache.put("C", new DNACompound("C",this,"G"));
+		dnaCompoundCache.put("G", new DNACompound("G",this,"C"));
+		dnaCompoundCache.put("a", new DNACompound("a",this,"t"));
+		dnaCompoundCache.put("t", new DNACompound("t",this,"a"));
+		dnaCompoundCache.put("c", new DNACompound("c",this,"g"));
+		dnaCompoundCache.put("g", new DNACompound("g",this,"c"));
 	}
 	
 	public CharSequence getCharSequenceForCompound(DNACompound compound) {
