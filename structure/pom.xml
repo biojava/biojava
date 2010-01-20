@@ -9,7 +9,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.biojava</groupId>
   <artifactId>structure</artifactId>
-  <name>biojava structure</name>
+  <name>structure</name>
   <description>The protein structure modules of BioJava.</description>
   <dependencies>
     <dependency>
@@ -31,3 +31,4 @@
     </dependency>
   </dependencies>
 </project>
+
