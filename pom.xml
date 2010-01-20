@@ -101,7 +101,7 @@
       <dependency>
         <groupId>junit</groupId>
         <artifactId>junit</artifactId>
-        <version>3.8.2</version>
+        <version>4.7</version>
         <scope>test</scope>
       </dependency>
       <dependency>
@@ -131,14 +131,6 @@
       </dependency>
     </dependencies>
   </dependencyManagement>
-  <dependencies>
-  	<dependency>
-  		<groupId>junit</groupId>
-  		<artifactId>junit</artifactId>
-  		<version>4.7</version>
-  		<scope>test</scope>
-  	</dependency>
-  </dependencies>
   <reporting>
     <plugins>
       <plugin>
@@ -148,7 +140,7 @@
       </plugin>
       <plugin>
         <artifactId>maven-javadoc-plugin</artifactId>
-	<version>2.6.1</version>
+        <version>2.6.1</version>
         <configuration>
           <aggregate>true</aggregate>
           <minmemory>100m</minmemory>
