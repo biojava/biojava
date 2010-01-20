@@ -1,8 +1,6 @@
 package org.biojava3.core;
 
 import junit.framework.TestCase;
-import org.biojava3.core.sequence.template.Sequence;
-import org.biojava3.core.sequence.compound.DNACompound;
 import org.biojava3.core.sequence.DNASequence;
 
 public class DNATests extends TestCase {
