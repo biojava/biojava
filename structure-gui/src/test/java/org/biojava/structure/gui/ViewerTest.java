@@ -21,7 +21,7 @@ public class ViewerTest extends TestCase {
 	@Override
 	protected void setUp(){
 		//viewer = new OpenAstexViewer();
-		viewer = new JmolViewer();
+		viewer = new JmolViewerImpl();
 		//viewer = new RCSBViewer();
 		structure = new StructureImpl();
 	}

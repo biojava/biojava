@@ -24,5 +24,17 @@
     	<version>3.0-SNAPSHOT</version>
     	<scope>compile</scope>
     </dependency>
+    <dependency>
+      <groupId>openAstex</groupId>
+      <artifactId>openAstex</artifactId>
+      <version>3.0</version>
+      <type>jar</type>
+    </dependency>
+    <dependency>
+      <groupId>jmolApplet</groupId>
+      <artifactId>jmolApplet</artifactId>
+      <version>11.8.17</version>
+    </dependency>
   </dependencies>
 </project>
+
