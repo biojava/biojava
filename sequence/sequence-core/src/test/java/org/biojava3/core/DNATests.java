@@ -1,53 +1,60 @@
 package org.biojava3.core;
 
-import static org.junit.Assert.*;
+import junit.framework.TestCase;
+import org.biojava3.core.sequence.template.Sequence;
+import org.biojava3.core.sequence.compound.DNACompound;
+import org.biojava3.core.sequence.DNASequence;
 
+public class DNATests extends TestCase {
 
-import org.biojava3.core.sequence.Sequence;
-import org.biojava3.core.sequence.impl.DNACompound;
-import org.biojava3.core.sequence.impl.DNASequence;
-import org.junit.Test;
+    public DNATests(String testName) {
+        super(testName);
+    }
 
-public class DNATests {
+    @Override
+    protected void setUp() throws Exception {
+        super.setUp();
+    }
 
-//  @Test
-//  public void reverseComplement() {
-//    String s = getSeq().reverseComplement().toString();
-//    assertThat(s, is("GCAT"));
-//  }
-//
-//  @Test
-//  public void complement() {
-//    String s = getSeq().complement().toString();
-//    assertThat(s, is("TACG"));
-//  }
-//
-//  @Test
-//  public void reverse() {
-//    String s = getSeq().reverse().toString();
-//    assertThat(s, is("CGTA"));
-//  }
-//
-//  @Test
-//  public void translateToRna() {
-//    String s = getSeq("ATGGCGGCGCTGAGCGGT").toRNA().toString();
-//    assertThat(s, is("AUGGCGGCGCUGAGCGGU"));
-//  }
-//
-//  @Test
-//  public void respectCase() {
-//    String s = "ATgc";
-//    assertThat(s.toString, is(s));
-//  }
-//
-//  @Test(expected=BadSequence.class`)
-//  public void bogusSequence() {
-//    getSeq("ATGCx");
-//  }
-//
-//  public Sequence<? extends DNACompound> getSeq(final String seq) {
-//    String target = ( seq == null ) ? "ATGC" : seq;
-//    return new DNASequence(target);
-//  }
+    @Override
+    protected void tearDown() throws Exception {
+        super.tearDown();
+    }
 
+    public void testgetReverseComplement() {
+        String s = getSeq(null).getReverseComplement().toString();
+        assertEquals(s, "GCAT");
+
+    }
+
+    public void testgetComplement() {
+        String s = getSeq(null).getComplement().toString();
+        assertEquals(s, "TACG");
+    }
+
+    public void testReverse() {
+        String s = getSeq(null).getReverse().toString();
+        assertEquals(s, "CGTA");
+    }
+
+    public void translateToRna() {
+        String s = getSeq("ATGGCGGCGCTGAGCGGT").getRNASequence().toString();
+        assertEquals(s, "AUGGCGGCGCUGAGCGGU");
+    }
+
+    public void testRespectCase() {
+        String s = "ATgc";
+        assertEquals(s.toString(), s);
+    }
+
+    //@Test(expected=BadSequence.class)
+    public void testBogusSequence() {
+        getSeq("ATGCx");
+    }
+
+    public DNASequence getSeq(final String seq) {
+        String target = (seq == null) ? "ATGC" : seq;
+        return new DNASequence(target);
+    }
 }
+

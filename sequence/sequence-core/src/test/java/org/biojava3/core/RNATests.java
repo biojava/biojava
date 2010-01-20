@@ -1,9 +1,9 @@
 package org.biojava3.core;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+//import static org.hamcrest.CoreMatchers.is;
+//import static org.junit.Assert.assertThat;
 
-import org.junit.Test;
+//import org.junit.Test;
 
 public class RNATests {
 

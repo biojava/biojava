@@ -1,13 +1,13 @@
-package org.biojava3.core.sequence;
+package org.biojava3.core.sequence.template;
 
 import java.util.Iterator;
 import java.util.List;
 
 public abstract class AbstractSequenceView<C extends Compound> implements SequenceView<C> {
 	
-	public CharSequence getAsCharSequence() {
+	public String getString() {
 		// TODO Optimise.
-		return this.getViewedSequence().getAsCharSequence().subSequence(this.getStart()-1, this.getEnd());
+		return this.getViewedSequence().getString().substring(this.getStart()-1, this.getEnd());
 	}
 
 	public List<C> getAsList() {

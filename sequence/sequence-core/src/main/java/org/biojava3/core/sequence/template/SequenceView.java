@@ -1,4 +1,4 @@
-package org.biojava3.core.sequence;
+package org.biojava3.core.sequence.template;
 
 public interface SequenceView<C extends Compound> extends Sequence<C> {
 	

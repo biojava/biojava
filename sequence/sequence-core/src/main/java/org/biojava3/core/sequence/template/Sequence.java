@@ -1,4 +1,4 @@
-package org.biojava3.core.sequence;
+package org.biojava3.core.sequence.template;
 
 import java.util.List;
 
@@ -11,7 +11,7 @@ public interface Sequence<C extends Compound> extends Iterable<C> {
 	
 	public int getLastIndexOf(C compound);
 	
-	public CharSequence getAsCharSequence();
+	public String getString();
 	
 	public List<C> getAsList();
 
