@@ -1,3 +1,28 @@
+/*
+ *                    BioJava development code
+ *
+ * This code may be freely distributed and modified under the
+ * terms of the GNU Lesser General Public Licence.  This should
+ * be distributed with the code.  If you do not have a copy,
+ * see:
+ *
+ *      http://www.gnu.org/copyleft/lesser.html
+ *
+ * Copyright for this code is held jointly by the individual
+ * authors.  These should be listed in @author doc comments.
+ *
+ * For more information on the BioJava project and its aims,
+ * or to join the biojava-l mailing list, visit the home page
+ * at:
+ *
+ *      http://www.biojava.org/
+ *
+ * Created on 01-21-2010
+ *
+ * @author Richard Holland
+ * @auther Scooter Willis
+ *
+ */
 package org.biojava3.core.sequence.compound;
 
 import org.biojava3.core.sequence.template.Compound;
@@ -58,32 +83,32 @@ public class NucleotideCompound<C extends Compound> implements NucleotideCompoun
         return description;
     }
 
-    public void setDescription(String _description) {
-        description = _description;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public String getShortName() {
         return shortName;
     }
 
-    public void setShortName(String _shortName) {
-        shortName = _shortName;
+    public void setShortName(String shortName) {
+        this.shortName = shortName;
     }
 
     public String getLongName() {
         return longName;
     }
 
-    public void setLongName(String _longName) {
-        longName = _longName;
+    public void setLongName(String longName) {
+        this.longName = longName;
     }
 
     public Float getMolecularWeight() {
         return molecularWeight;
     }
 
-    public void setMolecularWeight(Float _molecularWeight) {
-        molecularWeight = _molecularWeight;
+    public void setMolecularWeight(Float molecularWeight) {
+        this.molecularWeight = molecularWeight;
     }
 
     public void setComplement(NucleotideCompoundInterface nucleotideCompound) {
