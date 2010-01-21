@@ -2,6 +2,8 @@ TODO in order for this to compile:
 
 Install JmolApplet.jar from the Jmol web site using:
 
+http://jmol.sourceforge.net/download/
+
 mvn install:install-file \
  -Dfile=/Users/andreas/workspace_mvn/Jmol/build/JmolApplet.jar \
  -DgroupId=jmolapplet \
