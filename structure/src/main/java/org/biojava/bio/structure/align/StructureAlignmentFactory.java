@@ -12,7 +12,7 @@ import org.biojava.bio.structure.align.seq.SmithWaterman3Daligner;
 public class StructureAlignmentFactory {
 
 	public static StructureAlignment[] getAllAlgorithms(){
-		StructureAlignment[] algorithms = new StructureAlignment[5];
+		StructureAlignment[] algorithms = new StructureAlignment[3];
 		
 		algorithms[0] = new CeMain();
 		algorithms[1] = new CeSideChainMain();		
