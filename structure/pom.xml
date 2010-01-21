@@ -8,8 +8,8 @@
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.biojava</groupId>
-  <artifactId>structure</artifactId>
-  <name>structure</name>
+  <artifactId>biojava3-structure</artifactId>
+  <name>biojava3-structure</name>
   <description>The protein structure modules of BioJava.</description>
   <dependencies>
     <dependency>
