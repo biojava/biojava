@@ -206,5 +206,6 @@
     <module>bytecode</module>
     <module>structure-gui</module>
     <module>motif</module>
+    <module>biojava3-core</module>
   </modules>
 </project>
