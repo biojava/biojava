@@ -17,14 +17,18 @@
  *
  *      http://www.biojava.org/
  *
- * Created on DATE
+ * Created on 2010-01-21
  *
  */
 package demo;
 
 import org.biojava.bio.structure.align.gui.AlignmentGui;
 
-
+/**
+ * 
+ * @author Andreas Prlic
+ *
+ */
 public class AlignmentGuiDemo {
 
 	//  /Users/ap3/WORK/PDB/hy/pdb2hyn.ent.gz
