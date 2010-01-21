@@ -20,10 +20,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import org.biojava.bio.structure.Structure;
-import org.biojava.bio.structure.align.gui.AlignmentGui;
 import org.biojava.bio.structure.align.gui.MenuCreator;
-import org.biojava.bio.structure.align.gui.jmol.StructureAlignmentJmol;
-
 
 public class JmolViewerImpl implements StructureViewer {
 
@@ -38,9 +35,7 @@ public class JmolViewerImpl implements StructureViewer {
 
         frame = new JFrame();
 
- 
         JMenuBar menu = MenuCreator.initMenu(frame, null,null);
-
 
         frame.setJMenuBar(menu);
 
@@ -162,8 +157,11 @@ public class JmolViewerImpl implements StructureViewer {
          *
          */
         private static final long serialVersionUID = -3661941083797644242L;
-        Class viewerC;
+        @SuppressWarnings("unchecked")
+		Class viewerC;
+        @SuppressWarnings("unchecked")
         Class adapterC;
+        @SuppressWarnings("unchecked")
         Class smartAdapterC;
         Object viewerO;
         Object adapterO;
@@ -173,7 +171,8 @@ public class JmolViewerImpl implements StructureViewer {
 
         //JmolSimpleViewer viewer;
         //JmolAdapter adapter;
-        JmolPanel() throws ClassNotFoundException {
+        @SuppressWarnings("unchecked")
+		JmolPanel() throws ClassNotFoundException {
 
             try {
                 viewerC = Class.forName(viewer);
@@ -212,6 +211,7 @@ public class JmolViewerImpl implements StructureViewer {
 
         }
 
+        @SuppressWarnings("unchecked")
         public Class getViewer() {
             return viewerC;
         }
