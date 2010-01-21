@@ -28,6 +28,10 @@ import junit.framework.TestCase;
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.io.PDBFileParser;
 import org.biojava.bio.structure.io.PDBFileReader;
+import org.biojava3.structure.gui.OpenAstexViewerImpl;
+import org.biojava3.structure.gui.RenderStyle;
+import org.biojava3.structure.gui.Selection;
+import org.biojava3.structure.gui.StructureViewer;
 
 
 /**
