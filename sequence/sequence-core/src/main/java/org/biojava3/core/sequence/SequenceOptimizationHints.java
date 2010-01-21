@@ -5,6 +5,15 @@
 package org.biojava3.core.sequence;
 
 /**
+ * A static class that provides optimization hints for memory or performance handling of sequence data.
+ * If you are working with genomic sequence data and the use case is sub sequence then the sequence proxy loader
+ * implementation may do file reads for each sub-sequence request instead of loading everything into memory.
+ * If a large collection of protein sequences is being loaded from a fasta file but only a few sequences will be selected
+ * then the file loader could create a sequence proxy loader that retains the offset in the file for each sequence
+ * and it is loaded when the sequence data is requested. This way you could load a pointer to all sequences but delay
+ * loading until the user actually needs the data. The sequence loader could also have an internal sequence management
+ * algorithm that goes through and returns sequence data freeing up memory where a future request for sequence data will
+ * then be reloaded.
  *
  * @author Scooter
  */
