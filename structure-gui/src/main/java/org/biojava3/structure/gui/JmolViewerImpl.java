@@ -22,6 +22,7 @@ import javax.swing.JTextField;
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.align.gui.AlignmentGui;
 import org.biojava.bio.structure.align.gui.MenuCreator;
+import org.biojava.bio.structure.align.gui.jmol.StructureAlignmentJmol;
 
 
 public class JmolViewerImpl implements StructureViewer {
@@ -37,6 +38,7 @@ public class JmolViewerImpl implements StructureViewer {
 
         frame = new JFrame();
 
+ 
         JMenuBar menu = MenuCreator.initMenu(frame, null,null);
 
 

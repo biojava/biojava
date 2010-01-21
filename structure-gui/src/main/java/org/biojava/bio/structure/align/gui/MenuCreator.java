@@ -73,31 +73,36 @@ public class MenuCreator {
 		JMenu file= new JMenu("File");
 		file.getAccessibleContext().setAccessibleDescription("File Menu");
 
-		JMenuItem loadF = getLoadMenuItem();
-		loadF.addActionListener(new MyAlignmentLoadListener(parent));
-		file.add(loadF);
+		if ( parent != null){
+			JMenuItem loadF = getLoadMenuItem();
+			loadF.addActionListener(new MyAlignmentLoadListener(parent));
+			file.add(loadF);
+		}
 
 		JMenuItem saveF = getSaveAlignmentMenuItem(afpChain);
 		file.add(saveF);
 
 
 		JMenuItem openI = getOpenPDBMenuItem();
-		
+
 		file.add(openI);
 
-		JMenuItem exportI =  getExportPDBMenuItem(parent);
-						
-		file.add(exportI);
+		if ( parent != null){
+			JMenuItem exportI =  getExportPDBMenuItem(parent);
+
+			file.add(exportI);
+		}
 
 		JMenuItem openDBI = getDBResultMenuItem();
 		file.add(openDBI);
 		file.addSeparator();
 
-		JMenuItem print = getPrintMenuItem();
-		print.addActionListener(parent.getJmolPanel());
-		
-		file.add(print);
+		if ( parent != null){
+			JMenuItem print = getPrintMenuItem();
+			print.addActionListener(parent.getJmolPanel());
 
+			file.add(print);
+		}
 		file.addSeparator();
 
 		JMenuItem closeI = getCloseMenuItem(frame);
@@ -108,18 +113,18 @@ public class MenuCreator {
 		file.add(exitI);
 		menu.add(file);
 
-		
+
 		JMenu align = new JMenu("Align");
 		JMenuItem pairI = getPairwiseAlignmentMenuItem();
 		align.add(pairI);
 		JMenuItem dbI = getDBSearchMenuItem();
 		align.add(dbI);
 
-
-		JMenuItem distMax = new  JMenuItem("Show Distance Matrices Current Alignment");
-		distMax.addActionListener(new MyDistMaxListener(afpChain));
-		align.add(distMax);
-
+		if ( afpChain != null){
+			JMenuItem distMax = new  JMenuItem("Show Distance Matrices Current Alignment");
+			distMax.addActionListener(new MyDistMaxListener(afpChain));
+			align.add(distMax);
+		}
 
 		menu.add(align);
 
@@ -127,15 +132,16 @@ public class MenuCreator {
 		view.getAccessibleContext().setAccessibleDescription("View Menu");
 		view.setMnemonic(KeyEvent.VK_V);
 		menu.add(view);
-		
-		JMenuItem aligpI = MenuCreator.getIcon(parent,ALIGNMENT_PANEL);
-		view.add(aligpI);
-		
-		JMenuItem textI = MenuCreator.getIcon(parent,TEXT_ONLY);
-		view.add(textI);
-		
-		
-		
+
+		if ( parent != null){
+			JMenuItem aligpI = MenuCreator.getIcon(parent,ALIGNMENT_PANEL);
+			view.add(aligpI);
+
+			JMenuItem textI = MenuCreator.getIcon(parent,TEXT_ONLY);
+			view.add(textI);
+		}
+
+
 		JMenu about = new JMenu("Help");
 		about.setMnemonic(KeyEvent.VK_A);
 
@@ -151,11 +157,11 @@ public class MenuCreator {
 		return menu;
 
 	}
-	
-	
+
+
 	public static JMenuItem getDBResultMenuItem() {
 		JMenuItem item = getIcon(new ActionListener() {
-			
+
 			public void actionPerformed(ActionEvent e) {
 				final JFileChooser fc = new JFileChooser();
 
@@ -168,10 +174,10 @@ public class MenuCreator {
 					DBResultTable table = new DBResultTable();
 					table.show(file,config);
 				}
-				
+
 			}
 		}, LOAD_DB_RESULTS );
-		
+
 		return item;
 	}
 
@@ -179,7 +185,7 @@ public class MenuCreator {
 	public static JMenuItem getOpenPDBMenuItem() {
 		ImageIcon loadI = createImageIcon("/icons/background.png");
 		JMenuItem openI = null;
-		
+
 		if ( loadI == null)
 			openI =new JMenuItem("Open PDB file");
 		else 
@@ -191,7 +197,7 @@ public class MenuCreator {
 
 
 	public static JMenuItem getLoadMenuItem() {
-		
+
 		JMenuItem loadF = null;
 		ImageIcon loadI = createImageIcon("/icons/revert.png");
 		if ( loadI == null)
@@ -199,103 +205,103 @@ public class MenuCreator {
 		else 
 			loadF = new JMenuItem(LOAD_ALIGNMENT_XML, loadI);
 		loadF.setMnemonic(KeyEvent.VK_L);
-	
+
 		return loadF;
 	}
 
 
 	public static JMenuBar getAlignmentTextMenu(JFrame frame, ActionListener actionListener,AFPChain afpChain){
-		
+
 
 		JMenuBar menu = new JMenuBar();
 
 		JMenu file= new JMenu("File");
 		file.getAccessibleContext().setAccessibleDescription("File Menu");
 		menu.add(file);
-		
+
 		ImageIcon saveicon = createImageIcon("/icons/filesave.png");
-		
+
 		JMenuItem saveF = null;
-		
+
 		if (saveicon != null )
 			saveF = new JMenuItem("Save text display", saveicon);
 		else 
 			saveF = new JMenuItem("Save text display");
-		
+
 		saveF.setMnemonic(KeyEvent.VK_S);
 		MySaveFileListener listener = new MySaveFileListener(afpChain);
 		listener.setFatCatOutput(true);
 		saveF.addActionListener(listener);
 		file.add(saveF);
-		
+
 		file.addSeparator();
-		
+
 		JMenuItem print = getPrintMenuItem();
 		print.addActionListener(actionListener);
 		file.add(print);
-		
+
 		file.addSeparator();
-		
+
 		JMenuItem closeI = MenuCreator.getCloseMenuItem(frame);
 		file.add(closeI);
 		JMenuItem exitI = MenuCreator.getExitMenuItem();		
 		file.add(exitI);
-		
+
 		JMenu edit = new JMenu("Edit");
 		edit.setMnemonic(KeyEvent.VK_E);
 		menu.add(edit);
-		
+
 		JMenuItem eqrI = MenuCreator.getIcon(actionListener,SELECT_EQR);
 		edit.add(eqrI);
-		
+
 		JMenuItem eqrcI = MenuCreator.getIcon(actionListener,EQR_COLOR);
 		edit.add(eqrcI);
-		
+
 		JMenuItem simI = MenuCreator.getIcon(actionListener, SIMILARITY_COLOR);
 		edit.add(simI);
-		
+
 		JMenuItem fatcatI = MenuCreator.getIcon(actionListener, FATCAT_BLOCK );
 		edit.add(fatcatI);
-		
+
 		JMenu view= new JMenu("View");
 		view.getAccessibleContext().setAccessibleDescription("View Menu");
 		view.setMnemonic(KeyEvent.VK_V);
 		menu.add(view);
-		
+
 		JMenuItem textI = MenuCreator.getIcon(actionListener,TEXT_ONLY);
 		view.add(textI);
-		
-		
-		
-		
-		
+
+
+
+
+
 		JMenu about = new JMenu("Help");
 		about.setMnemonic(KeyEvent.VK_A);
-		
+
 		JMenuItem helpM = MenuCreator.getHelpMenuItem();
 		about.add(helpM);
-		
+
 		JMenuItem aboutM = MenuCreator.getAboutMenuItem();
 		about.add(aboutM);
 
-		
+
 		menu.add(Box.createGlue());
 		menu.add(about);
 
 		return menu;
-		
-		
+
+
 	}	
-	
-	
-	
+
+
+
 
 	private static JMenuItem getIcon(ActionListener actionListener, String text) {
 		JMenuItem to = new JMenuItem(text);
-		
+
 		to.setMnemonic(KeyEvent.VK_E);
 		to.addActionListener(actionListener);
-		
+
 		return to;
 	}
 
@@ -315,19 +321,19 @@ public class MenuCreator {
 
 
 		print.setMnemonic(KeyEvent.VK_P);
-	
+
 		return print;
 	}
 
 	public static JMenuItem getExportPDBMenuItem(StructureAlignmentJmol parent) {
 		ImageIcon saveicon = createImageIcon("/icons/compfile.png");
 		JMenuItem exportI = null;
-		
+
 		if ( saveicon == null)
 			exportI = new JMenuItem("Export PDB file");
 		else 
 			exportI = new JMenuItem("Export PDB file", saveicon);
-	
+
 		exportI.setMnemonic(KeyEvent.VK_E);
 
 		exportI.addActionListener(new MyExportListener(parent));
@@ -342,7 +348,7 @@ public class MenuCreator {
 			saveF = new JMenuItem(SAVE_ALIGNMENT_XML);
 		else 
 			saveF = new JMenuItem(SAVE_ALIGNMENT_XML, saveicon);
-		
+
 		saveF.setMnemonic(KeyEvent.VK_S);
 		saveF.addActionListener(new MySaveFileListener(afpChain));
 
@@ -539,50 +545,50 @@ public class MenuCreator {
 
 
 	public static JMenuBar initAlignmentGUIMenu(JFrame frame) {
-		
-			
-			JMenu file= new JMenu("File");
-			file.getAccessibleContext().setAccessibleDescription("File Menu");
 
-			JMenuItem loadF = MenuCreator.getLoadMenuItem();
-			loadF.addActionListener(new MyAlignmentLoadListener(null));
-			file.add(loadF);
-			
-			JMenuItem openI = MenuCreator.getOpenPDBMenuItem();		
-			file.add(openI);
-			
-			JMenuItem dbI = MenuCreator.getDBResultMenuItem();
-			file.add(dbI);
-			file.addSeparator();
-			
-			JMenuItem closeI = MenuCreator.getCloseMenuItem(frame);
-			file.add(closeI);
-			JMenuItem exitI = MenuCreator.getExitMenuItem();		
-			file.add(exitI);
-			
-			JMenuBar menu = new JMenuBar();
-			menu.add(file);
-			
-			JMenu alig = new JMenu("Align");
-			menu.add(alig);
-			
-			JMenuItem pw = MenuCreator.getPairwiseAlignmentMenuItem();
-			alig.add(pw);
-			
-			JMenuItem dbF = MenuCreator.getDBSearchMenuItem();
-			alig.add(dbF);
-						
-			JMenu about = new JMenu("Help");
-			about.setMnemonic(KeyEvent.VK_A);
-			
-			JMenuItem aboutM = MenuCreator.getAboutMenuItem();
-			about.add(aboutM);
-			
-			menu.add(Box.createGlue());
-			menu.add(about);
 
-			return menu;
-		
+		JMenu file= new JMenu("File");
+		file.getAccessibleContext().setAccessibleDescription("File Menu");
+
+		JMenuItem loadF = MenuCreator.getLoadMenuItem();
+		loadF.addActionListener(new MyAlignmentLoadListener(null));
+		file.add(loadF);
+
+		JMenuItem openI = MenuCreator.getOpenPDBMenuItem();		
+		file.add(openI);
+
+		JMenuItem dbI = MenuCreator.getDBResultMenuItem();
+		file.add(dbI);
+		file.addSeparator();
+
+		JMenuItem closeI = MenuCreator.getCloseMenuItem(frame);
+		file.add(closeI);
+		JMenuItem exitI = MenuCreator.getExitMenuItem();		
+		file.add(exitI);
+
+		JMenuBar menu = new JMenuBar();
+		menu.add(file);
+
+		JMenu alig = new JMenu("Align");
+		menu.add(alig);
+
+		JMenuItem pw = MenuCreator.getPairwiseAlignmentMenuItem();
+		alig.add(pw);
+
+		JMenuItem dbF = MenuCreator.getDBSearchMenuItem();
+		alig.add(dbF);
+
+		JMenu about = new JMenu("Help");
+		about.setMnemonic(KeyEvent.VK_A);
+
+		JMenuItem aboutM = MenuCreator.getAboutMenuItem();
+		about.add(aboutM);
+
+		menu.add(Box.createGlue());
+		menu.add(about);
+
+		return menu;
+
 	}
 
 
