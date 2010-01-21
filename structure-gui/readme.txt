@@ -22,6 +22,11 @@ mvn install:install-file \
  -DartifactId=openAstex \
  -Dversion=3.0 \
  -Dpackaging=jar \
- -DgeneratePom=true 
+ -DgeneratePom=true
+ 
+ 
+ Install Javaws.jar
+ 
+  
   
  
