@@ -32,6 +32,7 @@ import java.util.List;
 
 import javax.swing.JTextField;
 
+import org.biojava.bio.structure.gui.BiojavaJmol;
 import org.biojava.bio.structure.gui.BiojavaJmol.JmolPanel;
 
 /** a utility class that listens to Ramsol script commands in the @link {@link BiojavaJmol} class

@@ -47,10 +47,11 @@ import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.align.StructurePairAligner;
 import org.biojava.bio.structure.align.pairwise.AlternativeAlignment;
 import org.biojava.bio.structure.gui.events.AlignmentPositionListener;
+import org.biojava.bio.structure.io.PDBFileReader;
+import org.biojava.bio.structure.gui.SequenceDisplay;
 import org.biojava.bio.structure.gui.util.AlignedPosition;
 import org.biojava.bio.structure.gui.util.SequenceMouseListener;
 import org.biojava.bio.structure.gui.util.SequenceScalePanel;
-import org.biojava.bio.structure.io.PDBFileReader;
 
 /** A sequence display that can show the results of a protein structure alignment.
  * 

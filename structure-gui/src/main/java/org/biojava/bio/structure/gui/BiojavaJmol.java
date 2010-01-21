@@ -44,8 +44,10 @@ import javax.swing.JTextField;
 
 
 import org.biojava.bio.structure.Structure;
-import org.biojava.bio.structure.gui.util.MenuCreator;
 import org.biojava.bio.structure.io.PDBFileReader;
+import org.biojava.bio.structure.gui.BiojavaJmol;
+import org.biojava.bio.structure.gui.RasmolCommandListener;
+import org.biojava.bio.structure.gui.util.MenuCreator;
 
 
 /** A class that provides a simple GUI for Jmol

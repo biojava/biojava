@@ -22,11 +22,11 @@ import org.biojava.bio.structure.StructureTools;
 import org.biojava.bio.structure.align.webstart.PersistentConfig;
 import org.biojava.bio.structure.align.util.UserConfiguration;
 import org.biojava.bio.structure.align.webstart.WebStartMain;
-import org.biojava.bio.structure.gui.util.PDBUploadPanel;
-import org.biojava.bio.structure.gui.util.StructurePairSelector;
 import org.biojava.bio.structure.io.MMCIFFileReader;
 import org.biojava.bio.structure.io.PDBFileReader;
 import org.biojava.bio.structure.io.StructureIOFile;
+import org.biojava.bio.structure.gui.util.PDBUploadPanel;
+import org.biojava.bio.structure.gui.util.StructurePairSelector;
 
 
 public class SelectPDBPanel 

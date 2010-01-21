@@ -43,6 +43,8 @@ import org.biojava.bio.structure.align.pairwise.AlternativeAlignment;
 import org.biojava.bio.structure.align.pairwise.FragmentPair;
 import org.biojava.bio.structure.io.PDBFileReader;
 import org.biojava.bio.structure.jama.Matrix;
+import org.biojava.bio.structure.gui.JMatrixPanel;
+import org.biojava.bio.structure.gui.ScaleableMatrixPanel;
 
 
 /** A JPanel that can display the underlying distance matrix 
