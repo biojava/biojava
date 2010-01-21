@@ -1,4 +1,4 @@
-package org.biojava.structure.gui;
+package org.biojava3.structure.gui;
 
 import java.awt.Color;
 
