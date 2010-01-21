@@ -205,8 +205,8 @@
     <module>bytecode</module>
     <module>biojava3-core</module>
     <module>biojava3-phylo</module>
-    <module>biojava3-structure</module>
-    <module>biojava3-structure-gui</module>
+    <module>structure</module>
+    <module>structure-gui</module>
     <module>motif</module>
     
   </modules>
