@@ -62,7 +62,9 @@ public class AminoAcidCompoundSet implements CompoundSet<AminoAcidCompound> {
         aminoAcidCompoundCache.put("Z", new AminoAcidCompound(this, "Z", "Glx", "Glutamine or glutamic acid", null));
         aminoAcidCompoundCache.put("J", new AminoAcidCompound(this, "J", "Xle", "Leucine or Isoleucine", null));
         aminoAcidCompoundCache.put("X", new AminoAcidCompound(this, "Z", "Xaa", "Unspecified", null));
-
+        aminoAcidCompoundCache.put("-", new AminoAcidCompound(this, "-", "---", "Unspecified", null));
+        aminoAcidCompoundCache.put(".", new AminoAcidCompound(this, ".", "...", "Unspecified", null));
+        aminoAcidCompoundCache.put("_", new AminoAcidCompound(this, "_", "___", "Unspecified", null));
     }
 
     public String getStringForCompound(AminoAcidCompound compound) {

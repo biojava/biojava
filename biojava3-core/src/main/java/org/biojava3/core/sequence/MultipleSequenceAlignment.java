@@ -51,6 +51,14 @@ public class MultipleSequenceAlignment<C extends AbstractSequence,D extends Comp
         return sequences.remove(sequence);
     }
 
+    public C getSequence(int i ){
+        return sequences.get(i);
+    }
+
+    public int getNumberOfSequences(){
+        return sequences.size();
+    }
+
     public Collection<C> getSequences(){
         return sequences;
     }

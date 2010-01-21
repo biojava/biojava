@@ -42,6 +42,14 @@ public class DNASequence extends AbstractSequence<NucleotideCompound> {
     private Integer end = null;
     private LinkedHashMap<String, GeneSequence> geneSequenceHashMap = new LinkedHashMap<String, GeneSequence>();
 
+
+
+    public enum DNAType{
+        CHROMOSOME, MITOCHONDRIAL, PLASMID, PLASTID, UNKNOWN
+    }
+
+    private DNAType dnaType = DNAType.UNKNOWN;
+
     public DNASequence() {
         throw new UnsupportedOperationException("Null constructor not supported");
     }
@@ -120,6 +128,21 @@ public class DNASequence extends AbstractSequence<NucleotideCompound> {
     public void setEnd(Integer end) {
         this.end = end;
     }
+
+        /**
+     * @return the dnaType
+     */
+    public DNAType getDNAType() {
+        return dnaType;
+    }
+
+    /**
+     * @param dnaType the dnaType to set
+     */
+    public void setDNAType(DNAType dnaType) {
+        this.dnaType = dnaType;
+    }
+
 
     public static void main(String[] args) {
         DNASequence dnaSequence = new DNASequence("ATCG");

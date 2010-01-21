@@ -20,7 +20,6 @@
  * Created on DATE
  *
  */
-
 package org.biojava3.core.sequence;
 
 /**
@@ -28,12 +27,23 @@ package org.biojava3.core.sequence;
  * @author Scooter Willis
  */
 public class AccessionID {
+
     public enum Source {
 
         NCBI, UNIPROT, PFAM, LOCAL
     }
     private String id = null;
     private Source source = Source.LOCAL;
+
+    public AccessionID(){
+        id = "";
+        
+    }
+
+    public AccessionID(String id) {
+        this.id = id;
+        this.source = Source.LOCAL;
+    }
 
     public AccessionID(String id, Source source) {
         this.id = id;
@@ -58,6 +68,4 @@ public class AccessionID {
     public String toString() {
         return id;
     }
-
-
 }
