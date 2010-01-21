@@ -29,16 +29,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
-import org.biojava.bio.seq.ProteinTools;
-import org.biojava.bio.seq.io.SymbolTokenization;
-import org.biojava.bio.symbol.Alphabet;
-import org.biojava.bio.symbol.IllegalSymbolException;
-import org.biojava.bio.symbol.Symbol;
+//import org.biojava.bio.seq.ProteinTools;
+//import org.biojava.bio.seq.io.SymbolTokenization;
+//import org.biojava.bio.symbol.Alphabet;
+//import org.biojava.bio.symbol.IllegalSymbolException;
+//import org.biojava.bio.symbol.Symbol;
 
 
-/** A class that provides some tool methods.
+/**
+ * A class that provides some tool methods.
  *
- * @author Andreas Prlic
+ * @author Andreas Prlic, Jules Jacobsen
  * @since 1.0
  * @version %I% %G%
  */
@@ -47,7 +48,7 @@ public class StructureTools {
 	/** The Atom name of C-alpha atoms.
 	 *
 	 */
-	public static final String   caAtomName         = "CA" ;
+	public static final String caAtomName = "CA";
 	
 	public static final String nAtomName = "N";
 	
@@ -67,10 +68,12 @@ public class StructureTools {
 	static private Map<String, Integer> nucleotides30 ;
 	static private Map<String, Integer> nucleotides23 ;
 
+        //amino acid 3 and 1 letter code definitions
+        private static final Map<String, Character> aminoAcids;
 
-	// for conversion 3code 1code
-	private static  SymbolTokenization threeLetter ;
-	private static  SymbolTokenization oneLetter ;
+//	// for conversion 3code 1code
+//	private static  SymbolTokenization threeLetter ;
+//	private static  SymbolTokenization oneLetter ;
 
 	public static Logger logger =  Logger.getLogger("org.biojava.bio.structure");
 
@@ -112,16 +115,43 @@ public class StructureTools {
 			nucleotides23.put(n,1);
 		}
 
-		try {
-			Alphabet alpha_prot = ProteinTools.getAlphabet();
-			threeLetter = alpha_prot.getTokenization("name");
-			oneLetter  = alpha_prot.getTokenization("token");
-		} catch (Exception e) {
-			// this should not happen.
-			// only if BioJava has not been built correctly...
-			logger.config(e.getMessage());
-			e.printStackTrace() ;
-		}
+                aminoAcids = new HashMap<String, Character>();
+                aminoAcids.put("GLY", new Character('G'));
+                aminoAcids.put("ALA", new Character('A'));
+                aminoAcids.put("VAL", new Character('V'));
+                aminoAcids.put("LEU", new Character('L'));
+                aminoAcids.put("ILE", new Character('I'));
+                aminoAcids.put("PHE", new Character('F'));
+                aminoAcids.put("TYR", new Character('Y'));
+                aminoAcids.put("TRP", new Character('W'));
+                aminoAcids.put("PRO", new Character('P'));
+                aminoAcids.put("HIS", new Character('H'));
+                aminoAcids.put("LYS", new Character('K'));
+                aminoAcids.put("ARG", new Character('R'));
+                aminoAcids.put("SER", new Character('S'));
+                aminoAcids.put("THR", new Character('T'));
+                aminoAcids.put("GLU", new Character('E'));
+                aminoAcids.put("GLN", new Character('Q'));
+                aminoAcids.put("ASP", new Character('D'));
+                aminoAcids.put("ASN", new Character('N'));
+                aminoAcids.put("CYS", new Character('C'));
+                aminoAcids.put("MET", new Character('M'));
+                //MET is only found as a molecular replacement for MET
+                aminoAcids.put("MSE", new Character('M'));
+                //non-standard, naturally occurring
+                aminoAcids.put("SEC", new Character('U'));
+                aminoAcids.put("PYR", new Character('O'));
+
+//		try {
+//			Alphabet alpha_prot = ProteinTools.getAlphabet();
+//			threeLetter = alpha_prot.getTokenization("name");
+//			oneLetter  = alpha_prot.getTokenization("token");
+//		} catch (Exception e) {
+//			// this should not happen.
+//			// only if BioJava has not been built correctly...
+//			logger.config(e.getMessage());
+//			e.printStackTrace() ;
+//		}
 
 	}
 
@@ -361,13 +391,21 @@ public class StructureTools {
 	 *  @throws IllegalSymbolException
 	 */
 
-	public static final Character convert_3code_1code(String code3)
-	throws IllegalSymbolException
-	{
-		Symbol sym   =  threeLetter.parseToken(code3) ;
-		String code1 =  oneLetter.tokenizeSymbol(sym);
+        public static final Character convert_3code_1code(String code3)
+	throws UnknownPdbAminoAcidException {
+//	{
+//		Symbol sym   =  threeLetter.parseToken(code3) ;
+//		String code1 =  oneLetter.tokenizeSymbol(sym);
+//
+//		return new Character(code1.charAt(0)) ;
+            Character code1 = null;
+            code1 = aminoAcids.get(code3);
 
-		return new Character(code1.charAt(0)) ;
+            if (code1 == null) {
+                throw new UnknownPdbAminoAcidException(code3 + " not a standard amino acid");
+            } else {
+                return code1;
+            }
 
 	}
 
@@ -383,7 +421,7 @@ public class StructureTools {
 		try {
 			// is it a standard amino acid ?
 			aminoCode1 = convert_3code_1code(groupCode3);
-		} catch (IllegalSymbolException e){
+		} catch (UnknownPdbAminoAcidException e){
 			// hm groupCode3 is not standard
 			// perhaps it is an nucleotide?
 			if ( isNucleotide(groupCode3) ) {
@@ -615,7 +653,7 @@ public class StructureTools {
 			String code3 = g.getPDBName();
 			try {
 				buf.append(convert_3code_1code(code3) );
-			} catch (IllegalSymbolException e){
+			} catch (UnknownPdbAminoAcidException e){
 				buf.append('X');
 			}
 			prevGroup = g;

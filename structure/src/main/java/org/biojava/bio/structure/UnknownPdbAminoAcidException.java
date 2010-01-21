@@ -19,40 +19,39 @@
  *
  */
 
-package org.biojava.bio.structure.io;
+package org.biojava.bio.structure;
 
 /**
- * An exception during the parsing of a PDB file.
- *
- * @author Andreas Prlic, Thomas Down, Benjamin Schuster-B�ckler
+ * An exception for use during translating amino acids in a PDB file.
+ * @author Jules Jacobsen
  */
+public class UnknownPdbAminoAcidException extends Exception {
 
-public class PDBParseException extends Exception{
-    public static final long serialVersionUID = 219047230178423923l;
     /**
      * Constructs a PDBParseException object.
      *
      * @param s  a String ...
      */
-    
-    public PDBParseException(String s) {
+
+    public UnknownPdbAminoAcidException(String s) {
         super(s);
     }
     /**
-     * Constructs a PDBParseException object.
+     * Constructs a UnknownPdbAminoAcidException object.
      *
      * @param t  a Throwable object
      * @param s  a String ...
-     */ 
-    public PDBParseException ( String s,Throwable t) {
+     */
+    public UnknownPdbAminoAcidException ( String s,Throwable t) {
         super(s, t);
     }
     /**
-     * Constructs a PDBParseException object.
+     * Constructs a UnknownPdbAminoAcidException object.
      *
      * @param t  a Throwable object
      */
-    public PDBParseException (Throwable t) {
+    public UnknownPdbAminoAcidException (Throwable t) {
         super(t);
     }
+
 }

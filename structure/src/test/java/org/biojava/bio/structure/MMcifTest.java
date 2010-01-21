@@ -121,10 +121,10 @@ public class MMcifTest extends TestCase {
 		try {
 
 			// chech NMR data
-			assertEquals("the isNMR flag is not the same!", pdbStructure.isNmr(), cifStructure.isNmr());
+			assertEquals(id + ": the isNMR flag is not the same!", pdbStructure.isNmr(), cifStructure.isNmr());
 
 			if ( pdbStructure.isNmr()){
-				assertEquals("the nr of NMR models is not the same!", pdbStructure.nrModels(), pdbStructure.nrModels());
+				assertEquals(id + ": the nr of NMR models is not the same!", pdbStructure.nrModels(), pdbStructure.nrModels());
 				checkNMR(pdbStructure);
 				checkNMR(cifStructure);
 			}
@@ -147,10 +147,13 @@ public class MMcifTest extends TestCase {
 			String pdb_SEQseq = a_pdb.getSeqResSequence();
 			
 			String cif_SEQseq = a_cif.getSeqResSequence();
+
+//                        System.out.println(id + "_" + chainId + " pdbSEQ: " + pdb_SEQseq);
+//                        System.out.println(id + "_" + chainId + " cifSEQ: " + cif_SEQseq);
 			
-			assertEquals("the SEQRES sequences don;t match!", pdb_SEQseq,cif_SEQseq);
+			assertEquals(id + ": the SEQRES sequences don't match!", pdb_SEQseq,cif_SEQseq);
 			
-			assertEquals(" The nr of ATOM groups does not match!",a_pdb.getAtomGroups(GroupType.AMINOACID).size(),a_cif.getAtomGroups(GroupType.AMINOACID).size()  );
+			assertEquals(id + ":  The nr of ATOM groups does not match!",a_pdb.getAtomGroups(GroupType.AMINOACID).size(),a_cif.getAtomGroups(GroupType.AMINOACID).size()  );
 			
 			// actually this check not necessarily works, since there can be waters in PDB that we don;t deal with yet in cif...
 			//assertEquals("the nr of ATOM record groups is not the same!" , a_pdb.getAtomLength(),a_cif.getAtomLength());

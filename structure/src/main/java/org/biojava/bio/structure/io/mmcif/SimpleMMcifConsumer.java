@@ -45,6 +45,7 @@ import org.biojava.bio.structure.PDBHeader;
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureImpl;
 import org.biojava.bio.structure.StructureTools;
+import org.biojava.bio.structure.UnknownPdbAminoAcidException;
 import org.biojava.bio.structure.io.PDBParseException;
 import org.biojava.bio.structure.io.SeqRes2AtomAligner;
 import org.biojava.bio.structure.io.mmcif.model.AtomSite;
@@ -64,7 +65,6 @@ import org.biojava.bio.structure.io.mmcif.model.StructAsym;
 import org.biojava.bio.structure.io.mmcif.model.StructKeywords;
 import org.biojava.bio.structure.io.mmcif.model.StructRef;
 import org.biojava.bio.structure.io.mmcif.model.StructRefSeq;
-import org.biojava.bio.symbol.IllegalSymbolException;
 
 /** A MMcifConsumer implementation that build a in-memory representation of the
  * content of a mmcif file as a BioJava Structure object.
@@ -931,7 +931,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 			// this has to be obtained from _pdbx_poly_seq_scheme
 			entityChain.addGroup(g);
 
-		} catch (PDBParseException ex) {
+		}  catch (PDBParseException ex) {
 			if ( StructureTools.isNucleotide(epolseq.getMon_id())) {
 				// the group is actually a nucleotide group...
 				NucleotideImpl n = new NucleotideImpl();
@@ -952,7 +952,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 				}
 				//ex.printStackTrace();
 			}
-		} catch (IllegalSymbolException ex){
+		} catch (UnknownPdbAminoAcidException ex){
 			//logger.warning("no sure what to do with:" + epolseq.getMon_id()+ " " + ex.getMessage());
 			HetatomImpl h = new HetatomImpl();
 			try {
