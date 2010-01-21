@@ -24,15 +24,20 @@
     	<scope>compile</scope>
     </dependency>
     <dependency>
+  		<groupId>javaws</groupId>
+  		<artifactId>javaws</artifactId>
+  		<version>1.0</version>
+  	</dependency>
+  	<dependency>
+  		<groupId>jmolapplet</groupId>
+  		<artifactId>JmolApplet</artifactId>
+  		<version>11.8.17</version>
+  	</dependency>
+	<dependency>
       <groupId>openAstex</groupId>
       <artifactId>openAstex</artifactId>
       <version>3.0</version>
       <type>jar</type>
-    </dependency>
-    <dependency>
-      <groupId>jmolApplet</groupId>
-      <artifactId>jmolApplet</artifactId>
-      <version>11.8.17</version>
     </dependency>
   </dependencies>
 </project>
