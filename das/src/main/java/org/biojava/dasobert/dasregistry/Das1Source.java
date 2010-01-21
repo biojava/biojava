@@ -23,14 +23,17 @@
  */
 package org.biojava.dasobert.dasregistry;
 
+import java.util.ArrayList;
 import java.util.Date ;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
 
+import org.biojava.dasobert.das.Capabilities;
 import org.biojava.dasobert.das2.io.DasSourceWriter;
 import org.biojava.dasobert.das2.io.DasSourceWriterImpl;
 import org.biojava.utils.xml.PrettyXMLWriter;
@@ -45,9 +48,9 @@ public class Das1Source implements DasSource {
 	protected String nickname;
 	String adminemail;
 	String description ;
-	DasCoordinateSystem[] coordinateSystem;
-	String[] capabilities;
-	String[] labels;
+	List<DasCoordinateSystem> coordinateSystem;
+	List<Capabilities> capabilities;
+	List<String> labels;
 	String helperurl;    
 	Date   registerDate; 
 	Date   leaseDate;
@@ -66,10 +69,10 @@ public class Das1Source implements DasSource {
 		description      = "" ;
 		//String empty     = "" ;
 		nickname         = "" ;
-		coordinateSystem = new DasCoordinateSystem[0];
+		coordinateSystem =new  ArrayList<DasCoordinateSystem>();
 
-		capabilities     = new String[0];
-		labels 	         = new String[0];
+		capabilities     = new ArrayList<Capabilities>();
+		labels 	         = new ArrayList<String>();
 
 		registerDate     = new Date() ;
 		leaseDate        = new Date() ;
@@ -113,21 +116,21 @@ public class Das1Source implements DasSource {
 			return false;
 
 		// test coordinate systems
-		DasCoordinateSystem[] newCoords = this.getCoordinateSystem();
-		DasCoordinateSystem[] oldCoords = other.getCoordinateSystem();
+		List<DasCoordinateSystem> newCoords = this.getCoordinateSystem();
+		List<DasCoordinateSystem> oldCoords = other.getCoordinateSystem();
 
-		if ( ! (newCoords.length == oldCoords.length))
+		if ( ! (newCoords.size() == oldCoords.size()))
 			return false;
 
 		//System.out.println("testing coords");
-		for ( int i=0 ; i< newCoords.length ; i++) {
+		for ( int i=0 ; i< newCoords.size() ; i++) {
 
-			DasCoordinateSystem ncs = newCoords[i];
+			DasCoordinateSystem ncs = newCoords.get(i);
 
 			boolean found = false ;
 
-			for ( int j = 0 ; j < oldCoords.length; j++){
-				DasCoordinateSystem ocs = oldCoords[j];
+			for ( int j = 0 ; j < oldCoords.size(); j++){
+				DasCoordinateSystem ocs = oldCoords.get(j);
 
 				if ( ncs.getName().equals(ocs.getName())) {
 					if ( ncs.getCategory().equals(ocs.getCategory())) {
@@ -143,13 +146,13 @@ public class Das1Source implements DasSource {
 		//System.out.println("testing capabs");
 
 		// test capabilities
-		String[] otherCaps = other.getCapabilities();
-		for (int i=0 ; i < capabilities.length;i++){
-			String cap = capabilities[i];
+		List<Capabilities> otherCaps = other.getCapabilities();
+		for (int i=0 ; i < capabilities.size();i++){
+			Capabilities cap = capabilities.get(i);
 
 			boolean found = false;
-			for (int j=0; j < otherCaps.length;j++){
-				String oCap = otherCaps[j];
+			for (int j=0; j < otherCaps.size();j++){
+				Capabilities oCap = otherCaps.get(j);
 				if ( oCap.equals(cap)) {
 					found = true;
 					break;
@@ -224,11 +227,11 @@ System.out.println("hashcode="+h);
 		description = u;
 	}
 
-	public void setCoordinateSystem (DasCoordinateSystem[] u){
+	public void setCoordinateSystem (List<DasCoordinateSystem> u){
 		coordinateSystem=u ;
 	}
 
-	public void setCapabilities (String[] u){
+	public void setCapabilities (List<Capabilities> u){
 		capabilities = u ;
 	}
 
@@ -238,8 +241,8 @@ System.out.println("hashcode="+h);
      * @return <code>true</code> if the server has this capability.
      */
     public boolean hasCapability(String testCapability){
-        for (int i=0 ; i< capabilities.length;i++){
-            String cap = capabilities[i];
+        for (int i=0 ; i< capabilities.size();i++){
+            Capabilities cap = capabilities.get(i);
             if ( cap.equals(testCapability))
                 return true;
         }
@@ -252,9 +255,9 @@ System.out.println("hashcode="+h);
 	
     public String getDescription(){return description;}
 	
-    public String[] getCapabilities(){return capabilities;}
+    public List<Capabilities> getCapabilities(){return capabilities;}
 	
-    public DasCoordinateSystem[] getCoordinateSystem(){return coordinateSystem;}
+    public List<DasCoordinateSystem> getCoordinateSystem(){return coordinateSystem;}
 
 	public void setRegisterDate(Date d) {
 		registerDate = d;
@@ -269,11 +272,11 @@ System.out.println("hashcode="+h);
 		return leaseDate ;
 	}
 
-	public void setLabels(String[] ls) {
+	public void setLabels(List<String> ls) {
 		labels = ls ;
 	}
 
-	public String[] getLabels() {
+	public List<String> getLabels() {
 		return labels;
 	}
 

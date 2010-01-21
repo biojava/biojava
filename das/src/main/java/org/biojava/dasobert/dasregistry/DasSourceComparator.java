@@ -27,6 +27,7 @@ package org.biojava.dasobert.dasregistry ;
 
 import java.util.Comparator ;
 import java.util.Date;
+import java.util.List;
 import java.util.Map ;
 import java.util.HashMap ;
 
@@ -109,8 +110,8 @@ public abstract class DasSourceComparator
     };
     public static final Comparator BY_COORDINATE_SYSTEM = new DasSourceComparator("coordinateSystem") {
         protected Comparable getField(DasSource ds) {
-            DasCoordinateSystem[] dcss = ds.getCoordinateSystem();
-            return dcss.length == 0 ? "" : dcss[0].toString();
+            List<DasCoordinateSystem> dcss = ds.getCoordinateSystem();
+            return dcss.size() == 0 ? "" : dcss.get(0).toString();
         }
     };
 

@@ -1,5 +1,4 @@
-/*
- *                  BioJava development code
+/**                  BioJava development code
  *
  * This code may be freely distributed and modified under the
  * terms of the GNU Lesser General Public Licence.  This should
@@ -22,6 +21,9 @@
  */
 package org.biojava.dasobert.das2;
 
+import java.util.List;
+
+import org.biojava.dasobert.das.Capabilities;
 import org.biojava.dasobert.dasregistry.Das1Source;
 import org.biojava.dasobert.dasregistry.DasSource;
 
@@ -113,14 +115,14 @@ implements Das2Source
         
     }
     
-    public String[] getCapabilities() {
+    public List<Capabilities> getCapabilities() {
         //todo mark as not needed / not appropriate ...
         return super.getCapabilities();
     }
 
 
 
-    public void setCapabilities(String[] u) {
+    public void setCapabilities(List<Capabilities> u) {
         // TODO Auto-generated method stub
         super.setCapabilities(u);
     }

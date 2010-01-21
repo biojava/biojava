@@ -41,9 +41,9 @@ public class DasSourceFilter {
 		if ( authority.equals(""))
 			return true;
 
-		DasCoordinateSystem[] coords = source.getCoordinateSystem();
-		for ( int j =0 ; j < coords.length ; j++ ){
-			DasCoordinateSystem cs = coords[j];
+		List<DasCoordinateSystem> coords = source.getCoordinateSystem();
+		for ( int j =0 ; j < coords.size() ; j++ ){
+			DasCoordinateSystem cs = coords.get(j);
 			if ( authority.equalsIgnoreCase(cs.getName())) {
 				return true;
 			}
@@ -70,9 +70,9 @@ public class DasSourceFilter {
 			return true;
 
 
-		String[] labels = source.getLabels();
-		for ( int j = 0 ; j< labels.length ; j++){
-			String l = labels[j];
+		List<String> labels = source.getLabels();
+		for ( int j = 0 ; j< labels.size() ; j++){
+			String l = labels.get(j);
 			if ( l.equalsIgnoreCase(label))
 				return true;
 		}
@@ -86,9 +86,9 @@ public class DasSourceFilter {
 		if ( type.equals(""))
 			return true;
 
-		DasCoordinateSystem[] coords = source.getCoordinateSystem();
-		for ( int j =0 ; j < coords.length ; j++ ){
-			DasCoordinateSystem cs = coords[j];
+		List<DasCoordinateSystem> coords = source.getCoordinateSystem();
+		for ( int j =0 ; j < coords.size() ; j++ ){
+			DasCoordinateSystem cs = coords.get(j);
 			if ( type.equalsIgnoreCase(cs.getCategory())) {
 				return true;
 			}
@@ -105,9 +105,9 @@ public class DasSourceFilter {
 			return true;
 
 
-		DasCoordinateSystem[] coords = source.getCoordinateSystem();
-		for ( int j =0 ; j < coords.length ; j++ ){
-			DasCoordinateSystem cs = coords[j];
+		List<DasCoordinateSystem> coords = source.getCoordinateSystem();
+		for ( int j =0 ; j < coords.size() ; j++ ){
+			DasCoordinateSystem cs = coords.get(j);
 			if ( ( organism.equalsIgnoreCase(cs.getOrganismName())) ||
 					( organism.equalsIgnoreCase(cs.getNCBITaxId()+""))) {
 				return true;
