@@ -40,8 +40,8 @@ import org.biojava.bio.structure.StructureTools;
 import org.biojava.bio.structure.align.model.AFP;
 import org.biojava.bio.structure.align.model.AFPChain;
 import org.biojava.bio.structure.align.util.AFPAlignmentDisplay;
-import org.biojava.bio.structure.gui.ScaleableMatrixPanel;
 import org.biojava.bio.structure.jama.Matrix;
+
 
 
 /** A crazy class. If I would not port the CE source code directly to Java I would not write it like this!
@@ -607,27 +607,7 @@ public class CECalculator {
 				}
 
 
-				if (debug ){
-					ScaleableMatrixPanel smp = new ScaleableMatrixPanel();
-					JFrame frame = new JFrame("CE alignment matrix after initial trace.");
-					frame.addWindowListener(new WindowAdapter(){
-						public void windowClosing(WindowEvent e){
-							JFrame f = (JFrame) e.getSource();
-							f.setVisible(false);
-							f.dispose();
-						}
-
-					});
-
-					smp.getMatrixPanel().setScalevalue(10);
-					Matrix mx = (Matrix) new Matrix(mat).clone();
-					smp.setMatrix(mx);
-
-					frame.getContentPane().add(smp);
-
-					frame.pack();
-					frame.setVisible(true);
-				}	
+					
 			}
 
 
@@ -1209,27 +1189,7 @@ nBestTrace=nTrace;
 
 		}
 
-		if (debug ){
-			ScaleableMatrixPanel smp = new ScaleableMatrixPanel();
-			JFrame frame = new JFrame("CE alignment matrix.");
-			frame.addWindowListener(new WindowAdapter(){
-				public void windowClosing(WindowEvent e){
-					JFrame f = (JFrame) e.getSource();
-					f.setVisible(false);
-					f.dispose();
-				}
-
-			});
-
-			smp.getMatrixPanel().setScalevalue(500);
-			Matrix mx = (Matrix) new Matrix(mat).clone();
-			smp.setMatrix(mx);
-
-			frame.getContentPane().add(smp);
-
-			frame.pack();
-			frame.setVisible(true);
-		}
+		
 
 		//System.out.println("done optimizing");
 		/*

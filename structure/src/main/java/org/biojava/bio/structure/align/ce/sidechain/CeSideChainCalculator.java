@@ -1,12 +1,8 @@
 package org.biojava.bio.structure.align.ce.sidechain;
 
 
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.swing.JFrame;
 
 import org.biojava.bio.structure.Atom;
 import org.biojava.bio.structure.Calc;
@@ -18,8 +14,8 @@ import org.biojava.bio.structure.align.ce.CeParameters;
 import org.biojava.bio.structure.align.model.AFP;
 import org.biojava.bio.structure.align.model.AFPChain;
 import org.biojava.bio.structure.align.util.AFPAlignmentDisplay;
-import org.biojava.bio.structure.gui.ScaleableMatrixPanel;
 import org.biojava.bio.structure.jama.Matrix;
+
 
 /** Newer version of CE based on the V2.3 improvements with side chain calculations.
  * 
@@ -597,27 +593,7 @@ public class CeSideChainCalculator  {
 				}
 
 
-				if (debug ){
-					ScaleableMatrixPanel smp = new ScaleableMatrixPanel();
-					JFrame frame = new JFrame("CE alignment matrix after initial trace.");
-					frame.addWindowListener(new WindowAdapter(){
-						public void windowClosing(WindowEvent e){
-							JFrame f = (JFrame) e.getSource();
-							f.setVisible(false);
-							f.dispose();
-						}
-
-					});
-
-					smp.getMatrixPanel().setScalevalue(10);
-					Matrix mx = (Matrix) new Matrix(mat).clone();
-					smp.setMatrix(mx);
-
-					frame.getContentPane().add(smp);
-
-					frame.pack();
-					frame.setVisible(true);
-				}	
+				
 			}
 
 
@@ -1248,27 +1224,7 @@ nBestTrace=nTrace;
 
 		}
 
-		if (debug ){
-			ScaleableMatrixPanel smp = new ScaleableMatrixPanel();
-			JFrame frame = new JFrame("CE alignment matrix.");
-			frame.addWindowListener(new WindowAdapter(){
-				public void windowClosing(WindowEvent e){
-					JFrame f = (JFrame) e.getSource();
-					f.setVisible(false);
-					f.dispose();
-				}
-
-			});
-
-			smp.getMatrixPanel().setScalevalue(500);
-			Matrix mx = (Matrix) new Matrix(mat).clone();
-			smp.setMatrix(mx);
-
-			frame.getContentPane().add(smp);
-
-			frame.pack();
-			frame.setVisible(true);
-		}
+		
 
 		//System.out.println("done optimizing");
 		/*

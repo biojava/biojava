@@ -40,6 +40,7 @@ import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureException;
 import org.biojava.bio.structure.StructureImpl;
 import org.biojava.bio.structure.StructureTools;
+import org.biojava.bio.structure.align.ce.GuiWrapper;
 import org.biojava.bio.structure.align.helper.AlignTools;
 import org.biojava.bio.structure.align.helper.JointFragments;
 import org.biojava.bio.structure.align.pairwise.AlignmentProgressListener;
@@ -47,10 +48,10 @@ import org.biojava.bio.structure.align.pairwise.AltAligComparator;
 import org.biojava.bio.structure.align.pairwise.AlternativeAlignment;
 import org.biojava.bio.structure.align.pairwise.FragmentJoiner;
 import org.biojava.bio.structure.align.pairwise.FragmentPair;
-import org.biojava.bio.structure.gui.BiojavaJmol;
 import org.biojava.bio.structure.io.PDBFileParser;
 import org.biojava.bio.structure.io.PDBFileReader;
 import org.biojava.bio.structure.jama.Matrix;
+
 
 /**
  * Perform a pairwise protein structure superimposition.
@@ -250,8 +251,8 @@ public class StructurePairAligner {
 
 			if ( aligs.length > 0) {
 
-				if (! BiojavaJmol.jmolInClassPath()){
-					System.err.println("Could not find Jmol in classpath, please install first!");
+				if (! GuiWrapper.isGuiModuleInstalled()){
+					System.err.println("Could not find structure-gui modules in classpath, please install first!");
 					return;
 				}
 
@@ -262,34 +263,8 @@ public class StructurePairAligner {
 
 
 				// and then send it to Jmol (only will work if Jmol is in the Classpath)
-				BiojavaJmol jmol = new BiojavaJmol();
-				jmol.setTitle(artificial.getName());
-				jmol.setStructure(artificial);
-
-				// color the two structures
-
-				jmol.evalString("select *; backbone 0.4; wireframe off; spacefill off; " +
-				"select not protein and not solvent; spacefill on;");
-				jmol.evalString("select */1 ; color red; model 1; ");
-
-
-				// now color the equivalent residues ...
-
-				String[] pdbs1 = aa1.getPDBresnum1();
-				for (String res : pdbs1 ){
-					jmol.evalString("select " + res + "/1 ; backbone 0.6; color white;");
-				}
-
-				jmol.evalString("select */2; color blue; model 2;");
-				String[] pdbs2 = aa1.getPDBresnum2();
-				for (String res :pdbs2 ){
-					jmol.evalString("select " + res + "/2 ; backbone 0.6; color yellow;");
-				}
-
-				// now show both models again.
-				jmol.evalString("model 0;");
-
-				jmol.evalString("echo done.");
+				
+				//GuiWrapper.display(afpChain, ca1, ca2, hetatms1, nucs1, hetatms2, nucs2);
 			}
 
 

@@ -31,7 +31,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
-import java.io.NotSerializableException;
+
 
 import java.io.InputStreamReader;
 import java.io.PrintStream;
@@ -47,9 +47,9 @@ import org.biojava.bio.structure.align.model.AFPChain;
 import org.biojava.bio.structure.align.util.AtomCache;
 import org.biojava.bio.structure.align.util.CliTools;
 import org.biojava.bio.structure.align.util.ConfigurationException;
-import org.biojava.bio.structure.align.util.UserConfiguration;
+
 import org.biojava.bio.structure.align.xml.AFPChainXMLConverter;
-import org.biojava.bio.structure.gui.util.PDBDirPanel;
+
 
 
 public abstract class AbstractUserArgumentProcessor implements UserArgumentProcessor {
@@ -60,6 +60,11 @@ public abstract class AbstractUserArgumentProcessor implements UserArgumentProce
 
 	public static final List<String> mandatoryArgs= new ArrayList<String>();
 
+	/** the system property PDB_DIR can be used to configure the 
+	 * default location for PDB files.
+	 */
+	public static final String PDB_DIR = "PDB_DIR";
+	
 	protected AbstractUserArgumentProcessor(){ 
 		params = new StartupParameters();
 	}
@@ -111,7 +116,7 @@ public abstract class AbstractUserArgumentProcessor implements UserArgumentProce
 		if ( params.showMenu){
 
 			if ( params.getPdbFilePath() != null){
-				System.setProperty(PDBDirPanel.PDB_DIR,params.getPdbFilePath());
+				System.setProperty(PDB_DIR,params.getPdbFilePath());
 			}
 
 			try {

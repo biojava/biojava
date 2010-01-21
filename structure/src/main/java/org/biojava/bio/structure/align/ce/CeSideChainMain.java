@@ -6,8 +6,8 @@ import org.biojava.bio.structure.StructureException;
 import org.biojava.bio.structure.align.AbstractStructureAlignment;
 import org.biojava.bio.structure.align.StructureAlignment;
 import org.biojava.bio.structure.align.ce.sidechain.CeSideChainCalculator;
-import org.biojava.bio.structure.gui.AlignmentGui;
 import org.biojava.bio.structure.align.model.AFPChain;
+
 
 public class CeSideChainMain  extends AbstractStructureAlignment implements StructureAlignment {
 
