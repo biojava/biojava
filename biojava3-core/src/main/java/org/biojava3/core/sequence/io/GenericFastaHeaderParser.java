@@ -19,7 +19,7 @@ import org.biojava3.core.sequence.template.AbstractSequence.AnnotationType;
  * SWISS-PROT                        sp|accession|name
  * Brookhaven Protein Data Bank (1)  pdb|entry|chain
  * Brookhaven Protein Data Bank (2)  entry:chain|PDBID|CHAIN|SEQUENCE
- * RDB EBI                           PDB:1ECY_A mol:protein length:142  ECOTIN
+ * PDB EBI                           PDB:1ECY_A mol:protein length:142  ECOTIN
  * Patents                           pat|country|number
  * GenInfo Backbone Id               bbs|number
  * General database identifier       gnl|database|identifier
@@ -75,8 +75,18 @@ public class GenericFastaHeaderParser implements HeaderParserInterface {
             String[] pdbe = data[0].split(" ");
             String[] pdbaccession = pdbe[0].split(":");
             sequence.setAccession(new AccessionID(pdbaccession[1],AccessionID.Source.PDBe));
-        }else if (data[0].indexOf(":") != -1){
+        }else if (data[0].indexOf(":") != -1 && data[1].equals("PDB")){
             sequence.setAccession(new AccessionID(data[0],AccessionID.Source.PDB2));
+        }else if (data[0].equalsIgnoreCase("pat")) {
+            sequence.setAccession(new AccessionID(data[1], AccessionID.Source.PATENTS));
+        }else if (data[0].equalsIgnoreCase("bbs")) {
+            sequence.setAccession(new AccessionID(data[1], AccessionID.Source.GENINFO));
+        }else if (data[0].equalsIgnoreCase("gnl")) {
+            sequence.setAccession(new AccessionID(data[2], AccessionID.Source.GENERAL));
+        }else if (data[0].equalsIgnoreCase("ref")) {
+            sequence.setAccession(new AccessionID(data[1], AccessionID.Source.NCBI));
+        }else if (data[0].equalsIgnoreCase("lcl")) {
+            sequence.setAccession(new AccessionID(data[1], AccessionID.Source.LOCAL));
         }else{
             sequence.setAccession(new AccessionID(header));
         }
