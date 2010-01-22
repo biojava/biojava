@@ -35,6 +35,16 @@ import org.biojava.bio.structure.align.StructureAlignment;
 
 import org.biojava.bio.structure.align.model.AFPChain;
 
+/** The main class of the Java implementation of the Combinatorial Extension Algorithm (CE).
+ * 
+ * The original CE paper is available from here: <a href="http://peds.oxfordjournals.org/cgi/content/short/11/9/739">http://peds.oxfordjournals.org/cgi/content/short/11/9/739</a>
+ * 
+ * For a demo of how to use this algorithm, visit the BioJava web site:
+ * <a href="">CE usage example</a>.
+ * 
+ * @author Andreas Prlic.
+ *
+ */
 public class CeMain extends AbstractStructureAlignment implements StructureAlignment {
 
 	public static final String algorithmName = "jCE";
