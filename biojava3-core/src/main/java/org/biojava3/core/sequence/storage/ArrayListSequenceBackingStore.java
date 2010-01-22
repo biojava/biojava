@@ -31,7 +31,7 @@ import java.util.List;
 
 import org.biojava3.core.sequence.template.AbstractSequenceView;
 import org.biojava3.core.sequence.template.Compound;
-import org.biojava3.core.sequence.template.CompoundNotFoundError;
+import org.biojava3.core.exceptions.CompoundNotFoundError;
 import org.biojava3.core.sequence.template.CompoundSet;
 import org.biojava3.core.sequence.template.Sequence;
 import org.biojava3.core.sequence.template.SequenceBackingStore;

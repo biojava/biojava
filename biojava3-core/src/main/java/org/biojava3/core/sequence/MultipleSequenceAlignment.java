@@ -22,6 +22,7 @@
  */
 package org.biojava3.core.sequence;
 
+import org.biojava3.core.exceptions.SequenceLengthError;
 import java.util.ArrayList;
 import java.util.Collection;
 import org.biojava3.core.sequence.compound.AminoAcidCompound;

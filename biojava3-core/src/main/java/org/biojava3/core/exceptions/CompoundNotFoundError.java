@@ -23,7 +23,7 @@
  *
  *
  */
-package org.biojava3.core.sequence.template;
+package org.biojava3.core.exceptions;
 
 public class CompoundNotFoundError extends Error {
 	/**

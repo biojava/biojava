@@ -25,6 +25,7 @@
  */
 package org.biojava3.core.sequence.template;
 
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import org.biojava3.core.sequence.AccessionID;
@@ -38,6 +39,10 @@ public abstract class AbstractSequence<C extends Compound> implements Sequence<C
     private AccessionID accession;
     private SequenceBackingStore<C> backingStore = null;
     private CompoundSet<C> compoundSet;
+    private AnnotationType annotationType = AnnotationType.UNKNOWN;
+    private String description;
+    private String originalHeader;
+    private Collection userCollection;
 
     public AbstractSequence() {
     }
@@ -52,6 +57,73 @@ public abstract class AbstractSequence<C extends Compound> implements Sequence<C
     public AbstractSequence(SequenceProxyLoader<C> proxyLoader, CompoundSet<C> compoundSet) {
         setCompoundSet(compoundSet);
         this.backingStore = proxyLoader;
+    }
+
+    /**
+     * Provided for convience if the developer needs to associate data with a sequence
+     *
+     * @return
+     */
+
+    public Collection getUserCollection(){
+
+        return userCollection;
+    }
+
+    /**
+     * 
+     * @param userCollection
+     */
+
+    public void setUserCollection(Collection userCollection){
+        this.userCollection = userCollection;
+    }
+
+    /**
+     * @return the annotation
+     */
+    public AnnotationType getAnnotationType() {
+        return annotationType;
+    }
+
+    /**
+     * @param annotation the annotation to set
+     */
+    public void setAnnotationType(AnnotationType annotation) {
+        this.annotationType = annotationType;
+    }
+
+    /**
+     * @return the description
+     */
+    public String getDescription() {
+        return description;
+    }
+
+    /**
+     * @param description the description to set
+     */
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    /**
+     * @return the originalHeader
+     */
+    public String getOriginalHeader() {
+        return originalHeader;
+    }
+
+    /**
+     * @param originalHeader the originalHeader to set
+     */
+    public void setOriginalHeader(String originalHeader) {
+        this.originalHeader = originalHeader;
+    }
+
+    public enum AnnotationType {
+
+        CURATED, PREDICTED, UNKNOWN;
     }
 
     /**
@@ -91,7 +163,7 @@ public abstract class AbstractSequence<C extends Compound> implements Sequence<C
     }
 
     @Override
-    public String toString(){
+    public String toString() {
         return getString();
     }
 

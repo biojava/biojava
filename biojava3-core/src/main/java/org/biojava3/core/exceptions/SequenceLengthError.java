@@ -21,7 +21,7 @@
  *
  */
 
-package org.biojava3.core.sequence;
+package org.biojava3.core.exceptions;
 
 /**
  *

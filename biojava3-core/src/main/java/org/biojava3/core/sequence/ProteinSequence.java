@@ -26,6 +26,7 @@ import org.biojava3.core.sequence.compound.AminoAcidCompound;
 import org.biojava3.core.sequence.compound.AminoAcidCompoundSet;
 import org.biojava3.core.sequence.loader.SequenceStringProxyLoader;
 import org.biojava3.core.sequence.template.AbstractSequence;
+import org.biojava3.core.sequence.template.CompoundSet;
 import org.biojava3.core.sequence.template.SequenceProxyLoader;
 
 /**
@@ -39,11 +40,19 @@ public class ProteinSequence extends AbstractSequence<AminoAcidCompound> {
     private Integer end;
 
     public ProteinSequence(String seqString) {
-        super(seqString, new AminoAcidCompoundSet());
+        this(seqString, new AminoAcidCompoundSet());
+    }
+
+    public ProteinSequence(String seqString, CompoundSet compoundSet) {
+        super(seqString, compoundSet);
     }
 
     public ProteinSequence(SequenceProxyLoader<AminoAcidCompound> proxyLoader) {
-        super(proxyLoader, new AminoAcidCompoundSet());
+        this(proxyLoader, new AminoAcidCompoundSet());
+    }
+
+    public ProteinSequence(SequenceProxyLoader<AminoAcidCompound> proxyLoader, CompoundSet compoundSet) {
+        super(proxyLoader, compoundSet);
     }
 
     public void setParentDNASequence(DNASequence parentDNASequence, Integer begin, Integer end) {
