@@ -662,6 +662,5 @@ public class StructureTools {
 		return buf.toString();
 	}
 
-
 	
 }

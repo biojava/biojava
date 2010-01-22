@@ -1538,32 +1538,32 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 			// see if old chain is known ...
 			Chain testchain ;
 			testchain = isKnownChain(current_chain.getName(),current_model);
-		
+
 			//System.out.println("trying to re-using known chain " + current_chain.getName() + " " + chain_id);		
 			if ( testchain != null && testchain.getName().equals(chain_id)){
 				//System.out.println("re-using known chain " + current_chain.getName() + " " + chain_id);				
-				
+
 			} else {
-				
+
 				testchain = isKnownChain(chain_id,current_model);
 			}
-			
+
 			if ( testchain == null) {
 				//System.out.println("unknown chain. creating new chain.");
-								
+
 				current_chain = new ChainImpl();
 				current_chain.setName(chain_id);
-				
+
 			}   else {
 				current_chain = testchain;
 			}
-			
+
 			if ( ! current_model.contains(current_chain))
 				current_model.add(current_chain);
-			
-			
+
+
 		} 
-		
+
 		// process group data:
 		// join residue numbers and insertion codes together
 		String recordName     = line.substring (0, 6).trim ();
@@ -1574,6 +1574,13 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 
 		if ( recordName.equals("ATOM") ){
 			aminoCode1 = StructureTools.get1LetterCode(groupCode3);
+		} else {
+			// HETATOM RECORDS are treated slightly differently
+			// some modified amino acids that we want to treat as amino acids
+			// can be found as HETATOM records
+			aminoCode1 = StructureTools.get1LetterCode(groupCode3);
+			if ( aminoCode1.equals(StructureTools.UNKNOWN_GROUP_LABEL))
+				aminoCode1 = null;
 		}
 
 		if (current_group == null) {

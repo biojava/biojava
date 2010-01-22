@@ -227,9 +227,14 @@ public class SimpleMMcifParser implements MMcifParser {
 					lineData.clear();
 				} else {
 					// a boring normal line
-//					System.out.println("boring data line: " + line + " " + inLoop + " " );
+					//System.out.println("boring data line: " + line + " " + inLoop + " " );
 					List<String> data = processLine(line, buf, 2);
-//					System.out.println("got a single line " + data);
+					//System.out.println("got a single line " + data);
+					if ( data.size() < 1){
+						// this can happen if empty lines at end of file
+						lineData.clear();
+						continue;
+					}
 					String key = data.get(0);
 					int pos = key.indexOf(".");
 					if ( pos < 0 ) {
