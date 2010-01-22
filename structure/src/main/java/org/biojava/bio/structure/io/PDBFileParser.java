@@ -391,7 +391,13 @@ public class PDBFileParser  {
 			}
 		}
 		else {
-			group = new HetatomImpl();
+			if (aminoCode1 != null ) {
+				AminoAcidImpl aa = new AminoAcidImpl() ;
+				aa.setAminoType(aminoCode1);
+				group = aa ;
+			} else {
+				group = new HetatomImpl();
+			}
 		}
 		//System.out.println("new group type: "+ group.getType() );
 		return  group ;
