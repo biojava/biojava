@@ -139,8 +139,13 @@ public class StructureTools {
                 //MSE is only found as a molecular replacement for MET
                 aminoAcids.put("MSE", new Character('M'));
                 //'non-standard', genetically encoded
+                //http://www.chem.qmul.ac.uk/iubmb/newsletter/1999/item3.html
+                //IUBMB recommended name is 'SEC' but the wwPDB currently use 'CSE'
+                //likewise 'PYL' (IUBMB) and 'PYH' (PDB)
                 aminoAcids.put("CSE", new Character('U'));
+                aminoAcids.put("SEC", new Character('U'));
                 aminoAcids.put("PYH", new Character('O'));
+                aminoAcids.put("PYL", new Character('O'));
 
 //		try {
 //			Alphabet alpha_prot = ProteinTools.getAlphabet();
