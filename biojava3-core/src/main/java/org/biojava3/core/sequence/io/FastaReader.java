@@ -41,7 +41,6 @@ public class FastaReader<S extends AbstractSequence> {
         do {
             line = line.trim(); // nice to have but probably not needed
             if (line.length() != 0) {
-
                 if (line.startsWith(">")) {
                     if (sb.length() > 0) {
                         S sequence = (S)sequenceCreator.getSequence(sb.toString());
@@ -57,14 +56,9 @@ public class FastaReader<S extends AbstractSequence> {
                 } else {
                     sb.append(line);
                 }
-
-                
-
             }
             line = br.readLine();
         } while (line != null);
-
-
         return sequences;
     }
 
