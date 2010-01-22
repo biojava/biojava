@@ -28,7 +28,7 @@ package org.biojava3.core.sequence.loader;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import org.biojava3.core.sequence.storage.ArrayListSequenceBackingStore;
+
 import org.biojava3.core.sequence.template.AbstractSequenceView;
 import org.biojava3.core.sequence.template.Compound;
 import org.biojava3.core.exceptions.CompoundNotFoundError;
@@ -121,5 +121,9 @@ public class SequenceStringProxyLoader<C extends Compound> implements SequencePr
 
     public Iterator<C> iterator() {
         return this.parsedCompounds.iterator();
+    }
+
+    public CompoundSet<C> getCompoundSet() {
+      return compoundSet;
     }
 }

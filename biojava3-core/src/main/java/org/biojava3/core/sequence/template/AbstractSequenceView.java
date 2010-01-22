@@ -29,7 +29,7 @@ import java.util.Iterator;
 import java.util.List;
 
 public abstract class AbstractSequenceView<C extends Compound> implements SequenceView<C> {
-	
+
 	public String getString() {
 		// TODO Optimise.
 		return this.getViewedSequence().getString().substring(this.getStart()-1, this.getEnd());
@@ -37,23 +37,27 @@ public abstract class AbstractSequenceView<C extends Compound> implements Sequen
 
 	public List<C> getAsList() {
 		// TODO Optimise.
-		return this.getViewedSequence().getAsList().subList(this.getStart()-1, this.getEnd());
+		return getViewedSequence().getAsList().subList(getStart()-1, getEnd());
 	}
 
 	public C getCompoundAt(int position) {
-		return this.getViewedSequence().getCompoundAt(this.getStart()+position);
+		return getViewedSequence().getCompoundAt((getStart()+position)-1);
 	}
 
 	public int getIndexOf(C compound) {
-		return this.getViewedSequence().getIndexOf(compound)+this.getStart();
+		return (getViewedSequence().getIndexOf(compound)+getStart())-1;
 	}
 
 	public int getLastIndexOf(C compound) {
-		return this.getViewedSequence().getLastIndexOf(compound)+this.getStart();
+		return (getViewedSequence().getLastIndexOf(compound)+getStart())-1;
 	}
 
 	public int getLength() {
-		return (this.getEnd()-this.getStart()) + 1;
+		return (getEnd()-getStart()) + 1;
+	}
+
+	public CompoundSet<C> getCompoundSet() {
+	  return getViewedSequence().getCompoundSet();
 	}
 
 	public SequenceView<C> getSubSequence(final int start, final int end) {
@@ -75,6 +79,6 @@ public abstract class AbstractSequenceView<C extends Compound> implements Sequen
 
 	public Iterator<C> iterator() {
 		// TODO Optimise.
-		return this.getAsList().iterator();
+		return getAsList().iterator();
 	}
 }

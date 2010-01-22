@@ -23,9 +23,10 @@
 
 package org.biojava3.core.sequence;
 
-import org.biojava3.core.sequence.transcription.RNAProteinTranscription;
-import org.biojava3.core.sequence.transcription.DefaultRNAProteinTranscription;
 import java.util.LinkedHashMap;
+
+import org.biojava3.core.sequence.transcription.DefaultRNAProteinTranscription;
+import org.biojava3.core.sequence.transcription.RNAProteinTranscription;
 
 /**
  *

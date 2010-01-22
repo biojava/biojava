@@ -79,6 +79,10 @@ public class ArrayListSequenceBackingStore<C extends Compound> implements Sequen
         this.compoundSet = compoundSet;
     }
 
+    public CompoundSet<C> getCompoundSet() {
+      return compoundSet;
+    }
+
     public void setContents(String sequence) {
         // Horrendously inefficient - pretty much the way the old BJ did things.
         // TODO Should be optimised.

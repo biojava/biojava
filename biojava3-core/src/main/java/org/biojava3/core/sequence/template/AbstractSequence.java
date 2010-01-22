@@ -28,9 +28,9 @@ package org.biojava3.core.sequence.template;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+
 import org.biojava3.core.sequence.AccessionID;
 import org.biojava3.core.sequence.TaxonomyID;
-
 import org.biojava3.core.sequence.storage.ArrayListSequenceBackingStore;
 
 public abstract class AbstractSequence<C extends Compound> implements Sequence<C> {

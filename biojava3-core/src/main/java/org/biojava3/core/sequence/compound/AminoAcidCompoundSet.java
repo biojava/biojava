@@ -30,8 +30,11 @@ package org.biojava3.core.sequence.compound;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
+import org.biojava3.core.exceptions.CompoundNotFoundError;
 import org.biojava3.core.sequence.template.CompoundSet;
+import org.biojava3.core.sequence.template.Sequence;
 
 public class AminoAcidCompoundSet implements CompoundSet<AminoAcidCompound> {
 
@@ -88,5 +91,24 @@ public class AminoAcidCompoundSet implements CompoundSet<AminoAcidCompound> {
 
     static public AminoAcidCompoundSet getAminoAcidCompoundSet() {
         return aminoAcidCompoundSet;
+    }
+
+    public boolean compoundsEquivalent(AminoAcidCompound compoundOne,
+        AminoAcidCompound compoundTwo) {
+      throw new UnsupportedOperationException("Unimplemented");
+    }
+
+    public Set<AminoAcidCompound> getEquivalentCompounds(
+        AminoAcidCompound compound) {
+      throw new UnsupportedOperationException("Unimplemented");
+    }
+
+    public boolean hasCompound(AminoAcidCompound compound) {
+      throw new UnsupportedOperationException("Unimplemented");
+    }
+
+    public void verifySequence(Sequence<AminoAcidCompound> sequence)
+        throws CompoundNotFoundError {
+      throw new UnsupportedOperationException("Unimplemented");
     }
 }

@@ -45,8 +45,8 @@ public class RNASequence extends AbstractSequence<NucleotideCompound> {
 
 
     public RNASequence getReverseComplement() {
-        
-        
+
+
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
@@ -60,5 +60,9 @@ public class RNASequence extends AbstractSequence<NucleotideCompound> {
 
     public DNASequence getDNASequence() {
         throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    public double getGC() {
+      throw new UnsupportedOperationException("Not supported yet");
     }
 }

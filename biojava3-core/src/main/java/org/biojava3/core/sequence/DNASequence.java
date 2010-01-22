@@ -29,11 +29,15 @@ package org.biojava3.core.sequence;
  */
 
 import java.util.LinkedHashMap;
+
 import org.biojava3.core.sequence.compound.DNACompoundSet;
 import org.biojava3.core.sequence.compound.NucleotideCompound;
 import org.biojava3.core.sequence.loader.SequenceStringProxyLoader;
 import org.biojava3.core.sequence.template.AbstractSequence;
 import org.biojava3.core.sequence.template.SequenceProxyLoader;
+import org.biojava3.core.sequence.template.SequenceView;
+import org.biojava3.core.sequence.views.ComplementSequenceView;
+import org.biojava3.core.sequence.views.ReversedSequenceView;
 
 public class DNASequence extends AbstractSequence<NucleotideCompound> {
 
@@ -85,20 +89,24 @@ public class DNASequence extends AbstractSequence<NucleotideCompound> {
         return geneSequenceHashMap.get(accession);
     }
 
-    public DNASequence getReverseComplement() {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public SequenceView<NucleotideCompound> getReverseComplement() {
+      return new ComplementSequenceView<NucleotideCompound>(getReverse());
     }
 
-    public DNASequence getReverse() {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public SequenceView<NucleotideCompound> getReverse() {
+      return new ReversedSequenceView<NucleotideCompound>(this);
     }
 
-    public DNASequence getComplement() {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public SequenceView<NucleotideCompound> getComplement() {
+      return new ComplementSequenceView<NucleotideCompound>(this);
     }
 
     public RNASequence getRNASequence() {
         throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    public double getGC() {
+      throw new UnsupportedOperationException("Not supported yet");
     }
 
     /**
@@ -148,7 +156,8 @@ public class DNASequence extends AbstractSequence<NucleotideCompound> {
         DNASequence dnaSequence = new DNASequence("ATCG");
         System.out.println(dnaSequence.toString());
 
-        SequenceStringProxyLoader<NucleotideCompound> sequenceStringProxyLoader = new SequenceStringProxyLoader("GCTA", DNACompoundSet.getDNACompoundSet());
+        SequenceStringProxyLoader<NucleotideCompound> sequenceStringProxyLoader =
+          new SequenceStringProxyLoader<NucleotideCompound>("GCTA", DNACompoundSet.getDNACompoundSet());
         DNASequence dnaSequenceFromProxy = new DNASequence(sequenceStringProxyLoader);
         System.out.println(dnaSequenceFromProxy.toString());
 

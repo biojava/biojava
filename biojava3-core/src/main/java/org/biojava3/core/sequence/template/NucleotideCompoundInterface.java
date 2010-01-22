@@ -26,8 +26,8 @@
 
 package org.biojava3.core.sequence.template;
 
-public interface NucleotideCompoundInterface<C extends Compound> extends Compound{
+public interface NucleotideCompoundInterface extends Compound {
 
     public void setComplement(NucleotideCompoundInterface nucleotideCompound);
-    public C getComplement();
+    public NucleotideCompoundInterface getComplement();
 }

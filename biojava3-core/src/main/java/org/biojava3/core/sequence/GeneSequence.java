@@ -25,6 +25,7 @@ package org.biojava3.core.sequence;
 
 import java.util.Collection;
 import java.util.LinkedHashMap;
+
 import org.biojava3.core.sequence.TranscriptSequence.Sense;
 
 /**

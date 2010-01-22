@@ -29,7 +29,7 @@ import org.biojava3.core.sequence.template.Compound;
 import org.biojava3.core.sequence.template.CompoundSet;
 import org.biojava3.core.sequence.template.NucleotideCompoundInterface;
 
-public class NucleotideCompound<C extends Compound> implements NucleotideCompoundInterface {
+public class NucleotideCompound implements NucleotideCompoundInterface {
 
     private String base;
     private CompoundSet<NucleotideCompound> compoundSet;
@@ -41,7 +41,7 @@ public class NucleotideCompound<C extends Compound> implements NucleotideCompoun
         this.complementStr = complementStr;
     }
 
-    public NucleotideCompound getComplement() {
+    public NucleotideCompoundInterface getComplement() {
         return this.compoundSet.getCompoundForString(this.complementStr);
     }
 

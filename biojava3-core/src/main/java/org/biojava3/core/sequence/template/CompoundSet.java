@@ -25,14 +25,26 @@
  */
 package org.biojava3.core.sequence.template;
 
+import java.util.Set;
+
+import org.biojava3.core.exceptions.CompoundNotFoundError;
+
 public interface CompoundSet<C extends Compound> {
 	public int getMaxSingleCompoundStringLength();
-	
+
 	/**
 	 * Return null if not recognised. Throw IllegalArgumentException if string
 	 * is longer than maximum allowed by {@link #getStringForCompound(Compound)}.
 	 */
 	public C getCompoundForString(String string);
-	
+
 	public String getStringForCompound(C compound);
+
+	public boolean compoundsEquivalent(C compoundOne, C compoundTwo);
+
+	public void verifySequence(Sequence<C> sequence) throws CompoundNotFoundError;
+
+	public Set<C> getEquivalentCompounds(C compound);
+
+	public boolean hasCompound(C compound);
 }
