@@ -279,7 +279,11 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		Character aminoCode1 = null;
 		if ( recordName.equals("ATOM") )
 			aminoCode1 = StructureTools.get1LetterCode(groupCode3);
-
+		else {
+			aminoCode1 = StructureTools.get1LetterCode(groupCode3);
+			if ( aminoCode1.equals(StructureTools.UNKNOWN_GROUP_LABEL)) 
+				aminoCode1 = null;
+		}
 		String insCode = atom.getPdbx_PDB_ins_code();
 		if (!  insCode.equals("?")) {
 			residueNumber += insCode;
