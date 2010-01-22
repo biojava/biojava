@@ -65,6 +65,8 @@ public class MMcifTest extends TestCase {
 		comparePDB2cif("1a4w","L");
 		comparePDB2cif("1a4w","H");
 		comparePDB2cif("1a4w","I");
+                //non-standard encoded amino acid
+                comparePDB2cif("1fdo","A");
 
 		// test a DNA binding protein
 		comparePDB2cif("1j59","A");
@@ -90,7 +92,6 @@ public class MMcifTest extends TestCase {
 		SimpleMMcifConsumer consumer = new SimpleMMcifConsumer();
 		consumer.setHeaderOnly(headerOnly);
 		parser.addMMcifConsumer(consumer);
-
 		try {
 			parser.parse(new BufferedReader(new InputStreamReader(inStream)));
 		} catch (IOException e){

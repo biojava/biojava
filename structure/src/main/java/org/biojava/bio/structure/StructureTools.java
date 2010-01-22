@@ -136,11 +136,11 @@ public class StructureTools {
                 aminoAcids.put("ASN", new Character('N'));
                 aminoAcids.put("CYS", new Character('C'));
                 aminoAcids.put("MET", new Character('M'));
-                //MET is only found as a molecular replacement for MET
+                //MSE is only found as a molecular replacement for MET
                 aminoAcids.put("MSE", new Character('M'));
-                //non-standard, naturally occurring
-                aminoAcids.put("SEC", new Character('U'));
-                aminoAcids.put("PYR", new Character('O'));
+                //'non-standard', genetically encoded
+                aminoAcids.put("CSE", new Character('U'));
+                aminoAcids.put("PYH", new Character('O'));
 
 //		try {
 //			Alphabet alpha_prot = ProteinTools.getAlphabet();
