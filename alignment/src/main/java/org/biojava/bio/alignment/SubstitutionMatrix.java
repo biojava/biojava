@@ -396,9 +396,13 @@ public class SubstitutionMatrix {
 	 * @throws BioException
 	 */
 	public short getValueAt(Symbol row, Symbol col) throws BioException {
-		if ((!rowSymbols.containsKey(row)) || (!colSymbols.containsKey(col)))
-			throw new BioException("No entry for the sybols " + row.getName()
+		if ((!rowSymbols.containsKey(row)) || (!colSymbols.containsKey(col))) {
+			System.err.println("SubstitutionMatrix: No entry for the symbols " + row.getName()
 					+ " and " + col.getName());
+			
+			// treat the two records as X:
+			return 0;
+		}
 		return matrix[rowSymbols.get(row).intValue()][colSymbols.get(col)
 				.intValue()];
 	}
