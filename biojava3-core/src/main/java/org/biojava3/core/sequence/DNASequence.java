@@ -20,20 +20,19 @@
  * Created on DATE
  *
  */
-
 package org.biojava3.core.sequence;
 
 /**
  *
  * @author Scooter Willis
  */
-
 import java.util.LinkedHashMap;
 
 import org.biojava3.core.sequence.compound.DNACompoundSet;
 import org.biojava3.core.sequence.compound.NucleotideCompound;
 import org.biojava3.core.sequence.loader.SequenceStringProxyLoader;
 import org.biojava3.core.sequence.template.AbstractSequence;
+import org.biojava3.core.sequence.template.CompoundSet;
 import org.biojava3.core.sequence.template.SequenceProxyLoader;
 import org.biojava3.core.sequence.template.SequenceView;
 import org.biojava3.core.sequence.views.ComplementSequenceView;
@@ -46,12 +45,10 @@ public class DNASequence extends AbstractSequence<NucleotideCompound> {
     private Integer end = null;
     private LinkedHashMap<String, GeneSequence> geneSequenceHashMap = new LinkedHashMap<String, GeneSequence>();
 
+    public enum DNAType {
 
-
-    public enum DNAType{
         CHROMOSOME, MITOCHONDRIAL, PLASMID, PLASTID, UNKNOWN
     }
-
     private DNAType dnaType = DNAType.UNKNOWN;
 
     public DNASequence() {
@@ -66,11 +63,19 @@ public class DNASequence extends AbstractSequence<NucleotideCompound> {
         super(proxyLoader, DNACompoundSet.getDNACompoundSet());
     }
 
+    public DNASequence(String seqString, CompoundSet compoundSet) {
+        super(seqString, compoundSet);
+    }
+
+    public DNASequence(SequenceProxyLoader<NucleotideCompound> proxyLoader, CompoundSet compoundSet) {
+        super(proxyLoader, compoundSet);
+    }
+
     public void setParentDNASequence(DNASequence parentDNASequence) {
         this.parentDNASequence = parentDNASequence;
     }
 
-    public DNASequence getParentDNASequence(){
+    public DNASequence getParentDNASequence() {
         return parentDNASequence;
     }
 
@@ -90,15 +95,15 @@ public class DNASequence extends AbstractSequence<NucleotideCompound> {
     }
 
     public SequenceView<NucleotideCompound> getReverseComplement() {
-      return new ComplementSequenceView<NucleotideCompound>(getReverse());
+        return new ComplementSequenceView<NucleotideCompound>(getReverse());
     }
 
     public SequenceView<NucleotideCompound> getReverse() {
-      return new ReversedSequenceView<NucleotideCompound>(this);
+        return new ReversedSequenceView<NucleotideCompound>(this);
     }
 
     public SequenceView<NucleotideCompound> getComplement() {
-      return new ComplementSequenceView<NucleotideCompound>(this);
+        return new ComplementSequenceView<NucleotideCompound>(this);
     }
 
     public RNASequence getRNASequence() {
@@ -106,7 +111,7 @@ public class DNASequence extends AbstractSequence<NucleotideCompound> {
     }
 
     public double getGC() {
-      throw new UnsupportedOperationException("Not supported yet");
+        throw new UnsupportedOperationException("Not supported yet");
     }
 
     /**
@@ -137,7 +142,7 @@ public class DNASequence extends AbstractSequence<NucleotideCompound> {
         this.end = end;
     }
 
-        /**
+    /**
      * @return the dnaType
      */
     public DNAType getDNAType() {
@@ -151,13 +156,12 @@ public class DNASequence extends AbstractSequence<NucleotideCompound> {
         this.dnaType = dnaType;
     }
 
-
     public static void main(String[] args) {
         DNASequence dnaSequence = new DNASequence("ATCG");
         System.out.println(dnaSequence.toString());
 
         SequenceStringProxyLoader<NucleotideCompound> sequenceStringProxyLoader =
-          new SequenceStringProxyLoader<NucleotideCompound>("GCTA", DNACompoundSet.getDNACompoundSet());
+                new SequenceStringProxyLoader<NucleotideCompound>("GCTA", DNACompoundSet.getDNACompoundSet());
         DNASequence dnaSequenceFromProxy = new DNASequence(sequenceStringProxyLoader);
         System.out.println(dnaSequenceFromProxy.toString());
 

@@ -77,6 +77,7 @@ public class FastaReader<S extends AbstractSequence> {
             Collection<ProteinSequence> proteinSequences = fastaReader.process();
             bufferedReader.close();
             fileReader.close();
+            
             System.out.println(proteinSequences);
         }catch(Exception e){
             e.printStackTrace();

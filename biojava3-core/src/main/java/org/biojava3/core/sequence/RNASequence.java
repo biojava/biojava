@@ -20,7 +20,6 @@
  * Created on DATE
  *
  */
-
 package org.biojava3.core.sequence;
 
 /**
@@ -30,10 +29,10 @@ package org.biojava3.core.sequence;
 import org.biojava3.core.sequence.compound.NucleotideCompound;
 import org.biojava3.core.sequence.compound.RNACompoundSet;
 import org.biojava3.core.sequence.template.AbstractSequence;
+import org.biojava3.core.sequence.template.CompoundSet;
 import org.biojava3.core.sequence.template.SequenceProxyLoader;
 
 public class RNASequence extends AbstractSequence<NucleotideCompound> {
-
 
     public RNASequence(String seqString) {
         super(seqString, RNACompoundSet.getRNACompoundSet());
@@ -43,6 +42,13 @@ public class RNASequence extends AbstractSequence<NucleotideCompound> {
         super(proxyLoader, RNACompoundSet.getRNACompoundSet());
     }
 
+    public RNASequence(String seqString, CompoundSet compoundSet) {
+        super(seqString, compoundSet);
+    }
+
+    public RNASequence(SequenceProxyLoader<NucleotideCompound> proxyLoader, CompoundSet compoundSet) {
+        super(proxyLoader, compoundSet);
+    }
 
     public RNASequence getReverseComplement() {
 
@@ -63,6 +69,6 @@ public class RNASequence extends AbstractSequence<NucleotideCompound> {
     }
 
     public double getGC() {
-      throw new UnsupportedOperationException("Not supported yet");
+        throw new UnsupportedOperationException("Not supported yet");
     }
 }
