@@ -9,6 +9,15 @@ import org.biojava3.core.sequence.template.NucleotideCompoundInterface;
 import org.biojava3.core.sequence.template.Sequence;
 import org.biojava3.core.sequence.template.SequenceView;
 
+/**
+ * For a given sequence this class will create a view over the top of it
+ * and for every request the code will return the complement of the underlying
+ * base e.g. base A will become base T
+ *
+ * @author Andy Yates
+ * @param <C> Must be a subtype of @{link NucelotideCompoundInterface} since
+ * only those support complements
+ */
 public class ComplementSequenceView<C extends NucleotideCompoundInterface> extends AbstractSequenceHoldingSequenceView<C> {
 
   public ComplementSequenceView(Sequence<C> sequence) {

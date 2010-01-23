@@ -9,6 +9,15 @@ import org.biojava3.core.sequence.template.Compound;
 import org.biojava3.core.sequence.template.Sequence;
 import org.biojava3.core.sequence.template.SequenceView;
 
+/**
+ * For a given sequence this class will return the base at the reversed
+ * position i.e. in a sequence of size 10, if you request base 2 you will get
+ * back the base at position 9. Sub-views can be made of this class which
+ * also respect the reversed calls.
+ *
+ * @author Andy Yates
+ * @param <C> Must be a subtype of @{link Compound}
+ */
 public class ReversedSequenceView<C extends Compound> extends AbstractSequenceHoldingSequenceView<C> {
 
   private final int sequenceSize;
