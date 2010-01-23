@@ -197,7 +197,7 @@ public class IUPACParser {
           nucelotides.getCompoundForString(codonString.get(1));
         NucleotideCompound three =
           nucelotides.getCompoundForString(codonString.get(2));
-        boolean isStart = (startCodonStrings.get(i) == "*");
+        boolean isStart = (startCodonStrings.get(i) == "M");
         AminoAcidCompound aminoAcid =
           aminoAcids.getCompoundForString(aminoAcidStrings.get(i));
 
