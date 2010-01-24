@@ -23,20 +23,20 @@ public class DNATests {
 
   @Test
   public void reverseComplement() {
-    String s = getSeq().getReverseComplement().getString();
+    String s = getSeq().getReverseComplement().getSequenceAsString();
     assertThat("Reversed Complemented sequence not as expected", s, is("GCAT"));
   }
 
   @Test
   public void complement() {
-    String s = getSeq().getComplement().getString();
+    String s = getSeq().getComplement().getSequenceAsString();
     assertThat("Complemented sequence not as expected", s, is("TACG"));
   }
 
   @Test
   public void reverse() {
     SequenceView<NucleotideCompound> r = getSeq().getReverse();
-    assertThat("Reversed sequence not as expected", r.getString(), is("CGTA"));
+    assertThat("Reversed sequence not as expected", r.getSequenceAsString(), is("CGTA"));
     assertThat("Base at 2 not right", r.getCompoundAt(2).toString(), is("G"));
 
     List<String> actual = new ArrayList<String>();
@@ -52,7 +52,7 @@ public class DNATests {
 //
 //  @Test
 //  public void translateToRna() {
-//    String s = getSeq("ATGGCGGCGCTGAGCGGT").toRNA().getString()();
+//    String s = getSeq("ATGGCGGCGCTGAGCGGT").toRNA().getSequenceAsString()();
 //    assertThat("RNA as expected", s, is("AUGGCGGCGCUGAGCGGU"));
 //  }
 //
@@ -61,14 +61,14 @@ public class DNATests {
   public void respectCase() {
     String s = "ATgc";
     DNASequence dna = getSeq(s);
-    assertThat("Sequence does not remember casing", dna.getString(), is(s));
+    assertThat("Sequence does not remember casing", dna.getSequenceAsString(), is(s));
 
     StringBuilder reverse = new StringBuilder(s);
     assertThat("A reversed sequence does not remember case",
-        dna.getReverse().getString(), is(reverse.reverse().toString()));
+        dna.getReverse().getSequenceAsString(), is(reverse.reverse().toString()));
 
     assertThat("Reversed complement sequence forgets case",
-        dna.getReverseComplement().getString(), is("gcAT"));
+        dna.getReverseComplement().getSequenceAsString(), is("gcAT"));
   }
 
   @Test(expected=CompoundNotFoundError.class)

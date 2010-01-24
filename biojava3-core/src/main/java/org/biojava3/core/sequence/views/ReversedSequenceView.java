@@ -40,9 +40,9 @@ public class ReversedSequenceView<C extends Compound> extends AbstractSequenceHo
   }
 
   @Override
-  public String getString() {
+  public String getSequenceAsString() {
     //TODO This is because of the way the super class does the create; do a better version please!
-    StringBuilder b = new StringBuilder(super.getString());
+    StringBuilder b = new StringBuilder(super.getSequenceAsString());
     b.reverse();
     return b.toString();
   }

@@ -11,7 +11,7 @@ import org.biojava3.core.sequence.template.AbstractSequence;
  *
  * @author Scooter Willis <willishf at gmail dot com>
  */
-public interface HeaderParserInterface<S extends AbstractSequence> {
+public interface FastaHeaderParserInterface<S extends AbstractSequence> {
 
     public void parseHeader(String header,S sequence);
 }

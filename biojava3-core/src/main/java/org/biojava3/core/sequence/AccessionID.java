@@ -27,25 +27,9 @@ package org.biojava3.core.sequence;
  * @author Scooter Willis
  */
 public class AccessionID {
-// GenBank                           gi|gi-number|gb|accession|locus
-// EMBL Data Library                 gi|gi-number|emb|accession|locus
-// DDBJ, DNA Database of Japan       gi|gi-number|dbj|accession|locus
-// NBRF PIR                          pir||entry
-// Protein Research Foundation       prf||name
-// SWISS-PROT UNIPROT                sp|accession|name
-// Brookhaven Protein Data Bank (1)  pdb|entry|chain
-// Brookhaven Protein Data Bank (2)  entry:chain|PDBID|CHAIN|SEQUENCE
-// Patents                           pat|country|number
-// GenInfo Backbone Id               bbs|number
-// General database identifier       gnl|database|identifier
-// NCBI Reference Sequence           ref|accession|locus
-// Local Sequence identifier         lcl|identifier
-    public enum Source {
 
-        GENBANK,EMBL,DDBJ,NBRF,PRF,PDB1,PDB2,PDBe,PATENTS,GENINFO,GENERAL,NCBI, UNIPROT, PFAM, LOCAL, UNKNOWN
-    }
     private String id = null;
-    private Source source = Source.LOCAL;
+    private DataSource source = DataSource.LOCAL;
 
     public AccessionID(){
         id = "";
@@ -54,10 +38,10 @@ public class AccessionID {
 
     public AccessionID(String id) {
         this.id = id;
-        this.source = Source.LOCAL;
+        this.source = DataSource.LOCAL;
     }
 
-    public AccessionID(String id, Source source) {
+    public AccessionID(String id, DataSource source) {
         this.id = id;
         this.source = source;
     }
@@ -72,9 +56,13 @@ public class AccessionID {
     /**
      * @return the source
      */
-    public Source getSource() {
+    public DataSource getDataSource() {
         return source;
     }
+
+ //   public void setDataSource(DataSource dataSource){
+ //       source = dataSource;
+ //   }
 
     @Override
     public String toString() {

@@ -15,6 +15,6 @@ import org.biojava3.core.sequence.template.SequenceProxyLoader;
  */
 public interface SequenceCreatorInterface<C extends Compound> {
 
-    public AbstractSequence<C> getSequence(String sequence);
-    public AbstractSequence<C> getSequence(SequenceProxyLoader<C> proxyLoader);
+    public AbstractSequence<C> getSequence(String sequence, long index);
+    public AbstractSequence<C> getSequence(SequenceProxyLoader<C> proxyLoader,long index);
 }

@@ -21,11 +21,11 @@ public class RNASequenceCreator implements SequenceCreatorInterface{
         this.compoundSet = compoundSet;
     }
 
-    public AbstractSequence getSequence(String sequence) {
+    public AbstractSequence getSequence(String sequence,long index) {
         return new DNASequence(sequence,compoundSet);
     }
 
-    public AbstractSequence getSequence(SequenceProxyLoader proxyLoader) {
+    public AbstractSequence getSequence(SequenceProxyLoader proxyLoader,long index) {
         return new DNASequence(proxyLoader,compoundSet);
     }
 

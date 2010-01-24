@@ -28,16 +28,13 @@ package org.biojava3.core.sequence;
  */
 public class TaxonomyID {
 
-    public enum Source {
 
-        NCBI, LOCAL
-    }
     private String id = null;
-    private Source source = Source.LOCAL;
+    DataSource dataSource = DataSource.UNKNOWN;
 
-    public TaxonomyID(String id, Source source) {
+    public TaxonomyID(String id, DataSource dataSource) {
         this.id = id;
-        this.source = source;
+        this.dataSource = dataSource;
     }
 
     /**
@@ -50,7 +47,7 @@ public class TaxonomyID {
     /**
      * @return the source
      */
-    public Source getSource() {
-        return source;
+    public DataSource getDataSource() {
+        return dataSource;
     }
 }

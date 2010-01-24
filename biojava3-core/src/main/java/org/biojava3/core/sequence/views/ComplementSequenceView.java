@@ -48,7 +48,7 @@ public class ComplementSequenceView<C extends NucleotideCompoundInterface> exten
     return super.getLastIndexOf((C)compound.getComplement());
   }
 
-  public String getString() {
+  public String getSequenceAsString() {
     StringBuilder b = new StringBuilder(getLength());
     for(C c: this) {
       b.append(c.getComplement().toString());

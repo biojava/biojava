@@ -3,12 +3,15 @@
  * and open the template in the editor.
  */
 
-package org.biojava3.core.sequence;
+package org.biojava3.core.exceptions;
 
 /**
  *
  * @author Scooter Willis <willishf at gmail dot com>
  */
-public class test {
+public class FileAccessError extends Error{
 
+    public FileAccessError(String error){
+        super(error);
+    }
 }

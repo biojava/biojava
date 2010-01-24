@@ -42,7 +42,7 @@ public class ArrayListSequenceBackingStore<C extends Compound> implements Sequen
     private CompoundSet<C> compoundSet;
     private List<C> parsedCompounds = new ArrayList<C>();
 
-    public String getString() {
+    public String getSequenceAsString() {
         // TODO Optimise/cache.
         StringBuilder builder = new StringBuilder();
         for (C compound : parsedCompounds) {

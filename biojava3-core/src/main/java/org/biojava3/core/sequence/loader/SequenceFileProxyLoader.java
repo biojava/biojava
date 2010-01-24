@@ -25,6 +25,8 @@
  */
 package org.biojava3.core.sequence.loader;
 
+import java.io.File;
+import java.io.RandomAccessFile;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -32,26 +34,45 @@ import java.util.List;
 import org.biojava3.core.sequence.template.AbstractSequenceView;
 import org.biojava3.core.sequence.template.Compound;
 import org.biojava3.core.exceptions.CompoundNotFoundError;
+import org.biojava3.core.exceptions.FileAccessError;
+import org.biojava3.core.sequence.io.template.SequenceParserInterface;
 import org.biojava3.core.sequence.template.CompoundSet;
 import org.biojava3.core.sequence.template.Sequence;
 import org.biojava3.core.sequence.template.SequenceProxyLoader;
 import org.biojava3.core.sequence.template.SequenceView;
 
+public class SequenceFileProxyLoader<C extends Compound> implements SequenceProxyLoader<C> {
 
-public class SequenceStringProxyLoader<C extends Compound> implements SequenceProxyLoader<C> {
-
-    private String sequence;
+    SequenceParserInterface sequenceParser;
     private CompoundSet<C> compoundSet;
     private List<C> parsedCompounds = new ArrayList<C>();
-    
+    File file;
+    long sequenceStartIndex = -1;
+    int sequenceLength = -1;
+    private boolean initialized = false;
 
-    public SequenceStringProxyLoader(String sequence, CompoundSet<C> compoundSet) {
-        this.sequence = sequence;
+    public SequenceFileProxyLoader(File file,SequenceParserInterface sequenceParser, long sequenceStartIndex, int sequenceLength, CompoundSet<C> compoundSet) {
+        this.sequenceParser = sequenceParser;
+        this.file = file;
+        this.sequenceStartIndex = sequenceStartIndex;
+        this.sequenceLength = sequenceLength;
         setCompoundSet(compoundSet);
     }
 
     public void setCompoundSet(CompoundSet<C> compoundSet) {
         this.compoundSet = compoundSet;
+    }
+
+    private boolean init() {
+        try {
+            RandomAccessFile randomAccessFile = new RandomAccessFile(file, "r");
+            randomAccessFile.seek(sequenceStartIndex);
+            String sequence = sequenceParser.getSequence(randomAccessFile,sequenceLength);
+            setContents(sequence);
+        } catch (Exception e) {
+            throw new FileAccessError("Error accessing " + file + " offset=" + sequenceStartIndex + " sequenceLength=" + sequenceLength + " " + e.toString());
+        }
+        return true;
     }
 
     public void setContents(String sequence) {
@@ -72,38 +93,67 @@ public class SequenceStringProxyLoader<C extends Compound> implements SequencePr
             }
             this.parsedCompounds.add(compound);
         }
+
+        setInitialized(true);
     }
 
     public int getLength() {
-        return this.parsedCompounds.size();
+        return sequenceLength;
     }
 
     public C getCompoundAt(int position) {
+        if (this.isInitialized()) {
+            init();
+        }
         return this.parsedCompounds.get(position - 1);
     }
 
     public int getIndexOf(C compound) {
+        if (this.isInitialized()) {
+            init();
+        }
         return this.parsedCompounds.indexOf(compound) + 1;
     }
 
     public int getLastIndexOf(C compound) {
+        if (this.isInitialized()) {
+            init();
+        }
         return this.parsedCompounds.lastIndexOf(compound) + 1;
     }
 
     @Override
     public String toString() {
+        if (this.isInitialized()) {
+            init();
+        }
         return getSequenceAsString();
     }
 
     public String getSequenceAsString() {
-        return sequence;
+        if (this.isInitialized()) {
+            init();
+        }
+        StringBuilder sb = new StringBuilder(parsedCompounds.size());
+        for(C compounds : parsedCompounds){
+            sb.append(compounds);
+        }
+        //TODO could cache this but depends on how many times it is asked for.
+        return sb.toString();
     }
 
     public List<C> getAsList() {
+        if (this.isInitialized()) {
+            init();
+        }
         return this.parsedCompounds;
+
     }
 
     public SequenceView<C> getSubSequence(final int start, final int end) {
+        if (this.isInitialized()) {
+            init();
+        }
         return new AbstractSequenceView<C>() {
 
             public int getEnd() {
@@ -115,16 +165,33 @@ public class SequenceStringProxyLoader<C extends Compound> implements SequencePr
             }
 
             public Sequence<C> getViewedSequence() {
-                return SequenceStringProxyLoader.this;
+                return SequenceFileProxyLoader.this;
             }
         };
     }
 
     public Iterator<C> iterator() {
+        if (this.isInitialized()) {
+            init();
+        }
         return this.parsedCompounds.iterator();
     }
 
     public CompoundSet<C> getCompoundSet() {
-      return compoundSet;
+        return compoundSet;
+    }
+
+    /**
+     * @return the initialized
+     */
+    public boolean isInitialized() {
+        return initialized;
+    }
+
+    /**
+     * @param initialized the initialized to set
+     */
+    public void setInitialized(boolean initialized) {
+        this.initialized = initialized;
     }
 }

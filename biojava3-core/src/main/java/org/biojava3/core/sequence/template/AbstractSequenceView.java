@@ -30,9 +30,9 @@ import java.util.List;
 
 public abstract class AbstractSequenceView<C extends Compound> implements SequenceView<C> {
 
-	public String getString() {
+	public String getSequenceAsString() {
 		// TODO Optimise.
-		return this.getViewedSequence().getString().substring(this.getStart()-1, this.getEnd());
+		return this.getViewedSequence().getSequenceAsString().substring(this.getStart()-1, this.getEnd());
 	}
 
 	public List<C> getAsList() {

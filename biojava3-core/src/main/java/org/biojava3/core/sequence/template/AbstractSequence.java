@@ -44,6 +44,7 @@ public abstract class AbstractSequence<C extends Compound> implements Sequence<C
     private String originalHeader;
     private Collection userCollection;
 
+
     public AbstractSequence() {
     }
 
@@ -164,11 +165,11 @@ public abstract class AbstractSequence<C extends Compound> implements Sequence<C
 
     @Override
     public String toString() {
-        return getString();
+        return getSequenceAsString();
     }
 
-    public String getString() {
-        return backingStore.getString();
+    public String getSequenceAsString() {
+        return backingStore.getSequenceAsString();
     }
 
     public List<C> getAsList() {
@@ -206,7 +207,7 @@ public abstract class AbstractSequence<C extends Compound> implements Sequence<C
                 return AbstractSequence.this;
             }
 
-            public String getString() {
+            public String getSequenceAsString() {
                 throw new UnsupportedOperationException("Not supported yet.");
             }
         };
