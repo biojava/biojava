@@ -8,12 +8,12 @@ public class FarmJobParameters {
 	public static final int DEFAULT_JOB_TIME = -1;
 	public static final int DEFAULT_NR_ALIGNMENTS = -1;
 	public static final int DEFAULT_NR_THREADS = 1;
-	public static final String SERVER_URL;
+	public static final String DEFAULT_SERVER_URL;
 	private static ResourceManager resourceManager;
 	static {
 		resourceManager = ResourceManager.getResourceManager("jfatcat");
 		String server = resourceManager.getString("server.url");
-		SERVER_URL = server;
+		DEFAULT_SERVER_URL = server;
 	}
 	public static final String DEFAULT_PDB_PATH = "/tmp/";
 	public static final boolean DEFAULT_DIR_SPLIT = true;
@@ -37,7 +37,7 @@ public class FarmJobParameters {
 		nrAlignments = DEFAULT_NR_ALIGNMENTS;
 		time = DEFAULT_JOB_TIME;
 		threads = DEFAULT_NR_THREADS;
-		server = SERVER_URL;
+		server = DEFAULT_SERVER_URL;
 		pdbFilePath = DEFAULT_PDB_PATH;
 		pdbDirSplit = DEFAULT_DIR_SPLIT;
 		runBackground = false;

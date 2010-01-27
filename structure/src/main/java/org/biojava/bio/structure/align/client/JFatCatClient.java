@@ -27,12 +27,12 @@ import org.biojava.bio.structure.align.xml.RepresentativeXMLConverter;
 public class JFatCatClient {
 
 	private static ResourceManager resourceManager = ResourceManager.getResourceManager("jfatcat");
-	private static final String    serverLoc       = resourceManager.getString("server.url");
 
-	private static final String serverURL    = serverLoc+"show?name1=%s&name2=%s";
-	private static final String sendURL      = serverLoc+"submit?name1=%s&name2=%s&version=%s";
-	private static final String multiSendURL = serverLoc+"jobSubmit?username=%s&version=%s";
-	private static final String representURL = serverLoc +"representatives?cluster=%s";
+	private static final String serverAPPEND    = "show?name1=%s&name2=%s";
+	private static final String sendAPPEND      = "submit?name1=%s&name2=%s&version=%s";
+	private static final String multiSendAPPEND = "jobSubmit?username=%s&version=%s";
+	private static final String representAPPEND = "representatives?cluster=%s";
+	
 	
 	private static Random generator;
 	
@@ -40,9 +40,11 @@ public class JFatCatClient {
 		generator = new Random();
 	}
 	
-	public static AFPChain getAFPChainFromServer(String name1, String name2, Atom[] ca1, Atom[] ca2) 
+	public static AFPChain getAFPChainFromServer(String serverLocation , String name1, String name2, Atom[] ca1, Atom[] ca2) 
 	{
 
+	   String serverURL = serverLocation + serverAPPEND;
+	   
 		try {
 			String u = String.format(serverURL,name1,name2);
 
@@ -99,8 +101,10 @@ public class JFatCatClient {
 		return sb.toString();
 	}
 
-	public static String sendMultiAFPChainToServer(String multiXML, String username) throws JobKillException{
+	public static String sendMultiAFPChainToServer(String serverLocation, String multiXML, String username) throws JobKillException{
 
+	   String multiSendURL = serverLocation + multiSendAPPEND;
+	   
 		String responseS = "";
 		String version = resourceManager.getString("jfatcat.version");
 
@@ -155,8 +159,10 @@ public class JFatCatClient {
 	}
 
 
-	public static final void sendAFPChainToServer(AFPChain afpChain,Atom[] ca1, Atom[] ca2) 
+	public static final void sendAFPChainToServer(String serverLocation, AFPChain afpChain,Atom[] ca1, Atom[] ca2) 
 	{
+	   
+	   String sendURL = serverLocation + sendAPPEND;
 
 		String version = resourceManager.getString("jfatcat.version");
 		try {
@@ -232,8 +238,10 @@ public class JFatCatClient {
 	}
 
 
-	public static final SortedSet<String> getRepresentatives(int cutoff){
+	public static final SortedSet<String> getRepresentatives(String serverLocation, int cutoff){
 		SortedSet<String> representatives = new TreeSet<String>();
+		
+		String representURL = serverLocation + representAPPEND;
 		
 		if ( cutoff < 20)
 			cutoff = 40;

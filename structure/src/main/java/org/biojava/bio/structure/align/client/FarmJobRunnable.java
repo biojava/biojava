@@ -41,7 +41,8 @@ public class FarmJobRunnable implements Runnable {
 	private static final String JFATCAT_VERSION         = "jfatcat.version";
 
 	private static ResourceManager resourceManager = ResourceManager.getResourceManager("jfatcat");
-	
+
+  
 	private static DateFormat dateFormat = new SimpleDateFormat("MMMM dd, yyyy h:mm a");
 
 	FarmJobParameters params;
@@ -407,6 +408,8 @@ public class FarmJobRunnable implements Runnable {
 
 	private void sendResultsToServer(List<String> results) {
 
+	   String serverLocation = params.getServer();
+	   
 		if ( results.size() < 1)
 			return;
 
@@ -420,7 +423,7 @@ public class FarmJobRunnable implements Runnable {
 		fullXml += "</alignments>";
 		String msg = "";
 		try {
-			msg = JFatCatClient.sendMultiAFPChainToServer(fullXml, userName);
+			msg = JFatCatClient.sendMultiAFPChainToServer(serverLocation,fullXml, userName);
 		} catch (JobKillException e){
 			e.printStackTrace();
 			terminate();
