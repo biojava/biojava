@@ -50,7 +50,7 @@ public class BioJavaStructureAlignment
 
 implements StructureAlignment  {
 
-	private static final String algorithName = "BioJava_structure";
+	public static final String algorithmName = "BioJava_structure";
 	private static final float versionNr = 0.1f;
 	StrucAligParameters params;
 
@@ -81,7 +81,7 @@ implements StructureAlignment  {
 //	}
 
 	public String getAlgorithmName() {
-		return algorithName;
+		return algorithmName;
 	}
 
 	public ConfigStrucAligParams getParameters() {
