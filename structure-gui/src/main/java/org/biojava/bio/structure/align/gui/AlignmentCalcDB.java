@@ -38,6 +38,7 @@ import org.biojava.bio.structure.StructureTools;
 import org.biojava.bio.structure.align.StructureAlignment;
 import org.biojava.bio.structure.align.ce.CeMain;
 import org.biojava.bio.structure.align.ce.CeSideChainMain;
+import org.biojava.bio.structure.align.client.FarmJobParameters;
 import org.biojava.bio.structure.align.client.JFatCatClient;
 import org.biojava.bio.structure.align.model.AFPChain;
 import org.biojava.bio.structure.align.util.AtomCache;
@@ -78,9 +79,9 @@ public class AlignmentCalcDB implements Runnable {
 		System.out.println("running AlignmentCalcDB. Results will be in " + outFile);
 		AtomCache cache = new AtomCache(config);
 		StructureAlignment algorithm = parent.getStructureAlignment();	
-
+		String serverLocation = FarmJobParameters.DEFAULT_SERVER_URL;
 		if ( representatives == null){
-			SortedSet<String> repre = JFatCatClient.getRepresentatives(50);
+			SortedSet<String> repre = JFatCatClient.getRepresentatives(serverLocation,40);
 			System.out.println("got  " + repre.size() + " representatives for comparison");
 			representatives = repre;
 		}
