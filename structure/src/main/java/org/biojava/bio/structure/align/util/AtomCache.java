@@ -71,6 +71,13 @@ public class AtomCache {
 
 	
 
+	/** Returns the CA atoms for the provided name. see getStructure method for supported naming conventions.
+	 * 
+	 * @param name
+	 * @return
+	 * @throws IOException
+	 * @throws StructureException
+	 */
 	public synchronized Atom[] getAtoms(String name) throws IOException,StructureException{
 		// synchronizing the whole method now to prevent the same PDB file to be loaded multiple times
 	
@@ -119,7 +126,8 @@ public class AtomCache {
 	 * @throws IOException
 	 * @throws StructureException
 	 */
-	public Structure getStructure(String name) throws IOException, StructureException{
+	@SuppressWarnings("deprecation")
+   public Structure getStructure(String name) throws IOException, StructureException{
 
 		while ( loading.get() ){
 			// waiting for loading to be finished...
