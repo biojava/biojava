@@ -108,8 +108,8 @@ public class FastaReader<S extends AbstractSequence> {
 
     public static void main(String[] args) {
         try {
-            FileInputStream is = new FileInputStream("/Users/Scooter/mutualinformation/project/nuclear_receptor/PF00104_small.fasta");
-
+            String inputFile = "src/test/resources/PF00104_small.fasta";
+            FileInputStream is = new FileInputStream(inputFile);
 
             FastaReader<ProteinSequence> fastaReader = new FastaReader<ProteinSequence>(is, new GenericFastaHeaderParser(), new ProteinSequenceCreator(AminoAcidCompoundSet.getAminoAcidCompoundSet()));
             Collection<ProteinSequence> proteinSequences = fastaReader.process();
@@ -118,7 +118,7 @@ public class FastaReader<S extends AbstractSequence> {
 
             System.out.println(proteinSequences);
 
-            File file = new File("/Users/Scooter/mutualinformation/project/nuclear_receptor/PF00104_small.fasta");
+            File file = new File(inputFile);
             FastaReader<ProteinSequence> fastaProxyReader = new FastaReader<ProteinSequence>(file, new GenericFastaHeaderParser(), new FileProxyProteinSequenceCreator(file, AminoAcidCompoundSet.getAminoAcidCompoundSet()));
             Collection<ProteinSequence> proteinProxySequences = fastaProxyReader.process();
 
