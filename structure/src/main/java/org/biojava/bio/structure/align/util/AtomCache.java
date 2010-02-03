@@ -78,7 +78,7 @@ public class AtomCache {
 	 * @throws IOException
 	 * @throws StructureException
 	 */
-	public synchronized Atom[] getAtoms(String name) throws IOException,StructureException{
+	public  Atom[] getAtoms(String name) throws IOException,StructureException{
 		// synchronizing the whole method now to prevent the same PDB file to be loaded multiple times
 	
 		Atom[] atoms = null;
