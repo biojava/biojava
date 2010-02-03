@@ -75,416 +75,422 @@ import org.jmol.api.JmolViewer;
  */
 public class StructureAlignmentJmol implements MouseMotionListener, MouseListener, WindowListener,ActionListener {
 
-	Structure structure; 
+   Structure structure; 
 
-	JmolPanel jmolPanel;
-	JFrame frame ;
-	JTextField text ;
-	JTextField status;
+   JmolPanel jmolPanel;
+   JFrame frame ;
+   JTextField text ;
+   JTextField status;
 
-	protected static final String COMMAND_LINE_HELP = "enter Jmol scripting command...";
-	Atom[] ca1;
-	Atom[] ca2;
-	AFPChain afpChain;
+   protected static final String COMMAND_LINE_HELP = "enter Jmol scripting command...";
+   Atom[] ca1;
+   Atom[] ca2;
+   AFPChain afpChain;
 
-	public static final String DEFAULT_SCRIPT = ResourceManager.getResourceManager("ce").getString("default.alignment.jmol.script");
+   public static final String DEFAULT_SCRIPT = ResourceManager.getResourceManager("ce").getString("default.alignment.jmol.script");
 
-	private static final Object LIGAND_DISPLAY_SCRIPT = ResourceManager.getResourceManager("ce").getString("default.ligand.jmol.script");
+   private static final Object LIGAND_DISPLAY_SCRIPT = ResourceManager.getResourceManager("ce").getString("default.ligand.jmol.script");
 
-	public static void main(String[] args){
-		try {
+   public static void main(String[] args){
+      try {
 
-			PDBFileReader pdbr = new PDBFileReader();   
-			//pdbr.setAutoFetch(true);
-			pdbr.setPath("/Users/ap3/WORK/PDB/");
+         PDBFileReader pdbr = new PDBFileReader();   
+         //pdbr.setAutoFetch(true);
+         pdbr.setPath("/Users/ap3/WORK/PDB/");
 
-			String pdbCode = "5pti";
+         String pdbCode = "5pti";
 
-			Structure struc = pdbr.getStructureById(pdbCode);
+         Structure struc = pdbr.getStructureById(pdbCode);
 
-			StructureAlignmentJmol jmolPanel = new StructureAlignmentJmol(null,null,null);
+         StructureAlignmentJmol jmolPanel = new StructureAlignmentJmol(null,null,null);
 
-			jmolPanel.setStructure(struc);
+         jmolPanel.setStructure(struc);
 
-			// send some RASMOL style commands to Jmol
-			jmolPanel.evalString("select * ; color chain;");
-			jmolPanel.evalString("select *; spacefill off; wireframe off; backbone 0.4;  ");
+         // send some RASMOL style commands to Jmol
+         jmolPanel.evalString("select * ; color chain;");
+         jmolPanel.evalString("select *; spacefill off; wireframe off; backbone 0.4;  ");
 
-		} catch (Exception e){
-			e.printStackTrace();
-		}
-	}
+      } catch (Exception e){
+         e.printStackTrace();
+      }
+   }
 
-	public StructureAlignmentJmol(){
-		// don;t have an afpChain, set it to null...
-		this(null, null, null);
-	}
+   public StructureAlignmentJmol(){
+      // don;t have an afpChain, set it to null...
+      this(null, null, null);
+   }
 
 
-	public StructureAlignmentJmol(AFPChain afpChain, Atom[] ca1, Atom[] ca2) {		
+   public StructureAlignmentJmol(AFPChain afpChain, Atom[] ca1, Atom[] ca2) {		
 
-		jmolPanel = new JmolPanel();
+      jmolPanel = new JmolPanel();
 
-		frame = new JFrame();
+      frame = new JFrame();
 
-		JMenuBar menu = MenuCreator.initMenu(frame,this, afpChain);
+      JMenuBar menu = MenuCreator.initMenu(frame,this, afpChain);
 
-		frame.setJMenuBar(menu);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		this.afpChain = afpChain;
-		this.ca1 = ca1;
-		this.ca2 = ca2;
+      frame.setJMenuBar(menu);
+      frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+      this.afpChain = afpChain;
+      this.ca1 = ca1;
+      this.ca2 = ca2;
 
-		/*frame.addWindowListener( new WindowAdapter() {
+      /*frame.addWindowListener( new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
 				frame.dispose();
 				//System.exit(0);
 			}
 		});*/
 
-		Container contentPane = frame.getContentPane();
+      Container contentPane = frame.getContentPane();
 
-		Box vBox = Box.createVerticalBox();
+      Box vBox = Box.createVerticalBox();
 
-		//try {
+      //try {
 
 
 
-		jmolPanel.addMouseMotionListener(this);
-		jmolPanel.addMouseListener(this);
+      jmolPanel.addMouseMotionListener(this);
+      jmolPanel.addMouseListener(this);
 
-		//		} catch (ClassNotFoundException e){
-		//			e.printStackTrace();
-		//			System.err.println("Could not find Jmol in classpath, please install first. http://www.jmol.org");
-		//			return;
-		//		}
-		jmolPanel.setPreferredSize(new Dimension(500,500));
-		vBox.add(jmolPanel);
+      //		} catch (ClassNotFoundException e){
+      //			e.printStackTrace();
+      //			System.err.println("Could not find Jmol in classpath, please install first. http://www.jmol.org");
+      //			return;
+      //		}
+      jmolPanel.setPreferredSize(new Dimension(500,500));
+      vBox.add(jmolPanel);
 
 
-		JTextField field = new JTextField();
+      JTextField field = new JTextField();
 
-		field.setMaximumSize(new Dimension(Short.MAX_VALUE,30));   
-		field.setText(COMMAND_LINE_HELP);
-		RasmolCommandListener listener = new RasmolCommandListener(jmolPanel,field) ;
+      field.setMaximumSize(new Dimension(Short.MAX_VALUE,30));   
+      field.setText(COMMAND_LINE_HELP);
+      RasmolCommandListener listener = new RasmolCommandListener(jmolPanel,field) ;
 
-		field.addActionListener(listener);
-		field.addMouseListener(listener);
-		field.addKeyListener(listener);
+      field.addActionListener(listener);
+      field.addMouseListener(listener);
+      field.addKeyListener(listener);
 
 
 
-		vBox.add(field);
+      vBox.add(field);
 
-		Box hBox = Box.createHorizontalBox();
+      Box hBox = Box.createHorizontalBox();
 
-		status = new JTextField();		
-		status.setBackground(Color.white);
-		status.setEditable(false);
-		status.setMaximumSize(new Dimension(Short.MAX_VALUE,30));   
-		hBox.add(status);
-		text = new JTextField();
-		text.setBackground(Color.white);
-		text.setMaximumSize(new Dimension(190,30));
-		text.setSize(new Dimension(190,30));
-		text.setMinimumSize(new Dimension(190,30));
-		text.setText("Display of Atom info");
-		text.setEditable(false);
-		hBox.add(text);
+      status = new JTextField();		
+      status.setBackground(Color.white);
+      status.setEditable(false);
+      status.setMaximumSize(new Dimension(Short.MAX_VALUE,30));   
+      hBox.add(status);
+      text = new JTextField();
+      text.setBackground(Color.white);
+      text.setMaximumSize(new Dimension(190,30));
+      text.setSize(new Dimension(190,30));
+      text.setMinimumSize(new Dimension(190,30));
+      text.setText("Display of Atom info");
+      text.setEditable(false);
+      hBox.add(text);
 
-		vBox.add(hBox);
+      vBox.add(hBox);
 
 
 
-		contentPane.add(vBox);
-		MyJmolStatusListener li = (MyJmolStatusListener) jmolPanel.getStatusListener();
-		li.setTextField(status);
-		frame.pack();
-		frame.setVisible(true); 
+      contentPane.add(vBox);
+      MyJmolStatusListener li = (MyJmolStatusListener) jmolPanel.getStatusListener();
+      li.setTextField(status);
+      frame.pack();
+      frame.setVisible(true); 
 
-		
-		// init coordinates
-		initCoords();
 
-		resetDisplay();
+      // init coordinates
+      initCoords();
 
-	}
-	private void initCoords(){
-		try {
-			Structure artificial = DisplayAFP.getAlignedStructure(ca1,ca2);
-			PDBHeader header = new PDBHeader();
-			String title =  afpChain.getAlgorithmName() + " V." +afpChain.getVersion() + " : " + afpChain.getName1() + " vs. " + afpChain.getName2();
-			header.setTitle(title);
-			artificial.setPDBHeader(header);
-			setStructure(artificial);
-		} catch (StructureException e){
-			e.printStackTrace();
-		}
-	}
+      resetDisplay();
 
-	public void destroy(){
+   }
+   private void initCoords(){
+      try {
+         Structure artificial = DisplayAFP.getAlignedStructure(ca1,ca2);
+         PDBHeader header = new PDBHeader();
+         String title =  afpChain.getAlgorithmName() + " V." +afpChain.getVersion() + " : " + afpChain.getName1() + " vs. " + afpChain.getName2();
+         header.setTitle(title);
+         artificial.setPDBHeader(header);
+         setStructure(artificial);
+      } catch (StructureException e){
+         e.printStackTrace();
+      }
+   }
 
-		jmolPanel.removeMouseListener(this);
-		jmolPanel.removeMouseMotionListener(this);
-		afpChain =null;
-		ca1 = null;
-		ca2 = null;
-	}
+   public void destroy(){
 
-	public void setAtoms(Atom[] atoms){
-		Structure s = new StructureImpl();
-		Chain c = new ChainImpl();
-		c.setName("A");
-		for (Atom a: atoms){
-			c.addGroup(a.getParent());
-		}
-		s.addChain(c);
-		setStructure(s);
+      jmolPanel.removeMouseListener(this);
+      jmolPanel.removeMouseMotionListener(this);
+      afpChain =null;
+      ca1 = null;
+      ca2 = null;
+   }
 
-	}
+   public void setAtoms(Atom[] atoms){
+      Structure s = new StructureImpl();
+      Chain c = new ChainImpl();
+      c.setName("A");
+      for (Atom a: atoms){
+         c.addGroup(a.getParent());
+      }
+      s.addChain(c);
+      setStructure(s);
 
+   }
 
-	public JmolPanel getJmolPanel() {
-		return jmolPanel;
-	}
 
-	public void setJmolPanel(JmolPanel jmolPanel) {
-		this.jmolPanel = jmolPanel;
-	}
+   public JmolPanel getJmolPanel() {
+      return jmolPanel;
+   }
 
-	public void evalString(String rasmolScript){
-		if ( jmolPanel == null ){
-			System.err.println("please install Jmol first");
-			return;
-		}
-		jmolPanel.evalString(rasmolScript);
-	}
+   public void setJmolPanel(JmolPanel jmolPanel) {
+      this.jmolPanel = jmolPanel;
+   }
 
-	public void setStructure(Structure s) {
-		
-		if ( jmolPanel == null ){
-			System.err.println("please install Jmol first");
-			return;
-		}
+   public void evalString(String rasmolScript){
+      if ( jmolPanel == null ){
+         System.err.println("please install Jmol first");
+         return;
+      }
+      jmolPanel.evalString(rasmolScript);
+   }
 
-		
-		setTitle(s.getPDBCode());
+   public void setStructure(Structure s) {
 
-		// actually this is very simple
-		// just convert the structure to a PDB file
+      if ( jmolPanel == null ){
+         System.err.println("please install Jmol first");
+         return;
+      }
 
-		String pdb = s.toPDB();	
-		//System.out.println(s.isNmr());
 
-		//System.out.println(pdb);
-		// Jmol could also read the file directly from your file system
-		//viewer.openFile("/Path/To/PDB/1tim.pdb");
+      setTitle(s.getPDBCode());
 
-		//System.out.println(pdb);
-		jmolPanel.openStringInline(pdb);
+      // actually this is very simple
+      // just convert the structure to a PDB file
 
-		// send the PDB file to Jmol.
-		// there are also other ways to interact with Jmol, e.g make it directly
-		// access the biojava structure object, but they require more
-		// code. See the SPICE code repository for how to do this.
+      String pdb = s.toPDB();	
+      //System.out.println(s.isNmr());
 
+      //System.out.println(pdb);
+      // Jmol could also read the file directly from your file system
+      //viewer.openFile("/Path/To/PDB/1tim.pdb");
 
-		structure = s;
+      //System.out.println(pdb);
+      jmolPanel.openStringInline(pdb);
 
-	}
+      // send the PDB file to Jmol.
+      // there are also other ways to interact with Jmol, e.g make it directly
+      // access the biojava structure object, but they require more
+      // code. See the SPICE code repository for how to do this.
 
-	public Structure getStructure(){
-		return structure;
-	}
 
-	public void setTitle(String label){
-		frame.setTitle(label);
-		frame.repaint();
-	}
+      structure = s;
 
-	public void mouseDragged(MouseEvent e) {
-		// TODO Auto-generated method stub
+   }
 
-	}
+   public Structure getStructure(){
+      return structure;
+   }
 
-	public void mouseMoved(MouseEvent e) {
+   public void setTitle(String label){
+      frame.setTitle(label);
+      frame.repaint();
+   }
 
-		JmolViewer viewer = jmolPanel.getViewer();
+   public void mouseDragged(MouseEvent e) {
+      // TODO Auto-generated method stub
 
+   }
 
-		// needs latest jmol :-/
-		int pos = viewer.findNearestAtomIndex( e.getX(), e.getY() );
-		if ( pos == -1 ) { return ; }
+   public void mouseMoved(MouseEvent e) {
 
-		String atomInfo = viewer.getAtomInfo(pos);
-		text.setText(atomInfo);
+      JmolViewer viewer = jmolPanel.getViewer();
 
 
-	}
+      // needs latest jmol :-/
+      int pos = viewer.findNearestAtomIndex( e.getX(), e.getY() );
+      if ( pos == -1 ) { return ; }
 
-	public void mouseClicked(MouseEvent e) {
-		// TODO Auto-generated method stub
+      String atomInfo = viewer.getAtomInfo(pos);
+      text.setText(atomInfo);
 
-	}
 
-	public void mouseEntered(MouseEvent e) {
-		// TODO Auto-generated method stub
+   }
 
-	}
+   public void mouseClicked(MouseEvent e) {
+      // TODO Auto-generated method stub
 
-	public void mouseExited(MouseEvent e) {
-		// TODO Auto-generated method stub
+   }
 
-	}
+   public void mouseEntered(MouseEvent e) {
+      // TODO Auto-generated method stub
 
-	public void mousePressed(MouseEvent e) {
-		// TODO Auto-generated method stub
+   }
 
-	}
+   public void mouseExited(MouseEvent e) {
+      // TODO Auto-generated method stub
 
-	public void mouseReleased(MouseEvent e) {
-		JmolViewer viewer = jmolPanel.getViewer();
+   }
 
+   public void mousePressed(MouseEvent e) {
+      // TODO Auto-generated method stub
 
-		int pos = viewer.findNearestAtomIndex( e.getX(), e.getY() );
-		if ( pos == -1 ) { return ; }
+   }
 
-		String atomInfo = viewer.getAtomInfo(pos);
-		status.setText("clicked: " + atomInfo);
+   public void mouseReleased(MouseEvent e) {
+      JmolViewer viewer = jmolPanel.getViewer();
 
-		AtomInfo ai = AtomInfoParser.parse(atomInfo);
 
-		String cmd = "select " + ai.getResidueNumber()+":" +ai.getChainId()+"/"+ai.getModelNumber() + "; set display selected;";
+      int pos = viewer.findNearestAtomIndex( e.getX(), e.getY() );
+      if ( pos == -1 ) { return ; }
 
-		evalString(cmd);
+      String atomInfo = viewer.getAtomInfo(pos);
+      status.setText("clicked: " + atomInfo);
 
-	}
+      AtomInfo ai = AtomInfoParser.parse(atomInfo);
 
-	public void windowActivated(WindowEvent e) {
-		// TODO Auto-generated method stub
+      String cmd = "select " + ai.getResidueNumber()+":" +ai.getChainId()+"/"+ai.getModelNumber() + "; set display selected;";
 
-	}
+      evalString(cmd);
 
-	public void windowClosed(WindowEvent e) {
-		// TODO Auto-generated method stub
+   }
 
-	}
+   public void windowActivated(WindowEvent e) {
+      // TODO Auto-generated method stub
 
-	public void windowClosing(WindowEvent e) {
-		destroy();
+   }
 
-	}
+   public void windowClosed(WindowEvent e) {
+      // TODO Auto-generated method stub
 
-	public void windowDeactivated(WindowEvent e) {
-		// TODO Auto-generated method stub
+   }
 
-	}
+   public void windowClosing(WindowEvent e) {
+      destroy();
 
-	public void windowDeiconified(WindowEvent e) {
-		// TODO Auto-generated method stub
+   }
 
-	}
+   public void windowDeactivated(WindowEvent e) {
+      // TODO Auto-generated method stub
 
-	public void windowIconified(WindowEvent e) {
-		// TODO Auto-generated method stub
+   }
 
-	}
+   public void windowDeiconified(WindowEvent e) {
+      // TODO Auto-generated method stub
 
-	public void windowOpened(WindowEvent e) {
-		// TODO Auto-generated method stub
+   }
 
-	}
+   public void windowIconified(WindowEvent e) {
+      // TODO Auto-generated method stub
 
-	public void actionPerformed(ActionEvent e) {
-		String cmd = e.getActionCommand();
-		if ( cmd.equals(MenuCreator.TEXT_ONLY)) {
-			if ( afpChain == null) {
-				System.err.println("Currently not viewing an alignment!");
-				return;
-			}
-			String result = afpChain.toFatcat(ca1, ca2);
-			result += AFPChain.newline;
-			result += afpChain.toRotMat();
-			DisplayAFP.showAlignmentImage(afpChain, result);
-		} else if (cmd.equals(MenuCreator.ALIGNMENT_PANEL)){
-			if ( afpChain == null) {
-				System.err.println("Currently not viewing an alignment!");
-				return;
-			}
-			DisplayAFP.showAlignmentImage(afpChain, ca1, ca2, this);
-			
-		}
+   }
 
-	}
+   public void windowOpened(WindowEvent e) {
+      // TODO Auto-generated method stub
 
-	public void resetDisplay(){
-		StringBuffer j = new StringBuffer();
-		j.append(DEFAULT_SCRIPT);
+   }
 
+   public void actionPerformed(ActionEvent e) {
+      String cmd = e.getActionCommand();
+      if ( cmd.equals(MenuCreator.TEXT_ONLY)) {
+         if ( afpChain == null) {
+            System.err.println("Currently not viewing an alignment!");
+            return;
+         }
+         String result = afpChain.toFatcat(ca1, ca2);
+         result += AFPChain.newline;
+         result += afpChain.toRotMat();
+         DisplayAFP.showAlignmentImage(afpChain, result);
+      } else if (cmd.equals(MenuCreator.ALIGNMENT_PANEL)){
+         if ( afpChain == null) {
+            System.err.println("Currently not viewing an alignment!");
+            return;
+         }
+         DisplayAFP.showAlignmentImage(afpChain, ca1, ca2, this);
 
-		// now color the equivalent residues ...
-		StringBuffer sel = new StringBuffer();
-		List<String> pdb1 = DisplayAFP.getPDBresnum(0,afpChain,ca1);
-		sel.append("select ");
-		int pos = 0;
-		for (String res :pdb1 ){
-			if ( pos > 0)
-				sel.append(",");
-			pos++;
+      }
 
-			sel.append(res);	
-			sel.append("/1");
-		}
-		if ( pos == 0)
-			sel.append("none");
-		sel.append(";");
-		sel.append("backbone 0.6 ;   color orange;");
-		sel.append("select */2; color lightgrey; model 2; ");
-		//jmol.evalString("select */2; color lightgrey; model 2; ");		
-		List<String> pdb2 = DisplayAFP.getPDBresnum(1,afpChain,ca2);
-		sel.append("select ");
-		pos = 0;
-		for (String res :pdb2 ){
-			if ( pos > 0)
-				sel.append(",");
-			pos++;
+   }
 
-			sel.append(res);
-			sel.append("/2");
-		}
-		if ( pos == 0)
-			sel.append("none");
-		sel.append("; backbone 0.6 ;   color cyan;");
-		//System.out.println(sel);
-		j.append(sel);
-		// now show both models again.
-		j.append("model 0;  ");
-		j.append(LIGAND_DISPLAY_SCRIPT);
-		//color [object] cpk , set defaultColors Jmol , set defaultColors Rasmol  
+   public static String getJmolString(AFPChain afpChain, Atom[] ca1, Atom[] ca2){
+      StringBuffer j = new StringBuffer();
+      j.append(DEFAULT_SCRIPT);
 
-		// and now select the aligned residues...
-		StringBuffer buf = new StringBuffer("select ");
-		int count = 0;
-		for (String res : pdb1 ){
-			if ( count > 0)
-				buf.append(",");
-			buf.append(res);
-			buf.append("/1");
-			count++;
-		}
 
-		for (String res :pdb2 ){
-			buf.append(",");
-			buf.append(res);
-			buf.append("/2");
-		}
-		//buf.append("; set display selected;");
+      // now color the equivalent residues ...
+      StringBuffer sel = new StringBuffer();
+      List<String> pdb1 = DisplayAFP.getPDBresnum(0,afpChain,ca1);
+      sel.append("select ");
+      int pos = 0;
+      for (String res :pdb1 ){
+         if ( pos > 0)
+            sel.append(",");
+         pos++;
 
-		j.append(buf);
+         sel.append(res);    
+         sel.append("/1");
+      }
+      if ( pos == 0)
+         sel.append("none");
+      sel.append(";");
+      sel.append("backbone 0.6 ;   color orange;");
+      sel.append("select */2; color lightgrey; model 2; ");
+      //jmol.evalString("select */2; color lightgrey; model 2; ");        
+      List<String> pdb2 = DisplayAFP.getPDBresnum(1,afpChain,ca2);
+      sel.append("select ");
+      pos = 0;
+      for (String res :pdb2 ){
+         if ( pos > 0)
+            sel.append(",");
+         pos++;
 
-		//System.out.println(j.toString());
-		evalString(j.toString());
-	}
+         sel.append(res);
+         sel.append("/2");
+      }
+      if ( pos == 0)
+         sel.append("none");
+      sel.append("; backbone 0.6 ;   color cyan;");
+      //System.out.println(sel);
+      j.append(sel);
+      // now show both models again.
+      j.append("model 0;  ");
+      j.append(LIGAND_DISPLAY_SCRIPT);
+      //color [object] cpk , set defaultColors Jmol , set defaultColors Rasmol  
+
+      // and now select the aligned residues...
+      StringBuffer buf = new StringBuffer("select ");
+      int count = 0;
+      for (String res : pdb1 ){
+         if ( count > 0)
+            buf.append(",");
+         buf.append(res);
+         buf.append("/1");
+         count++;
+      }
+
+      for (String res :pdb2 ){
+         buf.append(",");
+         buf.append(res);
+         buf.append("/2");
+      }
+      //buf.append("; set display selected;");
+
+      j.append(buf);
+
+      return j.toString();
+   }
+
+   public void resetDisplay(){
+
+      String script = getJmolString( afpChain,ca1,ca2);
+      //System.out.println(j.toString());
+      evalString(script);
+   }
 
 
 }
