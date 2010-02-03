@@ -471,7 +471,7 @@ public class DisplayAFP
 		return s;
 	}
 
-	private static final Atom[] getAtomArray(Atom[] ca,List<Group> hetatms, List<Group> nucleotides ) throws StructureException{
+	public static final Atom[] getAtomArray(Atom[] ca,List<Group> hetatms, List<Group> nucleotides ) throws StructureException{
 		List<Atom> atoms = new ArrayList<Atom>();
 
 		for (Atom a: ca){			
