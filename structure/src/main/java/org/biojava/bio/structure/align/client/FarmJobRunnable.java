@@ -101,7 +101,7 @@ public class FarmJobRunnable implements Runnable {
 		progressListeners = null;
 	}
 
-	private static String getRandomUsername(){
+	protected static String getRandomUsername(){
 		String name = "";
 		try {
 			InetAddress i = InetAddress.getLocalHost();
@@ -351,7 +351,7 @@ public class FarmJobRunnable implements Runnable {
 	 * 
 	 * @return a list of pairs to align.
 	 */
-	private SortedSet<PdbPair> getAlignmentPairsFromServer() {
+	protected SortedSet<PdbPair> getAlignmentPairsFromServer() {
 
 
 		String url = params.getServer();
@@ -363,17 +363,17 @@ public class FarmJobRunnable implements Runnable {
 
 		SortedSet<PdbPair> allPairs = new TreeSet<PdbPair>();
 
-		int pairDelay = DEFAULT_PAIR_FETCH_DELAY;
-
-		String pairDelayS=resourceManager.getString(CONNECTION_PAIR_DELAY);
-		if ( pairDelayS !=null) {
-
-			try {
-				pairDelay = Integer.parseInt(pairDelayS);				
-			} catch (NumberFormatException ex){
-				ex.printStackTrace();
-			}
-		}
+//		int pairDelay = DEFAULT_PAIR_FETCH_DELAY;
+//
+//		String pairDelayS=resourceManager.getString(CONNECTION_PAIR_DELAY);
+//		if ( pairDelayS !=null) {
+//
+//			try {
+//				pairDelay = Integer.parseInt(pairDelayS);				
+//			} catch (NumberFormatException ex){
+//				ex.printStackTrace();
+//			}
+//		}
 
 		try {
 
@@ -406,7 +406,7 @@ public class FarmJobRunnable implements Runnable {
 		return allPairs;
 	}
 
-	private void sendResultsToServer(List<String> results) {
+	protected void sendResultsToServer(List<String> results) {
 
 	   String serverLocation = params.getServer();
 	   
