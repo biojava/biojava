@@ -37,11 +37,15 @@ import java.io.InputStream;
  */
 public class FlatFileCache {
 
-	private static FlatFileCache me = new FlatFileCache();
+	private static FlatFileCache me ;
 
 	private static SoftHashMap cache;
 	public static FlatFileCache getInstance() {
 
+	   if ( me == null){
+	      me = new FlatFileCache();
+	   }
+	   
 		return me;
 	}
 
@@ -51,7 +55,7 @@ public class FlatFileCache {
 	}
 
 
-	public synchronized static void addToCache(String key, File fileToCache){
+	public  static void addToCache(String key, File fileToCache){
 		//System.out.println("storing " + key + " on file cache (cache size: " + cache.size() + ")");
 		try {
 			InputStream is = new FileInputStream(fileToCache);
@@ -91,14 +95,13 @@ public class FlatFileCache {
 		}
 	}
 
-	public synchronized static InputStream getInputStream(String key){
+	public  static InputStream getInputStream(String key){
 		//System.out.println("returning " + key + " from file cache (cache size: " + cache.size() + ")");
 		byte[] bytes = (byte[])cache.get(key);
 		if ( bytes == null)
 			return null;
 
 		return new ByteArrayInputStream(bytes);
-
 
 	}
 
@@ -108,4 +111,14 @@ public class FlatFileCache {
 		else
 			return -1;
 	}
+	
+	public void clear(){
+	   cache.clear();	   
+	}
+	
+	public static void destroy(){
+	   me.clear();
+	   me = null;
+	}
+	
 }
