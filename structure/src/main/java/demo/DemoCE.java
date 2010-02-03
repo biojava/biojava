@@ -29,19 +29,24 @@ import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureTools;
 import org.biojava.bio.structure.align.StructureAlignment;
 import org.biojava.bio.structure.align.ce.CeMain;
+import org.biojava.bio.structure.align.ce.CeParameters;
 import org.biojava.bio.structure.align.model.AFPChain;
 import org.biojava.bio.structure.align.util.AtomCache;
+
 
 public class DemoCE {
 
 	public static void main(String[] args){
 		
-		String pdbFilePath="/Users/andreas/WORK/PDB/";
+		String pdbFilePath="/tmp/";
 		
 		boolean isSplit = true;
 		
-		String name1 = "4hhb.A";
-		String name2 = "4hhb.B";
+		//String name1 = "4hhb.A";
+		//String name2 = "4hhb.B";
+		
+		String name1 = "1cdg.A";
+		String name2 = "1tim.B";
 		
 		StructureAlignment algorithm  = new CeMain();
 		
@@ -58,15 +63,21 @@ public class DemoCE {
 			Atom[] ca1 = StructureTools.getAtomCAArray(structure1);
 			Atom[] ca2 = StructureTools.getAtomCAArray(structure2);
 			
-			AFPChain afpChain = algorithm.align(ca1,ca2);
-			//AFPChain afpChain = fatCat.alignFlexible(ca1,ca2,params);
+			CeParameters params = new CeParameters();
+			params.setShowAFPRanges(true);
+			
+			AFPChain afpChain = algorithm.align(ca1,ca2,params);			
 
 			afpChain.setName1(name1);
 			afpChain.setName2(name2);
 
 			// flexible original results:
 			System.out.println(afpChain.toFatcat(ca1,ca2));
-
+			
+			System.out.println(afpChain.toRotMat());
+			//System.out.println(afpChain.toCE(ca1, ca2));
+			
+			//System.out.println(AFPChainXMLConverter.toXML(afpChain,ca1,ca2));
 						
 		} catch (Exception e) {
 			e.printStackTrace();
