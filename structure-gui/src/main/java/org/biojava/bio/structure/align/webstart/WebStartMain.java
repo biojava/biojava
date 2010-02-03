@@ -41,6 +41,7 @@ import org.biojava.bio.structure.align.StructureAlignment;
 import org.biojava.bio.structure.align.StructureAlignmentFactory;
 import org.biojava.bio.structure.align.StructurePairAligner;
 import org.biojava.bio.structure.align.ce.CeMain;
+import org.biojava.bio.structure.align.client.FarmJobParameters;
 import org.biojava.bio.structure.align.client.JFatCatClient;
 import org.biojava.bio.structure.align.client.PdbPair;
 import org.biojava.bio.structure.align.gui.AlignmentGui;
@@ -64,10 +65,16 @@ public class WebStartMain
 
 	static UserConfiguration userConfig;
 
-	/** takes the following arguments
-	 * arg0 : fatcat or biojava
+	/** 
+	 *  If no arguments, shows AlignmentGui for pairwise alignments.
+	 *  if 1 argument: dbmenu shows the DBSearchGUI, otherwise the AlignentGUI is shown.
+	 *  
+	 * if more than 3 arguments takes the following arguments
+	 * arg0 : fatcat or biojava . 
 	 * arg1 : pdb1.X
 	 * arg2 ; pdb2.X
+	 * 
+	 * The 4th argument is optional and it could be the serverLocation which the client should talk to.
 	 *
 	 * @param args
 	 */
@@ -127,7 +134,13 @@ public class WebStartMain
 			return;
 		}
 
-
+		String serverLocation = FarmJobParameters.DEFAULT_SERVER_URL;
+		
+		if ( args.length  >= 3 ) {
+		   // we have 4 arguments.
+		   // in this case the 4th has to be the server URL
+		   serverLocation = args[3];
+		}
 
 		try {
 
@@ -197,7 +210,7 @@ public class WebStartMain
 				}
 			} else if ( arg0.equalsIgnoreCase("fatcat")){
 				try {
-					showFatcat(c1,c2, pair.getName1(),pair.getName2());
+					showFatcat(serverLocation,c1,c2, pair.getName1(),pair.getName2());
 				} catch (Exception e){
 					e.printStackTrace();
 					JOptionPane.showMessageDialog(null,
@@ -389,7 +402,7 @@ public class WebStartMain
 		DisplayAFP.showAlignmentImage(afpChain,ca1,ca2,jmol);
 
 	}
-	private static void showFatcat(Chain c1, Chain c2, String name1, String name2) throws StructureException{
+	private static void showFatcat(String serverLocation, Chain c1, Chain c2, String name1, String name2) throws StructureException{
 
 		JFrame tmpFrame = new JFrame();
 		tmpFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -406,7 +419,7 @@ public class WebStartMain
 		try {
 			System.out.println("requesting alignment from server...");
 
-			afpChain = JFatCatClient.getAFPChainFromServer(name1, name2, ca1, ca2);
+			afpChain = JFatCatClient.getAFPChainFromServer(serverLocation, name1, name2, ca1, ca2);
 			
 			if ( afpChain != null){
 				// twist groups for visualisation
@@ -424,7 +437,7 @@ public class WebStartMain
 
 				System.out.println("submitting...");
 
-				JFatCatClient.sendAFPChainToServer(afpChain, ca1, ca2);
+				JFatCatClient.sendAFPChainToServer(serverLocation,afpChain, ca1, ca2);
 			}
 		} catch (Exception e){
 			e.printStackTrace();
