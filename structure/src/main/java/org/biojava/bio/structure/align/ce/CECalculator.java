@@ -615,8 +615,7 @@ public class CECalculator {
 
       if ( params.isShowAFPRanges()){
          System.out.println("fragment length: " + params.getWinSize());
-         System.out.println("ntraces : " + nTraces );
-         System.out.println("best trace score: " + bestTraceScore);
+         System.out.println("ntraces : " + nTraces );         
 
       }
 
@@ -955,14 +954,14 @@ nBestTrace=nTrace;
       //System.out.println("zStrAlign: " + winSize + " strLen " + strLen  + " s/w " + (strLen/winSize) + " " + bestTraceScore + " " + nGaps);
       z=zStrAlign(winSize, strLen/winSize, bestTraceScore, nGaps);
 
-      if(isPrint) {
-         System.out.println(winSize + " " + strLen/winSize + " " + bestTraceScore + " " + nGaps + " " + nAtom);
+      if(params.isShowAFPRanges()) {
+         System.out.println("win size: " + winSize + " strLen/winSize: " + strLen/winSize + " best trace score: " + String.format("%.2f",bestTraceScore) + " nr gaps: " + nGaps + " nr residues: " + nAtom);
 
          System.out.println(String.format("size=%d rmsd=%.2f z=%.1f gaps=%d(%.1f%%) comb=%d", 
                nAtom, rmsd, z, nGaps, nGaps*100.0/nAtom,
                nTraces)); 
 
-         System.out.println("Best trace:");
+         System.out.println("Best Trace, before optimization");
          for(int k=0; k<nBestTrace; k++)
             System.out.println(String.format("(%d,%d,%d) ", bestTrace1[k]+1, bestTrace2[k]+1,
                   bestTraceLen[k]));
@@ -1021,15 +1020,17 @@ nBestTrace=nTrace;
          System.out.println(msg + " CPU = " + time_q);
       }
 
-      if ( params.isShowAFPRanges()){
-
-         for(int k=0; k<nBestTrace; k++)
-            System.out.println(
-                  String.format("(%d,%d,%d) ", bestTrace1[k]+1, bestTrace2[k]+1, bestTraceLen[k]));
-
-
-
-      }
+//      if ( params.isShowAFPRanges()){
+      
+      // this is actually the final alignment...
+//         System.out.println("Best Trace: (index1,index2,len)");
+//         for(int k=0; k<nBestTrace; k++)
+//            System.out.println(
+//                  String.format("(%d,%d,%d) ", bestTrace1[k]+1, bestTrace2[k]+1, bestTraceLen[k]));
+//
+//
+//
+//      }
 
       afpChain.setCalculationTime(time_q);
       afpChain.setGapLen(nGaps);

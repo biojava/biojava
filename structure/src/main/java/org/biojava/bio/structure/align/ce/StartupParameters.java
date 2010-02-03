@@ -14,6 +14,8 @@ public class StartupParameters {
 	String outFile;
 	String pdb1;
 	String pdb2;
+	String file1;
+	String file2;
 	String showDBresult;
 	boolean printXML;
 	boolean printFatCat;
@@ -23,7 +25,7 @@ public class StartupParameters {
 	boolean pdbDirSplit;
 	boolean printCE;
 	boolean showMenu;
-	
+	boolean showAFPRanges;
 	// for DB searches
 	String alignPairs;
 	String saveOutputDir;
@@ -38,25 +40,28 @@ public class StartupParameters {
 		flexible = false;
 		pdbDirSplit = true;
 		maxGapSize = 30;
+		showAFPRanges = false;
 	}
 	
 	
 
+	
+	
 	@Override
-	public String toString() {
-		return "StartupParameters [alignPairs=" + alignPairs + ", autoFetch="
-				+ autoFetch + ", flexible=" + flexible + ", outFile=" + outFile
-				+ ", pdb1=" + pdb1 + ", pdb2=" + pdb2 + ", pdbDirSplit="
-				+ pdbDirSplit + ", pdbFilePath=" + pdbFilePath + ", printCE="
-				+ printCE + ", printFatCat=" + printFatCat + ", printXML="
-				+ printXML + ", saveOutputDir=" + saveOutputDir + ", show3d="
-				+ show3d + ", showMenu=" + showMenu + ", showDBresult=" + showDBresult
-				+ ", maxGapSize (CE): " + maxGapSize				
-				+"]";
-	}
-	
-	
-	public String getAlignPairs() {
+   public String toString()
+   {
+      return "StartupParameters [alignPairs=" + alignPairs + ", autoFetch=" + autoFetch + ", file1=" + file1 + ", file2=" + file2
+            + ", flexible=" + flexible + ", maxGapSize=" + maxGapSize + ", outFile=" + outFile + ", pdb1=" + pdb1 + ", pdb2=" + pdb2
+            + ", pdbDirSplit=" + pdbDirSplit + ", pdbFilePath=" + pdbFilePath + ", printCE=" + printCE + ", printFatCat=" + printFatCat
+            + ", printXML=" + printXML + ", saveOutputDir=" + saveOutputDir + ", show3d=" + show3d + ", showDBresult=" + showDBresult
+            + ", showMenu=" + showMenu + "]";
+   }
+
+
+
+
+
+   public String getAlignPairs() {
 		return alignPairs;
 	}
 
@@ -197,5 +202,38 @@ public class StartupParameters {
 	public void setMaxGapSize(int maxGapSize) {
 		this.maxGapSize = maxGapSize;
 	}
+
+   public String getFile1()
+   {
+      return file1;
+   }
+
+   public void setFile1(String file1)
+   {
+      this.file1 = file1;
+   }
+
+   public String getFile2()
+   {
+      return file2;
+   }
+
+   public void setFile2(String file2)
+   {
+      this.file2 = file2;
+   }
+
+
+   public boolean isShowAFPRanges()
+   {
+      return showAFPRanges;
+   }
+
+   public void setShowAFPRanges(boolean showAFP)
+   {
+      this.showAFPRanges = showAFP;
+   }
+	
+	
 
 }

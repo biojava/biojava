@@ -39,132 +39,151 @@ import org.biojava.bio.structure.StructureTools;
  *
  */
 public class CeParameters implements ConfigStrucAligParams  {
-	int winSize;
-	double rmsdThr;
-	double rmsdThrJoin;
-	String[] alignmentAtoms;
-	private int maxGapSize;
-	
-	public CeParameters(){
-		reset();
-	}
-	
-	
-	
-	@Override
-	public String toString() {
-		return "CeParameters [alignmentAtoms="
-				+ Arrays.toString(alignmentAtoms) + ", maxGapSize="
-				+ maxGapSize + ", rmsdThr=" + rmsdThr + ", rmsdThrJoin="
-				+ rmsdThrJoin + ", winSize=" + winSize + "]";
-	}
+   int winSize;
+   double rmsdThr;
+   double rmsdThrJoin;
+   String[] alignmentAtoms;
+   private int maxGapSize;
+
+   boolean showAFPRanges;
+
+   public CeParameters(){
+      reset();
+   }
 
 
 
-	public void reset(){
-		winSize = 8;
-		rmsdThr = 3.0;
-		rmsdThrJoin = 4.0;
-		alignmentAtoms = new String[]{StructureTools.caAtomName};
-		maxGapSize = 30;
-		
-	}
-	
-	/** The window size to look at
-	 * 
-	 * @return
-	 */
-	public Integer getWinSize() {
-		return winSize;
-	}
-	public void setWinSize(Integer winSize) {
-		this.winSize = winSize;
-	}
-	
-	/** RMSD Threshold
-	 * 
-	 * @return
-	 */
-	public Double getRmsdThr() {
-		return rmsdThr;
-	}
-	public void setRmsdThr(Double rmsdThr) {
-		this.rmsdThr = rmsdThr;
-	}
-	
-	/** RMSD threshold for joining of AFPs
-	 * 
-	 * @return
-	 */
-	public Double getRmsdThrJoin() {
-		return rmsdThrJoin;
-	}
-	public void setRmsdThrJoin(Double rmsdThrJoin) {
-		this.rmsdThrJoin = rmsdThrJoin;
-	}
+   @Override
+   public String toString() {
+      return "CeParameters [alignmentAtoms="
+      + Arrays.toString(alignmentAtoms) + ", maxGapSize="
+      + maxGapSize + ", rmsdThr=" + rmsdThr + ", rmsdThrJoin="
+      + rmsdThrJoin + ", winSize=" + winSize + "]";
+   }
 
-	public String[] getAlignmentAtoms() {
-		return alignmentAtoms;
-	}
 
-	public void setAlignmentAtoms(String[] alignmentAtoms) {
-		this.alignmentAtoms = alignmentAtoms;
-	}
 
-	
-	public void setMaxGapSize(Integer maxGapSize){
-		this.maxGapSize = maxGapSize;
-	}
-	
-	/** the Max gap size parameter G . default is 30, which was
-	 * described to obtained empirically in the CE paper.
-	 * the larger the max gap size, the longer the compute time,
-	 * but in same cases drastically improved results. Set to -1 to get the 
-	 * §
-	 * @return
-	 */
-	public Integer getMaxGapSize() {
-		return maxGapSize;
-	}
+   public void reset(){
+      winSize = 8;
+      rmsdThr = 3.0;
+      rmsdThrJoin = 4.0;
+      alignmentAtoms = new String[]{StructureTools.caAtomName};
+      maxGapSize = 30;
+      showAFPRanges = false;
 
-	
-	public List<String> getUserConfigHelp() {
-		List<String> params =new ArrayList<String>();
-		String helpMaxGap = "This parameter configures the maximum gap size G, that is applied during the AFP extension. The larger the value, the longer the calculation time can become, Default value is 30. Set to 0 for no limit. " ;
-		String helpRmsdThr = "This configures the RMSD threshold applied during the trace of the fragment matrix.";
-		String helpWinSize = "This configures the fragment size m of Aligned Fragment Pairs (AFPs).";
-		params.add(helpMaxGap);
-		params.add(helpRmsdThr);
-		params.add(helpWinSize);
-		return params;
-	}
+   }
 
-	public List<String> getUserConfigParameters() {
-		List<String> params = new ArrayList<String>();
-		params.add("MaxGapSize");
-		params.add("RmsdThr");
-		params.add("WinSize");
-		return params;
-	}
-	
-	public List<String> getUserConfigParameterNames(){
-		List<String> params = new ArrayList<String>();
-		params.add("max. gap size G (during AFP extension).");
-		params.add("RMSD threshold during trace of the fragment matrix.");
-		params.add("fragment size m");
-		return params;
-	}
+   /** The window size to look at
+    * 
+    * @return
+    */
+   public Integer getWinSize() {
+      return winSize;
+   }
+   public void setWinSize(Integer winSize) {
+      this.winSize = winSize;
+   }
 
-	public List<Class> getUserConfigTypes() {
-		List<Class> params = new ArrayList<Class>();
-		params.add(Integer.class);
-		params.add(Double.class);
-		params.add(Integer.class);
-		return params;
-	}
+   /** RMSD Threshold
+    * 
+    * @return
+    */
+   public Double getRmsdThr() {
+      return rmsdThr;
+   }
+   public void setRmsdThr(Double rmsdThr) {
+      this.rmsdThr = rmsdThr;
+   }
 
-	
-	
-	
-	
+   /** RMSD threshold for joining of AFPs
+    * 
+    * @return
+    */
+   public Double getRmsdThrJoin() {
+      return rmsdThrJoin;
+   }
+   public void setRmsdThrJoin(Double rmsdThrJoin) {
+      this.rmsdThrJoin = rmsdThrJoin;
+   }
+
+   public String[] getAlignmentAtoms() {
+      return alignmentAtoms;
+   }
+
+   public void setAlignmentAtoms(String[] alignmentAtoms) {
+      this.alignmentAtoms = alignmentAtoms;
+   }
+
+
+   public void setMaxGapSize(Integer maxGapSize){
+      this.maxGapSize = maxGapSize;
+   }
+
+   /** the Max gap size parameter G . default is 30, which was
+    * described to obtained empirically in the CE paper.
+    * the larger the max gap size, the longer the compute time,
+    * but in same cases drastically improved results. Set to -1 to get the 
+    * §
+    * @return
+    */
+   public Integer getMaxGapSize() {
+      return maxGapSize;
+   }
+
+
+
+   public void setShowAFPRanges(boolean showAFPRanges)
+   {
+      this.showAFPRanges = showAFPRanges;
+   }
+
+   public List<String> getUserConfigHelp() {
+      List<String> params =new ArrayList<String>();
+      String helpMaxGap = "This parameter configures the maximum gap size G, that is applied during the AFP extension. The larger the value, the longer the calculation time can become, Default value is 30. Set to 0 for no limit. " ;
+      String helpRmsdThr = "This configures the RMSD threshold applied during the trace of the fragment matrix.";
+      String helpWinSize = "This configures the fragment size m of Aligned Fragment Pairs (AFPs).";
+      params.add(helpMaxGap);
+      params.add(helpRmsdThr);
+      params.add(helpWinSize);
+      return params;
+   }
+
+   public List<String> getUserConfigParameters() {
+      List<String> params = new ArrayList<String>();
+      params.add("MaxGapSize");
+      params.add("RmsdThr");
+      params.add("WinSize");
+      return params;
+   }
+
+   public List<String> getUserConfigParameterNames(){
+      List<String> params = new ArrayList<String>();
+      params.add("max. gap size G (during AFP extension).");
+      params.add("RMSD threshold during trace of the fragment matrix.");
+      params.add("fragment size m");
+      return params;
+   }
+
+   public List<Class> getUserConfigTypes() {
+      List<Class> params = new ArrayList<Class>();
+      params.add(Integer.class);
+      params.add(Double.class);
+      params.add(Integer.class);
+      return params;
+   }
+
+
+
+   public boolean isShowAFPRanges()
+   {
+      return showAFPRanges;
+   }
+
+
+
+
+
+
+
+
 }
