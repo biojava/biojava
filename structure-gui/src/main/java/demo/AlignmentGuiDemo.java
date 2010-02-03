@@ -35,7 +35,7 @@ public class AlignmentGuiDemo {
 	//  /Users/ap3/WORK/PDB/zl/pdb1zll.ent.gz
 	
 	public static void main(String[] args) {
-		System.setProperty("PDB_DIR","/Users/andreas/WORK/PDB/");
+		System.setProperty("PDB_DIR","/tmp/");
 	
 		AlignmentGui.getInstance();
 	}
