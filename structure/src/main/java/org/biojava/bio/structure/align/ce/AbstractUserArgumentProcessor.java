@@ -141,6 +141,8 @@ public abstract class AbstractUserArgumentProcessor implements UserArgumentProce
 
       String pdb1  = params.getPdb1();
       String file1 = params.getFile1();
+      
+     
       if (pdb1 != null || file1 != null){
          runPairwise();
       }
@@ -224,12 +226,6 @@ public abstract class AbstractUserArgumentProcessor implements UserArgumentProce
             StructureAlignment algorithm =  getAlgorithm();
             Object jparams = getParameters();
 
-            if ( params.isShowAFPRanges()) {
-               if ( algorithm.getAlgorithmName().equals(CeMain.algorithmName)){
-                  
-                  
-               }
-            }
             
             AFPChain afpChain;
 
@@ -294,16 +290,16 @@ public abstract class AbstractUserArgumentProcessor implements UserArgumentProce
          structure1 = getStructure(cache, name1, file1);
          structure2 = getStructure(cache, name2, file2);
       } else {
+         
          structure1 = getStructure(null, name1, file1);
          structure2 = getStructure(null, name2, file2);
-      }
-
+      }      
 
       if ( structure1 == null){
          System.err.println("structure 1 is null, can't run alignment.");
          return;
       }
-      
+
       if ( structure2 == null){
          System.err.println("structure 2 is null, can't run alignment.");
          return;
@@ -427,21 +423,18 @@ public abstract class AbstractUserArgumentProcessor implements UserArgumentProce
             // check if it is a URL:
             try {
                URL url = new URL(file);
-               File f;
-               try {
-                 f = new File(url.toURI());
-               } catch(URISyntaxException e) {
-                 f = new File(url.getPath());
-               }
-
-               return reader.getStructure(f);
+               System.out.println(url);
+                              
+               return reader.getStructure(url);
+               
             } catch ( Exception e){
-
+               System.err.println(e.getMessage());
             }
             File f= new File(file);
+            System.out.println("file from local " + f.getAbsolutePath());
             return reader.getStructure(f);
          } catch (Exception e){
-            System.err.println(e.getMessage());
+            System.err.println("general exception:" + e.getMessage());
             System.err.println("unable to load structure from " + file);
             return null;
          }
