@@ -38,7 +38,7 @@ public abstract class AbstractStructureAlignment implements StructureAlignment {
 		buf.append("-pdbFilePath  Path to the directory in your file system that contains the PDB files." + newline);
 		buf.append("-pdb1  PDB ID of target structure. Chain IDs are optional. In order to specify chain IDs write e.g: 5pti.A" + newline);
 		buf.append("-pdb2  PDB ID of query structure. Chain IDs are optional. In order to specify chain IDs write e.g: 5pti.A" + newline);
-		
+		buf.append(newline);
 		buf.append("-h / -help / --help : print this help string." + newline);
 		buf.append("-printXML true/false print the XML representation of the alignment on stdout." + newline);
 		buf.append("-printFatCat true/false print the original FATCAT output to stdout." + newline);
