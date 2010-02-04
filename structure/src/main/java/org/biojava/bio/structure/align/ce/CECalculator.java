@@ -24,12 +24,8 @@
 
 package org.biojava.bio.structure.align.ce;
 
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.swing.JFrame;
 
 import org.biojava.bio.structure.Atom;
 import org.biojava.bio.structure.Calc;
@@ -231,7 +227,7 @@ public class CECalculator {
    private double[][] initSumOfDistances(int nse1, int nse2, int winSize, int  winSizeComb1, Atom[] ca1, Atom[] ca2) {
 
       double d;
-      boolean isGood;
+      
       double[][] mat   = new double[nse1][nse2];
 
       // init the initial mat[] array.
