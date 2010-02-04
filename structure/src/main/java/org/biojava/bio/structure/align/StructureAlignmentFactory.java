@@ -5,19 +5,42 @@ import java.util.List;
 
 import org.biojava.bio.structure.StructureException;
 import org.biojava.bio.structure.align.ce.CeMain;
-import org.biojava.bio.structure.align.ce.CeSideChainMain;
 import org.biojava.bio.structure.align.seq.SmithWaterman3Daligner;
 
 
 public class StructureAlignmentFactory {
 
 	public static StructureAlignment[] getAllAlgorithms(){
-		StructureAlignment[] algorithms = new StructureAlignment[3];
+	   
+	   int nrAlgorithms = 2;
+	   
+	   StructureAlignment fatcatRigid    = null;
+	   StructureAlignment fatcatFlexible = null;
+	   try {
+	      fatcatRigid = getFatCatRigid();
+	      nrAlgorithms++;
+	      fatcatFlexible = getFatCatFlexible();
+	      nrAlgorithms++;
+	   } catch (Exception e){
+	      // ignore if not available...
+	   }
+	   
+		StructureAlignment[] algorithms = new StructureAlignment[nrAlgorithms];
 
-		algorithms[0] = new CeMain();
-		algorithms[1] = new CeSideChainMain();		
-		algorithms[2] = new SmithWaterman3Daligner();
-
+		int pos = 0;
+		algorithms[pos] = new CeMain();
+		pos++;
+		//algorithms[1] = new CeSideChainMain();
+		if ( fatcatRigid != null) {
+           algorithms[pos] = fatcatRigid;
+           pos++;
+        }
+        if ( fatcatFlexible != null){
+           algorithms[pos] = fatcatFlexible;
+           pos++;
+        }
+		algorithms[pos] = new SmithWaterman3Daligner();
+		
 		//algorithms[3] = new BioJavaStructureAlignment();
 		return algorithms;
 
