@@ -61,6 +61,9 @@ public class AFPChainXMLParser
 
 		if ( afps.length == 1) {
 			AFPChain newChain = AFPChainFlipper.flipChain(afps[0]);
+			if ( newChain.getAlgorithmName() == null) {
+			   newChain.setAlgorithmName("jFatCat_rigid");
+			}
 			return AFPChainXMLConverter.toXML(newChain);
 		}
 		throw new StructureException("not Implemented yet!");
@@ -149,6 +152,7 @@ public class AFPChainXMLParser
 			{
 
 				AFPChain a = new AFPChain();
+				a.setAlgorithmName("jFatCat_rigid");
 				Node rootElement       = listOfAFPChains.item(afpPos);
 
 				a.setName1(getAttribute(rootElement,"name1"));				
