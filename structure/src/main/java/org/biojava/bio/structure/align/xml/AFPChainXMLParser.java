@@ -153,6 +153,7 @@ public class AFPChainXMLParser
 
 				AFPChain a = new AFPChain();
 				a.setAlgorithmName("jFatCat_rigid");
+				a.setVersion("1.0");
 				Node rootElement       = listOfAFPChains.item(afpPos);
 
 				a.setName1(getAttribute(rootElement,"name1"));				
