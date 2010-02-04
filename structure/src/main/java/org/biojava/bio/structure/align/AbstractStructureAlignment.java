@@ -1,14 +1,9 @@
 package org.biojava.bio.structure.align;
 
-import java.util.List;
-
 import org.biojava.bio.structure.Atom;
-import org.biojava.bio.structure.Calc;
-import org.biojava.bio.structure.Group;
 import org.biojava.bio.structure.StructureException;
 import org.biojava.bio.structure.align.ce.ConfigStrucAligParams;
 import org.biojava.bio.structure.align.model.AFPChain;
-import org.biojava.bio.structure.jama.Matrix;
 
 public abstract class AbstractStructureAlignment implements StructureAlignment {
 
@@ -17,8 +12,6 @@ public abstract class AbstractStructureAlignment implements StructureAlignment {
 	abstract public  AFPChain align(Atom[] ca1, Atom[] ca2) throws StructureException ;
 
 	abstract public AFPChain align(Atom[] ca1, Atom[] ca2, Object params) throws StructureException;
-
-	
 
 	abstract public String getAlgorithmName() ;
 
@@ -38,9 +31,14 @@ public abstract class AbstractStructureAlignment implements StructureAlignment {
 		buf.append(getAlgorithmName() + " accepts the following parameters:" + newline);
 		buf.append(newline);
 		buf.append("--- pairwise alignments ---");
-		buf.append("-pdbFilePath (mandatory) Path to the directory in your file system that contains the PDB files." + newline);
-		buf.append("-pdb1 (mandatory) PDB ID of target structure. Chain IDs are optional. In order to specify chain IDs write e.g: 5pti.A" + newline);
-		buf.append("-pdb2 (mandatory) PDB ID of query structure. Chain IDs are optional. In order to specify chain IDs write e.g: 5pti.A" + newline);		
+		buf.append(" two files to align can be specified by providing a path to a file, or a URL:" + newline);
+		buf.append("-file1 the first file to align" + newline);
+		buf.append("-file2 the second file to align"+newline);
+		buf.append("alternatively you can specify PDB files by their PDB ids:" + newline);		
+		buf.append("-pdbFilePath  Path to the directory in your file system that contains the PDB files." + newline);
+		buf.append("-pdb1  PDB ID of target structure. Chain IDs are optional. In order to specify chain IDs write e.g: 5pti.A" + newline);
+		buf.append("-pdb2  PDB ID of query structure. Chain IDs are optional. In order to specify chain IDs write e.g: 5pti.A" + newline);
+		
 		buf.append("-h / -help / --help : print this help string." + newline);
 		buf.append("-printXML true/false print the XML representation of the alignment on stdout." + newline);
 		buf.append("-printFatCat true/false print the original FATCAT output to stdout." + newline);
@@ -49,13 +47,14 @@ public abstract class AbstractStructureAlignment implements StructureAlignment {
 		buf.append("-outFile file to write the output to (writes XML representation)." + newline);
 		buf.append("-autoFetch true/false if set to true PDB files will automatically get downloaded and stored in the right location. (default: false)" + newline);		
 		buf.append("-pdbDirSplit true/false the directory containing PDB files has all PDBs in one level or is split into multiple subdirs, like the ftp site. (default: true)" + newline);
-		buf.append("-showMenu displays the menu that allows to run alignments through a user interface.");
-		buf.append("-maxGapSize (jCE specific): set the maximum gap size parameter G during AFP extension. default: 30. Set to 0 for unrestricted. ");
+		buf.append("-showMenu displays the menu that allows to run alignments through a user interface." + newline);
+		buf.append("-maxGapSize (jCE specific): set the maximum gap size parameter G during AFP extension. default: 30. Set to 0 for unrestricted. " + newline);
+		buf.append("-showAFPRanges (jCE specific): show the raw Aligned Fragment Pair positions, prior to optimization." + newline);
 		buf.append(newline);
 		buf.append("--- database searches ---");
 		buf.append(newline);
-		buf.append("-alignPairs (mandatory) path to a file that contains a set of pairs to compair");		
-		buf.append("-outFile (mandatory) a file that will contain the summary of all the pairwise alignments");
+		buf.append("-alignPairs (mandatory) path to a file that contains a set of pairs to compair" + newline);		
+		buf.append("-outFile (mandatory) a file that will contain the summary of all the pairwise alignments" + newline);
 		buf.append("-pdbFilePath (mandatory) Path to the directory in your file system that contains the PDB files." + newline);
 		buf.append(newline);
 		buf.append("  Once DB seaches are complete it is possible to view the results with:" +newline);
