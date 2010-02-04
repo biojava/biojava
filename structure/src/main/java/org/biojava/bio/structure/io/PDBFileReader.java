@@ -526,14 +526,30 @@ public class PDBFileReader implements StructureIOFile {
 
       InputStream inStream = isp.getInputStream(filename);
 
+      return getStructure(inStream);
+   }
+   
+   private Structure getStructure(InputStream inStream) throws IOException{
+      
       PDBFileParser pdbpars = new PDBFileParser();
       pdbpars.setParseSecStruc(parseSecStruc);
       pdbpars.setAlignSeqRes(alignSeqRes);
       pdbpars.setParseCAOnly(parseCAOnly);
       pdbpars.setHeaderOnly(headerOnly);
+      
       Structure struc = pdbpars.parsePDBFile(inStream) ;
       return struc ;
 
+   }
+   
+   public Structure getStructure(URL u) throws IOException{
+      
+      InputStreamProvider isp = new InputStreamProvider();
+      
+      InputStream inStream = isp.getInputStream(u);
+
+      return getStructure(inStream);
+      
    }
 
 
