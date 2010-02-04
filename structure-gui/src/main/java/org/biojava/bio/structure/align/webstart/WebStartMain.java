@@ -136,7 +136,7 @@ public class WebStartMain
 
 		String serverLocation = FarmJobParameters.DEFAULT_SERVER_URL;
 		
-		if ( args.length  >= 3 ) {
+		if ( args.length  > 3 ) {
 		   // we have 4 arguments.
 		   // in this case the 4th has to be the server URL
 		   serverLocation = args[3];
