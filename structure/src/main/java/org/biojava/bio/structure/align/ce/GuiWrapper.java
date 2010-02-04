@@ -22,7 +22,7 @@ public class GuiWrapper {
 	static final String alignmentGUI = "org.biojava.bio.structure.align.gui.AlignmentGui";
 	
 	public static boolean isGuiModuleInstalled(){
-		String className = guiPackage + ".AlignmentGui";
+		String className = alignmentGUI;
 		try {
 			Class c = Class.forName(className);
 		} catch (ClassNotFoundException ex){
@@ -38,10 +38,9 @@ public class GuiWrapper {
 	throws ClassNotFoundException, NoSuchMethodException, InvocationTargetException, IllegalAccessException{
 	
 		Class c = Class.forName(strucAlignmentDisplay);
-		
-		
-		Method display = c.getMethod("display", new Class[]{AFPChain.class, Atom.class, 
-			Atom.class, List.class, List.class, List.class,List.class});
+				
+		Method display = c.getMethod("display", new Class[]{AFPChain.class, Atom[].class, 
+			Atom[].class, List.class, List.class, List.class,List.class});
 			
 		Object structureAlignmentJmol = display.invoke(null, afpChain,ca1,ca2, hetatms1, nucs1, hetatms2, nucs2);
 		
@@ -54,7 +53,7 @@ public class GuiWrapper {
 	throws ClassNotFoundException, NoSuchMethodException, InvocationTargetException, IllegalAccessException{
 		
 		Class c = Class.forName(displayAFP);		
-		Method show = c.getMethod("showAlignmentImage", new Class[] {AFPChain.class,Atom.class, Atom.class, Object.class});
+		Method show = c.getMethod("showAlignmentImage", new Class[] {AFPChain.class,Atom[].class, Atom[].class, Object.class});
 		
 		show.invoke(null,afpChain, ca1, ca2, jmol);
 	}
