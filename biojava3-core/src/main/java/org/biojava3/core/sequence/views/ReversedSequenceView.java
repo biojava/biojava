@@ -47,18 +47,22 @@ public class ReversedSequenceView<C extends Compound> extends AbstractSequenceHo
     return b.toString();
   }
 
+  @Override
   public C getCompoundAt(int position) {
     return super.getCompoundAt(toIndex(position));
   }
 
+  @Override
   public int getIndexOf(C compound) {
     return toIndex(super.getIndexOf(compound));
   }
 
+  @Override
   public int getLastIndexOf(C compound) {
     return toIndex(super.getLastIndexOf(compound));
   }
 
+  @Override
   public SequenceView<C> getSubSequence(final int start, final int end) {
     return new ReversedSequenceView<C>(getViewedSequence()) {
       public int getEnd() {
@@ -70,6 +74,7 @@ public class ReversedSequenceView<C extends Compound> extends AbstractSequenceHo
     };
   }
 
+  @Override
   public Iterator<C> iterator() {
     return new Iterator<C>() {
       private int currentIndex = getStart();

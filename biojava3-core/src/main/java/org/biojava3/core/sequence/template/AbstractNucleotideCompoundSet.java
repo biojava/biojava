@@ -5,6 +5,12 @@ import java.util.List;
 
 import org.biojava3.core.sequence.compound.NucleotideCompound;
 
+/**
+ *
+ * @author Andy Yates
+ * @param <C> Type of compound this set will contain but must extend
+ * NucleotideCompound
+ */
 public abstract class AbstractNucleotideCompoundSet<C extends NucleotideCompound>
   extends AbstractCompoundSet<C> {
 

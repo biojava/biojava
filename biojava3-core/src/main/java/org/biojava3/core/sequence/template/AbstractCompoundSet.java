@@ -11,6 +11,12 @@ import org.biojava3.core.exceptions.CompoundNotFoundError;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.SetMultimap;
 
+/**
+ *
+ * @author Andy Yates
+ *
+ * @param <C> The compound this set will contain
+ */
 public abstract class AbstractCompoundSet<C extends Compound> implements CompoundSet<C> {
 
   private Map<CharSequence, C> charSeqToCompound = new HashMap<CharSequence, C>();
@@ -18,10 +24,9 @@ public abstract class AbstractCompoundSet<C extends Compound> implements Compoun
   private SetMultimap<C, C> equivalentsMap = HashMultimap.create();
 
   protected void addCompound(C compound, C lowerCasedCompound, Iterable<C> equivalents) {
-    charSeqToCompound.put(compound.toString(), compound);
-    maxCompoundCharSequenceLength = -1;
+    addCompound(compound);
+    addCompound(lowerCasedCompound);
 
-    charSeqToCompound.put(lowerCasedCompound.toString(), lowerCasedCompound);
     equivalentsMap.put(compound, lowerCasedCompound);
     equivalentsMap.put(lowerCasedCompound, compound);
 
@@ -39,6 +44,11 @@ public abstract class AbstractCompoundSet<C extends Compound> implements Compoun
       equiv.add(c);
     }
     addCompound(compound, lowerCasedCompound, equiv);
+  }
+
+  protected void addCompound(C compound) {
+    charSeqToCompound.put(compound.toString(), compound);
+    maxCompoundCharSequenceLength = -1;
   }
 
   public String getStringForCompound(C compound) {
@@ -98,6 +108,10 @@ public abstract class AbstractCompoundSet<C extends Compound> implements Compoun
     for(C compound: sequence) {
       assertCompound(compound);
     }
+  }
+
+  public List<C> getAllCompounds() {
+    return new ArrayList<C>(charSeqToCompound.values());
   }
 
   private void assertCompound(C compound) {

@@ -2,7 +2,9 @@ package org.biojava3.core.sequence.compound;
 
 import org.biojava3.core.sequence.template.AbstractNucleotideCompoundSet;
 
-
+/**
+ * @author Andy Yates
+ */
 public class DNACompoundSet extends AbstractNucleotideCompoundSet<NucleotideCompound> {
 
   private static class InitaliseOnDemand {

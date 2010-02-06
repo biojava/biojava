@@ -31,44 +31,51 @@ import org.biojava3.core.sequence.compound.RNACompoundSet;
 import org.biojava3.core.sequence.template.AbstractSequence;
 import org.biojava3.core.sequence.template.CompoundSet;
 import org.biojava3.core.sequence.template.SequenceProxyLoader;
+import org.biojava3.core.sequence.template.SequenceView;
+import org.biojava3.core.sequence.transcription.TranscriptionEngine;
+import org.biojava3.core.sequence.views.ComplementSequenceView;
+import org.biojava3.core.sequence.views.ReversedSequenceView;
 
 public class RNASequence extends AbstractSequence<NucleotideCompound> {
 
-    public RNASequence(String seqString) {
-        super(seqString, RNACompoundSet.getRNACompoundSet());
-    }
+  public RNASequence(String seqString) {
+    super(seqString, RNACompoundSet.getRNACompoundSet());
+  }
 
-    public RNASequence(SequenceProxyLoader<NucleotideCompound> proxyLoader) {
-        super(proxyLoader, RNACompoundSet.getRNACompoundSet());
-    }
+  public RNASequence(SequenceProxyLoader<NucleotideCompound> proxyLoader) {
+    super(proxyLoader, RNACompoundSet.getRNACompoundSet());
+  }
 
-    public RNASequence(String seqString, CompoundSet compoundSet) {
-        super(seqString, compoundSet);
-    }
+  public RNASequence(String seqString, CompoundSet compoundSet) {
+    super(seqString, compoundSet);
+  }
 
-    public RNASequence(SequenceProxyLoader<NucleotideCompound> proxyLoader, CompoundSet compoundSet) {
-        super(proxyLoader, compoundSet);
-    }
+  public RNASequence(SequenceProxyLoader<NucleotideCompound> proxyLoader,
+      CompoundSet compoundSet) {
+    super(proxyLoader, compoundSet);
+  }
 
-    public RNASequence getReverseComplement() {
+  public SequenceView<NucleotideCompound> getReverseComplement() {
+    return new ComplementSequenceView<NucleotideCompound>(getReverse());
+  }
 
+  public SequenceView<NucleotideCompound> getReverse() {
+    return new ReversedSequenceView<NucleotideCompound>(this);
+  }
 
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
+  public SequenceView<NucleotideCompound> getComplement() {
+    return new ComplementSequenceView<NucleotideCompound>(this);
+  }
 
-    public RNASequence getReverse() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
+  public ProteinSequence getProteinSequence() {
+    return getProteinSequence(TranscriptionEngine.getDefault());
+  }
 
-    public RNASequence getComplement() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
+  public ProteinSequence getProteinSequence(TranscriptionEngine engine) {
+    return (ProteinSequence)engine.getRnaAminoAcidTranslator().createSequence(this);
+  }
 
-    public DNASequence getDNASequence() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    public double getGC() {
-        throw new UnsupportedOperationException("Not supported yet");
-    }
+  public double getGC() {
+    throw new UnsupportedOperationException("Not supported yet");
+  }
 }

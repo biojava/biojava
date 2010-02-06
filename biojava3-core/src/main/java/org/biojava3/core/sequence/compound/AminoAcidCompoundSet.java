@@ -28,7 +28,9 @@ package org.biojava3.core.sequence.compound;
 
 
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -68,6 +70,7 @@ public class AminoAcidCompoundSet implements CompoundSet<AminoAcidCompound> {
         aminoAcidCompoundCache.put("-", new AminoAcidCompound(this, "-", "---", "Unspecified", null));
         aminoAcidCompoundCache.put(".", new AminoAcidCompound(this, ".", "...", "Unspecified", null));
         aminoAcidCompoundCache.put("_", new AminoAcidCompound(this, "_", "___", "Unspecified", null));
+        aminoAcidCompoundCache.put("*", new AminoAcidCompound(this, "*", "***", "Stop", null));
     }
 
     public String getStringForCompound(AminoAcidCompound compound) {
@@ -79,7 +82,7 @@ public class AminoAcidCompoundSet implements CompoundSet<AminoAcidCompound> {
             return null;
         }
         if (string.length() > this.getMaxSingleCompoundStringLength()) {
-            throw new IllegalArgumentException("String supplied is too long.");
+            throw new IllegalArgumentException("String supplied ("+string+") is too long. Max is "+getMaxSingleCompoundStringLength());
         }
         return this.aminoAcidCompoundCache.get(string);
     }
@@ -87,6 +90,7 @@ public class AminoAcidCompoundSet implements CompoundSet<AminoAcidCompound> {
     public int getMaxSingleCompoundStringLength() {
         return 1;
     }
+
     private final static AminoAcidCompoundSet aminoAcidCompoundSet = new AminoAcidCompoundSet();
 
     static public AminoAcidCompoundSet getAminoAcidCompoundSet() {
@@ -110,5 +114,9 @@ public class AminoAcidCompoundSet implements CompoundSet<AminoAcidCompound> {
     public void verifySequence(Sequence<AminoAcidCompound> sequence)
         throws CompoundNotFoundError {
       throw new UnsupportedOperationException("Unimplemented");
+    }
+
+    public List<AminoAcidCompound> getAllCompounds() {
+      return new ArrayList<AminoAcidCompound>(aminoAcidCompoundCache.values());
     }
 }

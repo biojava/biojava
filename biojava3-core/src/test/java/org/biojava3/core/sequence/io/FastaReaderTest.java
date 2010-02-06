@@ -4,10 +4,12 @@
  */
 package org.biojava3.core.sequence.io;
 
-import java.io.BufferedReader;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.List;
+
 import org.biojava3.core.sequence.ProteinSequence;
 import org.biojava3.core.sequence.compound.AminoAcidCompoundSet;
 import org.junit.After;
@@ -15,7 +17,6 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import static org.junit.Assert.*;
 
 /**
  *
@@ -55,7 +56,7 @@ public class FastaReaderTest {
         FastaReader<ProteinSequence> fastaReader = new FastaReader<ProteinSequence>(inStream, new GenericFastaHeaderParser(), new ProteinSequenceCreator(AminoAcidCompoundSet.getAminoAcidCompoundSet()));
         List<ProteinSequence> proteinSequences = fastaReader.process();
         inStream.close();
-        
+
 
         //Should have 282 sequences
         System.out.println("Expecting 283 got " + proteinSequences.size());
@@ -71,6 +72,9 @@ public class FastaReaderTest {
         assertEquals(proteinSequence.getAccession().getID(),"Q9PU76_CRONI/141-323");
         assertEquals(proteinSequence.getSequenceAsString(),"VETVTELTEFAKSI-PGFS-N----LD-LND----------------Q----VTL--LKY-----------GVY----------------------EA-IFAM------LASVMNK---DGMPVAYGNGFITRE------------------------------------------------------------------------------------------------------------------------------------------------------------FLKSLRKPFCDIMEPKFDFA-MKF-NSL-E-LDDSDI--------------------SLFVA-AIIC-CGDRPG-------------------------------------------LVNV--GHIEKMQESIVHVLKL-H-----LQN---------NH---PD----------------------------DI------F--------LFP-KLLQKMAD-LRQLV-----------------TEH-AQLV--QIIKK---TESDAHLHPLL-------QEI---");
 
+        proteinSequence = proteinSequences.get(282);
+        assertEquals(proteinSequence.getAccession().getID(),"Q98SJ1_CHICK/15-61");
+        assertEquals(proteinSequence.getSequenceAsString(),"---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------Q-----------------NW------Q--------RFY-QLTKLLDS-MHDVV-----------------ENL-LSFC--FQTFLDKSM--SIEFPEML-------AEI---");
 
         // TODO review the generated test code and remove the default call to fail.
         //fail("The test case is a prototype.");

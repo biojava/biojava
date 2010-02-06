@@ -28,7 +28,7 @@ import org.biojava3.core.sequence.template.AbstractSequence.AnnotationType;
  * General database identifier       gnl|database|identifier
  * NCBI Reference Sequence           ref|accession|locus
  * Local Sequence identifier         lcl|identifier
- * 
+ *
  * @author Scooter Willis <willishf at gmail dot com>
  */
 public class GenericFastaHeaderParser implements FastaHeaderParserInterface {
@@ -59,7 +59,7 @@ public class GenericFastaHeaderParser implements FastaHeaderParserInterface {
     }
 
     public void parseHeader(String header, AbstractSequence sequence) {
-        //uniptrot 
+        //uniptrot
         // tr|Q0TET7|Q0TET7_ECOL5 Putative uncharacterized protein OS=Escherichia coli O6:K15:H31 (strain 536 / UPEC) GN=ECP_2553 PE=4 SV=1
         sequence.setOriginalHeader(header);
         String[] data = getHeaderValues(header);
@@ -103,7 +103,7 @@ public class GenericFastaHeaderParser implements FastaHeaderParserInterface {
             String[] pdbe = data[0].split(" ");
             String[] pdbaccession = pdbe[0].split(":");
             sequence.setAccession(new AccessionID(pdbaccession[1], DataSource.PDBe));
-        } else if (data[0].indexOf(":") != -1 && data[1].equals("PDBID")) {
+        } else if (data[0].indexOf(":") != -1 && data.length > 1 && data[1].equals("PDBID")) {
             sequence.setAccession(new AccessionID(data[0], DataSource.PDB2));
         } else if (data[0].equalsIgnoreCase("pat")) {
             sequence.setAccession(new AccessionID(data[2], DataSource.PATENTS));

@@ -1,6 +1,9 @@
 package org.biojava3.core.sequence.compound;
 
-
+/**
+ *
+ * @author Andy Yates
+ */
 public class AmbiguityDNACompoundSet extends DNACompoundSet {
 
   private static class InitaliseOnDemand {

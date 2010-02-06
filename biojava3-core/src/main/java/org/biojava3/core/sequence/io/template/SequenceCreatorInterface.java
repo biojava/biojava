@@ -5,6 +5,8 @@
 
 package org.biojava3.core.sequence.io.template;
 
+import java.util.List;
+
 import org.biojava3.core.sequence.template.AbstractSequence;
 import org.biojava3.core.sequence.template.Compound;
 import org.biojava3.core.sequence.template.SequenceProxyLoader;
@@ -16,5 +18,7 @@ import org.biojava3.core.sequence.template.SequenceProxyLoader;
 public interface SequenceCreatorInterface<C extends Compound> {
 
     public AbstractSequence<C> getSequence(String sequence, long index);
-    public AbstractSequence<C> getSequence(SequenceProxyLoader<C> proxyLoader,long index);
+    public AbstractSequence<C> getSequence(SequenceProxyLoader<C> proxyLoader, long index);
+    public AbstractSequence<C> getSequence(List<C> list);
+
 }

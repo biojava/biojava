@@ -49,13 +49,11 @@ public class DNATests {
     assertThat("Index of T not as expected", r.getIndexOf(set.getCompoundForString("T")), is(3));
   }
 
-//
-//  @Test
-//  public void translateToRna() {
-//    String s = getSeq("ATGGCGGCGCTGAGCGGT").toRNA().getSequenceAsString()();
-//    assertThat("RNA as expected", s, is("AUGGCGGCGCUGAGCGGU"));
-//  }
-//
+  @Test
+  public void translateToRna() {
+    String s = getSeq("ATGGCGGCGCTGAGCGGT").getRNASequence().getSequenceAsString();
+    assertThat("RNA as expected", s, is("AUGGCGGCGCUGAGCGGU"));
+  }
 
   @Test
   public void respectCase() {

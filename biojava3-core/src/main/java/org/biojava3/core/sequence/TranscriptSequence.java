@@ -25,8 +25,8 @@ package org.biojava3.core.sequence;
 
 import java.util.LinkedHashMap;
 
-import org.biojava3.core.sequence.transcription.DefaultRNAProteinTranscription;
 import org.biojava3.core.sequence.transcription.RNAProteinTranscription;
+import org.biojava3.core.sequence.transcription.TranscriptionEngine;
 
 /**
  *
@@ -122,15 +122,13 @@ private Sense sense = Sense.UNDEFINED;
         return new RNASequence(sb.toString());
     }
 
-    public ProteinSequence getProteinSequence() throws Exception{
-         return getProteinSequence(new DefaultRNAProteinTranscription());
+    public ProteinSequence getProteinSequence() {
+      return getProteinSequence(TranscriptionEngine.getDefault());
     }
 
-    public ProteinSequence getProteinSequence(RNAProteinTranscription rnaProteinTranslator) throws Exception{
+    public ProteinSequence getProteinSequence(TranscriptionEngine engine) {
         RNASequence rnaCodingSequence = getRNASequence();
-        String aminoAcidSequence = rnaProteinTranslator.translate(rnaCodingSequence);
-        return new ProteinSequence(aminoAcidSequence);
-
+        return rnaCodingSequence.getProteinSequence(engine);
     }
 
 }

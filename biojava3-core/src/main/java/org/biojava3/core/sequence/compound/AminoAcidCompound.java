@@ -23,100 +23,60 @@
 
 package org.biojava3.core.sequence.compound;
 
+import org.biojava3.core.sequence.template.AbstractCompound;
 import org.biojava3.core.sequence.template.Compound;
 
-/* @author Richard Holland
+/**
+ * @author Richard Holland
  * @author Scooter Willis
+ * @author Andy Yates
  */
+public class AminoAcidCompound extends AbstractCompound {
 
-public class AminoAcidCompound implements Compound {
+  private final AminoAcidCompoundSet compoundSet;
 
-    
-    private AminoAcidCompoundSet compoundSet;
-    
+  public AminoAcidCompound(AminoAcidCompoundSet compoundSet, String shortName,
+      String longName, String description, Float molecularWeight) {
+    super(shortName);
+    setShortName(shortName);
+    setLongName(longName);
+    setDescription(description);
+    setMolecularWeight(molecularWeight);
+    this.compoundSet = compoundSet;
+  }
 
-    public AminoAcidCompound(AminoAcidCompoundSet compoundSet,String shortName,String longName,String description,Float molecularWeight ) {
-        setShortName(shortName);
-        setLongName(longName);
-        setDescription(description);
-        setMolecularWeight(molecularWeight);
-        this.compoundSet = compoundSet;
-        
+  // TODO need to allow for modified name; that's not equality though is it?
+  public boolean equals(Object obj) {
+    if (obj == null) {
+      return false;
     }
-
-
-
-    public String toString() {
-        return shortName.toString();
+    if (!(obj instanceof AminoAcidCompound)) {
+      return false;
     }
-//TODO need to allow for modified name
-    public boolean equals(Object obj) {
-        if (obj == null) {
-            return false;
-        }
-        if (!(obj instanceof AminoAcidCompound)) {
-            return false;
-        }
-        AminoAcidCompound them = (AminoAcidCompound) obj;
-        if(shortName.equals(them.shortName)){
-            return true;
-        }
-        return longName.equals(them.longName);
-
+    AminoAcidCompound them = (AminoAcidCompound) obj;
+    if (toString().equals(them.toString())) {
+      return true;
     }
+    return getLongName().equals(them.getLongName());
 
-//    public int hashCode() {
-//        return this.base.hashCode();
-//    }
+  }
 
-    public boolean equalsIgnoreCase(Compound compound) {
-        if (compound == null) {
-            return false;
-        }
-        if (!(compound instanceof AminoAcidCompound)) {
-            return false;
-        }
-        AminoAcidCompound them = (AminoAcidCompound) compound;
-        if(shortName.toString().equalsIgnoreCase(them.shortName.toString())){
-            return true;
-        }
-        return longName.toString().equalsIgnoreCase(them.shortName.toString());
+  public int hashCode() {
+    return toString().hashCode();
+  }
+
+  public boolean equalsIgnoreCase(Compound compound) {
+    if (compound == null) {
+      return false;
     }
-
-    private String shortName = null;
-    private String longName = null;
-    private String description = null;
-    private Float molecularWeight = null;
-
-    public String getDescription() {
-        return description;
+    if (!(compound instanceof AminoAcidCompound)) {
+      return false;
     }
-
-    public void setDescription(String description) {
-        this.description = description;
+    AminoAcidCompound them = (AminoAcidCompound) compound;
+    if (toString().equalsIgnoreCase(them.toString())) {
+      return true;
     }
+    return getLongName().equalsIgnoreCase(them.getLongName());
+  }
 
-    public String getShortName() {
-        return shortName;
-    }
-
-    public void setShortName(String shortName) {
-        this.shortName = shortName;
-    }
-
-    public String getLongName() {
-        return longName;
-    }
-
-    public void setLongName(String longName) {
-        this.longName = longName;
-    }
-
-    public Float getMolecularWeight() {
-        return molecularWeight;
-    }
-
-    public void setMolecularWeight(Float molecularWeight) {
-        this.molecularWeight = molecularWeight;
-    }
 }

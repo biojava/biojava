@@ -72,7 +72,7 @@ public abstract class AbstractSequence<C extends Compound> implements Sequence<C
     }
 
     /**
-     * 
+     *
      * @param userCollection
      */
 
@@ -208,7 +208,7 @@ public abstract class AbstractSequence<C extends Compound> implements Sequence<C
             }
 
             public String getSequenceAsString() {
-                throw new UnsupportedOperationException("Not supported yet.");
+              return getViewedSequence().getSequenceAsString().substring(start-1, end);
             }
         };
     }

@@ -35,6 +35,7 @@ import org.biojava3.core.sequence.template.AbstractSequence;
 import org.biojava3.core.sequence.template.CompoundSet;
 import org.biojava3.core.sequence.template.SequenceProxyLoader;
 import org.biojava3.core.sequence.template.SequenceView;
+import org.biojava3.core.sequence.transcription.TranscriptionEngine;
 import org.biojava3.core.sequence.views.ComplementSequenceView;
 import org.biojava3.core.sequence.views.ReversedSequenceView;
 
@@ -63,11 +64,11 @@ public class DNASequence extends AbstractSequence<NucleotideCompound> {
         super(proxyLoader, DNACompoundSet.getDNACompoundSet());
     }
 
-    public DNASequence(String seqString, CompoundSet compoundSet) {
+    public DNASequence(String seqString, CompoundSet<NucleotideCompound> compoundSet) {
         super(seqString, compoundSet);
     }
 
-    public DNASequence(SequenceProxyLoader<NucleotideCompound> proxyLoader, CompoundSet compoundSet) {
+    public DNASequence(SequenceProxyLoader<NucleotideCompound> proxyLoader, CompoundSet<NucleotideCompound> compoundSet) {
         super(proxyLoader, compoundSet);
     }
 
@@ -107,7 +108,11 @@ public class DNASequence extends AbstractSequence<NucleotideCompound> {
     }
 
     public RNASequence getRNASequence() {
-        throw new UnsupportedOperationException("Not supported yet.");
+      return getRNASequence(TranscriptionEngine.getDefault());
+    }
+
+    public RNASequence getRNASequence(TranscriptionEngine engine) {
+      return (RNASequence) engine.getDnaRnaTranslator().createSequence(this);
     }
 
     public double getGC() {

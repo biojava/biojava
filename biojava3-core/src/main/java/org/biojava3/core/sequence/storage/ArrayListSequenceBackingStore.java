@@ -103,6 +103,13 @@ public class ArrayListSequenceBackingStore<C extends Compound> implements Sequen
         }
     }
 
+    public void setContents(List<C> list) {
+      parsedCompounds.clear();
+      for(C c: list) {
+        parsedCompounds.add(c);
+      }
+    }
+
     public SequenceView<C> getSubSequence(final int start, final int end) {
         return new AbstractSequenceView<C>() {
 

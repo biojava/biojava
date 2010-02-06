@@ -25,28 +25,34 @@
  */
 package org.biojava3.core.sequence.compound;
 
+import org.biojava3.core.sequence.template.AbstractCompound;
 import org.biojava3.core.sequence.template.Compound;
 import org.biojava3.core.sequence.template.CompoundSet;
 import org.biojava3.core.sequence.template.NucleotideCompoundInterface;
 
-public class NucleotideCompound implements NucleotideCompoundInterface {
+/**
+ *
+ * @author Scooter Willis
+ * @author Andy Yates
+ */
+public class NucleotideCompound extends AbstractCompound implements NucleotideCompoundInterface {
 
-    private String base;
-    private CompoundSet<NucleotideCompound> compoundSet;
-    private String complementStr;
+    private final CompoundSet<NucleotideCompound> compoundSet;
+    private final String complementStr;
 
     public NucleotideCompound(String base, CompoundSet<NucleotideCompound> compoundSet, String complementStr) {
-        this.base = base;
+        super(base);
         this.compoundSet = compoundSet;
         this.complementStr = complementStr;
     }
 
-    public NucleotideCompoundInterface getComplement() {
-        return this.compoundSet.getCompoundForString(this.complementStr);
+    @Override
+    public String getShortName() {
+      return getBase();
     }
 
-    public String toString() {
-        return base.toString();
+    public NucleotideCompoundInterface getComplement() {
+        return compoundSet.getCompoundForString(complementStr);
     }
 
     public boolean equals(Object obj) {
@@ -57,11 +63,11 @@ public class NucleotideCompound implements NucleotideCompoundInterface {
             return false;
         }
         NucleotideCompound them = (NucleotideCompound) obj;
-        return this.base.equals(them.base);
+        return toString().equals(them.toString());
     }
 
     public int hashCode() {
-        return this.base.hashCode();
+        return toString().hashCode();
     }
 
     public boolean equalsIgnoreCase(Compound compound) {
@@ -72,46 +78,6 @@ public class NucleotideCompound implements NucleotideCompoundInterface {
             return false;
         }
         NucleotideCompound them = (NucleotideCompound) compound;
-        return this.base.toString().equalsIgnoreCase(them.base.toString());
-    }
-    private String shortName = null;
-    private String longName = null;
-    private String description = null;
-    private Float molecularWeight = null;
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getShortName() {
-        return shortName;
-    }
-
-    public void setShortName(String shortName) {
-        this.shortName = shortName;
-    }
-
-    public String getLongName() {
-        return longName;
-    }
-
-    public void setLongName(String longName) {
-        this.longName = longName;
-    }
-
-    public Float getMolecularWeight() {
-        return molecularWeight;
-    }
-
-    public void setMolecularWeight(Float molecularWeight) {
-        this.molecularWeight = molecularWeight;
-    }
-
-    public void setComplement(NucleotideCompoundInterface nucleotideCompound) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return toString().equalsIgnoreCase(them.toString());
     }
 }
