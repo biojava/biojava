@@ -62,22 +62,15 @@ public class TranslationTest {
     IUPACParser.getInstance().getTable("UNIVERSAL");
   }
 
-//  @Test
-//  public void basicTranslation() {
-//    RNAToAminoAcidTranslator t = TranslationTables.getInstance()
-//        .getTranslator("UNIVERSAL");
-//    DNASequence dna = new DNASequence("ATG");
-//    RNASequence rna = dna.getRNASequence();
-//
-//    WindowedSequenceView<CodonCompound, NucleotideCompound> window = new WindowedSequenceView<CodonCompound, NucleotideCompound>(
-//        rna, 3, t.getFromCompoundSet());
-//
-//    CodonCompound one = window.getCompoundAt(1);
-//
-//    AminoAcidCompound initMet = t.translate(one);
-//
-//    assertThat("Initator methionine wrong", initMet.toString(), is("M"));
-//  }
+  @Test
+  public void basicTranslation() {
+    TranscriptionEngine e = TranscriptionEngine.getDefault();
+    DNASequence dna = new DNASequence("ATG");
+    RNASequence rna = dna.getRNASequence(e);
+    ProteinSequence protein = rna.getProteinSequence(e);
+    AminoAcidCompound initMet = protein.getCompoundAt(1);
+    assertThat("Initator methionine wrong", initMet.toString(), is("M"));
+  }
 
   @Test
   public void translateBrca2ExonOne() {
