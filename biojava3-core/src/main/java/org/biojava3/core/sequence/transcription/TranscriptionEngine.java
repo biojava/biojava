@@ -44,7 +44,7 @@ public class TranscriptionEngine {
   private final RNAToAminoAcidTranslator rnaAminoAcidTranslator;
   private final DNAToRNATranslator dnaRnaTranslator;
 
-  private final SequenceCreatorInterface<AminoAcidCompound> peptideSequenceCreator;
+  private final SequenceCreatorInterface<AminoAcidCompound> proteinSequenceCreator;
   private final SequenceCreatorInterface<NucleotideCompound> rnaSequenceCreator;
 
   private final CompoundSet<NucleotideCompound> dnaCompounds;
@@ -55,7 +55,7 @@ public class TranscriptionEngine {
       Table table,
       RNAToAminoAcidTranslator rnaAminoAcidTranslator,
       DNAToRNATranslator dnaRnaTranslator,
-      SequenceCreatorInterface<AminoAcidCompound> peptideSequenceCreator,
+      SequenceCreatorInterface<AminoAcidCompound> proteinSequenceCreator,
       SequenceCreatorInterface<NucleotideCompound> rnaSequenceCreator,
       CompoundSet<NucleotideCompound> dnaCompounds,
       CompoundSet<NucleotideCompound> rnaCompounds,
@@ -63,7 +63,7 @@ public class TranscriptionEngine {
     this.table = table;
     this.rnaAminoAcidTranslator = rnaAminoAcidTranslator;
     this.dnaRnaTranslator = dnaRnaTranslator;
-    this.peptideSequenceCreator = peptideSequenceCreator;
+    this.proteinSequenceCreator = proteinSequenceCreator;
     this.rnaSequenceCreator = rnaSequenceCreator;
     this.dnaCompounds = dnaCompounds;
     this.rnaCompounds = rnaCompounds;
@@ -82,8 +82,8 @@ public class TranscriptionEngine {
     return dnaRnaTranslator;
   }
 
-  public SequenceCreatorInterface<AminoAcidCompound> getPeptideSequenceCreator() {
-    return peptideSequenceCreator;
+  public SequenceCreatorInterface<AminoAcidCompound> getProteinSequenceCreator() {
+    return proteinSequenceCreator;
   }
 
   public SequenceCreatorInterface<NucleotideCompound> getRnaSequenceCreator() {
@@ -110,7 +110,7 @@ public class TranscriptionEngine {
     private Table table;
     private RNAToAminoAcidTranslator rnaAminoAcidTranslator;
     private DNAToRNATranslator dnaRnaTranslator;
-    private SequenceCreatorInterface<AminoAcidCompound> peptideSequenceCreator;
+    private SequenceCreatorInterface<AminoAcidCompound> proteinSequenceCreator;
     private SequenceCreatorInterface<NucleotideCompound> rnaSequenceCreator;
     private CompoundSet<NucleotideCompound> dnaCompounds;
     private CompoundSet<NucleotideCompound> rnaCompounds;
@@ -129,7 +129,7 @@ public class TranscriptionEngine {
           getTable(),
           getRnaAminoAcidTranslator(),
           getDnaRnaTranslator(),
-          getPeptideCreator(),
+          getProteinCreator(),
           getRnaCreator(),
           getDnaCompounds(),
           getRnaCompounds(),
@@ -187,8 +187,8 @@ public class TranscriptionEngine {
       return this;
     }
 
-    public Builder peptideCreator(SequenceCreatorInterface<AminoAcidCompound> creator) {
-      this.peptideSequenceCreator = creator;
+    public Builder proteinCreator(SequenceCreatorInterface<AminoAcidCompound> creator) {
+      this.proteinSequenceCreator = creator;
       return this;
     }
 
@@ -243,7 +243,7 @@ public class TranscriptionEngine {
         return rnaAminoAcidTranslator;
       }
       return new RNAToAminoAcidTranslator(
-          getPeptideCreator(), getRnaCompounds(), getCodons(),
+          getProteinCreator(), getRnaCompounds(), getCodons(),
           getAminoAcidCompounds(), getTable(), isTrimStop(), isInitMet()
        );
     }
@@ -252,9 +252,9 @@ public class TranscriptionEngine {
       return getTable().getCodonCompoundSet(getRnaCompounds(), getAminoAcidCompounds());
     }
 
-    private SequenceCreatorInterface<AminoAcidCompound> getPeptideCreator() {
-      if(peptideSequenceCreator != null) {
-        return peptideSequenceCreator;
+    private SequenceCreatorInterface<AminoAcidCompound> getProteinCreator() {
+      if(proteinSequenceCreator != null) {
+        return proteinSequenceCreator;
       }
       return new ProteinSequenceCreator(getAminoAcidCompounds());
     }
