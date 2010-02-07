@@ -91,8 +91,12 @@ public abstract class AbstractCompoundTranslator<F extends Compound, T extends C
       addCompoundsToList(compounds, workingList);
     }
 
+    postProcessCompoundLists(workingList);
+
     return workingListToSequences(workingList);
   }
+
+  protected abstract void postProcessCompoundLists(List<List<T>> compoundLists);
 
   protected void addCompoundsToList(List<T> compounds, List<List<T>> workingList) {
     int size = compounds.size();

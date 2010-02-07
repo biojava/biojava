@@ -115,7 +115,8 @@ public class TranscriptionEngine {
     private CompoundSet<NucleotideCompound> dnaCompounds;
     private CompoundSet<NucleotideCompound> rnaCompounds;
     private CompoundSet<AminoAcidCompound> aminoAcidCompounds;
-
+    private boolean initMet = true;
+    private boolean trimStop = true;
 
     /**
      * The method to finish any calls to the builder with which returns
@@ -196,6 +197,16 @@ public class TranscriptionEngine {
       return this;
     }
 
+    public Builder initMet(boolean initMet) {
+      this.initMet = initMet;
+      return this;
+    }
+
+    public Builder trimStop(boolean trimStop) {
+      this.trimStop = trimStop;
+      return this;
+    }
+
     //------ INTERNAL BUILDERS with defaults if exists
 
     private CompoundSet<NucleotideCompound> getDnaCompounds() {
@@ -233,7 +244,7 @@ public class TranscriptionEngine {
       }
       return new RNAToAminoAcidTranslator(
           getPeptideCreator(), getRnaCompounds(), getCodons(),
-          getAminoAcidCompounds(), getTable(), true
+          getAminoAcidCompounds(), getTable(), isTrimStop(), isInitMet()
        );
     }
 
@@ -261,6 +272,14 @@ public class TranscriptionEngine {
       }
       table(1); //Will set table to default IUPAC codee
       return table;
+    }
+
+    private boolean isInitMet() {
+      return initMet;
+    }
+
+    private boolean isTrimStop() {
+      return trimStop;
     }
   }
 }

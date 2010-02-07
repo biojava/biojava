@@ -15,24 +15,35 @@ import org.biojava3.core.sequence.template.Sequence;
 import org.biojava3.core.sequence.transcription.Table.Codon;
 import org.biojava3.core.sequence.views.WindowedSequence;
 
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.Multimap;
+
 public class RNAToAminoAcidTranslator extends
     AbstractCompoundTranslator<NucleotideCompound, AminoAcidCompound> {
 
-  private final boolean                              trimStops;
-  private final Map<List<NucleotideCompound>, Codon> quickLookup;
+  private final boolean                                trimStops;
+  private final boolean                                initMetOnly;
+  private final Map<List<NucleotideCompound>, Codon>   quickLookup;
+  private final Multimap<AminoAcidCompound, Codon> aminoAcidToCodon;
 
   public RNAToAminoAcidTranslator(
       SequenceCreatorInterface<AminoAcidCompound> creator,
       CompoundSet<NucleotideCompound> nucleotides, CompoundSet<Codon> codons,
-      CompoundSet<AminoAcidCompound> aminoAcids, Table table, boolean trimStops) {
+      CompoundSet<AminoAcidCompound> aminoAcids, Table table,
+      boolean trimStops, boolean initMetOnly) {
 
     super(creator, nucleotides, aminoAcids);
     this.trimStops = trimStops;
+    this.initMetOnly = initMetOnly;
 
     quickLookup = new HashMap<List<NucleotideCompound>, Codon>(codons
         .getAllCompounds().size());
-    for (Codon codon : table.getCodons(nucleotides, aminoAcids)) {
+    aminoAcidToCodon = ArrayListMultimap.create();
+
+    List<Codon> codonList = table.getCodons(nucleotides, aminoAcids);
+    for (Codon codon : codonList) {
       quickLookup.put(codon.getAsList(), codon);
+      aminoAcidToCodon.put(codon.getAminoAcid(), codon);
     }
   }
 
@@ -58,5 +69,49 @@ public class RNAToAminoAcidTranslator extends
     }
 
     return workingListToSequences(workingList);
+  }
+
+  @Override
+  protected void postProcessCompoundLists(
+      List<List<AminoAcidCompound>> compoundLists) {
+    for (List<AminoAcidCompound> compounds : compoundLists) {
+      if (initMetOnly) {
+        initMet(compounds);
+      }
+      if (trimStops) {
+        trimStop(compounds);
+      }
+    }
+  }
+
+  private void initMet(List<AminoAcidCompound> sequence) {
+    AminoAcidCompound initMet = getToCompoundSet().getCompoundForString("M");
+    AminoAcidCompound start = sequence.get(0);
+    boolean isStart = false;
+    for(Codon c: aminoAcidToCodon.get(start)) {
+      if(c.isStart()) {
+        isStart = true;
+        break;
+      }
+    }
+
+    if(isStart) {
+      sequence.set(0, initMet);
+    }
+  }
+
+  private void trimStop(List<AminoAcidCompound> sequence) {
+    AminoAcidCompound stop = sequence.get(sequence.size() - 1);
+    boolean isStop = false;
+    for(Codon c: aminoAcidToCodon.get(stop)) {
+      if(c.isStop()) {
+        isStop = true;
+        break;
+      }
+    }
+
+    if(isStop) {
+      sequence.remove(sequence.size()-1);
+    }
   }
 }

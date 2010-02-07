@@ -1,5 +1,7 @@
 package org.biojava3.core.sequence.transcription;
 
+import java.util.List;
+
 import org.biojava3.core.sequence.compound.NucleotideCompound;
 import org.biojava3.core.sequence.io.template.SequenceCreatorInterface;
 import org.biojava3.core.sequence.template.AbstractCompoundTranslator;
@@ -32,5 +34,11 @@ public class DNAToRNATranslator extends AbstractCompoundTranslator<NucleotideCom
         getToCompoundSet().getCompoundForString("U"));
     addCompounds(getFromCompoundSet().getCompoundForString("t"),
         getToCompoundSet().getCompoundForString("u"));
+  }
+
+  @Override
+  protected void postProcessCompoundLists(
+      List<List<NucleotideCompound>> compoundLists) {
+    //No post processing needed
   }
 }
