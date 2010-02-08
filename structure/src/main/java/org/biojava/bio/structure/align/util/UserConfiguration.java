@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 
 import org.biojava.bio.structure.align.ce.StartupParameters;
+import org.biojava.bio.structure.io.PDBFileReader;
 import org.biojava.utils.xml.PrettyXMLWriter;
 import org.biojava.utils.xml.XMLWriter;
 
@@ -43,7 +44,14 @@ public class UserConfiguration
 	public UserConfiguration(){
 		isSplit = true;
 		autoFetch = true;
-		pdbFilePath = ".";
+		 // accessing temp. OS directory:         
+        String property = "java.io.tmpdir";
+
+        String tempdir = System.getProperty(property);
+        
+        if ( !(tempdir.endsWith(PDBFileReader.lineSplit) ) )
+           tempdir = tempdir + PDBFileReader.lineSplit;
+		pdbFilePath = tempdir;
 	}
 	
 	public String getPdbFilePath()
