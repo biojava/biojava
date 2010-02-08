@@ -57,6 +57,7 @@ import org.biojava.bio.structure.align.util.AtomCache;
 import org.biojava.bio.structure.align.util.UserConfiguration;
 import org.biojava.bio.structure.gui.BiojavaJmol;
 import org.biojava.bio.structure.gui.util.PDBDirPanel;
+import org.biojava.bio.structure.io.PDBFileReader;
 
 
 public class WebStartMain
@@ -324,7 +325,16 @@ public class WebStartMain
 		ChooseDirAction action = new ChooseDirAction(textField, userConfig);
 		action.actionPerformed(null);
 		if ( textField.getText() == null) {
-			userConfig.setPdbFilePath(".");
+		   
+		   // accessing temp. OS directory:         
+	         String property = "java.io.tmpdir";
+
+	         String tempdir = System.getProperty(property);
+	         
+	         if ( !(tempdir.endsWith(PDBFileReader.lineSplit ) ) )
+	            tempdir = tempdir + PDBFileReader.lineSplit;
+		   
+			userConfig.setPdbFilePath(tempdir);
 			return userConfig;
 		}
 
