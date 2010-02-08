@@ -396,9 +396,16 @@ public class PDBFileReader implements StructureIOFile {
    private File downloadPDB(String pdbId){
 
       if ((path == null) || (path.equals(""))){
+         // accessing temp. OS directory:         
+         String property = "java.io.tmpdir";
+
+         String tempdir = System.getProperty(property);
+         
+         if ( !(tempdir.endsWith(lineSplit) ) )
+            tempdir = tempdir + lineSplit;
          System.err.println("you did not set the path in PDBFileReader, don;t know where to write the downloaded file to");
-         System.err.println("assuming default location is local directory.");
-         path = ".";
+         System.err.println("assuming default location is temp directory: " + tempdir);
+         path = tempdir;
       }
 
 
