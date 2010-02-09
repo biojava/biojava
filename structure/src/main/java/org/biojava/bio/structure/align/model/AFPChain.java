@@ -52,6 +52,11 @@ public class AFPChain implements Serializable
 
    public static final String newline = System.getProperty("line.separator");
 
+   /** the default algorithm used in the RCSB PDB all vs. all database searches
+    * 
+    */
+   public static final String DEFAULT_ALGORITHM_NAME = "jFatCat_rigid";
+   
    String algorithmName;
 
    String version;
@@ -155,8 +160,8 @@ public class AFPChain implements Serializable
       myResultsEQR = -1;
       myResultsSimilarity1 = -1;
       myResultsSimilarity2 = -1;
-      algorithmName = CeMain.algorithmName;
-      version = CeMain.version+"";
+      algorithmName = DEFAULT_ALGORITHM_NAME ;
+      version = "1.0";
 
    }
 
