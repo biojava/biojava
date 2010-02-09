@@ -60,6 +60,7 @@ import org.biojava.bio.structure.gui.util.PDBDirPanel;
 import org.biojava.bio.structure.io.PDBFileReader;
 
 
+
 public class WebStartMain
 {
 
@@ -426,18 +427,22 @@ public class WebStartMain
 
 		// check if we already have a precalculated alignment...
 		AFPChain afpChain = null;
+		
 		try {
-			System.out.println("requesting alignment from server...");
+			//System.out.println("requesting alignment from server...");
 
 			afpChain = JFatCatClient.getAFPChainFromServer(serverLocation, name1, name2, ca1, ca2);
 			
 			if ( afpChain != null){
 				// twist groups for visualisation
 				// we only have data for the optimized alignment so far...
-				//AA Group[] twistedGroups = AFPTwister.twistOptimized(afpChain,ca1,ca2);
-
-				//AA FatCatAligner aligner =  fatCat.getFatCatAligner();
-				//AA aligner.setTwistedGroups(twistedGroups);
+				
+			      System.out.println("sending afpChain to fatcatRigid proxy");
+			   
+			   //JFatCatProxy proxy = new JFatCatProxy();
+			   //proxy.setStructureAlignment(fatCatRigid);
+			   //proxy.twistGroups(afpChain,ca1,ca2);
+			   
 			} else {
 				System.out.println("calculating");
 				afpChain = fatCatRigid.align(ca1,ca2);
@@ -445,9 +450,9 @@ public class WebStartMain
 				afpChain.setName1(name1);
 				afpChain.setName2(name2);
 
-				System.out.println("submitting...");
+				//System.out.println("submitting...");
 
-				JFatCatClient.sendAFPChainToServer(serverLocation,afpChain, ca1, ca2);
+				//JFatCatClient.sendAFPChainToServer(serverLocation,afpChain, ca1, ca2);
 			}
 		} catch (Exception e){
 			e.printStackTrace();
@@ -458,6 +463,7 @@ public class WebStartMain
 			afpChain = fatCatRigid.align(ca1, ca2);
 			afpChain.setName1(name1);
 			afpChain.setName2(name2);
+			 
 		}
 
 
@@ -470,7 +476,8 @@ public class WebStartMain
 		List<Group> hetatms2 = new ArrayList<Group>();
 		List<Group> nucs2    = new ArrayList<Group>();
 
-		System.out.println("got afpChain bloocknum: " + afpChain.getBlockNum());
+		System.out.println("algorithmName: " + afpChain.getAlgorithmName() + " " + afpChain.getVersion());
+		
 		if ( (afpChain.getBlockNum() - 1) == 0){
 			hetatms2 = c2.getAtomGroups("hetatm");
 			nucs2    = c2.getAtomGroups("nucleotide");
@@ -479,6 +486,8 @@ public class WebStartMain
 		// show results
 		StructureAlignmentJmol jmol = StructureAlignmentDisplay.display(afpChain,ca1,ca2,hetatms,nucs, hetatms2, nucs2);
 
+		
+		
 		//jmol.setTitle(title);
 		// make sure the AlignmentGUI is always displayed, because it is the only way to close the application.
 		//AlignmentGui.getInstance();
