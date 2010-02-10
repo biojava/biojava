@@ -1,0 +1,71 @@
+<body>
+The core classes that will be used throughout the bio packages.
+
+<h2>Throwables</h2>
+<p>
+The classes BioException and BioError form the basis of error-handling within
+the core classes. They both can optionally wrap a source Throwable and carry a
+message. The stack-trace printed should contain a single merged stack-trace,
+together with all messages inserted in the proper places. These exceptions
+can be nested to any depth, providing an organic and natural way to trace errors
+and bugs.
+</p>
+
+<h2>Annotations</h2>
+<p>
+The Annotation classes are used throughout the org.biojava.bio interface
+hierachy to indicate that there is un-typed information that may optionally be
+associated with an object. The Annotation object takes the form of a paranoid
+Map, and Annotatable flags an object as having an associated Annotation object.
+</p>
+
+<p>
+Annotations would be used where the designer of an API knew that users may wish
+to associate further information with instances of an interface or class, but
+it is inapropreate to add get/set pairs and properties, either because the
+properties will frequently be absent, or the names and types of the properties
+will not be known untill objects are populated.
+</p>
+
+<p>
+To help bring some order to this potential chaos, there is a loose-typing system
+available. AnnotationType defines an instanceOf method that will return true if
+an annotation is considered to be an instance of that type, and false otherwise.
+In practice, this choice will tend to be made on the basis of the available
+annotation properties, their names and values. PropertyConstraint allows
+restrictions on the range of property values to be bound to names within a
+PropertyType. These may restrict a property to being of a particular java class,
+within a set of possible values (enumerated type), being an annotation of a
+particular AnnotationType, or being a collection of one of these (set, list).
+</p>
+
+<p>
+It is not expected that in the general case Annotations will publish an
+AnnotationType they conform to in a well-known slot such as ISA. In the
+general case, annotations will be dynamicaly validated by calling
+AnnotatoinType.instanceOf(Annotation). Annotations are symultaneously
+instances of all AnnotationType instances that they match to. In particular,
+all Annotation instances are of type AnnotationType.ANY which places no
+restrictions upon the presence or value of properties.
+</p>
+
+<p>
+AnnotationType and PropopertyConstraint both have operators to check if another
+instance matches a subset of the items it matches. These are subTypeOf and
+subConstraintOf respectively. In the same way that the type of an Annotation
+is inferred as needed, these relationships will in general be proved when
+required. It is not likely that AnnotatoinType or PropertyConstraint instances
+will maintain references between super- and sub-types, but rather they will
+introspect the class and properties of the type or constraints and prove
+that the sub-type instanceOf method returns true for a subset of the cases
+returning true for the super-type.
+</p>
+
+<p>
+This typing system is able to validate the type of an annotation by the names
+and types of its properties. It is unable to (and it is outside the scope of
+this API to attempt to) validate the type of an annotation by other
+annotations or objects that may refer to it. We only validate part-whole hierachies.
+</p>
+
+</body>

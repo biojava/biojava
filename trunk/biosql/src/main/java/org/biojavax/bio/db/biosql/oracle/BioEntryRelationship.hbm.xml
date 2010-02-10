@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+
+    <class name="org.biojavax.bio.SimpleBioEntryRelationship" table="bioentry_relationship" node="sequenceRelation" entity-name="BioEntryRelationship">
+
+        <id name="id" type="integer" unsaved-value="null" column="bioentry_relationship_id" node="@id">
+            <generator class="sequence">
+                <param name="sequence">bioentry_relationship_pk_seq</param>
+            </generator>
+        </id>
+
+        <many-to-one name="term" class="Term" column="term_id" not-null="true" cascade="persist,merge,save-update" node="@termId" embed-xml="false"/>
+        <many-to-one name="object" class="BioEntry" column="object_bioentry_id" not-null="true" cascade="persist,merge,save-update" node="@objectBioEntryId" embed-xml="false"/>
+        <many-to-one name="subject" class="BioEntry" column="subject_bioentry_id" not-null="true" cascade="persist,merge,save-update" node="@subjectBioEntryId" embed-xml="false"/>
+        <property name="rank" node="@rank"/>
+        
+    </class>
+
+</hibernate-mapping>

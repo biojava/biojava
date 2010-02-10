@@ -1,0 +1,149 @@
+ID   104K_THEPA     STANDARD;      PRT;   924 AA.
+AC   P15711;
+DT   01-APR-1990 (Rel. 14, Created)
+DT   01-APR-1990 (Rel. 14, Last sequence update)
+DT   01-AUG-1992 (Rel. 23, Last annotation update)
+DE   104 kDa microneme-rhoptry antigen.
+OS   Theileria parva.
+OC   Eukaryota; Alveolata; Apicomplexa; Piroplasmida; Theileriidae;
+OC   Theileria.
+OX   NCBI_TaxID=5875;
+RN   [1]
+RP   SEQUENCE FROM N.A.
+RC   STRAIN=MUGUGA;
+RX   MEDLINE=90158697; PubMed=1689460;
+RA   Iams K.P., Young J.R., Nene V., Desai J., Webster P., Ole-Moiyoi O.K.,
+RA   Musoke A.J.;
+RT   "Characterisation of the gene encoding a 104-kilodalton microneme-
+RT   rhoptry protein of Theileria parva.";
+RL   Mol. Biochem. Parasitol. 39:47-60(1990).
+CC   -!- SUBCELLULAR LOCATION: IN MICRONEME/RHOPTRY COMPLEXES.
+CC   -!- DEVELOPMENTAL STAGE: SPOROZOITE ANTIGEN.
+CC   --------------------------------------------------------------------------
+CC   This SWISS-PROT entry is copyright. It is produced through a collaboration
+CC   between  the Swiss Institute of Bioinformatics  and the  EMBL outstation -
+CC   the European Bioinformatics Institute.  There are no  restrictions on  its
+CC   use  by  non-profit  institutions as long  as its content  is  in  no  way
+CC   modified and this statement is not removed.  Usage  by  and for commercial
+CC   entities requires a license agreement (See http://www.isb-sib.ch/announce/
+CC   or send an email to license@isb-sib.ch).
+CC   --------------------------------------------------------------------------
+DR   EMBL; M29954; AAA18217.1; -.
+DR   PIR; A44945; A44945.
+KW   Antigen; Sporozoite; Repeat.
+FT   DOMAIN        1     19       HYDROPHOBIC.
+FT   DOMAIN      905    924       HYDROPHOBIC.
+SQ   SEQUENCE   924 AA;  103625 MW;  289B4B554A61870E CRC64;
+     MKFLILLFNI LCLFPVLAAD NHGVGPQGAS GVDPITFDIN SNQTGPAFLT AVEMAGVKYL
+     QVQHGSNVNI HRLVEGNVVI WENASTPLYT GAIVTNNDGP YMAYVEVLGD PNLQFFIKSG
+     DAWVTLSEHE YLAKLQEIRQ AVHIESVFSL NMAFQLENNK YEVETHAKNG ANMVTFIPRN
+     GHICKMVYHK NVRIYKATGN DTVTSVVGFF RGLRLLLINV FSIDDNGMMS NRYFQHVDDK
+     YVPISQKNYE TGIVKLKDYK HAYHPVDLDI KDIDYTMFHL ADATYHEPCF KIIPNTGFCI
+     TKLFDGDQVL YESFNPLIHC INEVHIYDRN NGSIICLHLN YSPPSYKAYL VLKDTGWEAT
+     THPLLEEKIE ELQDQRACEL DVNFISDKDL YVAALTNADL NYTMVTPRPH RDVIRVSDGS
+     EVLWYYEGLD NFLVCAWIYV SDGVASLVHL RIKDRIPANN DIYVLKGDLY WTRITKIQFT
+     QEIKRLVKKS KKKLAPITEE DSDKHDEPPE GPGASGLPPK APGDKEGSEG HKGPSKGSDS
+     SKEGKKPGSG KKPGPAREHK PSKIPTLSKK PSGPKDPKHP RDPKEPRKSK SPRTASPTRR
+     PSPKLPQLSK LPKSTSPRSP PPPTRPSSPE RPEGTKIIKT SKPPSPKPPF DPSFKEKFYD
+     DYSKAASRSK ETKTTVVLDE SFESILKETL PETPGTPFTT PRPVPPKRPR TPESPFEPPK
+     DPDSPSTSPS EFFTPPESKR TRFHETPADT PLPDVTAELF KEPDVTAETK SPDEAMKRPR
+     SPSEYEDTSP GDYPSLPMKR HRLERLRLTT TEMETDPGRM AKDASGKPVK LKRSKSFDDL
+     TTVELAPEPK ASRIVVDDEG TEADDEETHP PEERQKTEVR RRRPPKKPSK SPRPSKPKKP
+     KKPDSAYIPS ILAILVVSLI VGIL
+//
+ID   108_LYCES      STANDARD;      PRT;   102 AA.
+AC   Q43495;
+DT   15-JUL-1999 (Rel. 38, Created)
+DT   15-JUL-1999 (Rel. 38, Last sequence update)
+DT   15-JUL-1999 (Rel. 38, Last annotation update)
+DE   Protein 108 precursor.
+OS   Lycopersicon esculentum (Tomato).
+OC   Eukaryota; Viridiplantae; Streptophyta; Embryophyta; Tracheophyta;
+OC   Spermatophyta; Magnoliophyta; eudicotyledons; core eudicots;
+OC   Asteridae; lamiids; Solanales; Solanaceae; Solanum.
+OX   NCBI_TaxID=4081;
+RN   [1]
+RP   SEQUENCE FROM N.A.
+RC   STRAIN=CV. VF36; TISSUE=ANTHER;
+RX   MEDLINE=94143497; PubMed=8310077;
+RA   Chen R., Smith A.G.;
+RT   "Nucleotide sequence of a stamen- and tapetum-specific gene from
+RT   Lycopersicon esculentum.";
+RL   Plant Physiol. 101:1413-1413(1993).
+CC   -!- TISSUE SPECIFICITY: STAMEN- AND TAPETUM-SPECIFIC.
+CC   -!- SIMILARITY: BELONGS TO THE A9 / FIL1 FAMILY.
+CC   --------------------------------------------------------------------------
+CC   This SWISS-PROT entry is copyright. It is produced through a collaboration
+CC   between  the Swiss Institute of Bioinformatics  and the  EMBL outstation -
+CC   the European Bioinformatics Institute.  There are no  restrictions on  its
+CC   use  by  non-profit  institutions as long  as its content  is  in  no  way
+CC   modified and this statement is not removed.  Usage  by  and for commercial
+CC   entities requires a license agreement (See http://www.isb-sib.ch/announce/
+CC   or send an email to license@isb-sib.ch).
+CC   --------------------------------------------------------------------------
+DR   EMBL; Z14088; CAA78466.1; -.
+DR   InterPro; IPR003612; AAI.
+DR   InterPro; IPR001768; Try/amyl_inhbtr.
+DR   Pfam; PF00234; tryp_alpha_amyl; 1.
+DR   SMART; SM00499; AAI; 1.
+KW   Signal.
+FT   SIGNAL        1     30       POTENTIAL.
+FT   CHAIN        31    102       PROTEIN 108.
+FT   DISULFID     41     77       BY SIMILARITY.
+FT   DISULFID     51     66       BY SIMILARITY.
+FT   DISULFID     67     92       BY SIMILARITY.
+FT   DISULFID     79     99       BY SIMILARITY.
+SQ   SEQUENCE   102 AA;  10576 MW;  CFBAA1231C3A5E92 CRC64;
+     MASVKSSSSS SSSSFISLLL LILLVIVLQS QVIECQPQQS CTASLTGLNV CAPFLVPGSP
+     TASTECCNAV QSINHDCMCN TMRIAAQIPA QCNLPPLSCS AN
+//
+ID   10KD_VIGUN     STANDARD;      PRT;    75 AA.
+AC   P18646;
+DT   01-NOV-1990 (Rel. 16, Created)
+DT   01-NOV-1990 (Rel. 16, Last sequence update)
+DT   16-OCT-2001 (Rel. 40, Last annotation update)
+DE   10 kDa protein precursor (Clone PSAS10).
+OS   Vigna unguiculata (Cowpea).
+OC   Eukaryota; Viridiplantae; Streptophyta; Embryophyta; Tracheophyta;
+OC   Spermatophyta; Magnoliophyta; eudicotyledons; core eudicots; Rosidae;
+OC   eurosids I; Fabales; Fabaceae; Papilionoideae; Phaseoleae; Vigna.
+OX   NCBI_TaxID=3917;
+RN   [1]
+RP   SEQUENCE FROM N.A.
+RC   TISSUE=COTYLEDON;
+RX   MEDLINE=91355865; PubMed=2103443;
+RA   Ishibashi N., Yamauchi D., Miniamikawa T.;
+RT   "Stored mRNA in cotyledons of Vigna unguiculata seeds: nucleotide
+RT   sequence of cloned cDNA for a stored mRNA and induction of its
+RT   synthesis by precocious germination.";
+RL   Plant Mol. Biol. 15:59-64(1990).
+CC   -!- FUNCTION: THIS PROTEIN IS REQUIRED FOR GERMINATION.
+CC   -!- SIMILARITY: BELONGS TO THE PLANT DEFENSIN FAMILY.
+CC   --------------------------------------------------------------------------
+CC   This SWISS-PROT entry is copyright. It is produced through a collaboration
+CC   between  the Swiss Institute of Bioinformatics  and the  EMBL outstation -
+CC   the European Bioinformatics Institute.  There are no  restrictions on  its
+CC   use  by  non-profit  institutions as long  as its content  is  in  no  way
+CC   modified and this statement is not removed.  Usage  by  and for commercial
+CC   entities requires a license agreement (See http://www.isb-sib.ch/announce/
+CC   or send an email to license@isb-sib.ch).
+CC   --------------------------------------------------------------------------
+DR   EMBL; X16877; CAA34760.1; -.
+DR   PIR; S11156; S11156.
+DR   InterPro; IPR002118; Gamma-thionin.
+DR   InterPro; IPR003614; Knot1.
+DR   Pfam; PF00304; Gamma-thionin; 1.
+DR   ProDom; PD002594; Gamma-thionin; 1.
+DR   SMART; SM00505; Knot1; 1.
+DR   PROSITE; PS00940; GAMMA_THIONIN; 1.
+KW   Germination; Signal.
+FT   SIGNAL        1     24       POTENTIAL.
+FT   CHAIN        25     75       10 KDA PROTEIN.
+FT   DISULFID     31     75       BY SIMILARITY.
+FT   DISULFID     42     63       BY SIMILARITY.
+FT   DISULFID     48     69       BY SIMILARITY.
+FT   DISULFID     52     71       BY SIMILARITY.
+SQ   SEQUENCE   75 AA;  8523 MW;  6D72D9D238CF7650 CRC64;
+     MEKKSIAGLC FLFLVLFVAQ EVVVQSEAKT CENLVDTYRG PCFTTGSCDD HCKNKEHLLS
+     GRCRDDVRCW CTRNC
+//

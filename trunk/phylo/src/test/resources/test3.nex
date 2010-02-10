@@ -1,0 +1,13 @@
+#NEXUS
+Begin TREES;
+  tree test1 =
+(
+1
+,
+2
+)
+;
+  tree test2 = ((1,2)A,3) ;
+  tree test3 = (B:6.0,(A:5.0,C:3.0,E:4.0)
+Ancestor1:5.0,D:11.0);
+End;

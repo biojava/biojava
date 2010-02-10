@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+
+    <class name="org.biojavax.bio.taxa.SimpleNCBITaxon" table="taxon" node="taxon" entity-name="Taxon">
+
+        <id name="id" type="integer" unsaved-value="null" column="taxon_id" node="@id">
+            <generator class="sequence">
+                <param name="sequence">taxon_pk_seq</param>
+            </generator>
+        </id>
+
+        <property name="NCBITaxID" column="ncbi_taxon_id" node="@NCBITaxId"/>
+        <property name="nodeRank" column="node_rank"/>
+        <property name="geneticCode" column="genetic_code"/>
+        <property name="mitoGeneticCode" column="mito_genetic_code"/>
+        <property name="leftValue" column="left_value"/>
+        <property name="rightValue" column="right_value"/>
+        <property name="parentNCBITaxID" column="parent_taxon_id"/>
+        <set name="nameSet" table="taxon_name" lazy="false" sort="natural">
+            <key column="taxon_id" not-null="true"/>
+            <composite-element class="org.biojavax.bio.taxa.SimpleNCBITaxonName" node="taxonName">
+                <property name="name" node="@name"/>
+                <property name="nameClass" column="name_class" node="@class"/>
+            </composite-element>
+        </set>
+    </class>
+
+</hibernate-mapping>

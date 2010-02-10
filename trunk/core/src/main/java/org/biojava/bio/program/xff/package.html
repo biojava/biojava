@@ -1,0 +1,29 @@
+<body>
+Event-driven parsing system for the Extensible Feature Format (XFF).
+This is currently targetted at the XFF 0.2 proposal.  For more
+information, see <a href="http://www.biojava.org/thomasd/XFF/">The
+XFF proposal page</a>.
+
+<p>
+XFF is an experimental format, and both the format and the APIs
+in this package may change in the future.
+</p>
+
+<p>
+The main class in this package is <code>XFFFeatureSetHandler</code>,
+which is intended as a content handler for XFF <code>featureSet</code>
+elements.  By default, this class handles the XFF <code>feature</code>
+and <code>strandedFeature</code> types.  Any other feature types
+are treated as one of these.  It is, however, possible to plug in
+additional handlers to cope with sub-types of <code>feature</code>.
+The only detail type recognized is <code>xff:prop</code> -- all others
+are silently ignored.  But again, it is easy to plug in extra StAX
+handlers for other detail types.
+</p>
+
+<p>
+When writing a handler, for a new feature type, you will normally want
+to sub-class the existing <code>FeatureHandler</code> or
+<code>StrandedFeatureHanlder</code> classes.
+</p>
+</body>

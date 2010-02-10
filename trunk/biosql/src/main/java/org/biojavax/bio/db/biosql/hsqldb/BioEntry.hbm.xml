@@ -1,0 +1,80 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+
+    <class name="org.biojavax.bio.SimpleBioEntry" table="bioentry" node="bioentry" entity-name="BioEntry">
+
+        <id name="id" type="integer" unsaved-value="null" column="bioentry_id" node="@id">
+            <generator class="native"/>
+        </id>
+
+        <property name="name" node="@name"/>
+        <property name="identifier" node="@identifier"/>
+        <property name="accession" node="@accession"/>        
+        <property name="description"/>       
+        <property name="version" node="@version"/>      
+        <property name="division" node="@division"/>
+        <many-to-one name="taxon" class="Taxon" column="taxon_id" cascade="persist,merge,save-update" node="@taxonId" embed-xml="false"/>
+        <many-to-one name="namespace" class="Namespace" column="biodatabase_id" not-null="true" cascade="persist,merge,save-update" node="@namespaceId" embed-xml="false"/>
+        <set name="comments" lazy="false" cascade="all-delete-orphan" sort="natural">
+            <key column="bioentry_id" not-null="true"/>
+            <one-to-many class="Comment" embed-xml="true"/>
+        </set>
+        <set name="relationships" lazy="false" cascade="all-delete-orphan" sort="natural" inverse="true">
+            <key column="object_bioentry_id"/>
+            <one-to-many class="BioEntryRelationship" embed-xml="true"/>
+        </set>
+        <set name="rankedDocRefs" table="bioentry_reference" lazy="false" sort="natural">
+            <key column="bioentry_id" not-null="true"/>
+            <composite-element class="org.biojavax.SimpleRankedDocRef" node="rankedDocRef">
+                <many-to-one name="documentReference" class="DocRef" column="reference_id" not-null="true" cascade="persist,merge,save-update" node="@docRefId" embed-xml="false"/>
+                <property name="rank" node="@rank"/>   
+                <property name="start" column="start_pos" node="@start"/>
+                <property name="end" column="end_pos" node="@end"/>
+            </composite-element>
+        </set>
+        <set name="rankedCrossRefs" table="bioentry_dbxref" lazy="false" sort="natural">
+            <key column="bioentry_id" not-null="true"/>
+            <composite-element class="org.biojavax.SimpleRankedCrossRef" node="rankedCrossRef">
+                <many-to-one name="crossRef" class="CrossRef" column="dbxref_id" not-null="true" cascade="persist,merge,save-update" node="@crossRefId" embed-xml="false"/> 
+                <property name="rank" node="@rank"/>  
+            </composite-element>
+        </set>
+        <set name="noteSet" table="bioentry_qualifier_value" lazy="false" sort="natural">
+            <key column="bioentry_id" not-null="true"/>
+            <composite-element class="org.biojavax.SimpleNote" node="note">
+                <many-to-one name="term" class="Term" column="term_id" not-null="true" cascade="persist,merge,save-update" node="@termId" embed-xml="false"/>
+                <property name="rank" node="@rank"/>   
+                <property name="value"/>
+            </composite-element>
+        </set>
+        
+        <joined-subclass name="org.biojavax.bio.seq.ThinRichSequence" table="biosequence" node="richSequence" entity-name="ThinSequence">
+            <key column="bioentry_id" not-null="true"/>
+            <property name="seqVersion" column="version" node="@seqVersion"/>
+            <property name="sequenceLength" column="length" node="@seqLength"/>
+            <property name="alphabetName" column="alphabet" node="@alphabet"/>
+            <set name="featureSet" lazy="false" inverse="true" cascade="all-delete-orphan" sort="natural">
+                <key column="bioentry_id"/>
+                <one-to-many class="Feature" embed-xml="true"/>
+            </set>
+        </joined-subclass>
+        
+        <joined-subclass name="org.biojavax.bio.seq.SimpleRichSequence" table="biosequence" node="richSequence" entity-name="Sequence">
+            <key column="bioentry_id" not-null="true"/>
+            <property name="seqVersion" column="version" node="@seqVersion"/>
+            <property name="sequenceLength" column="length" node="@seqLength"/>
+            <property name="alphabetName" column="alphabet" node="@alphabet"/>
+            <property name="stringSequence" column="seq" type="text"/>
+            <set name="featureSet" lazy="false" inverse="true" cascade="all-delete-orphan" sort="natural">
+                <key column="bioentry_id"/>
+                <one-to-many class="Feature" embed-xml="true"/>
+            </set>
+        </joined-subclass>
+                
+    </class>
+
+</hibernate-mapping>

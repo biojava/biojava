@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+
+    <class name="org.biojavax.bio.seq.SimpleRichLocation" table="location" node="location" entity-name="Location">
+
+        <id name="id" type="integer" unsaved-value="null" column="location_id" node="@id">
+            <generator class="sequence">
+                <param name="sequence">location_pk_seq</param>
+            </generator>
+        </id>
+        
+        <many-to-one name="feature" class="Feature" column="seqfeature_id" not-null="true" cascade="persist,merge,save-update" node="@featureId" embed-xml="false"/>
+        <many-to-one name="term" class="Term" column="term_id" cascade="persist,merge,save-update" node="@termId" embed-xml="false"/>
+        <many-to-one name="crossRef" class="CrossRef" column="dbxref_id" cascade="persist,merge,save-update" node="@crossRefId" embed-xml="false"/>
+        <property name="rank" node="@rank"/>
+        <property name="min" column="start_pos" node="@start"/>
+        <property name="max" column="end_pos" node="@end"/>
+        <property name="strandNum" column="strand" node="@strand"/>
+        <set name="noteSet" table="location_qualifier_value" lazy="false" sort="natural">
+            <key column="location_id" not-null="true"/>
+            <composite-element class="org.biojavax.SimpleNote" node="note">
+                <many-to-one name="term" class="Term" column="term_id" not-null="true" cascade="persist,merge,save-update" node="@termId" embed-xml="false"/>
+                <property name="value"/>
+            </composite-element>
+        </set>
+        
+    </class>
+
+</hibernate-mapping>

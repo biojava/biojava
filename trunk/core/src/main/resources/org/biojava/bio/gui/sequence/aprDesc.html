@@ -1,0 +1,9 @@
+<html>
+At the beginning of an apr file there will be data that is unnecessary for the program to read in successfully.  
+The line that the program does read in, needs to start with obj|IxAlignment|, followed by an optional length of the sequence (i.e. \345:).
+  Next comes the sequence, which can have gaps represented by '-', '~', or '.', must end with a '|', and can not have spaces. 
+ The sequence is followed by an optional length of the name (i.e. |\30:).  Next is the name, which can have spaces.   
+Below are examples of acceptable formats for the lines being read in by the program: <hr>
+obj|IxAlignment|\345:<font color=#CC6600>DKLEEEINRRMADDN-------KLFR|</font>\30:<font color=#006633>hPTPalpha_D1 (NP_002827) PTPRA</font><br>
+obj|IXAlignment|<font color=#CC6600>DKLEEEINRRMADDN.......KLFR|</font>\30:<font color=#006633>hPTPalpha_D1 (NP_002827) PTPRA</font><br>
+obj|IXALIGNMENT|\345:<font color=#CC6600>DKLEEEINRRMADDN~~~~~~~KLFR|</font><font color=#006633>hPTPalpha_D1 (NP_002827) PTPRA</font></html>

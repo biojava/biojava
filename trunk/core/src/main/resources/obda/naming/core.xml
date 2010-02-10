@@ -1,0 +1,120 @@
+<directory>
+  <urn name="urn:open-bio.org:alphabet:dna">
+    <description>
+The DNA alphabet. DNA is composed from four nucleotides. Read a biochemistry
+or genetics introductory textbook to find out more. Commonly, the nucleotides
+are reprsented by the four letters a, g, c and t. However, this is not a
+formal requirement for a resource to declare this alphabet as its type.
+    </description>
+  </urn>
+  <urn name="urn:open-bio.org:alphabet">
+    <description>
+A namespace within which to store alphabet identifiers. Alphabets should
+represent URNs that represent objects of the type identified by
+urn:open-bio.org:type:alphabet, and any useage outside of this is not supported.
+    </description>
+  </urn>
+  <urn name="urn:open-bio.org:alphabet:protein">
+    <description>
+The protein alphabet. Proteins are composed from amino-acids. To find out more,
+read a biochemistry or genetics text book. It is common for protein sequences
+to be represented by characters, but this is not a formal requirement for
+a resource to publish an alphabet equal to this identifier.
+    </description>
+  </urn>
+  <urn name="urn:open-bio.org:alphabet:rna">
+    <description>
+The RNA alphabet. RNA is composed from four nucleotides. Read a biochemistry
+or genetics introductory textbook to find out more. Commonly, the nucleotides
+are reprsented by the four letters a, g, c and u. However, this is not a
+formal requirement for a resource to declare this alphabet as its type.
+    </description>
+  </urn>
+  <urn name="urn:open-bio.org:format:embl">
+    <description>
+The EMBL file format associated with entries in the EMBL sequence database.
+    </description>
+  </urn>
+  <urn name="urn:open-bio.org:format:enzyme">
+    <description>
+The Enzyme database entry format. The enzyme database can be downloaded from
+the ebi at:
+
+  ftp://ftp.ebi.ac.uk/pub/databases/enzyme/
+
+For an example of a file in this format, see:
+
+  ftp://ftp.ebi.ac.uk/pub/databases/enzyme/enzyme.dat
+
+The format is described more fully in
+
+  ftp://ftp.ebi.ac.uk/pub/databases/enzyme/enzyser.txt
+    </description>
+  </urn>
+  <urn name="urn:open-bio.org:format:genbank">
+    <description>
+The GENBANK file format associated with the GENBANK sequence database.
+    </description>
+  </urn>
+  <urn name="urn:open-bio.org:format">
+    <description>
+A namespace for OBDA URNs that define formats. All URNs within this namespace
+must be of the type urn:open-bio.org:type:format. Any URN in this namespace that
+is not of that type is not a valid OBDA URN.
+    </description>
+  </urn>
+  <urn name="urn:open-bio.org:format:swissprot">
+    <description>
+The SWISSPROT file format as used in the SWISSPROT sequence database.
+    </description>
+  </urn>
+  <urn name="urn:open-bio.org">
+    <description>
+This is the root namespace for all OBDA URNs. All OBDA URNs should be prefixed
+by urn:open-bio.org as described in the file naming/open-bio_urns.txt in the
+module obda-specs in the cvs repository located at
+pub.open-bio.org:/home/repository/obf-common.
+    </description>
+  </urn>
+  <urn name="urn:open-bio.org:type:alphabet">
+    <description>
+A biological sequence alphabet. Biological sequences are often represented as
+strings of characters. However, in differnt circumstances, the same characters
+can represent different things. For example, in DNA, the 't' character
+represents tyrosine. In Protein, this same character represents tryptophan.
+
+Associating alphabets with these sequences disambiguates their interpretation.
+Alphabets do not define a mapping to or from strings, but should be used
+wherever the type of the content of a sequence needs to be stated.
+    </description>
+  </urn>
+  <urn name="urn:open-bio.org:type:format">
+    <description>
+A file format. Many file formats are used in bioinformatics. Entities of this
+type identify a format. The format can be used to choose how to treat a file.
+The format is not expected to be resolvable to a formal deffinition of the
+file structure using OBDA-supplied functionality. Different applications may
+chose to process a stream with the same format URN in different ways. This
+type of URN is purely there to identify the format of the stream, not the
+manner in which it should be processed.
+    </description>
+  </urn>
+  <urn name="urn:open-bio.org:type">
+    <description>
+The namespace for URNs that identify data types. It is expected that the types
+that are given IDs will be very general in nature, such as Sequence and
+File Format. All types are of type urn:open-bio.org:type:type. Any URN in the
+type namespace that is not of this type is not conforming to the OBDA
+specification for this namespace.
+    </description>
+  </urn>
+  <urn name="urn:open-bio.org:type:type">
+    <description>
+The OBDA URN that identifies the concept of 'type'. In a given language, this
+may map to the types of data structures, or objects. Alternativel, it may
+map to a particular set of keys being present in a map, or a term in an
+ontology. This is not important. The important thing is that we have unique
+identifiers for common types that all projects use and interact with.
+    </description>
+  </urn>
+</directory>
