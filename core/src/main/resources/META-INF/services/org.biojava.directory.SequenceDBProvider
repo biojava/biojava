@@ -1,5 +1,0 @@
-org.biojava.bio.seq.db.biosql.BioSQLSequenceDBProvider
-org.biojava.bio.seq.db.biofetch.BioFetchSequenceDBProvider
-org.biojava.bio.seq.db.flat.FlatSequenceDBProvider
-org.biojava.bio.program.das.DASSequenceDBProvider
-
