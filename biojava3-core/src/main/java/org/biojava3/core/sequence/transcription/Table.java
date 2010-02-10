@@ -120,47 +120,47 @@ public interface Table {
       return stringified;
     }
 
-    @Override
+    
     public boolean equalsIgnoreCase(Compound compound) {
       return toString().equalsIgnoreCase(compound.toString());
     }
 
-    @Override
+    
     public String getDescription() {
       throw new UnsupportedOperationException("Not supported");
     }
 
-    @Override
+    
     public String getLongName() {
       throw new UnsupportedOperationException("Not supported");
     }
 
-    @Override
+
     public Float getMolecularWeight() {
       throw new UnsupportedOperationException("Not supported");
     }
 
-    @Override
+
     public String getShortName() {
       return stringified;
     }
 
-    @Override
+
     public void setDescription(String description) {
       throw new UnsupportedOperationException("Not supported");
     }
 
-    @Override
+
     public void setLongName(String longName) {
       throw new UnsupportedOperationException("Not supported");
     }
 
-    @Override
+
     public void setMolecularWeight(Float molecularWeight) {
       throw new UnsupportedOperationException("Not supported");
     }
 
-    @Override
+
     public void setShortName(String shortName) {
       throw new UnsupportedOperationException("Not supported");
     }
