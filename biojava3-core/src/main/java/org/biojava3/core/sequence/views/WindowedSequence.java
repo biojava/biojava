@@ -47,17 +47,17 @@ public class WindowedSequence<C extends Compound> implements Iterable<List<C>>{
     return output;
   }
 
-  @Override
+
   public Iterator<List<C>> iterator() {
     final int start = 1;
     final int end = getLength();
     return new Iterator<List<C>>() {
       private int currentIndex = start;
-      @Override
+     
       public boolean hasNext() {
         return currentIndex <= end;
       }
-      @Override
+    
       public List<C> next() {
         return WindowedSequence.this.getCompounds(currentIndex++);
       }
