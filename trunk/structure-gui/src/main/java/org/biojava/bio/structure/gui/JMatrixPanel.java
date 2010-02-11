@@ -142,7 +142,7 @@ public class JMatrixPanel extends JPanel{
 
 	public void paintComponent(Graphics g){
 
-		super.paintComponent(g);
+		//super.paintComponent(g);
 
 		Graphics2D g2 = (Graphics2D)g;
 		if ( _bufImage == null){						

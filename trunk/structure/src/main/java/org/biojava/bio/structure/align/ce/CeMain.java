@@ -25,6 +25,7 @@
 package org.biojava.bio.structure.align.ce;
 
 
+import org.biojava.bio.dp.twohead.CellCalculator;
 import org.biojava.bio.structure.Atom;
 
 import org.biojava.bio.structure.Group;
@@ -52,18 +53,19 @@ public class CeMain extends AbstractStructureAlignment implements StructureAlign
 	public static final String version = "1.0";
 
 	private CeParameters params;
-
+	CECalculator calculator;
 	Atom[] ca2clone;
 
 	public CeMain(){
 		super();
 		params = new CeParameters();
+		calculator = new CECalculator();
 	}
 	
 
 	public static void main(String[] args){
 
-		CeMain ce = new CeMain();
+		CeMain ce = new CeMain(); //Used only for printing help
 		if (args.length  == 0 ) {			
 			System.out.println(ce.printHelp());
 			return;			
@@ -77,11 +79,14 @@ public class CeMain extends AbstractStructureAlignment implements StructureAlign
 			
 		}
 
-		CeUserArgumentProcessor processor = new CeUserArgumentProcessor();
+		CeUserArgumentProcessor processor = new CeUserArgumentProcessor(); //Responsible for creating a CeMain instance
 		processor.process(args);
 
 	}
 
+	/**
+	 * Align ca2 onto ca1.
+	 */
 	public AFPChain align(Atom[] ca1, Atom[] ca2, Object param) throws StructureException{
 
 		if ( ! (param instanceof CeParameters))
@@ -89,12 +94,10 @@ public class CeMain extends AbstractStructureAlignment implements StructureAlign
 
 		params = (CeParameters) param;
 
-		AFPChain afpChain = new AFPChain();
-		afpChain.setCa1Length(ca1.length);
-		afpChain.setCa2Length(ca2.length);
+		int ca2length = params.isCheckCircular()? ca2.length*2 : ca2.length;
 
-		// we don;t want to rotate input atoms, do we?
-		ca2clone = new Atom[ca2.length];
+		// we don't want to rotate input atoms, do we?
+		ca2clone = new Atom[ca2length];
 
 		int pos = 0;
 		for (Atom a : ca2){
@@ -104,10 +107,24 @@ public class CeMain extends AbstractStructureAlignment implements StructureAlign
 
 			pos++;
 		}
+		
+		if(params.isCheckCircular()) {
+			System.out.println("Checking Circular permutations"); //TODO remove
+			
+			for (Atom a : ca2){
+				Group g = (Group)a.getParent().clone();
 
-		CECalculator calculator = new CECalculator();
+				ca2clone[pos] = g.getAtom("CA");
 
-		calculator.extractFragments(params, afpChain,ca1, ca2clone);
+				pos++;
+			}
+		}
+		
+		
+		calculator = new CECalculator();
+		
+
+		AFPChain afpChain = calculator.extractFragments(params, ca1, ca2clone);
 		calculator.traceFragmentMatrix(params, afpChain,ca1, ca2clone);
 		calculator.nextStep(params, afpChain,ca1, ca2clone);
 
@@ -147,5 +164,9 @@ public class CeMain extends AbstractStructureAlignment implements StructureAlign
 	
 	public String getVersion() {
 		return version;
+	}
+	
+	public CECalculator getCECalculator() {
+		return calculator;
 	}
 }

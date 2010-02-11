@@ -37,12 +37,17 @@ public class JointFragments {
 
 
         double rms;
+       
         List<int[]> idxlist;
         public JointFragments(){
             idxlist = new ArrayList<int[]>();
             rms = 999;
         }
 
+        /**
+         * Stores the alignment between the residues of several fragments.
+         * Each int[] stores the residue numbers of several equivalent residues.
+         */
         public void setIdxlist(List<int[]> idxs) {
             Iterator<int[]> iter = idxs.iterator();
             while (iter.hasNext()){

@@ -30,8 +30,8 @@ public abstract class AbstractStructureAlignment implements StructureAlignment {
 		buf.append(newline);
 		buf.append(getAlgorithmName() + " accepts the following parameters:" + newline);
 		buf.append(newline);
-		buf.append("--- pairwise alignments ---");
-		buf.append(" two files to align can be specified by providing a path to a file, or a URL:" + newline);
+		buf.append("--- pairwise alignments ---"+newline);
+		buf.append("two files to align can be specified by providing a path to a file, or a URL:" + newline);
 		buf.append("-file1 the first file to align" + newline);
 		buf.append("-file2 the second file to align"+newline);
 		buf.append("alternatively you can specify PDB files by their PDB ids:" + newline);		

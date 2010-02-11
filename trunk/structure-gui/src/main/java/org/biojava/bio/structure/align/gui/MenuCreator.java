@@ -25,6 +25,8 @@ package org.biojava.bio.structure.align.gui;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.File;
 
 import javax.swing.Box;
@@ -40,6 +42,7 @@ import org.biojava.bio.structure.align.gui.jmol.StructureAlignmentJmol;
 import org.biojava.bio.structure.align.model.AFPChain;
 import org.biojava.bio.structure.align.util.UserConfiguration;
 import org.biojava.bio.structure.align.webstart.WebStartMain;
+import org.biojava.bio.structure.jama.Matrix;
 
 
 
@@ -119,19 +122,11 @@ public class MenuCreator {
 		align.add(pairI);
 		JMenuItem dbI = getDBSearchMenuItem();
 		align.add(dbI);
-
-		if ( afpChain != null){
-			JMenuItem distMax = new  JMenuItem("Show Distance Matrices Current Alignment");
-			distMax.addActionListener(new MyDistMaxListener(afpChain));
-			align.add(distMax);
-		}
-
 		menu.add(align);
 
 		JMenu view = new JMenu("View");
 		view.getAccessibleContext().setAccessibleDescription("View Menu");
 		view.setMnemonic(KeyEvent.VK_V);
-		menu.add(view);
 
 		if ( parent != null){
 			JMenuItem aligpI = MenuCreator.getIcon(parent,ALIGNMENT_PANEL);
@@ -140,6 +135,19 @@ public class MenuCreator {
 			JMenuItem textI = MenuCreator.getIcon(parent,TEXT_ONLY);
 			view.add(textI);
 		}
+		
+		if ( afpChain != null){
+			JMenuItem distMax = new  JMenuItem("Show Distance Matrices");
+			distMax.addActionListener(new MyDistMaxListener(afpChain));
+			view.add(distMax);
+			
+			JMenuItem dotplot = new JMenuItem("Show Dot Plot");
+
+			dotplot.addActionListener(new DotPlotListener(afpChain,null));
+			view.add(dotplot);
+		}
+
+		menu.add(view);
 
 
 		JMenu about = new JMenu("Help");
@@ -516,6 +524,42 @@ public class MenuCreator {
 			}
 		});
 		return pairI;
+	}
+	
+	/**
+	 * Creates a frame to display a DotPlotPanel.
+	 * 
+	 * Used by the 'View>Show Dot Plot' menu item
+	 * @author Spencer Bliven
+	 *
+	 */
+	private static class DotPlotListener implements ActionListener {
+		private final AFPChain afpChain;
+		private final Matrix background;
+		public DotPlotListener(AFPChain afpChain, Matrix background) {
+			this.afpChain = afpChain;
+			this.background = background;
+		}
+		public void actionPerformed(ActionEvent e) {
+			String title = String.format("%s vs. %s", afpChain.getName1(),afpChain.getName2());
+
+			// Create window
+			JFrame frame = new JFrame(title);
+			frame.addWindowListener(new WindowAdapter(){
+				public void windowClosing(WindowEvent e){
+					JFrame f = (JFrame) e.getSource();
+					f.setVisible(false);
+					f.dispose();
+				}
+			});
+
+			DotPlotPanel dotplot = new DotPlotPanel(afpChain, background);			
+
+			frame.getContentPane().add(dotplot);
+
+			frame.pack();
+			frame.setVisible(true);
+		}
 	}
 
 
