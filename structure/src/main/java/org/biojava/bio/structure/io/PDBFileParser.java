@@ -1585,8 +1585,9 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 			// some modified amino acids that we want to treat as amino acids
 			// can be found as HETATOM records
 			aminoCode1 = StructureTools.get1LetterCode(groupCode3);
-			if ( aminoCode1.equals(StructureTools.UNKNOWN_GROUP_LABEL))
-				aminoCode1 = null;
+			if ( aminoCode1 != null)
+			   if ( aminoCode1.equals(StructureTools.UNKNOWN_GROUP_LABEL))
+			      aminoCode1 = null;
 		}
 
 		if (current_group == null) {
