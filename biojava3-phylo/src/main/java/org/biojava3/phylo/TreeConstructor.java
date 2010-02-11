@@ -5,26 +5,25 @@
 package org.biojava3.phylo;
 
 import org.biojava.bio.TreeType;
-import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FileReader;
+import java.io.InputStream;
 import java.io.PrintStream;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
-import org.biojava3.core.sequence.AccessionID;
 import org.biojava3.core.sequence.MultipleSequenceAlignment;
 import org.biojava3.core.sequence.ProteinSequence;
 import org.biojava3.core.sequence.compound.AminoAcidCompound;
+import org.biojava3.core.sequence.compound.AminoAcidCompoundSet;
+import org.biojava3.core.sequence.io.FastaReader;
+import org.biojava3.core.sequence.io.GenericFastaHeaderParser;
+import org.biojava3.core.sequence.io.ProteinSequenceCreator;
 import org.biojava3.core.sequence.template.AbstractSequence;
 import org.biojava3.core.sequence.template.Compound;
 
 
-import org.biojavax.SimpleNamespace;
-import org.biojavax.bio.seq.RichSequence;
-import org.biojavax.bio.seq.RichSequenceIterator;
 import org.forester.io.writers.PhylogenyWriter;
 import org.forester.phylogeny.Phylogeny;
 import org.forester.phylogenyinference.BasicSymmetricalDistanceMatrix;
@@ -37,14 +36,14 @@ import org.forester.phylogenyinference.NeighborJoining;
  *
  * @author Scooter Willis
  */
-public class TreeConstructor<C extends AbstractSequence,D extends Compound> extends Thread {
+public class TreeConstructor<C extends AbstractSequence, D extends Compound> extends Thread {
 
     TreeType treeType;
     TreeConstructionAlgorithm treeConstructionAlgorithm;
     NJTreeProgressListener treeProgessListener;
-    MultipleSequenceAlignment<C,D> multipleSequenceAlignment = new MultipleSequenceAlignment<C,D>();
+    MultipleSequenceAlignment<C, D> multipleSequenceAlignment = new MultipleSequenceAlignment<C, D>();
 
-    public TreeConstructor(MultipleSequenceAlignment<C,D> multipleSequenceAlignment, TreeType _treeType, TreeConstructionAlgorithm _treeConstructionAlgorithm, NJTreeProgressListener _treeProgessListener) {
+    public TreeConstructor(MultipleSequenceAlignment<C, D> multipleSequenceAlignment, TreeType _treeType, TreeConstructionAlgorithm _treeConstructionAlgorithm, NJTreeProgressListener _treeProgessListener) {
         treeType = _treeType;
         treeConstructionAlgorithm = _treeConstructionAlgorithm;
         treeProgessListener = _treeProgessListener;
@@ -58,7 +57,7 @@ public class TreeConstructor<C extends AbstractSequence,D extends Compound> exte
         treeType = _treeType;
         treeConstructionAlgorithm = _treeConstructionAlgorithm;
         treeProgessListener = _treeProgessListener;
-        
+
 
     }
 
@@ -83,13 +82,12 @@ public class TreeConstructor<C extends AbstractSequence,D extends Compound> exte
         fo.close();
     }
 
-
-    private double[][] calculateDistanceMatrix(MultipleSequenceAlignment<C,D> multipleSequenceAlignment, TreeConstructionAlgorithm tca) {
+    private double[][] calculateDistanceMatrix(MultipleSequenceAlignment<C, D> multipleSequenceAlignment, TreeConstructionAlgorithm tca) {
         updateProgress("Determing Distances", 0);
         int numberOfSequences = multipleSequenceAlignment.getNumberOfSequences();
         String[] sequenceString = new String[numberOfSequences];
         for (int i = 0; i < multipleSequenceAlignment.getNumberOfSequences(); i++) {
-            sequenceString[i] = multipleSequenceAlignment.getSequence(i).getString();
+            sequenceString[i] = multipleSequenceAlignment.getSequence(i).getSequenceAsString();
 
         }
 
@@ -158,7 +156,7 @@ public class TreeConstructor<C extends AbstractSequence,D extends Compound> exte
     }
 
     public DistanceMatrix getDistanceMatrix() {
-        return copyDistanceMatrix; 
+        return copyDistanceMatrix;
     }
 
     public void cancel() {
@@ -170,7 +168,7 @@ public class TreeConstructor<C extends AbstractSequence,D extends Compound> exte
     Phylogeny p = null;
     DistanceMatrix matrix = null;
     DistanceMatrix copyDistanceMatrix = null;
-    
+
     public void process() throws Exception {
 
 
@@ -198,12 +196,10 @@ public class TreeConstructor<C extends AbstractSequence,D extends Compound> exte
 
     }
 
- //   public void getTreeAccuracy(){
-        //   CheckTreeAccuracy checkTreeAccuracy = new CheckTreeAccuracy();
-        //   checkTreeAccuracy.process(p,distanceMatrix );
- //   }
-    
-    
+    //   public void getTreeAccuracy(){
+    //   CheckTreeAccuracy checkTreeAccuracy = new CheckTreeAccuracy();
+    //   checkTreeAccuracy.process(p,distanceMatrix );
+    //   }
     @Override
     public void run() {
         try {
@@ -214,13 +210,11 @@ public class TreeConstructor<C extends AbstractSequence,D extends Compound> exte
         }
     }
 
-    public String getNewickString(boolean simpleNewick,boolean writeDistanceToParent) throws Exception {
+    public String getNewickString(boolean simpleNewick, boolean writeDistanceToParent) throws Exception {
         final PhylogenyWriter w = new PhylogenyWriter();
         StringBuffer newickString = w.toNewHampshire(p, simpleNewick, writeDistanceToParent);
         return newickString.toString();
     }
-
-
     Vector<NJTreeProgressListener> progessListenerVector = new Vector<NJTreeProgressListener>();
 
     public void addProgessListener(NJTreeProgressListener treeProgessListener) {
@@ -254,32 +248,30 @@ public class TreeConstructor<C extends AbstractSequence,D extends Compound> exte
     }
 
     public static void main(String[] args) {
-        if (args.length == 0) {
-            args = new String[3];
-            //args[0] = "C:\\MutualInformation\\project\\hiv\\hiv-genes-genome.fasta";
-            args[0] = "/Users/Scooter/mutualinformation/project/nuclear_receptor/PF00104_small.fasta";
 
-        }
         try {
-            //prepare a BufferedReader for file io
-            BufferedReader br = new BufferedReader(new FileReader(args[0]));
-            SimpleNamespace ns = new SimpleNamespace("biojava");
 
-            // You can use any of the convenience methods found in the BioJava 1.6 API
-            RichSequenceIterator rsi = RichSequence.IOTools.readFastaProtein(br, ns);
-            MultipleSequenceAlignment<ProteinSequence,AminoAcidCompound> multipleSequenceAlignment = new MultipleSequenceAlignment<ProteinSequence,AminoAcidCompound>();
-            while (rsi.hasNext()) {
-                RichSequence richSequence = rsi.nextRichSequence();
-                ProteinSequence proteinSequence = new ProteinSequence(richSequence.seqString());
-                proteinSequence.setAccession(new AccessionID(richSequence.getAccession() ));
+
+            InputStream inStream = TreeConstructor.class.getResourceAsStream("/PF00104_small.fasta");
+
+
+
+            FastaReader<ProteinSequence> fastaReader = new FastaReader<ProteinSequence>(inStream, new GenericFastaHeaderParser(), new ProteinSequenceCreator(AminoAcidCompoundSet.getAminoAcidCompoundSet()));
+            List<ProteinSequence> proteinSequences = fastaReader.process();
+            inStream.close();
+
+
+            MultipleSequenceAlignment<ProteinSequence, AminoAcidCompound> multipleSequenceAlignment = new MultipleSequenceAlignment<ProteinSequence, AminoAcidCompound>();
+            for (ProteinSequence proteinSequence : proteinSequences) {
+
                 multipleSequenceAlignment.addAlignedSequence(proteinSequence);
             }
 
             long readTime = System.currentTimeMillis();
-            TreeConstructor<ProteinSequence,AminoAcidCompound> treeConstructor = new TreeConstructor<ProteinSequence,AminoAcidCompound>(multipleSequenceAlignment, TreeType.NJ, TreeConstructionAlgorithm.PID, new ProgessListenerStub());
+            TreeConstructor<ProteinSequence, AminoAcidCompound> treeConstructor = new TreeConstructor<ProteinSequence, AminoAcidCompound>(multipleSequenceAlignment, TreeType.NJ, TreeConstructionAlgorithm.PID, new ProgessListenerStub());
             treeConstructor.process();
             long treeTime = System.currentTimeMillis();
-            String newick = treeConstructor.getNewickString(true,true);
+            String newick = treeConstructor.getNewickString(true, true);
 
 
 
@@ -287,7 +279,7 @@ public class TreeConstructor<C extends AbstractSequence,D extends Compound> exte
             System.out.println("Tree time " + (treeTime - readTime));
             System.out.println(newick);
 
-            treeConstructor.outputPhylipDistances("/Users/Scooter/mutualinformation/project/nuclear_receptor/PF00104_small.fasta.phylip");
+            // treeConstructor.outputPhylipDistances("/Users/Scooter/mutualinformation/project/nuclear_receptor/PF00104_small.fasta.phylip");
 
         } catch (FileNotFoundException ex) {
             //can't find file specified by args[0]
