@@ -187,9 +187,9 @@ public class StructureAlignmentJmol implements MouseMotionListener, MouseListene
       hBox.add(status);
       text = new JTextField();
       text.setBackground(Color.white);
-      text.setMaximumSize(new Dimension(220,30));
-      text.setSize(new Dimension(220,30));
-      text.setMinimumSize(new Dimension(220,30));
+      text.setMaximumSize(new Dimension(Short.MAX_VALUE,30));
+      //text.setSize(new Dimension(240,30));
+      //text.setMinimumSize(new Dimension(240,30));
       text.setText("Display of Atom info");
       text.setEditable(false);
       hBox.add(text);
