@@ -71,6 +71,16 @@ public class AminoAcidCompoundSet implements CompoundSet<AminoAcidCompound> {
         aminoAcidCompoundCache.put(".", new AminoAcidCompound(this, ".", "...", "Unspecified", null));
         aminoAcidCompoundCache.put("_", new AminoAcidCompound(this, "_", "___", "Unspecified", null));
         aminoAcidCompoundCache.put("*", new AminoAcidCompound(this, "*", "***", "Stop", null));
+
+        //Selenocystine - this is encoded by UGA with the presence
+        //of a SECIS element (SElenoCysteine Insertion Sequence) in the mRNA
+        //and is a post-translation modification
+        aminoAcidCompoundCache.put("U", new AminoAcidCompound(this, "U", "Sec", "Selenocystine", 168.053f));
+
+        //Pyrrolysine is encoded by UAG in mRNA (normally Amber stop codon) which is translated to
+        //this amino acid under the presence of pylT which creates an anti-codon CUA & pylS
+        //which then does the actual conversion to Pyl.
+        aminoAcidCompoundCache.put("O", new AminoAcidCompound(this, "O", "Pyl", "Pyrrolysine", 255.31f));
     }
 
     public String getStringForCompound(AminoAcidCompound compound) {
