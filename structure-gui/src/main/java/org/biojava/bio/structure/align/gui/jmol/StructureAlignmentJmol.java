@@ -89,6 +89,10 @@ public class StructureAlignmentJmol implements MouseMotionListener, MouseListene
    Atom[] ca2;
    AFPChain afpChain;
 
+   private static final int DEFAULT_HEIGHT = 500;
+
+   private static final int DEFAULT_WIDTH = 500;
+
    public static final String DEFAULT_SCRIPT = ResourceManager.getResourceManager("ce").getString("default.alignment.jmol.script");
 
    private static final Object LIGAND_DISPLAY_SCRIPT = ResourceManager.getResourceManager("ce").getString("default.ligand.jmol.script");
@@ -160,7 +164,7 @@ public class StructureAlignmentJmol implements MouseMotionListener, MouseListene
       //			System.err.println("Could not find Jmol in classpath, please install first. http://www.jmol.org");
       //			return;
       //		}
-      jmolPanel.setPreferredSize(new Dimension(500,500));
+      jmolPanel.setPreferredSize(new Dimension(DEFAULT_WIDTH,DEFAULT_HEIGHT));
       vBox.add(jmolPanel);
 
 
@@ -183,13 +187,15 @@ public class StructureAlignmentJmol implements MouseMotionListener, MouseListene
       status = new JTextField();		
       status.setBackground(Color.white);
       status.setEditable(false);
-      status.setMaximumSize(new Dimension(Short.MAX_VALUE,30));   
-      hBox.add(status);
+      status.setMaximumSize(new Dimension(Short.MAX_VALUE,30));
+      status.setPreferredSize(new Dimension(DEFAULT_WIDTH / 2,30));
+      status.setMinimumSize(new Dimension(DEFAULT_WIDTH / 2,30));
+      hBox.add(status);      
       text = new JTextField();
       text.setBackground(Color.white);
       text.setMaximumSize(new Dimension(Short.MAX_VALUE,30));
-      //text.setSize(new Dimension(240,30));
-      //text.setMinimumSize(new Dimension(240,30));
+      text.setPreferredSize(new Dimension(DEFAULT_WIDTH / 2,30));
+      text.setMinimumSize(new Dimension(DEFAULT_WIDTH / 2,30));
       text.setText("Display of Atom info");
       text.setEditable(false);
       hBox.add(text);
