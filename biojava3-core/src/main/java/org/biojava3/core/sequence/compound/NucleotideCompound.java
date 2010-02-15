@@ -25,6 +25,12 @@
  */
 package org.biojava3.core.sequence.compound;
 
+import static java.util.Arrays.asList;
+import static java.util.Collections.unmodifiableSet;
+
+import java.util.HashSet;
+import java.util.Set;
+
 import org.biojava3.core.sequence.template.AbstractCompound;
 import org.biojava3.core.sequence.template.Compound;
 import org.biojava3.core.sequence.template.CompoundSet;
@@ -39,11 +45,20 @@ public class NucleotideCompound extends AbstractCompound implements NucleotideCo
 
     private final CompoundSet<NucleotideCompound> compoundSet;
     private final String complementStr;
+    private final Set<NucleotideCompound> constituents;
 
     public NucleotideCompound(String base, CompoundSet<NucleotideCompound> compoundSet, String complementStr) {
+      super(base);
+      this.compoundSet = compoundSet;
+      this.complementStr = complementStr;
+      this.constituents = unmodifiableSet(new HashSet<NucleotideCompound>(asList(this)));
+    }
+
+    public NucleotideCompound(String base, CompoundSet<NucleotideCompound> compoundSet, String complementStr, NucleotideCompound[] constituents) {
         super(base);
         this.compoundSet = compoundSet;
         this.complementStr = complementStr;
+        this.constituents = unmodifiableSet(new HashSet<NucleotideCompound>(asList(constituents)));
     }
 
     @Override
@@ -79,5 +94,13 @@ public class NucleotideCompound extends AbstractCompound implements NucleotideCo
         }
         NucleotideCompound them = (NucleotideCompound) compound;
         return toString().equalsIgnoreCase(them.toString());
+    }
+
+    public Set<NucleotideCompound> getConsituents() {
+      return constituents;
+    }
+
+    public boolean isAmbiguous() {
+      return !constituents.isEmpty();
     }
 }

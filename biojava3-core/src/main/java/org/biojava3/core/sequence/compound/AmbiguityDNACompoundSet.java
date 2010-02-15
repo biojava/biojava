@@ -1,5 +1,6 @@
 package org.biojava3.core.sequence.compound;
 
+
 /**
  *
  * @author Andy Yates
@@ -15,11 +16,7 @@ public class AmbiguityDNACompoundSet extends DNACompoundSet {
   }
 
   public AmbiguityDNACompoundSet() {
-
-    addNucleotideCompound("A", "T");
-    addNucleotideCompound("T", "A");
-    addNucleotideCompound("G", "C");
-    addNucleotideCompound("C", "G");
+    super();
 
     addNucleotideCompound("M", "K",
         "A", "C");
@@ -41,8 +38,8 @@ public class AmbiguityDNACompoundSet extends DNACompoundSet {
         "A", "G", "T");
     addNucleotideCompound("B", "V",
         "C", "G", "T");
-    addNucleotideCompound("N", "N",
-        "A", "C", "G", "T", "M", "R", "W", "S", "Y", "K", "V", "H", "D", "B");
-  }
+    addNucleotideCompound("N", "N", "A", "C", "G", "T");
 
+    calculateIndirectAmbiguities();
+  }
 }
