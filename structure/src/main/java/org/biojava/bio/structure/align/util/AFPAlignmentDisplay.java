@@ -142,6 +142,11 @@ public class AFPAlignmentDisplay
 	 */
 	public static void getAlign(AFPChain afpChain,Atom[] ca1,Atom[] ca2)
 	{
+	   boolean showSeq = false;
+	   getAlign(afpChain, ca1, ca2, showSeq);
+	}
+	
+	public static void getAlign(AFPChain afpChain,Atom[] ca1,Atom[] ca2, boolean showSeq) {
 
 		char[] alnsymb = afpChain.getAlnsymb();
 		char[] alnseq1 = afpChain.getAlnseq1();
@@ -167,7 +172,7 @@ public class AFPAlignmentDisplay
 		}
 
 		
-		boolean showSeq = false;
+		
 //		if ( afpChain.getAlgorithmName().equals(FatCatRigid.algorithmName)){
 //			showSeq = true;
 //		}
@@ -218,7 +223,7 @@ public class AFPAlignmentDisplay
 					if ( score > 1)
 						alnsymb[len ++] = ':';
 					else 
-						alnsymb[len ++] = ' ';
+						alnsymb[len ++] = '.';
 					}
 				} else {
 					String tmpS = String.format( "%d", i + 1);
