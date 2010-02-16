@@ -191,14 +191,22 @@ public class AfpChainWriter
    
    public static String toWebSiteDisplay(AFPChain afpChain, Atom[] ca1, Atom[] ca2){
       if ( afpChain.getAlgorithmName().equalsIgnoreCase("jFatCat-flexible")) {
-         return toFatCat(afpChain,ca1,ca2);
+         String msg =  toFatCat(afpChain,ca1,ca2) ;
+         
+         return msg;
       }
       
       boolean showSeq = true;
       AFPAlignmentDisplay.getAlign(afpChain, ca1, ca2, showSeq);
       
-      return toFatCat(afpChain,ca1,ca2);
+      String msg= toFatCat(afpChain,ca1,ca2);
+
+      msg = msg + newline + 
+      " | ... structurally equivalend and identical residues " + newline +
+      " : ... structurally equivalend and similar residues " + newline + 
+      " . ... structurally equivalent, but not similar residues. " + newline;
       
+      return msg;
       
       
    }
