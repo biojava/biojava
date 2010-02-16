@@ -115,11 +115,11 @@ public abstract class AbstractUserArgumentProcessor implements UserArgumentProce
          }           
       }
 
+      if ( params.getPdbFilePath() != null){
+         System.setProperty(PDB_DIR,params.getPdbFilePath());
+      }
+      
       if ( params.showMenu){
-
-         if ( params.getPdbFilePath() != null){
-            System.setProperty(PDB_DIR,params.getPdbFilePath());
-         }
 
          try {
             GuiWrapper.showAlignmentGUI();
