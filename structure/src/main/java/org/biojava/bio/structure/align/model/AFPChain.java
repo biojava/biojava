@@ -28,7 +28,6 @@ import java.util.Map;
 import org.biojava.bio.structure.Atom;
 import org.biojava.bio.structure.align.ce.CeMain;
 import org.biojava.bio.structure.align.ce.CeSideChainMain;
-import org.biojava.bio.structure.align.seq.SmithWaterman3Daligner;
 import org.biojava.bio.structure.align.util.AFPAlignmentDisplay;
 import org.biojava.bio.structure.jama.Matrix;
 
@@ -175,216 +174,28 @@ public class AFPChain implements Serializable
    }
 
    public String toCE(Atom[] ca1, Atom[]ca2) {
-
-      if (similarity == -1 || identity == -1)
-         calcSimilarity();
-
-
-      StringBuffer txt = new StringBuffer();
-
-      txt.append("Chain 1: ");
-      txt.append(name1);
-      txt.append(" (Size=");
-      txt.append(ca1.length);
-      txt.append(")");
-      txt.append(newline);
-      txt.append("Chain 2: ");
-      txt.append(name2);
-      txt.append(" (Size=");
-      txt.append(ca2.length);
-      txt.append(")");
-      txt.append(newline);
-      txt.append(newline);
-      txt.append(String.format("Alignment length = %d Rmsd = %.2fA Z-Score = %.1f",optLength,totalRmsdOpt,probability));
-      txt.append(String.format(" Gaps = %d(%.1f%%) CPU = %d ms. Sequence identities = %.1f%%",gapLen,( gapLen*100.0/optLength),calculationTime,identity*100));
-
-      int     linelen = 70;
-      String a;
-      String b;
-
-
-
-      int     t = 0;
-      int     ap = alnbeg1;
-      int     bp = alnbeg2;
-      int     k, len;
-
-      while((alnLength - t) > 0)      {
-         if(alnLength - t > linelen)     len = linelen;
-         else    len = alnLength - t;
-
-
-         //System.err.println("t,len:"+t+":"+len);
-         a = new String(alnseq1).substring(t,t+len);
-         b = new String(alnseq2).substring(t,t+len);
-
-         //System.err.println("B:" + b);
-
-         /*
-			txt.append(newline);
-			txt.append(String.format("%14s", " "));
-
-			for(k = 10; k <= len; k += 10)
-				txt.append("    .    :");
-			if(k <= len + 5) txt.append("    .");
-          */
-
-         //String pdb1 = ca1[ap].getParent().getPDBCode();
-         //String pdb2 = ca2[bp].getParent().getPDBCode();
-         txt.append(newline);
-         txt.append(String.format("Chain 1:%5s %s"+newline+"Chain 2:%5s %s",
-               (ap+1), a, (bp+1), b));
-         txt.append(newline);
-         for(k = 0; k < len; k ++)       {
-            if(a.charAt(k) != '-') ap ++;
-            if(b.charAt(k) != '-') bp ++;
-         }
-         t += len;
-
-      }
-      txt.append(newline);
-
-      txt.append(toRotMat());
-
-      return txt.toString();
-
+      
+      return AfpChainWriter.toCE(this,ca1,ca2);
+      
    }
 
    public String toRotMat(){
-      StringBuffer txt = new StringBuffer();
-
-      if ( blockRotationMatrix == null || blockRotationMatrix.length < 1)
-         return "";
-
-      int blockNum = getBlockNum();
-      for ( int blockNr = 0 ; blockNr < blockNum  ; blockNr++){
-         Matrix m = blockRotationMatrix[blockNr];
-         Atom shift   = blockShiftVector[blockNr];
-         if ( blockNum > 1) {
-            txt.append("Operations for block " );
-            txt.append(blockNr);
-            txt.append(newline);
-         }
-         
-         String origString = "orig";
-         if ( blockNr > 0)
-            origString = (blockNr)+""; 
-            
-         
-         txt.append(String.format("     X"+(blockNr+1)+" = (%9.6f)*X"+ origString +" + (%9.6f)*Y"+ origString +" + (%9.6f)*Z"+ origString +" + (%12.6f)",m.get(0,0),m.get(1,0), m.get(2,0), shift.getX()));
-         txt.append( newline); 
-         txt.append(String.format("     Y"+(blockNr+1)+" = (%9.6f)*X"+ origString +" + (%9.6f)*Y"+ origString +" + (%9.6f)*Z"+ origString +" + (%12.6f)",m.get(0,1),m.get(1,1), m.get(2,1), shift.getY()));
-         txt.append( newline);
-         txt.append(String.format("     Z"+(blockNr+1)+" = (%9.6f)*X"+ origString +" + (%9.6f)*Y"+ origString +" + (%9.6f)*Z"+ origString +" + (%12.6f)",m.get(0,2),m.get(1,2), m.get(2,2), shift.getZ()));
-         txt.append(newline);
-      }
-      return txt.toString();
+      
+      return AfpChainWriter.toRotMat(this);
    }
 
    public String toFatcat(Atom[] ca1, Atom[]ca2){
-      StringBuffer txt = new StringBuffer();
-
-      txt.append(String.format("Align %s.pdb %d with %s.pdb %d", name1, ca1Length, name2, ca2Length));
-      txt.append(newline);
-      if ( isShortAlign()){
-         txt.append("Short match");
-         return txt.toString();
-      }
-      //txt.append(String.format("raw-score: %.2f norm.-score: %.2f ", alignScore, normAlignScore));
-      txt.append(String.format( "Twists %d ini-len %d ini-rmsd %.2f opt-equ %d opt-rmsd %.2f chain-rmsd %.2f Score %.2f align-len %d gaps %d (%.2f%%)",
-            blockNum - 1, totalLenIni, totalRmsdIni, optLength, totalRmsdOpt, chainRmsd, alignScore, 
-            alnLength, gapLen, (100.0 * (double)gapLen/(double)alnLength)) );
-      txt.append(newline);
-
-
-      int afpNum = afpSet.size();
-
-      if (similarity == -1 || identity == -1){
-         calcSimilarity();
-      }
       
-      //txt.append(String.format("P-value %.2e Afp-num %d Identity %.2f%% Similarity %.2f%% norm.-score: %.2f"+newline, probability, afpNum, identity * 100, similarity * 100, normAlignScore));
-
-      
-      
-      if ( algorithmName.equalsIgnoreCase(CeMain.algorithmName) || algorithmName.equalsIgnoreCase(CeSideChainMain.algorithmName) ){
-         txt.append(String.format("Z-score %.2f ", probability));
-      } else if ( algorithmName.equalsIgnoreCase(SmithWaterman3Daligner.algorithmName)) {
-
-      } else {
-         txt.append(String.format("P-value %.2e ",probability));
-      }
-    
-      txt.append(String.format("Afp-num %d Identity %.2f%% Similarity %.2f%%", afpNum, identity * 100, similarity * 100));
-      txt.append(newline);
-
-      int i;
-      double gap;
-
-      int fragLen = 8 ; // FatCatParameters.DEFAULT_FRAGLEN;
-      for(i = 0; i < blockNum; i ++)  {
-         gap = (double)blockGap[i] /( (double)blockGap[i] + fragLen * blockSize[i]);
-         txt.append(String.format( "Block %2d afp %2d score %5.2f rmsd %5.2f gap %d (%.2f%%)",
-               i, blockSize[i], blockScore[i], blockRmsd[i], blockGap[i], gap));
-         txt.append(newline);
-      }
-
-      int     linelen = 70;
-      String a;
-      String b;
-      String c;
-
-
-      int     t = 0;
-      int     ap = alnbeg1;
-      int     bp = alnbeg2;
-      int     k, len;
-      while((alnLength - t) > 0)      {
-         if(alnLength - t > linelen)     len = linelen;
-         else    len = alnLength - t;
-
-
-         //System.err.println("t,len:"+t+":"+len);
-         a = new String(alnseq1).substring(t,t+len);
-         b = new String(alnseq2).substring(t,t+len);
-         c = new String(alnsymb).substring(t,t+len);
-         //System.err.println("B:" + b);
-
-         txt.append(newline);
-         txt.append(String.format("%14s", " "));
-
-
-         for(k = 10; k <= len; k += 10)
-            txt.append("    .    :");
-         if(k <= len + 5) txt.append("    .");
-
-         String pdb1 = ca1[ap].getParent().getPDBCode();
-         String pdb2 = ca2[bp].getParent().getPDBCode();
-         txt.append(newline);
-         txt.append(String.format("Chain 1:%5s %s"+newline +"%14s%s"+newline+"Chain 2:%5s %s",
-               pdb1, a, " ", c, pdb2, b));
-         txt.append(newline);
-         for(k = 0; k < len; k ++)       {
-            if(a.charAt(k) != '-') ap ++;
-            if(b.charAt(k) != '-') bp ++;
-         }
-         t += len;
-
-      }
-      txt.append(newline);
-      if ( algorithmName.equalsIgnoreCase(CeMain.algorithmName) || 
-            algorithmName.equalsIgnoreCase(SmithWaterman3Daligner.algorithmName)){
-         txt.append("Note: positions are from PDB; | means alignment of identical amino acids, : of similar amino acids ");
-
-      } else {
-         txt.append("Note: positions are from PDB; the numbers between alignments are block index");
-      }
-      txt.append(newline);
-
-      return txt.toString();
+      return AfpChainWriter.toFatCat(this,ca1,ca2);
+            
    }
+   
+   public String toDBSearchResult(){
+      
+      return AfpChainWriter.toDBSearchResult(this);
+    }
 
-   private void calcSimilarity() {
+   protected void calcSimilarity() {
       Map<String,Double> idMap = AFPAlignmentDisplay.calcIdSimilarity(alnseq1,alnseq2,alnLength);
 
       //probability = idMap.get("probability");
@@ -395,35 +206,7 @@ public class AFPChain implements Serializable
    }
 
 
-   public String toDBSearchResult(){
-      StringBuffer str = new StringBuffer();
-
-      str.append(getName1());
-      str.append("\t");
-      str.append(getName2());
-      str.append("\t");
-      str.append(String.format("%.2f",this.getAlignScore()));
-      str.append("\t");		
-      if ( algorithmName.equalsIgnoreCase(CeMain.algorithmName)){
-         str.append(String.format("%.2f",this.getProbability()));
-      } else {
-         str.append(String.format("%.2e",this.getProbability()));
-      }
-      str.append("\t");
-      str.append(String.format("%.2f",this.getTotalRmsdOpt()));
-      str.append("\t");
-      str.append(this.getCa1Length());
-      str.append("\t");
-      str.append(this.getCa2Length());		
-      str.append("\t");
-      str.append(this.getSimilarity1());
-      str.append("\t");
-      str.append(this.getSimilarity2());
-      str.append("\t");
-      str.append(newline);
-
-      return str.toString();
-   }
+ 
 
    /** get the number of structurally equivalent residues
     * 
