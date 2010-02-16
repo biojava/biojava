@@ -49,7 +49,7 @@ public class JFatCatClient {
 			String u = String.format(serverURL,name1,name2);
 
 			URL url = new URL(u);
-
+			System.out.println("requesting alignment from server..."  + url);
 			// have a short timeout for this...
 			// 5 sec
 			InputStream stream = HTTPConnectionTools.getInputStream(url,5000);
