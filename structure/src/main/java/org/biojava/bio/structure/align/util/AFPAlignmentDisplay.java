@@ -291,12 +291,12 @@ public class AFPAlignmentDisplay
 		double identity = 0.0;
 		double similarity = 0.0;
 
-		int     M0 = alnLength;        
+		        
 
 		int     i;
 
 
-		for(i = 0; i < M0; i ++)        {
+		for(i = 0; i < alnLength; i ++)        {
 			if(seq1[i] == seq2[i])  {
 
 				identity += 1.0;
@@ -308,8 +308,8 @@ public class AFPAlignmentDisplay
 		}
 
 
-		similarity = (identity + similarity) / (double)M0;
-		identity = identity/(double)M0;
+		similarity = (identity + similarity) / (double)alnLength;
+		identity = identity/(double)alnLength;
 
 		Map<String, Double> m = new HashMap<String, Double>();
 		m.put("similarity", similarity);
