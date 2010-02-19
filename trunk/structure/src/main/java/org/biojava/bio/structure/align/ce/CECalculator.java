@@ -228,7 +228,7 @@ public class CECalculator {
 			return afpChain;
 	}
 
-	private double[][] initSumOfDistances(int nse1, int nse2, int winSize, int  winSizeComb1, Atom[] ca1, Atom[] ca2) {
+	public double[][] initSumOfDistances(int nse1, int nse2, int winSize, int  winSizeComb1, Atom[] ca1, Atom[] ca2) {
 
 		double d;
 
@@ -1567,6 +1567,7 @@ nBestTrace=nTrace;
 		Atom[] cod1 = getAtoms(pro1,  strLen,false);
 		Atom[] cod2 = getAtoms(pro2,  strLen,true);
 
+		assert(cod1.length == cod2.length);
 		SVDSuperimposer svd = new SVDSuperimposer(cod1, cod2);
 
 		Matrix matrix = svd.getRotation();
@@ -1599,6 +1600,14 @@ nBestTrace=nTrace;
 
 	}
 
+	/**
+	 * Copies the first length atoms from the input array
+	 * @param ca The array to copy
+	 * @param length the number of atoms to copy
+	 * @param clone If true, preform a deep copy, cloning the underlying Groups
+	 * @return An array with the first length items of ca, possibly cloning the Atoms.
+	 * @throws StructureException
+	 */
 	private Atom[] getAtoms(Atom[] ca,  int length, boolean clone) throws StructureException{
 
 		List<Atom> atoms = new ArrayList<Atom>();
@@ -1946,9 +1955,32 @@ nBestTrace=nTrace;
 		align_se2 = alignSe2;
 	}
 	
+	/**
+	 * Caution: this matrix is overwriten with very different data at several
+	 * points in the alignment algorithm. After 
+	 * {@link #initSumOfDistances(int, int, int, int, Atom[], Atom[]) initSumOfDistances}
+	 * is run, this will hold the distance matrix between AFPs.
+	 * @return mat
+	 */
 	public double[][] getMatMatrix() {
-		System.out.println(mat);
 		return mat;
 	}
 
+	/**
+	 * Gets the rotation matrix from the last call to 
+	 * {@link #calc_rmsd(Atom[], Atom[], int, boolean, boolean) calc_rmsd}.
+	 * @return The rotatiokn matrix
+	 */
+	public Matrix getRotationMatrix() {
+		return r;
+	}
+	
+	/**
+	 * Gets the shift from the last call to 
+	 * {@link #calc_rmsd(Atom[], Atom[], int, boolean, boolean) calc_rmsd}.
+	 * @return The shift
+	 */
+	public Atom getShift() {
+		return t;
+	}
 }

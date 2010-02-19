@@ -69,9 +69,9 @@ public class CeParameters implements ConfigStrucAligParams  {
 		rmsdThr = 3.0;
 		rmsdThrJoin = 4.0;
 		alignmentAtoms = new String[]{StructureTools.caAtomName};
-		maxGapSize = 30;
+		maxGapSize = 0;
 		showAFPRanges = false;
-		checkCircular = false;
+		checkCircular = true;
 	}
 
 	/** The window size to look at
@@ -137,9 +137,11 @@ public class CeParameters implements ConfigStrucAligParams  {
 		String helpMaxGap = "This parameter configures the maximum gap size G, that is applied during the AFP extension. The larger the value, the longer the calculation time can become, Default value is 30. Set to 0 for no limit. " ;
 		String helpRmsdThr = "This configures the RMSD threshold applied during the trace of the fragment matrix.";
 		String helpWinSize = "This configures the fragment size m of Aligned Fragment Pairs (AFPs).";
+		String helpCircular = "Should the algoritm check for circular permutations? Increases calculation time.";
 		params.add(helpMaxGap);
 		params.add(helpRmsdThr);
 		params.add(helpWinSize);
+		params.add(helpCircular);
 		return params;
 	}
 
@@ -148,6 +150,7 @@ public class CeParameters implements ConfigStrucAligParams  {
 		params.add("MaxGapSize");
 		params.add("RmsdThr");
 		params.add("WinSize");
+		params.add("CheckCircular");
 		return params;
 	}
 
@@ -156,6 +159,7 @@ public class CeParameters implements ConfigStrucAligParams  {
 		params.add("max. gap size G (during AFP extension).");
 		params.add("RMSD threshold during trace of the fragment matrix.");
 		params.add("fragment size m");
+		params.add("check for circular permutations");
 		return params;
 	}
 
@@ -164,6 +168,7 @@ public class CeParameters implements ConfigStrucAligParams  {
 		params.add(Integer.class);
 		params.add(Double.class);
 		params.add(Integer.class);
+		params.add(Boolean.class);
 		return params;
 	}
 
@@ -185,13 +190,16 @@ public class CeParameters implements ConfigStrucAligParams  {
 	/**
 	 * @return whether the protein should be checked for circular permutations.
 	 */
-	public boolean isCheckCircular() {
+	public Boolean isCheckCircular() {
+		return checkCircular;
+	}
+	public Boolean getCheckCircular() {
 		return checkCircular;
 	}
 	/**
 	 * @param checkCircular whether the protein should be checked for circular permutations
 	 */
-	public void setCheckCircular(boolean checkCircular) {
+	public void setCheckCircular(Boolean checkCircular) {
 		this.checkCircular = checkCircular;
 	}
 

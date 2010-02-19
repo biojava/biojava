@@ -21,16 +21,22 @@ package org.biojava.bio.structure.align.gui;
 
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JFrame;
 
 import org.biojava.bio.structure.Atom;
+import org.biojava.bio.structure.Group;
+import org.biojava.bio.structure.StructureException;
 import org.biojava.bio.structure.align.StructureAlignment;
 import org.biojava.bio.structure.align.StructureAlignmentFactory;
 import org.biojava.bio.structure.align.ce.CECalculator;
 import org.biojava.bio.structure.align.ce.CeMain;
+import org.biojava.bio.structure.align.ce.CeParameters;
+import org.biojava.bio.structure.align.ce.ConfigStrucAligParams;
+import org.biojava.bio.structure.align.gui.jmol.StructureAlignmentJmol;
 import org.biojava.bio.structure.align.helper.JointFragments;
 import org.biojava.bio.structure.align.model.AFP;
 import org.biojava.bio.structure.align.model.AFPChain;
@@ -66,11 +72,33 @@ public class DotPlotPanel extends ScaleableMatrixPanel {
 	DotPlotPanel(AFPChain alignment, Matrix background ){
 		
 		final double defaultBackground = 100.;
+				
+		// Convert the AFPChain alignment into the MatrixPanel format
+		AlternativeAlignment[] aligns = new AlternativeAlignment[alignment.getBlockNum()];
+		int alignNumber = 0;
 		
+		//One alternative alignment for each block
+		int[][][] optAln = alignment.getOptAln(); // [block #][{0,1} chain index][pos]
+
+		for(;alignNumber < optAln.length;alignNumber++) {
+			List<int[]> alignPairs = new ArrayList<int[]>();
+			for(int pos = 0; pos<optAln[alignNumber][0].length; pos++ ) {
+				alignPairs.add( new int[] {
+						optAln[alignNumber][0][pos],
+						optAln[alignNumber][1][pos] }
+				);
+			}
+			JointFragments frag = new JointFragments();
+			frag.setIdxlist(alignPairs);
+			aligns[alignNumber] = new AlternativeAlignment();
+			aligns[alignNumber].apairs_from_idxlst(frag);
+
+		}
+		
+		/* TODO After the AFPSet is fixed in CeMain#filterDuplicateAFPs, maybe include this again
+		//add alignment for the AFPs
 		List<AFP> afps = alignment.getAfpSet();
-		
-		// Generate the lists of equivalent amino acids based on alignment
-		List<int[]> alignPairs = new ArrayList<int[]>(afps.size()*afps.get(0).getFragLen() );
+		List<int[]> alignPairs = new ArrayList<int[]>();
 		for(AFP afp : afps) {
 			int start1 = afp.getP1();
 			int start2 = afp.getP2();
@@ -80,11 +108,12 @@ public class DotPlotPanel extends ScaleableMatrixPanel {
 		}
 		JointFragments frag = new JointFragments();
 		frag.setIdxlist(alignPairs);
-		AlternativeAlignment[] aligns = new AlternativeAlignment[1];
-		aligns[0] = new AlternativeAlignment();
-		aligns[0].apairs_from_idxlst(frag);
+		aligns[alignNumber] = new AlternativeAlignment();
+		aligns[alignNumber].apairs_from_idxlst(frag);
+		*/
 
 		
+		/* AFP boxes are unnecessary.
 		// Calculate FragmentPairs based on alignment.
 		// These are displayed as a small box around the start of each alignment.
 		FragmentPair[] pairs = new FragmentPair[afps.size()];
@@ -94,6 +123,15 @@ public class DotPlotPanel extends ScaleableMatrixPanel {
 			pairs[i].setRms(afp.getRmsd());
 		}
 		
+		this.setFragmentPairs(pairs);
+		*/
+
+		
+		// Now the alignments have been build; add it
+		this.setAlternativeAligs(aligns);
+		this.setSelectedAlignmentPos(0); //color white, not red
+
+		
 		//Fill with default black background if none given
 		if(background == null) {
 			background = new Matrix(alignment.getCa1Length(),alignment.getCa2Length());
@@ -102,62 +140,137 @@ public class DotPlotPanel extends ScaleableMatrixPanel {
 					background.set(i, j, defaultBackground);
 				}
 		}
+		
 		// Set parameters
 		this.setMatrix(background);
-		this.setAlternativeAligs(aligns);
-		this.setSelectedAlignmentPos(0);
-		this.setFragmentPairs(pairs);
 	}
 
-	public static void main(String[] args) {
-		try {
-			StructureAlignment ce = StructureAlignmentFactory.getAlgorithm(CeMain.algorithmName);
-
-			CeMain ceA = (CeMain) ce;
-			
+	/**
+	 * Helper function to create and display a JFrame with a single DotPlotPanel
+	 * 
+	 * @param afpChain
+	 * @param background
+	 */
+	private static JFrame showDotPlotJFrame(AFPChain afpChain, Matrix mat ) {
 		
+		DotPlotPanel dotplot = new DotPlotPanel(afpChain, mat);			
+		
+		//Create JFrame
+		
+		String title = String.format("Dot plot of %s vs. %s", afpChain.getName1(),afpChain.getName2());
+
+		// Create window
+		JFrame frame = new JFrame(title);
+		frame.addWindowListener(new WindowAdapter(){
+			public void windowClosing(WindowEvent e){
+				JFrame f = (JFrame) e.getSource();
+				f.setVisible(false);
+				f.dispose();
+			}
+		});
+
+		
+		frame.getContentPane().add(dotplot);
+
+		frame.pack();
+		frame.setVisible(true);
+		
+		return frame;
+	}
+	
+	
+	public static void main(String[] args) {
+
+//		String name2= "1k5j.A"; //16-68,73-119
+//		String name1= "1lrh.A"; //80-127,37-79
+		
+		String name1= "1iu9.A";
+		String name2= "1h0r.A";
+		
+		// Hard case
+//		String name1= "1uiz.A";
+//		String name2= "1xxa.C";
+
+		AtomCache cache = new AtomCache("/Users/blivens/pdb/", true);
+
+
+		try {
+			CeMain ceA = (CeMain) StructureAlignmentFactory.getAlgorithm(CeMain.algorithmName);
+
+			CeParameters params = (CeParameters) ceA.getParameters();
+			params.setMaxGapSize(0);
 			
-			String name1= "1cdg.A";
-			String name2= "1tim.A";
-
-			AtomCache cache = new AtomCache("/tmp/", true);
-
 			Atom[] ca1 = cache.getAtoms(name1, true);
 			Atom[] ca2 = cache.getAtoms(name2, true);
 			
-			AFPChain afpChain = ce.align(ca1,ca2);
+			// Create initial alignment
+			AFPChain afpChain = ceA.align(ca1,ca2);
+			afpChain.setName1(name1);
+			afpChain.setName2(name2);
 			for ( AFP afpI : afpChain.getAfpSet()){
 				System.out.println(afpI);
 			}
 			
+			// Get background distances
 			CECalculator calculator = ceA.getCECalculator();
-			double[][] m = calculator.getMatMatrix();
+			int winSize = params.getWinSize();
+			int winSizeComb1 = (winSize-1)*(winSize-2)/2;	
+			double[][] m = calculator.initSumOfDistances(ca1.length, ca2.length, params.getWinSize(), winSizeComb1, ca1, ca2);
+			//double[][] m = calculator.getMatMatrix();
 			Matrix mat = new Matrix(m);
 
-			DotPlotPanel dotplot = new DotPlotPanel(afpChain, mat);			
+			showDotPlotJFrame(afpChain,mat);
 			
-			//Create JFrame
-			
-			String title = String.format("Dot plot of %s vs. %s", name1,name2);
+			//StructureAlignmentJmol jmol = new StructureAlignmentJmol(afpChain, ca1, ca2);
+//			jmol.setStructure(cache.getStructure(name1));
 
-			// Create window
-			JFrame frame = new JFrame(title);
-			frame.addWindowListener(new WindowAdapter(){
-				public void windowClosing(WindowEvent e){
-					JFrame f = (JFrame) e.getSource();
-					f.setVisible(false);
-					f.dispose();
+			
+			//////////////////////////
+			// Now make it circular
+			params.setCheckCircular(true);
+	
+			System.out.format("Aligning %s[%d] with %s[%d] with CPs\n",name1,ca1.length,name2,ca2.length);
+			afpChain = ceA.align(ca1,ca2);
+			afpChain.setName1(name1);
+			afpChain.setName2(name2+"-"+name2);
+			for ( AFP afpI : afpChain.getAfpSet()){
+				System.out.println(afpI);
+			}
+			
+			/*/ Reuse mat from the non-cp case, for simplicity
+
+			// Get background distances
+			Atom[] ca2clone = new Atom[ca2.length*2];
+			int pos = 0;
+			for (Atom a : ca2){
+				Group g = (Group)a.getParent().clone(); // works because each group has only a CA atom
+
+				ca2clone[pos] = g.getAtom("CA");
+
+				pos++;
+			}
+			for (Atom a : ca2){
+				Group g = (Group)a.getParent().clone();
+
+				ca2clone[pos] = g.getAtom("CA");
+
+				pos++;
+			}
+			m = calculator.initSumOfDistances(ca1.length, ca2clone.length, params.getWinSize(), winSizeComb1, ca1, ca2clone);
+			//m = calculator.getMatMatrix();
+			mat = new Matrix(m);/*ca2.length,ca1.length);
+			for(int i=0;i<ca2.length;i++)
+				for(int j=0;j<ca1.length;j++) {
+					mat.set(i, j, m[i][j]);
 				}
-			});
+			*/
 
-			
-			frame.getContentPane().add(dotplot);
-
-			frame.pack();
-			frame.setVisible(true);
+			showDotPlotJFrame(afpChain,mat);
 			
 			
-		} catch (Exception e) {
+		} catch (StructureException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 

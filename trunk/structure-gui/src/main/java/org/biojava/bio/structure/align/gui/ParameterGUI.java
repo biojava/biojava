@@ -167,6 +167,8 @@ public class ParameterGUI extends JFrame{
 				data = Double.parseDouble(value);
 			} else if ( type == Float.class) {
 				data = Float.parseFloat(value);
+			} else if ( type == Boolean.class) {
+				data = Boolean.parseBoolean(value);
 			}
 			
 			if (data == null){

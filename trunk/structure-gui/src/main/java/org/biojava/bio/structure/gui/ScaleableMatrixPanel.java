@@ -71,7 +71,7 @@ implements ChangeListener{
 
 		PDBFileReader pdbr = new PDBFileReader();  
 		pdbr.setAutoFetch(true);
-		pdbr.setPath("/Users/andreas/WORK/PDB/");
+		pdbr.setPath("/Users/blivens/pdb/");
 
 
 		//String pdb1 = "1crl";
