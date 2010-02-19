@@ -264,7 +264,7 @@ public class AfpChainWriter
    }
 
    public static String toWebSiteDisplay(AFPChain afpChain, Atom[] ca1, Atom[] ca2){
-      if ( afpChain.getAlgorithmName().equalsIgnoreCase("jFatCat-flexible")) {
+      if ( afpChain.getAlgorithmName().equalsIgnoreCase("jFatCat_flexible")) {
          String msg =  toFatCat(afpChain,ca1,ca2) ;
 
          return msg;
