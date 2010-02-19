@@ -29,11 +29,13 @@ public class StructureAlignmentDisplay {
       int blockNum = afpChain.getBlockNum();
       int i = -1;
      
-      if  ( blockNum == 0 ) {
+      if  ( blockNum == 1 ) {
+         
          Matrix m   =  afpChain.getBlockRotationMatrix()[ 0];
          Atom shift =  afpChain.getBlockShiftVector()   [ 0 ];
 
          shiftAll(afpChain, ca2,hetatms2, nucs2, m,shift, twistedGroups);
+         
       } else {
          
          for (Atom a: ca2){
@@ -80,20 +82,24 @@ public class StructureAlignmentDisplay {
       int i = -1;
       for (Atom a: ca2){
          i++;
-         twistedGroups[i]=a.getParent();         
-      }
-
-      shiftBlock(afpChain, ca2, 0, m, shift, twistedGroups);
-
-      for (Group g : hetatms2){
+         Group g = a.getParent();
+         twistedGroups[i]=g;   
          Calc.rotate(g,m);
          Calc.shift(g, shift);
       }
 
-      for (Group g : nucs2){
-         Calc.rotate(g,m);
-         Calc.shift(g, shift);
-      }
+      //shiftBlock(afpChain, ca2, 0, m, shift, twistedGroups);
+//
+      // this actually is done by the DisplayAFP ...
+//      for (Group g : hetatms2){
+//         Calc.rotate(g,m);
+//         Calc.shift(g, shift);
+//      }
+//
+//      for (Group g : nucs2){
+//         Calc.rotate(g,m);
+//         Calc.shift(g, shift);
+//      }
 
    }
 
