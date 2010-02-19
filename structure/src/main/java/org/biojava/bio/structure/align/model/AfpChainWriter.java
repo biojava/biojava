@@ -71,14 +71,14 @@ public class AfpChainWriter
 
       double similarity = afpChain.getSimilarity();
       double identity = afpChain.getIdentity();
-          
+
       if (similarity <0  || identity < 0){
          afpChain.calcSimilarity();
          similarity = afpChain.getSimilarity();
          identity = afpChain.getIdentity();
       }
-      
-    
+
+
 
       String algorithmName = afpChain.getAlgorithmName();
       //String version = afpChain.getVersion();
@@ -131,8 +131,8 @@ public class AfpChainWriter
 
          if ( ! longHeader)
             printScore(txt,algorithmName,probability,longHeader);
-      
-         
+
+
          if ( blockNum - 1 > 0) {
             txt.append(String.format( "Twists %d ", blockNum -1 ));
             txt.append(newline);
@@ -156,15 +156,15 @@ public class AfpChainWriter
 
       if ( longHeader)
          printScore(txt,algorithmName,probability,longHeader);
-   
 
-      
+
+
       if (  longHeader) {
-         
+
          txt.append(String.format("Afp-num %d Identity %.2f%% Similarity %.2f%%", afpNum, identity * 100, similarity * 100));
          txt.append(newline);
       } else {
-         
+
          txt.append(String.format("Identity: %.2f%% ", identity * 100 ));
          txt.append(newline);
          txt.append(String.format("Similarity: %.2f%%", similarity * 100));
@@ -208,11 +208,15 @@ public class AfpChainWriter
          txt.append(newline);
          txt.append(String.format("%14s", " "));
 
-
-         for(k = 10; k <= len; k += 10)
-            txt.append("    .    :");
-         if(k <= len + 5) txt.append("    .");
-
+         if ( ! longHeader ) {
+            for(k = 10; k <= len; k += 10)
+               txt.append("----+----|");
+            if(k <= len + 5) txt.append("----+");
+         } else {
+            for(k = 10; k <= len; k += 10)
+               txt.append("    .    :");
+            if(k <= len + 5) txt.append("    .");
+         }
          String pdb1 = ca1[ap].getParent().getPDBCode();
          String pdb2 = ca2[bp].getParent().getPDBCode();
          txt.append(newline);
@@ -260,7 +264,7 @@ public class AfpChainWriter
             txt.append(newline);
          }
       }
-      
+
    }
 
    public static String toWebSiteDisplay(AFPChain afpChain, Atom[] ca1, Atom[] ca2){
@@ -283,7 +287,7 @@ public class AfpChainWriter
       "     | ... Structurally equivalend and identical residues " + newline +
       "     : ... Structurally equivalend and similar residues " + newline + 
       "     . ... Structurally equivalent, but not similar residues. " + newline;
-      
+
       msg += newline;
       msg += "     To calculate the coordinates of chain 2 aligned on chain 1 apply the following transformation: ";
       msg += newline;
