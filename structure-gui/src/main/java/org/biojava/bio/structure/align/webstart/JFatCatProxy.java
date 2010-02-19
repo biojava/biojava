@@ -75,18 +75,20 @@ public class JFatCatProxy
 
          Group[] twistedGroups = (Group[]) m.invoke(null,afpChain,ca1,ca2);
 
-         Class fatCatRigidC = Class.forName(fatCatRigidClassName);
-         
-         Method getFatCatAligner =   fatCatRigidC.getMethod("getFatCatAligner", new Class[]{});
 
-         Class fatCatAligner = Class.forName(fatCatAlignerClassName);
+         if ( afpChain.getAlgorithmName().startsWith("jFatCat")) {
+            Class fatCatRigidC = Class.forName(fatCatRigidClassName);
 
-         Object fatCatAlignerInstance = getFatCatAligner.invoke(fatCatRigid, null);
+            Method getFatCatAligner =   fatCatRigidC.getMethod("getFatCatAligner", new Class[]{});
 
-         Method setTwistedGroups = fatCatAligner.getMethod("setTwistedGroups",new Class[]{Group[].class});
+            Class fatCatAligner = Class.forName(fatCatAlignerClassName);
 
-         setTwistedGroups.invoke(fatCatAlignerInstance,  (Object) twistedGroups);
+            Object fatCatAlignerInstance = getFatCatAligner.invoke(fatCatRigid, null);
 
+            Method setTwistedGroups = fatCatAligner.getMethod("setTwistedGroups",new Class[]{Group[].class});
+
+            setTwistedGroups.invoke(fatCatAlignerInstance,  (Object) twistedGroups);
+         }
 
          // we only have data for the optimized alignment so far...
 
