@@ -22,7 +22,16 @@ public class DNACompoundSet extends AbstractNucleotideCompoundSet<NucleotideComp
     addNucleotideCompound("C", "G");
   }
 
-  protected NucleotideCompound newNucleotideCompound(String base, String complement) {
-    return new NucleotideCompound(base, this, complement);
+  protected NucleotideCompound newNucleotideCompound(String base, String complement, String... equivalents) {
+    if(equivalents.length == 0) {
+      return new NucleotideCompound(base, this, complement);
+    }
+    else {
+      NucleotideCompound[] compounds = new NucleotideCompound[equivalents.length];
+      for(int i=0; i<compounds.length; i++) {
+        compounds[i] = getCompoundForString(equivalents[i]);
+      }
+      return new NucleotideCompound(base, this, complement, compounds);
+    }
   }
 }

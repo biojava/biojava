@@ -199,6 +199,7 @@ public class DotPlotPanel extends ScaleableMatrixPanel {
 
 			CeParameters params = (CeParameters) ceA.getParameters();
 			params.setMaxGapSize(0);
+			params.setCheckCircular(false);
 			
 			Atom[] ca1 = cache.getAtoms(name1, true);
 			Atom[] ca2 = cache.getAtoms(name2, true);

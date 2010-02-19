@@ -1164,15 +1164,12 @@ nBestTrace=nTrace;
 				for(int ise2=0; ise2<nse2; ise2++) {
 					mat[ise1][ise2]=-0.001;
 
-					if(ca1[ise1].getX()<1e10 && ca3[ise2].getX()<1e10) {
+					mat[ise1][ise2] = oRmsdThr - Calc.getDistance(ca1[ise1],ca3[ise2]);
 
-						mat[ise1][ise2] = oRmsdThr - Calc.getDistance(ca1[ise1],ca3[ise2]);
-
-						//if ( counter == 0 &&  ise1 == ise2) {
-						//double dist = Calc.getDistance(ca1[ise1],ca3[ise2]);
-						//System.out.println("mat[" + ise1 + "][" + ise2 + "] " + mat[ise1][ise2] + " oRmsdThr: " + oRmsdThr +" dist: " + dist + " ca2 dist: " + Calc.getDistance(ca2[ise2], ca3[ise2]));
-						//}
-					}
+					//if ( counter == 0 &&  ise1 == ise2) {
+					//double dist = Calc.getDistance(ca1[ise1],ca3[ise2]);
+					//System.out.println("mat[" + ise1 + "][" + ise2 + "] " + mat[ise1][ise2] + " oRmsdThr: " + oRmsdThr +" dist: " + dist + " ca2 dist: " + Calc.getDistance(ca2[ise2], ca3[ise2]));
+					//}
 				}
 			}
 

@@ -37,7 +37,9 @@ public class AFPChainXMLConverter {
 
 		PrintWriter writer = new PrintWriter(swriter);
 		PrettyXMLWriter xml = new PrettyXMLWriter(writer);
+		
 		xml.openTag("AFPChain");
+		
 		printXMLHeader(xml,afpChain);
 
 
@@ -216,10 +218,11 @@ public class AFPChainXMLConverter {
 
 		xml.attribute("alignScore", String.format("%5.2f", afpChain.getAlignScore() ).trim());
 		xml.attribute("chainRmsd",  String.format("%5.2f", afpChain.getChainRmsd() ).trim());
-		xml.attribute("identity",String.format("%5.2f", afpChain.getIdentity() ).trim());
+		xml.attribute("identity",String.format("%5.4f", afpChain.getIdentity() ).trim());
 		xml.attribute("normAlignScore", String.format("%5.2f",afpChain.getNormAlignScore()).trim());
 		xml.attribute("probability", String.format("%.2e", afpChain.getProbability() ).trim());
-		xml.attribute("similarity", String.format("%5.2f", afpChain.getSimilarity() ).trim());
+		xml.attribute("similarity", String.format("%5.4f", afpChain.getSimilarity() ).trim());
+		
 		xml.attribute("similarity1", afpChain.getSimilarity1() + "");
 		xml.attribute("similarity2", afpChain.getSimilarity2() + "");
 		xml.attribute("totalRmsdIni", String.format("%5.2f",afpChain.getTotalRmsdIni() ).trim());

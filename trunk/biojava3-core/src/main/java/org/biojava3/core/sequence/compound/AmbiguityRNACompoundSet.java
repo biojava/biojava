@@ -43,6 +43,8 @@ public class AmbiguityRNACompoundSet extends RNACompoundSet {
         "C", "G", "U");
     addNucleotideCompound("N", "N",
         "A", "C", "G", "U", "M", "R", "W", "S", "Y", "K", "V", "H", "D", "B");
+
+    calculateIndirectAmbiguities();
   }
 
 }

@@ -23,6 +23,10 @@ public class AtomCache {
 	boolean isSplit;
 	boolean autoFetch;
 
+	// this is a static flag across all instances of AtomCaches, to make sure 
+	// only one file is accessed in the file system at a time.
+	// this is to avoid reading of partial files that are being
+	// automatically downloaded by other instances / threads.	
 	private static AtomicBoolean loading  = new AtomicBoolean();
 	
 	public AtomCache(String pdbFilePath, boolean isSplit){
@@ -36,6 +40,7 @@ public class AtomCache {
 		//this.cache = cache;
 		this.isSplit = isSplit;
 		autoFetch = true;
+		loading.set(false);
 	}
 
 	public AtomCache(UserConfiguration config){
@@ -128,7 +133,7 @@ public class AtomCache {
 	 */
 	@SuppressWarnings("deprecation")
    public Structure getStructure(String name) throws IOException, StructureException{
-
+	   
 		while ( loading.get() ){
 			// waiting for loading to be finished...
 			

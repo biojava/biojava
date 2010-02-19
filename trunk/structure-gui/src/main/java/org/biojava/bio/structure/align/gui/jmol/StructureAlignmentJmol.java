@@ -54,7 +54,9 @@ import org.biojava.bio.structure.StructureImpl;
 import org.biojava.bio.structure.align.gui.DisplayAFP;
 import org.biojava.bio.structure.align.gui.MenuCreator;
 import org.biojava.bio.structure.align.model.AFPChain;
+import org.biojava.bio.structure.align.util.AtomCache;
 import org.biojava.bio.structure.align.util.ResourceManager;
+import org.biojava.bio.structure.align.util.UserConfiguration;
 import org.biojava.bio.structure.align.gui.jmol.AtomInfo;
 import org.biojava.bio.structure.align.gui.jmol.AtomInfoParser;
 import org.biojava.bio.structure.align.gui.jmol.JmolPanel;
@@ -87,6 +89,10 @@ public class StructureAlignmentJmol implements MouseMotionListener, MouseListene
    Atom[] ca2;
    AFPChain afpChain;
 
+   private static final int DEFAULT_HEIGHT = 500;
+
+   private static final int DEFAULT_WIDTH = 500;
+
    public static final String DEFAULT_SCRIPT = ResourceManager.getResourceManager("ce").getString("default.alignment.jmol.script");
 
    private static final Object LIGAND_DISPLAY_SCRIPT = ResourceManager.getResourceManager("ce").getString("default.ligand.jmol.script");
@@ -94,13 +100,13 @@ public class StructureAlignmentJmol implements MouseMotionListener, MouseListene
    public static void main(String[] args){
       try {
 
-         PDBFileReader pdbr = new PDBFileReader();   
-         //pdbr.setAutoFetch(true);
-         pdbr.setPath("/Users/ap3/WORK/PDB/");
 
-         String pdbCode = "5pti";
+         UserConfiguration config = new UserConfiguration();
+         config.setSplit(true);
+         config.setAutoFetch(true);
+         AtomCache cache = new AtomCache(config);
 
-         Structure struc = pdbr.getStructureById(pdbCode);
+         Structure struc = cache.getStructure("5pti");
 
          StructureAlignmentJmol jmolPanel = new StructureAlignmentJmol(null,null,null);
 
@@ -158,7 +164,7 @@ public class StructureAlignmentJmol implements MouseMotionListener, MouseListene
       //			System.err.println("Could not find Jmol in classpath, please install first. http://www.jmol.org");
       //			return;
       //		}
-      jmolPanel.setPreferredSize(new Dimension(500,500));
+      jmolPanel.setPreferredSize(new Dimension(DEFAULT_WIDTH,DEFAULT_HEIGHT));
       vBox.add(jmolPanel);
 
 
@@ -181,13 +187,15 @@ public class StructureAlignmentJmol implements MouseMotionListener, MouseListene
       status = new JTextField();		
       status.setBackground(Color.white);
       status.setEditable(false);
-      status.setMaximumSize(new Dimension(Short.MAX_VALUE,30));   
-      hBox.add(status);
+      status.setMaximumSize(new Dimension(Short.MAX_VALUE,30));
+      status.setPreferredSize(new Dimension(DEFAULT_WIDTH / 2,30));
+      status.setMinimumSize(new Dimension(DEFAULT_WIDTH / 2,30));
+      hBox.add(status);      
       text = new JTextField();
       text.setBackground(Color.white);
-      text.setMaximumSize(new Dimension(190,30));
-      text.setSize(new Dimension(190,30));
-      text.setMinimumSize(new Dimension(190,30));
+      text.setMaximumSize(new Dimension(Short.MAX_VALUE,30));
+      text.setPreferredSize(new Dimension(DEFAULT_WIDTH / 2,30));
+      text.setMinimumSize(new Dimension(DEFAULT_WIDTH / 2,30));
       text.setText("Display of Atom info");
       text.setEditable(false);
       hBox.add(text);
@@ -204,6 +212,7 @@ public class StructureAlignmentJmol implements MouseMotionListener, MouseListene
 
 
       // init coordinates
+
       initCoords();
 
       resetDisplay();
@@ -211,6 +220,14 @@ public class StructureAlignmentJmol implements MouseMotionListener, MouseListene
    }
    private void initCoords(){
       try {
+         if ( ca1 == null || ca2 == null ){
+            if ( structure != null)
+               setStructure(structure);
+            else  {
+               //System.err.println("could not find anything to display!");
+               return;
+            }
+         }
          Structure artificial = DisplayAFP.getAlignedStructure(ca1,ca2);
          PDBHeader header = new PDBHeader();
          String title =  afpChain.getAlgorithmName() + " V." +afpChain.getVersion() + " : " + afpChain.getName1() + " vs. " + afpChain.getName2();
@@ -487,9 +504,11 @@ public class StructureAlignmentJmol implements MouseMotionListener, MouseListene
 
    public void resetDisplay(){
 
-      String script = getJmolString( afpChain,ca1,ca2);
-      //System.out.println(j.toString());
-      evalString(script);
+      if  ( afpChain != null && ca1 != null && ca2 != null) {
+         String script = getJmolString( afpChain,ca1,ca2);
+         //System.out.println(j.toString());
+         evalString(script);
+      }
    }
 
 

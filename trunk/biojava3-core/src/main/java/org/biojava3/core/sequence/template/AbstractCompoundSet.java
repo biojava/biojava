@@ -27,14 +27,14 @@ public abstract class AbstractCompoundSet<C extends Compound> implements Compoun
     addCompound(compound);
     addCompound(lowerCasedCompound);
 
-    equivalentsMap.put(compound, lowerCasedCompound);
-    equivalentsMap.put(lowerCasedCompound, compound);
+    addEquivalent(compound, lowerCasedCompound);
+    addEquivalent(lowerCasedCompound, compound);
 
     for(C equivalent: equivalents) {
-      equivalentsMap.put(compound, equivalent);
-      equivalentsMap.put(equivalent, compound);
-      equivalentsMap.put(lowerCasedCompound, equivalent);
-      equivalentsMap.put(equivalent, lowerCasedCompound);
+      addEquivalent(compound, equivalent);
+      addEquivalent(equivalent, compound);
+      addEquivalent(lowerCasedCompound, equivalent);
+      addEquivalent(equivalent, lowerCasedCompound);
     }
   }
 
@@ -44,6 +44,10 @@ public abstract class AbstractCompoundSet<C extends Compound> implements Compoun
       equiv.add(c);
     }
     addCompound(compound, lowerCasedCompound, equiv);
+  }
+
+  protected void addEquivalent(C compound, C equivalent) {
+    equivalentsMap.put(compound, equivalent);
   }
 
   protected void addCompound(C compound) {

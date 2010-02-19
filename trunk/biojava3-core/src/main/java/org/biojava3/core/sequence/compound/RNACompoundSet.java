@@ -22,7 +22,7 @@ public class RNACompoundSet extends AbstractNucleotideCompoundSet<NucleotideComp
     addNucleotideCompound("C", "G");
   }
 
-  protected NucleotideCompound newNucleotideCompound(String base, String complement) {
+  protected NucleotideCompound newNucleotideCompound(String base, String complement, String... equivalents) {
     return new NucleotideCompound(base, this, complement);
   }
 }

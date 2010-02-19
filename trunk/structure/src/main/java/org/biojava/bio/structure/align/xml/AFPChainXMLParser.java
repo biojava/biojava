@@ -33,7 +33,7 @@ import org.xml.sax.SAXParseException;
 public class AFPChainXMLParser
 {
 
-	private static final String DEFAULT_ALGORITHM_NAME = "jFatCat_rigid";
+	
 
    public static AFPChain fromXML(String xml, Atom[] ca1, Atom[] ca2)
 	{
@@ -61,7 +61,7 @@ public class AFPChainXMLParser
 		if ( afps.length == 1) {
 			AFPChain newChain = AFPChainFlipper.flipChain(afps[0]);
 			if ( newChain.getAlgorithmName() == null) {
-			   newChain.setAlgorithmName(DEFAULT_ALGORITHM_NAME);
+			   newChain.setAlgorithmName(AFPChain.DEFAULT_ALGORITHM_NAME);
 			}
 			return AFPChainXMLConverter.toXML(newChain);
 		}
@@ -78,7 +78,7 @@ public class AFPChainXMLParser
 	public static void rebuildAFPChain(AFPChain afpChain, Atom[] ca1, Atom[] ca2){
 
 	   if ( afpChain.getAlgorithmName() == null) {
-	      afpChain.setAlgorithmName(DEFAULT_ALGORITHM_NAME);	      
+	      afpChain.setAlgorithmName(AFPChain.DEFAULT_ALGORITHM_NAME);	      
 	   }
 	   if ( afpChain.getVersion() == null){
 	      afpChain.setVersion("1.0");
@@ -158,7 +158,7 @@ public class AFPChainXMLParser
 			{
 
 				AFPChain a = new AFPChain();
-				a.setAlgorithmName(DEFAULT_ALGORITHM_NAME);
+				a.setAlgorithmName(AFPChain.DEFAULT_ALGORITHM_NAME);
 				a.setVersion("1.0");
 				Node rootElement       = listOfAFPChains.item(afpPos);
 

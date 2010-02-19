@@ -437,7 +437,7 @@ public class WebStartMain
 				// twist groups for visualisation
 				// we only have data for the optimized alignment so far...
 				
-			      System.out.println("sending afpChain to fatcatRigid proxy");
+			    //  System.out.println("sending afpChain to fatcatRigid proxy");
 			   
 			   //JFatCatProxy proxy = new JFatCatProxy();
 			   //proxy.setStructureAlignment(fatCatRigid);
@@ -451,7 +451,6 @@ public class WebStartMain
 				afpChain.setName2(name2);
 
 				//System.out.println("submitting...");
-
 				//JFatCatClient.sendAFPChainToServer(serverLocation,afpChain, ca1, ca2);
 			}
 		} catch (Exception e){
@@ -469,33 +468,26 @@ public class WebStartMain
 
 		tmpFrame.dispose();
 
-		List<Group> hetatms = c1.getAtomGroups("hetatm");
-		List<Group> nucs    = c1.getAtomGroups("nucleotide");
+		JFatCatProxy proxy = new JFatCatProxy();
+		proxy.setStructureAlignment(fatCatRigid);
+		Group[] twistedGroups = proxy.twistGroups(afpChain,ca1,ca2);
+
+        List<Group> hetatms = ca1[0].getParent().getParent().getAtomGroups("hetatm");
+        List<Group> nucs    = ca1[0].getParent().getParent().getAtomGroups("nucleotide");
+
+        List<Group> hetatms2 = new ArrayList<Group>();
+        List<Group> nucs2    = new ArrayList<Group>();
 
 
-		List<Group> hetatms2 = new ArrayList<Group>();
-		List<Group> nucs2    = new ArrayList<Group>();
+        if ( (afpChain.getBlockNum() - 1) == 0){           
+            hetatms2 = ca2[0].getParent().getParent().getAtomGroups("hetatm");
+            nucs2    = ca2[0].getParent().getParent().getAtomGroups("nucleotide");
 
-		System.out.println("algorithmName: " + afpChain.getAlgorithmName() + " " + afpChain.getVersion());
-		
-		if ( (afpChain.getBlockNum() - 1) == 0){
-			hetatms2 = c2.getAtomGroups("hetatm");
-			nucs2    = c2.getAtomGroups("nucleotide");
-		}
+            // they are not rotated at this point.. the display will do it for us...
 
-		// show results
-		StructureAlignmentJmol jmol = StructureAlignmentDisplay.display(afpChain,ca1,ca2,hetatms,nucs, hetatms2, nucs2);
-
-		
-		
-		//jmol.setTitle(title);
-		// make sure the AlignmentGUI is always displayed, because it is the only way to close the application.
-		//AlignmentGui.getInstance();
-		
-		//String result = afpChain.toFatcat(ca1, ca2);
-		//String rot = afpChain.toRotMat();
-		DisplayAFP.showAlignmentImage(afpChain,ca1,ca2,jmol);
-
+        }
+        StructureAlignmentJmol jmol = DisplayAFP.display(afpChain, twistedGroups, ca1, ca2, hetatms, nucs, hetatms2, nucs2);
+        DisplayAFP.showAlignmentImage(afpChain,ca1,ca2,jmol);
 
 	}
 

@@ -52,8 +52,6 @@ public class DisplayAFP
 	public static final boolean debug =  false;
 
 
-
-
 	/*public static final List<Integer> getEqrPos(int chainNr, AFPChain afpChain){
 		List<Integer> lst = new ArrayList<Integer>();
 
@@ -92,25 +90,42 @@ public class DisplayAFP
 			char c1 = s1[i];
 			char c2 = s2[i];
 
-			if ( isFatCat){
-				char s = symb[i];
-				if ( c1 != '-' && c2 != '-' && s != ' '){
-					lst.add(i);
-				}
-			} else {
-
-				if ( c1 != '-' && c2 != '-')
-					lst.add(i);
+			if ( isAlignedPosition(i,c1,c2,isFatCat, symb)) {
+			   lst.add(i);			  
 			}
+			
 		}
 		return lst;
 
 	}
+	
 
 
 
 
-	public static final List<String> getPDBresnum(int aligPos, AFPChain afpChain, Atom[] ca){
+	private static boolean isAlignedPosition(int i, char c1, char c2, boolean isFatCat,char[]symb)
+   {
+	   if ( isFatCat){
+          char s = symb[i];
+          if ( c1 != '-' && c2 != '-' && s != ' '){
+             return true;
+          }          
+      } else {
+
+          if ( c1 != '-' && c2 != '-')
+             return true;
+      }
+	   
+	   return false;
+	   
+	   
+   }
+
+
+
+
+
+   public static final List<String> getPDBresnum(int aligPos, AFPChain afpChain, Atom[] ca){
 		List<String> lst = new ArrayList<String>();
 		if ( aligPos > 1) {
 			System.err.println("multiple alignments not supported yet!");
@@ -528,11 +543,10 @@ public class DisplayAFP
 
 		// 
 
-
 		//if ( hetatms2.size() > 0)
 		//	System.out.println("atom after:" + hetatms2.get(0).getAtom(0));
 		if ( afpChain.getBlockNum()  == 1){
-
+		   
 			if (( hetatms2.size() > 0) || (nucleotides2.size() >0)) {
 				//	System.out.println("transforming ligands chain 2");
 				if ( afpChain.getBlockRotationMatrix().length > 0 ) {
