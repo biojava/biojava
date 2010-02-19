@@ -227,7 +227,7 @@ public class CECalculator {
    private double[][] initSumOfDistances(int nse1, int nse2, int winSize, int  winSizeComb1, Atom[] ca1, Atom[] ca2) {
 
       double d;
-      
+
       double[][] mat   = new double[nse1][nse2];
 
       // init the initial mat[] array.
@@ -794,12 +794,12 @@ nBestTrace=nTrace;
          if(bestTracesN[ir]!=nBestTrace) continue;
 
          rmsdNew = getRMSDForBestTrace(ir, strBuf1, strBuf2, bestTracesN,bestTraces1, bestTrace2,winSize,ca1,ca2);
-//
-//         if ( params.isShowAFPRanges()) {
-//            for(int jt=0; jt<bestTracesN[ir]; jt++) {
-//               System.out.println(String.format("trace Nr: %d %d %d index1: %d  index2: %d rmsd: %.2f", bestTracesN[ir],ir, jt,bestTraces1[ir][jt],bestTraces2[ir][jt],   rmsdNew));
-//            }
-//         }
+         //
+         //         if ( params.isShowAFPRanges()) {
+         //            for(int jt=0; jt<bestTracesN[ir]; jt++) {
+         //               System.out.println(String.format("trace Nr: %d %d %d index1: %d  index2: %d rmsd: %.2f", bestTracesN[ir],ir, jt,bestTraces1[ir][jt],bestTraces2[ir][jt],   rmsdNew));
+         //            }
+         //         }
 
          if(rmsd>rmsdNew) {
             iBestTrace=ir;
@@ -1016,17 +1016,17 @@ nBestTrace=nTrace;
          System.out.println(msg + " CPU = " + time_q);
       }
 
-//      if ( params.isShowAFPRanges()){
-      
+      //      if ( params.isShowAFPRanges()){
+
       // this is actually the final alignment...
-//         System.out.println("Best Trace: (index1,index2,len)");
-//         for(int k=0; k<nBestTrace; k++)
-//            System.out.println(
-//                  String.format("(%d,%d,%d) ", bestTrace1[k]+1, bestTrace2[k]+1, bestTraceLen[k]));
-//
-//
-//
-//      }
+      //         System.out.println("Best Trace: (index1,index2,len)");
+      //         for(int k=0; k<nBestTrace; k++)
+      //            System.out.println(
+      //                  String.format("(%d,%d,%d) ", bestTrace1[k]+1, bestTrace2[k]+1, bestTraceLen[k]));
+      //
+      //
+      //
+      //      }
 
       afpChain.setCalculationTime(time_q);
       afpChain.setGapLen(nGaps);
@@ -1147,15 +1147,13 @@ nBestTrace=nTrace;
             for(int ise2=0; ise2<nse2; ise2++) {
                mat[ise1][ise2]=-0.001;
 
-               if(ca1[ise1].getX()<1e10 && ca3[ise2].getX()<1e10) {
+               mat[ise1][ise2] = oRmsdThr - Calc.getDistance(ca1[ise1],ca3[ise2]);
 
-                  mat[ise1][ise2] = oRmsdThr - Calc.getDistance(ca1[ise1],ca3[ise2]);
+               //if ( counter == 0 &&  ise1 == ise2) {
+               //double dist = Calc.getDistance(ca1[ise1],ca3[ise2]);
+               //System.out.println("mat[" + ise1 + "][" + ise2 + "] " + mat[ise1][ise2] + " oRmsdThr: " + oRmsdThr +" dist: " + dist + " ca2 dist: " + Calc.getDistance(ca2[ise2], ca3[ise2]));
+               //}
 
-                  //if ( counter == 0 &&  ise1 == ise2) {
-                  //double dist = Calc.getDistance(ca1[ise1],ca3[ise2]);
-                  //System.out.println("mat[" + ise1 + "][" + ise2 + "] " + mat[ise1][ise2] + " oRmsdThr: " + oRmsdThr +" dist: " + dist + " ca2 dist: " + Calc.getDistance(ca2[ise2], ca3[ise2]));
-                  //}
-               }
             }
          }
 
