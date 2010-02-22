@@ -31,7 +31,7 @@ public class Hashcoder {
   /**
    * The prime number used to multiply any calculated hashcode seed by
    *
-   * i.e. result = DEFAULT_PRIME_NUMBER*result + c
+   * i.e. result = PRIME*result + c
    *
    * Where result is the result of the previous calculation (at first this will
    * be seed) and c is the calculated int to add to result
