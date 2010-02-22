@@ -36,28 +36,28 @@ public class Hashcoder {
    * Where result is the result of the previous calculation (at first this will
    * be seed) and c is the calculated int to add to result
    */
-  public static final int PRIME_NUMBER = 79;
+  public static final int PRIME = 79;
 
   public static int hash(int seed, boolean b) {
-    return (PRIME_NUMBER * seed) + (b ? 1 : 0);
+    return (PRIME * seed) + (b ? 1 : 0);
   }
 
   public static int hash(int seed, char c) {
-    return (PRIME_NUMBER * seed) + (int) c;
+    return (PRIME * seed) + (int) c;
   }
 
   /**
    * Used for ints, bytes and shorts
    */
   public static int hash(int seed, int i) {
-    return (PRIME_NUMBER * seed) + i;
+    return (PRIME * seed) + i;
   }
 
   /**
    * long support done by shifting by 32 (using unsigned shift)
    */
   public static int hash(int seed, long l) {
-    return (PRIME_NUMBER * seed) + (int) (l ^ (l >>> 32));
+    return (PRIME * seed) + (int) (l ^ (l >>> 32));
   }
 
   /**
