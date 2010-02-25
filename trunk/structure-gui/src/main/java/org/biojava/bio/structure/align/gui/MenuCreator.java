@@ -143,7 +143,7 @@ public class MenuCreator {
 			
 			JMenuItem dotplot = new JMenuItem("Show Dot Plot");
 
-			dotplot.addActionListener(new DotPlotListener(afpChain,null));
+			dotplot.addActionListener(new DotPlotListener(afpChain));
 			view.add(dotplot);
 		}
 
@@ -535,10 +535,8 @@ public class MenuCreator {
 	 */
 	private static class DotPlotListener implements ActionListener {
 		private final AFPChain afpChain;
-		private final Matrix background;
-		public DotPlotListener(AFPChain afpChain, Matrix background) {
+		public DotPlotListener(AFPChain afpChain) {
 			this.afpChain = afpChain;
-			this.background = background;
 		}
 		public void actionPerformed(ActionEvent e) {
 			String title = String.format("%s vs. %s", afpChain.getName1(),afpChain.getName2());
@@ -553,7 +551,7 @@ public class MenuCreator {
 				}
 			});
 
-			DotPlotPanel dotplot = new DotPlotPanel(afpChain, background);			
+			DotPlotPanel dotplot = new DotPlotPanel(afpChain);			
 
 			frame.getContentPane().add(dotplot);
 

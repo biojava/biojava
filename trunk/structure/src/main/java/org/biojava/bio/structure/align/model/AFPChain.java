@@ -156,6 +156,9 @@ public class AFPChain implements Serializable, Cloneable
 	// false if a circular permutation has occured
 	boolean sequentialAlignment;
 
+	// background distances
+	Matrix distanceMatrix;
+
 	public AFPChain(){
 		init();
 		similarity = -1;
@@ -166,6 +169,7 @@ public class AFPChain implements Serializable, Cloneable
 		algorithmName = DEFAULT_ALGORITHM_NAME ;
 		version = "1.0";
 		sequentialAlignment = true;
+		distanceMatrix = null;
 	}
 
 	/**
@@ -245,6 +249,7 @@ public class AFPChain implements Serializable, Cloneable
 		this.myResultsEQR = o.myResultsEQR;
 		this.myResultsSimilarity1 = o.myResultsSimilarity1;
 		this.myResultsSimilarity2 = o.myResultsSimilarity2;
+		this.distanceMatrix = o.distanceMatrix;
 	}
 
 	/**
@@ -265,27 +270,27 @@ public class AFPChain implements Serializable, Cloneable
 
 	public String toCE(Atom[] ca1, Atom[]ca2) {
 
-      return AfpChainWriter.toCE(this,ca1,ca2);
+		return AfpChainWriter.toCE(this,ca1,ca2);
 
-			}
+	}
 
 	public String toRotMat(){
 
-      return AfpChainWriter.toRotMat(this);
-			}
+		return AfpChainWriter.toRotMat(this);
+	}
 
 	public String toFatcat(Atom[] ca1, Atom[]ca2){
 
-      return AfpChainWriter.toFatCat(this,ca1,ca2);
+		return AfpChainWriter.toFatCat(this,ca1,ca2);
 
-		}
+	}
 
-   public String toDBSearchResult(){
+	public String toDBSearchResult(){
 
-      return AfpChainWriter.toDBSearchResult(this);
-		}
+		return AfpChainWriter.toDBSearchResult(this);
+	}
 
-   protected void calcSimilarity() {
+	protected void calcSimilarity() {
 		Map<String,Double> idMap = AFPAlignmentDisplay.calcIdSimilarity(alnseq1,alnseq2,alnLength);
 
 		//probability = idMap.get("probability");
@@ -1031,184 +1036,206 @@ public class AFPChain implements Serializable, Cloneable
 	 * 
 	 * @param totalRmsdIni
 	 */
-	 public void setTotalRmsdIni(double totalRmsdIni)
+	public void setTotalRmsdIni(double totalRmsdIni)
 	{
 		this.totalRmsdIni = totalRmsdIni;
 	}
 
 
-	 public double getTotalRmsdOpt()
-	 {
-		 return totalRmsdOpt;
-	 }
+	public double getTotalRmsdOpt()
+	{
+		return totalRmsdOpt;
+	}
 
-	 public void setTotalRmsdOpt(double totalRmsdOpt)
-	 {
-		 this.totalRmsdOpt = totalRmsdOpt;
-	 }
-
-
-	 public String getName1()
-	 {
-		 return name1;
-	 }
+	public void setTotalRmsdOpt(double totalRmsdOpt)
+	{
+		this.totalRmsdOpt = totalRmsdOpt;
+	}
 
 
-	 public void setName1(String name1)
-	 {
-		 this.name1 = name1;
-	 }
+	public String getName1()
+	{
+		return name1;
+	}
+
+
+	public void setName1(String name1)
+	{
+		this.name1 = name1;
+	}
 
 
 
-	 public String getName2()
-	 {
-		 return name2;
-	 }
+	public String getName2()
+	{
+		return name2;
+	}
 
-	 public void setName2(String name2)
-	 {
-		 this.name2 = name2;
-	 }
-
-
-	 public long getCalculationTime()
-	 {
-		 return calculationTime;
-	 }
-
-	 public void setCalculationTime(long calculationTime)
-	 {
-		 this.calculationTime = calculationTime;
-	 }
-
-	 public int getCa1Length()
-	 {
-		 return ca1Length;
-	 }
-
-	 public void setCa1Length(int ca1Length)
-	 {
-		 this.ca1Length = ca1Length;
-	 }
-
-	 public int getCa2Length()
-	 {
-		 return ca2Length;
-	 }
-
-	 public void setCa2Length(int ca2Length)
-	 {
-		 this.ca2Length = ca2Length;
-	 }
-
-	 public long getIoTime()
-	 {
-		 return ioTime;
-	 }
-
-	 public void setIoTime(long ioTime)
-	 {
-		 this.ioTime = ioTime;
-	 }
-
-	 public double getProbability()
-	 {
-		 return probability;
-	 }
-
-	 public void setProbability(double probability)
-	 {
-		 this.probability = probability;
-	 }
-
-	 public double getIdentity() {
-		 if ( identity < 0)
-			 calcSimilarity();
-		 return identity;
-	 }
+	public void setName2(String name2)
+	{
+		this.name2 = name2;
+	}
 
 
-	 public void setIdentity(double identity) {
-		 this.identity = identity;
-	 }
+	public long getCalculationTime()
+	{
+		return calculationTime;
+	}
+
+	public void setCalculationTime(long calculationTime)
+	{
+		this.calculationTime = calculationTime;
+	}
+
+	public int getCa1Length()
+	{
+		return ca1Length;
+	}
+
+	public void setCa1Length(int ca1Length)
+	{
+		this.ca1Length = ca1Length;
+	}
+
+	public int getCa2Length()
+	{
+		return ca2Length;
+	}
+
+	public void setCa2Length(int ca2Length)
+	{
+		this.ca2Length = ca2Length;
+	}
+
+	public long getIoTime()
+	{
+		return ioTime;
+	}
+
+	public void setIoTime(long ioTime)
+	{
+		this.ioTime = ioTime;
+	}
+
+	public double getProbability()
+	{
+		return probability;
+	}
+
+	public void setProbability(double probability)
+	{
+		this.probability = probability;
+	}
+
+	public double getIdentity() {
+		if ( identity < 0)
+			calcSimilarity();
+		return identity;
+	}
 
 
-	 public double getSimilarity() {
-		 if ( similarity < 0)
-			 calcSimilarity();
-		 return similarity;
-	 }
+	public void setIdentity(double identity) {
+		this.identity = identity;
+	}
 
 
-	 public void setSimilarity(double similarity) {
-		 this.similarity = similarity;
-	 }
+	public double getSimilarity() {
+		if ( similarity < 0)
+			calcSimilarity();
+		return similarity;
+	}
 
 
-	 public double getNormAlignScore()
-	 {
-		 return normAlignScore;
-	 }
+	public void setSimilarity(double similarity) {
+		this.similarity = similarity;
+	}
 
-	 public void setNormAlignScore(double normAlignScore)
-	 {
-		 this.normAlignScore = normAlignScore;
-	 }
 
-	 public Matrix[] getBlockRotationMatrix()
-	 {
-		 return blockRotationMatrix;
-	 }
+	public double getNormAlignScore()
+	{
+		return normAlignScore;
+	}
 
-	 public void setBlockRotationMatrix(Matrix[] blockRotationMatrix)
-	 {
-		 this.blockRotationMatrix = blockRotationMatrix;
-	 }
+	public void setNormAlignScore(double normAlignScore)
+	{
+		this.normAlignScore = normAlignScore;
+	}
 
-	 public Atom[] getBlockShiftVector()
-	 {
-		 return blockShiftVector;
-	 }
+	public Matrix[] getBlockRotationMatrix()
+	{
+		return blockRotationMatrix;
+	}
 
-	 public void setBlockShiftVector(Atom[] blockShiftVector)
-	 {
-		 this.blockShiftVector = blockShiftVector;
-	 }
+	public void setBlockRotationMatrix(Matrix[] blockRotationMatrix)
+	{
+		this.blockRotationMatrix = blockRotationMatrix;
+	}
 
-	 public String getAlgorithmName() {
-		 return algorithmName;
-	 }
+	public Atom[] getBlockShiftVector()
+	{
+		return blockShiftVector;
+	}
 
-	 public void setAlgorithmName(String algorithmName) {
-		 this.algorithmName = algorithmName;
-	 }
+	public void setBlockShiftVector(Atom[] blockShiftVector)
+	{
+		this.blockShiftVector = blockShiftVector;
+	}
 
-	 public String getVersion() {
-		 return version;
-	 }
+	public String getAlgorithmName() {
+		return algorithmName;
+	}
 
-	 public void setVersion(String version) {
-		 this.version = version;
-	 }
+	public void setAlgorithmName(String algorithmName) {
+		this.algorithmName = algorithmName;
+	}
 
-	 /**
-	  * Get whether this alignment has the normal topology, ie the residues
-	  * aligned in each block increase sequentially over the original protein.
-	  * 
-	  * This will be false if a circular permutation was detected.
-	  * @return true if the alignment is sequential
-	  */
-	 public boolean isSequentialAlignment() {
-		 return sequentialAlignment;
-	 }
-	 /**
-	  * Set whether this alignment has the normal topology, ie the residues
-	  * aligned in each block increase sequentially over the original protein.
-	  * 
-	  * This will be false if a circular permutation was detected.
-	  */
-	 public void setSequentialAlignment(boolean sequentialAlignment) {
-		 this.sequentialAlignment = sequentialAlignment;
-	 }
+	public String getVersion() {
+		return version;
+	}
+
+	public void setVersion(String version) {
+		this.version = version;
+	}
+
+	/**
+	 * Get whether this alignment has the normal topology, ie the residues
+	 * aligned in each block increase sequentially over the original protein.
+	 * 
+	 * This will be false if a circular permutation was detected.
+	 * @return true if the alignment is sequential
+	 */
+	public boolean isSequentialAlignment() {
+		return sequentialAlignment;
+	}
+	/**
+	 * Set whether this alignment has the normal topology, ie the residues
+	 * aligned in each block increase sequentially over the original protein.
+	 * 
+	 * This will be false if a circular permutation was detected.
+	 */
+	public void setSequentialAlignment(boolean sequentialAlignment) {
+		this.sequentialAlignment = sequentialAlignment;
+	}
+
+	/**
+	 * A ca1length x ca2length matrix.
+	 * For CE this is the distance matrix, but the exact interpretation is left
+	 * up to the alignment algorithm.
+	 * @return A matrix with dimensions ca1length x ca2length, or null
+	 */
+	public Matrix getDistanceMatrix() {
+		return distanceMatrix;
+	}
+
+	/**
+	 * A ca1length x ca2length matrix.
+	 * For CE this is the distance matrix, but the exact interpretation is left
+	 * up to the alignment algorithm.
+	 * @param distanceMatrix A matrix with dimensions ca1length x ca2length
+	 */
+	public void setDistanceMatrix(Matrix distanceMatrix) {
+		this.distanceMatrix = distanceMatrix;
+		System.out.println("Setting distMatrix "+distanceMatrix==null?"null":"not null");
+	}
+
 }

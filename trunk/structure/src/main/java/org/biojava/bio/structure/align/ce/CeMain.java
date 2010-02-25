@@ -129,10 +129,25 @@ public class CeMain extends AbstractStructureAlignment implements StructureAlign
 		AFPChain afpChain = calculator.extractFragments(params, ca1, ca2clone);
 		calculator.traceFragmentMatrix(params, afpChain,ca1, ca2clone);
 		calculator.nextStep(params, afpChain,ca1, ca2clone);
-
+		
 		afpChain.setAlgorithmName(algorithmName);
 		afpChain.setVersion(version);
-			
+	
+		// Set the distance matrix
+		int winSize = params.getWinSize();
+		int winSizeComb1 = (winSize-1)*(winSize-2)/2;	
+		double[][] m = calculator.initSumOfDistances(ca1.length, ca2length, winSize, winSizeComb1, ca1, ca2clone);
+		
+		// Draw a little green line across the center of the distance matrix
+		// TODO do this more elegantly
+		if(params.isCheckCircular()) {
+			for(int i=0;i<m.length;i++) {
+				m[i][ca2.length] = -1;
+			}
+		}
+		
+		afpChain.setDistanceMatrix(new Matrix(m));
+	
 		
 		if(params.isCheckCircular()) {
 			// Check for circular permutations
@@ -141,7 +156,6 @@ public class CeMain extends AbstractStructureAlignment implements StructureAlign
 		
 
 		return afpChain;
-
 	}
 
 
@@ -280,7 +294,7 @@ public class CeMain extends AbstractStructureAlignment implements StructureAlign
 			blockRMSDs[i] = rmsd;
 			
 			// Don't move blocks relative to the first block
-			Matrix identity = new Matrix(3,3);
+			/*Matrix identity = new Matrix(3,3);
 			for(int j=0;j<3;j++)
 				identity.set(j, j, 1.);
 			blockRotationMatrices[i] = identity;
@@ -288,6 +302,9 @@ public class CeMain extends AbstractStructureAlignment implements StructureAlign
 			Atom zero = new AtomImpl();
 			zero.setX(0.); zero.setY(0.); zero.setZ(0.);
 			blockShifts[i] = zero;
+			*/
+			blockRotationMatrices[i] = (Matrix) blockRotationMatrices[0].clone();
+			blockShifts[i] = (Atom) blockShifts[0].clone();
 		}
 		newAFPChain.setOptRmsd(blockRMSDs);
 		newAFPChain.setBlockRmsd(blockRMSDs);

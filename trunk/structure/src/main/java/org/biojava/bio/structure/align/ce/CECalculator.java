@@ -204,6 +204,8 @@ public class CECalculator {
 
 			mat = initSumOfDistances(nse1, nse2, winSize, winSizeComb1, ca1, ca2);
 
+			// Set the distance matrix
+			afpChain.setDistanceMatrix(new Matrix(mat.clone()));
 
 
 			//		
@@ -618,8 +620,7 @@ public class CECalculator {
 			System.out.println("ntraces : " + nTraces );         
 
 		}
-
-
+		
 	}
 
 	private double getScore2(int jse1, int jse2, double[][] traceScore, int traceIndex_,int[] traceIndex,int winSizeComb1, int winSizeComb2, double score0, double score1 ) {

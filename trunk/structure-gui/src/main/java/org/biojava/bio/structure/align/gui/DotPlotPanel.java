@@ -69,7 +69,7 @@ public class DotPlotPanel extends ScaleableMatrixPanel {
 	 *
 	 *  If this set to null, the background is set to black.
 	 */
-	DotPlotPanel(AFPChain alignment, Matrix background ){
+	DotPlotPanel(AFPChain alignment ){
 		
 		final double defaultBackground = 100.;
 				
@@ -131,7 +131,7 @@ public class DotPlotPanel extends ScaleableMatrixPanel {
 		this.setAlternativeAligs(aligns);
 		this.setSelectedAlignmentPos(0); //color white, not red
 
-		
+		Matrix background = alignment.getDistanceMatrix();
 		//Fill with default black background if none given
 		if(background == null) {
 			background = new Matrix(alignment.getCa1Length(),alignment.getCa2Length());
@@ -151,9 +151,9 @@ public class DotPlotPanel extends ScaleableMatrixPanel {
 	 * @param afpChain
 	 * @param background
 	 */
-	private static JFrame showDotPlotJFrame(AFPChain afpChain, Matrix mat ) {
+	private static JFrame showDotPlotJFrame(AFPChain afpChain ) {
 		
-		DotPlotPanel dotplot = new DotPlotPanel(afpChain, mat);			
+		DotPlotPanel dotplot = new DotPlotPanel(afpChain);			
 		
 		//Create JFrame
 		
@@ -219,8 +219,8 @@ public class DotPlotPanel extends ScaleableMatrixPanel {
 			double[][] m = calculator.initSumOfDistances(ca1.length, ca2.length, params.getWinSize(), winSizeComb1, ca1, ca2);
 			//double[][] m = calculator.getMatMatrix();
 			Matrix mat = new Matrix(m);
-
-			showDotPlotJFrame(afpChain,mat);
+			//afpChain.setDistanceMatrix(mat);
+			showDotPlotJFrame(afpChain);
 			
 			//StructureAlignmentJmol jmol = new StructureAlignmentJmol(afpChain, ca1, ca2);
 //			jmol.setStructure(cache.getStructure(name1));
@@ -266,7 +266,7 @@ public class DotPlotPanel extends ScaleableMatrixPanel {
 				}
 			*/
 
-			showDotPlotJFrame(afpChain,mat);
+			showDotPlotJFrame(afpChain);
 			
 			
 		} catch (StructureException e) {

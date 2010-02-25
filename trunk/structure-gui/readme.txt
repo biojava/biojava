@@ -26,7 +26,13 @@ mvn install:install-file \
  
  
  Install Javaws.jar
- 
+ Install fatcat.jar
   
-  
+ mvn install:install-file \
+ -Dfile=/Users/blivens/Downloads/fatcat.jar \
+ -DgroupId=org.rcsb \
+ -DartifactId=fatcat \
+ -Dversion=1.0 \
+ -Dpackaging=jar \
+ -DgeneratePom=true 
  
