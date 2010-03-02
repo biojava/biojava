@@ -9,6 +9,7 @@ import java.io.InputStream;
 import org.biojava3.core.sequence.compound.AminoAcidCompound;
 import org.biojava3.core.sequence.compound.AminoAcidCompoundSet;
 import org.biojava3.core.sequence.compound.DNACompoundSet;
+import org.biojava3.core.sequence.compound.NucleotideCompound;
 import org.biojava3.core.sequence.io.DNASequenceCreator;
 import org.biojava3.core.sequence.io.FastaReader;
 import org.biojava3.core.sequence.io.GenericFastaHeaderParser;
@@ -38,11 +39,11 @@ public class TranslationTest {
         "org/biojava3/core/sequence/BRCA2-peptide.fasta").getInputStream();
 
     try {
-      FastaReader<DNASequence> dnaReader = new FastaReader<DNASequence>(cdsIs,
-          new GenericFastaHeaderParser(), new DNASequenceCreator(dnaCs));
+      FastaReader<DNASequence, NucleotideCompound> dnaReader = new FastaReader<DNASequence, NucleotideCompound>(cdsIs,
+          new GenericFastaHeaderParser<DNASequence, NucleotideCompound>(), new DNASequenceCreator(dnaCs));
       brca2Dna = dnaReader.process().iterator().next();
-      FastaReader<ProteinSequence> pReader = new FastaReader<ProteinSequence>(
-          pepIs, new GenericFastaHeaderParser(), new ProteinSequenceCreator(
+      FastaReader<ProteinSequence, AminoAcidCompound> pReader = new FastaReader<ProteinSequence, AminoAcidCompound>(
+          pepIs, new GenericFastaHeaderParser<ProteinSequence, AminoAcidCompound>(), new ProteinSequenceCreator(
               aaCs));
       brca2Pep = pReader.process().iterator().next();
     }

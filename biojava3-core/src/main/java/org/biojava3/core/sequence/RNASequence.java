@@ -46,12 +46,12 @@ public class RNASequence extends AbstractSequence<NucleotideCompound> {
     super(proxyLoader, RNACompoundSet.getRNACompoundSet());
   }
 
-  public RNASequence(String seqString, CompoundSet compoundSet) {
+  public RNASequence(String seqString, CompoundSet<NucleotideCompound> compoundSet) {
     super(seqString, compoundSet);
   }
 
   public RNASequence(SequenceProxyLoader<NucleotideCompound> proxyLoader,
-      CompoundSet compoundSet) {
+      CompoundSet<NucleotideCompound> compoundSet) {
     super(proxyLoader, compoundSet);
   }
 

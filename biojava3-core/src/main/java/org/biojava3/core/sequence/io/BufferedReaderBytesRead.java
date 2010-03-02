@@ -301,6 +301,7 @@ public class BufferedReaderBytesRead extends Reader {
      *
      * @exception  IOException  If an I/O error occurs
      */
+    @SuppressWarnings("unused")
     private String readLine(boolean ignoreLF) throws IOException {
 	StringBuffer s = null;
 	int startChar;

@@ -1,13 +1,14 @@
 package org.biojava3.core.sequence;
 
 /**
- * Provides a way of representing the strand of a sequence or location.
+ * Provides a way of representing the strand of a sequence, location
+ * hit or feature.
  *
  * @author ayates
  */
 public enum Strand {
 
-  POSITIVE("+", 1), NEGATIVE("-", -1), UNKNOWN("?", 0);
+  POSITIVE("+", 1), NEGATIVE("-", -1), UNDEFINED("?", 0);
 
   private final String stringRepresentation;
   private final int    numericRepresentation;
