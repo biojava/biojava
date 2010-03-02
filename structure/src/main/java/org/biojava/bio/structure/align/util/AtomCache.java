@@ -19,6 +19,8 @@ public class AtomCache {
 	public static final String CHAIN_NR_SYMBOL = ":";
 	public static final String CHAIN_SPLIT_SYMBOL = ".";
 	
+	
+	
 	String path;
 	boolean isSplit;
 	boolean autoFetch;
@@ -134,6 +136,9 @@ public class AtomCache {
 	@SuppressWarnings("deprecation")
    public Structure getStructure(String name) throws IOException, StructureException{
 	   
+	   if ( name.length() < 4)
+	      throw new IllegalArgumentException("Can't interpred IDs that are shorter than 4 residues!");
+	   
 		while ( loading.get() ){
 			// waiting for loading to be finished...
 			
@@ -143,6 +148,8 @@ public class AtomCache {
 		Structure n = null;
 		
 		boolean useChainNr = false;
+		boolean useDomainInfo = false;
+		String range = null;
 		int chainNr = -1;
 	
 		try {
@@ -163,11 +170,18 @@ public class AtomCache {
 					chainId = name.substring(5,6);
 				} else if ( name.substring(4,5).equals(CHAIN_NR_SYMBOL)) {
 
-					useChainNr = true;					
+					useChainNr = true;	
 					chainNr = Integer.parseInt(name.substring(5,6));
 				}
+			} else if ( (name.length() > 6) &&  
+			      (name.contains(CHAIN_NR_SYMBOL))) {
+			   pdbId = name.substring(0,4);
+			   // this ID has domain split information...
+			   useDomainInfo = true;
+			   range = name.substring(5);
 			}
 			
+			//System.out.println("got: " + name + " " + pdbId + " " + chainId + " useChainNr:" + useChainNr + " " +chainNr + " useDomainInfo:" + useDomainInfo + " " + range);
 
 			if (pdbId == null) {
 				loading.set(false);
@@ -179,7 +193,7 @@ public class AtomCache {
 			Structure s= reader.getStructureById(pdbId.toLowerCase());
 			//long end  = System.currentTimeMillis();
 			//System.out.println("time to load " + pdbId + " " + (end-start) + "\t  size :" + StructureTools.getNrAtoms(s) + "\t cached: " + cache.size());
-			if ( chainId == null && chainNr < 0) {
+			if ( chainId == null && chainNr < 0 && range == null) {
 				loading.set(false);
 				
 				// we only want the 1st model in this case
@@ -197,13 +211,18 @@ public class AtomCache {
 
 			}
 			
-			if (! useChainNr)
-				n = StructureTools.getReducedStructure(s, chainId);
-			else  {
-				
-				n = StructureTools.getReducedStructure(s, chainNr);
-				
+			
+			if ( useChainNr) {
+			   //System.out.println("using ChainNr");
+			   n = StructureTools.getReducedStructure(s, chainNr);
+			} else if ( useDomainInfo) {
+			   //System.out.println("calling getSubRanges");
+			   n = StructureTools.getSubRanges(s, range);
+			} else  {
+			   //System.out.println("reducing Chain Id " + chainId);
+			   n = StructureTools.getReducedStructure(s, chainId);
 			}
+			
 						
 		} catch (Exception e){
 			e.printStackTrace();
