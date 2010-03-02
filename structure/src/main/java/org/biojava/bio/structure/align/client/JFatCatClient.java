@@ -165,6 +165,9 @@ public class JFatCatClient {
 	   String sendURL = serverLocation + sendAPPEND;
 
 		String version = resourceManager.getString("jfatcat.version");
+		
+		int timeout = getTimeout();
+		
 		try {
 
 			// just to make sure that similarity has been calculated!
@@ -175,9 +178,12 @@ public class JFatCatClient {
 			String u = String.format(sendURL,afpChain.getName1() , afpChain.getName2(),version);
 
 			URL url = new URL(u); 
+			
 			//System.out.println("posting xml: " + xml);
-			InputStream response = HTTPConnectionTools.doPOST(url, xml);
+			InputStream response = HTTPConnectionTools.doPOST(url, xml,timeout);
+			
 			FarmJobRunnable.log("got response: " + convertStreamToString(response));
+			
 			if ( xml.startsWith("KILL_JOB")){
 				throw new JobKillException("Server responded with KILL message.");
 			}
