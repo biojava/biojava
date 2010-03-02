@@ -98,6 +98,7 @@ public abstract class AbstractLocation implements Location {
           equal(getStart(), l.getStart()) &&
           equal(getEnd(), l.getEnd()) &&
           equal(getStrand(), l.getStrand()) &&
+          equal(isCircular(), l.isCircular()) &&
           equal(getSubLocations(), l.getSubLocations())
       );
     }
@@ -109,6 +110,7 @@ public abstract class AbstractLocation implements Location {
     r = Hashcoder.hash(r, getStart());
     r = Hashcoder.hash(r, getEnd());
     r = Hashcoder.hash(r, getStrand());
+    r = Hashcoder.hash(r, isCircular());
     r = Hashcoder.hash(r, getSubLocations());
     return r;
   }
