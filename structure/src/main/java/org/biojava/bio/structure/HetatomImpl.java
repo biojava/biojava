@@ -271,13 +271,20 @@ public class HetatomImpl implements Group,Serializable {
 
     /** test is an Atom with name is existing. */
     public boolean hasAtom(String name){
-        for (int i=0;i<atoms.size();i++){
-            Atom atom = atoms.get(i);
-            if (atom.getName().equals(name)){
-                return true;
-            }
-        }
-        return false ;
+       
+       Atom a = atomLookup.get(name);
+       if ( a != null)
+           return true;
+       
+       return false;
+       
+//       for (int i=0;i<atoms.size();i++){
+//            Atom atom = atoms.get(i);
+//            if (atom.getName().equals(name)){
+//                return true;
+//            }
+//        }
+//        return false ;
     }
 
     /**
