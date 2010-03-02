@@ -29,6 +29,8 @@ package org.biojava3.core.exceptions;
  */
 public class SequenceLengthError extends Error{
 
+  private static final long serialVersionUID = -5486504706601790351L;
+
     public SequenceLengthError(String message){
         super(message);
     }

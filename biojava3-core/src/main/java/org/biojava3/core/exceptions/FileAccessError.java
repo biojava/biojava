@@ -11,6 +11,8 @@ package org.biojava3.core.exceptions;
  */
 public class FileAccessError extends Error{
 
+  private static final long serialVersionUID = 6513440232428438424L;
+
     public FileAccessError(String error){
         super(error);
     }
