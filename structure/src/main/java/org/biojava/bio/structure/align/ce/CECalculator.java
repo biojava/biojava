@@ -49,7 +49,7 @@ public class CECalculator {
 
    private static final boolean isPrint = false;
    private static final boolean showAlignmentSteps = false;
-   private static final boolean debug = false;  
+   private static final boolean debug = true;  
 
    int[] f1;
    int[] f2;
@@ -1116,7 +1116,8 @@ nBestTrace=nTrace;
 
 
 
-   private int optimizeSuperposition(AFPChain afpChain, int nse1, int nse2, int strLen, double rmsd, Atom[] ca1, Atom[] ca2,int nGaps, Atom[] strBuf1, Atom[] strBuf2 ) throws StructureException {
+   private int optimizeSuperposition(AFPChain afpChain, int nse1, int nse2, int strLen, double rmsd, Atom[] ca1, Atom[] ca2,int nGaps, 
+         Atom[] strBuf1, Atom[] strBuf2 ) throws StructureException {
 
       //System.out.println("optimizing Superimposition...");
 
@@ -1168,12 +1169,12 @@ nBestTrace=nTrace;
          nAtom=0; nGaps=0; 
          for(int ia=0; ia<lcmp; ia++) {
             if(align_se1[ia]!=-1 && align_se2[ia]!=-1) {
-               if(ca1[align_se1[ia]].getX()<1e10 && ca2[align_se2[ia]].getX()<1e10) {
-                  strBuf1[nAtom]=ca1[align_se1[ia]];
-                  strBuf2[nAtom]=ca2[align_se2[ia]];
 
-                  nAtom++;
-               }
+               strBuf1[nAtom]=ca1[align_se1[ia]];
+               strBuf2[nAtom]=ca2[align_se2[ia]];
+
+               nAtom++;
+
             }
             else {
                nGaps++;
@@ -1230,16 +1231,16 @@ nBestTrace=nTrace;
       for(int ia=0; ia<lcmp; ia++) {
          if(align_se1[ia]!=-1 && align_se2[ia]!=-1) {
             //System.out.println(" " +align_se1[ia] + " " + align_se2[ia]);
-            if(ca1[align_se1[ia]].getX()<1e10 && ca2[align_se2[ia]].getX()<1e10) {
-               if(newBestTrace) {						
-                  bestTrace1[nBestTrace]=align_se1[ia];
-                  bestTrace2[nBestTrace]=align_se2[ia];
-                  bestTraceLen[nBestTrace]=0;
-                  newBestTrace=false;
-                  nBestTrace++;
-               }
-               bestTraceLen[nBestTrace-1]++;
+
+            if(newBestTrace) {						
+               bestTrace1[nBestTrace]=align_se1[ia];
+               bestTrace2[nBestTrace]=align_se2[ia];
+               bestTraceLen[nBestTrace]=0;
+               newBestTrace=false;
+               nBestTrace++;
             }
+            bestTraceLen[nBestTrace-1]++;
+
          }
          else {
             newBestTrace=true;

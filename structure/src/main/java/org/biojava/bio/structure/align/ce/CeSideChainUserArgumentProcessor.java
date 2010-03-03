@@ -17,8 +17,7 @@ public class CeSideChainUserArgumentProcessor extends AbstractUserArgumentProces
 	public Object getParameters() {
 		CeParameters params = new CeParameters();
 	
-		// default sidechain alignment atoms are CA, O, CB
-		params.setAlignmentAtoms(new String[]{StructureTools.caAtomName, StructureTools.oAtomName , StructureTools.cbAtomName });
+		params.setAlignmentAtoms(new String[]{StructureTools.caAtomName});
 		return params;
 	}
 

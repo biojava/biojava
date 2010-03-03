@@ -210,13 +210,17 @@ public class AfpChainWriter
 
          if ( ! longHeader ) {
             for(k = 10; k <= len; k += 10)
-               txt.append("----+----|");
-            if(k <= len + 5) txt.append("----+");
-         } else {
-            for(k = 10; k <= len; k += 10)
                txt.append("    .    :");
             if(k <= len + 5) txt.append("    .");
+            
+         } else {
+            
+            for(k = 10; k <= len; k += 10)
+               txt.append("----+----|");
+            if(k <= len + 5) txt.append("----+");
          }
+         
+         
          String pdb1 = ca1[ap].getParent().getPDBCode();
          String pdb2 = ca2[bp].getParent().getPDBCode();
          txt.append(newline);
