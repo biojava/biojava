@@ -58,7 +58,7 @@ public class Das1Source implements DasSource {
 	boolean local;
 	Map<String,String> properties;
 	boolean alertAdmin;
-	private String[] validCapabilities;
+	private List<String> validCapabilities;
 
 	public static String EMPTY_ID = "UNK:-1" ;
 
@@ -303,16 +303,19 @@ System.out.println("hashcode="+h);
 	}
 
 
-	public void setValidCapabilities(String[] validCapabilities) {
-		this.validCapabilities=validCapabilities;
-		
-	}
-	public String[] getValidCapabilities(){
+	
+	public List <String> getValidCapabilities(){
 		
 //			String []standin={"features"};
 //			return  standin;
 		
 		return validCapabilities;
+	}
+
+
+	public void setValidCapabilities(List validCapabilities) {
+		this.validCapabilities=validCapabilities;
+		
 	}
 	
 

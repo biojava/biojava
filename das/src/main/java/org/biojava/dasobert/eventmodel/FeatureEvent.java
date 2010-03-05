@@ -22,20 +22,21 @@
  */
 package org.biojava.dasobert.eventmodel;
 
+import java.util.List;
 import java.util.Map;
 
 import org.biojava.dasobert.dasregistry.Das1Source;
 public class FeatureEvent 
 extends AbstractDasEvent {
 	
-    Map<String,String>[] features;
+    List<Map<String, String>> features;
    
     int comeBackLater;
     String version;
     
-    public FeatureEvent(Map<String,String>[] features,Das1Source dasSource,String version) {
+    public FeatureEvent(List<Map<String, String>> feats,Das1Source dasSource,String version) {
         super();
-        this.features =features;
+        this.features =feats;
         this.dasSource = dasSource;
         comeBackLater = -1;
         this.version = version;
@@ -63,7 +64,7 @@ extends AbstractDasEvent {
      * </pre>
      * @return a Map containng the features
      */
-    public Map<String,String>[] getFeatures(){
+    public List<Map<String,String>> getFeatures(){
         return features;
     }
 

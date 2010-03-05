@@ -176,13 +176,13 @@ public class DasSourceWriterImpl implements DasSourceWriter {
 
 		// show validated capabilities
 		if (source.getValidCapabilities() != null) {
-			String[] validCapabilities = source.getValidCapabilities();
+			List<String> validCapabilities = source.getValidCapabilities();
 
 			// System.out.println("valid caps length="+validCapabilities.length);
-			for (int i = 0; i < validCapabilities.length; i++) {
+			for (int i = 0; i < validCapabilities.size(); i++) {
 				xw.openTag("PROP");
 				xw.attribute("name", "valid");
-				xw.attribute("value", validCapabilities[i]);
+				xw.attribute("value", validCapabilities.get(i));
 
 				xw.closeTag("PROP");
 			}
