@@ -33,13 +33,9 @@ import org.biojava3.core.sequence.transcription.TranscriptionEngine;
  */
 public class TranscriptSequence extends DNASequence {
 
-public enum Sense{
-    POSITIVE, NEGATIVE, UNDEFINED
-}
-
 private final LinkedHashMap<String ,IntronSequence> intronSequenceHashMap = new LinkedHashMap<String,IntronSequence>();
 private final LinkedHashMap<String ,ExonSequence> exonSequenceHashMap = new LinkedHashMap<String,ExonSequence>();
-private Sense sense = Sense.UNDEFINED;
+private Strand sense = Strand.UNDEFINED;
 
 
 
@@ -49,7 +45,7 @@ private Sense sense = Sense.UNDEFINED;
  * @param begin
  * @param end inclusive of end
  */
-    public TranscriptSequence(DNASequence parentDNASequence, int begin, int end, Sense sense){
+    public TranscriptSequence(DNASequence parentDNASequence, int begin, int end, Strand sense){
         setParentDNASequence(parentDNASequence);
         setBegin(begin);
         setEnd(end);
@@ -58,7 +54,7 @@ private Sense sense = Sense.UNDEFINED;
 
 
 
-    public Sense getSense(){
+    public Strand getStrand(){
         return sense;
     }
 

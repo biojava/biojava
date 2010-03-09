@@ -151,7 +151,7 @@ public class DAS_Stylesheet_Handler extends DefaultHandler {
     public void endElement(String uri, String name, String qName) {
         if ( qName.equals("HEIGHT")){
             currentType.put("height",chars);
-        } else if ( qName.equals("COLOR")){
+        } else if ( qName.equals("FGCOLOR")){
             //System.out.println("got color " + chars);
             Color col = getColorFromString(chars);
             if ( col != null ){
@@ -162,8 +162,8 @@ public class DAS_Stylesheet_Handler extends DefaultHandler {
                 }
             }
             
-        } else if ( qName.equals("OUTLINECOLOR")){
-            currentType.put("outlinecolor",chars);
+        } else if ( qName.equals("BGCOLOR")){
+            currentType.put("backgroundcolor",chars);
         } else if ( qName.equals("BACKGROUND")){
             currentType.put("background",chars);
         } else if ( qName.equals("BUMP")){

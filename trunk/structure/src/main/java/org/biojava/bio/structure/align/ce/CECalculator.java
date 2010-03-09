@@ -620,7 +620,7 @@ public class CECalculator {
 			System.out.println("ntraces : " + nTraces );         
 
 		}
-		
+
 	}
 
 	private double getScore2(int jse1, int jse2, double[][] traceScore, int traceIndex_,int[] traceIndex,int winSizeComb1, int winSizeComb2, double score0, double score1 ) {
@@ -962,14 +962,14 @@ nBestTrace=nTrace;
 						bestTraceLen[k]));
 
 		}
-		
+
 		// start to convert CE internal datastructure to generic AFPChain one...
 		List<AFP> afpSet = new ArrayList<AFP>();
 		for (int afp=0;afp<nBestTrace;afp++){
 			// fill in data from nBestTrace into AFP
 
 			AFP afpI = new AFP();
-	
+
 			afpI.setFragLen(bestTraceLen[afp]);
 			afpI.setP1(bestTrace1[afp]+1);
 			afpI.setP2(bestTrace2[afp]+1);
@@ -979,8 +979,8 @@ nBestTrace=nTrace;
 
 		afpChain.setAfpSet(afpSet);
 
-		
-		
+
+
 
 		//System.out.println("z:"+z + " zThr" + zThr+ " bestTraceScore " + bestTraceScore + " " + nGaps );
 		if(z>=zThr) {
@@ -1134,7 +1134,8 @@ nBestTrace=nTrace;
 
 
 
-	private int optimizeSuperposition(AFPChain afpChain, int nse1, int nse2, int strLen, double rmsd, Atom[] ca1, Atom[] ca2,int nGaps, Atom[] strBuf1, Atom[] strBuf2 ) throws StructureException {
+	private int optimizeSuperposition(AFPChain afpChain, int nse1, int nse2, int strLen, double rmsd, Atom[] ca1, Atom[] ca2,int nGaps, 
+			Atom[] strBuf1, Atom[] strBuf2 ) throws StructureException {
 
 		//System.out.println("optimizing Superimposition...");
 
@@ -1185,12 +1186,12 @@ nBestTrace=nTrace;
 			nAtom=0; nGaps=0; 
 			for(int ia=0; ia<lcmp; ia++) {
 				if(align_se1[ia]!=-1 && align_se2[ia]!=-1) {
-					if(ca1[align_se1[ia]].getX()<1e10 && ca2[align_se2[ia]].getX()<1e10) {
-						strBuf1[nAtom]=ca1[align_se1[ia]];
-						strBuf2[nAtom]=ca2[align_se2[ia]];
 
-						nAtom++;
-					}
+					strBuf1[nAtom]=ca1[align_se1[ia]];
+					strBuf2[nAtom]=ca2[align_se2[ia]];
+
+					nAtom++;
+
 				}
 				else {
 					nGaps++;
@@ -1247,16 +1248,16 @@ nBestTrace=nTrace;
 		for(int ia=0; ia<lcmp; ia++) {
 			if(align_se1[ia]!=-1 && align_se2[ia]!=-1) {
 				//System.out.println(" " +align_se1[ia] + " " + align_se2[ia]);
-				if(ca1[align_se1[ia]].getX()<1e10 && ca2[align_se2[ia]].getX()<1e10) {
-					if(newBestTrace) {						
-						bestTrace1[nBestTrace]=align_se1[ia];
-						bestTrace2[nBestTrace]=align_se2[ia];
-						bestTraceLen[nBestTrace]=0;
-						newBestTrace=false;
-						nBestTrace++;
-					}
-					bestTraceLen[nBestTrace-1]++;
+
+				if(newBestTrace) {						
+					bestTrace1[nBestTrace]=align_se1[ia];
+					bestTrace2[nBestTrace]=align_se2[ia];
+					bestTraceLen[nBestTrace]=0;
+					newBestTrace=false;
+					nBestTrace++;
 				}
+				bestTraceLen[nBestTrace-1]++;
+
 			}
 			else {
 				newBestTrace=true;
@@ -1952,7 +1953,7 @@ nBestTrace=nTrace;
 	public void setAlign_se2(int[] alignSe2) {
 		align_se2 = alignSe2;
 	}
-	
+
 	/**
 	 * Caution: this matrix is overwriten with very different data at several
 	 * points in the alignment algorithm. After 
@@ -1972,7 +1973,7 @@ nBestTrace=nTrace;
 	public Matrix getRotationMatrix() {
 		return r;
 	}
-	
+
 	/**
 	 * Gets the shift from the last call to 
 	 * {@link #calc_rmsd(Atom[], Atom[], int, boolean, boolean) calc_rmsd}.

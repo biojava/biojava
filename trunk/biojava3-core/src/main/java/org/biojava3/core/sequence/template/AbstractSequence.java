@@ -42,7 +42,7 @@ public abstract class AbstractSequence<C extends Compound> implements Sequence<C
     private AnnotationType annotationType = AnnotationType.UNKNOWN;
     private String description;
     private String originalHeader;
-    private Collection userCollection;
+    private Collection<Object> userCollection;
 
 
     public AbstractSequence() {
@@ -66,7 +66,7 @@ public abstract class AbstractSequence<C extends Compound> implements Sequence<C
      * @return
      */
 
-    public Collection getUserCollection(){
+    public Collection<Object> getUserCollection(){
 
         return userCollection;
     }
@@ -76,7 +76,7 @@ public abstract class AbstractSequence<C extends Compound> implements Sequence<C
      * @param userCollection
      */
 
-    public void setUserCollection(Collection userCollection){
+    public void setUserCollection(Collection<Object> userCollection){
         this.userCollection = userCollection;
     }
 
@@ -90,7 +90,7 @@ public abstract class AbstractSequence<C extends Compound> implements Sequence<C
     /**
      * @param annotation the annotation to set
      */
-    public void setAnnotationType(AnnotationType annotation) {
+    public void setAnnotationType(AnnotationType annotationType) {
         this.annotationType = annotationType;
     }
 

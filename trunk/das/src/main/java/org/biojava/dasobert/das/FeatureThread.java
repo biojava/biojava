@@ -64,6 +64,7 @@ implements Runnable
 	}
 
 	public void addFeatureListener(FeatureListener li) {
+		System.out.println("adding feature listener"+li.getClass());
 		featureListeners.add(li);
 	}
 
@@ -138,8 +139,8 @@ implements Runnable
 
 
 			// notify FeatureListeners
-			Map<String, String>[] feats = features.toArray(new Map[features.size()]);
-			notifyFeatureListeners(feats,version);
+			
+			notifyFeatureListeners(features,version);
 
 			break;
 
@@ -154,8 +155,8 @@ implements Runnable
 		thread.start();
 	}
 
-	private void notifyFeatureListeners(Map<String, String>[] feats,String version){
-		logger.finest("FeatureThread found " + feats.length + " features");
+	private void notifyFeatureListeners(List<Map<String, String>> feats,String version){
+		logger.finest("FeatureThread found " + feats.size() + " features");
 		FeatureEvent fevent = new FeatureEvent(feats,dasSource,version);
 		
 		Iterator<FeatureListener> fiter = featureListeners.iterator();
@@ -170,7 +171,7 @@ implements Runnable
 	 * @param comeBackLater
 	 */
 	private void notifyComeBackLater(int comeBackLater){
-		FeatureEvent event = new FeatureEvent(new HashMap[0],dasSource,"");
+		FeatureEvent event = new FeatureEvent(new ArrayList(),dasSource,"");
 		event.setComeBackLater(comeBackLater);
 		Iterator<FeatureListener> fiter = featureListeners.iterator();
 		while (fiter.hasNext()){

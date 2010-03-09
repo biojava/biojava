@@ -12,7 +12,7 @@ import java.util.List;
 import org.biojava3.core.exceptions.ParserException;
 
 public class IOUtils {
-
+ 
   private static final int BUFFER = 4096;
 
   /**

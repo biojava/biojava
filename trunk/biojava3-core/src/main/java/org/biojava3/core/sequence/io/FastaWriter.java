@@ -9,29 +9,31 @@ import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.util.Collection;
 import org.biojava3.core.sequence.ProteinSequence;
+import org.biojava3.core.sequence.compound.AminoAcidCompound;
 import org.biojava3.core.sequence.compound.AminoAcidCompoundSet;
 import org.biojava3.core.sequence.io.template.FastaHeaderFormatInterface;
 import org.biojava3.core.sequence.template.AbstractSequence;
+import org.biojava3.core.sequence.template.Compound;
 
 /**
  *
  * @author Scooter Willis <willishf at gmail dot com>
  */
-public class FastaWriter<S extends AbstractSequence> {
+public class FastaWriter<S extends AbstractSequence<C>, C extends Compound> {
 
     OutputStream os;
     Collection<S> sequences;
-    FastaHeaderFormatInterface headerFormat;
+    FastaHeaderFormatInterface<S,C> headerFormat;
     private int lineLength = 60;
 
-    public FastaWriter(OutputStream os, Collection<S> sequences, FastaHeaderFormatInterface headerFormat) {
+    public FastaWriter(OutputStream os, Collection<S> sequences, FastaHeaderFormatInterface<S,C> headerFormat) {
         this.os = os;
         this.sequences = sequences;
         this.headerFormat = headerFormat;
     }
 
     public void process() throws Exception {
-        for (AbstractSequence sequence : sequences) {
+        for (S sequence : sequences) {
             String header = headerFormat.getHeader(sequence);
             os.write('>');
             os.write(header.getBytes());
@@ -45,33 +47,33 @@ public class FastaWriter<S extends AbstractSequence> {
                 }else{
                   bytesToWrite = data.length - i;
                 }
-              
+
                 os.write(data, i,bytesToWrite);
                 os.write('\n');
             }
-            
+
         }
     }
 
     public static void main(String[] args) {
         try {
             FileInputStream is = new FileInputStream("/Users/Scooter/mutualinformation/project/nuclear_receptor/PF00104_small.fasta");
-            
 
-            FastaReader<ProteinSequence> fastaReader = new FastaReader<ProteinSequence>(is, new GenericFastaHeaderParser(), new ProteinSequenceCreator(AminoAcidCompoundSet.getAminoAcidCompoundSet()));
+
+            FastaReader<ProteinSequence,AminoAcidCompound> fastaReader = new FastaReader<ProteinSequence,AminoAcidCompound>(is, new GenericFastaHeaderParser<ProteinSequence,AminoAcidCompound>(), new ProteinSequenceCreator(AminoAcidCompoundSet.getAminoAcidCompoundSet()));
             Collection<ProteinSequence> proteinSequences = fastaReader.process();
             is.close();
-            
+
 
             System.out.println(proteinSequences);
-            
+
             FileOutputStream fileOutputStream = new FileOutputStream("/Users/Scooter/mutualinformation/project/nuclear_receptor/PF00104_small_test.fasta");
-            
-            FastaWriter fastaWriter = new FastaWriter(fileOutputStream,proteinSequences,new GenericFastaHeaderFormat());
+
+            FastaWriter<ProteinSequence,AminoAcidCompound> fastaWriter = new FastaWriter<ProteinSequence,AminoAcidCompound>(fileOutputStream,proteinSequences,new GenericFastaHeaderFormat<ProteinSequence,AminoAcidCompound>());
             fastaWriter.process();
             fileOutputStream.close();
-            
-            
+
+
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -195,6 +195,18 @@ public class IUPACParser {
       return name;
     }
 
+    public boolean isStart(AminoAcidCompound compound) {
+      if(this.codons.isEmpty()) {
+        throw new IllegalStateException("Codons are empty; please request getCodons() fist before asking this");
+      }
+      for(Codon codon: codons) {
+        if(codon.getAminoAcid().equalsIgnoreCase(compound)) {
+          return codon.isStart();
+        }
+      }
+      return false;
+    }
+
     public List<Codon> getCodons(CompoundSet<NucleotideCompound> nucelotides,
         CompoundSet<AminoAcidCompound> aminoAcids) {
 

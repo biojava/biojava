@@ -26,8 +26,6 @@ package org.biojava3.core.sequence;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 
-import org.biojava3.core.sequence.TranscriptSequence.Sense;
-
 /**
  *
  * @author Scooter Willis
@@ -37,7 +35,7 @@ public class GeneSequence extends DNASequence{
 private final LinkedHashMap<String ,TranscriptSequence> transcriptSequenceHashMap = new LinkedHashMap<String,TranscriptSequence>();
 
 /**
- * 
+ *
  * @param parentDNASequence
  * @param begin
  * @param end inclusive of end
@@ -62,7 +60,7 @@ private final LinkedHashMap<String ,TranscriptSequence> transcriptSequenceHashMa
         return transcriptSequenceHashMap.remove(accession);
     }
 
-    public TranscriptSequence addTranscript(AccessionID accession,int begin,int end, Sense sense){
+    public TranscriptSequence addTranscript(AccessionID accession,int begin,int end, Strand sense){
         TranscriptSequence transcriptSequence = new TranscriptSequence(this,begin,end, sense);
         transcriptSequence.setAccession(accession);
         transcriptSequenceHashMap.put(accession.toString(), transcriptSequence);

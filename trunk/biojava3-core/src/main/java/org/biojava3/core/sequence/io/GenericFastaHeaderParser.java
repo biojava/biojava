@@ -5,12 +5,14 @@
 package org.biojava3.core.sequence.io;
 
 import java.util.ArrayList;
-import org.biojava3.core.exceptions.HeaderParseException;
+
 import org.biojava3.core.sequence.AccessionID;
 import org.biojava3.core.sequence.DataSource;
 import org.biojava3.core.sequence.ProteinSequence;
+import org.biojava3.core.sequence.compound.AminoAcidCompound;
 import org.biojava3.core.sequence.io.template.FastaHeaderParserInterface;
 import org.biojava3.core.sequence.template.AbstractSequence;
+import org.biojava3.core.sequence.template.Compound;
 import org.biojava3.core.sequence.template.AbstractSequence.AnnotationType;
 
 /**
@@ -31,7 +33,7 @@ import org.biojava3.core.sequence.template.AbstractSequence.AnnotationType;
  *
  * @author Scooter Willis <willishf at gmail dot com>
  */
-public class GenericFastaHeaderParser implements FastaHeaderParserInterface {
+public class GenericFastaHeaderParser<S extends AbstractSequence<C>, C extends Compound> implements FastaHeaderParserInterface<S,C> {
 
     public String[] getHeaderValues(String header) {
         String[] data = new String[0];
@@ -58,7 +60,7 @@ public class GenericFastaHeaderParser implements FastaHeaderParserInterface {
         return data;
     }
 
-    public void parseHeader(String header, AbstractSequence sequence) {
+    public void parseHeader(String header, S sequence) {
         //uniptrot
         // tr|Q0TET7|Q0TET7_ECOL5 Putative uncharacterized protein OS=Escherichia coli O6:K15:H31 (strain 536 / UPEC) GN=ECP_2553 PE=4 SV=1
         sequence.setOriginalHeader(header);
@@ -127,7 +129,8 @@ public class GenericFastaHeaderParser implements FastaHeaderParserInterface {
         System.out.println("parseHeader");
         String header = "";
         ProteinSequence sequence = new ProteinSequence("");
-        GenericFastaHeaderParser instance = new GenericFastaHeaderParser();
+        GenericFastaHeaderParser<ProteinSequence,AminoAcidCompound> instance =
+          new GenericFastaHeaderParser<ProteinSequence,AminoAcidCompound>();
 
         header = "gi|gi-number|gb|accession|locus";
         instance.parseHeader(header, sequence);

@@ -70,7 +70,7 @@ public class JFatCatProxy
       //aligner.setTwistedGroups(twistedGroups);
       try {
          Class afpTwister = Class.forName(afpTwisterClassName);
-         int i = 0;
+
          Method m = afpTwister.getMethod("twistOptimized", new Class[] { AFPChain.class, Atom[].class, Atom[].class});
 
          Group[] twistedGroups = (Group[]) m.invoke(null,afpChain,ca1,ca2);

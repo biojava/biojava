@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.biojava.bio.program.das.dasalignment.DASException;
+import org.biojava.dasobert.das.Capabilities;
 import org.biojava.dasobert.das2.Das2Capability;
 import org.biojava.dasobert.das2.Das2CapabilityImpl;
 import org.biojava.dasobert.das2.Das2Source;
@@ -53,6 +54,7 @@ public class Das2SourceHandler extends DefaultHandler{
 	
 	StringBuffer characterdata;
 	DasCoordinateSystem dcs;
+	List validCapabilities;
 	
 	
 
@@ -65,6 +67,7 @@ public class Das2SourceHandler extends DefaultHandler{
 		currentSource = new Das2SourceImpl();
 		coordinates   = new ArrayList();
 		capabilities  = new ArrayList();
+		validCapabilities = new ArrayList();
 		labels        = new ArrayList();
 		characterdata=new StringBuffer();
 	}
@@ -76,7 +79,7 @@ public class Das2SourceHandler extends DefaultHandler{
 		String doc_ref = atts.getValue("doc_href");
 		String description = atts.getValue("description");
 
- System.out.println("setting id/uri="+id);
+ //System.out.println("setting id/uri="+id);
 		currentSource.setId(id);
 		currentSource.setNickname(title);
 		currentSource.setHelperurl(doc_ref);
@@ -125,6 +128,7 @@ public class Das2SourceHandler extends DefaultHandler{
 			currentSource = new Das2SourceImpl();
 			coordinates = new ArrayList();
 			capabilities = new ArrayList();
+			validCapabilities = new ArrayList();
 
 			startSource(uri,name, qName, atts);
 
@@ -170,6 +174,11 @@ public class Das2SourceHandler extends DefaultHandler{
 			if (! labels.contains(label)) 
 				labels.add(label);
 		}
+		if(Capabilities.exists(pname)){
+			if(label.equals("valid"))validCapabilities.add(pname);
+			//System.out.println("adding valid cap="+pname);
+		}
+		
 	}
 
 	public void startDocument(){
@@ -181,6 +190,7 @@ public class Das2SourceHandler extends DefaultHandler{
 	public void endElement(String uri, String name, String qName) {
 		if ( qName.equals("SOURCE")) {
 			currentSource.setDas2Capabilities((Das2Capability[])capabilities.toArray(new Das2Capability[capabilities.size()]));
+			currentSource.setValidCapabilities(validCapabilities);
 			//System.out.println("got coordinates " + coordinates.size());
 			currentSource.setCoordinateSystem(coordinates);
 
@@ -223,7 +233,7 @@ public class Das2SourceHandler extends DefaultHandler{
 	}
 
 	public DasSource[] getSources(){    
-		//System.out.println("Das2SourceHandler: source size: " + sources.size());
+		System.out.println("Das2SourceHandler: source size: " + sources.size());
 		return (DasSource[])sources.toArray(new DasSource[sources.size()]);
 	}
 

@@ -11,6 +11,7 @@ import java.io.InputStream;
 import java.util.List;
 
 import org.biojava3.core.sequence.ProteinSequence;
+import org.biojava3.core.sequence.compound.AminoAcidCompound;
 import org.biojava3.core.sequence.compound.AminoAcidCompoundSet;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -53,7 +54,7 @@ public class FastaReaderTest {
         assertNotNull(inStream);
 
 
-        FastaReader<ProteinSequence> fastaReader = new FastaReader<ProteinSequence>(inStream, new GenericFastaHeaderParser(), new ProteinSequenceCreator(AminoAcidCompoundSet.getAminoAcidCompoundSet()));
+        FastaReader<ProteinSequence,AminoAcidCompound> fastaReader = new FastaReader<ProteinSequence,AminoAcidCompound>(inStream, new GenericFastaHeaderParser<ProteinSequence,AminoAcidCompound>(), new ProteinSequenceCreator(AminoAcidCompoundSet.getAminoAcidCompoundSet()));
         List<ProteinSequence> proteinSequences = fastaReader.process();
         inStream.close();
 

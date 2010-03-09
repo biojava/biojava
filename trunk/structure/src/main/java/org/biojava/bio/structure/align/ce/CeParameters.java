@@ -57,9 +57,13 @@ public class CeParameters implements ConfigStrucAligParams  {
 	@Override
 	public String toString() {
 		return "CeParameters [alignmentAtoms="
-		+ Arrays.toString(alignmentAtoms) + ", maxGapSize="
-		+ maxGapSize + ", rmsdThr=" + rmsdThr + ", rmsdThrJoin="
-		+ rmsdThrJoin + ", winSize=" + winSize + "]";
+      + Arrays.toString(alignmentAtoms) 
+      + ", maxGapSize=" + maxGapSize 
+      + ", rmsdThr=" + rmsdThr 
+      + ", rmsdThrJoin="+ rmsdThrJoin 
+      + ", winSize=" + winSize 
+      + ", showAFPRanges=" + showAFPRanges +
+      "]";
 	}
 
 

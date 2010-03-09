@@ -344,7 +344,7 @@ public class CeMain extends AbstractStructureAlignment implements StructureAlign
 		if (! (params instanceof CeParameters )){
 			throw new IllegalArgumentException("provided parameter object is not of type CeParameter");
 		}
-		params = (CeParameters) params;
+		this.params = (CeParameters) params;
 	}
 	
 	public String getVersion() {
