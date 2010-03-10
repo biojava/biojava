@@ -28,7 +28,6 @@ package org.biojava.bio.structure.align.ce;
 import java.util.ArrayList;
 import java.util.List;
 import org.biojava.bio.structure.Atom;
-import org.biojava.bio.structure.AtomImpl;
 import org.biojava.bio.structure.Group;
 import org.biojava.bio.structure.StructureException;
 import org.biojava.bio.structure.align.AbstractStructureAlignment;
@@ -53,9 +52,9 @@ public class CeMain extends AbstractStructureAlignment implements StructureAlign
 
 	public static final String version = "1.0";
 
-	private CeParameters params;
-	CECalculator calculator;
-	Atom[] ca2clone;
+	protected CeParameters params;
+	protected CECalculator calculator;
+	protected Atom[] ca2clone;
 
 	public CeMain(){
 		super();
@@ -332,7 +331,7 @@ public class CeMain extends AbstractStructureAlignment implements StructureAlign
 
 	public String getAlgorithmName() {
 
-		return algorithmName;
+		return CeMain.algorithmName;
 	}
 
 	public ConfigStrucAligParams getParameters() {

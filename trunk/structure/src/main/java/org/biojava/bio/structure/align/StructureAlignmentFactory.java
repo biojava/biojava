@@ -1,9 +1,11 @@
 package org.biojava.bio.structure.align;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.biojava.bio.structure.StructureException;
+import org.biojava.bio.structure.align.ce.CeCPMain;
 import org.biojava.bio.structure.align.ce.CeMain;
 import org.biojava.bio.structure.align.seq.SmithWaterman3Daligner;
 
@@ -11,39 +13,31 @@ import org.biojava.bio.structure.align.seq.SmithWaterman3Daligner;
 public class StructureAlignmentFactory {
 
 	public static StructureAlignment[] getAllAlgorithms(){
-	   
-	   int nrAlgorithms = 2;
-	   
+		
 	   StructureAlignment fatcatRigid    = null;
 	   StructureAlignment fatcatFlexible = null;
 	   try {
 	      fatcatRigid = getFatCatRigid();
-	      nrAlgorithms++;
 	      fatcatFlexible = getFatCatFlexible();
-	      nrAlgorithms++;
 	   } catch (Exception e){
 	      // ignore if not available...
 	   }
 	   
-		StructureAlignment[] algorithms = new StructureAlignment[nrAlgorithms];
+		List<StructureAlignment> algorithms = new LinkedList<StructureAlignment>();
 
-		int pos = 0;
-		algorithms[pos] = new CeMain();
-		pos++;
-		//algorithms[1] = new CeSideChainMain();
+		algorithms.add( new CeMain() );
+		algorithms.add( new CeCPMain() );
+		//algorithms.add( new CeSideChainMain() );
 		if ( fatcatRigid != null) {
-           algorithms[pos] = fatcatRigid;
-           pos++;
+			algorithms.add( fatcatRigid );
         }
         if ( fatcatFlexible != null){
-           algorithms[pos] = fatcatFlexible;
-           pos++;
+        	algorithms.add( fatcatFlexible );
         }
-		algorithms[pos] = new SmithWaterman3Daligner();
+        algorithms.add( new SmithWaterman3Daligner() );
 		
-		//algorithms[3] = new BioJavaStructureAlignment();
-		return algorithms;
-
+		//algorithms.add( new BioJavaStructureAlignment());
+		return algorithms.toArray(new StructureAlignment[algorithms.size()]);
 	}
 
 	public static StructureAlignment getAlgorithm(String name) throws StructureException{
@@ -69,7 +63,7 @@ public class StructureAlignmentFactory {
 
 		String className = "org.rcsb.fatcat.FatCatRigid";
 		try {
-			Class c = Class.forName(className);
+			Class<?> c = Class.forName(className);
 			Object o = c.newInstance();
 			return (StructureAlignment)o;
 		} catch (Exception e){
@@ -81,7 +75,7 @@ public class StructureAlignmentFactory {
 
 		String className = "org.rcsb.fatcat.FatCatFlexible";
 		try {
-			Class c = Class.forName(className);
+			Class<?> c = Class.forName(className);
 			Object o = c.newInstance();
 			return (StructureAlignment)o;
 		} catch (Exception e){

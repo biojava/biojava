@@ -73,9 +73,9 @@ public class CeParameters implements ConfigStrucAligParams  {
 		rmsdThr = 3.0;
 		rmsdThrJoin = 4.0;
 		alignmentAtoms = new String[]{StructureTools.caAtomName};
-		maxGapSize = 0;
+		maxGapSize = 30;
 		showAFPRanges = false;
-		checkCircular = true;
+		checkCircular = false;
 	}
 
 	/** The window size to look at
