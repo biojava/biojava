@@ -1,6 +1,13 @@
-/*
- *                    BioJava development code
- *
+/* This class is based on the original FATCAT implementation by
+ * <pre>
+ * Yuzhen Ye & Adam Godzik (2003)
+ * Flexible structure alignment by chaining aligned fragment pairs allowing twists.
+ * Bioinformatics vol.19 suppl. 2. ii246-ii255.
+ * http://www.ncbi.nlm.nih.gov/pubmed/14534198
+ * </pre>
+ * 
+ * Thanks to Yuzhen Ye and A. Godzik for granting permission to freely use and redistribute this code.
+ *  
  * This code may be freely distributed and modified under the
  * terms of the GNU Lesser General Public Licence.  This should
  * be distributed with the code.  If you do not have a copy,
@@ -11,15 +18,10 @@
  * Copyright for this code is held jointly by the individual
  * authors.  These should be listed in @author doc comments.
  *
- * For more information on the BioJava project and its aims,
- * or to join the biojava-l mailing list, visit the home page
- * at:
  *
- *      http://www.biojava.org/
- *
- * Created on Mar 9, 2010
- * Author: Andreas Prlic 
- *
+ * Created on Jun 17, 2009
+ * Created by Andreas Prlic - RCSB PDB 
+ * 
  */
 
 package org.biojava.bio.structure.align.gui;
