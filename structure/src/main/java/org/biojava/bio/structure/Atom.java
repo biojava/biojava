@@ -37,7 +37,7 @@ package org.biojava.bio.structure;
  * @since 1.4
  * 
  */
-public interface Atom {
+public interface Atom extends Cloneable {
     
     /** set trimmed version of atom name, e.g. "CA". 
      * @param s  a String specifying the name value

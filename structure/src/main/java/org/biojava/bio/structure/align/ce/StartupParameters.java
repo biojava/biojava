@@ -26,6 +26,9 @@ public class StartupParameters {
 	boolean printCE;
 	boolean showMenu;
 	boolean showAFPRanges;
+	boolean checkCircular;
+	
+
 	// for DB searches
 	String alignPairs;
 	String saveOutputDir;
@@ -41,6 +44,7 @@ public class StartupParameters {
 		pdbDirSplit = true;
 		maxGapSize = 30;
 		showAFPRanges = false;
+		checkCircular = false;
 	}
 	
 	
@@ -54,7 +58,7 @@ public class StartupParameters {
             + ", flexible=" + flexible + ", maxGapSize=" + maxGapSize + ", outFile=" + outFile + ", pdb1=" + pdb1 + ", pdb2=" + pdb2
             + ", pdbDirSplit=" + pdbDirSplit + ", pdbFilePath=" + pdbFilePath + ", printCE=" + printCE + ", printFatCat=" + printFatCat
             + ", printXML=" + printXML + ", saveOutputDir=" + saveOutputDir + ", show3d=" + show3d + ", showDBresult=" + showDBresult
-            + ", showMenu=" + showMenu + "]";
+            + ", showMenu=" + showMenu + ", showAFPRanges=" + showAFPRanges + ", checkCircular=" + checkCircular + "]";
    }
 
 
@@ -234,6 +238,17 @@ public class StartupParameters {
       this.showAFPRanges = showAFP;
    }
 	
-	
+   /**
+	 * @return Returns whether the protein should be checked for circular permutations. 
+	 */
+	public boolean isCheckCircular() {
+		return checkCircular;
+	}
 
+	/**
+	 * @param checkCircular Indicates whether the protein should be checked for circular permutations
+	 */
+	public void setCheckCircular(boolean checkCircular) {
+		this.checkCircular = checkCircular;
+	}
 }
