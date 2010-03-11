@@ -6,6 +6,7 @@ import org.biojava.bio.structure.Atom;
 import org.biojava.bio.structure.Calc;
 import org.biojava.bio.structure.Group;
 import org.biojava.bio.structure.StructureException;
+import org.biojava.bio.structure.align.AFPTwister;
 import org.biojava.bio.structure.align.StructureAlignment;
 import org.biojava.bio.structure.align.StructureAlignmentFactory;
 import org.biojava.bio.structure.align.gui.jmol.StructureAlignmentJmol;
@@ -40,14 +41,12 @@ public class StructureAlignmentDisplay {
          
          for (Atom a: ca2){
             i++;
-            twistedGroups[i]=a.getParent();         
+            twistedGroups[i]=a.getParent();
+            
          }
 
-         JFatCatProxy proxy = new JFatCatProxy();
 
-         StructureAlignment fatCatFlexible = StructureAlignmentFactory.getAlgorithm(afpChain.getAlgorithmName());
-         proxy.setStructureAlignment(fatCatFlexible);
-         twistedGroups = proxy.twistGroups(afpChain, ca1, ca2);
+         twistedGroups = AFPTwister.twistOptimized(afpChain, ca1, ca2);
 
 
       }
