@@ -38,12 +38,13 @@ import org.biojava.bio.structure.StructureException;
 import org.biojava.bio.structure.StructureTools;
 
 import org.biojava.bio.structure.align.StructureAlignment;
+import org.biojava.bio.structure.align.fatcat.calc.FatCatParameters;
 import org.biojava.bio.structure.align.model.AFPChain;
 import org.biojava.bio.structure.align.util.AtomCache;
 import org.biojava.bio.structure.align.xml.AFPChainXMLConverter;
 import org.biojava.bio.structure.align.xml.AFPChainXMLParser;
 import org.biojava.bio.structure.jama.Matrix;
-import org.rcsb.fatcat.calc.FatCatParameters;
+
 
 
 public class TestFlexibleRotationMatrices extends TestCase{
