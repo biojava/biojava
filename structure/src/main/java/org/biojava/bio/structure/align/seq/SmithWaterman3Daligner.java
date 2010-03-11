@@ -23,6 +23,7 @@ import org.biojava.bio.structure.align.AbstractStructureAlignment;
 import org.biojava.bio.structure.align.StrucAligParameters;
 import org.biojava.bio.structure.align.StructureAlignment;
 import org.biojava.bio.structure.align.ce.CECalculator;
+import org.biojava.bio.structure.align.ce.CeParameters;
 import org.biojava.bio.structure.align.ce.ConfigStrucAligParams;
 
 import org.biojava.bio.structure.align.ce.UserArgumentProcessor;
@@ -243,7 +244,8 @@ public class SmithWaterman3Daligner extends AbstractStructureAlignment implement
 		if(nAtom<4) 
 			return afpChain;
 		
-		CECalculator cecalc = new CECalculator();
+		CeParameters params = new CeParameters();
+		CECalculator cecalc = new CECalculator(params);
 		//sup_str(strBuf1, strBuf2, nAtom, _d);
 		// here we don't store the rotation matrix for the user!
 		double rmsd= cecalc.calc_rmsd(strBuf1, strBuf2, nAtom,true, false);
