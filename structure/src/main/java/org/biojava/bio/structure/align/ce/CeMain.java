@@ -59,7 +59,7 @@ public class CeMain extends AbstractStructureAlignment implements StructureAlign
 	public CeMain(){
 		super();
 		params = new CeParameters();
-		calculator = new CECalculator();
+		calculator = new CECalculator(params);
 	}
 	
 
@@ -122,12 +122,13 @@ public class CeMain extends AbstractStructureAlignment implements StructureAlign
 			}
 		}
 		
-		calculator = new CECalculator();
+		calculator = new CECalculator(params);
 
 		//Build alignment ca1 to ca2-ca2
-		AFPChain afpChain = calculator.extractFragments(params, ca1, ca2clone);
-		calculator.traceFragmentMatrix(params, afpChain,ca1, ca2clone);
-		calculator.nextStep(params, afpChain,ca1, ca2clone);
+		AFPChain afpChain = new AFPChain();
+		afpChain = calculator.extractFragments(afpChain, ca1, ca2clone);
+		calculator.traceFragmentMatrix( afpChain,ca1, ca2clone);
+		calculator.nextStep( afpChain,ca1, ca2clone);
 		
 		afpChain.setAlgorithmName(algorithmName);
 		afpChain.setVersion(version);

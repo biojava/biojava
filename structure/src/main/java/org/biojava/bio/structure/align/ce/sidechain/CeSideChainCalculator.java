@@ -22,6 +22,7 @@ import org.biojava.bio.structure.jama.Matrix;
  * @author Andreas Prlic
  *
  */
+@Deprecated
 public class CeSideChainCalculator  {
 
    private static final boolean isPrint = false;

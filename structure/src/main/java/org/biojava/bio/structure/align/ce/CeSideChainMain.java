@@ -3,6 +3,7 @@ package org.biojava.bio.structure.align.ce;
 import org.biojava.bio.structure.Atom;
 import org.biojava.bio.structure.Group;
 import org.biojava.bio.structure.StructureException;
+import org.biojava.bio.structure.StructureTools;
 import org.biojava.bio.structure.align.AbstractStructureAlignment;
 import org.biojava.bio.structure.align.StructureAlignment;
 import org.biojava.bio.structure.align.ce.sidechain.CeSideChainCalculator;
@@ -22,7 +23,8 @@ public class CeSideChainMain  extends AbstractStructureAlignment implements Stru
 
    public CeSideChainMain(){
       super();
-      params = new CeParameters();
+      CeSideChainUserArgumentProcessor proc = new CeSideChainUserArgumentProcessor();
+      params = (CeParameters) proc.getParameters();
    }
 
    public static void main(String[] args){
@@ -76,7 +78,7 @@ public class CeSideChainMain  extends AbstractStructureAlignment implements Stru
          pos++;
       }
 
-      CeSideChainCalculator calculator = new CeSideChainCalculator(params);
+      CECalculator calculator = new CECalculator(params);
 
       calculator.extractFragments( afpChain,ca1, ca2clone);
       calculator.traceFragmentMatrix( afpChain,ca1, ca2clone);

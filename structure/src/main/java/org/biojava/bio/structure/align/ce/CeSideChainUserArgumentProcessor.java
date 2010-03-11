@@ -17,7 +17,8 @@ public class CeSideChainUserArgumentProcessor extends AbstractUserArgumentProces
 	public Object getParameters() {
 		CeParameters params = new CeParameters();
 	
-		params.setAlignmentAtoms(new String[]{StructureTools.caAtomName});
+		params.setAlignmentAtoms(new String[]{StructureTools.caAtomName, StructureTools.cbAtomName});
+		params.setMaxGapSize(0);
 		return params;
 	}
 
