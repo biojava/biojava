@@ -36,23 +36,23 @@ import org.biojava.bio.structure.align.ce.CeMain;
  */
 public class CeCPMain extends CeMain {
 
-	public static final String algorithmName = "jCE-CP";
+   public static final String algorithmName = "jCE-CP";
 
-	public static final String version = "1.0";
+   public static final String version = "1.0";
 
-	public CeCPMain(){
-		super();
-		this.params.setCheckCircular(true);
-		this.params.setMaxGapSize(0);
-	}
-	
-	public String getAlgorithmName() {
+   public CeCPMain(){
+      super();
+      this.params.setCheckCircular(true);
+      this.params.setMaxGapSize(0);
+   }
 
-		return algorithmName;
-	}
-	
-	public String getVersion() {
-		return version;
-	}
+   public String getAlgorithmName() {
+
+      return algorithmName;
+   }
+
+   public String getVersion() {
+      return version;
+   }
 
 }

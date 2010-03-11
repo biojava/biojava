@@ -213,7 +213,7 @@ public class AfpChainWriter
 			txt.append(newline);
 			txt.append(String.format("%14s", " "));
 
-         if ( ! longHeader ) {
+         if (  longHeader ) {
 			for(k = 10; k <= len; k += 10)
 				txt.append("    .    :");
 			if(k <= len + 5) txt.append("    .");

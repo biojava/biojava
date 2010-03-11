@@ -66,7 +66,7 @@ public class CeSideChainCalculator  {
    private double z;
    private int[] a;
 
-
+   CeParameters params;
    // SHOULD these fields be PARAMETERS?
 
    private static final int nIter = 1;
@@ -79,13 +79,13 @@ public class CeSideChainCalculator  {
 
 
 
-   public CeSideChainCalculator(){
+   public CeSideChainCalculator(CeParameters params){
       super();
       timeStart = System.currentTimeMillis();
 
       dist1= new double[0][0];
       dist2= new double[0][0];
-
+      this.params = params;
    }
 
 
@@ -93,7 +93,7 @@ public class CeSideChainCalculator  {
 
    /// no modifications to original CE algorithm
    //
-   public void extractFragments(CeParameters params, AFPChain afpChain,
+   public void extractFragments( AFPChain afpChain,
          Atom[] ca1, Atom[] ca2) throws StructureException{
 
       int nse1 = ca1.length;
@@ -276,7 +276,7 @@ public class CeSideChainCalculator  {
 
 
 
-   public void traceFragmentMatrix(CeParameters params, AFPChain afpChain,
+   public void traceFragmentMatrix( AFPChain afpChain,
          Atom[] ca1, Atom[] ca2) {
 
       double rmsdThr = params.getRmsdThr();
@@ -493,22 +493,23 @@ public class CeSideChainCalculator  {
 
                                        score=0.0;
 
-                                       if(!distAll) {
-                                          //System.out.println("getting score " + mse1 + " " + mse2 + " " + winSize + " " + jgap + " " + jdir + " " + it + " " + kse1 + " " + kse2);
-                                          score = getScoreFromDistanceMatrices(mse1,mse2,winSize);
-                                          // System.out.println("got score: " + score);
-                                          score1=score/(nTrace*winSize);
+                                       // distAll is always false!
+                                       // if(!distAll) {
+                                       //System.out.println("getting score " + mse1 + " " + mse2 + " " + winSize + " " + jgap + " " + jdir + " " + it + " " + kse1 + " " + kse2);
+                                       score = getScoreFromDistanceMatrices(mse1,mse2,winSize);
+                                       // System.out.println("got score: " + score);
+                                       score1=score/(nTrace*winSize);
 
-                                       } else {
-                                          // all dist
-                                          for(int itrace=0; itrace<nTrace; itrace++) {
-                                             for(int is1=0; is1<winSize; is1++)
-                                                for(int is2=0; is2<winSize; is2++)
-                                                   score+=Math.abs(dist1[trace1[itrace]+is1][mse1+is2]-
-                                                         dist2[trace2[itrace]+is1][mse2+is2]);
-                                          }
-                                          score1=score/(nTrace*winSize*winSize);
-                                       }
+                                       //                                       } else {
+                                       //                                          // all dist
+                                       //                                          for(int itrace=0; itrace<nTrace; itrace++) {
+                                       //                                             for(int is1=0; is1<winSize; is1++)
+                                       //                                                for(int is2=0; is2<winSize; is2++)
+                                       //                                                   score+=Math.abs(dist1[trace1[itrace]+is1][mse1+is2]-
+                                       //                                                         dist2[trace2[itrace]+is1][mse2+is2]);
+                                       //                                          }
+                                       //                                          score1=score/(nTrace*winSize*winSize);
+                                       //}
 
 
                                        //System.out.println("up: " + nTrace + " "  + score + " " + score0 + " " + score1 + " " + winSize + " " + traceIndex_ + " " + it + " ");
@@ -743,7 +744,7 @@ nBestTrace=nTrace;
       return score;
    }
 
-   public void nextStep(CeParameters params, AFPChain afpChain,
+   public void nextStep( AFPChain afpChain,
          Atom[] ca1, Atom[] ca2) throws StructureException{
 
       List<AFP> afpSet = new ArrayList<AFP>();
@@ -754,7 +755,7 @@ nBestTrace=nTrace;
       afpChain.setAfpSet(afpSet);
 
       if(nBestTrace>0) {
-         checkBestTraces(params,afpChain,ca1,ca2);
+         checkBestTraces(afpChain,ca1,ca2);
       } else {
          noBestTrace();
       }
@@ -766,7 +767,7 @@ nBestTrace=nTrace;
 
 
    // this part is modified from the original CeCalculator
-   private void checkBestTraces(CeParameters params, AFPChain afpChain,
+   private void checkBestTraces( AFPChain afpChain,
          Atom[] ca1, Atom[] ca2) throws StructureException{
 
       z=0.0;
@@ -1186,11 +1187,14 @@ nBestTrace=nTrace;
             for(int ise2=0; ise2<nse2; ise2++) {
                //mat[ise1][ise2]=-0.001;
 
-               //double dist = getDistanceWithSidechain(ca1[ise1], ca3[ise2]);
-               // mat[ise1][ise2] = oRmsdThr - dist;
-               double distold = Calc.getDistance(ca1[ise1],ca3[ise2]);
-               double scoreOld  = oRmsdThr - distold ;
-               mat[ise1][ise2] = scoreOld;
+               // this needs to be a parameter...
+
+               double dist = getDistanceWithSidechain(ca1[ise1], ca3[ise2]);
+               mat[ise1][ise2] = oRmsdThr - dist;
+
+               //double distold = Calc.getDistance(ca1[ise1],ca3[ise2]);
+               //double scoreOld  = oRmsdThr - distold ;
+               //mat[ise1][ise2] = scoreOld;
                //mat[ise1][ise2] = oRmsdThr - Calc.getDistance(ca1[ise1],ca3[ise2]);
 
                //if ( counter == 0 &&  ise1 == ise2) {
@@ -1806,158 +1810,158 @@ nBestTrace=nTrace;
     * @param ca1
     * @param ca2
     */
-    public void convertAfpChain(AFPChain afpChain, Atom[] ca1, Atom[] ca2) {
+   public void convertAfpChain(AFPChain afpChain, Atom[] ca1, Atom[] ca2) {
 
-       afpChain.setBlockNum(1);
-       //afpChain.setAlignScore(z);
-       Matrix[] m ;
+      afpChain.setBlockNum(1);
+      //afpChain.setAlignScore(z);
+      Matrix[] m ;
 
-       if ( r != null ) {
-          m = new Matrix[1];
-          m[0] = r;
-       } else  {
-          m = new Matrix[0];
-       }
+      if ( r != null ) {
+         m = new Matrix[1];
+         m[0] = r;
+      } else  {
+         m = new Matrix[0];
+      }
 
-       Atom[] as ;
-       if ( t != null) {
-          as = new Atom[1];
-          as[0] = t;
-       } else {
-          as = new Atom[0];
-       }
+      Atom[] as ;
+      if ( t != null) {
+         as = new Atom[1];
+         as[0] = t;
+      } else {
+         as = new Atom[0];
+      }
 
-       afpChain.setBlockRotationMatrix(m);
-       afpChain.setBlockShiftVector(as);
+      afpChain.setBlockRotationMatrix(m);
+      afpChain.setBlockShiftVector(as);
 
-       int nse1 = ca1.length;
-       int nse2 = ca2.length;
-       //System.out.println("dist1 :" + dist1.length + " " + dist2.length);
+      int nse1 = ca1.length;
+      int nse2 = ca2.length;
+      //System.out.println("dist1 :" + dist1.length + " " + dist2.length);
 
-       if ( nse1 > 0 && dist1.length > 0 )
-          afpChain.setDisTable1(new Matrix(dist1));
-       else 
-          afpChain.setDisTable1 (Matrix.identity(3, 3));
-       if ( nse2 > 0 && dist2.length > 0 )
-          afpChain.setDisTable2(new Matrix(dist2));
-       else
-          afpChain.setDisTable2(Matrix.identity(3, 3));
-
-
-       char[] alnseq1 = new char[nse1+nse2+1];
-       char[] alnseq2 = new char[nse1+nse2+1] ;
-       char[] alnsymb = new char[nse1+nse2+1];
-
-       int[][][] optAln = new int[1][2][nAtom];
-       afpChain.setOptAln(optAln);
-
-       int pos = 0;
-       int nrIdent = 0;
-       int nrSim   = 0;
-       for(int ia=0; ia<lcmp; ia++) {
-
-          // no gap
-          if(align_se1[ia]!=-1 && align_se2[ia]!=-1) {
-             //System.out.println("ia " + ia + " pos " + pos + " "  + align_se1[ia] + " " + align_se2[ia]);
-             optAln[0][0][pos] = align_se1[ia];
-             optAln[0][1][pos] = align_se2[ia];
-
-             char l1 = getOneLetter(ca1[align_se1[ia]].getParent());
-             char l2 = getOneLetter(ca2[align_se2[ia]].getParent());
-
-             alnseq1[ia] = Character.toUpperCase(l1);
-             alnseq2[ia] = Character.toUpperCase(l2);
-             alnsymb[ia] = ' ';
-             if ( l1 == l2) {					
-                nrIdent++;
-                nrSim++;
-                alnsymb[ia] = '|';
-             } else if ( AFPAlignmentDisplay.aaScore(l1, l2) > 0){
-                nrSim++;
-                alnsymb[ia] = ':';
-             }
-
-             pos++;
-
-          } else {
-             // there is a gap at this position
-             alnsymb[ia] = ' ';
-             if (align_se1[ia] == -1 ) {
-                alnseq1[ia] = '-';
-             } else {
-                char l1 = getOneLetter(ca1[align_se1[ia]].getParent());
-                alnseq1[ia] = Character.toUpperCase(l1);
-             }
-             if ( align_se2[ia] == -1 ) {
-                alnseq2[ia] = '-';
-             } else {
-                char l2 = getOneLetter(ca2[align_se2[ia]].getParent());
-                alnseq2[ia] = Character.toUpperCase(l2);
-             }
-
-          }
-       }
+      if ( nse1 > 0 && dist1.length > 0 )
+         afpChain.setDisTable1(new Matrix(dist1));
+      else 
+         afpChain.setDisTable1 (Matrix.identity(3, 3));
+      if ( nse2 > 0 && dist2.length > 0 )
+         afpChain.setDisTable2(new Matrix(dist2));
+      else
+         afpChain.setDisTable2(Matrix.identity(3, 3));
 
 
-       afpChain.setAlnseq1(alnseq1);
-       afpChain.setAlnseq2(alnseq2);
-       afpChain.setAlnsymb(alnsymb);
+      char[] alnseq1 = new char[nse1+nse2+1];
+      char[] alnseq2 = new char[nse1+nse2+1] ;
+      char[] alnsymb = new char[nse1+nse2+1];
+
+      int[][][] optAln = new int[1][2][nAtom];
+      afpChain.setOptAln(optAln);
+
+      int pos = 0;
+      int nrIdent = 0;
+      int nrSim   = 0;
+      for(int ia=0; ia<lcmp; ia++) {
+
+         // no gap
+         if(align_se1[ia]!=-1 && align_se2[ia]!=-1) {
+            //System.out.println("ia " + ia + " pos " + pos + " "  + align_se1[ia] + " " + align_se2[ia]);
+            optAln[0][0][pos] = align_se1[ia];
+            optAln[0][1][pos] = align_se2[ia];
+
+            char l1 = getOneLetter(ca1[align_se1[ia]].getParent());
+            char l2 = getOneLetter(ca2[align_se2[ia]].getParent());
+
+            alnseq1[ia] = Character.toUpperCase(l1);
+            alnseq2[ia] = Character.toUpperCase(l2);
+            alnsymb[ia] = ' ';
+            if ( l1 == l2) {					
+               nrIdent++;
+               nrSim++;
+               alnsymb[ia] = '|';
+            } else if ( AFPAlignmentDisplay.aaScore(l1, l2) > 0){
+               nrSim++;
+               alnsymb[ia] = ':';
+            }
+
+            pos++;
+
+         } else {
+            // there is a gap at this position
+            alnsymb[ia] = ' ';
+            if (align_se1[ia] == -1 ) {
+               alnseq1[ia] = '-';
+            } else {
+               char l1 = getOneLetter(ca1[align_se1[ia]].getParent());
+               alnseq1[ia] = Character.toUpperCase(l1);
+            }
+            if ( align_se2[ia] == -1 ) {
+               alnseq2[ia] = '-';
+            } else {
+               char l2 = getOneLetter(ca2[align_se2[ia]].getParent());
+               alnseq2[ia] = Character.toUpperCase(l2);
+            }
+
+         }
+      }
 
 
-       // CE uses the aligned pairs as reference not the whole alignment including gaps...
-       afpChain.setIdentity(nrIdent*1.0/pos);
-       afpChain.setSimilarity(nrSim*1.0/pos);
+      afpChain.setAlnseq1(alnseq1);
+      afpChain.setAlnseq2(alnseq2);
+      afpChain.setAlnsymb(alnsymb);
 
 
-       //AFPAlignmentDisplay.getAlign( afpChain,ca1,ca2);
-
-    }
-
-    public int getnAtom() {
-       return nAtom;
-    }
+      // CE uses the aligned pairs as reference not the whole alignment including gaps...
+      afpChain.setIdentity(nrIdent*1.0/pos);
+      afpChain.setSimilarity(nrSim*1.0/pos);
 
 
+      //AFPAlignmentDisplay.getAlign( afpChain,ca1,ca2);
 
-    public void setnAtom(int nAtom) {
-       this.nAtom = nAtom;
-    }
+   }
+
+   public int getnAtom() {
+      return nAtom;
+   }
 
 
 
-    public int getLcmp() {
-       return lcmp;
-    }
+   public void setnAtom(int nAtom) {
+      this.nAtom = nAtom;
+   }
 
 
 
-    public void setLcmp(int lcmp) {
-       this.lcmp = lcmp;
-    }
+   public int getLcmp() {
+      return lcmp;
+   }
 
 
 
-    public int[] getAlign_se1() {
-       return align_se1;
-    }
+   public void setLcmp(int lcmp) {
+      this.lcmp = lcmp;
+   }
 
 
 
-    public void setAlign_se1(int[] alignSe1) {
-       align_se1 = alignSe1;
-    }
+   public int[] getAlign_se1() {
+      return align_se1;
+   }
 
 
 
-    public int[] getAlign_se2() {
-       return align_se2;
-    }
+   public void setAlign_se1(int[] alignSe1) {
+      align_se1 = alignSe1;
+   }
 
 
 
-    public void setAlign_se2(int[] alignSe2) {
-       align_se2 = alignSe2;
-    }
+   public int[] getAlign_se2() {
+      return align_se2;
+   }
+
+
+
+   public void setAlign_se2(int[] alignSe2) {
+      align_se2 = alignSe2;
+   }
 
 
 

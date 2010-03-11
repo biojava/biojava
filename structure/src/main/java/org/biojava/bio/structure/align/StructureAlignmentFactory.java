@@ -7,13 +7,14 @@ import java.util.List;
 import org.biojava.bio.structure.StructureException;
 import org.biojava.bio.structure.align.ce.CeCPMain;
 import org.biojava.bio.structure.align.ce.CeMain;
+import org.biojava.bio.structure.align.ce.CeSideChainMain;
 import org.biojava.bio.structure.align.seq.SmithWaterman3Daligner;
 
 
 public class StructureAlignmentFactory {
 
 	public static StructureAlignment[] getAllAlgorithms(){
-		
+
 	   StructureAlignment fatcatRigid    = null;
 	   StructureAlignment fatcatFlexible = null;
 	   try {
@@ -27,17 +28,22 @@ public class StructureAlignmentFactory {
 
 		algorithms.add( new CeMain() );
 		algorithms.add( new CeCPMain() );
-		//algorithms.add( new CeSideChainMain() );
+		algorithms.add(new CeSideChainMain());
+
 		if ( fatcatRigid != null) {
-			algorithms.add( fatcatRigid );
+			algorithms.add( fatcatRigid) ;
+		
         }
         if ( fatcatFlexible != null){
         	algorithms.add( fatcatFlexible );
+	
         }
-        algorithms.add( new SmithWaterman3Daligner() );
+        algorithms.add( new SmithWaterman3Daligner()) ;
 		
+
 		//algorithms.add( new BioJavaStructureAlignment());
 		return algorithms.toArray(new StructureAlignment[algorithms.size()]);
+		
 	}
 
 	public static StructureAlignment getAlgorithm(String name) throws StructureException{

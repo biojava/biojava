@@ -62,7 +62,6 @@ public class CeSideChainMain  extends AbstractStructureAlignment implements Stru
       // we don;t want to rotate input atoms, do we?
       ca2clone = new Atom[ca2.length];
 
-
       // this implementaiton allows to use any set of Atom
       // i.e. CA, CB, N, C,O atoms
       // but it is ok to put in only CA atoms,
@@ -77,12 +76,11 @@ public class CeSideChainMain  extends AbstractStructureAlignment implements Stru
          pos++;
       }
 
+      CeSideChainCalculator calculator = new CeSideChainCalculator(params);
 
-      CeSideChainCalculator calculator = new CeSideChainCalculator();
-
-      calculator.extractFragments(params, afpChain,ca1, ca2clone);
-      calculator.traceFragmentMatrix(params, afpChain,ca1, ca2clone);
-      calculator.nextStep(params, afpChain,ca1, ca2clone);
+      calculator.extractFragments( afpChain,ca1, ca2clone);
+      calculator.traceFragmentMatrix( afpChain,ca1, ca2clone);
+      calculator.nextStep( afpChain,ca1, ca2clone);
 
       afpChain.setAlgorithmName(algorithmName);
       afpChain.setVersion(version);
