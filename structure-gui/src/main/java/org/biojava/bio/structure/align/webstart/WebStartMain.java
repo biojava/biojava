@@ -36,6 +36,7 @@ import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureException;
 import org.biojava.bio.structure.StructureImpl;
 import org.biojava.bio.structure.StructureTools;
+import org.biojava.bio.structure.align.AFPTwister;
 import org.biojava.bio.structure.align.StrucAligParameters;
 import org.biojava.bio.structure.align.StructureAlignment;
 import org.biojava.bio.structure.align.StructureAlignmentFactory;
@@ -44,6 +45,7 @@ import org.biojava.bio.structure.align.ce.CeMain;
 import org.biojava.bio.structure.align.client.FarmJobParameters;
 import org.biojava.bio.structure.align.client.JFatCatClient;
 import org.biojava.bio.structure.align.client.PdbPair;
+import org.biojava.bio.structure.align.fatcat.FatCatRigid;
 import org.biojava.bio.structure.align.gui.AlignmentGui;
 import org.biojava.bio.structure.align.gui.ChooseDirAction;
 import org.biojava.bio.structure.align.gui.DBSearchGUI;
@@ -420,7 +422,7 @@ public class WebStartMain
 
 		showProgressBar(tmpFrame,"Calculating JFatCat (rigid) alignment... ", "Calculating the structure alignment.");
 
-		StructureAlignment fatCatRigid = StructureAlignmentFactory.getAlgorithm("jFatCat_rigid");
+		StructureAlignment fatCatRigid = StructureAlignmentFactory.getAlgorithm(FatCatRigid.algorithmName);
 
 		Atom[] ca1 = StructureTools.getAtomCAArray(c1);
 		Atom[] ca2 = StructureTools.getAtomCAArray(c2);
@@ -468,9 +470,8 @@ public class WebStartMain
 
 		tmpFrame.dispose();
 
-		JFatCatProxy proxy = new JFatCatProxy();
-		proxy.setStructureAlignment(fatCatRigid);
-		Group[] twistedGroups = proxy.twistGroups(afpChain,ca1,ca2);
+	
+		Group[] twistedGroups = AFPTwister.twistOptimized(afpChain,ca1,ca2);
 
         List<Group> hetatms = ca1[0].getParent().getParent().getAtomGroups("hetatm");
         List<Group> nucs    = ca1[0].getParent().getParent().getAtomGroups("nucleotide");
