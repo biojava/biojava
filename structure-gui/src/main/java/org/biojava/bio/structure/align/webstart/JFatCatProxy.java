@@ -28,7 +28,6 @@ import java.lang.reflect.Method;
 
 import org.biojava.bio.structure.Atom;
 import org.biojava.bio.structure.Group;
-import org.biojava.bio.structure.align.StructureAlignment;
 import org.biojava.bio.structure.align.model.AFPChain;
 
 
@@ -37,6 +36,7 @@ import org.biojava.bio.structure.align.model.AFPChain;
  * @author Andreas Prlic
  *
  */
+@Deprecated
 public class JFatCatProxy
 {
 
