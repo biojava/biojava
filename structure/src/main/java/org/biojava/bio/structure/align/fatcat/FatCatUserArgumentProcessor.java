@@ -27,7 +27,8 @@ package org.biojava.bio.structure.align.fatcat;
 
 import org.biojava.bio.structure.align.StructureAlignment;
 import org.biojava.bio.structure.align.ce.AbstractUserArgumentProcessor;
-import org.rcsb.fatcat.calc.FatCatParameters;
+import org.biojava.bio.structure.align.fatcat.calc.FatCatParameters;
+
 
 public class FatCatUserArgumentProcessor extends AbstractUserArgumentProcessor {
 

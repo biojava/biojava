@@ -29,9 +29,10 @@ import org.biojava.bio.structure.Atom;
 import org.biojava.bio.structure.StructureException;
 import org.biojava.bio.structure.align.StructureAlignment;
 import org.biojava.bio.structure.align.ce.ConfigStrucAligParams;
+import org.biojava.bio.structure.align.fatcat.calc.FatCatParameters;
 
 import org.biojava.bio.structure.align.model.AFPChain;
-import org.rcsb.fatcat.calc.FatCatParameters;
+
 
 public class FatCatRigid extends FatCat implements StructureAlignment{
 
