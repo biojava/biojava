@@ -33,20 +33,23 @@ public class ParameterGUI extends JFrame{
 		
 		if ( params == null)
 			return;
-
+		this.params = params;
+		
 		String method = alignment.getAlgorithmName();
 		this.setTitle("Parameters for " + method);
-		this.params = params;
+		
 		
 		List<String> names = params.getUserConfigParameterNames();
 		List<String> keys  = params.getUserConfigParameters();
-	
+		List<Class> types  = params.getUserConfigTypes();
 		
 		List<String> helps = params.getUserConfigHelp();
 		textFields = new ArrayList<JTextField>();
 		Box vBox = Box.createVerticalBox();
 
 		for (int i = 0 ; i < names.size(); i++){
+		    Class type = types.get(i);
+		    
 			Box hBox = Box.createHorizontalBox();
 
 			JLabel label = new JLabel(names.get(i));
@@ -55,8 +58,18 @@ public class ParameterGUI extends JFrame{
 
 			Object value = getValue(keys.get(i));
 
+			String data = value.toString();
 			JTextField field = new JTextField(10);
-			field.setText(value.toString());
+			if ( type == String[].class) {
+			   String stuff = "";
+               for ( String da : (String[]) value){
+                  stuff += da + " ";
+               }
+               data = stuff;
+              
+               
+			}
+			field.setText(data);
 			field.setToolTipText(help);
 
 			hBox.add(label);
@@ -114,10 +127,23 @@ public class ParameterGUI extends JFrame{
 		params.reset();
 		
 		List<String> keys = params.getUserConfigParameters();
+		List<Class> types = params.getUserConfigTypes();
 		for (int i = 0 ; i < keys.size(); i++){
 			JTextField field = textFields.get(i);
+			Class type = types.get(i);
 			Object data = getValue(keys.get(i));
-			field.setText(data.toString());
+			if ( type.isArray()){
+			   String stuff = "";
+			   for ( String da : (String[]) data){
+			      stuff += da + " ";
+			   }
+			   System.out.println(type + "setting string array:" + stuff);
+			   field.setText(stuff);
+			} else {
+			   System.out.println(type + "setting string array:" + data.toString());
+			   field.setText(data.toString()); 
+			}
+			
 			field.updateUI();
 		}
 		this.repaint();
@@ -169,6 +195,9 @@ public class ParameterGUI extends JFrame{
 				data = Float.parseFloat(value);
 			} else if ( type == Boolean.class) {
 				data = Boolean.parseBoolean(value);
+			} else if ( type == String[].class) {
+			   data = value.split(" ");
+			   
 			}
 			
 			if (data == null){
