@@ -94,7 +94,7 @@ public class CeMain extends AbstractStructureAlignment implements StructureAlign
 
 		params = (CeParameters) param;
 
-		int ca2length = params.isCheckCircular()? ca2.length*2 : ca2.length; 
+		int ca2length = params.getCheckCircular()? ca2.length*2 : ca2.length; 
 
 
 		// we don't want to rotate input atoms, do we?
@@ -109,7 +109,7 @@ public class CeMain extends AbstractStructureAlignment implements StructureAlign
 			pos++;
 		}
 		
-		if(params.isCheckCircular()) {
+		if(params.getCheckCircular()) {
 			System.out.println("Checking Circular permutations");
 
 			// Duplicate ca2
@@ -140,7 +140,9 @@ public class CeMain extends AbstractStructureAlignment implements StructureAlign
 		
 		// Draw a little green line across the center of the distance matrix
 		// TODO do this more elegantly
-		if(params.isCheckCircular()) {
+		if(params.getCheckCircular()) {
+		  
+		      System.out.println("Running in Circular Permutation mode.");
 			for(int i=0;i<m.length;i++) {
 				m[i][ca2.length] = -1;
 			}
@@ -149,7 +151,7 @@ public class CeMain extends AbstractStructureAlignment implements StructureAlign
 		afpChain.setDistanceMatrix(new Matrix(m));
 	
 		
-		if(params.isCheckCircular()) {
+		if(params.getCheckCircular()) {
 			// Check for circular permutations
 			afpChain = filterDuplicateAFPs(afpChain,calculator,ca1,ca2clone);
 		}

@@ -95,6 +95,8 @@ public class CECalculator {
 
    private static final int nIter = 1;
    private static final boolean distAll = false;
+   
+   
    private static final double DEFAULT_GAP_OPEN = 5.0;
    private static final double DEFAULT_GAP_EXTENSION  = 0.5;
    private static final double DISTANCE_INCREMENT=0.5;
@@ -128,6 +130,11 @@ public class CECalculator {
 
       f1 = new int[nse1];
       f2 = new int[nse2];
+      if ( params.getAlignmentAtoms().length == 1) {
+         System.out.println("using CA only...");
+      } else {
+         System.out.println("using side chain scoring...");
+      }
       dist1 = initIntraDistmatrix(ca1, nse1);
       dist2 = initIntraDistmatrix(ca2, nse2);  
       if ( debug )
@@ -154,7 +161,6 @@ public class CECalculator {
       }
 
       // verified: a[] is set correctly.
-
 
       mat = initSumOfDistances(nse1, nse2, winSize, winSizeComb1, ca1, ca2);
 
@@ -187,6 +193,7 @@ public class CECalculator {
    private double getDistanceWithSidechain(Atom ca1, Atom ca2) throws StructureException {
    
       if ( params.getAlignmentAtoms().length == 1) {
+         
          return Calc.getDistance(ca1,ca2);
       }
       
@@ -213,16 +220,16 @@ public class CECalculator {
          dist = Calc.getDistance(ca1,ca2);
       }
 
-      // score type 2 add angle info
-
-      if ( cb1 != null && cb2 != null) {
-         Atom c1 = Calc.substract(cb1, ca1);
-         Atom c2 = Calc.substract(cb2, ca2);
-         Atom newA = Calc.substract(c2, c1);
-         dist += Calc.amount(newA);
-      }  else {
-         //dist += Calc.getDistance(ca1,ca2);
-      }
+//      // score type 2 add angle info
+//
+//      if ( cb1 != null && cb2 != null) {
+//         Atom c1 = Calc.substract(cb1, ca1);
+//         Atom c2 = Calc.substract(cb2, ca2);
+//         Atom newA = Calc.substract(c2, c1);
+//         dist += Calc.amount(newA);
+//      }  else {
+//         //dist += Calc.getDistance(ca1,ca2);
+//      }
 
       return dist;
    }

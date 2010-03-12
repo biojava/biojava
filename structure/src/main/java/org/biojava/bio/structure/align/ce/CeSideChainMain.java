@@ -1,30 +1,21 @@
 package org.biojava.bio.structure.align.ce;
 
-import org.biojava.bio.structure.Atom;
-import org.biojava.bio.structure.Group;
-import org.biojava.bio.structure.StructureException;
-import org.biojava.bio.structure.StructureTools;
-import org.biojava.bio.structure.align.AbstractStructureAlignment;
 import org.biojava.bio.structure.align.StructureAlignment;
-import org.biojava.bio.structure.align.ce.sidechain.CeSideChainCalculator;
-import org.biojava.bio.structure.align.model.AFPChain;
 
 
-public class CeSideChainMain  extends AbstractStructureAlignment implements StructureAlignment {
+public class CeSideChainMain  extends CeMain implements StructureAlignment {
 
    public static final String algorithmName = "jCE-sidechain";
 
    private static final String version = "2.3";
 
-   private CeParameters params;
-
-   Atom[] ca2clone;
-
-
    public CeSideChainMain(){
       super();
-      CeSideChainUserArgumentProcessor proc = new CeSideChainUserArgumentProcessor();
-      params = (CeParameters) proc.getParameters();
+      
+      if ( params == null) {
+         CeSideChainUserArgumentProcessor proc = new CeSideChainUserArgumentProcessor();
+         params = (CeParameters) proc.getParameters();
+      }
    }
 
    public static void main(String[] args){
@@ -48,61 +39,61 @@ public class CeSideChainMain  extends AbstractStructureAlignment implements Stru
 
    }
 
-   public AFPChain align(Atom[] ca1, Atom[] ca2, Object param) throws StructureException{
-
-      if ( ! (param instanceof CeParameters))
-         throw new IllegalArgumentException("CE algorithm needs an object of call CeParameters as argument.");
-
-      params = (CeParameters) param;
-
-      System.out.println("Running alignment with side chain directions");
-
-      AFPChain afpChain = new AFPChain();
-      afpChain.setCa1Length(ca1.length);
-      afpChain.setCa2Length(ca2.length);
-
-      // we don;t want to rotate input atoms, do we?
-      ca2clone = new Atom[ca2.length];
-
-      // this implementaiton allows to use any set of Atom
-      // i.e. CA, CB, N, C,O atoms
-      // but it is ok to put in only CA atoms,
-      // the other atoms will be fetched from the ca.getParent() group
-
-      int pos = 0;
-      for (Atom a : ca2){
-         Group g = (Group)a.getParent().clone();
-
-         ca2clone[pos] = g.getAtom("CA");
-
-         pos++;
-      }
-
-      CECalculator calculator = new CECalculator(params);
-
-      calculator.extractFragments( afpChain,ca1, ca2clone);
-      calculator.traceFragmentMatrix( afpChain,ca1, ca2clone);
-      calculator.nextStep( afpChain,ca1, ca2clone);
-
-      afpChain.setAlgorithmName(algorithmName);
-      afpChain.setVersion(version);
-
-      return afpChain;
-
-   }
-
-
-
-   public AFPChain align(Atom[] ca1, Atom[] ca2) throws StructureException {
-      if (params == null){
-         //CeSideChainUserArgumentProcessor proc = new CeSideChainUserArgumentProcessor();
-         //params = (CeParameters) proc.getParameters();
-         System.out.println("using default CE Parameters...");
-         params = new CeParameters();
-      }
-      System.out.println("alignment with show ranges? " + params.isShowAFPRanges());
-      return align(ca1,ca2,params);
-   }
+//   public AFPChain align(Atom[] ca1, Atom[] ca2, Object param) throws StructureException{
+//
+//      if ( ! (param instanceof CeParameters))
+//         throw new IllegalArgumentException("CE algorithm needs an object of call CeParameters as argument.");
+//
+//      params = (CeParameters) param;
+//
+//      System.out.println("Running alignment with side chain directions");
+//
+//      AFPChain afpChain = new AFPChain();
+//      afpChain.setCa1Length(ca1.length);
+//      afpChain.setCa2Length(ca2.length);
+//
+//      // we don;t want to rotate input atoms, do we?
+//      ca2clone = new Atom[ca2.length];
+//
+//      // this implementaiton allows to use any set of Atom
+//      // i.e. CA, CB, N, C,O atoms
+//      // but it is ok to put in only CA atoms,
+//      // the other atoms will be fetched from the ca.getParent() group
+//
+//      int pos = 0;
+//      for (Atom a : ca2){
+//         Group g = (Group)a.getParent().clone();
+//
+//         ca2clone[pos] = g.getAtom("CA");
+//
+//         pos++;
+//      }
+//
+//      CECalculator calculator = new CECalculator(params);
+//
+//      calculator.extractFragments( afpChain,ca1, ca2clone);
+//      calculator.traceFragmentMatrix( afpChain,ca1, ca2clone);
+//      calculator.nextStep( afpChain,ca1, ca2clone);
+//
+//      afpChain.setAlgorithmName(algorithmName);
+//      afpChain.setVersion(version);
+//
+//      return afpChain;
+//
+//   }
+//
+//
+//
+//   public AFPChain align(Atom[] ca1, Atom[] ca2) throws StructureException {
+//      if (params == null){
+//         //CeSideChainUserArgumentProcessor proc = new CeSideChainUserArgumentProcessor();
+//         //params = (CeParameters) proc.getParameters();
+//         System.out.println("using default CE Parameters...");
+//         params = new CeParameters();
+//      }
+//      System.out.println("alignment with show ranges? " + params.isShowAFPRanges());
+//      return align(ca1,ca2,params);
+//   }
 
    public String getAlgorithmName() {
 
@@ -115,7 +106,7 @@ public class CeSideChainMain  extends AbstractStructureAlignment implements Stru
    }
 
    public void setParameters(ConfigStrucAligParams params){
-      System.out.println("setting params show ranges: " + params);
+      System.out.println("setting params : " + params);
       if (! (params instanceof CeParameters )){
          throw new IllegalArgumentException("provided parameter object is not of type CeParameter");
       }

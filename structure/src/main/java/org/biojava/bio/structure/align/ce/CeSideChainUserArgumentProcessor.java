@@ -6,6 +6,7 @@ import org.biojava.bio.structure.align.StructureAlignment;
 public class CeSideChainUserArgumentProcessor extends AbstractUserArgumentProcessor {
 
 
+   
 	
 	
 	public StructureAlignment getAlgorithm() {
@@ -15,10 +16,11 @@ public class CeSideChainUserArgumentProcessor extends AbstractUserArgumentProces
 
 	@Override
 	public Object getParameters() {
+	   
 		CeParameters params = new CeParameters();
 	
 		params.setAlignmentAtoms(new String[]{StructureTools.caAtomName, StructureTools.cbAtomName});
-		params.setMaxGapSize(0);
+		//params.setMaxGapSize(0);
 		return params;
 	}
 

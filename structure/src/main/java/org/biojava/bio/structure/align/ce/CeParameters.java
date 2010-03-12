@@ -47,7 +47,7 @@ public class CeParameters implements ConfigStrucAligParams  {
 
 	boolean showAFPRanges;
 	boolean checkCircular;
-
+	int  sideChainScoringType;
 	public CeParameters(){
 		reset();
 	}
@@ -62,8 +62,9 @@ public class CeParameters implements ConfigStrucAligParams  {
       + ", rmsdThr=" + rmsdThr 
       + ", rmsdThrJoin="+ rmsdThrJoin 
       + ", winSize=" + winSize 
-      + ", showAFPRanges=" + showAFPRanges +
-      "]";
+      + ", showAFPRanges=" + showAFPRanges 
+      + ", checkCircular=" + checkCircular 
+      + "]";
 	}
 
 
@@ -142,10 +143,12 @@ public class CeParameters implements ConfigStrucAligParams  {
 		String helpRmsdThr = "This configures the RMSD threshold applied during the trace of the fragment matrix.";
 		String helpWinSize = "This configures the fragment size m of Aligned Fragment Pairs (AFPs).";
 		String helpCircular = "Should the algoritm check for circular permutations? Increases calculation time.";
+		String helpAligAtoms = "Which atoms should be used in the alignment calculations.";
 		params.add(helpMaxGap);
 		params.add(helpRmsdThr);
 		params.add(helpWinSize);
 		params.add(helpCircular);
+		params.add(helpAligAtoms);
 		return params;
 	}
 
@@ -155,6 +158,8 @@ public class CeParameters implements ConfigStrucAligParams  {
 		params.add("RmsdThr");
 		params.add("WinSize");
 		params.add("CheckCircular");
+		params.add("AlignmentAtoms");
+		
 		return params;
 	}
 
@@ -164,6 +169,7 @@ public class CeParameters implements ConfigStrucAligParams  {
 		params.add("RMSD threshold during trace of the fragment matrix.");
 		params.add("fragment size m");
 		params.add("check for circular permutations");
+		params.add("Which atoms to use for the sidechain calculations");
 		return params;
 	}
 
@@ -173,6 +179,7 @@ public class CeParameters implements ConfigStrucAligParams  {
 		params.add(Double.class);
 		params.add(Integer.class);
 		params.add(Boolean.class);
+		params.add(String[].class);
 		return params;
 	}
 
@@ -194,9 +201,7 @@ public class CeParameters implements ConfigStrucAligParams  {
 	/**
 	 * @return whether the protein should be checked for circular permutations.
 	 */
-	public Boolean isCheckCircular() {
-		return checkCircular;
-	}
+	
 	public Boolean getCheckCircular() {
 		return checkCircular;
 	}
