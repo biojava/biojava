@@ -1235,7 +1235,7 @@ public class AFPChain implements Serializable, Cloneable
 	 */
 	public void setDistanceMatrix(Matrix distanceMatrix) {
 		this.distanceMatrix = distanceMatrix;
-		System.out.println("Setting distMatrix "+distanceMatrix==null?"null":"not null");
+		//System.out.println("Setting distMatrix "+(distanceMatrix==null?"null":"not null"));
 	}
 
 }
