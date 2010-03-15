@@ -1,9 +1,11 @@
 package org.biojava.bio.structure.align.gui;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.biojava.bio.structure.Atom;
 import org.biojava.bio.structure.Calc;
+import org.biojava.bio.structure.Chain;
 import org.biojava.bio.structure.Group;
 import org.biojava.bio.structure.StructureException;
 import org.biojava.bio.structure.align.AFPTwister;
@@ -13,6 +15,41 @@ import org.biojava.bio.structure.jama.Matrix;
 
 public class StructureAlignmentDisplay {
 
+   public static StructureAlignmentJmol display(AFPChain afpChain, Atom[] ca1, Atom[] ca2) throws StructureException {
+      
+      if ( ca1.length < 1 || ca2.length < 1){
+         throw new StructureException("length of atoms arrays is too short! " + ca1.length + "," + ca2.length);
+      }
+      
+      List<Group> hetatms  = new ArrayList<Group>();
+      List<Group> nucs1    = new ArrayList<Group>();
+      List<Group> hetatms2 = new ArrayList<Group>();
+      List<Group> nucs2    = new ArrayList<Group>();
+      
+      Group g1 = ca1[0].getParent();
+      Chain c1 = null;
+      if ( g1 != null) {
+         c1 = g1.getParent();
+         if ( c1 != null){
+            hetatms = c1.getAtomGroups("hetatm");;
+            nucs1  = c1.getAtomGroups("nucleotide");
+         }
+      }
+      
+      Group g2 = ca2[0].getParent();
+      Chain c2 = null;
+      if ( g2 != null){
+         c2 = g2.getParent();
+         if ( c2 != null){
+            hetatms2 = c2.getAtomGroups("hetatm");
+            nucs2 = c2.getAtomGroups("nucleotide");
+         }
+      }
+            
+      
+      return display(afpChain, ca1, ca2, hetatms, nucs1, hetatms2, nucs2);
+   }
+   
    public static StructureAlignmentJmol display(AFPChain afpChain, Atom[] ca1,
          Atom[] ca2, List<Group> hetatms, List<Group> nucs1,
          List<Group> hetatms2, List<Group> nucs2) throws StructureException {
