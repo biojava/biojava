@@ -24,6 +24,7 @@
 
 package org.biojava.bio.structure.align.model;
 
+import java.io.StringWriter;
 import java.util.List;
 
 import org.biojava.bio.structure.Atom;
@@ -47,6 +48,44 @@ public class AfpChainWriter
 		return toFatCatCore(afpChain, ca1, ca2, printLegend, longHeader);   
 	}
 
+	public static String toScoresList(AFPChain afpChain){
+	   
+	   // see sippl On distance and similarity in fold space 2008 bioinformatics
+	   
+	   StringWriter writer = new StringWriter();
+	   
+	   writer.append("Sab (nr. equivalent residues): " );
+	   writer.append(afpChain.getNrEQR()+"");
+	   writer.append(newline);
+	   
+	   writer.append("Dab (distance between folds a,b): ");
+	   int dab = afpChain.getCa1Length()+afpChain.getCa2Length() - 2 * afpChain.getNrEQR();
+	   writer.append(dab+"");
+	   writer.append(newline);
+	   
+	   writer.append("sab (relative similarity): ");
+	   double sab = 2 * afpChain.getNrEQR() / (double)( afpChain.getCa1Length() + afpChain.getCa2Length());
+	   writer.append(sab+"");
+	   writer.append(newline);
+	   
+	   writer.append("cab (coverage a): ");
+	   double cab = afpChain.getNrEQR() / (double) afpChain.getCa1Length();
+	   writer.append(cab+"");
+	   writer.append(newline);
+	   
+	   writer.append("cba (coverage b): ");
+	   double cba = afpChain.getNrEQR() / (double) afpChain.getCa2Length();
+	   writer.append(cba+"");
+       writer.append(newline);
+       
+       writer.append("seq similarity: ");
+       writer.append(afpChain.getSimilarity()+"");
+       writer.append(newline);
+	   
+	   
+	   return writer.toString();
+	}
+	
 	public static String toFatCatCore(
 			AFPChain afpChain, 
 			Atom[] ca1, 
