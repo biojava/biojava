@@ -374,9 +374,13 @@ public class AFPChain implements Serializable, Cloneable
 		str.append("\tRMSD:");
 		str.append(String.format("%.2f",this.getTotalRmsdOpt()));
 
-		str.append("\tSim1:");
+		str.append("\tSeqID:");
+        str.append(String.format("%.0f",getIdentity()*100));
+		str.append("%\tSeqSim:");
+		str.append(String.format("%.0f",getSimilarity()*100));
+		str.append("%\tCov1:");
 		str.append(this.getSimilarity1());
-		str.append("%\tSim2:");
+		str.append("%\tCov2:");
 		str.append(this.getSimilarity2());
 		str.append("%");
 		str.append(newline);
@@ -1235,6 +1239,7 @@ public class AFPChain implements Serializable, Cloneable
 	 */
 	public void setDistanceMatrix(Matrix distanceMatrix) {
 		this.distanceMatrix = distanceMatrix;
+		
 		//System.out.println("Setting distMatrix "+(distanceMatrix==null?"null":"not null"));
 	}
 
