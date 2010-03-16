@@ -51,89 +51,96 @@ import org.biojava.bio.structure.Calc;
  */
 public class AlignmentCalc implements Runnable {
 
-	public static Logger logger =  Logger.getLogger("org.biojava");
+   public static Logger logger =  Logger.getLogger("org.biojava");
 
-	boolean interrupted = false;
+   boolean interrupted = false;
 
-	String pdb1;
-	String pdb2;
+   String pdb1;
+   String pdb2;
 
-	String name1;
-	String name2;
+   String name1;
+   String name2;
 
-	Structure structure1;
-	Structure structure2;
+   Structure structure1;
+   Structure structure2;
 
-	AlignmentGui parent;
+   AlignmentGui parent;
 
-	/** requests an alignment of pdb1 vs pdb 2.
-	 * Chain 1 and chain2 are optional.
-	 * If they are empty strings, they are ignored
-	 * @param parent the alignment gui frame that interacts with this class          
-	 * @param s1 structure 1
-	 * @param s2 structure 2
-	 */
-	public AlignmentCalc(AlignmentGui parent, Structure s1, Structure s2 , String name1, String name2) {
+   /** requests an alignment of pdb1 vs pdb 2.
+    * Chain 1 and chain2 are optional.
+    * If they are empty strings, they are ignored
+    * @param parent the alignment gui frame that interacts with this class          
+    * @param s1 structure 1
+    * @param s2 structure 2
+    */
+   public AlignmentCalc(AlignmentGui parent, Structure s1, Structure s2 , String name1, String name2) {
 
-		this.parent= parent;
+      this.parent= parent;
 
-		structure1 = s1;
-		structure2 = s2;
+      structure1 = s1;
+      structure2 = s2;
 
-		this.name1 = name1;
-		this.name2 = name2;
+      this.name1 = name1;
+      this.name2 = name2;
 
-	}
+   }
 
-	public void run() {
+   public void run() {
 
-		// both structure have been downloaded, now calculate the alignment ...
+      // both structure have been downloaded, now calculate the alignment ...
 
-		StructureAlignment algorithm = parent.getStructureAlignment();  
-		//StructurePairAligner aligner = new StructurePairAligner();
-		//aligner.setDebug(true);
-		try {
+      StructureAlignment algorithm = parent.getStructureAlignment();  
+      //StructurePairAligner aligner = new StructurePairAligner();
+      //aligner.setDebug(true);
+      try {
 
-			Atom[] ca1 = StructureTools.getAtomCAArray(structure1);
-			Atom[] ca2 = StructureTools.getAtomCAArray(structure2);
+         Atom[] ca1 = StructureTools.getAtomCAArray(structure1);
+         Atom[] ca2 = StructureTools.getAtomCAArray(structure2);
 
-			System.out.println("ca1 size:" + ca1.length + " ca2 size: " + ca2.length);
-			AFPChain afpChain = algorithm.align(ca1, ca2);
+         System.out.println("ca1 size:" + ca1.length + " ca2 size: " + ca2.length);
+         AFPChain afpChain = algorithm.align(ca1, ca2);
 
-			afpChain.setName1(name1);
-			afpChain.setName2(name2);
+         afpChain.setName1(name1);
+         afpChain.setName2(name2);
 
-			//System.out.println(afpChain);
+         //System.out.println(afpChain);
 
-			List<Group> hetatms = structure1.getChain(0).getAtomGroups("hetatm");
-			List<Group> nucs    = structure1.getChain(0).getAtomGroups("nucleotide");
+         List<Group> hetatms = structure1.getChain(0).getAtomGroups("hetatm");
+         List<Group> nucs    = structure1.getChain(0).getAtomGroups("nucleotide");
 
-			List<Group> hetatms2 = structure2.getChain(0).getAtomGroups("hetatm");
-			List<Group> nucs2    = structure2.getChain(0).getAtomGroups("nucleotide");
-			
-			StructureAlignmentJmol jmol;
-			if(afpChain.getAlgorithmName().startsWith("jCE")) {
-				//rotate all ca2 together
-				Matrix m = afpChain.getBlockRotationMatrix()[0];
-				Atom s = afpChain.getBlockShiftVector()[0];
-				for(Atom a : ca2 ) {
-					Calc.rotate(a.getParent(),m);
-					Calc.shift(a.getParent(),s);
-				}
-				jmol = new StructureAlignmentJmol(afpChain, ca1, ca2);
-			}
-			else {
-				jmol = StructureAlignmentDisplay.display(afpChain, ca1, ca2, hetatms, nucs,hetatms2, nucs2);
-			}
+         List<Group> hetatms2 = structure2.getChain(0).getAtomGroups("hetatm");
+         List<Group> nucs2    = structure2.getChain(0).getAtomGroups("nucleotide");
 
-			//String result = afpChain.toFatcat(ca1, ca2);
+         StructureAlignmentJmol jmol;
+         if(afpChain.getAlgorithmName().startsWith("jCE")) {
+            //rotate all ca2 together
+            Matrix m = afpChain.getBlockRotationMatrix()[0];
+            Atom s = afpChain.getBlockShiftVector()[0];
+            Group[] twistedGroups = new Group[ca2.length];
+            int i = -1;
+            for(Atom a : ca2 ) {
+               i++;
+               Group g = a.getParent();
+               twistedGroups[i] = g;
+               Calc.rotate(g,m);
+               Calc.shift(g,s);
+            }
 
-			//String rot = afpChain.toRotMat();
+            jmol = DisplayAFP.display(afpChain, twistedGroups, ca1, ca2,hetatms, nucs, hetatms2, nucs2);
+            //jmol = new StructureAlignmentJmol(afpChain, ca1, ca2);
+         }
+         else {
+            jmol = StructureAlignmentDisplay.display(afpChain, ca1, ca2, hetatms, nucs,hetatms2, nucs2);
+         }
 
-			DisplayAFP.showAlignmentImage(afpChain,ca1,ca2,jmol);           
+         //String result = afpChain.toFatcat(ca1, ca2);
 
-			System.out.println(afpChain.toCE(ca1,ca2));
-			/*
+         //String rot = afpChain.toRotMat();
+
+         DisplayAFP.showAlignmentImage(afpChain,ca1,ca2,jmol);           
+
+         System.out.println(afpChain.toCE(ca1,ca2));
+         /*
 			JFrame frame = new JFrame();
 			frame.setTitle(algorithm.getAlgorithmName()+ " : " + name1 + " vs. " + name2);
 			frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -151,42 +158,42 @@ public class AlignmentCalc implements Runnable {
 			frame.pack();      
 			frame.setVisible(true);*/
 
-			//aligner.align(structure1,structure2);
-		} catch (StructureException e){
-			logger.warning(e.getMessage());
+         //aligner.align(structure1,structure2);
+      } catch (StructureException e){
+         logger.warning(e.getMessage());
 
-		}
-
-
-
-		//logger.info("done!");
-
-		parent.notifyCalcFinished();
-
-	}
+      }
 
 
 
+      //logger.info("done!");
 
-	/** stops what is currently happening and does not continue
-	 * 
-	 *
-	 */
-	public void interrupt() {
-		interrupted = true;
-	}
+      parent.notifyCalcFinished();
 
-	public void cleanup() {
+   }
 
-		parent.notifyCalcFinished();
 
-		parent=null;
-		// cleanup...
 
-		structure1 = null;
-		structure2 = null;
 
-	}
+   /** stops what is currently happening and does not continue
+    * 
+    *
+    */
+   public void interrupt() {
+      interrupted = true;
+   }
+
+   public void cleanup() {
+
+      parent.notifyCalcFinished();
+
+      parent=null;
+      // cleanup...
+
+      structure1 = null;
+      structure2 = null;
+
+   }
 
 
 
