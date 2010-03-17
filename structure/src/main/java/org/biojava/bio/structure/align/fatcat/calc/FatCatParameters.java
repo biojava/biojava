@@ -26,6 +26,8 @@
 
 package org.biojava.bio.structure.align.fatcat.calc;
 
+import java.io.StringWriter;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,7 +41,7 @@ public class FatCatParameters implements ConfigStrucAligParams
 
 	int fragLen  ; // the length of the fragments to consider...
 	int fragLenSq ;
-	double rmsdCut; // cutoff forr AFP detection.
+	Double rmsdCut; // cutoff for AFP detection.
 	double disCut; // for AFPs connection, to be tuned, 4.0
 	double afpDisCut;
 	double afpDisCut0;
@@ -113,25 +115,35 @@ public class FatCatParameters implements ConfigStrucAligParams
 	}
 
 
-	public double getRmsdCut()
+	/** The cutoff to be used during AFP detection
+	 * 
+	 * @return
+	 */
+	public Double getRmsdCut()
 	{
 		return rmsdCut;
 	}
 
-
-	public void setRmsdCut(double rmsdCut)
+	/** The cutoff to be used during AFP detection
+	 * 
+	 * @param rmsdCut
+	 */
+	public void setRmsdCut(Double rmsdCut)
 	{
 		this.rmsdCut = rmsdCut;
 	}
 
-
-	public double getDisCut()
+	/** Get the distance cutoff used during AFP chain connectivity checks
+	 * 
+	 * @return
+	 */
+	public Double getDisCut()
 	{
 		return disCut;
 	}
 
 
-	public void setDisCut(double disCut)
+	public void setDisCut(Double disCut)
 	{
 		this.disCut = disCut;
 	}
@@ -237,7 +249,7 @@ public class FatCatParameters implements ConfigStrucAligParams
 	 * 
 	 * @return
 	 */
-	 public int getMaxTra()
+	 public Integer getMaxTra()
 	{
 		return maxTra;
 	}
@@ -246,7 +258,7 @@ public class FatCatParameters implements ConfigStrucAligParams
 	 * 
 	 * @param maxTra
 	 */
-	 public void setMaxTra(int maxTra)
+	 public void setMaxTra(Integer maxTra)
 	 {
 		 this.maxTra = maxTra;
 	 }
@@ -351,7 +363,13 @@ public class FatCatParameters implements ConfigStrucAligParams
 	 public List<String> getUserConfigHelp() {
 		 List<String> params = new ArrayList<String>();
 		 String fragLen = "The length of the fragments.";
+		 String rmsdCutHelp = "The RMSD cutoff to be used during AFP detection.";
+		 String disCutHelp = "The distance cutoff used when calculate the connectivity of AFP pairs";
+		 String twistHelp ="The number of twists that are allowed to be introduced. If set to 1 alignments are run in RIGID mode.";
 		 params.add(fragLen);
+		 params.add(rmsdCutHelp);
+		 params.add(disCutHelp);
+		 params.add(twistHelp);
 		 return params;
 
 	 }
@@ -360,6 +378,9 @@ public class FatCatParameters implements ConfigStrucAligParams
 	 public List<String> getUserConfigParameterNames() {
 		 List<String> params = new ArrayList<String>();
 		 params.add("Fragment Length");
+		 params.add("RMSD Cutoff");
+		 params.add("AFP Distance Cutoff");
+		 params.add("Maximum Nr. of twists");
 		 return params;
 	 }
 
@@ -367,6 +388,9 @@ public class FatCatParameters implements ConfigStrucAligParams
 	 public List<String> getUserConfigParameters() {
 		 List<String> params = new ArrayList<String>();
 		 params.add("FragLen");
+		 params.add("RmsdCut");
+		 params.add("DisCut");
+		 params.add("MaxTra");
 		 return params;
 	 }
 
@@ -376,8 +400,52 @@ public class FatCatParameters implements ConfigStrucAligParams
 		 
 		 List<Class> params = new ArrayList<Class>();
 		 params.add(Integer.class);
+		 params.add(Double.class);
+		 params.add(Double.class);
+		 params.add(Integer.class);
 		 return params;
 	 }
 
+	 
+	 public String toString(){
+	    StringWriter writer = new StringWriter();
+	    writer.append("[");
+	    if ( maxTra == 0)
+	       writer.append("Mode: rigid, ");
+	    else 
+	       writer.append("Mode: flexible, ");
+	    List<String> params = getUserConfigParameters();
+	    
+	    for ( String s : params){
+	       writer.append(s);
+	       writer.append(": ");
+	       Object val = getValue(s);
+	       writer.append(val.toString());
+	       writer.append(", ");
+	    }
+	    writer.append("]");
+	    return writer.toString();
+	 }
+	 
+	 @SuppressWarnings("unchecked")
+	   private Object  getValue(String name){
+
+	      try {
+	         String methodName = "get" + name;
+
+	         Class paramC = this.getClass();
+
+	         Method m =paramC.getMethod(methodName,null);
+
+	         Object value = m.invoke(this);
+
+	         return value;
+	      } catch (Exception e){
+	         e.printStackTrace();
+	         return null;
+	      }
+
+
+	   }
 
 }
