@@ -43,6 +43,7 @@ public class FatCatRigid extends FatCat implements StructureAlignment{
 	public FatCatRigid(){
 		super();
 		params = new FatCatParameters();
+	    params.setMaxTra(0);		
 	}
 
 	public AFPChain align(Atom[] ca1, Atom[] ca2) throws StructureException {
