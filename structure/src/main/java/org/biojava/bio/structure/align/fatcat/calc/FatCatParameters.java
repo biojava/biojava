@@ -365,7 +365,7 @@ public class FatCatParameters implements ConfigStrucAligParams
 		 String fragLen = "The length of the fragments.";
 		 String rmsdCutHelp = "The RMSD cutoff to be used during AFP detection.";
 		 String disCutHelp = "The distance cutoff used when calculate the connectivity of AFP pairs";
-		 String twistHelp ="The number of twists that are allowed to be introduced. If set to 1 alignments are run in RIGID mode.";
+		 String twistHelp ="The number of twists that are allowed to be introduced. If set to 0 alignments are run in RIGID mode.";
 		 params.add(fragLen);
 		 params.add(rmsdCutHelp);
 		 params.add(disCutHelp);
