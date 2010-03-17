@@ -1,5 +1,6 @@
 package org.biojava3.core.sequence.location.template;
 
+import static java.lang.String.format;
 import static org.biojava3.core.util.Equals.classEqual;
 import static org.biojava3.core.util.Equals.equal;
 
@@ -23,25 +24,55 @@ public abstract class AbstractLocation implements Location {
   private final int             end;
   private final Strand          strand;
   private final List<Location>  subLocations;
+  private final boolean         circular;
 
   public AbstractLocation(int start, int end, Strand strand) {
+    this(start, end, strand, false);
+  }
+
+  public AbstractLocation(int start, int end, Strand strand, boolean circular) {
     this.start = start;
     this.end = end;
     this.strand = strand;
     this.subLocations = Collections.emptyList();
+    this.circular = circular;
+    assertLocation();
   }
 
   public AbstractLocation(int start, int end, Strand strand,
       List<Location> subLocations) {
+    this(start, end, strand, false, subLocations);
+  }
+
+  public AbstractLocation(int start, int end, Strand strand, boolean circular,
+      List<Location> subLocations) {
     this.start = start;
     this.end = end;
     this.strand = strand;
+    this.circular = circular;
     this.subLocations = Collections.unmodifiableList(subLocations);
+    assertLocation();
   }
 
   public AbstractLocation(int start, int end, Strand strand,
       Location... subLocations) {
-    this(start, end, strand, Arrays.asList(subLocations));
+    this(start, end, strand, false, Arrays.asList(subLocations));
+  }
+
+  public AbstractLocation(int start, int end, Strand strand, boolean circular,
+      Location... subLocations) {
+    this(start, end, strand, circular, Arrays.asList(subLocations));
+  }
+
+  protected void assertLocation() {
+    if(!isCircular()) {
+      if(getStart() > getEnd()) {
+        throw new IllegalArgumentException(
+            String.format("Start (%d) is greater than end (%d); if this is " +
+            		"meant to be cicular then mark as so during construction",
+            		getStart(), getEnd()));
+      }
+    }
   }
 
   public int getEnd() {
@@ -115,14 +146,13 @@ public abstract class AbstractLocation implements Location {
     return r;
   }
 
-  /**
-   * Always returns false
-   */
   public boolean isCircular() {
-    return false;
+    return circular;
   }
 
   public String toString() {
-    return getStart()+":"+getEnd()+"("+getStrand().getStringRepresentation()+")";
+    String circ = (isCircular()) ? " - circular" : "";
+    return format("%d:%d(%s%s)", getStart(), getEnd(),
+        getStrand().getStringRepresentation(), circ);
   }
 }

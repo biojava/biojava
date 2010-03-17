@@ -18,6 +18,20 @@ public class SimpleLocation extends AbstractLocation {
     super(start, end, strand);
   }
 
+  public SimpleLocation(int start, int end, Strand strand, boolean circular,
+      List<Location> subLocations) {
+    super(start, end, strand, circular, subLocations);
+  }
+
+  public SimpleLocation(int start, int end, Strand strand, boolean circular,
+      Location... subLocations) {
+    super(start, end, strand, circular, subLocations);
+  }
+
+  public SimpleLocation(int start, int end, Strand strand, boolean circular) {
+    super(start, end, strand, circular);
+  }
+
   public SimpleLocation(int start, int end, Strand strand,
       List<Location> subLocations) {
     super(start, end, strand, subLocations);
