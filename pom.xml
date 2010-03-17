@@ -205,6 +205,6 @@
     <module>structure</module>
     <module>structure-gui</module>
     <module>motif</module>
-    
+    <module>biojava3-genome</module>
   </modules>
 </project>
