@@ -318,6 +318,9 @@ public class StructureAlignmentJmol implements MouseMotionListener, MouseListene
       frame.setTitle(label);
       frame.repaint();
    }
+   public String getTitle(){
+      return frame.getTitle();
+   }
 
    public void mouseDragged(MouseEvent e) {
       // TODO Auto-generated method stub

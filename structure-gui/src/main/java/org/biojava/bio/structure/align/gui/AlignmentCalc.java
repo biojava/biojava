@@ -97,7 +97,7 @@ public class AlignmentCalc implements Runnable {
          Atom[] ca1 = StructureTools.getAtomCAArray(structure1);
          Atom[] ca2 = StructureTools.getAtomCAArray(structure2);
 
-         System.out.println("ca1 size:" + ca1.length + " ca2 size: " + ca2.length);
+         //System.out.println("ca1 size:" + ca1.length + " ca2 size: " + ca2.length);
          AFPChain afpChain = algorithm.align(ca1, ca2);
 
          afpChain.setName1(name1);
@@ -105,6 +105,7 @@ public class AlignmentCalc implements Runnable {
 
          //System.out.println(afpChain);
 
+         
          List<Group> hetatms = structure1.getChain(0).getAtomGroups("hetatm");
          List<Group> nucs    = structure1.getChain(0).getAtomGroups("nucleotide");
 
@@ -132,7 +133,10 @@ public class AlignmentCalc implements Runnable {
          else {
             jmol = StructureAlignmentDisplay.display(afpChain, ca1, ca2, hetatms, nucs,hetatms2, nucs2);
          }
-
+         
+         String title = jmol.getTitle();
+         title += " " + algorithm.getParameters().toString();
+         jmol.setTitle(title);
          //String result = afpChain.toFatcat(ca1, ca2);
 
          //String rot = afpChain.toRotMat();
