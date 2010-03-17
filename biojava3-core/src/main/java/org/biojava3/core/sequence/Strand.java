@@ -25,4 +25,15 @@ public enum Strand {
   public String getStringRepresentation() {
     return stringRepresentation;
   }
+
+  public Strand getReverse() {
+    switch (this) {
+    case POSITIVE:
+      return NEGATIVE;
+    case NEGATIVE:
+      return POSITIVE;
+    default:
+      return UNDEFINED;
+    }
+  }
 }
