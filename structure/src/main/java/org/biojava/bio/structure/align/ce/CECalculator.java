@@ -107,8 +107,7 @@ public class CECalculator {
       dist1= new double[0][0];
       dist2= new double[0][0];
       this.params = params;
-      
-      System.out.println(params);
+          
    }
 
    /**
