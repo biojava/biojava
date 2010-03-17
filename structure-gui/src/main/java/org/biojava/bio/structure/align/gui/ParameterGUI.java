@@ -17,6 +17,7 @@ import javax.swing.JLabel;
 import javax.swing.JTextField;
 
 import org.biojava.bio.structure.align.StructureAlignment;
+import org.biojava.bio.structure.align.ce.CeParameters;
 import org.biojava.bio.structure.align.ce.ConfigStrucAligParams;
 
 public class ParameterGUI extends JFrame{
@@ -29,6 +30,8 @@ public class ParameterGUI extends JFrame{
    ConfigStrucAligParams params ;
    List<Component> textFields;
 
+   
+   
    public ParameterGUI(StructureAlignment alignment){
 
       ConfigStrucAligParams params = alignment.getParameters();
@@ -41,7 +44,7 @@ public class ParameterGUI extends JFrame{
       this.setTitle("Parameters for " + method);
 
 
-      List<String> names = params.getUserConfigParameterNames();
+      //List<String> names = params.getUserConfigParameters();
       List<String> keys  = params.getUserConfigParameters();
       List<Class> types  = params.getUserConfigTypes();
 
@@ -49,20 +52,26 @@ public class ParameterGUI extends JFrame{
       textFields = new ArrayList<Component>();
       Box vBox = Box.createVerticalBox();
 
-      for (int i = 0 ; i < names.size(); i++){
+      for (int i = 0 ; i < keys.size(); i++){
          Class type = types.get(i);
 
          Box hBox = Box.createHorizontalBox();
-
-         JLabel label = new JLabel(names.get(i));
+         String name = keys.get(i);
+         JLabel label = new JLabel(name);
          String help = helps.get(i);
          label.setToolTipText(help);
 
-         Object value = getValue(keys.get(i));
+         Object value = getValue(name);
 
          String data = value.toString();
          Component field;
-         if ( type == Boolean.class){
+         if ( name.equals(CeParameters.SCORING_STRATEGY) ){
+            String[] values = new String[]{"CA only","Sidechain orientation","Angle between sidechains"};
+            JComboBox jcbox = new JComboBox(values);
+            Integer val = (Integer)value;
+            jcbox.setSelectedIndex(val);
+            field = jcbox;
+         } else if ( type == Boolean.class){
 
             String[] values = new String[]{"true","false"};
             JComboBox jcbox = new JComboBox(values);
@@ -70,7 +79,11 @@ public class ParameterGUI extends JFrame{
                jcbox.setSelectedIndex(1);
             else 
                jcbox.setSelectedIndex(0);
+            
             field = jcbox;
+            
+            //field.setToolTipText(help);
+
          } else {
             JTextField tfield = new JTextField(10);
 
@@ -142,13 +155,19 @@ public class ParameterGUI extends JFrame{
    protected void setDefault() {
       params.reset();
 
-      List<String> keys = params.getUserConfigParameters();
-      List<Class> types = params.getUserConfigTypes();
+      List<String> keys  = params.getUserConfigParameters();
+      List<Class> types  = params.getUserConfigTypes();
+      //List<String> names = params.getUserConfigParameterNames();
       for (int i = 0 ; i < keys.size(); i++){
 
          Class type = types.get(i);
          Object data = getValue(keys.get(i));
-         if ( type == Boolean.class){
+         String name = keys.get(i);
+         if ( name.equals(CeParameters.SCORING_STRATEGY)){
+            JComboBox field = (JComboBox)  textFields.get(i);
+            field.setSelectedIndex((Integer)data);
+            field.updateUI();
+         }  else if ( type == Boolean.class){
             JComboBox field = (JComboBox)  textFields.get(i);
             if ( data.toString().equalsIgnoreCase("false"))
                field.setSelectedIndex(1);
@@ -163,10 +182,10 @@ public class ParameterGUI extends JFrame{
                for ( String da : (String[]) data){
                   stuff += da + " ";
                }
-               System.out.println(type + "setting string array:" + stuff);
+               
                field.setText(stuff);
             } else {
-               System.out.println(type + "setting string array:" + data.toString());
+               
                field.setText(data.toString()); 
             }
             field.updateUI();
@@ -186,17 +205,22 @@ public class ParameterGUI extends JFrame{
 
    @SuppressWarnings("unchecked")
    protected void storeParameters() {
-      List<String> names = params.getUserConfigParameterNames();
+      //List<String> names = params.getUserConfigParameterNames();
       List<String> keys = params.getUserConfigParameters();
       List<Class> types = params.getUserConfigTypes();
 
-      for (int i = 0 ; i < names.size(); i++){
+      for (int i = 0 ; i < keys.size(); i++){
          Class type = types.get(i);
          String key  = keys.get(i);
-
+        // String name = keys.get(i);
          String value = null;
 
-         if ( type == Boolean.class){
+         if ( key.equals(CeParameters.SCORING_STRATEGY)){
+            JComboBox field = (JComboBox)  textFields.get(i);
+            Integer sel = field.getSelectedIndex();
+            value = sel.toString();
+         }
+         else if ( type == Boolean.class){
             JComboBox field = (JComboBox)  textFields.get(i);
             int sel = field.getSelectedIndex();
             Boolean flag = true;
