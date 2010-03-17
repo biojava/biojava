@@ -25,12 +25,7 @@
 package org.biojava.bio.structure.align.ce;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-
-
-import org.biojava.bio.structure.StructureTools;
-
 
 
 /** Contains the parameters that can be sent to CE
@@ -39,15 +34,23 @@ import org.biojava.bio.structure.StructureTools;
  *
  */
 public class CeParameters implements ConfigStrucAligParams  {
-	int winSize;
+	
+   int winSize;
 	double rmsdThr;
 	double rmsdThrJoin;
-	String[] alignmentAtoms;
+	
+	public static final int DEFAULT_SCORING_STRATEGY = 0;
+	public static final int SIDE_CHAIN_SCORING = 1;
+	public static final int SIDE_CHAIN_ANGLE_SCORING = 2;
+	
+	int scoringStrategy;
+	//String[] alignmentAtoms;
 	private int maxGapSize;
 
 	boolean showAFPRanges;
 	boolean checkCircular;
 	int  sideChainScoringType;
+	
 	public CeParameters(){
 		reset();
 	}
@@ -56,8 +59,7 @@ public class CeParameters implements ConfigStrucAligParams  {
 
 	@Override
 	public String toString() {
-		return "CeParameters [alignmentAtoms="
-      + Arrays.toString(alignmentAtoms) 
+		return "CeParameters [scoringStrategy=" + scoringStrategy 
       + ", maxGapSize=" + maxGapSize 
       + ", rmsdThr=" + rmsdThr 
       + ", rmsdThrJoin="+ rmsdThrJoin 
@@ -73,7 +75,7 @@ public class CeParameters implements ConfigStrucAligParams  {
 		winSize = 8;
 		rmsdThr = 3.0;
 		rmsdThrJoin = 4.0;
-		alignmentAtoms = new String[]{StructureTools.caAtomName};
+		scoringStrategy = DEFAULT_SCORING_STRATEGY;
 		maxGapSize = 30;
 		showAFPRanges = false;
 		checkCircular = false;
@@ -112,15 +114,28 @@ public class CeParameters implements ConfigStrucAligParams  {
 		this.rmsdThrJoin = rmsdThrJoin;
 	}
 
-	public String[] getAlignmentAtoms() {
-		return alignmentAtoms;
-	}
-
-	public void setAlignmentAtoms(String[] alignmentAtoms) {
-		this.alignmentAtoms = alignmentAtoms;
-	}
+	public int getScoringStrategy()
+   {
+      return scoringStrategy;
+   }
 
 
+	/** Set the scoring strategy to use. 0 is default CE scoring scheme. 1 uses
+	 * Side chain orientation.
+	 * 
+	 * @param scoringStrategy
+	 */
+   public void setScoringStrategy(int scoringStrategy)
+   {
+      this.scoringStrategy = scoringStrategy;
+   }
+
+
+
+   /** Set the Max gap size parameter. Default 30. For unlimited gaps set to -1
+	 * 
+	 * @param maxGapSize
+	 */
 	public void setMaxGapSize(Integer maxGapSize){
 		this.maxGapSize = maxGapSize;
 	}
@@ -143,12 +158,12 @@ public class CeParameters implements ConfigStrucAligParams  {
 		String helpRmsdThr = "This configures the RMSD threshold applied during the trace of the fragment matrix.";
 		String helpWinSize = "This configures the fragment size m of Aligned Fragment Pairs (AFPs).";
 		String helpCircular = "Should the algoritm check for circular permutations? Increases calculation time.";
-		String helpAligAtoms = "Which atoms should be used in the alignment calculations.";
+		String helpScoring = "Which scoring function to use.";
 		params.add(helpMaxGap);
 		params.add(helpRmsdThr);
 		params.add(helpWinSize);
 		params.add(helpCircular);
-		params.add(helpAligAtoms);
+		params.add(helpScoring);
 		return params;
 	}
 
@@ -158,7 +173,7 @@ public class CeParameters implements ConfigStrucAligParams  {
 		params.add("RmsdThr");
 		params.add("WinSize");
 		params.add("CheckCircular");
-		params.add("AlignmentAtoms");
+		params.add("ScoringStrategy");
 		
 		return params;
 	}
@@ -169,7 +184,7 @@ public class CeParameters implements ConfigStrucAligParams  {
 		params.add("RMSD threshold during trace of the fragment matrix.");
 		params.add("fragment size m");
 		params.add("check for circular permutations");
-		params.add("Which atoms to use for the sidechain calculations");
+		params.add("Which scoring function to use");
 		return params;
 	}
 
@@ -179,7 +194,7 @@ public class CeParameters implements ConfigStrucAligParams  {
 		params.add(Double.class);
 		params.add(Integer.class);
 		params.add(Boolean.class);
-		params.add(String[].class);
+		params.add(Integer.class);
 		return params;
 	}
 

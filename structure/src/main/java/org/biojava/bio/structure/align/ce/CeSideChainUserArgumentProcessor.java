@@ -19,7 +19,7 @@ public class CeSideChainUserArgumentProcessor extends AbstractUserArgumentProces
 	   
 		CeParameters params = new CeParameters();
 	
-		params.setAlignmentAtoms(new String[]{StructureTools.caAtomName, StructureTools.cbAtomName});
+		params.setScoringStrategy(CeParameters.SIDE_CHAIN_SCORING);
 		//params.setMaxGapSize(0);
 		return params;
 	}

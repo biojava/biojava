@@ -49,7 +49,7 @@ public class CECalculator {
 
    private static final boolean isPrint = false;
    private static final boolean showAlignmentSteps = false;
-   private static final boolean debug = true;  
+   private static final boolean debug = false;  
 
    int[] f1;
    int[] f2;
@@ -95,8 +95,8 @@ public class CECalculator {
 
    private static final int nIter = 1;
    private static final boolean distAll = false;
-   
-   
+
+
    private static final double DEFAULT_GAP_OPEN = 5.0;
    private static final double DEFAULT_GAP_EXTENSION  = 0.5;
    private static final double DISTANCE_INCREMENT=0.5;
@@ -130,11 +130,7 @@ public class CECalculator {
 
       f1 = new int[nse1];
       f2 = new int[nse2];
-      if ( params.getAlignmentAtoms().length == 1) {
-         System.out.println("using CA only...");
-      } else {
-         System.out.println("using side chain scoring...");
-      }
+
       dist1 = initIntraDistmatrix(ca1, nse1);
       dist2 = initIntraDistmatrix(ca2, nse2);  
       if ( debug )
@@ -165,7 +161,7 @@ public class CECalculator {
       mat = initSumOfDistances(nse1, nse2, winSize, winSizeComb1, ca1, ca2);
 
       // Set the distance matrix
-      afpChain.setDistanceMatrix(new Matrix(mat.clone()));
+      //afpChain.setDistanceMatrix(new Matrix(mat.clone()));
 
 
       //		
@@ -191,12 +187,14 @@ public class CECalculator {
    }
 
    private double getDistanceWithSidechain(Atom ca1, Atom ca2) throws StructureException {
-   
-      if ( params.getAlignmentAtoms().length == 1) {
-         
+
+      if ( params.getScoringStrategy() == CeParameters.DEFAULT_SCORING_STRATEGY) {
+
          return Calc.getDistance(ca1,ca2);
+     
       }
-      
+
+
       double dist = 2e10;
       Group g1 = ca1.getParent();
       Atom cb1 = null;
@@ -211,27 +209,43 @@ public class CECalculator {
       }
 
 
-      // score type 1    consider side chain distances   
-      if ( cb1 != null && cb2 != null) {
-         // CB distance
-         dist = Calc.getDistance(cb1,cb2);
-         //dist = dist / 2.;
-      } else {
-         dist = Calc.getDistance(ca1,ca2);
+      if ( params.getScoringStrategy() == CeParameters.SIDE_CHAIN_SCORING) {
+
+
+         // here we are using side chain orientation for scoring...
+
+
+         // score type 1    consider side chain distances   
+         if ( cb1 != null && cb2 != null) {
+            // CB distance
+            dist = Calc.getDistance(cb1,cb2);
+            //dist = dist / 2.;
+         } else {
+            dist = Calc.getDistance(ca1,ca2);
+         }
+
+         return dist;
       }
 
-//      // score type 2 add angle info
-//
-//      if ( cb1 != null && cb2 != null) {
-//         Atom c1 = Calc.substract(cb1, ca1);
-//         Atom c2 = Calc.substract(cb2, ca2);
-//         Atom newA = Calc.substract(c2, c1);
-//         dist += Calc.amount(newA);
-//      }  else {
-//         //dist += Calc.getDistance(ca1,ca2);
-//      }
+      else if ( params.getScoringStrategy() == CeParameters.SIDE_CHAIN_ANGLE_SCORING){
 
-      return dist;
+         // score type 2 add angle info
+
+         if ( cb1 != null && cb2 != null) {
+            Atom c1 = Calc.substract(cb1, ca1);
+            Atom c2 = Calc.substract(cb2, ca2);
+            Atom newA = Calc.substract(c2, c1);
+            dist += Calc.amount(newA);
+         }  else {
+            //dist += Calc.getDistance(ca1,ca2);
+         }
+
+         return dist;
+         
+      } else {
+         // unsupported scoring scheme
+         return Calc.getDistance(ca1,ca2);
+      }
    }
 
    /** build up intramolecular distance matrix dist1 & dist2
