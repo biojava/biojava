@@ -21,8 +21,8 @@ public class StructureAlignmentFactory {
       List<StructureAlignment> algorithms = new LinkedList<StructureAlignment>();
 
       algorithms.add( new CeMain() );
-      algorithms.add( new CeCPMain() );
-      algorithms.add(new CeSideChainMain());
+     // algorithms.add( new CeCPMain() );
+      //algorithms.add(new CeSideChainMain());
 
       StructureAlignment fatcatRigid    = new FatCatRigid();
       StructureAlignment fatcatFlexible = new FatCatFlexible();

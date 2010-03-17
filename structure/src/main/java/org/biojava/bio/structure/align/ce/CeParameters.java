@@ -43,6 +43,7 @@ public class CeParameters implements ConfigStrucAligParams  {
 	public static final int SIDE_CHAIN_SCORING = 1;
 	public static final int SIDE_CHAIN_ANGLE_SCORING = 2;
 	
+	public static final String SCORING_STRATEGY = "ScoringStrategy";
 	int scoringStrategy;
 	//String[] alignmentAtoms;
 	private int maxGapSize;
@@ -114,7 +115,7 @@ public class CeParameters implements ConfigStrucAligParams  {
 		this.rmsdThrJoin = rmsdThrJoin;
 	}
 
-	public int getScoringStrategy()
+	public Integer getScoringStrategy()
    {
       return scoringStrategy;
    }
@@ -125,7 +126,7 @@ public class CeParameters implements ConfigStrucAligParams  {
 	 * 
 	 * @param scoringStrategy
 	 */
-   public void setScoringStrategy(int scoringStrategy)
+   public void setScoringStrategy(Integer scoringStrategy)
    {
       this.scoringStrategy = scoringStrategy;
    }
@@ -173,7 +174,7 @@ public class CeParameters implements ConfigStrucAligParams  {
 		params.add("RmsdThr");
 		params.add("WinSize");
 		params.add("CheckCircular");
-		params.add("ScoringStrategy");
+		params.add(SCORING_STRATEGY);
 		
 		return params;
 	}

@@ -107,6 +107,8 @@ public class CECalculator {
       dist1= new double[0][0];
       dist2= new double[0][0];
       this.params = params;
+      
+      System.out.println(params);
    }
 
    /**
@@ -1242,6 +1244,7 @@ nBestTrace=nTrace;
 
                // this needs to be a parameter...
 
+               
                double dist = getDistanceWithSidechain(ca1[ise1], ca3[ise2]);
                mat[ise1][ise2] = oRmsdThr - dist;
 
