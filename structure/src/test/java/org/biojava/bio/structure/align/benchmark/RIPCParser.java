@@ -16,6 +16,12 @@ import java.util.regex.Pattern;
 import org.biojava.bio.structure.align.benchmark.MultipleAlignmentParser;
 
 /**
+ * Parses files formatted like the RIPC dataset (Repetition, Indels, Permutation,
+ * Conformational variability), cited in:<br/>
+ * <i>Mayr et al. Comparative analysis of protein structure alignments. BMC Struct Biol (2007) vol. 7 pp. 50</i>
+ * <br/>and available online <a href="http://www.biomedcentral.com/content/supplementary/1472-6807-7-50-S5.txt">here</a>.
+ * <p>
+ * See {@link RIPCIterator} for info about the format.
  * @author Spencer Bliven
  *
  */
@@ -31,7 +37,7 @@ public class RIPCParser implements MultipleAlignmentParser
 	 */
 	public static void main(String[] args)
 	{
-		String filename = "/Users/blivens/dev/bourne/benchmarks/RIPC.align";
+		String filename = "src/test/resources/align/benchmarks/RIPC.align";
 		RIPCParser parser = new RIPCParser(filename);
 		for(MultipleAlignment ma : parser) {
 			System.out.println(ma.display());
@@ -59,11 +65,18 @@ public class RIPCParser implements MultipleAlignmentParser
 	 * resPair := res ' ' res '\n'
 	 * res := (3-letter amino acid code)'.'(pdb res number)'.'(insertion code)'.'(chain)</pre>
 	 * Where outputs are listed in parentheses. Note that alignments must be separated by empty lines.
-	 * 
+	 * <p>
+	 * Example:<br/><pre>
+	 * #d1hcy_2-d1lnlb1
+	 * HIS.194._._	HIS.41._.B
+	 * HIS.198._._	HIS.61._.B
+	 * HIS.224._._	HIS.70._.B
+	 * HIS.344._._	HIS.181._.B
+	 *
 	 * @author Spencer Bliven
 	 *
 	 */
-	private static class RIPCIterator implements Iterator<MultipleAlignment> {
+	protected static class RIPCIterator implements Iterator<MultipleAlignment> {
 		private BufferedReader ripc;
 		private String[] nextLabels;
 

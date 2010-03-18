@@ -1,0 +1,41 @@
+Type	Domain1	Domain2	Length1	Length2	SeqID	SCOP1	SCOP2	Ref
+I R	d1he9a_	d1nfn__	134	132	22.6	a.24.11.1	a.24.1.1	no
+I	d1hcy_2	d1lnlb1	263	307	13.9	a.86.1.1	a.86.1.1	yes
+I R	d1afra_	d1jkua_	345	266	19.2	a.25.1.2	a.25.1.3	no
+I	d1ay9b_	d1b12a_	108	239	20.0	b.87.1.1	b.87.1.2	yes
+I	d1hx6a1	d1p2za2	230	312	16.5	b.121.2.1	b.121.2.2	no
+I	d1b09a_	d1dy4a_	206	434	18.4	b.29.1.5	b.29.1.10	no
+I R	d1olza2	d2trcb_	474	340	17.8	b.69.12.1	b.69.4.1	no
+I	d1gbg__	d1ovwa_	214	398	19.5	b.29.1.2	b.29.1.10	yes
+I	d1ed9a_	d1p49a_	449	548	18.8	c.76.1.1	c.76.1.2	no
+I R	d1xyza_	d2hvm__	320	273	17.7	c.1.8.3	c.1.8.5	no
+I	d1crl__	d1ede__	534	310	22.0	c.69.1.17	c.69.1.8	yes
+I R	d1cpo_1	d1cpo_2	120	179	14.8	a.39.3.1	a.39.3.1	no
+I C	d1jj7a_	d1lvga_	251	190	21.1	c.37.1.12	c.37.1.1	yes
+I	d2adma_	d2hmyb_	386	327	15.3	c.66.1.27	c.66.1.26	yes
+I C	d1lzy__	d148le_	129	162	18.1	d.2.1.2	d.2.1.3	no
+I	d1an9a1	d1npx_1	247	198	19.3	c.4.1.2	c.3.1.5	yes
+I C	d1dmaa_	d1lt3a_	204	226	21.3	d.166.1.1	d.166.1.1	no
+I	d1bmld3	d2sak__	88	121	22.2	d.15.5.1	d.15.5.1	no
+I	d1ng4a2	d3cox_2	88	130	17.7	d.16.1.3	d.16.1.1	no
+I	d1aqza_	d1a2pa_	142	108	16.0	d.1.1.3	d.1.1.2	no
+P	d1nkl__	d1qdma1	78	77	24.3	a.64.1.1	a.64.1.2	yes
+P	d1d5ra1	d1rsy__	133	135	21.8	b.7.1.1	b.7.1.2	no
+P	d1nls__	d2bqpa_	237	228	43.9	b.29.1.1	b.29.1.1	yes
+P	d1qasa2	d1rsy__	126	135	26.4	b.7.1.1	b.7.1.2	yes
+P C	d1b6a_1	d1bia_1	74	63	25.7	a.4.5.25	a.4.5.1	no
+P R	d1b5ta_	d1k87a2	275	351	17.5	c.1.23.1	c.1.23.2	yes
+P I	d1jwyb_	d1puja_	281	261	20.2	c.37.1.8	c.37.1.8	yes
+P I	d1jwyb_	d1u0la2	281	212	19.5	c.37.1.8	c.37.1.8	yes
+P I	d1nw5a_	d2adma_	270	386	16.4	c.66.1.11	c.66.1.27	yes
+P C	d1gsa_1	d2hgsa1	122	102	15.6	c.30.1.3	c.30.1.4	yes
+P I	d1qq5a_	d3chy__	245	128	20.2	c.108.1.1	c.23.1.1	yes
+P I	d1kiaa_	d1nw5a_	275	270	19.9	c.66.1.5	c.66.1.11	yes
+C R	d1aj3__	d2spca_	98	107	22.2	a.7.1.1	a.7.1.1	no
+C	d2bbma_	d4cln__	148	148	100.0	a.39.1.5	a.39.1.5	yes
+C	d1dlia1	d1mv8a1	98	98	26.3	a.100.1.4	a.100.1.4	yes
+I C	d1hava_	d1kxf__	216	159	20.1	b.47.1.4	b.47.1.3	yes
+C	d1l5ba_	d1l5ea_	101	101	100.0	b.89.1.1	b.89.1.1	yes
+I C	d1adl__	d1mup__	131	157	14.1	b.60.1.2	b.60.1.1	no
+C	d1ggga_	d1wdna_	220	223	100.0	c.94.1.1	c.94.1.1	yes
+I C	d1d5fa_	d1nd7a_	350	374	34.6	d.148.1.1	d.148.1.1	yes
