@@ -8,6 +8,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.util.Collection;
+import java.util.LinkedHashMap;
 import org.biojava3.core.sequence.ProteinSequence;
 import org.biojava3.core.sequence.compound.AminoAcidCompound;
 import org.biojava3.core.sequence.compound.AminoAcidCompoundSet;
@@ -61,15 +62,15 @@ public class FastaWriter<S extends AbstractSequence<C>, C extends Compound> {
 
 
             FastaReader<ProteinSequence,AminoAcidCompound> fastaReader = new FastaReader<ProteinSequence,AminoAcidCompound>(is, new GenericFastaHeaderParser<ProteinSequence,AminoAcidCompound>(), new ProteinSequenceCreator(AminoAcidCompoundSet.getAminoAcidCompoundSet()));
-            Collection<ProteinSequence> proteinSequences = fastaReader.process();
+            LinkedHashMap<String,ProteinSequence> proteinSequences = fastaReader.process();
             is.close();
 
 
             System.out.println(proteinSequences);
 
             FileOutputStream fileOutputStream = new FileOutputStream("/Users/Scooter/mutualinformation/project/nuclear_receptor/PF00104_small_test.fasta");
-
-            FastaWriter<ProteinSequence,AminoAcidCompound> fastaWriter = new FastaWriter<ProteinSequence,AminoAcidCompound>(fileOutputStream,proteinSequences,new GenericFastaHeaderFormat<ProteinSequence,AminoAcidCompound>());
+            
+            FastaWriter fastaWriter = new FastaWriter(fileOutputStream,proteinSequences.values(),new GenericFastaHeaderFormat());
             fastaWriter.process();
             fileOutputStream.close();
 

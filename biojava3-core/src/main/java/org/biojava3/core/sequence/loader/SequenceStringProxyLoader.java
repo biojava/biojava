@@ -28,6 +28,7 @@ package org.biojava3.core.sequence.loader;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import org.biojava3.core.sequence.AccessionID;
 
 import org.biojava3.core.sequence.template.AbstractSequenceView;
 import org.biojava3.core.sequence.template.Compound;
@@ -117,6 +118,11 @@ public class SequenceStringProxyLoader<C extends Compound> implements SequencePr
             public Sequence<C> getViewedSequence() {
                 return SequenceStringProxyLoader.this;
             }
+
+            @Override
+            public AccessionID getAccession() {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
         };
     }
 
@@ -126,5 +132,10 @@ public class SequenceStringProxyLoader<C extends Compound> implements SequencePr
 
     public CompoundSet<C> getCompoundSet() {
       return compoundSet;
+    }
+
+    @Override
+    public AccessionID getAccession() {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 }

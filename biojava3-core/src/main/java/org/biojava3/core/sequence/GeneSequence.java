@@ -25,6 +25,7 @@ package org.biojava3.core.sequence;
 
 import java.util.Collection;
 import java.util.LinkedHashMap;
+import org.biojava3.core.sequence.TranscriptSequence.Sense;
 
 /**
  *
@@ -60,7 +61,7 @@ private final LinkedHashMap<String ,TranscriptSequence> transcriptSequenceHashMa
         return transcriptSequenceHashMap.remove(accession);
     }
 
-    public TranscriptSequence addTranscript(AccessionID accession,int begin,int end, Strand sense){
+    public TranscriptSequence addTranscript(AccessionID accession,int begin,int end, Sense sense){
         TranscriptSequence transcriptSequence = new TranscriptSequence(this,begin,end, sense);
         transcriptSequence.setAccession(accession);
         transcriptSequenceHashMap.put(accession.toString(), transcriptSequence);

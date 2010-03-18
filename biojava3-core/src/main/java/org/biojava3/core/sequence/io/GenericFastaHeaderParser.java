@@ -39,7 +39,13 @@ public class GenericFastaHeaderParser<S extends AbstractSequence<C>, C extends C
         String[] data = new String[0];
         ArrayList<String> values = new ArrayList<String>();
         StringBuffer sb = new StringBuffer();
-        if (header.startsWith("PDB:") == false) {
+        if(header.indexOf("length=") != -1){
+            data = new String[1];
+            int index = header.indexOf("length=");
+            data[0] = header.substring(0, index).trim();
+            System.out.println("accession=" + data[0]);
+            return data;
+        } else if (header.startsWith("PDB:") == false) {
             for (int i = 0; i < header.length(); i++) {
                 if (header.charAt(i) == '|') {
                     values.add(sb.toString());
@@ -67,9 +73,8 @@ public class GenericFastaHeaderParser<S extends AbstractSequence<C>, C extends C
         String[] data = getHeaderValues(header);
 
         if (data.length == 1) {
-            sequence.setAccession(new AccessionID(header));
-        }
-        if (data[0].equalsIgnoreCase("sp") || data[0].equalsIgnoreCase("tr")) {
+            sequence.setAccession(new AccessionID(data[0]));
+        } else  if (data[0].equalsIgnoreCase("sp") || data[0].equalsIgnoreCase("tr")) {
             if (data[0].equalsIgnoreCase("sp")) {
                 sequence.setAnnotationType(AnnotationType.CURATED);
             } else {

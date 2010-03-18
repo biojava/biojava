@@ -20,26 +20,44 @@
  * Created on DATE
  *
  */
-
 package org.biojava3.core.sequence;
 
+import java.util.logging.Logger;
 import org.biojava3.core.sequence.TranscriptSequence.Sense;
 
 /**
  *
  * @author Scooter Willis
  */
-public class IntronSequence extends DNASequence{
+public class CDSSequence extends DNASequence {
+    private static final Logger log = Logger.getLogger(CDSSequence.class.getName());
+    public DNASequence parentGeneSequence = null;
+    int phase = 0; // 0, 1, 2 http://www.sequenceontology.org/gff3.shtml
+    Sense sense = Sense.UNDEFINED;
 
-public DNASequence parentGeneSequence = null;
-int frame = 0; // not sure if this makes sense for an intron
- Sense sense = Sense.UNDEFINED;
-    public IntronSequence(TranscriptSequence parentGeneSequence, int begin, int end, int frame,  Sense sense){
+    public CDSSequence(ExonSequence parentGeneSequence, int begin, int end, int phase, Sense sense) {
         this.parentGeneSequence = parentGeneSequence;
         setBegin(begin);
         setEnd(end);
+        this.phase = phase;
         this.sense = sense;
     }
+
+
+    @Override
+    public String toString(){
+        String sequence = super.toString();
+        if(sense == Sense.NEGATIVE){
+            StringBuilder sb = new StringBuilder(sequence);
+            sequence = sb.reverse().toString();
+        }
+        if(phase != 0){
+            log.severe("Phase does not = 0 in exon sequence code needs to fix this");
+        }
+        return sequence;
+    }
+
+   
 
 
 

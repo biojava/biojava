@@ -1,5 +1,7 @@
 package org.biojava3.core.sequence.template;
 
+import org.biojava3.core.sequence.AccessionID;
+
 
 
 public class AbstractSequenceHoldingSequenceView<C extends Compound> extends AbstractSequenceView<C> {
@@ -21,4 +23,9 @@ public class AbstractSequenceHoldingSequenceView<C extends Compound> extends Abs
   public Sequence<C> getViewedSequence() {
     return sequence;
   }
+
+    @Override
+    public AccessionID getAccession() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 }

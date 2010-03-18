@@ -27,6 +27,7 @@ package org.biojava3.core.sequence.template;
 
 import java.util.Iterator;
 import java.util.List;
+import org.biojava3.core.sequence.AccessionID;
 
 public abstract class AbstractSequenceView<C extends Compound> implements SequenceView<C> {
 
@@ -74,6 +75,11 @@ public abstract class AbstractSequenceView<C extends Compound> implements Sequen
 			public Sequence<C> getViewedSequence() {
 				return AbstractSequenceView.this;
 			}
+
+            @Override
+            public AccessionID getAccession() {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
 		};
 	}
 

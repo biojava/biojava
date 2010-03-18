@@ -28,6 +28,7 @@ package org.biojava3.core.sequence.storage;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import org.biojava3.core.sequence.AccessionID;
 
 import org.biojava3.core.sequence.template.AbstractSequenceView;
 import org.biojava3.core.sequence.template.Compound;
@@ -124,6 +125,16 @@ public class ArrayListSequenceBackingStore<C extends Compound> implements Sequen
             public Sequence<C> getViewedSequence() {
                 return ArrayListSequenceBackingStore.this;
             }
+
+            @Override
+            public AccessionID getAccession() {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
         };
+    }
+
+    @Override
+    public AccessionID getAccession() {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 }

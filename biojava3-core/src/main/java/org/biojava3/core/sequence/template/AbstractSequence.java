@@ -210,6 +210,13 @@ public abstract class AbstractSequence<C extends Compound> implements Sequence<C
             public String getSequenceAsString() {
               return getViewedSequence().getSequenceAsString().substring(start-1, end);
             }
+
+            @Override
+            public AccessionID getAccession() {
+                return getViewedSequence().getAccession();
+            }
+
+
         };
     }
 

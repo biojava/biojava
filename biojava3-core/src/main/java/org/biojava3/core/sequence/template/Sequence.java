@@ -26,6 +26,7 @@
 package org.biojava3.core.sequence.template;
 
 import java.util.List;
+import org.biojava3.core.sequence.AccessionID;
 
 public interface Sequence<C extends Compound> extends Iterable<C> {
 
@@ -44,4 +45,7 @@ public interface Sequence<C extends Compound> extends Iterable<C> {
     public SequenceView<C> getSubSequence(int start, int end);
 
     public CompoundSet<C> getCompoundSet();
+
+    public AccessionID getAccession();
+
 }

@@ -30,6 +30,7 @@ import java.io.RandomAccessFile;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import org.biojava3.core.sequence.AccessionID;
 
 import org.biojava3.core.sequence.template.AbstractSequenceView;
 import org.biojava3.core.sequence.template.Compound;
@@ -167,6 +168,11 @@ public class SequenceFileProxyLoader<C extends Compound> implements SequenceProx
             public Sequence<C> getViewedSequence() {
                 return SequenceFileProxyLoader.this;
             }
+
+            @Override
+            public AccessionID getAccession() {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
         };
     }
 
@@ -193,5 +199,10 @@ public class SequenceFileProxyLoader<C extends Compound> implements SequenceProx
      */
     public void setInitialized(boolean initialized) {
         this.initialized = initialized;
+    }
+
+    @Override
+    public AccessionID getAccession() {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 }

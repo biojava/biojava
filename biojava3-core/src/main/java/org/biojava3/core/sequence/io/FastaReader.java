@@ -10,7 +10,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
+import java.util.LinkedHashMap;
+import org.biojava3.core.sequence.AccessionID;
 
 import org.biojava3.core.sequence.ProteinSequence;
 import org.biojava3.core.sequence.compound.AminoAcidCompound;
@@ -57,9 +58,8 @@ public class FastaReader<S extends Sequence<C>, C extends Compound> {
      * @return
      * @throws Exception
      */
-    @SuppressWarnings("unchecked")
-    public List<S> process() throws Exception {
-        ArrayList<S> sequences = new ArrayList<S>();
+    public LinkedHashMap<String,S> process() throws Exception {
+        LinkedHashMap<String,S> sequences = new LinkedHashMap<String,S>();
 
 
         String line = "";
@@ -76,7 +76,7 @@ public class FastaReader<S extends Sequence<C>, C extends Compound> {
                     if (sb.length() > 0) {
                         S sequence = (S)sequenceCreator.getSequence(sb.toString(), sequenceIndex);
                         headerParser.parseHeader(header, sequence);
-                        sequences.add(sequence);
+                        sequences.put(sequence.getAccession().getID(),sequence);
                         if (maxSequenceLength < sb.length()) {
                             maxSequenceLength = sb.length();
                         }
@@ -97,7 +97,7 @@ public class FastaReader<S extends Sequence<C>, C extends Compound> {
             if (line == null) {
                 S sequence = (S)sequenceCreator.getSequence(sb.toString(), fileIndex);
                 headerParser.parseHeader(header, sequence);
-                sequences.add(sequence);
+                sequences.put(sequence.getAccession().getID(),sequence);
                 keepGoing = false;
             }
         } while (keepGoing);
@@ -116,7 +116,7 @@ public class FastaReader<S extends Sequence<C>, C extends Compound> {
             FileInputStream is = new FileInputStream(inputFile);
 
             FastaReader<ProteinSequence, AminoAcidCompound> fastaReader = new FastaReader<ProteinSequence, AminoAcidCompound>(is, new GenericFastaHeaderParser<ProteinSequence,AminoAcidCompound>(), new ProteinSequenceCreator(AminoAcidCompoundSet.getAminoAcidCompoundSet()));
-            Collection<ProteinSequence> proteinSequences = fastaReader.process();
+            LinkedHashMap<String,ProteinSequence> proteinSequences = fastaReader.process();
             is.close();
 
 
@@ -124,7 +124,7 @@ public class FastaReader<S extends Sequence<C>, C extends Compound> {
 
             File file = new File(inputFile);
             FastaReader<ProteinSequence,AminoAcidCompound> fastaProxyReader = new FastaReader<ProteinSequence,AminoAcidCompound>(file, new GenericFastaHeaderParser<ProteinSequence,AminoAcidCompound>(), new FileProxyProteinSequenceCreator(file, AminoAcidCompoundSet.getAminoAcidCompoundSet()));
-            Collection<ProteinSequence> proteinProxySequences = fastaProxyReader.process();
+            LinkedHashMap<String,ProteinSequence> proteinProxySequences = fastaProxyReader.process();
 
             System.out.println(proteinProxySequences);
 

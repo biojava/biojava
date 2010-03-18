@@ -53,7 +53,7 @@ public class DNASequence extends AbstractSequence<NucleotideCompound> {
     private DNAType dnaType = DNAType.UNKNOWN;
 
     public DNASequence() {
-        throw new UnsupportedOperationException("Null constructor not supported");
+//        throw new UnsupportedOperationException("Null constructor not supported");
     }
 
     public DNASequence(String seqString) {
