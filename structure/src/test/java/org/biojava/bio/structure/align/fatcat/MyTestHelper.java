@@ -35,7 +35,7 @@ import org.biojava.bio.structure.io.PDBFileReader;
 
 
 
-public class TestHelper
+public class MyTestHelper
 {
 
    public static final String pdbPath = "/Users/ap3/WORK/PDB/";

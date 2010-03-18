@@ -152,7 +152,7 @@ public class TestOutputStrings extends TestCase
       "Chain 2:   50 DATKFGIPVFAVTKDAQ-AISADELK-KIFHIIDLENKFDATVNAREIETAVNNYED" + newline +
       "" + newline +
       "Note: positions are from PDB; the numbers between alignments are block index" + newline ;
-      String result = TestHelper.compareAlignment(pdb1, chain1, pdb2, chain2, originalOutput,true);
+      String result = MyTestHelper.compareAlignment(pdb1, chain1, pdb2, chain2, originalOutput,true);
       if (! result.equals("")){
          String msg = "the created alignment images are not identical! ";
          printMismatch(originalOutput,result);
@@ -194,7 +194,7 @@ public class TestOutputStrings extends TestCase
       "" +newline +
       "Note: positions are from PDB; the numbers between alignments are block index" + newline ;
 
-      String result = TestHelper.compareAlignment(pdb1, chain1, pdb2, chain2, originalOutput,true);
+      String result = MyTestHelper.compareAlignment(pdb1, chain1, pdb2, chain2, originalOutput,true);
       if (! result.equals("")){
          String msg = "the created alignment images are not identical! ";
          printMismatch(originalOutput,result);
@@ -235,7 +235,7 @@ public class TestOutputStrings extends TestCase
       "" +newline +
       "Note: positions are from PDB; the numbers between alignments are block index" +newline ;
 
-      String result = TestHelper.compareAlignment(pdb1, chain1, pdb2, chain2, originalOutput,false);
+      String result = MyTestHelper.compareAlignment(pdb1, chain1, pdb2, chain2, originalOutput,false);
       if (! result.equals("")){
          String msg = "the created alignment images are not identical! ";
          printMismatch(originalOutput,result);
@@ -273,7 +273,7 @@ public class TestOutputStrings extends TestCase
       "Chain 2:  140 ALAHKYH" +newline +
       "" +newline +
       "Note: positions are from PDB; the numbers between alignments are block index" +newline ;
-      String result = TestHelper.compareAlignment(pdb1, chain1, pdb2, chain2, originalOutput,true);
+      String result = MyTestHelper.compareAlignment(pdb1, chain1, pdb2, chain2, originalOutput,true);
       if (! result.equals("")){
          String msg = "the created alignment images are not identical! ";
          printMismatch(originalOutput,result);
@@ -310,7 +310,7 @@ public class TestOutputStrings extends TestCase
       "Chain 2:  140 ALAHKYH" +newline +
       "" +newline +
       "Note: positions are from PDB; the numbers between alignments are block index" +newline ;
-      String result = TestHelper.compareAlignment(pdb1, chain1, pdb2, chain2, originalOutput,false);
+      String result = MyTestHelper.compareAlignment(pdb1, chain1, pdb2, chain2, originalOutput,false);
       if (! result.equals("")){
          String msg = "the created alignment images are not identical! ";
          printMismatch(originalOutput,result);
@@ -346,7 +346,7 @@ public class TestOutputStrings extends TestCase
       "Chain 2:   74 GTYNVTVYSTNGTRILNKALDLRILE" +newline +
       "" +newline +
       "Note: positions are from PDB; the numbers between alignments are block index" +newline ;
-      String result = TestHelper.compareAlignment(pdb1, chain1, pdb2, chain2, originalOutput,false);
+      String result = MyTestHelper.compareAlignment(pdb1, chain1, pdb2, chain2, originalOutput,false);
       if (! result.equals("")){
          String msg = "the created alignment images are not identical! ";
          printMismatch(originalOutput,result);
@@ -401,7 +401,7 @@ public class TestOutputStrings extends TestCase
       "Chain 2:  342 IQGRVAQIRQQIEE---ATSDYDREKLQERVAKLAGGV" +newline +
       "" +newline +
       "Note: positions are from PDB; the numbers between alignments are block index" +newline;
-      String result = TestHelper.compareAlignment(pdb1, chain1, pdb2, chain2, originalOutput,false);
+      String result = MyTestHelper.compareAlignment(pdb1, chain1, pdb2, chain2, originalOutput,false);
       if (! result.equals("")){
          String msg = "the created alignment images are not identical! ";
          printMismatch(originalOutput,result);
@@ -450,7 +450,7 @@ public class TestOutputStrings extends TestCase
       "Note: positions are from PDB; the numbers between alignments are block index" +newline ;
 
 
-      String result = TestHelper.compareAlignment(pdb1, chain1, pdb2, chain2, originalOutput,true);
+      String result = MyTestHelper.compareAlignment(pdb1, chain1, pdb2, chain2, originalOutput,true);
       if (! result.equals("")){
          String msg = "the created alignment images are not identical! ";
          printMismatch(originalOutput,result);
@@ -502,7 +502,7 @@ public class TestOutputStrings extends TestCase
       "Note: positions are from PDB; the numbers between alignments are block index" +newline ;
 
 
-      String result = TestHelper.compareAlignment(pdb1, chain1, pdb2, chain2, originalOutput,false);
+      String result = MyTestHelper.compareAlignment(pdb1, chain1, pdb2, chain2, originalOutput,false);
       if (! result.equals("")){
          String msg = "the created alignment images are not identical! ";
          printMismatch(originalOutput,result);
@@ -544,7 +544,7 @@ public class TestOutputStrings extends TestCase
       "" +newline +
       "Note: positions are from PDB; the numbers between alignments are block index" +newline;
 
-      String result = TestHelper.compareAlignment(pdb1, chain1, pdb2, chain2, originalOutput,false);
+      String result = MyTestHelper.compareAlignment(pdb1, chain1, pdb2, chain2, originalOutput,false);
       if (! result.equals("")){
          String msg = "the created alignment images are not identical! ";
          printMismatch(originalOutput,result);
