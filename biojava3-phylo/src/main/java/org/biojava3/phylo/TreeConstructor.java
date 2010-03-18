@@ -11,6 +11,7 @@ import java.io.InputStream;
 import java.io.PrintStream;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Vector;
 import org.biojava3.core.sequence.MultipleSequenceAlignment;
@@ -36,7 +37,7 @@ import org.forester.phylogenyinference.NeighborJoining;
  *
  * @author Scooter Willis
  */
-public class TreeConstructor<C extends AbstractSequence, D extends Compound> extends Thread {
+public class TreeConstructor<C extends AbstractSequence<D>, D extends Compound> extends Thread {
 
     TreeType treeType;
     TreeConstructionAlgorithm treeConstructionAlgorithm;
@@ -256,13 +257,13 @@ public class TreeConstructor<C extends AbstractSequence, D extends Compound> ext
 
 
 
-            FastaReader<ProteinSequence> fastaReader = new FastaReader<ProteinSequence>(inStream, new GenericFastaHeaderParser(), new ProteinSequenceCreator(AminoAcidCompoundSet.getAminoAcidCompoundSet()));
-            List<ProteinSequence> proteinSequences = fastaReader.process();
+            FastaReader<ProteinSequence,AminoAcidCompound> fastaReader = new FastaReader<ProteinSequence,AminoAcidCompound>(inStream, new GenericFastaHeaderParser(), new ProteinSequenceCreator(AminoAcidCompoundSet.getAminoAcidCompoundSet()));
+            LinkedHashMap<String,ProteinSequence> proteinSequences = fastaReader.process();
             inStream.close();
 
 
             MultipleSequenceAlignment<ProteinSequence, AminoAcidCompound> multipleSequenceAlignment = new MultipleSequenceAlignment<ProteinSequence, AminoAcidCompound>();
-            for (ProteinSequence proteinSequence : proteinSequences) {
+            for (ProteinSequence proteinSequence : proteinSequences.values()) {
 
                 multipleSequenceAlignment.addAlignedSequence(proteinSequence);
             }
