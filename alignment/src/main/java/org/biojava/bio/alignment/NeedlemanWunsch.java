@@ -261,27 +261,41 @@ public class NeedlemanWunsch extends SequenceAlignment {
 	public static String printCostMatrix(int[][] CostMatrix, char[] queryChar,
 			char[] targetChar) {
 		int line, col;
-		String output = "\t";
+		StringBuilder output = new StringBuilder('\t');
+		String ls = System.getProperty("line.separator");
 
 		for (col = 0; col <= targetChar.length; col++)
-			if (col == 0)
-				output += "[" + col + "]\t";
-			else
-				output += "[" + targetChar[col - 1] + "]\t";
+			if (col == 0) {
+				output.append('['); 
+				output.append(col);
+				output.append("]\t");
+			} else {
+				output.append('[');
+				output.append(targetChar[col - 1]);
+				output.append("]\t");
+			}
 		for (line = 0; line <= queryChar.length; line++) {
-			if (line == 0)
-				output += System.getProperty("line.separator") + "[" + line
-						+ "]\t";
-			else
-				output += System.getProperty("line.separator") + "["
-						+ queryChar[line - 1] + "]\t";
-			for (col = 0; col <= targetChar.length; col++)
-				output += CostMatrix[line][col] + "\t";
+			if (line == 0) {
+				output.append(ls);
+				output.append('[');
+				output.append(line);
+				output.append("]\t");
+			} else {
+				output.append(ls);
+				output.append('[');
+				output.append(queryChar[line - 1]);
+				output.append("]\t");
+			}
+			for (col = 0; col <= targetChar.length; col++) {
+				output.append(CostMatrix[line][col]);
+				output.append('\t');
+			}
 		}
-		output += System.getProperty("line.separator") + "delta[Edit] = "
-				+ CostMatrix[line - 1][col - 1]
-				+ System.getProperty("line.separator");
-		return output;
+		output.append(ls);
+		output.append("delta[Edit] = ");
+		output.append(CostMatrix[line - 1][col - 1]);
+		output.append(ls);
+		return output.toString();
 	}
 
 	/**
