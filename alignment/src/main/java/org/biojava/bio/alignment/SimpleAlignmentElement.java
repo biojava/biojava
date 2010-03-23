@@ -36,11 +36,11 @@ import org.biojava.bio.symbol.SymbolList;
 
 public class SimpleAlignmentElement implements AlignmentElement{
     
-    protected Object label;
+    protected String label;
     protected Location loc;
     protected SymbolList seq;
     
-    public SimpleAlignmentElement(Object label,SymbolList seq,Location loc)throws BioException{
+    public SimpleAlignmentElement(String label,SymbolList seq,Location loc)throws BioException{
         if ((loc.getMax() - loc.getMin() + 1) != seq.length()){
             throw new BioException("Sequence length and location length do not match");
         }
@@ -49,7 +49,7 @@ public class SimpleAlignmentElement implements AlignmentElement{
         this.loc = loc;
     }
     
-    public Object getLabel(){
+    public String getLabel(){
         return label;
     }
     public Location getLoc(){

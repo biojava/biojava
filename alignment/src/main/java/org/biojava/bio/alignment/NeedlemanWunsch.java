@@ -628,7 +628,7 @@ public class NeedlemanWunsch extends SequenceAlignment {
 							.getTokenization("token"), align[1].toString()),
 					ssubject.getURN(), ssubject.getName(), ssubject
 							.getAnnotation()));
-			Map<String, Sequence> m = new HashMap<String, Sequence>();
+			Map<String, SymbolList> m = new HashMap<String, SymbolList>();
 			m.put(squery.getName(), squery);
 			m.put(ssubject.getName(), ssubject);
 			pairalign = new SimpleAlignment(m);

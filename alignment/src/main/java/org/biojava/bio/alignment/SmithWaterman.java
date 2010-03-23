@@ -32,10 +32,6 @@ import org.biojava.bio.seq.impl.SimpleGappedSequence;
 import org.biojava.bio.seq.impl.SimpleSequence;
 import org.biojava.bio.seq.io.SymbolTokenization;
 import org.biojava.bio.symbol.SimpleSymbolList;
-
-/*
- * Created on 05.09.2005
- */
 import org.biojava.bio.symbol.SymbolList;
 
 /**
@@ -385,7 +381,7 @@ public class SmithWaterman extends NeedlemanWunsch {
 				    new SimpleSymbolList(ssubject.getAlphabet()
 				        .getTokenization("token"), align[1].toString()), ssubject.getURN(),
 				    ssubject.getName(), ssubject.getAnnotation()));
-				Map<String, Sequence> m = new HashMap<String, Sequence>();
+				Map<String, SymbolList> m = new HashMap<String, SymbolList>();
 				m.put(squery.getName(), squery);
 				m.put(ssubject.getName(), ssubject);
 				pairalign = new SimpleAlignment(m);
