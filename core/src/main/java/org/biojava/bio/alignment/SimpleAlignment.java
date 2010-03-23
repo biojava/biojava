@@ -140,7 +140,7 @@ public class SimpleAlignment extends AbstractSymbolList implements Alignment,
 	 * 
 	 * @see org.biojava.bio.alignment.Alignment#symbolAt(java.lang.Object, int)
 	 */
-	public Symbol symbolAt(Object label, int column) {
+	public Symbol symbolAt(String label, int column) {
 		return symbolListForLabel(label).symbolAt(column);
 	}
 
