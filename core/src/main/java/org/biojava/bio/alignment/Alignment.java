@@ -78,7 +78,7 @@ public interface Alignment extends SymbolList {
    *
    * @return  the List of all SymbolLists in the alignment
    */
-  List getLabels();
+  List<String> getLabels();
 
   /**
    * Retrieve a symbol by label and column.
@@ -118,7 +118,7 @@ public interface Alignment extends SymbolList {
    * @return  a sub Alignment
    * @throws  NoSuchElementException if labels contains any item that is not a label
    */
-  Alignment subAlignment(Set labels, Location loc)
+  Alignment subAlignment(Set<String> labels, Location loc)
   throws NoSuchElementException;
 
   /**
@@ -128,7 +128,7 @@ public interface Alignment extends SymbolList {
    *
    * @return an Iterator
    */
-  Iterator symbolListIterator();
+  Iterator<SymbolList> symbolListIterator();
   
   /**
    * Iterator implementation looping over symbol lists in an alignment using
@@ -137,23 +137,38 @@ public interface Alignment extends SymbolList {
    * @author Matthew Pocock
    */
   public static class SymbolListIterator
-  implements Iterator {
-    private final Iterator labIt;
+  implements Iterator<SymbolList> {
+    private final Iterator<String> labIt;
     private final Alignment ali;
     
+    /*
+     * 
+     */
     public SymbolListIterator(Alignment ali) {
       this.ali = ali;
       this.labIt = ali.getLabels().iterator();
     }
     
+    /*
+     * (non-Javadoc)
+     * @see java.util.Iterator#hasNext()
+     */
     public boolean hasNext() {
       return labIt.hasNext();
     }
     
-    public Object next() {
+    /*
+     * (non-Javadoc)
+     * @see java.util.Iterator#next()
+     */
+    public SymbolList next() {
       return ali.symbolListForLabel(labIt.next());
     }
     
+    /*
+     * (non-Javadoc)
+     * @see java.util.Iterator#remove()
+     */
     public void remove() {
       labIt.remove();
     }

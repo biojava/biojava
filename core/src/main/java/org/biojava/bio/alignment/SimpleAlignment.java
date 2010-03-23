@@ -57,31 +57,66 @@ public class SimpleAlignment extends AbstractSymbolList implements Alignment,
 		Serializable {
 	private static final long serialVersionUID = -1760075176220928440L;
 
+	/**
+	 * 
+	 */
 	private LinkedHashMap<Object, SymbolList> labelToSymbolList;
-	private List labels;
+	/**
+	 * 
+	 */
+	private List<String> labels;
+	/**
+	 * 
+	 */
 	private Alphabet alphabet;
+	/**
+	 * 
+	 */
 	private int length;
+	/**
+	 * 
+	 */
 	private int score;
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#finalize()
+	 */
 	protected void finalize() throws Throwable {
 		super.finalize();
 		// System.err.println("Finalizing a SimpleAlignement");
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.biojava.bio.symbol.SymbolList#length()
+	 */
 	public int length() {
 		return length;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.biojava.bio.symbol.SymbolList#getAlphabet()
+	 */
 	public Alphabet getAlphabet() {
 		return alphabet;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.biojava.bio.symbol.SymbolList#symbolAt(int)
+	 */
 	public Symbol symbolAt(int index) {
 		try {
 			if (labels.size() == 1) {
 				return symbolAt(labels.get(0), index);
 			} else {
-				return alphabet.getSymbol(new ColAsList(index));
+				return alphabet.getSymbol(new ColAsList<Symbol>(index));
 			}
 		} catch (IllegalSymbolException ire) {
 			throw new BioError(
@@ -91,25 +126,41 @@ public class SimpleAlignment extends AbstractSymbolList implements Alignment,
 		}
 	}
 
-	public List getLabels() {
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.biojava.bio.alignment.Alignment#getLabels()
+	 */
+	public List<String> getLabels() {
 		return labels;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.biojava.bio.alignment.Alignment#symbolAt(java.lang.Object, int)
+	 */
 	public Symbol symbolAt(Object label, int column) {
 		return symbolListForLabel(label).symbolAt(column);
 	}
 
-	public Alignment subAlignment(Set labels, Location loc)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.biojava.bio.alignment.Alignment#subAlignment(java.util.Set,
+	 * org.biojava.bio.symbol.Location)
+	 */
+	public Alignment subAlignment(Set<String> labels, Location loc)
 			throws NoSuchElementException {
-		Map labelsToResList = new LinkedHashMap();
-		Iterator i;
+		Map<String, SymbolList> labelsToResList = new LinkedHashMap<String, SymbolList>();
+		Iterator<String> i;
 		if (labels != null) {
 			i = labels.iterator();
 		} else {
 			i = getLabels().iterator();
 		}
 		while (i.hasNext()) {
-			Object label = i.next();
+			String label = i.next();
 			SymbolList sym = symbolListForLabel(label);
 			if (loc != null) {
 				sym = loc.symbols(sym);
@@ -121,7 +172,7 @@ public class SimpleAlignment extends AbstractSymbolList implements Alignment,
 
 	public SymbolList symbolListForLabel(Object label)
 			throws NoSuchElementException {
-		SymbolList rl =  labelToSymbolList.get(label);
+		SymbolList rl = labelToSymbolList.get(label);
 		if (rl == null) {
 			throw new NoSuchElementException(
 					"No symbol list associated with label " + label);
@@ -139,19 +190,21 @@ public class SimpleAlignment extends AbstractSymbolList implements Alignment,
 	 * @throws IllegalArgumentException
 	 *             if the SymbolLists are not the same length
 	 */
-	public SimpleAlignment(Map labelToResList) throws IllegalArgumentException {
+	public SimpleAlignment(Map<String, SymbolList> labelToResList)
+			throws IllegalArgumentException {
 		if (labelToResList.isEmpty()) {
 			throw new IllegalArgumentException(
 					"Can't create an alignment with no sequences");
 		}
 
-		this.labels = Collections.unmodifiableList(new ArrayList(labelToResList
-				.keySet()));
-		this.labelToSymbolList = new LinkedHashMap<Object,SymbolList>(labelToResList);
+		this.labels = Collections.unmodifiableList(new ArrayList<String>(
+				labelToResList.keySet()));
+		this.labelToSymbolList = new LinkedHashMap<Object, SymbolList>(
+				labelToResList);
 
 		int length = -1;
-		List alphaList = new ArrayList();
-		for (Iterator li = labels.iterator(); li.hasNext();) {
+		List<Alphabet> alphaList = new ArrayList<Alphabet>();
+		for (Iterator<String> li = labels.iterator(); li.hasNext();) {
 			Object label = li.next();
 			try {
 				SymbolList rl = symbolListForLabel(label);
@@ -161,7 +214,8 @@ public class SimpleAlignment extends AbstractSymbolList implements Alignment,
 				} else {
 					if (rl.length() != length) {
 						StringBuffer sb = new StringBuffer();
-						for (Iterator labI = labels.iterator(); labI.hasNext();) {
+						for (Iterator<String> labI = labels.iterator(); labI
+								.hasNext();) {
 							Object lab = labI.next();
 							sb.append("\n\t" + lab + " ("
 									+ symbolListForLabel(lab).length() + ")");
@@ -188,7 +242,10 @@ public class SimpleAlignment extends AbstractSymbolList implements Alignment,
 		this.length = length;
 	}
 
-	public Iterator symbolListIterator() {
+	/**
+	 * 
+	 */
+	public Iterator<SymbolList> symbolListIterator() {
 		return new Alignment.SymbolListIterator(this);
 	}
 
@@ -197,32 +254,56 @@ public class SimpleAlignment extends AbstractSymbolList implements Alignment,
 	 * 
 	 * @author Matthew Pocock
 	 */
-	private final class ColAsList extends AbstractList implements Serializable {
+	private final class ColAsList<T extends Symbol> extends AbstractList<T>
+			implements Serializable {
+		/**
+		 * Generated serial version identifier.
+		 */
+		private static final long serialVersionUID = 8254702569039851040L;
 		private final int col;
 
 		public ColAsList(int col) {
 			this.col = col;
 		}
 
-		protected ColAsList() {
-			this.col = 0;
+		// protected ColAsList() {
+		// this.col = 0;
+		// }
+
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see java.util.AbstractList#get(int)
+		 */
+		@SuppressWarnings("unchecked")
+		public T get(int indx) {
+			return (T) symbolAt(labels.get(indx), col);
 		}
 
-		public Object get(int indx) {
-			return symbolAt(labels.get(indx), col);
-		}
-
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see java.util.AbstractCollection#size()
+		 */
 		public int size() {
 			return labels.size();
 		}
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
 	public int getScore() {
 		return score;
 	}
 
+	/**
+	 * 
+	 * @param score
+	 */
 	public void setScore(int score) {
 		this.score = score;
 	}
-	
+
 }
