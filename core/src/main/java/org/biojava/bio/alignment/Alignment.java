@@ -100,7 +100,7 @@ public interface Alignment extends SymbolList {
 	 * @throws NoSuchElementException
 	 *             if there is no row for 'label'
 	 */
-	SymbolList symbolListForLabel(Object label) throws NoSuchElementException;
+	SymbolList symbolListForLabel(String label) throws NoSuchElementException;
 
 	/**
 	 * <p>

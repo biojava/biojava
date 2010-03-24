@@ -8,7 +8,7 @@ import java.util.List;
 
 import org.biojava.bio.BioException;
 
-import org.biojava.bio.alignment.SequenceAlignment;
+import org.biojava.bio.alignment.AlignmentAlgorithm;
 import org.biojava.bio.alignment.SimpleAlignment;
 import org.biojava.bio.alignment.SmithWaterman;
 import org.biojava.bio.alignment.SubstitutionMatrix;
@@ -120,7 +120,7 @@ public class SmithWaterman3Daligner extends AbstractStructureAlignment implement
 		return afpChain;
 	}
 
-	private AFPChain convert(SequenceAlignment aligner,Atom[] ca1, Atom[] ca2,  SimpleAlignment alig) throws StructureException {
+	private AFPChain convert(AlignmentAlgorithm aligner,Atom[] ca1, Atom[] ca2,  SimpleAlignment alig) throws StructureException {
 		AFPChain afpChain = new AFPChain();
 		int ca1Length = ca1.length;
 		int ca2Length = ca2.length;		

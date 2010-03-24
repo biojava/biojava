@@ -261,7 +261,13 @@ public class FlexibleAlignment extends AbstractULAlignment implements
 		return symbol;
 	}
 
-	public synchronized SymbolList symbolListForLabel(Object label)
+	/**
+	 * 
+	 * @param label
+	 * @return
+	 * @throws NoSuchElementException
+	 */
+	public synchronized SymbolList symbolListForLabel(String label)
 			throws NoSuchElementException {
 		return getAE(label).getSymbolList();
 	}

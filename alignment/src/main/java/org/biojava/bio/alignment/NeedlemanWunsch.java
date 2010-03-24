@@ -20,17 +20,9 @@
  */
 package org.biojava.bio.alignment;
 
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.NoSuchElementException;
-
 import org.biojava.bio.BioException;
 import org.biojava.bio.SimpleAnnotation;
 import org.biojava.bio.seq.Sequence;
-import org.biojava.bio.seq.SequenceIterator;
-import org.biojava.bio.seq.db.SequenceDB;
 import org.biojava.bio.seq.impl.SimpleGappedSequence;
 import org.biojava.bio.seq.impl.SimpleSequence;
 import org.biojava.bio.seq.io.SymbolTokenization;
@@ -52,7 +44,7 @@ import org.biojava.bio.symbol.SymbolList;
  * @since 1.5
  */
 
-public class NeedlemanWunsch extends SequenceAlignment {
+public class NeedlemanWunsch extends AlignmentAlgorithm {
 
 	/**
 	 * A matrix with the size length(sequence1) times length(sequence2)
@@ -63,16 +55,6 @@ public class NeedlemanWunsch extends SequenceAlignment {
 	 * A matrix with the size length(alphabet) times length(alphabet)
 	 */
 	protected SubstitutionMatrix subMatrix;
-
-	/**
-	 * The result of a successful alignment
-	 */
-	protected SimpleAlignment pairalign;
-
-	/**
-	 * The result of a successful alignment as a simple String.
-	 */
-	protected String alignment;
 
 	/**
 	 * Expenses for inserts.
@@ -132,7 +114,6 @@ public class NeedlemanWunsch extends SequenceAlignment {
 		this.gapExt = gapExtend;
 		this.match = match;
 		this.replace = replace;
-		this.alignment = "";
 	}
 
 	/**
@@ -261,7 +242,8 @@ public class NeedlemanWunsch extends SequenceAlignment {
 	public static String printCostMatrix(int[][] CostMatrix, char[] queryChar,
 			char[] targetChar) {
 		int line, col;
-		StringBuilder output = new StringBuilder('\t');
+		StringBuilder output = new StringBuilder();
+		output.append('\t');
 		String ls = System.getProperty("line.separator");
 
 		for (col = 0; col <= targetChar.length; col++)
@@ -309,22 +291,22 @@ public class NeedlemanWunsch extends SequenceAlignment {
 		System.out.print(align);
 	}
 
-	/**
-	 * This method is good if one wants to reuse the alignment calculated by
-	 * this class in another BioJava class. It just performs
-	 * {@link #pairwiseAlignment(SymbolList, SymbolList) pairwiseAlignment} and
-	 * returns an <code>Alignment</code> instance containing the two aligned
-	 * sequences.
-	 * 
-	 * @return Alignment object containing the two gapped sequences constructed
-	 *         from query and target.
-	 * @throws Exception
-	 */
-	public Alignment getAlignment(SymbolList query, SymbolList target)
-			throws Exception {
-		pairwiseAlignment(query, target);
-		return pairalign;
-	}
+//	/**
+//	 * This method is good if one wants to reuse the alignment calculated by
+//	 * this class in another BioJava class. It just performs
+//	 * {@link #pairwiseAlignment(SymbolList, SymbolList) pairwiseAlignment} and
+//	 * returns an <code>Alignment</code> instance containing the two aligned
+//	 * sequences.
+//	 * 
+//	 * @return Alignment object containing the two gapped sequences constructed
+//	 *         from query and target.
+//	 * @throws Exception
+//	 */
+//	public AlignmentPair getAlignment(SymbolList query, SymbolList target)
+//			throws Exception {
+//		pairwiseAlignment(query, target);
+//		return pairalign;
+//	}
 
 	/**
 	 * This gives the edit distance according to the given parameters of this
@@ -355,51 +337,14 @@ public class NeedlemanWunsch extends SequenceAlignment {
 		return z;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see toolbox.align.SequenceAlignment#getAlignment()
-	 */
-	public String getAlignmentString() throws BioException {
-		return alignment;
-	}
-
-	public Alignment getAlignment() {
-		return pairalign;
-	}
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * toolbox.align.SequenceAlignment#alignAll(org.biojava.bio.seq.SequenceIterator
-	 * , org.biojava.bio.seq.db.SequenceDB)
-	 */
-	public List<Alignment> alignAll(SequenceIterator source,
-			SequenceDB subjectDB) throws NoSuchElementException, BioException {
-		List<Alignment> l = new LinkedList<Alignment>();
-		while (source.hasNext()) {
-			Sequence query = source.nextSequence();
-			// compare all the sequences of both sets.
-			SequenceIterator target = subjectDB.sequenceIterator();
-			while (target.hasNext())
-				try {
-					l.add(getAlignment(query, target.nextSequence()));
-					// pairwiseAlignment(query, target.nextSequence());
-				} catch (Exception exc) {
-					exc.printStackTrace();
-				}
-		}
-		return l;
-	}
-
 	/**
 	 * Global pairwise sequence alignment of two BioJava-Sequence objects
 	 * according to the Needleman-Wunsch-algorithm.
 	 * 
-	 * @see org.biojava.bio.alignment.SequenceAlignment#pairwiseAlignment(org.biojava.bio.symbol.SymbolList,
+	 * @see org.biojava.bio.alignment.AlignmentAlgorithm#pairwiseAlignment(org.biojava.bio.symbol.SymbolList,
 	 *      org.biojava.bio.symbol.SymbolList)
 	 */
-	public int pairwiseAlignment(SymbolList query, SymbolList subject)
+	public AlignmentPair pairwiseAlignment(SymbolList query, SymbolList subject)
 			throws BioException {
 		Sequence squery = null;
 		Sequence ssubject = null;
@@ -485,7 +430,7 @@ public class NeedlemanWunsch extends SequenceAlignment {
 					do {
 						// only Insert.
 						if (i == 0) {
-							align[0].insert(0, '~');
+							align[0].insert(0, '-');
 							align[1].insert(0, st.tokenizeSymbol(ssubject
 									.symbolAt(j--)));
 							path.insert(0, ' ');
@@ -494,7 +439,7 @@ public class NeedlemanWunsch extends SequenceAlignment {
 						} else if (j == 0) {
 							align[0].insert(0, st.tokenizeSymbol(squery
 									.symbolAt(i--)));
-							align[1].insert(0, '~');
+							align[1].insert(0, '-');
 							path.insert(0, ' ');
 
 							// Match/Replace
@@ -571,7 +516,7 @@ public class NeedlemanWunsch extends SequenceAlignment {
 					do {
 						// only Insert.
 						if (i == 0) {
-							align[0].insert(0, '~');
+							align[0].insert(0, '-');
 							align[1].insert(0, st.tokenizeSymbol(ssubject
 									.symbolAt(j--)));
 							path.insert(0, ' ');
@@ -580,7 +525,7 @@ public class NeedlemanWunsch extends SequenceAlignment {
 						} else if (j == 0) {
 							align[0].insert(0, st.tokenizeSymbol(squery
 									.symbolAt(i--)));
-							align[1].insert(0, '~');
+							align[1].insert(0, '-');
 							path.insert(0, ' ');
 
 							// Match/Replace
@@ -628,42 +573,45 @@ public class NeedlemanWunsch extends SequenceAlignment {
 							.getTokenization("token"), align[1].toString()),
 					ssubject.getURN(), ssubject.getName(), ssubject
 							.getAnnotation()));
-			Map<String, SymbolList> m = new HashMap<String, SymbolList>();
-			m.put(squery.getName(), squery);
-			m.put(ssubject.getName(), ssubject);
-			pairalign = new SimpleAlignment(m);
+			AlignmentPair pairalign = new AlignmentPair(squery, ssubject, subMatrix);
+			pairalign.setComputationTime(System.currentTimeMillis() - time);
+			pairalign.setScore((-1) * getEditDistance());
+			pairalign.setQueryStart(1);
+			pairalign.setQueryEnd(CostMatrix.length);
+			pairalign.setSubjectStart(1);
+			pairalign.setSubjectEnd(CostMatrix[0].length);
 
 			// this.printCostMatrix(queryChar, targetChar); // only for
 			// tests
 			// important
-			this.alignment = formatOutput(squery.getName(), // name of the
-					// query
-					// sequence
-					ssubject.getName(), // name of the target sequence
-					align, // the String representation of the alignment
-					path, // String match/missmatch representation
-					0, // Start position of the alignment in the query
-					// sequence
-					CostMatrix.length - 1, // End position of the alignment
-					// in the query sequence
-					CostMatrix.length - 1, // length of the query sequence
-					0, // Start position of the alignment in the target
-					// sequence
-					CostMatrix[0].length - 1, // End position of the
-					// alignment in the target sequence
-					CostMatrix[0].length - 1, // length of the target
-					// sequence
-					getEditDistance(), // the edit distance
-					System.currentTimeMillis() - time, subMatrix, st)
-					+ System.getProperty("line.separator"); // time
-			// consumption
-
-			// System.out.println(printCostMatrix(CostMatrix,
-			// query.seqString().toCharArray(),
-			// subject.seqString().toCharArray()));
+//			this.alignment = formatOutput(squery.getName(), // name of the
+//					// query
+//					// sequence
+//					ssubject.getName(), // name of the target sequence
+//					align, // the String representation of the alignment
+//					path, // String match/missmatch representation
+//					0, // Start position of the alignment in the query
+//					// sequence
+//					CostMatrix.length - 1, // End position of the alignment
+//					// in the query sequence
+//					CostMatrix.length - 1, // length of the query sequence
+//					0, // Start position of the alignment in the target
+//					// sequence
+//					CostMatrix[0].length - 1, // End position of the
+//					// alignment in the target sequence
+//					CostMatrix[0].length - 1, // length of the target
+//					// sequence
+//					getEditDistance(), // the edit distance
+//					System.currentTimeMillis() - time, subMatrix, st)
+//					+ System.getProperty("line.separator"); // time
+//			// consumption
+//
+//			// System.out.println(printCostMatrix(CostMatrix,
+//			// query.seqString().toCharArray(),
+//			// subject.seqString().toCharArray()));
 			int score = getEditDistance();
 			pairalign.setScore(score);
-			return score;
+			return pairalign;
 		} else
 			throw new BioException(
 					"Alphabet missmatch occured: sequences with different alphabet cannot be aligned.");

@@ -21,9 +21,6 @@
 
 package org.biojava.bio.alignment;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.biojava.bio.BioException;
 import org.biojava.bio.BioRuntimeException;
 import org.biojava.bio.SimpleAnnotation;
@@ -37,13 +34,13 @@ import org.biojava.bio.symbol.SymbolList;
 /**
  * Smith and Waterman developed an efficient dynamic programming algorithm to
  * perform local sequence alignments, which returns the most conserved region of
- * two sequences (longest common substring with modifications). This algorithm is
- * performed by the method <code>pairwiseAlignment</code> of this class. It
+ * two sequences (longest common substring with modifications). This algorithm
+ * is performed by the method <code>pairwiseAlignment</code> of this class. It
  * uses affine gap penalties if and only if the expenses of a delete or insert
  * operation are unequal to the expenses of gap extension. This uses
  * significantly more memory (four times as much) and increases the runtime if
  * swapping is performed.
- *
+ * 
  * @author Andreas Dr&auml;ger
  * @author Gero Greiner
  * @author Mark Schreiber
@@ -51,34 +48,34 @@ import org.biojava.bio.symbol.SymbolList;
  */
 public class SmithWaterman extends NeedlemanWunsch {
 
-	private short	match, replace, insert, delete, gapExt;
+	private short match, replace, insert, delete, gapExt;
 
 	/**
 	 * Constructs the new SmithWaterman alignment object. Alignments are only
 	 * performed, if the alphabet of the given <code>SubstitutionMatrix</code>
-	 * equals the alphabet of both the query and the target <code>Sequence</code>.
-	 * The alignment parameters here are expenses and not scores as they are in
-	 * the <code>NeedlemanWunsch</code> object. scores are just given by
-	 * multiplying the expenses with <code>(-1)</code>. For example you could
-	 * use parameters like "-2, 5, 3, 3, 0". If the expenses for gap extension are
-	 * equal to the cost of starting a gap (delete or insert), no affine gap
-	 * penalties are used, which saves memory.
-	 *
+	 * equals the alphabet of both the query and the target
+	 * <code>Sequence</code>. The alignment parameters here are expenses and not
+	 * scores as they are in the <code>NeedlemanWunsch</code> object. scores are
+	 * just given by multiplying the expenses with <code>(-1)</code>. For
+	 * example you could use parameters like "-2, 5, 3, 3, 0". If the expenses
+	 * for gap extension are equal to the cost of starting a gap (delete or
+	 * insert), no affine gap penalties are used, which saves memory.
+	 * 
 	 * @param match
-	 *          expenses for a match
+	 *            expenses for a match
 	 * @param replace
-	 *          expenses for a replace operation
+	 *            expenses for a replace operation
 	 * @param insert
-	 *          expenses for a gap opening in the query sequence
+	 *            expenses for a gap opening in the query sequence
 	 * @param delete
-	 *          expenses for a gap opening in the target sequence
+	 *            expenses for a gap opening in the target sequence
 	 * @param gapExtend
-	 *          expenses for the extension of a gap which was started earlier.
+	 *            expenses for the extension of a gap which was started earlier.
 	 * @param matrix
-	 *          the <code>SubstitutionMatrix</code> object to use.
+	 *            the <code>SubstitutionMatrix</code> object to use.
 	 */
-	public SmithWaterman(short match, short replace, short insert, short delete,
-	    short gapExtend, SubstitutionMatrix matrix) {
+	public SmithWaterman(short match, short replace, short insert,
+			short delete, short gapExtend, SubstitutionMatrix matrix) {
 		super(insert, delete, gapExtend, match, replace, matrix);
 		this.match = (short) -match;
 		this.replace = (short) -replace;
@@ -86,17 +83,16 @@ public class SmithWaterman extends NeedlemanWunsch {
 		this.delete = (short) -delete;
 		this.gapExt = (short) -gapExtend;
 		this.subMatrix = matrix;
-		this.alignment = "";
 	}
 
 	/**
 	 * Overrides the method inherited from the NeedlemanWunsch and sets the
-	 * penalty for an insert operation to the specified value. Reason: internally
-	 * scores are used instead of penalties so that the value is muliplyed with
-	 * -1.
-	 *
+	 * penalty for an insert operation to the specified value. Reason:
+	 * internally scores are used instead of penalties so that the value is
+	 * muliplyed with -1.
+	 * 
 	 * @param ins
-	 *          costs for a single insert operation
+	 *            costs for a single insert operation
 	 */
 	@Override
 	public void setInsert(short ins) {
@@ -108,9 +104,9 @@ public class SmithWaterman extends NeedlemanWunsch {
 	 * penalty for a delete operation to the specified value. Reason: internally
 	 * scores are used instead of penalties so that the value is muliplyed with
 	 * -1.
-	 *
+	 * 
 	 * @param del
-	 *          costs for a single deletion operation
+	 *            costs for a single deletion operation
 	 */
 	@Override
 	public void setDelete(short del) {
@@ -120,11 +116,11 @@ public class SmithWaterman extends NeedlemanWunsch {
 	/**
 	 * Overrides the method inherited from the NeedlemanWunsch and sets the
 	 * penalty for an extension of any gap (insert or delete) to the specified
-	 * value. Reason: internally scores are used instead of penalties so that the
-	 * value is muliplyed with -1.
-	 *
+	 * value. Reason: internally scores are used instead of penalties so that
+	 * the value is muliplyed with -1.
+	 * 
 	 * @param ge
-	 *          costs for any gap extension
+	 *            costs for any gap extension
 	 */
 	@Override
 	public void setGapExt(short ge) {
@@ -136,9 +132,9 @@ public class SmithWaterman extends NeedlemanWunsch {
 	 * penalty for a match operation to the specified value. Reason: internally
 	 * scores are used instead of penalties so that the value is muliplyed with
 	 * -1.
-	 *
+	 * 
 	 * @param ma
-	 *          costs for a single match operation
+	 *            costs for a single match operation
 	 */
 	@Override
 	public void setMatch(short ma) {
@@ -147,12 +143,12 @@ public class SmithWaterman extends NeedlemanWunsch {
 
 	/**
 	 * Overrides the method inherited from the NeedlemanWunsch and sets the
-	 * penalty for a replace operation to the specified value. Reason: internally
-	 * scores are used instead of penalties so that the value is muliplyed with
-	 * -1.
-	 *
+	 * penalty for a replace operation to the specified value. Reason:
+	 * internally scores are used instead of penalties so that the value is
+	 * muliplyed with -1.
+	 * 
 	 * @param rep
-	 *          costs for a single replace operation
+	 *            costs for a single replace operation
 	 */
 	@Override
 	public void setReplace(short rep) {
@@ -160,18 +156,19 @@ public class SmithWaterman extends NeedlemanWunsch {
 	}
 
 	/**
-	 * Overrides the method inherited from the NeedlemanWunsch and performs only a
-	 * local alignment. It finds only the longest common subsequence. This is good
-	 * for the beginning, but it might be better to have a system to find more
-	 * than only one hit within the score matrix. Therefore, one should only define
-	 * the k-th best hit, where k is somehow related to the number of hits.
-	 *
-	 * @see SequenceAlignment#pairwiseAlignment(org.biojava.bio.symbol.SymbolList,
+	 * Overrides the method inherited from the NeedlemanWunsch and performs only
+	 * a local alignment. It finds only the longest common subsequence. This is
+	 * good for the beginning, but it might be better to have a system to find
+	 * more than only one hit within the score matrix. Therefore, one should
+	 * only define the k-th best hit, where k is somehow related to the number
+	 * of hits.
+	 * 
+	 * @see AlignmentAlgorithm#pairwiseAlignment(org.biojava.bio.symbol.SymbolList,
 	 *      org.biojava.bio.symbol.SymbolList)
 	 */
 	@Override
-	public int pairwiseAlignment(SymbolList query, SymbolList subject)
-	    throws BioRuntimeException {
+	public AlignmentPair pairwiseAlignment(SymbolList query, SymbolList subject)
+			throws BioRuntimeException {
 		int[][] scoreMatrix;
 		Sequence squery = null;
 		Sequence ssubject = null;
@@ -180,28 +177,28 @@ public class SmithWaterman extends NeedlemanWunsch {
 			squery = (Sequence) query;
 		} else {
 			// make it a sequence
-			squery = new SimpleSequence(query, "", "query", new SimpleAnnotation());
+			squery = new SimpleSequence(query, "", "query",
+					new SimpleAnnotation());
 		}
 		if (subject instanceof Sequence) {
 			ssubject = (Sequence) subject;
 		} else {
 			// make it a sequence
 			ssubject = new SimpleSequence(subject, "", "subject",
-			    new SimpleAnnotation());
+					new SimpleAnnotation());
 		}
 
 		if (squery.getAlphabet().equals(ssubject.getAlphabet())
-		    && squery.getAlphabet().equals(subMatrix.getAlphabet())) {
+				&& squery.getAlphabet().equals(subMatrix.getAlphabet())) {
 			StringBuffer[] align = { new StringBuffer(), new StringBuffer() };
 			long time = System.currentTimeMillis();
-			int i, j, maxI = 0, maxJ = 0, queryStart = 0, targetStart = 0;
+			int i, j, maxI = 0, maxJ = 0, queryStart = 0, subjectStart = 0;
 			scoreMatrix = new int[squery.length() + 1][ssubject.length() + 1];
 
 			/*
 			 * Variables needed for traceback
 			 */
-			
-			StringBuffer path = new StringBuffer();
+
 			SymbolTokenization st;
 			try {
 				st = squery.getAlphabet().getTokenization("default");
@@ -229,13 +226,15 @@ public class SmithWaterman extends NeedlemanWunsch {
 				}
 				for (i = 1; i <= squery.length(); i++)
 					for (j = 1; j <= ssubject.length(); j++) {
-						E[i][j] = Math.max(E[i][j - 1], scoreMatrix[i][j - 1] + insert)
-						    + gapExt;
-						F[i][j] = Math.max(F[i - 1][j], scoreMatrix[i - 1][j] + delete)
-						    + gapExt;
+						E[i][j] = Math.max(E[i][j - 1], scoreMatrix[i][j - 1]
+								+ insert)
+								+ gapExt;
+						F[i][j] = Math.max(F[i - 1][j], scoreMatrix[i - 1][j]
+								+ delete)
+								+ gapExt;
 						scoreMatrix[i][j] = max(0, E[i][j], F[i][j],
-						    scoreMatrix[i - 1][j - 1]
-						        + matchReplace(squery, ssubject, i, j));
+								scoreMatrix[i - 1][j - 1]
+										+ matchReplace(squery, ssubject, i, j));
 
 						if (scoreMatrix[i][j] > scoreMatrix[maxI][maxJ]) {
 							maxI = i;
@@ -243,53 +242,59 @@ public class SmithWaterman extends NeedlemanWunsch {
 						}
 					}
 				// System.out.println(printCostMatrix(G,
-				// query.seqString().toCharArray(), subject.seqString().toCharArray()));
+				// query.seqString().toCharArray(),
+				// subject.seqString().toCharArray()));
 
 				/*
 				 * Here starts the traceback for affine gap penalities
 				 */
 				try {
-					boolean[] gap_extend = {false, false};
+					boolean[] gap_extend = { false, false };
 					j = maxJ;
 					for (i = maxI; i > 0;) {
 						do {
-							// only Deletes or Inserts or Replaces possible. That's not what
+							// only Deletes or Inserts or Replaces possible.
+							// That's not what
 							// we want to have.
 							if (scoreMatrix[i][j] == 0) {
 								queryStart = i;
-								targetStart = j;
+								subjectStart = j;
 								i = j = 0;
 
 								// Match/Replace
 							} else if ((scoreMatrix[i][j] == scoreMatrix[i - 1][j - 1]
-							    + matchReplace(squery, ssubject, i, j))
-							    && !(gap_extend[0] || gap_extend[1])) {
-								if (squery.symbolAt(i) == ssubject.symbolAt(j))
-									path.insert(0, '|');
-								else path.insert(0, ' ');
+									+ matchReplace(squery, ssubject, i, j))
+									&& !(gap_extend[0] || gap_extend[1])) {
 
-								align[0].insert(0, st.tokenizeSymbol(squery.symbolAt(i--)));
-								align[1].insert(0, st.tokenizeSymbol(ssubject.symbolAt(j--)));
+								align[0].insert(0, st.tokenizeSymbol(squery
+										.symbolAt(i--)));
+								align[1].insert(0, st.tokenizeSymbol(ssubject
+										.symbolAt(j--)));
 
-								// Insert || finish gap if extended gap is opened
-							} else if (scoreMatrix[i][j] == E[i][j] || gap_extend[0]) {
-								// check if gap has been extended or freshly opened
-								gap_extend[0] = (E[i][j] != scoreMatrix[i][j - 1] + insert
-								    + gapExt);
+								// Insert || finish gap if extended gap is
+								// opened
+							} else if (scoreMatrix[i][j] == E[i][j]
+									|| gap_extend[0]) {
+								// check if gap has been extended or freshly
+								// opened
+								gap_extend[0] = (E[i][j] != scoreMatrix[i][j - 1]
+										+ insert + gapExt);
 
 								align[0].insert(0, '-');
-								align[1].insert(0, st.tokenizeSymbol(ssubject.symbolAt(j--)));
-								path.insert(0, ' ');
+								align[1].insert(0, st.tokenizeSymbol(ssubject
+										.symbolAt(j--)));
 
-								// Delete || finish gap if extended gap is opened
+								// Delete || finish gap if extended gap is
+								// opened
 							} else {
-								// check if gap has been extended or freshly opened
-								gap_extend[1] = (F[i][j] != scoreMatrix[i - 1][j] + delete
-								    + gapExt);
+								// check if gap has been extended or freshly
+								// opened
+								gap_extend[1] = (F[i][j] != scoreMatrix[i - 1][j]
+										+ delete + gapExt);
 
-								align[0].insert(0, st.tokenizeSymbol(squery.symbolAt(i--)));
+								align[0].insert(0, st.tokenizeSymbol(squery
+										.symbolAt(i--)));
 								align[1].insert(0, '-');
-								path.insert(0, ' ');
 							}
 						} while (j > 0);
 					}
@@ -309,9 +314,10 @@ public class SmithWaterman extends NeedlemanWunsch {
 				for (i = 1; i <= squery.length(); i++)
 					for (j = 1; j <= ssubject.length(); j++) {
 
-						scoreMatrix[i][j] = max(0, scoreMatrix[i - 1][j] + delete,
-						    scoreMatrix[i][j - 1] + insert, scoreMatrix[i - 1][j - 1]
-						        + matchReplace(squery, ssubject, i, j));
+						scoreMatrix[i][j] = max(0, scoreMatrix[i - 1][j]
+								+ delete, scoreMatrix[i][j - 1] + insert,
+								scoreMatrix[i - 1][j - 1]
+										+ matchReplace(squery, ssubject, i, j));
 
 						if (scoreMatrix[i][j] > scoreMatrix[maxI][maxJ]) {
 							maxI = i;
@@ -326,34 +332,35 @@ public class SmithWaterman extends NeedlemanWunsch {
 					j = maxJ;
 					for (i = maxI; i > 0;) {
 						do {
-							// only Deletes or Inserts or Replaces possible. That's not what
+							// only Deletes or Inserts or Replaces possible.
+							// That's not what
 							// we want to have.
 							if (scoreMatrix[i][j] == 0) {
 								queryStart = i;
-								targetStart = j;
+								subjectStart = j;
 								i = j = 0;
 
 								// Match/Replace
 							} else if (scoreMatrix[i][j] == scoreMatrix[i - 1][j - 1]
-							    + matchReplace(squery, ssubject, i, j)) {
-								if (squery.symbolAt(i) == ssubject.symbolAt(j))
-									path.insert(0, '|');
-								else path.insert(0, ' ');
+									+ matchReplace(squery, ssubject, i, j)) {
 
-								align[0].insert(0, st.tokenizeSymbol(squery.symbolAt(i--)));
-								align[1].insert(0, st.tokenizeSymbol(ssubject.symbolAt(j--)));
+								align[0].insert(0, st.tokenizeSymbol(squery
+										.symbolAt(i--)));
+								align[1].insert(0, st.tokenizeSymbol(ssubject
+										.symbolAt(j--)));
 
 								// Insert
-							} else if (scoreMatrix[i][j] == scoreMatrix[i][j - 1] + insert) {
+							} else if (scoreMatrix[i][j] == scoreMatrix[i][j - 1]
+									+ insert) {
 								align[0].insert(0, '-');
-								align[1].insert(0, st.tokenizeSymbol(ssubject.symbolAt(j--)));
-								path.insert(0, ' ');
+								align[1].insert(0, st.tokenizeSymbol(ssubject
+										.symbolAt(j--)));
 
 								// Delete
 							} else {
-								align[0].insert(0, st.tokenizeSymbol(squery.symbolAt(i--)));
+								align[0].insert(0, st.tokenizeSymbol(squery
+										.symbolAt(i--)));
 								align[1].insert(0, '-');
-								path.insert(0, ' ');
 							}
 						} while (j > 0);
 					}
@@ -367,61 +374,77 @@ public class SmithWaterman extends NeedlemanWunsch {
 			 */
 
 			// System.out.println(printCostMatrix(scoreMatrix,
-			// query.seqString().toCharArray(), subject.seqString().toCharArray()));
+			// query.seqString().toCharArray(),
+			// subject.seqString().toCharArray()));
 			try {
-				// this is necessary to have a value for the getEditDistance method.
+				// this is necessary to have a value for the getEditDistance
+				// method.
 				this.CostMatrix = new int[1][1];
 				CostMatrix[0][0] = -scoreMatrix[maxI][maxJ];
 
-				squery = new SimpleGappedSequence(new SimpleSequence(
-				    new SimpleSymbolList(squery.getAlphabet().getTokenization("token"),
-				        align[0].toString()), squery.getURN(), squery.getName(), squery
-				        .getAnnotation()));
-				ssubject = new SimpleGappedSequence(new SimpleSequence(
-				    new SimpleSymbolList(ssubject.getAlphabet()
-				        .getTokenization("token"), align[1].toString()), ssubject.getURN(),
-				    ssubject.getName(), ssubject.getAnnotation()));
-				Map<String, SymbolList> m = new HashMap<String, SymbolList>();
-				m.put(squery.getName(), squery);
-				m.put(ssubject.getName(), ssubject);
-				pairalign = new SimpleAlignment(m);
+				squery = new SimpleGappedSequence(
+						new SimpleSequence(new SimpleSymbolList(squery
+								.getAlphabet().getTokenization("token"),
+								align[0].toString()), squery.getURN(), squery
+								.getName(), squery.getAnnotation()));
+				ssubject = new SimpleGappedSequence(
+						new SimpleSequence(new SimpleSymbolList(ssubject
+								.getAlphabet().getTokenization("token"),
+								align[1].toString()), ssubject.getURN(),
+								ssubject.getName(), ssubject.getAnnotation()));
+				AlignmentPair pairalign = new AlignmentPair(squery, ssubject, subMatrix);
+				pairalign.setComputationTime(System.currentTimeMillis() - time);
+				pairalign.setQueryStart(queryStart + 1);
+				pairalign.setQueryEnd(maxI);
+				pairalign.setSubjectStart(subjectStart + 1);
+				pairalign.setSubjectEnd(maxJ);
+				pairalign.setScore(getEditDistance());				
 
-				/*
-				 * Construct the output with only 60 symbols in each line.
-				 */
-				this.alignment = formatOutput(squery.getName(), // name of the query
-				    // sequence
-				    ssubject.getName(), // name of the target sequence
-				    align, // the String representation of the alignment
-				    path, // String match/missmatch representation
-				    queryStart, // Start position of the alignment in the query sequence
-				    maxI, // End position of the alignment in the query sequence
-				    scoreMatrix.length - 1, // length of the query sequence
-				    targetStart, // Start position of the alignment in the target
-				    // sequence
-				    maxJ, // End position of the alignment in the target sequence
-				    scoreMatrix[0].length - 1, // length of the target sequence
-				    getEditDistance(), System.currentTimeMillis() - time, subMatrix,st)
-				    
-				    + System.getProperty("line.separator"); // time consumption
+//				/*
+//				 * Construct the output with only 60 symbols in each line.
+//				 */
+//				this.alignment = formatOutput(
+//						squery.getName(), // name of the query
+//						// sequence
+//						ssubject.getName(), // name of the target sequence
+//						align, // the String representation of the alignment
+//						path, // String match/missmatch representation
+//						queryStart, // Start position of the alignment in the
+//									// query sequence
+//						maxI, // End position of the alignment in the query
+//								// sequence
+//						scoreMatrix.length - 1, // length of the query sequence
+//						targetStart, // Start position of the alignment in the
+//										// target
+//						// sequence
+//						maxJ, // End position of the alignment in the target
+//								// sequence
+//						scoreMatrix[0].length - 1, // length of the target
+//													// sequence
+//						getEditDistance(), System.currentTimeMillis() - time,
+//						subMatrix, st)
+//
+//						+ System.getProperty("line.separator"); // time
+//																// consumption
 
 				// Don't waste any memory.
 				int value = scoreMatrix[maxI][maxJ];
 				scoreMatrix = null;
 				pairalign.setScore(value);
 				// Runtime.getRuntime().gc();
-				return value;
+				return pairalign;
 
 			} catch (BioException exc) {
 				throw new BioRuntimeException(exc);
 			}
-		} else throw new BioRuntimeException(
-		    "The alphabets of the sequences and the substitution matrix have to be equal.");
+		} else
+			throw new BioRuntimeException(
+					"The alphabets of the sequences and the substitution matrix have to be equal.");
 	}
 
 	/**
 	 * This just computes the maximum of four integers.
-	 *
+	 * 
 	 * @param w
 	 * @param x
 	 * @param y
@@ -429,26 +452,29 @@ public class SmithWaterman extends NeedlemanWunsch {
 	 * @return the maximum of four <code>int</code>s.
 	 */
 	private int max(int w, int x, int y, int z) {
-		if ((w > x) && (w > y) && (w > z)) return w;
-		if ((x > y) && (x > z)) return x;
-		if ((y > z)) return y;
+		if ((w > x) && (w > y) && (w > z))
+			return w;
+		if ((x > y) && (x > z))
+			return x;
+		if ((y > z))
+			return y;
 		return z;
 	}
 
 	/**
-	 * This method computes the scores for the substitution of the i-th symbol of
-	 * query by the j-th symbol of subject.
-	 *
+	 * This method computes the scores for the substitution of the i-th symbol
+	 * of query by the j-th symbol of subject.
+	 * 
 	 * @param query
-	 *          The query sequence
+	 *            The query sequence
 	 * @param subject
-	 *          The target sequence
+	 *            The target sequence
 	 * @param i
-	 *          The position of the symbol under consideration within the query
-	 *          sequence (starting from one)
+	 *            The position of the symbol under consideration within the
+	 *            query sequence (starting from one)
 	 * @param j
-	 *          The position of the symbol under consideration within the target
-	 *          sequence
+	 *            The position of the symbol under consideration within the
+	 *            target sequence
 	 * @return The score for the given substitution.
 	 */
 	private short matchReplace(Sequence query, Sequence subject, int i, int j) {
@@ -456,8 +482,9 @@ public class SmithWaterman extends NeedlemanWunsch {
 			return subMatrix.getValueAt(query.symbolAt(i), subject.symbolAt(j));
 		} catch (Exception exc) {
 			if (query.symbolAt(i).getMatches().contains(subject.symbolAt(j))
-			    || subject.symbolAt(j).getMatches().contains(query.symbolAt(i)))
-			  return match;
+					|| subject.symbolAt(j).getMatches().contains(
+							query.symbolAt(i)))
+				return match;
 			return replace;
 		}
 	}

@@ -61,16 +61,35 @@ import org.biojava.bio.symbol.Symbol;
  * @author Andreas Dr&auml;ger <andreas.draeger@uni-tuebingen.de>
  */
 public class SubstitutionMatrix {
-	protected Map<Symbol, Integer> rowSymbols, colSymbols;
+	
+	/**
+	 * 
+	 */
+	private Map<Symbol, Integer> rowSymbols, colSymbols;
 
-	protected short[][] matrix;
+	/**
+	 * 
+	 */
+	private short[][] matrix;
 
-	protected short min, max;
+	/**
+	 * Minimal and maximal entry in this matrix
+	 */
+	private short min, max;
 
-	protected FiniteAlphabet alphabet;
+	/**
+	 * The alphabet used by this matrix.
+	 */
+	private FiniteAlphabet alphabet;
 
-	protected String description, name;
+	/**
+	 * Name and description of this matrix.
+	 */
+	private String description, name;
 
+	/**
+	 * Just the new line symbol of the system.
+	 */
 	private static final String newLine = System.getProperty("line.separator");
 
 	/**
@@ -397,9 +416,9 @@ public class SubstitutionMatrix {
 	 */
 	public short getValueAt(Symbol row, Symbol col) throws BioException {
 		if ((!rowSymbols.containsKey(row)) || (!colSymbols.containsKey(col))) {
-			System.err.println("SubstitutionMatrix: No entry for the symbols " + row.getName()
-					+ " and " + col.getName());
-			
+			System.err.printf("SubstitutionMatrix: No entry for the symbols %s and %s\n",
+					row.getName(), col.getName());
+
 			// treat the two records as X:
 			return 0;
 		}

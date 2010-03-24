@@ -60,7 +60,7 @@ public class SimpleAlignment extends AbstractSymbolList implements Alignment,
 	/**
 	 * 
 	 */
-	private LinkedHashMap<Object, SymbolList> labelToSymbolList;
+	private LinkedHashMap<String, SymbolList> labelToSymbolList;
 	/**
 	 * 
 	 */
@@ -170,7 +170,13 @@ public class SimpleAlignment extends AbstractSymbolList implements Alignment,
 		return new SimpleAlignment(labelsToResList);
 	}
 
-	public SymbolList symbolListForLabel(Object label)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.biojava.bio.alignment.Alignment#symbolListForLabel(java.lang.String)
+	 */
+	public SymbolList symbolListForLabel(String label)
 			throws NoSuchElementException {
 		SymbolList rl = labelToSymbolList.get(label);
 		if (rl == null) {
@@ -199,13 +205,13 @@ public class SimpleAlignment extends AbstractSymbolList implements Alignment,
 
 		this.labels = Collections.unmodifiableList(new ArrayList<String>(
 				labelToResList.keySet()));
-		this.labelToSymbolList = new LinkedHashMap<Object, SymbolList>(
+		this.labelToSymbolList = new LinkedHashMap<String, SymbolList>(
 				labelToResList);
 
 		int length = -1;
 		List<Alphabet> alphaList = new ArrayList<Alphabet>();
 		for (Iterator<String> li = labels.iterator(); li.hasNext();) {
-			Object label = li.next();
+			String label = li.next();
 			try {
 				SymbolList rl = symbolListForLabel(label);
 				alphaList.add(rl.getAlphabet());
@@ -216,7 +222,7 @@ public class SimpleAlignment extends AbstractSymbolList implements Alignment,
 						StringBuffer sb = new StringBuffer();
 						for (Iterator<String> labI = labels.iterator(); labI
 								.hasNext();) {
-							Object lab = labI.next();
+							String lab = labI.next();
 							sb.append("\n\t" + lab + " ("
 									+ symbolListForLabel(lab).length() + ")");
 						}

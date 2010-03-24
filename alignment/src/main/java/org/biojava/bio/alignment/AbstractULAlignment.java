@@ -425,9 +425,9 @@ public abstract class AbstractULAlignment extends AbstractSymbolList implements
 
 		/*
 		 * (non-Javadoc)
-		 * @see org.biojava.bio.alignment.Alignment#symbolListForLabel(java.lang.Object)
+		 * @see org.biojava.bio.alignment.Alignment#symbolListForLabel(java.lang.String)
 		 */
-		public SymbolList symbolListForLabel(Object label)
+		public SymbolList symbolListForLabel(String label)
 				throws NoSuchElementException {
 			return AbstractULAlignment.this.symbolListForLabel(label);
 		}
