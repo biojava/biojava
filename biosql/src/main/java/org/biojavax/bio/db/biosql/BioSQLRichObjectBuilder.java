@@ -45,6 +45,7 @@ import org.biojavax.ontology.SimpleComparableOntology;
  * makes it memory-efficient.
  * @author Richard Holland
  * @author David Scott
+ * @author Deepak Sheoran
  * @since 1.5
  */
 public class BioSQLRichObjectBuilder implements RichObjectBuilder {
@@ -112,6 +113,29 @@ public class BioSQLRichObjectBuilder implements RichObjectBuilder {
             queryText = "from CrossRef as cr where cr.dbname = ? and cr.accession = ? and cr.version = ?";
             queryType = "CrossRef";
         } else if (SimpleDocRef.class.isAssignableFrom(clazz)) {
+        	// First check if record exists with pubmed or medline id, if provided
+        	if (ourParamsList.size() > 3) {
+        		List crossRefParams = new ArrayList();
+        		String crossRefQueryText = "from DocRef as dr where dr.crossref = (select id from CrossRef as cref where cref.dbname = ? and cref.accession = ? and cref.version = ?)";
+        		crossRefParams.add(ourParamsList.get(ourParamsList.size() - 3)); // get dbname
+        		crossRefParams.add(ourParamsList.get(ourParamsList.size() - 2)); // get accession
+        		crossRefParams.add(ourParamsList.get(ourParamsList.size() - 1)); // get version
+                // Build the query object
+                Object query = this.createQuery.invoke(this.session, new Object[]{crossRefQueryText});
+                // Set the parameters
+                for (int i = 0; i < crossRefParams.size(); i++) {
+                    query = this.setParameter.invoke(query, new Object[]{new Integer(i), crossRefParams.get(i)});
+                }
+                // Get the results
+                Object result = this.uniqueResult.invoke(query, (Object[])null);
+                // Return the found object, if found
+                if (result!=null) return result;
+                // If we get here, resort to looking up by author and title and remove all references
+                // to pubmed/medline from params list.
+                ourParamsList.remove(ourParamsList.size() - 3);
+        		ourParamsList.remove(ourParamsList.size() - 2);
+        		ourParamsList.remove(ourParamsList.size() - 1);
+        	}
         	queryType = "DocRef";
         	// convert List constructor to String representation for query
         	ourParamsList.set(0, DocRefAuthor.Tools.generateAuthorString((List)ourParamsList.get(0), true));

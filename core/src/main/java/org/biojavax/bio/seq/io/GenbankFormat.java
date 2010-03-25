@@ -400,10 +400,21 @@ public class GenbankFormat extends RichSequenceFormat.HeaderlessFormat {
                         if (authors==null) authors = consortium + " (consortium)";
                         else if (consortium!=null) authors = authors + ", " + consortium + " (consortium)";
                         // Create docref.
-                        DocRef dr = (DocRef)RichObjectFactory.getObject(SimpleDocRef.class,new Object[]{DocRefAuthor.Tools.parseAuthorString(authors),journal,title});
+                        DocRef dr = null;
                         // assign either the pubmed or medline to the docref - medline gets priority
-                        if (medline!=null) dr.setCrossref((CrossRef)RichObjectFactory.getObject(SimpleCrossRef.class,new Object[]{Terms.MEDLINE_KEY, medline, new Integer(0)}));
-                        else if (pubmed!=null) dr.setCrossref((CrossRef)RichObjectFactory.getObject(SimpleCrossRef.class,new Object[]{Terms.PUBMED_KEY, pubmed, new Integer(0)}));
+                        if (medline != null) {
+                            dr = (DocRef) RichObjectFactory.getObject(SimpleDocRef.class, new Object[]{DocRefAuthor.Tools.parseAuthorString(authors), journal, title, Terms.MEDLINE_KEY, medline, new Integer(0)});
+                            if (dr.getCrossref() == null) {
+                                dr.setCrossref((CrossRef) RichObjectFactory.getObject(SimpleCrossRef.class, new Object[]{Terms.MEDLINE_KEY, medline, new Integer(0)}));
+                            }
+                        } else if (pubmed != null) {
+                            dr = (DocRef) RichObjectFactory.getObject(SimpleDocRef.class, new Object[]{DocRefAuthor.Tools.parseAuthorString(authors), journal, title, Terms.PUBMED_KEY, pubmed, new Integer(0)});
+                            if (dr.getCrossref() == null) {
+                                dr.setCrossref((CrossRef) RichObjectFactory.getObject(SimpleCrossRef.class, new Object[]{Terms.PUBMED_KEY, pubmed, new Integer(0)}));
+                            }
+                        } else {
+                            dr = (DocRef) RichObjectFactory.getObject(SimpleDocRef.class, new Object[]{DocRefAuthor.Tools.parseAuthorString(authors), journal, title});
+                        }                        
                         // assign the remarks
                         if (!this.getElideComments()) dr.setRemark(remark);
                         // assign the docref to the bioentry: null if no base ranges, Integers if 1 base range - the normal case, joined RichLocation if more than 1
