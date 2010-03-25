@@ -24,11 +24,18 @@ import java.util.Formatter;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.biojava.bio.BioException;
 import org.biojava.bio.seq.Sequence;
 import org.biojava.bio.symbol.Symbol;
 import org.biojava.bio.symbol.SymbolList;
 
 /**
+ * This class stores the result of an alignment procedure that creates a
+ * pairwise alignment of two sequences. Currently, these sequences must have the
+ * identical length (this may be changed in the future). A format routine
+ * produces a BLAST-like output for the sequences but all necessary information
+ * to visualize the alignment are contained in this class.
+ * 
  * @author Andreas Dr&auml;ger
  * 
  */
@@ -38,12 +45,6 @@ public class AlignmentPair extends SimpleAlignment {
 	 * Generated serial version identifier
 	 */
 	private static final long serialVersionUID = -8834131912021612261L;
-
-	/**
-	 * Highlights equal symbols within the alignment, String match/missmatch
-	 * representation
-	 */
-	private StringBuffer path;
 
 	/**
 	 * 
@@ -94,9 +95,11 @@ public class AlignmentPair extends SimpleAlignment {
 	/**
 	 * @param queryStart
 	 *            the queryStart to set
+	 * @throws BioException
 	 */
-	void setQueryStart(int queryStart) {
+	void setQueryStart(int queryStart) throws BioException {
 		this.queryStart = queryStart;
+		init();
 	}
 
 	/**
@@ -114,9 +117,11 @@ public class AlignmentPair extends SimpleAlignment {
 	/**
 	 * @param queryEnd
 	 *            the queryEnd to set
+	 * @throws BioException
 	 */
-	void setQueryEnd(int queryEnd) {
+	void setQueryEnd(int queryEnd) throws BioException {
 		this.queryEnd = queryEnd;
+		init();
 	}
 
 	/**
@@ -149,9 +154,11 @@ public class AlignmentPair extends SimpleAlignment {
 	/**
 	 * @param subjectStart
 	 *            the subjectStart to set
+	 * @throws BioException
 	 */
-	void setSubjectStart(int subjectStart) {
+	void setSubjectStart(int subjectStart) throws BioException {
 		this.subjectStart = subjectStart;
+		init();
 	}
 
 	/**
@@ -169,9 +176,11 @@ public class AlignmentPair extends SimpleAlignment {
 	/**
 	 * @param subjectEnd
 	 *            the subjectEnd to set
+	 * @throws BioException
 	 */
-	void setSubjectEnd(int subjectEnd) {
+	void setSubjectEnd(int subjectEnd) throws BioException {
 		this.subjectEnd = subjectEnd;
+		init();
 	}
 
 	/**
@@ -196,31 +205,69 @@ public class AlignmentPair extends SimpleAlignment {
 
 	/**
 	 * 
-	 * @param query
-	 * @param subject
+	 * @param queryStart
+	 *            the start position in the query, where the alignment starts.
+	 *            For example zero for normal Needleman-Wunsch-Alignments.
+	 * @param queryEnd
+	 *            the end position, that means the sequence coordinate, which is
+	 *            the last symbol of the query sequence. Counting starts at
+	 *            zero!
+	 * @param queryLength
+	 *            The length of the query sequence without gaps.
+	 * @param subjectStart
+	 *            These are all the same for the target. Have a look at these
+	 *            above.
+	 * @param subjectEnd
 	 * @param subMatrix
+	 *            the subsitution Matrix used for calculating the alignment
 	 * @throws IllegalArgumentException
+	 * @throws BioException
 	 */
-	public AlignmentPair(Sequence query, Sequence subject,
-			SubstitutionMatrix subMatrix) throws IllegalArgumentException {
+	public AlignmentPair(Sequence query, Sequence subject, int queryStart,
+			int queryEnd, int subjectStart, int subjectEnd,
+			SubstitutionMatrix subMatrix) throws IllegalArgumentException,
+			BioException {
 		super(createHashMap(query, subject));
 		this.subMatrix = subMatrix;
 		this.query = query;
 		this.subject = subject;
+		this.queryStart = queryStart;
+		this.queryEnd = queryEnd;
+		this.subjectStart = subjectStart;
+		this.subjectEnd = subjectEnd;
+		init();
+	}
+
+	/**
+	 * 
+	 * @param query
+	 * @param subject
+	 * @param subMatrix
+	 * @throws IllegalArgumentException
+	 * @throws BioException
+	 */
+	public AlignmentPair(Sequence query, Sequence subject,
+			SubstitutionMatrix subMatrix) throws IllegalArgumentException,
+			BioException {
+		this(query, subject, 1, query.length(), 1, subject.length(), subMatrix);
+	}
+
+	/**
+	 * 
+	 * @throws BioException
+	 */
+	private void init() throws BioException {
 		similars = 0;
 		identicals = 0;
 		nGapsQ = 0;
 		nGapsS = 0;
-		path = new StringBuffer();
-		for (int i = 1; i <= query.length(); i++) {
-			Symbol a = query.symbolAt(i);
-			Symbol b = subject.symbolAt(i);
+		for (int i = 0; i < Math.min(queryEnd - queryStart, subjectEnd
+				- subjectStart) + 1; i++) {
+			Symbol a = query.symbolAt(i + queryStart);
+			Symbol b = subject.symbolAt(i + subjectStart);
 			boolean gap = false;
-			if (a.equals(b)) {
+			if (a.equals(b))
 				identicals++;
-				path.append('|');
-			} else
-				path.append(' ');
 
 			// get score for this pair. if it is positive, they are similar...
 			if (a.equals(query.getAlphabet().getGapSymbol())) {
@@ -231,9 +278,7 @@ public class AlignmentPair extends SimpleAlignment {
 				nGapsS++;
 				gap = true;
 			}
-			if (!gap
-					&& (a.getMatches().contains(b) || b.getMatches()
-							.contains(a)))
+			if (!gap && subMatrix != null && subMatrix.getValueAt(a, b) > 0)
 				similars++;
 		}
 	}
@@ -330,7 +375,8 @@ public class AlignmentPair extends SimpleAlignment {
 
 	/**
 	 * @param time
-	 *            the time to set
+	 *            The time in milliseconds, which was needed to generate the
+	 *            alignment.
 	 */
 	void setComputationTime(long time) {
 		this.time = time;
@@ -339,62 +385,51 @@ public class AlignmentPair extends SimpleAlignment {
 	/**
 	 * 
 	 * @return
+	 * @throws BioException
 	 */
-	public String formatOutput() {
+	public String formatOutput() throws BioException {
 		return formatOutput(60);
 	}
 
 	/**
 	 * This method provides a BLAST-like formated alignment from the given
 	 * <code>String</code>s, in which the sequence coordinates and the
-	 * information "Query" or "Target", respectively is added to each line. Each
-	 * line contains 60 sequence characters including the gap symbols plus the
-	 * meta information. There is one white line between two pairs of sequences.
+	 * information "Query" or "Sbjct", respectively is added to each line. Each
+	 * line contains <code>width</code> sequence characters including the gap
+	 * symbols plus the meta information. There is one white line between two
+	 * pairs of sequences.
 	 * 
-	 * @param queryName
-	 *            name of the query sequence
-	 * @param targetName
-	 *            name of the target sequence
-	 * @param align
-	 *            a <code>String</code>-array, where the index 0 is the query
-	 *            sequence and index 1 the target sequence (for instance
-	 * 
-	 *            <code>new String[] {myQuerySequence.seqString(), myTargetSequence.seqString()}</code>
-	 *            )
-	 * @param path
-	 *            the "path", that means a String containing white spaces and
-	 *            pipe ("|") symbols, which makes matches visible. The two
-	 *            strings in <code>align</code> have to have the same length and
-	 *            also the same length than this <code>path</code>.
-	 * @param queryStart
-	 *            the start position in the query, where the alignment starts.
-	 *            For example zero for normal Needleman-Wunsch-Alignments.
-	 * @param queryEnd
-	 *            the end position, that means the sequence coordinate, which is
-	 *            the last symbol of the query sequence. Counting starts at
-	 *            zero!
-	 * @param queryLength
-	 *            The length of the query sequence without gaps.
-	 * @param subjectStart
-	 *            These are all the same for the target. Have a look at these
-	 *            above.
-	 * @param subjectEnd
-	 * @param targetLength
-	 * @param editdistance
-	 * @param subMatrix
-	 *            the subsitution Matrix used for calculating the alignment
-	 * @param st
-	 *            symbolTokenization of the alignment
-	 * @param time
-	 *            The time in milliseconds, which was needed to generate the
-	 *            alignment.
+	 * @param width
+	 *            the number of symbols to be displayed per line.
 	 * @return formated String.
+	 * @throws BioException
 	 */
-	public String formatOutput(int width) {
-		int maxLength = Math.max(query.length(), subject.length());
+	public String formatOutput(int width) throws BioException {
+		int i, j;
+		/*
+		 * Highlights equal symbols within the alignment, String match/missmatch
+		 * representation
+		 */
+		StringBuffer path = new StringBuffer();
+		for (i = 0; i < Math.min(queryEnd - queryStart, subjectEnd
+				- subjectStart) + 1; i++) {
+			Symbol a = query.symbolAt(i + queryStart);
+			Symbol b = subject.symbolAt(i + subjectStart);
+			if (!a.equals(query.getAlphabet().getGapSymbol())
+					&& !b.equals(subject.getAlphabet().getGapSymbol())
+					&& (subMatrix.getValueAt(a, b) >= 0 || a.equals(b)))
+				path.append('|');
+			else
+				path.append(' ');
+		}
+
+		int maxLength = path.length();
+		/*
+		 * Math.max(queryEnd - queryStart, subjectEnd - subjectStart) + 1;
+		 */
 		Formatter output = new Formatter();
 		output.format("%n Time (ms):  %s%n", time);
-		output.format(" Length:     %d%n", query.length());
+		output.format(" Length:     %d%n", maxLength);
 		output.format("  Score:     %d%n", getScore());
 		output.format("  Query:     %s, Length: %d%n", query.getName(), query
 				.length()
@@ -414,19 +449,24 @@ public class AlignmentPair extends SimpleAlignment {
 				nGapsQ, Math.round(getPercentGapsQuery()), nGapsS, Math
 						.round(getPercentGapsTarget()));
 
-		int i, j;
 		int queryLPos = queryStart, queryRPos, pathLPos = 0, pathRPos;
 		int subjectLPos = subjectStart, subjectRPos;
 		int ql = queryLPos - 1, qr = queryLPos - 1, qgaps;
 		int sl = subjectLPos - 1, sr = subjectLPos - 1, sgaps;
 
-		int widthLeft = String.valueOf(maxLength).length();
-		int widthRight = String.valueOf(
-				(int) Math.max(queryEnd, subjectEnd) + 1).length() + 1;
+		int widthLeft = String.valueOf((int) Math.max(queryStart, queryEnd))
+				.length();
+		int widthRight = String.valueOf((int) Math.max(queryEnd, subjectEnd))
+				.length() + 1;
+
+		// Take width of the meta information into account.
+		width = Math.max(width - widthLeft - widthRight - 12, 2);
+
 		for (i = 1; i <= Math.ceil((double) maxLength / width); i++) {
 
 			// Query
-			queryRPos = Math.min(i * width, query.length());
+			queryRPos = Math.min(queryStart + i * width - 1, Math.min(queryEnd,
+					subjectEnd - subjectStart + queryStart));
 			qgaps = 0;
 			for (j = queryLPos; j <= queryRPos; j++)
 				if (!query.symbolAt(j).equals(
@@ -449,7 +489,8 @@ public class AlignmentPair extends SimpleAlignment {
 			pathLPos = pathRPos;
 
 			// Sbjct
-			subjectRPos = Math.min(i * width, subject.length());
+			subjectRPos = Math.min(subjectStart + i * width - 1, Math.min(
+					queryEnd - queryStart + subjectStart, subjectEnd));
 			sgaps = 0;
 			for (j = subjectLPos; j <= subjectRPos; j++)
 				if (!subject.symbolAt(j).equals(

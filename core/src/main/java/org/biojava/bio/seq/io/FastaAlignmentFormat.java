@@ -95,8 +95,8 @@ public class FastaAlignmentFormat implements AlignmentFormat {
      */
     public void write(OutputStream os, Alignment align, int fileType) throws BioException, IllegalSymbolException {
         PrintStream out = new PrintStream(os);
-        Iterator labels = align.getLabels().listIterator();
-        Object curLabel = null;
+        Iterator<String> labels = align.getLabels().listIterator();
+        String curLabel = null;
         SymbolList curSeq = null;
         int lineWidth = 60;
 

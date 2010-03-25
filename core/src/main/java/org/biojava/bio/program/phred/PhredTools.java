@@ -343,12 +343,12 @@ public final class PhredTools {
      * @throws ClassCastException if the sequences in the alignment are not instances of PhredSequence
      */
     public static Distribution[] phredAlignmentToDistArray(Alignment a){
-      List labels = a.getLabels();
+      List<String> labels = a.getLabels();
       Distribution [] average = new Distribution[a.length()];
 
       Distribution[][] matrix = new Distribution[labels.size()][];
       for(int y = 0; y < a.length(); y++){// for eaxh position
-        for(Iterator i = labels.iterator(); i.hasNext();){
+        for(Iterator<String> i = labels.iterator(); i.hasNext();){
           SymbolList sl = a.symbolListForLabel(i.next());
           matrix[y] = phredToDistArray((PhredSequence)sl);
         }

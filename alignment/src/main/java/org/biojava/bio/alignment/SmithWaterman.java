@@ -46,9 +46,17 @@ import org.biojava.bio.symbol.SymbolList;
  * @author Mark Schreiber
  * @since 1.5
  */
-public class SmithWaterman extends NeedlemanWunsch {
+public class SmithWaterman extends AlignmentAlgorithm {
 
 	private short match, replace, insert, delete, gapExt;
+	private SubstitutionMatrix subMatrix;
+
+	/**
+	 * Default constructor.
+	 */
+	public SmithWaterman() {
+		this.subMatrix = null;
+	}
 
 	/**
 	 * Constructs the new SmithWaterman alignment object. Alignments are only
@@ -76,7 +84,6 @@ public class SmithWaterman extends NeedlemanWunsch {
 	 */
 	public SmithWaterman(short match, short replace, short insert,
 			short delete, short gapExtend, SubstitutionMatrix matrix) {
-		super(insert, delete, gapExtend, match, replace, matrix);
 		this.match = (short) -match;
 		this.replace = (short) -replace;
 		this.insert = (short) -insert;
@@ -86,73 +93,92 @@ public class SmithWaterman extends NeedlemanWunsch {
 	}
 
 	/**
-	 * Overrides the method inherited from the NeedlemanWunsch and sets the
-	 * penalty for an insert operation to the specified value. Reason:
-	 * internally scores are used instead of penalties so that the value is
-	 * muliplyed with -1.
-	 * 
-	 * @param ins
-	 *            costs for a single insert operation
+	 * @return the delete
 	 */
-	@Override
-	public void setInsert(short ins) {
-		this.insert = (short) -ins;
+	public short getDelete() {
+		return delete;
 	}
 
 	/**
-	 * Overrides the method inherited from the NeedlemanWunsch and sets the
-	 * penalty for a delete operation to the specified value. Reason: internally
-	 * scores are used instead of penalties so that the value is muliplyed with
-	 * -1.
-	 * 
-	 * @param del
-	 *            costs for a single deletion operation
+	 * @return the gapExt
 	 */
-	@Override
-	public void setDelete(short del) {
-		this.delete = (short) -del;
+	public short getGapExt() {
+		return gapExt;
 	}
 
 	/**
-	 * Overrides the method inherited from the NeedlemanWunsch and sets the
-	 * penalty for an extension of any gap (insert or delete) to the specified
-	 * value. Reason: internally scores are used instead of penalties so that
-	 * the value is muliplyed with -1.
-	 * 
-	 * @param ge
-	 *            costs for any gap extension
+	 * @return the insert
 	 */
-	@Override
-	public void setGapExt(short ge) {
-		this.gapExt = (short) -ge;
+	public short getInsert() {
+		return insert;
 	}
 
 	/**
-	 * Overrides the method inherited from the NeedlemanWunsch and sets the
-	 * penalty for a match operation to the specified value. Reason: internally
-	 * scores are used instead of penalties so that the value is muliplyed with
-	 * -1.
-	 * 
-	 * @param ma
-	 *            costs for a single match operation
+	 * @return the match
 	 */
-	@Override
-	public void setMatch(short ma) {
-		this.match = (short) -ma;
+	public short getMatch() {
+		return match;
 	}
 
 	/**
-	 * Overrides the method inherited from the NeedlemanWunsch and sets the
-	 * penalty for a replace operation to the specified value. Reason:
-	 * internally scores are used instead of penalties so that the value is
-	 * muliplyed with -1.
-	 * 
-	 * @param rep
-	 *            costs for a single replace operation
+	 * @return the replace
 	 */
-	@Override
-	public void setReplace(short rep) {
-		this.replace = (short) -rep;
+	public short getReplace() {
+		return replace;
+	}
+
+	/**
+	 * @return the subMatrix
+	 */
+	public SubstitutionMatrix getSubMatrix() {
+		return subMatrix;
+	}
+
+	/**
+	 * This method computes the scores for the substitution of the i-th symbol
+	 * of query by the j-th symbol of subject.
+	 * 
+	 * @param query
+	 *            The query sequence
+	 * @param subject
+	 *            The target sequence
+	 * @param i
+	 *            The position of the symbol under consideration within the
+	 *            query sequence (starting from one)
+	 * @param j
+	 *            The position of the symbol under consideration within the
+	 *            target sequence
+	 * @return The score for the given substitution.
+	 */
+	private short matchReplace(Sequence query, Sequence subject, int i, int j) {
+		try {
+			if (subMatrix != null)
+				return subMatrix.getValueAt(query.symbolAt(i), subject
+						.symbolAt(j));
+		} catch (Exception exc) {
+		}
+		if (query.symbolAt(i).equals(subject.symbolAt(j)))
+			return match;
+		return replace;
+	}
+
+	/**
+	 * This just computes the maximum of four integers.
+	 * 
+	 * @param w
+	 * @param x
+	 * @param y
+	 * @param z
+	 * @return the maximum of four <code>int</code>s.
+	 */
+	private int max(int w, int x, int y, int z) {
+		if ((w > x) && (w > y) && (w > z))
+			return w;
+		if ((x > y) && (x > z))
+			return x;
+		if ((y > z))
+			return y;
+		return z;
 	}
 
 	/**
@@ -166,7 +192,6 @@ public class SmithWaterman extends NeedlemanWunsch {
 	 * @see AlignmentAlgorithm#pairwiseAlignment(org.biojava.bio.symbol.SymbolList,
 	 *      org.biojava.bio.symbol.SymbolList)
 	 */
-	@Override
 	public AlignmentPair pairwiseAlignment(SymbolList query, SymbolList subject)
 			throws BioRuntimeException {
 		int[][] scoreMatrix;
@@ -189,7 +214,8 @@ public class SmithWaterman extends NeedlemanWunsch {
 		}
 
 		if (squery.getAlphabet().equals(ssubject.getAlphabet())
-				&& squery.getAlphabet().equals(subMatrix.getAlphabet())) {
+				&& (subMatrix == null || squery.getAlphabet().equals(
+						subMatrix.getAlphabet()))) {
 			StringBuffer[] align = { new StringBuffer(), new StringBuffer() };
 			long time = System.currentTimeMillis();
 			int i, j, maxI = 0, maxJ = 0, queryStart = 0, subjectStart = 0;
@@ -254,8 +280,7 @@ public class SmithWaterman extends NeedlemanWunsch {
 					for (i = maxI; i > 0;) {
 						do {
 							// only Deletes or Inserts or Replaces possible.
-							// That's not what
-							// we want to have.
+							// That's not what we want to have.
 							if (scoreMatrix[i][j] == 0) {
 								queryStart = i;
 								subjectStart = j;
@@ -373,14 +398,22 @@ public class SmithWaterman extends NeedlemanWunsch {
 			 * From here both cases are equal again.
 			 */
 
-			// System.out.println(printCostMatrix(scoreMatrix,
-			// query.seqString().toCharArray(),
-			// subject.seqString().toCharArray()));
 			try {
-				// this is necessary to have a value for the getEditDistance
-				// method.
-				this.CostMatrix = new int[1][1];
-				CostMatrix[0][0] = -scoreMatrix[maxI][maxJ];
+
+				/*
+				 * Make equal length alignments!
+				 */
+				for (i = 0; i < queryStart; i++)
+					align[0].insert(0, '-');
+				for (i = align[0].length(); i < Math.max(maxI, maxJ); i++)
+					align[0].append('-');
+				for (i = 0; i < subjectStart; i++)
+					align[1].insert(0, '-');
+				for (i = align[1].length(); i < Math.max(maxJ, align[0]
+						.length()); i++)
+					align[1].append('-');
+				for (i = align[0].length(); i < align[1].length(); i++)
+					align[0].append('-');
 
 				squery = new SimpleGappedSequence(
 						new SimpleSequence(new SimpleSymbolList(squery
@@ -392,46 +425,13 @@ public class SmithWaterman extends NeedlemanWunsch {
 								.getAlphabet().getTokenization("token"),
 								align[1].toString()), ssubject.getURN(),
 								ssubject.getName(), ssubject.getAnnotation()));
-				AlignmentPair pairalign = new AlignmentPair(squery, ssubject, subMatrix);
+
+				AlignmentPair pairalign = new AlignmentPair(squery, ssubject,
+						queryStart + 1, maxI, subjectStart + 1, maxJ, subMatrix);
 				pairalign.setComputationTime(System.currentTimeMillis() - time);
-				pairalign.setQueryStart(queryStart + 1);
-				pairalign.setQueryEnd(maxI);
-				pairalign.setSubjectStart(subjectStart + 1);
-				pairalign.setSubjectEnd(maxJ);
-				pairalign.setScore(getEditDistance());				
-
-//				/*
-//				 * Construct the output with only 60 symbols in each line.
-//				 */
-//				this.alignment = formatOutput(
-//						squery.getName(), // name of the query
-//						// sequence
-//						ssubject.getName(), // name of the target sequence
-//						align, // the String representation of the alignment
-//						path, // String match/missmatch representation
-//						queryStart, // Start position of the alignment in the
-//									// query sequence
-//						maxI, // End position of the alignment in the query
-//								// sequence
-//						scoreMatrix.length - 1, // length of the query sequence
-//						targetStart, // Start position of the alignment in the
-//										// target
-//						// sequence
-//						maxJ, // End position of the alignment in the target
-//								// sequence
-//						scoreMatrix[0].length - 1, // length of the target
-//													// sequence
-//						getEditDistance(), System.currentTimeMillis() - time,
-//						subMatrix, st)
-//
-//						+ System.getProperty("line.separator"); // time
-//																// consumption
-
+				pairalign.setScore(scoreMatrix[maxI][maxJ]);
 				// Don't waste any memory.
-				int value = scoreMatrix[maxI][maxJ];
 				scoreMatrix = null;
-				pairalign.setScore(value);
-				// Runtime.getRuntime().gc();
 				return pairalign;
 
 			} catch (BioException exc) {
@@ -443,50 +443,76 @@ public class SmithWaterman extends NeedlemanWunsch {
 	}
 
 	/**
-	 * This just computes the maximum of four integers.
+	 * Overrides the method inherited from the NeedlemanWunsch and sets the
+	 * penalty for a delete operation to the specified value. Reason: internally
+	 * scores are used instead of penalties so that the value is muliplyed with
+	 * -1.
 	 * 
-	 * @param w
-	 * @param x
-	 * @param y
-	 * @param z
-	 * @return the maximum of four <code>int</code>s.
+	 * @param del
+	 *            costs for a single deletion operation
 	 */
-	private int max(int w, int x, int y, int z) {
-		if ((w > x) && (w > y) && (w > z))
-			return w;
-		if ((x > y) && (x > z))
-			return x;
-		if ((y > z))
-			return y;
-		return z;
+	public void setDelete(short del) {
+		this.delete = (short) -del;
 	}
 
 	/**
-	 * This method computes the scores for the substitution of the i-th symbol
-	 * of query by the j-th symbol of subject.
+	 * Overrides the method inherited from the NeedlemanWunsch and sets the
+	 * penalty for an extension of any gap (insert or delete) to the specified
+	 * value. Reason: internally scores are used instead of penalties so that
+	 * the value is muliplyed with -1.
 	 * 
-	 * @param query
-	 *            The query sequence
-	 * @param subject
-	 *            The target sequence
-	 * @param i
-	 *            The position of the symbol under consideration within the
-	 *            query sequence (starting from one)
-	 * @param j
-	 *            The position of the symbol under consideration within the
-	 *            target sequence
-	 * @return The score for the given substitution.
+	 * @param ge
+	 *            costs for any gap extension
 	 */
-	private short matchReplace(Sequence query, Sequence subject, int i, int j) {
-		try {
-			return subMatrix.getValueAt(query.symbolAt(i), subject.symbolAt(j));
-		} catch (Exception exc) {
-			if (query.symbolAt(i).getMatches().contains(subject.symbolAt(j))
-					|| subject.symbolAt(j).getMatches().contains(
-							query.symbolAt(i)))
-				return match;
-			return replace;
-		}
+	public void setGapExt(short ge) {
+		this.gapExt = (short) -ge;
+	}
+
+	/**
+	 * Overrides the method inherited from the NeedlemanWunsch and sets the
+	 * penalty for an insert operation to the specified value. Reason:
+	 * internally scores are used instead of penalties so that the value is
+	 * muliplyed with -1.
+	 * 
+	 * @param ins
+	 *            costs for a single insert operation
+	 */
+	public void setInsert(short ins) {
+		this.insert = (short) -ins;
+	}
+
+	/**
+	 * Overrides the method inherited from the NeedlemanWunsch and sets the
+	 * penalty for a match operation to the specified value. Reason: internally
+	 * scores are used instead of penalties so that the value is muliplyed with
+	 * -1.
+	 * 
+	 * @param ma
+	 *            costs for a single match operation
+	 */
+	public void setMatch(short ma) {
+		this.match = (short) -ma;
+	}
+
+	/**
+	 * Overrides the method inherited from the NeedlemanWunsch and sets the
+	 * penalty for a replace operation to the specified value. Reason:
+	 * internally scores are used instead of penalties so that the value is
+	 * muliplyed with -1.
+	 * 
+	 * @param rep
+	 *            costs for a single replace operation
+	 */
+	public void setReplace(short rep) {
+		this.replace = (short) -rep;
+	}
+
+	/**
+	 * @param subMatrix
+	 *            the subMatrix to set
+	 */
+	public void setSubMatrix(SubstitutionMatrix subMatrix) {
+		this.subMatrix = subMatrix;
 	}
 
 }

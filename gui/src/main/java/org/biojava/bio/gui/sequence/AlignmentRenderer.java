@@ -44,9 +44,9 @@ extends SequenceRendererWrapper {
     SequenceRenderContext.LAYOUT
   );
   
-  private Object label;
+  private String label;
   
-  public void setLabel(Object label)
+  public void setLabel(String label)
   throws ChangeVetoException {
     if(hasListeners()) {
       ChangeEvent ce = new ChangeEvent(
@@ -64,7 +64,7 @@ extends SequenceRendererWrapper {
     }
   }
   
-  public Object getLabel() {
+  public String getLabel() {
     return this.label;
   }
   
@@ -114,7 +114,7 @@ extends SequenceRendererWrapper {
   }
 
   public SequenceRenderContext contextForLabel(
-    SequenceRenderContext src, Object label
+    SequenceRenderContext src, String label
   ) {
     Alignment ali = (Alignment) src.getSymbols();
     SymbolList sl = ali.symbolListForLabel(label);

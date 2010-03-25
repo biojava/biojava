@@ -157,21 +157,21 @@ public interface SimilarityPairFeature extends StrandedFeature
     static final class EmptyPairwiseAlignment extends Unchangeable
         implements Alignment
     {
-        private List labels = new ArrayList(2);
+        private List<String> labels = new ArrayList<String>(2);
 
         EmptyPairwiseAlignment()
         {
-            labels = new ArrayList(2);
+            labels = new ArrayList<String>(2);
             labels.add(QUERY_LABEL);
             labels.add(SUBJECT_LABEL);
         }
 
-        public List getLabels()
+        public List<String> getLabels()
         {
             return labels;
         }
 
-        public Symbol symbolAt(Object label, int index)
+        public Symbol symbolAt(String label, int index)
             throws NoSuchElementException
         {
             throw new NoSuchElementException("Attempted to retrieve symbol from empty list at "
@@ -180,13 +180,13 @@ public interface SimilarityPairFeature extends StrandedFeature
                                              + index);
         }
 
-        public SymbolList symbolListForLabel(Object label)
+        public SymbolList symbolListForLabel(String label)
             throws NoSuchElementException
         {
             return SymbolList.EMPTY_LIST;
         }
 
-        public Alignment subAlignment(Set labels, Location loc)
+        public Alignment subAlignment(Set<String> labels, Location loc)
             throws NoSuchElementException
         {
             throw new NoSuchElementException("Attempted to retrieve sub-alignment from empty list at "
@@ -246,7 +246,7 @@ public interface SimilarityPairFeature extends StrandedFeature
             throw new ChangeVetoException("You can't edit the empty symbol list");
         }
       
-        public Iterator symbolListIterator()
+        public Iterator<SymbolList> symbolListIterator()
         {
             return new Alignment.SymbolListIterator(this);
         }
