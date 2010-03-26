@@ -276,7 +276,7 @@ public class PDBFileParser  {
 		current_compound = new Compound();
 		dbrefs        = new ArrayList<DBRef>();
 
-		dateFormat = new SimpleDateFormat("dd-MMM-yy");
+		dateFormat = new SimpleDateFormat("dd-MMM-yy", java.util.Locale.ENGLISH);
 		atomCount = 0;
 		atomOverflow = false;
 
