@@ -198,18 +198,18 @@ public final class SymbolListViews {
     extends Unchangeable
     implements Alignment {
       private final SymbolList symList;
-      private final List labels;
+      private final List<String> labels;
 
-      public SymListAsAlignment(List labels, SymbolList symList) {
+      public SymListAsAlignment(List<String> labels, SymbolList symList) {
         if(labels.size() != symList.getAlphabet().getAlphabets().size()) {
           throw new IllegalArgumentException("There must be one label per symbol list");
         }
 
-        this.labels = Collections.unmodifiableList(new ArrayList(labels));
+        this.labels = Collections.unmodifiableList(new ArrayList<String>(labels));
         this.symList = symList;
       }
 
-      public List getLabels() {
+      public List<String> getLabels() {
         return labels;
       }
 
@@ -221,12 +221,12 @@ public final class SymbolListViews {
         return new Alignment.SymbolListIterator(this);
       }
 
-      public Symbol symbolAt(Object label, int column) {
+      public Symbol symbolAt(String label, int column) {
         BasisSymbol sym = (BasisSymbol) symList.symbolAt(column);
         return (Symbol) sym.getSymbols().get(labels.indexOf(label));
       }
 
-      public SymbolList symbolListForLabel(Object label) {
+      public SymbolList symbolListForLabel(String label) {
         return new IndexedSymbolList(symList, labels.indexOf(label));
       }
 
