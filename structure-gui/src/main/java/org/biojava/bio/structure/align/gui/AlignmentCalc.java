@@ -34,6 +34,7 @@ import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureException;
 import org.biojava.bio.structure.StructureTools;
 import org.biojava.bio.structure.align.StructureAlignment;
+import org.biojava.bio.structure.align.ce.ConfigStrucAligParams;
 import org.biojava.bio.structure.align.gui.AlignmentGui;
 import org.biojava.bio.structure.align.gui.jmol.StructureAlignmentJmol;
 import org.biojava.bio.structure.align.model.AFPChain;
@@ -135,7 +136,9 @@ public class AlignmentCalc implements Runnable {
          }
          
          String title = jmol.getTitle();
-         title += " " + algorithm.getParameters().toString();
+         ConfigStrucAligParams params = algorithm.getParameters();
+         if ( params != null)
+        	 title += " " + algorithm.getParameters().toString();
          jmol.setTitle(title);
          //String result = afpChain.toFatcat(ca1, ca2);
 
