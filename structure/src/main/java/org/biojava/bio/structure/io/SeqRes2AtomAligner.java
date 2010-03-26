@@ -32,6 +32,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.biojava.bio.BioException;
+import org.biojava.bio.alignment.AlignmentPair;
 import org.biojava.bio.alignment.NeedlemanWunsch;
 import org.biojava.bio.alignment.SimpleAlignment;
 import org.biojava.bio.alignment.SubstitutionMatrix;
@@ -219,7 +220,7 @@ public class SeqRes2AtomAligner {
         //System.out.println("align seq2 " + seq2);
 
 
-        SimpleAlignment simpleAli = null;
+        AlignmentPair aligPair = null;
         try  {
 
 
@@ -235,18 +236,9 @@ public class SeqRes2AtomAligner {
             	System.out.println("seq2: " + bjseq2.seqString());
             }
          
-            org.biojava.bio.alignment.Alignment ali = aligner.getAlignment(bjseq1,bjseq2);
-            if ( ! (ali instanceof SimpleAlignment )) {
-                throw new Exception ("Alignment is not a SimpleAlignment!");
-
-            }
-
-            simpleAli = (SimpleAlignment) ali;
-     
-            alignmentString = aligner.getAlignmentString();
-     
-            if (DEBUG)
-                System.out.println(alignmentString);
+            
+            aligPair= aligner.pairwiseAlignment(bjseq1,bjseq2);
+            
         } catch (Exception e){
             e.printStackTrace();
             System.err.println("align seq1 " + seq1);
@@ -254,13 +246,13 @@ public class SeqRes2AtomAligner {
 
         }
 
-        if ( simpleAli == null)
+        if ( aligPair == null)
             throw new StructureException("could not align objects!");
 
         //System.out.println(ali.getAlphabet());
-        SymbolList lst1 = simpleAli.symbolListForLabel("seq1");
+        SymbolList lst1 = aligPair.symbolListForLabel("seq1");
         //System.out.println("from seqres : " + lst1.seqString());
-        SymbolList lst2 = simpleAli.symbolListForLabel("seq2");
+        SymbolList lst2 = aligPair.symbolListForLabel("seq2");
 
         boolean noMatchFound = mapChains(seqRes,lst1,atomRes,lst2,gapSymbol);
         return noMatchFound;
