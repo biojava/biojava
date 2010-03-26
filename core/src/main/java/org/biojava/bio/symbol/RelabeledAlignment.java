@@ -47,31 +47,31 @@ public class RelabeledAlignment
     Alignment
 {
   private Alignment delegate;
-  private Map labelMap = new HashMap();
+  private Map<String, String> labelMap = new HashMap<String, String>();
 
   public RelabeledAlignment(Alignment delegate) {
     this.delegate = delegate;
-    for(Iterator i = delegate.getLabels().iterator(); i.hasNext(); ) {
-      Object label = i.next();
+    for(Iterator<String> i = delegate.getLabels().iterator(); i.hasNext(); ) {
+      String label = i.next();
       labelMap.put(label, label);
     }
   }
 
-  public List getLabels() {
-    return new ArrayList(labelMap.keySet());
+  public List<String> getLabels() {
+    return new ArrayList<String>(labelMap.keySet());
   }
 
-  public Symbol symbolAt(Object label, int column)
+  public Symbol symbolAt(String label, int column)
   throws NoSuchElementException {
     return delegate.symbolAt(map(label), column);
   }
 
-  public SymbolList symbolListForLabel(Object label)
+  public SymbolList symbolListForLabel(String label)
   throws NoSuchElementException {
     return delegate.symbolListForLabel(map(label));
   }
 
-  public Alignment subAlignment(Set labels, Location loc)
+  public Alignment subAlignment(Set<String> labels, Location loc)
   throws NoSuchElementException {
     return new RelabeledAlignment(delegate.subAlignment(map(labels), loc));
   }
@@ -117,15 +117,15 @@ public class RelabeledAlignment
     return new Alignment.SymbolListIterator(this);
   }
   
-  protected Set map(Set labels) {
-    Set set = new HashSet();
-    for(Iterator i = labels.iterator(); i.hasNext(); ) {
+  protected Set<String> map(Set<String> labels) {
+    Set<String> set = new HashSet<String>();
+    for(Iterator<String> i = labels.iterator(); i.hasNext(); ) {
       set.add(map(i.next()));
     }
     return set;
   }
 
-  protected Object map(Object label) {
+  protected String map(Object label) {
     return labelMap.get(label);
   }
 }
