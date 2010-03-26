@@ -275,6 +275,9 @@ public class AFPAlignmentDisplay
 		int pos1 = aa1List.indexOf(a);
 		int pos2 = aa1List.indexOf(b);
 
+		
+		// SEC an PYL amino acids are not supported as of yet...
+		
 		if ( pos1 < 0) {
 			System.err.println("unknown char " + a);
 			return 0;
