@@ -77,6 +77,8 @@ public class SmithWaterman3Daligner extends AbstractStructureAlignment implement
 	public AFPChain align(Atom[] ca1, Atom[] ca2, Object params)
 	throws StructureException {
 		AFPChain afpChain = new AFPChain();
+	
+		
 		try {
 			// covert input to sequences
 			String seq1 = StructureTools.convertAtomsToSeq(ca1);
@@ -117,30 +119,36 @@ public class SmithWaterman3Daligner extends AbstractStructureAlignment implement
 		return afpChain;
 	}
 
-	private AFPChain convert(AlignmentAlgorithm aligner,Atom[] ca1, Atom[] ca2,  AlignmentPair alig) throws StructureException {
+	private AFPChain convert(AlignmentAlgorithm aligner,Atom[] ca1, Atom[] ca2,  AlignmentPair aligPair) throws StructureException {
 		AFPChain afpChain = new AFPChain();
 		int ca1Length = ca1.length;
 		int ca2Length = ca2.length;		
 				
-		afpChain.setAlignScore(alig.getScore());
+		afpChain.setAlignScore(aligPair.getScore());
 
-		alig.getLabels();
+		
 
 		int nAtom=0; 
 		int nGaps=0;
 		
-		List<String> labels = alig.getLabels();
+		List<String> labels = aligPair.getLabels();
 		
 		if ( ! (labels.size() == 2)){
 			throw new StructureException("Expected labels of length 2 but got " + labels.size());
 		}
-		SymbolList symb1 = alig.symbolListForLabel(labels.get(0));
-		SymbolList symb2 = alig.symbolListForLabel(labels.get(1));
 		
+		SymbolList symb1 = aligPair.symbolListForLabel(labels.get(0));
+		SymbolList symb2 = aligPair.symbolListForLabel(labels.get(1));
+		try {
+			System.out.println(aligPair.formatOutput());
+		} catch (Exception e) {
+			e.printStackTrace();
+			// TODO: handle exception
+		}
 		List<Alphabet> alphas = new ArrayList<Alphabet>();
 		alphas.add(symb1.getAlphabet()); 
 		Symbol gapSymbol = AlphabetManager.getGapSymbol(alphas);
-		
+
 		int lcmp = symb1.length();
 		
 		Atom[] strBuf1 = new Atom[lcmp];
@@ -163,6 +171,7 @@ public class SmithWaterman3Daligner extends AbstractStructureAlignment implement
 		for(int ia=0; ia<lcmp; ia++) {
 			Symbol s1 = symb1.symbolAt(ia+1);
 			Symbol s2 = symb2.symbolAt(ia+1);
+			System.out.println(s1.getName() + " " + s2.getName());
 			if ( !s1.equals(gapSymbol))
 				pos1++;
 			if ( ! s2.equals(gapSymbol))
