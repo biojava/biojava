@@ -12,6 +12,7 @@ import org.biojava.bio.seq.DNATools;
 import org.biojava.bio.seq.Sequence;
 import org.biojava.bio.symbol.AlphabetManager;
 import org.biojava.bio.symbol.Symbol;
+import org.biojava.bio.symbol.SymbolList;
 
 /**
  * Tests that methods from DistributionTools work as advertised.
@@ -24,7 +25,7 @@ public class DistributionToolsTest extends TestCase {
   private Alignment a;
   private Distribution random;
   private String[] sa;
-  private Map map;
+  private Map<String,SymbolList> map;
 
   public DistributionToolsTest(String name) {
     super(name);
@@ -37,9 +38,9 @@ public class DistributionToolsTest extends TestCase {
                         "AATTGGG","AATTGGC","AATTGGG",
                         "AATTGGC"};
 
-      map = new HashMap(sa.length);
+      map = new HashMap<String, SymbolList>(sa.length);
       for (int i = 0; i < sa.length; i++) {
-         map.put(new Integer(i), DNATools.createDNA(sa[i]));
+         map.put(i+"", DNATools.createDNA(sa[i]));
       }
 
       a = new SimpleAlignment(map);
