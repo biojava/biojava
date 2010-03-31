@@ -70,7 +70,7 @@ public class AligPanel  extends JPrintPanel implements AlignmentPositionListener
 
 	private boolean colorByAlignmentBlock;
 
-	private static final Color[] colorWheel = new Color[] {Color.blue, Color.green, Color.magenta, Color.orange, Color.pink,Color.red}; 
+	public static final Color[] colorWheel = new Color[] {Color.blue, Color.green, Color.magenta, Color.orange, Color.pink,Color.red}; 
 
 
 	public static void main(String[] args){

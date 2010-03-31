@@ -32,6 +32,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 
@@ -51,18 +52,20 @@ import org.biojava.bio.structure.PDBHeader;
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureException;
 import org.biojava.bio.structure.StructureImpl;
+import org.biojava.bio.structure.align.gui.AlignmentGui;
 import org.biojava.bio.structure.align.gui.DisplayAFP;
 import org.biojava.bio.structure.align.gui.MenuCreator;
 import org.biojava.bio.structure.align.model.AFPChain;
 import org.biojava.bio.structure.align.util.AtomCache;
 import org.biojava.bio.structure.align.util.ResourceManager;
 import org.biojava.bio.structure.align.util.UserConfiguration;
+import org.biojava.bio.structure.align.gui.aligpanel.AligPanel;
 import org.biojava.bio.structure.align.gui.jmol.AtomInfo;
 import org.biojava.bio.structure.align.gui.jmol.AtomInfoParser;
 import org.biojava.bio.structure.align.gui.jmol.JmolPanel;
 import org.biojava.bio.structure.align.gui.jmol.MyJmolStatusListener;
 import org.biojava.bio.structure.align.gui.jmol.RasmolCommandListener;
-import org.biojava.bio.structure.io.PDBFileReader;
+
 
 import org.jmol.api.JmolViewer;
 
@@ -97,6 +100,8 @@ public class StructureAlignmentJmol implements MouseMotionListener, MouseListene
 
    private static final Object LIGAND_DISPLAY_SCRIPT = ResourceManager.getResourceManager("ce").getString("default.ligand.jmol.script");
 
+   static int nrOpenWindows = 0;
+
    public static void main(String[] args){
       try {
 
@@ -128,7 +133,7 @@ public class StructureAlignmentJmol implements MouseMotionListener, MouseListene
 
 
    public StructureAlignmentJmol(AFPChain afpChain, Atom[] ca1, Atom[] ca2) {		
-
+      nrOpenWindows++;
       jmolPanel = new JmolPanel();
 
       frame = new JFrame();
@@ -136,17 +141,33 @@ public class StructureAlignmentJmol implements MouseMotionListener, MouseListene
       JMenuBar menu = MenuCreator.initMenu(frame,this, afpChain);
 
       frame.setJMenuBar(menu);
-      frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+      //frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
       this.afpChain = afpChain;
       this.ca1 = ca1;
       this.ca2 = ca2;
 
-      /*frame.addWindowListener( new WindowAdapter() {
-			public void windowClosing(WindowEvent e) {
-				frame.dispose();
-				//System.exit(0);
-			}
-		});*/
+      frame.addWindowListener( new WindowAdapter()
+      {
+
+         public void windowClosing(WindowEvent e) {
+            
+            nrOpenWindows--;
+            
+            if ( nrOpenWindows > 0)
+               frame.dispose();
+            else  {
+               // check if AlignmentGUI is visible..
+               
+               AlignmentGui gui = AlignmentGui.getInstanceNoVisibilityChange();
+               if ( gui.isVisible()) {
+                  frame.dispose();
+                  gui.requestFocus();
+               } else {
+                  System.exit(0);
+               }
+            }
+         }
+      });
 
       Container contentPane = frame.getContentPane();
 
@@ -441,6 +462,9 @@ public class StructureAlignmentJmol implements MouseMotionListener, MouseListene
       StringBuffer j = new StringBuffer();
       j.append(DEFAULT_SCRIPT);
 
+      //      if ( afpChain.getBlockNum() > 1){
+      //         return getMultiBlockJmolScript( afpChain,  ca1,  ca2);
+      //      }
 
       // now color the equivalent residues ...
       StringBuffer sel = new StringBuffer();
@@ -503,6 +527,33 @@ public class StructureAlignmentJmol implements MouseMotionListener, MouseListene
       j.append(buf);
 
       return j.toString();
+   }
+
+   private static String getMultiBlockJmolScript(AFPChain afpChain, Atom[] ca1, Atom[] ca2)
+   {
+
+      int blockNum = afpChain.getBlockNum();      
+      int[] optLen = afpChain.getOptLen();
+      int[][][] optAln = afpChain.getOptAln();
+
+      if ( optLen == null)
+         return DEFAULT_SCRIPT;
+
+      for(int bk = 0; bk < blockNum; bk ++)       {
+
+         //the block nr determines the color...
+         int colorPos = bk;
+         if ( colorPos > AligPanel.colorWheel.length){
+            colorPos = AligPanel.colorWheel.length % colorPos ;
+         }
+         Color c = AligPanel.colorWheel[colorPos];
+
+         for ( int i=0;i< optLen[bk];i++){
+            ///
+         }
+      }
+      return "";
+
    }
 
    public void resetDisplay(){

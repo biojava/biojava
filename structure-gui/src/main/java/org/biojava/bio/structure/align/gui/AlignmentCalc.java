@@ -50,7 +50,7 @@ import org.biojava.bio.structure.Calc;
  * @since 1.7
  * @version %I% %G%
  */
-public class AlignmentCalc implements Runnable {
+public class AlignmentCalc implements AlignmentCalculationRunnable {
 
    public static Logger logger =  Logger.getLogger("org.biojava");
 

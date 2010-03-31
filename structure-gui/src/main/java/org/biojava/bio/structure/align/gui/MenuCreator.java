@@ -120,8 +120,7 @@ public class MenuCreator {
 		JMenu align = new JMenu("Align");
 		JMenuItem pairI = getPairwiseAlignmentMenuItem();
 		align.add(pairI);
-		JMenuItem dbI = getDBSearchMenuItem();
-		align.add(dbI);
+		
 		menu.add(align);
 
 		JMenu view = new JMenu("View");
@@ -385,6 +384,30 @@ public class MenuCreator {
 		return aboutM;
 	}
 
+
+	   private static JMenuItem getSystemInfoItem()
+	   {
+
+	      ImageIcon helpIcon = createImageIcon("/icons/help.png");
+
+	      JMenuItem aboutM = null;
+
+	      if ( helpIcon == null)
+	          aboutM = new  JMenuItem("System Info");
+	      else
+	          aboutM = new  JMenuItem("System Info", helpIcon);
+
+	      aboutM.setMnemonic(KeyEvent.VK_S);
+	      aboutM.addActionListener(new ActionListener(){
+
+	          public void actionPerformed(ActionEvent e) {
+	              MenuCreator.showSystemInfo();
+
+	          }           
+	      });
+	      return aboutM;
+	   }
+	
 	public static JMenuItem getExitMenuItem(){
 
 		ImageIcon exitIcon = createImageIcon("/icons/exit.png");
@@ -487,6 +510,11 @@ public class MenuCreator {
 
 
 	}
+	
+	public static void showSystemInfo(){
+	   SystemInfo dialog = new SystemInfo();
+	   dialog.showDialog();
+	}
 
 	/** Returns an ImageIcon, or null if the path was invalid. 
 	 * @param path the path to the icon
@@ -561,29 +589,7 @@ public class MenuCreator {
 	}
 
 
-	public static JMenuItem getDBSearchMenuItem() {
-		JMenuItem dbI = null;
-
-		ImageIcon dbSearchIcon = createImageIcon("/icons/kpdf.png");
-
-		if ( dbSearchIcon == null )
-			dbI = new JMenuItem("DB search");
-		else {
-			dbI = new JMenuItem("DB search", dbSearchIcon);
-		}
-
-		dbI.addActionListener(new ActionListener(){
-
-			public void actionPerformed(ActionEvent e) {
-				DBSearchGUI.getInstance();
-
-			}			
-		});
-
-
-		return dbI;
-
-	}
+	
 
 
 	public static JMenuBar initAlignmentGUIMenu(JFrame frame) {
@@ -617,21 +623,25 @@ public class MenuCreator {
 		JMenuItem pw = MenuCreator.getPairwiseAlignmentMenuItem();
 		alig.add(pw);
 
-		JMenuItem dbF = MenuCreator.getDBSearchMenuItem();
-		alig.add(dbF);
-
+		
 		JMenu about = new JMenu("Help");
 		about.setMnemonic(KeyEvent.VK_A);
 
 		JMenuItem aboutM = MenuCreator.getAboutMenuItem();
 		about.add(aboutM);
 
+		
+		JMenuItem techM = MenuCreator.getSystemInfoItem();
+		about.add(techM);
+		
 		menu.add(Box.createGlue());
 		menu.add(about);
 
 		return menu;
 
 	}
+
+
 
 
 

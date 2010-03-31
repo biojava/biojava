@@ -99,23 +99,7 @@ implements StructurePairSelector{
 			vBox.add(p2);	
 
 
-		pdbDir = new JTextField(20);
 
-		String conf = System.getProperty(PDB_DIR);
-		if ( conf != null){
-			pdbDir.setText(conf);
-		}
-
-		if ( show2PDBs) {
-			JPanel dir = getPDBDirPanel(pdbDir);
-
-			JTabbedPane configPane = new JTabbedPane();
-
-			configPane.addTab("Local PDB install", null, dir,
-			"Configure your local PDB setup.");
-
-			vBox.add(configPane);
-		}
 
 		//vBox.setBorder(BorderFactory.createLineBorder(Color.black));
 		this.add(vBox);
@@ -154,7 +138,30 @@ implements StructurePairSelector{
 	public JTextField getPDBDirField(){
 		return pdbDir;
 	}
-	public void persistCurrentConfig(){
+	public void setPDBDirField(JTextField dir){
+	   pdbDir = dir;
+	}
+	
+	
+	
+	public JCheckBox getFromFtp()
+   {
+      return fromFtp;
+   }
+   public void setFromFtp(JCheckBox fromFtp)
+   {
+      System.out.println(fromFtp);
+      this.fromFtp = fromFtp;
+   }
+   public JCheckBox getPdbSplit()
+   {
+      return pdbSplit;
+   }
+   public void setPdbSplit(JCheckBox pdbSplit)
+   {
+      this.pdbSplit = pdbSplit;
+   }
+   public void persistCurrentConfig(){
 
 		config = getConfiguration();
 
@@ -318,7 +325,7 @@ implements StructurePairSelector{
 		hBox.add(f);
 		vBox.add(hBox);
 
-		if ( config != null){
+		if ( config != null) {
 			pdbDir.setText( config.getPdbFilePath() );
 		}
 
