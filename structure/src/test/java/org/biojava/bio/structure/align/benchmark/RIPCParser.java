@@ -19,7 +19,8 @@ import org.biojava.bio.structure.align.benchmark.MultipleAlignmentParser;
  * Parses files formatted like the RIPC dataset (Repetition, Indels, Permutation,
  * Conformational variability), cited in:<br/>
  * <i>Mayr et al. Comparative analysis of protein structure alignments. BMC Struct Biol (2007) vol. 7 pp. 50</i>
- * <br/>and available online <a href="http://www.biomedcentral.com/content/supplementary/1472-6807-7-50-S5.txt">here</a>.
+ * <br/>and available online <a href="http://www.biomedcentral.com/content/supplementary/1472-6807-7-50-S5.txt">here</a>
+ * or at src/test/resources/align/benchmarks/RIPC.align.
  * <p>
  * See {@link RIPCIterator} for info about the format.
  * @author Spencer Bliven
@@ -55,6 +56,41 @@ public class RIPCParser implements MultipleAlignmentParser
 		}
 	}
 
+	
+
+	private static final Pattern scopRegex = Pattern.compile("d(....)(.)(.)");
+	/**
+	 * 
+	 * @param scopIDs
+	 * @return
+	 */
+	public static String[] getPDBNames(String[] scopIDs) {
+		String[] pdbNames = new String[scopIDs.length];
+		for(int i=0;i<scopIDs.length;i++) {
+			pdbNames[i] = getPDBName(scopIDs[i]);
+		}
+		return pdbNames;
+	}
+	/**
+	 * Converts scop domain identifiers (eg 'd1lnlb1') into a PDB ID and chain
+	 * (eg '1lnl.B').
+	 * @param scopID
+	 * @return the extracted pdbid and chain, or null if the scopID is malformed.
+	 */
+	public static String getPDBName(String scopID) {
+		Matcher match = scopRegex.matcher(scopID);
+		if(!match.matches()) {
+			return null;
+		}
+		if(!match.group(2).equals("_")) {
+			return match.group(1)+"."+match.group(2).toUpperCase();
+		} else {
+			return match.group(1);
+		}
+	}
+	
+	
+	
 	/**
 	 * Parses a RIPC alignment file.
 	 * <p>
@@ -134,7 +170,7 @@ public class RIPCParser implements MultipleAlignmentParser
 					else {
 						Matcher labels=labelRegex.matcher(line);
 						if(labels.matches()) {
-							MultipleAlignment m = new MultipleAlignment(nextLabels,residues);
+							MultipleAlignment m = new MultipleAlignment(RIPCParser.getPDBNames(nextLabels),residues);
 
 							nextLabels[0] = labels.group(1);
 							nextLabels[1] = labels.group(2);
@@ -156,7 +192,7 @@ public class RIPCParser implements MultipleAlignmentParser
 				throw new NoSuchElementException("IOException occured");
 			}
 
-			MultipleAlignment m = new MultipleAlignment(nextLabels,residues);
+			MultipleAlignment m = new MultipleAlignment(RIPCParser.getPDBNames(nextLabels),residues);
 			nextLabels = null;
 			return m;
 		}
@@ -190,6 +226,7 @@ public class RIPCParser implements MultipleAlignmentParser
 
 			throw new NoSuchElementException();
 		}
+		
 
 		@Override
 		public boolean hasNext()

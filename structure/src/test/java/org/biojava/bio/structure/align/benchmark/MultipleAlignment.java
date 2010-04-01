@@ -28,7 +28,7 @@ public class MultipleAlignment
 	 * @see Group#getPDBCode()
 	 */
 	private PDBResidue[][] residues;
-	private String[] proteinLabels;
+	private String[] names;
 
 	/**
 	 * Represents a comparison between <i>n</i> proteins.
@@ -36,9 +36,9 @@ public class MultipleAlignment
 	 *  Each row should represent a single structure. 
 	 *  Each column gives a list of {@link PDBResidue}s from each protein which should be
 	 *  aligned.
-	 * @param proteinLabels An identifier for each protein (eg PDB ID)
+	 * @param proteinNames An identifier for each protein (eg '1TIM.A')
 	 */
-	public MultipleAlignment(String[] proteinLabels, PDBResidue[][] residues)
+	public MultipleAlignment(String[] proteinNames, PDBResidue[][] residues)
 	{	
 		if(residues.length>0) {
 			for(PDBResidue[] prot : residues) {
@@ -48,17 +48,17 @@ public class MultipleAlignment
 			}
 		}
 		this.residues = residues;
-		this.proteinLabels = proteinLabels;
+		this.names = proteinNames;
 	}
 
 	/**
 	 * Alternate constructor for 2D Lists instead of arrays
-	 * @param proteinLabels
+	 * @param proteinNames
 	 * @param residues
 	 * @see #MultipleAlignment(String[], PDBResidue[][])
 	 */
-	public MultipleAlignment(String[] proteinLabels, List<List<PDBResidue>> residues) {
-		this(proteinLabels,listToArray(residues));
+	public MultipleAlignment(String[] proteinNames, List<List<PDBResidue>> residues) {
+		this(proteinNames,listToArray(residues));
 	}
 	/**
 	 * Helper function to convert 2D lists into arrays
@@ -106,17 +106,17 @@ public class MultipleAlignment
 	/**
 	 * @return the proteinLabels
 	 */
-	public String[] getProteinLabels()
+	public String[] getNames()
 	{
-		return proteinLabels;
+		return names;
 	}
 
 	/**
-	 * @param proteinLabels the proteinLabels to set
+	 * @param names the proteinLabels to set
 	 */
 	public void setProteinLabels(String[] proteinIDs)
 	{
-		this.proteinLabels = proteinIDs;
+		this.names = proteinIDs;
 	}
 
 	/**
@@ -129,7 +129,7 @@ public class MultipleAlignment
 	 *  Used to map PDB residue numbers to internal coordinates.
 	 * @param pIDs For each entry in structures, specifies what alignment
 	 *  protein each structure corresponds to. This should be the same length as
-	 *  structures, and should be a subset of the values in {@link #getProteinLabels()}
+	 *  structures, and should be a subset of the values in {@link #getNames()}
 	 * @return A matrix with a row for each item in structures. Columns correspond
 	 *  to aligned residues between the specified proteins. 
 	 * @throws StructureException If a pdb number does not appear in the corresponding Structure.
@@ -138,18 +138,37 @@ public class MultipleAlignment
 		int[] indices = new int[pIDs.length];
 		for(int i=0;i<pIDs.length;i++) {
 			int index;
-			for(index=0; index<this.proteinLabels.length; index++) {
-				if( this.proteinLabels[index].equals( pIDs[i] )) {
+			for(index=0; index<this.names.length; index++) {
+				if( this.names[index].equals( pIDs[i] )) {
 					break;
 				}
 			}
-			if(index==this.proteinLabels.length) {
+			if(index==this.names.length) {
 				throw new IllegalArgumentException("First argument expected to " +
 						"be a subset of getProteinIDs(). \""+pIDs[i]+"\" not found.");
 			}
 			indices[i]=index;
 		}
 		return getAlignmentMatrix(indices,structures);
+	}
+	
+	/**
+	 * Converts the PDB coordinates of all proteins into internal residue numbers
+	 * @param structures One structure for each protein
+	 * @return
+	 * @throws StructureException
+	 */
+	public int[][] getAlignmentMatrix(List<Atom[]> structures) throws StructureException {
+		if(structures.size() != this.residues.length) {
+			throw new IllegalArgumentException(
+					String.format("Error: %d structures provided, but alignment is length %d\n",
+							structures.size(),residues.length) );
+		}
+		int[] indices = new int[this.names.length];
+		for(int i=0;i< indices.length;i++) {
+			indices[i]=i;
+		}
+		return getAlignmentMatrix(indices, structures);
 	}
 
 	/**
@@ -186,10 +205,11 @@ public class MultipleAlignment
 				//				Group group = chain.getGroupByPDB(Integer.toString(residues[prot][res]));
 				//				alignMat[prot][res] = group.get
 				int groupNr = findGroup(struct,residues[protIndex][res],atomIndexGuess);
+				// Check the Group number exists
 				if(groupNr<0) {
 					throw new StructureException(String.format(
-							"Unable to locate residue %s.%s in structures[%d].",
-							residues[protIndex][res],protIndex));
+							"Unable to locate residue %s in structures[%d].",
+							residues[protIndex][res].toString(),protIndex));
 				}
 				alignMat[prot][res] = groupNr;
 			}
@@ -202,6 +222,7 @@ public class MultipleAlignment
 	/**
 	 * Locates the 1st instance of a group with the specified parameters within
 	 * an array of atoms and returns the index thereof.
+	 * <p>If the amino acid for pdbCode is specified, requires that it match.
 	 * <p>Requires O(atoms.length) time.
 	 * @param atoms The array of CA atoms to search in. 
 	 * @param residueNr The PDB residue number to search for
@@ -215,7 +236,9 @@ public class MultipleAlignment
 		do {
 			Group g = atoms[pos].getParent();
 			Chain c = g.getParent();
-			if( c.getName().equals(pdbCode.getChain()) && g.getPDBCode().equals(pdbCode.getResidueCode()) ) {
+			if( ("_".equals(pdbCode.getChain()) || c.getName().equals(pdbCode.getChain()) ) &&
+					g.getPDBCode().equals(pdbCode.getResidueCode()) &&
+					(pdbCode.getAaName() == null || pdbCode.getAaName().equals(g.getPDBName()) )) {
 				return pos;
 			}
 			pos++;
@@ -231,8 +254,8 @@ public class MultipleAlignment
 	 */
 	@Override
 	public String toString() {
-		return "MultipleAlignment between " + proteinLabels.length + " proteins: "
-		+ Arrays.toString(proteinLabels);
+		return "MultipleAlignment between " + names.length + " proteins: "
+		+ Arrays.toString(names);
 	}
 
 	public String display() {
@@ -240,7 +263,7 @@ public class MultipleAlignment
 			return "";
 
 		StringBuilder str = new StringBuilder();
-		join(str, proteinLabels, "\t");
+		join(str, names, "\t");
 		str.append("\n");
 
 		for(int res=0;res<residues[0].length;res++) {
@@ -271,6 +294,13 @@ public class MultipleAlignment
 		for(int i=1;i<objs.length;i++) {
 			str.append( separator ).append( objs[i] );
 		}
+	}
+	
+	public int size() {
+		if( residues.length<1 ) {
+			return 0;
+		}
+		return residues[0].length;
 	}
 
 }

@@ -1,5 +1,7 @@
 # Reference alignments between two domains
 # Amino acid type.PDB residue number.Insertion code.Chain
+# Mayr et al. Comparative analysis of protein structure alignments. BMC Struct Biol (2007) vol. 7 pp. 50
+# http://www.biomedcentral.com/content/supplementary/1472-6807-7-50-S5.txt
 
 #d1hcy_2-d1lnlb1
 HIS.194._._	HIS.41._.B
