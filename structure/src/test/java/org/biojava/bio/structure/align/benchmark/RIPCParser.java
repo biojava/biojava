@@ -45,7 +45,7 @@ public class RIPCParser implements MultipleAlignmentParser
 		}
 	}
 
-	@Override
+	//@Override
 	public Iterator<MultipleAlignment> iterator()
 	{
 		try {
@@ -130,7 +130,7 @@ public class RIPCParser implements MultipleAlignmentParser
 			skipComments();
 		}
 		
-		@Override
+		//@Override
 		public MultipleAlignment next()
 		{
 			List<List<PDBResidue>> residues = new ArrayList<List<PDBResidue>>(2);
@@ -228,7 +228,7 @@ public class RIPCParser implements MultipleAlignmentParser
 		}
 		
 
-		@Override
+		//@Override
 		public boolean hasNext()
 		{
 			return nextLabels != null;
@@ -239,7 +239,7 @@ public class RIPCParser implements MultipleAlignmentParser
 		/**
 		 * Not implemented.
 		 */
-		@Override
+		//@Override
 		public void remove()
 		{
 			throw new UnsupportedOperationException();

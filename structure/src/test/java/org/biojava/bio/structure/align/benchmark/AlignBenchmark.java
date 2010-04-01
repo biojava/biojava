@@ -7,7 +7,6 @@ package org.biojava.bio.structure.align.benchmark;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -193,7 +192,7 @@ public class AlignBenchmark {
 		/**
 		 * @see java.util.Iterator#next()
 		 */
-		@Override
+		//@Override
 		public AlignmentStats next() {
 			while(true) { // Eventually returns or throws exception
 				//String[] pdbIDs = this.currentAlignment.getNames();
@@ -281,7 +280,7 @@ public class AlignBenchmark {
 		/**
 		 * @see java.util.Iterator#hasNext()
 		 */
-		@Override
+		//@Override
 		public boolean hasNext() {
 			int alignLen = this.currentAlignment.getNames().length;
 
@@ -293,7 +292,7 @@ public class AlignBenchmark {
 		/**
 		 * @see java.util.Iterator#remove()
 		 */
-		@Override
+		//@Override
 		public void remove() {
 			throw new UnsupportedOperationException("remove() not implemented");
 		}
