@@ -261,8 +261,9 @@ public class AlignmentPair extends SimpleAlignment {
 		identicals = 0;
 		nGapsQ = 0;
 		nGapsS = 0;
-		for (int i = 0; i < Math.min(queryEnd - queryStart, subjectEnd
-				- subjectStart) + 1; i++) {
+		for (int i = 0; i < Math.min(queryEnd - queryStart , subjectEnd
+				- subjectStart)  ; i++) {
+		   
 			Symbol a = query.symbolAt(i + queryStart);
 			Symbol b = subject.symbolAt(i + subjectStart);
 			boolean gap = false;
