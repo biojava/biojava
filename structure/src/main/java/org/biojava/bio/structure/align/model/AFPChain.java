@@ -557,6 +557,14 @@ public class AFPChain implements Serializable, Cloneable
 		return afpSet;
 	}
 
+
+    /**
+     * Set the set of AFPs for this alignment.
+     * An AFP is a local ungapped alignment between the two peptides.
+     * 
+     * AFPs are set before the final optimization step. To get the final
+     * alignment, look at the aligned pairs from {@link #getOptAln()}.
+     */  
 	public void setAfpSet(List<AFP> afpSet)
 	{
 		this.afpSet = afpSet;
