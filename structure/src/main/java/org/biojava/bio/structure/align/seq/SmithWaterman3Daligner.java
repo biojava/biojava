@@ -49,6 +49,8 @@ public class SmithWaterman3Daligner extends AbstractStructureAlignment implement
 
 
 	public static void main(String[] args){
+	   	   
+	   args = new String[]{"-pdb1","1cdg.A","-pdb2","1tim.A","-pdbFilePath","/tmp/","-show3D","-printCE"};
 		SmithWaterman3Daligner algorithm = new SmithWaterman3Daligner();
 		if (args.length  == 0 ) {			
 			System.out.println(algorithm.printHelp());
@@ -126,8 +128,7 @@ public class SmithWaterman3Daligner extends AbstractStructureAlignment implement
 				
 		afpChain.setAlignScore(aligPair.getScore());
 
-		
-
+	
 		int nAtom=0; 
 		int nGaps=0;
 		
@@ -139,8 +140,16 @@ public class SmithWaterman3Daligner extends AbstractStructureAlignment implement
 		
 		SymbolList symb1 = aligPair.symbolListForLabel(labels.get(0));
 		SymbolList symb2 = aligPair.symbolListForLabel(labels.get(1));
+		//Sequence symb1 = aligPair.getQuery();
+		//Sequence symb2 = aligPair.getSubject();
+		
+		int queryEnd = aligPair.getQueryEnd();
+		int queryStart = aligPair.getQueryStart();
+		int subjectEnd = aligPair.getSubjectEnd();
+		int subjectStart = aligPair.getSubjectStart();
+			
 		try {
-			System.out.println(aligPair.formatOutput());
+			System.out.println(aligPair.formatOutput(10000));
 		} catch (Exception e) {
 			e.printStackTrace();
 			// TODO: handle exception
@@ -149,13 +158,14 @@ public class SmithWaterman3Daligner extends AbstractStructureAlignment implement
 		alphas.add(symb1.getAlphabet()); 
 		Symbol gapSymbol = AlphabetManager.getGapSymbol(alphas);
 
-		int lcmp = symb1.length();
+		int lcmp = Math.min(queryEnd - queryStart, subjectEnd
+              - subjectStart) + 1;
 		
 		Atom[] strBuf1 = new Atom[lcmp];
 		Atom[] strBuf2 = new Atom[lcmp];
 		
-		int pos1 = -1;
-		int pos2 = -1;
+		int pos1 = queryStart - 2 ;
+		int pos2 = subjectStart - 2;
 		
 		char[] alnseq1 = new char[ca1Length+ca2Length+1];
 		char[] alnseq2 = new char[ca1Length+ca2Length+1] ;
@@ -168,10 +178,13 @@ public class SmithWaterman3Daligner extends AbstractStructureAlignment implement
 		int[] align_se1 = new int[lcmp];
 		int[] align_se2 = new int[lcmp];
 		
-		for(int ia=0; ia<lcmp; ia++) {
-			Symbol s1 = symb1.symbolAt(ia+1);
-			Symbol s2 = symb2.symbolAt(ia+1);
-			System.out.println(s1.getName() + " " + s2.getName());
+		for(int ia=0;ia < Math.min(queryEnd - queryStart, subjectEnd
+              - subjectStart) + 1; ia++) {
+			Symbol s1 = symb1.symbolAt(ia+queryStart);
+			Symbol s2 = symb2.symbolAt(ia+subjectStart);
+			
+			//System.out.println(ia+ " " + queryStart + " " + subjectStart + " " + s1.getName() + " " + s2.getName());
+			
 			if ( !s1.equals(gapSymbol))
 				pos1++;
 			if ( ! s2.equals(gapSymbol))
@@ -234,6 +247,9 @@ public class SmithWaterman3Daligner extends AbstractStructureAlignment implement
 		
 		afpChain.setGapLen(nGaps);
 		afpChain.setAlnseq1(alnseq1);
+		System.out.println(new String(alnseq1));
+		System.out.println(new String(alnsymb));
+		System.out.println(new String(alnseq2));
 		afpChain.setAlnseq2(alnseq2);
 		afpChain.setAlnsymb(alnsymb);
 		
@@ -270,7 +286,8 @@ public class SmithWaterman3Daligner extends AbstractStructureAlignment implement
 		cecalc.setLcmp(lcmp);
 		cecalc.setAlign_se1(align_se1);
 		cecalc.setAlign_se2(align_se2);
-		
+		//System.out.println(align_se1);
+		//System.out.println(align_se2);
 		cecalc.convertAfpChain(afpChain, ca1, ca2);
 				
 		afpChain.setAlgorithmName(algorithmName);
