@@ -269,8 +269,9 @@ public class SubstitutionMatrix {
 			if (line == null)
 				break;
 			trim = line.trim();
-			if (trim.charAt(0) == '#')
+			if (trim.length()==0 || trim.charAt(0) == '#')
 				continue;
+			// Use line in next if-clause because trim will have lost leading important whitespace.
 			else if ((line.charAt(0) == ' ') || (line.charAt(0) == '\t')) {
 				String alphabets[] = new String[] { "DNA", "RNA", "PROTEIN",
 						"PROTEIN-TERM" };
@@ -337,7 +338,9 @@ public class SubstitutionMatrix {
 			if (trim.charAt(0) == '#') {
 				description += line.substring(1);
 				continue;
-			} else if (!trim.startsWith(newLine)) {
+			} 
+			// Use line in next if-clause because trim will have lost leading important whitespace.
+			else if (!line.startsWith(newLine)) {
 				if ((line.charAt(0) == ' ') || (line.charAt(0) == '\t')) {
 					st = new StringTokenizer(trim);
 					for (j = 0; st.hasMoreElements(); j++) {
@@ -347,7 +350,7 @@ public class SubstitutionMatrix {
 					cols = j;
 				} else {
 					// the matrix.
-					st = new StringTokenizer(line);
+					st = new StringTokenizer(trim);
 					if (st.hasMoreElements())
 						rowSymbols.put(symtok.parseToken(st.nextElement()
 								.toString()), Integer.valueOf(rows++));
@@ -379,7 +382,8 @@ public class SubstitutionMatrix {
 				continue;
 			else if ((line.charAt(0) == ' ') || (line.charAt(0) == '\t'))
 				continue;
-			else if (!trim.startsWith(newLine)) { // lines:
+			// Use line in next if-clause because trim will have lost leading important whitespace.
+			else if (!line.startsWith(newLine)) { // lines:
 				st = new StringTokenizer(trim);
 				if (st.hasMoreElements())
 					st.nextElement(); // throw away Symbol at
