@@ -42,6 +42,7 @@ import javax.swing.JTextField;
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureException;
 import org.biojava.bio.structure.StructureTools;
+import org.biojava.bio.structure.align.util.UserConfiguration;
 import org.biojava.bio.structure.io.MMCIFFileReader;
 import org.biojava.bio.structure.io.PDBFileReader;
 import org.biojava.bio.structure.io.StructureIOFile;
@@ -64,8 +65,7 @@ implements StructurePairSelector {
 
 	public static Logger logger =  Logger.getLogger("org.biojava");
 
-	public static final String PDB_FORMAT   = "PDB";
-	public static final String MMCIF_FORMAT = "mmCif";
+	
 	
 	private JComboBox fileType ;
 	
@@ -76,7 +76,7 @@ implements StructurePairSelector {
 	
 	public static JComboBox getFileFormatSelect(){
 		JComboBox fileType = new JComboBox();
-			fileType = new JComboBox(new String[] {PDB_FORMAT,MMCIF_FORMAT});
+			fileType = new JComboBox(new String[] {UserConfiguration.PDB_FORMAT,UserConfiguration.MMCIF_FORMAT});
 			fileType.setSelectedIndex(0);
 			fileType.setMaximumSize(new Dimension(10,50));
 			
@@ -130,9 +130,9 @@ implements StructurePairSelector {
 		
 		StructureIOFile reader = null;
 		String fileFormat = (String)fileType.getSelectedItem();
-		if ( fileFormat.equals(PDBUploadPanel.PDB_FORMAT)){
+		if ( fileFormat.equals(UserConfiguration.PDB_FORMAT)){
 			reader = new PDBFileReader();
-		} else if ( fileFormat.equals(PDBUploadPanel.MMCIF_FORMAT)){
+		} else if ( fileFormat.equals(UserConfiguration.MMCIF_FORMAT)){
 			reader = new MMCIFFileReader();
 		} else {
 			throw new StructureException("Unkown file format " + fileFormat);

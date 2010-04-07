@@ -27,9 +27,8 @@ implements ActionListener {
 					Structure s = reader.getStructure(file);
 					StructureAlignmentJmol jmol = new StructureAlignmentJmol(null,null,null);
 					jmol.setStructure(s);
-					
-					jmol.evalString("select * ; color chain;");
-					jmol.evalString("select *; spacefill off; wireframe off; backbone 0.5;  model 0;  ");
+										
+					jmol.evalString("select all;spacefill off; wireframe off; backbone off; cartoon;color cartoon chain; select ligand;wireframe 0.16;spacefill 0.5; select all; color cartoon structure;");
 
 				} catch (Exception ex){
 					ex.printStackTrace();

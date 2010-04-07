@@ -22,11 +22,13 @@
  */
 package org.biojava.bio.structure.align.gui;
 
+
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.util.logging.Logger;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
+
 
 import javax.swing.Box;
 import javax.swing.JButton;
@@ -35,10 +37,9 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenuBar;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JProgressBar;
-import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
 
+import javax.swing.JProgressBar;
 import javax.swing.JTabbedPane;
 
 import org.biojava.bio.structure.Structure;
@@ -49,6 +50,9 @@ import org.biojava.bio.structure.align.gui.AlignmentGui;
 import org.biojava.bio.structure.align.gui.ProgressThreadDrawer;
 import org.biojava.bio.structure.align.util.ResourceManager;
 import org.biojava.bio.structure.align.util.UserConfiguration;
+import org.biojava.bio.structure.align.webstart.AligUIManager;
+
+import org.biojava.bio.structure.align.webstart.WebStartMain;
 import org.biojava.bio.structure.gui.util.PDBUploadPanel;
 import org.biojava.bio.structure.gui.util.StructurePairSelector;
 
@@ -83,8 +87,7 @@ public class AlignmentGui extends JFrame{
    JTabbedPane tabPane;
    JProgressBar progress;
 
-   private JTextField pdbDir;
-
+ 
    private DBSearchGUI dbsearch;
 
 
@@ -101,13 +104,15 @@ public class AlignmentGui extends JFrame{
 
    public static AlignmentGui getInstance(){
 
+      AligUIManager.setLookAndFeel();
+  
       if (!  me.isVisible())
          me.setVisible(true);
 
       if ( ! me.isActive())
          me.requestFocus();
-
-
+ 
+      
       return me;
    }
 
@@ -130,14 +135,64 @@ public class AlignmentGui extends JFrame{
 
       this.setTitle(MAIN_TITLE);
 
-      /*this.addWindowListener(new WindowAdapter() {
-			public void windowClosing(WindowEvent evt) {
-				JFrame frame = (JFrame) evt.getSource();
-				frame.setVisible(false);
-				frame.dispose();
-			}
-		});*/
+      tab1 = new SelectPDBPanel();
+      tab2 = new PDBUploadPanel();
+     
+      // setup tabPane
+      tabPane = new JTabbedPane();
 
+      tabPane.addTab("Select PDB ID", null, tab1, "select PDB ID to align");
+
+      tabPane.addTab("Custom files",null, tab2,"Align your own files.");
+   
+      Box hBoxAlgo = setupAlgorithm();
+   
+      Box vBox = Box.createVerticalBox();
+      
+     
+      //vBox.add(hBoxAlgo);
+
+      vBox.add(tabPane);
+      vBox.add(Box.createGlue());
+
+      //vBox.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+
+      masterPane = new JTabbedPane();
+      
+      masterPane.addTab("Pairwise Comparison", vBox);
+
+      dbsearch = new DBSearchGUI();
+    
+      masterPane.addTab("Database Search",dbsearch);
+    
+      //JPanel dir = tab1.getPDBDirPanel(pdbDir);
+     
+      Box vBoxMain = Box.createVerticalBox();
+      vBoxMain.add(hBoxAlgo);
+      
+      // pairwise or db search
+      
+      vBoxMain.add(masterPane);
+      
+      // algorithm selection
+      
+      // PDB install config
+      //vBoxMain.add(dir);
+      // buttons
+      vBoxMain.add(initButtons());
+      
+      this.getContentPane().add(vBoxMain);
+      
+      //SwingUtilities.updateComponentTreeUI( me);
+      
+      this.pack();
+      this.setVisible(true);
+      
+      
+   }
+
+   private Box setupAlgorithm()
+   {
       String[] algorithms = StructureAlignmentFactory.getAllAlgorithmNames();
       try {
          algorithm = StructureAlignmentFactory.getAlgorithm(algorithms[0]);
@@ -181,51 +236,34 @@ public class AlignmentGui extends JFrame{
 
       JButton parameterButton = new JButton(paramAction);
 
-
-      tab1 = new SelectPDBPanel();
-      //tab1 = new PDBDirPanel();
-
-      tab2 = new PDBUploadPanel();
-
-      //tab3 = new PDBServerPanel();
-
-      tabPane = new JTabbedPane();
-
-      tabPane.addTab("Select PDB ID", null, tab1,
-      "select PDB ID to align");
-
-      tabPane.addTab("Custom files",null, tab2,"Align your own files.");
-
-      //tabPane.addTab("Local PDB config",null,tab3,"Configure local PDB installation.");
-
-
-
-      // BUILD UP THE UI out of the components defined above.
-
-      Box vBox = Box.createVerticalBox();
+     
 
       Box hBoxAlgo = Box.createHorizontalBox();
       hBoxAlgo.add(Box.createGlue());
-      hBoxAlgo.add(algoLabel);		
+      hBoxAlgo.add(algoLabel);      
       hBoxAlgo.add(algorithmList);
       hBoxAlgo.add(Box.createGlue());
       hBoxAlgo.add(parameterButton);
       hBoxAlgo.add(Box.createGlue());
-      //vBox.add(hBoxAlgo);
+      return hBoxAlgo;
+   }
+
+   
+    
 
 
-      vBox.add(tabPane);
+   private Box initButtons(){
 
-      //		Box hBox42 = Box.createHorizontalBox();
-      progress =new JProgressBar();
+      //        Box hBox42 = Box.createHorizontalBox();
+      progress =new JProgressBar();      
       progress.setIndeterminate(false);
       progress.setMaximumSize(new Dimension(10,100));
+      progress.setVisible(false);
 
-
-      //		hBox42.add(Box.createGlue());
-      //		hBox42.add(progress);		
-      //		hBox42.add(Box.createGlue());
-      //		vBox.add(hBox42);
+      //        hBox42.add(Box.createGlue());
+      //        hBox42.add(progress);       
+      //        hBox42.add(Box.createGlue());
+      //        vBox.add(hBox42);
       Action action1 = new AbstractAction("Align") {
          public static final long serialVersionUID = 0l;
          // This method is called when the button is pressed
@@ -254,7 +292,7 @@ public class AlignmentGui extends JFrame{
             abortCalc();
          }
       };
-      
+
       abortB = new JButton(action3);
 
       abortB.setEnabled(false);
@@ -277,57 +315,9 @@ public class AlignmentGui extends JFrame{
       hBox.add(abortB);
       //hBox.add(Box.createGlue());
       hBox.add(submitB);
-
-
-      //vBox.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
-
-      masterPane = new JTabbedPane();
-      masterPane.addTab("Pairwise Comparison", vBox);
-
-      pdbDir = new JTextField(20);
-      tab1.setPDBDirField(pdbDir);
       
-      dbsearch = new DBSearchGUI();
-      dbsearch.getSelectPDBPanel().setPDBDirField(pdbDir);
-     
-      masterPane.addTab("Database Search",dbsearch);
-
-
-
-      
-
-      String conf = System.getProperty(SelectPDBPanel.PDB_DIR);
-      if ( conf != null){
-         pdbDir.setText(conf);
-      }
-      JPanel dir = tab1.getPDBDirPanel(pdbDir);
-
-      //JTabbedPane configPane = new JTabbedPane();
-
-      //configPane.addTab("Local PDB install", null, dir,
-      //"Configure your local PDB setup.");
-
-      //vBox.add(configPane);
-
-
-      Box vBoxMain = Box.createVerticalBox();
-
-      // pairwise or db search
-      vBoxMain.add(masterPane);
-      // algorithm selection
-      vBoxMain.add(hBoxAlgo);
-      // PDB install config
-      vBoxMain.add(dir);
-      // buttons
-      vBoxMain.add(hBox);
-
-      this.getContentPane().add(vBoxMain);
-      this.pack();
-      this.setVisible(true);
+      return hBox;
    }
-
-
-
 
    protected void configureParameters() {
       StructureAlignment algorithm = getStructureAlignment();
@@ -347,7 +337,9 @@ public class AlignmentGui extends JFrame{
       }
    }
 
-
+   
+  
+  
 
    private void calcAlignment() {
 
@@ -355,8 +347,8 @@ public class AlignmentGui extends JFrame{
       StructurePairSelector tab = null;
 
       if (pos == 0 ){
-         tab = tab1;
-         tab1.persistCurrentConfig();
+         tab = tab1;         
+        
       } else if (pos == 1){
          tab = tab2;
       }
@@ -407,50 +399,49 @@ public class AlignmentGui extends JFrame{
       System.out.println("run DB search " + tabPane.getSelectedIndex());
 
       Structure s = null;
-      
-      dbsearch.getSelectPDBPanel().setFromFtp(tab1.getFromFtp());
-      dbsearch.getSelectPDBPanel().setPdbSplit(tab1.getPdbSplit());
-      
+
+
       StructurePairSelector tab = null;
       int pos = tabPane.getSelectedIndex();
-      
+
       if (pos == 0 ){
-      
+
          tab = dbsearch.getSelectPDBPanel();
-         tab1.persistCurrentConfig();
-      
+         
+   
+
       } else if (pos == 1){
-      
+
          tab = dbsearch.getPDBUploadPanel();
-      
+
       }
-      
+
       try {
-      
+
          s = tab.getStructure1();
 
          if ( s == null) {
             System.err.println("please select structure 1");
             return ;
          }
-      
+
       } catch (Exception e){
          e.printStackTrace();
       }
-   
+
       String name1 = "custom1"; 
-      
+
 
       if  ( pos == 0) {
-         
+
          name1 = dbsearch.getSelectPDBPanel().getName1();
-         
+
       } else {
-         
+
          name1 = s.getPDBCode();
-       
+
       }
-      
+
       System.out.println("name1 in alig gui:" + name1);
       String file = dbsearch.getOutFileLocation();
       if ( file == null || file.equals("")){
@@ -458,8 +449,7 @@ public class AlignmentGui extends JFrame{
          return;
       }
 
-      UserConfiguration config = tab1.getConfiguration();
-   
+      UserConfiguration config = WebStartMain.getWebStartConfig();
       alicalc = new AlignmentCalcDB(this, s,  name1,config,file);
 
       abortB.setEnabled(true);
@@ -518,6 +508,7 @@ class ProgressThreadDrawer extends Thread {
 
 
    public void run() {
+      progress.setVisible(true);
       boolean finished = false;
       while ( ! finished) {
          try {
@@ -532,6 +523,7 @@ class ProgressThreadDrawer extends Thread {
          }
          progress.repaint();
       }
+      progress.setVisible(false);
       progress = null;
    }
 

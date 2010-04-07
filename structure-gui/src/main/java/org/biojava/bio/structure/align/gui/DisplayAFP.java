@@ -142,6 +142,7 @@ public class DisplayAFP
 		for(int bk = 0; bk < blockNum; bk ++)       {
 
 			for ( int i=0;i< optLen[bk];i++){
+			   
 				int pos = optAln[bk][aligPos][i];
 				String pdbInfo = JmolTools.getPdbInfo(ca[pos]);
 				//lst.add(ca1[pos].getParent().getPDBCode());

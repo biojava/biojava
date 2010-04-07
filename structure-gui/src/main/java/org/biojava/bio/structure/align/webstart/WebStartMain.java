@@ -48,7 +48,6 @@ import org.biojava.bio.structure.align.client.PdbPair;
 import org.biojava.bio.structure.align.fatcat.FatCatRigid;
 import org.biojava.bio.structure.align.gui.AlignmentGui;
 import org.biojava.bio.structure.align.gui.ChooseDirAction;
-import org.biojava.bio.structure.align.gui.DBSearchGUI;
 import org.biojava.bio.structure.align.gui.DisplayAFP;
 import org.biojava.bio.structure.align.gui.StructureAlignmentDisplay;
 import org.biojava.bio.structure.align.gui.jmol.StructureAlignmentJmol;
@@ -83,6 +82,8 @@ public class WebStartMain
     * @param args
     */
    public static void main(String[] args){
+      
+      AligUIManager.setLookAndFeel();
 
       if ( args.length == 0){
 
@@ -93,6 +94,7 @@ public class WebStartMain
 
          javax.swing.SwingUtilities.invokeLater(new Runnable() {
             public void run() {
+               
                AlignmentGui.getInstance();
             }
          });
@@ -102,8 +104,7 @@ public class WebStartMain
       }
 
       else if ( args.length < 3){
-         String arg0 = args[0];
-
+         //String arg0 = args[0];
 
          javax.swing.SwingUtilities.invokeLater(new Runnable() {
             public void run() {
@@ -112,7 +113,6 @@ public class WebStartMain
          });
 
          return;
-
 
       }
 
@@ -150,7 +150,6 @@ public class WebStartMain
          System.out.println("### user provided: " + pair);
 
          UserConfiguration config = getWebStartConfig();
-
 
          System.setProperty("PDB_DIR",config.getPdbFilePath());
          System.out.println("using PDB file path: " + config.getPdbFilePath());
@@ -301,6 +300,19 @@ public class WebStartMain
       return userConfig;
    }
 
+   public static void persistConfig(UserConfiguration config){
+
+      try {
+          PersistentConfig webstartConfig = new PersistentConfig();
+
+          webstartConfig.save(config);
+
+      } catch (Exception e){
+          e.printStackTrace();
+      }
+
+  }
+   
    public static UserConfiguration requestUserConfig(){
 
       if ( userConfig == null) {

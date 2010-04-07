@@ -33,6 +33,7 @@ import org.biojava.bio.structure.align.ce.CeMain;
 import org.biojava.bio.structure.align.ce.CeParameters;
 import org.biojava.bio.structure.align.gui.StructureAlignmentDisplay;
 import org.biojava.bio.structure.align.model.AFPChain;
+import org.biojava.bio.structure.align.model.AfpChainWriter;
 import org.biojava.bio.structure.align.util.AtomCache;
 import org.biojava.bio.structure.align.xml.AFPChainXMLConverter;
 
@@ -83,8 +84,8 @@ public class DemoCE
            afpChain.setName1(name1);
            afpChain.setName2(name2);
 
-           // flexible original results:
-           System.out.println(afpChain.toFatcat(ca1,ca2));
+           // show a nice summary print
+           System.out.println(AfpChainWriter.toWebSiteDisplay(afpChain, ca1, ca2));
            
            // print rotation matrices
            System.out.println(afpChain.toRotMat());
@@ -94,6 +95,8 @@ public class DemoCE
            //System.out.println(AFPChainXMLConverter.toXML(afpChain,ca1,ca2));
                         
            StructureAlignmentDisplay.display(afpChain, ca1, ca2);
+           
+           System.out.println(AfpChainWriter.toScoresList(afpChain));
            
        } catch (Exception e) {
            e.printStackTrace();

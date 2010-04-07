@@ -56,7 +56,7 @@ public class DBSearchGUI extends JPanel {
 	StructureAlignment algorithm;
 	SelectPDBPanel tab1;
 	JTabbedPane tabPane;
-	JTextField pdbDir;
+
 	PDBUploadPanel tab2;
 	JTabbedPane listPane;
 	JButton abortB;
@@ -72,7 +72,6 @@ public class DBSearchGUI extends JPanel {
 	
 		
 		tab1 = new SelectPDBPanel(false);
-		pdbDir = tab1.getPDBDirField();
 		
 		tab2 = new PDBUploadPanel(false);
 		
@@ -92,8 +91,9 @@ public class DBSearchGUI extends JPanel {
 	
 		vBox.add(listPane);
 					
-		vBox.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
-
+		//vBox.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+		vBox.add(Box.createGlue());
+				
 		this.add(vBox);
 		
 		this.setVisible(true);

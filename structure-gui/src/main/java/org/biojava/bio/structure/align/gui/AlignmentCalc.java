@@ -167,6 +167,7 @@ public class AlignmentCalc implements AlignmentCalculationRunnable {
 
          //aligner.align(structure1,structure2);
       } catch (StructureException e){
+         e.printStackTrace();
          logger.warning(e.getMessage());
 
       }

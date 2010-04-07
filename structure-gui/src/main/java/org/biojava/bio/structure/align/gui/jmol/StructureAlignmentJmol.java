@@ -59,6 +59,7 @@ import org.biojava.bio.structure.align.model.AFPChain;
 import org.biojava.bio.structure.align.util.AtomCache;
 import org.biojava.bio.structure.align.util.ResourceManager;
 import org.biojava.bio.structure.align.util.UserConfiguration;
+import org.biojava.bio.structure.align.webstart.AligUIManager;
 import org.biojava.bio.structure.align.gui.aligpanel.AligPanel;
 import org.biojava.bio.structure.align.gui.jmol.AtomInfo;
 import org.biojava.bio.structure.align.gui.jmol.AtomInfoParser;
@@ -132,7 +133,10 @@ public class StructureAlignmentJmol implements MouseMotionListener, MouseListene
    }
 
 
-   public StructureAlignmentJmol(AFPChain afpChain, Atom[] ca1, Atom[] ca2) {		
+   public StructureAlignmentJmol(AFPChain afpChain, Atom[] ca1, Atom[] ca2) {
+      
+     AligUIManager.setLookAndFeel();
+      
       nrOpenWindows++;
       jmolPanel = new JmolPanel();
 

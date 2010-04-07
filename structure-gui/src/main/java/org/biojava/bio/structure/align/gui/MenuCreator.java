@@ -167,7 +167,16 @@ public class MenuCreator {
 
 
 	public static JMenuItem getDBResultMenuItem() {
-		JMenuItem item = getIcon(new ActionListener() {
+	   
+	   ImageIcon saveicon = createImageIcon("/icons/kpdf.png");
+       JMenuItem saveI = null;
+
+       if ( saveicon == null)
+           saveI = new JMenuItem(LOAD_DB_RESULTS);
+       else 
+           saveI = new JMenuItem(LOAD_DB_RESULTS, saveicon);
+	   
+		saveI.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {
 				final JFileChooser fc = new JFileChooser();
@@ -183,9 +192,9 @@ public class MenuCreator {
 				}
 
 			}
-		}, LOAD_DB_RESULTS );
+		} );
 
-		return item;
+		return saveI;
 	}
 
 
@@ -539,14 +548,14 @@ public class MenuCreator {
 
 		JMenuItem pairI ;
 		if ( alignIcon == null) 
-			pairI = new JMenuItem("Pairwise Alignment");
+			pairI = new JMenuItem("New Alignment");
 		else 
-			pairI = new JMenuItem("Pairwise Alignment", alignIcon);
+			pairI = new JMenuItem("New Alignment", alignIcon);
 		pairI.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				String cmd = e.getActionCommand();
 
-				if ( cmd.equals("Pairwise Alignment")){
+				if ( cmd.equals("New Alignment")){
 					MenuCreator.showPairDialog();
 				}				
 			}
@@ -608,6 +617,10 @@ public class MenuCreator {
 		JMenuItem dbI = MenuCreator.getDBResultMenuItem();
 		file.add(dbI);
 		file.addSeparator();
+		
+		JMenuItem configI = MenuCreator.getConfigMenuItem();
+		file.add(configI);
+		file.addSeparator();
 
 		JMenuItem closeI = MenuCreator.getCloseMenuItem(frame);
 		file.add(closeI);
@@ -617,11 +630,11 @@ public class MenuCreator {
 		JMenuBar menu = new JMenuBar();
 		menu.add(file);
 
-		JMenu alig = new JMenu("Align");
-		menu.add(alig);
+		//JMenu alig = new JMenu("Align");
+		//menu.add(alig);
 
-		JMenuItem pw = MenuCreator.getPairwiseAlignmentMenuItem();
-		alig.add(pw);
+		//JMenuItem pw = MenuCreator.getPairwiseAlignmentMenuItem();
+		//alig.add(pw);
 
 		
 		JMenu about = new JMenu("Help");
@@ -640,6 +653,35 @@ public class MenuCreator {
 		return menu;
 
 	}
+
+
+   private static JMenuItem getConfigMenuItem()
+   {
+      
+      ImageIcon configIcon = createImageIcon("/icons/configure.png");
+
+
+      JMenuItem configI;
+
+      if ( configIcon == null)
+          configI = new JMenuItem("Settings");
+      else 
+          configI = new JMenuItem("Settings",configIcon);
+      configI.setMnemonic(KeyEvent.VK_S);
+      configI.addActionListener(new ActionListener(){
+
+          public void actionPerformed(ActionEvent e) {
+              String cmd = e.getActionCommand();
+
+              if ( cmd.equals("Settings")){
+                 ConfigPDBInstallPanel.showDialog();
+              }               
+          }           
+      });
+      return configI;
+     
+     
+   }
 
 
 
