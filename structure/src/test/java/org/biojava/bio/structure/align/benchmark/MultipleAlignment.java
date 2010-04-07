@@ -3,14 +3,12 @@
  */
 package org.biojava.bio.structure.align.benchmark;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import org.biojava.bio.structure.Atom;
 import org.biojava.bio.structure.Chain;
 import org.biojava.bio.structure.Group;
 import org.biojava.bio.structure.StructureException;
-import org.biojava.bio.structure.align.util.AtomCache;
 
 /**
  * Stores the alignment between multiple proteins. For a set of proteins p1,p2,...,

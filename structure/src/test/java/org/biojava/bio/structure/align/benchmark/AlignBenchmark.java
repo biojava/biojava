@@ -7,6 +7,7 @@ package org.biojava.bio.structure.align.benchmark;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -173,7 +174,7 @@ public class AlignBenchmark {
 					Atom[] ca1 = cache.getAtoms(pdb1);
 
 					if(ca1.length > this.maxLength && this.maxLength > 0) {
-						System.out.format("Skipping large protein '%s' of length %d\n", pdb1, ca1.length);
+						System.err.format("Skipping large protein '%s' of length %d\n", pdb1, ca1.length);
 						this.structures.add(null);
 					} else {
 						this.structures.add(ca1);
@@ -234,8 +235,8 @@ public class AlignBenchmark {
 					nextAlignRight = nextAlignLeft+1;
 
 				}
-				
-				
+
+
 				// Nothing left for currentAlignment. Go on to next one.
 				if(this.parser.hasNext()) {
 					// Reset the currentAlignment
@@ -245,6 +246,7 @@ public class AlignBenchmark {
 
 					// Get alignment structures
 					String[] pdbIDs = this.currentAlignment.getNames();
+
 					this.structures= new ArrayList<Atom[]>(pdbIDs.length);
 
 					for(int i=0;i<pdbIDs.length;i++) {
@@ -262,7 +264,7 @@ public class AlignBenchmark {
 						}
 
 						if(ca1.length > this.maxLength && this.maxLength > 0) {
-							System.out.format("Skipping large protein '%s' of length %d\n", pdb1, ca1.length);
+							System.err.format("Skipping large protein '%s' of length %d\n", pdb1, ca1.length);
 							this.structures.add(null);
 						} else {
 							this.structures.add(ca1);
@@ -300,35 +302,123 @@ public class AlignBenchmark {
 	}
 
 	public static void main(String[] args) {
-		String RIPCfile = "src/test/resources/align/benchmarks/RIPC.align";
-		final int maxLength = 400; // Don't try alignments between proteins which are too long.
-		String outFile = "/Users/blivens/dev/bourne/benchmarks/RIPC.stats";
-		Writer out;
-		try {
-			out = new BufferedWriter(new FileWriter(outFile));
-			//out = new BufferedWriter(new OutputStreamWriter(System.err));
-		} catch (IOException e1) {
-			e1.printStackTrace();
-			System.err.println("Error writing file "+outFile);
+		//// Set parameters
+		// TODO make these arguments
+		int maxLength = 1000; // Don't try alignments between proteins which are too long.
+		String inFile = null;
+		String outFile = null;
+		MultipleAlignmentParser parser;
+		StructureAlignment aligner;
+
+		// Argument parsing
+		String usage = "usage: AlignBenchmark parser alignment [infile [outfile [maxLength]]]\n" +
+		"  parser:    Either RIPC or CPDB\n" +
+		"  alignment: Either CE or CE-CP\n" +
+		"  infile:    If empty or omitted, gets alignments from biojava resource directory\n" +
+		"  outfile:   If empty, omitted or \"-\", uses standard out\n" +
+		"  maxLength: Longest protein to compare. 0 disables. Default 1000";
+
+		if(args.length < 2) {
+			System.err.println("Error: Too few args!");
+			System.err.println(usage);
 			System.exit(1);
 			return;
 		}
-		
-		CeMain ceMain;
-		try {
-			ceMain = (CeMain) StructureAlignmentFactory.getAlgorithm(CeMain.algorithmName);
-			((CeParameters)ceMain.getParameters()).setCheckCircular(true);
-			((CeParameters)ceMain.getParameters()).setMaxGapSize(0);
 
-			AlignBenchmark bm = new AlignBenchmark("/tmp/",ceMain,maxLength);
-			MultipleAlignmentParser parser = new RIPCParser(RIPCfile);
+		// DO arg 0 (parser type) at the end
+		int arg = 1;
 
-			bm.runBenchmark(out, parser);
-
-		} catch (StructureException e) {
-			e.printStackTrace();
-			System.exit(1);
+		String alignerName = args[arg];
+		if(alignerName.matches("[cC][eE]|[cC][eE].?[cC][pP]")) {
+			CeMain ceMain;
+			try {
+				ceMain = (CeMain) StructureAlignmentFactory.getAlgorithm(CeMain.algorithmName);
+				if(alignerName.matches("[cC][eE].?[cC][pP]")) {
+					((CeParameters)ceMain.getParameters()).setCheckCircular(true);
+				}
+				((CeParameters)ceMain.getParameters()).setMaxGapSize(0);
+			} catch (StructureException e) {
+				e.printStackTrace();
+				System.exit(1);
+				return;
+			}
+			aligner = ceMain;
 		}
+		else {
+			System.err.println("Unrecognized aligner ("+alignerName+"). Choose from: CE, CE-CP");
+			System.err.println(usage);
+			System.exit(1);
+			return;
+		}
+		arg++;
+
+		if(args.length > arg && !args[arg].equals("")) {
+			inFile = args[arg];
+		}
+		arg++;
+
+		if(args.length > arg && !args[arg].equals("")) {
+			outFile = args[arg];
+		}
+		arg++;
+
+		if(args.length > arg) {
+			try {
+				maxLength = Integer.parseInt(args[arg]);
+			} catch(NumberFormatException e) {
+				System.err.println("Unrecognized maximum length ("+args[arg]+").");
+				System.err.println(usage);
+				System.exit(1);
+				return;
+			}
+		}
+		arg++;
+
+		if(args.length > arg) {
+			System.err.println("Error: Too many args!");
+			System.err.println(usage);
+			System.exit(1);
+			return;
+		}
+		arg++;
+
+		String fileType = args[0];
+		if(fileType.equalsIgnoreCase("RIPC")) {
+			if(inFile == null )
+				inFile = "src/test/resources/align/benchmarks/RIPC.align";
+			//outFile = "/Users/blivens/dev/bourne/benchmarks/RIPC.stats";
+			parser = new RIPCParser(inFile);
+		}
+		else if(fileType.equalsIgnoreCase("CPDB")) {
+			if(inFile == null )
+				inFile = "src/test/resources/align/benchmarks/CPDB_CPpairsAlignments_withCPSiteRefinement.txt";
+			//outFile = "/Users/blivens/dev/bourne/benchmarks/CPDB.stats";
+			parser = new CPDBParser(inFile);
+		}
+		else {
+			System.err.println("Unrecognized parser. Choose from: RIPC, CPDB");
+			System.err.println(usage);
+			System.exit(1);
+			return;
+		}
+
+		//// Done with parameters
+
+		Writer out;
+		out = new BufferedWriter(new OutputStreamWriter(System.out));
+		if( outFile != null && !(outFile.equals("") || outFile.equals("-") )) {
+			try {
+				out = new BufferedWriter(new FileWriter(outFile));
+			} catch (IOException e1) {
+				e1.printStackTrace();
+				System.err.println("Error writing file "+outFile);
+				System.exit(1);
+				return;
+			}
+		}
+
+		AlignBenchmark bm = new AlignBenchmark("/tmp/",aligner,maxLength);
+		bm.runBenchmark(out, parser);
 	}
 
 }

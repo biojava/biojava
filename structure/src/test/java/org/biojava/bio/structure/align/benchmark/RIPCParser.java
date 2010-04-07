@@ -157,7 +157,7 @@ public class RIPCParser implements MultipleAlignmentParser
 							pdb1 += pair.group(3);
 						}
 						if( !pair.group(7).equals("_") ) {
-							pdb1 += pair.group(7);
+							pdb2 += pair.group(7);
 						}
 
 						String chain1 = pair.group(4);

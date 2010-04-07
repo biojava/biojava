@@ -10,10 +10,12 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.biojava.bio.structure.Atom;
+import org.biojava.bio.structure.align.benchmark.metrics.ConsistencyMetric;
 import org.biojava.bio.structure.align.benchmark.metrics.LengthMetric;
 import org.biojava.bio.structure.align.benchmark.metrics.Metric;
 import org.biojava.bio.structure.align.benchmark.metrics.PercentCorrectMetric;
 import org.biojava.bio.structure.align.benchmark.metrics.RMSDMetric;
+import org.biojava.bio.structure.align.benchmark.metrics.TMScoreMetric;
 import org.biojava.bio.structure.align.model.AFPChain;
 
 /**
@@ -45,6 +47,27 @@ public class AlignmentStats  {
 	 */
 	public List<Metric> getMetrics() {
 		return metrics;
+	}
+
+	public double getResult(int i) {
+		if(results == null) {
+			throw new IllegalStateException("calculateStats() has not been run.");
+		}
+		return results.get(i);
+	}
+	
+	/**
+	 * @return the name1
+	 */
+	public String getName1() {
+		return name1;
+	}
+
+	/**
+	 * @return the name2
+	 */
+	public String getName2() {
+		return name2;
 	}
 
 	public void writeHeader(Writer w) throws IOException {
@@ -108,7 +131,11 @@ public class AlignmentStats  {
 		metrics.add(new LengthMetric.Alignment());
 		metrics.add(new RMSDMetric.Reference());
 		metrics.add(new RMSDMetric.Alignment());
-		metrics.add(new PercentCorrectMetric());
+		metrics.add(new TMScoreMetric.Reference());
+		metrics.add(new TMScoreMetric.Alignment());
+		//metrics.add(new PercentCorrectMetric());
+		metrics.add(new ConsistencyMetric() );
+		metrics.add(new ConsistencyMetric(4) );
 		return metrics;
 	}
 }

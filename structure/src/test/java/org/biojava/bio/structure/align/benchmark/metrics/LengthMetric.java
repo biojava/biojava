@@ -6,6 +6,11 @@ import org.biojava.bio.structure.align.benchmark.MultipleAlignment;
 import org.biojava.bio.structure.align.model.AFPChain;
 
 public abstract class LengthMetric {
+	/**
+	 * Calculates the length of the reference alignment
+	 * @author Spencer Bliven
+	 *
+	 */
 	public static class Reference extends Metric {
 
 		@Override
@@ -24,6 +29,11 @@ public abstract class LengthMetric {
 		}
 	}
 	
+	/**
+	 * Calculates the length of the test alignment
+	 * @author Spencer Bliven
+	 *
+	 */
 	public static class Alignment extends Metric {
 
 		@Override
