@@ -268,6 +268,46 @@ public class SVDSuperimposer {
 
     }
 
+    /**
+     * Calculate the TM-Score for the superposition.
+     * 
+     * <p>Citation:<br/>
+     * <i>Zhang Y and Skolnick J (2004). "Scoring function for automated assessment 
+     * of protein structure template quality". Proteins 57: 702Ð710.</i>
+     * 
+     * @param atomSet1 atom array 1
+     * @param atomSet2 atom array 2
+     * @param len1 The full length of the protein supplying atomSet1
+     * @param len2 The full length of the protein supplying atomSet2
+     * @return The TM-Score 
+     * @throws StructureException
+     */
+    public static double getTMScore(Atom[] atomSet1, Atom[] atomSet2, int len1, int len2) throws StructureException {
+        if ( atomSet1.length != atomSet2.length ){
+            throw new StructureException("The two atom sets are not of same length!");
+        }
+        if ( atomSet1.length > len1 ){
+            throw new StructureException("len1 must be greater or equal to the alignment length!");
+        }
+        if ( atomSet2.length > len2 ){
+            throw new StructureException("len2 must be greater or equal to the alignment length!");
+        }
+        
+        int Lmin = Math.min(len1,len2);
+        int Laln = atomSet1.length;
+        
+        double d0 = 1.24 * Math.cbrt(Lmin - 15.) - 1.8;
+        double d0sq = d0*d0;
+        
+        double sum = 0;
+        for(int i=0;i<Laln;i++) {
+            double d = Calc.getDistance(atomSet1[i],atomSet2[i]);
+        	sum+= 1./(1+d*d/d0sq);
+        }
+        
+        return sum/Lmin;
+    }
+
     /**  Get the Rotation matrix that is required to superimpose the two atom sets.
      *
      * @return a rotation matrix.
