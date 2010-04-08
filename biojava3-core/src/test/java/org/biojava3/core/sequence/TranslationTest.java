@@ -41,11 +41,11 @@ public class TranslationTest {
     try {
       FastaReader<DNASequence, NucleotideCompound> dnaReader = new FastaReader<DNASequence, NucleotideCompound>(cdsIs,
           new GenericFastaHeaderParser<DNASequence, NucleotideCompound>(), new DNASequenceCreator(dnaCs));
-      brca2Dna = dnaReader.process().iterator().next();
+      brca2Dna = dnaReader.process().values().iterator().next();
       FastaReader<ProteinSequence, AminoAcidCompound> pReader = new FastaReader<ProteinSequence, AminoAcidCompound>(
           pepIs, new GenericFastaHeaderParser<ProteinSequence, AminoAcidCompound>(), new ProteinSequenceCreator(
               aaCs));
-      brca2Pep = pReader.process().iterator().next();
+      brca2Pep = pReader.process().values().iterator().next();
     }
     catch (Exception e) {
       e.printStackTrace();
