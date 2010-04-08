@@ -38,7 +38,8 @@ import org.biojava.bio.structure.io.PDBFileReader;
 public class MyTestHelper
 {
 
-   public static final String pdbPath = "/Users/ap3/WORK/PDB/";
+   // 
+   public static final String pdbPath = System.getProperty("java.io.tmpdir");
 
    public static String compareAlignment(String pdb1, String chain1, String pdb2, String chain2, String originalOutput, boolean doRigid){
 
