@@ -70,7 +70,7 @@ public class AFPChain implements Serializable, Cloneable
 	double alignScoreUpdate;
 	int afpChainTwiNum;
 	// end of results
-
+	double tmScore;
 	// utility
 	int minLen ; // the length of the shorter 2 proteins.
 
@@ -1250,5 +1250,15 @@ public class AFPChain implements Serializable, Cloneable
 		
 		//System.out.println("Setting distMatrix "+(distanceMatrix==null?"null":"not null"));
 	}
+
+	
+	public void setTMScore(double tmScore){
+	   this.tmScore = tmScore;
+	}
+   public double getTMScore()
+   {
+      // TODO Auto-generated method stub
+      return tmScore;
+   }
 
 }

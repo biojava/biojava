@@ -35,102 +35,139 @@ import org.biojava.utils.xml.XMLWriter;
 public class UserConfiguration
 {
 
-	String pdbFilePath;
+   String pdbFilePath;
 
-	boolean isSplit;
+   boolean isSplit;
 
-	private boolean autoFetch;
+   private boolean autoFetch;
 
-	public UserConfiguration(){
-		isSplit = true;
-		autoFetch = true;
-		 // accessing temp. OS directory:         
-        String property = "java.io.tmpdir";
+   String fileFormat;
 
-        String tempdir = System.getProperty(property);
-        
-        if ( !(tempdir.endsWith(PDBFileReader.lineSplit) ) )
-           tempdir = tempdir + PDBFileReader.lineSplit;
-		pdbFilePath = tempdir;
-	}
-	
-	public String getPdbFilePath()
-	{
-		return pdbFilePath;
-	}
+   public static final String PDB_FORMAT   = "PDB";
+   public static final String MMCIF_FORMAT = "mmCif";
 
-	public void setPdbFilePath(String pdbFilePath)
-	{
-		this.pdbFilePath = pdbFilePath;
-	}
+   public static final String TMP_DIR = "java.io.tmpdir";
+   public static final String PDB_DIR = "PDB_DIR";
+   
+   public UserConfiguration(){
+      isSplit = true;
+      autoFetch = true;
+      // accessing temp. OS directory:         
+      
 
+      String userProvidedDir = System.getProperty(PDB_DIR);
 
-	public boolean isSplit() {
-		return isSplit;
-	}
+      if ( userProvidedDir != null ) {
+      
+         pdbFilePath = userProvidedDir;
+         
+      } else {
 
-	public void setSplit(boolean isSplit) {
-		this.isSplit = isSplit;
-	}
+         String tempdir = System.getProperty(TMP_DIR);
+         
+         pdbFilePath = tempdir;
+      }
+      if ( ! pdbFilePath.endsWith(PDBFileReader.lineSplit) )
+         pdbFilePath = pdbFilePath + PDBFileReader.lineSplit;
+             
+      fileFormat = PDB_FORMAT;
+   }
 
-	public boolean getAutoFetch() {
-		return autoFetch;
-	}
+   public String getPdbFilePath()
+   {
+      return pdbFilePath;
+   }
 
-	public void setAutoFetch(boolean autoFetch) {
-		this.autoFetch = autoFetch;
-	}
-
-	/** convert Configuration to an XML file so it can be serialized
-	 * 
-	 * @param pw
-	 * @return XMLWriter
-	 * @throws IOException
-	 */
-	public XMLWriter toXML(PrintWriter pw) 
-	throws IOException
-	{
-
-		XMLWriter     xw = new PrettyXMLWriter( pw);
-
-		toXML(xw);
-		return xw ;
-	}
+   public void setPdbFilePath(String pdbFilePath)
+   {
+      this.pdbFilePath = pdbFilePath;
+   }
 
 
-	/** convert Configuration to an XML file so it can be serialized
-	 * add to an already existing xml file.
-	 * 
-	 * @param xw the XML writer to use
-	 * @return the writer again
-	 * @throws IOException
-	 */
+   public boolean isSplit() {
+      return isSplit;
+   }
 
-	public XMLWriter toXML(XMLWriter xw) 
-	throws IOException
-	{
-		xw.printRaw("<?xml version='1.0' standalone='no' ?>");
-		//xw.printRaw("<!DOCTYPE " + XML_CONTENT_TYPE + " SYSTEM '" + XML_DTD + "' >");
-		xw.openTag("JFatCatConfig");
+   public void setSplit(boolean isSplit) {
+      this.isSplit = isSplit;
+   }
 
-		xw.openTag("PDBFILEPATH");
-		xw.attribute("path", pdbFilePath);
-		xw.attribute("split", isSplit +"" );
-		xw.attribute("autofetch", autoFetch+"");
-		xw.closeTag("PDBFILEPATH");
+   public boolean getAutoFetch() {
+      return autoFetch;
+   }
 
-		xw.closeTag("JFatCatConfig");
-		return xw ;
+   public void setAutoFetch(boolean autoFetch) {
+      this.autoFetch = autoFetch;
+   }
 
-	}
+   /** convert Configuration to an XML file so it can be serialized
+    * 
+    * @param pw
+    * @return XMLWriter
+    * @throws IOException
+    */
+   public XMLWriter toXML(PrintWriter pw) 
+   throws IOException
+   {
 
-	public static UserConfiguration fromStartupParams(StartupParameters params) {
-		UserConfiguration config = new UserConfiguration();
-		config.setPdbFilePath(params.getPdbFilePath());
-		config.setAutoFetch(params.isAutoFetch());
-		config.setSplit(params.isPdbDirSplit());
-		return config;
-	}
+      XMLWriter     xw = new PrettyXMLWriter( pw);
+
+      toXML(xw);
+      return xw ;
+   }
+
+
+   /** convert Configuration to an XML file so it can be serialized
+    * add to an already existing xml file.
+    * 
+    * @param xw the XML writer to use
+    * @return the writer again
+    * @throws IOException
+    */
+
+   public XMLWriter toXML(XMLWriter xw) 
+   throws IOException
+   {
+      xw.printRaw("<?xml version='1.0' standalone='no' ?>");
+      //xw.printRaw("<!DOCTYPE " + XML_CONTENT_TYPE + " SYSTEM '" + XML_DTD + "' >");
+      xw.openTag("JFatCatConfig");
+
+      xw.openTag("PDBFILEPATH");
+      // we don;t serialize the tempdir...
+      String tempdir = System.getProperty(TMP_DIR);
+      if (! pdbFilePath.equals(tempdir))
+         xw.attribute("path", pdbFilePath);
+      
+      xw.attribute("split", isSplit +"" );
+      xw.attribute("autofetch", autoFetch+"");
+      xw.attribute("fileFormat", fileFormat);
+      xw.closeTag("PDBFILEPATH");
+
+      xw.closeTag("JFatCatConfig");
+      return xw ;
+
+   }
+
+   public static UserConfiguration fromStartupParams(StartupParameters params) {
+      UserConfiguration config = new UserConfiguration();
+      config.setPdbFilePath(params.getPdbFilePath());
+      config.setAutoFetch(params.isAutoFetch());
+      config.setSplit(params.isPdbDirSplit());
+      // TODO support MMCif Files
+      config.setFileFormat(UserConfiguration.PDB_FORMAT);
+      return config;
+   }
+
+   public void setFileFormat (String fileFormat){
+      this.fileFormat = fileFormat;
+   }
+
+   public String getFileFormat()
+   {
+      return fileFormat;
+   }
+
+
 
 
 
