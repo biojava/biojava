@@ -34,7 +34,7 @@ public interface Location extends Iterable<Location> {
   int getStart();
 
   /**
-   * Start of the location; not necessarily the max position
+   * End of the location; not necessarily the max position
    */
   int getEnd();
 
