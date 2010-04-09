@@ -14,7 +14,7 @@ import org.biojava3.core.sequence.Strand;
 import org.biojava3.core.util.Hashcoder;
 
 /**
- * Basic implementation of a location which has a start, end and a location.
+ * Basic implementation of a location which has a start, end and a strand.
  *
  * @author ayates
  */
@@ -66,6 +66,7 @@ public abstract class AbstractLocation implements Location {
 
   protected void assertLocation() {
     if(!isCircular()) {
+      //TODO Is this right?!?
       if(getStart() > getEnd()) {
         throw new IllegalArgumentException(
             String.format("Start (%d) is greater than end (%d); if this is " +
