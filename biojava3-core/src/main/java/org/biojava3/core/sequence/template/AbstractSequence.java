@@ -223,4 +223,8 @@ public abstract class AbstractSequence<C extends Compound> implements Sequence<C
     public Iterator<C> iterator() {
         return backingStore.iterator();
     }
+
+    public int countCompounds(C... compounds) {
+      return SequenceMixin.countCompounds(this, compounds);
+    }
 }

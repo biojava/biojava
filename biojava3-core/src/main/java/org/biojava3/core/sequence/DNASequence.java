@@ -33,6 +33,7 @@ import org.biojava3.core.sequence.compound.NucleotideCompound;
 import org.biojava3.core.sequence.loader.SequenceStringProxyLoader;
 import org.biojava3.core.sequence.template.AbstractSequence;
 import org.biojava3.core.sequence.template.CompoundSet;
+import org.biojava3.core.sequence.template.SequenceMixin;
 import org.biojava3.core.sequence.template.SequenceProxyLoader;
 import org.biojava3.core.sequence.template.SequenceView;
 import org.biojava3.core.sequence.transcription.TranscriptionEngine;
@@ -115,8 +116,8 @@ public class DNASequence extends AbstractSequence<NucleotideCompound> {
       return (RNASequence) engine.getDnaRnaTranslator().createSequence(this);
     }
 
-    public double getGC() {
-        throw new UnsupportedOperationException("Not supported yet");
+    public int getGCCount() {
+        return SequenceMixin.countGC(this);
     }
 
     /**

@@ -48,4 +48,5 @@ public interface Sequence<C extends Compound> extends Iterable<C> {
 
     public AccessionID getAccession();
 
+    public int countCompounds(C... compounds);
 }

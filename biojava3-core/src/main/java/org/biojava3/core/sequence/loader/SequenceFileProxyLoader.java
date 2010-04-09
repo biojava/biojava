@@ -39,6 +39,7 @@ import org.biojava3.core.exceptions.FileAccessError;
 import org.biojava3.core.sequence.io.template.SequenceParserInterface;
 import org.biojava3.core.sequence.template.CompoundSet;
 import org.biojava3.core.sequence.template.Sequence;
+import org.biojava3.core.sequence.template.SequenceMixin;
 import org.biojava3.core.sequence.template.SequenceProxyLoader;
 import org.biojava3.core.sequence.template.SequenceView;
 
@@ -204,5 +205,9 @@ public class SequenceFileProxyLoader<C extends Compound> implements SequenceProx
     @Override
     public AccessionID getAccession() {
         throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    public int countCompounds(C... compounds) {
+      return SequenceMixin.countCompounds(this, compounds);
     }
 }

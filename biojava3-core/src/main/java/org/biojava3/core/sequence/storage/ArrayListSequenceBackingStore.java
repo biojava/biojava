@@ -36,6 +36,7 @@ import org.biojava3.core.exceptions.CompoundNotFoundError;
 import org.biojava3.core.sequence.template.CompoundSet;
 import org.biojava3.core.sequence.template.Sequence;
 import org.biojava3.core.sequence.template.SequenceBackingStore;
+import org.biojava3.core.sequence.template.SequenceMixin;
 import org.biojava3.core.sequence.template.SequenceView;
 
 public class ArrayListSequenceBackingStore<C extends Compound> implements SequenceBackingStore<C> {
@@ -136,5 +137,9 @@ public class ArrayListSequenceBackingStore<C extends Compound> implements Sequen
     @Override
     public AccessionID getAccession() {
         throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    public int countCompounds(C... compounds) {
+      return SequenceMixin.countCompounds(this, compounds);
     }
 }

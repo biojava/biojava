@@ -35,6 +35,7 @@ import org.biojava3.core.sequence.template.Compound;
 import org.biojava3.core.exceptions.CompoundNotFoundError;
 import org.biojava3.core.sequence.template.CompoundSet;
 import org.biojava3.core.sequence.template.Sequence;
+import org.biojava3.core.sequence.template.SequenceMixin;
 import org.biojava3.core.sequence.template.SequenceProxyLoader;
 import org.biojava3.core.sequence.template.SequenceView;
 
@@ -44,7 +45,7 @@ public class SequenceStringProxyLoader<C extends Compound> implements SequencePr
     private String sequence;
     private CompoundSet<C> compoundSet;
     private List<C> parsedCompounds = new ArrayList<C>();
-    
+
 
     public SequenceStringProxyLoader(String sequence, CompoundSet<C> compoundSet) {
         this.sequence = sequence;
@@ -137,5 +138,9 @@ public class SequenceStringProxyLoader<C extends Compound> implements SequencePr
     @Override
     public AccessionID getAccession() {
         throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    public int countCompounds(C... compounds) {
+      return SequenceMixin.countCompounds(this, compounds);
     }
 }
