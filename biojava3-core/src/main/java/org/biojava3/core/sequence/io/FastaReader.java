@@ -8,10 +8,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.LinkedHashMap;
-import org.biojava3.core.sequence.AccessionID;
 
 import org.biojava3.core.sequence.ProteinSequence;
 import org.biojava3.core.sequence.compound.AminoAcidCompound;
@@ -58,6 +55,7 @@ public class FastaReader<S extends Sequence<C>, C extends Compound> {
      * @return
      * @throws Exception
      */
+    @SuppressWarnings("unchecked")
     public LinkedHashMap<String,S> process() throws Exception {
         LinkedHashMap<String,S> sequences = new LinkedHashMap<String,S>();
 
