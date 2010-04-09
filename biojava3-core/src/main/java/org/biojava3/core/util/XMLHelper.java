@@ -4,12 +4,15 @@
  */
 package org.biojava3.core.util;
 
+import static org.biojava3.core.sequence.io.util.IOUtils.close;
+import static org.biojava3.core.sequence.io.util.IOUtils.openFile;
+
 import java.io.BufferedInputStream;
-import java.io.FileInputStream;
+import java.io.File;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
-import java.util.zip.GZIPInputStream;
+
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.Transformer;
@@ -19,6 +22,7 @@ import javax.xml.transform.stream.StreamResult;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathFactory;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -48,26 +52,10 @@ public class XMLHelper {
     }
 
     static public Document loadXML(String fileName) throws Exception {
-        Document doc = null;
-
-        if (fileName.endsWith(".gz")) {
-            FileInputStream fi = new FileInputStream(fileName);
-            BufferedInputStream bi = new BufferedInputStream(fi);
-            GZIPInputStream in = new GZIPInputStream(bi);
-            doc = inputStreamToDocument(in);
-            in.close();
-            bi.close();
-            fi.close();
-
-        } else {
-            FileInputStream fi = new FileInputStream(fileName);
-            BufferedInputStream bi = new BufferedInputStream(fi);
-            doc = inputStreamToDocument(bi);
-            bi.close();
-            fi.close();
-        }
+        InputStream is = openFile(new File(fileName));
+        Document doc = inputStreamToDocument(new BufferedInputStream(is));
+        close(is);
         return doc;
-
     }
 
     static public Document inputStreamToDocument(InputStream inputStream) throws Exception {
