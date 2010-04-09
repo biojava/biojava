@@ -9,6 +9,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.biojava3.core.exceptions.CompoundNotFoundError;
+import org.biojava3.core.features.GCStats;
 import org.biojava3.core.sequence.compound.AmbiguityDNACompoundSet;
 import org.biojava3.core.sequence.compound.DNACompoundSet;
 import org.biojava3.core.sequence.compound.NucleotideCompound;
@@ -94,15 +95,16 @@ public class DNATests {
     assertBaseEquivalence(ambiguity, "w", "T");
   }
 
-//  @Test
-//  public void gc() {
-//    assertThat("GC content not as expected", getSeq("GCGC").getGC(), is(1.0));
-//    assertThat("GC content not as expected", getSeq("GAAC").getGC(), is(0.5));
-//    assertThat("GC content not as expected",
-//        getSeq("AATTTATATGAATTTATATGAATTTATATGAATTTATATGAATTTATATGAATTTATATGAATTTATATGAATTTATATGAATTTATATG").gc(),
-//        is(0.1)
-//    );
-//  }
+  @Test
+  public void gc() {
+    assertThat("GC content not as expected", GCStats.getGCStats(getSeq("GCGC")), is(100.0));
+    assertThat("GC content not as expected", getSeq("GCGC").getGCCount(), is(4));
+    assertThat("GC content not as expected", GCStats.getGCStats(getSeq("GAAC")), is(50.0));
+    assertThat("GC content not as expected",
+        GCStats.getGCStats(getSeq("AATTTATATGAATTTATATGAATTTATATGAATTTATATGAATTTATATGAATTTATATGAATTTATATGAATTTATATGAATTTATATG")),
+        is(10.0)
+    );
+  }
 
   private DNASequence getSeq() {
     return getSeq(null);

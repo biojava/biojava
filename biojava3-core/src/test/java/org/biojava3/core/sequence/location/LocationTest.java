@@ -35,6 +35,11 @@ public class LocationTest {
     assertEquals("Checking sublocations iterate as expected", toStr(expected), toStr(actual));
   }
 
+  @Test(expected=IllegalArgumentException.class)
+  public void badLocations() {
+    new SimpleLocation(10, 1, Strand.UNDEFINED);
+  }
+
   private <L extends Location> String toStr(List<L> locations) {
     StringBuilder sb = new StringBuilder();
     for(L l: locations) {
