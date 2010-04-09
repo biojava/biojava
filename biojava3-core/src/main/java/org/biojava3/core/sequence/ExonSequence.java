@@ -23,20 +23,21 @@
 package org.biojava3.core.sequence;
 
 import java.util.ArrayList;
-import java.util.logging.Logger;
-import org.biojava3.core.sequence.TranscriptSequence.Sense;
 
 /**
  *
  * @author Scooter Willis
  */
 public class ExonSequence extends DNASequence {
-    private static final Logger log = Logger.getLogger(ExonSequence.class.getName());
-    public DNASequence parentGeneSequence = null;    
-    Sense sense = Sense.UNDEFINED;
+
+  //Not used just yet. Bring it back when we do
+//    private static final Logger log = Logger.getLogger(ExonSequence.class.getName());
+
+    public DNASequence parentGeneSequence = null;
+    Strand sense = Strand.UNDEFINED;
     private final ArrayList<CDSSequence> cdsSequenceList = new ArrayList<CDSSequence>();
 
-    public ExonSequence(TranscriptSequence parentGeneSequence, int begin, int end, Sense sense) {
+    public ExonSequence(TranscriptSequence parentGeneSequence, int begin, int end, Strand sense) {
         this.parentGeneSequence = parentGeneSequence;
         setBegin(begin);
         setEnd(end);
@@ -78,7 +79,7 @@ public class ExonSequence extends DNASequence {
     @Override
     public String toString(){
         String sequence = super.toString();
-        if(sense == Sense.NEGATIVE){
+        if(sense == Strand.NEGATIVE){
             StringBuilder sb = new StringBuilder(sequence);
             sequence = sb.reverse().toString();
         }
@@ -86,7 +87,7 @@ public class ExonSequence extends DNASequence {
         return sequence;
     }
 
-   
+
 
 
 

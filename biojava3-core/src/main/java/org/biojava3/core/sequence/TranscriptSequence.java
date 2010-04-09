@@ -26,7 +26,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.logging.Logger;
 
-
 import org.biojava3.core.sequence.transcription.TranscriptionEngine;
 
 /**
@@ -37,16 +36,12 @@ public class TranscriptSequence extends DNASequence {
 
     private static final Logger log = Logger.getLogger(TranscriptSequence.class.getName());
 
-    public enum Sense {
-
-        POSITIVE, NEGATIVE, UNDEFINED
-    }
     private StartCodonSequence startCodonSequence = null;
     private StopCodonSequence stopCodonSequence = null;
     boolean intronAdded = false; // need to deal with the problem that typically introns are not added when validating the list and adding in introns as the regions not included in exons
     private final ArrayList<IntronSequence> intronSequenceList = new ArrayList<IntronSequence>();
     private final ArrayList<ExonSequence> exonSequenceList = new ArrayList<ExonSequence>();
-    private Sense sense = Sense.UNDEFINED;
+    private Strand sense = Strand.UNDEFINED;
 
     /**
      *
@@ -54,7 +49,7 @@ public class TranscriptSequence extends DNASequence {
      * @param begin
      * @param end inclusive of end
      */
-    public TranscriptSequence(DNASequence parentDNASequence, int begin, int end, Sense sense) {
+    public TranscriptSequence(DNASequence parentDNASequence, int begin, int end, Strand sense) {
         setParentDNASequence(parentDNASequence);
         setBegin(begin);
         setEnd(end);
@@ -69,12 +64,12 @@ public class TranscriptSequence extends DNASequence {
             log.severe( this.getAccession() + " has introns added which will not be handled properly trying to fill in introns gaps from validate method");
         }
 
-        
+
     //    log.severe("Add in support for building introns based on added exons");
 
     }
 
-    public Sense getSense() {
+    public Strand getSense() {
         return sense;
     }
 

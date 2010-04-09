@@ -6,7 +6,6 @@
 package org.biojava3.core.sequence;
 
 import java.util.Comparator;
-import org.biojava3.core.sequence.TranscriptSequence.Sense;
 
 /**
  *
@@ -19,7 +18,7 @@ import org.biojava3.core.sequence.TranscriptSequence.Sense;
             if(o1.sense != o2.sense){
                 return o1.getBegin() - o2.getBegin();
             }
-            if(o1.sense == Sense.NEGATIVE){
+            if(o1.sense == Strand.NEGATIVE){
                 return -1 * (o1.getBegin() - o2.getBegin());
             }
 

@@ -23,7 +23,6 @@
 
 package org.biojava3.core.sequence;
 
-import org.biojava3.core.sequence.TranscriptSequence.Sense;
 
 /**
  *
@@ -33,8 +32,8 @@ public class IntronSequence extends DNASequence{
 
 public DNASequence parentGeneSequence = null;
 int frame = 0; // not sure if this makes sense for an intron
- Sense sense = Sense.UNDEFINED;
-    public IntronSequence(TranscriptSequence parentGeneSequence, int begin, int end, int frame,  Sense sense){
+ Strand sense = Strand.UNDEFINED;
+    public IntronSequence(TranscriptSequence parentGeneSequence, int begin, int end, int frame,  Strand sense){
         this.parentGeneSequence = parentGeneSequence;
         setBegin(begin);
         setEnd(end);

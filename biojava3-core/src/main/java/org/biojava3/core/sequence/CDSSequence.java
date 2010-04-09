@@ -23,7 +23,6 @@
 package org.biojava3.core.sequence;
 
 import java.util.logging.Logger;
-import org.biojava3.core.sequence.TranscriptSequence.Sense;
 
 /**
  *
@@ -33,9 +32,9 @@ public class CDSSequence extends DNASequence {
     private static final Logger log = Logger.getLogger(CDSSequence.class.getName());
     public DNASequence parentGeneSequence = null;
     int phase = 0; // 0, 1, 2 http://www.sequenceontology.org/gff3.shtml
-    Sense sense = Sense.UNDEFINED;
+    Strand sense = Strand.UNDEFINED;
 
-    public CDSSequence(ExonSequence parentGeneSequence, int begin, int end, int phase, Sense sense) {
+    public CDSSequence(ExonSequence parentGeneSequence, int begin, int end, int phase, Strand sense) {
         this.parentGeneSequence = parentGeneSequence;
         setBegin(begin);
         setEnd(end);
@@ -47,7 +46,7 @@ public class CDSSequence extends DNASequence {
     @Override
     public String toString(){
         String sequence = super.toString();
-        if(sense == Sense.NEGATIVE){
+        if(sense == Strand.NEGATIVE){
             StringBuilder sb = new StringBuilder(sequence);
             sequence = sb.reverse().toString();
         }
@@ -57,7 +56,7 @@ public class CDSSequence extends DNASequence {
         return sequence;
     }
 
-   
+
 
 
 
