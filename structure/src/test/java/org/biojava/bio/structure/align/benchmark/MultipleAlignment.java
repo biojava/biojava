@@ -206,8 +206,8 @@ public class MultipleAlignment
 				// Check the Group number exists
 				if(groupNr<0) {
 					throw new StructureException(String.format(
-							"Unable to locate residue %s in structures[%d].",
-							residues[protIndex][res].toString(),protIndex));
+							"Unable to locate residue %s in %s.",
+							residues[protIndex][res].toString(), struct[0].getParent().getParent().getParent().getPDBCode() ));
 				}
 				alignMat[prot][res] = groupNr;
 			}

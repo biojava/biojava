@@ -1,8 +1,8 @@
-///**
-// * 
-// */
-//package org.biojava.bio.structure.align.benchmark;
-//
+/**
+ * 
+ */
+package org.biojava.bio.structure.align.benchmark;
+
 //import java.io.IOException;
 //import java.util.ArrayList;
 //import java.util.HashMap;
@@ -33,12 +33,12 @@
 //import org.biojava.dasobert.eventmodel.AlignmentListener;
 //import org.biojava3.structure.gui.JmolViewerImpl;
 //import org.jmol.api.JmolViewer;
-//
-///**
-// * @author Spencer Bliven <sbliven@ucsd.edu>
-// *
-// */
-//public class SisyphusAlignment implements MultipleAlignmentParser {
+
+/**
+ * @author Spencer Bliven <sbliven@ucsd.edu>
+ *
+ */
+public class SisyphusAlignment {//implements MultipleAlignmentParser {
 //	private Das1Source dasSource;
 //	
 //	public SisyphusAlignment() {
@@ -356,4 +356,4 @@
 //	}
 //
 //
-//}
+}

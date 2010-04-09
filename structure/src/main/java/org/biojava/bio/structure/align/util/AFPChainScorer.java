@@ -43,10 +43,10 @@ public class AFPChainScorer
       int pos=0;
       int[] blockLens = align.getOptLen();
       int[][][] optAln = align.getOptAln();
-      assert(align.getBlockNum() == optAln.length);
-      for(int block=0;block< optAln.length;block++) {
-         assert(blockLens[block] == optAln[block][0].length);
-         for(int i=0;i<optAln[block][0].length;i++) {
+      assert(align.getBlockNum() <= optAln.length);
+      for(int block=0;block< align.getBlockNum();block++) {
+         assert(blockLens[block] <= optAln[block][0].length);
+         for(int i=0;i<blockLens[block];i++) {
             ca1aligned[pos] = ca1[optAln[block][0][i]];
             ca2aligned[pos] = (Atom) ca2[optAln[block][1][i]].clone();
             pos++;

@@ -19,7 +19,10 @@ import org.biojava.bio.structure.align.StructureAlignmentFactory;
 import org.biojava.bio.structure.align.benchmark.metrics.Metric;
 import org.biojava.bio.structure.align.ce.CeMain;
 import org.biojava.bio.structure.align.ce.CeParameters;
+import org.biojava.bio.structure.align.fatcat.FatCatFlexible;
+import org.biojava.bio.structure.align.fatcat.FatCatRigid;
 import org.biojava.bio.structure.align.model.AFPChain;
+import org.biojava.bio.structure.align.seq.SmithWaterman3Daligner;
 import org.biojava.bio.structure.align.util.AtomCache;
 
 /**
@@ -313,7 +316,7 @@ public class AlignBenchmark {
 		// Argument parsing
 		String usage = "usage: AlignBenchmark parser alignment [infile [outfile [maxLength]]]\n" +
 		"  parser:    Either RIPC or CPDB\n" +
-		"  alignment: Either CE or CE-CP\n" +
+		"  alignment: One of CE, CE0, CE-CP, SmithWaterman, FATCAT-rigid, FATCAT-flexible\n" +
 		"  infile:    If empty or omitted, gets alignments from biojava resource directory\n" +
 		"  outfile:   If empty, omitted or \"-\", uses standard out\n" +
 		"  maxLength: Longest protein to compare. 0 disables. Default 1000";
@@ -325,18 +328,25 @@ public class AlignBenchmark {
 			return;
 		}
 
-		// DO arg 0 (parser type) at the end
+		// Do arg=0 (parser type) at the end
 		int arg = 1;
 
-		String alignerName = args[arg];
-		if(alignerName.matches("[cC][eE]|[cC][eE].?[cC][pP]")) {
+		String alignerName = args[arg].toUpperCase();
+		if(alignerName.substring(0, 2).equals("CE")) { // Different flavors of CE
 			CeMain ceMain;
 			try {
 				ceMain = (CeMain) StructureAlignmentFactory.getAlgorithm(CeMain.algorithmName);
-				if(alignerName.matches("[cC][eE].?[cC][pP]")) {
-					((CeParameters)ceMain.getParameters()).setCheckCircular(true);
+				CeParameters param = (CeParameters)ceMain.getParameters();
+				//CE0
+				if(alignerName.equals("CE0")) {
+					param.setMaxGapSize(0);
 				}
-				((CeParameters)ceMain.getParameters()).setMaxGapSize(0);
+				//CE-CP
+				else if(alignerName.matches("[cC][eE].?[cC][pP]")) {
+					param.setMaxGapSize(0);
+					param.setCheckCircular(true);
+				}
+
 			} catch (StructureException e) {
 				e.printStackTrace();
 				System.exit(1);
@@ -344,11 +354,43 @@ public class AlignBenchmark {
 			}
 			aligner = ceMain;
 		}
+		else if(alignerName.equals("SMITHWATERMAN")) {
+			try {
+
+				aligner = StructureAlignmentFactory.getAlgorithm(SmithWaterman3Daligner.algorithmName);
+			} catch (StructureException e) {
+				e.printStackTrace();
+				System.exit(1);
+				return;
+			}
+		}
+		else if(alignerName.matches("J?FATCAT-?RIGID")) {
+			try {
+				aligner = StructureAlignmentFactory.getAlgorithm(FatCatRigid.algorithmName);
+			} catch (StructureException e) {
+				e.printStackTrace();
+				System.exit(1);
+				return;
+			}
+		}
+		else if(alignerName.matches("J?FATCAT-?FLEX.*")) {
+			try {
+				aligner = StructureAlignmentFactory.getAlgorithm(FatCatFlexible.algorithmName);
+			} catch (StructureException e) {
+				e.printStackTrace();
+				System.exit(1);
+				return;
+			}
+		}
 		else {
-			System.err.println("Unrecognized aligner ("+alignerName+"). Choose from: CE, CE-CP");
-			System.err.println(usage);
-			System.exit(1);
-			return;
+			// Try matching against all known StructureAlignment algorithm names
+			try {
+				aligner = StructureAlignmentFactory.getAlgorithm(args[arg]);
+			} catch (StructureException e) {
+				e.printStackTrace();
+				System.exit(1);
+				return;
+			}
 		}
 		arg++;
 

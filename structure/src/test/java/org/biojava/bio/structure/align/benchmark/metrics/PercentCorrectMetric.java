@@ -37,11 +37,12 @@ public class PercentCorrectMetric extends Metric {
 		}
 
 		int[][][] optAln = align.getOptAln();
-		
+		int[] blockLens = align.getOptLen();
+
 		// Hash table of ca1->ca2 values for the alignment
 		HashMap<Integer,Integer> optAlnMap = new HashMap<Integer,Integer>();
 		for(int block=0;block<align.getBlockNum(); block++) {
-			for(int i=0;i<optAln[block][0].length;i++) {
+			for(int i=0;i<blockLens[block];i++) {
 				optAlnMap.put(optAln[block][0][i], optAln[block][1][i]);
 			}
 		}

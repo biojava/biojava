@@ -47,13 +47,14 @@ public class ConsistencyMetric extends Metric {
 		}
 
 		int[][][] optAln = align.getOptAln();
+		int[] blockLens = align.getOptLen();
 
 		// Hash table of ca1->ca2 values for the alignment
 		HashMap<Integer,Integer> optAlnMap1 = new HashMap<Integer,Integer>();
 		// Hash table of ca2->ca1 values for the alignment
 		HashMap<Integer,Integer> optAlnMap2 = new HashMap<Integer,Integer>();
 		for(int block=0;block<align.getBlockNum(); block++) {
-			for(int i=0;i<optAln[block][0].length;i++) {
+			for(int i=0;i<blockLens[block];i++) {
 				optAlnMap1.put(optAln[block][0][i], optAln[block][1][i]);
 				optAlnMap2.put(optAln[block][1][i], optAln[block][0][i]);
 			}
