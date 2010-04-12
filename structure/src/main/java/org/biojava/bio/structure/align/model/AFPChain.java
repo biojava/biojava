@@ -170,6 +170,7 @@ public class AFPChain implements Serializable, Cloneable
 		version = "1.0";
 		sequentialAlignment = true;
 		distanceMatrix = null;
+		tmScore = -1;
 	}
 
 	/**
