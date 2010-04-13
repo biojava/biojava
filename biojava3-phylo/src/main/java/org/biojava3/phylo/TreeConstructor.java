@@ -4,7 +4,6 @@
  */
 package org.biojava3.phylo;
 
-import org.biojava.bio.TreeType;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.InputStream;

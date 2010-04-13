@@ -3,7 +3,7 @@
  * and open the template in the editor.
  */
 
-package org.biojava.bio;
+package org.biojava3.phylo;
 
 /**
  *
