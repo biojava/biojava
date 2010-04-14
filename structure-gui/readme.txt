@@ -14,4 +14,4 @@ mvn install:install-file \
  
  
  Install Javaws.jar
- 
+ (probably somewhere in your Java install)
