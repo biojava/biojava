@@ -13,17 +13,5 @@ mvn install:install-file \
  -DgeneratePom=true 
  
  
- Install OpenAstexViewer from 
- http://openastexviewer.net/web/download.html
-
-mvn install:install-file \
- -Dfile=/Users/andreas/Downloads/OpenAstexViewer.jar \
- -DgroupId=openAstex \
- -DartifactId=openAstex \
- -Dversion=3.0 \
- -Dpackaging=jar \
- -DgeneratePom=true
- 
- 
  Install Javaws.jar
  
