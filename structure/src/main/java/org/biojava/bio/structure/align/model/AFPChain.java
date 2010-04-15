@@ -193,8 +193,8 @@ public class AFPChain implements Serializable, Cloneable
 		this.afpIndex = o.afpIndex == null? null: o.afpIndex.clone();
 		this.afpAftIndex = o.afpAftIndex == null? null: o.afpAftIndex.clone();
 		this.afpBefIndex = o.afpBefIndex == null? null: o.afpBefIndex.clone();
-		this.disTable1 = (Matrix) o.disTable1.clone();
-		this.disTable2 = (Matrix) o.disTable2.clone();
+		this.disTable1 = o.disTable1 == null? null: (Matrix) o.disTable1.clone();
+		this.disTable2 = o.disTable2 == null? null: (Matrix) o.disTable2.clone();
 		this.twi = o.twi == null ? null : o.twi.clone();
 		this.afpChainLen = o.afpChainLen;
 		this.afpChainList = o.afpChainList == null? null: o.afpChainList.clone();
@@ -1234,6 +1234,11 @@ public class AFPChain implements Serializable, Cloneable
 	 * A ca1length x ca2length matrix.
 	 * For CE this is the distance matrix, but the exact interpretation is left
 	 * up to the alignment algorithm.
+	 * <p>
+	 * Special Note:<br/>
+	 * When using CE to check for circular permutations, a row of -1 is written
+	 * after the end of the first repeat of ca2. (See {@link CEMain#align()})
+	 * 
 	 * @return A matrix with dimensions ca1length x ca2length, or null
 	 */
 	public Matrix getDistanceMatrix() {
