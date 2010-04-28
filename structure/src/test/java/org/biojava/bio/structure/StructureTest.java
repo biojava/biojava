@@ -242,6 +242,9 @@ public class StructureTest extends TestCase {
 		Atom ca1    =       g1.getAtom("CA");
 		Atom oldca2 =       g2.getAtom("CA");
 		Atom newca2 = newGroup.getAtom("CA");
+		Element e1 = ca1.getElement();
+		
+		assertEquals(Element.C, e1);
 
 		// this also tests the cloning ...
 		double olddistance = Calc.getDistance(ca1,oldca2);
