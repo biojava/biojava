@@ -63,6 +63,18 @@ public interface Atom extends Cloneable {
      */
     public String getFullName();
     
+    /** set element of the atom name, e.g. Element.Fe
+     * @param e  an Element enumeration
+     * @see #getElement
+     */
+    public void   setElement(Element e);
+    
+    /** get element of the atom, e.g. Element.Ca
+     * @return an Element enumeration 
+     * @see #setElement
+     */
+    public Element getElement();
+    
     /** set PDB atom number. 
      * @param i  an int specifying the PDBserial value 
      * @see #getPDBserial
