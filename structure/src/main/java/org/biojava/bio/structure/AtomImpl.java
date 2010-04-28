@@ -41,6 +41,7 @@ public class AtomImpl implements Atom,Serializable {
    private static final long serialVersionUID = -2258364127420562883L;
    String name     ;
     String fullName ;
+    Element element;
     double[] coords ;
     String pdbline  ;
     int pdbserial   ;
@@ -54,6 +55,7 @@ public class AtomImpl implements Atom,Serializable {
 
     public AtomImpl () {
         name     = null        ;
+        element = Element.R;
         fullName = null        ;
         coords   = new double[3];
         pdbline  = ""          ;
@@ -203,6 +205,7 @@ public class AtomImpl implements Atom,Serializable {
         n.setPDBserial(getPDBserial());
         n.setFullName(getFullName());
         n.setName(getName());
+        n.setElement(getElement());
         return n ;
     }
 
@@ -215,6 +218,14 @@ public class AtomImpl implements Atom,Serializable {
         return parent;
 
     }
+	public Element getElement() {
+		return element;
+	}
+	
+	public void setElement(Element e) {
+		this.element = e;
+	
+	}
 
 
 }
