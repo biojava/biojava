@@ -258,6 +258,17 @@ public class StructureTest extends TestCase {
 
 	}
 
+	public void testElement() throws Exception {
+		// there should be no wild card elements
+		// in a structure (!= Element.R)
+		for (Chain c: structure.getChains()) {
+			for (Group g: c.getAtomGroups()) {
+				for (Atom a: g.getAtoms()) {
+					assertFalse(a.getElement().equals(Element.R));
+				}
+			}
+		}
+	}
 
 
 }
