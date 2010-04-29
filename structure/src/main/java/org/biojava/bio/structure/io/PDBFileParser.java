@@ -1741,9 +1741,13 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 			// at the first position, example HG23 in Valine
 			if (fullname.trim().length() == 4) {
 				elementSymbol = fullname.substring(0, 1);
-			} else {
+			} else if ( fullname.trim().length() > 1){
 				elementSymbol = fullname.substring(0, 2).trim();
+			} else {
+				// unknown element...
+				elementSymbol = "R";
 			}
+				
 			try {
 			element = Element.valueOfIgnoreCase(elementSymbol);
 			}  catch (IllegalArgumentException e){}
