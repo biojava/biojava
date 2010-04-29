@@ -180,7 +180,7 @@ public class AtomImpl implements Atom,Serializable {
 
     /** string representation. */
     public String toString() {
-        String str = fullName +" (" + name +") "+ pdbserial + " " + coords[0] + " " + coords[1] + " " + coords[2];
+        String str = fullName +" (" + name +") " + element + " " + pdbserial + " " + coords[0] + " " + coords[1] + " " + coords[2];
         return str ;
     }
 
