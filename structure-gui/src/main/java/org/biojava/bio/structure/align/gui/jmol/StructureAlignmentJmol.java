@@ -37,6 +37,8 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 
 import java.awt.event.MouseMotionListener;
+import java.io.StringWriter;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.Box;
@@ -56,6 +58,7 @@ import org.biojava.bio.structure.align.gui.AlignmentGui;
 import org.biojava.bio.structure.align.gui.DisplayAFP;
 import org.biojava.bio.structure.align.gui.MenuCreator;
 import org.biojava.bio.structure.align.model.AFPChain;
+import org.biojava.bio.structure.align.model.AfpChainWriter;
 import org.biojava.bio.structure.align.util.AtomCache;
 import org.biojava.bio.structure.align.util.ResourceManager;
 import org.biojava.bio.structure.align.util.UserConfiguration;
@@ -134,9 +137,9 @@ public class StructureAlignmentJmol implements MouseMotionListener, MouseListene
 
 
    public StructureAlignmentJmol(AFPChain afpChain, Atom[] ca1, Atom[] ca2) {
-      
-     AligUIManager.setLookAndFeel();
-      
+
+      AligUIManager.setLookAndFeel();
+
       nrOpenWindows++;
       jmolPanel = new JmolPanel();
 
@@ -154,14 +157,14 @@ public class StructureAlignmentJmol implements MouseMotionListener, MouseListene
       {
 
          public void windowClosing(WindowEvent e) {
-            
+
             nrOpenWindows--;
-            
+
             if ( nrOpenWindows > 0)
                frame.dispose();
             else  {
                // check if AlignmentGUI is visible..
-               
+
                AlignmentGui gui = AlignmentGui.getInstanceNoVisibilityChange();
                if ( gui.isVisible()) {
                   frame.dispose();
@@ -447,7 +450,7 @@ public class StructureAlignmentJmol implements MouseMotionListener, MouseListene
             System.err.println("Currently not viewing an alignment!");
             return;
          }
-         String result = afpChain.toFatcat(ca1, ca2);
+         String result = AfpChainWriter.toWebSiteDisplay(afpChain, ca1, ca2) ;
          result += AFPChain.newline;
          result += afpChain.toRotMat();
          DisplayAFP.showAlignmentImage(afpChain, result);
@@ -458,18 +461,31 @@ public class StructureAlignmentJmol implements MouseMotionListener, MouseListene
          }
          DisplayAFP.showAlignmentImage(afpChain, ca1, ca2, this);
 
+      } else if (cmd.equals(MenuCreator.FATCAT_TEXT)){
+         if ( afpChain == null) {
+            System.err.println("Currently not viewing an alignment!");
+            return;
+         }
+         String result = afpChain.toFatcat(ca1, ca2) ;
+         result += AFPChain.newline;
+         result += afpChain.toRotMat();
+         DisplayAFP.showAlignmentImage(afpChain, result);
       }
 
    }
 
    public static String getJmolString(AFPChain afpChain, Atom[] ca1, Atom[] ca2){
+     
+      if ( afpChain.getBlockNum() > 1){
+         return getMultiBlockJmolScript( afpChain,  ca1,  ca2);
+      }
+
+      
+      
       StringBuffer j = new StringBuffer();
       j.append(DEFAULT_SCRIPT);
 
-      //      if ( afpChain.getBlockNum() > 1){
-      //         return getMultiBlockJmolScript( afpChain,  ca1,  ca2);
-      //      }
-
+     
       // now color the equivalent residues ...
       StringBuffer sel = new StringBuffer();
       List<String> pdb1 = DisplayAFP.getPDBresnum(0,afpChain,ca1);
@@ -543,6 +559,9 @@ public class StructureAlignmentJmol implements MouseMotionListener, MouseListene
       if ( optLen == null)
          return DEFAULT_SCRIPT;
 
+      StringWriter jmol = new StringWriter();
+      jmol.append(DEFAULT_SCRIPT);
+
       for(int bk = 0; bk < blockNum; bk ++)       {
 
          //the block nr determines the color...
@@ -552,11 +571,45 @@ public class StructureAlignmentJmol implements MouseMotionListener, MouseListene
          }
          Color c = AligPanel.colorWheel[colorPos];
 
-         for ( int i=0;i< optLen[bk];i++){
+         List<String> pdb1 = new ArrayList<String>();
+         List<String> pdb2 = new ArrayList<String>();
+         for ( int i=0;i< optLen[bk];i++) {
             ///
+            int pos1 = optAln[bk][0][i];
+            pdb1.add(JmolTools.getPdbInfo(ca1[pos1]));
+            int pos2 = optAln[bk][1][i];
+            pdb2.add(JmolTools.getPdbInfo(ca2[pos2]));
+
+
          }
+
+
+         // and now select the aligned residues...
+         StringBuffer buf = new StringBuffer("select ");
+         int count = 0;
+         for (String res : pdb1 ){
+            if ( count > 0)
+               buf.append(",");
+            buf.append(res);
+            buf.append("/1");
+            count++;
+         }
+
+         for (String res :pdb2 ){
+            buf.append(",");
+            buf.append(res);
+            buf.append("/2");
+         }
+         //buf.append("; set display selected;");
+
+         buf.append("; backbone 0.6 ; color [" + c.getRed() +"," + c.getGreen() +"," +c.getBlue()+"];");
+
+         // now color this block:
+         jmol.append(buf);
       }
-      return "";
+      System.out.println(jmol);
+      return jmol.toString();
+
 
    }
 
