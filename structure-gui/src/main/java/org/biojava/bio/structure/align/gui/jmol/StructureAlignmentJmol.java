@@ -102,7 +102,7 @@ public class StructureAlignmentJmol implements MouseMotionListener, MouseListene
 
    public static final String DEFAULT_SCRIPT = ResourceManager.getResourceManager("ce").getString("default.alignment.jmol.script");
 
-   private static final Object LIGAND_DISPLAY_SCRIPT = ResourceManager.getResourceManager("ce").getString("default.ligand.jmol.script");
+   private static final String LIGAND_DISPLAY_SCRIPT = ResourceManager.getResourceManager("ce").getString("default.ligand.jmol.script");
 
    static int nrOpenWindows = 0;
 
@@ -569,6 +569,7 @@ public class StructureAlignmentJmol implements MouseMotionListener, MouseListene
          if ( colorPos > AligPanel.colorWheel.length){
             colorPos = AligPanel.colorWheel.length % colorPos ;
          }
+         System.out.println("block: " + bk + " " + colorPos + " cp");
          Color c = AligPanel.colorWheel[colorPos];
 
          List<String> pdb1 = new ArrayList<String>();
@@ -607,7 +608,9 @@ public class StructureAlignmentJmol implements MouseMotionListener, MouseListene
          // now color this block:
          jmol.append(buf);
       }
-      System.out.println(jmol);
+      jmol.append("model 0;  ");
+      jmol.append(LIGAND_DISPLAY_SCRIPT);
+      //System.out.println(jmol);
       return jmol.toString();
 
 
