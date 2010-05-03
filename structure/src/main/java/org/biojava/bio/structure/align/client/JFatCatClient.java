@@ -16,6 +16,7 @@ import java.util.TreeSet;
 
 
 import org.biojava.bio.structure.Atom;
+import org.biojava.bio.structure.align.fatcat.FatCatRigid;
 import org.biojava.bio.structure.align.model.AFPChain;
 import org.biojava.bio.structure.align.util.HTTPConnectionTools;
 import org.biojava.bio.structure.align.util.ResourceManager;
@@ -40,19 +41,27 @@ public class JFatCatClient {
 		generator = new Random();
 	}
 	
-	public static AFPChain getAFPChainFromServer(String serverLocation , String name1, String name2, Atom[] ca1, Atom[] ca2) 
+	public static AFPChain getAFPChainFromServer(String serverLocation ,  String name1, String name2, Atom[] ca1, Atom[] ca2) {
+	   String method = FatCatRigid.algorithmName;
+	   return getAFPChainFromServer(serverLocation, method, name1, name2, ca1, ca2,5000);
+	}
+	
+	public static AFPChain getAFPChainFromServer(String serverLocation , String method, String name1, String name2, Atom[] ca1, Atom[] ca2, int timeout) 
 	{
 
 	   String serverURL = serverLocation + serverAPPEND;
 	   
 		try {
-			String u = String.format(serverURL,name1,name2);
+			String u = String.format(serverURL,name1,name2) ;
 
+			if ( method != null)
+			   u+= "&method=" + method;
+			
 			URL url = new URL(u);
 			System.out.println("requesting alignment from server..."  + url);
 			// have a short timeout for this...
 			// 5 sec
-			InputStream stream = HTTPConnectionTools.getInputStream(url,5000);
+			InputStream stream = HTTPConnectionTools.getInputStream(url,timeout);
 
 			String xml = null;
 
