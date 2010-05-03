@@ -82,6 +82,20 @@ public class StructureAlignmentDisplay {
 
          twistedGroups = AFPTwister.twistOptimized(afpChain, ca1, ca2);
 
+         Matrix m   =  afpChain.getBlockRotationMatrix()[ 0];
+         Atom shift =  afpChain.getBlockShiftVector()   [ 0 ];
+         
+         // shift ligands for 2nd struct.
+         for (Group g : hetatms2){
+            Calc.rotate(g, m);
+            Calc.shift(g,shift);
+         }
+         for (Group g : nucs2){
+            Calc.rotate(g, m);
+            Calc.shift(g,shift);
+         }
+         
+         
 
       }
 
