@@ -22,8 +22,7 @@ import org.biojava.bio.structure.Atom;
 import org.biojava.bio.structure.Chain;
 import org.biojava.bio.structure.Group;
 import org.biojava.bio.structure.StructureException;
-import org.biojava.bio.structure.align.StructureAlignment;
-import org.biojava.bio.structure.align.StructureAlignmentFactory;
+
 
 import org.biojava.bio.structure.align.gui.DisplayAFP;
 import org.biojava.bio.structure.align.gui.JPrintPanel;
@@ -71,7 +70,14 @@ public class AligPanel  extends JPrintPanel implements AlignmentPositionListener
 
    private boolean colorByAlignmentBlock;
 
-   public static final Color[] colorWheel = new Color[] {Color.blue, Color.green, Color.magenta, Color.orange, Color.pink,Color.red}; 
+   static final Color c1 = Color.decode("#228B22"); // green
+   static final Color c2 = Color.decode("#8F8FFF"); // blue   
+   static final Color c3 = Color.decode("#FFD700"); // gold
+   static final Color c4 = Color.decode("#FF8C00"); // orange
+   static final Color c5 = Color.decode("#FF00FF"); // pink
+   static final Color c6 = Color.decode("#C71585"); // red
+   
+   public static final Color[] colorWheel = new Color[] {c1, c2, c3, c4 , c5,c6}; 
 
 
    public static void main(String[] args){
@@ -176,8 +182,13 @@ public class AligPanel  extends JPrintPanel implements AlignmentPositionListener
 
       this.afpChain = afpChain;
       coordManager.setAFPChain(afpChain);
-      if ( afpChain != null)
+      if ( afpChain != null) {
          selection = new BitSet (afpChain.getAlnLength());
+         if ( afpChain.getBlockNum() > 1) {
+            colorByAlignmentBlock = true;
+         }
+      }
+      
    }
 
    public void paintComponent(Graphics g){
@@ -277,7 +288,7 @@ public class AligPanel  extends JPrintPanel implements AlignmentPositionListener
                      int block = 0;
                      char s = symb[i];
                      try {
-                        block = Integer.parseInt(s+"");
+                        block = Integer.parseInt(s+"") - 1;
                      } catch (Exception e){}
                      colorPos = block;
                      if ( colorPos > colorWheel.length){
