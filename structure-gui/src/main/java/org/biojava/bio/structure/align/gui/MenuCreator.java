@@ -63,6 +63,7 @@ public class MenuCreator {
 	public static final String LOAD_DB_RESULTS = "Load DB search results";
 	public static final String SAVE_ALIGNMENT_XML = "Save Alignment XML";
 	public static final String LOAD_ALIGNMENT_XML = "Load Alignment XML";
+    public static final String FATCAT_TEXT = "View as FATCAT result";
 	/** provide a JMenuBar that can be added to a JFrame
 	 * 
 	 * @return a JMenuBar
@@ -133,6 +134,9 @@ public class MenuCreator {
 
 			JMenuItem textI = MenuCreator.getIcon(parent,TEXT_ONLY);
 			view.add(textI);
+			
+			JMenuItem textF = MenuCreator.getIcon(parent,FATCAT_TEXT);
+            view.add(textF);
 		}
 		
 		if ( afpChain != null){
@@ -287,6 +291,8 @@ public class MenuCreator {
 		JMenuItem textI = MenuCreator.getIcon(actionListener,TEXT_ONLY);
 		view.add(textI);
 
+		JMenuItem textF = MenuCreator.getIcon(actionListener,FATCAT_TEXT);
+        view.add(textF);
 
 
 
