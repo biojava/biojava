@@ -155,7 +155,7 @@ public class WebStartMain
          System.out.println("using PDB file path: " + config.getPdbFilePath());
 
          AtomCache cache = new AtomCache(config);
-
+         
          JFrame frame = new JFrame();
          frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -196,7 +196,7 @@ public class WebStartMain
                   algorithm = StructureAlignmentFactory.getAlgorithm("jFatCat_flexible");
                else
                   algorithm = new SmithWaterman3Daligner();
-               showStructureAlignment(algorithm ,c1,c2, pair.getName1(),pair.getName2());
+               showStructureAlignment(serverLocation,algorithm ,c1,c2, pair.getName1(),pair.getName2());
             } catch (Exception e){
                e.printStackTrace();
                JOptionPane.showMessageDialog(null,
@@ -369,20 +369,33 @@ public class WebStartMain
       return spl;
    }
 
-   private static void showStructureAlignment(StructureAlignment algorithm, Chain c1, Chain c2, String name1, String name2) throws StructureException{
+   private static void showStructureAlignment(String serverLocation, StructureAlignment algorithm, Chain c1, Chain c2, String name1, String name2) throws StructureException{
       JFrame tmpFrame = new JFrame();
       tmpFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
       String title = "Calculating " + algorithm.getAlgorithmName() + " V." + algorithm.getVersion()+" alignment... ";
-      System.out.println(title);
+     
 
       showProgressBar(tmpFrame,title, "Calculating the structure alignment.");
 
       Atom[] ca1 = StructureTools.getAtomCAArray(c1);
       Atom[] ca2 = StructureTools.getAtomCAArray(c2);
 
+      
       //do the actual alignment 
-      AFPChain afpChain = algorithm.align(ca1, ca2);
+      AFPChain afpChain = null;
+      
+      try {
+         // using 10 sec as timeout on server now, since we expect the server to be able to complete the calculation within that time...
+         afpChain =  JFatCatClient.getAFPChainFromServer(serverLocation,algorithm.getAlgorithmName(), name1, name2, ca1, ca2, 10000);
+      } catch (Exception e){
+         e.printStackTrace();
+      }
+      
+      if ( afpChain == null )  {
+         System.out.println(title);
+         afpChain = algorithm.align(ca1, ca2);
+      }
 
       afpChain.setName1(name1);
       afpChain.setName2(name2);
@@ -395,7 +408,7 @@ public class WebStartMain
       List<Group> hetatms2 = new ArrayList<Group>();
       List<Group> nucs2    = new ArrayList<Group>();
 
-      System.out.println("got afpChain blocknum: " + afpChain.getBlockNum());
+     // System.out.println("got afpChain blocknum: " + afpChain.getBlockNum());
       if ( (afpChain.getBlockNum() - 1) == 0){
          hetatms2 = c2.getAtomGroups("hetatm");
          nucs2    = c2.getAtomGroups("nucleotide");
