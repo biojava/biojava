@@ -84,6 +84,11 @@ public abstract class RMSDMetric {
 
 		@Override
 		public double calculate(MultipleAlignment reference, AFPChain align, Atom[] ca1, Atom[] ca2) {
+			// check if already set in the chain
+			double optRMSD = align.getTotalRmsdOpt();
+			if( optRMSD > 0 ) {
+				return optRMSD;
+			}
 			// Create new arrays for the subset of atoms in the alignment.
 			Atom[] ca1aligned = new Atom[align.getOptLength()];
 			Atom[] ca2aligned = new Atom[align.getOptLength()];
