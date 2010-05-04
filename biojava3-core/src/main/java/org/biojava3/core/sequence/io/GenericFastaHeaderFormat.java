@@ -13,7 +13,7 @@ import org.biojava3.core.sequence.template.Compound;
  *
  * @author Scooter Willis <willishf at gmail dot com>
  */
-public class GenericFastaHeaderFormat<S extends AbstractSequence<C>, C extends Compound> implements FastaHeaderFormatInterface<S,C> {
+public class GenericFastaHeaderFormat<S extends AbstractSequence<?>, C extends Compound> implements FastaHeaderFormatInterface<S,C> {
 
     public String getHeader(S sequence) {
         String header = "";
@@ -25,7 +25,6 @@ public class GenericFastaHeaderFormat<S extends AbstractSequence<C>, C extends C
         }
 
         return header;
-
     }
 
 }

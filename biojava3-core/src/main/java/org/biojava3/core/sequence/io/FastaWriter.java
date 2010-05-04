@@ -14,14 +14,14 @@ import org.biojava3.core.sequence.ProteinSequence;
 import org.biojava3.core.sequence.compound.AminoAcidCompound;
 import org.biojava3.core.sequence.compound.AminoAcidCompoundSet;
 import org.biojava3.core.sequence.io.template.FastaHeaderFormatInterface;
-import org.biojava3.core.sequence.template.AbstractSequence;
 import org.biojava3.core.sequence.template.Compound;
+import org.biojava3.core.sequence.template.Sequence;
 
 /**
  *
  * @author Scooter Willis <willishf at gmail dot com>
  */
-public class FastaWriter<S extends AbstractSequence<C>, C extends Compound> {
+public class FastaWriter<S extends Sequence<?>, C extends Compound> {
 
     OutputStream os;
     Collection<S> sequences;
@@ -34,26 +34,40 @@ public class FastaWriter<S extends AbstractSequence<C>, C extends Compound> {
         this.headerFormat = headerFormat;
     }
 
+    public FastaWriter(OutputStream os, Collection<S> sequences, FastaHeaderFormatInterface<S,C> headerFormat, int lineLength) {
+      this.os = os;
+      this.sequences = sequences;
+      this.headerFormat = headerFormat;
+      this.lineLength = lineLength;
+  }
+
     public void process() throws Exception {
-        for (S sequence : sequences) {
-            String header = headerFormat.getHeader(sequence);
-            os.write('>');
-            os.write(header.getBytes());
-            os.write('\n');
-            byte[] data = sequence.getSequenceAsString().getBytes();
+      int lineLength = getLineLength();
+      byte[] lineSep = System.getProperty("line.separator").getBytes();
 
-            int bytesToWrite = 0;
-            for(int i = 0; i < data.length; i = i + getLineLength()){
-                if(i + getLineLength() < data.length){
-                  bytesToWrite = getLineLength();
-                }else{
-                  bytesToWrite = data.length - i;
-                }
+      for (S sequence : sequences) {
+          String header = headerFormat.getHeader(sequence);
+          os.write('>');
+          os.write(header.getBytes());
+          os.write(lineSep);
 
-                os.write(data, i,bytesToWrite);
-                os.write('\n');
+          int compoundCount = 1;
+
+          for(Compound c: sequence) {
+            os.write(c.getShortName().getBytes());
+            if(compoundCount == lineLength) {
+              os.write(lineSep);
+              compoundCount = 1;
             }
+            compoundCount++;
+          }
 
+          //If we had sequence which was a reciprocal of line length
+          //then don't write the line terminator as this has already written
+          //it
+          if( (sequence.getLength() % getLineLength()) != 0) {
+            os.write(lineSep);
+          }
         }
     }
 

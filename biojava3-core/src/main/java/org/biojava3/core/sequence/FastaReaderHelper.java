@@ -32,12 +32,13 @@ public class FastaReaderHelper {
    * @return
    * @throws Exception
    */
-    public static LinkedHashMap<String,ProteinSequence> readFastaProteinSequence(File file) throws Exception {
-        FileInputStream inStream = new FileInputStream(file);
-        LinkedHashMap<String,ProteinSequence> proteinSequences = readFastaProteinSequence(inStream);
-        inStream.close();
-        return proteinSequences;
-    }
+  public static LinkedHashMap<String, ProteinSequence> readFastaProteinSequence(
+      File file) throws Exception {
+    FileInputStream inStream = new FileInputStream(file);
+    LinkedHashMap<String, ProteinSequence> proteinSequences = readFastaProteinSequence(inStream);
+    inStream.close();
+    return proteinSequences;
+  }
 
   /**
    * Read a fasta file containing amino acids with setup that would handle most
@@ -47,26 +48,37 @@ public class FastaReaderHelper {
    * @return
    * @throws Exception
    */
-    public static LinkedHashMap<String,ProteinSequence> readFastaProteinSequence(InputStream inStream) throws Exception {
-        FastaReader<ProteinSequence,AminoAcidCompound> fastaReader = new FastaReader<ProteinSequence,AminoAcidCompound>(inStream, new GenericFastaHeaderParser<ProteinSequence, AminoAcidCompound>(), new ProteinSequenceCreator(AminoAcidCompoundSet.getAminoAcidCompoundSet()));
-        return fastaReader.process();
-    }
+  public static LinkedHashMap<String, ProteinSequence> readFastaProteinSequence(
+      InputStream inStream) throws Exception {
+    FastaReader<ProteinSequence, AminoAcidCompound> fastaReader = new FastaReader<ProteinSequence, AminoAcidCompound>(
+        inStream,
+        new GenericFastaHeaderParser<ProteinSequence, AminoAcidCompound>(),
+        new ProteinSequenceCreator(AminoAcidCompoundSet
+            .getAminoAcidCompoundSet()));
+    return fastaReader.process();
+  }
 
-    public static LinkedHashMap<String,DNASequence> readFastaDNASequence(InputStream inStream) throws Exception {
-        FastaReader<DNASequence,NucleotideCompound> fastaReader = new FastaReader<DNASequence,NucleotideCompound>(inStream, new GenericFastaHeaderParser<DNASequence, NucleotideCompound>(), new DNASequenceCreator(DNACompoundSet.getDNACompoundSet()));
-        return fastaReader.process();
-    }
+  public static LinkedHashMap<String, DNASequence> readFastaDNASequence(
+      InputStream inStream) throws Exception {
+    FastaReader<DNASequence, NucleotideCompound> fastaReader = new FastaReader<DNASequence, NucleotideCompound>(
+        inStream,
+        new GenericFastaHeaderParser<DNASequence, NucleotideCompound>(),
+        new DNASequenceCreator(DNACompoundSet.getDNACompoundSet()));
+    return fastaReader.process();
+  }
 
-    public static LinkedHashMap<String,DNASequence> readFastaDNASequence(File file) throws Exception {
-        FileInputStream inStream = new FileInputStream(file);
-        LinkedHashMap<String,DNASequence> dnaSequences = readFastaDNASequence(inStream);
-        inStream.close();
-        return dnaSequences;
-    }
+  public static LinkedHashMap<String, DNASequence> readFastaDNASequence(
+      File file) throws Exception {
+    FileInputStream inStream = new FileInputStream(file);
+    LinkedHashMap<String, DNASequence> dnaSequences = readFastaDNASequence(inStream);
+    inStream.close();
+    return dnaSequences;
+  }
 
+  public static void main(String args[]) throws Exception {
 
-   public static void main(String args[]) throws Exception {
-
-        FastaReaderHelper.readFastaDNASequence(new File("/Users/Scooter/scripps/dyadic/analysis/454Scaffolds/454Scaffolds.fna"));
-   }
+    FastaReaderHelper
+        .readFastaDNASequence(new File(
+            "/Users/Scooter/scripps/dyadic/analysis/454Scaffolds/454Scaffolds.fna"));
+  }
 }

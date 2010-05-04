@@ -22,7 +22,7 @@ import org.biojava3.core.sequence.template.Sequence;
  *
  * @author Scooter Willis <willishf at gmail dot com>
  */
-public class FastaReader<S extends Sequence<C>, C extends Compound> {
+public class FastaReader<S extends Sequence<?>, C extends Compound> {
 
     SequenceCreatorInterface<C> sequenceCreator;
     FastaHeaderParserInterface<S,C> headerParser;
