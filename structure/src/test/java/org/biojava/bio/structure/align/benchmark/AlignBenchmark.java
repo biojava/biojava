@@ -12,6 +12,9 @@ import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import org.biojava.bio.structure.Atom;
 import org.biojava.bio.structure.StructureException;
 import org.biojava.bio.structure.align.StructureAlignment;
@@ -307,7 +310,7 @@ public class AlignBenchmark {
 	public static void main(String[] args) {
 		//// Set parameters
 		// TODO make these arguments
-		int maxLength = 1000; // Don't try alignments between proteins which are too long.
+		int maxLength = 0; // Don't try alignments between proteins which are too long.
 		String inFile = null;
 		String outFile = null;
 		MultipleAlignmentParser parser;
@@ -316,7 +319,7 @@ public class AlignBenchmark {
 		// Argument parsing
 		String usage = "usage: AlignBenchmark parser alignment [infile [outfile [maxLength]]]\n" +
 		"  parser:    Either RIPC or CPDB\n" +
-		"  alignment: One of CE, CE0, CE-CP, SmithWaterman, FATCAT-rigid, FATCAT-flexible\n" +
+		"  alignment: One of CE, CE0, CE-CP, CE-sidechains SmithWaterman, FATCAT-rigid, FATCAT-flexible\n" +
 		"  infile:    If empty or omitted, gets alignments from biojava resource directory\n" +
 		"  outfile:   If empty, omitted or \"-\", uses standard out\n" +
 		"  maxLength: Longest protein to compare. 0 disables. Default 1000";
@@ -333,20 +336,37 @@ public class AlignBenchmark {
 
 		String alignerName = args[arg].toUpperCase();
 		if(alignerName.substring(0, 2).equals("CE")) { // Different flavors of CE
+			System.out.println("Using CE aligner");
 			CeMain ceMain;
 			try {
 				ceMain = (CeMain) StructureAlignmentFactory.getAlgorithm(CeMain.algorithmName);
 				CeParameters param = (CeParameters)ceMain.getParameters();
 				//CE0
 				if(alignerName.equals("CE0")) {
+					System.out.println("Setting Gap Size 0");
 					param.setMaxGapSize(0);
 				}
 				//CE-CP
-				else if(alignerName.matches("[cC][eE].?[cC][pP]")) {
+				else if(alignerName.matches("CE.?CP.*")) {
+					System.out.println("Setting Gap Size 0");
+					System.out.println("Checking for circular permutations");
 					param.setMaxGapSize(0);
 					param.setCheckCircular(true);
 				}
+				
 
+				//-sidechains
+				Pattern digitPat = Pattern.compile("(?:^|[^A-Z0-9])([0-9]+)(?:[^A-Z0-9]|$)");
+				Matcher digitMatch = digitPat.matcher(alignerName);
+				if( digitMatch.find() ) {
+					System.out.println("Setting scoring mode to "+digitMatch.group(1));
+					param.setScoringStrategy(Integer.parseInt(digitMatch.group(1)));
+				}
+				if(alignerName.contains("SIDECHAIN")) {
+					System.out.println("Setting scoring mode to "+CeParameters.SIDE_CHAIN_SCORING);
+					param.setScoringStrategy(CeParameters.SIDE_CHAIN_SCORING);
+				}
+				
 			} catch (StructureException e) {
 				e.printStackTrace();
 				System.exit(1);
@@ -355,6 +375,8 @@ public class AlignBenchmark {
 			aligner = ceMain;
 		}
 		else if(alignerName.equals("SMITHWATERMAN")) {
+			System.out.println("Using Smith-Waterman aligner");
+
 			try {
 
 				aligner = StructureAlignmentFactory.getAlgorithm(SmithWaterman3Daligner.algorithmName);
@@ -365,6 +387,8 @@ public class AlignBenchmark {
 			}
 		}
 		else if(alignerName.matches("J?FATCAT-?RIGID")) {
+			System.out.println("Using FatCat-rigid aligner");
+
 			try {
 				aligner = StructureAlignmentFactory.getAlgorithm(FatCatRigid.algorithmName);
 			} catch (StructureException e) {
@@ -374,6 +398,8 @@ public class AlignBenchmark {
 			}
 		}
 		else if(alignerName.matches("J?FATCAT-?FLEX.*")) {
+			System.out.println("Using FatCat-flexible aligner");
+
 			try {
 				aligner = StructureAlignmentFactory.getAlgorithm(FatCatFlexible.algorithmName);
 			} catch (StructureException e) {
@@ -386,6 +412,7 @@ public class AlignBenchmark {
 			// Try matching against all known StructureAlignment algorithm names
 			try {
 				aligner = StructureAlignmentFactory.getAlgorithm(args[arg]);
+				System.out.println("Using "+aligner.getAlgorithmName()+" aligner");
 			} catch (StructureException e) {
 				e.printStackTrace();
 				System.exit(1);
