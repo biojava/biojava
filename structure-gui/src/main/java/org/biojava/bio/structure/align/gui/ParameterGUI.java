@@ -66,7 +66,7 @@ public class ParameterGUI extends JFrame{
          String data = value.toString();
          Component field;
          if ( name.equals(CeParameters.SCORING_STRATEGY) ){
-            String[] values = new String[]{"CA only","Sidechain orientation","Angle between sidechains"};
+            String[] values = new String[]{"CA only","Sidechain orientation","Angle between sidechains", "CA distance+Angle between sidechains"};
             JComboBox jcbox = new JComboBox(values);
             Integer val = (Integer)value;
             jcbox.setSelectedIndex(val);
