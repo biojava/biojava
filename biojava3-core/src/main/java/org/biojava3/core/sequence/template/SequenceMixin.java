@@ -1,7 +1,9 @@
 package org.biojava3.core.sequence.template;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.biojava3.core.sequence.compound.NucleotideCompound;
@@ -20,14 +22,14 @@ public class SequenceMixin {
    *
    * @param sequence The {@link Sequence} to perform the count on
    * @param compounds The compounds to look for
-   * @param <T> The type of compound we are looking for
+   * @param <C> The type of compound we are looking for
    * @return The number of times the given compounds appear in this Sequence
    */
-  public static <T extends Compound> int countCompounds(
-      Sequence<T> sequence, T... compounds) {
+  public static <C extends Compound> int countCompounds(
+      Sequence<C> sequence, C... compounds) {
     int count = 0;
-    Set<T> compoundSet = new HashSet<T>(Arrays.asList(compounds));
-    for (T currentCompound : sequence) {
+    Set<C> compoundSet = new HashSet<C>(Arrays.asList(compounds));
+    for (C currentCompound : sequence) {
       if(compoundSet.contains(currentCompound)) {
         count++;
       }
@@ -49,5 +51,42 @@ public class SequenceMixin {
     NucleotideCompound g = cs.getCompoundForString("g");
     NucleotideCompound c = cs.getCompoundForString("c");
     return countCompounds(sequence, G, C, g, c);
+  }
+
+  public static <C extends Compound> StringBuilder toStringBuilder(Sequence<C> sequence) {
+    StringBuilder sb = new StringBuilder(sequence.getLength());
+    for(C compound: sequence) {
+      sb.append(compound.toString());
+    }
+    return sb;
+  }
+
+  public static <C extends Compound> List<C> toList(Sequence<C> sequence) {
+    List<C> list = new ArrayList<C>(sequence.getLength());
+    for(C compound: sequence) {
+      list.add(compound);
+    }
+    return list;
+  }
+
+  public static <C extends Compound> int indexOf(Sequence<C> sequence, C compound) {
+    int index = 1;
+    for(C currentCompound: sequence) {
+      if(currentCompound.equals(compound)) {
+        return index;
+      }
+      index++;
+    }
+    return 0;
+  }
+
+  public static <C extends Compound> int lastIndexOf(Sequence<C> sequence, C compound) {
+    for(int index = sequence.getLength(); index >= 1; index--) {
+      C currentCompound = sequence.getCompoundAt(index);
+      if(currentCompound.equals(compound)) {
+        return index;
+      }
+    }
+    return 0;
   }
 }
