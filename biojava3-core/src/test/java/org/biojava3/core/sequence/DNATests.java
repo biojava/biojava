@@ -13,7 +13,9 @@ import org.biojava3.core.features.GCStats;
 import org.biojava3.core.sequence.compound.AmbiguityDNACompoundSet;
 import org.biojava3.core.sequence.compound.DNACompoundSet;
 import org.biojava3.core.sequence.compound.NucleotideCompound;
+import org.biojava3.core.sequence.storage.TwoBitSequenceBackingStore;
 import org.biojava3.core.sequence.template.CompoundSet;
+import org.biojava3.core.sequence.template.SequenceBackingStore;
 import org.biojava3.core.sequence.template.SequenceView;
 import org.junit.Test;
 
@@ -105,6 +107,67 @@ public class DNATests {
         is(10.0)
     );
   }
+
+  @Test
+  public void twoBit() {
+    String expected = "ATGCAACTGA";
+    DNASequence seq = getSeq(expected);
+    SequenceBackingStore<NucleotideCompound> twoBitFromSeq =
+      new TwoBitSequenceBackingStore<NucleotideCompound>(seq);
+
+    //being cheeky here & getting compound set from seq
+    SequenceBackingStore<NucleotideCompound> twoBitFromString =
+      new TwoBitSequenceBackingStore<NucleotideCompound>(expected, seq.getCompoundSet());
+
+    assertThat("TwoBit from Sequence not as expected", twoBitFromSeq.getSequenceAsString(), is(expected));
+    assertThat("TwoBit from String not as expected", twoBitFromString.getSequenceAsString(), is(expected));
+  }
+
+  @Test(expected=IllegalStateException.class)
+  public void badTwoBit() {
+    DNASequence seq = getSeq();
+    new TwoBitSequenceBackingStore<NucleotideCompound>("ATNGC", seq.getCompoundSet());
+  }
+
+//  @Test
+//  public void randomTwoBit() throws Exception {
+//    int[] ar = new int[1000000];
+//    Random r = new Random();
+//    for(int i = 0; i < ar.length; i++) {
+//      ar[i] = r.nextInt();
+//    }
+//
+//    System.out.println(Runtime.getRuntime().freeMemory());
+//    System.out.println(Runtime.getRuntime().totalMemory());
+//    TwoBitArrayWorker<NucleotideCompound> worker =
+//      new TwoBitArrayWorker<NucleotideCompound>(getSeq().getCompoundSet(), ar);
+//    SequenceProxyLoader<NucleotideCompound> sbs =
+//      new TwoBitSequenceBackingStore<NucleotideCompound>(worker, new AccessionID("barf"));
+//
+//    System.out.println(sbs.getLength());
+//
+//    System.out.println(Runtime.getRuntime().freeMemory());
+//    System.out.println(Runtime.getRuntime().totalMemory());
+//
+//    List<NucleotideCompound> c = sbs.getAsList();
+//
+//    System.out.println(Runtime.getRuntime().freeMemory());
+//    System.out.println(Runtime.getRuntime().totalMemory());
+//
+////    OutputStream os = new BufferedOutputStream(new FileOutputStream(new File("/tmp/random.fasta")));
+////
+////    List<DNASequence> seqs = Arrays.asList(new DNASequence(sbs, sbs.getCompoundSet()));
+////    seqs.get(0).setAccession(sbs.getAccession());
+////    FastaHeaderFormatInterface<DNASequence, NucleotideCompound> headerFormat =
+////      new GenericFastaHeaderFormat<DNASequence, NucleotideCompound>();
+////
+////    FastaWriter<DNASequence, NucleotideCompound> writer =
+////      new FastaWriter<DNASequence, NucleotideCompound>(os, seqs, headerFormat);
+////
+////    writer.process();
+////
+////    IOUtils.close(os);
+//  }
 
   private DNASequence getSeq() {
     return getSeq(null);
