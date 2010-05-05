@@ -135,7 +135,7 @@ public class FatCatParameters implements ConfigStrucAligParams
 
 	/** Get the distance cutoff used during AFP chain connectivity checks
 	 * 
-	 * @return
+	 * @return distance Cutoff
 	 */
 	public Double getDisCut()
 	{
@@ -247,7 +247,7 @@ public class FatCatParameters implements ConfigStrucAligParams
 
 	/** get the maximum number of Twists that are allowed...
 	 * 
-	 * @return
+	 * @return max nr of allowed twists
 	 */
 	 public Integer getMaxTra()
 	{
