@@ -11,6 +11,16 @@
 	<artifactId>biojava3-structure</artifactId>
 	<name>biojava3-structure</name>
 	<description>The protein structure modules of BioJava.</description>
+	<distributionManagement>
+		<downloadUrl>http://www.biojava.org/download/maven/</downloadUrl>
+		<repository>
+			<uniqueVersion>false</uniqueVersion>
+			<id>biojava-maven-repo</id>
+			<name>BioJava Maven Repository</name>
+			<url>scp://portal.open-bio.org/home/websites/biojava.org/html/static/download/maven/</url>
+			<layout>default</layout>
+		</repository>
+	</distributionManagement>
 	<dependencies>
 		<dependency>
 			<groupId>junit</groupId>
@@ -36,17 +46,17 @@
 		<project.build.targetEncoding>UTF-8</project.build.targetEncoding>
 	</properties>
 	<build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>2.0.2</version>
-                <configuration>
-                    <source>1.5</source>
-                    <target>1.5</target>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>2.0.2</version>
+				<configuration>
+					<source>1.5</source>
+					<target>1.5</target>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
 </project>
 
