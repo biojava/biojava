@@ -1694,7 +1694,7 @@ nBestTrace=nTrace;
 	 * @param strLen
 	 * @param storeTransform
 	 * @param show
-	 * @return
+	 * @return RMSD
 	 * @throws StructureException
 	 */
 	public double calc_rmsd(Atom[] pro1, Atom[] pro2, int strLen, boolean storeTransform, boolean show) throws StructureException {
