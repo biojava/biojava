@@ -13,7 +13,7 @@ public interface StructureAlignment {
 	 * 
 	 * @param ca1
 	 * @param ca2
-	 * @return
+	 * @return the afpChain object that contains the alignment.
 	 * @throws StructureException
 	 */
 	public AFPChain align(Atom[] ca1, Atom[] ca2) throws StructureException;
@@ -23,7 +23,7 @@ public interface StructureAlignment {
 	 * @param ca1
 	 * @param ca2
 	 * @param params
-	 * @return
+	 * @return the afpChain object that contains the alignment.
 	 * @throws StructureException
 	 */
 	public AFPChain align(Atom[] ca1, Atom[] ca2, Object params) throws StructureException;
@@ -42,13 +42,13 @@ public interface StructureAlignment {
 	
 	/** Get the name of the Algorithm
 	 * 
-	 * @return
+	 * @return the name of the algorithm
 	 */
 	public String getAlgorithmName();
 
 	/** Get the Version information for this Algorithm.
 	 * 
-	 * @return
+	 * @return the version of the algorithm
 	 */
 	public String getVersion();
 	
@@ -56,7 +56,7 @@ public interface StructureAlignment {
 	
 	/** Returns some documentation on the command line arguments for this algorithm.
 	 * 
-	 * @return
+	 * @return the help string
 	 */
 	public String printHelp();
 	
