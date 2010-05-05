@@ -8,6 +8,16 @@ import org.biojava3.core.sequence.template.AbstractCompoundTranslator;
 import org.biojava3.core.sequence.template.CompoundSet;
 import org.biojava3.core.sequence.template.Sequence;
 
+/**
+ * Performs the first stage of transcription by going from DNA to RNA. This
+ * class will first delegate to {@link Frame} in order to be in the correctly
+ * specified translation frame and then translates T to U. The other
+ * translation carried out is to convert an equivalent compound in DNA to RNA
+ * i.e. for the base A in DNA fetching the equivalent A base in the RNA
+ * {@link CompoundSet}.
+ *
+ * @author ayates
+ */
 public class DNAToRNATranslator extends AbstractCompoundTranslator<NucleotideCompound, NucleotideCompound>{
 
   public DNAToRNATranslator(SequenceCreatorInterface<NucleotideCompound> rnaCreator,

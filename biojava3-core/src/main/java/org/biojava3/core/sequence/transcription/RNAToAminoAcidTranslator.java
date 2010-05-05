@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.biojava3.core.sequence.RNASequence;
 import org.biojava3.core.sequence.compound.AminoAcidCompound;
 import org.biojava3.core.sequence.compound.NucleotideCompound;
 import org.biojava3.core.sequence.io.template.SequenceCreatorInterface;
@@ -18,6 +19,15 @@ import org.biojava3.core.sequence.views.WindowedSequence;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 
+/**
+ * Takes a {@link Sequence} of {@link NucleotideCompound} which should
+ * represent an RNA sequence ({@link RNASequence} is good for this) and returns
+ * a list of {@link Sequence} which hold {@link AminoAcidCompound}. The
+ * translator can also trim stop codons as well as changing any valid
+ * start codon to an initiating met.
+ *
+ * @author ayates
+ */
 public class RNAToAminoAcidTranslator extends
     AbstractCompoundTranslator<NucleotideCompound, AminoAcidCompound> {
 
@@ -47,6 +57,10 @@ public class RNAToAminoAcidTranslator extends
     }
   }
 
+  /**
+   * Refuses to add the * compound (stop) to the available compounds if
+   * trimStops is on
+   */
   @Override
   protected void addCompoundToLists(List<List<AminoAcidCompound>> list,
       AminoAcidCompound compound) {
@@ -56,6 +70,11 @@ public class RNAToAminoAcidTranslator extends
     super.addCompoundToLists(list, compound);
   }
 
+  /**
+   * Performs the core conversion of RNA to Peptide. It does this by walking
+   * a windowed version of the given sequence. Any trailing DNA base pairs
+   * are ignored according to the specification of {@link WindowedSequence}.
+   */
   @Override
   public List<Sequence<AminoAcidCompound>> createSequences(
       Sequence<NucleotideCompound> originalSequence) {
@@ -71,6 +90,10 @@ public class RNAToAminoAcidTranslator extends
     return workingListToSequences(workingList);
   }
 
+  /**
+   * Performs the trimming of stop codons and the conversion of a valid start
+   * amino acid to M
+   */
   @Override
   protected void postProcessCompoundLists(
       List<List<AminoAcidCompound>> compoundLists) {
