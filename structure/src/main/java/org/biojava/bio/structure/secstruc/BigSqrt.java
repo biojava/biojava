@@ -121,7 +121,7 @@ public class BigSqrt {
    /** Get square root
     *
     * @param n
-    * @return
+    * @return a BigDecimal
     */
 
 
@@ -132,7 +132,7 @@ public class BigSqrt {
    /** Get square root
    *
    * @param n
-   * @return
+   * @return a BigDecimal
    */
    public BigDecimal sqrt(BigDecimal n) {
 
