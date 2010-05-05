@@ -121,7 +121,7 @@ public class FarmJobParameters {
 	
 	/** Flag if a job that only runs one parallell job should be run in its own thread or in the main thread.
 	 * For User interface related apps should be set to true. Default: false;
-	 * @return
+	 * @return flag
 	 */
 	public boolean isRunBackground() {
 		return runBackground;
@@ -133,7 +133,7 @@ public class FarmJobParameters {
 
 	/** how many pairs should be requested for alignment from server?
 	 * 
-	 * @return
+	 * @return stepsize
 	 */
 	public int getStepSize() {
 		return stepSize;
