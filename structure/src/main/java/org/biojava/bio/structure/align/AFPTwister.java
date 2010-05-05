@@ -55,7 +55,7 @@ public class AFPTwister
     * output a merged pdb file for both proteins                                                                                                                                       
      protein 1, in chain A                                                                                                                                                            
     protein 2 is twisted according to the twists detected, in chain B
-    * returns the Atoms of the optTwistPDB.
+    * @return  twisted Groups
     */     
    public static Group[] twistPDB(AFPChain afpChain,Atom[] ca1, Atom[] ca2) throws StructureException {
       //--------------------------------------------------------                                                                                                                         
@@ -169,8 +169,16 @@ public class AFPTwister
       return twistOptimized(afpChain,ca1,origCA); 
    }
 
+   /**       superimposing according to the optimized alignment
+    * 
+    * @param afpChain
+    * @param ca1
+    * @param ca2
+    * @return Group array twisted.
+    * @throws StructureException
+    */
    public static Group[] twistOptimized(AFPChain afpChain,Atom[] ca1, Atom[] ca2) throws StructureException {
-      // superimposing according to the optimized alignment
+
       Atom[] optTwistPdb = new Atom[ca2.length];
 
       int gPos = -1;
@@ -324,7 +332,7 @@ public class AFPTwister
 
    /** Clones and copies the Atoms from p2 into p1 range is between r1 and r2 
     * 
-    * @param p1
+    * @param p1 
     * @param p2
     * @param r1
     * @param r2
@@ -378,7 +386,7 @@ public class AFPTwister
     *  
     *  Modifies the coordinates in the second set of Atoms (pro).
     *                                                                                                                               
-    * @return rmsd
+    * @return rmsd of CAs
     */
    private static double calCaRmsd(Atom[] ca1, Atom[] pro, int resn, int[] res1, int[] res2) throws StructureException
    { 
@@ -428,10 +436,10 @@ public class AFPTwister
     * 
     * WARNING: changes the values for FocusRes1, focusRes2 and FocusResn in afpChain!
     *                                                                                                                                                 
-    * @param afpn the AFPChain to store results in
+    * @param afpChain the AFPChain to store resuts
+    * @param afpn nr of afp
     * @param afpPositions
-    * @param res1
-    * @param res2
+    * @param listStart
     * @return
     */
 
