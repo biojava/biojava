@@ -112,7 +112,6 @@ public class CECalculator {
 
 	/**
 	 * 
-	 * @param params Parameters guiding the alignment
 	 * @param afpChain A new AFPChain, which will be filled in by this function
 	 * @param ca1
 	 * @param ca2
@@ -1690,9 +1689,11 @@ nBestTrace=nTrace;
 
 	/** superimpose and get rmsd
 	 * 
-	 * @param ca1
-	 * @param pro
+	 * @param pro1
+	 * @param pro2
 	 * @param strLen
+	 * @param storeTransform
+	 * @param show
 	 * @return
 	 * @throws StructureException
 	 */
