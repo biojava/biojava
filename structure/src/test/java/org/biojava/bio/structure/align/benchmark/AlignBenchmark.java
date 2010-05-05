@@ -10,8 +10,10 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -72,64 +74,6 @@ public class AlignBenchmark {
 			e.printStackTrace();
 			return;
 		}
-		/*try {
-			List<Metric> metrics = AlignmentStats.defaultMetrics();
-			Writer stdout = new BufferedWriter(new OutputStreamWriter(System.err));
-			stdout.write("PDB1\tPDB2\t");
-			AlignmentStats.writeHeader(stdout,metrics);
-
-			stdout.flush();
-
-			for(MultipleAlignment ma : parser ) {
-				//Parse labels & get the structures
-				String[] pdbIDs = ma.getNames();
-				List<Atom[]> structures = new ArrayList<Atom[]>(pdbIDs.length);
-
-				// Get alignment structures
-				for(int i=0;i<pdbIDs.length;i++) {
-					String pdb1 = pdbIDs[i];
-
-					Atom[] ca1 = this.cache.getAtoms(pdb1);
-
-					if(ca1.length > maxLength) {
-						System.out.format("Skipping large protein '%s' of length %d\n", pdb1, ca1.length);
-						structures.add(null);
-					}
-					structures.add(ca1);
-				}
-
-
-				// For each pair of structures, find the alignment
-				for(int i=0;i<pdbIDs.length-1;i++) {
-					Atom[] ca1 = structures.get(i);
-
-					if(ca1 == null)
-						continue;
-
-					for(int j=i+1;j<pdbIDs.length;j++) {
-						Atom[] ca2 = structures.get(j);
-
-						if(ca2 == null)
-							continue;
-
-						//System.out.format("Comparing %s to %s\n",pdbIDs[i],pdbIDs[j]);
-
-						AFPChain alignment = ceMain.align(ca1,ca2);
-						//System.out.format("Done Comparing %s to %s\n",pdbIDs[i],pdbIDs[j]);
-
-						stdout.write(String.format("%s\t%s\t",pdbIDs[i],pdbIDs[j]));
-						metrics.writeStats(stdout, ma, alignment, ca1, ca2);
-						stdout.flush();
-
-					}
-				}
-			}
-
-		} catch (Exception e) {
-			e.printStackTrace();
-			fail(e.getMessage());
-		}
-		 */
 	}
 
 	/**
@@ -226,15 +170,20 @@ public class AlignBenchmark {
 
 						//System.out.format("Comparing %s to %s\n",pdbIDs[i],pdbIDs[j]);
 						AFPChain alignment;
+						long elapsedTime;
 						try {
+							long startTime = System.currentTimeMillis();
 							alignment = aligner.align(ca1,ca2);
+							elapsedTime = System.currentTimeMillis() - startTime;
 						} catch (StructureException e) {
 							e.printStackTrace();
 							return null;
 						}
 						//System.out.format("Done Comparing %s to %s\n",pdbIDs[i],pdbIDs[j]);
 
-						return new AlignmentStats(this.metrics,this.currentAlignment, alignment, ca1, ca2);
+						Map<String,Object> metaData = new HashMap<String,Object>();
+						metaData.put("alignmentTime",new Double(elapsedTime/1000.));
+						return new AlignmentStats(this.metrics,this.currentAlignment, alignment, ca1, ca2, metaData);
 					}
 
 					nextAlignLeft++;

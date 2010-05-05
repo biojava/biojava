@@ -1,11 +1,13 @@
 package org.biojava.bio.structure.align.benchmark.metrics;
 
 
+import java.util.Map;
+
 import org.biojava.bio.structure.Atom;
 import org.biojava.bio.structure.align.benchmark.MultipleAlignment;
 import org.biojava.bio.structure.align.model.AFPChain;
 
-public abstract class LengthMetric {
+public abstract class AlignmentLengthMetric {
 	/**
 	 * Calculates the length of the reference alignment
 	 * @author Spencer Bliven
@@ -14,7 +16,7 @@ public abstract class LengthMetric {
 	public static class Reference extends Metric {
 
 		@Override
-		public double calculate(MultipleAlignment reference, AFPChain align, Atom[] ca1, Atom[] ca2) {
+		public double calculate(MultipleAlignment reference, AFPChain align, Atom[] ca1, Atom[] ca2, Map<String, Object> metaData) {
 			return reference.size();
 		}
 
@@ -37,7 +39,7 @@ public abstract class LengthMetric {
 	public static class Alignment extends Metric {
 
 		@Override
-		public double calculate(MultipleAlignment reference, AFPChain align, Atom[] ca1, Atom[] ca2) {
+		public double calculate(MultipleAlignment reference, AFPChain align, Atom[] ca1, Atom[] ca2, Map<String, Object> metaData) {
 			return (double)align.getAlnLength();
 		}
 

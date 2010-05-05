@@ -8,19 +8,22 @@ import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.biojava.bio.structure.Atom;
 import org.biojava.bio.structure.align.benchmark.metrics.ConsistencyMetric;
-import org.biojava.bio.structure.align.benchmark.metrics.LengthMetric;
+import org.biojava.bio.structure.align.benchmark.metrics.AlignmentLengthMetric;
+import org.biojava.bio.structure.align.benchmark.metrics.MetaDataMetric;
 import org.biojava.bio.structure.align.benchmark.metrics.Metric;
 import org.biojava.bio.structure.align.benchmark.metrics.PercentCorrectMetric;
+import org.biojava.bio.structure.align.benchmark.metrics.ProteinLengthMetric;
 import org.biojava.bio.structure.align.benchmark.metrics.RMSDMetric;
 import org.biojava.bio.structure.align.benchmark.metrics.TMScoreMetric;
 import org.biojava.bio.structure.align.model.AFPChain;
 
 /**
  * An AlignmentStats object holds the result of calling the 
- * {@link Metric#calculate(MultipleAlignment, AFPChain, Atom[], Atom[]) calculate}
+ * {@link Metric#calculate(MultipleAlignment, AFPChain, Atom[], Atom[], Map) calculate}
  * method for a series of {@link Metric}s on a particular pair of structures.
  * The result is cached and methods for outputting the stats are provided.
  * @author Spencer Bliven
@@ -32,10 +35,20 @@ public class AlignmentStats  {
 	private List<Double> results;
 	private String name1, name2; //PDB identifiers
 	
-	public AlignmentStats(List<Metric> metrics, MultipleAlignment reference, AFPChain align, Atom[] ca1, Atom[] ca2) {
+	/**
+	 * Create a new AlignmentStats
+	 * @param metrics The set of metrics to evaluate for the aligment pair
+	 * @param reference The "reference" alignment (must be pairwise)
+	 * @param align The other alignment, which will be compared to the reference (must be pairwise)
+	 * @param ca1 All CA atoms of protein 1
+	 * @param ca2 All CA atoms of protein 2
+	 * @param metaData A map storing arbitrary objects relating to the alignment process. May be null.
+	 * The {@link MetaDataMetric} displays values from here. Currently used to store "alignmentTime".
+	 */
+	public AlignmentStats(List<Metric> metrics, MultipleAlignment reference, AFPChain align, Atom[] ca1, Atom[] ca2, Map<String, Object> metaData) {
 		this.metrics = metrics;
 		this.results = null;
-		calculateStats(reference,align, ca1, ca2);
+		calculateStats(reference,align, ca1, ca2, metaData);
 		
 		String[] pdbIDs = reference.getNames();
 		this.name1=pdbIDs[0];
@@ -113,11 +126,11 @@ public class AlignmentStats  {
 		assert(!objIt.hasNext());
 	}
 	
-	protected void calculateStats(MultipleAlignment reference, AFPChain align, Atom[] ca1, Atom[] ca2) {
+	protected void calculateStats(MultipleAlignment reference, AFPChain align, Atom[] ca1, Atom[] ca2, Map<String,Object> metaData) {
 		results = new ArrayList<Double>(metrics.size());
 		
 		for(Metric m : metrics) {
-			results.add(m.calculate(reference, align, ca1, ca2));
+			results.add(m.calculate(reference, align, ca1, ca2, metaData));
 		}
 	}
 	
@@ -127,8 +140,11 @@ public class AlignmentStats  {
 	 */
 	public static List<Metric> defaultMetrics() {
 		ArrayList<Metric> metrics = new ArrayList<Metric>();
-		metrics.add(new LengthMetric.Reference());
-		metrics.add(new LengthMetric.Alignment());
+		metrics.add(new ProteinLengthMetric(0));
+		metrics.add(new ProteinLengthMetric(1));
+		metrics.add(new MetaDataMetric("alignmentTime","time"));
+		metrics.add(new AlignmentLengthMetric.Reference());
+		metrics.add(new AlignmentLengthMetric.Alignment());
 		metrics.add(new RMSDMetric.Reference());
 		metrics.add(new RMSDMetric.Alignment());
 		metrics.add(new TMScoreMetric.Reference());

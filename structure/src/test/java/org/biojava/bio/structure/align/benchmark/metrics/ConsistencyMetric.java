@@ -4,6 +4,7 @@ package org.biojava.bio.structure.align.benchmark.metrics;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.biojava.bio.structure.Atom;
 import org.biojava.bio.structure.StructureException;
@@ -33,7 +34,7 @@ public class ConsistencyMetric extends Metric {
 	}
 
 	@Override
-	public double calculate(MultipleAlignment reference, AFPChain align, Atom[] ca1, Atom[] ca2) {
+	public double calculate(MultipleAlignment reference, AFPChain align, Atom[] ca1, Atom[] ca2, Map<String, Object> metaData) {
 
 		List<Atom[]> structures = new ArrayList<Atom[]>(2);
 		structures.add(ca1);

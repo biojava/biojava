@@ -3,6 +3,7 @@ package org.biojava.bio.structure.align.benchmark.metrics;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.biojava.bio.structure.Atom;
 import org.biojava.bio.structure.Calc;
@@ -18,7 +19,7 @@ public abstract class TMScoreMetric {
    public static class Reference extends Metric {
 
       @Override
-      public double calculate(MultipleAlignment reference, AFPChain align, Atom[] ca1, Atom[] ca2) {
+      public double calculate(MultipleAlignment reference, AFPChain align, Atom[] ca1, Atom[] ca2, Map<String, Object> metaData) {
          try {
 
             List<Atom[]> structures = new ArrayList<Atom[]>(2);
@@ -68,7 +69,7 @@ public abstract class TMScoreMetric {
    public static class Alignment extends Metric {
 
       @Override
-      public double calculate(MultipleAlignment reference, AFPChain align, Atom[] ca1, Atom[] ca2) {
+      public double calculate(MultipleAlignment reference, AFPChain align, Atom[] ca1, Atom[] ca2, Map<String, Object> metaData) {
 
          try {
             return AFPChainScorer.getTMScore(align,ca1,ca2);

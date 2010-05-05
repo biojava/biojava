@@ -1,26 +1,17 @@
 package org.biojava.bio.structure.align.benchmark.metrics;
 
 
-import java.io.FileOutputStream;
 import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
-import org.biojava.bio.structure.AminoAcid;
 import org.biojava.bio.structure.Atom;
-import org.biojava.bio.structure.AtomImpl;
 import org.biojava.bio.structure.Calc;
-import org.biojava.bio.structure.Chain;
-import org.biojava.bio.structure.ChainImpl;
-import org.biojava.bio.structure.Group;
 import org.biojava.bio.structure.SVDSuperimposer;
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureException;
-import org.biojava.bio.structure.StructureImpl;
-import org.biojava.bio.structure.StructureTools;
 import org.biojava.bio.structure.align.StructureAlignmentFactory;
 import org.biojava.bio.structure.align.benchmark.MultipleAlignment;
 import org.biojava.bio.structure.align.ce.CeMain;
@@ -34,7 +25,7 @@ public abstract class RMSDMetric {
 	public static class Reference extends Metric {
 
 		@Override
-		public double calculate(MultipleAlignment reference, AFPChain align, Atom[] ca1, Atom[] ca2) {
+		public double calculate(MultipleAlignment reference, AFPChain align, Atom[] ca1, Atom[] ca2, Map<String, Object> metaData) {
 			try {
 
 				List<Atom[]> structures = new ArrayList<Atom[]>(2);
@@ -83,7 +74,7 @@ public abstract class RMSDMetric {
 	public static class Alignment extends Metric {
 
 		@Override
-		public double calculate(MultipleAlignment reference, AFPChain align, Atom[] ca1, Atom[] ca2) {
+		public double calculate(MultipleAlignment reference, AFPChain align, Atom[] ca1, Atom[] ca2, Map<String, Object> metaData) {
 			// check if already set in the chain
 			double optRMSD = align.getTotalRmsdOpt();
 			if( optRMSD > 0 ) {

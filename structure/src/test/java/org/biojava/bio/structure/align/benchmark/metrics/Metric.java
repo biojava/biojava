@@ -7,6 +7,7 @@ package org.biojava.bio.structure.align.benchmark.metrics;
 import org.biojava.bio.structure.align.benchmark.MultipleAlignment;
 import org.biojava.bio.structure.align.model.AFPChain;
 import org.biojava.bio.structure.Atom;
+import java.util.Map;
 
 /**
  * Represents some measure of comparison between a calculated alignment
@@ -15,7 +16,7 @@ import org.biojava.bio.structure.Atom;
  * <p>
  * Metrics should be written as singletons. They may make use of instance data
  * (eg parameters, etc), but the calculate() and toString() methods should not
- * modify the instance data, such that multiple calls to {@link #calculate(MultipleAlignment, AFPChain, Atom[], Atom[])}
+ * modify the instance data, such that multiple calls to {@link #calculate(MultipleAlignment, AFPChain, Atom[], Atom[], Map)}
  * with the same parameters should return the same result.
  * 
  * @author Spencer Bliven
@@ -27,11 +28,12 @@ public abstract class Metric {
 	 * 
 	 * @param reference The reference alignment against which to judge align
 	 * @param align The test alignment, to compare against the reference
-	 * @param ca1 TODO
-	 * @param ca2 TODO
-	 * @return
+	 * @param ca1 The CA atoms of the first protein
+	 * @param ca2 The CA atoms of the second protein
+	 * @param metaData A map containing any metaData associated with the alignment. May be null.
+	 * @return the metric's result.
 	 */
-	public abstract double calculate(MultipleAlignment reference, AFPChain align, Atom[] ca1, Atom[] ca2);
+	public abstract double calculate(MultipleAlignment reference, AFPChain align, Atom[] ca1, Atom[] ca2, Map<String, Object> metaData);
 	
 	/**
 	 * Calculates the Metric for the given parameters and returns the string
@@ -39,17 +41,18 @@ public abstract class Metric {
 	 * <code>this.toString(calculate(reference, align, ca1, ca2))</code>
 	 * @param reference The reference alignment against which to judge align.
 	 * @param align The test alignment, to compare against the reference
-	 * @param ca1 The CA atoms of the first 
-	 * @param ca2 TODO
+	 * @param ca1 The CA atoms of the first protein
+	 * @param ca2 The CA atoms of the second protein
+	 * @param metaData A map containing any metaData associated with the alignment. May be null.
 	 * @return A string representation of the Object returned by calculate()
 	 */
-	public String format(MultipleAlignment reference, AFPChain align, Atom[] ca1, Atom[] ca2) {
-		return this.format(calculate(reference, align, ca1, ca2));
+	public String format(MultipleAlignment reference, AFPChain align, Atom[] ca1, Atom[] ca2, Map<String, Object> metaData) {
+		return this.format(calculate(reference, align, ca1, ca2, metaData));
 	}
 	
 	/**
 	 * To facilitate outputting, this method converts the Object returned by 
-	 * {@link #calculate(Alignment, AFPChain, Atom[], Atom[]) this.calculate(goldStandard, align)}
+	 * {@link #calculate(Alignment, AFPChain, Atom[], Atom[], Map) this.calculate(goldStandard, align)}
 	 * into a String. The default implementation is just to call the
 	 * {@link Object#toString()} method, but in some metrics a shorter
 	 * representation may be more appropriate for tab-delimited output.
