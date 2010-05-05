@@ -306,7 +306,7 @@ public class AFPChain implements Serializable, Cloneable
 
 	/** get the number of structurally equivalent residues
 	 * 
-	 * @return
+	 * @return nr of EQR
 	 */
 	public int getNrEQR(){
 
@@ -446,7 +446,7 @@ public class AFPChain implements Serializable, Cloneable
 
 	/** used temporarily during XML serialization to track the PDB positions of the alignmnet
 	 * 
-	 * @return
+	 * @return String array
 	 */
 	public String[][][] getPdbAln() {
 		return pdbAln;
@@ -484,7 +484,7 @@ public class AFPChain implements Serializable, Cloneable
 
 	/** get the maximum nr of Twists that are allowed...
 	 * 
-	 * @return
+	 * @return maxTra, the max nr of twists 
 	 */
 	public int getMaxTra()
 	{
@@ -722,7 +722,7 @@ public class AFPChain implements Serializable, Cloneable
 
 	/** The number of blocks in the alignment
 	 * 
-	 * @return
+	 * @return the nr of blocks in alignment
 	 */
 	public int getBlockNum()
 	{
@@ -828,7 +828,7 @@ public class AFPChain implements Serializable, Cloneable
 	/** tracks the residues of the initial blocks (before optimization)
 	 * 
 	 * 
-	 * @return
+	 * @return list of block residues
 	 */
 	public int[][][] getBlockResList()
 	{
@@ -906,7 +906,7 @@ public class AFPChain implements Serializable, Cloneable
 	 * first dimension is the block nr
 	 * second dimension is 0 or 1 (the alignment chain index)
 	 * third is the position
-	 * @return
+	 * @return int array
 	 */
 	public int[][][] getOptAln()
 	{
@@ -920,7 +920,7 @@ public class AFPChain implements Serializable, Cloneable
 
 	/**
 	 * The length of each block
-	 * @return
+	 * @return lengths
 	 */
 	public int[] getOptLen()
 	{
@@ -949,7 +949,7 @@ public class AFPChain implements Serializable, Cloneable
 
 	/** The length of the optimal alignment. Set by AFPOptimizer.optimizeAln().
 	 * This should be the sum of the elements in optLen
-	 * @param optLength
+	 * @param optLength 
 	 */
 	public void setOptLength(int optLength)
 	{
