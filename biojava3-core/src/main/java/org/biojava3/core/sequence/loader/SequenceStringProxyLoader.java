@@ -28,13 +28,11 @@ package org.biojava3.core.sequence.loader;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import org.biojava3.core.sequence.AccessionID;
 
-import org.biojava3.core.sequence.template.AbstractSequenceView;
-import org.biojava3.core.sequence.template.Compound;
 import org.biojava3.core.exceptions.CompoundNotFoundError;
+import org.biojava3.core.sequence.AccessionID;
+import org.biojava3.core.sequence.template.Compound;
 import org.biojava3.core.sequence.template.CompoundSet;
-import org.biojava3.core.sequence.template.Sequence;
 import org.biojava3.core.sequence.template.SequenceMixin;
 import org.biojava3.core.sequence.template.SequenceProxyLoader;
 import org.biojava3.core.sequence.template.SequenceView;
@@ -106,25 +104,7 @@ public class SequenceStringProxyLoader<C extends Compound> implements SequencePr
     }
 
     public SequenceView<C> getSubSequence(final int start, final int end) {
-        return new AbstractSequenceView<C>() {
-
-            public int getEnd() {
-                return end;
-            }
-
-            public int getStart() {
-                return start;
-            }
-
-            public Sequence<C> getViewedSequence() {
-                return SequenceStringProxyLoader.this;
-            }
-
-            @Override
-            public AccessionID getAccession() {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-        };
+      return SequenceMixin.createSubSequence(this, start, end);
     }
 
     public Iterator<C> iterator() {

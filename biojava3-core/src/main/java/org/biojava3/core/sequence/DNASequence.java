@@ -36,6 +36,7 @@ import org.biojava3.core.sequence.template.CompoundSet;
 import org.biojava3.core.sequence.template.SequenceMixin;
 import org.biojava3.core.sequence.template.SequenceProxyLoader;
 import org.biojava3.core.sequence.template.SequenceView;
+import org.biojava3.core.sequence.transcription.Frame;
 import org.biojava3.core.sequence.transcription.TranscriptionEngine;
 import org.biojava3.core.sequence.views.ComplementSequenceView;
 import org.biojava3.core.sequence.views.ReversedSequenceView;
@@ -109,11 +110,19 @@ public class DNASequence extends AbstractSequence<NucleotideCompound> {
     }
 
     public RNASequence getRNASequence() {
-      return getRNASequence(TranscriptionEngine.getDefault());
+      return getRNASequence(Frame.getDefaultFrame());
     }
 
     public RNASequence getRNASequence(TranscriptionEngine engine) {
-      return (RNASequence) engine.getDnaRnaTranslator().createSequence(this);
+      return getRNASequence(engine, Frame.getDefaultFrame());
+    }
+
+    public RNASequence getRNASequence(Frame frame) {
+      return getRNASequence(TranscriptionEngine.getDefault(), Frame.getDefaultFrame());
+    }
+
+    public RNASequence getRNASequence(TranscriptionEngine engine, Frame frame) {
+      return (RNASequence) engine.getDnaRnaTranslator().createSequence(this, frame);
     }
 
     public int getGCCount() {

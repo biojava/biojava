@@ -6,6 +6,7 @@ import org.biojava3.core.sequence.compound.NucleotideCompound;
 import org.biojava3.core.sequence.io.template.SequenceCreatorInterface;
 import org.biojava3.core.sequence.template.AbstractCompoundTranslator;
 import org.biojava3.core.sequence.template.CompoundSet;
+import org.biojava3.core.sequence.template.Sequence;
 
 public class DNAToRNATranslator extends AbstractCompoundTranslator<NucleotideCompound, NucleotideCompound>{
 
@@ -34,6 +35,16 @@ public class DNAToRNATranslator extends AbstractCompoundTranslator<NucleotideCom
         getToCompoundSet().getCompoundForString("U"));
     addCompounds(getFromCompoundSet().getCompoundForString("t"),
         getToCompoundSet().getCompoundForString("u"));
+  }
+
+  public Sequence<NucleotideCompound> createSequence(Sequence<NucleotideCompound> originalSequence, Frame frame) {
+    Sequence<NucleotideCompound> wrapped = frame.wrap(originalSequence);
+    return super.createSequence(wrapped);
+  }
+
+  @Override
+  public Sequence<NucleotideCompound> createSequence(Sequence<NucleotideCompound> originalSequence) {
+    return createSequence(originalSequence, Frame.getDefaultFrame());
   }
 
   @Override

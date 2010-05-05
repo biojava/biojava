@@ -28,19 +28,15 @@ package org.biojava3.core.sequence.template;
 import java.util.Iterator;
 import java.util.List;
 
-import org.biojava3.core.sequence.AccessionID;
-
 public abstract class AbstractSequenceView<C extends Compound> implements SequenceView<C> {
 
-	public String getSequenceAsString() {
-		// TODO Optimise.
-		return this.getViewedSequence().getSequenceAsString().substring(this.getStart()-1, this.getEnd());
-	}
+  public List<C> getAsList() {
+    return SequenceMixin.toList(this);
+  }
 
-	public List<C> getAsList() {
-		// TODO Optimise.
-		return getViewedSequence().getAsList().subList(getStart()-1, getEnd());
-	}
+  public String getSequenceAsString() {
+    return SequenceMixin.toStringBuilder(this).toString();
+  }
 
 	public C getCompoundAt(int position) {
 		return getViewedSequence().getCompoundAt((getStart()+position)-1);
@@ -63,30 +59,11 @@ public abstract class AbstractSequenceView<C extends Compound> implements Sequen
 	}
 
 	public SequenceView<C> getSubSequence(final int start, final int end) {
-		return new AbstractSequenceView<C>() {
-
-			public int getEnd() {
-				return end;
-			}
-
-			public int getStart() {
-				return start;
-			}
-
-			public Sequence<C> getViewedSequence() {
-				return AbstractSequenceView.this;
-			}
-
-            @Override
-            public AccessionID getAccession() {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-		};
+		return SequenceMixin.createSubSequence(this, start, end);
 	}
 
 	public Iterator<C> iterator() {
-		// TODO Optimise.
-		return getAsList().iterator();
+		return SequenceMixin.createIterator(this);
 	}
 
 	public int countCompounds(C... compounds) {

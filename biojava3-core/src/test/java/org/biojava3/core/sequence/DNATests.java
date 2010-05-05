@@ -7,6 +7,7 @@ import static org.junit.Assert.assertTrue;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 import org.biojava3.core.exceptions.CompoundNotFoundError;
 import org.biojava3.core.features.GCStats;
@@ -16,6 +17,7 @@ import org.biojava3.core.sequence.compound.NucleotideCompound;
 import org.biojava3.core.sequence.storage.TwoBitSequenceBackingStore;
 import org.biojava3.core.sequence.template.CompoundSet;
 import org.biojava3.core.sequence.template.SequenceBackingStore;
+import org.biojava3.core.sequence.template.SequenceMixin;
 import org.biojava3.core.sequence.template.SequenceView;
 import org.junit.Test;
 
@@ -50,6 +52,18 @@ public class DNATests {
     assertThat("Iterator not behaving as expected", actual, is(expected));
 
     assertThat("Index of T not as expected", r.getIndexOf(set.getCompoundForString("T")), is(3));
+  }
+
+  @Test
+  public void subSequence() {
+    DNASequence seq = getSeq("ACGTGGC");
+    SequenceView<NucleotideCompound> subSeq = seq.getSubSequence(2, 4);
+    assertThat("Index 2 is the same as index 1 in the sub sequence",
+        seq.getCompoundAt(2), is(subSeq.getCompoundAt(1)));
+    assertThat("Index 4 is the same as index 3 in the sub sequence",
+        seq.getCompoundAt(4), is(subSeq.getCompoundAt(3)));
+    assertThat("Sub sequence contains only expected bases",
+        subSeq.getSequenceAsString(), is("CGT"));
   }
 
   @Test
@@ -106,6 +120,28 @@ public class DNATests {
         GCStats.getGCStats(getSeq("AATTTATATGAATTTATATGAATTTATATGAATTTATATGAATTTATATGAATTTATATGAATTTATATGAATTTATATGAATTTATATG")),
         is(10.0)
     );
+  }
+
+  @Test
+  public void at() {
+    assertThat("AT content not as expected", SequenceMixin.countAT(getSeq("GCGC")), is(0));
+    assertThat("AT content not as expected", SequenceMixin.countAT(getSeq("GCAT")), is(2));
+    assertThat("AT content not as expected", SequenceMixin.countAT(getSeq("atAT")), is(4));
+    assertThat("GC content not as expected",
+        SequenceMixin.countAT(getSeq("AATTTATATGAATTTATATGAATTTATATGAATTTATATGAATTTATATGAATTTATATGAATTTATATGAATTTATATGAATTTATATG")),
+        is(81)
+    );
+  }
+
+  @Test
+  public void composition() {
+    DNASequence seq = getSeq("ATTGGGCCCC");
+    CompoundSet<NucleotideCompound> set = seq.getCompoundSet();
+    Map<NucleotideCompound, Double> distribution = SequenceMixin.getDistribution(seq);
+    assertThat("A distribution not as expected", distribution.get(set.getCompoundForString("A")), is(0.1));
+    assertThat("T distribution not as expected", distribution.get(set.getCompoundForString("T")), is(0.2));
+    assertThat("G distribution not as expected", distribution.get(set.getCompoundForString("G")), is(0.3));
+    assertThat("C distribution not as expected", distribution.get(set.getCompoundForString("C")), is(0.4));
   }
 
   @Test

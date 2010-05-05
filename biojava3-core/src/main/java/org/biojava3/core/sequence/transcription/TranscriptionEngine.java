@@ -1,5 +1,8 @@
 package org.biojava3.core.sequence.transcription;
 
+import java.util.EnumMap;
+import java.util.Map;
+
 import org.biojava3.core.sequence.compound.AminoAcidCompound;
 import org.biojava3.core.sequence.compound.AminoAcidCompoundSet;
 import org.biojava3.core.sequence.compound.DNACompoundSet;
@@ -11,6 +14,7 @@ import org.biojava3.core.sequence.io.RNASequenceCreator;
 import org.biojava3.core.sequence.io.IUPACParser.IUPACTable;
 import org.biojava3.core.sequence.io.template.SequenceCreatorInterface;
 import org.biojava3.core.sequence.template.CompoundSet;
+import org.biojava3.core.sequence.template.Sequence;
 import org.biojava3.core.sequence.transcription.Table.Codon;
 
 /**
@@ -68,6 +72,20 @@ public class TranscriptionEngine {
     this.dnaCompounds = dnaCompounds;
     this.rnaCompounds = rnaCompounds;
     this.aminoAcidCompounds = aminoAcidCompounds;
+  }
+
+  public Map<Frame, Sequence<AminoAcidCompound>> multipleFrameTranslation(
+      Sequence<NucleotideCompound> dna, Frame... frames) {
+    Map<Frame, Sequence<AminoAcidCompound>> results =
+      new EnumMap<Frame, Sequence<AminoAcidCompound>>(Frame.class);
+    for(Frame frame: frames) {
+      Sequence<NucleotideCompound> rna =
+        getDnaRnaTranslator().createSequence(dna, frame);
+      Sequence<AminoAcidCompound> peptide =
+        getRnaAminoAcidTranslator().createSequence(rna);
+      results.put(frame, peptide);
+    }
+    return results;
   }
 
   public Table getTable() {

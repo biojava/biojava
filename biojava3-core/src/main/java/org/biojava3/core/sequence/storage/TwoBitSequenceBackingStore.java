@@ -8,7 +8,6 @@ import java.util.Map;
 
 import org.biojava3.core.sequence.AccessionID;
 import org.biojava3.core.sequence.compound.NucleotideCompound;
-import org.biojava3.core.sequence.template.AbstractSequenceView;
 import org.biojava3.core.sequence.template.Compound;
 import org.biojava3.core.sequence.template.CompoundSet;
 import org.biojava3.core.sequence.template.Sequence;
@@ -146,43 +145,14 @@ public class TwoBitSequenceBackingStore<C extends NucleotideCompound> implements
    * Returns a sub sequence view
    */
   public SequenceView<C> getSubSequence(final int start, final int end) {
-    return new AbstractSequenceView<C>() {
-        public int getEnd() {
-            return end;
-        }
-
-        public int getStart() {
-            return start;
-        }
-
-        public Sequence<C> getViewedSequence() {
-            return TwoBitSequenceBackingStore.this;
-        }
-
-        @Override
-        public AccessionID getAccession() {
-            throw new UnsupportedOperationException("Not supported yet.");
-        }
-    };
+    return SequenceMixin.createSubSequence(this, start, end);
   }
 
   /**
    * Provides basic iterable access to this class
    */
   public Iterator<C> iterator() {
-    return new Iterator<C>() {
-      private int currentIndex = 1;
-      private final int length = getLength();
-      public boolean hasNext() {
-        return currentIndex <= length;
-      }
-      public C next() {
-        return getCompoundAt(currentIndex++);
-      }
-      public void remove() {
-        throw new UnsupportedOperationException("Cannot remove Compounds from a Sequence Iterator");
-      }
-    };
+    return SequenceMixin.createIterator(this);
   }
 
   /**

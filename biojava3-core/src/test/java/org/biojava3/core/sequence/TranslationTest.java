@@ -5,6 +5,9 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
 import java.io.InputStream;
+import java.util.EnumMap;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import org.biojava3.core.sequence.compound.AminoAcidCompound;
 import org.biojava3.core.sequence.compound.AminoAcidCompoundSet;
@@ -17,6 +20,7 @@ import org.biojava3.core.sequence.io.IUPACParser;
 import org.biojava3.core.sequence.io.ProteinSequenceCreator;
 import org.biojava3.core.sequence.io.util.ClasspathResource;
 import org.biojava3.core.sequence.template.Sequence;
+import org.biojava3.core.sequence.transcription.Frame;
 import org.biojava3.core.sequence.transcription.RNAToAminoAcidTranslator;
 import org.biojava3.core.sequence.transcription.TranscriptionEngine;
 import org.junit.Assert;
@@ -71,6 +75,31 @@ public class TranslationTest {
     ProteinSequence protein = rna.getProteinSequence(e);
     AminoAcidCompound initMet = protein.getCompoundAt(1);
     assertThat("Initator methionine wrong", initMet.toString(), is("M"));
+  }
+
+  @SuppressWarnings("serial")
+  @Test
+  public void multiFrameTranslation() {
+    TranscriptionEngine e = TranscriptionEngine.getDefault();
+    DNASequence dna = new DNASequence("ATGGCGTGA");
+
+    Map<Frame, String> expectedTranslations = new EnumMap<Frame,String>(Frame.class) {{
+      put(Frame.ONE, "MA");
+      put(Frame.TWO, "WR");
+      put(Frame.THREE, "GV");
+      put(Frame.REVERSED_ONE, "SRH");
+      put(Frame.REVERSED_TWO, "HA");
+      put(Frame.REVERSED_THREE, "TP");
+    }};
+
+    Map<Frame, Sequence<AminoAcidCompound>> translations =
+      e.multipleFrameTranslation(dna, Frame.getAllFrames());
+
+    for(Entry<Frame, Sequence<AminoAcidCompound>> entry: translations.entrySet()) {
+      String expected = expectedTranslations.get(entry.getKey());
+      Sequence<AminoAcidCompound> protein = entry.getValue();
+      assertThat("Checking 6 frame translation", protein.toString(), is(expected));
+    }
   }
 
   @Test

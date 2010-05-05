@@ -193,31 +193,7 @@ public abstract class AbstractSequence<C extends Compound> implements Sequence<C
     }
 
     public SequenceView<C> getSubSequence(final int start, final int end) {
-        return new AbstractSequenceView<C>() {
-
-            public int getEnd() {
-                return end;
-            }
-
-            public int getStart() {
-                return start;
-            }
-
-            public Sequence<C> getViewedSequence() {
-                return AbstractSequence.this;
-            }
-
-            public String getSequenceAsString() {
-              return getViewedSequence().getSequenceAsString().substring(start-1, end);
-            }
-
-            @Override
-            public AccessionID getAccession() {
-                return getViewedSequence().getAccession();
-            }
-
-
-        };
+      return SequenceMixin.createSubSequence(this, start, end);
     }
 
     public Iterator<C> iterator() {
