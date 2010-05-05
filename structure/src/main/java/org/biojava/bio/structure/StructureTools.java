@@ -337,7 +337,7 @@ public class StructureTools {
 	/** Clone a set of CA Atoms, but returns the parent groups
 	 *  
 	 * @param optTwistPdb
-	 * @return
+	 * @return Group array
 	 */
 	public static Group[] cloneGroups(Atom[] ca) {
 		Group[] newGroup = new Group[ca.length]; 
@@ -565,9 +565,8 @@ public class StructureTools {
 	 * 
 	 * 
 	 * @param s
-	 * @param chainId
-	 * @param range
-	 * @return
+	 * @param ranges
+	 * @return a structure object
 	 */
 	public static final Structure getSubRanges(Structure s, String ranges ) 
 	throws StructureException
