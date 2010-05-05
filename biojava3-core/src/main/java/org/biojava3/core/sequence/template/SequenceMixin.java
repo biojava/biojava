@@ -1,13 +1,16 @@
 package org.biojava3.core.sequence.template;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 import org.biojava3.core.sequence.AccessionID;
 import org.biojava3.core.sequence.compound.NucleotideCompound;
+import org.biojava3.core.sequence.storage.ArrayListSequenceBackingStore;
 import org.biojava3.core.sequence.views.ReversedSequenceView;
+import org.biojava3.core.util.CRC64Checksum;
 
 import com.google.common.base.Function;
 import com.google.common.collect.MapMaker;
@@ -197,6 +200,31 @@ public class SequenceMixin {
   public static <C extends Compound> SequenceView<C> createSubSequence(
       Sequence<C> sequence, int start, int end) {
     return new SubSequence<C>(sequence, start, end);
+  }
+
+  /**
+   * Implements sequence shuffling by first materializing the given
+   * {@link Sequence} into a {@link List}, applying
+   * {@link Collections#shuffle(List)} and then returning the shuffled
+   * elements in a new instance of {@link SequenceBackingStore} which behaves
+   * as a {@link Sequence}.
+   */
+  public static <C extends Compound> Sequence<C> shuffle(Sequence<C> sequence) {
+    List<C> compounds = sequence.getAsList();
+    Collections.shuffle(compounds);
+    return new ArrayListSequenceBackingStore<C>(compounds,
+        sequence.getCompoundSet());
+  }
+
+  /**
+   * Performs a simple CRC64 checksum on any given sequence.
+   */
+  public static <C extends Compound> String checksum(Sequence<C> sequence) {
+    CRC64Checksum checksum = new CRC64Checksum();
+    for(C compound: sequence) {
+      checksum.update(compound.getShortName());
+    }
+    return checksum.toString();
   }
 
   /**
