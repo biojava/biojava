@@ -316,7 +316,7 @@ public class PDBFileReader implements StructureIOFile {
 
    /** Flag that defines if the PDB directory is containing all PDB files or is split into sub dirs (like the FTP site).
     *  
-    * @param boolean. If set to false all files are in one directory.
+    * @param pdbDirectorySplit boolean. If set to false all files are in one directory.
     */
    public void setPdbDirectorySplit(boolean pdbDirectorySplit) {
       this.pdbDirectorySplit = pdbDirectorySplit;
