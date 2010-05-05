@@ -1,7 +1,7 @@
 package org.biojava3.core.sequence.views;
 
 import org.biojava3.core.sequence.template.AbstractSequenceHoldingSequenceView;
-import org.biojava3.core.sequence.template.NucleotideCompoundInterface;
+import org.biojava3.core.sequence.template.ComplementCompound;
 import org.biojava3.core.sequence.template.Sequence;
 
 /**
@@ -10,10 +10,10 @@ import org.biojava3.core.sequence.template.Sequence;
  * base e.g. base A will become base T
  *
  * @author Andy Yates
- * @param <C> Must be a subtype of @{link NucelotideCompoundInterface} since
+ * @param <C> Must be a subtype of @{link ComplementCompound} since
  * only those support complements
  */
-public class ComplementSequenceView<C extends NucleotideCompoundInterface> extends AbstractSequenceHoldingSequenceView<C> {
+public class ComplementSequenceView<C extends ComplementCompound> extends AbstractSequenceHoldingSequenceView<C> {
 
   public ComplementSequenceView(Sequence<C> sequence) {
     super(sequence);
