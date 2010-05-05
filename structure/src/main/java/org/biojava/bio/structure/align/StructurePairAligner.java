@@ -107,7 +107,7 @@ import org.biojava.bio.structure.jama.Matrix;
 
 			// and then send it to Jmol (only will work if Jmol is in the Classpath)
 
-			{@link BiojavaJmol} jmol = new {@link BiojavaJmol}();
+			BiojavaJmol jmol = new BiojavaJmol();
 			jmol.setTitle(artificial.getName());
 			jmol.setStructure(artificial);
 
