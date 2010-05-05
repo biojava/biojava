@@ -92,27 +92,26 @@ public interface StructureIOFile extends StructureIO {
 	/** The PDB files are organized hierarchically (as on the PDB - FTP server. Directories are split based on the two middle characters of the files).
 	 * 
 	 * @param isSplit
-	 * @return
 	 */
 	public void setPdbDirectorySplit(boolean isSplit);
 	
 	/** The PDB files are organized hierarchically (as on the PDB - FTP server. Directories are split based on the two middle characters of the files).
 	 * 
 	 * @param isSplit
-	 * @return
+	 * @return flag
 	 */
 	public boolean isPdbDirectorySplit();
 		
 	
 	/** Get a Structure based on its PDB id. The reader takes care of finding the correct file in the PATH configured in get/setPath.
-	 * 
+	 * @return a Structure object
 	 */
 	public Structure getStructureById(String pdbId) throws IOException;
 
 	
 	/** Get the flag to set to read only the header of the file during parsing.
 	 * 
-	 * @return
+	 * @return flag
 	 */
 	public boolean isHeaderOnly();
 	
