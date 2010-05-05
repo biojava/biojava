@@ -440,7 +440,7 @@ public class AFPTwister
     * @param afpn nr of afp
     * @param afpPositions
     * @param listStart
-    * @return
+    * @return nr of eq residues
     */
 
    public static int afp2Res(AFPChain afpChain, int afpn, int[] afpPositions , int listStart   )
