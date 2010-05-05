@@ -628,9 +628,12 @@ public class AFPChainer
   //this value can be a measurement (1) for the connectivity of the AFPs
    *
    * @param afpn
-   * @param list the positions of AFPs to work on. 
+   * @param afpPositions the positions of AFPs to work on. 
    * @param listStart the starting position in the list of AFPs
-   * @return
+   * @param afpChain
+   * @param ca1
+   * @param ca2
+   * @return rmsd
    */
 
   protected static double calAfpRmsd(int afpn, int[] afpPositions, int listStart,  AFPChain afpChain,Atom[] ca1, Atom[] ca2)
