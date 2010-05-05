@@ -97,7 +97,6 @@ public interface StructureIOFile extends StructureIO {
 	
 	/** The PDB files are organized hierarchically (as on the PDB - FTP server. Directories are split based on the two middle characters of the files).
 	 * 
-	 * @param isSplit
 	 * @return flag
 	 */
 	public boolean isPdbDirectorySplit();
