@@ -91,7 +91,7 @@ public class StartupParameters {
 
 	/** Display the output string in CE style
 	 * 
-	 * @return
+	 * @return flag
 	 */
 	public boolean isPrintCE() {
 		return printCE;
@@ -99,7 +99,7 @@ public class StartupParameters {
 
 	/** Display the output string in CE style
 	 * 
-	 * @return
+	 * @param printCE a flag
 	 */
 	public void setPrintCE(boolean printCE) {
 		this.printCE = printCE;
@@ -193,7 +193,7 @@ public class StartupParameters {
 
 	/** CE specific parameter: set the Max gap size parameter G (during AFP extension). Default: 30
 	 * 
-	 * @return
+	 * @return the maximum gap size G parameter.
 	 */
 	public int getMaxGapSize() {
 		return maxGapSize;
