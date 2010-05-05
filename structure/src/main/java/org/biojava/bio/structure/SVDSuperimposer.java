@@ -273,7 +273,7 @@ public class SVDSuperimposer {
      * 
      * <p>Citation:<br/>
      * <i>Zhang Y and Skolnick J (2004). "Scoring function for automated assessment 
-     * of protein structure template quality". Proteins 57: 702Ð710.</i>
+     * of protein structure template quality". Proteins 57: 702 - 710.</i>
      * 
      * @param atomSet1 atom array 1
      * @param atomSet2 atom array 2
