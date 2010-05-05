@@ -302,7 +302,7 @@ public class StructureTools {
 	 * groups and chains. The chain will only contain groups that are part of the CA array.
 	 * 
 	 * @param ca array of CA atoms
-	 * @return
+	 * @return Atom array
 	 */
 	public static final Atom[] cloneCAArray(Atom[] ca) throws StructureException{
 		Atom[] newCA = new Atom[ca.length];
@@ -336,7 +336,7 @@ public class StructureTools {
 
 	/** Clone a set of CA Atoms, but returns the parent groups
 	 *  
-	 * @param optTwistPdb
+	 * @param ca Atom array
 	 * @return Group array
 	 */
 	public static Group[] cloneGroups(Atom[] ca) {
@@ -469,7 +469,7 @@ public class StructureTools {
 	 * 
 	 * @param s
 	 * @param chainId
-	 * @return
+	 * @return Structure
 	 * @since 3.0
 	 */
 	public static final Structure getReducedStructure(Structure s, String chainId) throws StructureException{
@@ -513,7 +513,7 @@ public class StructureTools {
 	/** Reduce a structure to provide a smaller representation . Only takes the first model of the structure. If chainNr >=0 only takes the chain at that position into account.	 * 
 	 * @param s
 	 * @param chainNr
-	 * @return
+	 * @return Structure object
 	 * @since 3.0
 	 */
 	public static final Structure getReducedStructure(Structure s, int chainNr) throws StructureException{
