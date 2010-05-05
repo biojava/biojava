@@ -399,9 +399,9 @@ public class SecStruc {
     *
     * Jeffrey, George A., An introduction to hydrogen bonding, Oxford University Press, 1997.
     * categorizes hbonds with donor-acceptor distances of
-    * 2.2-2.5 Å as "strong, mostly covalent",
-    * 2.5-3.2 Å as "moderate, mostly electrostatic",
-    * 3.2-4.0 Å as "weak, electrostatic".
+    * 2.2-2.5 &aring; as "strong, mostly covalent",
+    * 2.5-3.2 &aring; as "moderate, mostly electrostatic",
+    * 3.2-4.0 &aring; as "weak, electrostatic".
     *  Energies are given as 40-14, 15-4, and <4 kcal/mol respectively.
     *
     */
