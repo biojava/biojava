@@ -85,7 +85,7 @@ public class CeParameters implements ConfigStrucAligParams  {
 
 	/** The window size to look at
 	 * 
-	 * @return
+	 * @return window size
 	 */
 	public Integer getWinSize() {
 		return winSize;
@@ -96,7 +96,7 @@ public class CeParameters implements ConfigStrucAligParams  {
 
 	/** RMSD Threshold
 	 * 
-	 * @return
+	 * @return RMSD threshold
 	 */
 	public Double getRmsdThr() {
 		return rmsdThr;
@@ -107,7 +107,7 @@ public class CeParameters implements ConfigStrucAligParams  {
 
 	/** RMSD threshold for joining of AFPs
 	 * 
-	 * @return
+	 * @return rmsd threshold
 	 */
 	public Double getRmsdThrJoin() {
 		return rmsdThrJoin;
@@ -145,9 +145,9 @@ public class CeParameters implements ConfigStrucAligParams  {
 	/** the Max gap size parameter G . default is 30, which was
 	 * described to obtained empirically in the CE paper.
 	 * the larger the max gap size, the longer the compute time,
-	 * but in same cases drastically improved results. Set to -1 to get the 
-	 * §
-	 * @return
+	 * but in same cases drastically improved results. Set to -1 for unlimited gap size. 
+	 * 
+	 * @return max gap size parameter
 	 */
 	public Integer getMaxGapSize() {
 		return maxGapSize;
