@@ -147,7 +147,7 @@ public interface Group {
 
 	  
     /**  Get an atom by the full PDB name e.g. " N  " for N. Throws StructureException if atom not found.
-     * @param name  a String
+     * @param pdbName  a String
      * @return an Atom object
      * @throws StructureException ...
      */
