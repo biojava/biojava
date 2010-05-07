@@ -259,6 +259,7 @@ public class CECalculator {
 
 			// score type 2 add angle info
 
+
 			if ( cb1 != null && cb2 != null) {
 				// If the CA were overlaid, what is the distance between the CB?
 				// Recall c^2 = a^2 + b^2 -2ab*cos(theta), so this is a function of angle
@@ -1162,7 +1163,7 @@ nBestTrace=nTrace;
 		//TODO
 		Group parent = ca[j].getParent();
 		int pos = 0;
-		String atomName = "CA";
+		String atomName = StructureTools.caAtomName;
 
 		Atom a = null;
 		try {
@@ -1664,7 +1665,7 @@ nBestTrace=nTrace;
 
 			Calc.rotate( g, m);
 			Calc.shift(  g, shift);
-			caB[l] = g.getAtom("CA");
+			caB[l] = g.getAtom(" CA ");
 		}
 	}
 
@@ -1751,7 +1752,7 @@ nBestTrace=nTrace;
 			Atom a;
 			if ( clone ){
 				Group g = (Group)ca[i].getParent().clone();
-				a = g.getAtom("CA");
+				a = g.getAtom(" CA ");
 			}
 			else {
 				a = ca[i];
