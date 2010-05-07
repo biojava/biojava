@@ -353,7 +353,7 @@ public class AFPTwister
          Group g = p2[i].getParent();
          Group newG = (Group)g.clone();
 
-         p1[i] = newG.getAtom("CA");
+         p1[i] = newG.getAtom(StructureTools.caAtomName);
          Chain parentC = g.getParent();
 
          Chain newChain = null;
