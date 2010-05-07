@@ -52,6 +52,7 @@ public class AFPChainScorer
             pos++;
          }
       }
+      assert(pos == align.getOptLength());
 
       //Superimpose
       SVDSuperimposer svd = new SVDSuperimposer(ca1aligned, ca2aligned);

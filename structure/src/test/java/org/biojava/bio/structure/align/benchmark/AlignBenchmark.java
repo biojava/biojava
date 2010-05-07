@@ -323,7 +323,7 @@ public class AlignBenchmark {
 			}
 			aligner = ceMain;
 		}
-		else if(alignerName.equals("SMITHWATERMAN")) {
+		else if(alignerName.matches("SMITH-?WATERMAN|SW")) {
 			System.out.println("Using Smith-Waterman aligner");
 
 			try {
