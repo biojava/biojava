@@ -181,13 +181,13 @@ public class SmithWaterman3Daligner extends AbstractStructureAlignment implement
       int aligLength = 0;
       
       for(int ia=0;ia < Math.min(queryEnd - queryStart, subjectEnd
-            - subjectStart) + 1; ia++) {
+            - subjectStart) ; ia++) {
          
          aligLength++;
          Symbol s1 = symb1.symbolAt(ia+queryStart);
          Symbol s2 = symb2.symbolAt(ia+subjectStart);
 
-         //System.out.println(ia+ " " + queryStart + " " + subjectStart + " " + s1.getName() + " " + s2.getName());
+         
 
          if ( !s1.equals(gapSymbol))
             pos1++;
@@ -195,7 +195,7 @@ public class SmithWaterman3Daligner extends AbstractStructureAlignment implement
             pos2++;
 
          if ( ( ! s1.equals(gapSymbol) )&&  (! s2.equals(gapSymbol))){
-
+            System.out.println(ia+ " " + queryStart + " " + subjectStart + " " + s1.getName() + " " + s2.getName() + pos1 + " " + ca1.length);
             strBuf1[nAtom] = ca1[pos1];
             strBuf2[nAtom] = ca2[pos2];
 
