@@ -110,7 +110,7 @@ public class TestOutputStrings extends TestCase
 //      "" +newline +
 //      "Note: positions are from PDB; the numbers between alignments are block index" +newline ;
 //
-//      String result = TestHelper.compareAlignment(pdb1, chain1, pdb2, chain2, originalOutput,true);
+//      String result = MyTestHelper.compareAlignment(pdb1, chain1, pdb2, chain2, originalOutput,true);
 //      if (! result.equals("")){
 //         String msg = "the created alignment images are not identical! ";
 //         printMismatch(originalOutput,result);
@@ -120,16 +120,7 @@ public class TestOutputStrings extends TestCase
 //      }		
 //   }
    
-   
-   // interestingly although the alignment image seems to be identical, the scores are not
-   // changing: opt-equ from 101 to 102
-   // opt-rmsd: 3.03 to 3.11
-   // score: 123.13 to 123.16
-   // gaps (and %)
-   
-   // p-value
-   // afp-num
-   // alignment is 1 residue longer...
+  // 100% identical
    public void test1jbe1ord(){
       String pdb1 = "1jbe";
       String chain1 = "A";
@@ -137,9 +128,9 @@ public class TestOutputStrings extends TestCase
       String chain2 ="A";
 
       String originalOutput="Align 1jbeA.pdb 126 with 1ordA.pdb 730" + newline +
-      "Twists 0 ini-len 72 ini-rmsd 3.09 opt-equ 102 opt-rmsd 3.11 chain-rmsd 3.09 Score 123.16 align-len 127 gaps 25 (19.69%)" + newline +
-      "P-value 3.50e-01 Afp-num 30114 Identity 11.02% Similarity 22.05%" + newline +
-      "Block  0 afp  9 score 123.16 rmsd  3.09 gap 53 (0.42%)" + newline +
+      "Twists 0 ini-len 72 ini-rmsd 3.09 opt-equ 101 opt-rmsd 3.03 chain-rmsd 3.09 Score 123.13 align-len 127 gaps 26 (20.47%)" + newline +
+      "P-value 3.45e-01 Afp-num 30029 Identity 11.02% Similarity 22.05%" + newline +
+      "Block  0 afp  9 score 123.13 rmsd  3.09 gap 53 (0.42%)" + newline +
       "" + newline +
       "                  .    :    .    :    .    :    .    :    .    :    .    :    .    :" + newline +
       "Chain 1:    3 DKELKFLVVDDFSTMRRIVRNLLKELGFNNVEEAEDGVDALNKLQAGGYGFVISDWNMPNMDGLELLKTI" + newline +
@@ -148,7 +139,7 @@ public class TestOutputStrings extends TestCase
       "" + newline +
       "                  .    :    .    :    .    :    .    :    .    :    ." + newline +
       "Chain 1:   73 RAAMSALPVLMVTAEAKKENIIAAAQAGASGYVVKPFT--AATLEEKLNKIFEKLGM" + newline +
-      "              11111111111111111 11111111 11111111111  11111111111111111" + newline +
+      "              11111111111111111 11111111 11111111111  111111111111 1111" + newline +
       "Chain 2:   50 DATKFGIPVFAVTKDAQ-AISADELK-KIFHIIDLENKFDATVNAREIETAVNNYED" + newline +
       "" + newline +
       "Note: positions are from PDB; the numbers between alignments are block index" + newline ;
@@ -356,23 +347,16 @@ public class TestOutputStrings extends TestCase
 
    }
 
-
-   /** this mismatch is not release critical  
-       the parser is different and I had to change length 606 to 607
-     
-       Adjusting the output to match the Java results.
-       // adjusted p-value, afp-num
-    * 
-    */
+   // 100% identical
    public void test1nbw1kidFlexible(){
       String pdb1 = "1nbw";
       String chain1 = "A";
       String pdb2 = "1kid";
       String chain2 ="A";
 
-      String originalOutput="Align 1nbwA.pdb 607 with 1kidA.pdb 193" +newline +
+      String originalOutput="Align 1nbwA.pdb 606 with 1kidA.pdb 193" +newline +
       "Twists 5 ini-len 120 ini-rmsd 5.60 opt-equ 155 opt-rmsd 3.58 chain-rmsd 21.86 Score 133.98 align-len 248 gaps 93 (37.50%)" +newline +
-      "P-value 6.50e-01 Afp-num 37100 Identity 5.65% Similarity 18.55%" +newline +
+      "P-value 6.48e-01 Afp-num 37019 Identity 5.65% Similarity 18.55%" +newline +
       "Block  0 afp  6 score 68.26 rmsd  4.20 gap 13 (0.21%)" +newline +
       "Block  1 afp  2 score 42.05 rmsd  1.96 gap 1 (0.06%)" +newline +
       "Block  2 afp  1 score 22.05 rmsd  1.14 gap 0 (0.00%)" +newline +
@@ -411,10 +395,7 @@ public class TestOutputStrings extends TestCase
       }
    }
 
-   // the biojava pdb parser reads 2 more residues... some small differences in scores, but  the same alignment.
-   
-   // adjusting to match the Java output.
-   // adjusted afp-num
+  // 100% identical
    public void test1cdg8tim(){
 
       String pdb1 = "1cdg";
@@ -422,9 +403,9 @@ public class TestOutputStrings extends TestCase
       String pdb2 = "8tim";
       String chain2 ="A";
 
-      String originalOutput ="Align 1cdgA.pdb 688 with 8timA.pdb 247" +newline +
+      String originalOutput ="Align 1cdgA.pdb 686 with 8timA.pdb 247" +newline +
       "Twists 0 ini-len 128 ini-rmsd 8.15 opt-equ 159 opt-rmsd 4.72 chain-rmsd 8.15 Score 185.44 align-len 238 gaps 79 (33.19%)" +newline +
-      "P-value 1.39e-01 Afp-num 50129 Identity 5.46% Similarity 13.87%" +newline +
+      "P-value 1.38e-01 Afp-num 50059 Identity 5.46% Similarity 13.87%" +newline +
       "Block  0 afp 16 score 185.44 rmsd  8.15 gap 121 (0.49%)" +newline +
       "" +newline +
       "                  .    :    .    :    .    :    .    :    .    :    .    :    .    :" +newline +
@@ -461,9 +442,7 @@ public class TestOutputStrings extends TestCase
    }
 
    
-   // the biojava pdb parser reads 2 more residues... some small differences in scores, but  the same alignment.
-   // I changed the chain length to match the biojava parser.
-   // adjusted afp-num
+   // 100% identical
    public void test1cdg8timFlexible(){
 
       String pdb1 = "1cdg";
@@ -471,9 +450,9 @@ public class TestOutputStrings extends TestCase
       String pdb2 = "8tim";
       String chain2 ="A";
 
-      String originalOutput ="Align 1cdgA.pdb 688 with 8timA.pdb 247" +newline +
+      String originalOutput ="Align 1cdgA.pdb 686 with 8timA.pdb 247" +newline +
       "Twists 3 ini-len 112 ini-rmsd 3.95 opt-equ 149 opt-rmsd 3.85 chain-rmsd 8.15 Score 185.44 align-len 255 gaps 106 (41.57%)" +newline +
-      "P-value 3.53e-01 Afp-num 50129 Identity 7.45% Similarity 18.82%" +newline +
+      "P-value 3.52e-01 Afp-num 50059 Identity 7.45% Similarity 18.82%" +newline +
       "Block  0 afp  4 score 72.41 rmsd  2.94 gap 28 (0.47%)" +newline +
       "Block  1 afp  2 score 26.63 rmsd  2.67 gap 1 (0.06%)" +newline +
       "Block  2 afp  5 score 86.03 rmsd  4.72 gap 24 (0.38%)" +newline +
