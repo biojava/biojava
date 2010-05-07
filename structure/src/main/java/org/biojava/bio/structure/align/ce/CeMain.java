@@ -30,6 +30,7 @@ import java.util.List;
 import org.biojava.bio.structure.Atom;
 import org.biojava.bio.structure.Group;
 import org.biojava.bio.structure.StructureException;
+import org.biojava.bio.structure.StructureTools;
 import org.biojava.bio.structure.align.AbstractStructureAlignment;
 import org.biojava.bio.structure.align.StructureAlignment;
 import org.biojava.bio.structure.align.model.AFPChain;
@@ -104,7 +105,7 @@ public class CeMain extends AbstractStructureAlignment implements StructureAlign
 		for (Atom a : ca2){
 			Group g = (Group)a.getParent().clone(); // works because each group has only a CA atom
 
-			ca2clone[pos] = g.getAtom("CA");
+			ca2clone[pos] = g.getAtom(StructureTools.caAtomName);
 
 			pos++;
 		}
@@ -116,7 +117,7 @@ public class CeMain extends AbstractStructureAlignment implements StructureAlign
 			for (Atom a : ca2){
 				Group g = (Group)a.getParent().clone();
 
-				ca2clone[pos] = g.getAtom("CA");
+				ca2clone[pos] = g.getAtom(StructureTools.caAtomName);
 
 				pos++;
 			}
