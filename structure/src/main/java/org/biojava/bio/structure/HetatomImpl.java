@@ -225,6 +225,11 @@ public class HetatomImpl implements Group,Serializable {
       for (int i=0;i<atoms.size();i++){
          Atom atom = atoms.get(i);
 
+         if ( name.length() > 2) {
+            if ( atom.getFullName().equals(name)){
+               return atom;
+            }
+         }
          if (atom.getName().equals(name)){
             if ( name.equals("CA")) {
                if (atom.getElement().equals(Element.C))
