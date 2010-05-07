@@ -121,13 +121,23 @@ public class SmithWaterman3Daligner extends AbstractStructureAlignment implement
       return afpChain;
    }
 
+   /**
+    * Converts a sequence alignment into a structural alignment
+    * @param aligner The sequence aligner
+    * @param ca1 CA atoms from the query sequence
+    * @param ca2 CA atoms from the target sequence
+    * @param aligPair The sequence alignment calculated by aligner
+    * @return an AFPChain encapsulating the alignment in aligPair
+    * @throws StructureException
+    */
    private AFPChain convert(AlignmentAlgorithm aligner,Atom[] ca1, Atom[] ca2,  AlignmentPair aligPair) throws StructureException {
       AFPChain afpChain = new AFPChain();
       int ca1Length = ca1.length;
       int ca2Length = ca2.length;		
 
       afpChain.setAlignScore(aligPair.getScore());
-
+      afpChain.setCa1Length(ca1Length);
+      afpChain.setCa2Length(ca2Length);
 
       int nAtom=0; 
       int nGaps=0;
@@ -195,7 +205,7 @@ public class SmithWaterman3Daligner extends AbstractStructureAlignment implement
             pos2++;
 
          if ( ( ! s1.equals(gapSymbol) )&&  (! s2.equals(gapSymbol))){
-            System.out.println(ia+ " " + queryStart + " " + subjectStart + " " + s1.getName() + " " + s2.getName() + pos1 + " " + ca1.length);
+            //System.out.println(ia+ " " + queryStart + " " + subjectStart + " " + s1.getName() + " " + s2.getName() + pos1 + " " + ca1.length);
             strBuf1[nAtom] = ca1[pos1];
             strBuf2[nAtom] = ca2[pos2];
 
@@ -268,7 +278,7 @@ public class SmithWaterman3Daligner extends AbstractStructureAlignment implement
       afpChain.setSimilarity(nrSim*1.0/pos);
 
       afpChain.setAlnLength(aligLength);
-      afpChain.setOptLength(aligLength);
+      afpChain.setOptLength(nAtom);
       int[] optLen = new int[]{nAtom};
       afpChain.setOptLen(optLen);
 
