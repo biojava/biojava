@@ -34,13 +34,13 @@ import java.util.List;
 import org.biojava.bio.BioException;
 import org.biojava.bio.alignment.AlignmentPair;
 import org.biojava.bio.alignment.NeedlemanWunsch;
-import org.biojava.bio.alignment.SimpleAlignment;
 import org.biojava.bio.alignment.SubstitutionMatrix;
 import org.biojava.bio.seq.ProteinTools;
 import org.biojava.bio.seq.Sequence;
 import org.biojava.bio.structure.AminoAcid;
 import org.biojava.bio.structure.Chain;
 import org.biojava.bio.structure.Group;
+import org.biojava.bio.structure.HetatomImpl;
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureException;
 import org.biojava.bio.symbol.AlphabetManager;
@@ -319,8 +319,13 @@ public class SeqRes2AtomAligner {
                 if (! pdbNameA.equals(pdbNameS)){
                     if ( ! pdbNameA.trim().equals(pdbNameS.trim())) {
                         System.err.println(s1 + " " + posSeq + " does not align with " + a1+ " " + posAtom);
-                        //System.exit(0);// for debug only
-                        throw new StructureException("could not match residues");
+                        if ( s1.getType().equals(HetatomImpl.type) && a1.getType().equals(HetatomImpl.type)){
+                           System.err.println("they seem to be hetatoms, so ignoring mismatch.");
+                        }
+                        else {
+                        //  System.exit(0);// for debug only
+                           throw new StructureException("could not match residues");
+                        }
 
                     }
                 }
