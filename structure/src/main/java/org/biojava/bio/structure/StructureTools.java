@@ -48,7 +48,7 @@ public class StructureTools {
 	/** The Atom name of C-alpha atoms.
 	 *
 	 */
-	public static final String caAtomName = "CA";
+	public static final String caAtomName = " CA ";
 	
 	public static final String nAtomName = "N";
 	
@@ -294,7 +294,7 @@ public class StructureTools {
 	 * @return an Atom[] array
 	 */
 	public static final Atom[] getAtomCAArray(Chain c){
-		String[] atomNames = {caAtomName};
+		String[] atomNames = {" CA " };
 		return getAtomArray(c,atomNames);
 	}
 
@@ -328,7 +328,8 @@ public class StructureTools {
 			}
 
 			Group parentN = (Group)parentG.clone();
-			newCA[apos] = parentN.getAtom("CA");
+			
+			newCA[apos] = parentN.getAtom(" CA ");
 			newChain.addGroup(parentN);
 		}
 		return newCA;
@@ -374,7 +375,7 @@ public class StructureTools {
 	 * @return an Atom[] array
 	 */
 	public static Atom[] getAtomCAArray(Structure s){
-		String[] atomNames = {caAtomName};
+		String[] atomNames = {" CA "};
 		return getAtomArray(s,atomNames);
 	}
 
