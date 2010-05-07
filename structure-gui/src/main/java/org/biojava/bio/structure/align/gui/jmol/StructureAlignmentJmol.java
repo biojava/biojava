@@ -548,6 +548,53 @@ public class StructureAlignmentJmol implements MouseMotionListener, MouseListene
 
       return j.toString();
    }
+   
+   /**
+    * Make a color darker.
+    * 
+    * @param color     Color to make darker.
+    * @param fraction  Darkness fraction.
+    * @return          Darker color.
+    */
+   public static Color darker (Color color, double fraction)
+   {
+     int red   = (int) Math.round (color.getRed()   * (1.0 - fraction));
+     int green = (int) Math.round (color.getGreen() * (1.0 - fraction));
+     int blue  = (int) Math.round (color.getBlue()  * (1.0 - fraction));
+
+     if (red   < 0) red   = 0; else if (red   > 255) red   = 255;
+     if (green < 0) green = 0; else if (green > 255) green = 255;
+     if (blue  < 0) blue  = 0; else if (blue  > 255) blue  = 255;    
+
+     int alpha = color.getAlpha();
+
+     return new Color (red, green, blue, alpha);
+   }
+
+   
+
+   /**
+    * Make a color lighter.
+    * 
+    * @param color     Color to make lighter.
+    * @param fraction  Darkness fraction.
+    * @return          Lighter color.
+    */
+   public static Color lighter (Color color, double fraction)
+   {
+     int red   = (int) Math.round (color.getRed()   * (1.0 + fraction));
+     int green = (int) Math.round (color.getGreen() * (1.0 + fraction));
+     int blue  = (int) Math.round (color.getBlue()  * (1.0 + fraction));
+
+     if (red   < 0) red   = 0; else if (red   > 255) red   = 255;
+     if (green < 0) green = 0; else if (green > 255) green = 255;
+     if (blue  < 0) blue  = 0; else if (blue  > 255) blue  = 255;    
+
+     int alpha = color.getAlpha();
+
+     return new Color (red, green, blue, alpha);
+   }
+   
 
    private static String getMultiBlockJmolScript(AFPChain afpChain, Atom[] ca1, Atom[] ca2)
    {
@@ -569,9 +616,9 @@ public class StructureAlignmentJmol implements MouseMotionListener, MouseListene
          if ( colorPos > AligPanel.colorWheel.length){
             colorPos = AligPanel.colorWheel.length % colorPos ;
          }
-         System.out.println("block: " + bk + " " + colorPos + " cp");
-         Color c = AligPanel.colorWheel[colorPos];
-
+         
+         Color c =  AligPanel.colorWheel[colorPos];
+         Color cd = darker( AligPanel.colorWheel[colorPos],0.4);
          List<String> pdb1 = new ArrayList<String>();
          List<String> pdb2 = new ArrayList<String>();
          for ( int i=0;i< optLen[bk];i++) {
@@ -596,10 +643,16 @@ public class StructureAlignmentJmol implements MouseMotionListener, MouseListene
             count++;
          }
 
+         buf.append("; backbone 0.6 ; color [" + cd.getRed() +"," + cd.getGreen() +"," +cd.getBlue()+"]; select ");
+         
+         count = 0;
          for (String res :pdb2 ){
-            buf.append(",");
+            if ( count > 0)
+               buf.append(",");
+         
             buf.append(res);
             buf.append("/2");
+            count++;
          }
          //buf.append("; set display selected;");
 
@@ -610,7 +663,7 @@ public class StructureAlignmentJmol implements MouseMotionListener, MouseListene
       }
       jmol.append("model 0;  ");
       jmol.append(LIGAND_DISPLAY_SCRIPT);
-      //System.out.println(jmol);
+      System.out.println(jmol);
       return jmol.toString();
 
 
