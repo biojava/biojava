@@ -37,7 +37,6 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenuBar;
 import javax.swing.JOptionPane;
-import javax.swing.SwingUtilities;
 
 import javax.swing.JProgressBar;
 import javax.swing.JTabbedPane;
