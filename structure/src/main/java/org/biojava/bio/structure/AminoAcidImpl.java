@@ -102,7 +102,7 @@ implements AminoAcid, Serializable
 	 * @return an Atom object
 	 * @throws StructureException ...
 	 */
-	public Atom getCA() throws StructureException {return getAtom("CA"); }
+	public Atom getCA() throws StructureException {return getAtom(" CA "); }
 
 	/** get C atom.
 	 * @return an Atom object
