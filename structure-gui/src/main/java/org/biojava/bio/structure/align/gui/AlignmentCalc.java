@@ -114,26 +114,34 @@ public class AlignmentCalc implements AlignmentCalculationRunnable {
          List<Group> nucs2    = structure2.getChain(0).getAtomGroups("nucleotide");
 
          StructureAlignmentJmol jmol;
-         if(afpChain.getAlgorithmName().startsWith("jCE")) {
-            //rotate all ca2 together
-            Matrix m = afpChain.getBlockRotationMatrix()[0];
-            Atom s = afpChain.getBlockShiftVector()[0];
-            Group[] twistedGroups = new Group[ca2.length];
-            int i = -1;
-            for(Atom a : ca2 ) {
-               i++;
-               Group g = a.getParent();
-               twistedGroups[i] = g;
-               Calc.rotate(g,m);
-               Calc.shift(g,s);
-            }
-
-            jmol = DisplayAFP.display(afpChain, twistedGroups, ca1, ca2,hetatms, nucs, hetatms2, nucs2);
-            //jmol = new StructureAlignmentJmol(afpChain, ca1, ca2);
-         }
-         else {
+//         if(afpChain.getAlgorithmName().startsWith("jCE")) {
+//            //rotate all ca2 together
+//            Matrix m = afpChain.getBlockRotationMatrix()[0];
+//            Atom s = afpChain.getBlockShiftVector()[0];
+//            Group[] twistedGroups = new Group[ca2.length];
+//            int i = -1;
+//            for(Atom a : ca2 ) {
+//               i++;
+//               Group g = a.getParent();
+//               twistedGroups[i] = g;
+//               Calc.rotate(g,m);
+//               Calc.shift(g,s);
+//            }
+//            for ( Group g: hetatms2){
+//               Calc.rotate(g,m);
+//               Calc.shift(g,s);
+//            }
+//            for ( Group g: nucs2){
+//               Calc.rotate(g,m);
+//               Calc.shift(g,s);
+//            }
+//
+//            jmol = DisplayAFP.display(afpChain, twistedGroups, ca1, ca2,hetatms, nucs, hetatms2, nucs2);
+//            //jmol = new StructureAlignmentJmol(afpChain, ca1, ca2);
+//         }
+//         else {
             jmol = StructureAlignmentDisplay.display(afpChain, ca1, ca2, hetatms, nucs,hetatms2, nucs2);
-         }
+         //}
          
          String title = jmol.getTitle();
          ConfigStrucAligParams params = algorithm.getParameters();
