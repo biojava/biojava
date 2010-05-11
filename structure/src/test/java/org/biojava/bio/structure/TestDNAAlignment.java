@@ -50,7 +50,10 @@ public class TestDNAAlignment extends TestCase
          AFPChain afpChain = ce.align(ca1,ca2);
          assertNotNull(afpChain);
          
-         System.out.println(afpChain.toFatcat(ca1, ca2));
+        String txt = afpChain.toFatcat(ca1, ca2);
+        
+        assertNotNull(txt);
+        
       } catch (Exception e){
          e.printStackTrace();
          fail(e.getMessage());
