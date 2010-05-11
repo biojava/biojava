@@ -33,6 +33,7 @@ import junit.framework.TestCase;
 import org.biojava.bio.structure.Atom;
 import org.biojava.bio.structure.Calc;
 import org.biojava.bio.structure.SVDSuperimposer;
+import org.biojava.bio.structure.TmpAtomCache;
 
 import org.biojava.bio.structure.StructureException;
 import org.biojava.bio.structure.StructureTools;
@@ -49,7 +50,7 @@ import org.biojava.bio.structure.jama.Matrix;
 
 public class TestFlexibleRotationMatrices extends TestCase{
 
-   private String PDB_FILE_PATH = AFPChainSerialisationTest.PDB_FILE_PATH;
+  
 
 
    public void testFlexibleRotationMatrices(){
@@ -68,7 +69,7 @@ public class TestFlexibleRotationMatrices extends TestCase{
 
    private void compare(String name1, String name2, boolean doRigid){
 
-      AtomCache cache = new AtomCache(PDB_FILE_PATH, true);
+      AtomCache cache =    TmpAtomCache.cache;
 
       try {
          Atom[] ca1orig = cache.getAtoms(name1);
