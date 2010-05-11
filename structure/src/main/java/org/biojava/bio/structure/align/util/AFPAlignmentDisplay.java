@@ -186,7 +186,12 @@ public class AFPAlignmentDisplay
 		int alnbeg2 = afpChain.getAlnbeg2();
 		int alnLength = afpChain.getAlnLength();
 		int optLength = afpChain.getOptLength();
-
+		
+		if ( optLen == null) {
+		   optLen = new int[blockNum];
+		   for (int oi =0 ; oi < blockNum ; oi++)
+		      optLen[oi] = 0;
+		}
 		int     len = 0;
 		for(i = 0; i < blockNum; i ++)  {        	
 			for(j = 0; j < optLen[i]; j ++) {
