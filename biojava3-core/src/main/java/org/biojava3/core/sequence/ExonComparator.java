@@ -7,6 +7,7 @@ package org.biojava3.core.sequence;
 
 import java.util.Comparator;
 
+
 /**
  *
  * @author Scooter Willis <willishf at gmail dot com>
@@ -15,14 +16,8 @@ import java.util.Comparator;
 
         @Override
         public int compare(ExonSequence o1, ExonSequence o2) {
-            if(o1.sense != o2.sense){
-                return o1.getBegin() - o2.getBegin();
-            }
-            if(o1.sense == Strand.NEGATIVE){
-                return -1 * (o1.getBegin() - o2.getBegin());
-            }
 
-            return o1.getBegin() - o2.getBegin();
+            return o1.getBioBegin() - o2.getBioBegin();
         }
 
     }

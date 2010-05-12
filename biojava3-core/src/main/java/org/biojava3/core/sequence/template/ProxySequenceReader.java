@@ -20,14 +20,11 @@
  * Created on 01-21-2010
  *
  * @author Richard Holland
- *
+ * @auther Scooter Willis
  *
  */
 package org.biojava3.core.sequence.template;
 
-public interface SequenceBackingStore<C extends Compound> extends Sequence<C> {
+public interface ProxySequenceReader<C extends Compound> extends SequenceReader<C> {
 	
-	public void setCompoundSet(CompoundSet<C> compoundSet);
-	
-	public void setContents(String sequence);
 }

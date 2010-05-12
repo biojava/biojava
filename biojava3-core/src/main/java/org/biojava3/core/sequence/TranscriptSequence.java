@@ -24,6 +24,7 @@ package org.biojava3.core.sequence;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.logging.Logger;
 
 import org.biojava3.core.sequence.transcription.TranscriptionEngine;
@@ -34,14 +35,13 @@ import org.biojava3.core.sequence.transcription.TranscriptionEngine;
  */
 public class TranscriptSequence extends DNASequence {
 
-    private static final Logger log = Logger.getLogger(TranscriptSequence.class.getName());
 
+    private Strand strand = Strand.UNDEFINED;
+    private static final Logger log = Logger.getLogger(TranscriptSequence.class.getName());
+    private final ArrayList<CDSSequence> cdsSequenceList = new ArrayList<CDSSequence>();
+    private final LinkedHashMap<String, CDSSequence> cdsSequenceHashMap = new LinkedHashMap<String, CDSSequence>();
     private StartCodonSequence startCodonSequence = null;
     private StopCodonSequence stopCodonSequence = null;
-    boolean intronAdded = false; // need to deal with the problem that typically introns are not added when validating the list and adding in introns as the regions not included in exons
-    private final ArrayList<IntronSequence> intronSequenceList = new ArrayList<IntronSequence>();
-    private final ArrayList<ExonSequence> exonSequenceList = new ArrayList<ExonSequence>();
-    private Strand sense = Strand.UNDEFINED;
 
     /**
      *
@@ -49,28 +49,25 @@ public class TranscriptSequence extends DNASequence {
      * @param begin
      * @param end inclusive of end
      */
-    public TranscriptSequence(DNASequence parentDNASequence, int begin, int end, Strand sense) {
-        setParentDNASequence(parentDNASequence);
-        setBegin(begin);
-        setEnd(end);
-        this.sense = sense;
+    public TranscriptSequence(DNASequence parentDNASequence, int begin, int end, Strand strand) {
+        setParentSequence(parentDNASequence);
+        setBioBegin(begin);
+        setBioEnd(end);
+        setStrand(strand);
     }
 
-    public void validate() {
-        ExonComparator exonComparator = new ExonComparator();
-        //sort based on start position and sense;
-        Collections.sort(exonSequenceList, exonComparator);
-        if (intronAdded) {
-            log.severe( this.getAccession() + " has introns added which will not be handled properly trying to fill in introns gaps from validate method");
-        }
-
-
-    //    log.severe("Add in support for building introns based on added exons");
-
+    /**
+     * @return the strand
+     */
+    public Strand getStrand() {
+        return strand;
     }
 
-    public Strand getSense() {
-        return sense;
+    /**
+     * @param strand the strand to set
+     */
+    public void setStrand(Strand strand) {
+        this.strand = strand;
     }
 
     /**
@@ -78,11 +75,12 @@ public class TranscriptSequence extends DNASequence {
      * @param accession
      * @return
      */
-    public IntronSequence removeIntron(String accession) {
-        for (IntronSequence intronSequence : intronSequenceList) {
-            if (intronSequence.getAccession().getID().equals(accession)) {
-                intronSequenceList.remove(intronSequence);
-                return intronSequence;
+    public CDSSequence removeCDS(String accession) {
+        for (CDSSequence cdsSequence : cdsSequenceList) {
+            if (cdsSequence.getAccession().getID().equals(accession)) {
+                cdsSequenceList.remove(cdsSequence);
+                cdsSequenceHashMap.remove(accession);
+                return cdsSequence;
             }
         }
         return null;
@@ -93,54 +91,27 @@ public class TranscriptSequence extends DNASequence {
      * @param accession
      * @param begin
      * @param end
+     * @param phase 0,1,2
      * @return
      */
-    public IntronSequence addIntron(AccessionID accession, int begin, int end) {
-        intronAdded = true;
-        IntronSequence intronSequence = new IntronSequence(this, begin, end, 0, sense); // working off the assumption that intron frame is always 0 or doesn't matter and same sense as parent
-        intronSequence.setAccession(accession);
-        intronSequenceList.add(intronSequence);
-        return intronSequence;
-    }
-
-    /**
-     *
-     * @param accession
-     * @return
-     */
-    public ExonSequence removeExon(String accession) {
-        for (ExonSequence exonSequence : exonSequenceList) {
-            if (exonSequence.getAccession().getID().equals(accession)) {
-                exonSequenceList.remove(exonSequence);
-                validate();
-                return exonSequence;
-            }
+    public CDSSequence addCDS(AccessionID accession, int begin, int end, int phase) throws Exception {
+        if (cdsSequenceHashMap.containsKey(accession.getID())) {
+            throw new Exception("Duplicate accesion id " + accession.getID());
         }
-        return null;
+        CDSSequence cdsSequence = new CDSSequence(this, begin, end, phase); //sense should be the same as parent
+        cdsSequence.setAccession(accession);
+        cdsSequenceList.add(cdsSequence);
+        Collections.sort(cdsSequenceList, new CDSComparator());
+        cdsSequenceHashMap.put(accession.getID(), cdsSequence);
+        return cdsSequence;
     }
 
-    /**
-     *
-     * @param accession
-     * @param begin
-     * @param end
-     * @return
-     */
-    public ExonSequence addExon(AccessionID accession, int begin, int end) {
-        ExonSequence exonSequence = new ExonSequence(this, begin, end, sense); //sense should be the same as parent
-        exonSequence.setAccession(accession);
-        exonSequenceList.add(exonSequence);
-        validate();
-        return exonSequence;
-    }
-
-    public RNASequence getRNACodingSequence() {
+    public DNASequence getDNACodingSequence() {
         StringBuilder sb = new StringBuilder();
-        System.err.println("Need to sort exon list");
-        for (ExonSequence exonSequence : exonSequenceList) {
-            sb.append(exonSequence.toString());
+        for (CDSSequence cdsSequence : cdsSequenceList) {
+            sb.append(cdsSequence.getCodingSequence());
         }
-        return new RNASequence(sb.toString());
+        return new DNASequence(sb.toString().toUpperCase());
     }
 
     public ProteinSequence getProteinSequence() {
@@ -148,8 +119,11 @@ public class TranscriptSequence extends DNASequence {
     }
 
     public ProteinSequence getProteinSequence(TranscriptionEngine engine) {
-        RNASequence rnaCodingSequence = getRNASequence();
-        return rnaCodingSequence.getProteinSequence(engine);
+        DNASequence dnaCodingSequence = getDNACodingSequence();
+        RNASequence rnaCodingSequence = dnaCodingSequence.getRNASequence(engine);
+        ProteinSequence proteinSequence = rnaCodingSequence.getProteinSequence(engine);
+        proteinSequence.setAccession(new AccessionID(this.getAccession().getID()));
+        return proteinSequence;
     }
 
     /**

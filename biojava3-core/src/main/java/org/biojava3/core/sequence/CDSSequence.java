@@ -23,41 +23,52 @@
 package org.biojava3.core.sequence;
 
 import java.util.logging.Logger;
+import org.biojava3.core.sequence.compound.NucleotideCompound;
+import org.biojava3.core.sequence.template.CompoundSet;
 
 /**
  *
  * @author Scooter Willis
  */
 public class CDSSequence extends DNASequence {
-    private static final Logger log = Logger.getLogger(CDSSequence.class.getName());
-    public DNASequence parentGeneSequence = null;
-    int phase = 0; // 0, 1, 2 http://www.sequenceontology.org/gff3.shtml
-    Strand sense = Strand.UNDEFINED;
 
-    public CDSSequence(ExonSequence parentGeneSequence, int begin, int end, int phase, Strand sense) {
-        this.parentGeneSequence = parentGeneSequence;
-        setBegin(begin);
-        setEnd(end);
+    private static final Logger log = Logger.getLogger(CDSSequence.class.getName());
+    int phase = 0; // 0, 1, 2 http://www.sequenceontology.org/gff3.shtml
+    TranscriptSequence parentTranscriptSequence;
+
+    public CDSSequence(TranscriptSequence parentSequence, int begin, int end, int phase) {
+        parentTranscriptSequence = parentSequence;
+        this.setParentSequence(parentTranscriptSequence);
+        setBioBegin(begin);
+        setBioEnd(end);
         this.phase = phase;
-        this.sense = sense;
+
     }
 
+    public Strand getStrand() {
+        return parentTranscriptSequence.getStrand();
+    }
 
-    @Override
-    public String toString(){
-        String sequence = super.toString();
-        if(sense == Strand.NEGATIVE){
-            StringBuilder sb = new StringBuilder(sequence);
-            sequence = sb.reverse().toString();
+    /**
+     * http://www.sequenceontology.org/gff3.shtml
+     * http://biowiki.org/~yam/bioe131/GFF.ppt
+     * @return
+     */
+    public String getCodingSequence() {
+        String sequence = this.getSequenceAsString(getBioBegin(),getBioEnd(),getStrand());
+        if (getStrand() == Strand.NEGATIVE) {
+            //need to take complement of sequence because it is negative and we are returning a coding sequence
+            StringBuilder b = new StringBuilder(getLength());
+            CompoundSet<NucleotideCompound> compoundSet = this.getCompoundSet();
+            for (int i = 0; i < sequence.length(); i++) {
+                String nucleotide = sequence.charAt(i) + "";
+                NucleotideCompound nucleotideCompound = compoundSet.getCompoundForString(nucleotide);
+                b.append(nucleotideCompound.getComplement().getShortName());
+            }
+            sequence = b.toString();
         }
-        if(phase != 0){
-            log.severe("Phase does not = 0 in exon sequence code needs to fix this");
-        }
+        //  sequence = sequence.substring(phase);
         return sequence;
     }
-
-
-
-
 
 }

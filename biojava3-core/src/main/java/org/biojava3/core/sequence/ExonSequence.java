@@ -22,72 +22,23 @@
  */
 package org.biojava3.core.sequence;
 
-import java.util.ArrayList;
+import java.util.logging.Logger;
 
 /**
  *
  * @author Scooter Willis
  */
 public class ExonSequence extends DNASequence {
+    private static final Logger log = Logger.getLogger(ExonSequence.class.getName());
+   
 
-  //Not used just yet. Bring it back when we do
-//    private static final Logger log = Logger.getLogger(ExonSequence.class.getName());
 
-    public DNASequence parentGeneSequence = null;
-    Strand sense = Strand.UNDEFINED;
-    private final ArrayList<CDSSequence> cdsSequenceList = new ArrayList<CDSSequence>();
-
-    public ExonSequence(TranscriptSequence parentGeneSequence, int begin, int end, Strand sense) {
-        this.parentGeneSequence = parentGeneSequence;
-        setBegin(begin);
-        setEnd(end);
-        this.sense = sense;
+    public ExonSequence(GeneSequence parentGeneSequence, int begin, int end) {
+        this.setParentSequence(parentGeneSequence);
+        setBioBegin(begin);
+        setBioEnd(end);
+        
     }
-
-
-        /**
-     *
-     * @param accession
-     * @return
-     */
-    public CDSSequence removeCDS(String accession) {
-        for (CDSSequence cdsSequence : cdsSequenceList) {
-            if (cdsSequence.getAccession().getID().equals(accession)) {
-                cdsSequenceList.remove(cdsSequence);
-                return cdsSequence;
-            }
-        }
-        return null;
-    }
-
-    /**
-     *
-     * @param accession
-     * @param begin
-     * @param end
-     * @param phase 0,1,2
-     * @return
-     */
-    public CDSSequence addCDS(AccessionID accession, int begin, int end, int phase) {
-        CDSSequence cdsSequence = new CDSSequence(this, begin, end,phase, sense); //sense should be the same as parent
-        cdsSequence.setAccession(accession);
-        cdsSequenceList.add(cdsSequence);
-        return cdsSequence;
-    }
-
-
-    @Override
-    public String toString(){
-        String sequence = super.toString();
-        if(sense == Strand.NEGATIVE){
-            StringBuilder sb = new StringBuilder(sequence);
-            sequence = sb.reverse().toString();
-        }
-
-        return sequence;
-    }
-
-
 
 
 

@@ -33,8 +33,8 @@ public DNASequence parentGeneSequence = null;
 
     public StartCodonSequence(TranscriptSequence parentGeneSequence, int begin, int end){
         this.parentGeneSequence = parentGeneSequence;
-        setBegin(begin);
-        setEnd(end);
+        setBioBegin(begin);
+        setBioEnd(end);
     }
 
 

@@ -28,27 +28,45 @@ package org.biojava3.core.sequence.storage;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
-import org.biojava3.core.exceptions.CompoundNotFoundError;
 import org.biojava3.core.sequence.AccessionID;
+
+import org.biojava3.core.sequence.template.SequenceProxyView;
 import org.biojava3.core.sequence.template.Compound;
+import org.biojava3.core.exceptions.CompoundNotFoundError;
+import org.biojava3.core.sequence.Strand;
+
 import org.biojava3.core.sequence.template.CompoundSet;
-import org.biojava3.core.sequence.template.SequenceBackingStore;
 import org.biojava3.core.sequence.template.SequenceMixin;
+import org.biojava3.core.sequence.template.SequenceReader;
 import org.biojava3.core.sequence.template.SequenceView;
 
-public class ArrayListSequenceBackingStore<C extends Compound> implements SequenceBackingStore<C> {
+public class ArrayListSequenceReader<C extends Compound> implements SequenceReader<C> {
 
     private CompoundSet<C> compoundSet;
     private List<C> parsedCompounds = new ArrayList<C>();
 
+    public ArrayListSequenceReader() {
+        //Do nothing
+    }
+
+    public ArrayListSequenceReader(List<C> compounds, CompoundSet<C> compoundSet) {
+        setCompoundSet(compoundSet);
+        setContents(compounds);
+    }
+
+    public ArrayListSequenceReader(String sequence, CompoundSet<C> compoundSet) {
+        setCompoundSet(compoundSet);
+        setContents(sequence);
+    }
+
     public String getSequenceAsString() {
+        return getSequenceAsString(1, getLength(), Strand.POSITIVE);
+    }
+
+    public String getSequenceAsString(Integer begin, Integer end, Strand strand) {
         // TODO Optimise/cache.
-        StringBuilder builder = new StringBuilder();
-        for (C compound : parsedCompounds) {
-            builder.append(this.compoundSet.getStringForCompound(compound));
-        }
-        return builder.toString();
+        SequenceAsStringHelper<C> sequenceAsStringHelper = new SequenceAsStringHelper<C>();
+        return sequenceAsStringHelper.getSequenceAsString(this.parsedCompounds, compoundSet, begin, end, strand);
     }
 
     public List<C> getAsList() {
@@ -80,7 +98,7 @@ public class ArrayListSequenceBackingStore<C extends Compound> implements Sequen
     }
 
     public CompoundSet<C> getCompoundSet() {
-      return compoundSet;
+        return compoundSet;
     }
 
     public void setContents(String sequence) {
@@ -104,14 +122,14 @@ public class ArrayListSequenceBackingStore<C extends Compound> implements Sequen
     }
 
     public void setContents(List<C> list) {
-      parsedCompounds.clear();
-      for(C c: list) {
-        parsedCompounds.add(c);
-      }
+        parsedCompounds.clear();
+        for (C c : list) {
+            parsedCompounds.add(c);
+        }
     }
 
-    public SequenceView<C> getSubSequence(final int start, final int end) {
-      return SequenceMixin.createSubSequence(this, start, end);
+    public SequenceView<C> getSubSequence(final Integer bioBegin, final Integer bioEnd) {
+        return new SequenceProxyView<C>(ArrayListSequenceReader.this, bioBegin, bioEnd);
     }
 
     @Override
@@ -119,7 +137,8 @@ public class ArrayListSequenceBackingStore<C extends Compound> implements Sequen
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
+    @Override
     public int countCompounds(C... compounds) {
-      return SequenceMixin.countCompounds(this, compounds);
+       return SequenceMixin.countCompounds(this, compounds);
     }
 }

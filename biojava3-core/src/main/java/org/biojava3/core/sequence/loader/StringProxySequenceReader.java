@@ -28,24 +28,27 @@ package org.biojava3.core.sequence.loader;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
-import org.biojava3.core.exceptions.CompoundNotFoundError;
 import org.biojava3.core.sequence.AccessionID;
+
+import org.biojava3.core.sequence.template.SequenceProxyView;
 import org.biojava3.core.sequence.template.Compound;
+import org.biojava3.core.exceptions.CompoundNotFoundError;
+import org.biojava3.core.sequence.Strand;
+
+import org.biojava3.core.sequence.storage.SequenceAsStringHelper;
 import org.biojava3.core.sequence.template.CompoundSet;
-import org.biojava3.core.sequence.template.SequenceMixin;
-import org.biojava3.core.sequence.template.SequenceProxyLoader;
+import org.biojava3.core.sequence.template.ProxySequenceReader;
 import org.biojava3.core.sequence.template.SequenceView;
 
 
-public class SequenceStringProxyLoader<C extends Compound> implements SequenceProxyLoader<C> {
+public class StringProxySequenceReader<C extends Compound> implements ProxySequenceReader<C> {
 
     private String sequence;
     private CompoundSet<C> compoundSet;
     private List<C> parsedCompounds = new ArrayList<C>();
+    
 
-
-    public SequenceStringProxyLoader(String sequence, CompoundSet<C> compoundSet) {
+    public StringProxySequenceReader(String sequence, CompoundSet<C> compoundSet) {
         this.sequence = sequence;
         setCompoundSet(compoundSet);
     }
@@ -103,8 +106,15 @@ public class SequenceStringProxyLoader<C extends Compound> implements SequencePr
         return this.parsedCompounds;
     }
 
-    public SequenceView<C> getSubSequence(final int start, final int end) {
-      return SequenceMixin.createSubSequence(this, start, end);
+
+        @Override
+    public String getSequenceAsString(Integer bioBegin, Integer bioEnd,Strand strand) {
+        SequenceAsStringHelper<C> sequenceAsStringHelper = new SequenceAsStringHelper<C>();
+        return sequenceAsStringHelper.getSequenceAsString(this.parsedCompounds, compoundSet, bioBegin, bioEnd, strand);
+    }
+
+    public SequenceView<C> getSubSequence(final Integer bioBegin, final Integer bioEnd) {
+        return new SequenceProxyView<C>(StringProxySequenceReader.this,bioBegin,bioEnd);
     }
 
     public Iterator<C> iterator() {
@@ -120,7 +130,10 @@ public class SequenceStringProxyLoader<C extends Compound> implements SequencePr
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
+    @Override
     public int countCompounds(C... compounds) {
-      return SequenceMixin.countCompounds(this, compounds);
+        throw new UnsupportedOperationException("Not supported yet.");
     }
+
+
 }

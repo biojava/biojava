@@ -31,17 +31,21 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.biojava3.core.sequence.template.SequenceProxyView;
+import org.biojava3.core.sequence.template.Compound;
 import org.biojava3.core.exceptions.CompoundNotFoundError;
 import org.biojava3.core.exceptions.FileAccessError;
 import org.biojava3.core.sequence.AccessionID;
+import org.biojava3.core.sequence.Strand;
+
 import org.biojava3.core.sequence.io.template.SequenceParserInterface;
-import org.biojava3.core.sequence.template.Compound;
+import org.biojava3.core.sequence.storage.SequenceAsStringHelper;
 import org.biojava3.core.sequence.template.CompoundSet;
+import org.biojava3.core.sequence.template.ProxySequenceReader;
 import org.biojava3.core.sequence.template.SequenceMixin;
-import org.biojava3.core.sequence.template.SequenceProxyLoader;
 import org.biojava3.core.sequence.template.SequenceView;
 
-public class SequenceFileProxyLoader<C extends Compound> implements SequenceProxyLoader<C> {
+public class SequenceFileProxyLoader<C extends Compound> implements ProxySequenceReader<C> {
 
     SequenceParserInterface sequenceParser;
     private CompoundSet<C> compoundSet;
@@ -51,7 +55,7 @@ public class SequenceFileProxyLoader<C extends Compound> implements SequenceProx
     int sequenceLength = -1;
     private boolean initialized = false;
 
-    public SequenceFileProxyLoader(File file,SequenceParserInterface sequenceParser, long sequenceStartIndex, int sequenceLength, CompoundSet<C> compoundSet) {
+    public SequenceFileProxyLoader(File file, SequenceParserInterface sequenceParser, long sequenceStartIndex, int sequenceLength, CompoundSet<C> compoundSet) {
         this.sequenceParser = sequenceParser;
         this.file = file;
         this.sequenceStartIndex = sequenceStartIndex;
@@ -67,7 +71,7 @@ public class SequenceFileProxyLoader<C extends Compound> implements SequenceProx
         try {
             RandomAccessFile randomAccessFile = new RandomAccessFile(file, "r");
             randomAccessFile.seek(sequenceStartIndex);
-            String sequence = sequenceParser.getSequence(randomAccessFile,sequenceLength);
+            String sequence = sequenceParser.getSequence(randomAccessFile, sequenceLength);
             setContents(sequence);
         } catch (Exception e) {
             throw new FileAccessError("Error accessing " + file + " offset=" + sequenceStartIndex + " sequenceLength=" + sequenceLength + " " + e.toString());
@@ -130,16 +134,17 @@ public class SequenceFileProxyLoader<C extends Compound> implements SequenceProx
         return getSequenceAsString();
     }
 
+    @Override
     public String getSequenceAsString() {
+        return getSequenceAsString(1, getLength(),Strand.POSITIVE);
+    }
+
+    public String getSequenceAsString(Integer bioBegin, Integer bioEnd,Strand strand) {
         if (this.isInitialized()) {
             init();
         }
-        StringBuilder sb = new StringBuilder(parsedCompounds.size());
-        for(C compounds : parsedCompounds){
-            sb.append(compounds);
-        }
-        //TODO could cache this but depends on how many times it is asked for.
-        return sb.toString();
+        SequenceAsStringHelper<C> sequenceAsStringHelper = new SequenceAsStringHelper<C>();
+        return sequenceAsStringHelper.getSequenceAsString(this.parsedCompounds, compoundSet, bioBegin, bioEnd, strand);
     }
 
     public List<C> getAsList() {
@@ -150,11 +155,11 @@ public class SequenceFileProxyLoader<C extends Compound> implements SequenceProx
 
     }
 
-    public SequenceView<C> getSubSequence(final int start, final int end) {
+    public SequenceView<C> getSubSequence(final Integer bioBegin, final Integer bioEnd) {
         if (this.isInitialized()) {
             init();
         }
-        return SequenceMixin.createSubSequence(this, start, end);
+        return new SequenceProxyView<C>(SequenceFileProxyLoader.this,bioBegin, bioEnd);
     }
 
     public Iterator<C> iterator() {

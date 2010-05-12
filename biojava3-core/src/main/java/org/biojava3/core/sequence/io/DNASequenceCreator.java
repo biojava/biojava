@@ -10,10 +10,10 @@ import java.util.List;
 import org.biojava3.core.sequence.DNASequence;
 import org.biojava3.core.sequence.compound.NucleotideCompound;
 import org.biojava3.core.sequence.io.template.SequenceCreatorInterface;
-import org.biojava3.core.sequence.loader.SequenceArrayListProxyLoader;
+import org.biojava3.core.sequence.loader.ArrayListProxySequenceReader;
 import org.biojava3.core.sequence.template.AbstractSequence;
 import org.biojava3.core.sequence.template.CompoundSet;
-import org.biojava3.core.sequence.template.SequenceProxyLoader;
+import org.biojava3.core.sequence.template.ProxySequenceReader;
 
 /**
  *
@@ -34,13 +34,13 @@ public class DNASequenceCreator implements
   }
 
   public AbstractSequence<NucleotideCompound> getSequence(
-      SequenceProxyLoader<NucleotideCompound> proxyLoader, long index) {
+      ProxySequenceReader<NucleotideCompound> proxyLoader, long index) {
     return new DNASequence(proxyLoader, compoundSet);
   }
 
   public AbstractSequence<NucleotideCompound> getSequence(
       List<NucleotideCompound> list) {
-    SequenceArrayListProxyLoader<NucleotideCompound> store = new SequenceArrayListProxyLoader<NucleotideCompound>();
+    ArrayListProxySequenceReader<NucleotideCompound> store = new ArrayListProxySequenceReader<NucleotideCompound>();
     store.setCompoundSet(compoundSet);
     store.setContents(list);
     return new DNASequence(store);

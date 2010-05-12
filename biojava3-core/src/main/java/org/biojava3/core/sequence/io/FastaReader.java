@@ -31,7 +31,9 @@ public class FastaReader<S extends Sequence<?>, C extends Compound> {
     FileInputStream fi = null;
 
     /**
-     *
+     * If you are going to use FileProxyProteinSequenceCreator then do not use this constructor because we need details about
+     * local file offsets for quick reads. InputStreams don't give you the name of the stream to access quickly via file seek. A seek in
+     * an inputstream is forced to read all the data so you don't gain anything.
      * @param br
      * @param headerParser
      * @param sequenceCreator
@@ -43,7 +45,16 @@ public class FastaReader<S extends Sequence<?>, C extends Compound> {
         this.sequenceCreator = sequenceCreator;
     }
 
+    /**
+     * If you are going to use the FileProxyProteinSequenceCreator then you need to use this constructor because we need details about
+     * the location of the file.
+     * @param file
+     * @param headerParser
+     * @param sequenceCreator
+     * @throws Exception
+     */
     public FastaReader(File file, FastaHeaderParserInterface<S,C> headerParser, SequenceCreatorInterface<C> sequenceCreator) throws Exception {
+        this.headerParser = headerParser;
         fi = new FileInputStream(file);
         isr = new InputStreamReader(fi);
         this.br = new BufferedReaderBytesRead(isr);

@@ -1,8 +1,10 @@
 package org.biojava3.core.sequence.views;
 
-import org.biojava3.core.sequence.template.AbstractSequenceHoldingSequenceView;
+import java.util.Iterator;
 import org.biojava3.core.sequence.template.Compound;
 import org.biojava3.core.sequence.template.Sequence;
+import org.biojava3.core.sequence.template.SequenceProxyView;
+import org.biojava3.core.sequence.template.SequenceView;
 
 /**
  * For a given sequence this class will return the base at the reversed
@@ -13,7 +15,7 @@ import org.biojava3.core.sequence.template.Sequence;
  * @author Andy Yates
  * @param <C> Must be a subtype of @{link Compound}
  */
-public class ReversedSequenceView<C extends Compound> extends AbstractSequenceHoldingSequenceView<C> {
+public class ReversedSequenceView<C extends Compound> extends SequenceProxyView<C> {
 
   private final int sequenceSize;
 
@@ -39,5 +41,33 @@ public class ReversedSequenceView<C extends Compound> extends AbstractSequenceHo
   @Override
   public int getLastIndexOf(C compound) {
     return toIndex(super.getLastIndexOf(compound));
+  }
+
+  @Override
+  public SequenceView<C> getSubSequence(final Integer start, final Integer end) {
+    return new ReversedSequenceView<C>(getViewedSequence()) {
+      public Integer getEnd() {
+          return toIndex(end);
+      }
+      public Integer getStart() {
+          return toIndex(start);
+      }
+    };
+  }
+
+  @Override
+  public Iterator<C> iterator() {
+    return new Iterator<C>() {
+      private int currentIndex = getBioStart();
+      public boolean hasNext() {
+        return currentIndex <= getBioEnd();
+      }
+      public C next() {
+        return getCompoundAt(currentIndex++);
+      }
+      public void remove() {
+        throw new UnsupportedOperationException("Cannot remove from a Sequence from an Iterator");
+      }
+    };
   }
 }

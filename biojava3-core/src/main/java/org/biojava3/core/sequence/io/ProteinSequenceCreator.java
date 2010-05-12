@@ -10,10 +10,10 @@ import java.util.List;
 import org.biojava3.core.sequence.ProteinSequence;
 import org.biojava3.core.sequence.compound.AminoAcidCompound;
 import org.biojava3.core.sequence.io.template.SequenceCreatorInterface;
-import org.biojava3.core.sequence.loader.SequenceArrayListProxyLoader;
+import org.biojava3.core.sequence.loader.ArrayListProxySequenceReader;
 import org.biojava3.core.sequence.template.AbstractSequence;
 import org.biojava3.core.sequence.template.CompoundSet;
-import org.biojava3.core.sequence.template.SequenceProxyLoader;
+import org.biojava3.core.sequence.template.ProxySequenceReader;
 
 /**
  *
@@ -35,14 +35,14 @@ public class ProteinSequenceCreator implements
 
   public AbstractSequence<AminoAcidCompound> getSequence(
       List<AminoAcidCompound> list) {
-    SequenceArrayListProxyLoader<AminoAcidCompound> store = new SequenceArrayListProxyLoader<AminoAcidCompound>();
+    ArrayListProxySequenceReader<AminoAcidCompound> store = new ArrayListProxySequenceReader<AminoAcidCompound>();
     store.setCompoundSet(compoundSet);
     store.setContents(list);
     return new ProteinSequence(store);
   }
 
   public AbstractSequence<AminoAcidCompound> getSequence(
-      SequenceProxyLoader<AminoAcidCompound> proxyLoader, long index) {
+      ProxySequenceReader<AminoAcidCompound> proxyLoader, long index) {
     return new ProteinSequence(proxyLoader, compoundSet);
   }
 }

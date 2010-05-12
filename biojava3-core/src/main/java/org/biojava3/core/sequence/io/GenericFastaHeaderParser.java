@@ -43,7 +43,7 @@ public class GenericFastaHeaderParser<S extends AbstractSequence<C>, C extends C
             data = new String[1];
             int index = header.indexOf("length=");
             data[0] = header.substring(0, index).trim();
-            System.out.println("accession=" + data[0]);
+    //        System.out.println("accession=" + data[0]);
             return data;
         } else if (header.startsWith("PDB:") == false) {
             for (int i = 0; i < header.length(); i++) {

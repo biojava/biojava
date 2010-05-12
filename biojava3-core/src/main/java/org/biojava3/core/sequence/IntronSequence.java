@@ -24,20 +24,21 @@
 package org.biojava3.core.sequence;
 
 
+
 /**
  *
  * @author Scooter Willis
  */
 public class IntronSequence extends DNASequence{
 
-public DNASequence parentGeneSequence = null;
-int frame = 0; // not sure if this makes sense for an intron
- Strand sense = Strand.UNDEFINED;
-    public IntronSequence(TranscriptSequence parentGeneSequence, int begin, int end, int frame,  Strand sense){
-        this.parentGeneSequence = parentGeneSequence;
-        setBegin(begin);
-        setEnd(end);
-        this.sense = sense;
+
+
+
+    public IntronSequence(GeneSequence parentGeneSequence, int begin, int end){
+        this.setParentSequence(parentGeneSequence);
+        setBioBegin(begin);
+        setBioEnd(end);
+
     }
 
 
