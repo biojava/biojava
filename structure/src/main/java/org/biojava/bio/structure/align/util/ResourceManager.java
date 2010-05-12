@@ -38,32 +38,36 @@ import java.util.ResourceBundle;
  * @version %I% %G%
  */
 public class ResourceManager {
-    
-    private String BUNDLE_NAME ;
 
-    private ResourceBundle RESOURCE_BUNDLE ;
+   private String BUNDLE_NAME ;
 
-        
-    public ResourceManager() {
-    	BUNDLE_NAME =  "jfatcat"; //$NON-NLS-1$;
-    	RESOURCE_BUNDLE = ResourceBundle.getBundle(BUNDLE_NAME);
-    }
-    
-    private ResourceManager(String bundleName){
-    	RESOURCE_BUNDLE = ResourceBundle.getBundle(bundleName);
+   private ResourceBundle RESOURCE_BUNDLE ;
 
-    }
-    public static ResourceManager getResourceManager(String bundleName){
-    	return new ResourceManager(bundleName);
-    }
 
-    public String getString(String key) {
-        
-        try {
-            return RESOURCE_BUNDLE.getString(key);
-        } catch (MissingResourceException e) {
-        	System.err.println(e.getMessage());
-            return '!' + key + '!';
-        }
-    }
+   public ResourceManager() {
+      BUNDLE_NAME =  "jfatcat"; //$NON-NLS-1$;
+      RESOURCE_BUNDLE = ResourceBundle.getBundle(BUNDLE_NAME);
+   }
+
+   private ResourceManager(String bundleName){
+      try {
+         RESOURCE_BUNDLE = ResourceBundle.getBundle(bundleName);
+      } catch(Exception e){
+         e.printStackTrace();
+      }
+
+   }
+   public static ResourceManager getResourceManager(String bundleName){
+      return new ResourceManager(bundleName);
+   }
+
+   public String getString(String key) {
+
+      try {
+         return RESOURCE_BUNDLE.getString(key);
+      } catch (MissingResourceException e) {
+         System.err.println(e.getMessage());
+         return '!' + key + '!';
+      }
+   }
 }
