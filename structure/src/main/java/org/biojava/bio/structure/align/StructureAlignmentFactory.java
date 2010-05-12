@@ -7,7 +7,6 @@ import java.util.List;
 import org.biojava.bio.structure.StructureException;
 import org.biojava.bio.structure.align.ce.CeCPMain;
 import org.biojava.bio.structure.align.ce.CeMain;
-import org.biojava.bio.structure.align.ce.CeSideChainMain;
 import org.biojava.bio.structure.align.fatcat.FatCatFlexible;
 import org.biojava.bio.structure.align.fatcat.FatCatRigid;
 import org.biojava.bio.structure.align.seq.SmithWaterman3Daligner;
@@ -21,7 +20,7 @@ public class StructureAlignmentFactory {
       List<StructureAlignment> algorithms = new LinkedList<StructureAlignment>();
 
       algorithms.add( new CeMain() );
-     // algorithms.add( new CeCPMain() );
+      algorithms.add( new CeCPMain() );
       //algorithms.add(new CeSideChainMain());
 
       StructureAlignment fatcatRigid    = new FatCatRigid();
