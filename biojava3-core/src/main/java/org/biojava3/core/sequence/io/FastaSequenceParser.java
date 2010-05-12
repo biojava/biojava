@@ -23,12 +23,11 @@ public class FastaSequenceParser implements SequenceParserInterface {
         boolean keepGoing = true;
         while (keepGoing) {
             String line = dataInput.readLine();
-            if (line.startsWith(">")) {
-                keepGoing = false;
+            if (line == null || line.startsWith(">")) {
+                break;
             }
-            sb.append(line);
+            sb.append(line.trim());
         }
-
         return sb.toString();
     }
 }

@@ -17,6 +17,8 @@ public class SequenceAsStringHelper<C extends Compound> {
 
     public String getSequenceAsString(List<C> parsedCompounds, CompoundSet<C> compoundSet, Integer bioBegin, Integer bioEnd, Strand strand) {
         // TODO Optimise/cache.
+        if(parsedCompounds.size() == 0)
+            return "";
         StringBuilder builder = new StringBuilder();
         if (strand.equals(Strand.NEGATIVE)) {
             //we expect bioBegin to be bigger but could have circular case

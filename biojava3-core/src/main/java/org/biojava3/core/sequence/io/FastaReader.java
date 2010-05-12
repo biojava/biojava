@@ -83,6 +83,7 @@ public class FastaReader<S extends Sequence<?>, C extends Compound> {
             if (line.length() != 0) {
                 if (line.startsWith(">")) {
                     if (sb.length() > 0) {
+                    //    System.out.println("Sequence index=" + sequenceIndex);
                         S sequence = (S)sequenceCreator.getSequence(sb.toString(), sequenceIndex);
                         headerParser.parseHeader(header, sequence);
                         sequences.put(sequence.getAccession().getID(),sequence);
@@ -104,7 +105,8 @@ public class FastaReader<S extends Sequence<?>, C extends Compound> {
             fileIndex = br.getBytesRead();
             line = br.readLine();
             if (line == null) {
-                S sequence = (S)sequenceCreator.getSequence(sb.toString(), fileIndex);
+            //    System.out.println("Sequence index=" + sequenceIndex + " " + fileIndex );
+                S sequence = (S)sequenceCreator.getSequence(sb.toString(), sequenceIndex);
                 headerParser.parseHeader(header, sequence);
                 sequences.put(sequence.getAccession().getID(),sequence);
                 keepGoing = false;
@@ -135,7 +137,15 @@ public class FastaReader<S extends Sequence<?>, C extends Compound> {
             FastaReader<ProteinSequence,AminoAcidCompound> fastaProxyReader = new FastaReader<ProteinSequence,AminoAcidCompound>(file, new GenericFastaHeaderParser<ProteinSequence,AminoAcidCompound>(), new FileProxyProteinSequenceCreator(file, AminoAcidCompoundSet.getAminoAcidCompoundSet()));
             LinkedHashMap<String,ProteinSequence> proteinProxySequences = fastaProxyReader.process();
 
-            System.out.println(proteinProxySequences);
+            for(String key : proteinProxySequences.keySet()){
+                ProteinSequence proteinSequence = proteinProxySequences.get(key);
+                System.out.println(key);
+                if(key.equals("Q98SJ1_CHICK/15-61")){
+                    int dummy = 1;
+                }
+                System.out.println(proteinSequence.toString());
+
+            }
 
         } catch (Exception e) {
             e.printStackTrace();

@@ -106,21 +106,21 @@ public class SequenceFileProxyLoader<C extends Compound> implements ProxySequenc
     }
 
     public C getCompoundAt(int position) {
-        if (this.isInitialized()) {
+        if (this.isInitialized() == false) {
             init();
         }
         return this.parsedCompounds.get(position - 1);
     }
 
     public int getIndexOf(C compound) {
-        if (this.isInitialized()) {
+        if (this.isInitialized() == false) {
             init();
         }
         return this.parsedCompounds.indexOf(compound) + 1;
     }
 
     public int getLastIndexOf(C compound) {
-        if (this.isInitialized()) {
+        if (this.isInitialized() == false) {
             init();
         }
         return this.parsedCompounds.lastIndexOf(compound) + 1;
@@ -128,7 +128,7 @@ public class SequenceFileProxyLoader<C extends Compound> implements ProxySequenc
 
     @Override
     public String toString() {
-        if (this.isInitialized()) {
+        if (this.isInitialized() == false) {
             init();
         }
         return getSequenceAsString();
@@ -140,7 +140,8 @@ public class SequenceFileProxyLoader<C extends Compound> implements ProxySequenc
     }
 
     public String getSequenceAsString(Integer bioBegin, Integer bioEnd,Strand strand) {
-        if (this.isInitialized()) {
+       
+        if (this.isInitialized() == false) {
             init();
         }
         SequenceAsStringHelper<C> sequenceAsStringHelper = new SequenceAsStringHelper<C>();
@@ -148,7 +149,7 @@ public class SequenceFileProxyLoader<C extends Compound> implements ProxySequenc
     }
 
     public List<C> getAsList() {
-        if (this.isInitialized()) {
+        if (this.isInitialized() == false) {
             init();
         }
         return this.parsedCompounds;
@@ -156,14 +157,14 @@ public class SequenceFileProxyLoader<C extends Compound> implements ProxySequenc
     }
 
     public SequenceView<C> getSubSequence(final Integer bioBegin, final Integer bioEnd) {
-        if (this.isInitialized()) {
+        if (this.isInitialized() == false) {
             init();
         }
         return new SequenceProxyView<C>(SequenceFileProxyLoader.this,bioBegin, bioEnd);
     }
 
     public Iterator<C> iterator() {
-        if (this.isInitialized()) {
+        if (this.isInitialized() == false) {
             init();
         }
         return this.parsedCompounds.iterator();

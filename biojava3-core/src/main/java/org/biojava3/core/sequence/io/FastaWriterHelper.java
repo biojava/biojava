@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.biojava3.core.sequence;
+package org.biojava3.core.sequence.io;
 
 
 import java.io.File;
@@ -10,6 +10,8 @@ import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collection;
+import org.biojava3.core.sequence.DNASequence;
+import org.biojava3.core.sequence.ProteinSequence;
 
 import org.biojava3.core.sequence.compound.AminoAcidCompound;
 import org.biojava3.core.sequence.compound.NucleotideCompound;
