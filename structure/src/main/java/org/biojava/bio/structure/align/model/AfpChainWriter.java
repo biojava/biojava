@@ -256,7 +256,11 @@ public class AfpChainWriter
 
          }
 
-
+         if ( ap >= ca1.length)
+            break;
+         if ( bp >- ca2.length)
+            break;
+         
          String pdb1 = ca1[ap].getParent().getPDBCode();
          String pdb2 = ca2[bp].getParent().getPDBCode();
 
@@ -571,12 +575,14 @@ public class AfpChainWriter
    private static void formatPosition(int pos1, Atom[] ca, int len, StringWriter header1, StringWriter header2)
    {
       int linePos = len % LINELENGTH;
+  
       if ( header1.getBuffer().length() < linePos) {
          // fill up the buffer, we are probably shortly after the start...
          for ( int i = header1.getBuffer().length() ; i< linePos ; i++){
             header1.append(" ");
          }
       }
+  
       
       
       Atom a = ca[pos1];
@@ -599,14 +605,14 @@ public class AfpChainWriter
          // make sure we don't have a problem with the left boundary...
          if ( header1.getBuffer().length()-1 > linePos) {
             ignoreH1 = true;
-            //System.out.println("Ignore h1: " + len + " " + header1.getBuffer().length() + " >" + header1.toString() +"<");
+            System.out.println("Ignore h1: " + len + " " + header1.getBuffer().length() + " linePos: " + linePos +"  >" + header1.toString() +"<");
          }
          //System.out.println(len + " p1:" + tmp + " = " + pos1 + " " + " " + display + " " + ignoreH1);
          if ( ! ignoreH1) {
             header1.append(String.format("%-10s",display ));
             header2.append("|");
          } else {
-            header2.append(".");
+            header2.append("|");
          }
         
       } else if ( hasInsertionCode){
