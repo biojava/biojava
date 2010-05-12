@@ -26,22 +26,14 @@
 
 package org.biojava.bio.structure.align.fatcat.calc;
 
-import java.util.ArrayList;
-import java.util.List;
+
 
 import org.biojava.bio.structure.Atom;
-
-
-import org.biojava.bio.structure.AminoAcidImpl;
 import org.biojava.bio.structure.Calc;
-import org.biojava.bio.structure.Chain;
-import org.biojava.bio.structure.ChainImpl;
 import org.biojava.bio.structure.Group;
 import org.biojava.bio.structure.SVDSuperimposer;
-import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureException;
-import org.biojava.bio.structure.StructureImpl;
-
+import org.biojava.bio.structure.StructureTools;
 import org.biojava.bio.structure.jama.Matrix;
 
 
@@ -49,7 +41,7 @@ import org.biojava.bio.structure.jama.Matrix;
 public class StructureAlignmentOptimizer
 {
 
-   private static final boolean showAlig = false;
+   //private static final boolean showAlig = false;
    
    int pro1Len;
    int pro2Len;
@@ -111,7 +103,7 @@ public class StructureAlignmentOptimizer
          //cod1[i] = (Atom)a.clone();
          Group parent = (Group)a.getParent().clone();
          //cod1[i].setParent(parent);
-         cod1[i] = parent.getAtom("CA");
+         cod1[i] = parent.getAtom(StructureTools.caAtomName);
          //cod1[i] = c1[i];
       }
       for(int i = 0; i < len2; i ++)      {
@@ -119,7 +111,7 @@ public class StructureAlignmentOptimizer
          //cod2[i]= (Atom)a.clone();
          Group parent = (Group)a.getParent().clone();
          //cod2[i].setParent(parent);
-         cod2[i] = parent.getAtom("CA");
+         cod2[i] = parent.getAtom(StructureTools.caAtomName);
          //cod2[i] = c2[i];
       }
 
