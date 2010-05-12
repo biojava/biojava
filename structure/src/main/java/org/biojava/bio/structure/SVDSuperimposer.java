@@ -66,12 +66,12 @@ import org.biojava.bio.structure.jama.SingularValueDecomposition;
             Atom[] atoms2 = new Atom[3];
 
             atoms1[0] = g1.getAtom("N");
-            atoms1[1] = g1.getAtom("CA");
+            atoms1[1] = g1.getAtom(" CA ");
             atoms1[2] = g1.getAtom("CB");
 
 
             atoms2[0] = g2.getAtom("N");
-            atoms2[1] = g2.getAtom("CA");
+            atoms2[1] = g2.getAtom(" CA ");
             atoms2[2] = g2.getAtom("CB");
 
 
