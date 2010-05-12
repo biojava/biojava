@@ -36,7 +36,7 @@ import org.biojava.bio.structure.align.ce.CeMain;
  */
 public class CeCPMain extends CeMain {
 
-   public static final String algorithmName = "jCE-CP";
+   public static final String algorithmName = "jCE Circular Permutation";
 
    public static final String version = "1.0";
 
