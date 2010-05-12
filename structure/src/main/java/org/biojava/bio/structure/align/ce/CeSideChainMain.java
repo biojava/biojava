@@ -64,7 +64,7 @@ public class CeSideChainMain  extends CeMain implements StructureAlignment {
 //      for (Atom a : ca2){
 //         Group g = (Group)a.getParent().clone();
 //
-//         ca2clone[pos] = g.getAtom("CA");
+//         ca2clone[pos] = g.getAtom(" CA ");
 //
 //         pos++;
 //      }
