@@ -113,7 +113,7 @@ public class TranslationTest {
         is("MPIGSKERPTFFEIFKTRCNKA"));
   }
 
-  @Test(timeout=1000)
+  @Test(timeout=2000)
   public void translateBrca2() {
     TranscriptionEngine e = TranscriptionEngine.getDefault();
     RNAToAminoAcidTranslator t = e.getRnaAminoAcidTranslator();

@@ -1,6 +1,6 @@
 package org.biojava3.core.sequence.io;
 
-import static org.biojava3.core.sequence.FastaWriterHelper.writeSequence;
+
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
@@ -21,7 +21,7 @@ public class FastaWriterTest {
     DNASequence s = new DNASequence(dnaLineOne+dnaLineTwo);
     s.setAccession(new AccessionID(id));
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
-    writeSequence(baos, s);
+    FastaWriterHelper.writeSequence(baos, s);
 
     String actual = new String(baos.toByteArray());
     String expected = ">"+id+"\n"+dnaLineOne+"\n"+dnaLineTwo+"\n";
@@ -37,7 +37,7 @@ public class FastaWriterTest {
     DNASequence s = new DNASequence(dna);
     s.setAccession(new AccessionID(id));
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
-    writeSequence(baos, s);
+    FastaWriterHelper.writeSequence(baos, s);
 
     String actual = new String(baos.toByteArray());
     String expected = ">"+id+"\n"+dna+"\n";
