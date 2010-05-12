@@ -258,7 +258,7 @@ public class AfpChainWriter
 
          if ( ap >= ca1.length)
             break;
-         if ( bp >- ca2.length)
+         if ( bp >= ca2.length)
             break;
          
          String pdb1 = ca1[ap].getParent().getPDBCode();
