@@ -11,6 +11,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
+import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
 import org.biojava.bio.structure.PDBHeader;
@@ -135,7 +136,7 @@ public class MMCIFFileInstallation implements PDBInstallation
 	}
 
 	public File downloadCIF(String pdbId){
-		File tempFile = new File(filePath+"/"+pdbId+".cif.Z");
+		File tempFile = new File(filePath+"/"+pdbId+".cif.gz");
 		File pdbHome  = new File(filePath.getAbsolutePath());
 
 		if ( ! pdbHome.canWrite() ){
@@ -143,7 +144,7 @@ public class MMCIFFileInstallation implements PDBInstallation
 			return null;
 		}
 
-		String ftp = String.format("ftp://ftp.rcsb.org/pub/pdb/data/structures/all/mmCIF/%s.cif.Z", pdbId.toLowerCase());
+		String ftp = String.format("ftp://ftp.wwpdb.org/pub/pdb/data/structures/all/mmCIF/%s.cif.gz", pdbId.toLowerCase());
 
 		System.out.println("Fetching " + ftp);
 		try {
@@ -158,7 +159,7 @@ public class MMCIFFileInstallation implements PDBInstallation
 			GZIPOutputStream gzOutPut = new GZIPOutputStream(outPut);
 			PrintWriter pw = new PrintWriter(gzOutPut);
 
-			BufferedReader fileBuffer = new BufferedReader(new InputStreamReader(conn));
+			BufferedReader fileBuffer = new BufferedReader(new InputStreamReader(new GZIPInputStream(conn)));
 			String line;
 			while ((line = fileBuffer.readLine()) != null) {
 				pw.println(line);
