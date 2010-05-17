@@ -1,7 +1,5 @@
 package org.biojava3.core.sequence.storage;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -11,57 +9,39 @@ import org.biojava3.core.sequence.Strand;
 import org.biojava3.core.sequence.compound.NucleotideCompound;
 import org.biojava3.core.sequence.template.Compound;
 import org.biojava3.core.sequence.template.CompoundSet;
-import org.biojava3.core.sequence.template.Sequence;
 import org.biojava3.core.sequence.template.SequenceMixin;
 import org.biojava3.core.sequence.template.ProxySequenceReader;
+import org.biojava3.core.sequence.template.Sequence;
 import org.biojava3.core.sequence.template.SequenceView;
 
 /**
- * An implementation of the popular 2bit encoding. 2bit is the process
- * of representing ATGC as a series of states in 2 bits. For example
- * we can encode the base T as 00 (2 bits in the off state). This means
- * that for every byte we can store 4 bases (since there are 8 bits in
- * a byte). The actual storage is dependent on subclasses of
- * {@link TwoBitArrayWorker} but normally we work using a backing data
- * structure of int[] so we actually store 16 bases for every
- * int value.
- *
- * This should be more memory efficient than using the
- * {@link ArrayListSequenceBackingStore} but there are a number of issues
- * with using this format.
+ * An implementation of the popular bit encodings. This class provides the
+ * Sequence view over what is actually carried out in the {@link BitArrayWorker}
+ * instances. These are the objects that carry out array storage as well as
+ * indexing into those arrays. New bit encodings can be written by extending
+ * this class and a worker class. There are a number of issues with this
+ * type of storage engine:
  *
  * <ul>
- * <li>We can only support 4 {@link Compound}s so no N</li>
+ * <li>We can only support a finite number of {@link Compound}s; 2 bit allows no N compounds</li>
  * <li>For real savings you must read the sequence in using your own
- * Reader and a {@link TwoBitArrayWorker} instance</li>
+ * Reader and a {@link BitArrayWorker} instance</li>
  * </ul>
  *
  * @author ayates
  *
  * @param <C> Type of compound; must extend {@link NucleotideCompound}
  */
-public class TwoBitSequenceBackingStore<C extends NucleotideCompound> implements ProxySequenceReader<C> {
+public class BitSequenceReader<C extends Compound> implements ProxySequenceReader<C> {
 
     private final AccessionID accession;
-    private final TwoBitArrayWorker<C> worker;
+    private final BitArrayWorker<C> worker;
 
-    public TwoBitSequenceBackingStore(Sequence<C> sequence) {
-        this.accession = sequence.getAccession();
-        worker = new TwoBitArrayWorker<C>(sequence.getCompoundSet(), sequence.getLength());
-        worker.populate(sequence);
-    }
-
-    public TwoBitSequenceBackingStore(String sequence, CompoundSet<C> compoundSet) {
-        this(sequence, compoundSet, new AccessionID("Unknown"));
-    }
-
-    public TwoBitSequenceBackingStore(String sequence, CompoundSet<C> compoundSet, AccessionID accession) {
-        worker = new TwoBitArrayWorker<C>(compoundSet, sequence.length());
-        this.accession = accession;
-        worker.populate(sequence);
-    }
-
-    public TwoBitSequenceBackingStore(TwoBitArrayWorker<C> worker, AccessionID accession) {
+    /**
+     * Instance which allows you to supply a different @{BitArrayWorker}
+     * object.
+     */
+    public BitSequenceReader(BitArrayWorker<C> worker, AccessionID accession) {
         this.accession = accession;
         this.worker = worker;
     }
@@ -69,6 +49,7 @@ public class TwoBitSequenceBackingStore<C extends NucleotideCompound> implements
     /**
      * Class is immutable & so this is unsupported
      */
+    @Override
     public void setCompoundSet(CompoundSet<C> compoundSet) {
         throw new UnsupportedOperationException("Cannot reset the CompoundSet; object is immutable");
     }
@@ -76,17 +57,20 @@ public class TwoBitSequenceBackingStore<C extends NucleotideCompound> implements
     /**
      * Class is immutable & so this is unsupported
      */
+    @Override
     public void setContents(String sequence) {
-        throw new UnsupportedOperationException(this.getClass().getSimpleName() + " is an immutable data structure; cannot reset contents");
+        throw new UnsupportedOperationException(getClass().getSimpleName() + " is an immutable data structure; cannot reset contents");
     }
 
     /**
      * Counts the number of times a compound appears in this sequence store
      */
+    @Override
     public int countCompounds(C... compounds) {
         return SequenceMixin.countCompounds(this, compounds);
     }
 
+    @Override
     public AccessionID getAccession() {
         return accession;
     }
@@ -94,6 +78,7 @@ public class TwoBitSequenceBackingStore<C extends NucleotideCompound> implements
     /**
      * Returns this Sequence store as a List
      */
+    @Override
     public List<C> getAsList() {
         return SequenceMixin.toList(this);
     }
@@ -101,6 +86,7 @@ public class TwoBitSequenceBackingStore<C extends NucleotideCompound> implements
     /**
      * Returns the compound at the specified biological index
      */
+    @Override
     public C getCompoundAt(int position) {
         return worker.getCompoundAt(position);
     }
@@ -108,6 +94,7 @@ public class TwoBitSequenceBackingStore<C extends NucleotideCompound> implements
     /**
      * Returns the compound set backing this store
      */
+    @Override
     public CompoundSet<C> getCompoundSet() {
         return worker.getCompoundSet();
     }
@@ -116,6 +103,7 @@ public class TwoBitSequenceBackingStore<C extends NucleotideCompound> implements
      * Returns the first occurrence of the given compound in this store; performs
      * a linear search
      */
+    @Override
     public int getIndexOf(C compound) {
         return SequenceMixin.indexOf(this, compound);
     }
@@ -124,6 +112,7 @@ public class TwoBitSequenceBackingStore<C extends NucleotideCompound> implements
      * Returns the last occurrence of the given compound in this store; performs
      * a linear search
      */
+    @Override
     public int getLastIndexOf(C compound) {
         return SequenceMixin.lastIndexOf(this, compound);
     }
@@ -131,6 +120,7 @@ public class TwoBitSequenceBackingStore<C extends NucleotideCompound> implements
     /**
      * Returns the length of the sequence
      */
+    @Override
     public int getLength() {
         return worker.getLength();
     }
@@ -138,6 +128,7 @@ public class TwoBitSequenceBackingStore<C extends NucleotideCompound> implements
     /**
      * Returns the sequence as a String
      */
+    @Override
     public String getSequenceAsString() {
         return SequenceMixin.toStringBuilder(this).toString();
     }
@@ -152,6 +143,7 @@ public class TwoBitSequenceBackingStore<C extends NucleotideCompound> implements
     /**
      * Provides basic iterable access to this class
      */
+    @Override
     public Iterator<C> iterator() {
         return SequenceMixin.createIterator(this);
     }
@@ -163,51 +155,87 @@ public class TwoBitSequenceBackingStore<C extends NucleotideCompound> implements
 
     @Override
     public SequenceView<C> getSubSequence(Integer start, Integer end) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return getSubSequence((int) start, (int) end);
     }
 
     /**
-     * The logic of working with 2Bit has been separated out into this class
-     * to help developers create 2Bit data structures without having to
+     * The logic of working with a bit has been separated out into this class
+     * to help developers create the bit data structures without having to
      * put the code into an intermediate format and to also use the format
      * without the need to copy this code.
-     *
-     * This version works with a
      *
      * This class behaves just like a {@link Sequence} without the interface
      *
      * @author ayates
      *
-     * @param <C> The {@link Compound} to use; should subclass
-     * {@link NucleotideCompound}
+     * @param <C> The {@link Compound} to use
      */
-    public static class TwoBitArrayWorker<C extends NucleotideCompound> {
+    public static abstract class BitArrayWorker<C extends Compound> {
 
         private final CompoundSet<C> compoundSet;
         private final int length;
         private final int[] sequence;
         private transient List<C> indexToCompoundsLookup = null;
         private transient Map<C, Integer> compoundsToIndexLookup = null;
-        public static final int BYTES_PER_DATATYPE = 32;
-        /**
-         * Masking value used for extracting the right most 2 bits from a byte
-         */
-        private final static byte MASK = (byte) ((int) Math.pow(2, 0) | (int) Math.pow(2, 1));
+        public static final int BYTES_PER_INT = 32;
 
-        public TwoBitArrayWorker(CompoundSet<C> compoundSet, int length) {
+        public BitArrayWorker(Sequence<C> sequence) {
+            this(sequence.getCompoundSet(), sequence.getLength());
+            populate(sequence);
+        }
+
+        public BitArrayWorker(String sequence, CompoundSet<C> compoundSet) {
+            this(compoundSet, sequence.length());
+            populate(sequence);
+        }
+
+        public BitArrayWorker(CompoundSet<C> compoundSet, int length) {
             this.compoundSet = compoundSet;
             this.length = length;
             this.sequence = new int[seqArraySize(length)];
         }
 
-        public TwoBitArrayWorker(CompoundSet<C> compoundSet, int[] sequence) {
+        public BitArrayWorker(CompoundSet<C> compoundSet, int[] sequence) {
             this.compoundSet = compoundSet;
             this.sequence = sequence;
             this.length = sequence.length;
         }
 
-        public static int seqArraySize(int length) {
-            return (int) Math.ceil((double) length / (double) BYTES_PER_DATATYPE);
+        /**
+         * This method should return the bit mask to be used to extract the
+         * bytes you are interested in working with. See solid implementations
+         * on how to create these
+         */
+        protected abstract byte bitMask();
+
+        /**
+         * Should return the maximum amount of compounds we can encode per int
+         */
+        protected abstract int compoundsPerDatatype();
+
+        /**
+         * Should return the reverse information that {@link #generateCompoundsToIndex() }
+         * returns i.e. if the Compound C returns 1 from compoundsToIndex then we
+         * should find that compound here in position 1
+         */
+        protected abstract List<C> generateIndexToCompounds();
+
+        /**
+         * Returns what the value of a compound is in the backing bit storage i.e.
+         * in 2bit storage the value 0 is encoded as 00 (in binary).
+         */
+        protected abstract Map<C, Integer> generateCompoundsToIndex();
+
+        /**
+         * Returns how many bits are used to represent a compound e.g. 2 if using
+         * 2bit encoding.
+         */
+        protected int bitsPerCompound() {
+            return BYTES_PER_INT / compoundsPerDatatype();
+        }
+
+        public int seqArraySize(int length) {
+            return (int) Math.ceil((double) length / (double) compoundsPerDatatype());
         }
 
         /**
@@ -275,20 +303,19 @@ public class TwoBitSequenceBackingStore<C extends NucleotideCompound> implements
             int currentByte = sequence[arrayIndex];
             int shiftBy = shiftBy(position);
             int shifted = (int) (currentByte >>> shiftBy);
-            int masked = (int) (shifted & MASK);
+            int masked = (int) (shifted & bitMask());
 
-            if (masked > 3) {
-                throw new IllegalStateException("Got a masked value of " + masked + "; do not understand values greater than 3");
+            //If we could encode 4 compounds then our max masked value is 3
+            if (masked > (compoundsPerDatatype() - 1)) {
+                throw new IllegalStateException("Got a masked value of " + masked + "; do not understand values greater than " + (compoundsPerDatatype() - 1));
             }
             return getIndexToCompoundsLookup().get(masked);
         }
 
         /**
-         * Since 2bit only supports 4 bases it is more than likely when processing
-         * sequence you will encounter a base which is not one of the four (such
-         * as an N). Currently this method will throw an exception detailing the
-         * base it cannot process.
-         *
+         * Since bit encoding only supports a finite number of bases
+         * it is more than likely when processing sequence you will encounter a
+         * compound which is not covered by the encoding e.g. N in a 2bit sequence.
          * You can override this to convert the unknown base into one you can
          * process or store locations of unknown bases for a level of post processing
          * in your subclass.
@@ -298,73 +325,67 @@ public class TwoBitSequenceBackingStore<C extends NucleotideCompound> implements
          * @throws IllegalStateException Done whenever this method is invoked
          */
         protected byte processUnknownCompound(C compound, int position) throws IllegalStateException {
-            throw new IllegalStateException("Do not know how to translate the compound " + compound + " to a 2bit representation");
+            throw new IllegalStateException("Do not know how to translate the compound " + compound + " to a " + bitsPerCompound() + "bit representation");
         }
 
         /**
          * Returns a list of compounds the index position of which is used
          * to translate from the byte representation into a compound.
          */
-        @SuppressWarnings("serial")
         protected List<C> getIndexToCompoundsLookup() {
             if (indexToCompoundsLookup == null) {
-                final CompoundSet<C> cs = getCompoundSet();
-                indexToCompoundsLookup = new ArrayList<C>() {
-
-                    {
-                        add(cs.getCompoundForString("T"));
-                        add(cs.getCompoundForString("C"));
-                        add(cs.getCompoundForString("A"));
-                        add(cs.getCompoundForString("G"));
-                    }
-                };
+                indexToCompoundsLookup = generateIndexToCompounds();
             }
             return indexToCompoundsLookup;
         }
 
         /**
-         * Returns a map which converts from compound to byte
+         * Returns a map which converts from compound to an integer representation
          */
-        @SuppressWarnings("serial")
         protected Map<C, Integer> getCompoundsToIndexLookup() {
             if (compoundsToIndexLookup == null) {
-                final CompoundSet<C> cs = getCompoundSet();
-                compoundsToIndexLookup = new HashMap<C, Integer>() {
-
-                    {
-                        put(cs.getCompoundForString("T"), 0);
-                        put(cs.getCompoundForString("C"), 1);
-                        put(cs.getCompoundForString("A"), 2);
-                        put(cs.getCompoundForString("G"), 3);
-                        put(cs.getCompoundForString("t"), 0);
-                        put(cs.getCompoundForString("c"), 1);
-                        put(cs.getCompoundForString("a"), 2);
-                        put(cs.getCompoundForString("g"), 3);
-                    }
-                };
+                compoundsToIndexLookup = generateCompoundsToIndex();
             }
             return compoundsToIndexLookup;
         }
 
         /**
-         * Array position is biological - 1 / 4
-         * e.g. for position 4 we store this in array index 0 & BYTES_PER_DATATYPE = 4
-         * (4-1) = 3
-         * 3/4 = 0.75 (floor to 0)
+         * Converting a biological index to the int which is used to store that
+         * position's data.
+         *
+         * <ul>
+         * <li>Assuming 2bit encoding using the 17 base in a sequence</li>
+         * <li>Convert into 0 index; 17 - 1 = 16</li>
+         * <li>Divide by the number of compounds per int; 16 / 16</li>
+         * <li>Floor the value; floor(1) = 1</li>
+         * </ul>
+         *
+         * Running this for position 13
+         *
+         * <ul>
+         * <li>13 - 1 = 12</li>
+         * <li>12 / 16 = 0.75</li>
+         * <li>floor(0.75) = 0</li>
+         * </ul>
          */
         private int biologicalIndexToArrayIndex(int index) {
-            return ((index - 1) / BYTES_PER_DATATYPE);
+            return ((index - 1) / compoundsPerDatatype());
         }
 
         /**
          * Convert from bio to 0 index, remainder & then multiply by 2
-         * e.g. position 7 is the 3rd position in a byte but a shift of 4 therefore
-         * 7 - 1 = 6
-         * 6 % 4 = 2
-         * 2 * 2 = 4
+         * <ul>
+         * <li>Using 2bit encoding and working with position 19</li>
+         * <li>19 is the 3rd position in the second int</li>
+         * <li>Means a shift of 4 into that int to get the right data out</li>
+         * <li>Also must convert into the non-bio index</li>
+         * <li>19 - 1 = 18</li>
+         * <li>18 % compoundsPerDatatype() (16) = 2</li>
+         * <li>2 * bits per compound (2) = 4</li>
+         * </ul>
          */
         private byte shiftBy(int index) {
-            return (byte) (((index - 1) % BYTES_PER_DATATYPE) * 2);
+            return (byte) (((index - 1) % compoundsPerDatatype()) * bitsPerCompound());
         }
 
         /**

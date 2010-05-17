@@ -41,7 +41,7 @@ public interface Sequence<C extends Compound> extends Iterable<C> {
 
     public String getSequenceAsString();
 
-    public String getSequenceAsString(Integer start, Integer end,Strand strand);
+    public String getSequenceAsString(Integer start, Integer end, Strand strand);
 
     public List<C> getAsList();
 

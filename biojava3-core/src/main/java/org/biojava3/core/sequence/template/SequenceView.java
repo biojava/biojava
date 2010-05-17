@@ -26,18 +26,16 @@
 package org.biojava3.core.sequence.template;
 
 public interface SequenceView<C extends Compound> extends Sequence<C> {
-	
-	public Sequence<C> getViewedSequence();
 
-       
-	
-	/**
-	 * 1-indexed, inclusive.
-	 */
-	public Integer getBioStart();
-	
-	/**
-	 * 1-indexed, inclusive.
-	 */
-	public Integer getBioEnd();
+    public Sequence<C> getViewedSequence();
+
+    /**
+     * 1-indexed, inclusive.
+     */
+    public Integer getBioStart();
+
+    /**
+     * 1-indexed, inclusive.
+     */
+    public Integer getBioEnd();
 }

@@ -1,10 +1,10 @@
 package org.biojava3.core.sequence.views;
 
-import java.util.Iterator;
+import org.biojava3.core.sequence.Strand;
 import org.biojava3.core.sequence.template.Compound;
 import org.biojava3.core.sequence.template.Sequence;
+import org.biojava3.core.sequence.template.SequenceMixin;
 import org.biojava3.core.sequence.template.SequenceProxyView;
-import org.biojava3.core.sequence.template.SequenceView;
 
 /**
  * For a given sequence this class will return the base at the reversed
@@ -17,57 +17,39 @@ import org.biojava3.core.sequence.template.SequenceView;
  */
 public class ReversedSequenceView<C extends Compound> extends SequenceProxyView<C> {
 
-  private final int sequenceSize;
+    private final int sequenceSize;
 
-  public ReversedSequenceView(Sequence<C> sequence) {
-    super(sequence);
-    this.sequenceSize = sequence.getLength();
-  }
+    public ReversedSequenceView(Sequence<C> sequence) {
+        super(sequence);
+        this.sequenceSize = sequence.getLength();
+    }
 
-  protected int toIndex(int index) {
-    return (sequenceSize-index)+1;
-  }
+    @Override
+    public String getSequenceAsString() {
+        return SequenceMixin.toString(this);
+    }
 
-  @Override
-  public C getCompoundAt(int position) {
-    return super.getCompoundAt(toIndex(position));
-  }
+    @Override
+    public String getSequenceAsString(Integer start, Integer end, Strand strand) {
+        throw new UnsupportedOperationException("Cannot do this");
+    }
 
-  @Override
-  public int getIndexOf(C compound) {
-    return toIndex(super.getIndexOf(compound));
-  }
+    protected int toIndex(int index) {
+        return (sequenceSize - index) + 1;
+    }
 
-  @Override
-  public int getLastIndexOf(C compound) {
-    return toIndex(super.getLastIndexOf(compound));
-  }
+    @Override
+    public C getCompoundAt(int position) {
+        return super.getCompoundAt(toIndex(position));
+    }
 
-  @Override
-  public SequenceView<C> getSubSequence(final Integer start, final Integer end) {
-    return new ReversedSequenceView<C>(getViewedSequence()) {
-      public Integer getEnd() {
-          return toIndex(end);
-      }
-      public Integer getStart() {
-          return toIndex(start);
-      }
-    };
-  }
+    @Override
+    public int getIndexOf(C compound) {
+        return toIndex(super.getIndexOf(compound));
+    }
 
-  @Override
-  public Iterator<C> iterator() {
-    return new Iterator<C>() {
-      private int currentIndex = getBioStart();
-      public boolean hasNext() {
-        return currentIndex <= getBioEnd();
-      }
-      public C next() {
-        return getCompoundAt(currentIndex++);
-      }
-      public void remove() {
-        throw new UnsupportedOperationException("Cannot remove from a Sequence from an Iterator");
-      }
-    };
-  }
+    @Override
+    public int getLastIndexOf(C compound) {
+        return toIndex(super.getLastIndexOf(compound));
+    }
 }

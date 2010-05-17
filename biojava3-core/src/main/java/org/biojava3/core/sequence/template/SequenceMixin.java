@@ -6,7 +6,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.biojava3.core.sequence.AccessionID;
 import org.biojava3.core.sequence.compound.NucleotideCompound;
 import org.biojava3.core.sequence.storage.ArrayListSequenceReader;
 import org.biojava3.core.sequence.views.ReversedSequenceView;
@@ -14,6 +13,7 @@ import org.biojava3.core.util.CRC64Checksum;
 
 import com.google.common.base.Function;
 import com.google.common.collect.MapMaker;
+import java.util.NoSuchElementException;
 
 /**
  * Provides a set of static methods to be used as static imports when needed
@@ -98,6 +98,7 @@ public class SequenceMixin {
     public static <C extends Compound> Map<C, Double> getDistribution(Sequence<C> sequence) {
         Map<C, Double> results = new MapMaker().makeComputingMap(new Function<C, Double>() {
 
+            @Override
             public Double apply(C compound) {
                 return 0.0;
             }
@@ -123,6 +124,7 @@ public class SequenceMixin {
     public static <C extends Compound> Map<C, Integer> getComposition(Sequence<C> sequence) {
         Map<C, Integer> results = new MapMaker().makeComputingMap(new Function<C, Integer>() {
 
+            @Override
             public Integer apply(C compound) {
                 return 0;
             }
@@ -146,6 +148,14 @@ public class SequenceMixin {
             sb.append(compound.toString());
         }
         return sb;
+    }
+
+    /**
+     * Shortcut to {@link #toStringBuilder(org.biojava3.core.sequence.template.Sequence)}
+     * which calls toString() on the resulting object.
+     */
+    public static <C extends Compound> String toString(Sequence<C> sequence) {
+        return toStringBuilder(sequence).toString();
     }
 
     /**
@@ -201,7 +211,7 @@ public class SequenceMixin {
      */
     public static <C extends Compound> SequenceView<C> createSubSequence(
             Sequence<C> sequence, int start, int end) {
-        return new SubSequence<C>(sequence, start, end);
+        return new SequenceProxyView<C>(sequence, start, end);
     }
 
     /**
@@ -216,7 +226,6 @@ public class SequenceMixin {
         Collections.shuffle(compounds);
         return new ArrayListSequenceReader<C>(compounds,
                 sequence.getCompoundSet());
-      
     }
 
     /**
@@ -239,7 +248,7 @@ public class SequenceMixin {
      *
      * @param <C> Type of compound to return
      */
-    private static class SequenceIterator<C extends Compound>
+    public static class SequenceIterator<C extends Compound>
             implements Iterator<C> {
 
         private final Sequence<C> sequence;
@@ -251,68 +260,22 @@ public class SequenceMixin {
             this.length = sequence.getLength();
         }
 
+        @Override
         public boolean hasNext() {
-            if (currentPosition < length) {
-                currentPosition++;
-                return true;
-            }
-            return false;
-        }
-
-        public C next() {
-            return sequence.getCompoundAt(currentPosition);
-        }
-
-        public void remove() {
-            throw new UnsupportedOperationException("Cannot remove() on a SequenceIterator");
-        }
-    }
-
-    /**
-     * Simple sub-sequence object which holds a start and a end value which
-     * allows us to look at subsequences for the given Sequence. The sub-sequence
-     * is then referred to with respect to that sequence e.g. creating a
-     * sub sequence which starts at 5 and ends at 10; when querying for position
-     * 1 in the sub sequence we get back 5, when querying for 2 we get back 6.
-     *
-     * @author ayates
-     *
-     * @param <C> Type of compound to hold
-     */
-    private static class SubSequence<C extends Compound>
-            extends SequenceProxyView<C> {
-
-        private final Sequence<C> viewedSequence;
-        private final int start;
-        private final int end;
-
-
-
- //           public SubSequence( Sequence<C> sequence){
- //       this(sequence,1,sequence.getLength());
- //   }
-
-        public SubSequence(Sequence<C> viewedSequence, Integer start, Integer end) {
-            this.viewedSequence = viewedSequence;
-            this.start = start;
-            this.end = end;
-        }
-
-        public int getEnd() {
-            return end;
-        }
-
-        public int getStart() {
-            return start;
-        }
-
-        public Sequence<C> getViewedSequence() {
-            return viewedSequence;
+            return (currentPosition < length);
         }
 
         @Override
-        public AccessionID getAccession() {
-            return getViewedSequence().getAccession();
+        public C next() {
+            if(!hasNext()) {
+                throw new NoSuchElementException("Exhausted sequence of elements");
+            }
+            return sequence.getCompoundAt(++currentPosition);
+        }
+
+        @Override
+        public void remove() {
+            throw new UnsupportedOperationException("Cannot remove() on a SequenceIterator");
         }
     }
 }

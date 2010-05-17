@@ -59,48 +59,59 @@ public class ArrayListSequenceReader<C extends Compound> implements SequenceRead
         setContents(sequence);
     }
 
+    @Override
     public String getSequenceAsString() {
         return getSequenceAsString(1, getLength(), Strand.POSITIVE);
     }
 
+    @Override
     public String getSequenceAsString(Integer begin, Integer end, Strand strand) {
         // TODO Optimise/cache.
         SequenceAsStringHelper<C> sequenceAsStringHelper = new SequenceAsStringHelper<C>();
         return sequenceAsStringHelper.getSequenceAsString(this.parsedCompounds, compoundSet, begin, end, strand);
     }
 
+    @Override
     public List<C> getAsList() {
         return this.parsedCompounds;
     }
 
+    @Override
     public C getCompoundAt(int position) {
         return this.parsedCompounds.get(position - 1);
     }
 
+    @Override
     public int getIndexOf(C compound) {
         return this.parsedCompounds.indexOf(compound) + 1;
     }
 
+    @Override
     public int getLastIndexOf(C compound) {
         return this.parsedCompounds.lastIndexOf(compound) + 1;
     }
 
+    @Override
     public int getLength() {
         return this.parsedCompounds.size();
     }
 
+    @Override
     public Iterator<C> iterator() {
         return this.parsedCompounds.iterator();
     }
 
+    @Override
     public void setCompoundSet(CompoundSet<C> compoundSet) {
         this.compoundSet = compoundSet;
     }
 
+    @Override
     public CompoundSet<C> getCompoundSet() {
         return compoundSet;
     }
 
+    @Override
     public void setContents(String sequence) {
         // Horrendously inefficient - pretty much the way the old BJ did things.
         // TODO Should be optimised.
@@ -128,6 +139,7 @@ public class ArrayListSequenceReader<C extends Compound> implements SequenceRead
         }
     }
 
+    @Override
     public SequenceView<C> getSubSequence(final Integer bioBegin, final Integer bioEnd) {
         return new SequenceProxyView<C>(ArrayListSequenceReader.this, bioBegin, bioEnd);
     }
