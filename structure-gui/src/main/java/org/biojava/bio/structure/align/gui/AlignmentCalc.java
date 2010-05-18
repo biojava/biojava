@@ -23,23 +23,18 @@
 package org.biojava.bio.structure.align.gui;
 
 
-import java.util.List;
 import java.util.logging.Logger;
-
-
-
 import org.biojava.bio.structure.Atom;
-import org.biojava.bio.structure.Group;
+
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureException;
 import org.biojava.bio.structure.StructureTools;
 import org.biojava.bio.structure.align.StructureAlignment;
+
 import org.biojava.bio.structure.align.ce.ConfigStrucAligParams;
 import org.biojava.bio.structure.align.gui.AlignmentGui;
 import org.biojava.bio.structure.align.gui.jmol.StructureAlignmentJmol;
 import org.biojava.bio.structure.align.model.AFPChain;
-import org.biojava.bio.structure.jama.Matrix;
-import org.biojava.bio.structure.Calc;
 
 
 /** A class that obtains two structures via DAS and aligns them
@@ -103,77 +98,19 @@ public class AlignmentCalc implements AlignmentCalculationRunnable {
 
          afpChain.setName1(name1);
          afpChain.setName2(name2);
-
-         //System.out.println(afpChain);
-
-         
-         List<Group> hetatms = structure1.getChain(0).getAtomGroups("hetatm");
-         List<Group> nucs    = structure1.getChain(0).getAtomGroups("nucleotide");
-
-         List<Group> hetatms2 = structure2.getChain(0).getAtomGroups("hetatm");
-         List<Group> nucs2    = structure2.getChain(0).getAtomGroups("nucleotide");
-
-         StructureAlignmentJmol jmol;
-//         if(afpChain.getAlgorithmName().startsWith("jCE")) {
-//            //rotate all ca2 together
-//            Matrix m = afpChain.getBlockRotationMatrix()[0];
-//            Atom s = afpChain.getBlockShiftVector()[0];
-//            Group[] twistedGroups = new Group[ca2.length];
-//            int i = -1;
-//            for(Atom a : ca2 ) {
-//               i++;
-//               Group g = a.getParent();
-//               twistedGroups[i] = g;
-//               Calc.rotate(g,m);
-//               Calc.shift(g,s);
-//            }
-//            for ( Group g: hetatms2){
-//               Calc.rotate(g,m);
-//               Calc.shift(g,s);
-//            }
-//            for ( Group g: nucs2){
-//               Calc.rotate(g,m);
-//               Calc.shift(g,s);
-//            }
-//
-//            jmol = DisplayAFP.display(afpChain, twistedGroups, ca1, ca2,hetatms, nucs, hetatms2, nucs2);
-//            //jmol = new StructureAlignmentJmol(afpChain, ca1, ca2);
-//         }
-//         else {
-            jmol = StructureAlignmentDisplay.display(afpChain, ca1, ca2, hetatms, nucs,hetatms2, nucs2);
-         //}
-         
+   
+         StructureAlignmentJmol jmol =   StructureAlignmentDisplay.display(afpChain, ca1, ca2);
+           
          String title = jmol.getTitle();
          ConfigStrucAligParams params = algorithm.getParameters();
          if ( params != null)
         	 title += " " + algorithm.getParameters().toString();
          jmol.setTitle(title);
-         //String result = afpChain.toFatcat(ca1, ca2);
-
-         //String rot = afpChain.toRotMat();
 
          DisplayAFP.showAlignmentImage(afpChain,ca1,ca2,jmol);           
 
          System.out.println(afpChain.toCE(ca1,ca2));
-         /*
-			JFrame frame = new JFrame();
-			frame.setTitle(algorithm.getAlgorithmName()+ " : " + name1 + " vs. " + name2);
-			frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-
-			String html = "<html><body><pre>"+result+"</pre></body></html>";
-
-			//JTextPane tp = new JTextPane();
-			JEditorPane tp = new JEditorPane("text/html", html);
-			tp.setEditable(false);
-			JScrollPane js = new JScrollPane();
-			js.getViewport().add(tp);
-
-
-			frame.getContentPane().add(js);
-			frame.pack();      
-			frame.setVisible(true);*/
-
-         //aligner.align(structure1,structure2);
+        
       } catch (StructureException e){
          e.printStackTrace();
          logger.warning(e.getMessage());

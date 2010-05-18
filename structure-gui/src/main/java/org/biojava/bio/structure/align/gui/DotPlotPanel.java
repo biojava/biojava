@@ -30,6 +30,7 @@ import javax.swing.JFrame;
 import org.biojava.bio.structure.Atom;
 import org.biojava.bio.structure.Group;
 import org.biojava.bio.structure.StructureException;
+import org.biojava.bio.structure.StructureTools;
 import org.biojava.bio.structure.align.StructureAlignment;
 import org.biojava.bio.structure.align.StructureAlignmentFactory;
 import org.biojava.bio.structure.align.ce.CECalculator;
@@ -245,14 +246,14 @@ public class DotPlotPanel extends ScaleableMatrixPanel {
 			for (Atom a : ca2){
 				Group g = (Group)a.getParent().clone(); // works because each group has only a CA atom
 
-				ca2clone[pos] = g.getAtom("CA");
+				ca2clone[pos] = g.getAtom(StructureTools.caAtomName);
 
 				pos++;
 			}
 			for (Atom a : ca2){
 				Group g = (Group)a.getParent().clone();
 
-				ca2clone[pos] = g.getAtom("CA");
+				ca2clone[pos] = g.getAtom(StructureTools.caAtomName);
 
 				pos++;
 			}

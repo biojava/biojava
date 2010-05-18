@@ -237,11 +237,6 @@ public class DBResultTable implements ActionListener{
 			Atom[] ca1;
 			Atom[] ca2;
 
-			List<Group> hetatms1 = structure1.getChain(0).getAtomGroups("hetatm");
-			List<Group> nucs1    = structure1.getChain(0).getAtomGroups("nucleotide");
-			List<Group> hetatms2 = new ArrayList<Group>();
-			List<Group> nucs2    = new ArrayList<Group>();
-
 			ca1 = StructureTools.getAtomCAArray(structure1);
 			ca2 = StructureTools.getAtomCAArray(structure2);
 
@@ -253,12 +248,7 @@ public class DBResultTable implements ActionListener{
 
 
 
-			if ( (afpChain.getBlockNum() - 1) == 0){
-				hetatms2 = structure2.getChain(0).getAtomGroups("hetatm");
-				nucs2    = structure2.getChain(0).getAtomGroups("nucleotide");
-			}
-
-			StructureAlignmentJmol jmol = StructureAlignmentDisplay.display(afpChain,ca1,ca2,hetatms1, nucs1, hetatms2, nucs2);
+			StructureAlignmentJmol jmol = StructureAlignmentDisplay.display(afpChain,ca1,ca2);
 
 			//String result = afpChain.toFatcat(ca1, ca2);
 

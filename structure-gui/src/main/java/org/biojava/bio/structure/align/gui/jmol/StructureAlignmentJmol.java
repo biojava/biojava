@@ -451,8 +451,7 @@ public class StructureAlignmentJmol implements MouseMotionListener, MouseListene
             return;
          }
          String result = AfpChainWriter.toWebSiteDisplay(afpChain, ca1, ca2) ;
-         result += AFPChain.newline;
-         result += afpChain.toRotMat();
+
          DisplayAFP.showAlignmentImage(afpChain, result);
       } else if (cmd.equals(MenuCreator.ALIGNMENT_PANEL)){
          if ( afpChain == null) {

@@ -69,23 +69,9 @@ public class MyAlignmentLoadListener implements ActionListener {
             Chain c1 = ca1[0].getParent().getParent();
             Chain c2 = ca2[0].getParent().getParent();
 
-            List<Group> hetatms = c1.getAtomGroups("hetatm");
-            List<Group> nucs1   = c1.getAtomGroups("nucleotide");
-
-            List<Group> hetatms2 = new ArrayList<Group>();
-            List<Group> nucs2    = new ArrayList<Group>();
-
-
-            if ( (afpChain.getBlockNum() - 1) == 0){           
-               hetatms2 = c2.getAtomGroups("hetatm");
-               nucs2    = c2.getAtomGroups("nucleotide");
-
-               // they are not rotated at this point.. the display will do it for us...
-
-            }
 
             //StructureAlignment algorithm = StructureAlignmentFactory.getAlgorithm(afpChain.getAlgorithmName());
-            StructureAlignmentJmol jmol = StructureAlignmentDisplay.display(afpChain, ca1, ca2, hetatms, nucs1, hetatms2, nucs2);
+            StructureAlignmentJmol jmol = StructureAlignmentDisplay.display(afpChain, ca1, ca2); 
 
             //String result = afpChain.toFatcat(ca1, ca2);
 

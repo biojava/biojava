@@ -461,73 +461,7 @@ public class DisplayAFP
    }
 
 
-   private static final int getUngappedPos(AFPChain afpChain, int aligPos){
-      //		char[] aseq1 = afpChain.getAlnseq1();
-      //		char[] aseq2 = afpChain.getAlnseq2();
-      //
-      //		if ( aligPos > aseq1.length)
-      //			return -1;
-      //		if ( aligPos < 0)
-      //			return -1;
-      //
-      //		int pos = -1;
-      //
-      //		int ungappedPos = -1;
-      //		while (pos < aseq1.length){
-      //			pos++;
-      //			if ( aseq1[pos] != '-' && aseq2[pos] != '-' )
-      //				ungappedPos++;
-      //			if ( aligPos == pos)
-      //				return ungappedPos;
-      //		}
-      //		return ungappedPos;
-
-      int ungappedPos = -1;
-      int blockNum = afpChain.getBlockNum();
-
-      int[] optLen = afpChain.getOptLen();
-      int[][][] optAln = afpChain.getOptAln();
-
-      int len = 0;
-      int p1b=0;
-      int p2b=0;
-
-      for(int i = 0; i < blockNum; i ++)  {   
-
-         for(int j = 0; j < optLen[i]; j ++) {
-
-            int p1 = optAln[i][0][j];
-            int p2 = optAln[i][1][j];
-
-            //	               System.out.println(p1 + " " + p2 + " " +  footer2.toString());
-
-            if ( len == 0){
-               //
-            } else {
-               // check for gapped region
-               int lmax = (p1 - p1b - 1)>(p2 - p2b - 1)?(p1 - p1b - 1):(p2 - p2b - 1);
-               for(int k = 0; k < lmax; k ++)      {
-                  len++;
-               }
-            }
-
-            len++;
-            ungappedPos++;
-            p1b = p1;
-            p2b = p2;
-            if ( len >= aligPos) {
-
-               return ungappedPos;
-            }
-         }
-      }
-
-      return ungappedPos;
-
-   }
-
-
-
+  
    private static final List<Chain> getAlignedModel(Atom[] ca){
 
       List<Chain> model = new ArrayList<Chain>();
@@ -558,6 +492,7 @@ public class DisplayAFP
 
       return model;
    }
+  
 
    public static final Structure getAlignedStructure(Atom[] ca1, Atom[] ca2) throws StructureException{
 
@@ -633,10 +568,10 @@ public class DisplayAFP
 
       //if ( hetatms2.size() > 0)
       //	System.out.println("atom after:" + hetatms2.get(0).getAtom(0));
-      if ( afpChain.getBlockNum()  == 1){
+      if ( afpChain.getBlockNum() > 0){
 
          if (( hetatms2.size() > 0) || (nucleotides2.size() >0)) {
-            //	System.out.println("transforming ligands chain 2");
+          
             if ( afpChain.getBlockRotationMatrix().length > 0 ) {
 
                Matrix m1      = afpChain.getBlockRotationMatrix()[0];
