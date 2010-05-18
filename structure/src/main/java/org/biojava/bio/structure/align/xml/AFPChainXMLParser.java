@@ -14,6 +14,7 @@ import org.biojava.bio.structure.AtomImpl;
 import org.biojava.bio.structure.Chain;
 import org.biojava.bio.structure.Group;
 import org.biojava.bio.structure.StructureException;
+import org.biojava.bio.structure.align.ce.CeCPMain;
 import org.biojava.bio.structure.align.model.AFP;
 import org.biojava.bio.structure.align.model.AFPChain;
 import org.biojava.bio.structure.align.util.AFPAlignmentDisplay;
@@ -165,8 +166,9 @@ public class AFPChainXMLParser
 				a.setName1(getAttribute(rootElement,"name1"));				
 				a.setName2(getAttribute(rootElement,"name2"));
 				String algoname = getAttribute(rootElement,"method");
-				if ( algoname != null)
-					a.setAlgorithmName(algoname);
+				if ( algoname != null) {
+					a.setAlgorithmName(algoname);					
+				}
 				String version = getAttribute(rootElement,"version");
 				if ( version != null)
 					a.setVersion(version);
@@ -178,6 +180,10 @@ public class AFPChainXMLParser
 				a.setTotalLenIni(	new Integer(getAttribute(rootElement,"totalLenIni")).intValue());
 				a.setBlockNum(		new Integer(getAttribute(rootElement,"blockNum")).intValue());
 
+				if ( a.getAlgorithmName().equals(CeCPMain.algorithmName)){
+                   a.setSequentialAlignment(a.getBlockNum() == 1);
+                }
+				
 				a.setAlignScore(new Double(getAttribute(rootElement,"alignScore")).doubleValue());
 				a.setChainRmsd(new Double(getAttribute(rootElement,"chainRmsd")).doubleValue());
 				a.setIdentity(new Double(getAttribute(rootElement,"identity")).doubleValue());
