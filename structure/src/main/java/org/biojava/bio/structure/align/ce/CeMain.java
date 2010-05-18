@@ -131,7 +131,7 @@ public class CeMain extends AbstractStructureAlignment implements StructureAlign
 		calculator.traceFragmentMatrix( afpChain,ca1, ca2clone);
 		calculator.nextStep( afpChain,ca1, ca2clone);
 
-		afpChain.setAlgorithmName(algorithmName);
+		afpChain.setAlgorithmName(getAlgorithmName());
 		afpChain.setVersion(version);
 
 		// Set the distance matrix
