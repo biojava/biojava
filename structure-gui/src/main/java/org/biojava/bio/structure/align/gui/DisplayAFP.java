@@ -31,7 +31,6 @@ import javax.swing.JMenuBar;
 import javax.swing.JScrollPane;
 
 import org.biojava.bio.structure.Atom;
-import org.biojava.bio.structure.Calc;
 import org.biojava.bio.structure.Chain;
 import org.biojava.bio.structure.ChainImpl;
 import org.biojava.bio.structure.Group;
@@ -43,7 +42,6 @@ import org.biojava.bio.structure.align.gui.aligpanel.StatusDisplay;
 import org.biojava.bio.structure.align.gui.jmol.JmolTools;
 import org.biojava.bio.structure.align.gui.jmol.StructureAlignmentJmol;
 import org.biojava.bio.structure.align.model.AFPChain;
-import org.biojava.bio.structure.jama.Matrix;
 
 
 public class DisplayAFP
@@ -51,31 +49,6 @@ public class DisplayAFP
 
    public static final boolean debug =  false;
 
-
-   /*public static final List<Integer> getEqrPos(int chainNr, AFPChain afpChain){
-		List<Integer> lst = new ArrayList<Integer>();
-
-		if ( chainNr > 1) {
-			System.err.println("multiple alignments not supported yet!");
-			return lst;
-		}	
-
-
-		int blockNum = afpChain.getBlockNum();      
-		int[] optLen = afpChain.getOptLen();
-		int[][][] optAln = afpChain.getOptAln();
-
-		for(int bk = 0; bk < blockNum; bk ++)       {
-
-
-			for ( int i=0;i< optLen[bk];i++){
-				int pos = optAln[bk][chainNr][i];
-				lst.add(pos);
-			}
-
-		}
-		return lst;
-	}*/
 
    //TODO: same as getEqrPos??? !!!
    public static final List<Integer> getEQRAlignmentPos(AFPChain afpChain){
@@ -461,7 +434,13 @@ public class DisplayAFP
    }
 
 
-  
+   /** get an artifical List of chains containing the Atoms and groups.
+    * Does NOT rotate anything.
+    * @param ca1
+    * @param ca2
+    * @return
+    * @throws StructureException
+    */
    private static final List<Chain> getAlignedModel(Atom[] ca){
 
       List<Chain> model = new ArrayList<Chain>();
@@ -494,6 +473,13 @@ public class DisplayAFP
    }
   
 
+   /** get an artifical Structure containing both chains.
+    * Does NOT rotate anything
+    * @param ca1
+    * @param ca2
+    * @return
+    * @throws StructureException
+    */
    public static final Structure getAlignedStructure(Atom[] ca1, Atom[] ca2) throws StructureException{
 
       Structure s = new StructureImpl();
@@ -509,6 +495,8 @@ public class DisplayAFP
       return s;
    }
 
+   
+   
    public static final Atom[] getAtomArray(Atom[] ca,List<Group> hetatms, List<Group> nucleotides ) throws StructureException{
       List<Atom> atoms = new ArrayList<Atom>();
 
@@ -568,28 +556,7 @@ public class DisplayAFP
 
       //if ( hetatms2.size() > 0)
       //	System.out.println("atom after:" + hetatms2.get(0).getAtom(0));
-      if ( afpChain.getBlockNum() > 0){
-
-         if (( hetatms2.size() > 0) || (nucleotides2.size() >0)) {
-          
-            if ( afpChain.getBlockRotationMatrix().length > 0 ) {
-
-               Matrix m1      = afpChain.getBlockRotationMatrix()[0];
-               //m1.print(3,3);
-               Atom   vector1 = afpChain.getBlockShiftVector()[0];
-               //System.out.println("shift vector:" + vector1);
-
-               for ( Group g : hetatms2){						
-                  Calc.rotate(g, m1);
-                  Calc.shift(g,vector1);
-               }
-               for (Group g: nucleotides2){
-                  Calc.rotate(g, m1);
-                  Calc.shift(g,vector1);
-               }
-            }
-         }
-      }
+      
       //if ( hetatms2.size() > 0)
       //	System.out.println("atom after:" + hetatms2.get(0).getAtom(0));
 

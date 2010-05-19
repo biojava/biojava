@@ -10,6 +10,8 @@ import org.biojava.bio.structure.Group;
 import org.biojava.bio.structure.StructureException;
 import org.biojava.bio.structure.align.AFPTwister;
 import org.biojava.bio.structure.align.ce.CeCPMain;
+import org.biojava.bio.structure.align.fatcat.FatCatFlexible;
+import org.biojava.bio.structure.align.fatcat.FatCatRigid;
 import org.biojava.bio.structure.align.gui.jmol.StructureAlignmentJmol;
 import org.biojava.bio.structure.align.model.AFPChain;
 import org.biojava.bio.structure.jama.Matrix;
@@ -31,11 +33,10 @@ public class StructureAlignmentDisplay {
          throw new StructureException("length of atoms arrays is too short! " + ca1.length + "," + ca2.length);
       }
       
+      Group[] twistedGroups = prepareGroupsForDisplay(afpChain, ca1, ca2);
+            
       List<Group> hetatms  = new ArrayList<Group>();
       List<Group> nucs1    = new ArrayList<Group>();
-      List<Group> hetatms2 = new ArrayList<Group>();
-      List<Group> nucs2    = new ArrayList<Group>();
-      
       Group g1 = ca1[0].getParent();
       Chain c1 = null;
       if ( g1 != null) {
@@ -45,7 +46,8 @@ public class StructureAlignmentDisplay {
             nucs1  = c1.getAtomGroups("nucleotide");
          }
       }
-      
+      List<Group> hetatms2 = new ArrayList<Group>();
+      List<Group> nucs2    = new ArrayList<Group>();
       Group g2 = ca2[0].getParent();
       Chain c2 = null;
       if ( g2 != null){
@@ -55,35 +57,51 @@ public class StructureAlignmentDisplay {
             nucs2 = c2.getAtomGroups("nucleotide");
          }
       }
-            
-      System.out.println("got nr of hetatoms: " + hetatms2.size() + " nucs2: " + nucs2.size());
       
-      return display(afpChain, ca1, ca2, hetatms, nucs1, hetatms2, nucs2);
+   
+      
+      return DisplayAFP.display(afpChain, twistedGroups, ca1, ca2,hetatms, nucs1, hetatms2, nucs2);
+
    }
    
-   private static StructureAlignmentJmol display(AFPChain afpChain, Atom[] ca1,
-         Atom[] ca2, List<Group> hetatms, List<Group> nucs1,
-         List<Group> hetatms2, List<Group> nucs2) throws StructureException {
-
-      Group[] twistedGroups = new Group[ ca2.length];
-
+   /** Rotate the Atoms/Groups so they are aligned for the 3D visualisation
+    * 
+    * @param afpChain
+    * @param ca1
+    * @param ca2
+    * @return
+    * @throws StructureException
+    */
+   public static Group[] prepareGroupsForDisplay(AFPChain afpChain, Atom[] ca1, Atom[] ca2) throws StructureException{
+      
 
       if ( afpChain.getBlockRotationMatrix().length == 0 ) {
          throw new StructureException("No rotation matrix found to rotate 2nd structure!");
       }
-
+      
+      Group[] twistedGroups = new Group[ ca2.length];
+      
       int blockNum = afpChain.getBlockNum();
+            
       int i = -1;
      
-      if  (( blockNum == 1 ) || (afpChain.getAlgorithmName().equals(CeCPMain.algorithmName))) {
+   
+      List<Group> hetatms2 = new ArrayList<Group>();
+      List<Group> nucs2    = new ArrayList<Group>();
+      
+     
+      Group g2 = ca2[0].getParent();
+      Chain c2 = null;
+      if ( g2 != null){
+         c2 = g2.getParent();
+         if ( c2 != null){
+            hetatms2 = c2.getAtomGroups("hetatm");
+            nucs2 = c2.getAtomGroups("nucleotide");
+         }
+      }
+      
+      if (  (afpChain.getAlgorithmName().equals(FatCatRigid.algorithmName) ) || (afpChain.getAlgorithmName().equals(FatCatFlexible.algorithmName) ) ){
          
-         Matrix m   =  afpChain.getBlockRotationMatrix()[ 0];
-         Atom shift =  afpChain.getBlockShiftVector()   [ 0 ];
-
-         shiftAll(afpChain, ca2,hetatms2, nucs2, m,shift, twistedGroups);
-       
-      } else {
-        
          for (Atom a: ca2){
             i++;
             twistedGroups[i]=a.getParent();
@@ -91,31 +109,50 @@ public class StructureAlignmentDisplay {
          }
 
          twistedGroups = AFPTwister.twistOptimized(afpChain, ca1, ca2);
-         // display takes care of hets and nucs!
-//         Matrix m   =  afpChain.getBlockRotationMatrix()[ 0];
-//         Atom shift =  afpChain.getBlockShiftVector()   [ 0 ];
-//         
-//         // shift ligands for 2nd struct.
-//         for (Group g : hetatms2){
-//            Calc.rotate(g, m);
-//            Calc.shift(g,shift);
-//         }
-//         for (Group g : nucs2){
-//            Calc.rotate(g, m);
-//            Calc.shift(g,shift);
-//         }
          
+      //} else  if  (( blockNum == 1 ) || (afpChain.getAlgorithmName().equals(CeCPMain.algorithmName))) {
+      } else {
          
+         Matrix m   =  afpChain.getBlockRotationMatrix()[ 0];
+         Atom shift =  afpChain.getBlockShiftVector()   [ 0 ];
 
+         shiftCA2(afpChain, ca2,hetatms2, nucs2, m,shift, twistedGroups);
+       
       }
+      
+      if ( afpChain.getBlockNum() > 0){
 
+         if (( hetatms2.size() > 0) || (nucs2.size() >0)) {
+          
+            if ( afpChain.getBlockRotationMatrix().length > 0 ) {
 
-      return DisplayAFP.display(afpChain, twistedGroups, ca1, ca2,hetatms, nucs1, hetatms2, nucs2);
+               Matrix m1      = afpChain.getBlockRotationMatrix()[0];
+               //m1.print(3,3);
+               Atom   vector1 = afpChain.getBlockShiftVector()[0];
+               //System.out.println("shift vector:" + vector1);
 
+               for ( Group g : hetatms2){                       
+                  Calc.rotate(g, m1);
+                  Calc.shift(g,vector1);
+               }
+               for (Group g: nucs2){
+                  Calc.rotate(g, m1);
+                  Calc.shift(g,vector1);
+               }
+            }
+         }
+      }
+      
+      return twistedGroups;
    }
+   
+
+     
+
+   
 
   
-   private static void shiftAll(AFPChain afpChain, Atom[] ca2, List<Group> hetatms2, List<Group> nucs2, Matrix m, Atom shift, Group[] twistedGroups)
+   public static void shiftCA2(AFPChain afpChain, Atom[] ca2, List<Group> hetatms2, List<Group> nucs2, Matrix m, Atom shift, Group[] twistedGroups)
    {
       int i = -1;
       for (Atom a: ca2){

@@ -46,6 +46,7 @@ import org.biojava.bio.structure.align.ce.CeMain;
 import org.biojava.bio.structure.align.client.FarmJobParameters;
 import org.biojava.bio.structure.align.client.JFatCatClient;
 import org.biojava.bio.structure.align.client.PdbPair;
+import org.biojava.bio.structure.align.fatcat.FatCatFlexible;
 import org.biojava.bio.structure.align.fatcat.FatCatRigid;
 import org.biojava.bio.structure.align.gui.AlignmentGui;
 import org.biojava.bio.structure.align.gui.ChooseDirAction;
@@ -189,32 +190,38 @@ public class WebStartMain
          if (arg0.equalsIgnoreCase("ce") || 
                arg0.equalsIgnoreCase("ce_cp") ||
                arg0.equalsIgnoreCase("sw") ||
+               arg0.equalsIgnoreCase("fatcat") ||
                arg0.equalsIgnoreCase("fatcat_flexible")){
             try {
 
                StructureAlignment algorithm ;
                if ( arg0.equalsIgnoreCase("ce"))
-                  algorithm = new CeMain();
+                  algorithm = StructureAlignmentFactory.getAlgorithm(CeMain.algorithmName);
                else if ( arg0.equalsIgnoreCase("ce_cp"))
-                  algorithm = new CeCPMain();
+                  algorithm = StructureAlignmentFactory.getAlgorithm(CeCPMain.algorithmName);
+               else if ( arg0.equalsIgnoreCase("fatcat"))
+                  algorithm = StructureAlignmentFactory.getAlgorithm(FatCatRigid.algorithmName);
                else if ( arg0.equalsIgnoreCase("fatcat_flexible"))
-                  algorithm = StructureAlignmentFactory.getAlgorithm("jFatCat_flexible");
+                  algorithm = StructureAlignmentFactory.getAlgorithm(FatCatFlexible.algorithmName);
                else
                   algorithm = new SmithWaterman3Daligner();
+               
                showStructureAlignment(serverLocation,algorithm ,c1,c2, pair.getName1(),pair.getName2());
+            
             } catch (Exception e){
                e.printStackTrace();
                JOptionPane.showMessageDialog(null,
                      "Something went wrong! : " + e.getMessage());
             }
-         } else if ( arg0.equalsIgnoreCase("fatcat")){
-            try {
-               showFatcat(serverLocation,c1,c2, pair.getName1(),pair.getName2());
-            } catch (Exception e){
-               e.printStackTrace();
-               JOptionPane.showMessageDialog(null,
-                     "Something went wrong! : " + e.getMessage());
-            }
+            
+//         } else if ( arg0.equalsIgnoreCase("fatcat")){
+//            try {
+//               showFatcat(serverLocation,c1,c2, pair.getName1(),pair.getName2());
+//            } catch (Exception e){
+//               e.printStackTrace();
+//               JOptionPane.showMessageDialog(null,
+//                     "Something went wrong! : " + e.getMessage());
+//            }
          } else if ( arg0.equalsIgnoreCase("biojava")){
             try {
                showBiojava(structure1,c1,structure2,c2);
@@ -397,8 +404,7 @@ public class WebStartMain
          e.printStackTrace();
       }
 
-      if ( afpChain == null )  {
-         System.out.println(title);
+      if ( afpChain == null )  {         
          afpChain = algorithm.align(ca1, ca2);
       }
 
@@ -416,82 +422,82 @@ public class WebStartMain
       DisplayAFP.showAlignmentImage(afpChain,ca1,ca2,jmol);
 
       }
-      private static void showFatcat(String serverLocation, Chain c1, Chain c2, String name1, String name2) throws StructureException{
-
-         JFrame tmpFrame = new JFrame();
-         tmpFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-         showProgressBar(tmpFrame,"Calculating JFatCat (rigid) alignment... ", "Calculating the structure alignment.");
-
-         StructureAlignment fatCatRigid = StructureAlignmentFactory.getAlgorithm(FatCatRigid.algorithmName);
-
-         Atom[] ca1 = StructureTools.getAtomCAArray(c1);
-         Atom[] ca2 = StructureTools.getAtomCAArray(c2);
-
-         // check if we already have a precalculated alignment...
-         AFPChain afpChain = null;
-
-         try {
-            //System.out.println("requesting alignment from server...");
-
-            afpChain = JFatCatClient.getAFPChainFromServer(serverLocation, name1, name2, ca1, ca2);
-
-            if ( afpChain != null){
-               // twist groups for visualisation
-               // we only have data for the optimized alignment so far...
-
-               //  System.out.println("sending afpChain to fatcatRigid proxy");
-
-               //JFatCatProxy proxy = new JFatCatProxy();
-               //proxy.setStructureAlignment(fatCatRigid);
-               //proxy.twistGroups(afpChain,ca1,ca2);
-
-            } else {
-               System.out.println("calculating");
-               afpChain = fatCatRigid.align(ca1,ca2);
-
-               afpChain.setName1(name1);
-               afpChain.setName2(name2);
-
-               //System.out.println("submitting...");
-               //JFatCatClient.sendAFPChainToServer(serverLocation,afpChain, ca1, ca2);
-            }
-         } catch (Exception e){
-            e.printStackTrace();
-         }
-
-         if ( afpChain == null) {
-            //do the actual alignment 
-            afpChain = fatCatRigid.align(ca1, ca2);
-            afpChain.setName1(name1);
-            afpChain.setName2(name2);
-
-         }
-
-
-         tmpFrame.dispose();
-
-
-         Group[] twistedGroups = AFPTwister.twistOptimized(afpChain,ca1,ca2);
-
-         List<Group> hetatms = ca1[0].getParent().getParent().getAtomGroups("hetatm");
-         List<Group> nucs    = ca1[0].getParent().getParent().getAtomGroups("nucleotide");
-
-         List<Group> hetatms2 = new ArrayList<Group>();
-         List<Group> nucs2    = new ArrayList<Group>();
-
-
-         if ( (afpChain.getBlockNum() - 1) == 0){           
-            hetatms2 = ca2[0].getParent().getParent().getAtomGroups("hetatm");
-            nucs2    = ca2[0].getParent().getParent().getAtomGroups("nucleotide");
-
-            // they are not rotated at this point.. the display will do it for us...
-
-         }
-         StructureAlignmentJmol jmol = DisplayAFP.display(afpChain, twistedGroups, ca1, ca2, hetatms, nucs, hetatms2, nucs2);
-         DisplayAFP.showAlignmentImage(afpChain,ca1,ca2,jmol);
-
-      }
+//      private static void showFatcat(String serverLocation, Chain c1, Chain c2, String name1, String name2) throws StructureException{
+//
+//         JFrame tmpFrame = new JFrame();
+//         tmpFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//
+//         showProgressBar(tmpFrame,"Calculating JFatCat (rigid) alignment... ", "Calculating the structure alignment.");
+//
+//         StructureAlignment fatCatRigid = StructureAlignmentFactory.getAlgorithm(FatCatRigid.algorithmName);
+//
+//         Atom[] ca1 = StructureTools.getAtomCAArray(c1);
+//         Atom[] ca2 = StructureTools.getAtomCAArray(c2);
+//
+//         // check if we already have a precalculated alignment...
+//         AFPChain afpChain = null;
+//
+//         try {
+//            //System.out.println("requesting alignment from server...");
+//
+//            afpChain = JFatCatClient.getAFPChainFromServer(serverLocation, name1, name2, ca1, ca2);
+//
+//            if ( afpChain != null){
+//               // twist groups for visualisation
+//               // we only have data for the optimized alignment so far...
+//
+//               //  System.out.println("sending afpChain to fatcatRigid proxy");
+//
+//               //JFatCatProxy proxy = new JFatCatProxy();
+//               //proxy.setStructureAlignment(fatCatRigid);
+//               //proxy.twistGroups(afpChain,ca1,ca2);
+//
+//            } else {
+//               System.out.println("calculating");
+//               afpChain = fatCatRigid.align(ca1,ca2);
+//
+//               afpChain.setName1(name1);
+//               afpChain.setName2(name2);
+//
+//               //System.out.println("submitting...");
+//               //JFatCatClient.sendAFPChainToServer(serverLocation,afpChain, ca1, ca2);
+//            }
+//         } catch (Exception e){
+//            e.printStackTrace();
+//         }
+//
+//         if ( afpChain == null) {
+//            //do the actual alignment 
+//            afpChain = fatCatRigid.align(ca1, ca2);
+//            afpChain.setName1(name1);
+//            afpChain.setName2(name2);
+//
+//         }
+//
+//
+//         tmpFrame.dispose();
+//
+//
+//         Group[] twistedGroups = AFPTwister.twistOptimized(afpChain,ca1,ca2);
+//
+//         List<Group> hetatms = ca1[0].getParent().getParent().getAtomGroups("hetatm");
+//         List<Group> nucs    = ca1[0].getParent().getParent().getAtomGroups("nucleotide");
+//
+//         List<Group> hetatms2 = new ArrayList<Group>();
+//         List<Group> nucs2    = new ArrayList<Group>();
+//
+//
+//         if ( (afpChain.getBlockNum() - 1) == 0){           
+//            hetatms2 = ca2[0].getParent().getParent().getAtomGroups("hetatm");
+//            nucs2    = ca2[0].getParent().getParent().getAtomGroups("nucleotide");
+//
+//            // they are not rotated at this point.. the display will do it for us...
+//
+//         }
+//         StructureAlignmentJmol jmol = DisplayAFP.display(afpChain, twistedGroups, ca1, ca2, hetatms, nucs, hetatms2, nucs2);
+//         DisplayAFP.showAlignmentImage(afpChain,ca1,ca2,jmol);
+//
+//      }
 
 
 
