@@ -608,6 +608,8 @@ public class StructureAlignmentJmol implements MouseMotionListener, MouseListene
       StringWriter jmol = new StringWriter();
       jmol.append(DEFAULT_SCRIPT);
 
+      jmol.append("select */2; color lightgrey; model 2; ");
+      
       for(int bk = 0; bk < blockNum; bk ++)       {
 
          //the block nr determines the color...
