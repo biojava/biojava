@@ -197,6 +197,12 @@ public class AFPAlignmentDisplay
 			for(j = 0; j < optLen[i]; j ++) {
 				p1 = optAln[i][0][j];
 				p2 = optAln[i][1][j];
+				
+				// weird, could not find a residue in the Atom array. Did something change in the underlying data?
+				if (( p1 == -1 ) || ( p2 == -1)) {
+				   System.err.println("Could not get atom on position " + j );
+				   continue;
+				}
 				if(len > 0)     {
 					lmax = (p1 - p1b - 1)>(p2 - p2b - 1)?(p1 - p1b - 1):(p2 - p2b - 1);
 					for(k = 0; k < lmax; k ++)      {
