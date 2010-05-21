@@ -17,6 +17,9 @@ public class EditSequenceTest {
     assertSeq(new Edit.Substitute<NucleotideCompound>("TT", 2).edit(seq), "ATTT");
     assertSeq(new Edit.Substitute<NucleotideCompound>("T", 1).edit(seq), "TCGT");
     assertSeq(new Edit.Substitute<NucleotideCompound>("TTC", 2).edit(seq), "ATTC");
+
+    //Sub which exceeds the length of the sequence
+    assertSeq(new Edit.Substitute<NucleotideCompound>("AAAA", 4).edit(seq), "ACGAAAA");
   }
 
   @Test
@@ -31,14 +34,14 @@ public class EditSequenceTest {
   @Test
   public void insert() {
     DNASequence seq = new DNASequence("ACGT");
-    assertSeq(new Edit.Insert<NucleotideCompound>("T", 1).edit(seq), "TACGT");
-    assertSeq(new Edit.Insert<NucleotideCompound>("A", 1).edit(seq), "AACGT");
-    assertSeq(new Edit.Insert<NucleotideCompound>("A", 4).edit(seq), "ACGAT");
-    assertSeq(new Edit.Insert<NucleotideCompound>("TT", 2).edit(seq), "ATTCGT");
+    assertSeq(new Edit.Insert<NucleotideCompound>("TT", 1).edit(seq), "TTACGT");
+    assertSeq(new Edit.Insert<NucleotideCompound>("TT", 2,3).edit(seq), "ACTTGT");
+    assertSeq(new Edit.Insert<NucleotideCompound>("TT", 3,4).edit(seq), "ACGTTT");
+    assertSeq(new Edit.Insert<NucleotideCompound>("A", 4).edit(seq), "ACGTA");
 
     //Original BioJava example
     assertSeq(
-        new Edit.Insert<NucleotideCompound>("atgga", 4).edit(new DNASequence("gataca")),
+        new Edit.Insert<NucleotideCompound>("atgga", 3,4).edit(new DNASequence("gataca")),
         "gatatggaaca"
     );
   }
