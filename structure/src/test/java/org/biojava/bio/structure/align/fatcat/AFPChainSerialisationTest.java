@@ -58,6 +58,26 @@ extends TestCase
       super(testName);
    }
 
+//   public void testSerialization1P80_2IUF(){
+//      String name1 = "1P80.D";
+//      String name2 = "2IUF.E";
+//
+//      AtomCache cache =    TmpAtomCache.cache;
+//      try {
+//         
+//         Atom[] ca1 = cache.getAtoms(name1);         
+//         Atom[] ca2 = cache.getAtoms(name2);
+//         
+//         testAlignment(name1,name2 ,ca1,ca2,false);
+//         testAlignment(name1,name2,ca1,ca2,true);
+//         
+//      } catch (Exception e){
+//         e.printStackTrace();
+//         fail(e.getMessage());
+//      }
+//
+//   }
+
    public void testSerialization1a21_1hwg(){
 
 

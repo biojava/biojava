@@ -28,146 +28,159 @@ import java.io.IOException;
 
 
 import org.biojava.bio.structure.Atom;
-import org.biojava.bio.structure.Chain;
 
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureException;
-import org.biojava.bio.structure.StructureImpl;
 import org.biojava.bio.structure.StructureTools;
+import org.biojava.bio.structure.TmpAtomCache;
+import org.biojava.bio.structure.align.ce.CeCPMain;
 import org.biojava.bio.structure.align.ce.CeMain;
 import org.biojava.bio.structure.align.model.AFPChain;
+import org.biojava.bio.structure.align.util.AtomCache;
 import org.biojava.bio.structure.align.xml.AFPChainFlipper;
 import org.biojava.bio.structure.align.xml.AFPChainXMLConverter;
 import org.biojava.bio.structure.align.xml.AFPChainXMLParser;
-import org.biojava.bio.structure.io.PDBFileReader;
+
 
 
 import junit.framework.TestCase;
 
 public class FlipAFPChainTest extends TestCase {
 
-	public void testFlipping(){
-		try {
-			Structure s1 = getStructure("1cdg", "A");		
-			Structure s2 = getStructure("1tim","A");
+   public void testFlippingMultiBlock(){
+      
+      try {
 
-			String name1 = "1cdg.A";
-			String name2 = "1tim.A";
-			
-			Atom[] ca1 = StructureTools.getAtomCAArray(s1);
-			Atom[] ca2 = StructureTools.getAtomCAArray(s2);
+         String name1 = "1tim.A";
+         String name2 = "1cdg.A";
+         
+         flip(name1,name2, CeCPMain.algorithmName);
+      } catch (Exception e){
+         e.printStackTrace();
+         fail(e.getMessage());
+      }
 
-			StructureAlignment algorithm = StructureAlignmentFactory.getAlgorithm(CeMain.algorithmName);
-			AFPChain afpChain = algorithm.align(ca1,ca2);
-			afpChain.setName1(name1);
-			afpChain.setName2(name2);
-			
-			
+   }
 
-			String xml = AFPChainXMLConverter.toXML(afpChain, ca1, ca2);
-			
-			AFPChain newC    = AFPChainXMLParser.fromXML(xml, ca1, ca2);			
-			AFPChain flipped = AFPChainFlipper.flipChain(newC);
+   public void testFlipping(){
+      
+      try {
 
-			assertEquals(afpChain.getName1(), flipped.getName2());
-			assertEquals(afpChain.getName2(),flipped.getName1());
-			assertEquals(afpChain.getCa1Length(),flipped.getCa2Length());
-			assertEquals(afpChain.getCa2Length(),flipped.getCa1Length());
-			assertEquals(afpChain.getAlgorithmName(),flipped.getAlgorithmName());
-			assertEquals(afpChain.getVersion(), flipped.getVersion());
-			
-			//System.out.println(AFPChainXMLConverter.toXML(flipped));
-			
-			//AFPChainXMLParser.rebuildAFPChain(flipped, ca2, ca1);
-						
-			//FatCat newCat = new FatCat();
-			
-			//Group[] twistedGroups = AFPTwister.twistOptimized(flipped,ca2,ca1);
-			
-		    // FatCatAligner aligner =  newCat.getFatCatAligner();
-			//aligner.setTwistedGroups(twistedGroups);			
-			//newCat.display(flipped, ca2, ca1,  new ArrayList<Group>(),new ArrayList<Group>(),new ArrayList<Group>(),new ArrayList<Group>());
-			
-			String xmlNew = AFPChainXMLConverter.toXML(flipped, ca2, ca1);
-			
-			AFPChain backChain = AFPChainXMLParser.fromXML(xmlNew, ca2, ca1);
-			AFPChain origFlip  = AFPChainFlipper.flipChain(backChain);
-			//AFPChainXMLParser.rebuildAFPChain(origFlip, ca1, ca2);
-			
-			String xmlBack = AFPChainXMLConverter.toXML(origFlip);
-			if ( ! xmlBack.equals(xml)){
-				printFirstMismatch(xmlBack, xml);
-			}
-			assertEquals(xmlBack, xml);
-			
+         String name1 = "1cdg.A";
+         String name2 = "1tim.A";
+         flip(name1,name2, CeMain.algorithmName);
+      } catch (Exception e){
+         e.printStackTrace();
+         fail(e.getMessage());
+      }
+   }
 
-		} catch (Exception e){
-			e.printStackTrace();
-			fail(e.getMessage());
-		}
-	}
+   private void flip(String name1, String name2, String algorithmName) throws StructureException, IOException{
+      
+      AtomCache cache = TmpAtomCache.cache;
+      
+      Structure s1 = cache.getStructure(name1);
+      Structure s2 = cache.getStructure(name2);
+
+      Atom[] ca1 = StructureTools.getAtomCAArray(s1);
+      Atom[] ca2 = StructureTools.getAtomCAArray(s2);
+
+      StructureAlignment algorithm = StructureAlignmentFactory.getAlgorithm(algorithmName );
+      AFPChain afpChain = algorithm.align(ca1,ca2);
+      afpChain.setName1(name1);
+      afpChain.setName2(name2);
 
 
-	
-	
-	private Structure getStructure(String pdbId, String chainId) throws IOException, StructureException{
-		PDBFileReader pdbpars = new PDBFileReader();
-		
-		pdbpars.setAutoFetch(true);
-		Structure structure1 = pdbpars.getStructureById(pdbId);
 
-		Chain c = structure1.getChainByPDB(chainId);
+      String xml = AFPChainXMLConverter.toXML(afpChain, ca1, ca2);
 
-		Structure s = new StructureImpl();
-		s.addChain(c);
+      AFPChain newC    = AFPChainXMLParser.fromXML(xml, ca1, ca2);			
+      AFPChain flipped = AFPChainFlipper.flipChain(newC);
 
-		return s;
+      assertEquals(afpChain.getName1(), flipped.getName2());
+      assertEquals(afpChain.getName2(),flipped.getName1());
+      assertEquals(afpChain.getCa1Length(),flipped.getCa2Length());
+      assertEquals(afpChain.getCa2Length(),flipped.getCa1Length());
+      assertEquals(afpChain.getAlgorithmName(),flipped.getAlgorithmName());
+      assertEquals(afpChain.getVersion(), flipped.getVersion());
 
-	}
-	
-	 static final String newline = System.getProperty("line.separator");
-	  public void printFirstMismatch(String s1, String s2){
-	      String[] spl1 = s1.split(newline);
-	      String[] spl2 = s2.split(newline);
+      //System.out.println(AFPChainXMLConverter.toXML(flipped));
 
-	      for (int i = 0 ; i < spl1.length ; i++){
+      //AFPChainXMLParser.rebuildAFPChain(flipped, ca2, ca1);
 
-	         String line1 = spl1[i];
+      //FatCat newCat = new FatCat();
 
-	         if ( i >= spl2.length){
-	            System.err.println("s2 does not contain line " + (i+1));
-	            return;
-	         }
-	         String line2 = spl2[i];
+      //Group[] twistedGroups = AFPTwister.twistOptimized(flipped,ca2,ca1);
 
-	         if ( line1.equals(line2)){
-	            continue;
-	         }
+      // FatCatAligner aligner =  newCat.getFatCatAligner();
+      //aligner.setTwistedGroups(twistedGroups);			
+      //newCat.display(flipped, ca2, ca1,  new ArrayList<Group>(),new ArrayList<Group>(),new ArrayList<Group>(),new ArrayList<Group>());
 
-	         System.err.println("mismatch in line: " + (i+1));
+      String xmlNew = AFPChainXMLConverter.toXML(flipped, ca2, ca1);
 
-	         for ( int j = 0 ; j < line1.length();j++){
-	            char c1 = line1.charAt(j);
+      AFPChain backChain = AFPChainXMLParser.fromXML(xmlNew, ca2, ca1);
+      
+      AFPChain origFlip  = AFPChainFlipper.flipChain(backChain);
+      //AFPChainXMLParser.rebuildAFPChain(origFlip, ca1, ca2);
 
-	            if ( j >= line2.length()){
-	               System.err.println("s2 is shorter than s1. length s1:" + line1.length() + " length2:" + line2.length() );
-	               return;
-	            }
-
-	            char c2 = line2.charAt(j);
-	            if ( c1 != c2){
-
-	               System.err.println("line1: " + line1.substring(0,j+1));
-	               System.err.println("line2: " + line2.substring(0,j+1));
-
-	               System.err.println("mismatch at position " + (j+1) + " c1: "+ c1 + " " + c2);
-	             
-	               return;
-	            }
-	         }
+      String xmlBack = AFPChainXMLConverter.toXML(origFlip);
+      if ( ! xmlBack.equals(xml)){
+         printFirstMismatch(xmlBack, xml);
+      }
+      assertEquals(xmlBack, xml);
 
 
-	      }
 
-	   }
+   }
+
+
+
+
+
+
+   static final String newline = System.getProperty("line.separator");
+   public void printFirstMismatch(String s1, String s2){
+      String[] spl1 = s1.split(newline);
+      String[] spl2 = s2.split(newline);
+
+      for (int i = 0 ; i < spl1.length ; i++){
+
+         String line1 = spl1[i];
+
+         if ( i >= spl2.length){
+            System.err.println("s2 does not contain line " + (i+1));
+            return;
+         }
+         String line2 = spl2[i];
+
+         if ( line1.equals(line2)){
+            continue;
+         }
+
+         System.err.println("mismatch in line: " + (i+1));
+
+         for ( int j = 0 ; j < line1.length();j++){
+            char c1 = line1.charAt(j);
+
+            if ( j >= line2.length()){
+               System.err.println("s2 is shorter than s1. length s1:" + line1.length() + " length2:" + line2.length() );
+               return;
+            }
+
+            char c2 = line2.charAt(j);
+            if ( c1 != c2){
+
+               System.err.println("line1: " + line1.substring(0,j+1));
+               System.err.println("line2: " + line2.substring(0,j+1));
+
+               System.err.println("mismatch at position " + (j+1) + " c1: "+ c1 + " " + c2);
+
+               return;
+            }
+         }
+
+
+      }
+
+   }
 }
