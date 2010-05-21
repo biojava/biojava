@@ -98,10 +98,13 @@ public class AFPChainXMLParser
 		int[] optLen = afpChain.getOptLen();
 
 		String[][][] pdbAln = afpChain.getPdbAln();
+		
+		int[] verifiedOptLen =  afpChain.getOptLen().clone();
+		
 		for (int blockNr = 0 ; blockNr < blockNum ; blockNr++){
 
 			//System.out.println("got block " + blockNr + " size: " + optLen[blockNr]);
-
+		   int verifiedEQR = -1;
 			for ( int eqrNr = 0 ; eqrNr < optLen[blockNr] ; eqrNr++ ){
 				String pdbResnum1 = pdbAln[blockNr][0][eqrNr];
 				String pdbResnum2 = pdbAln[blockNr][1][eqrNr];
@@ -118,14 +121,24 @@ public class AFPChainXMLParser
 
 				int pos1 = getPositionForPDBresunm(pdbres1,chain1,ca1);
 				int pos2 = getPositionForPDBresunm(pdbres2,chain2,ca2);
+				
+				if ( pos1 == -1 || pos2 == -1 ){
+				   // this can happen when parsing old files that contained Calcium atoms...
+				   //System.err.println("AFPChainXMLParser: warning: pos1: " +pos1 + " " + pdbResnum1 + " pos2: " + pos2 + " " + pdbResnum2 +  " should never be -1. Probably parsing an.");
+				   verifiedOptLen[blockNr]-- ;
+				   continue;
+				}
+
+				verifiedEQR++;
 				//System.out.println(blockNr + " " + eqrNr + " " + pos1 + " " + pos2);
-				optAln[blockNr][0][eqrNr] = pos1;
-				optAln[blockNr][1][eqrNr] = pos2;
-				blockResList[blockNr][0][eqrNr] = pos1;
-				blockResList[blockNr][1][eqrNr] = pos2;
+				optAln[blockNr][0][verifiedEQR] = pos1;
+				optAln[blockNr][1][verifiedEQR] = pos2;
+				blockResList[blockNr][0][verifiedEQR] = pos1;
+				blockResList[blockNr][1][verifiedEQR] = pos2;
 			}
 		}
 
+		afpChain.setOptLen(verifiedOptLen);
 		afpChain.setOptAln(optAln);
 		afpChain.setBlockResList(blockResList);
 		// build up alignment image:
@@ -413,7 +426,7 @@ public class AFPChainXMLParser
 
 		for ( int i =0; i< atoms.length ;i++){
 			Group g = atoms[i].getParent();
-
+			//System.out.println(g + " ? " + pdbresnum);
 			if ( g.getPDBCode().equals(pdbresnum)){
 				Chain c = g.getParent();
 				if ( c.getName().equals(chainId)){
