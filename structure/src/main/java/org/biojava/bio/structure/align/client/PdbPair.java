@@ -20,9 +20,13 @@ public class PdbPair implements Comparable<PdbPair> {
 			name2= name1;
 			name1 = tmp;
 		}*/
+		// always make sure the first 4 chars are upper case...
 		
-		this.name1 = name1;
-		this.name2 = name2;
+		String pdb1 = name1.substring(0,4);
+		String pdb2 = name2.substring(0,4);
+		
+		this.name1 = pdb1.toUpperCase() + name1.substring(4,name1.length());
+		this.name2 = pdb2.toUpperCase() + name2.substring(4,name2.length());
 	}
 	public String getName1() {
 		return name1;
