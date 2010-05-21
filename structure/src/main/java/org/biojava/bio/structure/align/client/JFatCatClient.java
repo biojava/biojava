@@ -169,6 +169,7 @@ public class JFatCatClient {
             return null;
          } 
       } catch (Exception e){
+         e.printStackTrace();
          System.err.println("error in JFatCatClient: getAFPChainFromServer : " + e.getMessage());
       }
       return null;
