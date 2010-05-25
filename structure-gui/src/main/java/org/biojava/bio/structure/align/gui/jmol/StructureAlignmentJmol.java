@@ -63,12 +63,12 @@ import org.biojava.bio.structure.align.util.AtomCache;
 import org.biojava.bio.structure.align.util.ResourceManager;
 import org.biojava.bio.structure.align.util.UserConfiguration;
 import org.biojava.bio.structure.align.webstart.AligUIManager;
-import org.biojava.bio.structure.align.gui.aligpanel.AligPanel;
 import org.biojava.bio.structure.align.gui.jmol.AtomInfo;
 import org.biojava.bio.structure.align.gui.jmol.AtomInfoParser;
 import org.biojava.bio.structure.align.gui.jmol.JmolPanel;
 import org.biojava.bio.structure.align.gui.jmol.MyJmolStatusListener;
 import org.biojava.bio.structure.align.gui.jmol.RasmolCommandListener;
+import org.biojava.bio.structure.gui.util.ColorUtils;
 
 
 import org.jmol.api.JmolViewer;
@@ -548,51 +548,7 @@ public class StructureAlignmentJmol implements MouseMotionListener, MouseListene
       return j.toString();
    }
    
-   /**
-    * Make a color darker.
-    * 
-    * @param color     Color to make darker.
-    * @param fraction  Darkness fraction.
-    * @return          Darker color.
-    */
-   public static Color darker (Color color, double fraction)
-   {
-     int red   = (int) Math.round (color.getRed()   * (1.0 - fraction));
-     int green = (int) Math.round (color.getGreen() * (1.0 - fraction));
-     int blue  = (int) Math.round (color.getBlue()  * (1.0 - fraction));
-
-     if (red   < 0) red   = 0; else if (red   > 255) red   = 255;
-     if (green < 0) green = 0; else if (green > 255) green = 255;
-     if (blue  < 0) blue  = 0; else if (blue  > 255) blue  = 255;    
-
-     int alpha = color.getAlpha();
-
-     return new Color (red, green, blue, alpha);
-   }
-
    
-
-   /**
-    * Make a color lighter.
-    * 
-    * @param color     Color to make lighter.
-    * @param fraction  Darkness fraction.
-    * @return          Lighter color.
-    */
-   public static Color lighter (Color color, double fraction)
-   {
-     int red   = (int) Math.round (color.getRed()   * (1.0 + fraction));
-     int green = (int) Math.round (color.getGreen() * (1.0 + fraction));
-     int blue  = (int) Math.round (color.getBlue()  * (1.0 + fraction));
-
-     if (red   < 0) red   = 0; else if (red   > 255) red   = 255;
-     if (green < 0) green = 0; else if (green > 255) green = 255;
-     if (blue  < 0) blue  = 0; else if (blue  > 255) blue  = 255;    
-
-     int alpha = color.getAlpha();
-
-     return new Color (red, green, blue, alpha);
-   }
    
 
    private static String getMultiBlockJmolScript(AFPChain afpChain, Atom[] ca1, Atom[] ca2)
@@ -614,12 +570,17 @@ public class StructureAlignmentJmol implements MouseMotionListener, MouseListene
 
          //the block nr determines the color...
          int colorPos = bk;
-         if ( colorPos > AligPanel.colorWheel.length){
-            colorPos = AligPanel.colorWheel.length % colorPos ;
+         if ( colorPos > ColorUtils.colorWheel.length){
+            colorPos = ColorUtils.colorWheel.length % colorPos ;
          }
          
-         Color c =  AligPanel.colorWheel[colorPos];
-         Color cd = darker( AligPanel.colorWheel[colorPos],0.4);
+         Color end1 = ColorUtils.rotateHue(ColorUtils.orange,  (1.0f  / 24.0f) * blockNum  );
+         Color end2 = ColorUtils.rotateHue(ColorUtils.cyan,    (1.0f  / 24.0f) * (blockNum +1)  ) ;
+         
+         Color c   = ColorUtils.getIntermediate(ColorUtils.orange, end1, blockNum, bk);
+         Color cd   = ColorUtils.getIntermediate(ColorUtils.cyan, end2, blockNum, bk);
+         
+         
          List<String> pdb1 = new ArrayList<String>();
          List<String> pdb2 = new ArrayList<String>();
          for ( int i=0;i< optLen[bk];i++) {
@@ -628,10 +589,7 @@ public class StructureAlignmentJmol implements MouseMotionListener, MouseListene
             pdb1.add(JmolTools.getPdbInfo(ca1[pos1]));
             int pos2 = optAln[bk][1][i];
             pdb2.add(JmolTools.getPdbInfo(ca2[pos2]));
-
-
          }
-
 
          // and now select the aligned residues...
          StringBuffer buf = new StringBuffer("select ");
@@ -664,7 +622,7 @@ public class StructureAlignmentJmol implements MouseMotionListener, MouseListene
       }
       jmol.append("model 0;  ");
       jmol.append(LIGAND_DISPLAY_SCRIPT);
-      System.out.println(jmol);
+      //System.out.println(jmol);
       return jmol.toString();
 
 

@@ -36,6 +36,7 @@ import org.biojava.bio.structure.align.webstart.WebStartMain;
 import org.biojava.bio.structure.align.xml.AFPChainXMLParser;
 import org.biojava.bio.structure.gui.events.AlignmentPositionListener;
 import org.biojava.bio.structure.gui.util.AlignedPosition;
+import org.biojava.bio.structure.gui.util.ColorUtils;
 
 
 /** A JPanel that can display an AFPChain in a nice way and interact with Jmol.
@@ -66,15 +67,6 @@ public class AligPanel  extends JPrintPanel implements AlignmentPositionListener
    private boolean colorBySimilarity;
 
    private boolean colorByAlignmentBlock;
-
-   static final Color c1 = Color.decode("#228B22"); // green
-   static final Color c2 = Color.decode("#8F8FFF"); // blue   
-   static final Color c3 = Color.decode("#FFD700"); // gold
-   static final Color c4 = Color.decode("#FF8C00"); // orange
-   static final Color c5 = Color.decode("#FF00FF"); // pink
-   static final Color c6 = Color.decode("#C71585"); // red
-   
-   public static final Color[] colorWheel = new Color[] {c1, c2, c3, c4 , c5,c6}; 
 
 
    public static void main(String[] args){
@@ -243,7 +235,6 @@ public class AligPanel  extends JPrintPanel implements AlignmentPositionListener
             } else {
                isGapped = true;
 
-
             }
          }
 
@@ -253,40 +244,61 @@ public class AligPanel  extends JPrintPanel implements AlignmentPositionListener
          Point p2 = coordManager.getPanelPos(1, i);
          int xpos2 = p2.x;
          int ypos2 = p2.y;
-
+         int blockNum = afpChain.getBlockNum();
          if (! isGapped) {
-            Color bg ;
+            Color bg = Color.white;
+            Color bg2 = Color.white;
+            Color end1 = ColorUtils.rotateHue(ColorUtils.orange,  (1.0f  / 24.0f) * blockNum  );
+            Color end2 = ColorUtils.rotateHue(ColorUtils.cyan,    (1.0f  / 24.0f) * (blockNum  +1)) ;
+            
             if ( colorByAlignmentBlock) {
 
                if (! alignedPos.contains(i)){
 
                   // unaligned!
                   bg = Color.white;
+                  bg2 = Color.white;
                } else  {
+                  
                   int colorPos = 0;
                   if (isFATCAT ) {
                      int block = 0;
                      char s = symb[i];
                      try {
                         block = Integer.parseInt(s+"") - 1;
+                        bg  = ColorUtils.getIntermediate(ColorUtils.orange, end1, blockNum, block);
+                        bg2   = ColorUtils.getIntermediate(ColorUtils.cyan, end2, blockNum, block);
+                        //bg = ColorUtils.rotateHue(ColorUtils.orange,  (1.0f  / 24.0f) * block  );
+                        //bg2 = ColorUtils.rotateHue(ColorUtils.cyan,  (1.0f  / 16.0f) * block );
                      } catch (Exception e){}
-                     colorPos = block;
-                     if ( colorPos > colorWheel.length){
-                        colorPos = colorWheel.length % colorPos ;
+                     
+                     if ( colorPos > ColorUtils.colorWheel.length){
+                        colorPos = ColorUtils.colorWheel.length % colorPos ;
                      }
                   } else {
                      colorPos = DisplayAFP.getBlockNrForAlignPos(afpChain, i);
+                     bg  = ColorUtils.getIntermediate(ColorUtils.orange, end1, blockNum, colorPos);
+                     bg2   = ColorUtils.getIntermediate(ColorUtils.cyan, end2, blockNum, colorPos);
+                     //bg = ColorUtils.rotateHue(ColorUtils.orange,  (1.0f  / 24.0f) * colorPos );
+                     //bg2 = ColorUtils.rotateHue(ColorUtils.cyan,  (1.0f  / 16.0f) * colorPos);
                   }
-                  bg = colorWheel[colorPos];
+                  
+                   
+                 
                }
             } else {
 
                bg = Color.LIGHT_GRAY;
+               bg2 = Color.LIGHT_GRAY;
             }
+            
+            // draw a darker background
             g2D.setPaint(bg);
-            // draw a darker backgroun
-            Rectangle rec = new Rectangle(p1.x-1,p1.y-11, (p2.x-p1.x)+12, (p2.y-p1.y)+12);				
+            Rectangle rec = new Rectangle(p1.x-1,p1.y-11, (p2.x-p1.x)+12, (p2.y-p1.y)+1);
             g2D.fill(rec);
+            g2D.setPaint(bg2);
+            Rectangle rec2 = new Rectangle(p1.x-1,p1.y+4, (p2.x-p1.x)+12, (p2.y-p1.y)-3);
+            g2D.fill(rec2);
 
             //g2D.setPaint(Color.black);
             //g2D.draw(rec);
