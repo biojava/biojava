@@ -49,8 +49,8 @@ public class ChemCompConsumer implements MMcifConsumer {
 		if ( c.getResidueType() == ResidueType.dSaccharide)
 			return;
 
-		if ( c.isStandard())
-			System.out.println(c);
+		//if ( c.isStandard())
+		//	System.out.println(c);
 	}
 
 	public void documentEnd() {

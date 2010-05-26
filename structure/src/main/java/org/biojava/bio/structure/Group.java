@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.biojava.bio.structure.io.PDBParseException;
+import org.biojava.bio.structure.io.mmcif.model.ChemComp;
 
 
 /**
@@ -275,4 +276,17 @@ public interface Group {
 
 	public Chain getParent() ;
 
+	/** Set the Chemical Component that closer describes this group.
+	 * 
+	 * @param cc the chemical component
+	 */
+	public void setChemComp(ChemComp cc);
+
+	/** Get the chemical component that closer describes this group. If the information does not exist yet, fetches the information from PDB web site.
+	 *  
+	 * @return
+	 */
+	public ChemComp getChemComp();
+		
+	
 }

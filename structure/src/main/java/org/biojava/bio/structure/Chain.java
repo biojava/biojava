@@ -325,4 +325,15 @@ public interface Chain {
     
     public Structure getParent() ;
     
+    /** Get all groups that are not polymer groups and that are not solvent groups.
+     *  Will automatically fetch Chemical Component files from the PDB web site, even if
+     *  PDBFileReader.setLoadChemCompInfo(flag) has not been set to true. Otherwise the Ligands could not
+     *  correctly be identified.
+     * @return list of Groups that are ligands
+     */
+    public List<Group> getAtomLigands();
+    
+    
+   
+    
 }

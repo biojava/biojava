@@ -26,6 +26,7 @@ package org.biojava.bio.structure;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -34,6 +35,10 @@ import java.util.Map;
 import org.biojava.bio.Annotation;
 import org.biojava.bio.seq.ProteinTools;
 import org.biojava.bio.seq.Sequence;
+import org.biojava.bio.structure.io.PDBFileReader;
+import org.biojava.bio.structure.io.mmcif.ChemCompGroupFactory;
+import org.biojava.bio.structure.io.mmcif.chem.PolymerType;
+import org.biojava.bio.structure.io.mmcif.model.ChemComp;
 import org.biojava.bio.symbol.IllegalSymbolException;
 
 /**
@@ -47,11 +52,11 @@ import org.biojava.bio.symbol.IllegalSymbolException;
 public class ChainImpl implements Chain, Serializable {
 
 	/**
-    *
-    */
-   private static final long serialVersionUID = 1990171805277911840L;
+	 *
+	 */
+	private static final long serialVersionUID = 1990171805277911840L;
 
-   /** The default chain identifier is an empty space.
+	/** The default chain identifier is an empty space.
 	 *
 	 */
 	public static String DEFAULT_CHAIN_ID = "A";
@@ -65,7 +70,7 @@ public class ChainImpl implements Chain, Serializable {
 	private Long id;
 	Compound mol;
 	Structure parent;
-	
+
 	Map<String, Integer> pdbResnumMap;
 
 	/**
@@ -492,23 +497,23 @@ public class ChainImpl implements Chain, Serializable {
 	}
 
 	/** Convert the SEQRES groups of a Chain to a Biojava Sequence object.
-     *
-     * @return the SEQRES groups of the Chain as a Sequence object.
-     * @throws IllegalSymbolException
-     */
-    public Sequence getBJSequence() throws IllegalSymbolException {
+	 *
+	 * @return the SEQRES groups of the Chain as a Sequence object.
+	 * @throws IllegalSymbolException
+	 */
+	public Sequence getBJSequence() throws IllegalSymbolException {
 
-    	//List<Group> groups = c.getSeqResGroups();
-    	String seq = getSeqResSequence();
+		//List<Group> groups = c.getSeqResGroups();
+		String seq = getSeqResSequence();
 
-    	String name = "";
-    	if ( this.getParent() != null )
-    		name = getParent().getPDBCode();
-    	name += "." + getName();
+		String name = "";
+		if ( this.getParent() != null )
+			name = getParent().getPDBCode();
+		name += "." + getName();
 
-    	return ProteinTools.createProteinSequence(seq, name );
+		return ProteinTools.createProteinSequence(seq, name );
 
-    }
+	}
 
 
 
@@ -529,6 +534,29 @@ public class ChainImpl implements Chain, Serializable {
 	 */
 	public String getAtomSequence(){
 
+		String prop = System.getProperty(PDBFileReader.LOAD_CHEM_COMP_PROPERTY);
+
+		if ( prop != null && prop.equalsIgnoreCase("true")){
+
+
+			List<Group> groups = getAtomGroups();
+			StringBuffer sequence = new StringBuffer() ;
+
+			for ( Group g: groups){
+				ChemComp cc = g.getChemComp();
+
+				if ( PolymerType.PROTEIN_ONLY.contains(cc.getPolymerType()) ||
+						PolymerType.POLYNUCLEOTIDE_ONLY.contains(cc.getPolymerType())){
+					// an amino acid residue.. use for alignment
+					String oneLetter= ChemCompGroupFactory.getOneLetterCode(cc);
+					sequence.append(oneLetter);
+				}
+
+			}
+			return sequence.toString();
+		}
+
+		// not using ChemCOmp records...		
 		List<Group> aminos = getAtomGroups("amino");
 		StringBuffer sequence = new StringBuffer() ;
 		for ( int i=0 ; i< aminos.size(); i++){
@@ -544,6 +572,23 @@ public class ChainImpl implements Chain, Serializable {
 	 *
 	 */
 	public String getSeqResSequence(){
+
+		String prop = System.getProperty(PDBFileReader.LOAD_CHEM_COMP_PROPERTY);
+
+		if ( prop != null && prop.equalsIgnoreCase("true")){
+			StringBuffer str = new StringBuffer();
+			for (Group g : seqResGroups) {
+				ChemComp cc = g.getChemComp();
+
+				if ( PolymerType.PROTEIN_ONLY.contains(cc.getPolymerType()) ||
+						PolymerType.POLYNUCLEOTIDE_ONLY.contains(cc.getPolymerType())){
+					// an amino acid residue.. use for alignment
+					String oneLetter= ChemCompGroupFactory.getOneLetterCode(cc);
+					str.append(oneLetter);
+				}
+			}
+			return str.toString();
+		}
 
 		StringBuffer str = new StringBuffer();
 		for (Group group : seqResGroups) {
@@ -599,4 +644,40 @@ public class ChainImpl implements Chain, Serializable {
 		return groups.size();
 	}
 
+	/** {@inheritDoc}
+	 *
+	 */
+	public List<Group> getAtomLigands(){
+
+		return getLigands(getAtomGroups());
+			
+	}
+		
+	private List<Group> getLigands(List<Group> allGroups){
+		String prop = System.getProperty(PDBFileReader.LOAD_CHEM_COMP_PROPERTY);
+		
+		if ( prop == null || ( ! prop.equalsIgnoreCase("true"))){
+			System.err.println("You did not specify PDBFileReader.setLoadChemCompInfo, need to fetch Chemical Components anyways.");
+		}
+
+
+		List<String> waternames = Arrays.asList(new String[]{"HOH", "DOD",  "WAT"});
+		List<Group> groups = new ArrayList<Group>();
+		for ( Group g: allGroups) {
+			
+			ChemComp cc = g.getChemComp();
+
+			if (! PolymerType.PROTEIN_ONLY.contains(cc.getPolymerType()) &&
+					! PolymerType.POLYNUCLEOTIDE_ONLY.contains(cc.getPolymerType())
+			){
+				if ( ! waternames.contains(g.getPDBName())) 
+					groups.add(g);
+
+
+			}
+
+		}
+		return groups;
+	}
 }
+

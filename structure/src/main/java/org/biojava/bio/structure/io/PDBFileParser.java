@@ -59,6 +59,7 @@ import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureException;
 import org.biojava.bio.structure.StructureImpl;
 import org.biojava.bio.structure.StructureTools;
+import org.biojava.bio.structure.io.mmcif.ChemCompGroupFactory;
 
 
 /**
@@ -125,6 +126,24 @@ public class PDBFileParser  {
 
 	private final boolean DEBUG = false;
 
+	
+	// parsing options:
+	/** flag to detect if the secondary structure info should be read
+	 * 
+	 */
+	boolean parseSecStruc;
+
+	/** Flag to control if SEQRES and ATOM records should be aligned
+	 * 
+	 */
+	boolean alignSeqRes;
+	
+	
+	/** Flag to control if the chemical component info should be downloaded while parsing the files. (files will be cached).
+	 * 
+	 */
+	boolean loadChemCompInfo;
+	
 	private Logger logger = Logger.getLogger(PDBFileParser.class.getName());
 
 	// required for parsing:
@@ -201,9 +220,7 @@ public class PDBFileParser  {
 					"EXPRESSION_SYSTEM_GENE:", "OTHER_DETAILS:"));
 
 
-	boolean parseSecStruc;
-
-	boolean alignSeqRes;
+	
 
 	private String previousContinuationField = "";
 
@@ -269,7 +286,9 @@ public class PDBFileParser  {
 		connects      = new ArrayList<Map<String,Integer>>() ;
 
 		parseSecStruc = false;
-		alignSeqRes   = true;
+		
+		// by default we now do NOT align Atom and SeqRes records
+		alignSeqRes   = false;
 
 		helixList     = new ArrayList<Map<String,String>>();
 		strandList    = new ArrayList<Map<String,String>>();
@@ -282,6 +301,9 @@ public class PDBFileParser  {
 		atomOverflow = false;
 
 		parseCAOnly = false;
+		
+		// don't download ChemComp dictionary by default.
+		loadChemCompInfo = false;
 
 	}
 	/** the flag if only the C-alpha atoms of the structure should be parsed.
@@ -373,8 +395,13 @@ public class PDBFileParser  {
 	}
 
 	/** initiate new group, either Hetatom, Nucleotide, or AminoAcid */
-	private Group getNewGroup(String recordName,Character aminoCode1) {
+	private Group getNewGroup(String recordName,Character aminoCode1, String aminoCode3) {
 
+		if ( loadChemCompInfo ){
+			return ChemCompGroupFactory.getGroupFromChemCompDictionary(aminoCode3);
+		}
+		                        
+		
 		Group group;
 		if ( recordName.equals("ATOM") ) {
 			if (aminoCode1 == null)  {
@@ -857,7 +884,7 @@ public class PDBFileParser  {
 			//System.out.println(line);
 			// b
 			//}
-			current_group = getNewGroup("ATOM", aminoCode1);
+			current_group = getNewGroup("ATOM", aminoCode1, threeLetter);
 
 			try {
 				current_group.setPDBName(threeLetter);
@@ -1593,7 +1620,7 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 
 		if (current_group == null) {
 
-			current_group = getNewGroup(recordName,aminoCode1);
+			current_group = getNewGroup(recordName,aminoCode1,groupCode3);
 			current_group.setPDBCode(residueNumber);
 			current_group.setPDBName(groupCode3);
 		}
@@ -1602,7 +1629,7 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 		if ( startOfNewChain) {
 			//System.out.println("end of chain: "+current_chain.getName()+" >"+chain_id+"<");
 
-			current_group = getNewGroup(recordName,aminoCode1);
+			current_group = getNewGroup(recordName,aminoCode1,groupCode3);
 
 			current_group.setPDBCode(residueNumber);
 			current_group.setPDBName(groupCode3);			
@@ -1615,7 +1642,7 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 			//System.out.println("end of residue: "+current_group.getPDBCode()+" "+residueNumber);
 			current_chain.addGroup(current_group);
 
-			current_group = getNewGroup(recordName,aminoCode1);
+			current_group = getNewGroup(recordName,aminoCode1,groupCode3);
 
 			current_group.setPDBCode(residueNumber);
 			current_group.setPDBName(groupCode3);
@@ -2762,6 +2789,13 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 
 	public boolean isHeaderOnly(){
 		return headerOnly;
+	}
+	
+	public boolean isLoadChemCompInfo() {
+		return loadChemCompInfo;
+	}
+	public void setLoadChemCompInfo(boolean loadChemCompInfo) {
+		this.loadChemCompInfo = loadChemCompInfo;
 	}
 
 
