@@ -74,7 +74,8 @@ public class HetatomImpl implements Group,Serializable {
 	Chain parent;
 
 	Map<String,Atom> atomLookup = new HashMap<String,Atom>();
-
+	Map<String,Atom> atomSingleCharLookup = new HashMap<String,Atom>();
+	
 	ChemComp chemComp ;
 	/* Construct a Hetatom instance. */
 	public HetatomImpl() {
@@ -163,7 +164,8 @@ public class HetatomImpl implements Group,Serializable {
 			// we have got coordinates!
 			setPDBFlag(true);
 		}
-		atomLookup.put(atom.getName(),atom);
+		atomLookup.put(atom.getFullName(),atom);
+		atomSingleCharLookup.put(atom.getName(),atom);
 	};
 
 
@@ -174,6 +176,7 @@ public class HetatomImpl implements Group,Serializable {
 		atoms.clear();
 		setPDBFlag(false);
 		atomLookup.clear();
+		atomSingleCharLookup.clear();
 	}
 
 	/** getnumber of atoms.
@@ -199,7 +202,8 @@ public class HetatomImpl implements Group,Serializable {
 	public void setAtoms(List<Atom> atoms){
 		for (Atom a: atoms){
 			a.setParent(this);
-			atomLookup.put(a.getName(), a);
+			atomLookup.put(a.getFullName(), a);
+			atomSingleCharLookup.put(a.getName(),a);
 		}
 		this.atoms = atoms;
 		if ( atoms.size() > 0) {
@@ -220,6 +224,9 @@ public class HetatomImpl implements Group,Serializable {
 		// todo: add speedup by internal hashmap...
 
 		Atom a = atomLookup.get(name);
+		if ( a != null)
+			return a;
+		a =  atomSingleCharLookup.get(name);
 		if ( a != null)
 			return a;
 
@@ -285,12 +292,15 @@ public class HetatomImpl implements Group,Serializable {
 	}
 
 	/** test is an Atom with name is existing. */
-	public boolean hasAtom(String name){
+	public boolean hasAtom(String fullName){
 
-		Atom a = atomLookup.get(name);
+		Atom a = atomLookup.get(fullName);
 		if ( a != null)
 			return true;
-
+		a = atomSingleCharLookup.get(fullName.trim());
+		if ( a != null)
+			return true;
+		
 		return false;
 
 		//       for (int i=0;i<atoms.size();i++){
