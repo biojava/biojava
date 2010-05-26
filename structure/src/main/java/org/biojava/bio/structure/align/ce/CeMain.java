@@ -133,6 +133,10 @@ public class CeMain extends AbstractStructureAlignment implements StructureAlign
 
 		afpChain.setAlgorithmName(getAlgorithmName());
 		afpChain.setVersion(version);
+		
+		
+		if ( afpChain.getNrEQR() == 0)
+		   return afpChain;
 
 		// Set the distance matrix
 		int winSize = params.getWinSize();
