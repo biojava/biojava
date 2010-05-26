@@ -226,14 +226,14 @@ public class CECalculator {
 		double dist;
 		Group g1 = ca1.getParent();
 		Atom cb1 = null;
-		if ( g1.hasAtom("CB")) {
-			cb1 = g1.getAtom("CB");
+		if ( g1.hasAtom(StructureTools.cbAtomName)) {
+			cb1 = g1.getAtom(StructureTools.cbAtomName);
 		}
 		//
 		Group g2 = ca2.getParent();
 		Atom cb2 = null;
-		if ( g2.hasAtom("CB")) {
-			cb2 = g2.getAtom("CB");
+		if ( g2.hasAtom(StructureTools.cbAtomName)) {
+			cb2 = g2.getAtom(StructureTools.cbAtomName);
 		}
 
 
