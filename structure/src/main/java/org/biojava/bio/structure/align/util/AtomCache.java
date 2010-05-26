@@ -18,13 +18,12 @@ public class AtomCache {
 	
 	public static final String CHAIN_NR_SYMBOL = ":";
 	public static final String CHAIN_SPLIT_SYMBOL = ".";
-	
-	
-	
+		
 	String path;
 	boolean isSplit;
 	boolean autoFetch;
-
+	boolean loadChemCompInfo;
+	
 	// this is a static flag across all instances of AtomCaches, to make sure 
 	// only one file is accessed in the file system at a time.
 	// this is to avoid reading of partial files that are being
@@ -43,6 +42,7 @@ public class AtomCache {
 		this.isSplit = isSplit;
 		autoFetch = true;
 		loading.set(false);
+		loadChemCompInfo = true;
 	}
 
 	public AtomCache(UserConfiguration config){
@@ -159,6 +159,7 @@ public class AtomCache {
 			reader.setAutoFetch(autoFetch);
 			reader.setAlignSeqRes(false);
 			reader.setParseSecStruc(false);
+			reader.setLoadChemCompInfo(loadChemCompInfo);
 
 			String pdbId   = null;
 			String chainId = null;
@@ -236,4 +237,14 @@ public class AtomCache {
 
 	}
 
+	public boolean isLoadChemCompInfo() {
+		return loadChemCompInfo;
+	}
+
+	public void setLoadChemCompInfo(boolean loadChemCompInfo) {
+		this.loadChemCompInfo = loadChemCompInfo;
+	}
+
+	
+	
 }

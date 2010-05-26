@@ -46,6 +46,7 @@ import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureImpl;
 import org.biojava.bio.structure.StructureTools;
 import org.biojava.bio.structure.UnknownPdbAminoAcidException;
+import org.biojava.bio.structure.io.PDBFileReader;
 import org.biojava.bio.structure.io.PDBParseException;
 import org.biojava.bio.structure.io.SeqRes2AtomAligner;
 import org.biojava.bio.structure.io.mmcif.model.AtomSite;
@@ -1145,6 +1146,8 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		return loadChemCompInfo;
 	}
 	public void setLoadChemCompInfo(boolean loadChemCompInfo) {
+		if ( loadChemCompInfo)
+			System.setProperty(PDBFileReader.LOAD_CHEM_COMP_PROPERTY, "true");
 		this.loadChemCompInfo = loadChemCompInfo;
 	}
 
