@@ -54,6 +54,10 @@ public class AFPChainXMLConverter {
 
 		for(int bk = 0; bk < blockNum; bk ++) {
 
+			int[] blockSize    = afpChain.getBlockSize();
+			if ( blockSize[bk] == 0) {
+				continue;
+			}
 			xml.openTag("block");
 
 			printXMLBlockHeader(xml,afpChain, bk);
@@ -157,8 +161,12 @@ public class AFPChainXMLConverter {
 			AFPChain afpChain,int blockNr) throws IOException{
 
 		int bk = blockNr;
-		int[] blockGap     = afpChain.getBlockGap();
 		int[] blockSize    = afpChain.getBlockSize();
+		if ( blockSize[bk] == 0) {
+			return;
+		}
+		int[] blockGap     = afpChain.getBlockGap();
+		
 		double[]blockScore = afpChain.getBlockScore();
 		double[] blockRmsd = afpChain.getBlockRmsd();
 
