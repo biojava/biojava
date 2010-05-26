@@ -48,7 +48,9 @@ public class MyTestHelper
       PDBFileReader pdbpars = new PDBFileReader();
       pdbpars.setPath(pdbPath);
       pdbpars.setAutoFetch(true);
-      //pdbpars.setParseCAOnly(true);
+      pdbpars.setAlignSeqRes(true);
+      pdbpars.setLoadChemCompInfo(false);
+      pdbpars.setParseCAOnly(true);
 
       Structure structure1;
       Structure structure2;
@@ -87,7 +89,7 @@ public class MyTestHelper
          for (int i = 0 ; i < ca2.length; i++){
             Group g = (Group)ca2[i].getParent().clone();
             g.setParent(ca2[i].getParent().getParent());
-            ca3[i] = g.getAtom("CA");
+            ca3[i] = g.getAtom(StructureTools.caAtomName);
          }
 
          StructureAlignment fatCat;
