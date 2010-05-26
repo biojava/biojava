@@ -173,11 +173,12 @@ public class AFPChainXMLConverter {
 
 	private static void printXMLMatrixShift(PrettyXMLWriter xml,
 			AFPChain afpChain, int blockNr)  throws IOException {
-		xml.openTag("matrix");
-		Matrix[] ms     = afpChain.getBlockRotationMatrix();
-		
-		if ( ms == null || ms.length == 0)
-			return;
+	   
+	   Matrix[] ms     = afpChain.getBlockRotationMatrix();
+	   if ( ms == null || ms.length == 0)
+          return;
+	   
+	   xml.openTag("matrix");
 		
 		Matrix matrix = ms[blockNr];
 		for (int x=0;x<3;x++){
