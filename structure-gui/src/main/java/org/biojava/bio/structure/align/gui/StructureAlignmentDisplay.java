@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.biojava.bio.structure.Atom;
+import org.biojava.bio.structure.AtomImpl;
 import org.biojava.bio.structure.Calc;
 import org.biojava.bio.structure.Chain;
 import org.biojava.bio.structure.Group;
@@ -76,12 +77,15 @@ public class StructureAlignmentDisplay {
       
 
       if ( afpChain.getBlockRotationMatrix().length == 0 ) {
-         throw new StructureException("No rotation matrix found to rotate 2nd structure!");
+         // probably the alignment is too short!
+         System.err.println("No rotation matrix found to rotate 2nd structure!");
+         afpChain.setBlockRotationMatrix(new Matrix[]{Matrix.identity(3, 3)});
+         afpChain.setBlockShiftVector(new Atom[]{new AtomImpl()});
       }
       
       Group[] twistedGroups = new Group[ ca2.length];
       
-      int blockNum = afpChain.getBlockNum();
+      //int blockNum = afpChain.getBlockNum();
             
       int i = -1;
      
