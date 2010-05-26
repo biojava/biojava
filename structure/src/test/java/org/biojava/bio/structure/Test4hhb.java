@@ -54,7 +54,8 @@ public class Test4hhb  extends TestCase {
 			assertNotNull(inStream);
 
 			PDBFileParser pdbpars = new PDBFileParser();
-
+			pdbpars.setAlignSeqRes(true);
+			//pdbpars.setLoadChemCompInfo(true);
 
 			structure = pdbpars.parsePDBFile(inStream) ;
 		} catch (IOException e) {
@@ -76,6 +77,7 @@ public class Test4hhb  extends TestCase {
 
 			MMcifParser pdbpars = new SimpleMMcifParser();
 			SimpleMMcifConsumer consumer = new SimpleMMcifConsumer();
+			consumer.setAlignSeqRes(true);
 			pdbpars.addMMcifConsumer(consumer);
 
 			pdbpars.parse(inStream) ;
@@ -124,7 +126,7 @@ public class Test4hhb  extends TestCase {
 		assertTrue("chain " + c.getName() + " length should be 141. was: " + c.getAtomGroups(GroupType.AMINOACID).size(), ( c.getAtomGroups(GroupType.AMINOACID).size() == 141 ));
 		assertTrue("chain " + d.getName() + " length should be 146. was: " + d.getAtomGroups(GroupType.AMINOACID).size(), ( d.getAtomGroups(GroupType.AMINOACID).size() == 146 ));
 
-		assertTrue("chain " + a.getName() + " length should be 141.", ( a.getSeqResLength() == 141 ));
+		assertTrue("chain " + a.getName() + " length should be 141, but is " + a.getSeqResLength(), ( a.getSeqResLength() == 141 ));
 		assertTrue("chain " + b.getName() + " length should be 146.", ( b.getSeqResLength() == 146 ));
 
 		assertTrue("chain " + c.getName() + " length should be 141.", ( a.getSeqResLength() == 141 ));

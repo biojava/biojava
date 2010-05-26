@@ -138,8 +138,8 @@ public class MMcifTest extends TestCase {
 			Chain a_cif = cifStructure.getChainByPDB(chainId);
 			//System.out.println(a_pdb.getAtomGroups());
 			
-			//	System.out.println("pdb atom groups: " + a_cif.getAtomGroups(GroupType.AMINOACID).size());
-			//	System.out.println("cif atom groups: " + a_cif.getAtomGroups(GroupType.AMINOACID).size());
+				System.out.println(id + "_" + chainId + " pdb atom groups: " + a_pdb.getAtomGroups(GroupType.AMINOACID).size());
+				System.out.println(id + "_" + chainId + " cif atom groups: " + a_cif.getAtomGroups(GroupType.AMINOACID).size());
 			
 			//for (Group g: a_cif.getAtomGroups()){
 			//	System.out.println(g);

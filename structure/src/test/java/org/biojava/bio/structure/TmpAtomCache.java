@@ -28,7 +28,6 @@ import org.biojava.bio.structure.align.util.AtomCache;
 
 public class TmpAtomCache
 {
-
    static String tmpDir = System.getProperty("java.io.tmpdir");
    public static AtomCache cache = new AtomCache(tmpDir,true );
 }

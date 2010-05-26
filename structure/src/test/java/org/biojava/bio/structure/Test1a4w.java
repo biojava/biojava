@@ -27,7 +27,6 @@ package org.biojava.bio.structure;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
-import java.util.zip.GZIPInputStream;
 
 import junit.framework.TestCase;
 
@@ -38,7 +37,7 @@ import org.biojava.bio.structure.io.mmcif.SimpleMMcifParser;
 
 public class Test1a4w extends TestCase{
 
-	public void test4hhbPDBFile()
+	public void test1a4wPDBFile()
 	{
 
 		Structure structure = null;
@@ -47,7 +46,8 @@ public class Test1a4w extends TestCase{
 			assertNotNull(inStream);
 
 			PDBFileParser pdbpars = new PDBFileParser();
-
+			pdbpars.setLoadChemCompInfo(true);
+			pdbpars.setAlignSeqRes(true);
 
 			structure = pdbpars.parsePDBFile(inStream) ;
 		} catch (IOException e) {
@@ -69,6 +69,8 @@ public class Test1a4w extends TestCase{
 
 			MMcifParser pdbpars = new SimpleMMcifParser();
 			SimpleMMcifConsumer consumer = new SimpleMMcifConsumer();
+			consumer.setLoadChemCompInfo(true);
+			consumer.setAlignSeqRes(true);
 			pdbpars.addMMcifConsumer(consumer);
 
 			pdbpars.parse(inStream) ;
@@ -84,7 +86,7 @@ public class Test1a4w extends TestCase{
 		assertEquals("structure does not contain four chains ", 3 ,structure2.size());
 
 		testStructure(structure2);
-		
+
 		assertEquals(structure.getPDBHeader().toPDB().toLowerCase(),structure2.getPDBHeader().toPDB().toLowerCase());
 
 		for ( int i = 0 ; i < 3 ; i++){
@@ -94,8 +96,8 @@ public class Test1a4w extends TestCase{
 		}
 	}
 
-	
-	
+
+
 	private void testStructure(Structure structure){
 		List<Chain> chains = structure.getChains();
 		assertEquals("1a4w should have 3 chains. " , 3 , chains.size());
@@ -110,18 +112,22 @@ public class Test1a4w extends TestCase{
 		assertEquals("1a4w third chain should be I. " , c.getName(), "I");
 
 		assertTrue("chain " + a.getName() + " length should be 26. was: " + a.getAtomGroups(GroupType.AMINOACID).size(), ( a.getAtomGroups(GroupType.AMINOACID).size() == 26 ) );
-		
+
 		assertTrue("chain " + a.getName() + " seqres length should be 36. was: " + a.getSeqResLength(), a.getSeqResLength() == 36);
-		
+
 		assertTrue("chain " + b.getName() + " length should be 248. was: " + b.getAtomGroups(GroupType.AMINOACID).size(), ( b.getAtomGroups(GroupType.AMINOACID).size() == 248 ) );
-		
+
 		assertTrue("chain " + b.getName() + " seqres length should be 259. was: " + b.getSeqResLength(), b.getSeqResLength() == 259);
-		
-		assertTrue("chain " + c.getName() + " length should be 8. was: " + c.getAtomGroups(GroupType.AMINOACID).size(), ( c.getAtomGroups(GroupType.AMINOACID).size() == 8 ) );
-		
+
+		assertTrue("chain " + c.getName() + " length should be 9. was: " + c.getAtomGroups(GroupType.AMINOACID).size(), ( c.getAtomGroups(GroupType.AMINOACID).size() == 9 ) );
+
 		assertTrue("chain " + c.getName() + " seqres length should be 12. was: " + c.getSeqResLength(), c.getSeqResLength() == 12);
+	 
+		assertEquals("chain " + c.getName() + " seqres sequences is not correct!", "NGDFEEIPEEYL", c.getSeqResSequence());
+		
+		
 	}
-	
+
 	private void testEqualChains(Chain a,Chain b){
 
 		assertEquals("length of seqres " + a.getName() + " and "+b.getName()+" should be same. " , a.getSeqResLength(), b.getSeqResLength() );
@@ -129,5 +135,44 @@ public class Test1a4w extends TestCase{
 		assertEquals("sequences should be identical. " , a.getAtomSequence(),   b.getAtomSequence());
 		assertEquals("sequences should be identical. " , a.getSeqResSequence(), b.getSeqResSequence());
 	}
-	
+
+	public void testChemComps(){
+		try {
+			
+			Structure s = TmpAtomCache.cache.getStructure("1a4w");
+			System.out.println(s);
+			assertTrue(s.getChains().size() == 3);
+			Chain c2 = s.getChain(1);
+			assertTrue(c2.getName().equals("H"));
+			List<Group> ligands = c2.getAtomLigands();
+			
+			
+			boolean noWater = true;
+			boolean darPresent = false;
+			boolean twoepPresent = false;
+			
+			for ( Group g : ligands){
+				String pdbName = g.getPDBName();
+				if ( pdbName.equals("DAR"))
+					darPresent = true;
+				else if ( pdbName.equals("2EP"))
+					twoepPresent = true;
+				else if ( pdbName.equals("H2O"))
+					noWater = false;
+			}
+			
+			assertTrue("Found water in ligands list!", noWater );
+			
+			assertTrue("Did not find DAR in ligands list!", darPresent);
+			
+			assertTrue("Did not find 2EP in ligands list!", twoepPresent);
+						
+			//System.out.println(ligands);
+			assertEquals("Did not find any ligands in chain! " , 6,ligands.size());
+		} catch (Exception e){
+			fail(e.getMessage());
+		}
+
+	}
+
 }

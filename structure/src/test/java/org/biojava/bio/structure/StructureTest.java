@@ -28,6 +28,7 @@ public class StructureTest extends TestCase {
 		assertNotNull(inStream);
 
 		PDBFileParser pdbpars = new PDBFileParser();
+		pdbpars.setAlignSeqRes(true);
 		try {
 			structure = pdbpars.parsePDBFile(inStream) ;
 		} catch (IOException e) {

@@ -40,6 +40,7 @@ public class CeMainTest {
 			Atom[] ca1 = new Atom[14];
 			for(int i=0;i<ca1.length;i++) {
 				ca1[i] = new AtomImpl();
+				ca1[i].setFullName(" CA ");
 				ca1[i].setName("CA");
 				ca1[i].setCoords(new double[] { i, 0, 0 });
 				Group aa = new AminoAcidImpl();
@@ -52,6 +53,7 @@ public class CeMainTest {
 			Chain chain2 = new ChainImpl();
 			for(int i=0;i<ca2.length;i++) {
 				ca2[i] = new AtomImpl();
+				ca2[i].setFullName(" CA ");
 				ca2[i].setName("CA");
 				ca2[i].setCoords(new double[] { i%ca2len, 1, 1 });
 				Group aa = new AminoAcidImpl();
