@@ -398,7 +398,9 @@ public class PDBFileParser  {
 	private Group getNewGroup(String recordName,Character aminoCode1, String aminoCode3) {
 
 		if ( loadChemCompInfo ){
-			return ChemCompGroupFactory.getGroupFromChemCompDictionary(aminoCode3);
+			Group g =  ChemCompGroupFactory.getGroupFromChemCompDictionary(aminoCode3);
+			if ( g != null)
+				return g;
 		}
 		                        
 		
