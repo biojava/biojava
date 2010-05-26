@@ -140,10 +140,12 @@ public class Test1a4w extends TestCase{
 		try {
 			
 			Structure s = TmpAtomCache.cache.getStructure("1a4w");
-			System.out.println(s);
+			
 			assertTrue(s.getChains().size() == 3);
+			
 			Chain c2 = s.getChain(1);
 			assertTrue(c2.getName().equals("H"));
+			
 			List<Group> ligands = c2.getAtomLigands();
 			
 			
@@ -168,7 +170,7 @@ public class Test1a4w extends TestCase{
 			assertTrue("Did not find 2EP in ligands list!", twoepPresent);
 						
 			//System.out.println(ligands);
-			assertEquals("Did not find any ligands in chain! " , 6,ligands.size());
+			assertEquals("Did not find the correct nr of ligands in chain! " , 6,ligands.size());
 		} catch (Exception e){
 			fail(e.getMessage());
 		}
