@@ -230,7 +230,7 @@ public class HetatomImpl implements Group,Serializable {
 			Atom atom = atoms.get(i);
 
 			if ( name.length() > 2) {
-				System.out.println(atom);
+				
 				if ( atom.getFullName().equals(name)){
 					return atom;
 				}
