@@ -90,6 +90,11 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 	List<Chain>      entityChains; // needed to link entities, chains and compounds...
 	List<StructAsym> structAsyms;  // needed to link entities, chains and compounds...
 
+	/** Flag to control if the chemical component info should be downloaded while parsing the files. (files will be cached).
+	 * 
+	 */
+	boolean loadChemCompInfo;
+
 	Map<String,String> asymStrandId;
 
 	String current_nmr_model ;
@@ -102,9 +107,10 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 
 		documentStart();
 
-		alignSeqRes = true;
+		alignSeqRes = false;
 		parseCAOnly = false;
 		headerOnly  = false;
+		loadChemCompInfo = false;
 
 	}
 
@@ -170,7 +176,26 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 	}
 
 	/** initiate new group, either Hetatom, Nucleotide, or AminoAcid */
-	private Group getNewGroup(String recordName,Character aminoCode1, long seq_id) {
+	private Group getNewGroup(String recordName,Character aminoCode1, long seq_id,String groupCode3) {
+
+		if ( loadChemCompInfo ){
+			Group g = ChemCompGroupFactory.getGroupFromChemCompDictionary(groupCode3);
+			if ( g != null) {
+				if ( g instanceof AminoAcidImpl) {
+					AminoAcidImpl aa = (AminoAcidImpl) g;
+					aa.setId(seq_id);
+				} else if ( g instanceof NucleotideImpl) {
+					NucleotideImpl nuc =  (NucleotideImpl) g;
+					nuc.setId(seq_id);
+				} else if ( g instanceof HetatomImpl) {
+					HetatomImpl het = (HetatomImpl)g;
+					het.setId(seq_id);
+				}
+				return g;
+			}
+
+		}
+
 
 		Group group;
 		if ( recordName.equals("ATOM") ) {
@@ -369,7 +394,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 
 		if (current_group == null) {
 
-			current_group = getNewGroup(recordName,aminoCode1,seq_id);
+			current_group = getNewGroup(recordName,aminoCode1,seq_id, groupCode3);
 
 			current_group.setPDBCode(residueNumber);
 			try { 
@@ -380,7 +405,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		}
 
 		if ( startOfNewChain){
-			current_group = getNewGroup(recordName,aminoCode1,seq_id);
+			current_group = getNewGroup(recordName,aminoCode1,seq_id, groupCode3);
 
 			current_group.setPDBCode(residueNumber);
 			try {
@@ -396,7 +421,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 			//System.out.println("end of residue: "+current_group.getPDBCode()+" "+residueNumber);
 			current_chain.addGroup(current_group);
 
-			current_group = getNewGroup(recordName,aminoCode1,seq_id);
+			current_group = getNewGroup(recordName,aminoCode1,seq_id, groupCode3);
 
 			current_group.setPDBCode(residueNumber);
 			try {
@@ -1115,6 +1140,12 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 
 	public boolean isHeaderOnly(){
 		return headerOnly;
+	}
+	public boolean isLoadChemCompInfo() {
+		return loadChemCompInfo;
+	}
+	public void setLoadChemCompInfo(boolean loadChemCompInfo) {
+		this.loadChemCompInfo = loadChemCompInfo;
 	}
 
 }
