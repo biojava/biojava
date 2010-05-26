@@ -71,6 +71,14 @@ public class MMCIFFileReader implements StructureIOFile {
 	
 	boolean headerOnly;
 	
+	/** Flag to control if the chemical component info should be downloaded while parsing the files. (files will be cached).
+	 * 
+	 */
+	boolean loadChemCompInfo;
+	
+	boolean parseCAOnly;
+	boolean alignSeqRes;
+	
 	public static void main(String[] args){
 		//String filename =  "/Users/andreas/WORK/PDB/mmcif_files/a9/2a9w.cif.gz" ;
 
@@ -86,7 +94,8 @@ public class MMCIFFileReader implements StructureIOFile {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
+		
+		
 	}
 
 
@@ -100,6 +109,14 @@ public class MMCIFFileReader implements StructureIOFile {
 
 		autoFetch     = false;
 		headerOnly    = false;
+		//parseSecStruc = false;
+		
+		parseCAOnly   = false;
+		alignSeqRes   = true;
+		pdbDirectorySplit = false;
+		headerOnly    = false;
+		loadChemCompInfo = false;
+
 
 	}
 
@@ -150,7 +167,11 @@ public class MMCIFFileReader implements StructureIOFile {
 		SimpleMMcifConsumer consumer = new SimpleMMcifConsumer();
 
 		consumer.setHeaderOnly(headerOnly);
+//		consumer.setParseSecStruc(p);
+		consumer.setAlignSeqRes(alignSeqRes);
+		consumer.setParseCAOnly(parseCAOnly);
 		
+		consumer.setLoadChemCompInfo(loadChemCompInfo);
 		// The Consumer builds up the BioJava - structure object.
 		// you could also hook in your own and build up you own data model.
 		parser.addMMcifConsumer(consumer);
@@ -351,6 +372,38 @@ public class MMCIFFileReader implements StructureIOFile {
 		headerOnly = flag;
 		
 	}
+	public boolean isLoadChemCompInfo() {
+		return loadChemCompInfo;
+	}
+	public void setLoadChemCompInfo(boolean loadChemCompInfo) {
+		this.loadChemCompInfo = loadChemCompInfo;
+	}
+	public boolean isParseCAOnly() {
+		return parseCAOnly;
+	}
+
+	public void setParseCAOnly(boolean parseCAOnly) {
+		this.parseCAOnly = parseCAOnly;
+	}
+
+	/** Flag if the SEQRES amino acids should be aligned with the ATOM amino acids.
+	 *
+	 * @return flag if SEQRES - ATOM amino acids alignment is enabled
+	 */
+	public boolean isAlignSeqRes() {
+		return alignSeqRes;
+	}
+
+
+
+	/** define if the SEQRES in the structure should be aligned with the ATOM records
+	 * if yes, the AminoAcids in structure.getSeqRes will have the coordinates set.
+	 * @param alignSeqRes
+	 */
+	public void setAlignSeqRes(boolean alignSeqRes) {
+		this.alignSeqRes = alignSeqRes;
+	}
+
 
 
 }
