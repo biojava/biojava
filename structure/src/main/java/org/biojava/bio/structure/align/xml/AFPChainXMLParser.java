@@ -91,6 +91,7 @@ public class AFPChainXMLParser
 
 		int minLength = Math.min(ca1Length, ca2Length);
 		int[][][] optAln = new int[blockNum][2][minLength];
+				
 		int[][][] blockResList = afpChain.getBlockResList();
 		if ( blockResList == null){
 		   blockResList = new int[blockNum][2][minLength];
@@ -98,9 +99,14 @@ public class AFPChainXMLParser
 		int[] optLen = afpChain.getOptLen();
 
 		String[][][] pdbAln = afpChain.getPdbAln();
-		
-		int[] verifiedOptLen =  afpChain.getOptLen().clone();
-		
+		int[] verifiedOptLen = null;
+		if ( optLen != null)
+		  verifiedOptLen = afpChain.getOptLen().clone();
+		else {
+			System.err.println("did not find optimal alignment, building up empty alignment.");
+			optLen = new int[1];
+			optLen[0] = 0;
+		}
 		for (int blockNr = 0 ; blockNr < blockNum ; blockNr++){
 
 			//System.out.println("got block " + blockNr + " size: " + optLen[blockNr]);
