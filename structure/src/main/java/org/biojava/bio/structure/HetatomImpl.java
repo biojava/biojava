@@ -361,9 +361,9 @@ public class HetatomImpl implements Group,Serializable {
 
 		String[] atoms ;
 		if ( getType().equals("amino") & getPDBName().equals("GLY")){
-			atoms = new String[] { "N","CA","C","O"};
+			atoms = new String[] { "N"," CA ","C","O"};
 		} else {
-			atoms = new String[] { "N","CA","C","O","CB" };
+			atoms = new String[] { "N"," CA ","C","O","CB" };
 		}
 
 

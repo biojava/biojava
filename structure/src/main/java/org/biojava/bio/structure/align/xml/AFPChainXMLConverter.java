@@ -51,13 +51,10 @@ public class AFPChainXMLConverter {
 
 		// get the alignment blocks
 		int blockNum = afpChain.getBlockNum();
-
+		int[] optLen       = afpChain.getOptLen();
+		int[] blockSize    = afpChain.getBlockSize();
 		for(int bk = 0; bk < blockNum; bk ++) {
-
-			int[] blockSize    = afpChain.getBlockSize();
-			if ( blockSize[bk] == 0) {
-				continue;
-			}
+						
 			xml.openTag("block");
 
 			printXMLBlockHeader(xml,afpChain, bk);
@@ -162,9 +159,9 @@ public class AFPChainXMLConverter {
 
 		int bk = blockNr;
 		int[] blockSize    = afpChain.getBlockSize();
-		if ( blockSize[bk] == 0) {
-			return;
-		}
+		//if ( blockSize[bk] == 0) {
+		//	return;
+		//}
 		int[] blockGap     = afpChain.getBlockGap();
 		
 		double[]blockScore = afpChain.getBlockScore();
@@ -186,9 +183,12 @@ public class AFPChainXMLConverter {
 	   if ( ms == null || ms.length == 0)
           return;
 	   
+	   Matrix matrix = ms[blockNr];	
+	   if ( matrix == null)
+		   return;
 	   xml.openTag("matrix");
 		
-		Matrix matrix = ms[blockNr];
+			
 		for (int x=0;x<3;x++){
 			for (int y=0;y<3;y++){
 				String key = "mat"+(x+1)+(y+1);
