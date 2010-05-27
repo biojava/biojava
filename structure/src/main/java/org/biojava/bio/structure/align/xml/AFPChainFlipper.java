@@ -45,7 +45,7 @@ public class AFPChainFlipper {
 		AFPChain n = new AFPChain();
 		n.setAlgorithmName(o.getAlgorithmName());
 		n.setVersion(o.getVersion());
-		
+
 		n.setName2(o.getName1());
 		n.setName1(o.getName2());
 
@@ -99,23 +99,25 @@ public class AFPChainFlipper {
 
 
 		n.setAlnLength(o.getAlnLength());
-		n.setGapLen(o.getGapLen());
-		n.setOptLength(o.getOptLength());
-		n.setTotalLenIni(o.getTotalLenIni());
 		n.setAlignScore(o.getAlignScore());
-		n.setChainRmsd(o.getChainRmsd());
-		n.setIdentity(o.getIdentity());
-		n.setSimilarity(o.getSimilarity());
-		n.setTotalRmsdIni(o.getTotalRmsdIni());
-		n.setTotalRmsdOpt(o.getTotalRmsdOpt());
 		n.setAlignScoreUpdate(o.getAlignScoreUpdate());
 		n.setAfpSet(o.getAfpSet());
-		n.setNormAlignScore(o.getNormAlignScore());
-		n.setProbability(o.getProbability());
+		n.setChainRmsd(o.getChainRmsd());
 		n.setFocusRes1(o.getFocusRes2());
 		n.setFocusRes2(o.getFocusRes1());
 		n.setFocusResn(o.getFocusResn());
-
+		n.setGapLen(o.getGapLen());
+		n.setIdentity(o.getIdentity());
+		n.setNormAlignScore(o.getNormAlignScore());
+		n.setOptLength(o.getOptLength());
+		n.setProbability(o.getProbability());
+		n.setSimilarity(o.getSimilarity());
+		n.setTotalLenIni(o.getTotalLenIni());		
+		n.setTotalRmsdIni(o.getTotalRmsdIni());
+		n.setTotalRmsdOpt(o.getTotalRmsdOpt());
+		
+		
+		
 		// change direction of the Matrix and shift!
 		// 
 		Matrix[] maxO  = o.getBlockRotationMatrix();
@@ -123,24 +125,27 @@ public class AFPChainFlipper {
 
 		int i = -1;
 
-		for (Matrix m : maxO){
-			i++;
-			maxN[i] = m.transpose();
-		}
-
-		n.setBlockRotationMatrix(maxN);
-
 		Atom[] shiftO = o.getBlockShiftVector();
 		Atom[] shiftN = new Atom[shiftO.length];
-		i = -1;
-		for (Atom a : shiftO){
+
+		for (Matrix m : maxO){
 			i++;
 			try {
-				shiftN[i] = Calc.invert(a);
+				Matrix mnew = m ;
+				Atom a = shiftO[i];
+				
+				maxN[i] = mnew.transpose();
+
+				shiftN[i] =  Calc.invert(a);
+				
+				 Calc.rotate(shiftN[i],maxN[i]);
+
 			} catch (StructureException e){
 				e.printStackTrace();
 			}
 		}
+
+		n.setBlockRotationMatrix(maxN);
 		n.setBlockShiftVector(shiftN);
 		return n;
 

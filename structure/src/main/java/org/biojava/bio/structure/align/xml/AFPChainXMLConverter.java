@@ -192,7 +192,7 @@ public class AFPChainXMLConverter {
 		for (int x=0;x<3;x++){
 			for (int y=0;y<3;y++){
 				String key = "mat"+(x+1)+(y+1);
-				xml.attribute(key,matrix.get(x,y)+"");
+				xml.attribute(key,String.format("%.6f",matrix.get(x,y)));
 			}
 		}
 		xml.closeTag("matrix");
@@ -200,9 +200,9 @@ public class AFPChainXMLConverter {
 		Atom[]   shifts = afpChain.getBlockShiftVector();
 		Atom shift = shifts[blockNr];
 		xml.openTag("shift");
-		xml.attribute("x",shift.getX()+"");
-		xml.attribute("y",shift.getY()+"");
-		xml.attribute("z",shift.getZ()+"");
+		xml.attribute("x", String.format("%.3f",shift.getX()));
+		xml.attribute("y",String.format("%.3f",shift.getY()));
+		xml.attribute("z",String.format("%.3f",shift.getZ()));
 		xml.closeTag("shift");
 
 	}
