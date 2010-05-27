@@ -33,7 +33,9 @@ import org.biojava.bio.structure.align.client.JFatCatClient;
 
 import org.biojava.bio.structure.align.model.AFPChain;
 import org.biojava.bio.structure.align.util.AtomCache;
+import org.biojava.bio.structure.align.xml.AFPChainFlipper;
 import org.biojava.bio.structure.align.xml.AFPChainXMLConverter;
+import org.biojava.bio.structure.align.xml.AFPChainXMLParser;
 
 import junit.framework.TestCase;
 
@@ -60,10 +62,7 @@ public class TestWebStartClient extends TestCase
          
          assertTrue(afpServer.getAlgorithmName().equals(CeCPMain.algorithmName));
          assertTrue(afpServer.getBlockNum() > 1);
-         
-         
-         
-         
+                 
          StructureAlignment alignment = StructureAlignmentFactory.getAlgorithm(CeCPMain.algorithmName);
         
          
@@ -76,11 +75,17 @@ public class TestWebStartClient extends TestCase
          assertTrue(afpChain.getAlgorithmName().equals(CeCPMain.algorithmName));
          
          String xml = AFPChainXMLConverter.toXML(afpChain,ca1,ca2);
-       
-       
-         
+                
          String xml2 = AFPChainXMLConverter.toXML(afpServer, ca1, ca2);
          assertEquals(xml,xml2);
+         
+         AFPChain afpFlip = AFPChainFlipper.flipChain(afpChain);
+         String xml3 = AFPChainXMLConverter.toXML(afpFlip, ca2, ca1);
+         AFPChain afpDoubleFlip = AFPChainXMLParser.fromXML(xml3, ca2, ca1);
+         String xml5 = AFPChainXMLConverter.toXML(afpDoubleFlip, ca1, ca2);
+         
+         assertEquals(xml,xml5);
+         
          
          
       } catch (Exception e){

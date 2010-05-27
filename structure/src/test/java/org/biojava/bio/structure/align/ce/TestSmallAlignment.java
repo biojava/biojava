@@ -53,6 +53,8 @@ public class TestSmallAlignment extends TestCase{
 			
 			String xml = AFPChainXMLConverter.toXML(afpChain,ca1,ca2);
 			
+			
+			System.out.println(xml);
 			AFPChain newChain = AFPChainXMLParser.fromXML(xml, ca1, ca2);
 		
 			assertTrue(newChain != null);

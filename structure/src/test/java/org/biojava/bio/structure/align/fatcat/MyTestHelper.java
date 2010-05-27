@@ -121,6 +121,7 @@ public class MyTestHelper
 
          if ( ! result.equals(resultSerialized)) {
             System.out.println("not identical toFatCat()!!!");
+            System.out.println(xml);
             System.out.println(result);
             System.out.println("***");
             System.out.println(resultSerialized);

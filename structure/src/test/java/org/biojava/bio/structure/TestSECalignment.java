@@ -60,6 +60,7 @@ public class TestSECalignment extends  TestCase {
 			Atom[] ca2 = cache.getAtoms(name2);
 
 			AFPChain afpChainOrig = AFPChainXMLParser.fromXML(xml, ca1, ca2);
+			
 			//String ce1 = afpChainOrig.toFatcat(ca1, ca2);
 			
 			String xmlComp =  AFPChainXMLConverter.toXML(afpChainOrig, ca1, ca2);
