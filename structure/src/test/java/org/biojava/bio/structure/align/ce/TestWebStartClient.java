@@ -24,7 +24,10 @@
 
 package org.biojava.bio.structure.align.ce;
 
+import java.io.IOException;
+
 import org.biojava.bio.structure.Atom;
+import org.biojava.bio.structure.StructureException;
 import org.biojava.bio.structure.TmpAtomCache;
 import org.biojava.bio.structure.align.StructureAlignment;
 import org.biojava.bio.structure.align.StructureAlignmentFactory;
@@ -44,52 +47,62 @@ public class TestWebStartClient extends TestCase
 {
 
    public void testCPAlignment(){
-      
+
       String name1="1cdg.A";
       String name2="1tim.A";
-      
-      
-      
-      AtomCache cache = TmpAtomCache.cache;
       try {
-        
-         Atom[] ca1 = cache.getAtoms(name1);
-         Atom[] ca2 = cache.getAtoms(name2);
-         
-         String serverLocation = "http://beta.rcsb.org/pdb/rest/";
-         AFPChain afpServer = JFatCatClient.getAFPChainFromServer(serverLocation,CeCPMain.algorithmName, name1, name2, ca1, ca2, 5000);
-         assertNotNull(afpServer); 
-         
-         assertTrue(afpServer.getAlgorithmName().equals(CeCPMain.algorithmName));
-         assertTrue(afpServer.getBlockNum() > 1);
-                 
-         StructureAlignment alignment = StructureAlignmentFactory.getAlgorithm(CeCPMain.algorithmName);
-        
-         
-         AFPChain afpChain = alignment.align(ca1,ca2);
-         afpChain.setName1(name1);  
-         afpChain.setName2(name2);
-         
-         assertNotNull(afpChain);
-         assertNotNull(afpChain.getAlgorithmName());
-         assertTrue(afpChain.getAlgorithmName().equals(CeCPMain.algorithmName));
-         
-         String xml = AFPChainXMLConverter.toXML(afpChain,ca1,ca2);
-                
-         String xml2 = AFPChainXMLConverter.toXML(afpServer, ca1, ca2);
-         assertEquals(xml,xml2);
-         
-         AFPChain afpFlip = AFPChainFlipper.flipChain(afpChain);
-         String xml3 = AFPChainXMLConverter.toXML(afpFlip, ca2, ca1);
-         AFPChain afpDoubleFlip = AFPChainXMLParser.fromXML(xml3, ca2, ca1);
-         String xml5 = AFPChainXMLConverter.toXML(afpDoubleFlip, ca1, ca2);
-         
-         assertEquals(xml,xml5);
-         
-         
-         
+         //StructureAlignment algorithm = StructureAlignmentFactory.getAlgorithm(CeCPMain.algorithmName);
+         for (StructureAlignment algorithm : StructureAlignmentFactory.getAllAlgorithms()){
+            align(name1,name2,algorithm);
+         }
       } catch (Exception e){
+         e.printStackTrace();
          fail (e.getMessage());
       }
+   }
+
+   private void align(String name1, String name2, StructureAlignment algorithm) 
+   throws StructureException, IOException {
+      System.out.println("testing " + name1 + " " + name2 + " " + algorithm.getAlgorithmName());
+      AtomCache cache = TmpAtomCache.cache;
+
+
+      Atom[] ca1 = cache.getAtoms(name1);
+      Atom[] ca2 = cache.getAtoms(name2);
+
+      String serverLocation = "http://beta.rcsb.org/pdb/rest/";
+      AFPChain afpServer = JFatCatClient.getAFPChainFromServer(serverLocation,algorithm.getAlgorithmName(), name1, name2, ca1, ca2, 5000);
+      assertNotNull(afpServer); 
+
+      assertTrue(afpServer.getAlgorithmName().equals(algorithm.getAlgorithmName()));
+      assertTrue("Alignment blockNum < 1" , afpServer.getBlockNum() >= 1);
+
+
+      AFPChain afpChain = algorithm.align(ca1,ca2);
+      afpChain.setName1(name1);  
+      afpChain.setName2(name2);
+
+      assertNotNull(afpChain);
+      assertNotNull(afpChain.getAlgorithmName());
+      assertTrue(afpChain.getAlgorithmName().equals(algorithm.getAlgorithmName()));
+
+      String xml = AFPChainXMLConverter.toXML(afpChain,ca1,ca2);
+
+      String xml2 = AFPChainXMLConverter.toXML(afpServer, ca1, ca2);
+      //System.err.println(" tmp disabled comparison of server and client XML, a minor rounding diff...");
+      assertEquals(xml,xml2);
+
+      AFPChain afpFlip = AFPChainFlipper.flipChain(afpChain);
+      String xmlFlipped = AFPChainXMLConverter.toXML(afpFlip, ca2, ca1);
+
+      AFPChain fromXmlFlipped = AFPChainXMLParser.fromXML(xmlFlipped, ca1, ca2);
+      AFPChain afpBackToOrig = AFPChainFlipper.flipChain(fromXmlFlipped);
+      String xml5 = AFPChainXMLConverter.toXML(afpBackToOrig, ca1, ca2);
+
+      assertEquals(xml,xml5);
+
+
+
+
    }
 }
