@@ -130,6 +130,10 @@ public class AFPChainFlipper {
 
 		for (Matrix m : maxO){
 			i++;
+			if ( m == null) {
+				// alignment too short probably
+				continue;
+			}
 			try {
 				Matrix mnew = m ;
 				Atom a = shiftO[i];
