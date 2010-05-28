@@ -42,7 +42,7 @@ public class AtomCache {
 		this.isSplit = isSplit;
 		autoFetch = true;
 		loading.set(false);
-		loadChemCompInfo = true;
+		loadChemCompInfo = false;
 	}
 
 	public AtomCache(UserConfiguration config){
