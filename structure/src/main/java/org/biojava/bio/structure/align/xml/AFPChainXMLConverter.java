@@ -201,8 +201,8 @@ public class AFPChainXMLConverter {
 		Atom shift = shifts[blockNr];
 		xml.openTag("shift");
 		xml.attribute("x", String.format("%.3f",shift.getX()));
-		xml.attribute("y",String.format("%.3f",shift.getY()));
-		xml.attribute("z",String.format("%.3f",shift.getZ()));
+		xml.attribute("y", String.format("%.3f",shift.getY()));
+		xml.attribute("z", String.format("%.3f",shift.getZ()));
 		xml.closeTag("shift");
 
 	}
