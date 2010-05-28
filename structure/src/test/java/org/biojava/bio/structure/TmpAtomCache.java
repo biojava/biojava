@@ -30,4 +30,8 @@ public class TmpAtomCache
 {
    static String tmpDir = System.getProperty("java.io.tmpdir");
    public static AtomCache cache = new AtomCache(tmpDir,true );
+   static {
+	   cache.setLoadChemCompInfo(false);
+	   cache.setAutoFetch(true);
+   }
 }
