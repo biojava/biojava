@@ -120,16 +120,14 @@ public class AFPChainXMLConverter {
 	}
 
 
-	private static void printXMLEQRInferPositions(PrettyXMLWriter xml,			
+	public static void printXMLEQRInferPositions(PrettyXMLWriter xml,			
 			AFPChain afpChain, int bk, Atom[] ca1, Atom[] ca2)  throws IOException{
 		
 		int[] optLen       = afpChain.getOptLen();
 		
 		if ( optLen == null)
 			return;
-		
-		
-		
+				
 		int[][][] optAln   = afpChain.getOptAln();
 		
 		
@@ -214,7 +212,7 @@ public class AFPChainXMLConverter {
 	}
 
 
-	private static void printXMLHeader(PrettyXMLWriter xml, AFPChain afpChain) throws IOException{
+	public static void printXMLHeader(PrettyXMLWriter xml, AFPChain afpChain) throws IOException{
 		xml.attribute("name1", afpChain.getName1());
 		xml.attribute("name2", afpChain.getName2());
 		xml.attribute("method", afpChain.getAlgorithmName());
