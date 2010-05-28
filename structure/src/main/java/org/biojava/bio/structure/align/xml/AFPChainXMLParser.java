@@ -130,7 +130,7 @@ public class AFPChainXMLParser
 				
 				if ( pos1 == -1 || pos2 == -1 ){
 				   // this can happen when parsing old files that contained Calcium atoms...
-				   //System.err.println("AFPChainXMLParser: warning: pos1: " +pos1 + " " + pdbResnum1 + " pos2: " + pos2 + " " + pdbResnum2 +  " should never be -1. Probably parsing an.");
+				   System.err.println("AFPChainXMLParser: warning: pos1: " +pos1 + " " + pdbResnum1 + " pos2: " + pos2 + " " + pdbResnum2 +  " should never be -1. Probably parsing an.");
 				   verifiedOptLen[blockNr]-- ;
 				   continue;
 				}
