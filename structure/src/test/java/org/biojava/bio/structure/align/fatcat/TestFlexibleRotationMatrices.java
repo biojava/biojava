@@ -94,6 +94,7 @@ public class TestFlexibleRotationMatrices extends TestCase{
 
          // make sure the XML conversion worked OK.
          for ( int i = 0 ; i < newChain.getBlockNum();i++) {
+        	
             assertTrue(compareMatrices(maxs1[i],newChain.getBlockRotationMatrix()[i]));
             //assertTrue(compareVectors(shifts1[i],newChain.getBlockShiftVector()[i]));
             assertTrue(compareRmsd(blockRmsd[i], newChain.getBlockRmsd()[i]) );
@@ -223,7 +224,14 @@ public class TestFlexibleRotationMatrices extends TestCase{
       Atom   shift = shifts2[blockNr];
     
       compareMatrices(max, m);
-      //compareVectors(shift, s);
+
+      
+      if ( blockNr == 0) {
+    	  compareVectors(shift, s);
+      } else {
+    	  System.err.println("Not testing shift vectors for blocks > 1. There is still a problem...");
+    	  
+      }
 
       for ( Atom a : ca2Copy2){
          Calc.rotate(a, m);
@@ -242,9 +250,14 @@ public class TestFlexibleRotationMatrices extends TestCase{
 
    }
 
-   private boolean compareVectors(Atom atom1, Atom atom2) {
+   private boolean compareVectors(Atom atom1, Atom atom2) throws StructureException {
 
-      return (atom1.getX() == atom2.getX() && atom1.getY() == atom2.getY() && atom1.getZ() == atom2.getZ());
+	   //System.out.println(Math.abs(atom1.getX()-  atom2.getX()));
+	   assertTrue("The X coordinates are too far apart!", Math.abs(atom1.getX()-  atom2.getX()) < 0.01);
+	   assertTrue("The Y coordinates are too far apart!", Math.abs(atom1.getY()-  atom2.getY()) < 0.01);
+	   assertTrue("The Z coordinates are too far apart!", Math.abs(atom1.getZ()-  atom2.getZ()) < 0.01);
+      //return (atom1.getX() == atom2.getX() && atom1.getY() == atom2.getY() && atom1.getZ() == atom2.getZ());
+	   return true;
 
 
    }
