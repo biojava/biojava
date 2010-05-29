@@ -192,7 +192,7 @@ public class DotPlotPanel extends ScaleableMatrixPanel {
 //		String name1= "1uiz.A";
 //		String name2= "1xxa.C";
 
-		AtomCache cache = new AtomCache("/Users/blivens/pdb/", true);
+		AtomCache cache = new AtomCache("/tmp/", true);
 
 
 		try {
