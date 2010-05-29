@@ -24,15 +24,13 @@
 
 package demo;
 
-import java.util.List;
 
 import org.biojava.bio.structure.Atom;
-import org.biojava.bio.structure.Group;
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureTools;
 import org.biojava.bio.structure.align.StructureAlignment;
 import org.biojava.bio.structure.align.StructureAlignmentFactory;
-import org.biojava.bio.structure.align.ce.CeMain;
+
 import org.biojava.bio.structure.align.fatcat.FatCatFlexible;
 import org.biojava.bio.structure.align.gui.DisplayAFP;
 import org.biojava.bio.structure.align.gui.StructureAlignmentDisplay;
@@ -93,21 +91,8 @@ public class CookBook
          // flexible original results:
          System.out.println(afpChain.toFatcat(ca1,ca2));
 
-
-         // If there is only one alignment block then the hetatoms and nucleotides 
-         // can get rotated as well, which makes it nicer to compare active sites.
-
-         List<Group> hetatms = structure1.getChain(0).getAtomGroups("hetatm");
-         List<Group> nucs    = structure1.getChain(0).getAtomGroups("nucleotide");
-
-         List<Group> hetatms2 = structure2.getChain(0).getAtomGroups("hetatm");
-         List<Group> nucs2    = structure2.getChain(0).getAtomGroups("nucleotide");
-
-
-         // they are not rotated at this point.. the display will do it for us...
-
          // show the alignment in 3D in jmol
-         StructureAlignmentJmol jmol= StructureAlignmentDisplay.display(afpChain, ca1, ca2,  hetatms, nucs, hetatms2, nucs2);
+         StructureAlignmentJmol jmol= StructureAlignmentDisplay.display(afpChain, ca1, ca2);
                  
          // set the display title for the frame
          jmol.setTitle(algorithm.getAlgorithmName() + " : " + name1 + " vs. " + name2);
