@@ -22,7 +22,7 @@
  *
  */
 
-package org.biojava3.ptm;
+package org.biojava.bio.ptm;
 
 import java.util.HashMap;
 import java.util.HashSet;
