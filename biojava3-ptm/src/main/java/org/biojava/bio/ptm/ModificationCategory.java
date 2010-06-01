@@ -27,6 +27,12 @@ package org.biojava.bio.ptm;
 public enum ModificationCategory {
 	ATTACHMENT,
 	CHEMICAL_MODIFICATION, 
-	CROSS_OVER
+	CROSS_OVER1,
+	CROSS_OVER2,
+	CROSS_OVER3,
+	CROSS_OVER4,
+	CROSS_OVER5,
+	CROSS_OVER6,
+	CROSS_OVER7
 	;
 }

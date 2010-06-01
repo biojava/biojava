@@ -29,7 +29,7 @@
 			</Bond>
 		</Components>
 		<Occurrence>Natural</Occurrence>
-		<Type>Component</Type>
+		<Type>Attachment</Type>
 	</Entry>
 	<Entry>
 		<Id>0002</Id>
@@ -59,7 +59,7 @@
 			</Bond>
 		</Components>
 		<Occurrence>Natural</Occurrence>
-		<Type>Component</Type>
+		<Type>Attachment</Type>
 	</Entry>
 	<Entry>
 		<Id>0003</Id>
@@ -259,7 +259,7 @@
 			</Bond>
 		</Components>
 		<Occurrence>Natural</Occurrence>
-		<Type>Component</Type>
+		<Type>Attachment</Type>
 	</Entry>
 	<Entry>
 		<Id>0010</Id>
@@ -290,7 +290,7 @@
 			</Bond>
 		</Components>
 		<Occurrence>Natural</Occurrence>
-		<Type>Component</Type>
+		<Type>Attachment</Type>
 	</Entry>
 	<Entry>
 		<Id>0011</Id>
@@ -517,7 +517,7 @@
 			</Bond>
 		</Components>
 		<Occurrence>Natural</Occurrence>
-		<Type>CrossLink</Type>
+		<Type>CrossLink2</Type>
 	</Entry>
 	<Entry>
 		<Id>0019</Id>
@@ -545,7 +545,7 @@
 			</Component>
 		</Components>
 		<Occurrence>Natural</Occurrence>
-		<Type>CrossLink</Type>
+		<Type>ModifiedResidue</Type>
 	</Entry>
 	<Entry>
 		<Id>0020</Id>
@@ -589,7 +589,7 @@
 			</Bond>
 		</Components>
 		<Occurrence>Natural</Occurrence>
-		<Type>CrossLink</Type>
+		<Type>CrossLink3</Type>
 	</Entry>
 	<Entry>
 		<Id>0021</Id>
@@ -640,6 +640,6 @@
 			</Bond>
 		</Components>
 		<Occurrence>Natural</Occurrence>
-		<Type>CrossLink</Type>
+		<Type>CrossLink4</Type>
 	</Entry>
 </ProteinModifications>
