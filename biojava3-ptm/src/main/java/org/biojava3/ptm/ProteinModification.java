@@ -29,13 +29,19 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * contains information about a certain ProteinModification.
+ * The ProteinModification class uses the extensible enum pattern.
+ * You can't instantiate ProteinModifications directly, instead 
+ * you have to use one of the getBy... methods.
+ */
 public final class ProteinModification {
 	
 	/**
 	 * Constructor is private, so that we don't
 	 * get any stand-alone ProteinModifications. 
 	 * ProteinModifications should be obtained from 
-	 * getModificationBy... methods. Information about
+	 * getBy... methods. Information about
 	 * DataSources can be added with {@link register}.
 	 */
 	private ProteinModification() {
@@ -50,32 +56,26 @@ public final class ProteinModification {
 	private String psimodId = null;
 	private String psimodName = null;
 	private String sysName = null;
+	private String formula = null;
 	
 	private boolean isNTerminal = false;
 	private boolean isCTerminal = false;
 	private String[] components = null;
 	private String[] atoms = null;
 	
-	private String formula;
 	private ModificationCategory category;
 	private ModificationOccurrenceType occurrenceType;
 	
-	private static Map<String, ProteinModification> byId = 
+	private final static Map<String, ProteinModification> byId = 
 		new HashMap<String, ProteinModification>();
-	private static Map<String, ProteinModification> byResidId = 
+	private final static Map<String, ProteinModification> byResidId = 
 		new HashMap<String, ProteinModification>();
-	private static Map<String, ProteinModification> byPsimodId = 
+	private final static Map<String, ProteinModification> byPsimodId = 
 		new HashMap<String, ProteinModification>();
-	
-	/**
-	 * For CHEMICAL_MODIFICATION, one PdbccId should only correspond to 
-	 * one instance of ProteinModification. For ATTACHMENT, one PdbccId
-	 * could correspond to multiple instances of ProteinModification.
-	 */
-	private static Map<String, Set<ProteinModification>> byPdbccId = 
-		new HashMap<String, Set<ProteinModification>>();
-		
-	private static Set<ProteinModification> registry = new HashSet<ProteinModification>();
+	private final static Map<String, Set<ProteinModification>> byPdbccId = 
+		new HashMap<String, Set<ProteinModification>>();		
+	private static Set<ProteinModification> registry = 
+		new HashSet<ProteinModification>();
 
 	/**
 	 * 
@@ -163,7 +163,8 @@ public final class ProteinModification {
 	 *  For CHEMICAL_MODIFICATION, this should only contain the modified amino acid;
 	 *  For ATTACHMENT, this should contain two components: the first is the amino acid
 	 *  that is attached to, and the second is the attached group.
-	 *  For CROSS_OVER, This should contain the two linked amino acids. 
+	 *  For CROSS_OVER, This should contain the linked amino acids and other 
+	 *  chemical components. 
 	 */
 	public String[] components() {
 		return components;
@@ -175,7 +176,8 @@ public final class ProteinModification {
 	 *  For CHEMICAL_MODIFICATION, this information is not required and thus could be null;
 	 *  For ATTACHMENT, this should contain two atoms: the first is on the amino acid
 	 *  that is attached to, and the second is on the attached group.
-	 *  For CROSS_OVER, This should contain the atom on the two linked amino acids. 
+	 *  For CROSS_OVER, This should contain the atom on the corresponding amino acid
+	 *  and chemical components. 
 	 */
 	public String[] atoms() {
 		return atoms;
@@ -209,7 +211,8 @@ public final class ProteinModification {
 	 * Uses builder pattern to set optional attributes for a ProteinModification. 
 	 * For example, this allows you to use the following code:
 	 * <pre>
-	 * register("0001")
+	 * ProteinModification.
+	 *     .register("0001", Modification.ATTACHMENT, ModificationOccurrenceType.NATURAL)
 	 *     .residId("AA0406")
 	 *     .residName("O-xylosyl-L-serine")
 	 *     .components(new String[]{"SER","XYS"})
@@ -224,7 +227,7 @@ public final class ProteinModification {
 		 * This constructor should only be called by the register method.
 		 * @param current the ProteinModification to be modified.
 		 */
-		private Builder(ProteinModification current) {
+		private Builder(final ProteinModification current) {
 			if (current==null)
 				throw new IllegalArgumentException("Null argument.");
 			this.current = current;
@@ -243,10 +246,9 @@ public final class ProteinModification {
 		 * @param pdbccId Protein Data Bank Chemical Component ID.
 		 * @return the same Builder object so you can chain setters.
 		 * @throws IllegalArgumentException if pdbccId is null or
-		 *  it has been set or it is already been registered as 
-		 *  CHEMICAL_MODIFICATION or CROSS_OVER.
+		 *  it has been set.
 		 */
-		public Builder pdbccId(String pdbccId) {
+		public Builder pdbccId(final String pdbccId) {
 			if (pdbccId==null) {
 				throw new IllegalArgumentException("Null argument.");
 			}
@@ -260,15 +262,9 @@ public final class ProteinModification {
 			if (mods==null) {
 				mods = new HashSet<ProteinModification>();
 				byPdbccId.put(pdbccId, mods);
-			} else {
-				ModificationCategory catByPdbccId = getCategoryByPdbccId(pdbccId);
-				if (catByPdbccId!=ModificationCategory.CHEMICAL_MODIFICATION
-						|| catByPdbccId!=ModificationCategory.CROSS_OVER) {
-					throw new IllegalArgumentException("Only one modification is allowed " +
-							"for each PDBCC ID for chemical modifications of cross-over.");
-				}
-			}
+			}			
 			mods.add(current);
+			
 			return this;
 		}
 		
@@ -279,7 +275,7 @@ public final class ProteinModification {
 		 * @throws IllegalArgumentException if pdbccName is null or
 		 *  it has been set.
 		 */
-		public Builder pdbccName(String pdbccName) {
+		public Builder pdbccName(final String pdbccName) {
 			if (pdbccName==null) {
 				throw new IllegalArgumentException("Null argument.");
 			}
@@ -289,6 +285,7 @@ public final class ProteinModification {
 			}
 			
 			current.pdbccName = pdbccName;
+			
 			return this;
 		}
 		
@@ -301,7 +298,7 @@ public final class ProteinModification {
 		 * @throws IllegalArgumentException if residId is null or
 		 *  it has been set or has been registered by another instance.
 		 */
-		public Builder residId(String residId) {
+		public Builder residId(final String residId) {
 			if (residId==null) {
 				throw new IllegalArgumentException("Null argument.");
 			}
@@ -316,7 +313,8 @@ public final class ProteinModification {
 			}
 			
 			current.residId = residId;			
-			byResidId.put(residId, current);		
+			byResidId.put(residId, current);
+			
 			return this;
 		}
 		
@@ -327,7 +325,7 @@ public final class ProteinModification {
 		 * @throws IllegalArgumentException if residId is null or
 		 *  it has been set.
 		 */
-		public Builder residName(String residName) {
+		public Builder residName(final String residName) {
 			if (residName==null) {
 				throw new IllegalArgumentException("Null argument.");
 			}
@@ -337,6 +335,7 @@ public final class ProteinModification {
 			}
 			
 			current.residName = residName;
+			
 			return this;
 		}
 		
@@ -347,7 +346,7 @@ public final class ProteinModification {
 		 * @throws IllegalArgumentException if psimodId is null or
 		 *  it has been set or has been registered by another instance.
 		 */
-		public Builder psimodId(String psimodId) {
+		public Builder psimodId(final String psimodId) {
 			if (psimodId==null) {
 				throw new IllegalArgumentException("Null argument.");
 			}
@@ -362,6 +361,7 @@ public final class ProteinModification {
 			}
 			
 			current.psimodId = psimodId;
+			
 			return this;
 		}
 		
@@ -372,7 +372,7 @@ public final class ProteinModification {
 		 * @throws IllegalArgumentException if psimodName is null or
 		 *  it has been set.
 		 */
-		public Builder psimodName(String psimodName) {
+		public Builder psimodName(final String psimodName) {
 			if (psimodName==null) {
 				throw new IllegalArgumentException("Null argument.");
 			}
@@ -382,6 +382,7 @@ public final class ProteinModification {
 			}
 			
 			current.psimodName = psimodName;
+			
 			return this;
 		}
 		
@@ -390,7 +391,7 @@ public final class ProteinModification {
 		 * @param isNTerminal true if occurring at N-terminal.
 		 * @return the same Builder object so you can chain setters.
 		 */
-		public Builder isNTerminal(boolean isNTerminal) {
+		public Builder isNTerminal(final boolean isNTerminal) {
 			current.isNTerminal = isNTerminal;
 			return this;
 		}
@@ -400,7 +401,7 @@ public final class ProteinModification {
 		 * @param isCTerminal true if occurring at C-terminal.
 		 * @return the same Builder object so you can chain setters.
 		 */
-		public Builder isCTerminal(boolean isCTerminal) {
+		public Builder isCTerminal(final boolean isCTerminal) {
 			current.isCTerminal = isCTerminal;
 			return this;
 		}
@@ -410,10 +411,9 @@ public final class ProteinModification {
 		 * @param components components involved.
 		 * @return the same Builder object so you can chain setters.
 		 * @throws IllegalArgumentException if components is null or empty, or
-		 *  it has been set, or it has a illegal length. For CHEMICAL_MODIFICATION,
-		 *  the length should be 1; otherwise, 2.
+		 *  it has been set.
 		 */
-		public Builder components(String[] components) {
+		public Builder components(final String[] components) {
 			if (components==null || components.length==0) {
 				throw new IllegalArgumentException("Null or empty components.");
 			}
@@ -422,18 +422,8 @@ public final class ProteinModification {
 				throw new IllegalArgumentException("Components have been set.");
 			}
 			
-			if (current.category == ModificationCategory.CHEMICAL_MODIFICATION) {
-				if (components.length!=1) {
-					// TODO: is this necessary?
-					throw new IllegalArgumentException("Only one component is allowed for chemical modifications.");
-				}
-			} else {
-				if (components.length!=2) {
-					throw new IllegalArgumentException("Two and only two component are required for chemical modifications.");
-				}
-			}
-			
 			current.components = components;
+			
 			return this;
 		}
 		
@@ -441,15 +431,11 @@ public final class ProteinModification {
 		 * Set the atoms on the components.
 		 * @param atoms atoms on the components.
 		 * @return the same Builder object so you can chain setters.
-		 * @throws IllegalStateException if the ProteinModification is a chemical modification.
-		 * @throws IllegalArgumentException if atoms is null or length is not 2, or
-		 *  it has been set, or the modification is CHEMICAL_MODIFICATION.
+		 * @throws IllegalStateException if the ProteinModification is a 
+		 *  chemical modification.
+		 * @throws IllegalArgumentException if atoms is null.
 		 */
-		public Builder atoms(String[] atoms) {
-			if (current.category == ModificationCategory.CHEMICAL_MODIFICATION) {
-				throw new java.lang.IllegalStateException("Cannot set atoms for chemical modifications.");
-			}
-			
+		public Builder atoms(final String[] atoms) {			
 			if (atoms==null || atoms.length==0) {
 				throw new IllegalArgumentException("Null or empty atoms.");
 			}
@@ -458,11 +444,8 @@ public final class ProteinModification {
 				throw new IllegalArgumentException("Components have been set.");
 			}
 			
-			if (atoms.length!=2) {
-				throw new IllegalArgumentException("Two and only two component are required for chemical modifications.");
-			}
-			
 			current.atoms = atoms;
+			
 			return this;
 		}
 		
@@ -473,7 +456,7 @@ public final class ProteinModification {
 		 * @throws IllegalArgumentException if sysName is null or
 		 *  it has been set.
 		 */
-		public Builder systematicName(String sysName) {
+		public Builder systematicName(final String sysName) {
 			if (sysName==null) {
 				throw new IllegalArgumentException("Null argument.");
 			}
@@ -483,6 +466,7 @@ public final class ProteinModification {
 			}
 			
 			current.sysName = sysName;
+			
 			return this;
 		}
 		
@@ -493,7 +477,7 @@ public final class ProteinModification {
 		 * @throws IllegalArgumentException if formula is null or
 		 *  it has been set.
 		 */
-		public Builder formula(String formula) {
+		public Builder formula(final String formula) {
 			if (formula==null) {
 				throw new IllegalArgumentException("Null argument.");
 			}
@@ -503,6 +487,7 @@ public final class ProteinModification {
 			}
 			
 			current.formula = formula;
+			
 			return this;
 		}
 	}
@@ -514,8 +499,8 @@ public final class ProteinModification {
 	 * @param occType occurrence type.
 	 * @return Builder that can be used for adding detailed information.
 	 */
-	public static Builder register(String id, ModificationCategory cat,
-			ModificationOccurrenceType occType) {
+	public static Builder register(final String id, final ModificationCategory cat,
+			final ModificationOccurrenceType occType) {
 		if (id==null || cat==null || occType==null) {
 			throw new IllegalArgumentException("Null argument(s)!");
 		}
@@ -533,13 +518,22 @@ public final class ProteinModification {
 		
 		return new Builder(current);
 	}
+	
+	/**
+	 * 
+	 * @param id modification ID.
+	 * @return ProteinModification that has the corresponding ID.
+	 */
+	public static ProteinModification getById(final String id) {
+		return byId.get(id);
+	}
 
 	/**
 	 * 
 	 * @param residId RESID ID.
 	 * @return ProteinModification that has the RESID ID.
 	 */
-	public static ProteinModification getModificationByResidId(String residId) {
+	public static ProteinModification getByResidId(final String residId) {
 		return byResidId.get(residId);
 	}
 	/**
@@ -547,39 +541,16 @@ public final class ProteinModification {
 	 * @param psimodId PSI-MOD ID.
 	 * @return ProteinModification that has the PSI-MOD ID.
 	 */
-	public static ProteinModification getModificationByPsimodId(String psimodId) {
+	public static ProteinModification getByPsimodId(final String psimodId) {
 		return byPsimodId.get(psimodId);
 	}
 	
 	/**
 	 * 
-	 * @param pdbccId
-	 * @return
+	 * @param pdbccId Protein Data Bank Chemical Component ID.
+	 * @return chemical modifications that have the PDBCC ID.
 	 */
-	public static ProteinModification getChemicalModificationByPdbccId(String pdbccId) {
-		ModificationCategory cat = getCategoryByPdbccId(pdbccId);		
-		if (cat==null) {
-			return null;
-		}
-		
-		if (cat!=ModificationCategory.CHEMICAL_MODIFICATION) {
-			// TODO: throw a exception or just return null?
-			throw new IllegalArgumentException(pdbccId+" is not a chemical modification.");
-		}
-		
-		return byPdbccId.get(byPdbccId).iterator().next();
-	}
-	
-	public static ModificationCategory getCategoryByPdbccId(String pdbccId) {
-		Set<ProteinModification> mods = byPdbccId.get(byPdbccId);
-		if (mods==null||mods.isEmpty()) {
-			return null;
-		}
-		
-		if (mods.size()>1) {
-			return ModificationCategory.ATTACHMENT;
-		}
-		
-		return mods.iterator().next().category();
+	public static Set<ProteinModification> getByPdbccId(final String pdbccId) {
+		return byPdbccId.get(byPdbccId);
 	}
 }

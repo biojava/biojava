@@ -25,5 +25,8 @@
 package org.biojava3.ptm;
 
 public enum ModificationCategory {
-	ATTACHMENT, CHEMICAL_MODIFICATION, CROSS_OVER;
+	ATTACHMENT,
+	CHEMICAL_MODIFICATION, 
+	CROSS_OVER
+	;
 }
