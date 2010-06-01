@@ -2,441 +2,644 @@
 <ProteinModifications>
 	<Entry>
 		<Id>0001</Id>
-		<Name source="RESID">O-xylosyl-L-serine</Name>
-		<Name source="PSI-MOD">O-xylosyl-L-serine</Name>
-		<Description>a protein modification that effectively forms a O3-xylosylserine</Description>
+		<Description>a protein modification that effectively forms a O3-xylosylserine.</Description>
 		<SystematicName>(S)-2-amino-3-(alpha-D-xylopyranosyloxy)propanoic acid</SystematicName>
 		<CrossReference>
-			<DbId>AA0406</DbId>
-			<DbName>RESID</DbName>
-			<DbStatus>deprecated</DbStatus>	  
+			<Source>RESID</Source>
+			<Id>AA0406</Id>
+			<Name>O-xylosyl-L-serine</Name>
+			<Status>deprecated</Status>
 		</CrossReference>
 		<CrossReference>
-			<DbId>MOD:00814</DbId>
-			<DbName>PSI-MOD</DbName>  
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00814</Id>
+			<Name source="PSI-MOD">O-xylosyl-L-serine</Name>
 		</CrossReference>
 		<Formula>C 8 H 13 N 1 O 6</Formula>
-		<Condition>
-			<AminoAcid>SER</AminoAcid>
-			<AtomOnAminoAcid>OG</AtomOnAminoAcid>
-			<Attachment>XYS</Attachment>
-			<AtomOnAttachment>O1</AtomOnAttachment>
-		</Condition>
+		<Components>
+			<Component type="AminoAcid" no="1">
+				<Id source="PDBCC">SER</Id>
+			</Component>
+			<Component type="Ligand" no="2">
+				<Id source="PDBCC">XYS</Id>
+			</Component>
+			<Bond>
+				<Atom component="1">OG</Atom>
+				<Atom component="2">O1</Atom>
+			</Bond>
+		</Components>
 		<Occurrence>Natural</Occurrence>
-		<Type>Attachment</Type>
+		<Type>Component</Type>
 	</Entry>
 	<Entry>
 		<Id>0002</Id>
-		<Name source="RESID">N4-(N-acetylamino)glucosyl-L-asparagine</Name>
-		<Name source="PSI-MOD">N4-glycosyl-L-asparagine</Name>
 		<Description>A protein modification that effectively converts an L-asparagine residue to an N4-glycosyl-L-asparagine.</Description>
 		<SystematicName>(S)-2-amino-4-(2-acetamido-2-deoxy-beta-D-glucopyranosyl)amino-4-oxobutanoic acid</SystematicName>
 		<CrossReference>
-			<DbId>AA0151</DbId>
-			<DbName>RESID</DbName>  
+			<Source>RESID</Source>
+			<ID>AA0151</ID>
+			<Name>N4-(N-acetylamino)glucosyl-L-asparagine</Name>
 		</CrossReference>
 		<CrossReference>
-			<DbId>MOD:00160</DbId>
-			<DbName>PSI-MOD</DbName>  
+			<Source>PSI-MOD</Source>
+			<ID>MOD:00160</ID>
+			<Name>N4-glycosyl-L-asparagine</Name>
 		</CrossReference>
 		<Formula>C 12 H 19 N 3 O 7</Formula>
-		<Condition>
-			<AminoAcid>ASN</AminoAcid>
-			<AtomOnAminoAcid>ND2</AtomOnAminoAcid>
-			<Attachment>NAG</Attachment>
-			<AtomOnAttachment>O1</AtomOnAttachment>
-		</Condition>
+		<Components>
+			<Component type="AminoAcid" no="1">
+				<Id source="PDBCC">ASN</Id>
+			</Component>			
+			<Component type="Ligand" no="2">
+				<Id source="PDBCC">NAG</Id>
+			</Component>
+			<Bond>
+				<Atom component="1">ND2</Atom>
+				<Atom component="2">O1</Atom>
+			</Bond>
+		</Components>
 		<Occurrence>Natural</Occurrence>
-		<Type>Attachment</Type>
+		<Type>Component</Type>
 	</Entry>
 	<Entry>
 		<Id>0003</Id>
-		<Name source="PDBCC">S-PHOSPHOCYSTEINE</Name>
-		<Name source="RESID">S-phospho-L-cysteine</Name>
-		<Name source="PSI-MOD">S-phospho-L-cysteine</Name>
 		<Description>A protein modification that effectively converts an L-cysteine residue to S-phospho-L-cysteine.</Description>
 		<SystematicName>(R)-2-amino-3-(phosphonosulfanyl)propanoic acid</SystematicName>
 		<CrossReference>
-			<DbId>CSP</DbId>
-			<DbName>PDBCC</DbName>
+			<Source>PDBCC</Source>
+			<ID>CSP</ID>
+			<Name>S-PHOSPHOCYSTEINE</Name>
 		</CrossReference>
 		<CrossReference>
-			<DbId>AA0034</DbId>
-			<DbName>RESID</DbName>
+			<Source>RESID</Source>
+			<ID>AA0034</ID>
+			<Name>S-phospho-L-cysteine</Name>
 		</CrossReference>
 		<CrossReference>
-			<DbId>MOD:00043</DbId>
-			<DbName>PSI-MOD</DbName>  
+			<Source>PSI-MOD</Source>
+			<ID>MOD:00043</ID>
+			<Name>S-phospho-L-cysteine</Name>
 		</CrossReference>
 		<Formula>C 3 H 6 N 1 O 4 P 1 S 1</Formula>
-		<Condition>
-			<AminoAcid>CSP</AminoAcid>
-		</Condition>
+		<Components>
+			<Component type="AminoAcid" no="1">
+				<Id source="PDBCC">CSP</Id>
+			</Component>
+		</Components>
 		<Occurrence>Natural</Occurrence>
 		<Type>ModifiedResidue</Type>
 	</Entry>
 	<Entry>
 		<Id>0004</Id>
-		<Name source="PDBCC">N1-PHOSPHONOHISTIDINE</Name>
-		<Name source="RESID">1'-phospho-L-histidine</Name>
-		<Name source="PSI-MOD">1'-phospho-L-histidine</Name>
 		<Description>A protein modification that effectively converts an L-histidine residue to tele-phospho-L-histidine (Ntau-phospho-L-histidine, 1'-phospho-L-histidine).</Description>
 		<SystematicName>(S)-2-amino-3-(1-phosphono-1H-imidazol-4-yl)propanoic acid</SystematicName>
 		<CrossReference>
-			<DbId>NEP</DbId>
-			<DbName>PDBCC</DbName>
+			<ID>NEP</ID>
+			<Source>PDBCC</Source>
+			<Name>N1-PHOSPHONOHISTIDINE</Name>
 		</CrossReference>
 		<CrossReference>
-			<DbId>AA0035</DbId>
-			<DbName>RESID</DbName>  
+			<Source>RESID</Source>
+			<ID>AA0035</ID>
+			<Name>1'-phospho-L-histidine</Name>
 		</CrossReference>
 		<CrossReference>
-			<DbId>MOD:00044</DbId>
-			<DbName>PSI-MOD</DbName>  
+			<Source>PSI-MOD</Source>
+			<ID>MOD:00044</ID>
+			<Name>1'-phospho-L-histidine</Name>
 		</CrossReference>
 		<Formula>C 3 H 6 N 1 O 4 P 1 S 1</Formula>
-		<Condition>
-			<AminoAcid>NEP</AminoAcid>
-		</Condition>
+		<Components>
+			<Component type="AminoAcid" no="1">
+				<Id source="PDBCC">NEP</Id>
+			</Component>
+		</Components>
 		<Occurrence>Natural</Occurrence>
 		<Type>ModifiedResidue</Type>
 	</Entry>
 	<Entry>
 		<Id>0005</Id>
-		<Name source="PDBCC">ND1-PHOSPHONOHISTIDINE</Name>
-		<Name source="RESID">3'-phospho-L-histidine</Name>
-		<Name source="PSI-MOD">3'-phospho-L-histidine</Name>
 		<Description>A protein modification that effectively converts an L-histidine residue to pros-phospho-L-histidine (Npi-phospho-L-histidine, 3'-phospho-L-histidine).</Description>
 		<SystematicName>(S)-2-amino-3-(3-phosphono-3H-imidazol-4-yl)propanoic acid</SystematicName>
 		<CrossReference>
-			<DbId>HIP</DbId>
-			<DbName>PDBCC</DbName>
+			<Source>PDBCC</Source>
+			<ID>HIP</ID>
+			<Name>ND1-PHOSPHONOHISTIDINE</Name>
 		</CrossReference>
 		<CrossReference>
-			<DbId>AA0036</DbId>
-			<DbName>RESID</DbName>  
+			<Source>RESID</Source>
+			<ID>AA0036</ID>
+			<Name>3'-phospho-L-histidine</Name>
 		</CrossReference>
 		<CrossReference>
-			<DbId>MOD:00045</DbId>
-			<DbName>PSI-MOD</DbName>  
+			<Source>PSI-MOD</Source>
+			<ID>MOD:00045</ID>
+			<Name>3'-phospho-L-histidine</Name>
 		</CrossReference>
 		<Formula>C 6 H 8 N 3 O 4 P 1</Formula>
-		<Condition>
-			<AminoAcid>HIP</AminoAcid>
-		</Condition>
+		<Components>
+			<Component type="AminoAcid" no="1">
+				<Id source="PDBCC">HIP</Id>
+			</Component>
+		</Components>
 		<Occurrence>Natural</Occurrence>
 		<Type>ModifiedResidue</Type>
 	</Entry>
 	<Entry>
 		<Id>0006</Id>
-		<Name source="PDBCC">PHOSPHOSERINE</Name>
-		<Name source="RESID">O-phospho-L-serine</Name>
-		<Name source="PSI-MOD">O-phospho-L-serine</Name>
 		<Description>A protein modification that effectively converts an L-serine residue to O-phospho-L-serine.</Description>
 		<SystematicName>(S)-2-amino-3-(phosphonooxy)propanoic acid</SystematicName>
 		<CrossReference>
-			<DbId>SEP</DbId>
-			<DbName>PDBCC</DbName>
+			<Source>PDBCC</Source>
+			<ID>SEP</ID>
+			<Name>PHOSPHOSERINE</Name>
 		</CrossReference>
 		<CrossReference>
-			<DbId>AA0037</DbId>
-			<DbName>RESID</DbName>  
+			<Source>RESID</Source>
+			<ID>AA0037</ID>
+			<Name>O-phospho-L-serine</Name>
 		</CrossReference>
 		<CrossReference>
-			<DbId>MOD:00046</DbId>
-			<DbName>PSI-MOD</DbName>  
+			<Source>PSI-MOD</Source>
+			<ID>MOD:00046</ID>
+			<Name>O-phospho-L-serine</Name>
 		</CrossReference>
 		<Formula>C 3 H 6 N 1 O 5 P 1</Formula>
-		<Condition>
-			<AminoAcid>SEP</AminoAcid>
-		</Condition>
+		<Components>
+			<Component type="AminoAcid" no="1">
+				<Id source="PDBCC">SEP</Id>
+			</Component>
+		</Components>
 		<Occurrence>Natural</Occurrence>
 		<Type>ModifiedResidue</Type>
 	</Entry>
 	<Entry>
 		<Id>0007</Id>
-		<Name source="PDBCC">PHOSPHOTHREONINE</Name>
-		<Name source="RESID">O-phospho-L-threonine</Name>
-		<Name source="PSI-MOD">O-phospho-L-threonine</Name>
 		<Description>A protein modification that effectively converts an L-threonine residue to O-phospho-L-threonine.</Description>
 		<SystematicName>(2S,3R)-2-amino-3-phosphonooxybutanoic acid</SystematicName>
 		<CrossReference>
-			<DbId>TPO</DbId>
-			<DbName>PDBCC</DbName>
+			<Source>PDBCC</Source>
+			<ID>TPO</ID>
+			<Name>PHOSPHOTHREONINE</Name>
 		</CrossReference>
 		<CrossReference>
-			<DbId>AA0038</DbId>
-			<DbName>RESID</DbName>  
+			<Source>RESID</Source>
+			<ID>AA0038</ID>
+			<Name>O-phospho-L-threonine</Name>
 		</CrossReference>
 		<CrossReference>
-			<DbId>MOD:00047</DbId>
-			<DbName>PSI-MOD</DbName>  
+			<Source>PSI-MOD</Source>
+			<ID>MOD:00047</ID>
+			<Name>O-phospho-L-threonine</Name>
 		</CrossReference>
 		<Formula>C 4 H 8 N 1 O 5 P 1</Formula>
-		<Condition>
-			<AminoAcid>TPO</AminoAcid>
-		</Condition>
+		<Components>
+			<Component type="AminoAcid" no="1">
+				<Id source="PDBCC">TPO</Id>
+			</Component>
+		</Components>
 		<Occurrence>Natural</Occurrence>
 		<Type>ModifiedResidue</Type>
 	</Entry>
 	<Entry>
 		<Id>0008</Id>
-		<Name source="PDBCC">O-PHOSPHOTYROSINE</Name>
-		<Name source="RESID">O4'-phospho-L-tyrosine</Name>
-		<Name source="PSI-MOD">O4'-phospho-L-tyrosine</Name>
 		<Description>A protein modification that effectively converts an L-tyrosine residue to O4'-phospho-L-tyrosine.</Description>
 		<SystematicName>(2S)-2-amino-3-(4-phosphonooxyphenyl)propanoic acid</SystematicName>
 		<CrossReference>
-			<DbId>PTR</DbId>
-			<DbName>PDBCC</DbName>
+			<Source>PDBCC</Source>
+			<ID>PTR</ID>
+			<Name>O-PHOSPHOTYROSINE</Name>
 		</CrossReference>
 		<CrossReference>
-			<DbId>AA0039</DbId>
-			<DbName>RESID</DbName>  
+			<Source>RESID</Source>
+			<ID>AA0039</ID>
+			<Name>O4'-phospho-L-tyrosine</Name>
 		</CrossReference>
 		<CrossReference>
-			<DbId>MOD:00048</DbId>
-			<DbName>PSI-MOD</DbName>  
+			<Source>PSI-MOD</Source>
+			<ID>MOD:00048</ID>
+			<Name>O4'-phospho-L-tyrosine</Name>
 		</CrossReference>
 		<Formula>C 9 H 10 N 1 O 5 P 1</Formula>
-		<Condition>
-			<AminoAcid>PTR</AminoAcid>
-		</Condition>
+		<Components>
+			<Component type="AminoAcid" no="1">
+				<Id source="PDBCC">PTR</Id>
+			</Component>
+		</Components>
 		<Occurrence>Natural</Occurrence>
 		<Type>ModifiedResidue</Type>
 	</Entry>
 	<Entry>
 		<Id>0009</Id>
-		<Name source="RESID">N-acetyl-L-glutamine</Name>
-		<Name source="PSI-MOD">N-acetyl-L-glutamine</Name>
 		<Description>A protein modification that effectively converts an L-glutamine residue to N-acetyl-L-glutamine.</Description>
 		<SystematicName>(S)-2-acetamido-5-pentanediamic acid</SystematicName>
 		<CrossReference>
-			<DbId>AA0045</DbId>
-			<DbName>RESID</DbName>
-			<DbStatus>deprecated</DbStatus>	  
+			<Source>RESID</Source>
+			<ID>AA0045</ID>
+			<Name>N-acetyl-L-glutamine</Name>
+			<Status>deprecated</Status>
 		</CrossReference>
 		<CrossReference>
-			<DbId>MOD:00054</DbId>
-			<DbName>PSI-MOD</DbName>
+			<Source>PSI-MOD</Source>
+			<ID>MOD:00054</ID>
+			<Name>N-acetyl-L-glutamine</Name>
 		</CrossReference>
 		<Formula>C 7 H 11 N 2 O 3</Formula>
-		<Condition>
-			<AminoAcid>GLN</AminoAcid>
-			<AtomOnAminoAcid>N</AtomOnAminoAcid>
-			<Attachment>ACE</Attachment>
-			<AtomOnAttachment>C</AtomOnAttachment>
-			<Terminal>N</Terminal>
-		</Condition>
+		<Components>
+			<Component type="AminoAcid" no="1">
+				<Id source="PDBCC">GLN</Id>
+				<Terminal>N</Terminal>
+			</Component>
+			<Component type="Ligand" no="2">
+				<Id source="PDBCC">ACE</Id>
+			</Component>
+			<Bond>
+				<Atom component="1">N</Atom>
+				<Atom component="2">C</Atom>
+			</Bond>
+		</Components>
 		<Occurrence>Natural</Occurrence>
-		<Type>Attachment</Type>
+		<Type>Component</Type>
 	</Entry>
 	<Entry>
 		<Id>0010</Id>
-		<Name source="RESID">N-acetyl-L-methionine</Name>
-		<Name source="PSI-MOD">N-acetyl-L-methionine</Name>
 		<Description>A protein modification that effectively converts an L-methionine to N-acetyl-L-methionine.</Description>
 		<SystematicName>(2S)-2-acetamido-4-(methylsulfanyl)butanoic acid</SystematicName>
 		<CrossReference>
-			<DbId>AA0049</DbId>
-			<DbName>RESID</DbName>  
+			<Source>RESID</Source>
+			<ID>AA0049</ID>
+			<Name>N-acetyl-L-methionine</Name>
 		</CrossReference>
 		<CrossReference>
-			<DbId>MOD:00058</DbId>
-			<DbName>PSI-MOD</DbName>  
+			<Source>PSI-MOD</Source>
+			<ID>MOD:00058</ID>
+			<Name>N-acetyl-L-methionine</Name>
 		</CrossReference>
 		<Formula>C 7 H 12 N 1 O 2 S 1</Formula>
-		<Condition>
-			<AminoAcid>MET</AminoAcid>
-			<AtomOnAminoAcid>N</AtomOnAminoAcid>
-			<Attachment>ACE</Attachment>
-			<AtomOnAttachment>C</AtomOnAttachment>
-			<Terminal>N</Terminal>
-		</Condition>
+		<Components>
+			<Component type="AminoAcid" no="1">
+				<Id source="PDBCC">MET</Id>
+				<Terminal>N</Terminal>
+			</Component>
+			<Component type="Ligand" no="2">
+				<Id source="PDBCC">ACE</Id>
+			</Component>
+			<Bond>
+				<Atom component="1">N</Atom>
+				<Atom component="2">C</Atom>
+			</Bond>
+		</Components>
 		<Occurrence>Natural</Occurrence>
-		<Type>Attachment</Type>
+		<Type>Component</Type>
 	</Entry>
 	<Entry>
 		<Id>0011</Id>
-		<Name source="PDBCC">N(6)-ACETYLLYSINE</Name>
-		<Name source="RESID">N6-acetyl-L-lysine</Name>
-		<Name source="PSI-MOD">N6-acetyl-L-lysine</Name>
 		<Description>A protein modification that effectively converts an L-lysine residue to N6-acetyl-L-lysine.</Description>
 		<SystematicName>(2S)-2-amino-6-acetamidohexanoic acid</SystematicName>
 		<CrossReference>
-			<DbId>ALY</DbId>
-			<DbName>PDBCC</DbName>
+			<Source>PDBCC</Source>
+			<ID>ALY</ID>
+			<Name>N(6)-ACETYLLYSINE</Name>
 		</CrossReference>
 		<CrossReference>
-			<DbId>AA0055</DbId>
-			<DbName>RESID</DbName>  
+			<Source>RESID</Source>
+			<ID>AA0055</ID>
+			<Name>N6-acetyl-L-lysine</Name>
 		</CrossReference>
 		<CrossReference>
-			<DbId>MOD:00064</DbId>
-			<DbName>PSI-MOD</DbName>  
+			<Source>PSI-MOD</Source>
+			<ID>MOD:00064</ID>
+			<Name>N6-acetyl-L-lysine</Name>
 		</CrossReference>
 		<Formula>C 8 H 14 N 2 O 2</Formula>
-		<Condition>
-			<AminoAcid>ALY</AminoAcid>
-		</Condition>
+		<Components>
+			<Component type="AminoAcid" no="1">
+				<Id source="PDBCC">ALY</Id>
+			</Component>
+		</Components>
 		<Occurrence>Natural</Occurrence>
 		<Type>ModifiedResidue</Type>
 	</Entry>
 	<Entry>
 		<Id>0012</Id>
-		<Name source="PDBCC">O-SULFO-L-TYROSINE </Name>
-		<Name source="RESID">O4'-sulfo-L-tyrosine</Name>
-		<Name source="PSI-MOD">O4'-sulfo-L-tyrosine</Name>
 		<Description>A protein modification that effectively converts an L-tyrosine residue to O4'-sulfo-L-tyrosine.</Description>
 		<SystematicName>(S)-2-amino-3-(4-sulfooxyphenyl)propanoic acid</SystematicName>
 		<CrossReference>
-			<DbId>TYS</DbId>
-			<DbName>PDBCC</DbName>
+			<Source>PDBCC</Source>
+			<ID>TYS</ID>
+			<Name>O-SULFO-L-TYROSINE </Name>
 		</CrossReference>
 		<CrossReference>
-			<DbId>AA0172</DbId>
-			<DbName>RESID</DbName>  
+			<Source>RESID</Source>
+			<ID>AA0172</ID>
+			<Name>O4'-sulfo-L-tyrosine</Name>
 		</CrossReference>
 		<CrossReference>
-			<DbId>MOD:00181</DbId>
-			<DbName>PSI-MOD</DbName>  
+			<Source>PSI-MOD</Source>
+			<ID>MOD:00181</ID>
+			<Name>O4'-sulfo-L-tyrosine</Name>
 		</CrossReference>
 		<Formula>C 9 H 9 N 1 O 5 S 1</Formula>
-		<Condition>
-			<AminoAcid>TYS</AminoAcid>
-		</Condition>
+		<Components>
+			<Component type="AminoAcid" no="1">
+				<Id source="PDBCC">TYS</Id>
+			</Component>
+		</Components>
 		<Occurrence>Natural</Occurrence>
 		<Type>ModifiedResidue</Type>
 	</Entry>
 	<Entry>
 		<Id>0013</Id>
-		<Name source="PDBCC">N-METHYL-LYSINE</Name>
-		<Name source="RESID">N6-methyl-L-lysine</Name>
-		<Name source="PSI-MOD">N6-methyl-L-lysine</Name>
 		<Description>A protein modification that effectively converts an L-lysine residue to N6-methyl-L-lysine.</Description>
 		<SystematicName>(S)-2-amino-6-methylaminohexanoic acid</SystematicName>
 		<CrossReference>
-			<DbId>MLZ</DbId>
-			<DbName>PDBCC</DbName>
+			<Source>PDBCC</Source>
+			<ID>MLZ</ID>
+			<Name>N-METHYL-LYSINE</Name>
 		</CrossReference>
 		<CrossReference>
-			<DbId>AA0076</DbId>
-			<DbName>RESID</DbName>  
+			<Source>RESID</Source>
+			<ID>AA0076</ID>
+			<Name>N6-methyl-L-lysine</Name>
 		</CrossReference>
 		<CrossReference>
-			<DbId>MOD:00085</DbId>
-			<DbName>PSI-MOD</DbName>  
+			<Source>PSI-MOD</Source>
+			<ID>MOD:00085</ID>
+			<Name>N6-methyl-L-lysine</Name>
 		</CrossReference>
 		<Formula>C 7 H 14 N 2 O 1</Formula>
-		<Condition>
-			<AminoAcid>MLZ</AminoAcid>
-		</Condition>
+		<Components>
+			<Component type="AminoAcid" no="1">
+				<Id source="PDBCC">MLZ</Id>
+			</Component>
+		</Components>
 		<Occurrence>Natural</Occurrence>
 		<Type>ModifiedResidue</Type>
 	</Entry>
 	<Entry>
 		<Id>0014</Id>
-		<Name source="PDBCC">5-METHYL-ARGININE </Name>
-		<Name source="RESID">5-methyl-L-arginine</Name>
-		<Name source="PSI-MOD">5-methyl-L-arginine</Name>
 		<Description>A protein modification that effectively converts an L-arginine residue to 5-methyl-L-arginine.</Description>
 		<SystematicName>(2S,5S)-2-amino-5-carbamimidamidohexanoic acid</SystematicName>
 		<CrossReference>
-			<DbId>AGM</DbId>
-			<DbName>PDBCC</DbName>
+			<Source>PDBCC</Source>
+			<ID>AGM</ID>
+			<Name>5-METHYL-ARGININE </Name>
 		</CrossReference>
 		<CrossReference>
-			<DbId>AA0272</DbId>
-			<DbName>RESID</DbName>  
+			<Source>RESID</Source>
+			<ID>AA0272</ID>
+			<Name>5-methyl-L-arginine</Name>
 		</CrossReference>
 		<CrossReference>
-			<DbId>MOD:00277</DbId>
-			<DbName>PSI-MOD</DbName>  
+			<Source>PSI-MOD</Source>
+			<ID>MOD:00277</ID>
+			<Name>5-methyl-L-arginine</Name>
 		</CrossReference>
 		<Formula>C 7 H 14 N 4 O 1</Formula>
-		<Condition>
-			<AminoAcid>AGM</AminoAcid>
-		</Condition>
+		<Components>
+			<Component type="AminoAcid" no="1">
+				<Id source="PDBCC">AGM</Id>
+			</Component>
+		</Components>
 		<Occurrence>Natural</Occurrence>
 		<Type>ModifiedResidue</Type>
 	</Entry>
 	<Entry>
 		<Id>0015</Id>
-		<Name source="PDBCC">N-TRIMETHYLLYSINE</Name>
-		<Name source="RESID">N6,N6,N6-trimethyl-L-lysine</Name>
-		<Name source="PSI-MOD">N6,N6,N6-trimethyl-L-lysine</Name>
 		<Description>A protein modification that effectively converts an L-lysine residue to N6,N6,N6-trimethyl-L-lysine.</Description>
 		<SystematicName>(5S)-5-amino-5-carboxy-N,N,N-trimethylpentan-1-aminium</SystematicName>
 		<CrossReference>
-			<DbId>M3L</DbId>
-			<DbName>PDBCC</DbName>
+			<Source>PDBCC</Source>
+			<ID>M3L</ID>
+			<Name>N-TRIMETHYLLYSINE</Name>
 		</CrossReference>
 		<CrossReference>
-			<DbId>AA0074</DbId>
-			<DbName>RESID</DbName>  
+			<Source>RESID</Source>
+			<ID>AA0074</ID>
+			<Name>N6,N6,N6-trimethyl-L-lysine</Name>
 		</CrossReference>
 		<CrossReference>
-			<DbId>MOD:00083</DbId>
-			<DbName>PSI-MOD</DbName>  
+			<Source>PSI-MOD</Source>
+			<ID>MOD:00083</ID>
+			<Name>N6,N6,N6-trimethyl-L-lysine</Name>
 		</CrossReference>
 		<Formula>C 9 H 19 N 2 O 1</Formula>
-		<Condition>
-			<AminoAcid>M3L</AminoAcid>
-		</Condition>
+		<Components>
+			<Component type="AminoAcid" no="1">
+				<Id source="PDBCC">M3L</Id>
+			</Component>
+		</Components>
 		<Occurrence>Natural</Occurrence>
 		<Type>ModifiedResidue</Type>
 	</Entry>
 	<Entry>
 		<Id>0016</Id>
-		<Name source="PDBCC">N-METHYL METHIONINE</Name>
-		<Name source="RESID">N-methyl-L-methionine</Name>
-		<Name source="PSI-MOD">N-methyl-L-methionine</Name>
 		<Description>A protein modification that effectively converts an L-methionine residue to N-methyl-L-methionine.</Description>
 		<SystematicName>(S)-2-methylamino-4-(methylsulfanyl)butanoic acid</SystematicName>
 		<CrossReference>
-			<DbId>MME</DbId>
-			<DbName>PDBCC</DbName>
+			<Source>PDBCC</Source>
+			<ID>MME</ID>
+			<Name>N-METHYL METHIONINE</Name>
 		</CrossReference>
 		<CrossReference>
-			<DbId>AA0064</DbId>
-			<DbName>RESID</DbName>  
+			<Source>RESID</Source>
+			<ID>AA0064</ID>
+			<Name>N-methyl-L-methionine</Name>
 		</CrossReference>
 		<CrossReference>
-			<DbId>MOD:00073</DbId>
-			<DbName>PSI-MOD</DbName>  
+			<Source>PSI-MOD</Source>
+			<ID>MOD:00073</ID>
+			<Name>N-methyl-L-methionine</Name>
 		</CrossReference>
 		<Formula>C 6 H 11 N 1 O 1 S 1</Formula>
-		<Condition>
-			<AminoAcid>MME</AminoAcid>
-			<Terminal>N</Terminal>
-		</Condition>
+		<Components>
+			<Component type="AminoAcid" no="1">
+				<Id source="PDBCC">MME</Id>
+				<Terminal>N</Terminal>
+			</Component>
+		</Components>
 		<Occurrence>Natural</Occurrence>
 		<Type>ModifiedResidue</Type>
 	</Entry>
 	<Entry>
 		<Id>0017</Id>
-		<Name source="PDBCC">4-HYDROXYPROLINE</Name>
-		<Name source="RESID">4-hydroxy-L-proline</Name>
-		<Name source="PSI-MOD">4-hydroxy-L-proline</Name>
-		<Description>A protein modification that effectively converts an L-proline residue to 4-hydroxy-L-proline</Description>
+		<Description>A protein modification that effectively converts an L-proline residue to 4-hydroxy-L-proline.</Description>
 		<SystematicName>(2S,4R)-4-hydroxypyrrolidine-2-carboxylic acid</SystematicName>
 		<CrossReference>
-			<DbId>HYP</DbId>
-			<DbName>PDBCC</DbName>
+			<Source>PDBCC</Source>
+			<ID>HYP</ID>
+			<Name>4-HYDROXYPROLINE</Name>
 		</CrossReference>
 		<CrossReference>
-			<DbId>AA0030</DbId>
-			<DbName>RESID</DbName>  
+			<Source>RESID</Source>
+			<ID>AA0030</ID>
+			<Name>4-hydroxy-L-proline</Name>
 		</CrossReference>
 		<CrossReference>
-			<DbId>MOD:00039</DbId>
-			<DbName>PSI-MOD</DbName>  
+			<Source>PSI-MOD</Source>
+			<ID>MOD:00039</ID>
+			<Name>4-hydroxy-L-proline</Name>
 		</CrossReference>
 		<Formula>C 5 H 7 N 1 O 2</Formula>
-		<Condition>
-			<AminoAcid>HYP</AminoAcid>
-		</Condition>
+		<Components>
+			<Component type="AminoAcid" no="1">
+				<Id source="PDBCC">HYP</Id>
+			</Component>
+		</Components>
 		<Occurrence>Natural</Occurrence>
 		<Type>ModifiedResidue</Type>
+	</Entry>
+	<Entry>
+		<Id>0018</Id>
+		<Description>A protein modification that effectively cross-links two L-cysteine residues to form L-cystine.</Description>
+		<SystematicName>(R,R)-3,3'-disulfane-1,2-diylbis(2-aminopropanoic acid)</SystematicName>
+		<CrossReference>
+			<Source>RESID</Source>
+			<ID>AA0025</ID>
+			<Name>L-cystine</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<ID>MOD:00034</ID>
+			<Name>L-cystine (cross-link)</Name>
+		</CrossReference>
+		<Formula>C 6 H 8 N 2 O 2 S 2</Formula>
+		<Components>
+			<Component type="AminoAcid" no="1">
+				<Id source="PDBCC">CYS</Id>
+			</Component>
+			<Component type="AminoAcid" no="2">
+				<Id source="PDBCC">CYS</Id>
+			</Component>
+			<Bond>
+				<Atom component="1">S</Atom>
+				<Atom component="2">S</Atom>
+			</Bond>
+		</Components>
+		<Occurrence>Natural</Occurrence>
+		<Type>CrossLink</Type>
+	</Entry>
+	<Entry>
+		<Id>0019</Id>
+		<Description>A protein modification that effectively converts an L-cysteine residue to L-cysteine methyl disulfide.</Description>
+		<SystematicName>(R)-2-amino-3-(methyldisulfanediyl)propanoic acid</SystematicName>
+		<CrossReference>
+			<Source>PDBCC</Source>
+			<ID>SCH</ID>
+			<Name>S-METHYL-THIO-CYSTEINE</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>RESID</Source>
+			<ID>AA0101</ID>
+			<Name>L-cysteine methyl disulfide</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<ID>MOD:00110</ID>
+			<Name>L-cysteine methyl disulfide</Name>
+		</CrossReference>
+		<Formula>C 4 H 7 N 1 O 1 S 2</Formula>
+		<Components>
+			<Component type="AminoAcid" no="1">
+				<Id source="PDBCC">SCH</Id>
+			</Component>
+		</Components>
+		<Occurrence>Natural</Occurrence>
+		<Type>CrossLink</Type>
+	</Entry>
+	<Entry>
+		<Id>0020</Id>
+		<Description>A protein modification that effectively converts three L-cysteine residues and a three-iron four-sulfur cluster to tris-L-cysteinyl triiron tetrasulfide.</Description>
+		<SystematicName>mu3-sulfido-tri-mu-sulfidotris(cysteinato-kappaS-iron)</SystematicName>
+		<CrossReference>
+			<Source>RESID</Source>
+			<ID>AA0139</ID>
+			<Name>tris-L-cysteinyl triiron tetrasulfide</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<ID>MOD:00148</ID>
+			<Name>tris-L-cysteinyl triiron tetrasulfide</Name>
+		</CrossReference>
+		<Formula>C 9 Fe 3 H 12 N 3 O 3 S 7</Formula>
+		<Components>
+			<Component type="AminoAcid" no="1">
+				<Id source="PDBCC">CYS</Id>
+			</Component>
+			<Component type="AminoAcid" no="2">
+				<Id source="PDBCC">CYS</Id>
+			</Component>
+			<Component type="AminoAcid" no="3">
+				<Id source="PDBCC">CYS</Id>
+			</Component>
+			<Component type="Ligand" no="4">
+				<Id source="PDBCC">F3S</Id>
+			</Component>
+			<Bond>
+				<Atom component="1">S</Atom>
+				<Atom component="4">FE1</Atom>
+			</Bond>
+			<Bond>
+				<Atom component="2">S</Atom>
+				<Atom component="4">FE3</Atom>
+			</Bond>
+			<Bond>
+				<Atom component="3">S</Atom>
+				<Atom component="4">FE4</Atom>
+			</Bond>
+		</Components>
+		<Occurrence>Natural</Occurrence>
+		<Type>CrossLink</Type>
+	</Entry>
+	<Entry>
+		<Id>0021</Id>
+		<Description>A protein modification that effectively converts four L-cysteine residues and a two-iron two-sulfur cluster to tetrakis-L-cysteinyl diiron disulfide.</Description>
+		<SystematicName>tetrakis(cysteinato)-1kappaS,1kappaS,2kappaS,2kappaS-di-mu-sulfidodiiron</SystematicName>
+		<CrossReference>
+			<Source>RESID</Source>
+			<ID>AA0137</ID>
+			<Name>tetrakis-L-cysteinyl diiron disulfide</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<ID>MOD:00146</ID>
+			<Name>tetrakis-L-cysteinyl diiron disulfide</Name>
+		</CrossReference>
+		<Formula>C 12 Fe 2 H 16 N 4 O 4 S 6</Formula>
+		<Components>
+			<Component type="AminoAcid" no="1">
+				<Id source="PDBCC">CYS</Id>
+			</Component>
+			<Component type="AminoAcid" no="2">
+				<Id source="PDBCC">CYS</Id>
+			</Component>
+			<Component type="AminoAcid" no="3">
+				<Id source="PDBCC">CYS</Id>
+			</Component>
+			<Component type="AminoAcid" no="4">
+				<Id source="PDBCC">CYS</Id>
+			</Component>
+			<Component type="Ligand" no="5">
+				<Id source="PDBCC">FES</Id>
+			</Component>
+			<Bond>
+				<Atom component="1">S</Atom>
+				<Atom component="5">FE1</Atom>
+			</Bond>
+			<Bond>
+				<Atom component="2">S</Atom>
+				<Atom component="5">FE1</Atom>
+			</Bond>
+			<Bond>
+				<Atom component="3">S</Atom>
+				<Atom component="5">FE2</Atom>
+			</Bond>
+			<Bond>
+				<Atom component="4">S</Atom>
+				<Atom component="5">FE2</Atom>
+			</Bond>
+		</Components>
+		<Occurrence>Natural</Occurrence>
+		<Type>CrossLink</Type>
 	</Entry>
 </ProteinModifications>
