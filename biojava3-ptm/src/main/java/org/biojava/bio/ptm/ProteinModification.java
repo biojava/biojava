@@ -57,11 +57,12 @@ public final class ProteinModification {
 	private String psimodName = null;
 	private String sysName = null;
 	private String formula = null;
+	private String description = null;
 	
 	private boolean isNTerminal = false;
 	private boolean isCTerminal = false;
 	private String[] components = null;
-	private String[] atoms = null;
+	private String[][] atoms = null;
 	
 	private ModificationCategory category;
 	private ModificationOccurrenceType occurrenceType;
@@ -143,6 +144,14 @@ public final class ProteinModification {
 	
 	/**
 	 * 
+	 * @return Description.
+	 */
+	public String description() {
+		return description;
+	}
+	
+	/**
+	 * 
 	 * @return true if occurring at N-terminal of a protein; false otherwise.
 	 */
 	public boolean isNTerminal() {
@@ -172,14 +181,15 @@ public final class ProteinModification {
 	
 	/**
 	 * Get the atoms on the components.
-	 * @return a array of atoms involved in the modification.
+	 * @return a matrix of atoms involved in the modification. A non-null element in the
+	 *  matrix indicates a link between the corresponding two elements.
 	 *  For CHEMICAL_MODIFICATION, this information is not required and thus could be null;
-	 *  For ATTACHMENT, this should contain two atoms: the first is on the amino acid
-	 *  that is attached to, and the second is on the attached group.
-	 *  For CROSS_OVER, This should contain the atom on the corresponding amino acid
-	 *  and chemical components. 
+	 *  For ATTACHMENT, this should be a 2x2 matrix: element (1,2) represents the atom on 
+	 *  the amino acid that is attached to, and element (2,1) represents the atom on the 
+	 *  attached group.
+	 *  For CROSS_OVER, this should be a c by c matrix, where c is the size of components.
 	 */
-	public String[] atoms() {
+	public String[][] atoms() {
 		return atoms;
 	}
 	
@@ -187,7 +197,7 @@ public final class ProteinModification {
 	 * 
 	 * @return formula of the modified residue.
 	 */
-	public String getFormula() {
+	public String formula() {
 		return formula;
 	}
 	
@@ -245,14 +255,9 @@ public final class ProteinModification {
 		 * Set the Protein Data Bank Chemical Component ID.
 		 * @param pdbccId Protein Data Bank Chemical Component ID.
 		 * @return the same Builder object so you can chain setters.
-		 * @throws IllegalArgumentException if pdbccId is null or
-		 *  it has been set.
+		 * @throws IllegalArgumentException if pdbccId has been set.
 		 */
-		public Builder pdbccId(final String pdbccId) {
-			if (pdbccId==null) {
-				throw new IllegalArgumentException("Null argument.");
-			}
-			
+		public Builder pdbccId(final String pdbccId) {			
 			if (current.pdbccId!=null) {
 				throw new IllegalArgumentException("PDBCC ID has been set.");
 			}
@@ -272,14 +277,9 @@ public final class ProteinModification {
 		 * Set the Protein Data Bank Chemical Component name.
 		 * @param pdbccName Protein Data Bank Chemical Component name.
 		 * @return the same Builder object so you can chain setters.
-		 * @throws IllegalArgumentException if pdbccName is null or
-		 *  it has been set.
+		 * @throws IllegalArgumentException if pdbccName has been set.
 		 */
-		public Builder pdbccName(final String pdbccName) {
-			if (pdbccName==null) {
-				throw new IllegalArgumentException("Null argument.");
-			}
-			
+		public Builder pdbccName(final String pdbccName) {			
 			if (current.pdbccName!=null) {
 				throw new IllegalArgumentException("PDBCC name has been set.");
 			}
@@ -295,14 +295,10 @@ public final class ProteinModification {
 		 * @return the same Builder object so you can chain setters.
 		 * @throws IllegalArgumentException if residId is null or
 		 *  it has been set.
-		 * @throws IllegalArgumentException if residId is null or
-		 *  it has been set or has been registered by another instance.
+		 * @throws IllegalArgumentException if residIdhas been set 
+		 * or has been registered by another instance.
 		 */
 		public Builder residId(final String residId) {
-			if (residId==null) {
-				throw new IllegalArgumentException("Null argument.");
-			}
-			
 			if (current.residId!=null) {
 				throw new IllegalArgumentException("RESID ID has been set.");
 			}
@@ -322,14 +318,9 @@ public final class ProteinModification {
 		 * Set the RESID name.
 		 * @param residName RESID name.
 		 * @return the same Builder object so you can chain setters.
-		 * @throws IllegalArgumentException if residId is null or
-		 *  it has been set.
+		 * @throws IllegalArgumentException if residId has been set.
 		 */
 		public Builder residName(final String residName) {
-			if (residName==null) {
-				throw new IllegalArgumentException("Null argument.");
-			}
-			
 			if (current.residName!=null) {
 				throw new IllegalArgumentException("RESID name has been set.");
 			}
@@ -343,14 +334,10 @@ public final class ProteinModification {
 		 * Set the PSI-MOD ID.
 		 * @param psimodId PSI-MOD ID.
 		 * @return the same Builder object so you can chain setters.
-		 * @throws IllegalArgumentException if psimodId is null or
-		 *  it has been set or has been registered by another instance.
+		 * @throws IllegalArgumentException if psimodId has been set
+		 *  or has been registered by another instance.
 		 */
 		public Builder psimodId(final String psimodId) {
-			if (psimodId==null) {
-				throw new IllegalArgumentException("Null argument.");
-			}
-			
 			if (current.psimodId!=null) {
 				throw new IllegalArgumentException("PSI-MOD ID has been set.");
 			}
@@ -369,14 +356,9 @@ public final class ProteinModification {
 		 * Set the PSI-MOD name.
 		 * @param psimodName PSI-MOD name.
 		 * @return the same Builder object so you can chain setters.
-		 * @throws IllegalArgumentException if psimodName is null or
-		 *  it has been set.
+		 * @throws IllegalArgumentException if psimodName has been set.
 		 */
 		public Builder psimodName(final String psimodName) {
-			if (psimodName==null) {
-				throw new IllegalArgumentException("Null argument.");
-			}
-			
 			if (current.psimodName!=null) {
 				throw new IllegalArgumentException("PSI-MOD name has been set.");
 			}
@@ -407,43 +389,75 @@ public final class ProteinModification {
 		}
 		
 		/**
-		 * Set the involved components.
-		 * @param components components involved.
+		 * Set one component. The method is for ModifiedResidue only.
+		 * @param component component.
 		 * @return the same Builder object so you can chain setters.
-		 * @throws IllegalArgumentException if components is null or empty, or
-		 *  it has been set.
+		 * @throws IllegalArgumentException if component is null.
 		 */
-		public Builder components(final String[] components) {
-			if (components==null || components.length==0) {
-				throw new IllegalArgumentException("Null or empty components.");
+		public Builder component(final String component) {
+			if (component==null) {
+				throw new IllegalArgumentException("Null component.");
 			}
 			
+			return componentsAndAtoms(new String[]{component}, null);
+		}
+		
+		/**
+		 * Set components and atoms for modification involving two components,
+		 * e.g. attachments.
+		 * @param component1 the first involved component (amino acid for attachment).
+		 * @param atom1 atom on the first component.
+		 * @param component2 the second involved component (attached group for attachment).
+		 * @param atom2 atom on the second component.
+		 * @return the same Builder object so you can chain setters.
+		 * @throws IllegalArgumentException if any of the arguments is null.
+		 */
+		public Builder componentsAndAtoms(final String component1,
+				final String atom1, final String component2, final String atom2) {
+			if (component1==null || atom1==null || component2==null || atom2==null) {
+				throw new IllegalArgumentException("Null argument(s).");
+			}
+			
+			return componentsAndAtoms(new String[]{component1, component2},
+					new String[][]{new String[]{null,atom1},new String[]{atom2,null}});
+		}
+		
+		/**
+		 * Set the involved components and atoms.
+		 * @param components components involved.
+		 * @param atoms a matrix of atoms involved in the modification. A non-null element 
+		 *  in the matrix indicates a link between the corresponding two elements.
+		 *  For CHEMICAL_MODIFICATION, this information is not required and thus could be null;
+		 *  For ATTACHMENT, this should be a 2x2 matrix: element (1,2) represents the atom on 
+		 *  the amino acid that is attached to, and element (2,1) represents the atom on the 
+		 *  attached group.
+		 *  For CROSS_OVER, this should be a c by c matrix, where c is the size of components.
+		 * @return the same Builder object so you can chain setters.
+		 * @throws IllegalArgumentException if components or atoms has been set,
+		 *  or atom matrix dimension is improper.
+		 */
+		public Builder componentsAndAtoms(final String[] components,
+				final String[][] atoms) {
 			if (current.components!=null) {
 				throw new IllegalArgumentException("Components have been set.");
 			}
 			
-			current.components = components;
-			
-			return this;
-		}
-		
-		/**
-		 * Set the atoms on the components.
-		 * @param atoms atoms on the components.
-		 * @return the same Builder object so you can chain setters.
-		 * @throws IllegalStateException if the ProteinModification is a 
-		 *  chemical modification.
-		 * @throws IllegalArgumentException if atoms is null.
-		 */
-		public Builder atoms(final String[] atoms) {			
-			if (atoms==null || atoms.length==0) {
-				throw new IllegalArgumentException("Null or empty atoms.");
-			}
-			
 			if (current.atoms!=null) {
-				throw new IllegalArgumentException("Components have been set.");
+				throw new IllegalArgumentException("atoms have been set.");
 			}
 			
+			if (components==null || components.length==0) {
+				return this;
+			}			
+			
+			if (atoms!=null) {
+				if (components.length!=atoms.length || components.length!=atoms[0].length) {
+					throw new IllegalArgumentException("The matrix of atoms must has the same" +
+							"number of elements as components in both dimensions.");
+				}
+			}
+			
+			current.components = components;
 			current.atoms = atoms;
 			
 			return this;
@@ -453,14 +467,9 @@ public final class ProteinModification {
 		 * Set the systematic name.
 		 * @param sysName systematic name.
 		 * @return the same Builder object so you can chain setters.
-		 * @throws IllegalArgumentException if sysName is null or
-		 *  it has been set.
+		 * @throws IllegalArgumentException if sysName has been set.
 		 */
-		public Builder systematicName(final String sysName) {
-			if (sysName==null) {
-				throw new IllegalArgumentException("Null argument.");
-			}
-			
+		public Builder systematicName(final String sysName) {			
 			if (current.sysName!=null) {
 				throw new IllegalArgumentException("Systematic name has been set.");
 			}
@@ -471,17 +480,28 @@ public final class ProteinModification {
 		}
 		
 		/**
+		 * 
+		 * @param description description of the modification.
+		 * @return the same Builder object so you can chain setters.
+		 * @throws IllegalArgumentException if description has been set.
+		 */
+		public Builder description(final String description) {
+			if (current.description!=null) {
+				throw new IllegalArgumentException("Description has been set.");
+			}
+			
+			current.description = description;
+			
+			return this;
+		}
+		
+		/**
 		 * Set the residue formula.
 		 * @param formula residue formula.
 		 * @return the same Builder object so you can chain setters.
-		 * @throws IllegalArgumentException if formula is null or
-		 *  it has been set.
+		 * @throws IllegalArgumentException if formula has been set.
 		 */
 		public Builder formula(final String formula) {
-			if (formula==null) {
-				throw new IllegalArgumentException("Null argument.");
-			}
-			
 			if (current.formula!=null) {
 				throw new IllegalArgumentException("Formula has been set.");
 			}

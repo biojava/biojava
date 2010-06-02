@@ -24,6 +24,50 @@
 
 package org.biojava.bio.ptm;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public enum ModificationOccurrenceType {
-	NATURAL;
+	NATURAL("Natural");
+	
+	ModificationOccurrenceType(String label) {
+		this.label = label;
+	}
+	
+	/**
+	 * 
+	 * @return the label of this ModificationOccurrenceType.
+	 */
+	public String label() {
+		return label;
+	}
+	
+	/**
+	 * @return the label of this ModificationOccurrenceType.
+	 */
+	public String toString() {
+		return label;
+	}
+	
+	/**
+	 * The variable is the same as the &ltOccurrence&gt; in the ptm_list XML file.
+	 */
+	private String label;
+	
+	/**
+	 * 
+	 * @param label the label of ModificationOccurrenceType.
+	 * @return the ModificationOccurrenceType that has the label.
+	 */
+	public static ModificationOccurrenceType getByLabel(String label) {
+		return mapLabelOcc.get(label);
+	}
+	
+	private static Map<String, ModificationOccurrenceType> mapLabelOcc;	
+	static {
+		mapLabelOcc = new HashMap<String, ModificationOccurrenceType>();
+		for (ModificationOccurrenceType cat:ModificationOccurrenceType.values()) {
+			mapLabelOcc.put(cat.label, cat);
+		}
+	}
 }
