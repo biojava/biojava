@@ -22,12 +22,12 @@
  *
  */
 
-package org.biojava.bio.ptm;
+package org.biojava3.ptm;
 
 import org.biojava.bio.structure.AminoAcid;
 import org.biojava.bio.structure.Group;
 
-public interface CrossLink {
+public interface Attachement {
 	/**
 	 * 
 	 * @return {@link ProteinModification} occurred on the residue.
@@ -36,21 +36,20 @@ public interface CrossLink {
 	
 	/**
 	 * 
-	 * @return the {@link AminoAcid}s that are involved.
+	 * @return the {@link AminoAcid} that is attached to.
 	 */
-	public AminoAcid[] getLinkedResiues();
+	public AminoAcid getModifiedAminoAcid();
 	
 	/**
 	 * 
-	 * @return the attached {@link Group}s that are involved.
+	 * @return the attached {@link Group}.
 	 */
-	public Group[] getAttachedGroup();
+	public Group getAttachedGroup();
 	
 	/**
 	 * 
-	 * @return the chemical bonds that links the {@link AminoAcid}s and/or 
-	 *  the attached {@link Group}s.
+	 * @return the chemical bond that links the {@link AminoAcid} and 
+	 *  the attached {@link Group}.
 	 */
-	public ChemicalBond[] getChemicalBonds();
-
+	public ChemicalBond getChemicalBond();
 }

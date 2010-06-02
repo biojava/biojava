@@ -22,7 +22,7 @@
  *
  */
 
-package org.biojava.bio.ptm.io;
+package org.biojava3.ptm.io;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -36,9 +36,9 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.biojava.bio.ptm.ModificationCategory;
-import org.biojava.bio.ptm.ModificationOccurrenceType;
-import org.biojava.bio.ptm.ProteinModification;
+import org.biojava3.ptm.ModificationCategory;
+import org.biojava3.ptm.ModificationOccurrenceType;
+import org.biojava3.ptm.ProteinModification;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
@@ -55,7 +55,7 @@ public final class ProteinModificationXmlReader {
 	/**
 	 * Register common PTMs.
 	 */
-	private static final String PTM_LIST_XML = "org/biojava/bio/ptm/ptm_list.xml";
+	private static final String PTM_LIST_XML = "org/biojava3/ptm/ptm_list.xml";
 	static {
 		try {
 			InputStream isXml = ProteinModificationXmlReader.class

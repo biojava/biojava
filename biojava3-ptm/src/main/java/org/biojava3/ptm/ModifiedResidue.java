@@ -22,35 +22,20 @@
  *
  */
 
-package org.biojava.bio.ptm;
+package org.biojava3.ptm;
 
-import org.biojava.bio.structure.Atom;
-import org.biojava.bio.structure.Group;
+import org.biojava.bio.structure.AminoAcid;
 
-public interface ChemicalBond {
+public interface ModifiedResidue {
 	/**
 	 * 
-	 * @return the first of components that were linked.
+	 * @return {@link ProteinModification} occurred on the residue.
 	 */
-	public Group component1();
+	public ProteinModification getType();
 	
 	/**
 	 * 
-	 * @return the {@Atom} that is on the first component
-	 *  and forms a bond with the second one.
+	 * @return the modified {@link AminoAcid}.
 	 */
-	public Atom atomOnComp1();
-
-	/**
-	 * 
-	 * @return the second of components that were linked.
-	 */
-	public Group component2();
-	
-	/**
-	 * 
-	 * @return the {@Atom} that is on the second component
-	 *  and forms a bond with the first one.
-	 */
-	public Atom atomOnComp2();
+	public AminoAcid getModifiedAminoAcid();
 }
