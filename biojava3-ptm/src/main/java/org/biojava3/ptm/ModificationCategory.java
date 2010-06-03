@@ -33,13 +33,13 @@ import java.util.Map;
 public enum ModificationCategory {
 	ATTACHMENT("Attachment"),
 	CHEMICAL_MODIFICATION("ModifiedResidue"), 
-	CROSS_OVER1("CrossOver1"),
-	CROSS_OVER2("CrossOver2"),
-	CROSS_OVER3("CrossOver3"),
-	CROSS_OVER4("CrossOver4"),
-	CROSS_OVER5("CrossOver5"),
-	CROSS_OVER6("CrossOver6"),
-	CROSS_OVER7("CrossOver7")
+	CROSS_LINK1("CrossLink1"),
+	CROSS_LINK2("CrossLink2"),
+	CROSS_LINK3("CrossLink3"),
+	CROSS_LINK4("CrossLink4"),
+	CROSS_LINK5("CrossLink5"),
+	CROSS_LINK6("CrossLink6"),
+	CROSS_LINK7("CrossLink7")
 	;
 	
 	ModificationCategory(String label) {

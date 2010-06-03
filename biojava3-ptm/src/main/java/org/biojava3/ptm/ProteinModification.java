@@ -47,9 +47,7 @@ public final class ProteinModification {
 	 * getBy... methods. Information about
 	 * DataSources can be added with {@link register}.
 	 */
-	private ProteinModification() {
-		throw new AssertionError();
-	}
+	private ProteinModification() {}
 	
 	private String id;
 	private String pdbccId = null;
@@ -62,8 +60,11 @@ public final class ProteinModification {
 	private String formula = null;
 	private String description = null;
 	
+	// TODO: should we use two lists of Booleans for all involved components
+	// instead of just two variables for the ProteinModification?
 	private boolean isNTerminal = false;
 	private boolean isCTerminal = false;
+	
 	private String[] components = null;
 	private String[][] atoms = null;
 	
@@ -94,7 +95,7 @@ public final class ProteinModification {
 	 * register common protein modifications from XML file.
 	 */
 	private static void registerCommonProteinModifications() {
-		String xmlPTMList = "org/biojava3/ptm/ptm_list.xml";
+		String xmlPTMList = "ptm_list.xml";
 		try {
 			InputStream isXml = ProteinModification.class.getResourceAsStream(xmlPTMList);
 			ProteinModificationXmlReader.registerProteinModificationFromXml(isXml);
@@ -147,7 +148,7 @@ public final class ProteinModification {
 	 * 
 	 * @return PSI-MOD ID.
 	 */
-	public String getPsimodId() {
+	public String psimodId() {
 		return psimodId;
 	}
 	
@@ -604,5 +605,50 @@ public final class ProteinModification {
 	public static Set<ProteinModification> getByPdbccId(final String pdbccId) {
 		lazyInit();
 		return byPdbccId.get(byPdbccId);
+	}
+	
+	/**
+	 * 
+	 * @return set of all registered ProteinModifications.
+	 */
+	public static Set<ProteinModification> getProteinModifications() {
+		lazyInit();
+		return registry;
+	}
+	
+	/**
+	 * 
+	 * @return set of IDs of all registered ProteinModifications.
+	 */
+	public static Set<String> getIds() {
+		lazyInit();
+		return byId.keySet();
+	}
+	
+	/**
+	 * 
+	 * @return set of PDBCC IDs of all registered ProteinModifications.
+	 */
+	public static Set<String> getPdbccIds() {
+		lazyInit();
+		return byPdbccId.keySet();
+	}
+	
+	/**
+	 * 
+	 * @return set of RESID IDs of all registered ProteinModifications.
+	 */
+	public static Set<String> getResidIds() {
+		lazyInit();
+		return byResidId.keySet();
+	}
+	
+	/**
+	 * 
+	 * @return set of PSI-MOD IDs of all registered ProteinModifications.
+	 */
+	public static Set<String> getPsimodIds() {
+		lazyInit();
+		return byPsimodId.keySet();
 	}
 }
