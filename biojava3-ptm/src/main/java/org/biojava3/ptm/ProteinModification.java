@@ -251,8 +251,7 @@ public final class ProteinModification {
 	 *     .register("0001", Modification.ATTACHMENT, ModificationOccurrenceType.NATURAL)
 	 *     .residId("AA0406")
 	 *     .residName("O-xylosyl-L-serine")
-	 *     .components(new String[]{"SER","XYS"})
-	 *     .atoms(new String[]{"OG","O1"});
+	 *     .componentsAndAtoms("SER","OG","XYS","O1");
 	 * </pre>
 	 */
 	public static final class Builder {
