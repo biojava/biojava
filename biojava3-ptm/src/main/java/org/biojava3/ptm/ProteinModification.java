@@ -24,10 +24,13 @@
 
 package org.biojava3.ptm;
 
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+
+import org.biojava3.ptm.io.ProteinModificationXmlReader;
 
 /**
  * contains information about a certain ProteinModification.
@@ -67,16 +70,38 @@ public final class ProteinModification {
 	private ModificationCategory category;
 	private ModificationOccurrenceType occurrenceType;
 	
-	private final static Map<String, ProteinModification> byId = 
-		new HashMap<String, ProteinModification>();
-	private final static Map<String, ProteinModification> byResidId = 
-		new HashMap<String, ProteinModification>();
-	private final static Map<String, ProteinModification> byPsimodId = 
-		new HashMap<String, ProteinModification>();
-	private final static Map<String, Set<ProteinModification>> byPdbccId = 
-		new HashMap<String, Set<ProteinModification>>();		
-	private static Set<ProteinModification> registry = 
-		new HashSet<ProteinModification>();
+	private static Set<ProteinModification> registry = null;
+	private static Map<String, ProteinModification> byId = null;
+	private static Map<String, ProteinModification> byResidId = null;
+	private static Map<String, ProteinModification> byPsimodId = null;
+	private static Map<String, Set<ProteinModification>> byPdbccId = null;	
+	
+	/**
+	 * Lazy Initialization the static variables and register common modifications. 
+	 */
+	private static void lazyInit() {
+		if (registry==null) {	
+			registry = 	new HashSet<ProteinModification>();
+			byId = new HashMap<String, ProteinModification>();
+			byResidId = new HashMap<String, ProteinModification>();
+			byPsimodId = new HashMap<String, ProteinModification>();
+			byPdbccId = new HashMap<String, Set<ProteinModification>>();
+			registerCommonProteinModifications();
+		}
+	}
+	
+	/**
+	 * register common protein modifications from XML file.
+	 */
+	private static void registerCommonProteinModifications() {
+		String xmlPTMList = "org/biojava3/ptm/ptm_list.xml";
+		try {
+			InputStream isXml = ProteinModification.class.getResourceAsStream(xmlPTMList);
+			ProteinModificationXmlReader.registerProteinModificationFromXml(isXml);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 
 	/**
 	 * 
@@ -525,6 +550,8 @@ public final class ProteinModification {
 			throw new IllegalArgumentException("Null argument(s)!");
 		}
 		
+		lazyInit();
+		
 		if (byId.containsKey(id)) {
 			throw new IllegalArgumentException(id+" has already been registered.");
 		}
@@ -535,6 +562,7 @@ public final class ProteinModification {
 		current.occurrenceType = occType;
 		
 		registry.add(current);
+		byId.put(id, current);
 		
 		return new Builder(current);
 	}
@@ -544,7 +572,8 @@ public final class ProteinModification {
 	 * @param id modification ID.
 	 * @return ProteinModification that has the corresponding ID.
 	 */
-	public static ProteinModification getById(final String id) {
+	public static ProteinModification getById(final String id) {	
+		lazyInit();
 		return byId.get(id);
 	}
 
@@ -554,6 +583,7 @@ public final class ProteinModification {
 	 * @return ProteinModification that has the RESID ID.
 	 */
 	public static ProteinModification getByResidId(final String residId) {
+		lazyInit();
 		return byResidId.get(residId);
 	}
 	/**
@@ -562,6 +592,7 @@ public final class ProteinModification {
 	 * @return ProteinModification that has the PSI-MOD ID.
 	 */
 	public static ProteinModification getByPsimodId(final String psimodId) {
+		lazyInit();
 		return byPsimodId.get(psimodId);
 	}
 	
@@ -571,6 +602,7 @@ public final class ProteinModification {
 	 * @return chemical modifications that have the PDBCC ID.
 	 */
 	public static Set<ProteinModification> getByPdbccId(final String pdbccId) {
+		lazyInit();
 		return byPdbccId.get(byPdbccId);
 	}
 }

@@ -53,20 +53,6 @@ public final class ProteinModificationXmlReader {
 	private ProteinModificationXmlReader() {}
 	
 	/**
-	 * Register common PTMs.
-	 */
-	private static final String PTM_LIST_XML = "org/biojava3/ptm/ptm_list.xml";
-	static {
-		try {
-			InputStream isXml = ProteinModificationXmlReader.class
-				.getResourceAsStream(PTM_LIST_XML);
-			registerProteinModificationFromXml(isXml);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-	
-	/**
 	 * Read protein modifications from XML file and register them.
 	 * @param isXml {@link InputStream} of the XML file.
 	 * @throws IOException if failed to read the XML file.
@@ -219,10 +205,10 @@ public final class ProteinModificationXmlReader {
 					}
 					
 					// bonds
-					String[][] bonds = null;
+					String[][] atoms = null;
 					List<Node> bondNodes = compInfoNodes.get("Bond");
 					if (bondNodes!=null) {
-						bonds = new String[sizeComp][sizeComp];
+						atoms = new String[sizeComp][sizeComp];
 						for (Node bondNode:bondNodes) {
 							Map<String,List<Node>> bondChildNodes = getChildNodes(bondNode);
 							if (bondChildNodes==null)
@@ -250,10 +236,12 @@ public final class ProteinModificationXmlReader {
 							int iComp2 = mapLabelIndex.get(comp2);
 							String atom2 = atomNodes.get(1).getNodeValue();
 							
-							bonds[iComp1][iComp2] = atom1;
-							bonds[iComp2][iComp1] = atom2;							
+							atoms[iComp1][iComp2] = atom1;
+							atoms[iComp2][iComp1] = atom2;							
 						}
 					}
+					
+					modBuilder.componentsAndAtoms(comps, atoms);
 				}
 			} // end of components
 		}
