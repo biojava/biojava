@@ -22,9 +22,11 @@
  *
  */
 
-package org.biojava3.ptm;
+package org.biojava3.protmod;
 
 import java.util.Set;
+
+import org.biojava3.protmod.ProteinModification;
 
 import junit.framework.TestCase;
 

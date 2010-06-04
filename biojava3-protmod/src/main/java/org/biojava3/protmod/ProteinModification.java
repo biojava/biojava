@@ -22,7 +22,7 @@
  *
  */
 
-package org.biojava3.ptm;
+package org.biojava3.protmod;
 
 import java.io.InputStream;
 import java.util.HashMap;
@@ -30,7 +30,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import org.biojava3.ptm.io.ProteinModificationXmlReader;
+import org.biojava3.protmod.io.ProteinModificationXmlReader;
 
 /**
  * contains information about a certain ProteinModification.

@@ -22,7 +22,7 @@
  *
  */
 
-package org.biojava3.ptm.io;
+package org.biojava3.protmod.io;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -36,9 +36,9 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.biojava3.ptm.ModificationCategory;
-import org.biojava3.ptm.ModificationOccurrenceType;
-import org.biojava3.ptm.ProteinModification;
+import org.biojava3.protmod.ModificationCategory;
+import org.biojava3.protmod.ModificationOccurrenceType;
+import org.biojava3.protmod.ProteinModification;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;

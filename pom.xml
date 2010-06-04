@@ -227,7 +227,7 @@
 		<module>structure-gui</module>
 		<module>motif</module>
 		<module>biojava3-genome</module>
-		<module>biojava3-ptm</module>
+		<module>biojava3-protmod</module>
 		<module>biojava3-alignment</module>
 	</modules>
 </project>

@@ -22,7 +22,7 @@
  *
  */
 
-package org.biojava3.ptm;
+package org.biojava3.protmod;
 
 import org.biojava.bio.structure.AminoAcid;
 
