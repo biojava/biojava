@@ -81,6 +81,5 @@ public enum ModificationCategory {
 		for (ModificationCategory cat:ModificationCategory.values()) {
 			mapLabelCat.put(cat.label, cat);
 		}
-	}
-	
+	}	
 }

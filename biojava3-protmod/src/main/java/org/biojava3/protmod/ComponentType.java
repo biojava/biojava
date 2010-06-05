@@ -17,7 +17,7 @@
  *
  *      http://www.biojava.org/
  *
- * Created on May 30, 2010
+ * Created on Jun 4, 2010
  * Author: Jianjiong Gao 
  *
  */
@@ -27,47 +27,53 @@ package org.biojava3.protmod;
 import java.util.HashMap;
 import java.util.Map;
 
-public enum ModificationOccurrenceType {
-	NATURAL("Natural");
+/**
+ * indicates the type of a component involved in a protein
+ * modification, e.g., an amino acid or a ligand.
+ */
+public enum ComponentType {
+	AMINOACID("AminoAcid"),
+	LIGAND("Ligand")
+	;
 	
-	ModificationOccurrenceType(String label) {
+	ComponentType(String label) {
 		this.label = label;
 	}
 	
 	/**
 	 * 
-	 * @return the label of this ModificationOccurrenceType.
+	 * @return the label of this ModificationCategory.
 	 */
 	public String label() {
 		return label;
 	}
 	
 	/**
-	 * @return the label of this ModificationOccurrenceType.
+	 * @return the label of this ModificationCategory.
 	 */
 	public String toString() {
 		return label;
 	}
 	
 	/**
-	 * The variable is the same as the &ltOccurrence&gt; in the ptm_list XML file.
+	 * The variable is the same as the &ltType&gt; in the ptm_list XML file.
 	 */
 	private String label;
 	
 	/**
 	 * 
-	 * @param label the label of ModificationOccurrenceType.
-	 * @return the ModificationOccurrenceType that has the label.
+	 * @param label the label of ModificationCategory.
+	 * @return the ModificationCategory that has the label.
 	 */
-	public static ModificationOccurrenceType getByLabel(String label) {
-		return mapLabelOcc.get(label);
+	public static ComponentType getByLabel(String label) {
+		return mapLabelType.get(label);
 	}
 	
-	private static Map<String, ModificationOccurrenceType> mapLabelOcc;	
+	private static Map<String, ComponentType> mapLabelType;	
 	static {
-		mapLabelOcc = new HashMap<String, ModificationOccurrenceType>();
-		for (ModificationOccurrenceType occ:ModificationOccurrenceType.values()) {
-			mapLabelOcc.put(occ.label, occ);
+		mapLabelType = new HashMap<String, ComponentType>();
+		for (ComponentType type:ComponentType.values()) {
+			mapLabelType.put(type.label, type);
 		}
 	}
 }

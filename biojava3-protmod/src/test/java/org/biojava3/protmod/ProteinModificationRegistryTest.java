@@ -43,41 +43,45 @@ public class ProteinModificationRegistryTest extends TestCase {
 				+" protein modifications registered.");
 		
 		for (ProteinModification mod:mods) {
-			System.out.print(mod.id());
-			System.out.print("\t"+mod.pdbccId());
-			System.out.print("\t"+mod.pdbccName());
-			System.out.print("\t"+mod.residId());
-			System.out.print("\t"+mod.residName());
-			System.out.print("\t"+mod.psimodId());
-			System.out.print("\t"+mod.psimodName());
-			System.out.print("\t"+mod.description());
-			System.out.print("\t"+mod.systematicName());
-			System.out.print("\t"+mod.category().label());
-			System.out.print("\t"+mod.occurrenceType().label());
+			System.out.print(mod.getId());
+			System.out.print("\t"+mod.getPdbccId());
+			System.out.print("\t"+mod.getPdbccName());
+			System.out.print("\t"+mod.getResidId());
+			System.out.print("\t"+mod.getResidName());
+			System.out.print("\t"+mod.getPsimodId());
+			System.out.print("\t"+mod.getPsimodName());
+			System.out.print("\t"+mod.getDescription());
+			System.out.print("\t"+mod.getSystematicName());
+			System.out.print("\t"+mod.getCategory().label());
+			System.out.print("\t"+mod.getOccurrenceType().label());
 			
-			String[] comps = mod.components();
+			ModificationCondition condition = mod.getCondition();
+			
+			Component[] comps = condition.getComponents();
 			int sizeComp = comps.length;
 			assertTrue(comps!=null&&sizeComp>0);
 			System.out.print("\t");
 			for (int i=0; i<sizeComp; i++) {
-				System.out.print(comps[i]+";");
+				Component comp = comps[i];
+				String str = comp.getPdbccId();
+				str += "["+comp.getType().label()+"]";
+				if (comp.isCTerminal()) {
+					str += "(C)";
+				} else if (comp.isNTerminal()) {
+					str += "(N)";
+				}				
+				System.out.print(str+";");
 			}
 			
-			String[][] atoms = mod.atoms();
-			assertTrue((atoms==null) || (atoms.length==sizeComp
-					&& atoms[0].length==sizeComp));
+			AtomBond[] bonds = condition.getBonds();
 			System.out.print("\t");
-			if (atoms!=null) {
-				for (int i=0; i<sizeComp-1; i++) {
-					for (int j=i+1; j<sizeComp; j++) {
-						if (atoms[i][j]!=null) {
-							assertTrue(atoms[j][i]!=null);
-							System.out.print(comps[i]+"("+atoms[i][j]+")"
-									+"<=>"+comps[j]+"("+atoms[j][i]+");");
-						} else {
-							assertTrue(atoms[j][i]==null);
-						}
-					}
+			if (bonds!=null) {
+				for (AtomBond bond:bonds) {
+					String str = bond.getComponent1().getPdbccId();
+					str += "("+bond.getAtom1()+")<=>";
+					str += bond.getComponent2().getPdbccId();
+					str += "("+bond.getAtom2()+")";
+					System.out.print(str+";");
 				}
 			}
 			

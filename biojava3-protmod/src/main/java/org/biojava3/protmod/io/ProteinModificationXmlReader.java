@@ -36,7 +36,14 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.biojava3.protmod.AtomBond;
+import org.biojava3.protmod.AtomBondImpl;
+import org.biojava3.protmod.Component;
+import org.biojava3.protmod.ComponentImpl;
+import org.biojava3.protmod.ComponentType;
 import org.biojava3.protmod.ModificationCategory;
+import org.biojava3.protmod.ModificationCondition;
+import org.biojava3.protmod.ModificationConditionImpl;
 import org.biojava3.protmod.ModificationOccurrenceType;
 import org.biojava3.protmod.ProteinModification;
 
@@ -44,6 +51,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+
 import org.xml.sax.SAXException;
 
 public final class ProteinModificationXmlReader {
@@ -61,8 +69,9 @@ public final class ProteinModificationXmlReader {
 	 */
 	public static void registerProteinModificationFromXml(InputStream isXml)
 			throws IOException, ParserConfigurationException, SAXException {
-		if (isXml==null)
+		if (isXml==null) {
 			throw new IllegalArgumentException("Null argument.");
+		}
 		
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder builder = factory.newDocumentBuilder();
@@ -77,34 +86,39 @@ public final class ProteinModificationXmlReader {
 			
 			// ID
 			nodes = infoNodes.get("Id");
-			if (nodes==null || nodes.size()!=1)
+			if (nodes==null || nodes.size()!=1) {
 				throw new RuntimeException("Each modification must have exact " +
 						"one <Id> field.");
+			}
 			String id = nodes.get(0).getTextContent();
 			
 			// modification category
 			nodes = infoNodes.get("Type");
-			if (nodes==null || nodes.size()!=1)
+			if (nodes==null || nodes.size()!=1) {
 				throw new RuntimeException("Each modification must have exact " +
 						"one <Type> field. See Modification "+id+".");
+			}
 			ModificationCategory cat = ModificationCategory.getByLabel(
 					nodes.get(0).getTextContent());
-			if (cat==null)
+			if (cat==null) {
 				throw new RuntimeException(nodes.get(0).getTextContent()+
 					" is not defined as an modification category." +
 					" See Modification "+id+".");
+			}
 			
 			// occurrence type
 			nodes = infoNodes.get("Occurrence");
-			if (nodes==null || nodes.size()!=1)
+			if (nodes==null || nodes.size()!=1) {
 				throw new RuntimeException("Each modification must have exact " +
 						"one <Occurrence> field. See Modification "+id+".");
+			}
 			ModificationOccurrenceType occType = ModificationOccurrenceType
 				.getByLabel(nodes.get(0).getTextContent());
-			if (occType==null)
+			if (occType==null) {
 				throw new RuntimeException(nodes.get(0).getTextContent()+
 					" is not defined as an modification occurence type." +
 					" See Modification "+id+".");
+			}
 			
 			ProteinModification.Builder modBuilder = ProteinModification
 				.register(id, cat, occType);
@@ -123,18 +137,20 @@ public final class ProteinModificationXmlReader {
 					
 					// source
 					List<Node> xrefNode = xrefInfoNodes.get("Source");
-					if (xrefNode==null || xrefNode.size()!=1)
+					if (xrefNode==null || xrefNode.size()!=1) {
 						throw new RuntimeException("Error in XML file: " +
 							"a cross reference must contain exactly one <Source> field." +
 							" See Modification "+id+".");
+					}
 					String xrefDb = xrefNode.get(0).getTextContent();
 					
 					// id
 					xrefNode = xrefInfoNodes.get("Id");
-					if (xrefNode==null || xrefNode.size()!=1)
+					if (xrefNode==null || xrefNode.size()!=1) {
 						throw new RuntimeException("Error in XML file: " +
 							"a cross reference must contain exactly one <Id> field." +
 							" See Modification "+id+".");
+					}
 					String xrefId = xrefNode.get(0).getTextContent();
 					
 					// name
@@ -160,37 +176,53 @@ public final class ProteinModificationXmlReader {
 				modBuilder.formula(nodes.get(0).getTextContent());
 			}
 			
-			// components and atoms
+			// condition
 			{
-				nodes = infoNodes.get("Components");
-				if (nodes==null || nodes.size()!=1)
+				nodes = infoNodes.get("Condition");
+				if (nodes==null || nodes.size()!=1) {
 					throw new RuntimeException("Each modification must have exact " +
-							"one <Components> field. See Modification "+id+".");
+							"one <Condition> field. See Modification "+id+".");
+				}
 				
 				Node compsNode = nodes.get(0);
 				
 				// keep track of the labels of components
-				Map<String,Integer> mapLabelIndex = new HashMap<String,Integer>();
+				Map<String,Component> mapLabelComp = new HashMap<String,Component>();
 
 				Map<String,List<Node>> compInfoNodes = getChildNodes(compsNode);
 				
 				// components
 				List<Node> compNodes = compInfoNodes.get("Component");
 				int sizeComp = compNodes.size();
-				String[] comps = new String[sizeComp];
+				Component[] comps = new Component[sizeComp];
 				for (int iComp=0; iComp<sizeComp; iComp++) {
 					Node compNode = compNodes.get(iComp);
 					// comp label
 					NamedNodeMap compNodeAttrs = compNode.getAttributes();
 					Node labelNode = compNodeAttrs.getNamedItem("label");
-					if (labelNode==null)
+					if (labelNode==null) {
 						throw new RuntimeException("Each component must have a label." +
 								" See Modification "+id+".");
+					}
 					String label = labelNode.getTextContent();
 					
-					if (mapLabelIndex.containsKey(label))
+					// comp type
+					Node compTypeNode = compNodeAttrs.getNamedItem("type");
+					if (compTypeNode==null) {
+						throw new RuntimeException("Each component must have a type." +
+								" See Modification "+id+".");
+					}
+					ComponentType compType = ComponentType.getByLabel(
+							compTypeNode.getTextContent());
+					if (compType==null) {
+						throw new RuntimeException(compTypeNode.getTextContent()
+								+" is unsupported as a component type.");
+					}
+					
+					if (mapLabelComp.containsKey(label)) {
 						throw new RuntimeException("Each component must have a unique label." +
 								" See Modification "+id+".");
+					}
 					
 					// comp PDBCC ID
 					String compId = null;
@@ -206,14 +238,14 @@ public final class ProteinModificationXmlReader {
 						}
 					}
 					
-					if (compId==null)
+					if (compId==null) {
 						throw new RuntimeException("Each component must have a PDBCC ID." +
 								" See Modification "+id+".");
-					
-					comps[iComp] = compId;						
-					mapLabelIndex.put(label, iComp);
+					}
 					
 					// terminal
+					boolean nTerminal = false;
+					boolean cTerminal = false;
 					List<Node> compTermNode = getChildNodes(compNode).get("Terminal");
 					if (compTermNode!=null) {
 						if (compTermNode.size()!=1) {
@@ -222,58 +254,71 @@ public final class ProteinModificationXmlReader {
 						}
 						String nc = compTermNode.get(0).getTextContent();
 						if (nc.equals("N")) {
-							modBuilder.isNTerminal(true);
+							nTerminal = true;
 						} else if (nc.equals("C")) {
-							modBuilder.isCTerminal(true);
+							cTerminal = true;
 						} else {
 							throw new RuntimeException("Only N or C is allowed for <Terminal>." +
 									" See Modification "+id+".");
 						}
 					}
+					
+					Component comp = new ComponentImpl(compId, compType, nTerminal, cTerminal);
+					comps[iComp] = comp;						
+					mapLabelComp.put(label, comp);
 				}
 				
 				// bonds
-				String[][] atoms = null;
+				AtomBond[] bonds = null;
 				List<Node> bondNodes = compInfoNodes.get("Bond");
 				if (bondNodes!=null) {
-					atoms = new String[sizeComp][sizeComp];
-					for (Node bondNode:bondNodes) {
+					int sizeBonds = bondNodes.size();
+					bonds = new AtomBond[sizeBonds];
+					for (int iBond=0; iBond<sizeBonds; iBond++) {
+						Node bondNode = bondNodes.get(iBond);
 						Map<String,List<Node>> bondChildNodes = getChildNodes(bondNode);
-						if (bondChildNodes==null)
+						if (bondChildNodes==null) {
 							throw new RuntimeException("Each bond must contain two atoms" +
 									" See Modification "+id+".");
+						}
 						
 						List<Node> atomNodes = bondChildNodes.get("Atom");
-						if (atomNodes==null || atomNodes.size()!=2)
+						if (atomNodes==null || atomNodes.size()!=2) {
 							throw new RuntimeException("Each bond must contain two atoms" +
 									" See Modification "+id+".");
+						}
 						
 						// atom 1
 						NamedNodeMap atomNodeAttrs = atomNodes.get(0).getAttributes();
 						Node labelNode = atomNodeAttrs.getNamedItem("component");
-						if (labelNode==null)
+						if (labelNode==null) {
 							throw new RuntimeException("Each atom must on a component." +
 									" See Modification "+id+".");
-						String comp1 = labelNode.getTextContent();
-						int iComp1 = mapLabelIndex.get(comp1);
+						}
+						String labelComp1 = labelNode.getTextContent();
+						Component comp1 = mapLabelComp.get(labelComp1);
 						String atom1 = atomNodes.get(0).getTextContent();
 						
 						// atom 2
 						atomNodeAttrs = atomNodes.get(1).getAttributes();
 						labelNode = atomNodeAttrs.getNamedItem("component");
-						if (labelNode==null)
+						if (labelNode==null) {
 							throw new RuntimeException("Each atom must on a component." +
 									" See Modification "+id+".");
-						String comp2 = labelNode.getTextContent();
-						int iComp2 = mapLabelIndex.get(comp2);
+						}
+						String labelComp2 = labelNode.getTextContent();
+						Component comp2 = mapLabelComp.get(labelComp2);
 						String atom2 = atomNodes.get(1).getTextContent();
 						
-						atoms[iComp1][iComp2] = atom1;
-						atoms[iComp2][iComp1] = atom2;							
+						AtomBond bond = new AtomBondImpl(comp1, comp2, atom1, atom2);
+						bonds[iBond] = bond;
 					}
 				}
-				modBuilder.componentsAndAtoms(comps, atoms);
-			} // end of components			
+				
+				ModificationCondition condition = new ModificationConditionImpl(comps, bonds);
+				
+				modBuilder.condition(condition);
+			} // end of condition			
 		}
 	}
 	
@@ -292,6 +337,9 @@ public final class ProteinModificationXmlReader {
 		int nNodes = nodes.getLength();
 		for (int i=0; i<nNodes; i++) {
 			Node node = nodes.item(i);
+			if (node.getNodeType()!=Node.ELEMENT_NODE)
+				continue;
+			
 			String name = node.getNodeName();
 			List<Node> namesakes = children.get(name);
 			if (namesakes==null) {

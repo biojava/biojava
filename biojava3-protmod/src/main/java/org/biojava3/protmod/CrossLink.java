@@ -25,6 +25,7 @@
 package org.biojava3.protmod;
 
 import org.biojava.bio.structure.AminoAcid;
+import org.biojava.bio.structure.Atom;
 import org.biojava.bio.structure.Group;
 
 public interface CrossLink {
@@ -48,9 +49,11 @@ public interface CrossLink {
 	
 	/**
 	 * 
-	 * @return the chemical bonds that links the {@link AminoAcid}s and/or 
-	 *  the attached {@link Group}s.
+	 * @return an N by 2 2-dimensional array, which represent the 
+	 *  atom bonds that links the {@link AminoAcid}s and/or 
+	 *  the attached {@link Group}s. <i>N</i> is the number of bonds;
+	 *  <i>2</i> represents the pair of atom that form a bond.
 	 */
-	public ChemicalBond[] getChemicalBonds();
+	public Atom[][] getAtomBonds();
 
 }

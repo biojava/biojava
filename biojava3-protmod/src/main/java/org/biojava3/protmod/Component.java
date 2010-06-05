@@ -17,45 +17,35 @@
  *
  *      http://www.biojava.org/
  *
- * Created on Jun 1, 2010
+ * Created on Jun 4, 2010
  * Author: Jianjiong Gao 
  *
  */
 
 package org.biojava3.protmod;
 
-import org.biojava.bio.structure.AminoAcid;
-import org.biojava.bio.structure.Atom;
-import org.biojava.bio.structure.Group;
+public interface Component {
+	/**
+	 * 
+	 * @return Protein Data Bank ID.
+	 */
+	public String getPdbccId();
+	
+	/**
+	 * 
+	 * @return true if occurring on N terminal; false, otherwise.
+	 */
+	public boolean isNTerminal();
 
-public interface Attachement {
 	/**
 	 * 
-	 * @return {@link ProteinModification} occurred on the residue.
+	 * @return true if occurring on C terminal; false, other wise.
 	 */
-	public ProteinModification getType();
+	public boolean isCTerminal();
 	
 	/**
 	 * 
-	 * @return the {@link AminoAcid} that is attached to.
+	 * @return the component type.
 	 */
-	public AminoAcid getModifiedAminoAcid();
-	
-	/**
-	 * 
-	 * @return the attached {@link Group}.
-	 */
-	public Group getAttachedGroup();
-	
-	/**
-	 * 
-	 * @return the attached point on the {@link AminoAcid}.
-	 */
-	public Atom getAtomOnAminoAcid();
-	
-	/**
-	 * 
-	 * @return the attached point on the attached {@link Group}.
-	 */
-	public Atom getAtomOnAttachedGroup();
+	public ComponentType getType();
 }

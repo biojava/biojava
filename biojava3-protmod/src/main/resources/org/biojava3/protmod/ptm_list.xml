@@ -16,7 +16,7 @@
 			<Name>O-xylosyl-L-serine</Name>
 		</CrossReference>
 		<Formula>C 8 H 13 N 1 O 6</Formula>
-		<Components>
+		<Condition>
 			<Component type="AminoAcid" label="1">
 				<Id source="PDBCC">SER</Id>
 			</Component>
@@ -27,7 +27,7 @@
 				<Atom component="1">OG</Atom>
 				<Atom component="2">O1</Atom>
 			</Bond>
-		</Components>
+		</Condition>
 		<Occurrence>Natural</Occurrence>
 		<Type>Attachment</Type>
 	</Entry>
@@ -46,7 +46,7 @@
 			<Name>N4-glycosyl-L-asparagine</Name>
 		</CrossReference>
 		<Formula>C 12 H 19 N 3 O 7</Formula>
-		<Components>
+		<Condition>
 			<Component type="AminoAcid" label="1">
 				<Id source="PDBCC">ASN</Id>
 			</Component>			
@@ -57,7 +57,7 @@
 				<Atom component="1">ND2</Atom>
 				<Atom component="2">O1</Atom>
 			</Bond>
-		</Components>
+		</Condition>
 		<Occurrence>Natural</Occurrence>
 		<Type>Attachment</Type>
 	</Entry>
@@ -81,11 +81,11 @@
 			<Name>S-phospho-L-cysteine</Name>
 		</CrossReference>
 		<Formula>C 3 H 6 N 1 O 4 P 1 S 1</Formula>
-		<Components>
+		<Condition>
 			<Component type="AminoAcid" label="1">
 				<Id source="PDBCC">CSP</Id>
 			</Component>
-		</Components>
+		</Condition>
 		<Occurrence>Natural</Occurrence>
 		<Type>ModifiedResidue</Type>
 	</Entry>
@@ -109,11 +109,11 @@
 			<Name>1'-phospho-L-histidine</Name>
 		</CrossReference>
 		<Formula>C 3 H 6 N 1 O 4 P 1 S 1</Formula>
-		<Components>
+		<Condition>
 			<Component type="AminoAcid" label="1">
 				<Id source="PDBCC">NEP</Id>
 			</Component>
-		</Components>
+		</Condition>
 		<Occurrence>Natural</Occurrence>
 		<Type>ModifiedResidue</Type>
 	</Entry>
@@ -137,11 +137,11 @@
 			<Name>3'-phospho-L-histidine</Name>
 		</CrossReference>
 		<Formula>C 6 H 8 N 3 O 4 P 1</Formula>
-		<Components>
+		<Condition>
 			<Component type="AminoAcid" label="1">
 				<Id source="PDBCC">HIP</Id>
 			</Component>
-		</Components>
+		</Condition>
 		<Occurrence>Natural</Occurrence>
 		<Type>ModifiedResidue</Type>
 	</Entry>
@@ -165,11 +165,11 @@
 			<Name>O-phospho-L-serine</Name>
 		</CrossReference>
 		<Formula>C 3 H 6 N 1 O 5 P 1</Formula>
-		<Components>
+		<Condition>
 			<Component type="AminoAcid" label="1">
 				<Id source="PDBCC">SEP</Id>
 			</Component>
-		</Components>
+		</Condition>
 		<Occurrence>Natural</Occurrence>
 		<Type>ModifiedResidue</Type>
 	</Entry>
@@ -193,11 +193,11 @@
 			<Name>O-phospho-L-threonine</Name>
 		</CrossReference>
 		<Formula>C 4 H 8 N 1 O 5 P 1</Formula>
-		<Components>
+		<Condition>
 			<Component type="AminoAcid" label="1">
 				<Id source="PDBCC">TPO</Id>
 			</Component>
-		</Components>
+		</Condition>
 		<Occurrence>Natural</Occurrence>
 		<Type>ModifiedResidue</Type>
 	</Entry>
@@ -221,11 +221,11 @@
 			<Name>O4'-phospho-L-tyrosine</Name>
 		</CrossReference>
 		<Formula>C 9 H 10 N 1 O 5 P 1</Formula>
-		<Components>
+		<Condition>
 			<Component type="AminoAcid" label="1">
 				<Id source="PDBCC">PTR</Id>
 			</Component>
-		</Components>
+		</Condition>
 		<Occurrence>Natural</Occurrence>
 		<Type>ModifiedResidue</Type>
 	</Entry>
@@ -245,7 +245,7 @@
 			<Name>N-acetyl-L-glutamine</Name>
 		</CrossReference>
 		<Formula>C 7 H 11 N 2 O 3</Formula>
-		<Components>
+		<Condition>
 			<Component type="AminoAcid" label="1">
 				<Id source="PDBCC">GLN</Id>
 				<Terminal>N</Terminal>
@@ -257,7 +257,7 @@
 				<Atom component="1">N</Atom>
 				<Atom component="2">C</Atom>
 			</Bond>
-		</Components>
+		</Condition>
 		<Occurrence>Natural</Occurrence>
 		<Type>Attachment</Type>
 	</Entry>
@@ -276,7 +276,7 @@
 			<Name>N-acetyl-L-methionine</Name>
 		</CrossReference>
 		<Formula>C 7 H 12 N 1 O 2 S 1</Formula>
-		<Components>
+		<Condition>
 			<Component type="AminoAcid" label="1">
 				<Id source="PDBCC">MET</Id>
 				<Terminal>N</Terminal>
@@ -288,7 +288,7 @@
 				<Atom component="1">N</Atom>
 				<Atom component="2">C</Atom>
 			</Bond>
-		</Components>
+		</Condition>
 		<Occurrence>Natural</Occurrence>
 		<Type>Attachment</Type>
 	</Entry>
@@ -312,11 +312,11 @@
 			<Name>N6-acetyl-L-lysine</Name>
 		</CrossReference>
 		<Formula>C 8 H 14 N 2 O 2</Formula>
-		<Components>
+		<Condition>
 			<Component type="AminoAcid" label="1">
 				<Id source="PDBCC">ALY</Id>
 			</Component>
-		</Components>
+		</Condition>
 		<Occurrence>Natural</Occurrence>
 		<Type>ModifiedResidue</Type>
 	</Entry>
@@ -340,11 +340,11 @@
 			<Name>O4'-sulfo-L-tyrosine</Name>
 		</CrossReference>
 		<Formula>C 9 H 9 N 1 O 5 S 1</Formula>
-		<Components>
+		<Condition>
 			<Component type="AminoAcid" label="1">
 				<Id source="PDBCC">TYS</Id>
 			</Component>
-		</Components>
+		</Condition>
 		<Occurrence>Natural</Occurrence>
 		<Type>ModifiedResidue</Type>
 	</Entry>
@@ -368,11 +368,11 @@
 			<Name>N6-methyl-L-lysine</Name>
 		</CrossReference>
 		<Formula>C 7 H 14 N 2 O 1</Formula>
-		<Components>
+		<Condition>
 			<Component type="AminoAcid" label="1">
 				<Id source="PDBCC">MLZ</Id>
 			</Component>
-		</Components>
+		</Condition>
 		<Occurrence>Natural</Occurrence>
 		<Type>ModifiedResidue</Type>
 	</Entry>
@@ -396,11 +396,11 @@
 			<Name>5-methyl-L-arginine</Name>
 		</CrossReference>
 		<Formula>C 7 H 14 N 4 O 1</Formula>
-		<Components>
+		<Condition>
 			<Component type="AminoAcid" label="1">
 				<Id source="PDBCC">AGM</Id>
 			</Component>
-		</Components>
+		</Condition>
 		<Occurrence>Natural</Occurrence>
 		<Type>ModifiedResidue</Type>
 	</Entry>
@@ -424,11 +424,11 @@
 			<Name>N6,N6,N6-trimethyl-L-lysine</Name>
 		</CrossReference>
 		<Formula>C 9 H 19 N 2 O 1</Formula>
-		<Components>
+		<Condition>
 			<Component type="AminoAcid" label="1">
 				<Id source="PDBCC">M3L</Id>
 			</Component>
-		</Components>
+		</Condition>
 		<Occurrence>Natural</Occurrence>
 		<Type>ModifiedResidue</Type>
 	</Entry>
@@ -452,12 +452,12 @@
 			<Name>N-methyl-L-methionine</Name>
 		</CrossReference>
 		<Formula>C 6 H 11 N 1 O 1 S 1</Formula>
-		<Components>
+		<Condition>
 			<Component type="AminoAcid" label="1">
 				<Id source="PDBCC">MME</Id>
 				<Terminal>N</Terminal>
 			</Component>
-		</Components>
+		</Condition>
 		<Occurrence>Natural</Occurrence>
 		<Type>ModifiedResidue</Type>
 	</Entry>
@@ -481,11 +481,11 @@
 			<Name>4-hydroxy-L-proline</Name>
 		</CrossReference>
 		<Formula>C 5 H 7 N 1 O 2</Formula>
-		<Components>
+		<Condition>
 			<Component type="AminoAcid" label="1">
 				<Id source="PDBCC">HYP</Id>
 			</Component>
-		</Components>
+		</Condition>
 		<Occurrence>Natural</Occurrence>
 		<Type>ModifiedResidue</Type>
 	</Entry>
@@ -504,7 +504,7 @@
 			<Name>L-cystine (cross-link)</Name>
 		</CrossReference>
 		<Formula>C 6 H 8 N 2 O 2 S 2</Formula>
-		<Components>
+		<Condition>
 			<Component type="AminoAcid" label="1">
 				<Id source="PDBCC">CYS</Id>
 			</Component>
@@ -515,7 +515,7 @@
 				<Atom component="1">S</Atom>
 				<Atom component="2">S</Atom>
 			</Bond>
-		</Components>
+		</Condition>
 		<Occurrence>Natural</Occurrence>
 		<Type>CrossLink2</Type>
 	</Entry>
@@ -539,11 +539,11 @@
 			<Name>L-cysteine methyl disulfide</Name>
 		</CrossReference>
 		<Formula>C 4 H 7 N 1 O 1 S 2</Formula>
-		<Components>
+		<Condition>
 			<Component type="AminoAcid" label="1">
 				<Id source="PDBCC">SCH</Id>
 			</Component>
-		</Components>
+		</Condition>
 		<Occurrence>Natural</Occurrence>
 		<Type>ModifiedResidue</Type>
 	</Entry>
@@ -562,7 +562,7 @@
 			<Name>tris-L-cysteinyl triiron tetrasulfide</Name>
 		</CrossReference>
 		<Formula>C 9 Fe 3 H 12 N 3 O 3 S 7</Formula>
-		<Components>
+		<Condition>
 			<Component type="AminoAcid" label="1">
 				<Id source="PDBCC">CYS</Id>
 			</Component>
@@ -587,7 +587,7 @@
 				<Atom component="3">S</Atom>
 				<Atom component="4">FE4</Atom>
 			</Bond>
-		</Components>
+		</Condition>
 		<Occurrence>Natural</Occurrence>
 		<Type>CrossLink3</Type>
 	</Entry>
@@ -606,7 +606,7 @@
 			<Name>tetrakis-L-cysteinyl diiron disulfide</Name>
 		</CrossReference>
 		<Formula>C 12 Fe 2 H 16 N 4 O 4 S 6</Formula>
-		<Components>
+		<Condition>
 			<Component type="AminoAcid" label="1">
 				<Id source="PDBCC">CYS</Id>
 			</Component>
@@ -638,7 +638,7 @@
 				<Atom component="4">S</Atom>
 				<Atom component="5">FE2</Atom>
 			</Bond>
-		</Components>
+		</Condition>
 		<Occurrence>Natural</Occurrence>
 		<Type>CrossLink4</Type>
 	</Entry>

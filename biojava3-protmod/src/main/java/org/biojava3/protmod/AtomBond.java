@@ -24,33 +24,32 @@
 
 package org.biojava3.protmod;
 
-import org.biojava.bio.structure.Atom;
-import org.biojava.bio.structure.Group;
-
-public interface ChemicalBond {
+/**
+ * store the information of a bond link between two atoms
+ * on two components.
+ */
+public interface AtomBond {
 	/**
 	 * 
-	 * @return the first of components that were linked.
+	 * @return the first component.
 	 */
-	public Group component1();
+	public Component getComponent1();
 	
 	/**
 	 * 
-	 * @return the {@Atom} that is on the first component
-	 *  and forms a bond with the second one.
+	 * @return the second component.
 	 */
-	public Atom atomOnComp1();
-
-	/**
-	 * 
-	 * @return the second of components that were linked.
-	 */
-	public Group component2();
+	public Component getComponent2();
 	
 	/**
 	 * 
-	 * @return the {@Atom} that is on the second component
-	 *  and forms a bond with the first one.
+	 * @return the atom name on the first component.
 	 */
-	public Atom atomOnComp2();
+	public String getAtom1();
+	
+	/**
+	 * 
+	 * @return the atom name on the second component.
+	 */
+	public String getAtom2();
 }
