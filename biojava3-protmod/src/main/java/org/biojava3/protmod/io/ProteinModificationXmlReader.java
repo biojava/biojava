@@ -93,10 +93,10 @@ public final class ProteinModificationXmlReader {
 			String id = nodes.get(0).getTextContent();
 			
 			// modification category
-			nodes = infoNodes.get("Type");
+			nodes = infoNodes.get("Category");
 			if (nodes==null || nodes.size()!=1) {
 				throw new RuntimeException("Each modification must have exact " +
-						"one <Type> field. See Modification "+id+".");
+						"one <Category> field. See Modification "+id+".");
 			}
 			ModificationCategory cat = ModificationCategory.getByLabel(
 					nodes.get(0).getTextContent());

@@ -29,7 +29,7 @@
 			</Bond>
 		</Condition>
 		<Occurrence>Natural</Occurrence>
-		<Type>Attachment</Type>
+		<Category>Attachment</Category>
 	</Entry>
 	<Entry>
 		<Id>0002</Id>
@@ -59,7 +59,7 @@
 			</Bond>
 		</Condition>
 		<Occurrence>Natural</Occurrence>
-		<Type>Attachment</Type>
+		<Category>Attachment</Category>
 	</Entry>
 	<Entry>
 		<Id>0003</Id>
@@ -87,7 +87,7 @@
 			</Component>
 		</Condition>
 		<Occurrence>Natural</Occurrence>
-		<Type>ModifiedResidue</Type>
+		<Category>ModifiedResidue</Category>
 	</Entry>
 	<Entry>
 		<Id>0004</Id>
@@ -115,7 +115,7 @@
 			</Component>
 		</Condition>
 		<Occurrence>Natural</Occurrence>
-		<Type>ModifiedResidue</Type>
+		<Category>ModifiedResidue</Category>
 	</Entry>
 	<Entry>
 		<Id>0005</Id>
@@ -143,7 +143,7 @@
 			</Component>
 		</Condition>
 		<Occurrence>Natural</Occurrence>
-		<Type>ModifiedResidue</Type>
+		<Category>ModifiedResidue</Category>
 	</Entry>
 	<Entry>
 		<Id>0006</Id>
@@ -171,7 +171,7 @@
 			</Component>
 		</Condition>
 		<Occurrence>Natural</Occurrence>
-		<Type>ModifiedResidue</Type>
+		<Category>ModifiedResidue</Category>
 	</Entry>
 	<Entry>
 		<Id>0007</Id>
@@ -199,7 +199,7 @@
 			</Component>
 		</Condition>
 		<Occurrence>Natural</Occurrence>
-		<Type>ModifiedResidue</Type>
+		<Category>ModifiedResidue</Category>
 	</Entry>
 	<Entry>
 		<Id>0008</Id>
@@ -227,7 +227,7 @@
 			</Component>
 		</Condition>
 		<Occurrence>Natural</Occurrence>
-		<Type>ModifiedResidue</Type>
+		<Category>ModifiedResidue</Category>
 	</Entry>
 	<Entry>
 		<Id>0009</Id>
@@ -259,7 +259,7 @@
 			</Bond>
 		</Condition>
 		<Occurrence>Natural</Occurrence>
-		<Type>Attachment</Type>
+		<Category>Attachment</Category>
 	</Entry>
 	<Entry>
 		<Id>0010</Id>
@@ -290,7 +290,7 @@
 			</Bond>
 		</Condition>
 		<Occurrence>Natural</Occurrence>
-		<Type>Attachment</Type>
+		<Category>Attachment</Category>
 	</Entry>
 	<Entry>
 		<Id>0011</Id>
@@ -318,7 +318,7 @@
 			</Component>
 		</Condition>
 		<Occurrence>Natural</Occurrence>
-		<Type>ModifiedResidue</Type>
+		<Category>ModifiedResidue</Category>
 	</Entry>
 	<Entry>
 		<Id>0012</Id>
@@ -346,7 +346,7 @@
 			</Component>
 		</Condition>
 		<Occurrence>Natural</Occurrence>
-		<Type>ModifiedResidue</Type>
+		<Category>ModifiedResidue</Category>
 	</Entry>
 	<Entry>
 		<Id>0013</Id>
@@ -374,7 +374,7 @@
 			</Component>
 		</Condition>
 		<Occurrence>Natural</Occurrence>
-		<Type>ModifiedResidue</Type>
+		<Category>ModifiedResidue</Category>
 	</Entry>
 	<Entry>
 		<Id>0014</Id>
@@ -402,7 +402,7 @@
 			</Component>
 		</Condition>
 		<Occurrence>Natural</Occurrence>
-		<Type>ModifiedResidue</Type>
+		<Category>ModifiedResidue</Category>
 	</Entry>
 	<Entry>
 		<Id>0015</Id>
@@ -430,7 +430,7 @@
 			</Component>
 		</Condition>
 		<Occurrence>Natural</Occurrence>
-		<Type>ModifiedResidue</Type>
+		<Category>ModifiedResidue</Category>
 	</Entry>
 	<Entry>
 		<Id>0016</Id>
@@ -459,7 +459,7 @@
 			</Component>
 		</Condition>
 		<Occurrence>Natural</Occurrence>
-		<Type>ModifiedResidue</Type>
+		<Category>ModifiedResidue</Category>
 	</Entry>
 	<Entry>
 		<Id>0017</Id>
@@ -487,7 +487,7 @@
 			</Component>
 		</Condition>
 		<Occurrence>Natural</Occurrence>
-		<Type>ModifiedResidue</Type>
+		<Category>ModifiedResidue</Category>
 	</Entry>
 	<Entry>
 		<Id>0018</Id>
@@ -517,7 +517,7 @@
 			</Bond>
 		</Condition>
 		<Occurrence>Natural</Occurrence>
-		<Type>CrossLink2</Type>
+		<Category>CrossLink2</Category>
 	</Entry>
 	<Entry>
 		<Id>0019</Id>
@@ -545,7 +545,7 @@
 			</Component>
 		</Condition>
 		<Occurrence>Natural</Occurrence>
-		<Type>ModifiedResidue</Type>
+		<Category>ModifiedResidue</Category>
 	</Entry>
 	<Entry>
 		<Id>0020</Id>
@@ -589,7 +589,7 @@
 			</Bond>
 		</Condition>
 		<Occurrence>Natural</Occurrence>
-		<Type>CrossLink3</Type>
+		<Category>CrossLink3</Category>
 	</Entry>
 	<Entry>
 		<Id>0021</Id>
@@ -640,6 +640,6 @@
 			</Bond>
 		</Condition>
 		<Occurrence>Natural</Occurrence>
-		<Type>CrossLink4</Type>
+		<Category>CrossLink4</Category>
 	</Entry>
 </ProteinModifications>
