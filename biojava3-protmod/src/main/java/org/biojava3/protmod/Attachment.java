@@ -28,13 +28,10 @@ import org.biojava.bio.structure.AminoAcid;
 import org.biojava.bio.structure.Atom;
 import org.biojava.bio.structure.Group;
 
-public interface Attachement {
-	/**
-	 * 
-	 * @return {@link ProteinModification} occurred on the residue.
-	 */
-	public ProteinModification getType();
-	
+/**
+ * Attachment modification, e.g. glycosylation.
+ */
+public interface Attachment extends ModifiedCompound {	
 	/**
 	 * 
 	 * @return the {@link AminoAcid} that is attached to.

@@ -47,9 +47,7 @@ public class ModificationConditionImpl implements ModificationCondition {
 			throw new IllegalArgumentException("Null or empty components.");
 		}
 		
-		if (!areBondsProper(components, bonds)) {
-			throw new IllegalArgumentException("Improper atom bonds.");
-		}
+		checkBondsProper(components, bonds);
 		
 		this.components = components;
 		this.bonds = bonds;
@@ -59,12 +57,11 @@ public class ModificationConditionImpl implements ModificationCondition {
 	 * 
 	 * @param components involved components.
 	 * @param bonds atom bonds.
-	 * @return true if all bonds have proper components.
 	 */
-	private boolean areBondsProper(final Component[] components,
+	private void checkBondsProper(final Component[] components,
 			final AtomBond[] bonds) {
 		if (bonds==null||bonds.length==0) {
-			return true;
+			return;
 		}
 		
 		Set<Component> set = new HashSet<Component>(components.length);
@@ -73,15 +70,12 @@ public class ModificationConditionImpl implements ModificationCondition {
 		}
 		
 		for (AtomBond bond:bonds) {
-			if (!set.contains(bond.getComponent1())) {
-				return false;
-			}
-			if (!set.contains(bond.getComponent2())) {
-				return false;
+			if (!set.contains(bond.getComponent1())
+					||!set.contains(bond.getComponent2())) {
+				throw new IllegalArgumentException("Atoms must be on the " +
+					"involved components.");
 			}
 		}
-		
-		return true;
 	}
 	
 	/**

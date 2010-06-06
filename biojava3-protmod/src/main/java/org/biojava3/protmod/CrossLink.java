@@ -25,35 +25,21 @@
 package org.biojava3.protmod;
 
 import org.biojava.bio.structure.AminoAcid;
-import org.biojava.bio.structure.Atom;
 import org.biojava.bio.structure.Group;
 
-public interface CrossLink {
-	/**
-	 * 
-	 * @return {@link ProteinModification} occurred on the residue.
-	 */
-	public ProteinModification getType();
-	
+/**
+ * CrossLink between residues, e.g. disulfide bonds.
+ */
+public interface CrossLink extends ModifiedCompound {	
 	/**
 	 * 
 	 * @return the {@link AminoAcid}s that are involved.
 	 */
-	public AminoAcid[] getLinkedResiues();
+	public AminoAcid[] getLinkedAminoAcids();
 	
 	/**
 	 * 
 	 * @return the attached {@link Group}s that are involved.
 	 */
-	public Group[] getAttachedGroup();
-	
-	/**
-	 * 
-	 * @return an N by 2 2-dimensional array, which represent the 
-	 *  atom bonds that links the {@link AminoAcid}s and/or 
-	 *  the attached {@link Group}s. <i>N</i> is the number of bonds;
-	 *  <i>2</i> represents the pair of atom that form a bond.
-	 */
-	public Atom[][] getAtomBonds();
-
+	public Group[] getAttachedGroups();
 }

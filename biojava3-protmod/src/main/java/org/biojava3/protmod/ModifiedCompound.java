@@ -17,7 +17,7 @@
  *
  *      http://www.biojava.org/
  *
- * Created on Jun 1, 2010
+ * Created on Jun 5, 2010
  * Author: Jianjiong Gao 
  *
  */
@@ -25,14 +25,31 @@
 package org.biojava3.protmod;
 
 import org.biojava.bio.structure.AminoAcid;
+import org.biojava.bio.structure.Atom;
+import org.biojava.bio.structure.Group;
 
 /**
- * Chemical modification, e.g. phosphoserine.
+ * Parent interface for all modifications in structure.
  */
-public interface ModifiedResidue extends ModifiedCompound {
+public interface ModifiedCompound {
 	/**
 	 * 
-	 * @return the modified {@link AminoAcid}.
+	 * @return {@link ProteinModification} occurred on the residue.
 	 */
-	public AminoAcid getModifiedAminoAcid();
+	public ProteinModification getModificationType();
+	
+	/**
+	 * 
+	 * @return the chemical {@link Group}s that are involved.
+	 */
+	public Group[] getGroups();
+	
+	/**
+	 * 
+	 * @return an N by 2 2-dimensional array, which represent the 
+	 *  atom bonds that links the {@link AminoAcid}s and/or 
+	 *  the attached {@link Group}s. <i>N</i> is the number of bonds;
+	 *  <i>2</i> represents the pair of atom that form a bond.
+	 */
+	public Atom[][] getAtomBonds();
 }

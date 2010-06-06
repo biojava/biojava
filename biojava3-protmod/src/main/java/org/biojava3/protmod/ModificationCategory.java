@@ -62,6 +62,20 @@ public enum ModificationCategory {
 	}
 	
 	/**
+	 * 
+	 * @return true if it is a CrossLink; false, otherwise.
+	 */
+	public boolean isCrossLink() {
+		return this == CROSS_LINK1
+			|| this == CROSS_LINK2
+			|| this == CROSS_LINK3
+			|| this == CROSS_LINK4
+			|| this == CROSS_LINK5
+			|| this == CROSS_LINK6
+			|| this == CROSS_LINK7;
+	}
+	
+	/**
 	 * The variable is the same as the &ltType&gt; in the ptm_list XML file.
 	 */
 	private String label;
