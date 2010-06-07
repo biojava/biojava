@@ -39,7 +39,6 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.biojava3.protmod.AtomBond;
 import org.biojava3.protmod.AtomBondImpl;
 import org.biojava3.protmod.Component;
-import org.biojava3.protmod.ComponentImpl;
 import org.biojava3.protmod.ComponentType;
 import org.biojava3.protmod.ModificationCategory;
 import org.biojava3.protmod.ModificationCondition;
@@ -263,7 +262,7 @@ public final class ProteinModificationXmlReader {
 						}
 					}
 					
-					Component comp = new ComponentImpl(compId, compType, nTerminal, cTerminal);
+					Component comp = Component.register(compId, compType, nTerminal, cTerminal);
 					comps[iComp] = comp;						
 					mapLabelComp.put(label, comp);
 				}

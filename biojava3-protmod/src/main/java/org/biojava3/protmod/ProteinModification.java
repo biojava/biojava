@@ -25,6 +25,8 @@
 package org.biojava3.protmod;
 
 import java.io.InputStream;
+
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -69,7 +71,10 @@ public final class ProteinModification {
 	private static Map<String, ProteinModification> byId = null;
 	private static Map<String, ProteinModification> byResidId = null;
 	private static Map<String, ProteinModification> byPsimodId = null;
-	private static Map<String, Set<ProteinModification>> byPdbccId = null;	
+	private static Map<String, ProteinModification> byPdbccId = null;
+	private static Map<Component, Set<ProteinModification>> byComponent = null;
+	private static Map<ModificationCategory, Set<ProteinModification>> byCategory = null;
+	private static Map<ModificationOccurrenceType, Set<ProteinModification>> byOccurrenceType = null;
 	
 	/**
 	 * Lazy Initialization the static variables and register common modifications. 
@@ -80,7 +85,18 @@ public final class ProteinModification {
 			byId = new HashMap<String, ProteinModification>();
 			byResidId = new HashMap<String, ProteinModification>();
 			byPsimodId = new HashMap<String, ProteinModification>();
-			byPdbccId = new HashMap<String, Set<ProteinModification>>();
+			byPdbccId = new HashMap<String, ProteinModification>();
+			byComponent = new HashMap<Component, Set<ProteinModification>>();
+			byCategory = new EnumMap<ModificationCategory, Set<ProteinModification>>(
+					ModificationCategory.class);
+			for (ModificationCategory cat:ModificationCategory.values()) {
+				byCategory.put(cat, new HashSet<ProteinModification>());
+			}
+			byOccurrenceType = new EnumMap<ModificationOccurrenceType, Set<ProteinModification>>(
+					ModificationOccurrenceType.class);
+			for (ModificationOccurrenceType occ:ModificationOccurrenceType.values()) {
+				byOccurrenceType.put(occ, new HashSet<ProteinModification>());
+			}
 			registerCommonProteinModifications();
 		}
 	}
@@ -241,20 +257,21 @@ public final class ProteinModification {
 		 * Set the Protein Data Bank Chemical Component ID.
 		 * @param pdbccId Protein Data Bank Chemical Component ID.
 		 * @return the same Builder object so you can chain setters.
-		 * @throws IllegalArgumentException if pdbccId has been set.
+		 * @throws IllegalArgumentException if pdbccId has been set,
+		 *  or has been registered.
 		 */
 		public Builder pdbccId(final String pdbccId) {			
 			if (current.pdbccId!=null) {
 				throw new IllegalArgumentException("PDBCC ID has been set.");
 			}
 			
-			current.pdbccId = pdbccId;
-			Set<ProteinModification> mods = byPdbccId.get(pdbccId);
-			if (mods==null) {
-				mods = new HashSet<ProteinModification>();
-				byPdbccId.put(pdbccId, mods);
-			}			
-			mods.add(current);
+			if (byPdbccId.containsKey(pdbccId)) {
+				// TODO: is this the correct logic?
+				throw new IllegalArgumentException(pdbccId+" has been registered.");
+			}
+			
+			current.pdbccId = pdbccId;			
+			byPdbccId.put(pdbccId, current);
 			
 			return this;
 		}
@@ -334,6 +351,7 @@ public final class ProteinModification {
 			}
 			
 			current.psimodId = psimodId;
+			byPsimodId.put(psimodId, current);
 			
 			return this;
 		}
@@ -357,14 +375,31 @@ public final class ProteinModification {
 		/**
 		 * 
 		 * @param condition {@link ModificationCondition}.
-		 * @throws IllegalArgumentException if condition has been set.
+		 * @throws IllegalArgumentException if condition has been set,
+		 *  or components is null or empty in condition.
 		 */
 		public Builder condition(ModificationCondition condition) {
 			if (current.condition!=null) {
 				throw new IllegalArgumentException("condition has been set.");
 			}
 			
+			Component[] comps = condition.getComponents();
+			if (comps==null || comps.length==0) {
+				throw new IllegalArgumentException("At least one component for" +
+						" a modification.");
+			}
+			
+			for (Component comp:comps) {
+				Set<ProteinModification> mods = byComponent.get(comp);
+				if (mods==null) {
+					mods = new HashSet<ProteinModification>();
+					byComponent.put(comp, mods);
+				}
+				mods.add(current);
+			}
+			
 			current.condition = condition;
+			
 			return this;
 		}
 		
@@ -443,6 +478,8 @@ public final class ProteinModification {
 		
 		registry.add(current);
 		byId.put(id, current);
+		byCategory.get(cat).add(current);
+		byOccurrenceType.get(occType).add(current);
 		
 		return new Builder(current);
 	}
@@ -479,11 +516,41 @@ public final class ProteinModification {
 	/**
 	 * 
 	 * @param pdbccId Protein Data Bank Chemical Component ID.
-	 * @return chemical modifications that have the PDBCC ID.
+	 * @return chemical modification that have the PDBCC ID.
 	 */
-	public static Set<ProteinModification> getByPdbccId(final String pdbccId) {
+	public static ProteinModification getByPdbccId(final String pdbccId) {
 		lazyInit();
-		return byPdbccId.get(byPdbccId);
+		return byPdbccId.get(pdbccId);
+	}
+	
+	/**
+	 * Get ProteinModifications that involves one or more components.
+	 * @param comp1 a {@link Component}.
+	 * @param comps other {@link Component}s.
+	 * @return a set of ProteinModifications that involves all the components.
+	 */
+	public static Set<ProteinModification> getByComponent(final Component comp1,
+			final Component... comps) {
+		lazyInit();
+		Set<ProteinModification> mods = byComponent.get(comp1);
+		if (mods==null) {
+			return null;
+		}
+		
+		if (comps.length==0) {
+			return mods;
+		} else {
+			Set<ProteinModification> ret = new HashSet<ProteinModification>(mods);
+			for (Component comp:comps) {
+				mods = byComponent.get(comp);
+				if (mods==null) {
+					return null;
+				} else {
+					ret.retainAll(mods);
+				}
+			}
+			return ret;
+		}
 	}
 	
 	/**
@@ -493,6 +560,26 @@ public final class ProteinModification {
 	public static Set<ProteinModification> getProteinModifications() {
 		lazyInit();
 		return registry;
+	}
+	
+	/**
+	 * 
+	 * @param cat {@link ModificationCategory}.
+	 * @return set of registered ProteinModifications in a particular category.
+	 */
+	public static Set<ProteinModification> getByCategory(final ModificationCategory cat) {
+		lazyInit();
+		return byCategory.get(cat);
+	}
+	
+	/**
+	 * 
+	 * @param occ {@link ModificationOccurrenceType}.
+	 * @return set of registered ProteinModifications of a particular occurrence type.
+	 */
+	public static Set<ProteinModification> getByOccurrenceType(final ModificationOccurrenceType occ) {
+		lazyInit();
+		return byOccurrenceType.get(occ);
 	}
 	
 	/**
