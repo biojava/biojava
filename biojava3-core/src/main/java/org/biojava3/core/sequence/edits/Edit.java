@@ -54,7 +54,6 @@ public interface Edit<C extends Compound> {
         public Sequence<C> edit(Sequence<C> editingSequence) {
 //            assertEditWithinBounds(editingSequence);
             
-            CompoundSet<C> compoundSet = editingSequence.getCompoundSet();
             Sequence<C> targetSequence = getTargetSequence(editingSequence);
             List<Sequence<C>> sequences = new ArrayList<Sequence<C>>();
 
@@ -62,7 +61,7 @@ public interface Edit<C extends Compound> {
             sequences.add(targetSequence);
             sequences.add(getThreePrime(editingSequence));
 
-            return new JoiningSequenceReader<C>(compoundSet, sequences);
+            return new JoiningSequenceReader<C>(sequences);
         }
         
         private int start = -1;
