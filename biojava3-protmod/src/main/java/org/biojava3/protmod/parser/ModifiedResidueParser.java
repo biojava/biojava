@@ -54,6 +54,7 @@ public class ModifiedResidueParser implements ProteinModificationParser {
 	 *  empty potentialModifications, or potentialModifications contain 
 	 *  modifications other than ModifiedResidues.
 	 */
+	@Override
 	public List<ModifiedCompound> parse(final Structure structure, 
 			final Set<ProteinModification> potentialModifications,
 			final int modelnr) {
@@ -93,7 +94,7 @@ public class ModifiedResidueParser implements ProteinModificationParser {
 				}
 				
 				ModificationCondition condition = mod.getCondition();
-				Component comp = condition.getComponents()[0];
+				Component comp = condition.getComponents().get(0);
 				
 				// TODO: is this the correct way to determine N/C-terminal?
 				if ((comp.isNTerminal() && iRes==0) ||           // N-terminal

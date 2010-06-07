@@ -24,6 +24,8 @@
 
 package org.biojava3.protmod;
 
+import java.util.List;
+
 /**
  * Conditions of a protein modification, e.g. components and atoms.
  */
@@ -32,11 +34,11 @@ public interface ModificationCondition {
 	 * 
 	 * @return the involved components.
 	 */
-	public Component[] getComponents();
+	public List<Component> getComponents();
 	
 	/**
 	 * 
 	 * @return atom bonds between components.
 	 */
-	public AtomBond[] getBonds();
+	public List<AtomBond> getBonds();
 }

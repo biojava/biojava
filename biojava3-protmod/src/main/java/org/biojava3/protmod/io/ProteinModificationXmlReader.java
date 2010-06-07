@@ -193,7 +193,7 @@ public final class ProteinModificationXmlReader {
 				// components
 				List<Node> compNodes = compInfoNodes.get("Component");
 				int sizeComp = compNodes.size();
-				Component[] comps = new Component[sizeComp];
+				List<Component> comps = new ArrayList<Component>(sizeComp);
 				for (int iComp=0; iComp<sizeComp; iComp++) {
 					Node compNode = compNodes.get(iComp);
 					// comp label
@@ -263,16 +263,16 @@ public final class ProteinModificationXmlReader {
 					}
 					
 					Component comp = Component.register(compId, compType, nTerminal, cTerminal);
-					comps[iComp] = comp;						
+					comps.add(comp);						
 					mapLabelComp.put(label, comp);
 				}
 				
 				// bonds
-				AtomBond[] bonds = null;
+				List<AtomBond> bonds = null;
 				List<Node> bondNodes = compInfoNodes.get("Bond");
 				if (bondNodes!=null) {
 					int sizeBonds = bondNodes.size();
-					bonds = new AtomBond[sizeBonds];
+					bonds = new ArrayList<AtomBond>(sizeBonds);
 					for (int iBond=0; iBond<sizeBonds; iBond++) {
 						Node bondNode = bondNodes.get(iBond);
 						Map<String,List<Node>> bondChildNodes = getChildNodes(bondNode);
@@ -310,7 +310,7 @@ public final class ProteinModificationXmlReader {
 						String atom2 = atomNodes.get(1).getTextContent();
 						
 						AtomBond bond = new AtomBondImpl(comp1, comp2, atom1, atom2);
-						bonds[iBond] = bond;
+						bonds.add(bond);
 					}
 				}
 				

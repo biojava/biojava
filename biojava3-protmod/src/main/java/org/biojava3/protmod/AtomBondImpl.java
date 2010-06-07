@@ -52,6 +52,7 @@ public class AtomBondImpl implements AtomBond {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public Component getComponent1() {
 		return comp1;
 	}
@@ -59,6 +60,7 @@ public class AtomBondImpl implements AtomBond {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public Component getComponent2() {
 		return comp2;
 	}
@@ -66,6 +68,7 @@ public class AtomBondImpl implements AtomBond {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public String getAtom1() {
 		return atom1;
 	}
@@ -73,6 +76,7 @@ public class AtomBondImpl implements AtomBond {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public String getAtom2() {
 		return atom2;
 	}

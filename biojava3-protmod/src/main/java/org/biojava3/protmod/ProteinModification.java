@@ -30,6 +30,7 @@ import java.util.Collections;
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -384,8 +385,8 @@ public final class ProteinModification {
 				throw new IllegalArgumentException("condition has been set.");
 			}
 			
-			Component[] comps = condition.getComponents();
-			if (comps==null || comps.length==0) {
+			List<Component> comps = condition.getComponents();
+			if (comps==null || comps.isEmpty()) {
 				throw new IllegalArgumentException("At least one component for" +
 						" a modification.");
 			}

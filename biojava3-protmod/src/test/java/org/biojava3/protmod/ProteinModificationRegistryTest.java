@@ -24,6 +24,7 @@
 
 package org.biojava3.protmod;
 
+import java.util.List;
 import java.util.Set;
 
 import org.biojava3.protmod.ProteinModification;
@@ -126,12 +127,12 @@ public class ProteinModificationRegistryTest extends TestCase {
 		
 		ModificationCondition condition = mod.getCondition();
 		
-		Component[] comps = condition.getComponents();
-		int sizeComp = comps.length;
+		List<Component> comps = condition.getComponents();
+		int sizeComp = comps.size();
 		assertTrue(comps!=null&&sizeComp>0);
 		System.out.print("\t");
 		for (int i=0; i<sizeComp; i++) {
-			Component comp = comps[i];
+			Component comp = comps.get(i);
 			String str = comp.getPdbccId();
 			str += "["+comp.getType().label()+"]";
 			if (comp.isCTerminal()) {
@@ -142,7 +143,7 @@ public class ProteinModificationRegistryTest extends TestCase {
 			System.out.print(str+";");
 		}
 		
-		AtomBond[] bonds = condition.getBonds();
+		List<AtomBond> bonds = condition.getBonds();
 		System.out.print("\t");
 		if (bonds!=null) {
 			for (AtomBond bond:bonds) {

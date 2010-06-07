@@ -25,14 +25,15 @@
 package org.biojava3.protmod;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
  * 
  */
 public class ModificationConditionImpl implements ModificationCondition {
-	private final Component[] components;
-	private final AtomBond[] bonds;
+	private final List<Component> components;
+	private final List<AtomBond> bonds;
 	
 	/**
 	 * 
@@ -41,13 +42,10 @@ public class ModificationConditionImpl implements ModificationCondition {
 	 * @throws IllegalArgumentException if components is null or empty,
 	 *  or bonds have component(s) that are not included. 
 	 */
-	public ModificationConditionImpl(final Component[] components,
-			final AtomBond[] bonds) {
-		if (components==null||components.length==0) {
-			throw new IllegalArgumentException("Null or empty components.");
-		}
+	public ModificationConditionImpl(final List<Component> components,
+			final List<AtomBond> bonds) {
 		
-		checkBondsProper(components, bonds);
+		checkComponentsAndBondsProper(components, bonds);
 		
 		this.components = components;
 		this.bonds = bonds;
@@ -58,16 +56,17 @@ public class ModificationConditionImpl implements ModificationCondition {
 	 * @param components involved components.
 	 * @param bonds atom bonds.
 	 */
-	private void checkBondsProper(final Component[] components,
-			final AtomBond[] bonds) {
-		if (bonds==null||bonds.length==0) {
+	private void checkComponentsAndBondsProper(final List<Component> components,
+			final List<AtomBond> bonds) {
+		if (components==null||components.isEmpty()) {
+			throw new IllegalArgumentException("Null or empty components.");
+		}
+		
+		if (bonds==null||bonds.isEmpty()) {
 			return;
 		}
 		
-		Set<Component> set = new HashSet<Component>(components.length);
-		for (Component comp:components) {
-			set.add(comp);
-		}
+		Set<Component> set = new HashSet<Component>(components);
 		
 		for (AtomBond bond:bonds) {
 			if (!set.contains(bond.getComponent1())
@@ -82,7 +81,8 @@ public class ModificationConditionImpl implements ModificationCondition {
 	 * 
 	 * @return the involved components.
 	 */
-	public Component[] getComponents() {
+	@Override
+	public List<Component> getComponents() {
 		return components;
 	}
 	
@@ -90,7 +90,8 @@ public class ModificationConditionImpl implements ModificationCondition {
 	 * 
 	 * @return atom bonds between components.
 	 */
-	public AtomBond[] getBonds() {
+	@Override
+	public List<AtomBond> getBonds() {
 		return bonds;
 	}
 }
