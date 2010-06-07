@@ -29,6 +29,9 @@ import java.util.Map;
 
 /**
  * define modification categories.
+ * 
+ * @author Jianjiong Gao
+ * @since 3.0
  */
 public enum ModificationCategory {
 	ATTACHMENT("Attachment"),

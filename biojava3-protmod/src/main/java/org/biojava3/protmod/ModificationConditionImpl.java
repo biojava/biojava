@@ -30,6 +30,8 @@ import java.util.Set;
 
 /**
  * 
+ * @author Jianjiong Gao
+ * @since 3.0
  */
 public class ModificationConditionImpl implements ModificationCondition {
 	private final List<Component> components;

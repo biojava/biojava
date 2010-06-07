@@ -30,6 +30,9 @@ import java.util.Map;
 /**
  * indicates the type of a component involved in a protein
  * modification, e.g., an amino acid or a ligand.
+ * 
+ * @author Jianjiong Gao
+ * @since 3.0
  */
 public enum ComponentType {
 	AMINOACID("AminoAcid"),

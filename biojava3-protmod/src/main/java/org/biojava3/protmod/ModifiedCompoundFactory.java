@@ -31,7 +31,10 @@ import org.biojava.bio.structure.Atom;
 import org.biojava.bio.structure.Group;
 
 /**
- * Utility class to create and access {@link ModifiedCompound}s.
+ * Factory class to create and access {@link ModifiedCompound}s.
+ * 
+ * @author Jianjiong Gao
+ * @since 3.0
  */
 public final class ModifiedCompoundFactory {
 	private ModifiedCompoundFactory() {

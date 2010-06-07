@@ -28,6 +28,9 @@ import java.util.List;
 
 /**
  * Conditions of a protein modification, e.g. components and atoms.
+ * 
+ * @author Jianjiong Gao
+ * @since 3.0
  */
 public interface ModificationCondition {
 	/**

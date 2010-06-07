@@ -32,6 +32,9 @@ import java.util.Map;
  * The Component class uses the extensible enum pattern.
  * You can't instantiate Component directly, instead 
  * you have to use one of the {@link register} and {@link of} methods.
+ * 
+ * @author Jianjiong Gao
+ * @since 3.0
  */
 public final class Component {
 	private final String pdbccId;

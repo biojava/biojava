@@ -30,7 +30,10 @@ import org.biojava.bio.structure.Atom;
 import org.biojava.bio.structure.Group;
 
 /**
- * Parent interface for all modifications in structure.
+ * Root interface for all modifications in structure.
+ * 
+ * @author Jianjiong Gao
+ * @since 3.0
  */
 public interface ModifiedCompound {
 	/**

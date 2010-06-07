@@ -41,6 +41,9 @@ import org.biojava3.protmod.ProteinModification;
 
 /**
  * Identify modified residues in a 3-D structure.
+ * 
+ * @author Jianjiong Gao
+ * @since 3.0
  */
 public class ModifiedResidueParser implements ProteinModificationParser {
 	/**

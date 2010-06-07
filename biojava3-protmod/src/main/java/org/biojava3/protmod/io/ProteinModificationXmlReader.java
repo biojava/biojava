@@ -53,6 +53,11 @@ import org.w3c.dom.NodeList;
 
 import org.xml.sax.SAXException;
 
+/**
+ * 
+ * @author Jianjiong Gao
+ * @since 3.0
+ */
 public final class ProteinModificationXmlReader {
 	/**
 	 * This is a utility class and thus cannot be instantialized.

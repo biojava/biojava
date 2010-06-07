@@ -31,6 +31,11 @@ import org.biojava3.protmod.ProteinModification;
 
 import junit.framework.TestCase;
 
+/**
+ * 
+ * @author Jianjiong Gao
+ * @since 3.0
+ */
 public class ProteinModificationRegistryTest extends TestCase {
 	/**
 	 * Test the initialization registry of common protein modifications. 

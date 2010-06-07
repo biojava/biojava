@@ -41,6 +41,11 @@ import org.biojava3.protmod.ModificationCategory;
 import org.biojava3.protmod.ModifiedCompound;
 import org.biojava3.protmod.ProteinModification;
 
+/**
+ * 
+ * @author Jianjiong Gao
+ * @since 3.0
+ */
 public class ModifiedResidueParserTest extends TestCase {
 
 	public void testParser() throws IOException {

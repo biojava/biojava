@@ -31,6 +31,11 @@ import java.util.Set;
 import org.biojava.bio.structure.Atom;
 import org.biojava.bio.structure.Group;
 
+/**
+ * 
+ * @author Jianjiong Gao
+ * @since 3.0
+ */
 public class ModifiedCompoundImpl implements ModifiedCompound {
 	private final ProteinModification modification;
 	private final List<Group> residues;

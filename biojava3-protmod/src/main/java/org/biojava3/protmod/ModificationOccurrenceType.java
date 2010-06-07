@@ -27,6 +27,11 @@ package org.biojava3.protmod;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * 
+ * @author Jianjiong Gao
+ * @since 3.0
+ */
 public enum ModificationOccurrenceType {
 	NATURAL("Natural");
 	

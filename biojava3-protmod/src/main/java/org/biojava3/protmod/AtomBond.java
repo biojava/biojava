@@ -27,6 +27,9 @@ package org.biojava3.protmod;
 /**
  * store the information of a bond link between two atoms
  * on two components.
+ * 
+ * @author Jianjiong Gao
+ * @since 3.0
  */
 public interface AtomBond {
 	/**

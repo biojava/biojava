@@ -41,6 +41,9 @@ import org.biojava3.protmod.io.ProteinModificationXmlReader;
  * The ProteinModification class uses the extensible enum pattern.
  * You can't instantiate ProteinModifications directly, instead 
  * you have to use one of the getBy... methods.
+ * 
+ * @author Jianjiong Gao
+ * @since 3.0
  */
 public final class ProteinModification {
 	

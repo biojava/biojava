@@ -34,6 +34,9 @@ import org.biojava3.protmod.ProteinModification;
 
 /**
  * Identify protein modifications in a 3-d structure.
+ * 
+ * @author Jianjiong Gao
+ * @since 3.0
  */
 public interface ProteinModificationParser {
 	/**
