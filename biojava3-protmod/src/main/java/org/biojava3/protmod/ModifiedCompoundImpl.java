@@ -103,7 +103,7 @@ public class ModifiedCompoundImpl {
 	/**
 	 * {@inheritDoc}
 	 */
-	public ProteinModification getModificationType() {
+	public ProteinModification getModification() {
 		return modification;
 	}
 	

@@ -26,6 +26,7 @@ package org.biojava3.protmod;
 
 import java.io.InputStream;
 
+import java.util.Collections;
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -549,7 +550,12 @@ public final class ProteinModification {
 					ret.retainAll(mods);
 				}
 			}
-			return ret;
+			
+			if (ret.isEmpty()) {
+				return null;
+			}
+			
+			return Collections.unmodifiableSet(ret);
 		}
 	}
 	
@@ -559,7 +565,7 @@ public final class ProteinModification {
 	 */
 	public static Set<ProteinModification> getProteinModifications() {
 		lazyInit();
-		return registry;
+		return Collections.unmodifiableSet(registry);
 	}
 	
 	/**
@@ -569,7 +575,8 @@ public final class ProteinModification {
 	 */
 	public static Set<ProteinModification> getByCategory(final ModificationCategory cat) {
 		lazyInit();
-		return byCategory.get(cat);
+		Set<ProteinModification> ret = byCategory.get(cat);
+		return Collections.unmodifiableSet(ret);
 	}
 	
 	/**
@@ -579,7 +586,8 @@ public final class ProteinModification {
 	 */
 	public static Set<ProteinModification> getByOccurrenceType(final ModificationOccurrenceType occ) {
 		lazyInit();
-		return byOccurrenceType.get(occ);
+		Set<ProteinModification> ret = byOccurrenceType.get(occ);
+		return Collections.unmodifiableSet(ret);
 	}
 	
 	/**
@@ -588,7 +596,8 @@ public final class ProteinModification {
 	 */
 	public static Set<String> getIds() {
 		lazyInit();
-		return byId.keySet();
+		Set<String> ret = byId.keySet();
+		return Collections.unmodifiableSet(ret);
 	}
 	
 	/**
@@ -597,7 +606,8 @@ public final class ProteinModification {
 	 */
 	public static Set<String> getPdbccIds() {
 		lazyInit();
-		return byPdbccId.keySet();
+		Set<String> ret = byPdbccId.keySet();
+		return Collections.unmodifiableSet(ret);
 	}
 	
 	/**
@@ -606,7 +616,8 @@ public final class ProteinModification {
 	 */
 	public static Set<String> getResidIds() {
 		lazyInit();
-		return byResidId.keySet();
+		Set<String> ret = byResidId.keySet();
+		return Collections.unmodifiableSet(ret);
 	}
 	
 	/**
@@ -615,6 +626,17 @@ public final class ProteinModification {
 	 */
 	public static Set<String> getPsimodIds() {
 		lazyInit();
-		return byPsimodId.keySet();
+		Set<String> ret = byPsimodId.keySet();
+		return Collections.unmodifiableSet(ret);
+	}
+	
+	/**
+	 * 
+	 * @return set of components involved in all registered ProteinModifications.
+	 */
+	public static Set<Component> getComponents() {
+		lazyInit();
+		Set<Component> ret = byComponent.keySet();
+		return Collections.unmodifiableSet(ret);
 	}
 }

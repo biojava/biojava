@@ -36,7 +36,7 @@ public interface ModifiedCompound {
 	 * 
 	 * @return {@link ProteinModification} occurred on the residue.
 	 */
-	public ProteinModification getModificationType();
+	public ProteinModification getModification();
 	
 	/**
 	 * 
