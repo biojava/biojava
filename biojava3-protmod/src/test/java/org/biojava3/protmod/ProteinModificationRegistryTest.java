@@ -34,7 +34,7 @@ public class ProteinModificationRegistryTest extends TestCase {
 	/**
 	 * Test the initialization registry of common protein modifications. 
 	 */
-	public void testRegisteryInit() {
+	public void testRegistryInit() {
 		System.out.println("===Begin Testing on initialzation of the registry===");
 		
 		Set<ProteinModification> mods = ProteinModification.getProteinModifications();
