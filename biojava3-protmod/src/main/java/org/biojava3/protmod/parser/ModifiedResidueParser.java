@@ -28,7 +28,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import org.biojava.bio.structure.AminoAcid;
 import org.biojava.bio.structure.Chain;
 import org.biojava.bio.structure.Group;
 import org.biojava.bio.structure.Structure;
@@ -36,8 +35,8 @@ import org.biojava.bio.structure.Structure;
 import org.biojava3.protmod.Component;
 import org.biojava3.protmod.ModificationCategory;
 import org.biojava3.protmod.ModificationCondition;
-import org.biojava3.protmod.ModifiedResidue;
-import org.biojava3.protmod.ModifiedResidueImpl;
+import org.biojava3.protmod.ModifiedCompound;
+import org.biojava3.protmod.ModifiedCompoundFactory;
 import org.biojava3.protmod.ProteinModification;
 
 /**
@@ -48,13 +47,16 @@ public class ModifiedResidueParser implements ProteinModificationParser {
 	 * Parse chemically modified residues in a structure.
 	 * @param structure query {@link Structure}.
 	 * @param potentialModifications query {@link ProteinModification}s.
-	 * @return an list of {@link ModifiedResidue}s.
+	 * @param modelnr model number.
+	 * @return an list of {@link ModifiedCompound}s, or null if the
+	 *  nodelnr is larger than the number of models in the structure.
 	 * @throws IllegalArgumentException if null structure, or null or 
 	 *  empty potentialModifications, or potentialModifications contain 
 	 *  modifications other than ModifiedResidues.
 	 */
-	public List<ModifiedResidue> parse(final Structure structure, 
-			final Set<ProteinModification> potentialModifications) {
+	public List<ModifiedCompound> parse(final Structure structure, 
+			final Set<ProteinModification> potentialModifications,
+			final int modelnr) {
 		if (structure==null) {
 			throw new IllegalArgumentException("Null structure.");
 		}
@@ -69,32 +71,39 @@ public class ModifiedResidueParser implements ProteinModificationParser {
 			}
 		}
 		
-		List<ModifiedResidue> ret = new ArrayList();
+		if (modelnr >= structure.nrModels())
+			return null;
+		
+		List<ModifiedCompound> ret = new ArrayList<ModifiedCompound>();
 		
 		// TODO: how to deal with multi-model structure?
 		List<Chain> chains = structure.getChains(0);
 		for (Chain chain : chains) {
-			List<Group> aminoAcids = chain.getAtomGroups("amino");
-			int sizeAA = aminoAcids.size();
+			List<Group> residues = chain.getSeqResGroups();
+			int sizeRes = residues.size();
 			
 			// for all amino acid
-			for (int iAA=0; iAA<sizeAA; iAA++) {
-				Group group = aminoAcids.get(iAA);
-				AminoAcid aa = (AminoAcid)group;
-				String pdbccId = aa.getPDBName();
+			for (int iRes=0; iRes<sizeRes; iRes++) {
+				Group residue = residues.get(iRes);
+				String pdbccId = residue.getPDBName();
 				ProteinModification mod = ProteinModification.getByPdbccId(pdbccId);
-				if (mod!=null && potentialModifications.contains(mod)) {
-					ModificationCondition condition = mod.getCondition();
-					Component comp = condition.getComponents()[0];
-					
-					// TODO: is this the correct way to determine N/C-terminal?
-					if ((!comp.isNTerminal() && !comp.isCTerminal()) || // non-terminal
-							(comp.isNTerminal() && iAA==0) ||           // N-terminal
-							(comp.isCTerminal() && iAA==sizeAA-1)) {    // C-terminal
-						ModifiedResidue residue = new ModifiedResidueImpl(mod, aa);
-						ret.add(residue);
-					}
+				
+				if (mod==null || !potentialModifications.contains(mod)) {
+					continue;
 				}
+				
+				ModificationCondition condition = mod.getCondition();
+				Component comp = condition.getComponents()[0];
+				
+				// TODO: is this the correct way to determine N/C-terminal?
+				if ((comp.isNTerminal() && iRes==0) ||           // N-terminal
+						(comp.isCTerminal() && iRes==sizeRes-1)) {    // C-terminal
+					continue;
+				}
+				
+				ModifiedCompound modRes = ModifiedCompoundFactory
+					.createModifiedResidue(mod, residue);
+				ret.add(modRes);
 			}
 		}
 		

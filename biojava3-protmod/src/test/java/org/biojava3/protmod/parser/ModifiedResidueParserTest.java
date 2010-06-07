@@ -32,13 +32,13 @@ import java.util.List;
 
 import junit.framework.TestCase;
 
-import org.biojava.bio.structure.AminoAcid;
+import org.biojava.bio.structure.Group;
 import org.biojava.bio.structure.Chain;
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.io.PDBFileReader;
 
 import org.biojava3.protmod.ModificationCategory;
-import org.biojava3.protmod.ModifiedResidue;
+import org.biojava3.protmod.ModifiedCompound;
 import org.biojava3.protmod.ProteinModification;
 
 public class ModifiedResidueParserTest extends TestCase {
@@ -46,24 +46,31 @@ public class ModifiedResidueParserTest extends TestCase {
 	public void testParser() throws IOException {
 		System.out.println("===Begin testing on ModifiedResidueParser");
 		
-		URL fileUrl = ModifiedResidueParserTest.class.getResource("3MVJ.pdb");
+		parserTest("3MVJ.pdb");
+		
+		System.out.println("===End testing on ModifiedResidueParser");
+	}
+	
+	private void parserTest(String pdbfile) throws IOException {
+		URL fileUrl = ModifiedResidueParserTest.class.getResource(pdbfile);
 		assertNotNull(fileUrl);
 		
 		PDBFileReader pdbReader = new PDBFileReader();
 		Structure struc = pdbReader.getStructure(fileUrl);
 		
 		ModifiedResidueParser parser = new ModifiedResidueParser();
-		List<ModifiedResidue> residues = parser.parse(struc, 
-				ProteinModification.getByCategory(
-				ModificationCategory.CHEMICAL_MODIFICATION));
 		
-		for (ModifiedResidue residue : residues) {
-			ProteinModification mod = residue.getModification();
-			AminoAcid aa = residue.getModifiedAminoAcid();
-			Chain chain = aa.getParent();
-			System.out.println(mod.getPdbccId()+"\t"+chain.getName()+"\t");
+		int nrmodel = struc.nrModels();
+		for (int modelnr=0; modelnr<nrmodel; modelnr++) {
+			List<ModifiedCompound> residues = parser.parse(struc, 
+					ProteinModification.getByCategory(ModificationCategory.CHEMICAL_MODIFICATION),
+					modelnr);
+			
+			for (ModifiedCompound residue : residues) {
+				Group g = residue.getProteinResidues().get(0);
+				Chain chain = g.getParent();
+				System.out.println(g.getPDBName()+"\t"+chain.getName()+"\t"+g.getPDBCode());
+			}
 		}
-
-		System.out.println("===End testing on ModifiedResidueParser");
 	}
 }

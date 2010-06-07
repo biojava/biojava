@@ -24,7 +24,8 @@
 
 package org.biojava3.protmod;
 
-import org.biojava.bio.structure.AminoAcid;
+import java.util.List;
+
 import org.biojava.bio.structure.Atom;
 import org.biojava.bio.structure.Group;
 
@@ -40,16 +41,22 @@ public interface ModifiedCompound {
 	
 	/**
 	 * 
-	 * @return the chemical {@link Group}s that are involved.
+	 * @return involved protein residues.
 	 */
-	public Group[] getGroups();
+	public List<Group> getProteinResidues();
 	
 	/**
 	 * 
-	 * @return an N by 2 2-dimensional array, which represent the 
-	 *  atom bonds that links the {@link AminoAcid}s and/or 
-	 *  the attached {@link Group}s. <i>N</i> is the number of bonds;
-	 *  <i>2</i> represents the pair of atom that form a bond.
+	 * @return involved chemical {@link Group}s that are not
+	 *  protein residues.
 	 */
-	public Atom[][] getAtomBonds();
+	public List<Group> getOtherGroups();
+	
+	/**
+	 * 
+	 * @return a list of atom pairs, which represent the 
+	 *  atom bonds that links the residues and/or the attached groups.
+	 *  Each element of the list is a array containing two atoms.
+	 */
+	public List<Atom[]> getAtomBonds();
 }

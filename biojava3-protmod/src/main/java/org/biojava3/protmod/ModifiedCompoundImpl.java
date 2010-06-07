@@ -24,38 +24,40 @@
 
 package org.biojava3.protmod;
 
-import java.util.Set;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
-import org.biojava.bio.structure.AminoAcid;
 import org.biojava.bio.structure.Atom;
 import org.biojava.bio.structure.Group;
 
-public class ModifiedCompoundImpl {
+public class ModifiedCompoundImpl implements ModifiedCompound {
 	private final ProteinModification modification;
-	private final Group[] groups;
-	private final Atom[][] atomBonds;
+	private final List<Group> residues;
+	private final List<Group> otherGroups;
+	private final List<Atom[]> atomBonds;
 	
 	/**
 	 * 
 	 * @param modification {@link ProteinModification}.
-	 * @param groups involved chemical {@link Group}s. 
-	 * @param atomBonds an N by 2 2-dimensional array, which represent the 
-	 *  atom bonds that links the {@link AminoAcid}s and/or 
-	 *  the attached {@link Group}s. <i>N</i> is the number of bonds;
-	 *  <i>2</i> represents the pair of atom that form a bond.
-	 *  @throws IllegalArgumentException if modification is null.
+	 * @param residues protein residues.
+	 * @param otherGroups involved chemical {@link Group}s, except residues. 
+	 * @param atomBonds a list of atom pairs, which represent the 
+	 *  atom bonds that links the residues and/or the attached groups.
+	 *  Each element of the list is a array containing two atoms. 
 	 */
 	public ModifiedCompoundImpl(final ProteinModification modification,
-			final Group[] groups, final Atom[][] atomBonds) {
+			final List<Group> residues, final List<Group> otherGroups,
+			final List<Atom[]> atomBonds) {
 		if (modification==null) {
 			throw new IllegalArgumentException("modification cannot be null");
 		}
 		
-		checkGroupAndAtomBondsProper(groups, atomBonds);
+		checkGroupAndAtomBondsProper(residues, otherGroups, atomBonds);
 		
 		this.modification = modification;
-		this.groups = groups;
+		this.residues = residues;
+		this.otherGroups = otherGroups;
 		this.atomBonds = atomBonds;
 	}
 	
@@ -64,37 +66,37 @@ public class ModifiedCompoundImpl {
 	 * @param groups {@link Group}s.
 	 * @param atomBonds pairs of {@link Atom}s.
 	 */
-	private void checkGroupAndAtomBondsProper(final Group[] groups,
-			final Atom[][] atomBonds) {
-		if (groups==null||groups.length==0) {
-			throw new IllegalArgumentException("At least one involved chemical group.");
+	private void checkGroupAndAtomBondsProper(final List<Group> residues,
+			final List<Group> otherGroups, final List<Atom[]> atomBonds) {
+		if (residues==null||residues.isEmpty()) {
+			throw new IllegalArgumentException("At least one involved residue.");
 		}
 		
-		if (atomBonds==null) {
-			return;
+		Set<Group> gs = new HashSet<Group>(residues);
+		if (otherGroups != null) {
+			gs.addAll(otherGroups);
 		}
 		
-		int n = atomBonds.length;
-		if (n>0&&atomBonds[0].length!=2) {
-			throw new IllegalArgumentException("atomBonds must be N by 2.");
-		}
-		
-		Set<Group> gs = new HashSet<Group>();
-		for (Group g:groups) {
-			if (g==null) {
-				throw new IllegalArgumentException("Null group.");
+		if (gs.size()==1) {
+			if (atomBonds!=null && !atomBonds.isEmpty()) {
+				throw new IllegalArgumentException("No atomBond is necessary for" +
+						" one component.");
 			}
-			gs.add(g);
-		}
-		
-		for (int i=0; i<n; i++) {
-			for (int j=0; j<2; j++) {
-				if (atomBonds[i][j]==null) {
-					throw new IllegalArgumentException("Null bond.");
-				}
-				if (!gs.contains(atomBonds[i][j].getParent())) {
-					throw new IllegalArgumentException("Atoms must be on the " +
-							"involved amino acids or other chemical groups.");
+		} else {
+			if (atomBonds==null) {
+				throw new IllegalArgumentException("Atom bonds are supposed to be " +
+						"specified for more than one component.");
+			}
+			
+			for (Atom[] atoms : atomBonds) {
+				for (int j=0; j<2; j++) {
+					if (atoms[j]==null) {
+						throw new IllegalArgumentException("Null bond.");
+					}
+					if (!gs.contains(atoms[j].getParent())) {
+						throw new IllegalArgumentException("Atoms must be on the " +
+								"involved amino acids or other chemical groups.");
+					}
 				}
 			}
 		}
@@ -103,6 +105,7 @@ public class ModifiedCompoundImpl {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public ProteinModification getModification() {
 		return modification;
 	}
@@ -110,14 +113,23 @@ public class ModifiedCompoundImpl {
 	/**
 	 * {@inheritDoc}
 	 */
-	public Group[] getGroups() {
-		return groups;
+	public List<Group> getProteinResidues() {
+		return residues;
 	}
 	
 	/**
 	 * {@inheritDoc}
 	 */
-	public Atom[][] getAtomBonds() {
+	@Override
+	public List<Group> getOtherGroups() {
+		return otherGroups;
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public List<Atom[]> getAtomBonds() {
 		return atomBonds;
 	}
 }
