@@ -2,6 +2,7 @@ package org.biojava3.core.sequence.template;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -11,8 +12,6 @@ import org.biojava3.core.sequence.storage.ArrayListSequenceReader;
 import org.biojava3.core.sequence.views.ReversedSequenceView;
 import org.biojava3.core.util.CRC64Checksum;
 
-import com.google.common.base.Function;
-import com.google.common.collect.MapMaker;
 import java.util.NoSuchElementException;
 
 /**
@@ -96,16 +95,11 @@ public class SequenceMixin {
      * sequence. Any compound not in the Map will return a fraction of 0.
      */
     public static <C extends Compound> Map<C, Double> getDistribution(Sequence<C> sequence) {
-        Map<C, Double> results = new MapMaker().makeComputingMap(new Function<C, Double>() {
-
-            @Override
-            public Double apply(C compound) {
-                return 0.0;
-            }
-        });
+        Map<C, Double> results = new HashMap<C, Double>();
         Map<C, Integer> composition = getComposition(sequence);
         double length = (double) sequence.getLength();
         for (Map.Entry<C, Integer> entry : composition.entrySet()) {
+        	
             double dist = entry.getValue().doubleValue() / length;
             results.put(entry.getKey(), dist);
         }
@@ -122,16 +116,12 @@ public class SequenceMixin {
      * @return Counts for the instances of all compounds in the sequence
      */
     public static <C extends Compound> Map<C, Integer> getComposition(Sequence<C> sequence) {
-        Map<C, Integer> results = new MapMaker().makeComputingMap(new Function<C, Integer>() {
-
-            @Override
-            public Integer apply(C compound) {
-                return 0;
-            }
-        });
+        Map<C, Integer> results = new HashMap<C, Integer>();
 
         for (C currentCompound : sequence) {
             Integer currentInteger = results.get(currentCompound);
+            if ( currentInteger == null)
+            	currentInteger = 0;
             currentInteger++;
             results.put(currentCompound, currentInteger);
         }
