@@ -1,7 +1,7 @@
 package org.biojava3.genome.parsers.gff;
 
-import java.io.*;
-import java.util.*;
+import java.util.HashMap;
+
 
 /**
  * A Feature corresponds to a single row in a GFF file.
