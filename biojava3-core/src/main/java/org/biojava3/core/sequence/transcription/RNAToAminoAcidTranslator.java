@@ -16,9 +16,6 @@ import org.biojava3.core.sequence.template.Sequence;
 import org.biojava3.core.sequence.transcription.Table.Codon;
 import org.biojava3.core.sequence.views.WindowedSequence;
 
-import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.Multimap;
-
 /**
  * Takes a {@link Sequence} of {@link NucleotideCompound} which should
  * represent an RNA sequence ({@link RNASequence} is good for this) and returns
@@ -33,7 +30,7 @@ public class RNAToAminoAcidTranslator extends AbstractCompoundTranslator<Nucleot
     private final boolean trimStops;
     private final boolean initMetOnly;
     private final Map<List<NucleotideCompound>, Codon> quickLookup;
-    private final Multimap<AminoAcidCompound, Codon> aminoAcidToCodon;
+    private final Map<AminoAcidCompound, List<Codon>> aminoAcidToCodon;
     private final NucleotideCompound nCompound;
     private final AminoAcidCompound unknownAminoAcidCompound;
     private final boolean translateNCodons;
@@ -50,12 +47,19 @@ public class RNAToAminoAcidTranslator extends AbstractCompoundTranslator<Nucleot
         this.translateNCodons = translateNCodons;
 
         quickLookup = new HashMap<List<NucleotideCompound>, Codon>(codons.getAllCompounds().size());
-        aminoAcidToCodon = ArrayListMultimap.create();
+        aminoAcidToCodon = new HashMap<AminoAcidCompound, List<Codon>>();
 
         List<Codon> codonList = table.getCodons(nucleotides, aminoAcids);
         for (Codon codon : codonList) {
             quickLookup.put(codon.getAsList(), codon);
-            aminoAcidToCodon.put(codon.getAminoAcid(), codon);
+            
+            List<Codon> codonL = aminoAcidToCodon.get(codon.getAminoAcid());
+            if ( codonL == null){
+            	codonL = new ArrayList<Codon>();
+            	aminoAcidToCodon.put(codon.getAminoAcid(), codonL);
+            }
+            codonL.add(codon);
+            
         }
 
         nCompound = nucleotides.getCompoundForString("N");
