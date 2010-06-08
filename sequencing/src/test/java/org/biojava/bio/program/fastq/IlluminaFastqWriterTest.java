@@ -30,13 +30,13 @@ public final class IlluminaFastqWriterTest
 {
 
     /** {@inheritDoc} */
-    protected FastqWriter createFastqWriter()
+    public FastqWriter createFastqWriter()
     {
         return new IlluminaFastqWriter();
     }
 
     /** {@inheritDoc} */
-    protected Fastq createFastq()
+    public Fastq createFastq()
     {
         return new FastqBuilder()
             .withDescription("description")
