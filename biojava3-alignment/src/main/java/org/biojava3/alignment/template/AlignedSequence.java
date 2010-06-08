@@ -27,24 +27,85 @@ import org.biojava3.core.sequence.location.template.Location;
 import org.biojava3.core.sequence.template.Compound;
 import org.biojava3.core.sequence.template.Sequence;
 
+/**
+ * Defines a data structure for a {@link Sequence} within an alignment.
+ *
+ * @author Mark Chapman
+ * @param <C> each element of the {@link Sequence} is a {@link Compound} of type C
+ */
 public interface AlignedSequence<C extends Compound> extends Sequence<C> {
 
+    /**
+     * Returns the column index within an alignment corresponding to the given index in the original {@link Sequence}.
+     * Both indices are 1-indexed and inclusive.
+     *
+     * @param sequenceIndex index in the original {@link Sequence}
+     * @return column index within an alignment
+     * @throws IndexOutOfBoundsException if sequenceIndex < 1 or sequenceIndex > getLength()
+     */
     int getAlignmentIndexAt(int sequenceIndex);
 
+    /**
+     * Returns the column index within an alignment of the last element of the original {@link Sequence}.
+     *
+     * @return column index within an alignment of final original {@link Sequence} element
+     */
     int getEnd();
 
+    /**
+     * Returns the {@link Location} of the original {@link Sequence} within an alignment.  This provides access to
+     * additional substructure beyond start and end points.
+     *
+     * @return location within an alignment
+     */
     Location getLocationInAlignment();
 
+    /**
+     * Returns number of gaps in the sequence.  This could be determined from the {@link Location} information or from
+     * gap {@link Compound}s, which may not necessarily result in the same number.
+     *
+     * @return number of gaps in the sequence
+     */
     int getNumGaps();
 
+    /**
+     * Returns the original {@link Sequence} before alignment.
+     *
+     * @return the original sequence
+     */
     Sequence<C> getOriginalSequence();
 
-    int getOverlapCount(); // if !isCircular() ? == 1 : >= 1
+    /**
+     * Returns the maximum number of elements contributed to a column of an alignment by this {@link Sequence}.  If
+     * this {@link Sequence} is circular, this number is >= 1.  If not, this overlap count is definitely 1.
+     *
+     * @return the most elements contributed to any alignment column
+     */
+    int getOverlapCount();
 
+    /**
+     * Returns the index in the original {@link Sequence} corresponding to the given index within an alignment.  Both
+     * indices are 1-indexed and inclusive.
+     *
+     * @param alignmentIndex index within an alignment
+     * @return index in the original {@link Sequence}
+     * @throws IndexOutOfBoundsException if alignmentIndex < getStart() or alignmentIndex > getEnd()
+     */
     int getSequenceIndexAt(int alignmentIndex);
 
+    /**
+     * Returns the index within an alignment of the first element of the original {@link Sequence}.
+     *
+     * @return index within an alignment of first original {@link Sequence} element
+     */
     int getStart();
 
+    /**
+     * Returns true if this {@link Sequence} wraps around from the last alignment column back to the first.  This makes
+     * overlap possible, but does not require an overlap count > 1.
+     *
+     * @return true for circular alignment elements
+     */
     boolean isCircular();
 
 }

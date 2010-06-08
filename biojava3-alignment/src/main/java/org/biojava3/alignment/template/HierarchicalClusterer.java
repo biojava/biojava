@@ -23,10 +23,25 @@
 
 package org.biojava3.alignment.template;
 
+/**
+ * Defines a clustering algorithm that converts a distance matrix into a tree.
+ *
+ * @author Mark Chapman
+ */
 public interface HierarchicalClusterer {
 
-    float[] getDistanceMatrix();
+    /**
+     * Returns the distance matrix used in clustering.  May be calculated from another original source.
+     *
+     * @return the distance matrix input to clustering
+     */
+    float[][] getDistanceMatrix();
 
+    /**
+     * Returns the root node of the tree resulting from this clustering algorithm.
+     *
+     * @return the resulting tree output from clustering
+     */
     TreeNode getRoot();
 
 }

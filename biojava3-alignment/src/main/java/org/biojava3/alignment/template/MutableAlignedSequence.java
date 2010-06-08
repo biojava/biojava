@@ -26,12 +26,38 @@ package org.biojava3.alignment.template;
 import org.biojava3.core.sequence.location.template.Location;
 import org.biojava3.core.sequence.template.Compound;
 
+/**
+ * Defines a mutable (editable) data structure for an {@link AlignedSequence}.
+ *
+ * @author Mark Chapman
+ * @param <C> each element of the {@link AlignedSequence} is a {@link Compound} of type C
+ */
 public interface MutableAlignedSequence<C extends Compound> extends AlignedSequence<C> {
 
+    /**
+     * Sets the position of the {@link AlignedSequence} to the given {@link Location} (start, gaps, end).
+     *
+     * @param location new location for this sequence
+     * @throws IllegalArgumentException if location is invalid
+     */
     void setLocationInAlignment(Location location);
 
+    /**
+     * Slides a part of the {@link AlignedSequence}.
+     *
+     * @param location portion of sequence moved in alignment coordinates
+     * @param shift amount the alignment index changes for each contained element
+     * @throws IllegalArgumentException if location is invalid or the shift causes a collision with stationary elements
+     */
     void shiftAtAlignmentLocation(Location location, int shift);
 
+    /**
+     * Slides a part of the {@link AlignedSequence}.
+     *
+     * @param location portion of sequence moved in sequence coordinates
+     * @param shift amount the alignment index changes for each contained element
+     * @throws IllegalArgumentException if location is invalid or the shift causes a collision with stationary elements
+     */
     void shiftAtSequenceLocation(Location location, int shift);
 
 }

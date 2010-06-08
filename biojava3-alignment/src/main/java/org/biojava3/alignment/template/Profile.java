@@ -30,13 +30,21 @@ import org.biojava3.core.sequence.template.Compound;
 import org.biojava3.core.sequence.template.CompoundSet;
 import org.biojava3.core.sequence.template.Sequence;
 
+/**
+ * Defines a data structure for the results of sequence alignment.  Every {@link List} returned is unmodifiable unless
+ * the class implements the subinterface {@link MutableProfile}.
+ *
+ * @author Mark Chapman
+ * @param <S> each element of the alignment {@link Profile} is of type S
+ * @param <C> each element of an {@link AlignedSequence} is a {@link Compound} of type C
+ */
 public interface Profile<S extends Sequence<C>, C extends Compound> extends Iterable<S> {
 
     AlignedSequence<C> getAlignedSequence(int index);
 
     AlignedSequence<C> getAlignedSequence(S sequence); // will find either aligned or original sequences
 
-    List<AlignedSequence<C>> getAlignedSequences(); // unmodifiable unless class implements MutableProfile
+    List<AlignedSequence<C>> getAlignedSequences();
 
     List<AlignedSequence<C>> getAlignedSequences(int... indices); // useful for views
 
@@ -57,6 +65,8 @@ public interface Profile<S extends Sequence<C>, C extends Compound> extends Iter
     int getLastIndexOf(C compound);
 
     int getLength(); // number of columns
+
+    List<S> getOriginalSequences();
 
     int getSize(); // number of rows ... if !isCircular() ? == number of sequences : >= number of sequences
 
