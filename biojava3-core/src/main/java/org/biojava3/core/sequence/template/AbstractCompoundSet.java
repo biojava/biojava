@@ -2,14 +2,13 @@ package org.biojava3.core.sequence.template;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import org.biojava3.core.exceptions.CompoundNotFoundError;
 
-import com.google.common.collect.HashMultimap;
-import com.google.common.collect.SetMultimap;
 
 /**
  *
@@ -21,7 +20,8 @@ public abstract class AbstractCompoundSet<C extends Compound> implements Compoun
 
   private Map<CharSequence, C> charSeqToCompound = new HashMap<CharSequence, C>();
   private int maxCompoundCharSequenceLength = -1;
-  private SetMultimap<C, C> equivalentsMap = HashMultimap.create();
+  
+  Map<C,Set<C>> equivalentsMap = new HashMap<C, Set<C>>();
 
   protected void addCompound(C compound, C lowerCasedCompound, Iterable<C> equivalents) {
     addCompound(compound);
@@ -47,7 +47,13 @@ public abstract class AbstractCompoundSet<C extends Compound> implements Compoun
   }
 
   protected void addEquivalent(C compound, C equivalent) {
-    equivalentsMap.put(compound, equivalent);
+	 Set<C> s = equivalentsMap.get(compound);
+	 if ( s == null){
+		 s = new HashSet<C>();
+		 equivalentsMap.put(compound, s);
+	 }
+	  
+    s.add( equivalent);
   }
 
   protected void addCompound(C compound) {
