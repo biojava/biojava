@@ -8,23 +8,19 @@ import java.io.File;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.logging.Logger;
-import org.biojava3.genome.parsers.gff.Feature;
-
-import org.biojava3.genome.parsers.gff.FeatureI;
-import org.biojava3.genome.parsers.gff.FeatureList;
 import org.biojava3.core.sequence.AccessionID;
 import org.biojava3.core.sequence.DNASequence;
 import org.biojava3.core.sequence.ExonSequence;
-import org.biojava3.core.sequence.FastaReaderHelper;
-import org.biojava3.core.sequence.FastaWriterHelper;
 import org.biojava3.core.sequence.GeneSequence;
 import org.biojava3.core.sequence.ProteinSequence;
 import org.biojava3.core.sequence.Strand;
 import org.biojava3.core.sequence.TranscriptSequence;
+import org.biojava3.core.sequence.io.FastaReaderHelper;
+import org.biojava3.core.sequence.io.FastaWriterHelper;
+import org.biojava3.genome.parsers.gff.Feature;
+import org.biojava3.genome.parsers.gff.FeatureI;
+import org.biojava3.genome.parsers.gff.FeatureList;
 import org.biojava3.genome.parsers.gff.GFF3;
-
-
-
 import org.biojava3.genome.parsers.gff.GeneMarkGTF;
 
 /**
