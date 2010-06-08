@@ -97,10 +97,7 @@ public class CECalculator {
 	private static final boolean distAll = false;
 
 
-	private static final double DEFAULT_GAP_OPEN = 5.0;
-	private static final double DEFAULT_GAP_EXTENSION  = 0.5;
-	private static final double DISTANCE_INCREMENT=0.5;
-	private static final double DEFAULT_oRmsdThr = 2.0; 
+
 
 	public CECalculator(CeParameters params){
 		timeStart = System.currentTimeMillis();
@@ -447,7 +444,7 @@ public class CECalculator {
 
 		double traceTotalScore=0;
 		double traceScoreMax =0;
-
+		double userRMSDMax = params.getMaxOptRMSD();
 		int kse1;
 		int kse2;
 
@@ -511,7 +508,7 @@ public class CECalculator {
 
 								if(mat[ise1][ise2]<0.0) continue ise2Loop;
 								if(mat[ise1][ise2]>rmsdThr) continue ise2Loop;
-
+								if (mat[ise1][ise2]>userRMSDMax) continue ise2Loop;
 								nTrace=0;
 								trace1[nTrace]=ise1; 
 								trace2[nTrace]=ise2;
@@ -572,7 +569,8 @@ public class CECalculator {
 
 													if(mat[mse1][mse2]<0.0)     continue itLoop;
 													if(mat[mse1][mse2]>rmsdThr) continue itLoop;
-
+													if(mat[mse1][mse2]>userRMSDMax) continue itLoop;
+													
 													nTraces++;
 													if(nTraces>tracesLimit) {
 
@@ -602,7 +600,8 @@ public class CECalculator {
 														//System.out.println("up: " + nTrace + " "  + score + " " + score0 + " " + score1 + " " + winSize + " " + traceIndex_ + " " + it + " ");
 														if(score1>rmsdThrJoin) 
 															continue itLoop;
-
+														if(score1>userRMSDMax)
+														   continue itLoop;
 														score2=score1;
 
 														// this just got checked, no need to check again..
@@ -643,6 +642,8 @@ public class CECalculator {
 
 												if(score2>rmsdThrJoin) 
 													traceIndex_=-1;
+												else if ( score2 > userRMSDMax) 
+												   traceIndex_=-1;												
 												else {
 													traceScore[nTrace-1][traceIndex_]=score2;
 
@@ -1262,7 +1263,7 @@ nBestTrace=nTrace;
 
 		//System.out.println("optimizing Superimposition...");
 
-		nAtom=strLen;
+		//nAtom=strLen;
 		// optimization on superposition
 		Atom[] ca3=new Atom[nse2];
 
@@ -1272,16 +1273,20 @@ nBestTrace=nTrace;
 		boolean isRmsdLenAssigned=false;
 		int nAtomPrev=-1;
 
-		double oRmsdThr = DEFAULT_oRmsdThr;
-
+		double oRmsdThr = params.getORmsdThr();
+		
+		double distanceIncrement = params.getDistanceIncrement();
+		double maxUserRMSD = params.getMaxOptRMSD();
 		nAtom=0;
 		int counter = -1;
+		
 		while(nAtom<strLen*0.95 || 
 				(isRmsdLenAssigned && rmsd<rmsdLen*1.1 && nAtomPrev!=nAtom)) {
+		  
 			counter++;
 			//System.out.println("nAtom: " + nAtom);
 			nAtomPrev=nAtom;
-			oRmsdThr += DISTANCE_INCREMENT;
+			oRmsdThr += distanceIncrement;
 
 			rot_mol(ca2, ca3, nse2, r,t);
 
@@ -1310,7 +1315,10 @@ nBestTrace=nTrace;
 				}
 			}
 
-			double score = dpAlign( nse1, nse2, DEFAULT_GAP_OPEN , DEFAULT_GAP_EXTENSION , false, false);
+			double gapOpen = params.getGapOpen();
+			double gapExtension = params.getGapExtension();
+			
+			double score = dpAlign( nse1, nse2, gapOpen , gapExtension , false, false);
 
 			if (debug)
 				System.out.println("iter: "+ counter + "  score:"  + score + " " + " nAtomPrev: " + nAtomPrev + " nAtom:" + nAtom + " oRmsdThr: " + oRmsdThr);
@@ -1355,6 +1363,10 @@ nBestTrace=nTrace;
 			afpChain.setOptRmsd(new double[]{rmsd});
 			afpChain.setTotalRmsdOpt(rmsd);
 			afpChain.setChainRmsd(rmsd);
+			
+			if ( rmsd >= maxUserRMSD) {
+	              break;
+			}
 
 		}
 

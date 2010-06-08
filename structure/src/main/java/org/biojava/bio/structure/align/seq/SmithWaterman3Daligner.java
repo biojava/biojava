@@ -46,7 +46,7 @@ public class SmithWaterman3Daligner extends AbstractStructureAlignment implement
    public static final String algorithmName = "Smith-Waterman superposition";
 
    private static final String version = "1.0";
-
+   SmithWaterman3DParameters params;
 
    public static void main(String[] args){
 
@@ -67,19 +67,30 @@ public class SmithWaterman3Daligner extends AbstractStructureAlignment implement
       UserArgumentProcessor processor = new SmithWatermanUserArgumentProcessor();
       processor.process(args);
    }
+   
+   public SmithWaterman3Daligner(){
+      params = new SmithWaterman3DParameters();
+   }
 
    @Override
    public AFPChain align(Atom[] ca1, Atom[] ca2) throws StructureException {
-      return align(ca1,ca2,null);
+      if ( params == null)
+         params = new SmithWaterman3DParameters();
+      return align(ca1,ca2,params);
    }
 
 
 
    @Override
-   public AFPChain align(Atom[] ca1, Atom[] ca2, Object params)
+   public AFPChain align(Atom[] ca1, Atom[] ca2, Object parameters)
    throws StructureException {
-      AFPChain afpChain = new AFPChain();
+      
 
+      if ( ! (parameters instanceof SmithWaterman3DParameters))
+         throw new IllegalArgumentException("provided parameter object is not of type SmithWaterman3DParameters");
+      
+      params = (SmithWaterman3DParameters) parameters;
+      AFPChain afpChain = new AFPChain();
 
       try {
          // covert input to sequences
@@ -96,11 +107,12 @@ public class SmithWaterman3Daligner extends AbstractStructureAlignment implement
          // Perform a local alginment from the sequences with Smith-Waterman. 
          // Firstly, define the expenses (penalties) for every single operation.
          SmithWaterman aligner = new SmithWaterman(
-               (short) -1,     // match
-               (short) 3,      // replace 
-               (short) 2,      // insert
-               (short) 2,      // delete
-               (short) 1,      // gapExtend
+               params.getMatch(),
+               params.getReplace(),
+               params.getInsert(),
+               params.getDelete(),
+               params.getGapExtend(),
+               
                matrix  // SubstitutionMatrix
          );
 
@@ -346,7 +358,7 @@ public class SmithWaterman3Daligner extends AbstractStructureAlignment implement
    @Override
    public ConfigStrucAligParams getParameters() {
       // TODO Auto-generated method stub
-      return null;
+      return params;
    }
 
    @Override
@@ -356,8 +368,9 @@ public class SmithWaterman3Daligner extends AbstractStructureAlignment implement
 
    @Override
    public void setParameters(ConfigStrucAligParams parameters) {
-      // no parameters as of yet.
-
+    if ( ! (parameters instanceof SmithWaterman3DParameters))
+       throw new IllegalArgumentException("provided parameter object is not of type SmithWaterman3DParameters");
+    params = (SmithWaterman3DParameters)parameters;
    }
 
 
