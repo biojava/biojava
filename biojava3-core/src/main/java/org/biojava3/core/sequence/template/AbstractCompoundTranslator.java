@@ -2,26 +2,26 @@ package org.biojava3.core.sequence.template;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.biojava3.core.exceptions.TranslationException;
 import org.biojava3.core.sequence.io.template.SequenceCreatorInterface;
 
-import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.ListMultimap;
 
 public abstract class AbstractCompoundTranslator<F extends Compound, T extends Compound>
     implements CompoundTranslator<F, T> {
 
   private final SequenceCreatorInterface<T> creator;
-  private final ListMultimap<F, T>          mapper;
+  private final Map<F, List<T>>          mapper;
   private final CompoundSet<F>              fromCompoundSet;
   private final CompoundSet<T>              toCompoundSet;
 
   public AbstractCompoundTranslator(SequenceCreatorInterface<T> creator,
       CompoundSet<F> fromCompoundSet, CompoundSet<T> toCompoundSet) {
     this.creator = creator;
-    this.mapper = ArrayListMultimap.create();
+    this.mapper = new HashMap<F, List<T>>();
     this.fromCompoundSet = fromCompoundSet;
     this.toCompoundSet = toCompoundSet;
   }
@@ -47,8 +47,15 @@ public abstract class AbstractCompoundTranslator<F extends Compound, T extends C
   }
 
   protected void addCompounds(F source, T... targets) {
+	  
+	 List<T> l = mapper.get(source);
+	 if ( l == null) {
+		 l = new ArrayList<T>();
+		 mapper.put(source, l);
+	 }
+	  
     for (T t : targets) {
-      mapper.put(source, t);
+      l.add( t);
     }
   }
 

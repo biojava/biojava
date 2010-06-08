@@ -2,15 +2,15 @@ package org.biojava3.core.sequence.template;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
 
 import org.biojava3.core.sequence.compound.NucleotideCompound;
 
-import com.google.common.collect.HashMultimap;
-import com.google.common.collect.SetMultimap;
 
 /**
  *
@@ -52,8 +52,7 @@ public abstract class AbstractNucleotideCompoundSet<C extends NucleotideCompound
    */
   @SuppressWarnings("unchecked")
   protected void calculateIndirectAmbiguities() {
-    SetMultimap<NucleotideCompound, NucleotideCompound> equivalentsMap =
-      HashMultimap.create();
+    Map<NucleotideCompound, List<NucleotideCompound>> equivalentsMap = new HashMap<NucleotideCompound, List<NucleotideCompound>>();
 
     List<NucleotideCompound> ambiguousCompounds = new ArrayList<NucleotideCompound>();
     for(NucleotideCompound compound: getAllCompounds()) {
@@ -71,29 +70,51 @@ public abstract class AbstractNucleotideCompoundSet<C extends NucleotideCompound
           NucleotideCompound lcSourceCompound = toLowerCase(sourceCompound);
           NucleotideCompound lcTargetCompound = toLowerCase(targetCompound);
 
-          equivalentsMap.put(sourceCompound, targetCompound);
-          equivalentsMap.put(sourceCompound, lcTargetCompound);
-
-          equivalentsMap.put(targetCompound, sourceCompound);
-          equivalentsMap.put(lcTargetCompound, sourceCompound);
-
-          equivalentsMap.put(lcSourceCompound, targetCompound);
-          equivalentsMap.put(lcSourceCompound, lcTargetCompound);
+        //equivalentsMap.put(sourceCompound, targetCompound);
+    	//      equivalentsMap.put(sourceCompound, lcTargetCompound);
+	        
+          
+          checkAdd(equivalentsMap, sourceCompound, targetCompound);
+          checkAdd(equivalentsMap, sourceCompound, lcTargetCompound);
+        
+          checkAdd(equivalentsMap,targetCompound,sourceCompound);
+          checkAdd(equivalentsMap, lcTargetCompound, sourceCompound);
+          
+          checkAdd(equivalentsMap, lcSourceCompound, targetCompound);
+          checkAdd(equivalentsMap, lcSourceCompound, lcTargetCompound);
+                    
         }
       }
     }
 
     //And once it's all done start adding them to the equivalents map
-    for(Entry<NucleotideCompound, Collection<NucleotideCompound>> entry: equivalentsMap.asMap().entrySet()) {
-      for(NucleotideCompound target: entry.getValue()) {
-        //Just to keep it happy
-        addEquivalent((C)entry.getKey(), (C)target);
-        addEquivalent((C)target, (C)entry.getKey());
-      }
+    
+    for ( NucleotideCompound key: equivalentsMap.keySet()){
+    	List<NucleotideCompound> vals = equivalentsMap.get(key);
+    	for (NucleotideCompound value: vals){
+    		addEquivalent((C)key,(C)value);
+    		addEquivalent((C)value,(C)key);
+    	}
     }
   }
 
-  private NucleotideCompound toLowerCase(NucleotideCompound compound) {
+  private void checkAdd(
+		Map<NucleotideCompound, List<NucleotideCompound>> equivalentsMap,
+		NucleotideCompound key,
+		NucleotideCompound value) {
+
+	  
+      List<NucleotideCompound> listS = equivalentsMap.get(key);
+      if ( listS == null){
+    	  listS = new ArrayList<NucleotideCompound>();
+    	  equivalentsMap.put(key, listS);
+      }
+      listS.add(value);
+      
+	
+}
+
+private NucleotideCompound toLowerCase(NucleotideCompound compound) {
     return getCompoundForString(compound.getBase().toLowerCase());
   }
 
