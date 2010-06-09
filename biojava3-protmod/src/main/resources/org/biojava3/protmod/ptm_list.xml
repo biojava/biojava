@@ -25,7 +25,7 @@
 			</Component>
 			<Bond>
 				<Atom component="1">OG</Atom>
-				<Atom component="2">O1</Atom>
+				<Atom component="2">C1</Atom>
 			</Bond>
 		</Condition>
 		<Occurrence>Natural</Occurrence>
@@ -55,7 +55,7 @@
 			</Component>
 			<Bond>
 				<Atom component="1">ND2</Atom>
-				<Atom component="2">O1</Atom>
+				<Atom component="2">C1</Atom>
 			</Bond>
 		</Condition>
 		<Occurrence>Natural</Occurrence>
