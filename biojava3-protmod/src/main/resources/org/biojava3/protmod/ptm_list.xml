@@ -671,4 +671,314 @@
 		<Occurrence>Natural</Occurrence>
 		<Category>ModifiedResidue</Category>
 	</Entry>
+	<Entry>
+		<Id>0023</Id>
+		<Description>A protein modification that effectively converts a source amino acid residue to an L-selenocysteine, a natural pretranslational modification.</Description>
+		<SystematicName>(R)-2-amino-3-selanylpropanoic acid</SystematicName>
+		<CrossReference>
+			<Source>PDBCC</Source>
+			<Id>CSE</Id>
+			<Name>SELENOCYSTEINE</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0022</Id>
+			<Name>L-selenocysteine</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00031</Id>
+			<Name>L-selenocysteine residue</Name>
+		</CrossReference>
+		<Formula>C 6 H 10 N 1 O 2 S 1</Formula>
+		<Condition>
+			<Component type="AminoAcid" label="1">
+				<Id source="PDBCC">CSE</Id>
+			</Component>
+		</Condition>
+		<Occurrence>Natural</Occurrence>
+		<Category>ModifiedResidue</Category>
+	</Entry>
+	<Entry>
+		<Id>0024</Id>
+		<Description>A protein modification that effectively converts an L-asparagine residue to (2S,3R)-3-hydroxyasparagine.</Description>
+		<SystematicName>(2S,3R)-2-amino-3-hydroxy-4-butanediamic acid</SystematicName>
+		<CrossReference>
+			<Source>PDBCC</Source>
+			<Id>AHB</Id>
+			<Name>BETA-HYDROXYASPARAGINE</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0026</Id>
+			<Name>(2S,3R)-3-hydroxyasparagine</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00035</Id>
+			<Name>(2S,3R)-3-hydroxyasparagine</Name>
+		</CrossReference>
+		<Formula>C 4 H 6 N 2 O 3</Formula>
+		<Condition>
+			<Component type="AminoAcid" label="1">
+				<Id source="PDBCC">AHB</Id>
+			</Component>
+		</Condition>
+		<Occurrence>Natural</Occurrence>
+		<Category>ModifiedResidue</Category>
+	</Entry>
+	<Entry>
+		<Id>0025</Id>
+		<Description>A protein modification that effectively converts an L-aspartic acid residue to (2S,3R)-3-hydroxyaspartic acid.</Description>
+		<SystematicName>(2S,3R)-2-amino-3-hydroxybutanedioic acid</SystematicName>
+		<CrossReference>
+			<Source>PDBCC</Source>
+			<Id>BHD</Id>
+			<Name>BETA-HYDROXYASPARTIC ACID</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0027</Id>
+			<Name>(2S,3R)-3-hydroxyaspartic acid</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00036</Id>
+			<Name>(2S,3R)-3-hydroxyaspartic acid</Name>
+		</CrossReference>
+		<Formula>C 4 H 5 N 1 O 4</Formula>
+		<Condition>
+			<Component type="AminoAcid" label="1">
+				<Id source="PDBCC">BHD</Id>
+			</Component>
+		</Condition>
+		<Occurrence>Natural</Occurrence>
+		<Category>ModifiedResidue</Category>
+	</Entry>
+	<Entry>
+		<Id>0026</Id>
+		<Description>A protein modification that effectively converts an L-lysine residue to 5-hydroxy-L-lysine.</Description>
+		<SystematicName>(2S,5R)-2,6-diamino-5-hydroxyhexanoic acid</SystematicName>
+		<CrossReference>
+			<Source>PDBCC</Source>
+			<Id>LYZ</Id>
+			<Name>5-HYDROXYLYSINE</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0028</Id>
+			<Name>5-hydroxy-L-lysine</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00037</Id>
+			<Name>5-hydroxy-L-lysine</Name>
+		</CrossReference>
+		<Formula>C 6 H 12 N 2 O 2</Formula>
+		<Condition>
+			<Component type="AminoAcid" label="1">
+				<Id source="PDBCC">LYZ</Id>
+			</Component>
+		</Condition>
+		<Occurrence>Natural</Occurrence>
+		<Category>ModifiedResidue</Category>
+	</Entry>
+	<Entry>
+		<Id>0027</Id>
+		<Description>A protein modification that effectively converts an L-proline residue to 3-hydroxy-L-proline.</Description>
+		<SystematicName>(2S,3S)-3-hydroxypyrrolidine-2-carboxylic acid</SystematicName>
+		<CrossReference>
+			<Source>PDBCC</Source>
+			<Id>HY3</Id>
+			<Name>3-HYDROXYPROLINE</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0029</Id>
+			<Name>3-hydroxy-L-proline</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00038</Id>
+			<Name>3-hydroxy-L-proline</Name>
+		</CrossReference>
+		<Formula>C 5 H 7 N 1 O 2</Formula>
+		<Condition>
+			<Component type="AminoAcid" label="1">
+				<Id source="PDBCC">HY3</Id>
+			</Component>
+		</Condition>
+		<Occurrence>Natural</Occurrence>
+		<Category>ModifiedResidue</Category>
+	</Entry>
+	<Entry>
+		<Id>0028</Id>
+		<Description>A protein modification that effectively converts an L-glutamine residue to 2-pyrrolidone-5-carboxylic acid.</Description>
+		<SystematicName>(S)-5-oxo-2-pyrrolidinecarboxylic acid</SystematicName>
+		<CrossReference>
+			<Source>PDBCC</Source>
+			<Id>PCA</Id>
+			<Name>PYROGLUTAMIC ACID</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0031</Id>
+			<Name>2-pyrrolidone-5-carboxylic acid</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00040</Id>
+			<Name>2-pyrrolidone-5-carboxylic acid (Gln)</Name>
+		</CrossReference>
+		<Formula>C 5 H 6 N 1 O 2</Formula>
+		<Condition>
+			<Component type="AminoAcid" label="1">
+				<Id source="PDBCC">PCA</Id>
+			</Component>
+		</Condition>
+		<Occurrence>Natural</Occurrence>
+		<Category>ModifiedResidue</Category>
+	</Entry>
+	<Entry>
+		<Id>0029</Id>
+		<Description>A protein modification that effectively converts an L-glutamic acid residue to L-gamma-carboxyglutamic acid.</Description>
+		<SystematicName>(S)-3-amino-1,1,3-propanetricarboxylic acid</SystematicName>
+		<CrossReference>
+			<Source>PDBCC</Source>
+			<Id>CGU</Id>
+			<Name>GAMMA-CARBOXY-GLUTAMIC ACID</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0032</Id>
+			<Name>L-gamma-carboxyglutamic acid</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00041</Id>
+			<Name>L-gamma-carboxyglutamic acid</Name>
+		</CrossReference>
+		<Formula>C 6 H 7 N 1 O 5</Formula>
+		<Condition>
+			<Component type="AminoAcid" label="1">
+				<Id source="PDBCC">CGU</Id>
+			</Component>
+		</Condition>
+		<Occurrence>Natural</Occurrence>
+		<Category>ModifiedResidue</Category>
+	</Entry>
+	<Entry>
+		<Id>0030</Id>
+		<Description>A protein modification that effectively converts an L-aspartic acid residue to L-aspartic 4-phosphoric anhydride.</Description>
+		<SystematicName>(2S)-2-amino-4-oxo-4-(phosphonooxy)butanoic acid</SystematicName>
+		<CrossReference>
+			<Source>PDBCC</Source>
+			<Id>PHD</Id>
+			<Name>ASPARTYL PHOSPHATE</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0033</Id>
+			<Name>L-aspartic 4-phosphoric anhydride</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00042</Id>
+			<Name>L-aspartic 4-phosphoric anhydride</Name>
+		</CrossReference>
+		<Formula>C 4 H 6 N 1 O 6 P 1</Formula>
+		<Condition>
+			<Component type="AminoAcid" label="1">
+				<Id source="PDBCC">PHD</Id>
+			</Component>
+		</Condition>
+		<Occurrence>Natural</Occurrence>
+		<Category>ModifiedResidue</Category>
+	</Entry>
+	<Entry>
+		<Id>0031</Id>
+		<Description>A protein modification that effectively converts an L-histidine residue to diphthamide.</Description>
+		<SystematicName>(2R)-1-amino-4-(4-[(2S)-2-amino-2-carboxyethyl]-1H-imidazol-2-yl)-N,N,N-trimethyl-1-oxobutan-2-aminium</SystematicName>
+		<CrossReference>
+			<Source>PDBCC</Source>
+			<Id>DDE</Id>
+			<Name>{3-[4-(2-AMINO-2-CARBOXY-ETHYL)-1H-IMIDAZOL-2-YL]-1-CARBAMOYL-PROPYL}-TRIMETHYL-AMMONIUM</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0040</Id>
+			<Name>2'-[3-carboxamido-3-(trimethylammonio)propyl]-L-histidine</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00049</Id>
+			<Name>2'-[3-carboxamido-3-(trimethylammonio)propyl]-L-histidine</Name>
+		</CrossReference>
+		<Formula>C 13 H 22 N 5 O 2</Formula>
+		<Condition>
+			<Component type="AminoAcid" label="1">
+				<Id source="PDBCC">DDE</Id>
+			</Component>
+		</Condition>
+		<Occurrence>Natural</Occurrence>
+		<Category>ModifiedResidue</Category>
+	</Entry>
+	<Entry>
+		<Id>0032</Id>
+		<Description>A protein modification that effectively converts an L-cysteine residue to S-acetyl-L-cysteine.</Description>
+		<SystematicName>(R)-2-amino-3-(acetylsulfanyl)propanoic acid</SystematicName>
+		<CrossReference>
+			<Source>PDBCC</Source>
+			<Id>SCY</Id>
+			<Name>S-ACETYL-CYSTEINE</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0056</Id>
+			<Name>S-acetyl-L-cysteine</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00065</Id>
+			<Name>S-acetyl-L-cysteine</Name>
+		</CrossReference>
+		<Formula>C 5 H 7 N 1 O 2 S 1</Formula>
+		<Condition>
+			<Component type="AminoAcid" label="1">
+				<Id source="PDBCC">SCY</Id>
+			</Component>
+		</Condition>
+		<Occurrence>Natural</Occurrence>
+		<Category>ModifiedResidue</Category>
+	</Entry>
+	<Entry>
+		<Id>0033</Id>
+		<Description>A protein modification that effectively converts a glycine residue to N-myristoylglycine.</Description>
+		<SystematicName>(tetradecanoylamino)ethanoic acid</SystematicName>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0059</Id>
+			<Name>N-myristoyl-glycine</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00068</Id>
+			<Name>N-myristoylglycine</Name>
+		</CrossReference>
+		<Formula>C 16 H 30 N 1 O 2</Formula>
+		<Condition>
+			<Component type="AminoAcid" label="1">
+				<Id source="PDBCC">GLY</Id>
+			</Component>
+			<Component type="Ligand" label="2">
+				<Id source="PDBCC">MYR</Id>
+			</Component>
+			<Bond>
+				<Atom component="1">N</Atom>
+				<Atom component="2">C1</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>Natural</Occurrence>
+		<Category>Attachment</Category>
+	</Entry>
 </ProteinModifications>

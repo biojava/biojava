@@ -56,13 +56,103 @@ public class ModifiedResidueParserTest extends TestCase {
 		String name;
 		URL url;
 		
-		name = "3MVJ"; // SEP (phosphoserine) and TPO (phosphothreonine)
-		System.out.println(name);
-		url = new URL(server+name+".pdb");
-		assertNotNull(url);
-		parserTest(url);		
-		
-		name = "1KZU"; // FME
+//		name = "3MVJ"; // SEP and TPO
+//		System.out.println(name);
+//		url = new URL(server+name+".pdb");
+//		assertNotNull(url);
+//		parserTest(url);		
+//		
+//		name = "1KZU"; // FME
+//		System.out.println(name);
+//		url = new URL(server+name+".pdb");
+//		assertNotNull(url);
+//		parserTest(url);
+//		
+//		name = "1AA6"; // CSE
+//		System.out.println(name);
+//		url = new URL(server+name+".pdb");
+//		assertNotNull(url);
+//		parserTest(url);
+//		
+//		name = "1NT0"; // AHB
+//		System.out.println(name);
+//		url = new URL(server+name+".pdb");
+//		assertNotNull(url);
+//		parserTest(url);
+//		
+//		name = "1ERM"; // BHD
+//		System.out.println(name);
+//		url = new URL(server+name+".pdb");
+//		assertNotNull(url);
+//		parserTest(url);
+//		
+//		name = "1QGW"; // LYZ
+//		System.out.println(name);
+//		url = new URL(server+name+".pdb");
+//		assertNotNull(url);
+//		parserTest(url);
+//		
+//		name = "2G66"; // HY3 and HYP
+//		System.out.println(name);
+//		url = new URL(server+name+".pdb");
+//		assertNotNull(url);
+//		parserTest(url);
+//		
+//		name = "1A39"; // PCA
+//		System.out.println(name);
+//		url = new URL(server+name+".pdb");
+//		assertNotNull(url);
+//		parserTest(url);
+//		
+//		name = "1AG7"; // CUG, HYP
+//		System.out.println(name);
+//		url = new URL(server+name+".pdb");
+//		assertNotNull(url);
+//		parserTest(url);
+//		
+//		name = "1D5W"; // PHD
+//		System.out.println(name);
+//		url = new URL(server+name+".pdb");
+//		assertNotNull(url);
+//		parserTest(url);
+//		
+//		name = "1H9C"; // CSP
+//		System.out.println(name);
+//		url = new URL(server+name+".pdb");
+//		assertNotNull(url);
+//		parserTest(url);
+//
+//		name = "1EUD"; // NEP
+//		System.out.println(name);
+//		url = new URL(server+name+".pdb");
+//		assertNotNull(url);
+//		parserTest(url);
+//
+//		name = "1NSQ"; // HIP
+//		System.out.println(name);
+//		url = new URL(server+name+".pdb");
+//		assertNotNull(url);
+//		parserTest(url);
+//
+//		name = "3LXN"; // PTR
+//		System.out.println(name);
+//		url = new URL(server+name+".pdb");
+//		assertNotNull(url);
+//		parserTest(url);
+//
+//		name = "1ZM2"; // DDE
+//		System.out.println(name);
+//		url = new URL(server+name+".pdb");
+//		assertNotNull(url);
+//		parserTest(url);
+//
+//		name = "1E0Z"; // ALY
+//		System.out.println(name);
+//		url = new URL(server+name+".pdb");
+//		assertNotNull(url);
+//		parserTest(url);
+
+		name = "1DM3"; // SCY
 		System.out.println(name);
 		url = new URL(server+name+".pdb");
 		assertNotNull(url);
@@ -83,6 +173,8 @@ public class ModifiedResidueParserTest extends TestCase {
 			List<ModifiedCompound> residues = parser.parse(struc, 
 					ProteinModification.getByCategory(ModificationCategory.CHEMICAL_MODIFICATION),
 					modelnr);
+			
+			System.out.println("Model #"+(modelnr+1));
 			
 			int i=0;
 			for (ModifiedCompound residue : residues) {

@@ -58,17 +58,23 @@ public class AttachmentParserTest extends TestCase {
 		URL url;
 		String name;
 		
-		name = "3HN3";	
+//		name = "3HN3"; // NAG
+//		System.out.println(name);
+//		url = new URL(server+name+".pdb");
+//		assertNotNull(url);
+//		parserTest(url);
+//		
+//		name = "1CPO"; // XYS
+//		System.out.println(name);
+//		url = new URL(server+name+".pdb");
+//		assertNotNull(url);
+//		parserTest(url);
+		
+		name = "1AL2"; // MYR
 		System.out.println(name);
 		url = new URL(server+name+".pdb");
 		assertNotNull(url);
 		parserTest(url);
-		
-		name = "1CPO";	
-		System.out.println(name);
-		url = new URL(server+name+".pdb");
-		assertNotNull(url);
-		parserTest(url);	
 		
 		System.out.println("===End testing on ModifiedResidueParser");
 	}
