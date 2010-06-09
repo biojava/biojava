@@ -642,4 +642,33 @@
 		<Occurrence>Natural</Occurrence>
 		<Category>CrossLink4</Category>
 	</Entry>
+	<Entry>
+		<Id>0022</Id>
+		<Description>A protein modification that effectively converts a source amino acid residue to an N-formyl-L-methionine, a natural pretranslational modification.</Description>
+		<SystematicName>(S)-2-formylamino-4-(methylsulfanyl)butanoic acid</SystematicName>
+		<CrossReference>
+			<Source>PDBCC</Source>
+			<Id>FME</Id>
+			<Name>N-FORMYLMETHIONINE</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0021</Id>
+			<Name>N-formyl-L-methionine</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00030</Id>
+			<Name>N-formyl-L-methionine</Name>
+		</CrossReference>
+		<Formula>C 6 H 10 N 1 O 2 S 1</Formula>
+		<Condition>
+			<Component type="AminoAcid" label="1">
+				<Id source="PDBCC">FME</Id>
+				<Terminal>N</Terminal>
+			</Component>
+		</Condition>
+		<Occurrence>Natural</Occurrence>
+		<Category>ModifiedResidue</Category>
+	</Entry>
 </ProteinModifications>

@@ -53,10 +53,18 @@ public class ModifiedResidueParserTest extends TestCase {
 		
 		//URL url = ModifiedResidueParserTest.class.getResource("3MVJ.pdb");
 		String server = "http://www.pdb.org/pdb/files/";
+		String name;
+		URL url;
 		
-		String name = "3MVJ";
+		name = "3MVJ"; // SEP (phosphoserine) and TPO (phosphothreonine)
 		System.out.println(name);
-		URL url = new URL(server+name+".pdb");
+		url = new URL(server+name+".pdb");
+		assertNotNull(url);
+		parserTest(url);		
+		
+		name = "1KZU"; // FME
+		System.out.println(name);
+		url = new URL(server+name+".pdb");
 		assertNotNull(url);
 		parserTest(url);
 		

@@ -100,8 +100,8 @@ public class ModifiedResidueParser implements ProteinModificationParser {
 				Component comp = condition.getComponents().get(0);
 				
 				// TODO: is this the correct way to determine N/C-terminal?
-				if ((comp.isNTerminal() && iRes==0) ||           // N-terminal
-						(comp.isCTerminal() && iRes==sizeRes-1)) {    // C-terminal
+				if ((comp.isNTerminal() && iRes!=0) ||           // N-terminal
+						(comp.isCTerminal() && iRes!=sizeRes-1)) {    // C-terminal
 					continue;
 				}
 				
