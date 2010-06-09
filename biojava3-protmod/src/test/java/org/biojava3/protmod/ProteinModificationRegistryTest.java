@@ -81,12 +81,7 @@ public class ProteinModificationRegistryTest extends TestCase {
 		printModification(mod);
 
 		System.out.println("getByComponent");
-		mods = ProteinModification.getByComponent(Component.of("ACE"));
-		assertNotNull(mods);
-		printModifications(mods);
-
-		System.out.println("getByComponent");
-		mods = ProteinModification.getByComponent(Component.of("ACE"), Component.of("MET",true,false));
+		mods = ProteinModification.getByComponent(Component.of("NAG"));
 		assertNotNull(mods);
 		printModifications(mods);
 

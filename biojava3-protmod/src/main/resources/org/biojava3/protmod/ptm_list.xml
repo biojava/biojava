@@ -229,7 +229,7 @@
 		<Occurrence>Natural</Occurrence>
 		<Category>ModifiedResidue</Category>
 	</Entry>
-	<Entry>
+	<!--Entry>
 		<Id>0009</Id>
 		<Description>A protein modification that effectively converts an L-glutamine residue to N-acetyl-L-glutamine.</Description>
 		<SystematicName>(S)-2-acetamido-5-pentanediamic acid</SystematicName>
@@ -291,7 +291,7 @@
 		</Condition>
 		<Occurrence>Natural</Occurrence>
 		<Category>Attachment</Category>
-	</Entry>
+	</Entry-->
 	<Entry>
 		<Id>0011</Id>
 		<Description>A protein modification that effectively converts an L-lysine residue to N6-acetyl-L-lysine.</Description>
