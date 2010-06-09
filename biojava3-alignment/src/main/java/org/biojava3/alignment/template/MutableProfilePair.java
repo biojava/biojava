@@ -26,13 +26,39 @@ package org.biojava3.alignment.template;
 import org.biojava3.core.sequence.template.Compound;
 import org.biojava3.core.sequence.template.Sequence;
 
+/**
+ * Defines a mutable (editable) data structure for a {@link ProfilePair}.
+ *
+ * @author Mark Chapman
+ * @param <S> each element of the alignment {@link Profile} is of type S
+ * @param <C> each element of an {@link AlignedSequence} is a {@link Compound} of type C
+ */
 public interface MutableProfilePair<S extends Sequence<C>, C extends Compound> extends MutableProfile<S, C>,
         ProfilePair<S, C> {
 
+    /**
+     * Sets both {@link Profile}s of the pair.
+     *
+     * @param query becomes the first {@link Profile} of the pair
+     * @param target becomes the second {@link Profile} of the pair
+     * @throws IllegalArgumentException if query and target are different lengths
+     */
     void setPair(Profile<S, C> query, Profile<S, C> target);
 
+    /**
+     * Sets the first {@link Profile} of the pair.
+     *
+     * @param query becomes the first {@link Profile} of the pair
+     * @throws IllegalArgumentException if (new) query and (old) target are different lengths
+     */
     void setQuery(Profile<S, C> query);
 
+    /**
+     * Sets the second {@link Profile} of the pair.
+     *
+     * @param target becomes the second {@link Profile} of the pair
+     * @throws IllegalArgumentException if (old) query and (new) target are different lengths
+     */
     void setTarget(Profile<S, C> target);
 
 }

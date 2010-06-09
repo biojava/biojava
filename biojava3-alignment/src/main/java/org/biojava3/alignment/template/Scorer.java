@@ -23,12 +23,33 @@
 
 package org.biojava3.alignment.template;
 
+/**
+ * Defines an algorithm which computes a score.
+ *
+ * @author Mark Chapman
+ */
 public interface Scorer {
 
+    /**
+     * Returns maximum possible score.
+     *
+     * @return maximum possible score
+     */
     int getMaxScore();
 
+    /**
+     * Returns minimum possible score.
+     *
+     * @return minimum possible score
+     */
     int getMinScore();
 
+    /**
+     * Returns score resulting from algorithm.  This should normalize between 0 and 1 by calculating
+     * ({@link #getScore()} - {@link #getMinScore()}) / ({@link #getMaxScore()} - {@link #getMinScore()}).
+     *
+     * @return score resulting from algorithm
+     */
     int getScore();
 
 }

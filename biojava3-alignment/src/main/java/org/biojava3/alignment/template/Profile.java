@@ -40,42 +40,170 @@ import org.biojava3.core.sequence.template.Sequence;
  */
 public interface Profile<S extends Sequence<C>, C extends Compound> extends Iterable<S> {
 
-    AlignedSequence<C> getAlignedSequence(int index);
+    /**
+     * Returns {@link AlignedSequence} at given index.
+     *
+     * @param listIndex index of sequence in profile
+     * @return desired sequence
+     * @throws IndexOutOfBoundsException if listIndex < 1 or listIndex > number of sequences
+     */
+    AlignedSequence<C> getAlignedSequence(int listIndex);
 
-    AlignedSequence<C> getAlignedSequence(S sequence); // will find either aligned or original sequences
+    /**
+     * Searches for the given {@link Sequence} within this alignment profile.  Returns the corresponding
+     * {@link AlignedSequence}.
+     *
+     * @param sequence an original {@link Sequence}
+     * @return the corresponding {@link AlignedSequence}
+     */
+    AlignedSequence<C> getAlignedSequence(S sequence);
 
+    /**
+     * Returns a {@link List} containing the individual {@link AlignedSequence}s of this alignment.
+     *
+     * @return list of aligned sequences
+     */
     List<AlignedSequence<C>> getAlignedSequences();
 
-    List<AlignedSequence<C>> getAlignedSequences(int... indices); // useful for views
+    /**
+     * Returns a {@link List} containing some of the individual {@link AlignedSequence}s of this alignment.
+     *
+     * @param listIndices indices of sequences in profile
+     * @return list of aligned sequences
+     */
+    List<AlignedSequence<C>> getAlignedSequences(int... listIndices);
 
-    List<AlignedSequence<C>> getAlignedSequences(S... sequences); // useful for views
+    /**
+     * Returns a {@link List} containing some of the individual {@link AlignedSequence}s of this alignment.
+     *
+     * @param sequences original {@link Sequence}s
+     * @return list of aligned sequences
+     */
+    List<AlignedSequence<C>> getAlignedSequences(S... sequences);
 
-    C getCompoundAt(int index, int alignmentIndex);
+    /**
+     * Returns the {@link Compound} at row of given sequence and column of alignment index.  If the given sequence has
+     * overlap, this will return the {@link Compound} from the top row of the sequence.
+     *
+     * @param listIndex index of sequence in profile
+     * @param alignmentIndex index within an alignment
+     * @return the sequence element
+     * @throws IndexOutOfBoundsException if listIndex < 1, listIndex > number of sequences, alignmentIndex < 1, or
+     *     alignmentIndex > {@link #getLength()}
+     */
+    C getCompoundAt(int listIndex, int alignmentIndex);
 
-    C getCompoundAt(S sequence, int alignmentIndex); // will find either aligned or original sequences
+    /**
+     * Returns the {@link Compound} at row of given sequence and column of alignment index.  If the given sequence has
+     * overlap, this will return the {@link Compound} from the top row of the sequence.
+     *
+     * @param sequence either an {@link AlignedSequence} or an original {@link Sequence}
+     * @param alignmentIndex index within an alignment
+     * @return the sequence element
+     * @throws IndexOutOfBoundsException if alignmentIndex < 1 or alignmentIndex > {@link #getLength()}
+     */
+    C getCompoundAt(S sequence, int alignmentIndex);
 
-    List<C> getCompoundsAt(int alignmentIndex); // useful for views
+    /**
+     * Returns the {@link Compound} elements of the original {@link Sequence}s at the given index within an alignment.
+     *
+     * @param alignmentIndex index within an alignment
+     * @return the sequence elements
+     * @throws IndexOutOfBoundsException if alignmentIndex < 1 or alignmentIndex > {@link #getLength()}
+     */
+    List<C> getCompoundsAt(int alignmentIndex);
 
+    /**
+     * Returns {@link CompoundSet} of all {@link AlignedSequence}s
+     *
+     * @return set of {@link Compound}s in contained sequences
+     */
     CompoundSet<C> getCompoundSet();
 
-    int[] getIndicesAt(int alignmentIndex); // useful for views
+    /**
+     * Returns the indices in the original {@link Sequence}s corresponding to the given index within an alignment.  All
+     * indices are 1-indexed and inclusive.
+     *
+     * @param alignmentIndex index within an alignment
+     * @return the sequence indices
+     * @throws IndexOutOfBoundsException if alignmentIndex < 1 or alignmentIndex > {@link #getLength()}
+     */
+    int[] getIndicesAt(int alignmentIndex);
 
+    /**
+     * Searches for the given {@link Compound} within this alignment profile.  Returns column index nearest to the
+     * start of the alignment profile, or -1 if not found.
+     *
+     * @param compound search element
+     * @return index of column containing search element nearest to the start of the alignment profile
+     */
     int getIndexOf(C compound);
 
+    /**
+     * Searches for the given {@link Compound} within this alignment profile.  Returns column index nearest to the end
+     * of the alignment profile, or -1 if not found.
+     *
+     * @param compound search element
+     * @return index of column containing search element nearest to the end of the alignment profile
+     */
     int getLastIndexOf(C compound);
 
-    int getLength(); // number of columns
+    /**
+     * Returns the number of columns in the alignment profile.
+     *
+     * @return the number of columns
+     */
+    int getLength();
 
+    /**
+     * Returns a {@link List} containing the original {@link Sequence}s used for alignment.
+     *
+     * @return list of original sequences
+     */
     List<S> getOriginalSequences();
 
-    int getSize(); // number of rows ... if !isCircular() ? == number of sequences : >= number of sequences
+    /**
+     * Returns the number of rows in this profile.  If any {@link AlignedSequence}s are circular and overlap within the
+     * alignment, the returned size will be greater than the number of sequences, otherwise the numbers will be equal.
+     *
+     * @return number of rows
+     */
+    int getSize();
 
-    ProfileView<S, C> getSubProfile(Location location); // only include sequences that overlap Location
+    /**
+     * Returns a {@link ProfileView} windowed to contain only the given {@link Location}.  This only includes the
+     * {@link AlignedSequence}s which overlap the location.
+     *
+     * @param location portion of profile to view
+     * @return a windowed view of the profile
+     * @throws IllegalArgumentException if location is invalid
+     */
+    ProfileView<S, C> getSubProfile(Location location);
 
-    boolean isCircular(); // if so, sequences longer than length() return multiple compounds at any location
+    /**
+     * Returns true if any {@link AlignedSequence} is circular.  If so, sequences may simply wrap around from the end
+     * to the start of the alignment or they may contribute multiple overlapping lines to the profile.
+     *
+     * @return true if any {@link AlignedSequence} is circular
+     */
+    boolean isCircular();
 
-    String toString(); // simple view: each sequence on 1 line
+    /**
+     * Returns a simple view of the alignment profile.  This shows each sequence on a separate line (or multiple lines,
+     * if circular) and nothing more.  This should result in {@link #getSize()} lines with {@link #getLength()}
+     * {@link Compound}s per line.
+     *
+     * @return a simple view of the alignment profile
+     */
+    String toString();
 
-    String toString(int width); // formatted view: show start and end indices of profile and sequences, limited line length
+    /**
+     * Returns a formatted view of the alignment profile.  This shows the start and end indices of the profile and each
+     * sequence for each group of lines of the given width.  Each line may also be labeled.
+     *
+     * @param width limit on the line length
+     * @return a formatted view of the alignment profile
+     */
+    String toString(int width);
 
 }

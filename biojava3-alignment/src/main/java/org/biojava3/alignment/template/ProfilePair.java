@@ -26,10 +26,27 @@ package org.biojava3.alignment.template;
 import org.biojava3.core.sequence.template.Compound;
 import org.biojava3.core.sequence.template.Sequence;
 
+/**
+ * Defines a data structure for the results of the alignment of a pair of {@link Profile}s.
+ *
+ * @author Mark Chapman
+ * @param <S> each element of an alignment {@link Profile} is of type S
+ * @param <C> each element of an {@link AlignedSequence} is a {@link Compound} of type C
+ */
 public interface ProfilePair<S extends Sequence<C>, C extends Compound> extends Profile<S, C> {
 
+    /**
+     * Returns the first {@link Profile} of the pair.
+     *
+     * @return the first {@link Profile} of the pair
+     */
     Profile<S, C> getQuery();
 
+    /**
+     * Returns the second {@link Profile} of the pair.
+     *
+     * @return the second {@link Profile} of the pair
+     */
     Profile<S, C> getTarget();
 
 }

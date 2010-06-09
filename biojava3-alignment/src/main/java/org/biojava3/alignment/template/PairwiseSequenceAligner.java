@@ -26,6 +26,13 @@ package org.biojava3.alignment.template;
 import org.biojava3.core.sequence.template.Compound;
 import org.biojava3.core.sequence.template.Sequence;
 
+/**
+ * Defines an {@link Aligner} for a pair of {@link Sequence}s.
+ *
+ * @author Mark Chapman
+ * @param <S> each {@link Sequence} of the alignment pair is of type S
+ * @param <C> each element of an {@link AlignedSequence} is a {@link Compound} of type C
+ */
 public interface PairwiseSequenceAligner<S extends Sequence<C>, C extends Compound> extends MatrixAligner<S, C>,
         PairwiseSequenceScorer<S, C> {
 

@@ -26,11 +26,29 @@ package org.biojava3.alignment.template;
 import org.biojava3.core.sequence.template.Compound;
 import org.biojava3.core.sequence.template.Sequence;
 
+/**
+ * Defines an algorithm which computes a new alignment {@link Profile} by rescoring all pairs in an alignment and
+ * realigning.
+ *
+ * @author Mark Chapman
+ * @param <S> each element of the alignment {@link Profile} is of type S
+ * @param <C> each element of an {@link AlignedSequence} is a {@link Compound} of type C
+ */
 public interface RescoreRefiner<S extends Sequence<C>, C extends Compound> extends Aligner<S, C>,
         ProfileProfileScorer<S, C> {
 
+    /**
+     * Returns class type of pairwise scoring subroutine.
+     *
+     * @return class type of pairwise scoring subroutine
+     */
     Class<? extends PairInProfileScorer<S, C>> getPairInProfileScorer();
 
+    /**
+     * Returns class type of profile-profile alignment subroutine.
+     *
+     * @return class type of profile-profile alignment subroutine
+     */
     Class<? extends ProfileProfileAligner<S, C>> getProfileProfileAligner();
 
 }

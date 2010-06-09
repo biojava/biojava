@@ -26,8 +26,20 @@ package org.biojava3.alignment.template;
 import org.biojava3.core.sequence.template.Compound;
 import org.biojava3.core.sequence.template.Sequence;
 
+/**
+ * Defines an algorithm which computes a score for a sequence alignment pair.
+ *
+ * @author Mark Chapman
+ * @param <S> each {@link Sequence} of the alignment pair is of type S
+ * @param <C> each element of an {@link AlignedSequence} is a {@link Compound} of type C
+ */
 public interface PairwiseSequenceScorer<S extends Sequence<C>, C extends Compound> extends Scorer {
 
+    /**
+     * Returns pair for which score was calculated.
+     *
+     * @return sequence alignment pair
+     */
     SequencePair<S, C> getPair();
 
 }

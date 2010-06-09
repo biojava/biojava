@@ -28,10 +28,22 @@ import java.util.List;
 import org.biojava3.core.sequence.template.Compound;
 import org.biojava3.core.sequence.template.Sequence;
 
+/**
+ * Defines a mutable (editable) data structure for a {@link Profile}.  Returned {@link List}s are modifiable.
+ *
+ * @author Mark Chapman
+ * @param <S> each element of the alignment {@link Profile} is of type S
+ * @param <C> each element of an {@link AlignedSequence} is a {@link Compound} of type C
+ */
 public interface MutableProfile<S extends Sequence<C>, C extends Compound> extends Profile<S, C> {
 
-    // getAlignedSequences modifiable, full iterator with remove
-
+    /**
+     * Sets entirely new set of {@link AlignedSequences}.
+     *
+     * @param sequences new set of sequences
+     * @throws IllegalArgumentException if sequences have different lengths
+     */
     void setSequences(List<AlignedSequence<C>> sequences);
 
+    // TODO? - make compatible with core.sequence.MultipleSequenceAlignment
 }

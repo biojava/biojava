@@ -41,7 +41,7 @@ public interface AlignedSequence<C extends Compound> extends Sequence<C> {
      *
      * @param sequenceIndex index in the original {@link Sequence}
      * @return column index within an alignment
-     * @throws IndexOutOfBoundsException if sequenceIndex < 1 or sequenceIndex > getLength()
+     * @throws IndexOutOfBoundsException if sequenceIndex < 1 or sequenceIndex > {@link #getLength()}
      */
     int getAlignmentIndexAt(int sequenceIndex);
 
@@ -89,7 +89,7 @@ public interface AlignedSequence<C extends Compound> extends Sequence<C> {
      *
      * @param alignmentIndex index within an alignment
      * @return index in the original {@link Sequence}
-     * @throws IndexOutOfBoundsException if alignmentIndex < getStart() or alignmentIndex > getEnd()
+     * @throws IndexOutOfBoundsException if alignmentIndex < {@link #getStart()} or alignmentIndex > {@link #getEnd()}
      */
     int getSequenceIndexAt(int alignmentIndex);
 
