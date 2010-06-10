@@ -40,11 +40,11 @@ import org.biojava.bio.structure.GroupType;
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureException;
 
-import org.biojava3.protmod.AtomBond;
 import org.biojava3.protmod.Component;
 import org.biojava3.protmod.ComponentType;
 import org.biojava3.protmod.ModificationCategory;
 import org.biojava3.protmod.ModificationCondition;
+import org.biojava3.protmod.ModificationLinkage;
 import org.biojava3.protmod.ModifiedCompound;
 import org.biojava3.protmod.ModifiedCompoundFactory;
 import org.biojava3.protmod.ProteinModification;
@@ -147,7 +147,7 @@ public class AttachmentParser implements ProteinModificationParser {
 					Atom atomOnAttachedGroup = null;
 					
 					//* use atom specified by condition
-					AtomBond bond = condition.getBonds().get(0);
+					ModificationLinkage bond = condition.getBonds().get(0);
 					String nameOfAtomOnResidue = bond.getAtom1();
 					String nameOfAtomOnAttachedGroup = bond.getAtom2();
 					

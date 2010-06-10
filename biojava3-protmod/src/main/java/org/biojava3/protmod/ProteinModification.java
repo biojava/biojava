@@ -37,10 +37,17 @@ import java.util.Set;
 import org.biojava3.protmod.io.ProteinModificationXmlReader;
 
 /**
- * contains information about a certain ProteinModification.
- * The ProteinModification class uses the extensible enum pattern.
- * You can't instantiate ProteinModifications directly, instead 
- * you have to use one of the getBy... methods.
+ * This class contains information about a specific protein
+ * modification. By applying extensible enum pattern, this
+ * class also serves as a instance registry by maintaining 
+ * a pool of ProteinModification instances. You can't 
+ * instantiate ProteinModifications directly, instead you 
+ * have to use {@link register} to create and register a
+ * ProteinModification, and use one of the getBy... methods
+ * to retrieve a ProteinModification.
+ * 
+ * A list of common protein modifications were preloaded
+ * from an XML file.
  * 
  * @author Jianjiong Gao
  * @since 3.0

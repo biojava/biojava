@@ -36,13 +36,12 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.biojava3.protmod.AtomBond;
-import org.biojava3.protmod.AtomBondImpl;
 import org.biojava3.protmod.Component;
 import org.biojava3.protmod.ComponentType;
 import org.biojava3.protmod.ModificationCategory;
 import org.biojava3.protmod.ModificationCondition;
 import org.biojava3.protmod.ModificationConditionImpl;
+import org.biojava3.protmod.ModificationLinkage;
 import org.biojava3.protmod.ModificationOccurrenceType;
 import org.biojava3.protmod.ProteinModification;
 
@@ -273,11 +272,11 @@ public final class ProteinModificationXmlReader {
 				}
 				
 				// bonds
-				List<AtomBond> bonds = null;
+				List<ModificationLinkage> bonds = null;
 				List<Node> bondNodes = compInfoNodes.get("Bond");
 				if (bondNodes!=null) {
 					int sizeBonds = bondNodes.size();
-					bonds = new ArrayList<AtomBond>(sizeBonds);
+					bonds = new ArrayList<ModificationLinkage>(sizeBonds);
 					for (int iBond=0; iBond<sizeBonds; iBond++) {
 						Node bondNode = bondNodes.get(iBond);
 						Map<String,List<Node>> bondChildNodes = getChildNodes(bondNode);
@@ -314,7 +313,7 @@ public final class ProteinModificationXmlReader {
 						Component comp2 = mapLabelComp.get(labelComp2);
 						String atom2 = atomNodes.get(1).getTextContent();
 						
-						AtomBond bond = new AtomBondImpl(comp1, comp2, atom1, atom2);
+						ModificationLinkage bond = new ModificationLinkage(comp1, comp2, atom1, atom2);
 						bonds.add(bond);
 					}
 				}

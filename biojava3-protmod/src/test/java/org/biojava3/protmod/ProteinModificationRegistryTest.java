@@ -143,10 +143,10 @@ public class ProteinModificationRegistryTest extends TestCase {
 			System.out.print(str+";");
 		}
 		
-		List<AtomBond> bonds = condition.getBonds();
+		List<ModificationLinkage> bonds = condition.getBonds();
 		System.out.print("\t");
 		if (bonds!=null) {
-			for (AtomBond bond:bonds) {
+			for (ModificationLinkage bond:bonds) {
 				String str = bond.getComponent1().getPdbccId();
 				str += "("+bond.getAtom1()+")<=>";
 				str += bond.getComponent2().getPdbccId();

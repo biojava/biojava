@@ -35,7 +35,7 @@ import java.util.Set;
  */
 public class ModificationConditionImpl implements ModificationCondition {
 	private final List<Component> components;
-	private final List<AtomBond> bonds;
+	private final List<ModificationLinkage> bonds;
 	
 	/**
 	 * 
@@ -45,7 +45,7 @@ public class ModificationConditionImpl implements ModificationCondition {
 	 *  or bonds have component(s) that are not included. 
 	 */
 	public ModificationConditionImpl(final List<Component> components,
-			final List<AtomBond> bonds) {
+			final List<ModificationLinkage> bonds) {
 		
 		checkComponentsAndBondsProper(components, bonds);
 		
@@ -59,7 +59,7 @@ public class ModificationConditionImpl implements ModificationCondition {
 	 * @param bonds atom bonds.
 	 */
 	private void checkComponentsAndBondsProper(final List<Component> components,
-			final List<AtomBond> bonds) {
+			final List<ModificationLinkage> bonds) {
 		if (components==null||components.isEmpty()) {
 			throw new IllegalArgumentException("Null or empty components.");
 		}
@@ -70,7 +70,7 @@ public class ModificationConditionImpl implements ModificationCondition {
 		
 		Set<Component> set = new HashSet<Component>(components);
 		
-		for (AtomBond bond:bonds) {
+		for (ModificationLinkage bond:bonds) {
 			if (!set.contains(bond.getComponent1())
 					||!set.contains(bond.getComponent2())) {
 				throw new IllegalArgumentException("Atoms must be on the " +
@@ -93,7 +93,7 @@ public class ModificationConditionImpl implements ModificationCondition {
 	 * @return atom bonds between components.
 	 */
 	@Override
-	public List<AtomBond> getBonds() {
+	public List<ModificationLinkage> getBonds() {
 		return bonds;
 	}
 }

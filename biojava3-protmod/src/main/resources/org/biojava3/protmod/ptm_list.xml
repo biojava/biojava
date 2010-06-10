@@ -1517,7 +1517,7 @@
 			</Component>
 			<Bond>
 				<Atom component="1">SG</Atom>
-				<Atom component="2"></Atom>
+				<Atom component="2">C1</Atom>
 			</Bond>
 		</Condition>
 		<Occurrence>Natural</Occurrence>
