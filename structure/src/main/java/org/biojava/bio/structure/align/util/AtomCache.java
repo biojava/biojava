@@ -23,6 +23,7 @@ public class AtomCache {
 	boolean isSplit;
 	boolean autoFetch;
 	boolean loadChemCompInfo;
+	boolean alignSeqRes;
 	
 	// this is a static flag across all instances of AtomCaches, to make sure 
 	// only one file is accessed in the file system at a time.
@@ -43,6 +44,7 @@ public class AtomCache {
 		autoFetch = true;
 		loading.set(false);
 		loadChemCompInfo = false;
+		alignSeqRes = false;
 	}
 
 	public AtomCache(UserConfiguration config){
@@ -157,7 +159,8 @@ public class AtomCache {
 			reader.setPath(path);
 			reader.setPdbDirectorySplit(isSplit);
 			reader.setAutoFetch(autoFetch);
-			reader.setAlignSeqRes(false);
+			
+			reader.setAlignSeqRes(alignSeqRes);
 			reader.setParseSecStruc(false);
 			reader.setLoadChemCompInfo(loadChemCompInfo);
 
@@ -243,6 +246,14 @@ public class AtomCache {
 
 	public void setLoadChemCompInfo(boolean loadChemCompInfo) {
 		this.loadChemCompInfo = loadChemCompInfo;
+	}
+
+	public boolean isAlignSeqRes() {
+		return alignSeqRes;
+	}
+
+	public void setAlignSeqRes(boolean alignSeqRes) {
+		this.alignSeqRes = alignSeqRes;
 	}
 
 	
