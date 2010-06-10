@@ -35,11 +35,13 @@ import junit.framework.TestCase;
 import org.biojava.bio.structure.Group;
 import org.biojava.bio.structure.Chain;
 import org.biojava.bio.structure.Structure;
+import org.biojava.bio.structure.StructureException;
 import org.biojava.bio.structure.io.PDBFileReader;
 
 import org.biojava3.protmod.ModificationCategory;
 import org.biojava3.protmod.ModifiedCompound;
 import org.biojava3.protmod.ProteinModification;
+import org.biojava3.protmod.TmpAtomCache;
 
 /**
  * 
@@ -48,49 +50,61 @@ import org.biojava3.protmod.ProteinModification;
  */
 public class ModifiedResidueParserTest extends TestCase {
 
-	public void testParser() throws IOException {
-		System.out.println("===Begin testing on ModifiedResidueParser");
-		
-		//URL url = ModifiedResidueParserTest.class.getResource("3MVJ.pdb");
-		String server = "http://www.pdb.org/pdb/files/";
-		
+	public void testParser() {
 		String[] names = new String[] {
-//			"3MVJ", // SEP, TPO
-//			"1KZU", // FME
-//			"1AA6", // CSE
-//			"1NT0", // AHB
-//			"1ERM", // BHD
-//			"1QGW", // LYZ
-//			"2G66", // HY3, HYP
-//			"1A39", // PCA
-//			"1AG7", // CUG, HYP
-//			"1D5W", // PHD
-//			"1H9C", // CSP
-//			"1EUD", // NEP
-//			"1NSQ", // HIP
-//			"3LXN", // PTR
-//			"1ZM2", // DDE
-//			"1E0Z", // ALY
-//			"1DM3", // SCY
-//			"2NPP", //MAA
-//			"1GK8", //MME, HYP
-			"1DOJ" // MEA, TYS
+			"3MVJ", // SEP, TPO
+			"1KZU", // FME
+			"1AA6", // CSE
+			"1NT0", // AHB
+			"1ERM", // BHD
+			"1QGW", // LYZ
+			"2G66", // HY3, HYP
+			"1A39", // PCA
+			"1AG7", // CUG, HYP
+			"1D5W", // PHD
+			"1H9C", // CSP
+			"1EUD", // NEP
+			"1NSQ", // HIP
+			"3LXN", // PTR
+			"1ZM2", // DDE
+			"1E0Z", // ALY
+			"1DM3", // SCY
+			"2NPP", // MAA
+			"1GK8", // MME, HYP
+			"1DOJ", // MEA, TYS
+			"1G42", // 2MR
+			"2B2U", // DA2, M3L
+			"1ALL", // MEN
+			"3FMY", // MEQ
+			"1E6Y", // MHS, AGM
+			"1IV8", // MLY, MLZ
+			"1ZTO", // AAR
+			"1D7T", // CY3, HYP
+			"1D5M", // CLE
+			"1XAE", // NFA, C-terminal modification, but occurs in non-terminal residue in 1XAE
+			"2H9E", // LPD
+			"2BF9", // TYC, error reading PDB file
+			"1YYL", // VLM
+			"1AEX", // SCH
+			"1OMW", // CMT
+			"2C0J", // P1L
+			"1AA1", // KCX
+			"1O5K", // MCL
 		};
 		
 		for (String name : names) {
-			System.out.println(name);
-			URL url = new URL(server+name+".pdb");
-			assertNotNull(url);
-			parserTest(url);
+			System.out.println("===\n"+name);
+			try {
+				parserTest(name);
+			} catch (Exception e){
+				e.printStackTrace();
+				fail(e.getMessage());
+			}
 		}
-		
-		System.out.println("===End testing on ModifiedResidueParser");
 	}
 	
-	private void parserTest(URL pdbUrl) throws IOException {
-		
-		PDBFileReader pdbReader = new PDBFileReader();
-		Structure struc = pdbReader.getStructure(pdbUrl);
+	private void parserTest(String pdbId) throws IOException, StructureException {		
+		Structure struc = TmpAtomCache.cache.getStructure(pdbId);
 		
 		ModifiedResidueParser parser = new ModifiedResidueParser();
 		

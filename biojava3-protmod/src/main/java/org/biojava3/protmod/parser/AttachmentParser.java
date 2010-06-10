@@ -105,7 +105,6 @@ public class AttachmentParser implements ProteinModificationParser {
 		
 		List<ModifiedCompound> ret = new ArrayList<ModifiedCompound>();
 		
-		// TODO: how to deal with multi-model structure?
 		List<Chain> chains = structure.getChains(modelnr);
 		for (Chain chain : chains) {
 			Map<Component, List<Group>> mapCompRes = 
@@ -285,8 +284,13 @@ public class AttachmentParser implements ProteinModificationParser {
 	private Map<Component, List<Group>> modifiableResidues(
 			final Chain chain, 
 			final Set<ProteinModification> modifications) {
-		List<Group> residues = chain.getSeqResGroups();
 		Map<Component, List<Group>> mapCompRes = new HashMap<Component, List<Group>>();
+		
+		List<Group> residues = chain.getSeqResGroups();
+		
+		if (residues==null || residues.isEmpty()) {
+			return mapCompRes;
+		}
 		
 		// for all residue
 		for (Group res : residues) {

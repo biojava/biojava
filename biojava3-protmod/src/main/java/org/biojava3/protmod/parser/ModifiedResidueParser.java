@@ -80,7 +80,6 @@ public class ModifiedResidueParser implements ProteinModificationParser {
 		
 		List<ModifiedCompound> ret = new ArrayList<ModifiedCompound>();
 		
-		// TODO: how to deal with multi-model structure?
 		List<Chain> chains = structure.getChains(modelnr);
 		for (Chain chain : chains) {
 			List<Group> residues = chain.getSeqResGroups();

@@ -52,12 +52,14 @@ public class AttachmentParserTest extends TestCase {
 
 	public void testMultiParser(){
 		String[] names = new String[] {
-				"3HN3", // NAG
-				"1CPO", // XYS
-				"1AL2", // MYR
-				"1a4w"
+			"3HN3", // NAG
+			"1CPO", // XYS
+			"1AL2", // MYR
+			"1L9H", // PLM
+			"1BDO", // BTN
 		};
 		for ( String name : names){
+			System.out.println("===\n"+name);
 			try {
 				parserTest(name);
 			} catch (Exception e){
@@ -65,12 +67,9 @@ public class AttachmentParserTest extends TestCase {
 				fail(e.getMessage());
 			}
 		}
-	}
+	}	
 
-	
-
-	private void parserTest(String pdbId) throws IOException, StructureException {
-		
+	private void parserTest(String pdbId) throws IOException, StructureException {		
 		Structure struc = TmpAtomCache.cache.getStructure(pdbId);
 
 		AttachmentParser parser = new AttachmentParser(0.4);

@@ -1037,4 +1037,576 @@
 		<Occurrence>Natural</Occurrence>
 		<Category>ModifiedResidue</Category>
 	</Entry>
+	<!--Entry>
+		<Id>0036</Id>
+		<Description>A protein modification that effectively converts an L-proline residue to N,N-dimethyl-L-proline.</Description>
+		<SystematicName>(S)-2-carboxy-1,1-dimethylpyrrolidinium</SystematicName>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0066</Id>
+			<Name>N,N-dimethyl-L-proline</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00075</Id>
+			<Name>N,N-dimethyl-L-proline</Name>
+		</CrossReference>
+		<Formula>C 7 H 13 N 1 O 1</Formula>
+		<Condition>
+			<Component type="AminoAcid" label="1">
+				<Id source="PDBCC">PRO</Id>
+			</Component>
+			<Component type="Ligand" label="2">
+				<Id source="PDBCC">PBE</Id>
+			</Component>
+			<Bond>
+				<Atom component="1"></Atom>
+				<Atom component="2"></Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>Natural</Occurrence>
+		<Category>Attachment</Category>
+	</Entry-->
+	<Entry>
+		<Id>0037</Id>
+		<Description>A protein modification that effectively converts an L-arginine residue to N(omega),N'(omega)-dimethyl-L-arginine.</Description>
+		<SystematicName>(S)-2-amino-5-[((methylamino)(methylimino)methyl)amino]pentanoic acid</SystematicName>
+		<CrossReference>
+			<Source>PDBCC</Source>
+			<Id>2MR</Id>
+			<Name>N3, N4-DIMETHYLARGININE</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0067</Id>
+			<Name>omega-N,omega-N'-dimethyl-L-arginine</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00076</Id>
+			<Name>omega-N,omega-N'-dimethyl-L-arginine</Name>
+		</CrossReference>
+		<Formula>C 8 H 16 N 4 O 1</Formula>
+		<Condition>
+			<Component type="AminoAcid" label="1">
+				<Id source="PDBCC">2MR</Id>
+			</Component>
+		</Condition>
+		<Occurrence>Natural</Occurrence>
+		<Category>ModifiedResidue</Category>
+	</Entry>
+	<Entry>
+		<Id>0038</Id>
+		<Description>A protein modification that effectively converts an L-arginine residue to N(omega),N(omega)-dimethyl-L-arginine.</Description>
+		<SystematicName>(S)-2-amino-5-([(dimethylamino)(imino)methyl]amino)pentanoic acid</SystematicName>
+		<CrossReference>
+			<Source>PDBCC</Source>
+			<Id>DA2</Id>
+			<Name>NG,NG-DIMETHYL-L-ARGININE</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0068</Id>
+			<Name>omega-N,omega-N-dimethyl-L-arginine</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00077</Id>
+			<Name>omega-N,omega-N-dimethyl-L-arginine</Name>
+		</CrossReference>
+		<Formula>C 8 H 16 N 4 O 1</Formula>
+		<Condition>
+			<Component type="AminoAcid" label="1">
+				<Id source="PDBCC">DA2</Id>
+			</Component>
+		</Condition>
+		<Occurrence>Natural</Occurrence>
+		<Category>ModifiedResidue</Category>
+	</Entry>
+	<Entry>
+		<Id>0039</Id>
+		<Description>A protein modification that effectively converts an L-asparagine residue to N4-methyl-L-asparagine.</Description>
+		<SystematicName>(S)-2-amino-N4-methylbutanediamic acid</SystematicName>
+		<CrossReference>
+			<Source>PDBCC</Source>
+			<Id>MEN</Id>
+			<Name>N-METHYL ASPARAGINE</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0070</Id>
+			<Name>N4-methyl-L-asparagine</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00079</Id>
+			<Name>N4-methyl-L-asparagine</Name>
+		</CrossReference>
+		<Formula>C 5 H 8 N 2 O 2</Formula>
+		<Condition>
+			<Component type="AminoAcid" label="1">
+				<Id source="PDBCC">MEN</Id>
+			</Component>
+		</Condition>
+		<Occurrence>Natural</Occurrence>
+		<Category>ModifiedResidue</Category>
+	</Entry>
+	<Entry>
+		<Id>0040</Id>
+		<Description>A protein modification that effectively converts an L-glutamine residue to N5-methyl-L-glutamine.</Description>
+		<SystematicName>(2S)-2-amino-5-methylamino-5-oxopentanoic acid</SystematicName>
+		<CrossReference>
+			<Source>PDBCC</Source>
+			<Id>MEQ</Id>
+			<Name>N5-METHYLGLUTAMINE</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0071</Id>
+			<Name>N5-methyl-L-glutamine</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00080</Id>
+			<Name>N5-methyl-L-glutamine</Name>
+		</CrossReference>
+		<Formula>C 6 H 10 N 2 O 2</Formula>
+		<Condition>
+			<Component type="AminoAcid" label="1">
+				<Id source="PDBCC">MEQ</Id>
+			</Component>
+		</Condition>
+		<Occurrence>Natural</Occurrence>
+		<Category>ModifiedResidue</Category>
+	</Entry>
+	<Entry>
+		<Id>0041</Id>
+		<Description>A protein modification that effectively converts an L-histidine residue to pros-methyl-L-histidine (N-pi-methyl-L-histidine, 3'-methyl-L-histidine).</Description>
+		<SystematicName>(S)-2-amino-3-(3-methyl-3H-imidazol-4-yl)propanoic acid</SystematicName>
+		<CrossReference>
+			<Source>PDBCC</Source>
+			<Id>MHS</Id>
+			<Name>N1-METHYLATED HISTIDINE</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0073</Id>
+			<Name>3'-methyl-L-histidine</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00082</Id>
+			<Name>3'-methyl-L-histidine</Name>
+		</CrossReference>
+		<Formula>C 7 H 9 N 3 O 1</Formula>
+		<Condition>
+			<Component type="AminoAcid" label="1">
+				<Id source="PDBCC">MHS</Id>
+			</Component>
+		</Condition>
+		<Occurrence>Natural</Occurrence>
+		<Category>ModifiedResidue</Category>
+	</Entry>
+	<Entry>
+		<Id>0042</Id>
+		<Description>A protein modification that effectively converts an L-lysine residue to N6,N6-dimethyl-L-lysine.</Description>
+		<SystematicName>(S)-2-amino-6-dimethylaminohexanoic acid</SystematicName>
+		<CrossReference>
+			<Source>PDBCC</Source>
+			<Id>MLY</Id>
+			<Name>N-DIMETHYL-LYSINE</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0075</Id>
+			<Name>N6,N6-dimethyl-L-lysine</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00084</Id>
+			<Name>N6,N6-dimethyl-L-lysine</Name>
+		</CrossReference>
+		<Formula>C 8 H 16 N 2 O 1</Formula>
+		<Condition>
+			<Component type="AminoAcid" label="1">
+				<Id source="PDBCC">MLY</Id>
+			</Component>
+		</Condition>
+		<Occurrence>Natural</Occurrence>
+		<Category>ModifiedResidue</Category>
+	</Entry>
+	<Entry>
+		<Id>0043</Id>
+		<Description>A protein modification that effectively converts an L-arginine residue to L-arginine amide.</Description>
+		<SystematicName>(S)-2-amino-5-carbamimidamidopentanamide</SystematicName>
+		<CrossReference>
+			<Source>PDBCC</Source>
+			<Id>AAR</Id>
+			<Name>ARGININEAMIDE</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0082</Id>
+			<Name>L-arginine amide</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00091</Id>
+			<Name>L-arginine amide</Name>
+		</CrossReference>
+		<Formula>C 6 H 14 N 5 O 1</Formula>
+		<Condition>
+			<Component type="AminoAcid" label="1">
+				<Id source="PDBCC">AAR</Id>
+			</Component>
+		</Condition>
+		<Occurrence>Natural</Occurrence>
+		<Category>ModifiedResidue</Category>
+	</Entry>
+	<Entry>
+		<Id>0044</Id>
+		<Description>A protein modification that effectively converts an L-cysteine residue to L-cysteine amide.</Description>
+		<SystematicName>(R)-2-amino-3-sulfanylpropanamide</SystematicName>
+		<CrossReference>
+			<Source>PDBCC</Source>
+			<Id>CY3</Id>
+			<Name>2-AMINO-3-MERCAPTO-PROPIONAMIDE</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0085</Id>
+			<Name>L-cysteine amide</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00094</Id>
+			<Name>L-cysteine amide</Name>
+		</CrossReference>
+		<Formula>C 3 H 7 N 2 O 1 S 1</Formula>
+		<Condition>
+			<Component type="AminoAcid" label="1">
+				<Id source="PDBCC">CY3</Id>
+			</Component>
+		</Condition>
+		<Occurrence>Natural</Occurrence>
+		<Category>ModifiedResidue</Category>
+	</Entry>
+	<Entry>
+		<Id>0045</Id>
+		<Description>A protein modification that effectively converts an L-leucine residue to L-leucine amide.</Description>
+		<SystematicName>(S)-2-amino-4-methylpentanamide</SystematicName>
+		<CrossReference>
+			<Source>PDBCC</Source>
+			<Id>CLE</Id>
+			<Name>LEUCINE AMIDE</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0091</Id>
+			<Name>L-leucine amide</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00100</Id>
+			<Name>L-leucine amide</Name>
+		</CrossReference>
+		<Formula>C 6 H 13 N 2 O 1</Formula>
+		<Condition>
+			<Component type="AminoAcid" label="1">
+				<Id source="PDBCC">CLE</Id>
+				<Terminal>C</Terminal>
+			</Component>
+		</Condition>
+		<Occurrence>Natural</Occurrence>
+		<Category>ModifiedResidue</Category>
+	</Entry>
+	<Entry>
+		<Id>0046</Id>
+		<Description>A protein modification that effectively converts an L-phenylalanine residue to L-phenylalanine amide.</Description>
+		<SystematicName>(S)-2-amino-3-phenylpropanamide</SystematicName>
+		<CrossReference>
+			<Source>PDBCC</Source>
+			<Id>NFA</Id>
+			<Name>PHENYLALANINE AMIDE</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0094</Id>
+			<Name>L-phenylalanine amide</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00103</Id>
+			<Name>L-phenylalanine amide</Name>
+		</CrossReference>
+		<Formula>C 9 H 11 N 2 O 1</Formula>
+		<Condition>
+			<Component type="AminoAcid" label="1">
+				<Id source="PDBCC">NFA</Id>
+				<Terminal>C</Terminal>
+			</Component>
+		</Condition>
+		<Occurrence>Natural</Occurrence>
+		<Category>ModifiedResidue</Category>
+	</Entry>
+	<Entry>
+		<Id>0047</Id>
+		<Description>A protein modification that effectively converts an L-proline residue to L-proline amide.</Description>
+		<SystematicName>(S)-pyrrolidine-2-carboxamide</SystematicName>
+		<CrossReference>
+			<Source>PDBCC</Source>
+			<Id>LPD</Id>
+			<Name>L-PROLINAMIDE</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0095</Id>
+			<Name>L-proline amide</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00104</Id>
+			<Name>L-proline amide</Name>
+		</CrossReference>
+		<Formula>C 5 H 9 N 2 O 1</Formula>
+		<Condition>
+			<Component type="AminoAcid" label="1">
+				<Id source="PDBCC">LPD</Id>
+				<Terminal>C</Terminal>
+			</Component>
+		</Condition>
+		<Occurrence>Natural</Occurrence>
+		<Category>ModifiedResidue</Category>
+	</Entry>
+	<Entry>
+		<Id>0048</Id>
+		<Description>A protein modification that effectively converts an L-tyrosine residue to L-tyrosine amide.</Description>
+		<SystematicName>(S)-2-amino-3-(4-hydoxyphenyl)propanamide</SystematicName>
+		<CrossReference>
+			<Source>PDBCC</Source>
+			<Id>TYC</Id>
+			<Name>L-TYROSINAMIDE</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0099</Id>
+			<Name>L-tyrosine amide</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00108</Id>
+			<Name>L-tyrosine amide</Name>
+		</CrossReference>
+		<Formula>C 9 H 11 N 2 O 2</Formula>
+		<Condition>
+			<Component type="AminoAcid" label="1">
+				<Id source="PDBCC">TYC</Id>
+				<Terminal>C</Terminal>
+			</Component>
+		</Condition>
+		<Occurrence>Natural</Occurrence>
+		<Category>ModifiedResidue</Category>
+	</Entry>
+	<Entry>
+		<Id>0049</Id>
+		<Description>A protein modification that effectively converts an L-valine residue to L-valine amide.</Description>
+		<SystematicName>(S)-2-amino-3-methylbutanamide</SystematicName>
+		<CrossReference>
+			<Source>PDBCC</Source>
+			<Id>VLM</Id>
+			<Name>VALINYLAMINE</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0100</Id>
+			<Name>L-valine amide</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00109</Id>
+			<Name>L-valine amide</Name>
+		</CrossReference>
+		<Formula>C 5 H 11 N 2 O 1</Formula>
+		<Condition>
+			<Component type="AminoAcid" label="1">
+				<Id source="PDBCC">VLM</Id>
+				<Terminal>C</Terminal>
+			</Component>
+		</Condition>
+		<Occurrence>Natural</Occurrence>
+		<Category>ModifiedResidue</Category>
+	</Entry>
+	<Entry>
+		<Id>0050</Id>
+		<Description>A protein modification that effectively converts an L-cysteine residue to L-cysteine methyl ester.</Description>
+		<SystematicName>methyl (2R)-2-amino-3-sulfanylpropanoate</SystematicName>
+		<CrossReference>
+			<Source>PDBCC</Source>
+			<Id>CMT</Id>
+			<Name>O-METHYLCYSTEINE</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0105</Id>
+			<Name>L-cysteine methyl ester</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00114</Id>
+			<Name>L-cysteine methyl ester</Name>
+		</CrossReference>
+		<Formula>C 4 H 8 N 1 O 2 S 1</Formula>
+		<Condition>
+			<Component type="AminoAcid" label="1">
+				<Id source="PDBCC">CMT</Id>
+				<Terminal>C</Terminal>
+			</Component>
+		</Condition>
+		<Occurrence>Natural</Occurrence>
+		<Category>ModifiedResidue</Category>
+	</Entry>
+	<Entry>
+		<Id>0051</Id>
+		<Description>A protein modification that effectively converts an L-cysteine residue to S-palmitoyl-L-cysteine.</Description>
+		<SystematicName>(R)-2-amino-3-(hexadecanoylsulfanyl)propanoic acid</SystematicName>
+		<CrossReference>
+			<Source>PDBCC</Source>
+			<Id>P1L</Id>
+			<Name>S-PALMITOYL-L-CYSTEINE</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0106</Id>
+			<Name>S-palmitoyl-L-cysteine</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00115</Id>
+			<Name>S-palmitoyl-L-cysteine</Name>
+		</CrossReference>
+		<Formula>C 19 H 35 N 1 O 2 S 1</Formula>
+		<Condition>
+			<Component type="AminoAcid" label="1">
+				<Id source="PDBCC">P1L</Id>
+			</Component>
+		</Condition>
+		<Occurrence>Natural</Occurrence>
+		<Category>ModifiedResidue</Category>
+	</Entry>
+	<Entry>
+		<Id>0052</Id>
+		<Description>A protein modification that effectively converts an L-cysteine residue to S-palmitoyl-L-cysteine.</Description>
+		<SystematicName>(R)-2-amino-3-(hexadecanoylsulfanyl)propanoic acid</SystematicName>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0106.1</Id>
+			<Name>S-palmitoyl-L-cysteine</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00115</Id>
+			<Name>S-palmitoyl-L-cysteine</Name>
+		</CrossReference>
+		<Formula>C 19 H 35 N 1 O 2 S 1</Formula>
+		<Condition>
+			<Component type="AminoAcid" label="1">
+				<Id source="PDBCC">CYS</Id>
+			</Component>
+			<Component type="Ligand" label="2">
+				<Id source="PDBCC">PLM</Id>
+			</Component>
+			<Bond>
+				<Atom component="1">SG</Atom>
+				<Atom component="2"></Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>Natural</Occurrence>
+		<Category>Attachment</Category>
+	</Entry>
+	<Entry>
+		<Id>0053</Id>
+		<Description>A protein modification that effectively converts an L-lysine residue to N6-carboxy-L-lysine.</Description>
+		<SystematicName>(S)-2-amino-6-(carboxyamino)hexanoic acid</SystematicName>
+		<CrossReference>
+			<Source>PDBCC</Source>
+			<Id>KCX</Id>
+			<Name>LYSINE NZ-CARBOXYLIC ACID</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0114</Id>
+			<Name>N6-carboxy-L-lysine</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00123</Id>
+			<Name>N6-carboxy-L-lysine</Name>
+		</CrossReference>
+		<Formula>C 7 H 12 N 2 O 3</Formula>
+		<Condition>
+			<Component type="AminoAcid" label="1">
+				<Id source="PDBCC">KCX</Id>
+			</Component>
+		</Condition>
+		<Occurrence>Natural</Occurrence>
+		<Category>ModifiedResidue</Category>
+	</Entry>
+	<Entry>
+		<Id>0054</Id>
+		<Description>A protein modification that effectively converts an L-lysine residue to N6-1-carboxyethyl-L-lysine.</Description>
+		<SystematicName>(S,S)-2-amino-6-(1-carboxyethyl)aminohexanoic acid</SystematicName>
+		<CrossReference>
+			<Source>PDBCC</Source>
+			<Id>MCL</Id>
+			<Name>NZ-(1-CARBOXYETHYL)-LYSINE</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0115</Id>
+			<Name>N6-1-carboxyethyl-L-lysine</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00124</Id>
+			<Name>N6-1-carboxyethyl-L-lysine</Name>
+		</CrossReference>
+		<Formula>C 9 H 16 N 2 O 3</Formula>
+		<Condition>
+			<Component type="AminoAcid" label="1">
+				<Id source="PDBCC">MCL</Id>
+			</Component>
+		</Condition>
+		<Occurrence>Natural</Occurrence>
+		<Category>ModifiedResidue</Category>
+	</Entry>
+	<Entry>
+		<Id>0055</Id>
+		<Description>A protein modification that effectively converts an L-lysine residue to N6-biotinyl-L-lysine.</Description>
+		<SystematicName>(S)-2-amino-6-[5-((3aS,4S,6aR)-hexahydro-2-oxo-1H-thieno[3,4-d]imidazol-4-yl)-1-oxopentyl]aminohexanoic acid</SystematicName>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0117</Id>
+			<Name>N6-biotinyl-L-lysine</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00126</Id>
+			<Name>N6-biotinyl-L-lysine</Name>
+		</CrossReference>
+		<Formula>C 16 H 26 N 4 O 3 S 1</Formula>
+		<Condition>
+			<Component type="AminoAcid" label="1">
+				<Id source="PDBCC">LYS</Id>
+			</Component>
+			<Component type="Ligand" label="2">
+				<Id source="PDBCC">BTN</Id>
+			</Component>
+			<Bond>
+				<Atom component="1">NZ</Atom>
+				<Atom component="2">C11</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>Natural</Occurrence>
+		<Category>Attachment</Category>
+	</Entry>
 </ProteinModifications>
