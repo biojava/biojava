@@ -25,9 +25,6 @@
 package org.biojava3.protmod.parser;
 
 import java.io.IOException;
-
-import java.net.URL;
-
 import java.util.List;
 
 import junit.framework.TestCase;
@@ -38,11 +35,12 @@ import org.biojava.bio.structure.Chain;
 import org.biojava.bio.structure.Group;
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureException;
-import org.biojava.bio.structure.io.PDBFileReader;
+
 
 import org.biojava3.protmod.ModificationCategory;
 import org.biojava3.protmod.ModifiedCompound;
 import org.biojava3.protmod.ProteinModification;
+import org.biojava3.protmod.TmpAtomCache;
 
 /**
  * 
@@ -51,56 +49,56 @@ import org.biojava3.protmod.ProteinModification;
  */
 public class AttachmentParserTest extends TestCase {
 
-	public void testParser() throws IOException, StructureException {
-		System.out.println("===Begin testing on AttachmentParser");
-		
-		String server = "http://www.pdb.org/pdb/files/";
+
+	public void testMultiParser(){
 		String[] names = new String[] {
-//			"3HN3", // NAG
-//			"1CPO", // XYS
-			"1AL2" // MYR
+				"3HN3", // NAG
+				"1CPO", // XYS
+				"1AL2", // MYR
+				"1a4w"
 		};
-			
-		for (String name : names) {
-			System.out.println(name);
-			URL url = new URL(server+name+".pdb");
-			assertNotNull(url);
-			parserTest(url);
+		for ( String name : names){
+			try {
+				parserTest(name);
+			} catch (Exception e){
+				e.printStackTrace();
+				fail(e.getMessage());
+			}
 		}
-		
-		System.out.println("===End testing on AttachmentParser");
 	}
+
 	
-	private void parserTest(URL pdbUrl) throws IOException, StructureException {
-		PDBFileReader pdbReader = new PDBFileReader();
-		Structure struc = pdbReader.getStructure(pdbUrl);
+
+	private void parserTest(String pdbId) throws IOException, StructureException {
 		
+		Structure struc = TmpAtomCache.cache.getStructure(pdbId);
+
 		AttachmentParser parser = new AttachmentParser(0.4);
-		
+
 		int nrmodel = struc.nrModels();
 		for (int modelnr=0; modelnr<nrmodel; modelnr++) {
 			System.out.println("Model "+(modelnr+1));
-			
+
 			List<ModifiedCompound> mcs = parser.parse(struc, 
 					ProteinModification.getByCategory(ModificationCategory.ATTACHMENT),
 					modelnr);
-			
+
 			int i=0;
 			for (ModifiedCompound mc : mcs) {
 				System.out.println("Attachment #"+(++i)+":");
-				
+
 				Atom[] atoms = mc.getAtomBonds().get(0);
-				
+
 				Group residue = mc.getProteinResidues().get(0);
 				Chain chain = residue.getParent();
 				System.out.println("\t"+residue.getPDBName()+"\t"+chain.getName()+"\t"
 						+residue.getPDBCode()+"\t"+atoms[0].getName());
-				
+
 				Group group = mc.getOtherGroups().get(0);
 				assertEquals(chain, group.getParent());
 				System.out.println("\t"+group.getPDBName()+"\t"+chain.getName()+"\t"
 						+group.getPDBCode()+"\t"+atoms[1].getName());
-				
+
 				System.out.println("\t"+Calc.getDistance(atoms[0], atoms[1]));
 			}
 		}
