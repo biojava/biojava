@@ -17,9 +17,11 @@ public class EditSequenceTest {
     assertSeq(new Edit.Substitute<NucleotideCompound>("TT", 2).edit(seq), "ATTT");
     assertSeq(new Edit.Substitute<NucleotideCompound>("T", 1).edit(seq), "TCGT");
     assertSeq(new Edit.Substitute<NucleotideCompound>("TTC", 2).edit(seq), "ATTC");
+  }
 
-    //Sub which exceeds the length of the sequence
-    assertSeq(new Edit.Substitute<NucleotideCompound>("AAAA", 4).edit(seq), "ACGAAAA");
+  @Test(expected=IndexOutOfBoundsException.class)
+  public void badSubstitute() {
+    new Edit.Substitute<NucleotideCompound>("AAAA", 4).edit(new DNASequence("ACGT"));
   }
 
   @Test
