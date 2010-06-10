@@ -62,6 +62,7 @@ public class DNATests {
         SequenceView<NucleotideCompound> subSeq = seq.getSubSequence(2, 4);
         assertThat("Index 2 is the same as index 1 in the sub sequence",
                 seq.getCompoundAt(2), is(subSeq.getCompoundAt(1)));
+        assertThat("Length is equal to 3", subSeq.getLength(), is (3));
         assertThat("Index 4 is the same as index 3 in the sub sequence",
                 seq.getCompoundAt(4), is(subSeq.getCompoundAt(3)));
         assertThat("Sub sequence contains only expected bases",
