@@ -171,17 +171,15 @@ public class AttachmentParser implements ProteinModificationParser {
 						try {
 							atomOnResidue = residue.getAtom(nameOfAtomOnResidue);
 						} catch (StructureException e) {
-							e.printStackTrace();
-						}
-						
-						if (atomOnResidue==null) {
-							System.err.println("Atom does not exist.");
+							//e.printStackTrace();
 							continue;
 						}
 						
 						if (atomOnResidue==null) {
-							throw new IllegalStateException("Atom does not exist.");
+							//System.err.println("Atom does not exist.");
+							continue;
 						}
+						
 						double distance;
 						try {
 							distance = Calc.getDistance(atomOnAttachedGroup, atomOnResidue);
