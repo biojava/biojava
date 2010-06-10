@@ -981,4 +981,60 @@
 		<Occurrence>Natural</Occurrence>
 		<Category>Attachment</Category>
 	</Entry>
+	<Entry>
+		<Id>0034</Id>
+		<Description>A protein modification that effectively converts an L-alanine residue to N-methyl-L-alanine.</Description>
+		<SystematicName>(S)-2-methylaminopropanoic acid</SystematicName>
+		<CrossReference>
+			<Source>PDBCC</Source>
+			<Id>MAA</Id>
+			<Name>N-methyl-L-alanine</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0061</Id>
+			<Name>N-methyl-L-alanine</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00070</Id>
+			<Name>N-methyl-L-alanine</Name>
+		</CrossReference>
+		<Formula>C 4 H 7 N 1 O 1</Formula>
+		<Condition>
+			<Component type="AminoAcid" label="1">
+				<Id source="PDBCC">MAA</Id>
+			</Component>
+		</Condition>
+		<Occurrence>Natural</Occurrence>
+		<Category>ModifiedResidue</Category>
+	</Entry>
+	<Entry>
+		<Id>0035</Id>
+		<Description>A protein modification that effectively converts an L-phenylalanine residue to N-methyl-L-phenylalanine.</Description>
+		<SystematicName>(S)-2-methylamino-3-phenylpropanoic acid</SystematicName>
+		<CrossReference>
+			<Source>PDBCC</Source>
+			<Id>MEA</Id>
+			<Name>N-METHYLPHENYLALANINE</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0065</Id>
+			<Name>N-methyl-L-phenylalanine</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00074</Id>
+			<Name>N-methyl-L-phenylalanine</Name>
+		</CrossReference>
+		<Formula>C 10 H 11 N 1 O 1</Formula>
+		<Condition>
+			<Component type="AminoAcid" label="1">
+				<Id source="PDBCC">MEA</Id>
+			</Component>
+		</Condition>
+		<Occurrence>Natural</Occurrence>
+		<Category>ModifiedResidue</Category>
+	</Entry>
 </ProteinModifications>

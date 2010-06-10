@@ -53,110 +53,36 @@ public class ModifiedResidueParserTest extends TestCase {
 		
 		//URL url = ModifiedResidueParserTest.class.getResource("3MVJ.pdb");
 		String server = "http://www.pdb.org/pdb/files/";
-		String name;
-		URL url;
 		
-//		name = "3MVJ"; // SEP and TPO
-//		System.out.println(name);
-//		url = new URL(server+name+".pdb");
-//		assertNotNull(url);
-//		parserTest(url);		
-//		
-//		name = "1KZU"; // FME
-//		System.out.println(name);
-//		url = new URL(server+name+".pdb");
-//		assertNotNull(url);
-//		parserTest(url);
-//		
-//		name = "1AA6"; // CSE
-//		System.out.println(name);
-//		url = new URL(server+name+".pdb");
-//		assertNotNull(url);
-//		parserTest(url);
-//		
-//		name = "1NT0"; // AHB
-//		System.out.println(name);
-//		url = new URL(server+name+".pdb");
-//		assertNotNull(url);
-//		parserTest(url);
-//		
-//		name = "1ERM"; // BHD
-//		System.out.println(name);
-//		url = new URL(server+name+".pdb");
-//		assertNotNull(url);
-//		parserTest(url);
-//		
-//		name = "1QGW"; // LYZ
-//		System.out.println(name);
-//		url = new URL(server+name+".pdb");
-//		assertNotNull(url);
-//		parserTest(url);
-//		
-//		name = "2G66"; // HY3 and HYP
-//		System.out.println(name);
-//		url = new URL(server+name+".pdb");
-//		assertNotNull(url);
-//		parserTest(url);
-//		
-//		name = "1A39"; // PCA
-//		System.out.println(name);
-//		url = new URL(server+name+".pdb");
-//		assertNotNull(url);
-//		parserTest(url);
-//		
-//		name = "1AG7"; // CUG, HYP
-//		System.out.println(name);
-//		url = new URL(server+name+".pdb");
-//		assertNotNull(url);
-//		parserTest(url);
-//		
-//		name = "1D5W"; // PHD
-//		System.out.println(name);
-//		url = new URL(server+name+".pdb");
-//		assertNotNull(url);
-//		parserTest(url);
-//		
-//		name = "1H9C"; // CSP
-//		System.out.println(name);
-//		url = new URL(server+name+".pdb");
-//		assertNotNull(url);
-//		parserTest(url);
-//
-//		name = "1EUD"; // NEP
-//		System.out.println(name);
-//		url = new URL(server+name+".pdb");
-//		assertNotNull(url);
-//		parserTest(url);
-//
-//		name = "1NSQ"; // HIP
-//		System.out.println(name);
-//		url = new URL(server+name+".pdb");
-//		assertNotNull(url);
-//		parserTest(url);
-//
-//		name = "3LXN"; // PTR
-//		System.out.println(name);
-//		url = new URL(server+name+".pdb");
-//		assertNotNull(url);
-//		parserTest(url);
-//
-//		name = "1ZM2"; // DDE
-//		System.out.println(name);
-//		url = new URL(server+name+".pdb");
-//		assertNotNull(url);
-//		parserTest(url);
-//
-//		name = "1E0Z"; // ALY
-//		System.out.println(name);
-//		url = new URL(server+name+".pdb");
-//		assertNotNull(url);
-//		parserTest(url);
-
-		name = "1DM3"; // SCY
-		System.out.println(name);
-		url = new URL(server+name+".pdb");
-		assertNotNull(url);
-		parserTest(url);
+		String[] names = new String[] {
+//			"3MVJ", // SEP, TPO
+//			"1KZU", // FME
+//			"1AA6", // CSE
+//			"1NT0", // AHB
+//			"1ERM", // BHD
+//			"1QGW", // LYZ
+//			"2G66", // HY3, HYP
+//			"1A39", // PCA
+//			"1AG7", // CUG, HYP
+//			"1D5W", // PHD
+//			"1H9C", // CSP
+//			"1EUD", // NEP
+//			"1NSQ", // HIP
+//			"3LXN", // PTR
+//			"1ZM2", // DDE
+//			"1E0Z", // ALY
+//			"1DM3", // SCY
+//			"2NPP", //MAA
+//			"1GK8", //MME, HYP
+			"1DOJ" // MEA, TYS
+		};
+		
+		for (String name : names) {
+			System.out.println(name);
+			URL url = new URL(server+name+".pdb");
+			assertNotNull(url);
+			parserTest(url);
+		}
 		
 		System.out.println("===End testing on ModifiedResidueParser");
 	}

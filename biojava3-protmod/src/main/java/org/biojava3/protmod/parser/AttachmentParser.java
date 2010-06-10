@@ -233,6 +233,9 @@ public class AttachmentParser implements ProteinModificationParser {
 					}
 				}
 			}
+			
+			// TODO: identify additional attached groups that are not 
+			// directly attached to protein residues.
 		}
 		
 		return ret;

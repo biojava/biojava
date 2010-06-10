@@ -52,31 +52,23 @@ import org.biojava3.protmod.ProteinModification;
 public class AttachmentParserTest extends TestCase {
 
 	public void testParser() throws IOException, StructureException {
-		System.out.println("===Begin testing on ModifiedResidueParser");
+		System.out.println("===Begin testing on AttachmentParser");
 		
 		String server = "http://www.pdb.org/pdb/files/";
-		URL url;
-		String name;
+		String[] names = new String[] {
+//			"3HN3", // NAG
+//			"1CPO", // XYS
+			"1AL2" // MYR
+		};
+			
+		for (String name : names) {
+			System.out.println(name);
+			URL url = new URL(server+name+".pdb");
+			assertNotNull(url);
+			parserTest(url);
+		}
 		
-//		name = "3HN3"; // NAG
-//		System.out.println(name);
-//		url = new URL(server+name+".pdb");
-//		assertNotNull(url);
-//		parserTest(url);
-//		
-//		name = "1CPO"; // XYS
-//		System.out.println(name);
-//		url = new URL(server+name+".pdb");
-//		assertNotNull(url);
-//		parserTest(url);
-		
-		name = "1AL2"; // MYR
-		System.out.println(name);
-		url = new URL(server+name+".pdb");
-		assertNotNull(url);
-		parserTest(url);
-		
-		System.out.println("===End testing on ModifiedResidueParser");
+		System.out.println("===End testing on AttachmentParser");
 	}
 	
 	private void parserTest(URL pdbUrl) throws IOException, StructureException {
