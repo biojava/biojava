@@ -34,8 +34,8 @@ public class SimpleGapPenaltyTest {
     @Test
     public void testSimpleGapPenalty() {
         GapPenalty gaps = new SimpleGapPenalty();
-        short gop = SimpleGapPenalty.Defaults.getOpenPenalty();
-        short gep = SimpleGapPenalty.Defaults.getExtensionPenalty();
+        short gop = SimpleGapPenalty.Default.getOpenPenalty();
+        short gep = SimpleGapPenalty.Default.getExtensionPenalty();
         assertEquals(gaps.getOpenPenalty(), gop);
         assertEquals(gaps.getExtensionPenalty(), gep);
         assertEquals(gaps.getType(), new SimpleGapPenalty().getType());
@@ -77,12 +77,18 @@ public class SimpleGapPenaltyTest {
     public void testDefaults() {
         short gop = 5;
         short gep = 0;
-        SimpleGapPenalty.Defaults.setOpenPenalty(gop);
-        SimpleGapPenalty.Defaults.setExtensionPenalty(gep);
+        SimpleGapPenalty.Default.setOpenPenalty(gop);
+        SimpleGapPenalty.Default.setExtensionPenalty(gep);
         GapPenalty gaps = new SimpleGapPenalty();
         assertEquals(gaps.getOpenPenalty(), gop);
         assertEquals(gaps.getExtensionPenalty(), gep);
         assertEquals(gaps.getType(), GapPenalty.Type.CONSTANT);
+        gep = 5;
+        SimpleGapPenalty.Default.set(gop, gep);
+        gaps = new SimpleGapPenalty();
+        assertEquals(gaps.getOpenPenalty(), gop);
+        assertEquals(gaps.getExtensionPenalty(), gep);
+        assertEquals(gaps.getType(), GapPenalty.Type.LINEAR);
     }
 
 }

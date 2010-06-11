@@ -23,134 +23,147 @@
 
 package org.biojava3.alignment;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import org.biojava3.alignment.template.GapPenalty;
-import org.biojava3.alignment.template.HierarchicalClusterer;
-import org.biojava3.alignment.template.PairwiseSequenceAligner;
-import org.biojava3.alignment.template.PairwiseSequenceScorer;
-import org.biojava3.alignment.template.PartitionRefiner;
-import org.biojava3.alignment.template.Profile;
-import org.biojava3.alignment.template.ProfileProfileAligner;
-import org.biojava3.alignment.template.RescoreRefiner;
-import org.biojava3.alignment.template.SequencePair;
-import org.biojava3.alignment.template.SubstitutionMatrix;
+import org.biojava3.alignment.template.*;
 import org.biojava3.core.sequence.template.Compound;
-import org.biojava3.core.sequence.template.CompoundSet;
 import org.biojava3.core.sequence.template.Sequence;
 
 public class Alignments {
 
-    private Alignments() { } // prevents instantiation
+    // prevents instantiation
+    private Alignments() { }
 
-    public static <S extends Sequence<C>, C extends Compound> List<SequencePair<S, C>> getAllPairsAlignments(List<S> sequences) {
+    public static <S extends Sequence<C>, C extends Compound>
+            List<SequencePair<S, C>> getAllPairsAlignments(List<S> sequences) {
+        List<SequencePair<S, C>> allPairs = new ArrayList<SequencePair<S, C>>();
+        for (int i = 0; i < sequences.size(); i++) {
+            for (int j = i+1; j < sequences.size(); j++) {
+                allPairs.add(getPairwiseAlignment(sequences.get(i), sequences.get(j)));
+            }
+        }
+        return allPairs;
+    }
+
+    public static <S extends Sequence<C>, C extends Compound>
+            int[] getAllPairsScores(List<S> sequences) {
+        int size = sequences.size()*(sequences.size()-1)/2;
+        int[] allPairs = new int[size];
+        for (int i = 0, p = 0; i < sequences.size(); i++) {
+            for (int j = i+1; j < sequences.size(); j++, p++) {
+                allPairs[p] = getPairwiseScore(sequences.get(i), sequences.get(j));
+            }
+        }
+        return null;
+    }
+
+    public static <S extends Sequence<C>, C extends Compound>
+            SequencePair<S, C> getPairwiseAlignment(S sequence1, S sequence2) {
         // TODO
         return null;
     }
 
-    public static <S extends Sequence<C>, C extends Compound> int[] getAllPairsScores(List<S> sequences) {
-        // TODO
-        return null;
-    }
-
-    public static <S extends Sequence<C>, C extends Compound> SequencePair<S, C> getPairwiseAlignment(S sequence1, S sequence2) {
-        // TODO
-        return null;
-    }
-
-    public static <S extends Sequence<C>, C extends Compound> int getPairwiseScore(S sequence1, S sequence2) {
+    public static <S extends Sequence<C>, C extends Compound>
+            int getPairwiseScore(S sequence1, S sequence2) {
         // TODO
         return 0;
     }
 
-    public static <S extends Sequence<C>, C extends Compound> Profile<S, C> getMultipleSequenceAlignment(List<S> sequences) {
+    public static <S extends Sequence<C>, C extends Compound>
+            Profile<S, C> getMultipleSequenceAlignment(List<S> sequences) {
         // TODO
         return null;
     }
 
     public static enum MSAEmulation { CLUSTALW, MUSCLE, KALIGN, CUSTOM }
 
-    public static class Defaults { // static inner class
+    /**
+     * Stores the default values for the alignment algorithms and data structures
+     */
+    public static class Default {
+
+        private static MSAEmulation emulation;
+        private static Class<? extends GapPenalty> gapPenalty;
+        private static Class<? extends HierarchicalClusterer> clusterer;
+        private static Class<? extends PairwiseSequenceAligner<?, ?>> pwAligner;
+        private static Class<? extends PairwiseSequenceScorer<?, ?>> pwScorer;
+        private static Class<? extends PartitionRefiner<?, ?>> pRefiner;
+        private static Class<? extends ProfileProfileAligner<?, ?>> ppAligner;
+        private static Class<? extends RescoreRefiner<?, ?>> rRefiner;
+        private static Class<? extends SubstitutionMatrix<?>> subMatrix;
 
         public static MSAEmulation getEmulation() {
-            // TODO
-            return null;
+            return Default.emulation;
         }
 
-        public static GapPenalty getGapPenalty() {
-            // TODO
-            return null;
+        public static Class<? extends GapPenalty> getGapPenalty() {
+            return Default.gapPenalty;
         }
 
         public static Class<? extends HierarchicalClusterer> getHierarchicalClusterer() {
-            // TODO
-            return null;
+            return Default.clusterer;
         }
 
-        public static <S extends Sequence<C>, C extends Compound> Class<? extends PairwiseSequenceAligner<S, C>> getPairwiseSequenceAligner() {
-            // TODO
-            return null;
+        public static Class<? extends PairwiseSequenceAligner<?, ?>> getPairwiseSequenceAligner() {
+            return Default.pwAligner;
         }
 
-        public static <S extends Sequence<C>, C extends Compound> Class<? extends PairwiseSequenceScorer<S, C>> getPairwiseSequenceScorer() {
-            // TODO
-            return null;
+        public static Class<? extends PairwiseSequenceScorer<?, ?>> getPairwiseSequenceScorer() {
+            return Default.pwScorer;
         }
 
-        public static <S extends Sequence<C>, C extends Compound> Class<? extends PartitionRefiner<S, C>> getPartitionRefiner() {
-            // TODO
-            return null;
+        public static Class<? extends PartitionRefiner<?, ?>> getPartitionRefiner() {
+            return Default.pRefiner;
         }
 
-        public static <S extends Sequence<C>, C extends Compound>Class<? extends ProfileProfileAligner<S, C>> getProfileProfileAligner() {
-            // TODO
-            return null;
+        public static Class<? extends ProfileProfileAligner<?, ?>> getProfileProfileAligner() {
+            return Default.ppAligner;
         }
 
-        public static <S extends Sequence<C>, C extends Compound> Class<? extends RescoreRefiner<S, C>> getRescoreRefiner() {
-            // TODO
-            return null;
+        public static Class<? extends RescoreRefiner<?, ?>> getRescoreRefiner() {
+            return Default.rRefiner;
         }
 
-        public static <S extends CompoundSet<C>, C extends Compound> SubstitutionMatrix<S, C> getSubstitutionMatrix() {
-            // TODO
-            return null;
+        public static Class<? extends SubstitutionMatrix<?>> getSubstitutionMatrix() {
+            return Default.subMatrix;
         }
 
         public static void setEmulation(MSAEmulation emulation) {
-            // TODO
+            // TODO set defaults according to emulation value
+            Default.emulation = MSAEmulation.CUSTOM;
         }
 
-        public static void setGapPenalty(GapPenalty gapPenalty) {
-            // TODO
+        public static void setGapPenalty(Class<? extends GapPenalty> gapPenalty) {
+            Default.gapPenalty = gapPenalty;
         }
 
         public static void setHierarchicalClusterer(Class<? extends HierarchicalClusterer> clusterer) {
-            // TODO
+            Default.clusterer = clusterer;
         }
 
-        public static <S extends Sequence<C>, C extends Compound> void setPairwiseSequenceAligner(Class<? extends PairwiseSequenceAligner<S, C>> aligner) {
-            // TODO
+        public static void setPairwiseSequenceAligner(Class<? extends PairwiseSequenceAligner<?, ?>> pwAligner) {
+            Default.pwAligner = pwAligner;
         }
 
-        public static <S extends Sequence<C>, C extends Compound> void setPairwiseSequenceScorer(Class<? extends PairwiseSequenceScorer<S, C>> scorer) {
-            // TODO
+        public static void setPairwiseSequenceScorer(Class<? extends PairwiseSequenceScorer<?, ?>> pwScorer) {
+            Default.pwScorer = pwScorer;
         }
 
-        public static <S extends Sequence<C>, C extends Compound> void setPartitionRefiner(Class<? extends PartitionRefiner<S, C>> refiner) {
-            // TODO
+        public static void setPartitionRefiner(Class<? extends PartitionRefiner<?, ?>> pRefiner) {
+            Default.pRefiner = pRefiner;
         }
 
-        public static <S extends Sequence<C>, C extends Compound> void setProfileProfileAligner(Class<? extends ProfileProfileAligner<S, C>> aligner) {
-            // TODO
+        public static void setProfileProfileAligner(Class<? extends ProfileProfileAligner<?, ?>> ppAligner) {
+            Default.ppAligner = ppAligner;
         }
 
-        public static <S extends Sequence<C>, C extends Compound> void setRescoreRefiner(Class<? extends RescoreRefiner<S, C>> refiner) {
-            // TODO
+        public static void setRescoreRefiner(Class<? extends RescoreRefiner<?, ?>> rRefiner) {
+            Default.rRefiner = rRefiner;
         }
 
-        public static <S extends CompoundSet<C>, C extends Compound> void setSubstitutionMatrix(SubstitutionMatrix<S, C> matrix) {
-            // TODO
+        public static void setSubstitutionMatrix(Class<? extends SubstitutionMatrix<?>> subMatrix) {
+            Default.subMatrix = subMatrix;
         }
 
     }
