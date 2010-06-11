@@ -41,7 +41,7 @@ public interface ModificationCondition {
 	
 	/**
 	 * 
-	 * @return atom bonds between components.
+	 * @return {@link ModificationLinkage}s between components.
 	 */
-	public List<ModificationLinkage> getBonds();
+	public List<ModificationLinkage> getLinkages();
 }

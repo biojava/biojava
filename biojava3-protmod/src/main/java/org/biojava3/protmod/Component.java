@@ -208,4 +208,21 @@ public final class Component {
 		
 		return nonTerminalComps.get(pdbccId);
 	}
+	
+	/**
+	 * 
+	 * @return informative description.
+	 */
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append(getPdbccId());
+		sb.append("["+getType().label()+"]");
+		if (isCTerminal()) {
+			sb.append("(C)");
+		} else if (isNTerminal()) {
+			sb.append("(N)");
+		}
+		return sb.toString();
+	}
 }

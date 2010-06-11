@@ -87,4 +87,18 @@ public final class ModificationLinkage {
 	public String getAtom2() {
 		return atom2;
 	}
+	
+	/**
+	 * 
+	 * @return informative description.
+	 */
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append(getComponent1().getPdbccId());
+		sb.append("("+getAtom1()+")<=>");
+		sb.append(getComponent2().getPdbccId());
+		sb.append("("+getAtom2()+")");
+		return sb.toString();
+	}
 }

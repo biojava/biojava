@@ -37,12 +37,36 @@ import junit.framework.TestCase;
  * @since 3.0
  */
 public class ProteinModificationRegistryTest extends TestCase {
+	
+	public void testRegisterModification() {		
+		ProteinModification.register("TEST", 
+				ModificationCategory.CROSS_LINK2,
+				ModificationOccurrenceType.NATURAL)
+				.description("TEST")
+				.formula("TEST")
+				.residId("TEST")
+				.residName("TEST")
+				.psimodId("TEST")
+				.psimodName("TEST")
+				.systematicName("TEST")
+				.condition(new ModificationConditionImpl(
+					new Component[] {
+						Component.register("COMP1", ComponentType.AMINOACID),
+						Component.register("COMP2", ComponentType.AMINOACID, true, false)
+					},
+					new ModificationLinkage[] {
+						new ModificationLinkage(Component.of("COMP1"),
+								Component.of("COMP2", true, false),
+								"ATOM1", "ATOM2")
+					}
+				));
+		assertNotNull(ProteinModification.getById("TEST"));
+	}
+	
 	/**
 	 * Test the initialization registry of common protein modifications. 
 	 */
-	public void testRegistryInit() {
-		System.out.println("===Begin Testing on initialzation of the registry===");
-		
+	public void testRegisterCommonModification() {		
 		Set<ProteinModification> mods = ProteinModification.getProteinModifications();
 		assertTrue(mods!=null && !mods.isEmpty());
 		
@@ -50,35 +74,31 @@ public class ProteinModificationRegistryTest extends TestCase {
 				+" protein modifications registered.");
 		
 		printModifications(mods);
-		
-		System.out.println("===End Testing on initialzation of the registry===");
 	}
 	
 	public void testGetBy() {
 		ProteinModification mod;
 		Set<ProteinModification> mods;
 		
-		System.out.println("===Begin Testing getBy... methods===");
-		
 		System.out.println("getById");
 		mod = ProteinModification.getById("0001");
 		assertNotNull(mod);
-		printModification(mod);
+		System.out.println(mod);
 
 		System.out.println("getByPdbccId");
 		mod = ProteinModification.getByPdbccId("SEP");
 		assertNotNull(mod);
-		printModification(mod);
+		System.out.println(mod);
 
 		System.out.println("getByResidId");
 		mod = ProteinModification.getByResidId("AA0076");
 		assertNotNull(mod);
-		printModification(mod);
+		System.out.println(mod);
 
 		System.out.println("getByPsimodId");
 		mod = ProteinModification.getByPsimodId("MOD:00110");
 		assertNotNull(mod);
-		printModification(mod);
+		System.out.println(mod);
 
 		System.out.println("getByComponent");
 		mods = ProteinModification.getByComponent(Component.of("NAG"));
@@ -94,8 +114,6 @@ public class ProteinModificationRegistryTest extends TestCase {
 		mods = ProteinModification.getByOccurrenceType(ModificationOccurrenceType.NATURAL);
 		assertNotNull(mods);
 		printModifications(mods);
-		
-		System.out.println("===End Testing getBy... methods===");
 	}
 	
 	/**
@@ -104,56 +122,8 @@ public class ProteinModificationRegistryTest extends TestCase {
 	 */
 	private void printModifications(Set<ProteinModification> mods) {
 		for (ProteinModification mod:mods) {
-			printModification(mod);	
+			System.out.println(mod);	
 		}
 	}
 	
-	/**
-	 * Print a modification.
-	 * @param mod a {@link ProteinModification}.
-	 */
-	private void printModification(ProteinModification mod) {
-		System.out.print(mod.getId());
-		System.out.print("\t"+mod.getPdbccId());
-		System.out.print("\t"+mod.getPdbccName());
-		System.out.print("\t"+mod.getResidId());
-		System.out.print("\t"+mod.getResidName());
-		System.out.print("\t"+mod.getPsimodId());
-		System.out.print("\t"+mod.getPsimodName());
-		System.out.print("\t"+mod.getDescription());
-		System.out.print("\t"+mod.getSystematicName());
-		System.out.print("\t"+mod.getCategory().label());
-		System.out.print("\t"+mod.getOccurrenceType().label());
-		
-		ModificationCondition condition = mod.getCondition();
-		
-		List<Component> comps = condition.getComponents();
-		int sizeComp = comps.size();
-		assertTrue(comps!=null&&sizeComp>0);
-		System.out.print("\t");
-		for (int i=0; i<sizeComp; i++) {
-			Component comp = comps.get(i);
-			String str = comp.getPdbccId();
-			str += "["+comp.getType().label()+"]";
-			if (comp.isCTerminal()) {
-				str += "(C)";
-			} else if (comp.isNTerminal()) {
-				str += "(N)";
-			}				
-			System.out.print(str+";");
-		}
-		
-		List<ModificationLinkage> bonds = condition.getBonds();
-		System.out.print("\t");
-		if (bonds!=null) {
-			for (ModificationLinkage bond:bonds) {
-				String str = bond.getComponent1().getPdbccId();
-				str += "("+bond.getAtom1()+")<=>";
-				str += bond.getComponent2().getPdbccId();
-				str += "("+bond.getAtom2()+")";
-				System.out.print(str+";");
-			}
-		}		
-		System.out.println();
-	}
 }

@@ -24,6 +24,8 @@
 
 package org.biojava3.protmod;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -35,7 +37,13 @@ import java.util.Set;
  */
 public class ModificationConditionImpl implements ModificationCondition {
 	private final List<Component> components;
-	private final List<ModificationLinkage> bonds;
+	private final List<ModificationLinkage> linkages;
+	
+	public ModificationConditionImpl(final Component[] components,
+			final ModificationLinkage[] linkages) {
+		this(components==null?null:Arrays.asList(components),
+				linkages==null?null:Arrays.asList(linkages));
+	}
 	
 	/**
 	 * 
@@ -45,12 +53,12 @@ public class ModificationConditionImpl implements ModificationCondition {
 	 *  or bonds have component(s) that are not included. 
 	 */
 	public ModificationConditionImpl(final List<Component> components,
-			final List<ModificationLinkage> bonds) {
+			final List<ModificationLinkage> linkages) {
 		
-		checkComponentsAndBondsProper(components, bonds);
+		checkComponentsAndBondsProper(components, linkages);
 		
 		this.components = components;
-		this.bonds = bonds;
+		this.linkages = linkages;
 	}
 	
 	/**
@@ -81,19 +89,18 @@ public class ModificationConditionImpl implements ModificationCondition {
 	
 	/**
 	 * 
-	 * @return the involved components.
+	 * {@inheritDoc}}
 	 */
 	@Override
 	public List<Component> getComponents() {
-		return components;
+		return Collections.unmodifiableList(components);
 	}
 	
 	/**
-	 * 
-	 * @return atom bonds between components.
+	 * {@inheritDoc}}
 	 */
 	@Override
-	public List<ModificationLinkage> getBonds() {
-		return bonds;
+	public List<ModificationLinkage> getLinkages() {
+		return linkages==null ? null : Collections.unmodifiableList(linkages);
 	}
 }

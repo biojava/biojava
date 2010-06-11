@@ -137,4 +137,13 @@ public class ModifiedCompoundImpl implements ModifiedCompound {
 	public List<Atom[]> getAtomBonds() {
 		return atomBonds;
 	}
+	
+	/**
+	 * 
+	 */
+	public String toString() {
+		return "Modification: " + modification.toString() + "\n" +
+			   "Residues: " + residues.toString() + "\n" +
+			   "Atoms: " + atomBonds.toString();
+	}
 }

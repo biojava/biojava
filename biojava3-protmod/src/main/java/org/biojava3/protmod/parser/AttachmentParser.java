@@ -147,7 +147,7 @@ public class AttachmentParser implements ProteinModificationParser {
 					Atom atomOnAttachedGroup = null;
 					
 					//* use atom specified by condition
-					ModificationLinkage bond = condition.getBonds().get(0);
+					ModificationLinkage bond = condition.getLinkages().get(0);
 					String nameOfAtomOnResidue = bond.getAtom1();
 					String nameOfAtomOnAttachedGroup = bond.getAtom2();
 					

@@ -357,7 +357,7 @@ public final class ProteinModification {
 				throw new IllegalArgumentException("PSI-MOD ID has been set.");
 			}
 			
-			if (byResidId.containsKey(psimodId)) {
+			if (byPsimodId.containsKey(psimodId)) {
 				// TODO: is this the correct logic?
 				throw new IllegalArgumentException(psimodId+" has been registered.");
 			}
@@ -649,5 +649,44 @@ public final class ProteinModification {
 		lazyInit();
 		Set<Component> ret = byComponent.keySet();
 		return Collections.unmodifiableSet(ret);
+	}
+	
+	/**
+	 * 
+	 * @return informative description.
+	 */
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("ID:"+getId());
+		sb.append("\tPDBCC ID:"+getPdbccId());
+		sb.append("\tPDBCC name:"+getPdbccName());
+		sb.append("\tRESID ID:"+getResidId());
+		sb.append("\tRESID name:"+getResidName());
+		sb.append("\tPSI-MOD ID:"+getPsimodId());
+		sb.append("\tPSI-MOD name:"+getPsimodName());
+		sb.append("\tDescription:"+getDescription());
+		sb.append("\tSystematic name:"+getSystematicName());
+		sb.append("\tCategory:"+getCategory().label());
+		sb.append("\tOccurrence type:"+getOccurrenceType().label());
+		
+		ModificationCondition condition = getCondition();
+		
+		List<Component> comps = condition.getComponents();
+		sb.append("\tComponents:");
+		for (Component comp : comps) {	
+			sb.append(comp.toString()+";");
+		}
+		
+		List<ModificationLinkage> linkages = condition.getLinkages();
+		sb.append("\tLinkages");
+		if (linkages!=null) {
+			for (ModificationLinkage linkage : linkages) {
+				sb.append(linkage.toString()+";");
+			}
+		}
+		
+		return sb.toString();
 	}
 }
