@@ -26,24 +26,34 @@ package org.biojava3.alignment;
 
 import static org.junit.Assert.*;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.InputStreamReader;
 
 import org.biojava3.core.sequence.compound.AminoAcidCompound;
 import org.biojava3.core.sequence.compound.AminoAcidCompoundSet;
 import org.biojava3.core.sequence.compound.CodonCompound;
+import org.biojava3.core.sequence.compound.DNACompoundSet;
+import org.biojava3.core.sequence.compound.NucleotideCompound;
 import org.biojava3.core.sequence.template.CompoundSet;
+import org.junit.Ignore;
 import org.junit.Test;
 
 public class SimpleSubstitutionMatrixTest {
+
+    @Test(expected=FileNotFoundException.class)
+    public void testSimpleSubstitutionMatrixNotFound() throws FileNotFoundException {
+        new SimpleSubstitutionMatrix<AminoAcidCompound>(new AminoAcidCompoundSet(), new File("blosum63.txt"));
+    }
 
     @Test(expected=IllegalStateException.class)
     public void testSimpleSubstitutionMatrixNull() {
         new SimpleSubstitutionMatrix<AminoAcidCompound>();
     }
 
+    @Ignore
     @Test(expected=ClassCastException.class)
-    public void testSimplSubstitutionMatrixWrong() {
+    public void testSimpleSubstitutionMatrixWrong() {
         SimpleSubstitutionMatrix.Default.set(new AminoAcidCompoundSet(), new InputStreamReader(
                 SimpleSubstitutionMatrix.class.getResourceAsStream("/blosum62.txt") ), "blosum62");
         new SimpleSubstitutionMatrix<CodonCompound>();
@@ -64,42 +74,58 @@ public class SimpleSubstitutionMatrixTest {
 
     @Test
     public void testSimpleSubstitutionMatrixSubstitutionMatrixOfC() {
-        fail("Not yet implemented");
-    }
-
-    @Test
-    public void testSimpleSubstitutionMatrixCompoundSetOfCFile() {
-        fail("Not yet implemented");
-    }
-
-    @Test
-    public void testSimpleSubstitutionMatrixCompoundSetOfCReaderString() {
-        fail("Not yet implemented");
+        SimpleSubstitutionMatrix<AminoAcidCompound> matrix1 =
+                new SimpleSubstitutionMatrix<AminoAcidCompound>(new AminoAcidCompoundSet(), new InputStreamReader(
+                SimpleSubstitutionMatrix.class.getResourceAsStream("/blosum62.txt") ), "blosum62"),
+                matrix2 = new SimpleSubstitutionMatrix<AminoAcidCompound>(matrix1);
+        assertEquals(matrix2.getCompoundSet(), matrix1.getCompoundSet());
+        assertEquals(matrix2.getName(), "blosum62");
+        assertEquals(matrix2.getMaxValue(), 11);
+        assertEquals(matrix2.getMinValue(), -4);
     }
 
     @Test
     public void testSimpleSubstitutionMatrixCompoundSetOfCStringString() {
-        fail("Not yet implemented");
+        SimpleSubstitutionMatrix<NucleotideCompound> matrix = new SimpleSubstitutionMatrix<NucleotideCompound>(
+                new DNACompoundSet(), "# Test\nA C G T\nA 5 0 0 0\nC 0 5 0 0\nG 0 0 5 0\nT 0 0 0 1\n", "SimpleDNA");
+        assertEquals(matrix.getMatrixAsString().substring(2,9), "A C G T");
     }
 
     @Test
     public void testSimpleSubstitutionMatrixCompoundSetOfCShortShort() {
-        fail("Not yet implemented");
+        SimpleSubstitutionMatrix<AminoAcidCompound> matrix =
+                new SimpleSubstitutionMatrix<AminoAcidCompound>(new AminoAcidCompoundSet(), (short) 5, (short) 1);
+        assertEquals(matrix.getName(), "IDENTITY_5_1");
     }
 
     @Test
     public void testSetDescription() {
-        fail("Not yet implemented");
+        SimpleSubstitutionMatrix<AminoAcidCompound> matrix =
+                new SimpleSubstitutionMatrix<AminoAcidCompound>(new AminoAcidCompoundSet(), new InputStreamReader(
+                SimpleSubstitutionMatrix.class.getResourceAsStream("/blosum62.txt") ), "blosum62");
+        assertEquals(matrix.getDescription().substring(0, 2), "# ");
+        matrix.setDescription("blah");
+        assertEquals(matrix.getDescription().substring(0, 2), "bl");
     }
 
     @Test
     public void testSetName() {
-        fail("Not yet implemented");
+        SimpleSubstitutionMatrix<AminoAcidCompound> matrix =
+                new SimpleSubstitutionMatrix<AminoAcidCompound>(new AminoAcidCompoundSet(), new InputStreamReader(
+                SimpleSubstitutionMatrix.class.getResourceAsStream("/blosum62.txt") ), "blosum62");
+        assertEquals(matrix.getName(), "blosum62");
+        matrix.setName("blah");
+        assertEquals(matrix.getName(), "blah");
     }
 
     @Test
     public void testToString() {
-        fail("Not yet implemented");
+        SimpleSubstitutionMatrix<NucleotideCompound> matrix = new SimpleSubstitutionMatrix<NucleotideCompound>(
+                new DNACompoundSet(), "# Test\nA C  G T\nA 5  0 0 0\nC 0 5 0 0 \nG 0 0 5 0\n T 0 0 0 1\n", "DNAtest");
+        assertEquals(matrix.toString().substring(0,6), "# Test");
+        String nl = System.getProperty("line.separator");
+        assertEquals(matrix.toString(), "# Test" + nl + "  A C G T" + nl + "A 5 0 0 0" + nl + "C 0 5 0 0" + nl +
+                "G 0 0 5 0" + nl + "T 0 0 0 1" + nl);
     }
 
 }
