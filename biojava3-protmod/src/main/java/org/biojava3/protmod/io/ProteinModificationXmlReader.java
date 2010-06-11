@@ -123,63 +123,8 @@ public final class ProteinModificationXmlReader {
 					" See Modification "+id+".");
 			}
 			
-			ProteinModification.Builder modBuilder = ProteinModification
-				.register(id, cat, occType);
-			
-			// description
-			nodes = infoNodes.get("Description");
-			if (nodes!=null && !nodes.isEmpty()) {
-				modBuilder.description(nodes.get(0).getTextContent());
-			}
-			
-			// cross references
-			nodes = infoNodes.get("CrossReference");
-			if (nodes!=null) {
-				for (Node node:nodes) {
-					Map<String,List<Node>> xrefInfoNodes = getChildNodes(node);
-					
-					// source
-					List<Node> xrefNode = xrefInfoNodes.get("Source");
-					if (xrefNode==null || xrefNode.size()!=1) {
-						throw new RuntimeException("Error in XML file: " +
-							"a cross reference must contain exactly one <Source> field." +
-							" See Modification "+id+".");
-					}
-					String xrefDb = xrefNode.get(0).getTextContent();
-					
-					// id
-					xrefNode = xrefInfoNodes.get("Id");
-					if (xrefNode==null || xrefNode.size()!=1) {
-						throw new RuntimeException("Error in XML file: " +
-							"a cross reference must contain exactly one <Id> field." +
-							" See Modification "+id+".");
-					}
-					String xrefId = xrefNode.get(0).getTextContent();
-					
-					// name
-					String xrefName = null;
-					xrefNode = xrefInfoNodes.get("Name");
-					if (xrefNode!=null && !xrefNode.isEmpty()) {
-						xrefName = xrefNode.get(0).getTextContent();
-					}
-					
-					if (xrefDb.equals("PDBCC")) {
-						modBuilder.pdbccId(xrefId).pdbccName(xrefName);
-					} else if (xrefDb.equals("RESID")) {
-						modBuilder.residId(xrefId).residName(xrefName);
-					} else if (xrefDb.equals("PSI-MOD")) {
-						modBuilder.psimodId(xrefId).psimodName(xrefName);
-					}
-				}
-			} // end of cross references
-			
-			// formula
-			nodes = infoNodes.get("Formula");
-			if (nodes!=null && !nodes.isEmpty()) {
-				modBuilder.formula(nodes.get(0).getTextContent());
-			}
-			
 			// condition
+			ModificationCondition condition = null;
 			{
 				nodes = infoNodes.get("Condition");
 				if (nodes==null || nodes.size()!=1) {
@@ -272,11 +217,11 @@ public final class ProteinModificationXmlReader {
 				}
 				
 				// bonds
-				List<ModificationLinkage> bonds = null;
+				List<ModificationLinkage> linkages = null;
 				List<Node> bondNodes = compInfoNodes.get("Bond");
 				if (bondNodes!=null) {
 					int sizeBonds = bondNodes.size();
-					bonds = new ArrayList<ModificationLinkage>(sizeBonds);
+					linkages = new ArrayList<ModificationLinkage>(sizeBonds);
 					for (int iBond=0; iBond<sizeBonds; iBond++) {
 						Node bondNode = bondNodes.get(iBond);
 						Map<String,List<Node>> bondChildNodes = getChildNodes(bondNode);
@@ -313,15 +258,69 @@ public final class ProteinModificationXmlReader {
 						Component comp2 = mapLabelComp.get(labelComp2);
 						String atom2 = atomNodes.get(1).getTextContent();
 						
-						ModificationLinkage bond = new ModificationLinkage(comp1, comp2, atom1, atom2);
-						bonds.add(bond);
+						ModificationLinkage linkage = new ModificationLinkage(comp1, comp2, atom1, atom2);
+						linkages.add(linkage);
 					}
 				}
 				
-				ModificationCondition condition = new ModificationConditionImpl(comps, bonds);
-				
-				modBuilder.condition(condition);
-			} // end of condition			
+				condition = new ModificationConditionImpl(comps, linkages);
+			} // end of condition	
+			
+			ProteinModification.Builder modBuilder = ProteinModification
+				.register(id, cat, occType, condition);
+			
+			// description
+			nodes = infoNodes.get("Description");
+			if (nodes!=null && !nodes.isEmpty()) {
+				modBuilder.setDescription(nodes.get(0).getTextContent());
+			}
+			
+			// cross references
+			nodes = infoNodes.get("CrossReference");
+			if (nodes!=null) {
+				for (Node node:nodes) {
+					Map<String,List<Node>> xrefInfoNodes = getChildNodes(node);
+					
+					// source
+					List<Node> xrefNode = xrefInfoNodes.get("Source");
+					if (xrefNode==null || xrefNode.size()!=1) {
+						throw new RuntimeException("Error in XML file: " +
+							"a cross reference must contain exactly one <Source> field." +
+							" See Modification "+id+".");
+					}
+					String xrefDb = xrefNode.get(0).getTextContent();
+					
+					// id
+					xrefNode = xrefInfoNodes.get("Id");
+					if (xrefNode==null || xrefNode.size()!=1) {
+						throw new RuntimeException("Error in XML file: " +
+							"a cross reference must contain exactly one <Id> field." +
+							" See Modification "+id+".");
+					}
+					String xrefId = xrefNode.get(0).getTextContent();
+					
+					// name
+					String xrefName = null;
+					xrefNode = xrefInfoNodes.get("Name");
+					if (xrefNode!=null && !xrefNode.isEmpty()) {
+						xrefName = xrefNode.get(0).getTextContent();
+					}
+					
+					if (xrefDb.equals("PDBCC")) {
+						modBuilder.setPdbccId(xrefId).setPdbccName(xrefName);
+					} else if (xrefDb.equals("RESID")) {
+						modBuilder.setResidId(xrefId).setResidName(xrefName);
+					} else if (xrefDb.equals("PSI-MOD")) {
+						modBuilder.setPsimodId(xrefId).setPsimodName(xrefName);
+					}
+				}
+			} // end of cross references
+			
+			// formula
+			nodes = infoNodes.get("Formula");
+			if (nodes!=null && !nodes.isEmpty()) {
+				modBuilder.setFormula(nodes.get(0).getTextContent());
+			}		
 		}
 	}
 	

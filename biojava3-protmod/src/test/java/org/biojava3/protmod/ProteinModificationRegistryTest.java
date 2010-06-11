@@ -24,7 +24,6 @@
 
 package org.biojava3.protmod;
 
-import java.util.List;
 import java.util.Set;
 
 import org.biojava3.protmod.ProteinModification;
@@ -38,18 +37,9 @@ import junit.framework.TestCase;
  */
 public class ProteinModificationRegistryTest extends TestCase {
 	
-	public void testRegisterModification() {		
-		ProteinModification.register("TEST", 
-				ModificationCategory.CROSS_LINK2,
-				ModificationOccurrenceType.NATURAL)
-				.description("TEST")
-				.formula("TEST")
-				.residId("TEST")
-				.residName("TEST")
-				.psimodId("TEST")
-				.psimodName("TEST")
-				.systematicName("TEST")
-				.condition(new ModificationConditionImpl(
+	public void testRegisterModification() {
+		ModificationCondition condition
+			= new ModificationConditionImpl(
 					new Component[] {
 						Component.register("COMP1", ComponentType.AMINOACID),
 						Component.register("COMP2", ComponentType.AMINOACID, true, false)
@@ -59,7 +49,18 @@ public class ProteinModificationRegistryTest extends TestCase {
 								Component.of("COMP2", true, false),
 								"ATOM1", "ATOM2")
 					}
-				));
+				);
+		ProteinModification.register("TEST", 
+				ModificationCategory.CROSS_LINK2,
+				ModificationOccurrenceType.NATURAL,
+				condition)
+				.setDescription("TEST")
+				.setFormula("TEST")
+				.setResidId("TEST")
+				.setResidName("TEST")
+				.setPsimodId("TEST")
+				.setPsimodName("TEST")
+				.setSystematicName("TEST");
 		assertNotNull(ProteinModification.getById("TEST"));
 	}
 	

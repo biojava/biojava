@@ -39,6 +39,13 @@ public class ModificationConditionImpl implements ModificationCondition {
 	private final List<Component> components;
 	private final List<ModificationLinkage> linkages;
 	
+	public ModificationConditionImpl(final Component component1,
+			final Component component2, final String atom1, final String atom2) {
+		this(new Component[]{component1, component2},
+			 new ModificationLinkage[] {
+				new ModificationLinkage(component1, component2, atom1, atom2)});
+	}
+	
 	public ModificationConditionImpl(final Component[] components,
 			final ModificationLinkage[] linkages) {
 		this(components==null?null:Arrays.asList(components),

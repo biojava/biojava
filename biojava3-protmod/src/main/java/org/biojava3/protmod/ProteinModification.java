@@ -234,11 +234,13 @@ public final class ProteinModification {
 	 * Uses builder pattern to set optional attributes for a ProteinModification. 
 	 * For example, this allows you to use the following code:
 	 * <pre>
-	 * ProteinModification.
-	 *     .register("0001", Modification.ATTACHMENT, ModificationOccurrenceType.NATURAL)
-	 *     .residId("AA0406")
-	 *     .residName("O-xylosyl-L-serine")
-	 *     .componentsAndAtoms("SER","OG","XYS","O1");
+	 * ProteinModification
+	 *     .register("0001", Modification.ATTACHMENT, 
+	 *     		ModificationOccurrenceType.NATURAL,
+	 *     		new ModificationCondition(Component.register("SER"),
+	 *     			Component.register("XYS"),"OG","C1"))
+	 *     .setResidId("AA0406")
+	 *     .setResidName("O-xylosyl-L-serine");
 	 * </pre>
 	 */
 	public static final class Builder {
@@ -272,7 +274,7 @@ public final class ProteinModification {
 		 * @throws IllegalArgumentException if pdbccId has been set,
 		 *  or has been registered.
 		 */
-		public Builder pdbccId(final String pdbccId) {			
+		public Builder setPdbccId(final String pdbccId) {			
 			if (current.pdbccId!=null) {
 				throw new IllegalArgumentException("PDBCC ID has been set.");
 			}
@@ -294,7 +296,7 @@ public final class ProteinModification {
 		 * @return the same Builder object so you can chain setters.
 		 * @throws IllegalArgumentException if pdbccName has been set.
 		 */
-		public Builder pdbccName(final String pdbccName) {			
+		public Builder setPdbccName(final String pdbccName) {			
 			if (current.pdbccName!=null) {
 				throw new IllegalArgumentException("PDBCC name has been set.");
 			}
@@ -313,7 +315,7 @@ public final class ProteinModification {
 		 * @throws IllegalArgumentException if residIdhas been set 
 		 * or has been registered by another instance.
 		 */
-		public Builder residId(final String residId) {
+		public Builder setResidId(final String residId) {
 			if (current.residId!=null) {
 				throw new IllegalArgumentException("RESID ID has been set.");
 			}
@@ -335,7 +337,7 @@ public final class ProteinModification {
 		 * @return the same Builder object so you can chain setters.
 		 * @throws IllegalArgumentException if residId has been set.
 		 */
-		public Builder residName(final String residName) {
+		public Builder setResidName(final String residName) {
 			if (current.residName!=null) {
 				throw new IllegalArgumentException("RESID name has been set.");
 			}
@@ -352,7 +354,7 @@ public final class ProteinModification {
 		 * @throws IllegalArgumentException if psimodId has been set
 		 *  or has been registered by another instance.
 		 */
-		public Builder psimodId(final String psimodId) {
+		public Builder setPsimodId(final String psimodId) {
 			if (current.psimodId!=null) {
 				throw new IllegalArgumentException("PSI-MOD ID has been set.");
 			}
@@ -374,7 +376,7 @@ public final class ProteinModification {
 		 * @return the same Builder object so you can chain setters.
 		 * @throws IllegalArgumentException if psimodName has been set.
 		 */
-		public Builder psimodName(final String psimodName) {
+		public Builder setPsimodName(final String psimodName) {
 			if (current.psimodName!=null) {
 				throw new IllegalArgumentException("PSI-MOD name has been set.");
 			}
@@ -385,43 +387,12 @@ public final class ProteinModification {
 		}
 		
 		/**
-		 * 
-		 * @param condition {@link ModificationCondition}.
-		 * @throws IllegalArgumentException if condition has been set,
-		 *  or components is null or empty in condition.
-		 */
-		public Builder condition(ModificationCondition condition) {
-			if (current.condition!=null) {
-				throw new IllegalArgumentException("condition has been set.");
-			}
-			
-			List<Component> comps = condition.getComponents();
-			if (comps==null || comps.isEmpty()) {
-				throw new IllegalArgumentException("At least one component for" +
-						" a modification.");
-			}
-			
-			for (Component comp:comps) {
-				Set<ProteinModification> mods = byComponent.get(comp);
-				if (mods==null) {
-					mods = new HashSet<ProteinModification>();
-					byComponent.put(comp, mods);
-				}
-				mods.add(current);
-			}
-			
-			current.condition = condition;
-			
-			return this;
-		}
-		
-		/**
 		 * Set the systematic name.
 		 * @param sysName systematic name.
 		 * @return the same Builder object so you can chain setters.
 		 * @throws IllegalArgumentException if sysName has been set.
 		 */
-		public Builder systematicName(final String sysName) {			
+		public Builder setSystematicName(final String sysName) {			
 			if (current.sysName!=null) {
 				throw new IllegalArgumentException("Systematic name has been set.");
 			}
@@ -437,7 +408,7 @@ public final class ProteinModification {
 		 * @return the same Builder object so you can chain setters.
 		 * @throws IllegalArgumentException if description has been set.
 		 */
-		public Builder description(final String description) {
+		public Builder setDescription(final String description) {
 			if (current.description!=null) {
 				throw new IllegalArgumentException("Description has been set.");
 			}
@@ -453,7 +424,7 @@ public final class ProteinModification {
 		 * @return the same Builder object so you can chain setters.
 		 * @throws IllegalArgumentException if formula has been set.
 		 */
-		public Builder formula(final String formula) {
+		public Builder setFormula(final String formula) {
 			if (current.formula!=null) {
 				throw new IllegalArgumentException("Formula has been set.");
 			}
@@ -466,15 +437,35 @@ public final class ProteinModification {
 
 	/**
 	 * Register a new ProteinModification with (optional) detailed information.
+	 * After registration, you could set the optional parameters as the following code:
+	 * <pre>
+	 * ProteinModification
+	 *     .register("0001", Modification.ATTACHMENT, 
+	 *     		ModificationOccurrenceType.NATURAL,
+	 *     		new ModificationCondition(Component.register("SER"),
+	 *     			Component.register("XYS"),"OG","C1"))
+	 *     .setResidId("AA0406")
+	 *     .setResidName("O-xylosyl-L-serine");
+	 * </pre>
+	 *
 	 * @param id modification id.
 	 * @param cat modification category.
 	 * @param occType occurrence type.
+	 * @param condition {@link ModificationCondition}.
 	 * @return Builder that can be used for adding detailed information.
+	 * @throws IllegalArgumentException if null argument(s), or components is null
+	 *  or empty in condition.
 	 */
 	public static Builder register(final String id, final ModificationCategory cat,
-			final ModificationOccurrenceType occType) {
-		if (id==null || cat==null || occType==null) {
+			final ModificationOccurrenceType occType, final ModificationCondition condition) {
+		if (id==null || cat==null || occType==null || condition==null) {
 			throw new IllegalArgumentException("Null argument(s)!");
+		}
+		
+		List<Component> comps = condition.getComponents();
+		if (comps==null || comps.isEmpty()) {
+			throw new IllegalArgumentException("At least one component for" +
+				" a modification.");
 		}
 		
 		lazyInit();
@@ -487,11 +478,22 @@ public final class ProteinModification {
 		current.id = id;
 		current.category = cat;
 		current.occurrenceType = occType;
+		current.condition = condition;		
 		
 		registry.add(current);
 		byId.put(id, current);
 		byCategory.get(cat).add(current);
 		byOccurrenceType.get(occType).add(current);
+		
+		
+		for (Component comp:comps) {
+			Set<ProteinModification> mods = byComponent.get(comp);
+			if (mods==null) {
+				mods = new HashSet<ProteinModification>();
+				byComponent.put(comp, mods);
+			}
+			mods.add(current);
+		}
 		
 		return new Builder(current);
 	}
