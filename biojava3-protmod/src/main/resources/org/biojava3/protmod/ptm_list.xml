@@ -1499,12 +1499,12 @@
 		<SystematicName>(R)-2-amino-3-(hexadecanoylsulfanyl)propanoic acid</SystematicName>
 		<CrossReference>
 			<Source>RESID</Source>
-			<Id>AA0106.1</Id>
+			<Id>AA0106</Id>
 			<Name>S-palmitoyl-L-cysteine</Name>
 		</CrossReference>
 		<CrossReference>
 			<Source>PSI-MOD</Source>
-			<Id>MOD:00115.1</Id>
+			<Id>MOD:00115</Id>
 			<Name>S-palmitoyl-L-cysteine</Name>
 		</CrossReference>
 		<Formula>C 19 H 35 N 1 O 2 S 1</Formula>

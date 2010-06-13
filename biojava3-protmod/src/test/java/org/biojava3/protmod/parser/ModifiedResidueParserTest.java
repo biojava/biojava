@@ -26,8 +26,6 @@ package org.biojava3.protmod.parser;
 
 import java.io.IOException;
 
-import java.net.URL;
-
 import java.util.List;
 
 import junit.framework.TestCase;
@@ -36,7 +34,6 @@ import org.biojava.bio.structure.Group;
 import org.biojava.bio.structure.Chain;
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureException;
-import org.biojava.bio.structure.io.PDBFileReader;
 
 import org.biojava3.protmod.ModificationCategory;
 import org.biojava3.protmod.ModifiedCompound;

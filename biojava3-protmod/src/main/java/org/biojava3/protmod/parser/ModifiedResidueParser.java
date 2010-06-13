@@ -26,6 +26,7 @@ package org.biojava3.protmod.parser;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.biojava.bio.structure.Chain;
@@ -33,6 +34,7 @@ import org.biojava.bio.structure.Group;
 import org.biojava.bio.structure.Structure;
 
 import org.biojava3.protmod.Component;
+import org.biojava3.protmod.ComponentType;
 import org.biojava3.protmod.ModificationCategory;
 import org.biojava3.protmod.ModificationCondition;
 import org.biojava3.protmod.ModifiedCompound;
@@ -82,31 +84,26 @@ public class ModifiedResidueParser implements ProteinModificationParser {
 		
 		List<Chain> chains = structure.getChains(modelnr);
 		for (Chain chain : chains) {
-			List<Group> residues = chain.getSeqResGroups();
-			int sizeRes = residues.size();
+			Map<Component, List<Group>> mapCompRes = 
+				ModificationParserUtil.getModifiableResidues(chain, potentialModifications);
 			
-			// for all amino acid
-			for (int iRes=0; iRes<sizeRes; iRes++) {
-				Group residue = residues.get(iRes);
-				String pdbccId = residue.getPDBName();
-				ProteinModification mod = ProteinModification.getByPdbccId(pdbccId);
-				
-				if (mod==null || !potentialModifications.contains(mod)) {
-					continue;
-				}
-				
+			for (ProteinModification mod : potentialModifications) {
 				ModificationCondition condition = mod.getCondition();
 				Component comp = condition.getComponents().get(0);
+				if (comp.getType() != ComponentType.AMINOACID) {
+					throw new IllegalStateException("No residue involved in modification");
+				}
 				
-				// TODO: is this the correct way to determine N/C-terminal?
-				if ((comp.isNTerminal() && iRes!=0) ||           // N-terminal
-						(comp.isCTerminal() && iRes!=sizeRes-1)) {    // C-terminal
+				List<Group> residues = mapCompRes.get(comp);
+				if (residues == null) {
 					continue;
 				}
 				
-				ModifiedCompound modRes = ModifiedCompoundFactory
-					.createModifiedResidue(mod, residue);
-				ret.add(modRes);
+				for (Group residue : residues) {
+					ModifiedCompound modRes = ModifiedCompoundFactory
+						.createModifiedResidue(mod, residue);
+					ret.add(modRes);
+				}
 			}
 		}
 		

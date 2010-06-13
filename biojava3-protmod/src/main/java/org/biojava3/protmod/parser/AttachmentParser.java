@@ -108,7 +108,7 @@ public class AttachmentParser implements ProteinModificationParser {
 		List<Chain> chains = structure.getChains(modelnr);
 		for (Chain chain : chains) {
 			Map<Component, List<Group>> mapCompRes = 
-					modifiableResidues(chain, potentialModifications);
+				ModificationParserUtil.getModifiableResidues(chain, potentialModifications);
 			
 			List<Group> groups = chain.getAtomGroups(GroupType.HETATM);
 			
@@ -197,7 +197,7 @@ public class AttachmentParser implements ProteinModificationParser {
 						Atom[] atoms;
 						double distance;
 						try {
-							atoms = findNearestAtoms(residue, group);
+							atoms = ModificationParserUtil.findNearestAtoms(residue, group);
 							if (atoms==null) {
 								continue;
 							}
@@ -238,93 +238,5 @@ public class AttachmentParser implements ProteinModificationParser {
 		}
 		
 		return ret;
-	}
-	
-	/**
-	 * Find the nearest Atoms between a pair of {@link Group}s.
-	 * @param group1
-	 * @param group2
-	 * @return a pair of Atoms.
-	 * @throws StructureException ...
-	 */
-	private Atom[] findNearestAtoms(Group group1, Group group2)
-			throws StructureException {		
-		double nearestDistance = Double.MAX_VALUE;
-		Atom[] ret = new Atom[2];
-		
-		Iterator<Atom> it1 = group1.iterator();
-		while (it1.hasNext()) {
-			Atom atom1 = it1.next();
-			Iterator<Atom> it2 = group2.iterator();
-			while (it2.hasNext()) {
-				Atom atom2 = it2.next();
-				double dis = Calc.getDistance(atom1, atom2);
-				if (dis < nearestDistance) {
-					nearestDistance = dis;
-					ret[0] = atom1;
-					ret[1] = atom2;
-				}
-			}
-		}
-		
-		if (ret[0]==null) {
-			return null;
-		}
-		
-		return ret;
-	}
-	
-	/**
-	 * 
-	 * @param chain {@link Chain}.
-	 * @param modifications a set of {@link ProteinModification}s.
-	 * @return map from component to list of corresponding residues
-	 *  in the chain.
-	 */
-	private Map<Component, List<Group>> modifiableResidues(
-			final Chain chain, 
-			final Set<ProteinModification> modifications) {
-		Map<Component, List<Group>> mapCompRes = new HashMap<Component, List<Group>>();
-		
-		List<Group> residues = chain.getSeqResGroups();
-		
-		if (residues==null || residues.isEmpty()) {
-			return mapCompRes;
-		}
-		
-		// for all residue
-		for (Group res : residues) {
-			String pdbccId = res.getPDBName();
-			Component comp = Component.of(pdbccId);
-			if (comp==null) {
-				continue;
-			}
-			List<Group> groups = mapCompRes.get(comp);
-			if (groups==null) {
-				groups = new ArrayList<Group>();
-				mapCompRes.put(comp, groups);
-			}
-			groups.add(res);
-		}
-		
-		// for N-terminal
-		Group res = residues.get(0);
-		Component comp = Component.of(res.getPDBName(), true, false);
-		if (comp!=null) {
-			List<Group> groups = new ArrayList<Group>(1);
-			groups.add(res);
-			mapCompRes.put(comp, groups);
-		}
-		
-		// for C-terminal
-		res = residues.get(residues.size()-1);
-		comp = Component.of(res.getPDBName(), false, true);
-		if (comp!=null) {
-			List<Group> groups = new ArrayList<Group>(1);
-			groups.add(res);
-			mapCompRes.put(comp, groups);
-		}
-
-		return mapCompRes;
 	}
 }

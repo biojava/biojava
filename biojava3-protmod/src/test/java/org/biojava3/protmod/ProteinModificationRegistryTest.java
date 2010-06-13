@@ -87,19 +87,19 @@ public class ProteinModificationRegistryTest extends TestCase {
 		System.out.println(mod);
 
 		System.out.println("getByPdbccId");
-		mod = ProteinModification.getByPdbccId("SEP");
-		assertNotNull(mod);
-		System.out.println(mod);
+		mods = ProteinModification.getByPdbccId("SEP");
+		assertNotNull(mods);
+		System.out.println(mods);
 
 		System.out.println("getByResidId");
-		mod = ProteinModification.getByResidId("AA0076");
-		assertNotNull(mod);
-		System.out.println(mod);
+		mods = ProteinModification.getByResidId("AA0076");
+		assertNotNull(mods);
+		System.out.println(mods);
 
 		System.out.println("getByPsimodId");
-		mod = ProteinModification.getByPsimodId("MOD:00110");
-		assertNotNull(mod);
-		System.out.println(mod);
+		mods = ProteinModification.getByPsimodId("MOD:00110");
+		assertNotNull(mods);
+		System.out.println(mods);
 
 		System.out.println("getByComponent");
 		mods = ProteinModification.getByComponent(Component.of("NAG"));

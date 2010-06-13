@@ -81,9 +81,9 @@ public final class ProteinModification {
 	
 	private static Set<ProteinModification> registry = null;
 	private static Map<String, ProteinModification> byId = null;
-	private static Map<String, ProteinModification> byResidId = null;
-	private static Map<String, ProteinModification> byPsimodId = null;
-	private static Map<String, ProteinModification> byPdbccId = null;
+	private static Map<String, Set<ProteinModification>> byResidId = null;
+	private static Map<String, Set<ProteinModification>> byPsimodId = null;
+	private static Map<String, Set<ProteinModification>> byPdbccId = null;
 	private static Map<Component, Set<ProteinModification>> byComponent = null;
 	private static Map<ModificationCategory, Set<ProteinModification>> byCategory = null;
 	private static Map<ModificationOccurrenceType, Set<ProteinModification>> byOccurrenceType = null;
@@ -95,9 +95,9 @@ public final class ProteinModification {
 		if (registry==null) {	
 			registry = 	new HashSet<ProteinModification>();
 			byId = new HashMap<String, ProteinModification>();
-			byResidId = new HashMap<String, ProteinModification>();
-			byPsimodId = new HashMap<String, ProteinModification>();
-			byPdbccId = new HashMap<String, ProteinModification>();
+			byResidId = new HashMap<String, Set<ProteinModification>>();
+			byPsimodId = new HashMap<String, Set<ProteinModification>>();
+			byPdbccId = new HashMap<String, Set<ProteinModification>>();
 			byComponent = new HashMap<Component, Set<ProteinModification>>();
 			byCategory = new EnumMap<ModificationCategory, Set<ProteinModification>>(
 					ModificationCategory.class);
@@ -271,21 +271,21 @@ public final class ProteinModification {
 		 * Set the Protein Data Bank Chemical Component ID.
 		 * @param pdbccId Protein Data Bank Chemical Component ID.
 		 * @return the same Builder object so you can chain setters.
-		 * @throws IllegalArgumentException if pdbccId has been set,
-		 *  or has been registered.
+		 * @throws IllegalArgumentException if pdbccId has been set.
 		 */
 		public Builder setPdbccId(final String pdbccId) {			
 			if (current.pdbccId!=null) {
 				throw new IllegalArgumentException("PDBCC ID has been set.");
 			}
 			
-			if (byPdbccId.containsKey(pdbccId)) {
-				// TODO: is this the correct logic?
-				throw new IllegalArgumentException(pdbccId+" has been registered.");
-			}
+			current.pdbccId = pdbccId;
 			
-			current.pdbccId = pdbccId;			
-			byPdbccId.put(pdbccId, current);
+			Set<ProteinModification> mods = byPdbccId.get(pdbccId);
+			if (mods==null) {
+				mods = new HashSet<ProteinModification>();
+				byPdbccId.put(pdbccId, mods);
+			}
+			mods.add(current);
 			
 			return this;
 		}
@@ -312,21 +312,21 @@ public final class ProteinModification {
 		 * @return the same Builder object so you can chain setters.
 		 * @throws IllegalArgumentException if residId is null or
 		 *  it has been set.
-		 * @throws IllegalArgumentException if residIdhas been set 
-		 * or has been registered by another instance.
+		 * @throws IllegalArgumentException if residIdhas been set.
 		 */
 		public Builder setResidId(final String residId) {
 			if (current.residId!=null) {
 				throw new IllegalArgumentException("RESID ID has been set.");
 			}
 			
-			if (byResidId.containsKey(residId)) {
-				// TODO: is this the correct logic?
-				throw new IllegalArgumentException(residId+" has been registered.");
-			}
+			current.residId = residId;
 			
-			current.residId = residId;			
-			byResidId.put(residId, current);
+			Set<ProteinModification> mods = byResidId.get(residId);
+			if (mods==null) {
+				mods = new HashSet<ProteinModification>();
+				byResidId.put(residId, mods);
+			}
+			mods.add(current);
 			
 			return this;
 		}
@@ -351,21 +351,21 @@ public final class ProteinModification {
 		 * Set the PSI-MOD ID.
 		 * @param psimodId PSI-MOD ID.
 		 * @return the same Builder object so you can chain setters.
-		 * @throws IllegalArgumentException if psimodId has been set
-		 *  or has been registered by another instance.
+		 * @throws IllegalArgumentException if psimodId has been set.
 		 */
 		public Builder setPsimodId(final String psimodId) {
 			if (current.psimodId!=null) {
 				throw new IllegalArgumentException("PSI-MOD ID has been set.");
 			}
 			
-			if (byPsimodId.containsKey(psimodId)) {
-				// TODO: is this the correct logic?
-				throw new IllegalArgumentException(psimodId+" has been registered.");
-			}
-			
 			current.psimodId = psimodId;
-			byPsimodId.put(psimodId, current);
+			
+			Set<ProteinModification> mods = byPsimodId.get(psimodId);
+			if (mods==null) {
+				mods = new HashSet<ProteinModification>();
+				byPsimodId.put(psimodId, mods);
+			}
+			mods.add(current);
 			
 			return this;
 		}
@@ -511,18 +511,18 @@ public final class ProteinModification {
 	/**
 	 * 
 	 * @param residId RESID ID.
-	 * @return ProteinModification that has the RESID ID.
+	 * @return a set of ProteinModifications that have the RESID ID.
 	 */
-	public static ProteinModification getByResidId(final String residId) {
+	public static Set<ProteinModification> getByResidId(final String residId) {
 		lazyInit();
 		return byResidId.get(residId);
 	}
 	/**
 	 * 
 	 * @param psimodId PSI-MOD ID.
-	 * @return ProteinModification that has the PSI-MOD ID.
+	 * @return a set of ProteinModifications that have the PSI-MOD ID.
 	 */
-	public static ProteinModification getByPsimodId(final String psimodId) {
+	public static Set<ProteinModification> getByPsimodId(final String psimodId) {
 		lazyInit();
 		return byPsimodId.get(psimodId);
 	}
@@ -530,9 +530,9 @@ public final class ProteinModification {
 	/**
 	 * 
 	 * @param pdbccId Protein Data Bank Chemical Component ID.
-	 * @return chemical modification that have the PDBCC ID.
+	 * @return a set of ProteinModifications that have the PDBCC ID.
 	 */
-	public static ProteinModification getByPdbccId(final String pdbccId) {
+	public static Set<ProteinModification> getByPdbccId(final String pdbccId) {
 		lazyInit();
 		return byPdbccId.get(pdbccId);
 	}
@@ -678,14 +678,14 @@ public final class ProteinModification {
 		List<Component> comps = condition.getComponents();
 		sb.append("\tComponents:");
 		for (Component comp : comps) {	
-			sb.append(comp.toString()+";");
+			sb.append(comp+";");
 		}
 		
 		List<ModificationLinkage> linkages = condition.getLinkages();
 		sb.append("\tLinkages");
 		if (linkages!=null) {
 			for (ModificationLinkage linkage : linkages) {
-				sb.append(linkage.toString()+";");
+				sb.append(linkage+";");
 			}
 		}
 		
