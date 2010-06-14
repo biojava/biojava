@@ -44,16 +44,9 @@ public interface ModifiedCompound {
 	
 	/**
 	 * 
-	 * @return involved protein residues.
+	 * @return involved chemical {@link Group}s.
 	 */
-	public List<Group> getProteinResidues();
-	
-	/**
-	 * 
-	 * @return involved chemical {@link Group}s that are not
-	 *  protein residues.
-	 */
-	public List<Group> getOtherGroups();
+	public List<Group> getGroups();
 	
 	/**
 	 * 
@@ -61,5 +54,5 @@ public interface ModifiedCompound {
 	 *  atom bonds that links the residues and/or the attached groups.
 	 *  Each element of the list is a array containing two atoms.
 	 */
-	public List<Atom[]> getAtomBonds();
+	public List<Atom[]> getAtomLinkages();
 }

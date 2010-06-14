@@ -512,8 +512,8 @@
 				<Id source="PDBCC">CYS</Id>
 			</Component>
 			<Bond>
-				<Atom component="1">S</Atom>
-				<Atom component="2">S</Atom>
+				<Atom component="1">SG</Atom>
+				<Atom component="2">SG</Atom>
 			</Bond>
 		</Condition>
 		<Occurrence>Natural</Occurrence>
@@ -576,15 +576,15 @@
 				<Id source="PDBCC">F3S</Id>
 			</Component>
 			<Bond>
-				<Atom component="1">S</Atom>
+				<Atom component="1">SG</Atom>
 				<Atom component="4">FE1</Atom>
 			</Bond>
 			<Bond>
-				<Atom component="2">S</Atom>
+				<Atom component="2">SG</Atom>
 				<Atom component="4">FE3</Atom>
 			</Bond>
 			<Bond>
-				<Atom component="3">S</Atom>
+				<Atom component="3">SG</Atom>
 				<Atom component="4">FE4</Atom>
 			</Bond>
 		</Condition>
@@ -623,19 +623,19 @@
 				<Id source="PDBCC">FES</Id>
 			</Component>
 			<Bond>
-				<Atom component="1">S</Atom>
+				<Atom component="1">SG</Atom>
 				<Atom component="5">FE1</Atom>
 			</Bond>
 			<Bond>
-				<Atom component="2">S</Atom>
+				<Atom component="2">SG</Atom>
 				<Atom component="5">FE1</Atom>
 			</Bond>
 			<Bond>
-				<Atom component="3">S</Atom>
+				<Atom component="3">SG</Atom>
 				<Atom component="5">FE2</Atom>
 			</Bond>
 			<Bond>
-				<Atom component="4">S</Atom>
+				<Atom component="4">SG</Atom>
 				<Atom component="5">FE2</Atom>
 			</Bond>
 		</Condition>

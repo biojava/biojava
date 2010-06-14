@@ -51,7 +51,7 @@ public class ProteinModificationRegistryTest extends TestCase {
 					}
 				);
 		ProteinModification.register("TEST", 
-				ModificationCategory.CROSS_LINK2,
+				ModificationCategory.CROSS_LINK_2,
 				ModificationOccurrenceType.NATURAL,
 				condition)
 				.setDescription("TEST")

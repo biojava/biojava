@@ -24,6 +24,8 @@
 
 package org.biojava3.protmod;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -38,32 +40,78 @@ import org.biojava.bio.structure.Group;
  */
 public class ModifiedCompoundImpl implements ModifiedCompound {
 	private final ProteinModification modification;
-	private final List<Group> residues;
-	private final List<Group> otherGroups;
-	private final List<Atom[]> atomBonds;
+	private final List<Group> groups;
+	private final List<Atom[]> atomLinkages;
+	
+	/**
+	 * Create a ModifiedCompoundImpl that has only one involved component.
+	 * Use this constructor for a modified residue.
+	 * @param modification {@link ProteinModification}.
+	 * @param modifiedResidue modified {@link Group}.
+	 * @return a {@link ModifiedCompound}.
+	 * @throws IllegalArgumentException if the modification is not a 
+	 *  CHEMICAL_MODIFICATION.
+	 */
+	public ModifiedCompoundImpl (
+			final ProteinModification modification,
+			final Group modifiedResidue) {
+		this(modification, new Group[] {modifiedResidue}, null);
+	}
+	
+	/**
+	 * Create a ModifiedCompoundImpl representing a attachemnt modification.
+	 * @param modification {@link ProteinModification}.
+	 * @param modifiedResidue modified {@link Group}.
+	 * @param atomOnResidue {@link Atom} on the modified residue.
+	 * @param attachedGroup attached chemical {@link Group}.
+	 * @param atomOnAttachedGroup {@link Atom} on the attached group.
+	 * @return a {@link ModifiedCompound}.
+	 * @throws IllegalArgumentException if the modification is not a 
+	 *  ATTACHMENT, or any argument is null.
+	 */
+	public ModifiedCompoundImpl (
+			final ProteinModification modification,
+			final Group modifiedResidue, 
+			final Atom atomOnResidue,
+			final Group attachedGroup, 
+			final Atom atomOnAttachedGroup) {
+		this(modification, new Group[] {modifiedResidue, attachedGroup},
+				new Atom[][]{new Atom[]{atomOnResidue, atomOnAttachedGroup}});
+	}
+
+	/**
+	 * 
+	 * @param modification {@link ProteinModification}.
+	 * @param otherGroups involved chemical {@link Group}s. 
+	 * @param atomLinkages an Nx2 array of atom pairs, which represent the 
+	 *  atom bonds that links the residues and/or the attached groups. 
+	 */
+	public ModifiedCompoundImpl(final ProteinModification modification,
+			final Group[] groups,
+			final Atom[][] atomLinkages) {		
+		this(modification, Arrays.asList(groups),
+				atomLinkages==null?null:Arrays.asList(atomLinkages));
+	}	
 	
 	/**
 	 * 
 	 * @param modification {@link ProteinModification}.
-	 * @param residues protein residues.
-	 * @param otherGroups involved chemical {@link Group}s, except residues. 
-	 * @param atomBonds a list of atom pairs, which represent the 
+	 * @param groups involved chemical {@link Group}s residues. 
+	 * @param atomLinkages a list of atom pairs, which represent the 
 	 *  atom bonds that links the residues and/or the attached groups.
 	 *  Each element of the list is a array containing two atoms. 
 	 */
 	public ModifiedCompoundImpl(final ProteinModification modification,
-			final List<Group> residues, final List<Group> otherGroups,
-			final List<Atom[]> atomBonds) {
+			final List<Group> groups, final List<Atom[]> atomLinkages) {
 		if (modification==null) {
 			throw new IllegalArgumentException("modification cannot be null");
 		}
 		
-		checkGroupAndAtomBondsProper(residues, otherGroups, atomBonds);
+		checkGroupAndAtomBondsProper(groups, atomLinkages);
 		
 		this.modification = modification;
-		this.residues = residues;
-		this.otherGroups = otherGroups;
-		this.atomBonds = atomBonds;
+		this.groups = groups;
+		this.atomLinkages = atomLinkages;
 	}
 	
 	/**
@@ -71,16 +119,13 @@ public class ModifiedCompoundImpl implements ModifiedCompound {
 	 * @param groups {@link Group}s.
 	 * @param atomBonds pairs of {@link Atom}s.
 	 */
-	private void checkGroupAndAtomBondsProper(final List<Group> residues,
-			final List<Group> otherGroups, final List<Atom[]> atomBonds) {
-		if (residues==null||residues.isEmpty()) {
+	private void checkGroupAndAtomBondsProper(final List<Group> groups,
+			final List<Atom[]> atomBonds) {
+		if (groups==null||groups.isEmpty()) {
 			throw new IllegalArgumentException("At least one involved residue.");
 		}
 		
-		Set<Group> gs = new HashSet<Group>(residues);
-		if (otherGroups != null) {
-			gs.addAll(otherGroups);
-		}
+		Set<Group> gs = new HashSet<Group>(groups);
 		
 		if (gs.size()==1) {
 			if (atomBonds!=null && !atomBonds.isEmpty()) {
@@ -93,16 +138,27 @@ public class ModifiedCompoundImpl implements ModifiedCompound {
 						"specified for more than one component.");
 			}
 			
+			Set<Group> bondedGroups = new HashSet<Group>();
 			for (Atom[] atoms : atomBonds) {
 				for (int j=0; j<2; j++) {
 					if (atoms[j]==null) {
 						throw new IllegalArgumentException("Null bond.");
 					}
-					if (!gs.contains(atoms[j].getParent())) {
+					
+					Group g = atoms[j].getParent();
+					if (!gs.contains(g)) {
 						throw new IllegalArgumentException("Atoms must be on the " +
 								"involved amino acids or other chemical groups.");
 					}
+					
+					bondedGroups.add(g);
 				}
+			}
+			
+			gs.removeAll(bondedGroups);
+			if (!gs.isEmpty()) {
+				throw new IllegalArgumentException("Some of the components were" +
+						"not connected to others.");
 			}
 		}
 	}
@@ -118,32 +174,62 @@ public class ModifiedCompoundImpl implements ModifiedCompound {
 	/**
 	 * {@inheritDoc}
 	 */
-	public List<Group> getProteinResidues() {
-		return residues;
+	@Override
+	public List<Group> getGroups() {
+		return Collections.unmodifiableList(groups);
 	}
 	
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public List<Group> getOtherGroups() {
-		return otherGroups;
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public List<Atom[]> getAtomBonds() {
-		return atomBonds;
+	public List<Atom[]> getAtomLinkages() {
+		return Collections.unmodifiableList(atomLinkages);
 	}
 	
 	/**
 	 * 
 	 */
+	@Override
 	public String toString() {
-		return "Modification: " + modification.toString() + "\n" +
-			   "Residues: " + residues.toString() + "\n" +
-			   "Atoms: " + atomBonds.toString();
+		String str = "Modification: " + modification.toString() +
+			   "\nGroups: " + groups.toString();
+		if (atomLinkages!=null) {
+			str += "\nAtoms: " + atomLinkages.toString();;
+		}
+
+		return str;
+	}
+	
+	/**
+	 * @return true if same modification and same components; false, otherwise.
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (!(obj instanceof ModifiedCompoundImpl)) {
+			return false;
+		}
+		
+		ModifiedCompoundImpl mci = (ModifiedCompoundImpl)obj;
+		if (mci.getModification() != modification) {
+			return false;
+		}
+		
+		List<Group> gs = mci.getGroups();
+		return gs.containsAll(groups);
+		
+		// Do not need to consider linkage, since they can be determined by
+		// modification and groups.
+	}
+	
+	/**
+	 * 
+	 */
+	public int hashCode() {
+		int hashCode = modification.hashCode();
+		for (Group group : groups) {
+			hashCode += group.hashCode();
+		}
+		return hashCode;
 	}
 }

@@ -44,8 +44,7 @@ public interface ProteinModificationParser {
 	 * @param structure query {@link Structure}.
 	 * @param potentialModifications query {@link ProteinModification}s.
 	 * @param modelnr model number.
-	 * @return an list of {@link ModifiedCompound}s, or null if the
-	 *  nodelnr is larger than or equal to the number of models in the structure.
+	 * @return an list of {@link ModifiedCompound}s.
 	 */
 	public List<ModifiedCompound> parse(Structure structure, 
 			Set<ProteinModification> potentialModifications,

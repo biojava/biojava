@@ -36,13 +36,13 @@ import java.util.Map;
 public enum ModificationCategory {
 	ATTACHMENT("Attachment"),
 	CHEMICAL_MODIFICATION("ModifiedResidue"), 
-	CROSS_LINK1("CrossLink1"),
-	CROSS_LINK2("CrossLink2"),
-	CROSS_LINK3("CrossLink3"),
-	CROSS_LINK4("CrossLink4"),
-	CROSS_LINK5("CrossLink5"),
-	CROSS_LINK6("CrossLink6"),
-	CROSS_LINK7("CrossLink7")
+	CROSS_LINK_1("CrossLink1"),
+	CROSS_LINK_2("CrossLink2"),
+	CROSS_LINK_3("CrossLink3"),
+	CROSS_LINK_4("CrossLink4"),
+	CROSS_LINK_5("CrossLink5"),
+	CROSS_LINK_6("CrossLink6"),
+	CROSS_LINK_7("CrossLink7")
 	;
 	
 	ModificationCategory(String label) {
@@ -69,13 +69,13 @@ public enum ModificationCategory {
 	 * @return true if it is a CrossLink; false, otherwise.
 	 */
 	public boolean isCrossLink() {
-		return this == CROSS_LINK1
-			|| this == CROSS_LINK2
-			|| this == CROSS_LINK3
-			|| this == CROSS_LINK4
-			|| this == CROSS_LINK5
-			|| this == CROSS_LINK6
-			|| this == CROSS_LINK7;
+		return this == CROSS_LINK_1
+			|| this == CROSS_LINK_2
+			|| this == CROSS_LINK_3
+			|| this == CROSS_LINK_4
+			|| this == CROSS_LINK_5
+			|| this == CROSS_LINK_6
+			|| this == CROSS_LINK_7;
 	}
 	
 	/**
