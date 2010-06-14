@@ -1378,7 +1378,7 @@
 		<Occurrence>Natural</Occurrence>
 		<Category>ModifiedResidue</Category>
 	</Entry>
-	<Entry>
+	<!--Entry>
 		<Id>0048</Id>
 		<Description>A protein modification that effectively converts an L-tyrosine residue to L-tyrosine amide.</Description>
 		<SystematicName>(S)-2-amino-3-(4-hydoxyphenyl)propanamide</SystematicName>
@@ -1406,7 +1406,7 @@
 		</Condition>
 		<Occurrence>Natural</Occurrence>
 		<Category>ModifiedResidue</Category>
-	</Entry>
+	</Entry-->
 	<Entry>
 		<Id>0049</Id>
 		<Description>A protein modification that effectively converts an L-valine residue to L-valine amide.</Description>
@@ -1608,5 +1608,255 @@
 		</Condition>
 		<Occurrence>Natural</Occurrence>
 		<Category>Attachment</Category>
+	</Entry>
+	<Entry>
+		<Id>0056</Id>
+		<Description>A protein modification that effectively crosslinks an L-glutamine residue and an L-lysine residue by an isopeptide bond with the formation of N6-(L-isoglutamyl)-L-lysine and the release of ammonia.</Description>
+		<SystematicName>(S,S)-2-amino-6-[(4-amino-4-carboxybutanoyl)amino]hexanoic acid</SystematicName>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0124</Id>
+			<Name>N6-(L-isoglutamyl)-L-lysine</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00133</Id>
+			<Name>N6-(L-isoglutamyl)-L-lysine (Gln)</Name>
+		</CrossReference>
+		<Formula>C 11 H 17 N 3 O 3</Formula>
+		<Condition>
+			<Component type="AminoAcid" label="1">
+				<Id source="PDBCC">LYS</Id>
+			</Component>
+			<Component type="AminoAcid" label="2">
+				<Id source="PDBCC">GLN</Id>
+			</Component>
+			<Bond>
+				<!--TODO: verify this-->
+				<Atom component="1">NZ</Atom>
+				<Atom component="2">CD</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>Natural</Occurrence>
+		<Category>CrossLink2</Category>
+	</Entry>
+	<Entry>
+		<Id>0057</Id>
+		<Description>A protein modification that effectively crosslinks an L-glutamic acid residue and an L-lysine residue by an isopeptide bond to form N6-(L-isoglutamyl)-L-lysine.</Description>
+		<SystematicName>(S,S)-2-amino-6-[(4-amino-4-carboxybutanoyl)amino]hexanoic acid</SystematicName>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0124</Id>
+			<Name>N6-(L-isoglutamyl)-L-lysine</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:01484</Id>
+			<Name>N6-(L-isoglutamyl)-L-lysine (Glu)</Name>
+		</CrossReference>
+		<Formula>C 11 H 17 N 3 O 3</Formula>
+		<Condition>
+			<Component type="AminoAcid" label="1">
+				<Id source="PDBCC">LYS</Id>
+			</Component>
+			<Component type="AminoAcid" label="2">
+				<Id source="PDBCC">GLU</Id>
+			</Component>
+			<Bond>
+				<!--TODO: verify this-->
+				<Atom component="1">NZ</Atom>
+				<Atom component="2">CD</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>Natural</Occurrence>
+		<Category>CrossLink2</Category>
+	</Entry>
+	<Entry>
+		<Id>0058</Id>
+		<Description>A protein modification that effectively crosslinks an L-lysine residue and a glycine residue by an isopeptide bond to form N6-glycyl-L-lysine.</Description>
+		<SystematicName>(S)-2-amino-6-[(aminoacetyl)amino]hexanoic acid</SystematicName>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0125</Id>
+			<Name>N6-glycyl-L-lysine</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00134</Id>
+			<Name>N6-glycyl-L-lysine</Name>
+		</CrossReference>
+		<Formula>C 8 H 14 N 3 O 2</Formula>
+		<Condition>
+			<Component type="AminoAcid" label="1">
+				<Id source="PDBCC">LYS</Id>
+			</Component>
+			<Component type="AminoAcid" label="2">
+				<Id source="PDBCC">GLY</Id>
+				<Terminal>C</Terminal>
+			</Component>
+			<Bond>
+				<!--TODO: verify this-->
+				<Atom component="1">NZ</Atom>
+				<Atom component="2">C</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>Natural</Occurrence>
+		<Category>CrossLink2</Category>
+	</Entry>
+	<Entry>
+		<Id>0059</Id>
+		<Description>A protein modification that effectively crosslinks an L-asparagine residue and a glycine residue by an isopeptide bond with formation of N-(L-isoaspartyl)glycine and the release of ammonia.</Description>
+		<SystematicName>(S)-2-amino-4-(carboxymethyl)amino-4-oxobutanoic acid</SystematicName>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0126</Id>
+			<Name>N-(L-isoaspartyl)-glycine</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00135</Id>
+			<Name>N-(L-isoaspartyl)glycine</Name>
+		</CrossReference>
+		<Formula>C 6 H 7 N 2 O 3</Formula>
+		<Condition>
+			<Component type="AminoAcid" label="1">
+				<Id source="PDBCC">GLY</Id>
+				<Terminal>N</Terminal>
+			</Component>
+			<Component type="AminoAcid" label="2">
+				<Id source="PDBCC">ASN</Id>
+			</Component>
+			<Bond>
+				<!--TODO: verify this-->
+				<Atom component="1">N</Atom>
+				<Atom component="2">CG</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>Natural</Occurrence>
+		<Category>CrossLink2</Category>
+	</Entry>
+	<Entry>
+		<Id>0060</Id>
+		<Description>A protein modification that effectively crosslinks L-aspartic acid and L-cysteine residues via an isopeptide bond to form N-(L-isoaspartyl)-L-cysteine.</Description>
+		<SystematicName>(S)-2-amino-4-((R)-1-carboxy-2-sulfanylethyl)amino-4-oxobutanoic acid</SystematicName>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0216</Id>
+			<Name>N-(L-isoaspartyl)-L-cysteine</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00221</Id>
+			<Name>N-(L-isoaspartyl)-L-cysteine</Name>
+		</CrossReference>
+		<Formula>C 7 H 9 N 2 O 3 S 1</Formula>
+		<Condition>
+			<Component type="AminoAcid" label="1">
+				<Id source="PDBCC">CYS</Id>
+				<Terminal>N</Terminal>
+			</Component>
+			<Component type="AminoAcid" label="2">
+				<Id source="PDBCC">ASP</Id>
+			</Component>
+			<Bond>
+				<Atom component="1">N</Atom>
+				<Atom component="2">CG</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>Natural</Occurrence>
+		<Category>CrossLink2</Category>
+	</Entry>
+	<Entry>
+		<Id>0061</Id>
+		<Description>A protein modification that effectively crosslinks an L-asparagine residue and an L-lysine residue by an isopeptide bond with the formation of N6-(L-isoaspartyl)-L-lysine and the release of ammonia.</Description>
+		<SystematicName>(S,S)-2-amino-6-[(3-amino-3-carboxypropanoyl)amino]hexanoic acid</SystematicName>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0294</Id>
+			<Name>N6-(L-isoaspartyl)-L-lysine</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00299</Id>
+			<Name>N6-(L-isoaspartyl)-L-lysine</Name>
+		</CrossReference>
+		<Formula>C 10 H 15 N 3 O 3</Formula>
+		<Condition>
+			<Component type="AminoAcid" label="1">
+				<Id source="PDBCC">LYS</Id>
+			</Component>
+			<Component type="AminoAcid" label="2">
+				<Id source="PDBCC">ASN</Id>
+			</Component>
+			<Bond>
+				<Atom component="1">NZ</Atom>
+				<Atom component="2">CG</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>Natural</Occurrence>
+		<Category>CrossLink2</Category>
+	</Entry>
+	<Entry>
+		<Id>0062</Id>
+		<Description>A protein modification that effectively crosslinks an L-glutamic acid residue and a glycine residue by an isopeptide bond to form N-(L-isoglutamyl)-glycine.</Description>
+		<SystematicName>(S)-2-amino-5-(carboxymethyl)amino-5-oxopentanoic acid</SystematicName>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0360</Id>
+			<Name>N-(L-isoglutamyl)-glycine</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00365</Id>
+			<Name>N-(L-isoglutamyl)-glycine</Name>
+		</CrossReference>
+		<Formula>C 7 H 9 N 2 O 3</Formula>
+		<Condition>
+			<Component type="AminoAcid" label="1">
+				<Id source="PDBCC">GLU</Id>
+			</Component>
+			<Component type="AminoAcid" label="2">
+				<Id source="PDBCC">GLY</Id>
+				<Terminal>N</Terminal>
+			</Component>
+			<Bond>
+				<!--TODO: verify this-->
+				<Atom component="1">CD</Atom>
+				<Atom component="2">N</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>Natural</Occurrence>
+		<Category>CrossLink2</Category>
+	</Entry>
+	<Entry>
+		<Id>0063</Id>
+		<Description>A protein modification that effectively crosslinks an L-lysine residue and an L-threonine residue by an isopeptide bond to form N6-(L-threonyl)-L-lysine.</Description>
+		<SystematicName>(2S)-2-amino-6-([(2S,3R)-2-amino-3-hydroxybutanoyl]amino)hexanoic acid</SystematicName>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0440</Id>
+			<Name>N6-(L-threonyl)-L-lysine</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00924</Id>
+			<Name>N6-(L-threonyl)-L-lysine</Name>
+		</CrossReference>
+		<Formula>C 10 H 18 N 3 O 3</Formula>
+		<Condition>
+			<Component type="AminoAcid" label="1">
+				<Id source="PDBCC">LYS</Id>
+			</Component>
+			<Component type="AminoAcid" label="2">
+				<Id source="PDBCC">THR</Id>
+			</Component>
+			<Bond>
+				<!--TODO: verify this-->
+				<Atom component="1">NZ</Atom>
+				<Atom component="2">C</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>Natural</Occurrence>
+		<Category>CrossLink2</Category>
 	</Entry>
 </ProteinModifications>

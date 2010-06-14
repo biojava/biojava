@@ -90,7 +90,7 @@ public class ProteinModificationParserTest extends TestCase {
 				"1D5M", // CLE
 				"1XAE", // NFA, C-terminal modification, but occurs in non-terminal residue in 1XAE
 				"2H9E", // LPD
-				"2BF9", // TYC, error reading PDB file
+				//"2BF9", // TYC, error reading PDB file
 				"1YYL", // VLM
 				"1AEX", // SCH
 				"1OMW", // CMT
@@ -102,6 +102,8 @@ public class ProteinModificationParserTest extends TestCase {
 				"3M6S", // Disulfide bond
 				"1A6L", // F3S
 				"1A70", // FES
+				"1RPB", // Disulfide bond, and isopeptide (Cys - ASP)
+				"3B2M", // isopeptide (Lys - Asn)
 		};
 		for ( String name : names){
 			System.out.println("===\n"+name);
@@ -118,7 +120,7 @@ public class ProteinModificationParserTest extends TestCase {
 		Structure struc = TmpAtomCache.cache.getStructure(pdbId);
 
 		DefaultProteinModificationParser parser = new DefaultProteinModificationParser();
-		//parser.setbondLengthTolerance(20);
+//		parser.setbondLengthTolerance(5);
 
 		int nrmodel = struc.nrModels();
 		for (int modelnr=0; modelnr<nrmodel; modelnr++) {
@@ -140,12 +142,12 @@ public class ProteinModificationParserTest extends TestCase {
 	private void printModification(ModifiedCompound mc){
 		ProteinModification mod = mc.getModification();
 		ModificationCategory cat = mod.getCategory();
+		System.out.println(cat.label()+": "+mod.getId());
 		if (cat == ModificationCategory.CHEMICAL_MODIFICATION) {
 			Group g = mc.getGroups().get(0);
 			Chain chain = g.getParent();
-			System.out.println(cat.label()+"\t"+g.getPDBName()+"\t"+chain.getName()+"\t"+g.getPDBCode());
+			System.out.println("\t"+g.getPDBName()+"\t"+chain.getName()+"\t"+g.getPDBCode());
 		} else {
-			System.out.println(cat.label());
 			for (Atom[] atoms : mc.getAtomLinkages()) {
 				Group group = atoms[0].getParent();
 				Chain chain = group.getParent();
