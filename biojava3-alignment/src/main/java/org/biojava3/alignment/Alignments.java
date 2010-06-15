@@ -48,14 +48,13 @@ public class Alignments {
 
     public static <S extends Sequence<C>, C extends Compound>
             int[] getAllPairsScores(List<S> sequences) {
-        int size = sequences.size()*(sequences.size()-1)/2;
-        int[] allPairs = new int[size];
+        int[] allPairs = new int[sequences.size()*(sequences.size()-1)/2];
         for (int i = 0, p = 0; i < sequences.size(); i++) {
-            for (int j = i+1; j < sequences.size(); j++, p++) {
+            for (int j = i+1; p < allPairs.length && j < sequences.size(); j++, p++) {
                 allPairs[p] = getPairwiseScore(sequences.get(i), sequences.get(j));
             }
         }
-        return null;
+        return allPairs;
     }
 
     public static <S extends Sequence<C>, C extends Compound>

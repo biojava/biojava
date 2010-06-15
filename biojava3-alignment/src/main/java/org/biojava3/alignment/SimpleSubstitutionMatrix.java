@@ -62,8 +62,9 @@ public class SimpleSubstitutionMatrix<C extends Compound> implements Substitutio
      * @throws ClassCastException if {@link Compound} type of default compound set differs from type parameter C
      * @throws IllegalStateException if default SimpleSubstitutionMatrix has not been set
      */
-    @SuppressWarnings("unchecked") // explained possible ClassCastException
+    // @SuppressWarnings("unchecked") // explained possible ClassCastException
     public SimpleSubstitutionMatrix() {
+        // TODO proper type checking
         this((SimpleSubstitutionMatrix<C>) Default.getInstance());
     }
 
@@ -197,8 +198,8 @@ public class SimpleSubstitutionMatrix<C extends Compound> implements Substitutio
     @Override
     public String getMatrixAsString() {
         StringBuilder s = new StringBuilder();
-        int lengthCompound = compoundSet.getMaxSingleCompoundStringLength(),
-                lengthRest = getMax(Short.toString(min).length(), Short.toString(max).length(), lengthCompound) + 1;
+        int lengthCompound = compoundSet.getMaxSingleCompoundStringLength(), lengthRest =
+                Math.max(Math.max(Short.toString(min).length(), Short.toString(max).length()), lengthCompound) + 1;
         String padCompound = "%" + Integer.toString(lengthCompound) + "s",
                 padRest = "%" + Integer.toString(lengthRest);
         for (int i = 0; i < lengthCompound; i++) {
@@ -271,17 +272,13 @@ public class SimpleSubstitutionMatrix<C extends Compound> implements Substitutio
         StringTokenizer st = new StringTokenizer(description, "\n\r");
         while (st.hasMoreTokens()) {
             String line = st.nextToken();
-            if (!line.startsWith(comment))
+            if (!line.startsWith(comment)) {
                 s.append(comment);
+            }
             s.append(line + newLine);
         }
         s.append(getMatrixAsString());
         return s.toString();
-    }
-
-    // helper method that returns the maximum of three int's
-    private static int getMax(int i1, int i2, int i3) {
-        return i1 > i2 ? (i1 > i3 ? i1 : i3) : (i2 > i3 ? i2 : i3);
     }
 
     /**
