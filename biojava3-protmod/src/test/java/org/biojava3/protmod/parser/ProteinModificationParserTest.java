@@ -57,6 +57,11 @@ public class ProteinModificationParserTest extends TestCase {
 				"1AL2", // MYR
 				"1L9H", // PLM
 				"1BDO", // BTN
+				//"2IQD", // no successful test case for LPA
+				"1AT9", // RET
+				"1DJP", // DO2, (bond length error 3.0)
+				"1ALL", // CYC
+				"1B8D", // PEB
 				
 				// Modified resdiues
 				"3MVJ", // SEP, TPO
@@ -97,6 +102,9 @@ public class ProteinModificationParserTest extends TestCase {
 				"2C0J", // P1L
 				"1AA1", // KCX
 				"1O5K", // MCL
+				"1A8I", // LLP
+				"2J4Y", // LYR
+				//PVL not exist in PDB
 
 				// Cross link
 				"3M6S", // Disulfide bond
@@ -120,7 +128,7 @@ public class ProteinModificationParserTest extends TestCase {
 		Structure struc = TmpAtomCache.cache.getStructure(pdbId);
 
 		DefaultProteinModificationParser parser = new DefaultProteinModificationParser();
-//		parser.setbondLengthTolerance(5);
+//		parser.setbondLengthTolerance(20);
 
 		int nrmodel = struc.nrModels();
 		for (int modelnr=0; modelnr<nrmodel; modelnr++) {
@@ -128,7 +136,8 @@ public class ProteinModificationParserTest extends TestCase {
 
 			List<ModifiedCompound> mcs = parser.parse(struc, 
 					ProteinModification.getProteinModifications(),
-					//ProteinModification.getByCategory(ModificationCategory.CROSS_LINK_2),
+//					ProteinModification.getByCategory(ModificationCategory.ATTACHMENT),
+//					ProteinModification.getByCategory(ModificationCategory.CHEMICAL_MODIFICATION),
 					modelnr);
 
 			int i=0;

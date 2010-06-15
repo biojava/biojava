@@ -1859,4 +1859,243 @@
 		<Occurrence>Natural</Occurrence>
 		<Category>CrossLink2</Category>
 	</Entry>
+	<Entry>
+		<Id>0064</Id>
+		<Description>A protein modification that effectively converts an L-lysine residue to N6-lipoyl-L-lysine.</Description>
+		<SystematicName>(S)-2-amino-6-[5-((R)-1,2-dithiolan-3-yl)pentanamido]hexanoic acid</SystematicName>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0118</Id>
+			<Name>N6-lipoyl-L-lysine</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00127</Id>
+			<Name>N6-lipoyl-L-lysine</Name>
+		</CrossReference>
+		<Formula>C 14 H 24 N 2 O 2 S 2</Formula>
+		<Condition>
+			<Component type="AminoAcid" label="1">
+				<Id source="PDBCC">LYS</Id>
+			</Component>
+			<Component type="Ligand" label="2">
+				<Id source="PDBCC">LPA</Id>
+			</Component>
+			<Bond>
+				<!--TODO: verify this-->
+				<Atom component="1">NZ</Atom>
+				<Atom component="2">C1</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>Natural</Occurrence>
+		<Category>Attachment</Category>
+	</Entry>
+	<Entry>
+		<Id>0065</Id>
+		<Description>A protein modification that effectively converts an L-lysine residue to N6-pyridoxal phosphate-L-lysine.</Description>
+		<SystematicName>(S)-2-amino-6-[([3-hydroxy-2-methyl-5-phosphonooxymethylpyridin-4-yl]methylidene)amino]hexanoic acid</SystematicName>
+		<CrossReference>
+			<Source>PDBCC</Source>
+			<Id>LLP</Id>
+			<Name>2-LYSINE(3-HYDROXY-2-METHYL-5-PHOSPHONOOXYMETHYL-PYRIDIN-4-YLMETHANE)</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0119</Id>
+			<Name>N6-pyridoxal phosphate-L-lysine</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00128</Id>
+			<Name>N6-pyridoxal phosphate-L-lysine</Name>
+		</CrossReference>
+		<Formula>C 14 H 20 N 3 O 6 P 1</Formula>
+		<Condition>
+			<Component type="AminoAcid" label="1">
+				<Id source="PDBCC">LLP</Id>
+			</Component>
+		</Condition>
+		<Occurrence>Natural</Occurrence>
+		<Category>ModifiedResidue</Category>
+	</Entry>
+	<Entry>
+		<Id>0066</Id>
+		<Description>A protein modification that effectively converts an L-lysine residue to N6-retinylidene-L-lysine, the adduct of retinal.</Description>
+		<SystematicName>(S)-2-amino-6-[(2E,4E,6E,8E)-3,7-dimethyl-9-(2,6,6-trimethylcyclohex-1-en-1-yl)-2,4,6,8-nonatetraenylidene]aminohexanoic acid</SystematicName>
+		<CrossReference>
+			<Source>PDBCC</Source>
+			<Id>LYR</Id>
+			<Name>N~6~-[(2Z,4E,6E,8E)-3,7-DIMETHYL-9-(2,6,6-TRIMETHYLCYCLOHEX-1-EN-1-YL)NONA-2,4,6,8-TETRAENYL]LYSINE</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0120</Id>
+			<Name>N6-retinylidene-L-lysine</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00129</Id>
+			<Name>N6-retinylidene-L-lysine</Name>
+		</CrossReference>
+		<Formula>C 26 H 38 N 2 O 1</Formula>
+		<Condition>
+			<Component type="AminoAcid" label="1">
+				<Id source="PDBCC">LYR</Id>
+			</Component>
+		</Condition>
+		<Occurrence>Natural</Occurrence>
+		<Category>ModifiedResidue</Category>
+	</Entry>
+	<Entry>
+		<Id>0067</Id>
+		<Description>A protein modification that effectively converts an L-lysine residue to N6-retinylidene-L-lysine, the adduct of retinal.</Description>
+		<SystematicName>(S)-2-amino-6-[(2E,4E,6E,8E)-3,7-dimethyl-9-(2,6,6-trimethylcyclohex-1-en-1-yl)-2,4,6,8-nonatetraenylidene]aminohexanoic acid</SystematicName>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0120</Id>
+			<Name>N6-retinylidene-L-lysine</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00129</Id>
+			<Name>N6-retinylidene-L-lysine</Name>
+		</CrossReference>
+		<Formula>C 26 H 38 N 2 O 1</Formula>
+		<Condition>
+			<Component type="AminoAcid" label="1">
+				<Id source="PDBCC">LYS</Id>
+			</Component>
+			<Component type="Ligand" label="2">
+				<Id source="PDBCC">RET</Id>
+			</Component>
+			<Bond>
+				<Atom component="1">NZ</Atom>
+				<Atom component="2">C15</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>Natural</Occurrence>
+		<Category>Attachment</Category>
+	</Entry>
+	<Entry>
+		<Id>0068</Id>
+		<Description>A protein modification that effectively converts an L-lysine residue to L-allysine.</Description>
+		<SystematicName>(S)-2-amino-6-oxohexanoic acid</SystematicName>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0121</Id>
+			<Name>L-allysine</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00130</Id>
+			<Name>L-allysine</Name>
+		</CrossReference>
+		<Formula>C 6 H 9 N 1 O 2</Formula>
+		<Condition>
+			<Component type="AminoAcid" label="1">
+				<Id source="PDBCC">LYS</Id>
+			</Component>
+			<Component type="Ligand" label="2">
+				<Id source="PDBCC">DO2</Id>
+			</Component>
+			<Bond>
+				<Atom component="1">NZ</Atom>
+				<Atom component="2">CE</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>Natural</Occurrence>
+		<Category>Attachment</Category>
+	</Entry>
+	<Entry>
+		<Id>0069</Id>
+		<Description>A protein modification that effectively crosslinks an L-serine residue and an L-lysine residue to release water and form 2-amino-6-(2-amino-2-carboxyethylamino)hexanoic acid.</Description>
+		<SystematicName>(2S)-2-amino-6-((2Xi)-2-amino-2-carboxyethylamino)hexanoic acid</SystematicName>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0123</Id>
+			<Name>L-lysinoalanine</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00132</Id>
+			<Name>L-lysinoalanine</Name>
+		</CrossReference>
+		<Formula>C 9 H 15 N 3 O 2</Formula>
+		<Condition>
+			<Component type="AminoAcid" label="1">
+				<Id source="PDBCC">LYS</Id>
+			</Component>
+			<Component type="AminoAcid" label="2">
+				<Id source="PDBCC">SER</Id>
+			</Component>
+			<Bond>
+				<!--TODO: verify this-->
+				<Atom component="1">NZ</Atom>
+				<Atom component="2">CB</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>Natural</Occurrence>
+		<Category>CrossLink2</Category>
+	</Entry>
+	<Entry>
+		<Id>0070</Id>
+		<Description>A protein modification that effectively results from forming an adduct between a cysteine residue and the tetrapyrrole compound phycocyanobilin.</Description>
+		<SystematicName>(2R,3R)-3-[(1R)-1-(((2R)-2-amino-2-carboxy)ethylsulfanyl)ethyl]-8,12-bis(2-carboxyethyl)-18-ethyl-2,7,13,17-tetramethyl-1,2,3,19,21,22,24-heptahydrobilin-1,19(21H,22H,24H)-dione</SystematicName>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0131</Id>
+			<Name>S-phycocyanobilin-L-cysteine</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00140</Id>
+			<Name>S-phycocyanobilin-L-cysteine</Name>
+		</CrossReference>
+		<Formula>C 36 H 43 N 5 O 7 S 1</Formula>
+		<Condition>
+			<Component type="AminoAcid" label="1">
+				<Id source="PDBCC">CYS</Id>
+			</Component>
+			<Component type="Ligand" label="2">
+				<Id source="PDBCC">CYC</Id>
+			</Component>
+			<Bond>
+				<Atom component="1">SG</Atom>
+				<Atom component="2">CAC</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>Natural</Occurrence>
+		<Category>Attachment</Category>
+	</Entry>
+	<Entry>
+		<Id>0071</Id>
+		<Description>A protein modification that effectively results from forming an adduct between a cysteine residue and the tetrapyrrole compound phycoerythrobilin.</Description>
+		<SystematicName>(2S,3R,16R)-18-ethenyl-3-[(1R)-1-(((2R)-2-amino-2-carboxy)ethylsulfanyl)ethyl]-8,12-bis(2-carboxyethyl)-2,7,13,17-tetramethyl-2,3,15,16-tetrahydrobilin-1,19(21H,22H,24H)-dione</SystematicName>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0132</Id>
+			<Name>S-phycoerythrobilin-L-cysteine</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00141</Id>
+			<Name>S-phycoerythrobilin-L-cysteine</Name>
+		</CrossReference>
+		<Formula>C 36 H 43 N 5 O 7 S 1</Formula>
+		<Condition>
+			<Component type="AminoAcid" label="1">
+				<Id source="PDBCC">CYS</Id>
+			</Component>
+			<Component type="Ligand" label="2">
+				<Id source="PDBCC">PEB</Id>
+			</Component>
+			<Bond>
+				<!--TODO: verify this-->
+				<Atom component="1">SG</Atom>
+				<Atom component="2">CAA</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>Natural</Occurrence>
+		<Category>Attachment</Category>
+	</Entry>
 </ProteinModifications>
