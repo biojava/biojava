@@ -43,7 +43,7 @@ public class SimpleGapPenaltyTest {
 
     @Test
     public void testSimpleGapPenaltyShortShort() {
-        short gop = 10, gep = 4;
+        short gop = -10, gep = -4;
         GapPenalty gaps = new SimpleGapPenalty(gop, gep);
         assertEquals(gaps.getOpenPenalty(), gop);
         assertEquals(gaps.getExtensionPenalty(), gep);
@@ -53,7 +53,7 @@ public class SimpleGapPenaltyTest {
     @Test
     public void testExtensionPenalty() {
         GapPenalty gaps = new SimpleGapPenalty();
-        short gep = 14;
+        short gep = -14;
         gaps.setExtensionPenalty(gep);
         assertEquals(gaps.getExtensionPenalty(), gep);
     }
@@ -61,7 +61,7 @@ public class SimpleGapPenaltyTest {
     @Test
     public void testOpenPenalty() {
         GapPenalty gaps = new SimpleGapPenalty();
-        short gop = 27;
+        short gop = -27;
         gaps.setOpenPenalty(gop);
         assertEquals(gaps.getOpenPenalty(), gop);
     }
@@ -69,13 +69,13 @@ public class SimpleGapPenaltyTest {
     @Test
     public void testType() {
         assertEquals(new SimpleGapPenalty((short) 7, (short) 0).getType(), GapPenalty.Type.CONSTANT);
-        assertEquals(new SimpleGapPenalty((short) 5, (short) 5).getType(), GapPenalty.Type.LINEAR);
+        assertEquals(new SimpleGapPenalty((short) 0, (short) 5).getType(), GapPenalty.Type.LINEAR);
         assertEquals(new SimpleGapPenalty((short) 8, (short) 3).getType(), GapPenalty.Type.AFFINE);
     }
 
     @Test
     public void testDefaults() {
-        short gop = 5;
+        short gop = -5;
         short gep = 0;
         SimpleGapPenalty.Default.setOpenPenalty(gop);
         SimpleGapPenalty.Default.setExtensionPenalty(gep);
@@ -83,7 +83,8 @@ public class SimpleGapPenaltyTest {
         assertEquals(gaps.getOpenPenalty(), gop);
         assertEquals(gaps.getExtensionPenalty(), gep);
         assertEquals(gaps.getType(), GapPenalty.Type.CONSTANT);
-        gep = 5;
+        gop = 0;
+        gep = -5;
         SimpleGapPenalty.Default.set(gop, gep);
         gaps = new SimpleGapPenalty();
         assertEquals(gaps.getOpenPenalty(), gop);

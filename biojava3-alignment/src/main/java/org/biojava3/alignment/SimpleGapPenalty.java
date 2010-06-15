@@ -49,8 +49,8 @@ public class SimpleGapPenalty implements GapPenalty {
      * @param gep the gap extension penalty
      */
     public SimpleGapPenalty(short gop, short gep) {
-        this.gop = gop;
-        this.gep = gep;
+        this.gop = (short) -Math.abs(gop);
+        this.gep = (short) -Math.abs(gep);
         setType();
     }
 
@@ -71,21 +71,19 @@ public class SimpleGapPenalty implements GapPenalty {
 
     @Override
     public void setExtensionPenalty(short gep) {
-        this.gep = gep;
+        this.gep = (short) -Math.abs(gep);
         setType();
     }
 
     @Override
     public void setOpenPenalty(short gop) {
-        this.gop = gop;
+        this.gop = (short) -Math.abs(gop);
         setType();
     }
 
     // helper method to set the type given the open and extension penalties
     private void setType() {
-        type = (gep == 0) ? GapPenalty.Type.CONSTANT :
-            (gop == gep) ? GapPenalty.Type.LINEAR :
-                GapPenalty.Type.AFFINE;
+        type = (gep == 0) ? GapPenalty.Type.CONSTANT : ((gop == 0) ? GapPenalty.Type.LINEAR : GapPenalty.Type.AFFINE);
     }
 
     /**
@@ -94,6 +92,15 @@ public class SimpleGapPenalty implements GapPenalty {
     public static class Default {
 
         private static GapPenalty instance = new SimpleGapPenalty((short) 10, (short) 1);
+
+        /**
+         * Returns the current default values for the gap penalties.
+         *
+         * @return the current default set of gap penalties
+         */
+        public GapPenalty getInstance() {
+            return instance;
+        }
 
         /**
          * Returns the default gap extension penalty.
@@ -120,7 +127,8 @@ public class SimpleGapPenalty implements GapPenalty {
          * @param gep the default gap extension penalty
          */
         public static void set(short gop, short gep) {
-            instance = new SimpleGapPenalty(gop, gep);
+            instance.setOpenPenalty(gop);
+            instance.setExtensionPenalty(gep);
         }
 
         /**

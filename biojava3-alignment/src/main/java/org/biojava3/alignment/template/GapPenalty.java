@@ -34,7 +34,7 @@ public interface GapPenalty {
      * Defines the possible types of gap penalties.  This is:
      * <ul>
      *  <li>CONSTANT, if static and the extension penalty is 0
-     *  <li>LINEAR, if static and the extension penalty and open penalty are equal
+     *  <li>LINEAR, if static and the open penalty is 0
      *  <li>AFFINE, if static but neither CONSTANT nor LINEAR
      *  <li>DYNAMIC, if penalty values change during alignment
      * </ul>
