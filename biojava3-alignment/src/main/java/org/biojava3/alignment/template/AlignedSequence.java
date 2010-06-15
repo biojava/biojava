@@ -36,6 +36,11 @@ import org.biojava3.core.sequence.template.Sequence;
 public interface AlignedSequence<C extends Compound> extends Sequence<C> {
 
     /**
+     * Defines an alignment step in order to pass alignment information from an {@link Aligner} to a constructor.
+     */
+    enum Step { COMPOUND, GAP }
+
+    /**
      * Returns the column index within an alignment corresponding to the given index in the original {@link Sequence}.
      * Both indices are 1-indexed and inclusive.
      *

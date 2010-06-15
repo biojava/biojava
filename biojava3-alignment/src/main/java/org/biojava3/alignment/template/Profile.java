@@ -38,7 +38,7 @@ import org.biojava3.core.sequence.template.Sequence;
  * @param <S> each element of the alignment {@link Profile} is of type S
  * @param <C> each element of an {@link AlignedSequence} is a {@link Compound} of type C
  */
-public interface Profile<S extends Sequence<C>, C extends Compound> extends Iterable<S> {
+public interface Profile<S extends Sequence<C>, C extends Compound> extends Iterable<AlignedSequence<C>> {
 
     /**
      * Returns {@link AlignedSequence} at given index.
