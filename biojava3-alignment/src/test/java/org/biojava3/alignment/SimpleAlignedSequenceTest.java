@@ -27,6 +27,7 @@ import static org.junit.Assert.*;
 
 import java.util.Arrays;
 
+import org.biojava3.alignment.template.AlignedSequence;
 import org.biojava3.alignment.template.AlignedSequence.Step;
 import org.biojava3.core.sequence.ProteinSequence;
 import org.biojava3.core.sequence.Strand;
@@ -41,7 +42,7 @@ import org.junit.Test;
 public class SimpleAlignedSequenceTest {
 
     private ProteinSequence go, lo;
-    private SimpleAlignedSequence<AminoAcidCompound> global, local;
+    private AlignedSequence<AminoAcidCompound> global, local;
     private AminoAcidCompoundSet cs;
 
     @Before
