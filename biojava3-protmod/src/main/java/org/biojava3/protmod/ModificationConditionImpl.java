@@ -221,8 +221,8 @@ public class ModificationConditionImpl implements ModificationCondition {
 		}
 		
 		List<int[]> indicesOfLinkedComps = getIndicesOfLinkedComponents();
-		if (indicesOfLinkedComps!=null) {
-		sb.append("\tLinkages:");
+		if (!indicesOfLinkedComps.isEmpty()) {
+			sb.append("\tLinkages:");
 			for (int[] link : indicesOfLinkedComps) {
 				Component comp1 = components.get(link[0]);
 				Component comp2 = components.get(link[1]);

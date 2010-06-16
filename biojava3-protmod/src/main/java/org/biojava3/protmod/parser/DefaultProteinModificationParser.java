@@ -25,6 +25,7 @@
 package org.biojava3.protmod.parser;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -314,8 +315,7 @@ implements ProteinModificationParser {
 			Group res = residues.get(0);
 			Component comp = Component.of(res.getPDBName(), true, false);
 			if (comps.contains(comp)) {
-				List<Group> gs = new ArrayList<Group>(1);
-				gs.add(res);
+				List<Group> gs = Collections.singletonList(res);
 				mapCompRes.put(comp, gs);
 			}
 			
@@ -323,8 +323,7 @@ implements ProteinModificationParser {
 			res = residues.get(residues.size()-1);
 			comp = Component.of(res.getPDBName(), false, true);
 			if (comps.contains(comp)) {
-				List<Group> gs = new ArrayList<Group>(1);
-				gs.add(res);
+				List<Group> gs = Collections.singletonList(res);
 				mapCompRes.put(comp, gs);
 			}
 		}

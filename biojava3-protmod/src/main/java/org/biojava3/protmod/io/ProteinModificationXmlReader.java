@@ -28,6 +28,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -330,7 +331,7 @@ public final class ProteinModificationXmlReader {
 	 */
 	private static Map<String,List<Node>> getChildNodes(Node parent) {
 		if (parent==null)
-			return null;
+			return Collections.emptyMap();
 		
 		Map<String,List<Node>> children = new HashMap<String,List<Node>>();
 		

@@ -548,27 +548,23 @@ public final class ProteinModification {
 		lazyInit();
 		Set<ProteinModification> mods = byComponent.get(comp1);
 		if (mods==null) {
-			return null;
+			return Collections.emptySet();
 		}
 		
 		if (comps.length==0) {
-			return mods;
+			return Collections.unmodifiableSet(mods);
 		} else {
 			Set<ProteinModification> ret = new HashSet<ProteinModification>(mods);
 			for (Component comp:comps) {
 				mods = byComponent.get(comp);
 				if (mods==null) {
-					return null;
+					return Collections.emptySet();
 				} else {
 					ret.retainAll(mods);
 				}
 			}
 			
-			if (ret.isEmpty()) {
-				return null;
-			}
-			
-			return Collections.unmodifiableSet(ret);
+			return ret;
 		}
 	}
 	
