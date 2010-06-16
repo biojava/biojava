@@ -172,7 +172,8 @@ public class SimpleAlignedSequence<C extends Compound> implements AlignedSequenc
 
     @Override
     public C getCompoundAt(int alignmentIndex) {
-        return isGap(alignmentIndex) ? getCompoundSet().getCompoundForString(gap) :
+        return alignmentIndex >= 1 && alignmentIndex <= length && isGap(alignmentIndex) ?
+                getCompoundSet().getCompoundForString(gap) :
                 original.getCompoundAt(getSequenceIndexAt(alignmentIndex));
     }
 

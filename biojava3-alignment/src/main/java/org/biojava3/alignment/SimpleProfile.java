@@ -57,8 +57,12 @@ public class SimpleProfile<S extends Sequence<C>, C extends Compound> implements
      * @param target the second sequence of the pair
      * @param sx lists whether the query sequence aligns a {@link Compound} or gap at each index of the alignment
      * @param sy lists whether the target sequence aligns a {@link Compound} or gap at each index of the alignment
+     * @throws IllegalArgumentException if alignments differ in size or given sequences do not fit in alignments
      */
     public SimpleProfile(S query, S target, List<Step> sx, List<Step> sy) {
+        if (sx.size() != sy.size()) {
+            throw new IllegalArgumentException("Alignments differ in size");
+        }
         list = new ArrayList<AlignedSequence<C>>();
         list.add(new SimpleAlignedSequence<C>(query, sx));
         list.add(new SimpleAlignedSequence<C>(target, sy));
@@ -72,7 +76,7 @@ public class SimpleProfile<S extends Sequence<C>, C extends Compound> implements
 
     @Override
     public AlignedSequence<C> getAlignedSequence(int listIndex) {
-        return list.get(listIndex);
+        return list.get(listIndex - 1);
     }
 
     @Override
@@ -94,7 +98,7 @@ public class SimpleProfile<S extends Sequence<C>, C extends Compound> implements
     public List<AlignedSequence<C>> getAlignedSequences(int... listIndices) {
         List<AlignedSequence<C>> tempList = new ArrayList<AlignedSequence<C>>();
         for (int i : listIndices) {
-            tempList.add(list.get(i));
+            tempList.add(getAlignedSequence(i));
         }
         return Collections.unmodifiableList(tempList);
     }
@@ -110,12 +114,13 @@ public class SimpleProfile<S extends Sequence<C>, C extends Compound> implements
 
     @Override
     public C getCompoundAt(int listIndex, int alignmentIndex) {
-        return list.get(listIndex).getCompoundAt(alignmentIndex);
+        return getAlignedSequence(listIndex).getCompoundAt(alignmentIndex);
     }
 
     @Override
     public C getCompoundAt(S sequence, int alignmentIndex) {
-        return getAlignedSequence(sequence).getCompoundAt(alignmentIndex);
+        AlignedSequence<C> s = getAlignedSequence(sequence);
+        return (s == null) ? null : s.getCompoundAt(alignmentIndex);
     }
 
     @Override
@@ -207,8 +212,9 @@ public class SimpleProfile<S extends Sequence<C>, C extends Compound> implements
     public String toString() {
         // TODO handle circular alignments
         StringBuilder s = new StringBuilder();
+        String newLine = System.getProperty("line.separator");
         for (AlignedSequence<C> as : list) {
-            s.append(as.toString());
+            s.append(as.toString() + newLine);
         }
         return s.toString();
     }
