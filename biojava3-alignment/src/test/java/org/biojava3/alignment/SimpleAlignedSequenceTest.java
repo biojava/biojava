@@ -40,140 +40,245 @@ import org.junit.Test;
 
 public class SimpleAlignedSequenceTest {
 
-    private SimpleAlignedSequence<AminoAcidCompound> as;
+    private ProteinSequence go, lo;
+    private SimpleAlignedSequence<AminoAcidCompound> global, local;
     private AminoAcidCompoundSet cs;
 
     @Before
     public void setup() {
-        Step[] steps = { Step.GAP, Step.COMPOUND, Step.COMPOUND, Step.GAP, Step.COMPOUND, Step.COMPOUND, Step.GAP };
-        as = new SimpleAlignedSequence<AminoAcidCompound>(new ProteinSequence("ARND"), Arrays.asList(steps));
+        go = new ProteinSequence("ARND");
+        lo = new ProteinSequence("CEQGHILKM");
+        global = new SimpleAlignedSequence<AminoAcidCompound>(go, Arrays.asList(new Step[] {Step.GAP, Step.COMPOUND,
+                Step.COMPOUND, Step.GAP, Step.COMPOUND, Step.COMPOUND, Step.GAP}));
+        local = new SimpleAlignedSequence<AminoAcidCompound>(lo, Arrays.asList(new Step[] {Step.COMPOUND,
+                Step.COMPOUND, Step.GAP, Step.GAP, Step.COMPOUND, Step.GAP, Step.COMPOUND, Step.COMPOUND}), 1, 3);
         cs = AminoAcidCompoundSet.getAminoAcidCompoundSet();
     }
 
-    @Test
-    public void testSimpleAlignedSequence() {
-        Step[] steps = { Step.GAP, Step.COMPOUND, Step.COMPOUND, Step.GAP, Step.COMPOUND, Step.COMPOUND, Step.GAP };
-        SimpleAlignedSequence<AminoAcidCompound> as =
-                new SimpleAlignedSequence<AminoAcidCompound>(new ProteinSequence("ARND"), Arrays.asList(steps));
-        assertEquals(as.getLength(), 7);
+    @Test(expected=IllegalArgumentException.class)
+    public void testSimpleAlignedSequenceLocal() {
+        new SimpleAlignedSequence<AminoAcidCompound>(lo, Arrays.asList(new Step[] {Step.COMPOUND, Step.COMPOUND,
+                Step.GAP, Step.GAP, Step.COMPOUND, Step.GAP, Step.COMPOUND, Step.COMPOUND}));
+    }
+
+    @Test(expected=IllegalArgumentException.class)
+    public void testSimpleAlignedSequenceLong() {
+        new SimpleAlignedSequence<AminoAcidCompound>(go, Arrays.asList(new Step[] {Step.GAP, Step.COMPOUND,
+                Step.COMPOUND, Step.GAP, Step.COMPOUND, Step.COMPOUND, Step.COMPOUND, Step.GAP}));
+    }
+
+    @Test(expected=IllegalArgumentException.class)
+    public void testSimpleAlignedSequenceShort() {
+        new SimpleAlignedSequence<AminoAcidCompound>(go, Arrays.asList(new Step[] {Step.GAP, Step.COMPOUND,
+                Step.COMPOUND, Step.GAP, Step.COMPOUND, Step.GAP}));
     }
 
     @Test
     public void testGetAlignmentIndexAt() {
-        assertEquals(as.getAlignmentIndexAt(2), 3);
-        assertEquals(as.getAlignmentIndexAt(4), 6);
+        assertEquals(global.getAlignmentIndexAt(1), 2);
+        assertEquals(global.getAlignmentIndexAt(2), 3);
+        assertEquals(global.getAlignmentIndexAt(3), 5);
+        assertEquals(global.getAlignmentIndexAt(4), 6);
+        assertEquals(local.getAlignmentIndexAt(1), 1);
+        assertEquals(local.getAlignmentIndexAt(2), 1);
+        assertEquals(local.getAlignmentIndexAt(3), 2);
+        assertEquals(local.getAlignmentIndexAt(4), 5);
+        assertEquals(local.getAlignmentIndexAt(5), 7);
+        assertEquals(local.getAlignmentIndexAt(6), 8);
+        assertEquals(local.getAlignmentIndexAt(7), 8);
+        assertEquals(local.getAlignmentIndexAt(8), 8);
+        assertEquals(local.getAlignmentIndexAt(9), 8);
+    }
+
+    @Test(expected=IndexOutOfBoundsException.class)
+    public void testGetAlignmentIndexAtOutOfBounds() {
+        global.getAlignmentIndexAt(0);
+    }
+
+    @Test(expected=IndexOutOfBoundsException.class)
+    public void testGetAlignmentIndexAtOutOfBounds2() {
+        global.getAlignmentIndexAt(5);
+    }
+
+    @Test(expected=IndexOutOfBoundsException.class)
+    public void testGetAlignmentIndexAtOutOfBounds3() {
+        local.getAlignmentIndexAt(0);
+    }
+
+    @Test(expected=IndexOutOfBoundsException.class)
+    public void testGetAlignmentIndexAtOutOfBounds4() {
+        local.getAlignmentIndexAt(10);
     }
 
     @Test
     public void testGetEnd() {
-        assertEquals(as.getEnd(), 6);
+        assertEquals(global.getEnd(), 6);
+        assertEquals(local.getEnd(), 8);
     }
 
     @Test
     public void testGetLocationInAlignment() {
-        Location[] sublocations = { new SimpleLocation(2, 3, Strand.UNDEFINED),
-                new SimpleLocation(5, 6, Strand.UNDEFINED) };
-        assertEquals(as.getLocationInAlignment(), new SimpleLocation(2, 6, Strand.UNDEFINED,
-                Arrays.asList(sublocations)));
+        assertEquals(global.getLocationInAlignment(), new SimpleLocation(2, 6, Strand.UNDEFINED, Arrays.asList(
+                new Location[] {new SimpleLocation(2, 3, Strand.UNDEFINED),
+                new SimpleLocation(5, 6, Strand.UNDEFINED)})));
+        assertEquals(local.getLocationInAlignment(), new SimpleLocation(1, 8, Strand.UNDEFINED, Arrays.asList(
+                new Location[] {new SimpleLocation(1, 2, Strand.UNDEFINED), new SimpleLocation(5, 5, Strand.UNDEFINED),
+                new SimpleLocation(7, 8, Strand.UNDEFINED)})));
     }
 
     @Test
     public void testGetNumGaps() {
-        assertEquals(as.getNumGaps(), 1);
+        assertEquals(global.getNumGaps(), 3);
+        assertEquals(local.getNumGaps(), 2);
     }
 
-    @Ignore // TODO implement ProteinSequence.equals(Object)
     @Test
     public void testGetOriginalSequence() {
-        assertEquals(as.getOriginalSequence(), new ProteinSequence("ARND"));
+        assertEquals(global.getOriginalSequence(), go);
+        assertEquals(local.getOriginalSequence(), lo);
     }
 
     @Test
     public void testGetOverlapCount() {
-        assertEquals(as.getOverlapCount(), 1);
+        assertEquals(global.getOverlapCount(), 1);
+        assertEquals(local.getOverlapCount(), 1);
     }
 
     @Test
     public void testGetSequenceIndexAt() {
-        assertEquals(as.getSequenceIndexAt(1), 1);
-        assertEquals(as.getSequenceIndexAt(2), 1);
-        assertEquals(as.getSequenceIndexAt(3), 2);
-        assertEquals(as.getSequenceIndexAt(4), 2);
-        assertEquals(as.getSequenceIndexAt(5), 3);
-        assertEquals(as.getSequenceIndexAt(6), 4);
-        assertEquals(as.getSequenceIndexAt(7), 4);
+        assertEquals(global.getSequenceIndexAt(1), 1);
+        assertEquals(global.getSequenceIndexAt(2), 1);
+        assertEquals(global.getSequenceIndexAt(3), 2);
+        assertEquals(global.getSequenceIndexAt(4), 2);
+        assertEquals(global.getSequenceIndexAt(5), 3);
+        assertEquals(global.getSequenceIndexAt(6), 4);
+        assertEquals(global.getSequenceIndexAt(7), 4);
+        assertEquals(local.getSequenceIndexAt(1), 2);
+        assertEquals(local.getSequenceIndexAt(2), 3);
+        assertEquals(local.getSequenceIndexAt(3), 3);
+        assertEquals(local.getSequenceIndexAt(4), 3);
+        assertEquals(local.getSequenceIndexAt(5), 4);
+        assertEquals(local.getSequenceIndexAt(6), 4);
+        assertEquals(local.getSequenceIndexAt(7), 5);
+        assertEquals(local.getSequenceIndexAt(8), 6);
+    }
+
+    @Test(expected=IndexOutOfBoundsException.class)
+    public void testGetSequenceIndexAtOutOfBounds() {
+        global.getSequenceIndexAt(0);
+    }
+
+    @Test(expected=IndexOutOfBoundsException.class)
+    public void testGetSequenceIndexAtOutOfBounds2() {
+        global.getSequenceIndexAt(8);
+    }
+
+    @Test(expected=IndexOutOfBoundsException.class)
+    public void testGetSequenceIndexAtOutOfBounds3() {
+        local.getSequenceIndexAt(0);
+    }
+
+    @Test(expected=IndexOutOfBoundsException.class)
+    public void testGetSequenceIndexAtOutOfBounds4() {
+        local.getSequenceIndexAt(9);
     }
 
     @Test
     public void testGetStart() {
-        assertEquals(as.getStart(), 2);
+        assertEquals(global.getStart(), 2);
+        assertEquals(local.getStart(), 1);
     }
 
     @Test
     public void testIsCircular() {
-        assertFalse(as.isCircular());
+        assertFalse(global.isCircular());
+        assertFalse(local.isCircular());
     }
 
     @Test
     public void testCountCompounds() {
-        assertEquals(as.countCompounds(cs.getCompoundForString("A"), cs.getCompoundForString("N")), 2);
+        assertEquals(global.countCompounds(cs.getCompoundForString("A"), cs.getCompoundForString("N"),
+                cs.getCompoundForString("A"), cs.getCompoundForString("E"), cs.getCompoundForString("D")), 3);
+        assertEquals(local.countCompounds(cs.getCompoundForString("A"), cs.getCompoundForString("N"),
+                cs.getCompoundForString("A"), cs.getCompoundForString("E"), cs.getCompoundForString("D")), 1);
     }
 
     @Test
     public void testGetAccession() {
-        assertNull(as.getAccession());
+        assertNull(global.getAccession());
+        assertNull(local.getAccession());
     }
 
-    @Ignore // TODO fix isGap()
     @Test
     public void testGetAsList() {
-        AminoAcidCompound[] compounds = { cs.getCompoundForString("-"), cs.getCompoundForString("A"),
-                cs.getCompoundForString("R"), cs.getCompoundForString("-"), cs.getCompoundForString("N"),
-                cs.getCompoundForString("D"), cs.getCompoundForString("-") }, list = new AminoAcidCompound[7];
-        assertArrayEquals(as.getAsList().toArray(list), compounds);
+        assertArrayEquals(global.getAsList().toArray(new AminoAcidCompound[7]), new AminoAcidCompound[] {
+            cs.getCompoundForString("-"), cs.getCompoundForString("A"), cs.getCompoundForString("R"),
+            cs.getCompoundForString("-"), cs.getCompoundForString("N"), cs.getCompoundForString("D"),
+            cs.getCompoundForString("-")});
+        assertArrayEquals(local.getAsList().toArray(new AminoAcidCompound[8]), new AminoAcidCompound[] {
+            cs.getCompoundForString("E"), cs.getCompoundForString("Q"), cs.getCompoundForString("-"),
+            cs.getCompoundForString("-"), cs.getCompoundForString("G"), cs.getCompoundForString("-"),
+            cs.getCompoundForString("H"), cs.getCompoundForString("I")});
     }
 
     @Test
     public void testGetCompoundAt() {
-        assertEquals(as.getCompoundAt(1), cs.getCompoundForString("-"));
-        assertEquals(as.getCompoundAt(2), cs.getCompoundForString("A"));
-        assertEquals(as.getCompoundAt(3), cs.getCompoundForString("R"));
-        assertEquals(as.getCompoundAt(4), cs.getCompoundForString("-"));
-        assertEquals(as.getCompoundAt(5), cs.getCompoundForString("N"));
-        assertEquals(as.getCompoundAt(6), cs.getCompoundForString("D"));
-        assertEquals(as.getCompoundAt(7), cs.getCompoundForString("-"));
+        assertEquals(global.getCompoundAt(1), cs.getCompoundForString("-"));
+        assertEquals(global.getCompoundAt(2), cs.getCompoundForString("A"));
+        assertEquals(global.getCompoundAt(3), cs.getCompoundForString("R"));
+        assertEquals(global.getCompoundAt(4), cs.getCompoundForString("-"));
+        assertEquals(global.getCompoundAt(5), cs.getCompoundForString("N"));
+        assertEquals(global.getCompoundAt(6), cs.getCompoundForString("D"));
+        assertEquals(global.getCompoundAt(7), cs.getCompoundForString("-"));
+        assertEquals(global.getCompoundAt(1), cs.getCompoundForString("-"));
+        assertEquals(local.getCompoundAt(1), cs.getCompoundForString("E"));
+        assertEquals(local.getCompoundAt(2), cs.getCompoundForString("Q"));
+        assertEquals(local.getCompoundAt(3), cs.getCompoundForString("-"));
+        assertEquals(local.getCompoundAt(4), cs.getCompoundForString("-"));
+        assertEquals(local.getCompoundAt(5), cs.getCompoundForString("G"));
+        assertEquals(local.getCompoundAt(6), cs.getCompoundForString("-"));
+        assertEquals(local.getCompoundAt(7), cs.getCompoundForString("H"));
+        assertEquals(local.getCompoundAt(8), cs.getCompoundForString("I"));
     }
 
     @Test
     public void testGetCompoundSet() {
-        assertEquals(as.getCompoundSet(), cs);
+        assertEquals(global.getCompoundSet(), cs);
+        assertEquals(local.getCompoundSet(), cs);
     }
 
     @Test
     public void testGetIndexOf() {
-        assertEquals(as.getIndexOf(cs.getCompoundForString("R")), 3);
+        assertEquals(global.getIndexOf(cs.getCompoundForString("R")), 3);
+        assertEquals(global.getIndexOf(cs.getCompoundForString("-")), 1);
+        assertEquals(local.getIndexOf(cs.getCompoundForString("G")), 5);
+        assertEquals(local.getIndexOf(cs.getCompoundForString("-")), 3);
     }
 
     @Test
     public void testGetLastIndexOf() {
-        assertEquals(as.getLastIndexOf(cs.getCompoundForString("R")), 3);
+        assertEquals(global.getLastIndexOf(cs.getCompoundForString("R")), 3);
+        assertEquals(global.getLastIndexOf(cs.getCompoundForString("-")), 7);
+        assertEquals(local.getLastIndexOf(cs.getCompoundForString("G")), 5);
+        assertEquals(local.getLastIndexOf(cs.getCompoundForString("-")), 6);
     }
 
     @Test
     public void testGetLength() {
-        assertEquals(as.getLength(), 7);
+        assertEquals(global.getLength(), 7);
+        assertEquals(local.getLength(), 8);
     }
 
-    @Ignore // TODO fix isGap()
     @Test
     public void testGetSequenceAsString() {
-        assertEquals(as.getSequenceAsString(), "-AR-ND-");
+        assertEquals(global.getSequenceAsString(), "-AR-ND-");
+        assertEquals(local.getSequenceAsString(), "EQ--G-HI");
     }
 
-    @Ignore // TODO fix isGap()
     @Test
     public void testGetSequenceAsStringIntegerIntegerStrand() {
-        assertEquals(as.getSequenceAsString(2, 5, Strand.UNDEFINED), "AR-N");
+        assertEquals(global.getSequenceAsString(2, 5, Strand.UNDEFINED), "AR-N");
+        assertEquals(local.getSequenceAsString(2, 6, Strand.UNDEFINED), "Q--G-");
     }
 
     @Ignore // TODO SimpleAlignedSequence.getSubSequence(Integer, Integer)
@@ -184,15 +289,15 @@ public class SimpleAlignedSequenceTest {
 
     @Test
     public void testIterator() {
-        for (AminoAcidCompound c : as) {
+        for (AminoAcidCompound c : global) {
             assertNotNull(cs.getStringForCompound(c));
         }
     }
 
-    @Ignore // TODO fix isGap()
     @Test
     public void testToString() {
-        assertEquals(as.toString(), "-AR-ND-");
+        assertEquals(global.toString(), "-AR-ND-");
+        assertEquals(local.toString(), "EQ--G-HI");
     }
 
 }
