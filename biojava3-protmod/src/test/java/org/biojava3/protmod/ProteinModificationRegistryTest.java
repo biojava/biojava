@@ -39,17 +39,13 @@ public class ProteinModificationRegistryTest extends TestCase {
 	
 	public void testRegisterModification() {
 		ModificationCondition condition
-			= new ModificationConditionImpl(
+			= new ModificationConditionImpl.Builder(
 					new Component[] {
 						Component.register("COMP1", ComponentType.AMINOACID),
 						Component.register("COMP2", ComponentType.AMINOACID, true, false)
-					},
-					new ModificationLinkage[] {
-						new ModificationLinkage(Component.of("COMP1"),
-								Component.of("COMP2", true, false),
-								"ATOM1", "ATOM2")
-					}
-				);
+					})
+			.addLinkage(0, 1, "ATOM1", "ATOM2")
+			.build();
 		ProteinModification.register("TEST", 
 				ModificationCategory.CROSS_LINK_2,
 				ModificationOccurrenceType.NATURAL,

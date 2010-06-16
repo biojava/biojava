@@ -41,7 +41,19 @@ public interface ModificationCondition {
 	
 	/**
 	 * 
-	 * @return {@link ModificationLinkage}s between components.
+	 * @return a list of indices of linked components, or null if not 
+	 *  exist. Each element if an array of two integers, which are 
+	 *  indices of a pair of linked components.
 	 */
-	public List<ModificationLinkage> getLinkages();
+	public List<int[]> getIndicesOfLinkedComponents();
+	
+	/**
+	 * 
+	 * @param indexComponent1 index of component1, starting from 0.
+	 * @param indexComponent2 index of component2, starting from 0.
+	 * @return a array of two Strings, which are the PDBCC name of
+	 *  a pair of atoms that link the two component; or null if the
+	 *  two components are not linked.
+	 */
+	public String[] getLinkedAtoms(int indexComponent1, int indexComponent2);
 }

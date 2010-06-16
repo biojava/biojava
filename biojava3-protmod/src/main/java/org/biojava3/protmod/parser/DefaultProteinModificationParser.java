@@ -41,7 +41,6 @@ import org.biojava.bio.structure.StructureException;
 
 import org.biojava3.protmod.Component;
 import org.biojava3.protmod.ModificationCondition;
-import org.biojava3.protmod.ModificationLinkage;
 import org.biojava3.protmod.ModifiedCompound;
 import org.biojava3.protmod.ModifiedCompoundImpl;
 import org.biojava3.protmod.ProteinModification;
@@ -128,26 +127,25 @@ implements ProteinModificationParser {
 					// for multiple components
 					
 					// find linkages first
-					List<ModificationLinkage> linkages = condition.getLinkages();
+					List<int[]> linkages = condition.getIndicesOfLinkedComponents();
 					
 					int nLink = linkages.size();
 					List<List<Atom[]>> matchedAtomsOfLinkages = new ArrayList<List<Atom[]>>(nLink);
 					
 					for (int iLink=0; iLink<nLink; iLink++) {
-						ModificationLinkage linkage = linkages.get(iLink);
-						Component comp1 = linkage.getComponent1();
-						Component comp2 = linkage.getComponent2();
-						String atom1 = linkage.getAtom1();
-						String atom2 = linkage.getAtom2();
-						
+						int[] linkage = linkages.get(iLink);
+						Component comp1 = components.get(linkage[0]);
+						Component comp2 = components.get(linkage[1]);
 						List<Group> groups1 = mapCompGroups.get(comp1);
 						List<Group> groups2 = mapCompGroups.get(comp2);
+						
+						String[] atomNames = condition.getLinkedAtoms(linkage[0], linkage[1]);						
 						
 						List<Atom[]> list = new ArrayList<Atom[]>();
 						
 						for (Group g1 : groups1) {
 							for (Group g2 : groups2) {
-								Atom[] atoms = findLinkage(g1, g2, atom1, atom2);
+								Atom[] atoms = findLinkage(g1, g2, atomNames[0], atomNames[1]);
 //								Atom[] atoms = findNearestAtoms(g1, g2);								
 								if (atoms!=null) {
 									list.add(atoms);

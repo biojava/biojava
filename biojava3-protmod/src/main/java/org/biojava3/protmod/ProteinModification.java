@@ -672,23 +672,7 @@ public final class ProteinModification {
 		sb.append("\tSystematic name:"+getSystematicName());
 		sb.append("\tCategory:"+getCategory().label());
 		sb.append("\tOccurrence type:"+getOccurrenceType().label());
-		
-		ModificationCondition condition = getCondition();
-		
-		List<Component> comps = condition.getComponents();
-		sb.append("\tComponents:");
-		for (Component comp : comps) {	
-			sb.append(comp+";");
-		}
-		
-		List<ModificationLinkage> linkages = condition.getLinkages();
-		sb.append("\tLinkages");
-		if (linkages!=null) {
-			for (ModificationLinkage linkage : linkages) {
-				sb.append(linkage+";");
-			}
-		}
-		
+		sb.append("\tCondition:"+getCondition());
 		return sb.toString();
 	}
 }

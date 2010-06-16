@@ -41,7 +41,6 @@ import org.biojava3.protmod.ComponentType;
 import org.biojava3.protmod.ModificationCategory;
 import org.biojava3.protmod.ModificationCondition;
 import org.biojava3.protmod.ModificationConditionImpl;
-import org.biojava3.protmod.ModificationLinkage;
 import org.biojava3.protmod.ModificationOccurrenceType;
 import org.biojava3.protmod.ProteinModification;
 
@@ -134,8 +133,8 @@ public final class ProteinModificationXmlReader {
 				
 				Node compsNode = nodes.get(0);
 				
-				// keep track of the labels of components
-				Map<String,Component> mapLabelComp = new HashMap<String,Component>();
+				// keep track of the labels of component indices
+				Map<String,Integer> mapLabelComp = new HashMap<String,Integer>();
 
 				Map<String,List<Node>> compInfoNodes = getChildNodes(compsNode);
 				
@@ -213,15 +212,16 @@ public final class ProteinModificationXmlReader {
 					
 					Component comp = Component.register(compId, compType, nTerminal, cTerminal);
 					comps.add(comp);						
-					mapLabelComp.put(label, comp);
+					mapLabelComp.put(label, comps.size()-1);
 				}
 				
+				ModificationConditionImpl.Builder conditionBuilder
+					= new ModificationConditionImpl.Builder(comps);
+				
 				// bonds
-				List<ModificationLinkage> linkages = null;
 				List<Node> bondNodes = compInfoNodes.get("Bond");
 				if (bondNodes!=null) {
 					int sizeBonds = bondNodes.size();
-					linkages = new ArrayList<ModificationLinkage>(sizeBonds);
 					for (int iBond=0; iBond<sizeBonds; iBond++) {
 						Node bondNode = bondNodes.get(iBond);
 						Map<String,List<Node>> bondChildNodes = getChildNodes(bondNode);
@@ -244,7 +244,7 @@ public final class ProteinModificationXmlReader {
 									" See Modification "+id+".");
 						}
 						String labelComp1 = labelNode.getTextContent();
-						Component comp1 = mapLabelComp.get(labelComp1);
+						int iComp1 = mapLabelComp.get(labelComp1);
 						String atom1 = atomNodes.get(0).getTextContent();
 						
 						// atom 2
@@ -255,15 +255,14 @@ public final class ProteinModificationXmlReader {
 									" See Modification "+id+".");
 						}
 						String labelComp2 = labelNode.getTextContent();
-						Component comp2 = mapLabelComp.get(labelComp2);
+						int iComp2 = mapLabelComp.get(labelComp2);
 						String atom2 = atomNodes.get(1).getTextContent();
 						
-						ModificationLinkage linkage = new ModificationLinkage(comp1, comp2, atom1, atom2);
-						linkages.add(linkage);
+						conditionBuilder.addLinkage(iComp1, iComp2, atom1, atom2);
 					}
 				}
 				
-				condition = new ModificationConditionImpl(comps, linkages);
+				condition = conditionBuilder.build();
 			} // end of condition	
 			
 			ProteinModification.Builder modBuilder = ProteinModification
