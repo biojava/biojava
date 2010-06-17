@@ -27,6 +27,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -35,6 +36,8 @@ import java.util.Scanner;
 import java.util.StringTokenizer;
 
 import org.biojava3.alignment.template.SubstitutionMatrix;
+import org.biojava3.core.sequence.compound.AminoAcidCompound;
+import org.biojava3.core.sequence.compound.AminoAcidCompoundSet;
 import org.biojava3.core.sequence.template.Compound;
 import org.biojava3.core.sequence.template.CompoundSet;
 
@@ -59,22 +62,12 @@ public class SimpleSubstitutionMatrix<C extends Compound> implements Substitutio
     /**
      * Creates a substitution matrix using the defaults.
      *
-     * @throws ClassCastException if {@link Compound} type of default compound set differs from type parameter C
-     * @throws IllegalStateException if default SimpleSubstitutionMatrix has not been set
+     * @throws ClassCastException if type parameter C is not {@link AminoAcidCompound}
      */
-    // @SuppressWarnings("unchecked") // explained possible ClassCastException
+    @SuppressWarnings("unchecked") // TODO proper generic type checking instead of possible ClassCastException
     public SimpleSubstitutionMatrix() {
-        // TODO proper type checking
-        this((SimpleSubstitutionMatrix<C>) Default.getInstance());
-    }
-
-    /**
-     * Creates a copy of the given substitution matrix.
-     *
-     * @param original substitution matrix to copy
-     */
-    public SimpleSubstitutionMatrix(SubstitutionMatrix<C> original) {
-        this(original.getCompoundSet(), original.toString(), original.getName());
+        this((CompoundSet<C>) AminoAcidCompoundSet.getAminoAcidCompoundSet(), new InputStreamReader(
+                SimpleSubstitutionMatrix.class.getResourceAsStream("/blosum62.txt")), "blosum62");
     }
 
     /**
@@ -279,87 +272,6 @@ public class SimpleSubstitutionMatrix<C extends Compound> implements Substitutio
         }
         s.append(getMatrixAsString());
         return s.toString();
-    }
-
-    /**
-     * Stores the default values for the substitution matrices.
-     */
-    public static class Default {
-
-        private static SubstitutionMatrix<?> instance;
-
-        /**
-         * Returns the current default substitution matrix.
-         *
-         * @return the current default substitution matrix
-         * @throws IllegalStateException if default SimpleSubstitutionMatrix has not been set
-         */
-        public static SubstitutionMatrix<?> getInstance() {
-            if (instance == null) {
-                throw new IllegalStateException("Default SimpleSubstitutionMatrix has not been set.");
-            }
-            return instance;
-        }
-
-        /**
-         * Sets the default as a copy of the given substitution matrix.
-         *
-         * @param <C> each element of the matrix corresponds to a pair of {@link Compound}s of type C
-         * @param original substitution matrix to copy
-         */
-        public static <C extends Compound> void set(SubstitutionMatrix<C> original) {
-            instance = new SimpleSubstitutionMatrix<C>(original);
-        }
-
-        /**
-         * Sets the default substitution matrix by reading in a file.
-         *
-         * @param <C> each element of the matrix corresponds to a pair of {@link Compound}s of type C
-         * @param compoundSet the {@link CompoundSet} on which the matrix is defined
-         * @param fileInput file parsed for a substitution matrix
-         * @throws FileNotFoundException if fileInput parameter cannot be read
-         */
-        public static <C extends Compound> void set(CompoundSet<C> compoundSet, File fileInput)
-                throws FileNotFoundException {
-            instance = new SimpleSubstitutionMatrix<C>(compoundSet, fileInput);
-        }
-
-        /**
-         * Sets the default substitution matrix by parsing some input.
-         *
-         * @param <C> each element of the matrix corresponds to a pair of {@link Compound}s of type C
-         * @param compoundSet the {@link CompoundSet} on which the matrix is defined
-         * @param input input parsed for a substitution matrix
-         * @param name the name (short description) of this matrix
-         */
-        public static <C extends Compound> void set(CompoundSet<C> compoundSet, Reader input, String name) {
-            instance = new SimpleSubstitutionMatrix<C>(compoundSet, input, name);
-        }
-
-        /**
-         * Sets the default substitution matrix from a String.
-         *
-         * @param <C> each element of the matrix corresponds to a pair of {@link Compound}s of type C
-         * @param compoundSet the {@link CompoundSet} on which the matrix is defined
-         * @param matrixInput file parsed for a substitution matrix
-         * @param name the name (short description) of this matrix
-         */
-        public static <C extends Compound> void set(CompoundSet<C> compoundSet, String matrixInput, String name) {
-            instance = new SimpleSubstitutionMatrix<C>(compoundSet, matrixInput, name);
-        }
-
-        /**
-         * Sets the default to an identity substitution matrix from match and replace values.
-         *
-         * @param <C> each element of the matrix corresponds to a pair of {@link Compound}s of type C
-         * @param compoundSet the {@link CompoundSet} on which the matrix is defined
-         * @param match matrix value used for equivalent {@link Compound}s
-         * @param replace matrix value used for differing {@link Compound}s
-         */
-        public static <C extends Compound> void set(CompoundSet<C> compoundSet, short match, short replace) {
-            instance = new SimpleSubstitutionMatrix<C>(compoundSet, match, replace);
-        }
-
     }
 
 }
