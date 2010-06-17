@@ -22,6 +22,7 @@ import org.biojava.bio.structure.StructureTools;
 
 import org.biojava.bio.structure.align.util.UserConfiguration;
 import org.biojava.bio.structure.align.webstart.WebStartMain;
+import org.biojava.bio.structure.io.FileParsingParameters;
 import org.biojava.bio.structure.io.MMCIFFileReader;
 import org.biojava.bio.structure.io.PDBFileReader;
 import org.biojava.bio.structure.io.StructureIOFile;
@@ -146,18 +147,22 @@ implements StructurePairSelector{
 		String range = r.getText().trim();
 		
 		String fileFormat = config.getFileFormat();
-
+		
 		StructureIOFile reader = null;
 		if ( fileFormat.equals(UserConfiguration.PDB_FORMAT)){
 			PDBFileReader re = new PDBFileReader();
-			re.setAlignSeqRes(false);
+			
 			reader = re;
 		} else if ( fileFormat.equals(UserConfiguration.MMCIF_FORMAT)){						
 			reader = new MMCIFFileReader();
+			
 		} else {
 			throw new StructureException("Unkown file format " + fileFormat);
 		}
-
+		
+		FileParsingParameters params = new FileParsingParameters();
+        params.setAlignSeqRes(false);
+		reader.setFileParsingParameters(params);
 		
 		reader.setPath(config.getPdbFilePath());
 		
