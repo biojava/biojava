@@ -24,235 +24,59 @@
 package org.biojava3.alignment;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import org.biojava3.alignment.template.AlignedSequence;
 import org.biojava3.alignment.template.AlignedSequence.Step;
-import org.biojava3.alignment.template.Aligner;
+import org.biojava3.alignment.template.AbstractPairwiseSequenceAligner;
 import org.biojava3.alignment.template.GapPenalty;
-import org.biojava3.alignment.template.PairwiseSequenceAligner;
-import org.biojava3.alignment.template.Profile;
-import org.biojava3.alignment.template.SequencePair;
 import org.biojava3.alignment.template.SubstitutionMatrix;
 import org.biojava3.core.sequence.template.Compound;
-import org.biojava3.core.sequence.template.CompoundSet;
 import org.biojava3.core.sequence.template.Sequence;
 
 /**
- * Needleman and Wunsch defined an {@link Aligner} for the problem of pairwise global sequence alignments, from the
- * first until the last {@link Compound} of each {@link Sequence}.  This class performs such global sequence
- * comparisons efficiently by dynamic programming.
+ * Needleman and Wunsch defined an algorithm for pairwise global sequence alignments (from the first until the last
+ * {@link Compound} of each {@link Sequence}).  This class performs such global sequence comparisons efficiently by
+ * dynamic programming.
  *
  * @author Mark Chapman
  * @param <S> each {@link Sequence} of the alignment pair is of type S
  * @param <C> each element of an {@link AlignedSequence} is a {@link Compound} of type C
  */
-public class NeedlemanWunsch<S extends Sequence<C>, C extends Compound> implements PairwiseSequenceAligner<S, C> {
+public class NeedlemanWunsch<S extends Sequence<C>, C extends Compound>
+        extends AbstractPairwiseSequenceAligner<S, C> {
 
-    private static final String newLine = System.getProperty("line.separator");
-
-    // input fields
-    private S query, target;
-    private GapPenalty gapPenalty;
-    private SubstitutionMatrix<C> subMatrix;
-    private boolean storingScoreMatrix;
-
-    // output fields
-    private SequencePair<S, C> pair;
-    private short[][] scores;
-    private short max, min, score;
-    private long time;
-
+    /**
+     * Before running a pairwise global sequence alignment, data must be sent in via calls to
+     * {@link #setQuery(Sequence)}, {@link #setTarget(Sequence)}, {@link #setGapPenalty(GapPenalty)}, and
+     * {@link #setSubstitutionMatrix(SubstitutionMatrix)}.
+     */
     public NeedlemanWunsch() {
-        this(null, null, null, null);
     }
 
-    public NeedlemanWunsch(S query, S target) {
-        this(query, target, null, null);
-    }
-
-    public NeedlemanWunsch(GapPenalty gapPenalty, SubstitutionMatrix<C> subMatrix) {
-        this(null, null, gapPenalty, subMatrix);
-    }
-
+    /**
+     * Prepares for a pairwise global sequence alignment.
+     *
+     * @param query the first {@link Sequence} of the pair to align
+     * @param target the second {@link Sequence} of the pair to align
+     * @param gapPenalty the gap penalties used during alignment
+     * @param subMatrix the set of substitution scores used during alignment
+     */
     public NeedlemanWunsch(S query, S target, GapPenalty gapPenalty, SubstitutionMatrix<C> subMatrix) {
-        // TODO proper type checking
-        NeedlemanWunsch<S, C> def = (NeedlemanWunsch<S, C>) Default.getInstance();
-        this.query = query;
-        this.target = target;
-        this.gapPenalty = (gapPenalty != null) ? gapPenalty : ((def != null) ? def.getGapPenalty() : null);
-        this.subMatrix = (subMatrix != null) ? subMatrix : ((def != null) ? def.getSubstitutionMatrix() : null);
+        super(query, target, gapPenalty, subMatrix);
     }
 
-    public S getQuerySequence() {
-        return query;
-    }
-
-    public S getTargetSequence() {
-        return target;
-    }
-
-    public GapPenalty getGapPenalty() {
-        return gapPenalty;
-    }
-
-    public SubstitutionMatrix<C> getSubstitutionMatrix() {
-        return subMatrix;
-    }
-
-    public boolean isStoringScoreMatrix() {
-        return storingScoreMatrix;
-    }
-
-    public void setQuerySequence(S query) {
-        this.query = query;
-        reset();
-    }
-
-    public void setTargetSequence(S target) {
-        this.target = target;
-        reset();
-    }
-
-    public void setGapPenalty(GapPenalty gapPenalty) {
-        this.gapPenalty = gapPenalty;
-        reset();
-    }
-
-    public void setSubstitutionMatrix(SubstitutionMatrix<C> subMatrix) {
-        this.subMatrix = subMatrix;
-        reset();
-    }
-
-    public void setStoringScoreMatrix(boolean storingScoreMatrix) {
-        this.storingScoreMatrix = storingScoreMatrix;
-        if (!storingScoreMatrix) {
-            scores = null;
-        }
-    }
-
-    @Override
-    public short[][] getScoreMatrix() {
-        boolean tempStoringScoreMatrix = storingScoreMatrix;
-        if (scores == null) {
-            storingScoreMatrix = true;
-            align();
-            if (scores == null) {
-                return null;
-            }
-        }
-        short[][] copy = scores;
-        if (tempStoringScoreMatrix) {
-            copy = new short[scores.length][scores[0].length];
-            for (int i = 0; i < copy.length; i++) {
-                copy[i] = Arrays.copyOf(scores[i], scores[i].length);
-            }
-        }
-        setStoringScoreMatrix(tempStoringScoreMatrix);
-        return copy;
-    }
-
-    @Override
-    public String getScoreMatrixAsString() {
-        boolean tempStoringScoreMatrix = storingScoreMatrix;
-        if (scores == null) {
-            storingScoreMatrix = true;
-            align();
-            if (scores == null) {
-                return null;
-            }
-        }
-        StringBuilder s = new StringBuilder();
-        CompoundSet<C> compoundSet = query.getCompoundSet();
-        int lengthCompound = compoundSet.getMaxSingleCompoundStringLength(), lengthRest =
-                Math.max(Math.max(Short.toString(min).length(), Short.toString(max).length()), lengthCompound) + 1;
-        String padCompound = "%" + Integer.toString(lengthCompound) + "s",
-                padRest = "%" + Integer.toString(lengthRest);
-        s.append(String.format(padCompound, ""));
-        s.append(String.format(padRest + "s", ""));
-        for (C col : target.getAsList()) {
-            s.append(String.format(padRest + "s", compoundSet.getStringForCompound(col)));
-        }
-        s.append(newLine);
-        for (int row = 0; row <= query.getLength(); row++) {
-            s.append(String.format(padCompound, (row == 0) ? "" :
-                    compoundSet.getStringForCompound(query.getCompoundAt(row))));
-            for (int col = 0; col <= target.getLength(); col++) {
-                s.append(String.format(padRest + "d", scores[row][col]));
-            }
-            s.append(newLine);
-        }
-        setStoringScoreMatrix(tempStoringScoreMatrix);
-        return s.toString();
-    }
-
-    @Override
-    public short getScoreMatrixAt(int queryIndex, int targetIndex) {
-        boolean tempStoringScoreMatrix = storingScoreMatrix;
-        if (scores == null) {
-            storingScoreMatrix = true;
-            align();
-        }
-        short score = scores[queryIndex][targetIndex];
-        setStoringScoreMatrix(tempStoringScoreMatrix);
-        return score;
-    }
-
-    @Override
-    public long getComputationTime() {
-        if (pair == null) {
-            align();
-        }
-        return time;
-    }
-
-    @Override
-    public Profile<S, C> getProfile() {
-        if (pair == null) {
-            align();
-        }
-        return pair;
-    }
-
-    @Override
-    public int getMaxScore() {
-        if (pair == null) {
-            align();
-        }
-        return max;
-    }
-
-    @Override
-    public int getMinScore() {
-        if (pair == null) {
-            align();
-        }
-        return min;
-    }
-
-    @Override
-    public int getScore() {
-        if (pair == null) {
-            align();
-        }
-        return score;
-    }
-
-    @Override
-    public SequencePair<S, C> getPair() {
-        if (pair == null) {
-            align();
-        }
-        return pair;
-    }
-
-    // helper class for alignment with affine gap penalties
+    // helper enum for alignment with affine gap penalties
     private enum Last { M, IX, IY }
 
     // helper method that performs alignment
-    private void align() {
+    @Override
+    protected void align() {
         reset();
+        S query = getQuery(), target = getTarget();
+        GapPenalty gapPenalty = getGapPenalty();
+        SubstitutionMatrix<C> subMatrix = getSubstitutionMatrix();
+
         if (query == null || target == null || gapPenalty == null || subMatrix == null
                 || !query.getCompoundSet().equals(target.getCompoundSet())) {
             return;
@@ -275,9 +99,9 @@ public class NeedlemanWunsch<S extends Sequence<C>, C extends Compound> implemen
             }
             for (x = 1; x < scores.length; x++) {
                 for (y = 1; y < scores[0].length; y++) {
-                    scores[x][y] = (short) Math.max(Math.max(scores[x - 1][y] + gapPenalty.getExtensionPenalty(), scores[x][y - 1] + gapPenalty.getExtensionPenalty()),
-                            scores[x - 1][y - 1] + subMatrix.getValue(query.getCompoundAt(x),
-                                    target.getCompoundAt(y)));
+                    scores[x][y] = (short) Math.max(Math.max(scores[x - 1][y] + gapPenalty.getExtensionPenalty(),
+                            scores[x][y - 1] + gapPenalty.getExtensionPenalty()), scores[x - 1][y - 1] +
+                            subMatrix.getValue(query.getCompoundAt(x), target.getCompoundAt(y)));
                 }
             }
             // traceback: chooses highroad alignment
@@ -308,13 +132,14 @@ public class NeedlemanWunsch<S extends Sequence<C>, C extends Compound> implemen
             // scoring
             ix = new short[scores.length][scores[0].length];
             iy = new short[scores.length][scores[0].length];
+            short min = (short) (Short.MIN_VALUE - gapPenalty.getOpenPenalty() - gapPenalty.getExtensionPenalty());
             ix[0][0] = iy[0][0] = gapPenalty.getOpenPenalty();
             for (x = 1; x < scores.length; x++) {
-                scores[x][0] = iy[x][0] = Short.MIN_VALUE;
+                scores[x][0] = iy[x][0] = min;
                 ix[x][0] = (short) (ix[x - 1][0] + gapPenalty.getExtensionPenalty());
             }
             for (y = 1; y < scores[0].length; y++) {
-                scores[0][y] = ix[0][y] = Short.MIN_VALUE;
+                scores[0][y] = ix[0][y] = min;
                 iy[0][y] = (short) (iy[0][y - 1] + gapPenalty.getExtensionPenalty());
             }
             for (x = 1; x < scores.length; x++) {
@@ -364,50 +189,14 @@ public class NeedlemanWunsch<S extends Sequence<C>, C extends Compound> implemen
         }
 
         // set output fields 
+        score = scores[scores.length - 1][scores[0].length - 1];
         pair = new SimpleSequencePair<S, C>(query, target, sx, sy);
-        score = scores[x][y];
         time = System.nanoTime() - timeStart;
 
         // save memory by deleting score matrix
-        if (!storingScoreMatrix) {
+        if (!isStoringScoreMatrix()) {
             scores = null;
         }
-    }
-
-    // helper method that resets output fields
-    private void reset() {
-        pair = null;
-        scores = null;
-        int subLength = Math.min(query.getLength(), target.getLength()), maxLength = query.getLength()
-                + target.getLength(), penalties = gapPenalty.getOpenPenalty() + gapPenalty.getExtensionPenalty();
-        max = (short) (subLength * subMatrix.getMaxValue());
-        score = min = (short) Math.min(subLength * subMatrix.getMinValue() + (maxLength - subLength) * penalties,
-                maxLength * penalties);
-        time = 0;
-    }
-
-    public static class Default {
-
-        private static NeedlemanWunsch<?, ?> instance;
-
-        public static NeedlemanWunsch<?, ?> getInstance() {
-            return instance;
-        }
-
-        public static <S extends Sequence<C>, C extends Compound> void set(S query, S target) {
-            instance = new NeedlemanWunsch<S, C>(query, target);
-        }
-
-        public static <S extends Sequence<C>, C extends Compound> void set(GapPenalty gapPenalty,
-                SubstitutionMatrix<C> subMatrix) {
-            instance = new NeedlemanWunsch<S, C>(gapPenalty, subMatrix);
-        }
-
-        public static <S extends Sequence<C>, C extends Compound> void set(S query, S target, GapPenalty gapPenalty,
-                SubstitutionMatrix<C> subMatrix) {
-            instance = new NeedlemanWunsch<S, C>(query, target, gapPenalty, subMatrix);
-        }
-
     }
 
 }

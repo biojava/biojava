@@ -49,7 +49,7 @@ public interface MatrixAligner<S extends Sequence<C>, C extends Compound> extend
      * @param queryIndex index in the first (query) {@link Sequence}
      * @param targetIndex index in the second (target) {@link Sequence}
      * @return score at given point in score matrix
-     * @throws IndexOutOfBoundsException if queryIndex < 1, queryIndex > query length, targetIndex < 1, or
+     * @throws IndexOutOfBoundsException if queryIndex < 0, queryIndex > query length, targetIndex < 0, or
      *     targetIndex > target length
      */
     short getScoreMatrixAt(int queryIndex, int targetIndex);
