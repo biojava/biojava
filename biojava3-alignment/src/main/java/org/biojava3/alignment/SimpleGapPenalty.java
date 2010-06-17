@@ -32,6 +32,26 @@ import org.biojava3.alignment.template.GapPenalty;
  */
 public class SimpleGapPenalty implements GapPenalty {
 
+    private static short dgop = 10, dgep = 1;
+
+    /**
+     * Sets the default gap extension penalty.
+     *
+     * @param gep the default gap extension penalty
+     */
+    public static void setDefaultExtensionPenalty(short gep) {
+        dgep = gep;
+    }
+
+    /**
+     * Sets the default gap open penalty.
+     *
+     * @param gop the default gap open penalty
+     */
+    public static void setDefaultOpenPenalty(short gop) {
+        dgop = gop;
+    }
+
     private GapPenalty.Type type;
     private short gop, gep;
 
@@ -39,7 +59,7 @@ public class SimpleGapPenalty implements GapPenalty {
      * Creates a new set of gap penalties using the defaults.
      */
     public SimpleGapPenalty() {
-        this(Default.getOpenPenalty(), Default.getExtensionPenalty());
+        this(dgop, dgep);
     }
 
     /**
@@ -84,71 +104,6 @@ public class SimpleGapPenalty implements GapPenalty {
     // helper method to set the type given the open and extension penalties
     private void setType() {
         type = (gep == 0) ? GapPenalty.Type.CONSTANT : ((gop == 0) ? GapPenalty.Type.LINEAR : GapPenalty.Type.AFFINE);
-    }
-
-    /**
-     * Stores the default values for the gap penalties.
-     */
-    public static class Default {
-
-        private static GapPenalty instance = new SimpleGapPenalty((short) 10, (short) 1);
-
-        /**
-         * Returns the current default values for the gap penalties.
-         *
-         * @return the current default set of gap penalties
-         */
-        public GapPenalty getInstance() {
-            return instance;
-        }
-
-        /**
-         * Returns the default gap extension penalty.
-         *
-         * @return the default gap extension penalty
-         */
-        public static short getExtensionPenalty() {
-            return instance.getExtensionPenalty();
-        }
-
-        /**
-         * Returns the default gap open penalty.
-         *
-         * @return the default gap open penalty
-         */
-        public static short getOpenPenalty() {
-            return instance.getOpenPenalty();
-        }
-
-        /**
-         * Sets a new default set of gap penalties.
-         *
-         * @param gop the default gap open penalty
-         * @param gep the default gap extension penalty
-         */
-        public static void set(short gop, short gep) {
-            instance.setOpenPenalty(gop);
-            instance.setExtensionPenalty(gep);
-        }
-
-        /**
-         * Sets the default gap extension penalty.
-         *
-         * @param gep the default gap extension penalty
-         */
-        public static void setExtensionPenalty(short gep) {
-            instance.setExtensionPenalty(gep);
-        }
-
-        /**
-         * Sets the default gap open penalty.
-         *
-         * @param gop the default gap open penalty
-         */
-        public static void setOpenPenalty(short gop) {
-            instance.setOpenPenalty(gop);
-        }
-
     }
 
 }

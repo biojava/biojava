@@ -17,9 +17,8 @@
  *
  *      http://www.biojava.org/
  *
- * Created on Jun 9, 2010
- * Author: Mark 
- *
+ * Created on June 9, 2010
+ * Author: Mark Chapman
  */
 
 package org.biojava3.alignment;
@@ -33,12 +32,13 @@ public class SimpleGapPenaltyTest {
 
     @Test
     public void testSimpleGapPenalty() {
+        short gop = -12, gep = -3;
+        SimpleGapPenalty.setDefaultOpenPenalty(gop);
+        SimpleGapPenalty.setDefaultExtensionPenalty(gep);
         GapPenalty gaps = new SimpleGapPenalty();
-        short gop = SimpleGapPenalty.Default.getOpenPenalty();
-        short gep = SimpleGapPenalty.Default.getExtensionPenalty();
         assertEquals(gaps.getOpenPenalty(), gop);
         assertEquals(gaps.getExtensionPenalty(), gep);
-        assertEquals(gaps.getType(), new SimpleGapPenalty().getType());
+        assertEquals(gaps.getType(), GapPenalty.Type.AFFINE);
     }
 
     @Test
@@ -71,25 +71,6 @@ public class SimpleGapPenaltyTest {
         assertEquals(new SimpleGapPenalty((short) 7, (short) 0).getType(), GapPenalty.Type.CONSTANT);
         assertEquals(new SimpleGapPenalty((short) 0, (short) 5).getType(), GapPenalty.Type.LINEAR);
         assertEquals(new SimpleGapPenalty((short) 8, (short) 3).getType(), GapPenalty.Type.AFFINE);
-    }
-
-    @Test
-    public void testDefaults() {
-        short gop = -5;
-        short gep = 0;
-        SimpleGapPenalty.Default.setOpenPenalty(gop);
-        SimpleGapPenalty.Default.setExtensionPenalty(gep);
-        GapPenalty gaps = new SimpleGapPenalty();
-        assertEquals(gaps.getOpenPenalty(), gop);
-        assertEquals(gaps.getExtensionPenalty(), gep);
-        assertEquals(gaps.getType(), GapPenalty.Type.CONSTANT);
-        gop = 0;
-        gep = -5;
-        SimpleGapPenalty.Default.set(gop, gep);
-        gaps = new SimpleGapPenalty();
-        assertEquals(gaps.getOpenPenalty(), gop);
-        assertEquals(gaps.getExtensionPenalty(), gep);
-        assertEquals(gaps.getType(), GapPenalty.Type.LINEAR);
     }
 
 }
