@@ -203,17 +203,7 @@ public class AtomCache {
 				loading.set(false);
 				
 				// we only want the 1st model in this case
-				Structure newS = new StructureImpl();
-				newS.setHeader(s.getHeader());
-				newS.setPDBCode(s.getPDBCode());
-				newS.setPDBHeader(s.getPDBHeader());
-
-				// only get model 0
-				List<Chain> model0 = s.getModel(0);
-				for (Chain c : model0){
-					newS.addChain(c);
-				}
-				return newS;
+				return StructureTools.getReducedStructure(s,-1);
 
 			}
 			
