@@ -38,7 +38,7 @@ public class ProteinSequence extends AbstractSequence<AminoAcidCompound> {
 
 
     public ProteinSequence(String seqString) {
-        this(seqString, new AminoAcidCompoundSet());
+        this(seqString, AminoAcidCompoundSet.getAminoAcidCompoundSet());
     }
 
     public ProteinSequence(String seqString, CompoundSet<AminoAcidCompound> compoundSet) {
@@ -46,7 +46,7 @@ public class ProteinSequence extends AbstractSequence<AminoAcidCompound> {
     }
 
     public ProteinSequence(ProxySequenceReader<AminoAcidCompound> proxyLoader) {
-        this(proxyLoader, new AminoAcidCompoundSet());
+        this(proxyLoader, AminoAcidCompoundSet.getAminoAcidCompoundSet());
     }
 
     public ProteinSequence(ProxySequenceReader<AminoAcidCompound> proxyLoader, CompoundSet<AminoAcidCompound> compoundSet) {
