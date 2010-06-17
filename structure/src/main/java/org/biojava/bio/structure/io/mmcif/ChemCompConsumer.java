@@ -2,6 +2,7 @@ package org.biojava.bio.structure.io.mmcif;
 
 import java.util.List;
 
+import org.biojava.bio.structure.io.FileParsingParameters;
 import org.biojava.bio.structure.io.mmcif.chem.ResidueType;
 import org.biojava.bio.structure.io.mmcif.model.AtomSite;
 import org.biojava.bio.structure.io.mmcif.model.AuditAuthor;
@@ -144,6 +145,18 @@ public class ChemCompConsumer implements MMcifConsumer {
    {
       // TODO Auto-generated method stub
 
+   }
+
+   public FileParsingParameters getFileParsingParameters()
+   {
+     // can be ingored in this case...
+      return null;
+   }
+
+   public void setFileParsingParameters(FileParsingParameters params)
+   {
+      // TODO Auto-generated method stub
+      
    }
 
 }

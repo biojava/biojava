@@ -27,6 +27,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.List;
 
+import org.biojava.bio.structure.io.FileParsingParameters;
 import org.biojava.bio.structure.io.PDBFileParser;
 import org.biojava.bio.structure.io.mmcif.MMcifParser;
 import org.biojava.bio.structure.io.mmcif.SimpleMMcifConsumer;
@@ -90,7 +91,11 @@ public class MMcifTest extends TestCase {
 		MMcifParser parser = new SimpleMMcifParser();
 
 		SimpleMMcifConsumer consumer = new SimpleMMcifConsumer();
-		consumer.setHeaderOnly(headerOnly);
+		FileParsingParameters params = new FileParsingParameters();
+		params.setHeaderOnly(headerOnly);
+		consumer.setFileParsingParameters(params);
+		
+		
 		parser.addMMcifConsumer(consumer);
 		try {
 			parser.parse(new BufferedReader(new InputStreamReader(inStream)));
@@ -109,7 +114,8 @@ public class MMcifTest extends TestCase {
 		assertNotNull(inStream);
 
 		PDBFileParser pdbpars = new PDBFileParser();
-		pdbpars.setHeaderOnly(headerOnly);
+		pdbpars.setFileParsingParameters(params);
+		
 		try {
 			pdbStructure = pdbpars.parsePDBFile(pinStream) ;
 		} catch (IOException e) {

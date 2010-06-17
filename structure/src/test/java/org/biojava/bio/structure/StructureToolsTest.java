@@ -25,6 +25,7 @@ package org.biojava.bio.structure;
 import java.io.IOException;
 import java.io.InputStream;
 
+import org.biojava.bio.structure.io.FileParsingParameters;
 import org.biojava.bio.structure.io.PDBFileParser;
 
 import junit.framework.TestCase;
@@ -40,7 +41,10 @@ public class StructureToolsTest extends TestCase {
 
 
         PDBFileParser pdbpars = new PDBFileParser();
-        pdbpars.setAlignSeqRes(false);
+        FileParsingParameters params = new FileParsingParameters();
+        params.setAlignSeqRes(false);
+        pdbpars.setFileParsingParameters(params);
+        
         try {
             structure = pdbpars.parsePDBFile(inStream) ;
         } catch (IOException e) {

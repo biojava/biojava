@@ -35,7 +35,6 @@ import java.net.URL;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
@@ -44,11 +43,9 @@ import org.biojava.bio.structure.AminoAcid;
 import org.biojava.bio.structure.Chain;
 import org.biojava.bio.structure.Compound;
 import org.biojava.bio.structure.Group;
-import org.biojava.bio.structure.GroupIterator;
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.align.ce.AbstractUserArgumentProcessor;
 import org.biojava.bio.structure.io.mmcif.ChemCompGroupFactory;
-import org.biojava.bio.structure.io.mmcif.model.ChemComp;
 import org.biojava.utils.io.InputStreamProvider;
 
 
@@ -146,13 +143,11 @@ public class PDBFileReader implements StructureIOFile {
 
 	String path                     ;
 	List<String> extensions            ;
-	boolean parseSecStruc;
+
 	boolean autoFetch;
-	boolean parseCAOnly;
-	boolean alignSeqRes;
+
 	boolean pdbDirectorySplit;
-	boolean headerOnly;
-	boolean loadChemCompInfo;
+	
 
 	public static final String lineSplit = System.getProperty("file.separator");
 
@@ -160,6 +155,9 @@ public class PDBFileReader implements StructureIOFile {
 
 	public static final String PDB_FILE_SERVER_PROPERTY = "PDB.FILE.SERVER";
 
+	
+	FileParsingParameters params ;
+	
 	public static void main(String[] args){
 
 
@@ -172,11 +170,10 @@ public class PDBFileReader implements StructureIOFile {
 		// tempdir = "/path/to/local/PDB/installation/";
 		pdbreader.setPath(tempdir);
 
-		pdbreader.setParseSecStruc(true);
-		pdbreader.setAlignSeqRes(true);
-		pdbreader.setParseCAOnly(false);
-		pdbreader.setAutoFetch(true);
-		pdbreader.setLoadChemCompInfo(true);
+		
+		FileParsingParameters params = new FileParsingParameters();
+		pdbreader.setFileParsingParameters(params);
+
 
 		try{
 
@@ -231,7 +228,10 @@ public class PDBFileReader implements StructureIOFile {
 	}
 
 
-	public PDBFileReader() {
+	
+
+
+   public PDBFileReader() {
 		extensions    = new ArrayList<String>();
 		path = "" ;
 		extensions.add(".ent");
@@ -240,84 +240,16 @@ public class PDBFileReader implements StructureIOFile {
 		extensions.add(".pdb.gz");
 		extensions.add(".ent.Z");
 		extensions.add(".pdb.Z");
-		parseSecStruc = false;
-		autoFetch     = false;
-		parseCAOnly   = false;
-		alignSeqRes   = true;
+		
+		autoFetch     = false;		
 		pdbDirectorySplit = false;
-		headerOnly    = false;
-		loadChemCompInfo = false;
+		
+		params = new FileParsingParameters();
 	}
 
 
-	/** return the flag if only the CA atoms should be parsed
-	 *
-	 * @return flag if CA only should be read
-	 */
-	public boolean isParseCAOnly() {
-		return parseCAOnly;
-	}
-
-	/** only the CA atoms should be parsed from the PDB file
-	 *
-	 * @param parseCAOnly
-	 */
-	public void setParseCAOnly(boolean parseCAOnly) {
-		this.parseCAOnly = parseCAOnly;
-	}
-
-	/** get the flag if the SEQRES and ATOM amino acids are going to be aligned
-	 *
-	 * @return flag
-	 */
-	public boolean isAlignSeqRes() {
-		return alignSeqRes;
-	}
 
 
-	/** set the flag if the SEQRES and ATOM amino acids should be aligned and linked
-	 *
-	 * @param alignSeqRes
-	 */
-	public void setAlignSeqRes(boolean alignSeqRes) {
-		this.alignSeqRes = alignSeqRes;
-	}
-
-
-	/** should the parser to fetch missing PDB files from the PDB FTP server automatically?
-	 *  default is false
-	 * @return flag
-	 */
-	public boolean isAutoFetch() {
-		return autoFetch;
-	}
-
-	/** Tell the parser to fetch missing PDB files from the PDB FTP servers automatically.
-	 *
-	 * default is false. If true, new PDB files will be automatically stored in the Path and gzip compressed.
-	 *
-	 * @param autoFetch
-	 */
-	public void setAutoFetch(boolean autoFetch) {
-		this.autoFetch = autoFetch;
-	}
-
-	/* A flag to tell the parser to parse the Author's secondary structure assignment from the file
-	 * default is set to false, i.e. do NOT parse.
-	 * @param parseSecStruc
-	 */
-	public boolean isParseSecStruc() {
-		return parseSecStruc;
-	}
-
-
-	/*  A flag to tell the parser to parse the Author's secondary structure assignment from the file
-	 *
-	 */
-
-	public void setParseSecStruc(boolean parseSecStruc) {
-		this.parseSecStruc = parseSecStruc;
-	}
 
 
 	/** directory where to find PDB files */
@@ -550,12 +482,8 @@ public class PDBFileReader implements StructureIOFile {
 		InputStream inStream = getInputStream(pdbId);
 
 		PDBFileParser pdbpars = new PDBFileParser();
-		pdbpars.setParseSecStruc(parseSecStruc);
-		pdbpars.setAlignSeqRes(alignSeqRes);
-		pdbpars.setHeaderOnly(headerOnly);
-		pdbpars.setParseCAOnly(parseCAOnly);
-		pdbpars.setLoadChemCompInfo(loadChemCompInfo);
-
+		pdbpars.setFileParsingParameters(params);
+		
 
 		Structure struc = pdbpars.parsePDBFile(inStream) ;
 		return struc ;
@@ -593,11 +521,8 @@ public class PDBFileReader implements StructureIOFile {
 	private Structure getStructure(InputStream inStream) throws IOException{
 
 		PDBFileParser pdbpars = new PDBFileParser();
-		pdbpars.setParseSecStruc(parseSecStruc);
-		pdbpars.setAlignSeqRes(alignSeqRes);
-		pdbpars.setParseCAOnly(parseCAOnly);
-		pdbpars.setHeaderOnly(headerOnly);
-
+		pdbpars.setFileParsingParameters(params);
+		
 		Structure struc = pdbpars.parsePDBFile(inStream) ;
 		return struc ;
 
@@ -614,22 +539,33 @@ public class PDBFileReader implements StructureIOFile {
 	}
 
 
-	public boolean isHeaderOnly() {
-		return headerOnly;
-	}
+
+	public void setFileParsingParameters(FileParsingParameters params)
+	   {
+	      this.params= params;
+	      
+	   }
+	    
+	public FileParsingParameters getFileParsingParameters(){
+	       return params;
+	    }
 
 
-	public void setHeaderOnly(boolean flag) {
-		headerOnly = flag;
 
-	}
 
-	public boolean isLoadChemCompInfo() {
-		return loadChemCompInfo;
-	}
-	public void setLoadChemCompInfo(boolean loadChemCompInfo) {
-		if ( loadChemCompInfo)
-			System.setProperty(LOAD_CHEM_COMP_PROPERTY, "true");
-		this.loadChemCompInfo = loadChemCompInfo;
-	}
+
+      public boolean isAutoFetch()
+      {
+        return autoFetch;
+      }
+
+
+
+
+
+      public void setAutoFetch(boolean autoFetch)
+      {
+        this.autoFetch = autoFetch;
+         
+      }
 }

@@ -128,21 +128,7 @@ public class PDBFileParser  {
 
 	
 	// parsing options:
-	/** flag to detect if the secondary structure info should be read
-	 * 
-	 */
-	boolean parseSecStruc;
-
-	/** Flag to control if SEQRES and ATOM records should be aligned
-	 * 
-	 */
-	boolean alignSeqRes;
 	
-	
-	/** Flag to control if the chemical component info should be downloaded while parsing the files. (files will be cached).
-	 * 
-	 */
-	boolean loadChemCompInfo;
 	
 	private Logger logger = Logger.getLogger(PDBFileParser.class.getName());
 
@@ -259,13 +245,6 @@ public class PDBFileParser  {
 
 	private boolean atomOverflow;
 
-	/** Set the flag to only read in Ca atoms - this is useful for parsing large structures like 1htq.
-	 *
-	 */
-	public boolean parseCAOnly;
-
-	private boolean headerOnly;
-
 
 	static {
 
@@ -273,10 +252,11 @@ public class PDBFileParser  {
 
 	}
 
-
+	FileParsingParameters params;
 
 	public PDBFileParser() {
-
+	   params = new FileParsingParameters();
+	   
 		structure     = null           ;
 		current_model = new ArrayList<Chain>();
 		current_chain = null           ;
@@ -285,10 +265,6 @@ public class PDBFileParser  {
 		pdbHeader 	  = new PDBHeader();
 		connects      = new ArrayList<Map<String,Integer>>() ;
 
-		parseSecStruc = false;
-		
-		// by default we now do NOT align Atom and SeqRes records
-		alignSeqRes   = false;
 
 		helixList     = new ArrayList<Map<String,String>>();
 		strandList    = new ArrayList<Map<String,String>>();
@@ -300,65 +276,14 @@ public class PDBFileParser  {
 		atomCount = 0;
 		atomOverflow = false;
 
-		parseCAOnly = false;
 		
-		// don't download ChemComp dictionary by default.
-		loadChemCompInfo = false;
 
 	}
-	/** the flag if only the C-alpha atoms of the structure should be parsed.
-	 *
-	 * @return the flag
-	 */
-	public boolean isParseCAOnly() {
-		return parseCAOnly;
-	}
-	/** the flag if only the C-alpha atoms of the structure should be parsed.
-	 *
-	 * @param parseCAOnly boolean flag to enable or disable C-alpha only parsing
-	 */
-	public void setParseCAOnly(boolean parseCAOnly) {
-		this.parseCAOnly = parseCAOnly;
-	}
-
-
-
-	/** Flag if the SEQRES amino acids should be aligned with the ATOM amino acids.
-	 *
-	 * @return flag if SEQRES - ATOM amino acids alignment is enabled
-	 */
-	public boolean isAlignSeqRes() {
-		return alignSeqRes;
-	}
-
-
-
-	/** define if the SEQRES in the structure should be aligned with the ATOM records
-	 * if yes, the AminoAcids in structure.getSeqRes will have the coordinates set.
-	 * @param alignSeqRes
-	 */
-	public void setAlignSeqRes(boolean alignSeqRes) {
-		this.alignSeqRes = alignSeqRes;
-	}
 
 
 
 
-	/** is secondary structure assignment being parsed from the file?
-	 * default is null
-	 * @return boolean if HELIX STRAND and TURN fields are being parsed
-	 */
-	public boolean isParseSecStruc() {
-		return parseSecStruc;
-	}
 
-	/** a flag to tell the parser to parse the Author's secondary structure assignment from the file
-	 * default is set to false, i.e. do NOT parse.
-	 * @param parseSecStruc if HELIX STRAND and TURN fields are being parsed
-	 */
-	public void setParseSecStruc(boolean parseSecStruc) {
-		this.parseSecStruc = parseSecStruc;
-	}
 
 	/** initialize the header. */
 	private Map<String,Object> init_header(){
@@ -397,7 +322,7 @@ public class PDBFileParser  {
 	/** initiate new group, either Hetatom, Nucleotide, or AminoAcid */
 	private Group getNewGroup(String recordName,Character aminoCode1, String aminoCode3) {
 
-		if ( loadChemCompInfo ){
+		if ( params.isLoadChemCompInfo() ){
 			Group g =  ChemCompGroupFactory.getGroupFromChemCompDictionary(aminoCode3);
 			if ( g != null)
 				return g;
@@ -1651,7 +1576,7 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 
 		}
 
-		if ( headerOnly)
+		if ( params.isHeaderOnly())
 			return;
 
 		atomCount++;
@@ -1702,7 +1627,7 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 		String fullname = line.substring (12, 16);
 
 		// check for CA only if requested
-		if ( parseCAOnly){
+		if ( params.isParseCAOnly()){
 			// yes , user wants to get CA only
 			// only parse CA atoms...
 			if (! fullname.equals(" CA ")){
@@ -1791,7 +1716,8 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 
 
 	private void switchCAOnly(){
-		parseCAOnly = true;
+	     params.setParseCAOnly(true);
+		
 
 		current_model = CAConverter.getCAOnly(current_model);
 
@@ -2228,7 +2154,7 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 						pdb_DBREF_Handler(line);
 					else if (recordName.equals("SSBOND"))
 						pdb_SSBOND_Handler(line);
-					else if ( parseSecStruc) {
+					else if ( params.isParseSecStruc()) {
 						if ( recordName.equals("HELIX") ) pdb_HELIX_Handler (  line ) ;
 						else if (recordName.equals("SHEET")) pdb_SHEET_Handler(line ) ;
 						else if (recordName.equals("TURN")) pdb_TURN_Handler(   line ) ;
@@ -2255,7 +2181,7 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 			throw new IOException ("Error parsing PDB file");
 		}
 
-		if ( parseSecStruc)
+		if ( params.isParseSecStruc())
 			setSecStruc();
 
 
@@ -2345,7 +2271,7 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 		structure.setCompounds(compounds);
 		structure.setDBRefs(dbrefs);
 
-		if ( alignSeqRes ){
+		if ( params.isAlignSeqRes() ){
 
 			SeqRes2AtomAligner aligner = new SeqRes2AtomAligner();
 			aligner.align(structure,seqResChains);
@@ -2784,21 +2710,16 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 		}
 		return authorList;
 	}
-	public void setHeaderOnly(boolean headerOnly) {
-		this.headerOnly = headerOnly;
-
-	}
-
-	public boolean isHeaderOnly(){
-		return headerOnly;
-	}
 	
-	public boolean isLoadChemCompInfo() {
-		return loadChemCompInfo;
-	}
-	public void setLoadChemCompInfo(boolean loadChemCompInfo) {
-		this.loadChemCompInfo = loadChemCompInfo;
-	}
+	public void setFileParsingParameters(FileParsingParameters params)
+	   {
+	      this.params= params;
+	      
+	   }
+	    
+	    public FileParsingParameters getFileParsingParameters(){
+	       return params;
+	    }
 
 
 }

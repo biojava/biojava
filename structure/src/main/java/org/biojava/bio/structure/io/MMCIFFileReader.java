@@ -69,22 +69,18 @@ public class MMCIFFileReader implements StructureIOFile {
 	boolean pdbDirectorySplit;
 	public static final String lineSplit = System.getProperty("file.separator");
 	
-	boolean headerOnly;
+
+	FileParsingParameters params;
 	
-	/** Flag to control if the chemical component info should be downloaded while parsing the files. (files will be cached).
-	 * 
-	 */
-	boolean loadChemCompInfo;
-	
-	boolean parseCAOnly;
-	boolean alignSeqRes;
 	
 	public static void main(String[] args){
 		//String filename =  "/Users/andreas/WORK/PDB/mmcif_files/a9/2a9w.cif.gz" ;
 
 		StructureIOFile reader = new MMCIFFileReader();
 		reader.setPath("/Users/ap3/WORK/PDB/");
-		reader.setAutoFetch(true);
+		FileParsingParameters params = new FileParsingParameters();
+		reader.setFileParsingParameters(params);
+		
 		try{
 			Structure struc = reader.getStructureById("1gng");
 			System.out.println(struc);
@@ -108,14 +104,9 @@ public class MMCIFFileReader implements StructureIOFile {
 		extensions.add(".mmcif.gz");
 
 		autoFetch     = false;
-		headerOnly    = false;
-		//parseSecStruc = false;
-		
-		parseCAOnly   = false;
-		alignSeqRes   = true;
+	
 		pdbDirectorySplit = false;
-		headerOnly    = false;
-		loadChemCompInfo = false;
+		params = new FileParsingParameters();
 
 
 	}
@@ -165,13 +156,10 @@ public class MMCIFFileReader implements StructureIOFile {
 		MMcifParser parser = new SimpleMMcifParser();
 
 		SimpleMMcifConsumer consumer = new SimpleMMcifConsumer();
-
-		consumer.setHeaderOnly(headerOnly);
-//		consumer.setParseSecStruc(p);
-		consumer.setAlignSeqRes(alignSeqRes);
-		consumer.setParseCAOnly(parseCAOnly);
+		   
+		consumer.setFileParsingParameters(params);
 		
-		consumer.setLoadChemCompInfo(loadChemCompInfo);
+		
 		// The Consumer builds up the BioJava - structure object.
 		// you could also hook in your own and build up you own data model.
 		parser.addMMcifConsumer(consumer);
@@ -363,46 +351,18 @@ public class MMCIFFileReader implements StructureIOFile {
 	}
 
 
-	public boolean isHeaderOnly() {
-		return headerOnly;
-	}
+
+   public FileParsingParameters getFileParsingParameters()
+   {
+      return params;
+   }
 
 
-	public void setHeaderOnly(boolean flag) {
-		headerOnly = flag;
-		
-	}
-	public boolean isLoadChemCompInfo() {
-		return loadChemCompInfo;
-	}
-	public void setLoadChemCompInfo(boolean loadChemCompInfo) {
-		this.loadChemCompInfo = loadChemCompInfo;
-	}
-	public boolean isParseCAOnly() {
-		return parseCAOnly;
-	}
-
-	public void setParseCAOnly(boolean parseCAOnly) {
-		this.parseCAOnly = parseCAOnly;
-	}
-
-	/** Flag if the SEQRES amino acids should be aligned with the ATOM amino acids.
-	 *
-	 * @return flag if SEQRES - ATOM amino acids alignment is enabled
-	 */
-	public boolean isAlignSeqRes() {
-		return alignSeqRes;
-	}
-
-
-
-	/** define if the SEQRES in the structure should be aligned with the ATOM records
-	 * if yes, the AminoAcids in structure.getSeqRes will have the coordinates set.
-	 * @param alignSeqRes
-	 */
-	public void setAlignSeqRes(boolean alignSeqRes) {
-		this.alignSeqRes = alignSeqRes;
-	}
+   public void setFileParsingParameters(FileParsingParameters params)
+   {
+     this.params=params;
+      
+   }
 
 
 

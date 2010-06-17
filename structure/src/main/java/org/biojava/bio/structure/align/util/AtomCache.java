@@ -11,6 +11,7 @@ import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureException;
 import org.biojava.bio.structure.StructureImpl;
 import org.biojava.bio.structure.StructureTools;
+import org.biojava.bio.structure.io.FileParsingParameters;
 import org.biojava.bio.structure.io.PDBFileReader;
 import org.biojava.utils.io.InputStreamProvider;
 
@@ -20,10 +21,7 @@ public class AtomCache {
 	public static final String CHAIN_SPLIT_SYMBOL = ".";
 		
 	String path;
-	boolean isSplit;
-	boolean autoFetch;
-	boolean loadChemCompInfo;
-	boolean alignSeqRes;
+
 	
 	// this is a static flag across all instances of AtomCaches, to make sure 
 	// only one file is accessed in the file system at a time.
@@ -31,6 +29,9 @@ public class AtomCache {
 	// automatically downloaded by other instances / threads.	
 	private static AtomicBoolean loading  = new AtomicBoolean();
 	
+	boolean autoFetch;
+	boolean isSplit;
+	FileParsingParameters params;
 	public AtomCache(String pdbFilePath, boolean isSplit){
 		
 		// we are caching the binary files that contain the PDBs gzipped
@@ -39,12 +40,15 @@ public class AtomCache {
 		System.setProperty(InputStreamProvider.CACHE_PROPERTY, "true");
 
 		path = pdbFilePath;
+		
+		
 		//this.cache = cache;
 		this.isSplit = isSplit;
+		
 		autoFetch = true;
 		loading.set(false);
-		loadChemCompInfo = false;
-		alignSeqRes = false;
+		params = new FileParsingParameters();
+		
 	}
 
 	public AtomCache(UserConfiguration config){
@@ -160,9 +164,7 @@ public class AtomCache {
 			reader.setPdbDirectorySplit(isSplit);
 			reader.setAutoFetch(autoFetch);
 			
-			reader.setAlignSeqRes(alignSeqRes);
-			reader.setParseSecStruc(false);
-			reader.setLoadChemCompInfo(loadChemCompInfo);
+			reader.setFileParsingParameters(params);
 
 			String pdbId   = null;
 			String chainId = null;
@@ -240,21 +242,19 @@ public class AtomCache {
 
 	}
 
-	public boolean isLoadChemCompInfo() {
-		return loadChemCompInfo;
-	}
+   public FileParsingParameters getFileParsingParams()
+   {
+      return params;
+   }
 
-	public void setLoadChemCompInfo(boolean loadChemCompInfo) {
-		this.loadChemCompInfo = loadChemCompInfo;
-	}
+   public void setFileParsingParams(FileParsingParameters params)
+   {
+      this.params = params;
+   }
+	
+	
 
-	public boolean isAlignSeqRes() {
-		return alignSeqRes;
-	}
-
-	public void setAlignSeqRes(boolean alignSeqRes) {
-		this.alignSeqRes = alignSeqRes;
-	}
+	
 
 	
 	

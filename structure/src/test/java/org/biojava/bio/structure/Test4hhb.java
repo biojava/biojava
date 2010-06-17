@@ -29,6 +29,7 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.zip.GZIPInputStream;
 
+import org.biojava.bio.structure.io.FileParsingParameters;
 import org.biojava.bio.structure.io.PDBFileParser;
 import org.biojava.bio.structure.io.mmcif.MMcifParser;
 import org.biojava.bio.structure.io.mmcif.SimpleMMcifConsumer;
@@ -54,7 +55,9 @@ public class Test4hhb  extends TestCase {
 			assertNotNull(inStream);
 
 			PDBFileParser pdbpars = new PDBFileParser();
-			pdbpars.setAlignSeqRes(true);
+			FileParsingParameters params = new FileParsingParameters();
+			params.setAlignSeqRes(true);
+			pdbpars.setFileParsingParameters(params);
 			//pdbpars.setLoadChemCompInfo(true);
 
 			structure = pdbpars.parsePDBFile(inStream) ;
@@ -77,7 +80,9 @@ public class Test4hhb  extends TestCase {
 
 			MMcifParser pdbpars = new SimpleMMcifParser();
 			SimpleMMcifConsumer consumer = new SimpleMMcifConsumer();
-			consumer.setAlignSeqRes(true);
+			FileParsingParameters params = new FileParsingParameters();
+			params.setAlignSeqRes(true);
+			consumer.setFileParsingParameters(params);
 			pdbpars.addMMcifConsumer(consumer);
 
 			pdbpars.parse(inStream) ;

@@ -7,6 +7,7 @@ import java.util.Map;
 
 import junit.framework.TestCase;
 
+import org.biojava.bio.structure.io.FileParsingParameters;
 import org.biojava.bio.structure.io.PDBFileParser;
 import org.biojava.bio.structure.jama.Matrix;
 
@@ -28,7 +29,10 @@ public class StructureTest extends TestCase {
 		assertNotNull(inStream);
 
 		PDBFileParser pdbpars = new PDBFileParser();
-		pdbpars.setAlignSeqRes(true);
+		FileParsingParameters params = new FileParsingParameters();
+		params.setAlignSeqRes(true);
+		pdbpars.setFileParsingParameters(params);
+		
 		try {
 			structure = pdbpars.parsePDBFile(inStream) ;
 		} catch (IOException e) {

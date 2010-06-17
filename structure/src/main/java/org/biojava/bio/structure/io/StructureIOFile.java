@@ -77,6 +77,7 @@ public interface StructureIOFile extends StructureIO {
     /** Fetch files automatically from FTP server. Default: false
      *
      * @return flag is true or false.
+     * 
      */
     public boolean isAutoFetch();
        
@@ -85,19 +86,21 @@ public interface StructureIOFile extends StructureIO {
 	 * default is false. If true, new PDB files will be automatically stored in the Path and gzip compressed.
 	 *
 	 * @param autoFetch flag.
-	 */
+	 */ 
 	public void setAutoFetch(boolean autoFetch);
 
 	
 	/** The PDB files are organized hierarchically (as on the PDB - FTP server. Directories are split based on the two middle characters of the files).
 	 * 
 	 * @param isSplit
+	 * 
 	 */
 	public void setPdbDirectorySplit(boolean isSplit);
 	
 	/** The PDB files are organized hierarchically (as on the PDB - FTP server. Directories are split based on the two middle characters of the files).
 	 * 
 	 * @return flag
+	 *
 	 */
 	public boolean isPdbDirectorySplit();
 		
@@ -108,15 +111,19 @@ public interface StructureIOFile extends StructureIO {
 	public Structure getStructureById(String pdbId) throws IOException;
 
 	
-	/** Get the flag to set to read only the header of the file during parsing.
+	/** Set the parameters that should be used for file parsing
 	 * 
-	 * @return flag
+	 * @param params FileParsingParameters
 	 */
-	public boolean isHeaderOnly();
+	public void setFileParsingParameters(FileParsingParameters params);
+	   
 	
-	/** Set the flag to set to read only the header of the file during parsing.
-	 * 
-	 * @param flag
-	 */
-	public void setHeaderOnly(boolean flag);
+	/** Get the parameters that should be used for file parsing
+     * 
+     * @param params
+     */
+    public FileParsingParameters getFileParsingParameters();
+    
+	
+	
 }

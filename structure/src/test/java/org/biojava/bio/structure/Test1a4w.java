@@ -30,6 +30,7 @@ import java.util.List;
 
 import junit.framework.TestCase;
 
+import org.biojava.bio.structure.io.FileParsingParameters;
 import org.biojava.bio.structure.io.PDBFileParser;
 import org.biojava.bio.structure.io.mmcif.MMcifParser;
 import org.biojava.bio.structure.io.mmcif.SimpleMMcifConsumer;
@@ -46,8 +47,10 @@ public class Test1a4w extends TestCase{
 			assertNotNull(inStream);
 
 			PDBFileParser pdbpars = new PDBFileParser();
-			pdbpars.setLoadChemCompInfo(true);
-			pdbpars.setAlignSeqRes(true);
+			FileParsingParameters params = new FileParsingParameters();
+			params.setLoadChemCompInfo(true);
+			params.setAlignSeqRes(true);
+			pdbpars.setFileParsingParameters(params);
 
 			structure = pdbpars.parsePDBFile(inStream) ;
 		} catch (IOException e) {
@@ -69,8 +72,10 @@ public class Test1a4w extends TestCase{
 
 			MMcifParser pdbpars = new SimpleMMcifParser();
 			SimpleMMcifConsumer consumer = new SimpleMMcifConsumer();
-			consumer.setLoadChemCompInfo(true);
-			consumer.setAlignSeqRes(true);
+			FileParsingParameters params = new FileParsingParameters();
+            params.setLoadChemCompInfo(true);
+            params.setAlignSeqRes(true);
+            consumer.setFileParsingParameters(params);
 			pdbpars.addMMcifConsumer(consumer);
 
 			pdbpars.parse(inStream) ;

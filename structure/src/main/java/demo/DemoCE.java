@@ -28,10 +28,14 @@ import org.biojava.bio.structure.Atom;
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureTools;
 import org.biojava.bio.structure.align.StructureAlignment;
+import org.biojava.bio.structure.align.StructureAlignmentFactory;
 import org.biojava.bio.structure.align.ce.CeMain;
 import org.biojava.bio.structure.align.ce.CeParameters;
 import org.biojava.bio.structure.align.model.AFPChain;
+import org.biojava.bio.structure.align.model.AfpChainWriter;
+import org.biojava.bio.structure.align.util.AFPChainScorer;
 import org.biojava.bio.structure.align.util.AtomCache;
+import org.biojava.bio.structure.align.xml.AFPChainXMLConverter;
 
 
 public class DemoCE {
@@ -48,7 +52,7 @@ public class DemoCE {
 		String name1 = "1cdg.A";
 		String name2 = "1tim.B";
 		
-		StructureAlignment algorithm  = new CeMain();
+	
 		
 		AtomCache cache = new AtomCache(pdbFilePath, isSplit);
 				
@@ -57,14 +61,22 @@ public class DemoCE {
 
 		try {
 
+		   StructureAlignment algorithm  = StructureAlignmentFactory.getAlgorithm(CeMain.algorithmName);
+		   
 			structure1 = cache.getStructure(name1);
 			structure2 = cache.getStructure(name2);
 			
 			Atom[] ca1 = StructureTools.getAtomCAArray(structure1);
 			Atom[] ca2 = StructureTools.getAtomCAArray(structure2);
 			
+			// get default parameters
 			CeParameters params = new CeParameters();
+			
+			// add more print
 			params.setShowAFPRanges(true);
+			
+			// set the maximum gap size to unlimited 
+			params.setMaxGapSize(-1);
 			
 			AFPChain afpChain = algorithm.align(ca1,ca2,params);			
 
@@ -77,7 +89,12 @@ public class DemoCE {
 			System.out.println(afpChain.toRotMat());
 			//System.out.println(afpChain.toCE(ca1, ca2));
 			
-			//System.out.println(AFPChainXMLConverter.toXML(afpChain,ca1,ca2));
+			System.out.println(AFPChainXMLConverter.toXML(afpChain,ca1,ca2));
+			
+			double tmScore = AFPChainScorer.getTMScore(afpChain, ca1, ca2);
+			afpChain.setTMScore(tmScore);
+			
+			System.out.println(AfpChainWriter.toWebSiteDisplay(afpChain, ca1, ca2));
 						
 		} catch (Exception e) {
 			e.printStackTrace();
