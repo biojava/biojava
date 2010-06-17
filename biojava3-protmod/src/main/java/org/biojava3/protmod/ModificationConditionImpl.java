@@ -42,7 +42,8 @@ public class ModificationConditionImpl implements ModificationCondition {
 	private final List<Component> components;
 	
 	// TODO: is it possible that two components have more than one linkage?
-	private final Map<IntegerPair,String[]> linkages;
+	private final Map<IntegerPair,List<String[]>> linkages;
+	private final int linkageCount;
 	
 	private transient List<int[]> indicesOfLinkedComponents = null;
 	
@@ -51,7 +52,8 @@ public class ModificationConditionImpl implements ModificationCondition {
 	 */
 	public static class Builder {
 		private final List<Component> components;
-		private Map<IntegerPair,String[]> linkages;
+		private Map<IntegerPair,List<String[]>> linkages;
+		private int linkageCount;
 		
 		/**
 		 * 
@@ -63,6 +65,7 @@ public class ModificationConditionImpl implements ModificationCondition {
 			}
 			this.components = Arrays.asList(components);
 			linkages = null;
+			linkageCount = 0;
 		}
 		
 		/**
@@ -100,16 +103,19 @@ public class ModificationConditionImpl implements ModificationCondition {
 			}
 			
 			if (linkages==null) {
-				linkages = new HashMap<IntegerPair,String[]>();
+				linkages = new HashMap<IntegerPair,List<String[]>>();
 			}
 
 			IntegerPair ip = IntegerPair.of(indexComponent1, indexComponent2);
-			if (linkages.containsKey(ip)) {
-				throw new IllegalStateException("At most one linkage is allowed for " +
-				"two components.");
+			List<String[]> atoms = linkages.get(ip);
+			if (atoms == null) {
+				atoms = new ArrayList<String[]>();
+				linkages.put(ip, atoms);
 			}
 			
-			linkages.put(ip, new String[] {atom1, atom2});
+			atoms.add(new String[] {atom1, atom2});
+			
+			linkageCount++;
 			
 			return this;
 		}
@@ -140,21 +146,7 @@ public class ModificationConditionImpl implements ModificationCondition {
 						"have to be linked."); // TODO: is this true?
 			}
 		}
-	}
-	
-	/**
-	 * 
-	 * @param components components involved.
-	 * @throws IllegalArgumentException if components is null or empty,
-	 *  or bonds have component(s) that are not included. 
-	 */
-	public ModificationConditionImpl(final List<Component> components) {
-		if (components==null||components.isEmpty()) {
-			throw new IllegalArgumentException("Null or empty components.");
-		}
-		
-		this.components = components;
-		this.linkages = null;
+		linkageCount = builder.linkageCount; 
 	}
 	
 	/**
@@ -188,7 +180,7 @@ public class ModificationConditionImpl implements ModificationCondition {
 	/**
 	 * {@inheritDoc}
 	 */
-	public String[] getLinkedAtoms(int indexComponent1, int indexComponent2) {
+	public List<String[]> getLinkedAtoms(int indexComponent1, int indexComponent2) {
 		if (indexComponent1<0 || indexComponent1>=components.size()
 				|| indexComponent2<0 || indexComponent2>=components.size()) {
 			throw new IllegalArgumentException("Indices of components must" +
@@ -196,17 +188,28 @@ public class ModificationConditionImpl implements ModificationCondition {
 		}
 
 		IntegerPair ip = IntegerPair.of(indexComponent1, indexComponent2);
-		String[] atoms = linkages.get(ip);
+		List<String[]> atoms = linkages.get(ip);
 		
 		if (atoms == null) {
-			return null;
+			return Collections.emptyList();
 		}
 		
 		if (indexComponent1 < indexComponent2) {
-			return new String[]{atoms[0], atoms[1]};
+			return atoms;
 		} else {
-			return new String[]{atoms[1], atoms[0]};
+			List<String[]> rev = new ArrayList<String[]>(atoms.size());
+			for (String[] atomPair : atoms) {
+				rev.add(new String[]{atomPair[1], atomPair[0]});
+			}
+			return rev;
 		}
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	public int linkageCount() {
+		return linkageCount;
 	}
 	
 	/**
@@ -226,9 +229,11 @@ public class ModificationConditionImpl implements ModificationCondition {
 			for (int[] link : indicesOfLinkedComps) {
 				Component comp1 = components.get(link[0]);
 				Component comp2 = components.get(link[1]);
-				String[] atoms = getLinkedAtoms(link[0], link[1]);
-				sb.append(comp1.getPdbccId()+"["+atoms[0]+"]<=>"+
-						comp2.getPdbccId()+"["+atoms[0]+"];");
+				List<String[]> atoms = getLinkedAtoms(link[0], link[1]);
+				for (String[] atomPair : atoms) {
+					sb.append(comp1.getPdbccId()+"["+atomPair[0]+"]<=>"+
+							comp2.getPdbccId()+"["+atomPair[0]+"];");
+				}
 			}
 		}
 		

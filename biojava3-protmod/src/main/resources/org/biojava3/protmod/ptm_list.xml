@@ -2098,4 +2098,271 @@
 		<Occurrence>Natural</Occurrence>
 		<Category>Attachment</Category>
 	</Entry>
+	<!--Entry>
+		<Id>0072</Id>
+		<Description>A protein modification that effectively results from forming an adduct between two cysteine residues and the porphyrin compound heme b, (7,12-diethenyl-3,8,13,17-tetramethylporphyrin-2,18-dipropanoato)iron.</Description>
+		<SystematicName>[7,12-bis((S)-1-[((R)-2-amino-2-carboxy)ethylsulfanyl]ethyl)-3,8,13,17-tetramethyl-21H,23H-porphine-2,18-bis(2-carboxyethyl)-N21,N22,N23,N24]-ferrate</SystematicName>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0134</Id>
+			<Name>heme-bis-L-cysteine</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00143</Id>
+			<Name>heme-bis-L-cysteine</Name>
+		</CrossReference>
+		<Formula>C 40 Fe 1 H 42 N 6 O 6 S 2</Formula>
+		<Condition>
+			<Component type="AminoAcid" label="1">
+				<Id source="PDBCC">CYS</Id>
+			</Component>
+			<Component type="AminoAcid" label="2">
+				<Id source="PDBCC">CYS</Id>
+			</Component>
+			<Bond>
+				<Atom component="1"></Atom>
+				<Atom component="2"></Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>Natural</Occurrence>
+		<Category>CrossLink2</Category>
+	</Entry-->
+	<Entry>
+		<Id>0073</Id>
+		<Description>A protein modification that effectively converts four L-cysteine residues iron atom to tetrakis-L-cysteinyl iron.</Description>
+		<SystematicName>tetrakis(cysteinato)-1kappaS,2kappaS,3kappaS,4kappaS-iron</SystematicName>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0136</Id>
+			<Name>tetrakis-L-cysteinyl iron</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00145</Id>
+			<Name>tetrakis-L-cysteinyl iron</Name>
+		</CrossReference>
+		<Formula>C 12 Fe 1 H 16 N 4 O 4 S 4</Formula>
+		<Condition>
+			<Component type="AminoAcid" label="1">
+				<Id source="PDBCC">CYS</Id>
+			</Component>
+			<Component type="AminoAcid" label="2">
+				<Id source="PDBCC">CYS</Id>
+			</Component>
+			<Component type="AminoAcid" label="3">
+				<Id source="PDBCC">CYS</Id>
+			</Component>
+			<Component type="AminoAcid" label="4">
+				<Id source="PDBCC">CYS</Id>
+			</Component>
+			<Component type="Ligand" label="5">
+				<Id source="PDBCC">FE</Id>
+			</Component>
+			<Bond>
+				<Atom component="1">SG</Atom>
+				<Atom component="5">FE</Atom>
+			</Bond>
+			<Bond>
+				<Atom component="2">SG</Atom>
+				<Atom component="5">FE</Atom>
+			</Bond>
+			<Bond>
+				<Atom component="3">SG</Atom>
+				<Atom component="5">FE</Atom>
+			</Bond>
+			<Bond>
+				<Atom component="4">SG</Atom>
+				<Atom component="5">FE</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>Natural</Occurrence>
+		<Category>CrossLink4</Category>
+	</Entry>
+	<Entry>
+		<Id>0074</Id>
+		<Description>A protein modification that effectively converts four L-cysteine residues and a four-iron four-sulfur cluster to tetrakis-L-cysteinyl tetrairon tetrasulfide.</Description>
+		<SystematicName>tetrakis(cysteinato)-1kappaS,2kappaS,3kappaS,4kappaS-tetra-mu3-sulfido-tetrahedro-tetrairon</SystematicName>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0140</Id>
+			<Name>tetrakis-L-cysteinyl tetrairon tetrasulfide</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00149</Id>
+			<Name>tetrakis-L-cysteinyl tetrairon tetrasulfide</Name>
+		</CrossReference>
+		<Formula>C 12 Fe 4 H 16 N 4 O 4 S 8</Formula>
+		<Condition>
+			<Component type="AminoAcid" label="1">
+				<Id source="PDBCC">CYS</Id>
+			</Component>
+			<Component type="AminoAcid" label="2">
+				<Id source="PDBCC">CYS</Id>
+			</Component>
+			<Component type="AminoAcid" label="3">
+				<Id source="PDBCC">CYS</Id>
+			</Component>
+			<Component type="AminoAcid" label="4">
+				<Id source="PDBCC">CYS</Id>
+			</Component>
+			<Component type="Ligand" label="5">
+				<Id source="PDBCC">FS4</Id>
+			</Component>
+			<Bond>
+				<Atom component="1">SG</Atom>
+				<Atom component="5">FE1</Atom>
+			</Bond>
+			<Bond>
+				<Atom component="2">SG</Atom>
+				<Atom component="5">FE2</Atom>
+			</Bond>
+			<Bond>
+				<Atom component="3">SG</Atom>
+				<Atom component="5">FE3</Atom>
+			</Bond>
+			<Bond>
+				<Atom component="4">SG</Atom>
+				<Atom component="5">FE4</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>Natural</Occurrence>
+		<Category>CrossLink4</Category>
+	</Entry>
+	<Entry>
+		<Id>0075</Id>
+		<Description>A protein modification that effectively converts an L-cysteine residue, an L-histidine residue, homocitric acid and a one-molybdenum seven-iron nine-sulfur cluster to L-cysteinyl-L-histidino-homocitryl molybdenum heptairon nonasulfide.</Description>
+		<SystematicName></SystematicName>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0141</Id>
+			<Name>L-cysteinyl-L-histidino-homocitryl molybdenum heptairon nonasulfide</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00150</Id>
+			<Name>L-cysteinyl-L-histidino-homocitryl molybdenum heptairon nonasulfide</Name>
+		</CrossReference>
+		<Formula>C 16 Fe 7 H 18 Mo 1 N 4 O 9 S 10</Formula>
+		<Condition>
+			<Component type="AminoAcid" label="1">
+				<Id source="PDBCC">CYS</Id>
+			</Component>
+			<Component type="AminoAcid" label="2">
+				<Id source="PDBCC">HIS</Id>
+			</Component>
+			<Component type="Ligand" label="3">
+				<Id source="PDBCC">CFM</Id>
+			</Component>
+			<Component type="Ligand" label="4">
+				<Id source="PDBCC">HCA</Id>
+			</Component>
+			<Bond>
+				<!--TODO: verify this-->
+				<Atom component="1">SG</Atom>
+				<Atom component="3">FE1</Atom>
+			</Bond>
+			<Bond>
+				<!--TODO: verify this-->
+				<Atom component="2">ND1</Atom>
+				<Atom component="3">MO1</Atom>
+			</Bond>
+			<Bond>
+				<!--TODO: verify this-->
+				<Atom component="3">MO1</Atom>
+				<Atom component="4">O5</Atom>
+			</Bond>
+			<Bond>
+				<!--TODO: verify this-->
+				<Atom component="3">MO1</Atom>
+				<Atom component="4">O7</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>Natural</Occurrence>
+		<Category>CrossLink2</Category>
+	</Entry>
+	<Entry>
+		<Id>0076</Id>
+		<Description>A protein modification that effectively converts an L-cysteine residue, an L-histidine residue, homocitric acid and a one-molybdenum seven-iron nine-sulfur cluster to L-cysteinyl-L-histidino-homocitryl molybdenum heptairon nonasulfide.</Description>
+		<SystematicName></SystematicName>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0141</Id>
+			<Name>L-cysteinyl-L-histidino-homocitryl molybdenum heptairon nonasulfide</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00150</Id>
+			<Name>L-cysteinyl-L-histidino-homocitryl molybdenum heptairon nonasulfide</Name>
+		</CrossReference>
+		<Formula>C 16 Fe 7 H 18 Mo 1 N 4 O 9 S 10</Formula>
+		<Condition>
+			<Component type="AminoAcid" label="1">
+				<Id source="PDBCC">CYS</Id>
+			</Component>
+			<Component type="AminoAcid" label="2">
+				<Id source="PDBCC">HIS</Id>
+			</Component>
+			<Component type="Ligand" label="3">
+				<Id source="PDBCC">CFN</Id>
+			</Component>
+			<Component type="Ligand" label="4">
+				<Id source="PDBCC">HCA</Id>
+			</Component>
+			<Bond>
+				<!--TODO: verify this-->
+				<Atom component="1">SG</Atom>
+				<Atom component="3">FE1</Atom>
+			</Bond>
+			<Bond>
+				<!--TODO: verify this-->
+				<Atom component="2">ND1</Atom>
+				<Atom component="3">MO1</Atom>
+			</Bond>
+			<Bond>
+				<!--TODO: verify this-->
+				<Atom component="3">MO1</Atom>
+				<Atom component="4">O5</Atom>
+			</Bond>
+			<Bond>
+				<!--TODO: verify this-->
+				<Atom component="3">MO1</Atom>
+				<Atom component="4">O7</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>Natural</Occurrence>
+		<Category>CrossLink2</Category>
+	</Entry>
+	<Entry>
+		<Id>0077</Id>
+		<Description>modification from UniMod and Resid</Description>
+		<SystematicName>8-amino-2-(2-amino-2-carboxyethyl)sulfanyl-4,5a,6,9,10,11,11a-heptahydro-4-(phosphoric acid)methyl-2,2,10-trioxo-pteridino[6,7-5,6]pyrano[3,4-4,3][1,2,5]molybdadithiolene</SystematicName>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0142</Id>
+			<Name>L-cysteinyl molybdopterin</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00151</Id>
+			<Name>L-cysteinyl molybdopterin</Name>
+		</CrossReference>
+		<Formula>C 13 H 16 Mo 1 N 6 O 9 P 1 S 3</Formula>
+		<Condition>
+			<Component type="AminoAcid" label="1">
+				<Id source="PDBCC">CYS</Id>
+			</Component>
+			<Component type="Ligand" label="2">
+				<Id source="PDBCC">MTQ</Id>
+			</Component>
+			<Bond>
+				<!--TODO: verify this-->
+				<Atom component="1">SG</Atom>
+				<Atom component="2">MOM1</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>Natural</Occurrence>
+		<Category>Attachment</Category>
+	</Entry>
 </ProteinModifications>

@@ -37,6 +37,7 @@ import org.biojava.bio.structure.Atom;
 import org.biojava.bio.structure.Calc;
 import org.biojava.bio.structure.Chain;
 import org.biojava.bio.structure.Group;
+import org.biojava.bio.structure.GroupType;
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureException;
 
@@ -131,12 +132,11 @@ implements ProteinModificationParser {
 					List<List<Atom[]>> matchedAtomsOfLinkages =
 							getMatchedAtomsOfLinkages(condition, mapCompGroups);
 					
-					int nLink = condition.getIndicesOfLinkedComponents().size();
-					if (matchedAtomsOfLinkages.size()!=nLink) {
+					if (matchedAtomsOfLinkages.size() != condition.linkageCount()) {
 						continue;
 					}
 					
-					assembleLinkages(matchedAtomsOfLinkages, mod, condition, ret);
+					assembleLinkages(matchedAtomsOfLinkages, mod, ret);
 				}
 			}
 			
@@ -145,116 +145,6 @@ implements ProteinModificationParser {
 		}
 		
 		return ret;
-	}
-	
-	/**
-	 * Assembly the matched linkages.
-	 * @param matchedAtomsOfLinkages
-	 * @param mod
-	 * @param condition
-	 * @param ret ModifiedCompound will be stored here.
-	 */
-	private void assembleLinkages(List<List<Atom[]>> matchedAtomsOfLinkages,
-			ProteinModification mod, ModificationCondition condition,
-			List<ModifiedCompound> ret) {		
-		int nLink = matchedAtomsOfLinkages.size();
-		int[] indices = new int[nLink];
-		Set<ModifiedCompound> identifiedCompounds = new HashSet<ModifiedCompound>();
-		while (indices[0]<matchedAtomsOfLinkages.get(0).size()) {
-			List<Atom[]> atomLinkages = new ArrayList<Atom[]>(nLink);
-			List<Group> groups = new ArrayList<Group>();
-			for (int iLink=0; iLink<nLink; iLink++) {
-				Atom[] atoms = matchedAtomsOfLinkages.get(iLink).get(indices[iLink]);
-				atomLinkages.add(atoms);
-				groups.add(atoms[0].getParent());
-				groups.add(atoms[1].getParent());
-			}
-			if (matchLinkages(condition, atomLinkages)) {
-				// matched
-				ModifiedCompound mc = new ModifiedCompoundImpl(mod, 
-						new ArrayList<Group>(groups), atomLinkages);
-				if (!identifiedCompounds.contains(mc)) {
-					ret.add(mc);
-					identifiedCompounds.add(mc);
-				}
-			}
-			
-			// indices++ (e.g. [0,0,1]=>[0,0,2]=>[1,2,0])
-			int i = nLink-1;
-			while (i>=0) {
-				if (i==0 || indices[i]<matchedAtomsOfLinkages.get(i).size()-1) {
-					indices[i]++;
-					break;
-				} else {
-					indices[i] = 0;
-					i--;
-				}
-			}
-		}
-	}
-	
-	private boolean matchLinkages(ModificationCondition condition, 
-			List<Atom[]> atomLinkages) {
-		List<int[]> indicesOfLinkedComps = condition.getIndicesOfLinkedComponents();
-		int nLink = indicesOfLinkedComps.size();
-		for (int i=0; i<nLink-1; i++) {
-			int[] ix1 = indicesOfLinkedComps.get(i);
-			Atom[] atoms1 = atomLinkages.get(i);
-			for (int j=i; j<nLink; j++) {
-				int[] ix2 = indicesOfLinkedComps.get(j);
-				Atom[] atoms2 = atomLinkages.get(j);
-				if ((ix1[0]==ix2[0] && atoms1[0].getParent()!=atoms2[0].getParent())
-						 ||(ix1[0]==ix2[1] && atoms1[0].getParent()!=atoms2[1].getParent())
-						 ||(ix1[1]==ix2[0] && atoms1[1].getParent()!=atoms2[0].getParent())
-						 ||(ix1[1]==ix2[1] && atoms1[1].getParent()!=atoms2[1].getParent())) {
-					return false;
-				}
-			}
-		}
-		
-		return true;
-	}
-	
-	/**
-	 * Get matched atoms for all linkages.	
-	 */
-	private List<List<Atom[]>> getMatchedAtomsOfLinkages(
-			ModificationCondition condition, Map<Component, List<Group>> mapCompGroups) {
-		List<Component> components = condition.getComponents();
-		List<int[]> linkages = condition.getIndicesOfLinkedComponents();
-		int nLink = linkages.size();
-		List<List<Atom[]>> matchedAtomsOfLinkages = new ArrayList<List<Atom[]>>(nLink);
-		
-		for (int iLink=0; iLink<nLink; iLink++) {
-			int[] linkage = linkages.get(iLink);
-			Component comp1 = components.get(linkage[0]);
-			Component comp2 = components.get(linkage[1]);
-			List<Group> groups1 = mapCompGroups.get(comp1);
-			List<Group> groups2 = mapCompGroups.get(comp2);
-			
-			String[] atomNames = condition.getLinkedAtoms(linkage[0], linkage[1]);						
-			
-			List<Atom[]> list = new ArrayList<Atom[]>();
-			
-			for (Group g1 : groups1) {
-				for (Group g2 : groups2) {
-					Atom[] atoms = findLinkage(g1, g2, atomNames[0], atomNames[1]);
-//					Atom[] atoms = findNearestAtoms(g1, g2);								
-					if (atoms!=null) {
-						list.add(atoms);
-					}
-				}
-			}
-			
-			if (list.isEmpty()) {
-				// broken linkage
-				break;
-			}
-			
-			matchedAtomsOfLinkages.add(list);
-		}
-		
-		return matchedAtomsOfLinkages;
 	}
 	
 	/**
@@ -289,9 +179,9 @@ implements ProteinModificationParser {
 				return mapCompRes;
 			}
 			
-			// for all residue
-			for (Group res : groups) {
-				String pdbccId = res.getPDBName();
+			// for all groups
+			for (Group group : groups) {
+				String pdbccId = group.getPDBName().trim();
 				Component comp = Component.of(pdbccId);
 				if (!comps.contains(comp)) {
 					continue;
@@ -301,7 +191,7 @@ implements ProteinModificationParser {
 					gs = new ArrayList<Group>();
 					mapCompRes.put(comp, gs);
 				}
-				gs.add(res);
+				gs.add(group);
 			}
 		}
 		
@@ -329,6 +219,53 @@ implements ProteinModificationParser {
 		}
 
 		return mapCompRes;
+	}
+	
+	/**
+	 * Get matched atoms for all linkages.	
+	 */
+	private List<List<Atom[]>> getMatchedAtomsOfLinkages(
+			ModificationCondition condition, Map<Component, List<Group>> mapCompGroups) {
+		List<List<Atom[]>> matchedAtomsOfLinkages = 
+				new ArrayList<List<Atom[]>>(condition.linkageCount());
+		
+		List<Component> components = condition.getComponents();
+		List<int[]> linkages = condition.getIndicesOfLinkedComponents();
+		int nLink = linkages.size();
+		
+		
+		for (int iLink=0; iLink<nLink; iLink++) {
+			int[] linkage = linkages.get(iLink);
+			Component comp1 = components.get(linkage[0]);
+			Component comp2 = components.get(linkage[1]);
+			List<Group> groups1 = mapCompGroups.get(comp1);
+			List<Group> groups2 = mapCompGroups.get(comp2);
+			
+			List<String[]> atomNames = condition.getLinkedAtoms(linkage[0], linkage[1]);						
+			
+			for (String[] pair : atomNames) {
+				List<Atom[]> list = new ArrayList<Atom[]>();
+				
+				for (Group g1 : groups1) {
+					for (Group g2 : groups2) {
+						Atom[] atoms = findLinkage(g1, g2, pair[0], pair[1]);
+//						Atom[] atoms = findNearestAtoms(g1, g2);								
+						if (atoms!=null) {
+							list.add(atoms);
+						}
+					}
+				}
+				
+				if (list.isEmpty()) {
+					// broken linkage
+					break;
+				}
+				
+				matchedAtomsOfLinkages.add(list);
+			}
+		}
+		
+		return matchedAtomsOfLinkages;
 	}
 	
 	/**
@@ -369,12 +306,12 @@ implements ProteinModificationParser {
 	}
 	
 	/**
-	 * Find the nearest Atoms between a pair of {@link Group}s.
+	 * Find the N nearest pairs of Atoms between a pair of {@link Group}s.
 	 * This function is used for DEBUG only.
 	 * 
 	 * @param group1
 	 * @param group2
-	 * @return a pair of Atoms if found, null otherwise.
+	 * @return a list of a pair of Atoms if found, null otherwise.
 	 */
 	private Atom[] findNearestAtoms(Group group1, Group group2) {		
 		double nearestDistance = Double.MAX_VALUE;
@@ -413,5 +350,93 @@ implements ProteinModificationParser {
 		}
 		
 		return ret;
+	}
+	
+	/**
+	 * Assembly the matched linkages.
+	 * @param matchedAtomsOfLinkages
+	 * @param mod
+	 * @param condition
+	 * @param ret ModifiedCompound will be stored here.
+	 */
+	private void assembleLinkages(List<List<Atom[]>> matchedAtomsOfLinkages,
+			ProteinModification mod, List<ModifiedCompound> ret) {
+		ModificationCondition condition = mod.getCondition();
+		List<int[]> indicesOfComponentsForLinkages = 
+				getIndicesOfComponentsForLinkages(condition);
+		
+		int nLink = matchedAtomsOfLinkages.size();
+		int[] indices = new int[nLink];
+		Set<ModifiedCompound> identifiedCompounds = new HashSet<ModifiedCompound>();
+		while (indices[0]<matchedAtomsOfLinkages.get(0).size()) {
+			List<Atom[]> atomLinkages = new ArrayList<Atom[]>(nLink);
+			List<Group> groups = new ArrayList<Group>();
+			for (int iLink=0; iLink<nLink; iLink++) {
+				Atom[] atoms = matchedAtomsOfLinkages.get(iLink).get(indices[iLink]);
+				atomLinkages.add(atoms);
+				groups.add(atoms[0].getParent());
+				groups.add(atoms[1].getParent());
+			}
+			if (matchLinkages(indicesOfComponentsForLinkages, atomLinkages)) {
+				// matched
+				ModifiedCompound mc = new ModifiedCompoundImpl(mod, 
+						new ArrayList<Group>(groups), atomLinkages);
+				if (!identifiedCompounds.contains(mc)) {
+					ret.add(mc);
+					identifiedCompounds.add(mc);
+				}
+			}
+			
+			// indices++ (e.g. [0,0,1]=>[0,0,2]=>[1,2,0])
+			int i = nLink-1;
+			while (i>=0) {
+				if (i==0 || indices[i]<matchedAtomsOfLinkages.get(i).size()-1) {
+					indices[i]++;
+					break;
+				} else {
+					indices[i] = 0;
+					i--;
+				}
+			}
+		}
+	}
+	
+	private List<int[]> getIndicesOfComponentsForLinkages(ModificationCondition condition) {
+		List<int[]> ret = new ArrayList<int[]>();
+		List<int[]> indicesOfLinkedComps = condition.getIndicesOfLinkedComponents();
+		for (int[] indices : indicesOfLinkedComps) {
+			int n = condition.getLinkedAtoms(indices[0], indices[1]).size();
+			for (int i=0; i<n; i++) {
+				ret.add(indices);
+			}
+		}
+		return ret;
+	}
+	
+	/**
+	 * 
+	 * @param condition
+	 * @param atomLinkages
+	 * @return true if atomLinkages satisfy the condition; false, otherwise.
+	 */
+	private boolean matchLinkages(List<int[]> indicesOfComponentsForLinkages, 
+			List<Atom[]> atomLinkages) {
+		int nLink = indicesOfComponentsForLinkages.size();
+		for (int i=0; i<nLink-1; i++) {
+			int[] ix1 = indicesOfComponentsForLinkages.get(i);
+			Atom[] atoms1 = atomLinkages.get(i);
+			for (int j=i+1; j<nLink; j++) {
+				int[] ix2 = indicesOfComponentsForLinkages.get(j);
+				Atom[] atoms2 = atomLinkages.get(j);
+				if (((ix1[0]==ix2[0]) != (atoms1[0].getParent()==atoms2[0].getParent()))
+						 ||((ix1[0]==ix2[1]) != (atoms1[0].getParent()==atoms2[1].getParent()))
+						 ||((ix1[1]==ix2[0]) != (atoms1[1].getParent()==atoms2[0].getParent()))
+						 ||((ix1[1]==ix2[1]) != (atoms1[1].getParent()==atoms2[1].getParent()))) {
+					return false;
+				}
+			}
+		}
+		
+		return true;
 	}
 }

@@ -25,6 +25,7 @@
 package org.biojava3.protmod.parser;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
 
 import junit.framework.TestCase;
@@ -62,6 +63,7 @@ public class ProteinModificationParserTest extends TestCase {
 				"1DJP", // DO2, (bond length error 3.0)
 				"1ALL", // CYC
 				"1B8D", // PEB
+				"1OGP", // MTQ
 				
 				// Modified resdiues
 				"3MVJ", // SEP, TPO
@@ -112,6 +114,11 @@ public class ProteinModificationParserTest extends TestCase {
 				"1A70", // FES
 				"1RPB", // Disulfide bond, and isopeptide (Cys - ASP)
 				"3B2M", // isopeptide (Lys - Asn)
+				"1CAD", // FE and 4 Cys, cross-link4
+				"1FP4", // CFM, HCA, CYS, HIS
+				"1M1N", // CFN, HCA, CYS, HIS
+				//"1G21", // CFM, HCA, CYS, HIS, (tolerance 0.5)
+				//"1M34", // CFM, HCA, CYS, HIS, (tolerance 1.0)
 		};
 		for ( String name : names){
 			System.out.println("===\n"+name);
@@ -128,7 +135,7 @@ public class ProteinModificationParserTest extends TestCase {
 		Structure struc = TmpAtomCache.cache.getStructure(pdbId);
 
 		DefaultProteinModificationParser parser = new DefaultProteinModificationParser();
-//		parser.setbondLengthTolerance(20);
+//		parser.setbondLengthTolerance(1.0);
 
 		int nrmodel = struc.nrModels();
 		for (int modelnr=0; modelnr<nrmodel; modelnr++) {
@@ -138,6 +145,7 @@ public class ProteinModificationParserTest extends TestCase {
 					ProteinModification.getProteinModifications(),
 //					ProteinModification.getByCategory(ModificationCategory.ATTACHMENT),
 //					ProteinModification.getByCategory(ModificationCategory.CHEMICAL_MODIFICATION),
+//					ProteinModification.getByResidId("AA0142"),
 					modelnr);
 
 			int i=0;
