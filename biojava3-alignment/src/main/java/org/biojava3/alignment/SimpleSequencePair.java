@@ -51,6 +51,7 @@ public class SimpleSequencePair<S extends Sequence<C>, C extends Compound> exten
      * @param target the second sequence of the pair
      * @param sx lists whether the query sequence aligns a {@link Compound} or gap at each index of the alignment
      * @param sy lists whether the target sequence aligns a {@link Compound} or gap at each index of the alignment
+     * @throws IllegalArgumentException if alignments differ in size or given sequences do not fit in alignments
      */
     public SimpleSequencePair(S query, S target, List<Step> sx, List<Step> sy) {
         super(query, target, sx, sy);
@@ -58,39 +59,39 @@ public class SimpleSequencePair<S extends Sequence<C>, C extends Compound> exten
 
     @Override
     public C getCompoundInQueryAt(int alignmentIndex) {
-        return list.get(0).getCompoundAt(alignmentIndex);
+        return getAlignedSequence(1).getCompoundAt(alignmentIndex);
     }
 
     @Override
     public C getCompoundInTargetAt(int alignmentIndex) {
-        return list.get(1).getCompoundAt(alignmentIndex);
+        return getAlignedSequence(2).getCompoundAt(alignmentIndex);
     }
 
     @Override
     public int getIndexInQueryAt(int alignmentIndex) {
-        return list.get(0).getSequenceIndexAt(alignmentIndex);
+        return getAlignedSequence(1).getSequenceIndexAt(alignmentIndex);
     }
 
     @Override
     public int getIndexInQueryForTargetAt(int targetIndex) {
-        return list.get(0).getSequenceIndexAt(list.get(1).getAlignmentIndexAt(targetIndex));
+        return getAlignedSequence(1).getSequenceIndexAt(getAlignedSequence(2).getAlignmentIndexAt(targetIndex));
     }
 
     @Override
     public int getIndexInTargetAt(int alignmentIndex) {
-        return list.get(1).getSequenceIndexAt(alignmentIndex);
+        return getAlignedSequence(2).getSequenceIndexAt(alignmentIndex);
     }
 
     @Override
     public int getIndexInTargetForQueryAt(int queryIndex) {
-        return list.get(1).getSequenceIndexAt(list.get(0).getAlignmentIndexAt(queryIndex));
+        return getAlignedSequence(2).getSequenceIndexAt(getAlignedSequence(1).getAlignmentIndexAt(queryIndex));
     }
 
     @Override
     public int getNumIdenticals() {
         if (identicals == -1) {
             identicals = 0;
-            for (int i = 1; i <= length; i++) {
+            for (int i = 1; i <= getLength(); i++) {
                 if (getCompoundInQueryAt(i).equalsIgnoreCase(getCompoundInTargetAt(i))) {
                     identicals++;
                 }
@@ -103,7 +104,7 @@ public class SimpleSequencePair<S extends Sequence<C>, C extends Compound> exten
     public int getNumSimilars() {
         if (similars == -1) {
             similars = 0;
-            for (int i = 1; i <= length; i++) {
+            for (int i = 1; i <= getLength(); i++) {
                 if (getCompoundSet().compoundsEquivalent(getCompoundInQueryAt(i), getCompoundInTargetAt(i))) {
                     similars++;
                 }
@@ -114,12 +115,12 @@ public class SimpleSequencePair<S extends Sequence<C>, C extends Compound> exten
 
     @Override
     public AlignedSequence<C> getQuery() {
-        return list.get(0);
+        return getAlignedSequence(1);
     }
 
     @Override
     public AlignedSequence<C> getTarget() {
-        return list.get(1);
+        return getAlignedSequence(2);
     }
 
 }

@@ -46,9 +46,9 @@ import org.biojava3.core.sequence.template.Sequence;
  */
 public class SimpleProfile<S extends Sequence<C>, C extends Compound> implements Profile<S, C> {
 
-    protected List<AlignedSequence<C>> list;
-    protected List<S> originals;
-    protected int length;
+    private List<AlignedSequence<C>> list;
+    private List<S> originals;
+    private int length;
 
     /**
      * Creates a pair profile for the given sequences.
