@@ -210,8 +210,9 @@ public final class ProteinModificationXmlReader {
 									" See Modification "+id+".");
 						}
 					}
-					
-					Component comp = Component.register(compId, compType, nTerminal, cTerminal);
+
+					// register
+					Component comp = Component.of(compId, compType, nTerminal, cTerminal);
 					comps.add(comp);						
 					mapLabelComp.put(label, comps.size()-1);
 				}

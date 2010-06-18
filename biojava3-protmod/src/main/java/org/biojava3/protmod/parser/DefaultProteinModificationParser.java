@@ -42,6 +42,7 @@ import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureException;
 
 import org.biojava3.protmod.Component;
+import org.biojava3.protmod.ComponentType;
 import org.biojava3.protmod.ModificationCondition;
 import org.biojava3.protmod.ModifiedCompound;
 import org.biojava3.protmod.ModifiedCompoundImpl;
@@ -173,16 +174,12 @@ implements ProteinModificationParser {
 			new HashMap<Component, List<Group>>();
 		
 		{
-			List<Group> groups = chain.getAtomGroups();
+			// ligands
+			List<Group> groups = chain.getAtomLigands();
 			
-			if (groups==null || groups.isEmpty()) {
-				return mapCompRes;
-			}
-			
-			// for all groups
 			for (Group group : groups) {
 				String pdbccId = group.getPDBName().trim();
-				Component comp = Component.of(pdbccId);
+				Component comp = Component.of(pdbccId, ComponentType.LIGAND);
 				if (!comps.contains(comp)) {
 					continue;
 				}
@@ -196,14 +193,30 @@ implements ProteinModificationParser {
 		}
 		
 		{
-			// for N-terminal
+			// residues
 			List<Group> residues = chain.getSeqResGroups();
-			if (residues==null || residues.isEmpty()) {
+			if (residues.isEmpty()) {
 				return mapCompRes;
 			}
 			
+			// for all residues
+			for (Group group : residues) {
+				String pdbccId = group.getPDBName().trim();
+				Component comp = Component.of(pdbccId, ComponentType.AMINOACID);
+				if (!comps.contains(comp)) {
+					continue;
+				}
+				List<Group> gs = mapCompRes.get(comp);
+				if (gs==null) {
+					gs = new ArrayList<Group>();
+					mapCompRes.put(comp, gs);
+				}
+				gs.add(group);
+			}
+
+			// for N-terminal
 			Group res = residues.get(0);
-			Component comp = Component.of(res.getPDBName(), true, false);
+			Component comp = Component.of(res.getPDBName(), ComponentType.AMINOACID, true, false);
 			if (comps.contains(comp)) {
 				List<Group> gs = Collections.singletonList(res);
 				mapCompRes.put(comp, gs);
@@ -211,7 +224,7 @@ implements ProteinModificationParser {
 			
 			// for C-terminal
 			res = residues.get(residues.size()-1);
-			comp = Component.of(res.getPDBName(), false, true);
+			comp = Component.of(res.getPDBName(), ComponentType.AMINOACID, false, true);
 			if (comps.contains(comp)) {
 				List<Group> gs = Collections.singletonList(res);
 				mapCompRes.put(comp, gs);

@@ -41,8 +41,8 @@ public class ProteinModificationRegistryTest extends TestCase {
 		ModificationCondition condition
 			= new ModificationConditionImpl.Builder(
 					new Component[] {
-						Component.register("COMP1", ComponentType.AMINOACID),
-						Component.register("COMP2", ComponentType.AMINOACID, true, false)
+						Component.of("COMP1", ComponentType.AMINOACID),
+						Component.of("COMP2", ComponentType.AMINOACID, true, false)
 					})
 			.addLinkage(0, 1, "ATOM1", "ATOM2")
 			.build();
@@ -98,7 +98,7 @@ public class ProteinModificationRegistryTest extends TestCase {
 		System.out.println(mods);
 
 		System.out.println("getByComponent");
-		mods = ProteinModification.getByComponent(Component.of("FAD"));
+		mods = ProteinModification.getByComponent(Component.of("FAD", ComponentType.LIGAND));
 		assertNotNull(mods);
 		printModifications(mods);
 

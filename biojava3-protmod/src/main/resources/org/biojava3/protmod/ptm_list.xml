@@ -2439,7 +2439,6 @@
 				<Id source="PDBCC">FAD</Id>
 			</Component>
 			<Bond>
-				<!--TODO: verify this-->
 				<Atom component="1">OH</Atom>
 				<Atom component="2">C8M</Atom>
 			</Bond>
@@ -2526,7 +2525,6 @@
 				<Id source="PDBCC">TRP</Id>
 			</Component>
 			<Bond>
-				<!--TODO: verify this-->
 				<Atom component="1">CD1</Atom>
 				<Atom component="2">CE3</Atom>
 			</Bond>
@@ -2557,7 +2555,6 @@
 				<Id source="PDBCC">PNS</Id>
 			</Component>
 			<Bond>
-				<!--TODO: verify this-->
 				<Atom component="1">OG</Atom>
 				<Atom component="2">P24</Atom>
 			</Bond>
@@ -2593,4 +2590,354 @@
 		<Occurrence>Natural</Occurrence>
 		<Category>ModifiedResidue</Category>
 	</Entry>
+	<!--Entry>
+		<Id>0086</Id>
+		<Description>A protein modification that effectively substitutes an L-tyrosine residue with 3',3'',5'-triiodo-L-thyronine.</Description>
+		<SystematicName>(S)-2-amino-3-[4-(4-hydroxy-3-iodophenoxy)-3,5-diiodophenyl]propanoic acid</SystematicName>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0177</Id>
+			<Name>3',3'',5'-triiodo-L-thyronine</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00186</Id>
+			<Name>3',3'',5'-triiodo-L-thyronine</Name>
+		</CrossReference>
+		<Formula>C 15 H 10 I 3 N 1 O 3</Formula>
+		<Condition>
+			<Component type="AminoAcid" label="1">
+				<Id source="PDBCC">TYR</Id>
+			</Component>
+			<Component type="Ligand" label="2">
+				<Id source="PDBCC">T3</Id>
+			</Component>
+			<Bond>
+				<Atom component="1"></Atom>
+				<Atom component="2"></Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>Natural</Occurrence>
+		<Category>Attachment</Category>
+	</Entry>
+	<Entry>
+		<Id>0087</Id>
+		<Description>A protein modification that effectively substitutes an L-tyrosine residue with L-thyroxine.</Description>
+		<SystematicName>(S)-2-amino-3-[4-(4-hydroxy-3,5-diiodophenoxy)-3,5-diiodophenyl]propanoic acid</SystematicName>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0178</Id>
+			<Name>L-thyroxine</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00187</Id>
+			<Name>L-thyroxine</Name>
+		</CrossReference>
+		<Formula>C 15 H 9 I 4 N 1 O 3</Formula>
+		<Condition>
+			<Component type="AminoAcid" label="1">
+				<Id source="PDBCC">TYR</Id>
+			</Component>
+			<Component type="Ligand" label="2">
+				<Id source="PDBCC">T44</Id>
+			</Component>
+			<Bond>
+				<Atom component="1"></Atom>
+				<Atom component="2"></Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>Natural</Occurrence>
+		<Category>Attachment</Category>
+	</Entry-->
+	<Entry>
+		<Id>0088</Id>
+		<Description>A protein modification that effectively converts an L-tryptophan residue to L-6'-bromotryptophan.</Description>
+		<SystematicName>(S)-2-amino-3-(6-bromo-1H-indol-3-yl)propanoic acid</SystematicName>
+		<CrossReference>
+			<Source>PDBCC</Source>
+			<Id>BTR</Id>
+			<Name>6-BROMO-TRYPTOPHAN</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0179</Id>
+			<Name>L-6'-bromotryptophan</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00188</Id>
+			<Name>L-6'-bromotryptophan</Name>
+		</CrossReference>
+		<Formula>Br 1 C 11 H 9 N 2 O 1</Formula>
+		<Condition>
+			<Component type="AminoAcid" label="1">
+				<Id source="PDBCC">BTR</Id>
+			</Component>
+		</Condition>
+		<Occurrence>Natural</Occurrence>
+		<Category>ModifiedResidue</Category>
+	</Entry>
+	<Entry>
+		<Id>0089</Id>
+		<Description>A protein modification that effectively converts a source amino acid residue to dehydroalanine.</Description>
+		<SystematicName>2-aminopropenoic acid</SystematicName>
+		<CrossReference>
+			<Source>PDBCC</Source>
+			<Id>DHA</Id>
+			<Name>2-AMINO-ACRYLIC ACID</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0181</Id>
+			<Name>dehydroalanine</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:01168</Id>
+			<Name>dehydroalanine</Name>
+		</CrossReference>
+		<Formula>C 3 H 3 N 1 O 1</Formula>
+		<Condition>
+			<Component type="AminoAcid" label="1">
+				<Id source="PDBCC">DHA</Id>
+			</Component>
+		</Condition>
+		<Occurrence>Natural</Occurrence>
+		<Category>ModifiedResidue</Category>
+		<Comment>This modification occurs on SER or TYR</Comment>
+	</Entry>
+	<Entry>
+		<Id>0090</Id>
+		<Description>A protein modification that effectively converts L-tyrosine to (Z)-2,3-didehydrotyrosine.</Description>
+		<SystematicName>(Z)-2-amino-3-(4-hydoxyphenyl)propenoic acid</SystematicName>
+		<CrossReference>
+			<Source>PDBCC</Source>
+			<Id>CRQ</Id>
+			<Name>[2-(3-CARBAMOYL-1-IMINO-PROPYL)-4-(4-HYDROXY-BENZYLIDENE)-5-OXO-4,5-DIHYDRO-IMIDAZOL-1-YL]-ACETIC ACID</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0183</Id>
+			<Name>(Z)-2,3-didehydrotyrosine</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00191</Id>
+			<Name>(Z)-2,3-didehydrotyrosine</Name>
+		</CrossReference>
+		<Formula>C 9 H 7 N 1 O 2</Formula>
+		<Condition>
+			<Component type="AminoAcid" label="1">
+				<Id source="PDBCC">CRQ</Id>
+			</Component>
+		</Condition>
+		<Occurrence>Natural</Occurrence>
+		<Category>ModifiedResidue</Category>
+		<Comment>CRQ has two modifications: RESID:AA0183 and RESID:AA0189</Comment>
+	</Entry>
+	<Entry>
+		<Id>0091</Id>
+		<Description>A protein modification that effectively crosslinks an L-glutamine residue and a glycine residue to form 2-imino-glutamine 5-imidazolinone glycine.</Description>
+		<SystematicName>2-(3-carbamoyl-1-imino-propyl)-1-carboxymethyl-1-imidazolin-5-one</SystematicName>
+		<CrossReference>
+			<Source>PDBCC</Source>
+			<Id>CRQ</Id>
+			<Name>[2-(3-CARBAMOYL-1-IMINO-PROPYL)-4-(4-HYDROXY-BENZYLIDENE)-5-OXO-4,5-DIHYDRO-IMIDAZOL-1-YL]-ACETIC ACID</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0189</Id>
+			<Name>2-imino-glutamine 5-imidazolinone glycine</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00197</Id>
+			<Name>2-imino-glutamine 5-imidazolinone glycine</Name>
+		</CrossReference>
+		<Formula>C16 H16 N4 O5</Formula>
+		<Condition>
+			<Component type="AminoAcid" label="1">
+				<Id source="PDBCC">CRQ</Id>
+			</Component>
+		</Condition>
+		<Occurrence>Natural</Occurrence>
+		<Category>CrossLink1</Category>
+		<Comment>CRQ has two modifications: RESID:AA0183 and RESID:AA0189</Comment>
+	</Entry>
+	<Entry>
+		<Id>0092</Id>
+		<Description>A protein modification that effectively converts L-tyrosine to (Z)-2,3-didehydrotyrosine.</Description>
+		<SystematicName>(Z)-2-amino-3-(4-hydoxyphenyl)propenoic acid</SystematicName>
+		<CrossReference>
+			<Source>PDBCC</Source>
+			<Id>CRO</Id>
+			<Name>{2-[(1R,2R)-1-amino-2-hydroxypropyl]-4-(4-hydroxybenzylidene)-5-oxo-4,5-dihydro-1H-imidazol-1-yl}acetic acid</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0183</Id>
+			<Name>(Z)-2,3-didehydrotyrosine</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00191</Id>
+			<Name>(Z)-2,3-didehydrotyrosine</Name>
+		</CrossReference>
+		<Formula>C 9 H 7 N 1 O 2</Formula>
+		<Condition>
+			<Component type="AminoAcid" label="1">
+				<Id source="PDBCC">CRO</Id>
+			</Component>
+		</Condition>
+		<Occurrence>Natural</Occurrence>
+		<Category>ModifiedResidue</Category>
+		<Comment>CRO has two modifications: RESID:AA0183 and RESID:AA0184</Comment>
+	</Entry>
+	<Entry>
+		<Id>0093</Id>
+		<Description>A protein modification that effectively crosslinks an L-serine residue and a glycine residue to form L-serine 5-imidazolinone glycine.</Description>
+		<SystematicName>2-[(R)-1-amino-2-hydroxyethyl]-1-carboxymethyl-1-imidazolin-5-one</SystematicName>
+		<CrossReference>
+			<Source>PDBCC</Source>
+			<Id>CRO</Id>
+			<Name>{2-[(1R,2R)-1-amino-2-hydroxypropyl]-4-(4-hydroxybenzylidene)-5-oxo-4,5-dihydro-1H-imidazol-1-yl}acetic acid</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0184</Id>
+			<Name>L-serine 5-imidazolinone glycine</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00192</Id>
+			<Name>L-serine 5-imidazolinone glycine</Name>
+		</CrossReference>
+		<Formula>C 5 H 6 N 2 O 2</Formula>
+		<Condition>
+			<Component type="AminoAcid" label="1">
+				<Id source="PDBCC">CRO</Id>
+			</Component>
+		</Condition>
+		<Occurrence>Natural</Occurrence>
+		<Category>CrossLink1</Category>
+		<Comment>CRO has two modifications: RESID:AA0183 and RESID:AA0184</Comment>
+	</Entry>
+	<Entry>
+		<Id>0094</Id>
+		<Description>A protein modification that effectively converts a source amino acid residue to L-oxoalanine.</Description>
+		<SystematicName>(S)-2-amino-3-oxopropanoic acid</SystematicName>
+		<CrossReference>
+			<Source>PDBCC</Source>
+			<Id>FGL</Id>
+			<Name>2-AMINOPROPANEDIOIC ACID</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0185</Id>
+			<Name>L-3-oxoalanine</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:01169</Id>
+			<Name>L-3-oxoalanine</Name>
+		</CrossReference>
+		<Formula>C 3 H 3 N 1 O 2</Formula>
+		<Condition>
+			<Component type="AminoAcid" label="1">
+				<Id source="PDBCC">FGL</Id>
+			</Component>
+		</Condition>
+		<Occurrence>Natural</Occurrence>
+		<Category>ModifiedResidue</Category>
+		<Comment>This modification occurs on SER or CYS</Comment>
+	</Entry>
+	<Entry>
+		<Id>0095</Id>
+		<Description>A protein modification that effectively converts a source amino acid residue to D-alanine.</Description>
+		<SystematicName>(R)-2-aminopropanoic acid</SystematicName>
+		<CrossReference>
+			<Source>PDBCC</Source>
+			<Id>DAL</Id>
+			<Name>D-ALANINE</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0191</Id>
+			<Name>D-alanine</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00862</Id>
+			<Name>D-alanine</Name>
+		</CrossReference>
+		<Formula>C 3 H 5 N 1 O 1</Formula>
+		<Condition>
+			<Component type="AminoAcid" label="1">
+				<Id source="PDBCC">DAL</Id>
+			</Component>
+		</Condition>
+		<Occurrence>Natural</Occurrence>
+		<Category>ModifiedResidue</Category>
+	</Entry>
+	<!--Entry> what are they attached to
+		<Id>0096</Id>
+		<Description>A protein modification that effectively converts an L-serine residue to D-alanine.</Description>
+		<SystematicName>(R)-2-aminopropanoic acid</SystematicName>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0191</Id>
+			<Name>D-alanine</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00858</Id>
+			<Name>D-alanine (Ser)</Name>
+		</CrossReference>
+		<Formula>C 3 H 5 N 1 O 1</Formula>
+		<Condition>
+			<Component type="AminoAcid" label="1">
+				<Id source="PDBCC">SER</Id>
+			</Component>
+			<Component type="Ligand" label="2">
+				<Id source="PDBCC">DAL</Id>
+			</Component>
+			<Bond>
+				<Atom component="1"></Atom>
+				<Atom component="2"></Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>Natural</Occurrence>
+		<Category>Attachment</Category>
+	</Entry>
+	<Entry>
+		<Id>0097</Id>
+		<Description>A protein modification that effectively converts an L-alanine residue to D-alanine.</Description>
+		<SystematicName>(R)-2-aminopropanoic acid</SystematicName>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0191</Id>
+			<Name>D-alanine</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00198</Id>
+			<Name>D-alanine (Ala)</Name>
+		</CrossReference>
+		<Formula>C 3 H 5 N 1 O 1</Formula>
+		<Condition>
+			<Component type="AminoAcid" label="1">
+				<Id source="PDBCC">ALA</Id>
+			</Component>
+			<Component type="Ligand" label="2">
+				<Id source="PDBCC">DAL</Id>
+			</Component>
+			<Bond>
+				<Atom component="1"></Atom>
+				<Atom component="2"></Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>Natural</Occurrence>
+		<Category>Attachment</Category>
+	</Entry-->
 </ProteinModifications>

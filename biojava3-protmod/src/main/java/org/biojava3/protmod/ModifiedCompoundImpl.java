@@ -109,18 +109,21 @@ public class ModifiedCompoundImpl implements ModifiedCompound {
 		
 		this.modification = modification;
 		this.groups = groups;
-		this.atomLinkages = atomLinkages;
+		if (atomLinkages==null) {
+			this.atomLinkages = Collections.emptyList();
+		} else {
+			this.atomLinkages = atomLinkages;
+		}
 		
-		checkGroupAndAtomBondsProper(groups, atomLinkages);
+		checkGroupAndAtomLinkagessProper();
 	}
 	
 	/**
 	 * 
 	 * @param groups {@link Group}s.
-	 * @param atomBonds pairs of {@link Atom}s.
+	 * @param atomLinkages pairs of {@link Atom}s.
 	 */
-	private void checkGroupAndAtomBondsProper(final List<Group> groups,
-			final List<Atom[]> atomBonds) {
+	private void checkGroupAndAtomLinkagessProper() {
 		if (groups==null||groups.isEmpty()) {
 			throw new IllegalArgumentException("Error in "+
 					modification.getId()+": at least one involved residue.");
@@ -128,19 +131,14 @@ public class ModifiedCompoundImpl implements ModifiedCompound {
 		
 		Set<Group> gs = new HashSet<Group>(groups);
 		
-		if (gs.size()==1) {
-			if (atomBonds!=null && !atomBonds.isEmpty()) {
-				throw new IllegalArgumentException("No atomBond is necessary for" +
-						" one component.");
-			}
-		} else {
-			if (atomBonds==null) {
+		if (gs.size()>1) {
+			if (atomLinkages.isEmpty()) {
 				throw new IllegalArgumentException("Atom bonds are supposed to be " +
 						"specified for more than one component.");
 			}
 			
 			Set<Group> bondedGroups = new HashSet<Group>();
-			for (Atom[] atoms : atomBonds) {
+			for (Atom[] atoms : atomLinkages) {
 				for (int j=0; j<2; j++) {
 					if (atoms[j]==null) {
 						throw new IllegalArgumentException("Null bond.");
@@ -194,9 +192,9 @@ public class ModifiedCompoundImpl implements ModifiedCompound {
 	@Override
 	public String toString() {
 		String str = "Modification: " + modification.toString() +
-			   "\nGroups: " + groups.toString();
-		if (atomLinkages!=null) {
-			str += "\nAtoms: " + atomLinkages.toString();;
+			   "\nGroups: " + groups;
+		if (!atomLinkages.isEmpty()) {
+			str += "\nAtoms: " + atomLinkages;
 		}
 
 		return str;

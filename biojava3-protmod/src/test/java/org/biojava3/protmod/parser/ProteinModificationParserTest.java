@@ -26,6 +26,7 @@ package org.biojava3.protmod.parser;
 
 import java.io.IOException;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -69,7 +70,7 @@ public class ProteinModificationParserTest extends TestCase {
 				"1EL5", // FAD on CYS
 				"1W1O", // FAD on HIS
 				"1DII", // FAD on TYR
-				"2KJS", // PNS
+				"2KJS", "1LK9", // PNS
 				
 				// Modified resdiues
 				"3MVJ", // SEP, TPO
@@ -115,7 +116,11 @@ public class ProteinModificationParserTest extends TestCase {
 				//PVL not exist in PDB
 				"1A2V", // TPQ
 				"1JJU", // TRQ
-				"1WCT",
+				"1WCT", // GTH
+				"1A2C", // TYS
+				"1WCT", // BTR
+				"1AUK", // FGL
+				"148L", // DAL
 
 				// Cross link
 				"3M6S", // Disulfide bond
@@ -128,6 +133,8 @@ public class ProteinModificationParserTest extends TestCase {
 				"1M1N", // CFN, HCA, CYS, HIS
 				//"1G21", // CFM, HCA, CYS, HIS, (tolerance 0.5)
 				//"1M34", // CFM, HCA, CYS, HIS, (tolerance 1.0)
+				"1G7K", // CRQ, cross-link1
+				"1EMA", // CRO, cross-link1
 		};
 		for ( String name : names){
 			System.out.println("===\n"+name);
@@ -144,14 +151,13 @@ public class ProteinModificationParserTest extends TestCase {
 		Structure struc = TmpAtomCache.cache.getStructure(pdbId);
 
 		DefaultProteinModificationParser parser = new DefaultProteinModificationParser();
-//		parser.setbondLengthTolerance(4.0);
+//		parser.setbondLengthTolerance(2.0);
 		
 		Set<ProteinModification> mods = ProteinModification.getProteinModifications();
 //		Set<ProteinModification> mods = ProteinModification.getByCategory(ModificationCategory.ATTACHMENT);
 //		Set<ProteinModification> mods = ProteinModification.getByCategory(ModificationCategory.CHEMICAL_MODIFICATION);
-//		Set<ProteinModification> mods = ProteinModification.getByResidId("AA0155");
-		
-//		ProteinModification.init();
+//		Set<ProteinModification> mods = ProteinModification.getByResidId("AA0191");
+//		Set<ProteinModification> mods = Collections.singleton(ProteinModification.getById("0096"));
 //		Set<ProteinModification> mods = ProteinModification.getByComponent(Component.of("FAD"));
 		
 		assertFalse(mods.isEmpty());
@@ -174,12 +180,15 @@ public class ProteinModificationParserTest extends TestCase {
 		ProteinModification mod = mc.getModification();
 		ModificationCategory cat = mod.getCategory();
 		System.out.println(cat.label()+": "+mod.getId());
-		if (cat == ModificationCategory.CHEMICAL_MODIFICATION) {
+		
+		if (cat == ModificationCategory.CHEMICAL_MODIFICATION
+				|| cat == ModificationCategory.CROSS_LINK_1) {
 			Group g = mc.getGroups().get(0);
 			Chain chain = g.getParent();
 			System.out.println("\t"+g.getPDBName()+"\t"+chain.getName()+"\t"+g.getPDBCode());
 		} else {
-			for (Atom[] atoms : mc.getAtomLinkages()) {
+			List<Atom[]> atomLinkages = mc.getAtomLinkages();
+			for (Atom[] atoms : atomLinkages) {
 				Group group = atoms[0].getParent();
 				Chain chain = group.getParent();
 				System.out.println("\t"+group.getPDBName()+"\t"+chain.getName()+"\t"
