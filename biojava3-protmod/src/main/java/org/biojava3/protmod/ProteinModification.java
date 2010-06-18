@@ -89,6 +89,13 @@ public final class ProteinModification {
 	private static Map<ModificationOccurrenceType, Set<ProteinModification>> byOccurrenceType = null;
 	
 	/**
+	 * Initialization the static variables and register common modifications.
+	 */
+	public static void init() {
+		lazyInit();
+	}
+	
+	/**
 	 * Lazy Initialization the static variables and register common modifications. 
 	 */
 	private static void lazyInit() {
@@ -484,7 +491,6 @@ public final class ProteinModification {
 		byId.put(id, current);
 		byCategory.get(cat).add(current);
 		byOccurrenceType.get(occType).add(current);
-		
 		
 		for (Component comp:comps) {
 			Set<ProteinModification> mods = byComponent.get(comp);

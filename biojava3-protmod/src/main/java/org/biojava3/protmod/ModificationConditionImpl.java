@@ -164,7 +164,7 @@ public class ModificationConditionImpl implements ModificationCondition {
 	@Override
 	public List<int[]> getIndicesOfLinkedComponents() {
 		if (linkages == null) {
-			return null;
+			return Collections.emptyList();
 		}
 		
 		if (indicesOfLinkedComponents == null) {
@@ -232,7 +232,7 @@ public class ModificationConditionImpl implements ModificationCondition {
 				List<String[]> atoms = getLinkedAtoms(link[0], link[1]);
 				for (String[] atomPair : atoms) {
 					sb.append(comp1.getPdbccId()+"["+atomPair[0]+"]<=>"+
-							comp2.getPdbccId()+"["+atomPair[0]+"];");
+							comp2.getPdbccId()+"["+atomPair[1]+"];");
 				}
 			}
 		}

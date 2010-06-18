@@ -2259,22 +2259,18 @@
 				<Id source="PDBCC">HCA</Id>
 			</Component>
 			<Bond>
-				<!--TODO: verify this-->
 				<Atom component="1">SG</Atom>
 				<Atom component="3">FE1</Atom>
 			</Bond>
 			<Bond>
-				<!--TODO: verify this-->
 				<Atom component="2">ND1</Atom>
 				<Atom component="3">MO1</Atom>
 			</Bond>
 			<Bond>
-				<!--TODO: verify this-->
 				<Atom component="3">MO1</Atom>
 				<Atom component="4">O5</Atom>
 			</Bond>
 			<Bond>
-				<!--TODO: verify this-->
 				<Atom component="3">MO1</Atom>
 				<Atom component="4">O7</Atom>
 			</Bond>
@@ -2311,22 +2307,18 @@
 				<Id source="PDBCC">HCA</Id>
 			</Component>
 			<Bond>
-				<!--TODO: verify this-->
 				<Atom component="1">SG</Atom>
 				<Atom component="3">FE1</Atom>
 			</Bond>
 			<Bond>
-				<!--TODO: verify this-->
 				<Atom component="2">ND1</Atom>
 				<Atom component="3">MO1</Atom>
 			</Bond>
 			<Bond>
-				<!--TODO: verify this-->
 				<Atom component="3">MO1</Atom>
 				<Atom component="4">O5</Atom>
 			</Bond>
 			<Bond>
-				<!--TODO: verify this-->
 				<Atom component="3">MO1</Atom>
 				<Atom component="4">O7</Atom>
 			</Bond>
@@ -2357,12 +2349,248 @@
 				<Id source="PDBCC">MTQ</Id>
 			</Component>
 			<Bond>
-				<!--TODO: verify this-->
 				<Atom component="1">SG</Atom>
 				<Atom component="2">MOM1</Atom>
 			</Bond>
 		</Condition>
 		<Occurrence>Natural</Occurrence>
 		<Category>Attachment</Category>
+	</Entry>
+	<Entry>
+		<Id>0078</Id>
+		<Description>A protein modification that effectively converts an L-cysteine residue to S'-(8alpha-FAD)-L-cystine.</Description>
+		<SystematicName>(R)-2-amino-3-[8alpha-riboflavin 5'-(trihydrogen diphosphate) 5'->5'-ester with adenosine]sulfanylpropanoic acid</SystematicName>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0143</Id>
+			<Name>S-(8alpha-FAD)-L-cysteine</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00152</Id>
+			<Name>S-(8alpha-FAD)-L-cysteine</Name>
+		</CrossReference>
+		<Formula>C 30 H 36 N 10 O 16 P 2 S 1</Formula>
+		<Condition>
+			<Component type="AminoAcid" label="1">
+				<Id source="PDBCC">CYS</Id>
+			</Component>
+			<Component type="Ligand" label="2">
+				<Id source="PDBCC">FAD</Id>
+			</Component>
+			<Bond>
+				<Atom component="1">SG</Atom>
+				<Atom component="2">C8M</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>Natural</Occurrence>
+		<Category>Attachment</Category>
+	</Entry>
+	<Entry>
+		<Id>0079</Id>
+		<Description>A protein modification that effectively converts an L-histidine residue to 3'-(8alpha-FAD)-L-histidine.</Description>
+		<SystematicName>(S)-2-amino-3-(3-[8alpha-riboflavin 5'-(trihydrogen diphosphate) 5'->5'-ester with adenosine]imidazol-4-yl)propanoic acid</SystematicName>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0144</Id>
+			<Name>3'-(8alpha-FAD)-L-histidine</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00153</Id>
+			<Name>3'-(8alpha-FAD)-L-histidine</Name>
+		</CrossReference>
+		<Formula>C 33 H 38 N 12 O 16 P 2</Formula>
+		<Condition>
+			<Component type="AminoAcid" label="1">
+				<Id source="PDBCC">HIS</Id>
+			</Component>
+			<Component type="Ligand" label="2">
+				<Id source="PDBCC">FAD</Id>
+			</Component>
+			<Bond>
+				<Atom component="1">ND1</Atom>
+				<Atom component="2">C8M</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>Natural</Occurrence>
+		<Category>Attachment</Category>
+	</Entry>
+	<Entry>
+		<Id>0080</Id>
+		<Description>A protein modification that effectively converts an L-tyrosine residue to O4'-(8alpha-FAD)-L-tyrosine.</Description>
+		<SystematicName>(S)-2-amino-3-(4-[8alpha-riboflavin 5'-(trihydrogen diphosphate) 5'->5'-ester with adenosine]oxyphenyl)propanoic acid</SystematicName>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0145</Id>
+			<Name>O4'-(8alpha-FAD)-L-tyrosine</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00154</Id>
+			<Name>O4'-(8alpha-FAD)-L-tyrosine</Name>
+		</CrossReference>
+		<Formula>C 36 H 40 N 10 O 17 P 2</Formula>
+		<Condition>
+			<Component type="AminoAcid" label="1">
+				<Id source="PDBCC">TYR</Id>
+			</Component>
+			<Component type="Ligand" label="2">
+				<Id source="PDBCC">FAD</Id>
+			</Component>
+			<Bond>
+				<!--TODO: verify this-->
+				<Atom component="1">OH</Atom>
+				<Atom component="2">C8M</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>Natural</Occurrence>
+		<Category>Attachment</Category>
+	</Entry>
+	<Entry>
+		<Id>0081</Id>
+		<Description>A protein modification that effectively converts an L-tyrosine residue to an L-2',4',5'-topaquinone.</Description>
+		<SystematicName>(S)-2-amino-3-(5-hydroxy-2,5-cyclohexadien-1,4-dion-2-yl)propanoic acid</SystematicName>
+		<CrossReference>
+			<Source>PDBCC</Source>
+			<Id>TPQ</Id>
+			<Name>5-(2-CARBOXY-2-AMINOETHYL)-2-HYDROXY-1,4-BENZOQUINONE</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0147</Id>
+			<Name>L-2',4',5'-topaquinone</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00156</Id>
+			<Name>oxidation of tyrosine to L-2',4',5'-topaquinone</Name>
+		</CrossReference>
+		<Formula>C 9 H 7 N 1 O 4</Formula>
+		<Condition>
+			<Component type="AminoAcid" label="1">
+				<Id source="PDBCC">TPQ</Id>
+			</Component>
+		</Condition>
+		<Occurrence>Natural</Occurrence>
+		<Category>ModifiedResidue</Category>
+	</Entry>
+	<Entry>
+		<Id>0082</Id>
+		<Description>A protein modification that effectively converts an L-tryptophan residue to an L-tryptophan quinone.</Description>
+		<SystematicName>(S)-3-(2-amino-2-carboxyethyl)-6,7-indolinedione</SystematicName>
+		<CrossReference>
+			<Source>PDBCC</Source>
+			<Id>TRQ</Id>
+			<Name>2-AMINO-3-(6,7-DIOXO-6,7-DIHYDRO-1H-INDOL-3-YL)-PROPIONIC ACID</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0148</Id>
+			<Name>L-tryptophyl quinone</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00157</Id>
+			<Name>oxidation of tryptophan to L-tryptophyl quinone</Name>
+		</CrossReference>
+		<Formula>C 11 H 8 N 2 O 3</Formula>
+		<Condition>
+			<Component type="AminoAcid" label="1">
+				<Id source="PDBCC">TRQ</Id>
+			</Component>
+		</Condition>
+		<Occurrence>Natural</Occurrence>
+		<Category>ModifiedResidue</Category>
+	</Entry>
+	<Entry>
+		<Id>0083</Id>
+		<Description>A protein modification that effectively cross-links two L-tryptophan residues by a carbon-carbon bond to form 4'-(L-tryptophan)-L-tryptophyl quinone.</Description>
+		<SystematicName>(S,S)-3-(2-amino-2-carboxyethyl)-4-[3-(2-amino-2-carboxyethyl)-1H-indol-2-yl]-6,7-indolinedione</SystematicName>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0149</Id>
+			<Name>4'-(L-tryptophan)-L-tryptophyl quinone</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00158</Id>
+			<Name>4'-(L-tryptophan)-L-tryptophyl quinone</Name>
+		</CrossReference>
+		<Formula>C 22 H 16 N 4 O 4</Formula>
+		<Condition>
+			<Component type="AminoAcid" label="1">
+				<Id source="PDBCC">TRP</Id>
+			</Component>
+			<Component type="AminoAcid" label="2">
+				<Id source="PDBCC">TRP</Id>
+			</Component>
+			<Bond>
+				<!--TODO: verify this-->
+				<Atom component="1">CD1</Atom>
+				<Atom component="2">CE3</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>Natural</Occurrence>
+		<Category>CrossLink2</Category>
+	</Entry>
+	<Entry>
+		<Id>0084</Id>
+		<Description>A protein modification that effectively converts an L-serine residue to O-phosphopantetheine-L-serine.</Description>
+		<SystematicName>(2R)-4-((2S)-2-amino-2-carboxyethyl)phosphonato-2-hydroxy-N-[3-(2-sulfanylethyl)amino-3-oxopropyl]-3,3-dimethylbutanamide</SystematicName>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0150</Id>
+			<Name>O-phosphopantetheine-L-serine</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00159</Id>
+			<Name>O-phosphopantetheine-L-serine</Name>
+		</CrossReference>
+		<Formula>C 14 H 26 N 3 O 8 P 1 S 1</Formula>
+		<Condition>
+			<Component type="AminoAcid" label="1">
+				<Id source="PDBCC">SER</Id>
+			</Component>
+			<Component type="Ligand" label="2">
+				<Id source="PDBCC">PNS</Id>
+			</Component>
+			<Bond>
+				<!--TODO: verify this-->
+				<Atom component="1">OG</Atom>
+				<Atom component="2">P24</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>Natural</Occurrence>
+		<Category>Attachment</Category>
+	</Entry>
+	<Entry>
+		<Id>0085</Id>
+		<Description>A protein modification that effectively converts an L-asparagine residue to O-(N-acetylaminogalactosyl)-L-threonine.</Description>
+		<SystematicName>(2S,3R)-2-amino-3-(alpha-D-2-acetamido-2-deoxygalactopyranosyloxy)butanoic acid</SystematicName>
+		<CrossReference>
+			<Source>PDBCC</Source>
+			<Id>GTH</Id>
+			<Name>3-O-GLUCOPYRANOSYL-THREONINE-[2-DEOXY-2-ACETAMIDO-GLUCOPYRANOSIDE]</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0155</Id>
+			<Name>O-(N-acetylamino)galactosyl-L-threonine</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00164</Id>
+			<Name></Name>
+		</CrossReference>
+		<Formula>C 12 H 20 N 2 O 7</Formula>
+		<Condition>
+			<Component type="AminoAcid" label="1">
+				<Id source="PDBCC">GTH</Id>
+			</Component>
+		</Condition>
+		<Occurrence>Natural</Occurrence>
+		<Category>ModifiedResidue</Category>
 	</Entry>
 </ProteinModifications>

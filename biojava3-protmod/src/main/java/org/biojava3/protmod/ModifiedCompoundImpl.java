@@ -107,11 +107,11 @@ public class ModifiedCompoundImpl implements ModifiedCompound {
 			throw new IllegalArgumentException("modification cannot be null");
 		}
 		
-		checkGroupAndAtomBondsProper(groups, atomLinkages);
-		
 		this.modification = modification;
 		this.groups = groups;
 		this.atomLinkages = atomLinkages;
+		
+		checkGroupAndAtomBondsProper(groups, atomLinkages);
 	}
 	
 	/**
@@ -122,7 +122,8 @@ public class ModifiedCompoundImpl implements ModifiedCompound {
 	private void checkGroupAndAtomBondsProper(final List<Group> groups,
 			final List<Atom[]> atomBonds) {
 		if (groups==null||groups.isEmpty()) {
-			throw new IllegalArgumentException("At least one involved residue.");
+			throw new IllegalArgumentException("Error in "+
+					modification.getId()+": at least one involved residue.");
 		}
 		
 		Set<Group> gs = new HashSet<Group>(groups);

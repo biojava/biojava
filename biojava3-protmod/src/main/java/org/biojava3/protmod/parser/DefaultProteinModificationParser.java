@@ -248,6 +248,9 @@ implements ProteinModificationParser {
 				
 				for (Group g1 : groups1) {
 					for (Group g2 : groups2) {
+						if (g1 == g2) {
+							continue;
+						}
 						Atom[] atoms = findLinkage(g1, g2, pair[0], pair[1]);
 //						Atom[] atoms = findNearestAtoms(g1, g2);								
 						if (atoms!=null) {
@@ -422,6 +425,9 @@ implements ProteinModificationParser {
 	private boolean matchLinkages(List<int[]> indicesOfComponentsForLinkages, 
 			List<Atom[]> atomLinkages) {
 		int nLink = indicesOfComponentsForLinkages.size();
+		if (nLink != atomLinkages.size()) {
+			return false;
+		}
 		for (int i=0; i<nLink-1; i++) {
 			int[] ix1 = indicesOfComponentsForLinkages.get(i);
 			Atom[] atoms1 = atomLinkages.get(i);

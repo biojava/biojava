@@ -25,8 +25,9 @@
 package org.biojava3.protmod.parser;
 
 import java.io.IOException;
-import java.util.Collections;
+
 import java.util.List;
+import java.util.Set;
 
 import junit.framework.TestCase;
 
@@ -37,6 +38,7 @@ import org.biojava.bio.structure.Group;
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureException;
 
+import org.biojava3.protmod.Component;
 import org.biojava3.protmod.ModificationCategory;
 import org.biojava3.protmod.ModifiedCompound;
 import org.biojava3.protmod.ProteinModification;
@@ -64,6 +66,10 @@ public class ProteinModificationParserTest extends TestCase {
 				"1ALL", // CYC
 				"1B8D", // PEB
 				"1OGP", // MTQ
+				"1EL5", // FAD on CYS
+				"1W1O", // FAD on HIS
+				"1DII", // FAD on TYR
+				"2KJS", // PNS
 				
 				// Modified resdiues
 				"3MVJ", // SEP, TPO
@@ -107,6 +113,9 @@ public class ProteinModificationParserTest extends TestCase {
 				"1A8I", // LLP
 				"2J4Y", // LYR
 				//PVL not exist in PDB
+				"1A2V", // TPQ
+				"1JJU", // TRQ
+				"1WCT",
 
 				// Cross link
 				"3M6S", // Disulfide bond
@@ -135,18 +144,23 @@ public class ProteinModificationParserTest extends TestCase {
 		Structure struc = TmpAtomCache.cache.getStructure(pdbId);
 
 		DefaultProteinModificationParser parser = new DefaultProteinModificationParser();
-//		parser.setbondLengthTolerance(1.0);
+//		parser.setbondLengthTolerance(4.0);
+		
+		Set<ProteinModification> mods = ProteinModification.getProteinModifications();
+//		Set<ProteinModification> mods = ProteinModification.getByCategory(ModificationCategory.ATTACHMENT);
+//		Set<ProteinModification> mods = ProteinModification.getByCategory(ModificationCategory.CHEMICAL_MODIFICATION);
+//		Set<ProteinModification> mods = ProteinModification.getByResidId("AA0155");
+		
+//		ProteinModification.init();
+//		Set<ProteinModification> mods = ProteinModification.getByComponent(Component.of("FAD"));
+		
+		assertFalse(mods.isEmpty());
 
 		int nrmodel = struc.nrModels();
 		for (int modelnr=0; modelnr<nrmodel; modelnr++) {
 			System.out.println("Model "+(modelnr+1));
 
-			List<ModifiedCompound> mcs = parser.parse(struc, 
-					ProteinModification.getProteinModifications(),
-//					ProteinModification.getByCategory(ModificationCategory.ATTACHMENT),
-//					ProteinModification.getByCategory(ModificationCategory.CHEMICAL_MODIFICATION),
-//					ProteinModification.getByResidId("AA0142"),
-					modelnr);
+			List<ModifiedCompound> mcs = parser.parse(struc, mods, modelnr);
 
 			int i=0;
 			for (ModifiedCompound mc : mcs) {
