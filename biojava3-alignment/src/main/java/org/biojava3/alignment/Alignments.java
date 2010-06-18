@@ -25,29 +25,83 @@ package org.biojava3.alignment;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 
 import org.biojava3.alignment.template.*;
 import org.biojava3.core.sequence.template.Compound;
 import org.biojava3.core.sequence.template.Sequence;
+import org.biojava3.core.util.ConcurrencyTools;
 
+/**
+ * Static utility to easily run alignment routines.
+ *
+ * @author Mark Chapman
+ */
 public class Alignments {
 
     // prevents instantiation
     private Alignments() { }
 
-    public static <S extends Sequence<C>, C extends Compound>
-            List<SequencePair<S, C>> getAllPairsAlignments(List<S> sequences) {
+    /**
+     * Factory method to run a list of alignments concurrently.
+     *
+     * @param <A> each {@link Aligner} is of type A
+     * @param <S> each {@link Sequence} of an alignment pair is of type S
+     * @param <C> each element of an {@link AlignedSequence} is a {@link Compound} of type C
+     * @param alignments
+     * @return
+     */
+    public static <A extends PairwiseSequenceAligner<S, C>, S extends Sequence<C>, C extends Compound>
+            List<SequencePair<S, C>> getAllPairsAlignments(List<A> alignments) {
+        // submit alignment tasks to the shared thread pool
+        int n = 1, all = alignments.size();
+        List<Future<SequencePair<S, C>>> allPairsFutures = new ArrayList<Future<SequencePair<S, C>>>();
+        for (PairwiseSequenceAligner<S, C> alignment : alignments) {
+            allPairsFutures.add(ConcurrencyTools.submit(new CallablePairwiseSequenceAligner<S, C>(alignment),
+                    String.format("Aligning pair %d of %d", n++, all)));
+        }
+        // store completed alignments
         List<SequencePair<S, C>> allPairs = new ArrayList<SequencePair<S, C>>();
-        for (int i = 0; i < sequences.size(); i++) {
-            for (int j = i+1; j < sequences.size(); j++) {
-                allPairs.add(getPairwiseAlignment(sequences.get(i), sequences.get(j)));
+        for (Future<SequencePair<S, C>> f : allPairsFutures) {
+            // TODO when added to ConcurrencyTools, log completions and exceptions instead of printing stack traces
+            try {
+                allPairs.add(f.get());
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
             }
         }
         return allPairs;
     }
 
+    /**
+     * Factory method which computes a global sequence alignment for all {@link Sequence} pairs in the given
+     * {@link List}.  This method runs the alignments in parallel by submitting all of the alignments to the shared
+     * thread pool of the {@link ConcurrencyTools} utility.
+     *
+     * @param <S> each {@link Sequence} of the alignment pair is of type S
+     * @param <C> each element of an {@link AlignedSequence} is a {@link Compound} of type C
+     * @param sequences the {@link List} of {@link Sequence}s to align
+     * @param gapPenalty the gap penalties used during alignment
+     * @param subMatrix the set of substitution scores used during alignment
+     * @return list of sequence alignment pairs
+     */
+    public static <S extends Sequence<C>, C extends Compound> List<SequencePair<S, C>> getAllPairsGlobalAlignments(
+            List<S> sequences, GapPenalty gapPenalty, SubstitutionMatrix<C> subMatrix) {
+        List<NeedlemanWunsch<S, C>> allPairs = new ArrayList<NeedlemanWunsch<S, C>>();
+        for (int i = 0; i < sequences.size(); i++) {
+            for (int j = i+1; j < sequences.size(); j++) {
+                allPairs.add(new NeedlemanWunsch<S, C>(sequences.get(i), sequences.get(j), gapPenalty, subMatrix));
+            }
+        }
+        return getAllPairsAlignments(allPairs);
+    }
+
     public static <S extends Sequence<C>, C extends Compound>
             int[] getAllPairsScores(List<S> sequences) {
+        // TODO similar to getAllPairsAlignments
         int[] allPairs = new int[sequences.size()*(sequences.size()-1)/2];
         for (int i = 0, p = 0; i < sequences.size(); i++) {
             for (int j = i+1; p < allPairs.length && j < sequences.size(); j++, p++) {
@@ -75,11 +129,12 @@ public class Alignments {
         return null;
     }
 
+    /* TODO abandoned idea?
     public static enum MSAEmulation { CLUSTALW, MUSCLE, KALIGN, CUSTOM }
 
     /**
      * Stores the default values for the alignment algorithms and data structures
-     */
+     *
     public static class Default {
 
         private static MSAEmulation emulation;
@@ -165,6 +220,6 @@ public class Alignments {
             Default.subMatrix = subMatrix;
         }
 
-    }
+    } */
 
 }
