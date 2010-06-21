@@ -1632,7 +1632,6 @@
 				<Id source="PDBCC">GLN</Id>
 			</Component>
 			<Bond>
-				<!--TODO: verify this-->
 				<Atom component="1">NZ</Atom>
 				<Atom component="2">CD</Atom>
 			</Bond>
@@ -1663,7 +1662,6 @@
 				<Id source="PDBCC">GLU</Id>
 			</Component>
 			<Bond>
-				<!--TODO: verify this-->
 				<Atom component="1">NZ</Atom>
 				<Atom component="2">CD</Atom>
 			</Bond>
@@ -1695,7 +1693,6 @@
 				<Terminal>C</Terminal>
 			</Component>
 			<Bond>
-				<!--TODO: verify this-->
 				<Atom component="1">NZ</Atom>
 				<Atom component="2">C</Atom>
 			</Bond>
@@ -4270,37 +4267,30 @@
 				<Id source="PDBCC">CUZ</Id>
 			</Component>
 			<Bond>
-				<!--TODO: verify this-->
 				<Atom component="1">NE2</Atom>
 				<Atom component="8">CU1,CU2,CU3,CU4</Atom>
 			</Bond>
 			<Bond>
-				<!--TODO: verify this-->
 				<Atom component="2">NE2</Atom>
 				<Atom component="8">CU1,CU2,CU3,CU4</Atom>
 			</Bond>
 			<Bond>
-				<!--TODO: verify this-->
 				<Atom component="3">NE2</Atom>
 				<Atom component="8">CU1,CU2,CU3,CU4</Atom>
 			</Bond>
 			<Bond>
-				<!--TODO: verify this-->
 				<Atom component="4">NE2</Atom>
 				<Atom component="8">CU1,CU2,CU3,CU4</Atom>
 			</Bond>
 			<Bond>
-				<!--TODO: verify this-->
 				<Atom component="5">NE2</Atom>
 				<Atom component="8">CU1,CU2,CU3,CU4</Atom>
 			</Bond>
 			<Bond>
-				<!--TODO: verify this-->
 				<Atom component="6">ND1</Atom>
 				<Atom component="8">CU1,CU2,CU3,CU4</Atom>
 			</Bond>
 			<Bond>
-				<!--TODO: verify this-->
 				<Atom component="7">ND1</Atom>
 				<Atom component="8">CU1,CU2,CU3,CU4</Atom>
 			</Bond>

@@ -25,14 +25,18 @@
 package org.biojava3.protmod;
 
 import org.biojava.bio.structure.align.util.AtomCache;
+import org.biojava.bio.structure.io.FileParsingParameters;
 
 public class TmpAtomCache
 {
    static String tmpDir = System.getProperty("java.io.tmpdir");
    public static AtomCache cache = new AtomCache(tmpDir, true);
    static {
-	   cache.setLoadChemCompInfo(true);
+	   FileParsingParameters params = new FileParsingParameters();
+	   params.setLoadChemCompInfo(true);
+	   params.setAlignSeqRes(true);
+	   
+	   cache.setFileParsingParams(params);
 	   cache.setAutoFetch(true);
-	   cache.setAlignSeqRes(true);
    }
 }
