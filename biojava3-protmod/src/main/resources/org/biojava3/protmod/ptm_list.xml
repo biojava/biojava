@@ -2940,4 +2940,1372 @@
 		<Occurrence>Natural</Occurrence>
 		<Category>Attachment</Category>
 	</Entry-->
+	<Entry>
+		<Id>0098</Id>
+		<Description>A protein modification that effectively converts an L-isoleucine residue to a D-allo-isoleucine.</Description>
+		<SystematicName>(2R,3S)-2-amino-3-methylpentanoic acid</SystematicName>
+		<CrossReference>
+			<Source>PDBCC</Source>
+			<Id>DIL</Id>
+			<Name>D-ISOLEUCINE</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0192</Id>
+			<Name>D-allo-isoleucine</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00199</Id>
+			<Name>D-allo-isoleucine</Name>
+		</CrossReference>
+		<Formula>C 6 H 11 N 1 O 1</Formula>
+		<Condition>
+			<Component type="AminoAcid" label="1">
+				<Id source="PDBCC">DIL</Id>
+			</Component>
+		</Condition>
+		<Occurrence>Natural</Occurrence>
+		<Category>ModifiedResidue</Category>
+	</Entry>
+	<Entry>
+		<Id>0099</Id>
+		<Description>A protein modification that effectively converts an L-asparagine residue to D-asparagine.</Description>
+		<SystematicName>(R)-2-amino-4-butanediamic acid</SystematicName>
+		<CrossReference>
+			<Source>PDBCC</Source>
+			<Id>DSG</Id>
+			<Name>D-ASPARAGINE</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0196</Id>
+			<Name>D-asparagine</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00203</Id>
+			<Name>D-asparagine</Name>
+		</CrossReference>
+		<Formula>C 4 H 6 N 2 O 2</Formula>
+		<Condition>
+			<Component type="AminoAcid" label="1">
+				<Id source="PDBCC">DSG</Id>
+			</Component>
+		</Condition>
+		<Occurrence>Natural</Occurrence>
+		<Category>ModifiedResidue</Category>
+	</Entry>
+	<Entry>
+		<Id>0100</Id>
+		<Description>A protein modification that effectively converts an L-tryptophan residue to D-tryptophan.</Description>
+		<SystematicName>(R)-2-amino-3-(1H-indol-3-yl)propanoic acid</SystematicName>
+		<CrossReference>
+			<Source>PDBCC</Source>
+			<Id>DTR</Id>
+			<Name>D-TRYPTOPHAN</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0198</Id>
+			<Name>D-tryptophan</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00205</Id>
+			<Name>D-tryptophan</Name>
+		</CrossReference>
+		<Formula>C 11 H 10 N 2 O 1</Formula>
+		<Condition>
+			<Component type="AminoAcid" label="1">
+				<Id source="PDBCC">DTR</Id>
+			</Component>
+		</Condition>
+		<Occurrence>Natural</Occurrence>
+		<Category>ModifiedResidue</Category>
+	</Entry>
+	<Entry>
+		<Id>0101</Id>
+		<Description>A protein modification that effectively converts an L-threonine residue to D-allo-threonine.</Description>
+		<SystematicName>(2R,3R)-2-amino-3-hydroxybutanoic acid</SystematicName>
+		<CrossReference>
+			<Source>PDBCC</Source>
+			<Id>DTH</Id>
+			<Name>D-THREONINE</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0199</Id>
+			<Name>D-threonine</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00863</Id>
+			<Name>D-allo-threonine</Name>
+		</CrossReference>
+		<Formula>C 4 H 7 N 1 O 2</Formula>
+		<Condition>
+			<Component type="AminoAcid" label="1">
+				<Id source="PDBCC">DTH</Id>
+			</Component>
+		</Condition>
+		<Occurrence>Natural</Occurrence>
+		<Category>ModifiedResidue</Category>
+	</Entry>
+	<Entry>
+		<Id>0102</Id>
+		<Description>A protein modification that effectively converts an L-valine residue to D-valine.</Description>
+		<SystematicName>(R)-2-amino-3-methylbutanoic acid</SystematicName>
+		<CrossReference>
+			<Source>PDBCC</Source>
+			<Id>DVA</Id>
+			<Name>D-VALINE</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0200</Id>
+			<Name>D-valine</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00705</Id>
+			<Name>D-valine</Name>
+		</CrossReference>
+		<Formula>C 5 H 9 N 1 O 1</Formula>
+		<Condition>
+			<Component type="AminoAcid" label="1">
+				<Id source="PDBCC">DVA</Id>
+			</Component>
+		</Condition>
+		<Occurrence>Natural</Occurrence>
+		<Category>ModifiedResidue</Category>
+	</Entry>
+	<Entry>
+		<Id>0103</Id>
+		<Description>A protein modification that effectively monooxygenates an L-cysteine residue to L-cysteine sulfenic acid.</Description>
+		<SystematicName>(R)-2-amino-2-carboxyethanesulfenic acid</SystematicName>
+		<CrossReference>
+			<Source>PDBCC</Source>
+			<Id>CSO</Id>
+			<Name>S-HYDROXYCYSTEINE</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0205</Id>
+			<Name>L-cysteine sulfenic acid</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00210</Id>
+			<Name>L-cysteine sulfenic acid</Name>
+		</CrossReference>
+		<Formula>C 3 H 5 N 1 O 2 S 1</Formula>
+		<Condition>
+			<Component type="AminoAcid" label="1">
+				<Id source="PDBCC">CSO</Id>
+			</Component>
+		</Condition>
+		<Occurrence>Natural</Occurrence>
+		<Category>ModifiedResidue</Category>
+	</Entry>
+	<Entry>
+		<Id>0104</Id>
+		<Description>A protein modification that effectively monooxygenates an L-cysteine residue to L-cysteine sulfenic acid.</Description>
+		<SystematicName>(R)-2-amino-2-carboxyethanesulfenic acid</SystematicName>
+		<CrossReference>
+			<Source>PDBCC</Source>
+			<Id>CSX</Id>
+			<Name>S-OXY CYSTEINE</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0205</Id>
+			<Name>L-cysteine sulfenic acid</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00210</Id>
+			<Name>L-cysteine sulfenic acid</Name>
+		</CrossReference>
+		<Formula>C 3 H 5 N 1 O 2 S 1</Formula>
+		<Condition>
+			<Component type="AminoAcid" label="1">
+				<Id source="PDBCC">CSX</Id>
+			</Component>
+		</Condition>
+		<Occurrence>Natural</Occurrence>
+		<Category>ModifiedResidue</Category>
+	</Entry>
+	<Entry>
+		<Id>0105</Id>
+		<Description>A protein modification that effectively crosslinks an L-cysteine residue and a glycine residue by a thioester bond to form S-glycyl-L-cysteine.</Description>
+		<SystematicName>(2R)-2-amino-3-[(aminoacetyl)sulfanyl]propanoic acid</SystematicName>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0206</Id>
+			<Name>S-glycyl-L-cysteine</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00211</Id>
+			<Name>S-glycyl-L-cysteine</Name>
+		</CrossReference>
+		<Formula>C 5 H 7 N 2 O 2 S 1</Formula>
+		<Condition>
+			<Component type="AminoAcid" label="1">
+				<Id source="PDBCC">CYS</Id>
+			</Component>
+			<Component type="AminoAcid" label="2">
+				<Id source="PDBCC">GLY</Id>
+				<Terminal>C</Terminal>
+			</Component>
+			<Bond>
+				<!--TODO: verify this-->
+				<Atom component="1">SG</Atom>
+				<Atom component="2">C</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>Natural</Occurrence>
+		<Category>CrossLink2</Category>
+	</Entry>
+	<Entry>
+		<Id>0106</Id>
+		<Description>A protein modification that effectively converts an L-cysteine residue to S-4-hydroxycinnamyl-L-cysteine.</Description>
+		<SystematicName>(S,E)-2-amino-3-[3-(4-hydroxyphenyl)propenoylsulfanyl]propanoic acid</SystematicName>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0207</Id>
+			<Name>S-4-hydroxycinnamyl-L-cysteine</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00212</Id>
+			<Name>S-4-hydroxycinnamyl-L-cysteine</Name>
+		</CrossReference>
+		<Formula>C 12 H 11 N 1 O 3 S 1</Formula>
+		<Condition>
+			<Component type="AminoAcid" label="1">
+				<Id source="PDBCC">CYS</Id>
+			</Component>
+			<Component type="Ligand" label="2">
+				<Id source="PDBCC">HC4</Id>
+			</Component>
+			<Bond>
+				<Atom component="1">SG</Atom>
+				<Atom component="2">C1</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>Natural</Occurrence>
+		<Category>Attachment</Category>
+	</Entry>
+	<Entry>
+		<Id>0107</Id>
+		<Description>A protein modification that effectively converts an L-arginine residue to a 4-hydroxy-L-arginine.</Description>
+		<SystematicName>(2S,4Xi)-2-amino-5-[(diaminomethylidene)amino]-4-hydroxypentanoic acid</SystematicName>
+		<CrossReference>
+			<Source>PDBCC</Source>
+			<Id>ARO</Id>
+			<Name>C-GAMMA-HYDROXY ARGININE</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0215</Id>
+			<Name>4-hydroxy-L-arginine</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00220</Id>
+			<Name>4-hydroxy-L-arginine</Name>
+		</CrossReference>
+		<Formula>C 6 H 12 N 4 O 2</Formula>
+		<Condition>
+			<Component type="AminoAcid" label="1">
+				<Id source="PDBCC">ARO</Id>
+			</Component>
+		</Condition>
+		<Occurrence>Natural</Occurrence>
+		<Category>ModifiedResidue</Category>
+	</Entry>
+	<Entry>
+		<Id>0108</Id>
+		<Description>A protein modification that effectively converts an L-cysteine residue to S-(6-FMN)-L-cysteine.</Description>
+		<SystematicName>(R)-2-amino-3-[6-riboflavin 5'-dihydrogen phosphate]sulfanylpropanoic acid</SystematicName>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0220</Id>
+			<Name>S-(6-FMN)-L-cysteine</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00225</Id>
+			<Name>S-(6-FMN)-L-cysteine</Name>
+		</CrossReference>
+		<Formula>C 20 H 24 N 5 O 10 P 1 S 1</Formula>
+		<Condition>
+			<Component type="AminoAcid" label="1">
+				<Id source="PDBCC">CYS</Id>
+			</Component>
+			<Component type="Ligand" label="2">
+				<Id source="PDBCC">FMN</Id>
+			</Component>
+			<Bond>
+				<!--TODO: verify this-->
+				<Atom component="1">SG</Atom>
+				<Atom component="2">C6</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>Natural</Occurrence>
+		<Category>Attachment</Category>
+	</Entry>
+	<Entry>
+		<Id>0109</Id>
+		<Description>A protein modification that effectively converts an L-histidine residue to 1'-(8alpha-FAD)-L-histidine.</Description>
+		<SystematicName>(S)-2-amino-3-(1-[8alpha riboflavin 5'-(trihydrogen diphosphate) 5'->5'-ester with adenosine]imidazol-4-yl)propanoic acid</SystematicName>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0221</Id>
+			<Name>1'-(8alpha-FAD)-L-histidine</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00226</Id>
+			<Name>1'-(8alpha-FAD)-L-histidine</Name>
+		</CrossReference>
+		<Formula>C 33 H 38 N 12 O 16 P 2</Formula>
+		<Condition>
+			<Component type="AminoAcid" label="1">
+				<Id source="PDBCC">HIS</Id>
+			</Component>
+			<Component type="Ligand" label="2">
+				<Id source="PDBCC">FAD</Id>
+			</Component>
+			<Bond>
+				<Atom component="1">NE2</Atom>
+				<Atom component="2">C8M</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>Natural</Occurrence>
+		<Category>Attachment</Category>
+	</Entry>
+	<Entry>
+		<Id>0110</Id>
+		<Description>A protein modification that effectively crosslinks an L-lysine residue and 5'-phosphoguanosine through a phosphoramide ester bond to form N6-(phospho-5'-guanosine)-L-lysine.</Description>
+		<SystematicName>(S)-2-amino-6-(5'-guanosine phosphonamino)hexanoic acid</SystematicName>
+		<CrossReference>
+			<Source>PDBCC</Source>
+			<Id>GPL</Id>
+			<Name>LYSINE GUANOSINE-5'-MONOPHOSPHATE</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0228</Id>
+			<Name>N6-(phospho-5'-guanosine)-L-lysine</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00233</Id>
+			<Name>N6-(phospho-5'-guanosine)-L-lysine</Name>
+		</CrossReference>
+		<Formula>C 16 H 24 N 7 O 8 P 1</Formula>
+		<Condition>
+			<Component type="AminoAcid" label="1">
+				<Id source="PDBCC">GPL</Id>
+			</Component>
+		</Condition>
+		<Occurrence>Natural</Occurrence>
+		<Category>ModifiedResidue</Category>
+	</Entry>
+	<Entry>
+		<Id>0111</Id>
+		<Description>A protein modification that effectively converts an L-cysteine residue to S-nitrosyl-L-cysteine.</Description>
+		<SystematicName>(2R)-2-amino-3-nitrososulfanyl-propanoic acid</SystematicName>
+		<CrossReference>
+			<Source>PDBCC</Source>
+			<Id>SNC</Id>
+			<Name>S-NITROSO-CYSTEINE</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0230</Id>
+			<Name>S-nitrosyl-L-cysteine</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00235</Id>
+			<Name>S-nitrosyl-L-cysteine</Name>
+		</CrossReference>
+		<Formula>C 3 H 4 N 2 O 2 S 1</Formula>
+		<Condition>
+			<Component type="AminoAcid" label="1">
+				<Id source="PDBCC">SNC</Id>
+			</Component>
+		</Condition>
+		<Occurrence>Natural</Occurrence>
+		<Category>ModifiedResidue</Category>
+	</Entry>
+	<Entry>
+		<Id>0112</Id>
+		<Description>A protein modification that effectively cross-links an L-lysine residue and an L-tyrosine residue by a carbon-nitrogen bond to form 5'-(N6-L-lysine)-L-topaquinone.</Description>
+		<SystematicName>1-[(S)-5-amino-5-carboxypentyl]amino-2-[(S)-2-amino-2-carboxyethyl]-2,6-cyclohexadien-4,5-dione</SystematicName>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0233</Id>
+			<Name>2'-(L-lys-N6-yl)-L-4',5'-topaquinone</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00238</Id>
+			<Name>5'-(N6-L-lysine)-L-topaquinone</Name>
+		</CrossReference>
+		<Formula>C 15 H 17 N 3 O 4</Formula>
+		<Condition>
+			<Component type="AminoAcid" label="1">
+				<Id source="PDBCC">TPQ</Id>
+			</Component>
+			<Component type="AminoAcid" label="2">
+				<Id source="PDBCC">LYS</Id>
+			</Component>
+			<Bond>
+				<!--TODO: verify this-->
+				<Atom component="1">C2</Atom>
+				<Atom component="2">NZ</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>Natural</Occurrence>
+		<Category>CrossLink2</Category>
+	</Entry>
+	<Entry>
+		<Id>0113</Id>
+		<Description>A protein modification that effectively converts an L-cysteine residue to S-methyl-L-cysteine.</Description>
+		<SystematicName>(R)-2-amino-3-(methylsulfanyl)propanoic acid</SystematicName>
+		<CrossReference>
+			<Source>PDBCC</Source>
+			<Id>SMC</Id>
+			<Name>S-METHYLCYSTEINE</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0234</Id>
+			<Name>S-methyl-L-cysteine</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00239</Id>
+			<Name>S-methyl-L-cysteine</Name>
+		</CrossReference>
+		<Formula>C 4 H 7 N 1 O 1 S 1</Formula>
+		<Condition>
+			<Component type="AminoAcid" label="1">
+				<Id source="PDBCC">SMC</Id>
+			</Component>
+		</Condition>
+		<Occurrence>Natural</Occurrence>
+		<Category>ModifiedResidue</Category>
+	</Entry>
+	<Entry>
+		<Id>0114</Id>
+		<Description>A protein modification that effectively cross-links an L-histidine residue and an L-tyrosine residue by a carbon-nitrogen bond to form 3-(3'-L-histidyl)-L-tyrosine.</Description>
+		<SystematicName>(2S,3R)-2-amino-3-(5-[(2S)-2-amino-2-carboxyethyl]-1H-imidazol-1-yl)-3-(4-hydroxyphenyl)propanoic acid</SystematicName>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0250</Id>
+			<Name>3-(3'-L-histidyl)-L-tyrosine</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00255</Id>
+			<Name>3-(3'-L-histidyl)-L-tyrosine</Name>
+		</CrossReference>
+		<Formula>C 15 H 14 N 4 O 3</Formula>
+		<Condition>
+			<Component type="AminoAcid" label="1">
+				<Id source="PDBCC">HIS</Id>
+			</Component>
+			<Component type="AminoAcid" label="2">
+				<Id source="PDBCC">TYR</Id>
+			</Component>
+			<Bond>
+				<!--TODO: verify this-->
+				<Atom component="1">ND1</Atom>
+				<Atom component="2">CB</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>Natural</Occurrence>
+		<Category>CrossLink2</Category>
+	</Entry>
+	<Entry>
+		<Id>0115</Id>
+		<Description>A protein modification that dioxygenates an L-methionine residue to L-methionine sulfone.</Description>
+		<SystematicName>(S)-2-amino-4-(methylsulfonyl)butanoic acid</SystematicName>
+		<CrossReference>
+			<Source>PDBCC</Source>
+			<Id>OMT</Id>
+			<Name>S-DIOXYMETHIONINE</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0251</Id>
+			<Name>L-methionine sulfone</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00256</Id>
+			<Name>L-methionine sulfone</Name>
+		</CrossReference>
+		<Formula>C 5 H 9 N 1 O 3 S 1</Formula>
+		<Condition>
+			<Component type="AminoAcid" label="1">
+				<Id source="PDBCC">OMT</Id>
+			</Component>
+		</Condition>
+		<Occurrence>Natural</Occurrence>
+		<Category>ModifiedResidue</Category>
+	</Entry>
+	<Entry>
+		<Id>0116</Id>
+		<Description>A protein modification that effectively converts an L-cysteine residue to dipyrrolylmethanemethyl-L-cysteine.</Description>
+		<SystematicName>3-[5-[4-(2-carboxy)ethyl-3-carboxymethyl-1-pyrrol-2-yl]methyl-4-(2-carboxy)ethyl-3-carboxymethyl-1-pyrrol-2-yl]methylthio-2-aminopropanoic acid</SystematicName>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0252</Id>
+			<Name>dipyrrolylmethanemethyl-L-cysteine</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00257</Id>
+			<Name>dipyrrolylmethanemethyl-L-cysteine</Name>
+		</CrossReference>
+		<Formula>C 23 H 27 N 3 O 9 S 1</Formula>
+		<Condition>
+			<Component type="AminoAcid" label="1">
+				<Id source="PDBCC">CYS</Id>
+			</Component>
+			<Component type="Ligand" label="2">
+				<Id source="PDBCC">DPM</Id>
+			</Component>
+			<Bond>
+				<Atom component="1">SG</Atom>
+				<Atom component="2">CHA</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>Natural</Occurrence>
+		<Category>Attachment</Category>
+	</Entry>
+	<Entry>
+		<Id>0117</Id>
+		<Description>A protein modification that effectively results from forming an adduct between a cysteine residue and the tetrapyrrole compound phycoviolobilin.</Description>
+		<SystematicName>(4S)-3-[(1R)-1-(((2R)-2-amino-2-carboxy)ethylsulfanyl)ethyl]-8,12-bis(2-carboxyethyl)-18-ethyl-4,5-dihydro-2,7,13,17-tetramethyl-(21H,22H,24H)-biladiene-bc-1,19-dione</SystematicName>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0258</Id>
+			<Name>S-phycoviolobilin-L-cysteine</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00263</Id>
+			<Name>S-phycoviolobilin-L-cysteine</Name>
+		</CrossReference>
+		<Formula>C 36 H 43 N 5 O 7 S 1</Formula>
+		<Condition>
+			<Component type="AminoAcid" label="1">
+				<Id source="PDBCC">CYS</Id>
+			</Component>
+			<Component type="Ligand" label="2">
+				<Id source="PDBCC">PVN</Id>
+			</Component>
+			<Bond>
+				<Atom component="1">SG</Atom>
+				<Atom component="2">C31</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>Natural</Occurrence>
+		<Category>Attachment</Category>
+	</Entry>
+	<Entry>
+		<Id>0118</Id>
+		<Description>A protein modification that effectively results from forming an adduct between two cysteine residues and the tetrapyrrole compound phycourobilin.</Description>
+		<SystematicName>3,18-bis(1-[(R)-2-amino-2-carboxyethyl]sulfanylethyl)-8,12-bis(2-carboxyethyl)-2,7,13,17-tetramethyl-4,5,15,16-tetrahydro-(21H,22H,24H)-bilene-b-1,19(4H,16H)-dione</SystematicName>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0260</Id>
+			<Name>phycourobilin-bis-L-cysteine</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00265</Id>
+			<Name>phycourobilin-bis-L-cysteine</Name>
+		</CrossReference>
+		<Formula>C 39 H 48 N 6 O 8 S 2</Formula>
+		<Condition>
+			<Component type="AminoAcid" label="1">
+				<Id source="PDBCC">CYS</Id>
+			</Component>
+			<Component type="AminoAcid" label="2">
+				<Id source="PDBCC">CYS</Id>
+			</Component>
+			<Component type="Ligand" label="3">
+				<Id source="PDBCC">CYB</Id>
+			</Component>
+			<Bond>
+				<!--TODO: verify this-->
+				<Atom component="1">SG</Atom>
+				<Atom component="3">CAB</Atom>
+			</Bond>
+			<Bond>
+				<!--TODO: verify this-->
+				<Atom component="2">SG</Atom>
+				<Atom component="3">CBC</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>Natural</Occurrence>
+		<Category>CrossLink2</Category>
+	</Entry>
+	<Entry>
+		<Id>0119</Id>
+		<Description>A protein modification that effectively dioxygenates an L-cysteine residue to L-cysteine sulfinic acid.</Description>
+		<SystematicName>(R)-2-amino-2-carboxyethanesulfinic acid</SystematicName>
+		<CrossReference>
+			<Source>PDBCC</Source>
+			<Id>CSD</Id>
+			<Name>3-SULFINOALANINE</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0262</Id>
+			<Name>(R)-2-amino-2-carboxyethanesulfinic acid</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00267</Id>
+			<Name>cysteine-S,S-dioxide</Name>
+		</CrossReference>
+		<Formula>C 3 H 5 N 1 O 3 S 1</Formula>
+		<Condition>
+			<Component type="AminoAcid" label="1">
+				<Id source="PDBCC">CSD</Id>
+			</Component>
+		</Condition>
+		<Occurrence>Natural</Occurrence>
+		<Category>ModifiedResidue</Category>
+	</Entry>
+	<Entry>
+		<Id>0120</Id>
+		<Description>A protein modification that effectively dioxygenates an L-cysteine residue to L-cysteine sulfinic acid.</Description>
+		<SystematicName>(R)-2-amino-2-carboxyethanesulfinic acid</SystematicName>
+		<CrossReference>
+			<Source>PDBCC</Source>
+			<Id>CSW</Id>
+			<Name>CYSTEINE-S-DIOXIDE</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0262</Id>
+			<Name>(R)-2-amino-2-carboxyethanesulfinic acid</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00267</Id>
+			<Name>cysteine-S,S-dioxide</Name>
+		</CrossReference>
+		<Formula>C 3 H 5 N 1 O 3 S 1</Formula>
+		<Condition>
+			<Component type="AminoAcid" label="1">
+				<Id source="PDBCC">CSW</Id>
+			</Component>
+		</Condition>
+		<Occurrence>Natural</Occurrence>
+		<Category>ModifiedResidue</Category>
+	</Entry>
+	<Entry>
+		<Id>0121</Id>
+		<Description>A protein modification that effectively converts an L-serine residue to O-(sn-1-glycerophosphoryl)-L-serine.</Description>
+		<SystematicName>(2S)-2-amino-3-[(2Xi)-2,3-dihydroxypropyl]phosphonoxypropanoic acid</SystematicName>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0264</Id>
+			<Name>O-(sn-1-glycerophosphoryl)-L-serine</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00269</Id>
+			<Name>O-(sn-1-glycerophosphoryl)-L-serine</Name>
+		</CrossReference>
+		<Formula>C 6 H 12 N 1 O 7 P 1</Formula>
+		<Condition>
+			<Component type="AminoAcid" label="1">
+				<Id source="PDBCC">SER</Id>
+			</Component>
+			<Component type="Ligand" label="2">
+				<Id source="PDBCC">OPE</Id>
+			</Component>
+			<Bond>
+				<!--TODO: verify this-->
+				<Atom component="1">CB</Atom>
+				<Atom component="2">O3</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>Natural</Occurrence>
+		<Category>Attachment</Category>
+	</Entry>
+	<Entry>
+		<Id>0122</Id>
+		<Description>A protein modification that effectively converts a glycine residue to an internal 1-thioglycine.</Description>
+		<SystematicName>aminoethanethioic acid</SystematicName>
+		<CrossReference>
+			<Source>PDBCC</Source>
+			<Id>GL3</Id>
+			<Name>THIOGLYCIN</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0265</Id>
+			<Name>1-thioglycine</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00270</Id>
+			<Name>1-thioglycine (internal)</Name>
+		</CrossReference>
+		<Formula>C 2 H 3 N 1 O 0 S 1</Formula>
+		<Condition>
+			<Component type="AminoAcid" label="1">
+				<Id source="PDBCC">GL3</Id>
+			</Component>
+		</Condition>
+		<Occurrence>Natural</Occurrence>
+		<Category>ModifiedResidue</Category>
+		<Comments>There are two entries in PSI-MOD MOD:00270 and MOD:01623, corresponding to internal and terminal.</Comments>
+	</Entry>
+	<Entry>
+		<Id>0123</Id>
+		<Description>A protein modification that effectively results from forming an adduct between two cysteine residues, the C-3' of a tyrosine residue, and the porphyrin compound heme b, (7,12-diethenyl-3,8,13,17-tetramethylporphyrin-2,18-dipropanoato)iron.</Description>
+		<SystematicName>(10S,11S)-[7,12-bis((S)-1-[((R)-2-amino-2-carboxy)ethylsulfanyl]ethyl)-10-(2-hydroxy-5-[(S)-2-amino-2-carboxy]ethylphenyl)-3,8,13,17-tetramethyl-21H,23H-10,11-dihydroporphine-2,18-bis(2-carboxyethyl)-N21,N22,N23,N24]-ferrate</SystematicName>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0266</Id>
+			<Name>heme P460-bis-L-cysteine-L-tyrosine</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00271</Id>
+			<Name>heme P460-bis-L-cysteine-L-tyrosine</Name>
+		</CrossReference>
+		<Formula>C 49 Fe 1 H 51 N 7 O 8 S 2</Formula>
+		<Condition>
+			<Component type="AminoAcid" label="1">
+				<Id source="PDBCC">CYS</Id>
+			</Component>
+			<Component type="AminoAcid" label="2">
+				<Id source="PDBCC">CYS</Id>
+			</Component>
+			<Component type="AminoAcid" label="3">
+				<Id source="PDBCC">TYR</Id>
+			</Component>
+			<Component type="Ligand" label="4">
+				<Id source="PDBCC">HEC</Id>
+			</Component>
+			<Bond>
+				<Atom component="1">SG</Atom>
+				<Atom component="4">CAB</Atom>
+			</Bond>
+			<Bond>
+				<Atom component="2">SG</Atom>
+				<Atom component="4">CAC</Atom>
+			</Bond>
+			<Bond>
+				<!--TODO: verify this-->
+				<Atom component="3">CE2</Atom>
+				<Atom component="4">CHC</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>Natural</Occurrence>
+		<Category>CrossLink3</Category>
+	</Entry>
+	<Entry>
+		<Id>0124</Id>
+		<Description>A protein modification that effectively results from forming an adduct between two cysteine residues, a lysine residue, and the porphyrin compound heme b, (7,12-diethenyl-3,8,13,17-tetramethylporphyrin-2,18-dipropanoato)iron.</Description>
+		<SystematicName>(19S,20S)-[7,12-bis((S)-1-[((R)-2-amino-2-carboxy)ethylsulfanyl]ethyl)-20-([(S)-5-amino-5-carboxypentyl]amino)-3,8,13,17-tetramethyl-21H,23H-19,20-dihydroporphine-2,18-bis(2-carboxyethyl)-N21,N22,N23,N24]-ferrate</SystematicName>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0271</Id>
+			<Name>heme P460-bis-L-cysteine-L-lysine</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00276</Id>
+			<Name>heme P460-bis-L-cysteine-L-lysine</Name>
+		</CrossReference>
+		<Formula>C 46 Fe 1 H 54 N 8 O 7 S 2</Formula>
+		<Condition>
+			<Component type="AminoAcid" label="1">
+				<Id source="PDBCC">CYS</Id>
+			</Component>
+			<Component type="AminoAcid" label="2">
+				<Id source="PDBCC">CYS</Id>
+			</Component>
+			<Component type="AminoAcid" label="3">
+				<Id source="PDBCC">LYS</Id>
+			</Component>
+			<Component type="Ligand" label="4">
+				<Id source="PDBCC">HEC</Id>
+			</Component>
+			<Bond>
+				<Atom component="1">SG</Atom>
+				<Atom component="4">CAB</Atom>
+			</Bond>
+			<Bond>
+				<Atom component="2">SG</Atom>
+				<Atom component="4">CAC</Atom>
+			</Bond>
+			<Bond>
+				<Atom component="3">NZ</Atom>
+				<Atom component="4">CHA</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>Natural</Occurrence>
+		<Category>CrossLink3</Category>
+	</Entry>
+	<Entry>
+		<Id>0125</Id>
+		<Description>A protein modification that effectively converts an L-cysteine residue to L-cysteine persulfide.</Description>
+		<SystematicName>(R)-2-amino-3-disulfanylpropanoic acid</SystematicName>
+		<CrossReference>
+			<Source>PDBCC</Source>
+			<Id>CSS</Id>
+			<Name>S-MERCAPTOCYSTEINE</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0269</Id>
+			<Name>L-cysteine persulfide</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00274</Id>
+			<Name>L-cysteine persulfide</Name>
+		</CrossReference>
+		<Formula>C 3 H 5 N 1 O 1 S 2</Formula>
+		<Condition>
+			<Component type="AminoAcid" label="1">
+				<Id source="PDBCC">CSS</Id>
+			</Component>
+		</Condition>
+		<Occurrence>Natural</Occurrence>
+		<Category>ModifiedResidue</Category>
+	</Entry>
+	<Entry>
+		<Id>0126</Id>
+		<Description>A protein modification that effectively cross-links an L-histidine residue and an L-tyrosine residue by a carbon-nitrogen bond to form 3'-(1'-L-histidyl)-L-tyrosine.</Description>
+		<SystematicName>(2S)-2-amino-3-[1-(5-[(2S)-2-amino-2-carboxyethyl]-2-hydroxyphenyl)-1H-imidazol-4-yl]propanoic acid</SystematicName>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0270</Id>
+			<Name>3'-(1'-L-histidyl)-L-tyrosine</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00275</Id>
+			<Name>3'-(1'-L-histidyl)-L-tyrosine</Name>
+		</CrossReference>
+		<Formula>C 15 H 14 N 4 O 3</Formula>
+		<Condition>
+			<Component type="AminoAcid" label="1">
+				<Id source="PDBCC">HIS</Id>
+			</Component>
+			<Component type="AminoAcid" label="2">
+				<Id source="PDBCC">TYR</Id>
+			</Component>
+			<Bond>
+				<!--TODO: verify this-->
+				<Atom component="1">NE2</Atom>
+				<Atom component="2">CE1</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>Natural</Occurrence>
+		<Category>CrossLink2</Category>
+	</Entry>
+	<Entry>
+		<Id>0127</Id>
+		<Description>A protein modification that effectively converts an L-glutamine residue to 2-methyl-L-glutamine.</Description>
+		<SystematicName>(S)-2-amino-2-methylpentanediamic acid</SystematicName>
+		<CrossReference>
+			<Source>PDBCC</Source>
+			<Id>MGN</Id>
+			<Name>2-METHYL-GLUTAMINE</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0273</Id>
+			<Name>2-methyl-L-glutamine</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00278</Id>
+			<Name>2-methyl-L-glutamine</Name>
+		</CrossReference>
+		<Formula>C 6 H 10 N 2 O 2</Formula>
+		<Condition>
+			<Component type="AminoAcid" label="1">
+				<Id source="PDBCC">MGN</Id>
+			</Component>
+		</Condition>
+		<Occurrence>Natural</Occurrence>
+		<Category>ModifiedResidue</Category>
+	</Entry>
+	<Entry>
+		<Id>0128</Id>
+		<Description>A protein modification that effectively converts an L-cysteine residue to S-selenyl-L-cysteine.</Description>
+		<SystematicName>(R)-2-amino-3-(selanylsulfanyl)propanoic acid</SystematicName>
+		<CrossReference>
+			<Source>PDBCC</Source>
+			<Id>CSZ</Id>
+			<Name>S-SELANYL CYSTEINE</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0277</Id>
+			<Name>S-selanyl-L-cysteine</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00282</Id>
+			<Name>S-selenyl-L-cysteine</Name>
+		</CrossReference>
+		<Formula>C 3 H 5 N 1 O 1 S 1 Se 1</Formula>
+		<Condition>
+			<Component type="AminoAcid" label="1">
+				<Id source="PDBCC">CSZ</Id>
+			</Component>
+		</Condition>
+		<Occurrence>Natural</Occurrence>
+		<Category>ModifiedResidue</Category>
+	</Entry>
+	<Entry>
+		<Id>0129</Id>
+		<Description>A protein modification that effectively results from forming an adduct between an aspartic acid residue, a glutamic acid residue, a methionine residue (forming a sulfonium ether), and the porphyrin compound heme b, (7,12-diethenyl-3,8,13,17-tetramethylporphyrin-2,18-dipropanoato)iron.</Description>
+		<SystematicName>(19S,20S)-[7,12-bis((S)-1-[((R)-2-amino-2-carboxy)ethylsulfanyl]ethyl)-20-([(S)-5-amino-5-carboxypentyl]amino)-3,8,13,17-tetramethyl-21H,23H-19,20-dihydroporphine-2,18-bis(2-carboxyethyl)-N21,N22,N23,N24]-ferrate</SystematicName>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0280</Id>
+			<Name>dihydroxyheme-L-aspartate ester-L-glutamate ester-L-methionine sulfonium</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00285</Id>
+			<Name>dihydroxyheme-L-aspartate ester-L-glutamate ester-L-methionine sulfonium</Name>
+		</CrossReference>
+		<Formula>C 48 Fe 1 H 50 N 7 O 11 S 1</Formula>
+		<Condition>
+			<Component type="AminoAcid" label="1">
+				<Id source="PDBCC">ASP</Id>
+			</Component>
+			<Component type="AminoAcid" label="2">
+				<Id source="PDBCC">GLU</Id>
+			</Component>
+			<Component type="AminoAcid" label="3">
+				<Id source="PDBCC">MET</Id>
+			</Component>
+			<Component type="Ligand" label="4">
+				<Id source="PDBCC">HEM</Id>
+			</Component>
+			<Bond>
+				<Atom component="1">OD2</Atom>
+				<Atom component="4">CMD</Atom>
+			</Bond>
+			<Bond>
+				<Atom component="2">OE2</Atom>
+				<Atom component="4">CMB</Atom>
+			</Bond>
+			<Bond>
+				<Atom component="3">SD</Atom>
+				<Atom component="4">CBB</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>Natural</Occurrence>
+		<Category>CrossLink3</Category>
+	</Entry>
+	<Entry>
+		<Id>0130</Id>
+		<Description>A protein modification that effectively doubly cross-links an L-glutamic acid residue and an L-tyrosine residue with a carbon-carbon bond and a carbon-nitrogen bond to form pyrroloquinoline quinone.</Description>
+		<SystematicName>4,5-dihydro-4,5-dioxo-1H-pyrrolo[2,3-5,6]quinoline-2,7,9-tricarboxylic acid</SystematicName>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0283</Id>
+			<Name>pyrroloquinoline quinone</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00288</Id>
+			<Name>pyrroloquinoline quinone</Name>
+		</CrossReference>
+		<Formula>C 14 H 6 N 2 O 8</Formula>
+		<Condition>
+			<Component type="AminoAcid" label="1">
+				<Id source="PDBCC">GLU</Id>
+			</Component>
+			<Component type="AminoAcid" label="2">
+				<Id source="PDBCC">TYR</Id>
+			</Component>
+			<Component type="Ligand" label="3">
+				<Id source="PDBCC">PQQ</Id>
+			</Component>
+			<Bond>
+				<!--TODO: verify this-->
+				<Atom component="1">CG</Atom>
+				<Atom component="3">N1</Atom>
+			</Bond>
+			<Bond>
+				<!--TODO: verify this-->
+				<Atom component="2">OH</Atom>
+				<Atom component="3">C8</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>Natural</Occurrence>
+		<Category>CrossLink3</Category>
+	</Entry>
+	<Entry>
+		<Id>0131</Id>
+		<Description>A protein modification that effectively converts three L-cysteine residues, an L-histidine residue and a four-iron four-sulfur cluster to tris-L-cysteinyl L-N1'-histidino tetrairon tetrasulfide.</Description>
+		<SystematicName>tetra-mu3-sulfidotris(S-cysteinyliron)(N1'-histidinoiron)</SystematicName>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0284</Id>
+			<Name>tris-L-cysteinyl L-N1'-histidino tetrairon tetrasulfide</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00289</Id>
+			<Name>tris-L-cysteinyl L-N1'-histidino tetrairon tetrasulfide</Name>
+		</CrossReference>
+		<Formula>C 15 Fe 4 H 18 N 6 O 4 S 7</Formula>
+		<Condition>
+			<Component type="AminoAcid" label="1">
+				<Id source="PDBCC">CYS</Id>
+			</Component>
+			<Component type="AminoAcid" label="2">
+				<Id source="PDBCC">CYS</Id>
+			</Component>
+			<Component type="AminoAcid" label="3">
+				<Id source="PDBCC">CYS</Id>
+			</Component>
+			<Component type="AminoAcid" label="4">
+				<Id source="PDBCC">HIS</Id>
+			</Component>
+			<Component type="Ligand" label="5">
+				<Id source="PDBCC">FS4</Id>
+			</Component>
+			<Bond>
+				<Atom component="1">SG</Atom>
+				<Atom component="5">FE1</Atom>
+			</Bond>
+			<Bond>
+				<Atom component="2">SG</Atom>
+				<Atom component="5">FE2</Atom>
+			</Bond>
+			<Bond>
+				<Atom component="3">SG</Atom>
+				<Atom component="5">FE3</Atom>
+			</Bond>
+			<Bond>
+				<!--TODO: verify this-->
+				<Atom component="4">NE2</Atom>
+				<Atom component="5">FE4</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>Natural</Occurrence>
+		<Category>CrossLink4</Category>
+		<Comment>FS4 is symmentric. Any FE could be linked to HIS.</Comment>
+	</Entry>
+	<Entry>
+		<Id>0132</Id>
+		<Description>A protein modification that effectively converts three L-cysteine residues, an L-histidine residue and a four-iron four-sulfur cluster to tris-L-cysteinyl L-N3'-histidino tetrairon tetrasulfide.</Description>
+		<SystematicName>tetra-mu3-sulfidotris(S-cysteinyliron)(N3'-histidinoiron)</SystematicName>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0285</Id>
+			<Name>tris-L-cysteinyl L-N3'-histidino tetrairon tetrasulfide</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00290</Id>
+			<Name>tris-L-cysteinyl L-N3'-histidino tetrairon tetrasulfide</Name>
+		</CrossReference>
+		<Formula>C 15 Fe 4 H 18 N 6 O 4 S 7</Formula>
+		<Condition>
+			<Component type="AminoAcid" label="1">
+				<Id source="PDBCC">CYS</Id>
+			</Component>
+			<Component type="AminoAcid" label="2">
+				<Id source="PDBCC">CYS</Id>
+			</Component>
+			<Component type="AminoAcid" label="3">
+				<Id source="PDBCC">CYS</Id>
+			</Component>
+			<Component type="AminoAcid" label="4">
+				<Id source="PDBCC">HIS</Id>
+			</Component>
+			<Component type="Ligand" label="5">
+				<Id source="PDBCC">FS4</Id>
+			</Component>
+			<Bond>
+				<Atom component="1">SG</Atom>
+				<Atom component="5">FE1</Atom>
+			</Bond>
+			<Bond>
+				<Atom component="2">SG</Atom>
+				<Atom component="5">FE2</Atom>
+			</Bond>
+			<Bond>
+				<Atom component="3">SG</Atom>
+				<Atom component="5">FE3</Atom>
+			</Bond>
+			<Bond>
+				<!--TODO: verify this-->
+				<Atom component="4">ND1</Atom>
+				<Atom component="5">FE4</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>Natural</Occurrence>
+		<Category>CrossLink4</Category>
+		<Comment>FS4 is symmentric. Any FE could be linked to HIS.</Comment>
+	</Entry>
+	<Entry>
+		<Id>0133</Id>
+		<Description>A protein modification that effectively converts three L-cysteine residues, an L-aspartic acid residue and a four-iron four-sulfur cluster to tris-L-cysteinyl L-aspartato tetrairon tetrasulfide.</Description>
+		<SystematicName>tetra-mu3-sulfidotris(S-cysteinyliron)(O4-aspartatoiron)</SystematicName>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0286</Id>
+			<Name>tris-L-cysteinyl L-aspartato tetrairon tetrasulfide</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00291</Id>
+			<Name>tris-L-cysteinyl L-aspartato tetrairon tetrasulfide</Name>
+		</CrossReference>
+		<Formula>C 13 Fe 4 H 16 N 4 O 6 S 7</Formula>
+		<Condition>
+			<Component type="AminoAcid" label="1">
+				<Id source="PDBCC">CYS</Id>
+			</Component>
+			<Component type="AminoAcid" label="2">
+				<Id source="PDBCC">CYS</Id>
+			</Component>
+			<Component type="AminoAcid" label="3">
+				<Id source="PDBCC">CYS</Id>
+			</Component>
+			<Component type="AminoAcid" label="4">
+				<Id source="PDBCC">ASP</Id>
+			</Component>
+			<Component type="Ligand" label="5">
+				<Id source="PDBCC">FS4</Id>
+			</Component>
+			<Bond>
+				<Atom component="1">SG</Atom>
+				<Atom component="5">FE1</Atom>
+			</Bond>
+			<Bond>
+				<Atom component="2">SG</Atom>
+				<Atom component="5">FE2</Atom>
+			</Bond>
+			<Bond>
+				<Atom component="3">SG</Atom>
+				<Atom component="5">FE3</Atom>
+			</Bond>
+			<Bond>
+				<!--TODO: verify this-->
+				<Atom component="4">OD2</Atom>
+				<Atom component="5">FE4</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>Natural</Occurrence>
+		<Category>CrossLink4</Category>
+		<Comment>FS4 is symmentric. Any FE could be linked to ASP.</Comment>
+	</Entry>
+	<Entry>
+		<Id>0134</Id>
+		<Description>A protein modification that effectively converts three L-cysteine residues, an L-serine residue and a four-iron four-sulfur cluster to tris-L-cysteinyl L-serinyl tetrairon tetrasulfide.</Description>
+		<SystematicName>tetra-mu3-sulfidotris(S-cysteinyliron)(O3-serinyliron)</SystematicName>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0288</Id>
+			<Name>tris-L-cysteinyl L-serinyl tetrairon tetrasulfide</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00293</Id>
+			<Name>tris-L-cysteinyl L-serinyl tetrairon tetrasulfide</Name>
+		</CrossReference>
+		<Formula>C 12 Fe 4 H 16 N 4 O 5 S 7</Formula>
+		<Condition>
+			<Component type="AminoAcid" label="1">
+				<Id source="PDBCC">CYS</Id>
+			</Component>
+			<Component type="AminoAcid" label="2">
+				<Id source="PDBCC">CYS</Id>
+			</Component>
+			<Component type="AminoAcid" label="3">
+				<Id source="PDBCC">CYS</Id>
+			</Component>
+			<Component type="AminoAcid" label="4">
+				<Id source="PDBCC">SER</Id>
+			</Component>
+			<Component type="Ligand" label="5">
+				<Id source="PDBCC">FS4</Id>
+			</Component>
+			<Bond>
+				<Atom component="1">SG</Atom>
+				<Atom component="5">FE1</Atom>
+			</Bond>
+			<Bond>
+				<Atom component="2">SG</Atom>
+				<Atom component="5">FE2</Atom>
+			</Bond>
+			<Bond>
+				<Atom component="3">SG</Atom>
+				<Atom component="5">FE3</Atom>
+			</Bond>
+			<Bond>
+				<!--TODO: verify this-->
+				<Atom component="4">OG</Atom>
+				<Atom component="5">FE4</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>Natural</Occurrence>
+		<Category>CrossLink4</Category>
+		<Comment>FS4 is symmentric. Any FE could be linked to SER.</Comment>
+	</Entry>
+	<Entry>
+		<Id>0135</Id>
+		<Description>A protein modification that effectively converts two L-cysteine residues, an L-histidine residues, an L-serine residue and a four-iron four-sulfur cluster to bis-L-cysteinyl L-N3'-histidino L-serinyl tetrairon tetrasulfide.</Description>
+		<SystematicName>tetra-mu3-sulfidobis(S-cysteinyliron)(N3'-histidinoiron)(O3-serinyliron)</SystematicName>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0289</Id>
+			<Name>bis-L-cysteinyl L-N3'-histidino L-serinyl tetrairon tetrasulfide</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00294</Id>
+			<Name>bis-L-cysteinyl L-N3'-histidino L-serinyl tetrairon tetrasulfide</Name>
+		</CrossReference>
+		<Formula>C 15 Fe 4 H 18 N 6 O 5 S 6</Formula>
+		<Condition>
+			<Component type="AminoAcid" label="1">
+				<Id source="PDBCC">CYS</Id>
+			</Component>
+			<Component type="AminoAcid" label="2">
+				<Id source="PDBCC">CYS</Id>
+			</Component>
+			<Component type="AminoAcid" label="3">
+				<Id source="PDBCC">HIS</Id>
+			</Component>
+			<Component type="AminoAcid" label="4">
+				<Id source="PDBCC">SER</Id>
+			</Component>
+			<Component type="Ligand" label="5">
+				<Id source="PDBCC">FS4</Id>
+			</Component>
+			<Bond>
+				<Atom component="1">SG</Atom>
+				<Atom component="5">FE1</Atom>
+			</Bond>
+			<Bond>
+				<Atom component="2">SG</Atom>
+				<Atom component="5">FE2</Atom>
+			</Bond>
+			<Bond>
+				<!--TODO: verify this-->
+				<Atom component="3">ND1</Atom>
+				<Atom component="5">FE3</Atom>
+			</Bond>
+			<Bond>
+				<!--TODO: verify this-->
+				<Atom component="4">OG</Atom>
+				<Atom component="5">FE4</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>Natural</Occurrence>
+		<Category>CrossLink4</Category>
+		<Comment>FS4 is symmentric. Any FE could be linked to SER and HIS.</Comment>
+	</Entry>
+	<Entry>
+		<Id>0136</Id>
+		<Description>A protein modification that effectively converts seven L-histidinine residues and a four-copper one-sulfur one-hydroxide cluster to heptakis-L-histidino tetracopper mu4-sulfide hydroxide.</Description>
+		<SystematicName>mu4-sulfido bis(bis-N1'-histidino copper)(N1'-histidino-N3'-histidino copper)(N3'-histidino hydroxide copper)</SystematicName>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0298</Id>
+			<Name>heptakis-L-histidino tetracopper mu4-sulfide hydroxide</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00303</Id>
+			<Name>heptakis-L-histidino tetracopper mu4-sulfide hydroxide</Name>
+		</CrossReference>
+		<Formula>C 42 Cu 4 H 43 N 21 O 8 S 1</Formula>
+		<Condition>
+			<Component type="AminoAcid" label="1">
+				<Id source="PDBCC">HIS</Id>
+			</Component>
+			<Component type="AminoAcid" label="2">
+				<Id source="PDBCC">HIS</Id>
+			</Component>
+			<Component type="AminoAcid" label="3">
+				<Id source="PDBCC">HIS</Id>
+			</Component>
+			<Component type="AminoAcid" label="4">
+				<Id source="PDBCC">HIS</Id>
+			</Component>
+			<Component type="AminoAcid" label="5">
+				<Id source="PDBCC">HIS</Id>
+			</Component>
+			<Component type="AminoAcid" label="6">
+				<Id source="PDBCC">HIS</Id>
+			</Component>
+			<Component type="AminoAcid" label="7">
+				<Id source="PDBCC">HIS</Id>
+			</Component>
+			<Component type="Ligand" label="8">
+				<Id source="PDBCC">CUZ</Id>
+			</Component>
+			<Bond>
+				<!--TODO: verify this-->
+				<Atom component="1">ND1</Atom>
+				<Atom component="8">CU1</Atom>
+			</Bond>
+			<Bond>
+				<!--TODO: verify this-->
+				<Atom component="2">NE2</Atom>
+				<Atom component="8">CU1</Atom>
+			</Bond>
+			<Bond>
+				<!--TODO: verify this-->
+				<Atom component="3">NE2</Atom>
+				<Atom component="8">CU2</Atom>
+			</Bond>
+			<Bond>
+				<!--TODO: verify this-->
+				<Atom component="4">NE2</Atom>
+				<Atom component="8">CU2</Atom>
+			</Bond>
+			<Bond>
+				<!--TODO: verify this-->
+				<Atom component="5">NE2</Atom>
+				<Atom component="8">CU3</Atom>
+			</Bond>
+			<Bond>
+				<!--TODO: verify this-->
+				<Atom component="6">NE2</Atom>
+				<Atom component="8">CU3</Atom>
+			</Bond>
+			<Bond>
+				<!--TODO: verify this-->
+				<Atom component="7">ND1</Atom>
+				<Atom component="8">CU4</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>Natural</Occurrence>
+		<Category>CrossLink7</Category>
+	</Entry>
 </ProteinModifications>

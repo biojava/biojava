@@ -37,7 +37,6 @@ import org.biojava.bio.structure.Atom;
 import org.biojava.bio.structure.Calc;
 import org.biojava.bio.structure.Chain;
 import org.biojava.bio.structure.Group;
-import org.biojava.bio.structure.GroupType;
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureException;
 

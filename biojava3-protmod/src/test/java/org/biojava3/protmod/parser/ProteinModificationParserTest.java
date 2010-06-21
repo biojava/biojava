@@ -40,6 +40,7 @@ import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureException;
 
 import org.biojava3.protmod.Component;
+import org.biojava3.protmod.ComponentType;
 import org.biojava3.protmod.ModificationCategory;
 import org.biojava3.protmod.ModifiedCompound;
 import org.biojava3.protmod.ProteinModification;
@@ -71,6 +72,12 @@ public class ProteinModificationParserTest extends TestCase {
 				"1W1O", // FAD on HIS
 				"1DII", // FAD on TYR
 				"2KJS", "1LK9", // PNS
+				"1D7E", // HC4
+				"2TMD", // FMN
+				"1VAO", // FAD on HIS
+				"1PDA", // DPM
+				"2J96", // PVN
+				"2HIL", // OPE
 				
 				// Modified resdiues
 				"3MVJ", // SEP, TPO
@@ -121,6 +128,25 @@ public class ProteinModificationParserTest extends TestCase {
 				"1WCT", // BTR
 				"1AUK", // FGL
 				"148L", // DAL
+				"1C4B", // DIL
+				"1T5M", // DSG
+				"1CZQ", // DTR
+				"2JUE", // DTH
+				"1A7Y", // DVA
+				"1CXP", // CSO
+				"1F8W", // CSX
+				"1FFV", // ARO
+				"1CKN", // GPL
+				"1BUW", // SNC
+				"1CZI", // SMC
+				"1E93", // OMT
+				"1ACD", // CSD
+				"1C0T", // CSW
+				"1E6Y", // GL3
+				"1BI0", // CSS
+				"1E6Y", // AGM
+				"1HBM", // MGN
+				"1FFU", // CSZ
 
 				// Cross link
 				"3M6S", // Disulfide bond
@@ -135,6 +161,12 @@ public class ProteinModificationParserTest extends TestCase {
 				//"1M34", // CFM, HCA, CYS, HIS, (tolerance 1.0)
 				"1G7K", // CRQ, cross-link1
 				"1EMA", // CRO, cross-link1
+				"1OLN", // TZO, cross-link1
+				"1GGE", // HIS-TYR, cross-link2, (bond length error 0.6)
+				"2JE3", // HEC, CYS, CYS, LYS
+				//"1MHL", "1MYP" // not work for HEM
+				//"3HML", // PQQ, GLU, TYR, (atoms are not certain; bond length error 2)
+				"1FWX","1QNI","2IWF","2IWK", // CU4
 		};
 		for ( String name : names){
 			System.out.println("===\n"+name);
@@ -151,14 +183,14 @@ public class ProteinModificationParserTest extends TestCase {
 		Structure struc = TmpAtomCache.cache.getStructure(pdbId);
 
 		DefaultProteinModificationParser parser = new DefaultProteinModificationParser();
-//		parser.setbondLengthTolerance(2.0);
+//		parser.setbondLengthTolerance(2);
 		
 		Set<ProteinModification> mods = ProteinModification.getProteinModifications();
 //		Set<ProteinModification> mods = ProteinModification.getByCategory(ModificationCategory.ATTACHMENT);
 //		Set<ProteinModification> mods = ProteinModification.getByCategory(ModificationCategory.CHEMICAL_MODIFICATION);
-//		Set<ProteinModification> mods = ProteinModification.getByResidId("AA0191");
-//		Set<ProteinModification> mods = Collections.singleton(ProteinModification.getById("0096"));
-//		Set<ProteinModification> mods = ProteinModification.getByComponent(Component.of("FAD"));
+//		Set<ProteinModification> mods = ProteinModification.getByResidId("AA0298");
+//		Set<ProteinModification> mods = Collections.singleton(ProteinModification.getById("0102"));
+//		Set<ProteinModification> mods = ProteinModification.getByComponent(Component.of("HEC", ComponentType.LIGAND));
 		
 		assertFalse(mods.isEmpty());
 
