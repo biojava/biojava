@@ -33,6 +33,7 @@ import org.biojava3.core.sequence.AccessionID;
 import org.biojava3.core.sequence.Strand;
 import org.biojava3.core.sequence.location.SimpleLocation;
 import org.biojava3.core.sequence.location.template.Location;
+import org.biojava3.core.sequence.location.template.Point;
 import org.biojava3.core.sequence.template.Compound;
 import org.biojava3.core.sequence.template.CompoundSet;
 import org.biojava3.core.sequence.template.Sequence;
@@ -96,7 +97,7 @@ public class SimpleAlignedSequence<C extends Compound> implements AlignedSequenc
     }
 
     @Override
-    public int getEnd() {
+    public Point getEnd() {
         return location.getEnd();
     }
 
@@ -133,7 +134,7 @@ public class SimpleAlignedSequence<C extends Compound> implements AlignedSequenc
     }
 
     @Override
-    public int getStart() {
+    public Point getStart() {
         return location.getStart();
     }
 
@@ -247,7 +248,8 @@ public class SimpleAlignedSequence<C extends Compound> implements AlignedSequenc
     // determines if this sequence has a gap at a particular alignment location
     private boolean isGap(int alignmentIndex) {
         for (Location sublocation : location) {
-            if (sublocation.getStart() <= alignmentIndex && alignmentIndex <= sublocation.getEnd()) {
+            if (sublocation.getStart().getPosition() <= alignmentIndex &&
+                    alignmentIndex <= sublocation.getEnd().getPosition()) {
                 return false;
             }
         }
@@ -291,8 +293,9 @@ public class SimpleAlignedSequence<C extends Compound> implements AlignedSequenc
                 step++;
             }
         }
-        int start = sublocations.get(0).getStart(), end = sublocations.get(sublocations.size() - 1).getEnd();
-        location = (sublocations.size() > 1) ? new SimpleLocation(start, end, Strand.UNDEFINED, sublocations) :
+        Point start = sublocations.get(0).getStart(), end = sublocations.get(sublocations.size() - 1).getEnd();
+        // TODO handle circular alignments
+        location = (sublocations.size() > 1) ? new SimpleLocation(start, end, Strand.UNDEFINED, false, sublocations) :
                 new SimpleLocation(start, end, Strand.UNDEFINED);
 
         if (step != length || i != iMax) {
@@ -321,11 +324,11 @@ public class SimpleAlignedSequence<C extends Compound> implements AlignedSequenc
     private void setSequenceFromAlignment() {
         sequenceFromAlignment = new int[length];
         int a = 1, s = numBefore + 1;
-        for (int i = 0; i < getStart(); i++, a++) {
+        for (int i = 0; i < getStart().getPosition(); i++, a++) {
             sequenceFromAlignment[a - 1] = s;
         }
         for (; a <= length; a++) {
-            if (s < getEnd() && !isGap(a)) {
+            if (s < getEnd().getPosition() && !isGap(a)) {
                 s++;
             }
             sequenceFromAlignment[a - 1] = s;

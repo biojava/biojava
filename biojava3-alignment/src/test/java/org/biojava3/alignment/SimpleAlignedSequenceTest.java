@@ -34,7 +34,6 @@ import org.biojava3.core.sequence.Strand;
 import org.biojava3.core.sequence.compound.AminoAcidCompound;
 import org.biojava3.core.sequence.compound.AminoAcidCompoundSet;
 import org.biojava3.core.sequence.location.SimpleLocation;
-import org.biojava3.core.sequence.location.template.Location;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -113,18 +112,17 @@ public class SimpleAlignedSequenceTest {
 
     @Test
     public void testGetEnd() {
-        assertEquals(global.getEnd(), 6);
-        assertEquals(local.getEnd(), 8);
+        assertEquals(global.getEnd().getPosition(), new Integer(6));
+        assertEquals(local.getEnd().getPosition(), new Integer(8));
     }
 
     @Test
     public void testGetLocationInAlignment() {
-        assertEquals(global.getLocationInAlignment(), new SimpleLocation(2, 6, Strand.UNDEFINED, Arrays.asList(
-                new Location[] {new SimpleLocation(2, 3, Strand.UNDEFINED),
-                new SimpleLocation(5, 6, Strand.UNDEFINED)})));
-        assertEquals(local.getLocationInAlignment(), new SimpleLocation(1, 8, Strand.UNDEFINED, Arrays.asList(
-                new Location[] {new SimpleLocation(1, 2, Strand.UNDEFINED), new SimpleLocation(5, 5, Strand.UNDEFINED),
-                new SimpleLocation(7, 8, Strand.UNDEFINED)})));
+        assertEquals(global.getLocationInAlignment(), new SimpleLocation(2, 6, Strand.UNDEFINED,
+                new SimpleLocation(2, 3, Strand.UNDEFINED), new SimpleLocation(5, 6, Strand.UNDEFINED)));
+        assertEquals(local.getLocationInAlignment(), new SimpleLocation(1, 8, Strand.UNDEFINED,
+                new SimpleLocation(1, 2, Strand.UNDEFINED), new SimpleLocation(5, 5, Strand.UNDEFINED),
+                new SimpleLocation(7, 8, Strand.UNDEFINED)));
     }
 
     @Test
@@ -186,8 +184,8 @@ public class SimpleAlignedSequenceTest {
 
     @Test
     public void testGetStart() {
-        assertEquals(global.getStart(), 2);
-        assertEquals(local.getStart(), 1);
+        assertEquals(global.getStart().getPosition(), new Integer(2));
+        assertEquals(local.getStart().getPosition(), new Integer(1));
     }
 
     @Test

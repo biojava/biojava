@@ -24,6 +24,7 @@
 package org.biojava3.alignment.template;
 
 import org.biojava3.core.sequence.location.template.Location;
+import org.biojava3.core.sequence.location.template.Point;
 import org.biojava3.core.sequence.template.Compound;
 import org.biojava3.core.sequence.template.Sequence;
 
@@ -52,11 +53,11 @@ public interface AlignedSequence<C extends Compound> extends Sequence<C> {
     int getAlignmentIndexAt(int sequenceIndex);
 
     /**
-     * Returns the column index within an alignment of the last element of the original {@link Sequence}.
+     * Returns the {@link Point} within an alignment of the last element of the original {@link Sequence}.
      *
-     * @return column index within an alignment of final original {@link Sequence} element
+     * @return position within an alignment of final original {@link Sequence} element
      */
-    int getEnd();
+    Point getEnd();
 
     /**
      * Returns the {@link Location} of the original {@link Sequence} within an alignment.  This provides access to
@@ -100,11 +101,11 @@ public interface AlignedSequence<C extends Compound> extends Sequence<C> {
     int getSequenceIndexAt(int alignmentIndex);
 
     /**
-     * Returns the index within an alignment of the first element of the original {@link Sequence}.
+     * Returns the {@link Point} within an alignment of the first element of the original {@link Sequence}.
      *
-     * @return index within an alignment of first original {@link Sequence} element
+     * @return position within an alignment of first original {@link Sequence} element
      */
-    int getStart();
+    Point getStart();
 
     /**
      * Returns true if this {@link Sequence} wraps around from the last alignment column back to the first.  This makes
