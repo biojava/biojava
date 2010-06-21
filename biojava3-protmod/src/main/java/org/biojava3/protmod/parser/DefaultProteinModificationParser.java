@@ -263,7 +263,7 @@ implements ProteinModificationParser {
 						if (g1 == g2) {
 							continue;
 						}
-						Atom[] atoms = findLinkage(g1, g2, pair[0], pair[1]);
+						Atom[] atoms = findLinkage(g1, g2, pair[0].split(","), pair[1].split(","));
 //						Atom[] atoms = findNearestAtoms(g1, g2);								
 						if (atoms!=null) {
 							list.add(atoms);
@@ -281,6 +281,43 @@ implements ProteinModificationParser {
 		}
 		
 		return matchedAtomsOfLinkages;
+	}
+	
+	/**
+	 * Find a linkage between two groups within tolerance of bond length,
+	 * from potential atoms.
+	 * @param group1
+	 * @param group2
+	 * @param nameOfAtomOnGroup1
+	 * @param nameOfAtomOnGroup2
+	 * @return an array of two Atoms that form bond between each other
+	 *  if found; null, otherwise.
+	 */
+	private Atom[] findLinkage(final Group group1, final Group group2,
+			String[] potentialNamesOfAtomOnGroup1, String[] potentialNamesOfAtomOnGroup2) {
+		Atom[] ret = null;
+		double minDistance = Double.POSITIVE_INFINITY;
+		
+		for (String namesOfAtomOnGroup1 : potentialNamesOfAtomOnGroup1) {
+			for (String namesOfAtomOnGroup2 : potentialNamesOfAtomOnGroup2) {
+				Atom[] atoms = findLinkage(group1, group2, namesOfAtomOnGroup1, namesOfAtomOnGroup2);
+				if (atoms != null) {
+					double distance;
+					try {
+						distance = Calc.getDistance(atoms[0], atoms[1]);
+					} catch (StructureException e) {
+						continue;
+					}
+					
+					if (distance < minDistance) {
+						minDistance = distance;
+						ret = atoms;
+					}
+				}
+			}
+		}
+		
+		return ret;
 	}
 	
 	/**

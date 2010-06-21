@@ -3996,20 +3996,20 @@
 			</Component>
 			<Bond>
 				<Atom component="1">SG</Atom>
-				<Atom component="5">FE1</Atom>
+				<Atom component="5">FE1,FE2,FE3,FE4</Atom>
 			</Bond>
 			<Bond>
 				<Atom component="2">SG</Atom>
-				<Atom component="5">FE2</Atom>
+				<Atom component="5">FE1,FE2,FE3,FE4</Atom>
 			</Bond>
 			<Bond>
 				<Atom component="3">SG</Atom>
-				<Atom component="5">FE3</Atom>
+				<Atom component="5">FE1,FE2,FE3,FE4</Atom>
 			</Bond>
 			<Bond>
 				<!--TODO: verify this-->
 				<Atom component="4">NE2</Atom>
-				<Atom component="5">FE4</Atom>
+				<Atom component="5">FE1,FE2,FE3,FE4</Atom>
 			</Bond>
 		</Condition>
 		<Occurrence>Natural</Occurrence>
@@ -4049,20 +4049,20 @@
 			</Component>
 			<Bond>
 				<Atom component="1">SG</Atom>
-				<Atom component="5">FE1</Atom>
+				<Atom component="5">FE1,FE2,FE3,FE4</Atom>
 			</Bond>
 			<Bond>
 				<Atom component="2">SG</Atom>
-				<Atom component="5">FE2</Atom>
+				<Atom component="5">FE1,FE2,FE3,FE4</Atom>
 			</Bond>
 			<Bond>
 				<Atom component="3">SG</Atom>
-				<Atom component="5">FE3</Atom>
+				<Atom component="5">FE1,FE2,FE3,FE4</Atom>
 			</Bond>
 			<Bond>
 				<!--TODO: verify this-->
 				<Atom component="4">ND1</Atom>
-				<Atom component="5">FE4</Atom>
+				<Atom component="5">FE1,FE2,FE3,FE4</Atom>
 			</Bond>
 		</Condition>
 		<Occurrence>Natural</Occurrence>
@@ -4102,20 +4102,20 @@
 			</Component>
 			<Bond>
 				<Atom component="1">SG</Atom>
-				<Atom component="5">FE1</Atom>
+				<Atom component="5">FE1,FE2,FE3,FE4</Atom>
 			</Bond>
 			<Bond>
 				<Atom component="2">SG</Atom>
-				<Atom component="5">FE2</Atom>
+				<Atom component="5">FE1,FE2,FE3,FE4</Atom>
 			</Bond>
 			<Bond>
 				<Atom component="3">SG</Atom>
-				<Atom component="5">FE3</Atom>
+				<Atom component="5">FE1,FE2,FE3,FE4</Atom>
 			</Bond>
 			<Bond>
 				<!--TODO: verify this-->
 				<Atom component="4">OD2</Atom>
-				<Atom component="5">FE4</Atom>
+				<Atom component="5">FE1,FE2,FE3,FE4</Atom>
 			</Bond>
 		</Condition>
 		<Occurrence>Natural</Occurrence>
@@ -4155,20 +4155,20 @@
 			</Component>
 			<Bond>
 				<Atom component="1">SG</Atom>
-				<Atom component="5">FE1</Atom>
+				<Atom component="5">FE1,FE2,FE3,FE4</Atom>
 			</Bond>
 			<Bond>
 				<Atom component="2">SG</Atom>
-				<Atom component="5">FE2</Atom>
+				<Atom component="5">FE1,FE2,FE3,FE4</Atom>
 			</Bond>
 			<Bond>
 				<Atom component="3">SG</Atom>
-				<Atom component="5">FE3</Atom>
+				<Atom component="5">FE1,FE2,FE3,FE4</Atom>
 			</Bond>
 			<Bond>
 				<!--TODO: verify this-->
 				<Atom component="4">OG</Atom>
-				<Atom component="5">FE4</Atom>
+				<Atom component="5">FE1,FE2,FE3,FE4</Atom>
 			</Bond>
 		</Condition>
 		<Occurrence>Natural</Occurrence>
@@ -4208,21 +4208,21 @@
 			</Component>
 			<Bond>
 				<Atom component="1">SG</Atom>
-				<Atom component="5">FE1</Atom>
+				<Atom component="5">FE1,FE2,FE3,FE4</Atom>
 			</Bond>
 			<Bond>
 				<Atom component="2">SG</Atom>
-				<Atom component="5">FE2</Atom>
+				<Atom component="5">FE1,FE2,FE3,FE4</Atom>
 			</Bond>
 			<Bond>
 				<!--TODO: verify this-->
 				<Atom component="3">ND1</Atom>
-				<Atom component="5">FE3</Atom>
+				<Atom component="5">FE1,FE2,FE3,FE4</Atom>
 			</Bond>
 			<Bond>
 				<!--TODO: verify this-->
 				<Atom component="4">OG</Atom>
-				<Atom component="5">FE4</Atom>
+				<Atom component="5">FE1,FE2,FE3,FE4</Atom>
 			</Bond>
 		</Condition>
 		<Occurrence>Natural</Occurrence>
@@ -4271,38 +4271,38 @@
 			</Component>
 			<Bond>
 				<!--TODO: verify this-->
-				<Atom component="1">ND1</Atom>
-				<Atom component="8">CU1</Atom>
+				<Atom component="1">NE2</Atom>
+				<Atom component="8">CU1,CU2,CU3,CU4</Atom>
 			</Bond>
 			<Bond>
 				<!--TODO: verify this-->
 				<Atom component="2">NE2</Atom>
-				<Atom component="8">CU1</Atom>
+				<Atom component="8">CU1,CU2,CU3,CU4</Atom>
 			</Bond>
 			<Bond>
 				<!--TODO: verify this-->
 				<Atom component="3">NE2</Atom>
-				<Atom component="8">CU2</Atom>
+				<Atom component="8">CU1,CU2,CU3,CU4</Atom>
 			</Bond>
 			<Bond>
 				<!--TODO: verify this-->
 				<Atom component="4">NE2</Atom>
-				<Atom component="8">CU2</Atom>
+				<Atom component="8">CU1,CU2,CU3,CU4</Atom>
 			</Bond>
 			<Bond>
 				<!--TODO: verify this-->
 				<Atom component="5">NE2</Atom>
-				<Atom component="8">CU3</Atom>
+				<Atom component="8">CU1,CU2,CU3,CU4</Atom>
 			</Bond>
 			<Bond>
 				<!--TODO: verify this-->
-				<Atom component="6">NE2</Atom>
-				<Atom component="8">CU3</Atom>
+				<Atom component="6">ND1</Atom>
+				<Atom component="8">CU1,CU2,CU3,CU4</Atom>
 			</Bond>
 			<Bond>
 				<!--TODO: verify this-->
 				<Atom component="7">ND1</Atom>
-				<Atom component="8">CU4</Atom>
+				<Atom component="8">CU1,CU2,CU3,CU4</Atom>
 			</Bond>
 		</Condition>
 		<Occurrence>Natural</Occurrence>
