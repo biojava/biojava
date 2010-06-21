@@ -263,8 +263,14 @@ implements ProteinModificationParser {
 						if (g1 == g2) {
 							continue;
 						}
-						Atom[] atoms = findLinkage(g1, g2, pair[0].split(","), pair[1].split(","));
-//						Atom[] atoms = findNearestAtoms(g1, g2);								
+
+						// if empty name, search for all atoms
+						String[] potentialNamesOfAtomOnGroup1 =
+								pair[0]==null||pair[0].length()==0 ? null : pair[0].split(",");
+						String[] potentialNamesOfAtomOnGroup2 =
+								pair[1]==null||pair[1].length()==0 ? null : pair[1].split(",");
+						Atom[] atoms = findNearestAtoms(g1, g2, 
+								potentialNamesOfAtomOnGroup1, potentialNamesOfAtomOnGroup2);
 						if (atoms!=null) {
 							list.add(atoms);
 						}
@@ -293,10 +299,24 @@ implements ProteinModificationParser {
 	 * @return an array of two Atoms that form bond between each other
 	 *  if found; null, otherwise.
 	 */
-	private Atom[] findLinkage(final Group group1, final Group group2,
+	private Atom[] findNearestAtoms(final Group group1, final Group group2,
 			String[] potentialNamesOfAtomOnGroup1, String[] potentialNamesOfAtomOnGroup2) {
 		Atom[] ret = null;
 		double minDistance = Double.POSITIVE_INFINITY;
+		
+		if (potentialNamesOfAtomOnGroup1 == null) {
+			// if empty name, search for all atoms
+			potentialNamesOfAtomOnGroup1 = getAtomNames(group1);
+		}
+		
+		if (potentialNamesOfAtomOnGroup2 == null) {
+			// if empty name, search for all atoms
+			potentialNamesOfAtomOnGroup2 = getAtomNames(group2);
+		}
+		
+		if (potentialNamesOfAtomOnGroup1==null || potentialNamesOfAtomOnGroup2==null) {
+			return null;
+		}
 		
 		for (String namesOfAtomOnGroup1 : potentialNamesOfAtomOnGroup1) {
 			for (String namesOfAtomOnGroup2 : potentialNamesOfAtomOnGroup2) {
@@ -357,48 +377,16 @@ implements ProteinModificationParser {
 		return ret;
 	}
 	
-	/**
-	 * Find the N nearest pairs of Atoms between a pair of {@link Group}s.
-	 * This function is used for DEBUG only.
-	 * 
-	 * @param group1
-	 * @param group2
-	 * @return a list of a pair of Atoms if found, null otherwise.
-	 */
-	private Atom[] findNearestAtoms(Group group1, Group group2) {		
-		double nearestDistance = Double.MAX_VALUE;
-		Atom[] ret = new Atom[2];
-		
-		Iterator<Atom> it1 = group1.iterator();
-		while (it1.hasNext()) {
-			Atom atom1 = it1.next();
-			Iterator<Atom> it2 = group2.iterator();
-			while (it2.hasNext()) {
-				Atom atom2 = it2.next();
-				double dis;
-				try {
-					dis = Calc.getDistance(atom1, atom2);
-				} catch (StructureException e) {
-					continue;
-				}
-				if (dis < nearestDistance) {
-					nearestDistance = dis;
-					ret[0] = atom1;
-					ret[1] = atom2;
-				}
-			}
-		}
-		
-		if (ret[0]==null || ret[1]==null) {
+	private String[] getAtomNames(Group group) {
+		List<Atom> atoms = group.getAtoms();
+		if (atoms == null) {
 			return null;
 		}
 		
-		float radiusOfAtom1 = ret[0].getElement().getCovalentRadius();
-		float radiusOfAtom2 = ret[1].getElement().getCovalentRadius();
-		
-		if (Math.abs(nearestDistance-radiusOfAtom1 -radiusOfAtom2)
-				> bondLengthTolerance) {
-			return null;
+		int n = atoms.size();
+		String[] ret = new String[n];
+		for (int i=0; i<n; i++) {
+			ret[i] = atoms.get(i).getName();
 		}
 		
 		return ret;
