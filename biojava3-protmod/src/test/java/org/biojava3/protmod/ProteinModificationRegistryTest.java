@@ -24,9 +24,10 @@
 
 package org.biojava3.protmod;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Set;
-
-import org.biojava3.protmod.ProteinModification;
 
 import junit.framework.TestCase;
 
@@ -38,14 +39,15 @@ import junit.framework.TestCase;
 public class ProteinModificationRegistryTest extends TestCase {
 	
 	public void testRegisterModification() {
-		ModificationCondition condition
-			= new ModificationConditionImpl.Builder(
-					new Component[] {
-						Component.of("COMP1", ComponentType.AMINOACID),
-						Component.of("COMP2", ComponentType.AMINOACID, true, false)
-					})
-			.addLinkage(0, 1, "ATOM1", "ATOM2")
-			.build();
+		List<Component> components = new ArrayList<Component>(2);
+		components.add(Component.of("COMP1", ComponentType.AMINOACID));
+		components.add(Component.of("COMP2", ComponentType.AMINOACID, true, false));
+		
+		ModificationLinkage linkage = new ModificationLinkage(components, 0, "ATOM1", 1, "ATOM2");
+		
+		ModificationCondition condition = new ModificationConditionImpl(components, 
+				Collections.singletonList(linkage));
+		
 		ProteinModification.register("TEST", 
 				ModificationCategory.CROSS_LINK_2,
 				ModificationOccurrenceType.NATURAL,

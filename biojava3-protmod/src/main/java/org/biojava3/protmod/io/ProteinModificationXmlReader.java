@@ -28,6 +28,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -43,6 +44,7 @@ import org.biojava3.protmod.ModificationCategory;
 import org.biojava3.protmod.ModificationCondition;
 import org.biojava3.protmod.ModificationConditionImpl;
 import org.biojava3.protmod.ModificationOccurrenceType;
+import org.biojava3.protmod.ModificationLinkage;
 import org.biojava3.protmod.ProteinModification;
 
 import org.w3c.dom.Document;
@@ -217,13 +219,12 @@ public final class ProteinModificationXmlReader {
 					mapLabelComp.put(label, comps.size()-1);
 				}
 				
-				ModificationConditionImpl.Builder conditionBuilder
-					= new ModificationConditionImpl.Builder(comps);
-				
 				// bonds
 				List<Node> bondNodes = compInfoNodes.get("Bond");
+				List<ModificationLinkage> linkages = null;
 				if (bondNodes!=null) {
 					int sizeBonds = bondNodes.size();
+					linkages = new ArrayList<ModificationLinkage>(sizeBonds);
 					for (int iBond=0; iBond<sizeBonds; iBond++) {
 						Node bondNode = bondNodes.get(iBond);
 						Map<String,List<Node>> bondChildNodes = getChildNodes(bondNode);
@@ -240,31 +241,47 @@ public final class ProteinModificationXmlReader {
 						
 						// atom 1
 						NamedNodeMap atomNodeAttrs = atomNodes.get(0).getAttributes();
-						Node labelNode = atomNodeAttrs.getNamedItem("component");
-						if (labelNode==null) {
+						Node compNode = atomNodeAttrs.getNamedItem("component");
+						if (compNode==null) {
 							throw new RuntimeException("Each atom must on a component." +
 									" See Modification "+id+".");
 						}
-						String labelComp1 = labelNode.getTextContent();
+						String labelComp1 = compNode.getTextContent();
 						int iComp1 = mapLabelComp.get(labelComp1);
+						
+						Node labelNode = atomNodeAttrs.getNamedItem("label");
+						String labelAtom1 = labelNode==null?null:labelNode.getTextContent();
+						
 						String atom1 = atomNodes.get(0).getTextContent();
+						List<String> potentialAtoms1 = atom1.isEmpty()?null:
+							Arrays.asList(atom1.split(","));
 						
 						// atom 2
 						atomNodeAttrs = atomNodes.get(1).getAttributes();
-						labelNode = atomNodeAttrs.getNamedItem("component");
-						if (labelNode==null) {
+						compNode = atomNodeAttrs.getNamedItem("component");
+						if (compNode==null) {
 							throw new RuntimeException("Each atom must on a component." +
 									" See Modification "+id+".");
 						}
-						String labelComp2 = labelNode.getTextContent();
+						String labelComp2 = compNode.getTextContent();
 						int iComp2 = mapLabelComp.get(labelComp2);
-						String atom2 = atomNodes.get(1).getTextContent();
+
+						labelNode = atomNodeAttrs.getNamedItem("label");
+						String labelAtom2 = labelNode==null?null:labelNode.getTextContent();
 						
-						conditionBuilder.addLinkage(iComp1, iComp2, atom1, atom2);
+						String atom2 = atomNodes.get(1).getTextContent();
+						List<String> potentialAtoms2 = atom1.isEmpty()?null:
+							Arrays.asList(atom2.split(","));
+						
+						// add linkage
+						ModificationLinkage linkage = new ModificationLinkage(comps,
+								iComp1, potentialAtoms1, labelAtom1,
+								iComp2, potentialAtoms2, labelAtom2);
+						linkages.add(linkage);
 					}
 				}
 				
-				condition = conditionBuilder.build();
+				condition = new ModificationConditionImpl(comps, linkages);
 			} // end of condition	
 			
 			ProteinModification.Builder modBuilder = ProteinModification

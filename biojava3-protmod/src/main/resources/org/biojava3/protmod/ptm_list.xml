@@ -4298,4 +4298,170 @@
 		<Occurrence>Natural</Occurrence>
 		<Category>CrossLink7</Category>
 	</Entry>
+	<Entry>
+		<Id>0137</Id>
+		<Description>A protein modification that effectively converts six L-cysteine residues, an L-serine residue and a eight-iron seven-sulfur cluster to hexakis-L-cysteinyl L-serinyl octairon heptasulfide.</Description>
+		<SystematicName></SystematicName>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0300</Id>
+			<Name>hexakis-L-cysteinyl L-serinyl octairon heptasulfide</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00305</Id>
+			<Name>hexakis-L-cysteinyl L-serinyl octairon heptasulfide</Name>
+		</CrossReference>
+		<Formula>C 21 Fe 8 H 27 N 7 O 8 S 13</Formula>
+		<Condition>
+			<Component type="AminoAcid" label="1">
+				<Id source="PDBCC">CYS</Id>
+			</Component>
+			<Component type="AminoAcid" label="2">
+				<Id source="PDBCC">CYS</Id>
+			</Component>
+			<Component type="AminoAcid" label="3">
+				<Id source="PDBCC">CYS</Id>
+			</Component>
+			<Component type="AminoAcid" label="4">
+				<Id source="PDBCC">CYS</Id>
+			</Component>
+			<Component type="AminoAcid" label="5">
+				<Id source="PDBCC">CYS</Id>
+			</Component>
+			<Component type="AminoAcid" label="6">
+				<Id source="PDBCC">CYS</Id>
+			</Component>
+			<Component type="AminoAcid" label="7">
+				<Id source="PDBCC">SER</Id>
+			</Component>
+			<Component type="Ligand" label="8">
+				<Id source="PDBCC">CLF</Id>
+			</Component>
+			<Bond>
+				<Atom component="1">SG</Atom>
+				<Atom component="8">FE1,FE2,FE3,FE4,FE5,FE6,FE7,FE8</Atom>
+			</Bond>
+			<Bond>
+				<Atom component="2">SG</Atom>
+				<Atom component="8">FE1,FE2,FE3,FE4,FE5,FE6,FE7,FE8</Atom>
+			</Bond>
+			<Bond>
+				<Atom component="3">SG</Atom>
+				<Atom component="8">FE1,FE2,FE3,FE4,FE5,FE6,FE7,FE8</Atom>
+			</Bond>
+			<Bond>
+				<Atom component="4">SG</Atom>
+				<Atom component="8">FE1,FE2,FE3,FE4,FE5,FE6,FE7,FE8</Atom>
+			</Bond>
+			<Bond>
+				<Atom component="5">SG</Atom>
+				<Atom component="8">FE1,FE2,FE3,FE4,FE5,FE6,FE7,FE8</Atom>
+			</Bond>
+			<Bond>
+				<Atom component="6">SG</Atom>
+				<Atom component="8">FE1,FE2,FE3,FE4,FE5,FE6,FE7,FE8</Atom>
+			</Bond>
+			<Bond>
+				<Atom component="7">OG</Atom>
+				<Atom component="8">FE1,FE2,FE3,FE4,FE5,FE6,FE7,FE8</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>Natural</Occurrence>
+		<Category>CrossLink7</Category>
+	</Entry>
+	<Entry>
+		<Id>0138</Id>
+		<Description>A protein modification that effectively cyclizes an L-asparagine residue to form a carboxyl-terminal L-aspartimide.</Description>
+		<SystematicName>(S)-3-amino-2,5-pyrrolidinedione</SystematicName>
+		<CrossReference>
+			<Source>PDBCC</Source>
+			<Id>SNN</Id>
+			<Name>L-3-AMINOSUCCINIMIDE</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0302</Id>
+			<Name>L-aspartimide</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00307</Id>
+			<Name>L-aspartimide</Name>
+		</CrossReference>
+		<Formula>C 4 H 5 N 2 O 2</Formula>
+		<Condition>
+			<Component type="AminoAcid" label="1">
+				<Id source="PDBCC">SNN</Id>
+				<Terminal>C</Terminal>
+			</Component>
+		</Condition>
+		<Occurrence>Natural</Occurrence>
+		<Category>ModifiedResidue</Category>
+	</Entry>
+	<Entry>
+		<Id>0139</Id>
+		<Description>A protein modification that effectively converts five L-cysteine residues, an L-histidine residue and a one-nickel four-iron five-sulfur cluster to pentakis-L-cysteinyl L-histidino nickel tetrairon pentasulfide.</Description>
+		<SystematicName>mu-1:2kappaS-sulfido-mu3-1:3:5kappaS-sulfido-mu3-2:3:4kappaS-sulfido-mu3-2:4:5kappaS-sulfido-mu3-3:4:5kappaS-sulfido-N1'-histidino-S-cysteinyl-1-iron-S-cysteinyl-2-nickel-3,4,5-tris-(S-cysteinyl iron)</SystematicName>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0310</Id>
+			<Name>pentakis-L-cysteinyl L-histidino nickel tetrairon pentasulfide</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00315</Id>
+			<Name>pentakis-L-cysteinyl L-histidino nickel tetrairon pentasulfide</Name>
+		</CrossReference>
+		<Formula>C 21 Fe 4 H 26 N 8 Ni 1 O 6 S 10</Formula>
+		<Condition>
+			<Component type="AminoAcid" label="1">
+				<Id source="PDBCC">CYS</Id>
+			</Component>
+			<Component type="AminoAcid" label="2">
+				<Id source="PDBCC">CYS</Id>
+			</Component>
+			<Component type="AminoAcid" label="3">
+				<Id source="PDBCC">CYS</Id>
+			</Component>
+			<Component type="AminoAcid" label="4">
+				<Id source="PDBCC">CYS</Id>
+			</Component>
+			<Component type="AminoAcid" label="5">
+				<Id source="PDBCC">CYS</Id>
+			</Component>
+			<Component type="AminoAcid" label="6">
+				<Id source="PDBCC">HIS</Id>
+			</Component>
+			<Component type="Ligand" label="7">
+				<Id source="PDBCC">NFS</Id>
+			</Component>
+			<Bond>
+				<Atom component="1">SG</Atom>
+				<Atom component="7" label="1">FE1,FE2,FE3,FE4</Atom>
+			</Bond>
+			<Bond>
+				<Atom component="2">SG</Atom>
+				<Atom component="7">FE1,FE2,FE3,FE4</Atom>
+			</Bond>
+			<Bond>
+				<Atom component="3">SG</Atom>
+				<Atom component="7">FE1,FE2,FE3,FE4</Atom>
+			</Bond>
+			<Bond>
+				<Atom component="4">SG</Atom>
+				<Atom component="7">FE1,FE2,FE3,FE4</Atom>
+			</Bond>
+			<Bond>
+				<Atom component="5">SG</Atom>
+				<Atom component="7">NI1</Atom>
+			</Bond>
+			<Bond>
+				<Atom component="6">NE2</Atom>
+				<Atom component="7" label="1">FE1,FE2,FE3,FE4</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>Natural</Occurrence>
+		<Category>CrossLink7</Category>
+	</Entry>
 </ProteinModifications>
