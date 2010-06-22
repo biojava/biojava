@@ -10,7 +10,6 @@ import org.biojava.bio.structure.Chain;
 import org.biojava.bio.structure.Group;
 import org.biojava.bio.structure.StructureException;
 import org.biojava.bio.structure.align.AFPTwister;
-import org.biojava.bio.structure.align.ce.CeCPMain;
 import org.biojava.bio.structure.align.fatcat.FatCatFlexible;
 import org.biojava.bio.structure.align.fatcat.FatCatRigid;
 import org.biojava.bio.structure.align.gui.jmol.StructureAlignmentJmol;
