@@ -26,7 +26,7 @@ import org.biojava.bio.BioException;
 /**
  * An exception of one of the DAS classes.
  *
- * @author Andreas Prlic, Thomas Down, Benjamin Schuster-Böckler
+ * @author Andreas Prlic, Thomas Down, Benjamin Schuster-B&ouml;ckler
  */
 
 public class DASException extends BioException {
