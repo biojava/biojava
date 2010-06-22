@@ -2788,7 +2788,7 @@
 			</Component>
 		</Condition>
 		<Occurrence>Natural</Occurrence>
-		<Category>ModifiedResidue</Category>
+		<Category>CrossLink1</Category>
 		<Comment>CRO has two modifications: RESID:AA0183 and RESID:AA0184</Comment>
 	</Entry>
 	<Entry>

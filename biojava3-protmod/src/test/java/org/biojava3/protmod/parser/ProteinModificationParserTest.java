@@ -50,128 +50,137 @@ import org.biojava3.protmod.TmpAtomCache;
  */
 public class ProteinModificationParserTest extends TestCase {
 
-
 	public void testMultiParser(){
-		String[] names = new String[] {
+		String[][] names = new String[][] {
 				// Attachments
-				"3HN3", // NAG
-				"1CPO", // XYS
-				"1AL2", // MYR
-				"1L9H", // PLM
-				"1BDO", // BTN
-				//"2IQD", // no successful test case for LPA
-				"1AT9", // RET
-				//"1DJP", // DO2, (bond length error 3.0)
-				"1ALL", // CYC
-				"1B8D", // PEB
-				"1OGP", // MTQ
-				"1EL5", // FAD on CYS
-				"1W1O", // FAD on HIS
-				"1DII", // FAD on TYR
-				"2KJS", "1LK9", // PNS
-				"1D7E", // HC4
-				"2TMD", // FMN
-				"1VAO", // FAD on HIS
-				"1PDA", // DPM
-				"2J96", // PVN
-				"2HIL", // OPE
+				{"3HN3", "AA0151"}, // NAG
+				{"1CPO", "AA0406"}, // XYS
+				{"1AL2", "AA0059"}, // MYR
+				{"1L9H", "AA0106"}, // PLM
+				{"1BDO", "AA0117"}, // BTN
+				//{"2IQD", "AA0118"}, // no successful test case for LPA
+				{"1AT9", "AA0120"}, // RET
+				//{"1DJP", "AA0121"}, // DO2, (bond length error 3.0)
+				{"1ALL", "AA0131"}, // CYC
+				{"1B8D", "AA0132"}, // PEB
+				{"1OGP", "AA0142"}, // MTQ
+				{"1EL5", "AA0143"}, // FAD on CYS
+				{"1W1O", "AA0144"}, // FAD on HIS
+				{"1DII", "AA0145"}, // FAD on TYR
+				{"2KJS", "AA0150"}, // PNS
+				{"1D7E", "AA0207"}, // HC4
+				{"2TMD", "AA0220"}, // FMN
+				{"1VAO", "AA0221"}, // FAD on HIS
+				{"1PDA", "AA0252"}, // DPM
+				{"2J96", "AA0258"}, // PVN
+				{"2HIL", "AA0264"}, // OPE
 				
 				// Modified resdiues
-				"3MVJ", // SEP, TPO
-				"1KZU", // FME
-				"1AA6", // CSE
-				"1NT0", // AHB
-				"1ERM", // BHD
-				"1QGW", // LYZ
-				"2G66", // HY3, HYP
-				"1A39", // PCA
-				"1AG7", // CUG, HYP
-				"1D5W", // PHD
-				"1H9C", // CSP
-				"1EUD", // NEP
-				"1NSQ", // HIP
-				"3LXN", // PTR
-				"1ZM2", // DDE
-				"1E0Z", // ALY
-				"1DM3", // SCY
-				"2NPP", // MAA
-				"1GK8", // MME, HYP
-				"1DOJ", // MEA, TYS
-				"1G42", // 2MR
-				"2B2U", // DA2, M3L
-				"1ALL", // MEN
-				"3FMY", // MEQ
-				"1E6Y", // MHS, AGM
-				"1IV8", // MLY, MLZ
-				"1ZTO", // AAR
-				"1D7T", // CY3, HYP
-				"1D5M", // CLE
-				"1XAE", // NFA, C-terminal modification, but occurs in non-terminal residue in 1XAE
-				"2H9E", // LPD
-				//"2BF9", // TYC, error reading PDB file
-				"1YYL", // VLM
-				"1AEX", // SCH
-				"1OMW", // CMT
-				"2C0J", // P1L
-				"1AA1", // KCX
-				"1O5K", // MCL
-				"1A8I", // LLP
-				"2J4Y", // LYR
+				{"3MVJ", "AA0037"}, // SEP
+				{"3MVJ", "AA0038"}, // TPO
+				{"1KZU", "AA0021"}, // FME
+				{"1AA6", "AA0022"}, // CSE
+				{"1NT0", "AA0026"}, // AHB
+				{"1ERM", "AA0027"}, // BHD
+				{"1QGW", "AA0028"}, // LYZ
+				{"2G66", "AA0029"}, // HY3
+				{"2G66", "AA0030"}, // HYP
+				{"1A39", "AA0031"}, // PCA
+				{"1AG7", "AA0032"}, // CGU
+				{"1D5W", "AA0033"}, // PHD
+				{"1H9C", "AA0034"}, // CSP
+				{"1EUD", "AA0035"}, // NEP
+				{"1NSQ", "AA0036"}, // HIP
+				{"3LXN", "AA0039"}, // PTR
+				{"1ZM2", "AA0040"}, // DDE
+				{"1E0Z", "AA0055"}, // ALY
+				{"1DM3", "AA0056"}, // SCY
+				{"2NPP", "AA0061"}, // MAA
+				{"1GK8", "AA0064"}, // MME
+				{"1DOJ", "AA0065"}, // MEA
+				{"1DOJ", "AA0172"}, // TYS
+				{"1G42", "AA0067"}, // 2MR
+				{"2B2U", "AA0068"}, // DA2
+				{"2B2U", "AA0074"}, // M3L
+				{"1ALL", "AA0070"}, // MEN
+				{"3FMY", "AA0071"}, // MEQ
+				{"1E6Y", "AA0073"}, // MHS
+				{"1E6Y", "AA0272"}, // AGM
+				{"1IV8", "AA0075"}, // MLY
+				{"1IV8", "AA0076"}, // MLZ
+				{"1ZTO", "AA0082"}, // AAR
+				{"1D7T", "AA0085"}, // CY3
+				{"1D5M", "AA0091"}, // CLE
+				// {"1XAE", "AA0094"}, // NFA, C-terminal modification, but occurs in non-terminal residue
+				{"2H9E", "AA0095"}, // LPD
+				//{"2BF9", "AA0099"}, // TYC, error reading PDB file
+				{"1YYL", "AA0100"}, // VLM
+				{"1AEX", "AA0101"}, // SCH
+				{"1OMW", "AA0105"}, // CMT
+				{"2C0J", "AA0106"}, // P1L
+				{"1AA1", "AA0114"}, // KCX
+				{"1O5K", "AA0115"}, // MCL
+				{"1A8I", "AA0119"}, // LLP
+				{"2J4Y", "AA0120"}, // LYR
 				//PVL not exist in PDB
-				"1A2V", // TPQ
-				"1JJU", // TRQ
-				"1WCT", // GTH
-				"1A2C", // TYS
-				"1WCT", // BTR
-				"1AUK", // FGL
-				"148L", // DAL
-				"1C4B", // DIL
-				"1T5M", // DSG
-				"1CZQ", // DTR
-				"2JUE", // DTH
-				"1A7Y", // DVA
-				"1CXP", // CSO
-				"1F8W", // CSX
-				"1FFV", // ARO
-				"1CKN", // GPL
-				"1BUW", // SNC
-				"1CZI", // SMC
-				"1E93", // OMT
-				"1ACD", // CSD
-				"1C0T", // CSW
-				"1E6Y", // GL3
-				"1BI0", // CSS
-				"1E6Y", // AGM
-				"1HBM", // MGN
-				"1FFU", // CSZ
-				"3H5R", // SNN, note: SNN is not at C-terminal in some structures, e.g. 3I4W
+				{"1A2V", "AA0147"}, // TPQ
+				{"1JJU", "AA0148"}, // TRQ
+				{"1WCT", "AA0155"}, // GTH
+				{"1A2C", "AA0172"}, // TYS
+				{"1WCT", "AA0179"}, // BTR
+				{"1AUK", "AA0185"}, // FGL
+				{"148L", "AA0191"}, // DAL
+				{"1C4B", "AA0192"}, // DIL
+				{"1T5M", "AA0196"}, // DSG
+				{"1CZQ", "AA0198"}, // DTR
+				{"2JUE", "AA0199"}, // DTH
+				{"1A7Y", "AA0200"}, // DVA
+				{"1CXP", "AA0205"}, // CSO
+				{"1F8W", "AA0205"}, // CSX
+				{"1FFV", "AA0215"}, // ARO
+				{"1CKN", "AA0228"}, // GPL
+				{"1BUW", "AA0230"}, // SNC
+				{"1CZI", "AA0234"}, // SMC
+				{"1E93", "AA0251"}, // OMT
+				{"1ACD", "AA0262"}, // CSD
+				{"1C0T", "AA0262"}, // CSW
+				{"1E6Y", "AA0265"}, // GL3
+				{"1BI0", "AA0269"}, // CSS
+				{"1E6Y", "AA0272"}, // AGM
+				{"1HBM", "AA0273"}, // MGN
+				{"1FFU", "AA0277"}, // CSZ
+				{"3H5R", "AA0302"}, // SNN, note: SNN is not at C-terminal in some structures, e.g. 3I4W
 
 				// Cross link
-				"3M6S", // Disulfide bond
-				"1A6L", // F3S
-				"1A70", // FES
-				"1RPB", // Disulfide bond, and isopeptide (Cys - ASP)
-				"3B2M", // isopeptide (Lys - Asn)
-				"1CAD", // FE and 4 Cys, cross-link4
-				"1FP4", // CFM, HCA, CYS, HIS
-				"1M1N", // CFN, HCA, CYS, HIS
-				//"1G21", // CFM, HCA, CYS, HIS, (tolerance 0.5)
-				//"1M34", // CFM, HCA, CYS, HIS, (tolerance 1.0)
-				"1G7K", // CRQ, cross-link1
-				"1EMA", // CRO, cross-link1
-				//"1GGE", // HIS-TYR, cross-link2, (bond length error 0.6)
-				"2JE3", // HEC, CYS, CYS, LYS
-				//"1MHL", "1MYP" // not work for HEM
-				//"3HML", // PQQ, GLU, TYR, (bond length error 2)
-				"1FWX","1QNI","2IWF","2IWK", // CU4
-				//"1G20", // CLF (bond length error 20)
-				"1SU6", // NFS, 5 CYS, HIS
-				"1SU7", // NFS, 5 CYS, HIS (looks like 6 CYS are linked)
+				{"3M6S", "AA0025"}, // Disulfide bond
+				{"1A6L", "AA0139"}, // F3S
+				{"1A70", "AA0137"}, // FES
+				{"1RPB", "AA0216"}, // Isopeptide (Cys - ASP)
+				{"3B2M", "AA0294"}, // isopeptide (Lys - Asn)
+				{"1CAD", "AA0136"}, // FE and 4 Cys, cross-link4
+				{"1FP4", "AA0141"}, // CFM, HCA, CYS, HIS
+				{"1M1N", "AA0141"}, // CFN, HCA, CYS, HIS
+				//{"1G21", "AA0141"}, // CFM, HCA, CYS, HIS, (tolerance 0.5)
+				//{"1M34", "AA0141"}, // CFM, HCA, CYS, HIS, (tolerance 1.0)
+				{"1G7K", "AA0183"}, // CRQ, cross-link1
+				{"1EMA", "AA0183"}, // CRO, cross-link1
+				//{"1GGE", "AA0250"}, // HIS-TYR, cross-link2, (bond length error 0.6)
+				{"2JE3", "AA0271"}, // HEC, CYS, CYS, LYS
+				//{"1MHL", "AA0280"}, // not work for HEM
+				//{"1MYP", "AA0280"}, // not work for HEM
+				//{"3HML", "AA0283"}, // PQQ, GLU, TYR, (bond length error 2)
+				{"1FWX", "AA0298"}, // CU4
+				{"1QNI", "AA0298"}, // CU4
+				{"2IWF", "AA0298"}, // CU4
+				{"2IWK", "AA0298"}, // CU4
+				//{"1G20", "AA0300"}, // CLF (bond length error 20)
+				{"1SU6", "AA0310"}, // NFS, 5 CYS, HIS
+				{"1SU7", "AA0310"}, // NFS, 5 CYS, HIS (looks like 6 CYS are linked)
 		};
-		for ( String name : names){
-			System.out.println("===\n"+name);
+		for ( String[] name : names){
+			System.out.println("===\n"+name[0]);
 			try {
-				parserTest(name);
+				parserTest(name[0], name[1]);
 			} catch (Exception e){
 				e.printStackTrace();
 				fail(e.getMessage());
@@ -179,17 +188,14 @@ public class ProteinModificationParserTest extends TestCase {
 		}
 	}	
 
-	private void parserTest(String pdbId) throws IOException, StructureException {		
+	private void parserTest(String pdbId, String residId) throws IOException, StructureException {		
 		Structure struc = TmpAtomCache.cache.getStructure(pdbId);
 
 		DefaultProteinModificationParser parser = new DefaultProteinModificationParser();
 //		parser.setbondLengthTolerance(5);
 		
-		Set<ProteinModification> mods = ProteinModification.getProteinModifications();
-//		Set<ProteinModification> mods = ProteinModification.getByCategory(ModificationCategory.ATTACHMENT);
-//		Set<ProteinModification> mods = ProteinModification.getByCategory(ModificationCategory.CHEMICAL_MODIFICATION);
-//		Set<ProteinModification> mods = ProteinModification.getByResidId("AA0298");
-//		Set<ProteinModification> mods = java.util.Collections.singleton(ProteinModification.getById("0102"));
+//		Set<ProteinModification> mods = ProteinModification.getProteinModifications();
+		Set<ProteinModification> mods = ProteinModification.getByResidId(residId);
 		
 		assertFalse(mods.isEmpty());
 
