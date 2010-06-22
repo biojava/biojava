@@ -449,6 +449,8 @@ implements ProteinModificationParser {
 			for (int j=i+1; j<nLink; j++) {
 				ModificationLinkage link2 = linkages.get(j);
 				Atom[] atoms2 = atomLinkages.get(j);
+				
+				// check components
 				if (((link1.getIndexOfComponent1()==link2.getIndexOfComponent1())
 							!= (atoms1[0].getParent()==atoms2[0].getParent()))
 					|| ((link1.getIndexOfComponent1()==link2.getIndexOfComponent2())
@@ -457,6 +459,22 @@ implements ProteinModificationParser {
 							!= (atoms1[1].getParent()==atoms2[0].getParent()))
 					|| ((link1.getIndexOfComponent2()==link2.getIndexOfComponent2())
 							!= (atoms1[1].getParent()==atoms2[1].getParent()))) {
+					return false;
+				}
+				
+				// check atoms
+				String label11 = link1.getLabelOfAtomOnComponent1();
+				String label12 = link1.getLabelOfAtomOnComponent2();
+				String label21 = link2.getLabelOfAtomOnComponent1();
+				String label22 = link2.getLabelOfAtomOnComponent2();
+				if ((label11!=null && label21!=null && label11.equals(label21))
+							!= (atoms1[0]==atoms2[0])
+					 || (label11!=null && label22!=null && label11.equals(label22))
+							!= (atoms1[0]==atoms2[1])
+					 || (label12!=null && label21!=null && label12.equals(label21))
+							!= (atoms1[1]==atoms2[0])
+					 || (label12!=null && label22!=null && label12.equals(label22))
+							!= (atoms1[1]==atoms2[1])) {
 					return false;
 				}
 			}

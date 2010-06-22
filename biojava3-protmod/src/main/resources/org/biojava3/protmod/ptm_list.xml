@@ -624,19 +624,19 @@
 			</Component>
 			<Bond>
 				<Atom component="1">SG</Atom>
-				<Atom component="5">FE1</Atom>
+				<Atom component="5" label="1">FE1</Atom>
 			</Bond>
 			<Bond>
 				<Atom component="2">SG</Atom>
-				<Atom component="5">FE1</Atom>
+				<Atom component="5" label="1">FE1</Atom>
 			</Bond>
 			<Bond>
 				<Atom component="3">SG</Atom>
-				<Atom component="5">FE2</Atom>
+				<Atom component="5" label="2">FE2</Atom>
 			</Bond>
 			<Bond>
 				<Atom component="4">SG</Atom>
-				<Atom component="5">FE2</Atom>
+				<Atom component="5" label="2">FE2</Atom>
 			</Bond>
 		</Condition>
 		<Occurrence>Natural</Occurrence>
@@ -2158,19 +2158,19 @@
 			</Component>
 			<Bond>
 				<Atom component="1">SG</Atom>
-				<Atom component="5">FE</Atom>
+				<Atom component="5" label="1">FE</Atom>
 			</Bond>
 			<Bond>
 				<Atom component="2">SG</Atom>
-				<Atom component="5">FE</Atom>
+				<Atom component="5" label="1">FE</Atom>
 			</Bond>
 			<Bond>
 				<Atom component="3">SG</Atom>
-				<Atom component="5">FE</Atom>
+				<Atom component="5" label="1">FE</Atom>
 			</Bond>
 			<Bond>
 				<Atom component="4">SG</Atom>
-				<Atom component="5">FE</Atom>
+				<Atom component="5" label="1">FE</Atom>
 			</Bond>
 		</Condition>
 		<Occurrence>Natural</Occurrence>
@@ -2261,14 +2261,14 @@
 			</Bond>
 			<Bond>
 				<Atom component="2">ND1</Atom>
-				<Atom component="3">MO1</Atom>
+				<Atom component="3" label="1">MO1</Atom>
 			</Bond>
 			<Bond>
-				<Atom component="3">MO1</Atom>
+				<Atom component="3" label="1">MO1</Atom>
 				<Atom component="4">O5</Atom>
 			</Bond>
 			<Bond>
-				<Atom component="3">MO1</Atom>
+				<Atom component="3" label="1">MO1</Atom>
 				<Atom component="4">O7</Atom>
 			</Bond>
 		</Condition>
@@ -2309,14 +2309,14 @@
 			</Bond>
 			<Bond>
 				<Atom component="2">ND1</Atom>
-				<Atom component="3">MO1</Atom>
+				<Atom component="3" label="1">MO1</Atom>
 			</Bond>
 			<Bond>
-				<Atom component="3">MO1</Atom>
+				<Atom component="3" label="1">MO1</Atom>
 				<Atom component="4">O5</Atom>
 			</Bond>
 			<Bond>
-				<Atom component="3">MO1</Atom>
+				<Atom component="3" label="1">MO1</Atom>
 				<Atom component="4">O7</Atom>
 			</Bond>
 		</Condition>
@@ -3958,7 +3958,7 @@
 			</Bond>
 		</Condition>
 		<Occurrence>Natural</Occurrence>
-		<Category>CrossLink3</Category>
+		<Category>CrossLink2</Category>
 	</Entry>
 	<Entry>
 		<Id>0131</Id>
@@ -4268,27 +4268,27 @@
 			</Component>
 			<Bond>
 				<Atom component="1">NE2</Atom>
-				<Atom component="8">CU1,CU2,CU3,CU4</Atom>
+				<Atom component="8" label="1">CU1,CU2,CU3,CU4</Atom>
 			</Bond>
 			<Bond>
 				<Atom component="2">NE2</Atom>
-				<Atom component="8">CU1,CU2,CU3,CU4</Atom>
+				<Atom component="8" label="1">CU1,CU2,CU3,CU4</Atom>
 			</Bond>
 			<Bond>
 				<Atom component="3">NE2</Atom>
-				<Atom component="8">CU1,CU2,CU3,CU4</Atom>
+				<Atom component="8" label="2">CU1,CU2,CU3,CU4</Atom>
 			</Bond>
 			<Bond>
 				<Atom component="4">NE2</Atom>
-				<Atom component="8">CU1,CU2,CU3,CU4</Atom>
+				<Atom component="8" label="2">CU1,CU2,CU3,CU4</Atom>
 			</Bond>
 			<Bond>
 				<Atom component="5">NE2</Atom>
-				<Atom component="8">CU1,CU2,CU3,CU4</Atom>
+				<Atom component="8" label="3">CU1,CU2,CU3,CU4</Atom>
 			</Bond>
 			<Bond>
 				<Atom component="6">ND1</Atom>
-				<Atom component="8">CU1,CU2,CU3,CU4</Atom>
+				<Atom component="8" label="3">CU1,CU2,CU3,CU4</Atom>
 			</Bond>
 			<Bond>
 				<Atom component="7">ND1</Atom>
@@ -4340,7 +4340,7 @@
 			</Component>
 			<Bond>
 				<Atom component="1">SG</Atom>
-				<Atom component="8">FE1,FE2,FE3,FE4,FE5,FE6,FE7,FE8</Atom>
+				<Atom component="8" label="1">FE1,FE2,FE3,FE4,FE5,FE6,FE7,FE8</Atom>
 			</Bond>
 			<Bond>
 				<Atom component="2">SG</Atom>
@@ -4364,7 +4364,7 @@
 			</Bond>
 			<Bond>
 				<Atom component="7">OG</Atom>
-				<Atom component="8">FE1,FE2,FE3,FE4,FE5,FE6,FE7,FE8</Atom>
+				<Atom component="8" label="1">FE1,FE2,FE3,FE4,FE5,FE6,FE7,FE8</Atom>
 			</Bond>
 		</Condition>
 		<Occurrence>Natural</Occurrence>
@@ -4462,6 +4462,6 @@
 			</Bond>
 		</Condition>
 		<Occurrence>Natural</Occurrence>
-		<Category>CrossLink7</Category>
+		<Category>CrossLink6</Category>
 	</Entry>
 </ProteinModifications>

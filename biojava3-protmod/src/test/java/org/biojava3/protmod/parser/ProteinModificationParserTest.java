@@ -61,7 +61,7 @@ public class ProteinModificationParserTest extends TestCase {
 				"1BDO", // BTN
 				//"2IQD", // no successful test case for LPA
 				"1AT9", // RET
-				"1DJP", // DO2, (bond length error 3.0)
+				//"1DJP", // DO2, (bond length error 3.0)
 				"1ALL", // CYC
 				"1B8D", // PEB
 				"1OGP", // MTQ
@@ -159,13 +159,14 @@ public class ProteinModificationParserTest extends TestCase {
 				//"1M34", // CFM, HCA, CYS, HIS, (tolerance 1.0)
 				"1G7K", // CRQ, cross-link1
 				"1EMA", // CRO, cross-link1
-				"1GGE", // HIS-TYR, cross-link2, (bond length error 0.6)
+				//"1GGE", // HIS-TYR, cross-link2, (bond length error 0.6)
 				"2JE3", // HEC, CYS, CYS, LYS
 				//"1MHL", "1MYP" // not work for HEM
 				//"3HML", // PQQ, GLU, TYR, (bond length error 2)
 				"1FWX","1QNI","2IWF","2IWK", // CU4
 				//"1G20", // CLF (bond length error 20)
-				"1SU6","1SU7","1SU8","1SUF",
+				"1SU6", // NFS, 5 CYS, HIS
+				"1SU7", // NFS, 5 CYS, HIS (looks like 6 CYS are linked)
 		};
 		for ( String name : names){
 			System.out.println("===\n"+name);
@@ -187,7 +188,7 @@ public class ProteinModificationParserTest extends TestCase {
 		Set<ProteinModification> mods = ProteinModification.getProteinModifications();
 //		Set<ProteinModification> mods = ProteinModification.getByCategory(ModificationCategory.ATTACHMENT);
 //		Set<ProteinModification> mods = ProteinModification.getByCategory(ModificationCategory.CHEMICAL_MODIFICATION);
-//		Set<ProteinModification> mods = ProteinModification.getByResidId("AA0310");
+//		Set<ProteinModification> mods = ProteinModification.getByResidId("AA0298");
 //		Set<ProteinModification> mods = java.util.Collections.singleton(ProteinModification.getById("0102"));
 		
 		assertFalse(mods.isEmpty());
@@ -198,6 +199,8 @@ public class ProteinModificationParserTest extends TestCase {
 
 			List<ModifiedCompound> mcs = parser.parse(struc, mods, modelnr);
 
+			assertFalse(mcs.isEmpty());
+			
 			int i=0;
 			for (ModifiedCompound mc : mcs) {
 				System.out.println("Modification #"+(++i)+":");
