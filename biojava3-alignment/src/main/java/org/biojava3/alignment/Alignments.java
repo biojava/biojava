@@ -24,6 +24,7 @@
 package org.biojava3.alignment;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -33,8 +34,14 @@ import org.biojava3.core.sequence.template.Compound;
 import org.biojava3.core.sequence.template.Sequence;
 import org.biojava3.core.util.ConcurrencyTools;
 
+import org.forester.phylogeny.Phylogeny;
+import org.forester.phylogenyinference.BasicSymmetricalDistanceMatrix;
+import org.forester.phylogenyinference.NeighborJoining;
+
 /**
- * Static utility to easily run alignment routines.
+ * Static utility to easily run alignment routines.  To exit cleanly after running any parallel method that mentions
+ * use of the {@link ConcurrencyTools} utility, {@link ConcurrencyTools#shutdown()} or
+ * {@link ConcurrencyTools#shutdownAndAwaitTermination()} must be called.
  *
  * @author Mark Chapman
  */
@@ -67,7 +74,8 @@ public class Alignments {
         LOCAL,
         LOCAL_IDENTITIES,
         LOCAL_SIMILARITIES,
-        KMERS
+        KMERS,
+        WU_MANBER
     }
 
     // prevents instantiation
@@ -109,6 +117,12 @@ public class Alignments {
         return runScorers(getScorerList(sequences, type, gapPenalty, subMatrix));
     }
 
+    public static <S extends Sequence<C>, C extends Compound> Profile<S, C> getMultipleSequenceAlignment(
+            List<S> sequences, MSAEmulation type, Object... settings) {
+        // TODO multiple sequence alignments, convert other factories to this parameter style?
+        return null;
+    }
+
     /**
      * Factory method which computes a sequence alignment for the given {@link Sequence} pair.
      *
@@ -143,10 +157,22 @@ public class Alignments {
         return getScorer(query, target, type, gapPenalty, subMatrix).getScore();
     }
 
-    public static <S extends Sequence<C>, C extends Compound> Profile<S, C> getMultipleSequenceAlignment(
-            List<S> sequences, MSAEmulation type, Object... settings) {
-        // TODO multiple sequence alignments, convert other factories to this parameter style?
-        return null;
+    public static <S extends Sequence<C>, C extends Compound> Phylogeny getPhylogenyGuideTree(
+            List<S> sequences, PairwiseScorer type, GapPenalty gapPenalty, SubstitutionMatrix<C> subMatrix) {
+        // TODO wrap org.forester.phylogeny.Phylogeny in another class to hide implementation and allow easier updates
+        List<PairwiseSequenceScorer<S, C>> scorers = getScorerList(sequences, type, gapPenalty, subMatrix);
+        runScorers(scorers);
+        Iterator<PairwiseSequenceScorer<S, C>> scorerIterator = scorers.iterator();
+        BasicSymmetricalDistanceMatrix distances = new BasicSymmetricalDistanceMatrix(sequences.size());
+        for (int i = 0; i < sequences.size(); i++) {
+            distances.setIdentifier(i, sequences.get(i).getSequenceAsString()); // TODO? use accession ID or hash code
+            for (int j = i+1; j < sequences.size(); j++) {
+                PairwiseSequenceScorer<S, C> scorer = scorerIterator.next();
+                distances.setValue(i, j, (double)(scorer.getMaxScore() - scorer.getScore()) / (scorer.getMaxScore()
+                        - scorer.getMinScore()));
+            }
+        }
+        return NeighborJoining.createInstance().execute(distances);
     }
 
     /**
@@ -247,11 +273,21 @@ public class Alignments {
         case GLOBAL:
             return getAligner(query, target, PairwiseAligner.GLOBAL, gapPenalty, subMatrix);
         case GLOBAL_IDENTITIES:
+            return new FractionalIdentityScorer<S, C>(getAligner(query, target, PairwiseAligner.GLOBAL, gapPenalty,
+                    subMatrix));
         case GLOBAL_SIMILARITIES:
+            return new FractionalSimilarityScorer<S, C>(getAligner(query, target, PairwiseAligner.GLOBAL, gapPenalty,
+                    subMatrix));
         case LOCAL:
+            return getAligner(query, target, PairwiseAligner.LOCAL, gapPenalty, subMatrix);
         case LOCAL_IDENTITIES:
+            return new FractionalIdentityScorer<S, C>(getAligner(query, target, PairwiseAligner.LOCAL, gapPenalty,
+                    subMatrix));
         case LOCAL_SIMILARITIES:
+            return new FractionalSimilarityScorer<S, C>(getAligner(query, target, PairwiseAligner.LOCAL, gapPenalty,
+                    subMatrix));
         case KMERS:
+        case WU_MANBER:
             // TODO other scoring options
             return null;
         }

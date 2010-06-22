@@ -30,7 +30,8 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Static utility to easily share a thread pool for concurrent/parallel/lazy execution.
+ * Static utility to easily share a thread pool for concurrent/parallel/lazy execution.  To exit cleanly,
+ * {@link #shutdown()} or {@link #shutdownAndAwaitTermination()} must be called after all tasks have been submitted.
  *
  * @author Mark Chapman
  */
@@ -49,7 +50,7 @@ public class ConcurrencyTools {
      * @return shared thread pool
      */
     public static ExecutorService getThreadPool() {
-        if (pool == null) {
+        if (pool == null || pool.isShutdown()) {
             setThreadPoolDefault();
         }
         return pool;
@@ -75,8 +76,10 @@ public class ConcurrencyTools {
      * @param pool thread pool to share
      */
     public static void setThreadPool(ExecutorService pool) {
-        shutdown();
-        ConcurrencyTools.pool = pool;
+        if (ConcurrencyTools.pool != pool) {
+            shutdown();
+            ConcurrencyTools.pool = pool;
+        }
     }
 
     /**
