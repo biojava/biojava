@@ -11,7 +11,7 @@ import org.biojava3.core.sequence.template.ProxySequenceReader;
  *
  * @author ayates
  */
-public interface AccesionedLocation extends Accessioned {
+public interface AccesionedLocation extends Location, Accessioned {
 
     /**
      * Return the proxy reader used to get sequence for this location. We

@@ -1,6 +1,5 @@
 package org.biojava3.core.sequence.location;
 
-import org.biojava3.core.sequence.location.template.Location;
 import org.biojava3.core.sequence.location.template.Point;
 import org.biojava3.core.util.Hashcoder;
 import org.biojava3.core.util.Equals;

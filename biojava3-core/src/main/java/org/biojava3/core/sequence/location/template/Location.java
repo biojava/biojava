@@ -6,6 +6,7 @@ import java.util.List;
 import org.biojava3.core.sequence.Strand;
 import org.biojava3.core.sequence.location.SimpleLocation;
 import org.biojava3.core.sequence.location.SimplePoint;
+import org.biojava3.core.sequence.template.Accessioned;
 import org.biojava3.core.sequence.template.Compound;
 import org.biojava3.core.sequence.template.Sequence;
 
@@ -17,7 +18,7 @@ import org.biojava3.core.sequence.template.Sequence;
  * 
  * @author ayates
  */
-public interface Location extends Iterable<Location> {
+public interface Location extends Iterable<Location>, Accessioned {
 
     /**
      * Basic location which is set to the minimum and maximum bounds of
@@ -107,6 +108,18 @@ public interface Location extends Iterable<Location> {
      * inspiration from the RichSequence.Tools class from the old BioJava
      */
     public static class Tools {
+
+        /**
+         * Used for building a location from a series of sub-locations
+         */
+        public static Location location(List<Location> locations, Integer sequenceLength, String type) {
+            type = (type == null) ? "join" : type;
+            sequenceLength = (sequenceLength == null) ? -1 : sequenceLength;
+
+
+
+            return null;
+        }
 
         /**
          * Returns a location object which unlike the location constructors

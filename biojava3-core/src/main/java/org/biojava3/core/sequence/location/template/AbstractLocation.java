@@ -1,6 +1,7 @@
 package org.biojava3.core.sequence.location.template;
 
 import static java.lang.String.format;
+import org.biojava3.core.sequence.AccessionID;
 import org.biojava3.core.sequence.template.Compound;
 import org.biojava3.core.sequence.template.Sequence;
 import static org.biojava3.core.util.Equals.classEqual;
@@ -28,8 +29,6 @@ import org.biojava3.core.util.Hashcoder;
 public abstract class AbstractLocation implements Location {
 
     //TODO Need to have the Sequence lookup resolver here; see the next one as well
-    //TODO Need to record the Sequence this location comes from; accessionid
-    //TODO Need to have a way of resolving the uncertain locations. maybe point resolvers
     //TODO Need a way of late binding of start/stop
 
     private Point start;
@@ -38,6 +37,7 @@ public abstract class AbstractLocation implements Location {
     private List<Location> subLocations;
     private boolean circular;
     private boolean betweenCompounds;
+    private AccessionID accession;
 
     protected AbstractLocation() {
         super();
@@ -59,11 +59,32 @@ public abstract class AbstractLocation implements Location {
     public AbstractLocation(Point start, Point end, Strand strand,
             boolean circular, boolean betweenCompounds,
             List<Location> subLocations) {
+        this(start, end, strand, circular, betweenCompounds, null, subLocations);
+    }
+
+    /**
+     * Default constructor
+     *
+     * @param start start of the location
+     * @param end end of the location
+     * @param strand strand it is located on
+     * @param circular Boolean which says if the current location was circular
+     * or not
+     * @param betweenCompounds Indicates the location lies at the position between
+     * a pair of bases; means the bases must be next to each other (and
+     * therefore cannot be complex)
+     * @param accession The accession ID to link this location to
+     * @param subLocations Sub locations which composes this location
+     */
+    public AbstractLocation(Point start, Point end, Strand strand,
+            boolean circular, boolean betweenCompounds, AccessionID accession,
+            List<Location> subLocations) {
         this.start = start;
         this.end = end;
         this.strand = strand;
         this.circular = circular;
         this.betweenCompounds = betweenCompounds;
+        this.accession = accession;
         this.subLocations = Collections.unmodifiableList(subLocations);
         assertLocation();
     }
@@ -89,7 +110,7 @@ public abstract class AbstractLocation implements Location {
                     + "which is located between a pair of compounds");
         }
 
-        if(isBetweenCompounds() && (st + 1) == e) {
+        if(isBetweenCompounds() && (st + 1) != e) {
             throw new IllegalStateException(
                     String.format("Start (%d) is not next to end (%d)", st, e));
         }
@@ -127,6 +148,11 @@ public abstract class AbstractLocation implements Location {
     @Override
     public boolean isComplex() {
         return getSubLocations().size() > 0;
+    }
+
+    @Override
+    public AccessionID getAccession() {
+        return accession;
     }
 
     /**
@@ -183,7 +209,8 @@ public abstract class AbstractLocation implements Location {
                     && equal(getStrand(), l.getStrand())
                     && equal(isCircular(), l.isCircular())
                     && equal(isBetweenCompounds(), l.isBetweenCompounds())
-                    && equal(getSubLocations(), l.getSubLocations()));
+                    && equal(getSubLocations(), l.getSubLocations())
+                    && equal(getAccession(), l.getAccession()));
         }
         return equals;
     }
@@ -197,6 +224,7 @@ public abstract class AbstractLocation implements Location {
         r = Hashcoder.hash(r, isCircular());
         r = Hashcoder.hash(r, isBetweenCompounds());
         r = Hashcoder.hash(r, getSubLocations());
+        r = Hashcoder.hash(r, getAccession());
         return r;
     }
 
@@ -209,6 +237,8 @@ public abstract class AbstractLocation implements Location {
     public boolean isBetweenCompounds() {
         return betweenCompounds;
     }
+
+    //TODO Support the accession based lookup system; maybe still require a different impl?
 
     /**
      * If circular this will return the sequence represented by the sub
@@ -302,5 +332,9 @@ public abstract class AbstractLocation implements Location {
 
     protected void setSubLocations(List<Location> subLocations) {
         this.subLocations = subLocations;
+    }
+
+    protected void setAccession(AccessionID accession) {
+        this.accession = accession;
     }
 }

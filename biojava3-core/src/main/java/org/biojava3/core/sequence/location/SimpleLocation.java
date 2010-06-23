@@ -3,6 +3,7 @@ package org.biojava3.core.sequence.location;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import org.biojava3.core.sequence.AccessionID;
 
 import org.biojava3.core.sequence.Strand;
 import org.biojava3.core.sequence.location.template.AbstractLocation;
@@ -35,6 +36,18 @@ public class SimpleLocation extends AbstractLocation {
         super(start, end, strand, false, false, EMPTY_LOCS);
     }
 
+    public SimpleLocation(Point start, Point end, Strand strand, AccessionID accession) {
+        super(start, end, strand, false, false, accession, EMPTY_LOCS);
+    }
+
+    public SimpleLocation(Point start, Point end, Strand strand, boolean betweenCompounds, AccessionID accession) {
+        super(start, end, strand, false, betweenCompounds, accession, EMPTY_LOCS);
+    }
+
+    public SimpleLocation(Point start, Point end, Strand strand, boolean circular, boolean betweenBases) {
+        super(start, end, strand, circular, betweenBases, EMPTY_LOCS);
+    }
+
     public SimpleLocation(int start, int end, Strand strand, Location... subLocations) {
         this(new SimplePoint(start), new SimplePoint(end), strand, subLocations);
     }
@@ -53,5 +66,5 @@ public class SimpleLocation extends AbstractLocation {
 
     public SimpleLocation(Point start, Point end, Strand strand, boolean circular, boolean betweenBases, List<Location> subLocations) {
         super(start, end, strand, circular, betweenBases, subLocations);
-    }
+    }    
 }
