@@ -9,7 +9,7 @@ package org.biojava3.core.sequence;
  * @author Scooter Willis <willishf at gmail dot com>
  */
 // GenBank                           gi|gi-number|gb|accession|locus
-// EMBL Data Library                 gi|gi-number|emb|accession|locus
+// ENA Data Library                  gi|gi-number|emb|accession|locus
 // DDBJ, DNA Database of Japan       gi|gi-number|dbj|accession|locus
 // NBRF PIR                          pir||entry
 // Protein Research Foundation       prf||name
@@ -23,5 +23,5 @@ package org.biojava3.core.sequence;
 // Local Sequence identifier         lcl|identifier
 public enum DataSource {
 
-    GENBANK, EMBL, DDBJ, NBRF, PRF, PDB1, PDB2, PDBe, PATENTS, GENINFO, GENERAL, NCBI, UNIPROT, PFAM, LOCAL, UNKNOWN
+    GENBANK, ENA, DDBJ, NBRF, PRF, PDB1, PDB2, PDBe, PATENTS, GENINFO, GENERAL, NCBI, UNIPROT, PFAM, LOCAL, UNKNOWN
 }
