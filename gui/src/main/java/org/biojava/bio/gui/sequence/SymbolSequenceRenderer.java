@@ -43,7 +43,7 @@ import org.biojava.bio.symbol.SymbolList;
  * @author Thomas Down
  * @author David Huen
  * @author Keith James
- * @author Kalle Näslund
+ * @author Kalle N&auml;slund
  */
 public class SymbolSequenceRenderer implements SequenceRenderer
 {
