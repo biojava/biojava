@@ -40,6 +40,8 @@ public class JmolViewerImplTest extends TestCase {
      * Test of setStructure method, of class JmolViewerImpl.
      */
     public void testSetStructure() {
+    	if (  java.awt.GraphicsEnvironment.isHeadless())
+    		return;
         try {
             System.out.println("setStructure");
             PDBFileReader pdbr = new PDBFileReader();
@@ -65,6 +67,8 @@ public class JmolViewerImplTest extends TestCase {
      * Test of clear method, of class JmolViewerImpl.
      */
     public void testClear() {
+    	if (  java.awt.GraphicsEnvironment.isHeadless())
+    		return;
         System.out.println("clear");
         JmolViewerImpl instance = new JmolViewerImpl();
         instance.clear();
@@ -76,6 +80,8 @@ public class JmolViewerImplTest extends TestCase {
      * Test of getColor method, of class JmolViewerImpl.
      */
     public void testGetColor() {
+    	if (  java.awt.GraphicsEnvironment.isHeadless())
+    		return;
         System.out.println("getColor");
         JmolViewerImpl instance = new JmolViewerImpl();
         Color expResult = null;
@@ -89,6 +95,8 @@ public class JmolViewerImplTest extends TestCase {
      * Test of getSelection method, of class JmolViewerImpl.
      */
     public void testGetSelection() {
+    	if (  java.awt.GraphicsEnvironment.isHeadless())
+    		return;
         System.out.println("getSelection");
         JmolViewerImpl instance = new JmolViewerImpl();
         Selection expResult = null;
@@ -102,6 +110,8 @@ public class JmolViewerImplTest extends TestCase {
      * Test of repaint method, of class JmolViewerImpl.
      */
     public void testRepaint() {
+    	if (  java.awt.GraphicsEnvironment.isHeadless())
+    		return;
         System.out.println("repaint");
         JmolViewerImpl instance = new JmolViewerImpl();
         instance.repaint();
@@ -113,6 +123,8 @@ public class JmolViewerImplTest extends TestCase {
      * Test of setColor method, of class JmolViewerImpl.
      */
     public void testSetColor() {
+    	if (  java.awt.GraphicsEnvironment.isHeadless())
+    		return;
         System.out.println("setColor");
         Color red = null;
         JmolViewerImpl instance = new JmolViewerImpl();
@@ -125,6 +137,8 @@ public class JmolViewerImplTest extends TestCase {
      * Test of setSelection method, of class JmolViewerImpl.
      */
     public void testSetSelection() {
+    	if (  java.awt.GraphicsEnvironment.isHeadless())
+    		return;
         System.out.println("setSelection");
         Selection selection = null;
         JmolViewerImpl instance = new JmolViewerImpl();
@@ -137,6 +151,8 @@ public class JmolViewerImplTest extends TestCase {
      * Test of setStyle method, of class JmolViewerImpl.
      */
     public void testSetStyle() {
+    	if (  java.awt.GraphicsEnvironment.isHeadless())
+    		return;
         System.out.println("setStyle");
         RenderStyle wireframe = null;
         JmolViewerImpl instance = new JmolViewerImpl();
@@ -149,6 +165,8 @@ public class JmolViewerImplTest extends TestCase {
      * Test of setZoom method, of class JmolViewerImpl.
      */
     public void testSetZoom() {
+    	if (  java.awt.GraphicsEnvironment.isHeadless())
+    		return;
         System.out.println("setZoom");
         int i = 0;
         JmolViewerImpl instance = new JmolViewerImpl();
