@@ -33,7 +33,8 @@ import java.util.Map;
  * @since 3.0
  */
 public enum ModificationOccurrenceType {
-	NATURAL("Natural");
+	NATURAL("Natural"),
+	HYPOTHETICAL("Hypothetical");
 	
 	ModificationOccurrenceType(String label) {
 		this.label = label;

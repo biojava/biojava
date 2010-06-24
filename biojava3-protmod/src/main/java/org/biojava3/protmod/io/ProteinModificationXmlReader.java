@@ -270,7 +270,7 @@ public final class ProteinModificationXmlReader {
 						String labelAtom2 = labelNode==null?null:labelNode.getTextContent();
 						
 						String atom2 = atomNodes.get(1).getTextContent();
-						List<String> potentialAtoms2 = atom1.isEmpty()?null:
+						List<String> potentialAtoms2 = atom2.isEmpty()?null:
 							Arrays.asList(atom2.split(","));
 						
 						// add linkage

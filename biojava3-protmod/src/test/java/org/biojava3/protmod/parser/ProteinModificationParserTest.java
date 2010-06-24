@@ -74,6 +74,11 @@ public class ProteinModificationParserTest extends TestCase {
 				{"1PDA", "AA0252"}, // DPM
 				{"2J96", "AA0258"}, // PVN
 				{"2HIL", "AA0264"}, // OPE
+				//{"1RTX", "AA0329"}, // HEM, (bond length error 3.0, much closer to FE)
+				{"1FEH", "AA0334"}, // HC1
+				//{"2Z6D", "AA0351"}, // FMN, (bond length error 2.0)
+				{"1N63", "AA0355"}, // CYS-CUN-MCN
+				{"1HXQ", "AA0372"}, // U5P on HIS
 				
 				// Modified resdiues
 				{"3MVJ", "AA0037"}, // SEP
@@ -150,6 +155,14 @@ public class ProteinModificationParserTest extends TestCase {
 				{"1HBM", "AA0273"}, // MGN
 				{"1FFU", "AA0277"}, // CSZ
 				{"3H5R", "AA0302"}, // SNN, note: SNN is not at C-terminal in some structures, e.g. 3I4W
+				{"1JQ7", "AA0311"}, // DMH
+				{"1J6Z", "AA0317"}, // HIC
+				{"1B80", "AA0322"}, // HTR
+				{"1CWM", "AA0336"}, // IML
+				{"1BCK", "AA0337"}, // MLE
+				{"1EA7", "AA0361"}, // OSE
+				{"1TYS", "AA0363"}, // CXM
+				{"1EBV", "AA0364"}, // OAS
 
 				// Cross link
 				{"3M6S", "AA0025"}, // Disulfide bond
@@ -160,8 +173,8 @@ public class ProteinModificationParserTest extends TestCase {
 				{"1CAD", "AA0136"}, // FE and 4 Cys, cross-link4
 				{"1FP4", "AA0141"}, // CFM, HCA, CYS, HIS
 				{"1M1N", "AA0141"}, // CFN, HCA, CYS, HIS
-				//{"1G21", "AA0141"}, // CFM, HCA, CYS, HIS, (tolerance 0.5)
-				//{"1M34", "AA0141"}, // CFM, HCA, CYS, HIS, (tolerance 1.0)
+				//{"1G21", "AA0141"}, // CFM, HCA, CYS, HIS, (bond length error 0.5)
+				//{"1M34", "AA0141"}, // CFM, HCA, CYS, HIS, (bond length error 1.0)
 				{"1G7K", "AA0183"}, // CRQ, cross-link1
 				{"1EMA", "AA0183"}, // CRO, cross-link1
 				//{"1GGE", "AA0250"}, // HIS-TYR, cross-link2, (bond length error 0.6)
@@ -176,6 +189,28 @@ public class ProteinModificationParserTest extends TestCase {
 				//{"1G20", "AA0300"}, // CLF (bond length error 20)
 				{"1SU6", "AA0310"}, // NFS, 5 CYS, HIS
 				{"1SU7", "AA0310"}, // NFS, 5 CYS, HIS (looks like 6 CYS are linked)
+				//{"1JJU", "AA0313"}, // CYS-TRP, (bond length error 3)
+				{"1JJU", "AA0314"}, // CYS-ASP
+				{"1JJU", "AA0315"}, // CYS-GLU
+				//{"1AJ1", "AA0330"}, // CYS-THR, could not find.
+				{"1PXQ", "AA0340"}, // CYS-PHE
+				{"1PXQ", "AA0342"}, // CYS-THR
+				{"1ITK", "AA0348"}, // MET-TYR-TRP
+				//{"1R30", "AA0356"}, // 3 CYS-SF4-SAM (bond length error 0.6)
+				{"1R30", "AA0357"}, // 3 CYS-FES-ARG
+				// {"1S5L", "AA0366"}, // 2 ASP-3 GLU-HIT-OEC (bond length error 6)
+				{"1NGK", "AA0368"}, //TYR-TYR
+				{"1YZW", "AA0378"}, // CRU
+				{"1XQM", "AA0379"}, // CH6
+				{"1UIS", "AA0379"}, // NRQ
+				{"2OJK", "AA0380"}, // NYG
+				{"2A46", "AA0381"}, // CR7
+				{"1YZW", "AA0183"}, // CRU
+				{"1XQM", "AA0183"}, // CH6
+				{"1UIS", "AA0183"}, // NRQ
+				{"2OJK", "AA0183"}, // NYG
+				{"2A46", "AA0183"}, // CR7
+//				{"", ""}, // 
 		};
 		for ( String[] name : names){
 			System.out.println("===\n"+name[0]);
@@ -220,13 +255,13 @@ public class ProteinModificationParserTest extends TestCase {
 		ModificationCategory cat = mod.getCategory();
 		System.out.println(cat.label()+": "+mod.getId());
 		
-		if (cat == ModificationCategory.CHEMICAL_MODIFICATION
-				|| cat == ModificationCategory.CROSS_LINK_1) {
+		List<Atom[]> atomLinkages = mc.getAtomLinkages();
+		if (atomLinkages.isEmpty()) {
 			Group g = mc.getGroups().get(0);
 			Chain chain = g.getParent();
 			System.out.println("\t"+g.getPDBName()+"\t"+chain.getName()+"\t"+g.getPDBCode());
 		} else {
-			List<Atom[]> atomLinkages = mc.getAtomLinkages();
+			
 			for (Atom[] atoms : atomLinkages) {
 				Group group = atoms[0].getParent();
 				Chain chain = group.getParent();
