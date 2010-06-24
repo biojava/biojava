@@ -41,7 +41,7 @@ public class GenericFastaHeaderParserTest {
 
     /**
      * GenBank                           gi|gi-number|gb|accession|locus
-     * EMBL Data Library                 gi|gi-number|emb|accession|locus
+     * ENA Data Library                 gi|gi-number|emb|accession|locus
      * DDBJ, DNA Database of Japan       gi|gi-number|dbj|accession|locus
      * NBRF PIR                          pir||entry
      * Protein Research Foundation       prf||name
@@ -72,7 +72,7 @@ public class GenericFastaHeaderParserTest {
         header = "gi|gi-number|emb|accession|locus";
         instance.parseHeader(header, sequence);
         assertEquals("accession", sequence.getAccession().getID());
-        assertEquals(sequence.getAccession().getDataSource(), DataSource.EMBL);
+        assertEquals(sequence.getAccession().getDataSource(), DataSource.ENA);
 
         header = "gi|gi-number|dbj|accession|locus";
         instance.parseHeader(header, sequence);
