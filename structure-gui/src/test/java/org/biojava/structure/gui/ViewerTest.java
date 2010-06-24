@@ -40,6 +40,10 @@ public class ViewerTest extends TestCase {
 	 * then load a PDB file.
 	 */
 	public void testStructureLoad(){
+		
+		if (  java.awt.GraphicsEnvironment.isHeadless())
+    		return;
+		
 		PDBFileReader parser = new PDBFileReader();
 		parser.setAutoFetch(true);
 		try {
