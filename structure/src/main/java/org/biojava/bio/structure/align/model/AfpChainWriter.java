@@ -347,6 +347,15 @@ public class AfpChainWriter
 
    }
 
+   /**
+    * Prints the afpChain as a nicely formatted alignment, including alignment
+    * statistics, the aligned sequences themselves, and information about the 
+    * superposition.
+    * @param afpChain
+    * @param ca1
+    * @param ca2
+    * @return
+    */
    public static String toWebSiteDisplay(AFPChain afpChain, Atom[] ca1, Atom[] ca2){
       if ( afpChain.getAlgorithmName().equalsIgnoreCase(FatCatFlexible.algorithmName)) {
          String msg =  toFatCat(afpChain,ca1,ca2) ;
@@ -509,6 +518,62 @@ public class AfpChainWriter
 
       doLenCheck(LINELENGTH,txt,header1,header2,alnseq1,alnsymb,alnseq2,footer1, footer2,block);
       return txt.toString();
+   }
+   
+   /**
+    * Prints the alignment in the simplest form: a list of aligned residues.
+    * Format is one line per residue pair, tab delimited:
+    * <ul><li>1. PDB number. Includes insertion code</li>
+    * <li>1. Chain.</li>
+    * <li>1. Amino Acid. Three letter code.</li>
+    * <li>2. PDB number.</li>
+    * <li>2. Chain.</li>
+    * <li>2. Amino Acid.</li>
+    * </ul>
+    * example:
+    * <code>152	A	ALA	161S	A	VAL</code>
+    * <p>Note that this format loses information about blocks.
+    * @param afpChain
+    * @param ca1
+    * @param ca2
+    * @return
+    */
+   public static String toAlignedPairs(AFPChain afpChain, Atom[] ca1, Atom[] ca2) {
+	   StringWriter pairs = new StringWriter();
+	   
+	   //Write structure names & PDB codes
+	   pairs.append("#Struct1:\t");
+	   pairs.append(afpChain.getName1());
+	   pairs.append("\n");
+	   pairs.append("#Struct2:\t");
+	   pairs.append(afpChain.getName2());
+	   pairs.append("\n");
+	   
+	   //Write optimally aligned pairs
+	   pairs.append("#Num1\tChain1\tAA1\tNum2\tChain2\tAA2\n");
+	   int[][][] optAln = afpChain.getOptAln();
+	   int[] blockLen = afpChain.getOptLen();
+	   for( int block=0;block<afpChain.getBlockNum(); block++) {
+		   for(int i=0;i<blockLen[block];i++) {
+			   Atom atom1 = ca1[ optAln[block][0][i] ];
+			   Atom atom2 = ca2[ optAln[block][1][i] ];
+			   
+			   pairs.append(atom1.getParent().getPDBCode());
+			   pairs.append('\t');
+			   pairs.append(atom1.getParent().getParent().getName());
+			   pairs.append('\t');
+			   pairs.append(atom1.getParent().getPDBName());
+			   pairs.append('\t');
+			   pairs.append(atom2.getParent().getPDBCode());
+			   pairs.append('\t');
+			   pairs.append(atom2.getParent().getParent().getName());
+			   pairs.append('\t');
+			   pairs.append(atom2.getParent().getPDBName());
+			   pairs.append('\n');
+		   }
+	   }
+	   
+	   return pairs.toString();
    }
 
    private static void formatGappedRegion(Atom[] ca1, Atom[] ca2, StringBuffer txt, int p1, int p2, int k, int p1b, int p2b,

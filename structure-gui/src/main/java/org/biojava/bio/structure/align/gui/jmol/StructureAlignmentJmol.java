@@ -453,6 +453,14 @@ public class StructureAlignmentJmol implements MouseMotionListener, MouseListene
          String result = AfpChainWriter.toWebSiteDisplay(afpChain, ca1, ca2) ;
 
          DisplayAFP.showAlignmentImage(afpChain, result);
+      } else if ( cmd.equals(MenuCreator.PAIRS_ONLY)) {
+         if ( afpChain == null) {
+            System.err.println("Currently not viewing an alignment!");
+            return;
+         }
+         String result = AfpChainWriter.toAlignedPairs(afpChain, ca1, ca2) ;
+
+         DisplayAFP.showAlignmentImage(afpChain, result);
       } else if (cmd.equals(MenuCreator.ALIGNMENT_PANEL)){
          if ( afpChain == null) {
             System.err.println("Currently not viewing an alignment!");

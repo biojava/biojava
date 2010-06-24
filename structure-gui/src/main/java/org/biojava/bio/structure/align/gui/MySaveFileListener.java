@@ -53,9 +53,11 @@ public class MySaveFileListener implements ActionListener {
 		try {
 			UserConfiguration config = WebStartMain.getWebStartConfig();
 			AtomCache cache = new AtomCache(config);
+			
+			//TODO use the right ca atoms, since this will fail for a custom file!
 			Atom[] ca1 =cache.getAtoms(afpChain.getName1());
 			Atom[] ca2 =cache.getAtoms(afpChain.getName2());
-
+			
 			String output = "";
 			if ( ! printFatCat) {			
 				output = AFPChainXMLConverter.toXML(afpChain, ca1,ca2);

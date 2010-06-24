@@ -556,6 +556,9 @@ public class AligPanel  extends JPrintPanel implements AlignmentPositionListener
       } else if (cmd.equals(MenuCreator.TEXT_ONLY)){
          String result = AfpChainWriter.toWebSiteDisplay(afpChain, ca1, ca2);
          DisplayAFP.showAlignmentImage(afpChain, result);
+      } else if ( cmd.equals(MenuCreator.PAIRS_ONLY)) {
+         String result = AfpChainWriter.toAlignedPairs(afpChain, ca1, ca2) ;
+         DisplayAFP.showAlignmentImage(afpChain, result);
       } else if (cmd.equals(MenuCreator.FATCAT_TEXT)){
          String result = afpChain.toFatcat(ca1, ca2);
          result += AFPChain.newline;

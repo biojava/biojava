@@ -56,6 +56,7 @@ public class MenuCreator {
 	public static final String PRINT     = "Print";
 	public static final String ALIGNMENT_PANEL = "Alignment Panel";
 	public static final String TEXT_ONLY = "View Text Only";
+	public static final String PAIRS_ONLY = "View Aligned Pairs";
 	public static final String SELECT_EQR = "Select Equivalent Positions";
 	public static final String SIMILARITY_COLOR = "Color By Similarity";
 	public static final String EQR_COLOR = "Color By EQR";
@@ -134,6 +135,9 @@ public class MenuCreator {
 
 			JMenuItem textI = MenuCreator.getIcon(parent,TEXT_ONLY);
 			view.add(textI);
+			
+			JMenuItem pairsI = MenuCreator.getIcon(parent,PAIRS_ONLY);
+			view.add(pairsI);
 			
 			JMenuItem textF = MenuCreator.getIcon(parent,FATCAT_TEXT);
             view.add(textF);
@@ -230,6 +234,13 @@ public class MenuCreator {
 	}
 
 
+	/**
+	 * Create the menu for the "Text Only" representation of alignments
+	 * @param frame
+	 * @param actionListener
+	 * @param afpChain
+	 * @return
+	 */
 	public static JMenuBar getAlignmentTextMenu(JFrame frame, ActionListener actionListener,AFPChain afpChain){
 
 
@@ -290,6 +301,9 @@ public class MenuCreator {
 
 		JMenuItem textI = MenuCreator.getIcon(actionListener,TEXT_ONLY);
 		view.add(textI);
+		
+		JMenuItem pairsI = MenuCreator.getIcon(actionListener,PAIRS_ONLY);
+		view.add(pairsI);
 
 		JMenuItem textF = MenuCreator.getIcon(actionListener,FATCAT_TEXT);
         view.add(textF);
