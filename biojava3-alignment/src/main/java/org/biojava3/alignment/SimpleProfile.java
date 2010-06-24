@@ -59,7 +59,7 @@ public class SimpleProfile<S extends Sequence<C>, C extends Compound> implements
      * @param sy lists whether the target sequence aligns a {@link Compound} or gap at each index of the alignment
      * @throws IllegalArgumentException if alignments differ in size or given sequences do not fit in alignments
      */
-    public SimpleProfile(S query, S target, List<Step> sx, List<Step> sy) {
+    protected SimpleProfile(S query, S target, List<Step> sx, List<Step> sy) {
         if (sx.size() != sy.size()) {
             throw new IllegalArgumentException("Alignments differ in size");
         }
@@ -70,6 +70,35 @@ public class SimpleProfile<S extends Sequence<C>, C extends Compound> implements
         originals = new ArrayList<S>();
         originals.add(query);
         originals.add(target);
+        originals = Collections.unmodifiableList(originals);
+        length = sx.size();
+    }
+
+    /**
+     * Creates a pair profile for the given profiles.
+     *
+     * @param query the first profile of the pair
+     * @param target the second profile of the pair
+     * @param sx lists whether the query profile aligns a {@link Compound} or gap at each index of the alignment
+     * @param sy lists whether the target profile aligns a {@link Compound} or gap at each index of the alignment
+     * @throws IllegalArgumentException if alignments differ in size or given profiles do not fit in alignments
+     */
+    protected SimpleProfile(Profile<S, C> query, Profile<S, C> target, List<Step> sx, List<Step> sy) {
+        // TODO SimpleProfile(Profile<S, C>, Profile<S, C>, List<Step>, List<Step>)
+        if (sx.size() != sy.size()) {
+            throw new IllegalArgumentException("Alignments differ in size");
+        }
+        list = new ArrayList<AlignedSequence<C>>();
+        for (AlignedSequence<C> s : query) {
+            list.add(new SimpleAlignedSequence<C>(s, sx));
+        }
+        for (AlignedSequence<C> s : target) {
+            list.add(new SimpleAlignedSequence<C>(s, sy));
+        }
+        list = Collections.unmodifiableList(list);
+        originals = new ArrayList<S>();
+        originals.addAll(query.getOriginalSequences());
+        originals.addAll(target.getOriginalSequences());
         originals = Collections.unmodifiableList(originals);
         length = sx.size();
     }
@@ -188,7 +217,7 @@ public class SimpleProfile<S extends Sequence<C>, C extends Compound> implements
 
     @Override
     public ProfileView<S, C> getSubProfile(Location location) {
-        // TODO Auto-generated method stub
+        // TODO ProfileView<S, C> getSubProfile(Location)
         return null;
     }
 
@@ -204,7 +233,7 @@ public class SimpleProfile<S extends Sequence<C>, C extends Compound> implements
 
     @Override
     public String toString(int width) {
-        // TODO Auto-generated method stub
+        // TODO String toString(int)
         return null;
     }
 

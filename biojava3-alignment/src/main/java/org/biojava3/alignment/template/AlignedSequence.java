@@ -94,7 +94,7 @@ public interface AlignedSequence<C extends Compound> extends Sequence<C> {
      * Returns the index in the original {@link Sequence} corresponding to the given index within an alignment.  Both
      * indices are 1-indexed and inclusive.
      *
-     * @param alignmentIndex index within an alignment
+     * @param alignmentIndex column index within an alignment
      * @return index in the original {@link Sequence}
      * @throws IndexOutOfBoundsException if alignmentIndex < 1 or alignmentIndex > {@link #getLength()}
      */
@@ -114,5 +114,14 @@ public interface AlignedSequence<C extends Compound> extends Sequence<C> {
      * @return true for circular alignment elements
      */
     boolean isCircular();
+
+    /**
+     * Returns true if this {@link Sequence} has a gap at a particular alignment column.
+     *
+     * @param alignmentIndex column index within an alignment
+     * @return true if this column has a gap
+     * @throws IndexOutOfBoundsException if alignmentIndex < 1 or alignmentIndex > {@link #getLength()}
+     */
+    boolean isGap(int alignmentIndex);
 
 }

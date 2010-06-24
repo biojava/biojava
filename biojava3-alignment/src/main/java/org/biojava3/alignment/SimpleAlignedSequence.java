@@ -83,7 +83,50 @@ public class SimpleAlignedSequence<C extends Compound> implements AlignedSequenc
         this.numBefore = numBefore;
         this.numAfter = numAfter;
         length = steps.size();
-        setLocation(steps);
+        SimpleAlignedSequence<C> prev = null;
+        if (original instanceof SimpleAlignedSequence<?>) {
+            prev = (SimpleAlignedSequence<C>) original;
+            this.original = prev.getOriginalSequence();
+            this.numBefore += prev.numBefore;
+            this.numAfter += prev.numAfter;
+        }
+        List<Location> sublocations = new ArrayList<Location>();
+        int start = 0, step = 0, oStep = numBefore+numAfter, oMax = this.original.getLength(), pStep = 0, pMax =
+                (prev == null) ? 0 : prev.getLength();
+        boolean inGap = true;
+
+        // build sublocations: pieces of sequence separated by gaps
+        for (; step < length; step++) {
+            boolean isGapStep = (steps.get(step) == Step.GAP),
+                    isGapPrev = (prev != null && pStep < pMax && prev.isGap(pStep + 1));
+            if (!inGap && (isGapStep || isGapPrev)) {
+                inGap = true;
+                sublocations.add(new SimpleLocation(start, step, Strand.UNDEFINED));
+            } else if (!isGapStep && !isGapPrev) {
+                oStep++;
+                if (inGap) {
+                    inGap = false;
+                    start = step + 1;
+                }
+            }
+            if (!isGapStep) {
+                pStep += (prev == null) ? 0 : 1;
+            }
+        }
+        if (!inGap) {
+            sublocations.add(new SimpleLocation(start, step, Strand.UNDEFINED));
+        }
+
+        // combine sublocations into 1 Location
+        location = (sublocations.size() == 1) ? sublocations.get(0) : new SimpleLocation(
+                sublocations.get(0).getStart(), sublocations.get(sublocations.size() - 1).getEnd(), Strand.UNDEFINED,
+                false, sublocations);
+        // TODO handle circular alignments
+
+        // check that alignment has correct number of compounds in it to fit original sequence
+        if (step != length || oStep != oMax || pStep != pMax) {
+            throw new IllegalArgumentException("Given sequence does not fit in alignment.");
+        }
     }
 
     // methods for AlignedSequence
@@ -91,7 +134,21 @@ public class SimpleAlignedSequence<C extends Compound> implements AlignedSequenc
     @Override
     public int getAlignmentIndexAt(int sequenceIndex) {
         if (alignmentFromSequence == null) {
-            setAlignmentFromSequence();
+            alignmentFromSequence = new int[original.getLength()];
+            int s = 1, a = 1;
+            for (int i = 0; i < numBefore; i++, s++) {
+                alignmentFromSequence[s - 1] = a;
+            }
+            for (; s <= alignmentFromSequence.length && a <= length; s++, a++) {
+                while (a <= length && isGap(a)) {
+                    a++;
+                }
+                alignmentFromSequence[s - 1] = a;
+            }
+            a--;
+            for (int i = 0; i < numAfter; i++, s++) {
+                alignmentFromSequence[s - 1] = a;
+            }
         }
         return alignmentFromSequence[sequenceIndex - 1];
     }
@@ -109,7 +166,19 @@ public class SimpleAlignedSequence<C extends Compound> implements AlignedSequenc
     @Override
     public int getNumGaps() {
         if (numGaps == -1) {
-            setNumGaps();
+            numGaps = 0;
+            C cGap = getCompoundSet().getCompoundForString(gap);
+            boolean inGap = false;
+            for (C compound : getAsList()) {
+                if (compound == null || compound.equalsIgnoreCase(cGap)) {
+                    if (!inGap) {
+                        numGaps++;
+                        inGap = true;
+                    }
+                } else {
+                    inGap = false;
+                }
+            }
         }
         return numGaps;
     }
@@ -128,7 +197,17 @@ public class SimpleAlignedSequence<C extends Compound> implements AlignedSequenc
     @Override
     public int getSequenceIndexAt(int alignmentIndex) {
         if (sequenceFromAlignment == null) {
-            setSequenceFromAlignment();
+            sequenceFromAlignment = new int[length];
+            int a = 1, s = numBefore + 1;
+            for (int i = 0; i < getStart().getPosition(); i++, a++) {
+                sequenceFromAlignment[a - 1] = s;
+            }
+            for (; a <= length; a++) {
+                if (s < getEnd().getPosition() && !isGap(a)) {
+                    s++;
+                }
+                sequenceFromAlignment[a - 1] = s;
+            }
         }
         return sequenceFromAlignment[alignmentIndex - 1];
     }
@@ -141,6 +220,22 @@ public class SimpleAlignedSequence<C extends Compound> implements AlignedSequenc
     @Override
     public boolean isCircular() {
         return location.isCircular();
+    }
+
+    @Override
+    public boolean isGap(int alignmentIndex) {
+        if (getStart().getPosition() <= alignmentIndex && alignmentIndex <= getEnd().getPosition()) {
+            if (!location.isComplex()) {
+                return false;
+            }
+            for (Location sublocation : location) {
+                if (sublocation.getStart().getPosition() <= alignmentIndex &&
+                        alignmentIndex <= sublocation.getEnd().getPosition()) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
     // methods for Sequence
@@ -235,104 +330,14 @@ public class SimpleAlignedSequence<C extends Compound> implements AlignedSequenc
         return getAsList().iterator();
     }
 
+    // method from Object
+
     /**
      * Provides standard Java language access to results of {@link #getSequenceAsString()}.
      */
     @Override
     public String toString() {
         return getSequenceAsString();
-    }
-
-    // helper methods
-
-    // determines if this sequence has a gap at a particular alignment location
-    private boolean isGap(int alignmentIndex) {
-        for (Location sublocation : location) {
-            if (sublocation.getStart().getPosition() <= alignmentIndex &&
-                    alignmentIndex <= sublocation.getEnd().getPosition()) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    // initializes alignmentFromSequence
-    private void setAlignmentFromSequence() {
-        alignmentFromSequence = new int[original.getLength()];
-        int s = 1, a = 1;
-        for (int i = 0; i < numBefore; i++, s++) {
-            alignmentFromSequence[s - 1] = a;
-        }
-        for (; s <= alignmentFromSequence.length && a <= length; s++, a++) {
-            while (a <= length && isGap(a)) {
-                a++;
-            }
-            alignmentFromSequence[s - 1] = a;
-        }
-        a--;
-        for (int i = 0; i < numAfter; i++, s++) {
-            alignmentFromSequence[s - 1] = a;
-        }
-    }
-
-    // initializes location
-    private void setLocation(List<Step> steps) {
-        List<Location> sublocations = new ArrayList<Location>();
-        int step = 0, i = numBefore+numAfter, iMax = original.getLength();
-        while (step < length && steps.get(step) == Step.GAP) {
-            step++;
-        }
-        while (step < length && i < iMax) {
-            int start = step + 1;
-            while (step < length && steps.get(step) == Step.COMPOUND && i < iMax) {
-                step++;
-                i++;
-            }
-            sublocations.add(new SimpleLocation(start, step, Strand.UNDEFINED));
-            while (step < length && steps.get(step) == Step.GAP) {
-                step++;
-            }
-        }
-        Point start = sublocations.get(0).getStart(), end = sublocations.get(sublocations.size() - 1).getEnd();
-        // TODO handle circular alignments
-        location = (sublocations.size() > 1) ? new SimpleLocation(start, end, Strand.UNDEFINED, false, sublocations) :
-                new SimpleLocation(start, end, Strand.UNDEFINED);
-
-        if (step != length || i != iMax) {
-            throw new IllegalArgumentException("Given sequence does not fit in alignment.");
-        }
-    }
-
-    // initializes the number of gaps
-    private void setNumGaps() {
-        numGaps = 0;
-        C cGap = getCompoundSet().getCompoundForString(gap);
-        boolean inGap = false;
-        for (C compound : getAsList()) {
-            if (compound == null || compound.equalsIgnoreCase(cGap)) {
-                if (!inGap) {
-                    numGaps++;
-                    inGap = true;
-                }
-            } else {
-                inGap = false;
-            }
-        }
-    }
-
-    // initializes sequenceFromAlignment
-    private void setSequenceFromAlignment() {
-        sequenceFromAlignment = new int[length];
-        int a = 1, s = numBefore + 1;
-        for (int i = 0; i < getStart().getPosition(); i++, a++) {
-            sequenceFromAlignment[a - 1] = s;
-        }
-        for (; a <= length; a++) {
-            if (s < getEnd().getPosition() && !isGap(a)) {
-                s++;
-            }
-            sequenceFromAlignment[a - 1] = s;
-        }
     }
 
 }
