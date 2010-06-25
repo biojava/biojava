@@ -56,16 +56,20 @@ public class SimpleProfile<S extends Sequence<C>, C extends Compound> implements
      * @param query the first sequence of the pair
      * @param target the second sequence of the pair
      * @param sx lists whether the query sequence aligns a {@link Compound} or gap at each index of the alignment
+     * @param xb number of {@link Compound}s skipped in the query sequence before the aligned region
+     * @param xa number of {@link Compound}s skipped in the query sequence after the aligned region
      * @param sy lists whether the target sequence aligns a {@link Compound} or gap at each index of the alignment
+     * @param yb number of {@link Compound}s skipped in the target sequence before the aligned region
+     * @param ya number of {@link Compound}s skipped in the target sequence after the aligned region
      * @throws IllegalArgumentException if alignments differ in size or given sequences do not fit in alignments
      */
-    protected SimpleProfile(S query, S target, List<Step> sx, List<Step> sy) {
+    protected SimpleProfile(S query, S target, List<Step> sx, int xb, int xa, List<Step> sy, int yb, int ya) {
         if (sx.size() != sy.size()) {
             throw new IllegalArgumentException("Alignments differ in size");
         }
         list = new ArrayList<AlignedSequence<C>>();
-        list.add(new SimpleAlignedSequence<C>(query, sx));
-        list.add(new SimpleAlignedSequence<C>(target, sy));
+        list.add(new SimpleAlignedSequence<C>(query, sx, xb, xa));
+        list.add(new SimpleAlignedSequence<C>(target, sy, yb, ya));
         list = Collections.unmodifiableList(list);
         originals = new ArrayList<S>();
         originals.add(query);
@@ -84,7 +88,6 @@ public class SimpleProfile<S extends Sequence<C>, C extends Compound> implements
      * @throws IllegalArgumentException if alignments differ in size or given profiles do not fit in alignments
      */
     protected SimpleProfile(Profile<S, C> query, Profile<S, C> target, List<Step> sx, List<Step> sy) {
-        // TODO SimpleProfile(Profile<S, C>, Profile<S, C>, List<Step>, List<Step>)
         if (sx.size() != sy.size()) {
             throw new IllegalArgumentException("Alignments differ in size");
         }

@@ -232,8 +232,7 @@ public class Alignments {
         case GLOBAL:
             return new NeedlemanWunsch<S, C>(query, target, gapPenalty, subMatrix);
         case LOCAL:
-            // TODO local alignment option
-            return null;
+            return new SmithWaterman<S, C>(query, target, gapPenalty, subMatrix);
         }
     }
 

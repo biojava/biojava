@@ -45,7 +45,7 @@ public class SimpleSequencePair<S extends Sequence<C>, C extends Compound> exten
     private int identicals = -1, similars = -1;
 
     /**
-     * Creates a pair profile for the given sequences.
+     * Creates a pair profile for the given sequences with a global alignment.
      *
      * @param query the first sequence of the pair
      * @param target the second sequence of the pair
@@ -54,7 +54,24 @@ public class SimpleSequencePair<S extends Sequence<C>, C extends Compound> exten
      * @throws IllegalArgumentException if alignments differ in size or given sequences do not fit in alignments
      */
     public SimpleSequencePair(S query, S target, List<Step> sx, List<Step> sy) {
-        super(query, target, sx, sy);
+        this(query, target, sx, 0, 0, sy, 0, 0);
+    }
+
+    /**
+     * Creates a pair profile for the given sequences with a local alignment.
+     *
+     * @param query the first sequence of the pair
+     * @param target the second sequence of the pair
+     * @param sx lists whether the query sequence aligns a {@link Compound} or gap at each index of the alignment
+     * @param xb number of {@link Compound}s skipped in the query sequence before the aligned region
+     * @param xa number of {@link Compound}s skipped in the query sequence after the aligned region
+     * @param sy lists whether the target sequence aligns a {@link Compound} or gap at each index of the alignment
+     * @param yb number of {@link Compound}s skipped in the target sequence before the aligned region
+     * @param ya number of {@link Compound}s skipped in the target sequence after the aligned region
+     * @throws IllegalArgumentException if alignments differ in size or given sequences do not fit in alignments
+     */
+    public SimpleSequencePair(S query, S target, List<Step> sx, int xb, int xa, List<Step> sy, int yb, int ya) {
+        super(query, target, sx, xb, xa, sy, yb, ya);
     }
 
     @Override
