@@ -242,7 +242,7 @@ public class SimpleSubstitutionMatrix<C extends Compound> implements Substitutio
 
     @Override
     public SubstitutionMatrix<C> normalizeMatrix(short scale) {
-        // TODO Auto-generated method stub
+        // TODO SubstitutionMatrix<C> normalizeMatrix(short)
         return null;
     }
 

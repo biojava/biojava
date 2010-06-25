@@ -303,7 +303,7 @@ public abstract class AbstractPairwiseSequenceAligner<S extends Sequence<C>, C e
     // helper method that performs alignment
     protected abstract void align();
 
-    // helper method that resets output fields
+    // helper method that resets output fields; TODO better bounds for max and min
     protected void reset() {
         if (query != null && target != null && gapPenalty != null && subMatrix != null) {
             int subLength = Math.min(query.getLength(), target.getLength()), maxLength = query.getLength()
