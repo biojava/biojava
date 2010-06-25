@@ -57,6 +57,10 @@ public class DefaultProteinModificationParser
 implements ProteinModificationParser {
 	
 	private double bondLengthTolerance = 0.4;
+	private boolean recordUnidentifiableAtomLinkages = false;
+	
+	private List<ModifiedCompound> identifiedModifiedCompounds = null;
+	private List<Atom[]> unidentifiableAtomLinkages = null;
 	
 	/**
 	 * 
@@ -72,15 +76,56 @@ implements ProteinModificationParser {
 	}
 	
 	/**
+	 * 
+	 * @param recordUnidentifiableAtomLinkages true if choosing to record unidentifiable
+	 *  atoms; false, otherwise.
+	 */
+	public void setRecordUnidentifiableAtomLinkages(boolean recordUnidentifiableAtomLinkages) {
+		this.recordUnidentifiableAtomLinkages = recordUnidentifiableAtomLinkages;
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	public List<ModifiedCompound> getIdentifiedModifiedCompound() {
+		if (identifiedModifiedCompounds==null) {
+			throw new IllegalStateException("No result available. Please call parse() first.");
+		}
+		
+		return identifiedModifiedCompounds;
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	public List<Atom[]> getUnidentifiableAtomLinkages() {
+		if (!recordUnidentifiableAtomLinkages) {
+			throw new UnsupportedOperationException("Recording unidentified atom linkages" +
+					"is not supported. Please setRecordUnidentifiableAtoms(true) first.");
+		}
+		
+		if (identifiedModifiedCompounds==null) {
+			throw new IllegalStateException("No result available. Please call parse() first.");
+		}
+		
+		return unidentifiableAtomLinkages;
+	}
+	
+	/**
 	 * {@inheritDoc}
 	 * @throws IllegalArgumentException if null structure or
 	 *  potentialModification, or , or if the nodelnr is less then 0 or
 	 *  larger than or equal to the number of models in the structure.
 	 */
 	@Override
-	public List<ModifiedCompound> parse(final Structure structure, 
+	public void parse(final Structure structure, 
 			final Set<ProteinModification> potentialModifications,
 			final int modelnr) {
+		identifiedModifiedCompounds = new ArrayList<ModifiedCompound>();
+		if (recordUnidentifiableAtomLinkages) {
+			unidentifiableAtomLinkages = new ArrayList<Atom[]>();
+		}
+		
 		if (structure==null) {
 			throw new IllegalArgumentException("Null structure.");
 		}
@@ -95,10 +140,8 @@ implements ProteinModificationParser {
 					+ structure.getName());
 		}
 		
-		List<ModifiedCompound> ret = new ArrayList<ModifiedCompound>();
-		
 		if (potentialModifications.isEmpty()) {
-			return ret;
+			return;
 		}
 		
 		List<Chain> chains = structure.getChains(modelnr);
@@ -122,7 +165,7 @@ implements ProteinModificationParser {
 					if (residues != null) {
 						for (Group residue : residues) {
 							ModifiedCompound modRes = new ModifiedCompoundImpl(mod, residue);
-							ret.add(modRes);
+							identifiedModifiedCompounds.add(modRes);
 						}
 					}
 				} else {
@@ -136,7 +179,7 @@ implements ProteinModificationParser {
 						continue;
 					}
 					
-					assembleLinkages(matchedAtomsOfLinkages, mod, ret);
+					assembleLinkages(matchedAtomsOfLinkages, mod, identifiedModifiedCompounds);
 				}
 			}
 			
@@ -144,7 +187,49 @@ implements ProteinModificationParser {
 			// directly attached to protein residues.
 		}
 		
-		return ret;
+		// record unidentifiable linkage
+		if (recordUnidentifiableAtomLinkages) {
+			// first put identified linkages in a map for fast query
+			Map<Atom, Set<Atom>> identifiedLinkages = new HashMap<Atom, Set<Atom>>(); 
+			for (ModifiedCompound mc : identifiedModifiedCompounds) {
+				List<Atom[]> linkages = mc.getAtomLinkages();
+				for (Atom[] linkage : linkages) {
+					Set<Atom> set = identifiedLinkages.get(linkage[0]);
+					if (set == null) {
+						set = new HashSet<Atom>();
+						identifiedLinkages.put(linkage[0], set);
+					}
+					set.add(linkage[1]);
+					
+					set = identifiedLinkages.get(linkage[1]);
+					if (set == null) {
+						set = new HashSet<Atom>();
+						identifiedLinkages.put(linkage[1], set);
+					}
+					set.add(linkage[0]);
+				}
+			}
+			
+			// record
+			for (Chain chain : chains) {
+				List<Group> groups = chain.getAtomGroups();
+				int n = groups.size();
+				for (int i=0; i<n-1; i++) {
+					Group group1 = groups.get(i);
+					for (int j=i+1; j<n; j++) {
+						Group group2 = groups.get(j);
+						List<Atom[]> linkages = ProteinModificationParserUtil.
+								findNonNCAtomLinkages(group1, group2, bondLengthTolerance);
+						for (Atom[] linkage : linkages) {
+							Set<Atom> set = identifiedLinkages.get(linkage[0]);
+							if (set == null || !set.contains(linkage[1])) {
+								unidentifiableAtomLinkages.add(linkage);
+							}
+						}
+					}
+				}
+			}
+		}
 	}
 	
 	/**
@@ -262,8 +347,8 @@ implements ProteinModificationParser {
 						continue;
 					}
 		
-					Atom[] atoms = findNearestAtoms(g1, g2, 
-							potentialNamesOfAtomOnGroup1, potentialNamesOfAtomOnGroup2);
+					Atom[] atoms = ProteinModificationParserUtil.findNearestNonNCAtomLinkage(g1, g2, 
+							potentialNamesOfAtomOnGroup1, potentialNamesOfAtomOnGroup2, bondLengthTolerance);
 					if (atoms!=null) {
 						list.add(atoms);
 					}
@@ -279,109 +364,6 @@ implements ProteinModificationParser {
 		}
 		
 		return matchedAtomsOfLinkages;
-	}
-	
-	/**
-	 * Find a linkage between two groups within tolerance of bond length,
-	 * from potential atoms.
-	 * @param group1
-	 * @param group2
-	 * @param nameOfAtomOnGroup1
-	 * @param nameOfAtomOnGroup2
-	 * @return an array of two Atoms that form bond between each other
-	 *  if found; null, otherwise.
-	 */
-	private Atom[] findNearestAtoms(final Group group1, final Group group2,
-			List<String> potentialNamesOfAtomOnGroup1, List<String> potentialNamesOfAtomOnGroup2) {
-		Atom[] ret = null;
-		double minDistance = Double.POSITIVE_INFINITY;
-		
-		if (potentialNamesOfAtomOnGroup1 == null) {
-			// if empty name, search for all atoms
-			potentialNamesOfAtomOnGroup1 = getAtomNames(group1);
-		}
-		
-		if (potentialNamesOfAtomOnGroup2 == null) {
-			// if empty name, search for all atoms
-			potentialNamesOfAtomOnGroup2 = getAtomNames(group2);
-		}
-		
-		if (potentialNamesOfAtomOnGroup1==null || potentialNamesOfAtomOnGroup2==null) {
-			return null;
-		}
-		
-		for (String namesOfAtomOnGroup1 : potentialNamesOfAtomOnGroup1) {
-			for (String namesOfAtomOnGroup2 : potentialNamesOfAtomOnGroup2) {
-				Atom[] atoms = findLinkage(group1, group2, namesOfAtomOnGroup1, namesOfAtomOnGroup2);
-				if (atoms != null) {
-					double distance;
-					try {
-						distance = Calc.getDistance(atoms[0], atoms[1]);
-					} catch (StructureException e) {
-						continue;
-					}
-					
-					if (distance < minDistance) {
-						minDistance = distance;
-						ret = atoms;
-					}
-				}
-			}
-		}
-		
-		return ret;
-	}
-	
-	/**
-	 * Find a linkage between two groups within tolerance of bond length.
-	 * @param group1
-	 * @param group2
-	 * @param nameOfAtomOnGroup1
-	 * @param nameOfAtomOnGroup2
-	 * @return an array of two Atoms that form bond between each other
-	 *  if found; null, otherwise.
-	 */
-	private Atom[] findLinkage(final Group group1, final Group group2,
-			String nameOfAtomOnGroup1, String nameOfAtomOnGroup2) {
-		Atom[] ret = new Atom[2];
-		double distance;
-		
-		try {
-			ret[0] = group1.getAtom(nameOfAtomOnGroup1);
-			ret[1] = group2.getAtom(nameOfAtomOnGroup2);
-			distance = Calc.getDistance(ret[0], ret[1]);
-		} catch (StructureException e) {
-			return null;
-		}
-		
-		if (ret[0]==null || ret[1]==null) {
-			return null;
-		}
-		
-		float radiusOfAtom1 = ret[0].getElement().getCovalentRadius();
-		float radiusOfAtom2 = ret[1].getElement().getCovalentRadius();
-		
-		if (Math.abs(distance-radiusOfAtom1 -radiusOfAtom2)
-				> bondLengthTolerance) {
-			return null;
-		}
-		
-		return ret;
-	}
-	
-	private List<String> getAtomNames(Group group) {
-		List<Atom> atoms = group.getAtoms();
-		if (atoms == null) {
-			return null;
-		}
-		
-		int n = atoms.size();
-		List<String> ret = new ArrayList<String>(n);
-		for (int i=0; i<n; i++) {
-			ret.add(atoms.get(i).getName());
-		}
-		
-		return ret;
 	}
 	
 	/**

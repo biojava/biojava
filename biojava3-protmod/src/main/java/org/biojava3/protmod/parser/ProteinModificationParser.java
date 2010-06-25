@@ -27,6 +27,7 @@ package org.biojava3.protmod.parser;
 import java.util.List;
 import java.util.Set;
 
+import org.biojava.bio.structure.Atom;
 import org.biojava.bio.structure.Structure;
 
 import org.biojava3.protmod.ModifiedCompound;
@@ -44,9 +45,24 @@ public interface ProteinModificationParser {
 	 * @param structure query {@link Structure}.
 	 * @param potentialModifications query {@link ProteinModification}s.
 	 * @param modelnr model number.
-	 * @return an list of {@link ModifiedCompound}s.
 	 */
-	public List<ModifiedCompound> parse(Structure structure, 
+	public void parse(Structure structure, 
 			Set<ProteinModification> potentialModifications,
 			int modelnr);
+	
+	/**
+	 * 
+	 * @return a list of identified {@link ModifiedCompound}s from
+	 *  the last parse result.
+	 */
+	public List<ModifiedCompound> getIdentifiedModifiedCompound();
+	
+	/**
+	 * 
+	 * @return a list of atom pairs, which represent the 
+	 *  atom bonds that were covered by the identified 
+	 *  {@link ModifiedCompound}s from the last parse result.
+	 *  Each element of the list is a array containing two atoms.
+	 */
+	public List<Atom[]> getUnidentifiableAtomLinkages();
 }
