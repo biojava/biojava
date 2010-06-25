@@ -521,7 +521,7 @@ public class StructureTools {
 
    /** Reduce a structure to provide a smaller representation . Only takes the first model of the structure. If chainNr >=0 only takes the chain at that position into account.	 * 
     * @param s
-    * @param chainNr
+    * @param chainNr can be -1 to request all chains of model 0, otherwise will only add chain at this position 
     * @return Structure object
     * @since 3.0
     */
