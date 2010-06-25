@@ -25,6 +25,8 @@ public class ViewerTest extends TestCase {
 
 	@Override
 	protected void setUp(){
+		if (  java.awt.GraphicsEnvironment.isHeadless())
+    		return;
 		//viewer = new OpenAstexViewer();
 		viewer = new JmolViewerImpl();
 		//viewer = new RCSBViewer();
