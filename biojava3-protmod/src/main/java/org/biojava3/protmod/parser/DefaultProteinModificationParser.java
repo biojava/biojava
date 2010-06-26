@@ -28,6 +28,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -36,6 +39,7 @@ import org.biojava.bio.structure.Atom;
 import org.biojava.bio.structure.Calc;
 import org.biojava.bio.structure.Chain;
 import org.biojava.bio.structure.Group;
+import org.biojava.bio.structure.GroupType;
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureException;
 
@@ -145,9 +149,27 @@ implements ProteinModificationParser {
 		}
 		
 		List<Chain> chains = structure.getChains(modelnr);
+		int nChains = chains.size();
+		
+		Map<Chain, List<Group>> mapChainResidues = new LinkedHashMap<Chain,List<Group>>(nChains);
+		Map<Chain, Set<Group>> mapChainLigands = new LinkedHashMap<Chain, Set<Group>>(nChains);
+		
+		for (int i=0; i<nChains; i++) {
+			Chain chain = chains.get(i);
+			List<Group> residues = chain.getSeqResGroups();
+			mapChainResidues.put(chain, residues);
+			Set<Group> ligands = new LinkedHashSet<Group>(chain.getAtomLigands());
+			if (ligands.removeAll(residues)) {
+				System.err.println(structure.getPDBCode()+"\t"+modelnr+"\t"
+						+chain.getName()+": Overlapping between ligands and residues");
+			}
+			mapChainLigands.put(chain, ligands);
+		}
+		
 		for (Chain chain : chains) {
 			Map<Component, List<Group>> mapCompGroups = 
-				getModificationGroups(chain, potentialModifications);
+				getModificationGroups(potentialModifications, 
+						mapChainResidues.get(chain), mapChainLigands.get(chain));
 			
 			for (ProteinModification mod : potentialModifications) {
 				ModificationCondition condition = mod.getCondition();
@@ -182,50 +204,108 @@ implements ProteinModificationParser {
 					assembleLinkages(matchedAtomsOfLinkages, mod, identifiedModifiedCompounds);
 				}
 			}
-			
-			// TODO: identify additional attached groups that are not 
-			// directly attached to protein residues.
+		}
+
+		// identify additional groups that are not directly attached to amino acids. 
+		for (ModifiedCompound mc : identifiedModifiedCompounds) {
+			Chain chain = mc.getGroups().iterator().next().getParent();
+			Set<Group> ligands = mapChainLigands.get(chain);
+			identifyAdditionalAttachments(mc, ligands);
 		}
 		
 		// record unidentifiable linkage
 		if (recordUnidentifiableAtomLinkages) {
-			// first put identified linkages in a map for fast query
-			Map<Atom, Set<Atom>> identifiedLinkages = new HashMap<Atom, Set<Atom>>(); 
-			for (ModifiedCompound mc : identifiedModifiedCompounds) {
-				List<Atom[]> linkages = mc.getAtomLinkages();
-				for (Atom[] linkage : linkages) {
-					Set<Atom> set = identifiedLinkages.get(linkage[0]);
-					if (set == null) {
-						set = new HashSet<Atom>();
-						identifiedLinkages.put(linkage[0], set);
+			for (Chain chain : chains) {
+				recordUnidentifiableAtomLinkages(chain);
+			}
+		}
+	}
+	
+	/**
+	 * identify additional groups that are not directly attached to amino acids.
+	 * @param mc {@link ModifiedCompound}.
+	 * @return a list of added groups.
+	 */
+	private void identifyAdditionalAttachments(ModifiedCompound mc, 
+			Set<Group> ligands) {
+		if (ligands.isEmpty()) {
+			return;
+		}
+		
+		// TODO: should the additional groups only be allowed to the identified 
+		// heta groups or both amino acids and heta groups?
+		List<Group> identifiedLigands = new ArrayList<Group>();
+		for (Group group : mc.getGroups()) {
+			if (ligands.contains(group)) {
+				identifiedLigands.add(group);
+			}
+		}
+		
+		int start = 0;
+		
+		int n = identifiedLigands.size();
+		while (n > start) {
+			for (Group group1 : ligands) {
+				for (int i=start; i<n; i++) {
+					Group group2 = identifiedLigands.get(i);
+					if (!identifiedLigands.contains(group1)) {
+						List<Atom[]> linkages = ProteinModificationParserUtil.
+								findNonNCAtomLinkages(group2, group1, bondLengthTolerance);
+						if (!linkages.isEmpty()) {
+							for (Atom[] linkage : linkages) {
+								mc.addAtomLinkage(linkage[0], linkage[1]);
+							}
+							identifiedLigands.add(group1);
+							break;
+						}
 					}
-					set.add(linkage[1]);
-					
-					set = identifiedLinkages.get(linkage[1]);
-					if (set == null) {
-						set = new HashSet<Atom>();
-						identifiedLinkages.put(linkage[1], set);
-					}
-					set.add(linkage[0]);
 				}
 			}
 			
-			// record
-			for (Chain chain : chains) {
-				List<Group> groups = chain.getAtomGroups();
-				int n = groups.size();
-				for (int i=0; i<n-1; i++) {
-					Group group1 = groups.get(i);
-					for (int j=i+1; j<n; j++) {
-						Group group2 = groups.get(j);
-						List<Atom[]> linkages = ProteinModificationParserUtil.
-								findNonNCAtomLinkages(group1, group2, bondLengthTolerance);
-						for (Atom[] linkage : linkages) {
-							Set<Atom> set = identifiedLinkages.get(linkage[0]);
-							if (set == null || !set.contains(linkage[1])) {
-								unidentifiableAtomLinkages.add(linkage);
-							}
-						}
+			start = n;
+			n = identifiedLigands.size();
+		}
+	}
+	
+	/**
+	 * record unidentifiable atom linkages in a chain.
+	 * @param chain a {@link Chain}.
+	 */
+	private void recordUnidentifiableAtomLinkages(Chain chain) {
+		// first put identified linkages in a map for fast query
+		Map<Atom, Set<Atom>> identifiedLinkages = new HashMap<Atom, Set<Atom>>();
+		for (ModifiedCompound mc : identifiedModifiedCompounds) {
+			List<Atom[]> linkages = mc.getAtomLinkages();
+			for (Atom[] linkage : linkages) {
+				Set<Atom> set = identifiedLinkages.get(linkage[0]);
+				if (set == null) {
+					set = new HashSet<Atom>();
+					identifiedLinkages.put(linkage[0], set);
+				}
+				set.add(linkage[1]);
+				
+				set = identifiedLinkages.get(linkage[1]);
+				if (set == null) {
+					set = new HashSet<Atom>();
+					identifiedLinkages.put(linkage[1], set);
+				}
+				set.add(linkage[0]);
+			}
+		}
+		
+		// record
+		List<Group> groups = chain.getAtomGroups();
+		int n = groups.size();
+		for (int i=0; i<n-1; i++) {
+			Group group1 = groups.get(i);
+			for (int j=i+1; j<n; j++) {
+				Group group2 = groups.get(j);
+				List<Atom[]> linkages = ProteinModificationParserUtil.
+						findNonNCAtomLinkages(group1, group2, bondLengthTolerance);
+				for (Atom[] linkage : linkages) {
+					Set<Atom> set = identifiedLinkages.get(linkage[0]);
+					if (set == null || !set.contains(linkage[1])) {
+						unidentifiableAtomLinkages.add(linkage);
 					}
 				}
 			}
@@ -234,15 +314,17 @@ implements ProteinModificationParser {
 	
 	/**
 	 * 
-	 * @param chain {@link Chain}.
 	 * @param modifications a set of {@link ProteinModification}s.
+	 * @param residues
+	 * @param ligands 
 	 * @return map from component to list of corresponding residues
 	 *  in the chain.
 	 */
 	private Map<Component, List<Group>> getModificationGroups(
-			final Chain chain, 
-			final Set<ProteinModification> modifications) {
-		if (chain==null || modifications==null) {
+			final Set<ProteinModification> modifications,
+			final List<Group> residues,
+			final Set<Group> ligands) {
+		if (residues==null || ligands==null || modifications==null) {
 			throw new IllegalArgumentException("Null argument(s).");
 		}
 		
@@ -259,9 +341,7 @@ implements ProteinModificationParser {
 		
 		{
 			// ligands
-			List<Group> groups = chain.getAtomLigands();
-			
-			for (Group group : groups) {
+			for (Group group : ligands) {
 				String pdbccId = group.getPDBName().trim();
 				Component comp = Component.of(pdbccId, ComponentType.LIGAND);
 				if (!comps.contains(comp)) {
@@ -278,7 +358,6 @@ implements ProteinModificationParser {
 		
 		{
 			// residues
-			List<Group> residues = chain.getSeqResGroups();
 			if (residues.isEmpty()) {
 				return mapCompRes;
 			}
@@ -382,7 +461,7 @@ implements ProteinModificationParser {
 		Set<ModifiedCompound> identifiedCompounds = new HashSet<ModifiedCompound>();
 		while (indices[0]<matchedAtomsOfLinkages.get(0).size()) {
 			List<Atom[]> atomLinkages = new ArrayList<Atom[]>(nLink);
-			List<Group> groups = new ArrayList<Group>();
+			Set<Group> groups = new LinkedHashSet<Group>();
 			for (int iLink=0; iLink<nLink; iLink++) {
 				Atom[] atoms = matchedAtomsOfLinkages.get(iLink).get(indices[iLink]);
 				atomLinkages.add(atoms);
@@ -391,8 +470,7 @@ implements ProteinModificationParser {
 			}
 			if (matchLinkages(condition.getLinkages(), atomLinkages)) {
 				// matched
-				ModifiedCompound mc = new ModifiedCompoundImpl(mod, 
-						new ArrayList<Group>(groups), atomLinkages);
+				ModifiedCompound mc = new ModifiedCompoundImpl(mod, groups, atomLinkages);
 				if (!identifiedCompounds.contains(mc)) {
 					ret.add(mc);
 					identifiedCompounds.add(mc);

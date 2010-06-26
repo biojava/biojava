@@ -24,9 +24,11 @@
 
 package org.biojava3.protmod;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -40,7 +42,7 @@ import org.biojava.bio.structure.Group;
  */
 public class ModifiedCompoundImpl implements ModifiedCompound {
 	private final ProteinModification modification;
-	private final List<Group> groups;
+	private final Set<Group> groups;
 	private final List<Atom[]> atomLinkages;
 	
 	/**
@@ -89,7 +91,7 @@ public class ModifiedCompoundImpl implements ModifiedCompound {
 	public ModifiedCompoundImpl(final ProteinModification modification,
 			final Group[] groups,
 			final Atom[][] atomLinkages) {		
-		this(modification, Arrays.asList(groups),
+		this(modification, new LinkedHashSet<Group>(Arrays.asList(groups)),
 				atomLinkages==null?null:Arrays.asList(atomLinkages));
 	}	
 	
@@ -102,17 +104,17 @@ public class ModifiedCompoundImpl implements ModifiedCompound {
 	 *  Each element of the list is a array containing two atoms. 
 	 */
 	public ModifiedCompoundImpl(final ProteinModification modification,
-			final List<Group> groups, final List<Atom[]> atomLinkages) {
+			final Set<Group> groups, final List<Atom[]> atomLinkages) {
 		if (modification==null) {
 			throw new IllegalArgumentException("modification cannot be null");
 		}
 		
 		this.modification = modification;
-		this.groups = groups;
+		this.groups = new LinkedHashSet<Group>(groups);
 		if (atomLinkages==null) {
 			this.atomLinkages = Collections.emptyList();
 		} else {
-			this.atomLinkages = atomLinkages;
+			this.atomLinkages = new ArrayList<Atom[]>(atomLinkages);
 		}
 		
 		checkGroupAndAtomLinkagessProper();
@@ -129,9 +131,7 @@ public class ModifiedCompoundImpl implements ModifiedCompound {
 					modification.getId()+": at least one involved residue.");
 		}
 		
-		Set<Group> gs = new HashSet<Group>(groups);
-		
-		if (gs.size()>1) {
+		if (groups.size()>1) {
 			if (atomLinkages.isEmpty()) {
 				throw new IllegalArgumentException("Atom bonds are supposed to be " +
 						"specified for more than one component.");
@@ -145,7 +145,7 @@ public class ModifiedCompoundImpl implements ModifiedCompound {
 					}
 					
 					Group g = atoms[j].getParent();
-					if (!gs.contains(g)) {
+					if (!groups.contains(g)) {
 						throw new IllegalArgumentException("Atoms must be on the " +
 								"involved amino acids or other chemical groups.");
 					}
@@ -154,8 +154,7 @@ public class ModifiedCompoundImpl implements ModifiedCompound {
 				}
 			}
 			
-			gs.removeAll(bondedGroups);
-			if (!gs.isEmpty()) {
+			if (!bondedGroups.containsAll(groups)) {
 				throw new IllegalArgumentException("Some of the components were" +
 						"not connected to others.");
 			}
@@ -174,8 +173,8 @@ public class ModifiedCompoundImpl implements ModifiedCompound {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public List<Group> getGroups() {
-		return Collections.unmodifiableList(groups);
+	public Set<Group> getGroups() {
+		return Collections.unmodifiableSet(groups);
 	}
 	
 	/**
@@ -184,6 +183,23 @@ public class ModifiedCompoundImpl implements ModifiedCompound {
 	@Override
 	public List<Atom[]> getAtomLinkages() {
 		return Collections.unmodifiableList(atomLinkages);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public boolean addAtomLinkage(final Atom atom1, final Atom atom2) {
+		if (atom1==null || atom2==null) {
+			throw new IllegalArgumentException("Null atom(s).");
+		}
+		
+		atomLinkages.add(new Atom[]{atom1, atom2});
+		
+		groups.add(atom1.getParent());
+		groups.add(atom2.getParent());
+		
+		return true;
 	}
 	
 	/**
@@ -214,7 +230,7 @@ public class ModifiedCompoundImpl implements ModifiedCompound {
 			return false;
 		}
 		
-		List<Group> gs = mci.getGroups();
+		Set<Group> gs = mci.getGroups();
 		return gs.containsAll(groups);
 		
 		// Do not need to consider linkage, since they can be determined by

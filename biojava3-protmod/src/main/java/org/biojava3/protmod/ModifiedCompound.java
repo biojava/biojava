@@ -25,6 +25,7 @@
 package org.biojava3.protmod;
 
 import java.util.List;
+import java.util.Set;
 
 import org.biojava.bio.structure.Atom;
 import org.biojava.bio.structure.Group;
@@ -46,7 +47,7 @@ public interface ModifiedCompound {
 	 * 
 	 * @return involved chemical {@link Group}s.
 	 */
-	public List<Group> getGroups();
+	public Set<Group> getGroups();
 	
 	/**
 	 * 
@@ -55,4 +56,12 @@ public interface ModifiedCompound {
 	 *  Each element of the list is a array containing two atoms.
 	 */
 	public List<Atom[]> getAtomLinkages();
+	
+	/**
+	 * Add a linkage.
+	 * @param atom1 the first {@link Atom}.
+	 * @param atom2 the second {@link Atom}.
+	 * @return true if added; false otherwise.
+	 */
+	public boolean addAtomLinkage(Atom atom1, Atom atom2);
 }
