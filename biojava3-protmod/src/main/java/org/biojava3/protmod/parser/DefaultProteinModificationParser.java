@@ -28,7 +28,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -36,12 +35,9 @@ import java.util.Map;
 import java.util.Set;
 
 import org.biojava.bio.structure.Atom;
-import org.biojava.bio.structure.Calc;
 import org.biojava.bio.structure.Chain;
 import org.biojava.bio.structure.Group;
-import org.biojava.bio.structure.GroupType;
 import org.biojava.bio.structure.Structure;
-import org.biojava.bio.structure.StructureException;
 
 import org.biojava3.protmod.Component;
 import org.biojava3.protmod.ComponentType;
