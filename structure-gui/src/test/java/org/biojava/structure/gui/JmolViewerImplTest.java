@@ -36,6 +36,10 @@ public class JmolViewerImplTest extends TestCase {
         super.tearDown();
     }
 
+    public void testMe(){
+       assertTrue(true);
+    }
+    
 //    /**
 //     * Test of setStructure method, of class JmolViewerImpl.
 //     */
