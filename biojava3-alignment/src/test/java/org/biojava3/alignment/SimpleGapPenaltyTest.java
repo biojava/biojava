@@ -33,12 +33,15 @@ public class SimpleGapPenaltyTest {
     @Test
     public void testSimpleGapPenalty() {
         short gop = -12, gep = -3;
+        GapPenalty defaults = new SimpleGapPenalty();
         SimpleGapPenalty.setDefaultOpenPenalty(gop);
         SimpleGapPenalty.setDefaultExtensionPenalty(gep);
         GapPenalty gaps = new SimpleGapPenalty();
         assertEquals(gaps.getOpenPenalty(), gop);
         assertEquals(gaps.getExtensionPenalty(), gep);
         assertEquals(gaps.getType(), GapPenalty.Type.AFFINE);
+        SimpleGapPenalty.setDefaultOpenPenalty(defaults.getOpenPenalty());
+        SimpleGapPenalty.setDefaultExtensionPenalty(defaults.getExtensionPenalty());
     }
 
     @Test

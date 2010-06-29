@@ -43,7 +43,7 @@ public class NeedlemanWunschTest {
     public void setup() {
         query = new ProteinSequence("ARND");
         target = new ProteinSequence("RDG");
-        gaps = new SimpleGapPenalty();
+        gaps = new SimpleGapPenalty((short) 10, (short) 1);
         blosum62 = new SimpleSubstitutionMatrix<AminoAcidCompound>();
         alignment = new NeedlemanWunsch<ProteinSequence, AminoAcidCompound>(query, target, gaps, blosum62);
         self = new NeedlemanWunsch<ProteinSequence, AminoAcidCompound>(query, query, gaps, blosum62);
