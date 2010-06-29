@@ -118,9 +118,9 @@ public class SimpleAlignedSequenceTest {
 
     @Test
     public void testGetEnd() {
-        assertEquals(global.getEnd().getPosition(), new Integer(6));
-        assertEquals(local.getEnd().getPosition(), new Integer(8));
-        assertEquals(local2.getEnd().getPosition(), new Integer(3));
+        assertEquals(global.getEnd().getPosition(), Integer.valueOf(6));
+        assertEquals(local.getEnd().getPosition(), Integer.valueOf(8));
+        assertEquals(local2.getEnd().getPosition(), Integer.valueOf(3));
     }
 
     @Test
@@ -198,9 +198,9 @@ public class SimpleAlignedSequenceTest {
 
     @Test
     public void testGetStart() {
-        assertEquals(global.getStart().getPosition(), new Integer(2));
-        assertEquals(local.getStart().getPosition(), new Integer(1));
-        assertEquals(local2.getStart().getPosition(), new Integer(1));
+        assertEquals(global.getStart().getPosition(), Integer.valueOf(2));
+        assertEquals(local.getStart().getPosition(), Integer.valueOf(1));
+        assertEquals(local2.getStart().getPosition(), Integer.valueOf(1));
     }
 
     @Test
