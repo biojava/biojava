@@ -136,14 +136,14 @@ public class NeedlemanWunschTest {
 
     @Test
     public void testGetMaxScore() {
-        assertEquals(alignment.getMaxScore(), 33);
-        assertEquals(self.getMaxScore(), 44);
+        assertEquals(alignment.getMaxScore(), 21);
+        assertEquals(self.getMaxScore(), 21);
     }
 
     @Test
     public void testGetMinScore() {
-        assertEquals(alignment.getMinScore(), -77);
-        assertEquals(self.getMinScore(), -88);
+        assertEquals(alignment.getMinScore(), -27);
+        assertEquals(self.getMinScore(), -28);
     }
 
     @Test

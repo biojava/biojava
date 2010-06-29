@@ -46,8 +46,8 @@ public abstract class AbstractPairwiseSequenceAligner<S extends Sequence<C>, C e
     private boolean storingScoreMatrix;
 
     // output fields
-    private short max, min;
-    protected short score;
+    private short max;
+    protected short min, score;
     protected short[][] scores;
     protected SequencePair<S, C> pair;
     protected long time = -1;
@@ -303,14 +303,19 @@ public abstract class AbstractPairwiseSequenceAligner<S extends Sequence<C>, C e
     // helper method that performs alignment
     protected abstract void align();
 
-    // helper method that resets output fields; TODO better bounds for max and min
+    // helper method that resets output fields
     protected void reset() {
         if (query != null && target != null && gapPenalty != null && subMatrix != null) {
-            int subLength = Math.min(query.getLength(), target.getLength()), maxLength = query.getLength()
-                    + target.getLength(), penalties = gapPenalty.getOpenPenalty() + gapPenalty.getExtensionPenalty();
-            max = (short) (subLength * subMatrix.getMaxValue());
-            score = min = (short) Math.min(subLength * subMatrix.getMinValue() + (maxLength - subLength) * penalties,
-                    maxLength * penalties);
+            int maxq = 0, maxt = 0;
+            for (C c : query) {
+                maxq += subMatrix.getValue(c, c);
+            }
+            for (C c : target) {
+                maxt += subMatrix.getValue(c, c);
+            }
+            max = (short) Math.max(maxq, maxt);
+            score = min = (short) (2 * gapPenalty.getOpenPenalty() + (query.getLength() + target.getLength()) *
+                    gapPenalty.getExtensionPenalty());
         }
         scores = null;
         pair = null;

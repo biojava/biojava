@@ -202,4 +202,11 @@ public class SmithWaterman<S extends Sequence<C>, C extends Compound> extends Ab
         }
     }
 
+    // helper method that resets output fields
+    @Override
+    protected void reset() {
+        super.reset();
+        score = min = 0;
+    }
+
 }
