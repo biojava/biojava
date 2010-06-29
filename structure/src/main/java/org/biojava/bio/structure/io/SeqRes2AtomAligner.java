@@ -181,7 +181,10 @@ public class SeqRes2AtomAligner {
             Group g = (Group) groups.get(i);
             if ( g instanceof AminoAcid ){
                 AminoAcid a = (AminoAcid)g;
-                sequence.append( a.getAminoType());
+                char oneLetter =a.getAminoType();
+                if ( oneLetter == '?')
+                   oneLetter = 'X';
+                sequence.append(oneLetter );
             } else {
                 if ( ! excludeTypes.contains(g.getPDBName()))
                     sequence.append("X");
