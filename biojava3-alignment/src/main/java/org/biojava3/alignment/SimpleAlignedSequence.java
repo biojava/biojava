@@ -98,19 +98,19 @@ public class SimpleAlignedSequence<C extends Compound> implements AlignedSequenc
         // build sublocations: pieces of sequence separated by gaps
         for (; step < length; step++) {
             boolean isGapStep = (steps.get(step) == Step.GAP),
-                    isGapPrev = (prev != null && pStep < pMax && prev.isGap(pStep + 1));
-            if (!inGap && (isGapStep || isGapPrev)) {
-                inGap = true;
-                sublocations.add(new SimpleLocation(start, step, Strand.UNDEFINED));
-            } else if (!isGapStep && !isGapPrev) {
+                    isGapPrev = (pStep < pMax && prev.isGap(pStep + 1));
+            if (!isGapStep && !isGapPrev) {
                 oStep++;
                 if (inGap) {
                     inGap = false;
                     start = step + 1;
                 }
+            } else if (!inGap) {
+                inGap = true;
+                sublocations.add(new SimpleLocation(start, step, Strand.UNDEFINED));
             }
-            if (!isGapStep) {
-                pStep += (prev == null) ? 0 : 1;
+            if (prev != null && !isGapStep) {
+                pStep++;
             }
         }
         if (!inGap) {
@@ -203,7 +203,7 @@ public class SimpleAlignedSequence<C extends Compound> implements AlignedSequenc
                 sequenceFromAlignment[a - 1] = s;
             }
             for (; a <= length; a++) {
-                if (s < getEnd().getPosition() && !isGap(a)) {
+                if (!isGap(a)) {
                     s++;
                 }
                 sequenceFromAlignment[a - 1] = s;
