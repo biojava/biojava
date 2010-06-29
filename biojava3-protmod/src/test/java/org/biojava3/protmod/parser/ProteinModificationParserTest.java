@@ -49,7 +49,7 @@ import org.biojava3.protmod.TmpAtomCache;
  * @since 3.0
  */
 public class ProteinModificationParserTest extends TestCase {
-
+	
 	public void testMultiParser(){
 		String[][] names = new String[][] {
 				// Attachments
@@ -234,11 +234,14 @@ public class ProteinModificationParserTest extends TestCase {
 				{"3EE4", "AA0490"}, // VAL-TYR
 				{"3H8L", "AA0513"}, // CYS-S3H-CYS
 		};
+		
 		for ( String[] name : names){
-			System.out.println("===\n"+name[0]);
+//			System.out.println("===\n"+name[0]);
 			try {
-				parserTest(name[0], null);
-//				parserTest(name[0], name[1]);
+//				String result = 
+//					parserTest(name[0], null); 
+					parserTest(name[0], name[1]);
+//				System.out.println(result);
 			} catch (Exception e){
 				e.printStackTrace();
 				fail(e.getMessage());
@@ -246,7 +249,7 @@ public class ProteinModificationParserTest extends TestCase {
 		}
 	}	
 
-	private void parserTest(String pdbId, String residId) throws IOException, StructureException {		
+	private String parserTest(String pdbId, String residId) throws IOException, StructureException {		
 		Structure struc = TmpAtomCache.cache.getStructure(pdbId);
 
 		DefaultProteinModificationParser parser = new DefaultProteinModificationParser();
@@ -261,10 +264,12 @@ public class ProteinModificationParserTest extends TestCase {
 		}
 		
 		assertFalse(mods.isEmpty());
+		
+		StringBuilder sb = new StringBuilder();
 
 		int nrmodel = struc.nrModels();
 		for (int modelnr=0; modelnr<nrmodel; modelnr++) {
-			System.out.println("Model "+(modelnr+1));
+			sb.append("Model "+(modelnr+1)+"\n");
 
 			parser.parse(struc, mods, modelnr);
 			List<ModifiedCompound> mcs = parser.getIdentifiedModifiedCompound();
@@ -274,51 +279,60 @@ public class ProteinModificationParserTest extends TestCase {
 			
 			int i=0;
 			for (ModifiedCompound mc : mcs) {
-				System.out.println("Modification #"+(++i)+":");
-				printModification(mc);
+				sb.append("Modification #"+(++i)+":"+"\n");
+				sb.append(printModification(mc));
 			}
 			
 			i = 0;
 			for (Atom[] atoms : unidentifiedLinkages) {
-				System.out.println("Unidenfied linkage #"+(++i)+":");
-				printLinkage(atoms);
+				sb.append("Unidenfied linkage #"+(++i)+":"+"\n");
+				sb.append(printLinkage(atoms));
 			}
 		}
+		
+		return sb.toString();
 	}
 	
-	private void printModification(ModifiedCompound mc){
+	private String printModification(ModifiedCompound mc){
 		ProteinModification mod = mc.getModification();
 		ModificationCategory cat = mod.getCategory();
-		System.out.println(cat.label()+": "+mod.getId());
+		
+		StringBuilder sb = new StringBuilder();
+		sb.append(cat.label()+": "+mod.getId()+"\n");
 		
 		List<Atom[]> atomLinkages = mc.getAtomLinkages();
 		if (atomLinkages.isEmpty()) {
 			Group g = mc.getGroups().iterator().next();
 			Chain chain = g.getParent();
-			System.out.println("\t"+g.getPDBName()+"\t"+chain.getName()+"\t"+g.getPDBCode());
+			sb.append("\t"+g.getPDBName()+"\t"+chain.getName()+"\t"+g.getPDBCode()+"\n");
 		} else {
-			
 			for (Atom[] atoms : atomLinkages) {
-				printLinkage(atoms);
+				sb.append(printLinkage(atoms));
 			}
 		}
+		
+		return sb.toString();
 	}
 	
-	private void printLinkage(Atom[] atoms) {
+	private String printLinkage(Atom[] atoms) {
+		StringBuilder sb = new StringBuilder();
+		
 		Group group = atoms[0].getParent();
 		Chain chain = group.getParent();
-		System.out.println("\t"+group.getPDBName()+"\t"+chain.getName()+"\t"
-				+group.getPDBCode()+"\t"+atoms[0].getName());
+		sb.append("\t"+group.getPDBName()+"\t"+chain.getName()+"\t"
+				+group.getPDBCode()+"\t"+atoms[0].getName()+"\n");
 
 		group = atoms[1].getParent();
 		assertEquals(chain, group.getParent());
-		System.out.println("\t"+group.getPDBName()+"\t"+chain.getName()+"\t"
-				+group.getPDBCode()+"\t"+atoms[1].getName());
+		sb.append("\t"+group.getPDBName()+"\t"+chain.getName()+"\t"
+				+group.getPDBCode()+"\t"+atoms[1].getName()+"\n");
 
 		try {
-			System.out.println("\t"+Calc.getDistance(atoms[0], atoms[1]));
+			sb.append("\t"+Calc.getDistance(atoms[0], atoms[1])+"\n");
 		} catch (StructureException e) {
 			e.printStackTrace();
 		}
+		
+		return sb.toString();
 	}
 }

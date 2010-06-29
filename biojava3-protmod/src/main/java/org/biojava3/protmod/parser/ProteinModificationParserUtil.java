@@ -31,6 +31,7 @@ import java.util.List;
 import org.biojava.bio.structure.Atom;
 import org.biojava.bio.structure.Calc;
 import org.biojava.bio.structure.Group;
+import org.biojava.bio.structure.GroupType;
 import org.biojava.bio.structure.StructureException;
 
 public final class ProteinModificationParserUtil {
@@ -137,8 +138,11 @@ public final class ProteinModificationParserUtil {
 				if (atoms != null) {
 					if (((atoms[0].getName().equals("N") && atoms[1].getName().equals("C"))
 								|| (atoms[0].getName().equals("C") && atoms[1].getName().equals("N")))
-							&& atoms[0].getParent().hasAminoAtoms() // TODO: is this the correct way to 
-							&& atoms[1].getParent().hasAminoAtoms() // determine a amino acid?
+							// TODO: is this the correct way to determine a amino acid?
+							&& (atoms[0].getParent().getType().equals(GroupType.AMINOACID) ||
+									atoms[0].getParent().hasAminoAtoms())
+							&& (atoms[0].getParent().getType().equals(GroupType.AMINOACID) ||
+									atoms[1].getParent().hasAminoAtoms())
 								) {
 						continue;
 					}

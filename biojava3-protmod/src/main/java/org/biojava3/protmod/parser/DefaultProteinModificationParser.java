@@ -148,13 +148,13 @@ implements ProteinModificationParser {
 		int nChains = chains.size();
 		
 		Map<Chain, List<Group>> mapChainResidues = new LinkedHashMap<Chain,List<Group>>(nChains);
-		Map<Chain, Set<Group>> mapChainLigands = new LinkedHashMap<Chain, Set<Group>>(nChains);
+		Map<Chain, List<Group>> mapChainLigands = new LinkedHashMap<Chain, List<Group>>(nChains);
 		
 		for (int i=0; i<nChains; i++) {
 			Chain chain = chains.get(i);
 			List<Group> residues = chain.getSeqResGroups();
 			mapChainResidues.put(chain, residues);
-			Set<Group> ligands = new LinkedHashSet<Group>(chain.getAtomLigands());
+			List<Group> ligands = new ArrayList<Group>(chain.getAtomLigands());
 			if (ligands.removeAll(residues)) {
 				System.err.println(structure.getPDBCode()+"\t"+modelnr+"\t"
 						+chain.getName()+": Overlapping between ligands and residues");
@@ -205,14 +205,17 @@ implements ProteinModificationParser {
 		// identify additional groups that are not directly attached to amino acids. 
 		for (ModifiedCompound mc : identifiedModifiedCompounds) {
 			Chain chain = mc.getGroups().iterator().next().getParent();
-			Set<Group> ligands = mapChainLigands.get(chain);
+			Set<Group> ligands = new LinkedHashSet<Group>(mapChainLigands.get(chain));
 			identifyAdditionalAttachments(mc, ligands);
 		}
 		
 		// record unidentifiable linkage
 		if (recordUnidentifiableAtomLinkages) {
 			for (Chain chain : chains) {
-				recordUnidentifiableAtomLinkages(chain);
+				List<Group> groups = new ArrayList<Group>();
+				groups.addAll(mapChainResidues.get(chain));
+				groups.addAll(mapChainLigands.get(chain));
+				recordUnidentifiableAtomLinkages(chain, groups);
 			}
 		}
 	}
@@ -267,7 +270,7 @@ implements ProteinModificationParser {
 	 * record unidentifiable atom linkages in a chain.
 	 * @param chain a {@link Chain}.
 	 */
-	private void recordUnidentifiableAtomLinkages(Chain chain) {
+	private void recordUnidentifiableAtomLinkages(Chain chain, List<Group> groups) {
 		// first put identified linkages in a map for fast query
 		Map<Atom, Set<Atom>> identifiedLinkages = new HashMap<Atom, Set<Atom>>();
 		for (ModifiedCompound mc : identifiedModifiedCompounds) {
@@ -290,7 +293,6 @@ implements ProteinModificationParser {
 		}
 		
 		// record
-		List<Group> groups = chain.getAtomGroups();
 		int n = groups.size();
 		for (int i=0; i<n-1; i++) {
 			Group group1 = groups.get(i);
@@ -319,7 +321,7 @@ implements ProteinModificationParser {
 	private Map<Component, List<Group>> getModificationGroups(
 			final Set<ProteinModification> modifications,
 			final List<Group> residues,
-			final Set<Group> ligands) {
+			final List<Group> ligands) {
 		if (residues==null || ligands==null || modifications==null) {
 			throw new IllegalArgumentException("Null argument(s).");
 		}
