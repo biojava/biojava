@@ -69,60 +69,46 @@ public class ProteinModificationRegistryTest extends TestCase {
 		Set<ProteinModification> mods = ProteinModification.getProteinModifications();
 		assertTrue(mods!=null && !mods.isEmpty());
 		
-		System.out.println("There are totally "+mods.size()
-				+" protein modifications registered.");
+//		System.out.println("There are totally "+mods.size()
+//				+" protein modifications registered.");
 		
-		printModifications(mods);
+//		printModifications(mods);
 	}
 	
 	public void testGetBy() {
 		ProteinModification mod;
 		Set<ProteinModification> mods;
-		
-		System.out.println("getById");
+
 		mod = ProteinModification.getById("0001");
 		assertNotNull(mod);
-		System.out.println(mod);
 
-		System.out.println("getByPdbccId");
 		mods = ProteinModification.getByPdbccId("SEP");
 		assertNotNull(mods);
-		System.out.println(mods);
 
-		System.out.println("getByResidId");
 		mods = ProteinModification.getByResidId("AA0076");
 		assertNotNull(mods);
-		System.out.println(mods);
 
-		System.out.println("getByPsimodId");
 		mods = ProteinModification.getByPsimodId("MOD:00110");
 		assertNotNull(mods);
-		System.out.println(mods);
 
-		System.out.println("getByComponent");
 		mods = ProteinModification.getByComponent(Component.of("FAD", ComponentType.LIGAND));
 		assertNotNull(mods);
-		printModifications(mods);
 
-		System.out.println("getByCategory");
 		mods = ProteinModification.getByCategory(ModificationCategory.ATTACHMENT);
 		assertNotNull(mods);
-		printModifications(mods);
 
-		System.out.println("getByOccurrenceType");
 		mods = ProteinModification.getByOccurrenceType(ModificationOccurrenceType.NATURAL);
 		assertNotNull(mods);
-		printModifications(mods);
 	}
 	
-	/**
-	 * Print modifications.
-	 * @param mods {@link ProteinModification}s.
-	 */
-	private void printModifications(Set<ProteinModification> mods) {
-		for (ProteinModification mod:mods) {
-			System.out.println(mod);	
-		}
-	}
+//	/**
+//	 * Print modifications.
+//	 * @param mods {@link ProteinModification}s.
+//	 */
+//	private void printModifications(Set<ProteinModification> mods) {
+//		for (ProteinModification mod:mods) {
+//			System.out.println(mod);	
+//		}
+//	}
 	
 }
