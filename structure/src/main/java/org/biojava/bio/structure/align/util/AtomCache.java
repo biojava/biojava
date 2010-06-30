@@ -1,18 +1,20 @@
 package org.biojava.bio.structure.align.util;
 
 import java.io.IOException;
-import java.util.List;
+
 import java.util.concurrent.atomic.AtomicBoolean;
 
 
 import org.biojava.bio.structure.Atom;
-import org.biojava.bio.structure.Chain;
+
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureException;
-import org.biojava.bio.structure.StructureImpl;
+
 import org.biojava.bio.structure.StructureTools;
 import org.biojava.bio.structure.io.FileParsingParameters;
 import org.biojava.bio.structure.io.PDBFileReader;
+import org.biojava.bio.structure.scop.ScopDomain;
+
 import org.biojava.utils.io.InputStreamProvider;
 
 public class AtomCache {
@@ -82,6 +84,43 @@ public class AtomCache {
 		this.autoFetch = autoFetch;
 	}
 
+	/** Returns the representation of a ScopDomain as a BioJava Structure object
+	 * 
+	 * @param domain a scop domain
+	 * @return a Structure object.
+	 * @throws IOException
+	 * @throws StructureException
+	 */
+
+	public Structure getStructureForDomain(ScopDomain domain) throws IOException, StructureException{
+		
+		
+		Structure s = null;
+		
+		String pdbId = domain.getPdbId();
+		try {
+			s = getStructure(pdbId);
+	
+		} catch (StructureException ex){
+			System.err.println("error getting Structure for " + pdbId);
+			throw new StructureException(ex);
+		}
+		
+		String range = "(";
+		int rangePos = 0;
+		for ( String r : domain.getRanges()) {
+			rangePos++;
+			range+= r;
+			if ( ( domain.getRanges().size()> 1) && (rangePos < domain.getRanges().size())){
+				range+=",";
+			}
+			
+		}
+		range+=")";
+		//System.out.println("getting range for "+ pdbId + " " + range);
+		Structure n = StructureTools.getSubRanges(s, range);
+		return n;
+	}
 	
 
 	/** Returns the CA atoms for the provided name. See {@link #getStructure()} for supported naming conventions.
@@ -139,7 +178,7 @@ public class AtomCache {
 	 * @throws IOException
 	 * @throws StructureException
 	 */
-	@SuppressWarnings("deprecation")
+	
    public Structure getStructure(String name) throws IOException, StructureException{
 	   
 	   if ( name.length() < 4)
