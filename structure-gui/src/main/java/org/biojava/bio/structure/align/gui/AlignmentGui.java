@@ -53,6 +53,7 @@ import org.biojava.bio.structure.align.webstart.AligUIManager;
 
 import org.biojava.bio.structure.align.webstart.WebStartMain;
 import org.biojava.bio.structure.gui.util.PDBUploadPanel;
+import org.biojava.bio.structure.gui.util.ScopSelectPanel;
 import org.biojava.bio.structure.gui.util.StructurePairSelector;
 
 
@@ -77,9 +78,10 @@ public class AlignmentGui extends JFrame{
 
    JButton abortB;
 
-   SelectPDBPanel tab1 ;
-   PDBUploadPanel tab2;
-
+   SelectPDBPanel  tab1 ;
+   PDBUploadPanel  tab2;
+   ScopSelectPanel tab3;
+   
    Thread thread;
    AlignmentCalculationRunnable alicalc;
    JTabbedPane masterPane;
@@ -136,13 +138,16 @@ public class AlignmentGui extends JFrame{
 
       tab1 = new SelectPDBPanel();
       tab2 = new PDBUploadPanel();
+      tab3 = new ScopSelectPanel();
      
       // setup tabPane
       tabPane = new JTabbedPane();
 
-      tabPane.addTab("Select PDB ID", null, tab1, "select PDB ID to align");
+      tabPane.addTab("Select PDB ID", null, tab1, "Select PDB ID to align");
 
       tabPane.addTab("Custom files",null, tab2,"Align your own files.");
+      
+      tabPane.addTab("SCOP domains",null, tab3,"Select SCOP domains to align.");
    
       Box hBoxAlgo = setupAlgorithm();
    
@@ -350,7 +355,12 @@ public class AlignmentGui extends JFrame{
         
       } else if (pos == 1){
          tab = tab2;
+      
+      } else if (pos == 2){
+         tab = tab3;
       }
+      
+      
       try {
          Structure s1 = tab.getStructure1();
          Structure s2 = tab.getStructure2();
