@@ -17,7 +17,7 @@ public class ScopDomain {
 	String pdbId;
 	List<String> ranges;
 	String classificationId;
-	String sunid;
+	Integer sunid;
 
 	int classId;
 	int foldId;
@@ -50,7 +50,7 @@ public class ScopDomain {
 		buf.append("\t") ;
 		buf.append(classificationId);
 		buf.append("\t") ;
-		buf.append(sunid);
+		buf.append(sunid+"");
 		buf.append("\t") ;
 		
 		buf.append("cl=");
@@ -96,10 +96,10 @@ public class ScopDomain {
 	public void setClassificationId(String classificationId) {
 		this.classificationId = classificationId;
 	}
-	public String getSunid() {
+	public Integer getSunid() {
 		return sunid;
 	}
-	public void setSunid(String sunid) {
+	public void setSunid(Integer sunid) {
 		this.sunid = sunid;
 	}
 	public int getClassId() {
