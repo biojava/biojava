@@ -366,9 +366,8 @@ public class SimpleProfileTest {
 
     @Test
     public void testToString() {
-        String newLine = System.getProperty("line.separator");
-        assertEquals(global.toString(), "ARND-" + newLine + "-R-DG" + newLine);
-        assertEquals(local.toString(), "RND" + newLine + "R-D" + newLine);
+        assertEquals(global.toString(), String.format("ARND-%n-R-DG%n"));
+        assertEquals(local.toString(), String.format("RND%nR-D%n"));
     }
 
     @Test

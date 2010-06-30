@@ -244,9 +244,8 @@ public class SimpleProfile<S extends Sequence<C>, C extends Compound> implements
     public String toString() {
         // TODO handle circular alignments
         StringBuilder s = new StringBuilder();
-        String newLine = System.getProperty("line.separator");
         for (AlignedSequence<C> as : list) {
-            s.append(as.toString() + newLine);
+            s.append(String.format("%s%n", as.toString()));
         }
         return s.toString();
     }

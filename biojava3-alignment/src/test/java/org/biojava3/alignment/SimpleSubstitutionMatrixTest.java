@@ -102,9 +102,8 @@ public class SimpleSubstitutionMatrixTest {
                 DNACompoundSet.getDNACompoundSet(),
                 "# Test\nA C  G T\nA 5  0 0 0\nC 0 5 0 0 \nG 0 0 5 0\n    T 0     0 0 1\n", "DNAtest");
         assertEquals(matrix.toString().substring(0,6), "# Test");
-        String nl = System.getProperty("line.separator");
-        assertEquals(matrix.toString(), "# Test" + nl + "  A C G T" + nl + "A 5 0 0 0" + nl + "C 0 5 0 0" + nl +
-                "G 0 0 5 0" + nl + "T 0 0 0 1" + nl);
+        assertEquals(matrix.toString(),
+                String.format("# Test%n  A C G T%nA 5 0 0 0%nC 0 5 0 0%nG 0 0 5 0%nT 0 0 0 1%n"));
     }
 
 }

@@ -203,22 +203,21 @@ public abstract class AbstractProfileProfileAligner<S extends Sequence<C>, C ext
         CompoundSet<C> compoundSet = query.getCompoundSet();
         int lengthCompound = compoundSet.getMaxSingleCompoundStringLength(), lengthRest =
                 Math.max(Math.max(Short.toString(min).length(), Short.toString(max).length()), lengthCompound) + 1;
-        String newLine = System.getProperty("line.separator"),
-                padCompound = "%" + Integer.toString(lengthCompound) + "s",
+        String padCompound = "%" + Integer.toString(lengthCompound) + "s",
                 padRest = "%" + Integer.toString(lengthRest);
         s.append(String.format(padCompound, ""));
         s.append(String.format(padRest + "s", ""));
         for (C col : target.getAlignedSequence(0).getAsList()) { // TODO print consensus sequences
             s.append(String.format(padRest + "s", compoundSet.getStringForCompound(col)));
         }
-        s.append(newLine);
+        s.append(String.format("%n"));
         for (int row = 0; row <= query.getLength(); row++) {
             s.append(String.format(padCompound, (row == 0) ? "" :
                     compoundSet.getStringForCompound(query.getAlignedSequence(0).getCompoundAt(row))));
             for (int col = 0; col <= target.getLength(); col++) {
                 s.append(String.format(padRest + "d", getScoreMatrixAt(row, col)));
             }
-            s.append(newLine);
+            s.append(String.format("%n"));
         }
         setStoringScoreMatrix(tempStoringScoreMatrix);
         return s.toString();

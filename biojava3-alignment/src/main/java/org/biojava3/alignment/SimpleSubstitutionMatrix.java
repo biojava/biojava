@@ -51,7 +51,6 @@ import org.biojava3.core.sequence.template.CompoundSet;
 public class SimpleSubstitutionMatrix<C extends Compound> implements SubstitutionMatrix<C> {
 
     private static final String comment = "#";
-    private static final String newLine = System.getProperty("line.separator");
 
     private CompoundSet<C> compoundSet;
     private String description, name;
@@ -142,7 +141,7 @@ public class SimpleSubstitutionMatrix<C extends Compound> implements Substitutio
         while(input.hasNextLine()) {
             String line = input.nextLine();
             if (line.startsWith(comment)) {
-                descriptionIn.append(line + newLine);
+                descriptionIn.append(String.format("%s%n", line));
             } else if (!line.trim().isEmpty()) {
                 StringTokenizer st = new StringTokenizer(line);
                 if (cols.isEmpty()) {
@@ -201,13 +200,13 @@ public class SimpleSubstitutionMatrix<C extends Compound> implements Substitutio
         for (C col : cols) {
             s.append(String.format(padRest + "s", compoundSet.getStringForCompound(col)));
         }
-        s.append(newLine);
+        s.append(String.format("%n"));
         for (C row : rows) {
             s.append(String.format(padCompound, compoundSet.getStringForCompound(row)));
             for (C col : cols) {
                 s.append(String.format(padRest + "d", getValue(row, col)));
             }
-            s.append(newLine);
+            s.append(String.format("%n"));
         }
         return s.toString();
     }
@@ -268,7 +267,7 @@ public class SimpleSubstitutionMatrix<C extends Compound> implements Substitutio
             if (!line.startsWith(comment)) {
                 s.append(comment);
             }
-            s.append(line + newLine);
+            s.append(String.format("%s%n", line));
         }
         s.append(getMatrixAsString());
         return s.toString();
