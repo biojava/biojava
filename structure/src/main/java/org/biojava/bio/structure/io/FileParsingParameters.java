@@ -26,7 +26,17 @@ package org.biojava.bio.structure.io;
 
 import java.io.Serializable;
 
+import org.biojava.bio.structure.AminoAcid;
+
 /** A class that configures parameters that can be sent to the PDB file parsers
+ * 
+ * <ul>
+ * <li> {@link #setParseCAOnly(boolean)} - parse only the Atom records for C-alpha atoms</li>
+ * <li> {@link #setParseSecStruc(boolean)} - a flag if the secondary structure information from the PDB file (author's assignment) should be parsed.
+ *      If true the assignment can be accessed through {@link AminoAcid}.getSecStruc(); </li>
+ * <li> {@link #setAlignSeqRes(boolean)} - should the AminoAcid sequences from the SEQRES
+ *      and ATOM records of a PDB file be aligned? (default:yes)</li>
+ * </ul>
  * 
  * @author Andreas Prlic
  *
