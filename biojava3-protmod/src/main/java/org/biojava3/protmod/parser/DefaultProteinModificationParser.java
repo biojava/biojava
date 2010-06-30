@@ -37,6 +37,7 @@ import java.util.Set;
 import org.biojava.bio.structure.Atom;
 import org.biojava.bio.structure.Chain;
 import org.biojava.bio.structure.Group;
+import org.biojava.bio.structure.GroupType;
 import org.biojava.bio.structure.Structure;
 
 import org.biojava3.protmod.Component;
@@ -57,10 +58,11 @@ public class DefaultProteinModificationParser
 implements ProteinModificationParser {
 	
 	private double bondLengthTolerance = 0.4;
-	private boolean recordUnidentifiableAtomLinkages = false;
+	private boolean recordUnidentifiableModifiedCompounds = false;
 	
 	private List<ModifiedCompound> identifiedModifiedCompounds = null;
 	private List<Atom[]> unidentifiableAtomLinkages = null;
+	private List<Group> unidentifiableModifiedResidues = null;
 	
 	/**
 	 * 
@@ -80,8 +82,8 @@ implements ProteinModificationParser {
 	 * @param recordUnidentifiableAtomLinkages true if choosing to record unidentifiable
 	 *  atoms; false, otherwise.
 	 */
-	public void setRecordUnidentifiableAtomLinkages(boolean recordUnidentifiableAtomLinkages) {
-		this.recordUnidentifiableAtomLinkages = recordUnidentifiableAtomLinkages;
+	public void setRecordUnidentifiableCompounds(boolean recordUnidentifiableModifiedCompounds) {
+		this.recordUnidentifiableModifiedCompounds = recordUnidentifiableModifiedCompounds;
 	}
 	
 	/**
@@ -99,9 +101,9 @@ implements ProteinModificationParser {
 	 * {@inheritDoc}
 	 */
 	public List<Atom[]> getUnidentifiableAtomLinkages() {
-		if (!recordUnidentifiableAtomLinkages) {
+		if (!recordUnidentifiableModifiedCompounds) {
 			throw new UnsupportedOperationException("Recording unidentified atom linkages" +
-					"is not supported. Please setRecordUnidentifiableAtoms(true) first.");
+					"is not supported. Please setRecordUnidentifiableCompounds(true) first.");
 		}
 		
 		if (identifiedModifiedCompounds==null) {
@@ -109,6 +111,22 @@ implements ProteinModificationParser {
 		}
 		
 		return unidentifiableAtomLinkages;
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	public List<Group> getUnidentifiableModifiedResidues() {
+		if (!recordUnidentifiableModifiedCompounds) {
+			throw new UnsupportedOperationException("Recording unidentified atom linkages" +
+					"is not supported. Please setRecordUnidentifiableCompounds(true) first.");
+		}
+		
+		if (identifiedModifiedCompounds==null) {
+			throw new IllegalStateException("No result available. Please call parse() first.");
+		}
+		
+		return unidentifiableModifiedResidues;
 	}
 	
 	/**
@@ -122,8 +140,9 @@ implements ProteinModificationParser {
 			final Set<ProteinModification> potentialModifications,
 			final int modelnr) {
 		identifiedModifiedCompounds = new ArrayList<ModifiedCompound>();
-		if (recordUnidentifiableAtomLinkages) {
+		if (recordUnidentifiableModifiedCompounds) {
 			unidentifiableAtomLinkages = new ArrayList<Atom[]>();
+			unidentifiableModifiedResidues = new ArrayList<Group>();
 		}
 		
 		if (structure==null) {
@@ -210,12 +229,14 @@ implements ProteinModificationParser {
 		}
 		
 		// record unidentifiable linkage
-		if (recordUnidentifiableAtomLinkages) {
+		if (recordUnidentifiableModifiedCompounds) {
 			for (Chain chain : chains) {
+				List<Group> residues = mapChainResidues.get(chain);
 				List<Group> groups = new ArrayList<Group>();
-				groups.addAll(mapChainResidues.get(chain));
+				groups.addAll(residues);
 				groups.addAll(mapChainLigands.get(chain));
-				recordUnidentifiableAtomLinkages(chain, groups);
+				recordUnidentifiableAtomLinkages(groups);
+				recordUnidentifiableModifiedResidues(residues);
 			}
 		}
 	}
@@ -270,7 +291,7 @@ implements ProteinModificationParser {
 	 * record unidentifiable atom linkages in a chain.
 	 * @param chain a {@link Chain}.
 	 */
-	private void recordUnidentifiableAtomLinkages(Chain chain, List<Group> groups) {
+	private void recordUnidentifiableAtomLinkages(List<Group> groups) {
 		// first put identified linkages in a map for fast query
 		Map<Atom, Set<Atom>> identifiedLinkages = new HashMap<Atom, Set<Atom>>();
 		for (ModifiedCompound mc : identifiedModifiedCompounds) {
@@ -306,6 +327,19 @@ implements ProteinModificationParser {
 						unidentifiableAtomLinkages.add(linkage);
 					}
 				}
+			}
+		}
+	}
+	
+	private void recordUnidentifiableModifiedResidues(List<Group> residues) {
+		Set<Group> identifiedComps = new HashSet<Group>();
+		for (ModifiedCompound mc : identifiedModifiedCompounds) {
+			identifiedComps.addAll(mc.getGroups());
+		}
+		
+		for (Group group : residues) {
+			if (group.getType().equals(GroupType.HETATM) && !identifiedComps.contains(group)) {
+				unidentifiableModifiedResidues.add(group);
 			}
 		}
 	}

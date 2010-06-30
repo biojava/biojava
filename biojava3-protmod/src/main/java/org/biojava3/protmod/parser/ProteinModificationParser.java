@@ -28,6 +28,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.biojava.bio.structure.Atom;
+import org.biojava.bio.structure.Group;
 import org.biojava.bio.structure.Structure;
 
 import org.biojava3.protmod.ModifiedCompound;
@@ -59,8 +60,16 @@ public interface ProteinModificationParser {
 	
 	/**
 	 * 
+	 * @return a list of modified residues that were not covered by
+	 *  the identified {@link ModifiedCompound}s from the last parse 
+	 *  result.
+	 */
+	public List<Group> getUnidentifiableModifiedResidues();
+	
+	/**
+	 * 
 	 * @return a list of atom pairs, which represent the 
-	 *  atom bonds that were covered by the identified 
+	 *  atom bonds that were not covered by the identified 
 	 *  {@link ModifiedCompound}s from the last parse result.
 	 *  Each element of the list is a array containing two atoms.
 	 */

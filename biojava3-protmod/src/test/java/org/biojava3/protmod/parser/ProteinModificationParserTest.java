@@ -236,7 +236,7 @@ public class ProteinModificationParserTest extends TestCase {
 		};
 		
 		for ( String[] name : names){
-//			System.out.println("===\n"+name[0]);
+			System.out.println("===\n"+name[0]);
 			try {
 //				String result = 
 //					parserTest(name[0], null); 
@@ -253,7 +253,7 @@ public class ProteinModificationParserTest extends TestCase {
 		Structure struc = TmpAtomCache.cache.getStructure(pdbId);
 
 		DefaultProteinModificationParser parser = new DefaultProteinModificationParser();
-		parser.setRecordUnidentifiableAtomLinkages(true);
+		parser.setRecordUnidentifiableCompounds(true);
 //		parser.setbondLengthTolerance(2);
 		
 		Set<ProteinModification> mods;
@@ -273,7 +273,6 @@ public class ProteinModificationParserTest extends TestCase {
 
 			parser.parse(struc, mods, modelnr);
 			List<ModifiedCompound> mcs = parser.getIdentifiedModifiedCompound();
-			List<Atom[]> unidentifiedLinkages = parser.getUnidentifiableAtomLinkages();
 
 			assertFalse(mcs.isEmpty());
 			
@@ -283,6 +282,14 @@ public class ProteinModificationParserTest extends TestCase {
 				sb.append(printModification(mc));
 			}
 			
+			List<Group> unidentifiedModifiedResidues = parser.getUnidentifiableModifiedResidues();
+			i = 0;
+			for (Group group : unidentifiedModifiedResidues) {
+				sb.append("Unidenfied modified residue #"+(++i)+":"+"\n");
+				sb.append("\t"+group.getPDBName()+"\t"+group.getParent().getName()+"\t"+group.getPDBCode()+"\n");
+			}
+
+			List<Atom[]> unidentifiedLinkages = parser.getUnidentifiableAtomLinkages();
 			i = 0;
 			for (Atom[] atoms : unidentifiedLinkages) {
 				sb.append("Unidenfied linkage #"+(++i)+":"+"\n");
