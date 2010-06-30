@@ -32,7 +32,6 @@ import org.biojava3.alignment.template.SequencePair;
 import org.biojava3.core.sequence.ProteinSequence;
 import org.biojava3.core.sequence.compound.AminoAcidCompound;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 public class SimpleSequencePairTest {
@@ -248,7 +247,6 @@ public class SimpleSequencePairTest {
         assertEquals(local.getNumIdenticals(), 2);
     }
 
-    @Ignore // TODO implement AminoAcidCompoundSet.compoundsEquivalent(C, C)
     @Test
     public void testGetNumSimilars() {
         assertEquals(global.getNumSimilars(), 2);
