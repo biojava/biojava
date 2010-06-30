@@ -68,14 +68,8 @@ import org.biojava.bio.structure.io.mmcif.ChemCompGroupFactory;
  *
  * <h2>Parsing</h2>
  *
- * During the PDBfile parsing several Flags can be set:
- * <ul>
- * <li> {@link #setParseCAOnly(boolean)} - parse only the Atom records for C-alpha atoms</li>
- * <li> {@link #setParseSecStruc(boolean)} - a flag if the secondary structure information from the PDB file (author's assignment) should be parsed.
- *      If true the assignment can be accessed through {@link AminoAcid}.getSecStruc(); </li>
- * <li> {@link #setAlignSeqRes(boolean)} - should the AminoAcid sequences from the SEQRES
- *      and ATOM records of a PDB file be aligned? (default:yes)</li>
- * </ul>
+ * During the PDBfile parsing several Flags can be set. See the {@link #setFileParsingParameters(FileParsingParameters)} methods.
+ * 
  *
  * <p>
  * To provide excessive memory usage for large PDB files, there is the ATOM_CA_THRESHOLD.
