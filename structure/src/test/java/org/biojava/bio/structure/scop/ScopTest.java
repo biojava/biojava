@@ -48,8 +48,10 @@ public class ScopTest extends TestCase {
 		
 		try {
 			Structure s = TmpAtomCache.cache.getStructureForDomain(d2);
-		
-			checkRange(s,"A:496-581");
+			
+			//checkRange(s,"A:496-581");
+			// now with ligands!
+			checkRange(s,"A:496-692");
 			
 			
 		
@@ -65,7 +67,9 @@ public class ScopTest extends TestCase {
 		try {
 			Structure s = TmpAtomCache.cache.getStructureForDomain(domains1xzp.get(0));
 			Chain a = s.getChainByPDB("A");
-			assertEquals(a.getAtomGroups().size(),173);
+			
+			// now with ligands...
+			assertEquals(a.getAtomGroups().size(),176);
 			
 			
 		}catch (Exception e){
@@ -101,11 +105,12 @@ public class ScopTest extends TestCase {
 		while (iter.hasNext()){
 			g2 = iter.next();
 		}
+		assertNotNull(g1);
 		assertNotNull(g2);
 		String chainId = g1.getParent().getName();
 		String rangeTest = chainId + ":"+ g1.getPDBCode()+"-"+ g2.getPDBCode();
 		
-		assertTrue(rangeTest.equals(range));
+		assertEquals("The expected range and the detected range don;t match!", rangeTest, range);
 		
 	}
 	
