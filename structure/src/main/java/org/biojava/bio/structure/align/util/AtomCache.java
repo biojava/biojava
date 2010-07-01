@@ -2,11 +2,14 @@ package org.biojava.bio.structure.align.util;
 
 import java.io.IOException;
 
+import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 
 import org.biojava.bio.structure.Atom;
 
+import org.biojava.bio.structure.Chain;
+import org.biojava.bio.structure.Group;
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureException;
 
@@ -14,6 +17,7 @@ import org.biojava.bio.structure.StructureTools;
 import org.biojava.bio.structure.io.FileParsingParameters;
 import org.biojava.bio.structure.io.PDBFileReader;
 import org.biojava.bio.structure.scop.ScopDomain;
+import org.biojava.bio.structure.scop.ScopInstallation;
 
 import org.biojava.utils.io.InputStreamProvider;
 
@@ -31,6 +35,7 @@ public class AtomCache {
 	// automatically downloaded by other instances / threads.	
 	private static AtomicBoolean loading  = new AtomicBoolean();
 	
+	private static ScopInstallation scopInstallation ;
 	boolean autoFetch;
 	boolean isSplit;
 	FileParsingParameters params;
@@ -50,7 +55,7 @@ public class AtomCache {
 		autoFetch = true;
 		loading.set(false);
 		params = new FileParsingParameters();
-		
+		scopInstallation = null;
 	}
 
 	public AtomCache(UserConfiguration config){
@@ -105,7 +110,7 @@ public class AtomCache {
 			System.err.println("error getting Structure for " + pdbId);
 			throw new StructureException(ex);
 		}
-		
+	
 		String range = "(";
 		int rangePos = 0;
 		for ( String r : domain.getRanges()) {
@@ -118,7 +123,28 @@ public class AtomCache {
 		}
 		range+=")";
 		//System.out.println("getting range for "+ pdbId + " " + range);
+		
 		Structure n = StructureTools.getSubRanges(s, range);
+		
+		// get free ligands of first chain...
+		if ( n.getChains().size()> 0) {
+		   Chain c1 = n.getChains().get(0);
+		   for ( Chain c : s.getChains()) {
+		      if ( c1.getName().equals(c.getName())) {
+		         List<Group> ligands = c.getAtomLigands();
+		     
+		         for(Group g: ligands){
+		            if ( ! c1.getAtomGroups().contains(g)) {
+		               c1.addGroup(g);
+		            }
+		         }
+		      }
+		   
+		   }
+		}
+		n.setName(domain.getScopId());
+		n.setPDBCode(domain.getScopId());
+		
 		return n;
 	}
 	
@@ -190,6 +216,7 @@ public class AtomCache {
 		}
 		loading.set(true);
 				
+		
 		Structure n = null;
 		
 		boolean useChainNr = false;
@@ -207,8 +234,26 @@ public class AtomCache {
 
 			String pdbId   = null;
 			String chainId = null;
+			
 			if ( name.length() == 4){
-				pdbId = name;
+			
+			   pdbId = name; 
+		
+			} else if ( name.startsWith("d")){
+			
+			
+			   // looks like a SCOP domain!
+			   ScopDomain domain = getScopDomain(name);
+			   if ( domain == null){
+			      System.err.println("Warning, could not find SCOP domain: " + name);
+			   }
+			   loading.set(false);
+
+			   Structure s = getStructureForDomain(domain);
+			   
+			   
+			   return s;
+			
 			} else if (name.length() == 6){
 				pdbId = name.substring(0,4);
 				if ( name.substring(4,5).equals(CHAIN_SPLIT_SYMBOL)) {
@@ -270,6 +315,16 @@ public class AtomCache {
 
 
 	}
+
+   private ScopDomain getScopDomain(String scopId)
+   {
+    
+      if ( scopInstallation == null) {
+         scopInstallation = new ScopInstallation(path);
+      }
+      
+      return scopInstallation.getDomainByScopID(scopId);
+   }
 
    public FileParsingParameters getFileParsingParams()
    {
