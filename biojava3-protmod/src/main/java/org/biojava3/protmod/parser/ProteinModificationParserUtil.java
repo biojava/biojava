@@ -34,7 +34,7 @@ import org.biojava.bio.structure.Group;
 import org.biojava.bio.structure.GroupType;
 import org.biojava.bio.structure.StructureException;
 
-public final class ProteinModificationParserUtil {
+final class ProteinModificationParserUtil {
 	/**
 	 * Utility class. All methods are static.
 	 */
