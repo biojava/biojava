@@ -23,27 +23,25 @@
 
 package org.biojava3.alignment.template;
 
-import java.util.Arrays;
-
 import org.biojava3.core.sequence.template.Compound;
 import org.biojava3.core.sequence.template.CompoundSet;
 import org.biojava3.core.sequence.template.Sequence;
 
+/**
+ * Implements common code for an {@link Aligner} for a pair of {@link Profile}s.
+ *
+ * @author Mark Chapman
+ * @param <S> each {@link Sequence} in the pair of alignment {@link Profile}s is of type S
+ * @param <C> each element of an {@link AlignedSequence} is a {@link Compound} of type C
+ */
 public abstract class AbstractProfileProfileAligner<S extends Sequence<C>, C extends Compound>
-        implements ProfileProfileAligner<S, C> {
+        extends AbstractMatrixAligner<S, C> implements ProfileProfileAligner<S, C> {
 
-    // input fields
+    // additional input fields
     private Profile<S, C> query, target;
-    private GapPenalty gapPenalty;
-    private SubstitutionMatrix<C> subMatrix;
-    private boolean storingScoreMatrix;
 
-    // output fields
-    private short max, min;
-    protected short score;
-    protected short[][] scores;
+    // additional output field
     protected ProfilePair<S, C> pair;
-    protected long time = -1;
 
     /**
      * Before running a profile-profile alignment, data must be sent in via calls to
@@ -63,10 +61,10 @@ public abstract class AbstractProfileProfileAligner<S extends Sequence<C>, C ext
      */
     protected AbstractProfileProfileAligner(Profile<S, C> query, Profile<S, C> target, GapPenalty gapPenalty,
             SubstitutionMatrix<C> subMatrix) {
+        super(gapPenalty, subMatrix);
         this.query = query;
         this.target = target;
-        this.gapPenalty = gapPenalty;
-        this.subMatrix = subMatrix;
+        reset();
     }
 
     /**
@@ -85,33 +83,6 @@ public abstract class AbstractProfileProfileAligner<S extends Sequence<C>, C ext
      */
     public Profile<S, C> getTarget() {
         return target;
-    }
-
-    /**
-     * Returns the gap penalties.
-     *
-     * @return the gap penalties used during alignment
-     */
-    public GapPenalty getGapPenalty() {
-        return gapPenalty;
-    }
-
-    /**
-     * Returns the substitution matrix.
-     *
-     * @return the set of substitution scores used during alignment
-     */
-    public SubstitutionMatrix<C> getSubstitutionMatrix() {
-        return subMatrix;
-    }
-
-    /**
-     * Returns choice to cache the score matrix or to save memory by deleting score matrix after alignment.
-     *
-     * @return choice to cache the score matrix
-     */
-    public boolean isStoringScoreMatrix() {
-        return storingScoreMatrix;
     }
 
     /**
@@ -134,66 +105,13 @@ public abstract class AbstractProfileProfileAligner<S extends Sequence<C>, C ext
         reset();
     }
 
-    /**
-     * Sets the gap penalties.
-     *
-     * @param gapPenalty the gap penalties used during alignment
-     */
-    public void setGapPenalty(GapPenalty gapPenalty) {
-        this.gapPenalty = gapPenalty;
-        reset();
-    }
-
-    /**
-     * Sets the substitution matrix.
-     *
-     * @param subMatrix the set of substitution scores used during alignment
-     */
-    public void setSubstitutionMatrix(SubstitutionMatrix<C> subMatrix) {
-        this.subMatrix = subMatrix;
-        reset();
-    }
-
-    /**
-     * Sets choice to cache the score matrix or to save memory by deleting score matrix after alignment.
-     *
-     * @param storingScoreMatrix choice to cache the score matrix
-     */
-    public void setStoringScoreMatrix(boolean storingScoreMatrix) {
-        this.storingScoreMatrix = storingScoreMatrix;
-        if (!storingScoreMatrix) {
-            scores = null;
-        }
-    }
-
-    // methods for MatrixAligner
-
-    @Override
-    public short[][] getScoreMatrix() {
-        boolean tempStoringScoreMatrix = storingScoreMatrix;
-        if (scores == null) {
-            storingScoreMatrix = true;
-            align();
-            if (scores == null) {
-                return null;
-            }
-        }
-        short[][] copy = scores;
-        if (tempStoringScoreMatrix) {
-            copy = new short[scores.length][scores[0].length];
-            for (int i = 0; i < copy.length; i++) {
-                copy[i] = Arrays.copyOf(scores[i], scores[i].length);
-            }
-        }
-        setStoringScoreMatrix(tempStoringScoreMatrix);
-        return copy;
-    }
+    // method for MatrixAligner
 
     @Override
     public String getScoreMatrixAsString() {
-        boolean tempStoringScoreMatrix = storingScoreMatrix;
+        boolean tempStoringScoreMatrix = isStoringScoreMatrix();
         if (scores == null) {
-            storingScoreMatrix = true;
+            setStoringScoreMatrix(true);
             align();
             if (scores == null) {
                 return null;
@@ -223,65 +141,6 @@ public abstract class AbstractProfileProfileAligner<S extends Sequence<C>, C ext
         return s.toString();
     }
 
-    @Override
-    public short getScoreMatrixAt(int queryIndex, int targetIndex) {
-        boolean tempStoringScoreMatrix = storingScoreMatrix;
-        if (scores == null) {
-            storingScoreMatrix = true;
-            align();
-            if (scores == null) {
-                return Short.MIN_VALUE;
-            }
-        }
-        short score = scores[queryIndex][targetIndex];
-        setStoringScoreMatrix(tempStoringScoreMatrix);
-        return score;
-    }
-
-    // methods for Aligner
-
-    @Override
-    public long getComputationTime() {
-        if (pair == null) {
-            align();
-        }
-        return time;
-    }
-
-    @Override
-    public Profile<S, C> getProfile() {
-        if (pair == null) {
-            align();
-        }
-        return pair;
-    }
-
-    // methods for Scorer
-
-    @Override
-    public int getMaxScore() {
-        if (pair == null) {
-            align();
-        }
-        return max;
-    }
-
-    @Override
-    public int getMinScore() {
-        if (pair == null) {
-            align();
-        }
-        return min;
-    }
-
-    @Override
-    public int getScore() {
-        if (pair == null) {
-            align();
-        }
-        return score;
-    }
-
     // method for ProfileProfileScorer
 
     @Override
@@ -292,11 +151,22 @@ public abstract class AbstractProfileProfileAligner<S extends Sequence<C>, C ext
         return pair;
     }
 
-    // helper method that performs alignment
-    protected abstract void align();
+    // prepares for alignment; returns true if everything is set to run the alignment
+    @Override
+    protected boolean alignReady() {
+        reset();
+        if (query != null && target != null && getGapPenalty() != null && getSubstitutionMatrix() != null &&
+                query.getCompoundSet().equals(target.getCompoundSet())) {
+            scores = new short[query.getLength() + 1][target.getLength() + 1];
+            return true;
+        }
+        return false;
+    }
 
     // helper method that resets output fields; TODO better bounds for max and min
     protected void reset() {
+        GapPenalty gapPenalty = getGapPenalty();
+        SubstitutionMatrix<C> subMatrix = getSubstitutionMatrix();
         if (query != null && target != null && gapPenalty != null && subMatrix != null) {
             int subLength = Math.min(query.getLength(), target.getLength()), maxLength = query.getLength()
                     + target.getLength(), penalties = gapPenalty.getOpenPenalty() + gapPenalty.getExtensionPenalty(),

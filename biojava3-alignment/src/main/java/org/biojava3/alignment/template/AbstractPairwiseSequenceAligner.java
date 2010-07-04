@@ -23,8 +23,6 @@
 
 package org.biojava3.alignment.template;
 
-import java.util.Arrays;
-
 import org.biojava3.core.sequence.template.Compound;
 import org.biojava3.core.sequence.template.CompoundSet;
 import org.biojava3.core.sequence.template.Sequence;
@@ -37,20 +35,13 @@ import org.biojava3.core.sequence.template.Sequence;
  * @param <C> each element of an {@link AlignedSequence} is a {@link Compound} of type C
  */
 public abstract class AbstractPairwiseSequenceAligner<S extends Sequence<C>, C extends Compound>
-        implements PairwiseSequenceAligner<S, C> {
+        extends AbstractMatrixAligner<S, C> implements PairwiseSequenceAligner<S, C> {
 
-    // input fields
+    // additional input fields
     private S query, target;
-    private GapPenalty gapPenalty;
-    private SubstitutionMatrix<C> subMatrix;
-    private boolean storingScoreMatrix;
 
-    // output fields
-    private short max;
-    protected short min, score;
-    protected short[][] scores;
+    // additional output field
     protected SequencePair<S, C> pair;
-    protected long time = -1;
 
     /**
      * Before running a pairwise global sequence alignment, data must be sent in via calls to
@@ -70,10 +61,10 @@ public abstract class AbstractPairwiseSequenceAligner<S extends Sequence<C>, C e
      */
     protected AbstractPairwiseSequenceAligner(S query, S target, GapPenalty gapPenalty,
             SubstitutionMatrix<C> subMatrix) {
+        super(gapPenalty, subMatrix);
         this.query = query;
         this.target = target;
-        this.gapPenalty = gapPenalty;
-        this.subMatrix = subMatrix;
+        reset();
     }
 
     /**
@@ -92,33 +83,6 @@ public abstract class AbstractPairwiseSequenceAligner<S extends Sequence<C>, C e
      */
     public S getTarget() {
         return target;
-    }
-
-    /**
-     * Returns the gap penalties.
-     *
-     * @return the gap penalties used during alignment
-     */
-    public GapPenalty getGapPenalty() {
-        return gapPenalty;
-    }
-
-    /**
-     * Returns the substitution matrix.
-     *
-     * @return the set of substitution scores used during alignment
-     */
-    public SubstitutionMatrix<C> getSubstitutionMatrix() {
-        return subMatrix;
-    }
-
-    /**
-     * Returns choice to cache the score matrix or to save memory by deleting score matrix after alignment.
-     *
-     * @return choice to cache the score matrix
-     */
-    public boolean isStoringScoreMatrix() {
-        return storingScoreMatrix;
     }
 
     /**
@@ -141,66 +105,13 @@ public abstract class AbstractPairwiseSequenceAligner<S extends Sequence<C>, C e
         reset();
     }
 
-    /**
-     * Sets the gap penalties.
-     *
-     * @param gapPenalty the gap penalties used during alignment
-     */
-    public void setGapPenalty(GapPenalty gapPenalty) {
-        this.gapPenalty = gapPenalty;
-        reset();
-    }
-
-    /**
-     * Sets the substitution matrix.
-     *
-     * @param subMatrix the set of substitution scores used during alignment
-     */
-    public void setSubstitutionMatrix(SubstitutionMatrix<C> subMatrix) {
-        this.subMatrix = subMatrix;
-        reset();
-    }
-
-    /**
-     * Sets choice to cache the score matrix or to save memory by deleting score matrix after alignment.
-     *
-     * @param storingScoreMatrix choice to cache the score matrix
-     */
-    public void setStoringScoreMatrix(boolean storingScoreMatrix) {
-        this.storingScoreMatrix = storingScoreMatrix;
-        if (!storingScoreMatrix) {
-            scores = null;
-        }
-    }
-
-    // methods for MatrixAligner
-
-    @Override
-    public short[][] getScoreMatrix() {
-        boolean tempStoringScoreMatrix = storingScoreMatrix;
-        if (scores == null) {
-            storingScoreMatrix = true;
-            align();
-            if (scores == null) {
-                return null;
-            }
-        }
-        short[][] copy = scores;
-        if (tempStoringScoreMatrix) {
-            copy = new short[scores.length][scores[0].length];
-            for (int i = 0; i < copy.length; i++) {
-                copy[i] = Arrays.copyOf(scores[i], scores[i].length);
-            }
-        }
-        setStoringScoreMatrix(tempStoringScoreMatrix);
-        return copy;
-    }
+    // method for MatrixAligner
 
     @Override
     public String getScoreMatrixAsString() {
-        boolean tempStoringScoreMatrix = storingScoreMatrix;
+        boolean tempStoringScoreMatrix = isStoringScoreMatrix();
         if (scores == null) {
-            storingScoreMatrix = true;
+            setStoringScoreMatrix(true);
             align();
             if (scores == null) {
                 return null;
@@ -230,65 +141,6 @@ public abstract class AbstractPairwiseSequenceAligner<S extends Sequence<C>, C e
         return s.toString();
     }
 
-    @Override
-    public short getScoreMatrixAt(int queryIndex, int targetIndex) {
-        boolean tempStoringScoreMatrix = storingScoreMatrix;
-        if (scores == null) {
-            storingScoreMatrix = true;
-            align();
-            if (scores == null) {
-                return Short.MIN_VALUE;
-            }
-        }
-        short score = scores[queryIndex][targetIndex];
-        setStoringScoreMatrix(tempStoringScoreMatrix);
-        return score;
-    }
-
-    // methods for Aligner
-
-    @Override
-    public long getComputationTime() {
-        if (pair == null) {
-            align();
-        }
-        return time;
-    }
-
-    @Override
-    public Profile<S, C> getProfile() {
-        if (pair == null) {
-            align();
-        }
-        return pair;
-    }
-
-    // methods for Scorer
-
-    @Override
-    public int getMaxScore() {
-        if (pair == null) {
-            align();
-        }
-        return max;
-    }
-
-    @Override
-    public int getMinScore() {
-        if (pair == null) {
-            align();
-        }
-        return min;
-    }
-
-    @Override
-    public int getScore() {
-        if (pair == null) {
-            align();
-        }
-        return score;
-    }
-
     // method for PairwiseSequenceScorer
 
     @Override
@@ -299,22 +151,35 @@ public abstract class AbstractPairwiseSequenceAligner<S extends Sequence<C>, C e
         return pair;
     }
 
-    // helper method that performs alignment
-    protected abstract void align();
+    // helper methods
 
-    // helper method that resets output fields
+    // prepares for alignment; returns true if everything is set to run the alignment
+    @Override
+    protected boolean alignReady() {
+        reset();
+        if (query != null && target != null && getGapPenalty() != null && getSubstitutionMatrix() != null &&
+                query.getCompoundSet().equals(target.getCompoundSet())) {
+            scores = new short[query.getLength() + 1][target.getLength() + 1];
+            return true;
+        }
+        return false;
+    }
+
+    // resets output fields
+    @Override
     protected void reset() {
-        if (query != null && target != null && gapPenalty != null && subMatrix != null) {
+        if (query != null && target != null && getGapPenalty() != null && getSubstitutionMatrix() != null &&
+                query.getCompoundSet().equals(target.getCompoundSet())) {
             int maxq = 0, maxt = 0;
             for (C c : query) {
-                maxq += subMatrix.getValue(c, c);
+                maxq += getSubstitutionMatrix().getValue(c, c);
             }
             for (C c : target) {
-                maxt += subMatrix.getValue(c, c);
+                maxt += getSubstitutionMatrix().getValue(c, c);
             }
             max = (short) Math.max(maxq, maxt);
-            score = min = (short) (2 * gapPenalty.getOpenPenalty() + (query.getLength() + target.getLength()) *
-                    gapPenalty.getExtensionPenalty());
+            score = min = (short) (2 * getGapPenalty().getOpenPenalty() + (query.getLength() + target.getLength()) *
+                    getGapPenalty().getExtensionPenalty());
         }
         scores = null;
         pair = null;
