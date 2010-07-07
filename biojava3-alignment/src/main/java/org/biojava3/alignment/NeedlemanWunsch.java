@@ -80,7 +80,7 @@ public class NeedlemanWunsch<S extends Sequence<C>, C extends Compound>
             for (int y = 1; y < scores[0].length; y++) {
                 scores[x][y] = (short) Math.max(Math.max(scores[x - 1][y] + getGapPenalty().getExtensionPenalty(),
                         scores[x][y - 1] + getGapPenalty().getExtensionPenalty()), scores[x - 1][y - 1] +
-                        getSubstitutionMatrix().getValue(getQuery().getCompoundAt(x), getTarget().getCompoundAt(y)));
+                        alignScoreColumns(x, y));
             }
         }
     }
@@ -98,8 +98,7 @@ public class NeedlemanWunsch<S extends Sequence<C>, C extends Compound>
                 sx.add(0, Step.COMPOUND);
                 sy.add(0, Step.GAP);
                 x--;
-            } else if (scores[x][y] == scores[x - 1][y - 1] + getSubstitutionMatrix().getValue(
-                    getQuery().getCompoundAt(x), getTarget().getCompoundAt(y))) {
+            } else if (scores[x][y] == scores[x - 1][y - 1] + alignScoreColumns(x, y)) {
                 sx.add(0, Step.COMPOUND);
                 sy.add(0, Step.COMPOUND);
                 x--;
@@ -129,7 +128,7 @@ public class NeedlemanWunsch<S extends Sequence<C>, C extends Compound>
         for (int x = 1; x < scores.length; x++) {
             for (int y = 1; y < scores[0].length; y++) {
                 scores[x][y] = (short) (Math.max(Math.max(scores[x - 1][y - 1], ix[x - 1][y - 1]), iy[x - 1][y - 1]) +
-                        getSubstitutionMatrix().getValue(getQuery().getCompoundAt(x), getTarget().getCompoundAt(y)));
+                        alignScoreColumns(x, y));
                 ix[x][y] = (short) (Math.max(scores[x - 1][y] + gapPenalty.getOpenPenalty(), ix[x - 1][y]) +
                         gapPenalty.getExtensionPenalty());
                 iy[x][y] = (short) (Math.max(scores[x][y - 1] + gapPenalty.getOpenPenalty(), iy[x][y - 1]) +

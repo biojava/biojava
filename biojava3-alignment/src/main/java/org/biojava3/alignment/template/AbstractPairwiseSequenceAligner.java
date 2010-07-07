@@ -165,6 +165,12 @@ public abstract class AbstractPairwiseSequenceAligner<S extends Sequence<C>, C e
         return false;
     }
 
+    // scores alignment of two columns
+    @Override
+    protected short alignScoreColumns(int queryColumn, int targetColumn) {
+        return getSubstitutionMatrix().getValue(query.getCompoundAt(queryColumn), target.getCompoundAt(targetColumn));
+    }
+
     // resets output fields
     @Override
     protected void reset() {

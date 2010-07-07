@@ -249,6 +249,9 @@ public abstract class AbstractMatrixAligner<S extends Sequence<C>, C extends Com
     // prepares for alignment; returns true if everything is set to run the alignment
     protected abstract boolean alignReady();
 
+    // scores alignment of two columns
+    protected abstract short alignScoreColumns(int queryColumn, int targetColumn);
+
     // scores with linear gap penalty; saves memory by skipping allocation of separate matching and gap arrays
     protected abstract void alignScoreLinear();
 
