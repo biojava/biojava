@@ -51,6 +51,25 @@ public class SimpleProfile<S extends Sequence<C>, C extends Compound> implements
     private int length;
 
     /**
+     * Creates a profile from a single sequence.
+     *
+     * @param sequence sequence to seed profile
+     */
+    public SimpleProfile(S sequence) {
+        List<Step> s = new ArrayList<Step>();
+        for (int i = 0; i < sequence.getLength(); i++) {
+            s.add(Step.COMPOUND);
+        }
+        list = new ArrayList<AlignedSequence<C>>();
+        list.add(new SimpleAlignedSequence<C>(sequence, s));
+        list = Collections.unmodifiableList(list);
+        originals = new ArrayList<S>();
+        originals.add(sequence);
+        originals = Collections.unmodifiableList(originals);
+        length = sequence.getLength();
+    }
+
+    /**
      * Creates a pair profile for the given sequences.
      *
      * @param query the first sequence of the pair

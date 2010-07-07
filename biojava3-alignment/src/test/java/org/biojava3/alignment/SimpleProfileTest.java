@@ -41,7 +41,7 @@ import org.junit.Test;
 public class SimpleProfileTest {
 
     private ProteinSequence query, target;
-    private Profile<ProteinSequence, AminoAcidCompound> global, local;
+    private Profile<ProteinSequence, AminoAcidCompound> global, local, single;
 
     @Before
     public void setup() {
@@ -53,6 +53,7 @@ public class SimpleProfileTest {
         local = new SimpleProfile<ProteinSequence, AminoAcidCompound>(query, target, Arrays.asList(new Step[] {
                 Step.COMPOUND, Step.COMPOUND, Step.COMPOUND}), 1, 0, Arrays.asList(new Step[] { Step.COMPOUND,
                 Step.GAP, Step.COMPOUND}), 0, 1);
+        single = new SimpleProfile<ProteinSequence, AminoAcidCompound>(query);
     }
 
     @Test(expected=IllegalArgumentException.class)
@@ -68,6 +69,7 @@ public class SimpleProfileTest {
         assertEquals(global.getAlignedSequence(2).toString(), "-R-DG");
         assertEquals(local.getAlignedSequence(1).toString(), "RND");
         assertEquals(local.getAlignedSequence(2).toString(), "R-D");
+        assertEquals(single.getAlignedSequence(1).toString(), "ARND");
     }
 
     @Test(expected=IndexOutOfBoundsException.class)
@@ -90,6 +92,16 @@ public class SimpleProfileTest {
         local.getAlignedSequence(3);
     }
 
+    @Test(expected=IndexOutOfBoundsException.class)
+    public void testGetAlignedSequenceIntOutOfBounds5() {
+        single.getAlignedSequence(0);
+    }
+
+    @Test(expected=IndexOutOfBoundsException.class)
+    public void testGetAlignedSequenceIntOutOfBounds6() {
+        single.getAlignedSequence(2);
+    }
+
     @Test
     public void testGetAlignedSequenceS() {
         assertEquals(global.getAlignedSequence(query).toString(), "ARND-");
@@ -98,6 +110,8 @@ public class SimpleProfileTest {
         assertEquals(local.getAlignedSequence(query).toString(), "RND");
         assertEquals(local.getAlignedSequence(target).toString(), "R-D");
         assertNull(local.getAlignedSequence(new ProteinSequence("AR")));
+        assertEquals(single.getAlignedSequence(query).toString(), "ARND");
+        assertNull(single.getAlignedSequence(target));
     }
 
     @Test
@@ -110,6 +124,9 @@ public class SimpleProfileTest {
         assertEquals(list.size(), 2);
         assertEquals(list.get(0).toString(), "RND");
         assertEquals(list.get(1).toString(), "R-D");
+        list = single.getAlignedSequences();
+        assertEquals(list.size(), 1);
+        assertEquals(list.get(0).toString(), "ARND");
     }
 
     @Test
@@ -124,6 +141,10 @@ public class SimpleProfileTest {
         assertEquals(list.get(0).toString(), "R-D");
         assertEquals(list.get(1).toString(), "R-D");
         assertEquals(list.get(2).toString(), "RND");
+        list = single.getAlignedSequences(1, 1);
+        assertEquals(list.size(), 2);
+        assertEquals(list.get(0).toString(), "ARND");
+        assertEquals(list.get(1).toString(), "ARND");
     }
 
     @Test
@@ -138,6 +159,10 @@ public class SimpleProfileTest {
         assertEquals(list.get(0).toString(), "R-D");
         assertEquals(list.get(1).toString(), "RND");
         assertEquals(list.get(2).toString(), "R-D");
+        list = single.getAlignedSequences(query, query);
+        assertEquals(list.size(), 2);
+        assertEquals(list.get(0).toString(), "ARND");
+        assertEquals(list.get(1).toString(), "ARND");
     }
 
     @Test
@@ -146,6 +171,7 @@ public class SimpleProfileTest {
         assertEquals(global.getCompoundAt(2, 3).getShortName(), "-");
         assertEquals(local.getCompoundAt(1, 1).getShortName(), "R");
         assertEquals(local.getCompoundAt(2, 2).getShortName(), "-");
+        assertEquals(single.getCompoundAt(1, 3).getShortName(), "N");
     }
 
     @Test(expected=IndexOutOfBoundsException.class)
@@ -188,6 +214,11 @@ public class SimpleProfileTest {
         local.getCompoundAt(2, 4);
     }
 
+    @Test(expected=IndexOutOfBoundsException.class)
+    public void testGetCompoundAtIntIntOutOfBounds9() {
+        single.getCompoundAt(1, 0);
+    }
+
     @Test
     public void testGetCompoundAtSInt() {
         assertEquals(global.getCompoundAt(query, 2).getShortName(), "R");
@@ -196,6 +227,8 @@ public class SimpleProfileTest {
         assertEquals(local.getCompoundAt(query, 2).getShortName(), "N");
         assertEquals(local.getCompoundAt(target, 3).getShortName(), "D");
         assertNull(local.getCompoundAt(new ProteinSequence("AR"), 3));
+        assertEquals(single.getCompoundAt(query, 2).getShortName(), "R");
+        assertNull(single.getCompoundAt(target, 3));
     }
 
     @Test(expected=IndexOutOfBoundsException.class)
@@ -218,10 +251,16 @@ public class SimpleProfileTest {
         local.getCompoundAt(query, 4);
     }
 
+    @Test(expected=IndexOutOfBoundsException.class)
+    public void testGetCompoundAtSIntOutOfBounds5() {
+        single.getCompoundAt(query, 0);
+    }
+
     @Test
     public void testGetCompoundSet() {
         assertEquals(global.getCompoundSet(), AminoAcidCompoundSet.getAminoAcidCompoundSet());
         assertEquals(local.getCompoundSet(), AminoAcidCompoundSet.getAminoAcidCompoundSet());
+        assertEquals(single.getCompoundSet(), AminoAcidCompoundSet.getAminoAcidCompoundSet());
     }
 
     @Test
@@ -234,6 +273,9 @@ public class SimpleProfileTest {
         assertEquals(column.size(), 2);
         assertEquals(column.get(0).getShortName(), "N");
         assertEquals(column.get(1).getShortName(), "-");
+        column = single.getCompoundsAt(2);
+        assertEquals(column.size(), 1);
+        assertEquals(column.get(0).getShortName(), "R");
     }
 
     @Test(expected=IndexOutOfBoundsException.class)
@@ -256,6 +298,16 @@ public class SimpleProfileTest {
         local.getCompoundsAt(4);
     }
 
+    @Test(expected=IndexOutOfBoundsException.class)
+    public void testGetCompoundsAtOutOfBounds5() {
+        single.getCompoundsAt(0);
+    }
+
+    @Test(expected=IndexOutOfBoundsException.class)
+    public void testGetCompoundsAtOutOfBounds6() {
+        single.getCompoundsAt(5);
+    }
+
     @Test
     public void testGetIndexOf() {
         AminoAcidCompoundSet cs = AminoAcidCompoundSet.getAminoAcidCompoundSet();
@@ -271,6 +323,11 @@ public class SimpleProfileTest {
         assertEquals(local.getIndexOf(cs.getCompoundForString("D")), 3);
         assertEquals(local.getIndexOf(cs.getCompoundForString("-")), 2);
         assertEquals(local.getIndexOf(cs.getCompoundForString("K")), -1);
+        assertEquals(single.getIndexOf(cs.getCompoundForString("A")), 1);
+        assertEquals(single.getIndexOf(cs.getCompoundForString("R")), 2);
+        assertEquals(single.getIndexOf(cs.getCompoundForString("N")), 3);
+        assertEquals(single.getIndexOf(cs.getCompoundForString("D")), 4);
+        assertEquals(single.getIndexOf(cs.getCompoundForString("G")), -1);
     }
 
     @Test
@@ -283,6 +340,10 @@ public class SimpleProfileTest {
         assertArrayEquals(local.getIndicesAt(1), new int[] {2, 1});
         assertArrayEquals(local.getIndicesAt(2), new int[] {3, 1});
         assertArrayEquals(local.getIndicesAt(3), new int[] {4, 2});
+        assertArrayEquals(single.getIndicesAt(1), new int[] {1});
+        assertArrayEquals(single.getIndicesAt(2), new int[] {2});
+        assertArrayEquals(single.getIndicesAt(3), new int[] {3});
+        assertArrayEquals(single.getIndicesAt(4), new int[] {4});
     }
 
     @Test(expected=IndexOutOfBoundsException.class)
@@ -305,6 +366,16 @@ public class SimpleProfileTest {
         local.getIndicesAt(4);
     }
 
+    @Test(expected=IndexOutOfBoundsException.class)
+    public void testGetIndicesAtOutOfBounds5() {
+        single.getIndicesAt(0);
+    }
+
+    @Test(expected=IndexOutOfBoundsException.class)
+    public void testGetIndicesAtOutOfBounds6() {
+        single.getIndicesAt(5);
+    }
+
     @Test
     public void testGetLastIndexOf() {
         AminoAcidCompoundSet cs = AminoAcidCompoundSet.getAminoAcidCompoundSet();
@@ -320,12 +391,18 @@ public class SimpleProfileTest {
         assertEquals(local.getLastIndexOf(cs.getCompoundForString("D")), 3);
         assertEquals(local.getLastIndexOf(cs.getCompoundForString("-")), 2);
         assertEquals(local.getLastIndexOf(cs.getCompoundForString("K")), -1);
+        assertEquals(single.getLastIndexOf(cs.getCompoundForString("A")), 1);
+        assertEquals(single.getLastIndexOf(cs.getCompoundForString("R")), 2);
+        assertEquals(single.getLastIndexOf(cs.getCompoundForString("N")), 3);
+        assertEquals(single.getLastIndexOf(cs.getCompoundForString("D")), 4);
+        assertEquals(single.getLastIndexOf(cs.getCompoundForString("G")), -1);
     }
 
     @Test
     public void testGetLength() {
         assertEquals(global.getLength(), 5);
         assertEquals(local.getLength(), 3);
+        assertEquals(single.getLength(), 4);
     }
 
     @Test
@@ -338,12 +415,16 @@ public class SimpleProfileTest {
         assertEquals(list.size(), 2);
         assertEquals(list.get(0), query);
         assertEquals(list.get(1), target);
+        list = single.getOriginalSequences();
+        assertEquals(list.size(), 1);
+        assertEquals(list.get(0), query);
     }
 
     @Test
     public void testGetSize() {
         assertEquals(global.getSize(), 2);
         assertEquals(local.getSize(), 2);
+        assertEquals(single.getSize(), 1);
     }
 
     @Ignore // TODO SimpleProfile.getSubProfile(Location)
@@ -356,6 +437,7 @@ public class SimpleProfileTest {
     public void testIsCircular() {
         assertFalse(global.isCircular());
         assertFalse(local.isCircular());
+        assertFalse(single.isCircular());
     }
 
     @Ignore // TODO SimpleProfile.toString(int)
@@ -368,6 +450,7 @@ public class SimpleProfileTest {
     public void testToString() {
         assertEquals(global.toString(), String.format("ARND-%n-R-DG%n"));
         assertEquals(local.toString(), String.format("RND%nR-D%n"));
+        assertEquals(single.toString(), String.format("ARND%n"));
     }
 
     @Test
@@ -377,6 +460,9 @@ public class SimpleProfileTest {
         }
         for (AlignedSequence<AminoAcidCompound> s : local) {
             assertEquals(s.toString().length(), 3);
+        }
+        for (AlignedSequence<AminoAcidCompound> s : single) {
+            assertEquals(s.toString().length(), 4);
         }
     }
 

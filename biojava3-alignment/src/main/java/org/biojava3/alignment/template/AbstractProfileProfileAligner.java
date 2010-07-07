@@ -23,6 +23,8 @@
 
 package org.biojava3.alignment.template;
 
+import java.util.List;
+
 import org.biojava3.core.sequence.template.Compound;
 import org.biojava3.core.sequence.template.CompoundSet;
 import org.biojava3.core.sequence.template.Sequence;
@@ -125,13 +127,13 @@ public abstract class AbstractProfileProfileAligner<S extends Sequence<C>, C ext
                 padRest = "%" + Integer.toString(lengthRest);
         s.append(String.format(padCompound, ""));
         s.append(String.format(padRest + "s", ""));
-        for (C col : target.getAlignedSequence(0).getAsList()) { // TODO print consensus sequences
+        for (C col : target.getAlignedSequence(1).getAsList()) { // TODO print consensus sequences
             s.append(String.format(padRest + "s", compoundSet.getStringForCompound(col)));
         }
         s.append(String.format("%n"));
         for (int row = 0; row <= query.getLength(); row++) {
             s.append(String.format(padCompound, (row == 0) ? "" :
-                    compoundSet.getStringForCompound(query.getAlignedSequence(0).getCompoundAt(row))));
+                    compoundSet.getStringForCompound(query.getAlignedSequence(1).getCompoundAt(row))));
             for (int col = 0; col <= target.getLength(); col++) {
                 s.append(String.format(padRest + "d", getScoreMatrixAt(row, col)));
             }
@@ -151,6 +153,8 @@ public abstract class AbstractProfileProfileAligner<S extends Sequence<C>, C ext
         return pair;
     }
 
+    // helper methods
+
     // prepares for alignment; returns true if everything is set to run the alignment
     @Override
     protected boolean alignReady() {
@@ -163,7 +167,44 @@ public abstract class AbstractProfileProfileAligner<S extends Sequence<C>, C ext
         return false;
     }
 
-    // helper method that resets output fields; TODO better bounds for max and min
+    // scores alignment of two columns; TODO add caching of column compounds
+    @Override
+    protected short alignScoreColumns(int queryColumn, int targetColumn) {
+        CompoundSet<C> cs = query.getCompoundSet();
+        List<C> qlist = query.getCompoundsAt(queryColumn), tlist = target.getCompoundsAt(targetColumn),
+                cslist = cs.getAllCompounds();
+        C gap = cs.getCompoundForString("-");
+        float[] qfrac = new float[cslist.size()], tfrac = new float[cslist.size()];
+        int qtotal = 0, ttotal = 0, igap = cslist.indexOf(gap);
+        for (C compound : qlist) {
+            int i = cslist.indexOf(compound);
+            if (i >= 0 && i != igap && !cs.compoundsEquivalent(compound, gap)) {
+                qfrac[i]++;
+                qtotal++;
+            }
+        }
+        for (C compound : tlist) {
+            int i = cslist.indexOf(compound);
+            if (i >= 0 && i != igap && !cs.compoundsEquivalent(compound, gap)) {
+                tfrac[i]++;
+                ttotal++;
+            }
+        }
+        for (int i = 0; i < qfrac.length; i++) {
+            qfrac[i] /= qtotal;
+            tfrac[i] /= ttotal;
+        }
+        float score = 0.0f;
+        for (int q = 0; q < qfrac.length; q++) {
+            for (int t = 0; t < tfrac.length; t++) {
+                score += qfrac[q]*tfrac[t]*getSubstitutionMatrix().getValue(cslist.get(q), cslist.get(t));
+            }
+        }
+        return (short) Math.round(score);
+    }
+
+    // resets output fields; TODO better bounds for max and min
+    @Override
     protected void reset() {
         GapPenalty gapPenalty = getGapPenalty();
         SubstitutionMatrix<C> subMatrix = getSubstitutionMatrix();
