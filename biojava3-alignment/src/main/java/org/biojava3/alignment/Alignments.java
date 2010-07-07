@@ -24,7 +24,6 @@
 package org.biojava3.alignment;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -33,10 +32,6 @@ import org.biojava3.alignment.template.*;
 import org.biojava3.core.sequence.template.Compound;
 import org.biojava3.core.sequence.template.Sequence;
 import org.biojava3.core.util.ConcurrencyTools;
-
-import org.forester.phylogeny.Phylogeny;
-import org.forester.phylogenyinference.BasicSymmetricalDistanceMatrix;
-import org.forester.phylogenyinference.NeighborJoining;
 
 /**
  * Static utility to easily run alignment routines.  To exit cleanly after running any parallel method that mentions
@@ -157,24 +152,6 @@ public class Alignments {
         return getScorer(query, target, type, gapPenalty, subMatrix).getScore();
     }
 
-    public static <S extends Sequence<C>, C extends Compound> Phylogeny getPhylogenyGuideTree(
-            List<S> sequences, PairwiseScorer type, GapPenalty gapPenalty, SubstitutionMatrix<C> subMatrix) {
-        // TODO wrap org.forester.phylogeny.Phylogeny in another class to hide implementation and allow easier updates
-        List<PairwiseSequenceScorer<S, C>> scorers = getScorerList(sequences, type, gapPenalty, subMatrix);
-        runScorers(scorers);
-        Iterator<PairwiseSequenceScorer<S, C>> scorerIterator = scorers.iterator();
-        BasicSymmetricalDistanceMatrix distances = new BasicSymmetricalDistanceMatrix(sequences.size());
-        for (int i = 0; i < sequences.size(); i++) {
-            distances.setIdentifier(i, sequences.get(i).getSequenceAsString()); // TODO? use accession ID or hash code
-            for (int j = i+1; j < sequences.size(); j++) {
-                PairwiseSequenceScorer<S, C> scorer = scorerIterator.next();
-                distances.setValue(i, j, (double)(scorer.getMaxScore() - scorer.getScore()) / (scorer.getMaxScore()
-                        - scorer.getMinScore()));
-            }
-        }
-        return NeighborJoining.createInstance().execute(distances);
-    }
-
     /**
      * Factory method to run a list of alignments concurrently.  This method runs the alignments in parallel by
      * submitting all of the alignment tasks to the shared thread pool of the {@link ConcurrencyTools} utility.
@@ -293,7 +270,7 @@ public class Alignments {
     }
 
     // constructs a list of all pairwise sequence scorers from a list of sequences
-    private static <S extends Sequence<C>, C extends Compound> List<PairwiseSequenceScorer<S, C>> getScorerList(
+    static <S extends Sequence<C>, C extends Compound> List<PairwiseSequenceScorer<S, C>> getScorerList(
             List<S> sequences, PairwiseScorer type, GapPenalty gapPenalty, SubstitutionMatrix<C> subMatrix) {
         List<PairwiseSequenceScorer<S, C>> allPairs = new ArrayList<PairwiseSequenceScorer<S, C>>();
         for (int i = 0; i < sequences.size(); i++) {
