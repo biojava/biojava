@@ -42,6 +42,10 @@ public abstract class AbstractProfileProfileAligner<S extends Sequence<C>, C ext
     // additional input fields
     private Profile<S, C> query, target;
 
+    // cached fields
+    private List<C> cslist;
+    private float[][] qfrac, tfrac;
+
     // additional output field
     protected ProfilePair<S, C> pair;
 
@@ -167,18 +171,20 @@ public abstract class AbstractProfileProfileAligner<S extends Sequence<C>, C ext
         return false;
     }
 
-    // scores alignment of two columns; TODO add caching of column compounds
+    // scores alignment of two columns
     @Override
     protected short alignScoreColumns(int queryColumn, int targetColumn) {
-        List<C> cslist = query.getCompoundSet().getAllCompounds();
-        float[] qfrac = query.getCompoundWeightsAt(queryColumn, cslist),
-                tfrac = target.getCompoundWeightsAt(targetColumn, cslist);
+        return alignScoreVectors(qfrac[queryColumn - 1], tfrac[targetColumn - 1]);
+    }
+
+    // scores alignment of two column vectors
+    private short alignScoreVectors(float[] qv, float[] tv) {
         float score = 0.0f;
-        for (int q = 0; q < qfrac.length; q++) {
-            if (qfrac[q] > 0.0f) {
-                for (int t = 0; t < tfrac.length; t++) {
-                    if (tfrac[t] > 0.0f) {
-                        score += qfrac[q]*tfrac[t]*getSubstitutionMatrix().getValue(cslist.get(q), cslist.get(t));
+        for (int q = 0; q < qv.length; q++) {
+            if (qv[q] > 0.0f) {
+                for (int t = 0; t < tv.length; t++) {
+                    if (tv[t] > 0.0f) {
+                        score += qv[q]*tv[t]*getSubstitutionMatrix().getValue(cslist.get(q), cslist.get(t));
                     }
                 }
             }
@@ -186,18 +192,26 @@ public abstract class AbstractProfileProfileAligner<S extends Sequence<C>, C ext
         return (short) Math.round(score);
     }
 
-    // resets output fields; TODO better bounds for max and min
+    // resets output fields; caches profile vectors
     @Override
     protected void reset() {
-        GapPenalty gapPenalty = getGapPenalty();
-        SubstitutionMatrix<C> subMatrix = getSubstitutionMatrix();
-        if (query != null && target != null && gapPenalty != null && subMatrix != null) {
-            int subLength = Math.min(query.getLength(), target.getLength()), maxLength = query.getLength()
-                    + target.getLength(), penalties = gapPenalty.getOpenPenalty() + gapPenalty.getExtensionPenalty(),
-                    sumSize = query.getSize() * target.getSize();
-            max = (short) (subLength * subMatrix.getMaxValue() * sumSize);
-            score = min = (short) (Math.min(subLength * subMatrix.getMinValue() + (maxLength - subLength) * penalties,
-                    maxLength * penalties) * sumSize);
+        if (query != null && target != null && getGapPenalty() != null && getSubstitutionMatrix() != null &&
+                query.getCompoundSet().equals(target.getCompoundSet())) {
+            int maxq = 0, maxt = 0;
+            cslist = query.getCompoundSet().getAllCompounds();
+            qfrac = new float[query.getLength()][];
+            for (int i = 0; i < qfrac.length; i++) {
+                qfrac[i] = query.getCompoundWeightsAt(i + 1, cslist);
+                maxq += alignScoreVectors(qfrac[i], qfrac[i]);
+            }
+            tfrac = new float[target.getLength()][];
+            for (int i = 0; i < tfrac.length; i++) {
+                tfrac[i] = target.getCompoundWeightsAt(i + 1, cslist);
+                maxt += alignScoreVectors(tfrac[i], tfrac[i]);
+            }
+            max = (short) Math.max(maxq, maxt);
+            score = min = (short) (2 * getGapPenalty().getOpenPenalty() + (query.getLength() + target.getLength()) *
+                    getGapPenalty().getExtensionPenalty());
         }
         scores = null;
         pair = null;

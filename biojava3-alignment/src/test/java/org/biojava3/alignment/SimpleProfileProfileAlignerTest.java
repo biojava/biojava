@@ -144,12 +144,12 @@ public class SimpleProfileProfileAlignerTest {
                 "L  -5  -5  -6  -8  -7%n" +
                 "K  -6  -6  -5  -7  -6%n"));
         assertEquals(sppa3.getScoreMatrixAsString(), String.format(
-                "          -    H    I    L    K%n" +
-                "     0   -3   -4   -5   -6   -7%n" +
-                "A   -3    4    1    0   -1   -2%n" +
-                "R   -4    1    4    1    0    3%n" +
-                "N   -5    0    5    3    1    0%n" +
-                "D   -6   -1    2    7    4    3%n"));
+                "        -   H   I   L   K%n" +
+                "    0  -3  -4  -5  -6  -7%n" +
+                "A  -3   4   1   0  -1  -2%n" +
+                "R  -4   1   4   1   0   3%n" +
+                "N  -5   0   5   3   1   0%n" +
+                "D  -6  -1   2   7   4   3%n"));
     }
 
     @Test
@@ -175,16 +175,16 @@ public class SimpleProfileProfileAlignerTest {
 
     @Test // TODO better bounds
     public void testGetMaxScore() {
-        assertEquals(sppa1.getMaxScore(), 44);
-        assertEquals(sppa2.getMaxScore(), 44);
-        assertEquals(sppa3.getMaxScore(), 176);
+        assertEquals(sppa1.getMaxScore(), 21);
+        assertEquals(sppa2.getMaxScore(), 21);
+        assertEquals(sppa3.getMaxScore(), 21);
     }
 
     @Test // TODO better bounds
     public void testGetMinScore() {
-        assertEquals(sppa1.getMinScore(), -28);
-        assertEquals(sppa2.getMinScore(), -28);
-        assertEquals(sppa3.getMinScore(), -124);
+        assertEquals(sppa1.getMinScore(), -12);
+        assertEquals(sppa2.getMinScore(), -12);
+        assertEquals(sppa3.getMinScore(), -13);
     }
 
     @Test // TODO fix last score
