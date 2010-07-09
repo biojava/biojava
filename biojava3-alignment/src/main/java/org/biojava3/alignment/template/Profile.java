@@ -86,7 +86,7 @@ public interface Profile<S extends Sequence<C>, C extends Compound> extends Iter
      * overlap, this will return the {@link Compound} from the top row of the sequence.
      *
      * @param listIndex index of sequence in profile
-     * @param alignmentIndex index within an alignment
+     * @param alignmentIndex column index within an alignment
      * @return the sequence element
      * @throws IndexOutOfBoundsException if listIndex < 1, listIndex > number of sequences, alignmentIndex < 1, or
      *     alignmentIndex > {@link #getLength()}
@@ -98,16 +98,35 @@ public interface Profile<S extends Sequence<C>, C extends Compound> extends Iter
      * overlap, this will return the {@link Compound} from the top row of the sequence.
      *
      * @param sequence either an {@link AlignedSequence} or an original {@link Sequence}
-     * @param alignmentIndex index within an alignment
+     * @param alignmentIndex column index within an alignment
      * @return the sequence element
      * @throws IndexOutOfBoundsException if alignmentIndex < 1 or alignmentIndex > {@link #getLength()}
      */
     C getCompoundAt(S sequence, int alignmentIndex);
 
     /**
-     * Returns the {@link Compound} elements of the original {@link Sequence}s at the given index within an alignment.
+     * Returns the number of each {@link Compound} in the given column for all compounds in {@link CompoundSet}.
      *
-     * @param alignmentIndex index within an alignment
+     * @param alignmentIndex column index within an alignment
+     * @return list of counts
+     * @throws IndexOutOfBoundsException if alignmentIndex < 1 or alignmentIndex > {@link #getLength()}
+     */
+    int[] getCompoundCountsAt(int alignmentIndex);
+
+    /**
+     * Returns the number of each {@link Compound} in the given column only for compounds in the given list.
+     *
+     * @param alignmentIndex column index within an alignment
+     * @param compounds list of compounds to count
+     * @return corresponding list of counts
+     * @throws IndexOutOfBoundsException if alignmentIndex < 1 or alignmentIndex > {@link #getLength()}
+     */
+    int[] getCompoundCountsAt(int alignmentIndex, List<C> compounds);
+
+    /**
+     * Returns the {@link Compound} elements of the original {@link Sequence}s at the given column.
+     *
+     * @param alignmentIndex column index within an alignment
      * @return the sequence elements
      * @throws IndexOutOfBoundsException if alignmentIndex < 1 or alignmentIndex > {@link #getLength()}
      */
@@ -121,10 +140,29 @@ public interface Profile<S extends Sequence<C>, C extends Compound> extends Iter
     CompoundSet<C> getCompoundSet();
 
     /**
-     * Returns the indices in the original {@link Sequence}s corresponding to the given index within an alignment.  All
-     * indices are 1-indexed and inclusive.
+     * Returns the fraction of each {@link Compound} in the given column for all compounds in {@link CompoundSet}.
      *
-     * @param alignmentIndex index within an alignment
+     * @param alignmentIndex column index within an alignment
+     * @return list of fractional weights
+     * @throws IndexOutOfBoundsException if alignmentIndex < 1 or alignmentIndex > {@link #getLength()}
+     */
+    float[] getCompoundWeightsAt(int alignmentIndex);
+
+    /**
+     * Returns the fraction of each {@link Compound} in the given column only for compounds in the given list.
+     *
+     * @param alignmentIndex column index within an alignment
+     * @param compounds list of compounds to count
+     * @return corresponding list of fractional weights
+     * @throws IndexOutOfBoundsException if alignmentIndex < 1 or alignmentIndex > {@link #getLength()}
+     */
+    float[] getCompoundWeightsAt(int alignmentIndex, List<C> compounds);
+
+    /**
+     * Returns the indices in the original {@link Sequence}s corresponding to the given column.  All indices are
+     * 1-indexed and inclusive.
+     *
+     * @param alignmentIndex column index within an alignment
      * @return the sequence indices
      * @throws IndexOutOfBoundsException if alignmentIndex < 1 or alignmentIndex > {@link #getLength()}
      */

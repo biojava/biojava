@@ -175,8 +175,22 @@ public class SimpleProfile<S extends Sequence<C>, C extends Compound> implements
     }
 
     @Override
-    public CompoundSet<C> getCompoundSet() {
-        return list.get(0).getCompoundSet();
+    public int[] getCompoundCountsAt(int alignmentIndex) {
+        return getCompoundCountsAt(alignmentIndex, getCompoundSet().getAllCompounds());
+    }
+
+    @Override
+    public int[] getCompoundCountsAt(int alignmentIndex, List<C> compounds) {
+        int[] counts = new int[compounds.size()];
+        C gap = getCompoundSet().getCompoundForString("-");
+        int igap = compounds.indexOf(gap);
+        for (C compound : getCompoundsAt(alignmentIndex)) {
+            int i = compounds.indexOf(compound);
+            if (i >= 0 && i != igap && !getCompoundSet().compoundsEquivalent(compound, gap)) {
+                counts[i]++;
+            }
+        }
+        return counts;
     }
 
     @Override
@@ -187,6 +201,32 @@ public class SimpleProfile<S extends Sequence<C>, C extends Compound> implements
             column.add(s.getCompoundAt(alignmentIndex));
         }
         return Collections.unmodifiableList(column);
+    }
+
+    @Override
+    public CompoundSet<C> getCompoundSet() {
+        return list.get(0).getCompoundSet();
+    }
+
+    @Override
+    public float[] getCompoundWeightsAt(int alignmentIndex) {
+        return getCompoundWeightsAt(alignmentIndex, getCompoundSet().getAllCompounds());
+    }
+
+    @Override
+    public float[] getCompoundWeightsAt(int alignmentIndex, List<C> compounds) {
+        float[] weights = new float[compounds.size()];
+        int[] counts = getCompoundCountsAt(alignmentIndex, compounds);
+        float total = 0.0f;
+        for (int i : counts) {
+            total += i;
+        }
+        if (total > 0.0f) {
+            for (int i = 0; i < weights.length; i++) {
+                weights[i] = counts[i]/total;
+            }
+        }
+        return weights;
     }
 
     @Override

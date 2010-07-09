@@ -170,34 +170,17 @@ public abstract class AbstractProfileProfileAligner<S extends Sequence<C>, C ext
     // scores alignment of two columns; TODO add caching of column compounds
     @Override
     protected short alignScoreColumns(int queryColumn, int targetColumn) {
-        CompoundSet<C> cs = query.getCompoundSet();
-        List<C> qlist = query.getCompoundsAt(queryColumn), tlist = target.getCompoundsAt(targetColumn),
-                cslist = cs.getAllCompounds();
-        C gap = cs.getCompoundForString("-");
-        float[] qfrac = new float[cslist.size()], tfrac = new float[cslist.size()];
-        int qtotal = 0, ttotal = 0, igap = cslist.indexOf(gap);
-        for (C compound : qlist) {
-            int i = cslist.indexOf(compound);
-            if (i >= 0 && i != igap && !cs.compoundsEquivalent(compound, gap)) {
-                qfrac[i]++;
-                qtotal++;
-            }
-        }
-        for (C compound : tlist) {
-            int i = cslist.indexOf(compound);
-            if (i >= 0 && i != igap && !cs.compoundsEquivalent(compound, gap)) {
-                tfrac[i]++;
-                ttotal++;
-            }
-        }
-        for (int i = 0; i < qfrac.length; i++) {
-            qfrac[i] /= qtotal;
-            tfrac[i] /= ttotal;
-        }
+        List<C> cslist = query.getCompoundSet().getAllCompounds();
+        float[] qfrac = query.getCompoundWeightsAt(queryColumn, cslist),
+                tfrac = target.getCompoundWeightsAt(targetColumn, cslist);
         float score = 0.0f;
         for (int q = 0; q < qfrac.length; q++) {
-            for (int t = 0; t < tfrac.length; t++) {
-                score += qfrac[q]*tfrac[t]*getSubstitutionMatrix().getValue(cslist.get(q), cslist.get(t));
+            if (qfrac[q] > 0.0f) {
+                for (int t = 0; t < tfrac.length; t++) {
+                    if (tfrac[t] > 0.0f) {
+                        score += qfrac[q]*tfrac[t]*getSubstitutionMatrix().getValue(cslist.get(q), cslist.get(t));
+                    }
+                }
             }
         }
         return (short) Math.round(score);
