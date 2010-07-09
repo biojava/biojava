@@ -30,6 +30,7 @@ import java.util.List;
 
 import org.biojava3.alignment.Alignments.PairwiseScorer;
 import org.biojava3.alignment.template.GapPenalty;
+import org.biojava3.alignment.template.GuideTreeNode;
 import org.biojava3.alignment.template.SubstitutionMatrix;
 import org.biojava3.core.sequence.ProteinSequence;
 import org.biojava3.core.sequence.compound.AminoAcidCompound;
@@ -39,9 +40,9 @@ import org.junit.Test;
 
 public class GuideTreeTest {
 
-    List<ProteinSequence> proteins;
-    GapPenalty gaps;
-    SubstitutionMatrix<AminoAcidCompound> blosum62;
+    private List<ProteinSequence> proteins;
+    private GapPenalty gaps;
+    private SubstitutionMatrix<AminoAcidCompound> blosum62;
     private GuideTree<ProteinSequence, AminoAcidCompound> tree;
 
     @Before
@@ -50,8 +51,8 @@ public class GuideTreeTest {
                 new ProteinSequence("HILK"), new ProteinSequence("ANDR")});
         gaps = new SimpleGapPenalty((short) 2, (short) 1);
         blosum62 = new SimpleSubstitutionMatrix<AminoAcidCompound>();
-        tree = new GuideTree<ProteinSequence, AminoAcidCompound>(proteins, PairwiseScorer.GLOBAL_IDENTITIES, gaps,
-                blosum62);
+        tree = new GuideTree<ProteinSequence, AminoAcidCompound>(proteins, Alignments.getAllPairsScorers(proteins,
+                PairwiseScorer.GLOBAL_IDENTITIES, gaps, blosum62));
     }
 
     @Test
@@ -64,17 +65,23 @@ public class GuideTreeTest {
         assertArrayEquals(tree.getAllPairsScores(), new int[] {4, 0, 3, 0, 3, 0});
     }
 
+    // FIXME [0][3] and [3][0] should be 0.4
     @Test
     public void testGetDistanceMatrix() {
         assertArrayEquals(tree.getDistanceMatrix(), new double[][] {
-                {0.0,                 0.0, 1.0, 0.19999999999999996},
-                {0.0,                 0.0, 1.0, 0.4},
-                {1.0,                 1.0, 0.0, 1.0},
+                {0.0, 0.0, 1.0, 0.19999999999999996},
+                {0.0, 0.0, 1.0, 0.4},
+                {1.0, 1.0, 0.0, 1.0},
                 {0.19999999999999996, 0.4, 1.0, 0.0}});
     }
 
     @Test
     public void testGetRoot() {
+        for (GuideTreeNode<ProteinSequence, AminoAcidCompound> n : tree) {
+            if (n.getProfile() == null) {
+                n.setProfile(gaps, blosum62);
+            }
+        }
         assertEquals(tree.getRoot().getProfile().toString(), String.format("%s%n%s%n%s%n%s%n",
                 "--ARND-",
                 "--ARND-",
@@ -89,6 +96,32 @@ public class GuideTreeTest {
                 {4, 6, 0, 3},
                 {0, 0, 5, 0},
                 {3, 3, 0, 6}});
+    }
+
+    @Test
+    public void testGetSequences() {
+        List<ProteinSequence> list = tree.getSequences();
+        assertEquals(list.size(), 4);
+        assertEquals(list.get(0), proteins.get(0));
+        assertEquals(list.get(1), proteins.get(1));
+        assertEquals(list.get(2), proteins.get(2));
+        assertEquals(list.get(3), proteins.get(3));
+    }
+
+    @Test
+    public void testIterator() {
+        int i = 0;
+        for (GuideTreeNode<ProteinSequence, AminoAcidCompound> n : tree) {
+            switch (i++) {
+            case 0: assertEquals(n.getName(), "1"); break;
+            case 1: assertEquals(n.getName(), "2"); break;
+            case 2: assertEquals(n.getName(), ""); break;
+            case 3: assertEquals(n.getName(), "3"); break;
+            case 4: assertEquals(n.getName(), ""); break;
+            case 5: assertEquals(n.getName(), "4"); break;
+            case 6: assertEquals(n.getName(), ""); break;
+            }
+        }
     }
 
     @Test

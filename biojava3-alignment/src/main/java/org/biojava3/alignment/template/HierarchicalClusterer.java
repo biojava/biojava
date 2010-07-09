@@ -23,12 +23,17 @@
 
 package org.biojava3.alignment.template;
 
+import org.biojava3.core.sequence.template.Compound;
+import org.biojava3.core.sequence.template.Sequence;
+
 /**
  * Defines a clustering algorithm that converts a distance matrix into a tree.
  *
  * @author Mark Chapman
+ * @param <S> each {@link Sequence} in the tree is of type S
+ * @param <C> each element of a {@link Sequence} is a {@link Compound} of type C
  */
-public interface HierarchicalClusterer {
+public interface HierarchicalClusterer<S extends Sequence<C>, C extends Compound> {
 
     /**
      * Returns the distance matrix used in clustering.  May be calculated from another original source.
@@ -42,6 +47,6 @@ public interface HierarchicalClusterer {
      *
      * @return the resulting tree output from clustering
      */
-    TreeNode getRoot();
+    GuideTreeNode<S, C> getRoot();
 
 }
