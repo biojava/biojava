@@ -29,6 +29,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.biojava3.alignment.Alignments.PairwiseScorer;
+import org.biojava3.alignment.Alignments.ProfileAligner;
 import org.biojava3.alignment.template.GapPenalty;
 import org.biojava3.alignment.template.GuideTreeNode;
 import org.biojava3.alignment.template.SubstitutionMatrix;
@@ -77,12 +78,8 @@ public class GuideTreeTest {
 
     @Test
     public void testGetRoot() {
-        for (GuideTreeNode<ProteinSequence, AminoAcidCompound> n : tree) {
-            if (n.getProfile() == null) {
-                n.setProfile(gaps, blosum62);
-            }
-        }
-        assertEquals(tree.getRoot().getProfile().toString(), String.format("%s%n%s%n%s%n%s%n",
+        assertEquals(Alignments.getProgressiveAlignment(tree, ProfileAligner.GLOBAL, gaps, blosum62).toString(),
+                String.format("%s%n%s%n%s%n%s%n",
                 "--ARND-",
                 "--ARND-",
                 "HILK---",

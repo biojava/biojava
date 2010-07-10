@@ -67,19 +67,18 @@ public interface GuideTreeNode<S extends Sequence<C>, C extends Compound> extend
     String getName();
 
     /**
-     * Returns the profile stored at this node.  If the node is a leaf, the profile is that of a single sequence.
-     * If not, this returns null until {@link #setProfile(GapPenalty, SubstitutionMatrix)} has been called.
+     * Returns the profile stored at this node.  If the node is a leaf, the profile is that of a single sequence.  If
+     * not, this returns null until {@link #setProfile(Profile)} has been called.
      *
      * @return the profile stored at this node
      */
     Profile<S, C> getProfile();
 
     /**
-     * Computes the profile-profile alignment resulting from the profiles of this node's children.
+     * Stores the given profile.
      *
-     * @param gapPenalty the gap penalties used during alignment
-     * @param subMatrix the set of substitution scores used during alignment
+     * @param profile new profile stored at this node
      */
-    public void setProfile(GapPenalty gapPenalty, SubstitutionMatrix<C> subMatrix);
+    public void setProfile(Profile<S, C> profile);
 
 }

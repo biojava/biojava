@@ -31,11 +31,9 @@ import java.util.Stack;
 import java.util.Vector;
 import javax.swing.tree.TreeNode;
 
-import org.biojava3.alignment.template.GapPenalty;
 import org.biojava3.alignment.template.GuideTreeNode;
 import org.biojava3.alignment.template.PairwiseSequenceScorer;
 import org.biojava3.alignment.template.Profile;
-import org.biojava3.alignment.template.SubstitutionMatrix;
 import org.biojava3.core.sequence.AccessionID;
 import org.biojava3.core.sequence.template.Compound;
 import org.biojava3.core.sequence.template.Sequence;
@@ -59,7 +57,7 @@ public class GuideTree<S extends Sequence<C>, C extends Compound> implements Ite
     private List<S> sequences;
     private List<PairwiseSequenceScorer<S, C>> scorers;
     private BasicSymmetricalDistanceMatrix distances;
-    private Phylogeny phylogeny;
+    private String newick;
     private Node root;
 
     /**
@@ -81,7 +79,9 @@ public class GuideTree<S extends Sequence<C>, C extends Compound> implements Ite
                         - scorer.getMinScore()));
             }
         }
-        phylogeny = NeighborJoining.createInstance().execute(distances);
+        // TODO UPGMA and other hierarchical clustering routines
+        Phylogeny phylogeny = NeighborJoining.createInstance().execute(distances);
+        newick = phylogeny.toString();
         root = new Node(phylogeny.getRoot(), null);
     }
 
@@ -162,7 +162,7 @@ public class GuideTree<S extends Sequence<C>, C extends Compound> implements Ite
 
     @Override
     public String toString() {
-        return phylogeny.toString();
+        return newick;
     }
 
     /**
@@ -216,9 +216,8 @@ public class GuideTree<S extends Sequence<C>, C extends Compound> implements Ite
         }
 
         @Override
-        public void setProfile(GapPenalty gapPenalty, SubstitutionMatrix<C> subMatrix) {
-            profile = new SimpleProfileProfileAligner<S, C>(((Node) child1).getProfile(), ((Node) child2).getProfile(),
-                    gapPenalty, subMatrix).getPair();
+        public void setProfile(Profile<S, C> profile) {
+            this.profile = profile;
         }
 
         // methods for TreeNode

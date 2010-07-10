@@ -73,6 +73,13 @@ public class Alignments {
         WU_MANBER
     }
 
+    /**
+     * List of implemented profile-profile alignment routines.
+     */
+    public static enum ProfileAligner {
+        GLOBAL
+    }
+
     // prevents instantiation
     private Alignments() { }
 
@@ -92,7 +99,7 @@ public class Alignments {
         List<PairwiseSequenceAligner<S, C>> allPairs = new ArrayList<PairwiseSequenceAligner<S, C>>();
         for (int i = 0; i < sequences.size(); i++) {
             for (int j = i+1; j < sequences.size(); j++) {
-                allPairs.add(getAligner(sequences.get(i), sequences.get(j), type, gapPenalty, subMatrix));
+                allPairs.add(getPairwiseAligner(sequences.get(i), sequences.get(j), type, gapPenalty, subMatrix));
             }
         }
         return allPairs;
@@ -113,7 +120,7 @@ public class Alignments {
      */
     public static <S extends Sequence<C>, C extends Compound> List<SequencePair<S, C>> getAllPairsAlignments(
             List<S> sequences, PairwiseAligner type, GapPenalty gapPenalty, SubstitutionMatrix<C> subMatrix) {
-        return runAligners(getAllPairsAligners(sequences, type, gapPenalty, subMatrix));
+        return runPairwiseAligners(getAllPairsAligners(sequences, type, gapPenalty, subMatrix));
     }
 
     /**
@@ -132,7 +139,7 @@ public class Alignments {
         List<PairwiseSequenceScorer<S, C>> allPairs = new ArrayList<PairwiseSequenceScorer<S, C>>();
         for (int i = 0; i < sequences.size(); i++) {
             for (int j = i+1; j < sequences.size(); j++) {
-                allPairs.add(getScorer(sequences.get(i), sequences.get(j), type, gapPenalty, subMatrix));
+                allPairs.add(getPairwiseScorer(sequences.get(i), sequences.get(j), type, gapPenalty, subMatrix));
             }
         }
         return allPairs;
@@ -153,7 +160,7 @@ public class Alignments {
      */
     public static <S extends Sequence<C>, C extends Compound> int[] getAllPairsScores(
             List<S> sequences, PairwiseScorer type, GapPenalty gapPenalty, SubstitutionMatrix<C> subMatrix) {
-        return runScorers(getAllPairsScorers(sequences, type, gapPenalty, subMatrix));
+        return runPairwiseScorers(getAllPairsScorers(sequences, type, gapPenalty, subMatrix));
     }
 
     /**
@@ -172,6 +179,7 @@ public class Alignments {
         PairwiseScorer ps = PairwiseScorer.GLOBAL_IDENTITIES;
         GapPenalty gapPenalty = new SimpleGapPenalty();
         SubstitutionMatrix<C> subMatrix = new SimpleSubstitutionMatrix<C>();
+        ProfileAligner pa = ProfileAligner.GLOBAL;
         for (Object o : settings) {
             if (o instanceof PairwiseScorer) {
                 ps = (PairwiseScorer) o;
@@ -179,25 +187,23 @@ public class Alignments {
                 gapPenalty = (GapPenalty) o;
             } else if (o instanceof SubstitutionMatrix<?>) {
                 subMatrix = (SubstitutionMatrix<C>) o;
+            } else if (o instanceof ProfileAligner) {
+                pa = (ProfileAligner) o;
             }
         }
 
         // stage 1: pairwise similarity calculation
         List<PairwiseSequenceScorer<S, C>> scorers = getAllPairsScorers(sequences, ps, gapPenalty, subMatrix);
-        runScorers(scorers);
+        runPairwiseScorers(scorers);
 
         // stage 2: hierarchical clustering into a guide tree
         GuideTree<S, C> tree = new GuideTree<S, C>(sequences, scorers);
 
-        // stage 3: progressive alignment; TODO parallel version
-        for (GuideTreeNode<S, C> n : tree) {
-            if (n.getProfile() == null) {
-                n.setProfile(gapPenalty, subMatrix);
-            }
-        }
+        // stage 3: progressive alignment
+        Profile<S, C> msa = getProgressiveAlignment(tree, pa, gapPenalty, subMatrix);
 
-        // stage 4: refinement; TODO
-        return tree.getRoot().getProfile();
+        // stage 4: TODO refinement
+        return msa;
     }
 
     /**
@@ -214,7 +220,7 @@ public class Alignments {
      */
     public static <S extends Sequence<C>, C extends Compound> SequencePair<S, C> getPairwiseAlignment(
             S query, S target, PairwiseAligner type, GapPenalty gapPenalty, SubstitutionMatrix<C> subMatrix) {
-        return getAligner(query, target, type, gapPenalty, subMatrix).getPair();
+        return getPairwiseAligner(query, target, type, gapPenalty, subMatrix).getPair();
     }
 
     /**
@@ -231,21 +237,74 @@ public class Alignments {
      */
     public static <S extends Sequence<C>, C extends Compound> int getPairwiseScore(
             S query, S target, PairwiseScorer type, GapPenalty gapPenalty, SubstitutionMatrix<C> subMatrix) {
-        return getScorer(query, target, type, gapPenalty, subMatrix).getScore();
+        return getPairwiseScorer(query, target, type, gapPenalty, subMatrix).getScore();
+    }
+
+    /**
+     * Factory method which computes a profile alignment for the given {@link Profile} pair.
+     *
+     * @param <S> each {@link Sequence} of the {@link Profile} pair is of type S
+     * @param <C> each element of an {@link AlignedSequence} is a {@link Compound} of type C
+     * @param profile1 the first {@link Profile} to align
+     * @param profile2 the second {@link Profile} to align
+     * @param type chosen type from list of profile-profile alignment routines
+     * @param gapPenalty the gap penalties used during alignment
+     * @param subMatrix the set of substitution scores used during alignment
+     * @return alignment profile
+     */
+    public static <S extends Sequence<C>, C extends Compound> ProfilePair<S, C> getProfileProfileAlignment(
+            Profile<S, C> profile1, Profile<S, C> profile2, ProfileAligner type, GapPenalty gapPenalty,
+            SubstitutionMatrix<C> subMatrix) {
+        return getProfileProfileAligner(profile1, profile2, type, gapPenalty, subMatrix).getPair();
+    }
+
+    /**
+     * Factory method to run the profile-profile alignments of a progressive multiple sequence alignment concurrently.
+     * This method runs the alignments in parallel by submitting all of the alignment tasks to the shared thread pool
+     * of the {@link ConcurrencyTools} utility.
+     *
+     * @param <S> each {@link Sequence} of the {@link Profile} pair is of type S
+     * @param <C> each element of an {@link AlignedSequence} is a {@link Compound} of type C
+     * @param tree guide tree to follow aligning profiles from leaves to root
+     * @param type chosen type from list of profile-profile alignment routines
+     * @param gapPenalty the gap penalties used during alignment
+     * @param subMatrix the set of substitution scores used during alignment
+     * @return multiple sequence alignment
+     */
+    public static <S extends Sequence<C>, C extends Compound> Profile<S, C> getProgressiveAlignment(
+            GuideTree<S, C> tree, ProfileAligner type, GapPenalty gapPenalty, SubstitutionMatrix<C> subMatrix) {
+        while (tree.getRoot().getProfile() == null) {
+            List<GuideTreeNode<S, C>> nodes = new ArrayList<GuideTreeNode<S, C>>();
+            List<ProfileProfileAligner<S, C>> aligners = new ArrayList<ProfileProfileAligner<S, C>>();
+            for (GuideTreeNode<S, C> n : tree) {
+                if (n.getProfile() == null) {
+                    Profile<S, C> p1 = n.getChild1().getProfile(), p2 = n.getChild2().getProfile();
+                    if (p1 != null && p2 != null) {
+                        nodes.add(n);
+                        aligners.add(getProfileProfileAligner(p1, p2, ProfileAligner.GLOBAL, gapPenalty, subMatrix));
+                    }
+                }
+            }
+            List<ProfilePair<S, C>> profiles = runProfileAligners(aligners);
+            int i = 0;
+            for (GuideTreeNode<S, C> n : nodes) {
+                n.setProfile(profiles.get(i++));
+            }
+        }
+        return tree.getRoot().getProfile();
     }
 
     /**
      * Factory method to run a list of alignments concurrently.  This method runs the alignments in parallel by
      * submitting all of the alignment tasks to the shared thread pool of the {@link ConcurrencyTools} utility.
      *
-     * @param <A> each {@link Aligner} is of type A
      * @param <S> each {@link Sequence} of an alignment pair is of type S
      * @param <C> each element of an {@link AlignedSequence} is a {@link Compound} of type C
-     * @param alignments list of alignments to run
+     * @param aligners list of alignments to run
      * @return list of {@link SequencePair} results from running alignments
      */
-    public static <A extends PairwiseSequenceAligner<S, C>, S extends Sequence<C>, C extends Compound>
-            List<SequencePair<S, C>> runAligners(List<A> aligners) {
+    public static <S extends Sequence<C>, C extends Compound> List<SequencePair<S, C>>
+            runPairwiseAligners(List<PairwiseSequenceAligner<S, C>> aligners) {
         int n = 1, all = aligners.size();
         List<Future<SequencePair<S, C>>> futures = new ArrayList<Future<SequencePair<S, C>>>();
         for (PairwiseSequenceAligner<S, C> aligner : aligners) {
@@ -259,14 +318,13 @@ public class Alignments {
      * Factory method to run a list of scorers concurrently.  This method runs the scorers in parallel by submitting
      * all of the scoring tasks to the shared thread pool of the {@link ConcurrencyTools} utility.
      *
-     * @param <P> each {@link Scorer} is of type P
      * @param <S> each {@link Sequence} of an alignment pair is of type S
      * @param <C> each element of an {@link AlignedSequence} is a {@link Compound} of type C
      * @param scorers list of scorers to run
      * @return list of score results from running scorers
      */
-    public static <P extends PairwiseSequenceScorer<S, C>, S extends Sequence<C>, C extends Compound>
-            int[] runScorers(List<P> scorers) {
+    public static <S extends Sequence<C>, C extends Compound> int[] runPairwiseScorers(
+            List<PairwiseSequenceScorer<S, C>> scorers) {
         int n = 1, all = scorers.size();
         List<Future<Integer>> futures = new ArrayList<Future<Integer>>();
         for (PairwiseSequenceScorer<S, C> scorer : scorers) {
@@ -281,19 +339,27 @@ public class Alignments {
         return scores;
     }
 
-    // helper methods
-
-    // constructs a pairwise sequence alignment
-    private static <S extends Sequence<C>, C extends Compound> PairwiseSequenceAligner<S, C> getAligner(
-            S query, S target, PairwiseAligner type, GapPenalty gapPenalty, SubstitutionMatrix<C> subMatrix) {
-        switch (type) {
-        default:
-        case GLOBAL:
-            return new NeedlemanWunsch<S, C>(query, target, gapPenalty, subMatrix);
-        case LOCAL:
-            return new SmithWaterman<S, C>(query, target, gapPenalty, subMatrix);
+    /**
+     * Factory method to run a list of alignments concurrently.  This method runs the alignments in parallel by
+     * submitting all of the alignment tasks to the shared thread pool of the {@link ConcurrencyTools} utility.
+     *
+     * @param <S> each {@link Sequence} of the {@link Profile} pair is of type S
+     * @param <C> each element of an {@link AlignedSequence} is a {@link Compound} of type C
+     * @param aligners list of alignments to run
+     * @return list of {@link ProfilePair} results from running alignments
+     */
+    public static <S extends Sequence<C>, C extends Compound> List<ProfilePair<S, C>>
+            runProfileAligners(List<ProfileProfileAligner<S, C>> aligners) {
+        int n = 1, all = aligners.size();
+        List<Future<ProfilePair<S, C>>> futures = new ArrayList<Future<ProfilePair<S, C>>>();
+        for (ProfileProfileAligner<S, C> aligner : aligners) {
+            futures.add(ConcurrencyTools.submit(new CallableProfileProfileAligner<S, C>(aligner),
+                    String.format("Aligning pair %d of %d", n++, all)));
         }
+        return getListFromFutures(futures);
     }
+
+    // helper methods
 
     // retrieves calculated elements from a list on the concurrent execution queue
     private static <E> List<E> getListFromFutures(List<Future<E>> futures) {
@@ -311,31 +377,54 @@ public class Alignments {
         return list;
     }
 
-    // constructs a pairwise sequence scorer
-    private static <S extends Sequence<C>, C extends Compound> PairwiseSequenceScorer<S, C> getScorer(
-            S query, S target, PairwiseScorer type, GapPenalty gapPenalty, SubstitutionMatrix<C> subMatrix) {
-        switch(type) {
+    // constructs a pairwise sequence alignment
+    private static <S extends Sequence<C>, C extends Compound> PairwiseSequenceAligner<S, C> getPairwiseAligner(
+            S query, S target, PairwiseAligner type, GapPenalty gapPenalty, SubstitutionMatrix<C> subMatrix) {
+        switch (type) {
         default:
         case GLOBAL:
-            return getAligner(query, target, PairwiseAligner.GLOBAL, gapPenalty, subMatrix);
+            return new NeedlemanWunsch<S, C>(query, target, gapPenalty, subMatrix);
+        case LOCAL:
+            return new SmithWaterman<S, C>(query, target, gapPenalty, subMatrix);
+        }
+    }
+
+    // constructs a pairwise sequence scorer
+    private static <S extends Sequence<C>, C extends Compound> PairwiseSequenceScorer<S, C> getPairwiseScorer(
+            S query, S target, PairwiseScorer type, GapPenalty gapPenalty, SubstitutionMatrix<C> subMatrix) {
+        switch (type) {
+        default:
+        case GLOBAL:
+            return getPairwiseAligner(query, target, PairwiseAligner.GLOBAL, gapPenalty, subMatrix);
         case GLOBAL_IDENTITIES:
-            return new FractionalIdentityScorer<S, C>(getAligner(query, target, PairwiseAligner.GLOBAL, gapPenalty,
+            return new FractionalIdentityScorer<S, C>(getPairwiseAligner(query, target, PairwiseAligner.GLOBAL, gapPenalty,
                     subMatrix));
         case GLOBAL_SIMILARITIES:
-            return new FractionalSimilarityScorer<S, C>(getAligner(query, target, PairwiseAligner.GLOBAL, gapPenalty,
+            return new FractionalSimilarityScorer<S, C>(getPairwiseAligner(query, target, PairwiseAligner.GLOBAL, gapPenalty,
                     subMatrix));
         case LOCAL:
-            return getAligner(query, target, PairwiseAligner.LOCAL, gapPenalty, subMatrix);
+            return getPairwiseAligner(query, target, PairwiseAligner.LOCAL, gapPenalty, subMatrix);
         case LOCAL_IDENTITIES:
-            return new FractionalIdentityScorer<S, C>(getAligner(query, target, PairwiseAligner.LOCAL, gapPenalty,
+            return new FractionalIdentityScorer<S, C>(getPairwiseAligner(query, target, PairwiseAligner.LOCAL, gapPenalty,
                     subMatrix));
         case LOCAL_SIMILARITIES:
-            return new FractionalSimilarityScorer<S, C>(getAligner(query, target, PairwiseAligner.LOCAL, gapPenalty,
+            return new FractionalSimilarityScorer<S, C>(getPairwiseAligner(query, target, PairwiseAligner.LOCAL, gapPenalty,
                     subMatrix));
         case KMERS:
         case WU_MANBER:
             // TODO other scoring options
             return null;
+        }
+    }
+
+    // constructs a pairwise sequence alignment
+    private static <S extends Sequence<C>, C extends Compound> ProfileProfileAligner<S, C> getProfileProfileAligner(
+            Profile<S, C> profile1, Profile<S, C> profile2, ProfileAligner type, GapPenalty gapPenalty,
+            SubstitutionMatrix<C> subMatrix) {
+        switch (type) {
+        default:
+        case GLOBAL:
+            return new SimpleProfileProfileAligner<S, C>(profile1, profile2, gapPenalty, subMatrix);
         }
     }
 
