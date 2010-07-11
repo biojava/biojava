@@ -29,11 +29,13 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Stack;
 import java.util.Vector;
+import java.util.concurrent.Future;
 import javax.swing.tree.TreeNode;
 
 import org.biojava3.alignment.template.GuideTreeNode;
 import org.biojava3.alignment.template.PairwiseSequenceScorer;
 import org.biojava3.alignment.template.Profile;
+import org.biojava3.alignment.template.ProfilePair;
 import org.biojava3.core.sequence.AccessionID;
 import org.biojava3.core.sequence.template.Compound;
 import org.biojava3.core.sequence.template.Sequence;
@@ -175,6 +177,7 @@ public class GuideTree<S extends Sequence<C>, C extends Compound> implements Ite
         private String name;
         private boolean isLeaf, isVisited;
         private Profile<S, C> profile;
+        private Future<ProfilePair<S, C>> profileFuture;
 
         private Node(PhylogenyNode node, Node parent) {
             this.parent = parent;
@@ -216,8 +219,20 @@ public class GuideTree<S extends Sequence<C>, C extends Compound> implements Ite
         }
 
         @Override
+        public Future<ProfilePair<S, C>> getProfileFuture() {
+            return profileFuture;
+        }
+
+        @Override
         public void setProfile(Profile<S, C> profile) {
             this.profile = profile;
+            profileFuture = null;
+        }
+
+        @Override
+        public void setProfileFuture(Future<ProfilePair<S, C>> profileFuture) {
+            this.profileFuture = profileFuture;
+            profile = null;
         }
 
         // methods for TreeNode

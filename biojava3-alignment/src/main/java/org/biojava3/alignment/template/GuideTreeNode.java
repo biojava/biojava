@@ -23,6 +23,7 @@
 
 package org.biojava3.alignment.template;
 
+import java.util.concurrent.Future;
 import javax.swing.tree.TreeNode;
 
 import org.biojava3.core.sequence.template.Compound;
@@ -75,10 +76,25 @@ public interface GuideTreeNode<S extends Sequence<C>, C extends Compound> extend
     Profile<S, C> getProfile();
 
     /**
+     * Returns the profile future stored at this node, but does not force the calculation, yet.  This allows alignment
+     * tasks for the entire tree to be queued in a post-order traversal before concurrent execution.
+     *
+     * @return the profile future stored at this node
+     */
+    Future<ProfilePair<S, C>> getProfileFuture();
+
+    /**
      * Stores the given profile.
      *
      * @param profile new profile stored at this node
      */
-    public void setProfile(Profile<S, C> profile);
+    void setProfile(Profile<S, C> profile);
+
+    /**
+     * Stores the given profile future.  This allows concurrent execution of alignment tasks.
+     *
+     * @param profile new profile to be calculated and then stored at this node
+     */
+    void setProfileFuture(Future<ProfilePair<S, C>> profileFuture);
 
 }

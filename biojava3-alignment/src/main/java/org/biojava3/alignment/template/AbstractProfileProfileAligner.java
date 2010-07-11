@@ -24,6 +24,8 @@
 package org.biojava3.alignment.template;
 
 import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 
 import org.biojava3.core.sequence.template.Compound;
 import org.biojava3.core.sequence.template.CompoundSet;
@@ -41,6 +43,9 @@ public abstract class AbstractProfileProfileAligner<S extends Sequence<C>, C ext
 
     // additional input fields
     private Profile<S, C> query, target;
+
+    // concurrent execution fields
+    private Future<ProfilePair<S, C>> queryFuture, targetFuture;
 
     // cached fields
     private List<C> cslist;
@@ -74,6 +79,54 @@ public abstract class AbstractProfileProfileAligner<S extends Sequence<C>, C ext
     }
 
     /**
+     * Prepares for a profile-profile alignment run concurrently.
+     *
+     * @param query the first {@link Profile} of the pair to align, still to be calculated
+     * @param target the second {@link Profile} of the pair to align, still to be calculated
+     * @param gapPenalty the gap penalties used during alignment
+     * @param subMatrix the set of substitution scores used during alignment
+     */
+    protected AbstractProfileProfileAligner(Future<ProfilePair<S, C>> query, Future<ProfilePair<S, C>> target,
+            GapPenalty gapPenalty, SubstitutionMatrix<C> subMatrix) {
+        super(gapPenalty, subMatrix);
+        queryFuture = query;
+        targetFuture = target;
+        reset();
+    }
+
+    /**
+     * Prepares for a profile-profile alignment run concurrently.
+     *
+     * @param query the first {@link Profile} of the pair to align
+     * @param target the second {@link Profile} of the pair to align, still to be calculated
+     * @param gapPenalty the gap penalties used during alignment
+     * @param subMatrix the set of substitution scores used during alignment
+     */
+    protected AbstractProfileProfileAligner(Profile<S, C> query, Future<ProfilePair<S, C>> target,
+            GapPenalty gapPenalty, SubstitutionMatrix<C> subMatrix) {
+        super(gapPenalty, subMatrix);
+        this.query = query;
+        targetFuture = target;
+        reset();
+    }
+
+    /**
+     * Prepares for a profile-profile alignment run concurrently.
+     *
+     * @param query the first {@link Profile} of the pair to align, still to be calculated
+     * @param target the second {@link Profile} of the pair to align
+     * @param gapPenalty the gap penalties used during alignment
+     * @param subMatrix the set of substitution scores used during alignment
+     */
+    protected AbstractProfileProfileAligner(Future<ProfilePair<S, C>> query, Profile<S, C> target,
+            GapPenalty gapPenalty, SubstitutionMatrix<C> subMatrix) {
+        super(gapPenalty, subMatrix);
+        queryFuture = query;
+        this.target = target;
+        reset();
+    }
+
+    /**
      * Returns the query {@link Profile}.
      *
      * @return the first {@link Profile} of the pair to align
@@ -98,6 +151,7 @@ public abstract class AbstractProfileProfileAligner<S extends Sequence<C>, C ext
      */
     public void setQuery(Profile<S, C> query) {
         this.query = query;
+        queryFuture = null;
         reset();
     }
 
@@ -108,6 +162,7 @@ public abstract class AbstractProfileProfileAligner<S extends Sequence<C>, C ext
      */
     public void setTarget(Profile<S, C> target) {
         this.target = target;
+        targetFuture = null;
         reset();
     }
 
@@ -162,6 +217,19 @@ public abstract class AbstractProfileProfileAligner<S extends Sequence<C>, C ext
     // prepares for alignment; returns true if everything is set to run the alignment
     @Override
     protected boolean alignReady() {
+        // TODO when added to ConcurrencyTools, log completions and exceptions instead of printing stack traces
+        try {
+            if (query == null && queryFuture != null) {
+                query = queryFuture.get();
+            }
+            if (target == null && targetFuture != null) {
+                target = targetFuture.get();
+            }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
         reset();
         if (query != null && target != null && getGapPenalty() != null && getSubstitutionMatrix() != null &&
                 query.getCompoundSet().equals(target.getCompoundSet())) {

@@ -24,6 +24,7 @@
 package org.biojava3.alignment;
 
 import java.util.List;
+import java.util.concurrent.Future;
 
 import org.biojava3.alignment.template.AbstractProfileProfileAligner;
 import org.biojava3.alignment.template.AlignedSequence;
@@ -31,6 +32,7 @@ import org.biojava3.alignment.template.AlignedSequence.Step;
 import org.biojava3.alignment.template.Aligner;
 import org.biojava3.alignment.template.GapPenalty;
 import org.biojava3.alignment.template.Profile;
+import org.biojava3.alignment.template.ProfilePair;
 import org.biojava3.alignment.template.SubstitutionMatrix;
 import org.biojava3.core.sequence.template.Compound;
 import org.biojava3.core.sequence.template.Sequence;
@@ -63,6 +65,45 @@ public class SimpleProfileProfileAligner<S extends Sequence<C>, C extends Compou
      * @param subMatrix the set of substitution scores used during alignment
      */
     public SimpleProfileProfileAligner(Profile<S, C> query, Profile<S, C> target, GapPenalty gapPenalty,
+            SubstitutionMatrix<C> subMatrix) {
+        super(query, target, gapPenalty, subMatrix);
+    }
+
+    /**
+     * Prepares for a profile-profile alignment run concurrently.
+     *
+     * @param query the first {@link Profile} of the pair to align, still to be calculated
+     * @param target the second {@link Profile} of the pair to align, still to be calculated
+     * @param gapPenalty the gap penalties used during alignment
+     * @param subMatrix the set of substitution scores used during alignment
+     */
+    public SimpleProfileProfileAligner(Future<ProfilePair<S, C>> query, Future<ProfilePair<S, C>> target,
+            GapPenalty gapPenalty, SubstitutionMatrix<C> subMatrix) {
+        super(query, target, gapPenalty, subMatrix);
+    }
+
+    /**
+     * Prepares for a profile-profile alignment run concurrently.
+     *
+     * @param query the first {@link Profile} of the pair to align
+     * @param target the second {@link Profile} of the pair to align, still to be calculated
+     * @param gapPenalty the gap penalties used during alignment
+     * @param subMatrix the set of substitution scores used during alignment
+     */
+    public SimpleProfileProfileAligner(Profile<S, C> query, Future<ProfilePair<S, C>> target, GapPenalty gapPenalty,
+            SubstitutionMatrix<C> subMatrix) {
+        super(query, target, gapPenalty, subMatrix);
+    }
+
+    /**
+     * Prepares for a profile-profile alignment run concurrently.
+     *
+     * @param query the first {@link Profile} of the pair to align, still to be calculated
+     * @param target the second {@link Profile} of the pair to align
+     * @param gapPenalty the gap penalties used during alignment
+     * @param subMatrix the set of substitution scores used during alignment
+     */
+    public SimpleProfileProfileAligner(Future<ProfilePair<S, C>> query, Profile<S, C> target, GapPenalty gapPenalty,
             SubstitutionMatrix<C> subMatrix) {
         super(query, target, gapPenalty, subMatrix);
     }

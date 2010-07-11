@@ -273,24 +273,42 @@ public class Alignments {
      */
     public static <S extends Sequence<C>, C extends Compound> Profile<S, C> getProgressiveAlignment(
             GuideTree<S, C> tree, ProfileAligner type, GapPenalty gapPenalty, SubstitutionMatrix<C> subMatrix) {
-        while (tree.getRoot().getProfile() == null) {
-            List<GuideTreeNode<S, C>> nodes = new ArrayList<GuideTreeNode<S, C>>();
-            List<ProfileProfileAligner<S, C>> aligners = new ArrayList<ProfileProfileAligner<S, C>>();
-            for (GuideTreeNode<S, C> n : tree) {
-                if (n.getProfile() == null) {
-                    Profile<S, C> p1 = n.getChild1().getProfile(), p2 = n.getChild2().getProfile();
-                    if (p1 != null && p2 != null) {
-                        nodes.add(n);
-                        aligners.add(getProfileProfileAligner(p1, p2, ProfileAligner.GLOBAL, gapPenalty, subMatrix));
-                    }
-                }
-            }
-            List<ProfilePair<S, C>> profiles = runProfileAligners(aligners);
-            int i = 0;
-            for (GuideTreeNode<S, C> n : nodes) {
-                n.setProfile(profiles.get(i++));
+
+        // find inner nodes in post-order traversal of tree (each leaf node has a single sequence profile)
+        List<GuideTreeNode<S, C>> innerNodes = new ArrayList<GuideTreeNode<S, C>>();
+        for (GuideTreeNode<S, C> n : tree) {
+            if (n.getProfile() == null) {
+                innerNodes.add(n);
             }
         }
+
+        // submit alignment tasks to the shared thread pool
+        int i = 1, all = innerNodes.size();
+        for (GuideTreeNode<S, C> n : innerNodes) {
+            Profile<S, C> p1 = n.getChild1().getProfile(), p2 = n.getChild2().getProfile();
+            Future<ProfilePair<S, C>> pf1 = n.getChild1().getProfileFuture(), pf2 = n.getChild2().getProfileFuture();
+            ProfileProfileAligner<S, C> aligner =
+                    (p1 != null) ? ((p2 != null) ? getProfileProfileAligner(p1, p2, type, gapPenalty, subMatrix) :
+                            getProfileProfileAligner(p1, pf2, type, gapPenalty, subMatrix)) :
+                    ((p2 != null) ? getProfileProfileAligner(pf1, p2, type, gapPenalty, subMatrix) :
+                            getProfileProfileAligner(pf1, pf2, type, gapPenalty, subMatrix));
+            n.setProfileFuture(ConcurrencyTools.submit(new CallableProfileProfileAligner<S, C>(aligner), String.format(
+                    "Aligning pair %d of %d", i++, all)));
+        }
+
+        // retrieve the alignment results
+        for (GuideTreeNode<S, C> n : innerNodes) {
+            // TODO when added to ConcurrencyTools, log completions and exceptions instead of printing stack traces
+            try {
+                n.setProfile(n.getProfileFuture().get());
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            }
+        }
+
+        // the alignment profile at the root of the tree is the full multiple sequence alignment
         return tree.getRoot().getProfile();
     }
 
@@ -377,7 +395,7 @@ public class Alignments {
         return list;
     }
 
-    // constructs a pairwise sequence alignment
+    // constructs a pairwise sequence aligner
     private static <S extends Sequence<C>, C extends Compound> PairwiseSequenceAligner<S, C> getPairwiseAligner(
             S query, S target, PairwiseAligner type, GapPenalty gapPenalty, SubstitutionMatrix<C> subMatrix) {
         switch (type) {
@@ -417,9 +435,42 @@ public class Alignments {
         }
     }
 
-    // constructs a pairwise sequence alignment
+    // constructs a profile-profile aligner
     private static <S extends Sequence<C>, C extends Compound> ProfileProfileAligner<S, C> getProfileProfileAligner(
             Profile<S, C> profile1, Profile<S, C> profile2, ProfileAligner type, GapPenalty gapPenalty,
+            SubstitutionMatrix<C> subMatrix) {
+        switch (type) {
+        default:
+        case GLOBAL:
+            return new SimpleProfileProfileAligner<S, C>(profile1, profile2, gapPenalty, subMatrix);
+        }
+    }
+
+    // constructs a profile-profile aligner
+    private static <S extends Sequence<C>, C extends Compound> ProfileProfileAligner<S, C> getProfileProfileAligner(
+            Future<ProfilePair<S, C>> profile1, Future<ProfilePair<S, C>> profile2, ProfileAligner type,
+            GapPenalty gapPenalty, SubstitutionMatrix<C> subMatrix) {
+        switch (type) {
+        default:
+        case GLOBAL:
+            return new SimpleProfileProfileAligner<S, C>(profile1, profile2, gapPenalty, subMatrix);
+        }
+    }
+
+    // constructs a profile-profile aligner
+    private static <S extends Sequence<C>, C extends Compound> ProfileProfileAligner<S, C> getProfileProfileAligner(
+            Profile<S, C> profile1, Future<ProfilePair<S, C>> profile2, ProfileAligner type, GapPenalty gapPenalty,
+            SubstitutionMatrix<C> subMatrix) {
+        switch (type) {
+        default:
+        case GLOBAL:
+            return new SimpleProfileProfileAligner<S, C>(profile1, profile2, gapPenalty, subMatrix);
+        }
+    }
+
+    // constructs a profile-profile aligner
+    private static <S extends Sequence<C>, C extends Compound> ProfileProfileAligner<S, C> getProfileProfileAligner(
+            Future<ProfilePair<S, C>> profile1, Profile<S, C> profile2, ProfileAligner type, GapPenalty gapPenalty,
             SubstitutionMatrix<C> subMatrix) {
         switch (type) {
         default:
