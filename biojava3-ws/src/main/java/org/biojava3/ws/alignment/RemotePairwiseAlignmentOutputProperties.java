@@ -19,7 +19,7 @@
  *
  */
 
-package org.biojavax.bio.alignment;
+package org.biojava3.ws.alignment;
 
 import java.io.Serializable;
 import java.util.Set;
