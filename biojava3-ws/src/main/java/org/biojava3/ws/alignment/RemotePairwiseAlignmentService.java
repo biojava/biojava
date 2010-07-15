@@ -32,7 +32,7 @@ import org.biojavax.bio.seq.RichSequence;
  *                     Web Service at EBI
  * 
  * @author Sylvain Foisy
- * @since 1.8
+ * @since Biojava 3
  *
  */
 public interface RemotePairwiseAlignmentService {

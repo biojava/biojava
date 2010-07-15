@@ -37,7 +37,7 @@ import org.biojava.bio.BioException;
  * For an example, go see RemoteQBlastProperties
  * 
  * @author Sylvain Foisy, Diploide BioIT
- * @since 1.8
+ * @since Biojava 3
  *
  */
 public interface RemotePairwiseAlignmentProperties extends Serializable{

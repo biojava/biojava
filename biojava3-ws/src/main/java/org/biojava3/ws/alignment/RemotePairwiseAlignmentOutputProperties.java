@@ -31,7 +31,7 @@ import org.biojava.bio.BioException;
  * output formatting informations to be fed to a RemotePairwiseAlignmentService-implemented object.
  * 
  * @author Sylvain Foisy, Diploide BioIT
- * @since 1.8
+ * @since Biojava 3
  *
  *
  */
