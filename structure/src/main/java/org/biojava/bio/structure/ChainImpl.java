@@ -677,7 +677,7 @@ public class ChainImpl implements Chain, Serializable {
             continue;
          }
          if ( ! waternames.contains(g.getPDBName())) {
-            System.out.println("not a prot, nuc or solvent : " + g.getChemComp());
+            //System.out.println("not a prot, nuc or solvent : " + g.getChemComp());
             groups.add(g);
          }
       }
