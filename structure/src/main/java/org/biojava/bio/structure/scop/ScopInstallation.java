@@ -192,6 +192,16 @@ public class ScopInstallation {
 	   return matches;
 	}
 	
+	/** Return the SCOP description for a node in the hierarchy by its "sunid" id.
+	 * 
+	 * @param sunid
+	 * @return a ScopDescription object
+	 */
+	public ScopDescription getScopDescriptionBySunid(int sunid){
+	   ensureDesInstalled();
+	   return sunidMap.get(sunid);
+	}
+	
 	/** Get a list of ScopDomains that have been assigned to a PDB ID
 	 * 
 	 * @param pdbId the PDB entry
