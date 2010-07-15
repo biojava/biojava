@@ -228,5 +228,6 @@
 		<module>biojava3-genome</module>
 		<module>biojava3-protmod</module>
 		<module>biojava3-alignment</module>
+		<module>biojava3-ws</module>
 	</modules>
 </project>
