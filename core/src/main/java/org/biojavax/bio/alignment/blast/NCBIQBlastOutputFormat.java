@@ -19,7 +19,7 @@
  *
  */
 
-package org.biojava3.ws.alignment.blast;
+package org.biojavax.bio.alignment.blast;
 /**
  * The RemoteQBlastOutputFormat enum acts like static fields for specifiying various
  * values for certain output options.

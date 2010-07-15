@@ -19,13 +19,13 @@
  *
  */
 
-package org.biojava3.ws.alignment.blast;
+package org.biojavax.bio.alignment.blast;
 
 import java.util.HashMap;
 import java.util.Set;
 
 import org.biojava.bio.BioException;
-import org.biojava3.ws.alignment.RemotePairwiseAlignmentOutputProperties;
+import org.biojavax.bio.alignment.RemotePairwiseAlignmentOutputProperties;
 
 /**
  * The actual implementation of the RemotePairwiseAlignmentOutputProperties 

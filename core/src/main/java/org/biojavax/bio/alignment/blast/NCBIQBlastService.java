@@ -33,9 +33,9 @@ import java.util.HashMap;
 import org.biojava.bio.BioException;
 import org.biojavax.bio.seq.RichSequence;
 
-import org.biojava3.ws.alignment.RemotePairwiseAlignmentProperties;
-import org.biojava3.ws.alignment.RemotePairwiseAlignmentService;
-import org.biojava3.ws.alignment.RemotePairwiseAlignmentOutputProperties;
+import org.biojavax.bio.alignment.RemotePairwiseAlignmentProperties;
+import org.biojavax.bio.alignment.RemotePairwiseAlignmentService;
+import org.biojavax.bio.alignment.RemotePairwiseAlignmentOutputProperties;
 
 /**
  * NCBIQBlastService - A simple way of submitting BLAST request to the QBlast
