@@ -24,6 +24,8 @@ package org.biojava3.ws.alignment.blast;
  * The RemoteQBlastOutputFormat enum acts like static fields for specifiying various
  * values for certain output options.
  *  
+ * @author Sylvain Foisy, Diploide BioIT
+ * @since Biojava 3 
  */
 public enum NCBIQBlastOutputFormat {
 	TEXT,

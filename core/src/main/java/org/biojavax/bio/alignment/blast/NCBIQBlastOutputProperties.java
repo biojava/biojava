@@ -36,7 +36,7 @@ import org.biojava3.ws.alignment.RemotePairwiseAlignmentOutputProperties;
  * build around the generic method.
 
  * @author Sylvain Foisy, Diploide BioIT
- * @since 1.8
+ * @since Biojava 3
  *
  */
 public class NCBIQBlastOutputProperties implements

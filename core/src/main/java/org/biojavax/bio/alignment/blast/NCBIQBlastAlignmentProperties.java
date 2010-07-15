@@ -33,7 +33,7 @@ import org.biojava3.ws.alignment.RemotePairwiseAlignmentProperties;
  * convenient methods used to wrap the addition of Blast alignment parameters.
  * 
  * @author Sylvain Foisy, Diploide BioIT
- * @since 1.8
+ * @since Biojava 3
  *
  */
 public class NCBIQBlastAlignmentProperties implements
