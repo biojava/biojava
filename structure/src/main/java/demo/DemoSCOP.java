@@ -24,7 +24,7 @@
 
 package demo;
 
-import java.util.ArrayList;
+
 import java.util.List;
 
 import org.biojava.bio.structure.Atom;
@@ -36,6 +36,7 @@ import org.biojava.bio.structure.align.ce.CeMain;
 
 import org.biojava.bio.structure.align.model.AFPChain;
 import org.biojava.bio.structure.align.util.AtomCache;
+import org.biojava.bio.structure.io.FileParsingParameters;
 import org.biojava.bio.structure.scop.ScopCategory;
 import org.biojava.bio.structure.scop.ScopDescription;
 import org.biojava.bio.structure.scop.ScopDomain;
@@ -46,59 +47,106 @@ public class DemoSCOP
 {
    public static void main(String[] args){
 
+     DemoSCOP demo = new DemoSCOP();
+     demo.printDomainsForPDB();
+     demo.traverseHierarchy();
+     demo.alignSuperfamily();
+   }
+   
+   /** Traverse throught the SCOP hierarchy
+    * 
+    */
+   private void traverseHierarchy()
+   {
       String cacheLocation = "/tmp/";
-
+      String pdbId = "4HHB";
+      // download SCOP if required and load into memory
       ScopInstallation scop = new ScopInstallation(cacheLocation);
+      
+      List<ScopDomain> domains = scop.getDomainsForPDB(pdbId);
+      
+      // show the hierachy for the first domain:
+      
+      ScopNode node = scop.getScopNode(domains.get(0).getSunid());
+      
+      while (node != null){
+         
+         System.out.println("This node: sunid:" + node.getSunid() );
+         System.out.println(scop.getScopDescriptionBySunid(node.getSunid()));
+         node = scop.getScopNode(node.getParentSunid());
+      }
+      
+   }
 
-      List<ScopDomain> domains = scop.getDomainsForPDB("4HHB");
-
-      System.out.println(domains);
-
+   public void alignSuperfamily(){
+      
+      String cacheLocation = "/tmp/";
+     
+      // download SCOP if required and load into memory
+      ScopInstallation scop = new ScopInstallation(cacheLocation);
       List<ScopDescription> superfams = scop.getByCategory(ScopCategory.Superfamily);
 
       System.out.println("Total nr. of superfamilies:" + superfams.size());
 
-
+      
+      // configure where to load PDB files from and 
+      // what information to load
+      AtomCache cache = new AtomCache(cacheLocation, true);      
+      FileParsingParameters fileparams = new FileParsingParameters() ;
+      fileparams.setAlignSeqRes(false);
+      fileparams.setLoadChemCompInfo(true);
+      fileparams.setParseSecStruc(false);
+      cache.setFileParsingParams(fileparams);
+      
+      // get tge first superfamily
       ScopDescription superfam1 = superfams.get(0);
+      System.out.println("First superfamily: " + superfam1);
+      
+      ScopNode node = scop.getScopNode(superfam1.getSunID());
+      System.out.println("scopNode for first superfamily:" + node);
+      
       List<ScopDomain> doms4superfam1 = scop.getScopDomainsBySunid(superfam1.getSunID());
       ScopDomain dom1 = doms4superfam1.get(0);
       
-      AtomCache cache = new AtomCache(cacheLocation, true);
-      
-      for ( int i = 1 ; i < superfams.size() ; i ++){
-         ScopDescription superfam = superfams.get(i);
+      // align the first domain against all others members of this superfamily
+      for ( int i = 1 ; i < doms4superfam1.size() ; i ++){
 
-         ScopNode node = scop.getScopNode(superfam.getSunID());
-         
-         List<ScopDomain> doms = scop.getScopDomainsBySunid(superfam.getSunID());
-
-         ScopDomain dom2 = doms.get(0);
-         align(dom1,dom2,cache);
+         ScopDomain dom2 = doms4superfam1.get(i);
+        
+         try {
+            Structure s1 = cache.getStructureForDomain(dom1);
+            Structure s2 = cache.getStructureForDomain(dom2);
+            
+            Atom[] ca1 = StructureTools.getAtomCAArray(s1);
+            Atom[] ca2 = StructureTools.getAtomCAArray(s2);
+            StructureAlignment ce = StructureAlignmentFactory.getAlgorithm(CeMain.algorithmName);
+            AFPChain afpChain = ce.align(ca1, ca2);
+            
+            //System.out.println(afpChain.toCE(ca1, ca2));
+            
+            //StructureAlignmentDisplay.display(afpChain, ca1, ca2);
+            
+            System.out.println(dom1.getScopId() + " vs. " + dom2.getScopId()+ " :" + afpChain.getProbability());
+            
+         } catch (Exception e){
+            e.printStackTrace();
+         }
       }
-
-    
 
    }
    
-   public static final void align(ScopDomain dom1, ScopDomain dom2, AtomCache cache){
+   public void printDomainsForPDB(){
+      String cacheLocation = "/tmp/";
+      String pdbId = "4HHB";
+      
+      // download SCOP if required and load into memory
+      ScopInstallation scop = new ScopInstallation(cacheLocation);
 
-      try {
-         Structure s1 = cache.getStructureForDomain(dom1);
-         Structure s2 = cache.getStructureForDomain(dom2);
-         
-         Atom[] ca1 = StructureTools.getAtomCAArray(s1);
-         Atom[] ca2 = StructureTools.getAtomCAArray(s2);
-         StructureAlignment ce = StructureAlignmentFactory.getAlgorithm(CeMain.algorithmName);
-         AFPChain afpChain = ce.align(ca1, ca2);
-         
-         //System.out.println(afpChain.toCE(ca1, ca2));
-         
-         //StructureAlignmentDisplay.display(afpChain, ca1, ca2);
-         
-         System.out.println(dom1.getScopId() + " vs. " + dom2.getScopId()+ " :" + afpChain.getProbability());
-      } catch (Exception e){
-         e.printStackTrace();
-      }
+      List<ScopDomain> domains = scop.getDomainsForPDB(pdbId);
+
+      System.out.println(domains);
 
    }
+   
+  
 }
