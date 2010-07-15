@@ -48,6 +48,7 @@ public class DemoSCOP
    public static void main(String[] args){
 
      DemoSCOP demo = new DemoSCOP();
+     demo.getCategories();
      demo.printDomainsForPDB();
      demo.traverseHierarchy();
      demo.alignSuperfamily();
@@ -75,6 +76,24 @@ public class DemoSCOP
          System.out.println(scop.getScopDescriptionBySunid(node.getSunid()));
          node = scop.getScopNode(node.getParentSunid());
       }
+      
+   }
+   
+   /** Get various categories
+    * 
+    */
+   public void getCategories(){
+      String cacheLocation = "/tmp/";
+      
+      // download SCOP if required and load into memory
+      ScopInstallation scop = new ScopInstallation(cacheLocation);
+      List<ScopDescription> superfams = scop.getByCategory(ScopCategory.Superfamily);
+
+      System.out.println("Total nr. of superfamilies:" + superfams.size());
+      
+      List<ScopDescription> folds = scop.getByCategory(ScopCategory.Fold);
+      System.out.println("Total nr. of folds:" + folds.size());
+      
       
    }
 
