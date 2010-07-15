@@ -93,8 +93,7 @@ public class DemoSCOP
       
       List<ScopDescription> folds = scop.getByCategory(ScopCategory.Fold);
       System.out.println("Total nr. of folds:" + folds.size());
-      
-      
+            
    }
 
    public void alignSuperfamily(){
