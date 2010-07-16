@@ -49,6 +49,21 @@ public class AFPChainXMLParser
 		return null;
 	}
 
+   /** returns true if the alignment XML contains an error message
+    * 
+    * @param xml
+    * @return
+    */
+   public static boolean isErrorXML(String xml){
+      
+      if ( xml.contains("error=\""))
+         return true;
+      
+      return false;
+         
+      
+   }
+   
 	/** Takes an XML representation of the alignment and flips the positions of name1 and name2
 	 * 
 	 * @param xml String representing the alignment
