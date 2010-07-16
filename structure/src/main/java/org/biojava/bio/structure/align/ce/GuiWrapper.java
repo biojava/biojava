@@ -34,17 +34,15 @@ public class GuiWrapper {
 	}
 
 	@SuppressWarnings("unchecked")
-	public static Object display(AFPChain afpChain, Atom[] ca1, Atom[] ca2,
-			List<Group> hetatms1, List<Group> nucs1, List<Group> hetatms2,
-			List<Group> nucs2) 
+	public static Object display(AFPChain afpChain, Atom[] ca1, Atom[] ca2) 
 	throws ClassNotFoundException, NoSuchMethodException, InvocationTargetException, IllegalAccessException{
 
 		Class c = Class.forName(strucAlignmentDisplay);
 
 		Method display = c.getMethod("display", new Class[]{AFPChain.class, Atom[].class, 
-				Atom[].class, List.class, List.class, List.class,List.class});
+				Atom[].class});
 
-		Object structureAlignmentJmol = display.invoke(null, afpChain,ca1,ca2, hetatms1, nucs1, hetatms2, nucs2);
+		Object structureAlignmentJmol = display.invoke(null, afpChain,ca1,ca2);
 
 		return structureAlignmentJmol;
 	}
