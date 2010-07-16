@@ -28,7 +28,7 @@ implements ActionListener {
 					StructureAlignmentJmol jmol = new StructureAlignmentJmol(null,null,null);
 					jmol.setStructure(s);
 										
-					jmol.evalString("select all;spacefill off; wireframe off; backbone off; cartoon;color cartoon chain; select ligand;wireframe 0.16;spacefill 0.5; select all; color cartoon structure;");
+					jmol.evalString("set antialiasDisplay on; select all;spacefill off; wireframe off; backbone off; cartoon;color cartoon chain; select ligand;wireframe 0.16;spacefill 0.5; select all; color cartoon structure;");
 
 				} catch (Exception ex){
 					ex.printStackTrace();
