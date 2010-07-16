@@ -345,19 +345,14 @@ public abstract class AbstractUserArgumentProcessor implements UserArgumentProce
 			afpChain.setName2(name2);
 
 			if ( params.isShow3d()){
-
-				if ( (afpChain.getBlockNum() - 1) == 0){
-					hetatms2 = structure2.getChain(0).getAtomGroups("hetatm");
-					nucs2    = structure2.getChain(0).getAtomGroups("nucleotide");
-				}
-
+		
 				if (! GuiWrapper.isGuiModuleInstalled()) {
 					System.err.println("The biojava-structure-gui module is not installed. Please install!");
 				} else {
 
 					try {
 
-						Object jmol = GuiWrapper.display(afpChain,ca1,ca2,hetatms1, nucs1, hetatms2, nucs2);
+						Object jmol = GuiWrapper.display(afpChain,ca1,ca2);
 
 						GuiWrapper.showAlignmentImage(afpChain, ca1,ca2,jmol);
 
