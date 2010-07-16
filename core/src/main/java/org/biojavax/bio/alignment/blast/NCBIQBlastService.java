@@ -18,7 +18,7 @@
  *      http://www.biojava.org/
  *
  */
-package org.biojava3.ws.alignment.blast;
+package org.biojavax.bio.alignment.blast;
 
 import java.io.BufferedReader;
 import java.io.IOException;
