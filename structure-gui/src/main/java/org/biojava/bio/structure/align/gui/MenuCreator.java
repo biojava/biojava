@@ -205,7 +205,20 @@ public class MenuCreator {
 		return saveI;
 	}
 
+	public static JMenuItem getShowPDBMenuItem() {
+       ImageIcon loadI = createImageIcon("/icons/background.png");
+       JMenuItem openI = null;
 
+       if ( loadI == null)
+           openI =new JMenuItem("Show By ID");
+       else 
+           openI =new JMenuItem("Show By ID", loadI);
+       openI.setMnemonic(KeyEvent.VK_O);
+       openI.addActionListener(new ShowPDBIDListener());
+       return openI;
+	}
+	
+	
 	public static JMenuItem getOpenPDBMenuItem() {
 		ImageIcon loadI = createImageIcon("/icons/background.png");
 		JMenuItem openI = null;
@@ -631,6 +644,9 @@ public class MenuCreator {
 		loadF.addActionListener(new MyAlignmentLoadListener(null));
 		file.add(loadF);
 
+		JMenuItem openPDB = MenuCreator.getShowPDBMenuItem();       
+        file.add(openPDB);
+		
 		JMenuItem openI = MenuCreator.getOpenPDBMenuItem();		
 		file.add(openI);
 
