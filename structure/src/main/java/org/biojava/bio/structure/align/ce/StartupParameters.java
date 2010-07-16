@@ -27,7 +27,7 @@ public class StartupParameters {
 	boolean showMenu;
 	boolean showAFPRanges;
 	boolean checkCircular;
-	
+	boolean printPDB;
 
 	// for DB searches
 	String alignPairs;
@@ -38,6 +38,7 @@ public class StartupParameters {
 	public StartupParameters(){
 		show3d = false;
 		printXML = false;
+		printPDB = false;
 		printFatCat = false;
 		autoFetch = false;
 		flexible = false;
@@ -45,6 +46,7 @@ public class StartupParameters {
 		maxGapSize = 30;
 		showAFPRanges = false;
 		checkCircular = false;
+		showMenu = false;
 	}
 	
 	
@@ -58,7 +60,9 @@ public class StartupParameters {
             + ", flexible=" + flexible + ", maxGapSize=" + maxGapSize + ", outFile=" + outFile + ", pdb1=" + pdb1 + ", pdb2=" + pdb2
             + ", pdbDirSplit=" + pdbDirSplit + ", pdbFilePath=" + pdbFilePath + ", printCE=" + printCE + ", printFatCat=" + printFatCat
             + ", printXML=" + printXML + ", saveOutputDir=" + saveOutputDir + ", show3d=" + show3d + ", showDBresult=" + showDBresult
-            + ", showMenu=" + showMenu + ", showAFPRanges=" + showAFPRanges + ", checkCircular=" + checkCircular + "]";
+            + ", showMenu=" + showMenu + ", showAFPRanges=" + showAFPRanges + ", checkCircular=" + checkCircular 
+            + ", printPDB=" + printPDB
+            + "]";
    }
 
 
@@ -251,4 +255,22 @@ public class StartupParameters {
 	public void setCheckCircular(boolean checkCircular) {
 		this.checkCircular = checkCircular;
 	}
+
+
+	/** When writing the results to a file, don;t write as XML but write aligned PDB file
+	 * 
+	 * @return flag
+	 */
+	public boolean isOutputPDB() {
+		return printPDB;
+	}
+	/** When writing the results to a file, don;t write as XML but write aligned PDB file
+	 * 
+	 * @param printPDB flag to print aligned PDB 
+	 */
+	public void setOutputPDB(boolean printPDB) {
+		this.printPDB = printPDB;
+	}
+	
+	
 }
