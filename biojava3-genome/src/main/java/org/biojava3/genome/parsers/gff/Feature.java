@@ -179,7 +179,15 @@ public class Feature implements FeatureI {
     private void initAttributeHashMap(){
        String[] values = mAttributes.split(";");
        for(String attribute : values){
-           String[] data = attribute.split("=");
+           attribute = attribute.trim();
+           int equalindex = attribute.indexOf("=");
+           String splitData = "=";
+           if(equalindex == -1) //gtf uses space and gff3 uses =
+               splitData = " ";
+           String[] data = attribute.split(splitData);
+           if(data[1].indexOf('"') != -1){
+               data[1] = data[1].replaceAll('"' + "","");
+           }
            attributeHashMap.put(data[0].trim(), data[1].trim());
        }
 

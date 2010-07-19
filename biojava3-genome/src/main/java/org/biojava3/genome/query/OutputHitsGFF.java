@@ -10,7 +10,7 @@ import java.util.LinkedHashMap;
 import org.biojava3.genome.parsers.gff.Feature;
 import org.biojava3.genome.parsers.gff.FeatureI;
 import org.biojava3.genome.parsers.gff.FeatureList;
-import org.biojava3.genome.parsers.gff.GeneMarkGTF;
+import org.biojava3.genome.parsers.gff.GeneMarkGTFReader;
 
 /**
  *
@@ -21,7 +21,7 @@ public class OutputHitsGFF {
     public void process(File blastXMLFile, File gffFile, File gffOutputFile, double maxEScore, double percentageAligned, boolean includeFrameShift, boolean includeNegativeStrand) throws Exception {
         BlastXMLQuery blastXMLQuery = new BlastXMLQuery(blastXMLFile.getAbsolutePath());
         LinkedHashMap<String, ArrayList<String>> hits = blastXMLQuery.getHitsQueryDef(maxEScore);
-        FeatureList listGenes = GeneMarkGTF.read(gffFile.getAbsolutePath());
+        FeatureList listGenes = GeneMarkGTFReader.read(gffFile.getAbsolutePath());
         FeatureList hitGenes = new FeatureList();
         for (String id : hits.keySet()) {
             String[] values = id.split(" ");
@@ -49,7 +49,7 @@ public class OutputHitsGFF {
             }
         }
 
-        GeneMarkGTF.write(hitGenes, gffOutputFile.getAbsolutePath());
+    //    GeneMarkGTFReader.write(hitGenes, gffOutputFile.getAbsolutePath());
     }
 
 

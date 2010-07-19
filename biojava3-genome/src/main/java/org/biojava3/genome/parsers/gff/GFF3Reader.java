@@ -26,9 +26,9 @@ import java.util.logging.Logger;
  *
  * @author Hanno Hinsch
  */
-public class GeneMarkGTF {
+public class GFF3Reader {
 
-    private static final Logger log = Logger.getLogger(GeneMarkGTF.class.getName());
+    private static final Logger log = Logger.getLogger(GFF3Reader.class.getName());
 
     /**
      * Read a file into a FeatureList. Each line of the file becomes one Feature object.
@@ -135,54 +135,12 @@ public class GeneMarkGTF {
 
     }
 
-    /**
-     * Write features in FeatureList to file. Each Feature becomes one line in the file.
-     * The userMap() data in the features is not written to file.
-     *
-     * @param features The list of features to write.
-     * @param filename The path to the file.
-     * @throws IOException Something went wrong -- check exception detail message.
-     */
-    public static void write(FeatureList features, String filename) throws IOException {
-        log.info("Writing " + filename);
 
-        BufferedWriter bw = new BufferedWriter(new FileWriter(filename));
-
-        ListIterator iter = features.listIterator();
-        while (iter.hasNext()) {
-            Feature feature = (Feature) iter.next();
-            writeLine(feature, bw);
-        }
-
-        bw.close();
-    }
-
-    private static void writeLine(Feature f, BufferedWriter bw) throws IOException {
-        String s = f.seqname() + '\t';
-        s += f.source() + '\t';
-        s += f.type() + '\t';
-
-        s += f.location().bioStart() + "\t";
-        s += f.location().bioEnd() + "\t";
-        s += Double.toString(f.score()) + "\t";
-        s += f.location().bioStrand() + "\t";
-
-        if (f.frame() == -1) {
-            s += ".\t";
-        } else {
-            s += f.frame() + "\t";
-        }
-
-        s += f.attributes();
-
-        bw.write(s);
-        bw.newLine();
-    }
 
 
     public static void main(String args[]) throws Exception {
 
-        FeatureList listGenes = GeneMarkGTF.read("/Users/Scooter/scripps/dyadic/analysis/454Scaffolds/genemark_hmm.gtf");
+        FeatureList listGenes = GFF3Reader.read("/Users/Scooter/scripps/dyadic/GlimmerHMM/c1_glimmerhmm.gff");
         System.out.println("Features");
         for(FeatureI feature : listGenes){
             System.out.println(feature);

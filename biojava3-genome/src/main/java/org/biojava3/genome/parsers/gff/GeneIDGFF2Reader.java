@@ -26,9 +26,9 @@ import java.util.logging.Logger;
  *
  * @author Hanno Hinsch
  */
-public class GFF3 {
+public class GeneIDGFF2Reader {
 
-    private static final Logger log = Logger.getLogger(GFF3.class.getName());
+    private static final Logger log = Logger.getLogger(GeneIDGFF2Reader.class.getName());
 
     /**
      * Read a file into a FeatureList. Each line of the file becomes one Feature object.
@@ -130,7 +130,8 @@ public class GFF3 {
         } else {
             attributes = new String(s.substring(start, end));
         }
-
+        //need to add in attribute assignment for geneid where it just provides a gene name and will make it gtf like
+        attributes = "gene_id " + '"' + attributes + '"' + ";";
         return new Feature(seqname, source, type, location, score, frame, attributes);
 
     }
@@ -182,7 +183,7 @@ public class GFF3 {
 
     public static void main(String args[]) throws Exception {
 
-        FeatureList listGenes = GFF3.read("/Users/Scooter/scripps/dyadic/GlimmerHMM/c1_glimmerhmm.gff");
+        FeatureList listGenes = GeneIDGFF2Reader.read("/Users/Scooter/scripps/dyadic/analysis/454Scaffolds/genemark_hmm.gtf");
         System.out.println("Features");
         for(FeatureI feature : listGenes){
             System.out.println(feature);
