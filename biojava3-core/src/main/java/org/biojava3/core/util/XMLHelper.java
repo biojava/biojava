@@ -62,8 +62,10 @@ public class XMLHelper {
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 
         DocumentBuilder db = dbf.newDocumentBuilder();
+
         Document doc = db.parse(inputStream);
         doc.getDocumentElement().normalize();
+
         return doc;
     }
 
@@ -106,12 +108,19 @@ public class XMLHelper {
 
     static public Element selectSingleElement(Element element, String xpathExpression) throws Exception {
         if (xpathExpression.indexOf("/") == -1) {
-            NodeList nodes = element.getElementsByTagName(xpathExpression);
-            if (nodes.getLength() > 0) {
-                return (Element) nodes.item(0);
-            } else {
-                return null;
+            NodeList nodeList = element.getChildNodes();
+            for (int i = 0; i < nodeList.getLength(); i++) {
+                Node node = nodeList.item(i);
+                if (node.getNodeType() == node.ELEMENT_NODE && node.getNodeName().equals(xpathExpression)) {
+                    return (Element) node;
+                }
             }
+            //  NodeList nodes = element.getElementsByTagName(xpathExpression);
+            //  if (nodes.getLength() > 0) {
+            //      return (Element) nodes.item(0);
+            //  } else {
+            return null;
+            //  }
         } else {
             XPath xpath = XPathFactory.newInstance().newXPath();
             Element node = (Element) xpath.evaluate(xpathExpression, element, XPathConstants.NODE);
@@ -125,10 +134,12 @@ public class XMLHelper {
             return resultVector;
         }
         if (xpathExpression.indexOf("/") == -1) {
-            NodeList nodes = element.getElementsByTagName(xpathExpression);
-            for (int i = 0; i < nodes.getLength(); i++) {
-                Node node = nodes.item(i);
-                resultVector.add((Element) node);
+            NodeList nodeList = element.getChildNodes();
+            for (int i = 0; i < nodeList.getLength(); i++) {
+                Node node = nodeList.item(i);
+                if (node.getNodeType() == node.ELEMENT_NODE && node.getNodeName().equals(xpathExpression)) {
+                    resultVector.add((Element) node);
+                }
             }
         } else {
             XPath xpath = XPathFactory.newInstance().newXPath();

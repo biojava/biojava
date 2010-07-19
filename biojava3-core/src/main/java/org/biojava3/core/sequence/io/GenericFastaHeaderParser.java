@@ -123,7 +123,7 @@ public class GenericFastaHeaderParser<S extends AbstractSequence<C>, C extends C
         } else if (data[0].equalsIgnoreCase("lcl")) {
             sequence.setAccession(new AccessionID(data[1], DataSource.LOCAL));
         } else {
-            sequence.setAccession(new AccessionID(header));
+            sequence.setAccession(new AccessionID(data[0])); // avoid the common problem of picking up all the comments original header in getOriginalHeader
         }
 
 

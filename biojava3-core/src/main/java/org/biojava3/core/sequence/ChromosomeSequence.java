@@ -22,17 +22,41 @@
  */
 package org.biojava3.core.sequence;
 
+import java.util.LinkedHashMap;
+import org.biojava3.core.sequence.compound.DNACompoundSet;
+import org.biojava3.core.sequence.compound.NucleotideCompound;
+import org.biojava3.core.sequence.template.CompoundSet;
+import org.biojava3.core.sequence.template.ProxySequenceReader;
+
 /**
  *
  * @author Scooter Willis
  */
 public class ChromosomeSequence extends DNASequence {
 
-   
     private int chromosomeNumber;
+    private LinkedHashMap<String, GeneSequence> geneSequenceHashMap = new LinkedHashMap<String, GeneSequence>();
 
 
+        public ChromosomeSequence() {
+//        throw new UnsupportedOperationException("Null constructor not supported");
+    }
 
+    public ChromosomeSequence(String seqString) {
+        super(seqString, DNACompoundSet.getDNACompoundSet());
+    }
+
+    public ChromosomeSequence(ProxySequenceReader<NucleotideCompound> proxyLoader) {
+        super(proxyLoader, DNACompoundSet.getDNACompoundSet());
+    }
+
+    public ChromosomeSequence(String seqString, CompoundSet<NucleotideCompound> compoundSet) {
+        super(seqString, compoundSet);
+    }
+
+    public ChromosomeSequence(ProxySequenceReader<NucleotideCompound> proxyLoader, CompoundSet<NucleotideCompound> compoundSet) {
+        super(proxyLoader, compoundSet);
+    }
 
     /**
      * @return the chromosomeNumber
@@ -46,5 +70,24 @@ public class ChromosomeSequence extends DNASequence {
      */
     public void setChromosomeNumber(int chromosomeNumber) {
         this.chromosomeNumber = chromosomeNumber;
+    }
+
+    public LinkedHashMap<String, GeneSequence> getGeneSequences() {
+        return geneSequenceHashMap;
+    }
+
+    public GeneSequence removeGeneSequence(String accession) {
+        return geneSequenceHashMap.remove(accession);
+    }
+
+    public GeneSequence addGene(AccessionID accession, int begin, int end, Strand strand) {
+        GeneSequence geneSequence = new GeneSequence(this, begin, end, strand);
+        geneSequence.setAccession(accession);
+        geneSequenceHashMap.put(accession.toString(), geneSequence);
+        return geneSequence;
+    }
+
+    public GeneSequence getGene(String accession) {
+        return geneSequenceHashMap.get(accession);
     }
 }

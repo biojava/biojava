@@ -26,8 +26,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.logging.Logger;
-
-
+import org.biojava3.core.sequence.compound.NucleotideCompound;
+import org.biojava3.core.sequence.template.CompoundSet;
 
 /**
  *
@@ -42,17 +42,26 @@ public class GeneSequence extends DNASequence {
     private final ArrayList<IntronSequence> intronSequenceList = new ArrayList<IntronSequence>();
     private final ArrayList<ExonSequence> exonSequenceList = new ArrayList<ExonSequence>();
     boolean intronAdded = false; // need to deal with the problem that typically introns are not added when validating the list and adding in introns as the regions not included in exons
+    private Strand strand = Strand.UNDEFINED;
+    private ChromosomeSequence chromosomeSequence;
 
     /**
      *
      * @param parentDNASequence
      * @param begin
      * @param end inclusive of end
+     * @param strand force a gene to have strand and transcription sequence will inherit
      */
-    public GeneSequence(DNASequence parentDNASequence, int begin, int end) {
-        setParentSequence(parentDNASequence);
+    public GeneSequence(ChromosomeSequence parentSequence, int begin, int end, Strand strand) {
+        chromosomeSequence = parentSequence;
+        setParentSequence(parentSequence);
         setBioBegin(begin);
         setBioEnd(end);
+        setStrand(strand);
+    }
+
+    public ChromosomeSequence getParentChromosomeSequence() {
+        return chromosomeSequence;
     }
 
     public void validate() {
@@ -66,6 +75,21 @@ public class GeneSequence extends DNASequence {
 
         //    log.severe("Add in support for building introns based on added exons");
 
+    }
+
+    /**
+     * A gene should have Strand
+     * @return the strand
+     */
+    public Strand getStrand() {
+        return strand;
+    }
+
+    /**
+     * @param strand the strand to set
+     */
+    public void setStrand(Strand strand) {
+        this.strand = strand;
     }
 
     public TranscriptSequence getTranscript(String accession) {
@@ -82,11 +106,11 @@ public class GeneSequence extends DNASequence {
         return transcriptSequenceHashMap.remove(accession);
     }
 
-    public TranscriptSequence addTranscript(AccessionID accession, int begin, int end, Strand strand) throws Exception {
+    public TranscriptSequence addTranscript(AccessionID accession, int begin, int end) throws Exception {
         if (transcriptSequenceHashMap.containsKey(accession.getID())) {
             throw new Exception("Duplicate accesion id " + accession.getID());
         }
-        TranscriptSequence transcriptSequence = new TranscriptSequence(this, begin, end, strand);
+        TranscriptSequence transcriptSequence = new TranscriptSequence(this, begin, end);
         transcriptSequence.setAccession(accession);
         transcriptSequenceHashMap.put(accession.getID(), transcriptSequence);
         return transcriptSequence;
@@ -162,5 +186,36 @@ public class GeneSequence extends DNASequence {
         exonSequenceHashMap.put(accession.getID(), exonSequence);
         validate();
         return exonSequence;
+    }
+
+    public ArrayList<ExonSequence> getExonSequences(){
+        return exonSequenceList;
+    }
+
+    public ArrayList<IntronSequence> getIntronSequences(){
+        return intronSequenceList;
+    }
+
+    /**
+     * Returns the DNASequence representative of the 5' and 3' reading based on strand
+     * @return
+     */
+
+    public DNASequence getSequence5PrimeTo3Prime() {
+        String sequence = getSequenceAsString(this.getBioBegin(), this.getBioEnd(), this.getStrand());
+        if (getStrand() == Strand.NEGATIVE) {
+            //need to take complement of sequence because it is negative and we are returning the gene sequence from the opposite strand
+            StringBuilder b = new StringBuilder(getLength());
+            CompoundSet<NucleotideCompound> compoundSet = this.getCompoundSet();
+            for (int i = 0; i < sequence.length(); i++) {
+                String nucleotide = sequence.charAt(i) + "";
+                NucleotideCompound nucleotideCompound = compoundSet.getCompoundForString(nucleotide);
+                b.append(nucleotideCompound.getComplement().getShortName());
+            }
+            sequence = b.toString();
+        }
+        DNASequence dnaSequence = new DNASequence(sequence.toUpperCase());
+        dnaSequence.setAccession(new AccessionID(this.getAccession().getID()));
+        return dnaSequence;
     }
 }

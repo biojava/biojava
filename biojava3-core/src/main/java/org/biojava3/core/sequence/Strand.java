@@ -8,7 +8,7 @@ package org.biojava3.core.sequence;
  */
 public enum Strand {
 
-    POSITIVE("+", 1), NEGATIVE("-", -1), UNDEFINED("?", 0);
+    POSITIVE("+", 1), NEGATIVE("-", -1), UNDEFINED(".", 0);
     private final String stringRepresentation;
     private final int numericRepresentation;
 

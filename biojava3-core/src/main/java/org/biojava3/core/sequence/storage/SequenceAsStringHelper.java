@@ -22,7 +22,7 @@ public class SequenceAsStringHelper<C extends Compound> {
         StringBuilder builder = new StringBuilder();
         if (strand.equals(Strand.NEGATIVE)) {
             //we expect bioBegin to be bigger but could have circular case
-            if (bioBegin < bioEnd) {
+            if (bioBegin <= bioEnd) {
                 for (int index = bioEnd - 1; index >= bioBegin - 1; index--) {
                     C compound = parsedCompounds.get(index);
                     builder.append(compoundSet.getStringForCompound(compound));
@@ -40,7 +40,7 @@ public class SequenceAsStringHelper<C extends Compound> {
                 }
             }
         } else {
-            if (bioBegin < bioEnd) {
+            if (bioBegin <= bioEnd) {
                 for (int index = bioBegin - 1; index <= bioEnd - 1 ; index++) {
                     C compound = parsedCompounds.get(index);
                     builder.append(compoundSet.getStringForCompound(compound));

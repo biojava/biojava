@@ -26,6 +26,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.logging.Logger;
+import org.biojava3.core.sequence.compound.NucleotideCompound;
+import org.biojava3.core.sequence.template.CompoundSet;
 
 import org.biojava3.core.sequence.transcription.TranscriptionEngine;
 
@@ -35,13 +37,12 @@ import org.biojava3.core.sequence.transcription.TranscriptionEngine;
  */
 public class TranscriptSequence extends DNASequence {
 
-
-    private Strand strand = Strand.UNDEFINED;
     private static final Logger log = Logger.getLogger(TranscriptSequence.class.getName());
     private final ArrayList<CDSSequence> cdsSequenceList = new ArrayList<CDSSequence>();
     private final LinkedHashMap<String, CDSSequence> cdsSequenceHashMap = new LinkedHashMap<String, CDSSequence>();
     private StartCodonSequence startCodonSequence = null;
     private StopCodonSequence stopCodonSequence = null;
+    private GeneSequence parentGeneSequence = null;
 
     /**
      *
@@ -49,25 +50,19 @@ public class TranscriptSequence extends DNASequence {
      * @param begin
      * @param end inclusive of end
      */
-    public TranscriptSequence(DNASequence parentDNASequence, int begin, int end, Strand strand) {
+    public TranscriptSequence(GeneSequence parentDNASequence, int begin, int end) {
         setParentSequence(parentDNASequence);
+        this.parentGeneSequence = parentDNASequence;
         setBioBegin(begin);
         setBioEnd(end);
-        setStrand(strand);
+
     }
 
     /**
      * @return the strand
      */
     public Strand getStrand() {
-        return strand;
-    }
-
-    /**
-     * @param strand the strand to set
-     */
-    public void setStrand(Strand strand) {
-        this.strand = strand;
+        return parentGeneSequence.getStrand();
     }
 
     /**
@@ -84,6 +79,10 @@ public class TranscriptSequence extends DNASequence {
             }
         }
         return null;
+    }
+
+    public LinkedHashMap<String, CDSSequence> getCDSSequences() {
+        return cdsSequenceHashMap;
     }
 
     /**
@@ -106,12 +105,80 @@ public class TranscriptSequence extends DNASequence {
         return cdsSequence;
     }
 
+        /**
+     * http://www.sequenceontology.org/gff3.shtml
+     * http://biowiki.org/~yam/bioe131/GFF.ppt
+     * @return
+     */
+
+    /**
+     * Return a list of protein sequences based on each CDS sequence
+     * where the phase shift between two CDS sequences is assigned to the
+     * CDS sequence that starts the triplet.
+     *
+     * @return
+     */
+    public ArrayList<ProteinSequence> getProteinCDSSequences() {
+        ArrayList<ProteinSequence> proteinSequenceList = new ArrayList<ProteinSequence>();
+        for (int i = 0; i < cdsSequenceList.size(); i++) {
+            CDSSequence cdsSequence = cdsSequenceList.get(i);
+            String codingSequence = cdsSequence.getCodingSequence();
+  //          System.out.println("CDS " + getStrand() + " "  + cdsSequence.getPhase() + "=" + codingSequence);
+            if (this.getStrand() == Strand.NEGATIVE) {
+                if (cdsSequence.phase == 1) {
+                    codingSequence = codingSequence.substring(1, codingSequence.length());
+                } else if (cdsSequence.phase == 2) {
+                    codingSequence = codingSequence.substring(2, codingSequence.length());
+                }
+                if (i < cdsSequenceList.size() - 1) {
+                    CDSSequence nextCDSSequence = cdsSequenceList.get(i + 1);
+                    if (nextCDSSequence.phase == 1) {
+                        String nextCodingSequence = nextCDSSequence.getCodingSequence();
+                        codingSequence = codingSequence + nextCodingSequence.substring(0, 1);
+                    } else if (nextCDSSequence.phase == 2) {
+                        String nextCodingSequence = nextCDSSequence.getCodingSequence();
+                        codingSequence = codingSequence + nextCodingSequence.substring(0, 2);
+                    }
+                }
+            } else {
+                if (cdsSequence.phase == 1) {
+                    codingSequence = codingSequence.substring(1, codingSequence.length());
+                } else if (cdsSequence.phase == 2) {
+                    codingSequence = codingSequence.substring(2, codingSequence.length());
+                }
+                if (i < cdsSequenceList.size() - 1) {
+                    CDSSequence nextCDSSequence = cdsSequenceList.get(i + 1);
+                    if (nextCDSSequence.phase == 1) {
+                        String nextCodingSequence = nextCDSSequence.getCodingSequence();
+                       codingSequence = codingSequence + nextCodingSequence.substring(0, 1);
+                    } else if (nextCDSSequence.phase == 2) {
+                        String nextCodingSequence = nextCDSSequence.getCodingSequence();
+                        codingSequence = codingSequence + nextCodingSequence.substring(0, 2);
+                    }
+               }
+            }
+
+
+   //    System.out.println(codingSequence);
+            DNASequence dnaCodingSequence = new DNASequence(codingSequence.toString().toUpperCase());
+            RNASequence rnaCodingSequence = dnaCodingSequence.getRNASequence(TranscriptionEngine.getDefault());
+            ProteinSequence proteinSequence = rnaCodingSequence.getProteinSequence(TranscriptionEngine.getDefault());
+            proteinSequence.setAccession(new AccessionID(cdsSequence.getAccession().getID()));
+            proteinSequenceList.add(proteinSequence);
+        }
+        return proteinSequenceList;
+    }
+
+
+
     public DNASequence getDNACodingSequence() {
         StringBuilder sb = new StringBuilder();
         for (CDSSequence cdsSequence : cdsSequenceList) {
             sb.append(cdsSequence.getCodingSequence());
         }
-        return new DNASequence(sb.toString().toUpperCase());
+        DNASequence dnaSequence = new DNASequence(sb.toString().toUpperCase());
+        dnaSequence.setAccession(new AccessionID(this.getAccession().getID()));
+        return dnaSequence;
     }
 
     public ProteinSequence getProteinSequence() {

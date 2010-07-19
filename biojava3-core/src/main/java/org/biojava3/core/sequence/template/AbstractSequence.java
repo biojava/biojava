@@ -25,6 +25,7 @@
  */
 package org.biojava3.core.sequence.template;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
@@ -32,6 +33,8 @@ import java.util.List;
 import org.biojava3.core.sequence.AccessionID;
 import org.biojava3.core.sequence.Strand;
 import org.biojava3.core.sequence.TaxonomyID;
+import org.biojava3.core.sequence.features.DatabaseReferenceInterface;
+import org.biojava3.core.sequence.features.FeaturesKeyWordInterface;
 
 import org.biojava3.core.sequence.storage.ArrayListSequenceReader;
 
@@ -48,6 +51,13 @@ public abstract class AbstractSequence<C extends Compound> implements Sequence<C
     private Integer bioBegin = null;
     private Integer bioEnd = null;
     private AbstractSequence<C> parentSequence = null;
+    private String source = null;
+    private ArrayList<String> notesList = new ArrayList<String>();
+    private Double sequenceScore = null;
+
+    private FeaturesKeyWordInterface featuresKeyWord = null;
+    private DatabaseReferenceInterface databaseReferences = null;
+
 
     public AbstractSequence() {
     }
@@ -62,6 +72,12 @@ public abstract class AbstractSequence<C extends Compound> implements Sequence<C
     public AbstractSequence(ProxySequenceReader<C> proxyLoader, CompoundSet<C> compoundSet) {
         setCompoundSet(compoundSet);
         this.sequenceStorage = proxyLoader;
+        if(proxyLoader instanceof FeaturesKeyWordInterface){
+            this.setFeaturesKeyWord((FeaturesKeyWordInterface)sequenceStorage);
+        }
+        if(proxyLoader instanceof DatabaseReferenceInterface){
+            this.setDatabaseReferences((DatabaseReferenceInterface)sequenceStorage);
+        }
     }
 
     /**
@@ -172,6 +188,99 @@ public abstract class AbstractSequence<C extends Compound> implements Sequence<C
      */
     public void setParentSequence(AbstractSequence<C> parentSequence) {
         this.parentSequence = parentSequence;
+    }
+
+    /**
+     * Added support for the source of this sequence for GFF3 export
+     * If a sub sequence doesn't have  source then check for parent source
+     * @return the source
+     */
+    public String getSource() {
+        if (source != null) {
+            return source;
+        }
+        if (parentSequence != null) {
+            return parentSequence.getSource();
+        }
+        return null;
+    }
+
+    /**
+     * Added support for the source of this sequence for GFF3 export
+     * @param source the source to set
+     */
+    public void setSource(String source) {
+
+        this.source = source;
+    }
+
+    /**
+     * Add notes about this sequence that will get exported for GFF3
+     * @param note
+     */
+    public void addNote(String note) {
+        notesList.add(note);
+    }
+
+    public void removeNote(String note) {
+        notesList.remove(note);
+    }
+
+    /**
+     * @return the notesList
+     */
+    public ArrayList<String> getNotesList() {
+        return notesList;
+    }
+
+    /**
+     * @param notesList the notesList to set
+     */
+    public void setNotesList(ArrayList<String> notesList) {
+        this.notesList = notesList;
+    }
+
+    /**
+     * Provide place holder for a metric that indicate a score associated with the sequence
+     * @return the sequenceScore
+     */
+    public Double getSequenceScore() {
+        return sequenceScore;
+    }
+
+    /**
+     * @param sequenceScore the sequenceScore to set
+     */
+    public void setSequenceScore(Double sequenceScore) {
+        this.sequenceScore = sequenceScore;
+    }
+
+    /**
+     * @return the featuresKeyWord
+     */
+    public FeaturesKeyWordInterface getFeaturesKeyWord() {
+        return featuresKeyWord;
+    }
+
+    /**
+     * @param featuresKeyWord the featuresKeyWord to set
+     */
+    public void setFeaturesKeyWord(FeaturesKeyWordInterface featuresKeyWord) {
+        this.featuresKeyWord = featuresKeyWord;
+    }
+
+    /**
+     * @return the databaseReferences
+     */
+    public DatabaseReferenceInterface getDatabaseReferences() {
+        return databaseReferences;
+    }
+
+    /**
+     * @param databaseReferences the databaseReferences to set
+     */
+    public void setDatabaseReferences(DatabaseReferenceInterface databaseReferences) {
+        this.databaseReferences = databaseReferences;
     }
 
     public enum AnnotationType {
@@ -287,6 +396,6 @@ public abstract class AbstractSequence<C extends Compound> implements Sequence<C
     }
 
     public int countCompounds(C... compounds) {
-      return SequenceMixin.countCompounds(this, compounds);
+        return SequenceMixin.countCompounds(this, compounds);
     }
 }

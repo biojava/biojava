@@ -51,6 +51,7 @@ public class StringProxySequenceReader<C extends Compound> implements ProxySeque
     public StringProxySequenceReader(String sequence, CompoundSet<C> compoundSet) {
         this.sequence = sequence;
         setCompoundSet(compoundSet);
+        setContents(sequence);
     }
 
     public void setCompoundSet(CompoundSet<C> compoundSet) {
