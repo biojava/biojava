@@ -19,6 +19,7 @@
 			<layout>default</layout>
 		</repository>
 	</distributionManagement>
+	
   <url>http://maven.apache.org</url>
     <build>
         <plugins>
