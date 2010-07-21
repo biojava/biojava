@@ -1,4 +1,5 @@
-<?xml version="1.0" encoding="UTF-8"?><project>
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <parent>
     <artifactId>biojava</artifactId>
     <groupId>org.biojava</groupId>
@@ -18,6 +19,19 @@
 			<layout>default</layout>
 		</repository>
 	</distributionManagement>
+	<repositories>
+		<repository>
+			<id>biojava-maven-repo</id>
+			<name>BioJava repository</name>
+			<url>http://www.biojava.org/download/maven/</url>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+		</repository>
+	</repositories>	
   <version>3.0-SNAPSHOT</version>
   <url>http://maven.apache.org</url>
   <dependencies>
@@ -32,6 +46,11 @@
     	<artifactId>biojava3-core</artifactId>
     	<version>3.0-SNAPSHOT</version>
     	<scope>compile</scope>
+    </dependency>
+    <dependency>
+    	<groupId>net.sourceforge</groupId>
+    	<artifactId>jaligner</artifactId>
+    	<version>1.0</version>
     </dependency>
   </dependencies>
 </project>
