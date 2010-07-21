@@ -28,7 +28,8 @@ public class StartupParameters {
 	boolean showAFPRanges;
 	boolean checkCircular;
 	boolean printPDB;
-
+	Double maxOptRMSD;
+	
 	// for DB searches
 	String alignPairs;
 	String saveOutputDir;
@@ -270,6 +271,18 @@ public class StartupParameters {
 	 */
 	public void setOutputPDB(boolean printPDB) {
 		this.printPDB = printPDB;
+	}
+
+
+
+	
+
+	public Double getMaxOptRMSD() {
+		return maxOptRMSD;
+	}
+
+	public void setMaxOptRMSD(Double maxOptRMSD) {
+		this.maxOptRMSD = maxOptRMSD;
 	}
 	
 	
