@@ -51,6 +51,28 @@ public class SimpleProfile<S extends Sequence<C>, C extends Compound> implements
     private int length;
 
     /**
+     * Creates a pair profile for the given already aligned sequences.
+     *
+     * @param query the first sequence of the pair
+     * @param target the second sequence of the pair
+     * @throws IllegalArgumentException if sequences differ in size
+     */
+    protected SimpleProfile(AlignedSequence<C> query, AlignedSequence<C> target) {
+        if (query.getLength() != target.getLength()) {
+            throw new IllegalArgumentException("Aligned sequences differ in size");
+        }
+        list = new ArrayList<AlignedSequence<C>>();
+        list.add(query);
+        list.add(target);
+        list = Collections.unmodifiableList(list);
+        originals = new ArrayList<S>();
+        originals.add((S) query.getOriginalSequence());
+        originals.add((S) target.getOriginalSequence());
+        originals = Collections.unmodifiableList(originals);
+        length = query.getLength();
+    }
+
+    /**
      * Creates a profile from a single sequence.
      *
      * @param sequence sequence to seed profile

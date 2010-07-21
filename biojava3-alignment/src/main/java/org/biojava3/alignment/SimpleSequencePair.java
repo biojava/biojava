@@ -45,6 +45,17 @@ public class SimpleSequencePair<S extends Sequence<C>, C extends Compound> exten
     private int identicals = -1, similars = -1;
 
     /**
+     * Creates a pair profile for the given already aligned sequences.
+     *
+     * @param query the first sequence of the pair
+     * @param target the second sequence of the pair
+     * @throws IllegalArgumentException if sequences differ in size
+     */
+    public SimpleSequencePair(AlignedSequence<C> query, AlignedSequence<C> target) {
+        super(query, target);
+    }
+
+    /**
      * Creates a pair profile for the given sequences with a global alignment.
      *
      * @param query the first sequence of the pair
