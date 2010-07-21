@@ -276,11 +276,18 @@ public class StartupParameters {
 
 
 	
-
+	/**(jCE specific): maximum RMSD that shall be calculated for the alignment.
+	 * 
+	 * @return maxOptRMSD parameter
+	 */
 	public Double getMaxOptRMSD() {
 		return maxOptRMSD;
 	}
 
+	/** (jCE specific): maximum RMSD that shall be calculated for the alignment.
+	 * 
+	 * @param maxOptRMSD max RMSD to calculate
+	 */
 	public void setMaxOptRMSD(Double maxOptRMSD) {
 		this.maxOptRMSD = maxOptRMSD;
 	}
