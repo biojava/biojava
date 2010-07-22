@@ -258,7 +258,7 @@ public class ProteinModificationParserTest extends TestCase {
 		
 		Set<ProteinModification> mods;
 		if (residId==null) {
-			mods = ProteinModification.getProteinModifications();
+			mods = ProteinModification.allModifications();
 		} else {
 			mods = ProteinModification.getByResidId(residId);
 		}

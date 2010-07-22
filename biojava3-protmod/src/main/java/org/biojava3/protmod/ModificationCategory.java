@@ -34,15 +34,15 @@ import java.util.Map;
  * @since 3.0
  */
 public enum ModificationCategory {
-	ATTACHMENT("Attachment"),
-	CHEMICAL_MODIFICATION("ModifiedResidue"), 
-	CROSS_LINK_1("CrossLink1"),
-	CROSS_LINK_2("CrossLink2"),
-	CROSS_LINK_3("CrossLink3"),
-	CROSS_LINK_4("CrossLink4"),
-	CROSS_LINK_5("CrossLink5"),
-	CROSS_LINK_6("CrossLink6"),
-	CROSS_LINK_7("CrossLink7")
+	ATTACHMENT("attachment"),
+	CHEMICAL_MODIFICATION("modified residue"), 
+	CROSS_LINK_1("crosslink1"),
+	CROSS_LINK_2("crosslink2"),
+	CROSS_LINK_3("crosslink3"),
+	CROSS_LINK_4("crosslink4"),
+	CROSS_LINK_5("crosslink5"),
+	CROSS_LINK_6("crosslink6"),
+	CROSS_LINK_7("crosslink7")
 	;
 	
 	ModificationCategory(String label) {

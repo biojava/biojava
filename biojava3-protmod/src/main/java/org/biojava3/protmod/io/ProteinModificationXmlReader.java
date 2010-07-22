@@ -338,7 +338,15 @@ public final class ProteinModificationXmlReader {
 			nodes = infoNodes.get("Formula");
 			if (nodes!=null && !nodes.isEmpty()) {
 				modBuilder.setFormula(nodes.get(0).getTextContent());
-			}		
+			}
+			
+			// keywords
+			nodes = infoNodes.get("Keyword");
+			if (nodes!=null && !nodes.isEmpty()) {
+				for (Node node : nodes) {
+					modBuilder.addKeyword(node.getTextContent());
+				}
+			}
 		}
 	}
 	

@@ -66,12 +66,12 @@ public class ProteinModificationRegistryTest extends TestCase {
 	 * Test the initialization registry of common protein modifications. 
 	 */
 	public void testRegisterCommonModification() {		
-		Set<ProteinModification> mods = ProteinModification.getProteinModifications();
+		Set<ProteinModification> mods = ProteinModification.allModifications();
 		assertTrue(mods!=null && !mods.isEmpty());
 		
 //		System.out.println("There are totally "+mods.size()
 //				+" protein modifications registered.");
-		
+//		
 //		printModifications(mods);
 	}
 	

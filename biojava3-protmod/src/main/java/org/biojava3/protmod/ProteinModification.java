@@ -73,6 +73,7 @@ public final class ProteinModification {
 	private String sysName = null;
 	private String formula = null;
 	private String description = null;
+	private Set<String> keywords = new HashSet<String>();
 	
 	private ModificationCondition condition = null;
 	
@@ -84,6 +85,7 @@ public final class ProteinModification {
 	private static Map<String, Set<ProteinModification>> byResidId = null;
 	private static Map<String, Set<ProteinModification>> byPsimodId = null;
 	private static Map<String, Set<ProteinModification>> byPdbccId = null;
+	private static Map<String, Set<ProteinModification>> byKeyword = null;
 	private static Map<Component, Set<ProteinModification>> byComponent = null;
 	private static Map<ModificationCategory, Set<ProteinModification>> byCategory = null;
 	private static Map<ModificationOccurrenceType, Set<ProteinModification>> byOccurrenceType = null;
@@ -105,6 +107,7 @@ public final class ProteinModification {
 			byResidId = new HashMap<String, Set<ProteinModification>>();
 			byPsimodId = new HashMap<String, Set<ProteinModification>>();
 			byPdbccId = new HashMap<String, Set<ProteinModification>>();
+			byKeyword = new HashMap<String, Set<ProteinModification>>();
 			byComponent = new HashMap<Component, Set<ProteinModification>>();
 			byCategory = new EnumMap<ModificationCategory, Set<ProteinModification>>(
 					ModificationCategory.class);
@@ -120,13 +123,14 @@ public final class ProteinModification {
 		}
 	}
 	
+	private static String DIR_XML_PTM_LIST = "ptm_list.xml";
+	
 	/**
 	 * register common protein modifications from XML file.
 	 */
 	private static void registerCommonProteinModifications() {
-		String xmlPTMList = "ptm_list.xml";
 		try {
-			InputStream isXml = ProteinModification.class.getResourceAsStream(xmlPTMList);
+			InputStream isXml = ProteinModification.class.getResourceAsStream(DIR_XML_PTM_LIST);
 			ProteinModificationXmlReader.registerProteinModificationFromXml(isXml);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -203,6 +207,14 @@ public final class ProteinModification {
 	 */
 	public String getDescription() {
 		return description;
+	}
+	
+	/**
+	 * 
+	 * @return a set of keywords.
+	 */
+	public Set<String> getKeywords() {
+		return keywords;
 	}
 	
 	/**
@@ -426,6 +438,29 @@ public final class ProteinModification {
 		}
 		
 		/**
+		 * Add a keyword associate with the PTM.
+		 * @param keyword a keyword.
+		 * @return the same Builder object so you can chain setters.
+		 * @throws IllegalArgumentException if the keyword is null.
+		 */
+		public Builder addKeyword(String keyword) {
+			if (keyword==null) {
+				throw new IllegalArgumentException("Keyword cannot be null.");
+			}
+			
+			current.keywords.add(keyword);
+			
+			Set<ProteinModification> mods = byKeyword.get(keyword);
+			if (mods==null) {
+				mods = new HashSet<ProteinModification>();
+				byKeyword.put(keyword, mods);
+			}
+			mods.add(current);
+			
+			return this;
+		}
+		
+		/**
 		 * Set the residue formula.
 		 * @param formula residue formula.
 		 * @return the same Builder object so you can chain setters.
@@ -544,6 +579,16 @@ public final class ProteinModification {
 	}
 	
 	/**
+	 * 
+	 * @param keyword a keyword.
+	 * @return a set of ProteinModifications that have the keyword.
+	 */
+	public static Set<ProteinModification> getByKeyword(final String keyword) {
+		lazyInit();
+		return byKeyword.get(keyword);
+	}
+	
+	/**
 	 * Get ProteinModifications that involves one or more components.
 	 * @param comp1 a {@link Component}.
 	 * @param comps other {@link Component}s.
@@ -578,7 +623,7 @@ public final class ProteinModification {
 	 * 
 	 * @return set of all registered ProteinModifications.
 	 */
-	public static Set<ProteinModification> getProteinModifications() {
+	public static Set<ProteinModification> allModifications() {
 		lazyInit();
 		return Collections.unmodifiableSet(registry);
 	}
@@ -609,7 +654,7 @@ public final class ProteinModification {
 	 * 
 	 * @return set of IDs of all registered ProteinModifications.
 	 */
-	public static Set<String> getIds() {
+	public static Set<String> allIds() {
 		lazyInit();
 		Set<String> ret = byId.keySet();
 		return Collections.unmodifiableSet(ret);
@@ -619,7 +664,7 @@ public final class ProteinModification {
 	 * 
 	 * @return set of PDBCC IDs of all registered ProteinModifications.
 	 */
-	public static Set<String> getPdbccIds() {
+	public static Set<String> allPdbccIds() {
 		lazyInit();
 		Set<String> ret = byPdbccId.keySet();
 		return Collections.unmodifiableSet(ret);
@@ -629,7 +674,7 @@ public final class ProteinModification {
 	 * 
 	 * @return set of RESID IDs of all registered ProteinModifications.
 	 */
-	public static Set<String> getResidIds() {
+	public static Set<String> allResidIds() {
 		lazyInit();
 		Set<String> ret = byResidId.keySet();
 		return Collections.unmodifiableSet(ret);
@@ -639,7 +684,7 @@ public final class ProteinModification {
 	 * 
 	 * @return set of PSI-MOD IDs of all registered ProteinModifications.
 	 */
-	public static Set<String> getPsimodIds() {
+	public static Set<String> allPsimodIds() {
 		lazyInit();
 		Set<String> ret = byPsimodId.keySet();
 		return Collections.unmodifiableSet(ret);
@@ -649,9 +694,19 @@ public final class ProteinModification {
 	 * 
 	 * @return set of components involved in all registered ProteinModifications.
 	 */
-	public static Set<Component> getComponents() {
+	public static Set<Component> allComponents() {
 		lazyInit();
 		Set<Component> ret = byComponent.keySet();
+		return Collections.unmodifiableSet(ret);
+	}
+	
+	/**
+	 * 
+	 * @return set of keywords of all registered ProteinModifications.
+	 */
+	public static Set<String> allKeywords() {
+		lazyInit();
+		Set<String> ret = byKeyword.keySet();
 		return Collections.unmodifiableSet(ret);
 	}
 	
@@ -674,6 +729,7 @@ public final class ProteinModification {
 		sb.append("\tSystematic name:"+getSystematicName());
 		sb.append("\tCategory:"+getCategory().label());
 		sb.append("\tOccurrence type:"+getOccurrenceType().label());
+		sb.append("\tKeywords:"+getKeywords());
 		sb.append("\tCondition:"+getCondition());
 		return sb.toString();
 	}

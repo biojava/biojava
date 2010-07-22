@@ -28,8 +28,9 @@
 				<Atom component="2">C1</Atom>
 			</Bond>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>Attachment</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>attachment</Category>
+		<Keyword>glycoprotein</Keyword>
 	</Entry>
 	<Entry>
 		<Id>0002</Id>
@@ -58,8 +59,9 @@
 				<Atom component="2">C1</Atom>
 			</Bond>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>Attachment</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>attachment</Category>
+		<Keyword>glycoprotein</Keyword>
 	</Entry>
 	<Entry>
 		<Id>0003</Id>
@@ -86,8 +88,9 @@
 				<Id source="PDBCC">CSP</Id>
 			</Component>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>ModifiedResidue</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>modified residue</Category>
+		<Keyword>phosphoprotein</Keyword>
 	</Entry>
 	<Entry>
 		<Id>0004</Id>
@@ -114,8 +117,9 @@
 				<Id source="PDBCC">NEP</Id>
 			</Component>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>ModifiedResidue</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>modified residue</Category>
+		<Keyword>phosphoprotein</Keyword>
 	</Entry>
 	<Entry>
 		<Id>0005</Id>
@@ -142,8 +146,10 @@
 				<Id source="PDBCC">HIP</Id>
 			</Component>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>ModifiedResidue</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>modified residue</Category>
+		<Keyword>phosphohistidine</Keyword>
+		<Keyword>phosphoprotein</Keyword>
 	</Entry>
 	<Entry>
 		<Id>0006</Id>
@@ -170,8 +176,9 @@
 				<Id source="PDBCC">SEP</Id>
 			</Component>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>ModifiedResidue</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>modified residue</Category>
+		<Keyword>phosphoprotein</Keyword>
 	</Entry>
 	<Entry>
 		<Id>0007</Id>
@@ -198,8 +205,9 @@
 				<Id source="PDBCC">TPO</Id>
 			</Component>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>ModifiedResidue</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>modified residue</Category>
+		<Keyword>phosphoprotein</Keyword>
 	</Entry>
 	<Entry>
 		<Id>0008</Id>
@@ -226,8 +234,9 @@
 				<Id source="PDBCC">PTR</Id>
 			</Component>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>ModifiedResidue</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>modified residue</Category>
+		<Keyword>phosphoprotein</Keyword>
 	</Entry>
 	<!--Entry>
 		<Id>0009</Id>
@@ -258,8 +267,9 @@
 				<Atom component="2">C</Atom>
 			</Bond>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>Attachment</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>attachment</Category>
+		<Keyword>acetylated amino end</Keyword>
 	</Entry>
 	<Entry>
 		<Id>0010</Id>
@@ -289,8 +299,10 @@
 				<Atom component="2">C</Atom>
 			</Bond>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>Attachment</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>attachment</Category>
+		<Keyword>thioether bond</Keyword>
+		<Keyword>acetylated amino end</Keyword>
 	</Entry-->
 	<Entry>
 		<Id>0011</Id>
@@ -317,8 +329,9 @@
 				<Id source="PDBCC">ALY</Id>
 			</Component>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>ModifiedResidue</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>modified residue</Category>
+		<Keyword>acetyllysine</Keyword>
 	</Entry>
 	<Entry>
 		<Id>0012</Id>
@@ -345,8 +358,9 @@
 				<Id source="PDBCC">TYS</Id>
 			</Component>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>ModifiedResidue</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>modified residue</Category>
+		<Keyword>sulfoprotein</Keyword>
 	</Entry>
 	<Entry>
 		<Id>0013</Id>
@@ -373,8 +387,9 @@
 				<Id source="PDBCC">MLZ</Id>
 			</Component>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>ModifiedResidue</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>modified residue</Category>
+		<Keyword>methylated amino acid</Keyword>
 	</Entry>
 	<Entry>
 		<Id>0014</Id>
@@ -401,8 +416,9 @@
 				<Id source="PDBCC">AGM</Id>
 			</Component>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>ModifiedResidue</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>modified residue</Category>
+		<Keyword>methylated amino acid</Keyword>
 	</Entry>
 	<Entry>
 		<Id>0015</Id>
@@ -429,8 +445,9 @@
 				<Id source="PDBCC">M3L</Id>
 			</Component>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>ModifiedResidue</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>modified residue</Category>
+		<Keyword>methylated amino acid</Keyword>
 	</Entry>
 	<Entry>
 		<Id>0016</Id>
@@ -458,8 +475,10 @@
 				<Terminal>N</Terminal>
 			</Component>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>ModifiedResidue</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>modified residue</Category>
+		<Keyword>thioether bond</Keyword>
+		<Keyword>methylated amino acid</Keyword>
 	</Entry>
 	<Entry>
 		<Id>0017</Id>
@@ -486,8 +505,9 @@
 				<Id source="PDBCC">HYP</Id>
 			</Component>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>ModifiedResidue</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>modified residue</Category>
+		<Keyword>hydroxylation</Keyword>
 	</Entry>
 	<Entry>
 		<Id>0018</Id>
@@ -516,8 +536,10 @@
 				<Atom component="2">SG</Atom>
 			</Bond>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>CrossLink2</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>crosslink2</Category>
+		<Keyword>redox-active center</Keyword>
+		<Keyword>disulfide bond</Keyword>
 	</Entry>
 	<Entry>
 		<Id>0019</Id>
@@ -544,8 +566,9 @@
 				<Id source="PDBCC">SCH</Id>
 			</Component>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>ModifiedResidue</Category>
+		<Occurrence>hypothetical</Occurrence>
+		<Category>modified residue</Category>
+		<Keyword>disulfide bond</Keyword>
 	</Entry>
 	<Entry>
 		<Id>0020</Id>
@@ -588,8 +611,11 @@
 				<Atom component="4">FE4</Atom>
 			</Bond>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>CrossLink3</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>crosslink3</Category>
+		<Keyword>3Fe-4S</Keyword>
+		<Keyword>iron-sulfur protein</Keyword>
+		<Keyword>metalloprotein</Keyword>
 	</Entry>
 	<Entry>
 		<Id>0021</Id>
@@ -639,8 +665,11 @@
 				<Atom component="5" label="2">FE2</Atom>
 			</Bond>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>CrossLink4</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>crosslink4</Category>
+		<Keyword>2Fe-2S</Keyword>
+		<Keyword>iron-sulfur protein</Keyword>
+		<Keyword>metalloprotein</Keyword>
 	</Entry>
 	<Entry>
 		<Id>0022</Id>
@@ -668,8 +697,12 @@
 				<Terminal>N</Terminal>
 			</Component>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>ModifiedResidue</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>modified residue</Category>
+		<Keyword>thioether bond</Keyword>
+		<Keyword>blocked amino end</Keyword>
+		<Keyword>formylation</Keyword>
+		<Keyword>pretranslational modification</Keyword>
 	</Entry>
 	<Entry>
 		<Id>0023</Id>
@@ -696,8 +729,11 @@
 				<Id source="PDBCC">CSE</Id>
 			</Component>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>ModifiedResidue</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>modified residue</Category>
+		<Keyword>pretranslational modification</Keyword>
+		<Keyword>selenium</Keyword>
+		<Keyword>selenocysteine</Keyword>
 	</Entry>
 	<Entry>
 		<Id>0024</Id>
@@ -724,8 +760,9 @@
 				<Id source="PDBCC">AHB</Id>
 			</Component>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>ModifiedResidue</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>modified residue</Category>
+		<Keyword>hydroxylation</Keyword>
 	</Entry>
 	<Entry>
 		<Id>0025</Id>
@@ -752,8 +789,9 @@
 				<Id source="PDBCC">BHD</Id>
 			</Component>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>ModifiedResidue</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>modified residue</Category>
+		<Keyword>hydroxylation</Keyword>
 	</Entry>
 	<Entry>
 		<Id>0026</Id>
@@ -780,8 +818,9 @@
 				<Id source="PDBCC">LYZ</Id>
 			</Component>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>ModifiedResidue</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>modified residue</Category>
+		<Keyword>hydroxylation</Keyword>
 	</Entry>
 	<Entry>
 		<Id>0027</Id>
@@ -808,8 +847,9 @@
 				<Id source="PDBCC">HY3</Id>
 			</Component>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>ModifiedResidue</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>modified residue</Category>
+		<Keyword>hydroxylation</Keyword>
 	</Entry>
 	<Entry>
 		<Id>0028</Id>
@@ -836,8 +876,10 @@
 				<Id source="PDBCC">PCA</Id>
 			</Component>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>ModifiedResidue</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>modified residue</Category>
+		<Keyword>blocked amino end</Keyword>
+		<Keyword>pyroglutamic acid</Keyword>
 	</Entry>
 	<Entry>
 		<Id>0029</Id>
@@ -864,8 +906,9 @@
 				<Id source="PDBCC">CGU</Id>
 			</Component>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>ModifiedResidue</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>modified residue</Category>
+		<Keyword>carboxyglutamic acid</Keyword>
 	</Entry>
 	<Entry>
 		<Id>0030</Id>
@@ -892,8 +935,9 @@
 				<Id source="PDBCC">PHD</Id>
 			</Component>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>ModifiedResidue</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>modified residue</Category>
+		<Keyword>phosphoprotein</Keyword>
 	</Entry>
 	<Entry>
 		<Id>0031</Id>
@@ -920,8 +964,9 @@
 				<Id source="PDBCC">DDE</Id>
 			</Component>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>ModifiedResidue</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>modified residue</Category>
+		<Keyword>diphthamide</Keyword>
 	</Entry>
 	<Entry>
 		<Id>0032</Id>
@@ -948,8 +993,9 @@
 				<Id source="PDBCC">SCY</Id>
 			</Component>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>ModifiedResidue</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>modified residue</Category>
+		<Keyword>thioester bond</Keyword>
 	</Entry>
 	<Entry>
 		<Id>0033</Id>
@@ -978,8 +1024,11 @@
 				<Atom component="2">C1</Atom>
 			</Bond>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>Attachment</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>attachment</Category>
+		<Keyword>blocked amino end</Keyword>
+		<Keyword>lipoprotein</Keyword>
+		<Keyword>myristoylation</Keyword>
 	</Entry>
 	<Entry>
 		<Id>0034</Id>
@@ -1006,8 +1055,9 @@
 				<Id source="PDBCC">MAA</Id>
 			</Component>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>ModifiedResidue</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>modified residue</Category>
+		<Keyword>methylated amino end</Keyword>
 	</Entry>
 	<Entry>
 		<Id>0035</Id>
@@ -1034,8 +1084,9 @@
 				<Id source="PDBCC">MEA</Id>
 			</Component>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>ModifiedResidue</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>modified residue</Category>
+		<Keyword>methylated amino end</Keyword>
 	</Entry>
 	<!--Entry>
 		<Id>0036</Id>
@@ -1064,8 +1115,10 @@
 				<Atom component="2"></Atom>
 			</Bond>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>Attachment</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>attachment</Category>
+		<Keyword>blocked amino end</Keyword>
+		<Keyword>methylated amino end</Keyword>
 	</Entry-->
 	<Entry>
 		<Id>0037</Id>
@@ -1092,8 +1145,9 @@
 				<Id source="PDBCC">2MR</Id>
 			</Component>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>ModifiedResidue</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>modified residue</Category>
+		<Keyword>methylated amino acid</Keyword>
 	</Entry>
 	<Entry>
 		<Id>0038</Id>
@@ -1120,8 +1174,9 @@
 				<Id source="PDBCC">DA2</Id>
 			</Component>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>ModifiedResidue</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>modified residue</Category>
+		<Keyword>methylated amino acid</Keyword>
 	</Entry>
 	<Entry>
 		<Id>0039</Id>
@@ -1148,8 +1203,9 @@
 				<Id source="PDBCC">MEN</Id>
 			</Component>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>ModifiedResidue</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>modified residue</Category>
+		<Keyword>methylated amino acid</Keyword>
 	</Entry>
 	<Entry>
 		<Id>0040</Id>
@@ -1176,8 +1232,9 @@
 				<Id source="PDBCC">MEQ</Id>
 			</Component>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>ModifiedResidue</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>modified residue</Category>
+		<Keyword>methylated amino acid</Keyword>
 	</Entry>
 	<Entry>
 		<Id>0041</Id>
@@ -1204,8 +1261,9 @@
 				<Id source="PDBCC">MHS</Id>
 			</Component>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>ModifiedResidue</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>modified residue</Category>
+		<Keyword>methylated amino acid</Keyword>
 	</Entry>
 	<Entry>
 		<Id>0042</Id>
@@ -1232,8 +1290,9 @@
 				<Id source="PDBCC">MLY</Id>
 			</Component>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>ModifiedResidue</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>modified residue</Category>
+		<Keyword>methylated amino acid</Keyword>
 	</Entry>
 	<Entry>
 		<Id>0043</Id>
@@ -1260,8 +1319,9 @@
 				<Id source="PDBCC">AAR</Id>
 			</Component>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>ModifiedResidue</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>modified residue</Category>
+		<Keyword>amidated carboxyl end</Keyword>
 	</Entry>
 	<Entry>
 		<Id>0044</Id>
@@ -1288,8 +1348,9 @@
 				<Id source="PDBCC">CY3</Id>
 			</Component>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>ModifiedResidue</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>modified residue</Category>
+		<Keyword>amidated carboxyl end</Keyword>
 	</Entry>
 	<Entry>
 		<Id>0045</Id>
@@ -1317,8 +1378,9 @@
 				<Terminal>C</Terminal>
 			</Component>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>ModifiedResidue</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>modified residue</Category>
+		<Keyword>amidated carboxyl end</Keyword>
 	</Entry>
 	<Entry>
 		<Id>0046</Id>
@@ -1346,8 +1408,9 @@
 				<Terminal>C</Terminal>
 			</Component>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>ModifiedResidue</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>modified residue</Category>
+		<Keyword>amidated carboxyl end</Keyword>
 	</Entry>
 	<Entry>
 		<Id>0047</Id>
@@ -1375,8 +1438,9 @@
 				<Terminal>C</Terminal>
 			</Component>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>ModifiedResidue</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>modified residue</Category>
+		<Keyword>amidated carboxyl end</Keyword>
 	</Entry>
 	<!--Entry>
 		<Id>0048</Id>
@@ -1404,8 +1468,9 @@
 				<Terminal>C</Terminal>
 			</Component>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>ModifiedResidue</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>modified residue</Category>
+		<Keyword>amidated carboxyl end</Keyword>
 	</Entry-->
 	<Entry>
 		<Id>0049</Id>
@@ -1433,8 +1498,9 @@
 				<Terminal>C</Terminal>
 			</Component>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>ModifiedResidue</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>modified residue</Category>
+		<Keyword>amidated carboxyl end</Keyword>
 	</Entry>
 	<Entry>
 		<Id>0050</Id>
@@ -1462,8 +1528,9 @@
 				<Terminal>C</Terminal>
 			</Component>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>ModifiedResidue</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>modified residue</Category>
+		<Keyword>methylated carboxyl end</Keyword>
 	</Entry>
 	<Entry>
 		<Id>0051</Id>
@@ -1490,8 +1557,11 @@
 				<Id source="PDBCC">P1L</Id>
 			</Component>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>ModifiedResidue</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>modified residue</Category>
+		<Keyword>lipoprotein</Keyword>
+		<Keyword>palmitoylation</Keyword>
+		<Keyword>thioester bond</Keyword>
 	</Entry>
 	<Entry>
 		<Id>0052</Id>
@@ -1520,8 +1590,11 @@
 				<Atom component="2">C1</Atom>
 			</Bond>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>Attachment</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>attachment</Category>
+		<Keyword>lipoprotein</Keyword>
+		<Keyword>palmitoylation</Keyword>
+		<Keyword>thioester bond</Keyword>
 	</Entry>
 	<Entry>
 		<Id>0053</Id>
@@ -1548,8 +1621,8 @@
 				<Id source="PDBCC">KCX</Id>
 			</Component>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>ModifiedResidue</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>modified residue</Category>
 	</Entry>
 	<Entry>
 		<Id>0054</Id>
@@ -1576,8 +1649,8 @@
 				<Id source="PDBCC">MCL</Id>
 			</Component>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>ModifiedResidue</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>modified residue</Category>
 	</Entry>
 	<Entry>
 		<Id>0055</Id>
@@ -1606,8 +1679,9 @@
 				<Atom component="2">C11</Atom>
 			</Bond>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>Attachment</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>attachment</Category>
+		<Keyword>biotin</Keyword>
 	</Entry>
 	<Entry>
 		<Id>0056</Id>
@@ -1636,8 +1710,9 @@
 				<Atom component="2">CD</Atom>
 			</Bond>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>CrossLink2</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>crosslink2</Category>
+		<Keyword>isopeptide bond</Keyword>
 	</Entry>
 	<Entry>
 		<Id>0057</Id>
@@ -1666,8 +1741,9 @@
 				<Atom component="2">CD</Atom>
 			</Bond>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>CrossLink2</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>crosslink2</Category>
+		<Keyword>isopeptide bond</Keyword>
 	</Entry>
 	<Entry>
 		<Id>0058</Id>
@@ -1697,8 +1773,10 @@
 				<Atom component="2">C</Atom>
 			</Bond>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>CrossLink2</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>crosslink2</Category>
+		<Keyword>blocked carboxyl end</Keyword>
+		<Keyword>isopeptide bond</Keyword>
 	</Entry>
 	<Entry>
 		<Id>0059</Id>
@@ -1729,8 +1807,10 @@
 				<Atom component="2">CG</Atom>
 			</Bond>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>CrossLink2</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>crosslink2</Category>
+		<Keyword>blocked carboxyl end</Keyword>
+		<Keyword>isopeptide bond</Keyword>
 	</Entry>
 	<Entry>
 		<Id>0060</Id>
@@ -1760,8 +1840,10 @@
 				<Atom component="2">CG</Atom>
 			</Bond>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>CrossLink2</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>crosslink2</Category>
+		<Keyword>blocked amino end</Keyword>
+		<Keyword>isopeptide bond</Keyword>
 	</Entry>
 	<Entry>
 		<Id>0061</Id>
@@ -1790,8 +1872,9 @@
 				<Atom component="2">CG</Atom>
 			</Bond>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>CrossLink2</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>crosslink2</Category>
+		<Keyword>isopeptide bond</Keyword>
 	</Entry>
 	<Entry>
 		<Id>0062</Id>
@@ -1822,8 +1905,10 @@
 				<Atom component="2">N</Atom>
 			</Bond>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>CrossLink2</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>crosslink2</Category>
+		<Keyword>blocked amino end</Keyword>
+		<Keyword>isopeptide bond</Keyword>
 	</Entry>
 	<Entry>
 		<Id>0063</Id>
@@ -1853,8 +1938,10 @@
 				<Atom component="2">C</Atom>
 			</Bond>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>CrossLink2</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>crosslink2</Category>
+		<Keyword>blocked amino end</Keyword>
+		<Keyword>isopeptide bond</Keyword>
 	</Entry>
 	<Entry>
 		<Id>0064</Id>
@@ -1884,8 +1971,10 @@
 				<Atom component="2">C1</Atom>
 			</Bond>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>Attachment</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>attachment</Category>
+		<Keyword>lipoamide</Keyword>
+		<Keyword>redox-active center</Keyword>
 	</Entry>
 	<Entry>
 		<Id>0065</Id>
@@ -1912,8 +2001,10 @@
 				<Id source="PDBCC">LLP</Id>
 			</Component>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>ModifiedResidue</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>modified residue</Category>
+		<Keyword>phosphoprotein</Keyword>
+		<Keyword>pyridoxal phosphate</Keyword>
 	</Entry>
 	<Entry>
 		<Id>0066</Id>
@@ -1940,8 +2031,10 @@
 				<Id source="PDBCC">LYR</Id>
 			</Component>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>ModifiedResidue</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>modified residue</Category>
+		<Keyword>chromoprotein</Keyword>
+		<Keyword>retinal</Keyword>
 	</Entry>
 	<Entry>
 		<Id>0067</Id>
@@ -1970,8 +2063,10 @@
 				<Atom component="2">C15</Atom>
 			</Bond>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>Attachment</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>attachment</Category>
+		<Keyword>chromoprotein</Keyword>
+		<Keyword>retinal</Keyword>
 	</Entry>
 	<Entry>
 		<Id>0068</Id>
@@ -2000,8 +2095,8 @@
 				<Atom component="2">CE</Atom>
 			</Bond>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>Attachment</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>attachment</Category>
 	</Entry>
 	<Entry>
 		<Id>0069</Id>
@@ -2031,8 +2126,8 @@
 				<Atom component="2">CB</Atom>
 			</Bond>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>CrossLink2</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>crosslink2</Category>
 	</Entry>
 	<Entry>
 		<Id>0070</Id>
@@ -2061,8 +2156,11 @@
 				<Atom component="2">CAC</Atom>
 			</Bond>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>Attachment</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>attachment</Category>
+		<Keyword>chromoprotein</Keyword>
+		<Keyword>phycocyanobilin</Keyword>
+		<Keyword>thioether bond</Keyword>
 	</Entry>
 	<Entry>
 		<Id>0071</Id>
@@ -2092,8 +2190,11 @@
 				<Atom component="2">CAA</Atom>
 			</Bond>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>Attachment</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>attachment</Category>
+		<Keyword>chromoprotein</Keyword>
+		<Keyword>phycoerythrobilin</Keyword>
+		<Keyword>thioether bond</Keyword>
 	</Entry>
 	<!--Entry>
 		<Id>0072</Id>
@@ -2122,8 +2223,13 @@
 				<Atom component="2"></Atom>
 			</Bond>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>CrossLink2</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>crosslink2</Category>
+		<Keyword>chromoprotein</Keyword>
+		<Keyword>heme</Keyword>
+		<Keyword>iron</Keyword>
+		<Keyword>metalloprotein</Keyword>
+		<Keyword>thioether bond</Keyword>
 	</Entry-->
 	<Entry>
 		<Id>0073</Id>
@@ -2173,8 +2279,10 @@
 				<Atom component="5" label="1">FE</Atom>
 			</Bond>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>CrossLink4</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>crosslink4</Category>
+		<Keyword>iron</Keyword>
+		<Keyword>metalloprotein</Keyword>
 	</Entry>
 	<Entry>
 		<Id>0074</Id>
@@ -2224,8 +2332,11 @@
 				<Atom component="5">FE4</Atom>
 			</Bond>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>CrossLink4</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>crosslink4</Category>
+		<Keyword>4Fe-4S</Keyword>
+		<Keyword>iron-sulfur protein</Keyword>
+		<Keyword>metalloprotein</Keyword>
 	</Entry>
 	<Entry>
 		<Id>0075</Id>
@@ -2272,8 +2383,11 @@
 				<Atom component="4">O7</Atom>
 			</Bond>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>CrossLink2</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>crosslink2</Category>
+		<Keyword>iron-sulfur protein</Keyword>
+		<Keyword>metalloprotein</Keyword>
+		<Keyword>molybdenum</Keyword>
 	</Entry>
 	<Entry>
 		<Id>0076</Id>
@@ -2320,8 +2434,11 @@
 				<Atom component="4">O7</Atom>
 			</Bond>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>CrossLink2</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>crosslink2</Category>
+		<Keyword>iron-sulfur protein</Keyword>
+		<Keyword>metalloprotein</Keyword>
+		<Keyword>molybdenum</Keyword>
 	</Entry>
 	<Entry>
 		<Id>0077</Id>
@@ -2350,8 +2467,12 @@
 				<Atom component="2">MOM1</Atom>
 			</Bond>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>Attachment</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>attachment</Category>
+		<Keyword>metalloprotein</Keyword>
+		<Keyword>molybdenum</Keyword>
+		<Keyword>molybdopterin</Keyword>
+		<Keyword>phosphoprotein</Keyword>
 	</Entry>
 	<Entry>
 		<Id>0078</Id>
@@ -2380,8 +2501,12 @@
 				<Atom component="2">C8M</Atom>
 			</Bond>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>Attachment</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>attachment</Category>
+		<Keyword>phosphoprotein</Keyword>
+		<Keyword>FAD</Keyword>
+		<Keyword>flavoprotein</Keyword>
+		<Keyword>thioether bond</Keyword>
 	</Entry>
 	<Entry>
 		<Id>0079</Id>
@@ -2410,8 +2535,11 @@
 				<Atom component="2">C8M</Atom>
 			</Bond>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>Attachment</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>attachment</Category>
+		<Keyword>phosphoprotein</Keyword>
+		<Keyword>FAD</Keyword>
+		<Keyword>flavoprotein</Keyword>
 	</Entry>
 	<Entry>
 		<Id>0080</Id>
@@ -2440,8 +2568,11 @@
 				<Atom component="2">C8M</Atom>
 			</Bond>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>Attachment</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>attachment</Category>
+		<Keyword>phosphoprotein</Keyword>
+		<Keyword>FAD</Keyword>
+		<Keyword>flavoprotein</Keyword>
 	</Entry>
 	<Entry>
 		<Id>0081</Id>
@@ -2468,8 +2599,10 @@
 				<Id source="PDBCC">TPQ</Id>
 			</Component>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>ModifiedResidue</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>modified residue</Category>
+		<Keyword>quinoprotein</Keyword>
+		<Keyword>topaquinone</Keyword>
 	</Entry>
 	<Entry>
 		<Id>0082</Id>
@@ -2496,8 +2629,9 @@
 				<Id source="PDBCC">TRQ</Id>
 			</Component>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>ModifiedResidue</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>modified residue</Category>
+		<Keyword>quinoprotein</Keyword>
 	</Entry>
 	<Entry>
 		<Id>0083</Id>
@@ -2526,8 +2660,9 @@
 				<Atom component="2">CE3</Atom>
 			</Bond>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>CrossLink2</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>crosslink2</Category>
+		<Keyword>quinoprotein</Keyword>
 	</Entry>
 	<Entry>
 		<Id>0084</Id>
@@ -2556,8 +2691,10 @@
 				<Atom component="2">P24</Atom>
 			</Bond>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>Attachment</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>attachment</Category>
+		<Keyword>phosphopantetheine</Keyword>
+		<Keyword>phosphoprotein</Keyword>
 	</Entry>
 	<Entry>
 		<Id>0085</Id>
@@ -2584,8 +2721,9 @@
 				<Id source="PDBCC">GTH</Id>
 			</Component>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>ModifiedResidue</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>modified residue</Category>
+		<Keyword>glycoprotein</Keyword>
 	</Entry>
 	<!--Entry>
 		<Id>0086</Id>
@@ -2614,8 +2752,9 @@
 				<Atom component="2"></Atom>
 			</Bond>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>Attachment</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>attachment</Category>
+		<Keyword>iodine</Keyword>
 	</Entry>
 	<Entry>
 		<Id>0087</Id>
@@ -2644,8 +2783,9 @@
 				<Atom component="2"></Atom>
 			</Bond>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>Attachment</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>attachment</Category>
+		<Keyword>iodine</Keyword>
 	</Entry-->
 	<Entry>
 		<Id>0088</Id>
@@ -2672,8 +2812,9 @@
 				<Id source="PDBCC">BTR</Id>
 			</Component>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>ModifiedResidue</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>modified residue</Category>
+		<Keyword>bromine</Keyword>
 	</Entry>
 	<Entry>
 		<Id>0089</Id>
@@ -2700,8 +2841,8 @@
 				<Id source="PDBCC">DHA</Id>
 			</Component>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>ModifiedResidue</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>modified residue</Category>
 		<Comment>This modification occurs on SER or TYR</Comment>
 	</Entry>
 	<Entry>
@@ -2729,8 +2870,8 @@
 				<Id source="PDBCC">CRQ</Id>
 			</Component>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>ModifiedResidue</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>modified residue</Category>
 		<Comment>CRQ has two modifications: RESID:AA0183 and RESID:AA0189</Comment>
 	</Entry>
 	<Entry>
@@ -2758,9 +2899,10 @@
 				<Id source="PDBCC">CRQ</Id>
 			</Component>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>CrossLink1</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>crosslink1</Category>
 		<Comment>CRQ has two modifications: RESID:AA0183 and RESID:AA0189</Comment>
+		<Keyword>chromoprotein</Keyword>
 	</Entry>
 	<Entry>
 		<Id>0092</Id>
@@ -2787,8 +2929,8 @@
 				<Id source="PDBCC">CRO</Id>
 			</Component>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>CrossLink1</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>crosslink1</Category>
 		<Comment>CRO has two modifications: RESID:AA0183 and RESID:AA0184</Comment>
 	</Entry>
 	<Entry>
@@ -2816,9 +2958,10 @@
 				<Id source="PDBCC">CRO</Id>
 			</Component>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>CrossLink1</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>crosslink1</Category>
 		<Comment>CRO has two modifications: RESID:AA0183 and RESID:AA0184</Comment>
+		<Keyword>chromoprotein</Keyword>
 	</Entry>
 	<Entry>
 		<Id>0094</Id>
@@ -2845,8 +2988,8 @@
 				<Id source="PDBCC">FGL</Id>
 			</Component>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>ModifiedResidue</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>modified residue</Category>
 		<Comment>This modification occurs on SER or CYS</Comment>
 	</Entry>
 	<Entry>
@@ -2874,8 +3017,9 @@
 				<Id source="PDBCC">DAL</Id>
 			</Component>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>ModifiedResidue</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>modified residue</Category>
+		<Keyword>D-amino acid</Keyword>
 	</Entry>
 	<!--Entry> what are they attached to
 		<Id>0096</Id>
@@ -2904,8 +3048,9 @@
 				<Atom component="2"></Atom>
 			</Bond>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>Attachment</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>attachment</Category>
+		<Keyword>D-amino acid</Keyword>
 	</Entry>
 	<Entry>
 		<Id>0097</Id>
@@ -2934,8 +3079,9 @@
 				<Atom component="2"></Atom>
 			</Bond>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>Attachment</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>attachment</Category>
+		<Keyword>D-amino acid</Keyword>
 	</Entry-->
 	<Entry>
 		<Id>0098</Id>
@@ -2962,8 +3108,9 @@
 				<Id source="PDBCC">DIL</Id>
 			</Component>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>ModifiedResidue</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>modified residue</Category>
+		<Keyword>D-amino acid</Keyword>
 	</Entry>
 	<Entry>
 		<Id>0099</Id>
@@ -2990,8 +3137,9 @@
 				<Id source="PDBCC">DSG</Id>
 			</Component>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>ModifiedResidue</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>modified residue</Category>
+		<Keyword>D-amino acid</Keyword>
 	</Entry>
 	<Entry>
 		<Id>0100</Id>
@@ -3018,8 +3166,9 @@
 				<Id source="PDBCC">DTR</Id>
 			</Component>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>ModifiedResidue</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>modified residue</Category>
+		<Keyword>D-amino acid</Keyword>
 	</Entry>
 	<Entry>
 		<Id>0101</Id>
@@ -3046,8 +3195,9 @@
 				<Id source="PDBCC">DTH</Id>
 			</Component>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>ModifiedResidue</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>modified residue</Category>
+		<Keyword>D-amino acid</Keyword>
 	</Entry>
 	<Entry>
 		<Id>0102</Id>
@@ -3074,8 +3224,9 @@
 				<Id source="PDBCC">DVA</Id>
 			</Component>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>ModifiedResidue</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>modified residue</Category>
+		<Keyword>D-amino acid</Keyword>
 	</Entry>
 	<Entry>
 		<Id>0103</Id>
@@ -3102,8 +3253,8 @@
 				<Id source="PDBCC">CSO</Id>
 			</Component>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>ModifiedResidue</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>modified residue</Category>
 	</Entry>
 	<Entry>
 		<Id>0104</Id>
@@ -3130,8 +3281,8 @@
 				<Id source="PDBCC">CSX</Id>
 			</Component>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>ModifiedResidue</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>modified residue</Category>
 	</Entry>
 	<Entry>
 		<Id>0105</Id>
@@ -3162,8 +3313,10 @@
 				<Atom component="2">C</Atom>
 			</Bond>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>CrossLink2</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>crosslink2</Category>
+		<Keyword>blocked carboxyl end</Keyword>
+		<Keyword>thioester bond</Keyword>
 	</Entry>
 	<Entry>
 		<Id>0106</Id>
@@ -3192,8 +3345,12 @@
 				<Atom component="2">C1</Atom>
 			</Bond>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>Attachment</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>attachment</Category>
+		<Keyword>chromoprotein</Keyword>
+		<Keyword>hydroxylation</Keyword>
+		<Keyword>photoreceptor</Keyword>
+		<Keyword>thioester bond</Keyword>
 	</Entry>
 	<Entry>
 		<Id>0107</Id>
@@ -3220,8 +3377,9 @@
 				<Id source="PDBCC">ARO</Id>
 			</Component>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>ModifiedResidue</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>modified residue</Category>
+		<Keyword>hydroxylation</Keyword>
 	</Entry>
 	<Entry>
 		<Id>0108</Id>
@@ -3250,8 +3408,12 @@
 				<Atom component="2">C6</Atom>
 			</Bond>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>Attachment</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>attachment</Category>
+		<Keyword>phosphoprotein</Keyword>
+		<Keyword>flavoprotein</Keyword>
+		<Keyword>FMN</Keyword>
+		<Keyword>thioether bond</Keyword>
 	</Entry>
 	<Entry>
 		<Id>0109</Id>
@@ -3280,8 +3442,11 @@
 				<Atom component="2">C8M</Atom>
 			</Bond>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>Attachment</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>attachment</Category>
+		<Keyword>phosphoprotein</Keyword>
+		<Keyword>FAD</Keyword>
+		<Keyword>flavoprotein</Keyword>
 	</Entry>
 	<Entry>
 		<Id>0110</Id>
@@ -3308,8 +3473,9 @@
 				<Id source="PDBCC">GPL</Id>
 			</Component>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>ModifiedResidue</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>modified residue</Category>
+		<Keyword>phosphoprotein</Keyword>
 	</Entry>
 	<Entry>
 		<Id>0111</Id>
@@ -3336,8 +3502,8 @@
 				<Id source="PDBCC">SNC</Id>
 			</Component>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>ModifiedResidue</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>modified residue</Category>
 	</Entry>
 	<Entry>
 		<Id>0112</Id>
@@ -3367,8 +3533,9 @@
 				<Atom component="2">NZ</Atom>
 			</Bond>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>CrossLink2</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>crosslink2</Category>
+		<Keyword>quinoprotein</Keyword>
 	</Entry>
 	<Entry>
 		<Id>0113</Id>
@@ -3395,8 +3562,10 @@
 				<Id source="PDBCC">SMC</Id>
 			</Component>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>ModifiedResidue</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>modified residue</Category>
+		<Keyword>methylated amino acid</Keyword>
+		<Keyword>thioether bond</Keyword>
 	</Entry>
 	<Entry>
 		<Id>0114</Id>
@@ -3426,8 +3595,8 @@
 				<Atom component="2">CB</Atom>
 			</Bond>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>CrossLink2</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>crosslink2</Category>
 	</Entry>
 	<Entry>
 		<Id>0115</Id>
@@ -3454,8 +3623,8 @@
 				<Id source="PDBCC">OMT</Id>
 			</Component>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>ModifiedResidue</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>modified residue</Category>
 	</Entry>
 	<Entry>
 		<Id>0116</Id>
@@ -3484,8 +3653,9 @@
 				<Atom component="2">CHA</Atom>
 			</Bond>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>Attachment</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>attachment</Category>
+		<Keyword>thioether bond</Keyword>
 	</Entry>
 	<Entry>
 		<Id>0117</Id>
@@ -3514,8 +3684,11 @@
 				<Atom component="2">C31</Atom>
 			</Bond>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>Attachment</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>attachment</Category>
+		<Keyword>chromoprotein</Keyword>
+		<Keyword>phycoviolobilin</Keyword>
+		<Keyword>thioether bond</Keyword>
 	</Entry>
 	<Entry>
 		<Id>0118</Id>
@@ -3553,8 +3726,11 @@
 				<Atom component="3">CBC</Atom>
 			</Bond>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>CrossLink2</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>crosslink2</Category>
+		<Keyword>chromoprotein</Keyword>
+		<Keyword>phycourobilin</Keyword>
+		<Keyword>thioether bond</Keyword>
 	</Entry>
 	<Entry>
 		<Id>0119</Id>
@@ -3581,8 +3757,8 @@
 				<Id source="PDBCC">CSD</Id>
 			</Component>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>ModifiedResidue</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>modified residue</Category>
 	</Entry>
 	<Entry>
 		<Id>0120</Id>
@@ -3609,8 +3785,8 @@
 				<Id source="PDBCC">CSW</Id>
 			</Component>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>ModifiedResidue</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>modified residue</Category>
 	</Entry>
 	<Entry>
 		<Id>0121</Id>
@@ -3640,8 +3816,9 @@
 				<Atom component="2">O3</Atom>
 			</Bond>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>Attachment</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>attachment</Category>
+		<Keyword>phosphoprotein</Keyword>
 	</Entry>
 	<Entry>
 		<Id>0122</Id>
@@ -3668,8 +3845,8 @@
 				<Id source="PDBCC">GL3</Id>
 			</Component>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>ModifiedResidue</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>modified residue</Category>
 		<Comments>There are two entries in PSI-MOD MOD:00270 and MOD:01623, corresponding to internal and terminal.</Comments>
 	</Entry>
 	<Entry>
@@ -3714,8 +3891,13 @@
 				<Atom component="4">CHC</Atom>
 			</Bond>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>CrossLink3</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>crosslink3</Category>
+		<Keyword>chromoprotein</Keyword>
+		<Keyword>heme</Keyword>
+		<Keyword>iron</Keyword>
+		<Keyword>metalloprotein</Keyword>
+		<Keyword>thioether bond</Keyword>
 	</Entry>
 	<Entry>
 		<Id>0124</Id>
@@ -3758,8 +3940,13 @@
 				<Atom component="4">CHA</Atom>
 			</Bond>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>CrossLink3</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>crosslink3</Category>
+		<Keyword>chromoprotein</Keyword>
+		<Keyword>heme</Keyword>
+		<Keyword>iron</Keyword>
+		<Keyword>metalloprotein</Keyword>
+		<Keyword>thioether bond</Keyword>
 	</Entry>
 	<Entry>
 		<Id>0125</Id>
@@ -3786,8 +3973,8 @@
 				<Id source="PDBCC">CSS</Id>
 			</Component>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>ModifiedResidue</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>modified residue</Category>
 	</Entry>
 	<Entry>
 		<Id>0126</Id>
@@ -3817,8 +4004,8 @@
 				<Atom component="2">CE1</Atom>
 			</Bond>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>CrossLink2</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>crosslink2</Category>
 	</Entry>
 	<Entry>
 		<Id>0127</Id>
@@ -3845,8 +4032,9 @@
 				<Id source="PDBCC">MGN</Id>
 			</Component>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>ModifiedResidue</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>modified residue</Category>
+		<Keyword>methylated amino acid</Keyword>
 	</Entry>
 	<Entry>
 		<Id>0128</Id>
@@ -3873,8 +4061,9 @@
 				<Id source="PDBCC">CSZ</Id>
 			</Component>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>ModifiedResidue</Category>
+		<Occurrence>hypothetical</Occurrence>
+		<Category>modified residue</Category>
+		<Keyword>selenium</Keyword>
 	</Entry>
 	<Entry>
 		<Id>0129</Id>
@@ -3917,8 +4106,13 @@
 				<Atom component="4">CBB</Atom>
 			</Bond>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>CrossLink3</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>crosslink3</Category>
+		<Keyword>chromoprotein</Keyword>
+		<Keyword>heme</Keyword>
+		<Keyword>hydroxylation</Keyword>
+		<Keyword>iron</Keyword>
+		<Keyword>metalloprotein</Keyword>
 	</Entry>
 	<Entry>
 		<Id>0130</Id>
@@ -3956,8 +4150,9 @@
 				<Atom component="3">C8</Atom>
 			</Bond>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>CrossLink2</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>crosslink2</Category>
+		<Keyword>quinoprotein</Keyword>
 	</Entry>
 	<Entry>
 		<Id>0131</Id>
@@ -4008,8 +4203,11 @@
 				<Atom component="5">FE1,FE2,FE3,FE4</Atom>
 			</Bond>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>CrossLink4</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>crosslink4</Category>
+		<Keyword>4Fe-4S</Keyword>
+		<Keyword>iron-sulfur protein</Keyword>
+		<Keyword>metalloprotein</Keyword>
 	</Entry>
 	<Entry>
 		<Id>0132</Id>
@@ -4060,8 +4258,11 @@
 				<Atom component="5">FE1,FE2,FE3,FE4</Atom>
 			</Bond>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>CrossLink4</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>crosslink4</Category>
+		<Keyword>4Fe-4S</Keyword>
+		<Keyword>iron-sulfur protein</Keyword>
+		<Keyword>metalloprotein</Keyword>
 	</Entry>
 	<Entry>
 		<Id>0133</Id>
@@ -4112,8 +4313,11 @@
 				<Atom component="5">FE1,FE2,FE3,FE4</Atom>
 			</Bond>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>CrossLink4</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>crosslink4</Category>
+		<Keyword>4Fe-4S</Keyword>
+		<Keyword>iron-sulfur protein</Keyword>
+		<Keyword>metalloprotein</Keyword>
 	</Entry>
 	<Entry>
 		<Id>0134</Id>
@@ -4164,8 +4368,11 @@
 				<Atom component="5">FE1,FE2,FE3,FE4</Atom>
 			</Bond>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>CrossLink4</Category>
+		<Occurrence>hypothetical</Occurrence>
+		<Category>crosslink4</Category>
+		<Keyword>4Fe-4S</Keyword>
+		<Keyword>iron-sulfur protein</Keyword>
+		<Keyword>metalloprotein</Keyword>
 	</Entry>
 	<Entry>
 		<Id>0135</Id>
@@ -4217,8 +4424,11 @@
 				<Atom component="5">FE1,FE2,FE3,FE4</Atom>
 			</Bond>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>CrossLink4</Category>
+		<Occurrence>hypothetical</Occurrence>
+		<Category>crosslink4</Category>
+		<Keyword>4Fe-4S</Keyword>
+		<Keyword>iron-sulfur protein</Keyword>
+		<Keyword>metalloprotein</Keyword>
 	</Entry>
 	<Entry>
 		<Id>0136</Id>
@@ -4289,8 +4499,10 @@
 				<Atom component="8">CU1,CU2,CU3,CU4</Atom>
 			</Bond>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>CrossLink7</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>crosslink7</Category>
+		<Keyword>copper</Keyword>
+		<Keyword>metalloprotein</Keyword>
 	</Entry>
 	<Entry>
 		<Id>0137</Id>
@@ -4361,8 +4573,10 @@
 				<Atom component="8" label="1">FE1,FE2,FE3,FE4,FE5,FE6,FE7,FE8</Atom>
 			</Bond>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>CrossLink7</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>crosslink7</Category>
+		<Keyword>iron-sulfur protein</Keyword>
+		<Keyword>metalloprotein</Keyword>
 	</Entry>
 	<Entry>
 		<Id>0138</Id>
@@ -4390,8 +4604,10 @@
 				<Terminal>C</Terminal>
 			</Component>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>ModifiedResidue</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>modified residue</Category>
+		<Keyword>blocked carboxyl end</Keyword>
+		<Keyword>protein splicing</Keyword>
 	</Entry>
 	<Entry>
 		<Id>0139</Id>
@@ -4455,8 +4671,12 @@
 				<Atom component="7" label="1">FE1,FE2,FE3,FE4</Atom>
 			</Bond>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>CrossLink6</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>crosslink6</Category>
+		<Keyword>iron-sulfur protein</Keyword>
+		<Keyword>metalloprotein</Keyword>
+		<Keyword>Ni-4Fe-5S</Keyword>
+		<Keyword>nickel</Keyword>
 	</Entry>
 	<Entry>
 		<Id>0140</Id>
@@ -4483,8 +4703,9 @@
 				<Id source="PDBCC">DMH</Id>
 			</Component>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>ModifiedResidue</Category>
+		<Occurrence>hypothetical</Occurrence>
+		<Category>modified residue</Category>
+		<Keyword>methylated amino acid</Keyword>
 	</Entry>
 	<Entry>
 		<Id>0141</Id>
@@ -4514,8 +4735,10 @@
 				<Atom component="2">CE3</Atom>
 			</Bond>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>CrossLink2</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>crosslink2</Category>
+		<Keyword>quinoprotein</Keyword>
+		<Keyword>thioether bond</Keyword>
 	</Entry>
 	<Entry>
 		<Id>0142</Id>
@@ -4544,8 +4767,10 @@
 				<Atom component="2">CB</Atom>
 			</Bond>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>CrossLink2</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>crosslink2</Category>
+		<Keyword>lanthionine</Keyword>
+		<Keyword>thioether bond</Keyword>
 	</Entry>
 	<Entry>
 		<Id>0143</Id>
@@ -4574,8 +4799,9 @@
 				<Atom component="2">CG</Atom>
 			</Bond>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>CrossLink2</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>crosslink2</Category>
+		<Keyword>thioether bond</Keyword>
 	</Entry>
 	<Entry>
 		<Id>0144</Id>
@@ -4602,8 +4828,9 @@
 				<Id source="PDBCC">HIC</Id>
 			</Component>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>ModifiedResidue</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>modified residue</Category>
+		<Keyword>methylated amino acid</Keyword>
 	</Entry>
 	<!--Entry>
 		<Id>0145</Id>
@@ -4632,8 +4859,12 @@
 				<Atom component="2"></Atom>
 			</Bond>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>Attachment</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>attachment</Category>
+		<Keyword>metalloprotein</Keyword>
+		<Keyword>molybdenum</Keyword>
+		<Keyword>molybdopterin</Keyword>
+		<Keyword>phosphoprotein</Keyword>
 	</Entry-->
 	<Entry>
 		<Id>0146</Id>
@@ -4660,8 +4891,9 @@
 				<Id source="PDBCC">HTR</Id>
 			</Component>
 		</Condition>
-		<Occurrence>Hypothetical</Occurrence>
-		<Category>ModifiedResidue</Category>
+		<Occurrence>hypothetical</Occurrence>
+		<Category>modified residue</Category>
+		<Keyword>hydroxylation</Keyword>
 	</Entry>
 	<Entry>
 		<Id>0147</Id>
@@ -4711,8 +4943,11 @@
 				<Atom component="5" label="2">FE1,FE3,FE4</Atom>
 			</Bond>
 		</Condition>
-		<Occurrence>Hypothetical</Occurrence>
-		<Category>CrossLink4</Category>
+		<Occurrence>hypothetical</Occurrence>
+		<Category>crosslink4</Category>
+		<Keyword>3Fe-4S</Keyword>
+		<Keyword>iron-sulfur protein</Keyword>
+		<Keyword>metalloprotein</Keyword>
 	</Entry>
 	<Entry>
 		<Id>0148</Id>
@@ -4742,9 +4977,13 @@
 				<Atom component="2">CBB</Atom>
 			</Bond>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>Attachment</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>attachment</Category>
 		<Comment>NE2 is much closer to FE than to CBB.</Comment>
+		<Keyword>chromoprotein</Keyword>
+		<Keyword>heme</Keyword>
+		<Keyword>iron</Keyword>
+		<Keyword>metalloprotein</Keyword>
 	</Entry>
 	<Entry>
 		<Id>0149</Id>
@@ -4774,8 +5013,8 @@
 				<Atom component="2"></Atom>
 			</Bond>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>CrossLink2</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>crosslink2</Category>
 	</Entry>
 	<Entry>
 		<Id>0150</Id>
@@ -4825,8 +5064,11 @@
 				<Atom component="5" label="1">FE1,FE2</Atom>
 			</Bond>
 		</Condition>
-		<Occurrence>Hypothetical</Occurrence>
-		<Category>CrossLink4</Category>
+		<Occurrence>hypothetical</Occurrence>
+		<Category>crosslink4</Category>
+		<Keyword>2Fe-2S</Keyword>
+		<Keyword>iron-sulfur protein</Keyword>
+		<Keyword>metalloprotein</Keyword>
 	</Entry>
 	<Entry>
 		<Id>0151</Id>
@@ -4855,8 +5097,10 @@
 				<Atom component="2">FE1,FE2</Atom>
 			</Bond>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>Attachment</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>attachment</Category>
+		<Keyword>iron-sulfur protein</Keyword>
+		<Keyword>metalloprotein</Keyword>
 	</Entry>
 	<Entry>
 		<Id>0152</Id>
@@ -4883,8 +5127,9 @@
 				<Id source="PDBCC">IML</Id>
 			</Component>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>ModifiedResidue</Category>
+		<Occurrence>hypothetical</Occurrence>
+		<Category>modified residue</Category>
+		<Keyword>methylated amino end</Keyword>
 	</Entry>
 	<Entry>
 		<Id>0153</Id>
@@ -4911,8 +5156,9 @@
 				<Id source="PDBCC">MLE</Id>
 			</Component>
 		</Condition>
-		<Occurrence>Hypothetical</Occurrence>
-		<Category>ModifiedResidue</Category>
+		<Occurrence>hypothetical</Occurrence>
+		<Category>modified residue</Category>
+		<Keyword>methylated amino end</Keyword>
 	</Entry>
 	<Entry>
 		<Id>0154</Id>
@@ -4943,8 +5189,11 @@
 				<Atom component="2">C1</Atom>
 			</Bond>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>Attachment</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>attachment</Category>
+		<Keyword>blocked amino end</Keyword>
+		<Keyword>lipoprotein</Keyword>
+		<Keyword>palmitoylation</Keyword>
 	</Entry>
 	<Entry>
 		<Id>0155</Id>
@@ -4973,8 +5222,9 @@
 				<Atom component="2">CA</Atom>
 			</Bond>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>CrossLink2</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>crosslink2</Category>
+		<Keyword>thioether bond</Keyword>
 	</Entry>
 	<Entry>
 		<Id>0156</Id>
@@ -5003,8 +5253,10 @@
 				<Atom component="2">CA</Atom>
 			</Bond>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>CrossLink2</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>crosslink2</Category>
+		<Keyword>D-amino acid</Keyword>
+		<Keyword>thioether bond</Keyword>
 	</Entry>
 	<Entry>
 		<Id>0157</Id>
@@ -5033,8 +5285,10 @@
 				<Atom component="2">CA</Atom>
 			</Bond>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>CrossLink2</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>crosslink2</Category>
+		<Keyword>D-amino acid</Keyword>
+		<Keyword>thioether bond</Keyword>
 	</Entry>
 	<!--Entry>
 		<Id>0158</Id>
@@ -5063,8 +5317,8 @@
 				<Atom component="2"></Atom>
 			</Bond>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>CrossLink1</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>crosslink1</Category>
 	</Entry-->
 	<Entry>
 		<Id>0159</Id>
@@ -5102,8 +5356,8 @@
 				<Atom component="3">CE1,CE2</Atom>
 			</Bond>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>CrossLink3</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>crosslink3</Category>
 	</Entry>
 	<Entry>
 		<Id>0160</Id>
@@ -5133,8 +5387,12 @@
 				<Atom component="2">C4A</Atom>
 			</Bond>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>Attachment</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>attachment</Category>
+		<Keyword>phosphoprotein</Keyword>
+		<Keyword>flavoprotein</Keyword>
+		<Keyword>FMN</Keyword>
+		<Keyword>thioether bond</Keyword>
 	</Entry>
 	<Entry>
 		<Id>0161</Id>
@@ -5177,8 +5435,13 @@
 				<Atom component="3">S8'</Atom>
 			</Bond>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>Attachment</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>attachment</Category>
+		<Keyword>copper</Keyword>
+		<Keyword>metalloprotein</Keyword>
+		<Keyword>molybdenum</Keyword>
+		<Keyword>molybdopterin</Keyword>
+		<Keyword>phosphoprotein</Keyword>
 	</Entry>
 	<Entry>
 		<Id>0162</Id>
@@ -5232,8 +5495,12 @@
 				<Atom component="5">O,OXT</Atom>
 			</Bond>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>CrossLink3</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>crosslink3</Category>
+		<Keyword>4Fe-4S</Keyword>
+		<Keyword>iron-sulfur protein</Keyword>
+		<Keyword>metalloprotein</Keyword>
+		<Keyword>S-adenosyl-L-methionine</Keyword>
 	</Entry>
 	<Entry>
 		<Id>0163</Id>
@@ -5283,8 +5550,11 @@
 				<Atom component="5" label="2">FE1,FE2</Atom>
 			</Bond>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>CrossLink4</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>crosslink4</Category>
+		<Keyword>2Fe-2S</Keyword>
+		<Keyword>iron-sulfur protein</Keyword>
+		<Keyword>metalloprotein</Keyword>
 	</Entry>
 	<Entry>
 		<Id>0164</Id>
@@ -5311,8 +5581,9 @@
 				<Id source="PDBCC">OSE</Id>
 			</Component>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>ModifiedResidue</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>modified residue</Category>
+		<Keyword>sulfoprotein</Keyword>
 	</Entry>
 	<Entry>
 		<Id>0165</Id>
@@ -5341,8 +5612,9 @@
 				<Terminal>N</Terminal>
 			</Component>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>ModifiedResidue</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>modified residue</Category>
+		<Keyword>blocked amino end</Keyword>
 	</Entry>
 	<Entry>
 		<Id>0166</Id>
@@ -5369,8 +5641,8 @@
 				<Id source="PDBCC">OAS</Id>
 			</Component>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>ModifiedResidue</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>modified residue</Category>
 	</Entry>
 	<Entry>
 		<Id>0167</Id>
@@ -5445,8 +5717,11 @@
 				<Atom component="7" label="3">MN2</Atom>
 			</Bond>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>CrossLink6</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>crosslink6</Category>
+		<Keyword>calcium</Keyword>
+		<Keyword>manganese</Keyword>
+		<Keyword>metalloprotein</Keyword>
 	</Entry>
 	<Entry>
 		<Id>0168</Id>
@@ -5476,8 +5751,8 @@
 				<Atom component="2">CE2</Atom>
 			</Bond>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>CrossLink2</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>crosslink2</Category>
 	</Entry>
 	<Entry>
 		<Id>0169</Id>
@@ -5507,8 +5782,8 @@
 				<Atom component="2">CE2</Atom>
 			</Bond>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>CrossLink2</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>crosslink2</Category>
 	</Entry>
 	<Entry>
 		<Id>0170</Id>
@@ -5538,8 +5813,9 @@
 				<Atom component="2">P</Atom>
 			</Bond>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>Attachment</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>attachment</Category>
+		<Keyword>phosphoprotein</Keyword>
 	</Entry>
 	<Entry>
 		<Id>0171</Id>
@@ -5566,9 +5842,10 @@
 				<Id source="PDBCC">CRU</Id>
 			</Component>
 		</Condition>
-		<Occurrence>Hypothetical</Occurrence>
-		<Category>CrossLink1</Category>
+		<Occurrence>hypothetical</Occurrence>
+		<Category>crosslink1</Category>
 		<Comment>CRU has two modifications: RESID:AA0183 and RESID:AA0378</Comment>
+		<Keyword>chromoprotein</Keyword>
 	</Entry>
 	<Entry>
 		<Id>0172</Id>
@@ -5595,8 +5872,8 @@
 				<Id source="PDBCC">CRU</Id>
 			</Component>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>ModifiedResidue</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>modified residue</Category>
 		<Comment>CRU has two modifications: RESID:AA0183 and RESID:AA0378</Comment>
 	</Entry>
 	<Entry>
@@ -5624,9 +5901,10 @@
 				<Id source="PDBCC">CH6</Id>
 			</Component>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>CrossLink1</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>crosslink1</Category>
 		<Comment>CH6 has two modifications: RESID:AA0183 and RESID:AA0379</Comment>
+		<Keyword>chromoprotein</Keyword>
 	</Entry>
 	<Entry>
 		<Id>00174</Id>
@@ -5653,8 +5931,8 @@
 				<Id source="PDBCC">CH6</Id>
 			</Component>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>ModifiedResidue</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>modified residue</Category>
 		<Comment>CH6 has two modifications: RESID:AA0183 and RESID:AA0379</Comment>
 	</Entry>
 	<Entry>
@@ -5682,9 +5960,10 @@
 				<Id source="PDBCC">NRQ</Id>
 			</Component>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>CrossLink1</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>crosslink1</Category>
 		<Comment>NRQ has two modifications: RESID:AA0183 and RESID:AA0379</Comment>
+		<Keyword>chromoprotein</Keyword>
 	</Entry>
 	<Entry>
 		<Id>0176</Id>
@@ -5711,8 +5990,8 @@
 				<Id source="PDBCC">NRQ</Id>
 			</Component>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>ModifiedResidue</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>modified residue</Category>
 		<Comment>NRQ has two modifications: RESID:AA0183 and RESID:AA0379</Comment>
 	</Entry>
 	<Entry>
@@ -5740,8 +6019,8 @@
 				<Id source="PDBCC">NYG</Id>
 			</Component>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>CrossLink1</Category>
+		<Occurrence>hypothetical</Occurrence>
+		<Category>crosslink1</Category>
 		<Comment>NYG has two modifications: RESID:AA0183 and RESID:AA0380</Comment>
 	</Entry>
 	<Entry>
@@ -5769,8 +6048,8 @@
 				<Id source="PDBCC">NYG</Id>
 			</Component>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>ModifiedResidue</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>modified residue</Category>
 		<Comment>NYG has two modifications: RESID:AA0183 and RESID:AA0380</Comment>
 	</Entry>
 	<Entry>
@@ -5798,8 +6077,8 @@
 				<Id source="PDBCC">CR7</Id>
 			</Component>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>CrossLink1</Category>
+		<Occurrence>hypothetical</Occurrence>
+		<Category>crosslink1</Category>
 		<Comment>CR7 has two modifications: RESID:AA0183 and RESID:AA0381</Comment>
 	</Entry>
 	<Entry>
@@ -5827,8 +6106,8 @@
 				<Id source="PDBCC">CR7</Id>
 			</Component>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>CrossLink1</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>crosslink1</Category>
 		<Comment>CR7 has two modifications: RESID:AA0183 and RESID:AA0382</Comment>
 	</Entry>
 	<Entry>
@@ -5856,8 +6135,8 @@
 				<Id source="PDBCC">CR7</Id>
 			</Component>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>ModifiedResidue</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>modified residue</Category>
 		<Comment>CR7 has two modifications: RESID:AA0183 and RESID:AA0381/AA0382</Comment>
 	</Entry>
 	<Entry>
@@ -5888,8 +6167,10 @@
 				<Atom component="2">V</Atom>
 			</Bond>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>Attachment</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>attachment</Category>
+		<Keyword>metalloprotein</Keyword>
+		<Keyword>vanadium</Keyword>
 	</Entry>
 	<Entry>
 		<Id>0183</Id>
@@ -5919,8 +6200,9 @@
 				<Atom component="2">CB</Atom>
 			</Bond>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>CrossLink2</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>crosslink2</Category>
+		<Keyword>thioether bond</Keyword>
 	</Entry>
 	<Entry>
 		<Id>0184</Id>
@@ -5950,8 +6232,10 @@
 				<Atom component="2">SG</Atom>
 			</Bond>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>CrossLink2</Category>
+		<Occurrence>hypothetical</Occurrence>
+		<Category>crosslink2</Category>
+		<Keyword>blocked carboxyl end</Keyword>
+		<Keyword>thioester bond</Keyword>
 	</Entry>
 	<Entry>
 		<Id>0185</Id>
@@ -5981,8 +6265,10 @@
 				<Atom component="2">C</Atom>
 			</Bond>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>CrossLink2</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>crosslink2</Category>
+		<Keyword>blocked carboxyl end</Keyword>
+		<Keyword>thioester bond</Keyword>
 	</Entry>
 	<Entry>
 		<Id>0186</Id>
@@ -6012,8 +6298,10 @@
 				<Atom component="2">C</Atom>
 			</Bond>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>CrossLink2</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>crosslink2</Category>
+		<Keyword>blocked carboxyl end</Keyword>
+		<Keyword>thioester bond</Keyword>
 	</Entry>
 	<Entry>
 		<Id>0187</Id>
@@ -6043,8 +6331,10 @@
 				<Atom component="2">C</Atom>
 			</Bond>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>CrossLink2</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>crosslink2</Category>
+		<Keyword>blocked carboxyl end</Keyword>
+		<Keyword>thioester bond</Keyword>
 	</Entry>
 	<Entry>
 		<Id>0188</Id>
@@ -6074,8 +6364,10 @@
 				<Atom component="2">C</Atom>
 			</Bond>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>CrossLink2</Category>
+		<Occurrence>hypothetical</Occurrence>
+		<Category>crosslink2</Category>
+		<Keyword>blocked carboxyl end</Keyword>
+		<Keyword>thioester bond</Keyword>
 	</Entry>
 	<Entry>
 		<Id>0189</Id>
@@ -6105,8 +6397,10 @@
 				<Atom component="2">C</Atom>
 			</Bond>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>CrossLink2</Category>
+		<Occurrence>hypothetical</Occurrence>
+		<Category>crosslink2</Category>
+		<Keyword>blocked carboxyl end</Keyword>
+		<Keyword>thioester bond</Keyword>
 	</Entry>
 	<Entry>
 		<Id>0190</Id>
@@ -6136,8 +6430,10 @@
 				<Atom component="2">C</Atom>
 			</Bond>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>CrossLink2</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>crosslink2</Category>
+		<Keyword>blocked carboxyl end</Keyword>
+		<Keyword>thioester bond</Keyword>
 	</Entry>
 	<Entry>
 		<Id>0191</Id>
@@ -6167,8 +6463,9 @@
 				<Atom component="2">C</Atom>
 			</Bond>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>CrossLink2</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>crosslink2</Category>
+		<Keyword>blocked carboxyl end</Keyword>
 	</Entry>
 	<Entry>
 		<Id>0192</Id>
@@ -6195,8 +6492,8 @@
 				<Id source="PDBCC">TH5</Id>
 			</Component>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>ModifiedResidue</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>modified residue</Category>
 	</Entry>
 	<Entry>
 		<Id>0193</Id>
@@ -6225,8 +6522,11 @@
 				<Atom component="2">CAA</Atom>
 			</Bond>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>Attachment</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>attachment</Category>
+		<Keyword>chromoprotein</Keyword>
+		<Keyword>dihydrobiliverdin</Keyword>
+		<Keyword>thioether bond</Keyword>
 	</Entry>
 	<Entry>
 		<Id>0194</Id>
@@ -6262,8 +6562,11 @@
 				<Atom component="3">CAD</Atom>
 			</Bond>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>CrossLink2</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>crosslink2</Category>
+		<Keyword>chromoprotein</Keyword>
+		<Keyword>dihydrobiliverdin</Keyword>
+		<Keyword>thioether bond</Keyword>
 	</Entry>
 	<Entry>
 		<Id>0195</Id>
@@ -6292,8 +6595,8 @@
 				<Atom component="2">CE</Atom>
 			</Bond>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>CrossLink2</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>crosslink2</Category>
 	</Entry>
 	<Entry>
 		<Id>0196</Id>
@@ -6320,8 +6623,8 @@
 				<Id source="PDBCC">HIQ</Id>
 			</Component>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>ModifiedResidue</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>modified residue</Category>
 	</Entry>
 	<Entry>
 		<Id>0197</Id>
@@ -6336,6 +6639,7 @@
 			<Source>RESID</Source>
 			<Id>AA0432</Id>
 			<Name>S-(aspart-4-yloxy) thiocarbonate</Name>
+			<Status>deprecated</Status>
 		</CrossReference>
 		<CrossReference>
 			<Source>PSI-MOD</Source>
@@ -6348,8 +6652,8 @@
 				<Id source="PDBCC">OHS</Id>
 			</Component>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>ModifiedResidue</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>modified residue</Category>
 	</Entry>
 	<Entry>
 		<Id>0198</Id>
@@ -6379,8 +6683,12 @@
 				<Atom component="2"></Atom>
 			</Bond>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>Attachment</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>attachment</Category>
+		<Keyword>phosphoprotein</Keyword>
+		<Keyword>FAD</Keyword>
+		<Keyword>flavoprotein</Keyword>
+		<Keyword>thioether bond</Keyword>
 	</Entry>
 	<Entry>
 		<Id>0199</Id>
@@ -6418,8 +6726,12 @@
 				<Atom component="3">C8M</Atom>
 			</Bond>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>CrossLink2</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>crosslink2</Category>
+		<Keyword>phosphoprotein</Keyword>
+		<Keyword>FAD</Keyword>
+		<Keyword>flavoprotein</Keyword>
+		<Keyword>thioether bond</Keyword>
 	</Entry>
 	<Entry>
 		<Id>0200</Id>
@@ -6448,8 +6760,10 @@
 				<Atom component="2">SEG</Atom>
 			</Bond>
 		</Condition>
-		<Occurrence>Hypothetical</Occurrence>
-		<Category>CrossLink2</Category>
+		<Occurrence>hypothetical</Occurrence>
+		<Category>crosslink2</Category>
+		<Keyword>redox-active center</Keyword>
+		<Keyword>selenium</Keyword>
 	</Entry>
 	<Entry>
 		<Id>0201</Id>
@@ -6499,8 +6813,10 @@
 				<Atom component="5" label="2">FE1,FE2</Atom>
 			</Bond>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>CrossLink4</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>crosslink4</Category>
+		<Keyword>2Fe-2S</Keyword>
+		<Keyword>metalloprotein</Keyword>
 	</Entry>
 	<Entry>
 		<Id>0202</Id>
@@ -6527,8 +6843,8 @@
 				<Id source="PDBCC">LED</Id>
 			</Component>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>ModifiedResidue</Category>
+		<Occurrence>hypothetical</Occurrence>
+		<Category>modified residue</Category>
 	</Entry>
 	<!--Entry>
 		<Id>0203</Id>
@@ -6557,8 +6873,9 @@
 				<Atom component="2"></Atom>
 			</Bond>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>Attachment</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>attachment</Category>
+		<Keyword>hydroxylation</Keyword>
 	</Entry-->
 	<Entry>
 		<Id>0204</Id>
@@ -6585,8 +6902,9 @@
 				<Id source="PDBCC">ILX</Id>
 			</Component>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>ModifiedResidue</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>modified residue</Category>
+		<Keyword>hydroxylation</Keyword>
 	</Entry>
 	<Entry>
 		<Id>0205</Id>
@@ -6615,8 +6933,9 @@
 				<Atom component="2">CD1</Atom>
 			</Bond>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>CrossLink2</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>crosslink2</Category>
+		<Keyword>hydroxylation</Keyword>
 	</Entry>
 	<!--Entry>
 		<Id>0206</Id>
@@ -6646,8 +6965,11 @@
 				<Atom component="2"></Atom>
 			</Bond>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>Attachment</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>attachment</Category>
+		<Keyword>thioether bond</Keyword>
+		<Keyword>blocked amino end</Keyword>
+		<Keyword>methylated amino end</Keyword>
 	</Entry-->
 	<Entry>
 		<Id>0207</Id>
@@ -6676,8 +6998,11 @@
 				<Atom component="2">SEG</Atom>
 			</Bond>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>CrossLink2</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>crosslink2</Category>
+		<Keyword>redox-active center</Keyword>
+		<Keyword>selenium</Keyword>
+		<Keyword>selenocysteine</Keyword>
 	</Entry>
 	<Entry>
 		<Id>0208</Id>
@@ -6704,8 +7029,8 @@
 				<Id source="PDBCC">FGL</Id>
 			</Component>
 		</Condition>
-		<Occurrence>Hypothetical</Occurrence>
-		<Category>ModifiedResidue</Category>
+		<Occurrence>hypothetical</Occurrence>
+		<Category>modified residue</Category>
 	</Entry>
 	<!--Entry>
 		<Id>0209</Id>
@@ -6732,8 +7057,8 @@
 				<Id source="PDBCC">TY2</Id>
 			</Component>
 		</Condition>
-		<Occurrence>Hypothetical</Occurrence>
-		<Category>ModifiedResidue</Category>
+		<Occurrence>hypothetical</Occurrence>
+		<Category>modified residue</Category>
 		<Comment>Inconsistent structure between RESID and PDB.</Comment>
 	</Entry-->
 	<Entry>
@@ -6761,8 +7086,9 @@
 				<Id source="PDBCC">OLT</Id>
 			</Component>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>ModifiedResidue</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>modified residue</Category>
+		<Keyword>methylated amino acid</Keyword>
 	</Entry>
 	<!--Entry>
 		<Id>0211</Id>
@@ -6789,8 +7115,10 @@
 				<Id source="PDBCC">TZO</Id>
 			</Component>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>CrossLink1</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>crosslink1</Category>
+		<Keyword>oxazole/thiazole ring</Keyword>
+		<Keyword>thioether bond</Keyword>
 	</Entry-->
 	<!--Entry>
 		<Id>0212</Id>
@@ -6822,8 +7150,9 @@
 				<Atom component="2"></Atom>
 			</Bond>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
+		<Occurrence>natural</Occurrence>
 		<Category>CrossLink</Category>
+		<Keyword>pyridine ring</Keyword>
 	</Entry-->
 	<Entry>
 		<Id>0213</Id>
@@ -6862,8 +7191,9 @@
 				<Atom component="3">C7</Atom>
 			</Bond>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>CrossLink2</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>crosslink2</Category>
+		<Keyword>blocked amino end</Keyword>
 	</Entry>
 	<Entry>
 		<Id>0214</Id>
@@ -6890,8 +7220,9 @@
 				<Id source="PDBCC">AHB</Id>
 			</Component>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>ModifiedResidue</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>modified residue</Category>
+		<Keyword>hydroxylation</Keyword>
 	</Entry>
 	<Entry>
 		<Id>0215</Id>
@@ -6920,8 +7251,8 @@
 				<Atom component="2">OH</Atom>
 			</Bond>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>CrossLink2</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>crosslink2</Category>
 	</Entry>
 	<!--Entry>
 		<Id>0216</Id>
@@ -6948,8 +7279,8 @@
 				<Id source="PDBCC">DDZ</Id>
 			</Component>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>ModifiedResidue</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>modified residue</Category>
 		<Comment>Inconsistent with PDB's parent. Have to know the parent to determine</Comment>
 	</Entry-->
 	<Entry>
@@ -6977,8 +7308,12 @@
 				<Id source="PDBCC">CXM</Id>
 			</Component>
 		</Condition>
-		<Occurrence>Hypothetical</Occurrence>
-		<Category>ModifiedResidue</Category>
+		<Occurrence>hypothetical</Occurrence>
+		<Category>modified residue</Category>
+		<Keyword>thioether bond</Keyword>
+		<Keyword>blocked amino end</Keyword>
+		<Keyword>formylation</Keyword>
+		<Keyword>pretranslational modification</Keyword>
 	</Entry>
 	<Entry>
 		<Id>0218</Id>
@@ -7006,8 +7341,10 @@
 				<Terminal>N</Terminal>
 			</Component>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>ModifiedResidue</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>modified residue</Category>
+		<Keyword>phosphoprotein</Keyword>
+		<Keyword>blocked amino end</Keyword>
 	</Entry>
 	<Entry>
 		<Id>0219</Id>
@@ -7037,8 +7374,9 @@
 				<Atom component="2">C</Atom>
 			</Bond>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>CrossLink2</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>crosslink2</Category>
+		<Keyword>blocked carboxyl end</Keyword>
 	</Entry>
 	<Entry>
 		<Id>0220</Id>
@@ -7069,8 +7407,9 @@
 				<Atom component="2">C</Atom>
 			</Bond>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>CrossLink2</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>crosslink2</Category>
+		<Keyword>blocked carboxyl end</Keyword>
 	</Entry>
 	<Entry>
 		<Id>0221</Id>
@@ -7100,8 +7439,9 @@
 				<Atom component="2">P,O1,O2,O3</Atom>
 			</Bond>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>Attachment</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>attachment</Category>
+		<Keyword>phosphoprotein</Keyword>
 	</Entry>
 	<Entry>
 		<Id>0222</Id>
@@ -7131,8 +7471,8 @@
 				<Atom component="2">SD</Atom>
 			</Bond>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>CrossLink2</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>crosslink2</Category>
 	</Entry>
 	<Entry>
 		<Id>0223</Id>
@@ -7159,8 +7499,9 @@
 				<Id source="PDBCC">IYR</Id>
 			</Component>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>ModifiedResidue</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>modified residue</Category>
+		<Keyword>iodine</Keyword>
 	</Entry>
 	<Entry>
 		<Id>0224</Id>
@@ -7187,8 +7528,9 @@
 				<Id source="PDBCC">TYI</Id>
 			</Component>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>ModifiedResidue</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>modified residue</Category>
+		<Keyword>iodine</Keyword>
 	</Entry>
 	<Entry>
 		<Id>0225</Id>
@@ -7224,8 +7566,8 @@
 				<Atom component="3">S3</Atom>
 			</Bond>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>CrossLink2</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>crosslink2</Category>
 	</Entry>
 	<Entry>
 		<Id>0226</Id>
@@ -7252,8 +7594,9 @@
 				<Id source="PDBCC">0AF</Id>
 			</Component>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>ModifiedResidue</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>modified residue</Category>
+		<Keyword>hydroxylation</Keyword>
 	</Entry>
 	<Entry>
 		<Id>0227</Id>
@@ -7283,8 +7626,11 @@
 				<Atom component="2">C8M</Atom>
 			</Bond>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>Attachment</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>attachment</Category>
+		<Keyword>phosphoprotein</Keyword>
+		<Keyword>FAD</Keyword>
+		<Keyword>flavoprotein</Keyword>
 	</Entry>
 	<Entry>
 		<Id>0228</Id>
@@ -7311,7 +7657,7 @@
 				<Id source="PDBCC">AEI</Id>
 			</Component>
 		</Condition>
-		<Occurrence>Natural</Occurrence>
-		<Category>ModifiedResidue</Category>
+		<Occurrence>natural</Occurrence>
+		<Category>modified residue</Category>
 	</Entry>
 </ProteinModifications>
