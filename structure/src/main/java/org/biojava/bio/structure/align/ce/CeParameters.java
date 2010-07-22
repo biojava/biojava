@@ -265,6 +265,8 @@ public class CeParameters implements ConfigStrucAligParams  {
     * @param param maxOptRMSD
     */
    public void setMaxOptRMSD(Double param){
+      if ( param == null)
+         param = 99d;
       maxOptRMSD = param;
    }
 
