@@ -24,9 +24,12 @@
 
 package org.biojava3.protmod;
 
+import java.util.Collections;
 import java.util.EnumMap;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * contains information about a certain Component.
@@ -43,6 +46,7 @@ public final class Component {
 	private final boolean isCTerminal;
 	private final ComponentType type;
 	
+	private static Set<Component> components = null;
 	private static Map<ComponentType,Map<String, Component>> nonTerminalComps = null;
 	private static Map<String, Component> nTerminalAminoAcids = null;
 	private static Map<String, Component> cTerminalAminoAcids = null;
@@ -51,7 +55,8 @@ public final class Component {
 	 * Lazy initialization of the static variables.
 	 */
 	private static void lazyInit() {
-		if (nonTerminalComps==null) {
+		if (components==null) {
+			components = new HashSet<Component>();
 			nonTerminalComps = new EnumMap<ComponentType,Map<String,
 											Component>>(ComponentType.class);
 			for (ComponentType type : ComponentType.values()) {
@@ -63,8 +68,7 @@ public final class Component {
 	}
 	
 	/**
-	 * Create a ComponentImpl. Use this constructor if the component is
-	 * an amino acid and occurs at either terminal.
+	 * Create a ComponentImpl. 
 	 * @param pdbccId Protein Data Bank ID. Cannot be null.
 	 * @param type {@link ComponentType}. Cannot be null.
 	 * @param isNTerminal true if occurring at N-terminal. false, otherwise.
@@ -128,8 +132,8 @@ public final class Component {
 	}
 	
 	/**
-	 * Get a non-terminal Component. If the corresponding component 
-	 * has already been registered, return that one.
+	 * Get a Component that does not have to occur at terminals. If the 
+	 * corresponding component has already been registered, return that one.
 	 * @param pdbccId Protein Data Bank ID. Cannot be null.
 	 * @param type {@link ComponentType}. Cannot be null.
 	 * @return a component.
@@ -170,29 +174,34 @@ public final class Component {
 		
 		lazyInit();
 		
+		Component comp;
 		if (isNTerminal) {
-			Component comp = nTerminalAminoAcids.get(pdbccId);
+			comp = nTerminalAminoAcids.get(pdbccId);
 			if (comp == null) {
 				comp = new Component(pdbccId, type, isNTerminal, isCTerminal);
 				nTerminalAminoAcids.put(pdbccId, comp);
 			}
-			return comp;
 		} else if (isCTerminal) {
-			Component comp = cTerminalAminoAcids.get(pdbccId);
+			comp = cTerminalAminoAcids.get(pdbccId);
 			if (comp == null) {
 				comp = new Component(pdbccId, type, isNTerminal, isCTerminal);
 				cTerminalAminoAcids.put(pdbccId, comp);
 			}
-			return comp;
 		} else {
 			Map<String, Component> map = nonTerminalComps.get(type);
-			Component comp = map.get(pdbccId);
+			comp = map.get(pdbccId);
 			if (comp == null) {
 				comp = new Component(pdbccId, type, isNTerminal, isCTerminal);
 				map.put(pdbccId, comp);
 			}
-			return comp;
 		}
+		
+		components.add(comp);
+		return comp;
+	}
+	
+	public static Set<Component> allComponents() {
+		return Collections.unmodifiableSet(components);
 	}
 	
 	/**
