@@ -217,7 +217,7 @@ public class CliTools {
 							}
 						}
 					} else {
-						System.err.println("Unsupported optionType for " + arg);
+						System.err.println("Unsupported optionType for " + arg + " propType:" + propType);
 						System.exit(1);
 					}
 				}
