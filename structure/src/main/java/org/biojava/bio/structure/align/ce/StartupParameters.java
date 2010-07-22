@@ -30,6 +30,7 @@ public class StartupParameters {
 	boolean printPDB;
 	Double maxOptRMSD;
 	
+	
 	// for DB searches
 	String alignPairs;
 	String saveOutputDir;
@@ -48,6 +49,7 @@ public class StartupParameters {
 		showAFPRanges = false;
 		checkCircular = false;
 		showMenu = false;
+		
 	}
 	
 	
@@ -62,7 +64,7 @@ public class StartupParameters {
             + ", pdbDirSplit=" + pdbDirSplit + ", pdbFilePath=" + pdbFilePath + ", printCE=" + printCE + ", printFatCat=" + printFatCat
             + ", printXML=" + printXML + ", saveOutputDir=" + saveOutputDir + ", show3d=" + show3d + ", showDBresult=" + showDBresult
             + ", showMenu=" + showMenu + ", showAFPRanges=" + showAFPRanges + ", checkCircular=" + checkCircular 
-            + ", printPDB=" + printPDB
+            + ", printPDB=" + printPDB 
             + "]";
    }
 
@@ -291,6 +293,12 @@ public class StartupParameters {
 	public void setMaxOptRMSD(Double maxOptRMSD) {
 		this.maxOptRMSD = maxOptRMSD;
 	}
+
+
+
+
 	
+	
+
 	
 }
