@@ -23,6 +23,7 @@
 
 package org.biojava3.alignment;
 
+import org.biojava3.alignment.template.AbstractScorer;
 import org.biojava3.alignment.template.AlignedSequence;
 import org.biojava3.alignment.template.PairwiseSequenceAligner;
 import org.biojava3.alignment.template.PairwiseSequenceScorer;
@@ -38,7 +39,7 @@ import org.biojava3.core.sequence.template.Sequence;
  * @param <S> each {@link Sequence} of the alignment pair is of type S
  * @param <C> each element of an {@link AlignedSequence} is a {@link Compound} of type C
  */
-public class FractionalIdentityScorer<S extends Sequence<C>, C extends Compound>
+public class FractionalIdentityScorer<S extends Sequence<C>, C extends Compound> extends AbstractScorer
         implements PairwiseSequenceScorer<S, C> {
 
     private PairwiseSequenceAligner<S, C> aligner;

@@ -38,7 +38,8 @@ import org.biojava3.core.sequence.template.Sequence;
  * @param <S> each element of the alignment {@link Profile} is of type S
  * @param <C> each element of an {@link AlignedSequence} is a {@link Compound} of type C
  */
-public abstract class AbstractMatrixAligner<S extends Sequence<C>, C extends Compound> implements MatrixAligner<S, C> {
+public abstract class AbstractMatrixAligner<S extends Sequence<C>, C extends Compound> extends AbstractScorer
+        implements MatrixAligner<S, C> {
 
     // input fields
     private GapPenalty gapPenalty;

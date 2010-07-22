@@ -77,8 +77,7 @@ public class GuideTree<S extends Sequence<C>, C extends Compound> implements Ite
             distances.setIdentifier(i, (id == null) ? Integer.toString(i + 1) : id.getID());
             for (int j = i+1; j < sequences.size(); j++) {
                 PairwiseSequenceScorer<S, C> scorer = scorers.get(n++);
-                distances.setValue(i, j, (double)(scorer.getMaxScore() - scorer.getScore()) / (scorer.getMaxScore()
-                        - scorer.getMinScore()));
+                distances.setValue(i, j, scorer.getDistance());
             }
         }
         // TODO UPGMA and other hierarchical clustering routines

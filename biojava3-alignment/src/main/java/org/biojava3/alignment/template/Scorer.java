@@ -31,6 +31,23 @@ package org.biojava3.alignment.template;
 public interface Scorer {
 
     /**
+     * Returns score as a distance between 0.0 and 1.0.  This equals ({@link #getMaxScore()} - {@link #getScore()}) /
+     * ({@link #getMaxScore()} - {@link #getMinScore()}).
+     *
+     * @return score as a distance between 0.0 and 1.0
+     */
+    double getDistance();
+
+    /**
+     * Returns score as a distance between 0.0 and scale.  This equals scale * ({@link #getMaxScore()} -
+     * {@link #getScore()}) / ({@link #getMaxScore()} - {@link #getMinScore()}).
+     *
+     * @param scale maximum distance
+     * @return score as a distance between 0.0 and scale
+     */
+    double getDistance(double scale);
+
+    /**
      * Returns maximum possible score.
      *
      * @return maximum possible score
@@ -51,5 +68,22 @@ public interface Scorer {
      * @return score resulting from algorithm
      */
     int getScore();
+
+    /**
+     * Returns score as a similarity between 0.0 and 1.0.  This equals ({@link #getScore()} - {@link #getMinScore()}) /
+     * ({@link #getMaxScore()} - {@link #getMinScore()}).
+     *
+     * @return score as a similarity between 0.0 and 1.0
+     */
+    double getSimilarity();
+
+    /**
+     * Returns score as a similarity between 0.0 and scale.  This equals scale * ({@link #getScore()} -
+     * {@link #getMinScore()}) / ({@link #getMaxScore()} - {@link #getMinScore()}).
+     *
+     * @param scale maximum similarity
+     * @return score as a similarity between 0.0 and scale
+     */
+    double getSimilarity(double scale);
 
 }
