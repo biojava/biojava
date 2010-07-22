@@ -117,7 +117,7 @@ public class FatCatParameters implements ConfigStrucAligParams
 
 	/** The cutoff to be used during AFP detection
 	 * 
-	 * @return
+	 * @return rmsdCut parameter
 	 */
 	public Double getRmsdCut()
 	{
