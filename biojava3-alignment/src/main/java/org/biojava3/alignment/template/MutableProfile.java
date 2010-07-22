@@ -43,7 +43,7 @@ public interface MutableProfile<S extends Sequence<C>, C extends Compound> exten
      * @param sequences new set of sequences
      * @throws IllegalArgumentException if sequences have different lengths
      */
-    void setSequences(List<AlignedSequence<C>> sequences);
+    void setSequences(List<AlignedSequence<S, C>> sequences);
 
     // TODO? - make compatible with core.sequence.MultipleSequenceAlignment
 }

@@ -43,7 +43,7 @@ public interface MutableSequencePair<S extends Sequence<C>, C extends Compound> 
      * @param target becomes the second {@link AlignedSequence} of the pair
      * @throws IllegalArgumentException if query and target are different lengths
      */
-    void setPair(AlignedSequence<C> query, AlignedSequence<C> target);
+    void setPair(AlignedSequence<S, C> query, AlignedSequence<S, C> target);
 
     /**
      * Sets the first {@link AlignedSequence} of the pair.
@@ -51,7 +51,7 @@ public interface MutableSequencePair<S extends Sequence<C>, C extends Compound> 
      * @param query becomes the first {@link AlignedSequence} of the pair
      * @throws IllegalArgumentException if (new) query and (old) target are different lengths
      */
-    void setQuery(AlignedSequence<C> query);
+    void setQuery(AlignedSequence<S, C> query);
 
     /**
      * Sets the second {@link AlignedSequence} of the pair.
@@ -59,6 +59,6 @@ public interface MutableSequencePair<S extends Sequence<C>, C extends Compound> 
      * @param target becomes the second {@link AlignedSequence} of the pair
      * @throws IllegalArgumentException if (old) query and (new) target are different lengths
      */
-    void setTarget(AlignedSequence<C> target);
+    void setTarget(AlignedSequence<S, C> target);
 
 }

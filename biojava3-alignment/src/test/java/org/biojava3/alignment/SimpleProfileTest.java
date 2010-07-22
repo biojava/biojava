@@ -116,7 +116,7 @@ public class SimpleProfileTest {
 
     @Test
     public void testGetAlignedSequences() {
-        List<AlignedSequence<AminoAcidCompound>> list = global.getAlignedSequences();
+        List<AlignedSequence<ProteinSequence, AminoAcidCompound>> list = global.getAlignedSequences();
         assertEquals(list.size(), 2);
         assertEquals(list.get(0).toString(), "ARND-");
         assertEquals(list.get(1).toString(), "-R-DG");
@@ -131,7 +131,7 @@ public class SimpleProfileTest {
 
     @Test
     public void testGetAlignedSequencesIntArray() {
-        List<AlignedSequence<AminoAcidCompound>> list = global.getAlignedSequences(2, 1, 2);
+        List<AlignedSequence<ProteinSequence, AminoAcidCompound>> list = global.getAlignedSequences(2, 1, 2);
         assertEquals(list.size(), 3);
         assertEquals(list.get(0).toString(), "-R-DG");
         assertEquals(list.get(1).toString(), "ARND-");
@@ -149,7 +149,8 @@ public class SimpleProfileTest {
 
     @Test
     public void testGetAlignedSequencesSArray() {
-        List<AlignedSequence<AminoAcidCompound>> list = global.getAlignedSequences(query, query, target);
+        List<AlignedSequence<ProteinSequence, AminoAcidCompound>> list = global.getAlignedSequences(query, query,
+                target);
         assertEquals(list.size(), 3);
         assertEquals(list.get(0).toString(), "ARND-");
         assertEquals(list.get(1).toString(), "ARND-");
@@ -455,13 +456,13 @@ public class SimpleProfileTest {
 
     @Test
     public void testIterator() {
-        for (AlignedSequence<AminoAcidCompound> s : global) {
+        for (AlignedSequence<ProteinSequence, AminoAcidCompound> s : global) {
             assertEquals(s.toString().length(), 5);
         }
-        for (AlignedSequence<AminoAcidCompound> s : local) {
+        for (AlignedSequence<ProteinSequence, AminoAcidCompound> s : local) {
             assertEquals(s.toString().length(), 3);
         }
-        for (AlignedSequence<AminoAcidCompound> s : single) {
+        for (AlignedSequence<ProteinSequence, AminoAcidCompound> s : single) {
             assertEquals(s.toString().length(), 4);
         }
     }

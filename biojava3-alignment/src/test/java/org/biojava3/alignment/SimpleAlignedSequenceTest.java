@@ -41,38 +41,39 @@ import org.junit.Test;
 public class SimpleAlignedSequenceTest {
 
     private ProteinSequence go, lo;
-    private AlignedSequence<AminoAcidCompound> global, local, local2;
+    private AlignedSequence<ProteinSequence, AminoAcidCompound> global, local, local2;
     private AminoAcidCompoundSet cs;
 
     @Before
     public void setup() {
         go = new ProteinSequence("ARND");
         lo = new ProteinSequence("CEQGHILKM");
-        global = new SimpleAlignedSequence<AminoAcidCompound>(go, Arrays.asList(new Step[] {Step.GAP, Step.COMPOUND,
-                Step.COMPOUND, Step.GAP, Step.COMPOUND, Step.COMPOUND, Step.GAP}));
-        local = new SimpleAlignedSequence<AminoAcidCompound>(lo, Arrays.asList(new Step[] {Step.COMPOUND,
-                Step.COMPOUND, Step.GAP, Step.GAP, Step.COMPOUND, Step.GAP, Step.COMPOUND, Step.COMPOUND}), 1, 3);
-        local2 = new SimpleAlignedSequence<AminoAcidCompound>(go, Arrays.asList(new Step[] {Step.COMPOUND,
-                Step.COMPOUND, Step.COMPOUND}), 1, 0);
+        global = new SimpleAlignedSequence<ProteinSequence, AminoAcidCompound>(go, Arrays.asList(new Step[] {
+                Step.GAP, Step.COMPOUND, Step.COMPOUND, Step.GAP, Step.COMPOUND, Step.COMPOUND, Step.GAP}));
+        local = new SimpleAlignedSequence<ProteinSequence, AminoAcidCompound>(lo, Arrays.asList(new Step[] {
+                Step.COMPOUND, Step.COMPOUND, Step.GAP, Step.GAP, Step.COMPOUND, Step.GAP, Step.COMPOUND,
+                Step.COMPOUND}), 1, 3);
+        local2 = new SimpleAlignedSequence<ProteinSequence, AminoAcidCompound>(go, Arrays.asList(new Step[] {
+                Step.COMPOUND, Step.COMPOUND, Step.COMPOUND}), 1, 0);
         cs = AminoAcidCompoundSet.getAminoAcidCompoundSet();
     }
 
     @Test(expected=IllegalArgumentException.class)
     public void testSimpleAlignedSequenceLocal() {
-        new SimpleAlignedSequence<AminoAcidCompound>(lo, Arrays.asList(new Step[] {Step.COMPOUND, Step.COMPOUND,
-                Step.GAP, Step.GAP, Step.COMPOUND, Step.GAP, Step.COMPOUND, Step.COMPOUND}));
+        new SimpleAlignedSequence<ProteinSequence, AminoAcidCompound>(lo, Arrays.asList(new Step[] {Step.COMPOUND,
+                Step.COMPOUND, Step.GAP, Step.GAP, Step.COMPOUND, Step.GAP, Step.COMPOUND, Step.COMPOUND}));
     }
 
     @Test(expected=IllegalArgumentException.class)
     public void testSimpleAlignedSequenceLong() {
-        new SimpleAlignedSequence<AminoAcidCompound>(go, Arrays.asList(new Step[] {Step.GAP, Step.COMPOUND,
-                Step.COMPOUND, Step.GAP, Step.COMPOUND, Step.COMPOUND, Step.COMPOUND, Step.GAP}));
+        new SimpleAlignedSequence<ProteinSequence, AminoAcidCompound>(go, Arrays.asList(new Step[] {Step.GAP,
+                Step.COMPOUND, Step.COMPOUND, Step.GAP, Step.COMPOUND, Step.COMPOUND, Step.COMPOUND, Step.GAP}));
     }
 
     @Test(expected=IllegalArgumentException.class)
     public void testSimpleAlignedSequenceShort() {
-        new SimpleAlignedSequence<AminoAcidCompound>(go, Arrays.asList(new Step[] {Step.GAP, Step.COMPOUND,
-                Step.COMPOUND, Step.GAP, Step.COMPOUND, Step.GAP}));
+        new SimpleAlignedSequence<ProteinSequence, AminoAcidCompound>(go, Arrays.asList(new Step[] {Step.GAP,
+                Step.COMPOUND, Step.COMPOUND, Step.GAP, Step.COMPOUND, Step.GAP}));
     }
 
     @Test

@@ -46,7 +46,7 @@ import org.biojava3.core.sequence.template.Sequence;
  */
 public class SimpleProfile<S extends Sequence<C>, C extends Compound> implements Profile<S, C> {
 
-    private List<AlignedSequence<C>> list;
+    private List<AlignedSequence<S, C>> list;
     private List<S> originals;
     private int length;
 
@@ -57,11 +57,11 @@ public class SimpleProfile<S extends Sequence<C>, C extends Compound> implements
      * @param target the second sequence of the pair
      * @throws IllegalArgumentException if sequences differ in size
      */
-    protected SimpleProfile(AlignedSequence<C> query, AlignedSequence<C> target) {
+    protected SimpleProfile(AlignedSequence<S, C> query, AlignedSequence<S, C> target) {
         if (query.getLength() != target.getLength()) {
             throw new IllegalArgumentException("Aligned sequences differ in size");
         }
-        list = new ArrayList<AlignedSequence<C>>();
+        list = new ArrayList<AlignedSequence<S, C>>();
         list.add(query);
         list.add(target);
         list = Collections.unmodifiableList(list);
@@ -82,8 +82,8 @@ public class SimpleProfile<S extends Sequence<C>, C extends Compound> implements
         for (int i = 0; i < sequence.getLength(); i++) {
             s.add(Step.COMPOUND);
         }
-        list = new ArrayList<AlignedSequence<C>>();
-        list.add(new SimpleAlignedSequence<C>(sequence, s));
+        list = new ArrayList<AlignedSequence<S, C>>();
+        list.add(new SimpleAlignedSequence<S, C>(sequence, s));
         list = Collections.unmodifiableList(list);
         originals = new ArrayList<S>();
         originals.add(sequence);
@@ -108,9 +108,9 @@ public class SimpleProfile<S extends Sequence<C>, C extends Compound> implements
         if (sx.size() != sy.size()) {
             throw new IllegalArgumentException("Alignments differ in size");
         }
-        list = new ArrayList<AlignedSequence<C>>();
-        list.add(new SimpleAlignedSequence<C>(query, sx, xb, xa));
-        list.add(new SimpleAlignedSequence<C>(target, sy, yb, ya));
+        list = new ArrayList<AlignedSequence<S, C>>();
+        list.add(new SimpleAlignedSequence<S, C>(query, sx, xb, xa));
+        list.add(new SimpleAlignedSequence<S, C>(target, sy, yb, ya));
         list = Collections.unmodifiableList(list);
         originals = new ArrayList<S>();
         originals.add(query);
@@ -132,12 +132,12 @@ public class SimpleProfile<S extends Sequence<C>, C extends Compound> implements
         if (sx.size() != sy.size()) {
             throw new IllegalArgumentException("Alignments differ in size");
         }
-        list = new ArrayList<AlignedSequence<C>>();
-        for (AlignedSequence<C> s : query) {
-            list.add(new SimpleAlignedSequence<C>(s, sx));
+        list = new ArrayList<AlignedSequence<S, C>>();
+        for (AlignedSequence<S, C> s : query) {
+            list.add(new SimpleAlignedSequence<S, C>(s, sx));
         }
-        for (AlignedSequence<C> s : target) {
-            list.add(new SimpleAlignedSequence<C>(s, sy));
+        for (AlignedSequence<S, C> s : target) {
+            list.add(new SimpleAlignedSequence<S, C>(s, sy));
         }
         list = Collections.unmodifiableList(list);
         originals = new ArrayList<S>();
@@ -148,13 +148,13 @@ public class SimpleProfile<S extends Sequence<C>, C extends Compound> implements
     }
 
     @Override
-    public AlignedSequence<C> getAlignedSequence(int listIndex) {
+    public AlignedSequence<S, C> getAlignedSequence(int listIndex) {
         return list.get(listIndex - 1);
     }
 
     @Override
-    public AlignedSequence<C> getAlignedSequence(S sequence) {
-        for (AlignedSequence<C> s : list) {
+    public AlignedSequence<S, C> getAlignedSequence(S sequence) {
+        for (AlignedSequence<S, C> s : list) {
             if (s.equals(sequence) || s.getOriginalSequence().equals(sequence)) {
                 return s;
             }
@@ -163,13 +163,13 @@ public class SimpleProfile<S extends Sequence<C>, C extends Compound> implements
     }
 
     @Override
-    public List<AlignedSequence<C>> getAlignedSequences() {
+    public List<AlignedSequence<S, C>> getAlignedSequences() {
         return list;
     }
 
     @Override
-    public List<AlignedSequence<C>> getAlignedSequences(int... listIndices) {
-        List<AlignedSequence<C>> tempList = new ArrayList<AlignedSequence<C>>();
+    public List<AlignedSequence<S, C>> getAlignedSequences(int... listIndices) {
+        List<AlignedSequence<S, C>> tempList = new ArrayList<AlignedSequence<S, C>>();
         for (int i : listIndices) {
             tempList.add(getAlignedSequence(i));
         }
@@ -177,8 +177,8 @@ public class SimpleProfile<S extends Sequence<C>, C extends Compound> implements
     }
 
     @Override
-    public List<AlignedSequence<C>> getAlignedSequences(S... sequences) {
-        List<AlignedSequence<C>> tempList = new ArrayList<AlignedSequence<C>>();
+    public List<AlignedSequence<S, C>> getAlignedSequences(S... sequences) {
+        List<AlignedSequence<S, C>> tempList = new ArrayList<AlignedSequence<S, C>>();
         for (S s : sequences) {
             tempList.add(getAlignedSequence(s));
         }
@@ -192,7 +192,7 @@ public class SimpleProfile<S extends Sequence<C>, C extends Compound> implements
 
     @Override
     public C getCompoundAt(S sequence, int alignmentIndex) {
-        AlignedSequence<C> s = getAlignedSequence(sequence);
+        AlignedSequence<S, C> s = getAlignedSequence(sequence);
         return (s == null) ? null : s.getCompoundAt(alignmentIndex);
     }
 
@@ -219,7 +219,7 @@ public class SimpleProfile<S extends Sequence<C>, C extends Compound> implements
     public List<C> getCompoundsAt(int alignmentIndex) {
         // TODO handle circular alignments
         List<C> column = new ArrayList<C>();
-        for (AlignedSequence<C> s : list) {
+        for (AlignedSequence<S, C> s : list) {
             column.add(s.getCompoundAt(alignmentIndex));
         }
         return Collections.unmodifiableList(column);
@@ -293,7 +293,7 @@ public class SimpleProfile<S extends Sequence<C>, C extends Compound> implements
     @Override
     public int getSize() {
         int size = 0;
-        for (AlignedSequence<C> s : list) {
+        for (AlignedSequence<S, C> s : list) {
             size += s.getOverlapCount();
         }
         return size;
@@ -307,7 +307,7 @@ public class SimpleProfile<S extends Sequence<C>, C extends Compound> implements
 
     @Override
     public boolean isCircular() {
-        for (AlignedSequence<C> s : list) {
+        for (AlignedSequence<S, C> s : list) {
             if (s.isCircular()) {
                 return true;
             }
@@ -325,14 +325,14 @@ public class SimpleProfile<S extends Sequence<C>, C extends Compound> implements
     public String toString() {
         // TODO handle circular alignments
         StringBuilder s = new StringBuilder();
-        for (AlignedSequence<C> as : list) {
+        for (AlignedSequence<S, C> as : list) {
             s.append(String.format("%s%n", as.toString()));
         }
         return s.toString();
     }
 
     @Override
-    public Iterator<AlignedSequence<C>> iterator() {
+    public Iterator<AlignedSequence<S, C>> iterator() {
         return list.iterator();
     }
 

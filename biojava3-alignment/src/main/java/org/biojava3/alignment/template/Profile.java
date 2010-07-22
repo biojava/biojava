@@ -38,7 +38,7 @@ import org.biojava3.core.sequence.template.Sequence;
  * @param <S> each element of the alignment {@link Profile} is of type S
  * @param <C> each element of an {@link AlignedSequence} is a {@link Compound} of type C
  */
-public interface Profile<S extends Sequence<C>, C extends Compound> extends Iterable<AlignedSequence<C>> {
+public interface Profile<S extends Sequence<C>, C extends Compound> extends Iterable<AlignedSequence<S, C>> {
 
     /**
      * Returns {@link AlignedSequence} at given index.
@@ -47,7 +47,7 @@ public interface Profile<S extends Sequence<C>, C extends Compound> extends Iter
      * @return desired sequence
      * @throws IndexOutOfBoundsException if listIndex < 1 or listIndex > number of sequences
      */
-    AlignedSequence<C> getAlignedSequence(int listIndex);
+    AlignedSequence<S, C> getAlignedSequence(int listIndex);
 
     /**
      * Searches for the given {@link Sequence} within this alignment profile.  Returns the corresponding
@@ -56,14 +56,14 @@ public interface Profile<S extends Sequence<C>, C extends Compound> extends Iter
      * @param sequence an original {@link Sequence}
      * @return the corresponding {@link AlignedSequence}
      */
-    AlignedSequence<C> getAlignedSequence(S sequence);
+    AlignedSequence<S, C> getAlignedSequence(S sequence);
 
     /**
      * Returns a {@link List} containing the individual {@link AlignedSequence}s of this alignment.
      *
      * @return list of aligned sequences
      */
-    List<AlignedSequence<C>> getAlignedSequences();
+    List<AlignedSequence<S, C>> getAlignedSequences();
 
     /**
      * Returns a {@link List} containing some of the individual {@link AlignedSequence}s of this alignment.
@@ -71,7 +71,7 @@ public interface Profile<S extends Sequence<C>, C extends Compound> extends Iter
      * @param listIndices indices of sequences in profile
      * @return list of aligned sequences
      */
-    List<AlignedSequence<C>> getAlignedSequences(int... listIndices);
+    List<AlignedSequence<S, C>> getAlignedSequences(int... listIndices);
 
     /**
      * Returns a {@link List} containing some of the individual {@link AlignedSequence}s of this alignment.
@@ -79,7 +79,7 @@ public interface Profile<S extends Sequence<C>, C extends Compound> extends Iter
      * @param sequences original {@link Sequence}s
      * @return list of aligned sequences
      */
-    List<AlignedSequence<C>> getAlignedSequences(S... sequences);
+    List<AlignedSequence<S, C>> getAlignedSequences(S... sequences);
 
     /**
      * Returns the {@link Compound} at row of given sequence and column of alignment index.  If the given sequence has

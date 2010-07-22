@@ -25,6 +25,7 @@ package org.biojava3.alignment.template;
 
 import org.biojava3.core.sequence.location.template.Location;
 import org.biojava3.core.sequence.template.Compound;
+import org.biojava3.core.sequence.template.Sequence;
 
 /**
  * Defines a mutable (editable) data structure for an {@link AlignedSequence}.
@@ -32,7 +33,7 @@ import org.biojava3.core.sequence.template.Compound;
  * @author Mark Chapman
  * @param <C> each element of the {@link AlignedSequence} is a {@link Compound} of type C
  */
-public interface MutableAlignedSequence<C extends Compound> extends AlignedSequence<C> {
+public interface MutableAlignedSequence<S extends Sequence<C>, C extends Compound> extends AlignedSequence<S, C> {
 
     /**
      * Sets the position of the {@link AlignedSequence} to the given {@link Location} (start, gaps, end).

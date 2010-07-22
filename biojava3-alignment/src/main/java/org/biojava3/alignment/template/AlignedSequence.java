@@ -34,7 +34,7 @@ import org.biojava3.core.sequence.template.Sequence;
  * @author Mark Chapman
  * @param <C> each element of the {@link Sequence} is a {@link Compound} of type C
  */
-public interface AlignedSequence<C extends Compound> extends Sequence<C> {
+public interface AlignedSequence<S extends Sequence<C>, C extends Compound> extends Sequence<C> {
 
     /**
      * Defines an alignment step in order to pass alignment information from an {@link Aligner} to a constructor.
@@ -80,7 +80,7 @@ public interface AlignedSequence<C extends Compound> extends Sequence<C> {
      *
      * @return the original sequence
      */
-    Sequence<C> getOriginalSequence();
+    S getOriginalSequence();
 
     /**
      * Returns the maximum number of elements contributed to a column of an alignment by this {@link Sequence}.  If

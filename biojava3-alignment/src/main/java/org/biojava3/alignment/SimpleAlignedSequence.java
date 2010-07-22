@@ -45,12 +45,13 @@ import org.biojava3.core.sequence.template.SequenceView;
  * @author Mark Chapman
  * @param <C> each element of the {@link Sequence} is a {@link Compound} of type C
  */
-public class SimpleAlignedSequence<C extends Compound> implements AlignedSequence<C> {
+public class SimpleAlignedSequence<S extends Sequence<C>, C extends Compound> implements AlignedSequence<S, C> {
 
     private static final String gap = "-";
 
     // always stored
-    private Sequence<C> original;
+    private AlignedSequence<S, C> prev;
+    private S original;
     private int length, numBefore, numAfter;
     private Location location;
 
@@ -65,7 +66,7 @@ public class SimpleAlignedSequence<C extends Compound> implements AlignedSequenc
      * @param steps lists whether the sequence aligns a {@link Compound} or gap at each index of the alignment
      * @throws IllegalArgumentException if given sequence does not fit in alignment
      */
-    public SimpleAlignedSequence(Sequence<C> original, List<Step> steps) {
+    public SimpleAlignedSequence(S original, List<Step> steps) {
         this(original, steps, 0, 0);
     }
 
@@ -78,55 +79,46 @@ public class SimpleAlignedSequence<C extends Compound> implements AlignedSequenc
      * @param numAfter number of {@link Compound}s after a local alignment
      * @throws IllegalArgumentException if given sequence does not fit in alignment
      */
-    public SimpleAlignedSequence(Sequence<C> original, List<Step> steps, int numBefore, int numAfter) {
+    public SimpleAlignedSequence(S original, List<Step> steps, int numBefore, int numAfter) {
         this.original = original;
         this.numBefore = numBefore;
         this.numAfter = numAfter;
         length = steps.size();
-        SimpleAlignedSequence<C> prev = null;
-        if (original instanceof SimpleAlignedSequence<?>) {
-            prev = (SimpleAlignedSequence<C>) original;
-            this.original = prev.getOriginalSequence();
-            this.numBefore += prev.numBefore;
-            this.numAfter += prev.numAfter;
-        }
-        List<Location> sublocations = new ArrayList<Location>();
-        int start = 0, step = 0, oStep = numBefore+numAfter, oMax = this.original.getLength(), pStep = 0, pMax =
-                (prev == null) ? 0 : prev.getLength();
-        boolean inGap = true;
+        setLocation(steps);
+    }
 
-        // build sublocations: pieces of sequence separated by gaps
-        for (; step < length; step++) {
-            boolean isGapStep = (steps.get(step) == Step.GAP),
-                    isGapPrev = (pStep < pMax && prev.isGap(pStep + 1));
-            if (!isGapStep && !isGapPrev) {
-                oStep++;
-                if (inGap) {
-                    inGap = false;
-                    start = step + 1;
-                }
-            } else if (!inGap) {
-                inGap = true;
-                sublocations.add(new SimpleLocation(start, step, Strand.UNDEFINED));
-            }
-            if (prev != null && !isGapStep) {
-                pStep++;
-            }
-        }
-        if (!inGap) {
-            sublocations.add(new SimpleLocation(start, step, Strand.UNDEFINED));
-        }
+    /**
+     * Creates a new {@link AlignedSequence} for the given {@link AlignedSequence} in a global alignment.
+     *
+     * @param prev the previous {@link AlignedSequence} before this alignment
+     * @param steps lists whether the sequence aligns a {@link Compound} or gap at each index of the alignment
+     * @throws IllegalArgumentException if given sequence does not fit in alignment
+     */
+    public SimpleAlignedSequence(AlignedSequence<S, C> prev, List<Step> steps) {
+        this(prev, steps, 0, 0);
+    }
 
-        // combine sublocations into 1 Location
-        location = (sublocations.size() == 1) ? sublocations.get(0) : new SimpleLocation(
-                sublocations.get(0).getStart(), sublocations.get(sublocations.size() - 1).getEnd(), Strand.UNDEFINED,
-                false, sublocations);
-        // TODO handle circular alignments
-
-        // check that alignment has correct number of compounds in it to fit original sequence
-        if (step != length || oStep != oMax || pStep != pMax) {
-            throw new IllegalArgumentException("Given sequence does not fit in alignment.");
+    /**
+     * Creates a new {@link AlignedSequence} for the given {@link AlignedSequence} in a local alignment.
+     *
+     * @param prev the previous {@link AlignedSequence} before this alignment
+     * @param steps lists whether the sequence aligns a {@link Compound} or gap at each index of the alignment
+     * @param numBefore number of {@link Compound}s before a local alignment
+     * @param numAfter number of {@link Compound}s after a local alignment
+     * @throws IllegalArgumentException if given sequence does not fit in alignment
+     */
+    public SimpleAlignedSequence(AlignedSequence<S, C> prev, List<Step> steps, int numBefore, int numAfter) {
+        this.prev = prev;
+        this.original = prev.getOriginalSequence();
+        this.numBefore = numBefore;
+        this.numAfter = numAfter;
+        if (prev instanceof SimpleAlignedSequence<?, ?>) {
+            SimpleAlignedSequence<?, ?> p = (SimpleAlignedSequence<?, ?>) prev;
+            this.numBefore += p.numBefore;
+            this.numAfter += p.numAfter;
         }
+        length = steps.size();
+        setLocation(steps);
     }
 
     // methods for AlignedSequence
@@ -184,7 +176,7 @@ public class SimpleAlignedSequence<C extends Compound> implements AlignedSequenc
     }
 
     @Override
-    public Sequence<C> getOriginalSequence() {
+    public S getOriginalSequence() {
         return original;
     }
 
@@ -338,6 +330,47 @@ public class SimpleAlignedSequence<C extends Compound> implements AlignedSequenc
     @Override
     public String toString() {
         return getSequenceAsString();
+    }
+
+    // helper method to initialize the location
+    private void setLocation(List<Step> steps) {
+        List<Location> sublocations = new ArrayList<Location>();
+        int start = 0, step = 0, oStep = numBefore+numAfter, oMax = this.original.getLength(), pStep = 0, pMax =
+                (prev == null) ? 0 : prev.getLength();
+        boolean inGap = true;
+
+        // build sublocations: pieces of sequence separated by gaps
+        for (; step < length; step++) {
+            boolean isGapStep = (steps.get(step) == Step.GAP),
+                    isGapPrev = (pStep < pMax && prev.isGap(pStep + 1));
+            if (!isGapStep && !isGapPrev) {
+                oStep++;
+                if (inGap) {
+                    inGap = false;
+                    start = step + 1;
+                }
+            } else if (!inGap) {
+                inGap = true;
+                sublocations.add(new SimpleLocation(start, step, Strand.UNDEFINED));
+            }
+            if (prev != null && !isGapStep) {
+                pStep++;
+            }
+        }
+        if (!inGap) {
+            sublocations.add(new SimpleLocation(start, step, Strand.UNDEFINED));
+        }
+
+        // combine sublocations into 1 Location
+        location = (sublocations.size() == 1) ? sublocations.get(0) : new SimpleLocation(
+                sublocations.get(0).getStart(), sublocations.get(sublocations.size() - 1).getEnd(), Strand.UNDEFINED,
+                false, sublocations);
+        // TODO handle circular alignments
+
+        // check that alignment has correct number of compounds in it to fit original sequence
+        if (step != length || oStep != oMax || pStep != pMax) {
+            throw new IllegalArgumentException("Given sequence does not fit in alignment.");
+        }
     }
 
 }

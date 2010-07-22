@@ -51,7 +51,7 @@ public class SimpleSequencePair<S extends Sequence<C>, C extends Compound> exten
      * @param target the second sequence of the pair
      * @throws IllegalArgumentException if sequences differ in size
      */
-    public SimpleSequencePair(AlignedSequence<C> query, AlignedSequence<C> target) {
+    public SimpleSequencePair(AlignedSequence<S, C> query, AlignedSequence<S, C> target) {
         super(query, target);
     }
 
@@ -142,12 +142,12 @@ public class SimpleSequencePair<S extends Sequence<C>, C extends Compound> exten
     }
 
     @Override
-    public AlignedSequence<C> getQuery() {
+    public AlignedSequence<S, C> getQuery() {
         return getAlignedSequence(1);
     }
 
     @Override
-    public AlignedSequence<C> getTarget() {
+    public AlignedSequence<S, C> getTarget() {
         return getAlignedSequence(2);
     }
 

@@ -108,13 +108,13 @@ public interface SequencePair<S extends Sequence<C>, C extends Compound> extends
      *
      * @return the first {@link AlignedSequence} of the pair
      */
-    AlignedSequence<C> getQuery();
+    AlignedSequence<S, C> getQuery();
 
     /**
      * Returns the second {@link AlignedSequence} of the pair.
      *
      * @return the second {@link AlignedSequence} of the pair
      */
-    AlignedSequence<C> getTarget();
+    AlignedSequence<S, C> getTarget();
 
 }
