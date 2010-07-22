@@ -97,7 +97,6 @@ public class FourBitSequenceReader<C extends Compound> extends BitSequenceReader
          * not changed then neither will this.
          */
         @Override
-        @SuppressWarnings("serial")
         protected Map<C, Integer> generateCompoundsToIndex() {
             final CompoundSet<C> cs = getCompoundSet();
             Map<C, Integer> map = new HashMap<C, Integer>();
@@ -146,7 +145,6 @@ public class FourBitSequenceReader<C extends Compound> extends BitSequenceReader
          * Returns a List which reverse encodes the Compound, Integer map
          */
         @Override
-        @SuppressWarnings("unchecked")
         protected List<C> generateIndexToCompounds() {
             CompoundSet<C> cs = getCompoundSet();
             Map<C, Integer> lookup = getCompoundsToIndexLookup();

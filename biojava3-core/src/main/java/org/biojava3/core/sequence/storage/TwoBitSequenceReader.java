@@ -115,7 +115,6 @@ public class TwoBitSequenceReader<C extends NucleotideCompound> extends BitSeque
 		 * Returns a List which encodes TCAG into positions 0,1,2,3.
 		 */
 		@Override
-		@SuppressWarnings("unchecked")
 		protected List<C> generateIndexToCompounds() {
 			CompoundSet<C> cs = getCompoundSet();
 			List<C> result = new ArrayList<C>();

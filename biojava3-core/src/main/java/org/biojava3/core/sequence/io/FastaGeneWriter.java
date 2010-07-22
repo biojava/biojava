@@ -7,13 +7,12 @@ package org.biojava3.core.sequence.io;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collection;
+
 import org.biojava3.core.sequence.AccessionID;
 import org.biojava3.core.sequence.ChromosomeSequence;
 import org.biojava3.core.sequence.ExonSequence;
 import org.biojava3.core.sequence.GeneSequence;
 import org.biojava3.core.sequence.Strand;
-import org.biojava3.core.sequence.TranscriptSequence;
-
 import org.biojava3.core.sequence.compound.NucleotideCompound;
 import org.biojava3.core.sequence.io.template.FastaHeaderFormatInterface;
 

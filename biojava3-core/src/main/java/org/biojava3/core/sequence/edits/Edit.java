@@ -2,10 +2,10 @@ package org.biojava3.core.sequence.edits;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import org.biojava3.core.sequence.BasicSequence;
 import org.biojava3.core.sequence.storage.JoiningSequenceReader;
 import org.biojava3.core.sequence.template.Compound;
-import org.biojava3.core.sequence.template.CompoundSet;
 import org.biojava3.core.sequence.template.Sequence;
 
 /**

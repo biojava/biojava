@@ -111,7 +111,7 @@ public class XMLHelper {
             NodeList nodeList = element.getChildNodes();
             for (int i = 0; i < nodeList.getLength(); i++) {
                 Node node = nodeList.item(i);
-                if (node.getNodeType() == node.ELEMENT_NODE && node.getNodeName().equals(xpathExpression)) {
+                if (node.getNodeType() == Node.ELEMENT_NODE && node.getNodeName().equals(xpathExpression)) {
                     return (Element) node;
                 }
             }
@@ -137,7 +137,7 @@ public class XMLHelper {
             NodeList nodeList = element.getChildNodes();
             for (int i = 0; i < nodeList.getLength(); i++) {
                 Node node = nodeList.item(i);
-                if (node.getNodeType() == node.ELEMENT_NODE && node.getNodeName().equals(xpathExpression)) {
+                if (node.getNodeType() == Node.ELEMENT_NODE && node.getNodeName().equals(xpathExpression)) {
                     resultVector.add((Element) node);
                 }
             }

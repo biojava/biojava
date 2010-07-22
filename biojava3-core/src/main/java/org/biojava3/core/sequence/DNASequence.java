@@ -22,13 +22,6 @@
  */
 package org.biojava3.core.sequence;
 
-/**
- *
- * @author Scooter Willis
- */
-import java.util.LinkedHashMap;
-
-
 import org.biojava3.core.sequence.compound.DNACompoundSet;
 import org.biojava3.core.sequence.compound.NucleotideCompound;
 import org.biojava3.core.sequence.loader.StringProxySequenceReader;
@@ -42,14 +35,13 @@ import org.biojava3.core.sequence.transcription.TranscriptionEngine;
 import org.biojava3.core.sequence.views.ComplementSequenceView;
 import org.biojava3.core.sequence.views.ReversedSequenceView;
 
+/**
+ *
+ * @author Scooter Willis
+ */
 public class DNASequence extends AbstractSequence<NucleotideCompound> {
 
-    
-    
-    
-
     public enum DNAType {
-
         CHROMOSOME, MITOCHONDRIAL, PLASMID, PLASTID, UNKNOWN
     }
     private DNAType dnaType = DNAType.UNKNOWN;

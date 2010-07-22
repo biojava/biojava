@@ -9,10 +9,8 @@ import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.util.Collection;
 import java.util.LinkedHashMap;
-import org.biojava3.core.sequence.GeneSequence;
 
 import org.biojava3.core.sequence.ProteinSequence;
-import org.biojava3.core.sequence.TranscriptSequence;
 import org.biojava3.core.sequence.compound.AminoAcidCompound;
 import org.biojava3.core.sequence.compound.AminoAcidCompoundSet;
 import org.biojava3.core.sequence.io.template.FastaHeaderFormatInterface;
