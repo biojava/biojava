@@ -4,20 +4,20 @@
  */
 package org.biojava3.genome.homology;
 
-import jaligner.Alignment;
-import jaligner.Sequence;
-import jaligner.SmithWatermanGotoh;
-import jaligner.matrix.MatrixLoader;
-import jaligner.util.SequenceParser;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.logging.Level;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
+
+import org.biojava3.alignment.Alignments;
+import org.biojava3.alignment.Alignments.PairwiseAligner;
+import org.biojava3.alignment.SimpleGapPenalty;
+import org.biojava3.alignment.SimpleSubstitutionMatrix;
+import org.biojava3.alignment.template.SequencePair;
 import org.biojava3.core.sequence.CDSSequence;
 import org.biojava3.core.sequence.ChromosomeSequence;
 import org.biojava3.core.sequence.DNASequence;
@@ -32,11 +32,11 @@ import org.biojava3.core.sequence.features.DatabaseReferenceInterface;
 import org.biojava3.core.sequence.features.FeaturesKeyWordInterface;
 import org.biojava3.core.sequence.loader.UniprotProxySequenceReader;
 import org.biojava3.genome.GeneFeatureHelper;
-import org.biojava3.genome.query.BlastXMLQuery;
 
 /**
  *
  * @author Scooter Willis <willishf at gmail dot com>
+ * @author Mark Chapman
  */
 public class GFF3FromUniprotBlastHits {
 
@@ -78,7 +78,7 @@ public class GFF3FromUniprotBlastHits {
                     String predictedProteinSequence = transcriptSequence.getProteinSequence().getSequenceAsString();
                     ArrayList<ProteinSequence> cdsProteinList = transcriptSequence.getProteinCDSSequences();
 
-                    ArrayList<CDSSequence> cdsSequenceList = new ArrayList(transcriptSequence.getCDSSequences().values());
+                    ArrayList<CDSSequence> cdsSequenceList = new ArrayList<CDSSequence>(transcriptSequence.getCDSSequences().values());
                     String testSequence = "";
                     for (ProteinSequence cdsProteinSequence : cdsProteinList) {
                         testSequence = testSequence + cdsProteinSequence.getSequenceAsString();
@@ -93,10 +93,9 @@ public class GFF3FromUniprotBlastHits {
                         //  throw new Exception("Protein Sequence compare error " + id);
                     }
 
-
-                    Sequence s1 = SequenceParser.parse(predictedProteinSequence);
-                    Sequence s2 = SequenceParser.parse(hitSequence);
-                    Alignment alignment = SmithWatermanGotoh.align(s1, s2, MatrixLoader.load("BLOSUM62"), 10f, 0.5f);
+                    SequencePair<ProteinSequence, AminoAcidCompound> alignment = Alignments.getPairwiseAlignment(
+                            transcriptSequence.getProteinSequence(), proteinSequence, PairwiseAligner.LOCAL,
+                            new SimpleGapPenalty(), new SimpleSubstitutionMatrix<AminoAcidCompound>());
                     // System.out.println();
                     //    System.out.println(alignment.getSummary());
                     //   System.out.println(new Pair().format(alignment));
@@ -108,7 +107,7 @@ public class GFF3FromUniprotBlastHits {
                         Integer startIndex = null;
                         int offsetStartIndex = 0;
                         for (int s = 0; s < seq.length(); s++) {
-                            startIndex = alignment.getSequence2IndexFromSequence1Index(proteinIndex + s);
+                            startIndex = alignment.getIndexInTargetForQueryAt(proteinIndex + s);
                             if (startIndex != null) {
                                 startIndex = startIndex + 1;
                                 offsetStartIndex = s;
@@ -119,7 +118,7 @@ public class GFF3FromUniprotBlastHits {
 
                         int offsetEndIndex = 0;
                         for (int e = 0; e < seq.length(); e++) {
-                            endIndex = alignment.getSequence2IndexFromSequence1Index(proteinIndex + seq.length() - 1 - e);
+                            endIndex = alignment.getIndexInTargetForQueryAt(proteinIndex + seq.length() - 1 - e);
                             if (endIndex != null) {
                                 endIndex = endIndex + 1;
                                 offsetEndIndex = e;
@@ -261,7 +260,7 @@ public class GFF3FromUniprotBlastHits {
     
 
     public static void main(String[] args) {
-        if (false) {
+        /*
             try {
                 LogManager.getLogManager().getLogger("").setLevel(Level.SEVERE);
                 LinkedHashMap<String, ChromosomeSequence> dnaSequenceList = GeneFeatureHelper.loadFastaAddGeneFeaturesFromGeneMarkGTF(new File("/Users/Scooter/scripps/dyadic/analysis/454Scaffolds/454Scaffolds.fna"), new File("/Users/Scooter/scripps/dyadic/analysis/454Scaffolds/genemark_hmm.gtf"));
@@ -278,9 +277,8 @@ public class GFF3FromUniprotBlastHits {
 
 
             }
-        }
+        */
 
-        if (true) {
             try {
                 LogManager.getLogManager().getLogger("").setLevel(Level.SEVERE);
                 LinkedHashMap<String, ChromosomeSequence> dnaSequenceHashMap = GeneFeatureHelper.loadFastaAddGeneFeaturesFromGlimmerGFF3(new File("/Users/Scooter/scripps/dyadic/analysis/454Scaffolds/454Scaffolds-16.fna"), new File("/Users/Scooter/scripps/dyadic/GlimmerHMM/c1_glimmerhmm-16.gff"));
@@ -299,7 +297,6 @@ public class GFF3FromUniprotBlastHits {
 
 
             }
-        }
 
 
     }
