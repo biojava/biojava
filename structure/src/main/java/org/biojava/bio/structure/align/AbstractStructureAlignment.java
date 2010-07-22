@@ -44,8 +44,9 @@ public abstract class AbstractStructureAlignment implements StructureAlignment {
 		buf.append("   -printFatCat true/false print the original FATCAT output to stdout." + newline);
 		buf.append("   -printCE true/false print the result in CE style" + newline);
 		buf.append("   -show3d print a 3D visualisation of the alignment (requires jmolapplet.jar in classpath)" + newline);
-		buf.append("   -outFile file to write the output to (writes XML representation)." + newline);
+		buf.append("   -outFile file to write the output to (default: writes XML representation)." + newline);
 		buf.append("   -outputPDB use this flag together with -outFile to dump the PDB file of the aligned structures, instead of the XML representation, instead of XML");
+		
 		buf.append("   -autoFetch true/false if set to true PDB files will automatically get downloaded and stored in the right location. (default: false)" + newline);		
 		buf.append("   -pdbDirSplit true/false the directory containing PDB files has all PDBs in one level or is split into multiple subdirs, like the ftp site. (default: true)" + newline);
 		buf.append("   -showMenu displays the menu that allows to run alignments through a user interface." + newline);
@@ -56,7 +57,9 @@ public abstract class AbstractStructureAlignment implements StructureAlignment {
 		buf.append(newline);
 		buf.append("   -alignPairs (mandatory) path to a file that contains a set of pairs to compair" + newline);		
 		buf.append("   -outFile (mandatory) a file that will contain the summary of all the pairwise alignments" + newline);
+		
 		buf.append("   -pdbFilePath (mandatory) Path to the directory in your file system that contains the PDB files." + newline);
+		buf.append("   -saveOutputDir (optional) a directory that will contain the detailed outputs of the alignments. By default will write XML files, if used together with -outputPDB, will write PDB files of the alignment.");
 		buf.append(newline);
 		buf.append("  Once DB seaches are complete it is possible to view the results with:" +newline);
 		buf.append(newline);
