@@ -49,6 +49,7 @@ public class StartupParameters {
 		showAFPRanges = false;
 		checkCircular = false;
 		showMenu = false;
+		maxOptRMSD = 99d;
 		
 	}
 	
