@@ -299,7 +299,7 @@ public class FCAlignHelper
     * record the aligned pairs in alignList[][0], alignList[][1];
     * return the number of aligned pairs
     * @param alignList
-    * @return
+    * @return the number of aligned pairs
     */
    public int getAlignPos(int[][] alignList)
    {
