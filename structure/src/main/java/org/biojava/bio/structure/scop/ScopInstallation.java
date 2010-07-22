@@ -237,8 +237,8 @@ public class ScopInstallation {
     
     /** Access a particular ScopNode. The scopNode then allows to traverse through the scop hierarchy...
      * 
-     * @param sunid
-     * @return
+     * @param sunid the scop unique id
+     * @return a ScopNode that matches this sunid
      */
     public ScopNode getScopNode(int sunid){
        ensureHieInstalled();
@@ -550,8 +550,8 @@ public class ScopInstallation {
 
 	/** Get a SCOP domain by its sunid
 	 * 
-	 * @param sun
-	 * @return
+	 * @param sunid the scop unique id
+	 * @return a list of scop domains that match this sunid
 	 */
    public List<ScopDomain> getScopDomainsBySunid(Integer sunid)
    {
