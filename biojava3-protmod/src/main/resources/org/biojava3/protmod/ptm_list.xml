@@ -5907,7 +5907,7 @@
 		<Keyword>chromoprotein</Keyword>
 	</Entry>
 	<Entry>
-		<Id>00174</Id>
+		<Id>0174</Id>
 		<Description>A protein modification that effectively converts L-tyrosine to (Z)-2,3-didehydrotyrosine.</Description>
 		<SystematicName>(Z)-2-amino-3-(4-hydoxyphenyl)propenoic acid</SystematicName>
 		<CrossReference>
