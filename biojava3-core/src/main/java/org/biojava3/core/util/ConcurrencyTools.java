@@ -38,6 +38,7 @@ import java.util.concurrent.TimeUnit;
 public class ConcurrencyTools {
 
     private static ExecutorService pool;
+    // private static int tasks;
 
     // TODO additional logging and listening services
 
@@ -57,10 +58,28 @@ public class ConcurrencyTools {
     }
 
     /**
-     * Sets to default thread pool of 2 background threads for each processor core.
+     * Sets thread pool to reserve a given number of processor cores for foreground or other use.
+     *
+     * @param cpus number of processor cores to reserve
+     */
+    public static void setThreadPoolCPUsAvailable(int cpus) {
+        setThreadPoolSize(Math.max(1, Runtime.getRuntime().availableProcessors() - cpus));
+    }
+
+    /**
+     * Sets thread pool to a given fraction of the available processors.
+     *
+     * @param fraction portion of available processors to use in thread pool
+     */
+    public static void setThreadPoolCPUsFraction(float fraction) {
+        setThreadPoolSize(Math.max(1, Math.round(fraction * Runtime.getRuntime().availableProcessors())));
+    }
+
+    /**
+     * Sets thread pool to default of 1 background thread for each processor core.
      */
     public static void setThreadPoolDefault() {
-        setThreadPool(Executors.newFixedThreadPool(2 * Runtime.getRuntime().availableProcessors()));
+        setThreadPoolCPUsAvailable(0);
     }
 
     /**
@@ -68,6 +87,15 @@ public class ConcurrencyTools {
      */
     public static void setThreadPoolSingle() {
         setThreadPool(Executors.newSingleThreadExecutor());
+    }
+
+    /**
+     * Sets thread pool to given size.
+     *
+     * @param threads number of threads in pool
+     */
+    public static void setThreadPoolSize(int threads) {
+        setThreadPool(Executors.newFixedThreadPool(threads));
     }
 
     /**
@@ -122,12 +150,12 @@ public class ConcurrencyTools {
      * @return future on which the desired value is retrieved by calling get()
      */
     public static<T> Future<T> submit(Callable<T> task, String message) {
-        // TODO log("Task " + (tasks++) + " submitted to shared thread pool. " + message);
+        // TODO log("Task " + (++tasks) + " submitted to shared thread pool. " + message);
         return getThreadPool().submit(task);
     }
 
     /**
-     * Queues up a task and adds a log entry.
+     * Queues up a task and adds a default log entry.
      *
      * @param <T> type returned from the submitted task
      * @param task submitted task
