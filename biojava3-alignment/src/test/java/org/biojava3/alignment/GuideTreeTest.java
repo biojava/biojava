@@ -51,7 +51,7 @@ public class GuideTreeTest {
         proteins = Arrays.asList(new ProteinSequence[] {new ProteinSequence("ARND"), new ProteinSequence("ARND"),
                 new ProteinSequence("HILK"), new ProteinSequence("ANDR")});
         gaps = new SimpleGapPenalty((short) 2, (short) 1);
-        blosum62 = new SimpleSubstitutionMatrix<AminoAcidCompound>();
+        blosum62 = SubstitutionMatrixHelper.getBlosum62();
         tree = new GuideTree<ProteinSequence, AminoAcidCompound>(proteins, Alignments.getAllPairsScorers(proteins,
                 PairwiseScorer.GLOBAL_IDENTITIES, gaps, blosum62));
     }

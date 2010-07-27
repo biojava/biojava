@@ -47,7 +47,7 @@ public class FractionalSimilarityScorerTest {
         query = new ProteinSequence("ARXB");
         target = new ProteinSequence("RADG");
         gaps = new SimpleGapPenalty((short) 2, (short) 1);
-        blosum62 = new SimpleSubstitutionMatrix<AminoAcidCompound>();
+        blosum62 = SubstitutionMatrixHelper.getBlosum62();
         alignment = new NeedlemanWunsch<ProteinSequence, AminoAcidCompound>(query, target, gaps, blosum62);
         self = new NeedlemanWunsch<ProteinSequence, AminoAcidCompound>(query, query, gaps, blosum62);
         scorer1 = new FractionalSimilarityScorer<ProteinSequence, AminoAcidCompound>(alignment);

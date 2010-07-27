@@ -46,7 +46,7 @@ public class FractionalIdentityScorerTest {
         query = new ProteinSequence("ARND");
         target = new ProteinSequence("RDG");
         gaps = new SimpleGapPenalty((short) 10, (short) 1);
-        blosum62 = new SimpleSubstitutionMatrix<AminoAcidCompound>();
+        blosum62 = SubstitutionMatrixHelper.getBlosum62();
         alignment = new NeedlemanWunsch<ProteinSequence, AminoAcidCompound>(query, target, gaps, blosum62);
         self = new NeedlemanWunsch<ProteinSequence, AminoAcidCompound>(query, query, gaps, blosum62);
         scorer1 = new FractionalIdentityScorer<ProteinSequence, AminoAcidCompound>(alignment);

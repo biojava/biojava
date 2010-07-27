@@ -52,7 +52,7 @@ public class SimpleProfilePairTest {
         protein3 = new ProteinSequence("HILK");
         protein4 = new ProteinSequence("ANDR");
         gaps = new SimpleGapPenalty((short) 2, (short) 1);
-        blosum62 = new SimpleSubstitutionMatrix<AminoAcidCompound>();
+        blosum62 = SubstitutionMatrixHelper.getBlosum62();
         pair1 = new NeedlemanWunsch<ProteinSequence, AminoAcidCompound>(protein1, protein2, gaps, blosum62).getPair();
         pair2 = new NeedlemanWunsch<ProteinSequence, AminoAcidCompound>(protein3, protein4, gaps, blosum62).getPair();
     }

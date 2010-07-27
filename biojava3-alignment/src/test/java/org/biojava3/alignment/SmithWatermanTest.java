@@ -44,7 +44,7 @@ public class SmithWatermanTest {
         query = new ProteinSequence("AERNDKK");
         target = new ProteinSequence("ERDNKGFPS");
         gaps = new SimpleGapPenalty((short) 2, (short) 1);
-        blosum62 = new SimpleSubstitutionMatrix<AminoAcidCompound>();
+        blosum62 = SubstitutionMatrixHelper.getBlosum62();
         alignment = new SmithWaterman<ProteinSequence, AminoAcidCompound>(query, target, gaps, blosum62);
         self = new SmithWaterman<ProteinSequence, AminoAcidCompound>(query, query, gaps, blosum62);
     }
