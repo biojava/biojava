@@ -6087,7 +6087,7 @@
 		<SystematicName>2-(3,4,5,6-tetrahydropyridin-2-yl)-1-carboxymethyl-1-imidazolin-5-one</SystematicName>
 		<CrossReference>
 			<Source>PDBCC</Source>
-			<Id>CR7</Id>
+			<Id>CH7</Id>
 			<Name>[(4Z)-2-[(1S)-1,5-DIAMINOPENTYL]-4-(4-HYDROXYBENZYLIDENE)-5-OXO-4,5-DIHYDRO-1H-IMIDAZOL-1-YL]ACETIC ACID</Name>
 		</CrossReference>
 		<CrossReference>
@@ -6103,12 +6103,11 @@
 		<Formula>C 8 H 9 N 2 O 1</Formula>
 		<Condition>
 			<Component type="AminoAcid" label="1">
-				<Id source="PDBCC">CR7</Id>
+				<Id source="PDBCC">CH7</Id>
 			</Component>
 		</Condition>
 		<Occurrence>natural</Occurrence>
 		<Category>crosslink1</Category>
-		<Comment>CR7 has two modifications: RESID:AA0183 and RESID:AA0382</Comment>
 	</Entry>
 	<Entry>
 		<Id>0181</Id>
