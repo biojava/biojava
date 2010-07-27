@@ -29,7 +29,10 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
 import org.biojava3.alignment.template.*;
+import org.biojava3.core.sequence.compound.AmbiguityDNACompoundSet;
+import org.biojava3.core.sequence.compound.AminoAcidCompoundSet;
 import org.biojava3.core.sequence.template.Compound;
+import org.biojava3.core.sequence.template.CompoundSet;
 import org.biojava3.core.sequence.template.Sequence;
 import org.biojava3.core.util.ConcurrencyTools;
 
@@ -43,25 +46,13 @@ import org.biojava3.core.util.ConcurrencyTools;
 public class Alignments {
 
     /**
-     * List of multiple sequence alignment routines that can (mostly) be emulated.
-     */
-    public static enum MSAEmulation {
-                   // PairwiseScorer     Cluster  ProfileAligner       GapPenalty  Refinement
-        CLUSTAL,   // KMERS              UPGMA    GLOBAL_CONSENSUS     Standard
-        CLUSTALW,  // GLOBAL_IDENTITIES  NJ       GLOBAL_LINEAR_SPACE  Variable
-        CLUSTALW2, // GLOBAL_IDENTITIES  NJ       GLOBAL_LINEAR_SPACE  Variable    PARTITION_SINGLE(ALL)
-        MUSCLE,    // KMERS              UPGMA    GLOBAL               Variable    RESCORE_IDENTITIES/PARTITION_TREE
-        KALIGN     // WU_MANBER          UPGMA    GLOBAL               Standard
-    }
-
-    /**
      * List of implemented pairwise sequence alignment routines.
      */
     public static enum PairwiseAligner {
-        GLOBAL,
-        GLOBAL_LINEAR_SPACE,
-        LOCAL,
-        LOCAL_LINEAR_SPACE
+        GLOBAL,              // Needleman-Wunsch/Gotoh
+        GLOBAL_LINEAR_SPACE, // Myers-Miller/Thompson
+        LOCAL,               // Smith-Waterman/Gotoh
+        LOCAL_LINEAR_SPACE   // Smith-Waterman/Gotoh with 
     }
 
     /**
@@ -69,22 +60,22 @@ public class Alignments {
      */
     public static enum PairwiseScorer {
         GLOBAL,
-        GLOBAL_IDENTITIES,
+        GLOBAL_IDENTITIES,   // similar to CLUSTALW and CLUSTALW2
         GLOBAL_SIMILARITIES,
         LOCAL,
         LOCAL_IDENTITIES,
         LOCAL_SIMILARITIES,
-        KMERS,
-        WU_MANBER
+        KMERS,               // similar to CLUSTAL and MUSCLE
+        WU_MANBER            // similar to KALIGN
     }
 
     /**
      * List of implemented profile-profile alignment routines.
      */
     public static enum ProfileAligner {
-        GLOBAL,
-        GLOBAL_LINEAR_SPACE,
-        GLOBAL_CONSENSUS,
+        GLOBAL,              // similar to MUSCLE and KALIGN
+        GLOBAL_LINEAR_SPACE, // similar to CLUSTALW and CLUSTALW2
+        GLOBAL_CONSENSUS,    // similar to CLUSTAL
         LOCAL,
         LOCAL_LINEAR_SPACE,
         LOCAL_CONSENSUS
@@ -94,11 +85,11 @@ public class Alignments {
      * List of implemented profile refinement routines.
      */
     public static enum Refinement {
-        PARTITION_SINGLE,
-        PARTITION_SINGLE_ALL,
-        PARTITION_TREE,
+        PARTITION_SINGLE,     // similar to CLUSTALW2
+        PARTITION_SINGLE_ALL, // similar to CLUSTALW2
+        PARTITION_TREE,       // similar to MUSCLE
         PARTITION_TREE_ALL,
-        RESCORE_IDENTITIES,
+        RESCORE_IDENTITIES,   // similar to MUSCLE
         RESCORE_SIMILARITIES
     }
 
@@ -136,11 +127,20 @@ public class Alignments {
      * @return multiple sequence alignment {@link Profile}
      */
     public static <S extends Sequence<C>, C extends Compound> Profile<S, C> getMultipleSequenceAlignment(
-            List<S> sequences, MSAEmulation type, Object... settings) {
-        // TODO MSA emulation, convert other factories to this parameter style?
+            List<S> sequences, Object... settings) { // TODO convert other factories to this parameter style?
+        CompoundSet<C> cs = sequences.get(0).getCompoundSet();
         PairwiseScorer ps = PairwiseScorer.GLOBAL_IDENTITIES;
         GapPenalty gapPenalty = new SimpleGapPenalty();
-        SubstitutionMatrix<C> subMatrix = new SimpleSubstitutionMatrix<C>();
+        SubstitutionMatrix<C> subMatrix = null;
+        if (cs == AminoAcidCompoundSet.getAminoAcidCompoundSet()) {
+            @SuppressWarnings("unchecked") // compound types must be equal since compound sets are equal
+            SubstitutionMatrix<C> temp = (SubstitutionMatrix<C>) SubstitutionMatrixHelper.getBlosum62();
+            subMatrix = temp;
+        } else if (cs == AmbiguityDNACompoundSet.getDNACompoundSet()) {
+            @SuppressWarnings("unchecked") // compound types must be equal since compound sets are equal
+            SubstitutionMatrix<C> temp = (SubstitutionMatrix<C>) SubstitutionMatrixHelper.getNuc4_4();
+            subMatrix = temp;
+        } 
         ProfileAligner pa = ProfileAligner.GLOBAL;
         for (Object o : settings) {
             if (o instanceof PairwiseScorer) {
@@ -148,7 +148,13 @@ public class Alignments {
             } else if (o instanceof GapPenalty) {
                 gapPenalty = (GapPenalty) o;
             } else if (o instanceof SubstitutionMatrix<?>) {
-                subMatrix = (SubstitutionMatrix<C>) o;
+                if (cs != ((SubstitutionMatrix<?>) o).getCompoundSet()) {
+                    throw new IllegalArgumentException(
+                            "Compound sets of the sequences and substitution matrix must match.");
+                }
+                @SuppressWarnings("unchecked") // compound types must be equal since compound sets are equal
+                SubstitutionMatrix<C> temp = (SubstitutionMatrix<C>) o;
+                subMatrix = temp;
             } else if (o instanceof ProfileAligner) {
                 pa = (ProfileAligner) o;
             }
@@ -164,7 +170,7 @@ public class Alignments {
         // stage 3: progressive alignment
         Profile<S, C> msa = getProgressiveAlignment(tree, pa, gapPenalty, subMatrix);
 
-        // stage 4: TODO refinement
+        // TODO stage 4: refinement
         return msa;
     }
 
@@ -250,6 +256,55 @@ public class Alignments {
     }
 
     /**
+     * Factory method which retrieves calculated elements from a list of tasks on the concurrent execution queue.
+     *
+     * @param <E> each task calculates a value of type E
+     * @param futures list of tasks
+     * @return calculated elements
+     */
+    static <E> List<E> getListFromFutures(List<Future<E>> futures) {
+        List<E> list = new ArrayList<E>();
+        for (Future<E> f : futures) {
+            // TODO when added to ConcurrencyTools, log completions and exceptions instead of printing stack traces
+            try {
+                list.add(f.get());
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            }
+        }
+        return list;
+    }
+
+    /**
+     * Factory method which constructs a pairwise sequence aligner.
+     *
+     * @param <S> each {@link Sequence} of an alignment pair is of type S
+     * @param <C> each element of an {@link AlignedSequence} is a {@link Compound} of type C
+     * @param query the first {@link Sequence} to align
+     * @param target the second {@link Sequence} to align
+     * @param type chosen type from list of pairwise sequence alignment routines
+     * @param gapPenalty the gap penalties used during alignment
+     * @param subMatrix the set of substitution scores used during alignment
+     * @return pairwise sequence aligner
+     */
+    static <S extends Sequence<C>, C extends Compound> PairwiseSequenceAligner<S, C> getPairwiseAligner(
+            S query, S target, PairwiseAligner type, GapPenalty gapPenalty, SubstitutionMatrix<C> subMatrix) {
+        switch (type) {
+        default:
+        case GLOBAL:
+            return new NeedlemanWunsch<S, C>(query, target, gapPenalty, subMatrix);
+        case LOCAL:
+            return new SmithWaterman<S, C>(query, target, gapPenalty, subMatrix);
+        case GLOBAL_LINEAR_SPACE:
+        case LOCAL_LINEAR_SPACE:
+            // TODO other alignment options (Myers-Miller, Thompson)
+            return null;
+        }
+    }
+
+    /**
      * Factory method which computes a similarity score for the given {@link Sequence} pair.
      *
      * @param <S> each {@link Sequence} of the pair is of type S
@@ -264,6 +319,161 @@ public class Alignments {
     static <S extends Sequence<C>, C extends Compound> int getPairwiseScore(
             S query, S target, PairwiseScorer type, GapPenalty gapPenalty, SubstitutionMatrix<C> subMatrix) {
         return getPairwiseScorer(query, target, type, gapPenalty, subMatrix).getScore();
+    }
+
+    /**
+     * Factory method which constructs a pairwise sequence scorer.
+     *
+     * @param <S> each {@link Sequence} of a pair is of type S
+     * @param <C> each element of a {@link Sequence} is a {@link Compound} of type C
+     * @param query the first {@link Sequence} to score
+     * @param target the second {@link Sequence} to score
+     * @param type chosen type from list of pairwise sequence scoring routines
+     * @param gapPenalty the gap penalties used during alignment
+     * @param subMatrix the set of substitution scores used during alignment
+     * @return sequence pair scorer
+     */
+    static <S extends Sequence<C>, C extends Compound> PairwiseSequenceScorer<S, C> getPairwiseScorer(
+            S query, S target, PairwiseScorer type, GapPenalty gapPenalty, SubstitutionMatrix<C> subMatrix) {
+        switch (type) {
+        default:
+        case GLOBAL:
+            return getPairwiseAligner(query, target, PairwiseAligner.GLOBAL, gapPenalty, subMatrix);
+        case GLOBAL_IDENTITIES:
+            return new FractionalIdentityScorer<S, C>(getPairwiseAligner(query, target, PairwiseAligner.GLOBAL, gapPenalty,
+                    subMatrix));
+        case GLOBAL_SIMILARITIES:
+            return new FractionalSimilarityScorer<S, C>(getPairwiseAligner(query, target, PairwiseAligner.GLOBAL, gapPenalty,
+                    subMatrix));
+        case LOCAL:
+            return getPairwiseAligner(query, target, PairwiseAligner.LOCAL, gapPenalty, subMatrix);
+        case LOCAL_IDENTITIES:
+            return new FractionalIdentityScorer<S, C>(getPairwiseAligner(query, target, PairwiseAligner.LOCAL, gapPenalty,
+                    subMatrix));
+        case LOCAL_SIMILARITIES:
+            return new FractionalSimilarityScorer<S, C>(getPairwiseAligner(query, target, PairwiseAligner.LOCAL, gapPenalty,
+                    subMatrix));
+        case KMERS:
+        case WU_MANBER:
+            // TODO other scoring options
+            return null;
+        }
+    }
+
+    /**
+     * Factory method which constructs a profile-profile aligner.
+     *
+     * @param <S> each {@link Sequence} of an alignment profile is of type S
+     * @param <C> each element of an {@link AlignedSequence} is a {@link Compound} of type C
+     * @param profile1 the first {@link Profile} to align
+     * @param profile2 the second {@link Profile} to align
+     * @param type chosen type from list of profile-profile alignment routines
+     * @param gapPenalty the gap penalties used during alignment
+     * @param subMatrix the set of substitution scores used during alignment
+     * @return profile-profile aligner
+     */
+    static <S extends Sequence<C>, C extends Compound> ProfileProfileAligner<S, C> getProfileProfileAligner(
+            Profile<S, C> profile1, Profile<S, C> profile2, ProfileAligner type, GapPenalty gapPenalty,
+            SubstitutionMatrix<C> subMatrix) {
+        switch (type) {
+        default:
+        case GLOBAL:
+            return new SimpleProfileProfileAligner<S, C>(profile1, profile2, gapPenalty, subMatrix);
+        case GLOBAL_LINEAR_SPACE:
+        case GLOBAL_CONSENSUS:
+        case LOCAL:
+        case LOCAL_LINEAR_SPACE:
+        case LOCAL_CONSENSUS:
+            // TODO other alignment options (Myers-Miller, consensus, local)
+            return null;
+        }
+    }
+
+    /**
+     * Factory method which constructs a profile-profile aligner.
+     *
+     * @param <S> each {@link Sequence} of an alignment profile is of type S
+     * @param <C> each element of an {@link AlignedSequence} is a {@link Compound} of type C
+     * @param profile1 the first {@link Profile} to align
+     * @param profile2 the second {@link Profile} to align
+     * @param type chosen type from list of profile-profile alignment routines
+     * @param gapPenalty the gap penalties used during alignment
+     * @param subMatrix the set of substitution scores used during alignment
+     * @return profile-profile aligner
+     */
+    static <S extends Sequence<C>, C extends Compound> ProfileProfileAligner<S, C> getProfileProfileAligner(
+            Future<ProfilePair<S, C>> profile1, Future<ProfilePair<S, C>> profile2, ProfileAligner type,
+            GapPenalty gapPenalty, SubstitutionMatrix<C> subMatrix) {
+        switch (type) {
+        default:
+        case GLOBAL:
+            return new SimpleProfileProfileAligner<S, C>(profile1, profile2, gapPenalty, subMatrix);
+        case GLOBAL_LINEAR_SPACE:
+        case GLOBAL_CONSENSUS:
+        case LOCAL:
+        case LOCAL_LINEAR_SPACE:
+        case LOCAL_CONSENSUS:
+            // TODO other alignment options (Myers-Miller, consensus, local)
+            return null;
+        }
+    }
+
+    /**
+     * Factory method which constructs a profile-profile aligner.
+     *
+     * @param <S> each {@link Sequence} of an alignment profile is of type S
+     * @param <C> each element of an {@link AlignedSequence} is a {@link Compound} of type C
+     * @param profile1 the first {@link Profile} to align
+     * @param profile2 the second {@link Profile} to align
+     * @param type chosen type from list of profile-profile alignment routines
+     * @param gapPenalty the gap penalties used during alignment
+     * @param subMatrix the set of substitution scores used during alignment
+     * @return profile-profile aligner
+     */
+    static <S extends Sequence<C>, C extends Compound> ProfileProfileAligner<S, C> getProfileProfileAligner(
+            Profile<S, C> profile1, Future<ProfilePair<S, C>> profile2, ProfileAligner type, GapPenalty gapPenalty,
+            SubstitutionMatrix<C> subMatrix) {
+        switch (type) {
+        default:
+        case GLOBAL:
+            return new SimpleProfileProfileAligner<S, C>(profile1, profile2, gapPenalty, subMatrix);
+        case GLOBAL_LINEAR_SPACE:
+        case GLOBAL_CONSENSUS:
+        case LOCAL:
+        case LOCAL_LINEAR_SPACE:
+        case LOCAL_CONSENSUS:
+            // TODO other alignment options (Myers-Miller, consensus, local)
+            return null;
+        }
+    }
+
+    /**
+     * Factory method which constructs a profile-profile aligner.
+     *
+     * @param <S> each {@link Sequence} of an alignment profile is of type S
+     * @param <C> each element of an {@link AlignedSequence} is a {@link Compound} of type C
+     * @param profile1 the first {@link Profile} to align
+     * @param profile2 the second {@link Profile} to align
+     * @param type chosen type from list of profile-profile alignment routines
+     * @param gapPenalty the gap penalties used during alignment
+     * @param subMatrix the set of substitution scores used during alignment
+     * @return profile-profile aligner
+     */
+    static <S extends Sequence<C>, C extends Compound> ProfileProfileAligner<S, C> getProfileProfileAligner(
+            Future<ProfilePair<S, C>> profile1, Profile<S, C> profile2, ProfileAligner type, GapPenalty gapPenalty,
+            SubstitutionMatrix<C> subMatrix) {
+        switch (type) {
+        default:
+        case GLOBAL:
+            return new SimpleProfileProfileAligner<S, C>(profile1, profile2, gapPenalty, subMatrix);
+        case GLOBAL_LINEAR_SPACE:
+        case GLOBAL_CONSENSUS:
+        case LOCAL:
+        case LOCAL_LINEAR_SPACE:
+        case LOCAL_CONSENSUS:
+            // TODO other alignment options (Myers-Miller, consensus, local)
+            return null;
+        }
     }
 
     /**
@@ -401,140 +611,6 @@ public class Alignments {
                     String.format("Aligning pair %d of %d", n++, all)));
         }
         return getListFromFutures(futures);
-    }
-
-    // helper methods
-
-    // retrieves calculated elements from a list on the concurrent execution queue
-    private static <E> List<E> getListFromFutures(List<Future<E>> futures) {
-        List<E> list = new ArrayList<E>();
-        for (Future<E> f : futures) {
-            // TODO when added to ConcurrencyTools, log completions and exceptions instead of printing stack traces
-            try {
-                list.add(f.get());
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            } catch (ExecutionException e) {
-                e.printStackTrace();
-            }
-        }
-        return list;
-    }
-
-    // constructs a pairwise sequence aligner
-    private static <S extends Sequence<C>, C extends Compound> PairwiseSequenceAligner<S, C> getPairwiseAligner(
-            S query, S target, PairwiseAligner type, GapPenalty gapPenalty, SubstitutionMatrix<C> subMatrix) {
-        switch (type) {
-        default:
-        case GLOBAL:
-            return new NeedlemanWunsch<S, C>(query, target, gapPenalty, subMatrix);
-        case LOCAL:
-            return new SmithWaterman<S, C>(query, target, gapPenalty, subMatrix);
-        case GLOBAL_LINEAR_SPACE:
-        case LOCAL_LINEAR_SPACE:
-            // TODO other alignment options (Myers-Miller, Thompson)
-            return null;
-        }
-    }
-
-    // constructs a pairwise sequence scorer
-    private static <S extends Sequence<C>, C extends Compound> PairwiseSequenceScorer<S, C> getPairwiseScorer(
-            S query, S target, PairwiseScorer type, GapPenalty gapPenalty, SubstitutionMatrix<C> subMatrix) {
-        switch (type) {
-        default:
-        case GLOBAL:
-            return getPairwiseAligner(query, target, PairwiseAligner.GLOBAL, gapPenalty, subMatrix);
-        case GLOBAL_IDENTITIES:
-            return new FractionalIdentityScorer<S, C>(getPairwiseAligner(query, target, PairwiseAligner.GLOBAL, gapPenalty,
-                    subMatrix));
-        case GLOBAL_SIMILARITIES:
-            return new FractionalSimilarityScorer<S, C>(getPairwiseAligner(query, target, PairwiseAligner.GLOBAL, gapPenalty,
-                    subMatrix));
-        case LOCAL:
-            return getPairwiseAligner(query, target, PairwiseAligner.LOCAL, gapPenalty, subMatrix);
-        case LOCAL_IDENTITIES:
-            return new FractionalIdentityScorer<S, C>(getPairwiseAligner(query, target, PairwiseAligner.LOCAL, gapPenalty,
-                    subMatrix));
-        case LOCAL_SIMILARITIES:
-            return new FractionalSimilarityScorer<S, C>(getPairwiseAligner(query, target, PairwiseAligner.LOCAL, gapPenalty,
-                    subMatrix));
-        case KMERS:
-        case WU_MANBER:
-            // TODO other scoring options
-            return null;
-        }
-    }
-
-    // constructs a profile-profile aligner
-    private static <S extends Sequence<C>, C extends Compound> ProfileProfileAligner<S, C> getProfileProfileAligner(
-            Profile<S, C> profile1, Profile<S, C> profile2, ProfileAligner type, GapPenalty gapPenalty,
-            SubstitutionMatrix<C> subMatrix) {
-        switch (type) {
-        default:
-        case GLOBAL:
-            return new SimpleProfileProfileAligner<S, C>(profile1, profile2, gapPenalty, subMatrix);
-        case GLOBAL_LINEAR_SPACE:
-        case GLOBAL_CONSENSUS:
-        case LOCAL:
-        case LOCAL_LINEAR_SPACE:
-        case LOCAL_CONSENSUS:
-            // TODO other alignment options (Myers-Miller, consensus, local)
-            return null;
-        }
-    }
-
-    // constructs a profile-profile aligner
-    private static <S extends Sequence<C>, C extends Compound> ProfileProfileAligner<S, C> getProfileProfileAligner(
-            Future<ProfilePair<S, C>> profile1, Future<ProfilePair<S, C>> profile2, ProfileAligner type,
-            GapPenalty gapPenalty, SubstitutionMatrix<C> subMatrix) {
-        switch (type) {
-        default:
-        case GLOBAL:
-            return new SimpleProfileProfileAligner<S, C>(profile1, profile2, gapPenalty, subMatrix);
-        case GLOBAL_LINEAR_SPACE:
-        case GLOBAL_CONSENSUS:
-        case LOCAL:
-        case LOCAL_LINEAR_SPACE:
-        case LOCAL_CONSENSUS:
-            // TODO other alignment options (Myers-Miller, consensus, local)
-            return null;
-        }
-    }
-
-    // constructs a profile-profile aligner
-    private static <S extends Sequence<C>, C extends Compound> ProfileProfileAligner<S, C> getProfileProfileAligner(
-            Profile<S, C> profile1, Future<ProfilePair<S, C>> profile2, ProfileAligner type, GapPenalty gapPenalty,
-            SubstitutionMatrix<C> subMatrix) {
-        switch (type) {
-        default:
-        case GLOBAL:
-            return new SimpleProfileProfileAligner<S, C>(profile1, profile2, gapPenalty, subMatrix);
-        case GLOBAL_LINEAR_SPACE:
-        case GLOBAL_CONSENSUS:
-        case LOCAL:
-        case LOCAL_LINEAR_SPACE:
-        case LOCAL_CONSENSUS:
-            // TODO other alignment options (Myers-Miller, consensus, local)
-            return null;
-        }
-    }
-
-    // constructs a profile-profile aligner
-    private static <S extends Sequence<C>, C extends Compound> ProfileProfileAligner<S, C> getProfileProfileAligner(
-            Future<ProfilePair<S, C>> profile1, Profile<S, C> profile2, ProfileAligner type, GapPenalty gapPenalty,
-            SubstitutionMatrix<C> subMatrix) {
-        switch (type) {
-        default:
-        case GLOBAL:
-            return new SimpleProfileProfileAligner<S, C>(profile1, profile2, gapPenalty, subMatrix);
-        case GLOBAL_LINEAR_SPACE:
-        case GLOBAL_CONSENSUS:
-        case LOCAL:
-        case LOCAL_LINEAR_SPACE:
-        case LOCAL_CONSENSUS:
-            // TODO other alignment options (Myers-Miller, consensus, local)
-            return null;
-        }
     }
 
 }
