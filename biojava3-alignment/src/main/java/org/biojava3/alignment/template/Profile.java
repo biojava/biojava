@@ -219,6 +219,15 @@ public interface Profile<S extends Sequence<C>, C extends Compound> extends Iter
     ProfileView<S, C> getSubProfile(Location location);
 
     /**
+     * Returns true if any {@link AlignedSequence} has a gap at the given index.
+     *
+     * @param alignmentIndex column index within an alignment
+     * @return true if any {@link AlignedSequence} has a gap at the given index
+     * @throws IndexOutOfBoundsException if alignmentIndex < 1 or alignmentIndex > {@link #getLength()}
+     */
+    boolean hasGap(int alignmentIndex);
+
+    /**
      * Returns true if any {@link AlignedSequence} is circular.  If so, sequences may simply wrap around from the end
      * to the start of the alignment or they may contribute multiple overlapping lines to the profile.
      *

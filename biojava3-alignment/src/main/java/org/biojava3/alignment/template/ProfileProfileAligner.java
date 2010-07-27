@@ -33,7 +33,7 @@ import org.biojava3.core.sequence.template.Sequence;
  * @param <S> each {@link Sequence} in the pair of alignment {@link Profile}s is of type S
  * @param <C> each element of an {@link AlignedSequence} is a {@link Compound} of type C
  */
-public interface ProfileProfileAligner<S extends Sequence<C>, C extends Compound> extends MatrixAligner<S, C>,
+public interface ProfileProfileAligner<S extends Sequence<C>, C extends Compound> extends Aligner<S, C>,
         ProfileProfileScorer<S, C> {
 
     // combines 2 interfaces

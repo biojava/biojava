@@ -306,6 +306,17 @@ public class SimpleProfile<S extends Sequence<C>, C extends Compound> implements
     }
 
     @Override
+    public boolean hasGap(int alignmentIndex) {
+        C gap = getCompoundSet().getCompoundForString("-");
+        for (C compound : getCompoundsAt(alignmentIndex)) {
+            if (getCompoundSet().compoundsEquivalent(compound, gap)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
     public boolean isCircular() {
         for (AlignedSequence<S, C> s : list) {
             if (s.isCircular()) {

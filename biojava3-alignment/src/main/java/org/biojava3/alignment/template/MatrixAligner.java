@@ -27,7 +27,7 @@ import org.biojava3.core.sequence.template.Compound;
 import org.biojava3.core.sequence.template.Sequence;
 
 /**
- * Defines an {@link Aligner} which builds a score matrix during computation.
+ * Defines an {@link Aligner} which builds a score matrix during computation.  TODO: support multiple score matrices.
  *
  * @author Mark Chapman
  * @param <S> each element of the alignment {@link Profile} is of type S
