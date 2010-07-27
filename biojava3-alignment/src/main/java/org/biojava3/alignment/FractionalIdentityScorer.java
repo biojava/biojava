@@ -42,8 +42,13 @@ import org.biojava3.core.sequence.template.Sequence;
 public class FractionalIdentityScorer<S extends Sequence<C>, C extends Compound> extends AbstractScorer
         implements PairwiseSequenceScorer<S, C> {
 
-    private PairwiseSequenceAligner<S, C> aligner;
+    // input field
     private SequencePair<S, C> pair;
+
+    // optional cached input field
+    private PairwiseSequenceAligner<S, C> aligner;
+
+    // output fields
     private int max, score;
 
     /**
@@ -98,6 +103,7 @@ public class FractionalIdentityScorer<S extends Sequence<C>, C extends Compound>
         this.pair = pair;
         max = pair.getLength();
         score = pair.getNumIdenticals();
+        aligner = null;
     }
 
 }

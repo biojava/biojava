@@ -42,6 +42,11 @@ public interface AlignedSequence<S extends Sequence<C>, C extends Compound> exte
     enum Step { COMPOUND, GAP }
 
     /**
+     * Nullifies cached arrays/objects.
+     */
+    void clearCache();
+
+    /**
      * Returns the column index within an alignment corresponding to the given index in the original {@link Sequence}.
      * Both indices are 1-indexed and inclusive.
      *

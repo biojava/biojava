@@ -52,7 +52,7 @@ public class Alignments {
         GLOBAL,              // Needleman-Wunsch/Gotoh
         GLOBAL_LINEAR_SPACE, // Myers-Miller/Thompson
         LOCAL,               // Smith-Waterman/Gotoh
-        LOCAL_LINEAR_SPACE   // Smith-Waterman/Gotoh with 
+        LOCAL_LINEAR_SPACE   // Smith-Waterman/Gotoh with smart traceback at each maximum
     }
 
     /**
@@ -166,6 +166,7 @@ public class Alignments {
 
         // stage 2: hierarchical clustering into a guide tree
         GuideTree<S, C> tree = new GuideTree<S, C>(sequences, scorers);
+        scorers = null;
 
         // stage 3: progressive alignment
         Profile<S, C> msa = getProgressiveAlignment(tree, pa, gapPenalty, subMatrix);

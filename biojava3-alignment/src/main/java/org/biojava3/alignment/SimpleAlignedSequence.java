@@ -124,6 +124,12 @@ public class SimpleAlignedSequence<S extends Sequence<C>, C extends Compound> im
     // methods for AlignedSequence
 
     @Override
+    public void clearCache() {
+        alignmentFromSequence = null;
+        sequenceFromAlignment = null;
+    }
+
+    @Override
     public int getAlignmentIndexAt(int sequenceIndex) {
         if (alignmentFromSequence == null) {
             alignmentFromSequence = new int[original.getLength()];

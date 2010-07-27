@@ -103,7 +103,7 @@ public class SimpleGapPenalty implements GapPenalty {
 
     // helper method to set the type given the open and extension penalties
     private void setType() {
-        type = (gep == 0) ? GapPenalty.Type.CONSTANT : ((gop == 0) ? GapPenalty.Type.LINEAR : GapPenalty.Type.AFFINE);
+        type = (gop == 0) ? GapPenalty.Type.LINEAR : ((gep == 0) ? GapPenalty.Type.CONSTANT : GapPenalty.Type.AFFINE);
     }
 
 }

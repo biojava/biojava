@@ -125,6 +125,8 @@ public class SimpleSequencePair<S extends Sequence<C>, C extends Compound> exten
                 }
             }
         }
+        getQuery().clearCache();
+        getTarget().clearCache();
         return identicals;
     }
 
@@ -138,6 +140,8 @@ public class SimpleSequencePair<S extends Sequence<C>, C extends Compound> exten
                 }
             }
         }
+        getQuery().clearCache();
+        getTarget().clearCache();
         return similars;
     }
 
