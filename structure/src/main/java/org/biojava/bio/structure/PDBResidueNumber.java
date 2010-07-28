@@ -24,14 +24,20 @@
 
 package org.biojava.bio.structure;
 
+import java.io.Serializable;
+
 /** Everything that is needed to uniquely describe a residue position
  * 
  * @author Andreas Prlic
  *
  */
-public class PDBResidueNumber
+public class PDBResidueNumber implements Serializable
 {
    
+   /**
+    * 
+    */
+   private static final long serialVersionUID = 1773011704758536083L;
    String chainId;
    String insCode;
    Integer residueNumber;
