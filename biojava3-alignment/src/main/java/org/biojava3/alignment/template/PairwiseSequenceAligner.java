@@ -36,6 +36,11 @@ import org.biojava3.core.sequence.template.Sequence;
 public interface PairwiseSequenceAligner<S extends Sequence<C>, C extends Compound> extends Aligner<S, C>,
         PairwiseSequenceScorer<S, C> {
 
-    // combines 2 interfaces
+    /**
+     * Returns sequence alignment pair.
+     *
+     * @return sequence alignment pair
+     */
+    SequencePair<S, C> getPair();
 
 }

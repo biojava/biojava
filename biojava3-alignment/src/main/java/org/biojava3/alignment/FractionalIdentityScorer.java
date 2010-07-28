@@ -42,14 +42,12 @@ import org.biojava3.core.sequence.template.Sequence;
 public class FractionalIdentityScorer<S extends Sequence<C>, C extends Compound> extends AbstractScorer
         implements PairwiseSequenceScorer<S, C> {
 
-    // input field
-    private SequencePair<S, C> pair;
+    // always stored
+    private S query, target;
+    private int max, score;
 
     // optional cached input field
     private PairwiseSequenceAligner<S, C> aligner;
-
-    // output fields
-    private int max, score;
 
     /**
      * Creates a fractional identity scorer for a pair of sequences aligned by the given pairwise sequence aligner.
@@ -69,17 +67,23 @@ public class FractionalIdentityScorer<S extends Sequence<C>, C extends Compound>
         set(pair);
     }
 
+    // methods for PairwiseSequenceScorer
+
     @Override
-    public SequencePair<S, C> getPair() {
-        if (pair == null && aligner != null) {
-            set(aligner.getPair());
-        }
-        return pair;
+    public S getQuery() {
+        return query;
     }
 
     @Override
+    public S getTarget() {
+        return target;
+    }
+
+    // methods for Scorer
+
+    @Override
     public int getMaxScore() {
-        if (pair == null && aligner != null) {
+        if ((query == null || target == null) && aligner != null) {
             set(aligner.getPair());
         }
         return max;
@@ -92,7 +96,7 @@ public class FractionalIdentityScorer<S extends Sequence<C>, C extends Compound>
 
     @Override
     public int getScore() {
-        if (pair == null && aligner != null) {
+        if ((query == null || target == null) && aligner != null) {
             set(aligner.getPair());
         }
         return score;
@@ -100,7 +104,8 @@ public class FractionalIdentityScorer<S extends Sequence<C>, C extends Compound>
 
     // helper method for initialization
     private void set(SequencePair<S, C> pair) {
-        this.pair = pair;
+        query = pair.getQuery().getOriginalSequence();
+        target = pair.getTarget().getOriginalSequence();
         max = pair.getLength();
         score = pair.getNumIdenticals();
         aligner = null;

@@ -27,19 +27,26 @@ import org.biojava3.core.sequence.template.Compound;
 import org.biojava3.core.sequence.template.Sequence;
 
 /**
- * Defines an algorithm which computes a score for a sequence alignment pair.
+ * Defines an algorithm which computes a score for a pair of sequences.
  *
  * @author Mark Chapman
  * @param <S> each {@link Sequence} of the alignment pair is of type S
- * @param <C> each element of an {@link AlignedSequence} is a {@link Compound} of type C
+ * @param <C> each element of an Sequence is a {@link Compound} of type C
  */
 public interface PairwiseSequenceScorer<S extends Sequence<C>, C extends Compound> extends Scorer {
 
     /**
-     * Returns pair for which score was calculated.
+     * Returns the first sequence of the pair.
      *
-     * @return sequence alignment pair
+     * @return the first sequence of the pair
      */
-    SequencePair<S, C> getPair();
+    S getQuery();
+
+    /**
+     * Returns the second sequence of the pair.
+     *
+     * @return the second sequence of the pair
+     */
+    S getTarget();
 
 }

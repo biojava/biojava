@@ -65,9 +65,15 @@ public class FractionalSimilarityScorerTest {
     }
 
     @Test
-    public void testGetPair() {
-        assertEquals(scorer1.getPair(), alignment.getPair());
-        assertEquals(scorer2.getPair(), self.getPair());
+    public void testGetQuery() {
+        assertEquals(scorer1.getQuery(), query);
+        assertEquals(scorer2.getQuery(), query);
+    }
+
+    @Test
+    public void testGetTarget() {
+        assertEquals(scorer1.getQuery(), target);
+        assertEquals(scorer2.getQuery(), query);
     }
 
     @Test

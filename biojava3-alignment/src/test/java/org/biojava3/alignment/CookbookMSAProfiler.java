@@ -1,7 +1,6 @@
 package org.biojava3.alignment;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -9,7 +8,6 @@ import java.util.List;
 import org.biojava3.alignment.Alignments.PairwiseScorer;
 import org.biojava3.alignment.Alignments.ProfileAligner;
 import org.biojava3.alignment.template.GapPenalty;
-import org.biojava3.alignment.template.GuideTreeNode;
 import org.biojava3.alignment.template.PairwiseSequenceScorer;
 import org.biojava3.alignment.template.Profile;
 import org.biojava3.alignment.template.SubstitutionMatrix;
@@ -26,7 +24,7 @@ public class CookbookMSAProfiler {
         private final long timeStart;
 
         private Profiler() {
-            maxMemoryUsed = Math.max(maxMemoryUsed, Runtime.getRuntime().totalMemory());
+            maxMemoryUsed = Runtime.getRuntime().totalMemory();
             timeStart = timeCheckpoint = System.nanoTime();
         }
 
@@ -49,7 +47,7 @@ public class CookbookMSAProfiler {
 
     }
 
-    public static void main(String[] args) throws FileNotFoundException {
+    public static void main(String[] args) throws Exception {
 
         if (args.length < 1) {
             System.err.println("The first argument must be a fasta file of protein sequences.");
@@ -63,17 +61,15 @@ public class CookbookMSAProfiler {
 
         System.out.printf("Loading sequences from %s... ", args[0]);
         List<ProteinSequence> list = new ArrayList<ProteinSequence>();
-        try {
-            list.addAll(FastaReaderHelper.readFastaProteinSequence(new File(args[0])).values());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        list.addAll(FastaReaderHelper.readFastaProteinSequence(new File(args[0])).values());
         if (args.length > 1 && Integer.parseInt(args[1]) < list.size()) {
-            System.out.printf("%s/%d sequences in %d ms%n%n", args[1], list.size(), profiler.getTimeSinceCheckpoint()/1000000);
+            System.out.printf("%s/%d", args[1], list.size());
             list = list.subList(0, Integer.parseInt(args[1]));
         } else {
-            System.out.printf("%d sequences in %d ms%n%n", list.size(), profiler.getTimeSinceCheckpoint()/1000000);
+            System.out.printf("%d", list.size());
         }
+        System.out.printf(" sequences in %d ms using %d kB%n%n", profiler.getTimeSinceCheckpoint()/1000000,
+                profiler.getMaxMemoryUsed()/1024);
 
         profiler.setCheckpoint();
 
@@ -83,7 +79,8 @@ public class CookbookMSAProfiler {
         List<PairwiseSequenceScorer<ProteinSequence, AminoAcidCompound>> scorers = Alignments.getAllPairsScorers(list,
                 PairwiseScorer.GLOBAL_IDENTITIES, gaps, blosum62);
         Alignments.runPairwiseScorers(scorers);
-        System.out.printf("%d scores in %d ms%n%n", scorers.size(), profiler.getTimeSinceCheckpoint()/1000000);
+        System.out.printf("%d scores in %d ms using %d kB%n%n", scorers.size(),
+                profiler.getTimeSinceCheckpoint()/1000000, profiler.getMaxMemoryUsed()/1024);
 
         profiler.setCheckpoint();
 
@@ -91,21 +88,16 @@ public class CookbookMSAProfiler {
         GuideTree<ProteinSequence, AminoAcidCompound> tree = new GuideTree<ProteinSequence, AminoAcidCompound>(list,
                 scorers);
         scorers = null;
-        System.out.printf("%d ms%n%n%s%n%n", profiler.getTimeSinceCheckpoint()/1000000, tree);
+        System.out.printf("%d ms using %d kB%n%n%s%n%n", profiler.getTimeSinceCheckpoint()/1000000,
+                profiler.getMaxMemoryUsed()/1024, tree);
 
         profiler.setCheckpoint();
 
         System.out.print("Stage 3: progressive alignment... ");
-        int ppa = 0;
-        for (GuideTreeNode<ProteinSequence, AminoAcidCompound> n : tree) {
-            if (!n.isLeaf()) {
-                ppa++;
-            }
-        }
         Profile<ProteinSequence, AminoAcidCompound> msa = Alignments.getProgressiveAlignment(tree,
                 ProfileAligner.GLOBAL, gaps, blosum62);
-        System.out.printf("%d profile-profile alignments in %d ms%n%n", ppa,
-                profiler.getTimeSinceCheckpoint()/1000000);
+        System.out.printf("%d profile-profile alignments in %d ms using %d kB%n%n", list.size() - 1,
+                profiler.getTimeSinceCheckpoint()/1000000, profiler.getMaxMemoryUsed()/1024);
         fout.print(msa);
         fout.close();
 
