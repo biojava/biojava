@@ -38,6 +38,7 @@ import org.biojava.bio.alignment.SubstitutionMatrix;
 import org.biojava.bio.seq.ProteinTools;
 import org.biojava.bio.seq.Sequence;
 import org.biojava.bio.structure.AminoAcid;
+import org.biojava.bio.structure.Atom;
 import org.biojava.bio.structure.Chain;
 import org.biojava.bio.structure.Group;
 import org.biojava.bio.structure.HetatomImpl;
@@ -186,8 +187,24 @@ public class SeqRes2AtomAligner {
                    oneLetter = 'X';
                 sequence.append(oneLetter );
             } else {
-                if ( ! excludeTypes.contains(g.getPDBName()))
-                    sequence.append("X");
+                if (  excludeTypes.contains(g.getPDBName()))
+                   continue;
+                
+                if ( g.size() == 1 ) {
+                   try {
+                      Atom a = g.getAtom(0);
+                      if (a.getElement().isMetal())
+                         continue;
+                      
+                    continue;
+                   } catch (StructureException e){
+                      e.printStackTrace();
+                      continue;
+                   }
+                }
+                   
+                   
+                sequence.append("X");
             }
 
         }
@@ -316,8 +333,8 @@ public class SeqRes2AtomAligner {
                 String pdbNameS = s1.getPDBName();
                 String pdbNameA = a1.getPDBName();
                 if ( pdbNameS == null || pdbNameA == null ){
-                	System.err.println("nullvalue found at " + posSeq + " when trying to align " + s1 + " and " + a1 + " " + posAtom);
-                	throw new StructureException("nullvalue found at group.getPDBName()");
+                	System.err.println("null value found at " + posSeq + " when trying to align " + s1 + " and " + a1 + " " + posAtom);
+                	throw new StructureException("null value found at group.getPDBName()");
                 }
                 if (! pdbNameA.equals(pdbNameS)){
                     if ( ! pdbNameA.trim().equals(pdbNameS.trim())) {
