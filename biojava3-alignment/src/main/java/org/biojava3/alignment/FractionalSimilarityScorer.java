@@ -55,6 +55,8 @@ public class FractionalSimilarityScorer<S extends Sequence<C>, C extends Compoun
      * @param aligner a pairwise sequence aligner
      */
     public FractionalSimilarityScorer(PairwiseSequenceAligner<S, C> aligner) {
+        query = aligner.getQuery();
+        target = aligner.getTarget();
         this.aligner = aligner;
     }
 
@@ -64,7 +66,10 @@ public class FractionalSimilarityScorer<S extends Sequence<C>, C extends Compoun
      * @param pair an aligned pair of sequences
      */
     public FractionalSimilarityScorer(SequencePair<S, C> pair) {
-        set(pair);
+        query = pair.getQuery().getOriginalSequence();
+        target = pair.getTarget().getOriginalSequence();
+        max = pair.getLength();
+        score = pair.getNumIdenticals();
     }
 
     // methods for PairwiseSequenceScorer
@@ -83,8 +88,8 @@ public class FractionalSimilarityScorer<S extends Sequence<C>, C extends Compoun
 
     @Override
     public int getMaxScore() {
-        if ((query == null || target == null) && aligner != null) {
-            set(aligner.getPair());
+        if (aligner != null) {
+            align();
         }
         return max;
     }
@@ -96,18 +101,16 @@ public class FractionalSimilarityScorer<S extends Sequence<C>, C extends Compoun
 
     @Override
     public int getScore() {
-        if ((query == null || target == null) && aligner != null) {
-            set(aligner.getPair());
+        if (aligner != null) {
+            align();
         }
         return score;
     }
 
-    // helper method for initialization
-    private void set(SequencePair<S, C> pair) {
-        query = pair.getQuery().getOriginalSequence();
-        target = pair.getTarget().getOriginalSequence();
-        max = pair.getLength();
-        score = pair.getNumSimilars();
+    // helper method for initialization from an aligner
+    private void align() {
+        max = aligner.getPair().getLength();
+        score = aligner.getPair().getNumSimilars();
         aligner = null;
     }
 

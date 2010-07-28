@@ -72,8 +72,8 @@ public class FractionalSimilarityScorerTest {
 
     @Test
     public void testGetTarget() {
-        assertEquals(scorer1.getQuery(), target);
-        assertEquals(scorer2.getQuery(), query);
+        assertEquals(scorer1.getTarget(), target);
+        assertEquals(scorer2.getTarget(), query);
     }
 
     @Test

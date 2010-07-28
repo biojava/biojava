@@ -68,24 +68,6 @@ public abstract class AbstractPairwiseSequenceAligner<S extends Sequence<C>, C e
     }
 
     /**
-     * Returns the query {@link Sequence}.
-     *
-     * @return the first {@link Sequence} of the pair to align
-     */
-    public S getQuery() {
-        return query;
-    }
-
-    /**
-     * Returns the target {@link Sequence}.
-     *
-     * @return the second {@link Sequence} of the pair to align
-     */
-    public S getTarget() {
-        return target;
-    }
-
-    /**
      * Sets the query {@link Sequence}.
      *
      * @param query the first {@link Sequence} of the pair to align
@@ -103,6 +85,18 @@ public abstract class AbstractPairwiseSequenceAligner<S extends Sequence<C>, C e
     public void setTarget(S target) {
         this.target = target;
         reset();
+    }
+
+    // methods for PairwiseSequenceScorer
+
+    @Override
+    public S getQuery() {
+        return query;
+    }
+
+    @Override
+    public S getTarget() {
+        return target;
     }
 
     // method for MatrixAligner
