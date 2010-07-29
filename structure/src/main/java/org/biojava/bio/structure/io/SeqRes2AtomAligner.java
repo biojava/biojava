@@ -44,6 +44,9 @@ import org.biojava.bio.structure.Group;
 import org.biojava.bio.structure.HetatomImpl;
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureException;
+import org.biojava.bio.structure.io.mmcif.chem.PolymerType;
+import org.biojava.bio.structure.io.mmcif.chem.ResidueType;
+import org.biojava.bio.structure.io.mmcif.model.ChemComp;
 import org.biojava.bio.symbol.AlphabetManager;
 import org.biojava.bio.symbol.FiniteAlphabet;
 import org.biojava.bio.symbol.Symbol;
@@ -202,9 +205,26 @@ public class SeqRes2AtomAligner {
                       continue;
                    }
                 }
+                
+                ChemComp cc = g.getChemComp();
+                if ( 
+                      ResidueType.lPeptideLinking.equals(cc.getResidueType()) ||
+                      PolymerType.PROTEIN_ONLY.contains(cc.getPolymerType())  ||
+                      PolymerType.POLYNUCLEOTIDE_ONLY.contains(cc.getPolymerType())
+                      ) {
+                   //System.out.println(cc.getOne_letter_code());
+                   String c = cc.getOne_letter_code();
+                   if ( c.equals("?"))
+                      c = "X";
+                   
+                   sequence.append(c);
+                } else {
+                   //System.out.println(cc);
+                   continue;
+                }
                    
                    
-                sequence.append("X");
+                //sequence.append("X");
             }
 
         }
