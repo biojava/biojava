@@ -12,7 +12,7 @@ import org.biojava3.core.util.ConcurrencyTools;
 
 public class CookbookMSA {
 
-    public static void main(String[] args){
+    public static void main(String[] args) {
         String[] ids = new String[] {"Q21691", "Q21495", "O48771"};
         try {
             multipleSequenceAlignment(ids);
@@ -26,8 +26,7 @@ public class CookbookMSA {
         for (String id : ids) {
             lst.add(getSequenceForId(id));
         }
-        Profile<ProteinSequence, AminoAcidCompound> profile =
-                Alignments.getMultipleSequenceAlignment(lst);
+        Profile<ProteinSequence, AminoAcidCompound> profile = Alignments.getMultipleSequenceAlignment(lst);
         System.out.printf("Clustalw:%n%s%n", profile);
         ConcurrencyTools.shutdown();
     }

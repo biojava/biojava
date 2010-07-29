@@ -23,6 +23,7 @@
 
 package org.biojava3.alignment.template;
 
+import org.biojava3.alignment.Alignments.ProfileProfileAlignerType;
 import org.biojava3.core.sequence.template.Compound;
 import org.biojava3.core.sequence.template.Sequence;
 
@@ -41,6 +42,6 @@ public interface PartitionRefiner<S extends Sequence<C>, C extends Compound> ext
      *
      * @return class type of profile-profile alignment subroutine
      */
-    Class<? extends ProfileProfileAligner<S, C>> getProfileProfileAligner();
+    ProfileProfileAlignerType getProfileProfileAligner();
 
 }

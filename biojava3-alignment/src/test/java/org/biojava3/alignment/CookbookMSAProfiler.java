@@ -5,8 +5,8 @@ import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.biojava3.alignment.Alignments.PairwiseScorer;
-import org.biojava3.alignment.Alignments.ProfileAligner;
+import org.biojava3.alignment.Alignments.PairwiseSequenceScorerType;
+import org.biojava3.alignment.Alignments.ProfileProfileAlignerType;
 import org.biojava3.alignment.template.GapPenalty;
 import org.biojava3.alignment.template.PairwiseSequenceScorer;
 import org.biojava3.alignment.template.Profile;
@@ -77,7 +77,7 @@ public class CookbookMSAProfiler {
         GapPenalty gaps = new SimpleGapPenalty();
         SubstitutionMatrix<AminoAcidCompound> blosum62 = new SimpleSubstitutionMatrix<AminoAcidCompound>();
         List<PairwiseSequenceScorer<ProteinSequence, AminoAcidCompound>> scorers = Alignments.getAllPairsScorers(list,
-                PairwiseScorer.GLOBAL_IDENTITIES, gaps, blosum62);
+                PairwiseSequenceScorerType.GLOBAL_IDENTITIES, gaps, blosum62);
         Alignments.runPairwiseScorers(scorers);
         System.out.printf("%d scores in %d ms using %d kB%n%n", scorers.size(),
                 profiler.getTimeSinceCheckpoint()/1000000, profiler.getMaxMemoryUsed()/1024);
@@ -95,7 +95,7 @@ public class CookbookMSAProfiler {
 
         System.out.print("Stage 3: progressive alignment... ");
         Profile<ProteinSequence, AminoAcidCompound> msa = Alignments.getProgressiveAlignment(tree,
-                ProfileAligner.GLOBAL, gaps, blosum62);
+                ProfileProfileAlignerType.GLOBAL, gaps, blosum62);
         System.out.printf("%d profile-profile alignments in %d ms using %d kB%n%n", list.size() - 1,
                 profiler.getTimeSinceCheckpoint()/1000000, profiler.getMaxMemoryUsed()/1024);
         fout.print(msa);

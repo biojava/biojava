@@ -28,8 +28,8 @@ import static org.junit.Assert.*;
 import java.util.Arrays;
 import java.util.List;
 
-import org.biojava3.alignment.Alignments.PairwiseScorer;
-import org.biojava3.alignment.Alignments.ProfileAligner;
+import org.biojava3.alignment.Alignments.PairwiseSequenceScorerType;
+import org.biojava3.alignment.Alignments.ProfileProfileAlignerType;
 import org.biojava3.alignment.template.GapPenalty;
 import org.biojava3.alignment.template.GuideTreeNode;
 import org.biojava3.alignment.template.SubstitutionMatrix;
@@ -53,7 +53,7 @@ public class GuideTreeTest {
         gaps = new SimpleGapPenalty((short) 2, (short) 1);
         blosum62 = SubstitutionMatrixHelper.getBlosum62();
         tree = new GuideTree<ProteinSequence, AminoAcidCompound>(proteins, Alignments.getAllPairsScorers(proteins,
-                PairwiseScorer.GLOBAL_IDENTITIES, gaps, blosum62));
+                PairwiseSequenceScorerType.GLOBAL_IDENTITIES, gaps, blosum62));
     }
 
     @Test
@@ -78,8 +78,8 @@ public class GuideTreeTest {
 
     @Test
     public void testGetRoot() {
-        assertEquals(Alignments.getProgressiveAlignment(tree, ProfileAligner.GLOBAL, gaps, blosum62).toString(),
-                String.format("%s%n%s%n%s%n%s%n",
+        assertEquals(Alignments.getProgressiveAlignment(tree, ProfileProfileAlignerType.GLOBAL, gaps,
+                blosum62).toString(), String.format("%s%n%s%n%s%n%s%n",
                 "--ARND-",
                 "--ARND-",
                 "HILK---",

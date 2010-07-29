@@ -4,7 +4,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.biojava3.alignment.Alignments.PairwiseAligner;
+import org.biojava3.alignment.Alignments.PairwiseSequenceAlignerType;
 import org.biojava3.alignment.template.SequencePair;
 import org.biojava3.alignment.template.SubstitutionMatrix;
 import org.biojava3.core.sequence.ProteinSequence;
@@ -14,7 +14,7 @@ import org.biojava3.core.util.ConcurrencyTools;
 
 public class CookbookAlignAllLocal {
 
-    public static void main(String[] args){
+    public static void main(String[] args) {
         String[] ids = new String[] {"Q21691", "Q21495", "O48771"};
         try {
             alignAllLocal(ids);
@@ -29,8 +29,8 @@ public class CookbookAlignAllLocal {
             lst.add(getSequenceForId(id));
         }
         SubstitutionMatrix<AminoAcidCompound> matrix = new SimpleSubstitutionMatrix<AminoAcidCompound>();
-        List<SequencePair<ProteinSequence, AminoAcidCompound>> alig =
-                Alignments.getAllPairsAlignments(lst, PairwiseAligner.LOCAL, new SimpleGapPenalty(), matrix);
+        List<SequencePair<ProteinSequence, AminoAcidCompound>> alig = Alignments.getAllPairsAlignments(lst,
+                PairwiseSequenceAlignerType.LOCAL, new SimpleGapPenalty(), matrix);
         for (SequencePair<ProteinSequence, AminoAcidCompound> pair : alig) {
             System.out.printf("%n%s vs %s%n%s", pair.getQuery().getAccession(), pair.getTarget().getAccession(), pair);
         }
