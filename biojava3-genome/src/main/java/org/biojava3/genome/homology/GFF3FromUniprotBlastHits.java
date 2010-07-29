@@ -14,7 +14,7 @@ import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
 import org.biojava3.alignment.Alignments;
-import org.biojava3.alignment.Alignments.PairwiseAligner;
+import org.biojava3.alignment.Alignments.PairwiseSequenceAlignerType;
 import org.biojava3.alignment.SimpleGapPenalty;
 import org.biojava3.alignment.SimpleSubstitutionMatrix;
 import org.biojava3.alignment.template.SequencePair;
@@ -94,8 +94,9 @@ public class GFF3FromUniprotBlastHits {
                     }
 
                     SequencePair<ProteinSequence, AminoAcidCompound> alignment = Alignments.getPairwiseAlignment(
-                            transcriptSequence.getProteinSequence(), proteinSequence, PairwiseAligner.LOCAL,
-                            new SimpleGapPenalty(), new SimpleSubstitutionMatrix<AminoAcidCompound>());
+                            transcriptSequence.getProteinSequence(), proteinSequence,
+                            PairwiseSequenceAlignerType.LOCAL, new SimpleGapPenalty(),
+                            new SimpleSubstitutionMatrix<AminoAcidCompound>());
                     // System.out.println();
                     //    System.out.println(alignment.getSummary());
                     //   System.out.println(new Pair().format(alignment));
