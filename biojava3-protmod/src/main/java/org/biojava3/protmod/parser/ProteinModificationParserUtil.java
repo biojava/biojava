@@ -31,7 +31,6 @@ import java.util.List;
 import org.biojava.bio.structure.Atom;
 import org.biojava.bio.structure.Calc;
 import org.biojava.bio.structure.Group;
-import org.biojava.bio.structure.GroupType;
 import org.biojava.bio.structure.StructureException;
 
 final class ProteinModificationParserUtil {
@@ -46,7 +45,9 @@ final class ProteinModificationParserUtil {
 	 * Find a linkage between two groups within tolerance of bond length,
 	 * from potential atoms.
 	 * @param group1 the first {@link Group}.
+	 * @param isGroup1AminoAcid true if group1 is an amino acid.
 	 * @param group2 the second {@link Group}.
+	 * @param isGroup2AminoAcid true if group2 is an amino acid.
 	 * @param potentialNamesOfAtomOnGroup1 potential names of the atom on the first group.
 	 * 		  If null, search all atoms on the first group.
 	 * @param potentialNamesOfAtomOnGroup2 potential names of the atom on the second group.
@@ -55,10 +56,11 @@ final class ProteinModificationParserUtil {
 	 * @return an array of two Atoms that form bond between each other
 	 *  if found; null, otherwise.
 	 */
-	public static Atom[] findNearestNonNCAtomLinkage(final Group group1, final Group group2,
+	public static Atom[] findNearestNonNCAtomLinkage(final Group group1,
+			final boolean isGroup1AminoAcid, final Group group2, final boolean isGroup2AminoAcid,
 			List<String> potentialNamesOfAtomOnGroup1, List<String> potentialNamesOfAtomOnGroup2,
 			double bondLengthTolerance) {
-		List<Atom[]> linkages = findNonNCAtomLinkages(group1, group2,
+		List<Atom[]> linkages = findNonNCAtomLinkages(group1, isGroup1AminoAcid, group2, isGroup2AminoAcid,
 				potentialNamesOfAtomOnGroup1, potentialNamesOfAtomOnGroup2, bondLengthTolerance);
 		
 		Atom[] ret = null;
@@ -85,21 +87,26 @@ final class ProteinModificationParserUtil {
 	 * Find non-N-C linkages between two groups within tolerance of bond length,
 	 * from potential atoms.
 	 * @param group1 the first {@link Group}.
+	 * @param isGroup1AminoAcid true if group1 is an amino acid.
 	 * @param group2 the second {@link Group}.
+	 * @param isGroup2AminoAcid true if group2 is an amino acid.
 	 * @param bondLengthTolerance bond length error tolerance.
 	 * @return a list, each element of which is an array of two Atoms that form bond 
 	 * between each other.
 	 */
-	public static List<Atom[]> findNonNCAtomLinkages(final Group group1, final Group group2,
-			double bondLengthTolerance) {
-		return findNonNCAtomLinkages(group1, group2, null, null, bondLengthTolerance);
+	public static List<Atom[]> findNonNCAtomLinkages(final Group group1, final boolean isGroup1AminoAcid,
+			final Group group2, final boolean isGroup2AminoAcid, final double bondLengthTolerance) {
+		return findNonNCAtomLinkages(group1, isGroup1AminoAcid, group2,
+				isGroup2AminoAcid, null, null, bondLengthTolerance);
 	}
 	
 	/**
 	 * Find non-N-C linkages between two groups within tolerance of bond length,
 	 * from potential atoms.
 	 * @param group1 the first {@link Group}.
+	 * @param isGroup1AminoAcid true if group1 is an amino acid.
 	 * @param group2 the second {@link Group}.
+	 * @param isGroup2AminoAcid true if group2 is an amino acid.
 	 * @param potentialNamesOfAtomOnGroup1 potential names of the atom on the first group.
 	 * 		  If null, search all atoms on the first group.
 	 * @param potentialNamesOfAtomOnGroup2 potential names of the atom on the second group.
@@ -108,9 +115,12 @@ final class ProteinModificationParserUtil {
 	 * @return a list, each element of which is an array of two Atoms that form bond 
 	 * between each other.
 	 */
-	public static List<Atom[]> findNonNCAtomLinkages(final Group group1, final Group group2,
-			List<String> potentialNamesOfAtomOnGroup1, List<String> potentialNamesOfAtomOnGroup2,
-			double bondLengthTolerance) {
+	public static List<Atom[]> findNonNCAtomLinkages(final Group group1, 
+			final boolean isGroup1AminoAcid,  final Group group2,
+			final boolean isGroup2AminoAcid,
+			List<String> potentialNamesOfAtomOnGroup1,
+			List<String> potentialNamesOfAtomOnGroup2,
+			final double bondLengthTolerance) {
 		if (group1==null || group2==null) {
 			throw new IllegalArgumentException("Null group(s).");
 		}
@@ -136,13 +146,9 @@ final class ProteinModificationParserUtil {
 				Atom[] atoms = findLinkage(group1, group2, namesOfAtomOnGroup1,
 						namesOfAtomOnGroup2, bondLengthTolerance);
 				if (atoms != null) {
-					if (((atoms[0].getName().equals("N") && atoms[1].getName().equals("C"))
-								|| (atoms[0].getName().equals("C") && atoms[1].getName().equals("N")))
-							// TODO: is this the correct way to determine a amino acid?
-							&& (atoms[0].getParent().getType().equals(GroupType.AMINOACID) ||
-									atoms[0].getParent().hasAminoAtoms())
-							&& (atoms[0].getParent().getType().equals(GroupType.AMINOACID) ||
-									atoms[1].getParent().hasAminoAtoms())
+					if (isGroup1AminoAcid && isGroup2AminoAcid &&
+							((atoms[0].getName().equals("N") && atoms[1].getName().equals("C"))
+									|| (atoms[0].getName().equals("C") && atoms[1].getName().equals("N")))
 								) {
 						continue;
 					}

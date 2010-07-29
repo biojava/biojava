@@ -238,7 +238,7 @@
 		<Category>modified residue</Category>
 		<Keyword>phosphoprotein</Keyword>
 	</Entry>
-	<!--Entry>
+	<Entry>
 		<Id>0009</Id>
 		<Description>A protein modification that effectively converts an L-glutamine residue to N-acetyl-L-glutamine.</Description>
 		<SystematicName>(S)-2-acetamido-5-pentanediamic acid</SystematicName>
@@ -303,7 +303,7 @@
 		<Category>attachment</Category>
 		<Keyword>thioether bond</Keyword>
 		<Keyword>acetylated amino end</Keyword>
-	</Entry-->
+	</Entry>
 	<Entry>
 		<Id>0011</Id>
 		<Description>A protein modification that effectively converts an L-lysine residue to N6-acetyl-L-lysine.</Description>
@@ -7658,5 +7658,741 @@
 		</Condition>
 		<Occurrence>natural</Occurrence>
 		<Category>modified residue</Category>
+	</Entry>
+	<Entry>
+		<Id>0229</Id>
+		<Description>A protein modification that effectively converts an L-alanine residue to N-acetyl-L-alanine.</Description>
+		<SystematicName>(2S)-2-(acetamido)propanoic acid</SystematicName>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0041</Id>
+			<Name>N-acetyl-L-alanine</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00050</Id>
+			<Name>N-acetyl-L-alanine</Name>
+		</CrossReference>
+		<Formula>C 5 H 8 N 1 O 2</Formula>
+		<Condition>
+			<Component type="AminoAcid" label="1">
+				<Id source="PDBCC">ALA</Id>
+				<Terminal>N</Terminal>
+			</Component>
+			<Component type="Ligand" label="2">
+				<Id source="PDBCC">ACE</Id>
+			</Component>
+			<Bond>
+				<Atom component="1">N</Atom>
+				<Atom component="2">C</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>attachment</Category>
+		<Keyword>acetylated amino end</Keyword>
+	</Entry>
+	<Entry>
+		<Id>0230</Id>
+		<Description>A protein modification that effectively converts an L-aspartic acid residue to N-acetyl-L-aspartic acid.</Description>
+		<SystematicName>(S)-2-(acetamido)butanedioic acid</SystematicName>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0042</Id>
+			<Name>N-acetyl-L-aspartic acid</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00051</Id>
+			<Name>N-acetyl-L-aspartic acid</Name>
+		</CrossReference>
+		<Formula>C 6 H 8 N 1 O 4</Formula>
+		<Condition>
+			<Component type="AminoAcid" label="1">
+				<Id source="PDBCC">ASP</Id>
+				<Terminal>N</Terminal>
+			</Component>
+			<Component type="Ligand" label="2">
+				<Id source="PDBCC">ACE</Id>
+			</Component>
+			<Bond>
+				<Atom component="1">N</Atom>
+				<Atom component="2">C</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>attachment</Category>
+		<Keyword>acetylated amino end</Keyword>
+	</Entry>
+	<Entry>
+		<Id>0231</Id>
+		<Description>A protein modification that effectively converts an L-cysteine residue to N-acetyl-L-cysteine.</Description>
+		<SystematicName>(R)-2-acetamido-3-sulfanylpropanoic acid</SystematicName>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0043</Id>
+			<Name>N-acetyl-L-cysteine</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00052</Id>
+			<Name>N-acetyl-L-cysteine</Name>
+		</CrossReference>
+		<Formula>C 5 H 8 N 1 O 2 S 1</Formula>
+		<Condition>
+			<Component type="AminoAcid" label="1">
+				<Id source="PDBCC">CYS</Id>
+				<Terminal>N</Terminal>
+			</Component>
+			<Component type="Ligand" label="2">
+				<Id source="PDBCC">ACE</Id>
+			</Component>
+			<Bond>
+				<Atom component="1">N</Atom>
+				<Atom component="2">C</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>attachment</Category>
+		<Keyword>acetylated amino end</Keyword>
+	</Entry>
+	<Entry>
+		<Id>0232</Id>
+		<Description>A protein modification that effectively converts an L-glutamic acid residue to N-acetyl-L-glutamic acid.</Description>
+		<SystematicName>(S)-2-(acetamido)pentanedioic acid</SystematicName>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0044</Id>
+			<Name>N-acetyl-L-glutamic acid</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00053</Id>
+			<Name>N-acetyl-L-glutamic acid</Name>
+		</CrossReference>
+		<Formula>C 7 H 10 N 1 O 4</Formula>
+		<Condition>
+			<Component type="AminoAcid" label="1">
+				<Id source="PDBCC">GLU</Id>
+				<Terminal>N</Terminal>
+			</Component>
+			<Component type="Ligand" label="2">
+				<Id source="PDBCC">ACE</Id>
+			</Component>
+			<Bond>
+				<Atom component="1">N</Atom>
+				<Atom component="2">C</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>attachment</Category>
+		<Keyword>acetylated amino end</Keyword>
+	</Entry>
+	<Entry>
+		<Id>0233</Id>
+		<Description>A protein modification that effectively converts a glycine residue to N-acetylglycine.</Description>
+		<SystematicName>2-(acetamido)ethanoic acid</SystematicName>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0046</Id>
+			<Name>N-acetylglycine</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00055</Id>
+			<Name>N-acetylglycine</Name>
+		</CrossReference>
+		<Formula>C 4 H 6 N 1 O 2</Formula>
+		<Condition>
+			<Component type="AminoAcid" label="1">
+				<Id source="PDBCC">GLY</Id>
+				<Terminal>N</Terminal>
+			</Component>
+			<Component type="Ligand" label="2">
+				<Id source="PDBCC">ACE</Id>
+			</Component>
+			<Bond>
+				<Atom component="1">N</Atom>
+				<Atom component="2">C</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>attachment</Category>
+		<Keyword>acetylated amino end</Keyword>
+	</Entry>
+	<Entry>
+		<Id>0234</Id>
+		<Description>A protein modification that effectively converts an L-proline residue to N-acetyl-L-proline.</Description>
+		<SystematicName>(2S)-1-acetyl-2-pyrrolidinecarboxylic acid</SystematicName>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0050</Id>
+			<Name>N-acetyl-L-proline</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00059</Id>
+			<Name>N-acetyl-L-proline</Name>
+		</CrossReference>
+		<Formula>C 7 H 10 N 1 O 2</Formula>
+		<Condition>
+			<Component type="AminoAcid" label="1">
+				<Id source="PDBCC">PRO</Id>
+				<Terminal>N</Terminal>
+			</Component>
+			<Component type="Ligand" label="2">
+				<Id source="PDBCC">ACE</Id>
+			</Component>
+			<Bond>
+				<Atom component="1">N</Atom>
+				<Atom component="2">C</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>attachment</Category>
+		<Keyword>acetylated amino end</Keyword>
+	</Entry>
+	<Entry>
+		<Id>0235</Id>
+		<Description>A protein modification that effectively converts an L-serine residue to N-acetyl-L-serine.</Description>
+		<SystematicName>(2S)-2-acetamido-3-hydroxypropanoic acid</SystematicName>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0051</Id>
+			<Name>N-acetyl-L-serine</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00060</Id>
+			<Name>N-acetyl-L-serine</Name>
+		</CrossReference>
+		<Formula>C 5 H 8 N 1 O 3</Formula>
+		<Condition>
+			<Component type="AminoAcid" label="1">
+				<Id source="PDBCC">SER</Id>
+				<Terminal>N</Terminal>
+			</Component>
+			<Component type="Ligand" label="2">
+				<Id source="PDBCC">ACE</Id>
+			</Component>
+			<Bond>
+				<Atom component="1">N</Atom>
+				<Atom component="2">C</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>attachment</Category>
+		<Keyword>acetylated amino end</Keyword>
+	</Entry>
+	<Entry>
+		<Id>0236</Id>
+		<Description>A protein modification that effectively converts an L-threonine residue to N-acetyl-L-threonine.</Description>
+		<SystematicName>(2S,3R)-2-acetamido-3-hydroxybutanoic acid</SystematicName>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0052</Id>
+			<Name>N-acetyl-L-threonine</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00061</Id>
+			<Name>N-acetyl-L-threonine</Name>
+		</CrossReference>
+		<Formula>C 6 H 10 N 1 O 3</Formula>
+		<Condition>
+			<Component type="AminoAcid" label="1">
+				<Id source="PDBCC">THR</Id>
+				<Terminal>N</Terminal>
+			</Component>
+			<Component type="Ligand" label="2">
+				<Id source="PDBCC">ACE</Id>
+			</Component>
+			<Bond>
+				<Atom component="1">N</Atom>
+				<Atom component="2">C</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>attachment</Category>
+		<Keyword>acetylated amino end</Keyword>
+	</Entry>
+	<Entry>
+		<Id>0237</Id>
+		<Description>A protein modification that effectively converts an L-tyrosine residue to N-acetyl-L-tyrosine.</Description>
+		<SystematicName>(2S)-2-acetamido-3-(4-hydoxyphenyl)propanoic acid</SystematicName>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0053</Id>
+			<Name>N-acetyl-L-tyrosine</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00062</Id>
+			<Name>N-acetyl-L-tyrosine</Name>
+		</CrossReference>
+		<Formula>C 11 H 12 N 1 O 3</Formula>
+		<Condition>
+			<Component type="AminoAcid" label="1">
+				<Id source="PDBCC">TYR</Id>
+				<Terminal>N</Terminal>
+			</Component>
+			<Component type="Ligand" label="2">
+				<Id source="PDBCC">ACE</Id>
+			</Component>
+			<Bond>
+				<Atom component="1">N</Atom>
+				<Atom component="2">C</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>attachment</Category>
+		<Keyword>acetylated amino end</Keyword>
+	</Entry>
+	<Entry>
+		<Id>0238</Id>
+		<Description>A protein modification that effectively converts an L-valine residue to N-acetyl-L-valine.</Description>
+		<SystematicName>(S)-2-acetamido-3-methylbutanoic acid</SystematicName>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0054</Id>
+			<Name>N-acetyl-L-valine</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00063</Id>
+			<Name>N-acetyl-L-valine</Name>
+		</CrossReference>
+		<Formula>C 7 H 12 N 1 O 2</Formula>
+		<Condition>
+			<Component type="AminoAcid" label="1">
+				<Id source="PDBCC">VAL</Id>
+				<Terminal>N</Terminal>
+			</Component>
+			<Component type="Ligand" label="2">
+				<Id source="PDBCC">ACE</Id>
+			</Component>
+			<Bond>
+				<Atom component="1">N</Atom>
+				<Atom component="2">C</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>attachment</Category>
+		<Keyword>acetylated amino end</Keyword>
+	</Entry>
+	<Entry>
+		<Id>0239</Id>
+		<Description>A protein modification that effectively converts an L-arginine residue to N2-acetyl-L-arginine.</Description>
+		<SystematicName>(S)-2-acetamido-5-carbamimidamidopentanoic acid</SystematicName>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0354</Id>
+			<Name>N2-acetyl-L-arginine</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00359</Id>
+			<Name>N2-acetyl-L-arginine</Name>
+		</CrossReference>
+		<Formula>C 8 H 15 N 4 O 2</Formula>
+		<Condition>
+			<Component type="AminoAcid" label="1">
+				<Id source="PDBCC">ARG</Id>
+				<Terminal>N</Terminal>
+			</Component>
+			<Component type="Ligand" label="2">
+				<Id source="PDBCC">ACE</Id>
+			</Component>
+			<Bond>
+				<Atom component="1">N</Atom>
+				<Atom component="2">C</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>attachment</Category>
+		<Keyword>acetylated amino end</Keyword>
+	</Entry>
+	<Entry>
+		<Id>0240</Id>
+		<Description>A protein modification that effectively converts an L-alanine residue to L-alanine amide.</Description>
+		<SystematicName>(S)-2-aminopropanamide</SystematicName>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0081</Id>
+			<Name>L-alanine amide</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00090</Id>
+			<Name>L-alanine amide</Name>
+		</CrossReference>
+		<Formula>C 3 H 7 N 2 O 1</Formula>
+		<Condition>
+			<Component type="AminoAcid" label="1">
+				<Id source="PDBCC">ALA</Id>
+				<Terminal>C</Terminal>
+			</Component>
+			<Component type="Ligand" label="2">
+				<Id source="PDBCC">NH2</Id>
+			</Component>
+			<Bond>
+				<Atom component="1">C</Atom>
+				<Atom component="2">N</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>attachment</Category>
+		<Keyword>amidated carboxyl end</Keyword>
+	</Entry>
+	<Entry>
+		<Id>0241</Id>
+		<Description>A protein modification that effectively converts an L-asparagine residue to L-asparagine amide.</Description>
+		<SystematicName>(S)-2-amino-butanediamide</SystematicName>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0083</Id>
+			<Name>L-asparagine amide</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00092</Id>
+			<Name>L-asparagine amide</Name>
+		</CrossReference>
+		<Formula>C 4 H 8 N 3 O 2</Formula>
+		<Condition>
+			<Component type="AminoAcid" label="1">
+				<Id source="PDBCC">ASN</Id>
+				<Terminal>C</Terminal>
+			</Component>
+			<Component type="Ligand" label="2">
+				<Id source="PDBCC">NH2</Id>
+			</Component>
+			<Bond>
+				<Atom component="1">C</Atom>
+				<Atom component="2">N</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>attachment</Category>
+		<Keyword>amidated carboxyl end</Keyword>
+	</Entry>
+	<Entry>
+		<Id>0242</Id>
+		<Description>A protein modification that effectively converts an L-aspartic acid residue to L-aspartic acid 1-amide.</Description>
+		<SystematicName>(S)-2-amino-1-butanediamic acid</SystematicName>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0084</Id>
+			<Name>L-aspartic acid 1-amide</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00093</Id>
+			<Name>L-aspartic acid 1-amide</Name>
+		</CrossReference>
+		<Formula>C 4 H 7 N 2 O 3</Formula>
+		<Condition>
+			<Component type="AminoAcid" label="1">
+				<Id source="PDBCC">ASP</Id>
+				<Terminal>C</Terminal>
+			</Component>
+			<Component type="Ligand" label="2">
+				<Id source="PDBCC">NH2</Id>
+			</Component>
+			<Bond>
+				<Atom component="1">C</Atom>
+				<Atom component="2">N</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>attachment</Category>
+		<Keyword>amidated carboxyl end</Keyword>
+	</Entry>
+	<Entry>
+		<Id>0243</Id>
+		<Description>A protein modification that effectively converts an L-cysteine residue to L-cysteine amide.</Description>
+		<SystematicName>(R)-2-amino-3-sulfanylpropanamide</SystematicName>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0085</Id>
+			<Name>L-cysteine amide</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00094</Id>
+			<Name>L-cysteine amide</Name>
+		</CrossReference>
+		<Formula>C 3 H 7 N 2 O 1 S 1</Formula>
+		<Condition>
+			<Component type="AminoAcid" label="1">
+				<Id source="PDBCC">CYS</Id>
+				<Terminal>C</Terminal>
+			</Component>
+			<Component type="Ligand" label="2">
+				<Id source="PDBCC">NH2</Id>
+			</Component>
+			<Bond>
+				<Atom component="1">C</Atom>
+				<Atom component="2">N</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>attachment</Category>
+		<Keyword>amidated carboxyl end</Keyword>
+	</Entry>
+	<Entry>
+		<Id>0244</Id>
+		<Description>A protein modification that effectively converts an L-glutamine residue to L-glutamine amide.</Description>
+		<SystematicName>(S)-2-amino-pentanediamide</SystematicName>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0086</Id>
+			<Name>L-glutamine amide</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00095</Id>
+			<Name>L-glutamine amide</Name>
+		</CrossReference>
+		<Formula>C 5 H 10 N 3 O 2</Formula>
+		<Condition>
+			<Component type="AminoAcid" label="1">
+				<Id source="PDBCC">GLN</Id>
+				<Terminal>C</Terminal>
+			</Component>
+			<Component type="Ligand" label="2">
+				<Id source="PDBCC">NH2</Id>
+			</Component>
+			<Bond>
+				<Atom component="1">C</Atom>
+				<Atom component="2">N</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>attachment</Category>
+		<Keyword>amidated carboxyl end</Keyword>
+	</Entry>
+	<Entry>
+		<Id>0245</Id>
+		<Description>A protein modification that effectively converts an L-glutamic acid residue to L-glutamic acid 1-amide.</Description>
+		<SystematicName>(S)-2-amino-1-pentanediamic acid</SystematicName>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0087</Id>
+			<Name>L-glutamic acid 1-amide</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00096</Id>
+			<Name>L-glutamic acid 1-amide</Name>
+		</CrossReference>
+		<Formula>C 5 H 9 N 2 O 3</Formula>
+		<Condition>
+			<Component type="AminoAcid" label="1">
+				<Id source="PDBCC">GLU</Id>
+				<Terminal>C</Terminal>
+			</Component>
+			<Component type="Ligand" label="2">
+				<Id source="PDBCC">NH2</Id>
+			</Component>
+			<Bond>
+				<Atom component="1">C</Atom>
+				<Atom component="2">N</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>attachment</Category>
+		<Keyword>amidated carboxyl end</Keyword>
+	</Entry>
+	<Entry>
+		<Id>0246</Id>
+		<Description>A protein modification that effectively converts a glycine residue to glycine amide.</Description>
+		<SystematicName>2-aminoethanamide</SystematicName>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0088</Id>
+			<Name>glycine amide</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00097</Id>
+			<Name>glycine amide</Name>
+		</CrossReference>
+		<Formula>C 2 H 5 N 2 O 1</Formula>
+		<Condition>
+			<Component type="AminoAcid" label="1">
+				<Id source="PDBCC">GLY</Id>
+				<Terminal>C</Terminal>
+			</Component>
+			<Component type="Ligand" label="2">
+				<Id source="PDBCC">NH2</Id>
+			</Component>
+			<Bond>
+				<Atom component="1">C</Atom>
+				<Atom component="2">N</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>attachment</Category>
+		<Keyword>amidated carboxyl end</Keyword>
+	</Entry>
+	<Entry>
+		<Id>0247</Id>
+		<Description>A protein modification that effectively converts an L-histidine residue to L-histidine amide.</Description>
+		<SystematicName>(S)-2-amino-3-(1H-imidazol-4-yl)propanamide</SystematicName>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0089</Id>
+			<Name>L-histidine amide</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00098</Id>
+			<Name>L-histidine amide</Name>
+		</CrossReference>
+		<Formula>C 6 H 9 N 4 O 1</Formula>
+		<Condition>
+			<Component type="AminoAcid" label="1">
+				<Id source="PDBCC">HIS</Id>
+				<Terminal>C</Terminal>
+			</Component>
+			<Component type="Ligand" label="2">
+				<Id source="PDBCC">NH2</Id>
+			</Component>
+			<Bond>
+				<Atom component="1">C</Atom>
+				<Atom component="2">N</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>attachment</Category>
+		<Keyword>amidated carboxyl end</Keyword>
+	</Entry>
+	<Entry>
+		<Id>0248</Id>
+		<Description>A protein modification that effectively converts an L-leucine residue to L-leucine amide.</Description>
+		<SystematicName>(S)-2-amino-4-methylpentanamide</SystematicName>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0091</Id>
+			<Name>L-leucine amide</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00100</Id>
+			<Name>L-leucine amide</Name>
+		</CrossReference>
+		<Formula>C 6 H 13 N 2 O 1</Formula>
+		<Condition>
+			<Component type="AminoAcid" label="1">
+				<Id source="PDBCC">LEU</Id>
+				<Terminal>C</Terminal>
+			</Component>
+			<Component type="Ligand" label="2">
+				<Id source="PDBCC">NH2</Id>
+			</Component>
+			<Bond>
+				<Atom component="1">C</Atom>
+				<Atom component="2">N</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>attachment</Category>
+		<Keyword>amidated carboxyl end</Keyword>
+	</Entry>
+	<Entry>
+		<Id>0249</Id>
+		<Description>A protein modification that effectively converts an L-lysine residue to L-lysine amide.</Description>
+		<SystematicName>(S)-2,6-diaminohexanamide</SystematicName>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0092</Id>
+			<Name>L-lysine amide</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00101</Id>
+			<Name>L-lysine amide</Name>
+		</CrossReference>
+		<Formula>C 6 H 14 N 3 O 1</Formula>
+		<Condition>
+			<Component type="AminoAcid" label="1">
+				<Id source="PDBCC">LYS</Id>
+				<Terminal>C</Terminal>
+			</Component>
+			<Component type="Ligand" label="2">
+				<Id source="PDBCC">NH2</Id>
+			</Component>
+			<Bond>
+				<Atom component="1">C</Atom>
+				<Atom component="2">N</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>attachment</Category>
+		<Keyword>amidated carboxyl end</Keyword>
+	</Entry>
+	<Entry>
+		<Id>0250</Id>
+		<Description>A protein modification that effectively converts an L-proline residue to L-proline amide.</Description>
+		<SystematicName>(S)-pyrrolidine-2-carboxamide</SystematicName>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0095</Id>
+			<Name>L-proline amide</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00104</Id>
+			<Name>L-proline amide</Name>
+		</CrossReference>
+		<Formula>C 5 H 9 N 2 O 1</Formula>
+		<Condition>
+			<Component type="AminoAcid" label="1">
+				<Id source="PDBCC">PRO</Id>
+				<Terminal>C</Terminal>
+			</Component>
+			<Component type="Ligand" label="2">
+				<Id source="PDBCC">NH2</Id>
+			</Component>
+			<Bond>
+				<Atom component="1">C</Atom>
+				<Atom component="2">N</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>attachment</Category>
+		<Keyword>amidated carboxyl end</Keyword>
+	</Entry>
+	<Entry>
+		<Id>0251</Id>
+		<Description>A protein modification that effectively converts an L-tyrosine residue to L-tyrosine amide.</Description>
+		<SystematicName>(S)-2-amino-3-(4-hydoxyphenyl)propanamide</SystematicName>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0099</Id>
+			<Name>L-tyrosine amide</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00108</Id>
+			<Name>L-tyrosine amide</Name>
+		</CrossReference>
+		<Formula>C 9 H 11 N 2 O 2</Formula>
+		<Condition>
+			<Component type="AminoAcid" label="1">
+				<Id source="PDBCC">TYR</Id>
+				<Terminal>C</Terminal>
+			</Component>
+			<Component type="Ligand" label="2">
+				<Id source="PDBCC">NH2</Id>
+			</Component>
+			<Bond>
+				<Atom component="1">C</Atom>
+				<Atom component="2">N</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>attachment</Category>
+		<Keyword>amidated carboxyl end</Keyword>
 	</Entry>
 </ProteinModifications>

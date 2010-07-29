@@ -112,7 +112,7 @@ public class ModifiedCompoundImpl implements ModifiedCompound {
 		this.modification = modification;
 		this.groups = new LinkedHashSet<Group>(groups);
 		if (atomLinkages==null) {
-			this.atomLinkages = Collections.emptyList();
+			this.atomLinkages = new ArrayList<Atom[]>();
 		} else {
 			this.atomLinkages = new ArrayList<Atom[]>(atomLinkages);
 		}

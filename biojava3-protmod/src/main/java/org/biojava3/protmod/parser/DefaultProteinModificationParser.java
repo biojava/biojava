@@ -171,18 +171,19 @@ implements ProteinModificationParser {
 		
 		for (int i=0; i<nChains; i++) {
 			Chain chain = chains.get(i);
+			List<Group> ligands = chain.getAtomLigands();
+			mapChainLigands.put(chain, ligands);
+//			List<Group> residues = new ArrayList<Group>(chain.getSeqResGroups());
+//			if (residues.removeAll(ligands)) {
+//				System.err.println(structure.getPDBCode()+"\t"+modelnr+"\t"
+//						+chain.getName()+": Overlapping between ligands and residues");
+//			}
 			List<Group> residues = chain.getSeqResGroups();
 			mapChainResidues.put(chain, residues);
-			List<Group> ligands = new ArrayList<Group>(chain.getAtomLigands());
-			if (ligands.removeAll(residues)) {
-				System.err.println(structure.getPDBCode()+"\t"+modelnr+"\t"
-						+chain.getName()+": Overlapping between ligands and residues");
-			}
-			mapChainLigands.put(chain, ligands);
 		}
 		
 		for (Chain chain : chains) {
-			Map<Component, List<Group>> mapCompGroups = 
+			Map<Component, Set<Group>> mapCompGroups = 
 				getModificationGroups(potentialModifications, 
 						mapChainResidues.get(chain), mapChainLigands.get(chain));
 			
@@ -198,7 +199,7 @@ implements ProteinModificationParser {
 				if (sizeComps==1) {
 					// modified residue
 					// TODO: is this the correct logic for CROSS_LINK_1?
-					List<Group> residues = mapCompGroups.get(components.get(0));
+					Set<Group> residues = mapCompGroups.get(components.get(0));
 					if (residues != null) {
 						for (Group residue : residues) {
 							ModifiedCompound modRes = new ModifiedCompoundImpl(mod, residue);
@@ -232,10 +233,8 @@ implements ProteinModificationParser {
 		if (recordUnidentifiableModifiedCompounds) {
 			for (Chain chain : chains) {
 				List<Group> residues = mapChainResidues.get(chain);
-				List<Group> groups = new ArrayList<Group>();
-				groups.addAll(residues);
-				groups.addAll(mapChainLigands.get(chain));
-				recordUnidentifiableAtomLinkages(groups);
+				List<Group> ligands = mapChainLigands.get(chain);
+				recordUnidentifiableAtomLinkages(residues, ligands);
 				recordUnidentifiableModifiedResidues(residues);
 			}
 		}
@@ -270,7 +269,7 @@ implements ProteinModificationParser {
 					Group group2 = identifiedLigands.get(i);
 					if (!identifiedLigands.contains(group1)) {
 						List<Atom[]> linkages = ProteinModificationParserUtil.
-								findNonNCAtomLinkages(group2, group1, bondLengthTolerance);
+								findNonNCAtomLinkages(group2, false, group1, false, bondLengthTolerance);
 						if (!linkages.isEmpty()) {
 							for (Atom[] linkage : linkages) {
 								mc.addAtomLinkage(linkage[0], linkage[1]);
@@ -288,10 +287,11 @@ implements ProteinModificationParser {
 	}
 	
 	/**
-	 * record unidentifiable atom linkages in a chain.
+	 * Record unidentifiable atom linkages in a chain. Only linkages between two
+	 * residues or one residue and one ligand will be recorded.
 	 * @param chain a {@link Chain}.
 	 */
-	private void recordUnidentifiableAtomLinkages(List<Group> groups) {
+	private void recordUnidentifiableAtomLinkages(List<Group> residues, List<Group> ligands) {
 		// first put identified linkages in a map for fast query
 		Map<Atom, Set<Atom>> identifiedLinkages = new HashMap<Atom, Set<Atom>>();
 		for (ModifiedCompound mc : identifiedModifiedCompounds) {
@@ -314,13 +314,34 @@ implements ProteinModificationParser {
 		}
 		
 		// record
-		int n = groups.size();
-		for (int i=0; i<n-1; i++) {
-			Group group1 = groups.get(i);
-			for (int j=i+1; j<n; j++) {
-				Group group2 = groups.get(j);
+		// cross link
+		int nRes = residues.size();
+		for (int i=0; i<nRes-1; i++) {
+			Group group1 = residues.get(i);
+			for (int j=i+1; j<nRes; j++) {
+				Group group2 = residues.get(j);
 				List<Atom[]> linkages = ProteinModificationParserUtil.
-						findNonNCAtomLinkages(group1, group2, bondLengthTolerance);
+						findNonNCAtomLinkages(group1, true, group2, true, bondLengthTolerance);
+				for (Atom[] linkage : linkages) {
+					Set<Atom> set = identifiedLinkages.get(linkage[0]);
+					if (set == null || !set.contains(linkage[1])) {
+						unidentifiableAtomLinkages.add(linkage);
+					}
+				}
+			}
+		}
+		
+		// attachment
+		int nLig = ligands.size();
+		for (int i=0; i<nRes; i++) {
+			Group group1 = residues.get(i);
+			for (int j=0; j<nLig; j++) {
+				Group group2 = ligands.get(j);
+				if (group1==group2) { // overlap between residues and ligands
+					continue;
+				}
+				List<Atom[]> linkages = ProteinModificationParserUtil.
+						findNonNCAtomLinkages(group1, true, group2, false, bondLengthTolerance);
 				for (Atom[] linkage : linkages) {
 					Set<Atom> set = identifiedLinkages.get(linkage[0]);
 					if (set == null || !set.contains(linkage[1])) {
@@ -352,7 +373,7 @@ implements ProteinModificationParser {
 	 * @return map from component to list of corresponding residues
 	 *  in the chain.
 	 */
-	private Map<Component, List<Group>> getModificationGroups(
+	private Map<Component, Set<Group>> getModificationGroups(
 			final Set<ProteinModification> modifications,
 			final List<Group> residues,
 			final List<Group> ligands) {
@@ -368,8 +389,8 @@ implements ProteinModificationParser {
 			}
 		}
 		
-		Map<Component, List<Group>> mapCompRes = 
-			new HashMap<Component, List<Group>>();
+		Map<Component, Set<Group>> mapCompRes = 
+			new HashMap<Component, Set<Group>>();
 		
 		{
 			// ligands
@@ -379,9 +400,9 @@ implements ProteinModificationParser {
 				if (!comps.contains(comp)) {
 					continue;
 				}
-				List<Group> gs = mapCompRes.get(comp);
+				Set<Group> gs = mapCompRes.get(comp);
 				if (gs==null) {
-					gs = new ArrayList<Group>();
+					gs = new LinkedHashSet<Group>();
 					mapCompRes.put(comp, gs);
 				}
 				gs.add(group);
@@ -401,29 +422,39 @@ implements ProteinModificationParser {
 				if (!comps.contains(comp)) {
 					continue;
 				}
-				List<Group> gs = mapCompRes.get(comp);
+				Set<Group> gs = mapCompRes.get(comp);
 				if (gs==null) {
-					gs = new ArrayList<Group>();
+					gs = new LinkedHashSet<Group>();
 					mapCompRes.put(comp, gs);
 				}
 				gs.add(group);
 			}
 
 			// for N-terminal
-			Group res = residues.get(0);
-			Component comp = Component.of(res.getPDBName(), ComponentType.AMINOACID, true, false);
-			if (comps.contains(comp)) {
-				List<Group> gs = Collections.singletonList(res);
-				mapCompRes.put(comp, gs);
-			}
+			int nRes = residues.size();
+			int iRes = 0;
+			Group res;
+			do {
+				// for all ligands on N terminal and the first residue
+				res = residues.get(iRes);
+				Component comp = Component.of(res.getPDBName(), ComponentType.AMINOACID, true, false);
+				if (comps.contains(comp)) {
+					Set<Group> gs = Collections.singleton(res);
+					mapCompRes.put(comp, gs);
+				}
+			} while (++iRes<nRes && ligands.contains(res));
 			
 			// for C-terminal
-			res = residues.get(residues.size()-1);
-			comp = Component.of(res.getPDBName(), ComponentType.AMINOACID, false, true);
-			if (comps.contains(comp)) {
-				List<Group> gs = Collections.singletonList(res);
-				mapCompRes.put(comp, gs);
-			}
+			iRes = residues.size()-1;
+			do {
+				// for all ligands on C terminal and the last residue
+				res = residues.get(iRes);
+				Component comp = Component.of(res.getPDBName(), ComponentType.AMINOACID, false, true);
+				if (comps.contains(comp)) {
+					Set<Group> gs = Collections.singleton(res);
+					mapCompRes.put(comp, gs);
+				}
+			} while (--iRes>=0 && ligands.contains(res));
 		}
 
 		return mapCompRes;
@@ -433,7 +464,7 @@ implements ProteinModificationParser {
 	 * Get matched atoms for all linkages.	
 	 */
 	private List<List<Atom[]>> getMatchedAtomsOfLinkages(
-			ModificationCondition condition, Map<Component, List<Group>> mapCompGroups) {
+			ModificationCondition condition, Map<Component, Set<Group>> mapCompGroups) {
 		List<ModificationLinkage> linkages = condition.getLinkages();
 		int nLink = linkages.size();
 
@@ -444,8 +475,12 @@ implements ProteinModificationParser {
 			ModificationLinkage linkage = linkages.get(iLink);
 			Component comp1 = linkage.getComponent1();
 			Component comp2 = linkage.getComponent2();
-			List<Group> groups1 = mapCompGroups.get(comp1);
-			List<Group> groups2 = mapCompGroups.get(comp2);						
+
+			boolean isAA1 = comp1.getType()==ComponentType.AMINOACID;
+			boolean isAA2 = comp2.getType()==ComponentType.AMINOACID;
+			
+			Set<Group> groups1 = mapCompGroups.get(comp1);
+			Set<Group> groups2 = mapCompGroups.get(comp2);						
 			
 			List<Atom[]> list = new ArrayList<Atom[]>();
 
@@ -458,8 +493,11 @@ implements ProteinModificationParser {
 						continue;
 					}
 		
-					Atom[] atoms = ProteinModificationParserUtil.findNearestNonNCAtomLinkage(g1, g2, 
-							potentialNamesOfAtomOnGroup1, potentialNamesOfAtomOnGroup2, bondLengthTolerance);
+					Atom[] atoms = ProteinModificationParserUtil.findNearestNonNCAtomLinkage(
+							g1, isAA1, g2, isAA2,
+							potentialNamesOfAtomOnGroup1,
+							potentialNamesOfAtomOnGroup2, 
+							bondLengthTolerance);
 					if (atoms!=null) {
 						list.add(atoms);
 					}

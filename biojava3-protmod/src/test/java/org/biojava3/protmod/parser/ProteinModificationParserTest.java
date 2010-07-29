@@ -84,6 +84,14 @@ public class ProteinModificationParserTest extends TestCase {
 				//{"1E9W", "AA0447"}, // TSI on ILE, error when reading
 				{"2HIL", "AA0497"}, // OPE on SER
 				{"3I3L", "AA0522"}, // FAD on ASP
+				{"1MCC", "AA0045"}, // ACE on GLU
+				{"5CPV", "AA0041"}, // ACE on ALA
+				{"1BBR", "AA0042"}, // ACE on ASP
+				{"1AL1", "AA0044"}, // ACE on GLU
+				{"1SEM", "AA0050"}, // ACE on PRO
+				{"1PVB", "AA0051"}, // ACE on SER
+				{"1ZNF", "AA0053"}, // ACE on THR
+				{"1SCY", "AA0089"}, // NH2 on HIS
 				
 				// Modified resdiues
 				{"3MVJ", "AA0037"}, // SEP
