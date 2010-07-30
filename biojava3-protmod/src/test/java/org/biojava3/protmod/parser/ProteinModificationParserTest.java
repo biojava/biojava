@@ -282,7 +282,7 @@ public class ProteinModificationParserTest extends TestCase {
 			parser.parse(struc, mods, modelnr);
 			List<ModifiedCompound> mcs = parser.getIdentifiedModifiedCompound();
 
-			assertFalse(mcs.isEmpty());
+			assertFalse(pdbId + " " + residId +" is not false" , mcs.isEmpty());
 			
 			int i=0;
 			for (ModifiedCompound mc : mcs) {
