@@ -326,20 +326,26 @@ public class SeqRes2AtomAligner {
             // don't count gaps and terminal gaps
             String sn = s.getName();
             String an = a.getName();
+            boolean gap = false;
             if (! ( sn.equals("gap")  || sn.equals(gapSymbol.getName()))){
                 posSeq++;
+            } else {
+                gap = true;
             }
             if (! ( an.equals("gap") || an.equals(gapSymbol.getName()))){
                 posAtom++;
+            } else {
+                gap = true;
             }
+            if ( gap)
+               continue;
 
-
-           /* System.out.println(i+ " " + posSeq + " " +
-                    s.getName() +
-                    " " + posAtom +
-                    " " + a.getName() +
-                    " " + s.getName().equals(a.getName()));
-           */
+//           System.out.println(i+ " " + posSeq + " " +
+//                    s.getName() +
+//                    " " + posAtom +
+//                    " " + a.getName() +
+//                    " " + s.getName().equals(a.getName()));
+//           
 
             if ( s.getName().equals(a.getName())){
                 // the atom record can be aligned to the SeqRes record!
@@ -358,13 +364,16 @@ public class SeqRes2AtomAligner {
                 }
                 if (! pdbNameA.equals(pdbNameS)){
                     if ( ! pdbNameA.trim().equals(pdbNameS.trim())) {
-                        System.err.println(s1 + " " + posSeq + " does not align with " + a1+ " " + posAtom);
+                        System.err.println(s1 + " " + posSeq + " does not align with " + a1+ " " + posAtom + " should be: " + s.getName() + " : " + a.getName());
                         if ( s1.getType().equals(HetatomImpl.type) && a1.getType().equals(HetatomImpl.type)){
                            System.err.println("they seem to be hetatoms, so ignoring mismatch.");
                         }
                         else {
                         //  System.exit(0);// for debug only
-                           throw new StructureException("could not match residues");
+                           //System.out.println(lst1.seqString());
+                           //System.out.println(lst2.seqString());
+                           System.err.println("could not match residues " + s1 + " " + a1);
+                           //throw new StructureException("could not match residues " + s1 + " " + a1);
                         }
 
                     }
