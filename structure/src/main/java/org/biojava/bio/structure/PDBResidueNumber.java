@@ -67,4 +67,41 @@ public class PDBResidueNumber implements Serializable
       this.residueNumber = residueNumber;
    }
 
+   public boolean equals(Object obj) {
+	   if (!(obj instanceof PDBResidueNumber))
+		   return false;
+	   
+	   if (obj==this)
+		   return true;
+	   
+	   PDBResidueNumber anNumber = (PDBResidueNumber) obj;
+	   
+	   if (!chainId.equals(anNumber.getChainId()))
+		   return false;
+	   
+	   if (insCode!=null) {
+		   if (!insCode.equals(anNumber.getInsCode()))
+			   return false;
+	   } else {
+		   if (anNumber.getInsCode()!=null)
+			   return false;
+	   }
+	   
+	   if (!residueNumber.equals(anNumber.getResidueNumber()))
+		   return false;
+	   
+	   return true;
+   }
+   
+   public int hashCode() {
+	   int result = 17;
+	   result = 31 * result + chainId.hashCode();
+	   result = 31 * result + residueNumber.hashCode();
+	   result = 31 * result + (insCode==null ? 0 : insCode.hashCode());
+	   return result;
+   }
+   
+   public String toString() {
+	   return "Chain:" + chainId + ", Code:" + insCode + ", No.:" + residueNumber;
+   }
 }

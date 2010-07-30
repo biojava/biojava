@@ -721,5 +721,28 @@ public class StructureTools {
 		return pdbResNum;
 
 	}
+	
+	/** Get a group represented by a PDBResidueNumber.
+	 * 
+	 * @param struc a {@link Structure}
+	 * @param pdbResNum a {@link PDBResidueNumber}
+	 * @return a group in the structure that is represented by the pdbResNum. 
+	 * @throws StructureException if the group cannot be found.
+	 */
+	public static final Group getGroupByPDBResidueNumber(Structure struc, 
+			PDBResidueNumber pdbResNum) throws StructureException {
+		if (struc == null || pdbResNum==null) {
+			throw new IllegalArgumentException("Null argument(s).");
+		}
+		
+		Chain chain = struc.findChain(pdbResNum.getChainId());
+		
+		String numIns = "" + pdbResNum.getResidueNumber();
+		if (pdbResNum.getInsCode() != null) {
+			numIns += pdbResNum.getInsCode();
+		}
+		
+		return chain.getGroupByPDB(numIns);
+	}
 
 }
