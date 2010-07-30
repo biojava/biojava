@@ -244,7 +244,7 @@ public class ProteinModificationParserTest extends TestCase {
 		};
 		
 		for ( String[] name : names){
-			System.out.println("===\n"+name[0]);
+			//System.out.println("===\n"+name[0]);
 			try {
 //				String result = 
 //					parserTest(name[0], null); 
