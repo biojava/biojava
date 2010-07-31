@@ -28,7 +28,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -38,7 +37,13 @@ import org.biojava.bio.structure.Atom;
 import org.biojava.bio.structure.Chain;
 import org.biojava.bio.structure.Group;
 import org.biojava.bio.structure.GroupType;
+import org.biojava.bio.structure.PDBResidueNumber;
 import org.biojava.bio.structure.Structure;
+import org.biojava.bio.structure.StructureException;
+import org.biojava.bio.structure.StructureTools;
+import org.biojava.bio.structure.io.mmcif.chem.ResidueType;
+import org.biojava.bio.structure.io.mmcif.chem.PolymerType;
+import org.biojava.bio.structure.io.mmcif.model.ChemComp;
 
 import org.biojava3.protmod.Component;
 import org.biojava3.protmod.ComponentType;
@@ -46,6 +51,7 @@ import org.biojava3.protmod.ModificationCondition;
 import org.biojava3.protmod.ModificationLinkage;
 import org.biojava3.protmod.ModifiedCompound;
 import org.biojava3.protmod.ModifiedCompoundImpl;
+import org.biojava3.protmod.PDBAtom;
 import org.biojava3.protmod.ProteinModification;
 
 /**
@@ -61,8 +67,8 @@ implements ProteinModificationParser {
 	private boolean recordUnidentifiableModifiedCompounds = false;
 	
 	private List<ModifiedCompound> identifiedModifiedCompounds = null;
-	private List<Atom[]> unidentifiableAtomLinkages = null;
-	private List<Group> unidentifiableModifiedResidues = null;
+	private List<PDBAtom[]> unidentifiableAtomLinkages = null;
+	private List<PDBResidueNumber> unidentifiableModifiedResidues = null;
 	
 	/**
 	 * 
@@ -100,7 +106,7 @@ implements ProteinModificationParser {
 	/**
 	 * {@inheritDoc}
 	 */
-	public List<Atom[]> getUnidentifiableAtomLinkages() {
+	public List<PDBAtom[]> getUnidentifiableAtomLinkages() {
 		if (!recordUnidentifiableModifiedCompounds) {
 			throw new UnsupportedOperationException("Recording unidentified atom linkages" +
 					"is not supported. Please setRecordUnidentifiableCompounds(true) first.");
@@ -116,7 +122,7 @@ implements ProteinModificationParser {
 	/**
 	 * {@inheritDoc}
 	 */
-	public List<Group> getUnidentifiableModifiedResidues() {
+	public List<PDBResidueNumber> getUnidentifiableModifiedResidues() {
 		if (!recordUnidentifiableModifiedCompounds) {
 			throw new UnsupportedOperationException("Recording unidentified atom linkages" +
 					"is not supported. Please setRecordUnidentifiableCompounds(true) first.");
@@ -132,17 +138,15 @@ implements ProteinModificationParser {
 	/**
 	 * {@inheritDoc}
 	 * @throws IllegalArgumentException if null structure or
-	 *  potentialModification, or , or if the nodelnr is less then 0 or
-	 *  larger than or equal to the number of models in the structure.
+	 *  potentialModification.
 	 */
 	@Override
 	public void parse(final Structure structure, 
-			final Set<ProteinModification> potentialModifications,
-			final int modelnr) {
+			final Set<ProteinModification> potentialModifications) {
 		identifiedModifiedCompounds = new ArrayList<ModifiedCompound>();
 		if (recordUnidentifiableModifiedCompounds) {
-			unidentifiableAtomLinkages = new ArrayList<Atom[]>();
-			unidentifiableModifiedResidues = new ArrayList<Group>();
+			unidentifiableAtomLinkages = new ArrayList<PDBAtom[]>();
+			unidentifiableModifiedResidues = new ArrayList<PDBResidueNumber>();
 		}
 		
 		if (structure==null) {
@@ -153,39 +157,18 @@ implements ProteinModificationParser {
 			throw new IllegalArgumentException("Null potentialModifications.");
 		}
 		
-		if (modelnr >= structure.nrModels() || modelnr < 0) {
-			throw new IllegalArgumentException("modelnr should be between 0 to "
-					+ structure.nrModels() + " for the structure "
-					+ structure.getName());
-		}
-		
 		if (potentialModifications.isEmpty()) {
 			return;
 		}
 		
-		List<Chain> chains = structure.getChains(modelnr);
-		int nChains = chains.size();
-		
-		Map<Chain, List<Group>> mapChainResidues = new LinkedHashMap<Chain,List<Group>>(nChains);
-		Map<Chain, List<Group>> mapChainLigands = new LinkedHashMap<Chain, List<Group>>(nChains);
-		
-		for (int i=0; i<nChains; i++) {
-			Chain chain = chains.get(i);
-			List<Group> ligands = chain.getAtomLigands();
-			mapChainLigands.put(chain, ligands);
-//			List<Group> residues = new ArrayList<Group>(chain.getSeqResGroups());
-//			if (residues.removeAll(ligands)) {
-//				System.err.println(structure.getPDBCode()+"\t"+modelnr+"\t"
-//						+chain.getName()+": Overlapping between ligands and residues");
-//			}
-			List<Group> residues = chain.getSeqResGroups();
-			mapChainResidues.put(chain, residues);
-		}
+		List<Chain> chains = structure.getChains();
 		
 		for (Chain chain : chains) {
+			List<Group> residues = getAminoAcids(chain);
+			List<Group> ligands = chain.getAtomLigands();
+			
 			Map<Component, Set<Group>> mapCompGroups = 
-				getModificationGroups(potentialModifications, 
-						mapChainResidues.get(chain), mapChainLigands.get(chain));
+				getModificationGroups(potentialModifications, residues, ligands);
 			
 			for (ProteinModification mod : potentialModifications) {
 				ModificationCondition condition = mod.getCondition();
@@ -199,10 +182,11 @@ implements ProteinModificationParser {
 				if (sizeComps==1) {
 					// modified residue
 					// TODO: is this the correct logic for CROSS_LINK_1?
-					Set<Group> residues = mapCompGroups.get(components.get(0));
-					if (residues != null) {
-						for (Group residue : residues) {
-							ModifiedCompound modRes = new ModifiedCompoundImpl(mod, residue);
+					Set<Group> modifiedResidues = mapCompGroups.get(components.get(0));
+					if (modifiedResidues != null) {
+						for (Group residue : modifiedResidues) {
+							PDBResidueNumber resNum = StructureTools.getPDBResidueNumber(residue);
+							ModifiedCompound modRes = new ModifiedCompoundImpl(mod, resNum);
 							identifiedModifiedCompounds.add(modRes);
 						}
 					}
@@ -220,61 +204,96 @@ implements ProteinModificationParser {
 					assembleLinkages(matchedAtomsOfLinkages, mod, identifiedModifiedCompounds);
 				}
 			}
-		}
 
-		// identify additional groups that are not directly attached to amino acids. 
-		for (ModifiedCompound mc : identifiedModifiedCompounds) {
-			Chain chain = mc.getGroups().iterator().next().getParent();
-			Set<Group> ligands = new LinkedHashSet<Group>(mapChainLigands.get(chain));
-			identifyAdditionalAttachments(mc, ligands);
-		}
-		
-		// record unidentifiable linkage
-		if (recordUnidentifiableModifiedCompounds) {
-			for (Chain chain : chains) {
-				List<Group> residues = mapChainResidues.get(chain);
-				List<Group> ligands = mapChainLigands.get(chain);
+			// identify additional groups that are not directly attached to amino acids.
+			for (ModifiedCompound mc : identifiedModifiedCompounds) {
+				identifyAdditionalAttachments(mc, ligands, chain);
+			}
+			
+			// record unidentifiable linkage
+			if (recordUnidentifiableModifiedCompounds) {
 				recordUnidentifiableAtomLinkages(residues, ligands);
 				recordUnidentifiableModifiedResidues(residues);
 			}
 		}
 	}
 	
+	// TODO: this should be replaced when Andreas fix the getAtomGroups("amino");
+	/**
+	 * Get all amino acids in a chain.
+	 * @param chain
+	 * @return
+	 */
+	private List<Group> getAminoAcids(Chain chain) {
+//		List<Group> residues = new ArrayList<Group>();
+//		for (Group group : chain.getAtomGroups()) {
+//			ChemComp cc = group.getChemComp();
+//			if (ResidueType.lPeptideLinking.equals(cc.getResidueType()) ||
+//					PolymerType.PROTEIN_ONLY.contains(cc.getPolymerType())) {
+//				residues.add(group);
+//			}
+//		}
+		List<Group> residues = new ArrayList<Group>(chain.getSeqResGroups());
+		residues.retainAll(chain.getAtomGroups());
+		
+		return residues;
+	}
+	
 	/**
 	 * identify additional groups that are not directly attached to amino acids.
 	 * @param mc {@link ModifiedCompound}.
+	 * @param chain a {@link Chain}.
 	 * @return a list of added groups.
 	 */
 	private void identifyAdditionalAttachments(ModifiedCompound mc, 
-			Set<Group> ligands) {
+			List<Group> ligands, Chain chain) {
 		if (ligands.isEmpty()) {
 			return;
 		}
 		
 		// TODO: should the additional groups only be allowed to the identified 
 		// heta groups or both amino acids and heta groups?
-		List<Group> identifiedLigands = new ArrayList<Group>();
-		for (Group group : mc.getGroups()) {
-			if (ligands.contains(group)) {
-				identifiedLigands.add(group);
+		List<Group> identifiedGroups = new ArrayList<Group>();
+		for (PDBResidueNumber num : mc.getLigands()) {
+			Group group;
+			try {
+				String numIns = "" + num.getResidueNumber();
+				if (num.getInsCode() != null) {
+					numIns += num.getInsCode();
+				}
+				group = chain.getGroupByPDB(numIns);
+			} catch (StructureException e) {
+				// should not happen
+				continue;
 			}
+			identifiedGroups.add(group);
 		}
 		
 		int start = 0;
 		
-		int n = identifiedLigands.size();
+		int n = identifiedGroups.size();
 		while (n > start) {
 			for (Group group1 : ligands) {
 				for (int i=start; i<n; i++) {
-					Group group2 = identifiedLigands.get(i);
-					if (!identifiedLigands.contains(group1)) {
+					Group group2 = identifiedGroups.get(i);
+					if (!identifiedGroups.contains(group1)) {
 						List<Atom[]> linkages = ProteinModificationParserUtil.
-								findNonNCAtomLinkages(group2, false, group1, false, bondLengthTolerance);
+								findNonNCAtomLinkages(group1, false, group2, false, bondLengthTolerance);
 						if (!linkages.isEmpty()) {
 							for (Atom[] linkage : linkages) {
-								mc.addAtomLinkage(linkage[0], linkage[1]);
+								PDBResidueNumber residue1 = StructureTools
+									.getPDBResidueNumber(linkage[0].getParent());
+								String atom1 = linkage[0].getName();
+								PDBResidueNumber residue2 = StructureTools
+									.getPDBResidueNumber(linkage[1].getParent());
+								String atom2 = linkage[1].getName();
+								
+								mc.addGroup(residue1, false);
+								mc.addAtomLinkage(
+										new PDBAtom(residue1, atom1), 
+										new PDBAtom(residue2, atom2));
 							}
-							identifiedLigands.add(group1);
+							identifiedGroups.add(group1);
 							break;
 						}
 					}
@@ -282,31 +301,32 @@ implements ProteinModificationParser {
 			}
 			
 			start = n;
-			n = identifiedLigands.size();
+			n = identifiedGroups.size();
 		}
 	}
 	
 	/**
 	 * Record unidentifiable atom linkages in a chain. Only linkages between two
 	 * residues or one residue and one ligand will be recorded.
-	 * @param chain a {@link Chain}.
 	 */
-	private void recordUnidentifiableAtomLinkages(List<Group> residues, List<Group> ligands) {
+	private void recordUnidentifiableAtomLinkages(List<Group> residues,
+			List<Group> ligands) {
+		
 		// first put identified linkages in a map for fast query
-		Map<Atom, Set<Atom>> identifiedLinkages = new HashMap<Atom, Set<Atom>>();
+		Map<PDBAtom, Set<PDBAtom>> identifiedLinkages = new HashMap<PDBAtom, Set<PDBAtom>>();
 		for (ModifiedCompound mc : identifiedModifiedCompounds) {
-			List<Atom[]> linkages = mc.getAtomLinkages();
-			for (Atom[] linkage : linkages) {
-				Set<Atom> set = identifiedLinkages.get(linkage[0]);
+			List<PDBAtom[]> linkages = mc.getAtomLinkages();
+			for (PDBAtom[] linkage : linkages) {
+				Set<PDBAtom> set = identifiedLinkages.get(linkage[0]);
 				if (set == null) {
-					set = new HashSet<Atom>();
+					set = new HashSet<PDBAtom>();
 					identifiedLinkages.put(linkage[0], set);
 				}
 				set.add(linkage[1]);
 				
 				set = identifiedLinkages.get(linkage[1]);
 				if (set == null) {
-					set = new HashSet<Atom>();
+					set = new HashSet<PDBAtom>();
 					identifiedLinkages.put(linkage[1], set);
 				}
 				set.add(linkage[0]);
@@ -323,9 +343,16 @@ implements ProteinModificationParser {
 				List<Atom[]> linkages = ProteinModificationParserUtil.
 						findNonNCAtomLinkages(group1, true, group2, true, bondLengthTolerance);
 				for (Atom[] linkage : linkages) {
-					Set<Atom> set = identifiedLinkages.get(linkage[0]);
-					if (set == null || !set.contains(linkage[1])) {
-						unidentifiableAtomLinkages.add(linkage);
+					PDBAtom atom1 = new PDBAtom(
+							StructureTools.getPDBResidueNumber(group1),
+							linkage[0].getName());
+					PDBAtom atom2 = new PDBAtom(
+							StructureTools.getPDBResidueNumber(group2),
+							linkage[1].getName());
+					
+					Set<PDBAtom> set = identifiedLinkages.get(atom1);
+					if (set == null || !set.contains(atom2)) {
+						unidentifiableAtomLinkages.add(new PDBAtom[]{atom1, atom2});
 					}
 				}
 			}
@@ -343,9 +370,16 @@ implements ProteinModificationParser {
 				List<Atom[]> linkages = ProteinModificationParserUtil.
 						findNonNCAtomLinkages(group1, true, group2, false, bondLengthTolerance);
 				for (Atom[] linkage : linkages) {
-					Set<Atom> set = identifiedLinkages.get(linkage[0]);
-					if (set == null || !set.contains(linkage[1])) {
-						unidentifiableAtomLinkages.add(linkage);
+					PDBAtom atom1 = new PDBAtom(
+							StructureTools.getPDBResidueNumber(group1),
+							linkage[0].getName());
+					PDBAtom atom2 = new PDBAtom(
+							StructureTools.getPDBResidueNumber(group2),
+							linkage[1].getName());
+					
+					Set<PDBAtom> set = identifiedLinkages.get(atom1);
+					if (set == null || !set.contains(atom2)) {
+						unidentifiableAtomLinkages.add(new PDBAtom[]{atom1, atom2});
 					}
 				}
 			}
@@ -353,14 +387,17 @@ implements ProteinModificationParser {
 	}
 	
 	private void recordUnidentifiableModifiedResidues(List<Group> residues) {
-		Set<Group> identifiedComps = new HashSet<Group>();
+		Set<PDBResidueNumber> identifiedComps = new HashSet<PDBResidueNumber>();
 		for (ModifiedCompound mc : identifiedModifiedCompounds) {
-			identifiedComps.addAll(mc.getGroups());
+			identifiedComps.addAll(mc.getResidues());
 		}
 		
 		for (Group group : residues) {
-			if (group.getType().equals(GroupType.HETATM) && !identifiedComps.contains(group)) {
-				unidentifiableModifiedResidues.add(group);
+			if (group.getType().equals(GroupType.HETATM)) {
+				PDBResidueNumber resNum = StructureTools.getPDBResidueNumber(group);
+				if (!identifiedComps.contains(resNum)) {
+					unidentifiableModifiedResidues.add(resNum);
+				}
 			}
 		}
 	}
@@ -436,25 +473,35 @@ implements ProteinModificationParser {
 			Group res;
 			do {
 				// for all ligands on N terminal and the first residue
-				res = residues.get(iRes);
+				res = residues.get(iRes++);
+
 				Component comp = Component.of(res.getPDBName(), ComponentType.AMINOACID, true, false);
 				if (comps.contains(comp)) {
-					Set<Group> gs = Collections.singleton(res);
-					mapCompRes.put(comp, gs);
+					Set<Group> gs = mapCompRes.get(comp);
+					if (gs==null) {
+						gs = new LinkedHashSet<Group>();
+						mapCompRes.put(comp, gs);
+					}
+					gs.add(res);
 				}
-			} while (++iRes<nRes && ligands.contains(res));
+			} while (iRes<nRes && ligands.contains(res));
 			
 			// for C-terminal
 			iRes = residues.size()-1;
 			do {
 				// for all ligands on C terminal and the last residue
-				res = residues.get(iRes);
+				res = residues.get(iRes--);
+				
 				Component comp = Component.of(res.getPDBName(), ComponentType.AMINOACID, false, true);
 				if (comps.contains(comp)) {
-					Set<Group> gs = Collections.singleton(res);
-					mapCompRes.put(comp, gs);
+					Set<Group> gs = mapCompRes.get(comp);
+					if (gs==null) {
+						gs = new LinkedHashSet<Group>();
+						mapCompRes.put(comp, gs);
+					}
+					gs.add(res);
 				}
-			} while (--iRes>=0 && ligands.contains(res));
+			} while (iRes>=0 && ligands.contains(res));
 		}
 
 		return mapCompRes;
@@ -525,22 +572,49 @@ implements ProteinModificationParser {
 	private void assembleLinkages(List<List<Atom[]>> matchedAtomsOfLinkages,
 			ProteinModification mod, List<ModifiedCompound> ret) {
 		ModificationCondition condition = mod.getCondition();
+		List<ModificationLinkage> modLinks = condition.getLinkages();
 		
 		int nLink = matchedAtomsOfLinkages.size();
 		int[] indices = new int[nLink];
 		Set<ModifiedCompound> identifiedCompounds = new HashSet<ModifiedCompound>();
 		while (indices[0]<matchedAtomsOfLinkages.get(0).size()) {
 			List<Atom[]> atomLinkages = new ArrayList<Atom[]>(nLink);
-			Set<Group> groups = new LinkedHashSet<Group>();
 			for (int iLink=0; iLink<nLink; iLink++) {
 				Atom[] atoms = matchedAtomsOfLinkages.get(iLink).get(indices[iLink]);
 				atomLinkages.add(atoms);
-				groups.add(atoms[0].getParent());
-				groups.add(atoms[1].getParent());
 			}
-			if (matchLinkages(condition.getLinkages(), atomLinkages)) {
+			if (matchLinkages(modLinks, atomLinkages)) {
 				// matched
-				ModifiedCompound mc = new ModifiedCompoundImpl(mod, groups, atomLinkages);
+				Set<PDBResidueNumber> residues = new LinkedHashSet<PDBResidueNumber>();
+				Set<PDBResidueNumber> ligands = new LinkedHashSet<PDBResidueNumber>();
+				
+				int n = atomLinkages.size();
+				List<PDBAtom[]> linkages = new ArrayList<PDBAtom[]>(n);
+				for (int i=0; i<n; i++) {
+					Atom[] linkage = atomLinkages.get(i);
+					PDBResidueNumber first = StructureTools.getPDBResidueNumber(linkage[0].getParent());
+					PDBResidueNumber second = StructureTools.getPDBResidueNumber(linkage[1].getParent());
+					
+					if (modLinks.get(i).getComponent1().getType() == ComponentType.AMINOACID) {
+						residues.add(first);
+					} else {
+						ligands.add(first);
+					}
+					if (modLinks.get(i).getComponent2().getType() == ComponentType.AMINOACID) {
+						residues.add(second);
+					} else {
+						ligands.add(second);
+					}
+					
+					PDBAtom atom1 = new PDBAtom(first, linkage[0].getName());
+					PDBAtom atom2 = new PDBAtom(second,	linkage[1].getName());
+					linkages.add(new PDBAtom[]{atom1,atom2});
+				}
+				
+				if (ligands.isEmpty())
+					ligands = null;
+				
+				ModifiedCompound mc = new ModifiedCompoundImpl(mod, residues, ligands, linkages);
 				if (!identifiedCompounds.contains(mc)) {
 					ret.add(mc);
 					identifiedCompounds.add(mc);
@@ -563,7 +637,7 @@ implements ProteinModificationParser {
 	
 	/**
 	 * 
-	 * @param condition
+	 * @param linkages
 	 * @param atomLinkages
 	 * @return true if atomLinkages satisfy the condition; false, otherwise.
 	 */

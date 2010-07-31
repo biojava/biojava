@@ -27,8 +27,7 @@ package org.biojava3.protmod;
 import java.util.List;
 import java.util.Set;
 
-import org.biojava.bio.structure.Atom;
-import org.biojava.bio.structure.Group;
+import org.biojava.bio.structure.PDBResidueNumber;
 
 /**
  * Root interface for all modifications in structure.
@@ -45,23 +44,65 @@ public interface ModifiedCompound {
 	
 	/**
 	 * 
-	 * @return involved chemical {@link Group}s.
+	 * @return a set of the involved residues.
+	 * @see PDBResidueNumber
 	 */
-	public Set<Group> getGroups();
+	public Set<PDBResidueNumber> getResidues();
 	
 	/**
 	 * 
-	 * @return a list of atom pairs, which represent the 
-	 *  atom bonds that links the residues and/or the attached groups.
-	 *  Each element of the list is a array containing two atoms.
+	 * @return a set of the involved ligands.
+	 * @see PDBResidueNumber
 	 */
-	public List<Atom[]> getAtomLinkages();
+	public Set<PDBResidueNumber> getLigands();
 	
 	/**
-	 * Add a linkage.
-	 * @param atom1 the first {@link Atom}.
-	 * @param atom2 the second {@link Atom}.
-	 * @return true if added; false otherwise.
+	 * 
+	 * @param group a group.
+	 * @return true if the group is contained.
 	 */
-	public boolean addAtomLinkage(Atom atom1, Atom atom2);
+	public boolean containsGroup(PDBResidueNumber group);
+	
+	/**
+	 * 
+	 * @return a list of pairs of linked atoms.
+	 * @see #getLinkedGroupPairs
+	 * @see PDBAtom
+	 */
+	public List<PDBAtom[]> getAtomLinkages();
+	
+	/**
+	 * 
+	 * @param group1 the first group.
+	 * @param group2 the second group.
+	 * @return true if group1 and group2 are linked.
+	 * @see PDBResidueNumber
+	 */
+	public boolean areLinkedGroups(PDBResidueNumber group1, PDBResidueNumber group2);
+	
+	/**
+	 * 
+	 * @param atom1 the first atom.
+	 * @param atom2 the second atom.
+	 * @return trye if atom1 and atom2 are linked.
+	 * @see PDBAtom
+	 */
+	public boolean areLinkedAtoms(PDBAtom atom1, PDBAtom atom2);
+	
+	/**
+	 * 
+	 * @param group a involved group.
+	 * @param isResidue true if the group is a residue; false if it is a ligand.
+	 * @return true if this group was not already contained.
+	 */
+	public boolean addGroup(PDBResidueNumber group, boolean isResidue);
+	
+	/**
+	 * Add a linkage. Add new the involved groups first using {@link addGroup}. 
+	 * @param atom1 the first atom.
+	 * @param atom2 the second atom.
+	 * @return true if this linkage was not already contained.
+	 * @see PDBAtom
+	 */
+	public boolean addAtomLinkage(PDBAtom atom1, PDBAtom atom2);
 }

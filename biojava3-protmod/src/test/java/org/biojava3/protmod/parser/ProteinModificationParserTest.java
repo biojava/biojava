@@ -35,9 +35,12 @@ import org.biojava.bio.structure.Atom;
 import org.biojava.bio.structure.Calc;
 import org.biojava.bio.structure.Chain;
 import org.biojava.bio.structure.Group;
+import org.biojava.bio.structure.PDBResidueNumber;
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureException;
+import org.biojava.bio.structure.StructureTools;
 
+import org.biojava3.protmod.PDBAtom;
 import org.biojava3.protmod.ModificationCategory;
 import org.biojava3.protmod.ModifiedCompound;
 import org.biojava3.protmod.ProteinModification;
@@ -127,12 +130,12 @@ public class ProteinModificationParserTest extends TestCase {
 				{"1IV8", "AA0075"}, // MLY
 				{"1IV8", "AA0076"}, // MLZ
 				{"1ZTO", "AA0082"}, // AAR
-				{"1D7T", "AA0085"}, // CY3
-				{"1D5M", "AA0091"}, // CLE
+				{"2V1S", "AA0085"}, // CY3
+				{"1XXP", "AA0091"}, // CLE
 				// {"1XAE", "AA0094"}, // NFA, C-terminal modification, but occurs in non-terminal residue
-				{"2H9E", "AA0095"}, // LPD
-				//{"2BF9", "AA0099"}, // TYC, error reading PDB file
-				{"1YYL", "AA0100"}, // VLM
+				// {"2H9E", "AA0095"}, // LPD
+				// {"2BF9", "AA0099"}, // TYC, error reading PDB file
+				// {"1YYL", "AA0100"}, // VLM
 				{"1AEX", "AA0101"}, // SCH
 				{"1OMW", "AA0105"}, // CMT
 				{"2C0J", "AA0106"}, // P1L
@@ -148,9 +151,9 @@ public class ProteinModificationParserTest extends TestCase {
 				{"1WCT", "AA0179"}, // BTR
 				{"1AUK", "AA0185"}, // FGL
 				{"148L", "AA0191"}, // DAL
-				{"1C4B", "AA0192"}, // DIL
+				// {"1C4B", "AA0192"}, // DIL
 				{"1T5M", "AA0196"}, // DSG
-				{"1CZQ", "AA0198"}, // DTR
+				// {"1CZQ", "AA0198"}, // DTR
 				{"2JUE", "AA0199"}, // DTH
 				{"1A7Y", "AA0200"}, // DVA
 				{"1CXP", "AA0205"}, // CSO
@@ -244,7 +247,7 @@ public class ProteinModificationParserTest extends TestCase {
 		};
 		
 		for ( String[] name : names){
-			//System.out.println("===\n"+name[0]);
+//			System.out.println("===\n"+name[0]);
 			try {
 //				String result = 
 //					parserTest(name[0], null); 
@@ -261,7 +264,7 @@ public class ProteinModificationParserTest extends TestCase {
 		Structure struc = TmpAtomCache.cache.getStructure(pdbId);
 
 		DefaultProteinModificationParser parser = new DefaultProteinModificationParser();
-		parser.setRecordUnidentifiableCompounds(true);
+//		parser.setRecordUnidentifiableCompounds(true);
 //		parser.setbondLengthTolerance(2);
 		
 		Set<ProteinModification> mods;
@@ -272,82 +275,87 @@ public class ProteinModificationParserTest extends TestCase {
 		}
 		
 		assertFalse(mods.isEmpty());
+
+		parser.parse(struc, mods);
+		List<ModifiedCompound> mcs = parser.getIdentifiedModifiedCompound();
+
+		assertFalse(pdbId + " " + residId +" is not false" , mcs.isEmpty());
 		
 		StringBuilder sb = new StringBuilder();
-
-		int nrmodel = struc.nrModels();
-		for (int modelnr=0; modelnr<nrmodel; modelnr++) {
-			sb.append("Model "+(modelnr+1)+"\n");
-
-			parser.parse(struc, mods, modelnr);
-			List<ModifiedCompound> mcs = parser.getIdentifiedModifiedCompound();
-
-			assertFalse(pdbId + " " + residId +" is not false" , mcs.isEmpty());
-			
-			int i=0;
-			for (ModifiedCompound mc : mcs) {
-				sb.append("Modification #"+(++i)+":"+"\n");
-				sb.append(printModification(mc));
-			}
-			
-			List<Group> unidentifiedModifiedResidues = parser.getUnidentifiableModifiedResidues();
-			i = 0;
-			for (Group group : unidentifiedModifiedResidues) {
-				sb.append("Unidenfied modified residue #"+(++i)+":"+"\n");
-				sb.append("\t"+group.getPDBName()+"\t"+group.getParent().getName()+"\t"+group.getPDBCode()+"\n");
-			}
-
-			List<Atom[]> unidentifiedLinkages = parser.getUnidentifiableAtomLinkages();
-			i = 0;
-			for (Atom[] atoms : unidentifiedLinkages) {
-				sb.append("Unidenfied linkage #"+(++i)+":"+"\n");
-				sb.append(printLinkage(atoms));
-			}
-		}
+		
+//		int i=0;
+//		for (ModifiedCompound mc : mcs) {
+//			sb.append("Modification #"+(++i)+":"+"\n");
+//			sb.append(printModification(mc, struc));
+//		}
+//		
+//		List<PDBResidueNumber> unidentifiedModifiedResidues = parser.getUnidentifiableModifiedResidues();
+//		i = 0;
+//		for (PDBResidueNumber resNum : unidentifiedModifiedResidues) {
+//			sb.append("Unidenfied modified residue #"+(++i)+":"+"\n");
+//			Group group = StructureTools.getGroupByPDBResidueNumber(struc, resNum);
+//			sb.append("\t"+group.getPDBCode()+"\t"+resNum.getChainId()+"\t"+resNum.getResidueNumber()+"\n");
+//		}
+//
+//		List<PDBAtom[]> unidentifiedLinkages = parser.getUnidentifiableAtomLinkages();
+//		i = 0;
+//		for (PDBAtom[] atoms : unidentifiedLinkages) {
+//			sb.append("Unidenfied linkage #"+(++i)+":"+"\n");
+//			sb.append(printLinkage(atoms, struc));
+//		}
 		
 		return sb.toString();
 	}
 	
-	private String printModification(ModifiedCompound mc){
+	private String printModification(ModifiedCompound mc, Structure struc) throws StructureException {
 		ProteinModification mod = mc.getModification();
 		ModificationCategory cat = mod.getCategory();
 		
 		StringBuilder sb = new StringBuilder();
 		sb.append(cat.label()+": "+mod.getId()+"\n");
 		
-		List<Atom[]> atomLinkages = mc.getAtomLinkages();
+		List<PDBAtom[]> atomLinkages = mc.getAtomLinkages();
 		if (atomLinkages.isEmpty()) {
-			Group g = mc.getGroups().iterator().next();
+			Group g = StructureTools.getGroupByPDBResidueNumber(struc, mc.getResidues().iterator().next());
 			Chain chain = g.getParent();
 			sb.append("\t"+g.getPDBName()+"\t"+chain.getName()+"\t"+g.getPDBCode()+"\n");
 		} else {
-			for (Atom[] atoms : atomLinkages) {
-				sb.append(printLinkage(atoms));
+			for (PDBAtom[] atoms : atomLinkages) {
+				sb.append(printLinkage(atoms, struc));
 			}
 		}
 		
 		return sb.toString();
 	}
 	
-	private String printLinkage(Atom[] atoms) {
+	private String printLinkage(PDBAtom[] atoms, Structure struc) throws StructureException {
 		StringBuilder sb = new StringBuilder();
 		
-		Group group = atoms[0].getParent();
+		Atom atom1 = getAtom(struc, atoms[0]);
+		
+		Group group = atom1.getParent();
 		Chain chain = group.getParent();
 		sb.append("\t"+group.getPDBName()+"\t"+chain.getName()+"\t"
-				+group.getPDBCode()+"\t"+atoms[0].getName()+"\n");
+				+group.getPDBCode()+"\t"+atom1.getName()+"\n");
 
-		group = atoms[1].getParent();
+		Atom atom2 = getAtom(struc, atoms[1]);
+		group = atom2.getParent();
 		assertEquals(chain, group.getParent());
 		sb.append("\t"+group.getPDBName()+"\t"+chain.getName()+"\t"
-				+group.getPDBCode()+"\t"+atoms[1].getName()+"\n");
+				+group.getPDBCode()+"\t"+atom2.getName()+"\n");
 
 		try {
-			sb.append("\t"+Calc.getDistance(atoms[0], atoms[1])+"\n");
+			sb.append("\t"+Calc.getDistance(atom1, atom2)+"\n");
 		} catch (StructureException e) {
 			e.printStackTrace();
 		}
 		
 		return sb.toString();
+	}
+
+	private Atom getAtom(Structure struc, PDBAtom atom) throws StructureException {
+		PDBResidueNumber num = atom.getGroup();
+		Group group = StructureTools.getGroupByPDBResidueNumber(struc, num);
+		return group.getAtom(atom.getAtomName());
 	}
 }

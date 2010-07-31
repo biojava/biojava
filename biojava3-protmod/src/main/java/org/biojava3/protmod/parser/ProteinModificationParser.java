@@ -27,11 +27,11 @@ package org.biojava3.protmod.parser;
 import java.util.List;
 import java.util.Set;
 
-import org.biojava.bio.structure.Atom;
-import org.biojava.bio.structure.Group;
+import org.biojava.bio.structure.PDBResidueNumber;
 import org.biojava.bio.structure.Structure;
 
 import org.biojava3.protmod.ModifiedCompound;
+import org.biojava3.protmod.PDBAtom;
 import org.biojava3.protmod.ProteinModification;
 
 /**
@@ -45,11 +45,8 @@ public interface ProteinModificationParser {
 	 * Parse modifications in a structure.
 	 * @param structure query {@link Structure}.
 	 * @param potentialModifications query {@link ProteinModification}s.
-	 * @param modelnr model number.
 	 */
-	public void parse(Structure structure, 
-			Set<ProteinModification> potentialModifications,
-			int modelnr);
+	public void parse(Structure structure, Set<ProteinModification> potentialModifications);
 	
 	/**
 	 * 
@@ -60,11 +57,22 @@ public interface ProteinModificationParser {
 	
 	/**
 	 * 
-	 * @return a list of modified residues that were not covered by
-	 *  the identified {@link ModifiedCompound}s from the last parse 
-	 *  result.
+	 * @param recordUnidentifiableAtomLinkages true if choosing to record unidentifiable
+	 *  atoms; false, otherwise.
+	 * @see #getUnidentifiableModifiedResidues
+	 * @see #getUnidentifiableAtomLinkages
 	 */
-	public List<Group> getUnidentifiableModifiedResidues();
+	public void setRecordUnidentifiableCompounds(boolean recordUnidentifiableModifiedCompounds);
+	
+	/**
+	 * 
+	 * @return a list of modified residues that were not covered by
+	 *  the identified ModifiedCompounds from the last parse 
+	 *  result.
+	 *  @see #setRecordUnidentifiableCompounds
+	 *  @see #getIdentifiedModifiedCompound
+	 */
+	public List<PDBResidueNumber> getUnidentifiableModifiedResidues();
 	
 	/**
 	 * 
@@ -72,6 +80,8 @@ public interface ProteinModificationParser {
 	 *  atom bonds that were not covered by the identified 
 	 *  {@link ModifiedCompound}s from the last parse result.
 	 *  Each element of the list is a array containing two atoms.
+	 * @see PDBAtom
+	 * @see #setRecordUnidentifiableCompounds
 	 */
-	public List<Atom[]> getUnidentifiableAtomLinkages();
+	public List<PDBAtom[]> getUnidentifiableAtomLinkages();
 }
