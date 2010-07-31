@@ -164,6 +164,8 @@ implements ProteinModificationParser {
 		List<Chain> chains = structure.getChains();
 		
 		for (Chain chain : chains) {
+			List<ModifiedCompound> modComps = new ArrayList<ModifiedCompound>();
+			
 			List<Group> residues = getAminoAcids(chain);
 			List<Group> ligands = chain.getAtomLigands();
 			
@@ -187,7 +189,7 @@ implements ProteinModificationParser {
 						for (Group residue : modifiedResidues) {
 							PDBResidueNumber resNum = StructureTools.getPDBResidueNumber(residue);
 							ModifiedCompound modRes = new ModifiedCompoundImpl(mod, resNum);
-							identifiedModifiedCompounds.add(modRes);
+							modComps.add(modRes);
 						}
 					}
 				} else {
@@ -201,19 +203,21 @@ implements ProteinModificationParser {
 						continue;
 					}
 					
-					assembleLinkages(matchedAtomsOfLinkages, mod, identifiedModifiedCompounds);
+					assembleLinkages(matchedAtomsOfLinkages, mod, modComps);
 				}
 			}
 
 			// identify additional groups that are not directly attached to amino acids.
-			for (ModifiedCompound mc : identifiedModifiedCompounds) {
+			for (ModifiedCompound mc : modComps) {
 				identifyAdditionalAttachments(mc, ligands, chain);
 			}
 			
+			identifiedModifiedCompounds.addAll(modComps);
+			
 			// record unidentifiable linkage
 			if (recordUnidentifiableModifiedCompounds) {
-				recordUnidentifiableAtomLinkages(residues, ligands);
-				recordUnidentifiableModifiedResidues(residues);
+				recordUnidentifiableAtomLinkages(modComps, residues, ligands);
+				recordUnidentifiableModifiedResidues(modComps, residues);
 			}
 		}
 	}
@@ -253,6 +257,7 @@ implements ProteinModificationParser {
 		
 		// TODO: should the additional groups only be allowed to the identified 
 		// heta groups or both amino acids and heta groups?
+		// TODO: how about chain-chain links?
 		List<Group> identifiedGroups = new ArrayList<Group>();
 		for (PDBResidueNumber num : mc.getLigands()) {
 			Group group;
@@ -309,12 +314,12 @@ implements ProteinModificationParser {
 	 * Record unidentifiable atom linkages in a chain. Only linkages between two
 	 * residues or one residue and one ligand will be recorded.
 	 */
-	private void recordUnidentifiableAtomLinkages(List<Group> residues,
-			List<Group> ligands) {
+	private void recordUnidentifiableAtomLinkages(List<ModifiedCompound> modComps,
+			List<Group> residues, List<Group> ligands) {
 		
 		// first put identified linkages in a map for fast query
 		Map<PDBAtom, Set<PDBAtom>> identifiedLinkages = new HashMap<PDBAtom, Set<PDBAtom>>();
-		for (ModifiedCompound mc : identifiedModifiedCompounds) {
+		for (ModifiedCompound mc : modComps) {
 			List<PDBAtom[]> linkages = mc.getAtomLinkages();
 			for (PDBAtom[] linkage : linkages) {
 				Set<PDBAtom> set = identifiedLinkages.get(linkage[0]);
@@ -386,12 +391,13 @@ implements ProteinModificationParser {
 		}
 	}
 	
-	private void recordUnidentifiableModifiedResidues(List<Group> residues) {
+	private void recordUnidentifiableModifiedResidues(List<ModifiedCompound> modComps, List<Group> residues) {
 		Set<PDBResidueNumber> identifiedComps = new HashSet<PDBResidueNumber>();
-		for (ModifiedCompound mc : identifiedModifiedCompounds) {
+		for (ModifiedCompound mc : modComps) {
 			identifiedComps.addAll(mc.getResidues());
 		}
 		
+		// TODO: use the ModifiedAminoAcid after Andreas add that.
 		for (Group group : residues) {
 			if (group.getType().equals(GroupType.HETATM)) {
 				PDBResidueNumber resNum = StructureTools.getPDBResidueNumber(group);
