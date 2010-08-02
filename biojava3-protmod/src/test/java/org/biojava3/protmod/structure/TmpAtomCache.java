@@ -22,7 +22,7 @@
  *
  */
 
-package org.biojava3.protmod;
+package org.biojava3.protmod.structure;
 
 import org.biojava.bio.structure.align.util.AtomCache;
 import org.biojava.bio.structure.io.FileParsingParameters;

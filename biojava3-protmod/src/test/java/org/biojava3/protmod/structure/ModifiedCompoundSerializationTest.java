@@ -22,7 +22,7 @@
  *
  */
 
-package org.biojava3.protmod;
+package org.biojava3.protmod.structure;
 
 import java.io.File;
 import java.io.IOException;
@@ -31,24 +31,26 @@ import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
-import java.util.List;
+import java.util.Set;
 
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureException;
 
-import org.biojava3.protmod.parser.DefaultProteinModificationParser;
+import org.biojava3.protmod.ProteinModification;
+import org.biojava3.protmod.structure.ProteinModificationParser;
 
 import junit.framework.TestCase;
 
 public class ModifiedCompoundSerializationTest extends TestCase {
 
+	@SuppressWarnings("unchecked") 
 	public void testSerialization() throws StructureException, IOException, ClassNotFoundException {
 		String pdbId = "3M6S";
 		Structure struc = TmpAtomCache.cache.getStructure(pdbId);
 		
-		DefaultProteinModificationParser parser = new DefaultProteinModificationParser();
+		ProteinModificationParser parser = new ProteinModificationParser();
 		parser.parse(struc, ProteinModification.allModifications());
-		List<ModifiedCompound> mcs = parser.getIdentifiedModifiedCompound();
+		Set<ModifiedCompound> mcs = parser.getIdentifiedModifiedCompound();
 		
 		String file = System.getProperty("java.io.tmpdir") + File.separatorChar + pdbId;
 		FileOutputStream fos = new FileOutputStream(file);
@@ -58,7 +60,7 @@ public class ModifiedCompoundSerializationTest extends TestCase {
 		
 		FileInputStream fin = new FileInputStream(file);
 		ObjectInputStream ois = new ObjectInputStream(fin); 
-		mcs = (List<ModifiedCompound>) ois.readObject();
+		mcs = (Set<ModifiedCompound>) ois.readObject();
 		ois.close();
 		
 		try {

@@ -22,25 +22,23 @@
  *
  */
 
-package org.biojava3.protmod;
+package org.biojava3.protmod.structure;
 
 import java.io.Serializable;
-
-import org.biojava.bio.structure.PDBResidueNumber;
 
 /**
  * Everything that is needed to uniquely describe a atom.
  * @author Jianjiong Gao
  * @since 3.0
  */
-public class PDBAtom
+public class StructureAtom
 implements Serializable {
 	private static final long serialVersionUID = -3586772436145093984L;
 	
-	private final PDBResidueNumber group;
+	private final StructureGroup group;
 	private final String atomName;
 	
-	public PDBAtom(final PDBResidueNumber group, final String atomName) {
+	public StructureAtom(final StructureGroup group, final String atomName) {
 		if (group==null || atomName==null) {
 			throw new IllegalArgumentException("Null argument(s).");
 		}
@@ -48,7 +46,7 @@ implements Serializable {
 		this.atomName = atomName;
 	}
 	
-	public PDBResidueNumber getGroup() {
+	public StructureGroup getGroup() {
 		return group;
 	}
 	
@@ -57,13 +55,13 @@ implements Serializable {
 	}
 	
 	public boolean equals(Object obj) {
-		if (!(obj instanceof PDBAtom))
-			return false;
-		
 		if (obj == this)
 			return true;
 		
-		PDBAtom anAtom = (PDBAtom)obj;
+		if (!(obj instanceof StructureAtom))
+			return false;
+		
+		StructureAtom anAtom = (StructureAtom)obj;
 		
 		if (!anAtom.getGroup().equals(group))
 			return false;
@@ -82,6 +80,6 @@ implements Serializable {
 	}
 	
 	public String toString() {
-		return group.toString() + ", Atom:" + atomName; 
+		return group.toString() + '\t' + atomName; 
 	}
 }

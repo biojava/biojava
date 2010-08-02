@@ -22,29 +22,18 @@
  *
  */
 
-package org.biojava3.protmod.parser;
+package org.biojava3.protmod.structure;
 
 import java.io.IOException;
 
-import java.util.List;
 import java.util.Set;
 
 import junit.framework.TestCase;
 
-import org.biojava.bio.structure.Atom;
-import org.biojava.bio.structure.Calc;
-import org.biojava.bio.structure.Chain;
-import org.biojava.bio.structure.Group;
-import org.biojava.bio.structure.PDBResidueNumber;
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureException;
-import org.biojava.bio.structure.StructureTools;
 
-import org.biojava3.protmod.PDBAtom;
-import org.biojava3.protmod.ModificationCategory;
-import org.biojava3.protmod.ModifiedCompound;
 import org.biojava3.protmod.ProteinModification;
-import org.biojava3.protmod.TmpAtomCache;
 
 /**
  * 
@@ -247,12 +236,9 @@ public class ProteinModificationParserTest extends TestCase {
 		};
 		
 		for ( String[] name : names){
-//			System.out.println("===\n"+name[0]);
 			try {
-//				String result = 
-//					parserTest(name[0], null); 
-					parserTest(name[0], name[1]);
-//				System.out.println(result);
+//				parserTest(name[0], null); 
+				parserTest(name[0], name[1]);
 			} catch (Exception e){
 				e.printStackTrace();
 				fail(e.getMessage());
@@ -260,11 +246,12 @@ public class ProteinModificationParserTest extends TestCase {
 		}
 	}	
 
-	private String parserTest(String pdbId, String residId) throws IOException, StructureException {		
+	private void parserTest(String pdbId, String residId) throws IOException, StructureException {		
 		Structure struc = TmpAtomCache.cache.getStructure(pdbId);
 
-		DefaultProteinModificationParser parser = new DefaultProteinModificationParser();
-//		parser.setRecordUnidentifiableCompounds(true);
+		ProteinModificationParser parser = new ProteinModificationParser();
+		boolean recordUnidentifiable = false;
+		parser.setRecordUnidentifiableCompounds(recordUnidentifiable);
 //		parser.setbondLengthTolerance(2);
 		
 		Set<ProteinModification> mods;
@@ -277,85 +264,55 @@ public class ProteinModificationParserTest extends TestCase {
 		assertFalse(mods.isEmpty());
 
 		parser.parse(struc, mods);
-		List<ModifiedCompound> mcs = parser.getIdentifiedModifiedCompound();
 
-		assertFalse(pdbId + " " + residId +" is not false" , mcs.isEmpty());
+		assertFalse(pdbId + " " + residId +" is not false" , 
+				parser.getIdentifiedModifiedCompound().isEmpty());
 		
-		StringBuilder sb = new StringBuilder();
-		
-//		int i=0;
-//		for (ModifiedCompound mc : mcs) {
-//			sb.append("Modification #"+(++i)+":"+"\n");
-//			sb.append(printModification(mc, struc));
-//		}
-//		
-//		List<PDBResidueNumber> unidentifiedModifiedResidues = parser.getUnidentifiableModifiedResidues();
-//		i = 0;
-//		for (PDBResidueNumber resNum : unidentifiedModifiedResidues) {
-//			sb.append("Unidenfied modified residue #"+(++i)+":"+"\n");
-//			Group group = StructureTools.getGroupByPDBResidueNumber(struc, resNum);
-//			sb.append("\t"+group.getPDBCode()+"\t"+resNum.getChainId()+"\t"+resNum.getResidueNumber()+"\n");
-//		}
-//
-//		List<PDBAtom[]> unidentifiedLinkages = parser.getUnidentifiableAtomLinkages();
-//		i = 0;
-//		for (PDBAtom[] atoms : unidentifiedLinkages) {
-//			sb.append("Unidenfied linkage #"+(++i)+":"+"\n");
-//			sb.append(printLinkage(atoms, struc));
-//		}
-		
-		return sb.toString();
+		boolean print = false;
+		if (print)
+			printResult(pdbId, parser, recordUnidentifiable);
 	}
 	
-	private String printModification(ModifiedCompound mc, Structure struc) throws StructureException {
-		ProteinModification mod = mc.getModification();
-		ModificationCategory cat = mod.getCategory();
-		
+	private void printResult(String pdbId, ProteinModificationParser parser, boolean recordUnidentifiable) {
 		StringBuilder sb = new StringBuilder();
-		sb.append(cat.label()+": "+mod.getId()+"\n");
+
+		sb.append("===");
+		sb.append(pdbId);
+		sb.append("===\n");
 		
-		List<PDBAtom[]> atomLinkages = mc.getAtomLinkages();
-		if (atomLinkages.isEmpty()) {
-			Group g = StructureTools.getGroupByPDBResidueNumber(struc, mc.getResidues().iterator().next());
-			Chain chain = g.getParent();
-			sb.append("\t"+g.getPDBName()+"\t"+chain.getName()+"\t"+g.getPDBCode()+"\n");
-		} else {
-			for (PDBAtom[] atoms : atomLinkages) {
-				sb.append(printLinkage(atoms, struc));
+		Set<ModifiedCompound> mcs = parser.getIdentifiedModifiedCompound();
+		
+		int i=0;
+		for (ModifiedCompound mc : mcs) {
+			sb.append("Modification #");
+			sb.append(++i);
+			sb.append(":\n");
+			sb.append(mc);
+			sb.append('\n');
+		}
+		
+		if (recordUnidentifiable) {
+			Set<StructureGroup> unidentifiedModifiedResidues = parser.getUnidentifiableModifiedResidues();
+			i = 0;
+			for (StructureGroup group : unidentifiedModifiedResidues) {
+				sb.append("Unidenfied modified residue #");
+				sb.append(++i);
+				sb.append(":\n");
+				sb.append(group);
+				sb.append('\n');
+			}
+	
+			Set<StructureAtomLinkage> unidentifiedLinkages = parser.getUnidentifiableAtomLinkages();
+			i = 0;
+			for (StructureAtomLinkage link : unidentifiedLinkages) {
+				sb.append("Unidenfied linkage #");
+				sb.append(++i);
+				sb.append(":\n");
+				sb.append(link);
+				sb.append('\n');
 			}
 		}
 		
-		return sb.toString();
-	}
-	
-	private String printLinkage(PDBAtom[] atoms, Structure struc) throws StructureException {
-		StringBuilder sb = new StringBuilder();
-		
-		Atom atom1 = getAtom(struc, atoms[0]);
-		
-		Group group = atom1.getParent();
-		Chain chain = group.getParent();
-		sb.append("\t"+group.getPDBName()+"\t"+chain.getName()+"\t"
-				+group.getPDBCode()+"\t"+atom1.getName()+"\n");
-
-		Atom atom2 = getAtom(struc, atoms[1]);
-		group = atom2.getParent();
-		assertEquals(chain, group.getParent());
-		sb.append("\t"+group.getPDBName()+"\t"+chain.getName()+"\t"
-				+group.getPDBCode()+"\t"+atom2.getName()+"\n");
-
-		try {
-			sb.append("\t"+Calc.getDistance(atom1, atom2)+"\n");
-		} catch (StructureException e) {
-			e.printStackTrace();
-		}
-		
-		return sb.toString();
-	}
-
-	private Atom getAtom(Structure struc, PDBAtom atom) throws StructureException {
-		PDBResidueNumber num = atom.getGroup();
-		Group group = StructureTools.getGroupByPDBResidueNumber(struc, num);
-		return group.getAtom(atom.getAtomName());
+		System.out.println(sb.toString());
 	}
 }

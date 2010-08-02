@@ -17,12 +17,12 @@
  *
  *      http://www.biojava.org/
  *
- * Created on Jun 24, 2010
+ * Created on Aug 2, 2010
  * Author: Jianjiong Gao 
  *
  */
 
-package org.biojava3.protmod.parser;
+package org.biojava3.protmod.structure;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -31,14 +31,70 @@ import java.util.List;
 import org.biojava.bio.structure.Atom;
 import org.biojava.bio.structure.Calc;
 import org.biojava.bio.structure.Group;
+import org.biojava.bio.structure.PDBResidueNumber;
 import org.biojava.bio.structure.StructureException;
+import org.biojava.bio.structure.StructureTools;
+import org.biojava3.protmod.ComponentType;
 
-final class ProteinModificationParserUtil {
-	/**
-	 * Utility class. All methods are static.
-	 */
-	private ProteinModificationParserUtil() {
+public final class StructureUtil {
+	private StructureUtil() {
 		throw new AssertionError();
+	}
+	
+	/**
+	 * 
+	 * @param group a {@link Group} in structure.
+	 * @param type the {@link ComponentType}.
+	 * @return the {@link StructureGroup} of the group.
+	 */
+	public static StructureGroup getStructureGroup(Group group, ComponentType type) {
+		PDBResidueNumber resNum = StructureTools.getPDBResidueNumber(group);
+		return new StructureGroup(resNum, group.getPDBName(), type);
+	}
+	
+	/**
+	 * 
+	 * @param atom a {@link Atom} in structure.
+	 * @param parentGroupType the {@link ComponentType} of the atom's parent {@link Group}. 
+	 * @return the {@link StructureAtom} of the atom.
+	 */
+	public static StructureAtom getStructureAtom(Atom atom, ComponentType parentGroupType) {
+		StructureGroup strucGroup = getStructureGroup(atom.getParent(), parentGroupType);
+		return new StructureAtom(strucGroup, atom.getName());
+	}
+	
+	/**
+	 * 
+	 * @param atom1 the first {@link Atom} in structure.
+	 * @param parentGroupType1 the {@link ComponentType} of the first atom's parent {@link Group}. 
+	 * @param atom2 the second {@link Atom} in structure.
+	 * @param parentGroupType2 the {@link ComponentType} of the second atom's parent {@link Group}. 
+	 * @return the {@link StructureAtomLinkage} of the two atoms.
+	 */
+	public static StructureAtomLinkage getStructureAtomLinkage(
+			Atom atom1, ComponentType parentGroupType1,
+			Atom atom2, ComponentType parentGroupType2) {
+		StructureAtom strucAtom1 = getStructureAtom(atom1, parentGroupType1);
+		StructureAtom strucAtom2 = getStructureAtom(atom2, parentGroupType2);
+		double distance = getAtomDistance(atom1, atom2);
+		return new StructureAtomLinkage(strucAtom1, strucAtom2, distance);
+	}
+	
+	/**
+	 * 
+	 * @param atom1 the first {@link Atom} in structure.
+	 * @param atom2 the second {@link Atom} in structure.
+	 * @return the distance between the two atoms in Angstrom.
+	 */
+	public static double getAtomDistance(Atom atom1, Atom atom2) {
+		double distance;
+		try {
+			distance = Calc.getDistance(atom1, atom2);
+		} catch (StructureException e) {
+			throw new AssertionError();
+		}
+		
+		return distance;
 	}
 	
 	/**
@@ -71,7 +127,7 @@ final class ProteinModificationParserUtil {
 			try {
 				distance = Calc.getDistance(linkage[0], linkage[1]);
 			} catch (StructureException e) {
-				continue;
+				throw new AssertionError();
 			}
 			
 			if (distance < minDistance) {
