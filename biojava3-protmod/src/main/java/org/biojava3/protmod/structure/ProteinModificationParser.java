@@ -337,7 +337,7 @@ public class ProteinModificationParser {
 						group1, true, group2, true, bondLengthTolerance);
 				for (Atom[] atoms : linkages) {
 					StructureAtomLinkage link = StructureUtil.getStructureAtomLinkage(atoms[0], 
-							ComponentType.LIGAND, atoms[1], ComponentType.LIGAND);
+							ComponentType.AMINOACID, atoms[1], ComponentType.AMINOACID);
 					if (!identifiedLinkages.contains(link)) {
 						unidentifiableAtomLinkages.add(link);
 					}
@@ -358,7 +358,7 @@ public class ProteinModificationParser {
 						group1, true, group2, false, bondLengthTolerance);
 				for (Atom[] atoms : linkages) {
 					StructureAtomLinkage link = StructureUtil.getStructureAtomLinkage(atoms[0], 
-							ComponentType.LIGAND, atoms[1], ComponentType.LIGAND);
+							ComponentType.AMINOACID, atoms[1], ComponentType.LIGAND);
 					if (!identifiedLinkages.contains(link)) {
 						unidentifiableAtomLinkages.add(link);
 					}
