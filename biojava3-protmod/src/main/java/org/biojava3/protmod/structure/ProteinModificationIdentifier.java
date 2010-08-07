@@ -61,6 +61,7 @@ public class ProteinModificationIdentifier {
 	
 	private double bondLengthTolerance = 0.4;
 	private boolean recordUnidentifiableModifiedCompounds = false;
+	private boolean recordAdditionalAttachments = true;
 	
 	private Set<ModifiedCompound> identifiedModifiedCompounds = null;
 	private Set<StructureAtomLinkage> unidentifiableAtomLinkages = null;
@@ -88,6 +89,15 @@ public class ProteinModificationIdentifier {
 	 */
 	public void setRecordUnidentifiableCompounds(boolean recordUnidentifiableModifiedCompounds) {
 		this.recordUnidentifiableModifiedCompounds = recordUnidentifiableModifiedCompounds;
+	}
+	
+	/**
+	 * 
+	 * @param recordAdditionalAttachments true if choosing to record additional attachments
+	 *  that are not directly attached to a modified residue.
+	 */
+	public void setRecordAdditionalAttachments(boolean recordAdditionalAttachments) {
+		this.recordAdditionalAttachments = recordAdditionalAttachments;
 	}
 	
 	/**
@@ -187,6 +197,16 @@ public class ProteinModificationIdentifier {
 	}
 	
 	/**
+	 * Identify a set of modifications in a a chains.
+	 * @param chain query {@link Chain}.
+	 * @param potentialModifications query {@link ProteinModification}s.
+	 */
+	public void identify(final Chain chain,
+			final Set<ProteinModification> potentialModifications)  {
+		identify(Collections.singletonList(chain), potentialModifications);
+	}
+	
+	/**
 	 * Identify a set of modifications in a a list of chains.
 	 * @param chains query {@link Chain}s.
 	 * @param potentialModifications query {@link ProteinModification}s.
@@ -256,9 +276,11 @@ public class ProteinModificationIdentifier {
 				}
 			}
 
-			// identify additional groups that are not directly attached to amino acids.
-			for (ModifiedCompound mc : modComps) {
-				identifyAdditionalAttachments(mc, ligands, chain);
+			if (recordAdditionalAttachments) {
+				// identify additional groups that are not directly attached to amino acids.
+				for (ModifiedCompound mc : modComps) {
+					identifyAdditionalAttachments(mc, ligands, chain);
+				}
 			}
 			
 			identifiedModifiedCompounds.addAll(modComps);
