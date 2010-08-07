@@ -25,6 +25,7 @@
 package org.biojava3.protmod.structure;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
@@ -56,7 +57,7 @@ import org.biojava3.protmod.ProteinModification;
  * @author Jianjiong Gao
  * @since 3.0
  */
-public class ProteinModificationParser {
+public class ProteinModificationIdentifier {
 	
 	private double bondLengthTolerance = 0.4;
 	private boolean recordUnidentifiableModifiedCompounds = false;
@@ -148,19 +149,51 @@ public class ProteinModificationParser {
 	}
 	
 	/**
-	 * Parse modifications in a structure.
+	 * Identify all registered modifications in a structure.
+	 * @param structure
+	 */
+	public void identify(final Structure structure) {
+		identify(structure, ProteinModification.allModifications());
+	}
+
+	/**
+	 * Identify a set of modifications in a structure.
 	 * @param structure query {@link Structure}.
 	 * @param potentialModifications query {@link ProteinModification}s.
 	 */
-	public void parse(final Structure structure, 
+	public void identify(final Structure structure,
 			final Set<ProteinModification> potentialModifications) {
-		identifiedModifiedCompounds = new LinkedHashSet<ModifiedCompound>();
-		if (recordUnidentifiableModifiedCompounds) {
-			unidentifiableAtomLinkages = new LinkedHashSet<StructureAtomLinkage>();
-			unidentifiableModifiedResidues = new LinkedHashSet<StructureGroup>();
+		if (structure==null) {
+			throw new IllegalArgumentException("Null structure.");
 		}
 		
-		if (structure==null) {
+		identify(structure.getChains(), potentialModifications);
+	}
+	
+	/**
+	 * Identify all registered modifications in a chain. 
+	 * @param chain query {@link Chain}.
+	 */
+	public void identify(final Chain chain) {
+		identify(Collections.singletonList(chain));
+	}
+	
+	/**
+	 * Identify all registered modifications in chains. 
+	 * @param chains query {@link Chain}s.
+	 */
+	public void identify(final List<Chain> chains) {
+		identify(chains, ProteinModification.allModifications());
+	}
+	
+	/**
+	 * Identify a set of modifications in a a list of chains.
+	 * @param chains query {@link Chain}s.
+	 * @param potentialModifications query {@link ProteinModification}s.
+	 */
+	public void identify(final List<Chain> chains,
+			final Set<ProteinModification> potentialModifications) {
+		if (chains==null) {
 			throw new IllegalArgumentException("Null structure.");
 		}
 		
@@ -168,11 +201,15 @@ public class ProteinModificationParser {
 			throw new IllegalArgumentException("Null potentialModifications.");
 		}
 		
+		identifiedModifiedCompounds = new LinkedHashSet<ModifiedCompound>();
+		if (recordUnidentifiableModifiedCompounds) {
+			unidentifiableAtomLinkages = new LinkedHashSet<StructureAtomLinkage>();
+			unidentifiableModifiedResidues = new LinkedHashSet<StructureGroup>();
+		}
+		
 		if (potentialModifications.isEmpty()) {
 			return;
 		}
-		
-		List<Chain> chains = structure.getChains();
 		
 		for (Chain chain : chains) {
 			List<ModifiedCompound> modComps = new ArrayList<ModifiedCompound>();

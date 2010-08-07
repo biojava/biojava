@@ -249,7 +249,7 @@ public class ProteinModificationParserTest extends TestCase {
 	private void parserTest(String pdbId, String residId) throws IOException, StructureException {		
 		Structure struc = TmpAtomCache.cache.getStructure(pdbId);
 
-		ProteinModificationParser parser = new ProteinModificationParser();
+		ProteinModificationIdentifier parser = new ProteinModificationIdentifier();
 		boolean recordUnidentifiable = false;
 		parser.setRecordUnidentifiableCompounds(recordUnidentifiable);
 //		parser.setbondLengthTolerance(2);
@@ -263,7 +263,7 @@ public class ProteinModificationParserTest extends TestCase {
 		
 		assertFalse(mods.isEmpty());
 
-		parser.parse(struc, mods);
+		parser.identify(struc, mods);
 
 		assertFalse(pdbId + " " + residId +" is not false" , 
 				parser.getIdentifiedModifiedCompound().isEmpty());
@@ -273,7 +273,7 @@ public class ProteinModificationParserTest extends TestCase {
 			printResult(pdbId, parser, recordUnidentifiable);
 	}
 	
-	private void printResult(String pdbId, ProteinModificationParser parser, boolean recordUnidentifiable) {
+	private void printResult(String pdbId, ProteinModificationIdentifier parser, boolean recordUnidentifiable) {
 		StringBuilder sb = new StringBuilder();
 
 		sb.append("===");

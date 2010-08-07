@@ -37,7 +37,7 @@ import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureException;
 
 import org.biojava3.protmod.ProteinModification;
-import org.biojava3.protmod.structure.ProteinModificationParser;
+import org.biojava3.protmod.structure.ProteinModificationIdentifier;
 
 import junit.framework.TestCase;
 
@@ -48,8 +48,8 @@ public class ModifiedCompoundSerializationTest extends TestCase {
 		String pdbId = "3M6S";
 		Structure struc = TmpAtomCache.cache.getStructure(pdbId);
 		
-		ProteinModificationParser parser = new ProteinModificationParser();
-		parser.parse(struc, ProteinModification.allModifications());
+		ProteinModificationIdentifier parser = new ProteinModificationIdentifier();
+		parser.identify(struc, ProteinModification.allModifications());
 		Set<ModifiedCompound> mcs = parser.getIdentifiedModifiedCompound();
 		
 		String file = System.getProperty("java.io.tmpdir") + File.separatorChar + pdbId;
