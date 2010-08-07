@@ -74,6 +74,10 @@ implements Serializable {
 		return type;
 	}
 	
+	public boolean isAminoAcid() {
+		return type == ComponentType.AMINOACID;
+	}
+	
 	public boolean equals(Object obj) {
 		if (obj == this)
 			return false;
