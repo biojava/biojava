@@ -55,8 +55,8 @@ public class FlipAFPChainTest extends TestCase {
 
 		try {
 
-			String name1 = "1tim.A";
-			String name2 = "1cdg.A";
+			String name1 = "1vhr.A";
+			String name2 = "2ihb.A";
 
 			flip(name1,name2, CeCPMain.algorithmName);
 		} catch (Exception e){
@@ -70,8 +70,8 @@ public class FlipAFPChainTest extends TestCase {
 
 		try {
 
-			String name1 = "1cdg.A";
-			String name2 = "1tim.A";
+			String name1 = "4hhb.A";
+			String name2 = "4hhb.B";
 			flip(name1,name2, CeMain.algorithmName);
 		} catch (Exception e){
 			e.printStackTrace();
