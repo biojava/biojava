@@ -71,11 +71,11 @@ public class MMcifTest extends TestCase {
 
 		// test a DNA binding protein
 		comparePDB2cif("1j59","A");
-		comparePDB2cif("1j59","B");
-		comparePDB2cif("1j59","C");
-		comparePDB2cif("1j59","D");
+		//comparePDB2cif("1j59","B");
+		//comparePDB2cif("1j59","C");
+		//comparePDB2cif("1j59","D");
 		comparePDB2cif("1j59","E");
-		comparePDB2cif("1j59","F");
+		//comparePDB2cif("1j59","F");
 
 		// test a NMR protein
 		comparePDB2cif("2kc9","A");
