@@ -99,24 +99,26 @@ extends TestCase
       }
    }
 
-   public void testSerialization1cdg_1tim(){
-
-      try {
-
-         Structure s1 = getStructure("1cdg", "A");		
-         Structure s2 = getStructure("1tim","A");
-
-         Atom[] ca1 = StructureTools.getAtomCAArray(s1);
-         Atom[] ca2 = StructureTools.getAtomCAArray(s2);
-
-         testAlignment("1cdg.A","1tim.A",ca1,ca2,false);
-         testAlignment("1cdg.A","1tim.A",ca1,ca2,true);
-
-      } catch (Exception e) {
-         e.printStackTrace();
-         fail(e.getMessage());
-      }
-   }
+   
+   // slow...
+//   public void testSerialization1cdg_1tim(){
+//
+//      try {
+//
+//         Structure s1 = getStructure("1cdg", "A");		
+//         Structure s2 = getStructure("1tim","A");
+//
+//         Atom[] ca1 = StructureTools.getAtomCAArray(s1);
+//         Atom[] ca2 = StructureTools.getAtomCAArray(s2);
+//
+//         testAlignment("1cdg.A","1tim.A",ca1,ca2,false);
+//         testAlignment("1cdg.A","1tim.A",ca1,ca2,true);
+//
+//      } catch (Exception e) {
+//         e.printStackTrace();
+//         fail(e.getMessage());
+//      }
+//   }
    public void testSerialization4hhb(){
 
       try {
@@ -256,8 +258,8 @@ extends TestCase
       String name1 = "4hhb.A";
       String name2 = "4hhb.B";
 
-      String name3 ="1cdg.A";
-      String name4 ="1tim.A";
+      String name3 ="1hiv.A";
+      String name4 ="1a4w.H";
       try {
          Structure s1 = getStructure("4hhb","A");
          Structure s2 = getStructure("4hhb","B");
@@ -268,8 +270,8 @@ extends TestCase
 
          result1 = align(name1,name2,ca1, ca2,true);
 
-         Structure s3 = getStructure("1cdg","A");
-         Structure s4 = getStructure("1tim","A");
+         Structure s3 = getStructure("1hiv","A");
+         Structure s4 = getStructure("1a4w","H");
          ca4 = StructureTools.getAtomCAArray(s3);
          ca5 = StructureTools.getAtomCAArray(s4);
          ca6 = StructureTools.cloneCAArray(ca5);
