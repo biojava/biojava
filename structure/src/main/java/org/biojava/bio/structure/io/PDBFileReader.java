@@ -317,7 +317,7 @@ public class PDBFileReader implements StructureIOFile {
 		if ( pdbId.length() < 4)
 			throw new IOException("the provided ID does not look like a PDB ID : " + pdbId);
 
-
+	
 		InputStream inputStream =null;
 
 		String pdbFile = null ;
@@ -352,8 +352,9 @@ public class PDBFileReader implements StructureIOFile {
 					pdbFile = testpath+ex ;
 
 					InputStreamProvider isp = new InputStreamProvider();
-
+					
 					inputStream = isp.getInputStream(pdbFile);
+					
 					break;
 				}
 
@@ -373,7 +374,7 @@ public class PDBFileReader implements StructureIOFile {
 	}
 
 
-	private File downloadPDB(String pdbId){
+	private  File downloadPDB(String pdbId){
 
 		if ((path == null) || (path.equals(""))){
 			// accessing temp. OS directory:         
@@ -439,25 +440,34 @@ public class PDBFileReader implements StructureIOFile {
 			pw.flush();
 			pw.close();
 
+			outPut.flush();
 			outPut.close();
 			conn.close();
 			uStream.close();
 
 		} catch (Exception e){
+			System.err.println("Problem while downloading PDB ID " + pdbId + " from FTP server." );
 			e.printStackTrace();
 			return null;
 		}
 		return tempFile;
 	}
 
-	private InputStream downloadAndGetInputStream(String pdbId)
+	
+	
+	private  InputStream downloadAndGetInputStream(String pdbId)
 	throws IOException{
+		
+		
+		
 		//PDBURLReader reader = new PDBURLReader();
 		//Structure s = reader.getStructureById(pdbId);
 		File tmp = downloadPDB(pdbId);
 		if ( tmp != null ) {
 			InputStreamProvider prov = new InputStreamProvider();
-			return prov.getInputStream(tmp);
+			InputStream is = prov.getInputStream(tmp);
+						
+			return is;
 
 
 		} else {
@@ -474,7 +484,7 @@ public class PDBFileReader implements StructureIOFile {
 	 * @return the Structure object
 	 * @throws IOException ...
 	 */
-	public Structure getStructureById(String pdbId)
+	public  Structure getStructureById(String pdbId)
 	throws IOException
 	{
 
@@ -484,7 +494,6 @@ public class PDBFileReader implements StructureIOFile {
 		PDBFileParser pdbpars = new PDBFileParser();
 		pdbpars.setFileParsingParameters(params);
 		
-
 		Structure struc = pdbpars.parsePDBFile(inStream) ;
 		return struc ;
 	}

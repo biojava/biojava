@@ -258,7 +258,7 @@ public class FarmJobRunnable implements Runnable {
 			}
 		}	
 
-		log(userName+": JFatCat job result: " + counter.toString());
+		log(userName+": jFATCAT job result: " + counter.toString());
 
 		// clean up in the end...
 		clearListeners();

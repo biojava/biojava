@@ -2033,7 +2033,7 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 	 * @throws IOException ...
 	 */
 
-	public Structure parsePDBFile(BufferedReader buf)
+	public  Structure parsePDBFile(BufferedReader buf)
 	throws IOException
 	{
 		// (re)set structure
@@ -2172,7 +2172,7 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 		} catch (Exception e) {
 			System.err.println(line);
 			e.printStackTrace();
-			throw new IOException ("Error parsing PDB file");
+			throw new IOException ("Error parsing PDB file " + structure.getPDBCode());
 		}
 
 		if ( params.isParseSecStruc())
