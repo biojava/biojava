@@ -402,6 +402,7 @@ public class AlignmentGui extends JFrame{
 
    }
 
+   
    private void calcDBSearch() {
 
       JTabbedPane tabPane = dbsearch.getTabPane();
@@ -459,8 +460,34 @@ public class AlignmentGui extends JFrame{
       }
 
       UserConfiguration config = WebStartMain.getWebStartConfig();
+      
+      int totalNrCPUs = Runtime.getRuntime().availableProcessors();
+      
+      int useNrCPUs = 1;
+      if ( totalNrCPUs > 1){
+    	  Object[] options = new Integer[totalNrCPUs];
+    	  int posX = 0;
+    	  for ( int i = totalNrCPUs; i> 0 ; i--){
+    		  options[posX] = i;
+    		  posX++;
+    	  }
+    	  int n = JOptionPane.showOptionDialog(null,
+    			  "How many would you like to use for the calculations?",
+    			  "We detected " + totalNrCPUs + " processors on your system.",    			  
+    			  JOptionPane.OK_CANCEL_OPTION,
+    			  JOptionPane.QUESTION_MESSAGE,
+    			  null,
+    			  options,
+    			  options[0]);
+    	  
+    	  if ( n < 0)
+    		  return;
+    	  useNrCPUs = (Integer) options[n];
+    	  System.out.println("will use " + useNrCPUs + " CPUs." );
+      }
+      
       alicalc = new AlignmentCalcDB(this, s,  name1,config,file);
-
+      alicalc.setNrCPUs(useNrCPUs);
       abortB.setEnabled(true);
       progress.setIndeterminate(true);
       ProgressThreadDrawer drawer = new ProgressThreadDrawer(progress);
@@ -471,6 +498,10 @@ public class AlignmentGui extends JFrame{
    }
 
 
+   public DBSearchGUI getDBSearch(){
+	   return dbsearch;
+   }
+   
    public void notifyCalcFinished(){
       abortB.setEnabled(false);
       thread = null;

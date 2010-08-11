@@ -29,5 +29,6 @@ public interface AlignmentCalculationRunnable extends Runnable
 
    public void interrupt();
    public void cleanup();
-   
+   public void setNrCPUs(int useNrCPUs);
+
 }
