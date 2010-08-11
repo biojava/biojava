@@ -151,7 +151,7 @@ public class InputStreamProvider {
     * @return an InputStream for the file
     * @throws IOException
     */
-   public InputStream getInputStream(File f) 
+   public  InputStream getInputStream(File f) 
    throws IOException
    {
 
@@ -165,6 +165,7 @@ public class InputStreamProvider {
          magic = getMagicNumber(test);
          test.close();
       } catch (Exception e){
+    	  System.err.println("Problem while loading: " + f);
          e.printStackTrace();
       };
 
@@ -241,7 +242,7 @@ public class InputStreamProvider {
     * @throws FileNotFoundException
     */
    private InputStream getInputStreamFromFile(File f) throws FileNotFoundException{
-      InputStream stream ;
+      InputStream stream = null;
 
 
 
@@ -252,10 +253,11 @@ public class InputStreamProvider {
             cache.addToCache(f.getAbsolutePath(),f);
             stream = cache.getInputStream(f.getAbsolutePath());
          }
-
-      } else {
-         stream = new FileInputStream(f);    		   
       }
+
+      if ( stream == null)
+         stream = new FileInputStream(f);    		   
+      
       return stream;
    }
 
