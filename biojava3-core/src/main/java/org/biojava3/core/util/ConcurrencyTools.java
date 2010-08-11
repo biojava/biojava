@@ -24,9 +24,9 @@
 package org.biojava3.core.util;
 
 import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -37,7 +37,7 @@ import java.util.concurrent.TimeUnit;
  */
 public class ConcurrencyTools {
 
-    private static ExecutorService pool;
+    private static ThreadPoolExecutor pool;
     // private static int tasks;
 
     // TODO additional logging and listening services
@@ -50,7 +50,7 @@ public class ConcurrencyTools {
      *
      * @return shared thread pool
      */
-    public static ExecutorService getThreadPool() {
+    public static ThreadPoolExecutor getThreadPool() {
         if (pool == null || pool.isShutdown()) {
             setThreadPoolDefault();
         }
@@ -86,7 +86,7 @@ public class ConcurrencyTools {
      * Sets thread pool to a single background thread.
      */
     public static void setThreadPoolSingle() {
-        setThreadPool(Executors.newSingleThreadExecutor());
+        setThreadPoolSize(1);
     }
 
     /**
@@ -95,7 +95,11 @@ public class ConcurrencyTools {
      * @param threads number of threads in pool
      */
     public static void setThreadPoolSize(int threads) {
-        setThreadPool(Executors.newFixedThreadPool(threads));
+    	setThreadPool(   new ThreadPoolExecutor(threads, threads,
+                                      0L, TimeUnit.MILLISECONDS,
+                                      new LinkedBlockingQueue<Runnable>()));
+    	
+        
     }
 
     /**
@@ -103,7 +107,7 @@ public class ConcurrencyTools {
      *
      * @param pool thread pool to share
      */
-    public static void setThreadPool(ExecutorService pool) {
+    public static void setThreadPool(ThreadPoolExecutor pool) {
         if (ConcurrencyTools.pool != pool) {
             shutdown();
             ConcurrencyTools.pool = pool;
