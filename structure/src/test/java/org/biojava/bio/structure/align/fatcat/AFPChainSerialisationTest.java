@@ -33,8 +33,6 @@ import org.biojava.bio.structure.align.model.AFPChain;
 import org.biojava.bio.structure.align.util.AtomCache;
 import org.biojava.bio.structure.align.xml.AFPChainXMLConverter;
 import org.biojava.bio.structure.align.xml.AFPChainXMLParser;
-import org.biojava.bio.structure.io.PDBFileReader;
-
 
 import junit.framework.Test;
 import junit.framework.TestCase;
