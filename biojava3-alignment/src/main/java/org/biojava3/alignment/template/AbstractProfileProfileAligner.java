@@ -23,10 +23,12 @@
 
 package org.biojava3.alignment.template;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
+import org.biojava3.alignment.template.GapPenalty.Type;
 import org.biojava3.core.sequence.template.Compound;
 import org.biojava3.core.sequence.template.CompoundSet;
 import org.biojava3.core.sequence.template.Sequence;
@@ -127,24 +129,6 @@ public abstract class AbstractProfileProfileAligner<S extends Sequence<C>, C ext
     }
 
     /**
-     * Returns the query {@link Profile}.
-     *
-     * @return the first {@link Profile} of the pair to align
-     */
-    public Profile<S, C> getQuery() {
-        return query;
-    }
-
-    /**
-     * Returns the target {@link Profile}.
-     *
-     * @return the second {@link Profile} of the pair to align
-     */
-    public Profile<S, C> getTarget() {
-        return target;
-    }
-
-    /**
      * Sets the query {@link Profile}.
      *
      * @param query the first {@link Profile} of the pair to align
@@ -166,43 +150,7 @@ public abstract class AbstractProfileProfileAligner<S extends Sequence<C>, C ext
         reset();
     }
 
-    // method for MatrixAligner
-
-    @Override
-    public String getScoreMatrixAsString() {
-        boolean tempStoringScoreMatrix = isStoringScoreMatrix();
-        if (scores == null) {
-            setStoringScoreMatrix(true);
-            align();
-            if (scores == null) {
-                return null;
-            }
-        }
-        StringBuilder s = new StringBuilder();
-        CompoundSet<C> compoundSet = query.getCompoundSet();
-        int lengthCompound = compoundSet.getMaxSingleCompoundStringLength(), lengthRest =
-                Math.max(Math.max(Short.toString(min).length(), Short.toString(max).length()), lengthCompound) + 1;
-        String padCompound = "%" + Integer.toString(lengthCompound) + "s",
-                padRest = "%" + Integer.toString(lengthRest);
-        s.append(String.format(padCompound, ""));
-        s.append(String.format(padRest + "s", ""));
-        for (C col : target.getAlignedSequence(1).getAsList()) { // TODO print consensus sequences
-            s.append(String.format(padRest + "s", compoundSet.getStringForCompound(col)));
-        }
-        s.append(String.format("%n"));
-        for (int row = 0; row <= query.getLength(); row++) {
-            s.append(String.format(padCompound, (row == 0) ? "" :
-                    compoundSet.getStringForCompound(query.getAlignedSequence(1).getCompoundAt(row))));
-            for (int col = 0; col <= target.getLength(); col++) {
-                s.append(String.format(padRest + "d", getScoreMatrixAt(row, col)));
-            }
-            s.append(String.format("%n"));
-        }
-        setStoringScoreMatrix(tempStoringScoreMatrix);
-        return s.toString();
-    }
-
-    // method for ProfileProfileScorer
+    // method for ProfileProfileAligner
 
     @Override
     public ProfilePair<S, C> getPair() {
@@ -212,11 +160,50 @@ public abstract class AbstractProfileProfileAligner<S extends Sequence<C>, C ext
         return pair;
     }
 
-    // helper methods
+    // methods for ProfileProfileScorer
 
-    // prepares for alignment; returns true if everything is set to run the alignment
     @Override
-    protected boolean alignReady() {
+    public Profile<S, C> getQuery() {
+        return query;
+    }
+
+    @Override
+    public Profile<S, C> getTarget() {
+        return target;
+    }
+
+    // methods for AbstractMatrixAligner
+
+    @Override
+    protected CompoundSet<C> getCompoundSet() {
+        return (query == null) ? null : query.getCompoundSet();
+    }
+
+    @Override
+    protected List<C> getCompoundsOfQuery() {
+        // TODO replace with consensus sequence
+        return (query == null) ? new ArrayList<C>() : query.getAlignedSequence(1).getAsList();
+    }
+
+    @Override
+    protected List<C> getCompoundsOfTarget() {
+        // TODO replace with consensus sequence
+        return (target == null) ? new ArrayList<C>() : target.getAlignedSequence(1).getAsList();
+    }
+
+    @Override
+    protected int[] getScoreMatrixDimensions() {
+        return new int[] { query.getLength() + 1, target.getLength() + 1, (getGapPenalty().getType() == Type.LINEAR) ?
+                1 : 3 };
+    }
+
+    @Override
+    protected short getSubstitutionScore(int queryColumn, int targetColumn) {
+        return getSubstitutionScore(qfrac[queryColumn - 1], tfrac[targetColumn - 1]);
+    }
+
+    @Override
+    protected boolean isReady() {
         // TODO when added to ConcurrencyTools, log completions and exceptions instead of printing stack traces
         try {
             if (query == null && queryFuture != null) {
@@ -225,28 +212,42 @@ public abstract class AbstractProfileProfileAligner<S extends Sequence<C>, C ext
             if (target == null && targetFuture != null) {
                 target = targetFuture.get();
             }
+            reset();
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (ExecutionException e) {
             e.printStackTrace();
         }
-        reset();
+        return query != null && target != null && getGapPenalty() != null && getSubstitutionMatrix() != null &&
+                query.getCompoundSet().equals(target.getCompoundSet());
+    }
+
+    @Override
+    protected void reset() {
+        super.reset();
+        pair = null;
         if (query != null && target != null && getGapPenalty() != null && getSubstitutionMatrix() != null &&
                 query.getCompoundSet().equals(target.getCompoundSet())) {
-            scores = new short[query.getLength() + 1][target.getLength() + 1];
-            return true;
+            int maxq = 0, maxt = 0;
+            cslist = query.getCompoundSet().getAllCompounds();
+            qfrac = new float[query.getLength()][];
+            for (int i = 0; i < qfrac.length; i++) {
+                qfrac[i] = query.getCompoundWeightsAt(i + 1, cslist);
+                maxq += getSubstitutionScore(qfrac[i], qfrac[i]);
+            }
+            tfrac = new float[target.getLength()][];
+            for (int i = 0; i < tfrac.length; i++) {
+                tfrac[i] = target.getCompoundWeightsAt(i + 1, cslist);
+                maxt += getSubstitutionScore(tfrac[i], tfrac[i]);
+            }
+            max = (short) Math.max(maxq, maxt);
+            maxScore = score = min = isLocal() ? 0 : (short) (2 * getGapPenalty().getOpenPenalty() +
+                    (query.getLength() + target.getLength()) * getGapPenalty().getExtensionPenalty());
         }
-        return false;
     }
 
-    // scores alignment of two columns
-    @Override
-    protected short alignScoreColumns(int queryColumn, int targetColumn) {
-        return alignScoreVectors(qfrac[queryColumn - 1], tfrac[targetColumn - 1]);
-    }
-
-    // scores alignment of two column vectors
-    private short alignScoreVectors(float[] qv, float[] tv) {
+    // helper method that scores alignment of two column vectors
+    private short getSubstitutionScore(float[] qv, float[] tv) {
         float score = 0.0f;
         for (int q = 0; q < qv.length; q++) {
             if (qv[q] > 0.0f) {
@@ -258,32 +259,6 @@ public abstract class AbstractProfileProfileAligner<S extends Sequence<C>, C ext
             }
         }
         return (short) Math.round(score);
-    }
-
-    // resets output fields; caches profile vectors
-    @Override
-    protected void reset() {
-        if (query != null && target != null && getGapPenalty() != null && getSubstitutionMatrix() != null &&
-                query.getCompoundSet().equals(target.getCompoundSet())) {
-            int maxq = 0, maxt = 0;
-            cslist = query.getCompoundSet().getAllCompounds();
-            qfrac = new float[query.getLength()][];
-            for (int i = 0; i < qfrac.length; i++) {
-                qfrac[i] = query.getCompoundWeightsAt(i + 1, cslist);
-                maxq += alignScoreVectors(qfrac[i], qfrac[i]);
-            }
-            tfrac = new float[target.getLength()][];
-            for (int i = 0; i < tfrac.length; i++) {
-                tfrac[i] = target.getCompoundWeightsAt(i + 1, cslist);
-                maxt += alignScoreVectors(tfrac[i], tfrac[i]);
-            }
-            max = (short) Math.max(maxq, maxt);
-            score = min = (short) (2 * getGapPenalty().getOpenPenalty() + (query.getLength() + target.getLength()) *
-                    getGapPenalty().getExtensionPenalty());
-        }
-        scores = null;
-        pair = null;
-        time = -1;
     }
 
 }

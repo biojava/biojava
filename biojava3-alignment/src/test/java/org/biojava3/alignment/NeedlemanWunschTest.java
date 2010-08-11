@@ -92,34 +92,58 @@ public class NeedlemanWunschTest {
 
     @Test
     public void testGetScoreMatrix() {
-        short[][] scores = alignment.getScoreMatrix();
-        assertEquals(scores[2][1], -6);
+        short[][][] scores = alignment.getScoreMatrix();
+        assertEquals(scores[2][1][0], -6);
         scores = self.getScoreMatrix();
-        assertEquals(scores[3][4], 4);
+        assertEquals(scores[3][4][2], 4);
     }
 
     @Test
     public void testGetScoreMatrixAsString() {
         assertEquals(alignment.getScoreMatrixAsString(), String.format(
+                "Substitution%n" +
                 "        R   D   G%n" +
-                "    0 -11 -12 -13%n" +
-                "A -11  -1 -12 -12%n" +
-                "R -12  -6  -3 -14%n" +
-                "N -13 -12  -5  -3%n" +
-                "D -14 -14  -6  -6%n"));
+                "    0  -\u221E  -\u221E  -\u221E%n" +
+                "A  -\u221E  -1 -13 -12%n" +
+                "R  -\u221E  -6  -3 -14%n" +
+                "N  -\u221E -12  -5  -3%n" +
+                "D  -\u221E -15  -6  -6%n" +
+                "%nDeletion%n" +
+                "        R   D   G%n" +
+                "  -10  -\u221E  -\u221E  -\u221E%n" +
+                "A -11  -\u221E  -\u221E  -\u221E%n" +
+                "R -12 -12 -24 -23%n" +
+                "N -13 -13 -14 -24%n" +
+                "D -14 -14 -15 -14%n" +
+                "%nInsertion%n" +
+                "        R   D   G%n" +
+                "  -10 -11 -12 -13%n" +
+                "A  -\u221E  -\u221E -12 -13%n" +
+                "R  -\u221E  -\u221E -17 -14%n" +
+                "N  -\u221E  -\u221E -23 -16%n" +
+                "D  -\u221E  -\u221E -26 -17%n"));
         assertEquals(self.getScoreMatrixAsString(), String.format(
+                "Substitution%n" +
                 "        A   R   N   D%n" +
-                "    0 -11 -12 -13 -14%n" +
-                "A -11   4  -7  -8  -9%n" +
-                "R -12  -7   9  -2  -3%n" +
-                "N -13  -8  -2  15   4%n" +
-                "D -14  -9  -3   4  21%n"));
-    }
-
-    @Test
-    public void testGetScoreMatrixAt() {
-        assertEquals(alignment.getScoreMatrixAt(1,1), -1);
-        assertEquals(self.getScoreMatrixAt(1,1), 4);
+                "    0  -\u221E  -\u221E  -\u221E  -\u221E%n" +
+                "A  -\u221E   4 -12 -14 -15%n" +
+                "R  -\u221E -12   9  -7 -10%n" +
+                "N  -\u221E -14  -7  15  -1%n" +
+                "D  -\u221E -15 -10  -1  21%n" +
+                "%nDeletion%n" +
+                "        A   R   N   D%n" +
+                "  -10  -\u221E  -\u221E  -\u221E  -\u221E%n" +
+                "A -11  -\u221E  -\u221E  -\u221E  -\u221E%n" +
+                "R -12  -7 -23 -25 -26%n" +
+                "N -13  -8  -2 -18 -21%n" +
+                "D -14  -9  -3   4 -12%n" +
+                "%nInsertion%n" +
+                "        A   R   N   D%n" +
+                "  -10 -11 -12 -13 -14%n" +
+                "A  -\u221E  -\u221E  -7  -8  -9%n" +
+                "R  -\u221E  -\u221E -23  -2  -3%n" +
+                "N  -\u221E  -\u221E -25 -18   4%n" +
+                "D  -\u221E  -\u221E -26 -21 -12%n"));
     }
 
     @Test

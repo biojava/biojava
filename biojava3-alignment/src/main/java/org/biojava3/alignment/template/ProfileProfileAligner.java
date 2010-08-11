@@ -36,6 +36,11 @@ import org.biojava3.core.sequence.template.Sequence;
 public interface ProfileProfileAligner<S extends Sequence<C>, C extends Compound> extends Aligner<S, C>,
         ProfileProfileScorer<S, C> {
 
-    // combines 2 interfaces
+    /**
+     * Returns alignment profile pair.
+     *
+     * @return alignment profile pair
+     */
+    ProfilePair<S, C> getPair();
 
 }

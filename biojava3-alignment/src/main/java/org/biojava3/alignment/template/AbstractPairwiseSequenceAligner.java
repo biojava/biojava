@@ -23,6 +23,10 @@
 
 package org.biojava3.alignment.template;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.biojava3.alignment.template.GapPenalty.Type;
 import org.biojava3.core.sequence.template.Compound;
 import org.biojava3.core.sequence.template.CompoundSet;
 import org.biojava3.core.sequence.template.Sequence;
@@ -61,7 +65,21 @@ public abstract class AbstractPairwiseSequenceAligner<S extends Sequence<C>, C e
      */
     protected AbstractPairwiseSequenceAligner(S query, S target, GapPenalty gapPenalty,
             SubstitutionMatrix<C> subMatrix) {
-        super(gapPenalty, subMatrix);
+        this(query, target, gapPenalty, subMatrix, false);
+    }
+
+    /**
+     * Prepares for a pairwise sequence alignment.
+     *
+     * @param query the first {@link Sequence} of the pair to align
+     * @param target the second {@link Sequence} of the pair to align
+     * @param gapPenalty the gap penalties used during alignment
+     * @param subMatrix the set of substitution scores used during alignment
+     * @param local if true, find a region of similarity rather than aligning every compound
+     */
+    protected AbstractPairwiseSequenceAligner(S query, S target, GapPenalty gapPenalty,
+            SubstitutionMatrix<C> subMatrix, boolean local) {
+        super(gapPenalty, subMatrix, local);
         this.query = query;
         this.target = target;
         reset();
@@ -87,6 +105,16 @@ public abstract class AbstractPairwiseSequenceAligner<S extends Sequence<C>, C e
         reset();
     }
 
+    // method for PairwiseSequenceAligner
+
+    @Override
+    public SequencePair<S, C> getPair() {
+        if (pair == null) {
+            align();
+        }
+        return pair;
+    }
+
     // methods for PairwiseSequenceScorer
 
     @Override
@@ -99,75 +127,44 @@ public abstract class AbstractPairwiseSequenceAligner<S extends Sequence<C>, C e
         return target;
     }
 
-    // method for MatrixAligner
+    // methods for AbstractMatrixAligner
 
     @Override
-    public String getScoreMatrixAsString() {
-        boolean tempStoringScoreMatrix = isStoringScoreMatrix();
-        if (scores == null) {
-            setStoringScoreMatrix(true);
-            align();
-            if (scores == null) {
-                return null;
-            }
-        }
-        StringBuilder s = new StringBuilder();
-        CompoundSet<C> compoundSet = query.getCompoundSet();
-        int lengthCompound = compoundSet.getMaxSingleCompoundStringLength(), lengthRest =
-                Math.max(Math.max(Short.toString(min).length(), Short.toString(max).length()), lengthCompound) + 1;
-        String padCompound = "%" + Integer.toString(lengthCompound) + "s",
-                padRest = "%" + Integer.toString(lengthRest);
-        s.append(String.format(padCompound, ""));
-        s.append(String.format(padRest + "s", ""));
-        for (C col : target.getAsList()) {
-            s.append(String.format(padRest + "s", compoundSet.getStringForCompound(col)));
-        }
-        s.append(String.format("%n"));
-        for (int row = 0; row <= query.getLength(); row++) {
-            s.append(String.format(padCompound, (row == 0) ? "" :
-                    compoundSet.getStringForCompound(query.getCompoundAt(row))));
-            for (int col = 0; col <= target.getLength(); col++) {
-                s.append(String.format(padRest + "d", getScoreMatrixAt(row, col)));
-            }
-            s.append(String.format("%n"));
-        }
-        setStoringScoreMatrix(tempStoringScoreMatrix);
-        return s.toString();
+    protected CompoundSet<C> getCompoundSet() {
+        return (query == null) ? null : query.getCompoundSet();
     }
 
-    // method for PairwiseSequenceScorer
-
     @Override
-    public SequencePair<S, C> getPair() {
-        if (pair == null) {
-            align();
-        }
-        return pair;
+    protected List<C> getCompoundsOfQuery() {
+        return (query == null) ? new ArrayList<C>() : query.getAsList();
     }
 
-    // helper methods
-
-    // prepares for alignment; returns true if everything is set to run the alignment
     @Override
-    protected boolean alignReady() {
-        reset();
-        if (query != null && target != null && getGapPenalty() != null && getSubstitutionMatrix() != null &&
-                query.getCompoundSet().equals(target.getCompoundSet())) {
-            scores = new short[query.getLength() + 1][target.getLength() + 1];
-            return true;
-        }
-        return false;
+    protected List<C> getCompoundsOfTarget() {
+        return (target == null) ? new ArrayList<C>() : target.getAsList();
     }
 
-    // scores alignment of two columns
     @Override
-    protected short alignScoreColumns(int queryColumn, int targetColumn) {
+    protected int[] getScoreMatrixDimensions() {
+        return new int[] { query.getLength() + 1, target.getLength() + 1, (getGapPenalty().getType() == Type.LINEAR) ?
+                1 : 3 };
+    }
+
+    @Override
+    protected short getSubstitutionScore(int queryColumn, int targetColumn) {
         return getSubstitutionMatrix().getValue(query.getCompoundAt(queryColumn), target.getCompoundAt(targetColumn));
     }
 
-    // resets output fields
+    @Override
+    protected boolean isReady() {
+        return query != null && target != null && getGapPenalty() != null && getSubstitutionMatrix() != null &&
+                query.getCompoundSet().equals(target.getCompoundSet());
+    }
+
     @Override
     protected void reset() {
+        super.reset();
+        pair = null;
         if (query != null && target != null && getGapPenalty() != null && getSubstitutionMatrix() != null &&
                 query.getCompoundSet().equals(target.getCompoundSet())) {
             int maxq = 0, maxt = 0;
@@ -178,12 +175,9 @@ public abstract class AbstractPairwiseSequenceAligner<S extends Sequence<C>, C e
                 maxt += getSubstitutionMatrix().getValue(c, c);
             }
             max = (short) Math.max(maxq, maxt);
-            score = min = (short) (2 * getGapPenalty().getOpenPenalty() + (query.getLength() + target.getLength()) *
-                    getGapPenalty().getExtensionPenalty());
+            maxScore = score = min = isLocal() ? 0 : (short) (2 * getGapPenalty().getOpenPenalty() +
+                    (query.getLength() + target.getLength()) * getGapPenalty().getExtensionPenalty());
         }
-        scores = null;
-        pair = null;
-        time = -1;
     }
 
 }

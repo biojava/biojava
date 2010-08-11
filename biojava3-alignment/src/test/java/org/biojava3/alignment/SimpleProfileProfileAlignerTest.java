@@ -119,44 +119,82 @@ public class SimpleProfileProfileAlignerTest {
 
     @Test
     public void testGetScoreMatrix() {
-        short[][] scores = sppa1.getScoreMatrix();
-        assertEquals(scores[2][1], 1);
+        short[][][] scores = sppa1.getScoreMatrix();
+        assertEquals(scores[2][1][1], 1);
         scores = sppa2.getScoreMatrix();
-        assertEquals(scores[3][4], -7);
+        assertEquals(scores[3][4][0], -7);
         scores = sppa3.getScoreMatrix();
-        assertEquals(scores[1][2], 1);
-    }
-
-    @Test // TODO fix spacing, fix consensus sequence labels
-    public void testGetScoreMatrixAsString() {
-        assertEquals(sppa1.getScoreMatrixAsString(), String.format(
-                "        A   R   N   D%n" +
-                "    0  -3  -4  -5  -6%n" +
-                "A  -3   4   1   0  -1%n" +
-                "R  -4   1   9   6   5%n" +
-                "N  -5   0   6  15  12%n" +
-                "D  -6  -1   5  12  21%n"));
-        assertEquals(sppa2.getScoreMatrixAsString(), String.format(
-                "        A   N   D   R%n" +
-                "    0  -3  -4  -5  -6%n" +
-                "H  -3  -2  -2  -5  -5%n" +
-                "I  -4  -4  -5  -5  -8%n" +
-                "L  -5  -5  -6  -8  -7%n" +
-                "K  -6  -6  -5  -7  -6%n"));
-        assertEquals(sppa3.getScoreMatrixAsString(), String.format(
-                "        -   H   I   L   K%n" +
-                "    0  -3  -4  -5  -6  -7%n" +
-                "A  -3   4   1   0  -1  -2%n" +
-                "R  -4   1   4   1   0   3%n" +
-                "N  -5   0   5   3   1   0%n" +
-                "D  -6  -1   2   7   4   3%n"));
+        assertEquals(scores[1][2][2], 1);
     }
 
     @Test
-    public void testGetScoreMatrixAt() {
-        assertEquals(sppa1.getScoreMatrixAt(0, 3), -5);
-        assertEquals(sppa2.getScoreMatrixAt(1, 1), -2);
-        assertEquals(sppa3.getScoreMatrixAt(3, 5), 0);
+    public void testGetScoreMatrixAsString() {
+        assertEquals(sppa1.getScoreMatrixAsString(), String.format(
+                "Substitution%n" +
+                "        A   R   N   D%n" +
+                "    0  -\u221E  -\u221E  -\u221E  -\u221E%n" +
+                "A  -\u221E   4  -4  -6  -7%n" +
+                "R  -\u221E  -4   9   1  -2%n" +
+                "N  -\u221E  -6   1  15   7%n" +
+                "D  -\u221E  -7  -2   7  21%n" +
+                "%nDeletion%n" +
+                "        A   R   N   D%n" +
+                "   -2  -\u221E  -\u221E  -\u221E  -\u221E%n" +
+                "A  -3  -\u221E  -\u221E  -\u221E  -\u221E%n" +
+                "R  -4   1  -7  -9 -10%n" +
+                "N  -5   0   6  -2  -5%n" +
+                "D  -6  -1   5  12   4%n" +
+                "%nInsertion%n" +
+                "        A   R   N   D%n" +
+                "   -2  -3  -4  -5  -6%n" +
+                "A  -\u221E  -\u221E   1   0  -1%n" +
+                "R  -\u221E  -\u221E  -7   6   5%n" +
+                "N  -\u221E  -\u221E  -9  -2  12%n" +
+                "D  -\u221E  -\u221E -10  -5   4%n"));
+        assertEquals(sppa2.getScoreMatrixAsString(), String.format(
+                "Substitution%n" +
+                "        A   N   D   R%n" +
+                "    0  -\u221E  -\u221E  -\u221E  -\u221E%n" +
+                "H  -\u221E  -2  -2  -5  -5%n" +
+                "I  -\u221E  -4  -5  -5  -8%n" +
+                "L  -\u221E  -5  -7  -9  -7%n" +
+                "K  -\u221E  -6  -5  -7  -6%n" +
+                "%nDeletion%n" +
+                "        A   N   D   R%n" +
+                "   -2  -\u221E  -\u221E  -\u221E  -\u221E%n" +
+                "H  -3  -\u221E  -\u221E  -\u221E  -\u221E%n" +
+                "I  -4  -5  -5  -8  -8%n" +
+                "L  -5  -6  -6  -8  -9%n" +
+                "K  -6  -7  -7  -9 -10%n" +
+                "%nInsertion%n" +
+                "        A   N   D   R%n" +
+                "   -2  -3  -4  -5  -6%n" +
+                "H  -\u221E  -\u221E  -5  -5  -6%n" +
+                "I  -\u221E  -\u221E  -7  -8  -8%n" +
+                "L  -\u221E  -\u221E  -8  -9 -10%n" +
+                "K  -\u221E  -\u221E  -9  -8  -9%n"));
+        assertEquals(sppa3.getScoreMatrixAsString(), String.format(
+                "Substitution%n" +
+                "        -   H   I   L   K%n" +
+                "    0  -\u221E  -\u221E  -\u221E  -\u221E  -\u221E%n" +
+                "A  -\u221E   4  -5  -5  -6  -7%n" +
+                "R  -\u221E  -4   4  -1  -2   3%n" +
+                "N  -\u221E  -6   5   3  -2   0%n" +
+                "D  -\u221E  -7   0   7  -1   0%n" +
+                "%nDeletion%n" +
+                "        -   H   I   L   K%n" +
+                "   -2  -\u221E  -\u221E  -\u221E  -\u221E  -\u221E%n" +
+                "A  -3  -\u221E  -\u221E  -\u221E  -\u221E  -\u221E%n" +
+                "R  -4   1  -8  -8  -9 -10%n" +
+                "N  -5   0   1  -4  -5   0%n" +
+                "D  -6  -1   2   0  -5  -1%n" +
+                "%nInsertion%n" +
+                "        -   H   I   L   K%n" +
+                "   -2  -3  -4  -5  -6  -7%n" +
+                "A  -\u221E  -\u221E   1   0  -1  -2%n" +
+                "R  -\u221E  -\u221E  -7   1   0  -1%n" +
+                "N  -\u221E  -\u221E  -9   2   1   0%n" +
+                "D  -\u221E  -\u221E -10  -3   4   3%n"));
     }
 
     @Test
@@ -173,25 +211,25 @@ public class SimpleProfileProfileAlignerTest {
         assertEquals(sppa3.getProfile().toString(), String.format("ARND--%nARND--%n--HILK%nA-ND-R%n"));
     }
 
-    @Test // TODO better bounds
+    @Test
     public void testGetMaxScore() {
         assertEquals(sppa1.getMaxScore(), 21);
         assertEquals(sppa2.getMaxScore(), 21);
         assertEquals(sppa3.getMaxScore(), 21);
     }
 
-    @Test // TODO better bounds
+    @Test
     public void testGetMinScore() {
         assertEquals(sppa1.getMinScore(), -12);
         assertEquals(sppa2.getMinScore(), -12);
         assertEquals(sppa3.getMinScore(), -13);
     }
 
-    @Test // TODO fix last score
+    @Test
     public void testGetScore() {
         assertEquals(sppa1.getScore(), 21);
         assertEquals(sppa2.getScore(), -6);
-//        assertEquals(sppa3.getScore(), 3);
+        assertEquals(sppa3.getScore(), 3);
     }
 
     @Test

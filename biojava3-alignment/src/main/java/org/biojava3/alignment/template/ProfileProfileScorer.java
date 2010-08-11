@@ -36,10 +36,17 @@ import org.biojava3.core.sequence.template.Sequence;
 public interface ProfileProfileScorer<S extends Sequence<C>, C extends Compound> extends Scorer {
 
     /**
-     * Returns pair for which score was calculated.
+     * Returns the first profile of the pair.
      *
-     * @return alignment profile pair
+     * @return the first profile of the pair
      */
-    ProfilePair<S, C> getPair();
+    Profile<S, C> getQuery();
+
+    /**
+     * Returns the second profile of the pair.
+     *
+     * @return the second profile of the pair
+     */
+    Profile<S, C> getTarget();
 
 }

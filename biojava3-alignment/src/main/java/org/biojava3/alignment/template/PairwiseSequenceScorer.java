@@ -31,7 +31,7 @@ import org.biojava3.core.sequence.template.Sequence;
  *
  * @author Mark Chapman
  * @param <S> each {@link Sequence} of the alignment pair is of type S
- * @param <C> each element of an Sequence is a {@link Compound} of type C
+ * @param <C> each element of a Sequence is a {@link Compound} of type C
  */
 public interface PairwiseSequenceScorer<S extends Sequence<C>, C extends Compound> extends Scorer {
 

@@ -27,7 +27,7 @@ import org.biojava3.core.sequence.template.Compound;
 import org.biojava3.core.sequence.template.Sequence;
 
 /**
- * Defines an {@link Aligner} which builds a score matrix during computation.  TODO: support multiple score matrices.
+ * Defines an {@link Aligner} which builds a score matrix during computation.
  *
  * @author Mark Chapman
  * @param <S> each element of the alignment {@link Profile} is of type S
@@ -37,26 +37,16 @@ public interface MatrixAligner<S extends Sequence<C>, C extends Compound> extend
 
     /**
      * Returns the entire score matrix built during alignment.  The first dimension has the length of the first (query)
-     * {@link Sequence}; the second has the length of the second (target) {@link Sequence}.
+     * sequence + 1; the second has the length of the second (target) sequence + 1; the third has length equal to the
+     * number of scores stored per pairing of an element from each {@link Sequence}.
      *
      * @return the score matrix
      */
-    short[][] getScoreMatrix();
-
-    /**
-     * Returns a single value from within the score matrix.
-     *
-     * @param queryIndex index in the first (query) {@link Sequence}
-     * @param targetIndex index in the second (target) {@link Sequence}
-     * @return score at given point in score matrix
-     * @throws IndexOutOfBoundsException if queryIndex < 0, queryIndex > query length, targetIndex < 0, or
-     *     targetIndex > target length
-     */
-    short getScoreMatrixAt(int queryIndex, int targetIndex);
+    short[][][] getScoreMatrix();
 
     /**
      * Returns a depiction of the score matrix as a {@link String}.  This may include additional description such as
-     * labeling each axes with the {@link Compound}s of each {@link Sequence}.
+     * labels for each dimension: element from query sequence, element from target sequence, and meaning of each score.
      *
      * @return the score matrix as a character sequence
      */
