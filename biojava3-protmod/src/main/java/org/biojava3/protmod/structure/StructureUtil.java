@@ -30,6 +30,7 @@ import java.util.List;
 
 import org.biojava.bio.structure.Atom;
 import org.biojava.bio.structure.Calc;
+import org.biojava.bio.structure.Chain;
 import org.biojava.bio.structure.Group;
 import org.biojava.bio.structure.PDBResidueNumber;
 import org.biojava.bio.structure.StructureException;
@@ -274,5 +275,26 @@ public final class StructureUtil {
 		}
 		
 		return ret;
+	}
+	
+	// TODO: this should be replaced when Andreas fix the getAtomGroups("amino");
+	/**
+	 * Get all amino acids in a chain.
+	 * @param chain
+	 * @return
+	 */
+	public static List<Group> getAminoAcids(Chain chain) {
+//		List<Group> residues = new ArrayList<Group>();
+//		for (Group group : chain.getAtomGroups()) {
+//			ChemComp cc = group.getChemComp();
+//			if (ResidueType.lPeptideLinking.equals(cc.getResidueType()) ||
+//					PolymerType.PROTEIN_ONLY.contains(cc.getPolymerType())) {
+//				residues.add(group);
+//			}
+//		}
+		List<Group> residues = new ArrayList<Group>(chain.getSeqResGroups());
+		residues.retainAll(chain.getAtomGroups());
+		
+		return residues;
 	}
 }

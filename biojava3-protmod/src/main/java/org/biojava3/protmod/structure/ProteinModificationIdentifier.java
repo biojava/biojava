@@ -37,10 +37,8 @@ import org.biojava.bio.structure.Atom;
 import org.biojava.bio.structure.Chain;
 import org.biojava.bio.structure.Group;
 import org.biojava.bio.structure.GroupType;
-import org.biojava.bio.structure.PDBResidueNumber;
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureException;
-import org.biojava.bio.structure.StructureTools;
 //import org.biojava.bio.structure.io.mmcif.chem.ResidueType;
 //import org.biojava.bio.structure.io.mmcif.chem.PolymerType;
 //import org.biojava.bio.structure.io.mmcif.model.ChemComp;
@@ -234,7 +232,7 @@ public class ProteinModificationIdentifier {
 		for (Chain chain : chains) {
 			List<ModifiedCompound> modComps = new ArrayList<ModifiedCompound>();
 			
-			List<Group> residues = getAminoAcids(chain);
+			List<Group> residues = StructureUtil.getAminoAcids(chain);
 			List<Group> ligands = chain.getAtomLigands();
 			
 			Map<Component, Set<Group>> mapCompGroups = 
@@ -255,8 +253,7 @@ public class ProteinModificationIdentifier {
 					Set<Group> modifiedResidues = mapCompGroups.get(components.get(0));
 					if (modifiedResidues != null) {
 						for (Group residue : modifiedResidues) {
-							PDBResidueNumber resNum = StructureTools.getPDBResidueNumber(residue);
-							StructureGroup strucGroup = new StructureGroup(resNum, residue.getPDBCode(), ComponentType.AMINOACID);
+							StructureGroup strucGroup = StructureUtil.getStructureGroup(residue, ComponentType.AMINOACID);
 							ModifiedCompound modRes = new ModifiedCompoundImpl(mod, strucGroup);
 							modComps.add(modRes);
 						}
@@ -291,27 +288,6 @@ public class ProteinModificationIdentifier {
 				recordUnidentifiableModifiedResidues(modComps, residues);
 			}
 		}
-	}
-	
-	// TODO: this should be replaced when Andreas fix the getAtomGroups("amino");
-	/**
-	 * Get all amino acids in a chain.
-	 * @param chain
-	 * @return
-	 */
-	private List<Group> getAminoAcids(Chain chain) {
-//		List<Group> residues = new ArrayList<Group>();
-//		for (Group group : chain.getAtomGroups()) {
-//			ChemComp cc = group.getChemComp();
-//			if (ResidueType.lPeptideLinking.equals(cc.getResidueType()) ||
-//					PolymerType.PROTEIN_ONLY.contains(cc.getPolymerType())) {
-//				residues.add(group);
-//			}
-//		}
-		List<Group> residues = new ArrayList<Group>(chain.getSeqResGroups());
-		residues.retainAll(chain.getAtomGroups());
-		
-		return residues;
 	}
 	
 	/**

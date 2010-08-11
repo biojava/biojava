@@ -42,8 +42,43 @@ import org.biojava3.protmod.ProteinModification;
  */
 public class ProteinModificationParserTest extends TestCase {
 	
-	public void testMultiParser(){
-		String[][] names = new String[][] {
+	private String[][] strucs;
+	
+	public void setUp() {
+		setUpShortTest();
+//		setUpLongTest();
+	}
+	
+	public void setUpShortTest() {
+		strucs = new String[][] {
+				// Attachments
+				{"3HN3", "AA0151"}, // NAG
+				{"1ZNF", "AA0053"}, // ACE on THR
+				{"1SCY", "AA0089"}, // NH2 on HIS
+				
+				// Modified resdiues
+				{"3MVJ", "AA0037"}, // SEP
+				{"1DOJ", "AA0065"}, // MEA
+				{"1DOJ", "AA0172"}, // TYS
+				{"3H5R", "AA0302"}, // SNN, note: SNN is not at C-terminal in some structures, e.g. 3I4W
+
+				// Cross link
+				{"3M6S", "AA0025"}, // Disulfide bond
+				{"1A6L", "AA0139"}, // F3S
+				{"1A70", "AA0137"}, // FES
+				{"1RPB", "AA0216"}, // Isopeptide (Cys - ASP)
+				{"1CAD", "AA0136"}, // FE and 4 Cys, cross-link4
+				{"1FP4", "AA0141"}, // CFM, HCA, CYS, HIS
+				{"1EMA", "AA0183"}, // CRO, cross-link1
+				{"2IWK", "AA0298"}, // CU4
+				{"1SU6", "AA0310"}, // NFS, 5 CYS, HIS
+				{"2AXR", "AA0436"}, // CYS-FAD-HIS
+				{"3H8L", "AA0513"}, // CYS-S3H-CYS
+		};
+	}
+	
+	public void setUpLongTest() {
+		strucs = new String[][] {
 				// Attachments
 				{"3HN3", "AA0151"}, // NAG
 				{"1CPO", "AA0406"}, // XYS
@@ -234,8 +269,12 @@ public class ProteinModificationParserTest extends TestCase {
 				{"3EE4", "AA0490"}, // VAL-TYR
 				{"3H8L", "AA0513"}, // CYS-S3H-CYS
 		};
+	}
+	
+	public void testMultiParser(){
+
 		
-		for ( String[] name : names){
+		for ( String[] name : strucs){
 			try {
 //				parserTest(name[0], null); 
 				parserTest(name[0], name[1]);

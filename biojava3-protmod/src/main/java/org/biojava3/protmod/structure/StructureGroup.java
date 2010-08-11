@@ -36,17 +36,17 @@ import org.biojava3.protmod.ComponentType;
  * @since 3.0
  */
 public class StructureGroup
-implements Serializable {
+implements Serializable, Comparable<StructureGroup> {
 	private static final long serialVersionUID = -5648208521422258019L;
 	
 	private final PDBResidueNumber resNum;
-	private final String pdbCode;
+	private final String pdbName;
 	private final ComponentType type;
 	
 	public StructureGroup(final PDBResidueNumber resNum,
-			final String pdbCode, final ComponentType type) {
+			final String pdbName, final ComponentType type) {
 		this.resNum = resNum;
-		this.pdbCode = pdbCode;
+		this.pdbName = pdbName;
 		this.type = type;
 	}
 
@@ -66,8 +66,8 @@ implements Serializable {
 		return resNum.getInsCode();
 	}
 
-	public String getPDBCode() {
-		return pdbCode;
+	public String getPDBName() {
+		return pdbName;
 	}
 
 	public ComponentType getType() {
@@ -78,6 +78,7 @@ implements Serializable {
 		return type == ComponentType.AMINOACID;
 	}
 	
+	@Override
 	public boolean equals(Object obj) {
 		if (obj == this)
 			return false;
@@ -94,17 +95,19 @@ implements Serializable {
 		
 		return true;
 	}
-	
+
+	@Override
 	public int hashCode() {
 		int result = 17;
 		result = result * 31 + resNum.hashCode();
 		result = result * 31 + type.hashCode();
 		return result;
 	}
-	
+
+	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
-		sb.append(pdbCode);
+		sb.append(pdbName);
 		sb.append('\t');
 		sb.append(resNum.getChainId());
 		sb.append('\t');
@@ -113,5 +116,28 @@ implements Serializable {
 			sb.append(resNum.getInsCode());
 		sb.append('\t');
 		return sb.toString();
+	}
+
+	@Override
+	public int compareTo(StructureGroup aGroup) {
+		int result = getChainId().compareTo(aGroup.getChainId());
+		if (result != 0)
+			return result;
+		result = getResidueNumber()-aGroup.getResidueNumber();
+		if (result != 0)
+			return result;
+		if (getInsCode()==null) {
+			if (aGroup.getInsCode()!=null)
+				return -1;
+		} else {
+			if (aGroup.getInsCode()==null)
+				return 1;
+			else {
+				result = getInsCode().compareTo(aGroup.getInsCode());
+				if (result != 0)
+					return result;
+			}
+		}
+		return 0;
 	}
 }
