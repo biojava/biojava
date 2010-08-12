@@ -41,6 +41,17 @@ import org.biojava3.core.sequence.template.Sequence;
 public interface Profile<S extends Sequence<C>, C extends Compound> extends Iterable<AlignedSequence<S, C>> {
 
     /**
+     * List of output formats.
+     */
+    enum StringFormat {
+        ALN,
+        CLUSTALW,
+        FASTA,
+        GCG,
+        MSF
+    }
+
+    /**
      * Returns {@link AlignedSequence} at given index.
      *
      * @param listIndex index of sequence in profile
@@ -252,5 +263,13 @@ public interface Profile<S extends Sequence<C>, C extends Compound> extends Iter
      * @return a formatted view of the alignment profile
      */
     String toString(int width);
+
+    /**
+     * Returns a formatted view of the alignment profile.  Details depend on the format given.
+     *
+     * @param format output format
+     * @return a formatted view of the alignment profile
+     */
+    String toString(StringFormat format);
 
 }

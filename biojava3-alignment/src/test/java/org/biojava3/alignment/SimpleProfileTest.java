@@ -31,6 +31,8 @@ import java.util.List;
 import org.biojava3.alignment.template.AlignedSequence;
 import org.biojava3.alignment.template.AlignedSequence.Step;
 import org.biojava3.alignment.template.Profile;
+import org.biojava3.alignment.template.Profile.StringFormat;
+import org.biojava3.core.sequence.AccessionID;
 import org.biojava3.core.sequence.ProteinSequence;
 import org.biojava3.core.sequence.compound.AminoAcidCompound;
 import org.biojava3.core.sequence.compound.AminoAcidCompoundSet;
@@ -47,6 +49,8 @@ public class SimpleProfileTest {
     public void setup() {
         query = new ProteinSequence("ARND");
         target = new ProteinSequence("RDG");
+        query.setAccession(new AccessionID("Query"));
+        target.setAccession(new AccessionID("Target"));
         global = new SimpleProfile<ProteinSequence, AminoAcidCompound>(query, target, Arrays.asList(new Step[] {
                 Step.COMPOUND, Step.COMPOUND, Step.COMPOUND, Step.COMPOUND, Step.GAP}), 0, 0, Arrays.asList(
                 new Step[] {Step.GAP, Step.COMPOUND, Step.GAP, Step.COMPOUND, Step.COMPOUND}), 0, 0);
@@ -441,10 +445,48 @@ public class SimpleProfileTest {
         assertFalse(single.isCircular());
     }
 
-    @Ignore // TODO SimpleProfile.toString(int)
     @Test
     public void testToStringInt() {
-        fail("Not yet implemented");
+        // TODO conservation annotation
+        assertEquals(global.toString(3), String.format(
+                "          1 3%n" +
+                "Query   1 ARN 3%n" +
+                "Target  1 -R- 1%n" +
+                "          %n%n" +
+                "          4 5%n" +
+                "Query   4 D- 4%n" +
+                "Target  2 DG 3%n" +
+                "          %n"));
+        assertEquals(local.toString(4), String.format(
+                "          1 3%n" +
+                "Query   2 RND 4%n" +
+                "Target  1 R-D 2%n" +
+                "          %n"));
+        assertEquals(single.toString(4), String.format(
+                "         1  4%n" +
+                "Query  1 ARND 4%n" +
+                "         %n"));
+    }
+
+    @Test
+    public void testToStringFormatted() {
+        // TODO conservation annotation
+        assertEquals(global.toString(StringFormat.ALN), String.format(
+                "CLUSTAL W MSA from BioJava%n%n" +
+                "Query     ARND- 4%n" +
+                "Target    -R-DG 3%n" +
+                "          %n"));
+        assertEquals(local.toString(StringFormat.FASTA), String.format(
+                ">Query%n" +
+                "RND%n" +
+                ">Target%n" +
+                "R-D%n"));
+        assertEquals(single.toString(StringFormat.MSF), String.format(
+                "MSA from BioJava%n%n" +
+                " MSF: 4  Type: P  Check: 735 ..%n%n" +
+                " Name: Query  Len: 4  Check:  735  Weight: 1.0%n" +
+                "%n//%n%n" +
+                "Query ARND%n"));
     }
 
     @Test

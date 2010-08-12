@@ -32,6 +32,11 @@ import org.biojava3.alignment.template.AlignedSequence;
 import org.biojava3.alignment.template.AlignedSequence.Step;
 import org.biojava3.alignment.template.Profile;
 import org.biojava3.alignment.template.ProfileView;
+import org.biojava3.core.sequence.Strand;
+import org.biojava3.core.sequence.compound.AmbiguityDNACompoundSet;
+import org.biojava3.core.sequence.compound.AmbiguityRNACompoundSet;
+import org.biojava3.core.sequence.compound.DNACompoundSet;
+import org.biojava3.core.sequence.compound.RNACompoundSet;
 import org.biojava3.core.sequence.location.template.Location;
 import org.biojava3.core.sequence.template.Compound;
 import org.biojava3.core.sequence.template.CompoundSet;
@@ -146,6 +151,8 @@ public class SimpleProfile<S extends Sequence<C>, C extends Compound> implements
         originals = Collections.unmodifiableList(originals);
         length = sx.size();
     }
+
+    // methods for Profile
 
     @Override
     public AlignedSequence<S, C> getAlignedSequence(int listIndex) {
@@ -328,23 +335,164 @@ public class SimpleProfile<S extends Sequence<C>, C extends Compound> implements
 
     @Override
     public String toString(int width) {
-        // TODO String toString(int)
-        return null;
+        return toString(width, null, getIDFormat(), true, true, true, true, true);
     }
 
     @Override
-    public String toString() {
-        // TODO handle circular alignments
-        StringBuilder s = new StringBuilder();
-        for (AlignedSequence<S, C> as : list) {
-            s.append(String.format("%s%n", as.toString()));
+    public String toString(StringFormat format) {
+        switch (format) {
+        case ALN:
+        case CLUSTALW:
+        default:
+            return toString(60, String.format("CLUSTAL W MSA from BioJava%n%n"), getIDFormat() + "   ", false, true,
+                    true, false, true);
+        case FASTA:
+            return toString(60, null, ">%s%n", false, false, false, false, false);
+        case GCG:
+        case MSF:
+            String idFormat = getIDFormat();
+            StringBuilder header = new StringBuilder();
+            header.append(String.format("MSA from BioJava%n%n MSF: %d  Type: %s  Check: %d ..%n%n", getLength(),
+                    getGCGType(), getGCGChecksum()));
+            for (AlignedSequence<S, C> as : list) {
+                header.append(String.format(" Name: " + idFormat + " Len: %d  Check: %4d  Weight: %.1f%n",
+                        as.getAccession(), getLength(), getGCGChecksum(as), 1.0f)); // TODO show weights in MSF header
+            }
+            header.append(String.format("%n//%n%n"));
+            // TODO? convert gap characters to '.'
+            return toString(50, header.toString(), idFormat, false, false, true, false, false);
         }
-        return s.toString();
     }
+
+    // method from Object
+
+    @Override
+    public String toString() {
+        return toString(getLength(), null, null, false, false, false, false, false);
+    }
+
+    // method for Iterable
 
     @Override
     public Iterator<AlignedSequence<S, C>> iterator() {
         return list.iterator();
+    }
+
+    // helper methods
+
+    // calculates GCG checksum for entire Profile
+    private int getGCGChecksum() {
+        int check = 0;
+        for (AlignedSequence<S, C> as : list) {
+            check += getGCGChecksum(as);
+        }
+        return check % 10000;
+    }
+
+    // calculates GCG checksum for a given Sequence
+    private int getGCGChecksum(AlignedSequence<S, C> sequence) {
+        String s = sequence.toString().toUpperCase();
+        int count = 0, check = 0;
+        for (int i = 0; i < s.length(); i++) {
+            count++;
+            check += count * s.charAt(i);
+            if (count == 57) {
+                count = 0;
+            }
+        }
+        return check % 10000;
+    }
+
+    // determines GCG type
+    private String getGCGType() {
+        CompoundSet<C> cs = getCompoundSet();
+        return (cs == DNACompoundSet.getDNACompoundSet() || cs == AmbiguityDNACompoundSet.getDNACompoundSet()) ? "D" :
+                (cs == RNACompoundSet.getRNACompoundSet() || cs == AmbiguityRNACompoundSet.getRNACompoundSet()) ? "R" :
+                "P";
+    }
+
+    // creates format String for accession IDs
+    private String getIDFormat() {
+        int length = 0;
+        for (AlignedSequence<S, C> as : list) {
+            length = Math.max(length, (as.getAccession() == null) ? 0 : as.getAccession().toString().length());
+        }
+        return (length == 0) ? null : "%-" + (length + 1) + "s";
+    }
+
+    // creates formatted String
+    private String toString(int width, String header, String idFormat, boolean seqIndexPre, boolean seqIndexPost,
+            boolean interlaced, boolean aligIndices, boolean aligConservation) {
+        // TODO handle circular alignments
+        StringBuilder s = (header == null) ? new StringBuilder() : new StringBuilder(header);
+        width = Math.max(1, width);
+        int seqIndexPad = (int) (Math.floor(Math.log10(getLength())) + 2);
+        String seqIndexFormatPre = "%" + seqIndexPad + "d ", seqIndexFormatPost = "%" + seqIndexPad + "d";
+        if (interlaced) {
+            String aligIndFormat = "%-" + Math.max(1, width / 2) + "d %" + Math.max(1, width - (width / 2) - 1) +
+                    "d%n";
+            for (int i = 0; i < getLength(); i += width) {
+                int start = i + 1, end = Math.min(getLength(), i + width);
+                if (i > 0) {
+                    s.append(String.format("%n"));
+                }
+                if (aligIndices) {
+                    if (end < i + width) {
+                        int line = end - start + 1;
+                        aligIndFormat = "%-" + Math.max(1, line / 2) + "d %" + Math.max(1, line - (line / 2) - 1) +
+                                "d%n";
+                    }
+                    if (idFormat != null) {
+                        s.append(String.format(idFormat, ""));
+                    }
+                    if (seqIndexPre) {
+                        s.append(String.format("%" + (seqIndexPad + 1) + "s", ""));
+                    }
+                    s.append(String.format(aligIndFormat, start, end));
+                }
+                for (AlignedSequence<S, C> as : list) {
+                    if (idFormat != null) {
+                        s.append(String.format(idFormat, as.getAccession()));
+                    }
+                    if (seqIndexPre) {
+                        s.append(String.format(seqIndexFormatPre, as.getSequenceIndexAt(start)));
+                    }
+                    s.append(as.getSequenceAsString(start, end, Strand.UNDEFINED));
+                    if (seqIndexPost) {
+                        s.append(String.format(seqIndexFormatPost, as.getSequenceIndexAt(end)));
+                    }
+                    s.append(String.format("%n"));
+                }
+                if (aligConservation) {
+                    if (idFormat != null) {
+                        s.append(String.format(idFormat, ""));
+                    }
+                    if (seqIndexPre) {
+                        s.append(String.format("%" + (seqIndexPad + 1) + "s", ""));
+                    }
+                    // TODO conservation annotation
+                    s.append(String.format("%n"));
+                }
+            }
+        } else {
+            for (AlignedSequence<S, C> as : list) {
+                if (idFormat != null) {
+                    s.append(String.format(idFormat, as.getAccession()));
+                }
+                for (int i = 0; i < getLength(); i += width) {
+                    int start = i + 1, end = Math.min(getLength(), i + width);
+                    if (seqIndexPre) {
+                        s.append(String.format(seqIndexFormatPre, as.getSequenceIndexAt(start)));
+                    }
+                    s.append(as.getSequenceAsString(start, end, Strand.UNDEFINED));
+                    if (seqIndexPost) {
+                        s.append(String.format(seqIndexFormatPost, as.getSequenceIndexAt(end)));
+                    }
+                    s.append(String.format("%n"));
+                }
+            }
+        }
+        return s.toString();
     }
 
 }
