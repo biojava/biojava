@@ -302,7 +302,7 @@ public class Alignments {
      * @param subMatrix the set of substitution scores used during alignment
      * @return pairwise sequence aligner
      */
-    static <S extends Sequence<C>, C extends Compound> PairwiseSequenceAligner<S, C> getPairwiseAligner(
+    public static <S extends Sequence<C>, C extends Compound> PairwiseSequenceAligner<S, C> getPairwiseAligner(
             S query, S target, PairwiseSequenceAlignerType type, GapPenalty gapPenalty,
             SubstitutionMatrix<C> subMatrix) {
         switch (type) {
