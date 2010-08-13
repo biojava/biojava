@@ -111,8 +111,7 @@ public class SimpleProfileProfileAligner<S extends Sequence<C>, C extends Compou
     // method for AbstractMatrixAligner
 
     @Override
-    protected void setOutputs(List<Step> sx, List<Step> sy) {
-        super.setOutputs(sx, sy);
+    protected void setProfile(List<Step> sx, List<Step> sy) {
         profile = pair = new SimpleProfilePair<S, C>(getQuery(), getTarget(), sx, sy);
     }
 

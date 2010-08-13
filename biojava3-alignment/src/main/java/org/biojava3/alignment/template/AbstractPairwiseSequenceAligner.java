@@ -175,8 +175,8 @@ public abstract class AbstractPairwiseSequenceAligner<S extends Sequence<C>, C e
                 maxt += getSubstitutionMatrix().getValue(c, c);
             }
             max = (short) Math.max(maxq, maxt);
-            maxScore = score = min = isLocal() ? 0 : (short) (2 * getGapPenalty().getOpenPenalty() +
-                    (query.getLength() + target.getLength()) * getGapPenalty().getExtensionPenalty());
+            score = min = isLocal() ? 0 : (short) (2 * getGapPenalty().getOpenPenalty() + (query.getLength() +
+                    target.getLength()) * getGapPenalty().getExtensionPenalty());
         }
     }
 

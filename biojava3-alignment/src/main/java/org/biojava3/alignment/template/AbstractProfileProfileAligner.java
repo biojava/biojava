@@ -241,8 +241,8 @@ public abstract class AbstractProfileProfileAligner<S extends Sequence<C>, C ext
                 maxt += getSubstitutionScore(tfrac[i], tfrac[i]);
             }
             max = (short) Math.max(maxq, maxt);
-            maxScore = score = min = isLocal() ? 0 : (short) (2 * getGapPenalty().getOpenPenalty() +
-                    (query.getLength() + target.getLength()) * getGapPenalty().getExtensionPenalty());
+            score = min = isLocal() ? 0 : (short) (2 * getGapPenalty().getOpenPenalty() + (query.getLength() +
+                    target.getLength()) * getGapPenalty().getExtensionPenalty());
         }
     }
 
