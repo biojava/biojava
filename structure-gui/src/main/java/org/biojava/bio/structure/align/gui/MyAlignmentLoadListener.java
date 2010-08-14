@@ -7,23 +7,19 @@ import java.io.File;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
 import org.biojava.bio.structure.Atom;
-import org.biojava.bio.structure.Chain;
-import org.biojava.bio.structure.Group;
-
 import org.biojava.bio.structure.align.gui.jmol.StructureAlignmentJmol;
 import org.biojava.bio.structure.align.model.AFPChain;
 import org.biojava.bio.structure.align.util.AtomCache;
 import org.biojava.bio.structure.align.util.UserConfiguration;
 import org.biojava.bio.structure.align.webstart.WebStartMain;
 import org.biojava.bio.structure.align.xml.AFPChainXMLParser;
-import org.biojava.utils.io.InputStreamProvider;
+import org.biojava3.core.util.InputStreamProvider;
+
 
 public class MyAlignmentLoadListener implements ActionListener {
 
@@ -66,8 +62,8 @@ public class MyAlignmentLoadListener implements ActionListener {
 
             AFPChainXMLParser.rebuildAFPChain(afpChain, ca1, ca2);
 
-            Chain c1 = ca1[0].getParent().getParent();
-            Chain c2 = ca2[0].getParent().getParent();
+            //Chain c1 = ca1[0].getParent().getParent();
+            //Chain c2 = ca2[0].getParent().getParent();
 
 
             //StructureAlignment algorithm = StructureAlignmentFactory.getAlgorithm(afpChain.getAlgorithmName());

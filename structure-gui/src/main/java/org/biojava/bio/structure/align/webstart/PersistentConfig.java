@@ -40,7 +40,8 @@ import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
 import org.biojava.bio.structure.align.util.UserConfiguration;
-import org.biojava.utils.xml.XMLWriter;
+import org.biojava3.core.util.XMLWriter;
+
 import org.xml.sax.InputSource;
 import org.xml.sax.XMLReader;
 
