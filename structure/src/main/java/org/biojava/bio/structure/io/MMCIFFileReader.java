@@ -39,7 +39,8 @@ import org.biojava.bio.structure.io.StructureIOFile;
 import org.biojava.bio.structure.io.mmcif.MMcifParser;
 import org.biojava.bio.structure.io.mmcif.SimpleMMcifConsumer;
 import org.biojava.bio.structure.io.mmcif.SimpleMMcifParser;
-import org.biojava.utils.io.InputStreamProvider;
+import org.biojava3.core.util.InputStreamProvider;
+
 
 /** How to parse an mmCif file:
  * <pre>

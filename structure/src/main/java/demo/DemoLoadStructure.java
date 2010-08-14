@@ -32,7 +32,8 @@ import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.align.util.AtomCache;
 import org.biojava.bio.structure.io.FileParsingParameters;
 import org.biojava.bio.structure.io.PDBFileReader;
-import org.biojava.utils.io.InputStreamProvider;
+import org.biojava3.core.util.InputStreamProvider;
+
 
 public class DemoLoadStructure
 {

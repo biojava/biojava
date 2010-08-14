@@ -23,20 +23,12 @@
 
 package org.biojava.bio.structure.io;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.biojava.bio.BioException;
-import org.biojava.bio.alignment.AlignmentPair;
-import org.biojava.bio.alignment.NeedlemanWunsch;
-import org.biojava.bio.alignment.SubstitutionMatrix;
-import org.biojava.bio.seq.ProteinTools;
-import org.biojava.bio.seq.Sequence;
+
 import org.biojava.bio.structure.AminoAcid;
 import org.biojava.bio.structure.Atom;
 import org.biojava.bio.structure.Chain;
@@ -47,10 +39,19 @@ import org.biojava.bio.structure.StructureException;
 import org.biojava.bio.structure.io.mmcif.chem.PolymerType;
 import org.biojava.bio.structure.io.mmcif.chem.ResidueType;
 import org.biojava.bio.structure.io.mmcif.model.ChemComp;
-import org.biojava.bio.symbol.AlphabetManager;
-import org.biojava.bio.symbol.FiniteAlphabet;
-import org.biojava.bio.symbol.Symbol;
-import org.biojava.bio.symbol.SymbolList;
+import org.biojava3.alignment.Alignments;
+import org.biojava3.alignment.SimpleGapPenalty;
+import org.biojava3.alignment.SubstitutionMatrixHelper;
+import org.biojava3.alignment.Alignments.PairwiseSequenceAlignerType;
+import org.biojava3.alignment.template.GapPenalty;
+import org.biojava3.alignment.template.PairwiseSequenceAligner;
+import org.biojava3.alignment.template.SequencePair;
+import org.biojava3.alignment.template.SubstitutionMatrix;
+import org.biojava3.core.sequence.ProteinSequence;
+import org.biojava3.core.sequence.compound.AminoAcidCompound;
+import org.biojava3.core.sequence.compound.AminoAcidCompoundSet;
+import org.biojava3.core.sequence.template.Compound;
+
 
 
 
@@ -67,9 +68,7 @@ public class SeqRes2AtomAligner {
     boolean DEBUG = false;
 
     static final List<String> excludeTypes;
-    private static final FiniteAlphabet alphabet;
-    private static final Symbol gapSymbol ;
-    private static  SubstitutionMatrix matrix;
+   private static  SubstitutionMatrix<AminoAcidCompound> matrix;
 
 
     String alignmentString;
@@ -79,17 +78,6 @@ public class SeqRes2AtomAligner {
         excludeTypes.add("DOD"); // deuterated water
 
 
-        alphabet = (FiniteAlphabet) AlphabetManager.alphabetForName("PROTEIN-TERM");
-        gapSymbol =  alphabet.getGapSymbol();
-
-        try {
-            matrix = getSubstitutionMatrix(alphabet);
-
-        } catch (BioException e){
-            e.printStackTrace();
-        } catch (IOException e){
-            e.printStackTrace();
-        }
         //matrix.printMatrix();
 
     }
@@ -259,95 +247,66 @@ public class SeqRes2AtomAligner {
         //System.out.println("align seq1 " + seq1);
         //System.out.println("align seq2 " + seq2);
 
+    	ProteinSequence s1 = new ProteinSequence(seq1);
+		ProteinSequence s2 = new ProteinSequence(seq2);
+        
+		SubstitutionMatrix<AminoAcidCompound> matrix = SubstitutionMatrixHelper.getBlosum65();
+		
+		GapPenalty penalty = new SimpleGapPenalty();
+		
+		short gop = 8;
+		short extend = 1;
+		penalty.setOpenPenalty(gop);
+		penalty.setExtensionPenalty(extend);
+		
+		PairwiseSequenceAligner needlemanWunsch =
+			Alignments.getPairwiseAligner(s1, s2, PairwiseSequenceAlignerType.GLOBAL, penalty, matrix);
 
-        AlignmentPair aligPair = null;
-        try  {
+		SequencePair<ProteinSequence, AminoAcidCompound> pair = needlemanWunsch.getPair();
 
-
-            Sequence bjseq1 = ProteinTools.createProteinSequence(seq1,"seq1");
-            Sequence bjseq2 = ProteinTools.createProteinSequence(seq2,"seq2");
-
-            //System.out.println(bjseq1.getAlphabet());
-            NeedlemanWunsch aligner = new NeedlemanWunsch((short)-2,(short) 5,(short) 3,(short) 3,(short) 0,matrix);
-
-            if (DEBUG){
-            	System.out.println("seq lengths: " + bjseq1.seqString().length() + " " + bjseq2.seqString().length());
-            	System.out.println("seq1: " + bjseq1.seqString());
-            	System.out.println("seq2: " + bjseq2.seqString());
-            }
-         
-            
-            aligPair= aligner.pairwiseAlignment(bjseq1,bjseq2);
-            
-        } catch (Exception e){
-            e.printStackTrace();
-            System.err.println("align seq1 " + seq1);
-            System.err.println("align seq2 " + seq2);
-
-        }
-
-        if ( aligPair == null)
+	
+        if ( pair == null)
             throw new StructureException("could not align objects!");
 
-        //System.out.println(ali.getAlphabet());
-        SymbolList lst1 = aligPair.symbolListForLabel("seq1");
-        //System.out.println("from seqres : " + lst1.seqString());
-        SymbolList lst2 = aligPair.symbolListForLabel("seq2");
-
-        boolean noMatchFound = mapChains(seqRes,lst1,atomRes,lst2,gapSymbol);
+       
+        boolean noMatchFound = mapChains(seqRes,atomRes,needlemanWunsch,pair);
         return noMatchFound;
 
     }
 
 
-    private boolean mapChains(List<Group> seqRes, SymbolList lst1,
-            List<Group> atomRes, SymbolList lst2,Symbol gapSymbol) throws StructureException{
+    private boolean mapChains(List<Group> seqRes, List<Group> atomRes,
+    		PairwiseSequenceAligner needlemanWunsch, SequencePair<ProteinSequence, AminoAcidCompound> pair
+    		) throws StructureException{
 
-        assert (lst1.length() == lst2.length());
-
+        
         // at the present stage the future seqREs are still stored as Atom groups in the seqRes chain...
         List<Group> seqResGroups = seqRes;
 
-        int aligLength = lst1.length();
-        int posSeq  = -1;
-        int posAtom = -1;
+        int aligLength = pair.getLength();
+       
         // System.out.println(gapSymbol.getName());
 
         // make sure we actually find an alignment
         boolean noMatchFound = true;
 
+    	Compound gapSymbol =  AminoAcidCompoundSet.getAminoAcidCompoundSet().getCompoundForString("-");
+        
         for (int i = 1; i <= aligLength; i++) {
 
-            Symbol s = lst1.symbolAt(i);
-            Symbol a = lst2.symbolAt(i);
+        	Compound s =  pair.getCompoundAt(1, i);
+			Compound a =  pair.getCompoundAt(2,i);
 
-            //TODO replace the text gap with the proper symbol for terminal gap
-
-            // don't count gaps and terminal gaps
-            String sn = s.getName();
-            String an = a.getName();
-            boolean gap = false;
-            if (! ( sn.equals("gap")  || sn.equals(gapSymbol.getName()))){
-                posSeq++;
-            } else {
-                gap = true;
-            }
-            if (! ( an.equals("gap") || an.equals(gapSymbol.getName()))){
-                posAtom++;
-            } else {
-                gap = true;
-            }
-            if ( gap)
-               continue;
-
-//           System.out.println(i+ " " + posSeq + " " +
-//                    s.getName() +
-//                    " " + posAtom +
-//                    " " + a.getName() +
-//                    " " + s.getName().equals(a.getName()));
-//           
-
-            if ( s.getName().equals(a.getName())){
+			// alignment is using internal index start at 1...
+			int posSeq = pair.getIndexInQueryAt(i)  -1;
+			int posAtom = pair.getIndexInTargetAt(i) -1;
+			
+			if (  s.equals(gapSymbol) || a.equals(gapSymbol)){
+				continue;				
+			}
+           
+            if ( s.equals(a)){
+            	
                 // the atom record can be aligned to the SeqRes record!
                 // replace the SeqRes group with the Atom group!
 
@@ -364,7 +323,7 @@ public class SeqRes2AtomAligner {
                 }
                 if (! pdbNameA.equals(pdbNameS)){
                     if ( ! pdbNameA.trim().equals(pdbNameS.trim())) {
-                        System.err.println(s1 + " " + posSeq + " does not align with " + a1+ " " + posAtom + " should be: " + s.getName() + " : " + a.getName());
+                        System.err.println(s1 + " " + posSeq + " does not align with " + a1+ " " + posAtom + " should be: " + s + " : " + a);
                         if ( s1.getType().equals(HetatomImpl.type) && a1.getType().equals(HetatomImpl.type)){
                            System.err.println("they seem to be hetatoms, so ignoring mismatch.");
                         }
@@ -398,24 +357,6 @@ public class SeqRes2AtomAligner {
 
     }
 
-    public static SubstitutionMatrix getSubstitutionMatrix(FiniteAlphabet alphabet)
-    throws IOException,BioException {
-
-        InputStream inStream = SeqRes2AtomAligner.class.getResourceAsStream("/org/biojava/bio/structure/blosum62.mat");
-
-        String newline = System.getProperty("line.separator");
-        BufferedReader reader = new BufferedReader(new InputStreamReader( inStream));
-        StringBuffer file = new StringBuffer();
-        while (reader.ready()){
-            file.append(reader.readLine() );
-            file.append(newline);
-        }
-
-
-        SubstitutionMatrix matrix = new SubstitutionMatrix(alphabet,file.toString(),"blosum 62");
-        return matrix;
-
-
-    }
+   
 
 }

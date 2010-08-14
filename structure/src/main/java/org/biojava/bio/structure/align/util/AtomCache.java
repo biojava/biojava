@@ -19,8 +19,9 @@ import org.biojava.bio.structure.io.FileParsingParameters;
 import org.biojava.bio.structure.io.PDBFileReader;
 import org.biojava.bio.structure.scop.ScopDomain;
 import org.biojava.bio.structure.scop.ScopInstallation;
+import org.biojava3.core.util.InputStreamProvider;
 
-import org.biojava.utils.io.InputStreamProvider;
+
 
 
 public class AtomCache {

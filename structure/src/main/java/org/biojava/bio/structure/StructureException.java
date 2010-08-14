@@ -21,7 +21,6 @@
 
 package org.biojava.bio.structure;
 
-import org.biojava.bio.BioException;
 
 /**
  * An exception during the parsing of a PDB file.
@@ -32,7 +31,7 @@ import org.biojava.bio.BioException;
  * @version %I% %G%
  */
 
-public class StructureException extends BioException {
+public class StructureException extends Exception {
     
     public static final long serialVersionUID = 62946250941673093l;
     /**
@@ -53,16 +52,7 @@ public class StructureException extends BioException {
     public StructureException(String message, Throwable t){
         super(message, t);
     }
-    /**
-     * Constructs a StructureException object.
-     *
-     * @param t  a Throwable object
-     * @param s  a String ...
-     *  @deprecated use new StructureException(message, ex) instead
-     */
-    public StructureException (Throwable t, String s) {
-	super(t, s);
-    }
+    
     /**
      * Constructs a StructureException object.
      *

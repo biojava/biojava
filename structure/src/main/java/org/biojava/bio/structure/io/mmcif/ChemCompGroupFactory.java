@@ -44,7 +44,8 @@ import org.biojava.bio.structure.align.util.HTTPConnectionTools;
 
 import org.biojava.bio.structure.io.mmcif.chem.PolymerType;
 import org.biojava.bio.structure.io.mmcif.model.ChemComp;
-import org.biojava.utils.io.InputStreamProvider;
+import org.biojava3.core.util.InputStreamProvider;
+
 
 public class ChemCompGroupFactory {
 

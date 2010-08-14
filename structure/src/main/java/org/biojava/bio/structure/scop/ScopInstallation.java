@@ -17,7 +17,9 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import org.biojava.utils.io.InputStreamProvider;
+import org.biojava3.core.util.InputStreamProvider;
+
+
 
 
 /** This class provides access to the SCOP protein structure classification.

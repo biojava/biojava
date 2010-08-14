@@ -32,145 +32,89 @@ import org.biojava.bio.structure.align.ce.ConfigStrucAligParams;
 public class SmithWaterman3DParameters implements ConfigStrucAligParams
 {
 
-   short match ;     // match
-   short replace ;      // replace 
-   short insert ;     // insert
-   short delete ;      // delete
-   short gapExtend ;      // gapExtend
-   
-   public SmithWaterman3DParameters(){
-      reset();
-   }
-   
-  
-   
-   public List<String> getUserConfigHelp()
-   {
-      List<String> params =new ArrayList<String>();
-      params.add("The Gap Extension score");
-      params.add("The Insert score");
-      params.add("The Delete score");
-      params.add("The Match score");
-      params.add("The Replace score");
-      
-      // TODO Auto-generated method stub
-      return params;
-   }
 
-   public List<String> getUserConfigParameterNames()
-   {
-      List<String> params =new ArrayList<String>();
-      params.add("Gap Extension");
-      params.add("Insert");
-      params.add("Delete");
-      params.add("Match");
-      params.add("Replace");
-      
-      return params;
-   }
+	short gapOpen ;      
+	short gapExtend ;    
 
-   public List<String> getUserConfigParameters()
-   {
-      List<String> params =new ArrayList<String>();
-      params.add("GapExtend");      
-      params.add("Insert");
-      params.add("Delete");
-      params.add("Match");
-      params.add("Replace");
-      return params;
-   }
-
-   public List<Class> getUserConfigTypes()
-   {
-      List<Class> params = new ArrayList<Class>();
-      params.add(Short.class);
-      params.add(Short.class);
-      params.add(Short.class);
-      params.add(Short.class);
-      params.add(Short.class);
-      return params;
-   }
-
-   public void reset()
-   {
-       match = (short) -1;     // match
-       replace = (short) 3;      // replace 
-       insert = (short) 2;     // insert
-       delete = (short) 2;      // delete
-       gapExtend = (short) 1;      // gapExtend
-      
-   }
+	public SmithWaterman3DParameters(){
+		reset();
+	}
 
 
 
-   public Short getMatch()
-   {
-      return match;
-   }
+	public List<String> getUserConfigHelp()
+	{
+		List<String> params =new ArrayList<String>();
+		params.add("The Gap open penalty");
+		params.add("The Gap Extension penalty");
 
 
 
-   public void setMatch(Short match)
-   {
-      this.match = match;
-   }
+		// TODO Auto-generated method stub
+		return params;
+	}
+
+	public List<String> getUserConfigParameterNames()
+	{
+		List<String> params =new ArrayList<String>();
+		params.add("Gap Open");
+		params.add("Gap Extension");
+
+
+		return params;
+	}
+
+	public List<String> getUserConfigParameters()
+	{
+		List<String> params =new ArrayList<String>();
+		params.add("GapOpen");
+		params.add("GapExtend");      
+
+		return params;
+	}
+
+	public List<Class> getUserConfigTypes()
+	{
+		List<Class> params = new ArrayList<Class>();
+		params.add(Short.class);
+		params.add(Short.class);
+
+		return params;
+	}
+
+	public void reset()
+	{
+		gapOpen = (short) 8;
+		gapExtend = (short) 1;      
+
+	}
+
+
+	public Short getGapExtend()
+	{
+		return gapExtend;
+	}
 
 
 
-   public Short getReplace()
-   {
-      return replace;
-   }
+	public void setGapExtend(Short gapExtend)
+	{
+		this.gapExtend = gapExtend;
+	}
 
 
 
-   public void setReplace(Short replace)
-   {
-      this.replace = replace;
-   }
+	public Short getGapOpen() {
+		return gapOpen;
+	}
 
 
 
-   public Short getInsert()
-   {
-      return insert;
-   }
+	public void setGapOpen(Short gapOpen) {
+		this.gapOpen = gapOpen;
+	}
 
 
 
-   public void setInsert(Short insert)
-   {
-      this.insert = insert;
-   }
-
-
-
-   public Short getDelete()
-   {
-      return delete;
-   }
-
-
-
-   public void setDelete(Short delete)
-   {
-      this.delete = delete;
-   }
-
-
-
-   public Short getGapExtend()
-   {
-      return gapExtend;
-   }
-
-
-
-   public void setGapExtend(Short gapExtend)
-   {
-      this.gapExtend = gapExtend;
-   }
-   
-   
 
 }

@@ -22,9 +22,10 @@ import org.biojava.bio.structure.align.model.AFPChain;
 import org.biojava.bio.structure.align.util.AtomCache;
 import org.biojava.bio.structure.align.util.ResourceManager;
 import org.biojava.bio.structure.align.xml.AFPChainXMLConverter;
+import org.biojava3.core.util.FlatFileCache;
+import org.biojava3.core.util.PrettyXMLWriter;
 
-import org.biojava.utils.io.FlatFileCache;
-import org.biojava.utils.xml.PrettyXMLWriter;
+
 
 
 /** Contains the single thread for a job that can run multiple alignments.
@@ -35,8 +36,8 @@ import org.biojava.utils.xml.PrettyXMLWriter;
 public class FarmJobRunnable implements Runnable {
 
 
-	private static final int DEFAULT_PAIR_FETCH_DELAY   = 30000;
-	private static final String CONNECTION_PAIR_DELAY   = "connection.pair.delay";
+	//private static final int DEFAULT_PAIR_FETCH_DELAY   = 30000;
+	//private static final String CONNECTION_PAIR_DELAY   = "connection.pair.delay";
 	private static final String JFATCAT_NAME            = "jfatcat.name";
 	private static final String JFATCAT_VERSION         = "jfatcat.version";
 
@@ -306,7 +307,7 @@ public class FarmJobRunnable implements Runnable {
 
 		// we are running with default parameters
 
-		long startTime = System.currentTimeMillis();
+		//long startTime = System.currentTimeMillis();
 
 		if ( prevName1 == null)
 			initMaster(name1);

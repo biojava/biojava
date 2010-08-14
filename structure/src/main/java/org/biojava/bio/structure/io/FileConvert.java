@@ -37,7 +37,8 @@ import org.biojava.bio.structure.PDBHeader;
 import org.biojava.bio.structure.SSBond;
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureException;
-import org.biojava.utils.xml.XMLWriter;
+import org.biojava3.core.util.XMLWriter;
+
 
 /** Methods to convert a structure object into different file formats.
  * @author Andreas Prlic

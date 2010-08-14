@@ -8,7 +8,8 @@ import org.biojava.bio.structure.Atom;
 import org.biojava.bio.structure.StructureException;
 import org.biojava.bio.structure.align.model.AFPChain;
 import org.biojava.bio.structure.jama.Matrix;
-import org.biojava.utils.xml.PrettyXMLWriter;
+import org.biojava3.core.util.PrettyXMLWriter;
+
 
 
 public class AFPChainXMLConverter {

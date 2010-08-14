@@ -32,15 +32,16 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.biojava.bio.Annotation;
-import org.biojava.bio.seq.ProteinTools;
-import org.biojava.bio.seq.Sequence;
+
 import org.biojava.bio.structure.io.PDBFileReader;
 import org.biojava.bio.structure.io.mmcif.ChemCompGroupFactory;
 import org.biojava.bio.structure.io.mmcif.chem.PolymerType;
 import org.biojava.bio.structure.io.mmcif.chem.ResidueType;
 import org.biojava.bio.structure.io.mmcif.model.ChemComp;
-import org.biojava.bio.symbol.IllegalSymbolException;
+import org.biojava3.core.sequence.compound.AminoAcidCompound;
+import org.biojava3.core.sequence.template.Sequence;
+import org.biojava3.core.sequence.ProteinSequence;
+
 
 /**
  * A Chain in a PDB file. It contains several groups which can be of
@@ -65,7 +66,7 @@ public class ChainImpl implements Chain, Serializable {
    String swissprot_id ;
    String name ; // like in PDBfile
    List <Group> groups;
-   Annotation annotation ;
+
 
    List<Group> seqResGroups;
    private Long id;
@@ -82,7 +83,7 @@ public class ChainImpl implements Chain, Serializable {
 
       name = DEFAULT_CHAIN_ID;
       groups = new ArrayList<Group>() ;
-      annotation = Annotation.EMPTY_ANNOTATION;
+      
       seqResGroups = new ArrayList<Group>();
       pdbResnumMap = new HashMap<String,Integer>();
 
@@ -140,19 +141,7 @@ public class ChainImpl implements Chain, Serializable {
       return n ;
    }
 
-   /** {@inheritDoc}
-    *
-    */
-   public void setAnnotation(Annotation anno){
-      annotation = anno;
-   }
-
-   /** {@inheritDoc}
-    *
-    */
-   public Annotation getAnnotation(){
-      return annotation;
-   }
+   
 
    /** {@inheritDoc}
     *
@@ -502,7 +491,7 @@ public class ChainImpl implements Chain, Serializable {
     * @return the SEQRES groups of the Chain as a Sequence object.
     * @throws IllegalSymbolException
     */
-   public Sequence getBJSequence() throws IllegalSymbolException {
+   public Sequence<?> getBJSequence()  {
 
       //List<Group> groups = c.getSeqResGroups();
       String seq = getSeqResSequence();
@@ -512,7 +501,12 @@ public class ChainImpl implements Chain, Serializable {
          name = getParent().getPDBCode();
       name += "." + getName();
 
-      return ProteinTools.createProteinSequence(seq, name );
+      Sequence<AminoAcidCompound> s = null;
+      
+      s = new ProteinSequence(seq);
+     
+      //TODO: return a DNA sequence if the content is DNA...
+      return s;
 
    }
 

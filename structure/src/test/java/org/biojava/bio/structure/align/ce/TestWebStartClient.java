@@ -41,7 +41,8 @@ import org.biojava.bio.structure.align.util.AtomCache;
 import org.biojava.bio.structure.align.xml.AFPChainFlipper;
 import org.biojava.bio.structure.align.xml.AFPChainXMLConverter;
 import org.biojava.bio.structure.align.xml.AFPChainXMLParser;
-import org.biojava.utils.xml.PrettyXMLWriter;
+import org.biojava3.core.util.PrettyXMLWriter;
+
 
 import junit.framework.TestCase;
 

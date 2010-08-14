@@ -24,8 +24,9 @@ import java.io.PrintWriter;
 
 import org.biojava.bio.structure.align.ce.StartupParameters;
 import org.biojava.bio.structure.io.PDBFileReader;
-import org.biojava.utils.xml.PrettyXMLWriter;
-import org.biojava.utils.xml.XMLWriter;
+import org.biojava3.core.util.PrettyXMLWriter;
+import org.biojava3.core.util.XMLWriter;
+
 
 /** A container to persist config to the file system
  * 

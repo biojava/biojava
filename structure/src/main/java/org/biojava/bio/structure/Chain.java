@@ -25,9 +25,7 @@ package org.biojava.bio.structure;
 
 import java.util.List;
 
-import org.biojava.bio.Annotation;
-import org.biojava.bio.seq.Sequence;
-import org.biojava.bio.symbol.IllegalSymbolException;
+import org.biojava3.core.sequence.template.Sequence;
 
 /**
  * <p>
@@ -198,22 +196,7 @@ public interface Chain {
 
     public int getLengthAminos();
 
-    
-    /** get/set the Annotation of a Chain.
-     *  allows to annotate a protein chain, e.g. molecule description "AZURIN" for pdb 1a4a.A
-     *  @param anno the Annotation to be provided.
-     *  @see #getAnnotation()
-     *  
-     */
-    public void setAnnotation(Annotation anno);
-    
-    /** get/set the Annotation of a Chain.
-     *  allows to annotate a protein chain, e.g. molecule description "AZURIN" for pdb 1a4a.A
-     *  @return the Annotation of this chain
-     *  @see #setAnnotation(Annotation)
-     */
-    public Annotation getAnnotation();
-
+  
     /** Set the Header from the PDB file.
      * @param molId the Compound that contains the header information for this chain
      * @see #getHeader()
@@ -250,7 +233,7 @@ public interface Chain {
      * @return the SEQRES groups of the Chain as a Sequence object.
      * @throws IllegalSymbolException 
      */
-    public Sequence getBJSequence() throws IllegalSymbolException ;
+    public Sequence<?> getBJSequence()  ;
     
     
     /** return the amino acid sequence of this chain

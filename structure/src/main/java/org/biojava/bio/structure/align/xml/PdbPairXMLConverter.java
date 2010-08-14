@@ -11,7 +11,8 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.biojava.bio.structure.align.client.PdbPair;
-import org.biojava.utils.xml.PrettyXMLWriter;
+import org.biojava3.core.util.PrettyXMLWriter;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
