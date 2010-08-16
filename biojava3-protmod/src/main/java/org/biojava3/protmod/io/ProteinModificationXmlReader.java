@@ -31,8 +31,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -175,20 +177,24 @@ public final class ProteinModificationXmlReader {
 					}
 					
 					// comp PDBCC ID
-					String compId = null;
+					Set<String> compIds = new HashSet<String>();
 					List<Node> compIdNodes = getChildNodes(compNode).get("Id");
 					if (compIdNodes!=null) {
 						for (Node compIdNode : compIdNodes) {
 							NamedNodeMap compIdNodeAttr = compIdNode.getAttributes();
 							Node compIdSource = compIdNodeAttr.getNamedItem("source");
 							if (compIdSource!=null && compIdSource.getTextContent().equals("PDBCC")) {
-								compId = compIdNode.getTextContent();
-								break;
+								String strComps = compIdNode.getTextContent();
+								if (strComps.isEmpty()) {
+									throw new RuntimeException("Empty component." +
+											" See Modification "+id+".");
+								}
+								compIds.addAll(Arrays.asList(strComps.split(",")));
 							}
 						}
 					}
 					
-					if (compId==null) {
+					if (compIds.isEmpty()) {
 						throw new RuntimeException("Each component must have a PDBCC ID." +
 								" See Modification "+id+".");
 					}
@@ -214,7 +220,7 @@ public final class ProteinModificationXmlReader {
 					}
 
 					// register
-					Component comp = Component.of(compId, compType, nTerminal, cTerminal);
+					Component comp = Component.of(compIds, compType, nTerminal, cTerminal);
 					comps.add(comp);						
 					mapLabelComp.put(label, comps.size()-1);
 				}
@@ -253,8 +259,11 @@ public final class ProteinModificationXmlReader {
 						String labelAtom1 = labelNode==null?null:labelNode.getTextContent();
 						
 						String atom1 = atomNodes.get(0).getTextContent();
-						List<String> potentialAtoms1 = atom1.isEmpty()?null:
-							Arrays.asList(atom1.split(","));
+						if (atom1.isEmpty()) {
+							throw new RuntimeException("Each atom must have a name. Please use wildcard * if unknown." +
+									" See Modification "+id+".");
+						}
+						List<String> potentialAtoms1 = Arrays.asList(atom1.split(","));
 						
 						// atom 2
 						atomNodeAttrs = atomNodes.get(1).getAttributes();
@@ -270,8 +279,11 @@ public final class ProteinModificationXmlReader {
 						String labelAtom2 = labelNode==null?null:labelNode.getTextContent();
 						
 						String atom2 = atomNodes.get(1).getTextContent();
-						List<String> potentialAtoms2 = atom2.isEmpty()?null:
-							Arrays.asList(atom2.split(","));
+						if (atom2.isEmpty()) {
+							throw new RuntimeException("Each atom must have a name. Please use wildcard * if unknown." +
+									" See Modification "+id+".");
+						}
+						List<String> potentialAtoms2 = Arrays.asList(atom2.split(","));
 						
 						// add linkage
 						ModificationLinkage linkage = new ModificationLinkage(comps,

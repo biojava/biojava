@@ -432,11 +432,20 @@ public class ProteinModificationIdentifier {
 			throw new IllegalArgumentException("Null argument(s).");
 		}
 		
-		Set<Component> comps = new HashSet<Component>();
+		Map<Component,Set<Component>> mapSingleMultiComps = new HashMap<Component,Set<Component>>();
 		for (ProteinModification mod : modifications) {
 			ModificationCondition condition = mod.getCondition();
 			for (Component comp : condition.getComponents()) {
-				comps.add(comp);
+				for (String pdbccId : comp.getPdbccIds()) {
+					Component single = Component.of(Collections.singleton(pdbccId), 
+							comp.getType(), comp.isNTerminal(), comp.isCTerminal());
+					Set<Component> mult = mapSingleMultiComps.get(single);
+					if (mult == null) {
+						mult = new HashSet<Component>();
+						mapSingleMultiComps.put(single, mult);
+					}
+					mult.add(comp);
+				}
 			}
 		}
 		
@@ -445,18 +454,21 @@ public class ProteinModificationIdentifier {
 		
 		{
 			// ligands
+			Set<Component> ligandsWildCard = mapSingleMultiComps.get(
+					Component.of("*", ComponentType.LIGAND));
 			for (Group group : ligands) {
 				String pdbccId = group.getPDBName().trim();
-				Component comp = Component.of(pdbccId, ComponentType.LIGAND);
-				if (!comps.contains(comp)) {
-					continue;
+				Set<Component> comps = mapSingleMultiComps.get(
+						Component.of(pdbccId, ComponentType.LIGAND));
+				
+				for (Component comp : unionComponentSet(ligandsWildCard, comps)) {
+					Set<Group> gs = mapCompRes.get(comp);
+					if (gs==null) {
+						gs = new LinkedHashSet<Group>();
+						mapCompRes.put(comp, gs);
+					}
+					gs.add(group);
 				}
-				Set<Group> gs = mapCompRes.get(comp);
-				if (gs==null) {
-					gs = new LinkedHashSet<Group>();
-					mapCompRes.put(comp, gs);
-				}
-				gs.add(group);
 			}
 		}
 		
@@ -466,19 +478,23 @@ public class ProteinModificationIdentifier {
 				return mapCompRes;
 			}
 			
+			Set<Component> residuesWildCard = mapSingleMultiComps.get(
+					Component.of("*", ComponentType.AMINOACID));
+			
 			// for all residues
 			for (Group group : residues) {
 				String pdbccId = group.getPDBName().trim();
-				Component comp = Component.of(pdbccId, ComponentType.AMINOACID);
-				if (!comps.contains(comp)) {
-					continue;
+				Set<Component> comps = mapSingleMultiComps.get(
+						Component.of(pdbccId, ComponentType.AMINOACID));
+				
+				for (Component comp : unionComponentSet(residuesWildCard, comps)) {
+					Set<Group> gs = mapCompRes.get(comp);
+					if (gs==null) {
+						gs = new LinkedHashSet<Group>();
+						mapCompRes.put(comp, gs);
+					}
+					gs.add(group);
 				}
-				Set<Group> gs = mapCompRes.get(comp);
-				if (gs==null) {
-					gs = new LinkedHashSet<Group>();
-					mapCompRes.put(comp, gs);
-				}
-				gs.add(group);
 			}
 
 			// for N-terminal
@@ -489,8 +505,13 @@ public class ProteinModificationIdentifier {
 				// for all ligands on N terminal and the first residue
 				res = residues.get(iRes++);
 
-				Component comp = Component.of(res.getPDBName(), ComponentType.AMINOACID, true, false);
-				if (comps.contains(comp)) {
+				Set<Component> nTermWildCard = mapSingleMultiComps.get(
+						Component.of("*", ComponentType.AMINOACID, true, false));
+
+				Set<Component> comps = mapSingleMultiComps.get(
+						Component.of(res.getPDBName(), ComponentType.AMINOACID, true, false));
+				
+				for (Component comp : unionComponentSet(nTermWildCard, comps)) {
 					Set<Group> gs = mapCompRes.get(comp);
 					if (gs==null) {
 						gs = new LinkedHashSet<Group>();
@@ -505,9 +526,14 @@ public class ProteinModificationIdentifier {
 			do {
 				// for all ligands on C terminal and the last residue
 				res = residues.get(iRes--);
+
+				Set<Component> cTermWildCard = mapSingleMultiComps.get(
+						Component.of("*", ComponentType.AMINOACID, false, true));
 				
-				Component comp = Component.of(res.getPDBName(), ComponentType.AMINOACID, false, true);
-				if (comps.contains(comp)) {
+				Set<Component> comps = mapSingleMultiComps.get(
+						Component.of(res.getPDBName(), ComponentType.AMINOACID, false, true));
+
+				for (Component comp : unionComponentSet(cTermWildCard, comps)) {
 					Set<Group> gs = mapCompRes.get(comp);
 					if (gs==null) {
 						gs = new LinkedHashSet<Group>();
@@ -519,6 +545,23 @@ public class ProteinModificationIdentifier {
 		}
 
 		return mapCompRes;
+	}
+	
+	private Set<Component> unionComponentSet(Set<Component> set1, Set<Component> set2) {
+		if (set1 == null && set2 == null)
+			return Collections.emptySet();
+		
+		if (set1 == null)
+			return set2;
+		
+		if (set2 == null)
+			return set1;
+		
+		Set<Component> set = new HashSet<Component>(set1.size()+set2.size());
+		set.addAll(set1);
+		set.addAll(set2);
+		
+		return set;
 	}
 	
 	/**
@@ -541,12 +584,27 @@ public class ProteinModificationIdentifier {
 			boolean isAA2 = comp2.getType()==ComponentType.AMINOACID;
 			
 			Set<Group> groups1 = mapCompGroups.get(comp1);
-			Set<Group> groups2 = mapCompGroups.get(comp2);						
+			Set<Group> groups2 = mapCompGroups.get(comp2);
 			
 			List<Atom[]> list = new ArrayList<Atom[]>();
 
 			List<String> potentialNamesOfAtomOnGroup1 = linkage.getPDBNameOfPotentialAtomsOnComponent1();
+			for (String name : potentialNamesOfAtomOnGroup1) {
+				if (name.equals("*")) {
+					// wildcard
+					potentialNamesOfAtomOnGroup1 = null; // search all atoms
+					break;
+				}
+			}
+			
 			List<String> potentialNamesOfAtomOnGroup2 = linkage.getPDBNameOfPotentialAtomsOnComponent2();
+			for (String name : potentialNamesOfAtomOnGroup2) {
+				if (name.equals("*")) {
+					// wildcard
+					potentialNamesOfAtomOnGroup2 = null; // search all atoms
+					break;
+				}
+			}
 
 			for (Group g1 : groups1) {
 				for (Group g2 : groups2) {

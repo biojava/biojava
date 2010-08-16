@@ -41,15 +41,15 @@ import java.util.Set;
  * @since 3.0
  */
 public final class Component {
-	private final String pdbccId;
+	private final Set<String> pdbccIds;
 	private final boolean isNTerminal;
 	private final boolean isCTerminal;
 	private final ComponentType type;
 	
 	private static Set<Component> components = null;
-	private static Map<ComponentType,Map<String, Component>> nonTerminalComps = null;
-	private static Map<String, Component> nTerminalAminoAcids = null;
-	private static Map<String, Component> cTerminalAminoAcids = null;
+	private static Map<ComponentType,Map<Set<String>, Component>> nonTerminalComps = null;
+	private static Map<Set<String>, Component> nTerminalAminoAcids = null;
+	private static Map<Set<String>, Component> cTerminalAminoAcids = null;
 	
 	/**
 	 * Lazy initialization of the static variables.
@@ -57,19 +57,19 @@ public final class Component {
 	private static void lazyInit() {
 		if (components==null) {
 			components = new HashSet<Component>();
-			nonTerminalComps = new EnumMap<ComponentType,Map<String,
+			nonTerminalComps = new EnumMap<ComponentType,Map<Set<String>,
 											Component>>(ComponentType.class);
 			for (ComponentType type : ComponentType.values()) {
-				nonTerminalComps.put(type, new HashMap<String,Component>());
+				nonTerminalComps.put(type, new HashMap<Set<String>,Component>());
 			}
-			nTerminalAminoAcids = new HashMap<String, Component>();
-			cTerminalAminoAcids = new HashMap<String, Component>();
+			nTerminalAminoAcids = new HashMap<Set<String>, Component>();
+			cTerminalAminoAcids = new HashMap<Set<String>, Component>();
 		}
 	}
 	
 	/**
 	 * Create a ComponentImpl. 
-	 * @param pdbccId Protein Data Bank ID. Cannot be null.
+	 * @param pdbccIds a set of possible Protein Data Bank ID. Cannot be null or empty.
 	 * @param type {@link ComponentType}. Cannot be null.
 	 * @param isNTerminal true if occurring at N-terminal. false, otherwise.
 	 * @param isCTerminal true if occurring at C-terminal. false, otherwise.
@@ -77,9 +77,9 @@ public final class Component {
 	 *  or terminal condition is indicated for non-amino-acid component,
 	 *  or both N-terminal and C-terminal are true.
 	 */
-	private Component(final String pdbccId, final ComponentType type,
+	private Component(final Set<String> pdbccIds, final ComponentType type,
 			final boolean isNTerminal, final boolean isCTerminal) {
-		if (pdbccId==null || type==null) {
+		if (pdbccIds==null || pdbccIds.isEmpty() || type==null) {
 			throw new IllegalArgumentException("pdbccId or type cannot be null.");
 		}
 		
@@ -93,7 +93,7 @@ public final class Component {
 					"N-terminal or C-terminal but not both."); //TODO: is this true?
 		}
 		
-		this.pdbccId = pdbccId;
+		this.pdbccIds = pdbccIds;
 		this.type = type;
 		this.isNTerminal = isNTerminal;
 		this.isCTerminal = isCTerminal;
@@ -103,8 +103,8 @@ public final class Component {
 	 * 
 	 * @return Protein Data Bank ID.
 	 */
-	public String getPdbccId() {
-		return pdbccId;
+	public Set<String> getPdbccIds() {
+		return pdbccIds;
 	}
 	
 	/**
@@ -134,7 +134,7 @@ public final class Component {
 	/**
 	 * Get a Component that does not have to occur at terminals. If the 
 	 * corresponding component has already been registered, return that one.
-	 * @param pdbccId Protein Data Bank ID. Cannot be null.
+	 * @param pdbccIds possible Protein Data Bank ID.
 	 * @param type {@link ComponentType}. Cannot be null.
 	 * @return a component.
 	 * @throws IllegalArgumentException if pdbccId or type is null,
@@ -146,7 +146,7 @@ public final class Component {
 	
 	/**
 	 * Get or create a Component.
-	 * @param pdbccId Protein Data Bank ID. Cannot be null.
+	 * @param pdbccId Protein Data Bank ID.
 	 * @param type {@link ComponentType}. Cannot be null.
 	 * @param isNTerminal true if occurring at N-terminal. false, otherwise.
 	 * @param isCTerminal true if occurring at C-terminal. false, otherwise.
@@ -158,10 +158,36 @@ public final class Component {
 	 */
 	public static Component of(final String pdbccId, final ComponentType type, 
 			final boolean isNTerminal, final boolean isCTerminal) {
-		if (pdbccId==null || type==null) {
-			throw new IllegalArgumentException("Null argument(s).");
-		}
-		
+		return of (Collections.singleton(pdbccId), type, isNTerminal, isCTerminal);
+	}
+	
+	/**
+	 * Get a Component that does not have to occur at terminals. If the 
+	 * corresponding component has already been registered, return that one.
+	 * @param pdbccIds a set of possible Protein Data Bank ID.
+	 * @param type {@link ComponentType}. Cannot be null.
+	 * @return a component.
+	 * @throws IllegalArgumentException if pdbccId or type is null,
+	 *  or the pdbccId has been registered as a different type.
+	 */
+	public static Component of(final Set<String> pdbccIds, final ComponentType type) {
+		return of(pdbccIds, type, false, false);
+	}
+	
+	/**
+	 * Get or create a Component.
+	 * @param pdbccIds a set of possible Protein Data Bank ID.
+	 * @param type {@link ComponentType}. Cannot be null.
+	 * @param isNTerminal true if occurring at N-terminal. false, otherwise.
+	 * @param isCTerminal true if occurring at C-terminal. false, otherwise.
+	 * @return a component.
+	 * @throws IllegalArgumentException if pdbccId or type is null,
+	 *  or the pdbccId has been registered as a different type,
+	 *  or terminal condition is indicated for non-amino-acid component,
+	 *  or both N-terminal and C-terminal are true.
+	 */
+	public static Component of(final Set<String> pdbccIds, final ComponentType type, 
+			final boolean isNTerminal, final boolean isCTerminal) {
 		if (type!=ComponentType.AMINOACID && (isNTerminal || isCTerminal)) {
 			throw new IllegalArgumentException("Terminal condition can only be applied" +
 					" to amino acids.");
@@ -176,23 +202,23 @@ public final class Component {
 		
 		Component comp;
 		if (isNTerminal) {
-			comp = nTerminalAminoAcids.get(pdbccId);
+			comp = nTerminalAminoAcids.get(pdbccIds);
 			if (comp == null) {
-				comp = new Component(pdbccId, type, isNTerminal, isCTerminal);
-				nTerminalAminoAcids.put(pdbccId, comp);
+				comp = new Component(pdbccIds, type, isNTerminal, isCTerminal);
+				nTerminalAminoAcids.put(pdbccIds, comp);
 			}
 		} else if (isCTerminal) {
-			comp = cTerminalAminoAcids.get(pdbccId);
+			comp = cTerminalAminoAcids.get(pdbccIds);
 			if (comp == null) {
-				comp = new Component(pdbccId, type, isNTerminal, isCTerminal);
-				cTerminalAminoAcids.put(pdbccId, comp);
+				comp = new Component(pdbccIds, type, isNTerminal, isCTerminal);
+				cTerminalAminoAcids.put(pdbccIds, comp);
 			}
 		} else {
-			Map<String, Component> map = nonTerminalComps.get(type);
-			comp = map.get(pdbccId);
+			Map<Set<String>, Component> map = nonTerminalComps.get(type);
+			comp = map.get(pdbccIds);
 			if (comp == null) {
-				comp = new Component(pdbccId, type, isNTerminal, isCTerminal);
-				map.put(pdbccId, comp);
+				comp = new Component(pdbccIds, type, isNTerminal, isCTerminal);
+				map.put(pdbccIds, comp);
 			}
 		}
 		
@@ -211,7 +237,7 @@ public final class Component {
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
-		sb.append(getPdbccId());
+		sb.append(getPdbccIds());
 		sb.append("["+getType().label()+"]");
 		if (isCTerminal()) {
 			sb.append("(C)");

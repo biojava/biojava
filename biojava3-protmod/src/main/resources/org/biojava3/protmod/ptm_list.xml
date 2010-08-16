@@ -1111,8 +1111,8 @@
 				<Id source="PDBCC">PBE</Id>
 			</Component>
 			<Bond>
-				<Atom component="1"></Atom>
-				<Atom component="2"></Atom>
+				<Atom component="1">*</Atom>
+				<Atom component="2">*</Atom>
 			</Bond>
 		</Condition>
 		<Occurrence>natural</Occurrence>
@@ -2219,8 +2219,8 @@
 				<Id source="PDBCC">CYS</Id>
 			</Component>
 			<Bond>
-				<Atom component="1"></Atom>
-				<Atom component="2"></Atom>
+				<Atom component="1">*</Atom>
+				<Atom component="2">*</Atom>
 			</Bond>
 		</Condition>
 		<Occurrence>natural</Occurrence>
@@ -2713,7 +2713,7 @@
 		<CrossReference>
 			<Source>PSI-MOD</Source>
 			<Id>MOD:00164</Id>
-			<Name></Name>
+			<Name>O-(N-acetylamino)galactosyl-L-threonine</Name>
 		</CrossReference>
 		<Formula>C 12 H 20 N 2 O 7</Formula>
 		<Condition>
@@ -2748,8 +2748,8 @@
 				<Id source="PDBCC">T3</Id>
 			</Component>
 			<Bond>
-				<Atom component="1"></Atom>
-				<Atom component="2"></Atom>
+				<Atom component="1">*</Atom>
+				<Atom component="2">*</Atom>
 			</Bond>
 		</Condition>
 		<Occurrence>natural</Occurrence>
@@ -2779,8 +2779,8 @@
 				<Id source="PDBCC">T44</Id>
 			</Component>
 			<Bond>
-				<Atom component="1"></Atom>
-				<Atom component="2"></Atom>
+				<Atom component="1">*</Atom>
+				<Atom component="2">*</Atom>
 			</Bond>
 		</Condition>
 		<Occurrence>natural</Occurrence>
@@ -3044,8 +3044,8 @@
 				<Id source="PDBCC">DAL</Id>
 			</Component>
 			<Bond>
-				<Atom component="1"></Atom>
-				<Atom component="2"></Atom>
+				<Atom component="1">*</Atom>
+				<Atom component="2">*</Atom>
 			</Bond>
 		</Condition>
 		<Occurrence>natural</Occurrence>
@@ -3075,8 +3075,8 @@
 				<Id source="PDBCC">DAL</Id>
 			</Component>
 			<Bond>
-				<Atom component="1"></Atom>
-				<Atom component="2"></Atom>
+				<Atom component="1">*</Atom>
+				<Atom component="2">*</Atom>
 			</Bond>
 		</Condition>
 		<Occurrence>natural</Occurrence>
@@ -4855,8 +4855,8 @@
 				<Id source="PDBCC">MGD</Id>
 			</Component>
 			<Bond>
-				<Atom component="1"></Atom>
-				<Atom component="2"></Atom>
+				<Atom component="1">*</Atom>
+				<Atom component="2">*</Atom>
 			</Bond>
 		</Condition>
 		<Occurrence>natural</Occurrence>
@@ -5010,7 +5010,7 @@
 			<Bond>
 				<!--TODO: verify this-->
 				<Atom component="1">SG</Atom>
-				<Atom component="2"></Atom>
+				<Atom component="2">*</Atom>
 			</Bond>
 		</Condition>
 		<Occurrence>natural</Occurrence>
@@ -5313,8 +5313,8 @@
 				<Id source="PDBCC">SER</Id>
 			</Component>
 			<Bond>
-				<Atom component="1"></Atom>
-				<Atom component="2"></Atom>
+				<Atom component="1">*</Atom>
+				<Atom component="2">*</Atom>
 			</Bond>
 		</Condition>
 		<Occurrence>natural</Occurrence>
@@ -6671,15 +6671,15 @@
 		<Formula></Formula>
 		<Condition>
 			<Component type="AminoAcid" label="1">
-				<Id source="PDBCC"></Id>
+				<Id source="PDBCC">CYS</Id>
 			</Component>
 			<Component type="Ligand" label="2">
-				<Id source="PDBCC"></Id>
+				<Id source="PDBCC">HIS</Id>
 			</Component>
 			<Bond>
 				<!--TODO: verify this-->
-				<Atom component="1"></Atom>
-				<Atom component="2"></Atom>
+				<Atom component="1">*</Atom>
+				<Atom component="2">*</Atom>
 			</Bond>
 		</Condition>
 		<Occurrence>natural</Occurrence>
@@ -6868,8 +6868,8 @@
 				<Id source="PDBCC">TSI</Id>
 			</Component>
 			<Bond>
-				<Atom component="1"></Atom>
-				<Atom component="2"></Atom>
+				<Atom component="1">*</Atom>
+				<Atom component="2">*</Atom>
 			</Bond>
 		</Condition>
 		<Occurrence>natural</Occurrence>
@@ -6961,7 +6961,7 @@
 			</Component>
 			<Bond>
 				<Atom component="1">N</Atom>
-				<Atom component="2"></Atom>
+				<Atom component="2">*</Atom>
 			</Bond>
 		</Condition>
 		<Occurrence>natural</Occurrence>
@@ -7145,8 +7145,8 @@
 				<Id source="PDBCC">SER</Id>
 			</Component>
 			<Bond>
-				<Atom component="1"></Atom>
-				<Atom component="2"></Atom>
+				<Atom component="1">*</Atom>
+				<Atom component="2">*</Atom>
 			</Bond>
 		</Condition>
 		<Occurrence>natural</Occurrence>
@@ -8394,5 +8394,24 @@
 		<Occurrence>natural</Occurrence>
 		<Category>attachment</Category>
 		<Keyword>amidated carboxyl end</Keyword>
+	</Entry>
+	<Entry>
+		<Id>0252</Id>
+		<Description>Metal coordination</Description>
+		<Condition>
+			<Component type="AminoAcid" label="1">
+				<Id source="PDBCC">*</Id>
+			</Component>
+			<Component type="Ligand" label="2">
+				<Id source="PDBCC">AC,AG,AL,AM,AU,BA,BE,BI,BK,CA,CD,CE,CF,CM,CO,CR,CS,CU,DY,ER,ES,EU,FE,FM,FR,GA,GD,HF,HG,HO,IN,IR,K,LA,LI,LR,LU,MD,MG,MN,MO,NA,NB,ND,NI,NO,NP,OS,PA,PB,PD,PM,PR,PT,PU,RA,RB,RE,RH,RU,SC,SM,SN,SR,TA,TB,TC,TH,TI,TL,TM,U,V,W,Y,YB,ZN,ZR</Id>
+			</Component>
+			<Bond>
+				<Atom component="1">*</Atom>
+				<Atom component="2">*</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>attachment</Category>
+		<Keyword>Metal coordination</Keyword>
 	</Entry>
 </ProteinModifications>

@@ -54,6 +54,7 @@ public class ProteinModificationParserTest extends TestCase {
 				// Attachments
 				{"3HN3", "AA0151"}, // NAG
 				{"1ZNF", "AA0053"}, // ACE on THR
+				{"1MCC", "AA0045"}, // ACE on GLU
 				{"1SCY", "AA0089"}, // NH2 on HIS
 				
 				// Modified resdiues
@@ -271,28 +272,32 @@ public class ProteinModificationParserTest extends TestCase {
 		};
 	}
 	
-	public void testMultiParser(){
+	public void testParser() throws IOException, StructureException {
+		multiTest();
+		singleTest();
+	}
+	
+	public void multiTest() {
 
 		
 		for ( String[] name : strucs){
 			try {
-//				parserTest(name[0], null); 
+//				parserTest(name[0], (String)null); 
 				parserTest(name[0], name[1]);
 			} catch (Exception e){
 				e.printStackTrace();
 				fail(e.getMessage());
 			}
 		}
-	}	
+	}
+	
+	public void singleTest() throws IOException, StructureException {
+		String pdbId = "1CAD";
+		Set<ProteinModification> mods = ProteinModification.getByKeyword("Metal coordination");
+		parserTest(pdbId, mods);
+	}
 
-	private void parserTest(String pdbId, String residId) throws IOException, StructureException {		
-		Structure struc = TmpAtomCache.cache.getStructure(pdbId);
-
-		ProteinModificationIdentifier parser = new ProteinModificationIdentifier();
-		boolean recordUnidentifiable = false;
-		parser.setRecordUnidentifiableCompounds(recordUnidentifiable);
-//		parser.setbondLengthTolerance(2);
-		
+	private void parserTest(String pdbId, String residId) throws IOException, StructureException {
 		Set<ProteinModification> mods;
 		if (residId==null) {
 			mods = ProteinModification.allModifications();
@@ -300,11 +305,22 @@ public class ProteinModificationParserTest extends TestCase {
 			mods = ProteinModification.getByResidId(residId);
 		}
 		
+		parserTest(pdbId, mods);
+	}
+	
+	private void parserTest(String pdbId, Set<ProteinModification> mods) throws IOException, StructureException {	
+		Structure struc = TmpAtomCache.cache.getStructure(pdbId);
+
+		ProteinModificationIdentifier parser = new ProteinModificationIdentifier();
+		boolean recordUnidentifiable = false;
+		parser.setRecordUnidentifiableCompounds(recordUnidentifiable);
+//		parser.setbondLengthTolerance(2);
+		
 		assertFalse(mods.isEmpty());
 
 		parser.identify(struc, mods);
 
-		assertFalse(pdbId + " " + residId +" is not false" , 
+		assertFalse(pdbId + " is not false" , 
 				parser.getIdentifiedModifiedCompound().isEmpty());
 		
 		boolean print = false;

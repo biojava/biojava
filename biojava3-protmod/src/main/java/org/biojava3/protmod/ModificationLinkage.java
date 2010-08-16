@@ -211,6 +211,6 @@ public class ModificationLinkage {
 		Component comp2 = getComponent2();
 		List<String> atom1 = getPDBNameOfPotentialAtomsOnComponent1();
 		List<String> atom2 = getPDBNameOfPotentialAtomsOnComponent2();
-		return comp1.getPdbccId()+atom1+"<=>" + comp2.getPdbccId()+atom2;
+		return comp1.getPdbccIds().toString()+":"+atom1+"<=>" + comp2.getPdbccIds()+atom2;
 	}
 }
