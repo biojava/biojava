@@ -23,9 +23,10 @@
 
 package org.biojava3.alignment.template;
 
+import static org.biojava3.alignment.routines.AlignerHelper.*;
+
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 import org.biojava3.alignment.template.AlignedSequence.Step;
@@ -43,23 +44,17 @@ import org.biojava3.core.sequence.template.Sequence;
 public abstract class AbstractMatrixAligner<S extends Sequence<C>, C extends Compound> extends AbstractScorer
         implements MatrixAligner<S, C> {
 
-    // helper enum for alignment with affine gap penalties
-    public enum Last {
-        SUB,
-        DEL,
-        INS
-    }
-
     // input fields
-    private GapPenalty gapPenalty;
+    protected GapPenalty gapPenalty;
     private SubstitutionMatrix<C> subMatrix;
     private boolean local, storingScoreMatrix;
+    protected Anchor[] anchors;
 
     // output fields
     protected Profile<S, C> profile;
-    protected int xMax, yMax, xStart, yStart;
+    protected int[] xyMax, xyStart;
     protected short max, min, score;
-    private short[][][] scores;
+    protected short[][][] scores;
     private String[] types;
     private long time = -1;
 
@@ -285,40 +280,33 @@ public abstract class AbstractMatrixAligner<S extends Sequence<C>, C extends Com
             scores[0] = new short[dim[1]][dim[2]];
             scores[1] = new short[dim[1]][dim[2]];
         }
-        List<Step> sx = new ArrayList<Step>(), sy = new ArrayList<Step>();
-        if (gapPenalty.getType() == GapPenalty.Type.LINEAR) {
-            types = new String[] { null };
-            int[][][] traceback = new int[dim[0]][dim[1]][dim[2]];
+        Last[][][] traceback = new Last[dim[0]][][];
+        boolean linear = (gapPenalty.getType() == GapPenalty.Type.LINEAR);
+        for (int x = 0; x < dim[0]; x++) {
             if (local) {
-                for (int x = 1; x < dim[0]; x++) {
-                    setScoreVectorLinearLocal(x, traceback);
+                traceback[x] = linear ? setScoreVector(x, gapPenalty.getExtensionPenalty(),
+                        getSubstitutionScoreVector(x), storingScoreMatrix, scores, xyMax, score) : setScoreVector(x,
+                        gapPenalty.getOpenPenalty(), gapPenalty.getExtensionPenalty(), getSubstitutionScoreVector(x),
+                        storingScoreMatrix, scores, xyMax, score);
+                if (xyMax[0] == x) {
+                    score = scores[x][xyMax[1]][0];
                 }
             } else {
-                for (int x = 0; x < dim[0]; x++) {
-                    setScoreVectorLinearGlobal(x, traceback);
-                }
-            }
-            setStepsLinear(traceback, sx, sy);
-        } else {
-            types = new String[] { "Substitution", "Deletion", "Insertion" };
-            Last[][][] traceback = new Last[dim[0]][dim[1]][dim[2]];
-            if (local) {
-                for (int x = 1; x < dim[0]; x++) {
-                    setScoreVectorLocal(x, traceback);
-                }
-                setStepsLocal(traceback, sx, sy);
-            } else {
-                for (int x = 0; x < dim[0]; x++) {
-                    setScoreVectorGlobal(x, traceback);
-                }
-                setStepsGlobal(traceback, sx, sy);
+                traceback[x] = linear ? setScoreVector(x, gapPenalty.getExtensionPenalty(),
+                        getSubstitutionScoreVector(x), storingScoreMatrix, scores) : setScoreVector(x,
+                        gapPenalty.getOpenPenalty(), gapPenalty.getExtensionPenalty(), getSubstitutionScoreVector(x),
+                        storingScoreMatrix, scores);
             }
         }
         if (!local) {
-            for (int z = 0; z < scores[xMax][yMax].length; z++) {
-                score = (short) Math.max(score, scores[xMax][yMax][z]);
+            xyMax[0] = dim[0] - 1;
+            xyMax[1] = dim[1] - 1;
+            for (int z = 0; z < scores[xyMax[0]][xyMax[1]].length; z++) {
+                score = (short) Math.max(score, scores[xyMax[0]][xyMax[1]][z]);
             }
         }
+        List<Step> sx = new ArrayList<Step>(), sy = new ArrayList<Step>();
+        xyStart = local ? setSteps(traceback, xyMax, sx, sy) : setSteps(traceback, scores, sx, sy);
         setProfile(sx, sy);
 
         time = System.nanoTime() - timeStart;
@@ -328,220 +316,41 @@ public abstract class AbstractMatrixAligner<S extends Sequence<C>, C extends Com
         }
     }
 
+    // returns score for the alignment of the query column to all target columns
+    protected short[] getSubstitutionScoreVector(int queryColumn) {
+        return getSubstitutionScoreVector(queryColumn, new int[] {0, 0, scores.length - 1, scores[0].length - 1});
+    }
+
+    // returns score for the alignment of the query column to all target columns
+    protected short[] getSubstitutionScoreVector(int queryColumn, int[] subproblem) {
+        short[] subs = new short[subproblem[3] + 1];
+        if (queryColumn > 0) {
+            for (int y = Math.max(1, subproblem[1]); y <= subproblem[3]; y++) {
+                subs[y] = getSubstitutionScore(queryColumn, y);
+            }
+        }
+        return subs;
+    }
+
     // resets output fields; should be overridden to set max and min
     protected void reset() {
-        xMax = yMax = xStart = yStart = 0;
+        xyMax = new int[] {0, 0};
+        xyStart = new int[] {0, 0};
         scores = null;
-        types = null;
+        types = (gapPenalty == null || gapPenalty.getType() == GapPenalty.Type.LINEAR) ? new String[] { null } :
+            new String[] { "Substitution", "Deletion", "Insertion" };
         time = -1;
         profile = null;
     }
 
-    // scores alignment for a given position in both sequences
-    private void setScorePoint(int x, int y, Last[][][] traceback) {
-
-        // substitution
-        if (scores[x - 1][y - 1][1] >= scores[x - 1][y - 1][0] && scores[x - 1][y - 1][1] >= scores[x - 1][y - 1][2]) {
-            scores[x][y][0] = (short) (scores[x - 1][y - 1][1] + getSubstitutionScore(x, y));
-            traceback[x][y][0] = Last.DEL;
-        } else if (scores[x - 1][y - 1][0] >= scores[x - 1][y - 1][1] &&
-                scores[x - 1][y - 1][0] >= scores[x - 1][y - 1][2]) {
-            scores[x][y][0] = (short) (scores[x - 1][y - 1][0] + getSubstitutionScore(x, y));
-            traceback[x][y][0] = Last.SUB;
-        } else {
-            scores[x][y][0] = (short) (scores[x - 1][y - 1][2] + getSubstitutionScore(x, y));
-            traceback[x][y][0] = Last.INS;
+    // resets anchor fields to proper size
+    protected void resetAnchors(int length) {
+        if (anchors == null) {
+            anchors = new Anchor[length];
+        } else if (anchors.length != length) {
+            anchors = Arrays.copyOf(anchors, length);
         }
-
-        // deletion
-        if (scores[x - 1][y][1] >= scores[x - 1][y][0] + gapPenalty.getOpenPenalty()) {
-            scores[x][y][1] = (short) (scores[x - 1][y][1] + gapPenalty.getExtensionPenalty());
-            traceback[x][y][1] = Last.DEL;
-        } else {
-            scores[x][y][1] = (short) (scores[x - 1][y][0] + gapPenalty.getOpenPenalty() +
-                    gapPenalty.getExtensionPenalty());
-            traceback[x][y][1] = Last.SUB;
-        }
-
-        // insertion
-        if (scores[x][y - 1][0] + gapPenalty.getOpenPenalty() >= scores[x][y - 1][2]) {
-            scores[x][y][2] = (short) (scores[x][y - 1][0] + gapPenalty.getOpenPenalty() +
-                    gapPenalty.getExtensionPenalty());
-            traceback[x][y][2] = Last.SUB;
-        } else {
-            scores[x][y][2] = (short) (scores[x][y - 1][2] + gapPenalty.getExtensionPenalty());
-            traceback[x][y][2] = Last.INS;
-        }
-
-    }
-
-    // scores alignment for a given position in both sequences for linear gap penalty
-    private void setScorePointLinear(int x, int y, int[][][] traceback, int sub, int del, int ins) {
-        if (del >= sub && del >= ins) {
-            scores[x][y][0] = (short) del;
-            traceback[x][y][0] = y;
-        } else if (sub >= del && sub >= ins) {
-            scores[x][y][0] = (short) sub;
-            traceback[x][y][0] = y - 1;
-        } else {
-            scores[x][y][0] = (short) ins;
-            traceback[x][y][0] = traceback[x][y - 1][0];
-        }
-    }
-
-    // scores global alignment for a given position in the query sequence
-    private void setScoreVectorGlobal(int x, Last[][][] traceback) {
-        if (x == 0) {
-            short min = (short) (Short.MIN_VALUE - gapPenalty.getOpenPenalty() - gapPenalty.getExtensionPenalty());
-            scores[0][0][1] = scores[0][0][2] = gapPenalty.getOpenPenalty();
-            for (int y = 1; y < scores[0].length; y++) {
-                scores[0][y][0] = scores[0][y][1] = min;
-                scores[0][y][2] = (short) (scores[0][y - 1][2] + gapPenalty.getExtensionPenalty());
-                traceback[0][y][0] = traceback[0][y][1] = traceback[0][y][2] = Last.INS;
-            }
-            xMax = scores.length - 1;
-            yMax = scores[0].length - 1;
-        } else {
-            if (!storingScoreMatrix && x > 1) {
-                scores[x] = scores[x - 2];
-            }
-            scores[x][0][0] = scores[x][0][2] = (x > 1) ? scores[x - 1][0][0] : scores[0][1][0];
-            scores[x][0][1] = (short) (scores[x - 1][0][1] + gapPenalty.getExtensionPenalty());
-            traceback[x][0][0] = traceback[x][0][1] = traceback[x][0][2] = Last.DEL;
-            for (int y = 1; y < scores[x].length; y++) {
-                setScorePoint(x, y, traceback);
-            }
-        }
-    }
-
-    // scores local alignment for a given position in the query sequence
-    private void setScoreVectorLocal(int x, Last[][][] traceback) {
-        if (!storingScoreMatrix && x > 1) {
-            scores[x] = scores[x - 2];
-        }
-        for (int y = 1; y < scores[x].length; y++) {
-            setScorePoint(x, y, traceback);
-            for (int z = 0; z < scores[x][y].length; z++) {
-                if (scores[x][y][z] <= 0) {
-                    scores[x][y][z] = 0;
-                    traceback[x][y][z] = null;
-                }
-            }
-            if (scores[x][y][0] > score) {
-                xMax = x;
-                yMax = y;
-                score = scores[x][y][0];
-            }
-        }
-    }
-
-    // scores global alignment for a given position in the query sequence for a linear gap penalty
-    private void setScoreVectorLinearGlobal(int x, int[][][] traceback) {
-        if (x == 0) {
-            for (int y = 1; y < scores[0].length; y++) {
-                scores[0][y][0] = (short) (scores[0][y - 1][0] + gapPenalty.getExtensionPenalty());
-            }
-            xMax = scores.length - 1;
-            yMax = scores[0].length - 1;
-        } else {
-            if (!storingScoreMatrix && x > 1) {
-                scores[x] = scores[x - 2];
-            }
-            scores[x][0][0] = (short) (scores[x - 1][0][0] + gapPenalty.getExtensionPenalty());
-            for (int y = 1; y < scores[x].length; y++) {
-                int del = scores[x - 1][y][0] + gapPenalty.getExtensionPenalty(),
-                        ins = scores[x][y - 1][0] + gapPenalty.getExtensionPenalty(),
-                        sub = scores[x - 1][y - 1][0] + getSubstitutionScore(x, y);
-                setScorePointLinear(x, y, traceback, sub, del, ins);
-            }
-        }
-    }
-
-    // scores local alignment for a given position in the query sequence for a linear gap penalty
-    private void setScoreVectorLinearLocal(int x, int[][][] traceback) {
-        if (!storingScoreMatrix && x > 1) {
-            scores[x] = scores[x - 2];
-        }
-        for (int y = 1; y < scores[x].length; y++) {
-            int del = scores[x - 1][y][0] + gapPenalty.getExtensionPenalty(),
-                    ins = scores[x][y - 1][0] + gapPenalty.getExtensionPenalty(),
-                    sub = scores[x - 1][y - 1][0] + getSubstitutionScore(x, y);
-            if (del > 0 || sub > 0 || ins > 0) {
-                setScorePointLinear(x, y, traceback, sub, del, ins);
-                if (scores[x][y][0] > scores[xMax][yMax][0]) {
-                    xMax = x;
-                    yMax = y;
-                }
-            }
-        }
-    }
-
-    // finds alignment path through traceback matrix
-    private void setSteps(Last[][][] traceback, List<Step> sx, List<Step> sy, Last last) {
-        int x = xMax, y = yMax;
-        while (local ? traceback[x][y][last.ordinal()] != null : x > 0 || y > 0) {
-            switch (last) {
-            case DEL:
-                last = traceback[x][y][1];
-                sx.add(Step.COMPOUND);
-                sy.add(Step.GAP);
-                x--;
-                break;
-            case SUB:
-                last = traceback[x][y][0];
-                sx.add(Step.COMPOUND);
-                sy.add(Step.COMPOUND);
-                x--;
-                y--;
-                break;
-            case INS:
-                last = traceback[x][y][2];
-                sx.add(Step.GAP);
-                sy.add(Step.COMPOUND);
-                y--;
-            }
-        }
-        Collections.reverse(sx);
-        Collections.reverse(sy);
-        xStart = x;
-        yStart = y;
-    }
-
-    // finds global alignment path through traceback matrix
-    private void setStepsGlobal(Last[][][] traceback, List<Step> sx, List<Step> sy) {
-        setSteps(traceback, sx, sy, (scores[xMax][yMax][1] > scores[xMax][yMax][0] && scores[xMax][yMax][1] >
-                scores[xMax][yMax][2]) ? Last.DEL : (scores[xMax][yMax][0] > scores[xMax][yMax][1] &&
-                scores[xMax][yMax][0] > scores[xMax][yMax][2]) ? Last.SUB : Last.INS);
-    }
-
-    // finds local alignment path through traceback matrix
-    private void setStepsLocal(Last[][][] traceback, List<Step> sx, List<Step> sy) {
-        setSteps(traceback, sx, sy, Last.SUB);
-    }
-
-    // finds alignment path through traceback matrix for linear gap penalty
-    private void setStepsLinear(int[][][] traceback, List<Step> sx, List<Step> sy) {
-        int x = xMax, y = yMax;
-        while (local ? traceback[x][y][0] > 0 : x > 0 || y > 0) {
-            if (traceback[x][y][0] == y) {
-                sx.add(Step.COMPOUND);
-                sy.add(Step.GAP);
-                x--;
-            } else if (traceback[x][y][0] == y - 1) {
-                sx.add(Step.COMPOUND);
-                sy.add(Step.COMPOUND);
-                x--;
-                y--;
-            } else {
-                sx.add(Step.GAP);
-                sy.add(Step.COMPOUND);
-                y--;
-            }
-        }
-        Collections.reverse(sx);
-        Collections.reverse(sy);
-        xStart = x;
-        yStart = y;
+        anchors[0] = new Anchor();
     }
 
     // abstract methods

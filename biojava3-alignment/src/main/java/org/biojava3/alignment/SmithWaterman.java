@@ -68,8 +68,8 @@ public class SmithWaterman<S extends Sequence<C>, C extends Compound> extends Ab
 
     @Override
     protected void setProfile(List<Step> sx, List<Step> sy) {
-        profile = pair = new SimpleSequencePair<S, C>(getQuery(), getTarget(), sx, xStart,
-                getQuery().getLength() - xMax, sy, yStart, getTarget().getLength() - yMax);
+        profile = pair = new SimpleSequencePair<S, C>(getQuery(), getTarget(), sx, xyStart[0],
+                getQuery().getLength() - xyMax[0], sy, xyStart[1], getTarget().getLength() - xyMax[1]);
     }
 
 }

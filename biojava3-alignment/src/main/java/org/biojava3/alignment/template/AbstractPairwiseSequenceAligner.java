@@ -26,7 +26,6 @@ package org.biojava3.alignment.template;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.biojava3.alignment.template.GapPenalty.Type;
 import org.biojava3.core.sequence.template.Compound;
 import org.biojava3.core.sequence.template.CompoundSet;
 import org.biojava3.core.sequence.template.Sequence;
@@ -146,8 +145,8 @@ public abstract class AbstractPairwiseSequenceAligner<S extends Sequence<C>, C e
 
     @Override
     protected int[] getScoreMatrixDimensions() {
-        return new int[] { query.getLength() + 1, target.getLength() + 1, (getGapPenalty().getType() == Type.LINEAR) ?
-                1 : 3 };
+        return new int[] { query.getLength() + 1, target.getLength() + 1, (getGapPenalty().getType() ==
+                GapPenalty.Type.LINEAR) ? 1 : 3 };
     }
 
     @Override
