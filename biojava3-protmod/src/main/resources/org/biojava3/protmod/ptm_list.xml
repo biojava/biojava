@@ -4974,7 +4974,7 @@
 			<Bond>
 				<!--TODO: verify this-->
 				<Atom component="1">NE2</Atom>
-				<Atom component="2">CBB</Atom>
+				<Atom component="2">CBB,FE</Atom>
 			</Bond>
 		</Condition>
 		<Occurrence>natural</Occurrence>
