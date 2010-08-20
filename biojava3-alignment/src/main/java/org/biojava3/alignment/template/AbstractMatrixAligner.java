@@ -48,7 +48,7 @@ public abstract class AbstractMatrixAligner<S extends Sequence<C>, C extends Com
     protected GapPenalty gapPenalty;
     private SubstitutionMatrix<C> subMatrix;
     private boolean local, storingScoreMatrix;
-    protected Anchor[] anchors;
+    protected int[] anchors;
 
     // output fields
     protected Profile<S, C> profile;
@@ -56,7 +56,7 @@ public abstract class AbstractMatrixAligner<S extends Sequence<C>, C extends Com
     protected short max, min, score;
     protected short[][][] scores;
     private String[] types;
-    private long time = -1;
+    protected long time = -1;
 
     /**
      * Before running an alignment, data must be sent in via calls to {@link #setGapPenalty(GapPenalty)} and
@@ -338,19 +338,26 @@ public abstract class AbstractMatrixAligner<S extends Sequence<C>, C extends Com
         xyStart = new int[] {0, 0};
         scores = null;
         types = (gapPenalty == null || gapPenalty.getType() == GapPenalty.Type.LINEAR) ? new String[] { null } :
-            new String[] { "Substitution", "Deletion", "Insertion" };
+                new String[] { "Substitution", "Deletion", "Insertion" };
         time = -1;
         profile = null;
     }
 
     // resets anchor fields to proper size
-    protected void resetAnchors(int length) {
+    protected void resetAnchors() {
+        int x = getScoreMatrixDimensions()[0];
         if (anchors == null) {
-            anchors = new Anchor[length];
-        } else if (anchors.length != length) {
-            anchors = Arrays.copyOf(anchors, length);
+            anchors = new int[x];
+            for (int i = 0; i < x; i++) {
+                anchors[i] = -1;
+            }
+        } else if (anchors.length != x) {
+            int[] old = anchors;
+            anchors = new int[x];
+            for (int i = 0; i < x; i++) {
+                anchors[i] = (i < old.length) ? old[i] : -1;
+            }
         }
-        anchors[0] = new Anchor();
     }
 
     // abstract methods

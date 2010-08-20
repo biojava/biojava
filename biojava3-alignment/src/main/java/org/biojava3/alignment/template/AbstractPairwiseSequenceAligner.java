@@ -145,8 +145,8 @@ public abstract class AbstractPairwiseSequenceAligner<S extends Sequence<C>, C e
 
     @Override
     protected int[] getScoreMatrixDimensions() {
-        return new int[] { query.getLength() + 1, target.getLength() + 1, (getGapPenalty().getType() ==
-                GapPenalty.Type.LINEAR) ? 1 : 3 };
+        return new int[] { (query == null) ? 1 : query.getLength() + 1, (target == null) ? 1 : target.getLength() + 1,
+                (getGapPenalty() == null || getGapPenalty().getType() == GapPenalty.Type.LINEAR) ? 1 : 3 };
     }
 
     @Override

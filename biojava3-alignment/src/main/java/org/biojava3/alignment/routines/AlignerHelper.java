@@ -55,18 +55,11 @@ public class AlignerHelper {
 
         private int queryIndex;
         private int[][] targetIndices, tiLast, ti1, ti2;
-        private Last[][] pointers, pLast, p1, p2;
 
         public Cut(int queryIndex, int[] dim) {
             this.queryIndex = queryIndex;
             targetIndices = ti1 = new int[dim[1]][dim[2]];
             ti2 = new int[dim[1]][dim[2]];
-            pointers = p1 = new Last[dim[1]][dim[2]];
-            p2 = new Last[dim[1]][dim[2]];
-        }
-
-        public Last getPointer(int z) {
-            return pointers[pointers.length - 1][z];
         }
 
         public int getQueryIndex() {
@@ -77,47 +70,81 @@ public class AlignerHelper {
             return targetIndices[targetIndices.length - 1][z];
         }
 
-        public void update(int x, int[] subproblem, Last[][] pointerUpdates) {
-            if (queryIndex == x - 1) {
-                // TODO create
-                for (int y = subproblem[1]; y <= subproblem[3]; y++) {
-                    for (int z = 0; z < pointers[y].length; z++) {
-                        pointers[y][z] = pointerUpdates[y][z];
-                        if (pointers[y][z] != null) {
-                            switch (pointers[y][z]) {
-                            case DELETION:
-                                targetIndices[y][z] = y;
-                                break;
-                            case SUBSTITUTION:
-                                targetIndices[y][z] = y - 1;
-                                break;
-                            case INSERTION:
-                                targetIndices[y][z] = targetIndices[y - 1][z];
-                            }
-                        }
-                    }
+        public void update(int x, int[] subproblem, Last[][] pointers) {
+            if (pointers[subproblem[1]].length == 1) {
+                if (queryIndex == x - 1) {
+                    updateLinearInitial(subproblem, pointers);
+                } else if (queryIndex < x) {
+                    updateLinearAdvance(subproblem, pointers);
                 }
-            } else if (queryIndex < x) {
-                // TODO advance
-                tiLast = targetIndices;
-                targetIndices = (targetIndices == ti2) ? ti1 : ti2;
-                pLast = pointers;
-                pointers = (pointers == p2) ? p1 : p2;
-                for (int y = subproblem[1]; y <= subproblem[3]; y++) {
-                    for (int z = 0; z < pointers[y].length; z++) {
-                        switch (pointerUpdates[y][z]) {
-                        case DELETION:
-                            targetIndices[y][z] = tiLast[y][z];
-                            pointers[y][z] = pLast[y][z];
-                            break;
-                        case SUBSTITUTION:
-                            targetIndices[y][z] = tiLast[y - 1][z];
-                            pointers[y][z] = pLast[y - 1][z];
-                            break;
-                        case INSERTION:
-                            targetIndices[y][z] = targetIndices[y - 1][z];
-                            pointers[y][z] = pointers[y - 1][z];
-                        }
+            } else {
+                if (queryIndex == x - 1) {
+                    updateInitial(subproblem, pointers);
+                } else if (queryIndex < x) {
+                    updateAdvance(subproblem, pointers);
+                }
+            }
+        }
+
+        private void updateAdvance(int[] subproblem, Last[][] pointers) {
+            tiLast = targetIndices;
+            targetIndices = (targetIndices == ti2) ? ti1 : ti2;
+            for (int y = subproblem[1]; y <= subproblem[3]; y++) {
+                if (pointers[y][0] != null) {
+                    targetIndices[y][0] = tiLast[y - 1][pointers[y][0].ordinal()];
+                }
+                if (pointers[y][1] != null) {
+                    targetIndices[y][1] = tiLast[y][pointers[y][1].ordinal()];
+                }
+                if (pointers[y][2] != null) {
+                    targetIndices[y][2] = targetIndices[y - 1][pointers[y][2].ordinal()];
+                }
+            }
+        }
+
+        private void updateInitial(int[] subproblem, Last[][] pointers) {
+            for (int y = subproblem[1]; y <= subproblem[3]; y++) {
+                if (pointers[y][0] != null) {
+                    targetIndices[y][0] = y - 1;
+                }
+                if (pointers[y][1] != null) {
+                    targetIndices[y][1] = y;
+                }
+                if (pointers[y][2] != null) {
+                    targetIndices[y][2] = targetIndices[y - 1][2];
+                }
+            }
+        }
+
+        private void updateLinearAdvance(int[] subproblem, Last[][] pointers) {
+            tiLast = targetIndices;
+            targetIndices = (targetIndices == ti2) ? ti1 : ti2;
+            for (int y = subproblem[1]; y <= subproblem[3]; y++) {
+                switch (pointers[y][0]) {
+                case DELETION:
+                    targetIndices[y][0] = tiLast[y][0];
+                    break;
+                case SUBSTITUTION:
+                    targetIndices[y][0] = tiLast[y - 1][0];
+                    break;
+                case INSERTION:
+                    targetIndices[y][0] = targetIndices[y - 1][0];
+                }
+            }
+        }
+
+        private void updateLinearInitial(int[] subproblem, Last[][] pointers) {
+            for (int y = subproblem[1]; y <= subproblem[3]; y++) {
+                if (pointers[y][0] != null) {
+                    switch (pointers[y][0]) {
+                    case DELETION:
+                        targetIndices[y][0] = y;
+                        break;
+                    case SUBSTITUTION:
+                        targetIndices[y][0] = y - 1;
+                        break;
+                    case INSERTION:
+                        targetIndices[y][0] = targetIndices[y - 1][0];
                     }
                 }
             }
@@ -125,47 +152,25 @@ public class AlignerHelper {
 
     }
 
-    /**
-     * Implements a data structure for linking query compounds and target compounds.
-     */
-    public static class Anchor {
-
-        private int targetIndex;
-        private Last pointer;
-
-        public Anchor() {
-        }
-
-        public Anchor(Cut c, int z) {
-            this(c.getTargetIndex(z), c.getPointer(z));
-        }
-
-        public Anchor(int y, Last p) {
-            targetIndex = y;
-            pointer = p;
-        }
-
-        public Last getPointer() {
-            return pointer;
-        }
-
-        public int getTargetIndex() {
-            return targetIndex;
-        }
-
-    }
-
     // methods
 
-    public static void addAnchors(Cut[] cuts, Anchor[] anchors, int z) {
-        for (Cut c : cuts) {
-            anchors[c.getQueryIndex()] = new Anchor(c, z);
+    public static short addAnchors(Cut[] cuts, short[] scores, boolean addScore, int[] anchors) {
+        int zMax = 0, subscore = scores[0];
+        for (int z = 1; z < scores.length; z++) {
+            if (scores[z] > subscore) {
+                zMax = z;
+                subscore = scores[z];
+            }
         }
+        for (Cut c : cuts) {
+            anchors[c.getQueryIndex()] = c.getTargetIndex(zMax);
+        }
+        return addScore ? (short) subscore : 0;
     }
 
-    public static Cut[] getCuts(int k, int[] subproblem, int[] dim) {
+    public static Cut[] getCuts(int k, int[] subproblem, int[] dim, boolean anchor0) {
         Cut[] cuts;
-        int m = subproblem[2] - subproblem[0] - 1;
+        int m = subproblem[2] - subproblem[0] - (anchor0 ? 1 : 0);
         if (k < m) {
             cuts = new Cut[k];
             for (int i = 0; i < k; i++) {
@@ -173,7 +178,7 @@ public class AlignerHelper {
             }
         } else {
             cuts = new Cut[m];
-            for (int i = 0, x = subproblem[0] + 1; i < m; i++, x++) {
+            for (int i = 0, x = subproblem[0] + (anchor0 ? 1 : 0); i < m; i++, x++) {
                 cuts[i] = new Cut(x, dim);
             }
         }
@@ -190,33 +195,34 @@ public class AlignerHelper {
      * @param targetLength length of the target sequence
      * @return the coordinates for the next subproblem
      */
-    public static int[] getNextSubproblem(Anchor[] anchors, int targetLength) {
+    public static int[] getNextSubproblem(int[] anchors) {
         int[] subproblem = new int[4];
         int x = 0;
 
         // find first unanchored x (query sequence index)
-        while (x < anchors.length && anchors[x] != null) {
+        while (x < anchors.length && anchors[x] >= 0) {
             x++;
         }
         if (x == anchors.length) {
             return null; // no unanchored x, therefore alignment is complete
         }
 
-        // save last anchor as starting point
-        subproblem[0] = x - 1;
-        subproblem[1] = anchors[x - 1].getTargetIndex();
+        // save first point or last anchor as starting point
+        if (x == 0) {
+            subproblem[0] = 0;
+            subproblem[1] = 0;
+            x++;
+        } else {
+            subproblem[0] = x - 1;
+            subproblem[1] = anchors[x - 1];
+        }
 
-        // find next anchored x or reach the end
-        while (x < anchors.length && anchors[x] == null) {
+        // find next anchored x
+        while (x < anchors.length && anchors[x] < 0) {
             x++;
         }
-        if (x == anchors.length) {
-            subproblem[2] = x - 1;
-            subproblem[3] = targetLength;
-        } else {
-            subproblem[2] = x;
-            subproblem[3] = anchors[x].getTargetIndex();
-        }
+        subproblem[2] = x;
+        subproblem[3] = anchors[x];
 
         return subproblem;
     }
@@ -300,11 +306,11 @@ public class AlignerHelper {
         if (x == xb) {
             scores[xb][yb][1] = scores[xb][yb][2] = gop;
             pointers[yb] = new Last[] {null, null, null};
-            Last[] insertions = new Last[] { Last.INSERTION, Last.INSERTION, Last.INSERTION };
+            Last[] insertion = new Last[] { null, null, Last.INSERTION };
             for (int y = yb + 1; y <= ye; y++) {
                 scores[xb][y][0] = scores[xb][y][1] = min;
                 scores[xb][y][2] = (short) (scores[xb][y - 1][2] + gep);
-                pointers[y] = insertions;
+                pointers[y] = insertion;
             }
         } else {
             if (!storing && x > xb + 1) {
@@ -312,7 +318,7 @@ public class AlignerHelper {
             }
             scores[x][yb][0] = scores[x][yb][2] = min;
             scores[x][yb][1] = (short) (scores[x - 1][yb][1] + gep);
-            pointers[yb] = new Last[] { Last.DELETION, Last.DELETION, Last.DELETION };
+            pointers[yb] = new Last[] { null, Last.DELETION, null };
             for (int y = yb + 1; y <= ye; y++) {
                 pointers[y] = setScorePoint(x, y, gop, gep, subs[y], scores);
             }
@@ -322,22 +328,22 @@ public class AlignerHelper {
 
     // scores global alignment for a given position in the query sequence for a linear gap penalty
     public static Last[][] setScoreVector(int x, short gep, short[] subs, boolean storing, short[][][] scores) {
-        return setScoreVector(x, 0, scores[0].length - 1, gep, subs, storing, scores);
+        return setScoreVector(x, 0, 0, scores[0].length - 1, gep, subs, storing, scores);
     }
 
     // scores global alignment for a given position in the query sequence for a linear gap penalty
     public static Last[][] setScoreVector(int x, int[] subproblem, short gep, short[] subs, boolean storing,
             short[][][] scores) {
-        return setScoreVector(x, subproblem[1], subproblem[3], gep, subs, storing, scores);
+        return setScoreVector(x, subproblem[0], subproblem[1], subproblem[3], gep, subs, storing, scores);
     }
 
     // scores global alignment for a given position in the query sequence for a linear gap penalty
-    public static Last[][] setScoreVector(int x, int yb, int ye, short gep, short[] subs, boolean storing,
+    public static Last[][] setScoreVector(int x, int xb, int yb, int ye, short gep, short[] subs, boolean storing,
             short[][][] scores) {
         Last[][] pointers = new Last[ye + 1][1];
-        if (x == 0) {
+        if (x == xb) {
             for (int y = yb + 1; y <= ye; y++) {
-                scores[0][y][0] = (short) (scores[0][y - 1][0] + gep);
+                scores[xb][y][0] = (short) (scores[xb][y - 1][0] + gep);
                 pointers[y][0] = Last.INSERTION;
             }
         } else {
@@ -356,14 +362,14 @@ public class AlignerHelper {
     // scores local alignment for a given position in the query sequence
     public static Last[][] setScoreVector(int x, short gop, short gep, short[] subs, boolean storing,
             short[][][] scores, int[] xyMax, int score) {
-        return setScoreVector(x, 0, scores[0].length - 1, gop, gep, subs, storing, scores, xyMax, score);
+        return setScoreVector(x, 0, 0, scores[0].length - 1, gop, gep, subs, storing, scores, xyMax, score);
     }
 
     // scores local alignment for a given position in the query sequence
-    public static Last[][] setScoreVector(int x, int yb, int ye, short gop, short gep, short[] subs, boolean storing,
-            short[][][] scores, int[] xyMax, int score) {
+    public static Last[][] setScoreVector(int x, int xb, int yb, int ye, short gop, short gep, short[] subs,
+            boolean storing, short[][][] scores, int[] xyMax, int score) {
         Last[][] pointers;
-        if (x == 0) {
+        if (x == xb) {
             pointers = new Last[ye + 1][scores[0][0].length];
         } else {
             pointers = new Last[ye + 1][];
@@ -392,14 +398,14 @@ public class AlignerHelper {
     // scores local alignment for a given position in the query sequence for a linear gap penalty
     public static Last[][] setScoreVector(int x, short gep, short[] subs, boolean storing, short[][][] scores,
             int[] xyMax, int score) {
-        return setScoreVector(x, 0, scores[0].length - 1, gep, subs, storing, scores, xyMax, score);
+        return setScoreVector(x, 0, 0, scores[0].length - 1, gep, subs, storing, scores, xyMax, score);
     }
 
     // scores local alignment for a given position in the query sequence for a linear gap penalty
-    public static Last[][] setScoreVector(int x, int yb, int ye, short gep, short[] subs, boolean storing,
+    public static Last[][] setScoreVector(int x, int xb, int yb, int ye, short gep, short[] subs, boolean storing,
             short[][][] scores, int[] xyMax, int score) {
         Last[][] pointers;
-        if (x == 0) {
+        if (x == xb) {
             pointers = new Last[ye + 1][1];
         } else {
             pointers = new Last[ye + 1][];
@@ -429,24 +435,23 @@ public class AlignerHelper {
      * @param sx steps for the query sequence (output)
      * @param sy steps for the target sequence (output)
      */
-    public static void setSteps(Anchor[] anchors, List<Step> sx, List<Step> sy) {
+    public static void setSteps(int[] anchors, List<Step> sx, List<Step> sy) {
+        for (int gap = anchors[0]; gap > 0; gap--) {
+            sx.add(Step.GAP);
+            sy.add(Step.COMPOUND);
+        }
         for (int x = 1; x < anchors.length; x++) {
-            switch (anchors[x].getPointer()) {
-            case DELETION:
+            int change = anchors[x] - anchors[x - 1];
+            if (change == 0) {
                 sx.add(Step.COMPOUND);
                 sy.add(Step.GAP);
-                break;
-            case SUBSTITUTION:
+            } else {
                 sx.add(Step.COMPOUND);
                 sy.add(Step.COMPOUND);
-                break;
-            case INSERTION:
-                for (int dy = anchors[x].getTargetIndex() - anchors[x - 1].getTargetIndex(); dy > 1; dy--) {
+                for (change--; change > 0; change--) {
                     sx.add(Step.GAP);
                     sy.add(Step.COMPOUND);
                 }
-                sx.add(Step.COMPOUND);
-                sy.add(Step.COMPOUND);
             }
         }
     }
