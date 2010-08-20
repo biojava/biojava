@@ -82,6 +82,7 @@ public class ProteinModificationIdentifier {
 	 * 
 	 * @param recordUnidentifiableAtomLinkages true if choosing to record unidentifiable
 	 *  atoms; false, otherwise.
+	 * @see #getRecordUnidentifiableCompounds
 	 * @see #getUnidentifiableModifiedResidues
 	 * @see #getUnidentifiableAtomLinkages
 	 */
@@ -91,11 +92,34 @@ public class ProteinModificationIdentifier {
 	
 	/**
 	 * 
+	 * @return true if choosing to record unidentifiable
+	 *  atoms; false, otherwise.
+	 * @see #setRecordUnidentifiableCompounds
+	 * @see #getUnidentifiableModifiedResidues
+	 * @see #getUnidentifiableAtomLinkages
+	 */
+	public boolean getRecordUnidentifiableCompounds() {
+		return recordUnidentifiableModifiedCompounds;
+	}
+	
+	/**
+	 * 
 	 * @param recordAdditionalAttachments true if choosing to record additional attachments
 	 *  that are not directly attached to a modified residue.
+	 * @see #getRecordAdditionalAttachments
 	 */
 	public void setRecordAdditionalAttachments(boolean recordAdditionalAttachments) {
 		this.recordAdditionalAttachments = recordAdditionalAttachments;
+	}
+	
+	/**
+	 * 
+	 * @return true if choosing to record additional attachments
+	 *  that are not directly attached to a modified residue.
+	 * @see #setRecordAdditionalAttachments
+	 */
+	public boolean getRecordAdditionalAttachments() {
+		return recordAdditionalAttachments;
 	}
 	
 	/**
