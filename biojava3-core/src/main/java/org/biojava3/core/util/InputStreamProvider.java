@@ -192,11 +192,10 @@ public class InputStreamProvider {
 
          // stream to first entry is returned ...
          ZipEntry entry;
-         Enumeration e = zipfile.entries();
+         Enumeration<? extends ZipEntry> e = zipfile.entries();
          if ( e.hasMoreElements()){
-            entry = (ZipEntry) e.nextElement();
+            entry = e.nextElement();
             inputStream = zipfile.getInputStream(entry);
-
          } else {
             throw new IOException ("Zip file has no entries");
          }
@@ -209,10 +208,9 @@ public class InputStreamProvider {
 
          // stream to first entry is returned
          JarEntry entry;
-         Enumeration e = jarFile.entries();
+         Enumeration<JarEntry> e = jarFile.entries();
          if ( e.hasMoreElements()){
-            entry = (JarEntry) e.nextElement();
-
+            entry = e.nextElement();
             inputStream = jarFile.getInputStream(entry);
          } else {
             throw new IOException ("Jar file has no entries");
@@ -247,11 +245,11 @@ public class InputStreamProvider {
 
 
       if ( cacheRawFiles ){
-         stream = cache.getInputStream(f.getAbsolutePath());
+         stream = FlatFileCache.getInputStream(f.getAbsolutePath());
 
          if ( stream == null){
-            cache.addToCache(f.getAbsolutePath(),f);
-            stream = cache.getInputStream(f.getAbsolutePath());
+            FlatFileCache.addToCache(f.getAbsolutePath(),f);
+            stream = FlatFileCache.getInputStream(f.getAbsolutePath());
          }
       }
 

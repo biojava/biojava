@@ -34,7 +34,7 @@ import java.util.Set;
  * */
 
 
-public class SoftHashMap extends AbstractMap {
+public class SoftHashMap<K, V> extends AbstractMap<K, V> {
 
    public static final boolean DEBUG = false;
 
@@ -43,7 +43,7 @@ public class SoftHashMap extends AbstractMap {
 
    /** The internal HashMap that stores SoftReference to actual data. */
 
-   private final Map map = new HashMap();
+   private final Map<K, SoftReference<V>> map = new HashMap<K, SoftReference<V>>();
 
    /** Maximum Number of references you dont want GC to collect. */
 
@@ -51,11 +51,11 @@ public class SoftHashMap extends AbstractMap {
 
    /** The FIFO list of hard references, order of last access. */
 
-   private final LinkedList hardCache = new LinkedList();
+   private final LinkedList<V> hardCache = new LinkedList<V>();
 
    /** Reference queue for cleared SoftReference objects. */
 
-   private final ReferenceQueue queue = new ReferenceQueue();
+   private final ReferenceQueue<V> queue = new ReferenceQueue<V>();
 
    public SoftHashMap() {
 
@@ -69,13 +69,13 @@ public class SoftHashMap extends AbstractMap {
 
    }
 
-   public Object get(Object key) {
+   public V get(Object key) {
 
-      Object result = null;
+      V result = null;
 
       // We get the SoftReference represented by that key
 
-      SoftReference soft_ref = (SoftReference) map.get(key);
+      SoftReference<V> soft_ref = map.get(key);
 
       if (soft_ref != null) {
 
@@ -144,7 +144,7 @@ public class SoftHashMap extends AbstractMap {
 
     */
 
-   private static class SoftValue extends SoftReference {
+   private static class SoftValue<K, V> extends SoftReference<V> {
 
       private final Object key; // always make data member final
 
@@ -164,7 +164,7 @@ public class SoftHashMap extends AbstractMap {
 
        */
 
-      private SoftValue(Object k, Object key, ReferenceQueue q) {
+      private SoftValue(V k, K key, ReferenceQueue<? super V> q) {
 
          super(k, q);
 
@@ -186,11 +186,12 @@ public class SoftHashMap extends AbstractMap {
 
     */
 
+   @SuppressWarnings("unchecked") // every Reference in queue is stored as a SoftValue
    private void clearGCCollected() {
 
-      SoftValue sv;
+      SoftValue<K, V> sv;
 
-      while ((sv = (SoftValue) queue.poll()) != null) {
+      while ((sv = (SoftValue<K, V>) queue.poll()) != null) {
 
          map.remove(sv.key); // we can access private data!
 
@@ -208,24 +209,24 @@ public class SoftHashMap extends AbstractMap {
 
     */
 
-   public synchronized Object put(Object key, Object value) {
+   public synchronized V put(K key, V value) {
 
       clearGCCollected();
 
       if ( DEBUG)
          System.out.println("putting " + key + " on cache. size: " + size());
-      return map.put(key, new SoftValue(value, key, queue));
+      return map.put(key, new SoftValue<K, V>(value, key, queue)).get();
 
    }
 
 
 
-   public Object remove(Object key) {
+   public V remove(Object key) {
 
       clearGCCollected();
       if ( DEBUG)
           System.out.println("removing " + key + " from cache. size: " + size());
-      return map.remove(key);
+      return map.remove(key).get();
 
    }
 
@@ -256,7 +257,7 @@ public class SoftHashMap extends AbstractMap {
 
 
 
-   public Set entrySet() {
+   public Set<Map.Entry<K, V>> entrySet() {
 
       throw new UnsupportedOperationException();
 

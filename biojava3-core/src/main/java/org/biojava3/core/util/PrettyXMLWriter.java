@@ -46,10 +46,10 @@ public class PrettyXMLWriter implements XMLWriter {
     private boolean afterNewline = true;
     private int indent = 0;
     
-    private Map namespacePrefixes = new HashMap();
+    private Map<String, String> namespacePrefixes = new HashMap<String, String>();
     private int namespaceSeed = 0;
-    private LinkedList namespaceBindings = new LinkedList();
-    private List namespacesDeclared = new ArrayList();
+    private LinkedList<List<String>> namespaceBindings = new LinkedList<List<String>>();
+    private List<String> namespacesDeclared = new ArrayList<String>();
 
     public PrettyXMLWriter(PrintWriter writer) {
         this.writer = writer;
@@ -72,8 +72,8 @@ public class PrettyXMLWriter implements XMLWriter {
         throws IOException
     {
         if (namespacesDeclared.size() == 0) {
-            for (Iterator nsi = namespacesDeclared.iterator(); nsi.hasNext(); ) {
-                String nsURI = (String) nsi.next();
+            for (Iterator<String> nsi = namespacesDeclared.iterator(); nsi.hasNext(); ) {
+                String nsURI = nsi.next();
                 if (!namespacePrefixes.containsKey(nsURI)) {
                     String prefix = allocPrefix(nsURI);
                     attribute("xmlns:" + prefix, nsURI);
@@ -110,9 +110,9 @@ public class PrettyXMLWriter implements XMLWriter {
     private String allocPrefix(String nsURI) {
         String prefix = "ns" + (++namespaceSeed);
         namespacePrefixes.put(nsURI, prefix);
-        List bindings = (List) namespaceBindings.getLast();
+        List<String> bindings = namespaceBindings.getLast();
         if (bindings == null) {
-            bindings = new ArrayList();
+            bindings = new ArrayList<String>();
             namespaceBindings.removeLast();
             namespaceBindings.add(bindings);
         }
@@ -129,7 +129,7 @@ public class PrettyXMLWriter implements XMLWriter {
     	}
         _openTag();
         boolean alloced = false;
-        String prefix = (String) namespacePrefixes.get(nsURI);
+        String prefix = namespacePrefixes.get(nsURI);
         if (prefix == null) {
             prefix = allocPrefix(nsURI);
             alloced = true;
@@ -160,7 +160,7 @@ public class PrettyXMLWriter implements XMLWriter {
             throw new IOException("attributes must follow an openTag");
         }
 
-        String prefix = (String) namespacePrefixes.get(nsURI);
+        String prefix = namespacePrefixes.get(nsURI);
         if (prefix == null) {
             prefix = allocPrefix(nsURI);
             attribute("xmlns:" + prefix, nsURI);
@@ -192,9 +192,9 @@ public class PrettyXMLWriter implements XMLWriter {
     private void _closeTag() {
         isOpeningTag = false;
         afterNewline = true;
-        List hereBindings = (List) namespaceBindings.removeLast();
+        List<String> hereBindings = namespaceBindings.removeLast();
         if (hereBindings != null) {
-            for (Iterator bi = hereBindings.iterator(); bi.hasNext(); ) {
+            for (Iterator<String> bi = hereBindings.iterator(); bi.hasNext(); ) {
                 namespacePrefixes.remove(bi.next());
             }
         }
@@ -203,7 +203,7 @@ public class PrettyXMLWriter implements XMLWriter {
     public void closeTag(String nsURI, String localName)
         throws IOException
     {
-        String prefix = (String) namespacePrefixes.get(nsURI);
+        String prefix = namespacePrefixes.get(nsURI);
         if (prefix == null) {
             throw new IOException("Assertion failed: unknown namespace when closing tag");
         }

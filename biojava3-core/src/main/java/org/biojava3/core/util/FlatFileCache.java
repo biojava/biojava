@@ -39,7 +39,7 @@ public class FlatFileCache {
 
 	private static FlatFileCache me ;
 
-	private static SoftHashMap cache;
+	private static SoftHashMap<String, byte[]> cache;
 	public static FlatFileCache getInstance() {
 
 	   if ( me == null){
@@ -51,7 +51,7 @@ public class FlatFileCache {
 
 	// no public constructor;
 	private FlatFileCache(){
-		cache = new SoftHashMap(0);
+		cache = new SoftHashMap<String, byte[]>(0);
 	}
 
 
@@ -97,7 +97,7 @@ public class FlatFileCache {
 
 	public  static InputStream getInputStream(String key){
 		//System.out.println("returning " + key + " from file cache (cache size: " + cache.size() + ")");
-		byte[] bytes = (byte[])cache.get(key);
+		byte[] bytes = cache.get(key);
 		if ( bytes == null)
 			return null;
 
