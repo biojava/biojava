@@ -719,18 +719,18 @@ public final class ProteinModification {
 		StringBuilder sb = new StringBuilder();
 		
 		sb.append("ID:"+getId());
-		sb.append("\tPDBCC ID:"+getPdbccId());
+		sb.append("\nPDBCC ID:"+getPdbccId());
 		sb.append("\tPDBCC name:"+getPdbccName());
-		sb.append("\tRESID ID:"+getResidId());
+		sb.append("\nRESID ID:"+getResidId());
 		sb.append("\tRESID name:"+getResidName());
-		sb.append("\tPSI-MOD ID:"+getPsimodId());
+		sb.append("\nPSI-MOD ID:"+getPsimodId());
 		sb.append("\tPSI-MOD name:"+getPsimodName());
-		sb.append("\tDescription:"+getDescription());
-		sb.append("\tSystematic name:"+getSystematicName());
-		sb.append("\tCategory:"+getCategory().label());
-		sb.append("\tOccurrence type:"+getOccurrenceType().label());
-		sb.append("\tKeywords:"+getKeywords());
-		sb.append("\tCondition:"+getCondition());
+		sb.append("\nDescription:"+getDescription());
+		sb.append("\nSystematic name:"+getSystematicName());
+		sb.append("\nCategory:"+getCategory().label());
+		sb.append("\nOccurrence type:"+getOccurrenceType().label());
+		sb.append("\nKeywords:"+getKeywords());
+		sb.append("\nCondition:"+getCondition());
 		return sb.toString();
 	}
 }

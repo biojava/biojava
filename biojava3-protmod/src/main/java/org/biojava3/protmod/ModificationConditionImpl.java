@@ -95,12 +95,14 @@ public class ModificationConditionImpl implements ModificationCondition {
 		for (Component comp : components) {	
 			sb.append(comp+";");
 		}
+		sb.deleteCharAt(sb.length()-1);
 		
 		if (!linkages.isEmpty()) {
-			sb.append("\tLinkages:");
+			sb.append("\nLinkages:");
 			for (ModificationLinkage link : linkages) {
 				sb.append(link+";");
 			}
+			sb.deleteCharAt(sb.length()-1);
 		}
 		
 		return sb.toString();
