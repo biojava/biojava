@@ -18,7 +18,7 @@
  *      http://www.biojava.org/
  *
  * Created on Oct 5, 2009
- * Author: Andreas Prlic 
+ * Author: Andreas Prlic
  *
  */
 

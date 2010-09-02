@@ -35,6 +35,7 @@ import org.biojava.bio.structure.DBRef;
 import org.biojava.bio.structure.Group;
 import org.biojava.bio.structure.PDBHeader;
 import org.biojava.bio.structure.SSBond;
+import org.biojava.bio.structure.Site;
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureException;
 import org.biojava3.core.util.XMLWriter;
@@ -207,6 +208,9 @@ public class FileConvert {
 
         }
 
+        for (Site site : structure.getSites()) {
+            site.toPDB(str);           
+        }
 
         //
         // print the atom records

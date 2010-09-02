@@ -28,8 +28,6 @@ import java.util.Map;
 
 import org.biojava.bio.structure.io.FileConvert;
 import org.biojava.bio.structure.io.PDBFileReader;
-import org.biojava.bio.structure.HetatomImpl;
-import org.biojava.bio.structure.NucleotideImpl;
 
 
 /**
@@ -572,5 +570,14 @@ public interface Structure extends Cloneable{
      */
     public void setId(Long id) ;
 
+    /**
+     * @param sites the sites to set in the structure
+     */
+    public void setSites(List<Site> sites);
+
+    /**
+     * @return the sites contained in this structure
+     */
+    public List<Site> getSites();
 
 }
