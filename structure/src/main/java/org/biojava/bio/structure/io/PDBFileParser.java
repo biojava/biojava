@@ -2068,35 +2068,68 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
                 }
             }
 
+        //Site variable related to parsing the REMARK 800 records.
+        Site site;
         private void pdb_REMARK_800_Handler(String line){
-//            System.out.println("handling line: " + line);
+            boolean remark800debug = false;
+            if (DEBUG || remark800debug) {
+//                System.out.println("Handling line: " + line);
+            }
             // 'REMARK 800 SITE_IDENTIFIER: CAT                                                 '
             line = line.substring(11);
             String[] fields = line.split(": ");
-            String siteID = null;
+
+            //reset the remark counter so as to add the details to the next Site
+//            if (remark800Counter == 3) {
+//                remark800Counter = 0;
+//
+//            }
+
             if (fields.length == 2) {
                 if (fields[0].equals("SITE_IDENTIFIER")) {
-                    siteID = fields[1].trim();
-//                    System.out.println("siteID: " + siteID);
+//                    remark800Counter++;
+                    String siteID = fields[1].trim();
+                    if (DEBUG || remark800debug) {
+                        System.out.println("siteID: '" + siteID +"'");
+                    }
                     //fetch the site from the map
-                    Site site = siteMap.get(siteID);
+                    site = siteMap.get(siteID);
 
                     //if the site doesn't yet exist, make a new one.
                     if (site == null || !siteID.equals(site.getSiteID())) {
                         site = new Site(siteID, new ArrayList<Group>());
                         siteMap.put(site.getSiteID(), site);
-//                        System.out.println("New Site made: " + site);
-//                        System.out.println("Now made " + siteMap.size() + " sites");
+                        if (DEBUG || remark800debug) {
+                            System.out.print("New Site made: " + site);
+                            System.out.println("Now made " + siteMap.size() + " sites");
+                        }
                     }
-
+                }
+                if (fields[0].equals("EVIDENCE_CODE")) {
+//                    remark800Counter++;
+                    String evCode = fields[1].trim();
+                    if (DEBUG || remark800debug) {
+                        System.out.println("evCode: '" + evCode +"'");
+                    }
+                    //fetch the site from the map
+                    site.setEvCode(evCode);
+                }
+                if (fields[0].equals("SITE_DESCRIPTION")) {
+//                    remark800Counter++;
+                    String desc = fields[1].trim();
+                    if (DEBUG || remark800debug) {
+                        System.out.println("desc: '" + desc +"'");
+                    }
+                    //fetch the site from the map
+                    site.setDescription(desc);
+                    if (DEBUG || remark800debug) {
+                        System.out.println("Finished making REMARK 800 for site " + site.getSiteID());
+                        System.out.print(site.remark800toPDB());
+                    }
                 }
             }
-
-
-
-
         }
-
+        
 	private int intFromString(String intString){
 		int val = Integer.MIN_VALUE;
 		try {

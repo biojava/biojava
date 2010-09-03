@@ -54,6 +54,8 @@ public class SiteTest {
             catSite = new Site();
             catSite.setSiteID("CAT");
             catSite.setGroups(catSiteGroups);
+            catSite.setEvCode("UNKNOWN");
+            catSite.setDescription("ACTIVE SITE");
             //groups for site AC1
             Group arg221a = new AminoAcidImpl();
             arg221a.setPDBCode("H 221A");
@@ -86,6 +88,9 @@ public class SiteTest {
             bindingSite = new Site();
             bindingSite.setSiteID("AC1");
             bindingSite.setGroups(bindingSiteGroups);
+            bindingSite.setEvCode("SOFTWARE");
+            bindingSite.setDescription("BINDING SITE FOR RESIDUE NA H 541");
+
         } catch (PDBParseException ex) {
             Logger.getLogger(SiteTest.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -112,11 +117,11 @@ public class SiteTest {
      */
     @Test
     public void testToPDB_0args() {
-        System.out.println("toPDB_0args");
+//        System.out.println("toPDB_0args");
         String expResult =  "SITE     1 AC1  6 ARG H 221A LYS H 224  HOH H 403  HOH H 460                    " + newline +
                             "SITE     2 AC1  6 HOH H 464  HOH H 497                                          "+ newline;
         String result = bindingSite.toPDB();
-        System.out.println(result);
+//        System.out.println(result);
         assertEquals(expResult, result);
     }
 
@@ -125,15 +130,47 @@ public class SiteTest {
      */
     @Test
     public void testToPDB_StringBuffer() {
-        System.out.println("toPDB");
+//        System.out.println("toPDB");
         StringBuffer buf = new StringBuffer("");
         String expResult =  "SITE     1 AC1  6 ARG H 221A LYS H 224  HOH H 403  HOH H 460                    " + newline +
                             "SITE     2 AC1  6 HOH H 464  HOH H 497                                          "+ newline;
         bindingSite.toPDB(buf);
         String result = buf.toString();
-        System.out.println(result);
+//        System.out.println(result);
         assertEquals(expResult, result);
     }
+
+
+        /**
+     * Test of toPDB method, of class Site.
+     */
+    @Test
+    public void testRemark800ToPDB_0args() {
+//        System.out.println("remark800toPDB_0args");
+        String expResult =  "REMARK 800 SITE_IDENTIFIER: CAT                                                 " + newline +
+                            "REMARK 800 EVIDENCE_CODE: UNKNOWN                                               " + newline +
+                            "REMARK 800 SITE_DESCRIPTION: ACTIVE SITE                                        " + newline;
+        String result = catSite.remark800toPDB();
+//        System.out.println(result);
+        assertEquals(expResult, result);
+    }
+
+    /**
+     * Test of toPDB method, of class Site.
+     */
+    @Test
+    public void testRemark800ToPDB_StringBuffer() {
+//        System.out.println("remark800toPDB");
+        StringBuffer buf = new StringBuffer("");
+        String expResult =  "REMARK 800 SITE_IDENTIFIER: CAT                                                 " + newline +
+                            "REMARK 800 EVIDENCE_CODE: UNKNOWN                                               " + newline +
+                            "REMARK 800 SITE_DESCRIPTION: ACTIVE SITE                                        " + newline;
+        catSite.remark800toPDB(buf);
+        String result = buf.toString();
+//        System.out.println(result);
+        assertEquals(expResult, result);
+    }
+
 
 
     /**
@@ -141,7 +178,7 @@ public class SiteTest {
      */
     @Test
     public void testGetSiteID() {
-        System.out.println("getSiteID");
+//        System.out.println("getSiteID");
         String expResult = "CAT";
         String result = catSite.getSiteID();
         assertEquals(expResult, result);
@@ -152,7 +189,7 @@ public class SiteTest {
      */
     @Test
     public void testGetResidues() {
-        System.out.println("getGroups");
+//        System.out.println("getGroups");
         List expResult = bindingSiteGroups;
         List result = bindingSite.getGroups();
         assertEquals(expResult, result);

@@ -31,6 +31,7 @@ import java.util.Map;
 import org.biojava.bio.structure.io.PDBFileParser;
 
 import junit.framework.TestCase;
+import org.junit.Test;
 
 public class PDBFileParserTest extends TestCase {
 
@@ -200,7 +201,46 @@ public class PDBFileParserTest extends TestCase {
 		assertEquals("parsing failed with error " + errorMsg, parsingOK, true);
 	}
 
-        public void testREMARK800() {
+//        @Test
+//        public void testREMARK800() {
+//                        // from 1a4w:
+//			String t =
+//                                "REMARK 800                                                                      " + newline +
+//                                "REMARK 800 SITE                                                                 " + newline +
+//                                "REMARK 800 SITE_IDENTIFIER: CAT                                                 " + newline +
+//                                "REMARK 800 EVIDENCE_CODE: UNKNOWN                                               " + newline +
+//                                "REMARK 800 SITE_DESCRIPTION: ACTIVE SITE                                        " + newline +
+//                                "REMARK 800 SITE_IDENTIFIER: AC1                                                 " + newline +
+//                                "REMARK 800 EVIDENCE_CODE: SOFTWARE                                              " + newline +
+//                                "REMARK 800 SITE_DESCRIPTION: BINDING SITE FOR RESIDUE NA H 541                  " + newline +
+//                                "REMARK 800 SITE_IDENTIFIER: AC2                                                 " + newline +
+//                                "REMARK 800 EVIDENCE_CODE: SOFTWARE                                              " + newline +
+//                                "REMARK 800 SITE_DESCRIPTION: BINDING SITE FOR RESIDUE NA H 542                  " + newline +
+//                                "REMARK 800 SITE_IDENTIFIER: AC3                                                 " + newline +
+//                                "REMARK 800 EVIDENCE_CODE: SOFTWARE                                              " + newline +
+//                                "REMARK 800 SITE_DESCRIPTION: BINDING SITE FOR RESIDUE ANS H 373                 " + newline +
+//                                "REMARK 800 SITE_IDENTIFIER: AC4                                                 " + newline +
+//                                "REMARK 800 EVIDENCE_CODE: SOFTWARE                                              " + newline +
+//                                "REMARK 800 SITE_DESCRIPTION: BINDING SITE FOR RESIDUE DAR H 350                 " + newline +
+//                                "REMARK 800 SITE_IDENTIFIER: AC5                                                 " + newline +
+//                                "REMARK 800 EVIDENCE_CODE: SOFTWARE                                              " + newline +
+//                                "REMARK 800 SITE_DESCRIPTION: BINDING SITE FOR RESIDUE 2EP H 375                 " + newline +
+//                                "REMARK 800 SITE_IDENTIFIER: AC6                                                 " + newline +
+//                                "REMARK 800 EVIDENCE_CODE: SOFTWARE                                              " + newline +
+//                                "REMARK 800 SITE_DESCRIPTION: BINDING SITE FOR RESIDUE KTH H 377                 " + newline;
+//
+//			BufferedReader br = new BufferedReader(new StringReader(t));
+//		try {
+//			Structure s = parser.parsePDBFile(br);
+//			String pdb = s.toPDB();
+//                        System.out.println("testREMARK800: " + newline  + pdb);
+//			assertTrue("the created PDB file does not match the input file", pdb.equals(t));
+//		} catch (Exception e){
+//			fail(e.getMessage());
+//		}
+//        }
+
+        public void testSITE() {
                         // from 1a4w:
 			String t =
                                 "REMARK 800                                                                      " + newline +
@@ -225,22 +265,7 @@ public class PDBFileParserTest extends TestCase {
                                 "REMARK 800 SITE_DESCRIPTION: BINDING SITE FOR RESIDUE 2EP H 375                 " + newline +
                                 "REMARK 800 SITE_IDENTIFIER: AC6                                                 " + newline +
                                 "REMARK 800 EVIDENCE_CODE: SOFTWARE                                              " + newline +
-                                "REMARK 800 SITE_DESCRIPTION: BINDING SITE FOR RESIDUE KTH H 377                 " + newline;
-
-			BufferedReader br = new BufferedReader(new StringReader(t));
-		try {
-			Structure s = parser.parsePDBFile(br);
-			String pdb = s.toPDB();
-                        System.out.println("testREMARK800: " + newline  + pdb);
-//			assertTrue("the created PDB file does not match the input file", pdb.equals(t));
-		} catch (Exception e){
-			fail(e.getMessage());
-		}
-        }
-
-        public void testSITE() {
-                        // from 1a4w:
-			String t =
+                                "REMARK 800 SITE_DESCRIPTION: BINDING SITE FOR RESIDUE KTH H 377                 " + newline +
                                 "SITE     1 CAT  3 HIS H  57  ASP H 102  SER H 195                               " + newline +
                                 "SITE     1 AC1  6 ARG H 221A LYS H 224  HOH H 403  HOH H 460                    " + newline +
                                 "SITE     2 AC1  6 HOH H 464  HOH H 497                                          " + newline +
@@ -259,7 +284,7 @@ public class PDBFileParserTest extends TestCase {
 			Structure s = parser.parsePDBFile(br);
 //                        System.out.print(s.getSites());
 			String pdb = s.toPDB();
-                        System.out.println("testSITE: " + newline  + pdb);
+//                        System.out.println("testSITE: " + newline  + pdb);
 			assertTrue("the created PDB file does not match the input file", pdb.equals(t));
 		} catch (Exception e){
 			fail(e.getMessage());

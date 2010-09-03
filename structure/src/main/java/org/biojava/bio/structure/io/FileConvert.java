@@ -197,17 +197,26 @@ public class FileConvert {
         PDBHeader header = structure.getPDBHeader();
         header.toPDB(str);
 
+       
+        //REMARK 800
+        if (!structure.getSites().isEmpty()) {
+            str.append("REMARK 800                                                                      " + newline);
+            str.append("REMARK 800 SITE                                                                 " + newline);
+            for (Site site : structure.getSites()) {
+                site.remark800toPDB(str);
+            }
+        }
+        //DBREF
+        for (DBRef dbref : structure.getDBRefs()){
+        	dbref.toPDB(str);
+        	str.append(newline);
+        }
+        //SSBOND
         for (SSBond ssbond : structure.getSSBonds()){
         	ssbond.toPDB(str);
         	str.append(newline);
         }
-
-        for (DBRef dbref : structure.getDBRefs()){
-        	dbref.toPDB(str);
-        	str.append(newline);
-
-        }
-
+        //SITE
         for (Site site : structure.getSites()) {
             site.toPDB(str);           
         }

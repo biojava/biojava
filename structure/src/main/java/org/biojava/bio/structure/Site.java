@@ -18,12 +18,18 @@ import java.util.Locale;
  * SITE     2 AC2 10 HIS D  37  ALA D  39  THR D 152  LEU D 153
  * SITE     3 AC2 10 SER D 154  GOL D 172
  * @author Amr AL-Hossary
+ * @author Jules Jacobsen
  */
 public class Site implements PDBRecord, Serializable {
 
     private static final long serialVersionUID = -4577047072916341237L;
+    private static final String lineEnd =System.getProperty("line.separator");
+
     private String siteID = "";
     private List<Group> groups = new ArrayList<Group>();
+    //variables for REMARK 800
+    private String evCode = "";
+    private String description = "";
 
     public Site() {
     }
@@ -43,7 +49,7 @@ public class Site implements PDBRecord, Serializable {
                         group.getPDBCode());
             stringBuilder.append(groupString);
         }
-        stringBuilder.append(System.getProperty("line.separator"));
+        stringBuilder.append(lineEnd);
         return stringBuilder.toString();
     }
 
@@ -105,10 +111,48 @@ public class Site implements PDBRecord, Serializable {
             stringBuilder.append(String.format("SITE   %3d %3s %2d %-62s", seqNum + 1, siteID, groups.size(), groupsString.toString()));
             //iterate the line counter, add the end of line character
             seqNum++;
-            stringBuilder.append(System.getProperty("line.separator"));
+            stringBuilder.append(lineEnd);
         }
 
         buf.append(form.toString());
+    }
+
+    /**
+     * Appends the REMARK 800 section pertaining to the site onto the end of the
+     * StringBuffer provided.
+     *
+     * For example in pdb 1a4w:
+     * REMARK 800 SITE_IDENTIFIER: CAT
+     * REMARK 800 EVIDENCE_CODE: UNKNOWN
+     * REMARK 800 SITE_DESCRIPTION: ACTIVE SITE
+     *
+     * @param stringBuffer
+     */
+    public void remark800toPDB(StringBuffer stringBuffer) {
+        //REMARK 800 SITE_IDENTIFIER: CAT
+        //REMARK 800 EVIDENCE_CODE: UNKNOWN
+        //REMARK 800 SITE_DESCRIPTION: ACTIVE SITE
+
+        stringBuffer.append(String.format(Locale.UK, "REMARK 800 SITE_IDENTIFIER: %-52s%s", siteID, lineEnd));
+        stringBuffer.append(String.format(Locale.UK, "REMARK 800 EVIDENCE_CODE: %-54s%s", evCode, lineEnd));
+        stringBuffer.append(String.format(Locale.UK, "REMARK 800 SITE_DESCRIPTION: %-51s%s", description, lineEnd));
+
+    }
+
+    /**
+     * Privides REMARK 800 section pertaining to the site as a string.
+     *
+     * For example in pdb 1a4w:
+     * REMARK 800 SITE_IDENTIFIER: CAT
+     * REMARK 800 EVIDENCE_CODE: UNKNOWN
+     * REMARK 800 SITE_DESCRIPTION: ACTIVE SITE
+     *
+     * @param stringBuffer
+     */
+    public String remark800toPDB() {
+        StringBuffer stringBuffer = new StringBuffer();
+        remark800toPDB(stringBuffer);
+        return stringBuffer.toString();
     }
 
     /**
@@ -141,6 +185,37 @@ public class Site implements PDBRecord, Serializable {
         this.groups = residues;
     }
 
+
+    /**
+     * gets the REMARK 800 description of the site
+     * @return
+     */
+    public String getDescription() {
+        return description;
+    }
+
+    /**
+     * sets the REMARK 800 description of the site
+     */
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    /**
+     * gets the REMARK 800 EVIDENCE CODE for the site.
+     * @return
+     */
+    public String getEvCode() {
+        return evCode;
+    }
+
+    /**
+     * sets the REMARK 800 EVIDENCE CODE for the site.
+     */
+    public void setEvCode(String evCode) {
+        this.evCode = evCode;
+    }
+
     @Override
     public boolean equals(Object obj) {
         if (obj == null) {
@@ -156,14 +231,24 @@ public class Site implements PDBRecord, Serializable {
         if (this.groups != other.groups && (this.groups == null || !this.groups.equals(other.groups))) {
             return false;
         }
+        if ((this.evCode == null) ? (other.evCode != null) : !this.evCode.equals(other.evCode)) {
+            return false;
+        }
+        if ((this.description == null) ? (other.description != null) : !this.description.equals(other.description)) {
+            return false;
+        }
         return true;
     }
 
     @Override
     public int hashCode() {
-        int hash = 7;
-        hash = 97 * hash + (this.siteID != null ? this.siteID.hashCode() : 0);
-        hash = 97 * hash + (this.groups != null ? this.groups.hashCode() : 0);
+        int hash = 5;
+        hash = 37 * hash + (this.siteID != null ? this.siteID.hashCode() : 0);
+        hash = 37 * hash + (this.groups != null ? this.groups.hashCode() : 0);
+        hash = 37 * hash + (this.evCode != null ? this.evCode.hashCode() : 0);
+        hash = 37 * hash + (this.description != null ? this.description.hashCode() : 0);
         return hash;
     }
+
+
 }
