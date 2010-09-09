@@ -39,7 +39,8 @@ public class FlatFileCache {
 
 	private static FlatFileCache me ;
 
-	private static SoftHashMap<String, byte[]> cache;
+	private static SoftHashMap<String, byte[]> cache = new SoftHashMap<String, byte[]>(0);
+	
 	public static FlatFileCache getInstance() {
 
 	   if ( me == null){
@@ -51,7 +52,7 @@ public class FlatFileCache {
 
 	// no public constructor;
 	private FlatFileCache(){
-		cache = new SoftHashMap<String, byte[]>(0);
+		
 	}
 
 
@@ -88,9 +89,11 @@ public class FlatFileCache {
 
 			// Close the input stream and return bytes
 			is.close();
-
+	
 			cache.put(key,bytes);
+			
 		} catch (Exception e){
+		   System.err.println("error adding to cache! " + e.getMessage());
 			e.printStackTrace();
 		}
 	}
