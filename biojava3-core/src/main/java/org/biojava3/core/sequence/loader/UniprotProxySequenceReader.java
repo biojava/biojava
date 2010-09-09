@@ -119,7 +119,7 @@ public class UniprotProxySequenceReader<C extends Compound> implements ProxySequ
         return this.parsedCompounds.lastIndexOf(compound) + 1;
     }
 
-    @Override
+    
     public String toString() {
         return getSequenceAsString();
     }
@@ -132,7 +132,7 @@ public class UniprotProxySequenceReader<C extends Compound> implements ProxySequ
         return this.parsedCompounds;
     }
 
-    @Override
+    
     public String getSequenceAsString(Integer bioBegin, Integer bioEnd, Strand strand) {
         SequenceAsStringHelper<C> sequenceAsStringHelper = new SequenceAsStringHelper<C>();
         return sequenceAsStringHelper.getSequenceAsString(this.parsedCompounds, compoundSet, bioBegin, bioEnd, strand);
@@ -150,12 +150,12 @@ public class UniprotProxySequenceReader<C extends Compound> implements ProxySequ
         return compoundSet;
     }
 
-    @Override
+    
     public AccessionID getAccession() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
-    @Override
+    
     public int countCompounds(C... compounds) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
@@ -279,7 +279,7 @@ public class UniprotProxySequenceReader<C extends Compound> implements ProxySequ
 
     }
 
-    @Override
+    
     public ArrayList<String> getKeyWords() throws Exception {
         ArrayList<String> keyWordsList = new ArrayList<String>();
         if (uniprotDoc == null) {
@@ -295,7 +295,7 @@ public class UniprotProxySequenceReader<C extends Compound> implements ProxySequ
         return keyWordsList;
     }
 
-    @Override
+    
     public LinkedHashMap<String, ArrayList<DBReferenceInfo>> getDatabaseReferences() throws Exception {
         LinkedHashMap<String, ArrayList<DBReferenceInfo>> databaseReferencesHashMap = new LinkedHashMap<String, ArrayList<DBReferenceInfo>>();
         if (uniprotDoc == null) {

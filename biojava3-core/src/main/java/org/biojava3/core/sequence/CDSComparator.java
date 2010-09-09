@@ -14,7 +14,7 @@ import java.util.Comparator;
  */
     public class CDSComparator implements Comparator<CDSSequence>{
 
-        @Override
+       
         public int compare(CDSSequence o1, CDSSequence o2) {
             if(o1.getStrand() != o2.getStrand()){
                 return o1.getBioBegin() - o2.getBioBegin();

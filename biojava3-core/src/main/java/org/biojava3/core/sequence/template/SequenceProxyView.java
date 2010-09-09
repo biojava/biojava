@@ -49,63 +49,63 @@ public class SequenceProxyView<C extends Compound> implements SequenceView<C> {
         this.bioEnd = bioEnd;
     }
 
-    @Override
+  
     public Sequence<C> getViewedSequence() {
         return sequence;
     }
 
-    @Override
+
     public String getSequenceAsString(Integer start, Integer end, Strand strand) {
         return getViewedSequence().getSequenceAsString(start, end, strand);
     }
 
-    @Override
+
     public String getSequenceAsString() {
         // TODO Optimise.
         return getSequenceAsString(getBioStart(), getBioEnd(), Strand.POSITIVE);
     }
 
-    @Override
+    
     public List<C> getAsList() {
         return SequenceMixin.toList(this);
     }
 
-    @Override
+    
     public C getCompoundAt(int position) {
         return getViewedSequence().getCompoundAt((getBioStart() + position) - 1);
     }
 
-    @Override
+    
     public int getIndexOf(C compound) {
         return (getViewedSequence().getIndexOf(compound) + getBioStart()) - 1;
     }
 
-    @Override
+    
     public int getLastIndexOf(C compound) {
         return (getViewedSequence().getLastIndexOf(compound) + getBioStart()) - 1;
     }
 
-    @Override
+    
     public int getLength() {
         return (getBioEnd() - getBioStart()) + 1;
     }
 
-    @Override
+    
     public CompoundSet<C> getCompoundSet() {
         return getViewedSequence().getCompoundSet();
     }
 
-    @Override
+    
     public SequenceView<C> getSubSequence(final Integer bioStart, final Integer bioEnd) {
         return new SequenceProxyView<C>(this, bioStart, bioEnd);
     }
 
-    @Override
+    
     public Iterator<C> iterator() {
         return new SequenceMixin.SequenceIterator<C>(this);
     }
 
-    @Override
+    
     public AccessionID getAccession() {
         return getViewedSequence().getAccession();
     }
@@ -113,7 +113,7 @@ public class SequenceProxyView<C extends Compound> implements SequenceView<C> {
     /**
      * @return the bioStart
      */
-    @Override
+    
     public Integer getBioStart() {
         return bioStart;
     }
@@ -128,7 +128,7 @@ public class SequenceProxyView<C extends Compound> implements SequenceView<C> {
     /**
      * @return the bioEnd
      */
-    @Override
+    
     public Integer getBioEnd() {
         return bioEnd;
     }
@@ -140,7 +140,7 @@ public class SequenceProxyView<C extends Compound> implements SequenceView<C> {
         this.bioEnd = bioEnd;
     }
 
-    @Override
+    
     public int countCompounds(C... compounds) {
         return SequenceMixin.countCompounds(this, compounds);
     }

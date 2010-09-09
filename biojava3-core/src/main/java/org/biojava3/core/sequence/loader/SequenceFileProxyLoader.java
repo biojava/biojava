@@ -126,7 +126,7 @@ public class SequenceFileProxyLoader<C extends Compound> implements ProxySequenc
         return this.parsedCompounds.lastIndexOf(compound) + 1;
     }
 
-    @Override
+    
     public String toString() {
         if (this.isInitialized() == false) {
             init();
@@ -134,7 +134,7 @@ public class SequenceFileProxyLoader<C extends Compound> implements ProxySequenc
         return getSequenceAsString();
     }
 
-    @Override
+    
     public String getSequenceAsString() {
         return getSequenceAsString(1, getLength(),Strand.POSITIVE);
     }
@@ -188,7 +188,7 @@ public class SequenceFileProxyLoader<C extends Compound> implements ProxySequenc
         this.initialized = initialized;
     }
 
-    @Override
+    
     public AccessionID getAccession() {
         throw new UnsupportedOperationException("Not supported yet.");
     }

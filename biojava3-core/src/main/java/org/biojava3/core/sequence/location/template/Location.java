@@ -206,7 +206,7 @@ public interface Location extends Iterable<Location>, Accessioned {
          */
         public static Location getMin(List<Location> locations) {
             return scanLocations(locations, new LocationPredicate() {
-                @Override
+                
                 public boolean accept(Location previous, Location current) {
                     int res = current.getStart().compareTo(previous.getStart());
                     return res < 0;
@@ -220,7 +220,7 @@ public interface Location extends Iterable<Location>, Accessioned {
          */
         public static Location getMax(List<Location> locations) {
             return scanLocations(locations, new LocationPredicate() {
-                @Override
+                
                 public boolean accept(Location previous, Location current) {
                     int res = current.getEnd().compareTo(previous.getEnd());
                     return res > 0;

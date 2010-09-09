@@ -250,12 +250,12 @@ public class SequenceMixin {
             this.length = sequence.getLength();
         }
 
-        @Override
+
         public boolean hasNext() {
             return (currentPosition < length);
         }
 
-        @Override
+     
         public C next() {
             if(!hasNext()) {
                 throw new NoSuchElementException("Exhausted sequence of elements");
@@ -263,7 +263,6 @@ public class SequenceMixin {
             return sequence.getCompoundAt(++currentPosition);
         }
 
-        @Override
         public void remove() {
             throw new UnsupportedOperationException("Cannot remove() on a SequenceIterator");
         }

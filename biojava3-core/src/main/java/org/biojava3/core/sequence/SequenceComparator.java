@@ -32,7 +32,7 @@ import org.biojava3.core.sequence.template.AbstractSequence;
  */
 public class SequenceComparator implements Comparator<AbstractSequence<?>>{
 
-    @Override
+   
     public int compare(AbstractSequence<?> o1, AbstractSequence<?> o2) {
         return o1.getBioBegin() - o2.getBioBegin();
     }

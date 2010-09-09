@@ -117,27 +117,27 @@ public abstract class AbstractLocation implements Location {
 
     }
 
-    @Override
+    
     public Point getEnd() {
         return end;
     }
 
-    @Override
+    
     public Point getStart() {
         return start;
     }
 
-    @Override
+    
     public int getLength() {
         return (getEnd().getPosition() - getStart().getPosition()) + 1;
     }
 
-    @Override
+    
     public Strand getStrand() {
         return strand;
     }
 
-    @Override
+    
     public List<Location> getSubLocations() {
         if(subLocations == null) {
             return Collections.emptyList();
@@ -145,12 +145,12 @@ public abstract class AbstractLocation implements Location {
         return subLocations;
     }
 
-    @Override
+    
     public boolean isComplex() {
         return getSubLocations().size() > 0;
     }
 
-    @Override
+    
     public AccessionID getAccession() {
         return accession;
     }
@@ -159,7 +159,7 @@ public abstract class AbstractLocation implements Location {
      * Iterates through all known sub-locations for this location but does
      * not descend
      */
-    @Override
+    
     public Iterator<Location> iterator() {
         List<Location> list;
         if(isComplex()) {
@@ -177,7 +177,7 @@ public abstract class AbstractLocation implements Location {
      * which do not have a sub location. Useful for when you need to get
      * the exact elements of a location back for sub sequences.
      */
-    @Override
+    
     public List<Location> getRelevantSubLocations() {
         return getAllSubLocations(this);
     }
@@ -198,7 +198,7 @@ public abstract class AbstractLocation implements Location {
         return flatSubLocations;
     }
 
-    @Override
+    
     @SuppressWarnings("EqualsWhichDoesntCheckParameterClass")
     public boolean equals(Object obj) {
         boolean equals = false;
@@ -215,7 +215,7 @@ public abstract class AbstractLocation implements Location {
         return equals;
     }
 
-    @Override
+    
     public int hashCode() {
         int r = Hashcoder.SEED;
         r = Hashcoder.hash(r, getStart());
@@ -228,12 +228,12 @@ public abstract class AbstractLocation implements Location {
         return r;
     }
 
-    @Override
+    
     public boolean isCircular() {
         return circular;
     }
 
-    @Override
+    
     public boolean isBetweenCompounds() {
         return betweenCompounds;
     }
@@ -245,7 +245,7 @@ public abstract class AbstractLocation implements Location {
      * locations joined. If not circular then we get the Sequence for the
      * outer-bounds defined by this location.
      */
-    @Override
+    
     public <C extends Compound> Sequence<C> getSubSequence(Sequence<C> sequence) {
         if(isCircular()) {
             List<Sequence<C>> sequences = new ArrayList<Sequence<C>>();
@@ -261,7 +261,7 @@ public abstract class AbstractLocation implements Location {
     /**
      * 
      */
-    @Override
+    
     public <C extends Compound> Sequence<C> getRelevantSubSequence(Sequence<C> sequence) {
         List<Sequence<C>> sequences = new ArrayList<Sequence<C>>();
         for(Location l: getRelevantSubLocations()) {
@@ -302,7 +302,7 @@ public abstract class AbstractLocation implements Location {
         return ComplementCompound.class.isAssignableFrom(c.getClass());
     }
 
-    @Override
+    
     public String toString() {
         String circ = (isCircular()) ? " - circular" : "";
         String between = (isBetweenCompounds()) ? "^" : "..";

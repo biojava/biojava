@@ -90,7 +90,7 @@ public class JoiningSequenceReader<C extends Compound> implements ProxySequenceR
         return sequences.get(0).getCompoundSet();
     }
 
-    @Override
+    
     public C getCompoundAt(int position) {
         int sequenceIndex = getSequenceIndex(position);
         Sequence<C> sequence = sequences.get(sequenceIndex);
@@ -98,12 +98,12 @@ public class JoiningSequenceReader<C extends Compound> implements ProxySequenceR
         return sequence.getCompoundAt(indexInSequence);
     }
 
-    @Override
+    
     public CompoundSet<C> getCompoundSet() {
         return compoundSet;
     }
 
-    @Override
+    
     public int getLength() {
         int[] maxSeqIndex = getMaxSequenceIndex();
         if (maxSeqIndex.length == 0) {
@@ -204,7 +204,7 @@ public class JoiningSequenceReader<C extends Compound> implements ProxySequenceR
      * Iterator implementation which attempts to move through the 2D structure
      * attempting to skip onto the next sequence as & when it is asked to
      */
-    @Override
+    
     public Iterator<C> iterator() {
         final List<Sequence<C>> localSequences = sequences;
         return new Iterator<C>() {
@@ -212,7 +212,7 @@ public class JoiningSequenceReader<C extends Compound> implements ProxySequenceR
             private Iterator<C> currentSequenceIterator = null;
             private int currentPosition = 0;
 
-            @Override
+            
             public boolean hasNext() {
                 //If the current iterator is null then see if the Sequences object has anything
                 if (currentSequenceIterator == null) {
@@ -227,7 +227,7 @@ public class JoiningSequenceReader<C extends Compound> implements ProxySequenceR
                 return hasNext;
             }
 
-            @Override
+            
             public C next() {
                 if (currentSequenceIterator == null) {
                     if (localSequences.isEmpty()) {
@@ -243,59 +243,59 @@ public class JoiningSequenceReader<C extends Compound> implements ProxySequenceR
                 return currentSequenceIterator.next();
             }
 
-            @Override
+            
             public void remove() throws UnsupportedOperationException {
                 throw new UnsupportedOperationException("Cannot remove from this Sequence");
             }
         };
     }
 
-    @Override
+    
     public void setCompoundSet(CompoundSet<C> compoundSet) {
         throw new UnsupportedOperationException();
     }
 
-    @Override
+    
     public void setContents(String sequence) {
         throw new UnsupportedOperationException();
     }
 
-    @Override
+    
     public int countCompounds(C... compounds) {
         return SequenceMixin.countCompounds(this, compounds);
     }
 
-    @Override
+    
     public AccessionID getAccession() throws UnsupportedOperationException {
         throw new UnsupportedOperationException();
     }
 
-    @Override
+    
     public List<C> getAsList() {
         return SequenceMixin.toList(this);
     }
 
-    @Override
+    
     public int getIndexOf(C compound) {
         return SequenceMixin.indexOf(this, compound);
     }
 
-    @Override
+    
     public int getLastIndexOf(C compound) {
         return SequenceMixin.lastIndexOf(this, compound);
     }
 
-    @Override
+    
     public String getSequenceAsString() {
         return SequenceMixin.toStringBuilder(this).toString();
     }
 
-    @Override
+    
     public SequenceView<C> getSubSequence(Integer start, Integer end) {
         return SequenceMixin.createSubSequence(this, start, end);
     }
 
-    @Override
+    
     public String getSequenceAsString(Integer start, Integer end, Strand strand) throws UnsupportedOperationException {
         throw new UnsupportedOperationException("Not supported yet.");
     }

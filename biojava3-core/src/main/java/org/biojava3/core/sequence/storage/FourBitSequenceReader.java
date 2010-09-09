@@ -80,12 +80,12 @@ public class FourBitSequenceReader<C extends Compound> extends BitSequenceReader
          */
         private final static byte MASK = (byte) ((int) Math.pow(2, 0) | (int) Math.pow(2, 1) | (int) Math.pow(2, 2) | (int) Math.pow(2, 3));
 
-        @Override
+        
         protected byte bitMask() {
             return MASK;
         }
 
-        @Override
+        
         protected int compoundsPerDatatype() {
             return 8;
         }
@@ -96,7 +96,7 @@ public class FourBitSequenceReader<C extends Compound> extends BitSequenceReader
          * position. We sort lexigraphically so if the compound set has
          * not changed then neither will this.
          */
-        @Override
+        
         protected Map<C, Integer> generateCompoundsToIndex() {
             final CompoundSet<C> cs = getCompoundSet();
             Map<C, Integer> map = new HashMap<C, Integer>();
@@ -131,7 +131,7 @@ public class FourBitSequenceReader<C extends Compound> extends BitSequenceReader
             List<C> compounds = new ArrayList<C>(cs.getAllCompounds());
             Collections.sort(compounds, new Comparator<C>() {
 
-                @Override
+                
                 public int compare(C o1, C o2) {
                     String s1 = cs.getStringForCompound(o1);
                     String s2 = cs.getStringForCompound(o2);
@@ -144,7 +144,7 @@ public class FourBitSequenceReader<C extends Compound> extends BitSequenceReader
         /**
          * Returns a List which reverse encodes the Compound, Integer map
          */
-        @Override
+        
         protected List<C> generateIndexToCompounds() {
             CompoundSet<C> cs = getCompoundSet();
             Map<C, Integer> lookup = getCompoundsToIndexLookup();

@@ -16,7 +16,7 @@ public class FuzzyPoint extends SimplePoint {
      * Always uses the min point to resolve a location
      */
     public static final Resolver<FuzzyPoint> MIN_RESOLVER = new Resolver<FuzzyPoint>() {
-        @Override
+        
         public int resolve(FuzzyPoint point) {
             return point.getMin();
         }
@@ -26,7 +26,7 @@ public class FuzzyPoint extends SimplePoint {
      * Always uses the max point to resolve a location
      */
     public static final Resolver<FuzzyPoint> MAX_RESOLVER = new Resolver<FuzzyPoint>() {
-        @Override
+        
         public int resolve(FuzzyPoint point) {
             return point.getMax();
         }
@@ -36,7 +36,7 @@ public class FuzzyPoint extends SimplePoint {
      * Combines min and max and then gets the mean of it
      */
     public static final Resolver<FuzzyPoint> MEAN_RESOLVER = new Resolver<FuzzyPoint>() {
-        @Override
+        
         public int resolve(FuzzyPoint point) {
             return (point.getMin() + point.getMax()) / 2;
         }
@@ -63,7 +63,7 @@ public class FuzzyPoint extends SimplePoint {
         setPosition(-1); //Means we have not resolved this position yet
     }
 
-    @Override
+    
     public Integer getPosition() {
         if(super.getPosition() == -1) {
             super.setPosition(getResolver().resolve(this));
@@ -83,21 +83,21 @@ public class FuzzyPoint extends SimplePoint {
         return resolver;
     }
 
-    @Override
+    
     public Point reverse(int length) {
         int revMin = reverse(getMin(), length);
         int revMax = reverse(getMax(), length);
         return new FuzzyPoint(revMin, revMax, getResolver(), isUnknown(), isUncertain());
     }
 
-    @Override
+    
     public Point offset(int distance) {
         int offMin = getMin() + distance;
         int offMax = getMax() + distance;
         return new FuzzyPoint(offMin, offMax, getResolver(), isUnknown(), isUncertain());
     }
 
-        @Override
+        
     @SuppressWarnings("EqualsWhichDoesntCheckParameterClass")
     public boolean equals(Object obj) {
         boolean equals = false;
@@ -112,7 +112,7 @@ public class FuzzyPoint extends SimplePoint {
         return equals;
     }
 
-    @Override
+    
     public int hashCode() {
         int r = Hashcoder.SEED;
         r = Hashcoder.hash(r, getMin());
@@ -122,7 +122,7 @@ public class FuzzyPoint extends SimplePoint {
         return r;
     }
 
-    @Override
+    
     public int compareTo(Point point) {
         //If we can assign this to a FuzzyPoint then work with a bit more info
         if(FuzzyPoint.class.isAssignableFrom(point.getClass())) {

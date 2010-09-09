@@ -94,7 +94,7 @@ public class StringProxySequenceReader<C extends Compound> implements ProxySeque
         return this.parsedCompounds.lastIndexOf(compound) + 1;
     }
 
-    @Override
+    
     public String toString() {
         return getSequenceAsString();
     }
@@ -108,7 +108,7 @@ public class StringProxySequenceReader<C extends Compound> implements ProxySeque
     }
 
 
-        @Override
+        
     public String getSequenceAsString(Integer bioBegin, Integer bioEnd,Strand strand) {
         SequenceAsStringHelper<C> sequenceAsStringHelper = new SequenceAsStringHelper<C>();
         return sequenceAsStringHelper.getSequenceAsString(this.parsedCompounds, compoundSet, bioBegin, bioEnd, strand);
@@ -126,12 +126,12 @@ public class StringProxySequenceReader<C extends Compound> implements ProxySeque
       return compoundSet;
     }
 
-    @Override
+    
     public AccessionID getAccession() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
-    @Override
+    
     public int countCompounds(C... compounds) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
