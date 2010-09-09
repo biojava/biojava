@@ -160,10 +160,10 @@ public class AtomCache {
 	}
 
 
-	/** Returns the CA atoms for the provided name. See {@link #getStructure()} for supported naming conventions.
+	/** Returns the CA atoms for the provided name. See {@link #getStructure(String)} for supported naming conventions.
 	 * 
 	 * @param name
-	 * @return
+	 * @return an array of Atoms. 
 	 * @throws IOException
 	 * @throws StructureException
 	 */
@@ -211,7 +211,7 @@ public class AtomCache {
 	 * 	To specify that the 1st chain in a structure should be used write: 4hhb:0 .
 	 * 
 	 * @param name
-	 * @return
+	 * @return a Structure object
 	 * @throws IOException
 	 * @throws StructureException
 	 */
