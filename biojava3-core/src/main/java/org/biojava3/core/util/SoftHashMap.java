@@ -215,7 +215,10 @@ public class SoftHashMap<K, V> extends AbstractMap<K, V> {
 
       if ( DEBUG)
          System.out.println("putting " + key + " on cache. size: " + size());
-      return map.put(key, new SoftValue<K, V>(value, key, queue)).get();
+      
+      map.put(key, new SoftValue<K, V>(value, key, queue));
+      
+      return value;
 
    }
 
