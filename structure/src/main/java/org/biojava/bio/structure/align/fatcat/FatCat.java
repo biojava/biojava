@@ -54,7 +54,7 @@ public class FatCat
     * 
     * Parameters are:
     * 
-    * @param args
+    * @param argv
     */
    public static void main(String[] argv){
       FatCat cat = new FatCat();
