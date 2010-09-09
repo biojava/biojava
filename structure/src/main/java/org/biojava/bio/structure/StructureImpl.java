@@ -686,7 +686,7 @@ public class StructureImpl implements Structure, Serializable {
     /**
      * @return the sites contained in this structure
      */
-    @Override
+  
     public List<Site> getSites() {
             return sites;
     }
@@ -694,7 +694,7 @@ public class StructureImpl implements Structure, Serializable {
     /**
      * @param sites the sites to set in the structure
      */
-    @Override
+ 
     public void setSites(List<Site> sites) {
             this.sites = sites;
     }
