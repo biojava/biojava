@@ -61,9 +61,10 @@ implements StructurePairSelector
       
       Box vBox = Box.createVerticalBox();
       
-      dom1 = new JTextField(20);
-      dom2 = new JTextField(20);
+      dom1 = new JTextField(10);
+      dom2 = new JTextField(10);
       
+            
       Box b1 = getDomainPanel(1,dom1);
       Box b2 = getDomainPanel(2,dom2);
       
