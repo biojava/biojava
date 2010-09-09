@@ -354,7 +354,7 @@ public class AfpChainWriter
     * @param afpChain
     * @param ca1
     * @param ca2
-    * @return
+    * @return a String representation as it is used on the RCSB PDB web site for display.
     */
    public static String toWebSiteDisplay(AFPChain afpChain, Atom[] ca1, Atom[] ca2){
       if ( afpChain.getAlgorithmName().equalsIgnoreCase(FatCatFlexible.algorithmName)) {
@@ -536,7 +536,7 @@ public class AfpChainWriter
     * @param afpChain
     * @param ca1
     * @param ca2
-    * @return
+    * @return a String representation of the aligned pairs.
     */
    public static String toAlignedPairs(AFPChain afpChain, Atom[] ca1, Atom[] ca2) {
 	   StringWriter pairs = new StringWriter();
