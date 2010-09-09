@@ -42,8 +42,6 @@ import org.biojava.bio.structure.align.gui.jmol.StructureAlignmentJmol;
 import org.biojava.bio.structure.align.model.AFPChain;
 import org.biojava.bio.structure.align.util.UserConfiguration;
 import org.biojava.bio.structure.align.webstart.WebStartMain;
-import org.biojava.bio.structure.jama.Matrix;
-
 
 
 /**
@@ -87,6 +85,8 @@ public class MenuCreator {
 		JMenuItem saveF = getSaveAlignmentMenuItem(afpChain);
 		file.add(saveF);
 
+		JMenuItem openPDB = getShowPDBMenuItem();
+		file.add(openPDB);
 
 		JMenuItem openI = getOpenPDBMenuItem();
 
