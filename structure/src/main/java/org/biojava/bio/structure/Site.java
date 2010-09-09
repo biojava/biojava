@@ -39,7 +39,7 @@ public class Site implements PDBRecord, Serializable {
         this.groups = groups;
     }
 
-    @Override
+
     public String toString() {
         StringBuilder stringBuilder = new StringBuilder("SITE ");
         stringBuilder.append(siteID + " " + groups.size() + " ");
@@ -53,14 +53,14 @@ public class Site implements PDBRecord, Serializable {
         return stringBuilder.toString();
     }
 
-    @Override
+   
     public String toPDB() {
         StringBuffer buffer = new StringBuffer();
         toPDB(buffer);
         return buffer.toString();
     }
 
-    @Override
+
     public void toPDB(StringBuffer buf) {
         if (groups == null || groups.size() < 1) {
             return;
@@ -140,14 +140,14 @@ public class Site implements PDBRecord, Serializable {
     }
 
     /**
-     * Privides REMARK 800 section pertaining to the site as a string.
+     * Provides REMARK 800 section pertaining to the site as a string.
      *
      * For example in pdb 1a4w:
      * REMARK 800 SITE_IDENTIFIER: CAT
      * REMARK 800 EVIDENCE_CODE: UNKNOWN
      * REMARK 800 SITE_DESCRIPTION: ACTIVE SITE
      *
-     * @param stringBuffer
+     * 
      */
     public String remark800toPDB() {
         StringBuffer stringBuffer = new StringBuffer();
@@ -179,7 +179,7 @@ public class Site implements PDBRecord, Serializable {
     }
 
     /**
-     * @param groups the groups to set
+     * @param residues the groups to set
      */
     public void setGroups(List<Group> residues) {
         this.groups = residues;
@@ -188,7 +188,7 @@ public class Site implements PDBRecord, Serializable {
 
     /**
      * gets the REMARK 800 description of the site
-     * @return
+     * @return description
      */
     public String getDescription() {
         return description;
@@ -203,7 +203,7 @@ public class Site implements PDBRecord, Serializable {
 
     /**
      * gets the REMARK 800 EVIDENCE CODE for the site.
-     * @return
+     * @return evidence code
      */
     public String getEvCode() {
         return evCode;
