@@ -94,8 +94,7 @@ public class ScopTest extends TestCase {
 		}catch (Exception e){
 			e.printStackTrace();
 			fail(e.getMessage());
-		}
-		
+		}		
 	}
 
 	private void checkRange(Structure s, String range) {
