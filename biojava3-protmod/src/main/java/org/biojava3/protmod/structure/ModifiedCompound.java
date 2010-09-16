@@ -24,9 +24,11 @@
 
 package org.biojava3.protmod.structure;
 
+import java.util.Collection;
 import java.util.Set;
 
 import org.biojava3.protmod.ComponentType;
+import org.biojava3.protmod.ModificationCategory;
 import org.biojava3.protmod.ProteinModification;
 
 /**
@@ -56,14 +58,6 @@ public interface ModifiedCompound {
 	 */
 	public Set<StructureGroup> getGroups(ComponentType type);
 	
-//	/**
-//	 * 
-//	 * @param group a group.
-//	 * @return true if the group is contained.
-//	 * @see StructureGroup
-//	 */
-//	public boolean containsGroup(StructureGroup group);
-	
 	/**
 	 * 
 	 * @return a set of atom linkages.
@@ -71,33 +65,6 @@ public interface ModifiedCompound {
 	 * @see StructureAtomLinkage
 	 */
 	public Set<StructureAtomLinkage> getAtomLinkages();
-//	
-//	/**
-//	 * 
-//	 * @param group1 the first group.
-//	 * @param group2 the second group.
-//	 * @return true if group1 and group2 are linked.
-//	 * @see StructureGroup
-//	 */
-//	public boolean areLinkedGroups(StructureGroup group1, StructureGroup group2);
-//	
-//	/**
-//	 * 
-//	 * @param atom1 the first atom.
-//	 * @param atom2 the second atom.
-//	 * @return true if atom1 and atom2 are linked.
-//	 * @see StructureAtom
-//	 */
-//	public boolean areLinkedAtoms(StructureAtom atom1, StructureAtom atom2);
-//	
-//	/**
-//	 * 
-//	 * @param group a involved group.
-//	 * @param isResidue true if the group is a residue; false if it is a ligand.
-//	 * @return true if this group was not already contained.
-//	 * @see StructureGroup
-//	 */
-//	public boolean addGroup(StructureGroup group);
 	
 	/**
 	 * Add a linkage. Add new the involved groups first using {@link addGroup}. 
@@ -106,4 +73,10 @@ public interface ModifiedCompound {
 	 * @see StructureAtomLinkage
 	 */
 	public boolean addAtomLinkage(StructureAtomLinkage linkage);
+	
+	/**
+	 * Add a collections of linkages.
+	 * @param linkages an atom linkage.
+	 */
+	public void addAtomLinkages(Collection<StructureAtomLinkage> linkages);
 }

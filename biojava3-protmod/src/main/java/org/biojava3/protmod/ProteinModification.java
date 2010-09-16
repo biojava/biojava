@@ -26,6 +26,7 @@ package org.biojava3.protmod;
 
 import java.io.InputStream;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.EnumMap;
 import java.util.HashMap;
@@ -456,6 +457,18 @@ public final class ProteinModification {
 				byKeyword.put(keyword, mods);
 			}
 			mods.add(current);
+			
+			return this;
+		}
+		
+		public Builder addKeywords(Collection<String> keywords) {
+			if (keywords==null) {
+				throw new IllegalArgumentException("Keywords cannot be null.");
+			}
+			
+			for (String keyword : keywords) {
+				addKeyword(keyword);
+			}
 			
 			return this;
 		}

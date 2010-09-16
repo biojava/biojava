@@ -25,13 +25,17 @@
 package org.biojava3.protmod.structure;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeSet;
 
 import org.biojava.bio.structure.Atom;
 import org.biojava.bio.structure.Chain;
@@ -45,6 +49,7 @@ import org.biojava.bio.structure.StructureException;
 
 import org.biojava3.protmod.Component;
 import org.biojava3.protmod.ComponentType;
+import org.biojava3.protmod.ModificationCategory;
 import org.biojava3.protmod.ModificationCondition;
 import org.biojava3.protmod.ModificationLinkage;
 import org.biojava3.protmod.ProteinModification;
@@ -304,7 +309,10 @@ public class ProteinModificationIdentifier {
 				}
 			}
 			
+			mergeModComps(modComps);
+			
 			identifiedModifiedCompounds.addAll(modComps);
+			
 			
 			// record unidentifiable linkage
 			if (recordUnidentifiableModifiedCompounds) {
@@ -369,6 +377,53 @@ public class ProteinModificationIdentifier {
 			
 			start = n;
 			n = identifiedGroups.size();
+		}
+	}
+	
+	/**
+	 * Merge identified modified compounds if linked.
+	 */
+	private void mergeModComps(List<ModifiedCompound> modComps) {
+		TreeSet<Integer> remove = new TreeSet<Integer>();
+		int n = modComps.size();
+		for (int i=0; i<n; i++) {
+			ModifiedCompound curr = modComps.get(i);
+			
+			// find linked compounds that before curr
+			List<Integer> merging = new ArrayList<Integer>();
+			for (int j=0; j<i; j++) {
+				if (remove.contains(j))	continue;
+				ModifiedCompound pre = modComps.get(j);
+				if (!Collections.disjoint(pre.getGroups(), curr.getGroups())) {
+					merging.add(j);
+				}
+			}
+			
+			if (!merging.isEmpty()) {
+				merging.add(i);
+				
+				// keep the one with smallest index
+				Integer iKeep = merging.get(0);
+				ModifiedCompound mcKeep = modComps.get(iKeep);
+				
+				// merging all others to iKeep
+				int nm = merging.size();
+				for (int im=1; im<nm; im++) {
+					Integer iRmv = merging.get(im);
+					ModifiedCompound mcRmv = modComps.get(iRmv);
+					mcKeep.addAtomLinkages(mcRmv.getAtomLinkages());
+					remove.add(iRmv);
+				}
+				
+//				if (mcKeep.getModification().getCategory()!=ModificationCategory.UNDEFINED) {
+//					System.out.println("Merging compound:\n"+mcKeep.toString());
+//				}
+			}
+		}
+		
+		Iterator<Integer> it = remove.descendingIterator();
+		while (it.hasNext()) {
+			modComps.remove(it.next().intValue());
 		}
 	}
 	

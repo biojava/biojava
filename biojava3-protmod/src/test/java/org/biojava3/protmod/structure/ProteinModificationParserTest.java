@@ -68,13 +68,14 @@ public class ProteinModificationParserTest extends TestCase {
 				{"1A6L", "AA0139"}, // F3S
 				{"1A70", "AA0137"}, // FES
 				{"1RPB", "AA0216"}, // Isopeptide (Cys - ASP)
-				{"1CAD", "AA0136"}, // FE and 4 Cys, cross-link4
 				{"1FP4", "AA0141"}, // CFM, HCA, CYS, HIS
 				{"1EMA", "AA0183"}, // CRO, cross-link1
 				{"2IWK", "AA0298"}, // CU4
 				{"1SU6", "AA0310"}, // NFS, 5 CYS, HIS
 				{"2AXR", "AA0436"}, // CYS-FAD-HIS
 				{"3H8L", "AA0513"}, // CYS-S3H-CYS
+				{"1CAD", null}, // FE and 4 Cys, cross-link4
+				
 		};
 	}
 	
@@ -224,7 +225,6 @@ public class ProteinModificationParserTest extends TestCase {
 				{"1A70", "AA0137"}, // FES
 				{"1RPB", "AA0216"}, // Isopeptide (Cys - ASP)
 				{"3B2M", "AA0294"}, // isopeptide (Lys - Asn)
-				{"1CAD", "AA0136"}, // FE and 4 Cys, cross-link4
 				{"1FP4", "AA0141"}, // CFM, HCA, CYS, HIS
 				{"1M1N", "AA0141"}, // CFN, HCA, CYS, HIS
 				//{"1G21", "AA0141"}, // CFM, HCA, CYS, HIS, (bond length error 0.5)
@@ -269,17 +269,15 @@ public class ProteinModificationParserTest extends TestCase {
 				//{"2VUM", "AA0451"}, // CYS-TRP (bond length error 2)
 				{"3EE4", "AA0490"}, // VAL-TYR
 				{"3H8L", "AA0513"}, // CYS-S3H-CYS
+				{"1CAD", null}, // FE and 4 Cys, cross-link4
 		};
 	}
 	
 	public void testParser() throws IOException, StructureException {
 		multiTest();
-		singleTest();
 	}
 	
 	public void multiTest() {
-
-		
 		for ( String[] name : strucs){
 			try {
 //				parserTest(name[0], (String)null); 
@@ -289,12 +287,6 @@ public class ProteinModificationParserTest extends TestCase {
 				fail(e.getMessage());
 			}
 		}
-	}
-	
-	public void singleTest() throws IOException, StructureException {
-		String pdbId = "1CAD";
-		Set<ProteinModification> mods = ProteinModification.getByKeyword("Metal coordination");
-		parserTest(pdbId, mods);
 	}
 
 	private void parserTest(String pdbId, String residId) throws IOException, StructureException {

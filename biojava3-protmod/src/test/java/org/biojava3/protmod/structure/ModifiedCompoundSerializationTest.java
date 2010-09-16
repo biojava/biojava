@@ -45,7 +45,7 @@ public class ModifiedCompoundSerializationTest extends TestCase {
 
 	@SuppressWarnings("unchecked") 
 	public void testSerialization() throws StructureException, IOException, ClassNotFoundException {
-		String pdbId = "3M6S";
+		String pdbId = "1CAD";
 		Structure struc = TmpAtomCache.cache.getStructure(pdbId);
 		
 		ProteinModificationIdentifier parser = new ProteinModificationIdentifier();
@@ -62,6 +62,8 @@ public class ModifiedCompoundSerializationTest extends TestCase {
 		ObjectInputStream ois = new ObjectInputStream(fin); 
 		mcs = (Set<ModifiedCompound>) ois.readObject();
 		ois.close();
+		
+//		System.out.println(mcs);
 		
 		try {
 			new File(file).delete();

@@ -34,6 +34,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.biojava3.protmod.ComponentType;
+import org.biojava3.protmod.ModificationCategory;
 import org.biojava3.protmod.ProteinModification;
 
 /**
@@ -82,7 +83,7 @@ implements ModifiedCompound, Serializable {
         throw new java.io.InvalidObjectException("Proxy required");
     }
 	
-	private final ProteinModification modification;
+	private ProteinModification modification;
 	private final Set<StructureGroup> groups;
 	private Map<Set<StructureGroup>, Set<StructureAtomLinkage>> atomLinkages;
 	
@@ -128,20 +129,72 @@ implements ModifiedCompound, Serializable {
 		}
 		
 		this.modification = modification;
+		
 		this.groups = new HashSet<StructureGroup>();
 		
 		if (linkages==null) {
 			this.atomLinkages = null;
 		} else {
-			for (StructureAtomLinkage linkage : linkages) {
-				addAtomLinkage(linkage);
-			}
+			addAtomLinkages(linkages);
 		}
 	}
-
+	
 	@Override
 	public ProteinModification getModification() {
-		return modification;
+		if (modification.getCategory()!=ModificationCategory.UNDEFINED) {
+			return modification;
+		}
+		
+		int nRes = 0;
+		for (StructureGroup group : groups) {
+			if (group.getType() == ComponentType.AMINOACID) {
+				nRes ++;
+			}
+		}
+		
+		ModificationCategory cat;
+		switch (nRes) {
+		case 0:
+			return modification;
+		case 1:
+			cat = ModificationCategory.ATTACHMENT; break;
+		case 2:
+			cat = ModificationCategory.CROSS_LINK_2; break;
+		case 3:
+			cat = ModificationCategory.CROSS_LINK_3; break;
+		case 4:
+			cat = ModificationCategory.CROSS_LINK_4; break;
+		case 5:
+			cat = ModificationCategory.CROSS_LINK_5; break;
+		case 6:
+			cat = ModificationCategory.CROSS_LINK_6; break;
+		case 7:
+			cat = ModificationCategory.CROSS_LINK_7; break;
+		default:
+			cat = ModificationCategory.CROSS_LINK_8_OR_LARGE; break;
+		}
+		
+		// TODO: name crashing?
+		String newId = modification.getId() + "." + cat.name();
+		
+		ProteinModification mod = ProteinModification.getById(newId);
+		if (mod != null) {
+			return mod;
+		}
+
+		return ProteinModification.register(newId,
+				cat, modification.getOccurrenceType(), modification.getCondition())
+				.addKeywords(modification.getKeywords())
+				.setDescription(modification.getDescription())
+				.setFormula(modification.getFormula())
+				.setPdbccId(modification.getPdbccId())
+				.setPdbccName(modification.getPdbccName())
+				.setPsimodId(modification.getPdbccName())
+				.setPsimodName(modification.getPsimodName())
+				.setResidId(modification.getResidId())
+				.setResidName(modification.getResidName())
+				.setSystematicName(modification.getSystematicName())
+				.asModification();
 	}
 	
 	@Override
@@ -199,10 +252,23 @@ implements ModifiedCompound, Serializable {
 	}
 	
 	@Override
+	public void addAtomLinkages(Collection<StructureAtomLinkage> linkages) {
+		if (linkages==null) {
+			throw new IllegalArgumentException("Null linkages");
+		}
+		
+		for (StructureAtomLinkage link : linkages) {
+			addAtomLinkage(link);
+		}
+	}
+	
+	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("Modification ID: ");
 		sb.append(modification.getId());
+		sb.append("; Category: ");
+		sb.append(getModification().getCategory());
 		if (modification.getResidId()!=null) {
 			sb.append("; RESID: ");
 			sb.append(modification.getResidId());

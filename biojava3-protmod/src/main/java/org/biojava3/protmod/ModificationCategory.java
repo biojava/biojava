@@ -42,7 +42,9 @@ public enum ModificationCategory {
 	CROSS_LINK_4("crosslink4"),
 	CROSS_LINK_5("crosslink5"),
 	CROSS_LINK_6("crosslink6"),
-	CROSS_LINK_7("crosslink7")
+	CROSS_LINK_7("crosslink7"),
+	CROSS_LINK_8_OR_LARGE("crosslink8 or large"), // 8 or high
+	UNDEFINED("undefined")
 	;
 	
 	ModificationCategory(String label) {
@@ -75,7 +77,8 @@ public enum ModificationCategory {
 			|| this == CROSS_LINK_4
 			|| this == CROSS_LINK_5
 			|| this == CROSS_LINK_6
-			|| this == CROSS_LINK_7;
+			|| this == CROSS_LINK_7
+			|| this == CROSS_LINK_8_OR_LARGE;
 	}
 	
 	/**

@@ -2231,7 +2231,7 @@
 		<Keyword>metalloprotein</Keyword>
 		<Keyword>thioether bond</Keyword>
 	</Entry-->
-	<Entry>
+	<!--Entry>
 		<Id>0073</Id>
 		<Description>A protein modification that effectively converts four L-cysteine residues iron atom to tetrakis-L-cysteinyl iron.</Description>
 		<SystematicName>tetrakis(cysteinato)-1kappaS,2kappaS,3kappaS,4kappaS-iron</SystematicName>
@@ -2283,7 +2283,8 @@
 		<Category>crosslink4</Category>
 		<Keyword>iron</Keyword>
 		<Keyword>metalloprotein</Keyword>
-	</Entry>
+		<Comment>covered in metal coordination</Comment>
+	</Entry-->
 	<Entry>
 		<Id>0074</Id>
 		<Description>A protein modification that effectively converts four L-cysteine residues and a four-iron four-sulfur cluster to tetrakis-L-cysteinyl tetrairon tetrasulfide.</Description>
@@ -8411,7 +8412,7 @@
 			</Bond>
 		</Condition>
 		<Occurrence>natural</Occurrence>
-		<Category>attachment</Category>
+		<Category>undefined</Category>
 		<Keyword>Metal coordination</Keyword>
 	</Entry>
 </ProteinModifications>
