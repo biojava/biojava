@@ -1270,6 +1270,10 @@ nBestTrace=nTrace;
 
 		double rmsdLen  = 0.0;
 
+		// this flag tests if the RMSDLen has been assigned.
+		// this is to enforce that the alignment ends up 
+		// smaller than 95% of the original alignment.
+		// +/- 
 		boolean isRmsdLenAssigned=false;
 		int nAtomPrev=-1;
 
@@ -1284,10 +1288,11 @@ nBestTrace=nTrace;
 				(isRmsdLenAssigned && rmsd<rmsdLen*1.1 && nAtomPrev!=nAtom)) {
 		  
 			counter++;
-			//System.out.println("nAtom: " + nAtom);
+			if ( debug)
+			   System.out.println("nAtom: " + nAtom + " " + nAtomPrev + " " + rmsdLen + " " + isRmsdLenAssigned + " strLen:" + strLen);
 			nAtomPrev=nAtom;
 			oRmsdThr += distanceIncrement;
-
+			
 			rot_mol(ca2, ca3, nse2, r,t);
 
 			for(int ise1=0; ise1<nse1; ise1++) {
@@ -1352,6 +1357,7 @@ nBestTrace=nTrace;
 				System.out.println("iter: " + counter + " nAtom " + nAtom + " rmsd: " + rmsd);
 			//afpChain.setTotalRmsdOpt(rmsd);
 			//System.out.println("rmsd: " + rmsd);
+			
 			if(!(nAtom<strLen*0.95) && (!isRmsdLenAssigned)) { 
 				rmsdLen=rmsd;
 				isRmsdLenAssigned=true;
