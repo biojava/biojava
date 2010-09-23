@@ -65,7 +65,7 @@ import org.biojava3.core.sequence.template.Compound;
  */
 public class SeqRes2AtomAligner {
 
-	boolean DEBUG = false;
+	boolean DEBUG = true;
 
 	static final List<String> excludeTypes;
 	
@@ -260,10 +260,10 @@ public class SeqRes2AtomAligner {
 		penalty.setOpenPenalty(gop);
 		penalty.setExtensionPenalty(extend);
 
-		PairwiseSequenceAligner needlemanWunsch =
-			Alignments.getPairwiseAligner(s1, s2, PairwiseSequenceAlignerType.GLOBAL, penalty, matrix);
+		PairwiseSequenceAligner smithWaterman =
+			Alignments.getPairwiseAligner(s1, s2, PairwiseSequenceAlignerType.LOCAL, penalty, matrix);
 
-		SequencePair<ProteinSequence, AminoAcidCompound> pair = needlemanWunsch.getPair();
+		SequencePair<ProteinSequence, AminoAcidCompound> pair = smithWaterman.getPair();
 
 		
 
@@ -275,14 +275,14 @@ public class SeqRes2AtomAligner {
 			System.out.println(pair.toString(60));
 		}
 
-		boolean noMatchFound = mapChains(seqRes,atomRes,needlemanWunsch,pair);
+		boolean noMatchFound = mapChains(seqRes,atomRes,pair);
 		return noMatchFound;
 
 	}
 
 
 	private boolean mapChains(List<Group> seqRes, List<Group> atomRes,
-			PairwiseSequenceAligner needlemanWunsch, SequencePair<ProteinSequence, AminoAcidCompound> pair
+			 SequencePair<ProteinSequence, AminoAcidCompound> pair
 	) throws StructureException{
 
 
