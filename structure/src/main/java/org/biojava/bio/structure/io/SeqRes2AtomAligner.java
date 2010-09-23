@@ -65,7 +65,7 @@ import org.biojava3.core.sequence.template.Compound;
  */
 public class SeqRes2AtomAligner {
 
-	boolean DEBUG = true;
+	boolean DEBUG = false;
 
 	static final List<String> excludeTypes;
 	
