@@ -34,13 +34,13 @@ public class GenbankFormatTest extends TestCase {
     protected void setUp() {
         this.gbFormat = new GenbankFormat();
     }
-		
-		public void testGenbankParsingWithBondFeatures() {
-				readProteinFile("/BondFeature.gb");
-		}
+
+    public void testGenbankParsingWithBondFeatures() {
+        readProteinFile("/BondFeature.gb");
+    }
 
     public void testGenbankParsing_oldStyleFile() {
-		RichSequence sequence = readDNAFile("/NoAccession.gb");
+	RichSequence sequence = readDNAFile("/NoAccession.gb");
         assertEquals("NoAccess", sequence.getName());
         assertTrue(sequence.getCircular());
         assertEquals(null, sequence.getDescription());
@@ -66,7 +66,7 @@ public class GenbankFormatTest extends TestCase {
 
 
     public void testGenbankParsing_contemporaryApp() {
-		RichSequence sequence = readDNAFile("/AY069118.gb");
+	RichSequence sequence = readDNAFile("/AY069118.gb");
         assertEquals("AY069118", sequence.getName());
         assertFalse(sequence.getCircular());
         assertEquals("Drosophila melanogaster GH13089 full length cDNA.", sequence.getDescription());
@@ -100,33 +100,33 @@ public class GenbankFormatTest extends TestCase {
     }
 
     public void testCanReadWhatIsWritten() {
-    	// Read a genbank file
-    	RichSequence sequence = readDNAFile("/AY069118.gb");
+        // Read a genbank file
+        RichSequence sequence = readDNAFile("/AY069118.gb");
         assertNotNull(sequence);
 
         // Write the file to an in-memory buffer
         OutputStream output = new ByteArrayOutputStream();
-		RichSequenceFormat genbank = new GenbankFormat();
-		RichStreamWriter seqsOut = new RichStreamWriter(output, genbank);
-		SequenceIterator seqIterator = new RichSequence.IOTools.SingleRichSeqIterator(sequence);
-		try {
-			seqsOut.writeStream(seqIterator, null);
-		} catch (IOException e) {
-        	fail("Unexpected exception: "+e);
-		}
+        RichSequenceFormat genbank = new GenbankFormat();
+        RichStreamWriter seqsOut = new RichStreamWriter(output, genbank);
+        SequenceIterator seqIterator = new RichSequence.IOTools.SingleRichSeqIterator(sequence);
+        try {
+            seqsOut.writeStream(seqIterator, null);
+        } catch (IOException e) {
+            fail("Unexpected exception: " + e);
+        }
 
-		// Re-read the generated output
-		String newContent = output.toString();
+        // Re-read the generated output
+        String newContent = output.toString();
         SymbolTokenization dna = RichSequence.IOTools.getDNAParser();
         Namespace defaultNs = RichObjectFactory.getDefaultNamespace();
-		BufferedReader input = new BufferedReader(new StringReader(newContent));
-		RichSequence rereadSeq = null;
+        BufferedReader input = new BufferedReader(new StringReader(newContent));
+        RichSequence rereadSeq = null;
         try {
             RichStreamReader reader = new RichStreamReader(input, new GenbankFormat(), dna, RichSequenceBuilderFactory.FACTORY, defaultNs);
             rereadSeq = reader.nextRichSequence();
         } catch (Exception e) {
-        	e.printStackTrace();
-        	fail("Unexpected exception: "+e);
+            e.printStackTrace();
+            fail("Unexpected exception: " + e);
         }
         assertNotNull(rereadSeq);
         assertEquals(sequence.getAccession(), rereadSeq.getAccession());
@@ -154,7 +154,7 @@ public class GenbankFormatTest extends TestCase {
      * @return a RichSequence instance
      */
     private RichSequence readDNAFile(String filename) {
-		InputStream inStream = this.getClass().getResourceAsStream(filename);
+        InputStream inStream = this.getClass().getResourceAsStream(filename);
         BufferedReader br = new BufferedReader(new InputStreamReader(inStream));
         SymbolTokenization tokenization = RichSequence.IOTools.getDNAParser();
         Namespace namespace = RichObjectFactory.getDefaultNamespace();
@@ -165,13 +165,13 @@ public class GenbankFormatTest extends TestCase {
             sequence = builder.makeRichSequence();
         } catch (Exception e) {
             e.printStackTrace();
-            fail("Unexpected exception: "+e);
+            fail("Unexpected exception: " + e);
         }
-		return sequence;
-	}
-	
-	private RichSequence readProteinFile(String filename) {
-		InputStream inStream = this.getClass().getResourceAsStream(filename);
+        return sequence;
+    }
+
+    private RichSequence readProteinFile(String filename) {
+        InputStream inStream = this.getClass().getResourceAsStream(filename);
         BufferedReader br = new BufferedReader(new InputStreamReader(inStream));
         SymbolTokenization tokenization = RichSequence.IOTools.getProteinParser();
         Namespace namespace = RichObjectFactory.getDefaultNamespace();
@@ -182,8 +182,8 @@ public class GenbankFormatTest extends TestCase {
             sequence = builder.makeRichSequence();
         } catch (Exception e) {
             e.printStackTrace();
-            fail("Unexpected exception: "+e);
+            fail("Unexpected exception: " + e);
         }
-		return sequence;
-	}
+        return sequence;
+    }
 }
