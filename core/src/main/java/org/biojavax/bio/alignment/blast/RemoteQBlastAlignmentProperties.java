@@ -67,12 +67,16 @@ public class RemoteQBlastAlignmentProperties implements
 		boolean isValid = false;
 		String[] blastPr = { "blastn", "blastp", "blastx", "tblastn", "tblastx" };
 
-		for (int i = 0; i < blastPr.length; i++) {
-			if (program == blastPr[i]) {
-				this.param.put("PROGRAM", program);
-				isValid = true;
-			}
+//		for (int i = 0; i < blastPr.length; i++) {
+//			if (program.equals(blastPr[i])) {
+//				this.param.put("PROGRAM", program);
+//				isValid = true;
+//			}
+//		}
+		if(java.util.Arrays.binarySearch(blastPr,program)>=0){
+			isValid = true;			
 		}
+		
 		if (!isValid) {
 			throw new BioException(
 					"Invalid blastall program selection! Use one of valid values: blastn/blastp/blastx/tblastn/tblastx");
