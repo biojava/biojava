@@ -48,7 +48,8 @@ public interface Profile<S extends Sequence<C>, C extends Compound> extends Iter
         CLUSTALW,
         FASTA,
         GCG,
-        MSF
+        MSF,
+        PDBWEB
     }
 
     /**
