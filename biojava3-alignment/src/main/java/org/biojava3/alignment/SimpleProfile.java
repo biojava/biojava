@@ -33,6 +33,7 @@ import org.biojava3.alignment.template.AlignedSequence.Step;
 import org.biojava3.alignment.template.Profile;
 import org.biojava3.alignment.template.ProfileView;
 import org.biojava3.alignment.template.SubstitutionMatrix;
+import org.biojava3.core.sequence.AccessionID;
 import org.biojava3.core.sequence.Strand;
 import org.biojava3.core.sequence.compound.AmbiguityDNACompoundSet;
 import org.biojava3.core.sequence.compound.AmbiguityRNACompoundSet;
@@ -366,7 +367,8 @@ public class SimpleProfile<S extends Sequence<C>, C extends Compound> implements
 			// TODO? convert gap characters to '.'
 			return toString(50, header.toString(), idFormat, false, false, true, false, false);
 		case PDBWEB:            
-			return toString(60,null,null, true,true,true,true,true );
+			String pdbFormat = "%s";
+			return toString(60,null,pdbFormat, true,true,true,false,true );
 		}
 	}
 
@@ -506,16 +508,25 @@ public class SimpleProfile<S extends Sequence<C>, C extends Compound> implements
 			int seqIndexPad, boolean seqIndexPre, int start, int end, List<AlignedSequence<S, C>> list2) {
 		if ( list.size() == 2) {
 
-			if (idFormat != null) {
-				s.append(String.format(idFormat, ""));
-			}
+			AlignedSequence<S,C> as1 = list.get(0);
+			AlignedSequence<S,C> as2 = list.get(1);
+
 			
+			
+			if (idFormat != null) {
+				AccessionID ac1 = as1.getAccession();
+				String id1 = "null";
+				if ( ac1 != null)
+					id1 = ac1.getID();
+			
+				id1 = id1.replaceAll(".", " ");
+				s.append(String.format(idFormat, id1));
+			}
+
 			if (seqIndexPre) {
 				s.append(String.format("%" + (seqIndexPad + 1) + "s", ""));
 			}
 
-			AlignedSequence<S,C> as1 = list.get(0);
-			AlignedSequence<S,C> as2 = list.get(1);
 
 			String subseq1 = as1.getSequenceAsString(start, end, Strand.UNDEFINED);
 			String subseq2 = as2.getSequenceAsString(start, end, Strand.UNDEFINED);
@@ -532,7 +543,7 @@ public class SimpleProfile<S extends Sequence<C>, C extends Compound> implements
 					s.append(".");
 				else 
 					s.append(" ");
-						
+
 			}
 
 			s.append(String.format("%n"));
@@ -542,18 +553,18 @@ public class SimpleProfile<S extends Sequence<C>, C extends Compound> implements
 	}
 
 	private static SubstitutionMatrix<AminoAcidCompound> matrix = SubstitutionMatrixHelper.getBlosum65();
-	
+
 	private boolean isSimilar(char c1, char c2) {
-		
+
 		AminoAcidCompoundSet set = AminoAcidCompoundSet.getAminoAcidCompoundSet();
-		
+
 		AminoAcidCompound aa1 = set.getCompoundForString(""+c1);
 		AminoAcidCompound aa2 = set.getCompoundForString(""+c2);
-		
+
 		short val = matrix.getValue(aa1,aa2);
 		if ( val > 0 )
 			return true;
-		
+
 		return false;
 	}
 
