@@ -447,35 +447,38 @@ public class SimpleProfileTest {
 
     @Test
     public void testToStringInt() {
-        // TODO conservation annotation
+    
+    	
+    
+    	
         assertEquals(global.toString(3), String.format(
                 "          1 3%n" +
-                "Query   1 ARN 3%n" +
+                "Query   1 ARN 3%n" +                
+                "           | %n"+
                 "Target  1 -R- 1%n" +
-                "          %n%n" +
+                "%n" +
                 "          4 5%n" +
                 "Query   4 D- 4%n" +
-                "Target  2 DG 3%n" +
-                "          %n"));
+                "          | %n"+
+                "Target  2 DG 3%n"));
         assertEquals(local.toString(4), String.format(
                 "          1 3%n" +
                 "Query   2 RND 4%n" +
-                "Target  1 R-D 2%n" +
-                "          %n"));
+                "          | |%n"+
+                "Target  1 R-D 2%n"));
         assertEquals(single.toString(4), String.format(
                 "         1  4%n" +
-                "Query  1 ARND 4%n" +
-                "         %n"));
+                "Query  1 ARND 4%n" ));
     }
 
     @Test
     public void testToStringFormatted() {
-        // TODO conservation annotation
+       
         assertEquals(global.toString(StringFormat.ALN), String.format(
                 "CLUSTAL W MSA from BioJava%n%n" +
                 "Query     ARND- 4%n" +
-                "Target    -R-DG 3%n" +
-                "          %n"));
+                "           | | %n"+
+                "Target    -R-DG 3%n"));
         assertEquals(local.toString(StringFormat.FASTA), String.format(
                 ">Query%n" +
                 "RND%n" +
