@@ -360,7 +360,7 @@ public class SimpleProfile<S extends Sequence<C>, C extends Compound> implements
 			header.append(String.format("MSA from BioJava%n%n MSF: %d  Type: %s  Check: %d ..%n%n", getLength(),
 					getGCGType(), getGCGChecksum()));
 			for (AlignedSequence<S, C> as : list) {
-				header.append(String.format(" Name: " + idFormat + " Len: %d  Check: %4d  Weight: %.1f %n",
+				header.append(String.format(" Name: " + idFormat + " Len: %d  Check: %4d  Weight: %.1f%n",
 						as.getAccession(), getLength(), getGCGChecksum(as), 1.0f)); // TODO show weights in MSF header
 			}
 			header.append(String.format("%n//%n%n"));
