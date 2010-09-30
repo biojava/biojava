@@ -67,7 +67,7 @@ public class RemoteQBlastAlignmentProperties implements
 	public void setBlastProgram(String program) throws BioException {
 
 		boolean isValid = false;
-		String[] blastPr = { "blastn", "blastp", "blastx", "tblastn", "tblastx" };
+		String[] blastPr = new String[]{ "blastn", "blastp", "blastx", "tblastn", "tblastx" };
 
 //		for (int i = 0; i < blastPr.length; i++) {
 //			if (program.equals(blastPr[i])) {
@@ -76,7 +76,7 @@ public class RemoteQBlastAlignmentProperties implements
 //			}
 //		}
 
-		if(binarySearch(blastPr,program)>=0){
+		if(Arrays.binarySearch(blastPr,program)>=0){
 			isValid = true;			
 		}
 		
