@@ -23,6 +23,7 @@ package org.biojavax.bio.alignment.blast;
 
 import java.util.HashMap;
 import java.util.Set;
+import java.util.Arrays;
 
 import org.biojavax.bio.alignment.RemotePairwiseAlignmentProperties;
 
@@ -67,12 +68,17 @@ public class NCBIQBlastAlignmentProperties implements
 		boolean isValid = false;
 		String[] blastPr = { "blastn", "blastp", "blastx", "tblastn", "tblastx" };
 
-		for (int i = 0; i < blastPr.length; i++) {
-			if (program == blastPr[i]) {
-				this.param.put("PROGRAM", program);
-				isValid = true;
-			}
+//		for (int i = 0; i < blastPr.length; i++) {
+//			if (program == blastPr[i]) {
+//				this.param.put("PROGRAM", program);
+//				isValid = true;
+//			}
+//		}
+		
+		if(searchBinary(blastPr,program)>=0){
+			isValid = true;			
 		}
+		
 		if (!isValid) {
 			throw new Exception(
 					"Invalid blastall program selection! Use one of valid values: blastn/blastp/blastx/tblastn/tblastx");
