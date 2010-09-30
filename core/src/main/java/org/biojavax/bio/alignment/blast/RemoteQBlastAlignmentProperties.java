@@ -23,6 +23,8 @@ package org.biojavax.bio.alignment.blast;
 
 import java.util.HashMap;
 import java.util.Set;
+import java.util.Arrays;
+
 import org.biojava.bio.BioException;
 import org.biojavax.bio.alignment.RemotePairwiseAlignmentProperties;
 
@@ -73,7 +75,8 @@ public class RemoteQBlastAlignmentProperties implements
 //				isValid = true;
 //			}
 //		}
-		if(java.util.Arrays.binarySearch(blastPr,program)>=0){
+
+		if(binarySearch(blastPr,program)>=0){
 			isValid = true;			
 		}
 		
