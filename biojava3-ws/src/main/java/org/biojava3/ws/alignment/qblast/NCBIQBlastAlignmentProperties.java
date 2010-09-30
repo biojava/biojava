@@ -19,13 +19,13 @@
  *
  */
 
-package org.biojavax.bio.alignment.blast;
+package org.biojava3.ws.alignment.qblast;
 
 import java.util.HashMap;
 import java.util.Set;
 import java.util.Arrays;
 
-import org.biojavax.bio.alignment.RemotePairwiseAlignmentProperties;
+import org.biojava3.ws.alignment.RemotePairwiseAlignmentProperties;
 
 /**
  * 
@@ -66,7 +66,7 @@ public class NCBIQBlastAlignmentProperties implements
 	public void setBlastProgram(String program) throws Exception {
 
 		boolean isValid = false;
-		String[] blastPr = { "blastn", "blastp", "blastx", "tblastn", "tblastx" };
+		String[] blastPr = new String []{ "blastn", "blastp", "blastx", "tblastn", "tblastx" };
 
 //		for (int i = 0; i < blastPr.length; i++) {
 //			if (program == blastPr[i]) {
@@ -75,7 +75,7 @@ public class NCBIQBlastAlignmentProperties implements
 //			}
 //		}
 		
-		if(searchBinary(blastPr,program)>=0){
+		if(Arrays.binarySearch(blastPr,program)>=0){
 			isValid = true;			
 		}
 		

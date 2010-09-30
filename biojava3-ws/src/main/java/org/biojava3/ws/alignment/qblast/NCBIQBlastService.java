@@ -18,7 +18,7 @@
  *      http://www.biojava.org/
  *
  */
-package org.biojavax.bio.alignment.blast;
+package org.biojava3.ws.alignment.qblast;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -32,9 +32,9 @@ import java.util.HashMap;
 
 import org.biojavax.bio.seq.RichSequence;
 
-import org.biojavax.bio.alignment.RemotePairwiseAlignmentProperties;
-import org.biojavax.bio.alignment.RemotePairwiseAlignmentService;
-import org.biojavax.bio.alignment.RemotePairwiseAlignmentOutputProperties;
+import org.biojava3.ws.alignment.RemotePairwiseAlignmentProperties;
+import org.biojava3.ws.alignment.RemotePairwiseAlignmentService;
+import org.biojava3.ws.alignment.RemotePairwiseAlignmentOutputProperties;
 
 /**
  * NCBIQBlastService - A simple way of submitting BLAST request to the QBlast
