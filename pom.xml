@@ -215,7 +215,6 @@
 		<module>alignment</module>
 		<module>blast</module>
 		<module>das</module>
-		<module>sequence</module>
 		<module>sequencing</module>
 		<module>phylo</module>
 		<module>biosql</module>
