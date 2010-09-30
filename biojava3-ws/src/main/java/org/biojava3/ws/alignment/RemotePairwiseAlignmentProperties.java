@@ -24,8 +24,6 @@ import java.io.Serializable;
 import java.util.Properties;
 import java.util.Set;
 
-import org.biojava.bio.BioException;
-
 /**
  * RemotePairwiseAlignmentProperties is a interface that contains the barest of 
  * methods for setting and getting Alignment properties.
@@ -49,9 +47,9 @@ public interface RemotePairwiseAlignmentProperties extends Serializable{
      * 
      * @param key :a String with the required key for this map.
      * @return a String with the value associated with this key
-     * @throws BioException if key is not in the map of output options.
+     * @throws Exception if key is not in the map of output options.
      */
-	public String getAlignmentOption(String key) throws BioException;
+	public String getAlignmentOption(String key) throws Exception;
 	
 	/**
 	 * Method to set the value for a specific alignment parameter using a key to store in a map.

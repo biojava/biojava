@@ -24,8 +24,6 @@ package org.biojava3.ws.alignment;
 import java.io.Serializable;
 import java.util.Set;
 
-import org.biojava.bio.BioException;
-
 /**
  * RemotePairwiseAlignmentOutputProperties: the simplest representation of an object capable of holding 
  * output formatting informations to be fed to a RemotePairwiseAlignmentService-implemented object.
@@ -46,9 +44,9 @@ public interface RemotePairwiseAlignmentOutputProperties extends Serializable{
      * 
      * @param key :a String with the required key for this map.
      * @return a String with the value associated with this key
-     * @throws BioException if key is not in the map of output options.
+     * @throws Exception if key is not in the map of output options.
      */
- 	public String getOutputOption(String key) throws BioException;
+ 	public String getOutputOption(String key) throws Exception;
 
 	
 	/**

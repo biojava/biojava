@@ -22,7 +22,6 @@ package org.biojava3.ws.alignment;
 
 import java.io.InputStream;
 
-import org.biojava.bio.BioException;
 import org.biojavax.bio.seq.RichSequence;
 
 /**
@@ -40,17 +39,17 @@ public interface RemotePairwiseAlignmentService {
 	/**
 	 * Doing the actual analysis on the instantiated service using specified parameters and the RichSequence object
 	 * 
-	 * @throws BioException
+	 * @throws Exception
 	 */
-	public String sendAlignmentRequest(RichSequence rs, RemotePairwiseAlignmentProperties rpa) throws BioException;
+	public String sendAlignmentRequest(RichSequence rs, RemotePairwiseAlignmentProperties rpa) throws Exception;
 	
 	/**
 	 * Doing the actual analysis on the instantiated service using specified parameters on the string representation
 	 * of the Sequence object
 	 * 
-	 * @throws BioException
+	 * @throws Exception
 	 */
-	public String sendAlignmentRequest(String str, RemotePairwiseAlignmentProperties rpa) throws BioException;
+	public String sendAlignmentRequest(String str, RemotePairwiseAlignmentProperties rpa) throws Exception;
 	
 	/**
 	 * Simple method to check if the specified request has been completed by the service used.
@@ -58,9 +57,9 @@ public interface RemotePairwiseAlignmentService {
 	 * @param id :an ID for an alignment request 
 	 * @param present :a long integer value representing the actual time  
 	 * @return a boolean value telling if this requestID has been completed or not.
-	 * @throws BioException if the ID does not exist.
+	 * @throws Exception if the ID does not exist.
 	 */
-	public boolean isReady(String id,long present) throws BioException;
+	public boolean isReady(String id,long present) throws Exception;
 	
 	/**
 	 * Getting the actual alignment results from this instantiated service for a given ID with specific
@@ -69,7 +68,7 @@ public interface RemotePairwiseAlignmentService {
 	 * @param rid :a String with the request ID for this single alignment run
 	 * @param out :a RemotePairwiseAlignmentOutputProperties with the specific output instructions.
 	 * @return : an <code>InputStream</code> with the actual alignment results
-	 * @throws BioException
+	 * @throws Exception
 	 */
-	public InputStream getAlignmentResults(String rid,RemotePairwiseAlignmentOutputProperties out) throws BioException;
+	public InputStream getAlignmentResults(String rid,RemotePairwiseAlignmentOutputProperties out) throws Exception;
 }
