@@ -69,7 +69,9 @@ public class HetatomImpl implements Group,Serializable {
 	/* pdb numbering. */
 	protected String pdb_code ;
 
-	protected List<Atom> atoms ;
+        protected ResidueNumber residueNumber;
+
+        protected List<Atom> atoms ;
 
 	Chain parent;
 
@@ -77,14 +79,15 @@ public class HetatomImpl implements Group,Serializable {
 	Map<String,Atom> atomSingleCharLookup = new HashMap<String,Atom>();
 	
 	ChemComp chemComp ;
+
 	/* Construct a Hetatom instance. */
 	public HetatomImpl() {
 		super();
 
-
 		pdb_flag = false;
 		pdb_name = null ;
 		pdb_code = null ;
+                residueNumber = null;
 		atoms    = new ArrayList<Atom>();
 		properties = new HashMap<String,Object>();
 		parent = null;
@@ -120,14 +123,18 @@ public class HetatomImpl implements Group,Serializable {
 	 * Returns the PDBCode.
 	 * @see #setPDBCode
 	 * @return a String representing the PDBCode value
+         * @deprecated replaced by #getSeqNum
 	 */
+        @Deprecated
 	public String getPDBCode() {
 		return pdb_code;
 	}
 
 	/** set the PDB code.
 	 * @see #getPDBCode
+         * @deprecated replaced by #setSeqNum
 	 */
+        @Deprecated
 	public void setPDBCode(String pdb) {
 		pdb_code = pdb ;
 	}
@@ -342,7 +349,7 @@ public class HetatomImpl implements Group,Serializable {
      GLY does not have CB (unless we would calculate some artificially
      </p>
 
-     Example: 1DW9 chain A first group is a Selenomethionine, provided as HETATM, but here returns true.
+     Example: 1DW9 parent A first group is a Selenomethionine, provided as HETATM, but here returns true.
      <pre>
      HETATM    1  N   MSE A   1      11.720  20.973   1.584  0.00  0.00           N
      HETATM    2  CA  MSE A   1      10.381  20.548   1.139  0.00  0.00           C
@@ -435,6 +442,7 @@ public class HetatomImpl implements Group,Serializable {
 		HetatomImpl n = new HetatomImpl();
 		n.setPDBFlag(has3D());
 		n.setPDBCode(getPDBCode());
+                n.setResidueNumber(residueNumber);
 		try {
 			n.setPDBName(getPDBName());
 		} catch (PDBParseException e) {
@@ -495,6 +503,134 @@ public class HetatomImpl implements Group,Serializable {
 
 	}
 
+    /**
+     * {@inheritDoc}
+     */
+    public void setChain(Chain chain) {
+        this.parent = chain;
+        //TODO: setChain(), getChainId() and ResidueNumber.set/getChainId() are
+        //duplicating functionality at present and could give different values.
+        if (residueNumber != null) {
+            residueNumber.setChainId(chain.getName());
+        }
+        
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public Chain getChain() {
+        return parent;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public String getChainId() {
+        if (parent == null) {
+            return "";
+        }
+        return parent.getName();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public ResidueNumber getResidueNumber() {
+        //horrible, nasty double implementation here to cater for the old get/setPDBCode
+//        if (this.chainId != null && this.residueNumber != null && this.insCode != null && this.residueNumber == null) {
+//            residueNumber = new ResidueNumber(this.chainId, this.resNum, this.insCode);
+//            return residueNumber;
+//        }
+//        if (resNum.getSeqNum() == null && resNum.getInsCode() == null) {
+//            //using the old style get/setPdbcode so we need to make new ones from the pdbCode
+////            System.out.println("Please remove depricated use of get/setPDBCode for any Group instances.");
+//            if (pdb_code == null ) {
+//
+//            }
+//            // this should be refactored out of BJ3 and replaced with newer implementation based on setGroupId
+//            residueNumber = new ResidueNumber();
+//            Integer resNum = null;
+//            String icode = "";
+////            System.out.println("pdb_code: '" + pdb_code + "'");
+//            if (!pdb_code.endsWith("\\d")){
+//
+//                resNum = Integer.parseInt(pdb_code.split("\\D")[0]);
+//                icode = pdb_code.split("\\D")[1];
+////                System.out.println("insertionfound: " + icode);
+////                System.out.println("resNum: " + resNum);
+//                String [] posAndIcode = pdb_code.split("\\d");
+//                for (int i = 0; i < posAndIcode.length; i++) {
+//                    String string = posAndIcode[i];
+//                    System.out.println(string);
+//                }
+//                icode = posAndIcode[posAndIcode.length - 1];
+////                System.out.println("icode: " + icode);
+//            } else {
+//                resNum = Integer.parseInt(pdb_code);
+//            }
+//            if (parent != null) {
+//                chainId = parent.getName();
+//            }
+//            residueNumber.setChainId(chainId);
+//            residueNumber.setInsCode(icode);
+//            residueNumber.setSeqNum(resNum);
+//            //set the residueNumber here if there isn't one already
+//            this.resNum = residueNumber;
+//
+//        }
+            // this should be refactored out of BJ3 and replaced with newer implementation based on setGroupId
+        if (residueNumber == null) {
+            //using the old style get/setPdbcode so we need to make new ones from the pdbCode
+//            System.out.println("Please remove depricated use of get/setPDBCode for any Group instances.");
+            if (pdb_code == null ) {
+
+            }
+            //set the residueNumber here if there isn't one already
+            residueNumber = new ResidueNumber();
+            Integer resNum = null;
+            String icode = "";
+//            System.out.println("pdb_code: '" + pdb_code + "'");
+            if (!pdb_code.endsWith("\\d")){
+
+                resNum = Integer.parseInt(pdb_code.split("\\D")[0]);
+                icode = pdb_code.split("\\D")[1];
+//                System.out.println("insertionfound: " + icode);
+//                System.out.println("resNum: " + resNum);
+                String [] posAndIcode = pdb_code.split("\\d");
+                for (int i = 0; i < posAndIcode.length; i++) {
+                    String string = posAndIcode[i];
+                    System.out.println(string);
+                }
+                icode = posAndIcode[posAndIcode.length - 1];
+//                System.out.println("icode: " + icode);
+            } else {
+                resNum = Integer.parseInt(pdb_code);
+            }
+            String chainId = null;
+            if (parent != null) {
+                chainId = parent.getName();
+            }
+            residueNumber.setChainId(chainId);
+            residueNumber.setInsCode(icode);
+            residueNumber.setSeqNum(resNum);
+
+        }
+        else {
+            //all good new BJ3 compliant code - return the existing residueNumber
+            return residueNumber;
+        }
+//        System.out.println("Made resNum: " + residueNumber);
+        return residueNumber;
+    }
 
 
+    public void setResidueNumber(ResidueNumber residueNumber) {
+        this.residueNumber = residueNumber;
+    }
+
+    public void setResidueNumber(String chainId, Integer resNum, String iCode) {
+        this.residueNumber = new ResidueNumber(chainId, resNum, iCode);
+    }
+    
 }

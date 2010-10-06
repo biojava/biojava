@@ -37,15 +37,21 @@ public class SiteTest {
             //SITE     1 AC1  6 ARG H 221A LYS H 224  HOH H 403  HOH H 460
             //SITE     2 AC1  6 HOH H 464  HOH H 497
             //groups for site CAT
+            Chain chain = new ChainImpl();
+            chain.setName("H");
             Group his57 = new AminoAcidImpl();
-            his57.setPDBCode("H  57");
+//            his57.setPDBCode("57");
+            his57.setResidueNumber("H", 57, " ");
             his57.setPDBName("HIS");
+            his57.setChain(chain);
             Group asp102 = new AminoAcidImpl();
-            asp102.setPDBCode("H 102");
+            asp102.setResidueNumber("H", 102, " ");
             asp102.setPDBName("ASP");
+            asp102.setChain(chain);
             Group ser195 = new AminoAcidImpl();
-            ser195.setPDBCode("H 195");
+            ser195.setResidueNumber("H", 195, " ");
             ser195.setPDBName("SER");
+            ser195.setChain(chain);
             List<Group> catSiteGroups = new ArrayList<Group>();
             catSiteGroups.add(his57);
             catSiteGroups.add(asp102);
@@ -58,24 +64,30 @@ public class SiteTest {
             catSite.setDescription("ACTIVE SITE");
             //groups for site AC1
             Group arg221a = new AminoAcidImpl();
-            arg221a.setPDBCode("H 221A");
+            arg221a.setResidueNumber("H", 221, "A");
             arg221a.setPDBName("ARG");
+            arg221a.setChain(chain);
             Group lys224 = new AminoAcidImpl();
-            lys224.setPDBCode("H 224");
+            lys224.setResidueNumber("H", 224, " ");
             lys224.setPDBName("LYS");
+            lys224.setChain(chain);
             Group hoh403 = new HetatomImpl();
-            hoh403.setPDBCode("H 403");
+            hoh403.setResidueNumber("H", 403, " ");
             hoh403.setPDBName("HOH");
+            hoh403.setChain(chain);
             Group hoh460 = new HetatomImpl();
-            hoh460.setPDBCode("H 460");
+            hoh460.setResidueNumber("H", 460, " ");
             hoh460.setPDBName("HOH");
+            hoh460.setChain(chain);
             Group hoh464 = new HetatomImpl();
-            hoh464.setPDBCode("H 464");
+            hoh464.setResidueNumber("H", 464, " ");
             hoh464.setPDBName("HOH");
+            hoh464.setChain(chain);
             Group hoh497 = new HetatomImpl();
-            hoh497.setPDBCode("H 497");
+            hoh497.setResidueNumber("H", 497, " ");
             hoh497.setPDBName("HOH");
-
+            hoh497.setChain(chain);
+            
             bindingSiteGroups = new ArrayList<Group>();
             
             bindingSiteGroups.add(arg221a);
@@ -121,6 +133,9 @@ public class SiteTest {
         String expResult =  "SITE     1 AC1  6 ARG H 221A LYS H 224  HOH H 403  HOH H 460                    " + newline +
                             "SITE     2 AC1  6 HOH H 464  HOH H 497                                          "+ newline;
         String result = bindingSite.toPDB();
+//        System.out.println("Expected:");
+//        System.out.println(expResult);
+//        System.out.println("Got:");
 //        System.out.println(result);
         assertEquals(expResult, result);
     }
@@ -136,6 +151,9 @@ public class SiteTest {
                             "SITE     2 AC1  6 HOH H 464  HOH H 497                                          "+ newline;
         bindingSite.toPDB(buf);
         String result = buf.toString();
+//        System.out.println("Expected:");
+//        System.out.println(expResult);
+//        System.out.println("Got:");
 //        System.out.println(result);
         assertEquals(expResult, result);
     }
@@ -188,11 +206,45 @@ public class SiteTest {
      * Test of getGroups method, of class Site.
      */
     @Test
-    public void testGetResidues() {
+    public void testGetGroups() {
 //        System.out.println("getGroups");
         List expResult = bindingSiteGroups;
         List result = bindingSite.getGroups();
         assertEquals(expResult, result);
     }
 
+    /**
+     * Test to see how the groups have been set in the Groups list
+     */
+    @Test
+    public void testGroup() {
+        List<Group> result = bindingSite.getGroups();
+        Group arg221 = result.get(0);
+        ResidueNumber testResNum = new ResidueNumber("H", 221, "A");
+//        testResNum.setChainId("H");
+//        testResNum.setSeqNum(221);
+//        testResNum.setInsCode("A");
+//        System.out.println(arg221);
+        assertEquals(testResNum, arg221.getResidueNumber());
+        //test the chainId is also set
+        assertEquals("H", arg221.getChainId());
+
+
+        Group hoh403 = null;
+
+        for (Group group : result) {
+            if (group.getResidueNumber().getSeqNum() == 403) {
+                hoh403 = group;
+            }
+        }
+
+        ResidueNumber testResNum2 = new ResidueNumber("H", 403, " ");
+//        testResNum2.setChainId("H");
+//        testResNum2.setSeqNum(403);
+//        testResNum2.setInsCode("");
+//        System.out.println(hoh403);
+        assertEquals(testResNum2, hoh403.getResidueNumber());
+        //test the chaiId is also set
+        assertEquals("H", hoh403.getChainId());
+    }
 }

@@ -27,6 +27,7 @@ package org.biojava.bio.structure;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
+import junit.framework.Test;
 
 import junit.framework.TestCase;
 
@@ -38,10 +39,12 @@ import org.biojava.bio.structure.io.mmcif.SimpleMMcifParser;
 
 public class Test1a4w extends TestCase{
 
+    private static Structure structure = null;
+
 	public void test1a4wPDBFile()
 	{
 
-		Structure structure = null;
+//		structure = null;
 		try {
 			InputStream inStream = this.getClass().getResourceAsStream("/1a4w.pdb");
 			assertNotNull(inStream);
@@ -144,9 +147,9 @@ public class Test1a4w extends TestCase{
 	public void testChemComps(){
 		try {
 			
-			Structure s = TmpAtomCache.cache.getStructure("1a4w");
-			
-			assertTrue(s.getChains().size() == 3);
+                    Structure s = TmpAtomCache.cache.getStructure("1a4w");
+
+                    assertTrue(s.getChains().size() == 3);
 			
 			Chain c2 = s.getChain(1);
 			assertTrue(c2.getName().equals("H"));
@@ -182,4 +185,60 @@ public class Test1a4w extends TestCase{
 
 	}
 
+        public void testSiteGroups(){
+		try {
+
+//			Structure s = TmpAtomCache.cache.getStructure("1a4w");
+
+//                    test1a4wPDBFile();
+                    Structure s = structure;
+                    for (Chain chain : s.getChains()) {
+                        System.out.println("Chain: " + chain.getName());
+                    }
+                    Chain c2 = s.getChain(1);
+                    assertTrue(c2.getName().equals("H"));
+
+                    if (s == null) {
+                        System.out.println("No structure set");
+                    }
+			List<Site> sites = s.getSites();
+                        System.out.println("sites " + sites);
+                        assertEquals(7, sites.size());
+
+			boolean noWater = true;
+			boolean darPresent = false;
+			boolean glyPresent = false;
+			Site testSite = null;
+                        for (Site site : sites) {
+                            if (site.getSiteID().equals("AC3")) {
+                                testSite = site;
+                            for ( Group g : site.getGroups()){
+                                assertEquals(c2, g.getChain());
+                                String pdbName = g.getPDBName();
+                                if ( pdbName.equals("DAR")) {
+                                        darPresent = true;
+                                        System.out.println("darPresent");
+                                }
+                                else if ( pdbName.equals("GLY"))
+                                        glyPresent = true;
+                                else if ( pdbName.equals("H2O"))
+                                        noWater = false;
+                                }
+                            }
+                        }
+
+
+			assertTrue("Found water in site list!", noWater );
+
+			assertTrue("Did not find DAR in site list!", darPresent);
+
+			assertTrue("Did not find GLY in site list!", glyPresent);
+
+			//System.out.println(ligands);
+			assertEquals("Did not find the correct nr of ligands in chain! " , 8, testSite.getGroups().size());
+		} catch (Exception e){
+			fail(e.getMessage());
+		}
+
+	}
 }

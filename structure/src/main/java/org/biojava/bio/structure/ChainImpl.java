@@ -179,7 +179,7 @@ public class ChainImpl implements Chain, Serializable {
     */
    public void addGroup(Group group) {
 
-      group.setParent(this);
+      group.setChain(this);
 
       groups.add(group);
 
@@ -284,7 +284,7 @@ public class ChainImpl implements Chain, Serializable {
     */
    public void setAtomGroups(List<Group> groups){
       for (Group g:groups){
-         g.setParent(this);
+         g.setChain(this);
       }
       this.groups = groups;
    }
@@ -625,7 +625,7 @@ public class ChainImpl implements Chain, Serializable {
     */
    public void setSeqResGroups(List<Group> groups){
       for (Group g: groups){
-         g.setParent(this);
+         g.setChain(this);
       }
       this.seqResGroups = groups;
    }

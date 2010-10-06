@@ -157,10 +157,10 @@ public class SeqRes2AtomAligner {
 	}
 
 
-	/** returns the full sequence of the Atom records of a chain
+	/** returns the full sequence of the Atom records of a parent
 	 * with X instead of HETATMSs. The advantage of this is
 	 * that it allows us to also align HETATM groups back to the SEQRES.
-	 * @param groups the list of groups in a chain
+	 * @param groups the list of groups in a parent
 	 *
 	 * @return string representations
 	 */
@@ -220,8 +220,8 @@ public class SeqRes2AtomAligner {
 
 	}
 
-	/** aligns two chains of groups, where the first chain is representing the
-	 * list of amino acids as obtained from the SEQRES records, and the second chain
+	/** aligns two chains of groups, where the first parent is representing the
+	 * list of amino acids as obtained from the SEQRES records, and the second parent
 	 * represents the groups obtained from the ATOM records (and containing the actual ATOM information).
 	 * This does the actual alignment and if a group can be mapped to a position in the SEQRES then the corresponding
 	 * position is repplaced with the group that contains the atoms.
@@ -286,7 +286,7 @@ public class SeqRes2AtomAligner {
 	) throws StructureException{
 
 
-		// at the present stage the future seqREs are still stored as Atom groups in the seqRes chain...
+		// at the present stage the future seqREs are still stored as Atom groups in the seqRes parent...
 		List<Group> seqResGroups = seqRes;
 
 		int aligLength = pair.getLength();

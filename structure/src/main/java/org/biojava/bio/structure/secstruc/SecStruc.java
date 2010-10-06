@@ -243,7 +243,7 @@ public class SecStruc {
                } catch (PDBParseException e){
                   e.printStackTrace();
                }
-               sg.setParent(g.getParent());
+               sg.setParent(g.getChain());
 
                try {
 

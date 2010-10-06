@@ -92,7 +92,7 @@ public class MyTestHelper
          Atom[] ca3 = new Atom[ca2.length];
          for (int i = 0 ; i < ca2.length; i++){
             Group g = (Group)ca2[i].getParent().clone();
-            g.setParent(ca2[i].getParent().getParent());
+            g.setChain(ca2[i].getParent().getChain());
             ca3[i] = g.getAtom(StructureTools.caAtomName);
          }
 

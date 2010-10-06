@@ -25,6 +25,7 @@
 package org.biojava.bio.structure;
 
 import java.io.BufferedReader;
+import java.io.InputStream;
 import java.io.StringReader;
 import java.util.Map;
 
@@ -242,9 +243,10 @@ public class PDBFileParserTest extends TestCase {
 
         public void testSITE() {
                         // from 1a4w:
-			String t =
-                                "REMARK 800                                                                      " + newline +
-                                "REMARK 800 SITE                                                                 " + newline +
+			String remark800Test =
+                                //don't add these here - they are present in the PDB file but are added in the structure.toPDB()
+//                                "REMARK 800                                                                      " + newline +
+//                                "REMARK 800 SITE                                                                 " + newline +
                                 "REMARK 800 SITE_IDENTIFIER: CAT                                                 " + newline +
                                 "REMARK 800 EVIDENCE_CODE: UNKNOWN                                               " + newline +
                                 "REMARK 800 SITE_DESCRIPTION: ACTIVE SITE                                        " + newline +
@@ -265,7 +267,8 @@ public class PDBFileParserTest extends TestCase {
                                 "REMARK 800 SITE_DESCRIPTION: BINDING SITE FOR RESIDUE 2EP H 375                 " + newline +
                                 "REMARK 800 SITE_IDENTIFIER: AC6                                                 " + newline +
                                 "REMARK 800 EVIDENCE_CODE: SOFTWARE                                              " + newline +
-                                "REMARK 800 SITE_DESCRIPTION: BINDING SITE FOR RESIDUE KTH H 377                 " + newline +
+                                "REMARK 800 SITE_DESCRIPTION: BINDING SITE FOR RESIDUE KTH H 377                 " + newline;
+                        String sitesTest =
                                 "SITE     1 CAT  3 HIS H  57  ASP H 102  SER H 195                               " + newline +
                                 "SITE     1 AC1  6 ARG H 221A LYS H 224  HOH H 403  HOH H 460                    " + newline +
                                 "SITE     2 AC1  6 HOH H 464  HOH H 497                                          " + newline +
@@ -278,14 +281,50 @@ public class PDBFileParserTest extends TestCase {
                                 "SITE     1 AC5  4 TRP H  60D LEU H  99  DAR H 350  KTH H 377                    " + newline +
                                 "SITE     1 AC6  5 HIS H  57  TRP H  60D LYS H  60F 2EP H 375                    " + newline +
                                 "SITE     2 AC6  5 HOH H 532                                                     " + newline;
-
-			BufferedReader br = new BufferedReader(new StringReader(t));
+                        InputStream inStream = this.getClass().getResourceAsStream("/1a4w.pdb");
 		try {
-			Structure s = parser.parsePDBFile(br);
+			Structure s = parser.parsePDBFile(inStream);
 //                        System.out.print(s.getSites());
-			String pdb = s.toPDB();
+                        Chain chain = new ChainImpl();
+                        chain.setName("H");
+                        for (Site site : s.getSites()) {
+                            System.out.println("Site: " + site.getSiteID());
+                            for (Group group : site.getGroups()) {
+                                //manually add the chain as this is added later once the ATOM recrds are parsed usually
+                                group.setChain(chain);
+                                 System.out.println("    PDBName: " + group.getPDBName());
+                                 System.out.println("    PDBCode: " + group.getPDBCode());
+                                 System.out.println("    Type: " + group.getType());
+                                 System.out.println("    Parent: " + group.getChainId());
+                            }
+
+                        }
+                        StringBuilder remark800 = new StringBuilder();
+                        StringBuilder sites = new StringBuilder();
+
+                        for (Site site : s.getSites()) {
+                            remark800.append(site.remark800toPDB());
+                            sites.append(site.toPDB());
+                        }
+			
 //                        System.out.println("testSITE: " + newline  + pdb);
-			assertTrue("the created PDB file does not match the input file", pdb.equals(t));
+                        if (!remark800.toString().equals(remark800Test)) {
+                            System.out.println("Expected:");
+                            System.out.println(remark800Test);
+                            System.out.println("Got:");
+                            System.out.println(remark800.toString());
+                        }
+                        assertTrue("the created PDB REMARK800 section does not match the input file", remark800.toString().equals(remark800Test));
+
+                        if (!sites.toString().equals(sitesTest)) {
+                            System.out.println("Expected:");
+                            System.out.println(sitesTest);
+                            System.out.println("Got:");
+                            System.out.println(sites.toString());
+                        }
+                        assertTrue("the created PDB SITE section does not match the input file", sites.toString().equals(sitesTest));
+
+			
 		} catch (Exception e){
 			fail(e.getMessage());
 		}

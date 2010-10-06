@@ -31,7 +31,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -39,7 +38,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
-import java.util.TreeMap;
 import java.util.logging.Level;
 
 import java.util.logging.Logger;
@@ -58,7 +56,7 @@ import org.biojava.bio.structure.Compound;
 import org.biojava.bio.structure.JournalArticle;
 import org.biojava.bio.structure.NucleotideImpl;
 import org.biojava.bio.structure.PDBHeader;
-import org.biojava.bio.structure.PDBResidueNumber;
+import org.biojava.bio.structure.ResidueNumber;
 import org.biojava.bio.structure.SSBond;
 import org.biojava.bio.structure.Site;
 import org.biojava.bio.structure.Structure;
@@ -165,6 +163,8 @@ public class PDBFileParser  {
 	private List<String> journalLines = new ArrayList<String>();
 	private List<DBRef> dbrefs;
         private Map<String, Site> siteMap = new LinkedHashMap<String, Site>();
+        private Map<String, List<ResidueNumber>> siteToResidueMap = new LinkedHashMap<String, List<ResidueNumber>>();
+
 
 	// for parsing COMPOUND and SOURCE Header lines
 	private int molTypeCounter = 1;
@@ -320,7 +320,7 @@ public class PDBFileParser  {
 		return s ;
 	}
 
-	/** initiate new group, either Hetatom, Nucleotide, or AminoAcid */
+	/** initiate new resNum, either Hetatom, Nucleotide, or AminoAcid */
 	private Group getNewGroup(String recordName,Character aminoCode1, String aminoCode3) {
 
 		if ( params.isLoadChemCompInfo() ){
@@ -355,7 +355,7 @@ public class PDBFileParser  {
 				group = new HetatomImpl();
 			}
 		}
-//		System.out.println("new group type: "+ group.getType() );
+//		System.out.println("new resNum type: "+ resNum.getType() );
 		return  group ;
 	}
 
@@ -783,7 +783,7 @@ public class PDBFileParser  {
 			lengthCheck = Integer.parseInt(newLength);
 		}
 
-		//String residueNumber = line.substring(22, 27).trim() ;
+		//String resNum = line.substring(22, 27).trim() ;
 		StringTokenizer subSequenceResidues = new StringTokenizer(subSequence);
 
 		Character aminoCode1 = null;
@@ -823,7 +823,7 @@ public class PDBFileParser  {
 				AminoAcid aa = (AminoAcid)current_group;
 				aa.setRecordType(AminoAcid.SEQRESRECORD);
 			}
-			// add the current group to the new chain.
+			// add the current resNum to the new chain.
 			current_chain.addGroup(current_group);
 
 		}
@@ -1451,7 +1451,10 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 	/**
 	 Handler for
 	 ATOM Record Format
+         *
 	 <pre>
+         ATOM      1  N   ASP A  15     110.964  24.941  59.191  1.00 83.44           N
+         *
 	 COLUMNS        DATA TYPE       FIELD         DEFINITION
 	 ---------------------------------------------------------------------------------
 	 1 -  6        Record name     "ATOM  "
@@ -1533,8 +1536,20 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 		// process group data:
 		// join residue numbers and insertion codes together
 		String recordName     = line.substring (0, 6).trim ();
-		String residueNumber  = line.substring(22,27).trim();
+                String pdbCode = line.substring(22,27).trim();
 		String groupCode3     = line.substring(17,20);
+                // pdbCode is the old way of doing things...it's a concatenation
+                //of resNum and iCode which are now defined explicitly
+                String resNum  = line.substring(22,26).trim();
+                String iCode = line.substring(26,27);
+
+                ResidueNumber residueNumber = new ResidueNumber(chain_id, Integer.valueOf(resNum), iCode);
+
+                //recordName      groupCode3
+                //|                |    resNum
+                //|                |    |   iCode
+                //|     |          | |  |   ||
+                //ATOM      1  N   ASP A  15     110.964  24.941  59.191  1.00 83.44           N
 
 		Character aminoCode1 = null;
 
@@ -1553,8 +1568,11 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 		if (current_group == null) {
 
 			current_group = getNewGroup(recordName,aminoCode1,groupCode3);
-			current_group.setPDBCode(residueNumber);
+                        current_group.setPDBCode(pdbCode);
 			current_group.setPDBName(groupCode3);
+                        current_group.setResidueNumber(residueNumber);
+//                        System.out.println("Made new group: " + groupCode3 + " " + resNum + " " + iCode);
+
 		}
 
 
@@ -1562,22 +1580,24 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 			//System.out.println("end of chain: "+current_chain.getName()+" >"+chain_id+"<");
 
 			current_group = getNewGroup(recordName,aminoCode1,groupCode3);
-
-			current_group.setPDBCode(residueNumber);
-			current_group.setPDBName(groupCode3);			
+			current_group.setPDBCode(pdbCode);
+			current_group.setPDBName(groupCode3);
+                        current_group.setResidueNumber(residueNumber);
+//                        System.out.println("Made new start of chain group:  " + groupCode3 + " " + resNum + " " + iCode);
 		}
 
 
 		// check if residue number is the same ...
 		// insertion code is part of residue number
-		if ( ! residueNumber.equals(current_group.getPDBCode())) {
-			//System.out.println("end of residue: "+current_group.getPDBCode()+" "+residueNumber);
+		if ( ! residueNumber.equals(current_group.getResidueNumber())) {
+//			System.out.println("end of residue: "+current_group.getPDBCode()+" "+pdbCode);
 			current_chain.addGroup(current_group);
 
 			current_group = getNewGroup(recordName,aminoCode1,groupCode3);
-
-			current_group.setPDBCode(residueNumber);
+			current_group.setPDBCode(pdbCode);
 			current_group.setPDBName(groupCode3);
+                        current_group.setResidueNumber(residueNumber);
+//                        System.out.println("Made new group:  " + groupCode3 + " " + resNum + " " + iCode);
 
 		}
 
@@ -1971,13 +1991,13 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 	 * 1 - 6	Record name 	"SITE "
 	 * 8 - 10 	Integer 		seqNum 		Sequence number.
 	 * 12 - 14 	LString(3)		siteID 		Site name.
-	 * 16 - 17 	Integer 		numRes 		Number of residues that compose the site.
+	 * 16 - 17 	Integer 		numRes 		Number of residues that compose the siteResidues.
 	 * 19 - 21 	Residue name	resName1	Residue name for first residue that
-	 * 										creates the site.
-	 * 23 		Character 		chainID1 	Chain identifier for first residue of site.
+	 * 										creates the siteResidues.
+	 * 23 		Character 		chainID1 	Chain identifier for first residue of siteResidues.
 	 * 24 - 27 	Integer 		seq1 		Residue sequence number for first residue
-	 * 										of the site.
-	 * 28 		AChar 			iCode1 		Insertion code for first residue of the site.
+	 * 										of the siteResidues.
+	 * 28 		AChar 			iCode1 		Insertion code for first residue of the siteResidues.
 	 *
 	 * example:
 	 *          1         2         3         4         5         6         7         8
@@ -1998,24 +2018,24 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 	private void pdb_SITE_Handler(String line){
              boolean siteDebug = false;
 
+           //  make a map of: SiteId to List<ResidueNumber>
                 if (DEBUG || siteDebug) {
                     System.out.println("Site Line:"+line);
                 }
 
              String siteID = line.substring(11, 14);
-                //fetch the site from the map
-                Site site = siteMap.get(siteID);
+                //fetch the siteResidues from the map
+                List<ResidueNumber> siteResidues = siteToResidueMap.get(siteID);
                 
-                //if the site doesn't yet exist, make a new one.
-		if (site == null || !siteID.equals(site.getSiteID())) {
-                    site = new Site(siteID, new ArrayList<Group>());
-                    siteMap.put(site.getSiteID(), site);
+                //if the siteResidues doesn't yet exist, make a new one.
+		if (siteResidues == null |! siteToResidueMap.containsKey(siteID)){
+                    siteResidues = new ArrayList<ResidueNumber>();
+                    siteToResidueMap.put(siteID, siteResidues);
                     if (DEBUG || siteDebug) {
-                        System.out.println("New Site made: " + site);
+                        System.out.println(String.format("New Site made: %s %s", siteID,  siteResidues));
                         System.out.println("Now made " + siteMap.size() + " sites");
                     }
 		}
-
 
                 if (DEBUG || siteDebug) {
                     System.out.println(String.format("SiteId: %s", siteID));
@@ -2025,13 +2045,15 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
                 //line.substring(18) = 'ARG H 221A LYS H 224  HOH H 403  HOH H 460'
                 line = line.substring(18);
                 String groupString = null;
-                //keep iterating through chunks of 10 characters - these are the groups in the site
+                //groupString = 'ARG H 221A'
+                //keep iterating through chunks of 10 characters - these are the groups in the siteResidues
                 while (!(groupString = line.substring(0, 10)).equals("          ")) {
                     //groupstring: 'ARG H 221A'
                     if (DEBUG || siteDebug) {
                         System.out.println("groupString: '" + groupString + "'");
                     }
                     //set the residue name
+                    //residueName = 'ARG'
                     String residueName = groupString.substring(0, 3);
                     Character aminoCode1 = StructureTools.get1LetterCode(residueName);
                     if (aminoCode1 != null) {
@@ -2041,29 +2063,39 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
                     }
 
                     //this is already in the right format, so no need to fiddle with it...
-                    String pdbCode = groupString.substring(4, 10).trim();
+                    //pdbCode = 'H 221A'
+//                    String pdbCode = groupString.substring(4, 10).trim();
+                    String chainId = groupString.substring(4, 5);
+                    Integer resNum = Integer.valueOf(groupString.substring(5, 9).trim());
+                    String insCode = groupString.substring(9, 10);
+                    //set insCode to null as a measure to prevent storing thousands of empty Strings
+                    //- the empty value is returned using Group.getInsCode() 
+//                    if (insCode.equals(" ")) {
+//                        insCode = null;
+//                    }
                     if (DEBUG || siteDebug) {
-                        System.out.println(String.format("Site: %s: '%s %s'", siteID, residueName, pdbCode));
+                        System.out.println(String.format("Site: %s: 'resName:%s resNum:%s insCode:%s'", siteID, residueName, resNum, insCode));
                     }
-                    //make a new group with the data
-                    Group group = getNewGroup("SITE", aminoCode1, residueName);
-            try {
-                group.setPDBName(residueName);
-            } catch (PDBParseException ex) {
-                Logger.getLogger(PDBFileParser.class.getName()).log(Level.SEVERE, null, ex);
-            }
-                    group.setPDBCode(pdbCode);
-                    //add the group to the groups
-                    site.getGroups().add(group);
+                    //make a new resNum with the data - this will be linked up with a site later
+                    ResidueNumber residueNumber = new ResidueNumber();
+                    
                     if (DEBUG || siteDebug) {
-                        System.out.println("Adding group " + group + " to site " + site.getSiteID());
+                        System.out.println("pdbCode: '" + resNum + insCode + "'");
+                    }
+                    residueNumber.setChainId(chainId);
+                    residueNumber.setSeqNum(resNum);
+                    residueNumber.setInsCode(insCode);
+                    //add the resNum to the groups
+                    siteResidues.add(residueNumber);
+                    if (DEBUG || siteDebug) {
+                        System.out.println("Adding residueNumber " + residueNumber + " to site " + siteID);
                     }
                     line = line.substring(11);
                 }
                 if (DEBUG || siteDebug) {
-                    System.out.println("Current SiteMap (contains "+ siteMap.keySet().size() + " sites):");
-                    for (String key : siteMap.keySet()) {
-                        System.out.print(siteMap.get(key));
+                    System.out.println("Current SiteMap (contains "+ siteToResidueMap.keySet().size() + " sites):");
+                    for (String key : siteToResidueMap.keySet()) {
+                        System.out.println(key + " : " + siteToResidueMap.get(key));
                     }
                 }
             }
@@ -2079,12 +2111,6 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
             line = line.substring(11);
             String[] fields = line.split(": ");
 
-            //reset the remark counter so as to add the details to the next Site
-//            if (remark800Counter == 3) {
-//                remark800Counter = 0;
-//
-//            }
-
             if (fields.length == 2) {
                 if (fields[0].equals("SITE_IDENTIFIER")) {
 //                    remark800Counter++;
@@ -2092,10 +2118,10 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
                     if (DEBUG || remark800debug) {
                         System.out.println("siteID: '" + siteID +"'");
                     }
-                    //fetch the site from the map
+                    //fetch the siteResidues from the map
                     site = siteMap.get(siteID);
 
-                    //if the site doesn't yet exist, make a new one.
+                    //if the siteResidues doesn't yet exist, make a new one.
                     if (site == null || !siteID.equals(site.getSiteID())) {
                         site = new Site(siteID, new ArrayList<Group>());
                         siteMap.put(site.getSiteID(), site);
@@ -2111,7 +2137,7 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
                     if (DEBUG || remark800debug) {
                         System.out.println("evCode: '" + evCode +"'");
                     }
-                    //fetch the site from the map
+                    //fetch the siteResidues from the map
                     site.setEvCode(evCode);
                 }
                 if (fields[0].equals("SITE_DESCRIPTION")) {
@@ -2120,7 +2146,7 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
                     if (DEBUG || remark800debug) {
                         System.out.println("desc: '" + desc +"'");
                     }
-                    //fetch the site from the map
+                    //fetch the siteResidues from the map
                     site.setDescription(desc);
                     if (DEBUG || remark800debug) {
                         System.out.println("Finished making REMARK 800 for site " + site.getSiteID());
@@ -2446,8 +2472,7 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 		structure.setConnections(connects);
 		structure.setCompounds(compounds);
 		structure.setDBRefs(dbrefs);
-                List<Site> sites = new ArrayList<Site>(siteMap.values());
-                structure.setSites(sites);
+                
 		if ( params.isAlignSeqRes() ){
 
 			SeqRes2AtomAligner aligner = new SeqRes2AtomAligner();
@@ -2456,7 +2481,8 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 
 
 		linkChains2Compound(structure);
-
+                //associate the temporary Groups in the siteMap to the ones
+                linkSitesToGroups(); // will work now that setSites is called
 	}
 
 
@@ -2594,6 +2620,65 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 		}
 
 	}
+
+        /**
+         * Links the Sites in the siteMap to the Groups in the Structure via the
+         * siteToResidueMap ResidueNumber.
+         * @author Jules Jacobsen
+         * @return
+         */
+        private void linkSitesToGroups() {
+
+            //link the map of siteIds : <ResidueNumber> with the sites by using ResidueNumber to get the correct group back.
+            //the return list
+            List<Site> sites = null;
+            //check that there are chains with which to associate the groups
+            if (structure.getChains().isEmpty()) {
+                sites = new ArrayList<Site>(siteMap.values());
+                logger.warning("No chains to link Site Groups with - Sites will not be present in the Structure");
+                return;
+            }
+
+            //check that the keys in the siteMap and SiteToResidueMap are equal 
+            if (! siteMap.keySet().equals(siteToResidueMap.keySet())) {
+                logger.warning("Not all sites have been properly described in the PDB " + pdbId + " header - Sites will not be present in the Structure");
+                return;
+            }
+
+            //so we have chains - associate the siteResidues-related groups with the ones
+            //already in in the chains
+            for (String key : siteMap.keySet()) {
+                Site currentSite = siteMap.get(key);
+                List<ResidueNumber> linkedGroups = siteToResidueMap.get(key);
+                for (ResidueNumber residueNumber : linkedGroups) {
+                    
+                    String pdbCode = residueNumber.getSeqNum().toString() + residueNumber.getInsCode().trim();
+                    String chain = residueNumber.getChainId();
+//                    System.out.println("chain: '" + chain + "'");
+//                    String resNum = resNum.getSeqNum().toString();
+//                    System.out.println("resNum: '" + resNum + "'");
+                    
+                    Group linkedGroup = null;
+                    try {
+                        //TODO: implement findGroup(ResidueNumber resNum)
+                        linkedGroup = structure.findGroup(chain, pdbCode);
+                    } catch (StructureException ex) {
+                        Logger.getLogger(PDBFileParser.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+
+//                    System.out.println("Adding group: " + linkedGroup.getSeqNum() + " to site " + site.getSiteID());
+                    currentSite.getGroups().add(linkedGroup);
+                }
+            }
+            sites = new ArrayList<Site>(siteMap.values());
+            structure.setSites(sites);
+//            for (Site site : structure.getSites()) {
+//                System.out.println(site);
+//            }
+//            System.out.println("Linked Site Groups with Chains");
+
+        }
+
 	private void buildjournalArticle() {
 		if (DEBUG) {
 			System.out.println("building new JournalArticle");

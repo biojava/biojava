@@ -691,11 +691,11 @@ public class StructureTools {
 	/** get a PDB residue number object for this group
 	 * 
 	 * @param g Group object
-	 * @return a PDBResidueNumber object
+	 * @return a ResidueNumber object
 	 */
-	public static final PDBResidueNumber getPDBResidueNumber(Group g){
+	public static final ResidueNumber getPDBResidueNumber(Group g){
 
-		PDBResidueNumber pdbResNum = new PDBResidueNumber();
+		ResidueNumber pdbResNum = new ResidueNumber();
 
 		Chain parent = g.getParent();
 		if ( parent != null)
@@ -706,13 +706,13 @@ public class StructureTools {
 
 			String number = matcher.group(1);
 			String insCode = matcher.group(2);
-			pdbResNum.setResidueNumber(Integer.parseInt(number));
+			pdbResNum.setSeqNum(Integer.parseInt(number));
 			if ((insCode != null) && (! insCode.equals(""))){
 				pdbResNum.setInsCode(insCode);
 			}
 		} else {
 			try {
-				pdbResNum.setResidueNumber(Integer.parseInt(g.getPDBCode()));
+				pdbResNum.setSeqNum(Integer.parseInt(g.getPDBCode()));
 			} catch (NumberFormatException e){
 
 			}
@@ -722,22 +722,22 @@ public class StructureTools {
 
 	}
 	
-	/** Get a group represented by a PDBResidueNumber.
+	/** Get a group represented by a ResidueNumber.
 	 * 
 	 * @param struc a {@link Structure}
-	 * @param pdbResNum a {@link PDBResidueNumber}
+	 * @param pdbResNum a {@link ResidueNumber}
 	 * @return a group in the structure that is represented by the pdbResNum. 
 	 * @throws StructureException if the group cannot be found.
 	 */
 	public static final Group getGroupByPDBResidueNumber(Structure struc, 
-			PDBResidueNumber pdbResNum) throws StructureException {
+			ResidueNumber pdbResNum) throws StructureException {
 		if (struc == null || pdbResNum==null) {
 			throw new IllegalArgumentException("Null argument(s).");
 		}
 		
 		Chain chain = struc.findChain(pdbResNum.getChainId());
 		
-		String numIns = "" + pdbResNum.getResidueNumber();
+		String numIns = "" + pdbResNum.getSeqNum();
 		if (pdbResNum.getInsCode() != null) {
 			numIns += pdbResNum.getInsCode();
 		}
