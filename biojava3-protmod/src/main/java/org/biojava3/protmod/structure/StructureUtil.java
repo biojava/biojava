@@ -32,9 +32,8 @@ import org.biojava.bio.structure.Atom;
 import org.biojava.bio.structure.Calc;
 import org.biojava.bio.structure.Chain;
 import org.biojava.bio.structure.Group;
-import org.biojava.bio.structure.PDBResidueNumber;
+import org.biojava.bio.structure.ResidueNumber;
 import org.biojava.bio.structure.StructureException;
-import org.biojava.bio.structure.StructureTools;
 import org.biojava3.protmod.ComponentType;
 
 public final class StructureUtil {
@@ -49,7 +48,7 @@ public final class StructureUtil {
 	 * @return the {@link StructureGroup} of the group.
 	 */
 	public static StructureGroup getStructureGroup(Group group, ComponentType type) {
-		PDBResidueNumber resNum = StructureTools.getPDBResidueNumber(group);
+		ResidueNumber resNum = group.getResidueNumber();
 		return new StructureGroup(resNum, group.getPDBName(), type);
 	}
 	
@@ -60,7 +59,7 @@ public final class StructureUtil {
 	 * @return the {@link StructureAtom} of the atom.
 	 */
 	public static StructureAtom getStructureAtom(Atom atom, ComponentType parentGroupType) {
-		StructureGroup strucGroup = getStructureGroup(atom.getParent(), parentGroupType);
+		StructureGroup strucGroup = getStructureGroup(atom.getGroup(), parentGroupType);
 		return new StructureAtom(strucGroup, atom.getName());
 	}
 	

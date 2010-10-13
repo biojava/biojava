@@ -26,7 +26,7 @@ package org.biojava3.protmod.structure;
 
 import java.io.Serializable;
 
-import org.biojava.bio.structure.PDBResidueNumber;
+import org.biojava.bio.structure.ResidueNumber;
 
 import org.biojava3.protmod.ComponentType;
 
@@ -39,18 +39,18 @@ public class StructureGroup
 implements Serializable, Comparable<StructureGroup> {
 	private static final long serialVersionUID = -5648208521422258019L;
 	
-	private final PDBResidueNumber resNum;
+	private final ResidueNumber resNum;
 	private final String pdbName;
 	private final ComponentType type;
 	
-	public StructureGroup(final PDBResidueNumber resNum,
+	public StructureGroup(final ResidueNumber resNum,
 			final String pdbName, final ComponentType type) {
 		this.resNum = resNum;
 		this.pdbName = pdbName;
 		this.type = type;
 	}
 
-	public PDBResidueNumber getPDBResidueNumber() {
+	public ResidueNumber getPDBResidueNumber() {
 		return resNum;
 	}
 	
@@ -59,10 +59,10 @@ implements Serializable, Comparable<StructureGroup> {
 	}
 	
 	public int getResidueNumber() {
-		return resNum.getResidueNumber();
+		return resNum.getSeqNum();
 	}
 	
-	public String getInsCode() {
+	public Character getInsCode() {
 		return resNum.getInsCode();
 	}
 
@@ -111,7 +111,7 @@ implements Serializable, Comparable<StructureGroup> {
 		sb.append('\t');
 		sb.append(resNum.getChainId());
 		sb.append('\t');
-		sb.append(resNum.getResidueNumber());
+		sb.append(resNum.getSeqNum());
 		if (resNum.getInsCode() != null)
 			sb.append(resNum.getInsCode());
 		sb.append('\t');
