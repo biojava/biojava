@@ -99,7 +99,7 @@ public abstract class AbstractSequence<C extends Compound> implements Sequence<C
     /**
      * Very important method that allows external mappings of sequence data and features. This method
      * will gain additional interface inspection that allows external data sources with knowledge
-     * of features for a sequence to be supported. Please be carefull if you override this method. 
+     * of features for a sequence to be supported. 
      *  
      * @param proxyLoader
      */
