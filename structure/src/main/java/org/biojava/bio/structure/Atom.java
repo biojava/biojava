@@ -192,16 +192,31 @@ public interface Atom extends Cloneable {
     /** Sets the back-reference to its parent Group.
      * @param parent the parent Group
      * @see #getParent()
+     * @deprecated replaced by {@link #setGroup(Group)}
      */
     public void setParent(Group parent) ; 
-
+    
+    /** Sets the back-reference to its parent Group.
+     * @param parent the parent Group
+     * @see #getGroup()
+     */
+    
+    public void setGroup(Group parent);
+    
      /** Returns the parent Group of the Atom.
+     * returns null if the referenced object is not Group 
+     * @return Group the parent Group of the Atom, or null
+     * @see #setParent(Group)   
+     * @deprecated replaced by {@link #getGroup()}  
+     */
+    public Group getParent();
+    
+    /** Returns the parent Group of the Atom.
      * returns null if the referenced object is not Group 
      * @return Group the parent Group of the Atom, or null
      * @see #setParent(Group)     
      */
-    public Group getParent();
-    
+    public Group getGroup();
     
     
 }

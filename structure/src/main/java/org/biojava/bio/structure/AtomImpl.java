@@ -211,12 +211,20 @@ public class AtomImpl implements Atom,Serializable {
 
     public void setParent(Group parent) {
 
-        this.parent = parent;
+       setGroup(parent);
     }
 
     public Group getParent() {
-        return parent;
-
+        return getGroup();
+    }
+    
+    
+    public void setGroup(Group parent){
+    	this.parent = parent;
+    }
+    
+    public Group getGroup(){
+    	return parent;
     }
 	public Element getElement() {
 		return element;

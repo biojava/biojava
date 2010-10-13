@@ -120,27 +120,19 @@ public class TestOutputStrings extends TestCase
 //      }		
 //   }
    
-  // 
-   // hm this was already 100% identical, but we moved slightly away again!
-   // does this have to do with the new data representation & chem comps?
-   // mismatch
-   // one tiny gap gets now counted as aligned
-   // opt-equ : 102 instead of 101
-   // difference in P-value, AFP-num, 
-   // opt-rmsd 3.11 instead of 3.03
-   // score: 123.16 instead 123.13
-   // orig gaps: gaps 26 (20.47%)
-   // block0 score: 123.16 isntead 123.13
+
    public void test1jbe1ord(){
       String pdb1 = "1jbe";
       String chain1 = "A";
       String pdb2 = "1ord";
       String chain2 ="A";
 
+      
+      
       String originalOutput="Align 1jbeA.pdb 126 with 1ordA.pdb 730" + newline +
-      "Twists 0 ini-len 72 ini-rmsd 3.09 opt-equ 102 opt-rmsd 3.11 chain-rmsd 3.09 Score 123.16 align-len 127 gaps 25 (19.69%)" + newline +
-      "P-value 3.50e-01 Afp-num 30114 Identity 11.02% Similarity 22.05%" + newline +
-      "Block  0 afp  9 score 123.16 rmsd  3.09 gap 53 (0.42%)" + newline +
+      "Twists 0 ini-len 72 ini-rmsd 3.09 opt-equ 101 opt-rmsd 3.03 chain-rmsd 3.09 Score 123.13 align-len 127 gaps 26 (20.47%)" + newline +
+      "P-value 3.45e-01 Afp-num 30029 Identity 11.02% Similarity 22.05%" + newline +
+      "Block  0 afp  9 score 123.13 rmsd  3.09 gap 53 (0.42%)" + newline +
       "" + newline +
       "                  .    :    .    :    .    :    .    :    .    :    .    :    .    :" + newline +
       "Chain 1:    3 DKELKFLVVDDFSTMRRIVRNLLKELGFNNVEEAEDGVDALNKLQAGGYGFVISDWNMPNMDGLELLKTI" + newline +
@@ -149,7 +141,7 @@ public class TestOutputStrings extends TestCase
       "" + newline +
       "                  .    :    .    :    .    :    .    :    .    :    ." + newline +
       "Chain 1:   73 RAAMSALPVLMVTAEAKKENIIAAAQAGASGYVVKPFT--AATLEEKLNKIFEKLGM" + newline +
-      "              11111111111111111 11111111 11111111111  11111111111111111" + newline +
+      "              11111111111111111 11111111 11111111111  111111111111 1111" + newline +
       "Chain 2:   50 DATKFGIPVFAVTKDAQ-AISADELK-KIFHIIDLENKFDATVNAREIETAVNNYED" + newline +
       "" + newline +
       "Note: positions are from PDB; the numbers between alignments are block index" + newline ;

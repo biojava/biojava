@@ -42,6 +42,7 @@ import org.biojava.bio.structure.Group;
 import org.biojava.bio.structure.HetatomImpl;
 import org.biojava.bio.structure.NucleotideImpl;
 import org.biojava.bio.structure.PDBHeader;
+import org.biojava.bio.structure.ResidueNumber;
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureImpl;
 import org.biojava.bio.structure.StructureTools;
@@ -222,7 +223,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
       for (int i = 0; i< chains.size();i++){
          Chain testchain =  chains.get(i);
          //System.out.println("comparing chainID >"+chainID+"< against testchain " + i+" >" +testchain.getName()+"<");
-         if (chainID.equals(testchain.getName())) {
+         if (chainID.equals(testchain.getChainID())) {
             //System.out.println("chain "+ chainID+" already known ...");
             return testchain;
          }
@@ -285,7 +286,8 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
       String chain_id      = atom.getLabel_asym_id();		
       String fullname      = fixFullAtomName(atom.getLabel_atom_id());
       String recordName    = atom.getGroup_PDB();
-      String residueNumber = atom.getAuth_seq_id();
+      String residueNumberS = atom.getAuth_seq_id();
+      Integer residueNrInt = Integer.parseInt(residueNumberS);
       // the 3-letter name of the group:
       String groupCode3    = atom.getLabel_comp_id();
 
@@ -297,9 +299,10 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
          if ( aminoCode1.equals(StructureTools.UNKNOWN_GROUP_LABEL)) 
             aminoCode1 = null;
       }
-      String insCode = atom.getPdbx_PDB_ins_code();
-      if (!  insCode.equals("?")) {
-         residueNumber += insCode;
+      String insCodeS = atom.getPdbx_PDB_ins_code();
+      Character insCode = null;
+      if (!  insCodeS.equals("?")) {
+         insCode = insCodeS.charAt(0);
       }
       // we store the internal seq id in the Atom._id field
       // this is not a PDB file field but we need this to internally assign the insertion codes later
@@ -337,13 +340,13 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 
       if (current_chain == null) {
          current_chain = new ChainImpl();
-         current_chain.setName(chain_id);
+         current_chain.setChainID(chain_id);
          current_model.add(current_chain);
          startOfNewChain = true;
       }
 
       //System.out.println("BEFORE: " + chain_id + " " + current_chain.getName());
-      if ( ! chain_id.equals(current_chain.getName()) ) {
+      if ( ! chain_id.equals(current_chain.getChainID()) ) {
 
          startOfNewChain = true;
 
@@ -352,10 +355,10 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 
          // see if old chain is known ...
          Chain testchain ;
-         testchain = isKnownChain(current_chain.getName(),current_model);
+         testchain = isKnownChain(current_chain.getChainID(),current_model);
 
          //System.out.println("trying to re-using known chain " + current_chain.getName() + " " + chain_id);		
-         if ( testchain != null && testchain.getName().equals(chain_id)){
+         if ( testchain != null && testchain.getChainID().equals(chain_id)){
             //System.out.println("re-using known chain " + current_chain.getName() + " " + chain_id);				
 
          } else {
@@ -367,7 +370,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
             //System.out.println("unknown chain. creating new chain.");
 
             current_chain = new ChainImpl();
-            current_chain.setName(chain_id);
+            current_chain.setChainID(chain_id);
 
          }   else {
             current_chain = testchain;
@@ -379,12 +382,15 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
       } 
 
 
-
+      ResidueNumber residueNumber = new ResidueNumber(chain_id,residueNrInt, insCode);
+      
       if (current_group == null) {
 
          current_group = getNewGroup(recordName,aminoCode1,seq_id, groupCode3);
 
-         current_group.setPDBCode(residueNumber);
+         //current_group.setPDBCode(residueNumber);
+        
+         current_group.setResidueNumber(residueNumber);
          try { 
             current_group.setPDBName(groupCode3);
          } catch (PDBParseException e){
@@ -395,7 +401,8 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
       if ( startOfNewChain){
          current_group = getNewGroup(recordName,aminoCode1,seq_id, groupCode3);
 
-         current_group.setPDBCode(residueNumber);
+        // current_group.setPDBCode(residueNumber);
+         current_group.setResidueNumber(residueNumber);
          try {
             current_group.setPDBName(groupCode3);
          } catch (PDBParseException e){
@@ -403,22 +410,41 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
          }
       }
 
+      Group altGroup = null;
+      String altLocS = atom.getLabel_alt_id();
+      Character altLoc = ' ';
+      if ( altLocS.length()>0) {
+    	  altLoc = altLocS.charAt(0);
+    	  if ( altLoc.equals('.') )
+    		altLoc = ' ';
+    	  
+      }
+      
       // check if residue number is the same ...
       // insertion code is part of residue number
-      if ( ! residueNumber.equals(current_group.getPDBCode())) {
-         //System.out.println("end of residue: "+current_group.getPDBCode()+" "+residueNumber);
-         current_chain.addGroup(current_group);
+      if ( ! residueNumber.equals(current_group.getResidueNumber())) {
+         //System.out.println("end of residue: "+current_group.getPDBCode()+" "+residueNrInt);
+    	  current_chain.addGroup(current_group);
 
-         current_group = getNewGroup(recordName,aminoCode1,seq_id, groupCode3);
+			current_group = getNewGroup(recordName,aminoCode1,seq_id,groupCode3);
+			//current_group.setPDBCode(pdbCode);
+			try {
+				current_group.setPDBName(groupCode3);
+			} catch (PDBParseException e){
+				e.printStackTrace();
+			}
+			current_group.setResidueNumber(residueNumber);
+			//                        System.out.println("Made new group:  " + groupCode3 + " " + resNum + " " + iCode);
 
-         current_group.setPDBCode(residueNumber);
-         try {
-            current_group.setPDBName(groupCode3);
-         } catch (PDBParseException e){
-            e.printStackTrace();
-         }
+		} else {
+			// same residueNumber, but altLocs...
 
-      }
+			// test altLoc
+			if ( ! altLoc.equals(' ') && ( ! altLoc.equals('.'))) {												
+				altGroup = getCorrectAltLocGroup( altLoc,recordName,aminoCode1,groupCode3, seq_id);
+				System.out.println("found altLoc! " + altLoc + " " + current_group + " " + altGroup);
+			}
+		}
 
       if ( params.isHeaderOnly())
          return;
@@ -443,7 +469,14 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 
       Atom a = convertAtom(atom);
 
-      current_group.addAtom(a);
+      //see if chain_id is one of the previous chains ...
+		if ( altGroup != null) {
+			altGroup.addAtom(a);
+			altGroup = null;
+		}
+		else {
+			current_group.addAtom(a);
+		}
       //System.out.println(current_group);
 
    }
@@ -485,6 +518,60 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
       return a;
 
    }
+   
+   
+   private Group getCorrectAltLocGroup( Character altLoc,
+			String recordName, Character aminoCode1, String groupCode3, long seq_id) {
+
+		// see if we know this altLoc already;
+		List<Atom> atoms = current_group.getAtoms();
+		if ( atoms.size() > 0) {
+			Atom a1 = atoms.get(0);
+			// we are just adding atoms to the current group
+			// probably there is a second group following later...
+			if (a1.getAltLoc().equals(altLoc)) {
+
+				return current_group;
+			}
+		}
+
+		List<Group> altLocs = current_group.getAltLocs();
+		for ( Group altLocG : altLocs ){
+			atoms = altLocG.getAtoms();
+			if ( atoms.size() > 0) {
+				for ( Atom a1 : atoms) {
+					if (a1.getAltLoc().equals( altLoc)) {
+
+						return altLocG;
+					}
+				}
+			}
+		}
+
+		// no matching altLoc group found.
+		// build it up.
+
+		if ( groupCode3.equals(current_group.getPDBName())) {
+			if ( current_group.getAtoms().size() == 0)
+				return current_group;
+			//System.out.println("cloning current group");
+			Group altLocG = (Group) current_group.clone();
+			current_group.addAltLoc(altLocG);
+			return altLocG;	
+		}
+
+
+		Group altLocG = getNewGroup(recordName,aminoCode1,seq_id,groupCode3);
+
+		try {
+			altLocG.setPDBName(groupCode3);
+		} catch (PDBParseException e) {
+			e.printStackTrace();
+		}
+		altLocG.setResidueNumber(current_group.getResidueNumber());
+		current_group.addAltLoc(altLocG);
+		return altLocG;
+	}
 
    /** Start the parsing
     *
@@ -517,7 +604,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
       if ( current_chain != null ) {
 
          current_chain.addGroup(current_group);
-         if (isKnownChain(current_chain.getName(),current_model) == null) {
+         if (isKnownChain(current_chain.getChainID(),current_model) == null) {
             current_model.add(current_chain);
          }
       } else {
@@ -540,7 +627,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 
          Chain s = getEntityChain(asym.getEntity_id());
          Chain seqres = (Chain)s.clone();
-         seqres.setName(asym.getId());
+         seqres.setChainID(asym.getId());
 
          seqResChains.add(seqres);
          if ( DEBUG )
@@ -574,13 +661,13 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 
          for (Chain chain : model) {
             for (String asym : asymIds) {
-               if ( chain.getName().equals(asym)){
+               if ( chain.getChainID().equals(asym)){
                   if (DEBUG)
                      System.out.println("renaming " + asym  + " to : " + asymStrandId.get(asym));
 
-                  chain.setName(asymStrandId.get(asym));
+                  chain.setChainID(asymStrandId.get(asym));
 
-                  Chain known =  isKnownChain(chain.getName(), pdbChains);
+                  Chain known =  isKnownChain(chain.getChainID(), pdbChains);
                   if ( known == null ){
                      pdbChains.add(chain);
                   } else {
@@ -873,7 +960,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 
    private Chain getChainFromList(List<Chain> chains, String name){
       for (Chain chain : chains) {
-         if ( chain.getName().equals(name)){
+         if ( chain.getChainID().equals(name)){
 
             return chain;
          }
@@ -881,7 +968,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
       // does not exist yet, so create...
 
       Chain	chain = new ChainImpl();
-      chain.setName(name);
+      chain.setChainID(name);
       chains.add(chain);
 
       return chain;
@@ -927,7 +1014,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 
          Character code1 = StructureTools.convert_3code_1code(epolseq.getMon_id());
          g.setAminoType(code1);
-         g.setPDBCode(epolseq.getNum());
+         g.setResidueNumber(ResidueNumber.fromString(epolseq.getNum()));
          // ARGH at this stage we don;t know about insertion codes
          // this has to be obtained from _pdbx_poly_seq_scheme
          entityChain.addGroup(g);
@@ -936,7 +1023,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
          if ( StructureTools.isNucleotide(epolseq.getMon_id())) {
             // the group is actually a nucleotide group...
             NucleotideImpl n = new NucleotideImpl();
-            n.setPDBCode(epolseq.getNum());
+            n.setResidueNumber(ResidueNumber.fromString(epolseq.getNum()));
             entityChain.addGroup(n);
          }
          else {
@@ -945,7 +1032,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
             try {
                h.setPDBName(epolseq.getMon_id());
                //h.setAminoType('X');
-               h.setPDBCode(epolseq.getNum());
+               h.setResidueNumber(ResidueNumber.fromString(epolseq.getNum()));
                entityChain.addGroup(h);
 
             } catch (PDBParseException exc) {
@@ -959,7 +1046,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
          try {
             h.setPDBName(epolseq.getMon_id());
             //h.setAminoType('X');
-            h.setPDBCode(epolseq.getNum());
+            h.setResidueNumber(ResidueNumber.fromString(epolseq.getNum()));
             entityChain.addGroup(h);
 
          } catch (PDBParseException exc) {
@@ -980,7 +1067,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
       for (int i=0 ; i < structure.nrModels();i++){
          List<Chain> model = structure.getModel(i);
          for (Chain c: model){
-            if (c.getName().equals(chainId)) {
+            if (c.getChainID().equals(chainId)) {
                chains.add(c);
             }
          }
@@ -1032,14 +1119,17 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
          }
 
          // fix the residue number to the one used in the PDB files...
-         String pdbResNum = ppss.getAuth_seq_num();
+         Integer pdbResNum = Integer.parseInt(ppss.getAuth_seq_num());
          // check the insertion code...
-         String insCode = ppss.getPdb_ins_code();
-         if ( ( insCode != null) && (! insCode.equals("."))){
-            pdbResNum += insCode;
+         String insCodeS = ppss.getPdb_ins_code();
+         Character insCode = null;
+         if ( ( insCodeS != null) && (! insCodeS.equals(".")) && insCodeS.length()>0){
+            //pdbResNum += insCode
+        	 insCode = insCodeS.charAt(0);
          }
 
-         target.setPDBCode(pdbResNum);
+         ResidueNumber residueNumber = new ResidueNumber(null, pdbResNum,insCode);
+         target.setResidueNumber(residueNumber);
       }
    }
    public void newPdbxPolySeqScheme(PdbxPolySeqScheme ppss) {

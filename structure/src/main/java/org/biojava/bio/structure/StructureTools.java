@@ -28,8 +28,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+
 
 //import org.biojava.bio.seq.ProteinTools;
 //import org.biojava.bio.seq.io.SymbolTokenization;
@@ -67,8 +66,8 @@ public class StructureTools {
 	public static final Character UNKNOWN_GROUP_LABEL = new Character('x');;
 
 
-	private static final String insertionCodeRegExp = "([0-9]+)([a-zA-Z]*)";
-	private static final Pattern insertionCodePattern = Pattern.compile(insertionCodeRegExp);
+	//private static final String insertionCodeRegExp = "([0-9]+)([a-zA-Z]*)";
+	//private static final Pattern insertionCodePattern = Pattern.compile(insertionCodeRegExp);
 
 
 	// there is a file format change in PDB 3.0 and nucleotides are being renamed
@@ -319,7 +318,7 @@ public class StructureTools {
 		for(Atom a: ca){
 			apos++;
 			Group parentG = a.getParent();
-			Chain parentC = parentG.getParent();
+			Chain parentC = parentG.getChain();
 
 			Chain newChain = null;
 			for ( Chain c : model){
@@ -355,7 +354,7 @@ public class StructureTools {
 		for(Atom a: ca){
 			apos++;
 			Group parentG = a.getParent();
-			Chain parentC = parentG.getParent();
+			Chain parentC = parentG.getChain();
 
 			Chain newChain = null;
 			for ( Chain c : model){
@@ -692,33 +691,11 @@ public class StructureTools {
 	 * 
 	 * @param g Group object
 	 * @return a ResidueNumber object
+	 * @deprecated replaced by  Group.getResidueNumber()
 	 */
 	public static final ResidueNumber getPDBResidueNumber(Group g){
 
-		ResidueNumber pdbResNum = new ResidueNumber();
-
-		Chain parent = g.getParent();
-		if ( parent != null)
-			pdbResNum.setChainId(parent.getName());
-
-		Matcher matcher = insertionCodePattern.matcher(g.getPDBCode());
-		if (matcher.find()){
-
-			String number = matcher.group(1);
-			String insCode = matcher.group(2);
-			pdbResNum.setSeqNum(Integer.parseInt(number));
-			if ((insCode != null) && (! insCode.equals(""))){
-				pdbResNum.setInsCode(insCode);
-			}
-		} else {
-			try {
-				pdbResNum.setSeqNum(Integer.parseInt(g.getPDBCode()));
-			} catch (NumberFormatException e){
-
-			}
-		}
-
-		return pdbResNum;
+		return g.getResidueNumber();
 
 	}
 	

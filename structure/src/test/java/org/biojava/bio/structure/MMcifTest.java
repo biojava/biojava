@@ -58,7 +58,9 @@ public class MMcifTest extends TestCase {
 
 	public void testLoad(){
 		
-
+		// a structure with microheterogeneity
+		//comparePDB2cif("2CI1","A");
+		
 		// test a simple protein
 		comparePDB2cif("5pti","A");
 
@@ -80,6 +82,7 @@ public class MMcifTest extends TestCase {
 		// test a NMR protein
 		comparePDB2cif("2kc9","A");
 
+		
 	}
 
 
@@ -223,12 +226,21 @@ public class MMcifTest extends TestCase {
 	private void checkGroups(Group g1, Group g2){
 
 		//System.out.print("comparing " +g1 + " " + g2);
-
+		String pdbId1 = g1.getChain().getParent().getPDBCode();
+		String pdbId2 = g1.getChain().getParent().getPDBCode();
+		assertEquals(pdbId1, pdbId2);
+		
 		assertEquals(g1.getType(),g2.getType());
-		assertEquals(g1.getPDBCode(),g2.getPDBCode());
+		assertEquals(g1.getResidueNumber().getSeqNum(),g2.getResidueNumber().getSeqNum());
+		assertEquals(g1.getResidueNumber().getInsCode(),g2.getResidueNumber().getInsCode());
 		assertEquals(g1.getPDBName(),g2.getPDBName());
 		assertEquals(g1.has3D(),g2.has3D());
-		assertEquals(g1.getAtoms().size(), g2.getAtoms().size());
+		
+		assertEquals(g1.hasAltLoc(), g2.hasAltLoc());
+		
+		assertEquals(pdbId1 + ":" + g1 + " - " + pdbId2+":"+ g2,g1.getAltLocs().size(), g2.getAltLocs().size());
+		
+		assertEquals(pdbId1 + ":" + g1 + " - " + pdbId2+":"+ g2 , g1.getAtoms().size(), g2.getAtoms().size());
 		if ( g1.has3D()){
 			try {
 				Atom a1 = g1.getAtom(0);
@@ -268,7 +280,7 @@ public class MMcifTest extends TestCase {
 				// can;t compare seq res, since this is only done for 1st...
 				//assertEquals("c1.getSeqResLength(),cx.getSeqResLength());
 				assertEquals(c1.getAtomSequence(),cx.getAtomSequence());
-				assertEquals(c1.getLengthAminos(),cx.getLengthAminos());
+				assertEquals(c1.getAtomGroups("amino").size(),cx.getAtomGroups("amino").size());
 				assertEquals(c1.getAtomGroups(GroupType.AMINOACID).size(),cx.getAtomGroups(GroupType.AMINOACID).size());
 				assertEquals(c1.getAtomGroups(GroupType.NUCLEOTIDE).size(),cx.getAtomGroups(GroupType.NUCLEOTIDE).size());
 				assertEquals(c1.getAtomGroups(GroupType.HETATM).size(),cx.getAtomGroups(GroupType.HETATM).size());

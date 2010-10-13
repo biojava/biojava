@@ -221,13 +221,13 @@ public class CECalculator {
 
 
 		double dist;
-		Group g1 = ca1.getParent();
+		Group g1 = ca1.getGroup();
 		Atom cb1 = null;
 		if ( g1.hasAtom(StructureTools.cbAtomName)) {
 			cb1 = g1.getAtom(StructureTools.cbAtomName);
 		}
 		//
-		Group g2 = ca2.getParent();
+		Group g2 = ca2.getGroup();
 		Atom cb2 = null;
 		if ( g2.hasAtom(StructureTools.cbAtomName)) {
 			cb2 = g2.getAtom(StructureTools.cbAtomName);
@@ -1162,7 +1162,7 @@ nBestTrace=nTrace;
 	private void setStrBuf(Atom[] strBuf, int i, Atom[] ca, int j) {
 		// TODO Auto-generated method stub
 		//TODO
-		Group parent = ca[j].getParent();
+		Group parent = ca[j].getGroup();
 		int pos = 0;
 		String atomName = StructureTools.caAtomName;
 
@@ -1678,7 +1678,7 @@ nBestTrace=nTrace;
 
 		for(int l=0; l<nse2; l++) {
 			Atom a = caA[l];
-			Group g = (Group)a.getParent().clone();
+			Group g = (Group)a.getGroup().clone();
 			//Group g = (Group)a.getParent();
 
 			Calc.rotate( g, m);
@@ -1733,8 +1733,8 @@ nBestTrace=nTrace;
 		}
 		for (Atom a : cod2){
 
-			Calc.rotate(a.getParent(), matrix);
-			Calc.shift(a.getParent(),  shift);
+			Calc.rotate(a.getGroup(), matrix);
+			Calc.shift(a.getGroup(),  shift);
 			//Calc.rotate(a,r);
 			//Calc.shift(a,t);
 		}
@@ -1769,7 +1769,7 @@ nBestTrace=nTrace;
 
 			Atom a;
 			if ( clone ){
-				Group g = (Group)ca[i].getParent().clone();
+				Group g = (Group)ca[i].getGroup().clone();
 				a = g.getAtom(" CA ");
 			}
 			else {
@@ -2012,8 +2012,8 @@ nBestTrace=nTrace;
 				 optAln[0][0][pos] = align_se1[ia];
 				 optAln[0][1][pos] = align_se2[ia];
 
-				 char l1 = getOneLetter(ca1[align_se1[ia]].getParent());
-				 char l2 = getOneLetter(ca2[align_se2[ia]].getParent());
+				 char l1 = getOneLetter(ca1[align_se1[ia]].getGroup());
+				 char l2 = getOneLetter(ca2[align_se2[ia]].getGroup());
 
 				 alnseq1[ia] = Character.toUpperCase(l1);
 				 alnseq2[ia] = Character.toUpperCase(l2);
@@ -2035,13 +2035,13 @@ nBestTrace=nTrace;
 				 if (align_se1[ia] == -1 ) {
 					 alnseq1[ia] = '-';
 				 } else {
-					 char l1 = getOneLetter(ca1[align_se1[ia]].getParent());
+					 char l1 = getOneLetter(ca1[align_se1[ia]].getGroup());
 					 alnseq1[ia] = Character.toUpperCase(l1);
 				 }
 				 if ( align_se2[ia] == -1 ) {
 					 alnseq2[ia] = '-';
 				 } else {
-					 char l2 = getOneLetter(ca2[align_se2[ia]].getParent());
+					 char l2 = getOneLetter(ca2[align_se2[ia]].getGroup());
 					 alnseq2[ia] = Character.toUpperCase(l2);
 				 }
 

@@ -137,17 +137,17 @@ public class AFPChainXMLConverter {
 			int pos2 = optAln[bk][1][pos];
 			xml.openTag("eqr");
 			xml.attribute("eqrNr",pos+"");
-			xml.attribute("pdbres1",ca1[pos1].getParent().getPDBCode());
-			xml.attribute("chain1", ca1[pos1].getParent().getParent().getName());
-			xml.attribute("pdbres2",ca2[pos2].getParent().getPDBCode());
-			xml.attribute("chain2", ca2[pos2].getParent().getParent().getName());
+			xml.attribute("pdbres1",ca1[pos1].getGroup().getResidueNumber().toString());
+			xml.attribute("chain1", ca1[pos1].getGroup().getChain().getChainID());
+			xml.attribute("pdbres2",ca2[pos2].getGroup().getResidueNumber().toString());
+			xml.attribute("chain2", ca2[pos2].getGroup().getChain().getChainID());
 			
 			xml.closeTag("eqr");
-			/*System.out.println("aligned position: " + pos1  + ":" + pos2 + 
-			" pdbresnum " + ca1[pos1].getParent().getPDBCode() + " " +
-			ca1[pos1].getParent().getPDBName()+":" + 
-			ca2[pos2].getParent().getPDBCode() + " " + ca2[pos2].getParent().getPDBName());
-	 */
+			//System.out.println("aligned position: " + pos1  + ":" + pos2 + 
+			//" pdbresnum " + ca1[pos1].getGroup().getResidueNumber().toString() + " " +
+			//ca1[pos1].getParent().getPDBName()+":" + 
+			//ca2[pos2].getGroup().getResidueNumber().toString() + " " + ca2[pos2].getParent().getPDBName());
+	 
 		}	 
 
 	}

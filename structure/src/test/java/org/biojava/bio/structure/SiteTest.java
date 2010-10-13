@@ -9,6 +9,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import junit.framework.TestCase;
+
 import org.biojava.bio.structure.io.PDBParseException;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -21,7 +24,7 @@ import static org.junit.Assert.*;
  * Tests functionality of Site class.
  * @author Jules Jacobsen <jacobsen@ebi.ac.uk>
  */
-public class SiteTest {
+public class SiteTest extends TestCase {
 
     public static final String newline = System.getProperty("line.separator");
 
@@ -41,15 +44,15 @@ public class SiteTest {
             chain.setName("H");
             Group his57 = new AminoAcidImpl();
 //            his57.setPDBCode("57");
-            his57.setResidueNumber("H", 57, " ");
+            his57.setResidueNumber("H", 57, ' ');
             his57.setPDBName("HIS");
             his57.setChain(chain);
             Group asp102 = new AminoAcidImpl();
-            asp102.setResidueNumber("H", 102, " ");
+            asp102.setResidueNumber("H", 102, ' ');
             asp102.setPDBName("ASP");
             asp102.setChain(chain);
             Group ser195 = new AminoAcidImpl();
-            ser195.setResidueNumber("H", 195, " ");
+            ser195.setResidueNumber("H", 195, ' ');
             ser195.setPDBName("SER");
             ser195.setChain(chain);
             List<Group> catSiteGroups = new ArrayList<Group>();
@@ -64,27 +67,27 @@ public class SiteTest {
             catSite.setDescription("ACTIVE SITE");
             //groups for site AC1
             Group arg221a = new AminoAcidImpl();
-            arg221a.setResidueNumber("H", 221, "A");
+            arg221a.setResidueNumber("H", 221, 'A');
             arg221a.setPDBName("ARG");
             arg221a.setChain(chain);
             Group lys224 = new AminoAcidImpl();
-            lys224.setResidueNumber("H", 224, " ");
+            lys224.setResidueNumber("H", 224, ' ');
             lys224.setPDBName("LYS");
             lys224.setChain(chain);
             Group hoh403 = new HetatomImpl();
-            hoh403.setResidueNumber("H", 403, " ");
+            hoh403.setResidueNumber("H", 403, ' ');
             hoh403.setPDBName("HOH");
             hoh403.setChain(chain);
             Group hoh460 = new HetatomImpl();
-            hoh460.setResidueNumber("H", 460, " ");
+            hoh460.setResidueNumber("H", 460, ' ');
             hoh460.setPDBName("HOH");
             hoh460.setChain(chain);
             Group hoh464 = new HetatomImpl();
-            hoh464.setResidueNumber("H", 464, " ");
+            hoh464.setResidueNumber("H", 464, ' ');
             hoh464.setPDBName("HOH");
             hoh464.setChain(chain);
             Group hoh497 = new HetatomImpl();
-            hoh497.setResidueNumber("H", 497, " ");
+            hoh497.setResidueNumber("H", 497, ' ');
             hoh497.setPDBName("HOH");
             hoh497.setChain(chain);
             
@@ -220,7 +223,7 @@ public class SiteTest {
     public void testGroup() {
         List<Group> result = bindingSite.getGroups();
         Group arg221 = result.get(0);
-        ResidueNumber testResNum = new ResidueNumber("H", 221, "A");
+        ResidueNumber testResNum = new ResidueNumber("H", 221, 'A');
 //        testResNum.setChainId("H");
 //        testResNum.setSeqNum(221);
 //        testResNum.setInsCode("A");
@@ -238,7 +241,7 @@ public class SiteTest {
             }
         }
 
-        ResidueNumber testResNum2 = new ResidueNumber("H", 403, " ");
+        ResidueNumber testResNum2 = new ResidueNumber("H", 403, ' ');
 //        testResNum2.setChainId("H");
 //        testResNum2.setSeqNum(403);
 //        testResNum2.setInsCode("");

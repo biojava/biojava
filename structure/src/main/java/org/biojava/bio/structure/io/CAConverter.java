@@ -68,7 +68,7 @@ public class CAConverter {
     public static Chain getCAOnly(Chain chain){
 
         Chain newChain = new ChainImpl();
-        newChain.setName(chain.getName());
+        newChain.setChainID(chain.getChainID());
         newChain.setHeader(chain.getHeader());
         newChain.setSwissprotId(chain.getSwissprotId());
         
@@ -91,7 +91,7 @@ public class CAConverter {
                     } catch (PDBParseException e){
                         e.printStackTrace();
                     }
-                    n.setPDBCode(g.getPDBCode());
+                    n.setResidueNumber(g.getResidueNumber());
                     n.addAtom(a);
                     newChain.addGroup(n);
                     continue grouploop;

@@ -7,6 +7,9 @@ package org.biojava.bio.structure;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import junit.framework.TestCase;
+
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -18,7 +21,7 @@ import static org.junit.Assert.*;
  *
  * @author Jules Jacobsen <jacobsen@ebi.ac.uk>
  */
-public class HetatomImplTest {
+public class HetatomImplTest extends TestCase{
 
     int bigTestNumber = 60000;
 
@@ -492,7 +495,7 @@ public class HetatomImplTest {
     @Test
     public void testSetGetResidueNumber() {
 //        System.out.println("setGetResidueNumber");
-        ResidueNumber residueNumber = new ResidueNumber("A", 42, " ");
+        ResidueNumber residueNumber = new ResidueNumber("A", 42, ' ');
         HetatomImpl instance = new HetatomImpl();
         instance.setResidueNumber(residueNumber);
         ResidueNumber expResult = residueNumber;
@@ -507,7 +510,7 @@ public class HetatomImplTest {
         List<Group> resNumgroups = new ArrayList<Group>();
 
         for (int i = 0; i < bigTestNumber; i++) {
-            ResidueNumber resNum = new ResidueNumber("A", i, " ");
+            ResidueNumber resNum = new ResidueNumber("A", i, ' ');
             HetatomImpl hetAtom = new HetatomImpl();
             hetAtom.setResidueNumber(resNum);
             resNumgroups.add(hetAtom);
@@ -528,7 +531,7 @@ public class HetatomImplTest {
         List<Group> resNumgroups = new ArrayList<Group>();
 
         for (int i = 0; i < bigTestNumber; i++) {
-            ResidueNumber resNum = new ResidueNumber("A", i, " ");
+            ResidueNumber resNum = new ResidueNumber("A", i, ' ');
             HetatomImpl hetAtom = new HetatomImpl();
             hetAtom.setResidueNumber(resNum);
             resNumgroups.add(hetAtom);

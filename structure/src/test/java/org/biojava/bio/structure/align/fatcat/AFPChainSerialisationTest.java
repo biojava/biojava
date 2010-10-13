@@ -265,7 +265,6 @@ extends TestCase
          ca2 = StructureTools.getAtomCAArray(s2);
          ca3 = StructureTools.cloneCAArray(ca2);
 
-
          result1 = align(name1,name2,ca1, ca2,true);
 
          Structure s3 = getStructure("1hiv","A");
@@ -273,6 +272,7 @@ extends TestCase
          ca4 = StructureTools.getAtomCAArray(s3);
          ca5 = StructureTools.getAtomCAArray(s4);
          ca6 = StructureTools.cloneCAArray(ca5);
+
          result2 = align(name3,name4,ca4, ca5,true);
 
 
@@ -306,15 +306,16 @@ extends TestCase
       try {
          AFPChainXMLParser.rebuildAFPChain(new1, ca1, ca3);				
          String fatcat1 = new1.toFatcat(ca1, ca3); 
-         assertTrue(fatcat1.equals(result1[0]));				
+         assertEquals(fatcat1, result1[0]);				
          String xmlnew1 = AFPChainXMLConverter.toXML(new1, ca1, ca3);
          assertTrue(xmlnew1.equals(result1[1]));
 
          AFPChainXMLParser.rebuildAFPChain(new2, ca4, ca6);
          String fatcat2 = new2.toFatcat(ca4, ca6);
-         assertTrue(fatcat2.equals(result2[0]));			
+        
+         assertEquals(fatcat2,result2[0]);			
          String xmlnew2 = AFPChainXMLConverter.toXML(new2, ca4, ca6);
-         assertTrue(xmlnew2.equals(result2[1]));
+         assertEquals(xmlnew2,result2[1]);
       } catch (IOException e){
          fail(e.getMessage());
       }

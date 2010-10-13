@@ -140,8 +140,21 @@ public interface Chain {
      * @param pdbresnum the PDB residue number of the group
      * @return the matching group
      * @throws StructureException
+     * @Deprecated replaced by {@link #getGroupByPDB(ResidueNumber)}
      */
+    @Deprecated
     public Group getGroupByPDB(String pdbresnum) throws StructureException;
+    
+
+    /** Get a group by its PDB residue numbering. if the PDB residue number is not know,
+     * throws a StructureException.
+     * 
+     * @param pdbresnum the PDB residue number of the group
+     * @return the matching group
+     * @throws StructureException
+ 
+     */
+    public Group getGroupByPDB(ResidueNumber resNum) throws StructureException;
     
     /** Get all groups that are located between two PDB residue numbers.
      * 
@@ -149,9 +162,23 @@ public interface Chain {
      * @param pdbresnumEnd PDB residue number of end
      * @return Groups in between. or throws a StructureException if either start or end can not be found,
      * @throws StructureException
+     * @Deprecated replaced by {@link #getGroupsByPDB(ResidueNumber, ResidueNumber)}
      */
+    @Deprecated
     public Group[] getGroupsByPDB(String pdbresnumStart, String pdbresnumEnd) throws StructureException;
 
+    /** Get all groups that are located between two PDB residue numbers.
+     * 
+     * @param pdbresnumStart PDB residue number of start
+     * @param pdbresnumEnd PDB residue number of end
+     * @return Groups in between. or throws a StructureException if either start or end can not be found,
+     * @throws StructureException
+
+     */
+    public Group[] getGroupsByPDB(ResidueNumber pdbresnumStart, ResidueNumber pdbresnumEnd) throws StructureException;
+
+    
+    
     /** Get all groups that are located between two PDB residue numbers. In contrast to getGroupsByPDB
      * this method call ignores if the exact outer groups are not found. This is useful e.g. when requesting the range
      * of groups as specified by the DBREF records - these frequently are rather inaccurate.
@@ -162,9 +189,26 @@ public interface Chain {
      * @param ignoreMissing ignore missing groups in this range.
      * @return Groups in between. or throws a StructureException if either start or end can not be found,
      * @throws StructureException
+     * @Deprecated replaced by #{@link #getGroupsByPDB(ResidueNumber, ResidueNumber, boolean)}
      */
+    @Deprecated
     public Group[] getGroupsByPDB(String pdbresnumStart, String pdbresnumEnd,boolean ignoreMissing) throws StructureException;
 
+    
+    /** Get all groups that are located between two PDB residue numbers. In contrast to getGroupsByPDB
+     * this method call ignores if the exact outer groups are not found. This is useful e.g. when requesting the range
+     * of groups as specified by the DBREF records - these frequently are rather inaccurate.
+     * 
+     * 
+     * @param pdbresnumStart PDB residue number of start
+     * @param pdbresnumEnd PDB residue number of end
+     * @param ignoreMissing ignore missing groups in this range.
+     * @return Groups in between. or throws a StructureException if either start or end can not be found,
+     * @throws StructureException
+     * 
+     */
+    public Group[] getGroupsByPDB(ResidueNumber pdbresnumStart, ResidueNumber pdbresnumEnd,boolean ignoreMissing) throws StructureException;
+    
     
     /** get total length of chain, including HETATMs..
      * @return an int representing the length of the whole chain including HETATMs
@@ -213,17 +257,34 @@ public interface Chain {
     /** get and set the name of this chain (Chain id in PDB file ).
      * @param name  a String specifying the name value
      * @see #getName
-     * 
+     * @deprecated replaced by {@link #setChainID(String)}
      */
     public void setName(String name);	
 
     /** get and set the name of this chain (Chain id in PDB file ).
      * @return a String representing the name value
      * @see #setName
+     * @deprecated replaced by {@link #getChainID()}
      */
 
     public String getName();
-	
+    
+    /** get and set the name of this chain (Chain id in PDB file ).
+     * @param name  a String specifying the name value
+     * @see #getChainID()
+
+     */
+    public void setChainID(String name);	
+
+    
+    
+    /** get and set the name of this chain (Chain id in PDB file ).
+     * @return a String representing the name value
+     * @see #setChainID();
+     * 
+     */
+    public String getChainID();
+    
     /** string representation.  */
     public String toString();
 	

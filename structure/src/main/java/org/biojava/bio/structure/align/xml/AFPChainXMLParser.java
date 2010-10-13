@@ -13,6 +13,7 @@ import org.biojava.bio.structure.Atom;
 import org.biojava.bio.structure.AtomImpl;
 import org.biojava.bio.structure.Chain;
 import org.biojava.bio.structure.Group;
+import org.biojava.bio.structure.ResidueNumber;
 import org.biojava.bio.structure.StructureException;
 import org.biojava.bio.structure.align.ce.CeCPMain;
 import org.biojava.bio.structure.align.model.AFP;
@@ -359,7 +360,7 @@ public class AFPChainXMLParser
 				String pdbres2 = atts.getNamedItem("pdbres2").getTextContent();
 				String chain2 = atts.getNamedItem("chain2").getTextContent();
 
-				//System.out.println(blockNr + " " + eqrNr + " " + chain1+" " + pdbres1);
+				//System.out.println(blockNr + " " + eqrNr + " " + chain1+" " + pdbres1 + ":" + chain2 + " " + pdbres2);
 
 				pdbAln[blockNr][0][eqrNr] = chain1+":"+pdbres1;
 				pdbAln[blockNr][1][eqrNr] = chain2+":"+pdbres2;
@@ -444,13 +445,17 @@ public class AFPChainXMLParser
 	 * @return
 	 */
 	private static int getPositionForPDBresunm(String pdbresnum, String chainId , Atom[] atoms){
-
+		ResidueNumber residueNumber =  ResidueNumber.fromString(pdbresnum);
+		residueNumber.setChainId(chainId);
+		
 		for ( int i =0; i< atoms.length ;i++){
-			Group g = atoms[i].getParent();
-			//System.out.println(g + " ? " + pdbresnum);
-			if ( g.getPDBCode().equals(pdbresnum)){
-				Chain c = g.getParent();
-				if ( c.getName().equals(chainId)){
+			Group g = atoms[i].getGroup();
+			
+			//System.out.println(g.getResidueNumber() + "< ? >" + residueNumber +"<");
+			if ( g.getResidueNumber().equals(residueNumber)){
+				//System.out.println(g + " == " + residueNumber );
+				Chain c = g.getChain();
+				if ( c.getChainID().equals(chainId)){
 					return i;
 				}
 			}

@@ -187,7 +187,7 @@ public class StructureImpl implements Structure, Serializable {
 		while (giter.hasNext()){
 			Group g =  giter.next();
 			String rnum = g.getPDBCode();
-
+			//System.out.println(g + " >" + rnum + "< >" + pdbResnum + "<");
 			// we only mutate amino acids
 			// and ignore hetatoms and nucleotides in this case
 			if (rnum.equals(pdbResnum))

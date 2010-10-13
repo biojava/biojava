@@ -2,21 +2,17 @@ package org.biojava.bio.structure.align.seq;
 
 
 import org.biojava.bio.structure.Atom;
-
 import org.biojava.bio.structure.Group;
 import org.biojava.bio.structure.StructureException;
 import org.biojava.bio.structure.StructureTools;
 import org.biojava.bio.structure.align.AbstractStructureAlignment;
 import org.biojava.bio.structure.align.StructureAlignment;
-
 import org.biojava.bio.structure.align.ce.CECalculator;
 import org.biojava.bio.structure.align.ce.CeParameters;
 import org.biojava.bio.structure.align.ce.ConfigStrucAligParams;
-
 import org.biojava.bio.structure.align.ce.UserArgumentProcessor;
 import org.biojava.bio.structure.align.model.AFPChain;
 import org.biojava.bio.structure.align.util.AFPAlignmentDisplay;
-
 import org.biojava3.alignment.Alignments;
 import org.biojava3.alignment.SimpleGapPenalty;
 import org.biojava3.alignment.SubstitutionMatrixHelper;

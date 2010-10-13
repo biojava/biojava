@@ -75,9 +75,9 @@ public interface Group {
 	 *
 	 * @see #setPDBCode
 	 * @return a String representing the PDBCode value
-         * @deprecated replaced by #getResidueNumber
+	 * @deprecated replaced by {@link #getResidueNumber()}
 	 */
-        @Deprecated
+	@Deprecated
 	public String getPDBCode();
 
 	/**
@@ -85,9 +85,9 @@ public interface Group {
 	 *
 	 * @param pdbcode  a String specifying the PDBCode value
 	 * @see #getPDBCode
-         * @deprecated replaced by #setResidueNumber
+	 * @deprecated replaced by {@link #setResidueNumber(ResidueNumber)}
 	 */
-        @Deprecated
+	@Deprecated
 	public void setPDBCode(String pdbcode);
 
 
@@ -150,14 +150,14 @@ public interface Group {
 	 */
 	public Atom getAtom(String name) throws StructureException;
 
-	  
-    /**  Get an atom by the full PDB name e.g. " N  " for N. Throws StructureException if atom not found.
-     * @param pdbName  a String
-     * @return an Atom object
-     * @throws StructureException ...
-     */
+
+	/**  Get an atom by the full PDB name e.g. " N  " for N. Throws StructureException if atom not found.
+	 * @param pdbName  a String
+	 * @return an Atom object
+	 * @throws StructureException ...
+	 */
 	public  Atom getAtomByPDBname(String pdbName) throws StructureException;
-	
+
 	/** Get at atom by position.
 	 *
 	 * @param position  an int
@@ -266,61 +266,73 @@ public interface Group {
 
 
 	/** Set the back-reference (to its parent Chain).
-         *
+	 *
 	 * @param parent the parent Chain
-	 * @see #getParent()
-         * @see #getChain()
+	 * @see #setChain(Chain)
+	 * @see #getChain()
 	 */
-        @Deprecated
+	@Deprecated
 	public void setParent(Chain parent) ;
 
-        /** Returns the parent Chain of the Group.
+	/** Returns the parent Chain of the Group.
 	 *
 	 * @return Chain the Chain object that contains the Group
-	 * @see #setParent(Chain)
 	 * @see #setChain(Chain)
+	 * @deprecated replaced by {@link #getChain()}
 	 */
-        @Deprecated
+	@Deprecated
 	public Chain getParent() ;
 
-        /**
-         * Sets the back-reference to its parent Chain.
+	/**
+	 * Sets the back-reference to its parent Chain.
 	 * @param chain the parent Chain
 	 * @see #getChain()
 	 * @since 3.0
 	 */
-        public void setChain(Chain chain);
+	public void setChain(Chain chain);
 
-        /**
-         * Returns the parent Chain of the Group.
+	/**
+	 * Returns the parent Chain of the Group.
 	 *
 	 * @return Chain the Chain object that contains the Group
 	 * @see #setChain(Chain)
-         * @since 3.0
+	 * @since 3.0
 	 */
 	public Chain getChain() ;
 
-        /**
-         * returns a dynamically created ResidueNumber for the group - this
-         * contains the chainId, resNum and insCode of the group.
-         * @see ResidueNumber
-         * @return ResidueNumber for the group.
-         * @since 3.0
-         */
-        public ResidueNumber getResidueNumber();
+	/**
+	 * returns a dynamically created ResidueNumber for the group - this
+	 * contains the chainId, resNum and insCode of the group.
+	 * @see ResidueNumber
+	 * @return ResidueNumber for the group.
+	 * @since 3.0
+	 */
+	public ResidueNumber getResidueNumber();
 
-        public void setResidueNumber(ResidueNumber residueNumber);
+	
+	/** sets the ResidueNumber for this Group
+	 * 
+	 * @param residueNumber the PDB residueNumber
+	 */
+	public void setResidueNumber(ResidueNumber residueNumber);
 
-        public void setResidueNumber(String chainId, Integer residueNumber, String iCode);
+	/** Utility method to temporarily set a chainID for a group, if a parent chain object does not exist yet.
+	 * Not recommended for general use other than parsing.
+	 * 
+	 * @param chainId
+	 * @param residueNumber
+	 * @param iCode
+	 */
+	public void setResidueNumber(String chainId, Integer residueNumber, Character iCode);
 
-        /**
-         * Utility method for returning the chainId of the Group or null if no
-         * Chain has been set. This replaces the need to use the expression
-         * group.getChain().getId() 
-         * @since 3.0
-         * @return
-         */
-        public String getChainId();
+	/**
+	 * Utility method for returning the chainId of the Group or null if no
+	 * Chain has been set. This replaces the need to use the expression
+	 * group.getChain().getId() 
+	 * @since 3.0
+	 * @return
+	 */
+	public String getChainId();
 
 	/** Set the Chemical Component that closer describes this group.
 	 * 
@@ -333,6 +345,24 @@ public interface Group {
 	 * @return
 	 */
 	public ChemComp getChemComp();
-		
+
 	
+	/** Test if this group has alternate locations.
+	 * 
+	 * @return boolean flag if there are alternate locations.
+	 */
+	public boolean hasAltLoc();
+	
+	
+	/** Get the list of alternate locations.
+	 * 
+	 * @return List of other groups that are on alternate locations
+	 */
+	public List<Group> getAltLocs();
+	
+	/** Add a group that is an alternate location for this group.
+	 * 
+	 */
+	public void addAltLoc(Group g);
+
 }

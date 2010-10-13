@@ -101,9 +101,11 @@ public class FlipAFPChainTest extends TestCase {
 		
 		String xml = AFPChainXMLConverter.toXML(afpChain, ca1, ca2);
 
-		AFPChain newC    = AFPChainXMLParser.fromXML(xml, ca1, ca2);			
+		AFPChain newC    = AFPChainXMLParser.fromXML(xml, ca1, ca2);	
+		//System.out.println(xml);
+		//System.out.println(AFPChainXMLConverter.toXML(newC));
 		AFPChain flipped = AFPChainFlipper.flipChain(newC);
-
+		
 		assertEquals(afpChain.getName1(), flipped.getName2());
 		assertEquals(afpChain.getName2(),flipped.getName1());
 		assertEquals(afpChain.getCa1Length(),flipped.getCa2Length());
@@ -111,7 +113,7 @@ public class FlipAFPChainTest extends TestCase {
 
 
 		String xmlNew = AFPChainXMLConverter.toXML(flipped, ca2, ca1);
-
+		//System.out.println(xmlNew);
 		AFPChain backChain = AFPChainXMLParser.fromXML(xmlNew, ca2, ca1);
 		AFPChain origFlip  = AFPChainFlipper.flipChain(backChain);
 
