@@ -9,6 +9,7 @@ import java.util.Map;
 
 import org.biojava3.core.exceptions.ParserException;
 import org.biojava3.core.sequence.compound.AminoAcidCompound;
+import org.biojava3.core.sequence.transcription.CaseInsensitiveCompound;
 import org.biojava3.core.sequence.compound.NucleotideCompound;
 import org.biojava3.core.sequence.io.util.ClasspathResource;
 import org.biojava3.core.sequence.io.util.IOUtils;
@@ -242,6 +243,10 @@ public class IUPACParser {
     /**
      * Returns a list of codons where the source and target compounds
      * are the same as those given by the parameters.
+     *
+     * @param nucleotides The nucleotide set to use when building BioJava 
+     * representations of codons
+     * @param aminoAcids The target amino acid compounds objects
      */
     public List<Codon> getCodons(CompoundSet<NucleotideCompound> nucelotides,
         CompoundSet<AminoAcidCompound> aminoAcids) {
@@ -253,12 +258,12 @@ public class IUPACParser {
 
         for (int i = 0; i < aminoAcidStrings.size(); i++) {
 
-          List<String> codonString = codonStrings.get(i);
-          NucleotideCompound one = getCompound(codonString, 0, nucelotides);
-          NucleotideCompound two = getCompound(codonString, 1, nucelotides);
-          NucleotideCompound three = getCompound(codonString, 2, nucelotides);
-          boolean start = (startCodonStrings.get(i) == "M");
-          boolean stop = aminoAcidStrings.get(i).equals("*");
+          List<String> codonString    = codonStrings.get(i);
+          CaseInsensitiveCompound one      = getCompound(codonString, 0, nucelotides);
+          CaseInsensitiveCompound two      = getCompound(codonString, 1, nucelotides);
+          CaseInsensitiveCompound three    = getCompound(codonString, 2, nucelotides);
+          boolean start               = ("M".equals(startCodonStrings.get(i)));
+          boolean stop                = ("*".equals(aminoAcidStrings.get(i)));
           AminoAcidCompound aminoAcid = aminoAcids
               .getCompoundForString(aminoAcidStrings.get(i));
           codons.add(new Codon(one, two, three, aminoAcid, start, stop));
@@ -268,26 +273,27 @@ public class IUPACParser {
       return codons;
     }
 
-    private NucleotideCompound getCompound(List<String> compounds,
+    private CaseInsensitiveCompound getCompound(List<String> compounds,
         int position, CompoundSet<NucleotideCompound> nucelotides) {
       String compound = compounds.get(position);
       NucleotideCompound returnCompound = nucelotides
           .getCompoundForString(compound);
       if (returnCompound == null) {
         if ("T".equalsIgnoreCase(compound)) {
-          if (Character.isLowerCase(compound.charAt(0))) {
-            returnCompound = nucelotides.getCompoundForString("u");
-          }
-          else {
+          //TODO Remove if tests pass
+          // if (Character.isLowerCase(compound.charAt(0))) {
+          //   returnCompound = nucelotides.getCompoundForString("u");
+          // }
+          // else {
             returnCompound = nucelotides.getCompoundForString("U");
-          }
+          // }
         }
         else {
           throw new ParserException("Cannot find a compound for string "
               + compound);
         }
       }
-      return returnCompound;
+      return new CaseInsensitiveCompound(returnCompound);
     }
 
     /**

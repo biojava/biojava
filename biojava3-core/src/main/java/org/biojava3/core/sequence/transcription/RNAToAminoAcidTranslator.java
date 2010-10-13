@@ -8,6 +8,7 @@ import java.util.Map;
 
 import org.biojava3.core.sequence.RNASequence;
 import org.biojava3.core.sequence.compound.AminoAcidCompound;
+import org.biojava3.core.sequence.transcription.CaseInsensitiveCompound;
 import org.biojava3.core.sequence.compound.NucleotideCompound;
 import org.biojava3.core.sequence.io.template.SequenceCreatorInterface;
 import org.biojava3.core.sequence.template.AbstractCompoundTranslator;
@@ -29,7 +30,7 @@ public class RNAToAminoAcidTranslator extends AbstractCompoundTranslator<Nucleot
 
     private final boolean trimStops;
     private final boolean initMetOnly;
-    private final Map<List<NucleotideCompound>, Codon> quickLookup;
+    private final Map<List<CaseInsensitiveCompound>, Codon> quickLookup;
     private final Map<AminoAcidCompound, List<Codon>> aminoAcidToCodon;
     private final NucleotideCompound nCompound;
     private final AminoAcidCompound unknownAminoAcidCompound;
@@ -46,7 +47,7 @@ public class RNAToAminoAcidTranslator extends AbstractCompoundTranslator<Nucleot
         this.initMetOnly = initMetOnly;
         this.translateNCodons = translateNCodons;
 
-        quickLookup = new HashMap<List<NucleotideCompound>, Codon>(codons.getAllCompounds().size());
+        quickLookup = new HashMap<List<CaseInsensitiveCompound>, Codon>(codons.getAllCompounds().size());
         aminoAcidToCodon = new HashMap<AminoAcidCompound, List<Codon>>();
 
         List<Codon> codonList = table.getCodons(nucleotides, aminoAcids);
@@ -89,16 +90,19 @@ public class RNAToAminoAcidTranslator extends AbstractCompoundTranslator<Nucleot
             Sequence<NucleotideCompound> originalSequence) {
 
         List<List<AminoAcidCompound>> workingList = new ArrayList<List<AminoAcidCompound>>();
-        Iterable<List<NucleotideCompound>> iter = new WindowedSequence<NucleotideCompound>(
-                originalSequence, 3);
+        
+        Iterable<List<NucleotideCompound>> iter = 
+            new WindowedSequence<NucleotideCompound>(originalSequence, 3);
+                
         for (List<NucleotideCompound> element : iter) {
             AminoAcidCompound aminoAcid;
             if(hasN(element)) {
                 aminoAcid = unknownAminoAcidCompound;
             }
             else {
-                Codon target = quickLookup.get(element);
-                aminoAcid = target.getAminoAcid();
+              List<CaseInsensitiveCompound> c = wrap(element);
+              Codon target = quickLookup.get(c);
+              aminoAcid = target.getAminoAcid();
             }
             addCompoundsToList(Arrays.asList(aminoAcid), workingList);
         }
@@ -116,6 +120,14 @@ public class RNAToAminoAcidTranslator extends AbstractCompoundTranslator<Nucleot
             }
         }
         return false;
+    }
+    
+    protected List<CaseInsensitiveCompound> wrap(List<NucleotideCompound> list) {
+      List<CaseInsensitiveCompound> output = new ArrayList<CaseInsensitiveCompound>(list.size());
+      for(NucleotideCompound c: list) {
+        output.add(new CaseInsensitiveCompound(c));
+      }
+      return output;
     }
 
     /**

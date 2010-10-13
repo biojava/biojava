@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.biojava3.core.sequence.compound.AminoAcidCompound;
+import org.biojava3.core.sequence.transcription.CaseInsensitiveCompound;
 import org.biojava3.core.sequence.compound.NucleotideCompound;
 import org.biojava3.core.sequence.template.Compound;
 import org.biojava3.core.sequence.template.CompoundSet;
@@ -43,16 +44,16 @@ public interface Table {
    */
   public static class Codon implements Compound {
 
-    private final NucleotideCompound one;
-    private final NucleotideCompound two;
-    private final NucleotideCompound three;
+    private final CaseInsensitiveCompound one;
+    private final CaseInsensitiveCompound two;
+    private final CaseInsensitiveCompound three;
     private final boolean            start;
     private final boolean            stop;
     private final AminoAcidCompound  aminoAcid;
     private final String             stringified;
 
-    public Codon(NucleotideCompound one, NucleotideCompound two,
-        NucleotideCompound three, AminoAcidCompound aminoAcid, boolean start,
+    public Codon(CaseInsensitiveCompound one, CaseInsensitiveCompound two,
+        CaseInsensitiveCompound three, AminoAcidCompound aminoAcid, boolean start,
         boolean stop) {
       this.one = one;
       this.two = two;
@@ -60,26 +61,26 @@ public interface Table {
       this.start = start;
       this.stop = stop;
       this.aminoAcid = aminoAcid;
-      stringified = one.getBase().toUpperCase()
-          + two.getBase().toUpperCase()
-          + three.getBase().toUpperCase();
+      stringified = one.getUnderlyingCompound().getBase().toUpperCase()
+          + two.getUnderlyingCompound().getBase().toUpperCase()
+          + three.getUnderlyingCompound().getBase().toUpperCase();
     }
 
-    public Codon(NucleotideCompound one, NucleotideCompound two,
-        NucleotideCompound three) {
+    public Codon(CaseInsensitiveCompound one, CaseInsensitiveCompound two,
+        CaseInsensitiveCompound three) {
       this(one,two,three,null,false,false);
     }
 
     public NucleotideCompound getOne() {
-      return one;
+      return one.getUnderlyingCompound();
     }
 
     public NucleotideCompound getTwo() {
-      return two;
+      return two.getUnderlyingCompound();
     }
 
     public NucleotideCompound getThree() {
-      return three;
+      return three.getUnderlyingCompound();
     }
 
     public boolean isStart() {
@@ -94,14 +95,14 @@ public interface Table {
       return aminoAcid;
     }
 
-    public List<NucleotideCompound> getAsList() {
-      return Arrays.asList(one,two,three);
+    public List<CaseInsensitiveCompound> getAsList() {
+      return Arrays.asList(one, two, three);
     }
 
     public boolean equalsNucelotides(NucleotideCompound... compounds) {
-      return compounds[0].equalsIgnoreCase(one)
-          && compounds[1].equalsIgnoreCase(two)
-          && compounds[2].equalsIgnoreCase(three);
+      return new CaseInsensitiveCompound(compounds[0]).equals(one)
+          && new CaseInsensitiveCompound(compounds[1]).equals(two)
+          && new CaseInsensitiveCompound(compounds[2]).equals(three);
     }
 
     public boolean equals(Object o) {
