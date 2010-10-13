@@ -442,7 +442,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 			// test altLoc
 			if ( ! altLoc.equals(' ') && ( ! altLoc.equals('.'))) {												
 				altGroup = getCorrectAltLocGroup( altLoc,recordName,aminoCode1,groupCode3, seq_id);
-				System.out.println("found altLoc! " + altLoc + " " + current_group + " " + altGroup);
+				//System.out.println("found altLoc! " + altLoc + " " + current_group + " " + altGroup);
 			}
 		}
 
