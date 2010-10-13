@@ -14,6 +14,7 @@ import java.util.List;
 
 import org.biojava3.core.sequence.Strand;
 import org.biojava3.core.sequence.storage.JoiningSequenceReader;
+import org.biojava3.core.sequence.template.AbstractSequence;
 import org.biojava3.core.sequence.template.ComplementCompound;
 import org.biojava3.core.sequence.template.CompoundSet;
 import org.biojava3.core.sequence.views.ComplementSequenceView;
@@ -38,6 +39,8 @@ public abstract class AbstractLocation implements Location {
     private boolean circular;
     private boolean betweenCompounds;
     private AccessionID accession;
+
+
 
     protected AbstractLocation() {
         super();
