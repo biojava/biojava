@@ -14,7 +14,7 @@ import org.biojava3.core.sequence.io.FastaWriterHelper;
 
 
 /**
- *
+ * Utility to write each Fasta entry to a unique file
  * @author Scooter Willis <willishf at gmail dot com>
  */
 public class SplitFasta {

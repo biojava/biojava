@@ -50,6 +50,8 @@ public class GFF3Reader {
             if (s.length() > 0) {
                 if (s.charAt(0) == '#') {
                     //ignore comment lines
+                    if(s.startsWith("##fasta"))
+                        break;
                 } else {
 
                     FeatureI f = parseLine(s);
