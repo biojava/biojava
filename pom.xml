@@ -13,8 +13,9 @@
 		<url>http://www.biojava.org</url>
 	</organization>
 	<scm>
-		<connection>scm:svn:svn+ssh://dev.open-bio.org/home/svn-repositories/biojava/biojava-live/trunk/</connection>
-		<url>http://code.open-bio.org/svnweb/index.cgi/biojava/browse/biojava-live/trunk/</url>
+		<connection>scm:svn:svn://code.open-bio.org/biojava/biojava-live/trunk</connection>
+		<developerConnection>scm:svn:svn+ssh://dev.open-bio.org/home/svn-repositories/biojava/biojava-live/trunk</connection>
+		<url>http://code.open-bio.org/svnweb/index.cgi/biojava/browse/biojava-live/trunk</url>
 	</scm>
 	<repositories>
 		<repository>
@@ -115,7 +116,7 @@
 					<artifactId>maven-release-plugin</artifactId>
 					<version>2.1</version>
 					<configuration>
-						<tagBase>svn+ssh://dev.open-bio.org/home/svn-repositories/biojava/biojava-live/tags/</tagBase>
+						<tagBase>svn+ssh://dev.open-bio.org/home/svn-repositories/biojava/biojava-live/tags</tagBase>
 						<remoteTagging>true</remoteTagging>
 						<preparationGoals>clean install</preparationGoals>
 						<autoVersionSubmodules>true</autoVersionSubmodules>
