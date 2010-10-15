@@ -72,7 +72,7 @@ public class GeneFeatureHelperTest extends TestCase {
      * Test of getProteinSequences method, of class GeneFeatureHelper. Used gff3 file that was modified from the volvox gff version. Do not
      * have the reference protein that is generated from each CDS record so subject to being incorrect without a validated test case.
      * Could not find anyone providing a gff3 test case with expected protein output.
-     */
+     *
     public void testGetProteinSequences() throws Exception {
         System.out.println("getProteinSequences");
         LinkedHashMap<String, ChromosomeSequence> chromosomeSequenceList = GeneFeatureHelper.loadFastaAddGeneFeaturesFromGmodGFF3(new File("src/test/resources/volvox_all.fna"), new File("src/test/resources/volvox.gff3"));
@@ -81,7 +81,7 @@ public class GeneFeatureHelperTest extends TestCase {
         FileAssert.assertBinaryEquals("volvox_all_reference.faa and volvox_all.faa are not equal", new File("src/test/resources/volvox_all_reference.faa"), new File("src/test/resources/testoutput/volvox_all.faa"));
 
     }
-
+    */
     /**
      * Test of getGeneSequences method, of class GeneFeatureHelper.
      */
