@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.biojava</groupId>
 	<artifactId>biojava</artifactId>
@@ -110,6 +111,18 @@
 					<artifactId>maven-jaxb2-plugin</artifactId>
 					<version>0.7.2</version>
 				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-release-plugin</artifactId>
+					<version>2.1</version>
+					<configuration>
+						<tagBase>http://code.open-bio.org/svnweb/index.cgi/biojava/browse/biojava-live/tags/</tagBase>
+						<remoteTagging>true</remoteTagging>
+						<preparationGoals>clean install</preparationGoals>
+						<autoVersionSubmodules>true</autoVersionSubmodules>
+					</configuration>
+
+				</plugin>
 			</plugins>
 		</pluginManagement>
 	</build>
@@ -180,11 +193,8 @@
 						<link>http://java.sun.com/j2ee/sdk_1.3/techdocs/api/</link>
 
 						<!-- Libraries -->
-						<!--
-							<link>http://jakarta.apache.org/commons/collections/apidocs</link>
-							<link>http://jakarta.apache.org/commons/logging/apidocs/</link>
-							<link>http://www.junit.org/junit/javadoc/</link>
-						-->
+						<!-- <link>http://jakarta.apache.org/commons/collections/apidocs</link> 
+							<link>http://jakarta.apache.org/commons/logging/apidocs/</link> <link>http://www.junit.org/junit/javadoc/</link> -->
 						<link>http://logging.apache.org/log4j/docs/api/</link>
 						<link>http://jakarta.apache.org/regexp/apidocs/</link>
 						<link>http://jakarta.apache.org/velocity/api/</link>
@@ -208,8 +218,11 @@
 					<title>BioJava SVN statistics</title>
 				</configuration>
 			</plugin>
+
+
 		</plugins>
 	</reporting>
+
 	<modules>
 		<module>core</module>
 		<module>alignment</module>
