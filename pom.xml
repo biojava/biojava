@@ -115,7 +115,7 @@
 					<artifactId>maven-release-plugin</artifactId>
 					<version>2.1</version>
 					<configuration>
-						<tagBase>svn+ssh://dev.open-bio.org/home/svn-repositories/biojava/biojava-live/trunk/</tagBase>
+						<tagBase>svn+ssh://dev.open-bio.org/home/svn-repositories/biojava/biojava-live/tags/</tagBase>
 						<remoteTagging>true</remoteTagging>
 						<preparationGoals>clean install</preparationGoals>
 						<autoVersionSubmodules>true</autoVersionSubmodules>
