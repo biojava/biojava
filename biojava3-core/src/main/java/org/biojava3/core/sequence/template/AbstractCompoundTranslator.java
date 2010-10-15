@@ -1,6 +1,7 @@
 package org.biojava3.core.sequence.template;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -53,16 +54,15 @@ public abstract class AbstractCompoundTranslator<F extends Compound, T extends C
 		 l = new ArrayList<T>();
 		 mapper.put(source, l);
 	 }
-	  
-    for (T t : targets) {
-      l.add( t);
-    }
+     l.addAll(Arrays.asList(targets));
   }
 
+    @Override
   public List<T> translateMany(F fromCompound) {
     return mapper.get(fromCompound);
   }
 
+    @Override
   public T translate(F fromCompound) {
     List<T> compounds = translateMany(fromCompound);
     if (compounds.isEmpty()) {
@@ -77,6 +77,7 @@ public abstract class AbstractCompoundTranslator<F extends Compound, T extends C
     }
   }
 
+    @Override
   public List<Sequence<T>> createSequences(Sequence<F> originalSequence) {
     List<List<T>> workingList = new ArrayList<List<T>>();
     for (F source : originalSequence) {
@@ -91,7 +92,7 @@ public abstract class AbstractCompoundTranslator<F extends Compound, T extends C
       // AUG UGG GAC AGU
       // AUG UGG GAU AGC
       // AUG UGG GAC AGC
-      if (compounds.size() == 0) {
+      if (compounds.isEmpty()) {
         throw new TranslationException("Compound " + source + " resulted in "
             + "no target compounds");
       }
@@ -154,13 +155,14 @@ public abstract class AbstractCompoundTranslator<F extends Compound, T extends C
     }
   }
 
+    @Override
   public Sequence<T> createSequence(Sequence<F> originalSequence) {
     Collection<Sequence<T>> sequences = createSequences(originalSequence);
     if (sequences.size() > 1) {
       throw new TranslationException("Too many sequences created; "
           + "createSequence() assumes only one sequence can be created");
     }
-    else if (sequences.size() == 0) {
+    else if (sequences.isEmpty()) {
       throw new TranslationException("No sequences created");
     }
     return sequences.iterator().next();

@@ -6,7 +6,8 @@ package org.biojava3.core.sequence.template;
  */
 public abstract class AbstractCompound implements Compound {
 
-  private String base;
+  private final String base;
+  private final String upperedBase;
   private String shortName = null;
   private String longName = null;
   private String description = null;
@@ -14,10 +15,15 @@ public abstract class AbstractCompound implements Compound {
 
   public AbstractCompound(String base) {
     this.base = base;
+    this.upperedBase = base.toUpperCase();
   }
 
   public String getBase() {
     return base;
+  }
+
+  public String getUpperedBase() {
+    return upperedBase;
   }
 
   public String getDescription() {
