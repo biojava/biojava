@@ -81,6 +81,27 @@ public class TranscriptionEngine {
         this.aminoAcidCompounds = aminoAcidCompounds;
     }
 
+    /**
+     * Quick method to let you go from a CDS to a Peptide quickly. It assumes
+     * you are translating only in the first frame
+     *
+     * @param dna The CDS to translate
+     * @return The Protein Sequence
+     */
+    public Sequence<AminoAcidCompound> translate(Sequence<NucleotideCompound> dna) {
+        Map<Frame, Sequence<AminoAcidCompound>> trans =
+                multipleFrameTranslation(dna, Frame.ONE);
+        return trans.get(Frame.ONE);
+    }
+
+    /**
+     * A way of translating DNA in a number of frames
+     *
+     * @param dna The CDS to translate
+     * @param frames The Frames to translate in
+     * @return All generated protein sequences in the given frames. Can have
+     * null entries
+     */
     public Map<Frame, Sequence<AminoAcidCompound>> multipleFrameTranslation(
             Sequence<NucleotideCompound> dna, Frame... frames) {
         Map<Frame, Sequence<AminoAcidCompound>> results =
