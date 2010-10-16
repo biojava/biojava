@@ -1,0 +1,14 @@
+<?xml version='1.0' standalone='no' ?>
+<DASINT xmlns="http://localhost/dazzle/dasint_RC1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://localhost/dazzle/dasint_RC1 http://localhost/dazzle/dasint_RC1.xsi">
+  <INTERACTOR id="1212entrez gene/locuslink" shortLabel="CLTB" dbSource="entrez gene/locuslink" dbSourceCvId="MI:0477" dbVersion="" dbAccessionId="1212" dbCoordSys="Entrez,Gene_ID">
+    <DETAIL property="description" value="clathrin, light chain (Lcb)" />
+  </INTERACTOR>
+  <INTERACTOR id="10084entrez gene/locuslink" shortLabel="PQBP1" dbSource="entrez gene/locuslink" dbSourceCvId="MI:0477" dbVersion="" dbAccessionId="10084" dbCoordSys="Entrez,Gene_ID">
+    <DETAIL property="description" value="polyglutamine binding protein 1" />
+  </INTERACTOR>
+  <INTERACTION name="CLTB-PQBP1" dbSource="intact" dbSourceCvId="" dbVersion="" dbAccessionId="">
+    <PARTICIPANT id="1212entrez gene/locuslink" />
+
+    <PARTICIPANT id="10084entrez gene/locuslink" />
+  </INTERACTION>
+</DASINT>

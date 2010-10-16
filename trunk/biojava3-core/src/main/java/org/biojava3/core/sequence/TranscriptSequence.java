@@ -1,0 +1,223 @@
+/*
+ *                    BioJava development code
+ *
+ * This code may be freely distributed and modified under the
+ * terms of the GNU Lesser General Public Licence.  This should
+ * be distributed with the code.  If you do not have a copy,
+ * see:
+ *
+ *      http://www.gnu.org/copyleft/lesser.html
+ *
+ * Copyright for this code is held jointly by the individual
+ * authors.  These should be listed in @author doc comments.
+ *
+ * For more information on the BioJava project and its aims,
+ * or to join the biojava-l mailing list, visit the home page
+ * at:
+ *
+ *      http://www.biojava.org/
+ *
+ * Created on DATE
+ *
+ */
+package org.biojava3.core.sequence;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.logging.Logger;
+
+import org.biojava3.core.sequence.transcription.TranscriptionEngine;
+
+/**
+ *
+ * @author Scooter Willis
+ */
+public class TranscriptSequence extends DNASequence {
+
+    private static final Logger log = Logger.getLogger(TranscriptSequence.class.getName());
+    private final ArrayList<CDSSequence> cdsSequenceList = new ArrayList<CDSSequence>();
+    private final LinkedHashMap<String, CDSSequence> cdsSequenceHashMap = new LinkedHashMap<String, CDSSequence>();
+    private StartCodonSequence startCodonSequence = null;
+    private StopCodonSequence stopCodonSequence = null;
+    private GeneSequence parentGeneSequence = null;
+
+    /**
+     *
+     * @param parentDNASequence
+     * @param begin
+     * @param end inclusive of end
+     */
+    public TranscriptSequence(GeneSequence parentDNASequence, int begin, int end) {
+        setParentSequence(parentDNASequence);
+        this.parentGeneSequence = parentDNASequence;
+        setBioBegin(begin);
+        setBioEnd(end);
+
+    }
+
+    /**
+     * @return the strand
+     */
+    public Strand getStrand() {
+        return parentGeneSequence.getStrand();
+    }
+
+    /**
+     *
+     * @param accession
+     * @return
+     */
+    public CDSSequence removeCDS(String accession) {
+        for (CDSSequence cdsSequence : cdsSequenceList) {
+            if (cdsSequence.getAccession().getID().equals(accession)) {
+                cdsSequenceList.remove(cdsSequence);
+                cdsSequenceHashMap.remove(accession);
+                return cdsSequence;
+            }
+        }
+        return null;
+    }
+
+    public LinkedHashMap<String, CDSSequence> getCDSSequences() {
+        return cdsSequenceHashMap;
+    }
+
+    /**
+     *
+     * @param accession
+     * @param begin
+     * @param end
+     * @param phase 0,1,2
+     * @return
+     */
+    public CDSSequence addCDS(AccessionID accession, int begin, int end, int phase) throws Exception {
+        if (cdsSequenceHashMap.containsKey(accession.getID())) {
+            throw new Exception("Duplicate accesion id " + accession.getID());
+        }
+        CDSSequence cdsSequence = new CDSSequence(this, begin, end, phase); //sense should be the same as parent
+        cdsSequence.setAccession(accession);
+        cdsSequenceList.add(cdsSequence);
+        Collections.sort(cdsSequenceList, new CDSComparator());
+        cdsSequenceHashMap.put(accession.getID(), cdsSequence);
+        return cdsSequence;
+    }
+
+        /**
+     * http://www.sequenceontology.org/gff3.shtml
+     * http://biowiki.org/~yam/bioe131/GFF.ppt
+     * @return
+     */
+
+    /**
+     * Return a list of protein sequences based on each CDS sequence
+     * where the phase shift between two CDS sequences is assigned to the
+     * CDS sequence that starts the triplet.
+     *
+     * @return
+     */
+    public ArrayList<ProteinSequence> getProteinCDSSequences() {
+        ArrayList<ProteinSequence> proteinSequenceList = new ArrayList<ProteinSequence>();
+        for (int i = 0; i < cdsSequenceList.size(); i++) {
+            CDSSequence cdsSequence = cdsSequenceList.get(i);
+            String codingSequence = cdsSequence.getCodingSequence();
+  //          System.out.println("CDS " + getStrand() + " "  + cdsSequence.getPhase() + "=" + codingSequence);
+            if (this.getStrand() == Strand.NEGATIVE) {
+                if (cdsSequence.phase == 1) {
+                    codingSequence = codingSequence.substring(1, codingSequence.length());
+                } else if (cdsSequence.phase == 2) {
+                    codingSequence = codingSequence.substring(2, codingSequence.length());
+                }
+                if (i < cdsSequenceList.size() - 1) {
+                    CDSSequence nextCDSSequence = cdsSequenceList.get(i + 1);
+                    if (nextCDSSequence.phase == 1) {
+                        String nextCodingSequence = nextCDSSequence.getCodingSequence();
+                        codingSequence = codingSequence + nextCodingSequence.substring(0, 1);
+                    } else if (nextCDSSequence.phase == 2) {
+                        String nextCodingSequence = nextCDSSequence.getCodingSequence();
+                        codingSequence = codingSequence + nextCodingSequence.substring(0, 2);
+                    }
+                }
+            } else {
+                if (cdsSequence.phase == 1) {
+                    codingSequence = codingSequence.substring(1, codingSequence.length());
+                } else if (cdsSequence.phase == 2) {
+                    codingSequence = codingSequence.substring(2, codingSequence.length());
+                }
+                if (i < cdsSequenceList.size() - 1) {
+                    CDSSequence nextCDSSequence = cdsSequenceList.get(i + 1);
+                    if (nextCDSSequence.phase == 1) {
+                        String nextCodingSequence = nextCDSSequence.getCodingSequence();
+                       codingSequence = codingSequence + nextCodingSequence.substring(0, 1);
+                    } else if (nextCDSSequence.phase == 2) {
+                        String nextCodingSequence = nextCDSSequence.getCodingSequence();
+                        codingSequence = codingSequence + nextCodingSequence.substring(0, 2);
+                    }
+               }
+            }
+
+
+   //    System.out.println(codingSequence);
+            DNASequence dnaCodingSequence = new DNASequence(codingSequence.toString().toUpperCase());
+            RNASequence rnaCodingSequence = dnaCodingSequence.getRNASequence(TranscriptionEngine.getDefault());
+            ProteinSequence proteinSequence = rnaCodingSequence.getProteinSequence(TranscriptionEngine.getDefault());
+            proteinSequence.setAccession(new AccessionID(cdsSequence.getAccession().getID()));
+            proteinSequenceList.add(proteinSequence);
+        }
+        return proteinSequenceList;
+    }
+
+
+
+    public DNASequence getDNACodingSequence() {
+        StringBuilder sb = new StringBuilder();
+        for (CDSSequence cdsSequence : cdsSequenceList) {
+            sb.append(cdsSequence.getCodingSequence());
+        }
+        DNASequence dnaSequence = new DNASequence(sb.toString().toUpperCase());
+        dnaSequence.setAccession(new AccessionID(this.getAccession().getID()));
+        return dnaSequence;
+    }
+
+    public ProteinSequence getProteinSequence() {
+        return getProteinSequence(TranscriptionEngine.getDefault());
+    }
+
+    public ProteinSequence getProteinSequence(TranscriptionEngine engine) {
+        DNASequence dnaCodingSequence = getDNACodingSequence();
+        RNASequence rnaCodingSequence = dnaCodingSequence.getRNASequence(engine);
+        ProteinSequence proteinSequence = rnaCodingSequence.getProteinSequence(engine);
+        proteinSequence.setAccession(new AccessionID(this.getAccession().getID()));
+        return proteinSequence;
+    }
+
+    /**
+     * @return the startCodonSequence
+     */
+    public StartCodonSequence getStartCodonSequence() {
+        return startCodonSequence;
+    }
+
+    /**
+     * @param startCodonSequence the startCodonSequence to set
+     */
+    public void addStartCodonSequence(AccessionID accession, int begin, int end) {
+        this.startCodonSequence = new StartCodonSequence(this, begin, end);
+        startCodonSequence.setAccession(accession);
+    }
+
+    /**
+     * @return the stopCodonSequence
+     */
+    public StopCodonSequence getStopCodonSequence() {
+        return stopCodonSequence;
+    }
+
+    /**
+     * @param stopCodonSequence the stopCodonSequence to set
+     */
+    public void addStopCodonSequence(AccessionID accession, int begin, int end) {
+        this.stopCodonSequence = new StopCodonSequence(this, begin, end);
+        stopCodonSequence.setAccession(accession);
+    }
+}

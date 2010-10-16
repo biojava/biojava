@@ -1,0 +1,29 @@
+The StAXFeatureHandler and StAXPropertyHandler classes are used 
+as the base for subclassing most handlers in my design.  
+Basically, each StAXFeatureHandler setups up a fresh 
+environment which the nested StAXPropertyHandler instances 
+modify.  Access outside of the latest top 
+StAXPropertyHandler instance is not permitted in the 
+current implementation.
+
+One feature of the current implementation is a 
+callbackStack.  This was introduced to permit 
+StAXPropertyHandler instances to search downward in the 
+stack for handlers that provide methods to process data 
+obtained by the current handler.  This is a means of 
+allowing context sensitivity for child renderers as they 
+could be directed to search the stack for nesting handlers 
+that do a task with the data.  It has the advantage of 
+locating the context sensitive code within the handler that 
+creats that context.
+
+It is not compulsory for any property handler to subclass 
+StAXPropertyHandler: useful classes like 
+StringElementHandlerBase cannot be used simultaneously with 
+subclassing from StAXPropertyHandler.  However, if your 
+property handler wishes to offer a context to a nested 
+class, then it should use StAXPropertyHandler or at least 
+use the push and pop methods in StAXFeatureHandler to place 
+themselves in the callbackStack so that other classes can 
+find it.
+

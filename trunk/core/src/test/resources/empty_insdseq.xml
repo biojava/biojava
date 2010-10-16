@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE INSDSeq PUBLIC "-//EMBL-EBI//INSD INSDSeq/EN" "http://www.ebi.ac.uk/dtd/INSD_INSDSeq.dtd">
+<INSDSet>
+  <INSDSeq>
+    <INSDSeq_locus>testempty</INSDSeq_locus>
+    <INSDSeq_length>0</INSDSeq_length>
+    <INSDSeq_moltype>DNA</INSDSeq_moltype>
+    <INSDSeq_topology>linear</INSDSeq_topology>
+    <INSDSeq_update-date>null</INSDSeq_update-date>
+    <INSDSeq_create-date>null</INSDSeq_create-date>
+    <INSDSeq_definition>no sequence</INSDSeq_definition>
+    <INSDSeq_accession-version>.0</INSDSeq_accession-version>
+    <INSDSeq_sequence />
+  </INSDSeq>
+</INSDSet>

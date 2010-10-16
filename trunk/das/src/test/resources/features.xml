@@ -1,0 +1,354 @@
+<?xml version='1.0' standalone='no' ?>
+<!DOCTYPE DASGFF SYSTEM 'dasgff.dtd' >
+<DASGFF>
+  <GFF version="1.0" href="http://www.ebi.ac.uk/das-srv/uniprot/das/aristotle/features?segment=P00280">
+    <SEGMENT id="P00280" version="8f29b1d09f48ec8e9909593052dcfaec" start="1" stop="149">
+      <FEATURE id="P00280" label="P00280">
+        <TYPE id="description" category="">description</TYPE>
+        <METHOD id="description">description</METHOD>
+        <START>0</START>
+        <END>0</END>
+        <SCORE>-</SCORE>
+        <ORIENTATION>0</ORIENTATION>
+        <PHASE>-</PHASE>
+        <NOTE>Azurin precursor.</NOTE>
+        <LINK href="http://www.ebi.uniprot.org/uniprot-srv/uniProtView.do?proteinAc=P00280">http://www.ebi.uniprot.org/uniprot-srv/uniProtView.do?proteinAc=P00280</LINK>
+      </FEATURE>
+      <FEATURE id="AZUR_ALCDE_SIGNAL_1_20" label="AZUR_ALCDE_SIGNAL_1_20">
+        <TYPE id="SIGNAL" category="Molecule Processing">SIGNAL</TYPE>
+        <METHOD id="UniProt">UniProt</METHOD>
+        <START>1</START>
+        <END>20</END>
+        <SCORE>-</SCORE>
+        <ORIENTATION>0</ORIENTATION>
+        <PHASE>-</PHASE>
+      </FEATURE>
+      <FEATURE id="AZUR_ALCDE_DOMAIN_21_149" label="AZUR_ALCDE_DOMAIN_21_149">
+        <TYPE id="DOMAIN" category="Regions">DOMAIN</TYPE>
+        <METHOD id="UniProt">UniProt</METHOD>
+        <START>21</START>
+        <END>149</END>
+        <SCORE>-</SCORE>
+        <ORIENTATION>0</ORIENTATION>
+        <PHASE>-</PHASE>
+        <NOTE>Plastocyanin-like</NOTE>
+      </FEATURE>
+      <FEATURE id="AZUR_ALCDE_DISULFID_23_46" label="AZUR_ALCDE_DISULFID_23_46">
+        <TYPE id="DISULFID" category="Amino acid modifications(pre and PTM)">DISULFID</TYPE>
+        <METHOD id="UniProt">UniProt</METHOD>
+        <START>23</START>
+        <END>46</END>
+        <SCORE>-</SCORE>
+        <ORIENTATION>0</ORIENTATION>
+        <PHASE>-</PHASE>
+      </FEATURE>
+      <FEATURE id="AZUR_ALCDE_STRAND_23_29" label="AZUR_ALCDE_STRAND_23_29">
+        <TYPE id="STRAND" category="Secondary structure">STRAND</TYPE>
+        <METHOD id="UniProt">UniProt</METHOD>
+        <START>23</START>
+        <END>29</END>
+        <SCORE>-</SCORE>
+        <ORIENTATION>0</ORIENTATION>
+        <PHASE>-</PHASE>
+      </FEATURE>
+      <FEATURE id="AZUR_ALCDE_STRAND_31_33" label="AZUR_ALCDE_STRAND_31_33">
+        <TYPE id="STRAND" category="Secondary structure">STRAND</TYPE>
+        <METHOD id="UniProt">UniProt</METHOD>
+        <START>31</START>
+        <END>33</END>
+        <SCORE>-</SCORE>
+        <ORIENTATION>0</ORIENTATION>
+        <PHASE>-</PHASE>
+      </FEATURE>
+      <FEATURE id="AZUR_ALCDE_STRAND_38_43" label="AZUR_ALCDE_STRAND_38_43">
+        <TYPE id="STRAND" category="Secondary structure">STRAND</TYPE>
+        <METHOD id="UniProt">UniProt</METHOD>
+        <START>38</START>
+        <END>43</END>
+        <SCORE>-</SCORE>
+        <ORIENTATION>0</ORIENTATION>
+        <PHASE>-</PHASE>
+      </FEATURE>
+      <FEATURE id="AZUR_ALCDE_STRAND_47_55" label="AZUR_ALCDE_STRAND_47_55">
+        <TYPE id="STRAND" category="Secondary structure">STRAND</TYPE>
+        <METHOD id="UniProt">UniProt</METHOD>
+        <START>47</START>
+        <END>55</END>
+        <SCORE>-</SCORE>
+        <ORIENTATION>0</ORIENTATION>
+        <PHASE>-</PHASE>
+      </FEATURE>
+      <FEATURE id="AZUR_ALCDE_HELIX_61_64" label="AZUR_ALCDE_HELIX_61_64">
+        <TYPE id="HELIX" category="Secondary structure">HELIX</TYPE>
+        <METHOD id="UniProt">UniProt</METHOD>
+        <START>61</START>
+        <END>64</END>
+        <SCORE>-</SCORE>
+        <ORIENTATION>0</ORIENTATION>
+        <PHASE>-</PHASE>
+      </FEATURE>
+      <FEATURE id="AZUR_ALCDE_METAL_66_66" label="AZUR_ALCDE_METAL_66_66">
+        <TYPE id="METAL" category="Sites">METAL</TYPE>
+        <METHOD id="UniProt">UniProt</METHOD>
+        <START>66</START>
+        <END>66</END>
+        <SCORE>-</SCORE>
+        <ORIENTATION>0</ORIENTATION>
+        <PHASE>-</PHASE>
+        <NOTE>Copper</NOTE>
+      </FEATURE>
+      <FEATURE id="AZUR_ALCDE_STRAND_69_72" label="AZUR_ALCDE_STRAND_69_72">
+        <TYPE id="STRAND" category="Secondary structure">STRAND</TYPE>
+        <METHOD id="UniProt">UniProt</METHOD>
+        <START>69</START>
+        <END>72</END>
+        <SCORE>-</SCORE>
+        <ORIENTATION>0</ORIENTATION>
+        <PHASE>-</PHASE>
+      </FEATURE>
+      <FEATURE id="AZUR_ALCDE_HELIX_73_75" label="AZUR_ALCDE_HELIX_73_75">
+        <TYPE id="HELIX" category="Secondary structure">HELIX</TYPE>
+        <METHOD id="UniProt">UniProt</METHOD>
+        <START>73</START>
+        <END>75</END>
+        <SCORE>-</SCORE>
+        <ORIENTATION>0</ORIENTATION>
+        <PHASE>-</PHASE>
+      </FEATURE>
+      <FEATURE id="AZUR_ALCDE_HELIX_76_86" label="AZUR_ALCDE_HELIX_76_86">
+        <TYPE id="HELIX" category="Secondary structure">HELIX</TYPE>
+        <METHOD id="UniProt">UniProt</METHOD>
+        <START>76</START>
+        <END>86</END>
+        <SCORE>-</SCORE>
+        <ORIENTATION>0</ORIENTATION>
+        <PHASE>-</PHASE>
+      </FEATURE>
+      <FEATURE id="AZUR_ALCDE_CONFLICT_77_77" label="AZUR_ALCDE_CONFLICT_77_77">
+        <TYPE id="CONFLICT" category="Experimental info">CONFLICT</TYPE>
+        <METHOD id="UniProt">UniProt</METHOD>
+        <START>77</START>
+        <END>77</END>
+        <SCORE>-</SCORE>
+        <ORIENTATION>0</ORIENTATION>
+        <PHASE>-</PHASE>
+        <NOTE>Q -&#62; E (in Ref. 2)</NOTE>
+      </FEATURE>
+      <FEATURE id="AZUR_ALCDE_HELIX_88_90" label="AZUR_ALCDE_HELIX_88_90">
+        <TYPE id="HELIX" category="Secondary structure">HELIX</TYPE>
+        <METHOD id="UniProt">UniProt</METHOD>
+        <START>88</START>
+        <END>90</END>
+        <SCORE>-</SCORE>
+        <ORIENTATION>0</ORIENTATION>
+        <PHASE>-</PHASE>
+      </FEATURE>
+      <FEATURE id="AZUR_ALCDE_STRAND_101_103" label="AZUR_ALCDE_STRAND_101_103">
+        <TYPE id="STRAND" category="Secondary structure">STRAND</TYPE>
+        <METHOD id="UniProt">UniProt</METHOD>
+        <START>101</START>
+        <END>103</END>
+        <SCORE>-</SCORE>
+        <ORIENTATION>0</ORIENTATION>
+        <PHASE>-</PHASE>
+      </FEATURE>
+      <FEATURE id="AZUR_ALCDE_STRAND_112_118" label="AZUR_ALCDE_STRAND_112_118">
+        <TYPE id="STRAND" category="Secondary structure">STRAND</TYPE>
+        <METHOD id="UniProt">UniProt</METHOD>
+        <START>112</START>
+        <END>118</END>
+        <SCORE>-</SCORE>
+        <ORIENTATION>0</ORIENTATION>
+        <PHASE>-</PHASE>
+      </FEATURE>
+      <FEATURE id="AZUR_ALCDE_HELIX_119_121" label="AZUR_ALCDE_HELIX_119_121">
+        <TYPE id="HELIX" category="Secondary structure">HELIX</TYPE>
+        <METHOD id="UniProt">UniProt</METHOD>
+        <START>119</START>
+        <END>121</END>
+        <SCORE>-</SCORE>
+        <ORIENTATION>0</ORIENTATION>
+        <PHASE>-</PHASE>
+      </FEATURE>
+      <FEATURE id="AZUR_ALCDE_STRAND_128_131" label="AZUR_ALCDE_STRAND_128_131">
+        <TYPE id="STRAND" category="Secondary structure">STRAND</TYPE>
+        <METHOD id="UniProt">UniProt</METHOD>
+        <START>128</START>
+        <END>131</END>
+        <SCORE>-</SCORE>
+        <ORIENTATION>0</ORIENTATION>
+        <PHASE>-</PHASE>
+      </FEATURE>
+      <FEATURE id="AZUR_ALCDE_METAL_132_132" label="AZUR_ALCDE_METAL_132_132">
+        <TYPE id="METAL" category="Sites">METAL</TYPE>
+        <METHOD id="UniProt">UniProt</METHOD>
+        <START>132</START>
+        <END>132</END>
+        <SCORE>-</SCORE>
+        <ORIENTATION>0</ORIENTATION>
+        <PHASE>-</PHASE>
+        <NOTE>Copper</NOTE>
+      </FEATURE>
+      <FEATURE id="AZUR_ALCDE_TURN_135_140" label="AZUR_ALCDE_TURN_135_140">
+        <TYPE id="TURN" category="Secondary structure">TURN</TYPE>
+        <METHOD id="UniProt">UniProt</METHOD>
+        <START>135</START>
+        <END>140</END>
+        <SCORE>-</SCORE>
+        <ORIENTATION>0</ORIENTATION>
+        <PHASE>-</PHASE>
+      </FEATURE>
+      <FEATURE id="AZUR_ALCDE_METAL_137_137" label="AZUR_ALCDE_METAL_137_137">
+        <TYPE id="METAL" category="Sites">METAL</TYPE>
+        <METHOD id="UniProt">UniProt</METHOD>
+        <START>137</START>
+        <END>137</END>
+        <SCORE>-</SCORE>
+        <ORIENTATION>0</ORIENTATION>
+        <PHASE>-</PHASE>
+        <NOTE>Copper</NOTE>
+      </FEATURE>
+      <FEATURE id="AZUR_ALCDE_STRAND_141_148" label="AZUR_ALCDE_STRAND_141_148">
+        <TYPE id="STRAND" category="Secondary structure">STRAND</TYPE>
+        <METHOD id="UniProt">UniProt</METHOD>
+        <START>141</START>
+        <END>148</END>
+        <SCORE>-</SCORE>
+        <ORIENTATION>0</ORIENTATION>
+        <PHASE>-</PHASE>
+      </FEATURE>
+      <FEATURE id="AZUR_ALCDE_METAL_141_141" label="AZUR_ALCDE_METAL_141_141">
+        <TYPE id="METAL" category="Sites">METAL</TYPE>
+        <METHOD id="UniProt">UniProt</METHOD>
+        <START>141</START>
+        <END>141</END>
+        <SCORE>-</SCORE>
+        <ORIENTATION>0</ORIENTATION>
+        <PHASE>-</PHASE>
+        <NOTE>Copper</NOTE>
+      </FEATURE>
+      <FEATURE id="SSF49503" label="AZUR_ALCDE_Cupredoxin_21_146">
+        <TYPE id="Scop" category="Domain annotations">Scop</TYPE>
+        <METHOD id="Scop">Scop</METHOD>
+        <START>21</START>
+        <END>146</END>
+        <SCORE>-</SCORE>
+        <ORIENTATION>0</ORIENTATION>
+        <PHASE>-</PHASE>
+        <NOTE>Description: Cupredoxin</NOTE>
+        <NOTE>Status: True Positive</NOTE>
+      </FEATURE>
+      <FEATURE id="PS00196" label="AZUR_ALCDE_COPPER_BLUE_125_141">
+        <TYPE id="PROSITE" category="Domain annotations">PROSITE</TYPE>
+        <METHOD id="PROSITE">PROSITE</METHOD>
+        <START>125</START>
+        <END>141</END>
+        <SCORE>-</SCORE>
+        <ORIENTATION>0</ORIENTATION>
+        <PHASE>-</PHASE>
+        <NOTE>Description: COPPER_BLUE</NOTE>
+        <NOTE>Status: True Positive</NOTE>
+        <LINK href="http://us.expasy.org/cgi-bin/nicedoc.pl?PS00196">http://us.expasy.org/cgi-bin/nicedoc.pl?PS00196</LINK>
+      </FEATURE>
+      <FEATURE id="PD003655" label="AZUR_ALCDE_Azurin_22_145">
+        <TYPE id="ProDom" category="Domain annotations">ProDom</TYPE>
+        <METHOD id="ProDom">ProDom</METHOD>
+        <START>22</START>
+        <END>145</END>
+        <SCORE>-</SCORE>
+        <ORIENTATION>0</ORIENTATION>
+        <PHASE>-</PHASE>
+        <NOTE>Description: Azurin</NOTE>
+        <NOTE>Status: True Positive</NOTE>
+        <LINK href="http://prodes.toulouse.inra.fr/prodom/current/cgi-bin/request.pl?question=DBEN&#38;query=PD003655">http://prodes.toulouse.inra.fr/prodom/current/cgi-bin/request.pl?question=DBEN&#38;query=PD003655</LINK>
+      </FEATURE>
+      <FEATURE id="PF00127" label="AZUR_ALCDE_Copper-bind_21_148">
+        <TYPE id="Pfam" category="Domain annotations">Pfam</TYPE>
+        <METHOD id="Pfam">Pfam</METHOD>
+        <START>21</START>
+        <END>148</END>
+        <SCORE>-</SCORE>
+        <ORIENTATION>0</ORIENTATION>
+        <PHASE>-</PHASE>
+        <NOTE>Description: Copper-bind</NOTE>
+        <NOTE>Status: True Positive</NOTE>
+        <LINK href="http://www.sanger.ac.uk/cgi-bin/Pfam/getacc?PF00127">http://www.sanger.ac.uk/cgi-bin/Pfam/getacc?PF00127</LINK>
+      </FEATURE>
+      <FEATURE id="pubmed:2116366" label="pubmed:2116366">
+        <TYPE id="reference" category="">reference</TYPE>
+        <METHOD id="reference">reference</METHOD>
+        <START>0</START>
+        <END>0</END>
+        <SCORE>-</SCORE>
+        <ORIENTATION>0</ORIENTATION>
+        <PHASE>-</PHASE>
+        <NOTE>Hoitink C.W.G., Woudt L.P., Turenhout J.C.M., van de Kamp M., Canters G.W. (1990). "Isolation and sequencing of the Alcaligenes denitrificans azurin-encoding gene: comparison with the genes encoding blue copper proteins from Pseudomonas aeruginosa and Alcaligenes faecalis.", Gene 90:15-20</NOTE>
+        <LINK href="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?db=PubMed&#38;cmd=Retrieve&#38;dopt=Citation&#38;list_uids=2116366">http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?db=PubMed&#38;cmd=Retrieve&#38;dopt=Citation&#38;list_uids=2116366</LINK>
+      </FEATURE>
+      <FEATURE id="P00280" label="P00280">
+        <TYPE id="reference" category="">reference</TYPE>
+        <METHOD id="reference">reference</METHOD>
+        <START>0</START>
+        <END>0</END>
+        <SCORE>-</SCORE>
+        <ORIENTATION>0</ORIENTATION>
+        <PHASE>-</PHASE>
+        <NOTE>Ambler R.P. (1974). Submitted to database PIR data bank</NOTE>
+      </FEATURE>
+      <FEATURE id="P00280" label="P00280">
+        <TYPE id="reference" category="">reference</TYPE>
+        <METHOD id="reference">reference</METHOD>
+        <START>0</START>
+        <END>0</END>
+        <SCORE>-</SCORE>
+        <ORIENTATION>0</ORIENTATION>
+        <PHASE>-</PHASE>
+        <NOTE>Ambler R.P. (1971). "Developpements recents dans l'etude chimique de la structure des proteines" INSERM, Paris.</NOTE>
+      </FEATURE>
+      <FEATURE id="pubmed:6842609" label="pubmed:6842609">
+        <TYPE id="reference" category="">reference</TYPE>
+        <METHOD id="reference">reference</METHOD>
+        <START>0</START>
+        <END>0</END>
+        <SCORE>-</SCORE>
+        <ORIENTATION>0</ORIENTATION>
+        <PHASE>-</PHASE>
+        <NOTE>Norris G.E., Anderson B.F., Baker E.N. (1983). "Structure of azurin from Alcaligenes denitrificans at 2.5-A resolution.", J. Mol. Biol. 165:501-521</NOTE>
+        <LINK href="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?db=PubMed&#38;cmd=Retrieve&#38;dopt=Citation&#38;list_uids=6842609">http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?db=PubMed&#38;cmd=Retrieve&#38;dopt=Citation&#38;list_uids=6842609</LINK>
+      </FEATURE>
+      <FEATURE id="pubmed:3210236" label="pubmed:3210236">
+        <TYPE id="reference" category="">reference</TYPE>
+        <METHOD id="reference">reference</METHOD>
+        <START>0</START>
+        <END>0</END>
+        <SCORE>-</SCORE>
+        <ORIENTATION>0</ORIENTATION>
+        <PHASE>-</PHASE>
+        <NOTE>Baker E.N. (1988). "Structure of azurin from Alcaligenes denitrificans refinement at 1.8-A resolution and comparison of the two crystallographically independent molecules.", J. Mol. Biol. 203:1071-1095</NOTE>
+        <LINK href="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?db=PubMed&#38;cmd=Retrieve&#38;dopt=Citation&#38;list_uids=3210236">http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?db=PubMed&#38;cmd=Retrieve&#38;dopt=Citation&#38;list_uids=3210236</LINK>
+      </FEATURE>
+      <FEATURE id="pubmed:8383207" label="pubmed:8383207">
+        <TYPE id="reference" category="">reference</TYPE>
+        <METHOD id="reference">reference</METHOD>
+        <START>0</START>
+        <END>0</END>
+        <SCORE>-</SCORE>
+        <ORIENTATION>0</ORIENTATION>
+        <PHASE>-</PHASE>
+        <NOTE>Romero A., Hoitink C.W., Nar H., Huber R., Messerschmidt A., Canters G.W. (1993). "X-ray analysis and spectroscopic characterization of M121Q azurin. A copper site model for stellacyanin.", J. Mol. Biol. 229:1007-1021</NOTE>
+        <LINK href="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?db=PubMed&#38;cmd=Retrieve&#38;dopt=Citation&#38;list_uids=8383207">http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?db=PubMed&#38;cmd=Retrieve&#38;dopt=Citation&#38;list_uids=8383207</LINK>
+      </FEATURE>
+      <FEATURE id="pubmed:8639662" label="pubmed:8639662">
+        <TYPE id="reference" category="">reference</TYPE>
+        <METHOD id="reference">reference</METHOD>
+        <START>0</START>
+        <END>0</END>
+        <SCORE>-</SCORE>
+        <ORIENTATION>0</ORIENTATION>
+        <PHASE>-</PHASE>
+        <NOTE>Kroes S., Wamerdam G.C.M., Canters G.W. (1996). "Paramagnetic cobalt and nickel derivatives of Alcaligenes denitrificans azurin and its M121Q mutant. A 1H NMR study.", Biochemistry 35:1810-1819</NOTE>
+        <LINK href="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?db=PubMed&#38;cmd=Retrieve&#38;dopt=Citation&#38;list_uids=8639662">http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?db=PubMed&#38;cmd=Retrieve&#38;dopt=Citation&#38;list_uids=8639662</LINK>
+      </FEATURE>
+    </SEGMENT>
+  </GFF>
+</DASGFF>

@@ -1,0 +1,1570 @@
+##gff-version 3
+##Note: See http://song.sourceforge.net
+
+# file: volvox1.gff3
+# derived from GBrowse Administration Tutorial by Lincoln Stein, 2008
+
+ctgA	example	contig	1	50000	.	.	.	Name=ctgA
+ctgA	example	remark	1659	1984	.	+	.	Name=f07;Note=This is an example
+ctgA	example	remark	3014	6130	.	+	.	Name=f06;Note=This is another example
+ctgA	example	remark	4715	5968	.	-	.	Name=f05;Note=Ok! Ok! I get the message.
+ctgA	example	remark	13280	16394	.	+	.	Name=f08
+ctgA	example	remark	15329	15533	.	+	.	Name=f10
+ctgA	example	remark	19157	22915	.	-	.	Name=f13
+ctgA	example	remark	22832	24633	.	+	.	Name=f15
+ctgA	example	remark	23072	23185	.	+	.	Name=f14
+ctgA	example	remark	24562	28338	.	-	.	Name=f02
+ctgA	example	remark	36034	38167	.	+	.	Name=f09
+ctgA	example	remark	36649	40440	.	-	.	Name=f03
+ctgA	example	remark	37242	38653	.	+	.	Name=f04
+ctgA	example	remark	44705	47713	.	-	.	Name=f01
+ctgA	example	remark	46990	48410	.	-	.	Name=f11
+ctgA	example	remark	49758	50000	.	-	.	Name=f12
+ctgA	example	polypeptide_domain	11911	15561	.	+	.	Name=m11;Note=kinase
+ctgA	example	polypeptide_domain	13801	14007	.	-	.	Name=m05;Note=helix loop helix
+ctgA	example	polypeptide_domain	14731	17239	.	-	.	Name=m14;Note=kinase
+ctgA	example	polypeptide_domain	15396	16159	.	+	.	Name=m03;Note=zinc finger
+ctgA	example	polypeptide_domain	17023	17675	.	+	.	Name=m08;Note=7-transmembrane
+ctgA	example	polypeptide_domain	17667	17690	.	+	.	Name=m13;Note=DEAD box
+ctgA	example	polypeptide_domain	18048	18552	.	-	.	Name=m07;Note=7-transmembrane
+ctgA	example	polypeptide_domain	21748	25612	.	+	.	Name=m12;Note=kinase
+ctgA	example	polypeptide_domain	28332	30033	.	-	.	Name=m02;Note=HOX
+ctgA	example	polypeptide_domain	28342	28447	.	-	.	Name=m10;Note=DEAD box
+ctgA	example	polypeptide_domain	30578	31748	.	+	.	Name=m06;Note=SUSHI repeat
+ctgA	example	polypeptide_domain	33325	35791	.	+	.	Name=m04;Note=Ig-like
+ctgA	example	polypeptide_domain	37497	40559	.	-	.	Name=m15;Note=7-transmembrane
+ctgA	example	polypeptide_domain	46012	48851	.	+	.	Name=m09;Note=kinase
+ctgA	example	polypeptide_domain	48253	48366	.	+	.	Name=m01;Note=WD40
+ctgA	example	match	32329	32359	.	+	.	ID=match-seg01;Name=seg01;Note=This is a segment
+ctgA	example	match	26122	26126	.	+	.	ID=match-seg02;Name=seg02
+ctgA	example	match	26497	26869	.	+	.	ID=match-seg02;Name=seg02
+ctgA	example	match	27201	27325	.	+	.	ID=match-seg02;Name=seg02
+ctgA	example	match	27372	27433	.	+	.	ID=match-seg02;Name=seg02
+ctgA	example	match	27565	27565	.	+	.	ID=match-seg02;Name=seg02
+ctgA	example	match	27813	28091	.	+	.	ID=match-seg02;Name=seg02
+ctgA	example	match	28093	28201	.	+	.	ID=match-seg02;Name=seg02
+ctgA	example	match	28329	28377	.	+	.	ID=match-seg02;Name=seg02
+ctgA	example	match	28829	29194	.	+	.	ID=match-seg02;Name=seg02
+ctgA	example	match	29517	29702	.	+	.	ID=match-seg02;Name=seg02
+ctgA	example	match	29713	30061	.	+	.	ID=match-seg02;Name=seg02
+ctgA	example	match	30329	30774	.	+	.	ID=match-seg02;Name=seg02
+ctgA	example	match	30808	31306	.	+	.	ID=match-seg02;Name=seg02
+ctgA	example	match	31516	31729	.	+	.	ID=match-seg02;Name=seg02
+ctgA	example	match	31753	32154	.	+	.	ID=match-seg02;Name=seg02
+ctgA	example	match	32595	32696	.	+	.	ID=match-seg02;Name=seg02
+ctgA	example	match	32892	32901	.	+	.	ID=match-seg02;Name=seg02
+ctgA	example	match	33127	33388	.	+	.	ID=match-seg02;Name=seg02
+ctgA	example	match	33439	33443	.	+	.	ID=match-seg02;Name=seg02
+ctgA	example	match	33759	34209	.	+	.	ID=match-seg02;Name=seg02
+ctgA	example	match	34401	34466	.	+	.	ID=match-seg02;Name=seg02
+ctgA	example	match	6885	7241	.	-	.	ID=match-seg03;Name=seg03
+ctgA	example	match	7410	7737	.	-	.	ID=match-seg03;Name=seg03
+ctgA	example	match	8055	8080	.	-	.	ID=match-seg03;Name=seg03
+ctgA	example	match	8306	8999	.	-	.	ID=match-seg03;Name=seg03
+ctgA	example	match	5233	5302	.	-	.	ID=match-seg04;Name=seg04
+ctgA	example	match	5800	6101	.	-	.	ID=match-seg04;Name=seg04
+ctgA	example	match	6442	6854	.	-	.	ID=match-seg04;Name=seg04
+ctgA	example	match	7106	7211	.	-	.	ID=match-seg04;Name=seg04
+ctgA	example	match	7695	8177	.	-	.	ID=match-seg04;Name=seg04
+ctgA	example	match	8545	8783	.	-	.	ID=match-seg04;Name=seg04
+ctgA	example	match	8869	8935	.	-	.	ID=match-seg04;Name=seg04
+ctgA	example	match	9404	9825	.	-	.	ID=match-seg04;Name=seg04
+ctgA	example	match	26503	26799	.	-	.	ID=match-seg05;Name=seg05
+ctgA	example	match	27172	27185	.	-	.	ID=match-seg05;Name=seg05
+ctgA	example	match	27448	27860	.	-	.	ID=match-seg05;Name=seg05
+ctgA	example	match	27887	28076	.	-	.	ID=match-seg05;Name=seg05
+ctgA	example	match	28225	28316	.	-	.	ID=match-seg05;Name=seg05
+ctgA	example	match	28777	29058	.	-	.	ID=match-seg05;Name=seg05
+ctgA	example	match	29513	29647	.	-	.	ID=match-seg05;Name=seg05
+ctgA	example	match	30108	30216	.	-	.	ID=match-seg05;Name=seg05
+ctgA	example	match	30465	30798	.	-	.	ID=match-seg05;Name=seg05
+ctgA	example	match	31232	31236	.	-	.	ID=match-seg05;Name=seg05
+ctgA	example	match	31421	31817	.	-	.	ID=match-seg05;Name=seg05
+ctgA	example	match	32010	32057	.	-	.	ID=match-seg05;Name=seg05
+ctgA	example	match	32208	32680	.	-	.	ID=match-seg05;Name=seg05
+ctgA	example	match	33053	33325	.	-	.	ID=match-seg05;Name=seg05
+ctgA	example	match	33438	33868	.	-	.	ID=match-seg05;Name=seg05
+ctgA	example	match	34244	34313	.	-	.	ID=match-seg05;Name=seg05
+ctgA	example	match	34605	34983	.	-	.	ID=match-seg05;Name=seg05
+ctgA	example	match	35333	35507	.	-	.	ID=match-seg05;Name=seg05
+ctgA	example	match	35642	35904	.	-	.	ID=match-seg05;Name=seg05
+ctgA	example	match	19249	19559	.	+	.	ID=match-seg06;Name=seg06
+ctgA	example	match	19975	20260	.	+	.	ID=match-seg06;Name=seg06
+ctgA	example	match	20379	20491	.	+	.	ID=match-seg06;Name=seg06
+ctgA	example	match	20533	21005	.	+	.	ID=match-seg06;Name=seg06
+ctgA	example	match	21122	21331	.	+	.	ID=match-seg06;Name=seg06
+ctgA	example	match	21682	22176	.	+	.	ID=match-seg06;Name=seg06
+ctgA	example	match	22374	22570	.	+	.	ID=match-seg06;Name=seg06
+ctgA	example	match	23025	23427	.	+	.	ID=match-seg06;Name=seg06
+ctgA	example	match	44191	44514	.	-	.	ID=match-seg07;Name=seg07
+ctgA	example	match	44552	45043	.	-	.	ID=match-seg07;Name=seg07
+ctgA	example	match	45373	45600	.	-	.	ID=match-seg07;Name=seg07
+ctgA	example	match	45897	46315	.	-	.	ID=match-seg07;Name=seg07
+ctgA	example	match	46491	46890	.	-	.	ID=match-seg07;Name=seg07
+ctgA	example	match	47126	47297	.	-	.	ID=match-seg07;Name=seg07
+ctgA	example	match	47735	47983	.	-	.	ID=match-seg07;Name=seg07
+ctgA	example	match	48447	48709	.	-	.	ID=match-seg07;Name=seg07
+ctgA	example	match	48931	49186	.	-	.	ID=match-seg07;Name=seg07
+ctgA	example	match	49472	49699	.	-	.	ID=match-seg07;Name=seg07
+ctgA	example	match	49957	50000	.	-	.	ID=match-seg07;Name=seg07
+ctgA	example	match	18509	18985	.	+	.	ID=match-seg08;Name=seg08
+ctgA	example	match	18989	19388	.	+	.	ID=match-seg08;Name=seg08
+ctgA	example	match	19496	19962	.	+	.	ID=match-seg08;Name=seg08
+ctgA	example	match	20093	20580	.	+	.	ID=match-seg08;Name=seg08
+ctgA	example	match	20970	21052	.	+	.	ID=match-seg08;Name=seg08
+ctgA	example	match	21270	21277	.	+	.	ID=match-seg08;Name=seg08
+ctgA	example	match	21685	22168	.	+	.	ID=match-seg08;Name=seg08
+ctgA	example	match	22564	22869	.	+	.	ID=match-seg08;Name=seg08
+ctgA	example	match	22958	23298	.	+	.	ID=match-seg08;Name=seg08
+ctgA	example	match	23412	23469	.	+	.	ID=match-seg08;Name=seg08
+ctgA	example	match	23932	23932	.	+	.	ID=match-seg08;Name=seg08
+ctgA	example	match	24328	24787	.	+	.	ID=match-seg08;Name=seg08
+ctgA	example	match	25228	25367	.	+	.	ID=match-seg08;Name=seg08
+ctgA	example	match	36616	37057	.	-	.	ID=match-seg09;Name=seg09
+ctgA	example	match	37208	37227	.	-	.	ID=match-seg09;Name=seg09
+ctgA	example	match	29771	29942	.	+	.	ID=match-seg10;Name=seg10
+ctgA	example	match	30042	30340	.	+	.	ID=match-seg10;Name=seg10
+ctgA	example	match	30810	31307	.	+	.	ID=match-seg10;Name=seg10
+ctgA	example	match	31761	31984	.	+	.	ID=match-seg10;Name=seg10
+ctgA	example	match	32374	32937	.	+	.	ID=match-seg10;Name=seg10
+ctgA	example	match	24228	24510	.	+	.	ID=match-seg11;Name=seg11
+ctgA	example	match	24868	25012	.	+	.	ID=match-seg11;Name=seg11
+ctgA	example	match	25212	25426	.	+	.	ID=match-seg11;Name=seg11
+ctgA	example	match	25794	25874	.	+	.	ID=match-seg11;Name=seg11
+ctgA	example	match	26075	26519	.	+	.	ID=match-seg11;Name=seg11
+ctgA	example	match	26930	26940	.	+	.	ID=match-seg11;Name=seg11
+ctgA	example	match	26975	27063	.	+	.	ID=match-seg11;Name=seg11
+ctgA	example	match	27415	27799	.	+	.	ID=match-seg11;Name=seg11
+ctgA	example	match	27880	27943	.	+	.	ID=match-seg11;Name=seg11
+ctgA	example	match	28225	28346	.	+	.	ID=match-seg11;Name=seg11
+ctgA	example	match	28375	28570	.	+	.	ID=match-seg11;Name=seg11
+ctgA	example	match	28758	29041	.	+	.	ID=match-seg11;Name=seg11
+ctgA	example	match	29101	29302	.	+	.	ID=match-seg11;Name=seg11
+ctgA	example	match	29604	29702	.	+	.	ID=match-seg11;Name=seg11
+ctgA	example	match	29867	29885	.	+	.	ID=match-seg11;Name=seg11
+ctgA	example	match	30241	30246	.	+	.	ID=match-seg11;Name=seg11
+ctgA	example	match	30575	30738	.	+	.	ID=match-seg11;Name=seg11
+ctgA	example	match	12531	12895	.	+	.	ID=match-seg12;Name=seg12
+ctgA	example	match	13122	13449	.	+	.	ID=match-seg12;Name=seg12
+ctgA	example	match	13452	13745	.	+	.	ID=match-seg12;Name=seg12
+ctgA	example	match	13908	13965	.	+	.	ID=match-seg12;Name=seg12
+ctgA	example	match	13998	14488	.	+	.	ID=match-seg12;Name=seg12
+ctgA	example	match	14564	14899	.	+	.	ID=match-seg12;Name=seg12
+ctgA	example	match	15185	15276	.	+	.	ID=match-seg12;Name=seg12
+ctgA	example	match	15639	15736	.	+	.	ID=match-seg12;Name=seg12
+ctgA	example	match	15745	15870	.	+	.	ID=match-seg12;Name=seg12
+ctgA	example	match	49406	49476	.	+	.	ID=match-seg13;Name=seg13
+ctgA	example	match	49762	50000	.	+	.	ID=match-seg13;Name=seg13
+ctgA	example	match	41137	41318	.	-	.	ID=match-seg14;Name=seg14
+ctgA	example	match	41754	41948	.	-	.	ID=match-seg14;Name=seg14
+ctgA	example	match	42057	42474	.	-	.	ID=match-seg14;Name=seg14
+ctgA	example	match	42890	43270	.	-	.	ID=match-seg14;Name=seg14
+ctgA	example	match	43395	43811	.	-	.	ID=match-seg14;Name=seg14
+ctgA	example	match	44065	44556	.	-	.	ID=match-seg14;Name=seg14
+ctgA	example	match	44763	45030	.	-	.	ID=match-seg14;Name=seg14
+ctgA	example	match	45231	45488	.	-	.	ID=match-seg14;Name=seg14
+ctgA	example	match	45790	46022	.	-	.	ID=match-seg14;Name=seg14
+ctgA	example	match	46092	46318	.	-	.	ID=match-seg14;Name=seg14
+ctgA	example	match	46816	46992	.	-	.	ID=match-seg14;Name=seg14
+ctgA	example	match	47449	47829	.	-	.	ID=match-seg14;Name=seg14
+ctgA	example	match	39265	39361	.	-	.	ID=match-seg15;Name=seg15
+ctgA	example	match	39753	40034	.	-	.	ID=match-seg15;Name=seg15
+ctgA	example	match	40515	40954	.	-	.	ID=match-seg15;Name=seg15
+ctgA	example	match	41252	41365	.	-	.	ID=match-seg15;Name=seg15
+ctgA	example	match	41492	41504	.	-	.	ID=match-seg15;Name=seg15
+ctgA	example	match	41941	42377	.	-	.	ID=match-seg15;Name=seg15
+ctgA	example	match	42748	42954	.	-	.	ID=match-seg15;Name=seg15
+ctgA	example	match	43401	43897	.	-	.	ID=match-seg15;Name=seg15
+ctgA	example	match	44043	44113	.	-	.	ID=match-seg15;Name=seg15
+ctgA	example	match	44399	44888	.	-	.	ID=match-seg15;Name=seg15
+ctgA	example	match	45281	45375	.	-	.	ID=match-seg15;Name=seg15
+ctgA	example	match	45711	46041	.	-	.	ID=match-seg15;Name=seg15
+ctgA	example	match	46425	46564	.	-	.	ID=match-seg15;Name=seg15
+ctgA	example	match	46738	47087	.	-	.	ID=match-seg15;Name=seg15
+ctgA	example	match	47329	47595	.	-	.	ID=match-seg15;Name=seg15
+ctgA	example	match	47858	47979	.	-	.	ID=match-seg15;Name=seg15
+ctgA	example	match	48169	48453	.	-	.	ID=match-seg15;Name=seg15
+ctgA	example	gene	1050	9000	.	+	.	ID=EDEN;Name=EDEN;Note=protein kinase
+ctgA	example	mRNA	1050	9000	.	+	.	ID=EDEN.1;Parent=EDEN;Name=EDEN.1;Note=Eden splice form 1;Index=1
+ctgA	example	five_prime_UTR	1050	1200	.	+	.	Parent=EDEN.1
+ctgA	example	CDS	1201	1500	.	+	0	Parent=EDEN.1
+ctgA	example	CDS	3000	3902	.	+	0	Parent=EDEN.1
+ctgA	example	CDS	5000	5500	.	+	0	Parent=EDEN.1
+ctgA	example	CDS	7000	7608	.	+	0	Parent=EDEN.1
+ctgA	example	three_prime_UTR	7609	9000	.	+	.	Parent=EDEN.1
+
+ctgA	example	mRNA	1050	9000	.	+	.	ID=EDEN.2;Parent=EDEN;Name=EDEN.2;Note=Eden splice form 2;Index=1
+ctgA	example	five_prime_UTR	1050	1200	.	+	.	Parent=EDEN.2
+ctgA	example	CDS	1201	1500	.	+	0	Parent=EDEN.2
+ctgA	example	CDS	5000	5500	.	+	0	Parent=EDEN.2
+ctgA	example	CDS	7000	7608	.	+	0	Parent=EDEN.2
+ctgA	example	three_prime_UTR	7609	9000	.	+	.	Parent=EDEN.2
+
+ctgA	example	mRNA	1300	9000	.	+	.	ID=EDEN.3;Parent=EDEN;Name=EDEN.3;Note=Eden splice form 3;Index=1
+ctgA	example	five_prime_UTR	1300	1500	.	+	.	Parent=EDEN.3
+ctgA	example	five_prime_UTR	3000	3300	.	+	.	Parent=EDEN.3
+ctgA	example	CDS	3301	3902	.	+	0	Parent=EDEN.3
+ctgA	example	CDS	5000	5500	.	+	1	Parent=EDEN.3
+ctgA	example	CDS	7000	7600	.	+	1	Parent=EDEN.3
+ctgA	example	three_prime_UTR	7601	9000	.	+	.	Parent=EDEN.3
+ctgA	predicted	CDS	10000	11500	.	+	0	Name=Apple1;Note=A for Apple
+ctgA	predicted	CDS	13000	13800	.	+	0	ID=cds-Apple2;Name=Apple2;Note=AnotherApple
+ctgA	predicted	CDS	15000	15500	.	+	1	ID=cds-Apple2;Name=Apple2
+ctgA	predicted	CDS	17000	17200	.	+	2	ID=cds-Apple2;Name=Apple2
+ctgA	exonerate	mRNA	17400	23000	.	+	.	ID=rna-Apple3;Name=Apple3;Note=Predicted
+ctgA	exonerate	UTR	17400	17999	.	+	.	Parent=rna-Apple3
+ctgA	exonerate	CDS	18000	18800	.	+	0	Parent=rna-Apple3
+ctgA	exonerate	CDS	19000	19500	.	+	1	Parent=rna-Apple3
+ctgA	exonerate	CDS	21000	21200	.	+	2	Parent=rna-Apple3
+ctgA	exonerate	UTR	21201	23000	.	+	.	Parent=rna-Apple3
+ctgA	example	BAC	1000	20000	.	.	.	ID=b101.2;Name=b101.2;Note=Fingerprinted BAC with end reads
+ctgA	example	clone_start	1000	1500	.	+	.	Parent=b101.2
+ctgA	example	clone_end	19500	20000	.	-	.	Parent=b101.2
+ctgA	affy	microarray_oligo	1	100	281	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	101	200	183	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	201	300	213	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	301	400	191	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	401	500	288	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	501	600	184	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	601	700	258	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	701	800	173	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	801	900	274	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	901	1000	292	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	1001	1100	227	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	1101	1200	209	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	1201	1300	277	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	1301	1400	177	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	1401	1500	199	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	1501	1600	165	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	1601	1700	171	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	1701	1800	135	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	1801	1900	198	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	1901	2000	192	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	2001	2100	114	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	2101	2200	292	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	2201	2300	240	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	2301	2400	191	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	2401	2500	268	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	2501	2600	147	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	2601	2700	123	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	2701	2800	227	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	2801	2900	236	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	2901	3000	213	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	3001	3100	281	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	3101	3200	284	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	3201	3300	136	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	3301	3400	271	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	3401	3500	104	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	3501	3600	111	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	3601	3700	222	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	3701	3800	254	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	3801	3900	106	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	3901	4000	178	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	4001	4100	100	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	4101	4200	145	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	4201	4300	219	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	4301	4400	257	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	4401	4500	299	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	4501	4600	268	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	4601	4700	185	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	4701	4800	230	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	4801	4900	204	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	4901	5000	225	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	5001	5100	114	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	5101	5200	131	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	5201	5300	293	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	5301	5400	210	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	5401	5500	192	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	5501	5600	139	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	5601	5700	190	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	5701	5800	229	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	5801	5900	157	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	5901	6000	244	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	6001	6100	285	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	6101	6200	247	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	6201	6300	293	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	6301	6400	115	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	6401	6500	285	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	6501	6600	119	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	6601	6700	275	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	6701	6800	180	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	6801	6900	277	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	6901	7000	108	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	7001	7100	181	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	7101	7200	196	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	7201	7300	224	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	7301	7400	280	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	7401	7500	294	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	7501	7600	127	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	7601	7700	143	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	7701	7800	118	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	7801	7900	248	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	7901	8000	178	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	8001	8100	207	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	8101	8200	179	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	8201	8300	182	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	8301	8400	148	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	8401	8500	116	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	8501	8600	299	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	8601	8700	120	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	8701	8800	187	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	8801	8900	162	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	8901	9000	274	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	9001	9100	282	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	9101	9200	201	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	9201	9300	249	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	9301	9400	118	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	9401	9500	178	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	9501	9600	271	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	9601	9700	106	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	9701	9800	161	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	9801	9900	148	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	9901	10000	237	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	10001	10100	139	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	10101	10200	135	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	10201	10300	166	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	10301	10400	119	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	10401	10500	104	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	10501	10600	186	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	10601	10700	240	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	10701	10800	159	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	10801	10900	174	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	10901	11000	287	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	11001	11100	277	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	11101	11200	264	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	11201	11300	118	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	11301	11400	185	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	11401	11500	138	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	11501	11600	181	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	11601	11700	285	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	11701	11800	226	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	11801	11900	296	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	11901	12000	183	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	12001	12100	119	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	12101	12200	126	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	12201	12300	278	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	12301	12400	126	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	12401	12500	133	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	12501	12600	148	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	12601	12700	195	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	12701	12800	295	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	12801	12900	168	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	12901	13000	169	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	13001	13100	255	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	13101	13200	227	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	13201	13300	267	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	13301	13400	218	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	13401	13500	217	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	13501	13600	277	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	13601	13700	108	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	13701	13800	196	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	13801	13900	110	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	13901	14000	185	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	14001	14100	181	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	14101	14200	261	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	14201	14300	283	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	14301	14400	735	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	14401	14500	822	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	14501	14600	870	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	14601	14700	866	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	14701	14800	837	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	14801	14900	841	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	14901	15000	878	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	15001	15100	805	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	15101	15200	732	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	15201	15300	842	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	15301	15400	833	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	15401	15500	755	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	15501	15600	735	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	15601	15700	883	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	15701	15800	824	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	15801	15900	700	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	15901	16000	841	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	16001	16100	821	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	16101	16200	815	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	16201	16300	819	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	16301	16400	837	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	16401	16500	832	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	16501	16600	125	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	16601	16700	299	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	16701	16800	215	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	16801	16900	121	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	16901	17000	190	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	17001	17100	289	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	17101	17200	292	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	17201	17300	207	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	17301	17400	276	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	17401	17500	109	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	17501	17600	154	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	17601	17700	279	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	17701	17800	232	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	17801	17900	219	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	17901	18000	187	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	18001	18100	124	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	18101	18200	106	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	18201	18300	271	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	18301	18400	299	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	18401	18500	107	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	18501	18600	192	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	18601	18700	257	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	18701	18800	251	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	18801	18900	270	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	18901	19000	170	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	19001	19100	227	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	19101	19200	216	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	19201	19300	152	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	19301	19400	149	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	19401	19500	207	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	19501	19600	165	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	19601	19700	254	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	19701	19800	101	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	19801	19900	270	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	19901	20000	166	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	20001	20100	269	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	20101	20200	210	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	20201	20300	199	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	20301	20400	216	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	20401	20500	215	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	20501	20600	136	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	20601	20700	127	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	20701	20800	194	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	20801	20900	153	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	20901	21000	262	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	21001	21100	193	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	21101	21200	264	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	21201	21300	250	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	21301	21400	247	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	21401	21500	186	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	21501	21600	113	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	21601	21700	211	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	21701	21800	139	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	21801	21900	296	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	21901	22000	257	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	22001	22100	298	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	22101	22200	244	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	22201	22300	191	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	22301	22400	219	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	22401	22500	132	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	22501	22600	246	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	22601	22700	117	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	22701	22800	183	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	22801	22900	123	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	22901	23000	786	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	23001	23100	878	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	23101	23200	816	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	23201	23300	713	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	23301	23400	778	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	23401	23500	804	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	23501	23600	869	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	23601	23700	838	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	23701	23800	779	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	23801	23900	723	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	23901	24000	737	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	24001	24100	855	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	24101	24200	815	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	24201	24300	713	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	24301	24400	776	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	24401	24500	702	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	24501	24600	899	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	24601	24700	721	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	24701	24800	739	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	24801	24900	711	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	24901	25000	709	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	25001	25100	785	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	25101	25200	847	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	25201	25300	850	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	25301	25400	805	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	25401	25500	146	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	25501	25600	241	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	25601	25700	256	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	25701	25800	283	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	25801	25900	274	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	25901	26000	105	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	26001	26100	145	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	26101	26200	103	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	26201	26300	146	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	26301	26400	220	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	26401	26500	115	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	26501	26600	123	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	26601	26700	112	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	26701	26800	221	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	26801	26900	289	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	26901	27000	298	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	27001	27100	148	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	27101	27200	233	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	27201	27300	153	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	27301	27400	255	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	27401	27500	131	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	27501	27600	138	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	27601	27700	245	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	27701	27800	861	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	27801	27900	882	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	27901	28000	854	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	28001	28100	728	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	28101	28200	747	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	28201	28300	727	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	28301	28400	863	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	28401	28500	131	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	28501	28600	222	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	28601	28700	125	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	28701	28800	180	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	28801	28900	277	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	28901	29000	155	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	29001	29100	139	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	29101	29200	194	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	29201	29300	148	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	29301	29400	198	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	29401	29500	112	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	29501	29600	178	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	29601	29700	266	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	29701	29800	110	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	29801	29900	164	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	29901	30000	115	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	30001	30100	175	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	30101	30200	243	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	30201	30300	208	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	30301	30400	212	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	30401	30500	148	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	30501	30600	100	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	30601	30700	146	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	30701	30800	138	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	30801	30900	171	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	30901	31000	135	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	31001	31100	163	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	31101	31200	243	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	31201	31300	235	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	31301	31400	177	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	31401	31500	265	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	31501	31600	223	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	31601	31700	230	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	31701	31800	249	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	31801	31900	107	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	31901	32000	252	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	32001	32100	136	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	32101	32200	189	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	32201	32300	296	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	32301	32400	283	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	32401	32500	149	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	32501	32600	225	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	32601	32700	280	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	32701	32800	262	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	32801	32900	271	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	32901	33000	244	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	33001	33100	159	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	33101	33200	231	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	33201	33300	257	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	33301	33400	197	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	33401	33500	238	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	33501	33600	116	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	33601	33700	259	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	33701	33800	220	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	33801	33900	162	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	33901	34000	162	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	34001	34100	127	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	34101	34200	296	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	34201	34300	248	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	34301	34400	277	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	34401	34500	844	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	34501	34600	774	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	34601	34700	777	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	34701	34800	818	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	34801	34900	820	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	34901	35000	749	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	35001	35100	729	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	35101	35200	804	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	35201	35300	744	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	35301	35400	820	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	35401	35500	745	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	35501	35600	803	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	35601	35700	772	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	35701	35800	850	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	35801	35900	838	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	35901	36000	800	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	36001	36100	721	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	36101	36200	728	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	36201	36300	214	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	36301	36400	238	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	36401	36500	199	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	36501	36600	297	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	36601	36700	138	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	36701	36800	112	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	36801	36900	268	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	36901	37000	852	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	37001	37100	771	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	37101	37200	758	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	37201	37300	825	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	37301	37400	798	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	37401	37500	721	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	37501	37600	854	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	37601	37700	739	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	37701	37800	838	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	37801	37900	855	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	37901	38000	895	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	38001	38100	756	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	38101	38200	860	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	38201	38300	849	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	38301	38400	877	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	38401	38500	774	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	38501	38600	810	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	38601	38700	782	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	38701	38800	792	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	38801	38900	806	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	38901	39000	748	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	39001	39100	206	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	39101	39200	261	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	39201	39300	173	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	39301	39400	269	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	39401	39500	199	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	39501	39600	174	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	39601	39700	258	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	39701	39800	128	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	39801	39900	293	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	39901	40000	163	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	40001	40100	125	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	40101	40200	162	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	40201	40300	837	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	40301	40400	883	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	40401	40500	798	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	40501	40600	722	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	40601	40700	892	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	40701	40800	806	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	40801	40900	884	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	40901	41000	728	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	41001	41100	851	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	41101	41200	707	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	41201	41300	721	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	41301	41400	876	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	41401	41500	730	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	41501	41600	809	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	41601	41700	877	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	41701	41800	813	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	41801	41900	181	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	41901	42000	172	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	42001	42100	277	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	42101	42200	160	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	42201	42300	168	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	42301	42400	274	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	42401	42500	200	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	42501	42600	139	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	42601	42700	271	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	42701	42800	154	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	42801	42900	230	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	42901	43000	246	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	43001	43100	280	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	43101	43200	245	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	43201	43300	126	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	43301	43400	214	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	43401	43500	136	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	43501	43600	123	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	43601	43700	163	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	43701	43800	197	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	43801	43900	210	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	43901	44000	162	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	44001	44100	230	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	44101	44200	232	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	44201	44300	204	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	44301	44400	100	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	44401	44500	200	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	44501	44600	254	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	44601	44700	242	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	44701	44800	106	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	44801	44900	188	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	44901	45000	251	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	45001	45100	165	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	45101	45200	223	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	45201	45300	157	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	45301	45400	141	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	45401	45500	234	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	45501	45600	256	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	45601	45700	227	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	45701	45800	236	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	45801	45900	166	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	45901	46000	246	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	46001	46100	109	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	46101	46200	263	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	46201	46300	177	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	46301	46400	246	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	46401	46500	249	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	46501	46600	257	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	46601	46700	144	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	46701	46800	289	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	46801	46900	190	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	46901	47000	282	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	47001	47100	142	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	47101	47200	223	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	47201	47300	244	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	47301	47400	190	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	47401	47500	278	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	47501	47600	287	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	47601	47700	198	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	47701	47800	204	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	47801	47900	275	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	47901	48000	181	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	48001	48100	136	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	48101	48200	215	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	48201	48300	248	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	48301	48400	209	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	48401	48500	215	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	48501	48600	265	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	48601	48700	290	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	48701	48800	168	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	48801	48900	179	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	48901	49000	106	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	49001	49100	195	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	49101	49200	215	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	49201	49300	176	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	49301	49400	166	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	49401	49500	207	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	49501	49600	153	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	49601	49700	165	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	49701	49800	133	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	49801	49900	239	.	.	Name=Expt1
+ctgA	affy	microarray_oligo	49901	50000	197	.	.	Name=Expt1
+ctgA	est	EST_match	1050	1500	.	+	.	ID=Match1;Name=agt830.5;Target=agt830.5 1 451
+ctgA	est	EST_match	3000	3202	.	+	.	ID=Match1;Name=agt830.5;Target=agt830.5 452 654
+ctgA	est	EST_match	5410	5500	.	-	.	ID=Match2;Name=agt830.3;Target=agt830.3 505 595
+ctgA	est	EST_match	7000	7503	.	-	.	ID=Match2;Name=agt830.3;Target=agt830.3 1 504 
+ctgA	est	EST_match	1050	1500	.	+	.	ID=Match3;Name=agt221.5;Target=agt221.5 1 451
+ctgA	est	EST_match	5000	5500	.	+	.	ID=Match3;Name=agt221.5;Target=agt221.5 452 952
+ctgA	est	EST_match	7000	7300	.	+	.	ID=Match3;Name=agt221.5;Target=agt221.5 953 1253
+ctgA	est	EST_match	7500	8000	.	-	.	ID=Match4;Name=agt221.3;Target=agt221.3 1 501
+ctgA	est	EST_match	1150	1500	.	+	.	ID=Match5;Name=agt767.5;Target=agt767.5 1 351
+ctgA	est	EST_match	5000	5500	.	+	.	ID=Match5;Name=agt767.5;Target=agt767.5 352 852
+ctgA	est	EST_match	7000	7200	.	+	.	ID=Match5;Name=agt767.5;Target=agt767.5 853 1153
+ctgA	est	EST_match	8000	9000	.	-	.	ID=Match6;Name=agt767.3;Target=agt767.3 1 1001
+##fasta
+>ctgA
+cattgttgcggagttgaacaacggcattaggaacacttccgtctctcacttttatacgat
+tatgattggttctttagccttggtttagattggtagtagtagcggcgctaatgctacctg
+aattgagaactcgagcgggggctaggcaaattctgattcagcctgacttctcttggaacc
+ctgcccataaatcaaagggttagtgcggccaaaacgttggacaacggtattagaagacca
+acctgaccaccaaaccgtcaattaaccggtatcttctcggaaacggcggttctctcctag
+atagcgatctgtggtctcaccatgcaatttaaacaggtgagtaaagattgctacaaatac
+gagactagctgtcaccagatgctgttcatctgttggctccttggtcgctccgttgtaccc
+aggctactttgaaagagcgcagaatacttagacggtatcgatcatggtagcatagcattc
+tgataacatgtatggagttcgaacatccgtctggggccggacggtccgtttgaggttggt
+tgatctgggtgatagtcagcaagatagacgttagataacaaattaaaggattttacctta
+gattgcgactagtacaacggtacatcggtgattcgcgctctactagatcacgctatgggt
+accataaacaaacggtggaccttctcaagctggttgacgcctcagcaacataggcttcct
+cctccacgcatctcagcataaaaggcttataaactgcttctttgtgccagagcaactcaa
+ttaagcccttggtaccgtgggcacgcattctgtcacggtgaccaactgttcatcctgaat
+cgccgaatgggactatttggtacaggaatcaagcggatggcactactgcagcttatttac
+gacggtattcttaaagtttttaagacaatgtatttcatgggtagttcggtttgttttatt
+gctacacaggctcttgtagacgacctacttagcactacggccgagcgcaataacccccgg
+aaagcacttgctactgggaggcgggtttatccatcggcaataggggttatcagtactacc
+aagaagattgtgaagatattaacagcattgaaaaaagttcggactgggcatgaaacgtgt
+gtcagagttagagtccttgagggactgaatgggtttgtcccaggcccaagcttgaggtgg
+atgtcacctcgggtactgcctctattacagaggtatcttaatggcgcatccagccttgtg
+gctgggtctacgtacgcgtgggcaccatacgtatgttggcaggaaaggtcaatcatgctt
+gtttcctcgtcgcagaaacgttcacactattggctcgcgggatcgaacgggcctgattat
+ttttccagctcctgcgttcctatcacgccaactgtcgctaataaaatgttatatagagat
+aacccattgctatgcaaggatggagaaaccgcttcacaacaccctagaattacttcagca
+ctaacatctaagataccgggaaaaccgtaggtgccacttggttttgagggcaatgcctct
+tgcactggcgattcgtggagtaaccttgctaccgatttccaccttttctaggtatgatta
+catgcgatcgccattgtcagtcgtcgtacgaaatccaggaaggaattcgaatacatgacc
+gaaagctatggcatcataagcgtggctctttactaaggacacgtgtagtcggctgatttc
+gcgcagaacttcgctcaccggacagtgactgctgtccgaacttgggggcagcgtagattc
+tagctagagaccgcagcgaaaatgccactcgctaggtggctatggacgtccagctatagg
+cccccacattcgtatgtatactccggtaattgagtctacctttcgaaagatcaaagttca
+caaaccttctctcacgttaacatagatgctcgcacatagctagtccggtgataaagcggc
+cgtgcatgcgagtatttagcgcacggaacagatattaggctgcgaaataccctcatatgc
+tacagcgcaggtaacagacggttgatctccccgtagaattccctcaaggccggatcgttc
+tcatgagtagcctttgtctgacatttcctctcaatagattgcagactcctgtgtcgtggg
+aaaacttcgcggaatcgctgtcgttacataaatctaaacagtgcagtccaagctatttac
+taccacgtatcataatgaacatctctttgtgaaatacgccggtacgccgagagatcgccc
+acattgcgtgtcaccaagacccagtgtctattgggcgcgctggttatagtatgcggaggc
+acccgatgtgctgctaatcactacaaactcgacaccaagaggcgaccgcgtgcgggaggg
+ctagaacgcgagagccacgtcaacgtggtggtaccgctcctgatgatacgagcactgtgc
+tggcaccgctgccctatgtccagctaacaggtgtcacataatatcgcatctatagttgag
+tatcttatcgctagcgttacttgtgagttctcgggtagaatcgtcgtagcattctagtcc
+ttagcgtaagcaacgatatcgccgatattataggggcaataggtctcacccaccacgggt
+gtatatttaacgccctaagtagttaacggagactattaaacaattatgcacgtgaaagat
+tagggtactgcacacgtgtcacgttgacgatgtaaacaccataaaggttgttctgtgatg
+cgatgcccatacctgcggtgcaacgtcctaaacttatgcggatcaccttctaattcagcc
+gacgttgagaacgccagctatactctgtgagtacaaggtgaaagccccagatcaaaatat
+tggagtcttgtccgtagctcttgggtggagagtgtgaccacgtttatcccttaatactga
+gactcttctcgttccacgccccggacattcgcgatacagcctagtttgataggtggctac
+aagggctctatccgaatagcacaaaactcagtcctagtgcgtataggtcgtgctctgcgg
+ttatacgctccacagaagaaagtacccactgcagtttgtcggtgggacttagcaaaacct
+gtaaccaaaaccgcacatggactctgttttggtggcgtggagtgtgcccgccgcctttat
+gctgggtcaaaatactatatgatttgttgtggtcgggcgcgacattggctcttatggttt
+ataactattattcggtgcacagaaccgacttatgccccgattttgcacctcccgagagaa
+atggtactagtcattgtctcggggttttacaactcaaggataatctgccagcggtacccc
+gaaaaatcccatcccgaacggctggtacctatgctggagaccgaaatggagccagtgcta
+tgcaaaccctcgctctttctatttggcccgaccagctgcgagagtcattcgacatacatt
+gcgatggctggttcatctctctgcttcggattccgatcctgctgcctatggccacaacac
+gaaagagatcttggatacgtcctcaccatagtccaacggacaaatatggaggtgtacgcg
+cacggatacgagtacgacgggccgcccaatgctggtccttcgtgttatactgtttacttg
+cctccggtaagagtgtacagcttgtacccacgcggtggaggaccttacgcgtcgtccgca
+ggtgtggagatttcgctacctgttgcattggggcctcgccttacgtttttttcgacggag
+gcccgacccgccaggccagaccctcatcattgggatttttactgccttggacggcagatt
+ctgatgctggtaacgcgcttggcacacaccctggtcgtaattacgtactatcacctctat
+tttaccaggggcgggccccgcctcaacgatcggtagtctcgttagaacagttgcttatac
+tccgttagcactcacaactcggagaatgagcttacacagtccgtaatagtctccacagct
+tcccctggaaggttcgtacaggggccctggggtctaatgtgctaccgcctaacttcgtta
+gtgtaaggtctcgtgtgcacctccaataacgctgcatttttgtatagaactcctttatag
+gcctgactcttcggaacagcccactaattgacgtgcacgatgctgcatatacccttctca
+atgacgcataccggtgactaaatcctgtggctggttgacactttgcataacccaccacga
+aaacgcggtttgcacgtggttggaagcgagtaccggttaagggaagttacgtaaacccaa
+catagtgagcgatgcttaaaacactgcatgcgaacaacgaccggaacgagagcctaatag
+aaccaaatggataggtggttacgaaatccgcgcacaagtgtcgtgccactctcgtaaaga
+atgattgcttgcttatctatgagaaacctaataggcacgcacgtgtcgccagggaaaaac
+caccatccgacaagacgctgaaaatcgagatagatgcagcccgcgcgtactttaagcacg
+atagccatcttgagcgcgacgattcagcttacggagattacttctcaaagcggacacctc
+gacgctgaagctctctatcgatgcacttgcatgtccatctacggcttgagcgaaccatgc
+ttaacgcttggatgacgttgttagtcggattcgatcgtaccatactgtcctatccatcat
+aacttcccgaattaaaactcattttctaccctcatttgtttcattggcgcatatgagcgc
+cccatgggcgctgatcgacacaggcttgtagcgcacggctcgtcttgcagtagataacca
+tagtctttacgtcgcatatattaatatatcctcagacttccactgcggtattttggatcg
+tggcgtctgggacagtcacactctttaacgggagcgcgttcaatgtctgagtccatccgt
+gcagttcggtgcgattttattcttccctgcatcttccggattccttcttcttgtcggaga
+attcgccgctcgatcaaactcatcattggtacttattgaccgtttcatgctattacaccg
+gtacactgatgataacgctgcggttttatcccccccaatacgcgcacacacgcttctttc
+ggtgcgtcctgtcgtacccctattgcgcatcatggcactccagccgagcaatgctttgga
+caggtgtaaccaagctggatctagcgtgggttcgacacagctcggttcgtataaccacac
+gcatgaactgcgagtgcctcgccccagcgccgctgtctacttgctgtttagaggaagaag
+caacagcttgcacccaatccgcatatctgcatataggtggccgttcctccgtggcgcgcc
+gctacgttgtagcgcacggatcaaaagcgctgtgttactatacactggttcggagacggt
+tcatgacgagcgcgctatatgtcggcatctgcgccccatgagcggccgctgtccggcggc
+acgaataatatagtgcaagaaaaaccgaagactacggttatatatgatggaacggccctc
+acagcattctaacaggtttgacaaacttaataaatgatgggccgcgcctgctgtgaatcc
+cggacggtttggccggaaatacctaggcagtctttggaaaagcttttcctagatcaccat
+atcgttgtcagtggccaaggtttcgttaactctcggcgtacccagtatcggcgcaatagg
+cctttgatcaacccttggaagattagtcgatcgtaacttcctacatcccggtgaaaggct
+ttaattctaagtcttcgccacaaacgcttcaggagcgtcgagttctatcactttcgaggt
+actgccacttactatacaccggtacacttgttaagcaagtgtttgcggatgtggttaaat
+tttgatggcagatttctgggtgttttagctatagctgtatcctcgaggtcgtcgtttaac
+cgctcctgttgctagatcatatgtatcgttgttcgagacgctagtagtcgctcctaccga
+atcttacaggttcgatctctgctcggcttttgccgcgggccggtgcttgtgctataatta
+taatgataagggcagtggccgcacaactgcagattactgacacttgagtgagaactaagc
+cttgaagcatagtgttgaatgttgtagaaaagtatactgtgacaaaaacagggcctggtg
+tcaagtgtcctcagtgatctggatatcatcacgccttgttagcaggatttacccgcatag
+taatggccggactttatattgccctgctgcgctagctagtactgcgggggctctcttccc
+cctattgatattccgggcagaatgcgcgggtagtcagcattcatgtcaggcttctatcaa
+cgtctcattcacccttggagtgtgacctacgtgttagaggcaatgtagcccgagagcccg
+ttcaaagacaaactcccgaattaaacagacaccggttatgggagtgtgagtagtgacttc
+cgaccagtgtttggtttcagcctgtcggttaacctcgcagggctaggagaatgagctgct
+agtaggtgattaccgaagtctccccagaaagggaacagtcttatagagtagagaatgtca
+aatagcgttattgagttctgtctactgcactaccaagagcatgcccaccagagatgcgtc
+gcagtcgtagcgtagacgtcgtaatgacccaggtggcgttcggcctattcgcgtcggacg
+cgcgcgctactacaacgaagggttctgaaagtgcatgttcacactgaaattctaagtgtt
+agtaaacaaacgcgtgtattccagggtcgtgtgtgacattatggctgtctgcgcccctca
+atgatcatcaagacgttcaattgtatgttaacgtagatatcaggtttagttatccgtata
+ctttttacgccgcgcgcttggaacagattctcctaacagccctcgcggtttcaaaaagaa
+ccaaagtctataccatccttgttcccaattctgcctggttgcggagaaaagaccgcctcc
+atacgtacccgactcggtattggtaagtggggaagcagtcgaacgcatatttcttggtta
+tatcacaggccacgttctatatcggaagtggccggattacgatttgacgttctatccccg
+agagcgcattcttgtttgttactactaccacgcgggcgcttcttattcccagaccagagg
+gaatgtgcggaagctttttccacagattggcggaactccagcgtgcttagtgcaggcgga
+gaacgtccgttcagtggtgcgtgctttatttttcaatctgacccgacctgcgctcaaggg
+ttgcaagttgttgtgcgcccgagtaataggcgactcgtcgcaatgggtctggtacattgc
+attttcatcggtacggcgcttcataaagtgcggcaaatttctcaccccagtactcatgtt
+tatagggtatcaggacccgaagcttctctgttccaaagaaatgtactgtttggctcccct
+gtccatattggaggtagatcacttgtggattatgcaatgaatgaatgaaagtttggtgct
+ccccaccggggcgctctcaaagagagtgagctaaatttgaacatttaaattgctattcca
+acccggagtcctgaccggaacagtaatgaaacttcaaccatgccggacagactagaagaa
+gggaaagttgcttgtatatgggagtaaaaatgatgttggtgccgtaatggtgccggaagt
+gactatagagcatgtcgtgacgcaccggtaggcagtgctataatcgtatgtccttcaggc
+gccgccggacctacgaagctgaaattagacaccggcacactagccccgtcagcgacggtg
+cgcggccgctgccctgcagcgaatggggctaacacgcataaaacgcccgcataaccactc
+gagctacgggaattcactcaggctgttgcttcgacgtgtagtctcattacataatcataa
+tacctccaagaccaacggctgctcatgactctcttaccttgttagggacatttcggcact
+agggaagagctgaggactttgaaaacgtcgataaaaccatcgcgggaactagctgcgtta
+gaactccatattttacgggtcgcaagcttgaggtcctgtcccggcagctgcaagtgctac
+ggcaggaggggatctacctaacgtgcagtaacgagcccctgcccgtaatgaggcgtactc
+gtctctaatcgtcagtaagttactatgtccgaggacgcctctacgagttgaactctggct
+aggcccacctgtccgcgccctgctcgggtaccccatctgcttatccaacttcacctcgcc
+ttacggaatctctggttgccagtcatccgatggtcattaagcagcgtggtacatcgtagc
+caatacttcagggcgccagccatattcccagccaagcggctgcataattacagcgcctgg
+cacgactaatcgatcccacaagcctggtagatgacccttagccctaaagcgccctctgac
+ctatctgcacgtgatacttgattatttgtaatgagcggacagggtagatgactaatatac
+agggtcgtctaggtttgcacaatgcagacatcatccgcgcaaggcccggacggctgtact
+cacacagctagctccatctccctcagcagcactaagattcccacgtgaccagggcgacgg
+gcctcagccaaacgtatccttgatatctacttaagtcaaggttgactccgaaccctatgg
+gtcggtgccgttaacagggagtctatatctcggcgttccattgcttgtttcaaactcctg
+ctataaggtgaaagcgctggagggcatagtttatgcccaaagttgcgcgtagatccgtcg
+ggatatgtgctataataaggactgctcgaggtaggcggtaacggctcccgccttcagtag
+gcgcggaactcgaatcggagttacaggacttgaccgagtcatatccaagtttatgttacc
+cgatcggatccggatgctcgtatctgcgacgaggtcggaagacggacgaaatacgattca
+accgcgcgaaccattagcatctaacctttagcctcaatgggtgttaacgtggtgggctca
+ctcggcgtactctttgtgcaactattccgtatgaacaacagtcaagttgcgacatgatgc
+tcttacgtgattcccacagtttcccacctcaggatgctttctttagctaaacccaatagt
+tatggcggcaccttcagactcccacgaggacggctatgacgttgctaaaccattcgccgc
+caaaggctagcgctaacgagttctgtgagtttgttccgggccagatctccaggatggtcg
+caacaacgcagtaccggttttatactggtgaccctctacctgttattaagttacagcgtt
+gtcctacgtacatggtcgtgagtactcgcgtagtcaaacgccaggactagcagcgagaat
+tattgtcgcgatacttactacaatacttacccgatattgacgtgcagggttgaaagagat
+ggacagttgaatatctattttgacggaatcctcaaaactccctccacctcaggtaacggc
+cctgtccgggaccgcattcttgcatatattggttcccagagcgtatctaagttagtctct
+tgaccgttcaccgactctagggcgactcgttatcgccctccgaaacgatgctttcgttac
+ctcaatgatgacaggctgtaacgtaagtgatcccaatctcactcgtgccttgtccaccgt
+tccgtgaagacgaagcaatacgcggaatacgtggcttcgtaatattttgacgatatgggg
+ctgggacgctcaagacttccatgacaaacaaagtgaagagcaactgcatccctcatcatg
+atcactattaccagagtagcgatggataacgctaatttggtcagggcagctatcgcatcc
+cgcaggtgtaggcggagactttttcttttgttgcgagttgacaggtaatctcacggtata
+agcacggttatttacgcaagcgacgtccctgggagaatccgcccacgtaggaccccataa
+tccataaatactgcggtcgaaaccttcatatcgtgacagaaccgctttctagggatgcgg
+tccccgcattcagagttctactttggccagcgtgagacttaacaactccacttacgcggt
+acattgaagtcgttcagtccagtgtgacctgtgtaccgaataacgtgtagaccagcgcgt
+ctacgacttagcgcggctccactccaaagcaccttttgggactttccaacgagcctgttg
+gccgttaagcggtatttcacaaatagatcaccctagtgtcggtaaccgactaccctattg
+ggatcatcgtgagctcgaaacactagaggcggaccaacggatgacatttgattcggctct
+acagagcttgtcgccagagaaaaactgtggcaatctacgctcgcggggaattgactttag
+cggcccctagacaggtgtgggacactagtctagattcacgtcctacacgacataacagca
+ccttcctggccagcccagaaatagtacctggacgacatccagccttccgacgccataatg
+tgagccgtagcgcccacgacgatcaacgaggagaaatttacaaaggctgtgtgaatgcta
+cgtcgtctaccattgctcatcgaaacgaacgcaacgcacagcatacaacgtttaccatgc
+cggagcgggatcctcaagtacagaaaacagaggtctaaacatgatccgaacaaatcggta
+ggtttacacagctacctcgtccattggcgtactgcatcgatcgtgcttactacggtcatg
+ccggcccgcgatgcacgtacgaaggaataccctgtctgcccccgcgcgagttacgctgtc
+tcgcacataccgagcactgtcgttcgaagctaaactatgagcccagccgagctccttatg
+gccgcaacgctggtgcggccagctgataaattccacagtacacgatcctcgtgtaagatc
+tcgggcatagtaagtcatttcacatggttaggagagatagaatacatggttctggtagct
+caaccaggatttgtggaacccttggcccttggtgagtgctacaataaaattctccgtatg
+ggacaaccaaagggtgctggatgtgacttcccggcccaggttagatgtccatatcattca
+tacattgcccgaccgacccaatgcctaaatcagaggcgccttagctagttcttgtagtgt
+gccacgtccggccacgcagacacgaccctcggcgagtgatcaccattaccggattggcat
+cgaagtctttttctgggaagttagccagtttggtgtgcggtgcttagaatcttattccca
+gtcaaacgcccctgggacgaattgctaaccctagttgccacgccggaaccatcttcggga
+gagtagacaaatccgagttagatatgttagcgtcttcgtgagtctgaaatgtatcacttc
+accgcagaatacgcgaatgtctgtttgccctggactgacggaattggcttaaaagccgac
+tagagcattttggtacggttcctatccgcgatgtaattacctatctaggttatcgctaga
+cgaatagcgagtacagtgtagcaggccctttgttagcaagttgctctaaacagttgtcaa
+aacgtaggcacaatagtgcgattcttctaaatccgggaagctcatggcgctgggcagaaa
+tatcacatacgggaataatcaacctccattttggttcgttttactcgatgagtgcccctt
+gcttgagacgagcgttctgagttgatggcatgtcgaaaggtttacgcggtgagtagagca
+ctttacccctacagatcggaatcctcgaggaggacagttggaacttcacattaacctttg
+ttcgattgcatgaaggttgtgttctgggagtaggctcccaaggtagcggttcatgctggg
+ggcagccctaagtttgtattatgtgagtttgcgtctgaaactacatttagcatgaggaac
+gtaagctttctggagggatcttctaaagccaggtatcgcccgctacgatgccggagccgg
+tggttcacagctacctgtgctcaaaggcttaaggctaatcatagcaacagtgcgaaagga
+cgtctttcagatttcgaaaggtgctgacacaacaagggtcagggcggtcctacccttctg
+attccctacctggttttttagcaagggtcaaggctaggcttatactcccgaacgctttaa
+acactatcccacccctgacggggggaagttgcgcgttaagtataagaataagatttaaca
+gtacactttaggttcctcttccgcgagccgtcatacagcaccgagcgccgttgaaacgcg
+attaacgcgtattgtcgtgcgaaaaaaaaacgctcgccagcatattggagtgtcgacttg
+aaatattgaacaacaccgcatatcaaggacgaatagtagggcttcactacctccacctga
+cggccctaggacttatactcgaaaaagaccttccatcacgatgtcccttaccggcgagag
+ggctatatacgcatgaatagcagatcttgccgtcgctgagtgtcacccagggttgctcca
+gaaaggagatagggcggagagccatcgacagcagctctcgtctaggtggtagcagctaag
+gagtcgtgtcgtcgcgccgagttggaacattatcgatgtacatcaatgcagtaatgatgc
+tgatagactcgggagtttcctcaaacccagagttacgagaagacgcaggtctatcagtta
+gaaggagtcagtattggcctttgaaagatcttatgctcatgcccaatcgtagttaaacgc
+gaatcgggaaggccaatctggcggttttgacccccggactcttaagacgtccaatgtggc
+tagacataagtaacgaattactctataccgaggggcgggaaccggccaatttattacgag
+agcacgagagccttgtagcggccagcacactatcctcgagtccctctatcctgagacgta
+gatatacatatacgcctagagagaatagccgtctaggcttccgtcgccctctccgtcgtt
+cgcgtgaaccgtaagtcttccgcattcccttcctcaagcgcgttggtgtgagagtggtat
+tgaggcccagtcttataacgcatatacttgtgcactctattacttaccatgggaaccaat
+ggcactctcgaatcatgctcacagctgagcaacggtgctgctcaccaattacatatgagt
+cgtggtttagcgttggagcggaagatgaatttccatctgttcgcgcgcatcactaaccaa
+tatacggttatcccagcgctatctagttctgaccgggttggtagcgaacccttttgcaag
+ccggcttagtggatgtgaagtgggagtgataacttaagccgccacgttcgggggggactc
+gtttatattggtgctggaatacgaacggcgtgattcgtagtcgccctaatcgggcgcgac
+aacacatgtagtactgtcgaggcggtttaaacccacagtaggtactctatcagcagaatt
+atgctagaagtttcacaacaactttccgcatgaggctcagcggcagcgtcgcactcccaa
+tggccagtgccggtagcgatgtttggtggaattagttccttcggaatacgaaccggattt
+aaagagcctcggagaacctaaacgaatccgtacgcatcttgcccaaggtgctgagccttg
+tcgcctttctcagttccacctacattaatgcaatgcgttcgaagctctgaccgcaaacag
+gaatcaagttcagacagagtgcaagagtttcgcaataattgggaacgacccacttgatat
+aggtgcttttagagatgtgtgtacgaccgtccttcgagcatacctacgggttacaattgc
+tccggtaagtcaaggcacatagaaaacatagccaactgagagtgtatacaagattacctc
+atgtagactgaaatacacacatcgctttaagctctcaaccgatgtagaacagattttggg
+cggcgttgacagcgtgcccgctcaccggtttgctcccttctcaccaaataaccatgagac
+gactttggtgactggactgccagatgacgggctacaaccgttttggttccgaattcgctc
+taactcaactaacatcatactatatgcgccaggatattctcgcggttggacccccctgcc
+aattcgggttaaaaccactccccccatgtagggagctgccgcaattacaatatcgacgat
+cccagatggacgctcacaaaatatcagtcctttcacgatccgctcatatagacggatgaa
+gggactgaggctgttagatagtgacgtcgagcatggcgtagacgagcgcaaccgggtcga
+ggcccgcattaccgtgacacccagttgaaaggatttacactgcttcattcgatatttacc
+actttgtatgaggagctcaacctaagtcaacacggaccatcatacaggtcgccagtaatg
+agaaggctgctgtgccatggagaagcgctgctacagcacacaacgaacatcttgcaatgt
+gaaggagggtgctcttttgggatgagcctacggggatgtgtatccctgccctgtaggcag
+ttgggacttagcgcgactatctagataactaaggcgccagccgcggctgtttgccgaagt
+cgtgctgatgctgtacaacgaagggcgagcgtgttaacatgctacacgttgacctagact
+agtccaagtctgaaagtcccaatttaggtcgggtagtacagtcctcggttccagtcccat
+gttgtgccgacaaggacaagcgatcatcaaatcgactgaaattgaatcagctacctcaga
+ccacattcagctctcggtaacatgggaggcttgtggttgcaccgtaaaagggggatagcc
+catccatcctgtaaacctacaatcgcgcgtagcttaatacgctcacattagacattcgat
+cgagagacctggtttcaagagccttcccttttgctttagtgggccaaatcgcaaccctgc
+tcccctcccttacgccttatacacttcagtgcaaattcatgcgttcagcgaacaactgga
+cttctgttgtacgtagtccacgggggcttattcattatagaaagccccctactgtcaccg
+ttatatggttcacacatgagctgatcacctagagagtcgtcatgcacattcgcctaacaa
+ggacatatgagtaaccgggaggggatatcttcgatttgcagcaccaatcgacgttgtact
+ggtctattgtcggttaggtccgattatccgaccggcaatgaggcaagcccatctattcag
+gaaacttaggcagttccctgtgctggcccgacgtcgatgagttaagtctatacaggccgg
+ccgcgagtagttaacgagaccaacatagaactatcatactagccggcaatgatcaatagg
+gtcttagtgccactgtccttcgagccctcgcctaatttagcgcgaccggtttcctattgg
+cctgtggggttgcgggcgcgtccgctttaagaatggtccttaacacctacccggagatcc
+attgcatagcacactctccccattagcctagacacgtcgtcgcccgtcgactttggctgg
+aatttaatcgccggggatatcgaactttcacgccctttaacgacgaggaaacctaccgtc
+gcctggctggtaaatgggtgccttacggggactcacgatgctgtgaaccgcccgccagtc
+tctggggctcccaaaatccaggttggaattacggacctccgccggtactacgcattacgg
+ggtggaaagtcctaagataggtgaatgaaagggcttcgctaaaccagtaagtcattaaca
+ggacatcggcgtcacgtctcgcgggtttacacggcgcacaaatcctattcccatgataaa
+caccttatgccaatccacatccctcgctgcctaataaaattgtcacacctgcgctactga
+ctaacgtttacgcaatgagagatgaattccgacacccacgcttgttgcaagcacagccgt
+atgggttctcgggtaaggtaacacgaggcacactccggcgcggccacttcggcccctccc
+tgacgatgaccctcattggtcaagcatcagtcgaatgattcgtaacaaggagcaaccgac
+tcagtagagagggtgaatctcacgcgctagcctgaggaccgcctaagtgcttgctgtgcg
+tcgcggcagtcgcgaggtgcgggctaaagtaaataattactggtcttacctaattaaagt
+tggtggttagggacaacgttaccactaccagggtgcgcccctgaattcgggtatcggact
+atccagggcgccttttgcggccttaaatacctttttaatcacgctggagctagaaggcca
+tcgggatagacggggttctaggtactcgaaaaaacaggcctaataactttattgcgcttg
+gactaacctatgtacaacacgttgtagcatactatggaatgttactgacctacacggata
+gcatttgttcgggagcgtcattgacctcccagaccctatgccgatctgcaccattcagtg
+accatccacaagtctctaggtttagccaaaggtgacaggtcaagcacttgcgcatgtcca
+ctagtcgattatgcaacgtctctgaacagttagcacttatctcccgccgtgtgactcacg
+cagtgaacttacctatagcatacgcctactattgaatgttcgttgttctaacacagcgct
+aatacctcactggcagaggtgcgcacgctcctagtatgggagggagtcaggtcagagtgt
+atgagactgatttttattcccgataggggttcagtgaaatcgacctctcaaaagagaggc
+gcagaattcgctgataagctctgctacgatcgctaaggcacgataagcagggcggtgaag
+gttggagcaagataatatcacccggacgcgggtcctgtcgcaacgagcggccgtgagacc
+tggtgcgcaccgtgtctcgatcggccgaatatcggaacccactgcgtgactcaaatgata
+tttttgctatctgtgggggatttatgtcccggtagaactctgcttctagcagaggataaa
+ctttacaaggacggcgaatatggtgtcagagcgccctaatgatcccgtgctattccgcgg
+gccaccggccgttaatggacttcgggttagaaggatgggttattcatcttccacagaaac
+gcccagccgcaatcgtgggtttactcgaccgcggttatctgcctacttagctgcattcct
+aaaacaggattaaaaaggccgcgagggttgcgaacctatggttgagaacagagtcataga
+gtcagatgcgcagggacggcacggatccacatggcagttaactaatattaataccccctt
+agcctcgtatatgggcgtgtgcagtcttgtccactcgcggacgcgtatccgagcgattct
+gtcttccaacgctattcgttaccactttggcacctctttgctaagcaggatgagaacatc
+tcactcactacgagccttgactttcagcacgcggtacgagggcactgggcttctcgtcct
+ttgctagatgtaggtgccttcccgccctcatgacgatgtcacgtctatcggtttattaag
+gtcggggaccattacgagattaccccgcgaccttcgtccaaatgggatcacggcaacgtt
+ccacgaggggcgcgttgcctgagccactcgggtatccccttccgatatccgcagaagtct
+agctaggagcaccgccaagcattacccgattaagcaaagcctactcatcgcatacacggt
+tcttggggtttgcgtcagatagcaacttccggcggcagtagagatgatattttatccgat
+tgagcttgcccagcgcaccctcgggccccgtggctcttctcttaaatgtgccctgcacga
+tgttagcggttcctactcctccccgagccctatgggtggacagactcgccctctgaggct
+gcgtgttcaactggttccaagtccggcgcctgtggatctacgacgcgaccagcaacatta
+taccaatgtctaggcttagctcgaaaactagtaagccttagaactagggtcgtagcttct
+tctaaatgaagggcagcgtcatagccatccacgttagcgcttactcaatcgcctgtcggc
+tgtcatgttaccgctgccgtaagttcgtgaacataaaatacaacacattttaggtttaac
+aaggattgtttaccgccacgtactggtgccggtagtgaaacgaaaaacctcagcatcggg
+aggaggagaacggaatccctaccaatcttatctctacttaaagaacaaagcgcgcggtac
+atggcgcagacgagaatgaatccccgaacgggccgagttagactcctcaacctgtcgaaa
+agttgcgatccgctagatcgtagagtacggacttaaaaaagaaaagaaggtctctacccg
+agcggtgagcccaaccagttccaggttgctgccggattcttccacacggcggtgccatat
+ggacgaccccgtactttgggcattctaggctacctactgcgaacgcctcgcgttcatgcg
+caaagttttctctagataggcgcgctttggtaagcatagtaataggttcttcagcgtcta
+aagcccgcccattaggcctggcgactctgctttagtggtaaagagatagcatcgatgtac
+atcgatggagagagtattttcacgaaagtgcgcgccgtacactatttatcggcatgcgcg
+ctaaactggagggtctaataaccagatcacgcaacgaggtcccatgtacggttcgcattg
+cgaaagtatgggatactagaggttttatcgggcctcgcttgaggtctgtctgggactggc
+gcacatcgctcgtcgcccagtcgatagcggggtgattaaataagaaatatgttagtgccc
+ggatttggaaccaaccagtcccggtagcggtacaaaaagcctttcctgctagttctatgc
+ttaaagcgtactcctgttacaatccgtaggcaacctgaagaggcaacctggttttccttt
+atttcgactttgtttgccatttccaatgtgatactgtgcggcgaccttaatgctttttgg
+taaaaccataccgagatccagcgcacgcgacattcagaccggtcccggtttggcggtcaa
+cctcgtactctgcactgttcagctagaggggtctcctatcccgaggtaccggtcgtctaa
+cgggtggttacaggggctggtcctactctaccaacagttaaggagggcaacaagttcgat
+ggggcatcgtataacttgaatgccattggacaaataataattgctccacgtcccaaacct
+caactgaccttgtacgcataggtgccacctgcacgcaaccgagctcgttcaagtgtcctt
+cttagctggcgccgagtgaacctgcatctgagagtctacccaacgatctagtatcataat
+gtctgtagccagcgactatgacacttagagagccgcctaagaaagtgtttgcggctcctg
+ccccggtgcgcttgttcggtgggaggtcgttatatagaaccatggggatataatgaatgg
+taacatatctgccacgttgacaagccgctattatgaattcagggttggatactattatgg
+cccttcacggtcacttgtaggacggccccaaacaggattagtaaagtcggtggtctaagt
+gtaagcgataggcaaactgcggttattcgcgtagaccgcttgatgatgtaaaataacagt
+tttcatgtctttgcaattaccgcgtgtagtctgaggacttaaggccccttctcggatagt
+gaaatagttcaggtccggctgttgacaggtgtcctgaccggaacgctttacagctcctga
+ggagcgtagcgccctacgtccttcctgatccagccgcacccatagctagtaaacaagttg
+actgcgagacacaaagtcaagggcctgggcaagcgcgggccggactgcttgtcgaatatt
+gaagcgtactcgatccagatctgcgccattgagttaaaaggactatacgcctgtctccag
+ccgattgcagaaaggacagatcctaatagaagaactggggctccattctctcaccgacac
+cctcctattcctatcccactggccccattgctggtaacccaaacctctcacgacgattca
+gcgctgcgattaaagagtggagtaaggttaaaatcggttggggcgagtagtgtttgatgc
+aagatccattgattatcgccagtgggatggcggcaaaggtaccatacctcgagcttattt
+gggtgcctcactcctcggggaaccatatagacttgcacttggcaaaatatggtcgggttc
+aaccgaccttttatgcctggaccctctgctgagggcctcttgatcaaaatgcttgcgttg
+cttataagttgccgcttgatgtccaggattattattccagcgtggaacgggaaatgatag
+cttatctgttactcagggcgcctgaattagggttgccattacataaaggaacgacaaggt
+gagcactgggagggcgcattcttataaccgggcatatgcgcggaacaccagcgttggatg
+gcctacctccgcggaggtcggggtcgaaggcccccgtttcctggaacaataacactgtcc
+cacttggtttgtaaagaacctccactcgtcatgacacggcctagcggtgttatcggcgac
+gataatcatgggtctttacaagtgaatcaggcttaccaggcggaccaggaggaaacactc
+cacgagtgagacctggatccggggggatggcatacatcccatacgctcactcagcatgca
+cgttcctagcacatgctggaatcttgcaagctggacagagtgtattgtggcccttgagct
+atacttctaacgccagatccatgtttgcaaacatagctccagtggcctattcgacggttt
+agcctctgcaccatgttatggctcttataggtgttgggtcgacagtgggtgactagacgt
+aaagagagtatgccgtggttgaaccgagacctaaaaagctcaagatcacgacggatatct
+ttaacggataccagcaatcggctaagaccagtgtctactactcgtgatcggcaccggccg
+cccgttatctggtgtagtagtcagccccgcatcacccgtgcctatgcgagccttgactct
+atcagtctaagagcacacgtttagacctgagccaagcgtaggtcactatcgagtcaacct
+taaccctagttgattaatgctcttgacgtgtatgattacaccgaccgcgaataaactctc
+acgcgcgtgacggtttcctcgctagaagaagccatatactgtacacactgctgtgaccga
+caagacttacctttggtttacgtacaggtggacagttgtttctcccctcgggtcgatagc
+gtttggtcgtgattccaataagtgccagatgtcggaacaacatgtttccataaagacgcg
+tgacatgatatggtttgctatgaagccactacgaaaatgccagtgcttctctttatattt
+tgcagatgtggaagaagtgcatccattatagtccttttacgtacctggattctccgccag
+cactgccactactttcttactatccgttggggggggacgctcaacagagcgcggactcag
+gaatcagataacgaccggaacggggcatatgcccagcattcgttgttgtaaagcgattga
+gtttgggctgctaaggggccggcagttcgttccgggatacccgcaaaatttatgcctttg
+tccggtgattctaggtttagctcgatccacgaatacgacaatacaaggtttgcctcctct
+ttcgtctatcacgcaagcttagagttgctaaaatttcgtagtccgtgcgttaaagctccc
+tacatttctaagctgtacgacaccacactatcttgcaacaagagtcactctatttctcat
+atccgaatgaatatcgtcctgtacacgggtggcaatctcggcaagatggccgagatgtgt
+agcactgtcacgttcaaaagctcaaacttctgcccactgccagccctaacagaatctgga
+gacatcataccagcgctgtcccatgtggcggagagttgcttcaatagaacgctatcaccg
+tgggatcacatacgtcactactccgtgtgacactatttattattcctttacctccaatac
+gcccgtccttgcatcgcattttgtagtaagacatcagacgacgttactgccacggaacca
+taaaacgtgctgagcccacgtaaacgtcctatcggtgaggtccgctcatcgtacgactct
+gaaatttggaaactaccagtttgttggcggtgaatatccaacctgtcggcatacacgctc
+acgcgtatggttggtacatgcgaaaaactacccaagcaccgggcgcgcgagacactatga
+gtttagtgatgatttacggagcacgttttttgaactcaacagaccgattgaatccttcaa
+acagggttactcgttcgtgacaaccgattacagcattctgaacgtggtacgtgcacatag
+cttggagagttgcgcgaatctctttcgtaccgtattctacctgatcgctagctttccggg
+gtaacgacatcggcaatgatgagtagcagccagtatccatactggacaggtactccatat
+aaaactcccgcttcaacacgcgagatttgaaccgcacagtgattgtgctgagtcctagtc
+accatcccgatcttgtacacgggtaggggtgtaacgtgggcagatgatgcttacccttcc
+gctggcttgtaaaggtgccccgcttcacttgatgagctgcgtcgacaagaccacccaacc
+cgagccacgtggttccgacgactcaatgatttccagtatggtccaatcgagcaccttcca
+ctcatgaaatttgagcactgttggggatcgagtatgtgttttgcagtgggtctgtagcat
+ggaaagatgtaccctaacccggctctggcattatcaacggtggattgggtggttaaacag
+cttcccttcggagacttaatggactaaaacgaatgaatcagacgccgagaacgagaactc
+accatctggcccaggagccatatttttgattggtaaatcgctcgcatagtgcccgatacg
+atgcgtacttgagcgtaaacggcgcagcctctaatcataggtgattgctaagtctacggt
+catccccagtggctgacgaggaattaaagacctatttccgtacttgttgcgcgccttcaa
+ttatccagcgtataccccgatggctactgctacatgtctaaagtgactagccagaaaaac
+ctaaccctcgcccacgaggccttgatcatctcaatcatagagtaatgttcattgaattgc
+acggctcttggtgtgcacattgagacaatttctaaaccgacaagtttaatggccgagctc
+ctcctgcgtccagctggaccttcatgcaggcatgaaggtccatatatattgtcctcccat
+agcccgccgaccgggtctgactcaactgtgttttcgctatcccaggctagcacttctatt
+ctttgttacgtccagtcatagtgttactatagggtaattttagtcatagtagacggccgc
+tttttcgtatggcccgagaccgtccaccggctacccaattaagtcacatccggatcttgg
+gtctagatattcctatcgaaaatagtctcgccgcctcactgcgtagttcagggggcgtca
+cacttgttcgcggcttttcctcatgggatctttacccgatggttgatgcaataaatgtct
+acaccggactggcgtgtccgagacgactttatacacgtgtgacgagtagatcagatcgta
+cgaatggtctgtctcacctatcccagtgggaggatggaaaacactcctgcctaccgggtc
+gaattatttacgcgtgttacaatatgtaatttagaaaaagggattgctggtcgatgcgtc
+tccaagggattttttatctaaaagcatccttttgggtgtactctgatcgcacgtcgcaga
+cagcagtgggttttgacgcagtccgtaggcccacagactcgtttgttgtttattaatccc
+aggggagcgttgaagccacacctattctgtagctgtttgaaaggtagctagcccggatat
+tactcaaggtgactcccttcagaatcacacgtcgctggagtcgccacagggtggcatata
+cgagtgatagagcaccttactttcgaggtagcggtacattagtgcaacgatgaacccact
+atagtcttagtgatttcatgttttacttacgcgaaaacgtggggttttgtcaacacgtat
+acgttgaatgcacatgcctcatcctaaactgatgcactgccacaagtctgaaagagcgac
+agtctgcaacatagcggaaggttacgcccaagccagtggtgatcccccataagcttggag
+ggactccccttagcgttggatgtctttgccccagcggcctcggtgtacgggttctccacc
+ccactatggtttggaactatgaagaggtacggcaacctacccgaggcaccaaatcgtgaa
+cctacgcctatatatacggatagcagggtatccattcttaccatgagctcgtaaaccact
+ccgctgaattcgatgggctttggcgcacatcaccgtttctatcacagatctgtcaacgga
+atctaacgctatttactcggcgcacacagatcggaaaacccaactgtggcgcgggacgga
+ctccaggaatcgttacgcgttatcaccttcggctaagtcttgacgacattagagctatat
+ggtattaatagtagctgtacatcaaatgataaaattatctgaattataagtgatagcgcc
+cacataatgacacacacgttttagatagttagtagacgctcgagactttgcgagcaagaa
+tggactgttaaccttaggggcgggttcccgcttacaaaagctgattcgctcctagagatc
+tataagcgaagttcaacccctaattaccattgcataagaccgggagaacctgtgacacct
+gttcccatgggattagcgaaggattgttgacttattgccgagtgacctagtattgattaa
+aaatgcgacgtgaagtaaccaggccttcgatgggcgtctccgaatgggccagtaacaacc
+atatacaaactacaagttaaacccgaaaccgtggctaccatgctcatctagtcgggttcc
+cgatggaacattccacggtgagcggccttggatgtcggaccaccatttggcaggacaacc
+gtcacgattcgcaacagcggttaaagcaagatggacgccaataatgatattcgaaagtgg
+ggttaaaactggccgccgcttgatcggtcctacttagtagcgtctcagatgctagaacca
+ttccgagtgcaatgtgtgctagcaacagtggaatcggtctataacggtttcatgatccct
+tctccggccatccattgagaacgattctacattaatctgttaagcgaccgccaatcactg
+attagctccagaaaacctaagattaccgtatataagaatcaacctgctaaagtaggaagg
+cgcaggttgccgatgaacagatcaagttcatacaggagctcttaatccaccgtacccaag
+acctagtcaagcgggatgtcgttaacaactttgtacagacatttgggagcattgcaccac
+agactccaatgaataacgcatccgctaggaccggatatagactgaagaaagtatagtcag
+ctgcctcctaaaggaggcagtagtaggagccaacctaacgtcgtggatacgcattactcg
+gtagcgtggtaaacacacgaacccgatctcagaattttagcggcgagaagttccataaat
+catatttctacttcgtgctccggcttcatctgatggtggtcattattctccatatgcatc
+cagtagagcttgcgcttcacgcaaagttccaggatgctcacatatgtccatacggcgcta
+ctacatttactcgaacacttggaagcccgccgtcgggtgtatgactagcctttgactgag
+actcagcctcgcaattgtatgtaactagcgtatcccggcaaagtttataggtccatatta
+acaacagatgggagtagagcagcagcttttattcggactggcacctcatcgctttcgctg
+tctgcgggatcaccggtctctcttgaacgtgttagagcctgagggatctgagggcacaca
+cggcacttgtatccggaaaacctatgtatagagcctcggttgccagtactagttcgtggt
+ccatagcgcctgaggggattaaacgcctccggaaacacgcgagttgttcttgtgcacgta
+aaaatcacttgatgttatcgtgttcggccccagtcgctgtctcacttcaaaccagcgccg
+tatccattctatgcaattacgattatacttttgacccgatctacgaatcagttacccatg
+aatgcgacctgcgataacatacagtgcgacctccagtcctgttcgattaaatcgacagag
+ggtcccgaacgcatccaagcggcttgggtcccgctggcaccgctgggaagtaggtagaga
+cgtattgaaggaagcgtgtacagattggtgattacggtgctcttataggaccagactcgg
+gcgattctacggggtcgtccacactatggacccgagcatcgaatcagtatgtcaatctga
+agggactaatcggggagacgctggactccgtcaggagtgaccagaagcagggatgcaaag
+acatcccggacgtggatagactacaaatcggacactcagatacatacctctagaaaatac
+tattccccgtttctattccgttccgcggccttttacgtttagcttggagcaaactatata
+gccgaggagggtactacaacgcgacgcacttatatcccaatgaaagaataaaagctggta
+agacaacgctagccactctacctgtgttgcactcgcgatattagggagacaggttacaat
+cagctgacacatgactagctgacccggagcactcaattctgcccatcggggatctgatca
+aattcgtcgtcgcattggacggcttccctgcgtagcgaaggaatggttaccgtacgcctc
+ccaacacacggcggtcaaaatagtcttcagcaacagtaacacaaatctcttcctagtact
+cttggtacacggccctagagttaattgtgtgcccccccatactctctacatgtgataaca
+gcgacccactaggttgccaaacagagtcggaagtcctatcgagtccagggcgctgtaggg
+cctacagactctccgatgtcctgtgttcttcgtaattgcaatattttcgggacccttctg
+ctgttgtcagattcagtctgttccatcttctggaaatgttgaggaactcgaaaacgctaa
+ctccctgatatttgtggccttacatcaaccgtcctcaggtgaagcccaatgctaaaggag
+tgaaccagacgtgcaggaagaagctgttgaccctttaaagctctagttcttgtcaggtgt
+tccgactcgctggcgagagtatgatccagtaagcggcggacctgcgaccacatgatgagg
+tccctacaaaatcctatgctccctgcgaattacaactcacagagaacagcctaggctttc
+ttagttattgatgcacattctactgacgaacgcagcattcgaactaaaccattggtaatg
+taattgtgacacgtgggaatctatttaaagctgcaagaactccaccacgtgttcatccac
+atcggtctctgtggaatggtccaggaccgtcccaatagggggaattgcgagacccaacta
+atcgagtgattgaacatgggagcaattcccgaatagaaacttgcaacgcgcagtactacg
+acgatggtagcaataacgacgcgctacttcagctcatgggtctaaattagggcgaacgat
+tgcacctaatctgctggcttctctagattgtagatccacagggccaattaacagtgcaaa
+gaatagcgtcatatgattagtttgaaaataatatacatgaaaatcgagcacccgcatcaa
+taagctacgagagtctttggagagtgccaatacacctagcacatgctgtgcttatgttat
+gaaaattcatacttgactaacgttagccaccagccgatggcgctgtcacaacgaccctgg
+gttaccgtttagttctctaagaagggtcactctaccagcggggttaaatataccggccga
+ctgtctcgagagtgggttgagataactcaatttggatcagcattaagtctagagcgattc
+tcgcggagcgatctatgcgcactgacttactcttggaatgtcactcgcggcttacatgcc
+tccttgttccgcggattgaatattttatgcggtagtcatgactttaatcgtttctacaga
+aaagaccgtttgaaatggcagaggaaacaaccctgctggatcctccctaagtcacatccg
+gacggacagattctacttaacctccaataaattgagaaaaatgcaaaaggatgccaatac
+ctatagtacattttacgtttcccgtgtggttcgtgccaacccctggacggtggatgtccc
+cggtgggtttttggaccgggcgaaattattggccaacccggaaacccaccgagagcctaa
+gacgtgcatgatagttataagtttaatgggagccttaattgcaaccgatgggggcgggta
+tttgtctcctacaccgacactatggttgttatttgcggcttcactcaactacaatctggt
+ctgtagagagtaaccccgtattatcttcccttgcgccctgggtgcgttagcggaagtatg
+gggattaaggggcgtgaacaatgcttctaagagcccggcgctaacggacggtgtcacaga
+gtgtctaggcagagtccccactgtggaatacgcatgcgtagcgaaccgcgcgagtcagta
+ggaacacattgggagcgattgttcctcctatcagccggcctagcaagcatgacgtcaaac
+cttagtgagcagcccaagaaataacgctcggactgcaacagatctaagcgggaaatatat
+cgatagcgaggaagccgagaggactaagcagagagacgaagaggtgagccggagtgattt
+agccccagatggcaggtatagcttccgttcacaacgaattgaacagaaagtccggcgccc
+ctggaatttcgaaacgtcaccaggttggccgtaaggttggtaactcaacaccctaagact
+agcggtcttgcgtcatgcaagcggggcgtgtagcctgcacagacataatacggtagggag
+gttaggcgtggggcgacacagtaagatctgatgaatccatgtacgttgcctccccgtcgt
+acgcagttgatacttcgcatcatacttagcagaaagcatcatcgcgacctctcgtacaat
+ggcaaaaaggagggcttcgtgcacggggtagagtcttccgcactctaatgaatcaacagt
+cgaggttcatggccacaaatgtaacgacgcgatatgactcgttatgtctaggtcccactg
+cggatctccttagaagcgaattgtataaatctcatagccccccccttagcaagtggtacg
+tagcccacacgatttacgcagagtggggtaagacctcccccacgacttggggaacgcgcg
+ctcaccggatagctactgccactgtagagccactagcgcatagtgtatccatagtgatgt
+acgtagccaagcggggagtccttgtcttatgactagcgccatggggctatcaactgagaa
+cggatgcacaaacggtccggccattcgcacagtccgccggtcactaatgaccggtctgca
+tggggctgcaacgatcgcccaaggattggaaattgttaataagagtccagtggacaattt
+agtaacgcgacgcgcatctctccccgcctaacaaggctcatttttagcttgacggcgcgt
+ctcacgttgccgggctcagctcgagctcacgtgccgcgcggggttacctcaggtttgagg
+aatgtgtcttgaacggttcgtaccggcttagcgtcgggtgctcctcagggttcccagcaa
+cattcttaccgcaatccaatactgagggcgctaccaatctaacgtatcactgacccagta
+aaactcggtattacgggggcgatatatgtgcttgcctcaacatagaactaccgccttgac
+gttagaacgttaagttagagcacctgcccatctggattgcggcgataaaatcgattattg
+tcacctggatgaggaatatggcggacaaacgatcgtgtggacctgcgccgcaaccgtggg
+atgccgcagcagaatatctacagagcgtttgcaggagggccacgcggtatccacgtaagt
+tcgcgcaatagcagcatcatctcgttcggggttgctgctctcagactgtcgatacgtccg
+aataccagcaacccctcgaggctttgtaatatttacggagtcctaagggatttggtgccc
+caagtatagttttgccgaagggggggcacagtgccgtgactacgattgggctattgggca
+acccgaccccgtgcgcacacgtttgatctcagacagagggcaaaaagacgaagccacgag
+ctcttcgaaatcaatctacatctatgctgggataagttctggtccacacctagatccgag
+aatggaccgtggataacgagcaccgttacctttgaggcggcagcacttttaacaccgtaa
+aagtaactctatagttgtcagcctttaaagattgcgttcccaatacggtacgcaccgtct
+actaccgtcaacacaccgtagcttaggtccccccgcggcagcgcttccatcgtggagggc
+tgtcccccatcctccgtagaactgcgtttaccggtctggggagactccctaaagaaacac
+cacaggtgaggtggacgggaatcaagttaacgcattcacgtaattcactcctgttcactt
+acataagagaagttctggttcgcgccttaagtgccatccatgaggcatacgatgcgatgg
+ggaccacgcctgtagactagagaaacaccatcaagttgataaggagtgaaaattagtata
+ggtctggcccgctcgtctgttgatagggcctttaaatgtaataggcctccgctctgaacg
+agtccgtacttatctgttggatagtaagaacacggttctcagtccgcaaggtagtatatg
+actacgcgtcgatggacctaaagatacgtttggcatcgtcctgagcagcttatgaaaatt
+gctgcgcgtttcaggtggaagaatctgtgttattagtgcggggacggtagtttcgtaggg
+aattatgggtagtacagatctatggacgggaggtgactgtcagcagactgtgcgcaggcg
+ctggtggtataatcgctgggaccacgtactggcaagacgcatgcagcctggtgacatcca
+caccgccctcgctcagataggacggacgtgcggcaataccctatctggctcctggacacg
+gaaaaacagcagtttaaaaaaaagtgggttttgtgcattatcactttgtccgttcgacag
+tttattgcacctcccagcatgctagtaaccccttgctctgatttgagatttattatcgta
+acacggagtcgacgtgaagtttgatctgcggagaataggccgagaagcccctacgtaccc
+tatgattcccgccatgtgcggtgtaaaattaaccactacttatggatttcatccaaatta
+actgacgcattatatatacctcgagtgtgtaagccggccctcgcggtaccaaatttcggg
+ctgcatacctagaagtgtatgtcatctaaacctaaggatcgggtagtgacgtgtaactaa
+cacgtgggacaatgtctgtcctgagctacgtcttaagaagtatttagtcctacgtactca
+ggcatcgatactccccgatgttgggtgcagtggggcgtccgggcggctaagatagtccag
+ccactccttatgtgaatttatcaaaccgggaagaccagtgcataggccacgacctacgta
+gcacctccgtacaaccttgctccagggcacgtctaaatgtcgtactgggttcggactcca
+tgcctggcgactagcctggcggtccacatattttacaaatccgagacaacaaagcacttc
+caaagtcgcgtggaccttaaggaaggcaacacaggggacatttagccactctaaagaccc
+gcatactccagggcatacacgtaacgcgttctcttcactacggagtccgcgagcgaacga
+ctaagggcgagggccgtagatctccttctcgtaaatataatcaaggttgccagcgcttat
+cggtgccaccgatccgaagagcgtaaggacgttacagtgtaggatacatggtttgcgccc
+gtccatacataatcgaccatcaaatcgaaagcgcgtatgcagtacctcgtactgcccaaa
+ggacagagcgcattacgtcaccccgagcgtagcttaccatgttaagaccgtgctcatggt
+ttccacccgtaagatgagcacagattgcttgctctaggtaacatagtaataagagaacat
+tcatagacgttggaccacggttgaaagaccgcctcttaactactgaaaaacaatatttgt
+ccttagtaaccaagatacattaatcaatcctccgctaatgaagttggtaggcaagccttc
+agtagcgtaccgtggatttgtgtttactgcatttacaccgcggctgggtacgaagcggtg
+tcgggcacgcacacgcgttcgatactgtaggtttcgttggggttgcttgttgccgctaac
+gttcgggtcgcttacttctgcaggcttgattactgagttcattcgatcggttcccaactt
+cggactattgcgccatcatcaatgtgggaaatcatttttaggaatacacctcgtacatgc
+atatgaagtctgcgtgcaacagactttccatgatgcgagctgggcttcccgtcctgcggg
+atgcaattggcccagtgcgcgaaggctgggctgattacggacatatctgctgtcctgaca
+atcgatggtgtagagcgtaacaatcattccaatttttcgacacgggccagggctttaggc
+cactacgcacctgggttaacactcggcgacccgcctaacactgggtggacattcccgagt
+tataacgacacctcattttcaacaaccacaaaaaggcataggcaaccgaactaacctttt
+gtttagttacttctggtatgttcatagtgtagggcaggtgatcggttaaacgcttgtacg
+gaccccattctgtagcgcttttctgaacgataacactacgttgggagatacttgttgcgc
+agtcgtgggttaaaagcgagccgacgataaactgcaataaggaaagcggacctgtcacct
+cccgcgggtaaatctactcgctcgtttagaggccgtaaagcgacataacggtgtccagta
+caagcccaactggtttagagaattcttctcctactacattcaccgtccgtatttcggcgc
+gccctacggtattcgtggtgttctgagcatacatgggatggactatcacccctgcgcgta
+aggactagcagttgtaagtcacgttaaggttgcgtaggcaactgttggagtgcgtccata
+cttttcagcaccccgaatttgtacgcccaagttgtatcgtcgtgctgggacgagactcag
+cctttaccctaagcgtttaggaaagcgatgttttaccgcagacgcatatgagagaacgtt
+gcaagatcgatctttctcgcgcacgttctgtagctagacctgcagctaatctaactgccg
+aactgttaggatgttttctctcctagacgcagggaccagttgtaagtaagggtttctcat
+cgctaggctagggtgatggtaggtgataccaatggagcggcgcgttaaaagggttgtaat
+ctcggtgatatgtgcaccatagattgttccgttattttccttggtcatttagatacgaga
+taggggcgccccagtgccacgaggtccatcttatgctgttgcgtagctagagccctacaa
+ctttctaagtaaaacctccatcgagtgcgcttggagaatttcatgtaccgtggcggtacc
+ttacttgatgccgcgacccctatctaattaaagaccgcttcccgatgggcgaccttaatc
+ttgctgcagtccaagttaacttcctctacgcccgatgacaaatttagccggagtaagttg
+ttaacctagcctaatttgtaccgaattttgggttgtgagaagaccatttctacccgacga
+tcatgggttcctctcaactatacctagtgtcggttaatgatttatggcaaacaatccccc
+aatgtagcacccatatgggcgcaattatgtgaacttcaacactaactattggtttagtta
+gtgatatttagcgcaaataagaggcatgggctgcgaaaagattgtgtttccgcaatgcta
+gggaacctgacggcatacccgagatgatagttaggtgagcccgaatcatgcttgattaac
+gtaacgtctatcactacccgtgggcttttgcgattgcgatgcgttactcaaggcatactc
+aatggggctggtaataccgatatgggcctgtgtcttagcagcgacgtgtcgataatcgaa
+gtacaatacgccagtctacgttagggctttgctaacacatcacccacagttgaagcatca
+cgcacagccctcattaggttgtcgtcaacctggaactcctagcaggctgggcagtatggc
+atccttcacgaacaatcttaagagacgcacttgacacaggttgcgacagtcaggatgggg
+agcttctgaaaatctctacataaggtggcctcgtgatatcgtattaactcggagagcggt
+tggactaatgagtgagtccaatcagtgatcggtttttaatgccgggaccacggcttgcgg
+ctgcgcgatctatttccctcgcgttacacaaggggtaggcataagcaacaagcccaaaaa
+aatcctcacgcaggcgtcaggtacagactttttccctcagcaacgcaaggtacacgtgta
+gtcgaatgtggtcataaccagcagctgtcttgcgcaagggcggtgctacacgcatgtttc
+actccacagtgacatgatgcccgctcttcggttgttctatgcagcgcgctggtcgcacct
+taagcccagttcaatccatgcaattcaccgttgcagcactagatcatataccgcatactt
+cgtcagagcacaaccagatcacttacaacgaccgcaagctaagcatccctatcgtgcgta
+tgtgtcgaggcgcaagtactatggtcggatgaggaggtgtgccctcaggacacacagtat
+cgctcctcattcgacgacgcaagtcgtctagttctatgataggcgaagtgagtactgcgg
+atcactacgcccaagacttggagtgacgacgccggctactagcgatggcagttcagaatg
+gtgccttccaagggacactcggtcctaatcaggcacacgcgtctcaaagccactactcat
+tcatgagctcgctggcgtggcagtggtcttatgcggctagcgaccagaatttctactagc
+cttaggcgtacaagcgttgggcaggtcgcgagtaacctctacactctatcatggaccaca
+cccatccatgttttaaacacagaggtcttaagaatagcgatggtacggttgagaacgtgg
+gagttttttgctctacagcaagcacgttgcagtgaggagagctttaatcctaaatcataa
+gtgatactggtgccgagcatctttcggacgaatatgaagacccaacgctaatgtgcctgt
+tcgtcggcacattctcttgggacacccgctacccacatgtatgtgaattgggcccgtctt
+gattgtgtcgtagatgccaacggttcaatcagccccgacgacgagaagcatttctacgtc
+tccagccttgcaacggtttctagagtcttgctgttcgtaaattgaagaatctactgtgca
+gactttatcgacccacgatacgctaatccgagcgcgactcggtctcggaaaattatccga
+gggagctcgttcaatgcggcggaggctctgagtgaagtttaaggctgagatagtcacacg
+cattcgggtccctacaccttgtttcgaatgtccaacgcgaactctgggcaacatcgcgag
+actttgaaagatgagggggctgtgacagggcctttgtaataggggtactttaagggcggc
+acaatgtgatacctatgtattcctatggtctgggtcagttatttaaattgaccggacaag
+aatctgactcgtagactgctgtatagatcacgattagagtttggcaatggttctgaaagt
+gatcatgtctaacgtaccggatgacactagtaataactgcagcagcgtgacgatgtaggg
+gacttactctgtttacgggtctcgtctgccataaacatcctgctccggcagcggtcaaag
+acgtcctattatcgcactcgggcagaaactccagtcatggtgaggcacaccaacagtgtg
+gggtcggttcgtggttaccaagccaccatttttcggcccaaactcatcttgaatagtcgt
+cctcattcatttgatcgatcgtcattacaaggttcataaatgcccagcgccgcgtctccg
+gccagatggaagagctacgtgcaggcggtaagcaattgacgctatagccctatatacgta
+tgtgggactcaaggcgacatgctataccgactggtatcgaggcgaacgacaattgctatg
+ggtcatcacctcatatttagattcagcccctggtggcgtcgctttgaccaactagttaag
+gttgaggagttcgctctcaaacctgataacgagctaggccatgtaccaaccttggctgtg
+caccgacgagctgaaggaccgagctgctaggaggtcgcagtatcgattgctctttcagcc
+ttctaaaggtgcgacagaaacttgaacctctcggtactctaacactaggggtacgagtgg
+ataactcgattacattagtcctggtacaaaagtcctccttccgggcgccttaagctgctt
+taaagctatgtccgcttacgagaaaggggcgcacggtccgatctacttacagactgtcaa
+aacggtgtagtcggaatgggctcgaacgacgctaatagatacacgcgcattggcatggta
+cttcaccaatactatatctttaaagaagggcggcgagcctatttacccacttcgattagg
+ggataacacaggtgattgagttttctggaaccgtcatctaatagccgaagcagtccacat
+tacagtccattgcatttaaccactaggaatcgcgccaatcttgcgcttatgttgtttagg
+aggggccacgctagatcttgcctatcctgagttatatgagggacgatcctacatgtatcc
+tcaaagttcgcgctcatccttagattctaggagatggattactaagtgtgtgtccatagt
+ttaacgcaacacataatgttcgtgtcgtgatgcgtatccttggtcccgacctactactct
+agacctatacgatagcgttcaaagctccaccatcgatgcaacgtggtcgtaccagtactt
+atgaaaccttttttcgcagttcgaaccgcctggaaagaagcatacgcaatatcgtgtgat
+cagcacgcagggtatcagttaaagagcccaagacttagtctatcgagcagaagaccgatt
+agggtatacaccatgtcagaatcgcctccagactagtggctgatatcgtacgttacacga
+ggtcgctcttgtcgagtgctcgaacgatctatcccctagatcacgcgtcccagtcggagt
+atcccgcctcggatcgaaatgacggctaaaaggtgtaatcacgcgcgtaattcctgcaag
+ctctctgagttctgctcgctggttcgaatgagcctgcaggcagtacctacaattcctgct
+cggaggacctgttgcgagggatgcccccatacactgctgagggtaagtagctgaagtata
+aaggcggcaatcttctgacaaacacccttcttccccttggttaaccagacaagctggatt
+tatcacccctcccggggacactgccctgttttatatcgcggacttgcatcagtcgcagta
+gtccgcgtagatgtggggacccctcccaccttacatggcaacgcgtgatggagtagtatc
+tcgcgtcagtgagcgagttcgcatatttgtagggcgtcataacaaatgtaaatgctagta
+agtgaaagatgtcaacatgcgggctcggttttgcgctccaggtatatcctgcatctgatg
+aacttttcaatgaccgtgtctggcgcagggctgtcgttttgcaggaggggatgcccagcg
+catctcgagaatcatcggctaatcaacgcgaaaaagttaatcttctatcagtcagcgggc
+tataactccttgaccaacagaggatcgcaggtatttgtactgtggagaaacaatcgtaag
+atggccggccatgaggcaaggattgtaatataccggggtggttatcgaagaagtaaagta
+aggcctaccttctggggagcaatggggttctcagacgctaactcttcgttcacctacaac
+acgattggacttagagagggacctacggacccgaaattcacataggggggttccccgata
+agccaaggcaggatagagtctgaatccatggacttccatcaaacccctgtggtggttccg
+ttcaagtcagggagtatcacgactcacttactgagtcacgtcctcaatatgactgaagtc
+gataagacgaaggcttaatttacggaacccccgtttagtaatcaagaaacgcattggcgc
+gggtctaacgtaagctcttcacaccgccgtctacgaaccagttcccggcgttgcatggtg
+atcgccgggttcccttggagggagtaccttgtgccctgcccgtatggtcgttcctaaata
+gcgaccaagtattagttgactgttgcgacttaaaatccaacccataagcatatatcgtgc
+acccagggactggagggcctcagccccttctttcgaaacttaaaccgtcttcttatgggt
+gaaatgtaagtttctacgtctggaataaacggttcgggccaccatgaagcgtctcgtgtg
+atagagattcgcaatgagtctgggaagtagaatcacaccaagttagaaaaattctccaac
+tcagctaccgcgacccatccgttggggtaacgcaagggtattagccgctcagaggccaaa
+gattagagaaacgcgacgcctgcggctgtcttgtgactactccgaccatgccgtcagctg
+gagaccctacggtgggtagttgggtagagcgccgatagctaattctcgagtggaactgcg
+gaatgtgtcatatgaggtagcgatattgggctatcacaagtacgtgagcctgtgaaaacg
+gacgactcactagcaagtaagcacggccctggcgtggcggcggtacgcgtacaaacctcc
+actgcttggggaataaggtgcgaacaccgtgatccattgaggcgtggaggcatagggccg
+gagtgttcccgtaccaattacgagctaagaccgcctgtccagccctggtgattacgtagt
+aagctcggtacaagcctgtaattagcttccgggtggcggacattcgttcatattgccagt
+cacggcagaggccgcgctagctaggccagccccgatgaaacacgtgctagttttctatcg
+tgcctaaggatcgatggctatcgcggcattgttaacttatcaagcagccgaatcggcgat
+agtggacacaacatgaacacgctaagctctgagtgccagactctaccgcggcgaatccta
+ggccctgctggggctcccccacagagcagtaatggtcttctgcggccgcgtgcattcaat
+ccgcgctggtcaatgcgttccatcgtgccttaagcggggcagtgtgataagacaattttg
+ggggtttcatggagatatcttcagaaacctcgcgaggtgcgtttagataccacacgcgcg
+gcggtcttttcacacaattcagtccgcggccggtaacctaactttgcttatcaatacata
+atcctcccaaatgtacggtttcgaaggagatacctctcccctgttagactctaggttttg
+cagtgctacctagagatcacaccagcattaaaccaaggtatcagcatcgtaacatgggga
+ggcacgcgcttggcggtaagtacccgccacgattactctgtttcatagcgccaacgcccg
+tatagtgtgcttttaacgtcctcagaaatcaccgactgatcagtatggcgacatcggagg
+gaggttggcgaaatgttgcttttatagatcgttaaaacctatcgttggcgcgtatcgcct
+ccatagaacttcttactcacctagtctgatcccgggactggtcgaaatggagacgacgta
+gcttgagatctggatcgatcgactgatatcacacttaaatatgatcagattttactacgg
+tcgatctccatatatctatcccagcacttgatacctcctgtccagccgactgcttggacc
+ctagcacgcgatattagagggcgcgttgtagctcaaagtaaccagtgggacgacccgagt
+gaggttaccgctggcacgtaagggtgacatgactcccccagaaacactgaatttgtctag
+cagtacatcataatctgagaacatttagcgaagacgagaacaagctgtctcaatggacgt
+aggacgagaggaatgtgacggttataatacgcgacctctatgtgtctattaaatccctac
+gggccgtagcgagcaagctcgggatctttagtagcggatcgggtcttctacatggcgcac
+caggtttgatatttcgagctagagttgctctaaagaaacgctcttgcttgggaaagtgac
+ctggggtacgacgaagacacgggcctggttgcataccgtctcaccttcattcatcgagcg
+cgatagcgtagcattatccagcacgggaggcacctggcatgggcgtgaaatacaatccga
+agagcagcatgaaaaaaaaatgagcggtcgtgacccgagggtgcgtccctccgaacgttg
+ttcgttgccaaggtaagggacccacgccaagcatggttagggaagcgtgaccgacacaac
+atagaggacaatctcaatatgccttctgggtatcacctgggtgtgtagcagtgctactgt
+tacaagtcgcgccatctgcgacgtcgttcgtccctattccctcctaaaggccccgactct
+gaaaaaacctacaatcctagacacgttgtggcccagcacaacgcgtctgctatacagcaa
+gtcattcgtcgaatggggcaacacgtataagaaggccgtgattccaagggcacatggcgg
+gtctctcaatgatctacgacgtgacgcaaacggggaaaggctggaccgttgtccggtagg
+cgatccatcataaaaggcgtctggttctgtggttattgtgtacacgtttgaaatatctga
+ctgtagaacgatggaggtctctacgtagctctgcacgattccctcgggctcacgttcatg
+gcaaggcgacatcacatgaacagggttgggtaacagccatctctgaagcattcccccagc
+tcgcacggctcctttacccgctactacgtcatgcactggctagagacccaccaactattg
+tgcaagtaaagaccataaaattttggagctgtagcgaaagcgagttgctgcgatggttag
+accaacattgggtcaaactattctaatccggctaggctcattaagcatcgcagattgccg
+atactaatgctaacgagcgatgaatgggcctcttcgagacgcgtccgtacctgcgaatat
+caaccatgaaccctaatctggaaagtttgatgccgctgtgatagccactcctgtgtcgcg
+acggcaacgtaatgtacgtgcttggtttgagctctaaacataccttcgttagagttggtc
+agaggaggatattgtcatagcgctacaaccagcgccaaaggatagctccgtggctggtcg
+gacgcgctagaatctaggcagaacacgtgcggcttcttgcactctgacgctcacgcattg
+gactttggcggtcatctggttctcataagtccgaatcacagtagataaagatccgcgtga
+taagatatgcctacgtacttaagtagcaccctctgttcttggcgatcctatcattgcggg
+ttctatacatatgttgatccaaccatcggccgccgggccgtcgtaggatctaatggccaa
+cacatcaatcaaatcactcgcgaggacgcggaggtcccgtccataggtgtgtatgttggt
+acgcagcacctaatctggtctggtcaagcaactggcttgttccagtatataatctcagat
+agactgccctgaaagtagacaatgataaatatgtaagagcggggaaatcccatcgtcgac
+tgtgttgcggacgattagcttgcaaagagaggtgtgagcggctgtcttaaattatggact
+cctcgcttccgtcgaacgtctgactagagaatctcttggaggtacacacgaacgtaggtt
+cctcacagtatgtggcatggacaccggacaggtcacttgtatttatccattgaacgtgat
+atagtgtgtcgagtcgttatacaatacatactccaagcgtactccctttgggtaacgggt
+ttgggtacatattaccatggtgtggaccgatttgtaaccctataagcgttccgggtactt
+taccatcgcggatgcgatcgcggatctacctatgtcagcgacatactgcccgtccaaaag
+tgattcagtatgtgttaatcagcgtattgcatcatcagtcattgagagtggaccgttctc
+gaagagcaagattcctgaccctttccactgggccatccagtacacccaattatatgcaga
+cgaaaagctccatacatatataatacctcttcacaccgtgtgcagagaccaacttgatcg
+atattgtactcactcgtacggaataattagaagggcccgactgtcgagaccgttagcatt
+tgcattatcgcggtgagcgtatagaaacaattataggctttgctgcgatcgcagtgtctg
+ggacagagtctcctagacctagatcagcttaaaacaatgattgtaggtaatgtgcgttgc
+cgtcgggccacacctttcagttcggttacaccgactcagaattatcttctatcgggaccc
+tcaaactgataatggggtcaaatggtggtggtcccgtctttctgcagtgctttgtgagca
+gaatagctctcgagcgctccagtacgcctgagtatggctgcgcccaccaattggcgccgt
+taatgcgtggcgacacaagagaaccagtccacataagttatgcccttaagaagatcaccg
+ggtttgcgccatcctgattcaggtaacggacgtccgtgtacacgaaccatactaatgagt
+tctacatcgctccaacgcgtcttgaaccctatcgacaattacaaatgcaaagtattagtt
+gggtcagtgcgtagcttatccaagggctgcagtaagtcgtccccatgacagacggacggc
+ataagggccaaaaattccgccgcattagctgttaataatgccatccagaaccggacagtc
+tcgatatataacttacggctgcgaactggcccttatgaattacatccacgtgctagttaa
+caggacggatcgcccggactaattgccgatcggccgtcccattctccgtacgatgtactg
+aacccaggcgtgtgaatgggtatgtcaacgtttacccatcgaccctgcctatagacctga
+gtttcattccagttgagcgtagaatgggatgagcagctttgcttgaggtgcgatattcgg
+gagacctggtcagcaggattgatggttttatagtgctggattccctgctgaaattctctc
+ttctgccgcatgtgaagaaggccttgcttcccttccacatgattgtaagatttcctaagg
+cctcccagctgcgtggaactgtgagtcaattaaacctctttcctttataaattacccagt
+ctcaggtatttccttatcgtggtatgagaacggattaatacagttgtgtaagccagctcc
+ttataataaatctctctccctctctctgcctctcatctatgtatgtatgtatctgtcatc
+tatctcctataagttgtttcttttgagaactctgactaacatagacattaaataaacaat
+ttgtatactgaataattatataactactgcttgggggtgtggttgtgttgtgtggtgagg
+gggtgtagaaatgtctaggggttgatctagcctaacaccttccagatgaccctaggttct
+ggcctttccccaaagagtcctggtctactcagtcatctcccacaatttggccatcttctt
+gggtgctcaggacaataaatgacccagccagatcctctagagtcgacctgcaggcatgca
+agcttggcgtaatcatggtcatagctgtttgctgtgtgaaattgttatgcgctcacattg
+cacacaacatacgagccggaagcatacagtgtagagcctggggtggcgtatgagtgagct
+aactcacattaatttgcgtttgcgctcactgccgcttttcagtcggggaaactgtcgtga
+cagctgcatttaatgatcggtcatcgcgcggggagatgcggttttgcgtattgtgccgca
+ggtggttatttctctcaacagtgagacgggcacagctgattgccctcaccggctgggctg
+agagagttgcagcaagcgtacacgcggggtttgcccagcagggcgaaattcctgttgtga
+tgtggattccgaatcgggcaaatgccctataaatcaaagcatagtccgagatagggtttg
+agtgtgttcagttttgggacagaggtcactataaagaacgttgactgcacgtcaagggcg
+agaaacgtcatcaggcgattgcactacgtgacatcaccaatcagttttttgggtcaggtg
+cgtgagacttatcggaactaaaggagcccgttttagcttcggggaaacgcgaagtgtcgg
+aagaaggaaaacgaagagcgggtatcgcggaatgtacgtgctgagcgaaaccaacgcgcg
+ttacggtcaagcgtgtatgtgttttggaggtaagtttccctgataaagcggaacaggggc
+tatgtgtttacgggggtcgcatggagtacaagggggcaggacaagatttgcgcgacatgg
+ttttttttaaattgcgggagatggttggctgtcccgatgagattagaacctgcttttgtt
+ttagtttcggttcggtcagttcggactttggattggttttgttgggtatttaagaagggt
+gtttgtgggatgtttttttttgggtcgagcatcactggactatgtgtgtcctgcgtatcg
+tggcggggcctcgaacttagaggtaggacgattccgatgcaacaaccttatgctttactc
+caagcgatggtgaggcaaccttgtacagaagtgcaaccgccattgtggctgggtcggccc
+aaggaacggatattctcctgggtactgacaacccaggtctactgggttctatcgacggta
+cagtcaagcctcgagtttactgtctcccacttaagtccgctctgggcattaatgagtctg
+tggggtatcaagggtcacccaacgaagtagctagtcccgttgtacatttcgcgcgttacc
+tagggagcacggtgagctacgagggtgtagctgcacacagcacggtatataggaacgcaa
+acatagtagtatgtccctatgcataacagggagaagtgactctccgacggtcatttatcc
+cagactctcctcgctccctactaattgttctatatacaatcggagtaaattggtacctct
+ctgacaacataggggggttgaagtttatgccacgcagtctgttacacttttgccggggaa
+ttgtgtagaccatgactcaaggtggtggtgcgagttactctactatctactgcttctcat
+tacacatctcttggcttacaggccccagttatcagttacgaggctgccttaagagaaggc
+caacattcatgatcagatccccgcacacgggatgatagtctgagatctgccggacgctcg
+tctgctacaagtgtgggttgagcatagggtaagcctaagggctcgtaatggtacttcgcg
+atgtttattcgatatgagctacaaggtataacgttgccttcaccatttcggctcacgact
+cttacctcgcctcaccgctagacaccctgaccaaccgttagggtactgacaaccgatcag
+gcgactcctaaaggacctctcagcctcccagacatgaggtccgctcgcatgctgttcagc
+gagtccatatcaggaacagcaacgagacaaggcgagagcaacactagacttggagacata
+ccaccacatctgtttactcttgattcaggaagacctgtggtaactgggcgacgcgtgcgt
+ttatccgtcttccaatctccacagaatctgctccgtcagagggatgtatgactaacgcac
+tgattttttgttcagtaaccgggcgcggattacggggcgtattccaggggtacattcaac
+gggaccccaaggaaaagttcggggtatttaaggaggcggtccaactctcggacttattgg
+gcgacgtaatgataagcacacctctgctcatacagtgcacgaagaccggcattgttcaaa
+cacagccgtccattccgcgactattgtcctgtgtacaggtgcctcgggtcccaaatccag
+cttatacccaaaactctcccggacttttttcgtccttgcaggaggaaaggacctgactcc
+acgtttattaggggatcgttgggcccggacaatcgtgtattcaacataataaatgggttc
+tagtttaaagccggaggtgacggtggattatggactagaggtaaacatttccggcgtagg
+tcagaaagaatatagaccctaaatttacgcaaaacgtgcacacgattgtaggtggagtcg
+tattaggaactcagggcgggtggaacgagtgtgttttaggcttaccatgaaccgtcgcgc
+ggaaaatgatgacagaatggacggtgcttttttgcggggccaacaaaactcgcttatgtt
+cgccattggatgtaagtaccgctatactacgcagcgaccccttacgacattgttgatttc
+caatgctttcatggaggtttgtgagcggtcgctaggaatcttcctccagcgagtagccag
+ctggccactagttagcaaccagagttcatatgagctccagtaacacgaaggtacataagg
+aacgcaagcaagttcgggactacatagaacttggggtgcgtctaagccggggatcttaat
+agacaagaggccatcgtatgggtcaaatttcatgtttcgtcagatgccctatccgtggac
+acctaaatcaagcatcatatcctaatgctatttgctctcgctttggtatgattcatatgc
+agccctgtccgtaaaatgacgggccagaggatacctgtcactacctatttcagattacca
+ctgttcgaaaccttgctctgaaatcgatcttcgtagagtgttcgttaatcgccgcgtgaa
+ttatataatcccccaaggagtacccttcgtcggtgcagtctacgtaactttcccaggtta
+gcccccatctaatcgacgtacgtgagggggctacgggagatcgcacaagccgaagcattt
+ctgctctgtttcgttacaactggaatcctcatcacgcagcgctaccggatgccatcccta
+gtcatccccgcgagtttaaccagtcgagatggctcgaaccgtgtttcgaaggctggctat
+tgaaccagttataaagcaggggcgactgtccgtcggacttcgatataaactatcacaaat
+ttggcataagtatatacagccaagaaggctcagataggcacacgcacccaaatagtgacc
+gcctacgttcaggttgcccggcaacgaagcgcgcttgctccattaatccactatcagagg
+taacgaccctctttcaccgtagctgcccccatgtcggggcaacagtttcccaccgataac
+gtgttctgtctagtacgtgaaacggattggctaacccctgtcagcctaattagatgacat
+cctcgtacctctagagaaggtgaggagaccgctggaacataagtaaacagtttaccaaac
+aatgatcatacatataacagaaaggagagatgcccggtggggtcgaagatacagctgtgg
+ttgatatctgcaacggccaggctgtcatgaagatcacgcgcacgaagctatttatgaaag
+atacccatgccggggcggcagcggtacctagtcctaaataccgacacgtagcaacgcgtc
+ccctgaggcccaccctagtcaagggaacttaaaatatacgctgactttgtctaccaatca
+tcttcgattaacaccggcatactaagtctaccctggacccagcaatgagaaaaacttttc
+cgaatgatcattgtgagtttacagagattaggaacaccaaaaaaatttacgtacgtccgg
+ttacccctgtgtgacccttggccacaaaccgtaaggtgcagcatgggcgttgagtccagg
+gtttgtgacaccagacatgaataccctgtggcgggttgttagcatgttattcggatccga
+tttcagagggtccgttgataccgggcagtacaagacaccccacaccactgaggtggtacg
+tccgccagtctgctccctacgttatgcaaaattccttccccggcgttcttgcctgtacta
+ctcctaaagggccgtgaaatccgacgttgctgctccgtctcgggacacccacacaacagc
+tacggaaaatcgtgaggatgcacaagggtcttgcattgttgatctatacagctcttcgca
+cggtgtgctactgttttccacaatgggcaaggggcgtgtaggtcttatgtaggagtaccc
+cgtgatctggctataccttgctatctattccaccaaaatagccggggtcttatagtttta
+ttccggatctatcaagtgacaagtccatggggtaaacggtaagtttcgtacgctgggcgg
+tgatccccgcttataaacgagcaaaccgccaaagcaaccattgccgggcttccagctagt
+aaatgttgggtgtcaatcgtgcatgtgactacttacccacaaagggacgcttgaagcgcc
+tgaactcgtcacgtcatgcctagctcccggttgaaacacgaagacgcgtgaacctatctt
+tgcttactattcgcctcctttaagaggcttcttgatgtggctctgcgacatggacagtag
+tagttgtacctgggtatgttagtgaaattacaagtacctcaaaaacgaattacgtgtata
+gagattatgtcactccgtcac
