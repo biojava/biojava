@@ -1,0 +1,40 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-configuration PUBLIC
+    "-//Hibernate/Hibernate Configuration DTD//EN"
+    "http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+
+<hibernate-configuration>
+
+    <session-factory>
+
+        <property name="connection.datasource">java:comp/env/jdbc/YOUR_JNDI_DATASOURCE_GOES_HERE</property>
+        
+        <!-- OR... (for testing only)...
+	<property name="connection.driver_class">org.hsqldb.jdbcDriver</property>
+	<property name="connection.url">jdbc:hsqldb:hsql://MYSERVER:MYPORT</property>
+	<property name="connection.username">MYUSER</property>
+	<property name="connection.password">MYPASSWORD</property>
+	<property name="connection.pool_size">20</property>
+        -->
+        
+        <property name="show_sql">false</property>
+        <property name="dialect">org.hibernate.dialect.HSQLDialect</property>
+
+        <!-- Mapping files -->
+        <mapping resource="Namespace.hbm.xml"/>
+        <mapping resource="Taxon.hbm.xml"/>
+        <mapping resource="Ontology.hbm.xml"/>
+        <mapping resource="Term.hbm.xml"/>
+        <mapping resource="Triple.hbm.xml"/>
+        <mapping resource="BioEntry.hbm.xml"/>
+        <mapping resource="Comment.hbm.xml"/>
+        <mapping resource="BioEntryRelationship.hbm.xml"/>
+        <mapping resource="CrossRef.hbm.xml"/>
+        <mapping resource="DocRef.hbm.xml"/>
+        <mapping resource="Feature.hbm.xml"/>
+        <mapping resource="FeatureRelationship.hbm.xml"/>
+        <mapping resource="Location.hbm.xml"/>
+
+    </session-factory>
+
+</hibernate-configuration>

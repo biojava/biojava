@@ -1,0 +1,38 @@
+namespace core.agregate
+
+# Agregate functions
+#
+#
+agregate { Make a function for a set from a function for two items of the set }
+domain(relation, agregate)
+co_domain(relation, agregate)
+
+implies { Agregate must be over a function with equal domain and co_domain }
+       (agregate(_r, _agr),
+        and(domain(_t, _r), co_domain(_t, _r)))
+implies { Agregate over r has domain equal to all sub-sets of r's domain }
+       (agregate(_r, _agr),
+        and(and(and(domain(_Dr, _r), domain(_Dagr, _agr)), contains(_Darg, _darg)),
+            subset(_darg, _Dr)))
+implies { Agregate over r has co-domain equal to r }
+       (agregate(_r, _agr),
+        and(co_domain(_C, _r), co_domain(_C, _agr)))
+implies { Value of agregate of empty set is the same as the value of the
+          relation for none }
+       (agregate(_r, _agr),
+        and(_agr(empty, _res), _r(none, _res)))
+implies { Value of agregate for non-empty set is equal to r of any one item and
+          the agregate of all all remaining items }
+       (agregate(_r, _agr),
+        and(_agr(_X, _res),
+            and(_r([_x, _next], _res),
+                and(contains(_X, _x),
+                    and(remove([_X, _x], _X_),
+                        _agr(_X_, _next))))))
+
+for_each       { for every item in a set, a predicate holds }
+there_exists   { there is an item in a set for which a predicate holds }
+exactly_one    { there is exactly one item in a set for which a predicate holds }
+agregate(and, for_each)
+agregate(or, there_exists)
+agregate(xor, exactly_one)

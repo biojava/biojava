@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+
+    <class name="org.biojavax.bio.seq.SimpleRichFeatureRelationship" table="seqfeature_relationship" node="featureRelation" entity-name="FeatureRelationship">
+
+        <id name="id" type="integer" unsaved-value="null" column="seqfeature_relationship_id" node="@id">
+            <generator class="native"/>
+        </id>
+
+        <many-to-one name="term" class="Term" column="term_id" not-null="true" cascade="persist,merge,save-update" node="@termId" embed-xml="false"/>
+        <many-to-one name="object" class="Feature" column="object_seqfeature_id" not-null="true" cascade="persist,merge,save-update" node="@objectFeatureId" embed-xml="false"/>
+        <many-to-one name="subject" class="Feature" column="subject_seqfeature_id" not-null="true" cascade="persist,merge,save-update" node="@subjectFeatureId" embed-xml="false"/>
+        <property name="rank" node="@rank"/>
+        
+    </class>
+
+</hibernate-mapping>

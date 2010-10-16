@@ -1,0 +1,110 @@
+namespace core.set { Set type and operations }
+
+import core.instance_of
+import core.relation
+import core.domain
+import core.co_domain
+import core.equal
+
+
+# Sets and their opperations
+#
+#
+set           { a set of items }
+universal     { the set of all items }
+empty         { the empty set }
+contains      { set contains an element }
+not_contains  { does not contain }
+sub_set       { one set contains all members of another }
+
+instance_of(set, type)
+instance_of(universal, set)
+instance_of(empty, set)
+instance_of(contains, relation)
+instance_of(not_contains, relation)
+instance_of(sub_set, relation)
+
+instance_of(contains, relation)
+domain(set, contains)
+
+instance_of(not_contains, relation)
+domain(set, not_contains)
+
+contains { universal contains everything }
+        (universal, _x)
+
+equal { empty contains nothing }
+     (false,
+      contains(empty, _x))
+
+instance_of(relation, sub_set)
+domain(set, sub_set)
+co_domain(set, sub_set)
+
+# Set operation deffinitions
+#
+#
+implies(contains(_S, _x),
+        and(instance_of(_S, set),
+            instance_of(_x, any)))
+xor(contains(_S, _x), not_contains(_S, _x))
+
+union { set-wise union }
+domain(set, union)
+co_domain(set, union)
+equal { union(X, Y) = Z <=> i e Z && (i e X or i e Y) }
+     (union([_X, _Y], _Z),
+      and(and(and(instance_of(_X, set), instance_of(_Y, set)), instance_of(_Z, set)),
+          and(contains(_Z, _i),
+              or(contains(_X, _i), contains(_Y, _i)))))
+
+intersection { set-wise intersection }
+domain(set, intersection)
+co_domain(set, intersection)
+equal { intersection(X, Y) = Z <=> i e Z && (i e X and i e Y) }
+     (intersection([_X, _Y], _Z),
+      and(and(and(instance_of(_X, set), instance_of(_Y, set)), instance_of(_Z, set)),
+          and(contains(_Z, _i),
+              and(contains(_X, _i), contains(_Y, _i)))))
+
+subtraction { set-wise subtraction }
+co_domain(set, subtraction)
+equal { subtraction(X, Y) = Z <=> i e Z && (i e X and not i e Y) }
+     (subtraction([_X, _Y], _Z),
+      and(and(and(instance_of(_X, set), instance_of(_Y, set)), instance_of(_Z, set)),
+          and(contains(_Z, _i),
+              and(contains(_X, _i), not_contains(_Y, _i)))))
+
+disjoint { sets are disjoint if no item is a member of both }
+domain(set, disjoint)
+co_domain(set, disjoint)
+equal { disjoint(X, Y) = not (i e X && i e Y) }
+     (disjoint(_X, _Y),
+      equal(and(contains(_X, _i), contains(_Y, _i)), false))
+
+subset { one set is a subset of the other }
+domain(set, subset)
+co_domain(set, subset)
+equal { X subset Y <=> x e X => x e Y }
+     (subset(_X, _Y),
+      implies(contains(_X, _x), contains(_Y, _x)))
+
+remove { remove an item from a set }
+and(remove([_X, _x], _Z),
+    and(contains(_Z, _i),
+        and(contains(_X, _x), not_equal(_i, _x))))
+
+add { add an item to a set }
+and { adding an item means that the result contains all the originals as well as
+      the one you added }
+   (add([_X, _x], _Z),
+    and(contains(_Z, _i),
+        or(contains(_X, _i), equal(_x, _i))))
+
+equal { A set contains an item _x if adding it produces an equal set }
+     (contains(_X, _x),
+      add([_X, _x], _X))
+
+implies { sets are equal if they contain exactly the same items }
+       (and(instance_of(_S, set), and(instance_of(_T, set), equal(_S, _T))),
+        equal(contains(_S, _i), contains(_T, _i)))

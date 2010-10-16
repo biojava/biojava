@@ -1,0 +1,144 @@
+<body>
+<P>
+Support Vector Machine classification and regression.
+</P>
+<P>
+These classes are experimental. They implement support vector machines
+for classification and regression. Support vector machines are
+powerful artificial intelligence engines which construct hyperplanes
+in very high dimensional feature spaces using time and memory related to the
+number of training examples, not the size of the feature space.
+</P>
+<P>
+A dot product <code>&lt;a, b&gt;</code> is equal to
+<code>||a|| * ||b|| cos(theta)</code> where the sizes of a and b are scalars
+giving the lengths of a and b, and * indicates normal multiplication. 
+Theta is the angle between the items a and b.
+It should be clear from this that the dot product of two scalars is the value
+you would get by the normal notion of multiplication, as cos(theta) is by
+definition 1.
+</p>
+<p>
+The equation of a plane is:
+<code>W * x + b = 0</code>, where <code>W</code> is a vector representation of
+the normal of the plane, x is any point within the plane and b is a scalar
+constant giving the minimal distance of the plane from the origin. If we compute
+<code>f(x) = W * x + b</code> for an <code>x</code> that does not lie on the
+plane, then f(x) is equal to the minimal distance of <code>x</code> from the
+plane. If <code>f(x) = y</code> where <code>y</code> is the correct label or
+value for x then we have a working artificial intelligence engine. In reality,
+we find an <code>f(x)</code> that minimizes <code>sum_i (||f(x_i) - y_i||)</code>
+for the training examples <code>x_i</code>, <code>y_i</code>.
+</p>
+<P>
+The normal vector <code>W</code> could be represented as a sum of vectors such
+that <code>sum_i (w_i) = W</code>. We can further break each <code>w_i</code>
+down into two parts, a point (<code>x_i</code>) and a scaling factor
+(<code>a_i</code>) so that <code>W = sum_i (a_i * x_i)</code>. It follows that
+<code>f(x)</code> can be represented by <code>sum_i (a_i * x_i * x) + b</code>.
+</P>
+<P>
+It is unlikely that the observed values of your data are the best indicators
+upon which to classify the points. For example, when looking at heart-attacks,
+you may measure body-mass, height and age, but the distinguishing variable may
+be some mixture of these three variables, and you forgot to add in the effects
+of stress. Support vector machines can not tell you to go out and add a stress
+field to the data, but it can find that optimal mix of height, age and body-mass
+that pushes you over the edge into a high-risk of heart disease category. It
+does this by using a <b>kernel function</b>.
+</P>
+<P>
+In the above situation, the data-space was three dimensional. However, the
+solution is embedded in a feature space containing all possible combinations of
+these three variables. We can define a mapping function <code>M:X->F</code> such
+that <code>M(x) = f</code> and <code>f</code> is a point in the space of all
+possible combinations of the tree variables.
+</P>
+<P>
+To construct a plane in <code>F</code> space, we must calculate the dot product
+of two points in that space. The expression
+<code>&lt;M(a), M(b)&gt;</code> can be re-written as <code>k(a, b)</code> where
+<code>k</code> implicitly maps the points <code>a</code> and <code>b</code> into
+<code>F</code>-space, and returns the dot product there. To be useful to us, the
+function <code>k</code> must be expressible as
+<code>k(W, x) = sum_i (a_i * k(x_i, x))</code> for suitable values of
+<code>a_i</code> and <code>x_i</code>. It so happens that to search through all
+combinations of our heart-attack indicators we can use
+<code>k(a, b) = (s * a * b + c)^d</code> where <code>s</code> is a scaling
+factor, <code>a * b</code> is a dot product, <code>c</code> is a constant and
+<code>d</code> is a power. <code>s</code> and <code>c</code> allow you to tune
+the relative lengths of the unit vectors along each axis relative to the
+input space. <code>d</code> is the number of input space dimensions that
+contribute to each feature space dimension. For example, <code>d=2</code> with
+<code>c = 0</code> and <code>s = 1</code> would
+produce a feature space of the form:
+<blockquote>
+<br>height*height, height*weight, height*age,</br>
+<br>weight*height, weight* weight, weight*age,</br>
+<br>age*height, age*weight, age*age</br>
+</blockquote>
+This is in effect the space of input<code>^d</code> (the dimensions of feature
+space are the cross product of the input space d times). The variable
+<code>c</code> mixes in all of the spaces of the form
+input<code>^i; i = {0 .. d}</code>. Points in this feature space represent the
+coefficients of all possible polynomials of order <code>d</code>. Since any
+polynomeal can be constructed from a weighted sum of other polynomials, this
+particular kernel function is useful to us.
+</P>
+<P> So, the equasion for our classifier now becomes:
+<blockquote>
+<code>f(x) = sum_i (a_i * k(x_i, x)) + b</code>
+</blockquote>
+and the problem of training becomes setting <code>a_i</code> and <code>b</code>
+optimaly given training data points <code>x_i</code> to minimize the cumulative 
+error of <code>||f(x_i) - y_i||</code> over all training examples.
+</P>
+<P>
+It should be obvious that we can only explore the sub-space of the feature
+space that is spannable as a linear combination of the input data. This has
+the practical effect that although the feature space may be infinite
+dimensional, we explore the finite sub-space that the training points are
+embedded within. This guarantees that the model <code>f(x)</code> can never
+contain more information than the training examples <code>x_i, y_i</code>. Also,
+as the hyperplane chosen is the best one, it is most likely to generalise well
+to new data, assuming that it was drawn from the same population as the
+training examples. In practice, usually only a small subset of the weights
+<code>a_i</code> need to be set to a value other than 0, so the solution
+is over an even smaller subspace. The training examples that have a non-zero
+<code>a_i</code> are called the support vectors, as they support the hyperplane.
+</P>
+<P>
+Many kernels, such as the polynomial kernel, calculate the dot-product in a 
+feature space that is a combination of the input space dimensions, and do so
+by transforming the input space dot product in some way. Let us re-visit the
+polynomial kernel to illustrate one of the most striking points about kernel
+functions - that they can be nested to build very specific feature spaces.
+<blockquote>
+<br><code>k<sub>poly</sub>(a, b | s, c, d) = (s * a * b + c)^d</code></br>
+but <code>a * b</code> is <code>&lt;a, b&gt;</code> in linear space. Rewriting
+using a kernel <code>k</code> gives:
+<br><code>k<sub>poly</sub>(a, b | s, c, d, k) = (s * k(a, b) + c)^d</code></br>
+where <code>k</code> performs the dot product in the space that the polynomial
+kernel will cross-product.
+</blockquote>
+In this way, kernels can be layered one on another, to scale, stretch and
+combine sub-spaces to produce the feature space that you believe is optimal for
+locating <code>f(x)</code>.
+</P>
+<P>
+The design philosophy for kernels is as follows. There are basic
+kernels that calculate a type-specific dot product. These will
+normally be found by looking for a static final method named Kernel
+of type SVMKernel within a class. Then there are permutation
+kernels. These include PolynomialKernel and RadialBaseKernel. These
+use a primary kernel to calculate the dot product in the natural
+space for the objects, and then performs some function on that
+which produces a result equivalent to doing the same dot-product in
+a very much higher dimensional feature space. To avoid needless recalculation,
+there are some caching kernels that only calculate the value of the kernel they
+wrap if needed, and retrieve the value from a cache otherwise.
+</P>
+<P>
+As far as possible, kernels are java beans.
+</P>
+</body>

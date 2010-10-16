@@ -1,0 +1,6 @@
+org.biojava.bio.program.formats.Enzyme
+org.biojava.bio.program.formats.Embl
+org.biojava.bio.program.formats.Swissprot
+org.biojava.bio.program.formats.Ligand$Enzyme
+org.biojava.bio.program.formats.Ligand$Reaction
+org.biojava.bio.program.formats.Ligand$Compound

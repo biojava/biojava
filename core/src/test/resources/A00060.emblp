@@ -1,0 +1,32 @@
+ID   A00060; SV 1; linear; protein; PRT; SYN; 163 AA.
+XX
+AC   A00060;
+XX
+DT   04-MAR-1993 (Rel. 35, Created)
+DT   31-MAY-2006 (Rel. 88, Last updated, Version 3)
+XX
+DE   Artificial sequence of bFGF
+XX
+KW   .
+XX
+OS   synthetic construct
+OC   other sequences; artificial sequences.
+XX
+RN   [1]
+RP   1-163
+RA   ;
+RT   ;
+RL   Patent number GB2223495-A/8, 11-APR-1990.
+XX
+FH   Key             Location/Qualifiers
+FH
+FT   source          1..163
+FT                   /organism="synthetic construct"
+FT                   /mol_type="protein"
+FT                   /db_xref="taxon:32630"
+XX
+SQ   Sequence 163 AA; 18043 MW; FECB4208 CRC32;
+     SLPAMAAGSI TTLPALPEDG GSGAFPPGHF KDPKRLYCKN GGFFLRIHPD GRVDGVREKS        60
+     DPHIKLQLQA EERGVVSIKG VCANRYLAMK EDGRLLASKC VTDECFFFER LESNNYNTYR       120
+     SRKYTSWYVA LKRTGQYKLG SKTGPGQKAI LFLPMSAKSG SEF                         163
+//

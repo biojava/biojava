@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+
+    <class name="org.biojavax.SimpleNamespace" table="biodatabase" node="namespace" entity-name="Namespace">
+
+        <id name="id" type="integer" unsaved-value="null" column="biodatabase_id" node="@id">
+            <generator class="sequence">
+                <param name="sequence">biodatabase_pk_seq</param>
+            </generator>
+        </id>
+
+        <property name="name" node="@name"/>
+        <property name="authority" node="@authority"/>
+        <property name="description"/>
+        <!-- these mappings may become official in biosql1.1
+        <property name="acronym" node="@acronym"/>
+        <property name="URIString" column="uri" node="uri"/>
+        -->
+        
+    </class>
+
+</hibernate-mapping>

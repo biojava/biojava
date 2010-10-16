@@ -1,0 +1,8 @@
+##gff-version 3
+ctgA	volvox_all.fna	contig	1	50001	.	.	.	Name=ctgA
+agt830.5	volvox_all.fna	contig	1	654	.	.	.	Name=agt830.5
+agt830.3	volvox_all.fna	contig	1	595	.	.	.	Name=agt830.3
+agt767.5	volvox_all.fna	contig	1	1053	.	.	.	Name=agt767.5
+agt221.5	volvox_all.fna	contig	1	1253	.	.	.	Name=agt221.5
+agt221.3	volvox_all.fna	contig	1	501	.	.	.	Name=agt221.3
+agt767.3	volvox_all.fna	contig	1	1001	.	.	.	Name=agt767.3

@@ -1,0 +1,37 @@
+<body>
+Representation of the Symbols that make up a sequence, and locations within
+them.
+<P>
+This package
+is not intended to have strong biological ties. It is here to make programming
+things like dynamic-programming much easier. It also handles serialization of
+well-known alphabets so that applicable singleton properties of alphabets and
+Symbols are maintained.
+<P>
+All coordinates are in 'bio-coordinates' - that is - legal indexes start from 1
+and a range is inclusive (4 to 7 includes 4, 5, 6 and 7).
+<P>
+A Symbol is a single token. The Symbol maintains a name, a token (char), and an
+Annotation bundle. A set of Symbols is represented by an Alphabet instance. If
+the Alphabet can guarantee that there are only ever a finite number of Symbols
+contained with in it, then it must implement FiniteAlphabet. The Symbol objects
+within a FiniteAlphabet can be tested for equality by comparing their
+references directly. A SymbolList is a string over the Symbols from a single
+Alphabet instance. This allows you to represent a sequence of tokens, such as
+DNA nucleotides, or stock-market prices.
+<P>
+CrossProductAlphabet and CrossProductSymbol allow alphabets and symbols to be
+represented that are the combination of two or more alphabets and symbols under
+cross-product. For example, the CrossProduct alphabet DNA x DNA would contain
+all di-nucleotides. DNA x DNA x DNA x Protein would contain all combinations of
+three nucleotides and a single amino-acid. Dice x Coin would contain every
+possible combination of dice roles (1..6) and of coin flips (Heads, Tails) as
+the Symbol objects (1, Heads), (1, Tails), (2, Heads) ... (6, Tails). If any one
+of the Alphabets that make up the source of a CrossProductAlphabet is not
+finite, then the resulting CrossProductAlphabet will not be finite either.
+<P>
+Locations within a SymbolList can be represented by a Location object. This
+interface defines a sub-set of points that are within the Location. This uses
+bio-coordinates, and defines all the operations that you are likely to need to
+build your own Locations (union, intersection and the like).
+</body>
