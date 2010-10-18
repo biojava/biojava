@@ -67,14 +67,14 @@ public class GeneFeatureHelper {
                 bioStart = contigSequence.indexOf(lcGeneSequence);
                 if(bioStart != -1){
                     bioStart = bioStart + 1;
-                    bioEnd = bioStart + geneSequence.length();
+                    bioEnd = bioStart + geneSequence.length() - 1;
                     geneFound = true;
                     break;
                 }else{
                     bioStart = contigSequence.indexOf(lcReverseGeneSequence);
                     if(bioStart != -1){
                         bioStart = bioStart + 1;
-                        bioEnd = bioStart - geneSequence.length();
+                        bioEnd = bioStart - geneSequence.length() - 1;
                         strand = Strand.NEGATIVE;
                         geneFound = true;
                         break;
@@ -85,11 +85,9 @@ public class GeneFeatureHelper {
             if(geneFound){
                 System.out.println("Gene found at " + bioStart + " " + bioEnd);
                 ChromosomeSequence chromosomeSequence = chromosomeSequenceList.get(accession);
-                GeneSequence geneSeq = chromosomeSequence.addGene(dnaSequence.getAccession(), bioStart, bioEnd, strand);
-                geneSeq.setSource(uppercaseFastaFile.getName());
-                String transcriptName = dnaSequence.getAccession().getID() + "-transcript";
-                TranscriptSequence transcriptSequence = geneSeq.addTranscript(new AccessionID(transcriptName), bioStart, bioEnd);
+                
                 ArrayList<Integer> exonBoundries = new ArrayList<Integer>();
+
                 //look for transitions from lowercase to upper case
                 for(int i = 0; i < geneSequence.length(); i++){
                         if(i == 0 && Character.isUpperCase(geneSequence.charAt(i))){
@@ -105,8 +103,16 @@ public class GeneFeatureHelper {
                 if(strand == Strand.NEGATIVE){
                      Collections.reverse(exonBoundries);
                 }
+
+
+
+                GeneSequence geneSeq = chromosomeSequence.addGene(dnaSequence.getAccession(), bioStart, bioEnd, strand);
+                geneSeq.setSource(uppercaseFastaFile.getName());
+                String transcriptName = dnaSequence.getAccession().getID() + "-transcript";
+                TranscriptSequence transcriptSequence = geneSeq.addTranscript(new AccessionID(transcriptName), bioStart, bioEnd);
+
                 int runningFrameLength = 0;
-                for(int i = 0; i < exonBoundries.size(); i = i + 2){
+                for(int i = 0; i < exonBoundries.size() - 1; i = i + 2){
                     int cdsBioStart = exonBoundries.get(i) + bioStart;
                     int cdsBioEnd = exonBoundries.get(i + 1) + bioStart;
                     runningFrameLength = runningFrameLength + Math.abs(cdsBioEnd - cdsBioStart) + 1;
@@ -355,7 +361,7 @@ public class GeneFeatureHelper {
             Integer stopCodonEnd = null;
             String startCodonName = "";
             String stopCodonName = "";
-            FeatureList startCodonList = gene.selectByAttribute("Note", "initial-exon");
+            FeatureList startCodonList = gene.selectByType("five_prime_UTR");
             if (startCodonList != null && startCodonList.size() > 0) {
                 startCodon = startCodonList.get(0);
                 if (strand == Strand.NEGATIVE) {
@@ -366,7 +372,7 @@ public class GeneFeatureHelper {
                 startCodonName = startCodon.getAttribute("ID");
             }
 
-            FeatureList stopCodonList = gene.selectByAttribute("Note", "final-exon");
+            FeatureList stopCodonList = gene.selectByType("three_prime_UTR");
 
             if (stopCodonList != null && stopCodonList.size() > 0) {
                 stopCodon = stopCodonList.get(0);

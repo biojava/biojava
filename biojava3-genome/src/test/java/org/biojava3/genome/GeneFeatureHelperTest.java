@@ -44,7 +44,7 @@ public class GeneFeatureHelperTest extends TestCase {
     public void testLoadFastaAddGeneFeaturesFromUpperCaseExonFastaFile() throws Exception{
         System.out.println("loadFastaAddGeneFeaturesFromUpperCaseExonFastaFile");
         File fastaSequenceFile = new File("src/test/resources/volvox_all.fna");
-        File uppercaseFastaFile = new File("src/test/resources/volvox_all_genes_exon_uppercase.faa");
+        File uppercaseFastaFile = new File("src/test/resources/volvox_all_genes_exon_uppercase.fna");
         boolean throwExceptionGeneNotFound = false;
         LinkedHashMap<String, ChromosomeSequence> chromosomeSequenceHashMap = GeneFeatureHelper.loadFastaAddGeneFeaturesFromUpperCaseExonFastaFile( fastaSequenceFile, uppercaseFastaFile,  throwExceptionGeneNotFound);
 
@@ -72,7 +72,7 @@ public class GeneFeatureHelperTest extends TestCase {
      * Test of getProteinSequences method, of class GeneFeatureHelper. Used gff3 file that was modified from the volvox gff version. Do not
      * have the reference protein that is generated from each CDS record so subject to being incorrect without a validated test case.
      * Could not find anyone providing a gff3 test case with expected protein output.
-     *
+     */
     public void testGetProteinSequences() throws Exception {
         System.out.println("getProteinSequences");
         LinkedHashMap<String, ChromosomeSequence> chromosomeSequenceList = GeneFeatureHelper.loadFastaAddGeneFeaturesFromGmodGFF3(new File("src/test/resources/volvox_all.fna"), new File("src/test/resources/volvox.gff3"));
@@ -81,7 +81,7 @@ public class GeneFeatureHelperTest extends TestCase {
         FileAssert.assertBinaryEquals("volvox_all_reference.faa and volvox_all.faa are not equal", new File("src/test/resources/volvox_all_reference.faa"), new File("src/test/resources/testoutput/volvox_all.faa"));
 
     }
-    */
+   
     /**
      * Test of getGeneSequences method, of class GeneFeatureHelper.
      */
@@ -90,7 +90,7 @@ public class GeneFeatureHelperTest extends TestCase {
         LinkedHashMap<String, ChromosomeSequence> chromosomeSequenceList = GeneFeatureHelper.loadFastaAddGeneFeaturesFromGmodGFF3(new File("src/test/resources/volvox_all.fna"), new File("src/test/resources/volvox.gff3"));
         LinkedHashMap<String, GeneSequence> geneSequenceHashMap = GeneFeatureHelper.getGeneSequences(chromosomeSequenceList.values());
         Collection<GeneSequence> geneSequences = geneSequenceHashMap.values();
-        FastaWriterHelper.writeGeneSequence(new File("src/test/resources/volvox_all_genes_exon_uppercase.faa"), geneSequences, true);
+        FastaWriterHelper.writeGeneSequence(new File("src/test/resources/volvox_all_genes_exon_uppercase.fna"), geneSequences, true);
     }
 
 
