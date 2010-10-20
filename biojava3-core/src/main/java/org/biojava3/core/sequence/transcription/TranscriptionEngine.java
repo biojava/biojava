@@ -164,6 +164,7 @@ public class TranscriptionEngine {
         private boolean initMet = true;
         private boolean trimStop = true;
         private boolean translateNCodons = true;
+        private boolean decorateRna = false;
 
         /**
          * The method to finish any calls to the builder with which returns
@@ -257,6 +258,15 @@ public class TranscriptionEngine {
             return this;
         }
 
+        /**
+         * Performs an optimisation where RNASequences are not translated into
+         * their own objects but are views onto the base DNA sequence.
+         */
+        public Builder decorateRna(boolean decorateRna) {
+            this.decorateRna = decorateRna;
+            return this;
+        }
+
         //------ INTERNAL BUILDERS with defaults if exists
         private CompoundSet<NucleotideCompound> getDnaCompounds() {
             if (dnaCompounds != null) {
@@ -284,7 +294,7 @@ public class TranscriptionEngine {
                 return dnaRnaTranslator;
             }
             return new DNAToRNATranslator(new RNASequenceCreator(getRnaCompounds()),
-                    getDnaCompounds(), getRnaCompounds());
+                    getDnaCompounds(), getRnaCompounds(), isDecorateRna());
         }
 
         private RNAToAminoAcidTranslator getRnaAminoAcidTranslator() {
@@ -331,6 +341,9 @@ public class TranscriptionEngine {
         }
         private boolean isTranslateNCodons() {
             return translateNCodons;
+        }
+        private boolean isDecorateRna() {
+            return decorateRna;
         }
     }
 }

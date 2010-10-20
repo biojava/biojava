@@ -229,5 +229,34 @@ public interface Table {
             }
             return stringify;
         }
+
+        /**
+         * Attempts to provide an int version of this codon which multiplies
+         * each position by
+         */
+        public int intValue() {
+            return (16 * compoundToInt(getOne())) +
+                    (4 * compoundToInt(getTwo())) +
+                    (compoundToInt(getThree()));
+        }
+
+        public int compoundToInt(NucleotideCompound c) {
+            char b = c.getUpperedBase().charAt(0);
+            return (int)b;
+//            int v = -1;
+//            if('A' == b) {
+//                v = 1;
+//            }
+//            else if('C' == b) {
+//                v = 2;
+//            }
+//            else if('G' == b) {
+//                v = 3;
+//            }
+//            else if('T' == b || 'U' == b) {
+//                v = 4;
+//            }
+//            return v;
+        }
     }
 }
