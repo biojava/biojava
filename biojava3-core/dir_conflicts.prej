@@ -1,0 +1,15 @@
+Trying to change property 'svn:ignore' from '.settings
+.classpath
+.project
+' to '.settings
+.classpath
+.project
+',
+but the property has been locally changed from '.settings
+.classpath
+.project
+' to '.settings
+.classpath
+.project
+target
+'.
