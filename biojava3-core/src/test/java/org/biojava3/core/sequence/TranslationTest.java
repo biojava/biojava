@@ -21,9 +21,7 @@ import org.biojava3.core.sequence.io.ProteinSequenceCreator;
 import org.biojava3.core.sequence.io.util.ClasspathResource;
 import org.biojava3.core.sequence.template.Sequence;
 import org.biojava3.core.sequence.transcription.Frame;
-import org.biojava3.core.sequence.transcription.RNAToAminoAcidTranslator;
 import org.biojava3.core.sequence.transcription.TranscriptionEngine;
-import org.biojava3.core.sequence.views.RnaSequenceView;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -34,6 +32,8 @@ public class TranslationTest {
     private static AminoAcidCompoundSet aaCs = AminoAcidCompoundSet.getAminoAcidCompoundSet();
     private static DNASequence brca2Dna;
     private static Sequence<AminoAcidCompound> brca2Pep;
+    private static Sequence<NucleotideCompound> volvoxDna;
+    private static Sequence<AminoAcidCompound> volvoxPep;
 
     @BeforeClass
     public static void parseSequences() {
@@ -41,6 +41,10 @@ public class TranslationTest {
                 "org/biojava3/core/sequence/BRCA2-cds.fasta").getInputStream();
         InputStream pepIs = new ClasspathResource(
                 "org/biojava3/core/sequence/BRCA2-peptide.fasta").getInputStream();
+        InputStream volDnaIs = new ClasspathResource(
+                "org/biojava3/core/sequence/volvox-cds.fasta").getInputStream();
+        InputStream volPepIs = new ClasspathResource(
+                "org/biojava3/core/sequence/volvox-peptide.fasta").getInputStream();
 
         try {
             FastaReader<DNASequence, NucleotideCompound> dnaReader = new FastaReader<DNASequence, NucleotideCompound>(cdsIs,
@@ -50,6 +54,14 @@ public class TranslationTest {
                     pepIs, new GenericFastaHeaderParser<ProteinSequence, AminoAcidCompound>(), new ProteinSequenceCreator(
                     aaCs));
             brca2Pep = pReader.process().values().iterator().next();
+            
+            FastaReader<DNASequence, NucleotideCompound> volvoxDnaReader = new FastaReader<DNASequence, NucleotideCompound>(volDnaIs,
+                    new GenericFastaHeaderParser<DNASequence, NucleotideCompound>(), new DNASequenceCreator(dnaCs));
+            volvoxDna = volvoxDnaReader.process().values().iterator().next();
+            FastaReader<ProteinSequence, AminoAcidCompound> volvoxPepReader = new FastaReader<ProteinSequence, AminoAcidCompound>(
+                    volPepIs, new GenericFastaHeaderParser<ProteinSequence, AminoAcidCompound>(), new ProteinSequenceCreator(
+                    aaCs));
+            volvoxPep = volvoxPepReader.process().values().iterator().next();
         }
         catch (Exception e) {
             e.printStackTrace();
@@ -58,6 +70,8 @@ public class TranslationTest {
         finally {
             close(cdsIs);
             close(pepIs);
+            close(volDnaIs);
+            close(volPepIs);
         }
     }
 
@@ -130,11 +144,18 @@ public class TranslationTest {
     public void translateBrca2() {
         TranscriptionEngine e =
                 new TranscriptionEngine.Builder().decorateRna(true).build();
-        for (int i = 0; i < 1000; i++) {
+        for (int i = 0; i < 100; i++) {
             RNASequence rna = brca2Dna.getRNASequence(e);
             ProteinSequence protein = rna.getProteinSequence(e);
             assertThat("BRCA2 does not translate", protein.getSequenceAsString(),
                     is(brca2Pep.getSequenceAsString()));
         }
+    }
+
+    @Test
+    public void translateInternalStops() {
+        TranscriptionEngine e = TranscriptionEngine.getDefault();
+        Sequence<AminoAcidCompound> pep = e.translate(volvoxDna);
+        assertThat("Ensure internal stops stay", pep.toString(), is(volvoxPep.toString()));
     }
 }
