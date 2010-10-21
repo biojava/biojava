@@ -8,7 +8,7 @@
   </parent>
   <groupId>org.biojava</groupId>
   <artifactId>biojava3-alignment</artifactId>
-  <version>3.0-alpha1</version>
+  <version>3.0-alpha2-SNAPSHOT</version>
   <name>biojava3-alignment</name>
   <distributionManagement>
 		<downloadUrl>http://www.biojava.org/download/maven/</downloadUrl>
