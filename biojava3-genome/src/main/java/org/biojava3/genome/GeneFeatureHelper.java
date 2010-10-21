@@ -53,16 +53,17 @@ public class GeneFeatureHelper {
         for(DNASequence dnaSequence : geneSequenceList.values()){
             String geneSequence = dnaSequence.getSequenceAsString();
             String lcGeneSequence = geneSequence.toLowerCase();
-            String reverseGeneSequence = dnaSequence.getReverse().getSequenceAsString();
+            String reverseGeneSequence = dnaSequence.getReverseComplement().getSequenceAsString();
             String lcReverseGeneSequence = reverseGeneSequence.toLowerCase();
             Integer bioStart = null;
             Integer bioEnd = null;
             Strand strand = Strand.POSITIVE;
             boolean geneFound = false;
             String accession = "";
+            DNASequence contigDNASequence = null;
             for(String id : dnaSequenceList.keySet()){
                 accession = id;
-                DNASequence contigDNASequence = dnaSequenceList.get(id);
+                contigDNASequence = dnaSequenceList.get(id);
                 String contigSequence = contigDNASequence.getSequenceAsString().toLowerCase();
                 bioStart = contigSequence.indexOf(lcGeneSequence);
                 if(bioStart != -1){
@@ -83,7 +84,7 @@ public class GeneFeatureHelper {
             }
             
             if(geneFound){
-                System.out.println("Gene found at " + bioStart + " " + bioEnd);
+                System.out.println("Gene " + dnaSequence.getAccession().toString() + " found at " + contigDNASequence.getAccession().toString() + " " + bioStart + " " + bioEnd + " " + strand);
                 ChromosomeSequence chromosomeSequence = chromosomeSequenceList.get(accession);
                 
                 ArrayList<Integer> exonBoundries = new ArrayList<Integer>();
@@ -135,6 +136,7 @@ public class GeneFeatureHelper {
                 if(throwExceptionGeneNotFound){
                     throw new Exception(dnaSequence.getAccession().toString() + " not found");
                 }
+                System.out.println("Gene not found " + dnaSequence.getAccession().toString());
             }
             
         }
