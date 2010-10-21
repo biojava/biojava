@@ -116,15 +116,17 @@ public class ArrayListSequenceReader<C extends Compound> implements SequenceRead
         // Horrendously inefficient - pretty much the way the old BJ did things.
         // TODO Should be optimised.
         this.parsedCompounds.clear();
-        for (int i = 0; i < sequence.length();) {
+        int maxCompoundLength = compoundSet.getMaxSingleCompoundStringLength();
+        int length = sequence.length();
+        for (int i = 0; i < length;) {
             String compoundStr = null;
             C compound = null;
-            for (int compoundStrLength = 1; compound == null && compoundStrLength <= compoundSet.getMaxSingleCompoundStringLength(); compoundStrLength++) {
+            for (int compoundStrLength = 1; compound == null && compoundStrLength <= maxCompoundLength; compoundStrLength++) {
                 compoundStr = sequence.substring(i, i + compoundStrLength);
                 compound = compoundSet.getCompoundForString(compoundStr);
             }
             if (compound == null) {
-                throw new CompoundNotFoundError(compoundStr);
+                throw new CompoundNotFoundError("Cannot find compound for: "+compoundStr);
             } else {
                 i += compoundStr.length();
             }
