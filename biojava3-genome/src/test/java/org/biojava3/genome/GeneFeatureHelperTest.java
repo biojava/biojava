@@ -75,12 +75,12 @@ public class GeneFeatureHelperTest extends TestCase {
      */
     public void testGetProteinSequences() throws Exception {
 
-        System.out.println("getProteinSequences");
+       // System.out.println("getProteinSequences");
         LinkedHashMap<String, ChromosomeSequence> chromosomeSequenceList = GeneFeatureHelper.loadFastaAddGeneFeaturesFromGmodGFF3(new File("src/test/resources/volvox_all.fna"), new File("src/test/resources/volvox.gff3"));
         LinkedHashMap<String, ProteinSequence> proteinSequenceList = GeneFeatureHelper.getProteinSequences(chromosomeSequenceList.values());
-        for(ProteinSequence proteinSequence : proteinSequenceList.values()){
-            System.out.println("Output=" + proteinSequence.getSequenceAsString());
-        }
+//        for(ProteinSequence proteinSequence : proteinSequenceList.values()){
+//            System.out.println("Output=" + proteinSequence.getSequenceAsString());
+//        }
         FastaWriterHelper.writeProteinSequence(new File("src/test/resources/testoutput/volvox_all.faa"), proteinSequenceList.values());
 
         FileAssert.assertBinaryEquals("volvox_all_reference.faa and volvox_all.faa are not equal", new File("src/test/resources/volvox_all_reference.faa"), new File("src/test/resources/testoutput/volvox_all.faa"));
