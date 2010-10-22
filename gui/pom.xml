@@ -4,11 +4,11 @@
   <parent>
     <artifactId>biojava</artifactId>
     <groupId>org.biojava</groupId>
-    <version>3.0-alpha2-SNAPSHOT</version>
+    <version>3.0-alpha2</version>
   </parent>
   <groupId>org.biojava</groupId>
   <artifactId>gui</artifactId>
-  <version>3.0-alpha2-SNAPSHOT</version>
+  <version>3.0-alpha2</version>
   <name>gui</name>
   <distributionManagement>
 		<downloadUrl>http://www.biojava.org/download/maven/</downloadUrl>
