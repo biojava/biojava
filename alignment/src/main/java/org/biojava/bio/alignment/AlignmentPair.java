@@ -137,7 +137,7 @@ public class AlignmentPair extends SimpleAlignment {
 	/**
 	 * Length of the query sequence
 	 */
-	private Sequence query;
+	private final Sequence query;
 
 	/**
 	 * Start position in the subject
@@ -191,12 +191,12 @@ public class AlignmentPair extends SimpleAlignment {
 	/**
 	 * The subject sequence.
 	 */
-	private Sequence subject;
+	private final Sequence subject;
 
 	/**
 	 * Reference to the underlying substitution matrix of this alignment.
 	 */
-	private SubstitutionMatrix subMatrix;
+	private final SubstitutionMatrix subMatrix;
 
 	/**
 	 * Time consumption to create this alignment.
@@ -261,14 +261,14 @@ public class AlignmentPair extends SimpleAlignment {
 		identicals = 0;
 		nGapsQ = 0;
 		nGapsS = 0;
-		for (int i = 0; i < Math.min(queryEnd - queryStart , subjectEnd
-				- subjectStart)  ; i++) {
-		   
+		for (int i = 0; i < Math.min(queryEnd - queryStart, subjectEnd
+				- subjectStart); i++) {
 			Symbol a = query.symbolAt(i + queryStart);
 			Symbol b = subject.symbolAt(i + subjectStart);
 			boolean gap = false;
-			if (a.equals(b))
+			if (a.equals(b)) {
 				identicals++;
+			}
 
 			// get score for this pair. if it is positive, they are similar...
 			if (a.equals(query.getAlphabet().getGapSymbol())) {
@@ -279,8 +279,9 @@ public class AlignmentPair extends SimpleAlignment {
 				nGapsS++;
 				gap = true;
 			}
-			if (!gap && subMatrix != null && subMatrix.getValueAt(a, b) > 0)
+			if (!gap && subMatrix != null && subMatrix.getValueAt(a, b) > 0) {
 				similars++;
+			}
 		}
 	}
 
@@ -411,17 +412,18 @@ public class AlignmentPair extends SimpleAlignment {
 		 * Highlights equal symbols within the alignment, String match/missmatch
 		 * representation
 		 */
-		StringBuffer path = new StringBuffer();
+		StringBuilder path = new StringBuilder();
 		for (i = 0; i < Math.min(queryEnd - queryStart, subjectEnd
 				- subjectStart) + 1; i++) {
 			Symbol a = query.symbolAt(i + queryStart);
 			Symbol b = subject.symbolAt(i + subjectStart);
 			if (!a.equals(query.getAlphabet().getGapSymbol())
 					&& !b.equals(subject.getAlphabet().getGapSymbol())
-					&& (subMatrix.getValueAt(a, b) >= 0 || a.equals(b)))
+					&& ((subMatrix.getValueAt(a, b) >= 0) || a.equals(b))) {
 				path.append('|');
-			else
+			} else {
 				path.append(' ');
+			}
 		}
 
 		int maxLength = path.length();
@@ -455,9 +457,8 @@ public class AlignmentPair extends SimpleAlignment {
 		int ql = queryLPos - 1, qr = queryLPos - 1, qgaps;
 		int sl = subjectLPos - 1, sr = subjectLPos - 1, sgaps;
 
-		int widthLeft = String.valueOf((int) Math.max(queryStart, queryEnd))
-				.length();
-		int widthRight = String.valueOf((int) Math.max(queryEnd, subjectEnd))
+		int widthLeft = String.valueOf(Math.max(queryStart, queryEnd)).length();
+		int widthRight = String.valueOf(Math.max(queryEnd, subjectEnd))
 				.length() + 1;
 
 		// Take width of the meta information into account.
@@ -469,14 +470,17 @@ public class AlignmentPair extends SimpleAlignment {
 			queryRPos = Math.min(queryStart + i * width - 1, Math.min(queryEnd,
 					subjectEnd - subjectStart + queryStart));
 			qgaps = 0;
-			for (j = queryLPos; j <= queryRPos; j++)
+			for (j = queryLPos; j <= queryRPos; j++) {
 				if (!query.symbolAt(j).equals(
-						query.getAlphabet().getGapSymbol()))
+						query.getAlphabet().getGapSymbol())) {
 					qr++;
-				else
+				} else {
 					qgaps++;
-			if (qgaps <= queryRPos - queryLPos)
+				}
+			}
+			if (qgaps <= queryRPos - queryLPos) {
 				ql++;
+			}
 			output.format("%nQuery:   %" + widthLeft + "d ", ql);
 			output.format("%s ", query.subStr(queryLPos, queryRPos));
 			output.format("%-" + widthRight + "d%n", qr);
@@ -493,21 +497,23 @@ public class AlignmentPair extends SimpleAlignment {
 			subjectRPos = Math.min(subjectStart + i * width - 1, Math.min(
 					queryEnd - queryStart + subjectStart, subjectEnd));
 			sgaps = 0;
-			for (j = subjectLPos; j <= subjectRPos; j++)
+			for (j = subjectLPos; j <= subjectRPos; j++) {
 				if (!subject.symbolAt(j).equals(
-						subject.getAlphabet().getGapSymbol()))
+						subject.getAlphabet().getGapSymbol())) {
 					sr++;
-				else
+				} else {
 					sgaps++;
-			if (sgaps <= subjectRPos - subjectLPos)
+				}
+			}
+			if (sgaps <= subjectRPos - subjectLPos) {
 				sl++;
+			}
 			output.format("%nSbjct:   %" + widthLeft + "d ", sl);
 			output.format("%s ", subject.subStr(subjectLPos, subjectRPos));
 			output.format("%-" + widthRight + "d%n", sr);
 			subjectLPos = subjectRPos + 1;
 			sl = sr;
 		}
-
 		return output.toString();
 	}
 
