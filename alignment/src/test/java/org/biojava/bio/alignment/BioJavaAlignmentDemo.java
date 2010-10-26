@@ -17,7 +17,7 @@ import org.biojava.bio.symbol.FiniteAlphabet;
  *
  * @author Chris Friedline <cfriedline@vcu.edu>
  */
-public class BioJavaAlignmentTest {
+public class BioJavaAlignmentDemo {
 
     private final short GAPOPEN = 10;
     private final short GAPEXTEND = 5;
@@ -25,11 +25,11 @@ public class BioJavaAlignmentTest {
     private final short MISMATCH = 0;
 
     public static void main(String[] args) {
-        BioJavaAlignmentTest test = new BioJavaAlignmentTest();
-        test.run();
+        BioJavaAlignmentDemo test = new BioJavaAlignmentDemo();
+        test.testrun();
     }
 
-    public void run() {
+    public void testrun() {
         try {
             String header1 = ">gb|CP001821.1|:690821-692026 translation elongation factor Tu [Xylanimonas cellulosilytica DSM 15894]";
             String protein1 = "VAKAKFERTKPHVNVGTIGHVDHGKTTLTAAISKTLAEKYPASEGYLANQVVDFDGIDKAPEEKQRGITINISHIEYETPNRHYAHVDAPGHADYIKNMITGAAQMDGAILVVAATDGPMAQTREHVLLARQVGVPYLLVALNKSDMVDDEEILELVEMEVRELLSSQGFDGDDAPVVRVSGLKALEGDPEWQAKVLELMEAVDTNVPEPVRDLDKPFLMPIEDVFTITGRGTVVTGKVERGALNVNSEVEIVGIRNPQKTTVTGIETFHKSMDQAQAGDNTGLLLRGIKREDVERGQVVVKPGSITPHTDFEAQVYILGKDEGGRHNPFYSNYRPQFYFRTTDVTGVISLPEGTEMVMPGDNTEMTVELIQPIAMEEGLGFAIREGGRTVGSGRVTKIIK";
@@ -46,7 +46,7 @@ public class BioJavaAlignmentTest {
 			System.out.println(pair.formatOutput(100));
             System.out.printf("\n%d\t%d\n", protein1.length(), protein2.length());
         } catch (Exception ex) {
-            Logger.getLogger(BioJavaAlignmentTest.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(BioJavaAlignmentDemo.class.getName()).log(Level.SEVERE, null, ex);
         } 
     }
 }
