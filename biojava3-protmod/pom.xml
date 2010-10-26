@@ -21,9 +21,13 @@
 		</repository>
 	</distributionManagement>
   <url>http://maven.apache.org</url>
-  <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-  </properties>
+  <properties>  	   
+  	  	<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.build.targetEncoding>UTF-8</project.build.targetEncoding> 
+		<jdk.version>1.5</jdk.version>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.build.targetEncoding>UTF-8</project.build.targetEncoding>
+	</properties>
   <dependencies>
     <dependency>
       <groupId>junit</groupId>
