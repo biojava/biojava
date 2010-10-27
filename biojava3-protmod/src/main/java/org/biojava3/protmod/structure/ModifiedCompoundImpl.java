@@ -267,7 +267,13 @@ implements ModifiedCompound, Serializable {
 		
 		sb.append("Modification_");
 		sb.append(modification.getId());
-		
+		ModificationCategory cat ;
+		if (modification.getCategory()==ModificationCategory.UNDEFINED) {
+			cat = getModification().getCategory();
+		} else
+			cat = modification.getCategory();
+		sb.append("_");
+		sb.append(cat.toString());
 		return sb.toString();
 	}
 	
