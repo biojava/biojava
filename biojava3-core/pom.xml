@@ -3,13 +3,13 @@
   <parent>
     <artifactId>biojava</artifactId>
     <groupId>org.biojava</groupId>
-    <version>3.0-alpha3-SNAPSHOT</version>
+    <version>3.0-alpha3</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.biojava</groupId>
   <artifactId>biojava3-core</artifactId>
   <name>biojava3-core</name>  
-  <version>3.0-alpha3-SNAPSHOT</version>
+  <version>3.0-alpha3</version>
   <distributionManagement>
 		<downloadUrl>http://www.biojava.org/download/maven/</downloadUrl>
 		<repository>

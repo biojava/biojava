@@ -3,12 +3,12 @@
   <parent>
     <artifactId>biojava</artifactId>
     <groupId>org.biojava</groupId>
-    <version>3.0-alpha3-SNAPSHOT</version>
+    <version>3.0-alpha3</version>
   </parent>
   <groupId>org.biojava</groupId>
   <artifactId>biojava3-ws</artifactId>
   <name>biojava3-ws</name>
-  <version>3.0-alpha3-SNAPSHOT</version>
+  <version>3.0-alpha3</version>
   <description>This module deals with bioinformatics web services that could be used to process Biojava objects in a useful manner.</description>
   <dependencies>
   <dependency>
