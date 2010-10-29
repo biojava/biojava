@@ -61,8 +61,7 @@ public class SequenceProxyView<C extends Compound> implements SequenceView<C> {
 
 
     public String getSequenceAsString() {
-        // TODO Optimise.
-        return getSequenceAsString(getBioStart(), getBioEnd(), Strand.POSITIVE);
+        return SequenceMixin.toString(this);
     }
 
     

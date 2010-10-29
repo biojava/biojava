@@ -13,6 +13,7 @@ import org.biojava3.core.sequence.io.template.SequenceCreatorInterface;
 import org.biojava3.core.sequence.template.AbstractCompoundTranslator;
 import org.biojava3.core.sequence.template.CompoundSet;
 import org.biojava3.core.sequence.template.Sequence;
+import org.biojava3.core.sequence.template.SequenceView;
 import org.biojava3.core.sequence.transcription.Table.Codon;
 import org.biojava3.core.sequence.views.WindowedSequence;
 
@@ -78,15 +79,15 @@ public class RNAToAminoAcidTranslator extends AbstractCompoundTranslator<Nucleot
 
         List<List<AminoAcidCompound>> workingList = new ArrayList<List<AminoAcidCompound>>();
         
-        Iterable<List<NucleotideCompound>> iter = 
+        Iterable<SequenceView<NucleotideCompound>> iter =
             new WindowedSequence<NucleotideCompound>(originalSequence, 3);
                 
-        for (List<NucleotideCompound> element : iter) {
+        for (SequenceView<NucleotideCompound> element : iter) {
             AminoAcidCompound aminoAcid;
 
-            int i =0;
+            int i =1;
             Table.CaseInsensitiveTriplet triplet = new Table.CaseInsensitiveTriplet(
-              element.get(i++), element.get(i++), element.get(i++));
+              element.getCompoundAt(i++), element.getCompoundAt(i++), element.getCompoundAt(i++));
 
             Codon target;
 
