@@ -40,6 +40,8 @@ import org.biojava3.core.sequence.features.DatabaseReferenceInterface;
 import org.biojava3.core.sequence.features.FeatureInterface;
 import org.biojava3.core.sequence.features.FeaturesKeyWordInterface;
 import org.biojava3.core.sequence.location.SequenceLocation;
+import org.biojava3.core.sequence.location.SimpleLocation;
+import org.biojava3.core.sequence.location.template.Location;
 
 import org.biojava3.core.sequence.storage.ArrayListSequenceReader;
 
@@ -341,7 +343,8 @@ public abstract class AbstractSequence<C extends Compound> implements Sequence<C
      * @param feature
      */
     public void addFeature(int bioStart, int bioEnd, FeatureInterface feature) {
-        SequenceLocation sequenceLocation = new SequenceLocation(bioStart, bioEnd, this);
+        SequenceLocation<AbstractSequence<C>, C> sequenceLocation =
+                new SequenceLocation<AbstractSequence<C>, C>(bioStart, bioEnd, this);
         feature.setLocation(sequenceLocation);
         addFeature(feature);
     }
@@ -485,9 +488,9 @@ public abstract class AbstractSequence<C extends Compound> implements Sequence<C
      * @param strand 
      * @return
      */
-    public String getSequenceAsString(Integer begin, Integer end, Strand strand) {
-        SequenceReader<C> ss = getSequenceStorage();
-        return ss.getSequenceAsString(begin, end, strand);
+    public String getSequenceAsString(Integer bioStart, Integer bioEnd, Strand strand) {
+        Location loc = new SimpleLocation(bioStart, bioEnd, strand);
+        return loc.getSubSequence(this).getSequenceAsString();
     }
 
     /**
@@ -496,12 +499,11 @@ public abstract class AbstractSequence<C extends Compound> implements Sequence<C
      */
     public String getSequenceAsString() {
         return SequenceMixin.toString(this);
-//        return getSequenceAsString(this.getBioBegin(), this.getBioEnd(), Strand.POSITIVE);
 
     }
 
     public List<C> getAsList() {
-        return getSequenceStorage().getAsList();
+        return SequenceMixin.toList(this);
     }
 
     public C getCompoundAt(int position) {
@@ -521,7 +523,7 @@ public abstract class AbstractSequence<C extends Compound> implements Sequence<C
     }
 
     public SequenceView<C> getSubSequence(final Integer bioStart, final Integer bioEnd) {
-        return new SequenceProxyView<C>(AbstractSequence.this, bioStart, bioEnd);
+        return new SequenceProxyView<C>(this, bioStart, bioEnd);
     }
 
     public Iterator<C> iterator() {
