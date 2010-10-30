@@ -291,10 +291,17 @@ public class SequenceMixin {
             }
         }
 
-        for(int i=0; i<kmer; i++) {
-            Iterator<SequenceView<C>> iterator = windows.get(i);
-            if(iterator.hasNext()) {
-                l.add(iterator.next());
+        OUTER: while(true) {
+            for(int i=0; i<kmer; i++) {
+                Iterator<SequenceView<C>> iterator = windows.get(i);
+                boolean breakLoop=true;
+                if(iterator.hasNext()) {
+                    l.add(iterator.next());
+                    breakLoop = false;
+                }
+                if(breakLoop) {
+                    break OUTER;
+                }
             }
         }
         return l;
