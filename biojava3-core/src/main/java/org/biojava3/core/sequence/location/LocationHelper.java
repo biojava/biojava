@@ -5,8 +5,11 @@
 package org.biojava3.core.sequence.location;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import org.biojava3.core.exceptions.ParserException;
+import org.biojava3.core.sequence.AccessionID;
 import org.biojava3.core.sequence.Strand;
 import org.biojava3.core.sequence.location.template.Location;
 import org.biojava3.core.sequence.location.template.Point;
@@ -232,10 +235,14 @@ public class LocationHelper {
 
     /**
      * Loops through the given list of locations and returns true if it looks
-     * like they represent a circular location
+     * like they represent a circular location. Detection cannot happen if
+     * we do not have consistent accessions
      */
     public static boolean detectCicular(List<Location> subLocations) {
         boolean isCircular = false;
+        if(! consistentAccessions(subLocations))
+            return isCircular;
+
         int lastMax = 0;
         for (Location sub : subLocations) {
             if (sub.getEnd().getPosition() > lastMax) {
@@ -247,6 +254,22 @@ public class LocationHelper {
             }
         }
         return isCircular;
+    }
+
+    /**
+     * Scans a list of locations and returns true if all the given locations
+     * are linked to the same sequence. A list of null accessioned locations
+     * is the same as a list where the accession is the same
+     *
+     * @param subLocations The locations to scan
+     * @return Returns a boolean indicating if this is consistently accessioned
+     */
+    public static boolean consistentAccessions(List<Location> subLocations) {
+        Set<AccessionID> set = new HashSet<AccessionID>();
+        for(Location sub: subLocations) {
+            set.add(sub.getAccession());
+        }
+        return set.size() == 1;
     }
 
     /**

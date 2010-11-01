@@ -22,6 +22,9 @@
  */
 package org.biojava3.core.sequence;
 
+import org.biojava3.core.util.Equals;
+import org.biojava3.core.util.Hashcoder;
+
 /**
  *
  * @author Scooter Willis
@@ -58,6 +61,25 @@ public class AccessionID {
      */
     public DataSource getDataSource() {
         return source;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        boolean equals = false;
+        if (Equals.classEqual(this, o)) {
+            AccessionID l = (AccessionID) o;
+            equals = (Equals.equal(getID(), l.getID())
+                    && Equals.equal(getDataSource(), l.getDataSource()));
+        }
+        return equals;
+    }
+
+    @Override
+    public int hashCode() {
+        int r = Hashcoder.SEED;
+        r = Hashcoder.hash(r, getID());
+        r = Hashcoder.hash(r, getDataSource());
+        return r;
     }
 
  //   public void setDataSource(DataSource dataSource){

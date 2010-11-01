@@ -40,14 +40,14 @@ public class InsdcParser {
      * Parses a location of the form Accession:1
      */
     private static final Pattern SINGLE_LOCATION = Pattern.compile(
-            "\\A ([A-Za-z.0-9]*) :? ([<>]?) (\\d+) \\Z", Pattern.COMMENTS);
+            "\\A ([A-Za-z.0-9]*?) :? ([<>]?) (\\d+) \\Z", Pattern.COMMENTS);
 
     /**
      * Parses a location of the form Accession:1..4 (also supports the ^
      * format and undefined locations)
      */
     private static final Pattern RANGE_LOCATION = Pattern.compile(
-            "\\A ([A-Za-z.0-9]*) :? ([<>]?) (\\d+) ([.^]+) ([<>]?) (\\d+) \\Z", Pattern.COMMENTS);
+            "\\A ([A-Za-z.0-9]*?) :? ([<>]?) (\\d+) ([.^]+) ([<>]?) (\\d+) \\Z", Pattern.COMMENTS);
 
     /**
      * Main method for parsing a location from a String instance
