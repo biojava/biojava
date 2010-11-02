@@ -17,32 +17,35 @@ import org.biojava3.core.sequence.compound.NucleotideCompound;
 import org.biojava3.core.sequence.storage.FourBitSequenceReader;
 import org.biojava3.core.sequence.storage.SingleCompoundSequenceReader;
 import org.biojava3.core.sequence.storage.TwoBitSequenceReader;
+import org.biojava3.core.sequence.template.ComplementCompound;
 import org.biojava3.core.sequence.template.CompoundSet;
 import org.biojava3.core.sequence.template.ProxySequenceReader;
 import org.biojava3.core.sequence.template.SequenceMixin;
 import org.biojava3.core.sequence.template.SequenceView;
+import org.biojava3.core.sequence.views.ComplementSequenceView;
+import org.biojava3.core.sequence.views.ReversedSequenceView;
 import org.junit.Test;
 
-public class DNATests {
+public class DNATest {
 
     private DNACompoundSet set = new DNACompoundSet();
     private AmbiguityDNACompoundSet ambiguity = new AmbiguityDNACompoundSet();
 
     @Test
     public void reverseComplement() {
-        String s = getSeq().getReverseComplement().getSequenceAsString();
+        String s = getSeq().getReverse().getSequenceAsString();
         assertThat("Reversed Complemented sequence not as expected", s, is("GCAT"));
     }
 
     @Test
     public void complement() {
-        String s = getSeq().getComplement().getSequenceAsString();
+        String s = new ComplementSequenceView<NucleotideCompound>(getSeq()).getSequenceAsString();
         assertThat("Complemented sequence not as expected", s, is("TACG"));
     }
 
     @Test
     public void reverse() {
-        SequenceView<NucleotideCompound> r = getSeq().getReverse();
+        SequenceView<NucleotideCompound> r = new ReversedSequenceView<NucleotideCompound>(getSeq());
         assertThat("Reversed sequence not as expected", r.getSequenceAsString(), is("CGTA"));
         assertThat("Base at 2 not right", r.getCompoundAt(2).toString(), is("G"));
 
@@ -80,13 +83,8 @@ public class DNATests {
         String s = "ATgc";
         DNASequence dna = getSeq(s);
         assertThat("Sequence does not remember casing", dna.getSequenceAsString(), is(s));
-
-        StringBuilder reverse = new StringBuilder(s);
-        assertThat("A reversed sequence does not remember case",
-                dna.getReverse().getSequenceAsString(), is(reverse.reverse().toString()));
-
         assertThat("Reversed complement sequence forgets case",
-                dna.getReverseComplement().getSequenceAsString(), is("gcAT"));
+                dna.getReverse().getSequenceAsString(), is("gcAT"));
     }
 
     @Test(expected = CompoundNotFoundError.class)

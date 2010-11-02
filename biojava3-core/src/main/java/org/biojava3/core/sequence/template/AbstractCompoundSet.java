@@ -153,4 +153,9 @@ public abstract class AbstractCompoundSet<C extends Compound> implements Compoun
           compound);
     }
   }
+
+    @Override
+    public boolean isComplementable() {
+        return false;
+    }
 }

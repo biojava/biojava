@@ -196,4 +196,9 @@ public class SequenceFileProxyLoader<C extends Compound> implements ProxySequenc
     public int countCompounds(C... compounds) {
       return SequenceMixin.countCompounds(this, compounds);
     }
+
+    @Override
+    public SequenceView<C> getReverse() {
+        return SequenceMixin.reverse(this);
+    }
 }

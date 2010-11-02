@@ -28,9 +28,6 @@ package org.biojava3.core.sequence.template;
 import java.util.Iterator;
 import java.util.List;
 import org.biojava3.core.sequence.AccessionID;
-import org.biojava3.core.sequence.Strand;
-import org.biojava3.core.sequence.location.SimpleLocation;
-import org.biojava3.core.sequence.location.template.Location;
 
 public class SequenceProxyView<C extends Compound> implements SequenceView<C> {
 
@@ -45,69 +42,59 @@ public class SequenceProxyView<C extends Compound> implements SequenceView<C> {
         this(sequence, 1, sequence.getLength());
     }
 
+    /**
+     * Main constructor for working with SequenceProxyViews
+     *
+     * @param sequence Sequence to proxy
+     * @param bioStart Start; cannot be less than 1
+     * @param bioEnd End; cannot be greater than the sequence length
+     */
     public SequenceProxyView(Sequence<C> sequence, Integer bioStart, Integer bioEnd) {
         this.sequence = sequence;
-        this.bioStart = bioStart;
-        this.bioEnd = bioEnd;
+        setBioStart(bioStart);
+        setBioEnd(bioEnd);
     }
 
-  
     public Sequence<C> getViewedSequence() {
         return sequence;
     }
-
-
-    public String getSequenceAsString(Integer bioStart, Integer bioEnd, Strand strand) {
-        Location loc = new SimpleLocation(bioStart, bioEnd, strand);
-        return loc.getSubSequence(this).getSequenceAsString();
-    }
-
 
     public String getSequenceAsString() {
         return SequenceMixin.toString(this);
     }
 
-    
     public List<C> getAsList() {
         return SequenceMixin.toList(this);
     }
 
-    
     public C getCompoundAt(int position) {
         return getViewedSequence().getCompoundAt((getBioStart() + position) - 1);
     }
 
-    
     public int getIndexOf(C compound) {
-        return (getViewedSequence().getIndexOf(compound) + getBioStart()) - 1;
+        return SequenceMixin.indexOf(this, compound);
     }
 
-    
     public int getLastIndexOf(C compound) {
-        return (getViewedSequence().getLastIndexOf(compound) + getBioStart()) - 1;
+        return SequenceMixin.lastIndexOf(this, compound);
     }
 
-    
     public int getLength() {
         return (getBioEnd() - getBioStart()) + 1;
     }
 
-    
     public CompoundSet<C> getCompoundSet() {
         return getViewedSequence().getCompoundSet();
     }
 
-    
     public SequenceView<C> getSubSequence(final Integer bioStart, final Integer bioEnd) {
         return new SequenceProxyView<C>(this, bioStart, bioEnd);
     }
 
-    
     public Iterator<C> iterator() {
         return new SequenceMixin.SequenceIterator<C>(this);
     }
 
-    
     public AccessionID getAccession() {
         return getViewedSequence().getAccession();
     }
@@ -115,7 +102,6 @@ public class SequenceProxyView<C extends Compound> implements SequenceView<C> {
     /**
      * @return the bioStart
      */
-    
     public Integer getBioStart() {
         return bioStart;
     }
@@ -124,13 +110,16 @@ public class SequenceProxyView<C extends Compound> implements SequenceView<C> {
      * @param bioStart the bioStart to set
      */
     public void setBioStart(Integer bioStart) {
+        if (bioStart < 1) {
+            throw new IllegalArgumentException("The given start "
+                    + bioStart + " is less than 1; cannot index less than 1");
+        }
         this.bioStart = bioStart;
     }
 
     /**
      * @return the bioEnd
      */
-    
     public Integer getBioEnd() {
         return bioEnd;
     }
@@ -139,11 +128,23 @@ public class SequenceProxyView<C extends Compound> implements SequenceView<C> {
      * @param bioEnd the bioEnd to set
      */
     public void setBioEnd(Integer bioEnd) {
+        if(sequence == null) {
+            throw new NullPointerException("No sequence given before setting the end coordinate; cannot be done");
+        }
+        if (bioEnd > sequence.getLength()) {
+            throw new IllegalArgumentException("The given end "
+                    + bioEnd + " is greater than sequence length"
+                    + sequence.getLength());
+        }
         this.bioEnd = bioEnd;
     }
 
-    
     public int countCompounds(C... compounds) {
         return SequenceMixin.countCompounds(this, compounds);
+    }
+
+    @Override
+    public SequenceView<C> getReverse() {
+        return SequenceMixin.reverse(this);
     }
 }

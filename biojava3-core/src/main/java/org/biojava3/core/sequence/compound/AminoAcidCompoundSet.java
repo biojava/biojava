@@ -189,4 +189,8 @@ public class AminoAcidCompoundSet implements CompoundSet<AminoAcidCompound> {
         return new ArrayList<AminoAcidCompound>(aminoAcidCompoundCache.values());
     }
 
+    @Override
+    public boolean isComplementable() {
+        return false;
+    }
 }

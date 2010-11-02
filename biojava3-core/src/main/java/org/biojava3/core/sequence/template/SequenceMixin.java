@@ -14,6 +14,7 @@ import org.biojava3.core.sequence.views.ReversedSequenceView;
 import org.biojava3.core.util.CRC64Checksum;
 
 import java.util.NoSuchElementException;
+import org.biojava3.core.sequence.views.ComplementSequenceView;
 import org.biojava3.core.sequence.views.WindowedSequence;
 
 /**
@@ -199,11 +200,13 @@ public class SequenceMixin {
     /**
      * Performs a reversed linear search of the given Sequence by wrapping
      * it in a {@link ReversedSequenceView} and passing it into
-     * {@link #indexOf(Sequence, Compound)}.
+     * {@link #indexOf(Sequence, Compound)}. We then reverse the index coming
+     * out of it.
      */
     public static <C extends Compound> int lastIndexOf(Sequence<C> sequence,
             C compound) {
-        return indexOf(new ReversedSequenceView<C>(sequence), compound);
+        int index = indexOf(new ReversedSequenceView<C>(sequence), compound);
+        return (sequence.getLength() - index)+1;
     }
 
     /**
@@ -305,6 +308,23 @@ public class SequenceMixin {
             }
         }
         return l;
+    }
+
+    /**
+     * A method which attempts to do the right thing when is comes to a
+     * reverse/reverse complement
+     *
+     * @param <C> The type of compound
+     * @param sequence The input sequence
+     * @return The reversed sequence which is optionally complemented
+     */
+    @SuppressWarnings("unchecked")
+    public static <C extends Compound> SequenceView<C> reverse(Sequence<C> sequence) {
+        SequenceView<C> reverse = new ReversedSequenceView<C>(sequence);
+        if(sequence.getCompoundSet().isComplementable()) {
+            return new ComplementSequenceView(reverse);
+        }
+        return reverse;
     }
 
     /**

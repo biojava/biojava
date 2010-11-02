@@ -147,15 +147,14 @@ public class BitSequenceReader<C extends Compound> implements ProxySequenceReade
     public Iterator<C> iterator() {
         return SequenceMixin.createIterator(this);
     }
-
-    
-    public String getSequenceAsString(Integer start, Integer end, Strand strand) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
     
     public SequenceView<C> getSubSequence(Integer start, Integer end) {
         return getSubSequence((int) start, (int) end);
+    }
+
+    @Override
+    public SequenceView<C> getReverse() {
+        return SequenceMixin.reverse(this);
     }
 
     /**

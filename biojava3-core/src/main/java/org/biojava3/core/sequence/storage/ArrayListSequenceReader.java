@@ -155,4 +155,9 @@ public class ArrayListSequenceReader<C extends Compound> implements SequenceRead
     public int countCompounds(C... compounds) {
        return SequenceMixin.countCompounds(this, compounds);
     }
+
+    @Override
+    public SequenceView<C> getReverse() {
+        return SequenceMixin.reverse(this);
+    }
 }

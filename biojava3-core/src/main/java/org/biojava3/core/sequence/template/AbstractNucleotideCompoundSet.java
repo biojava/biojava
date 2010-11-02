@@ -138,4 +138,11 @@ private NucleotideCompound toLowerCase(NucleotideCompound compound) {
     return null;
   }
 
+    /**
+     * NucleotideCompounds can always complement
+     */
+    @Override
+    public boolean isComplementable() {
+        return true;
+    }
 }

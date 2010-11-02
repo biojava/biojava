@@ -29,11 +29,8 @@ import org.biojava3.core.sequence.template.AbstractSequence;
 import org.biojava3.core.sequence.template.CompoundSet;
 import org.biojava3.core.sequence.template.ProxySequenceReader;
 import org.biojava3.core.sequence.template.SequenceMixin;
-import org.biojava3.core.sequence.template.SequenceView;
 import org.biojava3.core.sequence.transcription.Frame;
 import org.biojava3.core.sequence.transcription.TranscriptionEngine;
-import org.biojava3.core.sequence.views.ComplementSequenceView;
-import org.biojava3.core.sequence.views.ReversedSequenceView;
 
 /**
  *
@@ -64,21 +61,6 @@ public class DNASequence extends AbstractSequence<NucleotideCompound> {
 
     public DNASequence(ProxySequenceReader<NucleotideCompound> proxyLoader, CompoundSet<NucleotideCompound> compoundSet) {
         super(proxyLoader, compoundSet);
-    }
-
-
-
-
-    public SequenceView<NucleotideCompound> getReverseComplement() {
-        return new ComplementSequenceView<NucleotideCompound>(getReverse());
-    }
-
-    public SequenceView<NucleotideCompound> getReverse() {
-        return new ReversedSequenceView<NucleotideCompound>(this);
-    }
-
-    public SequenceView<NucleotideCompound> getComplement() {
-        return new ComplementSequenceView<NucleotideCompound>(this);
     }
 
     public RNASequence getRNASequence() {

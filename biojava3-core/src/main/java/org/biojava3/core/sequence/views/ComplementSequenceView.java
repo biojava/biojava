@@ -1,6 +1,5 @@
 package org.biojava3.core.sequence.views;
 
-import org.biojava3.core.sequence.Strand;
 import org.biojava3.core.sequence.template.ComplementCompound;
 import org.biojava3.core.sequence.template.Sequence;
 import org.biojava3.core.sequence.template.SequenceMixin;
@@ -24,11 +23,6 @@ public class ComplementSequenceView<C extends ComplementCompound> extends Sequen
     @Override
     public String getSequenceAsString() {
         return SequenceMixin.toString(this);
-    }
-
-    @Override
-    public String getSequenceAsString(Integer start, Integer end, Strand strand) {
-        throw new UnsupportedOperationException("Cannot do this");
     }
 
     @SuppressWarnings("unchecked")
