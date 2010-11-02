@@ -308,9 +308,9 @@ public class SimpleAlignedSequenceTest {
 
     @Test
     public void testGetSequenceAsStringIntegerIntegerStrand() {
-        assertEquals(global.getSequenceAsString(2, 5, Strand.UNDEFINED), "AR-N");
-        assertEquals(local.getSequenceAsString(2, 6, Strand.UNDEFINED), "Q--G-");
-        assertEquals(local2.getSequenceAsString(2, 3, Strand.UNDEFINED), "ND");
+        assertEquals(global.getSubSequence(2, 5).getSequenceAsString(), "AR-N");
+        assertEquals(local.getSubSequence(2, 6).getSequenceAsString(), "Q--G-");
+        assertEquals(local2.getSubSequence(2, 3).getSequenceAsString(), "ND");
     }
 
     @Ignore // TODO SimpleAlignedSequence.getSubSequence(Integer, Integer)

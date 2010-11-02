@@ -37,6 +37,7 @@ import org.biojava3.core.sequence.location.template.Point;
 import org.biojava3.core.sequence.template.Compound;
 import org.biojava3.core.sequence.template.CompoundSet;
 import org.biojava3.core.sequence.template.Sequence;
+import org.biojava3.core.sequence.template.SequenceMixin;
 import org.biojava3.core.sequence.template.SequenceView;
 
 /**
@@ -303,22 +304,12 @@ public class SimpleAlignedSequence<S extends Sequence<C>, C extends Compound> im
 
     @Override
     public String getSequenceAsString() {
-        return getSequenceAsString(1, length, Strand.UNDEFINED);
-    }
-
-    @Override
-    public String getSequenceAsString(Integer start, Integer end, Strand strand) {
-        StringBuilder s = new StringBuilder();
-        for (C compound : getAsList().subList(start - 1, end)) {
-            s.append(compound == null ? gap : getCompoundSet().getStringForCompound(compound));
-        }
-        return s.toString();
+        return SequenceMixin.toString(this);
     }
 
     @Override
     public SequenceView<C> getSubSequence(Integer start, Integer end) {
-        // TODO SequenceView<C> getSubSequence(Integer start, Integer end)
-        return null;
+        return SequenceMixin.createSubSequence(this, start, end);
     }
 
     // method for Iterable
@@ -379,4 +370,9 @@ public class SimpleAlignedSequence<S extends Sequence<C>, C extends Compound> im
         }
     }
 
+    @Override
+    //TODO Needs to implements
+    public SequenceView<C> getReverse() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 }
