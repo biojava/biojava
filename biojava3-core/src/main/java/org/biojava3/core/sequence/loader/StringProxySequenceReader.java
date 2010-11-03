@@ -138,7 +138,7 @@ public class StringProxySequenceReader<C extends Compound> implements ProxySeque
     }
 
     @Override
-    public SequenceView<C> getReverse() {
+    public SequenceView<C> getInverse() {
         return SequenceMixin.reverse(this);
     }
 }

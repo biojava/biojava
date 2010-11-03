@@ -296,7 +296,7 @@ public class JoiningSequenceReader<C extends Compound> implements ProxySequenceR
     }
 
     @Override
-    public SequenceView<C> getReverse() {
+    public SequenceView<C> getInverse() {
         return SequenceMixin.reverse(this);
     }
 }

@@ -198,7 +198,7 @@ public class SequenceFileProxyLoader<C extends Compound> implements ProxySequenc
     }
 
     @Override
-    public SequenceView<C> getReverse() {
+    public SequenceView<C> getInverse() {
         return SequenceMixin.reverse(this);
     }
 }

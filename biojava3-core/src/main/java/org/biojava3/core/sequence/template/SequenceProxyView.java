@@ -144,7 +144,7 @@ public class SequenceProxyView<C extends Compound> implements SequenceView<C> {
     }
 
     @Override
-    public SequenceView<C> getReverse() {
+    public SequenceView<C> getInverse() {
         return SequenceMixin.reverse(this);
     }
 }

@@ -134,7 +134,7 @@ public class UniprotProxySequenceReader<C extends Compound> implements ProxySequ
     }
 
     @Override
-    public SequenceView<C> getReverse() {
+    public SequenceView<C> getInverse() {
         return SequenceMixin.reverse(this);
     }
 

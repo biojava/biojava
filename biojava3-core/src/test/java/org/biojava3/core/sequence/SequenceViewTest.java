@@ -31,8 +31,8 @@ public class SequenceViewTest {
   }
 
   @Test
-  public void testReverse() {
-    SequenceView<NucleotideCompound> s = new DNASequence("ATGC").getSubSequence(2, 3).getReverse();
+  public void testInverse() {
+    SequenceView<NucleotideCompound> s = new DNASequence("ATGC").getSubSequence(2, 3).getInverse();
     assertEquals("Reversed complementing view", s.getSequenceAsString(), "CA");
   }
 }

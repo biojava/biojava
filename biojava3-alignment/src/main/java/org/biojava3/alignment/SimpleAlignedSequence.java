@@ -372,7 +372,7 @@ public class SimpleAlignedSequence<S extends Sequence<C>, C extends Compound> im
 
     @Override
     //TODO Needs to implements
-    public SequenceView<C> getReverse() {
+    public SequenceView<C> getInverse() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 }

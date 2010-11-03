@@ -157,7 +157,7 @@ public class ArrayListSequenceReader<C extends Compound> implements SequenceRead
     }
 
     @Override
-    public SequenceView<C> getReverse() {
+    public SequenceView<C> getInverse() {
         return SequenceMixin.reverse(this);
     }
 }

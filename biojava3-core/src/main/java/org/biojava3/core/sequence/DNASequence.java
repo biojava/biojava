@@ -29,8 +29,11 @@ import org.biojava3.core.sequence.template.AbstractSequence;
 import org.biojava3.core.sequence.template.CompoundSet;
 import org.biojava3.core.sequence.template.ProxySequenceReader;
 import org.biojava3.core.sequence.template.SequenceMixin;
+import org.biojava3.core.sequence.template.SequenceView;
 import org.biojava3.core.sequence.transcription.Frame;
 import org.biojava3.core.sequence.transcription.TranscriptionEngine;
+import org.biojava3.core.sequence.views.ComplementSequenceView;
+import org.biojava3.core.sequence.views.ReversedSequenceView;
 
 /**
  *
@@ -81,6 +84,27 @@ public class DNASequence extends AbstractSequence<NucleotideCompound> {
 
     public int getGCCount() {
         return SequenceMixin.countGC(this);
+    }
+
+    /**
+     * Returns a Sequence which runs in the current reverse order
+     */
+    public SequenceView<NucleotideCompound> getReverse() {
+        return new ReversedSequenceView<NucleotideCompound>(this);
+    }
+
+    /**
+     * Returns a Sequence which will complement every base
+     */
+    public SequenceView<NucleotideCompound> getComplement() {
+        return new ComplementSequenceView<NucleotideCompound>(this);
+    }
+
+    /**
+     * Delegates to {@link #getInverse() } for the reverse complement
+     */
+    public SequenceView<NucleotideCompound> getReverseComplement() {
+        return getInverse();
     }
 
     /**

@@ -153,7 +153,7 @@ public class BitSequenceReader<C extends Compound> implements ProxySequenceReade
     }
 
     @Override
-    public SequenceView<C> getReverse() {
+    public SequenceView<C> getInverse() {
         return SequenceMixin.reverse(this);
     }
 

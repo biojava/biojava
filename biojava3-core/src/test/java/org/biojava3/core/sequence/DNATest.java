@@ -33,7 +33,7 @@ public class DNATest {
 
     @Test
     public void reverseComplement() {
-        String s = getSeq().getReverse().getSequenceAsString();
+        String s = getSeq().getInverse().getSequenceAsString();
         assertThat("Reversed Complemented sequence not as expected", s, is("GCAT"));
     }
 
@@ -84,7 +84,7 @@ public class DNATest {
         DNASequence dna = getSeq(s);
         assertThat("Sequence does not remember casing", dna.getSequenceAsString(), is(s));
         assertThat("Reversed complement sequence forgets case",
-                dna.getReverse().getSequenceAsString(), is("gcAT"));
+                dna.getInverse().getSequenceAsString(), is("gcAT"));
     }
 
     @Test(expected = CompoundNotFoundError.class)

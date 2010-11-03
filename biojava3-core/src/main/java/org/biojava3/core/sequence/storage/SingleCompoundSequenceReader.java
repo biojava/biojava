@@ -155,7 +155,7 @@ public class SingleCompoundSequenceReader<C extends Compound> implements ProxySe
     }
 
     @Override
-    public SequenceView<C> getReverse() {
+    public SequenceView<C> getInverse() {
         return SequenceMixin.reverse(this);
     }
 }
