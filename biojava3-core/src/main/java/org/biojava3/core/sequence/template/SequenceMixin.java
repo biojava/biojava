@@ -200,7 +200,7 @@ public class SequenceMixin {
     /**
      * Performs a reversed linear search of the given Sequence by wrapping
      * it in a {@link ReversedSequenceView} and passing it into
-     * {@link #indexOf(Sequence, Compound)}. We then reverse the index coming
+     * {@link #indexOf(Sequence, Compound)}. We then inverse the index coming
      * out of it.
      */
     public static <C extends Compound> int lastIndexOf(Sequence<C> sequence,
@@ -316,10 +316,10 @@ public class SequenceMixin {
      *
      * @param <C> The type of compound
      * @param sequence The input sequence
-     * @return The reversed sequence which is optionally complemented
+     * @return The inverted sequence which is optionally complemented
      */
     @SuppressWarnings("unchecked")
-    public static <C extends Compound> SequenceView<C> reverse(Sequence<C> sequence) {
+    public static <C extends Compound> SequenceView<C> inverse(Sequence<C> sequence) {
         SequenceView<C> reverse = new ReversedSequenceView<C>(sequence);
         if(sequence.getCompoundSet().isComplementable()) {
             return new ComplementSequenceView(reverse);

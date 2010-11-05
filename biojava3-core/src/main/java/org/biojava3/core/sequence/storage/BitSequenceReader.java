@@ -154,7 +154,7 @@ public class BitSequenceReader<C extends Compound> implements ProxySequenceReade
 
     @Override
     public SequenceView<C> getInverse() {
-        return SequenceMixin.reverse(this);
+        return SequenceMixin.inverse(this);
     }
 
     /**
@@ -213,7 +213,7 @@ public class BitSequenceReader<C extends Compound> implements ProxySequenceReade
         protected abstract int compoundsPerDatatype();
 
         /**
-         * Should return the reverse information that {@link #generateCompoundsToIndex() }
+         * Should return the inverse information that {@link #generateCompoundsToIndex() }
          * returns i.e. if the Compound C returns 1 from compoundsToIndex then we
          * should find that compound here in position 1
          */

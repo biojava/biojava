@@ -538,6 +538,6 @@ public abstract class AbstractSequence<C extends Compound> implements Sequence<C
 
     @Override
     public SequenceView<C> getInverse() {
-        return SequenceMixin.reverse(this);
+        return SequenceMixin.inverse(this);
     }
 }
