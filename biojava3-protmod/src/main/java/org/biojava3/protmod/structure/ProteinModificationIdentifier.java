@@ -261,7 +261,7 @@ public class ProteinModificationIdentifier {
 			List<ModifiedCompound> modComps = new ArrayList<ModifiedCompound>();
 			
 			List<Group> residues = StructureUtil.getAminoAcids(chain);
-			if ( residues.size() == 0)
+			if (residues.isEmpty())
 				System.err.println("WARNING: no amino acids found. Did you parse PDB file with alignSEQRES records?");
 			List<Group> ligands = chain.getAtomLigands();
 			
@@ -342,10 +342,10 @@ public class ProteinModificationIdentifier {
 		for (StructureGroup num : mc.getGroups(ComponentType.LIGAND)) {
 			Group group;
 			try {
-				String numIns = "" + num.getResidueNumber();
-				if (num.getInsCode() != null) {
-					numIns += num.getInsCode();
-				}
+				//String numIns = "" + num.getResidueNumber();
+				//if (num.getInsCode() != null) {
+				//	numIns += num.getInsCode();
+				//}
 				ResidueNumber resNum = new ResidueNumber();
 				resNum.setChainId(chain.getChainID());
 				resNum.setSeqNum(num.getResidueNumber());
@@ -400,12 +400,7 @@ public class ProteinModificationIdentifier {
 			for (int j=0; j<i; j++) {
 				if (remove.contains(j))	continue;
 				ModifiedCompound pre = modComps.get(j);
-                                ModificationCategory cat = pre.getModification().getCategory();
-                                if (cat == ModificationCategory.CHEMICAL_MODIFICATION
-                                        || cat == ModificationCategory.CROSS_LINK_1) {
-                                    continue; // do not merge modres or crosslink1
-                                }
-				if (!Collections.disjoint(pre.getGroups(), curr.getGroups())) {
+				if (!Collections.disjoint(pre.getGroups(ComponentType.LIGAND), curr.getGroups(ComponentType.LIGAND))) {
 					merging.add(j);
 				}
 			}
