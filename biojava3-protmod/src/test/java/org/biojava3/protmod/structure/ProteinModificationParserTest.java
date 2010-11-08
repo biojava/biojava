@@ -58,12 +58,14 @@ public class ProteinModificationParserTest extends TestCase {
 				{"1SCY", "AA0089"}, // NH2 on HIS
 				
 				// Modified resdiues
+				{"1UIS", "AA0183"}, // NRQ
 				{"3MVJ", "AA0037"}, // SEP
 				{"1DOJ", "AA0065"}, // MEA
 				{"1DOJ", "AA0172"}, // TYS
 				{"3H5R", "AA0302"}, // SNN, note: SNN is not at C-terminal in some structures, e.g. 3I4W
 
 				// Cross link
+				{"1UIS", "AA0379"}, // NRQ
 				{"3M6S", "AA0025"}, // Disulfide bond
 				{"1A6L", "AA0139"}, // F3S
 				{"1A70", "AA0137"}, // FES

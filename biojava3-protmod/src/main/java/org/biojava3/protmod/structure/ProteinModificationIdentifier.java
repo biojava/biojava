@@ -46,6 +46,7 @@ import org.biojava.bio.structure.StructureException;
 
 import org.biojava3.protmod.Component;
 import org.biojava3.protmod.ComponentType;
+import org.biojava3.protmod.ModificationCategory;
 import org.biojava3.protmod.ModificationCondition;
 import org.biojava3.protmod.ModificationLinkage;
 import org.biojava3.protmod.ProteinModification;
@@ -399,6 +400,11 @@ public class ProteinModificationIdentifier {
 			for (int j=0; j<i; j++) {
 				if (remove.contains(j))	continue;
 				ModifiedCompound pre = modComps.get(j);
+                                ModificationCategory cat = pre.getModification().getCategory();
+                                if (cat == ModificationCategory.CHEMICAL_MODIFICATION
+                                        || cat == ModificationCategory.CROSS_LINK_1) {
+                                    continue; // do not merge modres or crosslink1
+                                }
 				if (!Collections.disjoint(pre.getGroups(), curr.getGroups())) {
 					merging.add(j);
 				}
