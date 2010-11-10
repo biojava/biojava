@@ -45,12 +45,12 @@ public class ProteinModificationParserTest extends TestCase {
 	private String[][] strucs;
 	
 	public void setUp() {
-		setUpShortTest();
+		strucs = setUpShortTest();
 //		setUpLongTest();
 	}
 	
-	public void setUpShortTest() {
-		strucs = new String[][] {
+	public static String[][] setUpShortTest() {
+		String[][] strucs = new String[][] {
 				// Attachments
 				{"3HN3", "AA0151"}, // NAG
 				{"1ZNF", "AA0053"}, // ACE on THR
@@ -79,10 +79,11 @@ public class ProteinModificationParserTest extends TestCase {
 				{"1CAD", null}, // FE and 4 Cys, cross-link4
 				
 		};
+		return strucs;
 	}
 	
-	public void setUpLongTest() {
-		strucs = new String[][] {
+	public static String[][] setUpLongTest() {
+		String[][] strucs = new String[][] {
 				// Attachments
 				{"3HN3", "AA0151"}, // NAG
 				{"1CPO", "AA0406"}, // XYS
@@ -273,6 +274,7 @@ public class ProteinModificationParserTest extends TestCase {
 				{"3H8L", "AA0513"}, // CYS-S3H-CYS
 				{"1CAD", null}, // FE and 4 Cys, cross-link4
 		};
+		return strucs;
 	}
 	
 	public void testParser() throws IOException, StructureException {
