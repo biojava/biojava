@@ -49,8 +49,11 @@ public class ModifiedCompoundSerializationTest extends TestCase {
 	private String[][] strucs;
 	
 	public void setUp() {
+		strucs = new String[1][1];
+		                     
+		strucs[0][0]="1cdg";
 		//strucs = ProteinModificationParserTest.setUpShortTest();
-		strucs = ProteinModificationParserTest.setUpLongTest();
+		//strucs = ProteinModificationParserTest.setUpLongTest();
 	}
 	
 	public void testMulti() {
