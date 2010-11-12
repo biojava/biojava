@@ -31,11 +31,12 @@ public class ModificationConditionXMLConverter {
 		
 		xml.openTag("modificationCondition");
 		
-//		List<Component>  components = condition.getComponents();
-//		
-//		for (Component c: components){
-//			ComponentXMLConverter.toXML(c, xml);
-//		}
+		List<Component>  components = condition.getComponents();
+		
+		for (Component c: components){
+			
+			ComponentXMLConverter.toXML(c, xml);
+		}
 		
 		List<ModificationLinkage> linkages = condition.getLinkages();
 		
@@ -55,6 +56,10 @@ public class ModificationConditionXMLConverter {
 	 */
 	public static ModificationCondition fromXML( Node conditionElement) {
 		
+		String name = conditionElement.getNodeName();
+		if ( ! name.equals("modificationCondition"))
+			throw new RuntimeException("Did not get node modificationCondition, but " + name);
+		
 		NodeList valList = conditionElement.getChildNodes();
 		int numChildren  = valList.getLength();
 		
@@ -66,9 +71,8 @@ public class ModificationConditionXMLConverter {
 		for ( int e =0; e< numChildren ; e++){
 			Node  modificationLinkages = valList.item(e);
 
-			if(!modificationLinkages.hasAttributes()) continue;
 
-			if ( modificationLinkages.getNodeName().equals("Component")) {
+			if ( modificationLinkages.getNodeName().equals("component")) {
 				
 				Component component = ComponentXMLConverter.fromXML(modificationLinkages);
 				components.add(component);
@@ -77,7 +81,8 @@ public class ModificationConditionXMLConverter {
 
 			if ( modificationLinkages.getNodeName().equals("modificationLinkage")) {
 				
-				ModificationLinkage linkage = ModificationLinkageXMLConverter.fromXML(modificationLinkages);
+				ModificationLinkage linkage = ModificationLinkageXMLConverter.fromXML(modificationLinkages, components);
+				
 				linkages.add(linkage);
 				
 			}

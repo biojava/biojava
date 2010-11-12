@@ -119,10 +119,17 @@ public class ModificationLinkage {
 			throw new IllegalArgumentException("Null components");
 		}
 		
-		if (indexOfComponent1<0 || indexOfComponent1>=components.size()
-				|| indexOfComponent2<0 || indexOfComponent2>=components.size()) {
-			throw new IllegalArgumentException("index out of boundary.");
-		}
+		if ( indexOfComponent1 < 0)
+			throw new IllegalArgumentException("indexOfComponent1 has to be >= 0");
+		if ( indexOfComponent1 >= components.size())
+			throw new IllegalArgumentException("indexOfComponent1 has to be <= components.size()");
+		
+		if ( indexOfComponent2 < 0)
+			throw new IllegalArgumentException("indexOfComponent2 has to be >= 0");
+		if ( indexOfComponent2 >= components.size())
+			throw new IllegalArgumentException("indexOfComponent2 [" + indexOfComponent2 + "] has to be <= components.size() [" + components.size()+"]");
+		
+		
 		
 		if (indexOfComponent1 == indexOfComponent2) {
 			throw new IllegalArgumentException("No linkage is allowed for an" +
@@ -211,6 +218,13 @@ public class ModificationLinkage {
 		Component comp2 = getComponent2();
 		List<String> atom1 = getPDBNameOfPotentialAtomsOnComponent1();
 		List<String> atom2 = getPDBNameOfPotentialAtomsOnComponent2();
-		return comp1.getPdbccIds().toString()+":"+atom1+"<=>" + comp2.getPdbccIds()+atom2;
+		if ( comp1 == null || comp2 == null) {
+			return "ModificationLinkage: empty";
+		}
+		if ( comp1.getPdbccIds() != null && comp2.getPdbccIds() != null) {
+			return "ModificationLinkage: " + comp1.getPdbccIds().toString()+":"+atom1+"<=>" + comp2.getPdbccIds()+atom2;
+		} else {
+			return "ModificationLinkage :"+atom1+"<=>" + atom2;
+		}
 	}
 }

@@ -35,10 +35,15 @@ public class ModifiedCompoundXMLConverter {
 
 
 	public static String toXML(ModifiedCompound mc) throws IOException{
+		
+		if ( mc == null) { 
+			System.err.println("ModifiedCompound == null! ");
+			return "<modifiedCompound/>";
+		}
 		StringWriter out = new StringWriter();
 
 		PrettyXMLWriter xml = new PrettyXMLWriter(new PrintWriter(out));
-
+		
 		ProteinModification modification = mc.getModification();
 
 		xml.openTag("modifiedCompound");

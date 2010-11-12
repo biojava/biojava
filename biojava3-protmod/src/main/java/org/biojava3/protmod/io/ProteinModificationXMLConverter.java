@@ -53,7 +53,7 @@ public class ProteinModificationXMLConverter {
 		if ( modification.getSystematicName() != null )
 			xml.attribute("systematicName", modification.getSystematicName());
 
-		
+
 		ModificationCondition condition = modification.getCondition();
 		if ( condition != null) {
 
@@ -61,6 +61,8 @@ public class ProteinModificationXMLConverter {
 
 		}
 		
+		
+
 
 		xml.closeTag("proteinModification");
 
@@ -117,16 +119,14 @@ public class ProteinModificationXMLConverter {
 	}
 
 	public static ProteinModification fromXML(Node modificationElement) {
-		
+
 		String name = modificationElement.getNodeName();
 		if ( ! name.equals("proteinModification"))
 			throw new RuntimeException("Provided node is not a proteinModification node, but " + name);
-		
-		String id = getAttribute(modificationElement,"id");
-		
-		ProteinModification protMod = ProteinModification.getById(id);
-		if ( protMod == null) {
 
+		String id = getAttribute(modificationElement,"id");
+
+		
 			// we need to register it
 			String categoryS = getAttribute(modificationElement,"category");
 			String occurenceS = getAttribute(modificationElement, "occurenceType");
@@ -138,23 +138,39 @@ public class ProteinModificationXMLConverter {
 			NodeList valList = modificationElement.getChildNodes();
 			int numChildren  = valList.getLength();
 
-			
-			ModificationCondition condition = null;
-			
-			for ( int e =0; e< numChildren ; e++){
-				Node  listOfConditions = valList.item(e);
 
-				if(!listOfConditions.hasAttributes()) continue;
+			ModificationCondition condition = null;
+
+			for ( int e =0; e< numChildren ; e++){
+
+				Node  listOfConditions = valList.item(e);
 
 
 				if ( listOfConditions.getNodeName().equals("modificationCondition")) {
-															
-					condition= ModificationConditionXMLConverter.fromXML(listOfConditions);
-					
+
+					condition = ModificationConditionXMLConverter.fromXML(listOfConditions);
+
 				}
 			}
-			ProteinModification.register(id, cat, occType, condition);
-			protMod = ProteinModification.getById(id);
+			
+			
+			ProteinModification protMod = ProteinModification.getById(id);
+			if ( protMod == null) {
+
+				ProteinModification.register(id, cat, occType, condition);
+				protMod = ProteinModification.getById(id);
+			} else {
+				if (! protMod.getId().equals(id)) 
+					throw new RuntimeException("IDs don't match " + protMod.getId());
+				
+				if ( ! protMod.getCategory().equals(cat))
+					throw new RuntimeException("Categories don't match " + protMod.getCategory());
+				
+				if ( ! protMod.getOccurrenceType().equals(occType))
+					throw new RuntimeException("Occurences don't match " + protMod.getOccurrenceType());
+				
+				if ( ! protMod.getCondition().toString().equals(condition.toString()))
+					throw new RuntimeException("Conditions don't match " + protMod.getCondition() + String.format("%n") + condition);
 		}
 		return protMod;
 	}

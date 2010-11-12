@@ -40,9 +40,13 @@ public class ModificationConditionImpl implements ModificationCondition {
 	
 	public ModificationConditionImpl(final List<Component> components,
 			final List<ModificationLinkage> linkages) {
-		if (components==null || components.isEmpty()) {
-			throw new IllegalArgumentException("Nul or empty components");
-		}
+		
+		if ( components == null)
+			throw new IllegalArgumentException("Can not create ModificationCondition, components == null!");
+		
+		if ( components.isEmpty())
+			throw new IllegalArgumentException("Can not create ModificationCondition, components is empty!");
+		
 		
 		if (components.size() > 1) {
 			Set<Integer> indices = new HashSet<Integer>();
@@ -55,7 +59,7 @@ public class ModificationConditionImpl implements ModificationCondition {
 			// all components are connected
 			if (indices.size()!=components.size()) {
 				throw new IllegalStateException("All components " +
-						"have to be linked."); // TODO: is this true?
+						"have to be linked. indices.size:" + indices.size() + " components size:" + components.size()); // TODO: is this true?
 			}
 		}
 		

@@ -25,15 +25,22 @@
 package org.biojava3.protmod.structure;
 
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.Reader;
+import java.io.StringWriter;
+import java.io.Writer;
 
 import java.util.Set;
 
+import org.biojava.bio.structure.Chain;
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureException;
 
@@ -47,20 +54,20 @@ public class ModifiedCompoundSerializationTest extends TestCase {
 	boolean allOK = false;
 
 	private String[][] strucs;
-	
+
 	public void setUp() {
 		strucs = new String[1][1];
-		                     
-		strucs[0][0]="1cdg";
+
+		strucs[0][0]="2TMD";
 		//strucs = ProteinModificationParserTest.setUpShortTest();
 		//strucs = ProteinModificationParserTest.setUpLongTest();
 	}
-	
+
 	public void testMulti() {
 		int count = 0;
 		for ( String[] name : strucs){
 			try {
-				
+
 				testXMLSerialization(name[0]);
 				count++;
 			} catch (Exception e){
@@ -70,7 +77,7 @@ public class ModifiedCompoundSerializationTest extends TestCase {
 			}
 		}
 	}
-	
+
 	@SuppressWarnings("unchecked") 
 	public void testSerialization() throws StructureException, IOException, ClassNotFoundException {
 		String pdbId = "1CAD";
@@ -106,34 +113,48 @@ public class ModifiedCompoundSerializationTest extends TestCase {
 		String pdbId = "1CAD";
 		testXMLSerialization(pdbId);
 	}
-	
+
 	public void test1UIS(){
 		String pdbId = "1UIS";
 		testXMLSerialization(pdbId);
 	}
 	
+	public void test2TMD(){
+		String pdbId = "2TMD";
+		testXMLSerialization(pdbId);
+	}
+	
+	public void test1CDG(){
+		String pdbId = "1CDG";
+		testXMLSerialization(pdbId);
+	}
+
 	public void testXMLSerialization(String pdbId){
 		String xml = null;
 		ModifiedCompound currentMC = null;
 		try {
-			
+
 			Structure struc = TmpAtomCache.cache.getStructure(pdbId);
 
 			ProteinModificationIdentifier parser = new ProteinModificationIdentifier();
-			parser.identify(struc, ProteinModification.allModifications());
-			Set<ModifiedCompound> mcs = parser.getIdentifiedModifiedCompound();
-			
-			for (ModifiedCompound mc : mcs){
-				currentMC = mc;
-				 xml =  doXMLSerialization(mc) ;
-				//System.out.println("got XML: " + String.format("%n") + xml);
-				ModifiedCompound newMC = getModifiedCompoundFromXML(xml);
-				String xml2 = doXMLSerialization(newMC);
-				assertEquals(xml,xml2);
-				//System.out.println(xml2);
-				//assertEquals("The two objects are not equal before and after XML serialization" , mc, newMC);
-				//System.out.println(mc.getDescription());
-				//System.out.println(newMC.getDescription());
+
+			for (Chain c : struc.getChains()) {
+
+				parser.identify(c, ProteinModification.allModifications());
+				Set<ModifiedCompound> mcs = parser.getIdentifiedModifiedCompound();
+
+				for (ModifiedCompound mc : mcs){
+					currentMC = mc;
+					xml =  doXMLSerialization(mc) ;
+					//System.out.println( pdbId + " got XML: " + String.format("%n") + xml);
+					ModifiedCompound newMC = getModifiedCompoundFromXML(xml);
+					String xml2 = doXMLSerialization(newMC);
+					assertEquals(xml,xml2);
+					//System.out.println(xml2);
+					//assertEquals("The two objects are not equal before and after XML serialization" , mc, newMC);
+					//System.out.println(mc.getDescription());
+					//System.out.println(newMC.getDescription());
+				}
 			}
 		} catch (Exception e){
 			System.out.println("error when serializing " + pdbId);
@@ -153,5 +174,47 @@ public class ModifiedCompoundSerializationTest extends TestCase {
 
 	private String doXMLSerialization(ModifiedCompound mc) throws IOException{
 		return ModifiedCompoundXMLConverter.toXML(mc);
+	}
+
+	public void testFlatFileParsing(){
+		InputStream inStream = this.getClass().getResourceAsStream("/org/biojava3/protmod/parser/modifiedCompound.xml");
+		assertNotNull(inStream);
+		try {
+			String xml = convertStreamToString(inStream);
+			//System.out.println(xml);
+			ModifiedCompound newMC = getModifiedCompoundFromXML(xml);
+
+			assertNotNull(newMC);
+		} catch (Exception e){
+			fail(e.getMessage());
+		}
+
+	}
+
+	public String convertStreamToString(InputStream is)
+	throws IOException {
+		/*
+		 * To convert the InputStream to String we use the
+		 * Reader.read(char[] buffer) method. We iterate until the
+		 * Reader return -1 which means there's no more data to
+		 * read. We use the StringWriter class to produce the string.
+		 */
+		if (is != null) {
+			Writer writer = new StringWriter(); 
+			char[] buffer = new char[1024];
+			try {
+				Reader reader = new BufferedReader(
+						new InputStreamReader(is, "UTF-8"));
+				int n;
+				while ((n = reader.read(buffer)) != -1) {
+					writer.write(buffer, 0, n);
+				}
+			} finally {
+				is.close();
+			}
+			return writer.toString();
+		} else {       
+			return "";
+		}
 	}
 }

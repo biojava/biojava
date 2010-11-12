@@ -35,7 +35,7 @@ public class ComponentXMLConverter {
 			xml.attribute("id", pdbccId);
 			xml.closeTag("pdbccID");					
 		}
-
+		
 		xml.closeTag("component");
 	}
 
@@ -44,6 +44,11 @@ public class ComponentXMLConverter {
 	}
 
 	public static Component fromXML(Node componentN) {
+		
+		String name = componentN.getNodeName();
+		if ( ! name.equals("component"))
+			throw new RuntimeException("did not get component element, but " + name);
+		
 		String type = getAttribute(componentN, "type");
 		String nTerminalS = getAttribute(componentN, "nTerminal");
 		String cTerminalS = getAttribute(componentN, "cTerminal");
