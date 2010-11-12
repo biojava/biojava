@@ -119,10 +119,10 @@ public class ModifiedCompoundSerializationTest extends TestCase {
 		testXMLSerialization(pdbId);
 	}
 	
-	public void test2TMD(){
-		String pdbId = "2TMD";
-		testXMLSerialization(pdbId);
-	}
+//	public void test2TMD(){
+//		String pdbId = "2TMD";
+//		testXMLSerialization(pdbId);
+//	}
 	
 	public void test1CDG(){
 		String pdbId = "1CDG";

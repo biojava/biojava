@@ -1,7 +1,90 @@
 <modifiedCompound>
   <proteinModification id="0252.CROSS_LINK_4" description="Metal coordination" category="crosslink4" occurenceType="natural">
     <modificationCondition>
-      <modificationLinkage index1="0" index2="1">
+      <component type="AminoAcid" nTerminal="false" cTerminal="false">
+        <pdbccID id="*" />
+      </component>
+      <component type="Ligand" nTerminal="false" cTerminal="false">
+        <pdbccID id="RH" />
+        <pdbccID id="LU" />
+        <pdbccID id="RE" />
+        <pdbccID id="HO" />
+        <pdbccID id="RB" />
+        <pdbccID id="DY" />
+        <pdbccID id="LR" />
+        <pdbccID id="MG" />
+        <pdbccID id="ZN" />
+        <pdbccID id="RA" />
+        <pdbccID id="ZR" />
+        <pdbccID id="MD" />
+        <pdbccID id="FE" />
+        <pdbccID id="IN" />
+        <pdbccID id="AU" />
+        <pdbccID id="MN" />
+        <pdbccID id="IR" />
+        <pdbccID id="EU" />
+        <pdbccID id="MO" />
+        <pdbccID id="BA" />
+        <pdbccID id="YB" />
+        <pdbccID id="PT" />
+        <pdbccID id="AC" />
+        <pdbccID id="PU" />
+        <pdbccID id="NI" />
+        <pdbccID id="AG" />
+        <pdbccID id="ES" />
+        <pdbccID id="PR" />
+        <pdbccID id="ER" />
+        <pdbccID id="AL" />
+        <pdbccID id="NA" />
+        <pdbccID id="NB" />
+        <pdbccID id="AM" />
+        <pdbccID id="ND" />
+        <pdbccID id="GD" />
+        <pdbccID id="TI" />
+        <pdbccID id="GA" />
+        <pdbccID id="TH" />
+        <pdbccID id="TM" />
+        <pdbccID id="TL" />
+        <pdbccID id="CA" />
+        <pdbccID id="NP" />
+        <pdbccID id="NO" />
+        <pdbccID id="K" />
+        <pdbccID id="U" />
+        <pdbccID id="FR" />
+        <pdbccID id="W" />
+        <pdbccID id="V" />
+        <pdbccID id="BI" />
+        <pdbccID id="BE" />
+        <pdbccID id="FM" />
+        <pdbccID id="Y" />
+        <pdbccID id="TB" />
+        <pdbccID id="TC" />
+        <pdbccID id="BK" />
+        <pdbccID id="TA" />
+        <pdbccID id="HF" />
+        <pdbccID id="SC" />
+        <pdbccID id="HG" />
+        <pdbccID id="CU" />
+        <pdbccID id="CS" />
+        <pdbccID id="OS" />
+        <pdbccID id="SN" />
+        <pdbccID id="SM" />
+        <pdbccID id="SR" />
+        <pdbccID id="LA" />
+        <pdbccID id="PM" />
+        <pdbccID id="RU" />
+        <pdbccID id="CE" />
+        <pdbccID id="CF" />
+        <pdbccID id="CD" />
+        <pdbccID id="PD" />
+        <pdbccID id="LI" />
+        <pdbccID id="CR" />
+        <pdbccID id="CO" />
+        <pdbccID id="CM" />
+        <pdbccID id="PA" />
+        <pdbccID id="PB" />
+      </component>
+      <modificationLinkage index1="0" index2="1" pdbNameComp1="*" pdbNameComp2="*">
         <component1>
           <component type="AminoAcid" nTerminal="false" cTerminal="false">
             <pdbccID id="*" />
@@ -92,10 +175,10 @@
       </modificationLinkage>
     </modificationCondition>
   </proteinModification>
-  <linkage pos="0" total="4" distance="2.2961465545561377">
+  <linkage pos="0" total="4" distance="2.58146218256243">
     <atom1>
-      <structureAtom name="OD1">
-        <structureGroup chainID="A" pdbName="ASN" residueNr="139" type="AminoAcid" />
+      <structureAtom name="O">
+        <structureGroup chainID="A" pdbName="ILE" residueNr="190" type="AminoAcid" />
       </structureAtom>
     </atom1>
     <atom2>
@@ -128,10 +211,10 @@
       </structureAtom>
     </atom2>
   </linkage>
-  <linkage pos="3" total="4" distance="2.58146218256243">
+  <linkage pos="3" total="4" distance="2.2961465545561377">
     <atom1>
-      <structureAtom name="O">
-        <structureGroup chainID="A" pdbName="ILE" residueNr="190" type="AminoAcid" />
+      <structureAtom name="OD1">
+        <structureGroup chainID="A" pdbName="ASN" residueNr="139" type="AminoAcid" />
       </structureAtom>
     </atom1>
     <atom2>
