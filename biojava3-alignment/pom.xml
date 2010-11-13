@@ -4,11 +4,11 @@
   <parent>
     <artifactId>biojava</artifactId>
     <groupId>org.biojava</groupId>
-    <version>3.0-alpha5</version>
+    <version>3.0-alpha6-SNAPSHOT</version>
   </parent>
   <groupId>org.biojava</groupId>
   <artifactId>biojava3-alignment</artifactId>
-  <version>3.0-alpha5</version>
+  <version>3.0-alpha6-SNAPSHOT</version>
   <name>biojava3-alignment</name>
   <distributionManagement>
 		<downloadUrl>http://www.biojava.org/download/maven/</downloadUrl>
@@ -46,13 +46,13 @@
     <dependency>
       <groupId>org.biojava</groupId>
       <artifactId>biojava3-core</artifactId>
-      <version>3.0-alpha5</version>
+      <version>3.0-alpha6-SNAPSHOT</version>
       <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>org.biojava</groupId>
       <artifactId>biojava3-phylo</artifactId>
-      <version>3.0-alpha5</version>
+      <version>3.0-alpha6-SNAPSHOT</version>
       <scope>compile</scope>
     </dependency>
   </dependencies>
