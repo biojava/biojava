@@ -24,8 +24,6 @@
 
 package org.biojava3.protmod.structure;
 
-import java.io.Serializable;
-
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
@@ -44,10 +42,8 @@ import org.biojava3.protmod.ProteinModification;
  * @since 3.0
  */
 public class ModifiedCompoundImpl
-implements ModifiedCompound, Serializable {
-	public static final long serialVersionUID = -3809110608450334460L;
-
-
+implements ModifiedCompound {
+	
 	ProteinModification modification;
 	Set<StructureGroup> groups;
 	Map<Set<StructureGroup>, Set<StructureAtomLinkage>> atomLinkages;
@@ -360,51 +356,4 @@ implements ModifiedCompound, Serializable {
 
 		return result;
 	}
-
-
-	
-	
-
-
-	private static class SerializationProxy implements Serializable {
-		private static final long serialVersionUID = -5345107617243742042L;
-
-		private final String modificationId;
-		private  Set<StructureGroup> groups;
-		private  Set<StructureAtomLinkage> atomLinkages;
-		SerializationProxy(ModifiedCompoundImpl actualObj) {
-			this.modificationId = actualObj.modification.getId();
-			this.groups = actualObj.groups;
-			if (actualObj.atomLinkages == null)
-				this.atomLinkages = null;
-			else
-				this.atomLinkages = actualObj.getAtomLinkages();
-		}
-
-		private Object readResolve() {
-			ProteinModification modification = ProteinModification.getById(modificationId);
-			if (atomLinkages==null) {
-				if (groups==null || groups.size()!=1) {
-					throw new IllegalStateException("Only one group is allowed without linkage.");
-				}
-				return new ModifiedCompoundImpl(modification, groups.iterator().next());
-			}
-
-			return new ModifiedCompoundImpl(modification, atomLinkages);
-		}
-	}
-
-	private Object writeReplace() {
-		return new SerializationProxy(this);
-	}
-
-	private void readObject(java.io.ObjectInputStream stream)
-	throws java.io.InvalidObjectException {
-		throw new java.io.InvalidObjectException("Proxy required");
-	}
-
-
-
-
-
 }

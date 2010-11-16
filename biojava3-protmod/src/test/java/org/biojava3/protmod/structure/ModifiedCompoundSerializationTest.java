@@ -26,14 +26,9 @@ package org.biojava3.protmod.structure;
 
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.io.Reader;
 import java.io.StringWriter;
 import java.io.Writer;
@@ -42,7 +37,6 @@ import java.util.Set;
 
 import org.biojava.bio.structure.Chain;
 import org.biojava.bio.structure.Structure;
-import org.biojava.bio.structure.StructureException;
 
 import org.biojava3.protmod.ProteinModification;
 import org.biojava3.protmod.io.ModifiedCompoundXMLConverter;
@@ -76,37 +70,6 @@ public class ModifiedCompoundSerializationTest extends TestCase {
 				fail(e.getMessage());
 			}
 		}
-	}
-
-	@SuppressWarnings("unchecked") 
-	public void testSerialization() throws StructureException, IOException, ClassNotFoundException {
-		String pdbId = "1CAD";
-		Structure struc = TmpAtomCache.cache.getStructure(pdbId);
-
-		ProteinModificationIdentifier parser = new ProteinModificationIdentifier();
-		parser.identify(struc, ProteinModification.allModifications());
-		Set<ModifiedCompound> mcs = parser.getIdentifiedModifiedCompound();
-
-		String file = System.getProperty("java.io.tmpdir") + File.separatorChar + pdbId;
-		FileOutputStream fos = new FileOutputStream(file);
-		ObjectOutputStream oos = new ObjectOutputStream(fos);
-		oos.writeObject(mcs);
-		oos.close();
-
-		FileInputStream fin = new FileInputStream(file);
-		ObjectInputStream ois = new ObjectInputStream(fin); 
-		mcs = (Set<ModifiedCompound>) ois.readObject();
-		ois.close();
-
-		//		System.out.println(mcs);
-
-		try {
-			new File(file).delete();
-		} catch (Exception e) {
-			fail(e.getMessage());
-		}
-
-		//System.out.println(mcs);
 	}
 
 	public void test1CAD(){

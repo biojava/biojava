@@ -24,11 +24,7 @@
 
 package org.biojava3.protmod.structure;
 
-import java.io.Serializable;
-
-public class StructureAtomLinkage
-implements Serializable {
-	private static final long serialVersionUID = 8694272950455953976L;
+public class StructureAtomLinkage {
 	
 	private final StructureAtom atom1;
 	private final StructureAtom atom2;
