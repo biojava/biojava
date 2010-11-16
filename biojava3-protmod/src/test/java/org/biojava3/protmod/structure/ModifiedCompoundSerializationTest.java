@@ -110,8 +110,13 @@ public class ModifiedCompoundSerializationTest extends TestCase {
 //			}
 //			assertEquals("Not the right number of groups! should be 2, but got " + groups.size() + " in: " + ModifiedCompoundXMLConverter.toXML(mc),2,groups.size());
 //			
+			if ( ! cat.equals(ModificationCategory.CROSS_LINK_2)) {
+				System.out.println(ModifiedCompoundXMLConverter.toXML(mc));
+				System.out.println(cat);
+				System.out.println(mc);
+			}
 			
-			assertEquals(cat, ModificationCategory.CROSS_LINK_2);
+			assertEquals(ModificationCategory.CROSS_LINK_2, cat);
 		}
 		} catch (Exception e){
 			e.printStackTrace();
