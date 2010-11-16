@@ -146,6 +146,7 @@ public class ModifiedCompoundXMLConverter {
 					} else if (listOfConditions.getNodeName().equals("structureGroup")) {
 						StructureGroup group = StructureGroupXMLConverter.fromXML(listOfConditions);
 						structureGroups.add(group);
+//						System.out.println("structureGroups size:" + structureGroups.size());
 					}
 				}
 			}
@@ -182,7 +183,6 @@ public class ModifiedCompoundXMLConverter {
 
 	private static StructureAtom getAtom(String elementName, Node n) {
 
-
 		NodeList children = n.getChildNodes();
 
 		int numChildren  = children.getLength();
@@ -194,10 +194,12 @@ public class ModifiedCompoundXMLConverter {
 			if ( atoms.getNodeName().equals(elementName)) {
 				NodeList child2 = atoms.getChildNodes();
 				int numAtoms = child2.getLength();
+				//System.out.println("got " + numAtoms + " atoms");
 				for ( int a=0;a< numAtoms; a++){
 					Node atomNode = child2.item(a);
 					if(!atomNode.hasAttributes()) continue;
 					atom = StructureAtomXMLConverter.fromXML(atomNode);
+					return atom;
 				}
 
 			}
