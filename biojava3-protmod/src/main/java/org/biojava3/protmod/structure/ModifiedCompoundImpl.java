@@ -169,6 +169,17 @@ implements ModifiedCompound {
 				.setSystematicName(modification.getSystematicName())
 				.asModification();
 	}
+	
+	/**
+	 * 
+	 * @return the original modification ID.
+	 */
+	public String getOriginalModificationId() {
+		if (modification==null)
+			return null;
+		
+		return modification.getId();
+	}
 
 	@Override
 	public Set<StructureGroup> getGroups() {

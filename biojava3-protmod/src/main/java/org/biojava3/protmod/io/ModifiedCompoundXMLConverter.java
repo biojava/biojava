@@ -44,11 +44,21 @@ public class ModifiedCompoundXMLConverter {
 
 		PrettyXMLWriter xml = new PrettyXMLWriter(new PrintWriter(out));
 		
-		ProteinModification modification = mc.getModification();
+		String modificationId = null;
+		if (mc instanceof ModifiedCompoundImpl) {
+			modificationId = ((ModifiedCompoundImpl)mc).getOriginalModificationId();
+		} else {
+			if (mc.getModification()!=null) {
+				modificationId = mc.getModification().getId();
+			}
+		}
 
 		xml.openTag("modifiedCompound");
-		if ( modification != null) {
-			ProteinModificationXMLConverter.toXML(modification, xml);
+		if ( modificationId != null) {
+//			ProteinModificationXMLConverter.toXML(modification, xml);
+			xml.openTag("proteinModification");
+			xml.attribute("id", modificationId);
+			xml.closeTag("proteinModification");
 		}
 
 
@@ -127,11 +137,13 @@ public class ModifiedCompoundXMLConverter {
 
 
 					if ( listOfConditions.getNodeName().equals("proteinModification")) {
-
-						modification = ProteinModificationXMLConverter.fromXML(listOfConditions);
-					}
-
-					if ( listOfConditions.getNodeName().equals("linkage")) {
+						//modification = ProteinModificationXMLConverter.fromXML(listOfConditions);
+						String modId = getAttribute(listOfConditions, "id");
+						modification = ProteinModification.getById(modId);
+						if (modification==null) {
+							System.err.println("Error: no modification information.");
+						}
+					} else if ( listOfConditions.getNodeName().equals("linkage")) {
 						double dist = Double.parseDouble(getAttribute(listOfConditions, "distance"));
 						int pos = Integer.parseInt(getAttribute(listOfConditions,"pos"));
 						int total = Integer.parseInt(getAttribute(listOfConditions,"total"));
