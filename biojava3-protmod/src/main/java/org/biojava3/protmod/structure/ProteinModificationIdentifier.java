@@ -46,7 +46,6 @@ import org.biojava.bio.structure.StructureException;
 
 import org.biojava3.protmod.Component;
 import org.biojava3.protmod.ComponentType;
-import org.biojava3.protmod.ModificationCategory;
 import org.biojava3.protmod.ModificationCondition;
 import org.biojava3.protmod.ModificationLinkage;
 import org.biojava3.protmod.ProteinModification;

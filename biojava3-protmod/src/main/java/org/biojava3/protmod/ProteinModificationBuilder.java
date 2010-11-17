@@ -25,8 +25,6 @@
 package org.biojava3.protmod;
 
 import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * Uses ProteinModificationBuilder pattern to set optional attributes for a ProteinModification. 

@@ -320,4 +320,24 @@ implements ProteinModification {
 		
 		return sb.toString();
 	}
+	
+	public int hashCode() {
+		int ret = id.hashCode();
+		ret = ret * 31 + category.hashCode();
+		return ret;
+	}
+	
+	public boolean equals(Object obj) {
+		if (!(obj instanceof ProteinModification))
+			return false;
+		
+		ProteinModification mod = (ProteinModification)obj;
+		if (!id.equals(mod.getId()))
+			return false;
+		
+		if (category != mod.getCategory())
+			return false;
+		
+		return true;
+	}
 }

@@ -120,9 +120,12 @@ implements ModifiedCompound {
 		}
 
 		int nRes = 0;
+		Set<String> ligands = new HashSet<String>();
 		for (StructureGroup group : groups) {
 			if (group.getType() == ComponentType.AMINOACID) {
 				nRes ++;
+			} else {
+				ligands.add(group.getPDBName().trim());
 			}
 		}
 
@@ -150,6 +153,8 @@ implements ModifiedCompound {
 		
 		ProteinModification mod = new ProteinModificationImpl(modification);
 		mod.setCategory(cat);
+		for (String lig : ligands)
+			mod.addKeyword(lig);
 		return mod;
 
 //		String newId = modification.getId() + "." + cat.name();

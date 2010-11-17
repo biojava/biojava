@@ -24,7 +24,6 @@
 
 package org.biojava3.protmod;
 
-import java.util.HashSet;
 import java.util.Set;
 
 /**
