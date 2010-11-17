@@ -17,6 +17,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import org.biojava3.core.util.PrettyXMLWriter;
 
 import org.biojava3.protmod.ProteinModification;
+import org.biojava3.protmod.ProteinModificationRegistry;
 import org.biojava3.protmod.structure.ModifiedCompound;
 import org.biojava3.protmod.structure.ModifiedCompoundImpl;
 import org.biojava3.protmod.structure.StructureAtom;
@@ -139,7 +140,7 @@ public class ModifiedCompoundXMLConverter {
 					if ( listOfConditions.getNodeName().equals("proteinModification")) {
 						//modification = ProteinModificationXMLConverter.fromXML(listOfConditions);
 						String modId = getAttribute(listOfConditions, "id");
-						modification = ProteinModification.getById(modId);
+						modification = ProteinModificationRegistry.getById(modId);
 						if (modification==null) {
 							System.err.println("Error: no modification information.");
 						}

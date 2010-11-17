@@ -47,7 +47,9 @@ import org.biojava3.protmod.ModificationCondition;
 import org.biojava3.protmod.ModificationConditionImpl;
 import org.biojava3.protmod.ModificationOccurrenceType;
 import org.biojava3.protmod.ModificationLinkage;
-import org.biojava3.protmod.ProteinModification;
+import org.biojava3.protmod.ProteinModificationBuilder;
+import org.biojava3.protmod.ProteinModificationImpl;
+import org.biojava3.protmod.ProteinModificationRegistry;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
@@ -296,8 +298,8 @@ public final class ProteinModificationXmlReader {
 				condition = new ModificationConditionImpl(comps, linkages);
 			} // end of condition	
 			
-			ProteinModification.Builder modBuilder = ProteinModification
-				.register(id, cat, occType, condition);
+			ProteinModificationBuilder modBuilder = 
+				new ProteinModificationBuilder(new ProteinModificationImpl(id, cat, occType, condition));
 			
 			// description
 			nodes = infoNodes.get("Description");
@@ -359,6 +361,8 @@ public final class ProteinModificationXmlReader {
 					modBuilder.addKeyword(node.getTextContent());
 				}
 			}
+			
+			ProteinModificationRegistry.register(modBuilder.asModification());
 		}
 	}
 	

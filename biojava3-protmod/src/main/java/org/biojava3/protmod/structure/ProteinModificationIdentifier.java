@@ -50,6 +50,7 @@ import org.biojava3.protmod.ModificationCategory;
 import org.biojava3.protmod.ModificationCondition;
 import org.biojava3.protmod.ModificationLinkage;
 import org.biojava3.protmod.ProteinModification;
+import org.biojava3.protmod.ProteinModificationRegistry;
 
 /**
  * Identify attachment modification in a 3-D structure.
@@ -187,7 +188,7 @@ public class ProteinModificationIdentifier {
 	 * @param structure
 	 */
 	public void identify(final Structure structure) {
-		identify(structure, ProteinModification.allModifications());
+		identify(structure, ProteinModificationRegistry.allModifications());
 	}
 
 	/**
@@ -217,7 +218,7 @@ public class ProteinModificationIdentifier {
 	 * @param chains query {@link Chain}s.
 	 */
 	public void identify(final List<Chain> chains) {
-		identify(chains, ProteinModification.allModifications());
+		identify(chains, ProteinModificationRegistry.allModifications());
 	}
 	
 	/**

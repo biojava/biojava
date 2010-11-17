@@ -34,6 +34,7 @@ import java.util.Set;
 import org.biojava3.protmod.ComponentType;
 import org.biojava3.protmod.ModificationCategory;
 import org.biojava3.protmod.ProteinModification;
+import org.biojava3.protmod.ProteinModificationImpl;
 
 
 /**
@@ -146,28 +147,31 @@ implements ModifiedCompound {
 		default:
 			cat = ModificationCategory.CROSS_LINK_8_OR_LARGE; break;
 		}
+		
+		ProteinModification mod = new ProteinModificationImpl(modification);
+		mod.setCategory(cat);
+		return mod;
 
-		// TODO: name crashing?
-		String newId = modification.getId() + "." + cat.name();
-
-		ProteinModification mod = ProteinModification.getById(newId);
-		if (mod != null) {
-			return mod;
-		}
-
-		return ProteinModification.register(newId,
-				cat, modification.getOccurrenceType(), modification.getCondition())
-				.addKeywords(modification.getKeywords())
-				.setDescription(modification.getDescription())
-				.setFormula(modification.getFormula())
-				.setPdbccId(modification.getPdbccId())
-				.setPdbccName(modification.getPdbccName())
-				.setPsimodId(modification.getPdbccName())
-				.setPsimodName(modification.getPsimodName())
-				.setResidId(modification.getResidId())
-				.setResidName(modification.getResidName())
-				.setSystematicName(modification.getSystematicName())
-				.asModification();
+//		String newId = modification.getId() + "." + cat.name();
+//
+//		ProteinModification mod = ProteinModification.getById(newId);
+//		if (mod != null) {
+//			return mod;
+//		}
+//		
+//		return ProteinModification.register(newId,
+//				cat, modification.getOccurrenceType(), modification.getCondition())
+//				.addKeywords(modification.getKeywords())
+//				.setDescription(modification.getDescription())
+//				.setFormula(modification.getFormula())
+//				.setPdbccId(modification.getPdbccId())
+//				.setPdbccName(modification.getPdbccName())
+//				.setPsimodId(modification.getPdbccName())
+//				.setPsimodName(modification.getPsimodName())
+//				.setResidId(modification.getResidId())
+//				.setResidName(modification.getResidName())
+//				.setSystematicName(modification.getSystematicName())
+//				.asModification();
 	}
 	
 	/**

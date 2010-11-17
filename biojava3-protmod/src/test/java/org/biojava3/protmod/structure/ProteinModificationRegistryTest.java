@@ -37,6 +37,9 @@ import org.biojava3.protmod.ModificationConditionImpl;
 import org.biojava3.protmod.ModificationLinkage;
 import org.biojava3.protmod.ModificationOccurrenceType;
 import org.biojava3.protmod.ProteinModification;
+import org.biojava3.protmod.ProteinModificationBuilder;
+import org.biojava3.protmod.ProteinModificationImpl;
+import org.biojava3.protmod.ProteinModificationRegistry;
 
 import junit.framework.TestCase;
 
@@ -57,25 +60,29 @@ public class ProteinModificationRegistryTest extends TestCase {
 		ModificationCondition condition = new ModificationConditionImpl(components, 
 				Collections.singletonList(linkage));
 		
-		ProteinModification.register("TEST", 
+		ProteinModification mod = new ProteinModificationImpl("TEST", 
 				ModificationCategory.CROSS_LINK_2,
 				ModificationOccurrenceType.NATURAL,
-				condition)
-				.setDescription("TEST")
-				.setFormula("TEST")
-				.setResidId("TEST")
-				.setResidName("TEST")
-				.setPsimodId("TEST")
-				.setPsimodName("TEST")
-				.setSystematicName("TEST");
-		assertNotNull(ProteinModification.getById("TEST"));
+				condition);
+		ProteinModificationBuilder builder = new ProteinModificationBuilder(mod);
+		builder.setDescription("TEST")
+			.setFormula("TEST")
+			.setResidId("TEST")
+			.setResidName("TEST")
+			.setPsimodId("TEST")
+			.setPsimodName("TEST")
+			.setSystematicName("TEST");
+		
+		
+		ProteinModificationRegistry.register(mod);
+		assertNotNull(ProteinModificationRegistry.getById("TEST"));
 	}
 	
 	/**
 	 * Test the initialization registry of common protein modifications. 
 	 */
 	public void testRegisterCommonModification() {		
-		Set<ProteinModification> mods = ProteinModification.allModifications();
+		Set<ProteinModification> mods = ProteinModificationRegistry.allModifications();
 		assertTrue(mods!=null && !mods.isEmpty());
 		
 //		System.out.println("There are totally "+mods.size()
@@ -88,25 +95,25 @@ public class ProteinModificationRegistryTest extends TestCase {
 		ProteinModification mod;
 		Set<ProteinModification> mods;
 
-		mod = ProteinModification.getById("0001");
+		mod = ProteinModificationRegistry.getById("0001");
 		assertNotNull(mod);
 
-		mods = ProteinModification.getByPdbccId("SEP");
+		mods = ProteinModificationRegistry.getByPdbccId("SEP");
 		assertNotNull(mods);
 
-		mods = ProteinModification.getByResidId("AA0076");
+		mods = ProteinModificationRegistry.getByResidId("AA0076");
 		assertNotNull(mods);
 
-		mods = ProteinModification.getByPsimodId("MOD:00110");
+		mods = ProteinModificationRegistry.getByPsimodId("MOD:00110");
 		assertNotNull(mods);
 
-		mods = ProteinModification.getByComponent(Component.of("FAD", ComponentType.LIGAND));
+		mods = ProteinModificationRegistry.getByComponent(Component.of("FAD", ComponentType.LIGAND));
 		assertNotNull(mods);
 
-		mods = ProteinModification.getByCategory(ModificationCategory.ATTACHMENT);
+		mods = ProteinModificationRegistry.getByCategory(ModificationCategory.ATTACHMENT);
 		assertNotNull(mods);
 
-		mods = ProteinModification.getByOccurrenceType(ModificationOccurrenceType.NATURAL);
+		mods = ProteinModificationRegistry.getByOccurrenceType(ModificationOccurrenceType.NATURAL);
 		assertNotNull(mods);
 	}
 	

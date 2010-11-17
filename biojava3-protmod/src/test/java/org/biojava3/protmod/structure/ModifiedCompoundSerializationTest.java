@@ -41,7 +41,7 @@ import org.biojava.bio.structure.Chain;
 import org.biojava.bio.structure.Structure;
 
 import org.biojava3.protmod.ModificationCategory;
-import org.biojava3.protmod.ProteinModification;
+import org.biojava3.protmod.ProteinModificationRegistry;
 import org.biojava3.protmod.io.ModifiedCompoundXMLConverter;
 import org.biojava3.protmod.structure.ProteinModificationIdentifier;
 
@@ -152,7 +152,7 @@ public class ModifiedCompoundSerializationTest extends TestCase {
 
 			for (Chain c : struc.getChains()) {
 
-				parser.identify(c, ProteinModification.allModifications());
+				parser.identify(c, ProteinModificationRegistry.allModifications());
 				Set<ModifiedCompound> mcs = parser.getIdentifiedModifiedCompound();
 
 				for (ModifiedCompound mc : mcs){
