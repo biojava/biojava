@@ -107,36 +107,27 @@ public class ProteinModificationRegistry {
 	 * Register a new ProteinModification.
 	 */
 	public static void register(final ProteinModification modification) {
-		String id = modification.getId();		
-		if ( id == null) throw new IllegalArgumentException("id == null!");
-		
-		ModificationCategory cat = modification.getCategory();
-		if ( cat == null) throw new IllegalArgumentException("cat == null!");
-		
-		ModificationOccurrenceType occType = modification.getOccurrenceType();
-		if ( occType == null) throw new IllegalArgumentException("occType == null!");
-		
-		ModificationCondition condition = modification.getCondition();
-		if ( condition == null) throw new IllegalArgumentException("condition == null!");
-				
-		List<Component> comps = condition.getComponents();
-		if (comps==null || comps.isEmpty()) {
-			throw new IllegalArgumentException("At least one component for" +
-				" a modification.");
-		}
+		if (modification==null) throw new IllegalArgumentException("modification == null!");
 		
 		lazyInit();
-		
+
+		String id = modification.getId();
 		if (byId.containsKey(id)) {
 			throw new IllegalArgumentException(id+" has already been registered.");
 		}
 		
-		
 		registry.add(modification);
 		byId.put(id, modification);
-		byCategory.get(cat).add(modification);
-		byOccurrenceType.get(occType).add(modification);
 		
+		ModificationCategory cat = modification.getCategory();
+		byCategory.get(cat).add(modification);
+		
+		ModificationOccurrenceType occType = modification.getOccurrenceType();
+		byOccurrenceType.get(occType).add(modification);
+
+		
+		ModificationCondition condition = modification.getCondition();
+		List<Component> comps = condition.getComponents();
 		for (Component comp:comps) {
 			Set<ProteinModification> mods = byComponent.get(comp);
 			if (mods==null) {
@@ -184,8 +175,44 @@ public class ProteinModificationRegistry {
 			}
 			mods.add(modification);
 		}
+	}
+	
+	/**
+	 * Remove a modification from registry.
+	 * @param mod
+	 */
+	public static void unregister(ProteinModification modification) {
+		if (modification==null) throw new IllegalArgumentException("modification == null!");
 		
+		registry.remove(modification);
 		
+		byId.remove(modification.getId());
+		
+		Set<ProteinModification> mods;
+		
+		mods = byResidId.get(modification.getResidId());
+		if (mods!=null) mods.remove(modification);
+		
+		mods = byPsimodId.get(modification.getPsimodId());
+		if (mods!=null) mods.remove(modification);
+		
+		mods = byPdbccId.get(modification.getPdbccId());
+		if (mods!=null) mods.remove(modification);
+		
+		for (String keyword : modification.getKeywords()) {
+			mods = byKeyword.get(keyword);
+			if (mods!=null) mods.remove(modification);
+		}
+		
+		ModificationCondition condition = modification.getCondition();
+		List<Component> comps = condition.getComponents();
+		for (Component comp : comps) {
+			mods = byComponent.get(comp);
+			if (mods!=null) mods.remove(modification);
+		}
+		
+		byCategory.get(modification.getCategory()).remove(modification);
+		byOccurrenceType.get(modification.getOccurrenceType()).remove(modification);
 	}
 	
 	/**

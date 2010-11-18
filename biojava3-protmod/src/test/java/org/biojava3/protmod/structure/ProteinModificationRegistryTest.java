@@ -37,7 +37,6 @@ import org.biojava3.protmod.ModificationConditionImpl;
 import org.biojava3.protmod.ModificationLinkage;
 import org.biojava3.protmod.ModificationOccurrenceType;
 import org.biojava3.protmod.ProteinModification;
-import org.biojava3.protmod.ProteinModificationBuilder;
 import org.biojava3.protmod.ProteinModificationImpl;
 import org.biojava3.protmod.ProteinModificationRegistry;
 
@@ -60,18 +59,18 @@ public class ProteinModificationRegistryTest extends TestCase {
 		ModificationCondition condition = new ModificationConditionImpl(components, 
 				Collections.singletonList(linkage));
 		
-		ProteinModification mod = new ProteinModificationImpl("TEST", 
+		ProteinModification mod = new ProteinModificationImpl.Builder("TEST", 
 				ModificationCategory.CROSS_LINK_2,
 				ModificationOccurrenceType.NATURAL,
-				condition);
-		ProteinModificationBuilder builder = new ProteinModificationBuilder(mod);
-		builder.setDescription("TEST")
+				condition)
+			.setDescription("TEST")
 			.setFormula("TEST")
 			.setResidId("TEST")
 			.setResidName("TEST")
 			.setPsimodId("TEST")
 			.setPsimodName("TEST")
-			.setSystematicName("TEST");
+			.setSystematicName("TEST")
+			.build();
 		
 		
 		ProteinModificationRegistry.register(mod);

@@ -35,34 +35,6 @@ import java.util.Set;
  */
 public interface ProteinModification {
 
-	public void setId(String id);
-
-	public void setPdbccId(String pdbccId);
-
-	public void setPdbccName(String pdbccName);
-
-	public void setResidId(String residId);
-
-	public void setResidName(String residName);
-
-	public void setPsimodId(String psimodId);
-
-	public void setPsimodName(String psimodName);
-
-	public void setFormula(String formula);
-
-	public void setDescription(String description);
-
-	public void setSystematicName(String sysName);
-
-	public void addKeyword(String keyword);
-
-	public void setCondition(ModificationCondition condition);
-
-	public void setCategory(ModificationCategory category);
-
-	public void setOccurrenceType(ModificationOccurrenceType occurrenceType);
-
 	/**
 	 * 
 	 * @return modification id.

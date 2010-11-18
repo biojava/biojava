@@ -151,32 +151,8 @@ implements ModifiedCompound {
 			cat = ModificationCategory.CROSS_LINK_8_OR_LARGE; break;
 		}
 		
-		ProteinModification mod = new ProteinModificationImpl(modification);
-		mod.setCategory(cat);
-		for (String lig : ligands)
-			mod.addKeyword(lig);
-		return mod;
-
-//		String newId = modification.getId() + "." + cat.name();
-//
-//		ProteinModification mod = ProteinModification.getById(newId);
-//		if (mod != null) {
-//			return mod;
-//		}
-//		
-//		return ProteinModification.register(newId,
-//				cat, modification.getOccurrenceType(), modification.getCondition())
-//				.addKeywords(modification.getKeywords())
-//				.setDescription(modification.getDescription())
-//				.setFormula(modification.getFormula())
-//				.setPdbccId(modification.getPdbccId())
-//				.setPdbccName(modification.getPdbccName())
-//				.setPsimodId(modification.getPdbccName())
-//				.setPsimodName(modification.getPsimodName())
-//				.setResidId(modification.getResidId())
-//				.setResidName(modification.getResidName())
-//				.setSystematicName(modification.getSystematicName())
-//				.asModification();
+		return new ProteinModificationImpl.Builder(modification)
+				.setCategory(cat).addKeywords(ligands).build();
 	}
 	
 	/**
