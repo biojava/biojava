@@ -17,7 +17,6 @@ import org.biojava3.core.sequence.compound.NucleotideCompound;
 import org.biojava3.core.sequence.storage.FourBitSequenceReader;
 import org.biojava3.core.sequence.storage.SingleCompoundSequenceReader;
 import org.biojava3.core.sequence.storage.TwoBitSequenceReader;
-import org.biojava3.core.sequence.template.ComplementCompound;
 import org.biojava3.core.sequence.template.CompoundSet;
 import org.biojava3.core.sequence.template.ProxySequenceReader;
 import org.biojava3.core.sequence.template.SequenceMixin;

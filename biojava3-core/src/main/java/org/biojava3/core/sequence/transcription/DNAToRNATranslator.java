@@ -10,7 +10,6 @@ import org.biojava3.core.sequence.template.AbstractCompoundTranslator;
 import org.biojava3.core.sequence.template.CompoundSet;
 import org.biojava3.core.sequence.template.ProxySequenceReader;
 import org.biojava3.core.sequence.template.Sequence;
-import org.biojava3.core.sequence.template.SequenceProxyView;
 import org.biojava3.core.sequence.views.RnaSequenceView;
 
 /**

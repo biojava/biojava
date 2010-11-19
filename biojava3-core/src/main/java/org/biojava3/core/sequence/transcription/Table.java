@@ -1,6 +1,5 @@
 package org.biojava3.core.sequence.transcription;
 
-import java.util.Arrays;
 import java.util.List;
 
 import org.biojava3.core.sequence.compound.AminoAcidCompound;

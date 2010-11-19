@@ -42,10 +42,7 @@ import org.biojava3.core.sequence.features.FeaturesKeyWordInterface;
 import org.biojava3.core.sequence.location.SequenceLocation;
 import org.biojava3.core.sequence.location.SimpleLocation;
 import org.biojava3.core.sequence.location.template.Location;
-
 import org.biojava3.core.sequence.storage.ArrayListSequenceReader;
-import org.biojava3.core.sequence.views.ComplementSequenceView;
-import org.biojava3.core.sequence.views.ReversedSequenceView;
 
 public abstract class AbstractSequence<C extends Compound> implements Sequence<C> {
 
@@ -118,7 +115,7 @@ public abstract class AbstractSequence<C extends Compound> implements Sequence<C
     }
 
     public ProxySequenceReader<C> getProxySequenceReader(){
-        return (ProxySequenceReader)sequenceStorage;
+        return (ProxySequenceReader<C>)sequenceStorage;
     }
 
     /**
