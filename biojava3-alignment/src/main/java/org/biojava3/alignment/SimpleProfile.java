@@ -34,7 +34,6 @@ import org.biojava3.alignment.template.Profile;
 import org.biojava3.alignment.template.ProfileView;
 import org.biojava3.alignment.template.SubstitutionMatrix;
 import org.biojava3.core.sequence.AccessionID;
-import org.biojava3.core.sequence.Strand;
 import org.biojava3.core.sequence.compound.AmbiguityDNACompoundSet;
 import org.biojava3.core.sequence.compound.AmbiguityRNACompoundSet;
 import org.biojava3.core.sequence.compound.AminoAcidCompound;
@@ -643,7 +642,7 @@ public class SimpleProfile<S extends Sequence<C>, C extends Compound> implements
 
 	}
 
-	protected static SubstitutionMatrix<AminoAcidCompound> matrix = SubstitutionMatrixHelper.getBlosum65();
+	protected static final SubstitutionMatrix<AminoAcidCompound> matrix = SubstitutionMatrixHelper.getBlosum65();
 
 	private boolean isSimilar(char c1, char c2) {
 
