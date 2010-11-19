@@ -62,8 +62,10 @@ public abstract class AbstractSequence<C extends Compound> implements Sequence<C
     private Double sequenceScore = null;
     private FeaturesKeyWordInterface featuresKeyWord = null;
     private DatabaseReferenceInterface databaseReferences = null;
-    private ArrayList<FeatureInterface> features = new ArrayList<FeatureInterface>();
-    private LinkedHashMap<String, ArrayList<FeatureInterface>> groupedFeatures = new LinkedHashMap<String, ArrayList<FeatureInterface>>();
+    private ArrayList<FeatureInterface<AbstractSequence<C>, C>> features =
+            new ArrayList<FeatureInterface<AbstractSequence<C>, C>>();
+    private LinkedHashMap<String, ArrayList<FeatureInterface<AbstractSequence<C>, C>>> groupedFeatures =
+            new LinkedHashMap<String, ArrayList<FeatureInterface<AbstractSequence<C>, C>>>();
 
     public AbstractSequence() {
     }
@@ -299,11 +301,12 @@ public abstract class AbstractSequence<C extends Compound> implements Sequence<C
      * @param bioSequencePosition
      * @return
      */
-    public List<FeatureInterface> getFeatures(String featureType, int bioSequencePosition) {
-        ArrayList<FeatureInterface> featureHits = new ArrayList<FeatureInterface>();
-        List<FeatureInterface> features = getFeaturesByType(featureType);
+    public List<FeatureInterface<AbstractSequence<C>, C>> getFeatures(String featureType, int bioSequencePosition) {
+        ArrayList<FeatureInterface<AbstractSequence<C>, C>> featureHits =
+                new ArrayList<FeatureInterface<AbstractSequence<C>, C>>();
+        List<FeatureInterface<AbstractSequence<C>, C>> features = getFeaturesByType(featureType);
         if (features != null) {
-            for (FeatureInterface feature : features) {
+            for (FeatureInterface<AbstractSequence<C>, C> feature : features) {
                 if (bioSequencePosition >= feature.getLocations().getStart().getPosition() && bioSequencePosition <= feature.getLocations().getEnd().getPosition()) {
                     featureHits.add(feature);
                 }
@@ -318,10 +321,11 @@ public abstract class AbstractSequence<C extends Compound> implements Sequence<C
      * @param bioSequencePosition
      * @return
      */
-    public List<FeatureInterface> getFeatures(int bioSequencePosition) {
-        ArrayList<FeatureInterface> featureHits = new ArrayList<FeatureInterface>();
+    public List<FeatureInterface<AbstractSequence<C>, C>> getFeatures(int bioSequencePosition) {
+        ArrayList<FeatureInterface<AbstractSequence<C>, C>> featureHits =
+                new ArrayList<FeatureInterface<AbstractSequence<C>, C>>();
         if (features != null) {
-            for (FeatureInterface feature : features) {
+            for (FeatureInterface<AbstractSequence<C>, C> feature : features) {
                 if (bioSequencePosition >= feature.getLocations().getStart().getPosition() && bioSequencePosition <= feature.getLocations().getEnd().getPosition()) {
                     featureHits.add(feature);
                 }
@@ -330,7 +334,7 @@ public abstract class AbstractSequence<C extends Compound> implements Sequence<C
         return featureHits;
     }
 
-    public List<FeatureInterface> getFeatures() {
+    public List<FeatureInterface<AbstractSequence<C>, C>> getFeatures() {
         return features;
     }
 
@@ -341,7 +345,7 @@ public abstract class AbstractSequence<C extends Compound> implements Sequence<C
      * @param bioEnd
      * @param feature
      */
-    public void addFeature(int bioStart, int bioEnd, FeatureInterface feature) {
+    public void addFeature(int bioStart, int bioEnd, FeatureInterface<AbstractSequence<C>, C> feature) {
         SequenceLocation<AbstractSequence<C>, C> sequenceLocation =
                 new SequenceLocation<AbstractSequence<C>, C>(bioStart, bioEnd, this);
         feature.setLocation(sequenceLocation);
@@ -354,11 +358,11 @@ public abstract class AbstractSequence<C extends Compound> implements Sequence<C
      * in SequenceFeaturePanel
      * @param feature
      */
-    public void addFeature(FeatureInterface feature) {
+    public void addFeature(FeatureInterface<AbstractSequence<C>, C> feature) {
         features.add(feature);
-        ArrayList<FeatureInterface> featureList = groupedFeatures.get(feature.getType());
+        ArrayList<FeatureInterface<AbstractSequence<C>, C>> featureList = groupedFeatures.get(feature.getType());
         if (featureList == null) {
-            featureList = new ArrayList<FeatureInterface>();
+            featureList = new ArrayList<FeatureInterface<AbstractSequence<C>, C>>();
             groupedFeatures.put(feature.getType(), featureList);
         }
         featureList.add(feature);
@@ -370,9 +374,9 @@ public abstract class AbstractSequence<C extends Compound> implements Sequence<C
      * Remove a feature from the sequence
      * @param feature
      */
-    public void removeFeature(FeatureInterface feature) {
+    public void removeFeature(FeatureInterface<AbstractSequence<C>, C> feature) {
         features.remove(feature);
-        ArrayList<FeatureInterface> featureList = groupedFeatures.get(feature.getType());
+        ArrayList<FeatureInterface<AbstractSequence<C>, C>> featureList = groupedFeatures.get(feature.getType());
         if (featureList != null) {
             featureList.remove(feature);
             if (featureList.isEmpty()) {
@@ -381,10 +385,10 @@ public abstract class AbstractSequence<C extends Compound> implements Sequence<C
         }
     }
 
-    public List<FeatureInterface> getFeaturesByType(String type) {
-        List<FeatureInterface> features = groupedFeatures.get(type);
+    public List<FeatureInterface<AbstractSequence<C>, C>> getFeaturesByType(String type) {
+        List<FeatureInterface<AbstractSequence<C>, C>> features = groupedFeatures.get(type);
         if(features == null)
-            features = new ArrayList<FeatureInterface>();
+            features = new ArrayList<FeatureInterface<AbstractSequence<C>, C>>();
         return features;
     }
 
