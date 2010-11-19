@@ -30,6 +30,8 @@ import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.WindowAdapter;
@@ -42,7 +44,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.Box;
+import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JMenuBar;
 import javax.swing.JTextField;
 
@@ -196,6 +201,7 @@ public class StructureAlignmentJmol implements MouseMotionListener, MouseListene
       vBox.add(jmolPanel);
 
 
+      /// USER SCRIPTING COMMAND
       JTextField field = new JTextField();
 
       field.setMaximumSize(new Dimension(Short.MAX_VALUE,30));   
@@ -205,10 +211,58 @@ public class StructureAlignmentJmol implements MouseMotionListener, MouseListene
       field.addActionListener(listener);
       field.addMouseListener(listener);
       field.addKeyListener(listener);
-
-
-
       vBox.add(field);
+      
+      
+      /// COMBO BOXES 
+      Box hBox1 = Box.createHorizontalBox();
+
+
+		String[] styles = new String[] { "Cartoon", "Backbone", "CPK", "Ball and Stick", "Ligands","Ligands and Pocket"};
+		JComboBox style = new JComboBox(styles);
+
+		hBox1.add(new JLabel("Style"));
+		hBox1.add(style);
+		vBox.add(hBox1);
+		contentPane.add(vBox);
+
+		style.addActionListener(jmolPanel);
+
+		String[] colorModes = new String[] { "Secondary Structure", "By Chain", "Rainbow", "By Element", "By Amino Acid", "Hydrophobicity" };
+		JComboBox colors = new JComboBox(colorModes);
+		colors.addActionListener(jmolPanel);
+		hBox1.add(Box.createGlue());
+		hBox1.add(new JLabel("Color"));
+		hBox1.add(colors);
+
+// CHeck boxes
+		
+		JCheckBox toggleSelection = new JCheckBox("Show Selection");
+		toggleSelection.addItemListener(
+			    new ItemListener() {
+					
+					public void itemStateChanged(ItemEvent e) {
+						  boolean showSelection = (e.getStateChange() == ItemEvent.SELECTED);
+						  
+						  if (showSelection){
+							  jmolPanel.executeCmd("set display selected");
+						  } else {
+							  jmolPanel.executeCmd("set display off");
+						  }
+						
+					}
+				}
+			);
+		
+		
+		Box hBox2 = Box.createHorizontalBox();
+		hBox2.add(toggleSelection);
+		
+		hBox2.add(Box.createGlue());
+		vBox.add(hBox2);	
+		
+      
+      // STATUS DISPLAY
 
       Box hBox = Box.createHorizontalBox();
 

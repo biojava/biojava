@@ -27,6 +27,10 @@ package org.biojava.bio.structure.align.gui.jmol;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Rectangle;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.JComboBox;
 
 
 
@@ -43,6 +47,7 @@ import org.jmol.api.JmolViewer;
 
 public class JmolPanel 
 extends JPrintPanel
+implements ActionListener
 {
 	private static final long serialVersionUID = -3661941083797644242L;
 
@@ -102,4 +107,115 @@ extends JPrintPanel
 		viewer.openStringInline(pdb);
 	}
 
+	/** assign a custom color to the Jmol chains command.
+	 * 
+	 */
+	public void jmolColorByChain(){
+		String script = 			
+			"function color_by_chain(objtype, color_list) {"+ String.format("%n") +
+			""+ String.format("%n") +
+			"		 if (color_list) {"+ String.format("%n") +
+			"		   if (color_list.type == \"string\") {"+ String.format("%n") +
+			"		     color_list = color_list.split(\",\").trim();"+ String.format("%n") +
+			"		   }"+ String.format("%n") +
+			"		 } else {"+ String.format("%n") +
+			"		   color_list = [\"104BA9\",\"AA00A2\",\"C9F600\",\"FFA200\",\"284A7E\",\"7F207B\",\"9FB82E\",\"BF8B30\",\"052D6E\",\"6E0069\",\"83A000\",\"A66A00\",\"447BD4\",\"D435CD\",\"D8FA3F\",\"FFBA40\",\"6A93D4\",\"D460CF\",\"E1FA71\",\"FFCC73\"];"+ String.format("%n") +
+			"		 }"+ String.format("%n") +
+
+			"		 var cmd2 = \"\";"+ String.format("%n") +
+
+			"		 if (!objtype) {"+ String.format("%n") +
+			"		   var type_list  = [ \"backbone\",\"cartoon\",\"dots\",\"halo\",\"label\",\"meshribbon\",\"polyhedra\",\"rocket\",\"star\",\"strand\",\"strut\",\"trace\"];"+ String.format("%n") +
+			"		   cmd2 = \"color \" + type_list.join(\" none; color \") + \" none;\";"+ String.format("%n") +
+			"		   objtype = \"atoms\";"+ String.format("%n") +
+
+			"		 }"+ String.format("%n") +
+
+			"		 var chain_list  = script(\"show chain\").trim().lines;"+ String.format("%n") +
+			"		 var chain_count = chain_list.length;"+ String.format("%n") +
+
+			"		 var color_count = color_list.length;"+ String.format("%n") +
+			"		 var sel = {selected};"+ String.format("%n") +
+			"		 var cmds = \"\";"+ String.format("%n") +
+
+
+			"		 for (var chain_number=1; chain_number<=chain_count; chain_number++) {"+ String.format("%n") +
+			"		   // remember, Jmol arrays start with 1, but % can return 0"+ String.format("%n") +
+			"		   cmds += \"select sel and :\" + chain_list[chain_number] + \";color \" + objtype + \" [x\" + color_list[(chain_number-1) % color_count + 1] + \"];\" + cmd2;"+ String.format("%n") +
+			"		 }"+ String.format("%n") +
+			"		 script INLINE @{cmds + \"select sel\"}"+ String.format("%n") +
+			"}";
+		
+		executeCmd(script);
+	}
+	
+	/** The user selected one of the Combo boxes...
+	 * 
+	 * @param arg0
+	 */
+	public void actionPerformed(ActionEvent event) {
+		JComboBox source = (JComboBox) event.getSource();
+		String value = source.getSelectedItem().toString();
+
+		String selectLigand = "select ligand;wireframe 0.16;spacefill 0.5; color cpk ;";
+
+		if ( value.equals("Cartoon")){
+			String script = "hide null; select all;  spacefill off; wireframe off; backbone off;" +
+			" cartoon on; " +
+			" select ligand; wireframe 0.16;spacefill 0.5; color cpk; " +
+			" select *.FE; spacefill 0.7; color cpk ; " +
+			" select *.CU; spacefill 0.7; color cpk ; " +
+			" select *.ZN; spacefill 0.7; color cpk ; " +
+			" select all; ";
+			this.executeCmd(script);
+		} else if (value.equals("Backbone")){
+			String script = "hide null; select all; spacefill off; wireframe off; backbone 0.4;" +
+			" cartoon off; " +
+			" select ligand; wireframe 0.16;spacefill 0.5; color cpk; " +
+			" select *.FE; spacefill 0.7; color cpk ; " +
+			" select *.CU; spacefill 0.7; color cpk ; " +
+			" select *.ZN; spacefill 0.7; color cpk ; " +
+			" select all; ";
+			this.executeCmd(script);
+		} else if (value.equals("CPK")){
+			String script = "hide null; select all; spacefill off; wireframe off; backbone off;" +
+			" cartoon off; cpk on;" +
+			" select ligand; wireframe 0.16;spacefill 0.5; color cpk; " +
+			" select *.FE; spacefill 0.7; color cpk ; " +
+			" select *.CU; spacefill 0.7; color cpk ; " +
+			" select *.ZN; spacefill 0.7; color cpk ; " +
+			" select all; ";
+			this.executeCmd(script);
+
+		} else if (value.equals("Ligands")){
+			this.executeCmd("restrict ligand; cartoon off; wireframe on;  display selected;");			
+		} else if (value.equals("Ligands and Pocket")){
+			this.executeCmd(" select within (6.0,ligand); cartoon off; wireframe on; backbone off; display selected; ");
+		} else if ( value.equals("Ball and Stick")){
+			String script = "hide null; restrict not water;  wireframe 0.2; spacefill 25%;" +
+			" cartoon off; backbone off; " +
+			" select ligand; wireframe 0.16; spacefill 0.5; color cpk; " +
+			" select *.FE; spacefill 0.7; color cpk ; " +
+			" select *.CU; spacefill 0.7; color cpk ; " +
+			" select *.ZN; spacefill 0.7; color cpk ; " +
+			" select all; ";
+			this.executeCmd(script);
+		} else if ( value.equals("By Chain")){
+			jmolColorByChain();
+			String script = "hide null; select all;set defaultColors Jmol; color_by_chain(\"cartoon\"); color_by_chain(\"\"); " + selectLigand + "; select all; ";
+			this.executeCmd(script);
+		} else if ( value.equals("Rainbow")) {
+			this.executeCmd("hide null; select all; set defaultColors Jmol; color group; color cartoon group; " + selectLigand + "; select all; " );
+		} else if ( value.equals("Secondary Structure")){
+			this.executeCmd("hide null; select all; set defaultColors Jmol; color structure; color cartoon structure;" + selectLigand + "; select all; " );
+			
+		} else if ( value.equals("By Element")){
+			this.executeCmd("hide null; select all; set defaultColors Jmol; color cpk; color cartoon cpk; " + selectLigand + "; select all; "); 
+		} else if ( value.equals("By Amino Acid")){
+			this.executeCmd("hide null; select all; set defaultColors Jmol; color amino; color cartoon amino; " + selectLigand + "; select all; " );
+		} else if ( value.equals("Hydrophobicity") ){
+			this.executeCmd("hide null; set defaultColors Jmol; select hydrophobic; color red; color cartoon red; select not hydrophobic ; color blue ; color cartoon blue; "+ selectLigand+"; select all; ");
+		}
+	}
+	
 }
