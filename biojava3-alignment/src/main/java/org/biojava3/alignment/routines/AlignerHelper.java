@@ -435,7 +435,7 @@ public class AlignerHelper {
      * @param sx steps for the query sequence (output)
      * @param sy steps for the target sequence (output)
      */
-    public static void setSteps(int[] anchors, List<Step> sx, List<Step> sy) {
+    public static int[] setSteps(int[] anchors, List<Step> sx, List<Step> sy) {
         for (int gap = anchors[0]; gap > 0; gap--) {
             sx.add(Step.GAP);
             sy.add(Step.COMPOUND);
@@ -454,6 +454,7 @@ public class AlignerHelper {
                 }
             }
         }
+        return new int[] {0, 0};
     }
 
     // finds alignment path through traceback matrix
