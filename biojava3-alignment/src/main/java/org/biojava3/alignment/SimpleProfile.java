@@ -517,11 +517,10 @@ public class SimpleProfile<S extends Sequence<C>, C extends Compound> implements
 			s.append("</pre></div>");
 			s.append("			<div class=\"subText\">");
 			s.append("			<b>Legend:</b>");
-			s.append("			<span class=\"m\">Green</span> - identical residues |"); 
-			s.append("			<span class=\"sm\">Orange</span> - similar residues | ");
-			s.append("			<span class=\"dm\">Red</span> - sequence mismatch |");
-			s.append("			<span class=\"qg\">Blue</span> - deletion |");
-			s.append("			<span class=\"sg\">Grey</span> - insertion   ");       
+			s.append("			<span class=\"m\">Black</span> - identical residues |"); 
+			s.append("			<span class=\"sm\">Pink</span> - similar residues | ");
+			s.append("			<span class=\"qg\">Blue</span> - sequence mismatch |");
+			s.append("			<span class=\"dm\">Brown</span> - insertion/deletion |");			       
 			s.append("		</div>");
 			s.append(String.format("%n"));
 
@@ -563,12 +562,10 @@ public class SimpleProfile<S extends Sequence<C>, C extends Compound> implements
 				s.append("<span class=\"m\">"+c+"</span>");                    			
 			else if (  isSimilar(c1,c2))  
 				s.append("<span class=\"sm\">"+c+"</span>");
-			else  if ( c1 == '-' && c2 != '-')
-				s.append("<span class=\"qg\">"+c+"</span>");
-			else  if ( c1 != '-' && c2 == '-')
-				s.append("<span class=\"sg\">"+c+"</span>");
-			else 
+			else  if ( c1 == '-' || c2 == '-')				
 				s.append("<span class=\"dm\">"+c+"</span>");
+			else 
+				s.append("<span class=\"qg\">"+c+"</span>");
 			
 		}
 		
@@ -619,12 +616,10 @@ public class SimpleProfile<S extends Sequence<C>, C extends Compound> implements
 						s.append("<span class=\"m\">|</span>");                    			
 					else if (  isSimilar(c1,c2))  
 						s.append("<span class=\"sm\">.</span>");
-					else  if ( c1 == '-' && c2 != '-')
-						s.append("<span class=\"qg\"> </span>");
-					else  if ( c1 != '-' && c2 == '-')
-						s.append("<span class=\"sg\"> </span>");
+					else  if ( c1 == '-' || c2 == '-')
+						s.append("<span class=\"dm\"> </span>");					
 					else 
-						s.append("<span class=\"dm\">&nbsp;</span>");
+						s.append("<span class=\"qg\">&nbsp;</span>");
 				} else {
 					if ( c1 == c2) 
 						s.append("|");                    			
