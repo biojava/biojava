@@ -192,7 +192,6 @@ public class AlignerHelper {
      * next subproblem and this method returns {@code null}.
      *
      * @param anchors current list of anchors
-     * @param targetLength length of the target sequence
      * @return the coordinates for the next subproblem
      */
     public static int[] getNextSubproblem(int[] anchors) {
