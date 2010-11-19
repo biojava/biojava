@@ -27,12 +27,15 @@ package org.biojava.bio.structure.gui;
 
 import java.awt.Container;
 import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
 import javax.swing.Box;
+import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
@@ -88,7 +91,7 @@ public class BiojavaJmol  {
 			// send some RASMOL style commands to Jmol
 			jmolPanel.evalString("select * ; color chain;");
 			jmolPanel.evalString("select *; spacefill off; wireframe off; backbone 0.4;  ");
-
+			jmolPanel.evalString("save STATE state_1");
 		} catch (Exception e){
 			e.printStackTrace();
 		}
@@ -155,7 +158,22 @@ public class BiojavaJmol  {
 		hBox1.add(new JLabel("Color"));
 		hBox1.add(colors);
 		
-		// CHeck boxes
+		// Check boxes
+		Box hBox2 = Box.createHorizontalBox();
+		
+		
+		JButton resetDisplay = new JButton("Reset Display");
+		
+		resetDisplay.addActionListener(new ActionListener() {
+			
+			public void actionPerformed(ActionEvent e) {
+				System.out.println("reset!!");
+				jmolPanel.executeCmd("restore STATE state_1");
+				
+			}
+		});
+		
+		hBox2.add(resetDisplay); hBox2.add(Box.createGlue());
 		
 		JCheckBox toggleSelection = new JCheckBox("Show Selection");
 		toggleSelection.addItemListener(
@@ -175,7 +193,7 @@ public class BiojavaJmol  {
 			);
 		
 		
-		Box hBox2 = Box.createHorizontalBox();
+		
 		hBox2.add(toggleSelection);
 		
 		hBox2.add(Box.createGlue());
@@ -241,7 +259,7 @@ public class BiojavaJmol  {
 		// access the biojava structure object, but they require more
 		// code. See the SPICE code repository for how to do this.
 
-
+		
 
 
 	}

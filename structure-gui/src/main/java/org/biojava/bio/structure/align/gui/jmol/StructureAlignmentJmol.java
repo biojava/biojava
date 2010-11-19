@@ -44,6 +44,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.Box;
+import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
@@ -216,7 +217,7 @@ public class StructureAlignmentJmol implements MouseMotionListener, MouseListene
       
       /// COMBO BOXES 
       Box hBox1 = Box.createHorizontalBox();
-
+      hBox1.add(Box.createGlue());
 
 		String[] styles = new String[] { "Cartoon", "Backbone", "CPK", "Ball and Stick", "Ligands","Ligands and Pocket"};
 		JComboBox style = new JComboBox(styles);
@@ -236,6 +237,22 @@ public class StructureAlignmentJmol implements MouseMotionListener, MouseListene
 		hBox1.add(colors);
 
 // CHeck boxes
+		Box hBox2 = Box.createHorizontalBox();
+		
+		JButton resetDisplay = new JButton("Reset Display");
+		
+		resetDisplay.addActionListener(new ActionListener() {
+			
+			public void actionPerformed(ActionEvent e) {
+				System.out.println("reset!!");
+				jmolPanel.executeCmd("restore STATE state_1");
+				
+			}
+		});
+		
+		hBox2.add(resetDisplay); 
+		hBox2.add(Box.createGlue());
+		
 		
 		JCheckBox toggleSelection = new JCheckBox("Show Selection");
 		toggleSelection.addItemListener(
@@ -255,7 +272,7 @@ public class StructureAlignmentJmol implements MouseMotionListener, MouseListene
 			);
 		
 		
-		Box hBox2 = Box.createHorizontalBox();
+		
 		hBox2.add(toggleSelection);
 		
 		hBox2.add(Box.createGlue());
@@ -333,9 +350,9 @@ public class StructureAlignmentJmol implements MouseMotionListener, MouseListene
    public void setAtoms(Atom[] atoms){
       Structure s = new StructureImpl();
       Chain c = new ChainImpl();
-      c.setName("A");
+      c.setChainID("A");
       for (Atom a: atoms){
-         c.addGroup(a.getParent());
+         c.addGroup(a.getGroup());
       }
       s.addChain(c);
       setStructure(s);
@@ -696,6 +713,7 @@ public class StructureAlignmentJmol implements MouseMotionListener, MouseListene
          String script = getJmolString( afpChain,ca1,ca2);
          //System.out.println(j.toString());
          evalString(script);
+         jmolPanel.evalString("save STATE state_1");
       }
    }
 

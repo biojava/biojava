@@ -104,7 +104,8 @@ implements ActionListener
 	public void setStructure(Structure s)
 	{
 		String pdb = s.toPDB();
-		viewer.openStringInline(pdb);
+		viewer.openStringInline(pdb);		
+		evalString("save STATE state_1");
 	}
 
 	/** assign a custom color to the Jmol chains command.
