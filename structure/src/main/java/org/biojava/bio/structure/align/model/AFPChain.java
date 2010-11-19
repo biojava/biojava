@@ -1141,7 +1141,7 @@ public class AFPChain implements Serializable, Cloneable
 	}
 
 	public double getIdentity() {
-		if ( identity < 0)
+		if ( identity <= 0)
 			calcSimilarity();
 		return identity;
 	}
