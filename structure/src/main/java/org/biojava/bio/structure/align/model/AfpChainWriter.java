@@ -391,10 +391,7 @@ public class AfpChainWriter
 
 	}
 
-	private static String toPrettyAlignment(AFPChain afpChain, Atom[] ca1, Atom[] ca2)
-	{
-		return toPrettyAlignment(afpChain, ca1, ca2, false);
-	}
+	
 
 	private static String toPrettyAlignment(AFPChain afpChain, Atom[] ca1, Atom[] ca2, boolean showHTML) {
 		String name1 = afpChain.getName1();
