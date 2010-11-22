@@ -224,10 +224,7 @@
 	</reporting>
 
 	<modules>
-		
-		<module>blast</module>		
-		<module>sequencing</module>
-		<module>phylo</module>
+				
 		<module>biojava3-core</module>
 		<module>biojava3-phylo</module>
 		<module>structure</module>
