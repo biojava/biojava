@@ -225,8 +225,7 @@
 
 	<modules>
 		
-		<module>blast</module>
-		<module>das</module>
+		<module>blast</module>		
 		<module>sequencing</module>
 		<module>phylo</module>
 		<module>biosql</module>
