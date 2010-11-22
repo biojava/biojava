@@ -224,8 +224,7 @@
 	</reporting>
 
 	<modules>
-		<module>core</module>
-		<module>alignment</module>
+		
 		<module>blast</module>
 		<module>das</module>
 		<module>sequencing</module>
