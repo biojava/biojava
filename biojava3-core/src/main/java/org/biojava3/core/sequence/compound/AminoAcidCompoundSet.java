@@ -107,7 +107,7 @@ public class AminoAcidCompoundSet implements CompoundSet<AminoAcidCompound> {
         return 1;
     }
 
-    @Override
+
     public boolean isCompoundStringLengthEqual() {
         return true;
     }
@@ -189,7 +189,7 @@ public class AminoAcidCompoundSet implements CompoundSet<AminoAcidCompound> {
         return new ArrayList<AminoAcidCompound>(aminoAcidCompoundCache.values());
     }
 
-    @Override
+
     public boolean isComplementable() {
         return false;
     }
