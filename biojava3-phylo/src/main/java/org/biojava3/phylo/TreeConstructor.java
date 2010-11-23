@@ -84,10 +84,10 @@ public class TreeConstructor<C extends AbstractSequence<D>, D extends Compound> 
 
     private double[][] calculateDistanceMatrix(MultipleSequenceAlignment<C, D> multipleSequenceAlignment, TreeConstructionAlgorithm tca) {
         updateProgress("Determing Distances", 0);
-        int numberOfSequences = multipleSequenceAlignment.getNumberOfSequences();
+        int numberOfSequences = multipleSequenceAlignment.getSize();
         String[] sequenceString = new String[numberOfSequences];
-        for (int i = 0; i < multipleSequenceAlignment.getNumberOfSequences(); i++) {
-            sequenceString[i] = multipleSequenceAlignment.getSequence(i).getSequenceAsString();
+        for (int i = 0; i < multipleSequenceAlignment.getSize(); i++) {
+            sequenceString[i] = multipleSequenceAlignment.getAlignedSequence(i).getSequenceAsString();
 
         }
 
@@ -174,9 +174,9 @@ public class TreeConstructor<C extends AbstractSequence<D>, D extends Compound> 
 
         if (matrix == null) {
             double[][] distances = calculateDistanceMatrix(multipleSequenceAlignment, treeConstructionAlgorithm);
-            matrix = new BasicSymmetricalDistanceMatrix(multipleSequenceAlignment.getNumberOfSequences());
+            matrix = new BasicSymmetricalDistanceMatrix(multipleSequenceAlignment.getSize());
             for (int i = 0; i < matrix.getSize(); i++) {
-                matrix.setIdentifier(i, multipleSequenceAlignment.getSequence(i).getAccession().getID());
+                matrix.setIdentifier(i, multipleSequenceAlignment.getAlignedSequence(i).getAccession().getID());
             }
             for (int col = 0; col < matrix.getSize(); col++) {
                 for (int row = 0; row < matrix.getSize(); row++) {
