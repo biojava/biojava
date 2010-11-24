@@ -4,11 +4,11 @@
   <parent>
     <artifactId>biojava</artifactId>
     <groupId>org.biojava</groupId>
-    <version>3.0-beta2-SNAPSHOT</version>
+    <version>3.0-beta1-SNAPSHOT</version>
   </parent>
   <groupId>org.biojava</groupId>
   <artifactId>biojava3-protmod</artifactId>  
-  <version>3.0-beta2-SNAPSHOT</version>
+  <version>3.0-beta1-SNAPSHOT</version>
   <name>biojava3-protmod</name>
    <distributionManagement>
 		<downloadUrl>http://www.biojava.org/download/maven/</downloadUrl>
@@ -36,7 +36,7 @@
     <dependency>
     	<groupId>org.biojava</groupId>
     	<artifactId>biojava3-structure</artifactId>
-    	<version>3.0-beta2-SNAPSHOT</version>
+    	<version>3.0-beta1</version>
     	<type>jar</type>
     	<scope>compile</scope>
     </dependency>
