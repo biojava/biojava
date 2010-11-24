@@ -210,7 +210,7 @@ public class SequenceDisplay extends JPanel implements ChangeListener {
 				RES_MIN, RES_MAX, RES_INIT);
 		residueSizeSlider.setInverted(true);
 		//residueSizeSlider.setMajorTickSpacing(5);
-		//residueSizeSl¤ider.setMinorTickSpacing(2);
+		//residueSizeSlider.setMinorTickSpacing(2);
 		residueSizeSlider.setPaintTicks(false);
 		residueSizeSlider.setPaintLabels(false);
 		residueSizeSlider.addChangeListener(this);
