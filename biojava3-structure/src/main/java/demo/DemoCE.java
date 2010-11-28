@@ -38,6 +38,11 @@ import org.biojava.bio.structure.align.util.AtomCache;
 import org.biojava.bio.structure.align.xml.AFPChainXMLConverter;
 
 
+/** Example of how to run a structure alignment using the CE algorithm.
+ * 
+ * @author Andreas Prlic
+ *
+ */
 public class DemoCE {
 
 	public static void main(String[] args){
