@@ -35,6 +35,11 @@ import org.biojava.bio.structure.io.PDBFileReader;
 import org.biojava3.core.util.InputStreamProvider;
 
 
+/** Example for how to load protein structures (from PDB files).
+ * 
+ * @author Andreas Prlic
+ *
+ */
 public class DemoLoadStructure
 {
 
