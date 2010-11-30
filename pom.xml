@@ -13,6 +13,13 @@
 		<name>BioJava</name>
 		<url>http://www.biojava.org</url>
 	</organization>
+	<licenses>
+   <license>
+    <name>GNU LGPL v2</name>
+    <url>http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt</url>
+    <distribution>repo</distribution>
+  </license>
+  </licenses>
 	<scm>
 		<connection>scm:svn:svn://code.open-bio.org/biojava/biojava-live/trunk</connection>
 		<developerConnection>scm:svn:svn+ssh://dev.open-bio.org/home/svn-repositories/biojava/biojava-live/trunk</developerConnection>
