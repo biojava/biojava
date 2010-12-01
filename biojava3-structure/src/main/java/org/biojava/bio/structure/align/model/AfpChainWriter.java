@@ -253,13 +253,13 @@ public class AfpChainWriter
 					char c2 = lseq2.charAt(pos);
 					char cl = lsymb.charAt(pos);
 
-					if ( c1 == c2 ){
+					if ( cl != ' ' ){
 						
 						a += "<span class=\"m\">" + c1 + "</span>";
 						b += "<span class=\"m\">" + c2 + "</span>";
 						c += "<span class=\"m\">" + cl + "</span>";
 					
-					} else if ( cl != ' ') {
+					} else if ( c1 != '-' && c2 != '-') {
 					
 						a += "<span class=\"sm\">" + c1 + "</span>";
 						b += "<span class=\"sm\">" + c2 + "</span>";
@@ -341,7 +341,6 @@ public class AfpChainWriter
 				txt.append("Note: positions are from PDB; the numbers between alignments are block index");
 			}
 			txt.append(newline);
-			
 			
 		}
 		return txt.toString();
