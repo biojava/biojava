@@ -56,14 +56,14 @@ public class TestAtomCache extends TestCase
          
          assertTrue(s.getChains().size() == 1);
          Chain c = s.getChainByPDB(chainId2);
-         assertEquals(c.getName(),chainId2);
+         assertEquals(c.getChainID(),chainId2);
          
          s = cache.getStructure(name3);
          assertNotNull(s);
          assertTrue(s.getChains().size() == 1);
          
          c = s.getChainByPDB(chainId3);
-         assertEquals(c.getName(),chainId3);
+         assertEquals(c.getChainID(),chainId3);
          
          s = cache.getStructure(name4);
          assertNotNull(s);

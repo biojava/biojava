@@ -119,7 +119,7 @@ public class Test1a4w extends TestCase{
 		Chain c = chains.get(2);
 		assertEquals("1a4w third chain should be I. " , c.getChainID(), "I");
 
-		System.out.println(structure);
+		//System.out.println(structure);
 		assertTrue("chain " + a.getChainID() + " length should be 26. was: " + a.getAtomGroups(GroupType.AMINOACID).size(), ( a.getAtomGroups(GroupType.AMINOACID).size() == 26 ) );
 
 		assertTrue("chain " + a.getChainID() + " seqres length should be 36. was: " + a.getSeqResLength(), a.getSeqResLength() == 36);
@@ -133,8 +133,6 @@ public class Test1a4w extends TestCase{
 		assertTrue("chain " + c.getChainID() + " seqres length should be 12. was: " + c.getSeqResLength(), c.getSeqResLength() == 12);
 
 		assertEquals("chain " + c.getChainID() + " seqres sequences is not correct!", "NGDFEEIPEEYL", c.getSeqResSequence());
-
-
 	}
 
 	private void testEqualChains(Chain a,Chain b){
@@ -178,9 +176,10 @@ public class Test1a4w extends TestCase{
 
 			assertTrue("Did not find 2EP in ligands list!", twoepPresent);
 
-			//System.out.println(ligands);
+			//System.out.println("LIGANDS:" + ligands);
 			assertEquals("Did not find the correct nr of ligands in chain! " , 6,ligands.size());
 		} catch (Exception e){
+			e.printStackTrace();
 			fail(e.getMessage());
 		}
 
@@ -203,7 +202,7 @@ public class Test1a4w extends TestCase{
 //				System.out.println("No structure set");
 //			}
 			List<Site> sites = s.getSites();
-			System.out.println("sites " + sites);
+			//System.out.println("sites " + sites);
 			assertEquals(7, sites.size());
 
 			boolean noWater = true;
@@ -218,7 +217,7 @@ public class Test1a4w extends TestCase{
 						String pdbName = g.getPDBName();
 						if ( pdbName.equals("DAR")) {
 							darPresent = true;
-							System.out.println("darPresent");
+							//System.out.println("darPresent");
 						}
 						else if ( pdbName.equals("GLY"))
 							glyPresent = true;

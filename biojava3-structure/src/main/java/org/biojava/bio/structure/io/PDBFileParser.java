@@ -65,6 +65,7 @@ import org.biojava.bio.structure.StructureException;
 import org.biojava.bio.structure.StructureImpl;
 import org.biojava.bio.structure.StructureTools;
 import org.biojava.bio.structure.io.mmcif.ChemCompGroupFactory;
+import org.biojava.bio.structure.io.mmcif.ReducedChemCompProvider;
 
 
 /**
@@ -3038,6 +3039,9 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 	public void setFileParsingParameters(FileParsingParameters params)
 	{
 		this.params= params;
+		if ( !params.isLoadChemCompInfo()) {
+			ChemCompGroupFactory.setChemCompProvider(new ReducedChemCompProvider());
+		}
 
 	}
 

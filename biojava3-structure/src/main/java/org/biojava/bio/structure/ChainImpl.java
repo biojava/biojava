@@ -704,11 +704,11 @@ public class ChainImpl implements Chain, Serializable {
 	}
 
 	private List<Group> getLigands(List<Group> allGroups){
-		String prop = System.getProperty(PDBFileReader.LOAD_CHEM_COMP_PROPERTY);
+		//String prop = System.getProperty(PDBFileReader.LOAD_CHEM_COMP_PROPERTY);
 
-		if ( prop == null || ( ! prop.equalsIgnoreCase("true"))){
-			System.err.println("You did not specify PDBFileReader.setLoadChemCompInfo, need to fetch Chemical Components anyways.");
-		}
+//		if ( prop == null || ( ! prop.equalsIgnoreCase("true"))){
+//			System.err.println("You did not specify PDBFileReader.setLoadChemCompInfo, need to fetch Chemical Components anyways.");
+//		}
 
 
 		
@@ -716,9 +716,7 @@ public class ChainImpl implements Chain, Serializable {
 		for ( Group g: allGroups) {
 
 			ChemComp cc = g.getChemComp();
-
-
-
+			
 			if ( ResidueType.lPeptideLinking.equals(cc.getResidueType()) ||
 					PolymerType.PROTEIN_ONLY.contains(cc.getPolymerType()) ||
 					PolymerType.POLYNUCLEOTIDE_ONLY.contains(cc.getPolymerType())
