@@ -26,6 +26,10 @@ import org.biojava3.core.util.Equals;
 import org.biojava3.core.util.Hashcoder;
 
 /**
+ * Used in Sequences as the unique indentifier. If possible, set the {@link DataSource} to know the
+ * source of the id. This allows a SequenceProxy to gather features or related sequences
+ * Protein->Gene as an example. When parsing a Blast file it is also possible
+ * to identify the type of ID
  *
  * @author Scooter Willis
  */
@@ -34,16 +38,29 @@ public class AccessionID {
     private String id = null;
     private DataSource source = DataSource.LOCAL;
 
+    /**
+     *
+     */
+
     public AccessionID(){
         id = "";
         
     }
 
+    /**
+     *
+     * @param id
+     */
     public AccessionID(String id) {
         this.id = id.trim();
         this.source = DataSource.LOCAL;
     }
 
+    /**
+     *
+     * @param id
+     * @param source
+     */
     public AccessionID(String id, DataSource source) {
         this.id = id.trim();
         this.source = source;

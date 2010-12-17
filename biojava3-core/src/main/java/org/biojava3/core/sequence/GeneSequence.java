@@ -46,6 +46,14 @@ public class GeneSequence extends DNASequence {
     private ChromosomeSequence chromosomeSequence;
 
     /**
+     * A class that keeps track of the details of a GeneSequence which is difficult to properly model. Two important concepts that is difficult
+     * to make everything flexible but still work. You can have GFF features that only describe Exons or Exons/Introns or CDS regions and one
+     * or more Transcriptions. You can have exon sequences but that does not imply transcription to the actual protein.
+     *
+     * The GeneSequence will keep track of Exons and Introns but to get a Protein sequence you need to start with a
+     * TranscriptSequence and then add CDS sequences.
+     *
+     * This is also a key class in the biojava-3-genome module for reading and writing GFF3 files
      *
      * @param parentDNASequence
      * @param begin
@@ -60,10 +68,20 @@ public class GeneSequence extends DNASequence {
         setStrand(strand);
     }
 
+     /**
+      * The parent ChromosomeSequence which contains the actual DNA sequence data
+      * @return
+      */
     public ChromosomeSequence getParentChromosomeSequence() {
         return chromosomeSequence;
     }
 
+    /**
+     * Once everything has been added to the gene sequence where you might have added exon sequences only then you
+     * can infer the intron sequences and add them. You may also have the case where you only added one or more
+     * TranscriptSequences and from that you can infer the exon sequences and intron sequences.
+     * Currently not implement
+     */
     public void validate() {
         ExonComparator exonComparator = new ExonComparator();
         //sort based on start position and sense;
@@ -92,20 +110,42 @@ public class GeneSequence extends DNASequence {
         this.strand = strand;
     }
 
+    /**
+     * Get the transcript sequence by accession
+     * @param accession
+     * @return
+     */
     public TranscriptSequence getTranscript(String accession) {
         return transcriptSequenceHashMap.get(accession);
     }
 
+    /**
+     * Get the collection of transcription sequences assigned to this gene
+     * @return
+     */
     public LinkedHashMap<String, TranscriptSequence> getTranscripts() {
         return transcriptSequenceHashMap;
     }
 
+    /**
+     * Remove the transcript sequence from the gene
+     * @param accession
+     * @return
+     */
     public TranscriptSequence removeTranscript(String accession) {
 
 
         return transcriptSequenceHashMap.remove(accession);
     }
 
+    /**
+     * Add a transcription sequence to a gene which describes a ProteinSequence
+     * @param accession
+     * @param begin
+     * @param end
+     * @return
+     * @throws Exception If the accession id is already used
+     */
     public TranscriptSequence addTranscript(AccessionID accession, int begin, int end) throws Exception {
         if (transcriptSequenceHashMap.containsKey(accession.getID())) {
             throw new Exception("Duplicate accesion id " + accession.getID());
@@ -117,7 +157,7 @@ public class GeneSequence extends DNASequence {
     }
 
     /**
-     *
+     * Remove the intron by accession
      * @param accession
      * @return
      */
@@ -133,7 +173,7 @@ public class GeneSequence extends DNASequence {
     }
 
     /**
-     *
+     * Add an Intron Currently used to mark an IntronSequence as a feature
      * @param accession
      * @param begin
      * @param end
@@ -152,7 +192,7 @@ public class GeneSequence extends DNASequence {
     }
 
     /**
-     *
+     * Remove the exon sequence
      * @param accession
      * @return
      */
@@ -169,7 +209,7 @@ public class GeneSequence extends DNASequence {
     }
 
     /**
-     *
+     * Add an ExonSequence mainly used to mark as a feature
      * @param accession
      * @param begin
      * @param end
@@ -188,15 +228,24 @@ public class GeneSequence extends DNASequence {
         return exonSequence;
     }
 
+    /**
+     * Get the exons as an ArrayList
+     * @return
+     */
     public ArrayList<ExonSequence> getExonSequences(){
         return exonSequenceList;
     }
 
+    /**
+     * Get the introns as an ArrayList
+     * @return
+     */
     public ArrayList<IntronSequence> getIntronSequences(){
         return intronSequenceList;
     }
 
     /**
+     * Try to give method clarity where you want a DNASequence coding in the 5' to 3' direction
      * Returns the DNASequence representative of the 5' and 3' reading based on strand
      * @return
      */

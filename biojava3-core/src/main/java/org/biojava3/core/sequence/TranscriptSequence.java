@@ -30,7 +30,8 @@ import java.util.logging.Logger;
 import org.biojava3.core.sequence.transcription.TranscriptionEngine;
 
 /**
- *
+ * This is the sequence if you want to go from a gene sequence to a protein sequence. Need to start with a
+ * ChromosomeSequence then getting a GeneSequence and then a TranscriptSequence
  * @author Scooter Willis
  */
 public class TranscriptSequence extends DNASequence {
@@ -64,7 +65,7 @@ public class TranscriptSequence extends DNASequence {
     }
 
     /**
-     *
+     * Remove a CDS or coding sequence from the transcript sequence
      * @param accession
      * @return
      */
@@ -79,12 +80,16 @@ public class TranscriptSequence extends DNASequence {
         return null;
     }
 
+    /**
+     * Get the CDS sequences that have been added to the TranscriptSequences
+     * @return
+     */
     public LinkedHashMap<String, CDSSequence> getCDSSequences() {
         return cdsSequenceHashMap;
     }
 
     /**
-     *
+     * Add a Coding Sequence region with phase to the transcript sequence
      * @param accession
      * @param begin
      * @param end
@@ -103,16 +108,21 @@ public class TranscriptSequence extends DNASequence {
         return cdsSequence;
     }
 
-        /**
+    /**
      * http://www.sequenceontology.org/gff3.shtml
      * http://biowiki.org/~yam/bioe131/GFF.ppt
      * @return
      */
-
     /**
      * Return a list of protein sequences based on each CDS sequence
      * where the phase shift between two CDS sequences is assigned to the
-     * CDS sequence that starts the triplet.
+     * CDS sequence that starts the triplet. This can be used to map
+     * a CDS/exon region of a protein sequence back to the DNA sequence
+     * If you have a protein sequence and a predicted gene you can take the
+     * predict CDS protein sequences and align back to the protein sequence.
+     * If you have errors in mapping the predicted protein CDS regions to
+     * an the known protein sequence then you can identify possible errors
+     * in the prediction
      *
      * @return
      */
@@ -121,7 +131,7 @@ public class TranscriptSequence extends DNASequence {
         for (int i = 0; i < cdsSequenceList.size(); i++) {
             CDSSequence cdsSequence = cdsSequenceList.get(i);
             String codingSequence = cdsSequence.getCodingSequence();
-  //          System.out.println("CDS " + getStrand() + " "  + cdsSequence.getPhase() + "=" + codingSequence);
+            //          System.out.println("CDS " + getStrand() + " "  + cdsSequence.getPhase() + "=" + codingSequence);
             if (this.getStrand() == Strand.NEGATIVE) {
                 if (cdsSequence.phase == 1) {
                     codingSequence = codingSequence.substring(1, codingSequence.length());
@@ -148,27 +158,30 @@ public class TranscriptSequence extends DNASequence {
                     CDSSequence nextCDSSequence = cdsSequenceList.get(i + 1);
                     if (nextCDSSequence.phase == 1) {
                         String nextCodingSequence = nextCDSSequence.getCodingSequence();
-                       codingSequence = codingSequence + nextCodingSequence.substring(0, 1);
+                        codingSequence = codingSequence + nextCodingSequence.substring(0, 1);
                     } else if (nextCDSSequence.phase == 2) {
                         String nextCodingSequence = nextCDSSequence.getCodingSequence();
                         codingSequence = codingSequence + nextCodingSequence.substring(0, 2);
                     }
-               }
+                }
             }
 
 
-   //    System.out.println(codingSequence);
+            //    System.out.println(codingSequence);
             DNASequence dnaCodingSequence = new DNASequence(codingSequence.toString().toUpperCase());
             RNASequence rnaCodingSequence = dnaCodingSequence.getRNASequence(TranscriptionEngine.getDefault());
             ProteinSequence proteinSequence = rnaCodingSequence.getProteinSequence(TranscriptionEngine.getDefault());
             proteinSequence.setAccession(new AccessionID(cdsSequence.getAccession().getID()));
+            proteinSequence.setParentDNASequence(cdsSequence, 1, cdsSequence.getLength());
             proteinSequenceList.add(proteinSequence);
         }
         return proteinSequenceList;
     }
 
-
-
+    /**
+     * Get the stitched together CDS sequences then maps to the cDNA
+     * @return
+     */
     public DNASequence getDNACodingSequence() {
         StringBuilder sb = new StringBuilder();
         for (CDSSequence cdsSequence : cdsSequenceList) {
@@ -179,10 +192,19 @@ public class TranscriptSequence extends DNASequence {
         return dnaSequence;
     }
 
+    /**
+     * Get the protein sequence
+     * @return
+     */
     public ProteinSequence getProteinSequence() {
         return getProteinSequence(TranscriptionEngine.getDefault());
     }
 
+    /**
+     * Get the protein sequence with user defined TranscriptEngine
+     * @param engine
+     * @return
+     */
     public ProteinSequence getProteinSequence(TranscriptionEngine engine) {
         DNASequence dnaCodingSequence = getDNACodingSequence();
         RNASequence rnaCodingSequence = dnaCodingSequence.getRNASequence(engine);

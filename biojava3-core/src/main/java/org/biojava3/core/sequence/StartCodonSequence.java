@@ -24,7 +24,7 @@
 package org.biojava3.core.sequence;
 
 /**
- *
+ * Used to map the start codon feature on a gene
  * @author Scooter Willis
  */
 public class StartCodonSequence extends DNASequence {

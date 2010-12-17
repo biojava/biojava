@@ -43,10 +43,14 @@ import org.biojava3.core.sequence.template.Sequence;
 public class MultipleSequenceAlignment<S extends Sequence<C>, C extends Compound> implements LightweightProfile<S, C> {
 
     private List<S> sequences = new ArrayList<S>();
-    private int length = -1;
+    private Integer length = null;
 
+    /**
+     * A sequence that has been aligned to other sequences will have inserts. 
+     * @param sequence
+     */
     public void addAlignedSequence(S sequence){
-        if(length == -1){
+        if(length == null){
             length = sequence.getLength();
         }
         if(sequence.getLength() != length){
@@ -56,22 +60,42 @@ public class MultipleSequenceAlignment<S extends Sequence<C>, C extends Compound
         sequences.add(sequence);
     }
 
+    /**
+     * Remove a sequence
+     * @param sequence
+     * @return
+     */
     public boolean removeAlignedSequence(S sequence){
         return sequences.remove(sequence);
     }
+//methods for LightweightProfile
 
-    // methods for LightweightProfile
+    /**
+     * Uses bioIndex starting at 1 instead of 0
+     * @param listIndex
+     * @return
+     */
+     
 
     @Override
     public S getAlignedSequence(int listIndex) {
         return sequences.get(listIndex - 1);
     }
 
+    /**
+     * Get the list of sequences
+     * @return
+     */
     @Override
     public List<S> getAlignedSequences() {
         return Collections.unmodifiableList(sequences);
     }
 
+    /**
+     * Get a list of compounds at a sequence position
+     * @param alignmentIndex
+     * @return
+     */
     @Override
     public List<C> getCompoundsAt(int alignmentIndex) {
         List<C> column = new ArrayList<C>();
@@ -81,26 +105,49 @@ public class MultipleSequenceAlignment<S extends Sequence<C>, C extends Compound
         return Collections.unmodifiableList(column);
     }
 
+    /**
+     * Get the Compounds defined in the first sequence
+     * @return
+     */
     @Override
     public CompoundSet<C> getCompoundSet() {
         return sequences.get(0).getCompoundSet();
     }
 
+    /**
+     * Get the length of the MSA where it is assumed that
+     * all sequence position
+     * @return
+     */
     @Override
     public int getLength() {
         return length;
     }
 
+    /**
+     * Get the number of sequences in the MSA
+     * @return
+     */
     @Override
     public int getSize() {
         return sequences.size();
     }
 
+    /**
+     * Get a string representation of the MSA with a fixed width
+     * @param width
+     * @return
+     */
     @Override
     public String toString(int width) {
         return toString(width, null, IOUtils.getIDFormat(sequences), true, true, true, false);
     }
 
+    /**
+     * Support for different MSA formats
+     * @param format
+     * @return
+     */
     @Override
     public String toString(StringFormat format) {
         switch (format) {
@@ -120,7 +167,10 @@ public class MultipleSequenceAlignment<S extends Sequence<C>, C extends Compound
         }
     }
 
-    // method from Object
+    /**
+     * String representation of the MSA
+     * @return
+     */
 
     @Override
     public String toString() {
@@ -129,6 +179,17 @@ public class MultipleSequenceAlignment<S extends Sequence<C>, C extends Compound
 
     // helper methods
 
+    /**
+     * Helper method that does all the formating work
+     * @param width
+     * @param header
+     * @param idFormat
+     * @param interlaced
+     * @param aligIndices
+     * @param aligConservation
+     * @param webDisplay
+     * @return
+     */
     // creates formatted String
     private String toString(int width, String header, String idFormat, boolean interlaced, boolean aligIndices,
             boolean aligConservation, boolean webDisplay) {
@@ -196,6 +257,14 @@ public class MultipleSequenceAlignment<S extends Sequence<C>, C extends Compound
         return s.toString();
     }
 
+    /**
+     *
+     * @param s
+     * @param counter
+     * @param idFormat
+     * @param start
+     * @param end
+     */
     private void printSequenceAlignmentWeb(StringBuilder s, int counter, String idFormat, int start, int end) {
         S as = sequences.get(counter - 1), seq1 = sequences.get(0), seq2 = sequences.get(1);
 
@@ -221,6 +290,14 @@ public class MultipleSequenceAlignment<S extends Sequence<C>, C extends Compound
         s.append(String.format("%n"));
     }
 
+    /**
+     *
+     * @param s
+     * @param idFormat
+     * @param start
+     * @param end
+     * @param webDisplay
+     */
     private void printConservation(StringBuilder s, String idFormat, int start, int end, boolean webDisplay) {
         S seq1 = sequences.get(0), seq2 = sequences.get(1);
 
