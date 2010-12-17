@@ -20,7 +20,7 @@
 			<Component type="AminoAcid" label="1">
 				<Id source="PDBCC">SER</Id>
 			</Component>
-			<Component type="Ligand" label="2">
+			<Component type="Attachment" label="2">
 				<Id source="PDBCC">XYS</Id>
 			</Component>
 			<Bond>
@@ -51,7 +51,7 @@
 			<Component type="AminoAcid" label="1">
 				<Id source="PDBCC">ASN</Id>
 			</Component>			
-			<Component type="Ligand" label="2">
+			<Component type="Attachment" label="2">
 				<Id source="PDBCC">NAG</Id>
 			</Component>
 			<Bond>
@@ -259,7 +259,7 @@
 				<Id source="PDBCC">GLN</Id>
 				<Terminal>N</Terminal>
 			</Component>
-			<Component type="Ligand" label="2">
+			<Component type="Attachment" label="2">
 				<Id source="PDBCC">ACE</Id>
 			</Component>
 			<Bond>
@@ -291,7 +291,7 @@
 				<Id source="PDBCC">MET</Id>
 				<Terminal>N</Terminal>
 			</Component>
-			<Component type="Ligand" label="2">
+			<Component type="Attachment" label="2">
 				<Id source="PDBCC">ACE</Id>
 			</Component>
 			<Bond>
@@ -595,7 +595,7 @@
 			<Component type="AminoAcid" label="3">
 				<Id source="PDBCC">CYS</Id>
 			</Component>
-			<Component type="Ligand" label="4">
+			<Component type="Attachment" label="4">
 				<Id source="PDBCC">F3S</Id>
 			</Component>
 			<Bond>
@@ -645,7 +645,7 @@
 			<Component type="AminoAcid" label="4">
 				<Id source="PDBCC">CYS</Id>
 			</Component>
-			<Component type="Ligand" label="5">
+			<Component type="Attachment" label="5">
 				<Id source="PDBCC">FES</Id>
 			</Component>
 			<Bond>
@@ -1016,7 +1016,7 @@
 			<Component type="AminoAcid" label="1">
 				<Id source="PDBCC">GLY</Id>
 			</Component>
-			<Component type="Ligand" label="2">
+			<Component type="Attachment" label="2">
 				<Id source="PDBCC">MYR</Id>
 			</Component>
 			<Bond>
@@ -1107,7 +1107,7 @@
 			<Component type="AminoAcid" label="1">
 				<Id source="PDBCC">PRO</Id>
 			</Component>
-			<Component type="Ligand" label="2">
+			<Component type="Attachment" label="2">
 				<Id source="PDBCC">PBE</Id>
 			</Component>
 			<Bond>
@@ -1582,7 +1582,7 @@
 			<Component type="AminoAcid" label="1">
 				<Id source="PDBCC">CYS</Id>
 			</Component>
-			<Component type="Ligand" label="2">
+			<Component type="Attachment" label="2">
 				<Id source="PDBCC">PLM</Id>
 			</Component>
 			<Bond>
@@ -1671,7 +1671,7 @@
 			<Component type="AminoAcid" label="1">
 				<Id source="PDBCC">LYS</Id>
 			</Component>
-			<Component type="Ligand" label="2">
+			<Component type="Attachment" label="2">
 				<Id source="PDBCC">BTN</Id>
 			</Component>
 			<Bond>
@@ -1962,7 +1962,7 @@
 			<Component type="AminoAcid" label="1">
 				<Id source="PDBCC">LYS</Id>
 			</Component>
-			<Component type="Ligand" label="2">
+			<Component type="Attachment" label="2">
 				<Id source="PDBCC">LPA</Id>
 			</Component>
 			<Bond>
@@ -2055,7 +2055,7 @@
 			<Component type="AminoAcid" label="1">
 				<Id source="PDBCC">LYS</Id>
 			</Component>
-			<Component type="Ligand" label="2">
+			<Component type="Attachment" label="2">
 				<Id source="PDBCC">RET</Id>
 			</Component>
 			<Bond>
@@ -2087,7 +2087,7 @@
 			<Component type="AminoAcid" label="1">
 				<Id source="PDBCC">LYS</Id>
 			</Component>
-			<Component type="Ligand" label="2">
+			<Component type="Attachment" label="2">
 				<Id source="PDBCC">DO2</Id>
 			</Component>
 			<Bond>
@@ -2148,7 +2148,7 @@
 			<Component type="AminoAcid" label="1">
 				<Id source="PDBCC">CYS</Id>
 			</Component>
-			<Component type="Ligand" label="2">
+			<Component type="Attachment" label="2">
 				<Id source="PDBCC">CYC</Id>
 			</Component>
 			<Bond>
@@ -2181,7 +2181,7 @@
 			<Component type="AminoAcid" label="1">
 				<Id source="PDBCC">CYS</Id>
 			</Component>
-			<Component type="Ligand" label="2">
+			<Component type="Attachment" label="2">
 				<Id source="PDBCC">PEB</Id>
 			</Component>
 			<Bond>
@@ -2259,7 +2259,7 @@
 			<Component type="AminoAcid" label="4">
 				<Id source="PDBCC">CYS</Id>
 			</Component>
-			<Component type="Ligand" label="5">
+			<Component type="Attachment" label="5">
 				<Id source="PDBCC">FE</Id>
 			</Component>
 			<Bond>
@@ -2313,7 +2313,7 @@
 			<Component type="AminoAcid" label="4">
 				<Id source="PDBCC">CYS</Id>
 			</Component>
-			<Component type="Ligand" label="5">
+			<Component type="Attachment" label="5">
 				<Id source="PDBCC">SF4</Id>
 			</Component>
 			<Bond>
@@ -2342,7 +2342,6 @@
 	<Entry>
 		<Id>0075</Id>
 		<Description>A protein modification that effectively converts an L-cysteine residue, an L-histidine residue, homocitric acid and a one-molybdenum seven-iron nine-sulfur cluster to L-cysteinyl-L-histidino-homocitryl molybdenum heptairon nonasulfide.</Description>
-		<SystematicName></SystematicName>
 		<CrossReference>
 			<Source>RESID</Source>
 			<Id>AA0141</Id>
@@ -2361,10 +2360,10 @@
 			<Component type="AminoAcid" label="2">
 				<Id source="PDBCC">HIS</Id>
 			</Component>
-			<Component type="Ligand" label="3">
+			<Component type="Attachment" label="3">
 				<Id source="PDBCC">CFM</Id>
 			</Component>
-			<Component type="Ligand" label="4">
+			<Component type="Attachment" label="4">
 				<Id source="PDBCC">HCA</Id>
 			</Component>
 			<Bond>
@@ -2393,7 +2392,6 @@
 	<Entry>
 		<Id>0076</Id>
 		<Description>A protein modification that effectively converts an L-cysteine residue, an L-histidine residue, homocitric acid and a one-molybdenum seven-iron nine-sulfur cluster to L-cysteinyl-L-histidino-homocitryl molybdenum heptairon nonasulfide.</Description>
-		<SystematicName></SystematicName>
 		<CrossReference>
 			<Source>RESID</Source>
 			<Id>AA0141</Id>
@@ -2412,10 +2410,10 @@
 			<Component type="AminoAcid" label="2">
 				<Id source="PDBCC">HIS</Id>
 			</Component>
-			<Component type="Ligand" label="3">
+			<Component type="Attachment" label="3">
 				<Id source="PDBCC">CFN</Id>
 			</Component>
-			<Component type="Ligand" label="4">
+			<Component type="Attachment" label="4">
 				<Id source="PDBCC">HCA</Id>
 			</Component>
 			<Bond>
@@ -2460,7 +2458,7 @@
 			<Component type="AminoAcid" label="1">
 				<Id source="PDBCC">CYS</Id>
 			</Component>
-			<Component type="Ligand" label="2">
+			<Component type="Attachment" label="2">
 				<Id source="PDBCC">MTQ</Id>
 			</Component>
 			<Bond>
@@ -2494,7 +2492,7 @@
 			<Component type="AminoAcid" label="1">
 				<Id source="PDBCC">CYS</Id>
 			</Component>
-			<Component type="Ligand" label="2">
+			<Component type="Attachment" label="2">
 				<Id source="PDBCC">FAD</Id>
 			</Component>
 			<Bond>
@@ -2528,7 +2526,7 @@
 			<Component type="AminoAcid" label="1">
 				<Id source="PDBCC">HIS</Id>
 			</Component>
-			<Component type="Ligand" label="2">
+			<Component type="Attachment" label="2">
 				<Id source="PDBCC">FAD</Id>
 			</Component>
 			<Bond>
@@ -2561,7 +2559,7 @@
 			<Component type="AminoAcid" label="1">
 				<Id source="PDBCC">TYR</Id>
 			</Component>
-			<Component type="Ligand" label="2">
+			<Component type="Attachment" label="2">
 				<Id source="PDBCC">FAD</Id>
 			</Component>
 			<Bond>
@@ -2684,7 +2682,7 @@
 			<Component type="AminoAcid" label="1">
 				<Id source="PDBCC">SER</Id>
 			</Component>
-			<Component type="Ligand" label="2">
+			<Component type="Attachment" label="2">
 				<Id source="PDBCC">PNS</Id>
 			</Component>
 			<Bond>
@@ -2745,7 +2743,7 @@
 			<Component type="AminoAcid" label="1">
 				<Id source="PDBCC">TYR</Id>
 			</Component>
-			<Component type="Ligand" label="2">
+			<Component type="Attachment" label="2">
 				<Id source="PDBCC">T3</Id>
 			</Component>
 			<Bond>
@@ -2776,7 +2774,7 @@
 			<Component type="AminoAcid" label="1">
 				<Id source="PDBCC">TYR</Id>
 			</Component>
-			<Component type="Ligand" label="2">
+			<Component type="Attachment" label="2">
 				<Id source="PDBCC">T44</Id>
 			</Component>
 			<Bond>
@@ -3041,7 +3039,7 @@
 			<Component type="AminoAcid" label="1">
 				<Id source="PDBCC">SER</Id>
 			</Component>
-			<Component type="Ligand" label="2">
+			<Component type="Attachment" label="2">
 				<Id source="PDBCC">DAL</Id>
 			</Component>
 			<Bond>
@@ -3072,7 +3070,7 @@
 			<Component type="AminoAcid" label="1">
 				<Id source="PDBCC">ALA</Id>
 			</Component>
-			<Component type="Ligand" label="2">
+			<Component type="Attachment" label="2">
 				<Id source="PDBCC">DAL</Id>
 			</Component>
 			<Bond>
@@ -3338,7 +3336,7 @@
 			<Component type="AminoAcid" label="1">
 				<Id source="PDBCC">CYS</Id>
 			</Component>
-			<Component type="Ligand" label="2">
+			<Component type="Attachment" label="2">
 				<Id source="PDBCC">HC4</Id>
 			</Component>
 			<Bond>
@@ -3401,7 +3399,7 @@
 			<Component type="AminoAcid" label="1">
 				<Id source="PDBCC">CYS</Id>
 			</Component>
-			<Component type="Ligand" label="2">
+			<Component type="Attachment" label="2">
 				<Id source="PDBCC">FMN</Id>
 			</Component>
 			<Bond>
@@ -3435,7 +3433,7 @@
 			<Component type="AminoAcid" label="1">
 				<Id source="PDBCC">HIS</Id>
 			</Component>
-			<Component type="Ligand" label="2">
+			<Component type="Attachment" label="2">
 				<Id source="PDBCC">FAD</Id>
 			</Component>
 			<Bond>
@@ -3646,7 +3644,7 @@
 			<Component type="AminoAcid" label="1">
 				<Id source="PDBCC">CYS</Id>
 			</Component>
-			<Component type="Ligand" label="2">
+			<Component type="Attachment" label="2">
 				<Id source="PDBCC">DPM</Id>
 			</Component>
 			<Bond>
@@ -3677,7 +3675,7 @@
 			<Component type="AminoAcid" label="1">
 				<Id source="PDBCC">CYS</Id>
 			</Component>
-			<Component type="Ligand" label="2">
+			<Component type="Attachment" label="2">
 				<Id source="PDBCC">PVN</Id>
 			</Component>
 			<Bond>
@@ -3713,7 +3711,7 @@
 			<Component type="AminoAcid" label="2">
 				<Id source="PDBCC">CYS</Id>
 			</Component>
-			<Component type="Ligand" label="3">
+			<Component type="Attachment" label="3">
 				<Id source="PDBCC">CYB</Id>
 			</Component>
 			<Bond>
@@ -3808,7 +3806,7 @@
 			<Component type="AminoAcid" label="1">
 				<Id source="PDBCC">SER</Id>
 			</Component>
-			<Component type="Ligand" label="2">
+			<Component type="Attachment" label="2">
 				<Id source="PDBCC">OPE</Id>
 			</Component>
 			<Bond>
@@ -3875,7 +3873,7 @@
 			<Component type="AminoAcid" label="3">
 				<Id source="PDBCC">TYR</Id>
 			</Component>
-			<Component type="Ligand" label="4">
+			<Component type="Attachment" label="4">
 				<Id source="PDBCC">HEC</Id>
 			</Component>
 			<Bond>
@@ -3925,7 +3923,7 @@
 			<Component type="AminoAcid" label="3">
 				<Id source="PDBCC">LYS</Id>
 			</Component>
-			<Component type="Ligand" label="4">
+			<Component type="Attachment" label="4">
 				<Id source="PDBCC">HEC</Id>
 			</Component>
 			<Bond>
@@ -4091,7 +4089,7 @@
 			<Component type="AminoAcid" label="3">
 				<Id source="PDBCC">MET</Id>
 			</Component>
-			<Component type="Ligand" label="4">
+			<Component type="Attachment" label="4">
 				<Id source="PDBCC">HEM</Id>
 			</Component>
 			<Bond>
@@ -4137,7 +4135,7 @@
 			<Component type="AminoAcid" label="2">
 				<Id source="PDBCC">TYR</Id>
 			</Component>
-			<Component type="Ligand" label="3">
+			<Component type="Attachment" label="3">
 				<Id source="PDBCC">PQQ</Id>
 			</Component>
 			<Bond>
@@ -4183,7 +4181,7 @@
 			<Component type="AminoAcid" label="4">
 				<Id source="PDBCC">HIS</Id>
 			</Component>
-			<Component type="Ligand" label="5">
+			<Component type="Attachment" label="5">
 				<Id source="PDBCC">SF4</Id>
 			</Component>
 			<Bond>
@@ -4238,7 +4236,7 @@
 			<Component type="AminoAcid" label="4">
 				<Id source="PDBCC">HIS</Id>
 			</Component>
-			<Component type="Ligand" label="5">
+			<Component type="Attachment" label="5">
 				<Id source="PDBCC">SF4</Id>
 			</Component>
 			<Bond>
@@ -4293,7 +4291,7 @@
 			<Component type="AminoAcid" label="4">
 				<Id source="PDBCC">ASP</Id>
 			</Component>
-			<Component type="Ligand" label="5">
+			<Component type="Attachment" label="5">
 				<Id source="PDBCC">SF4</Id>
 			</Component>
 			<Bond>
@@ -4348,7 +4346,7 @@
 			<Component type="AminoAcid" label="4">
 				<Id source="PDBCC">SER</Id>
 			</Component>
-			<Component type="Ligand" label="5">
+			<Component type="Attachment" label="5">
 				<Id source="PDBCC">SF4</Id>
 			</Component>
 			<Bond>
@@ -4403,7 +4401,7 @@
 			<Component type="AminoAcid" label="4">
 				<Id source="PDBCC">SER</Id>
 			</Component>
-			<Component type="Ligand" label="5">
+			<Component type="Attachment" label="5">
 				<Id source="PDBCC">SF4</Id>
 			</Component>
 			<Bond>
@@ -4468,7 +4466,7 @@
 			<Component type="AminoAcid" label="7">
 				<Id source="PDBCC">HIS</Id>
 			</Component>
-			<Component type="Ligand" label="8">
+			<Component type="Attachment" label="8">
 				<Id source="PDBCC">CUZ</Id>
 			</Component>
 			<Bond>
@@ -4508,7 +4506,6 @@
 	<Entry>
 		<Id>0137</Id>
 		<Description>A protein modification that effectively converts six L-cysteine residues, an L-serine residue and a eight-iron seven-sulfur cluster to hexakis-L-cysteinyl L-serinyl octairon heptasulfide.</Description>
-		<SystematicName></SystematicName>
 		<CrossReference>
 			<Source>RESID</Source>
 			<Id>AA0300</Id>
@@ -4542,7 +4539,7 @@
 			<Component type="AminoAcid" label="7">
 				<Id source="PDBCC">SER</Id>
 			</Component>
-			<Component type="Ligand" label="8">
+			<Component type="Attachment" label="8">
 				<Id source="PDBCC">CLF</Id>
 			</Component>
 			<Bond>
@@ -4644,7 +4641,7 @@
 			<Component type="AminoAcid" label="6">
 				<Id source="PDBCC">HIS</Id>
 			</Component>
-			<Component type="Ligand" label="7">
+			<Component type="Attachment" label="7">
 				<Id source="PDBCC">NFS</Id>
 			</Component>
 			<Bond>
@@ -4852,7 +4849,7 @@
 			<Component type="AminoAcid" label="1">
 				<Id source="PDBCC">SER</Id>
 			</Component>
-			<Component type="Ligand" label="2">
+			<Component type="Attachment" label="2">
 				<Id source="PDBCC">MGD</Id>
 			</Component>
 			<Bond>
@@ -4924,7 +4921,7 @@
 			<Component type="AminoAcid" label="4">
 				<Id source="PDBCC">CYS</Id>
 			</Component>
-			<Component type="Ligand" label="5">
+			<Component type="Attachment" label="5">
 				<Id source="PDBCC">F3S</Id>
 			</Component>
 			<Bond>
@@ -4969,7 +4966,7 @@
 			<Component type="AminoAcid" label="1">
 				<Id source="PDBCC">HIS</Id>
 			</Component>
-			<Component type="Ligand" label="2">
+			<Component type="Attachment" label="2">
 				<Id source="PDBCC">HEM</Id>
 			</Component>
 			<Bond>
@@ -5074,7 +5071,6 @@
 	<Entry>
 		<Id>0151</Id>
 		<Description>A protein modification that effectively converts an L-cysteine residue to L-cysteinyl hydrogenase diiron subcluster.</Description>
-		<SystematicName></SystematicName>
 		<CrossReference>
 			<Source>RESID</Source>
 			<Id>AA0334</Id>
@@ -5090,7 +5086,7 @@
 			<Component type="AminoAcid" label="1">
 				<Id source="PDBCC">CYS</Id>
 			</Component>
-			<Component type="Ligand" label="2">
+			<Component type="Attachment" label="2">
 				<Id source="PDBCC">HC1</Id>
 			</Component>
 			<Bond>
@@ -5181,7 +5177,7 @@
 				<Id source="PDBCC">GLY</Id>
 				<Terminal>N</Terminal>
 			</Component>
-			<Component type="Ligand" label="2">
+			<Component type="Attachment" label="2">
 				<Id source="PDBCC">140</Id>
 			</Component>
 			<Bond>
@@ -5324,7 +5320,6 @@
 	<Entry>
 		<Id>0159</Id>
 		<Description>A protein modification that effectively cross-links an L-tryptophan residue with an L-tyrosine residue by a carbon-carbon bond, and cross-links the L-tyrosine residue to an L-methionine residue by a thioether bond to form S-[5'-(L-tryptoph-6'-yl)-L-tyrosin-3'-yl]-L-methionin-S-ium.</Description>
-		<SystematicName></SystematicName>
 		<CrossReference>
 			<Source>RESID</Source>
 			<Id>AA0348</Id>
@@ -5379,7 +5374,7 @@
 			<Component type="AminoAcid" label="1">
 				<Id source="PDBCC">CYS</Id>
 			</Component>
-			<Component type="Ligand" label="2">
+			<Component type="Attachment" label="2">
 				<Id source="PDBCC">FMN</Id>
 			</Component>
 			<Bond>
@@ -5414,10 +5409,10 @@
 			<Component type="AminoAcid" label="1">
 				<Id source="PDBCC">CYS</Id>
 			</Component>
-			<Component type="Ligand" label="2">
+			<Component type="Attachment" label="2">
 				<Id source="PDBCC">CUN</Id>
 			</Component>
-			<Component type="Ligand" label="3">
+			<Component type="Attachment" label="3">
 				<Id source="PDBCC">MCN</Id>
 			</Component>
 			<Bond>
@@ -5469,10 +5464,10 @@
 			<Component type="AminoAcid" label="3">
 				<Id source="PDBCC">CYS</Id>
 			</Component>
-			<Component type="Ligand" label="4">
+			<Component type="Attachment" label="4">
 				<Id source="PDBCC">SF4</Id>
 			</Component>
-			<Component type="Ligand" label="5">
+			<Component type="Attachment" label="5">
 				<Id source="PDBCC">SAM</Id>
 			</Component>
 			<Bond>
@@ -5531,7 +5526,7 @@
 			<Component type="AminoAcid" label="4">
 				<Id source="PDBCC">ARG</Id>
 			</Component>
-			<Component type="Ligand" label="5">
+			<Component type="Attachment" label="5">
 				<Id source="PDBCC">FES</Id>
 			</Component>
 			<Bond>
@@ -5647,17 +5642,11 @@
 	</Entry>
 	<Entry>
 		<Id>0167</Id>
-		<Description></Description>
 		<SystematicName>mu3-1:2:3kappaO-oxido-mu3-1:3:4kappaO-oxido-mu3-2:3:4kappaO-oxido-mu4-1:2:4:5kappaO-oxido-N1'-histidino-O5-glutamato 2-manganese-O5,O5-glutamato 3-manganese-O4-aspartato 4-manganese-O4-aspartato-O5-glutamato 5-manganese</SystematicName>
 		<CrossReference>
 			<Source>RESID</Source>
 			<Id>AA0366</Id>
 			<Name>bis-L-aspartato tris-L-glutamato L-histidino calcium tetramanganese tetroxide</Name>
-		</CrossReference>
-		<CrossReference>
-			<Source>PSI-MOD</Source>
-			<Id></Id>
-			<Name></Name>
 		</CrossReference>
 		<Formula>C 29 Ca 1 H 32 Mn 4 N 8 O 20</Formula>
 		<Condition>
@@ -5679,7 +5668,7 @@
 			<Component type="AminoAcid" label="6">
 				<Id source="PDBCC">HIS</Id>
 			</Component>
-			<Component type="Ligand" label="7">
+			<Component type="Attachment" label="7">
 				<Id source="PDBCC">OEC</Id>
 			</Component>
 			<Bond>
@@ -5805,7 +5794,7 @@
 			<Component type="AminoAcid" label="1">
 				<Id source="PDBCC">HIS</Id>
 			</Component>
-			<Component type="Ligand" label="2">
+			<Component type="Attachment" label="2">
 				<Id source="PDBCC">U5P</Id>
 			</Component>
 			<Bond>
@@ -6158,7 +6147,7 @@
 			<Component type="AminoAcid" label="1">
 				<Id source="PDBCC">HIS</Id>
 			</Component>
-			<Component type="Ligand" label="2">
+			<Component type="Attachment" label="2">
 				<Id source="PDBCC">VO4</Id>
 			</Component>
 			<Bond>
@@ -6514,7 +6503,7 @@
 			<Component type="AminoAcid" label="1">
 				<Id source="PDBCC">CYS</Id>
 			</Component>
-			<Component type="Ligand" label="2">
+			<Component type="Attachment" label="2">
 				<Id source="PDBCC">DBV</Id>
 			</Component>
 			<Bond>
@@ -6550,7 +6539,7 @@
 			<Component type="AminoAcid" label="2">
 				<Id source="PDBCC">CYS</Id>
 			</Component>
-			<Component type="Ligand" label="3">
+			<Component type="Attachment" label="3">
 				<Id source="PDBCC">DBV</Id>
 			</Component>
 			<Bond>
@@ -6656,41 +6645,6 @@
 		<Category>modified residue</Category>
 	</Entry>
 	<Entry>
-		<Id>0198</Id>
-		<Description></Description>
-		<SystematicName>6-((R)-2-amino-2-carboxyethyl)sulfanyl-8alpha-[4-((S)-2-amino-2-carboxyethyl)imidazol-3-yl]-riboflavin 5'-(trihydrogen diphosphate) 5'->5'-ester with adenosine</SystematicName>
-		<CrossReference>
-			<Source>RESID</Source>
-			<Id>AA0436</Id>
-			<Name>6-(S-L-cysteinyl)-8alpha-(N3'-L-histidino)-FAD</Name>
-		</CrossReference>
-		<CrossReference>
-			<Source>PSI-MOD</Source>
-			<Id></Id>
-			<Name></Name>
-		</CrossReference>
-		<Formula></Formula>
-		<Condition>
-			<Component type="AminoAcid" label="1">
-				<Id source="PDBCC">CYS</Id>
-			</Component>
-			<Component type="Ligand" label="2">
-				<Id source="PDBCC">HIS</Id>
-			</Component>
-			<Bond>
-				<!--TODO: verify this-->
-				<Atom component="1">*</Atom>
-				<Atom component="2">*</Atom>
-			</Bond>
-		</Condition>
-		<Occurrence>natural</Occurrence>
-		<Category>attachment</Category>
-		<Keyword>phosphoprotein</Keyword>
-		<Keyword>FAD</Keyword>
-		<Keyword>flavoprotein</Keyword>
-		<Keyword>thioether bond</Keyword>
-	</Entry>
-	<Entry>
 		<Id>0199</Id>
 		<Description>A protein modification that crosslinks a cysteine and a histidine residue by forming the adduct 6-(S-L-cysteinyl)-8alpha-(-3'-L-histidino)-FAD.</Description>
 		<SystematicName>6-((R)-2-amino-2-carboxyethyl)sulfanyl-8alpha-[4-((S)-2-amino-2-carboxyethyl)imidazol-3-yl]-riboflavin 5'-(trihydrogen diphosphate) 5'->5'-ester with adenosine</SystematicName>
@@ -6712,7 +6666,7 @@
 			<Component type="AminoAcid" label="2">
 				<Id source="PDBCC">HIS</Id>
 			</Component>
-			<Component type="Ligand" label="3">
+			<Component type="Attachment" label="3">
 				<Id source="PDBCC">FAD</Id>
 			</Component>
 			<Bond>
@@ -6793,7 +6747,7 @@
 			<Component type="AminoAcid" label="4">
 				<Id source="PDBCC">HIS</Id>
 			</Component>
-			<Component type="Ligand" label="5">
+			<Component type="Attachment" label="5">
 				<Id source="PDBCC">FES</Id>
 			</Component>
 			<Bond>
@@ -6865,7 +6819,7 @@
 			<Component type="AminoAcid" label="1">
 				<Id source="PDBCC">ILE</Id>
 			</Component>
-			<Component type="Ligand" label="2">
+			<Component type="Attachment" label="2">
 				<Id source="PDBCC">TSI</Id>
 			</Component>
 			<Bond>
@@ -6957,7 +6911,7 @@
 				<Id source="PDBCC">MET</Id>
 				<Terminal>N</Terminal>
 			</Component>
-			<Component type="Ligand" label="2">
+			<Component type="Attachment" label="2">
 				<Id source="PDBCC">4MM</Id>
 			</Component>
 			<Bond>
@@ -7177,7 +7131,7 @@
 				<Id source="PDBCC">ILE</Id>
 				<Terminal>N</Terminal>
 			</Component>
-			<Component type="Ligand" label="3">
+			<Component type="Attachment" label="3">
 				<Id source="PDBCC">QUA</Id>
 			</Component>
 			<Bond>
@@ -7430,7 +7384,7 @@
 			<Component type="AminoAcid" label="1">
 				<Id source="PDBCC">SER</Id>
 			</Component>
-			<Component type="Ligand" label="2">
+			<Component type="Attachment" label="2">
 				<Id source="PDBCC">OPE</Id>
 			</Component>
 			<Bond>
@@ -7554,7 +7508,7 @@
 			<Component type="AminoAcid" label="2">
 				<Id source="PDBCC">CYS</Id>
 			</Component>
-			<Component type="Ligand" label="3">
+			<Component type="Attachment" label="3">
 				<Id source="PDBCC">S3H</Id>
 			</Component>
 			<Bond>
@@ -7617,7 +7571,7 @@
 			<Component type="AminoAcid" label="1">
 				<Id source="PDBCC">ASP</Id>
 			</Component>
-			<Component type="Ligand" label="2">
+			<Component type="Attachment" label="2">
 				<Id source="PDBCC">FAD</Id>
 			</Component>
 			<Bond>
@@ -7680,7 +7634,7 @@
 				<Id source="PDBCC">ALA</Id>
 				<Terminal>N</Terminal>
 			</Component>
-			<Component type="Ligand" label="2">
+			<Component type="Attachment" label="2">
 				<Id source="PDBCC">ACE</Id>
 			</Component>
 			<Bond>
@@ -7712,7 +7666,7 @@
 				<Id source="PDBCC">ASP</Id>
 				<Terminal>N</Terminal>
 			</Component>
-			<Component type="Ligand" label="2">
+			<Component type="Attachment" label="2">
 				<Id source="PDBCC">ACE</Id>
 			</Component>
 			<Bond>
@@ -7744,7 +7698,7 @@
 				<Id source="PDBCC">CYS</Id>
 				<Terminal>N</Terminal>
 			</Component>
-			<Component type="Ligand" label="2">
+			<Component type="Attachment" label="2">
 				<Id source="PDBCC">ACE</Id>
 			</Component>
 			<Bond>
@@ -7776,7 +7730,7 @@
 				<Id source="PDBCC">GLU</Id>
 				<Terminal>N</Terminal>
 			</Component>
-			<Component type="Ligand" label="2">
+			<Component type="Attachment" label="2">
 				<Id source="PDBCC">ACE</Id>
 			</Component>
 			<Bond>
@@ -7808,7 +7762,7 @@
 				<Id source="PDBCC">GLY</Id>
 				<Terminal>N</Terminal>
 			</Component>
-			<Component type="Ligand" label="2">
+			<Component type="Attachment" label="2">
 				<Id source="PDBCC">ACE</Id>
 			</Component>
 			<Bond>
@@ -7840,7 +7794,7 @@
 				<Id source="PDBCC">PRO</Id>
 				<Terminal>N</Terminal>
 			</Component>
-			<Component type="Ligand" label="2">
+			<Component type="Attachment" label="2">
 				<Id source="PDBCC">ACE</Id>
 			</Component>
 			<Bond>
@@ -7872,7 +7826,7 @@
 				<Id source="PDBCC">SER</Id>
 				<Terminal>N</Terminal>
 			</Component>
-			<Component type="Ligand" label="2">
+			<Component type="Attachment" label="2">
 				<Id source="PDBCC">ACE</Id>
 			</Component>
 			<Bond>
@@ -7904,7 +7858,7 @@
 				<Id source="PDBCC">THR</Id>
 				<Terminal>N</Terminal>
 			</Component>
-			<Component type="Ligand" label="2">
+			<Component type="Attachment" label="2">
 				<Id source="PDBCC">ACE</Id>
 			</Component>
 			<Bond>
@@ -7936,7 +7890,7 @@
 				<Id source="PDBCC">TYR</Id>
 				<Terminal>N</Terminal>
 			</Component>
-			<Component type="Ligand" label="2">
+			<Component type="Attachment" label="2">
 				<Id source="PDBCC">ACE</Id>
 			</Component>
 			<Bond>
@@ -7968,7 +7922,7 @@
 				<Id source="PDBCC">VAL</Id>
 				<Terminal>N</Terminal>
 			</Component>
-			<Component type="Ligand" label="2">
+			<Component type="Attachment" label="2">
 				<Id source="PDBCC">ACE</Id>
 			</Component>
 			<Bond>
@@ -8000,7 +7954,7 @@
 				<Id source="PDBCC">ARG</Id>
 				<Terminal>N</Terminal>
 			</Component>
-			<Component type="Ligand" label="2">
+			<Component type="Attachment" label="2">
 				<Id source="PDBCC">ACE</Id>
 			</Component>
 			<Bond>
@@ -8032,7 +7986,7 @@
 				<Id source="PDBCC">ALA</Id>
 				<Terminal>C</Terminal>
 			</Component>
-			<Component type="Ligand" label="2">
+			<Component type="Attachment" label="2">
 				<Id source="PDBCC">NH2</Id>
 			</Component>
 			<Bond>
@@ -8064,7 +8018,7 @@
 				<Id source="PDBCC">ASN</Id>
 				<Terminal>C</Terminal>
 			</Component>
-			<Component type="Ligand" label="2">
+			<Component type="Attachment" label="2">
 				<Id source="PDBCC">NH2</Id>
 			</Component>
 			<Bond>
@@ -8096,7 +8050,7 @@
 				<Id source="PDBCC">ASP</Id>
 				<Terminal>C</Terminal>
 			</Component>
-			<Component type="Ligand" label="2">
+			<Component type="Attachment" label="2">
 				<Id source="PDBCC">NH2</Id>
 			</Component>
 			<Bond>
@@ -8128,7 +8082,7 @@
 				<Id source="PDBCC">CYS</Id>
 				<Terminal>C</Terminal>
 			</Component>
-			<Component type="Ligand" label="2">
+			<Component type="Attachment" label="2">
 				<Id source="PDBCC">NH2</Id>
 			</Component>
 			<Bond>
@@ -8160,7 +8114,7 @@
 				<Id source="PDBCC">GLN</Id>
 				<Terminal>C</Terminal>
 			</Component>
-			<Component type="Ligand" label="2">
+			<Component type="Attachment" label="2">
 				<Id source="PDBCC">NH2</Id>
 			</Component>
 			<Bond>
@@ -8192,7 +8146,7 @@
 				<Id source="PDBCC">GLU</Id>
 				<Terminal>C</Terminal>
 			</Component>
-			<Component type="Ligand" label="2">
+			<Component type="Attachment" label="2">
 				<Id source="PDBCC">NH2</Id>
 			</Component>
 			<Bond>
@@ -8224,7 +8178,7 @@
 				<Id source="PDBCC">GLY</Id>
 				<Terminal>C</Terminal>
 			</Component>
-			<Component type="Ligand" label="2">
+			<Component type="Attachment" label="2">
 				<Id source="PDBCC">NH2</Id>
 			</Component>
 			<Bond>
@@ -8256,7 +8210,7 @@
 				<Id source="PDBCC">HIS</Id>
 				<Terminal>C</Terminal>
 			</Component>
-			<Component type="Ligand" label="2">
+			<Component type="Attachment" label="2">
 				<Id source="PDBCC">NH2</Id>
 			</Component>
 			<Bond>
@@ -8288,7 +8242,7 @@
 				<Id source="PDBCC">LEU</Id>
 				<Terminal>C</Terminal>
 			</Component>
-			<Component type="Ligand" label="2">
+			<Component type="Attachment" label="2">
 				<Id source="PDBCC">NH2</Id>
 			</Component>
 			<Bond>
@@ -8320,7 +8274,7 @@
 				<Id source="PDBCC">LYS</Id>
 				<Terminal>C</Terminal>
 			</Component>
-			<Component type="Ligand" label="2">
+			<Component type="Attachment" label="2">
 				<Id source="PDBCC">NH2</Id>
 			</Component>
 			<Bond>
@@ -8352,7 +8306,7 @@
 				<Id source="PDBCC">PRO</Id>
 				<Terminal>C</Terminal>
 			</Component>
-			<Component type="Ligand" label="2">
+			<Component type="Attachment" label="2">
 				<Id source="PDBCC">NH2</Id>
 			</Component>
 			<Bond>
@@ -8384,7 +8338,7 @@
 				<Id source="PDBCC">TYR</Id>
 				<Terminal>C</Terminal>
 			</Component>
-			<Component type="Ligand" label="2">
+			<Component type="Attachment" label="2">
 				<Id source="PDBCC">NH2</Id>
 			</Component>
 			<Bond>
@@ -8403,7 +8357,7 @@
 			<Component type="AminoAcid" label="1">
 				<Id source="PDBCC">*</Id>
 			</Component>
-			<Component type="Ligand" label="2">
+			<Component type="Attachment" label="2">
 				<Id source="PDBCC">AC,AG,AL,AM,AU,BA,BE,BI,BK,CA,CD,CE,CF,CM,CO,CR,CS,CU,DY,ER,ES,EU,FE,FM,FR,GA,GD,HF,HG,HO,IN,IR,K,LA,LI,LR,LU,MD,MG,MN,MO,NA,NB,ND,NI,NO,NP,OS,PA,PB,PD,PM,PR,PT,PU,RA,RB,RE,RH,RU,SC,SM,SN,SR,TA,TB,TC,TH,TI,TL,TM,U,V,W,Y,YB,ZN,ZR</Id>
 			</Component>
 			<Bond>
