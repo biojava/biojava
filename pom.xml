@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.biojava</groupId>
 	<artifactId>biojava</artifactId>
 	<packaging>pom</packaging>
-	<version>3.0-beta2-SNAPSHOT</version>
+	<version>3.0-beta3</version>
 	<name>biojava</name>
 	<description>BioJava is an open-source project dedicated to providing a Java framework for processing biological data. It provides analytical and statistical routines, parsers for common file formats and allows the manipulation of sequences and 3D structures. The goal of the biojava project is to facilitate rapid application development for bioinformatics.</description>
 	<url>http://www.biojava.org</url>
@@ -21,9 +20,9 @@
   </license>
   </licenses>
 	<scm>
-		<connection>scm:svn:svn://code.open-bio.org/biojava/biojava-live/trunk</connection>
-		<developerConnection>scm:svn:svn+ssh://dev.open-bio.org/home/svn-repositories/biojava/biojava-live/trunk</developerConnection>
-		<url>http://code.open-bio.org/svnweb/index.cgi/biojava/browse/biojava-live/trunk</url>
+		<connection>scm:svn:svn://code.open-bio.org/biojava/biojava-live/tags/biojava-3.0-beta3</connection>
+		<developerConnection>scm:svn:svn+ssh://dev.open-bio.org/home/svn-repositories/biojava/biojava-live/tags/biojava-3.0-beta3</developerConnection>
+		<url>http://code.open-bio.org/svnweb/index.cgi/biojava/browse/biojava-live/tags/biojava-3.0-beta3</url>
 	</scm>
 	<repositories>
 		<repository>
@@ -136,8 +135,8 @@
 					<artifactId>maven-javadoc-plugin</artifactId>
 					<version>2.7</version>
 					<configuration>
-					<footer>&lt;script src=&quot;http://www.google-analytics.com/urchin.js&quot; type=&quot;text/javascript&quot;&gt;&lt;/script&gt;&lt;script type=&quot;text/javascri
-pt&quot;&gt;_uacct = &quot;UA-460553-1&quot;;urchinTracker();&lt;/script&gt;</footer>
+					<footer>&lt;script src="http://www.google-analytics.com/urchin.js" type="text/javascript"&gt;&lt;/script&gt;&lt;script type="text/javascri
+pt"&gt;_uacct = "UA-460553-1";urchinTracker();&lt;/script&gt;</footer>
 					</configuration>
 				</plugin>
 			</plugins>
