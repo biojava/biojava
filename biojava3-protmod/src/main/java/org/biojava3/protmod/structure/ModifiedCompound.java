@@ -102,7 +102,11 @@ public interface ModifiedCompound {
 	public void addAtomLinkages(Collection<StructureAtomLinkage> linkages);
 	
 	
-	
+	/**
+	 * 
+	 * @return true if groups from multiple chains were involved
+	 */
+	public boolean crossChains();
 	
 	
 }
