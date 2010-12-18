@@ -120,7 +120,7 @@ public interface StructureIOFile extends StructureIO {
 	
 	/** Get the parameters that should be used for file parsing
      * 
-     * @param params
+     * @return the FileParsingParameters that are configuring the behavior of the parser
      */
     public FileParsingParameters getFileParsingParameters();
     
