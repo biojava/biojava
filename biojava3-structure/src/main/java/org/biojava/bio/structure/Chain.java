@@ -149,7 +149,7 @@ public interface Chain {
     /** Get a group by its PDB residue numbering. if the PDB residue number is not know,
      * throws a StructureException.
      * 
-     * @param pdbresnum the PDB residue number of the group
+     * @param resNum the PDB residue number of the group
      * @return the matching group
      * @throws StructureException
  
