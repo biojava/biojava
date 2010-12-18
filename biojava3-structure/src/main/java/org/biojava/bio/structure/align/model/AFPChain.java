@@ -1237,7 +1237,7 @@ public class AFPChain implements Serializable, Cloneable
 	 * <p>
 	 * Special Note:<br/>
 	 * When using CE to check for circular permutations, a row of -1 is written
-	 * after the end of the first repeat of ca2. (See {@link CeMain#align(Atom[], Atom[])}  
+	 * after the end of the first repeat of ca2. (See {@link CeMain#align(Atom[], Atom[])}  )
 	 * 
 	 * @return A matrix with dimensions ca1length x ca2length, or null
 	 */
