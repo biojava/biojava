@@ -101,7 +101,7 @@ public class SystemInfo
           * Count the actual size of the System property list.
           */
          int size = 0;
-         Enumeration enumo = props.propertyNames();
+         Enumeration<?> enumo = props.propertyNames();
          while (enumo.hasMoreElements()) {
             ++size;
             enumo.nextElement();
@@ -142,7 +142,11 @@ public class SystemInfo
     * @param   vector      The vector of strings to sort
     * @param   startIndex  The first element to sort
     * @param   endIndex    The last element to sort
-    * @usage   JavaInfo.quickSort(vector, 0, vector.length - 1);
+    * 
+    * example use: 
+    * <pre>
+    *    JavaInfo.quickSort(vector, 0, vector.length - 1);
+    *  </pre>  
     */
    public static void quickSort(
            String[]        vector,
