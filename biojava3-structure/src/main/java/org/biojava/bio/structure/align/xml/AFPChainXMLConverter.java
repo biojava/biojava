@@ -18,7 +18,7 @@ public class AFPChainXMLConverter {
 	/** Convert an afpChain to a simple XML representation
 	 * 
 	 * @param afpChain
-	 * @return
+	 * @return XML representation of the AFPCHain
 	 */
 	public static String toXML(AFPChain afpChain, Atom[] ca1, Atom[]ca2) throws IOException{
 		StringWriter result = new StringWriter();	
@@ -52,8 +52,8 @@ public class AFPChainXMLConverter {
 
 		// get the alignment blocks
 		int blockNum = afpChain.getBlockNum();
-		int[] optLen       = afpChain.getOptLen();
-		int[] blockSize    = afpChain.getBlockSize();
+		//int[] optLen       = afpChain.getOptLen();
+		//int[] blockSize    = afpChain.getBlockSize();
 		for(int bk = 0; bk < blockNum; bk ++) {
 						
 			xml.openTag("block");
