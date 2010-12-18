@@ -112,12 +112,19 @@ public class FileParsingParameters implements Serializable
 
 
 
-
+   /** Should the chemical component information be automatically be downloade from the web?
+    * If set to false, a limited set of ChemComps is being used.
+    * @return flag if the data should be loaded
+    */
    public boolean isLoadChemCompInfo()
    {
       return loadChemCompInfo;
    }
 
+   /**  Sets if chemical component defintions should be loaded from the web
+    * 
+    * @param loadChemCompInfo flag
+    */
    public void setLoadChemCompInfo(boolean loadChemCompInfo)
    {
 
@@ -127,12 +134,19 @@ public class FileParsingParameters implements Serializable
 
    }
 
-
+   /** Parse only the PDB file header out of the files
+    * 
+    * @return flag
+    */
    public boolean isHeaderOnly()
    {
       return headerOnly;
    }
 
+   /** Parse only the PDB file header out of the files
+    * 
+    * @param headerOnly flag
+    */
    public void setHeaderOnly(boolean headerOnly)
    {
       this.headerOnly = headerOnly;
