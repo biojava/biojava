@@ -140,7 +140,7 @@ public interface Chain {
      * @param pdbresnum the PDB residue number of the group
      * @return the matching group
      * @throws StructureException
-     * @Deprecated replaced by {@link #getGroupByPDB(ResidueNumber)}
+     * @deprecated replaced by {@link #getGroupByPDB(ResidueNumber)}
      */
     @Deprecated
     public Group getGroupByPDB(String pdbresnum) throws StructureException;
@@ -162,7 +162,7 @@ public interface Chain {
      * @param pdbresnumEnd PDB residue number of end
      * @return Groups in between. or throws a StructureException if either start or end can not be found,
      * @throws StructureException
-     * @Deprecated replaced by {@link #getGroupsByPDB(ResidueNumber, ResidueNumber)}
+     * @deprecated replaced by {@link #getGroupsByPDB(ResidueNumber, ResidueNumber)}
      */
     @Deprecated
     public Group[] getGroupsByPDB(String pdbresnumStart, String pdbresnumEnd) throws StructureException;
@@ -189,7 +189,7 @@ public interface Chain {
      * @param ignoreMissing ignore missing groups in this range.
      * @return Groups in between. or throws a StructureException if either start or end can not be found,
      * @throws StructureException
-     * @Deprecated replaced by #{@link #getGroupsByPDB(ResidueNumber, ResidueNumber, boolean)}
+     * @deprecated replaced by #{@link #getGroupsByPDB(ResidueNumber, ResidueNumber, boolean)}
      */
     @Deprecated
     public Group[] getGroupsByPDB(String pdbresnumStart, String pdbresnumEnd,boolean ignoreMissing) throws StructureException;
@@ -280,7 +280,7 @@ public interface Chain {
     
     /** get and set the name of this chain (Chain id in PDB file ).
      * @return a String representing the name value
-     * @see #setChainID();
+     * @see #setChainID(String)
      * 
      */
     public String getChainID();
