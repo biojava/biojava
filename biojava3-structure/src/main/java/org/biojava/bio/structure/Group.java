@@ -330,7 +330,7 @@ public interface Group {
 	 * Chain has been set. This replaces the need to use the expression
 	 * group.getChain().getId() 
 	 * @since 3.0
-	 * @return
+	 * @return  the ID of the chain
 	 */
 	public String getChainId();
 
@@ -342,7 +342,7 @@ public interface Group {
 
 	/** Get the chemical component that closer describes this group. If the information does not exist yet, fetches the information from PDB web site.
 	 *  
-	 * @return
+	 * @return the Chemical Component definition for this Group.
 	 */
 	public ChemComp getChemComp();
 
