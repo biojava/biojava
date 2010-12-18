@@ -60,7 +60,7 @@ public class AFPChainCoordManager {
 	
 	/** X coordinate size
 	 * 
-	 * @return
+	 * @return the preferred width
 	 */
 	public int getPreferredWidth(){
 		return 2* DEFAULT_X_SPACE + DEFAULT_LINE_LENGTH * DEFAULT_CHAR_SIZE + DEFAULT_LEGEND_SIZE +DEFAULT_RIGHT_SPACER + DEFAULT_LEGEND_SIZE;
@@ -68,7 +68,7 @@ public class AFPChainCoordManager {
 	
 	/** Y coordinate size
 	 * 
-	 * @return
+	 * @return the preferred height
 	 */
 	public int getPreferredHeight(){
 		return 2* DEFAULT_Y_SPACE + (afpChain.getAlnLength() / DEFAULT_LINE_LENGTH) * DEFAULT_Y_STEP + DEFAULT_LINE_SEPARATION;
@@ -77,7 +77,7 @@ public class AFPChainCoordManager {
 	/** convert from a X position in the JPanel to alignment position
 	 * 
 	 * @param x
-	 * @return
+	 * @return the sequence position for a point on the Panel
 	 */
 	public int getSeqPos(int aligSeq, Point p) {
 		
@@ -101,7 +101,7 @@ public class AFPChainCoordManager {
 	 * 
 	 * @param aligSeq, 0 or 1 for which of the two sequences to ask for.
 	 * @param i
-	 * @return
+	 * @return the point on a panel for a sequence position
 	 */
 	public Point getPanelPos(int aligSeq, int i) {
 		Point p = new Point();
@@ -132,7 +132,7 @@ public class AFPChainCoordManager {
 	/** returns the AligSeq (0 or 1) for a point
 	 * returns -1 if not over an alig seq.
 	 * @param point
-	 * @return
+	 * @return which of the two sequences a point on the panel corresponds to
 	 */
 	public int getAligSeq(Point point) {
 		
@@ -166,7 +166,7 @@ public class AFPChainCoordManager {
 	 * 
 	 * @param rowNr
 	 * @param chainNr
-	 * @return
+	 * @return get the point where to draw the legend
 	 */
 	public Point getLegendPosition(int lineNr, int chainNr) {
 		int x = DEFAULT_X_SPACE ;
