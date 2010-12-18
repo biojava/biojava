@@ -214,10 +214,10 @@ public class ScopInstallation {
 		return domainMap.get(pdbId.toLowerCase());
 	}
 	
-	/** get a ScopDomain by its SCOP ID (warning, they are not stable between releasese!)
+	/** get a ScopDomain by its SCOP ID (warning, they are not stable between releases!)
      * 
      *
-     * @param string e.g. d2bq6a1
+     * @param scopId e.g. d2bq6a1 
      * @return a ScopDomain or null if no domain with the particular ID could be found
      */
     public ScopDomain getDomainByScopID(String scopId) {
