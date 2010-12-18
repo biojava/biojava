@@ -51,7 +51,7 @@ public class HasResultXMLConverter
    /** return flag if the server has a result
     * 
     * @param hasResult
-    * @return
+    * @return flag if there is a result
     */
    public String toXML(boolean hasResult) throws IOException{
       StringWriter swriter = new StringWriter();
