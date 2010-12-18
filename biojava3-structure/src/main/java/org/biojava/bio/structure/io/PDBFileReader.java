@@ -39,7 +39,6 @@ import java.util.List;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
-import org.biojava.bio.structure.AminoAcid;
 import org.biojava.bio.structure.Chain;
 import org.biojava.bio.structure.Compound;
 import org.biojava.bio.structure.Group;
@@ -60,13 +59,10 @@ import org.biojava3.core.util.InputStreamProvider;
  *  <p>
  *  Several flags can be set for this class
  *  <ul>
- *  <li> {@link #setParseCAOnly} - parse only the Atom records for C-alpha atoms (default:false)</li>
- * <li> {@link #setParseSecStruc} - a flag if the secondary structure information from the PDB file (author's assignment) should be parsed.
- *      If true the assignment can be accessed through {@link AminoAcid}.getSecStruc(); (default:false)</li>
- * <li> {@link #setAlignSeqRes(boolean)} - should the AminoAcid sequences from the SEQRES
- *      and ATOM records of a PDB file be aligned? (default:true)</li>
+ *  
  * <li> {@link #setAutoFetch(boolean)} - if the PDB file can not be found locally, should it be fetched
  *  from the PDB ftp servers? (default:false)</li>
+ *  <li> Other parameters can be set using the {@link #setFileParsingParameters(FileParsingParameters)}</li>
  *  </ul>
  *  </p>
  *
