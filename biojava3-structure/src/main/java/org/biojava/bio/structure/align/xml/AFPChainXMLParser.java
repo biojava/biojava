@@ -53,7 +53,7 @@ public class AFPChainXMLParser
    /** returns true if the alignment XML contains an error message
     * 
     * @param xml
-    * @return
+    * @return flag if there was an Error while processing the alignment. 
     */
    public static boolean isErrorXML(String xml){
       
@@ -68,7 +68,7 @@ public class AFPChainXMLParser
 	/** Takes an XML representation of the alignment and flips the positions of name1 and name2
 	 * 
 	 * @param xml String representing the alignment
-	 * @return
+	 * @return XML representation of the flipped alignment
 	 */
 	public static String flipAlignment(String xml) throws IOException,StructureException{
 		AFPChain[] afps = parseMultiXML( xml);
