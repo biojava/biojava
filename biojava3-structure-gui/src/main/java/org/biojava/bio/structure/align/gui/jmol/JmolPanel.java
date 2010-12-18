@@ -152,7 +152,7 @@ implements ActionListener
 	
 	/** The user selected one of the Combo boxes...
 	 * 
-	 * @param arg0
+	 * @param event an ActionEvent
 	 */
 	public void actionPerformed(ActionEvent event) {
 		JComboBox source = (JComboBox) event.getSource();
