@@ -34,6 +34,7 @@ import javax.swing.JTextField;
 
 import org.biojava.bio.structure.align.gui.jmol.JmolPanel;
 import org.biojava.bio.structure.align.gui.jmol.StructureAlignmentJmol;
+import org.biojava.bio.structure.gui.BiojavaJmol;
 
 
 
