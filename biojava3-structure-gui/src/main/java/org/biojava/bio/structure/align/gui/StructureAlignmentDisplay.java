@@ -24,7 +24,7 @@ public class StructureAlignmentDisplay {
     * @param afpChain
     * @param ca1
     * @param ca2
-    * @return
+    * @return a StructureAlignmentJmol instance
     * @throws StructureException
     */
    public static StructureAlignmentJmol display(AFPChain afpChain, Atom[] ca1, Atom[] ca2) throws StructureException {
@@ -37,10 +37,10 @@ public class StructureAlignmentDisplay {
             
       List<Group> hetatms  = new ArrayList<Group>();
       List<Group> nucs1    = new ArrayList<Group>();
-      Group g1 = ca1[0].getParent();
+      Group g1 = ca1[0].getGroup();
       Chain c1 = null;
       if ( g1 != null) {
-         c1 = g1.getParent();
+         c1 = g1.getChain();
          if ( c1 != null){
             hetatms = c1.getAtomGroups("hetatm");;
             nucs1  = c1.getAtomGroups("nucleotide");
@@ -48,10 +48,10 @@ public class StructureAlignmentDisplay {
       }
       List<Group> hetatms2 = new ArrayList<Group>();
       List<Group> nucs2    = new ArrayList<Group>();
-      Group g2 = ca2[0].getParent();
+      Group g2 = ca2[0].getGroup();
       Chain c2 = null;
       if ( g2 != null){
-         c2 = g2.getParent();
+         c2 = g2.getChain();
          if ( c2 != null){
             hetatms2 = c2.getAtomGroups("hetatm");
             nucs2 = c2.getAtomGroups("nucleotide");
@@ -67,7 +67,7 @@ public class StructureAlignmentDisplay {
     * @param afpChain
     * @param ca1
     * @param ca2
-    * @return
+    * @return an array of Groups that are transformed for 3D display
     * @throws StructureException
     */
    public static Group[] prepareGroupsForDisplay(AFPChain afpChain, Atom[] ca1, Atom[] ca2) throws StructureException{
@@ -91,10 +91,10 @@ public class StructureAlignmentDisplay {
       List<Group> nucs2    = new ArrayList<Group>();
       
      
-      Group g2 = ca2[0].getParent();
+      Group g2 = ca2[0].getGroup();
       Chain c2 = null;
       if ( g2 != null){
-         c2 = g2.getParent();
+         c2 = g2.getChain();
          if ( c2 != null){
             hetatms2 = c2.getAtomGroups("hetatm");
             nucs2 = c2.getAtomGroups("nucleotide");
@@ -105,7 +105,7 @@ public class StructureAlignmentDisplay {
          
          for (Atom a: ca2){
             i++;
-            twistedGroups[i]=a.getParent();
+            twistedGroups[i]=a.getGroup();
             
          }
 
@@ -161,7 +161,7 @@ public class StructureAlignmentDisplay {
       int i = -1;
       for (Atom a: ca2){
          i++;
-         Group g = a.getParent();
+         Group g = a.getGroup();
         
          
          Calc.rotate(g,m);
