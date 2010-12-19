@@ -476,11 +476,11 @@ public class DisplayAFP
    }
   
 
-   /** get an artifical Structure containing both chains.
+   /** Get an artifical Structure containing both chains.
     * Does NOT rotate anything
     * @param ca1
     * @param ca2
-    * @return
+    * @return a structure object containing two models, one for each set of Atoms.
     * @throws StructureException
     */
    public static final Structure getAlignedStructure(Atom[] ca1, Atom[] ca2) throws StructureException{
