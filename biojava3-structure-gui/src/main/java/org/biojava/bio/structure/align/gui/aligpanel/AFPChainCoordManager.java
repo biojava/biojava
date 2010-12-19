@@ -76,7 +76,8 @@ public class AFPChainCoordManager {
 	
 	/** convert from a X position in the JPanel to alignment position
 	 * 
-	 * @param x
+	 * @param aligSeq sequence 0 or 1 
+	 * @param p point on panel
 	 * @return the sequence position for a point on the Panel
 	 */
 	public int getSeqPos(int aligSeq, Point p) {
@@ -99,8 +100,8 @@ public class AFPChainCoordManager {
 
 	/** get the position of the sequence position on the Panel
 	 * 
-	 * @param aligSeq, 0 or 1 for which of the two sequences to ask for.
-	 * @param i
+	 * @param aligSeq  0 or 1 for which of the two sequences to ask for.
+	 * @param i sequence position
 	 * @return the point on a panel for a sequence position
 	 */
 	public Point getPanelPos(int aligSeq, int i) {
@@ -162,10 +163,10 @@ public class AFPChainCoordManager {
 		return -1;
 	}
 
-	/** provide the coordinates for where to draw the legend for row and if it is chain 1 or 2
+	/** provide the coordinates for where to draw the legend for line X and if it is chain 1 or 2
 	 * 
-	 * @param rowNr
-	 * @param chainNr
+	 * @param lineNr which line is this for
+	 * @param chainNr is it chain 0 or 1
 	 * @return get the point where to draw the legend
 	 */
 	public Point getLegendPosition(int lineNr, int chainNr) {
