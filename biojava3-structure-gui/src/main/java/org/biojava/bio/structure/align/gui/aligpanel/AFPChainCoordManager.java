@@ -74,7 +74,7 @@ public class AFPChainCoordManager {
 		return 2* DEFAULT_Y_SPACE + (afpChain.getAlnLength() / DEFAULT_LINE_LENGTH) * DEFAULT_Y_STEP + DEFAULT_LINE_SEPARATION;
 	}
 	
-	/** convert from a X position in the JPanel to alignment position
+	/** Convert from a X position in the JPanel to alignment position
 	 * 
 	 * @param aligSeq sequence 0 or 1 
 	 * @param p point on panel
