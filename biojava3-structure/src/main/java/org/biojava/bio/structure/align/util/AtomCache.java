@@ -2,10 +2,11 @@ package org.biojava.bio.structure.align.util;
 
 import java.io.IOException;
 
-import java.util.ArrayList;
+
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.TreeSet;
 
 import org.biojava.bio.structure.Atom;
 
@@ -41,7 +42,7 @@ public class AtomCache {
 
 
 	// make sure IDs are loaded uniquely
-	Collection<String> currentlyLoading = Collections.synchronizedCollection(new ArrayList<String>());
+	Collection<String> currentlyLoading = Collections.synchronizedCollection(new TreeSet<String>());
 
 	private static ScopInstallation scopInstallation ;
 	boolean autoFetch;
@@ -233,7 +234,7 @@ public class AtomCache {
 		return atoms;
 	}
 
-	
+
 	/** Returns the CA atoms for the provided name. See {@link #getStructure(String)} for supported naming conventions.
 	 * 
 	 * @param name
@@ -337,12 +338,12 @@ public class AtomCache {
 
 			while ( checkLoading(pdbId) ){
 				// waiting for loading to be finished...
-				// sleep half a second...
-				//				try {
-				//					Thread.sleep(500);
-				//				} catch (InterruptedException e){
-				//					System.err.println(e.getMessage());
-				//				}
+
+				try {
+					Thread.sleep(100);
+				} catch (InterruptedException e){
+					System.err.println(e.getMessage());
+				}
 
 			}
 
@@ -411,7 +412,8 @@ public class AtomCache {
 	}
 
 	private  void flagLoading(String name){
-		currentlyLoading.add(name);
+		if ( ! currentlyLoading.contains(name))	
+			currentlyLoading.add(name);
 	}
 
 	private  void flagLoadingFinished(String name){
