@@ -52,9 +52,9 @@
 				<configuration>
 					<filesets>
 						<fileset>
-							<directory>/src/test/resources/testoutput/</directory>
+							<directory>/src/test/resources/testoutput</directory>
 							<includes>
-								<include>volvox_all.faa</include>
+								<include>**/volvox_all.faa</include>
 							</includes>
 						</fileset>
 					</filesets>
