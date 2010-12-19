@@ -43,7 +43,11 @@ import org.biojava.bio.structure.align.gui.jmol.JmolTools;
 import org.biojava.bio.structure.align.gui.jmol.StructureAlignmentJmol;
 import org.biojava.bio.structure.align.model.AFPChain;
 
-
+/** A utility class for visualistion of structure alignments
+ * 
+ * @author Andreas Prlic
+ *
+ */
 public class DisplayAFP
 {
 
@@ -175,10 +179,10 @@ public class DisplayAFP
 
    /** return the atom at alignment position aligPos. at the present only works with block 0
     * @param chainNr the number of the aligned pair. 0... first chain, 1... second chain.
-    * @param afpChain
+    * @param afpChain an afpChain object
     * @param aligPos position on the alignment
     * @param getPrevious gives the previous position if false, gives the next posible atom
-    * @return
+    * @return a CA atom that is at a particular position of the alignment 
     */
    public static final Atom getAtomForAligPos(AFPChain afpChain,int chainNr, int aligPos, Atom[] ca , boolean getPrevious ) throws StructureException{
       int[] optLen = afpChain.getOptLen();
@@ -436,9 +440,8 @@ public class DisplayAFP
 
    /** get an artifical List of chains containing the Atoms and groups.
     * Does NOT rotate anything.
-    * @param ca1
-    * @param ca2
-    * @return
+    * @param ca
+    * @return a list of Chains that is built up from the Atoms in the ca array
     * @throws StructureException
     */
    private static final List<Chain> getAlignedModel(Atom[] ca){
@@ -446,12 +449,12 @@ public class DisplayAFP
       List<Chain> model = new ArrayList<Chain>();
       for ( Atom a: ca){
 
-         Group g = a.getParent();
-         Chain parentC = g.getParent();
+         Group g = a.getGroup();
+         Chain parentC = g.getChain();
 
          Chain newChain = null;
          for ( Chain c :  model) {
-            if ( c.getName().equals(parentC.getName())){
+            if ( c.getChainID().equals(parentC.getChainID())){
                newChain = c;
                break;
             }
@@ -460,7 +463,7 @@ public class DisplayAFP
 
             newChain = new ChainImpl();
 
-            newChain.setName(parentC.getName());
+            newChain.setChainID(parentC.getChainID());
 
             model.add(newChain);
          }
@@ -513,7 +516,7 @@ public class DisplayAFP
          Atom a = g.getAtom(0);
          //if (debug)
          //  System.out.println(a);
-         a.setParent(g);
+         a.setGroup(g);
          atoms.add(a);
       }
       for (Group g : nucleotides ){
@@ -522,7 +525,7 @@ public class DisplayAFP
          Atom a = g.getAtom(0);
          //if (debug)
          //   System.out.println(a);
-         a.setParent(g);
+         a.setGroup(g);
          atoms.add(a);
       }
 
