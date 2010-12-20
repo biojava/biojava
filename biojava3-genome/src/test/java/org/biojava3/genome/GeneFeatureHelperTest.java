@@ -69,6 +69,19 @@ public class GeneFeatureHelperTest extends TestCase {
     }
 
     /**
+     * Test if the note from a gff3 file is added to the gene sequence
+     * @throws Exception
+     */
+
+    public void testAddGFF3Note() throws Exception {
+        LinkedHashMap<String, ChromosomeSequence> chromosomeSequenceList = GeneFeatureHelper.loadFastaAddGeneFeaturesFromGmodGFF3(new File("src/test/resources/volvox_all.fna"), new File("src/test/resources/volvox.gff3"));
+        ChromosomeSequence ctgASequence = chromosomeSequenceList.get("ctgA");
+        GeneSequence edenGeneSequence = ctgASequence.getGene("EDEN");
+        System.out.println("Note " + edenGeneSequence.getNotesList());
+
+    }
+
+    /**
      * Test of getProteinSequences method, of class GeneFeatureHelper. Used gff3 file that was modified from the volvox gff version. Do not
      * have the reference protein that is generated from each CDS record so subject to being incorrect without a validated test case.
      * Could not find anyone providing a gff3 test case with expected protein output.

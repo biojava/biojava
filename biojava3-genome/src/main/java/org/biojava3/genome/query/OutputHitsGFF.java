@@ -56,9 +56,9 @@ public class OutputHitsGFF {
         public static void main(String[] args) {
         try {
             OutputHitsGFF outputHitsGFF = new OutputHitsGFF();
-            outputHitsGFF.process(new File("/Users/Scooter/scripps/dyadic/analysis/454Scaffolds/c1-454Scaffolds-hits-uniprot_fungi.xml"),
-                    new File("/Users/Scooter/scripps/dyadic/analysis/454Scaffolds/genemark_hmm.gtf"),
-                    new File("/Users/Scooter/scripps/dyadic/analysis/454Scaffolds/genemark_hits_hmm.gtf"), 0, 100, true, true);
+            outputHitsGFF.process(new File("hits-uniprot_fungi.xml"),
+                    new File("genemark_hmm.gtf"),
+                    new File("genemark_hits_hmm.gtf"), 0, 100, true, true);
 
 
         } catch (Exception e) {
