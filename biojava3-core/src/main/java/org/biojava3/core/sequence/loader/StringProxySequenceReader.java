@@ -41,6 +41,11 @@ import org.biojava3.core.sequence.template.ProxySequenceReader;
 import org.biojava3.core.sequence.template.SequenceMixin;
 import org.biojava3.core.sequence.template.SequenceView;
 
+/**
+ * An example of a ProxySequenceReader that is created from a String. Used for testing
+ * @author Scooter Willis <willishf at gmail dot com>
+ * @param <C>
+ */
 
 public class StringProxySequenceReader<C extends Compound> implements ProxySequenceReader<C> {
 

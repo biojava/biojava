@@ -1,7 +1,25 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ *                    BioJava development code
+ *
+ * This code may be freely distributed and modified under the
+ * terms of the GNU Lesser General Public Licence.  This should
+ * be distributed with the code.  If you do not have a copy,
+ * see:
+ *
+ *      http://www.gnu.org/copyleft/lesser.html
+ *
+ * Copyright for this code is held jointly by the individual
+ * authors.  These should be listed in @author doc comments.
+ *
+ * For more information on the BioJava project and its aims,
+ * or to join the biojava-l mailing list, visit the home page
+ * at:
+ *
+ *      http://www.biojava.org/
+ *
+ * Created on 01-21-2010
  */
+
 package org.biojava3.core.sequence.io;
 
 import java.io.OutputStream;
@@ -17,7 +35,9 @@ import org.biojava3.core.sequence.compound.NucleotideCompound;
 import org.biojava3.core.sequence.io.template.FastaHeaderFormatInterface;
 
 /**
- *  6/22/2010 FastaWriter needs to be sequence aware to handle writing out a GeneSequence which is negative Strand with the proper sequence
+ * A Gene sequence has a Positive or Negative Strand where we want to write out to a stream the 5 to 3 prime version.
+ * It is also an option to write out the gene sequence where the exon regions are upper case
+ * 6/22/2010 FastaWriter needs to be sequence aware to handle writing out a GeneSequence which is negative Strand with the proper sequence
  * @author Scooter Willis <willishf at gmail dot com>
  */
 public class FastaGeneWriter {
@@ -27,11 +47,24 @@ public class FastaGeneWriter {
     Collection<GeneSequence> sequences;
     FastaHeaderFormatInterface<GeneSequence, NucleotideCompound> headerFormat;
     private int lineLength = 60;
-
+/**
+ *
+ * @param os
+ * @param sequences
+ * @param headerFormat
+ * @param showExonUppercase
+ */
     public FastaGeneWriter(OutputStream os, Collection<GeneSequence> sequences, FastaHeaderFormatInterface<GeneSequence, NucleotideCompound> headerFormat, boolean showExonUppercase) {
         this(os, sequences, headerFormat, showExonUppercase, 60);
     }
-
+/**
+ *
+ * @param os
+ * @param sequences
+ * @param headerFormat
+ * @param showExonUppercase
+ * @param lineLength
+ */
     public FastaGeneWriter(OutputStream os, Collection<GeneSequence> sequences, FastaHeaderFormatInterface<GeneSequence, NucleotideCompound> headerFormat, boolean showExonUppercase, int lineLength) {
         this.os = os;
         this.sequences = sequences;
@@ -39,7 +72,10 @@ public class FastaGeneWriter {
         this.lineLength = lineLength;
         this.showExonUppercase = showExonUppercase;
     }
-
+/**
+ *
+ * @throws Exception
+ */
     public void process() throws Exception {
         byte[] lineSep = System.getProperty("line.separator").getBytes();
 

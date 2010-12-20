@@ -10,11 +10,21 @@ import org.biojava3.core.sequence.template.Compound;
 import org.biojava3.core.sequence.template.CompoundSet;
 
 /**
- *
+ * This is a common method that can be used across multiple storage/proxy implementations to
+ * handle Negative strand and other interesting elements of sequence data.
  * @author Scooter Willis <willishf at gmail dot com>
  */
 public class SequenceAsStringHelper<C extends Compound> {
 
+    /**
+     *
+     * @param parsedCompounds
+     * @param compoundSet
+     * @param bioBegin
+     * @param bioEnd
+     * @param strand
+     * @return
+     */
     public String getSequenceAsString(List<C> parsedCompounds, CompoundSet<C> compoundSet, Integer bioBegin, Integer bioEnd, Strand strand) {
         // TODO Optimise/cache.
         if(parsedCompounds.size() == 0)

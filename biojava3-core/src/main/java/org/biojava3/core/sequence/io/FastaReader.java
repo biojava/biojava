@@ -1,6 +1,23 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ *                    BioJava development code
+ *
+ * This code may be freely distributed and modified under the
+ * terms of the GNU Lesser General Public Licence.  This should
+ * be distributed with the code.  If you do not have a copy,
+ * see:
+ *
+ *      http://www.gnu.org/copyleft/lesser.html
+ *
+ * Copyright for this code is held jointly by the individual
+ * authors.  These should be listed in @author doc comments.
+ *
+ * For more information on the BioJava project and its aims,
+ * or to join the biojava-l mailing list, visit the home page
+ * at:
+ *
+ *      http://www.biojava.org/
+ *
+ * Created on 01-21-2010
  */
 package org.biojava3.core.sequence.io;
 
@@ -19,7 +36,8 @@ import org.biojava3.core.sequence.template.Compound;
 import org.biojava3.core.sequence.template.Sequence;
 
 /**
- *
+ * Use FastaReaderHelper as an example of how to use this class where FastaReaderHelper should be the
+ * primary class used to read Fasta files
  * @author Scooter Willis <willishf at gmail dot com>
  */
 public class FastaReader<S extends Sequence<?>, C extends Compound> {
@@ -32,7 +50,7 @@ public class FastaReader<S extends Sequence<?>, C extends Compound> {
 
     /**
      * If you are going to use FileProxyProteinSequenceCreator then do not use this constructor because we need details about
-     * local file offsets for quick reads. InputStreams don't give you the name of the stream to access quickly via file seek. A seek in
+     * local file offsets for quick reads. InputStreams does not give you the name of the stream to access quickly via file seek. A seek in
      * an inputstream is forced to read all the data so you don't gain anything.
      * @param br
      * @param headerParser
