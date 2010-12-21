@@ -183,7 +183,7 @@ public class PDBFileReader implements StructureIOFile {
 				List<Chain> chains = comp.getChains();
 				System.out.print(">Chains :" );
 				for (Chain c : chains){
-					System.out.print(c.getName() + " " );					
+					System.out.print(c.getChainID() + " " );					
 				}
 				System.out.println();
 				if ( chains.size() > 0)	{				
@@ -231,7 +231,7 @@ public class PDBFileReader implements StructureIOFile {
 
    public PDBFileReader() {
 		extensions    = new ArrayList<String>();
-		path = "" ;
+		
 		extensions.add(".ent");
 		extensions.add(".pdb");
 		extensions.add(".ent.gz");
@@ -243,6 +243,38 @@ public class PDBFileReader implements StructureIOFile {
 		pdbDirectorySplit = false;
 		
 		params = new FileParsingParameters();
+		
+		//checkPath();
+	}
+   
+   /** Check the directory that contains the local cache of PDB and chemical component definiton files.
+    * By default, at startup we fall back to java.io.tmpdir
+    */
+   private  void checkPath(){
+
+		if ((path == null) || (path.equals("")) || path.equals("null")) {
+
+			String syspath = System.getProperty(AbstractUserArgumentProcessor.PDB_DIR);
+
+			if ((syspath != null) && (! syspath.equals("")) && (! syspath.equals("null"))){
+
+				path = syspath;
+				return;
+			}
+
+			// accessing temp. OS directory:         
+			String property = "java.io.tmpdir";
+
+			String tempdir = System.getProperty(property);
+
+			if ( !(tempdir.endsWith(lineSplit) ) )
+				tempdir = tempdir + lineSplit;
+
+			// 
+			System.err.println("you did not set the path in PDBFileReader, don't know where to write the downloaded file to");
+			System.err.println("assuming default location is temp directory: " + tempdir);
+			path = tempdir;
+		}
 	}
 
 
@@ -311,10 +343,11 @@ public class PDBFileReader implements StructureIOFile {
 	private InputStream getInputStream(String pdbId)
 	throws IOException
 	{
-
+		
 		if ( pdbId.length() < 4)
 			throw new IOException("the provided ID does not look like a PDB ID : " + pdbId);
 
+		checkPath();
 	
 		InputStream inputStream =null;
 
