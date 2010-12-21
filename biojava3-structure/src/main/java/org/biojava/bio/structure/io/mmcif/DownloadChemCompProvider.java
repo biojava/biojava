@@ -3,11 +3,15 @@ package org.biojava.bio.structure.io.mmcif;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.FilenameFilter;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.zip.GZIPOutputStream;
 
 
@@ -17,7 +21,16 @@ import org.biojava.bio.structure.io.mmcif.model.ChemComp;
 import org.biojava3.core.util.InputStreamProvider;
 
 
-/** This class can download and caches chemical component files from the RCSB PDB web site.  
+
+/** This provider of chemical components can download and cache chemical component definition files from the RCSB PDB web site.
+ *  It is the default way to access these definitions.
+ *  If this provider is called he first time, it will download and install all chemical 
+ *  component definitions in a local directory. 
+ *  Once the definition files have been installed, it has quick startup time and low memory requirements. 
+ *
+ *  An alternative provider, that keeps all definitions in memory is the {@link AllChemCompProvider}. Another provider, that
+ *  does not require any network access, but only can support a limited set of chemical component definitions, is the {@link ReducedChemCompProvider}. 
+ *  
  * 
  * @author Andreas Prlic
  *
@@ -25,21 +38,140 @@ import org.biojava3.core.util.InputStreamProvider;
 public class DownloadChemCompProvider implements ChemCompProvider {
 
 	static String path; 
-	private static final String lineSplit = System.getProperty("file.separator");
+	private static final String FILE_SEPARATOR = System.getProperty("file.separator");
+	static final String NEWLINE = System.getProperty("line.separator");
 
-	private static String dirName = "chemcomp";
+	public static String CHEM_COMP_CACHE_DIRECTORY = "chemcomp";
 
 	private static String serverLocation = "http://www.rcsb.org/pdb/files/ligand/";
 
-	
+	// flags to make sure there is only one thread running that is loading the dictionary
+	static AtomicBoolean loading = new AtomicBoolean(false);
+
+
+
 	public DownloadChemCompProvider(){
-		//System.out.println("USING DOWNLOAD CHEM COMP PROVIDER");
+		//System.out.println("USING DOWNLOAD CHEM COMP PROVIDER");		
 	}
-	
+
+	/** checks if the chemical components already have been installed into the PDB directory.
+	 *  If not, will download the chemical components definitions file and split it up into small
+	 *  subfiles.
+	 */
+	public void checkDoFirstInstall(){
+
+		String filename = path + 	
+		DownloadChemCompProvider.CHEM_COMP_CACHE_DIRECTORY +
+		FILE_SEPARATOR + 
+		"components.cif.gz";
+
+		File f = new File(filename);
+
+		if ( ! f.exists()) {
+
+			downloadAllDefinitions();
+
+		} else {
+			// file exists.. did it get extracted?
+			String directoryName = path + 	
+			DownloadChemCompProvider.CHEM_COMP_CACHE_DIRECTORY +
+			FILE_SEPARATOR;
+
+			File dir = new File(directoryName);
+
+			FilenameFilter filter =new FilenameFilter() {
+
+				public boolean accept(File dir, String file) {
+					return file.endsWith(".cif.gz");
+				}
+			};
+			String[] files = dir.list(filter);
+			if ( files.length < 500) {
+				// not all did get unpacked
+				split();
+			}
+		}
+	}
+
+	private void split(){
+
+		System.out.println("Installing individual chem comp files ...");
+		
+		String filename = path + 
+		DownloadChemCompProvider.CHEM_COMP_CACHE_DIRECTORY + FILE_SEPARATOR +
+		"components.cif.gz";
+
+		int counter = 0;
+		InputStreamProvider prov = new InputStreamProvider();
+		try {
+			InputStream inStream = prov.getInputStream(filename);
+
+			BufferedReader buf = new BufferedReader (new InputStreamReader (inStream));
+
+			String line = null;
+			line = buf.readLine ();
+			StringWriter writer = new StringWriter();
+
+			String currentID = null;
+			while (line != null){
+
+				if ( line.startsWith("data_")) {
+					// a new record found!
+
+					if ( currentID != null) {
+						writeID(writer, currentID);
+						counter++;
+					}
+
+					currentID = line.substring(5);
+					writer = new StringWriter();
+				}
+
+				writer.append(line);
+				writer.append(NEWLINE);
+
+				line = buf.readLine ();
+			}
+
+			// write the last record...
+			writeID(writer,currentID);
+			counter++;
+		} catch (Exception e){
+			e.printStackTrace();
+		}
+		System.out.println("created " + counter + " chemical component files.");
+	}
+
+	private void writeID(StringWriter writer, String currentID) throws IOException{
+
+		//System.out.println("writing ID " + currentID);
+
+		String localName = DownloadChemCompProvider.getLocalFileName(currentID);
+
+		FileOutputStream outPut = new FileOutputStream(localName);
+
+		GZIPOutputStream gzOutPut = new GZIPOutputStream(outPut);
+
+		PrintWriter pw = new PrintWriter(gzOutPut);
+
+		pw.print(writer.toString());
+		writer.close();
+		pw.flush();
+		pw.close();
+
+		outPut.close();
+
+	}
+
+	/** Loads the definitions for this {@link ChemComp} from a local file and instantiates a new object.
+	 * 
+	 * @param recordName the ID of the {@link ChemComp}
+	 * @return a new {@link ChemComp} definition.
+	 */
 	public  ChemComp getChemComp(String recordName) {
 
 		checkPath();
-		
+
 		// make sure we work with upper case records		
 		recordName = recordName.toUpperCase().trim();
 
@@ -48,7 +180,12 @@ public class DownloadChemCompProvider implements ChemCompProvider {
 		}
 		try {
 			if ( ! fileExists(recordName)) {
-
+				// check if we should install all components				
+				checkDoFirstInstall();
+			}
+			if ( ! fileExists(recordName)) {
+				// we previously have installed already the definitions,
+				// just do an incrememntal update
 				downloadChemCompRecord(recordName);
 			}
 
@@ -82,13 +219,13 @@ public class DownloadChemCompProvider implements ChemCompProvider {
 		return null;
 
 	}
-	
+
 	private static void checkPath(){
 
 		if ((path == null) || (path.equals("")) || path.equals("null")) {
 
 			String syspath = System.getProperty(AbstractUserArgumentProcessor.PDB_DIR);
-			
+
 			if ((syspath != null) && (! syspath.equals("")) && (! syspath.equals("null"))){
 
 				path = syspath;
@@ -100,8 +237,8 @@ public class DownloadChemCompProvider implements ChemCompProvider {
 
 			String tempdir = System.getProperty(property);
 
-			if ( !(tempdir.endsWith(lineSplit) ) )
-				tempdir = tempdir + lineSplit;
+			if ( !(tempdir.endsWith(FILE_SEPARATOR) ) )
+				tempdir = tempdir + FILE_SEPARATOR;
 
 			System.err.println("you did not set the path in PDBFileReader, don't know where to write the downloaded file to");
 			System.err.println("assuming default location is temp directory: " + tempdir);
@@ -109,10 +246,14 @@ public class DownloadChemCompProvider implements ChemCompProvider {
 		}
 	}
 
+	/** Returns the file name that contains the definition for this {@link ChemComp}
+	 *  
+	 * @param recordName the ID of the {@link ChemComp}
+	 * @return full path to the file
+	 */
+	public static String getLocalFileName(String recordName){
 
-	private static String getLocalFileName(String recordName){
-
-		String dir = path + dirName + lineSplit;
+		String dir = path + CHEM_COMP_CACHE_DIRECTORY + FILE_SEPARATOR;
 
 		File f = new File(dir);
 		if (! f.exists()){
@@ -120,7 +261,7 @@ public class DownloadChemCompProvider implements ChemCompProvider {
 			f.mkdir();
 		}
 
-		String fileName = path + dirName + lineSplit + recordName + ".cif.gz";
+		String fileName = path + CHEM_COMP_CACHE_DIRECTORY + FILE_SEPARATOR + recordName + ".cif.gz";
 
 		return fileName;
 	}
@@ -138,8 +279,8 @@ public class DownloadChemCompProvider implements ChemCompProvider {
 	private static void downloadChemCompRecord(String recordName) {
 		String path = System.getProperty(AbstractUserArgumentProcessor.PDB_DIR);
 		setPath(path);
-		
-		
+
+
 		String localName = getLocalFileName(recordName);
 
 		String u = serverLocation + recordName + ".cif";
@@ -189,13 +330,58 @@ public class DownloadChemCompProvider implements ChemCompProvider {
 	 */
 	public static void setPath(String p) {
 		path = p;
-		if ( ! path.endsWith(lineSplit))
-			path += lineSplit;
+		if ( ! path.endsWith(FILE_SEPARATOR))
+			path += FILE_SEPARATOR;
+
+	}
+
+	private void downloadAllDefinitions() {
+
+		if ( loading.get()){
+			System.out.println("Waiting for other thread to install chemical components...");
+		}
+
+		while ( loading.get() ) {
+
+			// another thread is already downloading the components definitions
+			// wait for the other thread to finish...
+
+			try {
+				// wait half a second
+
+				Thread.sleep(500);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+			System.out.println("Another thread installed the chemical components.");
+			return;
+
+		}
+
+		loading.set(true);
+		long timeS = System.currentTimeMillis();
+
+		System.out.println("Performing first installation of chemical components.");
+		System.out.println("Downloading components.cif.gz ...");
+
+		AllChemCompProvider.checkPath();
+		try {
+			AllChemCompProvider.downloadFile();
+		} catch (IOException e){
+			e.printStackTrace();
+		}
+		
+		split();
+		long timeE = System.currentTimeMillis();		
+		System.out.println("time to install chem comp dictionary: " + (timeE - timeS) / 1000 + " sec.");		
+		loading.set(false);
 
 	}
 
 
 
-	
+
 
 }
