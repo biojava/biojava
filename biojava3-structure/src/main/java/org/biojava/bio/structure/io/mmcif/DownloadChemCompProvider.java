@@ -48,7 +48,11 @@ public class DownloadChemCompProvider implements ChemCompProvider {
 	// flags to make sure there is only one thread running that is loading the dictionary
 	static AtomicBoolean loading = new AtomicBoolean(false);
 
-
+	
+	/** by default we will download only some of the files. User has to request that all files should be downloaded...
+	 * 
+	 */
+	boolean downloadAll = false;
 
 	public DownloadChemCompProvider(){
 		//System.out.println("USING DOWNLOAD CHEM COMP PROVIDER");		
@@ -60,6 +64,10 @@ public class DownloadChemCompProvider implements ChemCompProvider {
 	 */
 	public void checkDoFirstInstall(){
 
+		if ( ! downloadAll ) {
+			return;
+		}
+		
 		String filename = path + 	
 		DownloadChemCompProvider.CHEM_COMP_CACHE_DIRECTORY +
 		FILE_SEPARATOR + 
@@ -329,6 +337,8 @@ public class DownloadChemCompProvider implements ChemCompProvider {
 	 * @param p path to PDB files.
 	 */
 	public static void setPath(String p) {
+		if ( p == null)
+			return;
 		path = p;
 		if ( ! path.endsWith(FILE_SEPARATOR))
 			path += FILE_SEPARATOR;
@@ -378,6 +388,24 @@ public class DownloadChemCompProvider implements ChemCompProvider {
 		System.out.println("time to install chem comp dictionary: " + (timeE - timeS) / 1000 + " sec.");		
 		loading.set(false);
 
+	}
+
+	/** By default this provider will download only some of the {@link ChemComp} files. 
+	 * The user has to request that all files should be downloaded by setting this parameter to true.
+	 * 
+	 *  @return flag if the all components should be downloaded and installed at startup. (default: false)
+	 */
+	public boolean isDownloadAll() {
+		return downloadAll;
+	}
+
+	/** By default this provider will download only some of the {@link ChemComp} files. 
+	 * The user has to request that all files should be downloaded by setting this parameter to true.
+	 * 
+	 * @param  flag if the all components should be downloaded and installed at startup. (default: false)
+	 */
+	public void setDownloadAll(boolean downloadAll) {
+		this.downloadAll = downloadAll;
 	}
 
 
