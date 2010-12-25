@@ -1,6 +1,8 @@
 package org.biojava.bio.structure;
 
 import org.biojava.bio.structure.io.mmcif.ChemCompGroupFactory;
+import org.biojava.bio.structure.io.mmcif.ChemCompProvider;
+import org.biojava.bio.structure.io.mmcif.DownloadChemCompProvider;
 import org.biojava.bio.structure.io.mmcif.chem.PolymerType;
 import org.biojava.bio.structure.io.mmcif.chem.ResidueType;
 import org.biojava.bio.structure.io.mmcif.model.ChemComp;
@@ -24,12 +26,16 @@ public class ChemCompTest extends TestCase {
 	}
 
 	public void testMEA(){
+		
+		
 		String chemID = "MEA";
 		
-//		DownloadChemCompProvider all = new DownloadChemCompProvider();
-//		all.setDownloadAll(true);
-//		
-//		ChemCompGroupFactory.setChemCompProvider(all);
+		ChemCompProvider oldProvider = ChemCompGroupFactory.getChemCompProvider();
+		
+		DownloadChemCompProvider all = new DownloadChemCompProvider();
+		//all.setDownloadAll(true);
+		
+		ChemCompGroupFactory.setChemCompProvider(all);
 
 		ChemComp cc = ChemCompGroupFactory.getChemComp(chemID);
 
@@ -53,6 +59,7 @@ public class ChemCompTest extends TestCase {
 
 		assertTrue( g.getType().equals("amino"));
 
+		ChemCompGroupFactory.setChemCompProvider(oldProvider);
 	}
 
 }
