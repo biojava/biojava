@@ -1,0 +1,3 @@
+##gff-version 3
+Contig13175	JGI	gene	1	1864985	.	-	.	ID=Aqu1;Name=Aqu1
+Contig100	JGI	mRNA	27	746	.	-	.	ID=PAC:15698561;Name=Aqu1.200033;PACid=15698561;Parent=Aqu1

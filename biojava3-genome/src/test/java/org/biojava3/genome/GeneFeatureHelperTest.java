@@ -14,6 +14,9 @@ import org.biojava3.core.sequence.ChromosomeSequence;
 import org.biojava3.core.sequence.GeneSequence;
 import org.biojava3.core.sequence.ProteinSequence;
 import org.biojava3.core.sequence.io.FastaWriterHelper;
+import org.biojava3.genome.parsers.gff.FeatureI;
+import org.biojava3.genome.parsers.gff.FeatureList;
+import org.biojava3.genome.parsers.gff.GFF3Reader;
 import org.biojava3.genome.parsers.gff.GFF3Writer;
 
 /**
@@ -34,6 +37,15 @@ public class GeneFeatureHelperTest extends TestCase {
     @Override
     protected void tearDown() throws Exception {
         super.tearDown();
+    }
+
+    public void testZeroLocation() throws Exception{
+
+        FeatureList listGenes = GFF3Reader.read("src/test/resources/amphimedon.gff3");
+     //   System.out.println("Features");
+     //   for(FeatureI feature : listGenes){
+     //       System.out.println(feature);
+     //   }
     }
 
     /**
