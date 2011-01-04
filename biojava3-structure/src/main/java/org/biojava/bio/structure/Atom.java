@@ -37,7 +37,7 @@ package org.biojava.bio.structure;
  * @since 1.4
  * 
  */
-public interface Atom extends Cloneable {
+public interface Atom extends Cloneable, PDBRecord {
     
     /** set trimmed version of atom name, e.g. "CA". 
      * @param s  a String specifying the name value
@@ -150,12 +150,14 @@ public interface Atom extends Cloneable {
     /** store the whole line.  
      * @param s  a String specifying the PDBline value
      * @see #getPDBline
+     * @deprecated replaced by {@link #toPDB()}
      */
     public void   setPDBline(String s) ;
     
     /** store the whole line.  
      * @return a String representing the PDBline value
      * @see #setPDBline
+     * @deprecated @deprecated replaced by {@link #toPDB()}
      */
     
     public String getPDBline() ;
