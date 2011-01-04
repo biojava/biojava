@@ -25,6 +25,8 @@ package org.biojava.bio.structure;
 
 import java.io.Serializable;
 
+import org.biojava.bio.structure.io.FileConvert;
+
 
 /**
  * Implementation of an Atom of a PDB file.
@@ -33,7 +35,7 @@ import java.io.Serializable;
  * @since 1.4
  * @version %I% %G%
  */
-public class AtomImpl implements Atom,Serializable {
+public class AtomImpl implements Atom,Serializable, PDBRecord {
 
     /**
     *
@@ -169,12 +171,14 @@ public class AtomImpl implements Atom,Serializable {
 
     /** store the whole line.
      * @see #getPDBline
+     * @deprecated
      */
     public void   setPDBline(String s) { pdbline = s;}
 
     /** get the whole line .
      * @return a String representing the PDBline value
      * @see #setPDBline
+     * @deprecated
      */
     public String getPDBline() { return pdbline ;}
 
@@ -233,6 +237,15 @@ public class AtomImpl implements Atom,Serializable {
 	public void setElement(Element e) {
 		this.element = e;
 	
+	}
+	
+	public String toPDB() {
+		
+		return FileConvert.toPDB(this);
+	}
+	public void toPDB(StringBuffer buf) {
+		FileConvert.toPDB(this,buf);
+		
 	}
 
 
