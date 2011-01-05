@@ -1,5 +1,7 @@
 package org.biojava.bio.structure.io.mmcif.model;
 
+import java.io.Serializable;
+
 import org.biojava.bio.structure.io.mmcif.chem.ChemCompTools;
 import org.biojava.bio.structure.io.mmcif.chem.PolymerType;
 import org.biojava.bio.structure.io.mmcif.chem.ResidueType;
@@ -10,7 +12,12 @@ import org.biojava.bio.structure.io.mmcif.chem.ResidueType;
  * @author Andreas Prlic
  *
  */
-public class ChemComp {
+public class ChemComp implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -4736341142030215915L;
+	
 	String id ;
 	String name;
 	String type;
