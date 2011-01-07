@@ -102,6 +102,11 @@ public class DBReferenceInfo {
         this.id = id;
     }
 
+    @Override
+    public String toString() {
+        return database + ":" + id + ":" + properties;
+    }
+
 
 
 }

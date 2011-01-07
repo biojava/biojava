@@ -39,6 +39,7 @@ import org.biojava3.core.sequence.features.AbstractFeature;
 import org.biojava3.core.sequence.features.DatabaseReferenceInterface;
 import org.biojava3.core.sequence.features.FeatureInterface;
 import org.biojava3.core.sequence.features.FeaturesKeyWordInterface;
+import org.biojava3.core.sequence.loader.UniprotProxySequenceReader;
 import org.biojava3.core.sequence.location.SequenceLocation;
 import org.biojava3.core.sequence.location.SimpleLocation;
 import org.biojava3.core.sequence.location.template.Location;
@@ -116,6 +117,9 @@ public abstract class AbstractSequence<C extends Compound> implements Sequence<C
         }
         if (proxyLoader instanceof DatabaseReferenceInterface) {
             this.setDatabaseReferences((DatabaseReferenceInterface) sequenceStorage);
+        }
+        if(getAccession() == null && proxyLoader instanceof UniprotProxySequenceReader){ // we have lots of unsupported operations for this call so quick fix to allow this tow rork
+            this.setAccession(proxyLoader.getAccession());
         }
     }
 

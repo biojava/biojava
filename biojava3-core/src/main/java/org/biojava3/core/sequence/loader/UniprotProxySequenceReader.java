@@ -42,6 +42,7 @@ import org.biojava3.core.sequence.AccessionID;
 import org.biojava3.core.sequence.template.SequenceProxyView;
 import org.biojava3.core.sequence.template.Compound;
 import org.biojava3.core.exceptions.CompoundNotFoundError;
+import org.biojava3.core.sequence.DataSource;
 import org.biojava3.core.sequence.ProteinSequence;
 import org.biojava3.core.sequence.Strand;
 import org.biojava3.core.sequence.compound.AminoAcidCompound;
@@ -68,19 +69,15 @@ import org.w3c.dom.Element;
  * not manage cache.
  * @param <C>
  */
-
 public class UniprotProxySequenceReader<C extends Compound> implements ProxySequenceReader<C>, FeaturesKeyWordInterface, DatabaseReferenceInterface {
 
     private static final Logger logger = Logger.getLogger(UniprotProxySequenceReader.class.getName());
     private static String uniprotbaseURL = "http://www.uniprot.org"; //"http://pir.uniprot.org";
     private static String uniprotDirectoryCache = null;
-
-
     private String sequence;
     private CompoundSet<C> compoundSet;
     private List<C> parsedCompounds = new ArrayList<C>();
     Document uniprotDoc;
-
 
     /**
      * The uniprot id is used to retrieve the uniprot XML which is then parsed as a DOM object
@@ -143,111 +140,132 @@ public class UniprotProxySequenceReader<C extends Compound> implements ProxySequ
     public C getCompoundAt(int position) {
         return this.parsedCompounds.get(position - 1);
     }
-/**
- *
- * @param compound
- * @return
- */
+
+    /**
+     *
+     * @param compound
+     * @return
+     */
     public int getIndexOf(C compound) {
         return this.parsedCompounds.indexOf(compound) + 1;
     }
-/**
- *
- * @param compound
- * @return
- */
+
+    /**
+     *
+     * @param compound
+     * @return
+     */
     public int getLastIndexOf(C compound) {
         return this.parsedCompounds.lastIndexOf(compound) + 1;
     }
-/**
- *
- * @return
- */
-    
+
+    /**
+     *
+     * @return
+     */
     @Override
     public String toString() {
         return getSequenceAsString();
     }
-/**
- *
- * @return
- */
+
+    /**
+     *
+     * @return
+     */
     public String getSequenceAsString() {
         return sequence;
     }
-/**
- *
- * @return
- */
+
+    /**
+     *
+     * @return
+     */
     public List<C> getAsList() {
         return this.parsedCompounds;
     }
-/**
- *
- * @return
- */
+
+    /**
+     *
+     * @return
+     */
     @Override
     public SequenceView<C> getInverse() {
         return SequenceMixin.inverse(this);
     }
-/**
- *
- * @param bioBegin
- * @param bioEnd
- * @param strand
- * @return
- */
-    
+
+    /**
+     *
+     * @param bioBegin
+     * @param bioEnd
+     * @param strand
+     * @return
+     */
     public String getSequenceAsString(Integer bioBegin, Integer bioEnd, Strand strand) {
         SequenceAsStringHelper<C> sequenceAsStringHelper = new SequenceAsStringHelper<C>();
         return sequenceAsStringHelper.getSequenceAsString(this.parsedCompounds, compoundSet, bioBegin, bioEnd, strand);
     }
-/**
- *
- * @param bioBegin
- * @param bioEnd
- * @return
- */
+
+    /**
+     *
+     * @param bioBegin
+     * @param bioEnd
+     * @return
+     */
     public SequenceView<C> getSubSequence(final Integer bioBegin, final Integer bioEnd) {
         return new SequenceProxyView<C>(UniprotProxySequenceReader.this, bioBegin, bioEnd);
     }
-/**
- *
- * @return
- */
+
+    /**
+     *
+     * @return
+     */
     public Iterator<C> iterator() {
         return this.parsedCompounds.iterator();
     }
-/**
- *
- * @return
- */
+
+    /**
+     *
+     * @return
+     */
     public CompoundSet<C> getCompoundSet() {
         return compoundSet;
     }
-/**
- *
- * @return
- */
-    
+
+    /**
+     *
+     * @return
+     */
     public AccessionID getAccession() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        AccessionID accessionID = new AccessionID();
+        if (uniprotDoc == null) {
+            return accessionID;
+        }
+        try {
+            Element uniprotElement = uniprotDoc.getDocumentElement();
+            Element entryElement = XMLHelper.selectSingleElement(uniprotElement, "entry");
+            Element nameElement = XMLHelper.selectSingleElement(entryElement, "name");
+            accessionID = new AccessionID(nameElement.getTextContent(), DataSource.UNIPROT);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return accessionID;
     }
-/**
- *
- * @param compounds
- * @return
- */
-    
+
+    /**
+     *
+     * @param compounds
+     * @return
+     */
     public int countCompounds(C... compounds) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
-/**
- *
- * @param accession
- * @return
- * @throws Exception
- */
+
+    /**
+     *
+     * @param accession
+     * @return
+     * @throws Exception
+     */
     private Document getUniprotXML(String accession) throws Exception {
         int index = accession.lastIndexOf(".");
         String key = accession;
@@ -273,8 +291,10 @@ public class UniprotProxySequenceReader<C extends Compound> implements ProxySequ
             }
 
         }
+
+        // http://www.uniprot.org/uniprot/?query=SORBIDRAFT_03g027040&format=xml
         if (sb.length() == 0) {
-            String uniprotURL = getUniprotbaseURL() + "/uniprot/" + key + ".xml";
+            String uniprotURL = getUniprotbaseURL() + "/uniprot/?query=" + key + "&format=xml";
             logger.info("Loading " + uniprotURL);
             URL uniprot = new URL(uniprotURL);
             URLConnection uniprotConnection = uniprot.openConnection();
@@ -309,12 +329,13 @@ public class UniprotProxySequenceReader<C extends Compound> implements ProxySequ
         }
         return null;
     }
-/**
- *
- * @param uniprotDoc
- * @return
- * @throws Exception
- */
+
+    /**
+     *
+     * @param uniprotDoc
+     * @return
+     * @throws Exception
+     */
     private String getSequence(Document uniprotDoc) throws Exception {
         Element uniprotElement = uniprotDoc.getDocumentElement();
         Element entryElement = XMLHelper.selectSingleElement(uniprotElement, "entry");
@@ -341,8 +362,8 @@ public class UniprotProxySequenceReader<C extends Compound> implements ProxySequ
         uniprotbaseURL = aUniprotbaseURL;
     }
 
-     /**
-      * Local directory cache of XML that can be downloaded
+    /**
+     * Local directory cache of XML that can be downloaded
      * @return the uniprotDirectoryCache
      */
     public static String getUniprotDirectoryCache() {
@@ -354,7 +375,7 @@ public class UniprotProxySequenceReader<C extends Compound> implements ProxySequ
      */
     public static void setUniprotDirectoryCache(String aUniprotDirectoryCache) {
         File f = new File(aUniprotDirectoryCache);
-        if(f.exists() == false){
+        if (f.exists() == false) {
             f.mkdirs();
         }
         uniprotDirectoryCache = aUniprotDirectoryCache;
@@ -365,7 +386,7 @@ public class UniprotProxySequenceReader<C extends Compound> implements ProxySequ
         try {
             UniprotProxySequenceReader<AminoAcidCompound> uniprotSequence = new UniprotProxySequenceReader<AminoAcidCompound>("YA745_GIBZE", AminoAcidCompoundSet.getAminoAcidCompoundSet());
             ProteinSequence proteinSequence = new ProteinSequence(uniprotSequence);
-
+            System.out.println(proteinSequence.getAccession().getID());
             System.out.println("Sequence=" + proteinSequence.getSequenceAsString());
         } catch (Exception e) {
             e.printStackTrace();
@@ -378,18 +399,20 @@ public class UniprotProxySequenceReader<C extends Compound> implements ProxySequ
      * @return
      * @throws Exception
      */
-
-    public String getGeneName() throws Exception{
-        if(uniprotDoc == null)
+    public String getGeneName() throws Exception {
+        if (uniprotDoc == null) {
             return "";
+        }
         Element uniprotElement = uniprotDoc.getDocumentElement();
         Element entryElement = XMLHelper.selectSingleElement(uniprotElement, "entry");
         Element geneElement = XMLHelper.selectSingleElement(entryElement, "gene");
-        if(geneElement == null)
+        if (geneElement == null) {
             return "";
+        }
         Element nameElement = XMLHelper.selectSingleElement(geneElement, "name");
-        if(nameElement == null)
+        if (nameElement == null) {
             return "";
+        }
         return nameElement.getTextContent();
     }
 
@@ -398,18 +421,20 @@ public class UniprotProxySequenceReader<C extends Compound> implements ProxySequ
      * @return
      * @throws Exception
      */
-
-    public String getOrganismName() throws Exception{
-        if(uniprotDoc == null)
+    public String getOrganismName() throws Exception {
+        if (uniprotDoc == null) {
             return "";
+        }
         Element uniprotElement = uniprotDoc.getDocumentElement();
         Element entryElement = XMLHelper.selectSingleElement(uniprotElement, "entry");
         Element organismElement = XMLHelper.selectSingleElement(entryElement, "organism");
-        if(organismElement == null)
+        if (organismElement == null) {
             return "";
+        }
         Element nameElement = XMLHelper.selectSingleElement(organismElement, "name");
-        if(nameElement == null)
+        if (nameElement == null) {
             return "";
+        }
         return nameElement.getTextContent();
     }
 
@@ -418,7 +443,6 @@ public class UniprotProxySequenceReader<C extends Compound> implements ProxySequ
      * @return
      * @throws Exception
      */
-    
     public ArrayList<String> getKeyWords() throws Exception {
         ArrayList<String> keyWordsList = new ArrayList<String>();
         if (uniprotDoc == null) {
@@ -439,7 +463,6 @@ public class UniprotProxySequenceReader<C extends Compound> implements ProxySequ
      * @return
      * @throws Exception
      */
-    
     public LinkedHashMap<String, ArrayList<DBReferenceInfo>> getDatabaseReferences() throws Exception {
         LinkedHashMap<String, ArrayList<DBReferenceInfo>> databaseReferencesHashMap = new LinkedHashMap<String, ArrayList<DBReferenceInfo>>();
         if (uniprotDoc == null) {
