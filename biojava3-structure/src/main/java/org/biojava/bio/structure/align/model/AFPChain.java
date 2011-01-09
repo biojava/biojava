@@ -304,7 +304,8 @@ public class AFPChain implements Serializable, Cloneable
 
 
 
-	/** get the number of structurally equivalent residues
+	/** 
+	 * Get the number of structurally equivalent residues
 	 * 
 	 * @return nr of EQR
 	 */
@@ -328,7 +329,11 @@ public class AFPChain implements Serializable, Cloneable
 		return myResultsEQR;
 	}
 
-	public int getSimilarity1(){
+	/** Get the coverage of protein 1 with the alignment
+	 * 
+	 * @return percentage of coverage, between 0 and 100.
+	 */
+	public int getCoverage1(){
 		if ( myResultsSimilarity1 < 0 ) {
 			int distance = ca1Length + ca2Length - 2 * getNrEQR();
 
@@ -338,15 +343,44 @@ public class AFPChain implements Serializable, Cloneable
 		} 
 		return myResultsSimilarity1;
 	}
-
-	public int getSimilarity2(){
+	
+	/** Get the coverage of protein 2 with the alignment
+	 * 
+	 * @return percentage of coverage, between 0 and 100.
+	*/
+	public int getCoverage2(){
 		if ( myResultsSimilarity2 < 0 ) {
+
+			
 			int distance = ca1Length + ca2Length - 2 * getNrEQR();
 
 			int similarity = (ca1Length + ca2Length - distance ) / 2;
 			myResultsSimilarity2 = Math.round(similarity /(float) ca2Length * 100);
 		}
 		return myResultsSimilarity2;
+
+	}
+	
+	/** get the coverage of protein 1 with the alignment
+	 * 
+	 * @return percentage of coverage, between 0 and 100.
+	 * @deprecated use getCoverage1() instead
+	 */
+	@Deprecated 
+	public int getSimilarity1(){
+		return getCoverage1();
+		
+	}
+
+	/** get the coverage of protein 2 with the alignment
+	 * 
+	 * @return percentage of coverage, between 0 and 100.
+	 * @deprecated use getCoverage2() instead
+	 */
+	@Deprecated
+	public int getSimilarity2(){
+		return getCoverage2();
+		
 	}
 
 	public String toString(){
@@ -1130,6 +1164,10 @@ public class AFPChain implements Serializable, Cloneable
 		this.ioTime = ioTime;
 	}
 
+	/** The probability (FATCAT) or Z-score (CE) of the alignment.
+	 * 
+	 * @return either the probability (FATCAT) or the Z-score (CE) of the alignment.
+	 */
 	public double getProbability()
 	{
 		return probability;
@@ -1140,6 +1178,10 @@ public class AFPChain implements Serializable, Cloneable
 		this.probability = probability;
 	}
 
+/** The percent of residues that are sequence-identical in the alignment.
+ * 
+ * @return a value between 0 and 1
+ */
 	public double getIdentity() {
 		if ( identity <= 0)
 			calcSimilarity();
@@ -1152,6 +1194,11 @@ public class AFPChain implements Serializable, Cloneable
 	}
 
 
+	/** Returns the similarity score for the alignment. This gives the percent of 
+	 * sequence similar residues in the alignment.
+	 * 
+	 * @return a double between 0 and 1
+	 */
 	public double getSimilarity() {
 		if ( similarity < 0)
 			calcSimilarity();
@@ -1261,9 +1308,15 @@ public class AFPChain implements Serializable, Cloneable
 	public void setTMScore(double tmScore){
 	   this.tmScore = tmScore;
 	}
+	
+	/** Returns the tmScore of the alignment. If the score has not been calcualted yet,
+	 * returns -1. To calculate it call AFPChainScorer.getTMScore(afpChain, ca1, ca2);
+	 * 
+	 * @return -1, if not calculated, or the TM-score, a score between 0 and 1
+	 */
    public double getTMScore()
    {
-      // TODO Auto-generated method stub
+     
       return tmScore;
    }
 
