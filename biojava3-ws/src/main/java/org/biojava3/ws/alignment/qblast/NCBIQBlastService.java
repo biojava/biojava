@@ -30,7 +30,9 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.HashMap;
 
-import org.biojavax.bio.seq.RichSequence;
+import org.biojava3.core.sequence.template.Sequence;
+import org.biojava3.core.sequence.DNASequence;
+import org.biojava3.core.sequence.ProteinSequence;
 
 import org.biojava3.ws.alignment.RemotePairwiseAlignmentProperties;
 import org.biojava3.ws.alignment.RemotePairwiseAlignmentService;
@@ -213,7 +215,7 @@ public class NCBIQBlastService implements RemotePairwiseAlignmentService {
 	/**
 	 * This method is a wrapper that executes the Blast request via the Put
 	 * command of the CGI-BIN interface with the specified parameters and a
-	 * RichSequence. It gets the estimated time of completion by capturing the
+	 * Sequence. It gets the estimated time of completion by capturing the
 	 * value of the RTOE variable and sets a loop that will check for completion
 	 * of analysis at intervals specified by RTOE.
 	 * 
@@ -222,13 +224,13 @@ public class NCBIQBlastService implements RemotePairwiseAlignmentService {
 	 * the actual results after completion.
 	 * </p>
 	 * 
-	 * @param rs :a <code>RichSequence</code> object
+	 * @param rs :a <code>Sequence</code> object
 	 * @param rpa :a <code>RemotePairwiseAlignmentProperties</code> object
 	 * @return rid : a <code>String</code> with the request ID for this sequence
 	 * 
 	 * @throws Exception if it is not possible to sent the BLAST command
 	 */
-	public String sendAlignmentRequest(RichSequence rs,
+	public String sendAlignmentRequest(Sequence rs,
 			RemotePairwiseAlignmentProperties rpa) throws Exception {
 
 		seq = rs.seqString();
