@@ -130,6 +130,8 @@ public class FileParsingParameters implements Serializable
 
       if ( loadChemCompInfo)
          System.setProperty(PDBFileReader.LOAD_CHEM_COMP_PROPERTY, "true");
+      else
+    	  System.setProperty(PDBFileReader.LOAD_CHEM_COMP_PROPERTY, "false");
       this.loadChemCompInfo = loadChemCompInfo;
 
    }
