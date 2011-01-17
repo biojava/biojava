@@ -263,12 +263,15 @@ implements ActionListener
 			List<String>ranges = domain.getRanges();
 			
 			for (String range : ranges){
-				
+				System.out.println(range);
 				String[] spl = range.split(":");
-				
-				
-				String script = " select  "+spl[1]+":"+spl[0] +"/1;";
+				String script = " select  ";
+				if ( spl.length > 1 )
+					script += spl[1]+":"+spl[0] +"/1;";
+				else 
+					script += "*" + spl[0]+"/1;";
 				script += " color [" + c1.getRed() + ","+c1.getGreen() + "," +c1.getBlue()+"];";
+				script += " color cartoon [" + c1.getRed() + ","+c1.getGreen() + "," +c1.getBlue()+"] ;";
 				System.out.println(script);
 				evalString(script);
 				
@@ -308,6 +311,7 @@ implements ActionListener
 					String j2 = endG.getResidueNumber()+":"+endG.getChainId();
 					String script = " select  " +j1 +"-" +j2 +"/1;";
 					script += " color [" + c1.getRed() + ","+c1.getGreen() + "," +c1.getBlue()+"];";
+					script += " color cartoon [" + c1.getRed() + ","+c1.getGreen() + "," +c1.getBlue()+"] ;";
 					//System.out.println(script);
 					evalString(script);
 				}
