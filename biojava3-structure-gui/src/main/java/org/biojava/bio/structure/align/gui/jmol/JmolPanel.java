@@ -315,8 +315,6 @@ implements ActionListener
 					//System.out.println(script);
 					evalString(script);
 				}
-				//(domain 1, 3Ð49; domain 2,
-				// 50Ð325; domain 3, 326Ð433)
 
 			}
 		} catch (Exception e){
