@@ -229,7 +229,7 @@ public class StructureAlignmentJmol implements MouseMotionListener, MouseListene
 
 		style.addActionListener(jmolPanel);
 
-		String[] colorModes = new String[] { "Secondary Structure", "By Chain", "Rainbow", "By Element", "By Amino Acid", "Hydrophobicity" };
+		String[] colorModes = new String[] { "Secondary Structure", "By Chain", "Rainbow", "By Element", "By Amino Acid", "Hydrophobicity" ,"Suggest Domains" , "Show SCOP Domains"};
 		JComboBox colors = new JComboBox(colorModes);
 		colors.addActionListener(jmolPanel);
 		hBox1.add(Box.createGlue());
@@ -386,10 +386,12 @@ public class StructureAlignmentJmol implements MouseMotionListener, MouseListene
 
       setTitle(s.getPDBCode());
 
+      jmolPanel.setStructure(s);
+      
       // actually this is very simple
       // just convert the structure to a PDB file
 
-      String pdb = s.toPDB();	
+      //String pdb = s.toPDB();	
       //System.out.println(s.isNmr());
 
       //System.out.println(pdb);
@@ -397,7 +399,7 @@ public class StructureAlignmentJmol implements MouseMotionListener, MouseListene
       //viewer.openFile("/Path/To/PDB/1tim.pdb");
 
       //System.out.println(pdb);
-      jmolPanel.openStringInline(pdb);
+      //jmolPanel.openStringInline(pdb);
 
       // send the PDB file to Jmol.
       // there are also other ways to interact with Jmol, e.g make it directly
