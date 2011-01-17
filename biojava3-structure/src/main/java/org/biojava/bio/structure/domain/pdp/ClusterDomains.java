@@ -38,7 +38,7 @@ public class ClusterDomains {
 		domains.get(i).avd=domcont(domains.get(i));
 		 */
 
-		if(verbose) ProteinDomainParser.listdomains (domains);
+		if(verbose) listdomains (domains);
 
 		do {
 			for(int i=0;i<ndom-1;i++) {
@@ -125,7 +125,7 @@ public class ClusterDomains {
 			domains.get(Sj).avd=domcont(domains.get(Sj));
 				 */
 				if(verbose) System.out.println(String.format(" Listing the domains after combining..."));
-				if(verbose) ProteinDomainParser.listdomains (domains);
+				if(verbose) listdomains (domains);
 			}
 			else if (maximum_valuem > PDPParameters.CUT_OFF_VALUE1M) {
 				/*
@@ -143,7 +143,7 @@ public class ClusterDomains {
 			domains[Sjm].avd=domcont(domains[Sjm]);
 				 */
 				if(verbose) System.out.println(String.format(" Listing the domains after combining..."));
-				if(verbose) ProteinDomainParser.listdomains (domains);
+				if(verbose) listdomains (domains);
 			}
 			else if (maximum_values > PDPParameters.CUT_OFF_VALUE1S) {
 				/*
@@ -161,7 +161,7 @@ public class ClusterDomains {
 			domains[Sjs].avd=domcont(domains[Sjs]);
 				 */
 				if(verbose) System.out.println(String.format(" Listing the domains after combining..."));
-				if(verbose) ProteinDomainParser.listdomains(domains);
+				if(verbose) listdomains(domains);
 			}
 			else {
 				if(verbose) System.out.println(String.format(" Maximum value is less than cut off value. (max:" + maximum_value+")" ));
@@ -173,7 +173,7 @@ public class ClusterDomains {
 		} while ( maximum_value > 0.0||maximum_values>0.0||maximum_valuem>0.0);
 
 		if(verbose) System.out.println(String.format(" The domains are:"));
-		if(verbose) ProteinDomainParser.listdomains(domains);
+		if(verbose) listdomains(domains);
 		return domains;
 	}
 
@@ -246,5 +246,20 @@ public class ClusterDomains {
 				contacts+=dist[i][j];
 
 		return contacts;
+	}
+	
+	private static final void listdomains(List<Domain> domains){
+
+		int i = -1;
+		for ( Domain dom : domains){
+			i++;
+			System.out.println("DOMAIN:" + i + " size:" + dom.size + " " +  dom.score);
+			List<Segment> segments = dom.getSegments();
+
+			for ( Segment s : segments){
+				System.out.println("   Segment: " + s);
+
+			}
+		}
 	}
 }

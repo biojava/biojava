@@ -37,6 +37,13 @@ Veretnik S, Bourne PE, Alexandrov NN, Shindyalov IN.
 public class ProteinDomainParser {
 
 
+	/** make sure this class can only get accessed via the static method calls
+	 * 
+	 */
+	private ProteinDomainParser(){
+		
+	}
+	
 	/** Suggest domains for a protein structure
 	 * 
 	 * @param s the protein structure
@@ -91,19 +98,6 @@ public class ProteinDomainParser {
 
 	}
 
-	public static final void listdomains(List<Domain> domains){
-
-		int i = -1;
-		for ( Domain dom : domains){
-			i++;
-			System.out.println("DOMAIN:" + i + " size:" + dom.size + " " +  dom.score);
-			List<Segment> segments = dom.getSegments();
-
-			for ( Segment s : segments){
-				System.out.println("   Segment: " + s);
-
-			}
-		}
-	}
+	
 
 }
