@@ -207,7 +207,7 @@ public class StructureTools {
 
 	/** Returns an array of the requested Atoms from the Structure object. Iterates over all groups
 	 * and checks if the requested atoms are in this group, no matter if this is a AminoAcid or Hetatom group.
-	 *
+	 * For structures with more than one model, only model 0 will be used.
 	 *
 	 * @param s the structure to get the atoms from
 	 *
@@ -216,8 +216,6 @@ public class StructureTools {
 	 */
 	public static final Atom[] getAtomArray(Structure s, String[] atomNames){
 		List<Chain> chains = s.getModel(0);
-
-		//Iterator<Group> iter = new GroupIterator(s);
 
 		List<Atom> atoms = new ArrayList<Atom>();
 
@@ -323,19 +321,19 @@ public class StructureTools {
 		int apos = -1;
 		for(Atom a: ca){
 			apos++;
-			Group parentG = a.getParent();
+			Group parentG = a.getGroup();
 			Chain parentC = parentG.getChain();
 
 			Chain newChain = null;
 			for ( Chain c : model){
-				if ( c.getName().equals(parentC.getName())){
+				if ( c.getChainID().equals(parentC.getChainID())){
 					newChain = c;
 					break;
 				}
 			}
 			if ( newChain == null){
 				newChain = new ChainImpl();
-				newChain.setName(parentC.getName());
+				newChain.setChainID(parentC.getChainID());
 				model.add(newChain);
 			}
 
@@ -359,19 +357,19 @@ public class StructureTools {
 		int apos = -1;
 		for(Atom a: ca){
 			apos++;
-			Group parentG = a.getParent();
+			Group parentG = a.getGroup();
 			Chain parentC = parentG.getChain();
 
 			Chain newChain = null;
 			for ( Chain c : model){
-				if ( c.getName().equals(parentC.getName())){
+				if ( c.getChainID().equals(parentC.getChainID())){
 					newChain = c;
 					break;
 				}
 			}
 			if ( newChain == null){
 				newChain = new ChainImpl();
-				newChain.setName(parentC.getName());
+				newChain.setChainID(parentC.getChainID());
 				model.add(newChain);
 			}
 
@@ -674,7 +672,7 @@ public class StructureTools {
 		StringBuffer buf = new StringBuffer();
 		Group prevGroup  = null;
 		for (Atom a : atoms){
-			Group g = a.getParent();
+			Group g = a.getGroup();
 			if ( prevGroup != null) {
 				if ( prevGroup.equals(g)) {
 					// we add each group only once.
