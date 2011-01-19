@@ -215,35 +215,41 @@ public class StructureTools {
 	 * @return an Atom[] array
 	 */
 	public static final Atom[] getAtomArray(Structure s, String[] atomNames){
-		Iterator<Group> iter = new GroupIterator(s);
+		List<Chain> chains = s.getModel(0);
+
+		//Iterator<Group> iter = new GroupIterator(s);
+
 		List<Atom> atoms = new ArrayList<Atom>();
-		while ( iter.hasNext()){
-			Group g = (Group) iter.next();
 
-			// a temp container for the atoms of this group
-			List<Atom> thisGroupAtoms = new ArrayList<Atom>();
-			// flag to check if this group contains all the requested atoms.
-			boolean thisGroupAllAtoms = true;
-			for ( int i = 0 ; i < atomNames.length; i++){
-				String atomName = atomNames[i];
-				try {
-					Atom a = g.getAtom(atomName);
-					thisGroupAtoms.add(a);
-				} catch (StructureException e){
-					// this group does not have a required atom, skip it...
-					thisGroupAllAtoms = false;
-					break;
-				}
-			}
-			if ( thisGroupAllAtoms){
-				// add the atoms of this group to the array.
-				Iterator<Atom> aIter = thisGroupAtoms.iterator();
-				while(aIter.hasNext()){
-					Atom a = (Atom) aIter.next();
-					atoms.add(a);
-				}
-			}
+		for ( Chain c : chains) {
+			
+			for ( Group g : c.getAtomGroups()) {
 
+				// a temp container for the atoms of this group
+				List<Atom> thisGroupAtoms = new ArrayList<Atom>();
+				// flag to check if this group contains all the requested atoms.
+				boolean thisGroupAllAtoms = true;
+				for ( int i = 0 ; i < atomNames.length; i++){
+					String atomName = atomNames[i];
+					try {
+						Atom a = g.getAtom(atomName);
+						thisGroupAtoms.add(a);
+					} catch (StructureException e){
+						// this group does not have a required atom, skip it...
+						thisGroupAllAtoms = false;
+						break;
+					}
+				}
+				if ( thisGroupAllAtoms){
+					// add the atoms of this group to the array.
+					Iterator<Atom> aIter = thisGroupAtoms.iterator();
+					while(aIter.hasNext()){
+						Atom a = (Atom) aIter.next();
+						atoms.add(a);
+					}
+				}
+
+			}
 		}
 		return (Atom[]) atoms.toArray(new Atom[atoms.size()]);
 
@@ -625,12 +631,12 @@ public class StructureTools {
 				String pdbresnumEnd   = pdbRanges[1].trim();
 
 				groups = chain.getGroupsByPDB(pdbresnumStart, pdbresnumEnd);
-				
+
 			} else {
 				// only chain ID provided ... add the whole chain...
-				 groups = chain.getAtomGroups().toArray(new Group[chain.getAtomGroups().size()]);
+				groups = chain.getAtomGroups().toArray(new Group[chain.getAtomGroups().size()]);
 			}
-			
+
 			Chain c = null;
 			if ( prevChainId == null) {
 				// first chain...
@@ -698,7 +704,7 @@ public class StructureTools {
 		return g.getResidueNumber();
 
 	}
-	
+
 	/** Get a group represented by a ResidueNumber.
 	 * 
 	 * @param struc a {@link Structure}
@@ -711,14 +717,14 @@ public class StructureTools {
 		if (struc == null || pdbResNum==null) {
 			throw new IllegalArgumentException("Null argument(s).");
 		}
-		
+
 		Chain chain = struc.findChain(pdbResNum.getChainId());
-		
+
 		String numIns = "" + pdbResNum.getSeqNum();
 		if (pdbResNum.getInsCode() != null) {
 			numIns += pdbResNum.getInsCode();
 		}
-		
+
 		return chain.getGroupByPDB(numIns);
 	}
 
