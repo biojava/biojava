@@ -69,7 +69,7 @@ public class StructurePairAlignerTest extends TestCase {
            AlternativeAlignment[] aligs = aligner.getAlignments();
            assertEquals("the number of obtained alternative alignments is not correct",20, aligs.length);
            AlternativeAlignment a = aligs[0];
-           assertEquals("the expected nr of eq. residues is not correct.",48,a.getEqr());
+           assertEquals("the expected nr of eq. residues is not correct.",47,a.getEqr());
 
            // they are v. close, but not identical
            assertTrue(a.getRmsd() < 3);
