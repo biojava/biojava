@@ -185,10 +185,13 @@ public class Feature implements FeatureI {
            if(equalindex == -1) //gtf uses space and gff3 uses =
                splitData = " ";
            String[] data = attribute.split(splitData);
-           if(data[1].indexOf('"') != -1){
-               data[1] = data[1].replaceAll('"' + "","");
+           String value = "";
+           if(data.length >= 2 && data[1].indexOf('"') != -1){ // an attibute field could be empty
+               value = data[1].replaceAll('"' + "","").trim();
+           }else if(data.length >= 2){
+               value = data[1].trim();
            }
-           attributeHashMap.put(data[0].trim(), data[1].trim());
+           attributeHashMap.put(data[0].trim(), value);
        }
 
     }

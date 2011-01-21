@@ -23,6 +23,7 @@ import org.biojava3.core.sequence.ProteinSequence;
 import org.biojava3.core.sequence.Strand;
 import org.biojava3.core.sequence.TranscriptSequence;
 import org.biojava3.genome.parsers.gff.Feature;
+import org.biojava3.genome.parsers.gff.FeatureHelper;
 import org.biojava3.genome.parsers.gff.FeatureI;
 import org.biojava3.genome.parsers.gff.FeatureList;
 import org.biojava3.genome.parsers.gff.GFF3Reader;
@@ -310,7 +311,7 @@ public class GeneFeatureHelper {
         LinkedHashMap<String, ChromosomeSequence> chromosomeSequenceList = new LinkedHashMap<String, ChromosomeSequence>();
         for (String key : dnaSequenceList.keySet()) {
             DNASequence dnaSequence = dnaSequenceList.get(key);
-            ChromosomeSequence chromosomeSequence = new ChromosomeSequence(dnaSequence.getSequenceAsString());
+            ChromosomeSequence chromosomeSequence = new ChromosomeSequence(dnaSequence.getProxySequenceReader()); //we want the underlying sequence but don't need storage
             chromosomeSequence.setAccession(dnaSequence.getAccession());
             chromosomeSequenceList.put(key, chromosomeSequence);
         }
@@ -323,11 +324,12 @@ public class GeneFeatureHelper {
      * included but can be extracted from other data elements.
      * @param fastaSequenceFile
      * @param gffFile
+     * @param lazyloadsequences If set to true then the fasta file will be parsed for accession id but sequences will be read from disk when needed to save memory
      * @return
      * @throws Exception
      */
-    static public LinkedHashMap<String, ChromosomeSequence> loadFastaAddGeneFeaturesFromGmodGFF3(File fastaSequenceFile, File gffFile) throws Exception {
-        LinkedHashMap<String, DNASequence> dnaSequenceList = FastaReaderHelper.readFastaDNASequence(fastaSequenceFile);
+    static public LinkedHashMap<String, ChromosomeSequence> loadFastaAddGeneFeaturesFromGmodGFF3(File fastaSequenceFile, File gffFile,boolean lazyloadsequences) throws Exception {
+        LinkedHashMap<String, DNASequence> dnaSequenceList = FastaReaderHelper.readFastaDNASequence(fastaSequenceFile,lazyloadsequences);
         LinkedHashMap<String, ChromosomeSequence> chromosomeSequenceList = GeneFeatureHelper.getChromosomeSequenceFromDNASequence(dnaSequenceList);
         FeatureList listGenes = GFF3Reader.read(gffFile.getAbsolutePath());
         addGmodGFF3GeneFeatures(chromosomeSequenceList, listGenes);
@@ -345,7 +347,10 @@ public class GeneFeatureHelper {
 
         // key off mRNA as being a known feature that may or may not have a parent gene
 
+
         FeatureList mRNAFeatures = listGenes.selectByType("mRNA");
+        LinkedHashMap<String,FeatureList> featureIDHashMap = FeatureHelper.buildFeatureAtrributeIndex("ID", listGenes);
+        LinkedHashMap<String,FeatureList> featureParentHashMap = FeatureHelper.buildFeatureAtrributeIndex("Parent", listGenes);
 
         for (FeatureI f : mRNAFeatures) {
             String geneID;
@@ -361,7 +366,8 @@ public class GeneFeatureHelper {
             String mRNANote = mRNAFeature.getAttribute("Note");
             String mRNAParent = mRNAFeature.getAttribute("Parent");
             if (mRNAParent != null && mRNAParent.length() > 0) {
-                FeatureList geneFeatureList = listGenes.selectByAttribute("ID", mRNAParent);
+               // FeatureList geneFeatureList = listGenes.selectByAttribute("ID", mRNAParent);
+                FeatureList geneFeatureList = featureIDHashMap.get(mRNAParent);
                 Feature geneFeature = (Feature) geneFeatureList.get(0);
                 geneID = geneFeature.getAttribute("ID");
                 geneNote = geneFeature.getAttribute("Note");
@@ -380,8 +386,8 @@ public class GeneFeatureHelper {
 
             AccessionID geneAccessionID = new AccessionID(geneID);
 
-            FeatureList mRNAChildren = listGenes.selectByAttribute("Parent", mRNAID);
-
+          //  FeatureList mRNAChildren = listGenes.selectByAttribute("Parent", mRNAID);
+            FeatureList mRNAChildren = featureParentHashMap.get(mRNAID);
             FeatureList cdsFeatures = mRNAChildren.selectByType("CDS");
             FeatureI feature = cdsFeatures.get(0);
             Strand strand = Strand.POSITIVE;
@@ -514,7 +520,7 @@ public class GeneFeatureHelper {
                 }
                 transcriptSequence.addCDS(cdsAccessionID, cdsFeature.location().bioStart(), cdsFeature.location().bioEnd(), cds.frame());
             }
-
+            geneSequence.addIntronsUsingExons();
 
         }
 
@@ -832,6 +838,7 @@ public class GeneFeatureHelper {
 
                     try {
                         ProteinSequence proteinSequence = transcriptSequence.getProteinSequence();
+                       
 //                        System.out.println(proteinSequence.getAccession().getID() + " " + proteinSequence);
                         if (proteinSequenceHashMap.containsKey(proteinSequence.getAccession().getID())) {
                             throw new Exception("Duplicate protein sequence id=" + proteinSequence.getAccession().getID() + " found at Gene id=" + geneSequence.getAccession().getID());
@@ -862,21 +869,21 @@ public class GeneFeatureHelper {
 
     public static void main(String args[]) throws Exception {
         if (false) {
-            LinkedHashMap<String, ChromosomeSequence> chromosomeSequenceList = GeneFeatureHelper.loadFastaAddGeneFeaturesFromGeneMarkGTF(new File("/Users/Scooter/scripps/dyadic/analysis/454Scaffolds/454Scaffolds.fna"), new File("/Users/Scooter/scripps/dyadic/analysis/454Scaffolds/genemark_hmm.gtf"));
+            LinkedHashMap<String, ChromosomeSequence> chromosomeSequenceList = GeneFeatureHelper.loadFastaAddGeneFeaturesFromGeneMarkGTF(new File("Scaffolds.fna"), new File("genemark_hmm.gtf"));
             LinkedHashMap<String, ProteinSequence> proteinSequenceList = GeneFeatureHelper.getProteinSequences(chromosomeSequenceList.values());
         }
 
         if (false) {
-            LinkedHashMap<String, ChromosomeSequence> chromosomeSequenceList = GeneFeatureHelper.loadFastaAddGeneFeaturesFromGlimmerGFF3(new File("/Users/Scooter/scripps/dyadic/analysis/454Scaffolds/454Scaffolds.fna"), new File("/Users/Scooter/scripps/dyadic/GlimmerHMM/c1_glimmerhmm.gff"));
+            LinkedHashMap<String, ChromosomeSequence> chromosomeSequenceList = GeneFeatureHelper.loadFastaAddGeneFeaturesFromGlimmerGFF3(new File("Scaffolds.fna"), new File("glimmerhmm.gff"));
             LinkedHashMap<String, ProteinSequence> proteinSequenceList = GeneFeatureHelper.getProteinSequences(chromosomeSequenceList.values());
             //  for (ProteinSequence proteinSequence : proteinSequenceList.values()) {
             //      System.out.println(proteinSequence.getAccession().getID() + " " + proteinSequence);
             //  }
-            FastaWriterHelper.writeProteinSequence(new File("/Users/Scooter/scripps/dyadic/GlimmerHMM/c1_predicted_glimmer.faa"), proteinSequenceList.values());
+            FastaWriterHelper.writeProteinSequence(new File("predicted_glimmer.faa"), proteinSequenceList.values());
 
         }
         if (false) {
-            GeneFeatureHelper.outputFastaSequenceLengthGFF3(new File("/Users/Scooter/scripps/dyadic/analysis/454Scaffolds/454Scaffolds.fna"), new File("/Users/Scooter/scripps/dyadic/analysis/454Scaffolds/c1scaffolds.gff3"));
+            GeneFeatureHelper.outputFastaSequenceLengthGFF3(new File("Scaffolds.fna"), new File("scaffolds.gff3"));
         }
 
 
@@ -884,22 +891,11 @@ public class GeneFeatureHelper {
         try {
 
             if (true) {
-                File fastaSequenceFile = new File("/Users/Scooter/scripps/dyadic/analysis/454Scaffolds/454Scaffolds.fna");
-                File gff3File = new File("/Users/Scooter/scripps/dyadic/delivered/gmod/gbrowse2/databases/c1scaffold/c1_geneid-v6.gff3");
-                LinkedHashMap<String, ChromosomeSequence> chromosomeSequenceHashMap = GeneFeatureHelper.loadFastaAddGeneFeaturesFromGmodGFF3(fastaSequenceFile, gff3File);
-
-
+                File fastaSequenceFile = new File("Scaffolds.fna");
+                File gff3File = new File("geneid-v6.gff3");
+                LinkedHashMap<String, ChromosomeSequence> chromosomeSequenceHashMap = GeneFeatureHelper.loadFastaAddGeneFeaturesFromGmodGFF3(fastaSequenceFile, gff3File,true);
             }
 
-            if (false) {
-                LinkedHashMap<String, ChromosomeSequence> dnaSequenceHashMap = GeneFeatureHelper.loadFastaAddGeneFeaturesFromGlimmerGFF3(new File("/Users/Scooter/scripps/dyadic/analysis/454Scaffolds/454Scaffolds-16.fna"), new File("/Users/Scooter/scripps/dyadic/GlimmerHMM/c1_glimmerhmm-16.gff"));
-
-                LinkedHashMap<String, GeneSequence> geneSequenceHashMap = GeneFeatureHelper.getGeneSequences(dnaSequenceHashMap.values());
-                Collection<GeneSequence> geneSequences = geneSequenceHashMap.values();
-                FastaWriterHelper.writeGeneSequence(new File("/Users/Scooter/scripps/dyadic/outputGlimmer6/c1_glimmer_genes.fna"), geneSequences, true);
-
-
-            }
         } catch (Exception e) {
             e.printStackTrace();
         }
