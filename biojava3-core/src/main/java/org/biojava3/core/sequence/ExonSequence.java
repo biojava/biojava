@@ -49,4 +49,11 @@ public class ExonSequence extends DNASequence {
         setBioEnd(bioEnd);
 
     }
+
+    @Override
+    public int getLength() {
+        return Math.abs(this.getBioEnd() - this.getBioBegin()) + 1;
+    }
+
+
 }

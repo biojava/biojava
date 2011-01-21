@@ -68,12 +68,17 @@ public class GeneSequence extends DNASequence {
         setStrand(strand);
     }
 
-     /**
-      * The parent ChromosomeSequence which contains the actual DNA sequence data
-      * @return
-      */
+    /**
+     * The parent ChromosomeSequence which contains the actual DNA sequence data
+     * @return
+     */
     public ChromosomeSequence getParentChromosomeSequence() {
         return chromosomeSequence;
+    }
+
+    @Override
+    public int getLength() {
+        return Math.abs(this.getBioEnd() - this.getBioBegin()) + 1;
     }
 
     /**
@@ -82,14 +87,38 @@ public class GeneSequence extends DNASequence {
      * TranscriptSequences and from that you can infer the exon sequences and intron sequences.
      * Currently not implement
      */
-    public void validate() {
+    public void addIntronsUsingExons() throws Exception {
+        if (intronAdded) { //going to assume introns are correct
+            return;
+        }
+        if (exonSequenceList.size() == 0) {
+            return;
+        }
         ExonComparator exonComparator = new ExonComparator();
         //sort based on start position and sense;
         Collections.sort(exonSequenceList, exonComparator);
-        if (intronAdded) {
-            log.severe(this.getAccession() + " has introns added which will not be handled properly trying to fill in introns gaps from validate method");
+        int shift = -1;
+        if (getStrand() == Strand.NEGATIVE) {
+            shift = 1;
+        }
+        ExonSequence firstExonSequence = exonSequenceList.get(0);
+        int intronIndex = 1;
+ //       if (firstExonSequence.getBioBegin().intValue() != getBioBegin().intValue()) {
+ //           this.addIntron(new AccessionID(this.getAccession().getID() + "-" + "intron" + intronIndex), getBioBegin(), firstExonSequence.getBioBegin() + shift);
+ //           intronIndex++;
+ //       }
+        for (int i = 0; i < exonSequenceList.size() - 1; i++) {
+            ExonSequence exon1 = exonSequenceList.get(i);
+            ExonSequence exon2 = exonSequenceList.get(i + 1);
+            this.addIntron(new AccessionID(this.getAccession().getID() + "-" + "intron" + intronIndex), exon1.getBioEnd() - shift, exon2.getBioBegin() + shift);
+            intronIndex++;
         }
 
+ //       ExonSequence lastExonSequence = exonSequenceList.get(exonSequenceList.size() - 1);
+ //       if (lastExonSequence.getBioEnd().intValue() != getBioEnd().intValue()) {
+ //           this.addIntron(new AccessionID(this.getAccession().getID() + "-" + "intron" + intronIndex), lastExonSequence.getBioEnd() - shift, getBioEnd());
+ //           intronIndex++;
+ //       }
 
         //    log.severe("Add in support for building introns based on added exons");
 
@@ -201,7 +230,15 @@ public class GeneSequence extends DNASequence {
             if (exonSequence.getAccession().getID().equals(accession)) {
                 exonSequenceList.remove(exonSequence);
                 exonSequenceHashMap.remove(accession);
-                validate();
+                // we now have a new gap which creates an intron
+                intronSequenceList.clear();
+                intronSequenceHashMap.clear();
+                intronAdded = false;
+                try{
+                    addIntronsUsingExons();
+                }catch(Exception e){
+                    log.severe("Remove Exon validate() error " + e.getMessage());
+                }
                 return exonSequence;
             }
         }
@@ -224,7 +261,6 @@ public class GeneSequence extends DNASequence {
         exonSequence.setAccession(accession);
         exonSequenceList.add(exonSequence);
         exonSequenceHashMap.put(accession.getID(), exonSequence);
-        validate();
         return exonSequence;
     }
 
@@ -232,7 +268,7 @@ public class GeneSequence extends DNASequence {
      * Get the exons as an ArrayList
      * @return
      */
-    public ArrayList<ExonSequence> getExonSequences(){
+    public ArrayList<ExonSequence> getExonSequences() {
         return exonSequenceList;
     }
 
@@ -240,7 +276,7 @@ public class GeneSequence extends DNASequence {
      * Get the introns as an ArrayList
      * @return
      */
-    public ArrayList<IntronSequence> getIntronSequences(){
+    public ArrayList<IntronSequence> getIntronSequences() {
         return intronSequenceList;
     }
 
@@ -249,7 +285,6 @@ public class GeneSequence extends DNASequence {
      * Returns the DNASequence representative of the 5' and 3' reading based on strand
      * @return
      */
-
     public DNASequence getSequence5PrimeTo3Prime() {
         String sequence = getSequenceAsString(this.getBioBegin(), this.getBioEnd(), this.getStrand());
         if (getStrand() == Strand.NEGATIVE) {

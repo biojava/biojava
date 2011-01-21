@@ -43,74 +43,92 @@ import org.biojava3.core.sequence.io.ProteinSequenceCreator;
  */
 public class FastaReaderHelper {
 
-  /**
-   * Read a fasta file containing amino acids with setup that would handle most
-   * cases.
-   *
-   * @param file
-   * @return
-   * @throws Exception
-   */
-  public static LinkedHashMap<String, ProteinSequence> readFastaProteinSequence(
-      File file) throws Exception {
-    FileInputStream inStream = new FileInputStream(file);
-    LinkedHashMap<String, ProteinSequence> proteinSequences = readFastaProteinSequence(inStream);
-    inStream.close();
-    return proteinSequences;
-  }
+    /**
+     * Selecting lazySequenceLoad=true will parse the FASTA file and figure out the accessionid and offsets and return sequence objects
+     * that can in the future read the sequence from the disk. This allows the loading of large fasta files where you are only interested
+     * in one sequence based on accession id.
+     * @param file
+     * @param lazySequenceLoad
+     * @return
+     * @throws Exception
+     */
+    public static LinkedHashMap<String, DNASequence> readFastaDNASequence(File file, boolean lazySequenceLoad) throws Exception {
+        if (lazySequenceLoad == false) {
+            return readFastaDNASequence(file);
+        }
 
-  /**
-   * Read a fasta file containing amino acids with setup that would handle most
-   * cases. User is responsible for closing InputStream because you opened it
-   *
-   * @param inStream
-   * @return
-   * @throws Exception
-   */
-  public static LinkedHashMap<String, ProteinSequence> readFastaProteinSequence(
-      InputStream inStream) throws Exception {
-    FastaReader<ProteinSequence, AminoAcidCompound> fastaReader = new FastaReader<ProteinSequence, AminoAcidCompound>(
-        inStream,
-        new GenericFastaHeaderParser<ProteinSequence, AminoAcidCompound>(),
-        new ProteinSequenceCreator(AminoAcidCompoundSet
-            .getAminoAcidCompoundSet()));
-    return fastaReader.process();
-  }
+        FastaReader<DNASequence, NucleotideCompound> fastaProxyReader = new FastaReader<DNASequence, NucleotideCompound>(file, new GenericFastaHeaderParser<DNASequence, NucleotideCompound>(), new FileProxyDNASequenceCreator(file, DNACompoundSet.getDNACompoundSet()));
+        return fastaProxyReader.process();
 
-  /**
-   * Read a fasta DNA sequence
-   * @param inStream
-   * @return
-   * @throws Exception
-   */
-  public static LinkedHashMap<String, DNASequence> readFastaDNASequence(
-      InputStream inStream) throws Exception {
-    FastaReader<DNASequence, NucleotideCompound> fastaReader = new FastaReader<DNASequence, NucleotideCompound>(
-        inStream,
-        new GenericFastaHeaderParser<DNASequence, NucleotideCompound>(),
-        new DNASequenceCreator(DNACompoundSet.getDNACompoundSet()));
-    return fastaReader.process();
-  }
-
-  /**
-   *
-   * @param file
-   * @return
-   * @throws Exception
-   */
-  public static LinkedHashMap<String, DNASequence> readFastaDNASequence(
-      File file) throws Exception {
-    FileInputStream inStream = new FileInputStream(file);
-    LinkedHashMap<String, DNASequence> dnaSequences = readFastaDNASequence(inStream);
-    inStream.close();
-    return dnaSequences;
-  }
-
-  public static void main(String args[]) throws Exception {
-
-    LinkedHashMap<String, DNASequence> dnaSequences = FastaReaderHelper.readFastaDNASequence(new File("/Users/Scooter/scripps/dyadic/analysis/454Scaffolds/454Scaffolds.fna"));
-    for(DNASequence sequence : dnaSequences.values() ){
-        sequence.getRNASequence().getProteinSequence().getSequenceAsString();
     }
-  }
+
+    /**
+     * Read a fasta file containing amino acids with setup that would handle most
+     * cases.
+     *
+     * @param file
+     * @return
+     * @throws Exception
+     */
+    public static LinkedHashMap<String, ProteinSequence> readFastaProteinSequence(
+            File file) throws Exception {
+        FileInputStream inStream = new FileInputStream(file);
+        LinkedHashMap<String, ProteinSequence> proteinSequences = readFastaProteinSequence(inStream);
+        inStream.close();
+        return proteinSequences;
+    }
+
+    /**
+     * Read a fasta file containing amino acids with setup that would handle most
+     * cases. User is responsible for closing InputStream because you opened it
+     *
+     * @param inStream
+     * @return
+     * @throws Exception
+     */
+    public static LinkedHashMap<String, ProteinSequence> readFastaProteinSequence(
+            InputStream inStream) throws Exception {
+        FastaReader<ProteinSequence, AminoAcidCompound> fastaReader = new FastaReader<ProteinSequence, AminoAcidCompound>(
+                inStream,
+                new GenericFastaHeaderParser<ProteinSequence, AminoAcidCompound>(),
+                new ProteinSequenceCreator(AminoAcidCompoundSet.getAminoAcidCompoundSet()));
+        return fastaReader.process();
+    }
+
+    /**
+     * Read a fasta DNA sequence
+     * @param inStream
+     * @return
+     * @throws Exception
+     */
+    public static LinkedHashMap<String, DNASequence> readFastaDNASequence(
+            InputStream inStream) throws Exception {
+        FastaReader<DNASequence, NucleotideCompound> fastaReader = new FastaReader<DNASequence, NucleotideCompound>(
+                inStream,
+                new GenericFastaHeaderParser<DNASequence, NucleotideCompound>(),
+                new DNASequenceCreator(DNACompoundSet.getDNACompoundSet()));
+        return fastaReader.process();
+    }
+
+    /**
+     *
+     * @param file
+     * @return
+     * @throws Exception
+     */
+    public static LinkedHashMap<String, DNASequence> readFastaDNASequence(
+            File file) throws Exception {
+        FileInputStream inStream = new FileInputStream(file);
+        LinkedHashMap<String, DNASequence> dnaSequences = readFastaDNASequence(inStream);
+        inStream.close();
+        return dnaSequences;
+    }
+
+    public static void main(String args[]) throws Exception {
+
+        LinkedHashMap<String, DNASequence> dnaSequences = FastaReaderHelper.readFastaDNASequence(new File("fasta.fna"));
+        for (DNASequence sequence : dnaSequences.values()) {
+            sequence.getRNASequence().getProteinSequence().getSequenceAsString();
+        }
+    }
 }

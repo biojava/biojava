@@ -98,7 +98,7 @@ public abstract class AbstractSequence<C extends Compound> implements Sequence<C
      * @param proxyLoader
      * @param compoundSet
      */
-    public AbstractSequence(ProxySequenceReader<C> proxyLoader, CompoundSet<C> compoundSet) {
+    public AbstractSequence(SequenceReader<C> proxyLoader, CompoundSet<C> compoundSet) {
         setCompoundSet(compoundSet);
         setProxySequenceReader(proxyLoader);
     }
@@ -110,7 +110,7 @@ public abstract class AbstractSequence<C extends Compound> implements Sequence<C
      *  
      * @param proxyLoader
      */
-    public void setProxySequenceReader(ProxySequenceReader<C> proxyLoader) {
+    public void setProxySequenceReader(SequenceReader<C> proxyLoader) {
         this.sequenceStorage = proxyLoader;
         if (proxyLoader instanceof FeaturesKeyWordInterface) {
             this.setFeaturesKeyWord((FeaturesKeyWordInterface) sequenceStorage);
@@ -123,8 +123,8 @@ public abstract class AbstractSequence<C extends Compound> implements Sequence<C
         }
     }
 
-    public ProxySequenceReader<C> getProxySequenceReader() {
-        return (ProxySequenceReader<C>) sequenceStorage;
+    public SequenceReader<C> getProxySequenceReader() {
+        return (SequenceReader<C>) sequenceStorage;
     }
 
     /**
