@@ -86,7 +86,7 @@ public class GeneFeatureHelperTest extends TestCase {
      */
 
     public void testAddGFF3Note() throws Exception {
-        LinkedHashMap<String, ChromosomeSequence> chromosomeSequenceList = GeneFeatureHelper.loadFastaAddGeneFeaturesFromGmodGFF3(new File("src/test/resources/volvox_all.fna"), new File("src/test/resources/volvox.gff3"));
+        LinkedHashMap<String, ChromosomeSequence> chromosomeSequenceList = GeneFeatureHelper.loadFastaAddGeneFeaturesFromGmodGFF3(new File("src/test/resources/volvox_all.fna"), new File("src/test/resources/volvox.gff3"),false);
         ChromosomeSequence ctgASequence = chromosomeSequenceList.get("ctgA");
         GeneSequence edenGeneSequence = ctgASequence.getGene("EDEN");
         System.out.println("Note " + edenGeneSequence.getNotesList());
@@ -99,7 +99,7 @@ public class GeneFeatureHelperTest extends TestCase {
      * Could not find anyone providing a gff3 test case with expected protein output.
      */
     public void testGetProteinSequences() throws Exception {
-        LinkedHashMap<String, ChromosomeSequence> chromosomeSequenceList = GeneFeatureHelper.loadFastaAddGeneFeaturesFromGmodGFF3(new File("src/test/resources/volvox_all.fna"), new File("src/test/resources/volvox.gff3"));
+        LinkedHashMap<String, ChromosomeSequence> chromosomeSequenceList = GeneFeatureHelper.loadFastaAddGeneFeaturesFromGmodGFF3(new File("src/test/resources/volvox_all.fna"), new File("src/test/resources/volvox.gff3"),false);
         LinkedHashMap<String, ProteinSequence> proteinSequenceList = GeneFeatureHelper.getProteinSequences(chromosomeSequenceList.values());
 //        for(ProteinSequence proteinSequence : proteinSequenceList.values()){
 //            System.out.println("Output=" + proteinSequence.getSequenceAsString());
@@ -116,7 +116,7 @@ public class GeneFeatureHelperTest extends TestCase {
      */
     public void testGetGeneSequences() throws Exception {
 //        System.out.println("getGeneSequences");
-        LinkedHashMap<String, ChromosomeSequence> chromosomeSequenceList = GeneFeatureHelper.loadFastaAddGeneFeaturesFromGmodGFF3(new File("src/test/resources/volvox_all.fna"), new File("src/test/resources/volvox.gff3"));
+        LinkedHashMap<String, ChromosomeSequence> chromosomeSequenceList = GeneFeatureHelper.loadFastaAddGeneFeaturesFromGmodGFF3(new File("src/test/resources/volvox_all.fna"), new File("src/test/resources/volvox.gff3"),true);
         LinkedHashMap<String, GeneSequence> geneSequenceHashMap = GeneFeatureHelper.getGeneSequences(chromosomeSequenceList.values());
         Collection<GeneSequence> geneSequences = geneSequenceHashMap.values();
         FastaWriterHelper.writeGeneSequence(new File("src/test/resources/volvox_all_genes_exon_uppercase.fna"), geneSequences, true);
