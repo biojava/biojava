@@ -233,7 +233,7 @@ public class NCBIQBlastService implements RemotePairwiseAlignmentService {
 	public String sendAlignmentRequest(Sequence rs,
 			RemotePairwiseAlignmentProperties rpa) throws Exception {
 
-		seq = rs.seqString();
+		seq = rs.getSequenceAsString();
 
 		return rid = sendActualAlignementRequest(seq, rpa);
 	}
