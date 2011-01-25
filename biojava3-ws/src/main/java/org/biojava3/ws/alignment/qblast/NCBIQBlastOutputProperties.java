@@ -33,7 +33,11 @@ import org.biojava3.ws.alignment.RemotePairwiseAlignmentOutputProperties;
  * The constructor for this class builds an object with default format values. Any modification will 
  * either use the generic setOutputOption method or use the wrapper methods that are actually 
  * build around the generic method.
-
+ * 
+ * <p>
+ * Many thanks to Matthew Busse for helping in debugging after the migration from BJ1.7 to BJ3.0.
+ * </p>
+ * 
  * @author Sylvain Foisy, Diploide BioIT
  * @since Biojava 3
  *
