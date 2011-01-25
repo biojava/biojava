@@ -100,8 +100,8 @@ public class NCBIQBlastService implements RemotePairwiseAlignmentService {
 	 */
 	public NCBIQBlastService() throws Exception {
 		try {
-			aUrl = new URL(baseurl);
-			uConn = setQBlastServiceProperties(aUrl.openConnection());
+			this.aUrl = new URL(baseurl);
+			this.uConn = setQBlastServiceProperties(aUrl.openConnection());
 			this.holder = new HashMap<String, Long>();
 		}
 		/*
