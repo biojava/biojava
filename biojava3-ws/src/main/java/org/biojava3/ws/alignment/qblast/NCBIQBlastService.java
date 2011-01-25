@@ -102,7 +102,7 @@ public class NCBIQBlastService implements RemotePairwiseAlignmentService {
 		try {
 			aUrl = new URL(baseurl);
 			uConn = setQBlastServiceProperties(aUrl.openConnection());
-			holder = new HashMap<String, Long>();
+			this.holder = new HashMap<String, Long>();
 		}
 		/*
 		 * Needed but should never be thrown since the URL is static and known
