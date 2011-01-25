@@ -54,6 +54,8 @@ public class DownloadChemCompProvider implements ChemCompProvider {
 	static {
 		protectedIDs.add("CON");
 		protectedIDs.add("PRN");
+		protectedIDs.add("AUX");
+		protectedIDs.add("NUL");
 	}
 	
 	/** by default we will download only some of the files. User has to request that all files should be downloaded...
@@ -271,7 +273,7 @@ public class DownloadChemCompProvider implements ChemCompProvider {
 	public static String getLocalFileName(String recordName){
 
 		if ( protectedIDs.contains(recordName)){
-			recordName += "_1";
+			recordName = "_" + recordName;
 		}
 		
 		String dir = path + CHEM_COMP_CACHE_DIRECTORY + FILE_SEPARATOR;
