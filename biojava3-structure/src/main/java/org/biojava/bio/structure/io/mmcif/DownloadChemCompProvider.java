@@ -77,6 +77,9 @@ public class DownloadChemCompProvider implements ChemCompProvider {
 			return;
 		}
 		
+		if ( path == null)
+			path =  System.getProperty(AbstractUserArgumentProcessor.PDB_DIR);
+		
 		String filename = path + 	
 		DownloadChemCompProvider.CHEM_COMP_CACHE_DIRECTORY +
 		FILE_SEPARATOR + 
@@ -210,6 +213,7 @@ public class DownloadChemCompProvider implements ChemCompProvider {
 
 			String filename = getLocalFileName(recordName);
 
+			System.out.println("reading " + filename);
 			InputStreamProvider isp = new InputStreamProvider();
 
 			InputStream inStream = isp.getInputStream(filename);
@@ -357,6 +361,10 @@ public class DownloadChemCompProvider implements ChemCompProvider {
 		path = p;
 		if ( ! path.endsWith(FILE_SEPARATOR))
 			path += FILE_SEPARATOR;
+		
+		System.setProperty(AbstractUserArgumentProcessor.PDB_DIR,path);
+		
+		
 
 	}
 
