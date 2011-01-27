@@ -134,9 +134,7 @@ implements ProteinModification {
 	
 	private String printModification(ProteinModificationImpl mod) {
 		StringBuilder sb = new StringBuilder();
-				
-		
-		
+						
 		String name = getBestPossibleName(mod);
 		boolean hasName = true;
 		if (  name.equals(""))
@@ -160,7 +158,7 @@ implements ProteinModification {
 	
 	private String getBestPossibleName(ProteinModificationImpl mod) {
 		
-		System.out.println(mod.getResidName() + " : " + mod.getPsimodName() + " : " + mod.getPdbccName() + " : " + mod.getSystematicName());
+		//System.out.println(mod.getResidName() + " : " + mod.getPsimodName() + " : " + mod.getPdbccName() + " : " + mod.getSystematicName());
 		
 		// first: get resid
 		String resid = mod.getResidId();
