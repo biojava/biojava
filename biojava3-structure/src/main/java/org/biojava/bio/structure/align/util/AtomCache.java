@@ -36,8 +36,11 @@ import org.biojava3.core.util.InputStreamProvider;
 public class AtomCache {
 
 	public static final String CHAIN_NR_SYMBOL = ":";
+	
 	public static final String CHAIN_SPLIT_SYMBOL = ".";
 
+	private static final String FILE_SEPARATOR = System.getProperty("file.separator");
+	
 	String path;
 
 
@@ -57,6 +60,10 @@ public class AtomCache {
 	 */
 	public AtomCache(String pdbFilePath, boolean isSplit){
 
+		
+		if ( ! pdbFilePath.endsWith(FILE_SEPARATOR))
+			pdbFilePath += FILE_SEPARATOR;
+		
 		// we are caching the binary files that contain the PDBs gzipped
 		// that is the most memory efficient way of caching...
 		// set the input stream provider to caching mode
