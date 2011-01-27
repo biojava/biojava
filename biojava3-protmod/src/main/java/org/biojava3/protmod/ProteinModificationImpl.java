@@ -87,7 +87,8 @@ implements ProteinModification {
 	}
 	
 	public String getDescription() {
-		return description;
+		return toString();
+		//return description;
 	}
 	
 	public Set<String> getKeywords() {
@@ -134,27 +135,72 @@ implements ProteinModification {
 	private String printModification(ProteinModificationImpl mod) {
 		StringBuilder sb = new StringBuilder();
 				
-		String resid = mod.getResidId();
-		if (resid != null) {
-			String residname = mod.getResidName();
-			if (residname != null) {
-				sb.append(residname);
-			}
-		}
+		
+		
+		String name = getBestPossibleName(mod);
+		boolean hasName = true;
+		if (  name.equals(""))
+			hasName = false;
+		sb.append(name);
 		
 		Set<String> keywords = mod.getKeywords();
 		if (keywords!=null && !keywords.isEmpty()) {
-			sb.append(", ");
+			if ( hasName)
+				sb.append(", ");
 			for (String keyword : keywords) {
+				
 				sb.append(keyword);
 				sb.append(", ");
 			}
 			sb.delete(sb.length()-2,sb.length());
 		}
-		
+	
 		return sb.toString();
 	}
 	
+	private String getBestPossibleName(ProteinModificationImpl mod) {
+		
+		System.out.println(mod.getResidName() + " : " + mod.getPsimodName() + " : " + mod.getPdbccName() + " : " + mod.getSystematicName());
+		
+		// first: get resid
+		String resid = mod.getResidId();
+		if (resid != null) {
+			String residname = mod.getResidName();
+			if (residname != null) {
+				return residname;
+			}
+		}
+		
+		// 2nd: PSI-MOD
+		
+		String name = mod.getPsimodName();
+		if ( name != null) {
+			//System.out.println("PSI_MOD name:" + name);
+			return name;
+		}
+		
+		// 3rd PDB-CC
+		
+		String pdbcc = mod.getPdbccName();
+		if ( pdbcc != null ) {
+			//System.out.println("PDBCC name: " + pdbcc);
+			return pdbcc;
+		}
+		
+		
+		// no public name know, use the systematic name
+		
+		String systematic = mod.getSystematicName();
+		if ( systematic != null) {
+			//System.out.println("SYSTEMATIC NAME: " + mod.getSystematicName());
+			return systematic;
+		}
+		
+		
+		return "";
+		
+	}
+
 	public int hashCode() {
 		int ret = id.hashCode();
 		ret = ret * 31 + category.hashCode();
