@@ -863,8 +863,8 @@ public class PDBFileParser  {
 	 */
 	private void pdb_TITLE_Handler(String line) {
 		String title;
-		if ( line.length() > 69)
-			title = line.substring(10,70).trim();
+		if ( line.length() > 79)
+			title = line.substring(10,80).trim();
 		else
 			title = line.substring(10,line.length()).trim();
 
