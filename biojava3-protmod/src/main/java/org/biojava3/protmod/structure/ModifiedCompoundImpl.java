@@ -283,43 +283,45 @@ implements ModifiedCompound {
 	public String getDescription() {
 
 		StringBuilder sb = new StringBuilder();
-		sb.append("Category: ");
+		//sb.append("Category: ");
 
 		if ( getModification()  == null) {
 			sb.append(" !!! not initialized !!!");
 			return sb.toString();
 		}
-		sb.append(getModification().getCategory());
-		if (!modification.getKeywords().isEmpty()) {
-			sb.append("; ");
-			sb.append(modification.getKeywords());
-		}
-		sb.append("; Modification ID: ");
-		sb.append(modification.getId());
-
-		if (modification.getResidId()!=null) {
-			sb.append("; RESID: ");
-			sb.append(modification.getResidId());
-			sb.append(" [");
-			sb.append(modification.getResidName());
-			sb.append(']');
-		}
-
-		sb.append(" | ");
-
-		if (atomLinkages==null) {
-			for (StructureGroup group : groups) {
-				sb.append(group);
-				sb.append(" | ");
-			}
-		} else {
-			for (Set<StructureAtomLinkage> linkages : atomLinkages.values()) {
-				for (StructureAtomLinkage linkage : linkages) {
-					sb.append(linkage);
-					sb.append(" | ");
-				}
-			}
-		}
+		
+		sb.append(modification.toString());
+//		sb.append(getModification().getCategory());
+//		if (!modification.getKeywords().isEmpty()) {
+//			sb.append("; ");
+//			sb.append(modification.getKeywords());
+//		}
+//		sb.append("; Modification ID: ");
+//		sb.append(modification.getId());
+//
+//		if (modification.getResidId()!=null) {
+//			sb.append("; RESID: ");
+//			sb.append(modification.getResidId());
+//			sb.append(" [");
+//			sb.append(modification.getResidName());
+//			sb.append(']');
+//		}
+//
+//		sb.append(" | ");
+//
+//		if (atomLinkages==null) {
+//			for (StructureGroup group : groups) {
+//				sb.append(group);
+//				sb.append(" | ");
+//			}
+//		} else {
+//			for (Set<StructureAtomLinkage> linkages : atomLinkages.values()) {
+//				for (StructureAtomLinkage linkage : linkages) {
+//					sb.append(linkage);
+//					sb.append(" | ");
+//				}
+//			}
+//		}
 
 		return sb.toString();
 	}
