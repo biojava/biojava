@@ -133,34 +133,23 @@ implements ProteinModification {
 	
 	private String printModification(ProteinModificationImpl mod) {
 		StringBuilder sb = new StringBuilder();
-						
+				
+		String resid = mod.getResidId();
+		if (resid != null) {
+			String residname = mod.getResidName();
+			if (residname != null) {
+				sb.append(residname);
+			}
+		}
+		
 		Set<String> keywords = mod.getKeywords();
 		if (keywords!=null && !keywords.isEmpty()) {
-
+			sb.append(", ");
 			for (String keyword : keywords) {
 				sb.append(keyword);
 				sb.append(", ");
 			}
 			sb.delete(sb.length()-2,sb.length());
-		}
-		sb.append(" [ID:");
-		sb.append(mod.getId());
-		sb.append("] [");
-		sb.append(mod.getCategory());
-		sb.append("] ");
-		
-		
-		String resid = mod.getResidId();
-		if (resid != null) {
-			sb.append("; ");
-			sb.append("RESID:");
-			sb.append(resid);
-			String residname = mod.getResidName();
-			if (residname != null) {
-				sb.append(" (");
-				sb.append(residname);
-				sb.append(')');
-			}
 		}
 		
 		return sb.toString();
