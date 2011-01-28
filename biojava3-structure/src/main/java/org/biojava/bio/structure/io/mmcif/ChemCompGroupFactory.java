@@ -81,7 +81,7 @@ public class ChemCompGroupFactory {
 				AminoAcid aa = new AminoAcidImpl();
 
 				String one_letter = cc.getOne_letter_code();
-				if ( one_letter == null || one_letter.equals("X") || one_letter.equals("?")){
+				if ( one_letter == null || one_letter.equals("X") || one_letter.equals("?") || one_letter.length()==0){
 					String parent = cc.getMon_nstd_parent_comp_id();
 					if ( parent != null && parent.length() == 3){
 						String parentid = cc.getMon_nstd_parent_comp_id() ;
@@ -89,7 +89,10 @@ public class ChemCompGroupFactory {
 						one_letter = parentCC.getOne_letter_code();
 					}
 				}
-				aa.setAminoType(one_letter.charAt(0));
+				if ( one_letter != null && one_letter.length()>1)
+					aa.setAminoType(one_letter.charAt(0));
+				else 
+					System.err.println(" Problem with chemical component: " + recordName + "  Can not inferr one letter code!");
 
 
 				g = aa;
