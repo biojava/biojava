@@ -61,5 +61,21 @@ public class ChemCompTest extends TestCase {
 
 		ChemCompGroupFactory.setChemCompProvider(oldProvider);
 	}
+	
+	public void testPRR(){
+		
+		String chemID = "PRR"; 
+				
+		Group g = ChemCompGroupFactory.getGroupFromChemCompDictionary(chemID);
+		
+		assertEquals(g.getType(), AminoAcidImpl.type);
+		
+		AminoAcid aa = (AminoAcid) g;
+		
+		assertNotNull(aa.getAminoType());
+		
+		assertTrue(aa.getAminoType().equals('X'));
+		
+	}
 
 }
