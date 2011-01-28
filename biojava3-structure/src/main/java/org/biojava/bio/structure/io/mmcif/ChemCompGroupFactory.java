@@ -89,10 +89,15 @@ public class ChemCompGroupFactory {
 						one_letter = parentCC.getOne_letter_code();
 					}
 				}
-				if ( one_letter != null && one_letter.length()>0)
+				
+				if ( one_letter == null || one_letter.length()==0 || one_letter.equals("?")) {
+					// e.g. problem with PRR, which probably should have a parent of ALA, but as of 20110127 does not.
+					System.err.println(" Problem with chemical component: " + recordName + "  Did not find one letter code!");
+					aa.setAminoType('X');
+
+				} else  {
 					aa.setAminoType(one_letter.charAt(0));
-				else 
-					System.err.println(" Problem with chemical component: " + recordName + "  Can not inferr one letter code!");
+				}
 
 
 				g = aa;
