@@ -30,26 +30,28 @@ public class ChemCompTest extends TestCase {
 		
 		String chemID = "MEA";
 		
+		
+
+		// also test replacing providers...
 		ChemCompProvider oldProvider = ChemCompGroupFactory.getChemCompProvider();
 		
 		DownloadChemCompProvider all = new DownloadChemCompProvider();
-		//all.setDownloadAll(true);
-		
+				
 		ChemCompGroupFactory.setChemCompProvider(all);
-
+		
 		ChemComp cc = ChemCompGroupFactory.getChemComp(chemID);
 
 		assertNotNull(cc);
-		
+				
 		assertTrue(" is not mea" , cc.getId().equals(chemID));
 
-		assertEquals(" one letter code is not correct", cc.getOne_letter_code(),"F");
+		assertEquals(" one letter code is not correct", "F", cc.getOne_letter_code());
 
-		assertEquals(cc.getThree_letter_code(),"MEA");
+		assertEquals("MEA",cc.getThree_letter_code());
 
 		assertNotNull(cc.getPolymerType());
 
-		assertEquals(cc.getPolymerType(), PolymerType.peptide);
+		assertEquals( PolymerType.peptide, cc.getPolymerType());
 
 		assertNotNull("residue type has not been set!", cc.getResidueType());
 
@@ -58,23 +60,31 @@ public class ChemCompTest extends TestCase {
 		Group g = ChemCompGroupFactory.getGroupFromChemCompDictionary(chemID);
 
 		assertTrue( g.getType().equals("amino"));
-
+		
 		ChemCompGroupFactory.setChemCompProvider(oldProvider);
 	}
 	
 	public void testPRR(){
 		
+		ChemCompProvider oldProvider = ChemCompGroupFactory.getChemCompProvider();
+		
+		DownloadChemCompProvider all = new DownloadChemCompProvider();
+		
+		ChemCompGroupFactory.setChemCompProvider(all);
+		
 		String chemID = "PRR"; 
 				
 		Group g = ChemCompGroupFactory.getGroupFromChemCompDictionary(chemID);
 		
-		assertEquals(g.getType(), AminoAcidImpl.type);
+		assertTrue("Got back group of wrong type! " + g.getClass().getName(),  g instanceof AminoAcid);
 		
 		AminoAcid aa = (AminoAcid) g;
 		
 		assertNotNull(aa.getAminoType());
 		
 		assertTrue(aa.getAminoType().equals('X'));
+		
+		ChemCompGroupFactory.setChemCompProvider(oldProvider);
 		
 	}
 
