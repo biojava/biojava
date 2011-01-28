@@ -89,7 +89,7 @@ public class ChemCompGroupFactory {
 						one_letter = parentCC.getOne_letter_code();
 					}
 				}
-				if ( one_letter != null && one_letter.length()>1)
+				if ( one_letter != null && one_letter.length()>0)
 					aa.setAminoType(one_letter.charAt(0));
 				else 
 					System.err.println(" Problem with chemical component: " + recordName + "  Can not inferr one letter code!");
