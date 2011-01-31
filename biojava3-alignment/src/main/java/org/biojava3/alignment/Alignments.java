@@ -237,7 +237,7 @@ public class Alignments {
      * @param subMatrix the set of substitution scores used during alignment
      * @return list of sequence pair scorers
      */
-    static <S extends Sequence<C>, C extends Compound> List<PairwiseSequenceScorer<S, C>> getAllPairsScorers(
+    public static <S extends Sequence<C>, C extends Compound> List<PairwiseSequenceScorer<S, C>> getAllPairsScorers(
             List<S> sequences, PairwiseSequenceScorerType type, GapPenalty gapPenalty,
             SubstitutionMatrix<C> subMatrix) {
         List<PairwiseSequenceScorer<S, C>> allPairs = new ArrayList<PairwiseSequenceScorer<S, C>>();
@@ -262,7 +262,7 @@ public class Alignments {
      * @param subMatrix the set of substitution scores used during alignment
      * @return list of sequence pair scores
      */
-    static <S extends Sequence<C>, C extends Compound> int[] getAllPairsScores( List<S> sequences,
+    public static <S extends Sequence<C>, C extends Compound> int[] getAllPairsScores( List<S> sequences,
             PairwiseSequenceScorerType type, GapPenalty gapPenalty, SubstitutionMatrix<C> subMatrix) {
         return runPairwiseScorers(getAllPairsScorers(sequences, type, gapPenalty, subMatrix));
     }
@@ -521,7 +521,7 @@ public class Alignments {
      * @param subMatrix the set of substitution scores used during alignment
      * @return multiple sequence alignment
      */
-    static <S extends Sequence<C>, C extends Compound> Profile<S, C> getProgressiveAlignment(GuideTree<S, C> tree,
+    public static <S extends Sequence<C>, C extends Compound> Profile<S, C> getProgressiveAlignment(GuideTree<S, C> tree,
             ProfileProfileAlignerType type, GapPenalty gapPenalty, SubstitutionMatrix<C> subMatrix) {
 
         // find inner nodes in post-order traversal of tree (each leaf node has a single sequence profile)
@@ -591,7 +591,7 @@ public class Alignments {
      * @param scorers list of scorers to run
      * @return list of score results from running scorers
      */
-    static <S extends Sequence<C>, C extends Compound> int[] runPairwiseScorers(
+    public static <S extends Sequence<C>, C extends Compound> int[] runPairwiseScorers(
             List<PairwiseSequenceScorer<S, C>> scorers) {
         int n = 1, all = scorers.size();
         List<Future<Integer>> futures = new ArrayList<Future<Integer>>();
