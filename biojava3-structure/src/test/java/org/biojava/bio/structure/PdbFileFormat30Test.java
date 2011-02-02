@@ -123,5 +123,26 @@ public class PdbFileFormat30Test extends TestCase {
 		return nr;
 	}
 
-    
+        /**
+         * Checks that the legacy file check is working and that that non-legacy
+         * files have the correct number of chains when the line length is over
+         * 72 characters.
+         */
+        public void testIsLegacyFormat_pdb_COMPND_handler(){
+
+		Structure s = getStructure("/3mk3.pdb");
+
+		List<Compound> compounds= s.getCompounds();
+		assertTrue(compounds.size() == 1);
+		Compound mol = compounds.get(0);
+		assertTrue(mol.getMolName().equals("6,7-DIMETHYL-8-RIBITYLLUMAZINE SYNTHASE"));
+                assertEquals(60, mol.getChainId().size());
+                assertEquals(60, mol.getChains().size());
+                assertTrue(mol.getChainId().contains("S"));
+                assertTrue(mol.getChainId().contains("T"));
+                assertTrue(mol.getChainId().contains("U"));
+                assertTrue(mol.getChainId().contains("g"));
+                assertTrue(mol.getChainId().contains("h"));
+                assertTrue(mol.getChainId().contains("i"));
+	}
 }

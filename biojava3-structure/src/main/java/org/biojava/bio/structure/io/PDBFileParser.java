@@ -140,8 +140,11 @@ public class PDBFileParser  {
 	private Group         current_group;
 
 	private List<Chain>   seqResChains; // contains all the chains for the SEQRES records
-
-
+        //we're going to work on the assumption that the files are current -
+        //if the pdb_HEADER_Handler detects a legacy format, this will be changed to true.
+        //if true then lines will be truncated at 72 characters in certain cases
+        //(pdb_COMPOUND_handler for example)
+        private boolean isLegacyFormat = false;
 
 	// for printing
 	private static final String NEWLINE;
@@ -285,9 +288,6 @@ public class PDBFileParser  {
 
 
 
-
-
-
 	/** initialize the header. */
 	private Map<String,Object> init_header(){
 
@@ -389,6 +389,18 @@ public class PDBFileParser  {
 		if (DEBUG) {
 			System.out.println("Parsing entry " + pdbId);
 		}
+                //*really* old files (you'll need to hunt to find these as they
+                //should have been remediated) have headers like below. Plus the
+                //pdbId at positions 72-76 is present in every line
+
+     //HEADER    PROTEINASE INHIBITOR (TRYPSIN)          05-OCT-84   5PTI      5PTI   3
+     //HEADER    TRANSFERASE (ACYLTRANSFERASE)           02-SEP-92   1LAC      1LAC   2
+                if (line.trim().length() > 66) {
+                    if (pdbId.equals(line.substring (72, 76))){
+                        isLegacyFormat = true;
+                        System.out.println(pdbId + " is a LEGACY entry - this will most likely not parse correctly.");
+                    }
+                }
 		header.put("idCode",pdbCode);
 		structure.setPDBCode(pdbCode);
 		header.put("classification",classification);
@@ -932,8 +944,14 @@ public class PDBFileParser  {
 					+ current_compound);
 		}
 
-		// in some PDB files the line ends with the PDB code and a serial number, chop those off!
-		if (line.length() > 72) {
+		// In legacy PDB files the line ends with the PDB code and a serial number, chop those off!
+                //format version 3.0 onwards will have 80 characters in a line
+//		if (line.length() > 72) {
+                if (isLegacyFormat) {
+//                    if (DEBUG) {
+//                        System.out.println("We have a legacy file - truncating line length to 71 characters:");
+//                        System.out.println(line);
+//                    }
 			line = line.substring(0, 72);
 		}
 
