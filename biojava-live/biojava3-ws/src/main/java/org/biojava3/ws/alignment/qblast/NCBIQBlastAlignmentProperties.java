@@ -44,16 +44,20 @@ public class NCBIQBlastAlignmentProperties implements
 		RemotePairwiseAlignmentProperties {
 
 	private static final long serialVersionUID = 1L;
-	private HashMap<String, String> param = new HashMap<String, String>();
+	private HashMap<String, String> param;
 
+//	param.put("PROGRAM","not_set");
+//	param.put("DATABASE","not_set");
+//	param.put("OTHER_ADVANCED","not_set");
 	
-	public void NCBIQBlastAlignmentProperties() {
+	
+	public NCBIQBlastAlignmentProperties() {
+		param = new HashMap<String, String>();
 		this.param.put("PROGRAM","not_set");
 		this.param.put("DATABASE","not_set");
 		this.param.put("OTHER_ADVANCED","not_set");
 	}
-//	this.param.put("OTHER_ADVANCED","not_used");
-
+	
 	/**
 	 * This method returns the value of the program used for this particular
 	 * blast run.
@@ -61,7 +65,7 @@ public class NCBIQBlastAlignmentProperties implements
 	 * @return program :the name of the blastall program used.
 	 */
 	public String getBlastProgram() {
-		return param.get("PROGRAM");
+		return this.param.get("PROGRAM");
 	}
 
 	/**
@@ -76,16 +80,8 @@ public class NCBIQBlastAlignmentProperties implements
 	 * 
 	 */
 	public void setBlastProgram(String program) throws Exception {
-
 		boolean isValid = false;
 		String[] blastPr = new String []{ "blastn", "blastp", "blastx", "tblastn", "tblastx" };
-
-//		for (int i = 0; i < blastPr.length; i++) {
-//			if (program == blastPr[i]) {
-//				this.param.put("PROGRAM", program);
-//				isValid = true;
-//			}
-//		}
 		
 		if(Arrays.binarySearch(blastPr,program)>=0){
 			this.param.put("PROGRAM", program);
@@ -179,6 +175,7 @@ public class NCBIQBlastAlignmentProperties implements
 	public String getBlastAdvancedOptions() {
 		return this.param.get("OTHER_ADVANCED");
 	}
+	
 	public String getAlignmentOption(String key) throws Exception {
 		if(param.containsKey(key)){
 			return this.param.get(key);}
@@ -192,6 +189,6 @@ public class NCBIQBlastAlignmentProperties implements
 	}
 
 	public Set<String> getAlignmentOptions() {
-		return param.keySet();
+		return this.param.keySet();
 	}
 }

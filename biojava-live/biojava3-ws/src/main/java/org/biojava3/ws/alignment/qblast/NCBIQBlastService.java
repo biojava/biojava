@@ -244,6 +244,18 @@ public class NCBIQBlastService implements RemotePairwiseAlignmentService {
 	public String sendAlignmentRequest(Sequence rs,
 			RemotePairwiseAlignmentProperties rpa) throws Exception {
 
+		if((rs instanceof DNASequence) && rpa.getAlignmentOption("PROGRAM") == "blastp"){
+			throw new Exception("DNA Sequence is not blastable with blastp\n");
+		}else if((rs instanceof DNASequence) && rpa.getAlignmentOption("PROGRAM") == "tblastn"){
+			throw new Exception("DNA Sequence is not blastable with tblastn\n");
+		}else if((rs instanceof ProteinSequence) && rpa.getAlignmentOption("PROGRAM") == "blastn"){
+			throw new Exception("Protein Sequence is not blastable with blastn\n");
+		}else if((rs instanceof ProteinSequence) && rpa.getAlignmentOption("PROGRAM") == "blastx"){
+			throw new Exception("Protein Sequence is not blastable with blastx\n");
+		}else if((rs instanceof ProteinSequence) && rpa.getAlignmentOption("PROGRAM") == "tblastn"){
+			throw new Exception("Protein Sequence is not blastable with tblastn\n");
+		}
+		
 		tmp = rs.getSequenceAsString();
 
 		return rid = sendActualAlignementRequest(tmp, rpa);
