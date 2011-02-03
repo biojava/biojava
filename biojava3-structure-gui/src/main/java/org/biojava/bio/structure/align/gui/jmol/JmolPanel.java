@@ -257,7 +257,7 @@ implements ActionListener
 		int i = -1;
 		for ( ScopDomain domain : domains){
 			i++;
-			if ( i > ColorUtils.colorWheel.length)
+			if ( i >= ColorUtils.colorWheel.length)
 				i = 0;
 			Color c1 = ColorUtils.colorWheel[i];
 			List<String>ranges = domain.getRanges();
