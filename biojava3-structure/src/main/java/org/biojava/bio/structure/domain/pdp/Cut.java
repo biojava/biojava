@@ -366,6 +366,8 @@ public class Cut {
 			}
 
 			nc++;
+			if ( nc >= PDPParameters.MAXSIZE)
+				nc = PDPParameters.MAXSIZE-1;
 		}
 		val.first_cut=false;
 		if(verbose) 
