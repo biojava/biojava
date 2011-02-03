@@ -46,11 +46,6 @@ public class NCBIQBlastAlignmentProperties implements
 	private static final long serialVersionUID = 1L;
 	private HashMap<String, String> param;
 
-//	param.put("PROGRAM","not_set");
-//	param.put("DATABASE","not_set");
-//	param.put("OTHER_ADVANCED","not_set");
-	
-	
 	public NCBIQBlastAlignmentProperties() {
 		param = new HashMap<String, String>();
 		this.param.put("PROGRAM","not_set");
@@ -97,6 +92,14 @@ public class NCBIQBlastAlignmentProperties implements
 	/**
 	 * This method returns the value of the database used for this particular
 	 * blast run.
+	 * 
+	 * At this point in time (Feb. 2011), there is no way of recovering the database list available through the URLAPI inteface.
+	 * A list of available databases is available here:
+	 * 
+	 *  http://www.ncbi.nlm.nih.gov/staff/tao/URLAPI/remote_blastdblist.html
+	 * 
+	 * By using the proper DB_DIR_PREFIX/DATABASE concatenation as required to define your string, you should acces to 
+	 * all the database found at this link.
 	 * 
 	 * @return db :the name of the database used
 	 */
