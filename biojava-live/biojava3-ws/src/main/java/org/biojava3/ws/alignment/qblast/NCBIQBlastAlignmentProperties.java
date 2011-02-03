@@ -99,7 +99,7 @@ public class NCBIQBlastAlignmentProperties implements
 	 *  http://www.ncbi.nlm.nih.gov/staff/tao/URLAPI/remote_blastdblist.html
 	 * 
 	 * By using the proper DB_DIR_PREFIX/DATABASE concatenation as required to define your string, you should have access to 
-	 * all the database found at this link.
+	 * all the databases found at this link.
 	 * 
 	 * @return db :the name of the database used
 	 */
