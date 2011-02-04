@@ -46,6 +46,7 @@ import org.biojava.bio.structure.StructureException;
 
 import org.biojava3.protmod.Component;
 import org.biojava3.protmod.ComponentType;
+import org.biojava3.protmod.ModificationCategory;
 import org.biojava3.protmod.ModificationCondition;
 import org.biojava3.protmod.ModificationLinkage;
 import org.biojava3.protmod.ProteinModification;
@@ -343,7 +344,9 @@ public class ProteinModificationIdentifier {
 		}
 		
 		// TODO: should the additional groups only be allowed to the identified 
-		// heta groups or both amino acids and heta groups?
+		// ligands or both amino acids and ligands? Currently only on ligands
+		// ligands to amino acid bonds for same modification of unknown category
+		// will be combined in mergeModComps()
 		// TODO: how about chain-chain links?
 		List<Group> identifiedGroups = new ArrayList<Group>();
 		for (StructureGroup num : mc.getGroups(ComponentType.LIGAND)) {
@@ -399,38 +402,35 @@ public class ProteinModificationIdentifier {
 	private void mergeModComps(List<ModifiedCompound> modComps) {
 		TreeSet<Integer> remove = new TreeSet<Integer>();
 		int n = modComps.size();
-		for (int i=0; i<n; i++) {
-			ModifiedCompound curr = modComps.get(i);
+		for (int icurr=1; icurr<n; icurr++) {
+			ModifiedCompound curr = modComps.get(icurr);
+			
+			String id = curr.getModification().getId();
+			if (ProteinModificationRegistry.getById(id).getCategory()
+					!=ModificationCategory.UNDEFINED)
+				continue;
 			
 			// find linked compounds that before curr
-			List<Integer> merging = new ArrayList<Integer>();
-			for (int j=0; j<i; j++) {
-				if (remove.contains(j))	continue;
-				ModifiedCompound pre = modComps.get(j);
-				if (!Collections.disjoint(pre.getGroups(ComponentType.LIGAND), curr.getGroups(ComponentType.LIGAND))) {
-					merging.add(j);
+			//List<Integer> merging = new ArrayList<Integer>();
+			int ipre = 0;
+			for (; ipre<icurr; ipre++) {
+				if (remove.contains(ipre))	continue;
+				ModifiedCompound pre = modComps.get(ipre);
+				if (!Collections.disjoint(pre.getGroups(ComponentType.LIGAND), 
+						curr.getGroups(ComponentType.LIGAND))) {
+					break;
 				}
 			}
 			
-			if (!merging.isEmpty()) {
-				merging.add(i);
+			if (ipre<icurr) {				
+				ModifiedCompound mcKeep = modComps.get(ipre);
 				
-				// keep the one with smallest index
-				Integer iKeep = merging.get(0);
-				ModifiedCompound mcKeep = modComps.get(iKeep);
-				
-				// merging all others to iKeep
-				int nm = merging.size();
-				for (int im=1; im<nm; im++) {
-					Integer iRmv = merging.get(im);
-					ModifiedCompound mcRmv = modComps.get(iRmv);
-					mcKeep.addAtomLinkages(mcRmv.getAtomLinkages());
-					remove.add(iRmv);
+				// merge modifications of the same type
+				if (mcKeep.getModification().getId().equals(id)) {
+					// merging the current one to the previous one
+					mcKeep.addAtomLinkages(curr.getAtomLinkages());
+					remove.add(icurr);
 				}
-				
-//				if (mcKeep.getModification().getCategory()!=ModificationCategory.UNDEFINED) {
-//					System.out.println("Merging compound:\n"+mcKeep.toString());
-//				}
 			}
 		}
 		
