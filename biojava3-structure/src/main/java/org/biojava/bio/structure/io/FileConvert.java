@@ -63,7 +63,7 @@ public class FileConvert {
 		d2.setMinimumFractionDigits(2);
 		d2.setMaximumFractionDigits(2);
 	}
-	
+
 	private static final String newline = System.getProperty("line.separator");
 
 	/**
@@ -130,7 +130,7 @@ public class FileConvert {
 	 * Thanks to Tamas Horvath for this one
 	 */
 	private String printPDBConnections(){
-		
+
 
 		StringBuffer str = new StringBuffer();
 
@@ -189,7 +189,7 @@ public class FileConvert {
 	 * @return a String representing a PDB file.
 	 */
 	public String toPDB() {
-		
+
 
 		StringBuffer str = new StringBuffer();
 		//int i = 0 ;
@@ -224,7 +224,11 @@ public class FileConvert {
 		}
 		//SITE
 		for (Site site : structure.getSites()) {
-			site.toPDB(str);           
+			try {
+				site.toPDB(str);
+			} catch (Exception e){
+				e.printStackTrace();
+			}
 		}
 
 		//
@@ -302,11 +306,11 @@ public class FileConvert {
 	 */
 	public static String toPDB(Atom a){
 		StringBuffer w = new StringBuffer();
-		
+
 		toPDB(a,w);
-		
+
 		return w.toString();
-		
+
 	}
 
 	public static void toPDB(Atom a, StringBuffer str) {
@@ -314,7 +318,7 @@ public class FileConvert {
 		Group g = a.getGroup();
 		Chain c = g.getChain();
 		String chainID = c.getChainID();
-		
+
 		String type = g.getType() ;
 
 		String record = "" ;
