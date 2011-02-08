@@ -492,6 +492,7 @@ public class StructureTools {
 		newS.setHeader(s.getHeader());
 		newS.setPDBCode(s.getPDBCode());
 		newS.setPDBHeader(s.getPDBHeader());
+		newS.setSites(s.getSites());
 
 		if ( chainId != null)
 			chainId = chainId.trim();
@@ -539,6 +540,8 @@ public class StructureTools {
 		newS.setPDBHeader(s.getPDBHeader());
 		newS.setSSBonds(s.getSSBonds());
 		newS.setDBRefs(s.getDBRefs());
+		newS.setSites(s.getSites());
+		
 		if ( chainNr < 0 ) {
 
 			// only get model 0
