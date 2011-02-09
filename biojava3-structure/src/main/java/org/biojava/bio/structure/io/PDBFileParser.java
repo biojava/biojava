@@ -2942,7 +2942,11 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 			}
 
 			if (!dateString.equals("    ")) {
-				publicationDate = Integer.valueOf(dateString);
+				try {
+                                    publicationDate = Integer.valueOf(dateString);
+                                } catch (NumberFormatException nfe) {
+                                    logger.warning(dateString + " is not a valid integer for a date in JRNL sub-section REF line 1");
+                                }
 //				if (DEBUG) {
 //					System.out.println("JournalParser set date " + publicationDate);
 //				}
