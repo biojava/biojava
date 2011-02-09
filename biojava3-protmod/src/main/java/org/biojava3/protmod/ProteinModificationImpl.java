@@ -144,7 +144,7 @@ implements ProteinModification {
 		Set<String> keywords = mod.getKeywords();
 		if (keywords!=null && !keywords.isEmpty()) {
 			if ( hasName)
-				sb.append(", ");
+				sb.append(" (");
 			for (String keyword : keywords) {
 				
 				sb.append(keyword);
@@ -152,7 +152,8 @@ implements ProteinModification {
 			}
 			sb.delete(sb.length()-2,sb.length());
 		}
-	
+		if ( hasName)
+			sb.append(")");
 		return sb.toString();
 	}
 	
