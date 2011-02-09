@@ -51,7 +51,7 @@ implements ProteinModification {
 	private final String psimodName;
 	private final String sysName;
 	private final String formula;
-	private final String description;
+	
 	private final Set<String> keywords;
 
 	public String getId() {
@@ -240,7 +240,7 @@ implements ProteinModification {
 		private String psimodName = null;
 		private String sysName = null;
 		private String formula = null;
-		private String description = null;
+		
 		private Set<String> keywords = new HashSet<String>();
 		
 		/**
@@ -278,7 +278,7 @@ implements ProteinModification {
 			this.psimodName = copyFrom.getPsimodName();
 			this.sysName = copyFrom.getSystematicName();
 			this.formula = copyFrom.getFormula();
-			this.description = copyFrom.getDescription();
+			
 			this.keywords = new HashSet<String>(copyFrom.getKeywords());
 		}
 		
@@ -376,7 +376,7 @@ implements ProteinModification {
 		 * @return the same Builder object so you can chain setters.
 		 */
 		public Builder setDescription(final String description) {
-			this.description = description;
+			// description is created on the fly in getDescription
 			return this;
 		}
 		
@@ -437,7 +437,7 @@ implements ProteinModification {
 		this.psimodName = builder.psimodName;
 		this.sysName = builder.sysName;
 		this.formula = builder.formula;
-		this.description = builder.description;
+		
 		this.keywords = new HashSet<String>(builder.keywords);
 	}
 }
