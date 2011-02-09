@@ -37,6 +37,7 @@ import org.biojava3.protmod.ComponentType;
 import org.biojava3.protmod.ModificationCategory;
 import org.biojava3.protmod.ProteinModification;
 import org.biojava3.protmod.ProteinModificationImpl;
+import org.biojava3.protmod.io.ModifiedCompoundXMLConverter;
 
 
 /**
@@ -57,6 +58,7 @@ implements ModifiedCompound, Serializable, Comparable<ModifiedCompound> {
 	ProteinModification modification;
 	
 	Set<StructureGroup> groups;
+	
 	Map<Set<StructureGroup>, Set<StructureAtomLinkage>> atomLinkages;
 
 	public static final String newline = System.getProperty("line.separator");
@@ -116,6 +118,7 @@ implements ModifiedCompound, Serializable, Comparable<ModifiedCompound> {
 
 	public void setModification(ProteinModification protmod){
 		originalModification = protmod;
+		
 		resetModification();
 	}
 
@@ -347,10 +350,16 @@ implements ModifiedCompound, Serializable, Comparable<ModifiedCompound> {
 	}
 
 	public int compareTo(ModifiedCompound compound){
-		if (this.equals(compound)){
-			return 0;
+		try {
+			// quite complex objects so the easiest is to just wrap it as XML
+			// and compare the two strings...
+			String xml  = ModifiedCompoundXMLConverter.toXML(this);
+			String xml2 = ModifiedCompoundXMLConverter.toXML(compound);
+			return xml.compareTo(xml2);
+		} catch (Exception e){
+			
 		}
-		return this.getModification().toString().compareTo(compound.getModification().toString());
+		return this.toString().compareTo(compound.toString());
 	}
 	
 	/**
