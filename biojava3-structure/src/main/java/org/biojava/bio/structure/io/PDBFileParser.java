@@ -2898,6 +2898,15 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
                                 }
 				return;
 			}
+
+                        if (ref.length() < 48) {
+                            logger.warning("REF line too short - must be at least 48 characters to be valid for parsing.");
+                            journalName = "";
+                            volume = "";
+                            startPage = "";
+                            publicationDate = 0;
+                            return;
+                        }
                         //can be multi line:
                         //REF    PHILOS.TRANS.R.SOC.LONDON,    V. 293    53 1981
                         //REF  2 SER.B

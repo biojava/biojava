@@ -387,6 +387,33 @@ public class PDBFileParserTest extends TestCase {
             assertEquals("PHILOS.TRANS.R.SOC.LONDON, SER.B", journalArticle.getJournalName());
         }
 
+      public void testInvalidFormatREFsectionJRNL(){
+//            System.out.println("Testing JRNL record parsing from 3pfk");
+            String jrnlString =
+            "JRNL        AUTH   P.R.EVANS,G.W.FARRANTS,P.J.HUDSON                            " + newline +
+//            "JRNL        TITL   PHOSPHOFRUCTOKINASE: STRUCTURE AND CONTROL.                  " + newline +
+            "JRNL        REF    INTERESTING TIMES                                            " + newline +
+            "JRNL        REFN                   ISSN 0080-4622                               " + newline +
+            "JRNL        PMID   6115424                                                      ";
+
+
+            BufferedReader br = new BufferedReader(new StringReader(jrnlString));
+            Structure s = null;
+        try {
+            s = parser.parsePDBFile(br);
+        } catch (IOException ex) {
+            Logger.getLogger(PDBFileParserTest.class.getName()).log(Level.SEVERE, null, ex);
+        }
+            String jrnl = s.getJournalArticle().toString();
+//            System.out.println(jrnl);
+            JournalArticle journalArticle = s.getJournalArticle();
+            assertEquals("", journalArticle.getVolume());
+            assertEquals("", journalArticle.getStartPage());
+            assertEquals(0, journalArticle.getPublicationDate());
+            assertEquals("", journalArticle.getJournalName());
+        }
+
+
         public void testSecondMultiLineJRNL(){
 //            System.out.println("Testing JRNL record parsing from 1gpb");
             String jrnlString =
