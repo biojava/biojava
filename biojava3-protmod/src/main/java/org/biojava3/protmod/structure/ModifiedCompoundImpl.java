@@ -24,6 +24,7 @@
 
 package org.biojava3.protmod.structure;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
@@ -44,17 +45,21 @@ import org.biojava3.protmod.ProteinModificationImpl;
  * @since 3.0
  */
 public class ModifiedCompoundImpl
-implements ModifiedCompound {
+implements ModifiedCompound, Serializable, Comparable<ModifiedCompound> {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1656563037849815427L;
+
 	ProteinModification originalModification;
+
 	ProteinModification modification;
 	
 	Set<StructureGroup> groups;
 	Map<Set<StructureGroup>, Set<StructureAtomLinkage>> atomLinkages;
 
-
 	public static final String newline = System.getProperty("line.separator");
-
 
 	public ModifiedCompoundImpl(){
 
@@ -341,6 +346,13 @@ implements ModifiedCompound {
 
 	}
 
+	public int compareTo(ModifiedCompound compound){
+		if (this.equals(compound)){
+			return 0;
+		}
+		return this.getModification().toString().compareTo(compound.getModification().toString());
+	}
+	
 	/**
 	 * @return true if same modification and same components; false, otherwise.
 	 */
