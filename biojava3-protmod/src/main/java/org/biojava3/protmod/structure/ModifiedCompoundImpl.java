@@ -285,7 +285,7 @@ implements ModifiedCompound, Serializable, Comparable<ModifiedCompound> {
 		if ( originalModification == null)
 			return "ModifiedCompoundImpl -- not initialized";
 
-		sb.append("Modification_");
+		//sb.append("Modification_");
 		sb.append(originalModification.getId());
 		ModificationCategory cat ;
 		if (originalModification.getCategory()==ModificationCategory.UNDEFINED) {
