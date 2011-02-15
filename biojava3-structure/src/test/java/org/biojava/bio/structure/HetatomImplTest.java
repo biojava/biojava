@@ -527,7 +527,7 @@ public class HetatomImplTest extends TestCase{
 
     @Test
     public void testSetResidueNumberUsage() {
-        System.out.println("testSetResidueNumberUsage");
+     
         List<Group> resNumgroups = new ArrayList<Group>();
 
         for (int i = 0; i < bigTestNumber; i++) {
