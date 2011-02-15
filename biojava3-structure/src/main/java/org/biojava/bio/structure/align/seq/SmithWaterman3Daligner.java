@@ -254,10 +254,10 @@ public class SmithWaterman3Daligner<S> extends AbstractStructureAlignment implem
 		afpChain.setAlnseq2(alnseq2);
 		afpChain.setAlnsymb(alnsymb);
 
-		System.out.println("nr aligned positions:" + pos + " " + nAtom);
-		System.out.println(new String(alnseq1));
-		System.out.println(new String(alnsymb));
-		System.out.println(new String(alnseq2));
+//		System.out.println("nr aligned positions:" + pos + " " + nAtom);
+//		System.out.println(new String(alnseq1));
+//		System.out.println(new String(alnsymb));
+//		System.out.println(new String(alnseq2));
 
 		// CE uses the aligned pairs as reference not the whole alignment including gaps...
 		afpChain.setIdentity(nrIdent*1.0/pos);
