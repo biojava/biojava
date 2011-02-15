@@ -69,11 +69,14 @@ public class FarmJobRunnable implements Runnable {
 
 	String userName = null;
 	AtomCache cache;
+	
+	boolean verbose = false;
 
 	public FarmJobRunnable(FarmJobParameters params){
 		terminated = false;
 		this.params = params;
-
+		verbose = false;
+		
 		// multiple farm jobs share the same SoftHashMap for caching coordinates
 		cache = new AtomCache( params.getPdbFilePath(), params.isPdbDirSplit());
 
@@ -87,6 +90,10 @@ public class FarmJobRunnable implements Runnable {
 		counter  = new CountProgressListener();
 		addAlignmentProgressListener(counter);
 		waitForAlignments = true;
+		
+		if ( params.isVerbose()){
+			verbose = true;
+		}
 	}
 
 	public void addAlignmentProgressListener(AlignmentProgressListener listener){
@@ -194,6 +201,7 @@ public class FarmJobRunnable implements Runnable {
 				if ( progressListeners != null)
 					notifyStartAlignment(name1,name2);
 
+				
 				try {
 					//System.out.println("calculating alignent: " + name1 + "  " + name2);
 					String resultXML = alignPair(name1, name2);
@@ -308,7 +316,12 @@ public class FarmJobRunnable implements Runnable {
 
 		// we are running with default parameters
 
-		//long startTime = System.currentTimeMillis();
+
+		if ( verbose ) {
+			log("aligning " + name1 + " vs. " + name2);
+		}
+		
+		long startTime = System.currentTimeMillis();
 
 		if ( prevName1 == null)
 			initMaster(name1);
@@ -324,7 +337,9 @@ public class FarmJobRunnable implements Runnable {
 		Atom[] ca2 =  cache.getAtoms(name2);
 
 		//		if ( FatCatAligner.printTimeStamps){
-		//			long endTime = System.currentTimeMillis();
+		long endTime = System.currentTimeMillis();
+		
+		
 		//			System.out.println("time to get " + name1 + " " + name2 + " : " + (endTime-startTime) / 1000.0 + " sec.");
 		//		}
 		AFPChain afpChain = fatCatRigid.align(ca1, ca2);
@@ -335,6 +350,10 @@ public class FarmJobRunnable implements Runnable {
 		// add tmScore
 		double tmScore = AFPChainScorer.getTMScore(afpChain, ca1, ca2);
 		afpChain.setTMScore(tmScore);
+		
+		if ( verbose ){
+			log("  finished alignment: " + name1 + " vs. " + name2 + " in " + (endTime-startTime) / 1000.0 + " sec." + afpChain );
+		}
 		
 		String xml = AFPChainXMLConverter.toXML(afpChain, ca1, ca2);
 		return xml;
