@@ -34,40 +34,72 @@ import org.biojava.bio.structure.jama.Matrix;
 public class AFPChainScorer
 {
 
-   public static double getTMScore(AFPChain align, Atom[] ca1, Atom[] ca2) throws StructureException
-   {
-      if ( align.getNrEQR() == 0)
-         return -1;
+	public static double getTMScore(AFPChain align, Atom[] ca1, Atom[] ca2) throws StructureException
+	{
+		if ( align.getNrEQR() == 0)
+			return -1;
 
-      // Create new arrays for the subset of atoms in the alignment.
-      Atom[] ca1aligned = new Atom[align.getOptLength()];
-      Atom[] ca2aligned = new Atom[align.getOptLength()];
-      int pos=0;
-      int[] blockLens = align.getOptLen();
-      int[][][] optAln = align.getOptAln();
-      assert(align.getBlockNum() <= optAln.length);
-      for(int block=0;block< align.getBlockNum();block++) {
-         assert(blockLens[block] <= optAln[block][0].length);
-         for(int i=0;i<blockLens[block];i++) {
-            ca1aligned[pos] = ca1[optAln[block][0][i]];
-            ca2aligned[pos] = (Atom) ca2[optAln[block][1][i]].clone();
-            pos++;
-         }
-      }
-      assert(pos == align.getOptLength());
+		// Create new arrays for the subset of atoms in the alignment.
+		Atom[] ca1aligned = new Atom[align.getOptLength()];
+		Atom[] ca2aligned = new Atom[align.getOptLength()];
+		int pos=0;
+		int[] blockLens = align.getOptLen();
+		int[][][] optAln = align.getOptAln();
+		assert(align.getBlockNum() <= optAln.length);
+		
+		for(int block=0;block< align.getBlockNum();block++) {
+		
+			if ( ! ( blockLens[block] <= optAln[block][0].length)) {
+				System.err.println("AFPChainScorer getTMScore: errors reconstructing alignment block ["+ block +"]. Length is " + blockLens[block] + " but should be <=" + optAln[block][0].length );
+			}
 
-      //Superimpose
-      SVDSuperimposer svd = new SVDSuperimposer(ca1aligned, ca2aligned);
-      Matrix matrix = svd.getRotation();
-      Atom shift = svd.getTranslation();
+			for(int i=0;i<blockLens[block];i++) {
+				Atom a1 = ca1[optAln[block][0][i]];
+				Atom a2 = (Atom) ca2[optAln[block][1][i]].clone();
+								
+				ca1aligned[pos] = a1;
+				ca2aligned[pos] = a2;
+				pos++;
+			}
+		}
+		
+		// this can happen when we load an old XML serialization which did not support modern ChemComp representation of modified residues.		
+		if ( pos != align.getOptLength()){
+			System.err.println("AFPChainScorer getTMScore: Problems reconstructing alignment! nr of loaded atoms is " + pos + " but should be " + align.getOptLength());
+			// we need to resize the array, because we allocated too many atoms earlier on.
+			ca1aligned = (Atom[]) resizeArray(ca1aligned, pos);
+			ca2aligned = (Atom[]) resizeArray(ca2aligned, pos);
+		}
+		//Superimpose
+		SVDSuperimposer svd = new SVDSuperimposer(ca1aligned, ca2aligned);
+		Matrix matrix = svd.getRotation();
+		Atom shift = svd.getTranslation();
 
-      for(Atom a : ca2aligned) {
-         Calc.rotate(a, matrix);
-         Calc.shift(a, shift);
-      }
+		for(Atom a : ca2aligned) {
+			Calc.rotate(a, matrix);
+			Calc.shift(a, shift);
+		}
 
-      return SVDSuperimposer.getTMScore(ca1aligned, ca2aligned, ca1.length, ca2.length);
+		return SVDSuperimposer.getTMScore(ca1aligned, ca2aligned, ca1.length, ca2.length);
 
-   }
+	}
+
+	/**
+	 * Reallocates an array with a new size, and copies the contents
+	 * of the old array to the new array.
+	 * @param oldArray  the old array, to be reallocated.
+	 * @param newSize   the new array size.
+	 * @return          A new array with the same contents.
+	 */
+	private static Object resizeArray (Object oldArray, int newSize) {
+		int oldSize = java.lang.reflect.Array.getLength(oldArray);
+		@SuppressWarnings("rawtypes")
+		Class elementType = oldArray.getClass().getComponentType();
+		Object newArray = java.lang.reflect.Array.newInstance(
+				elementType,newSize);
+		int preserveLength = Math.min(oldSize,newSize);
+		if (preserveLength > 0)
+			System.arraycopy (oldArray,0,newArray,0,preserveLength);
+		return newArray; }
 
 }
