@@ -75,6 +75,7 @@
 		<jdk.version>1.6</jdk.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.build.targetEncoding>UTF-8</project.build.targetEncoding>
+		<maxmem>512M</maxmem>
 	</properties>
 	<build>
 		<pluginManagement>
@@ -137,6 +138,7 @@
 					<configuration>
 					<footer>&lt;script src="http://www.google-analytics.com/urchin.js" type="text/javascript"&gt;&lt;/script&gt;&lt;script type="text/javascript"&gt;_uacct = "UA-1326640-1";urchinTracker();&lt;/script&gt;</footer>
 					</configuration>
+					
 				</plugin>
 			</plugins>
 		</pluginManagement>
