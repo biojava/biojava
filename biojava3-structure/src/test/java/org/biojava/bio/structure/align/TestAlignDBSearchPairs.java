@@ -39,44 +39,46 @@ import junit.framework.TestCase;
 public class TestAlignDBSearchPairs extends TestCase
 {
 
-   public void testParsePairs(){
-
-      String tmpDir = System.getProperty("java.io.tmpdir");
-      
-      AtomCache cache = new AtomCache(tmpDir,true);
-
-      InputStream inStream = this.getClass().getResourceAsStream("/db_search.pairs");
-      assertNotNull(inStream);
-
-      BufferedReader is = new BufferedReader (new InputStreamReader(inStream)) ;
-      try {
-         StructureAlignment algorithm =  StructureAlignmentFactory.getAlgorithm(CeMain.algorithmName);
-         String line = null;
-         while ( (line = is.readLine()) != null){
-            if ( line.startsWith("#"))
-               continue;
-           // System.out.println("aligning: " + line);
-            String[] spl = line.split(" ");
-            String pdb1 = spl[0];
-            String pdb2 = spl[1];
-
-
-            Structure structure1 = cache.getStructure(pdb1);
-            Structure structure2 = cache.getStructure(pdb2);
-
-            Atom[] ca1;
-            Atom[] ca2;
-
-
-            ca1 = StructureTools.getAtomCAArray(structure1);
-            ca2 = StructureTools.getAtomCAArray(structure2);
-
-            algorithm.align(ca1,ca2);
-
-         }
-      } catch (Exception e){
-         e.printStackTrace();
-         fail(e.getMessage());
-      }
-   }
+	
+	// speedup... nothing new being tested here, so disabling for now
+//   public void testParsePairs(){
+//
+//      String tmpDir = System.getProperty("java.io.tmpdir");
+//      
+//      AtomCache cache = new AtomCache(tmpDir,true);
+//
+//      InputStream inStream = this.getClass().getResourceAsStream("/db_search.pairs");
+//      assertNotNull(inStream);
+//
+//      BufferedReader is = new BufferedReader (new InputStreamReader(inStream)) ;
+//      try {
+//         StructureAlignment algorithm =  StructureAlignmentFactory.getAlgorithm(CeMain.algorithmName);
+//         String line = null;
+//         while ( (line = is.readLine()) != null){
+//            if ( line.startsWith("#"))
+//               continue;
+//           // System.out.println("aligning: " + line);
+//            String[] spl = line.split(" ");
+//            String pdb1 = spl[0];
+//            String pdb2 = spl[1];
+//
+//
+//            Structure structure1 = cache.getStructure(pdb1);
+//            Structure structure2 = cache.getStructure(pdb2);
+//
+//            Atom[] ca1;
+//            Atom[] ca2;
+//
+//
+//            ca1 = StructureTools.getAtomCAArray(structure1);
+//            ca2 = StructureTools.getAtomCAArray(structure2);
+//
+//            algorithm.align(ca1,ca2);
+//
+//         }
+//      } catch (Exception e){
+//         e.printStackTrace();
+//         fail(e.getMessage());
+//      }
+//   }
 }
