@@ -320,7 +320,7 @@ public class FarmJobRunnable implements Runnable {
 
 
 		// get a copy of the atoms, but clone them, since they will be rotated...
-		Atom[] ca2 =  cache.getAtoms(name2,true);
+		Atom[] ca2 =  cache.getAtoms(name2);
 
 		//		if ( FatCatAligner.printTimeStamps){
 		//			long endTime = System.currentTimeMillis();
@@ -341,7 +341,7 @@ public class FarmJobRunnable implements Runnable {
 	private void initMaster(String name1) throws IOException, StructureException{
 		//AtomCache cache = AtomCache.getInstance();
 
-		ca1 = cache.getAtoms(name1,true);
+		ca1 = cache.getAtoms(name1);
 
 		prevName1 = name1;
 
