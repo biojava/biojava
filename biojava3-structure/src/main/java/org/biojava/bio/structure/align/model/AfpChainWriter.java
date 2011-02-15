@@ -998,9 +998,9 @@ public class AfpChainWriter
 		str.append("\t");
 		str.append(afpChain.getCa2Length());      
 		str.append("\t");
-		str.append(afpChain.getSimilarity1());
+		str.append(afpChain.getCoverage1());
 		str.append("\t");
-		str.append(afpChain.getSimilarity2());
+		str.append(afpChain.getCoverage2());
 		str.append("\t");
 		str.append(newline);
 
