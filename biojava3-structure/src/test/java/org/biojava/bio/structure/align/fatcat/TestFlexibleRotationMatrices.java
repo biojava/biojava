@@ -61,8 +61,8 @@ public class TestFlexibleRotationMatrices extends TestCase{
       compare(name1,name2, false);
       compare(name1,name2, true);
 
-      String name3 = "1cdg.A";
-      String name4 = "1tim.A";
+      String name3 = "5pti.A";
+      String name4 = "1znf.A";
       compare(name3,name4, false);
       compare(name3,name4, true);
    }
