@@ -19,6 +19,7 @@ import org.biojava.bio.structure.align.StructureAlignment;
 import org.biojava.bio.structure.align.StructureAlignmentFactory;
 import org.biojava.bio.structure.align.events.AlignmentProgressListener;
 import org.biojava.bio.structure.align.model.AFPChain;
+import org.biojava.bio.structure.align.util.AFPChainScorer;
 import org.biojava.bio.structure.align.util.AtomCache;
 import org.biojava.bio.structure.align.util.ResourceManager;
 import org.biojava.bio.structure.align.xml.AFPChainXMLConverter;
@@ -331,6 +332,10 @@ public class FarmJobRunnable implements Runnable {
 		afpChain.setName1(name1);
 		afpChain.setName2(name2);
 
+		// add tmScore
+		double tmScore = AFPChainScorer.getTMScore(afpChain, ca1, ca2);
+		afpChain.setTMScore(tmScore);
+		
 		String xml = AFPChainXMLConverter.toXML(afpChain, ca1, ca2);
 		return xml;
 	}
