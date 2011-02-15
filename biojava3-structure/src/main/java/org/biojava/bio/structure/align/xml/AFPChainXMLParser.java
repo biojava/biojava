@@ -233,6 +233,15 @@ public class AFPChainXMLParser
 				int ca2Length = new Integer(getAttribute(rootElement,"ca2Length")).intValue();						
 				a.setCa2Length(ca2Length);
 
+				String tmScoreS = getAttribute(rootElement,"tmScore");
+				if ( tmScoreS != null) {
+					Double tmScore = null;
+					try {
+					 tmScore = Double.parseDouble(tmScoreS);
+					} catch (Exception e){						
+					}
+					a.setTMScore(tmScore);
+				}
 				Matrix[] ms = new Matrix[a.getBlockNum()];
 				a.setBlockRotationMatrix(ms);
 				Atom[] blockShiftVector = new Atom[a.getBlockNum()];
