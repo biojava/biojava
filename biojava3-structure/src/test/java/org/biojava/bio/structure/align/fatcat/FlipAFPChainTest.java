@@ -25,8 +25,7 @@
 package org.biojava.bio.structure.align.fatcat;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+
 
 import org.biojava.bio.structure.Atom;
 
@@ -45,6 +44,7 @@ import org.biojava.bio.structure.align.model.AFPChain;
 import org.biojava.bio.structure.align.model.AfpChainWriter;
 import org.biojava.bio.structure.align.seq.SmithWaterman3Daligner;
 import org.biojava.bio.structure.align.util.AFPAlignmentDisplay;
+import org.biojava.bio.structure.align.util.AFPChainScorer;
 
 import org.biojava.bio.structure.align.xml.AFPChainFlipper;
 import org.biojava.bio.structure.align.xml.AFPChainXMLConverter;
@@ -98,6 +98,8 @@ public class FlipAFPChainTest extends TestCase {
 		AFPChain afpChain = algorithm.align(ca1,ca2);
 		afpChain.setName1(name1);
 		afpChain.setName2(name2);
+		double tmScore = AFPChainScorer.getTMScore(afpChain, ca1, ca2);
+		afpChain.setTMScore(tmScore);
 		
 		String xml = AFPChainXMLConverter.toXML(afpChain, ca1, ca2);
 
@@ -110,7 +112,8 @@ public class FlipAFPChainTest extends TestCase {
 		assertEquals(afpChain.getName2(),flipped.getName1());
 		assertEquals(afpChain.getCa1Length(),flipped.getCa2Length());
 		assertEquals(afpChain.getCa2Length(),flipped.getCa1Length());
-
+		assertEquals(String.format("%.2f",afpChain.getTMScore()), String.format("%.2f",flipped.getTMScore()));
+		assertTrue(afpChain.getTMScore() != -1);
 
 		String xmlNew = AFPChainXMLConverter.toXML(flipped, ca2, ca1);
 		//System.out.println(xmlNew);
