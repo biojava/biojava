@@ -231,13 +231,16 @@ public class AFPChainXMLConverter {
 		xml.attribute("probability", String.format("%.2e", afpChain.getProbability() ).trim());
 		xml.attribute("similarity", String.format("%5.4f", afpChain.getSimilarity() ).trim());
 		
-		xml.attribute("similarity1", afpChain.getSimilarity1() + "");
-		xml.attribute("similarity2", afpChain.getSimilarity2() + "");
+		xml.attribute("similarity1", afpChain.getCoverage1() + "");
+		xml.attribute("similarity2", afpChain.getCoverage2() + "");
 		xml.attribute("totalRmsdIni", String.format("%5.2f",afpChain.getTotalRmsdIni() ).trim());
 		xml.attribute("totalRmsdOpt", String.format("%5.2f",afpChain.getTotalRmsdOpt() ).trim());
 		xml.attribute("ca1Length", afpChain.getCa1Length()+"");
 		xml.attribute("ca2Length", afpChain.getCa2Length()+"");
 		xml.attribute("afpNum",afpChain.getAfpSet().size()+"");
 		xml.attribute("alignScoreUpdate",String.format("%5.2f",afpChain.getAlignScoreUpdate()).trim());
+		if ( afpChain.getTMScore() != -1){
+			xml.attribute("tmScore", String.format("%.2f",afpChain.getTMScore()));
+		}
 	}
 }
