@@ -40,6 +40,11 @@ public class TestAlignDBSearchPairs extends TestCase
 {
 
 	
+	public void testNothing(){
+		
+	}
+	
+	
 	// speedup... nothing new being tested here, so disabling for now
 //   public void testParsePairs(){
 //
