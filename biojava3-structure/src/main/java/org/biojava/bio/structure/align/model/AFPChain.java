@@ -414,10 +414,15 @@ public class AFPChain implements Serializable, Cloneable
 		str.append("%\tSeqSim:");
 		str.append(String.format("%.0f",getSimilarity()*100));
 		str.append("%\tCov1:");
-		str.append(this.getSimilarity1());
+		str.append(this.getCoverage1());
 		str.append("%\tCov2:");
-		str.append(this.getSimilarity2());
+		str.append(this.getCoverage2());
 		str.append("%");
+		
+		if (  tmScore != -1)  {
+			str.append("\ttmScore:");
+			str.append(String.format("%.2f",tmScore));
+		}
 		str.append(newline);
 
 
