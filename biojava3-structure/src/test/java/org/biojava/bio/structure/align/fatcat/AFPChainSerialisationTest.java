@@ -117,24 +117,24 @@ extends TestCase
 //         fail(e.getMessage());
 //      }
 //   }
-   public void testSerialization4hhb(){
-
-      try {
-
-         Structure s1 = getStructure("4hhb", "A");		
-         Structure s2 = getStructure("4hhb", "B");
-
-         Atom[] ca1 = StructureTools.getAtomCAArray(s1);
-         Atom[] ca2 = StructureTools.getAtomCAArray(s2);
-
-         testAlignment("4hhb.A","4hhb.B",ca1,ca2,false);
-         testAlignment("4hhb.A","4hhb.B",ca1,ca2,true);
-
-      } catch (Exception e) {
-         e.printStackTrace();
-         fail(e.getMessage());
-      }
-   }
+//   public void testSerialization4hhb(){
+//
+//      try {
+//
+//         Structure s1 = getStructure("4hhb", "A");		
+//         Structure s2 = getStructure("4hhb", "B");
+//
+//         Atom[] ca1 = StructureTools.getAtomCAArray(s1);
+//         Atom[] ca2 = StructureTools.getAtomCAArray(s2);
+//
+//         testAlignment("4hhb.A","4hhb.B",ca1,ca2,false);
+//         testAlignment("4hhb.A","4hhb.B",ca1,ca2,true);
+//
+//      } catch (Exception e) {
+//         e.printStackTrace();
+//         fail(e.getMessage());
+//      }
+//   }
 
 
    private Structure getStructure(String pdbId, String chainId) throws IOException, StructureException{
@@ -253,14 +253,14 @@ extends TestCase
       String[] result1 = null;
       String[] result2 = null;
 
-      String name1 = "4hhb.A";
-      String name2 = "4hhb.B";
+      String name1 = "5pti.A";
+      String name2 = "1znf.A";
 
       String name3 ="1hiv.A";
       String name4 ="1a4w.H";
       try {
-         Structure s1 = getStructure("4hhb","A");
-         Structure s2 = getStructure("4hhb","B");
+         Structure s1 = getStructure("5pti","A");
+         Structure s2 = getStructure("1znf","A");
          ca1 = StructureTools.getAtomCAArray(s1);
          ca2 = StructureTools.getAtomCAArray(s2);
          ca3 = StructureTools.cloneCAArray(ca2);
