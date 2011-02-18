@@ -22,7 +22,7 @@
  *
  */
 
-package org.biojava.bio.structure.gui.util;
+package org.biojava.bio.structure.gui.util.color;
 
 import java.awt.Color;
 

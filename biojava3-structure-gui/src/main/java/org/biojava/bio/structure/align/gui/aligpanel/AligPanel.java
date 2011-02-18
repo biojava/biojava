@@ -36,7 +36,7 @@ import org.biojava.bio.structure.align.webstart.WebStartMain;
 import org.biojava.bio.structure.align.xml.AFPChainXMLParser;
 import org.biojava.bio.structure.gui.events.AlignmentPositionListener;
 import org.biojava.bio.structure.gui.util.AlignedPosition;
-import org.biojava.bio.structure.gui.util.ColorUtils;
+import org.biojava.bio.structure.gui.util.color.ColorUtils;
 
 
 /** A JPanel that can display an AFPChain in a nice way and interact with Jmol.

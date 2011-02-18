@@ -74,7 +74,7 @@ import org.biojava.bio.structure.align.gui.jmol.AtomInfoParser;
 import org.biojava.bio.structure.align.gui.jmol.JmolPanel;
 import org.biojava.bio.structure.align.gui.jmol.MyJmolStatusListener;
 import org.biojava.bio.structure.align.gui.jmol.RasmolCommandListener;
-import org.biojava.bio.structure.gui.util.ColorUtils;
+import org.biojava.bio.structure.gui.util.color.ColorUtils;
 
 
 import org.jmol.api.JmolViewer;

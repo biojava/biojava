@@ -31,12 +31,15 @@ import java.awt.Graphics2D;
 import java.awt.Stroke;
 import java.awt.geom.Line2D;
 import java.awt.image.BufferedImage;
+import java.lang.reflect.Method;
 
 import javax.swing.JPanel;
 
 import org.biojava.bio.structure.align.StrucAligParameters;
 import org.biojava.bio.structure.align.pairwise.AlternativeAlignment;
 import org.biojava.bio.structure.align.pairwise.FragmentPair;
+import org.biojava.bio.structure.gui.util.color.ContinuousColorMapper;
+import org.biojava.bio.structure.gui.util.color.DefaultMatrixMapper;
 import org.biojava.bio.structure.jama.Matrix;
 
 
@@ -54,8 +57,7 @@ public class JMatrixPanel extends JPanel{
 	private static final long serialVersionUID = -1720879395453257846L;
 	BufferedImage _bufImage;
 	Matrix matrix;
-	float saturation;
-	float scalevalue;
+	ContinuousColorMapper cellColor; //Maps matrix elements to a color
 	float scale;
 
 	FragmentPair[] fragmentPairs;
@@ -67,8 +69,9 @@ public class JMatrixPanel extends JPanel{
 	
 	public JMatrixPanel(){
 		scale = 1;
-		saturation = 0.9f;
-		scalevalue = 10;
+		cellColor = new DefaultMatrixMapper(10, 0.9f);
+		//saturation = 0.9f;
+		//scalevalue = 10;
 		selectedAlignmentPos = -1;
 		matrix = new Matrix(0,0);
 		params = new StrucAligParameters();
@@ -162,7 +165,7 @@ public class JMatrixPanel extends JPanel{
 
 		drawPairs(g);
 
-		if ( scale > 4) {
+		if ( scale >= 4) {
 			drawBoxes(g);
 		}
 	}
@@ -257,6 +260,15 @@ public class JMatrixPanel extends JPanel{
 	}
 
 
+	/**
+	 * For each element in matrix, draw it as a colored square or pixel.
+	 * 
+	 * The color of a matrix element with value x is specified as
+	 *   - H: 1-x/scalevalue
+	 *   - S: saturation
+	 *   - B: 1-x/scalevalue
+	 * @param g1
+	 */
 	public void drawDistances(Graphics g1){
 		Graphics2D g = (Graphics2D)g1;
 
@@ -274,11 +286,7 @@ public class JMatrixPanel extends JPanel{
 
 				int jpaint = Math.round(j*scale);
 
-				float hue = 1.0f;
-				hue = (float)(1-(val/scalevalue));
-				if (hue < 0)
-					hue = 0;
-				Color color = Color.getHSBColor(hue,saturation,hue);
+				Color color = cellColor.getColor(val);
 				g.setColor(color);
 
 				g.fillRect(ipaint,jpaint,width,width);
@@ -288,20 +296,63 @@ public class JMatrixPanel extends JPanel{
 
 	}
 
+	
+	@Deprecated
 	public float getSaturation() {
-		return saturation;
+		try {
+			Method getSaturation = cellColor.getClass().getMethod("getSaturation");
+			Float saturation = (Float)getSaturation.invoke(cellColor);
+			return saturation;
+		} catch (Exception e) {
+			throw new IllegalStateException("Error calling getSaturation() for "+cellColor.getClass());
+		}
 	}
-
+	
+	@Deprecated
 	public void setSaturation(float saturation) {
-		this.saturation = saturation;
+		try {
+			Method setSaturation = cellColor.getClass().getMethod("setSaturation",Float.TYPE);
+			setSaturation.invoke(cellColor);
+		} catch (Exception e) {
+			throw new IllegalStateException("Error calling setSaturation(float) for "+cellColor.getClass());
+		}
 	}
 
+	@Deprecated
 	public float getScalevalue() {
-		return scalevalue;
+		try {
+			Method getScalevalue = cellColor.getClass().getMethod("getScalevalue");
+			Float scalevalue = (Float)getScalevalue.invoke(cellColor);
+			return scalevalue;
+		} catch (Exception e) {
+			throw new IllegalStateException("Error calling getScalevalue() for "+cellColor.getClass());
+		}
 	}
 
+	@Deprecated
 	public void setScalevalue(float scalevalue) {
-		this.scalevalue = scalevalue;
+		try{
+			Method setScalevalue = cellColor.getClass().getMethod("setScalevalue",Float.TYPE);
+			setScalevalue.invoke(cellColor);
+		} catch (Exception e) {
+			throw new IllegalStateException("Error calling setScalevalue(float) for "+cellColor.getClass());
+		}
 	}
+
+	/**
+	 * @return the color mapping of the JMatrixPanel
+	 */
+	public ContinuousColorMapper getCellColor() {
+		return cellColor;
+	}
+
+	/**
+	 * @param cellColor the color mapping of the JMatrixPanel to set
+	 */
+	public void setCellColor(ContinuousColorMapper cellColor) {
+		this.cellColor = cellColor;
+	}
+	
+
 
 }

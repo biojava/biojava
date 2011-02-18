@@ -19,6 +19,8 @@
 
 package org.biojava.bio.structure.align.gui;
 
+import java.awt.Color;
+import java.awt.color.ColorSpace;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.IOException;
@@ -28,24 +30,24 @@ import java.util.List;
 import javax.swing.JFrame;
 
 import org.biojava.bio.structure.Atom;
-import org.biojava.bio.structure.Group;
 import org.biojava.bio.structure.StructureException;
-import org.biojava.bio.structure.StructureTools;
-import org.biojava.bio.structure.align.StructureAlignment;
 import org.biojava.bio.structure.align.StructureAlignmentFactory;
 import org.biojava.bio.structure.align.ce.CECalculator;
 import org.biojava.bio.structure.align.ce.CeMain;
 import org.biojava.bio.structure.align.ce.CeParameters;
-import org.biojava.bio.structure.align.ce.ConfigStrucAligParams;
-import org.biojava.bio.structure.align.gui.jmol.StructureAlignmentJmol;
 import org.biojava.bio.structure.align.helper.JointFragments;
 import org.biojava.bio.structure.align.model.AFP;
 import org.biojava.bio.structure.align.model.AFPChain;
 import org.biojava.bio.structure.align.pairwise.AlternativeAlignment;
-import org.biojava.bio.structure.align.pairwise.FragmentPair;
 import org.biojava.bio.structure.align.util.AtomCache;
 import org.biojava.bio.structure.jama.Matrix;
 import org.biojava.bio.structure.gui.ScaleableMatrixPanel;
+import org.biojava.bio.structure.gui.util.color.ContinuousColorMapper;
+import org.biojava.bio.structure.gui.util.color.DefaultMatrixMapper;
+import org.biojava.bio.structure.gui.util.color.GradientMapper;
+import org.biojava.bio.structure.gui.util.color.HSVColorSpace;
+import org.biojava.bio.structure.gui.util.color.LinearColorInterpolator;
+import org.biojava.bio.structure.gui.util.color.LinearColorInterpolator.InterpolationDirection;
 
 /**
  * Displays the dot plot trace for an alignment.
@@ -156,6 +158,8 @@ public class DotPlotPanel extends ScaleableMatrixPanel {
 		
 		DotPlotPanel dotplot = new DotPlotPanel(afpChain);			
 		
+		dotplot.setCellColor(getDotPlotGradient());
+		
 		//Create JFrame
 		
 		String title = String.format("Dot plot of %s vs. %s", afpChain.getName1(),afpChain.getName2());
@@ -177,6 +181,33 @@ public class DotPlotPanel extends ScaleableMatrixPanel {
 		frame.setVisible(true);
 		
 		return frame;
+	}
+	
+	private static ContinuousColorMapper dotPlotGradient = null;
+	
+	/**
+	 * Gets an instance of the gradient used for Dot Plots. 
+	 * @return
+	 */
+	protected static ContinuousColorMapper getDotPlotGradient() {
+		synchronized(DotPlotPanel.class) {
+			if(dotPlotGradient == null) {
+				/*ColorSpace hsv = HSVColorSpace.getHSVColorSpace();
+				GradientMapper gradient = new GradientMapper(Color.green, Color.black, hsv);
+				gradient.put( 0., new Color(hsv,new float[] {1f, .9f, 1f},1f));
+				gradient.put( 1., new Color(hsv,new float[] {0f, .9f, 1f},1f));
+				gradient.put( 1+1e-6, Color.white);
+				gradient.put(10., Color.black);
+				LinearColorInterpolator interp = new LinearColorInterpolator(hsv);
+				interp.setInterpolationDirection(0, InterpolationDirection.INNER);
+				gradient.setInterpolator(interp);
+				
+				dotPlotGradient = gradient;*/
+				dotPlotGradient = new DefaultMatrixMapper(5.0,.9f);
+			}
+		}
+		
+		return dotPlotGradient;
 	}
 	
 	
@@ -219,6 +250,23 @@ public class DotPlotPanel extends ScaleableMatrixPanel {
 			double[][] m = calculator.initSumOfDistances(ca1.length, ca2.length, params.getWinSize(), winSizeComb1, ca1, ca2);
 			//double[][] m = calculator.getMatMatrix();
 			Matrix mat = new Matrix(m);
+			
+			/*
+			//Find range
+			double min = mat.get(0, 0);
+			double max = min;
+			for(int r=0;r<mat.getRowDimension();r++) {
+				for(int c=0;c<mat.getColumnDimension();c++) {
+					double y = mat.get(r,c);
+					if(y<min)
+						min = y;
+					if(y>max)
+						max = y;
+				}
+			}
+			System.out.format("[%f, %f]\n", min, max);
+			*/
+			
 			//afpChain.setDistanceMatrix(mat);
 			showDotPlotJFrame(afpChain);
 			

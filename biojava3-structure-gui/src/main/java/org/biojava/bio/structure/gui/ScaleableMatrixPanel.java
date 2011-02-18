@@ -45,6 +45,7 @@ import org.biojava.bio.structure.io.PDBFileReader;
 import org.biojava.bio.structure.jama.Matrix;
 import org.biojava.bio.structure.gui.JMatrixPanel;
 import org.biojava.bio.structure.gui.ScaleableMatrixPanel;
+import org.biojava.bio.structure.gui.util.color.ContinuousColorMapper;
 
 
 /** A JPanel that can display the underlying distance matrix 
@@ -63,9 +64,11 @@ implements ChangeListener{
 	 */
 	private static final long serialVersionUID = -8082261434322968652L;
 
-	JMatrixPanel mPanel;
-	JSlider slider;
-	JScrollPane scroll;
+	protected JMatrixPanel mPanel;
+	protected JSlider slider;
+	protected JScrollPane scroll;
+	protected static final int SLIDER_STEPS = 8; // Number of minor ticks per unit scaled
+	
 	
 	public static void main(String[] args){
 
@@ -142,16 +145,20 @@ implements ChangeListener{
 		mPanel   = new JMatrixPanel();
 		Box vBox = Box.createVerticalBox();
 		
-		int RES_MIN  = 1;
-		int RES_MAX  = 8;
-		int RES_INIT = 1;
+		int RES_MIN  = 0*SLIDER_STEPS;
+		int RES_MAX  = 8*SLIDER_STEPS;
+		int RES_INIT = 1*SLIDER_STEPS;
 
 		slider = new JSlider(JSlider.HORIZONTAL, RES_MIN,RES_MAX,RES_INIT);
 		slider.setInverted(false);
-		slider.setPaintTicks(false);
+		slider.setPaintTicks(true);
+		//slider.setMinorTickSpacing(1);
+		slider.setMajorTickSpacing(SLIDER_STEPS);
+		slider.setSnapToTicks(true);
 		slider.setPaintLabels(false);
+		slider.setLabelTable(slider.createStandardLabels(SLIDER_STEPS));
 		slider.addChangeListener(this);
-		slider.setPreferredSize(new Dimension(100,15));
+		slider.setPreferredSize(new Dimension(100,slider.getPreferredSize().height));
 
 		vBox.add(slider);
 
@@ -163,11 +170,10 @@ implements ChangeListener{
 		vBox.add(scroll);
 		this.setPreferredSize(new Dimension(400,400));
 		this.add(vBox);
-		
-		
-		mPanel.setLayout(new BoxLayout(mPanel,BoxLayout.Y_AXIS));
-		 this.setLayout(new BoxLayout(this,BoxLayout.Y_AXIS));
 
+
+		mPanel.setLayout(new BoxLayout(mPanel,BoxLayout.Y_AXIS));
+		this.setLayout(new BoxLayout(this,BoxLayout.Y_AXIS));
 
 	}
 
@@ -177,10 +183,12 @@ implements ChangeListener{
 		
 		JSlider source = (JSlider)e.getSource();
 		
-		if ( source.getValueIsAdjusting())
-			return;
+		if ( source.getValueIsAdjusting()) {
+			//return;
+		}
 		
-		mPanel.setScale((float)source.getValue());
+		//System.out.println("Changed scale to "+source.getValue());
+		mPanel.setScale((float)source.getValue()/SLIDER_STEPS);
 		
 		scroll.repaint();
 		scroll.updateUI();
@@ -225,5 +233,18 @@ implements ChangeListener{
 		mPanel.setSelectedAlignmentPos(selectedAlignmentPos);
 	}
 
+	/**
+	 * @return the color mapping of the JMatrixPanel
+	 */
+	public ContinuousColorMapper getCellColor() {
+		return mPanel.getCellColor();
+	}
 
+	/**
+	 * @param cellColor the color mapping of the JMatrixPanel
+	 */
+	public void setCellColor(ContinuousColorMapper cellColor) {
+		mPanel.setCellColor(cellColor);
+	}
+	
 }
