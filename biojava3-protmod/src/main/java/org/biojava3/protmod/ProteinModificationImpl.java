@@ -25,7 +25,7 @@
 package org.biojava3.protmod;
 
 import java.util.Collection;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 /**
@@ -241,7 +241,7 @@ implements ProteinModification {
 		private String sysName = null;
 		private String formula = null;
 		
-		private Set<String> keywords = new HashSet<String>();
+		private Set<String> keywords = new LinkedHashSet<String>();
 		
 		/**
 		 * 
@@ -279,7 +279,7 @@ implements ProteinModification {
 			this.sysName = copyFrom.getSystematicName();
 			this.formula = copyFrom.getFormula();
 			
-			this.keywords = new HashSet<String>(copyFrom.getKeywords());
+			this.keywords = new LinkedHashSet<String>(copyFrom.getKeywords());
 		}
 		
 		public Builder setCategory(final ModificationCategory cat) {
@@ -438,6 +438,6 @@ implements ProteinModification {
 		this.sysName = builder.sysName;
 		this.formula = builder.formula;
 		
-		this.keywords = new HashSet<String>(builder.keywords);
+		this.keywords = new LinkedHashSet<String>(builder.keywords);
 	}
 }
