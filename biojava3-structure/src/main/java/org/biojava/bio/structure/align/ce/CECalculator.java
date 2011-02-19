@@ -127,9 +127,10 @@ public class CECalculator {
 
 		f1 = new int[nse1];
 		f2 = new int[nse2];
-
+		
 		dist1 = initIntraDistmatrix(ca1, nse1);
-		dist2 = initIntraDistmatrix(ca2, nse2);  
+		dist2 = initIntraDistmatrix(ca2, nse2);
+		
 		if ( debug )
 			System.out.println("parameters: " + params);
 		int winSize = params.getWinSize();
@@ -214,7 +215,7 @@ public class CECalculator {
 	private double getDistanceWithSidechain(Atom ca1, Atom ca2) throws StructureException {
 		
 		if ( params.getScoringStrategy() == CeParameters.DEFAULT_SCORING_STRATEGY) {
-
+			
 			return Calc.getDistance(ca1,ca2);
 
 		}
@@ -311,8 +312,7 @@ public class CECalculator {
 		// 
 		for(int ise1=0; ise1<nse; ise1++)  {
 
-			for(int ise2=0; ise2<nse; ise2++)  {
-
+			for(int ise2=0; ise2<nse; ise2++)  {				
 				intraDist[ise1][ise2] = getDistanceWithSidechain(ca[ise1], ca[ise2]);            
 
 			}
@@ -2118,6 +2118,10 @@ nBestTrace=nTrace;
 	  */
 	 public double[][] getMatMatrix() {
 		 return mat;
+	 }
+	 
+	 public void setMatMatrix(double[][] matrix){
+		 mat = matrix;
 	 }
 
 	 /**
