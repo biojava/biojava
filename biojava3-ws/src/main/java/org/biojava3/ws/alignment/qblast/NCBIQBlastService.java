@@ -80,6 +80,7 @@ public class NCBIQBlastService implements RemotePairwiseAlignmentService {
 	private String tool = "biojava3";
 	 
 
+	private String cmd = null;
 	private String seq = null;
 	private String tmp = null;
 	private String prog = null;
@@ -136,18 +137,18 @@ public class NCBIQBlastService implements RemotePairwiseAlignmentService {
 	private String sendActualAlignementRequest(String str,
 			RemotePairwiseAlignmentProperties rpa) throws Exception {
 
-		seq = "QUERY=" + str;
-		prog = "PROGRAM=" + rpa.getAlignmentOption("PROGRAM");
-		db = "DATABASE=" + rpa.getAlignmentOption("DATABASE");
-
-		if (prog == null || db == null || str == null || str.length() == 0) {
+		if(rpa.getAlignmentOption("PROGRAM")=="not_set" || rpa.getAlignmentOption("DATABASE")=="not_set"){
 			throw new Exception(
-					"Impossible to execute QBlast request. One or more of sequence|database|program has not been set correctly.\n");
+			"Impossible to execute QBlast request. One or more of sequence|database|program has not been set correctly.\n");			
 		}
+		else{
+			seq = "QUERY=" + str;
+			prog = "PROGRAM=" + rpa.getAlignmentOption("PROGRAM");
+			db = "DATABASE=" + rpa.getAlignmentOption("DATABASE");
 
-		String cmd = "CMD=Put&SERVICE=plain&" + seq + "&" + prog + "&"
+			cmd = "CMD=Put&SERVICE=plain&" + seq + "&" + prog + "&"
 				+ db + "&" + "FORMAT_TYPE=HTML"+"&TOOL="+getTool()+"&EMAIL="+getEmail();
-
+		}
 		/* 
 		 * This is a not so good hack to be fix by forcing key 
 		 * checking in RemoteQBlastAlignmentProperties 
