@@ -48,11 +48,16 @@ public class NCBIQBlastAlignmentProperties implements
 
 	
 	public NCBIQBlastAlignmentProperties() {
+		// Of course, mandatory
 		this.param.put("PROGRAM","not_set");
 		this.param.put("DATABASE","not_set");
+		// Nice parameters to set
+		this.param.put("WORD_SIZE","default");
+		this.param.put("EXPECT","-1");		
+		// Everything else
 		this.param.put("OTHER_ADVANCED","not_set");
+		
 	}
-//	this.param.put("OTHER_ADVANCED","not_used");
 
 	/**
 	 * This method returns the value of the program used for this particular
@@ -109,13 +114,69 @@ public class NCBIQBlastAlignmentProperties implements
 	}
 
 	/**
-	 * This method set the database to be use with blastall
+	 * This method set the database to be used with blastall
 	 * 
 	 * @param db :a valid name to a NCBI Blastable database
 	 */
 	public void setBlastDatabase(String db) {
 		this.param.put("DATABASE", db);
 	}
+
+	/**
+	 * This method returns the value of EXPECT parameter used for this particular
+	 * blast run.
+	 * 
+	 * @return double :the value for EXPECT used by this search
+	 */	
+	public double getBlastExpect() {
+		if(this.param.get("EXPECT")!="-1")
+			return Double.parseDouble(this.param.get("EXPECT"));
+		else
+			return 10;
+	}
+
+	/**
+	 * This method set the EXPECT parameter to be use with blastall
+	 * 
+	 * Example: if you want a EXPECT of 1e-10, try this
+	 * 
+	 *   setBlastExpect(Double.parseDouble("1e-10"))
+	 * 
+	 * @param expect: a double used to set EXPECT 
+	 */
+	public void setBlastExpect(double expect) {
+		String str = Double.toString(expect);
+		this.param.put("EXPECT",str);
+	}
+	
+	/**
+	 * This method returns the value of the WORD_SIZE parameter used for this particular
+	 * blast run.
+	 * 
+	 * @return int :the value for WORD_SIZE used by this search
+	 */	
+	public int getBlastWordSize() {		
+		if(this.param.get("WORD_SIZE")!="default")
+			return Integer.parseInt(this.param.get("WORD_SIZE"));
+		else if(this.param.get("PROGRAM")=="blastn")
+			return 11;
+		else if(this.param.get("PROGRAM")=="blastp" || this.param.get("PROGRAM")=="blastx" || this.param.get("PROGRAM")=="tblastn"|| this.param.get("PROGRAM")=="tblastx")
+			return 3;
+		else if(this.param.get("PROGRAM")=="megablast")
+			return 28;
+		else
+			return -1;
+	}
+
+	/**
+	 * This method set the WORD_SIZE parameter to be use with blastall
+	 * 
+	 * @param expect: a double used to set WORD_SIZE 
+	 */
+	public void setBlastWordSize(int word) {
+		this.param.put("WORD_SIZE",Integer.toString(word));
+	}
+
 	/**
 	 * <p>
 	 * This method is to be used if a request is to use non-default values at
@@ -130,9 +191,6 @@ public class NCBIQBlastAlignmentProperties implements
 	 * non-affine for megablast</li>
 	 * <li>-r: integer to reward for match. Default = 1</li>
 	 * <li>-q: negative integer for penalty to allow mismatch. Default = -3</li>
-	 * <li>-e: expectation value. Default = 10.0</li>
-	 * <li>-W: word size. Default = 3 (proteins) / 11 (nuc-nuc) / 28 (megablast)
-	 * </li>
 	 * <li>-y: dropoff for blast extensions in bits, using default if not
 	 * specified. Default = 20 for blastn, 7 for all others (except megablast
 	 * for which it is not applicable).</li>
