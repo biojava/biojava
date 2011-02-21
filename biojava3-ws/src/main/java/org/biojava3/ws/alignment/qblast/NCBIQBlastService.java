@@ -153,7 +153,7 @@ public class NCBIQBlastService implements RemotePairwiseAlignmentService {
 		 * checking in RemoteQBlastAlignmentProperties 
 		 *
 		 * */
-		if (rpa.getAlignmentOption("OTHER_ADVANCED") != "not_set") {
+		if (rpa.getAlignmentOption("OTHER_ADVANCED")!="not_set") {
 			cmd += cmd + "&" + rpa.getAlignmentOption("OTHER_ADVANCED");
 		}
 

@@ -47,7 +47,7 @@ public class NCBIQBlastAlignmentProperties implements
 	private HashMap<String, String> param = new HashMap<String, String>();
 
 	
-	public void NCBIQBlastAlignmentProperties() {
+	public NCBIQBlastAlignmentProperties() {
 		this.param.put("PROGRAM","not_set");
 		this.param.put("DATABASE","not_set");
 		this.param.put("OTHER_ADVANCED","not_set");
