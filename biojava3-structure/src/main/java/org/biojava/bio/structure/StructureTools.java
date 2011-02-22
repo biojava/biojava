@@ -22,8 +22,6 @@
  */
 package org.biojava.bio.structure;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -31,21 +29,10 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.TreeSet;
+
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.openscience.cdk.CDK;
-import org.openscience.cdk.interfaces.IAtom;
-import org.openscience.cdk.interfaces.IMolecule;
-import org.openscience.cdk.interfaces.IPDBAtom;
-import org.openscience.cdk.io.CIFReader;
-import org.openscience.cdk.io.formats.CIFFormat;
-import org.openscience.cdk.isomorphism.matchers.smarts.AnyAtom;
-import org.openscience.cdk.isomorphism.matchers.smarts.FormalChargeAtom;
-import org.openscience.cdk.iupac.parser.MoleculeBuilder;
-import org.openscience.cdk.protein.data.PDBAtom;
-import org.openscience.cdk.templates.MoleculeFactory;
-import org.openscience.cdk.tools.CDKUtilities;
+
 
 
 //import org.biojava.bio.seq.ProteinTools;
@@ -739,12 +726,13 @@ public class StructureTools {
 
 		Chain chain = struc.findChain(pdbResNum.getChainId());
 
-		String numIns = "" + pdbResNum.getSeqNum();
-		if (pdbResNum.getInsCode() != null) {
-			numIns += pdbResNum.getInsCode();
-		}
+//		String numIns = "" + pdbResNum.getSeqNum();
+//		if (pdbResNum.getInsCode() != null) {
+//			numIns += pdbResNum.getInsCode();
+//		}
 
-		return chain.getGroupByPDB(numIns);
+		
+		return chain.getGroupByPDB(pdbResNum);
 	}
 
         /*
