@@ -24,8 +24,14 @@
 
 package org.biojava.bio.structure.align.ce;
 
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.swing.JFrame;
+import javax.swing.JPanel;
 
 import org.biojava.bio.structure.Atom;
 import org.biojava.bio.structure.Calc;
@@ -35,6 +41,7 @@ import org.biojava.bio.structure.StructureException;
 import org.biojava.bio.structure.StructureTools;
 import org.biojava.bio.structure.align.model.AFP;
 import org.biojava.bio.structure.align.model.AFPChain;
+import org.biojava.bio.structure.align.pairwise.AlternativeAlignment;
 import org.biojava.bio.structure.align.util.AFPAlignmentDisplay;
 import org.biojava.bio.structure.jama.Matrix;
 
@@ -131,16 +138,15 @@ public class CECalculator {
 		dist1 = initIntraDistmatrix(ca1, nse1);
 		dist2 = initIntraDistmatrix(ca2, nse2);
 		
+		
 		if ( debug )
 			System.out.println("parameters: " + params);
+		
 		int winSize = params.getWinSize();
 
-
-
 		int winSizeComb1 = (winSize-1)*(winSize-2)/2;		
+
 		a = new int[traceMaxSize];
-
-
 
 		// CE: unused code. distAll is always false and both loops do the same???
 		// CE v2.3 calls this Weight factors for trace extension
@@ -158,6 +164,30 @@ public class CECalculator {
 
 		mat = initSumOfDistances(nse1, nse2, winSize, winSizeComb1, ca1, ca2);
 
+
+		
+//		try {
+//			Matrix m2 = new Matrix(mat).copy();
+//			JPanel panel = GuiWrapper.getScaleableMatrixPanel(m2);
+//			JFrame frame = new JFrame();
+//			frame.addWindowListener(new WindowAdapter(){
+//				public void windowClosing(WindowEvent e){
+//					JFrame f = (JFrame) e.getSource();
+//					f.setVisible(false);
+//					f.dispose();
+//				}				
+//			});
+//						
+//			
+//			frame.getContentPane().add(panel);
+//
+//			frame.pack();
+//			frame.setVisible(true);
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+
+		
 		// Set the distance matrix
 		//afpChain.setDistanceMatrix(new Matrix(mat.clone()));
 
@@ -219,7 +249,6 @@ public class CECalculator {
 			return Calc.getDistance(ca1,ca2);
 
 		}
-
 
 		double dist;
 		Group g1 = ca1.getGroup();
@@ -708,6 +737,26 @@ public class CECalculator {
 
 			}
 
+//		try {
+//			Matrix m2 = new Matrix(traceScore).copy();
+//			JPanel panel = GuiWrapper.getScaleableMatrixPanel(m2);
+//			JFrame frame = new JFrame();
+//			frame.addWindowListener(new WindowAdapter(){
+//				public void windowClosing(WindowEvent e){
+//					JFrame f = (JFrame) e.getSource();
+//					f.setVisible(false);
+//					f.dispose();
+//				}				
+//			});
+//						
+//			
+//			frame.getContentPane().add(panel);
+//
+//			frame.pack();
+//			frame.setVisible(true);
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
 
 
 		if ( params.isShowAFPRanges()){
@@ -827,6 +876,7 @@ nBestTrace=nTrace;
 						dist2[trace2[itrace]+id][mse2+winSize-1-id]);
 
 		}
+		
 		return score;
 	}
 
@@ -2141,4 +2191,22 @@ nBestTrace=nTrace;
 	 public Atom getShift() {
 		 return t;
 	 }
+
+	public double[][] getDist1() {
+		return dist1;
+	}
+
+	public void setDist1(double[][] dist1) {
+		this.dist1 = dist1;
+	}
+
+	public double[][] getDist2() {
+		return dist2;
+	}
+
+	public void setDist2(double[][] dist2) {
+		this.dist2 = dist2;
+	}
+	 
+	 
 }
