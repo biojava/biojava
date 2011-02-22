@@ -58,6 +58,7 @@ public class StructureImpl implements Structure, Serializable {
         List<DBRef> dbrefs;
         List<SSBond> ssbonds;
         List<Site> sites;
+        List<Group> hetAtoms;
 	String name ;
     private JournalArticle journalArticle;
 	private PDBHeader pdbHeader;
@@ -81,6 +82,7 @@ public class StructureImpl implements Structure, Serializable {
         pdbHeader      = new PDBHeader();
         ssbonds        = new ArrayList<SSBond>();
         sites          = new ArrayList<Site>();
+        hetAtoms          = new ArrayList<Group>();
 	}
 
 	/** get the ID used by Hibernate
@@ -697,6 +699,15 @@ public class StructureImpl implements Structure, Serializable {
  
     public void setSites(List<Site> sites) {
             this.sites = sites;
+    }
+
+    /**
+     *
+     * @return a list of Groups listed in the HET records - this will not
+     * include any waters.
+     */
+    public List<Group> getHetGroups() {
+        return hetAtoms;
     }
 
 }

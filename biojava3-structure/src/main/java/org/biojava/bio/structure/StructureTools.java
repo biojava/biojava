@@ -22,12 +22,30 @@
  */
 package org.biojava.bio.structure;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
+import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.openscience.cdk.CDK;
+import org.openscience.cdk.interfaces.IAtom;
+import org.openscience.cdk.interfaces.IMolecule;
+import org.openscience.cdk.interfaces.IPDBAtom;
+import org.openscience.cdk.io.CIFReader;
+import org.openscience.cdk.io.formats.CIFFormat;
+import org.openscience.cdk.isomorphism.matchers.smarts.AnyAtom;
+import org.openscience.cdk.isomorphism.matchers.smarts.FormalChargeAtom;
+import org.openscience.cdk.iupac.parser.MoleculeBuilder;
+import org.openscience.cdk.protein.data.PDBAtom;
+import org.openscience.cdk.templates.MoleculeFactory;
+import org.openscience.cdk.tools.CDKUtilities;
 
 
 //import org.biojava.bio.seq.ProteinTools;
@@ -729,4 +747,77 @@ public class StructureTools {
 		return chain.getGroupByPDB(numIns);
 	}
 
+        /*
+         * Returns a List of Groups in a structure within the distance specified of a given group.
+         */
+        public static List<Group> getGroupsWithinShell(Structure structure, Group group, double distance, boolean includeWater) {
+            Set<Group> returnSet = new LinkedHashSet<Group>();
+
+            distance = Math.abs(distance);
+
+            for (Atom atomA : group.getAtoms()) {
+                for (Chain chain : structure.getChains()) {
+                    for (Group chainGroup : chain.getAtomGroups()) {
+//                        System.out.println("Checking group: " + chainGroup);
+                        if (chainGroup.getResidueNumber().equals(group.getResidueNumber())) {
+                            continue;
+                        }
+                        else if (!includeWater && chainGroup.getPDBName().equals("HOH")) {
+                            continue;
+                        }
+                        else {
+                            for (Atom atomB : chainGroup.getAtoms()) {
+                            try {
+                                double dist = Calc.getDistance(atomA, atomB);
+                                if (dist <= distance) {
+                                    returnSet.add(chainGroup);
+//                                    System.out.println(String.format("%s within %s of %s", atomB, dist, atomA));
+                                    break;
+                                }
+                                
+                            } catch (StructureException ex) {
+                                Logger.getLogger(StructureTools.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+                                
+                            }
+                        }
+                    }
+                }
+            }
+            List<Group> returnList = new ArrayList<Group>();
+            returnList.addAll(returnSet);
+            return returnList;
+        }
+
+        /*
+         * Not fully implemented - needs a it if work and not necessarily in the
+         * scope of BJ - might be a CDK job or something.
+         */
+        public static List<Bond> findBonds(Group group, List<Group> groups) {
+            List<Bond> bondList = new ArrayList<Bond>();
+
+            for (Atom atomA : group.getAtoms()) {
+//                IAtom atom = new PDBAtom(atomA.getElement().toString());
+//                System.out.println(atom);
+                for (Group groupB : groups) {
+                    for (Atom atomB : groupB.getAtoms()) {
+                        try {
+                            double dist = Calc.getDistance(atomA, atomB);
+                            if (dist <= 4) {
+                                Bond bond = new Bond(dist, BondType.UNDEFINED, atomA, atomB);
+                                bondList.add(bond);
+//                                    System.out.println(String.format("%s within %s of %s", atomB, dist, atomA));
+                            }
+
+                        } catch (StructureException ex) {
+                            Logger.getLogger(StructureTools.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+
+                    }
+                }
+            }
+
+
+            return bondList;
+        }
 }

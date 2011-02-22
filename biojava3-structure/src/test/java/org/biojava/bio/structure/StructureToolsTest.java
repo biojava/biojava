@@ -69,6 +69,8 @@ public class StructureToolsTest extends TestCase {
 
     }
 
+    public void testGroupsWithinShell() {
 
+    }
 
 }

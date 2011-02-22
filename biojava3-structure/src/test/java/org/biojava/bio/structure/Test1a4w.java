@@ -241,4 +241,53 @@ public class Test1a4w extends TestCase{
 		}
 
 	}
+
+        public void testGetHetGroups() {
+//            try {
+                Structure struct = structure;
+
+//                HET    TYS  I 363      16
+//                HET     NA  H 541       1
+//                HET     NA  H 542       1
+//                HET    ANS  H 373      16
+//                HET    DAR  H 350      11
+//                HET    2EP  H 375       8
+//                HET    KTH  H 377       7
+//                HETNAM     TYS O-SULFO-L-TYROSINE
+//                HETNAM      NA SODIUM ION
+//                HETNAM     ANS 5-(DIMETHYLAMINO)-1-NAPHTHALENESULFONIC ACID(DANSYL
+//                HETNAM   2 ANS  ACID)
+//                HETNAM     DAR D-ARGININE
+//                HETNAM     2EP 2-ETHYLPIPERIDINE
+//                HETNAM     KTH 2-KETOTHIAZOLE
+//                HETSYN     ANS DANSYL ACID
+//                FORMUL   3  TYS    C9 H11 N O6 S
+//                FORMUL   4   NA    2(NA 1+)
+//                FORMUL   6  ANS    C12 H13 N O3 S
+//                FORMUL   6  DAR    C6 H15 N4 O2 1+
+//                FORMUL   6  2EP    C7 H15 N
+//                FORMUL   7  KTH    C4 H3 N O S
+//                FORMUL   8  HOH   *157(H2 O)
+
+                List<Group> hets = struct.getHetGroups();
+                for (Group group : hets) {
+                    System.out.println(group);
+                    List<Group> fourAngstromShell = StructureTools.getGroupsWithinShell(struct, group, 4.00, true);
+                    System.out.println("Groups within 4 Angstroms of " + group + ":");
+                    for (Group fourAngstromgroup : fourAngstromShell) {
+                        System.out.println(fourAngstromgroup);
+//                        for (Bond bond : StructureTools.findBonds(group, fourAngstromShell)) {
+//                            System.out.println(bond);
+//                        }
+                    }
+                }
+                assertEquals(7, hets.size());
+
+                
+
+
+//            } catch (Exception e) {
+//                fail(e.getMessage());
+//            }
+        }
 }

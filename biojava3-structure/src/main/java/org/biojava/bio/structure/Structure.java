@@ -580,4 +580,6 @@ public interface Structure extends Cloneable{
      */
     public List<Site> getSites();
 
+    public List<Group> getHetGroups();
+
 }

@@ -54,6 +54,7 @@ import org.biojava.bio.structure.Group;
 import org.biojava.bio.structure.GroupIterator;
 import org.biojava.bio.structure.HetatomImpl;
 import org.biojava.bio.structure.Compound;
+import org.biojava.bio.structure.GroupType;
 import org.biojava.bio.structure.JournalArticle;
 import org.biojava.bio.structure.NucleotideImpl;
 import org.biojava.bio.structure.PDBHeader;
@@ -1522,6 +1523,9 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 
 			// end up old chain...
 			current_chain.addGroup(current_group);
+                        if (current_group.getType().equals(GroupType.HETATM) &! current_group.getPDBName().equals("HOH")) {
+                            structure.getHetGroups().add(current_group);
+                        }
 
 			// see if old chain is known ...
 			Chain testchain ;
@@ -1592,8 +1596,10 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 			current_group.setPDBName(groupCode3);
 			current_group.setResidueNumber(residueNumber);
 			//                        System.out.println("Made new group: " + groupCode3 + " " + resNum + " " + iCode);
-
-		}
+                        if (current_group.getType().equals(GroupType.HETATM) &! current_group.getPDBName().equals("HOH")) {
+                            structure.getHetGroups().add(current_group);
+                        }
+                }
 
 
 		if ( startOfNewChain) {
@@ -1603,6 +1609,9 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 			//current_group.setPDBCode(pdbCode);
 			current_group.setPDBName(groupCode3);
 			current_group.setResidueNumber(residueNumber);
+                        if (current_group.getType().equals(GroupType.HETATM) &! current_group.getPDBName().equals("HOH")) {
+                            structure.getHetGroups().add(current_group);
+                        }
 			//                        System.out.println("Made new start of chain group:  " + groupCode3 + " " + resNum + " " + iCode);
 		}
 
@@ -1622,6 +1631,9 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 			//current_group.setPDBCode(pdbCode);
 			current_group.setPDBName(groupCode3);
 			current_group.setResidueNumber(residueNumber);
+                        if (current_group.getType().equals(GroupType.HETATM) &! current_group.getPDBName().equals("HOH")) {
+                            structure.getHetGroups().add(current_group);
+                        }
 			//                        System.out.println("Made new group:  " + groupCode3 + " " + resNum + " " + iCode);
 
 		} else {
@@ -2014,6 +2026,49 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 		//System.out.println(dbref.toPDB());
 		dbrefs.add(dbref);
 	}
+
+        /*
+         * For each het group that appears in the entry, the wwPDB checks that the corresponding HET, HETNAM, HETSYN, FORMUL, HETATM, and CONECT records appear, if applicable. The HET record is generated automatically using the Chemical Component Dictionary and information from the HETATM records.
+
+         * Record Format
+
+            COLUMNS       DATA  TYPE     FIELD         DEFINITION
+            ---------------------------------------------------------------------------------
+             1 -  6       Record name   "HET   "
+             8 - 10       LString(3)    hetID          Het identifier, right-justified.
+            13            Character     ChainID        Chain  identifier.
+            14 - 17       Integer       seqNum         Sequence  number.
+            18            AChar         iCode          Insertion  code.
+            21 - 25       Integer       numHetAtoms    Number of HETATM records for the group
+                                                       present in the entry.
+            31 - 70       String        text           Text describing Het group.
+
+            Each unique hetID represents a unique molecule.
+
+            Relationships to Other Record Types
+
+            For each het group that appears in the entry, there must be corresponding HET, HETNAM, HETSYN, FORMUL,HETATM, and CONECT records. LINK records may also be created.
+
+            Example
+
+                     1         2         3         4         5         6         7         8
+            12345678901234567890123456789012345678901234567890123456789012345678901234567890
+            HET    TRS    975       8
+
+            HET    UDP  A1457      25
+            HET    B3P  A1458      19
+
+            HET    NAG  Y   3      15
+            HET    FUC  Y   4      10
+            HET    NON  Y   5      12
+            HET    UNK  A 161       1
+
+         * Heterogen sections are HET, HETNAM, HETSYN, FORMUL
+         * @see http://www.wwpdb.org/documentation/format32/sect4.html
+         */
+        private void pdb_HET_handler(String line) {
+
+        }
 
 	/* process the disulfid bond info provided by an SSBOND record
 	 *
