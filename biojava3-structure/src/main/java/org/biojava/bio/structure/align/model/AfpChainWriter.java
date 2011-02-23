@@ -63,6 +63,13 @@ public class AfpChainWriter
 
 		StringWriter writer = new StringWriter();
 
+		if ( afpChain.getAlgorithmName().startsWith("CE")) {
+			writer.append("Z-score " );
+			writer.append(String.format("%.2f", afpChain.getProbability()));
+			writer.append(newline);
+		}
+
+
 		writer.append("Sab (nr. equivalent residues): " );
 		writer.append(afpChain.getNrEQR()+"");
 		writer.append(newline);
@@ -254,26 +261,26 @@ public class AfpChainWriter
 					char cl = lsymb.charAt(pos);
 
 					if ( cl != ' ' ){
-						
+
 						a += "<span class=\"m\">" + c1 + "</span>";
 						b += "<span class=\"m\">" + c2 + "</span>";
 						c += "<span class=\"m\">" + cl + "</span>";
-					
+
 					} else if ( c1 != '-' && c2 != '-') {
-					
+
 						a += "<span class=\"sm\">" + c1 + "</span>";
 						b += "<span class=\"sm\">" + c2 + "</span>";
 						c += "<span class=\"sm\">" + cl + "</span>";
-						
-						
+
+
 					} else {
-						
+
 						a += "<span class=\"qg\">" + c1 + "</span>";
 						b += "<span class=\"qg\">" + c2 + "</span>";
 						c += "<span class=\"qg\">" + cl + "</span>";
-						
+
 					}
-					
+
 					if(c1 != '-') ap ++;
 					if(c2 != '-') bp ++;
 				}
@@ -319,7 +326,7 @@ public class AfpChainWriter
 					pdb1, a, " ", c, pdb2, b));
 
 			txt.append(newline);
-			
+
 			if ( ! showHTML){
 				for(k = 0; k < len; k ++)       {
 					if(a.charAt(k) != '-') ap ++;
@@ -341,7 +348,7 @@ public class AfpChainWriter
 				txt.append("Note: positions are from PDB; the numbers between alignments are block index");
 			}
 			txt.append(newline);
-			
+
 		}
 		return txt.toString();
 
@@ -418,7 +425,7 @@ public class AfpChainWriter
 			boolean showHTML = true;
 
 			String msg =  toFatCatCore(afpChain,ca1,ca2,printLegend,longHeader,showHTML);
-				
+
 			return msg;
 		}
 
