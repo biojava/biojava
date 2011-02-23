@@ -23,16 +23,29 @@
 
 package org.biojava.bio.structure.gui;
 
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.color.ColorSpace;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.Map;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSlider;
+import javax.swing.ListCellRenderer;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
@@ -46,6 +59,11 @@ import org.biojava.bio.structure.jama.Matrix;
 import org.biojava.bio.structure.gui.JMatrixPanel;
 import org.biojava.bio.structure.gui.ScaleableMatrixPanel;
 import org.biojava.bio.structure.gui.util.color.ContinuousColorMapper;
+import org.biojava.bio.structure.gui.util.color.GradientMapper;
+import org.biojava.bio.structure.gui.util.color.GradientPanel;
+import org.biojava.bio.structure.gui.util.color.HSVColorSpace;
+import org.biojava.bio.structure.gui.util.color.LinearColorInterpolator;
+import org.biojava.bio.structure.gui.util.color.LinearColorInterpolator.InterpolationDirection;
 
 
 /** A JPanel that can display the underlying distance matrix 
@@ -57,7 +75,7 @@ import org.biojava.bio.structure.gui.util.color.ContinuousColorMapper;
  */
 public class ScaleableMatrixPanel 
 extends JPanel 
-implements ChangeListener{
+implements ChangeListener, ActionListener {
 
 	/**
 	 * 
@@ -67,6 +85,10 @@ implements ChangeListener{
 	protected JMatrixPanel mPanel;
 	protected JSlider slider;
 	protected JScrollPane scroll;
+	protected JComboBox coloring;
+	
+	protected Map<String,ContinuousColorMapper> gradients;
+	
 	protected static final int SLIDER_STEPS = 8; // Number of minor ticks per unit scaled
 	
 	
@@ -145,6 +167,19 @@ implements ChangeListener{
 		mPanel   = new JMatrixPanel();
 		Box vBox = Box.createVerticalBox();
 		
+		Box gradientBox = Box.createHorizontalBox();
+		vBox.add(gradientBox);
+		gradientBox.add(new JLabel("Coloring:"));
+		gradients = createGradients(); //sets gradients
+		//Set first gradient
+		this.setCellColor(gradients.values().iterator().next());
+		
+		coloring = new JComboBox(gradients.keySet().toArray(new String[] {}));
+		coloring.setRenderer(new GradientRenderer());
+		coloring.addActionListener(this);
+		coloring.setMaximumSize(new Dimension(1000,30));
+		gradientBox.add(coloring);
+		
 		int RES_MIN  = 0*SLIDER_STEPS;
 		int RES_MAX  = 8*SLIDER_STEPS;
 		int RES_INIT = 1*SLIDER_STEPS;
@@ -156,7 +191,8 @@ implements ChangeListener{
 		slider.setMajorTickSpacing(SLIDER_STEPS);
 		slider.setSnapToTicks(true);
 		slider.setPaintLabels(false);
-		slider.setLabelTable(slider.createStandardLabels(SLIDER_STEPS));
+		slider.setPaintTrack(true);
+		//slider.setLabelTable(slider.createStandardLabels(SLIDER_STEPS));
 		slider.addChangeListener(this);
 		slider.setPreferredSize(new Dimension(100,slider.getPreferredSize().height));
 
@@ -178,6 +214,61 @@ implements ChangeListener{
 	}
 
 
+
+
+	protected static Map<String,ContinuousColorMapper> createGradients() {
+		SortedMap<String,ContinuousColorMapper> gradients = new TreeMap<String,ContinuousColorMapper>();
+		
+		int i = 0; //prepend number, since sorted alphabetically
+		ColorSpace hsv = HSVColorSpace.getHSVColorSpace();
+		LinearColorInterpolator interp;
+		GradientMapper gradient;
+		
+		/*
+		DefaultMatrixMapper defaultMapper = new DefaultMatrixMapper(10., .9f);
+		gradients.put((++i)+". Default", defaultMapper);
+		defaultMapper = new DefaultMatrixMapper(5., .9f);
+		gradients.put((++i)+". Sensitive", defaultMapper);
+		
+		
+		gradients.put((++i)+". Rainbow", GradientMapper.getGradientMapper(GradientMapper.RAINBOW_INTENSITY_GRADIENT, 0, 10));
+		gradients.put((++i)+". Rainbow", GradientMapper.getGradientMapper(GradientMapper.RAINBOW_INTENSITY_GRADIENT, 10, 0));
+		*/
+		
+		// Mimic DefaultMapper
+		interp = new LinearColorInterpolator(hsv);
+		interp.setInterpolationDirection(0, InterpolationDirection.INNER);
+		gradient = new GradientMapper(Color.green, Color.black, hsv);
+		gradient.put( 0., new Color(hsv,new float[] {1f, .9f, 1f},1f));
+		gradient.put(10., new Color(hsv,new float[] {0f, .9f, 0f},1f));
+		gradient.setInterpolator(interp);
+		
+		gradients.put((++i)+". Default", gradient);
+		
+		// Sensitive DefaultMapper
+		interp = new LinearColorInterpolator(hsv);
+		interp.setInterpolationDirection(0, InterpolationDirection.INNER);
+		gradient = new GradientMapper(Color.green, Color.black, hsv);
+		gradient.put( 0., new Color(hsv,new float[] {1f, .9f, 1f},1f));
+		gradient.put( 5., new Color(hsv,new float[] {0f, .9f, 0f},1f));
+		gradient.setInterpolator(interp);
+		
+		gradients.put((++i)+". Sensitive", gradient);	
+		
+		// color [0,1]
+		interp = new LinearColorInterpolator(hsv);
+		interp.setInterpolationDirection(0, InterpolationDirection.INNER);
+		gradient = new GradientMapper(Color.green, Color.black, hsv);
+		gradient.put( 0., new Color(hsv,new float[] {1f, .9f, 1f},1f));
+		gradient.put( 1., new Color(hsv,new float[] {.2f, .9f, 1f},1f));
+		gradient.put( 1+1e-6, Color.white);
+		gradient.put(5., Color.black);
+		gradient.setInterpolator(interp);
+		
+		gradients.put((++i)+". Emphasize low", gradient);	
+
+		return gradients;
+	}
 
 	public void stateChanged(ChangeEvent e) {
 		
@@ -246,5 +337,97 @@ implements ChangeListener{
 	public void setCellColor(ContinuousColorMapper cellColor) {
 		mPanel.setCellColor(cellColor);
 	}
+
+	protected class GradientRenderer extends JPanel
+	implements ListCellRenderer {
+
+		private static final long serialVersionUID = -2000575579184232365L;
+		private int min,max;
+		JLabel title;
+		JPanel gradientContainer;
+		
+		public GradientRenderer() {
+			this.setPreferredSize(new Dimension(100,25));
+			this.setLayout(new BorderLayout());
+			this.min = -1;
+			this.max = 10;
+			
+			JPanel gradientBounds = new JPanel();
+			gradientBounds.setLayout(new BorderLayout());
+			//gradientBounds.setBorder(BorderFactory.createLineBorder(Color.GRAY));
+			gradientBounds.add(new JLabel(Integer.toString(min)),BorderLayout.WEST);
+			
+			gradientContainer = new JPanel();
+			gradientContainer.setLayout(new BorderLayout());
+			gradientContainer.setOpaque(false);
+			gradientContainer.add(new JLabel("<No gradient>"),BorderLayout.CENTER);
+			//gradientContainer.setMinimumSize(new Dimension(50,20));
+			//gradientContainer.setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY));
+			//gradientBounds.setPreferredSize(new Dimension(200,25));
+			gradientBounds.add(gradientContainer,BorderLayout.CENTER);
+			gradientBounds.setOpaque(false);
+			
+			gradientBounds.add(new JLabel(Integer.toString(max)),BorderLayout.WEST);
+			
+			this.add(gradientBounds, BorderLayout.EAST);
+			
+			this.title = new JLabel("No gradient");
+			//this.title.setOpaque(true);
+			this.title.setHorizontalAlignment(JLabel.CENTER);
+			this.title.setVerticalAlignment(JLabel.CENTER);
+			this.add(this.title,BorderLayout.CENTER);
+		}
+
+		/*
+		 * This method finds the image and text corresponding
+		 * to the selected value and returns the label, set up
+		 * to display the text and image.
+		 */
+		public Component getListCellRendererComponent(
+				JList list,
+				Object value,
+				int index,
+				boolean isSelected,
+				boolean cellHasFocus) {
+			//Get the selected index. (The index param isn't
+			//always valid, so just use the value.)
+			String gradientLabel = (String)value;
+			
+			if (isSelected) {
+				setBackground(list.getSelectionBackground());
+				setForeground(list.getSelectionForeground());
+			} else {
+				setBackground(list.getBackground());
+				setForeground(list.getForeground());
+			}
+			
+			//Set the icon and text.  If icon was null, say so.
+			GradientPanel gradPanel = new GradientPanel(gradients.get(gradientLabel),min,max);
+			gradPanel.setPreferredSize(new Dimension(100,20));
+			//gradPanel.setBorder(BorderFactory.createLineBorder(Color.cyan));
+			gradientContainer.removeAll();
+			gradientContainer.add(gradPanel,BorderLayout.CENTER);
+
+			title.setText(gradientLabel);
+
+			this.validate();
+			
+			return this;
+		}
+	}
+
+	/**
+	 * @param e
+	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+	 */
+	public void actionPerformed(ActionEvent e) {
+        JComboBox cb = (JComboBox)e.getSource(); // == coloring
+        String gradientName = (String)cb.getSelectedItem();
+        ContinuousColorMapper gradient = gradients.get(gradientName);
+        assert(gradient != null);
+        this.setCellColor(gradient);
+        this.repaint();
+	}
+
 	
 }

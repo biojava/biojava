@@ -38,7 +38,7 @@ public class GradientPanel extends JPanel {
 		this.min = min; 
 		this.max = max;
 		this.mapper = mapper;
-		this.setPreferredSize(new Dimension(100,50));
+		this.setPreferredSize(new Dimension(100,20));
 	}
 	
 	public void paintComponent(Graphics g) {

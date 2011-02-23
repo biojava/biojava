@@ -19,8 +19,6 @@
 
 package org.biojava.bio.structure.align.gui;
 
-import java.awt.Color;
-import java.awt.color.ColorSpace;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.IOException;
@@ -32,7 +30,6 @@ import javax.swing.JFrame;
 import org.biojava.bio.structure.Atom;
 import org.biojava.bio.structure.StructureException;
 import org.biojava.bio.structure.align.StructureAlignmentFactory;
-import org.biojava.bio.structure.align.ce.CECalculator;
 import org.biojava.bio.structure.align.ce.CeMain;
 import org.biojava.bio.structure.align.ce.CeParameters;
 import org.biojava.bio.structure.align.helper.JointFragments;
@@ -42,12 +39,6 @@ import org.biojava.bio.structure.align.pairwise.AlternativeAlignment;
 import org.biojava.bio.structure.align.util.AtomCache;
 import org.biojava.bio.structure.jama.Matrix;
 import org.biojava.bio.structure.gui.ScaleableMatrixPanel;
-import org.biojava.bio.structure.gui.util.color.ContinuousColorMapper;
-import org.biojava.bio.structure.gui.util.color.DefaultMatrixMapper;
-import org.biojava.bio.structure.gui.util.color.GradientMapper;
-import org.biojava.bio.structure.gui.util.color.HSVColorSpace;
-import org.biojava.bio.structure.gui.util.color.LinearColorInterpolator;
-import org.biojava.bio.structure.gui.util.color.LinearColorInterpolator.InterpolationDirection;
 
 /**
  * Displays the dot plot trace for an alignment.
@@ -72,7 +63,8 @@ public class DotPlotPanel extends ScaleableMatrixPanel {
 	 *
 	 *  If this set to null, the background is set to black.
 	 */
-	DotPlotPanel(AFPChain alignment ){
+	public DotPlotPanel(AFPChain alignment ){
+		super();
 		
 		final double defaultBackground = 100.;
 				
@@ -157,9 +149,7 @@ public class DotPlotPanel extends ScaleableMatrixPanel {
 	private static JFrame showDotPlotJFrame(AFPChain afpChain ) {
 		
 		DotPlotPanel dotplot = new DotPlotPanel(afpChain);			
-		
-		dotplot.setCellColor(getDotPlotGradient());
-		
+				
 		//Create JFrame
 		
 		String title = String.format("Dot plot of %s vs. %s", afpChain.getName1(),afpChain.getName2());
@@ -181,35 +171,7 @@ public class DotPlotPanel extends ScaleableMatrixPanel {
 		frame.setVisible(true);
 		
 		return frame;
-	}
-	
-	private static ContinuousColorMapper dotPlotGradient = null;
-	
-	/**
-	 * Gets an instance of the gradient used for Dot Plots. 
-	 * @return
-	 */
-	protected static ContinuousColorMapper getDotPlotGradient() {
-		synchronized(DotPlotPanel.class) {
-			if(dotPlotGradient == null) {
-				/*ColorSpace hsv = HSVColorSpace.getHSVColorSpace();
-				GradientMapper gradient = new GradientMapper(Color.green, Color.black, hsv);
-				gradient.put( 0., new Color(hsv,new float[] {1f, .9f, 1f},1f));
-				gradient.put( 1., new Color(hsv,new float[] {0f, .9f, 1f},1f));
-				gradient.put( 1+1e-6, Color.white);
-				gradient.put(10., Color.black);
-				LinearColorInterpolator interp = new LinearColorInterpolator(hsv);
-				interp.setInterpolationDirection(0, InterpolationDirection.INNER);
-				gradient.setInterpolator(interp);
-				
-				dotPlotGradient = gradient;*/
-				dotPlotGradient = new DefaultMatrixMapper(5.0,.9f);
-			}
-		}
-		
-		return dotPlotGradient;
-	}
-	
+	}	
 	
 	public static void main(String[] args) {
 
@@ -232,8 +194,8 @@ public class DotPlotPanel extends ScaleableMatrixPanel {
 			CeParameters params = (CeParameters) ceA.getParameters();
 			params.setMaxGapSize(0);
 			
-			Atom[] ca1 = cache.getAtoms(name1, true);
-			Atom[] ca2 = cache.getAtoms(name2, true);
+			Atom[] ca1 = cache.getAtoms(name1);
+			Atom[] ca2 = cache.getAtoms(name2);
 			
 			// Create initial alignment
 			AFPChain afpChain = ceA.align(ca1,ca2);
@@ -243,6 +205,7 @@ public class DotPlotPanel extends ScaleableMatrixPanel {
 				System.out.println(afpI);
 			}
 			
+			/*
 			// Get background distances
 			CECalculator calculator = ceA.getCECalculator();
 			int winSize = params.getWinSize();
@@ -251,7 +214,6 @@ public class DotPlotPanel extends ScaleableMatrixPanel {
 			//double[][] m = calculator.getMatMatrix();
 			Matrix mat = new Matrix(m);
 			
-			/*
 			//Find range
 			double min = mat.get(0, 0);
 			double max = min;

@@ -115,10 +115,10 @@ public class GradientMapper implements ContinuousColorMapper, Map<Double, Color>
 			//Set up interpolation in HSV colorspace
 			ColorSpace hsv = HSVColorSpace.getHSVColorSpace();
 			LinearColorInterpolator interp = new LinearColorInterpolator(hsv);
-			interp.setInterpolationDirection(0, InterpolationDirection.UPPER);
+			interp.setInterpolationDirection(0, InterpolationDirection.LOWER);
 			
-			Color hsvLow = new Color(hsv,new float[] {0f, 1f, 0f},1f);
-			Color hsvHigh = new Color(hsv,new float[] {1f, 1f, 1f},1f);
+			Color hsvLow = new Color(hsv,new float[] {1f, 1f, 1f},1f);
+			Color hsvHigh = new Color(hsv,new float[] {0f, 1f, 0f},1f);
 			
 			gm = new GradientMapper(hsvLow, hsvHigh, hsv);
 			gm.put(min, hsvLow);
@@ -282,7 +282,7 @@ public class GradientMapper implements ContinuousColorMapper, Map<Double, Color>
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		GradientMapper[] mappers = new GradientMapper[10];
+		GradientMapper[] mappers = new GradientMapper[20];
 		int i = 0;
 		ColorSpace hsv = HSVColorSpace.getHSVColorSpace();
 		LinearColorInterpolator interp;
@@ -360,6 +360,16 @@ public class GradientMapper implements ContinuousColorMapper, Map<Double, Color>
 		mappers[i].put(10., Color.black);
 		mappers[i].setInterpolator(interp);
 		i++;
+		// Better DefaultGradient
+		interp = new LinearColorInterpolator(hsv);
+		interp.setInterpolationDirection(0, InterpolationDirection.INNER);
+		mappers[i] = new GradientMapper(Color.green, Color.black, hsv);
+		mappers[i].put( 0., new Color(hsv,new float[] {1f, .9f, 1f},1f));
+		mappers[i].put( 1., new Color(hsv,new float[] {.2f, .9f, 1f},1f));
+		mappers[i].put( 1+1e-6, Color.white);
+		mappers[i].put(10., Color.black);
+		mappers[i].setInterpolator(interp);
+		i++;
 		
 		
 		DefaultMatrixMapper defaultMapper = new DefaultMatrixMapper(10f,.9f);
@@ -372,11 +382,13 @@ public class GradientMapper implements ContinuousColorMapper, Map<Double, Color>
 
 		for(int j=0;j<i;j++) {
 			GradientPanel grad1 = new GradientPanel(mappers[j],-10,10);
+			//grad1.setPreferredSize(new Dimension(500,50));
 			main.add(grad1);
 		}
-		
-		main.add(new GradientPanel(defaultMapper,-10,10));
-		main.add(new GradientPanel(defaultMapper,-10,10));
+		GradientPanel grad2 = new GradientPanel(defaultMapper,-10,10);
+		//grad2.setPreferredSize(new Dimension(500,50));
+		main.add(grad2);
+		//main.add(new GradientPanel(defaultMapper,-10,10));
 
 
 		frame.getContentPane().add(main);
