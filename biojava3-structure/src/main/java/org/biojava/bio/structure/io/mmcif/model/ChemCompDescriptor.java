@@ -4,6 +4,7 @@ package org.biojava.bio.structure.io.mmcif.model;
 /** Container object for _pdbx_chem_comp_descriptor
  * 
  * @author Andreas Prlic
+ * @since 3.2
  *
  */
 public class ChemCompDescriptor {
