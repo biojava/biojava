@@ -1,6 +1,8 @@
 package org.biojava.bio.structure.io.mmcif.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.biojava.bio.structure.io.mmcif.chem.ChemCompTools;
 import org.biojava.bio.structure.io.mmcif.chem.PolymerType;
@@ -17,7 +19,7 @@ public class ChemComp implements Serializable{
 	 * 
 	 */
 	private static final long serialVersionUID = -4736341142030215915L;
-	
+
 	String id ;
 	String name;
 	String type;
@@ -43,6 +45,8 @@ public class ChemComp implements Serializable{
 	String pdbx_subcomponent_list;
 	String pdbx_processing_site;
 	String mon_nstd_flag;
+
+	List<ChemCompDescriptor> descriptors = new ArrayList<ChemCompDescriptor>();
 
 	// and some derived data for easier processing...
 	ResidueType residueType;
@@ -275,15 +279,23 @@ public class ChemComp implements Serializable{
 		this.standard = standard;
 	}
 
-   public String getMon_nstd_flag()
-   {
-      return mon_nstd_flag;
-   }
+	public String getMon_nstd_flag()
+	{
+		return mon_nstd_flag;
+	}
 
-   public void setMon_nstd_flag(String mon_nstd_flag)
-   {
-      this.mon_nstd_flag = mon_nstd_flag;
-   }
+	public void setMon_nstd_flag(String mon_nstd_flag)
+	{
+		this.mon_nstd_flag = mon_nstd_flag;
+	}
+
+	public List<ChemCompDescriptor> getDescriptors() {
+		return descriptors;
+	}
+
+	public void setDescriptors(List<ChemCompDescriptor> descriptors) {
+		this.descriptors = descriptors;
+	}
 
 
 }
