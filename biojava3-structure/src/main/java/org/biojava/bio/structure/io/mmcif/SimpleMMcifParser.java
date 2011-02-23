@@ -37,6 +37,7 @@ import org.biojava.bio.structure.io.StructureIOFile;
 import org.biojava.bio.structure.io.mmcif.model.AtomSite;
 import org.biojava.bio.structure.io.mmcif.model.AuditAuthor;
 import org.biojava.bio.structure.io.mmcif.model.ChemComp;
+import org.biojava.bio.structure.io.mmcif.model.ChemCompDescriptor;
 import org.biojava.bio.structure.io.mmcif.model.DatabasePDBremark;
 import org.biojava.bio.structure.io.mmcif.model.DatabasePDBrev;
 import org.biojava.bio.structure.io.mmcif.model.Entity;
@@ -573,13 +574,20 @@ public class SimpleMMcifParser implements MMcifParser {
 					"org.biojava.bio.structure.io.mmcif.model.ChemComp",
 					loopFields, lineData
 					);
+			
 			triggerNewChemComp(c);
 		} else if (category.equals("_audit_author")) {
 		   AuditAuthor aa = (AuditAuthor)buildObject(
 		         "org.biojava.bio.structure.io.mmcif.model.AuditAuthor",
 		         loopFields, lineData);
 		      triggerNewAuditAuthor(aa);
+		} else if (category.equals("_pdbx_chem_comp_descriptor")) {
+			ChemCompDescriptor ccd = (ChemCompDescriptor) buildObject(
+			         "org.biojava.bio.structure.io.mmcif.model.ChemCompDescriptor",
+			         loopFields, lineData);
+			triggerNewChemCompDescriptor(ccd);
 		} else {
+		
 
 			// trigger a generic bean that can deal with all missing data types...
 			triggerGeneric(category,loopFields,lineData);
@@ -587,6 +595,8 @@ public class SimpleMMcifParser implements MMcifParser {
 
 
 	}
+
+	
 
 	private void setPair(Object o, List<String> lineData){
 		Class c = o.getClass();
@@ -795,6 +805,11 @@ public class SimpleMMcifParser implements MMcifParser {
 	public void triggerDocumentEnd(){
 		for(MMcifConsumer c : consumers){
 			c.documentEnd();
+		}
+	}
+	public void triggerNewChemCompDescriptor(ChemCompDescriptor ccd) {
+		for(MMcifConsumer c : consumers){
+			c.newChemCompDescriptor(ccd);
 		}
 	}
 

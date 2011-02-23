@@ -7,6 +7,7 @@ import org.biojava.bio.structure.io.mmcif.chem.ResidueType;
 import org.biojava.bio.structure.io.mmcif.model.AtomSite;
 import org.biojava.bio.structure.io.mmcif.model.AuditAuthor;
 import org.biojava.bio.structure.io.mmcif.model.ChemComp;
+import org.biojava.bio.structure.io.mmcif.model.ChemCompDescriptor;
 import org.biojava.bio.structure.io.mmcif.model.DatabasePDBremark;
 import org.biojava.bio.structure.io.mmcif.model.DatabasePDBrev;
 import org.biojava.bio.structure.io.mmcif.model.Entity;
@@ -26,6 +27,7 @@ public class ChemCompConsumer implements MMcifConsumer {
 
 	ChemicalComponentDictionary dictionary;
 
+	String latestChemCompId;
 	public ChemCompConsumer(){
 		dictionary = new ChemicalComponentDictionary();
 	}
@@ -40,7 +42,8 @@ public class ChemCompConsumer implements MMcifConsumer {
 	}
 
 	public void newChemComp(ChemComp c) {
-		dictionary.addChemComp(c);
+		latestChemCompId = c.getId();
+		dictionary.addChemComp(c);		
 		if ( c.getResidueType() == ResidueType.nonPolymer)
 			return;
 
@@ -141,22 +144,28 @@ public class ChemCompConsumer implements MMcifConsumer {
 	}
 
 
-   public void newAuditAuthor(AuditAuthor aa)
-   {
-      // TODO Auto-generated method stub
+	public void newAuditAuthor(AuditAuthor aa)
+	{
+		// TODO Auto-generated method stub
 
-   }
+	}
 
-   public FileParsingParameters getFileParsingParameters()
-   {
-     // can be ingored in this case...
-      return null;
-   }
+	public FileParsingParameters getFileParsingParameters()
+	{
+		// can be ingored in this case...
+		return null;
+	}
 
-   public void setFileParsingParameters(FileParsingParameters params)
-   {
-      // TODO Auto-generated method stub
-      
-   }
+	public void setFileParsingParameters(FileParsingParameters params)
+	{
+		// TODO Auto-generated method stub
+
+	}
+
+	public void newChemCompDescriptor(ChemCompDescriptor ccd) {
+		ChemComp cc = dictionary.getChemComp(latestChemCompId);
+		cc.getDescriptors().add(ccd);
+
+	}
 
 }

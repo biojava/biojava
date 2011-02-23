@@ -54,6 +54,8 @@ import org.biojava.bio.structure.io.SeqRes2AtomAligner;
 import org.biojava.bio.structure.io.mmcif.model.AtomSite;
 import org.biojava.bio.structure.io.mmcif.model.AuditAuthor;
 import org.biojava.bio.structure.io.mmcif.model.ChemComp;
+
+import org.biojava.bio.structure.io.mmcif.model.ChemCompDescriptor;
 import org.biojava.bio.structure.io.mmcif.model.DatabasePDBremark;
 import org.biojava.bio.structure.io.mmcif.model.DatabasePDBrev;
 import org.biojava.bio.structure.io.mmcif.model.Entity;
@@ -1205,6 +1207,12 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
       this.params = params;
 
    }
+   
+   public void newChemCompDescriptor(ChemCompDescriptor ccd) {
+	
+	   // todo: nothing happening here yet.
+
+	}
 
 }
 
