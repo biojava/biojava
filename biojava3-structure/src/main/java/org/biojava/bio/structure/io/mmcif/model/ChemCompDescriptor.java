@@ -35,6 +35,10 @@ public class ChemCompDescriptor {
 	String program;
 	String program_version;
 	String descriptor;
+	
+	public ChemCompDescriptor(){
+		
+	}
 	public String getComp_id() {
 		return comp_id;
 	}
