@@ -778,23 +778,52 @@ public class StructureTools {
         }
 
         /*
-         * Not fully implemented - needs a it if work and not necessarily in the
+         * Not fully implemented - needs a bit of work and not necessarily in the
          * scope of BJ - might be a CDK job or something.
          */
         public static List<Bond> findBonds(Group group, List<Group> groups) {
             List<Bond> bondList = new ArrayList<Bond>();
-
             for (Atom atomA : group.getAtoms()) {
-//                IAtom atom = new PDBAtom(atomA.getElement().toString());
-//                System.out.println(atom);
                 for (Group groupB : groups) {
                     for (Atom atomB : groupB.getAtoms()) {
                         try {
                             double dist = Calc.getDistance(atomA, atomB);
-                            if (dist <= 4) {
-                                Bond bond = new Bond(dist, BondType.UNDEFINED, atomA, atomB);
+                            BondType bondType = BondType.UNDEFINED;
+                            if (dist <= 2) {
+                                bondType = BondType.COVALENT;
+                                Bond bond = new Bond(dist, bondType, group, atomA, groupB, atomB);
                                 bondList.add(bond);
 //                                    System.out.println(String.format("%s within %s of %s", atomB, dist, atomA));
+                            }
+                            else if (dist <= 3.1) {
+                                
+                                if (atomA.getElement().equals(Element.O) && atomB.getElement().equals(Element.N)) {
+                                    bondType = BondType.HBOND;
+                                }
+                                else if (atomA.getElement().equals(Element.N) && atomB.getElement().equals(Element.O)) {
+                                    bondType = BondType.HBOND;
+                                }
+                                else if (atomA.getElement().isMetal() && atomB.getElement().equals(Element.O)) {
+                                    bondType = BondType.METAL;
+                                }
+                                else if (atomA.getElement().equals(Element.C) && atomB.getElement().equals(Element.C)) {
+                                    bondType = BondType.HYDROPHOBIC;
+                                }
+                                //not really interested in 'undefined' types
+                                if (bondType != BondType.UNDEFINED) {
+                                    Bond bond = new Bond(dist, bondType, group, atomA, groupB, atomB);
+                                    bondList.add(bond);
+                                }
+//                                    System.out.println(String.format("%s within %s of %s", atomB, dist, atomA));
+                            } else if (dist <= 3.9) {
+                                if (atomA.getElement().equals(Element.C) && atomB.getElement().equals(Element.C)) {
+                                    bondType = BondType.HYDROPHOBIC;
+                                }
+                                //not really interested in 'undefined' types
+                                if (bondType != BondType.UNDEFINED) {
+                                    Bond bond = new Bond(dist, bondType, group, atomA, groupB, atomB);
+                                    bondList.add(bond);
+                                }
                             }
 
                         } catch (StructureException ex) {

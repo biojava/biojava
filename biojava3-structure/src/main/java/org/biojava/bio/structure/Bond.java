@@ -13,21 +13,27 @@ public class Bond {
 
     private double length;
     private BondType type;
+    private Group groupA;
     private Atom atomA;
+    private Group groupB;
     private Atom atomB;
 
     public Bond() {
     }
 
-    public Bond(double length, BondType type, Atom atomA, Atom atomB) {
+    public Bond(double length, BondType type, Group resA, Atom atomA, Group resB, Atom atomB) {
         this.length = length;
         this.type = type;
+        this.groupA = resA;
         this.atomA = atomA;
+        this.groupB = resB;
         this.atomB = atomB;
     }
 
     @Override
     public String toString() {
-        return "Bond{" + "length=" + length + " type=" + type + " atomA=" + atomA + " atomB=" + atomB + '}';
+        return "Bond{" + "length=" + length + " type=" + type + " resA=" + groupA.getPDBName() + " " + groupA.getResidueNumber() + " atomA=" + atomA + " resB=" + groupB.getPDBName() + " " + groupB.getResidueNumber() + " atomB=" + atomB + '}';
     }
+
+
 }

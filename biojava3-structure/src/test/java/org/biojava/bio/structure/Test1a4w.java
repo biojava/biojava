@@ -272,14 +272,17 @@ public class Test1a4w extends TestCase{
                 List<Group> hets = struct.getHetGroups();
                 for (Group group : hets) {
                     System.out.println(group);
-                    List<Group> fourAngstromShell = StructureTools.getGroupsWithinShell(struct, group, 4.00, true);
-                    System.out.println("Groups within 4 Angstroms of " + group + ":");
+//                    System.out.println(group.getChemComp().getDescriptors());
+                    List<Group> fourAngstromShell = StructureTools.getGroupsWithinShell(struct, group, 4.00, false);
+                    System.out.println("Groups within 4.00 Angstroms of " + group + ":");
                     for (Group fourAngstromgroup : fourAngstromShell) {
                         System.out.println(fourAngstromgroup);
-//                        for (Bond bond : StructureTools.findBonds(group, fourAngstromShell)) {
-//                            System.out.println(bond);
-//                        }
+//                        System.out.println(fourAngstromgroup.getChemComp().getDescriptors());
+                        
                     }
+                    for (Bond bond : StructureTools.findBonds(group, fourAngstromShell)) {
+                            System.out.println(bond);
+                        }
                 }
                 assertEquals(7, hets.size());
 
