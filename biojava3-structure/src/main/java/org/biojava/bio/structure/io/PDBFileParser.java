@@ -1466,8 +1466,34 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 
 	}
 
+        /**
+         * Decides whether or not a Group is qualified to be added to the
+         * Structure.hetGroups list. If it likes it, it adds it.
+         * @param group
+         */
+        private void addTohetGroupsDecider(Group group) {
+            boolean wanted = false;
+            //these are HET groups, but they are usually less interesting
+            //than other types
+            if (group.getPDBName().equals("HOH"))
+                 return;
+            if (group.getChemComp() == null) {
+                if (group.getType().equals(GroupType.HETATM)) {
+                    wanted = true;
+                }
+            } else if (!group.getChemComp().isStandard()) {
+                //also want to add modified amino acids e.g. TYS
+                //these are GroupType.AMINOACID, so we need to check the ChemComp
+                wanted = true;
+            }
 
-
+            if (wanted) {
+                if (! structure.getHetGroups().contains(group)) {
+//                    System.out.println("Added " + group + " to structure.hetgroups");
+                    structure.getHetGroups().add(group);
+                }
+            }
+        }
 
 	/**
 	 Handler for
@@ -1523,10 +1549,7 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 
 			// end up old chain...
 			current_chain.addGroup(current_group);
-                        if (current_group.getType().equals(GroupType.HETATM) &! current_group.getPDBName().equals("HOH")) {
-                            structure.getHetGroups().add(current_group);
-                        }
-
+                        
 			// see if old chain is known ...
 			Chain testchain ;
 			testchain = isKnownChain(current_chain.getChainID(),current_model);
@@ -1574,6 +1597,7 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 		//|                |    |   iCode
 		//|     |          | |  |   ||
 		//ATOM      1  N   ASP A  15     110.964  24.941  59.191  1.00 83.44           N
+                //ATOM   1964  N   ARG H 221A      5.963 -16.715  27.669  1.00 28.59           N
 
 		Character aminoCode1 = null;
 
@@ -1595,10 +1619,8 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 			//               current_group.setPDBCode(pdbCode);
 			current_group.setPDBName(groupCode3);
 			current_group.setResidueNumber(residueNumber);
-			//                        System.out.println("Made new group: " + groupCode3 + " " + resNum + " " + iCode);
-                        if (current_group.getType().equals(GroupType.HETATM) &! current_group.getPDBName().equals("HOH")) {
-                            structure.getHetGroups().add(current_group);
-                        }
+//			                        System.out.println("Made new group: " + groupCode3 + " " + resNum + " " + iCode);
+                        addTohetGroupsDecider(current_group);
                 }
 
 
@@ -1609,9 +1631,7 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 			//current_group.setPDBCode(pdbCode);
 			current_group.setPDBName(groupCode3);
 			current_group.setResidueNumber(residueNumber);
-                        if (current_group.getType().equals(GroupType.HETATM) &! current_group.getPDBName().equals("HOH")) {
-                            structure.getHetGroups().add(current_group);
-                        }
+                        addTohetGroupsDecider(current_group);
 			//                        System.out.println("Made new start of chain group:  " + groupCode3 + " " + resNum + " " + iCode);
 		}
 
@@ -1628,12 +1648,11 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 			current_chain.addGroup(current_group);
 
 			current_group = getNewGroup(recordName,aminoCode1,groupCode3);
+
 			//current_group.setPDBCode(pdbCode);
 			current_group.setPDBName(groupCode3);
 			current_group.setResidueNumber(residueNumber);
-                        if (current_group.getType().equals(GroupType.HETATM) &! current_group.getPDBName().equals("HOH")) {
-                            structure.getHetGroups().add(current_group);
-                        }
+                        addTohetGroupsDecider(current_group);
 			//                        System.out.println("Made new group:  " + groupCode3 + " " + resNum + " " + iCode);
 
 		} else {
@@ -2561,7 +2580,6 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 
 
 	private void triggerEndFileChecks(){
-
 		// finish and add ...
 
 		String modDate = (String) header.get("modDate");
@@ -2588,7 +2606,7 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 		if ( current_chain != null ) {			
 			current_chain.addGroup(current_group);
 
-			if (isKnownChain(current_chain.getChainID(),current_model) == null) {
+                        if (isKnownChain(current_chain.getChainID(),current_model) == null) {
 				current_model.add(current_chain);
 			}
 		}

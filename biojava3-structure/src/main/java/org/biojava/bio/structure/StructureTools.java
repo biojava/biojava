@@ -785,6 +785,9 @@ public class StructureTools {
             List<Bond> bondList = new ArrayList<Bond>();
             for (Atom atomA : group.getAtoms()) {
                 for (Group groupB : groups) {
+                    if (groupB.getType().equals(GroupType.HETATM)) {
+                        continue;
+                    }
                     for (Atom atomB : groupB.getAtoms()) {
                         try {
                             double dist = Calc.getDistance(atomA, atomB);
@@ -804,6 +807,9 @@ public class StructureTools {
                                     bondType = BondType.HBOND;
                                 }
                                 else if (atomA.getElement().isMetal() && atomB.getElement().equals(Element.O)) {
+                                    bondType = BondType.METAL;
+                                }
+                                else if (atomA.getElement().isMetal() && atomB.getElement().equals(Element.N)) {
                                     bondType = BondType.METAL;
                                 }
                                 else if (atomA.getElement().equals(Element.C) && atomB.getElement().equals(Element.C)) {
