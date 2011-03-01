@@ -48,6 +48,7 @@ public class FastaWriter<S extends Sequence<?>, C extends Compound> {
     Collection<S> sequences;
     FastaHeaderFormatInterface<S, C> headerFormat;
     private int lineLength = 60;
+    byte[] lineSep = System.getProperty("line.separator").getBytes();
 /**
  * Use default line length of 60
  * @param os
@@ -75,9 +76,17 @@ public class FastaWriter<S extends Sequence<?>, C extends Compound> {
         this.lineLength = lineLength;
     }
 
+    /**
+     * Allow an override of operating system line separator for programs that needs a specific CRLF or CR or LF option
+     * @param lineSeparator
+     */
+    public void setLineSeparator(String lineSeparator){
+        lineSep = lineSeparator.getBytes();
+    }
+
     public void process() throws Exception {
 
-        byte[] lineSep = System.getProperty("line.separator").getBytes();
+        
 
         for (S sequence : sequences) {
             String header = headerFormat.getHeader(sequence);
