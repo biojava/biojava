@@ -10,5 +10,5 @@ package org.biojava.bio.structure;
  * @author Jules Jacobsen <jacobsen@ebi.ac.uk>
  */
 public enum BondType {
-    UNDEFINED, COVALENT, IONIC, HBOND, VANDERWAALS, HYDROPHOBIC, METAL;
+    UNDEFINED, COVALENT, IONIC, HBOND, VANDERWAALS, HYDROPHOBIC, METAL, PLANAR, ATOM_PLANE;
 }

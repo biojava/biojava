@@ -85,7 +85,30 @@ public class Calc {
         
         return dist ;
     }
-    
+
+
+    /**
+     * Will calculate the *square* of distances between two atoms. This will be
+     * faster as it will not perform the final square root to get the actual
+     * distance. Use this if doing large numbers of distance comparisons - it is
+     * marginally faster than getDistance().
+     *
+     * @param a  an Atom object
+     * @param b  an Atom object
+     * @return a double
+     * @throws StructureException ...
+     */
+    public static double getDistanceFast(Atom a, Atom b)
+    throws StructureException
+    {
+        double x = a.getX() - b.getX();
+        double y = a.getY() - b.getY();
+        double z = a.getZ() - b.getZ();
+
+        double distSquared  = x * x  + y * y + z * z;
+
+        return distSquared ;
+    }
     
     private static final void nullCheck(Atom a) 
     throws StructureException

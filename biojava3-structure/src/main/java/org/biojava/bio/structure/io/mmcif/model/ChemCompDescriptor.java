@@ -120,7 +120,7 @@ public class ChemCompDescriptor {
 	}
 	@Override
 	public String toString() {
-		return "ChemCompDescriptior [comp_id=" + comp_id + ", type=" + type
+		return "ChemCompDescriptor [comp_id=" + comp_id + ", type=" + type
 				+ ", program=" + program + ", program_version="
 				+ program_version + ", descriptor=" + descriptor + "]";
 	}

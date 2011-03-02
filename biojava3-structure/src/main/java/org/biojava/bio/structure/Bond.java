@@ -21,6 +21,31 @@ public class Bond {
     public Bond() {
     }
 
+    public Atom getAtomA() {
+        return atomA;
+    }
+
+    public Atom getAtomB() {
+        return atomB;
+    }
+
+    public Group getGroupA() {
+        return groupA;
+    }
+
+    public Group getGroupB() {
+        return groupB;
+    }
+
+    public double getLength() {
+        return length;
+    }
+
+    public BondType getType() {
+        return type;
+    }
+
+    
     public Bond(double length, BondType type, Group resA, Atom atomA, Group resB, Atom atomB) {
         this.length = length;
         this.type = type;

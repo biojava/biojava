@@ -23,7 +23,9 @@
 package org.biojava.bio.structure;
 
 import java.util.ArrayList;
+import java.util.EnumSet;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -82,6 +84,7 @@ public class StructureTools {
 	//amino acid 3 and 1 letter code definitions
 	private static final Map<String, Character> aminoAcids;
 
+        private static final Set<Element> hBondDonorAcceptors;
 	//	// for conversion 3code 1code
 	//	private static  SymbolTokenization threeLetter ;
 	//	private static  SymbolTokenization oneLetter ;
@@ -158,16 +161,10 @@ public class StructureTools {
 		aminoAcids.put("PYH", new Character('O'));
 		aminoAcids.put("PYL", new Character('O'));
 
-		//		try {
-		//			Alphabet alpha_prot = ProteinTools.getAlphabet();
-		//			threeLetter = alpha_prot.getTokenization("name");
-		//			oneLetter  = alpha_prot.getTokenization("token");
-		//		} catch (Exception e) {
-		//			// this should not happen.
-		//			// only if BioJava has not been built correctly...
-		//			logger.config(e.getMessage());
-		//			e.printStackTrace() ;
-		//		}
+		hBondDonorAcceptors = new HashSet<Element>();
+                hBondDonorAcceptors.add(Element.N);
+                hBondDonorAcceptors.add(Element.O);
+                hBondDonorAcceptors.add(Element.S);
 
 	}
 
@@ -741,7 +738,8 @@ public class StructureTools {
         public static List<Group> getGroupsWithinShell(Structure structure, Group group, double distance, boolean includeWater) {
             Set<Group> returnSet = new LinkedHashSet<Group>();
 
-            distance = Math.abs(distance);
+            //square the distance to use as a comparison against getDistanceFast which returns the square of a distance.
+            distance = distance * distance;
 
             for (Atom atomA : group.getAtoms()) {
                 for (Chain chain : structure.getChains()) {
@@ -756,7 +754,8 @@ public class StructureTools {
                         else {
                             for (Atom atomB : chainGroup.getAtoms()) {
                             try {
-                                double dist = Calc.getDistance(atomA, atomB);
+                                //use getDistanceFast as we are doing a lot of comparisons
+                                double dist = Calc.getDistanceFast(atomA, atomB);
                                 if (dist <= distance) {
                                     returnSet.add(chainGroup);
 //                                    System.out.println(String.format("%s within %s of %s", atomB, dist, atomA));
@@ -778,8 +777,8 @@ public class StructureTools {
         }
 
         /*
-         * Not fully implemented - needs a bit of work and not necessarily in the
-         * scope of BJ - might be a CDK job or something.
+         * Very simple distance-based bond calculator. Will give approximations,
+         * but do not rely on this to be chemically correct.
          */
         public static List<Bond> findBonds(Group group, List<Group> groups) {
             List<Bond> bondList = new ArrayList<Bond>();
@@ -798,18 +797,12 @@ public class StructureTools {
                                 bondList.add(bond);
 //                                    System.out.println(String.format("%s within %s of %s", atomB, dist, atomA));
                             }
-                            else if (dist <= 3.1) {
+                            else if (dist <= 3.25) {
                                 
-                                if (atomA.getElement().equals(Element.O) && atomB.getElement().equals(Element.N)) {
+                                if (isHbondDonorAcceptor(atomA) && isHbondDonorAcceptor(atomB)) {
                                     bondType = BondType.HBOND;
                                 }
-                                else if (atomA.getElement().equals(Element.N) && atomB.getElement().equals(Element.O)) {
-                                    bondType = BondType.HBOND;
-                                }
-                                else if (atomA.getElement().isMetal() && atomB.getElement().equals(Element.O)) {
-                                    bondType = BondType.METAL;
-                                }
-                                else if (atomA.getElement().isMetal() && atomB.getElement().equals(Element.N)) {
+                                else if (atomA.getElement().isMetal() && isHbondDonorAcceptor(atomB)) {
                                     bondType = BondType.METAL;
                                 }
                                 else if (atomA.getElement().equals(Element.C) && atomB.getElement().equals(Element.C)) {
@@ -842,5 +835,12 @@ public class StructureTools {
 
 
             return bondList;
+        }
+
+        private static boolean isHbondDonorAcceptor(Atom atom) {
+            if (hBondDonorAcceptors.contains(atom.getElement())) {
+                return true;
+            }
+            return false;
         }
 }
