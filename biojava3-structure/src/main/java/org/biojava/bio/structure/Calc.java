@@ -637,7 +637,7 @@ public class Calc {
 			totalMass += mass;
 			center = scaleAdd(mass, a, center);
 		}
-		System.out.println(totalMass);
+		
 		center = scale(center, 1.0f/totalMass);
 		return center;
 	}
