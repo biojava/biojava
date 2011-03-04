@@ -627,6 +627,54 @@ public class Calc {
         
     }
     
+    public static  Atom centerOfMass(Atom[] points) {
+		Atom center = new AtomImpl();
+
+		float totalMass = 0.0f;
+		for (int i = 0, n = points.length; i < n; i++) {
+			Atom a = points[i];
+			float mass = a.getElement().getAtomicMass();
+			totalMass += mass;
+			center = scaleAdd(mass, a, center);
+		}
+		System.out.println(totalMass);
+		center = scale(center, 1.0f/totalMass);
+		return center;
+	}
+    
+    private static Atom scale(Atom a, float s) {
+		double x = a.getX();
+		double y = a.getY();
+		double z = a.getZ();
+		
+		x *= s;
+		y *= s;
+		z *= s;
+		
+		//Atom b = new AtomImpl();
+		a.setX(x);
+		a.setY(y);
+		a.setZ(z);
+
+		return a;
+	}
+
+
+	public static Atom scaleAdd(float s, Atom t1, Atom t2){
+
+		double x = s*t1.getX() + t2.getX();
+		double y = s*t1.getY() + t2.getY();
+		double z = s*t1.getZ() + t2.getZ();
+
+		//Atom a = new AtomImpl();
+		t2.setX(x);
+		t2.setY(y);
+		t2.setZ(z);
+
+		return t2;
+
+	}
+    
     /** Returns the Vector that needs to be applied to shift a set of atoms
      * to the Centroid.
      * @param atomSet array of Atoms  
@@ -683,7 +731,7 @@ public class Calc {
         
         for (int i =0 ; i < atomSet.length; i++){
             Atom a = atomSet[i];
-            Atom n = add(a,shiftVector);
+             Atom n = add(a,shiftVector);
             newAtoms[i] = n ;
         }
         return newAtoms;
