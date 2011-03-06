@@ -44,6 +44,9 @@ import org.biojava.bio.structure.gui.util.color.LinearColorInterpolator.Interpol
  * in the segment [-Inf,a) is labeled with the negInf color, and any point in [b,Inf] is labeled with the posInf
  * color. If no endpoints are present, the posInf color is used as default.
  * 
+ * Common gradients are predefined an may be instantiated through 
+ * GradientMapper.getGradientMapper().
+ * 
  * @author Spencer Bliven
  *
  */
@@ -73,6 +76,10 @@ public class GradientMapper implements ContinuousColorMapper, Map<Double, Color>
 
 	/**
 	 * Constructs a gradientMapper to draw one of the pre-defined gradients
+	 * 
+	 * For example,
+	 * GradientMapper.getGradientMapper(GradientMapper.RAINBOW_GRADIENT, 0, 10)
+	 * 
 	 * @param gradientType One of the gradient types, eg GradientMapper.BLACK_WHITE_GRADIENT
 	 * @param min Start of the gradient
 	 * @param max End of the gradient
@@ -140,11 +147,11 @@ public class GradientMapper implements ContinuousColorMapper, Map<Double, Color>
 		Double right = mapping.higherKey(value);
 		
 		//don't interpolate to infinity
-		if(right.isInfinite()) {
-			return mapping.get(right);
+		if(right == null || right.isInfinite()) {
+			return mapping.get(Double.POSITIVE_INFINITY);
 		}
-		if(left.isInfinite()) {
-			return mapping.get(left);
+		if(left == null || left.isInfinite()) {
+			return mapping.get(Double.NEGATIVE_INFINITY);
 		}
 		
 		// fraction of left color to use

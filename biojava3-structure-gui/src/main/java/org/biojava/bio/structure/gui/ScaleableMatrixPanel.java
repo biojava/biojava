@@ -58,11 +58,7 @@ import org.biojava.bio.structure.io.PDBFileReader;
 import org.biojava.bio.structure.jama.Matrix;
 import org.biojava.bio.structure.gui.JMatrixPanel;
 import org.biojava.bio.structure.gui.ScaleableMatrixPanel;
-import org.biojava.bio.structure.gui.util.color.ContinuousColorMapper;
-import org.biojava.bio.structure.gui.util.color.GradientMapper;
-import org.biojava.bio.structure.gui.util.color.GradientPanel;
-import org.biojava.bio.structure.gui.util.color.HSVColorSpace;
-import org.biojava.bio.structure.gui.util.color.LinearColorInterpolator;
+import org.biojava.bio.structure.gui.util.color.*;
 import org.biojava.bio.structure.gui.util.color.LinearColorInterpolator.InterpolationDirection;
 
 
@@ -189,7 +185,7 @@ implements ChangeListener, ActionListener {
 		slider.setPaintTicks(true);
 		//slider.setMinorTickSpacing(1);
 		slider.setMajorTickSpacing(SLIDER_STEPS);
-		slider.setSnapToTicks(true);
+		slider.setSnapToTicks(false);
 		slider.setPaintLabels(false);
 		slider.setPaintTrack(true);
 		//slider.setLabelTable(slider.createStandardLabels(SLIDER_STEPS));
@@ -255,7 +251,8 @@ implements ChangeListener, ActionListener {
 		
 		gradients.put((++i)+". Sensitive", gradient);	
 		
-		// color [0,1]
+		// color [0,1]import java.awt.Color;
+
 		interp = new LinearColorInterpolator(hsv);
 		interp.setInterpolationDirection(0, InterpolationDirection.INNER);
 		gradient = new GradientMapper(Color.green, Color.black, hsv);
@@ -266,7 +263,29 @@ implements ChangeListener, ActionListener {
 		gradient.setInterpolator(interp);
 		
 		gradients.put((++i)+". Emphasize low", gradient);	
-
+		
+		// log color
+		interp = new LinearColorInterpolator(hsv);
+		interp.setInterpolationDirection(0, InterpolationDirection.INNER);
+		gradient = new GradientMapper(Color.red, Color.black, hsv);
+		gradient.put( 0., new Color(hsv,new float[] {1f, .9f, 1f},1f));
+		gradient.put( 10., new Color(hsv,new float[] {0f, .9f, 0f},1f));
+		gradient.setInterpolator(interp);
+		
+		ContinuousColorMapper logGradient = new LogColorMapper(gradient,2);
+		gradients.put((++i)+". Logorithmic", logGradient);	
+		
+		// sqrt color
+		interp = new LinearColorInterpolator(hsv);
+		interp.setInterpolationDirection(0, InterpolationDirection.INNER);
+		gradient = new GradientMapper(Color.red, Color.black, hsv);
+		gradient.put( 0., new Color(hsv,new float[] {1f, .9f, 1f},1f));
+		gradient.put( 4., new Color(hsv,new float[] {0f, .9f, 0f},1f));
+		gradient.setInterpolator(interp);
+		
+		ContinuousColorMapper sqrtGradient = new SqrtColorMapper(gradient);
+		gradients.put((++i)+". Square Root", sqrtGradient);	
+		
 		return gradients;
 	}
 
@@ -338,6 +357,13 @@ implements ChangeListener, ActionListener {
 		mPanel.setCellColor(cellColor);
 	}
 
+	/**
+	 * A renderer for the the gradient dropdown menu at the top of scaleableMatrixPanes.
+	 * Knows how to draw a gradient and nicely label it.
+	 * 
+	 * @author Spencer Bliven
+	 *
+	 */
 	protected class GradientRenderer extends JPanel
 	implements ListCellRenderer {
 
@@ -367,7 +393,7 @@ implements ChangeListener, ActionListener {
 			gradientBounds.add(gradientContainer,BorderLayout.CENTER);
 			gradientBounds.setOpaque(false);
 			
-			gradientBounds.add(new JLabel(Integer.toString(max)),BorderLayout.WEST);
+			gradientBounds.add(new JLabel(Integer.toString(max)),BorderLayout.EAST);
 			
 			this.add(gradientBounds, BorderLayout.EAST);
 			
