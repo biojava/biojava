@@ -24,7 +24,6 @@ package org.biojava.bio.structure;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.List;
 
 import org.biojava.bio.structure.io.FileParsingParameters;
 import org.biojava.bio.structure.io.PDBFileParser;
