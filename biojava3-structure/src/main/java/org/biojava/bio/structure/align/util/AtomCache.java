@@ -7,6 +7,8 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.TreeSet;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.biojava.bio.structure.Atom;
 
@@ -50,13 +52,14 @@ public class AtomCache {
 	private static ScopInstallation scopInstallation ;
 	boolean autoFetch;
 	boolean isSplit;
+	boolean strictSCOP;
 	FileParsingParameters params;
 
 	/** Creates an instance of an AtomCache that is pointed to the a particular
 	 * path in the file system.
 	 * 
 	 * @param pdbFilePath a directory in the file system to use as a location to cache files.
-	 * @param isSplit a flag to indiacte if the directory organisation is "split" as on the PDB ftp servers, or if all files are contained in one directory.
+	 * @param isSplit a flag to indicate if the directory organisation is "split" as on the PDB ftp servers, or if all files are contained in one directory.
 	 */
 	public AtomCache(String pdbFilePath, boolean isSplit){
 
@@ -74,7 +77,7 @@ public class AtomCache {
 
 		//this.cache = cache;
 		this.isSplit = isSplit;
-
+		
 		autoFetch = true;
 		currentlyLoading.clear();
 		params = new FileParsingParameters();
@@ -85,6 +88,8 @@ public class AtomCache {
 		params.setParseSecStruc(false);
 		// 
 
+		this.strictSCOP = true;
+		
 		scopInstallation = null;
 	}
 
@@ -144,6 +149,28 @@ public class AtomCache {
 	 */
 	public void setAutoFetch(boolean autoFetch) {
 		this.autoFetch = autoFetch;
+	}
+
+	
+	/**
+	 * Reports whether strict scop naming will be enforced, or whether this AtomCache
+	 * should try to guess some simple variants on scop domains.
+	 * @return true if scop names should be used strictly with no guessing
+	 */
+	public boolean isStrictSCOP() {
+		return strictSCOP;
+	}
+
+	/**
+	 * When strictSCOP is enabled, SCOP domain identifiers (eg 'd1gbga_') are
+	 * matched literally to the SCOP database.
+	 * 
+	 * When disabled, some simple mistakes are corrected automatically.
+	 * For instance, the invalid identifier 'd1gbg__' would be corrected to 'd1gbga_' automatically.
+	 * @param strictSCOP Indicates whether strict scop names should be used.
+	 */
+	public void setStrictSCOP(boolean strictSCOP) {
+		this.strictSCOP = strictSCOP;
 	}
 
 	/** Returns the representation of a ScopDomain as a BioJava Structure object
@@ -269,7 +296,7 @@ public class AtomCache {
 	 *  <ul>
 	 *	<li>To specify a particular chain write as: 4hhb.A (chain IDs are case sensitive, PDB ids are not)</li>
 	 * 	<li>To specify that the 1st chain in a structure should be used write: 4hhb:0 .</li>
-	 *  <li>To specify a SCOP domain write a scopId e.g. d2bq6a1 </li>
+	 *  <li>To specify a SCOP domain write a scopId e.g. d2bq6a1. Some flexibility can be allowed in SCOP domain names, see {@link #setStrictSCOP(boolean)}</li>
 	 *  </ul>
 	 *  
 	 * @param name
@@ -308,17 +335,35 @@ public class AtomCache {
 
 
 				// looks like a SCOP domain!
-				ScopDomain domain = getScopDomain(name);
-				if ( domain == null){
-					System.err.println("Warning, could not find SCOP domain: " + name);
+				ScopDomain domain;
+				if( this.strictSCOP) {
+					domain = getScopDomain(name);
+				} else {
+					domain = guessScopDomain(name);
 				}
+				if ( domain != null){
+					Structure s = getStructureForDomain(domain);
+					return s;
+				}
+			
+				if( !this.strictSCOP) {
+					Matcher scopMatch = scopIDregex.matcher(name);
+					if( scopMatch.matches() ) {
+						String pdbID = scopMatch.group(1);
+						String chainID = scopMatch.group(2);
 
-
-				Structure s = getStructureForDomain(domain);
-
-
-				return s;
-
+						// None of the actual SCOP domains match. Guess that '_' means 'whole chain'
+						if( !chainID.equals("_") ) {
+							//Add chain identifier
+							pdbID += "."+scopMatch.group(2);
+						}
+						// Fetch the structure by pdb id
+						return getStructure(pdbID);
+					}
+				}
+									
+				throw new StructureException("Unable to get structure for SCOP domain: "+name);
+			
 			} else if (name.length() == 6){
 				pdbId = name.substring(0,4);
 				if ( name.substring(4,5).equals(CHAIN_SPLIT_SYMBOL)) {
@@ -413,6 +458,63 @@ public class AtomCache {
 
 	}
 
+	private static final Pattern scopIDregex = Pattern.compile("d(....)(.)(.)" );
+	/**
+	 * <p>Guess a scop domain. If an exact match is found, return that.
+	 * 
+	 * <p>Otherwise, return the first scop domain found for the specified protein
+	 * such that<ul>
+	 *   <li>The chains match, or one of the chains is '_' or '.'.
+	 *   <li>The domains match, or one of the domains is '_'.
+	 * </ul>
+	 *   
+	 *   
+	 * @param name
+	 * @return
+	 * @throws IOException
+	 * @throws StructureException
+	 */
+	private ScopDomain guessScopDomain(String name) throws IOException, StructureException {
+
+		// Try exact match first
+		ScopDomain domain = getScopDomain(name);
+		if ( domain != null){
+			return domain;
+		}
+
+		// Didn't work. Guess it!
+		System.err.println("Warning, could not find SCOP domain: " + name);
+
+		Matcher scopMatch = scopIDregex.matcher(name);
+		if( scopMatch.matches() ) {
+			String pdbID = scopMatch.group(1);
+			String chainID = scopMatch.group(2);
+			String domainID = scopMatch.group(3);
+
+			if ( scopInstallation == null) {
+				scopInstallation = new ScopInstallation(path);
+			}
+
+			for( ScopDomain potentialSCOP : scopInstallation.getDomainsForPDB(pdbID) ) {
+				Matcher potMatch = scopIDregex.matcher(potentialSCOP.getScopId());
+				if(potMatch.matches()) {
+					if( chainID.equals(potMatch.group(2)) ||
+							chainID.equals("_") || chainID.equals(".") ||
+							potMatch.group(2).equals("_") || potMatch.group(2).equals(".") ) {
+						if( domainID.equals(potMatch.group(3)) || domainID.equals("_") || potMatch.group(3).equals("_") ) {
+							// Match, or near match
+							System.err.println("Trying domain "+potentialSCOP.getScopId());
+							return potentialSCOP;
+						}
+					}
+				}
+			}
+		}
+
+		// Give up.
+		return null;
+	}
+
 	private  boolean checkLoading(String name) {
 		return  currentlyLoading.contains(name);
 
@@ -435,6 +537,13 @@ public class AtomCache {
 		}
 
 		return scopInstallation.getDomainByScopID(scopId);
+	}
+	public ScopInstallation getScopInstallation() {
+		if ( scopInstallation == null) {
+			scopInstallation = new ScopInstallation(path);
+		}
+		
+		return scopInstallation;
 	}
 
 	public FileParsingParameters getFileParsingParams()
