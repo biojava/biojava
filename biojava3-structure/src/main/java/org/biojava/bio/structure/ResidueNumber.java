@@ -119,6 +119,10 @@ public class ResidueNumber implements Serializable
 		return result;
 	}
 
+	/**
+	 * @return The residue number and insertion code as a string, eg "74A"
+	 * @see java.lang.Object#toString()
+	 */
 	@Override
 	public String toString() {
 
@@ -135,6 +139,9 @@ public class ResidueNumber implements Serializable
 		return writer.toString();
 	}
 
+	/**
+	 * @return The chain, number, and insertion code as a string, eg "B  74A" or "A    1 "
+	 */
 	public String toPDB() {
 		String insCodeS ;
 		if ( insCode != null)

@@ -34,6 +34,8 @@ import java.util.Set;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 
@@ -566,10 +568,15 @@ public class StructureTools {
 		return newS;
 	}
 
+	/**
+	 * Pattern to describe subranges. Matches "A", "A:", "A:7-53", etc.
+	 * @see #getSubRanges(Structure, String)
+	 */
+	private static final Pattern pdbNumRangeRegex = Pattern.compile("\\s*(\\w):?(?:([-+]?[0-9]+[A-Za-z]?)\\s*-\\s*([-+]?[0-9]+[A-Za-z]?))?\\s*");
+	
 	/** In addition to the functionality provided by getReducedStructure also provides a way to specify sub-regions of a structure with the following 
 	 * specification:
-	 *
-	 * If range is null or "" returns the whole structure / chain.
+	 * 
 	 * 
 	 * range can be surrounded by ( and ). (but will be removed).
 	 * ranges are specified as
@@ -614,32 +621,37 @@ public class StructureTools {
 
 		String prevChainId = null;
 
+		
 		for ( String r: rangS){
-			String[] coords = r.split(":");
-			if ( coords.length > 2){
-				throw new StructureException("wrong range specification, should be provided as chainID:pdbResnum1=pdbRensum2");
+			// Match a single range, eg "A:4-27"
+			Matcher matcher = pdbNumRangeRegex.matcher(r);
+			if( ! matcher.matches() ){
+				throw new StructureException("wrong range specification, should be provided as chainID:pdbResnum1-pdbRensum2");
 			}
-
-
-			Chain chain = struc.getChainByPDB(coords[0]);
+			String chainId = matcher.group(1);
+			
+			Chain chain = struc.getChainByPDB(chainId);
 			Group[] groups;
-			if  ( coords.length > 1){
-				// if length 1, only provided a Chain id...
+			
+			String pdbresnumStart = matcher.group(2);
+			String pdbresnumEnd   = matcher.group(3);
+			
 
-
-				String[] pdbRanges = coords[1].split("-");
-				if ( pdbRanges.length!= 2)
-					throw new StructureException("wrong range specification, should be provided as chainID:pdbResnum1=pdbRensum2");
-				String pdbresnumStart = pdbRanges[0].trim();
-				String pdbresnumEnd   = pdbRanges[1].trim();
-
+			if( pdbresnumStart != null && pdbresnumEnd != null) {
+				// not a full chain
+				//since Java doesn't allow '+' before integers, fix this up.
+				if(pdbresnumStart.charAt(0) == '+')
+					pdbresnumStart = pdbresnumStart.substring(1);
+				if(pdbresnumEnd.charAt(0) == '+')
+					pdbresnumEnd = pdbresnumEnd.substring(1);
 				groups = chain.getGroupsByPDB(pdbresnumStart, pdbresnumEnd);
-
 			} else {
-				// only chain ID provided ... add the whole chain...
+				// full chain
 				groups = chain.getAtomGroups().toArray(new Group[chain.getAtomGroups().size()]);
 			}
-
+			
+			
+			// Create new chain, if needed
 			Chain c = null;
 			if ( prevChainId == null) {
 				// first chain...
