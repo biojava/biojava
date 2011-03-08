@@ -50,6 +50,8 @@ public class JFatCatClient {
       generator = new Random();
    }
 
+   static final boolean debug = false;
+   
    public static void main(String[] args){
       //System.out.println(hasPrecalculatedResult("http://emmy.rcsb.org/jfatcatserver/align/", "jCE Circular Permutation", "1CDG.A", "1TIM.A"));
       AtomCache cache = new AtomCache("/tmp/", true);
@@ -87,7 +89,8 @@ public class JFatCatClient {
          if ( stream != null) {
 
             xml = convertStreamToString(stream);
-            //System.out.println("got XML from server: " + xml);
+            if ( debug )
+            	System.out.println(" has PrecalcResults got XML from server: " + xml);
             HasResultXMLConverter conv = new HasResultXMLConverter();
             hasResults = conv.fromXML(xml);
          }
