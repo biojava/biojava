@@ -18,6 +18,7 @@ import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureException;
 
 import org.biojava.bio.structure.StructureTools;
+import org.biojava.bio.structure.align.ce.AbstractUserArgumentProcessor;
 import org.biojava.bio.structure.io.FileParsingParameters;
 import org.biojava.bio.structure.io.LocalCacheStructureProvider;
 import org.biojava.bio.structure.io.PDBFileReader;
@@ -76,7 +77,7 @@ public class AtomCache {
 
 		path = pdbFilePath;
 
-
+		System.setProperty(AbstractUserArgumentProcessor.PDB_DIR,path);
 		//this.cache = cache;
 		this.isSplit = isSplit;
 		
@@ -118,6 +119,7 @@ public class AtomCache {
 	 * @param path to a directory
 	 */
 	public void setPath(String path) {
+		System.setProperty(AbstractUserArgumentProcessor.PDB_DIR,path);
 		this.path = path;
 	}
 
