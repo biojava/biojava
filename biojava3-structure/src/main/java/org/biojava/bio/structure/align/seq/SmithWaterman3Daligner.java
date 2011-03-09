@@ -25,16 +25,14 @@ import org.biojava3.core.sequence.ProteinSequence;
 import org.biojava3.core.sequence.compound.AminoAcidCompound;
 import org.biojava3.core.sequence.compound.AminoAcidCompoundSet;
 import org.biojava3.core.sequence.template.Compound;
-import org.biojava3.core.sequence.template.Sequence;
 
 
 /** provides a 3D superimposition based on the sequence alignment
  * 
  * @author Andreas Prlic
- * @param <S>
  *
  */
-public class SmithWaterman3Daligner<S> extends AbstractStructureAlignment implements StructureAlignment {
+public class SmithWaterman3Daligner extends AbstractStructureAlignment implements StructureAlignment {
 
 	public static final String algorithmName = "Smith-Waterman superposition";
 
@@ -108,7 +106,7 @@ public class SmithWaterman3Daligner<S> extends AbstractStructureAlignment implem
 			penalty.setOpenPenalty(params.getGapOpen());
 			penalty.setExtensionPenalty(params.getGapExtend());
 			
-			PairwiseSequenceAligner smithWaterman =
+			PairwiseSequenceAligner<ProteinSequence, AminoAcidCompound> smithWaterman =
 				Alignments.getPairwiseAligner(s1, s2, PairwiseSequenceAlignerType.LOCAL, penalty, matrix);
 
 			SequencePair<ProteinSequence, AminoAcidCompound> pair = smithWaterman.getPair();
@@ -127,23 +125,23 @@ public class SmithWaterman3Daligner<S> extends AbstractStructureAlignment implem
 
 	/**
 	 * Converts a sequence alignment into a structural alignment
-	 * @param aligner The sequence aligner
+	 * @param smithWaterman The sequence aligner
 	 * @param ca1 CA atoms from the query sequence
 	 * @param ca2 CA atoms from the target sequence
-	 * @param aligner pairwise Sequence aligner
+	 * @param smithWaterman pairwise Sequence aligner
 	 * @param aligPair The sequence alignment calculated by aligner
 	 * @return an AFPChain encapsulating the alignment in aligPair
 	 * @throws StructureException
 	 */
 	private AFPChain convert(Atom[] ca1, Atom[] ca2,  SequencePair<ProteinSequence, 
-			AminoAcidCompound> pair, PairwiseSequenceAligner< Sequence<Compound>,  Compound> aligner) throws StructureException {
+			AminoAcidCompound> pair, PairwiseSequenceAligner<ProteinSequence, AminoAcidCompound> smithWaterman) throws StructureException {
 		AFPChain afpChain = new AFPChain();
 		int ca1Length = ca1.length;
 		int ca2Length = ca2.length;		
 
 		//System.out.println(aligner.getScore());
 
-		afpChain.setAlignScore(aligner.getScore());
+		afpChain.setAlignScore(smithWaterman.getScore());
 		afpChain.setCa1Length(ca1Length);
 		afpChain.setCa2Length(ca2Length);
 

@@ -5,10 +5,12 @@ import java.io.IOException;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.TreeSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.Iterator;
 
 import org.biojava.bio.structure.Atom;
 
@@ -362,7 +364,11 @@ public class AtomCache {
 							pdbID += "."+scopMatch.group(2);
 						}
 						// Fetch the structure by pdb id
-						return getStructure(pdbID);
+						Structure struct = getStructure(pdbID);
+						if(struct != null) {
+							System.err.println("Trying chain "+pdbID);
+						}
+						return struct;
 					}
 				}
 									
@@ -479,7 +485,8 @@ public class AtomCache {
 	 * @throws StructureException
 	 */
 	private ScopDomain guessScopDomain(String name) throws IOException, StructureException {
-
+		List<ScopDomain> matches = new LinkedList<ScopDomain>();
+		
 		// Try exact match first
 		ScopDomain domain = getScopDomain(name);
 		if ( domain != null){
@@ -507,16 +514,28 @@ public class AtomCache {
 							potMatch.group(2).equals("_") || potMatch.group(2).equals(".") ) {
 						if( domainID.equals(potMatch.group(3)) || domainID.equals("_") || potMatch.group(3).equals("_") ) {
 							// Match, or near match
-							System.err.println("Trying domain "+potentialSCOP.getScopId());
-							return potentialSCOP;
+							matches.add(potentialSCOP);
 						}
 					}
 				}
 			}
 		}
 
-		// Give up.
-		return null;
+		Iterator<ScopDomain> match = matches.iterator();
+		if( match.hasNext() ) {
+			ScopDomain bestMatch = match.next();
+			System.err.print("Trying domain "+bestMatch.getScopId()+".");
+			if( match.hasNext() ) {
+				System.err.print(" Other possibilities: ");
+				while(match.hasNext()) {
+					System.err.print(match.next().getScopId() + " ");
+				}
+			}
+			System.err.println();
+			return bestMatch;
+		} else {
+			return null;
+		}
 	}
 
 	private  boolean checkLoading(String name) {

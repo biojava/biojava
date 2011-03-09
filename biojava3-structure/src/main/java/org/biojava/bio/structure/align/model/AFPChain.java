@@ -1029,6 +1029,9 @@ public class AFPChain implements Serializable, Cloneable
 	}
 
 
+	/**
+	 * @see #getOptLength(), the number of aligned residues in the final alignment.
+	 */
 	public int getAlnLength()
 	{
 		return alnLength;
