@@ -19,7 +19,9 @@ import org.biojava.bio.structure.StructureException;
 
 import org.biojava.bio.structure.StructureTools;
 import org.biojava.bio.structure.io.FileParsingParameters;
+import org.biojava.bio.structure.io.LocalCacheStructureProvider;
 import org.biojava.bio.structure.io.PDBFileReader;
+import org.biojava.bio.structure.io.StructureProvider;
 import org.biojava.bio.structure.scop.ScopDomain;
 import org.biojava.bio.structure.scop.ScopInstallation;
 import org.biojava3.core.util.InputStreamProvider;
@@ -556,6 +558,18 @@ public class AtomCache {
 		this.params = params;
 	}
 
+	
+	/** Loads the biological unit
+	 * 
+	 * @param pdbId the PDB ID
+	 * @return a structure object
+	 * @throws IOException  
+	 * @throws StructureException 
+	 */
+	public Structure getBiologicalUnit(String pdbId) throws StructureException, IOException{
+		StructureProvider provider = new LocalCacheStructureProvider();
+		return provider.getBiologicalUnit(pdbId);
+	}
 
 
 
