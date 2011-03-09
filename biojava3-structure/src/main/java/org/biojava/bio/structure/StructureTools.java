@@ -209,7 +209,7 @@ public class StructureTools {
 
 
 	/** Returns an array of the requested Atoms from the Structure object. Iterates over all groups
-	 * and checks if the requested atoms are in this group, no matter if this is a AminoAcid or Hetatom group.
+	 * and checks if the requested atoms are in this group, no matter if this is a  {@link AminoAcid} or {@link HetatomImpl} group.
 	 * For structures with more than one model, only model 0 will be used.
 	 *
 	 * @param s the structure to get the atoms from
@@ -222,6 +222,38 @@ public class StructureTools {
 
 		List<Atom> atoms = new ArrayList<Atom>();
 
+		extractCAatoms(atomNames, chains, atoms);
+		return (Atom[]) atoms.toArray(new Atom[atoms.size()]);
+
+	}
+	
+	/** Returns an array of the requested Atoms from the Structure object. 
+	 * In contrast to {@link #getAtomArray(Structure, String[])} this method iterates over all chains.
+	 * Iterates over all chains and groups
+	 * and checks if the requested atoms are in this group, no matter if this is a {@link AminoAcid} or {@link HetatomImpl} group.
+	 * For structures with more than one model, only model 0 will be used.
+	 *
+	 * @param s the structure to get the atoms from
+	 *
+	 * @param atomNames  contains the atom names to be used.
+	 * @return an Atom[] array
+	 */
+	public static final Atom[] getAtomArrayAllModels(Structure s, String[] atomNames){
+		
+		List<Atom> atoms = new ArrayList<Atom>();
+
+		for (int i =0 ; i < s.nrModels(); i++ ) {
+			List<Chain> chains = s.getModel(i);
+			extractCAatoms(atomNames, chains, atoms);
+		}
+		return (Atom[]) atoms.toArray(new Atom[atoms.size()]);
+
+	}
+
+
+
+	private static void extractCAatoms(String[] atomNames, List<Chain> chains,
+			List<Atom> atoms) {
 		for ( Chain c : chains) {
 			
 			for ( Group g : c.getAtomGroups()) {
@@ -252,8 +284,6 @@ public class StructureTools {
 
 			}
 		}
-		return (Atom[]) atoms.toArray(new Atom[atoms.size()]);
-
 	}
 
 	/** Returns an array of the requested Atoms from the Structure object. Iterates over all groups
