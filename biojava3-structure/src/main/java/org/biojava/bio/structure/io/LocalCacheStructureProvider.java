@@ -81,7 +81,10 @@ public class LocalCacheStructureProvider implements StructureProvider{
 		return reader;
 	}
 
-	/** returns the first available biological unit for the PDB ID
+	/** Returns the first available biological unit for the PDB ID.
+	 * Note: the biological units are represented using multiple models.
+	 * You need to work with all models to get the full set of atoms.
+	 * 
 	 * @throws IOException 
 	 * 
 	 */
@@ -118,9 +121,13 @@ public class LocalCacheStructureProvider implements StructureProvider{
 	
 	
 	
-
+	/** Download the biological unit file
+	 * 
+	 * @param pdbId the PDB ID
+	 * @param localFile where to store the file locally
+	 */
 	private void downloadBiolUnit(String pdbId, File localFile){
-		String u = "http://www2.rcsb.org/pdb/files/%s.pdb1.gz";
+		String u = "http://www.rcsb.org/pdb/files/%s.pdb1.gz";
 		
 		String ur = String.format(u,pdbId);
 		
@@ -161,13 +168,11 @@ public class LocalCacheStructureProvider implements StructureProvider{
 	}
 	
 	public void setFileParsingParameters(FileParsingParameters params) {
-		// TODO Auto-generated method stub
-		
+		this.params = params;
 	}
 
 	public FileParsingParameters getFileParsingParameters() {
-		// TODO Auto-generated method stub
-		return null;
+		return params;
 	}
 
 	
