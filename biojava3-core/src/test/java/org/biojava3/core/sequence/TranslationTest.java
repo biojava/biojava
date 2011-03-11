@@ -91,6 +91,21 @@ public class TranslationTest {
         assertThat("Initator methionine wrong", initMet.toString(), is("M"));
     }
 
+  @Test
+    public void translateN() {
+        TranscriptionEngine.Builder b = new TranscriptionEngine.Builder();
+        b.translateNCodons(true).initMet(true);
+        TranscriptionEngine e = b.build();
+        DNASequence dna = new DNASequence("ATN");
+        RNASequence rna = dna.getRNASequence(e);
+        ProteinSequence protein = rna.getProteinSequence(e);
+        assertThat("Ambiguous translation problem", protein.toString(), is("X"));
+        DNASequence dna2 = new DNASequence("GTGGTNTAA");
+        RNASequence rna2 = dna2.getRNASequence(e);
+        ProteinSequence protein2 = rna2.getProteinSequence(e);
+        assertThat("Ambiguous translation problem", protein2.toString(), is("VX"));
+    }
+
     @SuppressWarnings("serial")
     @Test
     public void multiFrameTranslation() {

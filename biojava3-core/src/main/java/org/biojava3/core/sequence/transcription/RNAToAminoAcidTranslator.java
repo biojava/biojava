@@ -85,7 +85,6 @@ public class RNAToAminoAcidTranslator extends AbstractCompoundTranslator<Nucleot
             codonL.add(codon);
             
         }
-
         unknownAminoAcidCompound = aminoAcids.getCompoundForString("X");
     }
 
@@ -105,32 +104,32 @@ public class RNAToAminoAcidTranslator extends AbstractCompoundTranslator<Nucleot
             new WindowedSequence<NucleotideCompound>(originalSequence, 3);
                 
         for (SequenceView<NucleotideCompound> element : iter) {
-            AminoAcidCompound aminoAcid;
+            AminoAcidCompound aminoAcid = null;
 
             int i =1;
             Table.CaseInsensitiveTriplet triplet = new Table.CaseInsensitiveTriplet(
               element.getCompoundAt(i++), element.getCompoundAt(i++), element.getCompoundAt(i++));
 
-            Codon target;
+            Codon target = null;
 
             int arrayIndex = triplet.intValue();
             //So long as we're within range then access
             if(arrayIndex > -1 && arrayIndex < codonArray.length) {
                 target = codonArray[arrayIndex];
-                aminoAcid = target.getAminoAcid();
+                if (target != null) {
+                    aminoAcid = target.getAminoAcid();
+                }
             }
             //Otherwise we have to use the Map
             else {
                 target = quickLookup.get(triplet);
                 aminoAcid = target.getAminoAcid();
             }
-            
             if(aminoAcid == null && translateNCodons()) {
                 aminoAcid = unknownAminoAcidCompound;
             }
             addCompoundsToList(Arrays.asList(aminoAcid), workingList);
         }
-
         postProcessCompoundLists(workingList);
 
         return workingListToSequences(workingList);
@@ -157,11 +156,13 @@ public class RNAToAminoAcidTranslator extends AbstractCompoundTranslator<Nucleot
         AminoAcidCompound initMet = getToCompoundSet().getCompoundForString("M");
         AminoAcidCompound start = sequence.get(0);
         boolean isStart = false;
-        for (Codon c : aminoAcidToCodon.get(start)) {
-            if (c.isStart()) {
-                isStart = true;
-                break;
-            }
+        if (aminoAcidToCodon.containsKey(start)) {
+          for (Codon c : aminoAcidToCodon.get(start)) {
+              if (c.isStart()) {
+                  isStart = true;
+                  break;
+              }
+          }
         }
 
         if (isStart) {
@@ -176,11 +177,13 @@ public class RNAToAminoAcidTranslator extends AbstractCompoundTranslator<Nucleot
     protected void trimStop(List<AminoAcidCompound> sequence) {
         AminoAcidCompound stop = sequence.get(sequence.size() - 1);
         boolean isStop = false;
-        for (Codon c : aminoAcidToCodon.get(stop)) {
-            if (c.isStop()) {
-                isStop = true;
-                break;
-            }
+        if (aminoAcidToCodon.containsKey(stop)) {
+          for (Codon c : aminoAcidToCodon.get(stop)) {
+              if (c.isStop()) {
+                  isStop = true;
+                  break;
+              }
+          }
         }
 
         if (isStop) {
