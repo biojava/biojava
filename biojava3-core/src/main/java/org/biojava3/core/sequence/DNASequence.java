@@ -114,7 +114,7 @@ public class DNASequence extends AbstractSequence<NucleotideCompound> {
      * @return
      */
     public RNASequence getRNASequence(Frame frame) {
-      return getRNASequence(TranscriptionEngine.getDefault(), Frame.getDefaultFrame());
+      return getRNASequence(TranscriptionEngine.getDefault(), frame);
     }
 
     public RNASequence getRNASequence(TranscriptionEngine engine, Frame frame) {

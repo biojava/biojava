@@ -21,6 +21,7 @@ import org.biojava3.core.sequence.template.CompoundSet;
 import org.biojava3.core.sequence.template.ProxySequenceReader;
 import org.biojava3.core.sequence.template.SequenceMixin;
 import org.biojava3.core.sequence.template.SequenceView;
+import org.biojava3.core.sequence.transcription.Frame;
 import org.biojava3.core.sequence.views.ComplementSequenceView;
 import org.biojava3.core.sequence.views.ReversedSequenceView;
 import org.junit.Test;
@@ -75,6 +76,8 @@ public class DNATest {
     public void translateToRna() {
         String s = getSeq("ATGGCGGCGCTGAGCGGT").getRNASequence().getSequenceAsString();
         assertThat("RNA as expected", s, is("AUGGCGGCGCUGAGCGGU"));
+        String s2 = getSeq("ATGGCGGCGCTGAGCGGT").getRNASequence(Frame.TWO).getSequenceAsString();
+        assertThat("RNA as expected", s2, is("UGGCGGCGCUGAGCGGU"));
     }
 
     @Test
