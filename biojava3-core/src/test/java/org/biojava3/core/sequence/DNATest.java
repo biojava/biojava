@@ -9,11 +9,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import junit.framework.Assert;
 
 import org.biojava3.core.exceptions.CompoundNotFoundError;
 import org.biojava3.core.sequence.compound.AmbiguityDNACompoundSet;
 import org.biojava3.core.sequence.compound.DNACompoundSet;
 import org.biojava3.core.sequence.compound.NucleotideCompound;
+import org.biojava3.core.sequence.storage.BitSequenceReader;
 import org.biojava3.core.sequence.storage.FourBitSequenceReader;
 import org.biojava3.core.sequence.storage.SingleCompoundSequenceReader;
 import org.biojava3.core.sequence.storage.TwoBitSequenceReader;
@@ -243,6 +245,22 @@ public class DNATest {
         assertThat("Asserting second k-mer", l.get(2).getSequenceAsString(), is("GT"));
         assertThat("Asserting second k-mer", l.get(3).getSequenceAsString(), is("TT"));
     }
+
+    @Test
+    public void sequenceEquality() {
+        DNASequence d = getSeq("ATGC");
+        assertTrue("Asserting sequences are identical", SequenceMixin.sequenceEquality(d, d));
+        Assert.assertFalse("Sequence identical but case different", SequenceMixin.sequenceEquality(d, getSeq("ATGc")));
+        assertTrue("Asserting sequences are identical ignoring case", SequenceMixin.sequenceEqualityIgnoreCase(d, d));
+        assertTrue("Asserting sequences are identical ignoring case & case different", SequenceMixin.sequenceEqualityIgnoreCase(d, getSeq("aTgC")));
+        Assert.assertFalse("Sequence lengths differ", SequenceMixin.sequenceEquality(d, getSeq("ATG")));
+
+        DNASequence bsr = new DNASequence(new TwoBitSequenceReader<NucleotideCompound>("ATGC", DNACompoundSet.getDNACompoundSet()));
+        DNASequence bsrCI = new DNASequence(new TwoBitSequenceReader<NucleotideCompound>("ATGc", DNACompoundSet.getDNACompoundSet()));
+
+        assertTrue("Asserting sequences are identical; backing stores differ", SequenceMixin.sequenceEquality(d, bsr));
+        assertTrue("Asserting sequences are identical ignoring case; backing stores differ", SequenceMixin.sequenceEqualityIgnoreCase(d, bsrCI));
+    }   
 
 //  @Test
 //  public void randomTwoBit() throws Exception {

@@ -79,33 +79,37 @@ public abstract class AbstractCompound implements Compound {
     this.molecularWeight = molecularWeight;
   }
 
+  @Override
   public String toString() {
     return base;
   }
 
-//  public boolean equals(Object obj) {
-//    if (obj == null) {
-//      return false;
-//    }
-//    if (!(obj instanceof NucleotideCompound)) {
-//      return false;
-//    }
-//    NucleotideCompound them = (NucleotideCompound) obj;
-//    return this.base.equals(them.base);
-//  }
+  @Override
+  public boolean equals(Object obj) {
+    if (obj == null) {
+      return false;
+    }
+    if (!(obj instanceof AbstractCompound)) {
+      return false;
+    }
+    AbstractCompound them = (AbstractCompound) obj;
+    return this.base.equals(them.base);
+  }
 
-//  public int hashCode() {
-//    return this.base.hashCode();
-//  }
+  @Override
+  public int hashCode() {
+    return this.base.hashCode();
+  }
 
-//  public boolean equalsIgnoreCase(Compound compound) {
-//    if (compound == null) {
-//      return false;
-//    }
-//    if (!(compound instanceof NucleotideCompound)) {
-//      return false;
-//    }
-//    NucleotideCompound them = (NucleotideCompound) compound;
-//    return this.base.toString().equalsIgnoreCase(them.base.toString());
-//  }
+  @Override
+  public boolean equalsIgnoreCase(Compound compound) {
+    if (compound == null) {
+      return false;
+    }
+    if (!(compound instanceof AbstractCompound)) {
+      return false;
+    }
+    AbstractCompound them = (AbstractCompound) compound;
+    return this.base.toString().equalsIgnoreCase(them.base.toString());
+  }
 }

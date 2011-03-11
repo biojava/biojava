@@ -9,6 +9,8 @@ import org.biojava3.core.sequence.template.ProxySequenceReader;
 import org.biojava3.core.sequence.template.SequenceMixin;
 import org.biojava3.core.sequence.template.SequenceProxyView;
 import org.biojava3.core.sequence.template.SequenceView;
+import org.biojava3.core.util.Equals;
+import org.biojava3.core.util.Hashcoder;
 
 /**
  * An implementation of the SequenceReader interface which for every
@@ -156,5 +158,26 @@ public class SingleCompoundSequenceReader<C extends Compound> implements ProxySe
     @Override
     public SequenceView<C> getInverse() {
         return SequenceMixin.inverse(this);
+    }
+
+    @Override
+    public int hashCode() {
+        int s = Hashcoder.SEED;
+        s = Hashcoder.hash(s, compound);
+        s = Hashcoder.hash(s, length);
+        s = Hashcoder.hash(s, compoundSet);
+        return s;
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public boolean equals(Object o) {
+        if(Equals.classEqual(this, o)) {
+            SingleCompoundSequenceReader<C> that = (SingleCompoundSequenceReader<C>)o;
+            return  Equals.equal(compound, that.compound) &&
+                    Equals.equal(compoundSet, that.compoundSet) &&
+                    Equals.equal(length, that.length);
+        }
+        return false;
     }
 }

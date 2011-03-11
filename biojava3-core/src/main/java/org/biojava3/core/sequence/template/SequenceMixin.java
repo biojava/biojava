@@ -328,6 +328,61 @@ public class SequenceMixin {
     }
 
     /**
+     * A case-insensitive manner of comparing two sequence objects together.
+     * We will throw out any compounds which fail to match on their sequence
+     * length & compound sets used. The code will also bail out the moment
+     * we find something is wrong with a Sequence. Cost to run is linear to
+     * the length of the Sequence.
+     *
+     * @param <C> The type of compound
+     * @param source Source sequence to assess
+     * @param target Target sequence to assess
+     * @return Boolean indicating if the sequences matched ignoring case
+     */
+    public static <C extends Compound> boolean sequenceEqualityIgnoreCase(Sequence<C> source, Sequence<C> target) {
+        return baseSequenceEquality(source, target, true);
+    }
+
+    /**
+     * A case-sensitive manner of comparing two sequence objects together.
+     * We will throw out any compounds which fail to match on their sequence
+     * length & compound sets used. The code will also bail out the moment
+     * we find something is wrong with a Sequence. Cost to run is linear to
+     * the length of the Sequence.
+     *
+     * @param <C> The type of compound
+     * @param source Source sequence to assess
+     * @param target Target sequence to assess
+     * @return Boolean indicating if the sequences matched
+     */
+    public static <C extends Compound> boolean sequenceEquality(Sequence<C> source, Sequence<C> target) {
+        return baseSequenceEquality(source, target, false);
+    }
+
+    private static <C extends Compound> boolean baseSequenceEquality(Sequence<C> source, Sequence<C> target, boolean ignoreCase) {
+        boolean equal = true;
+        if(
+                source.getLength() == target.getLength() &&
+                source.getCompoundSet().equals(target.getCompoundSet())) {
+            Iterator<C> sIter = source.iterator();
+            Iterator<C> tIter = target.iterator();
+            while(sIter.hasNext()) {
+                C s = sIter.next();
+                C t = tIter.next();
+                boolean cEqual = (ignoreCase) ? s.equalsIgnoreCase(t) : s.equals(t);
+                if(!cEqual) {
+                    equal = false;
+                    break;
+                }
+            }
+        }
+        else {
+            equal = false;
+        }
+        return equal;
+    }
+
+    /**
      * A basic sequence iterator which iterates over the given Sequence by
      * biological index. This assumes your sequence supports random access
      * and performs well when doing these operations.
