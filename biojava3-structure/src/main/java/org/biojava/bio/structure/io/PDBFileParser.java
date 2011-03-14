@@ -2633,7 +2633,12 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 
 		linkChains2Compound(structure);
 		//associate the temporary Groups in the siteMap to the ones
-		linkSitesToGroups(); // will work now that setSites is called
+		try { 
+			linkSitesToGroups(); // will work now that setSites is called
+		} catch (Exception e){
+			System.err.println("Error while linking SITE records to groups. ..");
+			e.printStackTrace();
+		}
 	}
 
 
@@ -2780,6 +2785,8 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 	 */
 	private void linkSitesToGroups() {
 
+		//System.out.println("LINK SITES TO GROUPS:" + siteToResidueMap.keySet().size());
+		
 		//link the map of siteIds : <ResidueNumber> with the sites by using ResidueNumber to get the correct group back.
 		//the return list
 		List<Site> sites = null;
@@ -2824,8 +2831,12 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 				currentSite.getGroups().add(linkedGroup);
 			}
 		}
+		
+		//System.out.println("SITEMAP: " + siteMap);
+		
 		sites = new ArrayList<Site>(siteMap.values());
 		structure.setSites(sites);
+		//System.out.println("STRUCTURE SITES: " + structure.getSites().size());
 		//            for (Site site : structure.getSites()) {
 		//                System.out.println(site);
 		//            }
