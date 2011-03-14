@@ -2532,7 +2532,7 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 		} catch (Exception e) {
 			System.err.println(line);
 			e.printStackTrace();
-			throw new IOException ("Error parsing PDB file " + structure.getPDBCode());
+			throw new IOException ("Error parsing PDB file " + structure.getPDBCode() + " at line: " + line);
 		}
 
 		if ( params.isParseSecStruc())
