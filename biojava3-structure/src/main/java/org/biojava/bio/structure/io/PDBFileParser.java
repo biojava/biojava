@@ -2789,6 +2789,13 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 		
 		//link the map of siteIds : <ResidueNumber> with the sites by using ResidueNumber to get the correct group back.
 		//the return list
+		
+		if ( siteMap == null || siteToResidueMap == null){
+			logger.warning("Sites can not be linked to residues!");
+			
+			return;
+		}
+		
 		List<Site> sites = null;
 		//check that there are chains with which to associate the groups
 		if (structure.getChains().isEmpty()) {
