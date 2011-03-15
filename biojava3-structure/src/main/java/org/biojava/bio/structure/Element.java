@@ -188,8 +188,14 @@ public enum Element implements Serializable {
 //        hillOrderIndex[Element.H.getHillOrder()] = Element.H; // special case for hydrogen
 //    }
 
-    private static Map<String,Element> allElements = new HashMap<String,Element>();
+    private static final Map<String,Element> allElements ;
    
+    static {
+    	allElements = new HashMap<String,Element>();
+    	for (Element e : Element.values()){
+    		allElements.put(e.toString().toLowerCase(), e);
+    	}
+    }
     private Element(int atomicNumber,
             int period,
             int hillOrder,
@@ -222,11 +228,7 @@ public enum Element implements Serializable {
         this.paulingElectronegativity = paulingElectronegativity;
         this.elementType = elementType;
         
-        addElement(this.toString(),this);
-    }
-
-    private static void addElement(String name, Element e){
-    	allElements.put(name.toLowerCase(), e);
+       
     }
     /**
      * Returns the atomic number of this Element.
