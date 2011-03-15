@@ -23,6 +23,8 @@
 package org.biojava.bio.structure;
 
 import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Element is an enumeration of the elements of the periodic table. In addition,
@@ -175,17 +177,19 @@ public enum Element implements Serializable {
     private float paulingElectronegativity;
     // Element type: http://www.ptable.com/
     private ElementType elementType;
-    private static final Element[] hillOrderIndex;
+    //private static final Element[] hillOrderIndex;
     
+//
+//    static {
+//        hillOrderIndex = new Element[Element.values().length + 1];
+//        for (Element e : Element.values()) {
+//            hillOrderIndex[e.getHillOrder()] = e;
+//        }
+//        hillOrderIndex[Element.H.getHillOrder()] = Element.H; // special case for hydrogen
+//    }
 
-    static {
-        hillOrderIndex = new Element[Element.values().length + 1];
-        for (Element e : Element.values()) {
-            hillOrderIndex[e.getHillOrder()] = e;
-        }
-        hillOrderIndex[Element.H.getHillOrder()] = Element.H; // special case for hydrogen
-    }
-
+    private static Map<String,Element> allElements = new HashMap<String,Element>();
+   
     private Element(int atomicNumber,
             int period,
             int hillOrder,
@@ -217,8 +221,13 @@ public enum Element implements Serializable {
         this.oxidationState = oxidationState;
         this.paulingElectronegativity = paulingElectronegativity;
         this.elementType = elementType;
+        
+        addElement(this.toString(),this);
     }
 
+    private static void addElement(String name, Element e){
+    	allElements.put(name.toLowerCase(), e);
+    }
     /**
      * Returns the atomic number of this Element.
      * @return the atomic number of this Element.
@@ -254,7 +263,9 @@ public enum Element implements Serializable {
      * @return the Hill Order of this Element.
      */
     public int getHillOrder() {
-        return hillOrder;
+    	throw new RuntimeException("Not implemented, yet!");
+    	//throw new NotImplementedYetException();
+        //return hillOrder;
     }
 
     /**
@@ -361,12 +372,10 @@ public enum Element implements Serializable {
      * @return the Element specified by the element symbol.
      */
     public static Element valueOfIgnoreCase(String elementSymbol) throws IllegalArgumentException {
-        //final Element[] list = Element.	();
-        for (Element element : hillOrderIndex) {
-            if (element.toString().equalsIgnoreCase(elementSymbol)) {
-                return element;
-            }
-        }
+
+    	Element e = allElements.get(elementSymbol.toLowerCase());
+        if ( e != null)
+        	return e;
         throw new IllegalArgumentException("Invalid element symbol: " + elementSymbol);
     }
 
@@ -443,6 +452,7 @@ public enum Element implements Serializable {
      * @see #getHillOrder()
      */
     public static Element getElementFromHillIndex(int index) {
-        return hillOrderIndex[index];
+    	throw new RuntimeException("Not implemented, yet!");
+        //return hillOrderIndex[index];
     }
 }
