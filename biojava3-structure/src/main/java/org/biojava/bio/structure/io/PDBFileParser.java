@@ -2831,7 +2831,9 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 					//TODO: implement findGroup(ResidueNumber resNum)
 					linkedGroup = structure.findGroup(chain, pdbCode);
 				} catch (StructureException ex) {
-					Logger.getLogger(PDBFileParser.class.getName()).log(Level.SEVERE, null, ex);
+					Logger.getLogger(PDBFileParser.class.getName()).log(Level.WARNING, "Can't find group in chain in order to link up SITE records", ex);
+					//Logger.getLogger(PDBFileParser.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
+					continue;
 				}
 
 				//                    System.out.println("Adding group: " + linkedGroup.getSeqNum() + " to site " + site.getSiteID());
