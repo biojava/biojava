@@ -272,9 +272,15 @@ public class ProteinModificationIdentifier {
 			addModificationGroups(potentialModifications, ress, ligs, mapCompGroups);
 		}
 		
-		if (residues.isEmpty())
-			System.err.println("WARNING: no amino acids found. Did you parse PDB file with alignSEQRES records?");
-		
+		if (residues.isEmpty()) {
+			String pdbId = "?";
+			if ( chains.size() > 0) {
+				Structure struc = chains.get(0).getParent();
+				if ( struc != null)
+					pdbId = struc.getPDBCode(); 
+			}
+			System.err.println("WARNING: no amino acids found for "+ pdbId + ". Either you did not parse the PDB file with alignSEQRES records, or this record does not contain any amino acids.");
+		}
 		List<ModifiedCompound> modComps = new ArrayList<ModifiedCompound>();
 		
 		for (ProteinModification mod : potentialModifications) {
@@ -287,28 +293,12 @@ public class ProteinModificationIdentifier {
 			
 			int sizeComps = components.size();
 			if (sizeComps==1) {
-				// modified residue
-				// TODO: is this the correct logic for CROSS_LINK_1?
-				Set<Group> modifiedResidues = mapCompGroups.get(components.get(0));
-				if (modifiedResidues != null) {
-					for (Group residue : modifiedResidues) {
-						StructureGroup strucGroup = StructureUtil.getStructureGroup(residue, ComponentType.AMINOACID);
-						ModifiedCompound modRes = new ModifiedCompoundImpl(mod, strucGroup);
-						modComps.add(modRes);
-					}
-				}
+				
+				processCrosslink1(mapCompGroups, modComps, mod, components);
+			
 			} else {
-				// for multiple components
 				
-				// find linkages first
-				List<List<Atom[]>> matchedAtomsOfLinkages =
-						getMatchedAtomsOfLinkages(condition, mapCompGroups);
-				
-				if (matchedAtomsOfLinkages.size() != condition.getLinkages().size()) {
-					continue;
-				}
-				
-				assembleLinkages(matchedAtomsOfLinkages, mod, modComps);
+				processMultiCrosslink(mapCompGroups, modComps, mod, condition);
 			}
 		}
 
@@ -328,6 +318,39 @@ public class ProteinModificationIdentifier {
 		if (recordUnidentifiableModifiedCompounds) {
 			recordUnidentifiableAtomLinkages(modComps, residues, ligands);
 			recordUnidentifiableModifiedResidues(modComps, residues);
+		}
+	}
+
+	private void processMultiCrosslink(
+			Map<Component, Set<Group>> mapCompGroups,
+			List<ModifiedCompound> modComps, ProteinModification mod,
+			ModificationCondition condition) {
+		// for multiple components
+		
+		// find linkages first
+		List<List<Atom[]>> matchedAtomsOfLinkages =
+				getMatchedAtomsOfLinkages(condition, mapCompGroups);
+		
+		if (matchedAtomsOfLinkages.size() != condition.getLinkages().size()) {
+			return;
+		} 
+		
+		assembleLinkages(matchedAtomsOfLinkages, mod, modComps);
+		
+	}
+
+	private void processCrosslink1(Map<Component, Set<Group>> mapCompGroups,
+			List<ModifiedCompound> modComps, ProteinModification mod,
+			List<Component> components) {
+		// modified residue
+		// TODO: is this the correct logic for CROSS_LINK_1?
+		Set<Group> modifiedResidues = mapCompGroups.get(components.get(0));
+		if (modifiedResidues != null) {
+			for (Group residue : modifiedResidues) {
+				StructureGroup strucGroup = StructureUtil.getStructureGroup(residue, ComponentType.AMINOACID);
+				ModifiedCompound modRes = new ModifiedCompoundImpl(mod, strucGroup);
+				modComps.add(modRes);
+			}
 		}
 	}
 	
@@ -363,6 +386,7 @@ public class ProteinModificationIdentifier {
 				//group = chain.getGroupByPDB(numIns);
 				group = mapChainIdChain.get(num.getChainId()).getGroupByPDB(resNum);
 			} catch (StructureException e) {
+				e.printStackTrace();
 				// should not happen
 				continue;
 			}
