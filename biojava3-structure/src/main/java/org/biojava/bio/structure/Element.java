@@ -361,8 +361,8 @@ public enum Element implements Serializable {
      * @return the Element specified by the element symbol.
      */
     public static Element valueOfIgnoreCase(String elementSymbol) throws IllegalArgumentException {
-        Element[] list = Element.values();
-        for (Element element : list) {
+        //final Element[] list = Element.	();
+        for (Element element : hillOrderIndex) {
             if (element.toString().equalsIgnoreCase(elementSymbol)) {
                 return element;
             }
