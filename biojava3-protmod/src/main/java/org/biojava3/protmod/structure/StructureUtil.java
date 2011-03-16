@@ -291,9 +291,21 @@ public final class StructureUtil {
 //				residues.add(group);
 //			}
 //		}
-		List<Group> residues = new ArrayList<Group>(chain.getSeqResGroups());
-		residues.retainAll(chain.getAtomGroups());
+		
+		List<Group> residues = new ArrayList<Group>(chain.getAtomGroups());
+		residues.retainAll(chain.getSeqResGroups()); // not work because chain.getAtomGroups() may return different object from chain.getSeqResGroups()
+		
+		// add amino acids that do not alinged with the sequence residues
+		List<Group> otherGroups = new ArrayList<Group>(chain.getAtomGroups());
+		otherGroups.removeAll(chain.getSeqResGroups());
+		for (Group g : otherGroups) {
+			if (g.hasAminoAtoms()) {
+				residues.add(g);
+			}
+		}
 		
 		return residues;
+		
+//		return chain.getAtomGroups("amino");
 	}
 }
