@@ -55,13 +55,13 @@ public class JFatCatClient {
    public static void main(String[] args){
       //System.out.println(hasPrecalculatedResult("http://emmy.rcsb.org/jfatcatserver/align/", "jCE Circular Permutation", "1CDG.A", "1TIM.A"));
       AtomCache cache = new AtomCache("/tmp/", true);
-      String name1= "1CDG.A";
-      String name2= "1TIM.A";
+      String name1= "2W72.A";
+      String name2= "1D2Z.D";
       try {
          Atom[] ca1 = cache.getAtoms(name1);
          Atom[] ca2 = cache.getAtoms(name2);
          int timeout = 10000;
-         System.out.println(getAFPChainFromServer("http://emmy.rcsb.org/jfatcatserver/align/", "jCE Circular Permutation", name1, name2, ca1, ca2, timeout));
+         System.out.println(getAFPChainFromServer("http://emmy.rcsb.org/jfatcatserver/align/", FatCatRigid.algorithmName, name1, name2, ca1, ca2, timeout));
       } catch (Exception e){
          e.printStackTrace();
       }
@@ -166,8 +166,8 @@ public class JFatCatClient {
 
             //System.out.println("got XML from server: " + xml);
 
-            AFPChain newChain = AFPChainXMLParser.fromXML (xml, ca1, ca2);
-
+            AFPChain newChain = AFPChainXMLParser.fromXML (xml, name1, name2, ca1, ca2);
+        				
             return newChain;
 
          } else {
