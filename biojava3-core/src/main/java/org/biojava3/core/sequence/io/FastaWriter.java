@@ -21,6 +21,7 @@
  */
 package org.biojava3.core.sequence.io;
 
+import java.io.BufferedOutputStream;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
@@ -56,6 +57,7 @@ public class FastaWriter<S extends Sequence<?>, C extends Compound> {
  * @param headerFormat
  */
     public FastaWriter(OutputStream os, Collection<S> sequences, FastaHeaderFormatInterface<S, C> headerFormat) {
+
         this.os = os;
         this.sequences = sequences;
         this.headerFormat = headerFormat;
@@ -85,14 +87,20 @@ public class FastaWriter<S extends Sequence<?>, C extends Compound> {
     }
 
     public void process() throws Exception {
-
-        
+        boolean closeit = false;
+        BufferedOutputStream bo;
+        if(os instanceof BufferedOutputStream)
+            bo = (BufferedOutputStream)os;
+        else{
+            bo = new BufferedOutputStream(os);
+            closeit = true;
+        }
 
         for (S sequence : sequences) {
             String header = headerFormat.getHeader(sequence);
-            os.write('>');
-            os.write(header.getBytes());
-            os.write(lineSep);
+            bo.write('>');
+            bo.write(header.getBytes());
+            bo.write(lineSep);
 
             int compoundCount = 0;
             String seq = "";
@@ -100,36 +108,31 @@ public class FastaWriter<S extends Sequence<?>, C extends Compound> {
             seq = sequence.getSequenceAsString();
 
             for (int i = 0; i < seq.length(); i++) {
-                os.write(seq.charAt(i));
+                bo.write(seq.charAt(i));
                 compoundCount++;
                 if (compoundCount == lineLength) {
-                    os.write(lineSep);
+                    bo.write(lineSep);
                     compoundCount = 0;
                 }
 
             }
-//          for(Compound c: sequence) {
-//            os.write(c.getShortName().getBytes());
-//            compoundCount++;
-//            if(compoundCount == lineLength) {
-//              os.write(lineSep);
-//              compoundCount = 0;
-//            }
 
-//          }
 
             //If we had sequence which was a reciprocal of line length
             //then don't write the line terminator as this has already written
             //it
             if ((sequence.getLength() % getLineLength()) != 0) {
-                os.write(lineSep);
+                bo.write(lineSep);
             }
+        }
+        if(closeit){
+            bo.close();
         }
     }
 
     public static void main(String[] args) {
         try {
-            FileInputStream is = new FileInputStream("test.fasta");
+            FileInputStream is = new FileInputStream("/Users/Scooter/scripps/dyadic/c1-454Scaffolds.faa");
 
 
             FastaReader<ProteinSequence, AminoAcidCompound> fastaReader = new FastaReader<ProteinSequence, AminoAcidCompound>(is, new GenericFastaHeaderParser<ProteinSequence, AminoAcidCompound>(), new ProteinSequenceCreator(AminoAcidCompoundSet.getAminoAcidCompoundSet()));
@@ -137,12 +140,16 @@ public class FastaWriter<S extends Sequence<?>, C extends Compound> {
             is.close();
 
 
-            System.out.println(proteinSequences);
+          //  System.out.println(proteinSequences);
 
-            FileOutputStream fileOutputStream = new FileOutputStream("test_out.fasta");
-
+            FileOutputStream fileOutputStream = new FileOutputStream("/Users/Scooter/scripps/dyadic/c1-454Scaffolds_temp.faa");
+         //   BufferedOutputStream bo = new BufferedOutputStream(fileOutputStream);
+            long start = System.currentTimeMillis();
             FastaWriter<ProteinSequence, AminoAcidCompound> fastaWriter = new FastaWriter<ProteinSequence, AminoAcidCompound>(fileOutputStream, proteinSequences.values(), new GenericFastaHeaderFormat<ProteinSequence, AminoAcidCompound>());
             fastaWriter.process();
+        //    bo.close();
+            long end = System.currentTimeMillis();
+            System.out.println("Took " + (end - start) + " seconds");
             fileOutputStream.close();
 
 
