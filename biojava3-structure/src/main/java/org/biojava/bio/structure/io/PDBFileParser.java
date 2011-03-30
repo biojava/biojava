@@ -251,7 +251,9 @@ public class PDBFileParser  {
 	public static final int MAX_ATOMS = 700000; // tested with java -Xmx300M
 
 	private boolean atomOverflow;
-
+	
+	/** flag to tell parser to only read Calpha coordinates **/
+	boolean parseCAonly;
 
 	static {
 
@@ -260,7 +262,7 @@ public class PDBFileParser  {
 	}
 
 	FileParsingParameters params;
-
+	
 	public PDBFileParser() {
 		params = new FileParsingParameters();
 
@@ -282,6 +284,7 @@ public class PDBFileParser  {
 		dateFormat = new SimpleDateFormat("dd-MMM-yy", java.util.Locale.ENGLISH);
 		atomCount = 0;
 		atomOverflow = false;
+		parseCAonly = false;
 
 
 
@@ -1704,7 +1707,7 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 		String fullname = line.substring (12, 16);
 
 		// check for CA only if requested
-		if ( params.isParseCAOnly()){
+		if ( parseCAonly ){
 			// yes , user wants to get CA only
 			// only parse CA atoms...
 			if (! fullname.equals(" CA ")){
@@ -1850,7 +1853,7 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 	}
 
 	private void switchCAOnly(){
-		params.setParseCAOnly(true);
+		parseCAonly = true;
 
 
 		current_model = CAConverter.getCAOnly(current_model);
@@ -2419,6 +2422,9 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 		lengthCheck = -1;
 		atomCount = 0;
 		atomOverflow = false;
+		
+		parseCAonly = params.isParseCAOnly();
+		
 		String line = null;
 		try {
 
