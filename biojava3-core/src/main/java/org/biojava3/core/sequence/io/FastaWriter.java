@@ -125,9 +125,7 @@ public class FastaWriter<S extends Sequence<?>, C extends Compound> {
                 bo.write(lineSep);
             }
         }
-        if(closeit){
-            bo.close();
-        }
+        bo.flush();
     }
 
     public static void main(String[] args) {
@@ -150,6 +148,7 @@ public class FastaWriter<S extends Sequence<?>, C extends Compound> {
         //    bo.close();
             long end = System.currentTimeMillis();
             System.out.println("Took " + (end - start) + " seconds");
+            fileOutputStream.write("Test".getBytes());
             fileOutputStream.close();
 
 
