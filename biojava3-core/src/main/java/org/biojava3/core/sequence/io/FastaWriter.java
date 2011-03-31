@@ -88,19 +88,14 @@ public class FastaWriter<S extends Sequence<?>, C extends Compound> {
 
     public void process() throws Exception {
         boolean closeit = false;
-        BufferedOutputStream bo;
-        if(os instanceof BufferedOutputStream)
-            bo = (BufferedOutputStream)os;
-        else{
-            bo = new BufferedOutputStream(os);
-            closeit = true;
-        }
+       
+        
 
         for (S sequence : sequences) {
             String header = headerFormat.getHeader(sequence);
-            bo.write('>');
-            bo.write(header.getBytes());
-            bo.write(lineSep);
+            os.write('>');
+            os.write(header.getBytes());
+            os.write(lineSep);
 
             int compoundCount = 0;
             String seq = "";
@@ -108,10 +103,10 @@ public class FastaWriter<S extends Sequence<?>, C extends Compound> {
             seq = sequence.getSequenceAsString();
 
             for (int i = 0; i < seq.length(); i++) {
-                bo.write(seq.charAt(i));
+                os.write(seq.charAt(i));
                 compoundCount++;
                 if (compoundCount == lineLength) {
-                    bo.write(lineSep);
+                    os.write(lineSep);
                     compoundCount = 0;
                 }
 
@@ -122,10 +117,10 @@ public class FastaWriter<S extends Sequence<?>, C extends Compound> {
             //then don't write the line terminator as this has already written
             //it
             if ((sequence.getLength() % getLineLength()) != 0) {
-                bo.write(lineSep);
+                os.write(lineSep);
             }
         }
-        bo.flush();
+        
     }
 
     public static void main(String[] args) {
@@ -141,14 +136,15 @@ public class FastaWriter<S extends Sequence<?>, C extends Compound> {
           //  System.out.println(proteinSequences);
 
             FileOutputStream fileOutputStream = new FileOutputStream("/Users/Scooter/scripps/dyadic/c1-454Scaffolds_temp.faa");
-         //   BufferedOutputStream bo = new BufferedOutputStream(fileOutputStream);
+           
+            BufferedOutputStream bo = new BufferedOutputStream(fileOutputStream);
             long start = System.currentTimeMillis();
-            FastaWriter<ProteinSequence, AminoAcidCompound> fastaWriter = new FastaWriter<ProteinSequence, AminoAcidCompound>(fileOutputStream, proteinSequences.values(), new GenericFastaHeaderFormat<ProteinSequence, AminoAcidCompound>());
+            FastaWriter<ProteinSequence, AminoAcidCompound> fastaWriter = new FastaWriter<ProteinSequence, AminoAcidCompound>(bo, proteinSequences.values(), new GenericFastaHeaderFormat<ProteinSequence, AminoAcidCompound>());
             fastaWriter.process();
-        //    bo.close();
+            bo.close();
             long end = System.currentTimeMillis();
             System.out.println("Took " + (end - start) + " seconds");
-            fileOutputStream.write("Test".getBytes());
+         
             fileOutputStream.close();
 
 
