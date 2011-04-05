@@ -391,7 +391,7 @@ public interface Structure extends Cloneable{
      * @param modelnr  an int
      * @return a Chain object
     */
-    public Chain getChain(int pos, int modelnr);
+    public Chain getChain( int modelnr, int pos);
 
 
 
