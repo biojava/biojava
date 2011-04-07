@@ -185,13 +185,13 @@ public class CeMain extends AbstractStructureAlignment implements StructureAlign
 	 *  at most 1 AFP.
 	 * @throws StructureException 
 	 */
-	private static AFPChain filterDuplicateAFPs(AFPChain afpChain, CECalculator ceCalc, Atom[] ca1, Atom[] ca2duplicated) throws StructureException {
+	public static AFPChain filterDuplicateAFPs(AFPChain afpChain, CECalculator ceCalc, Atom[] ca1, Atom[] ca2duplicated) throws StructureException {
 		AFPChain newAFPChain = new AFPChain(afpChain);
 		newAFPChain.setAlgorithmName(afpChain.getAlgorithmName());
 		newAFPChain.setVersion(afpChain.getVersion());
 		newAFPChain.setName1(afpChain.getName1());
 		newAFPChain.setName2(afpChain.getName2());
-
+		newAFPChain.setTMScore(afpChain.getTMScore());
 		int ca2len = afpChain.getCa2Length()/2;
 
 		// Fix optimal alignment		
