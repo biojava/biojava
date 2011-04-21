@@ -56,6 +56,7 @@ public class RNAToAminoAcidTranslator extends AbstractCompoundTranslator<Nucleot
     //Cheeky lookup which uses a hashing value; key is to switch to using this all the time
     private final Codon[] codonArray = new Codon[64000];
     private final AminoAcidCompound unknownAminoAcidCompound;
+    private final AminoAcidCompound methionineAminoAcidCompound;
     private final boolean translateNCodons;
 
     public RNAToAminoAcidTranslator(
@@ -86,6 +87,7 @@ public class RNAToAminoAcidTranslator extends AbstractCompoundTranslator<Nucleot
             
         }
         unknownAminoAcidCompound = aminoAcids.getCompoundForString("X");
+        methionineAminoAcidCompound = aminoAcids.getCompoundForString("M");
     }
 
     /**
@@ -94,7 +96,7 @@ public class RNAToAminoAcidTranslator extends AbstractCompoundTranslator<Nucleot
      * are ignored according to the specification of {@link WindowedSequence}.
      */
 
-
+    @Override
     public List<Sequence<AminoAcidCompound>> createSequences(
             Sequence<NucleotideCompound> originalSequence) {
 
@@ -102,6 +104,8 @@ public class RNAToAminoAcidTranslator extends AbstractCompoundTranslator<Nucleot
         
         Iterable<SequenceView<NucleotideCompound>> iter =
             new WindowedSequence<NucleotideCompound>(originalSequence, 3);
+
+        boolean first = true;
                 
         for (SequenceView<NucleotideCompound> element : iter) {
             AminoAcidCompound aminoAcid = null;
@@ -128,7 +132,15 @@ public class RNAToAminoAcidTranslator extends AbstractCompoundTranslator<Nucleot
             if(aminoAcid == null && translateNCodons()) {
                 aminoAcid = unknownAminoAcidCompound;
             }
+
+            else {
+                if(first && initMetOnly && target.isStart()) {
+                    aminoAcid = methionineAminoAcidCompound;
+                }
+            }
+
             addCompoundsToList(Arrays.asList(aminoAcid), workingList);
+            first = false;
         }
         postProcessCompoundLists(workingList);
 
@@ -143,30 +155,9 @@ public class RNAToAminoAcidTranslator extends AbstractCompoundTranslator<Nucleot
     protected void postProcessCompoundLists(
             List<List<AminoAcidCompound>> compoundLists) {
         for (List<AminoAcidCompound> compounds : compoundLists) {
-            if (initMetOnly) {
-                initMet(compounds);
-            }
             if (trimStops) {
                 trimStop(compounds);
             }
-        }
-    }
-
-    private void initMet(List<AminoAcidCompound> sequence) {
-        AminoAcidCompound initMet = getToCompoundSet().getCompoundForString("M");
-        AminoAcidCompound start = sequence.get(0);
-        boolean isStart = false;
-        if (aminoAcidToCodon.containsKey(start)) {
-          for (Codon c : aminoAcidToCodon.get(start)) {
-              if (c.isStart()) {
-                  isStart = true;
-                  break;
-              }
-          }
-        }
-
-        if (isStart) {
-            sequence.set(0, initMet);
         }
     }
 

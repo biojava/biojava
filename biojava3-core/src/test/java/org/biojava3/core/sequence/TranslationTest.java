@@ -173,4 +173,14 @@ public class TranslationTest {
         Sequence<AminoAcidCompound> pep = e.translate(volvoxDna);
         assertThat("Ensure internal stops stay", pep.toString(), is(volvoxPep.toString()));
     }
+
+    @Test
+    public void translateInitMet() {
+        TranscriptionEngine e = TranscriptionEngine.getDefault();
+        assertThat("Leucene (CTA) is not changed to init met", e.translate(new DNASequence("CTA")).toString(), is("L"));
+        assertThat("Leucene (CTG) is changed to init met", e.translate(new DNASequence("CTG")).toString(), is("M"));
+
+        e = new TranscriptionEngine.Builder().initMet(false).build();
+        assertThat("Leucene (CTG) is not changed to init met", e.translate(new DNASequence("CTG")).toString(), is("L"));
+    }
 }
