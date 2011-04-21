@@ -145,10 +145,10 @@ public class AFPAlignmentDisplay
 	 */
 	public static void getAlign(AFPChain afpChain,Atom[] ca1,Atom[] ca2)
 	{
-	   boolean showSeq = false;
-	   getAlign(afpChain, ca1, ca2, showSeq);
+		boolean showSeq = false;
+		getAlign(afpChain, ca1, ca2, showSeq);
 	}
-	
+
 	public static void getAlign(AFPChain afpChain,Atom[] ca1,Atom[] ca2, boolean showSeq) {
 
 		char[] alnsymb = afpChain.getAlnsymb();
@@ -156,7 +156,7 @@ public class AFPAlignmentDisplay
 		char[] alnseq2 = afpChain.getAlnseq2();
 
 		int     i, j, k, p1, p2, p1b, p2b, lmax;
-		
+
 		int pro1Len = ca1.length;
 		int pro2Len = ca2.length;
 
@@ -174,11 +174,11 @@ public class AFPAlignmentDisplay
 			afpChain.setAlnsymb(alnsymb);
 		}
 
-		
-		
-//		if ( afpChain.getAlgorithmName().equals(FatCatRigid.algorithmName)){
-//			showSeq = true;
-//		}
+
+
+		//		if ( afpChain.getAlgorithmName().equals(FatCatRigid.algorithmName)){
+		//			showSeq = true;
+		//		}
 
 		int blockNum = afpChain.getBlockNum();
 
@@ -189,22 +189,22 @@ public class AFPAlignmentDisplay
 		int alnbeg2 = afpChain.getAlnbeg2();
 		int alnLength = afpChain.getAlnLength();
 		int optLength = afpChain.getOptLength();
-		
+
 		if ( optLen == null) {
-		   optLen = new int[blockNum];
-		   for (int oi =0 ; oi < blockNum ; oi++)
-		      optLen[oi] = 0;
+			optLen = new int[blockNum];
+			for (int oi =0 ; oi < blockNum ; oi++)
+				optLen[oi] = 0;
 		}
 		int     len = 0;
 		for(i = 0; i < blockNum; i ++)  {        	
 			for(j = 0; j < optLen[i]; j ++) {
 				p1 = optAln[i][0][j];
 				p2 = optAln[i][1][j];
-				
+
 				// weird, could not find a residue in the Atom array. Did something change in the underlying data?
 				if (( p1 == -1 ) || ( p2 == -1)) {
-				   System.err.println("Could not get atom on position " + j );
-				   continue;
+					System.err.println("Could not get atom on position " + j );
+					continue;
 				}
 				if(len > 0)     {
 					lmax = (p1 - p1b - 1)>(p2 - p2b - 1)?(p1 - p1b - 1):(p2 - p2b - 1);
@@ -232,12 +232,12 @@ public class AFPAlignmentDisplay
 					if ( alnseq1[len] == alnseq2[len]){
 						alnsymb[len ++] = '|';
 					} else {
-					double score = aaScore(alnseq1[len], alnseq2[len]);
-					
-					if ( score > 1)
-						alnsymb[len ++] = ':';
-					else 
-						alnsymb[len ++] = '.';
+						double score = aaScore(alnseq1[len], alnseq2[len]);
+
+						if ( score > 1)
+							alnsymb[len ++] = ':';
+						else 
+							alnsymb[len ++] = '.';
 					}
 				} else {
 					String tmpS = String.format( "%d", i + 1);
@@ -250,9 +250,9 @@ public class AFPAlignmentDisplay
 		alnLength = len;
 
 
-//		System.out.println(alnseq1);
-//		System.out.println(alnsymb);
-//		System.out.println(alnseq2);
+		//		System.out.println(alnseq1);
+		//		System.out.println(alnsymb);
+		//		System.out.println(alnseq2);
 
 		afpChain.setOptAln(optAln);
 		afpChain.setOptLen(optLen);
@@ -289,9 +289,9 @@ public class AFPAlignmentDisplay
 		int pos1 = aa1List.indexOf(a);
 		int pos2 = aa1List.indexOf(b);
 
-		
+
 		// SEC an PYL amino acids are not supported as of yet...
-		
+
 		if ( pos1 < 0) {
 			System.err.println("unknown char " + a);
 			return 0;
@@ -307,21 +307,26 @@ public class AFPAlignmentDisplay
 	public static Map<String,Double> calcIdSimilarity(char[] seq1, char[] seq2, int alnLength){
 		double identity = 0.0;
 		double similarity = 0.0;
-
-		        
-
+		
+		if ( seq1 == null || seq2 == null){
+			Map<String, Double> m = new HashMap<String, Double>();
+			m.put("similarity", 0d);
+			m.put("identity", 0d);
+			return m;
+		}
+		
 		int     i;
 
-
 		for(i = 0; i < alnLength; i ++)        {
-			if(seq1[i] == seq2[i])  {
+		
+				if(seq1[i] == seq2[i])  {
 
-				identity += 1.0;
-			}
-			else if(seq1[i] == '-' || seq1[i] == '*' || seq1[i] == '.' ||
-					seq2[i] == '-' || seq2[i] == '*' || seq2[i] == '.' )
-				continue;
-			else if(aaScore(seq1[i], seq2[i]) > 0)  similarity += 1.0;
+					identity += 1.0;
+				}
+				else if(seq1[i] == '-' || seq1[i] == '*' || seq1[i] == '.' ||
+						seq2[i] == '-' || seq2[i] == '*' || seq2[i] == '.' )
+					continue;
+				else if(aaScore(seq1[i], seq2[i]) > 0)  similarity += 1.0;		
 		}
 
 
@@ -331,20 +336,20 @@ public class AFPAlignmentDisplay
 		Map<String, Double> m = new HashMap<String, Double>();
 		m.put("similarity", similarity);
 		m.put("identity", identity);
-		
+
 		//System.out.println(m);
 		return m;
 	}
-	
-	
+
+
 	public static Structure createArtificalStructure(AFPChain afpChain, Atom[] ca1,
 			Atom[] ca2) throws Exception{
 
-		
+
 		if ( afpChain.getNrEQR() < 1){
 			return GuiWrapper.getAlignedStructure(ca1, ca2);
 		}
-		
+
 		Group[] twistedGroups = GuiWrapper.prepareGroupsForDisplay(afpChain,ca1, ca2);
 
 		List<Atom> twistedAs = new ArrayList<Atom>();
