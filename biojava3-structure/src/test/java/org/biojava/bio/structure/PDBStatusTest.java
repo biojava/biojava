@@ -40,6 +40,7 @@ public class PDBStatusTest extends TestCase {
 		//TODO should test a case with a longer/more complicated version tree
 		assertEquals("4HHB",PDBStatus.getCurrent("1HHB"));
 		assertEquals("3HHB",PDBStatus.getCurrent("3HHB"));
+		assertEquals(null, PDBStatus.getCurrent("1CMW"));
 	}
 	
 	public void testGetReplaces() {

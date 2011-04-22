@@ -50,7 +50,8 @@ public class PDBStatus {
 		REFI,
 		REPL,
 		WAIT,
-		WDRN;
+		WDRN,
+		UNKNOWN;
 		
 		
 		public static Status fromString(String statusStr) {
@@ -144,7 +145,8 @@ public class PDBStatus {
 	 * @param recurse If true, return the most current version of oldPdbId.
 	 * 		Otherwise, just go one step newer than oldPdbId.
 	 * @return The PDB which replaced oldPdbId. This may be oldPdbId itself, for
-	 * 		current records.
+	 * 		current records. A return value of null indicates that the ID has
+	 * 		been removed from the PDB.
 	 */
 	public static String getReplacement(String oldPdbId, boolean recurse) {
 		List<Attributes> attrList = getStatusIdRecords(new String[] {oldPdbId});
@@ -186,6 +188,11 @@ public class PDBStatus {
 					System.err.format("Error: %s is OBSOLETE but lacks a replacedBy attribute.\n",oldPdbId);
 					return null;
 				}
+				// Some PDBs are not replaced.
+				if(replacement.equals("NONE")) {
+					return null;
+				}
+				
 				// Return the replacement.
 				if(recurse) {
 					return PDBStatus.getReplacement(replacement, recurse);
@@ -194,6 +201,8 @@ public class PDBStatus {
 					return replacement;
 				}
 			}
+			case UNKNOWN:
+				return null;
 			default: { //TODO handle other cases explicitly. They might have other syntax than "replacedBy"
 				String replacement = attrs.getValue("replacedBy");
 				if(replacement == null) {
@@ -201,6 +210,11 @@ public class PDBStatus {
 					// TODO is this correct?
 					return oldPdbId;
 				}
+				// Some PDBs are not replaced.
+				if(replacement.equals("NONE")) {
+					return null;
+				}
+				
 				return replacement;
 			}
 		}
