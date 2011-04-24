@@ -24,14 +24,9 @@
 
 package org.biojava.bio.structure.align.ce;
 
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.JFrame;
-import javax.swing.JPanel;
 
 import org.biojava.bio.structure.Atom;
 import org.biojava.bio.structure.Calc;
@@ -41,7 +36,6 @@ import org.biojava.bio.structure.StructureException;
 import org.biojava.bio.structure.StructureTools;
 import org.biojava.bio.structure.align.model.AFP;
 import org.biojava.bio.structure.align.model.AFPChain;
-import org.biojava.bio.structure.align.pairwise.AlternativeAlignment;
 import org.biojava.bio.structure.align.util.AFPAlignmentDisplay;
 import org.biojava.bio.structure.jama.Matrix;
 
@@ -95,7 +89,7 @@ public class CECalculator {
 	private int nTraces;
 
 	private double z;
-	private int[] a;
+	private int[] traceIndexContainer;
 
 	CeParameters params;
 	// SHOULD these fields be PARAMETERS?
@@ -103,6 +97,7 @@ public class CECalculator {
 	private static final int nIter = 1;
 	private static final boolean distAll = false;
 
+	List<MatrixListener> matrixListeners;
 
 
 
@@ -111,6 +106,7 @@ public class CECalculator {
 		dist1= new double[0][0];
 		dist2= new double[0][0];
 		this.params = params;
+		matrixListeners = new ArrayList<MatrixListener>();
 
 	}
 
@@ -146,16 +142,17 @@ public class CECalculator {
 
 		int winSizeComb1 = (winSize-1)*(winSize-2)/2;		
 
-		a = new int[traceMaxSize];
+		traceIndexContainer = new int[traceMaxSize];
 
 		// CE: unused code. distAll is always false and both loops do the same???
 		// CE v2.3 calls this Weight factors for trace extension
 		if(distAll ) {
 			for(int i=0; i<traceMaxSize; i++)
-				a[i]=(i+1)*i*winSize*winSize/2+(i+1)*winSizeComb1;
+				traceIndexContainer[i]=(i+1)*i*winSize*winSize/2+(i+1)*winSizeComb1;
 		} else {
 			for(int i=0; i<traceMaxSize; i++) {
-				a[i]=(i+1)*i*winSize/2+(i+1)*winSizeComb1;		
+				traceIndexContainer[i]=(i+1)*i*winSize/2+(i+1)*winSizeComb1;	
+				
 
 			}
 		}
@@ -781,10 +778,9 @@ public class CECalculator {
 		else
 			val = score0;
 
+		double score2 =  (val * traceIndexContainer[nTrace-1]+score1*(traceIndexContainer[nTrace]-traceIndexContainer[nTrace-1]))/traceIndexContainer[nTrace];
 
-		double score2 =  (val * a[nTrace-1]+score1*(a[nTrace]-a[nTrace-1]))/a[nTrace];
-
-		//System.out.println("check: score0 " + score0 + " score 1 " + score1 + " sc2: " + score2 + " val: " + val + " nTrace:" + nTrace+ " " +  a[nTrace-1] + " " +  a[nTrace-1] + " " + a[nTrace] );
+		//System.out.println("check: score0 " + score0 + " score 1 " + score1 + " sc2: " + score2 + " val: " + val + " nTrace:" + nTrace+ " " +  traceIndexContainer[nTrace-1] + " " +  traceIndexContainer[nTrace-1] + " " + traceIndexContainer[nTrace] );
 
 		return score2;
 
@@ -1334,8 +1330,9 @@ nBestTrace=nTrace;
 		nAtom=0;
 		int counter = -1;
 		
-		while(nAtom<strLen*0.95 || 
-				(isRmsdLenAssigned && rmsd<rmsdLen*1.1 && nAtomPrev!=nAtom)) {
+		int maxNrIterations = params.getMaxNrIterationsForOptimization();
+		while((nAtom<strLen*0.95 || 
+				(isRmsdLenAssigned && rmsd<rmsdLen*1.1 && nAtomPrev!=nAtom)) && ( counter< maxNrIterations)) {
 		  
 			counter++;
 			if ( debug)
@@ -1370,6 +1367,8 @@ nBestTrace=nTrace;
 				}
 			}
 
+			mat = notifyMatrixListener(mat);
+			
 			double gapOpen = params.getGapOpen();
 			double gapExtension = params.getGapExtension();
 			
@@ -1474,6 +1473,25 @@ nBestTrace=nTrace;
 	}
 
 
+	private double[][] notifyMatrixListener(double[][] mat2) {
+		for (MatrixListener li : matrixListeners) {
+			mat2 = li.matrixInOptimizer(mat2);
+		}
+		return mat2;
+	}
+	
+	private boolean[][] notifyBreakFlagListener(boolean[][] brkFlag){
+		for (MatrixListener li : matrixListeners) {
+			brkFlag = li.initializeBreakFlag(brkFlag);
+		}
+		return brkFlag;
+	}
+
+	public void addMatrixListener(MatrixListener li){
+		matrixListeners.add(li);
+	}
+	
+	
 	private double dpAlign(int nSeq1, int nSeq2, double gapI, double gapE, 
 			boolean isGlobal1, boolean isGlobal2) {
 
@@ -1487,6 +1505,8 @@ nBestTrace=nTrace;
 		boolean[][] brk_flg=new boolean [nSeq1][nSeq2];
 		for(i=0; i<nSeq1; i++) brk_flg[i]=new boolean [nSeq2];
 
+		brk_flg = notifyBreakFlagListener(brk_flg);
+		
 		// ge = true here...
 		/*  
 		  for(i=0; i<nSeq1; i++)
