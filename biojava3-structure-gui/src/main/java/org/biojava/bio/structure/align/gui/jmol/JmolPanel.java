@@ -253,7 +253,10 @@ implements ActionListener
 		ScopInstallation scop = new ScopInstallation(pdbLocation);
 
 		List<ScopDomain> domains = scop.getDomainsForPDB(pdbId);
-
+		if ( domains == null) {
+			System.err.println("No SCOP domains found for " + pdbId);
+			return;
+		}
 		int i = -1;
 		for ( ScopDomain domain : domains){
 			i++;
