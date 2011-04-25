@@ -654,6 +654,66 @@ public class DisplayAFP
 		frame.setVisible(true);
 
 	}
+	
+	/** Create a "fake" Structure objects that contains the two sets of atoms aligned on top of each other.
+	 * 
+	 * @param afpChain the container of the alignment
+	 * @param ca1 atoms for protein 1
+	 * @param ca2 atoms for protein 2
+	 * @return a protein structure with 2 models.
+	 * @throws StructureException
+	 */
+	public Structure createArtificalStructure(AFPChain afpChain, Atom[] ca1,
+			Atom[] ca2) throws StructureException{
+
+		
+		if ( afpChain.getNrEQR() < 1){
+			return DisplayAFP.getAlignedStructure(ca1, ca2);
+		}
+		
+		Group[] twistedGroups = StructureAlignmentDisplay.prepareGroupsForDisplay(afpChain,ca1, ca2);
+
+		List<Atom> twistedAs = new ArrayList<Atom>();
+
+		for ( Group g: twistedGroups){
+			if ( g == null )
+				continue;
+			if ( g.size() < 1)
+				continue;
+			Atom a = g.getAtom(0);
+			twistedAs.add(a);
+		}
+		Atom[] twistedAtoms = (Atom[])twistedAs.toArray(new Atom[twistedAs.size()]);
+
+		List<Group> hetatms  = new ArrayList<Group>();
+		List<Group> nucs1    = new ArrayList<Group>();
+		Group g1 = ca1[0].getGroup();
+		Chain c1 = null;
+		if ( g1 != null) {
+			c1 = g1.getChain();
+			if ( c1 != null){
+				hetatms = c1.getAtomGroups("hetatm");;
+				nucs1  = c1.getAtomGroups("nucleotide");
+			}
+		}
+		List<Group> hetatms2 = new ArrayList<Group>();
+		List<Group> nucs2    = new ArrayList<Group>();
+		Group g2 = ca2[0].getGroup();
+		Chain c2 = null;
+		if ( g2 != null){
+			c2 = g2.getChain();
+			if ( c2 != null){
+				hetatms2 = c2.getAtomGroups("hetatm");
+				nucs2 = c2.getAtomGroups("nucleotide");
+			}
+		}
+		Atom[] arr1 = DisplayAFP.getAtomArray(ca1, hetatms, nucs1);
+		Atom[] arr2 = DisplayAFP.getAtomArray(twistedAtoms, hetatms2, nucs2);
+
+		Structure artificial = DisplayAFP.getAlignedStructure(arr1,arr2);
+		return artificial;
+	}
+
 
 
 }
