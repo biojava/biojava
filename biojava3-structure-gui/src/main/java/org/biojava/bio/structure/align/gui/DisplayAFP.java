@@ -663,7 +663,7 @@ public class DisplayAFP
 	 * @return a protein structure with 2 models.
 	 * @throws StructureException
 	 */
-	public Structure createArtificalStructure(AFPChain afpChain, Atom[] ca1,
+	public static Structure createArtificalStructure(AFPChain afpChain, Atom[] ca1,
 			Atom[] ca2) throws StructureException{
 
 		
