@@ -6,7 +6,10 @@ package org.biojava.bio.structure;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
@@ -94,24 +97,24 @@ public class PDBStatus {
 	 * @return The status, or null if an error occurred.
 	 */
 	public static Status getStatus(String pdbId) {
-		List<Attributes> attrList = getStatusIdRecords(new String[] {pdbId});
+		List<Map<String,String>> attrList = getStatusIdRecords(new String[] {pdbId});
 		//Expect a single record
 		if(attrList == null || attrList.size() != 1) {
 			System.err.println("Error getting Status for "+pdbId+" from the PDB website.");
 			return null;
 		}
 		
-		Attributes attrs = attrList.get(0);
+		Map<String,String> attrs = attrList.get(0);
 		
 		//Check that the record matches pdbId
-		String id = attrs.getValue("structureId");
+		String id = attrs.get("structureId");
 		if(id == null || !id.equals(pdbId)) {
 			System.err.println("Error: Results returned from the query don't match "+pdbId);
 			return null;
 		}
 		
 		//Check that the status is given
-		String statusStr = attrs.getValue("status");
+		String statusStr = attrs.get("status");
 		if(statusStr == null ) {
 			System.err.println("Error: No status returned for "+pdbId);
 			return null;
@@ -149,24 +152,24 @@ public class PDBStatus {
 	 * 		been removed from the PDB.
 	 */
 	public static String getReplacement(String oldPdbId, boolean recurse) {
-		List<Attributes> attrList = getStatusIdRecords(new String[] {oldPdbId});
+		List<Map<String,String>> attrList = getStatusIdRecords(new String[] {oldPdbId});
 		//Expect a single record
 		if(attrList == null || attrList.size() != 1) {
 			System.err.println("Error getting Status for "+oldPdbId+" from the PDB website.");
 			return null;
 		}
 		
-		Attributes attrs = attrList.get(0);
+		Map<String,String> attrs = attrList.get(0);
 		
 		//Check that the record matches pdbId
-		String id = attrs.getValue("structureId");
+		String id = attrs.get("structureId");
 		if(id == null || !id.equals(oldPdbId)) {
 			System.err.println("Error: Results returned from the query don't match "+oldPdbId);
 			return null;
 		}
 		
 		//Check that the status is given
-		String statusStr = attrs.getValue("status");
+		String statusStr = attrs.get("status");
 		if(statusStr == null ) {
 			System.err.println("Error: No status returned for "+oldPdbId);
 			return null;
@@ -183,7 +186,7 @@ public class PDBStatus {
 			case CURRENT:
 				return oldPdbId;
 			case OBSOLETE: {
-				String replacement = attrs.getValue("replacedBy");
+				String replacement = attrs.get("replacedBy");
 				if(replacement == null) {
 					System.err.format("Error: %s is OBSOLETE but lacks a replacedBy attribute.\n",oldPdbId);
 					return null;
@@ -204,7 +207,7 @@ public class PDBStatus {
 			case UNKNOWN:
 				return null;
 			default: { //TODO handle other cases explicitly. They might have other syntax than "replacedBy"
-				String replacement = attrs.getValue("replacedBy");
+				String replacement = attrs.get("replacedBy");
 				if(replacement == null) {
 					// If no "replacedBy" attribute, assume at the root.
 					// TODO is this correct?
@@ -224,57 +227,60 @@ public class PDBStatus {
 	 * Equivalent to {@link #getReplaces(String,boolean) getReplaces(newPdbId, false)}
 	 * 
 	 * @param newPdbId PDB ID of the newer structure
-	 * @return The ID of the direct ancestor of newPdbId, or <tt>null</tt> if 
-	 * 		<tt>newPdbId</tt> is the original structure.
+	 * @return A (possibly empty) list of ID(s) of the direct ancestor(s) of
+	 * 		newPdbId, or <tt>null</tt> if an error occurred.
 	 */
-	public static String getReplaces(String newPdbId) {
+	public static List<String> getReplaces(String newPdbId) {
 		return getReplaces(newPdbId, false);
 	}
 	/**
 	 * Get the ID of the protein which was made obsolete by newPdbId.
 	 * 
 	 * @param newPdbId PDB ID of the newer structure
-	 * @param recurse If true, return the most oldest version of newPdbId.
+	 * @param recurse If true, return all ancestors of newPdbId.
 	 * 		Otherwise, just go one step newer than oldPdbId.
-	 * @return The ID of the direct ancestor of newPdbId, or <tt>null</tt> if 
-	 * 		<tt>newPdbId</tt> is the original structure.
+	 * @return A (possibly empty) list of ID(s) of the ancestor(s) of
+	 * 		newPdbId, or <tt>null</tt> if an error occurred.
 	 */
-	public static String getReplaces(String newPdbId, boolean recurse) {
-		List<Attributes> attrList = getStatusIdRecords(new String[] {newPdbId});
+	public static List<String> getReplaces(String newPdbId, boolean recurse) {
+		List<Map<String,String>> attrList = getStatusIdRecords(new String[] {newPdbId});
 		//Expect a single record
 		if(attrList == null || attrList.size() != 1) {
-			//TODO is it possible to have multiple results? If so, should return String[] rather than null
+			//TODO Is it possible to have multiple record per ID?
+			// They seem to be combined into one record with space-delimeted 'replaces'
 			System.err.println("Error getting Status for "+newPdbId+" from the PDB website.");
 			return null;
 		}
 		
-		Attributes attrs = attrList.get(0);
+		Map<String,String> attrs = attrList.get(0);
 		
 		//Check that the record matches pdbId
-		String id = attrs.getValue("structureId");
+		String id = attrs.get("structureId");
 		if(id == null || !id.equals(newPdbId)) {
 			System.err.println("Error: Results returned from the query don't match "+newPdbId);
 			return null;
 		}
 		
 		
-		String replaced = attrs.getValue("replaces");
-		if(replaced == null) {
+		String replacedList = attrs.get("replaces"); //space-delimited list
+		if(replacedList == null) {
 			// no replaces value; assume root
-			return null;
+			return new ArrayList<String>();
 		}
-
+		String[] directDescendents = replacedList.split("\\s");
+		
 		// Not the root! Return the replaced PDB.
 		if(recurse) {
-			String root = PDBStatus.getReplaces(replaced, recurse);
-			if(root == null) {
-				//replaced was already root
-				return replaced;
-			} else {
-				return root;
+			// Note: Assumes a proper directed acyclic graph of revisions
+			// Cycles will cause infinite loops.
+			List<String> allDescendents = Arrays.asList(directDescendents);
+			for(String replaced : directDescendents) {
+				List<String> roots = PDBStatus.getReplaces(replaced, recurse);
+				allDescendents.addAll(roots);
 			}
+			return allDescendents;
 		} else {
-			return replaced;
+			return Arrays.asList(directDescendents);
 		}
 	}
 	
@@ -295,9 +301,9 @@ public class PDBStatus {
 	 * </pre>
 	 * 
 	 * @param pdbIDs
-	 * @return
+	 * @return A map between attributes and values
 	 */
-	private static List<Attributes> getStatusIdRecords(String[] pdbIDs) {
+	private static List<Map<String, String>> getStatusIdRecords(String[] pdbIDs) {
 		String serverName = System.getProperty(PDB_SERVER_PROPERTY);
 
 		if ( serverName == null)
@@ -359,10 +365,10 @@ public class PDBStatus {
 	 *
 	 */
 	private static class PDBStatusXMLHandler extends DefaultHandler {
-		private List<Attributes> records;
+		private List<Map<String,String>> records;
 		
 		public PDBStatusXMLHandler() {
-			records = new ArrayList<Attributes>();
+			records = new ArrayList<Map<String,String>>();
 		}
 		
 		/**
@@ -378,7 +384,13 @@ public class PDBStatus {
 				Attributes attributes) throws SAXException {
 			//System.out.format("Starting element: uri='%s' localName='%s' qName='%s'\n", uri, localName, qName);
 			if(qName.equals("record")) {
-				records.add(attributes);
+				//Convert attributes into a Map, as it should have been.
+				//Important since SAX reuses Attributes objects for different calls
+				Map<String,String> attrMap = new HashMap<String,String>(attributes.getLength()*2);
+				for(int i=0;i<attributes.getLength();i++) {
+					attrMap.put(attributes.getQName(i), attributes.getValue(i));
+				}
+				records.add(attrMap);
 			}
 		}
 
@@ -395,7 +407,7 @@ public class PDBStatus {
 		}
 
 		
-		public List<Attributes> getRecords() {
+		public List<Map<String, String>> getRecords() {
 			return records;
 		}
 	}
