@@ -7,8 +7,11 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
 
 import javax.xml.parsers.SAXParser;
@@ -25,7 +28,31 @@ import org.xml.sax.helpers.DefaultHandler;
  * Methods for getting the status of a PDB file (current, obsolete, etc)
  * and for accessing different versions of the structure.
  * 
- * All methods query the PDB website.
+ * <p>All methods query the 
+ * <a href="http://www.rcsb.org/pdb/rest/idStatus?structureId=1HHB,3HHB,4HHB">
+ * PDB website.</a>
+ * 
+ * <p>PDB supersessions form a directed acyclic graph, where edges point from an
+ * obsolete ID to the entry that directly superseded it. For example, here are  
+ * edges from one portion of the graph:<br/>
+ * 
+ * 1CAT -> 3CAT<br/>
+ * 3CAT -> 7CAT<br/>
+ * 3CAT -> 8CAT<br/>
+ * 
+ * <p>The methods {@link #getReplaces(String, boolean) getReplaces(pdbId, false)}/ 
+ * {@link #getReplacement(String, boolean, boolean) getReplacement(pdbId, false, true)}
+ * just get the incoming/outgoing edges for a single node. The recursive versions 
+ * ({@link #getReplaces(String, boolean) getReplaces(pdbId, true)}, 
+ * {@link #getReplacement(String, boolean, boolean) getReplacement(pdbId, true, false)})
+ * will do a depth-first search up/down the tree and return a list of all nodes ]
+ * reached.
+ * 
+ * <p>Finally, the getCurrent() method returns a single PDB ID from among the 
+ * results of 
+ * {@link #getReplacement(String, boolean) getReplacement(pdbId, true)}. 
+ * To be consistent with the old REST ordering, this is the PDB ID that occurs 
+ * last alphabetically.
  * 
  * <p><b>TODO</b> Keep a small cache of queries around, to reduce server load
  * 
@@ -57,32 +84,41 @@ public class PDBStatus {
 		UNKNOWN;
 		
 		
+		/**
+		 * 
+		 * @param statusStrUpper
+		 * @return
+		 * @throws IllegalArgumentException If the string is not recognized
+		 */
 		public static Status fromString(String statusStr) {
 			Status status;
-			if(statusStr.equalsIgnoreCase("OBSOLETE"))
+			String statusStrUpper = statusStr.toUpperCase();
+			if(statusStrUpper.equalsIgnoreCase("OBSOLETE"))
 				status = Status.OBSOLETE;
-			else if(statusStr.equalsIgnoreCase("CURRENT"))
+			else if(statusStrUpper.equalsIgnoreCase("CURRENT"))
 				status = Status.CURRENT;
-			else if(statusStr.equalsIgnoreCase("AUTH"))
+			else if(statusStrUpper.equalsIgnoreCase("AUTH"))
 				status = Status.AUTH;
-			else if(statusStr.equalsIgnoreCase("HOLD"))
+			else if(statusStrUpper.equalsIgnoreCase("HOLD"))
 				status = Status.HOLD;
-			else if(statusStr.equalsIgnoreCase("HPUB"))
+			else if(statusStrUpper.equalsIgnoreCase("HPUB"))
 				status = Status.HPUB;
-			else if(statusStr.equalsIgnoreCase("POLC"))
+			else if(statusStrUpper.equalsIgnoreCase("POLC"))
 				status = Status.POLC;
-			else if(statusStr.equalsIgnoreCase("PROC"))
+			else if(statusStrUpper.equalsIgnoreCase("PROC"))
 				status = Status.PROC;
-			else if(statusStr.equalsIgnoreCase("REFI"))
+			else if(statusStrUpper.equalsIgnoreCase("REFI"))
 				status = Status.REFI;
-			else if(statusStr.equalsIgnoreCase("REPL"))
+			else if(statusStrUpper.equalsIgnoreCase("REPL"))
 				status = Status.REPL;
-			else if(statusStr.equalsIgnoreCase("WAIT"))
+			else if(statusStrUpper.equalsIgnoreCase("WAIT"))
 				status = Status.WAIT;
-			else if(statusStr.equalsIgnoreCase("WDRN"))
+			else if(statusStrUpper.equalsIgnoreCase("WDRN"))
 				status = Status.WDRN;
+			else if(statusStrUpper.equalsIgnoreCase("UNKNOWN"))
+				status = Status.UNKNOWN;
 			else {
-				status = null;
+				throw new IllegalArgumentException("Unable to parse status '"+statusStrUpper+"'.");
 			}
 			return status;
 		}
@@ -130,28 +166,40 @@ public class PDBStatus {
 	}
 	
 	/**
-	 * Gets the current version of a PDB ID. This is equivalent to calling
-	 * {@link #getReplacement(String,boolean) getReplacement(oldPdbId,true)}
+	 * Gets the current version of a PDB ID. This is equivalent to selecting
+	 * the first element from
+	 * {@link #getReplacement(String,boolean) getReplacement(oldPdbId,true,false)}
 	 * 
 	 * @param oldPdbId
-	 * @return 
+	 * @return The 
 	 */
 	public static String getCurrent(String oldPdbId) {
-		return getReplacement(oldPdbId,true);
+		List<String> replacements =  getReplacement(oldPdbId,true, false);
+		if(replacements.size()>0)
+			return replacements.get(0);
+		else
+			return null;
 	}
 	
 	/**
-	 * Gets the PDB which superseded oldPdbId. For CURRENT ids, this will
-	 * be itself.
+	 * Gets the PDB which superseded oldPdbId. For CURRENT IDs, this will
+	 * be itself. For obsolete IDs, the behavior depends on the recursion 
+	 * parameter. If false, only IDs which directly supersede oldPdbId are
+	 * returned. If true, the replacements for obsolete records are recursively 
+	 * fetched, yielding a list of all current replacements of oldPdbId.
+	 * 
+	 * 
 	 * 
 	 * @param oldPdbId A pdb ID
-	 * @param recurse If true, return the most current version of oldPdbId.
-	 * 		Otherwise, just go one step newer than oldPdbId.
+	 * @param recurse Indicates whether the replacements for obsolete records 
+	 * 		should be fetched.
+	 * @param includeObsolete Indicates whether obsolete records should be
+	 * 		included in the results.
 	 * @return The PDB which replaced oldPdbId. This may be oldPdbId itself, for
 	 * 		current records. A return value of null indicates that the ID has
 	 * 		been removed from the PDB.
 	 */
-	public static String getReplacement(String oldPdbId, boolean recurse) {
+	public static List<String> getReplacement(String oldPdbId, boolean recurse, boolean includeObsolete) {
 		List<Map<String,String>> attrList = getStatusIdRecords(new String[] {oldPdbId});
 		//Expect a single record
 		if(attrList == null || attrList.size() != 1) {
@@ -163,7 +211,7 @@ public class PDBStatus {
 		
 		//Check that the record matches pdbId
 		String id = attrs.get("structureId");
-		if(id == null || !id.equals(oldPdbId)) {
+		if(id == null || !id.equalsIgnoreCase(oldPdbId)) {
 			System.err.println("Error: Results returned from the query don't match "+oldPdbId);
 			return null;
 		}
@@ -182,57 +230,163 @@ public class PDBStatus {
 		}
 		
 		// If we're current, just return
+		LinkedList<String> results = new LinkedList<String>();
 		switch(status) {
 			case CURRENT:
-				return oldPdbId;
+				results.add(oldPdbId);
+				return results;
 			case OBSOLETE: {
-				String replacement = attrs.get("replacedBy");
-				if(replacement == null) {
+				String replacementStr = attrs.get("replacedBy");
+				if(replacementStr == null) {
 					System.err.format("Error: %s is OBSOLETE but lacks a replacedBy attribute.\n",oldPdbId);
 					return null;
 				}
+				replacementStr = replacementStr.toUpperCase();
+				//include this result
+				if(includeObsolete) {
+					results.add(oldPdbId);
+				}
 				// Some PDBs are not replaced.
-				if(replacement.equals("NONE")) {
-					return null;
+				if(replacementStr.equals("NONE")) {
+					return results; //empty
 				}
 				
-				// Return the replacement.
-				if(recurse) {
-					return PDBStatus.getReplacement(replacement, recurse);
+				String[] replacements = replacementStr.split(" ");
+				Arrays.sort(replacements, new Comparator<String>() {
+					public int compare(String o1, String o2) {
+						return o2.compareToIgnoreCase(o1);
+					}
+				});
+				for(String replacement : replacements) {
+
+					// Return the replacement.
+					if(recurse) {
+						List<String> others = PDBStatus.getReplacement(replacement, recurse, includeObsolete);
+						mergeReversed(results,others);
+					}
+					else {
+						if(includeObsolete) {
+							mergeReversed(results,Arrays.asList(replacement));
+						} else {
+							// check status of replacement
+							Status replacementStatus = getStatus(replacement);
+							switch(replacementStatus) {
+							case OBSOLETE:
+								//ignore obsolete
+								break;
+							case CURRENT:
+							default:
+								// include it
+								mergeReversed(results,Arrays.asList(replacement));
+							}
+						}
+					}
 				}
-				else {
-					return replacement;
-				}
+				
+				
+				return results;
 			}
 			case UNKNOWN:
 				return null;
 			default: { //TODO handle other cases explicitly. They might have other syntax than "replacedBy"
-				String replacement = attrs.get("replacedBy");
-				if(replacement == null) {
-					// If no "replacedBy" attribute, assume at the root.
+				String replacementStr = attrs.get("replacedBy");
+				
+				if(replacementStr == null) {
+					// If no "replacedBy" attribute, treat like we're current
 					// TODO is this correct?
-					return oldPdbId;
+					results.add(oldPdbId);
+					return results;
 				}
+
+				replacementStr = replacementStr.toUpperCase();
 				// Some PDBs are not replaced.
-				if(replacement.equals("NONE")) {
+				if(replacementStr.equals("NONE")) {
 					return null;
 				}
 				
-				return replacement;
+				
+				//include this result, since it's not obsolete
+				results.add(oldPdbId);
+				
+				String[] replacements = replacementStr.split(" ");
+				Arrays.sort(replacements, new Comparator<String>() {
+					public int compare(String o1, String o2) {
+						return o2.compareToIgnoreCase(o1);
+					}
+				});
+				for(String replacement : replacements) {
+
+					// Return the replacement.
+					if(recurse) {
+						List<String> others = PDBStatus.getReplacement(replacement, recurse, includeObsolete);
+						mergeReversed(results,others);
+					}
+					else {
+						mergeReversed(results,Arrays.asList(replacement));
+					}
+				}
+				
+				
+				return results;
 			}
 		}
 	}
+
 	/**
-	 * Get the ID of the protein which was made obsolete by newPdbId.
-	 * Equivalent to {@link #getReplaces(String,boolean) getReplaces(newPdbId, false)}
+	 * Takes two reverse sorted lists of strings and merges the second into the
+	 * first. Duplicates are removed.
 	 * 
-	 * @param newPdbId PDB ID of the newer structure
-	 * @return A (possibly empty) list of ID(s) of the direct ancestor(s) of
-	 * 		newPdbId, or <tt>null</tt> if an error occurred.
+	 * @param merged A reverse sorted list. Modified by this method to contain
+	 * 		the contents of other.
+	 * @param other A reverse sorted list. Not modified.
 	 */
-	public static List<String> getReplaces(String newPdbId) {
-		return getReplaces(newPdbId, false);
+	private static void mergeReversed(List<String> merged,
+			final List<String> other) {
+		
+		if(other.isEmpty())
+			return;
+
+		if(merged.isEmpty()) {
+			merged.addAll(other);
+			return;
+		}
+		
+		ListIterator<String> m = merged.listIterator();
+		ListIterator<String> o = other.listIterator();
+		
+		String nextM, prevO;
+		prevO = o.next();
+		while(m.hasNext()) {
+			// peek at m
+			nextM = m.next();
+			m.previous();
+			
+			//insert from O until exhausted or occurs after nextM
+			while(prevO.compareTo(nextM) > 0) {
+				m.add(prevO);
+				if(!o.hasNext()) {
+					return;
+				}
+				prevO = o.next();
+			}
+			//remove duplicates
+			if(prevO.equals(nextM)) {
+				if(!o.hasNext()) {
+					return;
+				}
+				prevO = o.next();
+			}
+			
+			m.next();
+		}
+		m.add(prevO);
+		while(o.hasNext()) {
+			m.add(o.next());
+		}
+		
 	}
+	
+
 	/**
 	 * Get the ID of the protein which was made obsolete by newPdbId.
 	 * 
@@ -247,7 +401,7 @@ public class PDBStatus {
 		//Expect a single record
 		if(attrList == null || attrList.size() != 1) {
 			//TODO Is it possible to have multiple record per ID?
-			// They seem to be combined into one record with space-delimeted 'replaces'
+			// They seem to be combined into one record with space-delimited 'replaces'
 			System.err.println("Error getting Status for "+newPdbId+" from the PDB website.");
 			return null;
 		}
@@ -273,11 +427,13 @@ public class PDBStatus {
 		if(recurse) {
 			// Note: Assumes a proper directed acyclic graph of revisions
 			// Cycles will cause infinite loops.
-			List<String> allDescendents = Arrays.asList(directDescendents);
+			List<String> allDescendents = new LinkedList<String>();
 			for(String replaced : directDescendents) {
 				List<String> roots = PDBStatus.getReplaces(replaced, recurse);
-				allDescendents.addAll(roots);
+				mergeReversed(allDescendents,roots);
 			}
+			mergeReversed(allDescendents,Arrays.asList(directDescendents));
+			
 			return allDescendents;
 		} else {
 			return Arrays.asList(directDescendents);
