@@ -60,6 +60,10 @@ public class AtomCache {
 	boolean strictSCOP;
 	FileParsingParameters params;
 
+	private boolean fetchFileEvenIfObsolete;
+
+	private boolean fetchCurrent;
+
 	/** Creates an instance of an AtomCache that is pointed to the a particular
 	 * path in the file system.
 	 * 
@@ -84,6 +88,9 @@ public class AtomCache {
 		this.isSplit = isSplit;
 		
 		autoFetch = true;
+		fetchFileEvenIfObsolete = false;
+		fetchCurrent = false;
+		
 		currentlyLoading.clear();
 		params = new FileParsingParameters();
 
@@ -157,6 +164,46 @@ public class AtomCache {
 		this.autoFetch = autoFetch;
 	}
 
+
+
+	/**
+	 * @param fetchFileEvenIfObsolete the fetchFileEvenIfObsolete to set
+	 */
+	public void setFetchFileEvenIfObsolete(boolean fetchFileEvenIfObsolete) {
+		this.fetchFileEvenIfObsolete = fetchFileEvenIfObsolete;
+	}
+
+
+	/**forces the cache to fetch the file if its status is OBSOLETE.
+	 * This feature has a higher priority than {@link #setFetchCurrent(boolean)}
+	 * @return the fetchFileEvenIfObsolete
+	 * @author Amr AL-Hossary
+	 * @see #fetchCurrent
+	 * @since 3.0.2
+	 */
+	public boolean isFetchFileEvenIfObsolete() {
+		return fetchFileEvenIfObsolete;
+	}
+
+
+	/**if enabled, the reader searches for the newest possible PDB ID, if not present in he local installation.
+	 * The {@link #setFetchFileEvenIfObsolete(boolean)} function has a higher priority than this function.
+	 * @param fetchCurrent the fetchCurrent to set
+	 * @author Amr AL-Hossary
+	 * @see #setFetchFileEvenIfObsolete(boolean)
+	 * @since 3.0.2
+	 */
+	public void setFetchCurrent(boolean fetchNewestCurrent) {
+		this.fetchCurrent = fetchNewestCurrent;
+	}
+
+	/**
+	 * @return the fetchCurrent
+	 */
+	public boolean isFetchCurrent() {
+		return fetchCurrent;
+	}
+	
 	
 	/**
 	 * Reports whether strict scop naming will be enforced, or whether this AtomCache
@@ -423,6 +470,8 @@ public class AtomCache {
 				reader.setPath(path);
 				reader.setPdbDirectorySplit(isSplit);
 				reader.setAutoFetch(autoFetch);
+				reader.setFetchFileEvenIfObsolete(fetchFileEvenIfObsolete);
+				reader.setFetchCurrent(fetchCurrent);
 
 				reader.setFileParsingParameters(params);
 

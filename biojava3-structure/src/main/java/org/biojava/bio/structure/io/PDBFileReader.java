@@ -42,6 +42,8 @@ import java.util.zip.GZIPOutputStream;
 import org.biojava.bio.structure.Chain;
 import org.biojava.bio.structure.Compound;
 import org.biojava.bio.structure.Group;
+import org.biojava.bio.structure.PDBStatus;
+import org.biojava.bio.structure.PDBStatus.Status;
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.align.ce.AbstractUserArgumentProcessor;
 import org.biojava.bio.structure.io.mmcif.ChemCompGroupFactory;
@@ -113,6 +115,8 @@ import org.biojava3.core.util.InputStreamProvider;
  */
 public class PDBFileReader implements StructureIOFile {
 
+
+
 	// a list of big pdb files for testing
 	//  "1htq",
 	//  "1c2w",
@@ -139,23 +143,28 @@ public class PDBFileReader implements StructureIOFile {
 	public static final String LOAD_CHEM_COMP_PROPERTY = "loadChemCompInfo";
 
 
-	String path                     ;
-	List<String> extensions            ;
+	String path;
+	List<String> extensions;
 
 	boolean autoFetch;
 
+	private boolean fetchCurrent;
+
+	private boolean fetchFileEvenIfObsolete;
+
 	boolean pdbDirectorySplit;
-	
 
 	public static final String lineSplit = System.getProperty("file.separator");
 
 	public static final String DEFAULT_PDB_FILE_SERVER = "ftp.wwpdb.org";
-
 	public static final String PDB_FILE_SERVER_PROPERTY = "PDB.FILE.SERVER";
 
-	
+	private static final String CURRENT_FILES_PATH  = "/pub/pdb/data/structures/divided/pdb/";
+	private static final String OBSOLETE_FILES_PATH = "/pub/pdb/data/structures/obsolete/pdb/";
+
+
 	FileParsingParameters params ;
-	
+
 	public static void main(String[] args){
 
 
@@ -168,7 +177,7 @@ public class PDBFileReader implements StructureIOFile {
 		// tempdir = "/path/to/local/PDB/installation/";
 		pdbreader.setPath(tempdir);
 
-		
+
 		FileParsingParameters params = new FileParsingParameters();
 		pdbreader.setFileParsingParameters(params);
 
@@ -219,38 +228,38 @@ public class PDBFileReader implements StructureIOFile {
 				}
 
 			}
-	*/
+			 */
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
 
-	
 
 
-   public PDBFileReader() {
+
+	public PDBFileReader() {
 		extensions    = new ArrayList<String>();
-		
+
 		extensions.add(".ent");
 		extensions.add(".pdb");
 		extensions.add(".ent.gz");
 		extensions.add(".pdb.gz");
 		extensions.add(".ent.Z");
 		extensions.add(".pdb.Z");
-		
+
 		autoFetch     = false;		
 		pdbDirectorySplit = false;
-		
+
 		params = new FileParsingParameters();
-		
+
 		//checkPath();
 	}
-   
-   /** Check the directory that contains the local cache of PDB and chemical component definiton files.
-    * By default, at startup we fall back to java.io.tmpdir
-    */
-   private  void checkPath(){
+
+	/** Check the directory that contains the local cache of PDB and chemical component definiton files.
+	 * By default, at startup we fall back to java.io.tmpdir
+	 */
+	private  void checkPath(){
 
 		if ((path == null) || (path.equals("")) || path.equals("null")) {
 
@@ -285,7 +294,7 @@ public class PDBFileReader implements StructureIOFile {
 	/** directory where to find PDB files */
 	public void setPath(String p){
 		System.setProperty(AbstractUserArgumentProcessor.PDB_DIR,p);
-		
+
 		path = p ;
 	}
 
@@ -343,12 +352,12 @@ public class PDBFileReader implements StructureIOFile {
 	private InputStream getInputStream(String pdbId)
 	throws IOException
 	{
-		
+
 		if ( pdbId.length() < 4)
 			throw new IOException("the provided ID does not look like a PDB ID : " + pdbId);
 
 		checkPath();
-	
+
 		InputStream inputStream =null;
 
 		String pdbFile = null ;
@@ -383,9 +392,9 @@ public class PDBFileReader implements StructureIOFile {
 					pdbFile = testpath+ex ;
 
 					InputStreamProvider isp = new InputStreamProvider();
-					
+
 					inputStream = isp.getInputStream(pdbFile);
-					
+
 					break;
 				}
 
@@ -394,18 +403,30 @@ public class PDBFileReader implements StructureIOFile {
 		}
 
 		if ( pdbFile == null ) {
-			if ( autoFetch)
-				return downloadAndGetInputStream(pdbId);
+			if (autoFetch){//from here we try our online search
+				if(fetchCurrent && !fetchFileEvenIfObsolete) {
+					String current = PDBStatus.getCurrent(pdbId);
 
-			String message = "no structure with PDB code " + pdbId + " found!" ;
-			throw new IOException (message);
+					if(current == null) {
+						// either an error or there is not current entry
+						current = pdbId;
+					}
+					return downloadAndGetInputStream(current, CURRENT_FILES_PATH);
+				} else if(fetchFileEvenIfObsolete && PDBStatus.getStatus(pdbId) == Status.OBSOLETE) {
+					return downloadAndGetInputStream(pdbId, OBSOLETE_FILES_PATH);
+				} else {
+					return downloadAndGetInputStream(pdbId, CURRENT_FILES_PATH);
+				}
+			}else {
+				String message = "no structure with PDB code " + pdbId + " found!" ;
+				throw new IOException (message);
+			}
 		}
-
 		return inputStream ;
 	}
 
 
-	private  File downloadPDB(String pdbId){
+	private  File downloadPDB(String pdbId, String pathOnServer){
 
 		if ((path == null) || (path.equals(""))){
 			// accessing temp. OS directory:         
@@ -423,20 +444,21 @@ public class PDBFileReader implements StructureIOFile {
 
 		File tempFile ;
 
+		pdbId = pdbId.toLowerCase();
+		String middle = pdbId.substring(1,3);
 		if ( pdbDirectorySplit) {
-			String middle = pdbId.substring(1,3).toLowerCase();
 			String dir = path+lineSplit+middle;
 			File directoryCheck = new File (dir);
 			if ( ! directoryCheck.exists()){
 				directoryCheck.mkdir();
 			}
 
-			tempFile =new File(dir+lineSplit+"pdb"+ pdbId.toLowerCase()+".ent.gz");
+			tempFile =new File(dir+lineSplit+"pdb"+ pdbId+".ent.gz");
 
 		} else {
 
 
-			tempFile = new File(path+lineSplit+"pdb"+pdbId.toLowerCase()+".ent.gz");
+			tempFile = new File(path+lineSplit+"pdb"+pdbId+".ent.gz");
 		}
 
 
@@ -445,7 +467,7 @@ public class PDBFileReader implements StructureIOFile {
 		if ( serverName == null)
 			serverName = DEFAULT_PDB_FILE_SERVER;
 
-		String ftp = String.format("ftp://%s/pub/pdb/data/structures/all/pdb/pdb%s.ent.gz", serverName,pdbId.toLowerCase());
+		String ftp = String.format("ftp://%s%s%s/pdb%s.ent.gz", serverName,pathOnServer,middle, pdbId);
 
 		System.out.println("Fetching " + ftp);
 
@@ -484,20 +506,20 @@ public class PDBFileReader implements StructureIOFile {
 		return tempFile;
 	}
 
-	
-	
-	private  InputStream downloadAndGetInputStream(String pdbId)
+
+
+	private  InputStream downloadAndGetInputStream(String pdbId, String pathOnServer)
 	throws IOException{
-		
-		
-		
+
+
+
 		//PDBURLReader reader = new PDBURLReader();
 		//Structure s = reader.getStructureById(pdbId);
-		File tmp = downloadPDB(pdbId);
+		File tmp = downloadPDB(pdbId, pathOnServer);
 		if ( tmp != null ) {
 			InputStreamProvider prov = new InputStreamProvider();
 			InputStream is = prov.getInputStream(tmp);
-						
+
 			return is;
 
 
@@ -515,16 +537,13 @@ public class PDBFileReader implements StructureIOFile {
 	 * @return the Structure object
 	 * @throws IOException ...
 	 */
-	public  Structure getStructureById(String pdbId)
-	throws IOException
-	{
-
+	public  Structure getStructureById(String pdbId)throws IOException	{
 
 		InputStream inStream = getInputStream(pdbId);
 
 		PDBFileParser pdbpars = new PDBFileParser();
 		pdbpars.setFileParsingParameters(params);
-		
+
 		Structure struc = pdbpars.parsePDBFile(inStream) ;
 		return struc ;
 	}
@@ -562,53 +581,83 @@ public class PDBFileReader implements StructureIOFile {
 
 		PDBFileParser pdbpars = new PDBFileParser();
 		pdbpars.setFileParsingParameters(params);
-		
+
 		Structure struc = pdbpars.parsePDBFile(inStream) ;
 		return struc ;
 
 	}
 
 	public Structure getStructure(URL u) throws IOException{
-
 		InputStreamProvider isp = new InputStreamProvider();
-
 		InputStream inStream = isp.getInputStream(u);
-
 		return getStructure(inStream);
-
 	}
 
 
 
-	public void setFileParsingParameters(FileParsingParameters params)
-	   {
+	public void setFileParsingParameters(FileParsingParameters params){
 		this.params= params;
 		if ( ! params.isLoadChemCompInfo()) {
 			ChemCompGroupFactory.setChemCompProvider(new ReducedChemCompProvider());
 		}
-	      
-	   }
-	    
+	}
+
 	public FileParsingParameters getFileParsingParameters(){
-	       return params;
-	    }
+		return params;
+	}
+
+
+	public boolean isAutoFetch(){
+		return autoFetch;
+	}
+
+
+	public void setAutoFetch(boolean autoFetch){
+		this.autoFetch = autoFetch;
+	}
 
 
 
 
 
-      public boolean isAutoFetch()
-      {
-        return autoFetch;
-      }
+	/**
+	 * @param fetchFileEvenIfObsolete the fetchFileEvenIfObsolete to set
+	 */
+	public void setFetchFileEvenIfObsolete(boolean fetchFileEvenIfObsolete) {
+		this.fetchFileEvenIfObsolete = fetchFileEvenIfObsolete;
+	}
 
 
 
 
 
-      public void setAutoFetch(boolean autoFetch)
-      {
-        this.autoFetch = autoFetch;
-         
-      }
+	/**forces the reader to fetch the file if its status is OBSOLETE.
+	 * This feature has a higher priority than {@link #setFetchCurrent(boolean)}
+	 * @return the fetchFileEvenIfObsolete
+	 * @author Amr AL-Hossary
+	 * @see #fetchCurrent
+	 * @since 3.0.2
+	 */
+	public boolean isFetchFileEvenIfObsolete() {
+		return fetchFileEvenIfObsolete;
+	}
+
+
+	/**if enabled, the reader searches for the newest possible PDB ID, if not present in he local installation.
+	 * The {@link #setFetchFileEvenIfObsolete(boolean)} function has a higher priority than this function.
+	 * @param fetchCurrent the fetchCurrent to set
+	 * @author Amr AL-Hossary
+	 * @see #setFetchFileEvenIfObsolete(boolean)
+	 * @since 3.0.2
+	 */
+	public void setFetchCurrent(boolean fetchNewestCurrent) {
+		this.fetchCurrent = fetchNewestCurrent;
+	}
+
+	/**
+	 * @return the fetchCurrent
+	 */
+	public boolean isFetchCurrent() {
+		return fetchCurrent;
+	}
 }

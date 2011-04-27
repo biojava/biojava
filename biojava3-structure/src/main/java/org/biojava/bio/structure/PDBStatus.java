@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
@@ -54,14 +55,22 @@ import org.xml.sax.helpers.DefaultHandler;
  * To be consistent with the old REST ordering, this is the PDB ID that occurs 
  * last alphabetically.
  * 
- * <p><b>TODO</b> Keep a small cache of queries around, to reduce server load
+ * <p>Results are cached to reduce server load.
  * 
  * @author Spencer Bliven <sbliven@ucsd.edu>
- *
+ * @author Amr AL-Hossary
+ * @since 3.0.2
  */
 public class PDBStatus {
 	public static final String DEFAULT_PDB_SERVER = "www.rcsb.org";
 	public static final String PDB_SERVER_PROPERTY = "PDB.SERVER";
+	
+	/**
+	 * saves the returned results for further use.
+	 * 
+	 */
+	//TODO Use SoftReferences to allow garbage collection
+	private static Map<String, Map<String, String>> recordsCache= new Hashtable<String, Map<String, String>>(); 
 	
 	/**
 	 * Represents the status of PDB IDs. 'OBSOLETE' and 'CURRENT' are the most
@@ -127,42 +136,72 @@ public class PDBStatus {
 	/**
 	 * Get the status of the PDB in question.
 	 * 
-	 * <p>Possible return values are:
-
 	 * @param pdbId
 	 * @return The status, or null if an error occurred.
 	 */
 	public static Status getStatus(String pdbId) {
-		List<Map<String,String>> attrList = getStatusIdRecords(new String[] {pdbId});
-		//Expect a single record
-		if(attrList == null || attrList.size() != 1) {
-			System.err.println("Error getting Status for "+pdbId+" from the PDB website.");
+		Status[] statuses = getStatus(new String[] {pdbId});
+		if(statuses != null) {
+			assert(statuses.length == 1);
+			return statuses[0];
+		} else {
 			return null;
 		}
-		
-		Map<String,String> attrs = attrList.get(0);
-		
-		//Check that the record matches pdbId
-		String id = attrs.get("structureId");
-		if(id == null || !id.equals(pdbId)) {
-			System.err.println("Error: Results returned from the query don't match "+pdbId);
-			return null;
-		}
-		
-		//Check that the status is given
-		String statusStr = attrs.get("status");
-		if(statusStr == null ) {
-			System.err.println("Error: No status returned for "+pdbId);
-			return null;
-		}
-		
-		Status status = Status.fromString(statusStr);
-		if(status == null) {
-			System.err.println("Error: Unknown status '"+statusStr+"'");
-			return null;
-		}
+	}
 	
-		return status;
+	/**
+	 * Get the status of the a collection of PDBs in question in a single query.
+	 * 
+	 * @see #getStatus(String)
+	 * @param pdbIds
+	 * @return The status array, or null if an error occurred.
+	 */
+	public static Status[] getStatus(String[] pdbIds) {
+		Status[] statuses = new Status[pdbIds.length];
+		
+		List<Map<String,String>> attrList = getStatusIdRecords(pdbIds);
+		//Expect a single record
+		if(attrList == null || attrList.size() != pdbIds.length) {
+			System.err.println("Error getting Status for "+pdbIds+" from the PDB website.");
+			return null;
+		}
+		
+		
+		for(int pdbNum = 0;pdbNum<pdbIds.length;pdbNum++) {
+			//Locate first element of attrList with matching structureId.
+			//attrList is usually short, so don't worry about performance
+			boolean foundAttr = false;
+			for( Map<String,String> attrs : attrList) {
+
+				//Check that the record matches pdbId
+				String id = attrs.get("structureId");
+				if(id == null || !id.equalsIgnoreCase(pdbIds[pdbNum])) {
+					continue;
+				}
+
+				//Check that the status is given
+				String statusStr = attrs.get("status");
+				if(statusStr == null ) {
+					System.err.println("Error: No status returned for "+pdbIds[pdbNum]);
+					statuses[pdbNum] = null;
+				}
+
+				Status status = Status.fromString(statusStr);
+				if(status == null) {
+					System.err.println("Error: Unknown status '"+statusStr+"'");
+					statuses[pdbNum] = null;
+				}
+				
+				statuses[pdbNum] = status;
+				foundAttr = true;
+			}
+			if(!foundAttr) {
+				System.err.println("Error: No result found for "+pdbIds[pdbNum]);
+				statuses[pdbNum] = null;
+			}
+		}
+		
+		return statuses;
 	}
 	
 	/**
@@ -171,11 +210,11 @@ public class PDBStatus {
 	 * {@link #getReplacement(String,boolean) getReplacement(oldPdbId,true,false)}
 	 * 
 	 * @param oldPdbId
-	 * @return The 
+	 * @return The replacement for oldPdbId, or null if none are found or if an error occurred.
 	 */
 	public static String getCurrent(String oldPdbId) {
 		List<String> replacements =  getReplacement(oldPdbId,true, false);
-		if(replacements.size()>0)
+		if(replacements != null && replacements.size()>0)
 			return replacements.get(0);
 		else
 			return null;
@@ -197,7 +236,7 @@ public class PDBStatus {
 	 * 		included in the results.
 	 * @return The PDB which replaced oldPdbId. This may be oldPdbId itself, for
 	 * 		current records. A return value of null indicates that the ID has
-	 * 		been removed from the PDB.
+	 * 		been removed from the PDB or that an error has occurred.
 	 */
 	public static List<String> getReplacement(String oldPdbId, boolean recurse, boolean includeObsolete) {
 		List<Map<String,String>> attrList = getStatusIdRecords(new String[] {oldPdbId});
@@ -440,6 +479,15 @@ public class PDBStatus {
 		}
 	}
 	
+
+	/**
+	 * The status of PDB IDs are cached to reduce server overload.
+	 * 
+	 * This method clears the cached records.
+	 */
+	public static void clearCache() {
+		recordsCache.clear();
+	}
 	
 	/**
 	 * Fetches the status of one or more pdbIDs from the server.
@@ -456,10 +504,19 @@ public class PDBStatus {
 	 *&lt;/idStatus&gt;
 	 * </pre>
 	 * 
+	 * <p>Results are not guaranteed to be returned in the same order as pdbIDs.
+	 * Refer to the structureId property to match them.
+	 * 
 	 * @param pdbIDs
 	 * @return A map between attributes and values
 	 */
 	private static List<Map<String, String>> getStatusIdRecords(String[] pdbIDs) {
+		
+		List<Map<String,String>> result = new ArrayList<Map<String,String>>(pdbIDs.length);
+
+
+		
+		
 		String serverName = System.getProperty(PDB_SERVER_PROPERTY);
 
 		if ( serverName == null)
@@ -471,14 +528,26 @@ public class PDBStatus {
 		if(pdbIDs.length < 1) {
 			throw new IllegalArgumentException("No pdbIDs specified");
 		}
-		String urlStr = String.format("http://%s/pdb/rest/idStatus?structureId=%s",serverName,pdbIDs[0]);
-		for(int i=1;i<pdbIDs.length;i++) {
-			urlStr += "," + pdbIDs[i];
+		String urlStr = String.format("http://%s/pdb/rest/idStatus?structureId=",serverName);
+		for(String pdbId : pdbIDs) {
+			pdbId = pdbId.toUpperCase();
+			//check the cache
+			if (recordsCache.containsKey(pdbId)) {
+				//System.out.println("Fetching "+pdbId+" from Cache");
+				result.add( recordsCache.get(pdbId) );
+			} else {
+				urlStr += pdbId + ",";
+			}
 		}
 		
-		//System.out.println("Fetching " + urlStr);
+		// check if any ids still need fetching
+		if(urlStr.charAt(urlStr.length()-1) == '=') {
+			return result;
+		}
 
 		try {
+			//System.out.println("Fetching " + urlStr);
+
 			URL url = new URL(urlStr);
 
 			InputStream uStream = url.openStream();
@@ -506,12 +575,26 @@ public class PDBStatus {
 			reader.setContentHandler(handler);
 			reader.parse(source);
 			
-			return handler.getRecords();
+			// Fetch results of SAX parsing
+			List<Map<String,String>> records = handler.getRecords();
+			
+			//add to cache
+			for(Map<String,String> record : records) {
+				String pdbId = record.get("structureId").toUpperCase();
+				if(pdbId != null) {
+					recordsCache.put(pdbId, record);
+				}
+			}
+			
+			// return results
+			result.addAll(handler.getRecords());			
 		} catch (Exception e){
 			System.err.println("Problem getting status for " + pdbIDs.toString() + " from PDB server." );
 			e.printStackTrace();
 			return null;
 		}
+
+		return result;
 	}
 	
 	/**
