@@ -125,6 +125,8 @@ public class ChemCompGroupFactory {
 		String oneLetter = cc.getOne_letter_code();
 		if ( oneLetter == null || oneLetter.equals("X") || oneLetter.equals("?")) {
 			String parentId = cc.getMon_nstd_parent_comp_id() ;
+			if ( parentId == null)
+				return oneLetter;
 			ChemComp parentCC = ChemCompGroupFactory.getChemComp(parentId);
 			if ( parentCC == null)
 				return oneLetter;
