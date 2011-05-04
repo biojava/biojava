@@ -599,6 +599,8 @@ public class ChainImpl implements Chain, Serializable {
 						PolymerType.POLYNUCLEOTIDE_ONLY.contains(cc.getPolymerType())){
 					// an amino acid residue.. use for alignment
 					String oneLetter= ChemCompGroupFactory.getOneLetterCode(cc);
+					if ( oneLetter == null)
+						oneLetter = "X";
 					sequence.append(oneLetter);
 				}
 
@@ -728,6 +730,7 @@ public class ChainImpl implements Chain, Serializable {
 				groups.add(g);
 			}
 		}
+		
 		return groups;
 	}
 }
