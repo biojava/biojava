@@ -251,5 +251,6 @@
 		<module>biojava3-alignment</module>
 		<module>biojava3-ws</module>
 
+		<module>biojava3-aa-prop</module>
 	</modules>
 </project>
