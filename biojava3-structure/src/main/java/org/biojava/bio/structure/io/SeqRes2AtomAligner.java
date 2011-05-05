@@ -68,7 +68,7 @@ import org.biojava3.core.sequence.template.Compound;
  */
 public class SeqRes2AtomAligner {
 
-	boolean DEBUG = true;
+	boolean DEBUG = false;
 
 	static final List<String> excludeTypes;
 
@@ -184,6 +184,9 @@ public class SeqRes2AtomAligner {
 		List<Group> seqResGroups = seqRes.getAtomGroups();
 		List<Group> atmResGroups = atomRes.getAtomGroups();
 		
+		if (DEBUG) {
+			System.err.println("COMPARING " + atomRes.getChainID() + " " + seqRes.getChainID());
+		}
 		// by default first ATOM position is 1
 		//
 		boolean startAt1 = true;
@@ -201,23 +204,33 @@ public class SeqRes2AtomAligner {
 			
 			ResidueNumber atomResNum = atomResGroup.getResidueNumber();
 			
-			if ( atomResNum.getSeqNum() < 0) {
+			int seqResPos = atomResNum.getSeqNum();
+			
+			
+			
+			if ( seqResPos < 0) {
 				if ( DEBUG )
 				System.err.println("ATOM residue number < 0");
 				return false;
 			}
 			
-			if ( atomResNum.getSeqNum() == 0){
+			if ( seqResPos == 0){
 				// make sure the first SEQRES is matching.
 				Group seqResGroup = seqResGroups.get(0);
 				if (  seqResGroup.getPDBName().equals(atomResGroup.getPDBName())){
 					// they match! seems in this case the numbering starts with 0...
 					startAt1 = false;
+				} else {
+					if ( DEBUG){
+						System.err.println("SEQRES position 1  ("+seqResGroup.getPDBName()+
+								") does not match ATOM PDB res num 0 (" + atomResGroup.getPDBName()+")");
+						return false;
+					}
+				
 				}
 			}
 			
-			int seqResPos = atomResNum.getSeqNum();
-			
+		 	
 			if ( startAt1 )
 				seqResPos--;
 			
@@ -228,7 +241,7 @@ public class SeqRes2AtomAligner {
 				// could be a HETATOM...
 				if ( atomResGroup instanceof AminoAcid) {
 					if ( DEBUG )
-					System.err.println(" ATOM residue nr: " + seqResPos + " > seqres! " + seqResGroups.size() + " " + atomResGroup);
+						System.err.println(" ATOM residue nr: " + seqResPos + " > seqres! " + seqResGroups.size() + " " + atomResGroup);
 					return false;
 				} else {
 					// we won't map HETATOM groups...
@@ -237,7 +250,10 @@ public class SeqRes2AtomAligner {
 			}
 			
 			
-			
+			if ( seqResPos < 0){
+				
+				System.err.println("What is going on??? " + atomRes.getChainID() + " " + atomResGroup);
+			}
 
 			Group seqResGroup = seqResGroups.get(seqResPos );
 			
