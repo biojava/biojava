@@ -6,8 +6,8 @@
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
   <groupId>org.biojava</groupId>
-  <artifactId>biojava3-protProperties</artifactId>
+  <artifactId>biojava3-aa-prop</artifactId>
   <version>3.0.2-SNAPSHOT</version>
-  <name>biojava3-protProperties</name>
+  <name>biojava3-aa-prop</name>
   <url>http://maven.apache.org</url>
 </project>
