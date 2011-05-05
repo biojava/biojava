@@ -808,8 +808,15 @@ public class AfpChainWriter
 			StringWriter alnsymb, StringWriter header1, StringWriter footer1, StringWriter header2, 
 			StringWriter footer2, StringWriter block, int len, boolean showHTML)
 	{
-		char c1 =  getOneLetter(ca1[p1].getGroup());
-		char c2 =  getOneLetter(ca2[p2].getGroup());
+		char c1;
+		char c2;
+		if (( p1 < ca1.length) && (p2< ca2.length)){
+			c1=  getOneLetter(ca1[p1].getGroup());
+			c2 =  getOneLetter(ca2[p2].getGroup());
+		} else {
+			c1 = 'X';
+			c2 = 'X';
+		}
 		double score = AFPAlignmentDisplay.aaScore(c1,c2);
 
 		if ( showHTML) {
@@ -850,10 +857,11 @@ public class AfpChainWriter
 			}
 		}
 
+		if ( p1 < ca1.length)
+			formatPosition(p1, ca1,len, header1, header2);
 
-		formatPosition(p1, ca1,len, header1, header2);
-
-		formatPosition(p2,ca2,len, footer1, footer2);
+		if ( p2 < ca2.length)
+			formatPosition(p2,ca2,len, footer1, footer2);
 
 	}
 
