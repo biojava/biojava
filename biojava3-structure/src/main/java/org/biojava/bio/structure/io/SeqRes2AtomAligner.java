@@ -68,7 +68,7 @@ import org.biojava3.core.sequence.template.Compound;
  */
 public class SeqRes2AtomAligner {
 
-	boolean DEBUG = false;
+	boolean DEBUG = true;
 
 	static final List<String> excludeTypes;
 
@@ -222,9 +222,8 @@ public class SeqRes2AtomAligner {
 				seqResPos--;
 			
 			// another check that would require the alignment approach
-			if ( 
-					(   startAt1 && seqResPos >  seqResGroups.size()  ) ||
-					( ! startAt1 && seqResPos >= seqResGroups.size() )) {
+			if ( startAt1 && seqResPos >=  seqResGroups.size()  )
+					 {
 				
 				// could be a HETATOM...
 				if ( atomResGroup instanceof AminoAcid) {
@@ -242,7 +241,7 @@ public class SeqRes2AtomAligner {
 
 			Group seqResGroup = seqResGroups.get(seqResPos );
 			
-			if ( ! seqResGroup.getPDBName().equals(atomResGroup.getPDBName())){
+			if ( ! seqResGroup.getPDBName().trim().equals(atomResGroup.getPDBName().trim())){
 				// a mismatch! something is wrong in the mapping and we need to do an alignment
 				if ( DEBUG )
 				System.err.println("Mismatch of SEQRES pos " + seqResPos + " and ATOM record: " + atomResGroup + " | " + seqResGroup);
