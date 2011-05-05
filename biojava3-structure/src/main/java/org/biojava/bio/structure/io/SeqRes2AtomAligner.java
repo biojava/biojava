@@ -56,8 +56,6 @@ import org.biojava3.core.sequence.compound.AminoAcidCompoundSet;
 import org.biojava3.core.sequence.template.Compound;
 
 
-
-
 /** Aligns the SEQRES residues to the ATOM residues.
  * The AminoAcids that can be matched between the two of them will be set in the SEQRES
  * chains
@@ -83,8 +81,6 @@ public class SeqRes2AtomAligner {
 		//matrix.printMatrix();
 
 	}
-
-
 
 	public SeqRes2AtomAligner(){
 		alignmentString = "";
@@ -224,8 +220,9 @@ public class SeqRes2AtomAligner {
 					if ( DEBUG){
 						System.err.println("SEQRES position 1  ("+seqResGroup.getPDBName()+
 								") does not match ATOM PDB res num 0 (" + atomResGroup.getPDBName()+")");
-						return false;
+						 
 					}
+					return false;
 				
 				}
 			}
@@ -511,7 +508,5 @@ public class SeqRes2AtomAligner {
 		return noMatchFound;
 
 	}
-
-
 
 }
