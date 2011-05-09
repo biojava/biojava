@@ -268,6 +268,22 @@ public class HetatomImpl implements Group,Serializable {
 			}
 
 		}
+		
+		// if here, we could not find the atom in this group.
+		// however in some alternate locations, the CA atoms are displayed.
+		// check the alternate locations...
+		
+		if ( hasAltLoc()) {
+			for ( Group alt : altLocs){
+				try {
+					a = alt.getAtom(name);
+					if ( a != null)
+						return a;
+				} catch (StructureException e){
+					// does not have that atom, ignore.
+				}
+			}
+		}
 
 		throw new StructureException(" No atom "+name + " in group " + pdb_name + " " + residueNumber  + " !");
 
@@ -319,6 +335,15 @@ public class HetatomImpl implements Group,Serializable {
 		if ( a != null)
 			return true;
 
+		// check altLocs:
+		
+		if ( hasAltLoc()){
+			for (Group alt: altLocs){
+				if ( alt.hasAtom(fullName))
+					return true;
+			}
+		}
+		
 		return false;
 
 		//       for (int i=0;i<atoms.size();i++){
