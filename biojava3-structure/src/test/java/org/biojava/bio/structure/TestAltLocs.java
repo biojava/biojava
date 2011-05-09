@@ -1,5 +1,6 @@
 package org.biojava.bio.structure;
 
+import java.util.Iterator;
 import java.util.List;
 
 import org.biojava.bio.structure.io.mmcif.chem.PolymerType;
@@ -80,5 +81,32 @@ public class TestAltLocs extends TestCase {
 			fail(e.getMessage());
 		}
 
+	}
+	
+	public void test2W72(){
+		try {
+			TmpAtomCache.cache.getFileParsingParams().setAlignSeqRes(true);
+			Structure s = TmpAtomCache.cache.getStructure("2W72");
+			
+			Chain a = s.getChainByPDB("A");
+			
+			Group val1 = a.getGroupByPDB("1");
+			Atom ca1 = val1.getAtom(" CA ");
+			assertNotNull(ca1);
+			
+			Group lys7 = a.getGroupByPDB("7");
+			Atom ca7 = lys7.getAtom(" CA ");
+			
+			assertNotNull(ca7);
+			
+			Atom[] caA = StructureTools.getAtomCAArray(a);
+						
+			assertEquals(caA.length,141);
+			
+		} catch(Exception e){
+			e.printStackTrace();
+			fail(e.getMessage());
+		}
+		
 	}
 }
