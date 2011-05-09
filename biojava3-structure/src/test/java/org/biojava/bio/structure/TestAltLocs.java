@@ -85,7 +85,7 @@ public class TestAltLocs extends TestCase {
 	
 	public void test2W72(){
 		try {
-			TmpAtomCache.cache.getFileParsingParams().setAlignSeqRes(true);
+			
 			Structure s = TmpAtomCache.cache.getStructure("2W72");
 			
 			Chain a = s.getChainByPDB("A");
@@ -95,8 +95,7 @@ public class TestAltLocs extends TestCase {
 			assertNotNull(ca1);
 			
 			Group lys7 = a.getGroupByPDB("7");
-			Atom ca7 = lys7.getAtom(" CA ");
-			
+			Atom ca7 = lys7.getAtom(" CA ");			
 			assertNotNull(ca7);
 			
 			Atom[] caA = StructureTools.getAtomCAArray(a);
