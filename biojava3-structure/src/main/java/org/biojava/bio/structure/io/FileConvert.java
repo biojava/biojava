@@ -258,30 +258,10 @@ public class FileConvert {
 
 					Group g= chain.getAtomGroup(h);
 
-					// format output ...
-					int groupsize  = g.size();
-
-
-					// iteratate over all atoms ...
-					for ( int atompos = 0 ; atompos < groupsize; atompos++) {
-						Atom a = null ;
-						try {
-							a = g.getAtom(atompos);
-						} catch ( StructureException e) {
-							System.err.println(e);
-							continue ;
-						}
-
-						toPDB(a, str);
-
-
-						//line = record + serial + " " + fullname +altLoc
-						//+ leftResName + " " + chainID + resseq
-						//+ "   " + x+y+z
-						//+ occupancy + tempfactor;
-						//str.append(line + newline);
-						//System.out.println(line);
-					}
+					
+					toPDB(g,str);
+					
+					
 				}
 			}
 
@@ -297,6 +277,38 @@ public class FileConvert {
 			str.append(printPDBConnections());
 
 		return str.toString() ;
+	}
+
+	private void toPDB(Group g, StringBuffer str) {
+		// iterate over all atoms ...
+		// format output ...
+		int groupsize  = g.size();
+
+		for ( int atompos = 0 ; atompos < groupsize; atompos++) {
+			Atom a = null ;
+			try {
+				a = g.getAtom(atompos);
+			} catch ( StructureException e) {
+				System.err.println(e);
+				continue ;
+			}
+
+			toPDB(a, str);
+
+
+			//line = record + serial + " " + fullname +altLoc
+			//+ leftResName + " " + chainID + resseq
+			//+ "   " + x+y+z
+			//+ occupancy + tempfactor;
+			//str.append(line + newline);
+			//System.out.println(line);
+		}
+		if ( g.hasAltLoc()){
+			for (Group alt : g.getAltLocs() ) {
+				toPDB(alt,str);
+			}
+		}
+		
 	}
 
 	/** Prints the content of an Atom object as a PDB formatted line.
