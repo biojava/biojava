@@ -37,8 +37,14 @@ import org.biojava3.core.sequence.ProteinSequence;
  * what is the instability index? Is there only one way to calculate it? If so
  * it should be described here.
  * 
+ * TODO read on javadoc standards for example -
+ * http://www.oracle.com/technetwork/java/javase/documentation/index-137868.html
+ * your javadoc is not complete
+ * 
  * TODO Have you thought about the input restrictions? For example do you allow
  * ambiguous characters in the input sequence? This should be documented.
+ * 
+ * Once you acted on todo comment, feel free to delete it.
  * 
  * @author kohchuanhock
  * @version 2011.05.09
