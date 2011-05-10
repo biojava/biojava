@@ -44,6 +44,10 @@ import org.biojava3.core.sequence.ProteinSequence;
  * TODO Have you thought about the input restrictions? For example do you allow
  * ambiguous characters in the input sequence? This should be documented.
  * 
+ * TODO read on java naming conventions for example here
+ * http://java.about.com/od/javasyntax/a/nameconventions.htm and stick to them!
+ * Start from renaming the package for this interface.
+ * 
  * Once you acted on todo comment, feel free to delete it.
  * 
  * @author kohchuanhock
