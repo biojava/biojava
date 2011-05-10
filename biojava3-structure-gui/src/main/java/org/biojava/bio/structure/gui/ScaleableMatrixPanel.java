@@ -262,7 +262,17 @@ implements ChangeListener, ActionListener {
 		gradient.put(5., Color.black);
 		gradient.setInterpolator(interp);
 		
-		gradients.put((++i)+". Emphasize low", gradient);	
+		gradients.put((++i)+". Emphasize low", gradient);
+		
+		
+		interp = new LinearColorInterpolator(hsv);
+		interp.setInterpolationDirection(0, InterpolationDirection.INNER);
+		gradient = new GradientMapper(Color.green, Color.black, hsv);
+		gradient.put( 0., new Color(hsv,new float[] {0f, .9f, 0f},1f));
+		gradient.put( 100., new Color(hsv,new float[] {1f, .9f, 1f},1f));
+		gradient.setInterpolator(interp);
+		
+		gradients.put((++i)+". 0 to 100", gradient);	
 		
 		// log color
 		interp = new LinearColorInterpolator(hsv);
