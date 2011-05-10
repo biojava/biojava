@@ -2,6 +2,7 @@ package org.biojava.bio.structure.align;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ListIterator;
 
 import org.biojava.bio.structure.StructureException;
 import org.biojava.bio.structure.align.ce.CeCPMain;
@@ -53,9 +54,32 @@ public class StructureAlignmentFactory {
 			algorithms.add(alg);
 		}
 	}
+	
+	/**
+	 * Removes the specified algorithm from the list of options
+	 * @param name the name of the algorithm to remove
+	 * @return true if the specified algorithm was found and removed
+	 */
+	public static boolean removeAlgorithm(String name) {
+		ListIterator<StructureAlignment> algIt = algorithms.listIterator();
+		while(algIt.hasNext()) {
+			StructureAlignment alg = algIt.next();
+			if(alg.getAlgorithmName().equalsIgnoreCase(name)) {
+				algIt.remove();
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	/**
+	 * Removes all algorithms from the list
+	 */
+	public static void clearAlgorithms() {
+		algorithms.clear();
+	}
 
 	public static StructureAlignment getAlgorithm(String name) throws StructureException{
-		StructureAlignment[] algorithms = getAllAlgorithms();
 		for ( StructureAlignment algo : algorithms){
 			if (algo.getAlgorithmName().equalsIgnoreCase(name))
 				return algo;
