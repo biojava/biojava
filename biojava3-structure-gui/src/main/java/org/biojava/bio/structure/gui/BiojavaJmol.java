@@ -269,7 +269,9 @@ public class BiojavaJmol  {
 		frame.repaint();
 	}
 
-	
+	public JFrame getFrame(){
+		return frame;
+	}
 
 
 }
