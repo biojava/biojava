@@ -1664,6 +1664,10 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 			// test altLoc
 			if ( ! altLoc.equals(' ')) {												
 				altGroup = getCorrectAltLocGroup( altLoc,recordName,aminoCode1,groupCode3);
+				if ( altGroup.getChain() == null) {
+					// need to set current chain
+					altGroup.setChain(current_chain);
+				}
 				//System.out.println("found altLoc! " + current_group + " " + altGroup);
 			}
 		}
