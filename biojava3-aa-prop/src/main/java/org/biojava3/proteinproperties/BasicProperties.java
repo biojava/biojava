@@ -23,18 +23,12 @@
 package org.biojava3.proteinproperties;
 
 import java.util.AbstractMap;
-import java.util.Hashtable;
 
 import org.biojava.bio.structure.AminoAcid;
 import org.biojava3.core.sequence.ProteinSequence;
 
 /**
  * An interface to generate some basic physico-chemical properties of protein sequences
- * 
- * AHFU - TODO
- * What constraints are we talking about? values for properties
- * What input restrictions? non-ambiguous characters and the implementations
- * getAAComposition - What do Peter mean by use interface as return value? Use AbstractMap or Map
  * 
  * @author kohchuanhock
  * @version 2011.05.09
