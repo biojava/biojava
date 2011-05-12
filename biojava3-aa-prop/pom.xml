@@ -15,8 +15,11 @@
   		<groupId>org.biojava</groupId>
   		<artifactId>biojava3-core</artifactId>
   		<version>3.0.2-SNAPSHOT</version>
-  		<type>jar</type>
-  		<scope>compile</scope>
+  	</dependency>
+  	<dependency>
+  		<groupId>org.biojava</groupId>
+  		<artifactId>biojava3-structure</artifactId>
+  		<version>3.0.2-SNAPSHOT</version>
   	</dependency>
   </dependencies>
 </project>
