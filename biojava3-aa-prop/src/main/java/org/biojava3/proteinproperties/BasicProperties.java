@@ -22,6 +22,7 @@
  */
 package org.biojava3.proteinproperties;
 
+import java.util.AbstractMap;
 import java.util.Hashtable;
 
 import org.biojava.bio.structure.AminoAcid;
@@ -31,10 +32,9 @@ import org.biojava3.core.sequence.ProteinSequence;
  * An interface to generate some basic physico-chemical properties of protein sequences
  * 
  * AHFU - TODO
- * What constraints are we talking about? Isnt it the same as input restrictions?
- * What input restrictions?
- * Netcharge and isoelectric points approach I found are acceptable?
- * getAAComposition - What do Peter mean by use interface as return value?
+ * What constraints are we talking about? values for properties
+ * What input restrictions? non-ambiguous characters and the implementations
+ * getAAComposition - What do Peter mean by use interface as return value? Use AbstractMap or Map
  * 
  * @author kohchuanhock
  * @version 2011.05.09
@@ -157,14 +157,9 @@ public interface BasicProperties {
 	 * <p>
 	 * The composition of an amino acid is the total number of its occurrence, divided by the total length of the sequence.
 	 * 
-	 * TODO use interfaces as return type.
-	 * 
-	 * TODO same as above RE amino acid code
-	 * 
-	 * 
 	 * @param sequence a protein sequence consisting of non-ambiguous characters only
 	 * @return the composition of the 20 standard amino acid in the sequence
 	 * @see ProteinSequence, AminoAcid
 	 */
-	public Hashtable<Character, Double> getAAComposition(ProteinSequence sequence);
+	public AbstractMap<AminoAcid, Double> getAAComposition(ProteinSequence sequence);
 }
