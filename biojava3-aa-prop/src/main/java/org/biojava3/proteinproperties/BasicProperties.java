@@ -24,8 +24,8 @@ package org.biojava3.proteinproperties;
 
 import java.util.AbstractMap;
 
-import org.biojava.bio.structure.AminoAcid;
 import org.biojava3.core.sequence.ProteinSequence;
+import org.biojava3.core.sequence.compound.AminoAcidCompound;
 
 /**
  * An interface to generate some basic physico-chemical properties of protein sequences
@@ -39,7 +39,7 @@ public interface BasicProperties {
 	 * The sequence argument must be a protein sequence consisting of only non-ambiguous characters.
 	 * <p>
 	 * This method will sum the molecular weight of each amino acid in the sequence.
-	 * Molecular weights are based on (http://au.expasy.org/tools/findmod/findmod_masses.html#AA).
+	 * Molecular weights are based on {@link http://au.expasy.org/tools/findmod/findmod_masses.html#AA}.
 	 *
 	 * @param  sequence a protein sequence consisting of non-ambiguous characters only
 	 * @return the total molecular weight of sequence
@@ -110,7 +110,7 @@ public interface BasicProperties {
 	 * <p>
 	 * The isoelectric point is the pH at which the protein carries no net electrical charge.
 	 * The isoelectric point will be computed based on approach stated in 
-	 * (http://www.innovagen.se/custom-peptide-synthesis/peptide-property-calculator/peptide-property-calculator-notes.asp#PI)
+	 * {@link http://www.innovagen.se/custom-peptide-synthesis/peptide-property-calculator/peptide-property-calculator-notes.asp#PI}
 	 * 
 	 * @param sequence a protein sequence consisting of non-ambiguous characters only
 	 * @return the isoelectric point of sequence
@@ -123,7 +123,7 @@ public interface BasicProperties {
 	 * The sequence argument must be a protein sequence consisting of only non-ambiguous characters.
 	 * <p>
 	 * The net charge will be computed using the approach stated in 
-	 * (http://www.innovagen.se/custom-peptide-synthesis/peptide-property-calculator/peptide-property-calculator-notes.asp#NetCharge)
+	 * {@link http://www.innovagen.se/custom-peptide-synthesis/peptide-property-calculator/peptide-property-calculator-notes.asp#NetCharge}
 	 * 
 	 * @param sequence a protein sequence consisting of non-ambiguous characters only
 	 * @return the net charge of sequence at pH 7
@@ -143,7 +143,7 @@ public interface BasicProperties {
 	 * @return the composition of specified amino acid in the sequence
 	 * @see ProteinSequence, AminoAcid
 	 */
-	public double getEnrichment(ProteinSequence sequence, AminoAcid aminoAcidCode);
+	public double getEnrichment(ProteinSequence sequence, AminoAcidCompound aminoAcidCode);
 
 	/**
 	 * Returns the composition of the 20 standard amino acid in the sequence. 
@@ -155,5 +155,5 @@ public interface BasicProperties {
 	 * @return the composition of the 20 standard amino acid in the sequence
 	 * @see ProteinSequence, AminoAcid
 	 */
-	public AbstractMap<AminoAcid, Double> getAAComposition(ProteinSequence sequence);
+	public AbstractMap<AminoAcidCompound, Double> getAAComposition(ProteinSequence sequence);
 }
