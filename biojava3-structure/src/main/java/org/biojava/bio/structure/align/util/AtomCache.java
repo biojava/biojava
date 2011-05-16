@@ -1,6 +1,7 @@
 package org.biojava.bio.structure.align.util;
 
 import java.io.IOException;
+import java.net.URL;
 
 
 import java.util.Collection;
@@ -43,13 +44,12 @@ import org.biojava3.core.util.InputStreamProvider;
 public class AtomCache {
 
 	public static final String CHAIN_NR_SYMBOL = ":";
-	
+
 	public static final String CHAIN_SPLIT_SYMBOL = ".";
 
 	private static final String FILE_SEPARATOR = System.getProperty("file.separator");
-	
-	String path;
 
+	String path;
 
 	// make sure IDs are loaded uniquely
 	Collection<String> currentlyLoading = Collections.synchronizedCollection(new TreeSet<String>());
@@ -72,10 +72,10 @@ public class AtomCache {
 	 */
 	public AtomCache(String pdbFilePath, boolean isSplit){
 
-		
+
 		if ( ! pdbFilePath.endsWith(FILE_SEPARATOR))
 			pdbFilePath += FILE_SEPARATOR;
-		
+
 		// we are caching the binary files that contain the PDBs gzipped
 		// that is the most memory efficient way of caching...
 		// set the input stream provider to caching mode
@@ -86,11 +86,11 @@ public class AtomCache {
 		System.setProperty(AbstractUserArgumentProcessor.PDB_DIR,path);
 		//this.cache = cache;
 		this.isSplit = isSplit;
-		
+
 		autoFetch = true;
 		fetchFileEvenIfObsolete = false;
 		fetchCurrent = false;
-		
+
 		currentlyLoading.clear();
 		params = new FileParsingParameters();
 
@@ -101,7 +101,7 @@ public class AtomCache {
 		// 
 
 		this.strictSCOP = true;
-		
+
 		scopInstallation = null;
 	}
 
@@ -203,8 +203,8 @@ public class AtomCache {
 	public boolean isFetchCurrent() {
 		return fetchCurrent;
 	}
-	
-	
+
+
 	/**
 	 * Reports whether strict scop naming will be enforced, or whether this AtomCache
 	 * should try to guess some simple variants on scop domains.
@@ -304,6 +304,7 @@ public class AtomCache {
 		//System.out.println("loading " + name);
 		Structure s = null;
 		try {
+
 			s = getStructure(name);
 
 		} catch (StructureException ex){
@@ -362,11 +363,7 @@ public class AtomCache {
 
 		if ( name.length() < 4)
 			throw new IllegalArgumentException("Can't interpred IDs that are shorter than 4 residues!");
-
-
-		//loading.set(true);
-
-
+		
 		Structure n = null;
 
 		boolean useChainNr = false;
@@ -398,7 +395,7 @@ public class AtomCache {
 					Structure s = getStructureForDomain(domain);
 					return s;
 				}
-			
+
 				if( !this.strictSCOP) {
 					Matcher scopMatch = scopIDregex.matcher(name);
 					if( scopMatch.matches() ) {
@@ -418,9 +415,9 @@ public class AtomCache {
 						return struct;
 					}
 				}
-									
+
 				throw new StructureException("Unable to get structure for SCOP domain: "+name);
-			
+
 			} else if (name.length() == 6){
 				pdbId = name.substring(0,4);
 				if ( name.substring(4,5).equals(CHAIN_SPLIT_SYMBOL)) {
@@ -431,11 +428,25 @@ public class AtomCache {
 					chainNr = Integer.parseInt(name.substring(5,6));
 				}
 			} else if ( (name.length() > 6) &&  
-					(name.contains(CHAIN_NR_SYMBOL))) {
+					(name.contains(CHAIN_NR_SYMBOL)) && (! (name.startsWith("file:/") || name.startsWith("http:/")))) {
 				pdbId = name.substring(0,4);
 				// this ID has domain split information...
 				useDomainInfo = true;
 				range = name.substring(5);
+			} else if ( name.startsWith("file:/") || name.startsWith("http:/") ) {
+				
+				try {
+					
+					URL url = new URL(name);
+					
+					return getStructureFromURL(url);
+					
+				} catch (Exception e){
+					e.printStackTrace();
+					return null;
+				}
+
+
 			}
 
 			//System.out.println("got: " + name + " " + pdbId + " " + chainId + " useChainNr:" + useChainNr + " " +chainNr + " useDomainInfo:" + useDomainInfo + " " + range);
@@ -460,10 +471,6 @@ public class AtomCache {
 			//long start  = System.currentTimeMillis();
 
 			Structure s;
-
-
-
-
 			flagLoading(pdbId);
 			try {
 				PDBFileReader reader = new PDBFileReader();
@@ -517,6 +524,37 @@ public class AtomCache {
 
 	}
 
+
+	private Structure getStructureFromURL(URL url) throws IOException, StructureException {
+		// looks like a URL for a file was provided:
+		System.out.println("fetching structure from URL:" + url);
+		
+		String queryS = url.getQuery();
+				
+		String chainId = null;
+		if ( queryS != null && (queryS.startsWith("chainId="))) {
+			chainId = queryS.substring(8);
+		
+		}
+		
+		
+		PDBFileReader reader = new PDBFileReader();
+		reader.setPath(path);
+		reader.setPdbDirectorySplit(isSplit);
+		reader.setAutoFetch(autoFetch);
+		reader.setFetchFileEvenIfObsolete(fetchFileEvenIfObsolete);
+		reader.setFetchCurrent(fetchCurrent);
+
+		reader.setFileParsingParameters(params);
+		
+		Structure s = reader.getStructure(url);
+		if ( chainId == null)
+			return StructureTools.getReducedStructure(s,-1);
+		else 
+			return StructureTools.getReducedStructure(s,chainId);
+	}
+
+
 	private static final Pattern scopIDregex = Pattern.compile("d(....)(.)(.)" );
 	/**
 	 * <p>Guess a scop domain. If an exact match is found, return that.
@@ -535,7 +573,7 @@ public class AtomCache {
 	 */
 	private ScopDomain guessScopDomain(String name) throws IOException, StructureException {
 		List<ScopDomain> matches = new LinkedList<ScopDomain>();
-		
+
 		// Try exact match first
 		ScopDomain domain = getScopDomain(name);
 		if ( domain != null){
@@ -614,7 +652,7 @@ public class AtomCache {
 		if ( scopInstallation == null) {
 			scopInstallation = new ScopInstallation(path);
 		}
-		
+
 		return scopInstallation;
 	}
 
@@ -628,7 +666,7 @@ public class AtomCache {
 		this.params = params;
 	}
 
-	
+
 	/** Loads the biological unit
 	 * 
 	 * @param pdbId the PDB ID
