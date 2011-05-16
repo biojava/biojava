@@ -35,11 +35,6 @@ import org.biojava.bio.structure.Group;
 import org.biojava.bio.structure.ResidueNumber;
 import org.biojava.bio.structure.StructureException;
 
-import org.biojava.bio.structure.io.mmcif.chem.PolymerType;
-import org.biojava.bio.structure.io.mmcif.chem.ResidueType;
-import org.biojava.bio.structure.io.mmcif.model.ChemComp;
-import org.biojava3.protmod.ComponentType;
-
 
 public final class StructureUtil {
 	private StructureUtil() {
