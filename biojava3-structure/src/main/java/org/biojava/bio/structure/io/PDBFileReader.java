@@ -392,9 +392,16 @@ public class PDBFileReader implements StructureIOFile {
 					pdbFile = testpath+ex ;
 
 					InputStreamProvider isp = new InputStreamProvider();
-
-					inputStream = isp.getInputStream(pdbFile);
-
+					
+					try {
+						inputStream = isp.getInputStream(pdbFile);
+					} catch (Exception e){
+						e.printStackTrace();
+						// something is wrong with the file!
+						// it probably should be downloaded again...
+						pdbFile = null;
+					}
+					
 					break;
 				}
 
