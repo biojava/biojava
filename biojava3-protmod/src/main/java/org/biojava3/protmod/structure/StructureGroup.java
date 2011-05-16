@@ -126,7 +126,8 @@ implements Comparable<StructureGroup> {
 	@Override
 	public int hashCode() {
 		int result = 17;
-		result = result * 31 + resNum.hashCode();
+		if ( resNum != null)
+			result = result * 31 + resNum.hashCode();
 		return result;
 	}
 
