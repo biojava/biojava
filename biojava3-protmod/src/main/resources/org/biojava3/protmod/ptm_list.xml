@@ -2215,7 +2215,7 @@
 			</Component>
 			<Bond>
 				<Atom component="1">SG</Atom>
-				<Atom component="3">CBB</Atom>
+				<Atom component="2">CBB</Atom>
 			</Bond>
 			<Bond>
 				<Atom component="1">SG</Atom>
