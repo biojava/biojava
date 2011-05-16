@@ -41,7 +41,6 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.biojava3.protmod.Component;
-import org.biojava3.protmod.ComponentType;
 import org.biojava3.protmod.ModificationCategory;
 import org.biojava3.protmod.ModificationCondition;
 import org.biojava3.protmod.ModificationConditionImpl;
@@ -159,19 +158,6 @@ public final class ProteinModificationXmlReader {
 					}
 					String label = labelNode.getTextContent();
 					
-					// comp type
-					Node compTypeNode = compNodeAttrs.getNamedItem("type");
-					if (compTypeNode==null) {
-						throw new RuntimeException("Each component must have a type." +
-								" See Modification "+id+".");
-					}
-					ComponentType compType = ComponentType.getByLabel(
-							compTypeNode.getTextContent());
-					if (compType==null) {
-						throw new RuntimeException(compTypeNode.getTextContent()
-								+" is unsupported as a component type.");
-					}
-					
 					if (mapLabelComp.containsKey(label)) {
 						throw new RuntimeException("Each component must have a unique label." +
 								" See Modification "+id+".");
@@ -221,7 +207,7 @@ public final class ProteinModificationXmlReader {
 					}
 
 					// register
-					Component comp = Component.of(compIds, compType, nTerminal, cTerminal);
+					Component comp = Component.of(compIds, nTerminal, cTerminal);
 					comps.add(comp);						
 					mapLabelComp.put(label, comps.size()-1);
 				}

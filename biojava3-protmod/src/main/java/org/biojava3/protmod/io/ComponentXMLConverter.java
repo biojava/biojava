@@ -8,7 +8,6 @@ import java.util.Set;
 
 import org.biojava3.core.util.PrettyXMLWriter;
 import org.biojava3.protmod.Component;
-import org.biojava3.protmod.ComponentType;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -27,7 +26,6 @@ public class ComponentXMLConverter {
 	public static void toXML(Component component, PrettyXMLWriter xml) throws IOException{
 		xml.openTag("component");
 		
-		xml.attribute("type",component.getType().toString());
 		xml.attribute("nTerminal" , component.isNTerminal()+"");
 		xml.attribute("cTerminal", component.isCTerminal()+"");
 		for (String pdbccId : component.getPdbccIds()){
@@ -55,8 +53,7 @@ public class ComponentXMLConverter {
 		
 		boolean isNTerminal = Boolean.parseBoolean(nTerminalS); 
 		boolean isCTerminal = Boolean.parseBoolean(cTerminalS);
-		
-		ComponentType compType = ComponentType.getByLabel(type);
+                
 		Set<String>pdbccIds = new HashSet<String>();
 
 		NodeList valList = componentN.getChildNodes();
@@ -76,7 +73,7 @@ public class ComponentXMLConverter {
 
 		}
 
-		Component c = Component.of(pdbccIds, compType, isNTerminal, isCTerminal);
+		Component c = Component.of(pdbccIds, isNTerminal, isCTerminal);
 		return c;
 
 	}

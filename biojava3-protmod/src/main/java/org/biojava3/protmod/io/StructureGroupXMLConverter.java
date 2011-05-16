@@ -4,7 +4,6 @@ import java.io.IOException;
 
 import org.biojava.bio.structure.ResidueNumber;
 import org.biojava3.core.util.PrettyXMLWriter;
-import org.biojava3.protmod.ComponentType;
 import org.biojava3.protmod.structure.StructureGroup;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
@@ -19,7 +18,7 @@ public class StructureGroupXMLConverter {
 		if ( group.getInsCode() != null)
 			xml.attribute("insCode",group.getInsCode()+"");
 		xml.attribute("residueNr", group.getResidueNumber()+"");
-		xml.attribute("type", group.getType().label());
+		xml.attribute("isAminoAcid", Boolean.toString(group.isAminoAcid()));
 		xml.closeTag("structureGroup");
 	}
 
@@ -30,7 +29,7 @@ public class StructureGroupXMLConverter {
 		String pdbName = getAttribute(n, "pdbName");
 		String insCode = getAttribute(n, "insCode");
 		String resN  = getAttribute(n, "residueNr");
-		String type = getAttribute(n,"type");
+		String isAminoAcid = getAttribute(n,"isAminoAcid");
 		
 		ResidueNumber resNum = new ResidueNumber();
 		resNum.setChainId(chainID);
@@ -38,7 +37,7 @@ public class StructureGroupXMLConverter {
 		resNum.setInsCode(insCode.charAt(0));
 		resNum.setSeqNum(Integer.parseInt(resN));
 		
-		StructureGroup g = new StructureGroup(resNum, pdbName, ComponentType.getByLabel(type));
+		StructureGroup g = new StructureGroup(resNum, pdbName, Boolean.valueOf(isAminoAcid));
 		return g;
 	}
 	

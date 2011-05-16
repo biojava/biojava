@@ -45,7 +45,6 @@ import org.biojava.bio.structure.StructureException;
 
 
 import org.biojava3.protmod.Component;
-import org.biojava3.protmod.ComponentType;
 import org.biojava3.protmod.ModificationCategory;
 import org.biojava3.protmod.ModificationCondition;
 import org.biojava3.protmod.ModificationLinkage;
@@ -62,11 +61,16 @@ public class ProteinModificationIdentifier {
 	
 	private double bondLengthTolerance = 0.4;
 	private boolean recordUnidentifiableModifiedCompounds = false;
-	private boolean recordAdditionalAttachments = true;
+	private boolean recordAdditionalAttachments = false;
 	
 	private Set<ModifiedCompound> identifiedModifiedCompounds = null;
 	private Set<StructureAtomLinkage> unidentifiableAtomLinkages = null;
 	private Set<StructureGroup> unidentifiableModifiedResidues = null;
+
+        /**
+         * Temporary save the amino acids for each call of identify().
+         */
+        private List<Group> residues;
 	
 	/**
 	 * 
@@ -259,7 +263,7 @@ public class ProteinModificationIdentifier {
 		}
 		
 		Map<String, Chain> mapChainIdChain = new HashMap<String, Chain>(chains.size());
-		List<Group> residues = new ArrayList<Group>();
+		residues = new ArrayList<Group>();
 		List<Group> ligands = new ArrayList<Group>();
 		Map<Component, Set<Group>> mapCompGroups = new HashMap<Component, Set<Group>>();
 		
@@ -268,6 +272,7 @@ public class ProteinModificationIdentifier {
 			List<Group> ress = StructureUtil.getAminoAcids(chain);
 			List<Group> ligs = chain.getAtomLigands();
 			residues.addAll(ress);
+                        residues.removeAll(ligs);
 			ligands.addAll(ligs);
 			addModificationGroups(potentialModifications, ress, ligs, mapCompGroups);
 		}
@@ -316,8 +321,8 @@ public class ProteinModificationIdentifier {
 		
 		// record unidentifiable linkage
 		if (recordUnidentifiableModifiedCompounds) {
-			recordUnidentifiableAtomLinkages(modComps, residues, ligands);
-			recordUnidentifiableModifiedResidues(modComps, residues);
+			recordUnidentifiableAtomLinkages(modComps, ligands);
+			recordUnidentifiableModifiedResidues(modComps);
 		}
 	}
 
@@ -347,7 +352,7 @@ public class ProteinModificationIdentifier {
 		Set<Group> modifiedResidues = mapCompGroups.get(components.get(0));
 		if (modifiedResidues != null) {
 			for (Group residue : modifiedResidues) {
-				StructureGroup strucGroup = StructureUtil.getStructureGroup(residue, ComponentType.AMINOACID);
+				StructureGroup strucGroup = StructureUtil.getStructureGroup(residue, true);
 				ModifiedCompound modRes = new ModifiedCompoundImpl(mod, strucGroup);
 				modComps.add(modRes);
 			}
@@ -372,7 +377,7 @@ public class ProteinModificationIdentifier {
 		// will be combined in mergeModComps()
 		// TODO: how about chain-chain links?
 		List<Group> identifiedGroups = new ArrayList<Group>();
-		for (StructureGroup num : mc.getGroups(ComponentType.LIGAND)) {
+		for (StructureGroup num : mc.getGroups(false)) {
 			Group group;
 			try {
 				//String numIns = "" + num.getResidueNumber();
@@ -401,12 +406,12 @@ public class ProteinModificationIdentifier {
 				for (int i=start; i<n; i++) {
 					Group group2 = identifiedGroups.get(i);
 					if (!identifiedGroups.contains(group1)) {
-						List<Atom[]> linkedAtoms = StructureUtil.findNonNCAtomLinkages(
-								group1, false, group2, false, bondLengthTolerance);
+						List<Atom[]> linkedAtoms = StructureUtil.findAtomLinkages(
+								group1, group2, false, bondLengthTolerance);
 						if (!linkedAtoms.isEmpty()) {
 							for (Atom[] atoms : linkedAtoms) {
 								mc.addAtomLinkage(StructureUtil.getStructureAtomLinkage(atoms[0], 
-										ComponentType.LIGAND, atoms[1], ComponentType.LIGAND));
+										false, atoms[1], false));
 							}
 							identifiedGroups.add(group1);
 							break;
@@ -440,8 +445,8 @@ public class ProteinModificationIdentifier {
 			for (; ipre<icurr; ipre++) {
 				if (remove.contains(ipre))	continue;
 				ModifiedCompound pre = modComps.get(ipre);
-				if (!Collections.disjoint(pre.getGroups(ComponentType.LIGAND), 
-						curr.getGroups(ComponentType.LIGAND))) {
+				if (!Collections.disjoint(pre.getGroups(false),
+						curr.getGroups(false))) {
 					break;
 				}
 			}
@@ -469,7 +474,7 @@ public class ProteinModificationIdentifier {
 	 * residues or one residue and one ligand will be recorded.
 	 */
 	private void recordUnidentifiableAtomLinkages(List<ModifiedCompound> modComps,
-			List<Group> residues, List<Group> ligands) {
+			List<Group> ligands) {
 		
 		// first put identified linkages in a map for fast query
 		Set<StructureAtomLinkage> identifiedLinkages = new HashSet<StructureAtomLinkage>();
@@ -484,11 +489,11 @@ public class ProteinModificationIdentifier {
 			Group group1 = residues.get(i);
 			for (int j=i+1; j<nRes; j++) {
 				Group group2 = residues.get(j);
-				List<Atom[]> linkages = StructureUtil.findNonNCAtomLinkages(
-						group1, true, group2, true, bondLengthTolerance);
+				List<Atom[]> linkages = StructureUtil.findAtomLinkages(
+						group1, group2, true, bondLengthTolerance);
 				for (Atom[] atoms : linkages) {
 					StructureAtomLinkage link = StructureUtil.getStructureAtomLinkage(atoms[0], 
-							ComponentType.AMINOACID, atoms[1], ComponentType.AMINOACID);
+							true, atoms[1], true);
 					unidentifiableAtomLinkages.add(link);
 				}
 			}
@@ -503,28 +508,28 @@ public class ProteinModificationIdentifier {
 				if (group1.equals(group2)) { // overlap between residues and ligands
 					continue;
 				}
-				List<Atom[]> linkages = StructureUtil.findNonNCAtomLinkages(
-						group1, true, group2, false, bondLengthTolerance);
+				List<Atom[]> linkages = StructureUtil.findAtomLinkages(
+						group1, group2, false, bondLengthTolerance);
 				for (Atom[] atoms : linkages) {
 					StructureAtomLinkage link = StructureUtil.getStructureAtomLinkage(atoms[0], 
-							ComponentType.AMINOACID, atoms[1], ComponentType.LIGAND);
+							true, atoms[1], false);
 					unidentifiableAtomLinkages.add(link);
 				}
 			}
 		}
 	}
 	
-	private void recordUnidentifiableModifiedResidues(List<ModifiedCompound> modComps, List<Group> residues) {
+	private void recordUnidentifiableModifiedResidues(List<ModifiedCompound> modComps) {
 		Set<StructureGroup> identifiedComps = new HashSet<StructureGroup>();
 		for (ModifiedCompound mc : modComps) {
-			identifiedComps.addAll(mc.getGroups(ComponentType.AMINOACID));
+			identifiedComps.addAll(mc.getGroups(true));
 		}
 		
 		// TODO: use the ModifiedAminoAcid after Andreas add that.
 		for (Group group : residues) {
 			if (group.getType().equals(GroupType.HETATM)) {
 				StructureGroup strucGroup = StructureUtil.getStructureGroup(
-						group, ComponentType.AMINOACID);
+						group, true);
 				if (!identifiedComps.contains(strucGroup)) {
 					unidentifiableModifiedResidues.add(strucGroup);
 				}
@@ -556,7 +561,7 @@ public class ProteinModificationIdentifier {
 			for (Component comp : condition.getComponents()) {
 				for (String pdbccId : comp.getPdbccIds()) {
 					Component single = Component.of(Collections.singleton(pdbccId), 
-							comp.getType(), comp.isNTerminal(), comp.isCTerminal());
+							comp.isNTerminal(), comp.isCTerminal());
 					Set<Component> mult = mapSingleMultiComps.get(single);
 					if (mult == null) {
 						mult = new HashSet<Component>();
@@ -570,11 +575,11 @@ public class ProteinModificationIdentifier {
 		{
 			// ligands
 			Set<Component> ligandsWildCard = mapSingleMultiComps.get(
-					Component.of("*", ComponentType.LIGAND));
+					Component.of("*"));
 			for (Group group : ligands) {
 				String pdbccId = group.getPDBName().trim();
 				Set<Component> comps = mapSingleMultiComps.get(
-						Component.of(pdbccId, ComponentType.LIGAND));
+						Component.of(pdbccId));
 				
 				for (Component comp : unionComponentSet(ligandsWildCard, comps)) {
 					Set<Group> gs = saveTo.get(comp);
@@ -594,13 +599,13 @@ public class ProteinModificationIdentifier {
 			}
 			
 			Set<Component> residuesWildCard = mapSingleMultiComps.get(
-					Component.of("*", ComponentType.AMINOACID));
+					Component.of("*"));
 			
 			// for all residues
 			for (Group group : residues) {
 				String pdbccId = group.getPDBName().trim();
 				Set<Component> comps = mapSingleMultiComps.get(
-						Component.of(pdbccId, ComponentType.AMINOACID));
+						Component.of(pdbccId));
 				
 				for (Component comp : unionComponentSet(residuesWildCard, comps)) {
 					Set<Group> gs = saveTo.get(comp);
@@ -621,10 +626,10 @@ public class ProteinModificationIdentifier {
 				res = residues.get(iRes++);
 
 				Set<Component> nTermWildCard = mapSingleMultiComps.get(
-						Component.of("*", ComponentType.AMINOACID, true, false));
+						Component.of("*", true, false));
 
 				Set<Component> comps = mapSingleMultiComps.get(
-						Component.of(res.getPDBName(), ComponentType.AMINOACID, true, false));
+						Component.of(res.getPDBName(), true, false));
 				
 				for (Component comp : unionComponentSet(nTermWildCard, comps)) {
 					Set<Group> gs = saveTo.get(comp);
@@ -643,10 +648,10 @@ public class ProteinModificationIdentifier {
 				res = residues.get(iRes--);
 
 				Set<Component> cTermWildCard = mapSingleMultiComps.get(
-						Component.of("*", ComponentType.AMINOACID, false, true));
+						Component.of("*", false, true));
 				
 				Set<Component> comps = mapSingleMultiComps.get(
-						Component.of(res.getPDBName(), ComponentType.AMINOACID, false, true));
+						Component.of(res.getPDBName(), false, true));
 
 				for (Component comp : unionComponentSet(cTermWildCard, comps)) {
 					Set<Group> gs = saveTo.get(comp);
@@ -693,8 +698,8 @@ public class ProteinModificationIdentifier {
 			Component comp1 = linkage.getComponent1();
 			Component comp2 = linkage.getComponent2();
 
-			boolean isAA1 = comp1.getType()==ComponentType.AMINOACID;
-			boolean isAA2 = comp2.getType()==ComponentType.AMINOACID;
+//			boolean isAA1 = comp1.;
+//			boolean isAA2 = comp2.getType()==true;
 			
 			Set<Group> groups1 = mapCompGroups.get(comp1);
 			Set<Group> groups2 = mapCompGroups.get(comp2);
@@ -724,11 +729,19 @@ public class ProteinModificationIdentifier {
 					if (g1.equals(g2)) {
 						continue;
 					}
+
+                                        // only for wildcard match of two residues
+                                        boolean ignoreNCLinkage = 
+                                                potentialNamesOfAtomOnGroup1 == null &&
+                                                potentialNamesOfAtomOnGroup2 == null &&
+                                                residues.contains(g1) &&
+                                                residues.contains(g2);
 		
-					Atom[] atoms = StructureUtil.findNearestNonNCAtomLinkage(
-							g1, isAA1, g2, isAA2,
+					Atom[] atoms = StructureUtil.findNearestAtomLinkage(
+							g1, g2, 
 							potentialNamesOfAtomOnGroup1,
-							potentialNamesOfAtomOnGroup2, 
+							potentialNamesOfAtomOnGroup2,
+                                                        ignoreNCLinkage,
 							bondLengthTolerance);
 					if (atoms!=null) {
 						list.add(atoms);
@@ -776,8 +789,8 @@ public class ProteinModificationIdentifier {
 				for (int i=0; i<n; i++) {
 					Atom[] linkage = atomLinkages.get(i);
 					StructureAtomLinkage link = StructureUtil.getStructureAtomLinkage(
-							linkage[0], modLinks.get(i).getComponent1().getType(), 
-							linkage[1], modLinks.get(i).getComponent2().getType());
+							linkage[0], residues.contains(linkage[0].getGroup()),
+							linkage[1], residues.contains(linkage[1].getGroup()));
 					linkages.add(link);
 				}
 				

@@ -30,7 +30,6 @@ import java.util.List;
 import java.util.Set;
 
 import org.biojava3.protmod.Component;
-import org.biojava3.protmod.ComponentType;
 import org.biojava3.protmod.ModificationCategory;
 import org.biojava3.protmod.ModificationCondition;
 import org.biojava3.protmod.ModificationConditionImpl;
@@ -51,8 +50,8 @@ public class ProteinModificationRegistryTest extends TestCase {
 	
 	public void testRegisterModification() {
 		List<Component> components = new ArrayList<Component>(2);
-		components.add(Component.of("COMP1", ComponentType.AMINOACID));
-		components.add(Component.of("COMP2", ComponentType.AMINOACID, true, false));
+		components.add(Component.of("COMP1"));
+		components.add(Component.of("COMP2", true, false));
 		
 		ModificationLinkage linkage = new ModificationLinkage(components, 0, "ATOM1", 1, "ATOM2");
 		
@@ -106,7 +105,7 @@ public class ProteinModificationRegistryTest extends TestCase {
 		mods = ProteinModificationRegistry.getByPsimodId("MOD:00110");
 		assertNotNull(mods);
 
-		mods = ProteinModificationRegistry.getByComponent(Component.of("FAD", ComponentType.LIGAND));
+		mods = ProteinModificationRegistry.getByComponent(Component.of("FAD"));
 		assertNotNull(mods);
 
 		mods = ProteinModificationRegistry.getByCategory(ModificationCategory.ATTACHMENT);

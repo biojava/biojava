@@ -26,8 +26,6 @@ package org.biojava3.protmod.structure;
 
 import org.biojava.bio.structure.ResidueNumber;
 
-import org.biojava3.protmod.ComponentType;
-
 /**
  * Information of a group (residue or ligand) involved in a modification. 
  * @author Jianjiong Gao
@@ -38,19 +36,23 @@ implements Comparable<StructureGroup> {
 	
 	private  ResidueNumber resNum;
 	private  String pdbName;
-	private  ComponentType type;
+        private Boolean isAminoAcid;
 	
 	public StructureGroup(){
 		resNum = new ResidueNumber();
-		type = ComponentType.AMINOACID;
 	}
-	
+
 	public StructureGroup( ResidueNumber resNum,
-			 String pdbName,  ComponentType type) {
+			 String pdbName, boolean isAminoAcid) {
 		this.resNum = resNum;
 		this.pdbName = pdbName;
-		this.type = type;
+                this.isAminoAcid = isAminoAcid;
 	}
+
+//	public StructureGroup( ResidueNumber resNum,
+//			 String pdbName) {
+//		this(resNum, pdbName, true);
+//	}
 
 	public ResidueNumber getPDBResidueNumber() {
 		return resNum;
@@ -98,19 +100,10 @@ implements Comparable<StructureGroup> {
 		
 	}
 
-	public ComponentType getType() {
-		return type;
-	}
-	
-	public void setType(ComponentType type){
-		this.type  = type;
-	}
-	
-	
 	public boolean isAminoAcid() {
-		return type == ComponentType.AMINOACID;
+		return isAminoAcid;
 	}
-	
+
 	@Override
 	public boolean equals(Object obj) {
 		if (obj == this)
@@ -123,9 +116,6 @@ implements Comparable<StructureGroup> {
 		if (!resNum.equals(aGroup.resNum))
 			return false;
 		
-		if (type != aGroup.type)
-			return false;
-		
 		return true;
 	}
 
@@ -133,7 +123,6 @@ implements Comparable<StructureGroup> {
 	public int hashCode() {
 		int result = 17;
 		result = result * 31 + resNum.hashCode();
-		result = result * 31 + type.hashCode();
 		return result;
 	}
 

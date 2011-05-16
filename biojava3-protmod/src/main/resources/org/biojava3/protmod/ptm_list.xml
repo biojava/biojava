@@ -15,12 +15,11 @@
 			<Id>MOD:00814</Id>
 			<Name>O-xylosyl-L-serine</Name>
 		</CrossReference>
-		<Formula>C 8 H 13 N 1 O 6</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">SER</Id>
 			</Component>
-			<Component type="Attachment" label="2">
+			<Component label="2">
 				<Id source="PDBCC">XYS</Id>
 			</Component>
 			<Bond>
@@ -46,12 +45,11 @@
 			<Id>MOD:00160</Id>
 			<Name>N4-glycosyl-L-asparagine</Name>
 		</CrossReference>
-		<Formula>C 12 H 19 N 3 O 7</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">ASN</Id>
 			</Component>			
-			<Component type="Attachment" label="2">
+			<Component label="2">
 				<Id source="PDBCC">NAG</Id>
 			</Component>
 			<Bond>
@@ -82,9 +80,8 @@
 			<Id>MOD:00043</Id>
 			<Name>S-phospho-L-cysteine</Name>
 		</CrossReference>
-		<Formula>C 3 H 6 N 1 O 4 P 1 S 1</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">CSP</Id>
 			</Component>
 		</Condition>
@@ -111,9 +108,8 @@
 			<Id>MOD:00044</Id>
 			<Name>1'-phospho-L-histidine</Name>
 		</CrossReference>
-		<Formula>C 3 H 6 N 1 O 4 P 1 S 1</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">NEP</Id>
 			</Component>
 		</Condition>
@@ -140,9 +136,8 @@
 			<Id>MOD:00045</Id>
 			<Name>3'-phospho-L-histidine</Name>
 		</CrossReference>
-		<Formula>C 6 H 8 N 3 O 4 P 1</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">HIP</Id>
 			</Component>
 		</Condition>
@@ -170,9 +165,8 @@
 			<Id>MOD:00046</Id>
 			<Name>O-phospho-L-serine</Name>
 		</CrossReference>
-		<Formula>C 3 H 6 N 1 O 5 P 1</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">SEP</Id>
 			</Component>
 		</Condition>
@@ -199,9 +193,8 @@
 			<Id>MOD:00047</Id>
 			<Name>O-phospho-L-threonine</Name>
 		</CrossReference>
-		<Formula>C 4 H 8 N 1 O 5 P 1</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">TPO</Id>
 			</Component>
 		</Condition>
@@ -228,9 +221,8 @@
 			<Id>MOD:00048</Id>
 			<Name>O4'-phospho-L-tyrosine</Name>
 		</CrossReference>
-		<Formula>C 9 H 10 N 1 O 5 P 1</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">PTR</Id>
 			</Component>
 		</Condition>
@@ -253,13 +245,12 @@
 			<Id>MOD:00054</Id>
 			<Name>N-acetyl-L-glutamine</Name>
 		</CrossReference>
-		<Formula>C 7 H 11 N 2 O 3</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">GLN</Id>
 				<Terminal>N</Terminal>
 			</Component>
-			<Component type="Attachment" label="2">
+			<Component label="2">
 				<Id source="PDBCC">ACE</Id>
 			</Component>
 			<Bond>
@@ -285,13 +276,12 @@
 			<Id>MOD:00058</Id>
 			<Name>N-acetyl-L-methionine</Name>
 		</CrossReference>
-		<Formula>C 7 H 12 N 1 O 2 S 1</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">MET</Id>
 				<Terminal>N</Terminal>
 			</Component>
-			<Component type="Attachment" label="2">
+			<Component label="2">
 				<Id source="PDBCC">ACE</Id>
 			</Component>
 			<Bond>
@@ -323,9 +313,8 @@
 			<Id>MOD:00064</Id>
 			<Name>N6-acetyl-L-lysine</Name>
 		</CrossReference>
-		<Formula>C 8 H 14 N 2 O 2</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">ALY</Id>
 			</Component>
 		</Condition>
@@ -352,9 +341,8 @@
 			<Id>MOD:00181</Id>
 			<Name>O4'-sulfo-L-tyrosine</Name>
 		</CrossReference>
-		<Formula>C 9 H 9 N 1 O 5 S 1</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">TYS</Id>
 			</Component>
 		</Condition>
@@ -381,9 +369,8 @@
 			<Id>MOD:00085</Id>
 			<Name>N6-methyl-L-lysine</Name>
 		</CrossReference>
-		<Formula>C 7 H 14 N 2 O 1</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">MLZ</Id>
 			</Component>
 		</Condition>
@@ -410,9 +397,8 @@
 			<Id>MOD:00277</Id>
 			<Name>5-methyl-L-arginine</Name>
 		</CrossReference>
-		<Formula>C 7 H 14 N 4 O 1</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">AGM</Id>
 			</Component>
 		</Condition>
@@ -439,9 +425,8 @@
 			<Id>MOD:00083</Id>
 			<Name>N6,N6,N6-trimethyl-L-lysine</Name>
 		</CrossReference>
-		<Formula>C 9 H 19 N 2 O 1</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">M3L</Id>
 			</Component>
 		</Condition>
@@ -468,9 +453,8 @@
 			<Id>MOD:00073</Id>
 			<Name>N-methyl-L-methionine</Name>
 		</CrossReference>
-		<Formula>C 6 H 11 N 1 O 1 S 1</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">MME</Id>
 				<Terminal>N</Terminal>
 			</Component>
@@ -499,9 +483,8 @@
 			<Id>MOD:00039</Id>
 			<Name>4-hydroxy-L-proline</Name>
 		</CrossReference>
-		<Formula>C 5 H 7 N 1 O 2</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">HYP</Id>
 			</Component>
 		</Condition>
@@ -523,12 +506,11 @@
 			<Id>MOD:00034</Id>
 			<Name>L-cystine (cross-link)</Name>
 		</CrossReference>
-		<Formula>C 6 H 8 N 2 O 2 S 2</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">CYS</Id>
 			</Component>
-			<Component type="AminoAcid" label="2">
+			<Component label="2">
 				<Id source="PDBCC">CYS</Id>
 			</Component>
 			<Bond>
@@ -560,9 +542,8 @@
 			<Id>MOD:00110</Id>
 			<Name>L-cysteine methyl disulfide</Name>
 		</CrossReference>
-		<Formula>C 4 H 7 N 1 O 1 S 2</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">SCH</Id>
 			</Component>
 		</Condition>
@@ -584,18 +565,17 @@
 			<Id>MOD:00148</Id>
 			<Name>tris-L-cysteinyl triiron tetrasulfide</Name>
 		</CrossReference>
-		<Formula>C 9 Fe 3 H 12 N 3 O 3 S 7</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">CYS</Id>
 			</Component>
-			<Component type="AminoAcid" label="2">
+			<Component label="2">
 				<Id source="PDBCC">CYS</Id>
 			</Component>
-			<Component type="AminoAcid" label="3">
+			<Component label="3">
 				<Id source="PDBCC">CYS</Id>
 			</Component>
-			<Component type="Attachment" label="4">
+			<Component label="4">
 				<Id source="PDBCC">F3S</Id>
 			</Component>
 			<Bond>
@@ -631,21 +611,20 @@
 			<Id>MOD:00146</Id>
 			<Name>tetrakis-L-cysteinyl diiron disulfide</Name>
 		</CrossReference>
-		<Formula>C 12 Fe 2 H 16 N 4 O 4 S 6</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">CYS</Id>
 			</Component>
-			<Component type="AminoAcid" label="2">
+			<Component label="2">
 				<Id source="PDBCC">CYS</Id>
 			</Component>
-			<Component type="AminoAcid" label="3">
+			<Component label="3">
 				<Id source="PDBCC">CYS</Id>
 			</Component>
-			<Component type="AminoAcid" label="4">
+			<Component label="4">
 				<Id source="PDBCC">CYS</Id>
 			</Component>
-			<Component type="Attachment" label="5">
+			<Component label="5">
 				<Id source="PDBCC">FES</Id>
 			</Component>
 			<Bond>
@@ -690,9 +669,8 @@
 			<Id>MOD:00030</Id>
 			<Name>N-formyl-L-methionine</Name>
 		</CrossReference>
-		<Formula>C 6 H 10 N 1 O 2 S 1</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">FME</Id>
 				<Terminal>N</Terminal>
 			</Component>
@@ -723,9 +701,8 @@
 			<Id>MOD:00031</Id>
 			<Name>L-selenocysteine residue</Name>
 		</CrossReference>
-		<Formula>C 6 H 10 N 1 O 2 S 1</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">CSE</Id>
 			</Component>
 		</Condition>
@@ -754,9 +731,8 @@
 			<Id>MOD:00035</Id>
 			<Name>(2S,3R)-3-hydroxyasparagine</Name>
 		</CrossReference>
-		<Formula>C 4 H 6 N 2 O 3</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">AHB</Id>
 			</Component>
 		</Condition>
@@ -783,9 +759,8 @@
 			<Id>MOD:00036</Id>
 			<Name>(2S,3R)-3-hydroxyaspartic acid</Name>
 		</CrossReference>
-		<Formula>C 4 H 5 N 1 O 4</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">BHD</Id>
 			</Component>
 		</Condition>
@@ -812,9 +787,8 @@
 			<Id>MOD:00037</Id>
 			<Name>5-hydroxy-L-lysine</Name>
 		</CrossReference>
-		<Formula>C 6 H 12 N 2 O 2</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">LYZ</Id>
 			</Component>
 		</Condition>
@@ -841,9 +815,8 @@
 			<Id>MOD:00038</Id>
 			<Name>3-hydroxy-L-proline</Name>
 		</CrossReference>
-		<Formula>C 5 H 7 N 1 O 2</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">HY3</Id>
 			</Component>
 		</Condition>
@@ -870,9 +843,8 @@
 			<Id>MOD:00040</Id>
 			<Name>2-pyrrolidone-5-carboxylic acid (Gln)</Name>
 		</CrossReference>
-		<Formula>C 5 H 6 N 1 O 2</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">PCA</Id>
 			</Component>
 		</Condition>
@@ -900,9 +872,8 @@
 			<Id>MOD:00041</Id>
 			<Name>L-gamma-carboxyglutamic acid</Name>
 		</CrossReference>
-		<Formula>C 6 H 7 N 1 O 5</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">CGU</Id>
 			</Component>
 		</Condition>
@@ -929,9 +900,8 @@
 			<Id>MOD:00042</Id>
 			<Name>L-aspartic 4-phosphoric anhydride</Name>
 		</CrossReference>
-		<Formula>C 4 H 6 N 1 O 6 P 1</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">PHD</Id>
 			</Component>
 		</Condition>
@@ -958,9 +928,8 @@
 			<Id>MOD:00049</Id>
 			<Name>2'-[3-carboxamido-3-(trimethylammonio)propyl]-L-histidine</Name>
 		</CrossReference>
-		<Formula>C 13 H 22 N 5 O 2</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">DDE</Id>
 			</Component>
 		</Condition>
@@ -987,9 +956,8 @@
 			<Id>MOD:00065</Id>
 			<Name>S-acetyl-L-cysteine</Name>
 		</CrossReference>
-		<Formula>C 5 H 7 N 1 O 2 S 1</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">SCY</Id>
 			</Component>
 		</Condition>
@@ -1011,12 +979,11 @@
 			<Id>MOD:00068</Id>
 			<Name>N-myristoylglycine</Name>
 		</CrossReference>
-		<Formula>C 16 H 30 N 1 O 2</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">GLY</Id>
 			</Component>
-			<Component type="Attachment" label="2">
+			<Component label="2">
 				<Id source="PDBCC">MYR</Id>
 			</Component>
 			<Bond>
@@ -1049,9 +1016,8 @@
 			<Id>MOD:00070</Id>
 			<Name>N-methyl-L-alanine</Name>
 		</CrossReference>
-		<Formula>C 4 H 7 N 1 O 1</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">MAA</Id>
 			</Component>
 		</Condition>
@@ -1078,9 +1044,8 @@
 			<Id>MOD:00074</Id>
 			<Name>N-methyl-L-phenylalanine</Name>
 		</CrossReference>
-		<Formula>C 10 H 11 N 1 O 1</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">MEA</Id>
 			</Component>
 		</Condition>
@@ -1102,9 +1067,8 @@
 			<Id>MOD:00075</Id>
 			<Name>N,N-dimethyl-L-proline</Name>
 		</CrossReference>
-		<Formula>C 7 H 13 N 1 O 1</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">PBE</Id>
 			</Component>
 		</Condition>
@@ -1132,9 +1096,8 @@
 			<Id>MOD:00076</Id>
 			<Name>omega-N,omega-N'-dimethyl-L-arginine</Name>
 		</CrossReference>
-		<Formula>C 8 H 16 N 4 O 1</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">2MR</Id>
 			</Component>
 		</Condition>
@@ -1161,9 +1124,8 @@
 			<Id>MOD:00077</Id>
 			<Name>omega-N,omega-N-dimethyl-L-arginine</Name>
 		</CrossReference>
-		<Formula>C 8 H 16 N 4 O 1</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">DA2</Id>
 			</Component>
 		</Condition>
@@ -1190,9 +1152,8 @@
 			<Id>MOD:00079</Id>
 			<Name>N4-methyl-L-asparagine</Name>
 		</CrossReference>
-		<Formula>C 5 H 8 N 2 O 2</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">MEN</Id>
 			</Component>
 		</Condition>
@@ -1219,9 +1180,8 @@
 			<Id>MOD:00080</Id>
 			<Name>N5-methyl-L-glutamine</Name>
 		</CrossReference>
-		<Formula>C 6 H 10 N 2 O 2</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">MEQ</Id>
 			</Component>
 		</Condition>
@@ -1248,9 +1208,8 @@
 			<Id>MOD:00082</Id>
 			<Name>3'-methyl-L-histidine</Name>
 		</CrossReference>
-		<Formula>C 7 H 9 N 3 O 1</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">MHS</Id>
 			</Component>
 		</Condition>
@@ -1277,9 +1236,8 @@
 			<Id>MOD:00084</Id>
 			<Name>N6,N6-dimethyl-L-lysine</Name>
 		</CrossReference>
-		<Formula>C 8 H 16 N 2 O 1</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">MLY</Id>
 			</Component>
 		</Condition>
@@ -1306,9 +1264,8 @@
 			<Id>MOD:00091</Id>
 			<Name>L-arginine amide</Name>
 		</CrossReference>
-		<Formula>C 6 H 14 N 5 O 1</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">AAR</Id>
 			</Component>
 		</Condition>
@@ -1335,9 +1292,8 @@
 			<Id>MOD:00094</Id>
 			<Name>L-cysteine amide</Name>
 		</CrossReference>
-		<Formula>C 3 H 7 N 2 O 1 S 1</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">CY3</Id>
 			</Component>
 		</Condition>
@@ -1364,9 +1320,8 @@
 			<Id>MOD:00100</Id>
 			<Name>L-leucine amide</Name>
 		</CrossReference>
-		<Formula>C 6 H 13 N 2 O 1</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">CLE</Id>
 				<Terminal>C</Terminal>
 			</Component>
@@ -1394,9 +1349,8 @@
 			<Id>MOD:00103</Id>
 			<Name>L-phenylalanine amide</Name>
 		</CrossReference>
-		<Formula>C 9 H 11 N 2 O 1</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">NFA</Id>
 				<Terminal>C</Terminal>
 			</Component>
@@ -1424,9 +1378,8 @@
 			<Id>MOD:00104</Id>
 			<Name>L-proline amide</Name>
 		</CrossReference>
-		<Formula>C 5 H 9 N 2 O 1</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">LPD</Id>
 				<Terminal>C</Terminal>
 			</Component>
@@ -1454,9 +1407,8 @@
 			<Id>MOD:00108</Id>
 			<Name>L-tyrosine amide</Name>
 		</CrossReference>
-		<Formula>C 9 H 11 N 2 O 2</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">TYC</Id>
 				<Terminal>C</Terminal>
 			</Component>
@@ -1484,9 +1436,8 @@
 			<Id>MOD:00109</Id>
 			<Name>L-valine amide</Name>
 		</CrossReference>
-		<Formula>C 5 H 11 N 2 O 1</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">VLM</Id>
 				<Terminal>C</Terminal>
 			</Component>
@@ -1514,9 +1465,8 @@
 			<Id>MOD:00114</Id>
 			<Name>L-cysteine methyl ester</Name>
 		</CrossReference>
-		<Formula>C 4 H 8 N 1 O 2 S 1</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">CMT</Id>
 				<Terminal>C</Terminal>
 			</Component>
@@ -1544,9 +1494,8 @@
 			<Id>MOD:00115</Id>
 			<Name>S-palmitoyl-L-cysteine</Name>
 		</CrossReference>
-		<Formula>C 19 H 35 N 1 O 2 S 1</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">P1L</Id>
 			</Component>
 		</Condition>
@@ -1570,12 +1519,11 @@
 			<Id>MOD:00115</Id>
 			<Name>S-palmitoyl-L-cysteine</Name>
 		</CrossReference>
-		<Formula>C 19 H 35 N 1 O 2 S 1</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">CYS</Id>
 			</Component>
-			<Component type="Attachment" label="2">
+			<Component label="2">
 				<Id source="PDBCC">PLM</Id>
 			</Component>
 			<Bond>
@@ -1608,9 +1556,8 @@
 			<Id>MOD:00123</Id>
 			<Name>N6-carboxy-L-lysine</Name>
 		</CrossReference>
-		<Formula>C 7 H 12 N 2 O 3</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">KCX</Id>
 			</Component>
 		</Condition>
@@ -1636,9 +1583,8 @@
 			<Id>MOD:00124</Id>
 			<Name>N6-1-carboxyethyl-L-lysine</Name>
 		</CrossReference>
-		<Formula>C 9 H 16 N 2 O 3</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">MCL</Id>
 			</Component>
 		</Condition>
@@ -1659,12 +1605,11 @@
 			<Id>MOD:00126</Id>
 			<Name>N6-biotinyl-L-lysine</Name>
 		</CrossReference>
-		<Formula>C 16 H 26 N 4 O 3 S 1</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">LYS</Id>
 			</Component>
-			<Component type="Attachment" label="2">
+			<Component label="2">
 				<Id source="PDBCC">BTN</Id>
 			</Component>
 			<Bond>
@@ -1690,12 +1635,11 @@
 			<Id>MOD:00133</Id>
 			<Name>N6-(L-isoglutamyl)-L-lysine (Gln)</Name>
 		</CrossReference>
-		<Formula>C 11 H 17 N 3 O 3</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">LYS</Id>
 			</Component>
-			<Component type="AminoAcid" label="2">
+			<Component label="2">
 				<Id source="PDBCC">GLN</Id>
 			</Component>
 			<Bond>
@@ -1721,12 +1665,11 @@
 			<Id>MOD:01484</Id>
 			<Name>N6-(L-isoglutamyl)-L-lysine (Glu)</Name>
 		</CrossReference>
-		<Formula>C 11 H 17 N 3 O 3</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">LYS</Id>
 			</Component>
-			<Component type="AminoAcid" label="2">
+			<Component label="2">
 				<Id source="PDBCC">GLU</Id>
 			</Component>
 			<Bond>
@@ -1752,12 +1695,11 @@
 			<Id>MOD:00134</Id>
 			<Name>N6-glycyl-L-lysine</Name>
 		</CrossReference>
-		<Formula>C 8 H 14 N 3 O 2</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">LYS</Id>
 			</Component>
-			<Component type="AminoAcid" label="2">
+			<Component label="2">
 				<Id source="PDBCC">GLY</Id>
 				<Terminal>C</Terminal>
 			</Component>
@@ -1785,13 +1727,12 @@
 			<Id>MOD:00135</Id>
 			<Name>N-(L-isoaspartyl)glycine</Name>
 		</CrossReference>
-		<Formula>C 6 H 7 N 2 O 3</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">GLY</Id>
 				<Terminal>N</Terminal>
 			</Component>
-			<Component type="AminoAcid" label="2">
+			<Component label="2">
 				<Id source="PDBCC">ASN</Id>
 			</Component>
 			<Bond>
@@ -1818,13 +1759,12 @@
 			<Id>MOD:00221</Id>
 			<Name>N-(L-isoaspartyl)-L-cysteine</Name>
 		</CrossReference>
-		<Formula>C 7 H 9 N 2 O 3 S 1</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">CYS</Id>
 				<Terminal>N</Terminal>
 			</Component>
-			<Component type="AminoAcid" label="2">
+			<Component label="2">
 				<Id source="PDBCC">ASP</Id>
 			</Component>
 			<Bond>
@@ -1851,12 +1791,11 @@
 			<Id>MOD:00299</Id>
 			<Name>N6-(L-isoaspartyl)-L-lysine</Name>
 		</CrossReference>
-		<Formula>C 10 H 15 N 3 O 3</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">LYS</Id>
 			</Component>
-			<Component type="AminoAcid" label="2">
+			<Component label="2">
 				<Id source="PDBCC">ASN</Id>
 			</Component>
 			<Bond>
@@ -1882,12 +1821,11 @@
 			<Id>MOD:00365</Id>
 			<Name>N-(L-isoglutamyl)-glycine</Name>
 		</CrossReference>
-		<Formula>C 7 H 9 N 2 O 3</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">GLU</Id>
 			</Component>
-			<Component type="AminoAcid" label="2">
+			<Component label="2">
 				<Id source="PDBCC">GLY</Id>
 				<Terminal>N</Terminal>
 			</Component>
@@ -1916,12 +1854,11 @@
 			<Id>MOD:00924</Id>
 			<Name>N6-(L-threonyl)-L-lysine</Name>
 		</CrossReference>
-		<Formula>C 10 H 18 N 3 O 3</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">LYS</Id>
 			</Component>
-			<Component type="AminoAcid" label="2">
+			<Component label="2">
 				<Id source="PDBCC">THR</Id>
 				<Terminal>C</Terminal>
 			</Component>
@@ -1949,12 +1886,11 @@
 			<Id>MOD:00127</Id>
 			<Name>N6-lipoyl-L-lysine</Name>
 		</CrossReference>
-		<Formula>C 14 H 24 N 2 O 2 S 2</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">LYS</Id>
 			</Component>
-			<Component type="Attachment" label="2">
+			<Component label="2">
 				<Id source="PDBCC">LPA</Id>
 			</Component>
 			<Bond>
@@ -1987,9 +1923,8 @@
 			<Id>MOD:00128</Id>
 			<Name>N6-pyridoxal phosphate-L-lysine</Name>
 		</CrossReference>
-		<Formula>C 14 H 20 N 3 O 6 P 1</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">LLP</Id>
 			</Component>
 		</Condition>
@@ -2017,9 +1952,8 @@
 			<Id>MOD:00129</Id>
 			<Name>N6-retinylidene-L-lysine</Name>
 		</CrossReference>
-		<Formula>C 26 H 38 N 2 O 1</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">LYR</Id>
 			</Component>
 		</Condition>
@@ -2042,12 +1976,11 @@
 			<Id>MOD:00129</Id>
 			<Name>N6-retinylidene-L-lysine</Name>
 		</CrossReference>
-		<Formula>C 26 H 38 N 2 O 1</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">LYS</Id>
 			</Component>
-			<Component type="Attachment" label="2">
+			<Component label="2">
 				<Id source="PDBCC">RET</Id>
 			</Component>
 			<Bond>
@@ -2074,12 +2007,11 @@
 			<Id>MOD:00130</Id>
 			<Name>L-allysine</Name>
 		</CrossReference>
-		<Formula>C 6 H 9 N 1 O 2</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">LYS</Id>
 			</Component>
-			<Component type="Attachment" label="2">
+			<Component label="2">
 				<Id source="PDBCC">DO2</Id>
 			</Component>
 			<Bond>
@@ -2104,12 +2036,11 @@
 			<Id>MOD:00132</Id>
 			<Name>L-lysinoalanine</Name>
 		</CrossReference>
-		<Formula>C 9 H 15 N 3 O 2</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">LYS</Id>
 			</Component>
-			<Component type="AminoAcid" label="2">
+			<Component label="2">
 				<Id source="PDBCC">SER</Id>
 			</Component>
 			<Bond>
@@ -2135,12 +2066,11 @@
 			<Id>MOD:00140</Id>
 			<Name>S-phycocyanobilin-L-cysteine</Name>
 		</CrossReference>
-		<Formula>C 36 H 43 N 5 O 7 S 1</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">CYS</Id>
 			</Component>
-			<Component type="Attachment" label="2">
+			<Component label="2">
 				<Id source="PDBCC">CYC</Id>
 			</Component>
 			<Bond>
@@ -2168,12 +2098,11 @@
 			<Id>MOD:00141</Id>
 			<Name>S-phycoerythrobilin-L-cysteine</Name>
 		</CrossReference>
-		<Formula>C 36 H 43 N 5 O 7 S 1</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">CYS</Id>
 			</Component>
-			<Component type="Attachment" label="2">
+			<Component label="2">
 				<Id source="PDBCC">PEB</Id>
 			</Component>
 			<Bond>
@@ -2202,15 +2131,14 @@
 			<Id>MOD:00143</Id>
 			<Name>heme-bis-L-cysteine</Name>
 		</CrossReference>
-		<Formula>C 40 Fe 1 H 42 N 6 O 6 S 2</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">CYS</Id>
 			</Component>
-			<Component type="AminoAcid" label="2">
+			<Component label="2">
 				<Id source="PDBCC">CYS</Id>
 			</Component>
-			<Component type="AminoAcid" label="3">
+			<Component label="3">
 				<Id source="PDBCC">HEM</Id>
 			</Component>
 			<Bond>
@@ -2218,7 +2146,7 @@
 				<Atom component="2">CBB</Atom>
 			</Bond>
 			<Bond>
-				<Atom component="1">SG</Atom>
+				<Atom component="2">SG</Atom>
 				<Atom component="3">CBC</Atom>
 			</Bond>
 		</Condition>
@@ -2244,21 +2172,20 @@
 			<Id>MOD:00145</Id>
 			<Name>tetrakis-L-cysteinyl iron</Name>
 		</CrossReference>
-		<Formula>C 12 Fe 1 H 16 N 4 O 4 S 4</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">CYS</Id>
 			</Component>
-			<Component type="AminoAcid" label="2">
+			<Component label="2">
 				<Id source="PDBCC">CYS</Id>
 			</Component>
-			<Component type="AminoAcid" label="3">
+			<Component label="3">
 				<Id source="PDBCC">CYS</Id>
 			</Component>
-			<Component type="AminoAcid" label="4">
+			<Component label="4">
 				<Id source="PDBCC">CYS</Id>
 			</Component>
-			<Component type="Attachment" label="5">
+			<Component label="5">
 				<Id source="PDBCC">FE</Id>
 			</Component>
 			<Bond>
@@ -2298,21 +2225,20 @@
 			<Id>MOD:00149</Id>
 			<Name>tetrakis-L-cysteinyl tetrairon tetrasulfide</Name>
 		</CrossReference>
-		<Formula>C 12 Fe 4 H 16 N 4 O 4 S 8</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">CYS</Id>
 			</Component>
-			<Component type="AminoAcid" label="2">
+			<Component label="2">
 				<Id source="PDBCC">CYS</Id>
 			</Component>
-			<Component type="AminoAcid" label="3">
+			<Component label="3">
 				<Id source="PDBCC">CYS</Id>
 			</Component>
-			<Component type="AminoAcid" label="4">
+			<Component label="4">
 				<Id source="PDBCC">CYS</Id>
 			</Component>
-			<Component type="Attachment" label="5">
+			<Component label="5">
 				<Id source="PDBCC">SF4</Id>
 			</Component>
 			<Bond>
@@ -2351,18 +2277,17 @@
 			<Id>MOD:00150</Id>
 			<Name>L-cysteinyl-L-histidino-homocitryl molybdenum heptairon nonasulfide</Name>
 		</CrossReference>
-		<Formula>C 16 Fe 7 H 18 Mo 1 N 4 O 9 S 10</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">CYS</Id>
 			</Component>
-			<Component type="AminoAcid" label="2">
+			<Component label="2">
 				<Id source="PDBCC">HIS</Id>
 			</Component>
-			<Component type="Attachment" label="3">
+			<Component label="3">
 				<Id source="PDBCC">CFM</Id>
 			</Component>
-			<Component type="Attachment" label="4">
+			<Component label="4">
 				<Id source="PDBCC">HCA</Id>
 			</Component>
 			<Bond>
@@ -2401,18 +2326,17 @@
 			<Id>MOD:00150</Id>
 			<Name>L-cysteinyl-L-histidino-homocitryl molybdenum heptairon nonasulfide</Name>
 		</CrossReference>
-		<Formula>C 16 Fe 7 H 18 Mo 1 N 4 O 9 S 10</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">CYS</Id>
 			</Component>
-			<Component type="AminoAcid" label="2">
+			<Component label="2">
 				<Id source="PDBCC">HIS</Id>
 			</Component>
-			<Component type="Attachment" label="3">
+			<Component label="3">
 				<Id source="PDBCC">CFN</Id>
 			</Component>
-			<Component type="Attachment" label="4">
+			<Component label="4">
 				<Id source="PDBCC">HCA</Id>
 			</Component>
 			<Bond>
@@ -2452,12 +2376,11 @@
 			<Id>MOD:00151</Id>
 			<Name>L-cysteinyl molybdopterin</Name>
 		</CrossReference>
-		<Formula>C 13 H 16 Mo 1 N 6 O 9 P 1 S 3</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">CYS</Id>
 			</Component>
-			<Component type="Attachment" label="2">
+			<Component label="2">
 				<Id source="PDBCC">MTQ</Id>
 			</Component>
 			<Bond>
@@ -2486,12 +2409,11 @@
 			<Id>MOD:00152</Id>
 			<Name>S-(8alpha-FAD)-L-cysteine</Name>
 		</CrossReference>
-		<Formula>C 30 H 36 N 10 O 16 P 2 S 1</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">CYS</Id>
 			</Component>
-			<Component type="Attachment" label="2">
+			<Component label="2">
 				<Id source="PDBCC">FAD</Id>
 			</Component>
 			<Bond>
@@ -2520,12 +2442,11 @@
 			<Id>MOD:00153</Id>
 			<Name>3'-(8alpha-FAD)-L-histidine</Name>
 		</CrossReference>
-		<Formula>C 33 H 38 N 12 O 16 P 2</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">HIS</Id>
 			</Component>
-			<Component type="Attachment" label="2">
+			<Component label="2">
 				<Id source="PDBCC">FAD</Id>
 			</Component>
 			<Bond>
@@ -2553,12 +2474,11 @@
 			<Id>MOD:00154</Id>
 			<Name>O4'-(8alpha-FAD)-L-tyrosine</Name>
 		</CrossReference>
-		<Formula>C 36 H 40 N 10 O 17 P 2</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">TYR</Id>
 			</Component>
-			<Component type="Attachment" label="2">
+			<Component label="2">
 				<Id source="PDBCC">FAD</Id>
 			</Component>
 			<Bond>
@@ -2591,9 +2511,8 @@
 			<Id>MOD:00156</Id>
 			<Name>oxidation of tyrosine to L-2',4',5'-topaquinone</Name>
 		</CrossReference>
-		<Formula>C 9 H 7 N 1 O 4</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">TPQ</Id>
 			</Component>
 		</Condition>
@@ -2621,9 +2540,8 @@
 			<Id>MOD:00157</Id>
 			<Name>oxidation of tryptophan to L-tryptophyl quinone</Name>
 		</CrossReference>
-		<Formula>C 11 H 8 N 2 O 3</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">TRQ</Id>
 			</Component>
 		</Condition>
@@ -2645,12 +2563,11 @@
 			<Id>MOD:00158</Id>
 			<Name>4'-(L-tryptophan)-L-tryptophyl quinone</Name>
 		</CrossReference>
-		<Formula>C 22 H 16 N 4 O 4</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">TRP</Id>
 			</Component>
-			<Component type="AminoAcid" label="2">
+			<Component label="2">
 				<Id source="PDBCC">TRP</Id>
 			</Component>
 			<Bond>
@@ -2676,12 +2593,11 @@
 			<Id>MOD:00159</Id>
 			<Name>O-phosphopantetheine-L-serine</Name>
 		</CrossReference>
-		<Formula>C 14 H 26 N 3 O 8 P 1 S 1</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">SER</Id>
 			</Component>
-			<Component type="Attachment" label="2">
+			<Component label="2">
 				<Id source="PDBCC">PNS</Id>
 			</Component>
 			<Bond>
@@ -2713,9 +2629,8 @@
 			<Id>MOD:00164</Id>
 			<Name>O-(N-acetylamino)galactosyl-L-threonine</Name>
 		</CrossReference>
-		<Formula>C 12 H 20 N 2 O 7</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">GTH</Id>
 			</Component>
 		</Condition>
@@ -2742,9 +2657,8 @@
 			<Id>MOD:00186</Id>
 			<Name>3',3'',5'-triiodo-L-thyronine</Name>
 		</CrossReference>
-		<Formula>C 15 H 10 I 3 N 1 O 3</Formula>
 		<Condition>
-			<Component type="Attachment" label="1">
+			<Component label="1">
 				<Id source="PDBCC">T3</Id>
 			</Component>
 		</Condition>
@@ -2771,9 +2685,8 @@
 			<Id>MOD:00187</Id>
 			<Name>L-thyroxine</Name>
 		</CrossReference>
-		<Formula>C 15 H 9 I 4 N 1 O 3</Formula>
 		<Condition>
-			<Component type="Attachment" label="1">
+			<Component label="1">
 				<Id source="PDBCC">T44</Id>
 			</Component>
 		</Condition>
@@ -2800,9 +2713,8 @@
 			<Id>MOD:00188</Id>
 			<Name>L-6'-bromotryptophan</Name>
 		</CrossReference>
-		<Formula>Br 1 C 11 H 9 N 2 O 1</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">BTR</Id>
 			</Component>
 		</Condition>
@@ -2829,9 +2741,8 @@
 			<Id>MOD:01168</Id>
 			<Name>dehydroalanine</Name>
 		</CrossReference>
-		<Formula>C 3 H 3 N 1 O 1</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">DHA</Id>
 			</Component>
 		</Condition>
@@ -2858,9 +2769,8 @@
 			<Id>MOD:00191</Id>
 			<Name>(Z)-2,3-didehydrotyrosine</Name>
 		</CrossReference>
-		<Formula>C 9 H 7 N 1 O 2</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">CRQ</Id>
 			</Component>
 		</Condition>
@@ -2887,9 +2797,8 @@
 			<Id>MOD:00197</Id>
 			<Name>2-imino-glutamine 5-imidazolinone glycine</Name>
 		</CrossReference>
-		<Formula>C16 H16 N4 O5</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">CRQ</Id>
 			</Component>
 		</Condition>
@@ -2917,9 +2826,8 @@
 			<Id>MOD:00191</Id>
 			<Name>(Z)-2,3-didehydrotyrosine</Name>
 		</CrossReference>
-		<Formula>C 9 H 7 N 1 O 2</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">CRO</Id>
 			</Component>
 		</Condition>
@@ -2946,9 +2854,8 @@
 			<Id>MOD:00192</Id>
 			<Name>L-serine 5-imidazolinone glycine</Name>
 		</CrossReference>
-		<Formula>C 5 H 6 N 2 O 2</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">CRO</Id>
 			</Component>
 		</Condition>
@@ -2976,9 +2883,8 @@
 			<Id>MOD:01169</Id>
 			<Name>L-3-oxoalanine</Name>
 		</CrossReference>
-		<Formula>C 3 H 3 N 1 O 2</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">FGL</Id>
 			</Component>
 		</Condition>
@@ -3005,9 +2911,8 @@
 			<Id>MOD:00862</Id>
 			<Name>D-alanine</Name>
 		</CrossReference>
-		<Formula>C 3 H 5 N 1 O 1</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">DAL</Id>
 			</Component>
 		</Condition>
@@ -3029,9 +2934,8 @@
 			<Id>MOD:00862</Id>
 			<Name>D-alanine</Name>
 		</CrossReference>
-		<Formula>C 3 H 5 N 1 O 1</Formula>
 		<Condition>
-			<Component type="Attachment" label="1">
+			<Component label="1">
 				<Id source="PDBCC">DAL</Id>
 			</Component>
 		</Condition>
@@ -3058,9 +2962,8 @@
 			<Id>MOD:00199</Id>
 			<Name>D-allo-isoleucine</Name>
 		</CrossReference>
-		<Formula>C 6 H 11 N 1 O 1</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">DIL</Id>
 			</Component>
 		</Condition>
@@ -3087,9 +2990,8 @@
 			<Id>MOD:00203</Id>
 			<Name>D-asparagine</Name>
 		</CrossReference>
-		<Formula>C 4 H 6 N 2 O 2</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">DSG</Id>
 			</Component>
 		</Condition>
@@ -3116,9 +3018,8 @@
 			<Id>MOD:00205</Id>
 			<Name>D-tryptophan</Name>
 		</CrossReference>
-		<Formula>C 11 H 10 N 2 O 1</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">DTR</Id>
 			</Component>
 		</Condition>
@@ -3145,9 +3046,8 @@
 			<Id>MOD:00863</Id>
 			<Name>D-allo-threonine</Name>
 		</CrossReference>
-		<Formula>C 4 H 7 N 1 O 2</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">DTH</Id>
 			</Component>
 		</Condition>
@@ -3174,9 +3074,8 @@
 			<Id>MOD:00705</Id>
 			<Name>D-valine</Name>
 		</CrossReference>
-		<Formula>C 5 H 9 N 1 O 1</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">DVA</Id>
 			</Component>
 		</Condition>
@@ -3203,9 +3102,8 @@
 			<Id>MOD:00210</Id>
 			<Name>L-cysteine sulfenic acid</Name>
 		</CrossReference>
-		<Formula>C 3 H 5 N 1 O 2 S 1</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">CSO</Id>
 			</Component>
 		</Condition>
@@ -3231,9 +3129,8 @@
 			<Id>MOD:00210</Id>
 			<Name>L-cysteine sulfenic acid</Name>
 		</CrossReference>
-		<Formula>C 3 H 5 N 1 O 2 S 1</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">CSX</Id>
 			</Component>
 		</Condition>
@@ -3254,12 +3151,11 @@
 			<Id>MOD:00211</Id>
 			<Name>S-glycyl-L-cysteine</Name>
 		</CrossReference>
-		<Formula>C 5 H 7 N 2 O 2 S 1</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">CYS</Id>
 			</Component>
-			<Component type="AminoAcid" label="2">
+			<Component label="2">
 				<Id source="PDBCC">GLY</Id>
 				<Terminal>C</Terminal>
 			</Component>
@@ -3287,12 +3183,11 @@
 			<Id>MOD:00212</Id>
 			<Name>S-4-hydroxycinnamyl-L-cysteine</Name>
 		</CrossReference>
-		<Formula>C 12 H 11 N 1 O 3 S 1</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">CYS</Id>
 			</Component>
-			<Component type="Attachment" label="2">
+			<Component label="2">
 				<Id source="PDBCC">HC4</Id>
 			</Component>
 			<Bond>
@@ -3326,9 +3221,8 @@
 			<Id>MOD:00220</Id>
 			<Name>4-hydroxy-L-arginine</Name>
 		</CrossReference>
-		<Formula>C 6 H 12 N 4 O 2</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">ARO</Id>
 			</Component>
 		</Condition>
@@ -3350,12 +3244,11 @@
 			<Id>MOD:00225</Id>
 			<Name>S-(6-FMN)-L-cysteine</Name>
 		</CrossReference>
-		<Formula>C 20 H 24 N 5 O 10 P 1 S 1</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">CYS</Id>
 			</Component>
-			<Component type="Attachment" label="2">
+			<Component label="2">
 				<Id source="PDBCC">FMN</Id>
 			</Component>
 			<Bond>
@@ -3384,12 +3277,11 @@
 			<Id>MOD:00226</Id>
 			<Name>1'-(8alpha-FAD)-L-histidine</Name>
 		</CrossReference>
-		<Formula>C 33 H 38 N 12 O 16 P 2</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">HIS</Id>
 			</Component>
-			<Component type="Attachment" label="2">
+			<Component label="2">
 				<Id source="PDBCC">FAD</Id>
 			</Component>
 			<Bond>
@@ -3422,9 +3314,8 @@
 			<Id>MOD:00233</Id>
 			<Name>N6-(phospho-5'-guanosine)-L-lysine</Name>
 		</CrossReference>
-		<Formula>C 16 H 24 N 7 O 8 P 1</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">GPL</Id>
 			</Component>
 		</Condition>
@@ -3451,9 +3342,8 @@
 			<Id>MOD:00235</Id>
 			<Name>S-nitrosyl-L-cysteine</Name>
 		</CrossReference>
-		<Formula>C 3 H 4 N 2 O 2 S 1</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">SNC</Id>
 			</Component>
 		</Condition>
@@ -3474,12 +3364,11 @@
 			<Id>MOD:00238</Id>
 			<Name>5'-(N6-L-lysine)-L-topaquinone</Name>
 		</CrossReference>
-		<Formula>C 15 H 17 N 3 O 4</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">TPQ</Id>
 			</Component>
-			<Component type="AminoAcid" label="2">
+			<Component label="2">
 				<Id source="PDBCC">LYS</Id>
 			</Component>
 			<Bond>
@@ -3511,9 +3400,8 @@
 			<Id>MOD:00239</Id>
 			<Name>S-methyl-L-cysteine</Name>
 		</CrossReference>
-		<Formula>C 4 H 7 N 1 O 1 S 1</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">SMC</Id>
 			</Component>
 		</Condition>
@@ -3536,12 +3424,11 @@
 			<Id>MOD:00255</Id>
 			<Name>3-(3'-L-histidyl)-L-tyrosine</Name>
 		</CrossReference>
-		<Formula>C 15 H 14 N 4 O 3</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">HIS</Id>
 			</Component>
-			<Component type="AminoAcid" label="2">
+			<Component label="2">
 				<Id source="PDBCC">TYR</Id>
 			</Component>
 			<Bond>
@@ -3572,9 +3459,8 @@
 			<Id>MOD:00256</Id>
 			<Name>L-methionine sulfone</Name>
 		</CrossReference>
-		<Formula>C 5 H 9 N 1 O 3 S 1</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">OMT</Id>
 			</Component>
 		</Condition>
@@ -3595,12 +3481,11 @@
 			<Id>MOD:00257</Id>
 			<Name>dipyrrolylmethanemethyl-L-cysteine</Name>
 		</CrossReference>
-		<Formula>C 23 H 27 N 3 O 9 S 1</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">CYS</Id>
 			</Component>
-			<Component type="Attachment" label="2">
+			<Component label="2">
 				<Id source="PDBCC">DPM</Id>
 			</Component>
 			<Bond>
@@ -3626,12 +3511,11 @@
 			<Id>MOD:00263</Id>
 			<Name>S-phycoviolobilin-L-cysteine</Name>
 		</CrossReference>
-		<Formula>C 36 H 43 N 5 O 7 S 1</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">CYS</Id>
 			</Component>
-			<Component type="Attachment" label="2">
+			<Component label="2">
 				<Id source="PDBCC">PVN</Id>
 			</Component>
 			<Bond>
@@ -3659,15 +3543,14 @@
 			<Id>MOD:00265</Id>
 			<Name>phycourobilin-bis-L-cysteine</Name>
 		</CrossReference>
-		<Formula>C 39 H 48 N 6 O 8 S 2</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">CYS</Id>
 			</Component>
-			<Component type="AminoAcid" label="2">
+			<Component label="2">
 				<Id source="PDBCC">CYS</Id>
 			</Component>
-			<Component type="Attachment" label="3">
+			<Component label="3">
 				<Id source="PDBCC">PUB</Id>
 			</Component>
 			<Bond>
@@ -3704,9 +3587,8 @@
 			<Id>MOD:00267</Id>
 			<Name>cysteine-S,S-dioxide</Name>
 		</CrossReference>
-		<Formula>C 3 H 5 N 1 O 3 S 1</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">CSD</Id>
 			</Component>
 		</Condition>
@@ -3732,9 +3614,8 @@
 			<Id>MOD:00267</Id>
 			<Name>cysteine-S,S-dioxide</Name>
 		</CrossReference>
-		<Formula>C 3 H 5 N 1 O 3 S 1</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">CSW</Id>
 			</Component>
 		</Condition>
@@ -3755,12 +3636,11 @@
 			<Id>MOD:00269</Id>
 			<Name>O-(sn-1-glycerophosphoryl)-L-serine</Name>
 		</CrossReference>
-		<Formula>C 6 H 12 N 1 O 7 P 1</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">SER</Id>
 			</Component>
-			<Component type="Attachment" label="2">
+			<Component label="2">
 				<Id source="PDBCC">OPE</Id>
 			</Component>
 			<Bond>
@@ -3792,9 +3672,8 @@
 			<Id>MOD:00270</Id>
 			<Name>1-thioglycine (internal)</Name>
 		</CrossReference>
-		<Formula>C 2 H 3 N 1 O 0 S 1</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">GL3</Id>
 			</Component>
 		</Condition>
@@ -3816,18 +3695,17 @@
 			<Id>MOD:00271</Id>
 			<Name>heme P460-bis-L-cysteine-L-tyrosine</Name>
 		</CrossReference>
-		<Formula>C 49 Fe 1 H 51 N 7 O 8 S 2</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">CYS</Id>
 			</Component>
-			<Component type="AminoAcid" label="2">
+			<Component label="2">
 				<Id source="PDBCC">CYS</Id>
 			</Component>
-			<Component type="AminoAcid" label="3">
+			<Component label="3">
 				<Id source="PDBCC">TYR</Id>
 			</Component>
-			<Component type="Attachment" label="4">
+			<Component label="4">
 				<Id source="PDBCC">HEC</Id>
 			</Component>
 			<Bond>
@@ -3865,18 +3743,17 @@
 			<Id>MOD:00276</Id>
 			<Name>heme P460-bis-L-cysteine-L-lysine</Name>
 		</CrossReference>
-		<Formula>C 46 Fe 1 H 54 N 8 O 7 S 2</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">CYS</Id>
 			</Component>
-			<Component type="AminoAcid" label="2">
+			<Component label="2">
 				<Id source="PDBCC">CYS</Id>
 			</Component>
-			<Component type="AminoAcid" label="3">
+			<Component label="3">
 				<Id source="PDBCC">LYS</Id>
 			</Component>
-			<Component type="Attachment" label="4">
+			<Component label="4">
 				<Id source="PDBCC">HEC</Id>
 			</Component>
 			<Bond>
@@ -3919,9 +3796,8 @@
 			<Id>MOD:00274</Id>
 			<Name>L-cysteine persulfide</Name>
 		</CrossReference>
-		<Formula>C 3 H 5 N 1 O 1 S 2</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">CSS</Id>
 			</Component>
 		</Condition>
@@ -3942,12 +3818,11 @@
 			<Id>MOD:00275</Id>
 			<Name>3'-(1'-L-histidyl)-L-tyrosine</Name>
 		</CrossReference>
-		<Formula>C 15 H 14 N 4 O 3</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">HIS</Id>
 			</Component>
-			<Component type="AminoAcid" label="2">
+			<Component label="2">
 				<Id source="PDBCC">TYR</Id>
 			</Component>
 			<Bond>
@@ -3978,9 +3853,8 @@
 			<Id>MOD:00278</Id>
 			<Name>2-methyl-L-glutamine</Name>
 		</CrossReference>
-		<Formula>C 6 H 10 N 2 O 2</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">MGN</Id>
 			</Component>
 		</Condition>
@@ -4007,9 +3881,8 @@
 			<Id>MOD:00282</Id>
 			<Name>S-selenyl-L-cysteine</Name>
 		</CrossReference>
-		<Formula>C 3 H 5 N 1 O 1 S 1 Se 1</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">CSZ</Id>
 			</Component>
 		</Condition>
@@ -4031,18 +3904,17 @@
 			<Id>MOD:00285</Id>
 			<Name>dihydroxyheme-L-aspartate ester-L-glutamate ester-L-methionine sulfonium</Name>
 		</CrossReference>
-		<Formula>C 48 Fe 1 H 50 N 7 O 11 S 1</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">ASP</Id>
 			</Component>
-			<Component type="AminoAcid" label="2">
+			<Component label="2">
 				<Id source="PDBCC">GLU</Id>
 			</Component>
-			<Component type="AminoAcid" label="3">
+			<Component label="3">
 				<Id source="PDBCC">MET</Id>
 			</Component>
-			<Component type="Attachment" label="4">
+			<Component label="4">
 				<Id source="PDBCC">HEM</Id>
 			</Component>
 			<Bond>
@@ -4080,15 +3952,14 @@
 			<Id>MOD:00288</Id>
 			<Name>pyrroloquinoline quinone</Name>
 		</CrossReference>
-		<Formula>C 14 H 6 N 2 O 8</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">GLU</Id>
 			</Component>
-			<Component type="AminoAcid" label="2">
+			<Component label="2">
 				<Id source="PDBCC">TYR</Id>
 			</Component>
-			<Component type="Attachment" label="3">
+			<Component label="3">
 				<Id source="PDBCC">PQQ</Id>
 			</Component>
 			<Bond>
@@ -4120,21 +3991,20 @@
 			<Id>MOD:00289</Id>
 			<Name>tris-L-cysteinyl L-N1'-histidino tetrairon tetrasulfide</Name>
 		</CrossReference>
-		<Formula>C 15 Fe 4 H 18 N 6 O 4 S 7</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">CYS</Id>
 			</Component>
-			<Component type="AminoAcid" label="2">
+			<Component label="2">
 				<Id source="PDBCC">CYS</Id>
 			</Component>
-			<Component type="AminoAcid" label="3">
+			<Component label="3">
 				<Id source="PDBCC">CYS</Id>
 			</Component>
-			<Component type="AminoAcid" label="4">
+			<Component label="4">
 				<Id source="PDBCC">HIS</Id>
 			</Component>
-			<Component type="Attachment" label="5">
+			<Component label="5">
 				<Id source="PDBCC">SF4</Id>
 			</Component>
 			<Bond>
@@ -4175,21 +4045,20 @@
 			<Id>MOD:00290</Id>
 			<Name>tris-L-cysteinyl L-N3'-histidino tetrairon tetrasulfide</Name>
 		</CrossReference>
-		<Formula>C 15 Fe 4 H 18 N 6 O 4 S 7</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">CYS</Id>
 			</Component>
-			<Component type="AminoAcid" label="2">
+			<Component label="2">
 				<Id source="PDBCC">CYS</Id>
 			</Component>
-			<Component type="AminoAcid" label="3">
+			<Component label="3">
 				<Id source="PDBCC">CYS</Id>
 			</Component>
-			<Component type="AminoAcid" label="4">
+			<Component label="4">
 				<Id source="PDBCC">HIS</Id>
 			</Component>
-			<Component type="Attachment" label="5">
+			<Component label="5">
 				<Id source="PDBCC">SF4</Id>
 			</Component>
 			<Bond>
@@ -4230,21 +4099,20 @@
 			<Id>MOD:00291</Id>
 			<Name>tris-L-cysteinyl L-aspartato tetrairon tetrasulfide</Name>
 		</CrossReference>
-		<Formula>C 13 Fe 4 H 16 N 4 O 6 S 7</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">CYS</Id>
 			</Component>
-			<Component type="AminoAcid" label="2">
+			<Component label="2">
 				<Id source="PDBCC">CYS</Id>
 			</Component>
-			<Component type="AminoAcid" label="3">
+			<Component label="3">
 				<Id source="PDBCC">CYS</Id>
 			</Component>
-			<Component type="AminoAcid" label="4">
+			<Component label="4">
 				<Id source="PDBCC">ASP</Id>
 			</Component>
-			<Component type="Attachment" label="5">
+			<Component label="5">
 				<Id source="PDBCC">SF4</Id>
 			</Component>
 			<Bond>
@@ -4285,21 +4153,20 @@
 			<Id>MOD:00293</Id>
 			<Name>tris-L-cysteinyl L-serinyl tetrairon tetrasulfide</Name>
 		</CrossReference>
-		<Formula>C 12 Fe 4 H 16 N 4 O 5 S 7</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">CYS</Id>
 			</Component>
-			<Component type="AminoAcid" label="2">
+			<Component label="2">
 				<Id source="PDBCC">CYS</Id>
 			</Component>
-			<Component type="AminoAcid" label="3">
+			<Component label="3">
 				<Id source="PDBCC">CYS</Id>
 			</Component>
-			<Component type="AminoAcid" label="4">
+			<Component label="4">
 				<Id source="PDBCC">SER</Id>
 			</Component>
-			<Component type="Attachment" label="5">
+			<Component label="5">
 				<Id source="PDBCC">SF4</Id>
 			</Component>
 			<Bond>
@@ -4340,21 +4207,20 @@
 			<Id>MOD:00294</Id>
 			<Name>bis-L-cysteinyl L-N3'-histidino L-serinyl tetrairon tetrasulfide</Name>
 		</CrossReference>
-		<Formula>C 15 Fe 4 H 18 N 6 O 5 S 6</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">CYS</Id>
 			</Component>
-			<Component type="AminoAcid" label="2">
+			<Component label="2">
 				<Id source="PDBCC">CYS</Id>
 			</Component>
-			<Component type="AminoAcid" label="3">
+			<Component label="3">
 				<Id source="PDBCC">HIS</Id>
 			</Component>
-			<Component type="AminoAcid" label="4">
+			<Component label="4">
 				<Id source="PDBCC">SER</Id>
 			</Component>
-			<Component type="Attachment" label="5">
+			<Component label="5">
 				<Id source="PDBCC">SF4</Id>
 			</Component>
 			<Bond>
@@ -4396,30 +4262,29 @@
 			<Id>MOD:00303</Id>
 			<Name>heptakis-L-histidino tetracopper mu4-sulfide hydroxide</Name>
 		</CrossReference>
-		<Formula>C 42 Cu 4 H 43 N 21 O 8 S 1</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">HIS</Id>
 			</Component>
-			<Component type="AminoAcid" label="2">
+			<Component label="2">
 				<Id source="PDBCC">HIS</Id>
 			</Component>
-			<Component type="AminoAcid" label="3">
+			<Component label="3">
 				<Id source="PDBCC">HIS</Id>
 			</Component>
-			<Component type="AminoAcid" label="4">
+			<Component label="4">
 				<Id source="PDBCC">HIS</Id>
 			</Component>
-			<Component type="AminoAcid" label="5">
+			<Component label="5">
 				<Id source="PDBCC">HIS</Id>
 			</Component>
-			<Component type="AminoAcid" label="6">
+			<Component label="6">
 				<Id source="PDBCC">HIS</Id>
 			</Component>
-			<Component type="AminoAcid" label="7">
+			<Component label="7">
 				<Id source="PDBCC">HIS</Id>
 			</Component>
-			<Component type="Attachment" label="8">
+			<Component label="8">
 				<Id source="PDBCC">CUZ</Id>
 			</Component>
 			<Bond>
@@ -4469,30 +4334,29 @@
 			<Id>MOD:00305</Id>
 			<Name>hexakis-L-cysteinyl L-serinyl octairon heptasulfide</Name>
 		</CrossReference>
-		<Formula>C 21 Fe 8 H 27 N 7 O 8 S 13</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">CYS</Id>
 			</Component>
-			<Component type="AminoAcid" label="2">
+			<Component label="2">
 				<Id source="PDBCC">CYS</Id>
 			</Component>
-			<Component type="AminoAcid" label="3">
+			<Component label="3">
 				<Id source="PDBCC">CYS</Id>
 			</Component>
-			<Component type="AminoAcid" label="4">
+			<Component label="4">
 				<Id source="PDBCC">CYS</Id>
 			</Component>
-			<Component type="AminoAcid" label="5">
+			<Component label="5">
 				<Id source="PDBCC">CYS</Id>
 			</Component>
-			<Component type="AminoAcid" label="6">
+			<Component label="6">
 				<Id source="PDBCC">CYS</Id>
 			</Component>
-			<Component type="AminoAcid" label="7">
+			<Component label="7">
 				<Id source="PDBCC">SER</Id>
 			</Component>
-			<Component type="Attachment" label="8">
+			<Component label="8">
 				<Id source="PDBCC">CLF</Id>
 			</Component>
 			<Bond>
@@ -4548,9 +4412,8 @@
 			<Id>MOD:00307</Id>
 			<Name>L-aspartimide</Name>
 		</CrossReference>
-		<Formula>C 4 H 5 N 2 O 2</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">SNN</Id>
 				<Terminal>C</Terminal>
 			</Component>
@@ -4574,27 +4437,26 @@
 			<Id>MOD:00315</Id>
 			<Name>pentakis-L-cysteinyl L-histidino nickel tetrairon pentasulfide</Name>
 		</CrossReference>
-		<Formula>C 21 Fe 4 H 26 N 8 Ni 1 O 6 S 10</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">CYS</Id>
 			</Component>
-			<Component type="AminoAcid" label="2">
+			<Component label="2">
 				<Id source="PDBCC">CYS</Id>
 			</Component>
-			<Component type="AminoAcid" label="3">
+			<Component label="3">
 				<Id source="PDBCC">CYS</Id>
 			</Component>
-			<Component type="AminoAcid" label="4">
+			<Component label="4">
 				<Id source="PDBCC">CYS</Id>
 			</Component>
-			<Component type="AminoAcid" label="5">
+			<Component label="5">
 				<Id source="PDBCC">CYS</Id>
 			</Component>
-			<Component type="AminoAcid" label="6">
+			<Component label="6">
 				<Id source="PDBCC">HIS</Id>
 			</Component>
-			<Component type="Attachment" label="7">
+			<Component label="7">
 				<Id source="PDBCC">NFS</Id>
 			</Component>
 			<Bond>
@@ -4648,9 +4510,8 @@
 			<Id>MOD:00316</Id>
 			<Name>N4,N4-dimethyl-L-asparagine</Name>
 		</CrossReference>
-		<Formula>C 6 H 10 N 2 O 2</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">DMH</Id>
 			</Component>
 		</Condition>
@@ -4672,12 +4533,11 @@
 			<Id>MOD:00318</Id>
 			<Name>4'-(S-L-cysteinyl)-L-tryptophyl quinone</Name>
 		</CrossReference>
-		<Formula>C 14 H 11 N 3 O 4 S 1</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">CYS</Id>
 			</Component>
-			<Component type="AminoAcid" label="2">
+			<Component label="2">
 				<Id source="PDBCC">TRP</Id>
 			</Component>
 			<Bond>
@@ -4705,12 +4565,11 @@
 			<Id>MOD:00319</Id>
 			<Name>3-(S-L-cysteinyl)-L-aspartic acid</Name>
 		</CrossReference>
-		<Formula>C 7 H 8 N 2 O 4 S 1</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">CYS</Id>
 			</Component>
-			<Component type="AminoAcid" label="2">
+			<Component label="2">
 				<Id source="PDBCC">ASP</Id>
 			</Component>
 			<Bond>
@@ -4737,12 +4596,11 @@
 			<Id>MOD:00320</Id>
 			<Name>4-(S-L-cysteinyl)-L-glutamic acid</Name>
 		</CrossReference>
-		<Formula>C 8 H 10 N 2 O 4 S 1</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">CYS</Id>
 			</Component>
-			<Component type="AminoAcid" label="2">
+			<Component label="2">
 				<Id source="PDBCC">GLU</Id>
 			</Component>
 			<Bond>
@@ -4773,9 +4631,8 @@
 			<Id>MOD:00322</Id>
 			<Name>1'-methyl-L-histidine</Name>
 		</CrossReference>
-		<Formula>C 7 H 9 N 3 O 1</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">HIC</Id>
 			</Component>
 		</Condition>
@@ -4797,18 +4654,17 @@
 			<Id>MOD:00324</Id>
 			<Name>L-serinyl molybdenum bis(molybdopterin guanine dinucleotide)</Name>
 		</CrossReference>
-		<Formula>C 43 H 52 Mo 1 N 21 O 29 P 4 S 4</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">SER</Id>
 			</Component>
-			<Component type="Attachment" label="2">
+			<Component label="2">
 				<Id source="PDBCC">MGD</Id>
 			</Component>
-			<Component type="Attachment" label="3">
+			<Component label="3">
 				<Id source="PDBCC">MGD</Id>
 			</Component>
-			<Component type="Attachment" label="4">
+			<Component label="4">
 				<Id source="PDBCC">6MO</Id>
 			</Component>
 			<Bond>
@@ -4850,9 +4706,8 @@
 			<Id>MOD:00327</Id>
 			<Name>3-hydroxy-L-tryptophan</Name>
 		</CrossReference>
-		<Formula>C 11 H 10 N 2 O 2</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">HTR</Id>
 			</Component>
 		</Condition>
@@ -4874,21 +4729,20 @@
 			<Id>MOD:00331</Id>
 			<Name>tetrakis-L-cysteinyl triiron tetrasulfide</Name>
 		</CrossReference>
-		<Formula>C 12 Fe 3 H 16 N 4 O 4 S 8</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">CYS</Id>
 			</Component>
-			<Component type="AminoAcid" label="2">
+			<Component label="2">
 				<Id source="PDBCC">CYS</Id>
 			</Component>
-			<Component type="AminoAcid" label="3">
+			<Component label="3">
 				<Id source="PDBCC">CYS</Id>
 			</Component>
-			<Component type="AminoAcid" label="4">
+			<Component label="4">
 				<Id source="PDBCC">CYS</Id>
 			</Component>
-			<Component type="Attachment" label="5">
+			<Component label="5">
 				<Id source="PDBCC">F3S</Id>
 			</Component>
 			<Bond>
@@ -4928,12 +4782,11 @@
 			<Id>MOD:00334</Id>
 			<Name>1'-heme-L-histidine</Name>
 		</CrossReference>
-		<Formula>C 40 Fe 1 H 39 N 7 O 5</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">HIS</Id>
 			</Component>
-			<Component type="Attachment" label="2">
+			<Component label="2">
 				<Id source="PDBCC">HEM</Id>
 			</Component>
 			<Bond>
@@ -4963,12 +4816,11 @@
 			<Id>MOD:00335</Id>
 			<Name>3-methyl-L-lanthionine sulfoxide</Name>
 		</CrossReference>
-		<Formula>C 7 H 10 N 2 O 3 S 1</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">CYS</Id>
 			</Component>
-			<Component type="AminoAcid" label="2">
+			<Component label="2">
 				<Id source="PDBCC">THR</Id>
 			</Component>
 			<Bond>
@@ -4994,21 +4846,20 @@
 			<Id>MOD:00336</Id>
 			<Name>tris-L-cysteinyl L-aspartato diiron disulfide</Name>
 		</CrossReference>
-		<Formula>C 13 Fe 2 H 16 N 4 O 6 S 5</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">CYS</Id>
 			</Component>
-			<Component type="AminoAcid" label="2">
+			<Component label="2">
 				<Id source="PDBCC">CYS</Id>
 			</Component>
-			<Component type="AminoAcid" label="3">
+			<Component label="3">
 				<Id source="PDBCC">CYS</Id>
 			</Component>
-			<Component type="AminoAcid" label="4">
+			<Component label="4">
 				<Id source="PDBCC">ASP</Id>
 			</Component>
-			<Component type="AminoAcid" label="5">
+			<Component label="5">
 				<Id source="PDBCC">FES</Id>
 			</Component>
 			<Bond>
@@ -5047,12 +4898,11 @@
 			<Id>MOD:00339</Id>
 			<Name>L-cysteinyl hydrogenase diiron subcluster</Name>
 		</CrossReference>
-		<Formula>C 8 Fe 2 H 4 N 3 O 6 S 3</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">CYS</Id>
 			</Component>
-			<Component type="Attachment" label="2">
+			<Component label="2">
 				<Id source="PDBCC">HC1</Id>
 			</Component>
 			<Bond>
@@ -5084,9 +4934,8 @@
 			<Id>MOD:00341</Id>
 			<Name>N-methyl-L-isoleucine</Name>
 		</CrossReference>
-		<Formula>C 7 H 13 N 1 O 1</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">IML</Id>
 			</Component>
 		</Condition>
@@ -5113,9 +4962,8 @@
 			<Id>MOD:00342</Id>
 			<Name>N-methyl-L-leucine</Name>
 		</CrossReference>
-		<Formula>C 7 H 13 N 1 O 1</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">MLE</Id>
 			</Component>
 		</Condition>
@@ -5137,13 +4985,12 @@
 			<Id>MOD:00344</Id>
 			<Name>N-palmitoylglycine</Name>
 		</CrossReference>
-		<Formula>C 18 H 34 N 1 O 2</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">GLY</Id>
 				<Terminal>N</Terminal>
 			</Component>
-			<Component type="Attachment" label="2">
+			<Component label="2">
 				<Id source="PDBCC">140</Id>
 			</Component>
 			<Bond>
@@ -5172,12 +5019,11 @@
 			<Id>MOD:00345</Id>
 			<Name>2-(S-L-cysteinyl)-L-phenylalanine</Name>
 		</CrossReference>
-		<Formula>C 12 H 12 N 2 O 2 S 1</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">CYS</Id>
 			</Component>
-			<Component type="AminoAcid" label="2">
+			<Component label="2">
 				<Id source="PDBCC">PHE</Id>
 			</Component>
 			<Bond>
@@ -5203,12 +5049,11 @@
 			<Id>MOD:00346</Id>
 			<Name>2-(S-L-cysteinyl)-D-phenylalanine</Name>
 		</CrossReference>
-		<Formula>C 12 H 12 N 2 O 2 S 1</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">CYS</Id>
 			</Component>
-			<Component type="AminoAcid" label="2">
+			<Component label="2">
 				<Id source="PDBCC">PHE</Id>
 			</Component>
 			<Bond>
@@ -5235,12 +5080,11 @@
 			<Id>MOD:00347</Id>
 			<Name>2-(S-L-cysteinyl)-D-allo-threonine</Name>
 		</CrossReference>
-		<Formula>C 7 H 10 N 2 O 3 S 1</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">CYS</Id>
 			</Component>
-			<Component type="AminoAcid" label="2">
+			<Component label="2">
 				<Id source="PDBCC">THR</Id>
 			</Component>
 			<Bond>
@@ -5267,12 +5111,11 @@
 			<Id>MOD:00349</Id>
 			<Name>4-amino-3-isothiazolidinone-L-serine</Name>
 		</CrossReference>
-		<Formula>C 6 H 8 N 2 O 3 S 1</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">CYS</Id>
 			</Component>
-			<Component type="AminoAcid" label="2">
+			<Component label="2">
 				<Id source="PDBCC">SER</Id>
 			</Component>
 			<Bond>
@@ -5300,15 +5143,14 @@
 			<Id>MOD:00353</Id>
 			<Name>S-[5'-(L-tryptoph-6'-yl)-L-tyrosin-3'-yl]-L-methionin-S-ium</Name>
 		</CrossReference>
-		<Formula>C 25 H 25 N 4 O 4 S 1</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">MET</Id>
 			</Component>
-			<Component type="AminoAcid" label="2">
+			<Component label="2">
 				<Id source="PDBCC">TRP</Id>
 			</Component>
-			<Component type="AminoAcid" label="3">
+			<Component label="3">
 				<Id source="PDBCC">TYR</Id>
 			</Component>
 			<Bond>
@@ -5339,12 +5181,11 @@
 			<Id>MOD:00356</Id>
 			<Name>S-(4a-FMN)-L-cysteine</Name>
 		</CrossReference>
-		<Formula>C 20 H 26 N 5 O 10 P 1 S 1</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">CYS</Id>
 			</Component>
-			<Component type="Attachment" label="2">
+			<Component label="2">
 				<Id source="PDBCC">FMN</Id>
 			</Component>
 			<Bond>
@@ -5374,15 +5215,14 @@
 			<Id>MOD:00360</Id>
 			<Name>L-cysteinyl copper sulfido molybdopterin cytosine dinuncleotide</Name>
 		</CrossReference>
-		<Formula>C 22 Cu 1 H 29 Mo 1 N 9 O 16 P 2 S 4</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">CYS</Id>
 			</Component>
-			<Component type="Attachment" label="2">
+			<Component label="2">
 				<Id source="PDBCC">CUN</Id>
 			</Component>
-			<Component type="Attachment" label="3">
+			<Component label="3">
 				<Id source="PDBCC">MCN</Id>
 			</Component>
 			<Bond>
@@ -5423,21 +5263,20 @@
 			<Id>MOD:00361</Id>
 			<Name>tris-L-cysteinyl S-adenosylmethion-N,O-diyl tetrairon tetrasulfide</Name>
 		</CrossReference>
-		<Formula>C 24 Fe 4 H 34 N 9 O 8 S 8</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">CYS</Id>
 			</Component>
-			<Component type="AminoAcid" label="2">
+			<Component label="2">
 				<Id source="PDBCC">CYS</Id>
 			</Component>
-			<Component type="AminoAcid" label="3">
+			<Component label="3">
 				<Id source="PDBCC">CYS</Id>
 			</Component>
-			<Component type="Attachment" label="4">
+			<Component label="4">
 				<Id source="PDBCC">SF4</Id>
 			</Component>
-			<Component type="Attachment" label="5">
+			<Component label="5">
 				<Id source="PDBCC">SAM</Id>
 			</Component>
 			<Bond>
@@ -5482,21 +5321,20 @@
 			<Id>MOD:00362</Id>
 			<Name>tris-L-cysteinyl L-arginyl diiron disulfide</Name>
 		</CrossReference>
-		<Formula>C 15 Fe 2 H 24 N 7 O 4 S 5</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">CYS</Id>
 			</Component>
-			<Component type="AminoAcid" label="2">
+			<Component label="2">
 				<Id source="PDBCC">CYS</Id>
 			</Component>
-			<Component type="AminoAcid" label="3">
+			<Component label="3">
 				<Id source="PDBCC">CYS</Id>
 			</Component>
-			<Component type="AminoAcid" label="4">
+			<Component label="4">
 				<Id source="PDBCC">ARG</Id>
 			</Component>
-			<Component type="Attachment" label="5">
+			<Component label="5">
 				<Id source="PDBCC">FES</Id>
 			</Component>
 			<Bond>
@@ -5541,9 +5379,8 @@
 			<Id>MOD:00366</Id>
 			<Name>O-sulfo-L-serine</Name>
 		</CrossReference>
-		<Formula>C 3 H 5 N 1 O 5 S 1</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">OSE</Id>
 			</Component>
 		</Condition>
@@ -5571,9 +5408,8 @@
 			<Id>MOD:00368</Id>
 			<Name>N-carboxy-L-methionine</Name>
 		</CrossReference>
-		<Formula>C 6 H 10 N 1 O 3 S 1</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">CXM</Id>
 				<Terminal>N</Terminal>
 			</Component>
@@ -5601,9 +5437,8 @@
 			<Id>MOD:00369</Id>
 			<Name>O-acetyl-L-serine</Name>
 		</CrossReference>
-		<Formula>C 5 H 7 N 1 O 3</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">OAS</Id>
 			</Component>
 		</Condition>
@@ -5618,27 +5453,26 @@
 			<Id>AA0366</Id>
 			<Name>bis-L-aspartato tris-L-glutamato L-histidino calcium tetramanganese tetroxide</Name>
 		</CrossReference>
-		<Formula>C 29 Ca 1 H 32 Mn 4 N 8 O 20</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">ASP</Id>
 			</Component>
-			<Component type="AminoAcid" label="2">
+			<Component label="2">
 				<Id source="PDBCC">ASP</Id>
 			</Component>
-			<Component type="AminoAcid" label="3">
+			<Component label="3">
 				<Id source="PDBCC">GLU</Id>
 			</Component>
-			<Component type="AminoAcid" label="4">
+			<Component label="4">
 				<Id source="PDBCC">GLU</Id>
 			</Component>
-			<Component type="AminoAcid" label="5">
+			<Component label="5">
 				<Id source="PDBCC">GLU</Id>
 			</Component>
-			<Component type="AminoAcid" label="6">
+			<Component label="6">
 				<Id source="PDBCC">HIS</Id>
 			</Component>
-			<Component type="Attachment" label="7">
+			<Component label="7">
 				<Id source="PDBCC">OEC</Id>
 			</Component>
 			<Bond>
@@ -5690,12 +5524,11 @@
 			<Id>MOD:00372</Id>
 			<Name>3'-(3'-L-tyrosinyl)-L-tyrosine</Name>
 		</CrossReference>
-		<Formula>C 18 H 16 N 2 O 4</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">TYR</Id>
 			</Component>
-			<Component type="AminoAcid" label="2">
+			<Component label="2">
 				<Id source="PDBCC">TYR</Id>
 			</Component>
 			<Bond>
@@ -5721,12 +5554,11 @@
 			<Id>MOD:00373</Id>
 			<Name>3'-(O4'-L-tyrosinyl)-L-tyrosine</Name>
 		</CrossReference>
-		<Formula>C 18 H 16 N 2 O 4</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">TYR</Id>
 			</Component>
-			<Component type="AminoAcid" label="2">
+			<Component label="2">
 				<Id source="PDBCC">TYR</Id>
 			</Component>
 			<Bond>
@@ -5752,12 +5584,11 @@
 			<Id>MOD:00377</Id>
 			<Name>1'-(phospho-5'-uridine)-L-histidine</Name>
 		</CrossReference>
-		<Formula>C 15 H 18 N 5 O 9 P 1</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">HIS</Id>
 			</Component>
-			<Component type="Attachment" label="2">
+			<Component label="2">
 				<Id source="PDBCC">U5P</Id>
 			</Component>
 			<Bond>
@@ -5789,9 +5620,8 @@
 			<Id>MOD:00383</Id>
 			<Name>2-imino-glutamic acid 5-imidazolinone glycine</Name>
 		</CrossReference>
-		<Formula>C 7 H 6 N 2 O 3</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">CRU</Id>
 			</Component>
 		</Condition>
@@ -5819,9 +5649,8 @@
 			<Id>MOD:00191</Id>
 			<Name>(Z)-2,3-didehydrotyrosine</Name>
 		</CrossReference>
-		<Formula>C 9 H 7 N 1 O 2</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">CRU</Id>
 			</Component>
 		</Condition>
@@ -5848,9 +5677,8 @@
 			<Id>MOD:00384</Id>
 			<Name>2-imino-methionine 5-imidazolinone glycine</Name>
 		</CrossReference>
-		<Formula>C 7 H 8 N 2 O 1 S 1</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">CH6</Id>
 			</Component>
 		</Condition>
@@ -5878,9 +5706,8 @@
 			<Id>MOD:00191</Id>
 			<Name>(Z)-2,3-didehydrotyrosine</Name>
 		</CrossReference>
-		<Formula>C 9 H 7 N 1 O 2</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">CH6</Id>
 			</Component>
 		</Condition>
@@ -5907,9 +5734,8 @@
 			<Id>MOD:00384</Id>
 			<Name>2-imino-methionine 5-imidazolinone glycine</Name>
 		</CrossReference>
-		<Formula>C 7 H 8 N 2 O 1 S 1</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">NRQ</Id>
 			</Component>
 		</Condition>
@@ -5937,9 +5763,8 @@
 			<Id>MOD:00191</Id>
 			<Name>(Z)-2,3-didehydrotyrosine</Name>
 		</CrossReference>
-		<Formula>C 9 H 7 N 1 O 2</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">NRQ</Id>
 			</Component>
 		</Condition>
@@ -5966,9 +5791,8 @@
 			<Id>MOD:00385</Id>
 			<Name>L-asparagine 5-imidazolinone glycine</Name>
 		</CrossReference>
-		<Formula>C 6 H 7 N 3 O 2</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">NYG</Id>
 			</Component>
 		</Condition>
@@ -5995,9 +5819,8 @@
 			<Id>MOD:00191</Id>
 			<Name>(Z)-2,3-didehydrotyrosine</Name>
 		</CrossReference>
-		<Formula>C 9 H 7 N 1 O 2</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">NYG</Id>
 			</Component>
 		</Condition>
@@ -6024,9 +5847,8 @@
 			<Id>MOD:00386</Id>
 			<Name>L-lysine 5-imidazolinone glycine</Name>
 		</CrossReference>
-		<Formula>C 8 H 13 N 3 O 1</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">CR7</Id>
 			</Component>
 		</Condition>
@@ -6053,9 +5875,8 @@
 			<Id>MOD:00387</Id>
 			<Name>2-tetrahydropyridinyl-5-imidazolinone glycine</Name>
 		</CrossReference>
-		<Formula>C 8 H 9 N 2 O 1</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">CH7</Id>
 			</Component>
 		</Condition>
@@ -6081,9 +5902,8 @@
 			<Id>MOD:00191</Id>
 			<Name>(Z)-2,3-didehydrotyrosine</Name>
 		</CrossReference>
-		<Formula>C 9 H 7 N 1 O 2</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">CR7</Id>
 			</Component>
 		</Condition>
@@ -6105,12 +5925,11 @@
 			<Id>MOD:00802</Id>
 			<Name>L-histidino vanadium tetraoxide</Name>
 		</CrossReference>
-		<Formula>C 6 H 9 N 3 O 5 V 1</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">HIS</Id>
 			</Component>
-			<Component type="Attachment" label="2">
+			<Component label="2">
 				<Id source="PDBCC">VO4</Id>
 			</Component>
 			<Bond>
@@ -6137,12 +5956,11 @@
 			<Id>MOD:00803</Id>
 			<Name>3-(S-L-cysteinyl)-L-tyrosine</Name>
 		</CrossReference>
-		<Formula>C 12 H 12 N 2 O 3 S 1</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">CYS</Id>
 			</Component>
-			<Component type="AminoAcid" label="2">
+			<Component label="2">
 				<Id source="PDBCC">TYR</Id>
 			</Component>
 			<Bond>
@@ -6169,13 +5987,12 @@
 			<Id>MOD:00821</Id>
 			<Name>S-(L-alanyl)-L-cysteine</Name>
 		</CrossReference>
-		<Formula>C 6 H 9 N 2 O 2 S 1</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">ALA</Id>
 				<Terminal>C</Terminal>
 			</Component>
-			<Component type="AminoAcid" label="2">
+			<Component label="2">
 				<Id source="PDBCC">CYS</Id>
 			</Component>
 			<Bond>
@@ -6202,12 +6019,11 @@
 			<Id>MOD:00822</Id>
 			<Name>S-(L-leucyl)-L-cysteine</Name>
 		</CrossReference>
-		<Formula>C 9 H 15 N 2 O 2 S 1</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">CYS</Id>
 			</Component>
-			<Component type="AminoAcid" label="2">
+			<Component label="2">
 				<Id source="PDBCC">LEU</Id>
 				<Terminal>C</Terminal>
 			</Component>
@@ -6235,12 +6051,11 @@
 			<Id>MOD:00823</Id>
 			<Name>S-(L-methionyl)-L-cysteine</Name>
 		</CrossReference>
-		<Formula>C 8 H 13 N 2 O 2 S 2</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">CYS</Id>
 			</Component>
-			<Component type="AminoAcid" label="2">
+			<Component label="2">
 				<Id source="PDBCC">MET</Id>
 				<Terminal>C</Terminal>
 			</Component>
@@ -6268,12 +6083,11 @@
 			<Id>MOD:00825</Id>
 			<Name>S-(L-phenylalanyl)-L-cysteine</Name>
 		</CrossReference>
-		<Formula>C 12 H 13 N 2 O 2 S 1</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">CYS</Id>
 			</Component>
-			<Component type="AminoAcid" label="2">
+			<Component label="2">
 				<Id source="PDBCC">PHE</Id>
 				<Terminal>C</Terminal>
 			</Component>
@@ -6301,12 +6115,11 @@
 			<Id>MOD:00826</Id>
 			<Name>S-(L-threonyl)-L-cysteine</Name>
 		</CrossReference>
-		<Formula>C 7 H 11 N 2 O 3 S 1</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">CYS</Id>
 			</Component>
-			<Component type="AminoAcid" label="2">
+			<Component label="2">
 				<Id source="PDBCC">THR</Id>
 				<Terminal>C</Terminal>
 			</Component>
@@ -6334,12 +6147,11 @@
 			<Id>MOD:00827</Id>
 			<Name>S-(L-tyrosyl)-L-cysteine</Name>
 		</CrossReference>
-		<Formula>C 12 H 13 N 2 O 3 S 1</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">CYS</Id>
 			</Component>
-			<Component type="AminoAcid" label="2">
+			<Component label="2">
 				<Id source="PDBCC">TYR</Id>
 				<Terminal>C</Terminal>
 			</Component>
@@ -6367,12 +6179,11 @@
 			<Id>MOD:00828</Id>
 			<Name>S-(L-tryptophanyl)-L-cysteine</Name>
 		</CrossReference>
-		<Formula>C 14 H 14 N 3 O 2 S 1</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">CYS</Id>
 			</Component>
-			<Component type="AminoAcid" label="2">
+			<Component label="2">
 				<Id source="PDBCC">TRP</Id>
 				<Terminal>C</Terminal>
 			</Component>
@@ -6400,12 +6211,11 @@
 			<Id>MOD:00829</Id>
 			<Name>O-(L-phenylalanyl)-L-serine</Name>
 		</CrossReference>
-		<Formula>C 12 H 13 N 2 O 3</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">SER</Id>
 			</Component>
-			<Component type="AminoAcid" label="2">
+			<Component label="2">
 				<Id source="PDBCC">PHE</Id>
 				<Terminal>C</Terminal>
 			</Component>
@@ -6437,9 +6247,8 @@
 			<Id>MOD:01171</Id>
 			<Name>O-acetyl-L-threonine</Name>
 		</CrossReference>
-		<Formula>C 6 H 9 N 1 O 3</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">TH5</Id>
 			</Component>
 		</Condition>
@@ -6460,12 +6269,11 @@
 			<Id>MOD:01142</Id>
 			<Name>S-15,16-dihydrobiliverdin-L-cysteine</Name>
 		</CrossReference>
-		<Formula>C 36 H 41 N 5 O 7 S 1</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">CYS</Id>
 			</Component>
-			<Component type="Attachment" label="2">
+			<Component label="2">
 				<Id source="PDBCC">DBV</Id>
 			</Component>
 			<Bond>
@@ -6493,15 +6301,14 @@
 			<Id>MOD:01143</Id>
 			<Name>15,16-dihydrobiliverdin-bis-L-cysteine</Name>
 		</CrossReference>
-		<Formula>C 39 H 46 N 6 O 8 S 2</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">CYS</Id>
 			</Component>
-			<Component type="AminoAcid" label="2">
+			<Component label="2">
 				<Id source="PDBCC">CYS</Id>
 			</Component>
-			<Component type="Attachment" label="3">
+			<Component label="3">
 				<Id source="PDBCC">DBV</Id>
 			</Component>
 			<Bond>
@@ -6533,12 +6340,11 @@
 			<Id>MOD:01176</Id>
 			<Name>L-dehydrolysinonorleucine</Name>
 		</CrossReference>
-		<Formula>C 12 H 19 N 3 O 2</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">LYS</Id>
 			</Component>
-			<Component type="AminoAcid" label="2">
+			<Component label="2">
 				<Id source="PDBCC">LYS</Id>
 			</Component>
 			<Bond>
@@ -6568,9 +6374,8 @@
 			<Id>MOD:01177</Id>
 			<Name>1'-(1,2,3-trihydroxyprop-2-yl)-L-histidine</Name>
 		</CrossReference>
-		<Formula>C 9 H 13 N 3 O 4</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">HIQ</Id>
 			</Component>
 		</Condition>
@@ -6597,9 +6402,8 @@
 			<Id>MOD:01178</Id>
 			<Name>S-(aspart-4-yloxy) thiocarbonate</Name>
 		</CrossReference>
-		<Formula>C 5 H 5 N 1 O 5 S 1</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">OHS</Id>
 			</Component>
 		</Condition>
@@ -6620,15 +6424,14 @@
 			<Id>MOD:01182</Id>
 			<Name>6-(S-L-cysteinyl)-8alpha-(-3'-L-histidino)-FAD</Name>
 		</CrossReference>
-		<Formula>C 36 H 41 N 13 O 17 P 2 S 1</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">CYS</Id>
 			</Component>
-			<Component type="AminoAcid" label="2">
+			<Component label="2">
 				<Id source="PDBCC">HIS</Id>
 			</Component>
-			<Component type="Attachment" label="3">
+			<Component label="3">
 				<Id source="PDBCC">FAD</Id>
 			</Component>
 			<Bond>
@@ -6663,12 +6466,11 @@
 			<Id>MOD:01183</Id>
 			<Name>L-selenocystine (oxidized selenocysteine) (Sec-Sec)</Name>
 		</CrossReference>
-		<Formula>C 6 H 8 N 2 O 2 Se 2</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">SEC</Id>
 			</Component>
-			<Component type="AminoAcid" label="2">
+			<Component label="2">
 				<Id source="PDBCC">SEC</Id>
 			</Component>
 			<Bond>
@@ -6695,21 +6497,20 @@
 			<Id>MOD:00864</Id>
 			<Name>tris-L-cysteinyl L-histidino diiron disulfide</Name>
 		</CrossReference>
-		<Formula>C 15 Fe 2 H 18 N 6 O 4 S 5</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">CYS</Id>
 			</Component>
-			<Component type="AminoAcid" label="2">
+			<Component label="2">
 				<Id source="PDBCC">CYS</Id>
 			</Component>
-			<Component type="AminoAcid" label="3">
+			<Component label="3">
 				<Id source="PDBCC">CYS</Id>
 			</Component>
-			<Component type="AminoAcid" label="4">
+			<Component label="4">
 				<Id source="PDBCC">HIS</Id>
 			</Component>
-			<Component type="Attachment" label="5">
+			<Component label="5">
 				<Id source="PDBCC">FES</Id>
 			</Component>
 			<Bond>
@@ -6753,9 +6554,8 @@
 			<Id>MOD:01374</Id>
 			<Name>(2S,4R)-5-oxoleucine</Name>
 		</CrossReference>
-		<Formula>C 6 H 9 N 1 O 2</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">LED</Id>
 			</Component>
 		</Condition>
@@ -6781,9 +6581,8 @@
 			<Id>MOD:01378</Id>
 			<Name>(2S,3R,4R)-4,5-dihydroxyisoleucine</Name>
 		</CrossReference>
-		<Formula>C 6 H 11 N 1 O 3</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">ILX</Id>
 			</Component>
 		</Condition>
@@ -6805,12 +6604,11 @@
 			<Id>MOD:01380</Id>
 			<Name>2'-(S-L-cysteinyl)-6'-hydroxy-L-tryptophan sulfoxide</Name>
 		</CrossReference>
-		<Formula>C 14 H 13 N 3 O 4 S 1</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">CYS</Id>
 			</Component>
-			<Component type="AminoAcid" label="2">
+			<Component label="2">
 				<Id source="PDBCC">TRP</Id>
 			</Component>
 			<Bond>
@@ -6836,9 +6634,8 @@
 			<Id>MOD:01382</Id>
 			<Name>N,N,N-trimethyl-L-methionine</Name>
 		</CrossReference>
-		<Formula>C 8 H 17 N 1 O 1 S 1</Formula>
 		<Condition>
-			<Component type="Attachment" label="1">
+			<Component label="1">
 				<Id source="PDBCC">4MM</Id>
 			</Component>
 		</Condition>
@@ -6862,12 +6659,11 @@
 			<Id>MOD:00363</Id>
 			<Name>L-cysteinyl-L-selenocysteine (Cys-Sec)</Name>
 		</CrossReference>
-		<Formula>C 6 H 8 N 2 O 2 S 1 Se 1</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">SYS</Id>
 			</Component>
-			<Component type="AminoAcid" label="2">
+			<Component label="2">
 				<Id source="PDBCC">SEC</Id>
 			</Component>
 			<Bond>
@@ -6900,9 +6696,8 @@
 			<Id>MOD:01384</Id>
 			<Name>aminomalonic acid (Ser)</Name>
 		</CrossReference>
-		<Formula>C 3 H 3 N 1 O 3</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">FGL</Id>
 			</Component>
 		</Condition>
@@ -6923,12 +6718,11 @@
 			<Id>MOD:01787</Id>
 			<Name>5'-(L-tyros-5'-yl)amino-L-tyrosine</Name>
 		</CrossReference>
-		<Formula>C 18 H 17 N 3 O 4</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">TYR</Id>
 			</Component>
-			<Component type="AminoAcid" label="2">
+			<Component label="2">
 				<Id source="PDBCC">TY2</Id>
 			</Component>
 		   <Bond>
@@ -6958,9 +6752,8 @@
 			<Id>MOD:01387</Id>
 			<Name>O-methyl-L-threonine</Name>
 		</CrossReference>
-		<Formula>C 5 H 9 N 1 O 2</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">OLT</Id>
 			</Component>
 		</Condition>
@@ -6982,16 +6775,15 @@
 			<Id>MOD:01395</Id>
 			<Name>4-(1-hydroxyethyl)-7-isoleucino-2-(threonin-O3-ylcarbonyl)-7,8-dihydroquinolin-8-ol</Name>
 		</CrossReference>
-		<Formula>C 22 H 28 N 3 O 6</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">THR</Id>
 			</Component>
-			<Component type="AminoAcid" label="2">
+			<Component label="2">
 				<Id source="PDBCC">ILE</Id>
 				<Terminal>N</Terminal>
 			</Component>
-			<Component type="Attachment" label="3">
+			<Component label="3">
 				<Id source="PDBCC">QUA</Id>
 			</Component>
 			<Bond>
@@ -7028,9 +6820,8 @@
 			<Id>MOD:01401</Id>
 			<Name>(2S,3S)-3-hydroxyasparagine</Name>
 		</CrossReference>
-		<Formula>C 4 H 6 N 2 O 3</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">AHB</Id>
 			</Component>
 		</Condition>
@@ -7052,12 +6843,11 @@
 			<Id>MOD:01442</Id>
 			<Name>3-(O4'-L-tyrosyl)-L-valine</Name>
 		</CrossReference>
-		<Formula>C 14 H 16 N 2 O 3</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">VAL</Id>
 			</Component>
-			<Component type="AminoAcid" label="2">
+			<Component label="2">
 				<Id source="PDBCC">TYR</Id>
 			</Component>
 			<Bond>
@@ -7087,9 +6877,8 @@
 			<Id>MOD:01448</Id>
 			<Name>L-3,3-dihydroxyoalanine</Name>
 		</CrossReference>
-		<Formula>C 3 H 5 N 1 O 3</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">DDZ</Id>
 			</Component>
 		</Condition>
@@ -7115,9 +6904,8 @@
 			<Id>MOD:01446</Id>
 			<Name>N-(dihydroxymethyl)-L-methionine (fMet)</Name>
 		</CrossReference>
-		<Formula>C 6 H 12 N 1 O 3 S 1</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">CXM</Id>
 			</Component>
 		</Condition>
@@ -7147,9 +6935,8 @@
 			<Id>MOD:01454</Id>
 			<Name>N-(DNA-1',2'-dideoxyribos-1'-ylidene)-L-prolinium</Name>
 		</CrossReference>
-		<Formula>C 10 H 16 N 1 O 6 P 1</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">PED</Id>
 				<Terminal>N</Terminal>
 			</Component>
@@ -7173,12 +6960,11 @@
 			<Id>MOD:01585</Id>
 			<Name>O-glycyl-L-serine</Name>
 		</CrossReference>
-		<Formula>C 5 H 7 N 2 O 3</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">SER</Id>
 			</Component>
-			<Component type="AminoAcid" label="2">
+			<Component label="2">
 				<Id source="PDBCC">GLY</Id>
 				<Terminal>C</Terminal>
 			</Component>
@@ -7205,12 +6991,11 @@
 			<Id>MOD:01586</Id>
 			<Name>O-glycyl-L-threonine</Name>
 		</CrossReference>
-		<Formula>C 6 H 9 N 2 O 3</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">THR</Id>
 			</Component>
-			<Component type="AminoAcid" label="2">
+			<Component label="2">
 				<Id source="PDBCC">GLY</Id>
 				<Terminal>C</Terminal>
 			</Component>
@@ -7238,12 +7023,11 @@
 			<Id>MOD:01587</Id>
 			<Name>O-(2-aminoethylphosphoryl)-L-serine</Name>
 		</CrossReference>
-		<Formula>C 5 H 11 N 2 O 5 P 1</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">SER</Id>
 			</Component>
-			<Component type="Attachment" label="2">
+			<Component label="2">
 				<Id source="PDBCC">OPE</Id>
 			</Component>
 			<Bond>
@@ -7269,12 +7053,11 @@
 			<Id>MOD:01602</Id>
 			<Name>S-(L-lysyl)-L-methionine sulfilimine</Name>
 		</CrossReference>
-		<Formula>C 11 H 19 N 3 O 2 S 1</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">LYS</Id>
 			</Component>
-			<Component type="AminoAcid" label="2">
+			<Component label="2">
 				<Id source="PDBCC">MET</Id>
 			</Component>
 			<Bond>
@@ -7305,9 +7088,8 @@
 			<Id>MOD:01612</Id>
 			<Name>3'-iodo-L-tyrosine</Name>
 		</CrossReference>
-		<Formula>C 9 H 8 I 1 N 1 O 2</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">IYR</Id>
 			</Component>
 		</Condition>
@@ -7334,9 +7116,8 @@
 			<Id>MOD:01613</Id>
 			<Name>3',5'-diiodo-L-tyrosine</Name>
 		</CrossReference>
-		<Formula>C 9 H 7 I 2 N 1 O 2</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">TYI</Id>
 			</Component>
 		</Condition>
@@ -7358,15 +7139,14 @@
 			<Id>MOD:01616</Id>
 			<Name>trithiocystine</Name>
 		</CrossReference>
-		<Formula>C 6 H 8 N 2 O 2 S 5</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">CYS</Id>
 			</Component>
-			<Component type="AminoAcid" label="2">
+			<Component label="2">
 				<Id source="PDBCC">CYS</Id>
 			</Component>
-			<Component type="Attachment" label="3">
+			<Component label="3">
 				<Id source="PDBCC">S3H</Id>
 			</Component>
 			<Bond>
@@ -7400,9 +7180,8 @@
 			<Id>MOD:01664</Id>
 			<Name>7'-hydroxy-L-tryptophan</Name>
 		</CrossReference>
-		<Formula>C 11 H 10 N 2 O 2</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">0AF</Id>
 			</Component>
 		</Condition>
@@ -7424,12 +7203,11 @@
 			<Id>MOD:01668</Id>
 			<Name>O4-(8alpha-FAD)-L-aspartate</Name>
 		</CrossReference>
-		<Formula>C 31 H 36 N 10 O 18 P 2</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">ASP</Id>
 			</Component>
-			<Component type="Attachment" label="2">
+			<Component label="2">
 				<Id source="PDBCC">FAD</Id>
 			</Component>
 			<Bond>
@@ -7463,9 +7241,8 @@
 			<Id>MOD:01671</Id>
 			<Name>O-(L-isoaspartyl)-L-threonine</Name>
 		</CrossReference>
-		<Formula>C 8 H 12 N 2 O 5</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">AEI</Id>
 			</Component>
 		</Condition>
@@ -7486,13 +7263,12 @@
 			<Id>MOD:00050</Id>
 			<Name>N-acetyl-L-alanine</Name>
 		</CrossReference>
-		<Formula>C 5 H 8 N 1 O 2</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">ALA</Id>
 				<Terminal>N</Terminal>
 			</Component>
-			<Component type="Attachment" label="2">
+			<Component label="2">
 				<Id source="PDBCC">ACE</Id>
 			</Component>
 			<Bond>
@@ -7518,13 +7294,12 @@
 			<Id>MOD:00051</Id>
 			<Name>N-acetyl-L-aspartic acid</Name>
 		</CrossReference>
-		<Formula>C 6 H 8 N 1 O 4</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">ASP</Id>
 				<Terminal>N</Terminal>
 			</Component>
-			<Component type="Attachment" label="2">
+			<Component label="2">
 				<Id source="PDBCC">ACE</Id>
 			</Component>
 			<Bond>
@@ -7550,13 +7325,12 @@
 			<Id>MOD:00052</Id>
 			<Name>N-acetyl-L-cysteine</Name>
 		</CrossReference>
-		<Formula>C 5 H 8 N 1 O 2 S 1</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">CYS</Id>
 				<Terminal>N</Terminal>
 			</Component>
-			<Component type="Attachment" label="2">
+			<Component label="2">
 				<Id source="PDBCC">ACE</Id>
 			</Component>
 			<Bond>
@@ -7582,13 +7356,12 @@
 			<Id>MOD:00053</Id>
 			<Name>N-acetyl-L-glutamic acid</Name>
 		</CrossReference>
-		<Formula>C 7 H 10 N 1 O 4</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">GLU</Id>
 				<Terminal>N</Terminal>
 			</Component>
-			<Component type="Attachment" label="2">
+			<Component label="2">
 				<Id source="PDBCC">ACE</Id>
 			</Component>
 			<Bond>
@@ -7614,13 +7387,12 @@
 			<Id>MOD:00055</Id>
 			<Name>N-acetylglycine</Name>
 		</CrossReference>
-		<Formula>C 4 H 6 N 1 O 2</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">GLY</Id>
 				<Terminal>N</Terminal>
 			</Component>
-			<Component type="Attachment" label="2">
+			<Component label="2">
 				<Id source="PDBCC">ACE</Id>
 			</Component>
 			<Bond>
@@ -7646,13 +7418,12 @@
 			<Id>MOD:00059</Id>
 			<Name>N-acetyl-L-proline</Name>
 		</CrossReference>
-		<Formula>C 7 H 10 N 1 O 2</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">PRO</Id>
 				<Terminal>N</Terminal>
 			</Component>
-			<Component type="Attachment" label="2">
+			<Component label="2">
 				<Id source="PDBCC">ACE</Id>
 			</Component>
 			<Bond>
@@ -7678,13 +7449,12 @@
 			<Id>MOD:00060</Id>
 			<Name>N-acetyl-L-serine</Name>
 		</CrossReference>
-		<Formula>C 5 H 8 N 1 O 3</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">SER</Id>
 				<Terminal>N</Terminal>
 			</Component>
-			<Component type="Attachment" label="2">
+			<Component label="2">
 				<Id source="PDBCC">ACE</Id>
 			</Component>
 			<Bond>
@@ -7710,13 +7480,12 @@
 			<Id>MOD:00061</Id>
 			<Name>N-acetyl-L-threonine</Name>
 		</CrossReference>
-		<Formula>C 6 H 10 N 1 O 3</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">THR</Id>
 				<Terminal>N</Terminal>
 			</Component>
-			<Component type="Attachment" label="2">
+			<Component label="2">
 				<Id source="PDBCC">ACE</Id>
 			</Component>
 			<Bond>
@@ -7742,13 +7511,12 @@
 			<Id>MOD:00062</Id>
 			<Name>N-acetyl-L-tyrosine</Name>
 		</CrossReference>
-		<Formula>C 11 H 12 N 1 O 3</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">TYR</Id>
 				<Terminal>N</Terminal>
 			</Component>
-			<Component type="Attachment" label="2">
+			<Component label="2">
 				<Id source="PDBCC">ACE</Id>
 			</Component>
 			<Bond>
@@ -7774,13 +7542,12 @@
 			<Id>MOD:00063</Id>
 			<Name>N-acetyl-L-valine</Name>
 		</CrossReference>
-		<Formula>C 7 H 12 N 1 O 2</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">VAL</Id>
 				<Terminal>N</Terminal>
 			</Component>
-			<Component type="Attachment" label="2">
+			<Component label="2">
 				<Id source="PDBCC">ACE</Id>
 			</Component>
 			<Bond>
@@ -7806,13 +7573,12 @@
 			<Id>MOD:00359</Id>
 			<Name>N2-acetyl-L-arginine</Name>
 		</CrossReference>
-		<Formula>C 8 H 15 N 4 O 2</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">ARG</Id>
 				<Terminal>N</Terminal>
 			</Component>
-			<Component type="Attachment" label="2">
+			<Component label="2">
 				<Id source="PDBCC">ACE</Id>
 			</Component>
 			<Bond>
@@ -7838,13 +7604,12 @@
 			<Id>MOD:00090</Id>
 			<Name>L-alanine amide</Name>
 		</CrossReference>
-		<Formula>C 3 H 7 N 2 O 1</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">ALA</Id>
 				<Terminal>C</Terminal>
 			</Component>
-			<Component type="Attachment" label="2">
+			<Component label="2">
 				<Id source="PDBCC">NH2</Id>
 			</Component>
 			<Bond>
@@ -7870,13 +7635,12 @@
 			<Id>MOD:00092</Id>
 			<Name>L-asparagine amide</Name>
 		</CrossReference>
-		<Formula>C 4 H 8 N 3 O 2</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">ASN</Id>
 				<Terminal>C</Terminal>
 			</Component>
-			<Component type="Attachment" label="2">
+			<Component label="2">
 				<Id source="PDBCC">NH2</Id>
 			</Component>
 			<Bond>
@@ -7902,13 +7666,12 @@
 			<Id>MOD:00093</Id>
 			<Name>L-aspartic acid 1-amide</Name>
 		</CrossReference>
-		<Formula>C 4 H 7 N 2 O 3</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">ASP</Id>
 				<Terminal>C</Terminal>
 			</Component>
-			<Component type="Attachment" label="2">
+			<Component label="2">
 				<Id source="PDBCC">NH2</Id>
 			</Component>
 			<Bond>
@@ -7934,13 +7697,12 @@
 			<Id>MOD:00094</Id>
 			<Name>L-cysteine amide</Name>
 		</CrossReference>
-		<Formula>C 3 H 7 N 2 O 1 S 1</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">CYS</Id>
 				<Terminal>C</Terminal>
 			</Component>
-			<Component type="Attachment" label="2">
+			<Component label="2">
 				<Id source="PDBCC">NH2</Id>
 			</Component>
 			<Bond>
@@ -7966,13 +7728,12 @@
 			<Id>MOD:00095</Id>
 			<Name>L-glutamine amide</Name>
 		</CrossReference>
-		<Formula>C 5 H 10 N 3 O 2</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">GLN</Id>
 				<Terminal>C</Terminal>
 			</Component>
-			<Component type="Attachment" label="2">
+			<Component label="2">
 				<Id source="PDBCC">NH2</Id>
 			</Component>
 			<Bond>
@@ -7998,13 +7759,12 @@
 			<Id>MOD:00096</Id>
 			<Name>L-glutamic acid 1-amide</Name>
 		</CrossReference>
-		<Formula>C 5 H 9 N 2 O 3</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">GLU</Id>
 				<Terminal>C</Terminal>
 			</Component>
-			<Component type="Attachment" label="2">
+			<Component label="2">
 				<Id source="PDBCC">NH2</Id>
 			</Component>
 			<Bond>
@@ -8030,13 +7790,12 @@
 			<Id>MOD:00097</Id>
 			<Name>glycine amide</Name>
 		</CrossReference>
-		<Formula>C 2 H 5 N 2 O 1</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">GLY</Id>
 				<Terminal>C</Terminal>
 			</Component>
-			<Component type="Attachment" label="2">
+			<Component label="2">
 				<Id source="PDBCC">NH2</Id>
 			</Component>
 			<Bond>
@@ -8062,13 +7821,12 @@
 			<Id>MOD:00098</Id>
 			<Name>L-histidine amide</Name>
 		</CrossReference>
-		<Formula>C 6 H 9 N 4 O 1</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">HIS</Id>
 				<Terminal>C</Terminal>
 			</Component>
-			<Component type="Attachment" label="2">
+			<Component label="2">
 				<Id source="PDBCC">NH2</Id>
 			</Component>
 			<Bond>
@@ -8094,13 +7852,12 @@
 			<Id>MOD:00100</Id>
 			<Name>L-leucine amide</Name>
 		</CrossReference>
-		<Formula>C 6 H 13 N 2 O 1</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">LEU</Id>
 				<Terminal>C</Terminal>
 			</Component>
-			<Component type="Attachment" label="2">
+			<Component label="2">
 				<Id source="PDBCC">NH2</Id>
 			</Component>
 			<Bond>
@@ -8126,13 +7883,12 @@
 			<Id>MOD:00101</Id>
 			<Name>L-lysine amide</Name>
 		</CrossReference>
-		<Formula>C 6 H 14 N 3 O 1</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">LYS</Id>
 				<Terminal>C</Terminal>
 			</Component>
-			<Component type="Attachment" label="2">
+			<Component label="2">
 				<Id source="PDBCC">NH2</Id>
 			</Component>
 			<Bond>
@@ -8158,13 +7914,12 @@
 			<Id>MOD:00104</Id>
 			<Name>L-proline amide</Name>
 		</CrossReference>
-		<Formula>C 5 H 9 N 2 O 1</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">PRO</Id>
 				<Terminal>C</Terminal>
 			</Component>
-			<Component type="Attachment" label="2">
+			<Component label="2">
 				<Id source="PDBCC">NH2</Id>
 			</Component>
 			<Bond>
@@ -8190,13 +7945,12 @@
 			<Id>MOD:00108</Id>
 			<Name>L-tyrosine amide</Name>
 		</CrossReference>
-		<Formula>C 9 H 11 N 2 O 2</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">TYR</Id>
 				<Terminal>C</Terminal>
 			</Component>
-			<Component type="Attachment" label="2">
+			<Component label="2">
 				<Id source="PDBCC">NH2</Id>
 			</Component>
 			<Bond>
@@ -8212,10 +7966,10 @@
 		<Id>0252</Id>
 		<Description>Metal coordination</Description>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">*</Id>
 			</Component>
-			<Component type="Attachment" label="2">
+			<Component label="2">
 				<Id source="PDBCC">AC,AG,AL,AM,AU,BA,BE,BI,BK,CA,CD,CE,CF,CM,CO,CR,CS,CU,DY,ER,ES,EU,FE,FM,FR,GA,GD,HF,HG,HO,IN,IR,K,LA,LI,LR,LU,MD,MG,MN,MO,NA,NB,ND,NI,NO,NP,OS,PA,PB,PD,PM,PR,PT,PU,RA,RB,RE,RH,RU,SC,SM,SN,SR,TA,TB,TC,TH,TI,TL,TM,U,V,W,Y,YB,ZN,ZR</Id>
 			</Component>
 			<Bond>
@@ -8247,9 +8001,8 @@
 			<Id>MOD:00050</Id>
 			<Name>N-acetyl-L-alanine</Name>
 		</CrossReference>
-		<Formula>C 5 H 8 N 1 O 2</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">AYA</Id>
 			</Component>
 		</Condition>
@@ -8276,9 +8029,8 @@
 			<Id>MOD:00052</Id>
 			<Name>N-acetyl-L-cysteine</Name>
 		</CrossReference>
-		<Formula>C 5 H 8 N 1 O 2 S 1</Formula>
 		<Condition>
-			<Component type="Attachment" label="1">
+			<Component label="1">
 				<Id source="PDBCC">SC2</Id>
 			</Component>
 		</Condition>
@@ -8305,9 +8057,8 @@
 			<Id>MOD:00053</Id>
 			<Name>N-acetyl-L-glutamic acid</Name>
 		</CrossReference>
-		<Formula>C 7 H 10 N 1 O 4</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">NLG</Id>
 			</Component>
 		</Condition>
@@ -8334,9 +8085,8 @@
 			<Id>MOD:00061</Id>
 			<Name>N-acetyl-L-threonine</Name>
 		</CrossReference>
-		<Formula>C 6 H 10 N 1 O 3</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">THC</Id>
 			</Component>
 		</Condition>
@@ -8363,9 +8113,8 @@
 			<Id>MOD:00060</Id>
 			<Name>N-acetyl-L-serine</Name>
 		</CrossReference>
-		<Formula>C 5 H 8 N 1 O 3</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">SAC</Id>
 			</Component>
 		</Condition>
@@ -8392,9 +8141,8 @@
 			<Id>MOD:00062</Id>
 			<Name>N-acetyl-L-tyrosine</Name>
 		</CrossReference>
-		<Formula>C 11 H 12 N 1 O 3</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">3NF</Id>
 			</Component>
 		</Condition>
@@ -8421,9 +8169,8 @@
 			<Id>MOD:00058</Id>
 			<Name>N-acetyl-L-methionine</Name>
 		</CrossReference>
-		<Formula>C 7 H 12 N 1 O 2 S 1</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">AME</Id>
 			</Component>
 		</Condition>
@@ -8451,9 +8198,8 @@
 			<Id>MOD:00072</Id>
 			<Name>N-methylglycine</Name>
 		</CrossReference>
-		<Formula>C 1 H 2 N 0 O 0</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">SAR</Id>
 			</Component>
 		</Condition>
@@ -8476,13 +8222,12 @@
 			<Id>MOD:00091</Id>
 			<Name>L-arginine amide</Name>
 		</CrossReference>
-		<Formula>C 6 H 14 N 5 O 1</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">ARG</Id>
 				<Terminal>C</Terminal>
 			</Component>
-			<Component type="Attachment" label="2">
+			<Component label="2">
 				<Id source="PDBCC">NH2</Id>
 			</Component>
 			<Bond>
@@ -8508,12 +8253,11 @@
 			<Id>MOD:00099</Id>
 			<Name>L-isoleucine amide</Name>
 		</CrossReference>
-		<Formula>C 6 H 13 N 2 O 1</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">ILE</Id>
 			</Component>
-			<Component type="Attachment" label="2">
+			<Component label="2">
 				<Id source="PDBCC">NH2</Id>
 			</Component>
 			<Bond>
@@ -8539,12 +8283,11 @@
 			<Id>MOD:00102</Id>
 			<Name>L-methionine amide</Name>
 		</CrossReference>
-		<Formula>C 5 H 11 N 2 O 1 S 1</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">MET</Id>
 			</Component>
-			<Component type="Attachment" label="2">
+			<Component label="2">
 				<Id source="PDBCC">NH2</Id>
 			</Component>
 			<Bond>
@@ -8570,12 +8313,11 @@
 			<Id>MOD:00103</Id>
 			<Name>L-phenylalanine amide</Name>
 		</CrossReference>
-		<Formula>C 9 H 11 N 2 O 1</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">PHE</Id>
 			</Component>
-			<Component type="Attachment" label="2">
+			<Component label="2">
 				<Id source="PDBCC">NH2</Id>
 			</Component>
 			<Bond>
@@ -8601,13 +8343,11 @@
 			<Id>MOD:00104</Id>
 			<Name>L-proline amide</Name>
 		</CrossReference>
-		<Formula>C 5 H 9 N 2 O 1</Formula>
 		<Condition>
-			<Component>
-			Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">PRO</Id>
 			</Component>
-			<Component type="Attachment" label="2">
+			<Component label="2">
 				<Id source="PDBCC">NH2</Id>
 			</Component>
 			<Bond>
@@ -8633,12 +8373,11 @@
 			<Id>MOD:00105</Id>
 			<Name>L-serine amide</Name>
 		</CrossReference>
-		<Formula>C 3 H 7 N 2 O 2</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">SER</Id>
 			</Component>
-			<Component type="Attachment" label="2">
+			<Component label="2">
 				<Id source="PDBCC">NH2</Id>
 			</Component>
 			<Bond>
@@ -8669,9 +8408,8 @@
 			<Id>MOD:00105</Id>
 			<Name>L-serine amide</Name>
 		</CrossReference>
-		<Formula>C 3 H 7 N 2 O 2</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">SET</Id>
 			</Component>
 		</Condition>
@@ -8693,12 +8431,11 @@
 			<Id>MOD:00106</Id>
 			<Name>L-threonine amide</Name>
 		</CrossReference>
-		<Formula>C 4 H 9 N 2 O 2</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">THR</Id>
 			</Component>
-			<Component type="Attachment" label="2">
+			<Component label="2">
 				<Id source="PDBCC">NH2</Id>
 			</Component>
 			<Bond>
@@ -8724,12 +8461,11 @@
 			<Id>MOD:00107</Id>
 			<Name>L-tryptophan amide</Name>
 		</CrossReference>
-		<Formula>C 11 H 12 N 3 O 1</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">TRP</Id>
 			</Component>
-			<Component type="Attachment" label="2">
+			<Component label="2">
 				<Id source="PDBCC">NH2</Id>
 			</Component>
 			<Bond>
@@ -8760,9 +8496,8 @@
 			<Id>MOD:00107</Id>
 			<Name>L-tryptophan amide</Name>
 		</CrossReference>
-		<Formula>C 11 H 12 N 3 O 1</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">LTN</Id>
 			</Component>
 		</Condition>
@@ -8784,12 +8519,11 @@
 			<Id>MOD:00108</Id>
 			<Name>L-tyrosine amide</Name>
 		</CrossReference>
-		<Formula>C 9 H 11 N 2 O 2</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">TYR</Id>
 			</Component>
-			<Component type="Attachment" label="2">
+			<Component label="2">
 				<Id source="PDBCC">NH2</Id>
 			</Component>
 			<Bond>
@@ -8815,12 +8549,11 @@
 			<Id>MOD:00109</Id>
 			<Name>L-valine amide</Name>
 		</CrossReference>
-		<Formula>C 5 H 11 N 2 O 1</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">VAL</Id>
 			</Component>
-			<Component type="Attachment" label="2">
+			<Component label="2">
 				<Id source="PDBCC">NH2</Id>
 			</Component>
 			<Bond>
@@ -8846,12 +8579,11 @@
 			<Id>MOD:00109</Id>
 			<Name>S-farnesyl-L-cysteine</Name>
 		</CrossReference>
-		<Formula>C 18 H 29 N 1 O 1 S 1</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">CYS</Id>
 			</Component>
-			<Component type="Attachment" label="2">
+			<Component label="2">
 				<Id source="PDBCC">FAR</Id>
 			</Component>
 			<Bond>
@@ -8879,12 +8611,11 @@
 			<Id>MOD:00113</Id>
 			<Name>S-geranylgeranyl-L-cysteine</Name>
 		</CrossReference>
-		<Formula>C 23 H 37 N 1 O 1 S 1</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">CYS</Id>
 			</Component>
-			<Component type="Attachment" label="2">
+			<Component label="2">
 				<Id source="PDBCC">GER</Id>
 			</Component>
 			<Bond>
@@ -8927,9 +8658,8 @@
 			<Id>MOD:01661</Id>
 			<Name>pyruvic acid</Name>
 		</CrossReference>
-		<Formula>C 3 H 3 O 2</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">PYR</Id>
 			</Component>
 		</Condition>
@@ -8956,9 +8686,8 @@
 			<Id>MOD:00138</Id>
 			<Name>2-oxobutanoic acid</Name>
 		</CrossReference>
-		<Formula>C 4 H 5 O 2</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">2KT</Id>
 			</Component>
 		</Condition>
@@ -8980,12 +8709,11 @@
 			<Id>MOD:00144</Id>
 			<Name>heme-L-cysteine</Name>
 		</CrossReference>
-		<Formula>C 37 Fe 1 H 37 N 5 O 5 S 1</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">CYS</Id>
 			</Component>
-			<Component type="Attachment" label="2">
+			<Component label="2">
 				<Id source="PDBCC">HEM</Id>
 			</Component>
 			<Bond>
@@ -9020,9 +8748,8 @@
 			<Id>MOD:00155</Id>
 			<Name>L-3',4'-dihydroxyphenylalanine</Name>
 		</CrossReference>
-		<Formula>C 9 H 9 N 1 O 3</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">DAH</Id>
 			</Component>
 		</Condition>
@@ -9049,9 +8776,8 @@
 			<Id>MOD:00886</Id>
 			<Name>L-6'-chlorotryptophan</Name>
 		</CrossReference>
-		<Formula>C 11 Cl 1 H 9 N 2 O 1</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">6CW</Id>
 			</Component>
 		</Condition>
@@ -9078,9 +8804,8 @@
 			<Id>MOD:00190</Id>
 			<Name>dehydrobutyrine (Thr)</Name>
 		</CrossReference>
-		<Formula>C 4 H 5 N 1 O 1</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">DBU</Id>
 			</Component>
 		</Condition>
@@ -9107,9 +8832,8 @@
 			<Id>MOD:00194</Id>
 			<Name>lactic acid</Name>
 		</CrossReference>
-		<Formula>C 3 H 5 O 2</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">LAC</Id>
 			</Component>
 		</Condition>
@@ -9136,9 +8860,8 @@
 			<Id>MOD:00200</Id>
 			<Name>D-methionine</Name>
 		</CrossReference>
-		<Formula>C 5 H 9 N 1 O 1 S 1</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">MED</Id>
 			</Component>
 		</Condition>
@@ -9165,9 +8888,8 @@
 			<Id>MOD:00201</Id>
 			<Name>D-phenylalanine</Name>
 		</CrossReference>
-		<Formula>C 9 H 9 N 1 O 1</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">DPN</Id>
 			</Component>
 		</Condition>
@@ -9194,9 +8916,8 @@
 			<Id>MOD:00891</Id>
 			<Name>D-serine</Name>
 		</CrossReference>
-		<Formula>C 3 H 5 N 1 O 2</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">DSN</Id>
 			</Component>
 		</Condition>
@@ -9223,9 +8944,8 @@
 			<Id>MOD:00204</Id>
 			<Name>D-leucine</Name>
 		</CrossReference>
-		<Formula>C 6 H 11 N 1 O 1</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">DLE</Id>
 			</Component>
 		</Condition>
@@ -9247,12 +8967,11 @@
 			<Id>MOD:00208</Id>
 			<Name>O4'-(phospho-5'-adenosine)-L-tyrosine</Name>
 		</CrossReference>
-		<Formula>C 19 H 21 N 6 O 8 P 1</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">TYR</Id>
 			</Component>
-			<Component type="Attachment" label="2">
+			<Component label="2">
 				<Id source="PDBCC">AMP</Id>
 			</Component>
 			<Bond>
@@ -9278,12 +8997,11 @@
 			<Id>MOD:00227</Id>
 			<Name>omega-N-phospho-L-arginine</Name>
 		</CrossReference>
-		<Formula>C 6 H 13 N 4 O 4 P 1</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">ARG</Id>
 			</Component>
-			<Component type="Attachment" label="2">
+			<Component label="2">
 				<Id source="PDBCC">PO3</Id>
 			</Component>
 			<Bond>
@@ -9309,21 +9027,20 @@
 			<Id>MOD:00230</Id>
 			<Name>bis-L-cysteinyl bis-L-histidino diiron disulfide</Name>
 		</CrossReference>
-		<Formula>C 18 Fe 2 H 20 N 8 O 4 S 4</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">CYS</Id>
 			</Component>
-			<Component type="AminoAcid" label="2">
+			<Component label="2">
 				<Id source="PDBCC">CYS</Id>
 			</Component>
-			<Component type="AminoAcid" label="3">
+			<Component label="3">
 				<Id source="PDBCC">HIS</Id>
 			</Component>
-			<Component type="AminoAcid" label="4">
+			<Component label="4">
 				<Id source="PDBCC">HIS</Id>
 			</Component>
-			<Component type="Attachment" label="5">
+			<Component label="5">
 				<Id source="PDBCC">FES</Id>
 			</Component>
 			<Bond>
@@ -9363,12 +9080,11 @@
 			<Id>MOD:00232</Id>
 			<Name>N6-(phospho-5'-adenosine)-L-lysine</Name>
 		</CrossReference>
-		<Formula>C 16 H 24 N 7 O 7 P 1</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">LYS</Id>
 			</Component>
-			<Component type="Attachment" label="2">
+			<Component label="2">
 				<Id source="PDBCC">AMP</Id>
 			</Component>
 			<Bond>
@@ -9399,9 +9115,8 @@
 			<Id>MOD:00234</Id>
 			<Name>L-cysteine glutathione disulfide</Name>
 		</CrossReference>
-		<Formula>C 13 H 20 N 4 O 7 S 2</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">CGL</Id>
 			</Component>
 		</Condition>
@@ -9423,12 +9138,11 @@
 			<Id>MOD:00244</Id>
 			<Name>L-cysteine oxazoline-4-carboxylic acid</Name>
 		</CrossReference>
-		<Formula>C 6 H 8 N 2 O 2 S 1</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">CYS</Id>
 			</Component>
-			<Component type="AminoAcid" label="2">
+			<Component label="2">
 				<Id source="PDBCC">SER</Id>
 			</Component>
 			<Bond>
@@ -9458,12 +9172,11 @@
 			<Id>MOD:00243</Id>
 			<Name>L-cysteine oxazole-4-carboxylic acid</Name>
 		</CrossReference>
-		<Formula>C 6 H 6 N 2 O 2 S 1</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">CYS</Id>
 			</Component>
-			<Component type="AminoAcid" label="2">
+			<Component label="2">
 				<Id source="PDBCC">SER</Id>
 			</Component>
 			<Bond>
@@ -9493,12 +9206,11 @@
 			<Id>MOD:00243</Id>
 			<Name>glycine oxazole-4-carboxylic acid</Name>
 		</CrossReference>
-		<Formula>C 5 H 4 N 2 O 2</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">GLY</Id>
 			</Component>
-			<Component type="AminoAcid" label="2">
+			<Component label="2">
 				<Id source="PDBCC">SER</Id>
 			</Component>
 			<Bond>
@@ -9528,12 +9240,11 @@
 			<Id>MOD:00246</Id>
 			<Name>glycine thiazole-4-carboxylic acid</Name>
 		</CrossReference>
-		<Formula>C 5 H 4 N 2 O 1 S 1</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">GLY</Id>
 			</Component>
-			<Component type="AminoAcid" label="2">
+			<Component label="2">
 				<Id source="PDBCC">CYS</Id>
 			</Component>
 			<Bond>
@@ -9564,12 +9275,11 @@
 			<Id>MOD:00247</Id>
 			<Name>L-serine thiazole-4-carboxylic acid</Name>
 		</CrossReference>
-		<Formula>C 6 H 6 N 2 O 2 S 1</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">SER</Id>
 			</Component>
-			<Component type="AminoAcid" label="2">
+			<Component label="2">
 				<Id source="PDBCC">CYS</Id>
 			</Component>
 			<Bond>
@@ -9600,12 +9310,11 @@
 			<Id>MOD:00248</Id>
 			<Name>L-phenylalanine thiazole-4-carboxylic acid</Name>
 		</CrossReference>
-		<Formula>C 12 H 10 N 2 O 1 S 1</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">PHE</Id>
 			</Component>
-			<Component type="AminoAcid" label="2">
+			<Component label="2">
 				<Id source="PDBCC">CYS</Id>
 			</Component>
 			<Bond>
@@ -9636,12 +9345,11 @@
 			<Id>MOD:00249</Id>
 			<Name>L-cysteine thiazole-4-carboxylic acid</Name>
 		</CrossReference>
-		<Formula>C 6 H 6 N 2 O 1 S 2</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">CYS</Id>
 			</Component>
-			<Component type="AminoAcid" label="2">
+			<Component label="2">
 				<Id source="PDBCC">CYS</Id>
 			</Component>
 			<Bond>
@@ -9672,12 +9380,11 @@
 			<Id>MOD:00250</Id>
 			<Name>L-lysine thiazole-4-carboxylic acid</Name>
 		</CrossReference>
-		<Formula>C 9 H 13 N 3 O 1 S 1</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">CYS</Id>
 			</Component>
-			<Component type="AminoAcid" label="2">
+			<Component label="2">
 				<Id source="PDBCC">LYS</Id>
 			</Component>
 			<Bond>
@@ -9708,12 +9415,11 @@
 			<Id>MOD:00258</Id>
 			<Name>S-(2-aminovinyl)-3-methyl-D-cysteine</Name>
 		</CrossReference>
-		<Formula>C 6 H 9 N 2 O 1 S 1</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">THR</Id>
 			</Component>
-			<Component type="AminoAcid" label="2">
+			<Component label="2">
 				<Id source="PDBCC">TEE</Id>
 			</Component>
 			<Bond>
@@ -9746,9 +9452,8 @@
 			<Id>MOD:01187</Id>
 			<Name>L-pyrrolysine residue</Name>
 		</CrossReference>
-		<Formula>C 12 H 19 N 3 O 2</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">PYH</Id>
 			</Component>
 		</Condition>
@@ -9775,9 +9480,8 @@
 			<Id>MOD:00819</Id>
 			<Name>L-2-aminobutanoic acid (Glu)</Name>
 		</CrossReference>
-		<Formula>C 4 H 7 N 1 O 1</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">ABA</Id>
 			</Component>
 		</Condition>
@@ -9799,12 +9503,11 @@
 			<Id>MOD:01389</Id>
 			<Name>L-isoleucine thiazole-4-carboxylic acid</Name>
 		</CrossReference>
-		<Formula>C 9 H 12 N 2 O 1 S 1</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">ILE</Id>
 			</Component>
-			<Component type="AminoAcid" label="2">
+			<Component label="2">
 				<Id source="PDBCC">CYS</Id>
 			</Component>
 			<Bond>
@@ -9835,12 +9538,11 @@
 			<Id>MOD:01390</Id>
 			<Name>L-valine thiazole-4-carboxylic acid</Name>
 		</CrossReference>
-		<Formula>C 8 H 10 N 2 O 1 S 1</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">VAL</Id>
 			</Component>
-			<Component type="AminoAcid" label="2">
+			<Component label="2">
 				<Id source="PDBCC">CYS</Id>
 			</Component>
 			<Bond>
@@ -9871,12 +9573,11 @@
 			<Id>MOD:01589</Id>
 			<Name>O-(2,4-diacetamido-2,4-dideoxyglucosyl)-L-serine</Name>
 		</CrossReference>
-		<Formula>C 13 H 21 N 3 O 7</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">SER</Id>
 			</Component>
-			<Component type="AminoAcid" label="2">
+			<Component label="2">
 				<Id source="PDBCC">DT6</Id>
 			</Component>
 			<Bond>
@@ -9907,9 +9608,8 @@
 			<Id>MOD:01786</Id>
 			<Name>3-nitro-L-tyrosine</Name>
 		</CrossReference>
-		<Formula>C 9 H 8 N 2 O 4</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">NIY</Id>
 			</Component>
 		</Condition>
@@ -9936,9 +9636,8 @@
 			<Id>MOD:01816</Id>
 			<Name>2'-hydroxy-L-tryptophan</Name>
 		</CrossReference>
-		<Formula>C 11 H 10 N 2 O 2</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">TRO</Id>
 			</Component>
 		</Condition>
@@ -9965,9 +9664,8 @@
 			<Id>MOD:01817</Id>
 			<Name>oxidation of tryptophan to 2'-oxo-L-tryptophan</Name>
 		</CrossReference>
-		<Formula>C 11 H 10 N 2 O 2</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">TRO</Id>
 			</Component>
 		</Condition>
@@ -9995,9 +9693,8 @@
 			<Id>MOD:01844</Id>
 			<Name>2-(3-methylbutanoyl)-5-hydroxy-oxazole-4-carbothionic acid</Name>
 		</CrossReference>
-		<Formula>C 9 H 10 N 1 O 3 S 1</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">8LI</Id>
 			</Component>
 		</Condition>
@@ -10025,9 +9722,8 @@
 			<Id>MOD:01844</Id>
 			<Name>	L-proline 5-hydroxy-oxazole-4-carbothionic acid</Name>
 		</CrossReference>
-		<Formula>C 8 H 8 N 2 O 2 S 1</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">66G</Id>
 			</Component>
 		</Condition>
@@ -10054,9 +9750,8 @@
 			<Id>MOD:00460</Id>
 			<Name>L-cysteic acid (L-cysteine sulfonic acid)</Name>
 		</CrossReference>
-		<Formula>C 3 H 5 N 1 O 4 S 1</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">OCS</Id>
 			</Component>
 		</Condition>
@@ -10078,13 +9773,12 @@
 			<Id>MOD:00030</Id>
 			<Name>N-formyl-L-methionine</Name>
 		</CrossReference>
-		<Formula>C 6 H 10 N 1 O 2 S 1</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">MET</Id>
 				<Terminal>N</Terminal>
 			</Component>
-		    <Component type="Attachment" label="2">
+		    <Component label="2">
 				<Id source="PDBCC">FOR</Id>
 			</Component>
 			<Bond>
@@ -10113,13 +9807,12 @@
 			<Id>MOD:00216</Id>
 			<Name>N6-formyl-L-lysine</Name>
 		</CrossReference>
-		<Formula>C 7 H 12 N 2 O 2</Formula>
 		<Condition>
-			<Component type="AminoAcid" label="1">
+			<Component label="1">
 				<Id source="PDBCC">LYS</Id>
 				<Terminal>N</Terminal>
 			</Component>
-		    <Component type="Attachment" label="2">
+		    <Component label="2">
 				<Id source="PDBCC">FOR</Id>
 			</Component>
 			<Bond>
