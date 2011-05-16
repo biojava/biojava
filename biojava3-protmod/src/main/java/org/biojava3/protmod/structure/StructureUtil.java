@@ -35,6 +35,12 @@ import org.biojava.bio.structure.Group;
 import org.biojava.bio.structure.ResidueNumber;
 import org.biojava.bio.structure.StructureException;
 
+import org.biojava.bio.structure.io.mmcif.chem.PolymerType;
+import org.biojava.bio.structure.io.mmcif.chem.ResidueType;
+import org.biojava.bio.structure.io.mmcif.model.ChemComp;
+import org.biojava3.protmod.ComponentType;
+
+
 public final class StructureUtil {
 	private StructureUtil() {
 		throw new AssertionError();
@@ -279,7 +285,8 @@ public final class StructureUtil {
 	 * @return
 	 */
 	public static List<Group> getAminoAcids(Chain chain) {
-//		List<Group> residues = new ArrayList<Group>();
+		//List<Group> residues = new ArrayList<Group>();
+		//return chain.getSeqResGroups();
 //		for (Group group : chain.getAtomGroups()) {
 //			ChemComp cc = group.getChemComp();
 //			if (ResidueType.lPeptideLinking.equals(cc.getResidueType()) ||
