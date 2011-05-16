@@ -3800,7 +3800,7 @@
 		</Condition>
 		<Occurrence>natural</Occurrence>
 		<Category>modified residue</Category>
-		<Comments>There are two entries in PSI-MOD MOD:00270 and MOD:01623, corresponding to internal and terminal.</Comments>
+		<Comment>There are two entries in PSI-MOD MOD:00270 and MOD:01623, corresponding to internal and terminal.</Comment>
 	</Entry>
 	<Entry>
 		<Id>0123</Id>
@@ -6822,7 +6822,7 @@
 		<Category>crosslink2</Category>
 		<Keyword>hydroxylation</Keyword>
 	</Entry>
-	<!Entry>
+	<Entry>
 		<Id>0206</Id>
 		<Description>A protein modification that effectively converts an L-methionine residue to N,N,N-trimethyl-L-methionine.</Description>
 		<SystematicName>(1S)-1-carboxy-N,N,N-trimethyl-3-(methylsulfanyl)propan-1-aminium</SystematicName>
@@ -8227,7 +8227,7 @@
 		<Category>undefined</Category>
 		<Keyword>Metal coordination</Keyword>
 	</Entry>
-	<Comment text="new entries added 05/05/2011">
+	<Comment text="new entries added 05/05/2011"/>
 	<Entry>
 		<Id>0253</Id>
 		<Description>A protein modification that effectively converts an L-alanine residue to N-acetyl-L-alanine.</Description>
@@ -8603,6 +8603,7 @@
 		</CrossReference>
 		<Formula>C 5 H 9 N 2 O 1</Formula>
 		<Condition>
+			<Component>
 			Component type="AminoAcid" label="1">
 				<Id source="PDBCC">PRO</Id>
 			</Component>
