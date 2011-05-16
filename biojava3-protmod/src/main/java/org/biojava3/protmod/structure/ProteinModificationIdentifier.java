@@ -59,9 +59,10 @@ import org.biojava3.protmod.ProteinModificationRegistry;
  */
 public class ProteinModificationIdentifier {
 	
-	private double bondLengthTolerance = 0.4;
-	private boolean recordUnidentifiableModifiedCompounds = false;
-	private boolean recordAdditionalAttachments = false;
+
+	private double bondLengthTolerance ;
+	private boolean recordUnidentifiableModifiedCompounds ;
+	private boolean recordAdditionalAttachments ;
 	
 	private Set<ModifiedCompound> identifiedModifiedCompounds = null;
 	private Set<StructureAtomLinkage> unidentifiableAtomLinkages = null;
@@ -71,6 +72,32 @@ public class ProteinModificationIdentifier {
          * Temporary save the amino acids for each call of identify().
          */
         private List<Group> residues;
+	
+	
+	public ProteinModificationIdentifier(){
+		
+		bondLengthTolerance =  0.4;
+		recordUnidentifiableModifiedCompounds = false;
+		recordAdditionalAttachments = true;
+		
+		reset();
+	}
+	
+	
+	public void destroy(){
+		if ( identifiedModifiedCompounds != null)
+			identifiedModifiedCompounds.clear();
+		if ( unidentifiableAtomLinkages != null)
+			unidentifiableAtomLinkages.clear();
+		if ( unidentifiableModifiedResidues != null)
+			unidentifiableModifiedResidues.clear();
+		
+		unidentifiableAtomLinkages = null;
+		unidentifiableAtomLinkages = null;
+		unidentifiableModifiedResidues = null;
+		
+		
+	}
 	
 	/**
 	 * 
@@ -252,11 +279,7 @@ public class ProteinModificationIdentifier {
 		}
 		
 			
-		identifiedModifiedCompounds = new LinkedHashSet<ModifiedCompound>();
-		if (recordUnidentifiableModifiedCompounds) {
-			unidentifiableAtomLinkages = new LinkedHashSet<StructureAtomLinkage>();
-			unidentifiableModifiedResidues = new LinkedHashSet<StructureGroup>();
-		}
+		reset();
 		
 		if (potentialModifications.isEmpty()) {
 			return;
@@ -269,6 +292,7 @@ public class ProteinModificationIdentifier {
 		
 		for (Chain chain : chains) {
 			mapChainIdChain.put(chain.getChainID(), chain);
+					
 			List<Group> ress = StructureUtil.getAminoAcids(chain);
 			List<Group> ligs = chain.getAtomLigands();
 			residues.addAll(ress);
@@ -324,6 +348,15 @@ public class ProteinModificationIdentifier {
 			recordUnidentifiableAtomLinkages(modComps, ligands);
 			recordUnidentifiableModifiedResidues(modComps);
 		}
+	}
+
+	private void reset() {
+		identifiedModifiedCompounds = new LinkedHashSet<ModifiedCompound>();
+		if (recordUnidentifiableModifiedCompounds) {
+			unidentifiableAtomLinkages = new LinkedHashSet<StructureAtomLinkage>();
+			unidentifiableModifiedResidues = new LinkedHashSet<StructureGroup>();
+		}
+		
 	}
 
 	private void processMultiCrosslink(
