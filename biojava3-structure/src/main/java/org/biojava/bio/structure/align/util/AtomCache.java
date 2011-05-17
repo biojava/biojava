@@ -296,8 +296,7 @@ public class AtomCache {
 	 * @throws IOException
 	 * @throws StructureException
 	 */
-	public  Atom[] getAtoms(String name) throws IOException,StructureException{
-		// synchronizing the whole method now to prevent the same PDB file to be loaded multiple times
+	public synchronized Atom[] getAtoms(String name) throws IOException,StructureException{
 
 		Atom[] atoms = null;
 
@@ -351,6 +350,7 @@ public class AtomCache {
 	 *	<li>To specify a particular chain write as: 4hhb.A (chain IDs are case sensitive, PDB ids are not)</li>
 	 * 	<li>To specify that the 1st chain in a structure should be used write: 4hhb:0 .</li>
 	 *  <li>To specify a SCOP domain write a scopId e.g. d2bq6a1. Some flexibility can be allowed in SCOP domain names, see {@link #setStrictSCOP(boolean)}</li>
+	 *  <li>URLs are accepted as well</li>
 	 *  </ul>
 	 *  
 	 * @param name
@@ -383,42 +383,12 @@ public class AtomCache {
 
 			} else if ( name.startsWith("d")){
 
-
-				// looks like a SCOP domain!
-				ScopDomain domain;
-				if( this.strictSCOP) {
-					domain = getScopDomain(name);
-				} else {
-					domain = guessScopDomain(name);
-				}
-				if ( domain != null){
-					Structure s = getStructureForDomain(domain);
-					return s;
-				}
-
-				if( !this.strictSCOP) {
-					Matcher scopMatch = scopIDregex.matcher(name);
-					if( scopMatch.matches() ) {
-						String pdbID = scopMatch.group(1);
-						String chainID = scopMatch.group(2);
-
-						// None of the actual SCOP domains match. Guess that '_' means 'whole chain'
-						if( !chainID.equals("_") ) {
-							//Add chain identifier
-							pdbID += "."+scopMatch.group(2);
-						}
-						// Fetch the structure by pdb id
-						Structure struct = getStructure(pdbID);
-						if(struct != null) {
-							System.err.println("Trying chain "+pdbID);
-						}
-						return struct;
-					}
-				}
-
-				throw new StructureException("Unable to get structure for SCOP domain: "+name);
+				// return based on SCOP domain ID
+				return getStructureFromSCOPDomain(name);
 
 			} else if (name.length() == 6){
+				// name is PDB.CHAINID style (e.g. 4hhb.A)
+				
 				pdbId = name.substring(0,4);
 				if ( name.substring(4,5).equals(CHAIN_SPLIT_SYMBOL)) {
 					chainId = name.substring(5,6);
@@ -427,14 +397,20 @@ public class AtomCache {
 					useChainNr = true;	
 					chainNr = Integer.parseInt(name.substring(5,6));
 				}
+				
 			} else if ( (name.length() > 6) &&  
 					(name.contains(CHAIN_NR_SYMBOL)) && (! (name.startsWith("file:/") || name.startsWith("http:/")))) {
+				
+				// this is a name + range 
+				
 				pdbId = name.substring(0,4);
 				// this ID has domain split information...
 				useDomainInfo = true;
 				range = name.substring(5);
+				
 			} else if ( name.startsWith("file:/") || name.startsWith("http:/") ) {
 				
+				// this is a URL
 				try {
 					
 					URL url = new URL(name);
@@ -522,6 +498,43 @@ public class AtomCache {
 		return n;
 
 
+	}
+
+	private Structure getStructureFromSCOPDomain(String name)
+			throws IOException, StructureException {
+		// looks like a SCOP domain!
+		ScopDomain domain;
+		if( this.strictSCOP) {
+			domain = getScopDomain(name);
+		} else {
+			domain = guessScopDomain(name);
+		}
+		if ( domain != null){
+			Structure s = getStructureForDomain(domain);
+			return s;
+		}
+
+		if( !this.strictSCOP) {
+			Matcher scopMatch = scopIDregex.matcher(name);
+			if( scopMatch.matches() ) {
+				String pdbID = scopMatch.group(1);
+				String chainID = scopMatch.group(2);
+
+				// None of the actual SCOP domains match. Guess that '_' means 'whole chain'
+				if( !chainID.equals("_") ) {
+					//Add chain identifier
+					pdbID += "."+scopMatch.group(2);
+				}
+				// Fetch the structure by pdb id
+				Structure struct = getStructure(pdbID);
+				if(struct != null) {
+					System.err.println("Trying chain "+pdbID);
+				}
+				return struct;
+			}
+		}
+
+		throw new StructureException("Unable to get structure for SCOP domain: "+name);
 	}
 
 
@@ -676,6 +689,7 @@ public class AtomCache {
 	 */
 	public Structure getBiologicalUnit(String pdbId) throws StructureException, IOException{
 		StructureProvider provider = new LocalCacheStructureProvider();
+		provider.setFileParsingParameters(params);
 		return provider.getBiologicalUnit(pdbId);
 	}
 
