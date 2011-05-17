@@ -37,10 +37,15 @@ public class LocalCacheStructureProvider implements StructureProvider{
 		params = new FileParsingParameters();
 		
 		// set the path to cache files
-		String property = "java.io.tmpdir";
-		String tempdir = System.getProperty(property);
+
 		
-		setPath(tempdir);
+		String defaultPath = System.getProperty(AbstractUserArgumentProcessor.PDB_DIR);
+		if ( defaultPath == null) {
+			String property = "java.io.tmpdir";
+			defaultPath = System.getProperty(property);
+		}
+		
+		setPath(defaultPath);
 		
 	}
 	
