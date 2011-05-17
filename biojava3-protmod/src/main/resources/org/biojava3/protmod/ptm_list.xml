@@ -2921,29 +2921,6 @@
 		<Keyword>D-amino acid</Keyword>
 	</Entry>
 	<Entry>
-		<Id>0096</Id>
-		<Description>A protein modification that effectively converts a source amino acid to D-alanine.</Description>
-		<SystematicName>(R)-2-aminopropanoic acid</SystematicName>
-		<CrossReference>
-			<Source>RESID</Source>
-			<Id>AA0191</Id>
-			<Name>D-alanine</Name>
-		</CrossReference>
-		<CrossReference>
-			<Source>PSI-MOD</Source>
-			<Id>MOD:00862</Id>
-			<Name>D-alanine</Name>
-		</CrossReference>
-		<Condition>
-			<Component label="1">
-				<Id source="PDBCC">DAL</Id>
-			</Component>
-		</Condition>
-		<Occurrence>natural</Occurrence>
-		<Category>modified residue</Category>
-		<Keyword>D-amino acid</Keyword>
-	</Entry>
-	<Entry>
 		<Id>0098</Id>
 		<Description>A protein modification that effectively converts an L-isoleucine residue to a D-allo-isoleucine.</Description>
 		<SystematicName>(2R,3S)-2-amino-3-methylpentanoic acid</SystematicName>
