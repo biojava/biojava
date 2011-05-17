@@ -151,7 +151,7 @@ public final class ProteinModificationXmlReader {
 					Node compNode = compNodes.get(iComp);
 					// comp label
 					NamedNodeMap compNodeAttrs = compNode.getAttributes();
-					Node labelNode = compNodeAttrs.getNamedItem("label");
+					Node labelNode = compNodeAttrs.getNamedItem("component");
 					if (labelNode==null) {
 						throw new RuntimeException("Each component must have a label." +
 								" See Modification "+id+".");
@@ -242,7 +242,7 @@ public final class ProteinModificationXmlReader {
 						String labelComp1 = compNode.getTextContent();
 						int iComp1 = mapLabelComp.get(labelComp1);
 						
-						Node labelNode = atomNodeAttrs.getNamedItem("label");
+						Node labelNode = atomNodeAttrs.getNamedItem("atom");
 						String labelAtom1 = labelNode==null?null:labelNode.getTextContent();
 						
 						String atom1 = atomNodes.get(0).getTextContent();
@@ -262,7 +262,7 @@ public final class ProteinModificationXmlReader {
 						String labelComp2 = compNode.getTextContent();
 						int iComp2 = mapLabelComp.get(labelComp2);
 
-						labelNode = atomNodeAttrs.getNamedItem("label");
+						labelNode = atomNodeAttrs.getNamedItem("atom");
 						String labelAtom2 = labelNode==null?null:labelNode.getTextContent();
 						
 						String atom2 = atomNodes.get(1).getTextContent();
