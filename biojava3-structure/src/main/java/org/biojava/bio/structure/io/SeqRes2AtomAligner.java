@@ -254,7 +254,10 @@ public class SeqRes2AtomAligner {
 
 			if ( seqResPos >= seqResGroups.size()){
 				//System.err.println("seqres groups don't match atom indeces");
-				return false;
+				if ( atomResGroup instanceof AminoAcid )
+					return false;
+				else
+					continue;
 			}
 			
 			Group seqResGroup = seqResGroups.get(seqResPos );
