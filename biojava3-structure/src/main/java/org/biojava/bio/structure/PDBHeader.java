@@ -175,17 +175,19 @@ public class PDBHeader implements PDBRecord, Serializable{
       String thisLine = "";
       int count = 1;
       while (data.length() > 57) {
-
           // find first whitespace from left
           // there are 10 chars to the left, so the cutoff position is 56
          boolean charFound = false;
-          for ( int i =57;i>-1;i--){
+         for ( int i =57;i>-1;i--){
               char c = data.charAt(i);
-              if (c == breakChar){
-                  //System.out.println("found space at:"+ i);
+              if (c == breakChar){                
                   // found the whitespace
 
                   thisLine = data.substring(0,i+1);
+                  
+                  // prevent endless loop
+                  if (i == 0 )
+                	  i++;
                   data = data.substring(i);
                   charFound = true;
                   //System.out.println(thisLine);
@@ -196,12 +198,11 @@ public class PDBHeader implements PDBRecord, Serializable{
           // for emergencies...  prevents an endless loop
           if ( ! charFound){
              thisLine = data.substring(0,58);
-             data = data.substring(57);
+             data = data.substring(57);             
           }
           if ( ( breakChar == ',' ) && ( data.charAt(0)== ',')) {
              data =   data.substring(1);
           }
-
 
           //TODO: check structures that have more than 10  lines...
           // start printing..
