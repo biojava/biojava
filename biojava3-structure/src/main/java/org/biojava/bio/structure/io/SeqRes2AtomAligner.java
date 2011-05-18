@@ -252,6 +252,11 @@ public class SeqRes2AtomAligner {
 				System.err.println("What is going on??? " + atomRes.getChainID() + " " + atomResGroup);
 			}
 
+			if ( seqResPos > seqResGroups.size()){
+				System.err.println("seqres groups don't match atom indeces");
+				return false;
+			}
+			
 			Group seqResGroup = seqResGroups.get(seqResPos );
 			
 			if ( ! seqResGroup.getPDBName().trim().equals(atomResGroup.getPDBName().trim())){
