@@ -128,7 +128,7 @@ public class SeqRes2AtomAligner {
 					continue;
 				}
 
-				System.err.println("Could not map SEQRES to ATOM records easily, need to align...");
+				//System.err.println("Could not map SEQRES to ATOM records easily, need to align...");
 				
 				if ( seqRes.getAtomGroups("amino").size() < 1) {
 					if (DEBUG){
@@ -252,8 +252,8 @@ public class SeqRes2AtomAligner {
 				System.err.println("What is going on??? " + atomRes.getChainID() + " " + atomResGroup);
 			}
 
-			if ( seqResPos > seqResGroups.size()){
-				System.err.println("seqres groups don't match atom indeces");
+			if ( seqResPos >= seqResGroups.size()){
+				//System.err.println("seqres groups don't match atom indeces");
 				return false;
 			}
 			
