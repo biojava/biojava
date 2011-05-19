@@ -20,41 +20,43 @@
  * Created on 2011.05.09 by kohchuanhock
  *
  */
-package org.biojava3.proteinproperties;
+package org.biojava3.aaproperties;
 
-import java.util.AbstractMap;
+import java.util.Map;
 
+import org.biojava.bio.structure.AminoAcid;
 import org.biojava3.core.sequence.ProteinSequence;
 import org.biojava3.core.sequence.compound.AminoAcidCompound;
 
 /**
- * An interface to generate some basic physico-chemical properties of protein
- * sequences
+ * TODO
+ * How to properly set the @see
+ * How to make the class not so long in the javadoc?
+ * Discuss the usage of either AminoAcidCompound or AminoAcid
+ * Should the methods be static?
  * 
- * TODO Please list all the properties
- * 
- * TODO Javadoc is invalid in places for instance use of @see tags. Use Eclipse
- * to validate your javadoc! E.g. right click on the project Properties->Java
- * compiler->Javadoc play with settings. Alternative, generate the Javadoc from
- * your code and see how it looks like. Also use closing </p> tag if you used
- * opening.
- * 
- * TODO package javadoc
- * 
- * 
+ * An interface to generate some basic physico-chemical properties of protein sequences.<br/>
+ * The following properties could be generated:
+ * <p/>
+ * Molecular weight<br/>
+ * Extinction coefficient<br/>
+ * Instability index<br/>
+ * Apliphatic index<br/>
+ * Average hydropathy value<br/>
+ * Isoelectric point<br/>
+ * Net charge at pH 7<br/>
+ * Composition of specified amino acid<br/>
+ * Composition of the 20 standard amino acid<br/>
  * 
  * @author kohchuanhock
  * @version 2011.05.09
  */
-public interface BasicProperties {
+public interface IPeptideProperties {
 
 	/**
-	 * Returns the molecular weight of sequence. The sequence argument must be a
-	 * protein sequence consisting of only non-ambiguous characters.
-	 * <p>
+	 * Returns the molecular weight of sequence. The sequence argument must be a protein sequence consisting of only non-ambiguous characters.
 	 * This method will sum the molecular weight of each amino acid in the
-	 * sequence. Molecular weights are based on {@link http
-	 * ://au.expasy.org/tools/findmod/findmod_masses.html#AA}.
+	 * sequence. Molecular weights are based on <a href="http://au.expasy.org/tools/findmod/findmod_masses.html#AA">here</a>.
 	 * 
 	 * @param sequence
 	 *            a protein sequence consisting of non-ambiguous characters only
@@ -66,12 +68,11 @@ public interface BasicProperties {
 	/**
 	 * Returns the extinction coefficient of sequence. The sequence argument
 	 * must be a protein sequence consisting of only non-ambiguous characters.
-	 * <p>
 	 * The extinction coefficient indicates how much light a protein absorbs at
 	 * a certain wavelength. It is useful to have an estimation of this
 	 * coefficient for following a protein which a spectrophotometer when
 	 * purifying it. The computation of extinction coefficient follows the
-	 * documentation in {@link http://au.expasy.org/tools/protparam-doc.html}.
+	 * documentation in <a href="http://au.expasy.org/tools/protparam-doc.html">here</a>.
 	 * 
 	 * @param sequence
 	 *            a protein sequence consisting of non-ambiguous characters only
@@ -87,10 +88,9 @@ public interface BasicProperties {
 	/**
 	 * Returns the instability index of sequence. The sequence argument must be
 	 * a protein sequence consisting of only non-ambiguous characters.
-	 * <p>
 	 * The instability index provides an estimate of the stability of your
 	 * protein in a test tube. The computation of instability index follows the
-	 * documentation in {@link http://au.expasy.org/tools/protparam-doc.html}.
+	 * documentation in <a href="http://au.expasy.org/tools/protparam-doc.html">here</a>.
 	 * 
 	 * @param sequence
 	 *            a protein sequence consisting of non-ambiguous characters only
@@ -102,13 +102,11 @@ public interface BasicProperties {
 	/**
 	 * Returns the apliphatic index of sequence. The sequence argument must be a
 	 * protein sequence consisting of only non-ambiguous characters.
-	 * <p>
 	 * The aliphatic index of a protein is defined as the relative volume
 	 * occupied by aliphatic side chains (alanine, valine, isoleucine, and
 	 * leucine). It may be regarded as a positive factor for the increase of
 	 * thermostability of globular proteins. The computation of aliphatic index
-	 * follows the documentation in {@link http
-	 * ://au.expasy.org/tools/protparam-doc.html}.
+	 * follows the documentation in <a href="http://au.expasy.org/tools/protparam-doc.html">here</a>.
 	 * 
 	 * @param sequence
 	 *            a protein sequence consisting of non-ambiguous characters only
@@ -120,7 +118,6 @@ public interface BasicProperties {
 	/**
 	 * Returns the average hydropathy value of sequence. The sequence argument
 	 * must be a protein sequence consisting of only non-ambiguous characters.
-	 * <p>
 	 * The average value for a sequence is calculated as the sum of hydropathy
 	 * values of all the amino acids, divided by the number of residues in the
 	 * sequence. Hydropathy values are based on (Kyte, J. and Doolittle, R.F.
@@ -137,12 +134,10 @@ public interface BasicProperties {
 	/**
 	 * Returns the isoelectric point of sequence. The sequence argument must be
 	 * a protein sequence consisting of only non-ambiguous characters.
-	 * <p>
 	 * The isoelectric point is the pH at which the protein carries no net
 	 * electrical charge. The isoelectric point will be computed based on
-	 * approach stated in {@link http
-	 * ://www.innovagen.se/custom-peptide-synthesis
-	 * /peptide-property-calculator/peptide-property-calculator-notes.asp#PI}
+	 * approach stated in <a href=
+	 * "http://www.innovagen.se/custom-peptide-synthesis/peptide-property-calculator/peptide-property-calculator-notes.asp#PI">here</a>
 	 * 
 	 * @param sequence
 	 *            a protein sequence consisting of non-ambiguous characters only
@@ -154,10 +149,8 @@ public interface BasicProperties {
 	/**
 	 * Returns the net charge of sequence at pH 7. The sequence argument must be
 	 * a protein sequence consisting of only non-ambiguous characters.
-	 * <p>
-	 * The net charge will be computed using the approach stated in {@link http
-	 * ://www.innovagen.se/custom-peptide-synthesis/peptide-property-calculator/
-	 * peptide-property-calculator-notes.asp#NetCharge}
+	 * The net charge will be computed using the approach stated in <a href=
+	 * "http://www.innovagen.se/custom-peptide-synthesis/peptide-property-calculator/peptide-property-calculator-notes.asp#NetCharge>here</a>
 	 * 
 	 * @param sequence
 	 *            a protein sequence consisting of non-ambiguous characters only
@@ -171,7 +164,6 @@ public interface BasicProperties {
 	 * sequence argument must be a protein sequence consisting of only
 	 * non-ambiguous characters. The aminoAcidCode must be a non-ambiguous
 	 * character.
-	 * <p>
 	 * The composition of an amino acid is the total number of its occurrence,
 	 * divided by the total length of the sequence.
 	 * 
@@ -180,31 +172,21 @@ public interface BasicProperties {
 	 * @param aminoAcidCode
 	 *            the code of the amino acid to compute
 	 * @return the composition of specified amino acid in the sequence
-	 * @see ProteinSequence, AminoAcid
+	 * @see ProteinSequence AminoAcid
 	 */
-	public double getEnrichment(ProteinSequence sequence,
-			AminoAcidCompound aminoAcidCode);
+	public double getEnrichment(ProteinSequence sequence, AminoAcid aminoAcidCode);
 
 	/**
 	 * Returns the composition of the 20 standard amino acid in the sequence.
 	 * The sequence argument must be a protein sequence consisting of only
 	 * non-ambiguous characters.
-	 * <p>
 	 * The composition of an amino acid is the total number of its occurrence,
 	 * divided by the total length of the sequence.
-	 * 
-	 * TODO favour interfaces to classes or super classes - you should use Map
-	 * here - read about in in J. Bloch "Effective Java"
-	 * http://java.sun.com/docs/books/effective/
-	 * 
-	 * TODO Why did you choose AminoAcidCompound? What the calling method would
-	 * look like? Please give an example.
 	 * 
 	 * @param sequence
 	 *            a protein sequence consisting of non-ambiguous characters only
 	 * @return the composition of the 20 standard amino acid in the sequence
-	 * @see ProteinSequence, AminoAcid
+	 * @see ProteinSequence AminoAcid
 	 */
-	public AbstractMap<AminoAcidCompound, Double> getAAComposition(
-			ProteinSequence sequence);
+	public Map<AminoAcidCompound, Double> getAAComposition(ProteinSequence sequence);
 }

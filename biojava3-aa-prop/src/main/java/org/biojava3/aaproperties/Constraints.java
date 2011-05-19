@@ -1,4 +1,4 @@
-package org.biojava3.proteinproperties;
+package org.biojava3.aaproperties;
 
 import java.util.HashMap;
 import java.util.Map;
