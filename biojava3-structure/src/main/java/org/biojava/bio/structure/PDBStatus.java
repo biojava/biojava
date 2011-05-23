@@ -90,6 +90,7 @@ public class PDBStatus {
 		REPL,
 		WAIT,
 		WDRN,
+		MODEL,
 		UNKNOWN;
 		
 		
@@ -124,6 +125,8 @@ public class PDBStatus {
 				status = Status.WAIT;
 			else if(statusStrUpper.equalsIgnoreCase("WDRN"))
 				status = Status.WDRN;
+			else if(statusStrUpper.equalsIgnoreCase("MODEL"))
+				status = Status.MODEL;
 			else if(statusStrUpper.equalsIgnoreCase("UNKNOWN"))
 				status = Status.UNKNOWN;
 			else {
@@ -514,9 +517,6 @@ public class PDBStatus {
 		
 		List<Map<String,String>> result = new ArrayList<Map<String,String>>(pdbIDs.length);
 
-
-		
-		
 		String serverName = System.getProperty(PDB_SERVER_PROPERTY);
 
 		if ( serverName == null)
