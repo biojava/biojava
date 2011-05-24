@@ -716,25 +716,20 @@ public class AtomCache {
 	public Structure getBiologicalAssembly(String pdbId, int bioAssemblyId, boolean bioAssemblyFallback) throws StructureException, IOException {
 		Structure s;
 		if (bioAssemblyId < 1) {
-		    throw new StructureException("bioAssemblyID must be greater than zero: " + pdbId + 
-				" bioAssemblyId " + bioAssemblyId);
+			throw new StructureException("bioAssemblyID must be greater than zero: " + pdbId + 
+					" bioAssemblyId " + bioAssemblyId);
 		}
-//		try {
-			PDBFileReader reader = new PDBFileReader();
-			reader.setPath(path);
-			reader.setPdbDirectorySplit(isSplit);
-			reader.setAutoFetch(autoFetch);
-			reader.setFetchFileEvenIfObsolete(fetchFileEvenIfObsolete);
-			reader.setFetchCurrent(fetchCurrent);
-			reader.setFileParsingParameters(params);
-            reader.setBioAssemblyId(bioAssemblyId);
-            reader.setBioAssemblyFallback(bioAssemblyFallback);
-			s = reader.getStructureById(pdbId.toLowerCase());
-			s.setPDBCode(pdbId);
-//		} catch (Exception e){
-//			throw new StructureException(e.getMessage() + " while parsing " + pdbId + 
-//					" biological assembly " + bioAssemblyId,e);
-//		}
+		PDBFileReader reader = new PDBFileReader();
+		reader.setPath(path);
+		reader.setPdbDirectorySplit(isSplit);
+		reader.setAutoFetch(autoFetch);
+		reader.setFetchFileEvenIfObsolete(fetchFileEvenIfObsolete);
+		reader.setFetchCurrent(fetchCurrent);
+		reader.setFileParsingParameters(params);
+		reader.setBioAssemblyId(bioAssemblyId);
+		reader.setBioAssemblyFallback(bioAssemblyFallback);
+		s = reader.getStructureById(pdbId.toLowerCase());
+		s.setPDBCode(pdbId);
 		return s;
 	}
 
