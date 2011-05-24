@@ -24,16 +24,14 @@ package org.biojava3.aaproperties;
 
 import java.util.Map;
 
-import org.biojava.bio.structure.AminoAcid;
 import org.biojava3.core.sequence.ProteinSequence;
 import org.biojava3.core.sequence.compound.AminoAcidCompound;
 
 /**
  * TODO
- * How to properly set the @see
- * How to make the class not so long in the javadoc?
- * Discuss the usage of either AminoAcidCompound or AminoAcid
- * Should the methods be static?
+ * Create adaptor methods for all methods - Change to Char instead of AminoAcidCompound or AminoAcid
+ * Implement all the methods
+ * Get IsoElectric Point - What is a suitable small enough margin?
  * 
  * An interface to generate some basic physico-chemical properties of protein sequences.<br/>
  * The following properties could be generated:
@@ -47,9 +45,9 @@ import org.biojava3.core.sequence.compound.AminoAcidCompound;
  * Net charge at pH 7<br/>
  * Composition of specified amino acid<br/>
  * Composition of the 20 standard amino acid<br/>
- * 
  * @author kohchuanhock
  * @version 2011.05.09
+ * @see PeptideProperties
  */
 public interface IPeptideProperties {
 
@@ -82,8 +80,7 @@ public interface IPeptideProperties {
 	 * @return the extinction coefficient of sequence
 	 * @see ProteinSequence
 	 */
-	public double getExtinctionCoefficient(ProteinSequence sequence,
-			boolean assumeCysReduced);
+	public double getExtinctionCoefficient(ProteinSequence sequence, boolean assumeCysReduced);
 
 	/**
 	 * Returns the instability index of sequence. The sequence argument must be
@@ -136,8 +133,8 @@ public interface IPeptideProperties {
 	 * a protein sequence consisting of only non-ambiguous characters.
 	 * The isoelectric point is the pH at which the protein carries no net
 	 * electrical charge. The isoelectric point will be computed based on
-	 * approach stated in <a href=
-	 * "http://www.innovagen.se/custom-peptide-synthesis/peptide-property-calculator/peptide-property-calculator-notes.asp#PI">here</a>
+	 * approach stated in 
+	 * <a href="http://www.innovagen.se/custom-peptide-synthesis/peptide-property-calculator/peptide-property-calculator-notes.asp#PI">here</a>
 	 * 
 	 * @param sequence
 	 *            a protein sequence consisting of non-ambiguous characters only
@@ -149,8 +146,8 @@ public interface IPeptideProperties {
 	/**
 	 * Returns the net charge of sequence at pH 7. The sequence argument must be
 	 * a protein sequence consisting of only non-ambiguous characters.
-	 * The net charge will be computed using the approach stated in <a href=
-	 * "http://www.innovagen.se/custom-peptide-synthesis/peptide-property-calculator/peptide-property-calculator-notes.asp#NetCharge>here</a>
+	 * The net charge will be computed using the approach stated in 
+	 * <a href="http://www.innovagen.se/custom-peptide-synthesis/peptide-property-calculator/peptide-property-calculator-notes.asp#NetCharge>here</a>
 	 * 
 	 * @param sequence
 	 *            a protein sequence consisting of non-ambiguous characters only
@@ -172,9 +169,10 @@ public interface IPeptideProperties {
 	 * @param aminoAcidCode
 	 *            the code of the amino acid to compute
 	 * @return the composition of specified amino acid in the sequence
-	 * @see ProteinSequence AminoAcid
+	 * @see ProteinSequence 
+	 * @see AminoAcidCompound
 	 */
-	public double getEnrichment(ProteinSequence sequence, AminoAcid aminoAcidCode);
+	public double getEnrichment(ProteinSequence sequence, AminoAcidCompound aminoAcidCode);
 
 	/**
 	 * Returns the composition of the 20 standard amino acid in the sequence.
