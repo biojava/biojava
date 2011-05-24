@@ -680,17 +680,62 @@ public class AtomCache {
 	}
 
 
-	/** Loads the biological unit
+	/** 
+	 * Loads the default biological unit (*.pdb1.gz) file. If it is not available, the original
+	 * PDB file will be loaded, i.e., for NMR structures, where the original files is also the 
+	 * biological assembly.
 	 * 
 	 * @param pdbId the PDB ID
 	 * @return a structure object
-	 * @throws IOException  
+ 	 * @throws IOException 
 	 * @throws StructureException 
+	 * @since 3.2
 	 */
 	public Structure getBiologicalUnit(String pdbId) throws StructureException, IOException{
-		StructureProvider provider = new LocalCacheStructureProvider();
-		provider.setFileParsingParameters(params);
-		return provider.getBiologicalUnit(pdbId);
+		int bioAssemblyId = 1;
+		boolean bioAssemblyFallback = true;
+		return getBiologicalAssembly(pdbId, bioAssemblyId, bioAssemblyFallback);
+	}
+	
+	/** 
+	 * Loads the biological assembly for a given PDB ID and bioAssemblyId. 
+	 * If a bioAssemblyId > 0 is specified, the corresponding biological assembly file will be loaded. Note, the
+	 * number of available biological unit files varies. Many entries don't have a biological assembly specified (i.e. NMR structures),
+	 * many entries have only one biological assembly (bioAssemblyId=1), and a few structures have multiple biological assemblies.
+	 * Set bioAssemblyFallback to true, to download the original PDB file in cases that a biological assembly file is not available.
+	 * 
+	 * @param pdbId the PDB ID
+	 * @param bioAssemblyId the ID of the biological assembly
+	 * @param bioAssemblyFallback if true, try reading original PDB file in case the biological assembly file is not available
+	 * @return a structure object
+	 * @throws IOException 
+	 * @throws StructureException 
+	 * @author Peter Rose
+	 * @since 3.2
+	 */
+	public Structure getBiologicalAssembly(String pdbId, int bioAssemblyId, boolean bioAssemblyFallback) throws StructureException, IOException {
+		Structure s;
+		if (bioAssemblyId < 1) {
+		    throw new StructureException("bioAssemblyID must be greater than zero: " + pdbId + 
+				" bioAssemblyId " + bioAssemblyId);
+		}
+//		try {
+			PDBFileReader reader = new PDBFileReader();
+			reader.setPath(path);
+			reader.setPdbDirectorySplit(isSplit);
+			reader.setAutoFetch(autoFetch);
+			reader.setFetchFileEvenIfObsolete(fetchFileEvenIfObsolete);
+			reader.setFetchCurrent(fetchCurrent);
+			reader.setFileParsingParameters(params);
+            reader.setBioAssemblyId(bioAssemblyId);
+            reader.setBioAssemblyFallback(bioAssemblyFallback);
+			s = reader.getStructureById(pdbId.toLowerCase());
+			s.setPDBCode(pdbId);
+//		} catch (Exception e){
+//			throw new StructureException(e.getMessage() + " while parsing " + pdbId + 
+//					" biological assembly " + bioAssemblyId,e);
+//		}
+		return s;
 	}
 
 
