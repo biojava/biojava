@@ -21,14 +21,54 @@ public class PeptidePropertiesImpl implements IPeptideProperties{
 
 	@Override
 	public double getExtinctionCoefficient(ProteinSequence sequence, boolean assumeCysReduced) {
-		// TODO Auto-generated method stub
-		return 0;
+		//E(Prot) = Numb(Tyr)*Ext(Tyr) + Numb(Trp)*Ext(Trp) + Numb(Cystine)*Ext(Cystine)
+		//where (for proteins in water measured at 280 nm): Ext(Tyr) = 1490, Ext(Trp) = 5500, Ext(Cystine) = 125;
+		//Absorb(Prot) = E(Prot) / Molecular_weight
+		double tyr = 1490;
+		double trp = 5500;
+		double cys = 125;
+		AminoAcidCompoundSet aaSet = new AminoAcidCompoundSet();
+		Map<AminoAcidCompound, Integer> extinctAA2Count = this.getExtinctAACount(sequence);
+		double mw = this.getMolecularWeight(sequence);
+		
+		double eProt;
+		if(assumeCysReduced)
+			eProt = extinctAA2Count.get(aaSet.getCompoundForString("Y")) * tyr + extinctAA2Count.get(aaSet.getCompoundForString("W")) * trp + 
+				extinctAA2Count.get(aaSet.getCompoundForString("C")) * cys;
+		else
+			eProt = extinctAA2Count.get(aaSet.getCompoundForString("Y")) * tyr + extinctAA2Count.get(aaSet.getCompoundForString("W")) * trp;
+		
+		return eProt / mw;
+	}
+	
+	private Map<AminoAcidCompound, Integer> getExtinctAACount(ProteinSequence sequence){
+		//Cys => C, Tyr => Y, Trp => W
+		int numW = 0;
+		double numC = 0;
+		int numY = 0;
+		for(char aa:sequence.getSequenceAsString().toCharArray()){
+			switch(aa){
+			case 'W': numW++; break;
+			case 'C': numC += 0.5; break;
+			case 'Y': numY++; break;
+			}
+		}
+		AminoAcidCompoundSet aaSet = new AminoAcidCompoundSet();
+		Map<AminoAcidCompound, Integer> extinctAA2Count = new HashMap<AminoAcidCompound, Integer>();
+		extinctAA2Count.put(aaSet.getCompoundForString("W"), numW);
+		extinctAA2Count.put(aaSet.getCompoundForString("C"), (int)numC);
+		extinctAA2Count.put(aaSet.getCompoundForString("Y"), numY);
+		return extinctAA2Count;
 	}
 
 	@Override
 	public double getInstabilityIndex(ProteinSequence sequence) {
-		// TODO Auto-generated method stub
-		return 0;
+		double sum = 0.0;
+		String s = sequence.getSequenceAsString();
+		for(int i = 0; i < sequence.getLength() - 1; i++){
+			sum += Constraints.diAA2Instability.get(s.substring(i, i+2));
+		}
+		return sum * 10 / s.length();
 	}
 
 	@Override
@@ -177,9 +217,10 @@ public class PeptidePropertiesImpl implements IPeptideProperties{
 	 * Test Method
 	 */
 	public static void main(String[] args){
-		ProteinSequence sequence = new ProteinSequence("AAACCCAAA");
+		ProteinSequence sequence = new ProteinSequence("AAACCAAAWWTT");
 		IPeptideProperties pp = new PeptidePropertiesImpl();
 		AminoAcidCompoundSet aaSet = new AminoAcidCompoundSet();
+		System.out.println(sequence);
 		System.out.println("A Composition: " + pp.getEnrichment(sequence, aaSet.getCompoundForString("A")));//CHECKED
 		
 		System.out.println("C Composition: " + pp.getEnrichment(sequence, aaSet.getCompoundForString("C")));//CHECKED
@@ -189,5 +230,8 @@ public class PeptidePropertiesImpl implements IPeptideProperties{
 		System.out.println("NetCharge: " + pp.getNetCharge(sequence));//CHECKED
 		System.out.println("PI: " + pp.getIsoelectricPoint(sequence));//CHECKED
 		System.out.println("Apliphatic: " + pp.getApliphaticIndex(sequence));//CHECKED
+		System.out.println("Instability: " + pp.getInstabilityIndex(sequence));//CHECKED
+		System.out.println("Extinct: " + pp.getExtinctionCoefficient(sequence, true));//CHECKED - 
+		System.out.println("Extinct: " + pp.getExtinctionCoefficient(sequence, false));
 	}
 }

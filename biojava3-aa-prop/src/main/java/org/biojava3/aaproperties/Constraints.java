@@ -17,6 +17,7 @@ public class Constraints {
 		initMolecularWeight();
 		initHydropathicity();
 		initPKa();
+		initInstability();
 	}
 	
 	private static void initMolecularWeight(){
@@ -132,6 +133,12 @@ public class Constraints {
 	}
 
 	private static void initInstability(){
+		/*
+		 * Guruprasad, K., Reddy, B.V.B. and Pandit, M.W. (1990) 
+		 * Correlation between stability of a protein and its dipeptide composition: a novel approach for predicting in vivo stability of a protein from its primary sequence. 
+		 * Protein Eng. 4,155-161.
+		 * Table III.
+		 */
 		double[][] instability = {
 //W		C		M		H		Y		F		Q		N		I		R		D		P		T		K		E		V		S		G		A		L
 {1.0,	1.0,	24.68,	24.68,	1.0,	1.0,	1.0,	13.34,	1.0,	1.0,	1.0,	1.0,	-14.03, 1.0, 	1.0, 	-7.49, 	1.0, 	-9.37, 	-14.03, 13.34},
@@ -155,5 +162,18 @@ public class Constraints {
 {1.0,	44.94,	1.0,	-7.49,	1.0,	1.0,	1.0,	1.0,	1.0,	1.0,	-7.49,	20.26,	1.0,	1.0,	1.0,	1.0,	1.0,	1.0,	1.0,	1.0},
 {24.68,	1.0,	1.0,	1.0,	1.0,	1.0,	33.6,	1.0,	1.0,	20.26,	1.0,	20.26,	1.0,	-7.49,	1.0,	1.0,	1.0,	1.0,	1.0,	1.0}
 				};
+		char[] aa = {'W', 'C', 'M', 'H', 'Y', 'F', 'Q', 'N', 'I', 'R', 'D', 'P', 'T', 'K', 'E', 'V', 'S', 'G', 'A', 'L'};
+		for(int i = 0; i < aa.length; i++){
+			for(int j = 0; j < aa.length; j++){
+				diAA2Instability.put("" + aa[i] + aa[j], instability[i][j]);
+			}
+		}
+//		System.out.println(diAA2Instability.get("CW"));
+//		System.out.println(diAA2Instability.get("YM"));
+//		System.out.println(diAA2Instability.get("WL"));
+	}
+	
+	public static void main(String[] args){
+		
 	}
 }

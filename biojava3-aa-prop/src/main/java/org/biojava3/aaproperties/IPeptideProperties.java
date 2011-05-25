@@ -29,9 +29,9 @@ import org.biojava3.core.sequence.compound.AminoAcidCompound;
 
 /**
  * TODO
- * Create adaptor methods for all methods - Change to Char instead of AminoAcidCompound or AminoAcid
- * Implement all the methods
  * Get IsoElectric Point - What is a suitable small enough margin?
+ * Is there a Exception already in BioJava for unknown AminoAcid character?
+ * Molecular weight - Close but does not tallies, I believe is due to the head(NH2) and tail(COOH).
  * 
  * An interface to generate some basic physico-chemical properties of protein sequences.<br/>
  * The following properties could be generated:
