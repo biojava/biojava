@@ -47,7 +47,7 @@ public class PeptidePropertiesImpl implements IPeptideProperties{
 		double xVal = aa2Composition.get(aaSet.getCompoundForString("V"));
 		double xIle = aa2Composition.get(aaSet.getCompoundForString("I"));
 		double xLeu = aa2Composition.get(aaSet.getCompoundForString("L"));
-		return xAla + (a * xVal) + (b * (xIle + xLeu));
+		return (xAla + (a * xVal) + (b * (xIle + xLeu))) * 100;
 	}
 
 	@Override
@@ -66,7 +66,7 @@ public class PeptidePropertiesImpl implements IPeptideProperties{
 		double changeSize = 7.0;
 		Map<AminoAcidCompound, Integer> chargedAA2Count = this.getChargedAACount(sequence);
 		double margin = 1.0;
-		double difference = 0.00001;
+		double difference = 0.00000001;
 		while(true){
 			margin = this.getNetCharge(chargedAA2Count, currentPH) - 0.0;
 			//Within allowed difference
@@ -181,11 +181,13 @@ public class PeptidePropertiesImpl implements IPeptideProperties{
 		IPeptideProperties pp = new PeptidePropertiesImpl();
 		AminoAcidCompoundSet aaSet = new AminoAcidCompoundSet();
 		System.out.println("A Composition: " + pp.getEnrichment(sequence, aaSet.getCompoundForString("A")));//CHECKED
+		
 		System.out.println("C Composition: " + pp.getEnrichment(sequence, aaSet.getCompoundForString("C")));//CHECKED
 		System.out.println("Molecular Weight: " + pp.getMolecularWeight(sequence));//CHECKED
 		System.out.println("All Composition: " + pp.getAAComposition(sequence));//CHECKED
 		System.out.println("AvgHydro: " + pp.getAvgHydropathy(sequence));//CHECKED
 		System.out.println("NetCharge: " + pp.getNetCharge(sequence));//CHECKED
-		System.out.println("PI: " + pp.getIsoelectricPoint(sequence));
+		System.out.println("PI: " + pp.getIsoelectricPoint(sequence));//CHECKED
+		System.out.println("Apliphatic: " + pp.getApliphaticIndex(sequence));//CHECKED
 	}
 }

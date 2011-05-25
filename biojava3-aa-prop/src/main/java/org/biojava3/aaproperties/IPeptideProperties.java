@@ -104,6 +104,7 @@ public interface IPeptideProperties {
 	 * leucine). It may be regarded as a positive factor for the increase of
 	 * thermostability of globular proteins. The computation of aliphatic index
 	 * follows the documentation in <a href="http://au.expasy.org/tools/protparam-doc.html">here</a>.
+	 * A protein whose instability index is smaller than 40 is predicted as stable, a value above 40 predicts that the protein may be unstable.
 	 * 
 	 * @param sequence
 	 *            a protein sequence consisting of non-ambiguous characters only
