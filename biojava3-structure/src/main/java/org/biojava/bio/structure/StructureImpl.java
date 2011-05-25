@@ -64,6 +64,7 @@ public class StructureImpl implements Structure, Serializable {
 	private PDBHeader pdbHeader;
 	boolean nmrflag ;
 	private Long id;
+	private boolean biologicalAssembly;
 
 
 	/**
@@ -708,6 +709,24 @@ public class StructureImpl implements Structure, Serializable {
      */
     public List<Group> getHetGroups() {
         return hetAtoms;
+    }
+    
+    /**
+     * Sets a flag to indicate if this structure is a biological assembly
+     * @param biologicalAssembly true if biological assembly, otherwise false
+     * @since 3.2
+     */
+    public void setBiologicalAssembly(boolean biologicalAssembly) {
+    	this.biologicalAssembly = biologicalAssembly;
+    }
+
+    /**
+     * Gets flag that indicates if this structure is a biological assembly
+     * @return the sites contained in this structure
+     * @since 3.2
+     */
+    public boolean isBiologicalAssembly() {
+    	return biologicalAssembly;
     }
 
 }
