@@ -157,9 +157,10 @@ public class PDBFileReader implements StructureIOFile {
 
 	boolean pdbDirectorySplit;
 
-	int bioAssemblyId = 0; // number > 0 indicates the id of the biological assembly
-	boolean bioAssemblyFallback = true; // use regular PDB file as the biological assembly (i.e. for NMR structures)
+	private int bioAssemblyId = 0; // number > 0 indicates the id of the biological assembly
+	private boolean bioAssemblyFallback = true; // use regular PDB file as the biological assembly (i.e. for NMR structures)
 	                                    // in case no biological assembly file is available.
+	private boolean loadedBioAssembly = false;
 	
 	public static final String lineSplit = System.getProperty("file.separator");
 
@@ -477,6 +478,7 @@ public class PDBFileReader implements StructureIOFile {
 	private InputStream getInputStreamBioAssembly(String pdbId)
 	throws IOException
 	{
+		loadedBioAssembly = true;
 		InputStream inputStream = null;
 		
 		if ( pdbId.length() < 4)
@@ -537,6 +539,7 @@ public class PDBFileReader implements StructureIOFile {
 					InputStreamProvider isp = new InputStreamProvider();
 					inputStream = isp.getInputStream(fileName);
 					System.out.println("Loaded original PDB file as a fallback." + fileName);
+					loadedBioAssembly = false;
 					return inputStream;
 				} catch (Exception e) {
 					// now try autofetch next
@@ -667,7 +670,9 @@ public class PDBFileReader implements StructureIOFile {
 	 * @author Peter Rose
 	 * @since 3.2
 	 */
-	private  File downloadPDBBiologicalAssembly(String pdbId, String pathOnServer){		
+	private  File downloadPDBBiologicalAssembly(String pdbId, String pathOnServer){	
+		loadedBioAssembly = true;
+		
 		if ((path == null) || (path.equals(""))){
 			// accessing temp. OS directory:         
 			String property = "java.io.tmpdir";
@@ -708,6 +713,7 @@ public class PDBFileReader implements StructureIOFile {
 			if (bioAssemblyFallback) {
 				System.out.println("Biological unit file for PDB ID: " + pdbId+  " is not available. " +
 				"Downloading original PDB file as a fallback.");
+				loadedBioAssembly = false;
 				return downloadPDB(pdbId, CURRENT_FILES_PATH);
 			} 
 			return null;
@@ -848,6 +854,7 @@ public class PDBFileReader implements StructureIOFile {
 		pdbpars.setFileParsingParameters(params);
 
 		Structure struc = pdbpars.parsePDBFile(inStream) ;
+		struc.setBiologicalAssembly(loadedBioAssembly);
 		return struc ;
 	}
 
