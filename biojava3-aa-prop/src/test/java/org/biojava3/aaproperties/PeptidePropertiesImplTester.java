@@ -2,6 +2,7 @@ package org.biojava3.aaproperties;
 
 import java.util.Map;
 
+import org.biojava3.aaproperties.PeptideProperties.SingleLetterAACode;
 import org.biojava3.core.sequence.compound.AminoAcidCompound;
 import org.biojava3.core.sequence.compound.AminoAcidCompoundSet;
 import org.junit.Test;
@@ -10,7 +11,7 @@ import static junit.framework.Assert.*;
 public class PeptidePropertiesImplTester {
 
 	/**
-	 * 
+	 * Test input 
 	 */
 	private final String peptide = "MTADGPRELLQLRAAVRHR";
 	
@@ -34,7 +35,7 @@ public class PeptidePropertiesImplTester {
 	 * TODO 
 	 */
 	@Test
-	public void testApliphaticIndex() {
+	public void testEnrichment() {
 		
 	}
 	
