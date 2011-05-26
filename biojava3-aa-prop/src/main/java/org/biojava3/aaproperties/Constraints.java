@@ -6,6 +6,10 @@ import java.util.Map;
 import org.biojava3.core.sequence.compound.AminoAcidCompound;
 import org.biojava3.core.sequence.compound.AminoAcidCompoundSet;
 
+/**
+ *  TODO Javadoc? for class and methods 
+ *  
+ */
 public class Constraints {
 	private static AminoAcidCompoundSet aaSet = new AminoAcidCompoundSet();
 	public static Map<AminoAcidCompound, Double> aa2MolecularWeight = new HashMap<AminoAcidCompound, Double>();
@@ -20,8 +24,12 @@ public class Constraints {
 		initInstability();
 	}
 	
+	
+	/** 
+	 * TODO get MolComponent aaSet.getCompoundForString("A") only once and then reuse them 
+	 */
 	private static void initMolecularWeight(){
-		/*
+		/* FIXME this should be a part of the Javadoc 
 		 * Initialize molecular weights - http://au.expasy.org/tools/findmod/findmod_masses.html#AA
 		 */
 //		Alanine (A)	71.03711	71.0788
@@ -67,7 +75,7 @@ public class Constraints {
 	}
 	
 	private static void initHydropathicity(){
-		/*
+		/* FIXME this should be a part of the Javadoc
 		 * Initialize hydropathicity - http://au.expasy.org/tools/pscale/Hphob.Doolittle.html
 		 */
 //		Ala(A):  1.800  
@@ -113,7 +121,7 @@ public class Constraints {
 	}
 
 	private static void initPKa(){
-		/*
+		/* FIXME this should be a part of the Javadoc
 		 * Initialize PKa - http://www.innovagen.se/custom-peptide-synthesis/peptide-property-calculator/peptide-property-calculator-notes.asp#NetCharge
 		 */
 //		K, Lys	10.5	
@@ -133,7 +141,7 @@ public class Constraints {
 	}
 
 	private static void initInstability(){
-		/*
+		/* FIXME this should be a part of the Javadoc
 		 * Guruprasad, K., Reddy, B.V.B. and Pandit, M.W. (1990) 
 		 * Correlation between stability of a protein and its dipeptide composition: a novel approach for predicting in vivo stability of a protein from its primary sequence. 
 		 * Protein Eng. 4,155-161.
@@ -162,6 +170,8 @@ public class Constraints {
 {1.0,	44.94,	1.0,	-7.49,	1.0,	1.0,	1.0,	1.0,	1.0,	1.0,	-7.49,	20.26,	1.0,	1.0,	1.0,	1.0,	1.0,	1.0,	1.0,	1.0},
 {24.68,	1.0,	1.0,	1.0,	1.0,	1.0,	33.6,	1.0,	1.0,	20.26,	1.0,	20.26,	1.0,	-7.49,	1.0,	1.0,	1.0,	1.0,	1.0,	1.0}
 				};
+		
+		//TODO Why not to use SingleAA Enum throughout here? 
 		char[] aa = {'W', 'C', 'M', 'H', 'Y', 'F', 'Q', 'N', 'I', 'R', 'D', 'P', 'T', 'K', 'E', 'V', 'S', 'G', 'A', 'L'};
 		for(int i = 0; i < aa.length; i++){
 			for(int j = 0; j < aa.length; j++){
