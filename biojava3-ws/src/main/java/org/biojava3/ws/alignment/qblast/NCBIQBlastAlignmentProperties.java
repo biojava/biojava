@@ -21,6 +21,7 @@
 
 package org.biojava3.ws.alignment.qblast;
 
+import java.lang.Integer;
 import java.util.HashMap;
 import java.util.Set;
 import java.util.Arrays;
@@ -53,7 +54,10 @@ public class NCBIQBlastAlignmentProperties implements
 		this.param.put("DATABASE","not_set");
 		// Nice parameters to set
 		this.param.put("WORD_SIZE","default");
-		this.param.put("EXPECT","-1");		
+		this.param.put("EXPECT","-1");
+		// Optional
+		this.param.put("QUERY_FROM","-1");
+		this.param.put("QUERY_TO","-1");
 		// Everything else
 		this.param.put("OTHER_ADVANCED","not_set");
 		
@@ -175,6 +179,39 @@ public class NCBIQBlastAlignmentProperties implements
 	 */
 	public void setBlastWordSize(int word) {
 		this.param.put("WORD_SIZE",Integer.toString(word));
+	}
+
+	
+	/**
+	 * 
+	 * This method set the QUERY_FROM parameter to be use by blast. It needs the corresponding
+	 * setBlastToPosition() to work. If you decide to use the whole sequence, do not use...
+	 * 
+	 */
+	public void setBlastFromPosition(int start){
+		this.param.put("QUERY_FROM",String.valueOf(start));
+	}
+	/**
+	 * 
+	 */
+	public int getBlastFromPosition(){
+		return Integer.parseInt(this.param.get("QUERY_FROM"));
+	}
+
+	/**
+	 * 
+	 * This method set the QUERY_TO parameter to be use by blast. It needs the corresponding
+	 * setBlastFromPosition(). If you decide to use the whole sequence, do not use...
+	 * 
+	 */
+	public void setBlastToPosition(int stop){
+		this.param.put("QUERY_FROM",String.valueOf(stop));		
+	}
+	/**
+	 * 
+	 */
+	public int getBlastToPosition(){
+		return Integer.parseInt(this.param.get("QUERY_TO"));		
 	}
 
 	/**

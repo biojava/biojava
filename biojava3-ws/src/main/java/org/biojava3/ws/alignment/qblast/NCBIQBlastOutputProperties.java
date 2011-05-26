@@ -97,7 +97,7 @@ public class NCBIQBlastOutputProperties implements
 			this.out.put("FORMAT_TYPE", outFormat);
 			break;
 		case HTML:
-			this.outFormat = "FORMAT_TYPE=HTML";
+			this.outFormat = "FORMAT_TYPE=HTML&NOHEADER=true&SHOW_OVERVIEW=false&SHOW_LINKOUT=false";
 			this.out.put("FORMAT_TYPE", outFormat);
 			break;
 		default:

@@ -374,15 +374,14 @@ public class NCBIQBlastService implements RemotePairwiseAlignmentService {
 	 */
 	public InputStream getAlignmentResults(String id,
 			RemotePairwiseAlignmentOutputProperties rb) throws Exception {
-		if (holder.containsKey(id)) {
+		if (holder.containsKey(id)) {			
 			String srid = "CMD=Get&RID=" + id + "&"
 					+ rb.getOutputOption("FORMAT_TYPE") + "&"
 					+ rb.getOutputOption("ALIGNMENT_VIEW") + "&"
 					+ rb.getOutputOption("DESCRIPTIONS") + "&"
-					+ rb.getOutputOption("ALIGNMENTS")
-					+ "NOHEADER=true" + "&"
+					+ rb.getOutputOption("ALIGNMENTS")+ "&"
 					+ "&TOOL="+getTool()+"&EMAIL="+getEmail();
-
+			
 			try {
 				uConn = setQBlastServiceProperties(aUrl.openConnection());
 
@@ -390,6 +389,8 @@ public class NCBIQBlastService implements RemotePairwiseAlignmentService {
 				fromQBlast.write(srid);
 				fromQBlast.flush();
 
+				
+				
 				return uConn.getInputStream();
 
 			} catch (IOException ioe) {
