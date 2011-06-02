@@ -193,6 +193,23 @@ public class ScopInstallation {
 	   return matches;
 	}
 	
+	public List<ScopDescription> filterByClassificationId(String query){
+		  ensureDesInstalled();
+		  
+		  List<ScopDescription> matches = new ArrayList<ScopDescription>();
+		   for (Integer i : sunidMap.keySet()){
+			   ScopDescription sc = sunidMap.get(i);
+			   
+			   
+			   if( sc.getClassificationId().startsWith(query)){
+				   matches.add(sc);
+				   continue;
+			   }
+		   }
+		   
+		   return matches;
+	}
+	
 	/** Return the SCOP description for a node in the hierarchy by its "sunid" id.
 	 * 
 	 * @param sunid
