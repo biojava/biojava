@@ -2,9 +2,18 @@ package org.biojava3.aaproperties;
 
 import java.util.Map;
 
+import org.junit.Assert;
 import org.junit.Test;
 import static junit.framework.Assert.*;
 
+/**
+ * TODO Please run your tests and make sure they all pass!
+ * On my computer only two tests pass AAComposition and Enrichment 
+ * 
+ * TODO Try to input invalid values into your methods. Does the code behave as you would have liked? 
+ * If not please change the code, not the test. Some examples of possible invalid input is below. 
+ *
+ */
 public class PeptidePropertiesImplTester {
 
 	/**
@@ -37,6 +46,13 @@ public class PeptidePropertiesImplTester {
 		assertEquals(1.0/sequenceLength, composition.get("G"));
 		assertEquals(3.0/sequenceLength, composition.get("A"));
 		assertEquals(3.0/sequenceLength, composition.get("L"));
+		
+		//FIXME
+		assertNotSame(0d, composition.get("Z"));
+		// How the API deals with invalid input is important part of testing & documentation! 
+		// These tests document the behaviour of your code! 
+		assertNull(composition.get(""));
+		assertNull(composition.get("1"));
 	}
 	
 	@Test
@@ -71,6 +87,14 @@ public class PeptidePropertiesImplTester {
 		//http://au.expasy.org/cgi-bin/protparam
 		//2872.4 is the value computed by the above two web tools
 		assertEquals(2872.4, PeptideProperties.getMolecularWeight(sequence));
+		//FIXME
+		try { 
+		assertEquals(Constraints.aa2MolecularWeight.get(Constraints.A), PeptideProperties.getMolecularWeight("A"));
+		assertEquals(2854.3822, PeptideProperties.getMolecularWeight("Z"));
+		assertEquals(2854.3822, PeptideProperties.getMolecularWeight(""));
+		} catch(NullPointerException e) { 
+			Assert.fail(e.getLocalizedMessage());
+		}
 	}
 	
 	@Test
@@ -78,6 +102,8 @@ public class PeptidePropertiesImplTester {
 		//http://au.expasy.org/cgi-bin/protparam
 		assertEquals(11125.0, PeptideProperties.getExtinctionCoefficient(sequence, true));
 		assertEquals(11000.0, PeptideProperties.getExtinctionCoefficient(sequence, false));
+		
+		assertEquals(11000.0, PeptideProperties.getExtinctionCoefficient(null, true));
 	}
 	
 	@Test

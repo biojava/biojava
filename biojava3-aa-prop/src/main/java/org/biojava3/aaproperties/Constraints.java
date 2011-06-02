@@ -22,7 +22,7 @@ import org.biojava3.core.sequence.compound.AminoAcidCompoundSet;
  */
 public class Constraints {
 	private static AminoAcidCompoundSet aaSet = new AminoAcidCompoundSet();
-	private static AminoAcidCompound A = aaSet.getCompoundForString("A");
+	static AminoAcidCompound A = aaSet.getCompoundForString("A");
 	private static AminoAcidCompound R = aaSet.getCompoundForString("R");
 	private static AminoAcidCompound N = aaSet.getCompoundForString("N");
 	private static AminoAcidCompound D = aaSet.getCompoundForString("D");
