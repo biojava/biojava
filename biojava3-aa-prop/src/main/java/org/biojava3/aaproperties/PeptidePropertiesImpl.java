@@ -23,13 +23,11 @@ public class PeptidePropertiesImpl implements IPeptideProperties{
 	public double getExtinctionCoefficient(ProteinSequence sequence, boolean assumeCysReduced) {
 		//E(Prot) = Numb(Tyr)*Ext(Tyr) + Numb(Trp)*Ext(Trp) + Numb(Cystine)*Ext(Cystine)
 		//where (for proteins in water measured at 280 nm): Ext(Tyr) = 1490, Ext(Trp) = 5500, Ext(Cystine) = 125;
-		//Absorb(Prot) = E(Prot) / Molecular_weight
 		double tyr = 1490;
 		double trp = 5500;
 		double cys = 125;
 		AminoAcidCompoundSet aaSet = new AminoAcidCompoundSet();
 		Map<AminoAcidCompound, Integer> extinctAA2Count = this.getExtinctAACount(sequence);
-		double mw = this.getMolecularWeight(sequence);
 		
 		double eProt;
 		if(assumeCysReduced)
@@ -38,6 +36,14 @@ public class PeptidePropertiesImpl implements IPeptideProperties{
 		else
 			eProt = extinctAA2Count.get(aaSet.getCompoundForString("Y")) * tyr + extinctAA2Count.get(aaSet.getCompoundForString("W")) * trp;
 		
+		return eProt;
+	}
+	
+	@Override
+	public double getAbsorbance(ProteinSequence sequence, boolean assumeCysReduced){
+		//Absorb(Prot) = E(Prot) / Molecular_weight
+		double mw = this.getMolecularWeight(sequence);
+		double eProt = this.getExtinctionCoefficient(sequence, assumeCysReduced);
 		return eProt / mw;
 	}
 	
@@ -220,6 +226,7 @@ public class PeptidePropertiesImpl implements IPeptideProperties{
 		ProteinSequence sequence = new ProteinSequence("AAACCAAAWWTT");
 		IPeptideProperties pp = new PeptidePropertiesImpl();
 		AminoAcidCompoundSet aaSet = new AminoAcidCompoundSet();
+		System.out.println(aaSet.getCompoundForString("1"));
 		System.out.println(sequence);
 		System.out.println("A Composition: " + pp.getEnrichment(sequence, aaSet.getCompoundForString("A")));//CHECKED
 		

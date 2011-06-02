@@ -29,14 +29,14 @@ import org.biojava3.core.sequence.compound.AminoAcidCompound;
 
 /**
  * TODO
- * Get IsoElectric Point - What is a suitable small enough margin?
- * Is there a Exception already in BioJava for unknown AminoAcid character?
- * Molecular weight - Close but does not tallies, I believe is due to the head(NH2) and tail(COOH).
+ * Andreas - I am thinking of throwing an error and terminate the program if invalid character exists? Would that be too strict?
+ * All - test for many are very close but different. Should we have a precision variable for user to choose.
  * 
  * An interface to generate some basic physico-chemical properties of protein sequences.<br/>
  * The following properties could be generated:
  * <p/>
  * Molecular weight<br/>
+ * Absorbance<br/>
  * Extinction coefficient<br/>
  * Instability index<br/>
  * Apliphatic index<br/>
@@ -58,7 +58,7 @@ public interface IPeptideProperties {
 	 * 
 	 * @param sequence
 	 *            a protein sequence consisting of non-ambiguous characters only
-	 * @return the total molecular weight of sequence
+	 * @return the total molecular weight of sequence + weight of water molecule
 	 * @see ProteinSequence
 	 */
 	public double getMolecularWeight(ProteinSequence sequence);
@@ -82,6 +82,22 @@ public interface IPeptideProperties {
 	 */
 	public double getExtinctionCoefficient(ProteinSequence sequence, boolean assumeCysReduced);
 
+	/**
+	 * Returns the absorbance (optical density) of sequence. The sequence argument
+	 * must be a protein sequence consisting of only non-ambiguous characters.
+	 * The computation of absorbance (optical density) follows the
+	 * documentation in <a href="http://au.expasy.org/tools/protparam-doc.html">here</a>.
+	 * 
+	 * @param sequence
+	 *            a protein sequence consisting of non-ambiguous characters only
+	 * @param assumeCysReduced
+	 *            true if Cys are assumed to be reduced and false if Cys are
+	 *            assumed to form cystines
+	 * @return the absorbance (optical density) of sequence
+	 * @see ProteinSequence
+	 */
+	public double getAbsorbance(ProteinSequence sequence, boolean assumeCysReduced);
+	
 	/**
 	 * Returns the instability index of sequence. The sequence argument must be
 	 * a protein sequence consisting of only non-ambiguous characters.
@@ -185,7 +201,8 @@ public interface IPeptideProperties {
 	 * @param sequence
 	 *            a protein sequence consisting of non-ambiguous characters only
 	 * @return the composition of the 20 standard amino acid in the sequence
-	 * @see ProteinSequence AminoAcid
+	 * @see ProteinSequence 
+	 * @see AminoAcidCompound
 	 */
 	public Map<AminoAcidCompound, Double> getAAComposition(ProteinSequence sequence);
 }
