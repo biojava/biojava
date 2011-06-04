@@ -14,8 +14,13 @@ public class PeptidePropertiesImpl implements IPeptideProperties{
 		double value = 0.0;
 		AminoAcidCompoundSet aaSet = new AminoAcidCompoundSet();
 		for(char aa:sequence.toString().toCharArray()){
-			value += Constraints.aa2MolecularWeight.get(aaSet.getCompoundForString(aa + ""));
+			AminoAcidCompound c = aaSet.getCompoundForString(aa + "");
+			if(Constraints.aa2MolecularWeight.containsKey(c)){
+				value += Constraints.aa2MolecularWeight.get(c);
+			}
 		}
+		//H	1.0079	OH	17.0073
+		if(value > 0) value += 1.0079 + 17.0073;
 		return value;
 	}
 
@@ -72,9 +77,12 @@ public class PeptidePropertiesImpl implements IPeptideProperties{
 		double sum = 0.0;
 		String s = sequence.getSequenceAsString();
 		for(int i = 0; i < sequence.getLength() - 1; i++){
-			sum += Constraints.diAA2Instability.get(s.substring(i, i+2));
+			String dipeptide = s.substring(i, i+2);
+			if(Constraints.diAA2Instability.containsKey(dipeptide)){
+				sum += Constraints.diAA2Instability.get(dipeptide);
+			}
 		}
-		return sum * 10 / s.length();
+		return sum * 10 / (s.length() - Utils.getNumberOfInvalidChar(s));
 	}
 
 	@Override
@@ -98,12 +106,17 @@ public class PeptidePropertiesImpl implements IPeptideProperties{
 
 	@Override
 	public double getAvgHydropathy(ProteinSequence sequence) {
-		double value = 0.0;
+		int validLength = 0;
+		double total = 0.0;
 		AminoAcidCompoundSet aaSet = new AminoAcidCompoundSet();
 		for(char aa:sequence.toString().toCharArray()){
-			value += Constraints.aa2Hydrophathicity.get(aaSet.getCompoundForString(aa + ""));
+			AminoAcidCompound c = aaSet.getCompoundForString(aa + "");
+			if(Constraints.aa2Hydrophathicity.containsKey(c)){
+				total += Constraints.aa2Hydrophathicity.get(c);
+				validLength++;
+			}
 		}
-		return value / sequence.getLength();
+		return total / validLength;
 	}
 
 	@Override
@@ -112,9 +125,9 @@ public class PeptidePropertiesImpl implements IPeptideProperties{
 		double changeSize = 7.0;
 		Map<AminoAcidCompound, Integer> chargedAA2Count = this.getChargedAACount(sequence);
 		double margin = 1.0;
-		double difference = 0.00000001;
+		double difference = 0.0000001;
 		while(true){
-			margin = this.getNetCharge(chargedAA2Count, currentPH) - 0.0;
+			margin = this.getNetCharge(chargedAA2Count, currentPH);
 			//Within allowed difference
 			if(margin <= difference && margin >= -difference) break;
 			changeSize /= 2.0;
@@ -147,6 +160,9 @@ public class PeptidePropertiesImpl implements IPeptideProperties{
 		double cCharge = chargedAA2Count.get(aaSet.getCompoundForString("C")) * this.getNegCharge(Constraints.aa2PKa.get(aaSet.getCompoundForString("C")), ph);
 		double yCharge = chargedAA2Count.get(aaSet.getCompoundForString("Y")) * this.getNegCharge(Constraints.aa2PKa.get(aaSet.getCompoundForString("Y")), ph);
 		double cTerminalCharge = this.getNegCharge(2.34, ph);
+		if((kCharge + rCharge + hCharge) == 0.0 && (dCharge + eCharge + cCharge + yCharge) == 0.0){
+			return 0.0;
+		}
 		return (nTerminalCharge + kCharge + rCharge + hCharge) - (dCharge + eCharge + cCharge + yCharge + cTerminalCharge);
 	}
 	
@@ -204,17 +220,27 @@ public class PeptidePropertiesImpl implements IPeptideProperties{
 
 	@Override
 	public Map<AminoAcidCompound, Double> getAAComposition(ProteinSequence sequence) {
+		int validLength = 0;
 		Map<AminoAcidCompound, Double> aa2Composition = new HashMap<AminoAcidCompound, Double>();
 		AminoAcidCompoundSet aaSet = new AminoAcidCompoundSet();
 		for(AminoAcidCompound aa:aaSet.getAllCompounds()){
 			aa2Composition.put(aa, 0.0);
 		}
 		for(char aa:sequence.toString().toCharArray()){
-			AminoAcidCompound compound = aaSet.getCompoundForString(aa + "");
-			aa2Composition.put(compound, aa2Composition.get(compound) + 1.0);
+			if(PeptideProperties.standardAASet.contains(aa)){
+				AminoAcidCompound compound = aaSet.getCompoundForString(aa + "");
+				aa2Composition.put(compound, aa2Composition.get(compound) + 1.0);
+				validLength++;
+			}
 		}
-		for(AminoAcidCompound aa:aaSet.getAllCompounds()){
-			aa2Composition.put(aa, aa2Composition.get(aa) / sequence.getLength());
+		if(validLength > 0){
+			for(AminoAcidCompound aa:aaSet.getAllCompounds()){
+				aa2Composition.put(aa, aa2Composition.get(aa) / validLength);
+			}
+		}else{
+			for(AminoAcidCompound aa:aaSet.getAllCompounds()){
+				aa2Composition.put(aa, 0.0);
+			}
 		}
 		return aa2Composition;
 	}

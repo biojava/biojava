@@ -29,8 +29,17 @@ import org.biojava3.core.sequence.compound.AminoAcidCompound;
 
 /**
  * TODO
- * Andreas - I am thinking of throwing an error and terminate the program if invalid character exists? Would that be too strict?
- * All - test for many are very close but different. Should we have a precision variable for user to choose.
+ * 2) 	Look at the original emails about the white papers - molecular weight -> Email them if in doubt
+ * 			Loading of XML files
+ * 6)	PROFEAT Properties
+ * 			Solvent accessibilty
+ * 			Secondary structure 
+ * 			Positive Netural or Negative
+ * 			Hydrophobicities
+ * 
+ * TODO 
+ * 	throws null pointer exception when the sequence is null. Acceptable?
+ * 
  * 
  * An interface to generate some basic physico-chemical properties of protein sequences.<br/>
  * The following properties could be generated:
