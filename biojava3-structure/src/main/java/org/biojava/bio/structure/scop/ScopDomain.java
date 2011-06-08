@@ -1,5 +1,6 @@
 package org.biojava.bio.structure.scop;
 
+import java.io.Serializable;
 import java.io.StringWriter;
 import java.util.List;
 
@@ -11,8 +12,13 @@ import java.util.List;
  * @author Andreas Prlic
  *
  */
-public class ScopDomain {
+public class ScopDomain implements Serializable{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 5890476209571654301L;
+	
 	String scopId;
 	String pdbId;
 	List<String> ranges;
