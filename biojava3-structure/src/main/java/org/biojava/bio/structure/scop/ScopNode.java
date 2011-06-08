@@ -24,9 +24,10 @@
 
 package org.biojava.bio.structure.scop;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class ScopNode
+public class ScopNode implements Serializable
 {
 
    int sunid;

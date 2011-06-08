@@ -1,5 +1,6 @@
 package org.biojava.bio.structure.scop;
 
+import java.io.Serializable;
 import java.io.StringWriter;
 
 /** Contains data from
@@ -16,7 +17,7 @@ import java.io.StringWriter;
  * @author Andreas Prlic
  *
  */
-public class ScopDescription {
+public class ScopDescription implements Serializable{
    int sunID;
    ScopCategory category;
    String classificationId;
