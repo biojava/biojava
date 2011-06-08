@@ -10,6 +10,7 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -38,7 +39,7 @@ import org.biojava3.core.util.InputStreamProvider;
  * @author Andreas Prlic
  *
  */
-public class ScopInstallation {
+public class ScopInstallation implements ScopDatabase {
 
 	public static final String DEFAULT_VERSION = "1.75";
 
@@ -175,10 +176,8 @@ public class ScopInstallation {
 
     }
 	
-	/** Get all records of a particular classification.
-	 * 
-	 * @param category e.g. "superfamily"
-	 * @return all records of this type
+	/* (non-Javadoc)
+	 * @see org.biojava.bio.structure.scop.ScopDatabase#getByCategory(org.biojava.bio.structure.scop.ScopCategory)
 	 */
 	public List<ScopDescription> getByCategory(ScopCategory category){
 	   
@@ -193,6 +192,9 @@ public class ScopInstallation {
 	   return matches;
 	}
 	
+	/* (non-Javadoc)
+	 * @see org.biojava.bio.structure.scop.ScopDatabase#filterByClassificationId(java.lang.String)
+	 */
 	public List<ScopDescription> filterByClassificationId(String query){
 		  ensureDesInstalled();
 		  
@@ -210,20 +212,87 @@ public class ScopInstallation {
 		   return matches;
 	}
 	
-	/** Return the SCOP description for a node in the hierarchy by its "sunid" id.
-	 * 
-	 * @param sunid
-	 * @return a ScopDescription object
+	
+	/* (non-Javadoc)
+	 * @see org.biojava.bio.structure.scop.ScopDatabase#getTree(org.biojava.bio.structure.scop.ScopDomain)
+	 */
+	public List<ScopNode> getTree(ScopDomain domain){
+		 ScopNode node = getScopNode(domain.getSunid());
+	      
+		 
+		 List<ScopNode> tree = new ArrayList<ScopNode>();
+	      while (node != null){
+	         
+	    	 //System.out.println("This node: sunid:" + node.getSunid() );
+	         //System.out.println(getScopDescriptionBySunid(node.getSunid()));
+	         node = getScopNode(node.getParentSunid());
+	         if ( node != null)
+	        	 tree.add(node);
+	      }
+	      Collections.reverse(tree);
+	      return tree;
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.biojava.bio.structure.scop.ScopDatabase#filterByDomainName(java.lang.String)
+	 */
+	public List<ScopDomain> filterByDomainName(String query) {
+		
+		List<ScopDomain > domains = new ArrayList<ScopDomain>();
+		if (query.length() <5){
+			return domains;
+		}
+		
+		String pdbId = query.substring(1,5);
+		
+		List<ScopDomain> doms = getDomainsForPDB(pdbId);
+		
+		
+		if ( doms == null)
+			return domains;
+		
+		query = query.toLowerCase();
+		for ( ScopDomain d: doms){
+			if ( d.getScopId().toLowerCase().contains(query)){
+				domains.add(d);
+			}
+		}
+		
+		return domains;
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.biojava.bio.structure.scop.ScopDatabase#filterByDescription(java.lang.String)
+	 */
+	public List<ScopDescription> filterByDescription(String query){
+		  ensureDesInstalled();
+		  
+		  query = query.toLowerCase();
+		  List<ScopDescription> matches = new ArrayList<ScopDescription>();
+		   for (Integer i : sunidMap.keySet()){
+			   ScopDescription sc = sunidMap.get(i);
+			   
+			   
+			   if( sc.getDescription().toLowerCase().startsWith(query)){
+				   matches.add(sc);
+				   continue;
+			   }
+		   }
+		   
+		   return matches;
+	}
+	
+	
+	/* (non-Javadoc)
+	 * @see org.biojava.bio.structure.scop.ScopDatabase#getScopDescriptionBySunid(int)
 	 */
 	public ScopDescription getScopDescriptionBySunid(int sunid){
 	   ensureDesInstalled();
 	   return sunidMap.get(sunid);
 	}
 	
-	/** Get a list of ScopDomains that have been assigned to a PDB ID
-	 * 
-	 * @param pdbId the PDB entry
-	 * @return a list of ScopDomains
+	/* (non-Javadoc)
+	 * @see org.biojava.bio.structure.scop.ScopDatabase#getDomainsForPDB(java.lang.String)
 	 */
 	public  List<ScopDomain> getDomainsForPDB(String pdbId){
 		ensureClaInstalled();
@@ -231,12 +300,9 @@ public class ScopInstallation {
 		return domainMap.get(pdbId.toLowerCase());
 	}
 	
-	/** get a ScopDomain by its SCOP ID (warning, they are not stable between releases!)
-     * 
-     *
-     * @param scopId e.g. d2bq6a1 
-     * @return a ScopDomain or null if no domain with the particular ID could be found
-     */
+	/* (non-Javadoc)
+	 * @see org.biojava.bio.structure.scop.ScopDatabase#getDomainByScopID(java.lang.String)
+	 */
     public ScopDomain getDomainByScopID(String scopId) {
        ensureClaInstalled();
        
@@ -253,11 +319,9 @@ public class ScopInstallation {
         return null;
     }
     
-    /** Access a particular ScopNode. The scopNode then allows to traverse through the scop hierarchy...
-     * 
-     * @param sunid the scop unique id
-     * @return a ScopNode that matches this sunid
-     */
+    /* (non-Javadoc)
+	 * @see org.biojava.bio.structure.scop.ScopDatabase#getScopNode(int)
+	 */
     public ScopNode getScopNode(int sunid){
        ensureHieInstalled();
        ScopNode node = scopTree.get(sunid);
@@ -559,6 +623,9 @@ public class ScopInstallation {
 
 
 	}
+	/* (non-Javadoc)
+	 * @see org.biojava.bio.structure.scop.ScopDatabase#getScopVersion()
+	 */
 	public String getScopVersion() {
 		return scopVersion;
 	}
@@ -566,10 +633,8 @@ public class ScopInstallation {
 		this.scopVersion = scopVersion;
 	}
 
-	/** Get a SCOP domain by its sunid
-	 * 
-	 * @param sunid the scop unique id
-	 * @return a list of scop domains that match this sunid
+	/* (non-Javadoc)
+	 * @see org.biojava.bio.structure.scop.ScopDatabase#getScopDomainsBySunid(java.lang.Integer)
 	 */
    public List<ScopDomain> getScopDomainsBySunid(Integer sunid)
    {
@@ -608,7 +673,7 @@ public class ScopInstallation {
      
    }
 
-	
+   
 
 
 }
