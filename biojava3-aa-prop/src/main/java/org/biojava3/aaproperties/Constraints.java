@@ -1,7 +1,14 @@
 package org.biojava3.aaproperties;
 
+import java.io.File;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
+
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBElement;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Unmarshaller;
 
 import org.biojava3.aaproperties.PeptideProperties.SingleLetterAACode;
 import org.biojava3.core.sequence.compound.AminoAcidCompound;
@@ -55,11 +62,28 @@ public class Constraints {
 		initPKa();
 		initInstability();
 	}
+	
+	public static void initMolecularWeightAccordingToXML(){
+		try{
+			JAXBContext jc = JAXBContext.newInstance("org.biojava3.aaproperties.molecularweight.jaxb");
+			Unmarshaller unmarshaller = jc.createUnmarshaller();
+			//Collection collection= (Collection) unmarshaller.unmarshal(new File( "books.xml"));
+			 //JAXBElement<T> doc = (JAXBElement<T>)u.unmarshal( inputStream );
+		}catch(Exception e){e.printStackTrace();}
+	}
+	
+	public static <T> T unmarshal( Class<T> docClass, InputStream inputStream ) throws JAXBException {
+	    String packageName = docClass.getPackage().getName();
+	    JAXBContext jc = JAXBContext.newInstance( packageName );
+	    Unmarshaller u = jc.createUnmarshaller();
+	    JAXBElement<T> doc = (JAXBElement<T>) u.unmarshal( inputStream );
+	    return doc.getValue();
+}
 
 	/** 
 	 * Does the initialization of molecular weights based on http://au.expasy.org/tools/findmod/findmod_masses.html#AA
 	 */
-	private static void initMolecularWeight(){
+	public static void initMolecularWeight(){
 		//		Alanine (A)	71.03711	71.0788
 		aa2MolecularWeight.put(A, 71.0788);
 		//		Arginine (R)	156.10111	156.1875

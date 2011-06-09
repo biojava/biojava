@@ -29,9 +29,8 @@ import org.biojava3.core.sequence.compound.AminoAcidCompound;
 
 /**
  * TODO
- * 2) 	Look at the original emails about the white papers - molecular weight -> Email them if in doubt
- * 			Loading of XML files
- * 6)	PROFEAT Properties
+ * 1) Implement the two things that I have suggested for molecular weight 
+ * 2)	PROFEAT Properties
  * 			Solvent accessibilty
  * 			Secondary structure 
  * 			Positive Netural or Negative
