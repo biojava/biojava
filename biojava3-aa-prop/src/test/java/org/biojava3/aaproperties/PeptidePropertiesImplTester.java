@@ -1,5 +1,6 @@
 package org.biojava3.aaproperties;
 
+import java.text.NumberFormat;
 import java.util.Map;
 
 import org.junit.Test;
@@ -68,7 +69,7 @@ public class PeptidePropertiesImplTester {
 		assertNull(composition.get("1"));
 	}
 	
-	@Test
+	@Test()
 	public void testEnrichment() {
 		//'W', 'C', 'M', 'H', 'Y', 'F', 'Q', 'N', 'I', 'R', 'D', 'P', 'T', 'K', 'E', 'V', 'S', 'G', 'A', 'L'
 		int sequenceLength = sequence.length();
@@ -118,7 +119,11 @@ public class PeptidePropertiesImplTester {
 			assertEquals(0.0, PeptideProperties.getEnrichment(sequence, "X"));
 			assertNull(PeptideProperties.getEnrichment(sequence, "1"));
 			assertEquals(0.0, PeptideProperties.getEnrichment(sequence, ""));
-		}catch(NullPointerException e){}
+		}catch(NullPointerException e){
+			// FIXME if you expect exception from the test case make it explicit use 
+			// expected=NullPointerException.class 
+			// TODO READ ON UNIT TESTS!!! 
+		}
 	}
 	
 	@Test
@@ -149,7 +154,7 @@ public class PeptidePropertiesImplTester {
 	@Test
 	public void testAbsorbance(){
 		//http://au.expasy.org/cgi-bin/protparam
-		assertEquals(3.873, PeptideProperties.getAbsorbance(sequence, true));
+		assertEquals(3.873,PeptideProperties.getAbsorbance(sequence, true));
 		assertEquals(3.830, PeptideProperties.getAbsorbance(sequence, false));
 		
 		assertEquals(0.0, PeptideProperties.getAbsorbance(fullInvalidSequence, true));

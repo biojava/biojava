@@ -117,6 +117,7 @@ public class PeptideProperties {
 		sequence = Utils.checkSequence(sequence);
 		ProteinSequence pSequence = new ProteinSequence(sequence);
 		IPeptideProperties pp = new PeptidePropertiesImpl();
+		// FIXME do not round for the sake of test cases!!!
 		return Utils.roundToDecimals(pp.getInstabilityIndex(pSequence), decimals);
 	}
 	

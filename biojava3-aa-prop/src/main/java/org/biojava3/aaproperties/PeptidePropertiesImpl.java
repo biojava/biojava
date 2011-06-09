@@ -28,6 +28,8 @@ public class PeptidePropertiesImpl implements IPeptideProperties{
 	public double getExtinctionCoefficient(ProteinSequence sequence, boolean assumeCysReduced) {
 		//E(Prot) = Numb(Tyr)*Ext(Tyr) + Numb(Trp)*Ext(Trp) + Numb(Cystine)*Ext(Cystine)
 		//where (for proteins in water measured at 280 nm): Ext(Tyr) = 1490, Ext(Trp) = 5500, Ext(Cystine) = 125;
+	
+		// FIXME Is there any good reasons why these values are not in the Constraints class!?
 		double tyr = 1490;
 		double trp = 5500;
 		double cys = 125;
