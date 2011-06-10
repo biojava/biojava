@@ -1,6 +1,5 @@
 package org.biojava3.aaproperties;
 
-import java.text.NumberFormat;
 import java.util.Map;
 
 import org.junit.Test;
@@ -114,16 +113,13 @@ public class PeptidePropertiesImplTester {
 		assertEquals(0.0, PeptideProperties.getEnrichment(fullInvalidSequence, "G"));
 		assertEquals(0.0, PeptideProperties.getEnrichment(fullInvalidSequence, "A"));
 		assertEquals(0.0, PeptideProperties.getEnrichment(fullInvalidSequence, "L"));
-		
-		try{
-			assertEquals(0.0, PeptideProperties.getEnrichment(sequence, "X"));
-			assertNull(PeptideProperties.getEnrichment(sequence, "1"));
-			assertEquals(0.0, PeptideProperties.getEnrichment(sequence, ""));
-		}catch(NullPointerException e){
-			// FIXME if you expect exception from the test case make it explicit use 
-			// expected=NullPointerException.class 
-			// TODO READ ON UNIT TESTS!!! 
-		}
+		assertEquals(0.0, PeptideProperties.getEnrichment(sequence, "X"));
+	}
+	
+	@Test (expected = NullPointerException.class)
+	public void testEnrichmentNull(){
+		assertNull(PeptideProperties.getEnrichment(sequence, "1"));
+		assertEquals(0.0, PeptideProperties.getEnrichment(sequence, ""));
 	}
 	
 	@Test
@@ -131,7 +127,7 @@ public class PeptidePropertiesImplTester {
 		//http://www.innovagen.se/custom-peptide-synthesis/peptide-property-calculator/peptide-property-calculator.asp
 		//http://au.expasy.org/cgi-bin/protparam
 		//2872.4 is the value computed by the above two web tools
-		assertEquals(2872.4, PeptideProperties.getMolecularWeight(sequence));
+		assertEquals(2872.4, PeptideProperties.getMolecularWeight(sequence, 1));
 		assertEquals(0.0, PeptideProperties.getMolecularWeight("Z"));
 		assertEquals(0.0, PeptideProperties.getMolecularWeight("1"));
 		
@@ -146,71 +142,86 @@ public class PeptidePropertiesImplTester {
 		
 		assertEquals(0.0, PeptideProperties.getExtinctionCoefficient(fullInvalidSequence, true));
 		assertEquals(0.0, PeptideProperties.getExtinctionCoefficient(fullInvalidSequence, false));
-		try{
-			assertEquals(11000.0, PeptideProperties.getExtinctionCoefficient(null, true));
-		}catch(NullPointerException e){}
+	}
+	
+	@Test (expected = NullPointerException.class)
+	public void testExtinctionCoefficientNull(){
+		assertEquals(11000.0, PeptideProperties.getExtinctionCoefficient(null, true));
 	}
 	
 	@Test
 	public void testAbsorbance(){
 		//http://au.expasy.org/cgi-bin/protparam
-		assertEquals(3.873,PeptideProperties.getAbsorbance(sequence, true));
-		assertEquals(3.830, PeptideProperties.getAbsorbance(sequence, false));
+		assertEquals(3.873,PeptideProperties.getAbsorbance(sequence, true, 3));
+		assertEquals(3.830, PeptideProperties.getAbsorbance(sequence, false, 3));
 		
-		assertEquals(0.0, PeptideProperties.getAbsorbance(fullInvalidSequence, true));
-		assertEquals(0.0, PeptideProperties.getAbsorbance(fullInvalidSequence, false));
-		try{
-			assertEquals(3.830, PeptideProperties.getAbsorbance(null, false));
-		}catch(NullPointerException e){}
+		assertEquals(0.0, PeptideProperties.getAbsorbance(fullInvalidSequence, true, 3));
+		assertEquals(0.0, PeptideProperties.getAbsorbance(fullInvalidSequence, false, 3));
 	}
+	
+	@Test (expected = NullPointerException.class)
+	public void testAbsorbanceNull(){
+		assertEquals(3.830, PeptideProperties.getAbsorbance(null, false));
+	}
+	
 	
 	@Test
 	public void testInstabilityIndex(){
 		//http://au.expasy.org/cgi-bin/protparam
-		assertEquals(38.48, PeptideProperties.getInstabilityIndex(sequence));
-		assertEquals(0.0, PeptideProperties.getInstabilityIndex(fullInvalidSequence));
-		try{
-			assertEquals(38.48, PeptideProperties.getInstabilityIndex(null));
-		}catch(NullPointerException e){}
+		assertEquals(38.48, PeptideProperties.getInstabilityIndex(sequence, 2));
+		assertEquals(0.0, PeptideProperties.getInstabilityIndex(fullInvalidSequence, 2));
+	}
+	
+	@Test (expected = NullPointerException.class)
+	public void testInstabilityIndexNull(){
+		assertEquals(38.48, PeptideProperties.getInstabilityIndex(null));
 	}
 	
 	@Test
 	public void testApliphaticIndex(){
 		//http://au.expasy.org/cgi-bin/protparam
-		assertEquals(73.33, PeptideProperties.getApliphaticIndex(sequence));
-		assertEquals(0.0, PeptideProperties.getApliphaticIndex(fullInvalidSequence));
-		try{
-			assertEquals(73.33, PeptideProperties.getApliphaticIndex(null));
-		}catch(NullPointerException e){}
+		assertEquals(73.33, PeptideProperties.getApliphaticIndex(sequence, 2));
+		assertEquals(0.0, PeptideProperties.getApliphaticIndex(fullInvalidSequence, 2));
+	}
+	
+	@Test (expected = NullPointerException.class)
+	public void testApliphaticIndexNull(){
+		assertEquals(73.33, PeptideProperties.getApliphaticIndex(null, 2));
 	}
 	
 	@Test
 	public void testAverageHydropathy(){
 		//http://au.expasy.org/cgi-bin/protparam
-		assertEquals(-0.242, PeptideProperties.getAvgHydropathy(sequence));
-		assertEquals(0.0, PeptideProperties.getAvgHydropathy(fullInvalidSequence));
-		try{
-			assertEquals(-0.242, PeptideProperties.getAvgHydropathy(null));
-		}catch(NullPointerException e){}
+		assertEquals(-0.242, PeptideProperties.getAvgHydropathy(sequence, 3));
+		assertEquals(0.0, PeptideProperties.getAvgHydropathy(fullInvalidSequence, 3));
+	}
+	
+	@Test (expected = NullPointerException.class)
+	public void testAverageHydropathyNull(){
+		assertEquals(-0.242, PeptideProperties.getAvgHydropathy(null, 3));
 	}
 	
 	@Test
 	public void testIsoelectricPoint(){
 		//http://www.innovagen.se/custom-peptide-synthesis/peptide-property-calculator/peptide-property-calculator.asp
-		assertEquals(8.6, PeptideProperties.getIsoelectricPoint(sequence));
-		assertEquals(7.0, PeptideProperties.getIsoelectricPoint(fullInvalidSequence));
-		try{
-			assertEquals(8.6, PeptideProperties.getIsoelectricPoint(null));
-		}catch(NullPointerException e){}
+		assertEquals(8.6, PeptideProperties.getIsoelectricPoint(sequence, 1));
+		assertEquals(7.0, PeptideProperties.getIsoelectricPoint(fullInvalidSequence, 1));
+	}
+	
+	@Test (expected = NullPointerException.class)
+	public void testIsoelectricPointNull(){
+		assertEquals(8.6, PeptideProperties.getIsoelectricPoint(null, 1));
 	}
 	
 	@Test
 	public void testNetCharge(){
 		//http://www.innovagen.se/custom-peptide-synthesis/peptide-property-calculator/peptide-property-calculator.asp
-		assertEquals(2.0, PeptideProperties.getNetCharge(sequence));
-		assertEquals(0.0, PeptideProperties.getNetCharge(fullInvalidSequence));
-		try{
-			assertEquals(8.6, PeptideProperties.getNetCharge(null));
-		}catch(NullPointerException e){}
+		assertEquals(2.0, PeptideProperties.getNetCharge(sequence, 1));
+		assertEquals(0.0, PeptideProperties.getNetCharge(fullInvalidSequence, 1));
+	}
+	
+	@Test (expected = NullPointerException.class)
+	public void testNetChargeNull(){
+		assertEquals(8.6, PeptideProperties.getNetCharge(null));
 	}
 }
