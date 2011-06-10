@@ -591,7 +591,7 @@ public interface Structure extends Cloneable{
 
     /**
      * Gets flag that indicates if this structure is a biological assembly
-     * @return the sites contained in this structure
+     * @return  true if biological assembly, otherwise false
      * @since 3.2
      */
     public boolean isBiologicalAssembly();
