@@ -50,7 +50,7 @@ public class Constraints {
 	private static AminoAcidCompound Y = aaSet.getCompoundForString("Y");
 	private static AminoAcidCompound V = aaSet.getCompoundForString("V");
 
-
+	public static Map<AminoAcidCompound, Double> aa2ExtinctionCoefficient = new HashMap<AminoAcidCompound, Double>();
 	public static Map<AminoAcidCompound, Double> aa2MolecularWeight = new HashMap<AminoAcidCompound, Double>();
 	public static Map<AminoAcidCompound, Double> aa2Hydrophathicity = new HashMap<AminoAcidCompound, Double>();
 	public static Map<AminoAcidCompound, Double> aa2PKa = new HashMap<AminoAcidCompound, Double>();
@@ -61,24 +61,9 @@ public class Constraints {
 		initHydropathicity();
 		initPKa();
 		initInstability();
+		initExtinctionCoefficient();
 	}
 	
-	public static void initMolecularWeightAccordingToXML(){
-		try{
-			JAXBContext jc = JAXBContext.newInstance("org.biojava3.aaproperties.molecularweight.jaxb");
-			Unmarshaller unmarshaller = jc.createUnmarshaller();
-			//Collection collection= (Collection) unmarshaller.unmarshal(new File( "books.xml"));
-			 //JAXBElement<T> doc = (JAXBElement<T>)u.unmarshal( inputStream );
-		}catch(Exception e){e.printStackTrace();}
-	}
-	
-	public static <T> T unmarshal( Class<T> docClass, InputStream inputStream ) throws JAXBException {
-	    String packageName = docClass.getPackage().getName();
-	    JAXBContext jc = JAXBContext.newInstance( packageName );
-	    Unmarshaller u = jc.createUnmarshaller();
-	    JAXBElement<T> doc = (JAXBElement<T>) u.unmarshal( inputStream );
-	    return doc.getValue();
-}
 
 	/** 
 	 * Does the initialization of molecular weights based on http://au.expasy.org/tools/findmod/findmod_masses.html#AA
@@ -231,5 +216,15 @@ public class Constraints {
 				diAA2Instability.put("" + aa[i] + aa[j], instability[i][j]);
 			}
 		}
+	}
+	
+	/**
+	 * Does the initialization of extinction coefficient based on
+	 * http://au.expasy.org/tools/protparam-doc.html
+	 */
+	public static void initExtinctionCoefficient(){
+		aa2ExtinctionCoefficient.put(Y, 1490.0);
+		aa2ExtinctionCoefficient.put(W, 5500.0);
+		aa2ExtinctionCoefficient.put(C, 125.0);
 	}
 }

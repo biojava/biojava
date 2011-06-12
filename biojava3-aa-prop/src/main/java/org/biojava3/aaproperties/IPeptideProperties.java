@@ -29,19 +29,14 @@ import org.biojava3.core.sequence.compound.AminoAcidCompound;
 
 /**
  * TODO
- * 1) Extract some data from website and implement the Element class data structure to represent the periodic table then marshal it into xml
+ * 1) Extract some data from website 
+ * 		implement the Element class data structure to represent the periodic table 
+ * 		then marshal it into xml
  * 2) PROFEAT Properties
  * 		Solvent accessibilty
  * 		Secondary structure 
  * 		Positive Netural or Negative
  * 		Hydrophobicities
- * 3) JUnit - Never catch an exception - Declare the exception in the test cases
- * 4) Read JUnit test
- * 5) Substring as a comparison for the test case or (DecimalFormat 2 or 3 and compare)
- * 
- * TODO 
- * throws null pointer exception when the sequence is null. Acceptable?
- * 
  * 
  * An interface to generate some basic physico-chemical properties of protein sequences.<br/>
  * The following properties could be generated:

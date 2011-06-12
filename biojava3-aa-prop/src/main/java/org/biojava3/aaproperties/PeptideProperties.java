@@ -48,7 +48,7 @@ public class PeptideProperties {
 	}
 	
 	public static final double getMolecularWeight(String sequence){
-		return getMolecularWeight(sequence, 1);
+		return getMolecularWeight(sequence, -1);
 	}
 	
 	/**
@@ -74,7 +74,7 @@ public class PeptideProperties {
 	}
 	
 	public static final double getAbsorbance(String sequence, boolean assumeCysReduced){
-		return getAbsorbance(sequence, assumeCysReduced, 3);
+		return getAbsorbance(sequence, assumeCysReduced, -1);
 	}
 
 	/**
@@ -117,12 +117,11 @@ public class PeptideProperties {
 		sequence = Utils.checkSequence(sequence);
 		ProteinSequence pSequence = new ProteinSequence(sequence);
 		IPeptideProperties pp = new PeptidePropertiesImpl();
-		// FIXME do not round for the sake of test cases!!!
 		return Utils.roundToDecimals(pp.getInstabilityIndex(pSequence), decimals);
 	}
 	
 	public static final double getInstabilityIndex(String sequence){
-		return getInstabilityIndex(sequence, 2);
+		return getInstabilityIndex(sequence, -1);
 	}
 
 	/**
@@ -149,7 +148,7 @@ public class PeptideProperties {
 	}
 	
 	public static final double getApliphaticIndex(String sequence){
-		return getApliphaticIndex(sequence, 2);
+		return getApliphaticIndex(sequence, -1);
 	}
 	
 	/**
@@ -175,7 +174,7 @@ public class PeptideProperties {
 	}
 	
 	public static final double getAvgHydropathy(String sequence){
-		return getAvgHydropathy(sequence, 3);
+		return getAvgHydropathy(sequence, -1);
 	}
 
 	/**
@@ -200,7 +199,7 @@ public class PeptideProperties {
 	}
 	
 	public static final double getIsoelectricPoint(String sequence){
-		return getIsoelectricPoint(sequence, 1);
+		return getIsoelectricPoint(sequence, -1);
 	}
 
 	/**
@@ -223,7 +222,7 @@ public class PeptideProperties {
 	}
 	
 	public static final double getNetCharge(String sequence){
-		return getNetCharge(sequence, 1);
+		return getNetCharge(sequence, -1);
 	}
 	
 	/**
