@@ -1,14 +1,7 @@
 package org.biojava3.aaproperties;
 
-import java.io.File;
-import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
-
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBElement;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Unmarshaller;
 
 import org.biojava3.aaproperties.PeptideProperties.SingleLetterAACode;
 import org.biojava3.core.sequence.compound.AminoAcidCompound;

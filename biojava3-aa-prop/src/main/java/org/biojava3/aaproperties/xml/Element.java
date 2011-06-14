@@ -2,6 +2,9 @@ package org.biojava3.aaproperties.xml;
 
 import java.util.List;
 
+import org.biojava3.aaproperties.Utils;
+
+
 /**
  * One way to model the elements
  * @author pvtroshin
@@ -20,38 +23,73 @@ public class Element {
 	/**
 	 * The atomic number of the element = number of protons. 
 	 */
-	int atomic_number; 
+	int atomicNumber; 
 	/**
 	 * List of common isotopes of the element
 	 */
 	List<Isotope> isotopes; 
-
+	
+	public Element(){}
+	
+	public Element(String name, String shortName, int atomicNumber, List<Isotope> isotopes){
+		this.setName(name);
+		this.setShortName(shortName);
+		this.setAtomicNumber(atomicNumber);
+		this.setIsotopes(isotopes);
+	}
+	
 	/**
-	 * Standard Atomic Weight
-	 *   
+	 * Returns the standard atomic weight. It is computed by the relative abundance of the isotope multiply by its atomic weight
+	 * @return the standard atomic weight 
 	 */
-	double getMass() { 
-		throw new UnsupportedOperationException();
+	public double getMass() { 
+		return getMass(-1);
 	}
 	
-	
-	class Isotope { 
-		/**
-		 * The isotope name i.e. T (tritium)
-		 */
-		String name; 
-		/**
-		 * Number of neutrons 
-		 */
-		int neutrons_num;
-		/**
-		 * Relative Atomic Mass of the isotope
-		 */
-		double weight; 
-		/**
-		 * Natural abundance 
-		 */
-		double abandunce; 
+	public double getMass(int decimalPlace){
+		double total = 0.0;
+		for(Isotope i:isotopes){
+			total += i.getWeight() * i.getAbundance();
+		}
+		return Utils.roundToDecimals(total, decimalPlace);
 	}
 	
+	public String getName() {
+		return name;
+	}
+
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+
+	public String getShortName() {
+		return shortName;
+	}
+
+
+	public void setShortName(String shortName) {
+		this.shortName = shortName;
+	}
+
+
+	public int getAtomicNumber() {
+		return atomicNumber;
+	}
+
+
+	public void setAtomicNumber(int atomicNumber) {
+		this.atomicNumber = atomicNumber;
+	}
+
+
+	public List<Isotope> getIsotopes() {
+		return isotopes;
+	}
+
+
+	public void setIsotopes(List<Isotope> isotopes) {
+		this.isotopes = isotopes;
+	}
 }
