@@ -9763,8 +9763,8 @@
 				<Atom component="2">C</Atom>
 			</Bond>
 		</Condition>
-		<Occurrence>natural</Occurrence>
 		<Category>attachment</Category>
+		<Occurrence>natural</Occurrence>
 		<Keyword>thioether bond</Keyword>
 		<Keyword>blocked amino end</Keyword>
 		<Keyword>formylation</Keyword>
@@ -9787,7 +9787,6 @@
 		<Condition>
 			<Component component="1">
 				<Id source="PDBCC">LYS</Id>
-				<Terminal>N</Terminal>
 			</Component>
 		    <Component component="2">
 				<Id source="PDBCC">FOR</Id>
@@ -9797,8 +9796,239 @@
 				<Atom component="2">C</Atom>
 			</Bond>
 		</Condition>
-		<Occurrence>natural</Occurrence>
 		<Category>attachment</Category>
+		<Occurrence>natural</Occurrence>
 		<Keyword>formylation</Keyword>
 	</Entry>
+	<Entry>
+	    <Id>0313</Id>
+        <Description>A protein modification that effectively crosslinks an L-alanine residue and a glycine residue to form L-alanine 5-imidazolinone glycine.</Description>
+        <SystematicName>(2-[(1S)-1-aminoethyl]-5-oxo-4,5-dihydro-1H-imidazol-1-yl)acetic acid</SystematicName>
+        <CrossReference>
+            <Source>RESID</Source>
+            <Id>AA0187</Id>
+            <Name>L-alanine 5-imidazolinone glycine</Name>
+        </CrossReference>
+        <CrossReference>
+            <Source>PDBCC</Source>
+            <Id>AYG</Id>
+            <Name>[(4E)-2-[(1S)-1-aminoethyl]-4-(4-hydroxybenzylidene)-5-oxo-4,5-dihydro-1H-imidazol-1-yl]acetic acid</Name>
+        </CrossReference>
+        <CrossReference>
+            <Source>PDBCC</Source>
+            <Id>CRQ</Id>
+            <Name>[2-(3-carbamoyl-1-imino-propyl)-4-(4-hydroxy-benzylidene)-5-oxo-4,5-dihydro-imidazol-1-yl]-acetic acid</Name>
+        </CrossReference>
+        <CrossReference>
+            <Source>PDBCC</Source>
+            <Id>MDO</Id>
+            <Name>{2-[(1S)-1-aminoethyl]-4-methylidene-5-oxo-4,5-dihydro-1H-imidazol-1-yl}acetic acid</Name>
+        </CrossReference>
+        <CrossReference>
+            <Source>PDBCC</Source>
+            <Id>X9Q</Id>
+            <Name>{(2S)-2-[(1S)-1-aminoethyl]-4-benzyl-5-oxo-2,5-dihydro-1H-imidazol-1-yl}acetic acid</Name>
+        </CrossReference>
+        <CrossReference>
+            <Source>PSI-MOD</Source>
+            <Id>MOD:00195</Id>
+            <Name>L-alanine 5-imidazolinone glycine</Name>
+        </CrossReference>
+        <Condition>
+			<Component component="1">
+				<Id source="PDBCC">AYG,CRQ,MDO,X9Q</Id>
+			</Component>
+		</Condition>
+		<Category>modified residue</Category>
+        <Occurrence>natural</Occurrence>
+        <Keyword>imidazolinone/oxazolinone ring</Keyword>
+    </Entry>
+    <Entry>
+        <Id>0314</Id>
+        <Description>A protein modification that effectively crosslinks an L-cysteine residue and a glycine residue to form L-cysteine 5-imidazolinone glycine.</Description>
+        <SystematicName>(2-[(1R)-1-amino-2-sulfanylethyl]-5-oxo-4,5-dihydro-1H-imidazol-1-yl)acetic acid</SystematicName>
+        <CrossReference>
+            <Source>RESID</Source>
+            <Id>AA0188</Id>
+            <Name>L-cysteine 5-imidazolinone glycine</Name>
+        </CrossReference>
+        <CrossReference>
+            <Source>PDBCC</Source>
+            <Id>GYC</Id>
+            <Name>[(4Z)-2-[(1R)-1-amino-2-mercaptoethyl]-4-(4-hydroxybenzylidene)-5-oxo-4,5-dihydro-1H-imidazol-1-yl]acetic acid</Name>
+        </CrossReference>
+        <CrossReference>
+            <Source>PSI-MOD</Source>
+            <Id>MOD:00196</Id>
+            <Name>L-cysteine 5-imidazolinone glycine</Name>
+        </CrossReference>
+        <Condition>
+			<Component component="1">
+				<Id source="PDBCC">GYC</Id>
+			</Component>
+		</Condition>
+		<Category>modified residue</Category>
+        <Occurrence>natural</Occurrence>
+        <Keyword>imidazolinone/oxazolinone ring</Keyword>
+    </Entry>
+    <Entry>
+        <Id>0315</Id>
+        <Description>A protein modification that effectively crosslinks an L-histidine residue and 5'-phosphoadenosine through a phosphoramide ester bond to form 1'-(phospho-5'-adenosine)-L-histidine.</Description>
+        <SystematicName>(2S)-2-amino-3-[1-(5'-adenosine phosphono)imidazol-4-yl]propanoic acid</SystematicName>
+        <CrossReference>
+            <Source>RESID</Source>
+            <Id>AA0371</Id>
+            <Name>1'-(phospho-5'-adenosine)-L-histidine</Name>
+        </CrossReference>
+        <CrossReference>
+            <Source>PDBCC</Source>
+            <Id>AMP</Id>
+            <Name>adenosine monophosphate</Name>
+        </CrossReference>
+        <CrossReference>
+            <Source>PSI-MOD</Source>
+            <Id>MOD:00376</Id>
+            <Name>1'-(phospho-5'-adenosine)-L-histidine</Name>
+        </CrossReference>
+        <Condition>
+			<Component component="1">
+				<Id source="PDBCC">HIS</Id>
+			</Component>
+		    <Component component="2">
+				<Id source="PDBCC">AMP</Id>
+			</Component>
+			<Bond>
+				<Atom component="1">NE2</Atom>
+				<Atom component="2">P</Atom>
+			</Bond>
+		</Condition>
+		<Category>attachment</Category>
+		<Occurrence>natural</Occurrence>
+        <Keyword>phosphoprotein</Keyword>
+    </Entry>
+    <Entry>
+        <Id>0316</Id>
+        <Description>a protein modification that effectively forms a O3-(N-acetylaminoglucosyl)serine</Description>
+        <SystematicName>(2S)-2-amino-3-(2-acetamido-2-deoxy-beta-D-glucopyranosyloxy)propanoic acid</SystematicName>
+        <CrossReference>
+            <Source>RESID</Source>
+            <Id>AA0398</Id>
+            <Name>O-(N-acetylamino)glucosyl-L-serine</Name>
+        </CrossReference>
+        <CrossReference>
+            <Source>PDBCC</Source>
+            <Id>NAG</Id>
+            <Name>N-acetyl-D-glucosamine</Name>
+        </CrossReference>
+        <CrossReference>
+            <Source>PSI-MOD</Source>
+            <Id>MOD:00805</Id>
+            <Name>O-(N-acetylaminoglucosyl)-L-serine</Name>
+        </CrossReference>
+        <Condition>
+			<Component component="1">
+				<Id source="PDBCC">SER</Id>
+			</Component>
+		    <Component component="2">
+				<Id source="PDBCC">NAG</Id>
+			</Component>
+			<Bond>
+				<Atom component="1">OG</Atom>
+				<Atom component="2">C1</Atom>
+			</Bond>
+		</Condition>
+		<Category>attachment</Category>
+		<Occurrence>natural</Occurrence>
+        <Keyword>glycoprotein</Keyword>
+    </Entry>
+    <Entry>
+        <Id>0317</Id>
+        <Description>a protein modification that effectively forms a O3-(N-acetylaminoglucosyl)threonine</Description>
+        <SystematicName>(2S,3R)-2-amino-3-(alpha-D-2-acetamido-2-deoxyglucopyranosyloxy)butanoic acid</SystematicName>
+        <CrossReference>
+            <Source>RESID</Source>
+            <Id>AA0399</Id>
+            <Name>O-(N-acetylamino)glucosyl-L-threonine</Name>
+        </CrossReference>
+        <CrossReference>
+            <Source>PDBCC</Source>
+            <Id>NDG</Id>
+            <Name>2-(acetylamino)-2-deoxy-A-D-glucopyranose</Name>
+        </CrossReference>
+        <CrossReference>
+            <Source>PSI-MOD</Source>
+            <Id>MOD:00806</Id>
+            <Name>O-(N-acetylaminoglucosyl)-L-threonine</Name>
+        </CrossReference>
+        <Condition>
+			<Component component="1">
+				<Id source="PDBCC">THR</Id>
+			</Component>
+		    <Component component="2">
+				<Id source="PDBCC">NDG</Id>
+			</Component>
+			<Bond>
+				<Atom component="1">OG1</Atom>
+				<Atom component="2">C1</Atom>
+			</Bond>
+		</Condition>
+		<Category>attachment</Category>
+        <Occurrence>natural</Occurrence>
+        <Keyword>glycoprotein</Keyword>
+    </Entry>
+    <Entry>
+        <Id>0318</Id>
+        <Description>A protein modification that effectively crosslinks an L-aspartic acid residue and a glycine residue to form 2-imino-alanine 5-imidazolinone glycine.</Description>
+        <SystematicName>(2-ethanimidoyl-5-oxo-4,5-dihydro-1H-imidazol-1-yl)acetic acid</SystematicName>
+        <CrossReference>
+            <Source>RESID</Source>
+            <Id>AA0410</Id>
+            <Name>2-imino-alanine 5-imidazolinone glycine</Name>
+        </CrossReference>
+        <CrossReference>
+            <Source>PDBCC</Source>
+            <Id>XYG</Id>
+            <Name>[(4Z)-2-[(1Z)-ethanimidoyl]-4-(4-hydroxybenzylidene)-5-oxo-4,5-dihydro-1H-imidazol-1-yl]acetic acid</Name> 
+        </CrossReference>
+        <CrossReference>
+            <Source>PSI-MOD</Source>
+            <Id>MOD:00820</Id>
+            <Name>2-imino-alanine 5-imidazolinone glycine</Name>
+        </CrossReference>
+        <Condition>
+			<Component component="1">
+				<Id source="PDBCC">XYG</Id>
+			</Component>
+		</Condition>
+        <Category>modified residue</Category>
+        <Occurrence>natural</Occurrence>
+        <Keyword>imidazolinone/oxazolinone ring</Keyword>
+    </Entry>
+    <Entry>
+        <Id>0319</Id>
+        <Description>A protein modification that crosslinks an aspartic acid and the following glycine residue with the formation of (2-aminosuccinimidyl)acetic acid.</Description>
+        <SystematicName>[(3S)-3-amino-2,5-dioxopyrrolidin-1-yl]acetic acid</SystematicName>
+        <CrossReference>
+            <Source>RESID</Source>
+            <Id>AA0441</Id>
+            <Name>(2-aminosuccinimidyl)acetic acid</Name>
+        </CrossReference>
+        <CrossReference>
+            <Source>PDBCC</Source>
+            <Id>SUI</Id>
+            <Name>(3-amino-2,5-dioxo-1-pyrrolidinly)acetic acid</Name>
+        </CrossReference>
+        <CrossReference>
+            <Source>PSI-MOD</Source>
+            <Id>MOD:00952</Id>
+            <Name>(2-aminosuccinimidyl)acetic acid</Name>
+        </CrossReference>
+        <Condition>
+			<Component component="1">
+				<Id source="PDBCC">SUI</Id>
+			</Component>
+		</Condition>
+        <Category>modified residue</Category>
+        <Occurrence>hypothetical</Occurrence>
+    </Entry>
 </ProteinModifications>
