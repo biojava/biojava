@@ -98,7 +98,7 @@ public class SeqRes2AtomAligner {
 		DEBUG = debug;
 	}
 
-	private Chain getMatchingAtomRes(Chain seqRes, List<Chain> atomList)
+	public Chain getMatchingAtomRes(Chain seqRes, List<Chain> atomList)
 	throws StructureException {
 		Iterator<Chain> iter = atomList.iterator();
 		while(iter.hasNext()){
