@@ -141,11 +141,11 @@ public class PDBFileParser  {
 	private Group         current_group;
 
 	private List<Chain>   seqResChains; // contains all the chains for the SEQRES records
-        //we're going to work on the assumption that the files are current -
-        //if the pdb_HEADER_Handler detects a legacy format, this will be changed to true.
-        //if true then lines will be truncated at 72 characters in certain cases
-        //(pdb_COMPOUND_handler for example)
-        private boolean isLegacyFormat = false;
+	//we're going to work on the assumption that the files are current -
+	//if the pdb_HEADER_Handler detects a legacy format, this will be changed to true.
+	//if true then lines will be truncated at 72 characters in certain cases
+	//(pdb_COMPOUND_handler for example)
+	private boolean isLegacyFormat = false;
 
 	// for printing
 	private static final String NEWLINE;
@@ -251,7 +251,7 @@ public class PDBFileParser  {
 	public static final int MAX_ATOMS = 700000; // tested with java -Xmx300M
 
 	private boolean atomOverflow;
-	
+
 	/** flag to tell parser to only read Calpha coordinates **/
 	boolean parseCAonly;
 
@@ -262,7 +262,7 @@ public class PDBFileParser  {
 	}
 
 	FileParsingParameters params;
-	
+
 	public PDBFileParser() {
 		params = new FileParsingParameters();
 
@@ -393,18 +393,18 @@ public class PDBFileParser  {
 		if (DEBUG) {
 			System.out.println("Parsing entry " + pdbId);
 		}
-                //*really* old files (you'll need to hunt to find these as they
-                //should have been remediated) have headers like below. Plus the
-                //pdbId at positions 72-76 is present in every line
+		//*really* old files (you'll need to hunt to find these as they
+		//should have been remediated) have headers like below. Plus the
+		//pdbId at positions 72-76 is present in every line
 
-     //HEADER    PROTEINASE INHIBITOR (TRYPSIN)          05-OCT-84   5PTI      5PTI   3
-     //HEADER    TRANSFERASE (ACYLTRANSFERASE)           02-SEP-92   1LAC      1LAC   2
-                if (line.trim().length() > 66) {
-                    if (pdbId.equals(line.substring (72, 76))){
-                        isLegacyFormat = true;
-                        System.out.println(pdbId + " is a LEGACY entry - this will most likely not parse correctly.");
-                    }
-                }
+		//HEADER    PROTEINASE INHIBITOR (TRYPSIN)          05-OCT-84   5PTI      5PTI   3
+		//HEADER    TRANSFERASE (ACYLTRANSFERASE)           02-SEP-92   1LAC      1LAC   2
+		if (line.trim().length() > 66) {
+			if (pdbId.equals(line.substring (72, 76))){
+				isLegacyFormat = true;
+				System.out.println(pdbId + " is a LEGACY entry - this will most likely not parse correctly.");
+			}
+		}
 		header.put("idCode",pdbCode);
 		structure.setPDBCode(pdbCode);
 		header.put("classification",classification);
@@ -949,13 +949,13 @@ public class PDBFileParser  {
 		}
 
 		// In legacy PDB files the line ends with the PDB code and a serial number, chop those off!
-                //format version 3.0 onwards will have 80 characters in a line
-//		if (line.length() > 72) {
-                if (isLegacyFormat) {
-//                    if (DEBUG) {
-//                        System.out.println("We have a legacy file - truncating line length to 71 characters:");
-//                        System.out.println(line);
-//                    }
+		//format version 3.0 onwards will have 80 characters in a line
+		//		if (line.length() > 72) {
+		if (isLegacyFormat) {
+			//                    if (DEBUG) {
+			//                        System.out.println("We have a legacy file - truncating line length to 71 characters:");
+			//                        System.out.println(line);
+			//                    }
 			line = line.substring(0, 72);
 		}
 
@@ -1469,34 +1469,34 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 
 	}
 
-        /**
-         * Decides whether or not a Group is qualified to be added to the
-         * Structure.hetGroups list. If it likes it, it adds it.
-         * @param group
-         */
-        private void addTohetGroupsDecider(Group group) {
-            boolean wanted = false;
-            //these are HET groups, but they are usually less interesting
-            //than other types
-            if (group.getPDBName().equals("HOH"))
-                 return;
-            if (group.getChemComp() == null) {
-                if (group.getType().equals(GroupType.HETATM)) {
-                    wanted = true;
-                }
-            } else if (!group.getChemComp().isStandard()) {
-                //also want to add modified amino acids e.g. TYS
-                //these are GroupType.AMINOACID, so we need to check the ChemComp
-                wanted = true;
-            }
+	/**
+	 * Decides whether or not a Group is qualified to be added to the
+	 * Structure.hetGroups list. If it likes it, it adds it.
+	 * @param group
+	 */
+	private void addTohetGroupsDecider(Group group) {
+		boolean wanted = false;
+		//these are HET groups, but they are usually less interesting
+		//than other types
+		if (group.getPDBName().equals("HOH"))
+			return;
+		if (group.getChemComp() == null) {
+			if (group.getType().equals(GroupType.HETATM)) {
+				wanted = true;
+			}
+		} else if (!group.getChemComp().isStandard()) {
+			//also want to add modified amino acids e.g. TYS
+			//these are GroupType.AMINOACID, so we need to check the ChemComp
+			wanted = true;
+		}
 
-            if (wanted) {
-                if (! structure.getHetGroups().contains(group)) {
-//                    System.out.println("Added " + group + " to structure.hetgroups");
-                    structure.getHetGroups().add(group);
-                }
-            }
-        }
+		if (wanted) {
+			if (! structure.getHetGroups().contains(group)) {
+				//                    System.out.println("Added " + group + " to structure.hetgroups");
+				structure.getHetGroups().add(group);
+			}
+		}
+	}
 
 	/**
 	 Handler for
@@ -1552,7 +1552,7 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 
 			// end up old chain...
 			current_chain.addGroup(current_group);
-                        
+
 			// see if old chain is known ...
 			Chain testchain ;
 			testchain = isKnownChain(current_chain.getChainID(),current_model);
@@ -1600,7 +1600,7 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 		//|                |    |   iCode
 		//|     |          | |  |   ||
 		//ATOM      1  N   ASP A  15     110.964  24.941  59.191  1.00 83.44           N
-                //ATOM   1964  N   ARG H 221A      5.963 -16.715  27.669  1.00 28.59           N
+		//ATOM   1964  N   ARG H 221A      5.963 -16.715  27.669  1.00 28.59           N
 
 		Character aminoCode1 = null;
 
@@ -1622,9 +1622,9 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 			//               current_group.setPDBCode(pdbCode);
 			current_group.setPDBName(groupCode3);
 			current_group.setResidueNumber(residueNumber);
-//			                        System.out.println("Made new group: " + groupCode3 + " " + resNum + " " + iCode);
-                        addTohetGroupsDecider(current_group);
-                }
+			//			                        System.out.println("Made new group: " + groupCode3 + " " + resNum + " " + iCode);
+			addTohetGroupsDecider(current_group);
+		}
 
 
 		if ( startOfNewChain) {
@@ -1634,7 +1634,7 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 			//current_group.setPDBCode(pdbCode);
 			current_group.setPDBName(groupCode3);
 			current_group.setResidueNumber(residueNumber);
-                        addTohetGroupsDecider(current_group);
+			addTohetGroupsDecider(current_group);
 			//                        System.out.println("Made new start of chain group:  " + groupCode3 + " " + resNum + " " + iCode);
 		}
 
@@ -1655,7 +1655,7 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 			//current_group.setPDBCode(pdbCode);
 			current_group.setPDBName(groupCode3);
 			current_group.setResidueNumber(residueNumber);
-                        addTohetGroupsDecider(current_group);
+			addTohetGroupsDecider(current_group);
 			//                        System.out.println("Made new group:  " + groupCode3 + " " + resNum + " " + iCode);
 
 		} else {
@@ -2053,10 +2053,10 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 		dbrefs.add(dbref);
 	}
 
-        /*
-         * For each het group that appears in the entry, the wwPDB checks that the corresponding HET, HETNAM, HETSYN, FORMUL, HETATM, and CONECT records appear, if applicable. The HET record is generated automatically using the Chemical Component Dictionary and information from the HETATM records.
+	/*
+	 * For each het group that appears in the entry, the wwPDB checks that the corresponding HET, HETNAM, HETSYN, FORMUL, HETATM, and CONECT records appear, if applicable. The HET record is generated automatically using the Chemical Component Dictionary and information from the HETATM records.
 
-         * Record Format
+	 * Record Format
 
             COLUMNS       DATA  TYPE     FIELD         DEFINITION
             ---------------------------------------------------------------------------------
@@ -2089,12 +2089,12 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
             HET    NON  Y   5      12
             HET    UNK  A 161       1
 
-         * Heterogen sections are HET, HETNAM, HETSYN, FORMUL
-         * @see http://www.wwpdb.org/documentation/format32/sect4.html
-         */
-        private void pdb_HET_handler(String line) {
+	 * Heterogen sections are HET, HETNAM, HETSYN, FORMUL
+	 * @see http://www.wwpdb.org/documentation/format32/sect4.html
+	 */
+	private void pdb_HET_handler(String line) {
 
-        }
+	}
 
 	/* process the disulfid bond info provided by an SSBOND record
 	 *
@@ -2426,9 +2426,9 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 		lengthCheck = -1;
 		atomCount = 0;
 		atomOverflow = false;
-		
+
 		parseCAonly = params.isParseCAOnly();
-		
+
 		String line = null;
 		try {
 
@@ -2616,7 +2616,7 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 		if ( current_chain != null ) {			
 			current_chain.addGroup(current_group);
 
-                        if (isKnownChain(current_chain.getChainID(),current_model) == null) {
+			if (isKnownChain(current_chain.getChainID(),current_model) == null) {
 				current_model.add(current_chain);
 			}
 		}
@@ -2638,6 +2638,11 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 
 			SeqRes2AtomAligner aligner = new SeqRes2AtomAligner();
 			aligner.align(structure,seqResChains);
+
+		} else if ( params.getStoreEmptySeqRes() ){
+			// user wants to know about the seqres, but not align them
+
+			storeUnAlignedSeqRes(structure, seqResChains);
 		}
 
 
@@ -2650,6 +2655,30 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 			e.printStackTrace();
 		}
 	}
+
+
+	private void storeUnAlignedSeqRes(Structure structure,
+			List<Chain> seqResChains) {
+		List<Chain> atomList   = structure.getModel(0);
+		SeqRes2AtomAligner aligner = new SeqRes2AtomAligner();
+		for (Chain seqRes: seqResChains){
+
+
+			Chain atomRes;
+			try {
+				atomRes = aligner.getMatchingAtomRes(seqRes,atomList);
+				atomRes.setSeqResGroups(seqRes.getAtomGroups());
+			} catch (StructureException e) {
+
+				e.printStackTrace();
+				continue;
+			}
+
+
+			
+		}
+	}
+
 
 
 	private void setSecStruc(){
@@ -2796,16 +2825,16 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 	private void linkSitesToGroups() {
 
 		//System.out.println("LINK SITES TO GROUPS:" + siteToResidueMap.keySet().size());
-		
+
 		//link the map of siteIds : <ResidueNumber> with the sites by using ResidueNumber to get the correct group back.
 		//the return list
-		
+
 		if ( siteMap == null || siteToResidueMap == null){
 			logger.warning("Sites can not be linked to residues!");
-			
+
 			return;
 		}
-		
+
 		List<Site> sites = null;
 		//check that there are chains with which to associate the groups
 		if (structure.getChains().isEmpty()) {
@@ -2850,9 +2879,9 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 				currentSite.getGroups().add(linkedGroup);
 			}
 		}
-		
+
 		//System.out.println("SITEMAP: " + siteMap);
-		
+
 		sites = new ArrayList<Site>(siteMap.values());
 		structure.setSites(sites);
 		//System.out.println("STRUCTURE SITES: " + structure.getSites().size());
@@ -2974,10 +3003,10 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 		journalArticle.setPmid(pmid.toString().trim());
 		journalArticle.setDoi(doi.toString().trim());
 
-                if (DEBUG) {
-                    System.out.println("Made JournalArticle:");
-                    System.out.println(journalArticle);
-                }
+		if (DEBUG) {
+			System.out.println("Made JournalArticle:");
+			System.out.println(journalArticle);
+		}
 	}
 
 	//inner class to deal with all the journal info
@@ -2996,86 +3025,86 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 
 			if (ref.equals("TO BE PUBLISHED ")) {
 				journalName = ref.trim();
-                                if (DEBUG) {
-                                    System.out.println(String.format("JournalParser found journalString '%s'", journalName));
-                                }
+				if (DEBUG) {
+					System.out.println(String.format("JournalParser found journalString '%s'", journalName));
+				}
 				return;
 			}
 
-                        if (ref.length() < 48) {
-                            logger.warning("REF line too short - must be at least 48 characters to be valid for parsing.");
-                            journalName = "";
-                            volume = "";
-                            startPage = "";
-                            publicationDate = 0;
-                            return;
-                        }
-                        //can be multi line:
-                        //REF    PHILOS.TRANS.R.SOC.LONDON,    V. 293    53 1981
-                        //REF  2 SER.B
+			if (ref.length() < 48) {
+				logger.warning("REF line too short - must be at least 48 characters to be valid for parsing.");
+				journalName = "";
+				volume = "";
+				startPage = "";
+				publicationDate = 0;
+				return;
+			}
+			//can be multi line:
+			//REF    PHILOS.TRANS.R.SOC.LONDON,    V. 293    53 1981
+			//REF  2 SER.B
 
-                        //or
+			//or
 
-                        //REF    GLYCOGEN PHOSPHORYLASE B:                1 1991
-                        //REF  2 DESCRIPTION OF THE PROTEIN
-                        //REF  3 STRUCTURE
+			//REF    GLYCOGEN PHOSPHORYLASE B:                1 1991
+			//REF  2 DESCRIPTION OF THE PROTEIN
+			//REF  3 STRUCTURE
 
-                        //but usually single line
+			//but usually single line
 			//REF    NUCLEIC ACIDS RES.                         2009
 			//REF    MOL.CELL                                   2009
 			//REF    NAT.STRUCT.MOL.BIOL.          V.  16   238 2009
 			//REF    ACTA CRYSTALLOGR.,SECT.F      V.  65   199 2009
 			//check if the date is present at the end of the line.
 			//                             09876543210987654321
-                        //'J.BIOL.CHEM.                  V. 280 23000 2005 '
+			//'J.BIOL.CHEM.                  V. 280 23000 2005 '
 			//'J.AM.CHEM.SOC.                V. 130 16011 2008 '
 			//'NAT.STRUCT.MOL.BIOL.          V.  16   238 2009'
-                        String volumeInformation = ref.substring(30, 48);
-                        if (DEBUG) {
-                            System.out.println(String.format("Parsing volumeInformation: '%s'", volumeInformation));
-                        }
+			String volumeInformation = ref.substring(30, 48);
+			if (DEBUG) {
+				System.out.println(String.format("Parsing volumeInformation: '%s'", volumeInformation));
+			}
 			//volumeInformation: 'V. 293    53 1981 '
-//                      String dateString = ref.substring(ref.length() - 5 , ref.length() - 1).trim();
-//			String startPageString = ref.substring(ref.length() - 11 , ref.length() - 6).trim();
-//			String volumeString = ref.substring(ref.length() - 16 , ref.length() - 12).trim();
-//			String journalString = ref.substring(0 , ref.length() - 18).trim();
-                        String dateString = volumeInformation.substring(volumeInformation.length() - 5 , volumeInformation.length() - 1).trim();
+			//                      String dateString = ref.substring(ref.length() - 5 , ref.length() - 1).trim();
+			//			String startPageString = ref.substring(ref.length() - 11 , ref.length() - 6).trim();
+			//			String volumeString = ref.substring(ref.length() - 16 , ref.length() - 12).trim();
+			//			String journalString = ref.substring(0 , ref.length() - 18).trim();
+			String dateString = volumeInformation.substring(volumeInformation.length() - 5 , volumeInformation.length() - 1).trim();
 			String startPageString = volumeInformation.substring(volumeInformation.length() - 11 , volumeInformation.length() - 6).trim();
 			String volumeString = volumeInformation.substring(volumeInformation.length() - 16 , volumeInformation.length() - 12).trim();
-                        //for the journal string we need to remove the volume information which might be in the middle of the string (e.g. 1gpb, 3pfk)
-                        String journalString = ref.substring(0 , 29).trim() + " " + ref.substring(30, ref.length() - 1).replace(volumeInformation.trim(), "").trim();
-                        journalString = journalString.trim();
-//                        System.out.println("journalString: " + journalString);
-                        if (DEBUG) {
+			//for the journal string we need to remove the volume information which might be in the middle of the string (e.g. 1gpb, 3pfk)
+			String journalString = ref.substring(0 , 29).trim() + " " + ref.substring(30, ref.length() - 1).replace(volumeInformation.trim(), "").trim();
+			journalString = journalString.trim();
+			//                        System.out.println("journalString: " + journalString);
+			if (DEBUG) {
 				System.out.println(String.format("JournalParser found volumeString '%s'", volumeString));
 				System.out.println(String.format("JournalParser found startPageString '%s'", startPageString));
 				System.out.println(String.format("JournalParser found dateString '%s'", dateString));
-                                System.out.println(String.format("JournalParser found journalString '%s'", journalString));
+				System.out.println(String.format("JournalParser found journalString '%s'", journalString));
 			}
 
 			if (!dateString.equals("    ")) {
 				try {
-                                    publicationDate = Integer.valueOf(dateString);
-                                } catch (NumberFormatException nfe) {
-                                    logger.warning(dateString + " is not a valid integer for a date in JRNL sub-section REF line 1");
-                                }
-//				if (DEBUG) {
-//					System.out.println("JournalParser set date " + publicationDate);
-//				}
+					publicationDate = Integer.valueOf(dateString);
+				} catch (NumberFormatException nfe) {
+					logger.warning(dateString + " is not a valid integer for a date in JRNL sub-section REF line 1");
+				}
+				//				if (DEBUG) {
+				//					System.out.println("JournalParser set date " + publicationDate);
+				//				}
 			}
 
 			if (!startPageString.equals("    ")) {
 				startPage = startPageString;
-//				if (DEBUG) {
-//					System.out.println("JournalParser set startPage " + startPage);
-//				}
+				//				if (DEBUG) {
+				//					System.out.println("JournalParser set startPage " + startPage);
+				//				}
 			}
 
 			if (!volumeString.equals("    ")) {
 				volume = volumeString;
-//				if (DEBUG) {
-//					System.out.println("JournalParser set volume " + volume);
-//				}
+				//				if (DEBUG) {
+				//					System.out.println("JournalParser set volume " + volume);
+				//				}
 			}
 
 			if (!journalString.equals("    ")) {
