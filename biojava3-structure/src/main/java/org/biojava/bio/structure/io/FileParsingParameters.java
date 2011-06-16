@@ -75,6 +75,8 @@ public class FileParsingParameters implements Serializable
     */
    boolean headerOnly;
 
+private boolean storeEmptySeqRes;
+
 
    public FileParsingParameters(){
       setDefault();
@@ -91,7 +93,8 @@ public class FileParsingParameters implements Serializable
       // don't download ChemComp dictionary by default.
       loadChemCompInfo = false;
       headerOnly = false;
-
+      
+      storeEmptySeqRes = false;
    }
 
    /** is secondary structure assignment being parsed from the file?
@@ -189,6 +192,20 @@ public class FileParsingParameters implements Serializable
       this.alignSeqRes = alignSeqRes;
    }
 
+   
+   /** a flag to detrermine if SEQRES should be stored, even if alignSeqREs is disabled.
+    * THis will provide access to the sequence in the SEQRES, without linking it up with the ATOMs.
+    * 
+    * @return flag
+    */
+   public boolean getStoreEmptySeqRes() {
+	 // TODO Auto-generated method stub
+	   return storeEmptySeqRes;
+   }
+
+   public void setStoreEmptySeqRes(boolean storeEmptySeqRes){
+	   this.storeEmptySeqRes = storeEmptySeqRes;
+   }
 
 
 
