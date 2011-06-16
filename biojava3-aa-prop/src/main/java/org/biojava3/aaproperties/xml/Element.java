@@ -19,7 +19,7 @@ public class Element {
 	/**
 	 * Element short name as in periodic table e.g. "H"
 	 */
-	String shortName; 
+	String symbol; 
 	/**
 	 * The atomic number of the element = number of protons. 
 	 */
@@ -27,13 +27,13 @@ public class Element {
 	/**
 	 * List of common isotopes of the element
 	 */
-	List<Isotope> isotopes; 
+	List<Isotope> isotope; 
 	
 	public Element(){}
 	
-	public Element(String name, String shortName, int atomicNumber, List<Isotope> isotopes){
+	public Element(String name, String symbol, int atomicNumber, List<Isotope> isotopes){
 		this.setName(name);
-		this.setShortName(shortName);
+		this.setSymbol(symbol);
 		this.setAtomicNumber(atomicNumber);
 		this.setIsotopes(isotopes);
 	}
@@ -48,7 +48,7 @@ public class Element {
 	
 	public double getMass(int decimalPlace){
 		double total = 0.0;
-		for(Isotope i:isotopes){
+		for(Isotope i:isotope){
 			total += i.getWeight() * i.getAbundance();
 		}
 		return Utils.roundToDecimals(total, decimalPlace);
@@ -64,13 +64,13 @@ public class Element {
 	}
 
 
-	public String getShortName() {
-		return shortName;
+	public String getSymbol() {
+		return symbol;
 	}
 
 
-	public void setShortName(String shortName) {
-		this.shortName = shortName;
+	public void setSymbol(String symbol) {
+		this.symbol = symbol;
 	}
 
 
@@ -85,11 +85,11 @@ public class Element {
 
 
 	public List<Isotope> getIsotopes() {
-		return isotopes;
+		return isotope;
 	}
 
 
 	public void setIsotopes(List<Isotope> isotopes) {
-		this.isotopes = isotopes;
+		this.isotope = isotopes;
 	}
 }

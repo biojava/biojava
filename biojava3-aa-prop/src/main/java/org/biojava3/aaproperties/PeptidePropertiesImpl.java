@@ -11,6 +11,8 @@ public class PeptidePropertiesImpl implements IPeptideProperties{
 
 	@Override
 	public double getMolecularWeight(ProteinSequence sequence) {
+		final double hydrogenMW = 1.0079;
+		final double hydroxideMW = 17.0073;
 		double value = 0.0;
 		AminoAcidCompoundSet aaSet = new AminoAcidCompoundSet();
 		for(char aa:sequence.toString().toCharArray()){
@@ -20,7 +22,9 @@ public class PeptidePropertiesImpl implements IPeptideProperties{
 			}
 		}
 		//H	1.0079	OH	17.0073
-		if(value > 0) value += 1.0079 + 17.0073;
+		if(value > 0){
+			value += hydrogenMW + hydroxideMW;
+		}
 		return value;
 	}
 
@@ -102,8 +106,8 @@ public class PeptidePropertiesImpl implements IPeptideProperties{
 //		Ala => A, Val => V, Ile => I, Leu => L
 		AminoAcidCompoundSet aaSet = new AminoAcidCompoundSet();
 		Map<AminoAcidCompound, Double> aa2Composition = getAAComposition(sequence);
-		double a = 2.9;
-		double b = 3.9;
+		final double a = 2.9;
+		final double b = 3.9;
 		double xAla = aa2Composition.get(aaSet.getCompoundForString("A"));
 		double xVal = aa2Composition.get(aaSet.getCompoundForString("V"));
 		double xIle = aa2Composition.get(aaSet.getCompoundForString("I"));
@@ -132,7 +136,7 @@ public class PeptidePropertiesImpl implements IPeptideProperties{
 		double changeSize = 7.0;
 		Map<AminoAcidCompound, Integer> chargedAA2Count = this.getChargedAACount(sequence);
 		double margin = 1.0;
-		double difference = 0.0000001;
+		final double difference = 0.0000001;
 		while(true){
 			margin = this.getNetCharge(chargedAA2Count, currentPH);
 			//Within allowed difference
@@ -157,8 +161,10 @@ public class PeptidePropertiesImpl implements IPeptideProperties{
 		//Lys => K, Arg => R, His => H
 		//Asp => D, Glu => E, Cys => C, Tyr => Y
 		//(NH2-)	9.69	(-COOH)	2.34
+		final double pkaOfNH2 = 9.69;
+		final double pkaOfCOOH = 2.34;
 		AminoAcidCompoundSet aaSet = new AminoAcidCompoundSet();
-		double nTerminalCharge = this.getPosCharge(9.69, ph);
+		double nTerminalCharge = this.getPosCharge(pkaOfNH2, ph);
 		double kCharge = chargedAA2Count.get(aaSet.getCompoundForString("K")) * this.getPosCharge(Constraints.aa2PKa.get(aaSet.getCompoundForString("K")), ph);
 		double rCharge = chargedAA2Count.get(aaSet.getCompoundForString("R")) * this.getPosCharge(Constraints.aa2PKa.get(aaSet.getCompoundForString("R")), ph);
 		double hCharge = chargedAA2Count.get(aaSet.getCompoundForString("H")) * this.getPosCharge(Constraints.aa2PKa.get(aaSet.getCompoundForString("H")), ph);
@@ -166,7 +172,7 @@ public class PeptidePropertiesImpl implements IPeptideProperties{
 		double eCharge = chargedAA2Count.get(aaSet.getCompoundForString("E")) * this.getNegCharge(Constraints.aa2PKa.get(aaSet.getCompoundForString("E")), ph);
 		double cCharge = chargedAA2Count.get(aaSet.getCompoundForString("C")) * this.getNegCharge(Constraints.aa2PKa.get(aaSet.getCompoundForString("C")), ph);
 		double yCharge = chargedAA2Count.get(aaSet.getCompoundForString("Y")) * this.getNegCharge(Constraints.aa2PKa.get(aaSet.getCompoundForString("Y")), ph);
-		double cTerminalCharge = this.getNegCharge(2.34, ph);
+		double cTerminalCharge = this.getNegCharge(pkaOfCOOH, ph);
 		if((kCharge + rCharge + hCharge) == 0.0 && (dCharge + eCharge + cCharge + yCharge) == 0.0){
 			return 0.0;
 		}
