@@ -1,5 +1,7 @@
 package org.biojava3.aaproperties.convertor;
 
+import org.biojava3.core.sequence.ProteinSequence;
+
 public abstract class Convertor {
 	/**
 	 * Based on Table 2 of http://nar.oxfordjournals.org/content/34/suppl_2/W32.full.pdf<br/>
@@ -14,13 +16,12 @@ public abstract class Convertor {
 	 * Solvent accessibility (Buried, Exposed, Intermediate)<br/>
 	 * 
 	 * @author kohchuanhock
-	 * @version 2011.05.09
+	 * @version 2011.06.09
 	 */
-	
-	protected final char group1 = '1';
-	protected final char group2 = '2';
-	protected final char group3 = '3';
-	protected final char unknownGroup = '0';
+	public final static char group1 = '1';
+	public final static char group2 = '2';
+	public final static char group3 = '3';
+	public final static char unknownGroup = '0';
 	
  	/**
  	 * Returns the grouping of the amino acid character.
@@ -56,10 +57,10 @@ public abstract class Convertor {
 	 * 		a protein sequence consisting of preferably non-ambiguous characters only
 	 * @return the converted sequence
 	 */
-	public String convert(String sequence){
+	public String convert(ProteinSequence sequence){
 		String convertedSequence = "";
-		String uppercaseSequence = sequence.toUpperCase();
-		for(int x = 0; x < sequence.length(); x++){
+		String uppercaseSequence = sequence.getSequenceAsString().toUpperCase();
+		for(int x = 0; x < uppercaseSequence.length(); x++){
 			convertedSequence += convert(uppercaseSequence.charAt(x));
 		}
 		return convertedSequence;
