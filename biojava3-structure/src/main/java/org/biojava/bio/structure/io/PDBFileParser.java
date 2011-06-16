@@ -2669,8 +2669,11 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 				atomRes = aligner.getMatchingAtomRes(seqRes,atomList);
 				atomRes.setSeqResGroups(seqRes.getAtomGroups());
 			} catch (StructureException e) {
-
-				e.printStackTrace();
+				// this is used for matching of biological units
+				// where chains can be missing
+				// ignore if chain can't be found.
+				
+				//e.printStackTrace();
 				continue;
 			}
 
