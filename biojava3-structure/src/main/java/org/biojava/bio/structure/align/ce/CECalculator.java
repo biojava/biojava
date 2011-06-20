@@ -41,9 +41,15 @@ import org.biojava.bio.structure.jama.Matrix;
 
 
 
-/** A crazy class. If I would not port the CE source code directly to Java I would not write it like this!
+/** This is based on the original Combinatorial Extension (CE) source code from 2003 or 2004 (CE version 2.3),
+ * as has been originally developed by I. Shindyalov and P.Bourne (1998).
+ * The original CE paper is available from here: <a href="http://peds.oxfordjournals.org/cgi/content/short/11/9/739">http://peds.oxfordjournals.org/cgi/content/short/11/9/739</a>.
+ * 
+ * This class is a pretty much exact 1:1 port from C, where I cared about exact reproduce of the CE results
+ * and not about Java style.
  * 
  * @author Andreas Prlic
+
  *
  */
 public class CECalculator {
