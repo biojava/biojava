@@ -7940,26 +7940,6 @@
 		<Keyword>amidated carboxyl end</Keyword>
 	</Entry>
 	<Entry>
-		<Id>0252</Id>
-		<Description>Metal coordination</Description>
-		<Condition>
-			<Component component="1">
-				<Id source="PDBCC">*</Id>
-			</Component>
-			<Component component="2">
-				<Id source="PDBCC">AC,AG,AL,AM,AU,BA,BE,BI,BK,CA,CD,CE,CF,CM,CO,CR,CS,CU,DY,ER,ES,EU,FE,FM,FR,GA,GD,HF,HG,HO,IN,IR,K,LA,LI,LR,LU,MD,MG,MN,MO,NA,NB,ND,NI,NO,NP,OS,PA,PB,PD,PM,PR,PT,PU,RA,RB,RE,RH,RU,SC,SM,SN,SR,TA,TB,TC,TH,TI,TL,TM,U,V,W,Y,YB,ZN,ZR</Id>
-			</Component>
-			<Bond>
-				<Atom component="1">*</Atom>
-				<Atom component="2">*</Atom>
-			</Bond>
-		</Condition>
-		<Occurrence>natural</Occurrence>
-		<Category>undefined</Category>
-		<Keyword>Metal coordination</Keyword>
-	</Entry>
-	<Comment text="new entries added 05/05/2011"/>
-	<Entry>
 		<Id>0253</Id>
 		<Description>A protein modification that effectively converts an L-alanine residue to N-acetyl-L-alanine.</Description>
 		<SystematicName>(2S)-2-(acetamido)propanoic acid</SystematicName>
@@ -10031,4 +10011,1296 @@
         <Category>modified residue</Category>
         <Occurrence>hypothetical</Occurrence>
     </Entry>
+    <Entry>
+		<Id>320</Id>
+		<Description>Metal coordination</Description>
+		<Condition>
+			<Component component="1">
+				<Id source="PDBCC">*</Id>
+			</Component>
+			<Component component="2">
+				<Id source="PDBCC">AG</Id>
+			</Component>
+			<Bond>
+				<Atom component="1">*</Atom>
+				<Atom component="2">*</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>undefined</Category>
+		<Keyword>Metal coordination</Keyword>
+	</Entry>
+	<Entry>
+		<Id>321</Id>
+		<Description>Metal coordination</Description>
+		<Condition>
+			<Component component="1">
+				<Id source="PDBCC">*</Id>
+			</Component>
+			<Component component="2">
+				<Id source="PDBCC">AL</Id>
+			</Component>
+			<Bond>
+				<Atom component="1">*</Atom>
+				<Atom component="2">*</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>undefined</Category>
+		<Keyword>Metal coordination</Keyword>
+	</Entry>
+	<Entry>
+		<Id>322</Id>
+		<Description>Metal coordination</Description>
+		<Condition>
+			<Component component="1">
+				<Id source="PDBCC">*</Id>
+			</Component>
+			<Component component="2">
+				<Id source="PDBCC">AU</Id>
+			</Component>
+			<Bond>
+				<Atom component="1">*</Atom>
+				<Atom component="2">*</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>undefined</Category>
+		<Keyword>Metal coordination</Keyword>
+	</Entry>
+	<Entry>
+		<Id>323</Id>
+		<Description>Metal coordination</Description>
+		<Condition>
+			<Component component="1">
+				<Id source="PDBCC">*</Id>
+			</Component>
+			<Component component="2">
+				<Id source="PDBCC">AU3</Id>
+			</Component>
+			<Bond>
+				<Atom component="1">*</Atom>
+				<Atom component="2">*</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>undefined</Category>
+		<Keyword>Metal coordination</Keyword>
+	</Entry>
+	<Entry>
+		<Id>324</Id>
+		<Description>Metal coordination</Description>
+		<Condition>
+			<Component component="1">
+				<Id source="PDBCC">*</Id>
+			</Component>
+			<Component component="2">
+				<Id source="PDBCC">BA</Id>
+			</Component>
+			<Bond>
+				<Atom component="1">*</Atom>
+				<Atom component="2">*</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>undefined</Category>
+		<Keyword>Metal coordination</Keyword>
+	</Entry>
+	<Entry>
+		<Id>325</Id>
+		<Description>Metal coordination</Description>
+		<Condition>
+			<Component component="1">
+				<Id source="PDBCC">*</Id>
+			</Component>
+			<Component component="2">
+				<Id source="PDBCC">CA</Id>
+			</Component>
+			<Bond>
+				<Atom component="1">*</Atom>
+				<Atom component="2">*</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>undefined</Category>
+		<Keyword>Metal coordination</Keyword>
+	</Entry>
+	<Entry>
+		<Id>326</Id>
+		<Description>Metal coordination</Description>
+		<Condition>
+			<Component component="1">
+				<Id source="PDBCC">*</Id>
+			</Component>
+			<Component component="2">
+				<Id source="PDBCC">CD</Id>
+			</Component>
+			<Bond>
+				<Atom component="1">*</Atom>
+				<Atom component="2">*</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>undefined</Category>
+		<Keyword>Metal coordination</Keyword>
+	</Entry>
+	<Entry>
+		<Id>327</Id>
+		<Description>Metal coordination</Description>
+		<Condition>
+			<Component component="1">
+				<Id source="PDBCC">*</Id>
+			</Component>
+			<Component component="2">
+				<Id source="PDBCC">CE</Id>
+			</Component>
+			<Bond>
+				<Atom component="1">*</Atom>
+				<Atom component="2">*</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>undefined</Category>
+		<Keyword>Metal coordination</Keyword>
+	</Entry>
+	<Entry>
+		<Id>328</Id>
+		<Description>Metal coordination</Description>
+		<Condition>
+			<Component component="1">
+				<Id source="PDBCC">*</Id>
+			</Component>
+			<Component component="2">
+				<Id source="PDBCC">CO</Id>
+			</Component>
+			<Bond>
+				<Atom component="1">*</Atom>
+				<Atom component="2">*</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>undefined</Category>
+		<Keyword>Metal coordination</Keyword>
+	</Entry>
+	<Entry>
+		<Id>329</Id>
+		<Description>Metal coordination</Description>
+		<Condition>
+			<Component component="1">
+				<Id source="PDBCC">*</Id>
+			</Component>
+			<Component component="2">
+				<Id source="PDBCC">3CO</Id>
+			</Component>
+			<Bond>
+				<Atom component="1">*</Atom>
+				<Atom component="2">*</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>undefined</Category>
+		<Keyword>Metal coordination</Keyword>
+	</Entry>
+	<Entry>
+		<Id>330</Id>
+		<Description>Metal coordination</Description>
+		<Condition>
+			<Component component="1">
+				<Id source="PDBCC">*</Id>
+			</Component>
+			<Component component="2">
+				<Id source="PDBCC">CR</Id>
+			</Component>
+			<Bond>
+				<Atom component="1">*</Atom>
+				<Atom component="2">*</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>undefined</Category>
+		<Keyword>Metal coordination</Keyword>
+	</Entry>
+	<Entry>
+		<Id>331</Id>
+		<Description>Metal coordination</Description>
+		<Condition>
+			<Component component="1">
+				<Id source="PDBCC">*</Id>
+			</Component>
+			<Component component="2">
+				<Id source="PDBCC">CS</Id>
+			</Component>
+			<Bond>
+				<Atom component="1">*</Atom>
+				<Atom component="2">*</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>undefined</Category>
+		<Keyword>Metal coordination</Keyword>
+	</Entry>
+	<Entry>
+		<Id>332</Id>
+		<Description>Metal coordination</Description>
+		<Condition>
+			<Component component="1">
+				<Id source="PDBCC">*</Id>
+			</Component>
+			<Component component="2">
+				<Id source="PDBCC">CU</Id>
+			</Component>
+			<Bond>
+				<Atom component="1">*</Atom>
+				<Atom component="2">*</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>undefined</Category>
+		<Keyword>Metal coordination</Keyword>
+	</Entry>
+	<Entry>
+		<Id>333</Id>
+		<Description>Metal coordination</Description>
+		<Condition>
+			<Component component="1">
+				<Id source="PDBCC">*</Id>
+			</Component>
+			<Component component="2">
+				<Id source="PDBCC">CU1</Id>
+			</Component>
+			<Bond>
+				<Atom component="1">*</Atom>
+				<Atom component="2">*</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>undefined</Category>
+		<Keyword>Metal coordination</Keyword>
+	</Entry>
+	<Entry>
+		<Id>334</Id>
+		<Description>Metal coordination</Description>
+		<Condition>
+			<Component component="1">
+				<Id source="PDBCC">*</Id>
+			</Component>
+			<Component component="2">
+				<Id source="PDBCC">CU3</Id>
+			</Component>
+			<Bond>
+				<Atom component="1">*</Atom>
+				<Atom component="2">*</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>undefined</Category>
+		<Keyword>Metal coordination</Keyword>
+	</Entry>
+	<Entry>
+		<Id>335</Id>
+		<Description>Metal coordination</Description>
+		<Condition>
+			<Component component="1">
+				<Id source="PDBCC">*</Id>
+			</Component>
+			<Component component="2">
+				<Id source="PDBCC">ER3</Id>
+			</Component>
+			<Bond>
+				<Atom component="1">*</Atom>
+				<Atom component="2">*</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>undefined</Category>
+		<Keyword>Metal coordination</Keyword>
+	</Entry>
+    <Entry>
+		<Id>336</Id>
+		<Description>Metal coordination</Description>
+		<Condition>
+			<Component component="1">
+				<Id source="PDBCC">*</Id>
+			</Component>
+			<Component component="2">
+				<Id source="PDBCC">EU</Id>
+			</Component>
+			<Bond>
+				<Atom component="1">*</Atom>
+				<Atom component="2">*</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>undefined</Category>
+		<Keyword>Metal coordination</Keyword>
+	</Entry>
+	<Entry>
+		<Id>337</Id>
+		<Description>Metal coordination</Description>
+		<Condition>
+			<Component component="1">
+				<Id source="PDBCC">*</Id>
+			</Component>
+			<Component component="2">
+				<Id source="PDBCC">EU3</Id>
+			</Component>
+			<Bond>
+				<Atom component="1">*</Atom>
+				<Atom component="2">*</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>undefined</Category>
+		<Keyword>Metal coordination</Keyword>
+	</Entry>
+	<Entry>
+		<Id>338</Id>
+		<Description>Metal coordination</Description>
+		<Condition>
+			<Component component="1">
+				<Id source="PDBCC">*</Id>
+			</Component>
+			<Component component="2">
+				<Id source="PDBCC">FE</Id>
+			</Component>
+			<Bond>
+				<Atom component="1">*</Atom>
+				<Atom component="2">*</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>undefined</Category>
+		<Keyword>Metal coordination</Keyword>
+	</Entry>
+	<Entry>
+		<Id>339</Id>
+		<Description>Metal coordination</Description>
+		<Condition>
+			<Component component="1">
+				<Id source="PDBCC">*</Id>
+			</Component>
+			<Component component="2">
+				<Id source="PDBCC">FE2</Id>
+			</Component>
+			<Bond>
+				<Atom component="1">*</Atom>
+				<Atom component="2">*</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>undefined</Category>
+		<Keyword>Metal coordination</Keyword>
+	</Entry>
+	<Entry>
+		<Id>340</Id>
+		<Description>Metal coordination</Description>
+		<Condition>
+			<Component component="1">
+				<Id source="PDBCC">*</Id>
+			</Component>
+			<Component component="2">
+				<Id source="PDBCC">FR</Id>
+			</Component>
+			<Bond>
+				<Atom component="1">*</Atom>
+				<Atom component="2">*</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>undefined</Category>
+		<Keyword>Metal coordination</Keyword>
+	</Entry>
+	<Entry>
+		<Id>341</Id>
+		<Description>Metal coordination</Description>
+		<Condition>
+			<Component component="1">
+				<Id source="PDBCC">*</Id>
+			</Component>
+			<Component component="2">
+				<Id source="PDBCC">GA</Id>
+			</Component>
+			<Bond>
+				<Atom component="1">*</Atom>
+				<Atom component="2">*</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>undefined</Category>
+		<Keyword>Metal coordination</Keyword>
+	</Entry>
+	<Entry>
+		<Id>342</Id>
+		<Description>Metal coordination</Description>
+		<Condition>
+			<Component component="1">
+				<Id source="PDBCC">*</Id>
+			</Component>
+			<Component component="2">
+				<Id source="PDBCC">GD</Id>
+			</Component>
+			<Bond>
+				<Atom component="1">*</Atom>
+				<Atom component="2">*</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>undefined</Category>
+		<Keyword>Metal coordination</Keyword>
+	</Entry>
+	<Entry>
+		<Id>343</Id>
+		<Description>Metal coordination</Description>
+		<Condition>
+			<Component component="1">
+				<Id source="PDBCC">*</Id>
+			</Component>
+			<Component component="2">
+				<Id source="PDBCC">GD3</Id>
+			</Component>
+			<Bond>
+				<Atom component="1">*</Atom>
+				<Atom component="2">*</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>undefined</Category>
+		<Keyword>Metal coordination</Keyword>
+	</Entry>
+	<Entry>
+		<Id>344</Id>
+		<Description>Metal coordination</Description>
+		<Condition>
+			<Component component="1">
+				<Id source="PDBCC">*</Id>
+			</Component>
+			<Component component="2">
+				<Id source="PDBCC">HG</Id>
+			</Component>
+			<Bond>
+				<Atom component="1">*</Atom>
+				<Atom component="2">*</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>undefined</Category>
+		<Keyword>Metal coordination</Keyword>
+	</Entry>
+	<Entry>
+		<Id>345</Id>
+		<Description>Metal coordination</Description>
+		<Condition>
+			<Component component="1">
+				<Id source="PDBCC">*</Id>
+			</Component>
+			<Component component="2">
+				<Id source="PDBCC">HO</Id>
+			</Component>
+			<Bond>
+				<Atom component="1">*</Atom>
+				<Atom component="2">*</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>undefined</Category>
+		<Keyword>Metal coordination</Keyword>
+	</Entry>
+	<Entry>
+		<Id>346</Id>
+		<Description>Metal coordination</Description>
+		<Condition>
+			<Component component="1">
+				<Id source="PDBCC">*</Id>
+			</Component>
+			<Component component="2">
+				<Id source="PDBCC">HO3</Id>
+			</Component>
+			<Bond>
+				<Atom component="1">*</Atom>
+				<Atom component="2">*</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>undefined</Category>
+		<Keyword>Metal coordination</Keyword>
+	</Entry>
+	<Entry>
+		<Id>347</Id>
+		<Description>Metal coordination</Description>
+		<Condition>
+			<Component component="1">
+				<Id source="PDBCC">*</Id>
+			</Component>
+			<Component component="2">
+				<Id source="PDBCC">IN</Id>
+			</Component>
+			<Bond>
+				<Atom component="1">*</Atom>
+				<Atom component="2">*</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>undefined</Category>
+		<Keyword>Metal coordination</Keyword>
+	</Entry>
+	<Entry>
+		<Id>348</Id>
+		<Description>Metal coordination</Description>
+		<Condition>
+			<Component component="1">
+				<Id source="PDBCC">*</Id>
+			</Component>
+			<Component component="2">
+				<Id source="PDBCC">IR</Id>
+			</Component>
+			<Bond>
+				<Atom component="1">*</Atom>
+				<Atom component="2">*</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>undefined</Category>
+		<Keyword>Metal coordination</Keyword>
+	</Entry>
+	<Entry>
+		<Id>349</Id>
+		<Description>Metal coordination</Description>
+		<Condition>
+			<Component component="1">
+				<Id source="PDBCC">*</Id>
+			</Component>
+			<Component component="2">
+				<Id source="PDBCC">IR3</Id>
+			</Component>
+			<Bond>
+				<Atom component="1">*</Atom>
+				<Atom component="2">*</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>undefined</Category>
+		<Keyword>Metal coordination</Keyword>
+	</Entry>
+	<Entry>
+		<Id>350</Id>
+		<Description>Metal coordination</Description>
+		<Condition>
+			<Component component="1">
+				<Id source="PDBCC">*</Id>
+			</Component>
+			<Component component="2">
+				<Id source="PDBCC">K</Id>
+			</Component>
+			<Bond>
+				<Atom component="1">*</Atom>
+				<Atom component="2">*</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>undefined</Category>
+		<Keyword>Metal coordination</Keyword>
+	</Entry>
+	<Entry>
+		<Id>351</Id>
+		<Description>Metal coordination</Description>
+		<Condition>
+			<Component component="1">
+				<Id source="PDBCC">*</Id>
+			</Component>
+			<Component component="2">
+				<Id source="PDBCC">LA</Id>
+			</Component>
+			<Bond>
+				<Atom component="1">*</Atom>
+				<Atom component="2">*</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>undefined</Category>
+		<Keyword>Metal coordination</Keyword>
+	</Entry>
+	<Entry>
+		<Id>352</Id>
+		<Description>Metal coordination</Description>
+		<Condition>
+			<Component component="1">
+				<Id source="PDBCC">*</Id>
+			</Component>
+			<Component component="2">
+				<Id source="PDBCC">LI</Id>
+			</Component>
+			<Bond>
+				<Atom component="1">*</Atom>
+				<Atom component="2">*</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>undefined</Category>
+		<Keyword>Metal coordination</Keyword>
+	</Entry>
+	<Entry>
+		<Id>353</Id>
+		<Description>Metal coordination</Description>
+		<Condition>
+			<Component component="1">
+				<Id source="PDBCC">*</Id>
+			</Component>
+			<Component component="2">
+				<Id source="PDBCC">LU</Id>
+			</Component>
+			<Bond>
+				<Atom component="1">*</Atom>
+				<Atom component="2">*</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>undefined</Category>
+		<Keyword>Metal coordination</Keyword>
+	</Entry>
+	<Entry>
+		<Id>354</Id>
+		<Description>Metal coordination</Description>
+		<Condition>
+			<Component component="1">
+				<Id source="PDBCC">*</Id>
+			</Component>
+			<Component component="2">
+				<Id source="PDBCC">MG</Id>
+			</Component>
+			<Bond>
+				<Atom component="1">*</Atom>
+				<Atom component="2">*</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>undefined</Category>
+		<Keyword>Metal coordination</Keyword>
+	</Entry>
+	<Entry>
+		<Id>355</Id>
+		<Description>Metal coordination</Description>
+		<Condition>
+			<Component component="1">
+				<Id source="PDBCC">*</Id>
+			</Component>
+			<Component component="2">
+				<Id source="PDBCC">MN</Id>
+			</Component>
+			<Bond>
+				<Atom component="1">*</Atom>
+				<Atom component="2">*</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>undefined</Category>
+		<Keyword>Metal coordination</Keyword>
+	</Entry>
+	<Entry>
+		<Id>356</Id>
+		<Description>Metal coordination</Description>
+		<Condition>
+			<Component component="1">
+				<Id source="PDBCC">*</Id>
+			</Component>
+			<Component component="2">
+				<Id source="PDBCC">MN3</Id>
+			</Component>
+			<Bond>
+				<Atom component="1">*</Atom>
+				<Atom component="2">*</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>undefined</Category>
+		<Keyword>Metal coordination</Keyword>
+	</Entry>
+	<Entry>
+		<Id>357</Id>
+		<Description>Metal coordination</Description>
+		<Condition>
+			<Component component="1">
+				<Id source="PDBCC">*</Id>
+			</Component>
+			<Component component="2">
+				<Id source="PDBCC">MO</Id>
+			</Component>
+			<Bond>
+				<Atom component="1">*</Atom>
+				<Atom component="2">*</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>undefined</Category>
+		<Keyword>Metal coordination</Keyword>
+	</Entry>
+	<Entry>
+		<Id>358</Id>
+		<Description>Metal coordination</Description>
+		<Condition>
+			<Component component="1">
+				<Id source="PDBCC">*</Id>
+			</Component>
+			<Component component="2">
+				<Id source="PDBCC">4MO</Id>
+			</Component>
+			<Bond>
+				<Atom component="1">*</Atom>
+				<Atom component="2">*</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>undefined</Category>
+		<Keyword>Metal coordination</Keyword>
+	</Entry>
+    <Entry>
+		<Id>359</Id>
+		<Description>Metal coordination</Description>
+		<Condition>
+			<Component component="1">
+				<Id source="PDBCC">*</Id>
+			</Component>
+			<Component component="2">
+				<Id source="PDBCC">6MO</Id>
+			</Component>
+			<Bond>
+				<Atom component="1">*</Atom>
+				<Atom component="2">*</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>undefined</Category>
+		<Keyword>Metal coordination</Keyword>
+	</Entry>
+	<Entry>
+		<Id>360</Id>
+		<Description>Metal coordination</Description>
+		<Condition>
+			<Component component="1">
+				<Id source="PDBCC">*</Id>
+			</Component>
+			<Component component="2">
+				<Id source="PDBCC">NA</Id>
+			</Component>
+			<Bond>
+				<Atom component="1">*</Atom>
+				<Atom component="2">*</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>undefined</Category>
+		<Keyword>Metal coordination</Keyword>
+	</Entry>
+	<Entry>
+		<Id>361</Id>
+		<Description>Metal coordination</Description>
+		<Condition>
+			<Component component="1">
+				<Id source="PDBCC">*</Id>
+			</Component>
+			<Component component="2">
+				<Id source="PDBCC">NI</Id>
+			</Component>
+			<Bond>
+				<Atom component="1">*</Atom>
+				<Atom component="2">*</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>undefined</Category>
+		<Keyword>Metal coordination</Keyword>
+	</Entry>
+	<Entry>
+		<Id>362</Id>
+		<Description>Metal coordination</Description>
+		<Condition>
+			<Component component="1">
+				<Id source="PDBCC">*</Id>
+			</Component>
+			<Component component="2">
+				<Id source="PDBCC">3NI</Id>
+			</Component>
+			<Bond>
+				<Atom component="1">*</Atom>
+				<Atom component="2">*</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>undefined</Category>
+		<Keyword>Metal coordination</Keyword>
+	</Entry>
+	<Entry>
+		<Id>363</Id>
+		<Description>Metal coordination</Description>
+		<Condition>
+			<Component component="1">
+				<Id source="PDBCC">*</Id>
+			</Component>
+			<Component component="2">
+				<Id source="PDBCC">OS</Id>
+			</Component>
+			<Bond>
+				<Atom component="1">*</Atom>
+				<Atom component="2">*</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>undefined</Category>
+		<Keyword>Metal coordination</Keyword>
+	</Entry>
+	<Entry>
+		<Id>364</Id>
+		<Description>Metal coordination</Description>
+		<Condition>
+			<Component component="1">
+				<Id source="PDBCC">*</Id>
+			</Component>
+			<Component component="2">
+				<Id source="PDBCC">OS4</Id>
+			</Component>
+			<Bond>
+				<Atom component="1">*</Atom>
+				<Atom component="2">*</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>undefined</Category>
+		<Keyword>Metal coordination</Keyword>
+	</Entry>
+	<Entry>
+		<Id>365</Id>
+		<Description>Metal coordination</Description>
+		<Condition>
+			<Component component="1">
+				<Id source="PDBCC">*</Id>
+			</Component>
+			<Component component="2">
+				<Id source="PDBCC">PB</Id>
+			</Component>
+			<Bond>
+				<Atom component="1">*</Atom>
+				<Atom component="2">*</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>undefined</Category>
+		<Keyword>Metal coordination</Keyword>
+	</Entry>
+	<Entry>
+		<Id>366</Id>
+		<Description>Metal coordination</Description>
+		<Condition>
+			<Component component="1">
+				<Id source="PDBCC">*</Id>
+			</Component>
+			<Component component="2">
+				<Id source="PDBCC">PD</Id>
+			</Component>
+			<Bond>
+				<Atom component="1">*</Atom>
+				<Atom component="2">*</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>undefined</Category>
+		<Keyword>Metal coordination</Keyword>
+	</Entry>
+	<Entry>
+		<Id>367</Id>
+		<Description>Metal coordination</Description>
+		<Condition>
+			<Component component="1">
+				<Id source="PDBCC">*</Id>
+			</Component>
+			<Component component="2">
+				<Id source="PDBCC">PR</Id>
+			</Component>
+			<Bond>
+				<Atom component="1">*</Atom>
+				<Atom component="2">*</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>undefined</Category>
+		<Keyword>Metal coordination</Keyword>
+	</Entry>
+	<Entry>
+		<Id>368</Id>
+		<Description>Metal coordination</Description>
+		<Condition>
+			<Component component="1">
+				<Id source="PDBCC">*</Id>
+			</Component>
+			<Component component="2">
+				<Id source="PDBCC">PT</Id>
+			</Component>
+			<Bond>
+				<Atom component="1">*</Atom>
+				<Atom component="2">*</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>undefined</Category>
+		<Keyword>Metal coordination</Keyword>
+	</Entry>
+	<Entry>
+		<Id>369</Id>
+		<Description>Metal coordination</Description>
+		<Condition>
+			<Component component="1">
+				<Id source="PDBCC">*</Id>
+			</Component>
+			<Component component="2">
+				<Id source="PDBCC">PT4</Id>
+			</Component>
+			<Bond>
+				<Atom component="1">*</Atom>
+				<Atom component="2">*</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>undefined</Category>
+		<Keyword>Metal coordination</Keyword>
+	</Entry>
+	<Entry>
+		<Id>370</Id>
+		<Description>Metal coordination</Description>
+		<Condition>
+			<Component component="1">
+				<Id source="PDBCC">*</Id>
+			</Component>
+			<Component component="2">
+				<Id source="PDBCC">RB</Id>
+			</Component>
+			<Bond>
+				<Atom component="1">*</Atom>
+				<Atom component="2">*</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>undefined</Category>
+		<Keyword>Metal coordination</Keyword>
+	</Entry>
+	<Entry>
+		<Id>371</Id>
+		<Description>Metal coordination</Description>
+		<Condition>
+			<Component component="1">
+				<Id source="PDBCC">*</Id>
+			</Component>
+			<Component component="2">
+				<Id source="PDBCC">RE</Id>
+			</Component>
+			<Bond>
+				<Atom component="1">*</Atom>
+				<Atom component="2">*</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>undefined</Category>
+		<Keyword>Metal coordination</Keyword>
+	</Entry>
+	    <Entry>
+		<Id>0252</Id>
+		<Description>Metal coordination</Description>
+		<Condition>
+			<Component component="1">
+				<Id source="PDBCC">*</Id>
+			</Component>
+			<Component component="2">
+				<Id source="PDBCC">RH</Id>
+			</Component>
+			<Bond>
+				<Atom component="1">*</Atom>
+				<Atom component="2">*</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>undefined</Category>
+		<Keyword>Metal coordination</Keyword>
+	</Entry>
+	<Entry>
+		<Id>372</Id>
+		<Description>Metal coordination</Description>
+		<Condition>
+			<Component component="1">
+				<Id source="PDBCC">*</Id>
+			</Component>
+			<Component component="2">
+				<Id source="PDBCC">RH3</Id>
+			</Component>
+			<Bond>
+				<Atom component="1">*</Atom>
+				<Atom component="2">*</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>undefined</Category>
+		<Keyword>Metal coordination</Keyword>
+	</Entry>
+	<Entry>
+		<Id>373</Id>
+		<Description>Metal coordination</Description>
+		<Condition>
+			<Component component="1">
+				<Id source="PDBCC">*</Id>
+			</Component>
+			<Component component="2">
+				<Id source="PDBCC">RU</Id>
+			</Component>
+			<Bond>
+				<Atom component="1">*</Atom>
+				<Atom component="2">*</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>undefined</Category>
+		<Keyword>Metal coordination</Keyword>
+	</Entry>
+	<Entry>
+		<Id>374</Id>
+		<Description>Metal coordination</Description>
+		<Condition>
+			<Component component="1">
+				<Id source="PDBCC">*</Id>
+			</Component>
+			<Component component="2">
+				<Id source="PDBCC">SM</Id>
+			</Component>
+			<Bond>
+				<Atom component="1">*</Atom>
+				<Atom component="2">*</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>undefined</Category>
+		<Keyword>Metal coordination</Keyword>
+	</Entry>
+	<Entry>
+		<Id>375</Id>
+		<Description>Metal coordination</Description>
+		<Condition>
+			<Component component="1">
+				<Id source="PDBCC">*</Id>
+			</Component>
+			<Component component="2">
+				<Id source="PDBCC">SR</Id>
+			</Component>
+			<Bond>
+				<Atom component="1">*</Atom>
+				<Atom component="2">*</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>undefined</Category>
+		<Keyword>Metal coordination</Keyword>
+	</Entry>
+	<Entry>
+		<Id>376</Id>
+		<Description>Metal coordination</Description>
+		<Condition>
+			<Component component="1">
+				<Id source="PDBCC">*</Id>
+			</Component>
+			<Component component="2">
+				<Id source="PDBCC">TB</Id>
+			</Component>
+			<Bond>
+				<Atom component="1">*</Atom>
+				<Atom component="2">*</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>undefined</Category>
+		<Keyword>Metal coordination</Keyword>
+	</Entry>
+	<Entry>
+		<Id>377</Id>
+		<Description>Metal coordination</Description>
+		<Condition>
+			<Component component="1">
+				<Id source="PDBCC">*</Id>
+			</Component>
+			<Component component="2">
+				<Id source="PDBCC">TL</Id>
+			</Component>
+			<Bond>
+				<Atom component="1">*</Atom>
+				<Atom component="2">*</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>undefined</Category>
+		<Keyword>Metal coordination</Keyword>
+	</Entry>
+	<Entry>
+		<Id>378</Id>
+		<Description>Metal coordination</Description>
+		<Condition>
+			<Component component="1">
+				<Id source="PDBCC">*</Id>
+			</Component>
+			<Component component="2">
+				<Id source="PDBCC">U1</Id>
+			</Component>
+			<Bond>
+				<Atom component="1">*</Atom>
+				<Atom component="2">*</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>undefined</Category>
+		<Keyword>Metal coordination</Keyword>
+	</Entry>
+    <Entry>
+		<Id>379</Id>
+		<Description>Metal coordination</Description>
+		<Condition>
+			<Component component="1">
+				<Id source="PDBCC">*</Id>
+			</Component>
+			<Component component="2">
+				<Id source="PDBCC">V</Id>
+			</Component>
+			<Bond>
+				<Atom component="1">*</Atom>
+				<Atom component="2">*</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>undefined</Category>
+		<Keyword>Metal coordination</Keyword>
+	</Entry>
+	<Entry>
+		<Id>380</Id>
+		<Description>Metal coordination</Description>
+		<Condition>
+			<Component component="1">
+				<Id source="PDBCC">*</Id>
+			</Component>
+			<Component component="2">
+				<Id source="PDBCC">W</Id>
+			</Component>
+			<Bond>
+				<Atom component="1">*</Atom>
+				<Atom component="2">*</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>undefined</Category>
+		<Keyword>Metal coordination</Keyword>
+	</Entry>
+	<Entry>
+		<Id>381</Id>
+		<Description>Metal coordination</Description>
+		<Condition>
+			<Component component="1">
+				<Id source="PDBCC">*</Id>
+			</Component>
+			<Component component="2">
+				<Id source="PDBCC">Y1</Id>
+			</Component>
+			<Bond>
+				<Atom component="1">*</Atom>
+				<Atom component="2">*</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>undefined</Category>
+		<Keyword>Metal coordination</Keyword>
+	</Entry>
+    <Entry>
+		<Id>382</Id>
+		<Description>Metal coordination</Description>
+		<Condition>
+			<Component component="1">
+				<Id source="PDBCC">*</Id>
+			</Component>
+			<Component component="2">
+				<Id source="PDBCC">YT3</Id>
+			</Component>
+			<Bond>
+				<Atom component="1">*</Atom>
+				<Atom component="2">*</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>undefined</Category>
+		<Keyword>Metal coordination</Keyword>
+	</Entry>
+	<Entry>
+		<Id>383</Id>
+		<Description>Metal coordination</Description>
+		<Condition>
+			<Component component="1">
+				<Id source="PDBCC">*</Id>
+			</Component>
+			<Component component="2">
+				<Id source="PDBCC">YB</Id>
+			</Component>
+			<Bond>
+				<Atom component="1">*</Atom>
+				<Atom component="2">*</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>undefined</Category>
+		<Keyword>Metal coordination</Keyword>
+	</Entry>
+	<Entry>
+		<Id>384</Id>
+		<Description>Metal coordination</Description>
+		<Condition>
+			<Component component="1">
+				<Id source="PDBCC">*</Id>
+			</Component>
+			<Component component="2">
+				<Id source="PDBCC">YB2</Id>
+			</Component>
+			<Bond>
+				<Atom component="1">*</Atom>
+				<Atom component="2">*</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>undefined</Category>
+		<Keyword>Metal coordination</Keyword>
+	</Entry>
+	<Entry>
+		<Id>385</Id>
+		<Description>Metal coordination</Description>
+		<Condition>
+			<Component component="1">
+				<Id source="PDBCC">*</Id>
+			</Component>
+			<Component component="2">
+				<Id source="PDBCC">ZN</Id>
+			</Component>
+			<Bond>
+				<Atom component="1">*</Atom>
+				<Atom component="2">*</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>undefined</Category>
+		<Keyword>Metal coordination</Keyword>
+	</Entry>
+	<Entry>
+		<Id>386</Id>
+		<Description>Metal coordination</Description>
+		<Condition>
+			<Component component="1">
+				<Id source="PDBCC">*</Id>
+			</Component>
+			<Component component="2">
+				<Id source="PDBCC">ZR</Id>
+			</Component>
+			<Bond>
+				<Atom component="1">*</Atom>
+				<Atom component="2">*</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>undefined</Category>
+		<Keyword>Metal coordination</Keyword>
+	</Entry>
 </ProteinModifications>
