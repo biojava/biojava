@@ -2657,32 +2657,28 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 	}
 
 
-	private void storeUnAlignedSeqRes(Structure structure,
-			List<Chain> seqResChains) {
-		List<Chain> atomList   = structure.getModel(0);
+	private void storeUnAlignedSeqRes(Structure structure, List<Chain> seqResChains) {
 		SeqRes2AtomAligner aligner = new SeqRes2AtomAligner();
-		for (Chain seqRes: seqResChains){
-
-
-			Chain atomRes;
-			try {
-				atomRes = aligner.getMatchingAtomRes(seqRes,atomList);
-				atomRes.setSeqResGroups(seqRes.getAtomGroups());
-			} catch (StructureException e) {
-				// this is used for matching of biological units
-				// where chains can be missing
-				// ignore if chain can't be found.
-				
-				//e.printStackTrace();
-				continue;
-			}
-
-
+		
+		for (int i = 0; i < structure.nrModels(); i++) {
+			List<Chain> atomList   = structure.getModel(i);
 			
+			for (Chain seqRes: seqResChains){
+				Chain atomRes;
+				try {
+					atomRes = aligner.getMatchingAtomRes(seqRes,atomList);
+					atomRes.setSeqResGroups(seqRes.getAtomGroups());
+				} catch (StructureException e) {
+					// this is used for matching of biological units
+					// where chains can be missing
+					// ignore if chain can't be found.
+
+					// e.printStackTrace();
+					continue;
+				}
+			}
 		}
 	}
-
-
 
 	private void setSecStruc(){
 
