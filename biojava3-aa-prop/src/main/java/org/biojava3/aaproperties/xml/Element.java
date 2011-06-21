@@ -1,9 +1,8 @@
 package org.biojava3.aaproperties.xml;
 
+import java.util.HashMap;
 import java.util.List;
-
-import org.biojava3.aaproperties.Utils;
-
+import java.util.Map;
 
 /**
  * One way to model the elements
@@ -25,9 +24,18 @@ public class Element {
 	 */
 	int atomicNumber; 
 	/**
+	 * The computed mass based on isotopes and their abundances
+	 */
+	double mass;
+	/**
 	 * List of common isotopes of the element
 	 */
-	List<Isotope> isotope; 
+	List<Isotope> isotope;
+	
+	/**
+	 * To enable quick retrieval of Isotope from its name
+	 */
+	Map<String, Isotope> name2Isotope;
 	
 	public Element(){}
 	
@@ -38,20 +46,25 @@ public class Element {
 		this.setIsotopes(isotopes);
 	}
 	
+	public String toString(){
+		return symbol + ", " + name + ", " + atomicNumber;
+	}
+	
+	public void setMass(double mass){
+		this.mass = mass;
+	}
+	
 	/**
 	 * Returns the standard atomic weight. It is computed by the relative abundance of the isotope multiply by its atomic weight
 	 * @return the standard atomic weight 
 	 */
 	public double getMass() { 
-		return getMass(-1);
-	}
-	
-	public double getMass(int decimalPlace){
 		double total = 0.0;
 		for(Isotope i:isotope){
-			total += i.getWeight() * i.getAbundance();
+			total += (i.getWeight() * i.getAbundance());
 		}
-		return Utils.roundToDecimals(total, decimalPlace);
+		this.mass = total;
+		return mass;
 	}
 	
 	public String getName() {
@@ -91,5 +104,11 @@ public class Element {
 
 	public void setIsotopes(List<Isotope> isotopes) {
 		this.isotope = isotopes;
+		this.name2Isotope = new HashMap<String, Isotope>();
+		if(isotopes != null){
+			for(Isotope i:isotopes){
+				name2Isotope.put(i.getName(), i);
+			}
+		}
 	}
 }

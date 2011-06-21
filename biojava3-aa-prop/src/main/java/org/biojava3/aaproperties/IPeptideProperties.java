@@ -22,21 +22,34 @@
  */
 package org.biojava3.aaproperties;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.Map;
 
+import javax.xml.bind.JAXBException;
+
+import org.biojava3.aaproperties.xml.AminoAcidCompositionTable;
 import org.biojava3.core.sequence.ProteinSequence;
 import org.biojava3.core.sequence.compound.AminoAcidCompound;
 
 /**
  * TODO
- * 1) Extract some data from website 
- * 		implement the Element class data structure to represent the periodic table 
- * 		then marshal it into xml
- * 2) PROFEAT Properties
- * 		Solvent accessibilty
- * 		Secondary structure 
- * 		Positive Netural or Negative
- * 		Hydrophobicities
+ * 2) PROFEAT Properties - Write Test Cases for them. - Wait first because it might be deleted in future.
+ * 4) Write tutorials for BioJava.
+ * 
+ * DONE
+ * Removed Utils.roundToDecimals from PeptidePropertiesImpl.java
+ * Loaded the data from the website into java.
+ * Tested the data - Note that some discrepencies exist.
+ * Generated XML files for Element Mass and Amino Acid Composition.
+ * Able to read in XML files for Element Mass and Amino Acid Composition into Java via JAXB.
+ * Modified the methods of the molecular mass method properties to run with xml files.
+ * Wrote some test cases for the newly created methods of computing molecular weight of sequence given XML files.
+ * 
+ * PROBLEM
+ * Discrepencies in the computed mass values and stated mass values. Two were even simply given [98] and [145] => ElementTester
+ * Ask for help in generating the schema => ElementTester
+ * How to properly test the MW XML methods since there are no comparable website and stuff
  * 
  * An interface to generate some basic physico-chemical properties of protein sequences.<br/>
  * The following properties could be generated:
@@ -55,19 +68,79 @@ import org.biojava3.core.sequence.compound.AminoAcidCompound;
  * @version 2011.05.09
  * @see PeptideProperties
  */
-public interface IPeptideProperties {
-
+public interface IPeptideProperties{
 	/**
 	 * Returns the molecular weight of sequence. The sequence argument must be a protein sequence consisting of only non-ambiguous characters.
 	 * This method will sum the molecular weight of each amino acid in the
 	 * sequence. Molecular weights are based on <a href="http://au.expasy.org/tools/findmod/findmod_masses.html#AA">here</a>.
 	 * 
 	 * @param sequence
-	 *            a protein sequence consisting of non-ambiguous characters only
+	 * 	a protein sequence consisting of non-ambiguous characters only
 	 * @return the total molecular weight of sequence + weight of water molecule
 	 * @see ProteinSequence
 	 */
 	public double getMolecularWeight(ProteinSequence sequence);
+	
+	/**
+	 * Returns the molecular weight of sequence. The sequence argument must be a protein sequence consisting of only non-ambiguous characters.
+	 * This method will sum the molecular weight of each amino acid in the
+	 * sequence. Molecular weights are based on the input files. These input files must be XML using the defined schema. 
+	 * 
+	 * @param sequence
+	 * 	a protein sequence consisting of non-ambiguous characters only
+	 * @param elementMassFile
+	 * 	xml file that details the mass of each elements and isotopes
+	 * @param aminoAcidCompositionFile
+	 * 	xml file that details the composition of amino acids
+	 * @return the total molecular weight of sequence + weight of water molecule
+	 * @throws JAXBException
+	 * 	thrown if unable to properly parse either elementMassFile or aminoAcidCompositionFile
+	 * @throws FileNotFoundException
+	 * 	thrown if either elementMassFile or aminoAcidCompositionFile are not found
+	 */
+	public double getMolecularWeight(ProteinSequence sequence, File elementMassFile, File aminoAcidCompositionFile) throws JAXBException, FileNotFoundException;
+	
+	/**
+	 * Note: This method MUST be used in tandem with IPeptideProperties.setMolecularWeightXML(File, File). That is IPeptideProperties.setMolecularWeightXML(File, File)
+	 * should be called before calling this method.
+	 * Rationale behind this is so that the elementMassFile and aminoAcidCompositionFile need not be parse repeatedly
+	 * if computation of molecular weight of more than one sequence is required.
+	 * As would be the case (repeated parsing) if IPeptideProperties.getMolecularWeight(ProteinSequence, File, File) is called instead.
+	 * <p/>
+	 * Returns the molecular weight of sequence. The sequence argument must be a protein sequence consisting of only non-ambiguous characters.
+	 * This method will sum the molecular weight of each amino acid in the
+	 * sequence. Molecular weights are based on the input files supplied to IPeptideProperties.setMolecularWeightXML(File, File). 
+	 * Those input files must be XML using the defined schema.
+	 * 
+	 * @param sequence
+	 * 	a protein sequence consisting of non-ambiguous characters only
+	 * @return the total molecular weight of sequence + weight of water molecule
+	 * @throws Exception
+	 * 	thrown if the method IPeptideProperties.setMolecularWeightXML(File, File) is not successfully called before calling this method.
+	 */
+	public double getMolecularWeightBasedOnXML(ProteinSequence sequence) throws Exception;
+	
+	/**
+	 * Note: This method MUST be used in tandem with IPeptideProperties.getMolecularWeightBasedOnXML(ProteinSequence). 
+	 * That is this method should be called before calling IPeptideProperties.getMolecularWeightBasedOnXML(ProteinSequence).
+	 * Rationale behind this is so that the elementMassFile and aminoAcidCompositionFile need not be parse repeatedly
+	 * if computation of molecular weight of more than one sequence is required.
+	 * As would be the case (repeated parsing) if IPeptideProperties.getMolecularWeight(ProteinSequence, File, File) is called instead.
+	 * <p/>
+	 * This method would initialize the molecular weight table based on the input xml files and stores the table for usage in future calls to 
+	 * IPeptideProperties.getMolecularWeightBasedOnXML(ProteinSequence).
+	 * 
+	 * @param elementMassFile
+	 * 	xml file that details the mass of each elements and isotopes
+	 * @param aminoAcidCompositionFile
+	 * 	xml file that details the composition of amino acids
+	 * @return the initialized molecular weight table
+	 * @throws JAXBException
+	 * 	thrown if unable to properly parse either elementMassFile or aminoAcidCompositionFile
+	 * @throws FileNotFoundException
+	 * 	thrown if either elementMassFile or aminoAcidCompositionFile are not found
+	 */
+	public AminoAcidCompositionTable setMolecularWeightXML(File elementMassFile, File aminoAcidCompositionFile) throws JAXBException, FileNotFoundException;
 
 	/**
 	 * Returns the extinction coefficient of sequence. The sequence argument

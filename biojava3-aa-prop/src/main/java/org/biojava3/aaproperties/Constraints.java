@@ -56,7 +56,6 @@ public class Constraints {
 		initInstability();
 		initExtinctionCoefficient();
 	}
-	
 
 	/** 
 	 * Does the initialization of molecular weights based on http://au.expasy.org/tools/findmod/findmod_masses.html#AA

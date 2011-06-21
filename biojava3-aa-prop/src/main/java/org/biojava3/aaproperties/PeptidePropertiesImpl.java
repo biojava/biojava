@@ -1,14 +1,24 @@
 package org.biojava3.aaproperties;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Unmarshaller;
+
+import org.biojava3.aaproperties.xml.AminoAcidCompositionTable;
+import org.biojava3.aaproperties.xml.ElementTable;
 import org.biojava3.core.sequence.ProteinSequence;
 import org.biojava3.core.sequence.compound.AminoAcidCompound;
 import org.biojava3.core.sequence.compound.AminoAcidCompoundSet;
 
 public class PeptidePropertiesImpl implements IPeptideProperties{
-
+	private AminoAcidCompositionTable aminoAcidCompositionTable = null;
+	
 	@Override
 	public double getMolecularWeight(ProteinSequence sequence) {
 		final double hydrogenMW = 1.0079;
@@ -26,6 +36,84 @@ public class PeptidePropertiesImpl implements IPeptideProperties{
 			value += hydrogenMW + hydroxideMW;
 		}
 		return value;
+	}
+	
+	@Override
+	public double getMolecularWeight(ProteinSequence sequence, File elementMassFile, File aminoAcidCompositionFile) throws JAXBException, FileNotFoundException {
+		//Parse elementMassFile
+		ElementTable iTable = new ElementTable();
+		// Get a JAXB Context for the object we created above
+		JAXBContext jc = JAXBContext.newInstance(iTable.getClass());
+		Unmarshaller u = jc.createUnmarshaller();
+		iTable = (ElementTable)u.unmarshal(new FileInputStream(elementMassFile));
+		iTable.populateMaps();
+		
+		//Parse aminoAcidCompositionFile
+		AminoAcidCompositionTable aTable = new AminoAcidCompositionTable();
+		// Get a JAXB Context for the object we created above
+		JAXBContext jc2 = JAXBContext.newInstance(aTable.getClass());
+		Unmarshaller u2 = jc2.createUnmarshaller();
+		aTable = (AminoAcidCompositionTable)u2.unmarshal(new FileInputStream(aminoAcidCompositionFile));
+		aTable.computeMolecularWeight(iTable);
+
+		double value = 0.0;
+		for(char aa:sequence.toString().toCharArray()){
+			Double weight = aTable.getMolecularWeight(aa + "");
+			if(weight != null){
+				value += weight;
+			}
+		}
+		//H	1.0079	OH	17.0073
+		final double hydrogenMW = 1.0079;
+		final double hydroxideMW = 17.0073;
+		if(value > 0){
+			value += hydrogenMW + hydroxideMW;
+		}
+		return value;
+	}
+	
+	@Override
+	public double getMolecularWeightBasedOnXML(ProteinSequence sequence) throws Exception{
+		if(this.aminoAcidCompositionTable == null){
+			throw new Exception("PeptidePropertiesImpl.setMolecularWeightXML(File, File) must be called and " +
+					"successfully complete before this method can be utilized.");
+		}
+		
+		double value = 0.0;
+		for(char aa:sequence.toString().toCharArray()){
+			Double weight = this.aminoAcidCompositionTable.getMolecularWeight(aa + "");
+			if(weight != null){
+				value += weight;
+			}
+		}
+		//H	1.0079	OH	17.0073
+		final double hydrogenMW = 1.0079;
+		final double hydroxideMW = 17.0073;
+		if(value > 0){
+			value += hydrogenMW + hydroxideMW;
+		}
+		return value;
+	}
+
+	@Override
+	public AminoAcidCompositionTable setMolecularWeightXML(File elementMassFile, File aminoAcidCompositionFile) throws JAXBException, FileNotFoundException{
+		//Parse elementMassFile
+		ElementTable iTable = new ElementTable();
+		// Get a JAXB Context for the object we created above
+		JAXBContext jc = JAXBContext.newInstance(iTable.getClass());
+		Unmarshaller u = jc.createUnmarshaller();
+		iTable = (ElementTable)u.unmarshal(new FileInputStream(elementMassFile));
+		iTable.populateMaps();
+		
+		//Parse aminoAcidCompositionFile
+		AminoAcidCompositionTable aTable = new AminoAcidCompositionTable();
+		// Get a JAXB Context for the object we created above
+		JAXBContext jc2 = JAXBContext.newInstance(aTable.getClass());
+		Unmarshaller u2 = jc2.createUnmarshaller();
+		aTable = (AminoAcidCompositionTable)u2.unmarshal(new FileInputStream(aminoAcidCompositionFile));
+		aTable.computeMolecularWeight(iTable);
+		this.aminoAcidCompositionTable = aTable;
+		return this.aminoAcidCompositionTable;
 	}
 
 	@Override
@@ -257,9 +345,9 @@ public class PeptidePropertiesImpl implements IPeptideProperties{
 		}
 		return aa2Composition;
 	}
-
+	
 	/*
-	 * Test Method
+	 * Quick Test Method
 	 */
 	public static void main(String[] args){
 		ProteinSequence sequence = new ProteinSequence("AAACCAAAWWTT");
