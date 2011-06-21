@@ -144,15 +144,31 @@ public class Calc {
         return c ;
     }
     
-    /** substract two atoms ( a - b).
+    /** subtract two atoms ( a - b).
      *
      * @param a  an Atom object
      * @param b  an Atom object
      * @return an Atom object
      * @throws StructureException ...
-     
+     * @deprecated
      */
+    
     public static final Atom substract(Atom a, Atom b) 
+    throws StructureException
+    {
+       return subtract(a,b);
+       
+    }
+    
+    /** subtract two atoms ( a - b).
+    *
+    * @param a  an Atom object
+    * @param b  an Atom object
+    * @return an Atom object
+    * @throws StructureException ...
+    
+    */
+    public static final Atom subtract(Atom a, Atom b) 
     throws StructureException
     {
         nullCheck(a) ;
@@ -167,8 +183,8 @@ public class Calc {
         Atom c = new AtomImpl();
         c.setCoords(coords);
         return c ;
+       
     }
-    
     
     /** Vector product .
      *
