@@ -1082,12 +1082,16 @@ public class AFPChain implements Serializable, Cloneable
 		this.totalLenOpt = totalLenOpt;
 	}
 
+	/** this is the init-RMSD, not the final RMSD after refinement.
+	 * 
+	 * @return totalRmsdIni
+	 */
 	public double getTotalRmsdIni()
 	{
 		return totalRmsdIni;
 	}
 
-	/** this is the ini-RMSD
+	/** this is the init-RMSD, not the final RMSD after refinement.
 	 * 
 	 * @param totalRmsdIni
 	 */
@@ -1097,11 +1101,19 @@ public class AFPChain implements Serializable, Cloneable
 	}
 
 
+	/** The RMSD of the final alignment. Use this to print overal alignment RMSD.
+	 * 
+	 * @return total RMSD of the optimal alignment.
+	 */
 	public double getTotalRmsdOpt()
 	{
 		return totalRmsdOpt;
 	}
 
+	/** The RMSD of the final alignment. Use this to print overal alignment RMSD.
+	 * 
+	 * @param totalRmsdOpt : total RMSD of the optimal alignment
+	 */
 	public void setTotalRmsdOpt(double totalRmsdOpt)
 	{
 		this.totalRmsdOpt = totalRmsdOpt;
