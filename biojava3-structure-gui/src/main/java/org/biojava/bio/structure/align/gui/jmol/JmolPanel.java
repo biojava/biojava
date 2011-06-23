@@ -48,6 +48,7 @@ import org.biojava.bio.structure.domain.ProteinDomainParser;
 import org.biojava.bio.structure.domain.pdp.Domain;
 import org.biojava.bio.structure.domain.pdp.Segment;
 import org.biojava.bio.structure.gui.util.color.ColorUtils;
+import org.biojava.bio.structure.scop.ScopDatabase;
 import org.biojava.bio.structure.scop.ScopDomain;
 import org.biojava.bio.structure.scop.ScopInstallation;
 import org.jmol.adapter.smarter.SmarterJmolAdapter;
@@ -250,7 +251,7 @@ implements ActionListener
 		if ( pdbId == null)
 			return;
 		String pdbLocation = System.getProperty(AbstractUserArgumentProcessor.PDB_DIR);
-		ScopInstallation scop = new ScopInstallation(pdbLocation);
+		ScopDatabase scop = new ScopInstallation(pdbLocation);
 
 		List<ScopDomain> domains = scop.getDomainsForPDB(pdbId);
 		if ( domains == null) {
