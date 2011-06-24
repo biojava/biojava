@@ -97,8 +97,10 @@ public class ProteinModificationRegistry {
 	 * just opens the stream to ptm_list.xml and delegates to lazyInit(InputStream) for parsing. 
 	 */
 	private static synchronized void lazyInit() {
-		InputStream isXml = ProteinModification.class.getResourceAsStream(DIR_XML_PTM_LIST);
-		lazyInit(isXml);
+		if (registry==null) {	
+			InputStream isXml = ProteinModification.class.getResourceAsStream(DIR_XML_PTM_LIST);
+			lazyInit(isXml);
+		}
 	}
 	
 	
