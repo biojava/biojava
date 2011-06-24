@@ -42,6 +42,7 @@ import org.biojava.bio.structure.align.gui.aligpanel.StatusDisplay;
 import org.biojava.bio.structure.align.gui.jmol.JmolTools;
 import org.biojava.bio.structure.align.gui.jmol.StructureAlignmentJmol;
 import org.biojava.bio.structure.align.model.AFPChain;
+import org.biojava.bio.structure.align.util.AFPAlignmentDisplay;
 
 /** A utility class for visualistion of structure alignments
  * 
@@ -132,49 +133,17 @@ public class DisplayAFP
 		return lst;
 	}
 
+	/** get the block number for an aligned position
+	 * 
+	 * @param afpChain
+	 * @param aligPos
+	 * @return
+	 * @deprecated use AFPAlignmentDisplay.getBlockNrForAlignPos instead...
+	 */
 	public static int getBlockNrForAlignPos(AFPChain afpChain, int aligPos){
-		int ungappedPos = -1;
-		int blockNum = afpChain.getBlockNum();
-
-		int[] optLen = afpChain.getOptLen();
-		int[][][] optAln = afpChain.getOptAln();
-
-		int len = 0;
-		int p1b=0;
-		int p2b=0;
-
-		for(int i = 0; i < blockNum; i ++)  {   
-
-			for(int j = 0; j < optLen[i]; j ++) {
-
-				int p1 = optAln[i][0][j];
-				int p2 = optAln[i][1][j];
-
-				//                 System.out.println(p1 + " " + p2 + " " +  footer2.toString());
-
-				if ( len == 0){
-					//
-				} else {
-					// check for gapped region
-					int lmax = (p1 - p1b - 1)>(p2 - p2b - 1)?(p1 - p1b - 1):(p2 - p2b - 1);
-					for(int k = 0; k < lmax; k ++)      {
-						len++;
-					}
-				}
-
-				len++;
-				ungappedPos++;
-				p1b = p1;
-				p2b = p2;
-				if ( len >= aligPos) {
-
-					return i;
-				}
-			}
-		}
-
-		return blockNum;
-
+		
+		return AFPAlignmentDisplay.getBlockNrForAlignPos(afpChain, aligPos);
+		
 	}
 
 
