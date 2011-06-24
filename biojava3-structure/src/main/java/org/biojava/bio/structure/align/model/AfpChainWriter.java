@@ -232,10 +232,20 @@ public class AfpChainWriter
 		int     bp = alnbeg2;
 		int     k, len;
 
+		System.out.println(alnseq1.length + " " + alnseq1.toString());
+		
 		while((alnLength - t) > 0)      {
 			if(alnLength - t > linelen)     len = linelen;
 			else    len = alnLength - t;
 
+			if ( ap >= ca1.length)
+				break;
+			if ( bp >= ca2.length)
+				break;
+
+			String pdb1 = ca1[ap].getGroup().getResidueNumber().toString();
+			String pdb2 = ca2[bp].getGroup().getResidueNumber().toString();
+			
 
 			//System.err.println("t,len:"+t+":"+len);
 			String lseq1 = new String(alnseq1).substring(t,t+len); 
@@ -259,12 +269,25 @@ public class AfpChainWriter
 					char c1 = lseq1.charAt(pos);
 					char c2 = lseq2.charAt(pos);
 					char cl = lsymb.charAt(pos);
-
+					int block = -1 ;
+					if ( cl != ' ') {
+						try { 
+							block = Integer.parseInt(cl+"");
+						} catch (Exception e){
+							//
+						}
+					}
 					if ( cl != ' ' ){
-
-						a += "<span class=\"m\">" + c1 + "</span>";
-						b += "<span class=\"m\">" + c2 + "</span>";
-						c += "<span class=\"m\">" + cl + "</span>";
+						
+						if ( block > -1 ) {
+							a += "<span class=\"alignmentBlock1"+block+"\">" + c1 + "</span>";
+							b += "<span class=\"alignmentBlock2"+block+"\">" + c2 + "</span>";
+							c += "<span class=\"m\">" + cl + "</span>";
+						} else {
+							a += "<span class=\"m\">" + c1 + "</span>";
+							b += "<span class=\"m\">" + c2 + "</span>";
+							c += "<span class=\"m\">" + cl + "</span>";
+						}
 
 					} else if ( c1 != '-' && c2 != '-') {
 
@@ -313,13 +336,7 @@ public class AfpChainWriter
 
 			}
 
-			if ( ap >= ca1.length)
-				break;
-			if ( bp >= ca2.length)
-				break;
-
-			String pdb1 = ca1[ap].getGroup().getResidueNumber().toString();
-			String pdb2 = ca2[bp].getGroup().getResidueNumber().toString();
+			
 
 			txt.append(newline);
 			txt.append(String.format("Chain 1:%5s %s"+newline +"%14s%s"+newline+"Chain 2:%5s %s",
