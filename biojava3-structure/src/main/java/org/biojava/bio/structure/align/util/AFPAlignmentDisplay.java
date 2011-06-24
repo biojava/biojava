@@ -211,12 +211,12 @@ public class AFPAlignmentDisplay
 					for(k = 0; k < lmax; k ++)      {
 						if(k >= (p1 - p1b - 1)) alnseq1[len] = '-';
 						else {
-							char oneletter = getOneLetter(ca1[p1b+1+k].getParent());
+							char oneletter = getOneLetter(ca1[p1b+1+k].getGroup());
 							alnseq1[len] = oneletter;
 						}
 						if(k >= (p2 - p2b - 1)) alnseq2[len] = '-';
 						else  {
-							char oneletter = getOneLetter(ca2[p2b+1+k].getParent());
+							char oneletter = getOneLetter(ca2[p2b+1+k].getGroup());
 							alnseq2[len] = oneletter;
 						}
 						alnsymb[len ++] = ' ';
@@ -226,8 +226,15 @@ public class AFPAlignmentDisplay
 					alnbeg1 = p1; //the first position of sequence in alignment
 					alnbeg2 = p2;
 				}
-				alnseq1[len] = getOneLetter(ca1[p1].getParent());              
-				alnseq2[len] = getOneLetter(ca2[p2].getParent());
+				
+				if ( p1 < ca1.length && p2<ca2.length) {
+				
+					alnseq1[len] = getOneLetter(ca1[p1].getGroup());              
+					alnseq2[len] = getOneLetter(ca2[p2].getGroup());
+				} else {
+					alnseq1[len]='?';
+					alnseq2[len]='?';
+				}
 				if ( showSeq) {
 					if ( alnseq1[len] == alnseq2[len]){
 						alnsymb[len ++] = '|';
@@ -366,10 +373,10 @@ public class AFPAlignmentDisplay
 
 		List<Group> hetatms  = new ArrayList<Group>();
 		List<Group> nucs1    = new ArrayList<Group>();
-		Group g1 = ca1[0].getParent();
+		Group g1 = ca1[0].getGroup();
 		Chain c1 = null;
 		if ( g1 != null) {
-			c1 = g1.getParent();
+			c1 = g1.getChain();
 			if ( c1 != null){
 				hetatms = c1.getAtomGroups("hetatm");;
 				nucs1  = c1.getAtomGroups("nucleotide");
@@ -377,10 +384,10 @@ public class AFPAlignmentDisplay
 		}
 		List<Group> hetatms2 = new ArrayList<Group>();
 		List<Group> nucs2    = new ArrayList<Group>();
-		Group g2 = ca2[0].getParent();
+		Group g2 = ca2[0].getGroup();
 		Chain c2 = null;
 		if ( g2 != null){
-			c2 = g2.getParent();
+			c2 = g2.getChain();
 			if ( c2 != null){
 				hetatms2 = c2.getAtomGroups("hetatm");
 				nucs2 = c2.getAtomGroups("nucleotide");
@@ -391,6 +398,59 @@ public class AFPAlignmentDisplay
 
 		Structure artificial = GuiWrapper.getAlignedStructure(arr1,arr2);
 		return artificial;
+	}
+	
+	/** get the block number for an aligned position
+	 * 
+	 * @param afpChain
+	 * @param aligPos
+	 * @return
+	 */
+	public static int getBlockNrForAlignPos(AFPChain afpChain, int aligPos){
+		// moved here from DisplayAFP;
+		
+		int ungappedPos = -1;
+		int blockNum = afpChain.getBlockNum();
+
+		int[] optLen = afpChain.getOptLen();
+		int[][][] optAln = afpChain.getOptAln();
+
+		int len = 0;
+		int p1b=0;
+		int p2b=0;
+
+		for(int i = 0; i < blockNum; i ++)  {   
+
+			for(int j = 0; j < optLen[i]; j ++) {
+
+				int p1 = optAln[i][0][j];
+				int p2 = optAln[i][1][j];
+
+				//                 System.out.println(p1 + " " + p2 + " " +  footer2.toString());
+
+				if ( len == 0){
+					//
+				} else {
+					// check for gapped region
+					int lmax = (p1 - p1b - 1)>(p2 - p2b - 1)?(p1 - p1b - 1):(p2 - p2b - 1);
+					for(int k = 0; k < lmax; k ++)      {
+						len++;
+					}
+				}
+
+				len++;
+				ungappedPos++;
+				p1b = p1;
+				p2b = p2;
+				if ( len >= aligPos) {
+
+					return i;
+				}
+			}
+		}
+
+		return blockNum;
+
 	}
 
 
