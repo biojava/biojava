@@ -285,8 +285,8 @@ public class AfpChainWriter
 							b += "<span class=\"alignmentBlock2"+block+"\">" + c2 + "</span>";
 							c += "<span class=\"m\">" + cl + "</span>";
 						} else {
-							a += "<span class=\"m\">" + c1 + "</span>";
-							b += "<span class=\"m\">" + c2 + "</span>";
+							a += getPrefix(c1, c2, 0, block, false).toString() + c1 + "</span>";
+							b += getPrefix(c1, c2, 1, block, false).toString() + c2 + "</span>";
 							c += "<span class=\"m\">" + cl + "</span>";
 						}
 
@@ -863,7 +863,7 @@ public class AfpChainWriter
 		}
 		
 		int blockPos = -1;
-		if ( afpChain.getBlockNum() > 1) {
+		if ( afpChain.getBlockNum() > 0) {
 			blockPos = AFPAlignmentDisplay.getBlockNrForAlignPos(afpChain, aligPos);
 		}	
 		
