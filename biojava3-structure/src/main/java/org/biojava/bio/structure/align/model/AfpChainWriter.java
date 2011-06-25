@@ -771,7 +771,7 @@ public class AfpChainWriter
 		// an aligned position
 		
 		if ( showAlignmentBlock && blockNr > -1){
-			return "<span class=\"alignmentBlock1"+(i+1)+"\">";
+			return "<span class=\"alignmentBlock"+(i+1)+(blockNr+1)+"\">";
 		}
 		
 		// we return the "default" sequence alignment view...
