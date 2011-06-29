@@ -311,6 +311,8 @@ public class ScopInstallation implements ScopDatabase {
         }
         String pdbId = scopId.substring(1,5);
         List<ScopDomain> doms = getDomainsForPDB(pdbId);
+        if ( doms == null)
+        	return null;
         for ( ScopDomain d : doms){
             if ( d.getScopId().equalsIgnoreCase(scopId)) 
                 return d;
