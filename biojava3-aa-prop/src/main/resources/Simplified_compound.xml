@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+  <aminoacid symbol="A" shortName="Ala" name="Alanine">
+        <elements>
+            <element symbol="O" /><!-- make count defaults to 1 if not provided -->
+            <element symbol="C" count="3"/>
+            <element symbol="H" count="5"/>
+            <element symbol="N"/>
+        </elements>
+        <isotopes/>
+   </aminoacid>
+    
