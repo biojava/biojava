@@ -20,12 +20,18 @@ import org.junit.Test;
 public class AminoAcidTester {
 	
 	@Test
+	public void generateSchema() throws JAXBException, IOException{
+		JAXBContext context = JAXBContext.newInstance(AminoAcidCompositionTable.class);
+		context.generateSchema(new SchemaGenerator("./src/main/resources/AminoAcidComposition.xsd"));
+	}
+	
+	@Test
 	public void readXml() throws JAXBException, IOException{
 		ElementTable iTable = new ElementTable();
 		// Get a JAXB Context for the object we created above
 		JAXBContext jc = JAXBContext.newInstance(iTable.getClass());
 		Unmarshaller u = jc.createUnmarshaller();
-		iTable = (ElementTable)u.unmarshal(new FileInputStream("./doc/ElementMass.xml" ) );
+		iTable = (ElementTable)u.unmarshal(new FileInputStream("./src/main/resources/ElementMass.xml" ) );
 		iTable.populateMaps();
 		
 		AminoAcidCompositionTable aTable = new AminoAcidCompositionTable();
@@ -33,7 +39,7 @@ public class AminoAcidTester {
 		JAXBContext jc2 = JAXBContext.newInstance(aTable.getClass());
 		Unmarshaller u2 = jc2.createUnmarshaller();
 		
-		aTable = (AminoAcidCompositionTable)u2.unmarshal(new FileInputStream("./doc/MolecularWeight.xml" ) );
+		aTable = (AminoAcidCompositionTable)u2.unmarshal(new FileInputStream("./src/main/resources/AminoAcidComposition.xml" ) );
 		aTable.computeMolecularWeight(iTable);
 		for(AminoAcidComposition a:aTable.getAminoacid()){
 			System.out.println(a + ", " + aTable.getMolecularWeight(a.getSymbol()));
@@ -237,7 +243,7 @@ public class AminoAcidTester {
 		// marshall the object to XML
 		marshaller.marshal(aTable, sw);
 		// print it out for this example
-		BufferedWriter output = new BufferedWriter(new FileWriter("./doc/MolecularWeight.xml"));
+		BufferedWriter output = new BufferedWriter(new FileWriter("./src/main/resources/AminoAcidComposition.xml"));
 		output.write(sw.toString());
 		output.close();
 	}

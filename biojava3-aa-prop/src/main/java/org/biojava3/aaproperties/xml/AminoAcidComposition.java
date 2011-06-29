@@ -2,10 +2,27 @@ package org.biojava3.aaproperties.xml;
 
 import java.util.Map;
 
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlType;
+import javax.xml.bind.annotation.XmlAccessType;
+
+@XmlRootElement(name = "ComplexService", namespace ="http://biojava.org")
+@XmlAccessorType(XmlAccessType.FIELD)
+@XmlType(name = "AminoAcidComposition", propOrder = {
+    "symbol",
+    "shortName",
+    "name",
+    "elementName2Count",
+    "isotopeName2Count"}
+)
 public class AminoAcidComposition {
 	/**
 	 * Amino acid symbol - single character
 	 */
+	
 	private String symbol;
 	/**
 	 * Amino acid short name - three characters

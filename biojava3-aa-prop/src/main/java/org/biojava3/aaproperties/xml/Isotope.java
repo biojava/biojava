@@ -4,27 +4,22 @@ public class Isotope {
 	/**
 	 * The isotope name i.e. T (tritium)
 	 */
-	String name; 
+	private String name; 
 	/**
 	 * Number of neutrons 
 	 */
-	int neutronsNum;
+	private int neutronsNum;
 	/**
 	 * Relative Atomic Mass of the isotope
 	 */
-	double weight; 
-	/**
-	 * Natural abundance 
-	 */
-	double abundance;
+	private double weight; 
 
 	public Isotope(){}
 
-	public Isotope(String name, int neutronsNum, double weight, double abundance){
+	public Isotope(String name, int neutronsNum, double weight){
 		this.setName(name);
 		this.setNeutronsNum(neutronsNum);
 		this.setWeight(weight);
-		this.setAbundance(abundance);
 	}
 
 	public String getName() {
@@ -45,10 +40,4 @@ public class Isotope {
 	public void setWeight(double weight) {
 		this.weight = weight;
 	}
-	public double getAbundance() {
-		return abundance;
-	}
-	public void setAbundance(double abundance) {
-		this.abundance = abundance;
-	} 
 }

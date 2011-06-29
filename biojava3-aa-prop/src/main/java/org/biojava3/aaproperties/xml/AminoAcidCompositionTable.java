@@ -6,7 +6,7 @@ import java.util.Map;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
-@XmlRootElement(name="aminoacids", namespace="http://biojava.org")
+@XmlRootElement(name="AminoAcidsTable", namespace="http://biojava.org")
 public class AminoAcidCompositionTable {
 	
 	/**

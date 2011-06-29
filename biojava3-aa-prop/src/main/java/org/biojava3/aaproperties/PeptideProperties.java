@@ -9,6 +9,7 @@ import java.util.Set;
 
 import javax.xml.bind.JAXBException;
 
+import org.biojava3.aaproperties.xml.AminoAcidCompositionTable;
 import org.biojava3.core.sequence.ProteinSequence;
 import org.biojava3.core.sequence.compound.AminoAcidCompound;
 import org.biojava3.core.sequence.compound.AminoAcidCompoundSet;
@@ -72,6 +73,70 @@ public class PeptideProperties {
 		ProteinSequence pSequence = new ProteinSequence(sequence);
 		IPeptideProperties pp = new PeptidePropertiesImpl();
 		return pp.getMolecularWeight(pSequence, elementMassFile, aminoAcidCompositionFile);
+	}
+	
+	/**
+	 * An adaptor method to return the molecular weight of sequence. The sequence argument must be a protein sequence consisting of only non-ambiguous characters.
+	 * This method will sum the molecular weight of each amino acid in the
+	 * sequence. Molecular weights are based on the input files. These input files must be XML using the defined schema.
+	 * Note that it assumes that ElementMass.xml file can be found in default location.
+	 * 
+	 * @param sequence
+	 * 	a protein sequence consisting of non-ambiguous characters only
+	 * 	xml file that details the mass of each elements and isotopes
+	 * @param aminoAcidCompositionFile
+	 * 	xml file that details the composition of amino acids
+	 * @return the total molecular weight of sequence + weight of water molecule
+	 * @throws JAXBException
+	 * 	thrown if unable to properly parse either elementMassFile or aminoAcidCompositionFile
+	 * @throws FileNotFoundException
+	 * 	thrown if either elementMassFile or aminoAcidCompositionFile are not found
+	 */
+	public static final double getMolecularWeight(String sequence, File aminoAcidCompositionFile) throws FileNotFoundException, JAXBException{
+		sequence = Utils.checkSequence(sequence);
+		ProteinSequence pSequence = new ProteinSequence(sequence);
+		IPeptideProperties pp = new PeptidePropertiesImpl();
+		return pp.getMolecularWeight(pSequence, aminoAcidCompositionFile);
+	}
+	
+	/**
+	 * An adaptor method would initialize amino acid composition table based on the input xml files and stores the table for usage in future calls to 
+	 * IPeptideProperties.getMolecularWeightBasedOnXML(ProteinSequence, AminoAcidCompositionTable).
+	 * 
+	 * @param elementMassFile
+	 * 	xml file that details the mass of each elements and isotopes
+	 * @param aminoAcidCompositionFile
+	 * 	xml file that details the composition of amino acids
+	 * @return the initialized amino acid composition table
+	 * @throws JAXBException
+	 * 	thrown if unable to properly parse either elementMassFile or aminoAcidCompositionFile
+	 * @throws FileNotFoundException
+	 * 	thrown if either elementMassFile or aminoAcidCompositionFile are not found
+	 */
+	public static final AminoAcidCompositionTable obtainAminoAcidCompositionTable(File elementMassFile, File aminoAcidCompositionFile) throws JAXBException, FileNotFoundException{
+		IPeptideProperties pp = new PeptidePropertiesImpl();
+		return pp.obtainAminoAcidCompositionTable(elementMassFile, aminoAcidCompositionFile);
+	}
+	
+	/**
+	 * An adaptor method that returns the molecular weight of sequence. The sequence argument must be a protein sequence consisting of only non-ambiguous characters.
+	 * This method will sum the molecular weight of each amino acid in the
+	 * sequence. Molecular weights are based on the AminoAcidCompositionTable. 
+	 * Those input files must be XML using the defined schema.
+	 * 
+	 * @param sequence
+	 * 	a protein sequence consisting of non-ambiguous characters only
+	 * @param aminoAcidCompositionTable
+	 * 	a amino acid composition table obtained by calling IPeptideProperties.obtainAminoAcidCompositionTable
+	 * @return the total molecular weight of sequence + weight of water molecule
+	 * @throws Exception
+	 * 	thrown if the method IPeptideProperties.setMolecularWeightXML(File, File) is not successfully called before calling this method.
+	 */
+	public static double getMolecularWeightBasedOnXML(String sequence, AminoAcidCompositionTable aminoAcidCompositionTable) throws Exception{
+		sequence = Utils.checkSequence(sequence);
+		ProteinSequence pSequence = new ProteinSequence(sequence);
+		IPeptideProperties pp = new PeptidePropertiesImpl();
+		return pp.getMolecularWeightBasedOnXML(pSequence, aminoAcidCompositionTable);
 	}
 	
 	/**

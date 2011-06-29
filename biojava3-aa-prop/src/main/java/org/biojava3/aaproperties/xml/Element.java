@@ -14,36 +14,37 @@ public class Element {
 	/**
 	 * Element name as per periodic table e.g. "Hydrogen"
 	 */
-	String name; 
+	private String name; 
 	/**
 	 * Element short name as in periodic table e.g. "H"
 	 */
-	String symbol; 
+	private String symbol; 
 	/**
 	 * The atomic number of the element = number of protons. 
 	 */
-	int atomicNumber; 
+	private int atomicNumber; 
 	/**
 	 * The computed mass based on isotopes and their abundances
 	 */
-	double mass;
+	private double mass;
 	/**
 	 * List of common isotopes of the element
 	 */
-	List<Isotope> isotope;
+	private List<Isotope> isotope;
 	
 	/**
 	 * To enable quick retrieval of Isotope from its name
 	 */
-	Map<String, Isotope> name2Isotope;
+	private Map<String, Isotope> name2Isotope;
 	
 	public Element(){}
 	
-	public Element(String name, String symbol, int atomicNumber, List<Isotope> isotopes){
+	public Element(String name, String symbol, int atomicNumber, List<Isotope> isotopes, double mass){
 		this.setName(name);
 		this.setSymbol(symbol);
 		this.setAtomicNumber(atomicNumber);
 		this.setIsotopes(isotopes);
+		this.setMass(mass);
 	}
 	
 	public String toString(){
@@ -59,11 +60,11 @@ public class Element {
 	 * @return the standard atomic weight 
 	 */
 	public double getMass() { 
-		double total = 0.0;
+		/*double total = 0.0;
 		for(Isotope i:isotope){
 			total += (i.getWeight() * i.getAbundance());
 		}
-		this.mass = total;
+		this.mass = total;*/
 		return mass;
 	}
 	

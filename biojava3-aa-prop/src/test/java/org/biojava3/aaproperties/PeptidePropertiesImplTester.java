@@ -6,6 +6,7 @@ import java.util.Map;
 
 import javax.xml.bind.JAXBException;
 
+import org.biojava3.aaproperties.xml.AminoAcidCompositionTable;
 import org.junit.Test;
 import static junit.framework.Assert.*;
 
@@ -140,12 +141,32 @@ public class PeptidePropertiesImplTester {
 	
 	@Test
 	public void testMolecularWeightXML() throws FileNotFoundException, JAXBException{
-		File elementMassFile = new File("./doc/ElementMass.xml");
-		File aminoAcidCompositionFile = new File("./doc/MolecularWeight.xml");
+		File elementMassFile = new File("./src/main/resources/ElementMass.xml");
+		File aminoAcidCompositionFile = new File("./src/main/resources/AminoAcidComposition.xml");
 		
 		assertEquals(
 			Utils.roundToDecimals(PeptideProperties.getMolecularWeight("A", elementMassFile, aminoAcidCompositionFile) * 5.0 -  4 * (17.0073 + 1.0079), 5), 
 			Utils.roundToDecimals(PeptideProperties.getMolecularWeight("AAAAA", elementMassFile, aminoAcidCompositionFile), 5));
+	}
+	
+	@Test
+	public void testMolecularWeightXMLSingleFile() throws FileNotFoundException, JAXBException{
+		File aminoAcidCompositionFile = new File("./src/main/resources/AminoAcidComposition.xml");
+		
+		assertEquals(
+			Utils.roundToDecimals(PeptideProperties.getMolecularWeight("A", aminoAcidCompositionFile) * 5.0 -  4 * (17.0073 + 1.0079), 5), 
+			Utils.roundToDecimals(PeptideProperties.getMolecularWeight("AAAAA", aminoAcidCompositionFile), 5));
+	}
+	
+	@Test
+	public void testMolecularWeightBasedOnAminoAcidCompositionTable() throws Exception{
+		File elementMassFile = new File("./src/main/resources/ElementMass.xml");
+		File aminoAcidCompositionFile = new File("./src/main/resources/AminoAcidComposition.xml");
+		AminoAcidCompositionTable table = PeptideProperties.obtainAminoAcidCompositionTable(elementMassFile, aminoAcidCompositionFile);
+		
+		assertEquals(
+			Utils.roundToDecimals(PeptideProperties.getMolecularWeightBasedOnXML("A", table) * 5.0 -  4 * (17.0073 + 1.0079), 5), 
+			Utils.roundToDecimals(PeptideProperties.getMolecularWeightBasedOnXML("AAAAA", table), 5));
 	}
 	
 	@Test (expected = NullPointerException.class)
