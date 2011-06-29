@@ -35,6 +35,7 @@ public class AminoAcidComposition {
 	/**
 	 * Stores the name of the element and the amount this amino acid contains
 	 */
+	
 	private Map<String, Integer> elementName2Count;
 	/**
 	 * Stores the name of the isotope and the amount this amino acid contains

@@ -102,6 +102,24 @@ public class PeptideProperties {
 	/**
 	 * An adaptor method would initialize amino acid composition table based on the input xml files and stores the table for usage in future calls to 
 	 * IPeptideProperties.getMolecularWeightBasedOnXML(ProteinSequence, AminoAcidCompositionTable).
+	 * Note that ElementMass.xml is assumed to be able to be seen in default location.
+	 * 
+	 * @param aminoAcidCompositionFile
+	 * 	xml file that details the composition of amino acids
+	 * @return the initialized amino acid composition table
+	 * @throws JAXBException
+	 * 	thrown if unable to properly parse either elementMassFile or aminoAcidCompositionFile
+	 * @throws FileNotFoundException
+	 * 	thrown if either elementMassFile or aminoAcidCompositionFile are not found
+	 */
+	public static final AminoAcidCompositionTable obtainAminoAcidCompositionTable(File aminoAcidCompositionFile) throws JAXBException, FileNotFoundException{
+		IPeptideProperties pp = new PeptidePropertiesImpl();
+		return pp.obtainAminoAcidCompositionTable(aminoAcidCompositionFile);
+	}
+	
+	/**
+	 * An adaptor method would initialize amino acid composition table based on the input xml files and stores the table for usage in future calls to 
+	 * IPeptideProperties.getMolecularWeightBasedOnXML(ProteinSequence, AminoAcidCompositionTable).
 	 * 
 	 * @param elementMassFile
 	 * 	xml file that details the mass of each elements and isotopes

@@ -133,6 +133,33 @@ public class PeptidePropertiesImpl implements IPeptideProperties{
 	}
 
 	@Override
+	public AminoAcidCompositionTable obtainAminoAcidCompositionTable(File aminoAcidCompositionFile) throws JAXBException, FileNotFoundException{
+		File elementMassFile = new File("./src/main/resources/ElementMass.xml");
+		if(elementMassFile.exists() == false){
+			throw new FileNotFoundException("Cannot locate ElementMass.xml. " +
+					"Please use getMolecularWeight(ProteinSequence, File, File) to specify ElementMass.xml location.");
+		}
+		//Parse elementMassFile
+		ElementTable iTable = new ElementTable();
+		// Get a JAXB Context for the object we created above
+		JAXBContext jc = JAXBContext.newInstance(iTable.getClass());
+		Unmarshaller u = jc.createUnmarshaller();
+		u.setEventHandler(new MyValidationEventHandler()); 
+		iTable = (ElementTable)u.unmarshal(new FileInputStream(elementMassFile));
+		iTable.populateMaps();
+		
+		//Parse aminoAcidCompositionFile
+		AminoAcidCompositionTable aTable = new AminoAcidCompositionTable();
+		// Get a JAXB Context for the object we created above
+		JAXBContext jc2 = JAXBContext.newInstance(aTable.getClass());
+		Unmarshaller u2 = jc2.createUnmarshaller();
+		u2.setEventHandler(new MyValidationEventHandler()); 
+		aTable = (AminoAcidCompositionTable)u2.unmarshal(new FileInputStream(aminoAcidCompositionFile));
+		aTable.computeMolecularWeight(iTable);
+		return aTable;
+	}
+	
+	@Override
 	public AminoAcidCompositionTable obtainAminoAcidCompositionTable(File elementMassFile, File aminoAcidCompositionFile) throws JAXBException, FileNotFoundException{
 		//Parse elementMassFile
 		ElementTable iTable = new ElementTable();

@@ -34,16 +34,25 @@ import org.biojava3.core.sequence.compound.AminoAcidCompound;
 
 /**
  * TODO
- * 4) Write tutorials for BioJava - Cookbook BioJava Wiki -> ProteinStructure
  * 5) Make the xml file more restrictive.
  * 6) Simplify the MW.xml and give a isotope example.
+ * 7) combine 4 and 5 and change into ".. Composition of Peptides.. "
+ * 9) Check spellings especially physico-chemical properties
+ * 13) Definition of the xml in the cook book
+ * 2) How to write the formulae for Net Charge where there are summation and power. Likewise for Instability index - Use images if not possible
+ * 12) Write an email to in bio-javalist after solving all the above
+ * 
+ * Meetings
+ * Wednesday 6 July
+ * Tuesday 12 July
+ * Thursday 21 July
  * 
  * DONE
- * 9) Next week to be on wednesday
+ * 10) Add one more method to improve the reading of amino acid table
+ * 11) Improve the CookbookTester
  * 
  * Question
- * 1) Where should the method auto locate the elementMass file
- * 2) How to write the formulae for Net Charge where there are summation and power. Likewise for Instability index
+ * 
  * 
  * 
  * 
@@ -130,6 +139,21 @@ public interface IPeptideProperties{
 	 * 	thrown if the method IPeptideProperties.setMolecularWeightXML(File, File) is not successfully called before calling this method.
 	 */
 	public double getMolecularWeightBasedOnXML(ProteinSequence sequence, AminoAcidCompositionTable aminoAcidCompositionTable) throws Exception;
+	
+	/**
+	 * This method would initialize amino acid composition table based on the input xml files and stores the table for usage in future calls to 
+	 * IPeptideProperties.getMolecularWeightBasedOnXML(ProteinSequence, AminoAcidCompositionTable).
+	 * Note that ElementMass.xml is assumed to be able to be seen in default location.
+	 * 
+	 * @param aminoAcidCompositionFile
+	 * 	xml file that details the composition of amino acids
+	 * @return the initialized amino acid composition table
+	 * @throws JAXBException
+	 * 	thrown if unable to properly parse either elementMassFile or aminoAcidCompositionFile
+	 * @throws FileNotFoundException
+	 * 	thrown if either elementMassFile or aminoAcidCompositionFile are not found
+	 */
+	public AminoAcidCompositionTable obtainAminoAcidCompositionTable(File aminoAcidCompositionFile) throws JAXBException, FileNotFoundException;
 	
 	/**
 	 * This method would initialize amino acid composition table based on the input xml files and stores the table for usage in future calls to 
