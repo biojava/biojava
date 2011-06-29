@@ -1,0 +1,3 @@
+1) Modify the test case that writes ElementMass.xsd into the root of the project. (it should not do that!)
+2) Modify both schemas to make them more restrictive. 
+3) Implement new schema for proposed Compound.xml. 
