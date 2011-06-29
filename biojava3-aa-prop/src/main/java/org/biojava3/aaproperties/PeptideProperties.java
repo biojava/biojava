@@ -37,7 +37,7 @@ public class PeptideProperties {
 	 * An adaptor method to return the molecular weight of sequence. 
 	 * The sequence argument must be a protein sequence consisting of only non-ambiguous characters.
 	 * This method will sum the molecular weight of each amino acid in the
-	 * sequence. Molecular weights are based on <a href="http://au.expasy.org/tools/findmod/findmod_masses.html#AA">here</a>.
+	 * sequence. Molecular weights are based on <a href="http://web.expasy.org/findmod/findmod_masses.html">here</a>.
 	 * 
 	 * @param sequence
 	 * 	a protein sequence consisting of non-ambiguous characters only
@@ -143,7 +143,7 @@ public class PeptideProperties {
 	 * An adaptor method to returns the absorbance (optical density) of sequence. The sequence argument
 	 * must be a protein sequence consisting of only non-ambiguous characters.
 	 * The computation of absorbance (optical density) follows the
-	 * documentation in <a href="http://au.expasy.org/tools/protparam-doc.html">here</a>.
+	 * documentation in <a href="http://web.expasy.org/protparam/protparam-doc.html">here</a>.
 	 * 
 	 * @param sequence
 	 * 	a protein sequence consisting of non-ambiguous characters only
@@ -165,7 +165,7 @@ public class PeptideProperties {
 	 * a certain wavelength. It is useful to have an estimation of this
 	 * coefficient for following a protein which a spectrophotometer when
 	 * purifying it. The computation of extinction coefficient follows the
-	 * documentation in <a href="http://au.expasy.org/tools/protparam-doc.html">here</a>.
+	 * documentation in <a href="http://web.expasy.org/protparam/protparam-doc.html">here</a>.
 	 * 
 	 * @param sequence
 	 *            a protein sequence consisting of non-ambiguous characters only
@@ -186,7 +186,7 @@ public class PeptideProperties {
 	 * a protein sequence consisting of only non-ambiguous characters.
 	 * The instability index provides an estimate of the stability of your
 	 * protein in a test tube. The computation of instability index follows the
-	 * documentation in <a href="http://au.expasy.org/tools/protparam-doc.html">here</a>.
+	 * documentation in <a href="http://web.expasy.org/protparam/protparam-doc.html">here</a>.
 	 * 
 	 * @param sequence
 	 *            a protein sequence consisting of non-ambiguous characters only
@@ -206,7 +206,7 @@ public class PeptideProperties {
 	 * occupied by aliphatic side chains (alanine, valine, isoleucine, and
 	 * leucine). It may be regarded as a positive factor for the increase of
 	 * thermostability of globular proteins. The computation of aliphatic index
-	 * follows the documentation in <a href="http://au.expasy.org/tools/protparam-doc.html">here</a>.
+	 * follows the documentation in <a href="http://web.expasy.org/protparam/protparam-doc.html">here</a>.
 	 * A protein whose instability index is smaller than 40 is predicted as stable, a value above 40 predicts that the protein may be unstable.
 	 * 
 	 * @param sequence

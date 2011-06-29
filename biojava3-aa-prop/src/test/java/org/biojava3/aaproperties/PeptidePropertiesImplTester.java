@@ -177,8 +177,8 @@ public class PeptidePropertiesImplTester {
 	@Test
 	public void testExtinctionCoefficient(){
 		//http://au.expasy.org/cgi-bin/protparam
-		assertEquals(11125.0, PeptideProperties.getExtinctionCoefficient(sequence, true));
-		assertEquals(11000.0, PeptideProperties.getExtinctionCoefficient(sequence, false));
+		assertEquals(11125.0, PeptideProperties.getExtinctionCoefficient(sequence, false));
+		assertEquals(11000.0, PeptideProperties.getExtinctionCoefficient(sequence, true));
 		
 		assertEquals(0.0, PeptideProperties.getExtinctionCoefficient(fullInvalidSequence, true));
 		assertEquals(0.0, PeptideProperties.getExtinctionCoefficient(fullInvalidSequence, false));
@@ -192,8 +192,8 @@ public class PeptidePropertiesImplTester {
 	@Test
 	public void testAbsorbance(){
 		//http://au.expasy.org/cgi-bin/protparam
-		assertEquals(3.873, Utils.roundToDecimals(PeptideProperties.getAbsorbance(sequence, true), 3));
-		assertEquals(3.830, Utils.roundToDecimals(PeptideProperties.getAbsorbance(sequence, false), 3));
+		assertEquals(3.830, Utils.roundToDecimals(PeptideProperties.getAbsorbance(sequence, true), 3));
+		assertEquals(3.873, Utils.roundToDecimals(PeptideProperties.getAbsorbance(sequence, false), 3));
 		
 		assertEquals(0.0, Utils.roundToDecimals(PeptideProperties.getAbsorbance(fullInvalidSequence, true), 3));
 		assertEquals(0.0, Utils.roundToDecimals(PeptideProperties.getAbsorbance(fullInvalidSequence, false), 3));

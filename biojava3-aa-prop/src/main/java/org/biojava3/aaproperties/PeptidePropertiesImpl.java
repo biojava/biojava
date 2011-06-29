@@ -78,7 +78,6 @@ public class PeptidePropertiesImpl implements IPeptideProperties{
 		return value;
 	}
 	
-	
 	@Override
 	public double getMolecularWeight(ProteinSequence sequence, File elementMassFile, File aminoAcidCompositionFile) throws JAXBException, FileNotFoundException {
 		//Parse elementMassFile
@@ -166,7 +165,7 @@ public class PeptidePropertiesImpl implements IPeptideProperties{
 		Map<AminoAcidCompound, Integer> extinctAA2Count = this.getExtinctAACount(sequence);
 		
 		double eProt;
-		if(assumeCysReduced){
+		if(assumeCysReduced == false){
 			eProt = extinctAA2Count.get(aaSet.getCompoundForString("Y")) * 
 				Constraints.aa2ExtinctionCoefficient.get(aaSet.getCompoundForString("Y")) + 
 				extinctAA2Count.get(aaSet.getCompoundForString("W")) * 
@@ -205,7 +204,7 @@ public class PeptidePropertiesImpl implements IPeptideProperties{
 		AminoAcidCompoundSet aaSet = new AminoAcidCompoundSet();
 		Map<AminoAcidCompound, Integer> extinctAA2Count = new HashMap<AminoAcidCompound, Integer>();
 		extinctAA2Count.put(aaSet.getCompoundForString("W"), numW);
-		extinctAA2Count.put(aaSet.getCompoundForString("C"), (int)numC);
+		extinctAA2Count.put(aaSet.getCompoundForString("C"), (int) numC);
 		extinctAA2Count.put(aaSet.getCompoundForString("Y"), numY);
 		return extinctAA2Count;
 	}
@@ -262,7 +261,7 @@ public class PeptidePropertiesImpl implements IPeptideProperties{
 		double currentPH = 7.0;
 		double changeSize = 7.0;
 		Map<AminoAcidCompound, Integer> chargedAA2Count = this.getChargedAACount(sequence);
-		double margin = 1.0;
+		double margin;
 		final double difference = 0.0000001;
 		while(true){
 			margin = this.getNetCharge(chargedAA2Count, currentPH);

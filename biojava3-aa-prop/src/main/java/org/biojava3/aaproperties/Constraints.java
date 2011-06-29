@@ -104,7 +104,7 @@ public class Constraints {
 	}
 
 	/**
-	 * Does the initialization of hydropathicity based on http://au.expasy.org/tools/pscale/Hphob.Doolittle.html
+	 * Does the initialization of hydropathicity based on http://web.expasy.org/protscale/pscale/Hphob.Doolittle.html
 	 */
 	private static void initHydropathicity(){
 		//		Ala(A):  1.800  
