@@ -1,29 +1,9 @@
-<!-- TODO make schema more restrictive -->
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<xs:schema version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+<xs:schema version="1.0" targetNamespace="http://biojava.org" xmlns:xs="http://www.w3.org/2001/XMLSchema">
 
-  <xs:complexType name="elementTable">
-    <xs:sequence>
-      <xs:element name="element" type="element" nillable="true" minOccurs="0" maxOccurs="unbounded"/>
-    </xs:sequence>
-  </xs:complexType>
+  <xs:import schemaLocation="ElementMass.xsd"/>
 
-  <xs:complexType name="element">
-    <xs:sequence>
-      <xs:element name="atomicNumber" type="xs:int"/>
-      <xs:element name="isotopes" type="isotope" nillable="true" minOccurs="0" maxOccurs="unbounded"/>
-      <xs:element name="mass" type="xs:double"/>
-      <xs:element name="name" type="xs:string" minOccurs="0"/>
-      <xs:element name="symbol" type="xs:string" minOccurs="0"/>
-    </xs:sequence>
-  </xs:complexType>
+  <xs:element name="elements" type="elementTable"/>
 
-  <xs:complexType name="isotope">
-    <xs:sequence>
-      <xs:element name="name" type="xs:string" minOccurs="0"/>
-      <xs:element name="neutronsNum" type="xs:int"/>
-      <xs:element name="weight" type="xs:double"/>
-    </xs:sequence>
-  </xs:complexType>
 </xs:schema>
 

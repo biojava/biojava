@@ -34,25 +34,22 @@ import org.biojava3.core.sequence.compound.AminoAcidCompound;
 
 /**
  * TODO
- * 5) Make the xml file more restrictive.
- * 6) Simplify the MW.xml and give a isotope example.
- * 7) combine 4 and 5 and change into ".. Composition of Peptides.. "
- * 9) Check spellings especially physico-chemical properties
  * 13) Definition of the xml in the cook book
  * 2) How to write the formulae for Net Charge where there are summation and power. Likewise for Instability index - Use images if not possible
  * 12) Write an email to in bio-javalist after solving all the above
  * 
  * Meetings
  * Wednesday 6 July
- * Tuesday 12 July
+ * Wednesday 13 July
  * Thursday 21 July
  * 
  * DONE
- * 10) Add one more method to improve the reading of amino acid table
- * 11) Improve the CookbookTester
+ * 5) Make the xml file more restrictive.
+ * 6) Simplified the MW.xml and ElementMass.xml.
  * 
  * Question
- * 
+ * Ordering of attributes not possible? - Did some googling and got that conclusion
+ * How to annotate interfaces such as Map<K, V>? - After googling, I think one way is to extend HashMap and annotate from there. Any better solutions?
  * 
  * 
  * 

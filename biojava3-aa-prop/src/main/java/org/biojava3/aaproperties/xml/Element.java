@@ -4,32 +4,43 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
+
 /**
  * One way to model the elements
  * @author pvtroshin
  *
  */
+@XmlAccessorType(XmlAccessType.NONE)
 public class Element {
 
 	/**
 	 * Element name as per periodic table e.g. "Hydrogen"
 	 */
+	@XmlAttribute(name = "name", required = true)
 	private String name; 
 	/**
 	 * Element short name as in periodic table e.g. "H"
 	 */
+	@XmlAttribute(name = "symbol", required = true)
 	private String symbol; 
 	/**
 	 * The atomic number of the element = number of protons. 
 	 */
+	@XmlAttribute(name = "atomicnumber", required = true)
 	private int atomicNumber; 
 	/**
 	 * The computed mass based on isotopes and their abundances
 	 */
+	@XmlAttribute(name = "mass", required = true)
 	private double mass;
 	/**
 	 * List of common isotopes of the element
 	 */
+	@XmlElement
 	private List<Isotope> isotope;
 	
 	/**
@@ -55,43 +66,21 @@ public class Element {
 		this.mass = mass;
 	}
 	
-	/**
-	 * Returns the standard atomic weight. It is computed by the relative abundance of the isotope multiply by its atomic weight
-	 * @return the standard atomic weight 
-	 */
-	public double getMass() { 
-		/*double total = 0.0;
-		for(Isotope i:isotope){
-			total += (i.getWeight() * i.getAbundance());
-		}
-		this.mass = total;*/
-		return mass;
+	public double getMass(){
+		return this.mass;
 	}
-	
-	public String getName() {
-		return name;
-	}
-
 
 	public void setName(String name) {
 		this.name = name;
 	}
-
-
-	public String getSymbol() {
-		return symbol;
+	
+	public String getName(){
+		return this.name;
 	}
-
 
 	public void setSymbol(String symbol) {
 		this.symbol = symbol;
 	}
-
-
-	public int getAtomicNumber() {
-		return atomicNumber;
-	}
-
 
 	public void setAtomicNumber(int atomicNumber) {
 		this.atomicNumber = atomicNumber;
@@ -108,7 +97,7 @@ public class Element {
 		this.name2Isotope = new HashMap<String, Isotope>();
 		if(isotopes != null){
 			for(Isotope i:isotopes){
-				name2Isotope.put(i.getName(), i);
+				name2Isotope.put(i.name(), i);
 			}
 		}
 	}

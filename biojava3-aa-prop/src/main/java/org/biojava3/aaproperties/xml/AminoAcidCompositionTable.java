@@ -49,7 +49,7 @@ public class AminoAcidCompositionTable {
 				total += eTable.getElement(eName).getMass() * a.getElementCount(eName);
 			}
 			for(String iName:a.getIsotope2Count().keySet()){
-				total += eTable.getIsotope(iName).getWeight() * a.getIsotopeCount(iName);
+				total += eTable.getIsotope(iName).weight() * a.getIsotopeCount(iName);
 			}
 			this.aaSymbol2MolecularWeight.put(a.getSymbol(), total);
 		}
