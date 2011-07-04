@@ -43,13 +43,21 @@ public class AminoAcidCompositionTable {
 		this.aaSymbol2MolecularWeight = new HashMap<String, Double>();
 		for(AminoAcidComposition a:aminoacid){
 			double total = 0.0;
-			for(String eName:a.getElement2Count().keySet()){
-				Element e = eTable.getElement(eName);
-				e.getMass();
-				total += eTable.getElement(eName).getMass() * a.getElementCount(eName);
+			if(a.getElementList() != null){
+				for(Name2Count element:a.getElementList()){
+					element.getName();
+					eTable.getElement(element.getName());
+					eTable.getElement(element.getName()).getMass();
+					total += eTable.getElement(element.getName()).getMass() * element.getCount();
+				}
 			}
-			for(String iName:a.getIsotope2Count().keySet()){
-				total += eTable.getIsotope(iName).weight() * a.getIsotopeCount(iName);
+			if(a.getIsotopeList() != null){
+				for(Name2Count isotope:a.getIsotopeList()){
+					isotope.getName();
+					eTable.getIsotope(isotope.getName());
+					eTable.getIsotope(isotope.getName()).getWeight();
+					total += eTable.getIsotope(isotope.getName()).getWeight() * isotope.getCount();
+				}
 			}
 			this.aaSymbol2MolecularWeight.put(a.getSymbol(), total);
 		}

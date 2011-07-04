@@ -44,12 +44,12 @@ import org.biojava3.core.sequence.compound.AminoAcidCompound;
  * Thursday 21 July
  * 
  * DONE
- * 5) Make the xml file more restrictive.
- * 6) Simplified the MW.xml and ElementMass.xml.
+ * Added annotations for AminoAcidComposition.java and Element.java.
+ * Simplified MolecularWeight.xml and ElementMass.xml.
+ * Work around and made the XML files annotated to requirements.
+ * Use Hydrogen-1 isotope weight
  * 
  * Question
- * Ordering of attributes not possible? - Did some googling and got that conclusion
- * How to annotate interfaces such as Map<K, V>? - After googling, I think one way is to extend HashMap and annotate from there. Any better solutions?
  * 
  * 
  * 

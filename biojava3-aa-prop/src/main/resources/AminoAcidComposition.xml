@@ -1,431 +1,125 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <ns2:AminoAcidsTable xmlns:ns2="http://biojava.org">
     <aminoacid name="Alanine" shortname="Ala" symbol="A">
-        <elementName2Count>
-            <entry>
-                <key>Oxygen</key>
-                <value>1</value>
-            </entry>
-            <entry>
-                <key>Carbon</key>
-                <value>3</value>
-            </entry>
-            <entry>
-                <key>Hydrogen</key>
-                <value>5</value>
-            </entry>
-            <entry>
-                <key>Nitrogen</key>
-                <value>1</value>
-            </entry>
-        </elementName2Count>
-        <isotopeName2Count/>
+        <elements count="3" name="Carbon"/>
+        <elements count="1" name="Nitrogen"/>
+        <elements count="1" name="Oxygen"/>
+        <isotopes count="5" name="Hydrogen"/>
     </aminoacid>
     <aminoacid name="Arginine" shortname="Arg" symbol="R">
-        <elementName2Count>
-            <entry>
-                <key>Oxygen</key>
-                <value>1</value>
-            </entry>
-            <entry>
-                <key>Carbon</key>
-                <value>6</value>
-            </entry>
-            <entry>
-                <key>Hydrogen</key>
-                <value>12</value>
-            </entry>
-            <entry>
-                <key>Nitrogen</key>
-                <value>4</value>
-            </entry>
-        </elementName2Count>
-        <isotopeName2Count/>
+        <elements count="6" name="Carbon"/>
+        <elements count="4" name="Nitrogen"/>
+        <elements count="1" name="Oxygen"/>
+        <isotopes count="12" name="Hydrogen"/>
     </aminoacid>
     <aminoacid name="Asparagine" shortname="Asn" symbol="N">
-        <elementName2Count>
-            <entry>
-                <key>Oxygen</key>
-                <value>2</value>
-            </entry>
-            <entry>
-                <key>Carbon</key>
-                <value>4</value>
-            </entry>
-            <entry>
-                <key>Hydrogen</key>
-                <value>6</value>
-            </entry>
-            <entry>
-                <key>Nitrogen</key>
-                <value>2</value>
-            </entry>
-        </elementName2Count>
-        <isotopeName2Count/>
+        <elements count="4" name="Carbon"/>
+        <elements count="2" name="Nitrogen"/>
+        <elements count="2" name="Oxygen"/>
+        <isotopes count="6" name="Hydrogen"/>
     </aminoacid>
     <aminoacid name="Aspartic Acid" shortname="Asp" symbol="D">
-        <elementName2Count>
-            <entry>
-                <key>Oxygen</key>
-                <value>3</value>
-            </entry>
-            <entry>
-                <key>Carbon</key>
-                <value>4</value>
-            </entry>
-            <entry>
-                <key>Hydrogen</key>
-                <value>5</value>
-            </entry>
-            <entry>
-                <key>Nitrogen</key>
-                <value>1</value>
-            </entry>
-        </elementName2Count>
-        <isotopeName2Count/>
+        <elements count="4" name="Carbon"/>
+        <elements count="1" name="Nitrogen"/>
+        <elements count="3" name="Oxygen"/>
+        <isotopes count="5" name="Hydrogen"/>
     </aminoacid>
     <aminoacid name="Cysteine" shortname="Cys" symbol="C">
-        <elementName2Count>
-            <entry>
-                <key>Sulfur</key>
-                <value>1</value>
-            </entry>
-            <entry>
-                <key>Oxygen</key>
-                <value>1</value>
-            </entry>
-            <entry>
-                <key>Carbon</key>
-                <value>3</value>
-            </entry>
-            <entry>
-                <key>Hydrogen</key>
-                <value>5</value>
-            </entry>
-            <entry>
-                <key>Nitrogen</key>
-                <value>1</value>
-            </entry>
-        </elementName2Count>
-        <isotopeName2Count/>
+        <elements count="3" name="Carbon"/>
+        <elements count="1" name="Nitrogen"/>
+        <elements count="1" name="Oxygen"/>
+        <elements count="1" name="Sulfur"/>
+        <isotopes count="5" name="Hydrogen"/>
     </aminoacid>
     <aminoacid name="Glutamic Acid" shortname="Glu" symbol="E">
-        <elementName2Count>
-            <entry>
-                <key>Oxygen</key>
-                <value>3</value>
-            </entry>
-            <entry>
-                <key>Carbon</key>
-                <value>5</value>
-            </entry>
-            <entry>
-                <key>Hydrogen</key>
-                <value>7</value>
-            </entry>
-            <entry>
-                <key>Nitrogen</key>
-                <value>1</value>
-            </entry>
-        </elementName2Count>
-        <isotopeName2Count/>
+        <elements count="5" name="Carbon"/>
+        <elements count="1" name="Nitrogen"/>
+        <elements count="3" name="Oxygen"/>
+        <isotopes count="7" name="Hydrogen"/>
     </aminoacid>
     <aminoacid name="Glutamine" shortname="Gln" symbol="Q">
-        <elementName2Count>
-            <entry>
-                <key>Oxygen</key>
-                <value>2</value>
-            </entry>
-            <entry>
-                <key>Carbon</key>
-                <value>5</value>
-            </entry>
-            <entry>
-                <key>Hydrogen</key>
-                <value>8</value>
-            </entry>
-            <entry>
-                <key>Nitrogen</key>
-                <value>2</value>
-            </entry>
-        </elementName2Count>
-        <isotopeName2Count/>
+        <elements count="5" name="Carbon"/>
+        <elements count="2" name="Nitrogen"/>
+        <elements count="2" name="Oxygen"/>
+        <isotopes count="8" name="Hydrogen"/>
     </aminoacid>
     <aminoacid name="Glycine" shortname="Gly" symbol="G">
-        <elementName2Count>
-            <entry>
-                <key>Oxygen</key>
-                <value>1</value>
-            </entry>
-            <entry>
-                <key>Carbon</key>
-                <value>2</value>
-            </entry>
-            <entry>
-                <key>Hydrogen</key>
-                <value>3</value>
-            </entry>
-            <entry>
-                <key>Nitrogen</key>
-                <value>1</value>
-            </entry>
-        </elementName2Count>
-        <isotopeName2Count/>
+        <elements count="2" name="Carbon"/>
+        <elements count="1" name="Nitrogen"/>
+        <elements count="1" name="Oxygen"/>
+        <isotopes count="3" name="Hydrogen"/>
     </aminoacid>
     <aminoacid name="Histidine" shortname="His" symbol="H">
-        <elementName2Count>
-            <entry>
-                <key>Oxygen</key>
-                <value>1</value>
-            </entry>
-            <entry>
-                <key>Carbon</key>
-                <value>6</value>
-            </entry>
-            <entry>
-                <key>Hydrogen</key>
-                <value>7</value>
-            </entry>
-            <entry>
-                <key>Nitrogen</key>
-                <value>3</value>
-            </entry>
-        </elementName2Count>
-        <isotopeName2Count/>
+        <elements count="6" name="Carbon"/>
+        <elements count="3" name="Nitrogen"/>
+        <elements count="1" name="Oxygen"/>
+        <isotopes count="7" name="Hydrogen"/>
     </aminoacid>
     <aminoacid name="Isoleucine" shortname="Ile" symbol="I">
-        <elementName2Count>
-            <entry>
-                <key>Oxygen</key>
-                <value>1</value>
-            </entry>
-            <entry>
-                <key>Carbon</key>
-                <value>6</value>
-            </entry>
-            <entry>
-                <key>Hydrogen</key>
-                <value>11</value>
-            </entry>
-            <entry>
-                <key>Nitrogen</key>
-                <value>1</value>
-            </entry>
-        </elementName2Count>
-        <isotopeName2Count/>
+        <elements count="6" name="Carbon"/>
+        <elements count="1" name="Nitrogen"/>
+        <elements count="1" name="Oxygen"/>
+        <isotopes count="11" name="Hydrogen"/>
     </aminoacid>
     <aminoacid name="Leucine" shortname="Leu" symbol="L">
-        <elementName2Count>
-            <entry>
-                <key>Oxygen</key>
-                <value>1</value>
-            </entry>
-            <entry>
-                <key>Carbon</key>
-                <value>6</value>
-            </entry>
-            <entry>
-                <key>Hydrogen</key>
-                <value>11</value>
-            </entry>
-            <entry>
-                <key>Nitrogen</key>
-                <value>1</value>
-            </entry>
-        </elementName2Count>
-        <isotopeName2Count/>
+        <elements count="6" name="Carbon"/>
+        <elements count="1" name="Nitrogen"/>
+        <elements count="1" name="Oxygen"/>
+        <isotopes count="11" name="Hydrogen"/>
     </aminoacid>
     <aminoacid name="Lysine" shortname="Lys" symbol="K">
-        <elementName2Count>
-            <entry>
-                <key>Oxygen</key>
-                <value>1</value>
-            </entry>
-            <entry>
-                <key>Carbon</key>
-                <value>6</value>
-            </entry>
-            <entry>
-                <key>Hydrogen</key>
-                <value>12</value>
-            </entry>
-            <entry>
-                <key>Nitrogen</key>
-                <value>2</value>
-            </entry>
-        </elementName2Count>
-        <isotopeName2Count/>
+        <elements count="6" name="Carbon"/>
+        <elements count="2" name="Nitrogen"/>
+        <elements count="1" name="Oxygen"/>
+        <isotopes count="12" name="Hydrogen"/>
     </aminoacid>
     <aminoacid name="Methionine" shortname="Met" symbol="M">
-        <elementName2Count>
-            <entry>
-                <key>Sulfur</key>
-                <value>1</value>
-            </entry>
-            <entry>
-                <key>Oxygen</key>
-                <value>1</value>
-            </entry>
-            <entry>
-                <key>Carbon</key>
-                <value>5</value>
-            </entry>
-            <entry>
-                <key>Hydrogen</key>
-                <value>9</value>
-            </entry>
-            <entry>
-                <key>Nitrogen</key>
-                <value>1</value>
-            </entry>
-        </elementName2Count>
-        <isotopeName2Count/>
+        <elements count="5" name="Carbon"/>
+        <elements count="1" name="Nitrogen"/>
+        <elements count="1" name="Oxygen"/>
+        <elements count="1" name="Sulfur"/>
+        <isotopes count="9" name="Hydrogen"/>
     </aminoacid>
     <aminoacid name="Phenylalanine" shortname="Phe" symbol="F">
-        <elementName2Count>
-            <entry>
-                <key>Oxygen</key>
-                <value>1</value>
-            </entry>
-            <entry>
-                <key>Carbon</key>
-                <value>9</value>
-            </entry>
-            <entry>
-                <key>Hydrogen</key>
-                <value>9</value>
-            </entry>
-            <entry>
-                <key>Nitrogen</key>
-                <value>1</value>
-            </entry>
-        </elementName2Count>
-        <isotopeName2Count/>
+        <elements count="9" name="Carbon"/>
+        <elements count="1" name="Nitrogen"/>
+        <elements count="1" name="Oxygen"/>
+        <isotopes count="9" name="Hydrogen"/>
     </aminoacid>
     <aminoacid name="Proline" shortname="Pro" symbol="P">
-        <elementName2Count>
-            <entry>
-                <key>Oxygen</key>
-                <value>1</value>
-            </entry>
-            <entry>
-                <key>Carbon</key>
-                <value>5</value>
-            </entry>
-            <entry>
-                <key>Hydrogen</key>
-                <value>7</value>
-            </entry>
-            <entry>
-                <key>Nitrogen</key>
-                <value>1</value>
-            </entry>
-        </elementName2Count>
-        <isotopeName2Count/>
+        <elements count="5" name="Carbon"/>
+        <elements count="1" name="Nitrogen"/>
+        <elements count="1" name="Oxygen"/>
+        <isotopes count="7" name="Hydrogen"/>
     </aminoacid>
     <aminoacid name="Serine" shortname="Ser" symbol="S">
-        <elementName2Count>
-            <entry>
-                <key>Oxygen</key>
-                <value>2</value>
-            </entry>
-            <entry>
-                <key>Carbon</key>
-                <value>3</value>
-            </entry>
-            <entry>
-                <key>Hydrogen</key>
-                <value>5</value>
-            </entry>
-            <entry>
-                <key>Nitrogen</key>
-                <value>1</value>
-            </entry>
-        </elementName2Count>
-        <isotopeName2Count/>
+        <elements count="3" name="Carbon"/>
+        <elements count="1" name="Nitrogen"/>
+        <elements count="2" name="Oxygen"/>
+        <isotopes count="5" name="Hydrogen"/>
     </aminoacid>
     <aminoacid name="Threonine" shortname="Thr" symbol="T">
-        <elementName2Count>
-            <entry>
-                <key>Oxygen</key>
-                <value>2</value>
-            </entry>
-            <entry>
-                <key>Carbon</key>
-                <value>4</value>
-            </entry>
-            <entry>
-                <key>Hydrogen</key>
-                <value>7</value>
-            </entry>
-            <entry>
-                <key>Nitrogen</key>
-                <value>1</value>
-            </entry>
-        </elementName2Count>
-        <isotopeName2Count/>
+        <elements count="4" name="Carbon"/>
+        <elements count="7" name="Hydrogen"/>
+        <elements count="1" name="Nitrogen"/>
+        <elements count="2" name="Oxygen"/>
     </aminoacid>
     <aminoacid name="Tryptophan" shortname="Trp" symbol="W">
-        <elementName2Count>
-            <entry>
-                <key>Oxygen</key>
-                <value>1</value>
-            </entry>
-            <entry>
-                <key>Carbon</key>
-                <value>11</value>
-            </entry>
-            <entry>
-                <key>Hydrogen</key>
-                <value>10</value>
-            </entry>
-            <entry>
-                <key>Nitrogen</key>
-                <value>2</value>
-            </entry>
-        </elementName2Count>
-        <isotopeName2Count/>
+        <elements count="11" name="Carbon"/>
+        <elements count="2" name="Nitrogen"/>
+        <elements count="1" name="Oxygen"/>
+        <isotopes count="10" name="Hydrogen"/>
     </aminoacid>
     <aminoacid name="Tyrosine" shortname="Tyr" symbol="Y">
-        <elementName2Count>
-            <entry>
-                <key>Oxygen</key>
-                <value>2</value>
-            </entry>
-            <entry>
-                <key>Carbon</key>
-                <value>9</value>
-            </entry>
-            <entry>
-                <key>Hydrogen</key>
-                <value>9</value>
-            </entry>
-            <entry>
-                <key>Nitrogen</key>
-                <value>1</value>
-            </entry>
-        </elementName2Count>
-        <isotopeName2Count/>
+        <elements count="9" name="Carbon"/>
+        <elements count="1" name="Nitrogen"/>
+        <elements count="2" name="Oxygen"/>
+        <isotopes count="9" name="Hydrogen"/>
     </aminoacid>
     <aminoacid name="Valine" shortname="Val" symbol="V">
-        <elementName2Count>
-            <entry>
-                <key>Oxygen</key>
-                <value>1</value>
-            </entry>
-            <entry>
-                <key>Carbon</key>
-                <value>5</value>
-            </entry>
-            <entry>
-                <key>Hydrogen</key>
-                <value>9</value>
-            </entry>
-            <entry>
-                <key>Nitrogen</key>
-                <value>1</value>
-            </entry>
-        </elementName2Count>
-        <isotopeName2Count/>
+        <elements count="5" name="Carbon"/>
+        <elements count="1" name="Nitrogen"/>
+        <elements count="1" name="Oxygen"/>
+        <isotopes count="9" name="Hydrogen"/>
     </aminoacid>
 </ns2:AminoAcidsTable>

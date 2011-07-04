@@ -1,14 +1,15 @@
 package org.biojava3.aaproperties.xml;
 
-import java.util.Map;
+import java.util.List;
 
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlAccessType;
 
 @XmlRootElement(name = "AminoAcidComposition", namespace ="http://biojava.org")
-@XmlAccessorType(XmlAccessType.FIELD)
+@XmlAccessorType(XmlAccessType.NONE)
 public class AminoAcidComposition {
 	/**
 	 * Amino acid symbol - single character
@@ -28,23 +29,23 @@ public class AminoAcidComposition {
 	/**
 	 * Stores the name of the element and the amount this amino acid contains
 	 */
-	//@XmlElement(type=HashMap.class, nillable = false, defaultValue = "1", name = "elements")
-	private Map<String, Integer> elementName2Count;
+	@XmlElement(name = "elements")
+	private List<Name2Count> elementList;
 	/**
 	 * Stores the name of the isotope and the amount this amino acid contains
 	 */
-	//@XmlElement(type=HashMap.class, name = "isotopes")
-	private Map<String, Integer> isotopeName2Count;
+	@XmlElement(name = "isotopes")
+	private List<Name2Count> isotopeList;
 	
 	public AminoAcidComposition(){}
 	
-	public AminoAcidComposition(String symbol, String shortName, String name, Map<String, Integer> elementName2Count, 
-			Map<String, Integer> isotopeName2Count){
+	public AminoAcidComposition(String symbol, String shortName, String name, List<Name2Count> elementList, 
+			List<Name2Count> isotopeList){
 		this.symbol = symbol;
 		this.shortName = shortName;
 		this.name = name;
-		this.elementName2Count = elementName2Count;
-		this.isotopeName2Count = isotopeName2Count;
+		this.elementList = elementList;
+		this.isotopeList = isotopeList;
 	}
 	
 	public String toString(){
@@ -67,27 +68,11 @@ public class AminoAcidComposition {
 		this.name = name;
 	}
 	
-	public Map<String, Integer> getIsotope2Count() {
-		return isotopeName2Count;
+	public List<Name2Count> getElementList(){
+		return this.elementList;
 	}
 	
-	public int getIsotopeCount(String isotopeName){
-		return this.isotopeName2Count.get(isotopeName);
-	}
-	
-	public void setIsotope2Count(Map<String, Integer> isotopeName2Count) {
-		this.isotopeName2Count = isotopeName2Count;
-	}
-	
-	public void setElement2Count(Map<String, Integer> elementName2Count) {
-		this.elementName2Count = elementName2Count;
-	}
-	
-	public Map<String, Integer> getElement2Count() {
-		return elementName2Count;
-	}
-	
-	public int getElementCount(String elementName){
-		return this.elementName2Count.get(elementName);
+	public List<Name2Count> getIsotopeList(){
+		return this.isotopeList;
 	}
 }

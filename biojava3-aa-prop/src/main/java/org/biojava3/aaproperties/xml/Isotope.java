@@ -1,10 +1,13 @@
 package org.biojava3.aaproperties.xml;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlType;
 
 
 @XmlType(name = "Iostope", propOrder = {"name","neutronsNum","weight"})
+@XmlAccessorType(XmlAccessType.NONE)
 public class Isotope {
 	/**
 	 * The isotope name i.e. T (tritium)
@@ -46,7 +49,7 @@ public class Isotope {
 		this.neutronsNum = neutronsNum;
 	}
 	
-	public double weight() {
+	public double getWeight() {
 		return weight;
 	}
 	
