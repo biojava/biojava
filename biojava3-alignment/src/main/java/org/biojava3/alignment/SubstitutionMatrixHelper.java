@@ -27,11 +27,13 @@ import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.biojava3.alignment.aaindex.AAindexFactory;
 import org.biojava3.alignment.template.SubstitutionMatrix;
 import org.biojava3.core.sequence.compound.AmbiguityDNACompoundSet;
 import org.biojava3.core.sequence.compound.AminoAcidCompound;
 import org.biojava3.core.sequence.compound.AminoAcidCompoundSet;
 import org.biojava3.core.sequence.compound.NucleotideCompound;
+
 
 /**
  * Static utility to access substitution matrices that come bundled with BioJava.  All matrices were downloaded from
@@ -49,6 +51,19 @@ public class SubstitutionMatrixHelper {
     // prevents instantiation
     private SubstitutionMatrixHelper() { }
 
+    
+    /** Returns any matrix from the AAINDEX database file
+     * 
+     * @param matrixName
+     * @return a {@link SubstitutionMatrix}
+     */
+    public static SubstitutionMatrix<AminoAcidCompound> getMatrixFromAAINDEX(String matrixName){
+    	
+    	return AAindexFactory.getAAIndexProvider().getMatrix(matrixName);
+    	
+    }
+    
+    
     /**
      * Returns Blosum 100 matrix by Henikoff & Henikoff
      * @return Blosum 100 matrix
