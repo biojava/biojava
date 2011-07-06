@@ -97,7 +97,7 @@ public class Element {
 		this.name2Isotope = new HashMap<String, Isotope>();
 		if(isotopes != null){
 			for(Isotope i:isotopes){
-				name2Isotope.put(i.name(), i);
+				name2Isotope.put(i.getName(), i);
 			}
 		}
 	}

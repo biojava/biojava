@@ -35,41 +35,23 @@ import org.biojava3.core.sequence.compound.AminoAcidCompound;
 /**
  * TODO
  * 
- * 12) Write an email to in bio-javalist after solving all the above
- * 
- * 
- * 1) The question I have now is - What is the minimal requirements for defining compound? There should be a test case demonstrating them.
- * 
- * Other test cases, and parts of your cookbook should demonstrate how to define
-1) Labelled amino acid.
-2) Phosphorilated or modified in any other way amino acid.
-3) any other compound which is not an amino acid. e.g. Glucose.
-4) Any or all of the above in the peptide chain
+1) Finalized XML and stuff. Write test cases and cookbook.
+	* Do up the cookbook
+	* Phosphorylation etc - Create XML files to show this - Do test cases for them as well
+	* Radio Labeled - Create XML files to show this - Do test cases for them as well
+2) Email them to check.
+3) Email BioJava mailing list
+4) Start working on executables to generate work on the APIs - based on APIs defined in IPeptideProperties
 
-Calculate molecular weight for all of the above.
-Does it all fit well into an XML you have defined for the compound?
-
-
-
-One more thing - what is the minimum requirement for defining an element?
-Which XML attributes are required and which are optional. You should also describe this in you cookbook, perhaps in a separate section to avoid overcomplicating more common use cases.
-
-I know these are defined in the classes, but the test case and a cookbook entry would be helpful.
-
- * 
  * Meetings
- * Wednesday 6 July
  * Wednesday 13 July
  * Thursday 21 July
  * 
  * DONE
- * Add CookBook pages on how Net Charge and Instability Index are computed.
- * Defined the standard XML files in the CookBook
+ *
  * 
  * 
  * Question
- * 
- * 
  * 
  * An interface to generate some basic physico-chemical properties of protein sequences.<br/>
  * The following properties could be generated:

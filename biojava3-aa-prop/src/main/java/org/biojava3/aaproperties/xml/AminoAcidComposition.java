@@ -8,7 +8,7 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlAccessType;
 
-@XmlRootElement(name = "AminoAcidComposition", namespace ="http://biojava.org")
+@XmlRootElement(name = "compoundcomposition", namespace ="http://biojava.org")
 @XmlAccessorType(XmlAccessType.NONE)
 public class AminoAcidComposition {
 	/**
@@ -29,19 +29,22 @@ public class AminoAcidComposition {
 	/**
 	 * Stores the name of the element and the amount this amino acid contains
 	 */
-	@XmlElement(name = "elements")
+	@XmlElement(name = "element")
 	private List<Name2Count> elementList;
 	/**
 	 * Stores the name of the isotope and the amount this amino acid contains
 	 */
-	@XmlElement(name = "isotopes")
+	@XmlElement(name = "isotope", required = false)
 	private List<Name2Count> isotopeList;
 	
 	public AminoAcidComposition(){}
 	
 	public AminoAcidComposition(String symbol, String shortName, String name, List<Name2Count> elementList, 
 			List<Name2Count> isotopeList){
-		this.symbol = symbol;
+		if(symbol.length() != 1){
+			throw new Error("Symbol attribute must be of length 1.");
+		}
+		this.symbol = symbol.toUpperCase();
 		this.shortName = shortName;
 		this.name = name;
 		this.elementList = elementList;

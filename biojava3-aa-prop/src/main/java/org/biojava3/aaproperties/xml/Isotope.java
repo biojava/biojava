@@ -6,7 +6,7 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlType;
 
 
-@XmlType(name = "Iostope", propOrder = {"name","neutronsNum","weight"})
+@XmlType(name = "Iostope", propOrder = {"name","neutronsNum","mass"})
 @XmlAccessorType(XmlAccessType.NONE)
 public class Isotope {
 	/**
@@ -22,8 +22,8 @@ public class Isotope {
 	/**
 	 * Relative Atomic Mass of the isotope
 	 */
-	@XmlAttribute(name = "weight", required = true)
-	private double weight; 
+	@XmlAttribute(name = "mass", required = true)
+	private double mass; 
 
 	public Isotope(){}
 
@@ -33,7 +33,7 @@ public class Isotope {
 		this.setWeight(weight);
 	}
 	
-	public String name(){
+	public String getName(){
 		return this.name;
 	}
 
@@ -41,7 +41,7 @@ public class Isotope {
 		this.name = name;
 	}
 	
-	public int neutronsNum() {
+	public int getNeutronsNum() {
 		return neutronsNum;
 	}
 	
@@ -49,11 +49,11 @@ public class Isotope {
 		this.neutronsNum = neutronsNum;
 	}
 	
-	public double getWeight() {
-		return weight;
+	public double getMass() {
+		return mass;
 	}
 	
 	public void setWeight(double weight) {
-		this.weight = weight;
+		this.mass = weight;
 	}
 }

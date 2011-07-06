@@ -4,14 +4,19 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
-@XmlRootElement(name="AminoAcidsTable", namespace="http://biojava.org")
+@XmlRootElement(name="compoundtable", namespace="http://biojava.org")
+@XmlAccessorType(XmlAccessType.NONE)
 public class AminoAcidCompositionTable {
 	
 	/**
 	 * Contains the list of amino acid composition 
 	 */
+	@XmlElement(name = "compound", required = true)
 	private List<AminoAcidComposition> aminoacid;
 	
 	/**
@@ -61,8 +66,8 @@ public class AminoAcidCompositionTable {
 						throw new Error("Isotope " + isotope.getName() + " could not be found. " +
 							"\r\nPlease ensure that its name is correct in AminoAcidComposition.xml and is defined in ElementMass.xml.");
 					}
-					eTable.getIsotope(isotope.getName()).getWeight();
-					total += eTable.getIsotope(isotope.getName()).getWeight() * isotope.getCount();
+					eTable.getIsotope(isotope.getName()).getMass();
+					total += eTable.getIsotope(isotope.getName()).getMass() * isotope.getCount();
 				}
 			}
 			this.aaSymbol2MolecularWeight.put(a.getSymbol(), total);

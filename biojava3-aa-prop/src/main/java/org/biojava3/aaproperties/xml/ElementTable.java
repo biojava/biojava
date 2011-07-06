@@ -46,7 +46,7 @@ public class ElementTable {
 				this.elementName2Element.put(e.getName(), e);
 				if(e.getIsotopes() != null){
 					for(Isotope i:e.getIsotopes()){
-						this.isotopeName2Isotope.put(i.name(), i);
+						this.isotopeName2Isotope.put(i.getName(), i);
 					}
 				}
 			}

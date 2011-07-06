@@ -16,7 +16,6 @@ import javax.xml.bind.Unmarshaller;
 import org.junit.Test;
 
 public class AminoAcidTester {
-	
 	@Test
 	public void generateSchema() throws JAXBException, IOException{
 		JAXBContext context = JAXBContext.newInstance(AminoAcidCompositionTable.class);
@@ -68,166 +67,162 @@ public class AminoAcidTester {
 	@Test
 	public void generateXml() throws JAXBException, IOException{
 		List<Name2Count> elementList = new ArrayList<Name2Count>();
-		List<Name2Count> isotopeList = new ArrayList<Name2Count>();
 		elementList.add(new Name2Count("Carbon", 3));
-		isotopeList.add(new Name2Count("Hydrogen", 5));
+		elementList.add(new Name2Count("Hydrogen", 5));
 		elementList.add(new Name2Count("Nitrogen", 1));
 		elementList.add(new Name2Count("Oxygen", 1));
-		AminoAcidComposition alanine = new AminoAcidComposition("A", "Ala", "Alanine", elementList, isotopeList);
+		AminoAcidComposition alanine = new AminoAcidComposition("A", "Ala", "Alanine", elementList, null);
 		
 		elementList = new ArrayList<Name2Count>();
-		isotopeList = new ArrayList<Name2Count>();
 		elementList.add(new Name2Count("Carbon", 6));
-		isotopeList.add(new Name2Count("Hydrogen", 12));
+		elementList.add(new Name2Count("Hydrogen", 12));
 		elementList.add(new Name2Count("Nitrogen", 4));
 		elementList.add(new Name2Count("Oxygen", 1));
-		AminoAcidComposition arginine = new AminoAcidComposition("R", "Arg", "Arginine", elementList, isotopeList);
+		AminoAcidComposition arginine = new AminoAcidComposition("R", "Arg", "Arginine", elementList, null);
 		
 		elementList = new ArrayList<Name2Count>();
-		isotopeList = new ArrayList<Name2Count>();
 		elementList.add(new Name2Count("Carbon", 4));
-		isotopeList.add(new Name2Count("Hydrogen", 6));
+		elementList.add(new Name2Count("Hydrogen", 6));
 		elementList.add(new Name2Count("Nitrogen", 2));
 		elementList.add(new Name2Count("Oxygen", 2));
-		AminoAcidComposition asparagine = new AminoAcidComposition("N", "Asn", "Asparagine", elementList, isotopeList);
+		AminoAcidComposition asparagine = new AminoAcidComposition("N", "Asn", "Asparagine", elementList, null);
 	
 		elementList = new ArrayList<Name2Count>();
-		isotopeList = new ArrayList<Name2Count>();
 		elementList.add(new Name2Count("Carbon", 4));
-		isotopeList.add(new Name2Count("Hydrogen", 5));
+		elementList.add(new Name2Count("Hydrogen", 5));
 		elementList.add(new Name2Count("Nitrogen", 1));
 		elementList.add(new Name2Count("Oxygen", 3));
-		AminoAcidComposition asparticAcid = new AminoAcidComposition("D", "Asp", "Aspartic Acid", elementList, isotopeList);
+		AminoAcidComposition asparticAcid = new AminoAcidComposition("D", "Asp", "Aspartic Acid", elementList, null);
 		
 		elementList = new ArrayList<Name2Count>();
-		isotopeList = new ArrayList<Name2Count>();
+		
 		elementList.add(new Name2Count("Carbon", 3));
-		isotopeList.add(new Name2Count("Hydrogen", 5));
+		elementList.add(new Name2Count("Hydrogen", 5));
 		elementList.add(new Name2Count("Nitrogen", 1));
 		elementList.add(new Name2Count("Oxygen", 1));
 		elementList.add(new Name2Count("Sulfur", 1));
-		AminoAcidComposition cysteine = new AminoAcidComposition("C", "Cys", "Cysteine", elementList, isotopeList);
+		AminoAcidComposition cysteine = new AminoAcidComposition("C", "Cys", "Cysteine", elementList, null);
 		
 		elementList = new ArrayList<Name2Count>();
-		isotopeList = new ArrayList<Name2Count>();
+		
 		elementList.add(new Name2Count("Carbon", 5));
-		isotopeList.add(new Name2Count("Hydrogen", 7));
+		elementList.add(new Name2Count("Hydrogen", 7));
 		elementList.add(new Name2Count("Nitrogen", 1));
 		elementList.add(new Name2Count("Oxygen", 3));
-		AminoAcidComposition glutamicAcid = new AminoAcidComposition("E", "Glu", "Glutamic Acid", elementList, isotopeList);
+		AminoAcidComposition glutamicAcid = new AminoAcidComposition("E", "Glu", "Glutamic Acid", elementList, null);
 		
 		elementList = new ArrayList<Name2Count>();
-		isotopeList = new ArrayList<Name2Count>();
+		
 		elementList.add(new Name2Count("Carbon", 5));
-		isotopeList.add(new Name2Count("Hydrogen", 8));
+		elementList.add(new Name2Count("Hydrogen", 8));
 		elementList.add(new Name2Count("Nitrogen", 2));
 		elementList.add(new Name2Count("Oxygen", 2));
-		AminoAcidComposition glutamine = new AminoAcidComposition("Q", "Gln", "Glutamine", elementList, isotopeList);
+		AminoAcidComposition glutamine = new AminoAcidComposition("Q", "Gln", "Glutamine", elementList, null);
 		
 		elementList = new ArrayList<Name2Count>();
-		isotopeList = new ArrayList<Name2Count>();
+		
 		elementList.add(new Name2Count("Carbon", 2));
-		isotopeList.add(new Name2Count("Hydrogen", 3));
+		elementList.add(new Name2Count("Hydrogen", 3));
 		elementList.add(new Name2Count("Nitrogen", 1));
 		elementList.add(new Name2Count("Oxygen", 1));
-		AminoAcidComposition glycine = new AminoAcidComposition("G", "Gly", "Glycine", elementList, isotopeList);
+		AminoAcidComposition glycine = new AminoAcidComposition("G", "Gly", "Glycine", elementList, null);
 		
 		elementList = new ArrayList<Name2Count>();
-		isotopeList = new ArrayList<Name2Count>();
+		
 		elementList.add(new Name2Count("Carbon", 6));
-		isotopeList.add(new Name2Count("Hydrogen", 7));
+		elementList.add(new Name2Count("Hydrogen", 7));
 		elementList.add(new Name2Count("Nitrogen", 3));
 		elementList.add(new Name2Count("Oxygen", 1));
-		AminoAcidComposition histidine = new AminoAcidComposition("H", "His", "Histidine", elementList, isotopeList);
+		AminoAcidComposition histidine = new AminoAcidComposition("H", "His", "Histidine", elementList, null);
 		
 		elementList = new ArrayList<Name2Count>();
-		isotopeList = new ArrayList<Name2Count>();
+		
 		elementList.add(new Name2Count("Carbon", 6));
-		isotopeList.add(new Name2Count("Hydrogen", 11));
+		elementList.add(new Name2Count("Hydrogen", 11));
 		elementList.add(new Name2Count("Nitrogen", 1));
 		elementList.add(new Name2Count("Oxygen", 1));
-		AminoAcidComposition isoleucine = new AminoAcidComposition("I", "Ile", "Isoleucine", elementList, isotopeList);
+		AminoAcidComposition isoleucine = new AminoAcidComposition("I", "Ile", "Isoleucine", elementList, null);
 		
 		elementList = new ArrayList<Name2Count>();
-		isotopeList = new ArrayList<Name2Count>();
+		
 		elementList.add(new Name2Count("Carbon", 6));
-		isotopeList.add(new Name2Count("Hydrogen", 11));
+		elementList.add(new Name2Count("Hydrogen", 11));
 		elementList.add(new Name2Count("Nitrogen", 1));
 		elementList.add(new Name2Count("Oxygen", 1));
-		AminoAcidComposition leucine = new AminoAcidComposition("L", "Leu", "Leucine", elementList, isotopeList);
+		AminoAcidComposition leucine = new AminoAcidComposition("L", "Leu", "Leucine", elementList, null);
 		
 		elementList = new ArrayList<Name2Count>();
-		isotopeList = new ArrayList<Name2Count>();
+		
 		elementList.add(new Name2Count("Carbon", 6));
-		isotopeList.add(new Name2Count("Hydrogen", 12));
+		elementList.add(new Name2Count("Hydrogen", 12));
 		elementList.add(new Name2Count("Nitrogen", 2));
 		elementList.add(new Name2Count("Oxygen", 1));
-		AminoAcidComposition lysine = new AminoAcidComposition("K", "Lys", "Lysine", elementList, isotopeList);
+		AminoAcidComposition lysine = new AminoAcidComposition("K", "Lys", "Lysine", elementList, null);
 		
 		elementList = new ArrayList<Name2Count>();
-		isotopeList = new ArrayList<Name2Count>();
+		
 		elementList.add(new Name2Count("Carbon", 5));
-		isotopeList.add(new Name2Count("Hydrogen", 9));
+		elementList.add(new Name2Count("Hydrogen", 9));
 		elementList.add(new Name2Count("Nitrogen", 1));
 		elementList.add(new Name2Count("Oxygen", 1));
 		elementList.add(new Name2Count("Sulfur", 1));
-		AminoAcidComposition methionine = new AminoAcidComposition("M", "Met", "Methionine", elementList, isotopeList);
+		AminoAcidComposition methionine = new AminoAcidComposition("M", "Met", "Methionine", elementList, null);
 		
 		elementList = new ArrayList<Name2Count>();
-		isotopeList = new ArrayList<Name2Count>();
+		
 		elementList.add(new Name2Count("Carbon", 9));
-		isotopeList.add(new Name2Count("Hydrogen", 9));
+		elementList.add(new Name2Count("Hydrogen", 9));
 		elementList.add(new Name2Count("Nitrogen", 1));
 		elementList.add(new Name2Count("Oxygen", 1));
-		AminoAcidComposition phenylalanine = new AminoAcidComposition("F", "Phe", "Phenylalanine", elementList, isotopeList);
+		AminoAcidComposition phenylalanine = new AminoAcidComposition("F", "Phe", "Phenylalanine", elementList, null);
 		
 		elementList = new ArrayList<Name2Count>();
-		isotopeList = new ArrayList<Name2Count>();
+		
 		elementList.add(new Name2Count("Carbon", 5));
-		isotopeList.add(new Name2Count("Hydrogen", 7));
+		elementList.add(new Name2Count("Hydrogen", 7));
 		elementList.add(new Name2Count("Nitrogen", 1));
 		elementList.add(new Name2Count("Oxygen", 1));
-		AminoAcidComposition proline = new AminoAcidComposition("P", "Pro", "Proline", elementList, isotopeList);
+		AminoAcidComposition proline = new AminoAcidComposition("P", "Pro", "Proline", elementList, null);
 		
 		elementList = new ArrayList<Name2Count>();
-		isotopeList = new ArrayList<Name2Count>();
+		
 		elementList.add(new Name2Count("Carbon", 3));
-		isotopeList.add(new Name2Count("Hydrogen", 5));
+		elementList.add(new Name2Count("Hydrogen", 5));
 		elementList.add(new Name2Count("Nitrogen", 1));
 		elementList.add(new Name2Count("Oxygen", 2));
-		AminoAcidComposition serine = new AminoAcidComposition("S", "Ser", "Serine", elementList, isotopeList);
+		AminoAcidComposition serine = new AminoAcidComposition("S", "Ser", "Serine", elementList, null);
 		
 		elementList = new ArrayList<Name2Count>();
-		isotopeList = new ArrayList<Name2Count>();
+		
 		elementList.add(new Name2Count("Carbon", 4));
 		elementList.add(new Name2Count("Hydrogen", 7));
 		elementList.add(new Name2Count("Nitrogen", 1));
 		elementList.add(new Name2Count("Oxygen", 2));
-		AminoAcidComposition threonine = new AminoAcidComposition("T", "Thr", "Threonine", elementList, isotopeList);
+		AminoAcidComposition threonine = new AminoAcidComposition("T", "Thr", "Threonine", elementList, null);
 		
 		elementList = new ArrayList<Name2Count>();
-		isotopeList = new ArrayList<Name2Count>();
+		
 		elementList.add(new Name2Count("Carbon", 11));
-		isotopeList.add(new Name2Count("Hydrogen", 10));
+		elementList.add(new Name2Count("Hydrogen", 10));
 		elementList.add(new Name2Count("Nitrogen", 2));
 		elementList.add(new Name2Count("Oxygen", 1));
-		AminoAcidComposition tryptophan = new AminoAcidComposition("W", "Trp", "Tryptophan", elementList, isotopeList);
+		AminoAcidComposition tryptophan = new AminoAcidComposition("W", "Trp", "Tryptophan", elementList, null);
 		
 		elementList = new ArrayList<Name2Count>();
-		isotopeList = new ArrayList<Name2Count>();
+		
 		elementList.add(new Name2Count("Carbon", 9));
-		isotopeList.add(new Name2Count("Hydrogen", 9));
+		elementList.add(new Name2Count("Hydrogen", 9));
 		elementList.add(new Name2Count("Nitrogen", 1));
 		elementList.add(new Name2Count("Oxygen", 2));
-		AminoAcidComposition tyrosine = new AminoAcidComposition("Y", "Tyr", "Tyrosine", elementList, isotopeList);
+		AminoAcidComposition tyrosine = new AminoAcidComposition("Y", "Tyr", "Tyrosine", elementList, null);
 		
 		elementList = new ArrayList<Name2Count>();
-		isotopeList = new ArrayList<Name2Count>();
+		
 		elementList.add(new Name2Count("Carbon", 5));
-		isotopeList.add(new Name2Count("Hydrogen", 9));
+		elementList.add(new Name2Count("Hydrogen", 9));
 		elementList.add(new Name2Count("Nitrogen", 1));
 		elementList.add(new Name2Count("Oxygen", 1));
-		AminoAcidComposition valine = new AminoAcidComposition("V", "Val", "Valine", elementList, isotopeList);
+		AminoAcidComposition valine = new AminoAcidComposition("V", "Val", "Valine", elementList, null);
 		
 		List<AminoAcidComposition> aList = new ArrayList<AminoAcidComposition>();
 		aList.add(alanine);
