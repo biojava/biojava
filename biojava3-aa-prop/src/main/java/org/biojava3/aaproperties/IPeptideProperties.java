@@ -34,9 +34,28 @@ import org.biojava3.core.sequence.compound.AminoAcidCompound;
 
 /**
  * TODO
- * 13) Definition of the xml in the cook book
- * 2) How to write the formulae for Net Charge where there are summation and power. Likewise for Instability index - Use images if not possible
+ * 
  * 12) Write an email to in bio-javalist after solving all the above
+ * 
+ * 
+ * 1) The question I have now is - What is the minimal requirements for defining compound? There should be a test case demonstrating them.
+ * 
+ * Other test cases, and parts of your cookbook should demonstrate how to define
+1) Labelled amino acid.
+2) Phosphorilated or modified in any other way amino acid.
+3) any other compound which is not an amino acid. e.g. Glucose.
+4) Any or all of the above in the peptide chain
+
+Calculate molecular weight for all of the above.
+Does it all fit well into an XML you have defined for the compound?
+
+
+
+One more thing - what is the minimum requirement for defining an element?
+Which XML attributes are required and which are optional. You should also describe this in you cookbook, perhaps in a separate section to avoid overcomplicating more common use cases.
+
+I know these are defined in the classes, but the test case and a cookbook entry would be helpful.
+
  * 
  * Meetings
  * Wednesday 6 July
@@ -44,10 +63,9 @@ import org.biojava3.core.sequence.compound.AminoAcidCompound;
  * Thursday 21 July
  * 
  * DONE
- * Added annotations for AminoAcidComposition.java and Element.java.
- * Simplified MolecularWeight.xml and ElementMass.xml.
- * Work around and made the XML files annotated to requirements.
- * Use Hydrogen-1 isotope weight
+ * Add CookBook pages on how Net Charge and Instability Index are computed.
+ * Defined the standard XML files in the CookBook
+ * 
  * 
  * Question
  * 

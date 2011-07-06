@@ -19,12 +19,12 @@ public class AminoAcidComposition {
 	/**
 	 * Amino acid short name - three characters
 	 */
-	@XmlAttribute(name = "shortname", required = true)
+	@XmlAttribute(name = "shortname")
 	private String shortName;
 	/**
 	 * Amino acid full name
 	 */
-	@XmlAttribute(name = "name", required = true)
+	@XmlAttribute(name = "name")
 	private String name;
 	/**
 	 * Stores the name of the element and the amount this amino acid contains

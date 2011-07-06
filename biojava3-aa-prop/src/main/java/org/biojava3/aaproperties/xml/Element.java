@@ -25,12 +25,12 @@ public class Element {
 	/**
 	 * Element short name as in periodic table e.g. "H"
 	 */
-	@XmlAttribute(name = "symbol", required = true)
+	@XmlAttribute(name = "symbol")
 	private String symbol; 
 	/**
 	 * The atomic number of the element = number of protons. 
 	 */
-	@XmlAttribute(name = "atomicnumber", required = true)
+	@XmlAttribute(name = "atomicnumber")
 	private int atomicNumber; 
 	/**
 	 * The computed mass based on isotopes and their abundances

@@ -46,7 +46,10 @@ public class AminoAcidCompositionTable {
 			if(a.getElementList() != null){
 				for(Name2Count element:a.getElementList()){
 					element.getName();
-					eTable.getElement(element.getName());
+					if(eTable.getElement(element.getName()) == null){
+						throw new Error("Element " + element.getName() + " could not be found. " +
+								"\r\nPlease ensure that its name is correct in AminoAcidComposition.xml and is defined in ElementMass.xml.");
+					}
 					eTable.getElement(element.getName()).getMass();
 					total += eTable.getElement(element.getName()).getMass() * element.getCount();
 				}
@@ -54,7 +57,10 @@ public class AminoAcidCompositionTable {
 			if(a.getIsotopeList() != null){
 				for(Name2Count isotope:a.getIsotopeList()){
 					isotope.getName();
-					eTable.getIsotope(isotope.getName());
+					if(eTable.getIsotope(isotope.getName()) == null){
+						throw new Error("Isotope " + isotope.getName() + " could not be found. " +
+							"\r\nPlease ensure that its name is correct in AminoAcidComposition.xml and is defined in ElementMass.xml.");
+					}
 					eTable.getIsotope(isotope.getName()).getWeight();
 					total += eTable.getIsotope(isotope.getName()).getWeight() * isotope.getCount();
 				}
