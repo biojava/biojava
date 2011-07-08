@@ -35,11 +35,6 @@ import org.biojava3.core.sequence.compound.AminoAcidCompound;
 /**
  * TODO
  * 
-1) Finalized XML and stuff. Write test cases and cookbook.
-	* Do up the cookbook
-	* Phosphorylation etc - Create XML files to show this - Do test cases for them as well
-	* Radio Labeled - Create XML files to show this - Do test cases for them as well
-2) Email them to check.
 3) Email BioJava mailing list
 4) Start working on executables to generate work on the APIs - based on APIs defined in IPeptideProperties
 
@@ -48,8 +43,6 @@ import org.biojava3.core.sequence.compound.AminoAcidCompound;
  * Thursday 21 July
  * 
  * DONE
- *
- * 
  * 
  * Question
  * 
@@ -132,10 +125,8 @@ public interface IPeptideProperties{
 	 * @param aminoAcidCompositionTable
 	 * 	a amino acid composition table obtained by calling IPeptideProperties.obtainAminoAcidCompositionTable
 	 * @return the total molecular weight of sequence + weight of water molecule
-	 * @throws Exception
-	 * 	thrown if the method IPeptideProperties.setMolecularWeightXML(File, File) is not successfully called before calling this method.
 	 */
-	public double getMolecularWeightBasedOnXML(ProteinSequence sequence, AminoAcidCompositionTable aminoAcidCompositionTable) throws Exception;
+	public double getMolecularWeightBasedOnXML(ProteinSequence sequence, AminoAcidCompositionTable aminoAcidCompositionTable);
 	
 	/**
 	 * This method would initialize amino acid composition table based on the input xml files and stores the table for usage in future calls to 

@@ -147,11 +147,10 @@ public class PeptideProperties {
 	 * @param aminoAcidCompositionTable
 	 * 	a amino acid composition table obtained by calling IPeptideProperties.obtainAminoAcidCompositionTable
 	 * @return the total molecular weight of sequence + weight of water molecule
-	 * @throws Exception
 	 * 	thrown if the method IPeptideProperties.setMolecularWeightXML(File, File) is not successfully called before calling this method.
 	 */
-	public static double getMolecularWeightBasedOnXML(String sequence, AminoAcidCompositionTable aminoAcidCompositionTable) throws Exception{
-		sequence = Utils.checkSequence(sequence);
+	public static double getMolecularWeightBasedOnXML(String sequence, AminoAcidCompositionTable aminoAcidCompositionTable){
+		sequence = Utils.checkSequence(sequence, aminoAcidCompositionTable.getSymbolSet());
 		ProteinSequence pSequence = new ProteinSequence(sequence);
 		IPeptideProperties pp = new PeptidePropertiesImpl();
 		return pp.getMolecularWeightBasedOnXML(pSequence, aminoAcidCompositionTable);

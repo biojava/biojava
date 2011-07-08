@@ -1,5 +1,7 @@
 package org.biojava3.aaproperties.xml;
 
+import static junit.framework.Assert.assertEquals;
+
 import java.io.BufferedWriter;
 import java.io.FileInputStream;
 import java.io.FileWriter;
@@ -13,6 +15,7 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 
+import org.biojava3.aaproperties.PeptideProperties;
 import org.junit.Test;
 
 public class AminoAcidTester {
@@ -20,6 +23,29 @@ public class AminoAcidTester {
 	public void generateSchema() throws JAXBException, IOException{
 		JAXBContext context = JAXBContext.newInstance(AminoAcidCompositionTable.class);
 		context.generateSchema(new SchemaGenerator("./src/main/resources/AminoAcidComposition.xsd"));
+	}
+	
+	@Test
+	public void readAdvancedXml() throws JAXBException, IOException{
+		ElementTable iTable = new ElementTable();
+		// Get a JAXB Context for the object we created above
+		JAXBContext jc = JAXBContext.newInstance(iTable.getClass());
+		Unmarshaller u = jc.createUnmarshaller();
+		iTable = (ElementTable)u.unmarshal(new FileInputStream("./src/main/resources/AdvancedElementMass.xml" ) );
+		iTable.populateMaps();
+		
+		AminoAcidCompositionTable aTable = new AminoAcidCompositionTable();
+		// Get a JAXB Context for the object we created above
+		JAXBContext jc2 = JAXBContext.newInstance(aTable.getClass());
+		Unmarshaller u2 = jc2.createUnmarshaller();
+		
+		aTable = (AminoAcidCompositionTable)u2.unmarshal(new FileInputStream("./src/main/resources/AdvancedAminoAcidComposition.xml" ) );
+		aTable.computeMolecularWeight(iTable);
+		//Assert the weight of the radioactives
+		String sequence = "BBBBB";
+		assertEquals(398.558744445, PeptideProperties.getMolecularWeightBasedOnXML(sequence, aTable));
+		sequence = "JJJJ";
+//		assertEquals(702.335483556, PeptideProperties.getMolecularWeightBasedOnXML(sequence, aTable));
 	}
 	
 	@Test
@@ -38,9 +64,9 @@ public class AminoAcidTester {
 		
 		aTable = (AminoAcidCompositionTable)u2.unmarshal(new FileInputStream("./src/main/resources/MinAminoAcidComposition.xml" ) );
 		aTable.computeMolecularWeight(iTable);
-		for(AminoAcidComposition a:aTable.getAminoacid()){
-			System.out.println(a + ", " + aTable.getMolecularWeight(a.getSymbol()));
-		}
+		
+		String sequence = "AAAAA";
+		assertEquals(373.4047, PeptideProperties.getMolecularWeightBasedOnXML(sequence, aTable));
 	}
 	
 	@Test
@@ -59,9 +85,6 @@ public class AminoAcidTester {
 		
 		aTable = (AminoAcidCompositionTable)u2.unmarshal(new FileInputStream("./src/main/resources/AminoAcidComposition.xml" ) );
 		aTable.computeMolecularWeight(iTable);
-		for(AminoAcidComposition a:aTable.getAminoacid()){
-			System.out.println(a + ", " + aTable.getMolecularWeight(a.getSymbol()));
-		}
 	}
 	
 	@Test

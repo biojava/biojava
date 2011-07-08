@@ -14,6 +14,9 @@ public class Name2Count{
 	public Name2Count(){}
 	
 	public Name2Count(String n, int c){
+		if(count <= 0){
+			throw new Error("Count must be > 0.");
+		}
 		this.name = n;
 		this.count = c;
 	}

@@ -1,5 +1,7 @@
 package org.biojava3.aaproperties;
 
+import java.util.Set;
+
 public class Utils {
 
 	/**
@@ -19,6 +21,25 @@ public class Utils {
 		d = d * p;
 		double tmp = Math.round(d);
 		return tmp/p;
+	}
+	
+	/**
+	 * Checks if given sequence contains invalid characters. Returns true if invalid characters are found, else return false.
+	 * Note that any characters are deemed as valid only if it is found in cSet.
+	 * 
+	 * @param sequence
+	 * 		protein sequence to be check.
+	 * @param cSet
+	 * 		the set of characters that are deemed valid.
+	 * @return
+	 * 		true if invalid characters are found, else return false.
+	 */
+	public final static boolean doesSequenceContainInvalidChar(String sequence, Set<Character> cSet){
+		String seq = sequence.toUpperCase();
+		for(char c:seq.toCharArray()){
+			if(cSet.contains(c) == false) return true;
+		}
+		return false;
 	}
 	
 	/**
@@ -89,13 +110,38 @@ public class Utils {
 	 * 		a sequence with no invalid characters.
 	 */
 	public static final String checkSequence(String sequence){
-		if(sequence != null && doesSequenceContainInvalidChar(sequence)){
+		return checkSequence(sequence, null);
+	}
+	
+	/**
+	 * Checks if the sequence contains invalid characters. 
+	 * Note that any character outside of the 20 standard protein amino acid codes are considered as invalid.
+	 * If yes, it will return a new sequence where invalid characters are replaced with '-'.
+	 * If no, it will simply return the input sequence. 
+	 * 
+	 * @param sequence
+	 * 		protein sequence to be check for invalid characters.
+	 * @param cSet
+	 * 		character set which define the valid characters.
+	 * @return
+	 * 		a sequence with no invalid characters.
+	 */
+	public static final String checkSequence(String sequence, Set<Character> cSet){
+		boolean containInvalid = false;
+		if(cSet != null){
+			containInvalid = sequence != null && doesSequenceContainInvalidChar(sequence, cSet);
+		}else{
+			containInvalid = sequence != null && doesSequenceContainInvalidChar(sequence);
+		}
+		if(containInvalid){
 			String cSeq = cleanSequence(sequence);
 			System.err.println("Warning: There exists invalid characters in the sequence. Computed results might not be precise.");
 			System.err.println("To remove this warning: Please use org.biojava3.aaproperties.Utils.cleanSequence to clean sequence.");
 			return cSeq;
 		}
-		else return sequence;
+		else{
+			return sequence;
+		}
 	}
 	
 	public static void main(String[] args){

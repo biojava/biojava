@@ -51,6 +51,12 @@ public class Element {
 	public Element(){}
 	
 	public Element(String name, String symbol, int atomicNumber, List<Isotope> isotopes, double mass){
+		if(atomicNumber <= 0){
+			throw new Error("Atomic number of Elements must be > 0.");
+		}
+		if(mass <= 0){
+			throw new Error("Mass of Elements must be > 0.");
+		}
 		this.setName(name);
 		this.setSymbol(symbol);
 		this.setAtomicNumber(atomicNumber);

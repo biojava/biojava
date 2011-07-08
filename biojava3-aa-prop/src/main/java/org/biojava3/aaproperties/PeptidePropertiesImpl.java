@@ -18,11 +18,15 @@ import org.biojava3.core.sequence.compound.AminoAcidCompound;
 import org.biojava3.core.sequence.compound.AminoAcidCompoundSet;
 
 public class PeptidePropertiesImpl implements IPeptideProperties{
+	public double getWaterMoleculeWeight(){
+		final double hydrogenMW = 1.0079;
+		final double hydroxideMW = 17.0073;
+		//H	1.0079	OH	17.0073
+		return hydrogenMW + hydroxideMW;
+	}
 	
 	@Override
 	public double getMolecularWeight(ProteinSequence sequence) {
-		final double hydrogenMW = 1.0079;
-		final double hydroxideMW = 17.0073;
 		double value = 0.0;
 		AminoAcidCompoundSet aaSet = new AminoAcidCompoundSet();
 		for(char aa:sequence.toString().toUpperCase().toCharArray()){
@@ -31,11 +35,10 @@ public class PeptidePropertiesImpl implements IPeptideProperties{
 				value += Constraints.aa2MolecularWeight.get(c);
 			}
 		}
-		//H	1.0079	OH	17.0073
-		if(value > 0){
-			value += hydrogenMW + hydroxideMW;
-		}
-		return value;
+		if(value == 0)
+			return value;
+		else
+			return value + getWaterMoleculeWeight();
 	}
 	
 	@Override
@@ -58,18 +61,15 @@ public class PeptidePropertiesImpl implements IPeptideProperties{
 	public double getMolecularWeightBasedOnXML(ProteinSequence sequence, AminoAcidCompositionTable aminoAcidCompositionTable){
 		double value = 0.0;
 		for(char aa:sequence.toString().toUpperCase().toCharArray()){
-			Double weight = aminoAcidCompositionTable.getMolecularWeight(aa + "");
+			Double weight = aminoAcidCompositionTable.getMolecularWeight(aa);
 			if(weight != null){
 				value += weight;
 			}
 		}
-		//H	1.0079	OH	17.0073
-		final double hydrogenMW = 1.0079;
-		final double hydroxideMW = 17.0073;
-		if(value > 0){
-			value += hydrogenMW + hydroxideMW;
-		}
-		return value;
+		if(value == 0.0)
+			return value;
+		else
+			return value + getWaterMoleculeWeight();
 	}
 
 	@Override

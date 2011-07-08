@@ -27,10 +27,16 @@ public class Isotope {
 
 	public Isotope(){}
 
-	public Isotope(String name, int neutronsNum, double weight){
+	public Isotope(String name, int neutronsNum, double mass){
+		if(neutronsNum <= 0){
+			throw new Error("Neutrons number of Isotopes must be > 0.");
+		}
+		if(mass <= 0){
+			throw new Error("Mass of Isotopes must be > 0.");
+		}
 		this.setName(name);
 		this.setNeutronsNum(neutronsNum);
-		this.setWeight(weight);
+		this.setMass(mass);
 	}
 	
 	public String getName(){
@@ -53,7 +59,7 @@ public class Isotope {
 		return mass;
 	}
 	
-	public void setWeight(double weight) {
+	public void setMass(double weight) {
 		this.mass = weight;
 	}
 }
