@@ -82,14 +82,18 @@ public class Utils {
 	 * 
 	 * @param sequence
 	 * 		protein sequence to be clean
+	 * @param cSet
+	 * 		user defined characters that are valid. Can be null. If null, then 20 standard protein amino acid codes will be considered as valid.
 	 * @return
 	 * 		a new sequence with all invalid characters being replaced by '-'.
 	 */
-	public final static String cleanSequence(String sequence){
+	public final static String cleanSequence(String sequence, Set<Character> cSet){
 		String seq = sequence.toUpperCase();
 		String cleanSeq = "";
+		if(cSet == null)
+			cSet = PeptideProperties.standardAASet;
 		for(char c:seq.toCharArray()){
-			if(PeptideProperties.standardAASet.contains(c) == false){
+			if(cSet.contains(c) == false){
 				cleanSeq += "-";
 			}else{
 				cleanSeq += c;
@@ -134,7 +138,7 @@ public class Utils {
 			containInvalid = sequence != null && doesSequenceContainInvalidChar(sequence);
 		}
 		if(containInvalid){
-			String cSeq = cleanSequence(sequence);
+			String cSeq = cleanSequence(sequence, cSet);
 			System.err.println("Warning: There exists invalid characters in the sequence. Computed results might not be precise.");
 			System.err.println("To remove this warning: Please use org.biojava3.aaproperties.Utils.cleanSequence to clean sequence.");
 			return cSeq;
@@ -147,6 +151,6 @@ public class Utils {
 	public static void main(String[] args){
 		String seq = "MTADGPCRELLCQLRAAVRHRWWCx";
 		System.out.println(doesSequenceContainInvalidChar(seq));
-		System.out.println(cleanSequence(seq));
+		System.out.println(cleanSequence(seq, null));
 	}
 }

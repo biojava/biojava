@@ -35,7 +35,6 @@ import org.biojava3.core.sequence.compound.AminoAcidCompound;
 /**
  * TODO
  * 
-3) Email BioJava mailing list
 4) Start working on executables to generate work on the APIs - based on APIs defined in IPeptideProperties
 
  * Meetings
@@ -43,6 +42,8 @@ import org.biojava3.core.sequence.compound.AminoAcidCompound;
  * Thursday 21 July
  * 
  * DONE
+3) Email BioJava mailing list
+4) Done up the first draft for Command Prompt 
  * 
  * Question
  * 

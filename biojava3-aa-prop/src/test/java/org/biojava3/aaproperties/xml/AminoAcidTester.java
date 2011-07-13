@@ -45,7 +45,7 @@ public class AminoAcidTester {
 		String sequence = "BBBBB";
 		assertEquals(398.558744445, PeptideProperties.getMolecularWeightBasedOnXML(sequence, aTable));
 		sequence = "JJJJ";
-//		assertEquals(702.335483556, PeptideProperties.getMolecularWeightBasedOnXML(sequence, aTable));
+		assertEquals(702.335483556, PeptideProperties.getMolecularWeightBasedOnXML(sequence, aTable));
 	}
 	
 	@Test

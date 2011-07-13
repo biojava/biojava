@@ -22,26 +22,27 @@ import org.biojava3.core.sequence.compound.AminoAcidCompoundSet;
  */
 public class Constraints {
 	private static AminoAcidCompoundSet aaSet = new AminoAcidCompoundSet();
-	static AminoAcidCompound A = aaSet.getCompoundForString("A");
-	private static AminoAcidCompound R = aaSet.getCompoundForString("R");
-	private static AminoAcidCompound N = aaSet.getCompoundForString("N");
-	private static AminoAcidCompound D = aaSet.getCompoundForString("D");
-	private static AminoAcidCompound C = aaSet.getCompoundForString("C");
-	private static AminoAcidCompound E = aaSet.getCompoundForString("E");
-	private static AminoAcidCompound Q = aaSet.getCompoundForString("Q");
-	private static AminoAcidCompound G = aaSet.getCompoundForString("G");
-	private static AminoAcidCompound H = aaSet.getCompoundForString("H");
-	private static AminoAcidCompound I = aaSet.getCompoundForString("I");
-	private static AminoAcidCompound L = aaSet.getCompoundForString("L");
-	private static AminoAcidCompound K = aaSet.getCompoundForString("K");
-	private static AminoAcidCompound M = aaSet.getCompoundForString("M");
-	private static AminoAcidCompound F = aaSet.getCompoundForString("F");
-	private static AminoAcidCompound P = aaSet.getCompoundForString("P");
-	private static AminoAcidCompound S = aaSet.getCompoundForString("S");
-	private static AminoAcidCompound T = aaSet.getCompoundForString("T");
-	private static AminoAcidCompound W = aaSet.getCompoundForString("W");
-	private static AminoAcidCompound Y = aaSet.getCompoundForString("Y");
-	private static AminoAcidCompound V = aaSet.getCompoundForString("V");
+	//A, R, N, D, C, E, Q, G, H, I, L, K, M, F, P, S, T, W, Y, V
+	public static AminoAcidCompound A = aaSet.getCompoundForString("A");
+	public static AminoAcidCompound R = aaSet.getCompoundForString("R");
+	public static AminoAcidCompound N = aaSet.getCompoundForString("N");
+	public static AminoAcidCompound D = aaSet.getCompoundForString("D");
+	public static AminoAcidCompound C = aaSet.getCompoundForString("C");
+	public static AminoAcidCompound E = aaSet.getCompoundForString("E");
+	public static AminoAcidCompound Q = aaSet.getCompoundForString("Q");
+	public static AminoAcidCompound G = aaSet.getCompoundForString("G");
+	public static AminoAcidCompound H = aaSet.getCompoundForString("H");
+	public static AminoAcidCompound I = aaSet.getCompoundForString("I");
+	public static AminoAcidCompound L = aaSet.getCompoundForString("L");
+	public static AminoAcidCompound K = aaSet.getCompoundForString("K");
+	public static AminoAcidCompound M = aaSet.getCompoundForString("M");
+	public static AminoAcidCompound F = aaSet.getCompoundForString("F");
+	public static AminoAcidCompound P = aaSet.getCompoundForString("P");
+	public static AminoAcidCompound S = aaSet.getCompoundForString("S");
+	public static AminoAcidCompound T = aaSet.getCompoundForString("T");
+	public static AminoAcidCompound W = aaSet.getCompoundForString("W");
+	public static AminoAcidCompound Y = aaSet.getCompoundForString("Y");
+	public static AminoAcidCompound V = aaSet.getCompoundForString("V");
 
 	public static Map<AminoAcidCompound, Double> aa2ExtinctionCoefficient = new HashMap<AminoAcidCompound, Double>();
 	public static Map<AminoAcidCompound, Double> aa2MolecularWeight = new HashMap<AminoAcidCompound, Double>();
