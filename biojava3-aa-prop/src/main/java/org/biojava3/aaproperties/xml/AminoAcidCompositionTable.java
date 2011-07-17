@@ -10,6 +10,7 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
+
 @XmlRootElement(name="compoundtable", namespace="http://biojava.org")
 @XmlAccessorType(XmlAccessType.NONE)
 public class AminoAcidCompositionTable {
@@ -19,6 +20,11 @@ public class AminoAcidCompositionTable {
 	 */
 	@XmlElement(name = "compound", required = true)
 	private List<AminoAcidComposition> aminoacid;
+	
+	/**
+	 * Defines the amino acid compound set unique to this table
+	 */
+	private ModifiedAminoAcidCompoundSet modifiedAminoAcidCompoundSet;
 	
 	/**
 	 * Stores the mapping of amino acid symbol to its molecular weight
@@ -31,6 +37,10 @@ public class AminoAcidCompositionTable {
 		this.setAminoacid(aaList);
 	}
 
+	public ModifiedAminoAcidCompoundSet getAminoAcidCompoundSet(){
+		return this.modifiedAminoAcidCompoundSet;
+	}
+	
 	public List<AminoAcidComposition> getAminoacid() {
 		return aminoacid;
 	}
@@ -43,8 +53,12 @@ public class AminoAcidCompositionTable {
 		return this.aaSymbol2MolecularWeight.keySet();
 	}
 	
+	private void generatesAminoAcidCompoundSet(){
+		this.modifiedAminoAcidCompoundSet = new ModifiedAminoAcidCompoundSet(this.aminoacid, this.aaSymbol2MolecularWeight);
+	}
+	
 	/**
-	 * Computes and store the molecular weight of each amino acid by its symbol in aaSymbol2MolecularWeight
+	 * Computes and store the molecular weight of each amino acid by its symbol in aaSymbol2MolecularWeight.
 	 * 
 	 * @param eTable
 	 * 	Stores the mass of elements and isotopes
@@ -87,6 +101,7 @@ public class AminoAcidCompositionTable {
 			}
 			this.aaSymbol2MolecularWeight.put(a.getSymbol().toUpperCase().charAt(0), total);
 		}
+		generatesAminoAcidCompoundSet();
 	}
 	
 	/**

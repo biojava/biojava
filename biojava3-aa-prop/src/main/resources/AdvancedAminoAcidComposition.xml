@@ -6,13 +6,13 @@
         <element count="1" name="Nitrogen"/>
         <element count="1" name="Oxygen"/>
     </compound>
-    <compound name="Radio Active Alanine" shortname="Ala*" symbol="B">
+    <compound name="Radio Active Alanine" shortname="Ala*" symbol="0">
         <element count="3" name="Carbon"/>
         <isotope count="5" name="Deuterium"/>
         <element count="1" name="Nitrogen"/>
         <element count="1" name="Oxygen"/>
     </compound>
-    <compound name="Phosphorylated Alanine" shortname="P-Ala" symbol="J">
+    <compound name="Phosphorylated Alanine" shortname="P-Ala" symbol="1">
         <element count="3" name="Carbon"/>
         <isotope count="5" name="Deuterium"/>
         <element count="1" name="Nitrogen"/>

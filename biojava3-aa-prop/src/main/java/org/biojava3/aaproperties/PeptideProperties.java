@@ -151,7 +151,7 @@ public class PeptideProperties {
 	 */
 	public static double getMolecularWeightBasedOnXML(String sequence, AminoAcidCompositionTable aminoAcidCompositionTable){
 		sequence = Utils.checkSequence(sequence, aminoAcidCompositionTable.getSymbolSet());
-		ProteinSequence pSequence = new ProteinSequence(sequence);
+		ProteinSequence pSequence = new ProteinSequence(sequence, aminoAcidCompositionTable.getAminoAcidCompoundSet());
 		IPeptideProperties pp = new PeptidePropertiesImpl();
 		return pp.getMolecularWeightBasedOnXML(pSequence, aminoAcidCompositionTable);
 	}

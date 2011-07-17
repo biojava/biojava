@@ -67,8 +67,16 @@ public class AminoAcidComposition {
 		this.shortName = shortName;
 	}
 	
+	public String getShorName(){
+		return this.shortName;
+	}
+	
 	public void setName(String name) {
 		this.name = name;
+	}
+	
+	public String getName(){
+		return this.name;
 	}
 	
 	public List<Name2Count> getElementList(){

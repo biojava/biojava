@@ -35,15 +35,15 @@ import org.biojava3.core.sequence.compound.AminoAcidCompound;
 /**
  * TODO
  * 
-4) Start working on executables to generate work on the APIs - based on APIs defined in IPeptideProperties
+ * 2) Scooter email - Extend the existing class to suit out need - just add new and not modify to prevent breaking anything
+ * 			to accept non-standard amino acid - A-Z, 0-9, !@#$%&
+ * 1) Check the first draft of Command Prompt and shall proceed with testing and documentation
 
  * Meetings
- * Wednesday 13 July
  * Thursday 21 July
  * 
  * DONE
-3) Email BioJava mailing list
-4) Done up the first draft for Command Prompt 
+ * Created a new class ModifiedAminoAcidCompoundSet which will enables the any specified symbols in XML file 
  * 
  * Question
  * 

@@ -42,10 +42,12 @@ public class AminoAcidTester {
 		aTable = (AminoAcidCompositionTable)u2.unmarshal(new FileInputStream("./src/main/resources/AdvancedAminoAcidComposition.xml" ) );
 		aTable.computeMolecularWeight(iTable);
 		//Assert the weight of the radioactives
-		String sequence = "BBBBB";
+		String sequence = "00000";
 		assertEquals(398.558744445, PeptideProperties.getMolecularWeightBasedOnXML(sequence, aTable));
-		sequence = "JJJJ";
+		sequence = "1111";
 		assertEquals(702.335483556, PeptideProperties.getMolecularWeightBasedOnXML(sequence, aTable));
+		sequence = "JJJJ";
+		assertEquals(0.0, PeptideProperties.getMolecularWeightBasedOnXML(sequence, aTable));
 	}
 	
 	@Test
@@ -85,6 +87,9 @@ public class AminoAcidTester {
 		
 		aTable = (AminoAcidCompositionTable)u2.unmarshal(new FileInputStream("./src/main/resources/AminoAcidComposition.xml" ) );
 		aTable.computeMolecularWeight(iTable);
+		
+		String sequence = "AAAAA";
+		assertEquals(373.4047, PeptideProperties.getMolecularWeightBasedOnXML(sequence, aTable));
 	}
 	
 	@Test

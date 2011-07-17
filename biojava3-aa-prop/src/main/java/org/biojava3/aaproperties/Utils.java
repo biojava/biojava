@@ -1,5 +1,6 @@
 package org.biojava3.aaproperties;
 
+import java.util.HashSet;
 import java.util.Set;
 
 public class Utils {
@@ -88,6 +89,7 @@ public class Utils {
 	 * 		a new sequence with all invalid characters being replaced by '-'.
 	 */
 	public final static String cleanSequence(String sequence, Set<Character> cSet){
+		Set<Character> invalidCharSet = new HashSet<Character>();
 		String seq = sequence.toUpperCase();
 		String cleanSeq = "";
 		if(cSet == null)
@@ -95,10 +97,18 @@ public class Utils {
 		for(char c:seq.toCharArray()){
 			if(cSet.contains(c) == false){
 				cleanSeq += "-";
+				invalidCharSet.add(c);
 			}else{
 				cleanSeq += c;
 			}
 		}
+		int count = 0;
+		for(char c:invalidCharSet){
+			if(count != 0) System.err.print(",");
+			System.err.print("\'" + c + "\'");
+			count++;
+		}
+		System.err.println(" are being replaced with '-'");
 		return cleanSeq;
 	}
 	
