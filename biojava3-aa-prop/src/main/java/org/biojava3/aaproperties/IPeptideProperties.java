@@ -35,17 +35,25 @@ import org.biojava3.core.sequence.compound.AminoAcidCompound;
 /**
  * TODO
  * 
- * 2) Scooter email - Extend the existing class to suit out need - just add new and not modify to prevent breaking anything
- * 			to accept non-standard amino acid - A-Z, 0-9, !@#$%&
- * 1) Check the first draft of Command Prompt and shall proceed with testing and documentation
+ * RE command line tool:
+
+- Help can be improved. 
 
  * Meetings
  * Thursday 21 July
  * 
  * DONE
- * Created a new class ModifiedAminoAcidCompoundSet which will enables the any specified symbols in XML file 
+ * Created a new class ModifiedAminoAcidCompoundSet which enables any symbols to be specified in XML file to represent amino acids and modified amino acids.
+ * Added three examples on how to run the tool.
+ * Change output file to optional and default to standard output.
+ * Set default decimal place to 4. Possible to change with -d argument.
+ * Change to use BioJava FASTA reader.
+ * Created CommandPromptTester.java to do testing of CommandPrompt.java
  * 
  * Question
+ * Even with BioJava FASTA reader, still not possible to have lower case characters.
+ * Try looking at the well known tools as an example of help writing for instance "find". What is "find"
+ * Will update cookbook once commandprompt is more or less done
  * 
  * An interface to generate some basic physico-chemical properties of protein sequences.<br/>
  * The following properties could be generated:
