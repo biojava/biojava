@@ -35,20 +35,10 @@ import org.biojava3.core.sequence.compound.AminoAcidCompound;
 /**
  * TODO
  * 
- * RE command line tool:
-
-- Help can be improved. 
-
  * Meetings
  * Thursday 21 July
  * 
  * DONE
- * Created a new class ModifiedAminoAcidCompoundSet which enables any symbols to be specified in XML file to represent amino acids and modified amino acids.
- * Added three examples on how to run the tool.
- * Change output file to optional and default to standard output.
- * Set default decimal place to 4. Possible to change with -d argument.
- * Change to use BioJava FASTA reader.
- * Created CommandPromptTester.java to do testing of CommandPrompt.java
  * 
  * Question
  * Even with BioJava FASTA reader, still not possible to have lower case characters.

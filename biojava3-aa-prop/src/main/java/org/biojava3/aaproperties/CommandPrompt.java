@@ -39,6 +39,7 @@ public class CommandPrompt {
 		String elementMassLocation = null;
 		String delimiter = ",";
 		int decimalPlace = 4;
+		
 		/*
 		 * a properties of 1-9
 		 * 1 Molecular weight
@@ -245,7 +246,7 @@ public class CommandPrompt {
 	}
 
 	private static void compute(PrintStream output, String header, String sequence, String delimiter, 
-			AminoAcidCompositionTable aaTable, List<Character> propertyList, List<Character> specificList, int decimalPlace) throws IOException{
+			AminoAcidCompositionTable aaTable, List<Character> propertyList, List<Character> specificList, int decimalPlace){
 		/* 
 		 * 1 Molecular weight
 		 * 2 Absorbance (assumed Cys reduced and assume Cys to form cystines)
@@ -330,38 +331,46 @@ public class CommandPrompt {
 	}
 
 	private static void showHelp(){
-		System.err.println("Examples");
-		System.err.println("Example 1 (Generates all possible properties): java -jar AAProperties.jar -i test.fasta -a");
-		System.err.println("Example 2 (Generates only molecular weight, extinction coefficient and isoelectric point): " +
-				"java -jar AAProperties.jar -i test.fasta -1 -3 -7");
-		System.err.println("Example 2 (Generates composition of two specific amino acid symbol and molecular weight): " +
-			"java -jar AAProperties.jar -i test.fasta -0 A -0 N -1");
+		System.err.println("NAME");
+		System.err.println("\tAn executable to generate physico-chemical properties of protein sequences.");
 		System.err.println();
 		
-		System.err.println("Required");
-		System.err.println("-i location of input FASTA file");
+		System.err.println("EXAMPLES");
+		System.err.println("\tjava -jar AAProperties.jar -i test.fasta -a");
+		System.err.println("\t\tGenerates all possible properties.");
+		System.err.println();
+		System.err.println("\tjava -jar AAProperties.jar -i test.fasta -1 -3 -7");
+		System.err.println("\t\tGenerates only molecular weight, extinction coefficient and isoelectric point.");
+		System.err.println();
+		System.err.println("\tjava -jar AAProperties.jar -i test.fasta -0 A -0 N -1");
+		System.err.println("\t\tGenerates composition of two specific amino acid symbol and molecular weight.");
+		System.err.println();
+		
+		System.err.println("OPTIONS");
+		System.err.println("\tRequired");
+		System.err.println("\t\t-i location of input FASTA file");
 		System.err.println();
 
-		System.err.println("Optional");
-		System.err.println("-o location of output file [standard output (default)]");
-		System.err.println("-f output format [csv (default) or tsv]");
-		System.err.println("-x location of Amino Acid Composition XML file for defining amino acid composition");
-		System.err.println("-y location of Element Mass XML file for defining mass of elements");
-		System.err.println("-d number of decimals (int) [4 (default)]");
+		System.err.println("\tOptional");
+		System.err.println("\t\t-o location of output file [standard output (default)]");
+		System.err.println("\t\t-f output format [csv (default) or tsv]");
+		System.err.println("\t\t-x location of Amino Acid Composition XML file for defining amino acid composition");
+		System.err.println("\t\t-y location of Element Mass XML file for defining mass of elements");
+		System.err.println("\t\t-d number of decimals (int) [4 (default)]");
 		System.err.println();
-
-		System.err.println("Provide at least one of them");
-		System.err.println("-a compute properties of option 1-9");
-		System.err.println("-1 compute molecular weight");
-		System.err.println("-2 compute absorbance");
-		System.err.println("-3 compute extinction coefficient");
-		System.err.println("-4 compute instability index");
-		System.err.println("-5 compute apliphatic index");
-		System.err.println("-6 compute average hydropathy value");
-		System.err.println("-7 compute isoelectric point");
-		System.err.println("-8 compute net charge at pH 7");
-		System.err.println("-9 compute composition of 20 standard amino acid (A, R, N, D, C, E, Q, G, H, I, L, K, M, F, P, S, T, W, Y, V)");
-		System.err.println("-0 compute composition of specific amino acid symbol");
+		
+		System.err.println("\tProvide at least one of them");
+		System.err.println("\t\t-a compute properties of option 1-9");
+		System.err.println("\t\t-1 compute molecular weight");
+		System.err.println("\t\t-2 compute absorbance");
+		System.err.println("\t\t-3 compute extinction coefficient");
+		System.err.println("\t\t-4 compute instability index");
+		System.err.println("\t\t-5 compute apliphatic index");
+		System.err.println("\t\t-6 compute average hydropathy value");
+		System.err.println("\t\t-7 compute isoelectric point");
+		System.err.println("\t\t-8 compute net charge at pH 7");
+		System.err.println("\t\t-9 compute composition of 20 standard amino acid (A, R, N, D, C, E, Q, G, H, I, L, K, M, F, P, S, T, W, Y, V)");
+		System.err.println("\t\t-0 compute composition of specific amino acid symbol");
 		System.err.println();
 	}
 }
