@@ -32,30 +32,15 @@ public class Utils {
 	 * 		protein sequence to be check.
 	 * @param cSet
 	 * 		the set of characters that are deemed valid.
+	 * @param ignoreCase
+	 * 		indicates if cases should be ignored.
 	 * @return
 	 * 		true if invalid characters are found, else return false.
 	 */
-	public final static boolean doesSequenceContainInvalidChar(String sequence, Set<Character> cSet){
-		String seq = sequence.toUpperCase();
-		for(char c:seq.toCharArray()){
-			if(cSet.contains(c) == false) return true;
-		}
-		return false;
-	}
-	
-	/**
-	 * Checks if given sequence contains invalid characters. Returns true if invalid characters are found, else return false.
-	 * Note that any character outside of the 20 standard protein amino acid codes are considered as invalid.
-	 * 
-	 * @param sequence
-	 * 		protein sequence to be check.
-	 * @return
-	 * 		true if invalid characters are found, else return false.
-	 */
-	public final static boolean doesSequenceContainInvalidChar(String sequence){
-		String seq = sequence.toUpperCase();
-		for(char c:seq.toCharArray()){
-			if(PeptideProperties.standardAASet.contains(c) == false) return true;
+	public final static boolean doesSequenceContainInvalidChar(String sequence, Set<Character> cSet, boolean ignoreCase){
+		Set<Character> set = getSet(cSet, ignoreCase);
+		for(char c:sequence.toCharArray()){
+			if(set.contains(c) == false) return true;
 		}
 		return false;
 	}
@@ -65,16 +50,35 @@ public class Utils {
 	 * 
 	 * @param sequence
 	 * 		protein sequence to count for invalid characters.
+	 * @param cSet
+	 * 		the set of characters that are deemed valid.
+	 * @param ignoreCase
+	 * 		indicates if cases should be ignored
 	 * @return
 	 * 		the number of invalid characters in sequence.
 	 */
-	public final static int getNumberOfInvalidChar(String sequence){
-		String seq = sequence.toUpperCase();
+	public final static int getNumberOfInvalidChar(String sequence, Set<Character> cSet, boolean ignoreCase){
 		int total = 0;
-		for(char c:seq.toCharArray()){
-			if(PeptideProperties.standardAASet.contains(c) == false) total++;
+		Set<Character> set = getSet(cSet, ignoreCase);
+		for(char c:sequence.toCharArray()){
+			if(set.contains(c) == false) total++;
 		}
 		return total;
+	}
+	
+	private final static Set<Character> getSet(Set<Character> cSet, boolean ignoreCase){
+		Set<Character> set;
+		if(cSet == null) cSet = PeptideProperties.standardAASet;
+		if(ignoreCase){
+			set = new HashSet<Character>();
+			for(char c:cSet){
+				set.add(Character.toUpperCase(c));
+				set.add(Character.toLowerCase(c));
+			}
+		}else{
+			set = cSet;
+		}
+		return set;
 	}
 
 	/**
@@ -85,17 +89,17 @@ public class Utils {
 	 * 		protein sequence to be clean
 	 * @param cSet
 	 * 		user defined characters that are valid. Can be null. If null, then 20 standard protein amino acid codes will be considered as valid.
+	 * @param ignoreCase
+	 * 		indicates whether cases should be ignored.
 	 * @return
 	 * 		a new sequence with all invalid characters being replaced by '-'.
 	 */
-	public final static String cleanSequence(String sequence, Set<Character> cSet){
+	public final static String cleanSequence(String sequence, Set<Character> cSet, boolean ignoreCase){
 		Set<Character> invalidCharSet = new HashSet<Character>();
-		String seq = sequence.toUpperCase();
+		Set<Character> set = getSet(cSet, ignoreCase);
 		String cleanSeq = "";
-		if(cSet == null)
-			cSet = PeptideProperties.standardAASet;
-		for(char c:seq.toCharArray()){
-			if(cSet.contains(c) == false){
+		for(char c:sequence.toCharArray()){
+			if(set.contains(c) == false){
 				cleanSeq += "-";
 				invalidCharSet.add(c);
 			}else{
@@ -120,11 +124,13 @@ public class Utils {
 	 * 
 	 * @param sequence
 	 * 		protein sequence to be check for invalid characters.
+	 * @param ignoreCase
+	 * 		indicates whether cases should be ignored.
 	 * @return
 	 * 		a sequence with no invalid characters.
 	 */
-	public static final String checkSequence(String sequence){
-		return checkSequence(sequence, null);
+	public static final String checkSequence(String sequence, boolean ignoreCase){
+		return checkSequence(sequence, null, ignoreCase);
 	}
 	
 	/**
@@ -137,18 +143,20 @@ public class Utils {
 	 * 		protein sequence to be check for invalid characters.
 	 * @param cSet
 	 * 		character set which define the valid characters.
+	 * @param ignoreCase
+	 * 		indicates whether cases should be ignored.
 	 * @return
 	 * 		a sequence with no invalid characters.
 	 */
-	public static final String checkSequence(String sequence, Set<Character> cSet){
+	public static final String checkSequence(String sequence, Set<Character> cSet, boolean ignoreCase){
 		boolean containInvalid = false;
 		if(cSet != null){
-			containInvalid = sequence != null && doesSequenceContainInvalidChar(sequence, cSet);
+			containInvalid = sequence != null && doesSequenceContainInvalidChar(sequence, cSet, ignoreCase);
 		}else{
-			containInvalid = sequence != null && doesSequenceContainInvalidChar(sequence);
+			containInvalid = sequence != null && doesSequenceContainInvalidChar(sequence, PeptideProperties.standardAASet, ignoreCase);
 		}
 		if(containInvalid){
-			String cSeq = cleanSequence(sequence, cSet);
+			String cSeq = cleanSequence(sequence, cSet, ignoreCase);
 			System.err.println("Warning: There exists invalid characters in the sequence. Computed results might not be precise.");
 			System.err.println("To remove this warning: Please use org.biojava3.aaproperties.Utils.cleanSequence to clean sequence.");
 			return cSeq;
@@ -160,7 +168,8 @@ public class Utils {
 	
 	public static void main(String[] args){
 		String seq = "MTADGPCRELLCQLRAAVRHRWWCx";
-		System.out.println(doesSequenceContainInvalidChar(seq));
-		System.out.println(cleanSequence(seq, null));
+		boolean ignoreCase = false;
+		System.out.println(doesSequenceContainInvalidChar(seq, null, ignoreCase));
+		System.out.println(cleanSequence(seq, null, ignoreCase));
 	}
 }

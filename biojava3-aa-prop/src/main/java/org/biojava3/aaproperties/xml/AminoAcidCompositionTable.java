@@ -61,9 +61,11 @@ public class AminoAcidCompositionTable {
 	 * Computes and store the molecular weight of each amino acid by its symbol in aaSymbol2MolecularWeight.
 	 * 
 	 * @param eTable
-	 * 	Stores the mass of elements and isotopes
+	 * 		Stores the mass of elements and isotopes
+	 * @param ignoreCase
+	 *		indicates if cases should be ignored.
 	 */
-	public void computeMolecularWeight(ElementTable eTable){
+	public void computeMolecularWeight(ElementTable eTable, boolean ignoreCase){
 		this.aaSymbol2MolecularWeight = new HashMap<Character, Double>();
 		for(AminoAcidComposition a:aminoacid){
 			//Check to ensure that the symbol is of single character
@@ -71,8 +73,10 @@ public class AminoAcidCompositionTable {
 				throw new Error(a.getSymbol() + " is not allowed. Symbols must be single character.\r\nPlease check AminoAcidComposition XML file");
 			}
 			//Check to ensure that the symbols are not repeated
-			if(this.aaSymbol2MolecularWeight.keySet().contains(a.getSymbol().toUpperCase().charAt(0))){
-				throw new Error("Symbol " + a.getSymbol().toUpperCase().charAt(0) + " is repeated.\r\n" +
+			char c = a.getSymbol().charAt(0);
+			if(ignoreCase) c = Character.toUpperCase(c);
+			if(this.aaSymbol2MolecularWeight.keySet().contains(c)){
+				throw new Error("Symbol " + c + " is repeated.\r\n" +
 						"Please check AminoAcidComposition XML file to ensure there are no repeated symbols. Note that this is case-insensitive.\r\n" +
 						"This means that having 'A' and 'a' would be repeating.");
 			}
@@ -99,7 +103,9 @@ public class AminoAcidCompositionTable {
 					total += eTable.getIsotope(isotope.getName()).getMass() * isotope.getCount();
 				}
 			}
-			this.aaSymbol2MolecularWeight.put(a.getSymbol().toUpperCase().charAt(0), total);
+			c = a.getSymbol().charAt(0);
+			if(ignoreCase) c = Character.toUpperCase(c);
+			this.aaSymbol2MolecularWeight.put(c, total);
 		}
 		generatesAminoAcidCompoundSet();
 	}

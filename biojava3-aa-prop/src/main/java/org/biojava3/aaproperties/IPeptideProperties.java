@@ -35,15 +35,17 @@ import org.biojava3.core.sequence.compound.AminoAcidCompound;
 /**
  * TODO
  * 
+ * Wait for the JABAWS link and work on it.
+ * 
  * Meetings
- * Thursday 21 July
+ * Thursday 28 July
  * 
  * DONE
  * 
+ * 
+ * 
  * Question
- * Even with BioJava FASTA reader, still not possible to have lower case characters.
- * Try looking at the well known tools as an example of help writing for instance "find". What is "find"
- * Will update cookbook once commandprompt is more or less done
+ * Where to upload the jar file for the command prompt
  * 
  * An interface to generate some basic physico-chemical properties of protein sequences.<br/>
  * The following properties could be generated:
@@ -69,11 +71,13 @@ public interface IPeptideProperties{
 	 * sequence. Molecular weights are based on <a href="http://web.expasy.org/findmod/findmod_masses.html">here</a>.
 	 * 
 	 * @param sequence
-	 * 	a protein sequence consisting of non-ambiguous characters only
+	 * 		a protein sequence consisting of non-ambiguous characters only
+	 * @param ignoreCase
+	 * 		indicates if cases should be ignored.
 	 * @return the total molecular weight of sequence + weight of water molecule
 	 * @see ProteinSequence
 	 */
-	public double getMolecularWeight(ProteinSequence sequence);
+	public double getMolecularWeight(ProteinSequence sequence, boolean ignoreCase);
 	
 	/**
 	 * Returns the molecular weight of sequence. The sequence argument must be a protein sequence consisting of only non-ambiguous characters.
@@ -82,17 +86,19 @@ public interface IPeptideProperties{
 	 * Note that it assumes that ElementMass.xml file can be found in default location.
 	 * 
 	 * @param sequence
-	 * 	a protein sequence consisting of non-ambiguous characters only
-	 * 	xml file that details the mass of each elements and isotopes
+	 * 		a protein sequence consisting of non-ambiguous characters only
+	 * 		xml file that details the mass of each elements and isotopes
 	 * @param aminoAcidCompositionFile
-	 * 	xml file that details the composition of amino acids
+	 * 		xml file that details the composition of amino acids
+	 * @param ignoreCase
+	 * 		indicates if cases should be ignored.
 	 * @return the total molecular weight of sequence + weight of water molecule
 	 * @throws JAXBException
-	 * 	thrown if unable to properly parse either elementMassFile or aminoAcidCompositionFile
+	 * 		thrown if unable to properly parse either elementMassFile or aminoAcidCompositionFile
 	 * @throws FileNotFoundException
-	 * 	thrown if either elementMassFile or aminoAcidCompositionFile are not found
+	 * 		thrown if either elementMassFile or aminoAcidCompositionFile are not found
 	 */
-	public double getMolecularWeight(ProteinSequence sequence, File aminoAcidCompositionFile) throws JAXBException, FileNotFoundException;
+	public double getMolecularWeight(ProteinSequence sequence, File aminoAcidCompositionFile, boolean ignoreCase) throws JAXBException, FileNotFoundException;
 	
 	/**
 	 * Returns the molecular weight of sequence. The sequence argument must be a protein sequence consisting of only non-ambiguous characters.
@@ -100,18 +106,21 @@ public interface IPeptideProperties{
 	 * sequence. Molecular weights are based on the input files. These input files must be XML using the defined schema. 
 	 * 
 	 * @param sequence
-	 * 	a protein sequence consisting of non-ambiguous characters only
+	 * 		a protein sequence consisting of non-ambiguous characters only
 	 * @param elementMassFile
-	 * 	xml file that details the mass of each elements and isotopes
+	 * 		xml file that details the mass of each elements and isotopes
 	 * @param aminoAcidCompositionFile
-	 * 	xml file that details the composition of amino acids
+	 * 		xml file that details the composition of amino acids
+	 * @param ignoreCase
+	 * 		indicates if cases should be ignored.
 	 * @return the total molecular weight of sequence + weight of water molecule
 	 * @throws JAXBException
-	 * 	thrown if unable to properly parse either elementMassFile or aminoAcidCompositionFile
+	 * 		thrown if unable to properly parse either elementMassFile or aminoAcidCompositionFile
 	 * @throws FileNotFoundException
-	 * 	thrown if either elementMassFile or aminoAcidCompositionFile are not found
+	 * 		thrown if either elementMassFile or aminoAcidCompositionFile are not found
 	 */
-	public double getMolecularWeight(ProteinSequence sequence, File elementMassFile, File aminoAcidCompositionFile) throws JAXBException, FileNotFoundException;
+	public double getMolecularWeight(ProteinSequence sequence, File elementMassFile, File aminoAcidCompositionFile, boolean ignoreCase) 
+		throws JAXBException, FileNotFoundException;
 	
 	/**
 	 * Returns the molecular weight of sequence. The sequence argument must be a protein sequence consisting of only non-ambiguous characters.
@@ -120,12 +129,14 @@ public interface IPeptideProperties{
 	 * Those input files must be XML using the defined schema.
 	 * 
 	 * @param sequence
-	 * 	a protein sequence consisting of non-ambiguous characters only
+	 * 		a protein sequence consisting of non-ambiguous characters only
 	 * @param aminoAcidCompositionTable
-	 * 	a amino acid composition table obtained by calling IPeptideProperties.obtainAminoAcidCompositionTable
+	 * 		a amino acid composition table obtained by calling IPeptideProperties.obtainAminoAcidCompositionTable
+	 * @param ignoreCase
+	 * 		indicates if cases should be ignored.
 	 * @return the total molecular weight of sequence + weight of water molecule
 	 */
-	public double getMolecularWeightBasedOnXML(ProteinSequence sequence, AminoAcidCompositionTable aminoAcidCompositionTable);
+	public double getMolecularWeightBasedOnXML(ProteinSequence sequence, AminoAcidCompositionTable aminoAcidCompositionTable, boolean ignoreCase);
 	
 	/**
 	 * This method would initialize amino acid composition table based on the input xml files and stores the table for usage in future calls to 
@@ -133,30 +144,36 @@ public interface IPeptideProperties{
 	 * Note that ElementMass.xml is assumed to be able to be seen in default location.
 	 * 
 	 * @param aminoAcidCompositionFile
-	 * 	xml file that details the composition of amino acids
+	 * 		xml file that details the composition of amino acids
+	 * @param ignoreCase
+	 * 		indicates if cases should be ignored.
 	 * @return the initialized amino acid composition table
 	 * @throws JAXBException
-	 * 	thrown if unable to properly parse either elementMassFile or aminoAcidCompositionFile
+	 * 		thrown if unable to properly parse either elementMassFile or aminoAcidCompositionFile
 	 * @throws FileNotFoundException
-	 * 	thrown if either elementMassFile or aminoAcidCompositionFile are not found
+	 * 		thrown if either elementMassFile or aminoAcidCompositionFile are not found
 	 */
-	public AminoAcidCompositionTable obtainAminoAcidCompositionTable(File aminoAcidCompositionFile) throws JAXBException, FileNotFoundException;
+	public AminoAcidCompositionTable obtainAminoAcidCompositionTable(File aminoAcidCompositionFile, boolean ignoreCase) 
+		throws JAXBException, FileNotFoundException;
 	
 	/**
 	 * This method would initialize amino acid composition table based on the input xml files and stores the table for usage in future calls to 
 	 * IPeptideProperties.getMolecularWeightBasedOnXML(ProteinSequence, AminoAcidCompositionTable).
 	 * 
 	 * @param elementMassFile
-	 * 	xml file that details the mass of each elements and isotopes
+	 * 		xml file that details the mass of each elements and isotopes
 	 * @param aminoAcidCompositionFile
-	 * 	xml file that details the composition of amino acids
+	 * 		xml file that details the composition of amino acids
+	 * @param ignoreCase
+	 * 		indicates if cases should be ignored.
 	 * @return the initialized amino acid composition table
 	 * @throws JAXBException
-	 * 	thrown if unable to properly parse either elementMassFile or aminoAcidCompositionFile
+	 * 		thrown if unable to properly parse either elementMassFile or aminoAcidCompositionFile
 	 * @throws FileNotFoundException
-	 * 	thrown if either elementMassFile or aminoAcidCompositionFile are not found
+	 * 		thrown if either elementMassFile or aminoAcidCompositionFile are not found
 	 */
-	public AminoAcidCompositionTable obtainAminoAcidCompositionTable(File elementMassFile, File aminoAcidCompositionFile) throws JAXBException, FileNotFoundException;
+	public AminoAcidCompositionTable obtainAminoAcidCompositionTable(File elementMassFile, File aminoAcidCompositionFile, boolean ignoreCase) 
+		throws JAXBException, FileNotFoundException;
 
 	/**
 	 * Returns the extinction coefficient of sequence. The sequence argument
@@ -168,14 +185,16 @@ public interface IPeptideProperties{
 	 * documentation in <a href="http://web.expasy.org/protparam/protparam-doc.html">here</a>.
 	 * 
 	 * @param sequence
-	 *            a protein sequence consisting of non-ambiguous characters only
+	 * 		a protein sequence consisting of non-ambiguous characters only
 	 * @param assumeCysReduced
-	 *            true if Cys are assumed to be reduced and false if Cys are
-	 *            assumed to form cystines
+	 * 		true if Cys are assumed to be reduced and false if Cys are
+	 *		assumed to form cystines
+	 * @param ignoreCase
+	 * 		indicates if cases should be ignored.
 	 * @return the extinction coefficient of sequence
 	 * @see ProteinSequence
 	 */
-	public double getExtinctionCoefficient(ProteinSequence sequence, boolean assumeCysReduced);
+	public double getExtinctionCoefficient(ProteinSequence sequence, boolean assumeCysReduced, boolean ignoreCase);
 
 	/**
 	 * Returns the absorbance (optical density) of sequence. The sequence argument
@@ -184,14 +203,16 @@ public interface IPeptideProperties{
 	 * documentation in <a href="http://web.expasy.org/protparam/protparam-doc.html">here</a>.
 	 * 
 	 * @param sequence
-	 *            a protein sequence consisting of non-ambiguous characters only
+	 * 		a protein sequence consisting of non-ambiguous characters only
 	 * @param assumeCysReduced
-	 *            true if Cys are assumed to be reduced and false if Cys are
-	 *            assumed to form cystines
+	 * 		true if Cys are assumed to be reduced and false if Cys are
+	 * 		assumed to form cystines
+	 * @param ignoreCase
+	 * 		indicates if cases should be ignored.
 	 * @return the absorbance (optical density) of sequence
 	 * @see ProteinSequence
 	 */
-	public double getAbsorbance(ProteinSequence sequence, boolean assumeCysReduced);
+	public double getAbsorbance(ProteinSequence sequence, boolean assumeCysReduced, boolean ignoreCase);
 	
 	/**
 	 * Returns the instability index of sequence. The sequence argument must be
@@ -201,11 +222,13 @@ public interface IPeptideProperties{
 	 * documentation in <a href="http://web.expasy.org/protparam/protparam-doc.html">here</a>.
 	 * 
 	 * @param sequence
-	 *            a protein sequence consisting of non-ambiguous characters only
+	 * 		a protein sequence consisting of non-ambiguous characters only
+	 * @param ignoreCase
+	 * 		indicates if cases should be ignored.
 	 * @return the instability index of sequence
 	 * @see ProteinSequence
 	 */
-	public double getInstabilityIndex(ProteinSequence sequence);
+	public double getInstabilityIndex(ProteinSequence sequence, boolean ignoreCase);
 
 	/**
 	 * Returns the apliphatic index of sequence. The sequence argument must be a
@@ -218,11 +241,13 @@ public interface IPeptideProperties{
 	 * A protein whose instability index is smaller than 40 is predicted as stable, a value above 40 predicts that the protein may be unstable.
 	 * 
 	 * @param sequence
-	 *            a protein sequence consisting of non-ambiguous characters only
+	 * 		a protein sequence consisting of non-ambiguous characters only
+	 * @param ignoreCase
+	 * 		indicates if cases should be ignored.
 	 * @return the aliphatic index of sequence
 	 * @see ProteinSequence
 	 */
-	public double getApliphaticIndex(ProteinSequence sequence);
+	public double getApliphaticIndex(ProteinSequence sequence, boolean ignoreCase);
 
 	/**
 	 * Returns the average hydropathy value of sequence. The sequence argument
@@ -234,11 +259,13 @@ public interface IPeptideProperties{
 	 * protein. J. Mol. Biol. 157, 105-132).
 	 * 
 	 * @param sequence
-	 *            a protein sequence consisting of non-ambiguous characters only
+	 * 		a protein sequence consisting of non-ambiguous characters only
+	 * @param ignoreCase
+	 * 		indicates if cases should be ignored.
 	 * @return the average hydropathy value of sequence
 	 * @see ProteinSequence
 	 */
-	public double getAvgHydropathy(ProteinSequence sequence);
+	public double getAvgHydropathy(ProteinSequence sequence, boolean ignoreCase);
 
 	/**
 	 * Returns the isoelectric point of sequence. The sequence argument must be
@@ -249,11 +276,13 @@ public interface IPeptideProperties{
 	 * <a href="http://www.innovagen.se/custom-peptide-synthesis/peptide-property-calculator/peptide-property-calculator-notes.asp#PI">here</a>
 	 * 
 	 * @param sequence
-	 *            a protein sequence consisting of non-ambiguous characters only
+	 * 		a protein sequence consisting of non-ambiguous characters only
+	 * @param ignoreCase
+	 * 		indicates if cases should be ignored.
 	 * @return the isoelectric point of sequence
 	 * @see ProteinSequence
 	 */
-	public double getIsoelectricPoint(ProteinSequence sequence);
+	public double getIsoelectricPoint(ProteinSequence sequence, boolean ignoreCase);
 
 	/**
 	 * Returns the net charge of sequence at pH 7. The sequence argument must be
@@ -262,11 +291,13 @@ public interface IPeptideProperties{
 	 * <a href="http://www.innovagen.se/custom-peptide-synthesis/peptide-property-calculator/peptide-property-calculator-notes.asp#NetCharge>here</a>
 	 * 
 	 * @param sequence
-	 *            a protein sequence consisting of non-ambiguous characters only
+	 * 		a protein sequence consisting of non-ambiguous characters only
+	 * @param ignoreCase
+	 * 		indicates if cases should be ignored.
 	 * @return the net charge of sequence at pH 7
 	 * @see ProteinSequence
 	 */
-	public double getNetCharge(ProteinSequence sequence);
+	public double getNetCharge(ProteinSequence sequence, boolean ignoreCase);
 
 	/**
 	 * Returns the composition of specified amino acid in the sequence. The
@@ -277,14 +308,16 @@ public interface IPeptideProperties{
 	 * divided by the total length of the sequence.
 	 * 
 	 * @param sequence
-	 *            a protein sequence consisting of non-ambiguous characters only
+	 * 		a protein sequence consisting of non-ambiguous characters only
 	 * @param aminoAcidCode
-	 *            the code of the amino acid to compute
+	 * 		the code of the amino acid to compute
+	 * @param ignoreCase
+	 * 		indicates if cases should be ignored.
 	 * @return the composition of specified amino acid in the sequence
 	 * @see ProteinSequence 
 	 * @see AminoAcidCompound
 	 */
-	public double getEnrichment(ProteinSequence sequence, AminoAcidCompound aminoAcidCode);
+	public double getEnrichment(ProteinSequence sequence, AminoAcidCompound aminoAcidCode, boolean ignoreCase);
 
 	/**
 	 * Returns the composition of the 20 standard amino acid in the sequence.
@@ -294,10 +327,12 @@ public interface IPeptideProperties{
 	 * divided by the total length of the sequence.
 	 * 
 	 * @param sequence
-	 *            a protein sequence consisting of non-ambiguous characters only
+	 * 		a protein sequence consisting of non-ambiguous characters only
+	 * @param ignoreCase
+	 * 		indicates if cases should be ignored.
 	 * @return the composition of the 20 standard amino acid in the sequence
 	 * @see ProteinSequence 
 	 * @see AminoAcidCompound
 	 */
-	public Map<AminoAcidCompound, Double> getAAComposition(ProteinSequence sequence);
+	public Map<AminoAcidCompound, Double> getAAComposition(ProteinSequence sequence, boolean ignoreCase);
 }

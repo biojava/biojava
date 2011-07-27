@@ -7,12 +7,11 @@ import java.io.PrintStream;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
 
 import org.biojava3.aaproperties.xml.AminoAcidCompositionTable;
+import org.biojava3.aaproperties.xml.CaseFreeAminoAcidCompoundSet;
 import org.biojava3.core.sequence.ProteinSequence;
 import org.biojava3.core.sequence.compound.AminoAcidCompound;
 import org.biojava3.core.sequence.compound.AminoAcidCompoundSet;
@@ -22,15 +21,56 @@ import org.biojava3.core.sequence.io.ProteinSequenceCreator;
 import org.biojava3.core.sequence.template.CompoundSet;
 
 public class CommandPrompt {
+	private static boolean ignoreCase = true;
+	
 	public static void main(String[] args) throws Exception{
 		run(args);
 	}
+	
+	private static AminoAcidCompositionTable checkForValidityAndObtainAATable(String inputLocation, int propertyListSize, String aminoAcidCompositionLocation,
+			String elementMassLocation) throws Exception{
+		if(inputLocation == null) {
+			showHelp();
+			throw new Error("Please do provide location of input file.");
+		}
+		if(propertyListSize == 0){
+			showHelp();
+			throw new Error("Please at least specify a property to compute.");
+		}
+		AminoAcidCompositionTable aaTable = null;
+		if(aminoAcidCompositionLocation != null && elementMassLocation == null){
+			ignoreCase = false;
+			aaTable = PeptideProperties.obtainAminoAcidCompositionTable(new File(aminoAcidCompositionLocation), ignoreCase);
+		}else if(aminoAcidCompositionLocation != null && elementMassLocation != null){
+			ignoreCase = false;
+			aaTable = PeptideProperties.obtainAminoAcidCompositionTable(new File(aminoAcidCompositionLocation, elementMassLocation), ignoreCase);
+		}else if(aminoAcidCompositionLocation == null && elementMassLocation != null){
+			throw new Error("You have define the location of Element Mass XML file. Please also define the location of Amino Acid Composition XML file");
+		}
+		return aaTable;
+	}
+	
+	private static void readInputAndGenerateOutput(String outputLocation, List<Character> propertyList, List<Character> specificList,
+			String delimiter, String inputLocation, AminoAcidCompositionTable aaTable, int decimalPlace) throws Exception{
+		PrintStream output;
+		if(outputLocation != null)
+			output = new PrintStream(new File(outputLocation));
+		else
+			output = System.out;
+		printHeader(output, propertyList, specificList, delimiter);
+		LinkedHashMap<String, ProteinSequence> a = readInputFile(inputLocation, aaTable);
+		//Need for the last sequence
+		for(Entry<String, ProteinSequence> entry:a.entrySet()){
+			compute(output, entry.getValue().getOriginalHeader(), entry.getValue().getSequenceAsString().trim(), delimiter, aaTable, propertyList, specificList,
+					decimalPlace);
+		}
+		output.close();
+	}
+	
 	public static void run(String[] args) throws Exception{
 		/*
-		 * Initialization
+		 * Parse input arguments
 		 */
-		Set<String> argumentsSet = new HashSet<String>();
-		Character[] arguments = new Character[17];
 		List<Character> propertyList = new ArrayList<Character>();
 		List<Character> specificList = new ArrayList<Character>();
 		String inputLocation = null;
@@ -40,43 +80,6 @@ public class CommandPrompt {
 		String delimiter = ",";
 		int decimalPlace = 4;
 		
-		/*
-		 * a properties of 1-9
-		 * 1 Molecular weight
-		 * 2 Absorbance
-		 * 3 Extinction coefficient
-		 * 4 Instability index
-		 * 5 Apliphatic index
-		 * 6 Average hydropathy value
-		 * 7 Isoelectric point
-		 * 8 Net charge at pH 7
-		 * 9 Composition of the 20 standard amino acid
-		 * 0 Composition of the specific amino acid
-		 */
-		arguments[0] = 'i';
-		arguments[1] = 'o';
-		arguments[2] = 'f';
-		arguments[3] = 'x';
-		arguments[4] = 'y';
-		arguments[5] = 'd';
-		arguments[6] = 'a';
-		arguments[7] = '1';
-		arguments[8] = '2';
-		arguments[9] = '3';
-		arguments[10] = '4';
-		arguments[11] = '5';
-		arguments[12] = '6';
-		arguments[13] = '7';
-		arguments[14] = '8';
-		arguments[15] = '9';
-		arguments[16] = '0';
-		for(char c:arguments){
-			argumentsSet.add("-" + c);
-		}
-		
-		/*
-		 * Parse input arguments
-		 */
 		for(int i = 0; i < args.length; i++){
 			if(args[i].charAt(0) != '-' || args[i].length() != 2){
 				showHelp();
@@ -133,51 +136,32 @@ public class CommandPrompt {
 		/*
 		 * Check for validity of input arguments
 		 */
-		if(inputLocation == null) {
-			showHelp();
-			throw new Error("Please do provide location of input file.");
-		}
-		if(propertyList.size() == 0){
-			showHelp();
-			throw new Error("Please at least specify a property to compute.");
-		}
-		AminoAcidCompositionTable aaTable = null;
-		if(aminoAcidCompositionLocation != null && elementMassLocation == null){
-			aaTable = PeptideProperties.obtainAminoAcidCompositionTable(new File(aminoAcidCompositionLocation));
-		}else if(aminoAcidCompositionLocation != null && elementMassLocation != null){
-			aaTable = PeptideProperties.obtainAminoAcidCompositionTable(new File(aminoAcidCompositionLocation, elementMassLocation));
-		}else if(aminoAcidCompositionLocation == null && elementMassLocation != null){
-			throw new Error("You have define the location of Element Mass XML file. Please also define the location of Amino Acid Composition XML file");
-		}
+		AminoAcidCompositionTable aaTable = checkForValidityAndObtainAATable(inputLocation, propertyList.size(), aminoAcidCompositionLocation, 
+				elementMassLocation);
 		
 		/*
 		 * Read input file and generate output
 		 */
-		PrintStream output;
-		if(outputLocation != null)
-			output = new PrintStream(new File(outputLocation));
-		else
-			output = System.out;
-		printHeader(output, propertyList, specificList, delimiter);
-		LinkedHashMap<String, ProteinSequence> a = readInputFile(inputLocation, aaTable);
-		//Need for the last sequence
-		for(Entry<String, ProteinSequence> entry:a.entrySet()){
-			compute(output, entry.getValue().getOriginalHeader(), entry.getValue().getSequenceAsString().trim(), delimiter, aaTable, propertyList, specificList, decimalPlace);
-		}
-		output.close();
+		readInputAndGenerateOutput(outputLocation, propertyList, specificList, delimiter, inputLocation, aaTable, decimalPlace);
 	}
 	
 	private static LinkedHashMap<String, ProteinSequence> readInputFile(String inputLocation, AminoAcidCompositionTable aaTable) throws Exception{
 		FileInputStream inStream = new FileInputStream(inputLocation);
-		FastaReader<ProteinSequence,AminoAcidCompound> fastaReader;
-		if(aaTable == null)
-			fastaReader = new FastaReader<ProteinSequence,AminoAcidCompound>(
-					inStream, new GenericFastaHeaderParser<ProteinSequence,AminoAcidCompound>(), 
-					new ProteinSequenceCreator(AminoAcidCompoundSet.getAminoAcidCompoundSet()));
-		else
-			fastaReader = new FastaReader<ProteinSequence,AminoAcidCompound>(
-					inStream, new GenericFastaHeaderParser<ProteinSequence,AminoAcidCompound>(), 
+		FastaReader<ProteinSequence, AminoAcidCompound> fastaReader;
+		if(aaTable == null){
+			CompoundSet<AminoAcidCompound> set = AminoAcidCompoundSet.getAminoAcidCompoundSet();
+			if(ignoreCase){
+				System.out.println("Ignore");
+				set = CaseFreeAminoAcidCompoundSet.getAminoAcidCompoundSet();
+			}
+			fastaReader = new FastaReader<ProteinSequence, AminoAcidCompound>(
+					inStream, new GenericFastaHeaderParser<ProteinSequence, AminoAcidCompound>(), 
+					new ProteinSequenceCreator(set));
+		}else{
+			fastaReader = new FastaReader<ProteinSequence, AminoAcidCompound>(
+					inStream, new GenericFastaHeaderParser<ProteinSequence, AminoAcidCompound>(), 
 					new ProteinSequenceCreator(aaTable.getAminoAcidCompoundSet()));
+		}
 		return fastaReader.process();
 	}
 	
@@ -262,11 +246,11 @@ public class CommandPrompt {
 		ProteinSequence pSequence;
 		CompoundSet<AminoAcidCompound> aaSet;
 		if(aaTable != null){
-			sequence = Utils.checkSequence(sequence, aaTable.getSymbolSet());
+			sequence = Utils.checkSequence(sequence, aaTable.getSymbolSet(), ignoreCase);
 			pSequence = new ProteinSequence(sequence, aaTable.getAminoAcidCompoundSet());
 			aaSet = aaTable.getAminoAcidCompoundSet(); 
 		}else{
-			sequence = Utils.checkSequence(sequence);
+			sequence = Utils.checkSequence(sequence, ignoreCase);
 			pSequence = new ProteinSequence(sequence);
 			aaSet = AminoAcidCompoundSet.getAminoAcidCompoundSet();
 		}
@@ -278,25 +262,25 @@ public class CommandPrompt {
 			switch(c){
 			case '1': 
 				if(aaTable == null) 
-					dList.add(pp.getMolecularWeight(pSequence));
+					dList.add(pp.getMolecularWeight(pSequence, ignoreCase));
 				else 
-					dList.add(pp.getMolecularWeight(pSequence));
+					dList.add(pp.getMolecularWeight(pSequence, ignoreCase));
 				break;
 			case '2': 
-				dList.add(pp.getAbsorbance(pSequence, true)); 
-				dList.add(pp.getAbsorbance(pSequence, false)); 
+				dList.add(pp.getAbsorbance(pSequence, true, ignoreCase)); 
+				dList.add(pp.getAbsorbance(pSequence, false, ignoreCase)); 
 				break;
 			case '3': 
-				dList.add(pp.getExtinctionCoefficient(pSequence, true));
-				dList.add(pp.getExtinctionCoefficient(pSequence, false)); 
+				dList.add(pp.getExtinctionCoefficient(pSequence, true, ignoreCase));
+				dList.add(pp.getExtinctionCoefficient(pSequence, false, ignoreCase)); 
 				break;
-			case '4': dList.add(pp.getInstabilityIndex(pSequence)); break;
-			case '5': dList.add(pp.getApliphaticIndex(pSequence)); break;
-			case '6': dList.add(pp.getAvgHydropathy(pSequence)); break;
-			case '7': dList.add(pp.getIsoelectricPoint(pSequence)); break;
-			case '8': dList.add(pp.getNetCharge(pSequence)); break;
+			case '4': dList.add(pp.getInstabilityIndex(pSequence, ignoreCase)); break;
+			case '5': dList.add(pp.getApliphaticIndex(pSequence, ignoreCase)); break;
+			case '6': dList.add(pp.getAvgHydropathy(pSequence, ignoreCase)); break;
+			case '7': dList.add(pp.getIsoelectricPoint(pSequence, ignoreCase)); break;
+			case '8': dList.add(pp.getNetCharge(pSequence, ignoreCase)); break;
 			case '9': 
-				Map<AminoAcidCompound, Double> aaCompound2Double = pp.getAAComposition(pSequence);
+				Map<AminoAcidCompound, Double> aaCompound2Double = pp.getAAComposition(pSequence, ignoreCase);
 				//(A, R, N, D, C, E, Q, G, H, I, L, K, M, F, P, S, T, W, Y, V)
 				dList.add(aaCompound2Double.get(Constraints.A));
 				dList.add(aaCompound2Double.get(Constraints.R));
@@ -319,7 +303,7 @@ public class CommandPrompt {
 				dList.add(aaCompound2Double.get(Constraints.Y));
 				dList.add(aaCompound2Double.get(Constraints.V));
 				break;
-			case '0': dList.add(pp.getEnrichment(pSequence, aaSet.getCompoundForString("" + specificList.get(specificCount++)))); break;
+			case '0': dList.add(pp.getEnrichment(pSequence, aaSet.getCompoundForString("" + specificList.get(specificCount++)), ignoreCase)); break;
 			}
 		}
 		for(int i = 0; i < dList.size(); i++){
