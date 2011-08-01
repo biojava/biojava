@@ -1,0 +1,50 @@
+package org.biojava3.ronn;
+
+import static org.junit.Assert.*;
+
+import java.io.FileInputStream;
+import java.io.PrintWriter;
+import java.util.Arrays;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
+
+import org.biojava3.data.sequence.FastaSequence;
+import org.biojava3.data.sequence.SequenceUtil;
+import org.biojava3.ronn.Jronn.Range;
+import org.junit.Test;
+
+
+public class JronnExample {
+
+	
+	@Test
+	public void callJronn() {
+		
+		
+	}
+	
+	
+	
+	@Test
+	public void verifyRanges() { 
+	Jronn jr = new Jronn(1);  
+	Range[]	ranges = jr.getDisorder(new FastaSequence("name", "LLRGRHLMNGTMIMRPWNFLNDHHFPKFFPHLIEQQAIWLADWWRKKHC" +
+				"RPLPTRAPTMDQWDHFALIQKHWTANLWFLTFPFNDKWGWIWFLKDWTPGSADQAQRACTWFFCHGHDTN" +
+				"CQIIFEGRNAPERADPMWTGGLNKHIIARGHFFQSNKFHFLERKFCEMAEIERPNFTCRTLDCQKFPWDDP" +
+				"CSSTHSDCPKLEDLISFTETHGCSAADNADRPSQACHIGWAAMCEPTAMFMLMGSRCRCSFWPQNNAARHR" +
+				"NFLIQIEMHSHLEHWIQTLHPQRPFLCNTWDDNWPICQFASQARGNSPDHHP"));
+	assertEquals(4, ranges.length);
+	assertEquals(53, ranges[0].from);
+	assertEquals(59, ranges[0].to); 
+	
+	assertEquals(190, ranges[1].from);
+	assertEquals(196, ranges[1].to);
+	
+	assertEquals(210, ranges[2].from);
+	assertEquals(226, ranges[2].to);
+	
+	assertEquals(305, ranges[3].from);
+	assertEquals(313, ranges[3].to);
+	//System.out.println(Arrays.toString(ranges));
+	}
+}

@@ -32,6 +32,8 @@ public final class RonnConstraint {
     public final static float DEFAULT_DISORDER = 0.53f;
     public final static float DEFAULT_ORDER = 0.47f;
 
+    public final static float DEFAULT_RANGE_PROBABILITY_THRESHOLD = 0.50f;
+    
     // A b C D E F G H I j K L M N o P Q R S T u V W x Y
     // 
     // 0 0 1 2 3 4 5 6 7 0 8 9 10 11 0 12 13 14 15 16 0 17 18 0 19

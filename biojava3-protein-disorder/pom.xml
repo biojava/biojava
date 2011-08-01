@@ -10,5 +10,11 @@
 	<name>biojava3-ws</name>
 	<version>3.0.2-SNAPSHOT</version>
 	<description>This module is for predicting disordered regions in protein sequences </description>
-	
+	<dependencies>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
 </project>
