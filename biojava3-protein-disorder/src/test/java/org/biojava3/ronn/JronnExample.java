@@ -21,10 +21,11 @@ import org.junit.Test;
 public class JronnExample {
 
 	
+	/*
 	@Test
 	public void highPerformanceDisorderCalculation() {
 		try {
-			Jronn.calculateDisorder("inputFile", "outputFile", 4, ResultLayout.HORIZONTAL);
+			Jronn.calculateDisorder("src/test/resources/fasta.in", "src/test/resources/result.txt", 4, ResultLayout.HORIZONTAL);
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 			fail(e.getMessage());
@@ -33,12 +34,12 @@ public class JronnExample {
 			fail(e.getMessage());
 		}
 	}
-	
+	*/
 	
 	@Test
 	public void rawScoresForMultipleSequences() {
 		try {
-		final List<FastaSequence> sequences = SequenceUtil.readFasta(new FileInputStream("filename"));
+		final List<FastaSequence> sequences = SequenceUtil.readFasta(new FileInputStream("src/test/resources/fasta.in"));
 		Map<FastaSequence, float[]>	rawProbabilityScores = Jronn.getDisorderScores(sequences); 
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();

@@ -220,6 +220,8 @@ public class Jronn {
 	}
 	
 	/**
+	 * TODO 
+	 * 
 	 * High performance method for calculating disorder. Use multiple threads to achieve the speedup.
 	 *  
 	 * @param fastaFile  fully qualified path to the input FASTA file  
@@ -229,13 +231,14 @@ public class Jronn {
 	 * @throws FileNotFoundException if input file in not found 
 	 * @throws IOException if the input or the output files cannot be accessed  
 	 * @see ORonn.ResultLayout
-	 */
+	 
 	public static void calculateDisorder(String fastaFile, String outputFile, int threadNumber, ResultLayout layout) throws FileNotFoundException, IOException {
 		final List<FastaSequence> sequences = SequenceUtil.readFasta(new FileInputStream(fastaFile));
 		InputParameters in = new InputParameters(); 
 		in.setFilePrm(fastaFile, InputParameters.inputKey);
 		in.setFilePrm(outputFile, InputParameters.outputKey);
-		in.setThreadNum(Integer.toString(threadNumber)); 
+		//in.setThreadNum(Integer.toString(threadNumber)); 
 		ORonn.predictParallel(sequences, in, loader); 
-	} 
+	}
+	*/ 
 }
