@@ -19,7 +19,7 @@
  * must include this copyright and license notice.
  */
 
-package compbio.data.sequence;
+package org.biojava3.data.sequence;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;

@@ -18,7 +18,7 @@
  * Any republication or derived work distributed in source code form
  * must include this copyright and license notice.
  */
-package compbio.ronn;
+package org.biojava3.ronn;
 
 import java.io.IOException;
 import java.io.OutputStream;

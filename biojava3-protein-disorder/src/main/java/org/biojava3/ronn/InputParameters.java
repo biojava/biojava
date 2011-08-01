@@ -17,7 +17,7 @@
  * Any republication or derived work distributed in source code form
  * must include this copyright and license notice.
  */
-package compbio.ronn;
+package org.biojava3.ronn;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -25,7 +25,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-import compbio.ronn.ORonn.ResultLayout;
+import org.biojava3.ronn.ORonn.ResultLayout;
+
 
 /**
  * Holder for input parameters of the {@link ORonn} class

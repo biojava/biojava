@@ -17,7 +17,7 @@
  * Any republication or derived work distributed in source code form
  * must include this copyright and license notice.
  */
-package compbio.data.sequence;
+package org.biojava3.data.sequence;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

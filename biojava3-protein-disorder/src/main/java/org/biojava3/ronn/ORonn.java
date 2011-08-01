@@ -18,7 +18,7 @@
  * Any republication or derived work distributed in source code form
  * must include this copyright and license notice.
  */
-package compbio.ronn;
+package org.biojava3.ronn;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -34,9 +34,10 @@ import java.util.concurrent.SynchronousQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-import compbio.data.sequence.FastaSequence;
-import compbio.data.sequence.SequenceUtil;
-import compbio.ronn.ModelLoader.Model;
+import org.biojava3.data.sequence.FastaSequence;
+import org.biojava3.data.sequence.SequenceUtil;
+import org.biojava3.ronn.ModelLoader.Model;
+
 
 /**
  * Fully re-factored and enhanced version of RONN.
@@ -152,7 +153,7 @@ public final class ORonn implements Callable<ORonn> {
     }
 
     static enum ResultLayout {
-	VERTICAL, HORIZONTAL
+ 	 VERTICAL, HORIZONTAL
     }
 
     static void printUsage() {

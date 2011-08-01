@@ -18,14 +18,16 @@
  * Any republication or derived work distributed in source code form
  * must include this copyright and license notice.
  */
-package compbio.ronn;
+package org.biojava3.ronn;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 
-import compbio.ronn.ModelLoader.Model;
-import compbio.ronn.ModelLoader.Threshold;
+import org.biojava3.ronn.ModelLoader.Model;
+import org.biojava3.ronn.ModelLoader.Threshold;
+
+
 
 /**
  * Fully re-factored version of RONN model. Based on the code in C version of
