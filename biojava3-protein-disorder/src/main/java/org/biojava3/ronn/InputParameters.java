@@ -31,7 +31,7 @@ import org.biojava3.ronn.ORonn.ResultLayout;
 /**
  * Holder for input parameters of the {@link ORonn} class
  * 
- * @author Petr Troshin
+ * @author Peter Troshin
  * @version 1.0
  */
 final class InputParameters {

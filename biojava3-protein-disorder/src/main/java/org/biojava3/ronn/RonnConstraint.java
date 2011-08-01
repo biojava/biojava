@@ -24,7 +24,7 @@ package org.biojava3.ronn;
 /**
  * A collection of various constrain values used by RONN
  * 
- * @author Petr Troshin
+ * @author Peter Troshin
  * @version 1.0
  */
 public final class RonnConstraint {
@@ -146,76 +146,77 @@ public final class RonnConstraint {
 
     static final byte MIN_SEQUENCE_LENGTH = 19;
 
-    static final String HELP_MESSAGE = "\r\n"
-	    + "JRONN version 3.1b usage:\r\n"
-	    + "java -jar JRONN_JAR_NAME -i=inputfile <OPTIONS>\r\n"
-	    + "\r\n"
-	    + "Where -i=input file \r\n"
-	    + "	Input file can contain one or more FASTA formatted sequences.\r\n"
-	    + "\r\n"
-	    + "All OPTIONS are optional\r\n"
-	    + "Supported OPTIONS are: \r\n"
-	    + "	-o=output file\r\n"
-	    + "	-d=disorder value\r\n"
-	    + "	-f=V or H \r\n"
-	    + "	-s=statistics file\r\n"
-	    + "	-n=number of threads to use\r\n"
-	    + "OPTION DETAILED DESCRIPTION:\r\n"
-	    + "	-o full path to the output file, if not specified \r\n"
-	    + "	standard out is used\r\n"
-	    + "\r\n"
-	    + "	-d the value of disorder, defaults to 0.5\r\n"
-	    + "\r\n"
-	    + "	-f output format, V for vertical, where the letters \r\n"
-	    + "	of the sequence and corresponding disorder values are \r\n"
-	    + "	output in two column layout. H for horizontal, where the\r\n"
-	    + "	disorder values are provided under the letters of the \r\n"
-	    + "	sequence. Letters and values separated by tabulation in\r\n"
-	    + "	this case. Defaults to V.\r\n"
-	    + "\r\n"
-	    + "	-s the file name to write execution statistics to.\r\n"
-	    + "\r\n"
-	    + "	-n the number of threads to use. Defaults to the number of \r\n"
-	    + "	cores available on the computer. n=1 mean sequential \r\n"
-	    + "	processing. Valid values are 1 < n < (2 x num_of_cores)\r\n"
-	    + "	Default value will give the best performance.\r\n"
-	    + "	\r\n"
-	    + "EXAMPLES: \r\n"
-	    + "\r\n"
-	    + "	Predict disorder values for sequences from input file /home/input.fasta\r\n"
-	    + "	output the results to the standard out. Use default disorder value\r\n"
-	    + "	and utilise all cpus available on the computer.\r\n"
-	    + "\r\n"
-	    + "	java -jar JRONN.JAR -i=/home/input.fasta\r\n"
-	    + "	\r\n"
-	    + "	Predict disorder values for sequences from input file /home/input.fasta\r\n"
-	    + "	output the results in horizontal layout to the /home/jronn.out, collect \r\n"
-	    + "	execution statistics to /home/jronn.stat.txt file and limit the number \r\n"
-	    + "	of threads to two. \r\n"
-	    + "	\r\n"
-	    + "	java -jar JRONN.JAR -i=/home/input.fasta -o=/home/jronn.out -d=0.6 -n=2 -f=H\r\n"
-	    + "	 \r\n"
-	    + "	The arguments can be provided in any order.\r\n"
-	    + "\r\n"
-	    + "ABOUT THE PROGRAM: 	\r\n"
-	    + "	\r\n"
-	    + "	JRONN is a Java implementation of RONN. JRONN is based on RONN and uses the \r\n"
-	    + "	same model data, therefore gives the same predictions. Main motivation \r\n"
-	    + "	behind JRONN development was providing an implementation of RONN more \r\n"
-	    + "	suitable to use by the automated analysis pipelines and web services.  \r\n"
-	    + "	\r\n"
-	    + "	Original version of RONN is described in Yang,Z.R., Thomson,R., \r\n"
-	    + "	McMeil,P. and Esnouf,R.M. (2005) RONN: the bio-basis function neural network\r\n"
-	    + "	technique applied to the detection of natively disordered regions in proteins  \r\n"
-	    + "	Bioinformatics 21: 3369-3376\r\n"
-	    + "	\r\n"
-	    + "	Authors: Petr Troshin and Geoff Barton, The Barton Group, University of Dundee,\r\n"
-	    + "	Dundee, UK. Web address: www.compbio.dundee.ac.uk\r\n"
-	    + "	\r\n"
-	    + "	This is a free software which comes with no guarantees.\r\n"
-	    + "	JRONN is distributed under Apache Licence version 2. The full version of \r\n"
-	    + "	licence	can be obtained from http://www.apache.org/licenses/LICENSE-2.0\r\n"
-	    + "	";
+    static final String HELP_MESSAGE = " \r\n" + 
+    		"JRONN version 3.1b usage 1 August 2011:\r\n" + 
+    		"java -jar JRONN_JAR_NAME -i=inputfile <OPTIONS>\r\n" + 
+    		"\r\n" + 
+    		"Where -i=input file \r\n" + 
+    		"	Input file can contain one or more FASTA formatted sequences.\r\n" + 
+    		"\r\n" + 
+    		"All OPTIONS are optional\r\n" + 
+    		"Supported OPTIONS are: \r\n" + 
+    		"	-o=output file\r\n" + 
+    		"	-d=disorder value\r\n" + 
+    		"	-f=V or H \r\n" + 
+    		"	-s=statistics file\r\n" + 
+    		"	-n=number of threads to use\r\n" + 
+    		"OPTION DETAILED DESCRIPTION:\r\n" + 
+    		"	-o full path to the output file, if not specified \r\n" + 
+    		"	standard out is used\r\n" + 
+    		"\r\n" + 
+    		"	-d the value of disorder, defaults to 0.5\r\n" + 
+    		"\r\n" + 
+    		"	-f output format, V for vertical, where the letters \r\n" + 
+    		"	of the sequence and corresponding disorder values are \r\n" + 
+    		"	output in two column layout. H for horizontal, where the\r\n" + 
+    		"	disorder values are provided under the letters of the \r\n" + 
+    		"	sequence. Letters and values separated by tabulation in\r\n" + 
+    		"	this case. Defaults to V.\r\n" + 
+    		"\r\n" + 
+    		"	-s the file name to write execution statistics to.\r\n" + 
+    		"\r\n" + 
+    		"	-n the number of threads to use. Defaults to the number of \r\n" + 
+    		"	cores available on the computer. n=1 mean sequential \r\n" + 
+    		"	processing. Valid values are 1 < n < (2 x num_of_cores)\r\n" + 
+    		"	Default value will give the best performance.\r\n" + 
+    		"	\r\n" + 
+    		"EXAMPLES: \r\n" + 
+    		"\r\n" + 
+    		"	Predict disorder values for sequences from input file /home/input.fasta\r\n" + 
+    		"	output the results to the standard out. Use default disorder value\r\n" + 
+    		"	and utilise all cpus available on the computer.\r\n" + 
+    		"\r\n" + 
+    		"	java -jar JRONN.JAR -i=/home/input.fasta\r\n" + 
+    		"	\r\n" + 
+    		"	Predict disorder values for sequences from input file /home/input.fasta\r\n" + 
+    		"	output the results in horizontal layout to the /home/jronn.out, collect \r\n" + 
+    		"	execution statistics to /home/jronn.stat.txt file and limit the number \r\n" + 
+    		"	of threads to two. \r\n" + 
+    		"	\r\n" + 
+    		"	java -jar JRONN.JAR -i=/home/input.fasta -o=/home/jronn.out -d=0.6 -n=2 -f=H\r\n" + 
+    		"	 \r\n" + 
+    		"	The arguments can be provided in any order.\r\n" + 
+    		"\r\n" + 
+    		"ABOUT THE PROGRAM: 	\r\n" + 
+    		"	\r\n" + 
+    		"	JRONN is a Java implementation of RONN. JRONN is based on RONN and uses the \r\n" + 
+    		"	same model data, therefore gives the same predictions. Main motivation \r\n" + 
+    		"	behind JRONN development was providing an implementation of RONN more \r\n" + 
+    		"	suitable to use by the automated analysis pipelines and web services.  \r\n" + 
+    		"	\r\n" + 
+    		"	Original version of RONN is described in Yang,Z.R., Thomson,R., \r\n" + 
+    		"	McMeil,P. and Esnouf,R.M. (2005) RONN: the bio-basis function neural network\r\n" + 
+    		"	technique applied to the detection of natively disordered regions in proteins  \r\n" + 
+    		"	Bioinformatics 21: 3369-3376\r\n" + 
+    		"	See also http://www.strubi.ox.ac.uk/RONN\r\n" + 
+    		"	\r\n" + 
+    		"	Author: Peter Troshin \r\n" + 
+    		"	email: to.petr AT gmail DOT com\r\n" + 
+    		"	\r\n" + 
+    		"	This is a free software which comes with no guarantees.\r\n" + 
+    		"	JRONN is distributed under Apache Licence version 2. The full version of \r\n" + 
+    		"	licence	can be obtained from http://www.apache.org/licenses/LICENSE-2.0\r\n" + 
+    		"	";
     /**
      * 700 - maximum number of lines (with sequence values) in the single model
      * file.

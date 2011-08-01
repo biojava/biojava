@@ -36,7 +36,7 @@ import java.util.regex.Pattern;
 /**
  * Utility class for operations on sequences
  * 
- * @author Petr Troshin
+ * @author Peter Troshin
  * @version 1.0
  */
 public final class SequenceUtil {

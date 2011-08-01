@@ -33,7 +33,7 @@ import org.biojava3.ronn.ModelLoader.Threshold;
  * Fully re-factored version of RONN model. Based on the code in C version of
  * RONN.
  * 
- * @author Petr Troshin
+ * @author Peter Troshin
  * @version 1.0
  */
 public final class ORonnModel {

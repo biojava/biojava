@@ -42,8 +42,12 @@ import org.biojava3.ronn.ModelLoader.Model;
 /**
  * Fully re-factored and enhanced version of RONN.
  * 
- * @author Petr Troshin
+ * This class does the calculation and contains the main for the command line client. 
+ * 
+ * @author Peter Troshin 
  * @version 1.0
+ * 
+ * TODO refactor 
  */
 public final class ORonn implements Callable<ORonn> {
 
@@ -81,7 +85,17 @@ public final class ORonn implements Callable<ORonn> {
 		disorder = params.getDisorder();
 		timer = new Timer(TimeUnit.MILLISECONDS);
 	}
-
+	//This constructor is for API calls where the caller collects the results directly
+	ORonn(final FastaSequence sequence, final ModelLoader mloader) throws NumberFormatException,
+			IOException {
+		this.sequence = sequence;
+		this.mloader = mloader;
+		out = new PrintWriter(new NullOutputStream());
+		layout = ResultLayout.HORIZONTAL;
+		stat = new PrintWriter(new NullOutputStream());
+		disorder = RonnConstraint.DEFAULT_DISORDER;
+		timer = new Timer(TimeUnit.MILLISECONDS);
+	}
 
 	synchronized void writeResults(final float[] meanScores, final char[] seqs) {
 		out.println(">" + sequence.getId());
@@ -156,6 +170,17 @@ public final class ORonn implements Callable<ORonn> {
 		return meanScores;
 	}
 
+	/**
+	 * 
+	 * @author pvtroshin
+	 * 
+	 * VERTICAL - where the letters	of the sequence and corresponding disorder values are 
+	 * output in two column layout. 
+	 * 
+	 * HORIZONTAL where the disorder values are provided under the letters of the 
+	 * sequence. Letters and values separated by tabulation in	this case. 
+	 *
+	 */
 	static enum ResultLayout {
 		VERTICAL, HORIZONTAL
 	}

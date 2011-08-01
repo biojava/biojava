@@ -36,7 +36,7 @@ import javax.xml.bind.annotation.XmlAccessorType;
  */
 
 @XmlAccessorType(XmlAccessType.FIELD)
-public final class FastaSequence {
+public final class FastaSequence implements Comparable<FastaSequence>{
 
     /**
      * Sequence id
@@ -195,5 +195,13 @@ public final class FastaSequence {
 	}
 	return true;
     }
+
+	@Override
+	public int compareTo(FastaSequence o) {
+		if(o==null || o.id==null) 
+			return 1;
+		
+		return this.getId().compareTo(o.id);
+	}
 
 }

@@ -1,5 +1,5 @@
  
-JRONN version 3.1b usage:
+JRONN version 3.1b usage 1 August 2011:
 java -jar JRONN_JAR_NAME -i=inputfile <OPTIONS>
 
 Where -i=input file 
@@ -60,9 +60,10 @@ ABOUT THE PROGRAM:
 	McMeil,P. and Esnouf,R.M. (2005) RONN: the bio-basis function neural network
 	technique applied to the detection of natively disordered regions in proteins  
 	Bioinformatics 21: 3369-3376
+	See also http://www.strubi.ox.ac.uk/RONN
 	
-	Authors: Petr Troshin and Geoff Barton, The Barton Group, University of Dundee,
-	Dundee, UK. Web address: www.compbio.dundee.ac.uk
+	Author: Peter Troshin 
+	email: to.petr AT gmail DOT com
 	
 	This is a free software which comes with no guarantees.
 	JRONN is distributed under Apache Licence version 2. The full version of 

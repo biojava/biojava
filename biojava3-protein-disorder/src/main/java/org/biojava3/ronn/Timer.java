@@ -28,7 +28,7 @@ import java.util.concurrent.TimeUnit;
  * end of the application for instance, and another for short events, to measure
  * how long it took to reach a next block of code.
  * 
- * @author Petr Troshin
+ * @author Peter Troshin
  * @version 1.0
  * 
  */
