@@ -33,19 +33,136 @@ import org.biojava3.core.sequence.ProteinSequence;
 import org.biojava3.core.sequence.compound.AminoAcidCompound;
 
 /**
+ * 
+ * How To add a new executable
+
+1) Add executable to the binaries folder. If it has source code and can be 
+recompiled for different platforms include it under binaries/src 
+Edit binaries/src setexecutableflag.sh and compilebin.sh scripts accordingly.
+
+Added AAProperties.jar into jabaws/binaries/windows.
+Need not edit *.sh since its a jar file.
+
+2) Make sure all the dependencies of the software being installed are satisfied. 
+If there are other binaries they should be included as well. Keep the dependant 
+binaries in subfolder for the main executable. Update compile and setexecflag 
+scripts accordingly.
+
+Every dependencies are packed into the jar file hence nothing needs to be done here.
+
+3) Make sure executable 
+   - Does not have any hard links to its dependencies, e.g. is able to run from 
+   any installation folder and does not contain any hard coded paths. 
+   (TODO examples...)
+   
+Actually, there exists a hard link but maybe it is packaged into the jar file as well. That is the default XML Location. 
+But I suppose it would be fine.
+
+4) Describe executable in conf/Exectuable.properties. The lowercase name of the 
+wrapper should be included in the name of the property for example Clustal 
+properties all include clustal as a part of the name e.g. local.clustalw.bin
+The same property for Mafft will be called local.mafft.bin. 
+
+Added AAProperties description to conf/Executable.properties
+Change AAProperties.jar to aaproperties.jar
+
+
+5) Add <ExecutableName>Limit.xml, <ExecutableName>Parameters.xml and 
+<ExecutableName>Presets.xml. All are optional (should be at least). If the 
+executable does not support parameters you do not have to refer to the 
+XXXParameter.xml file into the Executable.properties file. The same is true for 
+Presets and Limits. 
+
+Added AAPropertiesLimits.xml and AAPropertiesParameters.xml
+Ignore AAPropertiesPresets.xml for now
+Question) Think that my AAPropertiesParameters.xml is not properly defined
+
+6) Create a Java wrapper class for your executable. Create it within runner 
+source directory. Examples of other wrappers can be found in compbio.runner.msa 
+or compbio.runner.disorder packages. Wrapper should extend SkeletalExecutable<T> 
+implements PipedExecutable<T> if you need to pass the input or collect the 
+results from the standard in/out. Please see Mafft code as example. Wrapper 
+should expend SkeletalExecutable<T> if input/output can be set as a parameter 
+for an executable. Please see ClustalW code as example.
+
+Created AAProperties.java under compbio.runner.sequence and extends SkeletalExecutable<AAProperties>
+
+7) Create a testcase suit for your wrapper and run the test cases. 
+
+Question) Stuck at Step 7. What are the test cases we are supposed to be running?
+
+8) Create parser for the output files of your executable. Suggested location 
+compbio.data.sequence.SequenceUtil  
+
+9) Test the parser
+
+Stop at step 9
+
+10) Decide which web services interface your executable is going to match. 
+    For example if the executable output can be represented as 
+    SequenceAnnotation then SequenceAnnotation interface might be appropriate. 
+    For multiple sequence alignment an Msa interface should be used. 
+
+11) If you find a web interface that matches your returning data type, then 
+implement a web service which confirms to it within a webservices source folder 
+
+12) Register web service in WEB-INF/ web.xml and sun-jaxws.xml
+
+13) Add generated wsdl to wsbuild.xml ant script to generate the stubs
+
+14) Run build-server task in wsbuild file. Watch for errors. If the task fails 
+that means that JAXB cannot serialize some of the data structures. Add 
+appropriate annotations to your data types.
+Also check that 
+  - you do not have interfaces to serialize. JAXB cannot serialize them.
+  - you have a default no args constructor (can be private if you do not need it)
+  - JAXB cannot serialize a Map, use custom data structure instead!
+  - Enum cannot be serialized as its abstract class (do not confuse with enum 
+  which is fine)
+  - Fields serialization leave a little more space for manoeuvre, so use it. If 
+  you do then you can accept and return interfaces, e.g. List, Map; abstract 
+  classes etc, from your methods. 
+  
+If you have the data on the server side, but nothing is coming through to the 
+client, this is a JAXB serialization problem. They tend to be very silent and 
+thus hard to debug. Check your data structure can be serialized! 
+
+13) Modify the client to work with your new web service. Update Services 
+enumeration to include new service and ensure that all the methods of this 
+enumeration take into account the new service. Update the client help text 
+(client_help.txt) and insert it into the Constraints class.   
+
+14) Test the web service with the client 
+
+15) Test on the cluster...
+
+
+ * 
  * TODO
  * 
- * Wait for the JABAWS link and work on it.
+ * Go into the websites to look at man_jaba_internals.html - Taught me how to link svn and abit about jaba internals.
+ * ignore dependancies problem since i am using java
+ * Jronn and AACon as examples
+ * naming conventions are important
+ * disorder.jronn
+ * ignore clusters
+ * goto SequenceUtil - Create readAAProperties
+ * Be aware of the boundaries
+ * 
+ * runner.conservation.AACon.java
+ * Download the WAR file and install the TomCat.
  * 
  * Meetings
  * Thursday 28 July
  * 
  * DONE
- * 
+ * Only consider cases difference for Molecular Weight. Revert all cases consideration for other properties
+ * Managed to link up with JABAWS via SVN
  * 
  * 
  * Question
  * Where to upload the jar file for the command prompt
+ * Strangely JABAWS via SVN is only available at home and not accessible from NUS
  * 
  * An interface to generate some basic physico-chemical properties of protein sequences.<br/>
  * The following properties could be generated:
@@ -72,12 +189,10 @@ public interface IPeptideProperties{
 	 * 
 	 * @param sequence
 	 * 		a protein sequence consisting of non-ambiguous characters only
-	 * @param ignoreCase
-	 * 		indicates if cases should be ignored.
 	 * @return the total molecular weight of sequence + weight of water molecule
 	 * @see ProteinSequence
 	 */
-	public double getMolecularWeight(ProteinSequence sequence, boolean ignoreCase);
+	public double getMolecularWeight(ProteinSequence sequence);
 	
 	/**
 	 * Returns the molecular weight of sequence. The sequence argument must be a protein sequence consisting of only non-ambiguous characters.
@@ -90,15 +205,13 @@ public interface IPeptideProperties{
 	 * 		xml file that details the mass of each elements and isotopes
 	 * @param aminoAcidCompositionFile
 	 * 		xml file that details the composition of amino acids
-	 * @param ignoreCase
-	 * 		indicates if cases should be ignored.
 	 * @return the total molecular weight of sequence + weight of water molecule
 	 * @throws JAXBException
 	 * 		thrown if unable to properly parse either elementMassFile or aminoAcidCompositionFile
 	 * @throws FileNotFoundException
 	 * 		thrown if either elementMassFile or aminoAcidCompositionFile are not found
 	 */
-	public double getMolecularWeight(ProteinSequence sequence, File aminoAcidCompositionFile, boolean ignoreCase) throws JAXBException, FileNotFoundException;
+	public double getMolecularWeight(ProteinSequence sequence, File aminoAcidCompositionFile) throws JAXBException, FileNotFoundException;
 	
 	/**
 	 * Returns the molecular weight of sequence. The sequence argument must be a protein sequence consisting of only non-ambiguous characters.
@@ -111,15 +224,13 @@ public interface IPeptideProperties{
 	 * 		xml file that details the mass of each elements and isotopes
 	 * @param aminoAcidCompositionFile
 	 * 		xml file that details the composition of amino acids
-	 * @param ignoreCase
-	 * 		indicates if cases should be ignored.
 	 * @return the total molecular weight of sequence + weight of water molecule
 	 * @throws JAXBException
 	 * 		thrown if unable to properly parse either elementMassFile or aminoAcidCompositionFile
 	 * @throws FileNotFoundException
 	 * 		thrown if either elementMassFile or aminoAcidCompositionFile are not found
 	 */
-	public double getMolecularWeight(ProteinSequence sequence, File elementMassFile, File aminoAcidCompositionFile, boolean ignoreCase) 
+	public double getMolecularWeight(ProteinSequence sequence, File elementMassFile, File aminoAcidCompositionFile) 
 		throws JAXBException, FileNotFoundException;
 	
 	/**
@@ -132,11 +243,9 @@ public interface IPeptideProperties{
 	 * 		a protein sequence consisting of non-ambiguous characters only
 	 * @param aminoAcidCompositionTable
 	 * 		a amino acid composition table obtained by calling IPeptideProperties.obtainAminoAcidCompositionTable
-	 * @param ignoreCase
-	 * 		indicates if cases should be ignored.
 	 * @return the total molecular weight of sequence + weight of water molecule
 	 */
-	public double getMolecularWeightBasedOnXML(ProteinSequence sequence, AminoAcidCompositionTable aminoAcidCompositionTable, boolean ignoreCase);
+	public double getMolecularWeightBasedOnXML(ProteinSequence sequence, AminoAcidCompositionTable aminoAcidCompositionTable);
 	
 	/**
 	 * This method would initialize amino acid composition table based on the input xml files and stores the table for usage in future calls to 
@@ -145,15 +254,13 @@ public interface IPeptideProperties{
 	 * 
 	 * @param aminoAcidCompositionFile
 	 * 		xml file that details the composition of amino acids
-	 * @param ignoreCase
-	 * 		indicates if cases should be ignored.
 	 * @return the initialized amino acid composition table
 	 * @throws JAXBException
 	 * 		thrown if unable to properly parse either elementMassFile or aminoAcidCompositionFile
 	 * @throws FileNotFoundException
 	 * 		thrown if either elementMassFile or aminoAcidCompositionFile are not found
 	 */
-	public AminoAcidCompositionTable obtainAminoAcidCompositionTable(File aminoAcidCompositionFile, boolean ignoreCase) 
+	public AminoAcidCompositionTable obtainAminoAcidCompositionTable(File aminoAcidCompositionFile) 
 		throws JAXBException, FileNotFoundException;
 	
 	/**
@@ -164,15 +271,13 @@ public interface IPeptideProperties{
 	 * 		xml file that details the mass of each elements and isotopes
 	 * @param aminoAcidCompositionFile
 	 * 		xml file that details the composition of amino acids
-	 * @param ignoreCase
-	 * 		indicates if cases should be ignored.
 	 * @return the initialized amino acid composition table
 	 * @throws JAXBException
 	 * 		thrown if unable to properly parse either elementMassFile or aminoAcidCompositionFile
 	 * @throws FileNotFoundException
 	 * 		thrown if either elementMassFile or aminoAcidCompositionFile are not found
 	 */
-	public AminoAcidCompositionTable obtainAminoAcidCompositionTable(File elementMassFile, File aminoAcidCompositionFile, boolean ignoreCase) 
+	public AminoAcidCompositionTable obtainAminoAcidCompositionTable(File elementMassFile, File aminoAcidCompositionFile) 
 		throws JAXBException, FileNotFoundException;
 
 	/**
@@ -189,12 +294,10 @@ public interface IPeptideProperties{
 	 * @param assumeCysReduced
 	 * 		true if Cys are assumed to be reduced and false if Cys are
 	 *		assumed to form cystines
-	 * @param ignoreCase
-	 * 		indicates if cases should be ignored.
 	 * @return the extinction coefficient of sequence
 	 * @see ProteinSequence
 	 */
-	public double getExtinctionCoefficient(ProteinSequence sequence, boolean assumeCysReduced, boolean ignoreCase);
+	public double getExtinctionCoefficient(ProteinSequence sequence, boolean assumeCysReduced);
 
 	/**
 	 * Returns the absorbance (optical density) of sequence. The sequence argument
@@ -207,12 +310,10 @@ public interface IPeptideProperties{
 	 * @param assumeCysReduced
 	 * 		true if Cys are assumed to be reduced and false if Cys are
 	 * 		assumed to form cystines
-	 * @param ignoreCase
-	 * 		indicates if cases should be ignored.
 	 * @return the absorbance (optical density) of sequence
 	 * @see ProteinSequence
 	 */
-	public double getAbsorbance(ProteinSequence sequence, boolean assumeCysReduced, boolean ignoreCase);
+	public double getAbsorbance(ProteinSequence sequence, boolean assumeCysReduced);
 	
 	/**
 	 * Returns the instability index of sequence. The sequence argument must be
@@ -223,12 +324,10 @@ public interface IPeptideProperties{
 	 * 
 	 * @param sequence
 	 * 		a protein sequence consisting of non-ambiguous characters only
-	 * @param ignoreCase
-	 * 		indicates if cases should be ignored.
 	 * @return the instability index of sequence
 	 * @see ProteinSequence
 	 */
-	public double getInstabilityIndex(ProteinSequence sequence, boolean ignoreCase);
+	public double getInstabilityIndex(ProteinSequence sequence);
 
 	/**
 	 * Returns the apliphatic index of sequence. The sequence argument must be a
@@ -242,12 +341,10 @@ public interface IPeptideProperties{
 	 * 
 	 * @param sequence
 	 * 		a protein sequence consisting of non-ambiguous characters only
-	 * @param ignoreCase
-	 * 		indicates if cases should be ignored.
 	 * @return the aliphatic index of sequence
 	 * @see ProteinSequence
 	 */
-	public double getApliphaticIndex(ProteinSequence sequence, boolean ignoreCase);
+	public double getApliphaticIndex(ProteinSequence sequence);
 
 	/**
 	 * Returns the average hydropathy value of sequence. The sequence argument
@@ -260,12 +357,10 @@ public interface IPeptideProperties{
 	 * 
 	 * @param sequence
 	 * 		a protein sequence consisting of non-ambiguous characters only
-	 * @param ignoreCase
-	 * 		indicates if cases should be ignored.
 	 * @return the average hydropathy value of sequence
 	 * @see ProteinSequence
 	 */
-	public double getAvgHydropathy(ProteinSequence sequence, boolean ignoreCase);
+	public double getAvgHydropathy(ProteinSequence sequence);
 
 	/**
 	 * Returns the isoelectric point of sequence. The sequence argument must be
@@ -277,12 +372,10 @@ public interface IPeptideProperties{
 	 * 
 	 * @param sequence
 	 * 		a protein sequence consisting of non-ambiguous characters only
-	 * @param ignoreCase
-	 * 		indicates if cases should be ignored.
 	 * @return the isoelectric point of sequence
 	 * @see ProteinSequence
 	 */
-	public double getIsoelectricPoint(ProteinSequence sequence, boolean ignoreCase);
+	public double getIsoelectricPoint(ProteinSequence sequence);
 
 	/**
 	 * Returns the net charge of sequence at pH 7. The sequence argument must be
@@ -292,12 +385,10 @@ public interface IPeptideProperties{
 	 * 
 	 * @param sequence
 	 * 		a protein sequence consisting of non-ambiguous characters only
-	 * @param ignoreCase
-	 * 		indicates if cases should be ignored.
 	 * @return the net charge of sequence at pH 7
 	 * @see ProteinSequence
 	 */
-	public double getNetCharge(ProteinSequence sequence, boolean ignoreCase);
+	public double getNetCharge(ProteinSequence sequence);
 
 	/**
 	 * Returns the composition of specified amino acid in the sequence. The
@@ -311,13 +402,11 @@ public interface IPeptideProperties{
 	 * 		a protein sequence consisting of non-ambiguous characters only
 	 * @param aminoAcidCode
 	 * 		the code of the amino acid to compute
-	 * @param ignoreCase
-	 * 		indicates if cases should be ignored.
 	 * @return the composition of specified amino acid in the sequence
 	 * @see ProteinSequence 
 	 * @see AminoAcidCompound
 	 */
-	public double getEnrichment(ProteinSequence sequence, AminoAcidCompound aminoAcidCode, boolean ignoreCase);
+	public double getEnrichment(ProteinSequence sequence, AminoAcidCompound aminoAcidCode);
 
 	/**
 	 * Returns the composition of the 20 standard amino acid in the sequence.
@@ -328,11 +417,9 @@ public interface IPeptideProperties{
 	 * 
 	 * @param sequence
 	 * 		a protein sequence consisting of non-ambiguous characters only
-	 * @param ignoreCase
-	 * 		indicates if cases should be ignored.
 	 * @return the composition of the 20 standard amino acid in the sequence
 	 * @see ProteinSequence 
 	 * @see AminoAcidCompound
 	 */
-	public Map<AminoAcidCompound, Double> getAAComposition(ProteinSequence sequence, boolean ignoreCase);
+	public Map<AminoAcidCompound, Double> getAAComposition(ProteinSequence sequence);
 }

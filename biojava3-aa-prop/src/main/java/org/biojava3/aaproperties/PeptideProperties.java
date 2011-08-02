@@ -41,15 +41,13 @@ public class PeptideProperties {
 	 * 
 	 * @param sequence
 	 * 	a protein sequence consisting of non-ambiguous characters only
-	 * @param ignoreCase
-	 * 		indicates if cases should be ignored.
 	 * @return the total molecular weight of sequence + weight of water molecule
 	 */
-	public static final double getMolecularWeight(String sequence, boolean ignoreCase){
-		sequence = Utils.checkSequence(sequence, ignoreCase);
+	public static final double getMolecularWeight(String sequence){
+		sequence = Utils.checkSequence(sequence);
 		ProteinSequence pSequence = new ProteinSequence(sequence);
 		IPeptideProperties pp = new PeptidePropertiesImpl();
-		return pp.getMolecularWeight(pSequence, ignoreCase);
+		return pp.getMolecularWeight(pSequence);
 	}
 
 	/**
@@ -64,20 +62,18 @@ public class PeptideProperties {
 	 * 	xml file that details the mass of each elements and isotopes
 	 * @param aminoAcidCompositionFile 
 	 * 	xml file that details the composition of amino acids
-	 * @param ignoreCase
-	 * 		indicates if cases should be ignored.
 	 * @return the total molecular weight of sequence + weight of water molecule
 	 * @throws FileNotFoundException 
 	 * 	thrown if either elementMassFile or aminoAcidCompositionFile are not found
 	 * @throws JAXBException 
 	 * 	thrown if unable to properly parse either elementMassFile or aminoAcidCompositionFile
 	 */
-	public static final double getMolecularWeight(String sequence, File elementMassFile, File aminoAcidCompositionFile, boolean ignoreCase) 
+	public static final double getMolecularWeight(String sequence, File elementMassFile, File aminoAcidCompositionFile) 
 	throws FileNotFoundException, JAXBException{
-		sequence = Utils.checkSequence(sequence, ignoreCase);
+		sequence = Utils.checkSequence(sequence);
 		ProteinSequence pSequence = new ProteinSequence(sequence);
 		IPeptideProperties pp = new PeptidePropertiesImpl();
-		return pp.getMolecularWeight(pSequence, elementMassFile, aminoAcidCompositionFile, ignoreCase);
+		return pp.getMolecularWeight(pSequence, elementMassFile, aminoAcidCompositionFile);
 	}
 
 	/**
@@ -91,19 +87,17 @@ public class PeptideProperties {
 	 * 	xml file that details the mass of each elements and isotopes
 	 * @param aminoAcidCompositionFile
 	 * 	xml file that details the composition of amino acids
-	 * @param ignoreCase
-	 * 		indicates if cases should be ignored.
 	 * @return the total molecular weight of sequence + weight of water molecule
 	 * @throws JAXBException
 	 * 	thrown if unable to properly parse either elementMassFile or aminoAcidCompositionFile
 	 * @throws FileNotFoundException
 	 * 	thrown if either elementMassFile or aminoAcidCompositionFile are not found
 	 */
-	public static final double getMolecularWeight(String sequence, File aminoAcidCompositionFile, boolean ignoreCase) throws FileNotFoundException, JAXBException{
-		sequence = Utils.checkSequence(sequence, ignoreCase);
+	public static final double getMolecularWeight(String sequence, File aminoAcidCompositionFile) throws FileNotFoundException, JAXBException{
+		sequence = Utils.checkSequence(sequence);
 		ProteinSequence pSequence = new ProteinSequence(sequence);
 		IPeptideProperties pp = new PeptidePropertiesImpl();
-		return pp.getMolecularWeight(pSequence, aminoAcidCompositionFile, ignoreCase);
+		return pp.getMolecularWeight(pSequence, aminoAcidCompositionFile);
 	}
 
 	/**
@@ -113,18 +107,16 @@ public class PeptideProperties {
 	 * 
 	 * @param aminoAcidCompositionFile
 	 * 	xml file that details the composition of amino acids
-	 * @param ignoreCase
-	 * 		indicates if cases should be ignored.
 	 * @return the initialized amino acid composition table
 	 * @throws JAXBException
 	 * 	thrown if unable to properly parse either elementMassFile or aminoAcidCompositionFile
 	 * @throws FileNotFoundException
 	 * 	thrown if either elementMassFile or aminoAcidCompositionFile are not found
 	 */
-	public static final AminoAcidCompositionTable obtainAminoAcidCompositionTable(File aminoAcidCompositionFile, boolean ignoreCase) 
+	public static final AminoAcidCompositionTable obtainAminoAcidCompositionTable(File aminoAcidCompositionFile) 
 	throws JAXBException, FileNotFoundException{
 		IPeptideProperties pp = new PeptidePropertiesImpl();
-		return pp.obtainAminoAcidCompositionTable(aminoAcidCompositionFile, ignoreCase);
+		return pp.obtainAminoAcidCompositionTable(aminoAcidCompositionFile);
 	}
 
 	/**
@@ -135,18 +127,16 @@ public class PeptideProperties {
 	 * 	xml file that details the mass of each elements and isotopes
 	 * @param aminoAcidCompositionFile
 	 * 	xml file that details the composition of amino acids
-	 * @param ignoreCase
-	 * 		indicates if cases should be ignored.
 	 * @return the initialized amino acid composition table
 	 * @throws JAXBException
 	 * 	thrown if unable to properly parse either elementMassFile or aminoAcidCompositionFile
 	 * @throws FileNotFoundException
 	 * 	thrown if either elementMassFile or aminoAcidCompositionFile are not found
 	 */
-	public static final AminoAcidCompositionTable obtainAminoAcidCompositionTable(File elementMassFile, File aminoAcidCompositionFile, boolean ignoreCase)
+	public static final AminoAcidCompositionTable obtainAminoAcidCompositionTable(File elementMassFile, File aminoAcidCompositionFile)
 	throws JAXBException, FileNotFoundException{
 		IPeptideProperties pp = new PeptidePropertiesImpl();
-		return pp.obtainAminoAcidCompositionTable(elementMassFile, aminoAcidCompositionFile, ignoreCase);
+		return pp.obtainAminoAcidCompositionTable(elementMassFile, aminoAcidCompositionFile);
 	}
 
 	/**
@@ -159,16 +149,14 @@ public class PeptideProperties {
 	 * 	a protein sequence consisting of non-ambiguous characters only
 	 * @param aminoAcidCompositionTable
 	 * 	a amino acid composition table obtained by calling IPeptideProperties.obtainAminoAcidCompositionTable
-	 * @param ignoreCase
-	 * 		indicates if cases should be ignored.
 	 * @return the total molecular weight of sequence + weight of water molecule
 	 * 	thrown if the method IPeptideProperties.setMolecularWeightXML(File, File) is not successfully called before calling this method.
 	 */
-	public static double getMolecularWeightBasedOnXML(String sequence, AminoAcidCompositionTable aminoAcidCompositionTable, boolean ignoreCase){
-		sequence = Utils.checkSequence(sequence, aminoAcidCompositionTable.getSymbolSet(), ignoreCase);
+	public static double getMolecularWeightBasedOnXML(String sequence, AminoAcidCompositionTable aminoAcidCompositionTable){
+		sequence = Utils.checkSequence(sequence, aminoAcidCompositionTable.getSymbolSet());
 		ProteinSequence pSequence = new ProteinSequence(sequence, aminoAcidCompositionTable.getAminoAcidCompoundSet());
 		IPeptideProperties pp = new PeptidePropertiesImpl();
-		return pp.getMolecularWeightBasedOnXML(pSequence, aminoAcidCompositionTable, ignoreCase);
+		return pp.getMolecularWeightBasedOnXML(pSequence, aminoAcidCompositionTable);
 	}
 
 	/**
@@ -181,15 +169,13 @@ public class PeptideProperties {
 	 * 	a protein sequence consisting of non-ambiguous characters only
 	 * @param assumeCysReduced
 	 * 	true if Cys are assumed to be reduced and false if Cys are assumed to form cystines
-	 * @param ignoreCase
-	 * 		indicates if cases should be ignored.s
 	 * @return the absorbance (optical density) of sequence
 	 */
-	public static final double getAbsorbance(String sequence, boolean assumeCysReduced, boolean ignoreCase){
-		sequence = Utils.checkSequence(sequence, ignoreCase);
+	public static final double getAbsorbance(String sequence, boolean assumeCysReduced){
+		sequence = Utils.checkSequence(sequence);
 		ProteinSequence pSequence = new ProteinSequence(sequence);
 		IPeptideProperties pp = new PeptidePropertiesImpl();
-		return pp.getAbsorbance(pSequence, assumeCysReduced, ignoreCase);
+		return pp.getAbsorbance(pSequence, assumeCysReduced);
 	}
 
 	/**
@@ -206,15 +192,13 @@ public class PeptideProperties {
 	 * @param assumeCysReduced
 	 *            true if Cys are assumed to be reduced and false if Cys are
 	 *            assumed to form cystines
-	 * @param ignoreCase
-	 * 		indicates if cases should be ignored.
 	 * @return the extinction coefficient of sequence
 	 */
-	public static final double getExtinctionCoefficient(String sequence, boolean assumeCysReduced, boolean ignoreCase) {
-		sequence = Utils.checkSequence(sequence, ignoreCase);
+	public static final double getExtinctionCoefficient(String sequence, boolean assumeCysReduced) {
+		sequence = Utils.checkSequence(sequence);
 		ProteinSequence pSequence = new ProteinSequence(sequence);
 		IPeptideProperties pp = new PeptidePropertiesImpl();
-		return pp.getExtinctionCoefficient(pSequence, assumeCysReduced, ignoreCase);
+		return pp.getExtinctionCoefficient(pSequence, assumeCysReduced);
 	}
 
 	/**
@@ -226,15 +210,13 @@ public class PeptideProperties {
 	 * 
 	 * @param sequence
 	 * 		a protein sequence consisting of non-ambiguous characters only
-	 * @param ignoreCase
-	 * 		indicates if cases should be ignored.
 	 * @return the instability index of sequence
 	 */
-	public static final double getInstabilityIndex(String sequence, boolean ignoreCase) {
-		sequence = Utils.checkSequence(sequence, ignoreCase);
+	public static final double getInstabilityIndex(String sequence) {
+		sequence = Utils.checkSequence(sequence);
 		ProteinSequence pSequence = new ProteinSequence(sequence);
 		IPeptideProperties pp = new PeptidePropertiesImpl();
-		return pp.getInstabilityIndex(pSequence, ignoreCase);
+		return pp.getInstabilityIndex(pSequence);
 	}
 
 	/**
@@ -249,15 +231,13 @@ public class PeptideProperties {
 	 * 
 	 * @param sequence
 	 * 		a protein sequence consisting of non-ambiguous characters only
-	 * @param ignoreCase
-	 * 		indicates if cases should be ignored.
 	 * @return the aliphatic index of sequence
 	 */
-	public static final double getApliphaticIndex(String sequence, boolean ignoreCase) {
-		sequence = Utils.checkSequence(sequence, ignoreCase);
+	public static final double getApliphaticIndex(String sequence) {
+		sequence = Utils.checkSequence(sequence);
 		ProteinSequence pSequence = new ProteinSequence(sequence);
 		IPeptideProperties pp = new PeptidePropertiesImpl();
-		return pp.getApliphaticIndex(pSequence, ignoreCase);
+		return pp.getApliphaticIndex(pSequence);
 	}
 
 	/**
@@ -271,15 +251,13 @@ public class PeptideProperties {
 	 * 
 	 * @param sequence 
 	 * 		a protein sequence consisting of non-ambiguous characters only
-	 * @param ignoreCase
-	 * 		indicates if cases should be ignored.
 	 * @return the average hydropathy value of sequence
 	 */
-	public static final double getAvgHydropathy(String sequence, boolean ignoreCase) {
-		sequence = Utils.checkSequence(sequence, ignoreCase);
+	public static final double getAvgHydropathy(String sequence) {
+		sequence = Utils.checkSequence(sequence);
 		ProteinSequence pSequence = new ProteinSequence(sequence);
 		IPeptideProperties pp = new PeptidePropertiesImpl();
-		return pp.getAvgHydropathy(pSequence, ignoreCase);
+		return pp.getAvgHydropathy(pSequence);
 	}
 
 	/**
@@ -292,15 +270,13 @@ public class PeptideProperties {
 	 * 
 	 * @param sequence
 	 * 		a protein sequence consisting of non-ambiguous characters only
-	 * @param ignoreCase
-	 * 		indicates if cases should be ignored.
 	 * @return the isoelectric point of sequence
 	 */
-	public static final double getIsoelectricPoint(String sequence, boolean ignoreCase) {
-		sequence = Utils.checkSequence(sequence, ignoreCase);
+	public static final double getIsoelectricPoint(String sequence) {
+		sequence = Utils.checkSequence(sequence);
 		ProteinSequence pSequence = new ProteinSequence(sequence);
 		IPeptideProperties pp = new PeptidePropertiesImpl();
-		return pp.getIsoelectricPoint(pSequence, ignoreCase);
+		return pp.getIsoelectricPoint(pSequence);
 	}
 
 	/**
@@ -311,15 +287,13 @@ public class PeptideProperties {
 	 * 
 	 * @param sequence
 	 * 		a protein sequence consisting of non-ambiguous characters only
-	 * @param ignoreCase
-	 * 		indicates if cases should be ignored.
 	 * @return the net charge of sequence at pH 7
 	 */
-	public static final double getNetCharge(String sequence, boolean ignoreCase) {
-		sequence = Utils.checkSequence(sequence, ignoreCase);
+	public static final double getNetCharge(String sequence) {
+		sequence = Utils.checkSequence(sequence);
 		ProteinSequence pSequence = new ProteinSequence(sequence);
 		IPeptideProperties pp = new PeptidePropertiesImpl();
-		return pp.getNetCharge(pSequence, ignoreCase);
+		return pp.getNetCharge(pSequence);
 	}
 
 	/**
@@ -334,13 +308,11 @@ public class PeptideProperties {
 	 *            a protein sequence consisting of non-ambiguous characters only
 	 * @param aminoAcidCode
 	 *            the code of the amino acid to compute
-	 * @param ignoreCase
-	 * 		indicates if cases should be ignored.
 	 * @return the composition of specified amino acid in the sequence
 	 * @see SingleLetterAACode
 	 */
-	public static final double getEnrichment(String sequence, SingleLetterAACode aminoAcidCode, boolean ignoreCase) {
-		return getEnrichment(sequence, aminoAcidCode.toString(), ignoreCase);
+	public static final double getEnrichment(String sequence, SingleLetterAACode aminoAcidCode) {
+		return getEnrichment(sequence, aminoAcidCode.toString());
 	}
 
 	/**
@@ -355,12 +327,10 @@ public class PeptideProperties {
 	 * 		a protein sequence consisting of non-ambiguous characters only
 	 * @param aminoAcidCode
 	 * 		the code of the amino acid to compute
-	 * @param ignoreCase
-	 * 		indicates if cases should be ignored.
 	 * @return the composition of specified amino acid in the sequence
 	 */
-	public static final double getEnrichment(String sequence, char aminoAcidCode, boolean ignoreCase){
-		return getEnrichment(sequence, aminoAcidCode + "", ignoreCase);
+	public static final double getEnrichment(String sequence, char aminoAcidCode){
+		return getEnrichment(sequence, aminoAcidCode + "");
 	}
 
 	/**
@@ -375,16 +345,14 @@ public class PeptideProperties {
 	 *            a protein sequence consisting of non-ambiguous characters only
 	 * @param aminoAcidCode
 	 *            the code of the amino acid to compute
-	 * @param ignoreCase
-	 * 		indicates if cases should be ignored.
 	 * @return the composition of specified amino acid in the sequence
 	 */
-	public static final double getEnrichment(String sequence, String aminoAcidCode, boolean ignoreCase){
-		sequence = Utils.checkSequence(sequence, ignoreCase);
+	public static final double getEnrichment(String sequence, String aminoAcidCode){
+		sequence = Utils.checkSequence(sequence);
 		ProteinSequence pSequence = new ProteinSequence(sequence);
 		IPeptideProperties pp = new PeptidePropertiesImpl();
 		AminoAcidCompoundSet aaSet = new AminoAcidCompoundSet();
-		return pp.getEnrichment(pSequence, aaSet.getCompoundForString(aminoAcidCode), ignoreCase);
+		return pp.getEnrichment(pSequence, aaSet.getCompoundForString(aminoAcidCode));
 	}
 
 	/**
@@ -396,16 +364,14 @@ public class PeptideProperties {
 	 * 
 	 * @param sequence
 	 *            a protein sequence consisting of non-ambiguous characters only
-	 *            @param ignoreCase
-	 * 		indicates if cases should be ignored.
 	 * @return the composition of the 20 standard amino acid in the sequence
 	 * @see AminoAcidCompound
 	 */
-	public static final Map<AminoAcidCompound, Double> getAAComposition(String sequence, boolean ignoreCase) {
-		sequence = Utils.checkSequence(sequence, ignoreCase);
+	public static final Map<AminoAcidCompound, Double> getAAComposition(String sequence) {
+		sequence = Utils.checkSequence(sequence);
 		ProteinSequence pSequence = new ProteinSequence(sequence);
 		IPeptideProperties pp = new PeptidePropertiesImpl();
-		return pp.getAAComposition(pSequence, ignoreCase);
+		return pp.getAAComposition(pSequence);
 	}
 
 	/**
@@ -417,12 +383,10 @@ public class PeptideProperties {
 	 * 
 	 * @param sequence
 	 * 		a protein sequence consisting of non-ambiguous characters only
-	 * @param ignoreCase
-	 * 		indicates if cases should be ignored.
 	 * @return the composition of the 20 standard amino acid in the sequence
 	 */
-	public static final Map<String, Double> getAACompositionString(String sequence, boolean ignoreCase){
-		Map<AminoAcidCompound, Double> aa2Composition = getAAComposition(sequence, ignoreCase);
+	public static final Map<String, Double> getAACompositionString(String sequence){
+		Map<AminoAcidCompound, Double> aa2Composition = getAAComposition(sequence);
 		Map<String, Double> aaString2Composition = new HashMap<String, Double>();
 		for(AminoAcidCompound aaCompound:aa2Composition.keySet()){
 			aaString2Composition.put(aaCompound.getShortName(), aa2Composition.get(aaCompound));
@@ -439,12 +403,10 @@ public class PeptideProperties {
 	 * 
 	 * @param sequence
 	 * 		a protein sequence consisting of non-ambiguous characters only
-	 * @param ignoreCase
-	 * 		indicates if cases should be ignored.
 	 * @return the composition of the 20 standard amino acid in the sequence
 	 */
-	public static final Map<Character, Double> getAACompositionChar(String sequence, boolean ignoreCase){
-		Map<AminoAcidCompound, Double> aa2Composition = getAAComposition(sequence, ignoreCase);
+	public static final Map<Character, Double> getAACompositionChar(String sequence){
+		Map<AminoAcidCompound, Double> aa2Composition = getAAComposition(sequence);
 		Map<Character, Double> aaChar2Composition = new HashMap<Character, Double>();
 		for(AminoAcidCompound aaCompound:aa2Composition.keySet()){
 			aaChar2Composition.put(aaCompound.getShortName().charAt(0), aa2Composition.get(aaCompound));

@@ -62,10 +62,8 @@ public class AminoAcidCompositionTable {
 	 * 
 	 * @param eTable
 	 * 		Stores the mass of elements and isotopes
-	 * @param ignoreCase
-	 *		indicates if cases should be ignored.
 	 */
-	public void computeMolecularWeight(ElementTable eTable, boolean ignoreCase){
+	public void computeMolecularWeight(ElementTable eTable){
 		this.aaSymbol2MolecularWeight = new HashMap<Character, Double>();
 		for(AminoAcidComposition a:aminoacid){
 			//Check to ensure that the symbol is of single character
@@ -74,7 +72,6 @@ public class AminoAcidCompositionTable {
 			}
 			//Check to ensure that the symbols are not repeated
 			char c = a.getSymbol().charAt(0);
-			if(ignoreCase) c = Character.toUpperCase(c);
 			if(this.aaSymbol2MolecularWeight.keySet().contains(c)){
 				throw new Error("Symbol " + c + " is repeated.\r\n" +
 						"Please check AminoAcidComposition XML file to ensure there are no repeated symbols. Note that this is case-insensitive.\r\n" +
@@ -104,7 +101,6 @@ public class AminoAcidCompositionTable {
 				}
 			}
 			c = a.getSymbol().charAt(0);
-			if(ignoreCase) c = Character.toUpperCase(c);
 			this.aaSymbol2MolecularWeight.put(c, total);
 		}
 		generatesAminoAcidCompoundSet();

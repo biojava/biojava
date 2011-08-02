@@ -21,7 +21,6 @@ import org.biojava3.core.sequence.io.ProteinSequenceCreator;
 import org.biojava3.core.sequence.template.CompoundSet;
 
 public class CommandPrompt {
-	private static boolean ignoreCase = true;
 	
 	public static void main(String[] args) throws Exception{
 		run(args);
@@ -39,11 +38,9 @@ public class CommandPrompt {
 		}
 		AminoAcidCompositionTable aaTable = null;
 		if(aminoAcidCompositionLocation != null && elementMassLocation == null){
-			ignoreCase = false;
-			aaTable = PeptideProperties.obtainAminoAcidCompositionTable(new File(aminoAcidCompositionLocation), ignoreCase);
+			aaTable = PeptideProperties.obtainAminoAcidCompositionTable(new File(aminoAcidCompositionLocation));
 		}else if(aminoAcidCompositionLocation != null && elementMassLocation != null){
-			ignoreCase = false;
-			aaTable = PeptideProperties.obtainAminoAcidCompositionTable(new File(aminoAcidCompositionLocation, elementMassLocation), ignoreCase);
+			aaTable = PeptideProperties.obtainAminoAcidCompositionTable(new File(aminoAcidCompositionLocation, elementMassLocation));
 		}else if(aminoAcidCompositionLocation == null && elementMassLocation != null){
 			throw new Error("You have define the location of Element Mass XML file. Please also define the location of Amino Acid Composition XML file");
 		}
@@ -149,11 +146,7 @@ public class CommandPrompt {
 		FileInputStream inStream = new FileInputStream(inputLocation);
 		FastaReader<ProteinSequence, AminoAcidCompound> fastaReader;
 		if(aaTable == null){
-			CompoundSet<AminoAcidCompound> set = AminoAcidCompoundSet.getAminoAcidCompoundSet();
-			if(ignoreCase){
-				System.out.println("Ignore");
-				set = CaseFreeAminoAcidCompoundSet.getAminoAcidCompoundSet();
-			}
+			CompoundSet<AminoAcidCompound>	set = CaseFreeAminoAcidCompoundSet.getAminoAcidCompoundSet();
 			fastaReader = new FastaReader<ProteinSequence, AminoAcidCompound>(
 					inStream, new GenericFastaHeaderParser<ProteinSequence, AminoAcidCompound>(), 
 					new ProteinSequenceCreator(set));
@@ -246,11 +239,11 @@ public class CommandPrompt {
 		ProteinSequence pSequence;
 		CompoundSet<AminoAcidCompound> aaSet;
 		if(aaTable != null){
-			sequence = Utils.checkSequence(sequence, aaTable.getSymbolSet(), ignoreCase);
+			sequence = Utils.checkSequence(sequence, aaTable.getSymbolSet());
 			pSequence = new ProteinSequence(sequence, aaTable.getAminoAcidCompoundSet());
 			aaSet = aaTable.getAminoAcidCompoundSet(); 
 		}else{
-			sequence = Utils.checkSequence(sequence, ignoreCase);
+			sequence = Utils.checkSequence(sequence);
 			pSequence = new ProteinSequence(sequence);
 			aaSet = AminoAcidCompoundSet.getAminoAcidCompoundSet();
 		}
@@ -262,25 +255,25 @@ public class CommandPrompt {
 			switch(c){
 			case '1': 
 				if(aaTable == null) 
-					dList.add(pp.getMolecularWeight(pSequence, ignoreCase));
+					dList.add(pp.getMolecularWeight(pSequence));
 				else 
-					dList.add(pp.getMolecularWeight(pSequence, ignoreCase));
+					dList.add(pp.getMolecularWeight(pSequence));
 				break;
 			case '2': 
-				dList.add(pp.getAbsorbance(pSequence, true, ignoreCase)); 
-				dList.add(pp.getAbsorbance(pSequence, false, ignoreCase)); 
+				dList.add(pp.getAbsorbance(pSequence, true)); 
+				dList.add(pp.getAbsorbance(pSequence, false)); 
 				break;
 			case '3': 
-				dList.add(pp.getExtinctionCoefficient(pSequence, true, ignoreCase));
-				dList.add(pp.getExtinctionCoefficient(pSequence, false, ignoreCase)); 
+				dList.add(pp.getExtinctionCoefficient(pSequence, true));
+				dList.add(pp.getExtinctionCoefficient(pSequence, false)); 
 				break;
-			case '4': dList.add(pp.getInstabilityIndex(pSequence, ignoreCase)); break;
-			case '5': dList.add(pp.getApliphaticIndex(pSequence, ignoreCase)); break;
-			case '6': dList.add(pp.getAvgHydropathy(pSequence, ignoreCase)); break;
-			case '7': dList.add(pp.getIsoelectricPoint(pSequence, ignoreCase)); break;
-			case '8': dList.add(pp.getNetCharge(pSequence, ignoreCase)); break;
+			case '4': dList.add(pp.getInstabilityIndex(pSequence)); break;
+			case '5': dList.add(pp.getApliphaticIndex(pSequence)); break;
+			case '6': dList.add(pp.getAvgHydropathy(pSequence)); break;
+			case '7': dList.add(pp.getIsoelectricPoint(pSequence)); break;
+			case '8': dList.add(pp.getNetCharge(pSequence)); break;
 			case '9': 
-				Map<AminoAcidCompound, Double> aaCompound2Double = pp.getAAComposition(pSequence, ignoreCase);
+				Map<AminoAcidCompound, Double> aaCompound2Double = pp.getAAComposition(pSequence);
 				//(A, R, N, D, C, E, Q, G, H, I, L, K, M, F, P, S, T, W, Y, V)
 				dList.add(aaCompound2Double.get(Constraints.A));
 				dList.add(aaCompound2Double.get(Constraints.R));
@@ -303,7 +296,7 @@ public class CommandPrompt {
 				dList.add(aaCompound2Double.get(Constraints.Y));
 				dList.add(aaCompound2Double.get(Constraints.V));
 				break;
-			case '0': dList.add(pp.getEnrichment(pSequence, aaSet.getCompoundForString("" + specificList.get(specificCount++)), ignoreCase)); break;
+			case '0': dList.add(pp.getEnrichment(pSequence, aaSet.getCompoundForString("" + specificList.get(specificCount++)))); break;
 			}
 		}
 		for(int i = 0; i < dList.size(); i++){

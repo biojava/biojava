@@ -19,8 +19,6 @@ import org.biojava3.aaproperties.PeptideProperties;
 import org.junit.Test;
 
 public class AminoAcidTester {
-	private final boolean ignoreCase = true;
-	
 	@Test
 	public void generateSchema() throws JAXBException, IOException{
 		JAXBContext context = JAXBContext.newInstance(AminoAcidCompositionTable.class);
@@ -42,14 +40,14 @@ public class AminoAcidTester {
 		Unmarshaller u2 = jc2.createUnmarshaller();
 		
 		aTable = (AminoAcidCompositionTable)u2.unmarshal(new FileInputStream("./src/main/resources/AdvancedAminoAcidComposition.xml" ) );
-		aTable.computeMolecularWeight(iTable, ignoreCase);
+		aTable.computeMolecularWeight(iTable);
 		//Assert the weight of the radioactives
 		String sequence = "00000";
-		assertEquals(398.558744445, PeptideProperties.getMolecularWeightBasedOnXML(sequence, aTable, ignoreCase));
+		assertEquals(398.558744445, PeptideProperties.getMolecularWeightBasedOnXML(sequence, aTable));
 		sequence = "1111";
-		assertEquals(702.335483556, PeptideProperties.getMolecularWeightBasedOnXML(sequence, aTable, ignoreCase));
+		assertEquals(702.335483556, PeptideProperties.getMolecularWeightBasedOnXML(sequence, aTable));
 		sequence = "JJJJ";
-		assertEquals(0.0, PeptideProperties.getMolecularWeightBasedOnXML(sequence, aTable, ignoreCase));
+		assertEquals(0.0, PeptideProperties.getMolecularWeightBasedOnXML(sequence, aTable));
 	}
 	
 	@Test
@@ -67,10 +65,10 @@ public class AminoAcidTester {
 		Unmarshaller u2 = jc2.createUnmarshaller();
 		
 		aTable = (AminoAcidCompositionTable)u2.unmarshal(new FileInputStream("./src/main/resources/MinAminoAcidComposition.xml" ) );
-		aTable.computeMolecularWeight(iTable, ignoreCase);
+		aTable.computeMolecularWeight(iTable);
 		
 		String sequence = "AAAAA";
-		assertEquals(373.4047, PeptideProperties.getMolecularWeightBasedOnXML(sequence, aTable, ignoreCase));
+		assertEquals(373.4047, PeptideProperties.getMolecularWeightBasedOnXML(sequence, aTable));
 	}
 	
 	@Test
@@ -88,10 +86,10 @@ public class AminoAcidTester {
 		Unmarshaller u2 = jc2.createUnmarshaller();
 		
 		aTable = (AminoAcidCompositionTable)u2.unmarshal(new FileInputStream("./src/main/resources/AminoAcidComposition.xml" ) );
-		aTable.computeMolecularWeight(iTable, ignoreCase);
+		aTable.computeMolecularWeight(iTable);
 		
 		String sequence = "AAAAA";
-		assertEquals(373.4047, PeptideProperties.getMolecularWeightBasedOnXML(sequence, aTable, ignoreCase));
+		assertEquals(373.4047, PeptideProperties.getMolecularWeightBasedOnXML(sequence, aTable));
 	}
 	
 	@Test

@@ -34,10 +34,10 @@ public class PeptidePropertiesImpl implements IPeptideProperties{
 	}
 	
 	@Override
-	public double getMolecularWeight(ProteinSequence sequence, boolean ignoreCase) {
+	public double getMolecularWeight(ProteinSequence sequence) {
 		double value = 0.0;
 		AminoAcidCompoundSet aaSet = new AminoAcidCompoundSet();
-		char[] seq = getSequence(sequence.toString(), ignoreCase);
+		char[] seq = getSequence(sequence.toString(), true);//ignore case
 		for(char aa:seq){
 			AminoAcidCompound c = aaSet.getCompoundForString(aa + "");
 			if(Constraints.aa2MolecularWeight.containsKey(c)){
@@ -51,25 +51,25 @@ public class PeptidePropertiesImpl implements IPeptideProperties{
 	}
 	
 	@Override
-	public double getMolecularWeight(ProteinSequence sequence, File aminoAcidCompositionFile, boolean ignoreCase) throws JAXBException, FileNotFoundException {
+	public double getMolecularWeight(ProteinSequence sequence, File aminoAcidCompositionFile) throws JAXBException, FileNotFoundException {
 		File elementMassFile = new File("./src/main/resources/ElementMass.xml");
 		if(elementMassFile.exists() == false){
 			throw new FileNotFoundException("Cannot locate ElementMass.xml. " +
 					"Please use getMolecularWeight(ProteinSequence, File, File) to specify ElementMass.xml location.");
 		}
-		return getMolecularWeightBasedOnXML(sequence, obtainAminoAcidCompositionTable(elementMassFile, aminoAcidCompositionFile, ignoreCase), ignoreCase);
+		return getMolecularWeightBasedOnXML(sequence, obtainAminoAcidCompositionTable(elementMassFile, aminoAcidCompositionFile));
 	}
 	
 	@Override
-	public double getMolecularWeight(ProteinSequence sequence, File elementMassFile, File aminoAcidCompositionFile, boolean ignoreCase) 
+	public double getMolecularWeight(ProteinSequence sequence, File elementMassFile, File aminoAcidCompositionFile) 
 			throws JAXBException, FileNotFoundException{
-		return getMolecularWeightBasedOnXML(sequence, obtainAminoAcidCompositionTable(elementMassFile, aminoAcidCompositionFile, ignoreCase), ignoreCase);
+		return getMolecularWeightBasedOnXML(sequence, obtainAminoAcidCompositionTable(elementMassFile, aminoAcidCompositionFile));
 	}
 	
 	@Override
-	public double getMolecularWeightBasedOnXML(ProteinSequence sequence, AminoAcidCompositionTable aminoAcidCompositionTable, boolean ignoreCase){
+	public double getMolecularWeightBasedOnXML(ProteinSequence sequence, AminoAcidCompositionTable aminoAcidCompositionTable){
 		double value = 0.0;
-		char[] seq = getSequence(sequence.toString(), ignoreCase);
+		char[] seq = sequence.toString().toCharArray();
 		for(char aa:seq){
 			Double weight = aminoAcidCompositionTable.getMolecularWeight(aa);
 			if(weight != null){
@@ -83,18 +83,18 @@ public class PeptidePropertiesImpl implements IPeptideProperties{
 	}
 
 	@Override
-	public AminoAcidCompositionTable obtainAminoAcidCompositionTable(File aminoAcidCompositionFile, boolean ignoreCase) 
+	public AminoAcidCompositionTable obtainAminoAcidCompositionTable(File aminoAcidCompositionFile) 
 		throws JAXBException, FileNotFoundException{
 		File elementMassFile = new File("./src/main/resources/ElementMass.xml");
 		if(elementMassFile.exists() == false){
 			throw new FileNotFoundException("Cannot locate ElementMass.xml. " +
 					"Please use getMolecularWeight(ProteinSequence, File, File) to specify ElementMass.xml location.");
 		}
-		return obtainAminoAcidCompositionTable(elementMassFile, aminoAcidCompositionFile, ignoreCase);
+		return obtainAminoAcidCompositionTable(elementMassFile, aminoAcidCompositionFile);
 	}
 	
 	@Override
-	public AminoAcidCompositionTable obtainAminoAcidCompositionTable(File elementMassFile, File aminoAcidCompositionFile, boolean ignoreCase) 
+	public AminoAcidCompositionTable obtainAminoAcidCompositionTable(File elementMassFile, File aminoAcidCompositionFile) 
 		throws JAXBException, FileNotFoundException{
 		//Parse elementMassFile
 		ElementTable iTable = new ElementTable();
@@ -112,19 +112,19 @@ public class PeptidePropertiesImpl implements IPeptideProperties{
 		Unmarshaller u2 = jc2.createUnmarshaller();
 		u2.setEventHandler(new MyValidationEventHandler()); 
 		aTable = (AminoAcidCompositionTable)u2.unmarshal(new FileInputStream(aminoAcidCompositionFile));
-		aTable.computeMolecularWeight(iTable, ignoreCase);
+		aTable.computeMolecularWeight(iTable);
 		return aTable;
 	}
 
 	@Override
-	public double getExtinctionCoefficient(ProteinSequence sequence, boolean assumeCysReduced, boolean ignoreCase) {
+	public double getExtinctionCoefficient(ProteinSequence sequence, boolean assumeCysReduced) {
 		//Tyr => Y
 		//Trp => W
 		//Cys => C
 		//E(Prot) = Numb(Tyr)*Ext(Tyr) + Numb(Trp)*Ext(Trp) + Numb(Cystine)*Ext(Cystine)
 		//where (for proteins in water measured at 280 nm): Ext(Tyr) = 1490, Ext(Trp) = 5500, Ext(Cystine) = 125;
 		AminoAcidCompoundSet aaSet = new AminoAcidCompoundSet();
-		Map<AminoAcidCompound, Integer> extinctAA2Count = this.getExtinctAACount(sequence, ignoreCase);
+		Map<AminoAcidCompound, Integer> extinctAA2Count = this.getExtinctAACount(sequence);
 		
 		double eProt;
 		if(assumeCysReduced == false){
@@ -144,14 +144,14 @@ public class PeptidePropertiesImpl implements IPeptideProperties{
 	}
 	
 	@Override
-	public double getAbsorbance(ProteinSequence sequence, boolean assumeCysReduced, boolean ignoreCase){
+	public double getAbsorbance(ProteinSequence sequence, boolean assumeCysReduced){
 		//Absorb(Prot) = E(Prot) / Molecular_weight
-		double mw = this.getMolecularWeight(sequence, ignoreCase);
-		double eProt = this.getExtinctionCoefficient(sequence, assumeCysReduced, ignoreCase);
+		double mw = this.getMolecularWeight(sequence);
+		double eProt = this.getExtinctionCoefficient(sequence, assumeCysReduced);
 		return eProt / mw;
 	}
 	
-	private Map<AminoAcidCompound, Integer> getExtinctAACount(ProteinSequence sequence, boolean ignoreCase){
+	private Map<AminoAcidCompound, Integer> getExtinctAACount(ProteinSequence sequence){
 		//Cys => C, Tyr => Y, Trp => W
 		int numW = 0;
 		int smallW = 0;
@@ -171,34 +171,28 @@ public class PeptidePropertiesImpl implements IPeptideProperties{
 		}
 		AminoAcidCompoundSet aaSet = new AminoAcidCompoundSet();
 		Map<AminoAcidCompound, Integer> extinctAA2Count = new HashMap<AminoAcidCompound, Integer>();
-		if(ignoreCase){
-			extinctAA2Count.put(aaSet.getCompoundForString("W"), numW + smallW);
-			extinctAA2Count.put(aaSet.getCompoundForString("C"), (int) (numC + smallC));
-			extinctAA2Count.put(aaSet.getCompoundForString("Y"), numY + smallY);
-		}else{
-			extinctAA2Count.put(aaSet.getCompoundForString("W"), numW);
-			extinctAA2Count.put(aaSet.getCompoundForString("C"), (int) numC);
-			extinctAA2Count.put(aaSet.getCompoundForString("Y"), numY);
-		}
+		//Ignore Case is always true
+		extinctAA2Count.put(aaSet.getCompoundForString("W"), numW + smallW);
+		extinctAA2Count.put(aaSet.getCompoundForString("C"), (int) (numC + smallC));
+		extinctAA2Count.put(aaSet.getCompoundForString("Y"), numY + smallY);
 		return extinctAA2Count;
 	}
 
 	@Override
-	public double getInstabilityIndex(ProteinSequence sequence, boolean ignoreCase) {
+	public double getInstabilityIndex(ProteinSequence sequence) {
 		double sum = 0.0;
-		String s = sequence.getSequenceAsString();
-		if(ignoreCase) s = s.toUpperCase();
+		String s = sequence.getSequenceAsString().toUpperCase();
 		for(int i = 0; i < sequence.getLength() - 1; i++){
 			String dipeptide = s.substring(i, i+2);
 			if(Constraints.diAA2Instability.containsKey(dipeptide)){
 				sum += Constraints.diAA2Instability.get(dipeptide);
 			}
 		}
-		return sum * 10 / (s.length() - Utils.getNumberOfInvalidChar(s, null, ignoreCase));
+		return sum * 10 / (s.length() - Utils.getNumberOfInvalidChar(s, null, true));
 	}
 
 	@Override
-	public double getApliphaticIndex(ProteinSequence sequence, boolean ignoreCase) {
+	public double getApliphaticIndex(ProteinSequence sequence) {
 //		Aliphatic index = X(Ala) + a * X(Val) + b * ( X(Ile) + X(Leu) )  
 //		where X(Ala), X(Val), X(Ile), and X(Leu) are mole percent (100 X mole fraction) 
 //		of alanine, valine, isoleucine, and leucine. 
@@ -206,7 +200,7 @@ public class PeptidePropertiesImpl implements IPeptideProperties{
 //		and of Leu/Ile side chains (b = 3.9) to the side chain of alanine. 
 //		Ala => A, Val => V, Ile => I, Leu => L
 		AminoAcidCompoundSet aaSet = new AminoAcidCompoundSet();
-		Map<AminoAcidCompound, Double> aa2Composition = getAAComposition(sequence, ignoreCase);
+		Map<AminoAcidCompound, Double> aa2Composition = getAAComposition(sequence);
 		final double a = 2.9;
 		final double b = 3.9;
 		double xAla = aa2Composition.get(aaSet.getCompoundForString("A"));
@@ -217,11 +211,11 @@ public class PeptidePropertiesImpl implements IPeptideProperties{
 	}
 
 	@Override
-	public double getAvgHydropathy(ProteinSequence sequence, boolean ignoreCase) {
+	public double getAvgHydropathy(ProteinSequence sequence) {
 		int validLength = 0;
 		double total = 0.0;
 		AminoAcidCompoundSet aaSet = new AminoAcidCompoundSet();
-		char[] seq = this.getSequence(sequence.toString(), ignoreCase);
+		char[] seq = this.getSequence(sequence.toString(), true);
 		for(char aa:seq){
 			AminoAcidCompound c = aaSet.getCompoundForString(aa + "");
 			if(Constraints.aa2Hydrophathicity.containsKey(c)){
@@ -233,10 +227,10 @@ public class PeptidePropertiesImpl implements IPeptideProperties{
 	}
 
 	@Override
-	public double getIsoelectricPoint(ProteinSequence sequence, boolean ignoreCase) {
+	public double getIsoelectricPoint(ProteinSequence sequence) {
 		double currentPH = 7.0;
 		double changeSize = 7.0;
-		Map<AminoAcidCompound, Integer> chargedAA2Count = this.getChargedAACount(sequence, ignoreCase);
+		Map<AminoAcidCompound, Integer> chargedAA2Count = this.getChargedAACount(sequence);
 		double margin;
 		final double difference = 0.0000001;
 		while(true){
@@ -254,8 +248,8 @@ public class PeptidePropertiesImpl implements IPeptideProperties{
 	}
 
 	@Override
-	public double getNetCharge(ProteinSequence sequence, boolean ignoreCase) {
-		Map<AminoAcidCompound, Integer> chargedAA2Count = this.getChargedAACount(sequence, ignoreCase);
+	public double getNetCharge(ProteinSequence sequence) {
+		Map<AminoAcidCompound, Integer> chargedAA2Count = this.getChargedAACount(sequence);
 		return getNetCharge(chargedAA2Count, 7.0);
 	}
 	
@@ -289,7 +283,7 @@ public class PeptidePropertiesImpl implements IPeptideProperties{
 		return Math.pow(10, ph) / (Math.pow(10, pka) + Math.pow(10, ph));
 	}
 	
-	private Map<AminoAcidCompound, Integer> getChargedAACount(ProteinSequence sequence, boolean ignoreCase){
+	private Map<AminoAcidCompound, Integer> getChargedAACount(ProteinSequence sequence){
 		//Lys => K, Arg => R, His => H
 		//Asp => D, Glu => E, Cys => C, Tyr => Y
 		int numK = 0;
@@ -299,7 +293,7 @@ public class PeptidePropertiesImpl implements IPeptideProperties{
 		int numE = 0;
 		int numC = 0;
 		int numY = 0;
-		char[] seq = this.getSequence(sequence.getSequenceAsString(), ignoreCase);
+		char[] seq = this.getSequence(sequence.getSequenceAsString(), true);
 		for(char aa:seq){
 			switch(aa){
 			case 'K': numK++; break;
@@ -324,9 +318,9 @@ public class PeptidePropertiesImpl implements IPeptideProperties{
 	}
 	
 	@Override
-	public double getEnrichment(ProteinSequence sequence, AminoAcidCompound aminoAcidCode, boolean ignoreCase) {
+	public double getEnrichment(ProteinSequence sequence, AminoAcidCompound aminoAcidCode) {
 		double counter = 0.0;
-		char[] seq = this.getSequence(sequence.getSequenceAsString(), ignoreCase);
+		char[] seq = this.getSequence(sequence.getSequenceAsString(), true);
 		for(char aa:seq){
 			if(aminoAcidCode.getShortName().equals(aa + "")){
 				counter++;
@@ -336,14 +330,14 @@ public class PeptidePropertiesImpl implements IPeptideProperties{
 	}
 
 	@Override
-	public Map<AminoAcidCompound, Double> getAAComposition(ProteinSequence sequence, boolean ignoreCase) {
+	public Map<AminoAcidCompound, Double> getAAComposition(ProteinSequence sequence) {
 		int validLength = 0;
 		Map<AminoAcidCompound, Double> aa2Composition = new HashMap<AminoAcidCompound, Double>();
 		AminoAcidCompoundSet aaSet = new AminoAcidCompoundSet();
 		for(AminoAcidCompound aa:aaSet.getAllCompounds()){
 			aa2Composition.put(aa, 0.0);
 		}
-		char[] seq = this.getSequence(sequence.toString(), ignoreCase);
+		char[] seq = this.getSequence(sequence.toString(), true);
 		for(char aa:seq){
 			if(PeptideProperties.standardAASet.contains(aa)){
 				AminoAcidCompound compound = aaSet.getCompoundForString(aa + "");
@@ -372,18 +366,17 @@ public class PeptidePropertiesImpl implements IPeptideProperties{
 		AminoAcidCompoundSet aaSet = new AminoAcidCompoundSet();
 		System.out.println(aaSet.getCompoundForString("1"));
 		System.out.println(sequence);
-		boolean ignoreCase = true;
-		System.out.println("A Composition: " + pp.getEnrichment(sequence, aaSet.getCompoundForString("A"), ignoreCase));//CHECKED
+		System.out.println("A Composition: " + pp.getEnrichment(sequence, aaSet.getCompoundForString("A")));//CHECKED
 		
-		System.out.println("C Composition: " + pp.getEnrichment(sequence, aaSet.getCompoundForString("C"), ignoreCase));//CHECKED
-		System.out.println("Molecular Weight: " + pp.getMolecularWeight(sequence, ignoreCase));//CHECKED
-		System.out.println("All Composition: " + pp.getAAComposition(sequence, ignoreCase));//CHECKED
-		System.out.println("AvgHydro: " + pp.getAvgHydropathy(sequence, ignoreCase));//CHECKED
-		System.out.println("NetCharge: " + pp.getNetCharge(sequence, ignoreCase));//CHECKED
-		System.out.println("PI: " + pp.getIsoelectricPoint(sequence, ignoreCase));//CHECKED
-		System.out.println("Apliphatic: " + pp.getApliphaticIndex(sequence, ignoreCase));//CHECKED
-		System.out.println("Instability: " + pp.getInstabilityIndex(sequence, ignoreCase));//CHECKED
-		System.out.println("Extinct: " + pp.getExtinctionCoefficient(sequence, true, ignoreCase));//CHECKED - 
-		System.out.println("Extinct: " + pp.getExtinctionCoefficient(sequence, false, ignoreCase));
+		System.out.println("C Composition: " + pp.getEnrichment(sequence, aaSet.getCompoundForString("C")));//CHECKED
+		System.out.println("Molecular Weight: " + pp.getMolecularWeight(sequence));//CHECKED
+		System.out.println("All Composition: " + pp.getAAComposition(sequence));//CHECKED
+		System.out.println("AvgHydro: " + pp.getAvgHydropathy(sequence));//CHECKED
+		System.out.println("NetCharge: " + pp.getNetCharge(sequence));//CHECKED
+		System.out.println("PI: " + pp.getIsoelectricPoint(sequence));//CHECKED
+		System.out.println("Apliphatic: " + pp.getApliphaticIndex(sequence));//CHECKED
+		System.out.println("Instability: " + pp.getInstabilityIndex(sequence));//CHECKED
+		System.out.println("Extinct: " + pp.getExtinctionCoefficient(sequence, true));//CHECKED - 
+		System.out.println("Extinct: " + pp.getExtinctionCoefficient(sequence, false));
 	}
 }
