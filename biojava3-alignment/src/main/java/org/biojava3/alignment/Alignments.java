@@ -31,6 +31,7 @@ import java.util.concurrent.Future;
 import org.biojava3.alignment.template.*;
 import org.biojava3.core.sequence.compound.AmbiguityDNACompoundSet;
 import org.biojava3.core.sequence.compound.AminoAcidCompoundSet;
+import org.biojava3.core.sequence.compound.DNACompoundSet;
 import org.biojava3.core.sequence.template.Compound;
 import org.biojava3.core.sequence.template.CompoundSet;
 import org.biojava3.core.sequence.template.Sequence;
@@ -144,11 +145,17 @@ public class Alignments {
             @SuppressWarnings("unchecked") // compound types must be equal since compound sets are equal
             SubstitutionMatrix<C> temp = (SubstitutionMatrix<C>) SubstitutionMatrixHelper.getBlosum62();
             subMatrix = temp;
+        } else if (cs == DNACompoundSet.getDNACompoundSet()) {
+            @SuppressWarnings("unchecked") // compound types must be equal since compound sets are equal
+            SubstitutionMatrix<C> temp = (SubstitutionMatrix<C>) SubstitutionMatrixHelper.getNuc4_4();
+            subMatrix = temp;
+            
         } else if (cs == AmbiguityDNACompoundSet.getDNACompoundSet()) {
             @SuppressWarnings("unchecked") // compound types must be equal since compound sets are equal
             SubstitutionMatrix<C> temp = (SubstitutionMatrix<C>) SubstitutionMatrixHelper.getNuc4_4();
             subMatrix = temp;
-        } 
+            
+        }
         ProfileProfileAlignerType pa = ProfileProfileAlignerType.GLOBAL;
         for (Object o : settings) {
             if (o instanceof PairwiseSequenceScorerType) {
