@@ -44,6 +44,7 @@ public class StructureToolsTest extends TestCase {
     	PDBFileParser pdbpars = new PDBFileParser();
     	FileParsingParameters params = new FileParsingParameters();
     	params.setAlignSeqRes(false);
+    	
     	pdbpars.setFileParsingParameters(params);
 
     	structure = pdbpars.parsePDBFile(inStream) ;
