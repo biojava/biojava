@@ -63,7 +63,9 @@ public class ProteinModificationParserTest extends TestCase {
 				// Modified resdiues
 				{"1UIS", "AA0183"}, // NRQ
 				{"3MVJ", "AA0037"}, // SEP
-				{"1DOJ", "AA0065"}, // MEA
+				
+				// remediation changed 1DOJ...
+				//{"1DOJ", "AA0065"}, // MEA
 				{"1DOJ", "AA0172"}, // TYS
 				{"3H5R", "AA0302"}, // SNN, note: SNN is not at C-terminal in some structures, e.g. 3I4W
 
