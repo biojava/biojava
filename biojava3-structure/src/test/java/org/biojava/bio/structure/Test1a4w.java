@@ -158,26 +158,23 @@ public class Test1a4w extends TestCase{
 
 			boolean noWater = true;
 			boolean darPresent = false;
-			boolean twoepPresent = false;
+		
 
 			for ( Group g : ligands){
 				String pdbName = g.getPDBName();
-				if ( pdbName.equals("DAR"))
+				if ( pdbName.equals("QWE"))
 					darPresent = true;
-				else if ( pdbName.equals("2EP"))
-					twoepPresent = true;
+			
 				else if ( pdbName.equals("H2O"))
 					noWater = false;
 			}
 
 			assertTrue("Found water in ligands list!", noWater );
 
-			assertTrue("Did not find DAR in ligands list!", darPresent);
-
-			assertTrue("Did not find 2EP in ligands list!", twoepPresent);
-
+			assertTrue("Did not find QWE in ligands list!", darPresent);
+			
 			//System.out.println("LIGANDS:" + ligands);
-			assertEquals("Did not find the correct nr of ligands in chain! " , 6,ligands.size());
+			assertEquals("Did not find the correct nr of ligands in chain! " , 3,ligands.size());
 		} catch (Exception e){
 			e.printStackTrace();
 			fail(e.getMessage());
