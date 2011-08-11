@@ -4,9 +4,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.ArrayList;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -158,6 +158,11 @@ public class CommandPrompt {
 		return fastaReader.process();
 	}
 	
+	public enum PropertyName{MolecularWeight, Absorbance_True, Absorbance_False, ExtinctionCoefficient_True, ExtinctionCoefficient_False, 
+		InstabilityIndex, ApliphaticIndex, AverageHydropathyValue, IsoelectricPoint, NetCharge_pH_7, A, R, 
+		N, D, C, E, Q, G, H, I, L,
+		K, M, F, P, S, T, W, Y, V};
+	
 	private static void printHeader(PrintStream output, List<Character> propertyList, List<Character> specificList, String delimiter) throws IOException{
 		int specificCount = 0;
 		/* 
@@ -175,43 +180,27 @@ public class CommandPrompt {
 		List<String> sList = new ArrayList<String>();
 		for(Character c:propertyList){
 			switch(c){
-			case '1': sList.add("MolecularWeight"); break;
-			case '2': 
-				sList.add("Absorbance(true)");
-				sList.add("Absorbance(false)"); 
-				break;
-			case '3': 
-				sList.add("ExtinctionCoefficient(true)");
-				sList.add("ExtinctionCoefficient(false)"); 
-				break;
-			case '4': sList.add("InstabilityIndex"); break;
-			case '5': sList.add("ApliphaticIndex"); break;
-			case '6': sList.add("AverageHydropathyValue"); break;
-			case '7': sList.add("IsoelectricPoint"); break;
-			case '8': sList.add("NetCharge@pH7"); break;
+			case '1': sList.add(PropertyName.MolecularWeight.toString()); break;
+			case '2': sList.add(PropertyName.Absorbance_True.toString()); sList.add(PropertyName.Absorbance_False.toString()); break;
+			case '3': sList.add(PropertyName.ExtinctionCoefficient_True.toString()); sList.add(PropertyName.ExtinctionCoefficient_False.toString()); break;
+			case '4': sList.add(PropertyName.InstabilityIndex.toString()); break;
+			case '5': sList.add(PropertyName.ApliphaticIndex.toString()); break;
+			case '6': sList.add(PropertyName.AverageHydropathyValue.toString()); break;
+			case '7': sList.add(PropertyName.IsoelectricPoint.toString()); break;
+			case '8': sList.add(PropertyName.NetCharge_pH_7.toString()); break;
 			case '9': 
-				sList.add("Composition_A");
-				sList.add("Composition_R");
-				sList.add("Composition_N");
-				sList.add("Composition_D"); 
-				sList.add("Composition_C");
-				sList.add("Composition_E");
-				sList.add("Composition_Q");
-				sList.add("Composition_G");
-				sList.add("Composition_H");
-				sList.add("Composition_I");
-				sList.add("Composition_L");
-				sList.add("Composition_K");
-				sList.add("Composition_M");
-				sList.add("Composition_F");
-				sList.add("Composition_P");
-				sList.add("Composition_S");
-				sList.add("Composition_T");
-				sList.add("Composition_W");
-				sList.add("Composition_Y");
-				sList.add("Composition_V");
+				sList.add(PropertyName.A.toString()); sList.add(PropertyName.R.toString()); 
+				sList.add(PropertyName.N.toString()); sList.add(PropertyName.D.toString()); 
+				sList.add(PropertyName.C.toString()); sList.add(PropertyName.E.toString());
+				sList.add(PropertyName.Q.toString()); sList.add(PropertyName.G.toString());
+				sList.add(PropertyName.H.toString()); sList.add(PropertyName.I.toString());
+				sList.add(PropertyName.L.toString()); sList.add(PropertyName.K.toString());
+				sList.add(PropertyName.M.toString()); sList.add(PropertyName.F.toString());
+				sList.add(PropertyName.P.toString()); sList.add(PropertyName.S.toString());
+				sList.add(PropertyName.T.toString()); sList.add(PropertyName.W.toString());
+				sList.add(PropertyName.Y.toString()); sList.add(PropertyName.V.toString());
 				break;
-			case '0': sList.add("Composition_" + specificList.get(specificCount++)); break;
+			case '0': sList.add("" + specificList.get(specificCount++)); break;
 			}
 		}
 		for(int i = 0; i < sList.size(); i++){

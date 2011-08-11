@@ -10,6 +10,25 @@
   <version>3.0.2-SNAPSHOT</version>
   <name>biojava3-aa-prop</name>
   <url>http://maven.apache.org</url>
+  
+  <build>
+    <plugins>
+        <plugin>
+            <artifactId>maven-assembly-plugin</artifactId>
+            <configuration>
+                <archive>
+                    <manifest>
+                        <mainClass>org.biojava3.aaproperties.CommandPrompt</mainClass>
+                    </manifest>
+                </archive>
+                <descriptorRefs>
+                    <descriptorRef>jar-with-dependencies</descriptorRef>
+                </descriptorRefs>
+            </configuration>
+        </plugin>
+    </plugins>
+</build>
+  
   <dependencies>
   	<dependency>
   		<groupId>org.biojava</groupId>
@@ -28,11 +47,4 @@
       <scope>test</scope>
     </dependency>
   </dependencies>
-  	<properties>
-		<jdk.version>1.6</jdk.version>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<project.build.targetEncoding>UTF-8</project.build.targetEncoding>
-		<maxmem>512M</maxmem>
-	</properties>
-  
 </project>

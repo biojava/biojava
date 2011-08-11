@@ -33,8 +33,13 @@ import org.biojava3.core.sequence.ProteinSequence;
 import org.biojava3.core.sequence.compound.AminoAcidCompound;
 
 /**
- * 
- * How To add a new executable
+ *
+ *
+ *
+ *
+ *
+ *
+How To add a new executable
 
 1) Add executable to the binaries folder. If it has source code and can be 
 recompiled for different platforms include it under binaries/src 
@@ -66,6 +71,7 @@ The same property for Mafft will be called local.mafft.bin.
 Added AAProperties description to conf/Executable.properties
 Change AAProperties.jar to aaproperties.jar
 
+GOOD TILL HERE
 
 5) Add <ExecutableName>Limit.xml, <ExecutableName>Parameters.xml and 
 <ExecutableName>Presets.xml. All are optional (should be at least). If the 
@@ -73,9 +79,14 @@ executable does not support parameters you do not have to refer to the
 XXXParameter.xml file into the Executable.properties file. The same is true for 
 Presets and Limits. 
 
+
 Added AAPropertiesLimits.xml and AAPropertiesParameters.xml
 Ignore AAPropertiesPresets.xml for now
+
 Question) Think that my AAPropertiesParameters.xml is not properly defined
+i) My command prompt uses ' ' to separate instead of '='. Would that work?
+ii) Some of my options do not have values. Would that be fine with the xml file?
+iii) Any way to specify some options to be mandatory or optional?
 
 6) Create a Java wrapper class for your executable. Create it within runner 
 source directory. Examples of other wrappers can be found in compbio.runner.msa 
@@ -89,14 +100,18 @@ Created AAProperties.java under compbio.runner.sequence and extends SkeletalExec
 
 7) Create a testcase suit for your wrapper and run the test cases. 
 
-Question) Stuck at Step 7. What are the test cases we are supposed to be running?
+Question) Stuck at Step 7.
+i) What are the test cases are we supposed to run?
+ii) Tried copying the JronnTester.testRunLocally but does not seems to work. Believe my step 6, Java wrapper class might not be working as well.
+
+Initial attempt to provide AAProperties as a service in JABAWS
 
 8) Create parser for the output files of your executable. Suggested location 
 compbio.data.sequence.SequenceUtil  
 
 9) Test the parser
 
-Stop at step 9
+Stop at step 9 then use the 
 
 10) Decide which web services interface your executable is going to match. 
     For example if the executable output can be represented as 
@@ -152,17 +167,24 @@ enumeration take into account the new service. Update the client help text
  * runner.conservation.AACon.java
  * Download the WAR file and install the TomCat.
  * 
- * Meetings
- * Thursday 28 July
+ * 
+ * 
+ * Look at Andreas email
+ * http://www.biojava.org/download/maven/
+ * http://emmy.rcsb.org:8080/cruisecontrol/
+ * http://maven.apache.org/shared/maven-archiver/examples/classpath.html#Make
+ * Commit only when you ensure it runs locally
+ * Maven Compile around 20mins to 1hour after commit
+ * 
+ * distributionManagement
+ * build
  * 
  * DONE
- * Only consider cases difference for Molecular Weight. Revert all cases consideration for other properties
- * Managed to link up with JABAWS via SVN
- * 
+ * Change the return type of parseAAProp to ScoreManager
+ * Adjust the configuration of pom.xml to generate a jar file with org.biojava3.aaproperties.CommandPrompt as the main class. However, need to rename it to AAProperties.jar
  * 
  * Question
  * Where to upload the jar file for the command prompt
- * Strangely JABAWS via SVN is only available at home and not accessible from NUS
  * 
  * An interface to generate some basic physico-chemical properties of protein sequences.<br/>
  * The following properties could be generated:
