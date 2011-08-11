@@ -97,12 +97,14 @@ should expend SkeletalExecutable<T> if input/output can be set as a parameter
 for an executable. Please see ClustalW code as example.
 
 Created AAProperties.java under compbio.runner.sequence and extends SkeletalExecutable<AAProperties>
+Done by Peter
 
 7) Create a testcase suit for your wrapper and run the test cases. 
 
 Question) Stuck at Step 7.
 i) What are the test cases are we supposed to run?
 ii) Tried copying the JronnTester.testRunLocally but does not seems to work. Believe my step 6, Java wrapper class might not be working as well.
+Solved by Peter
 
 Initial attempt to provide AAProperties as a service in JABAWS
 
@@ -111,7 +113,7 @@ compbio.data.sequence.SequenceUtil
 
 9) Test the parser
 
-Stop at step 9 then use the 
+DONE till here - 10th August
 
 10) Decide which web services interface your executable is going to match. 
     For example if the executable output can be represented as 
@@ -176,12 +178,23 @@ enumeration take into account the new service. Update the client help text
  * Commit only when you ensure it runs locally
  * Maven Compile around 20mins to 1hour after commit
  * 
+ * 
+ * 
+After that I'd sugest you to resume following the
+tutorial on adding a new web service. Now your webservice confirms to
+existing SequenceAnnotation interface. So just look at the examples of
+other web services and I trust you to figure the details for next
+implementation steps.
+
+ * 
  * distributionManagement
  * build
  * 
  * DONE
  * Change the return type of parseAAProp to ScoreManager
  * Adjust the configuration of pom.xml to generate a jar file with org.biojava3.aaproperties.CommandPrompt as the main class. However, need to rename it to AAProperties.jar
+ * Added SequenceName in the output of AAProperties.jar (in the first column)
+ * Modify the SequenceUtil.AAprop result parser to cater for the change above in the AAProperties.jar output 
  * 
  * Question
  * Where to upload the jar file for the command prompt

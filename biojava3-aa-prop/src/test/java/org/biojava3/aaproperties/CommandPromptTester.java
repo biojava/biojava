@@ -36,6 +36,20 @@ public class CommandPromptTester {
 	}
 	
 	@Test
+	public void testExample1WithCSV() throws Exception{
+		//-i test.fasta -a
+		String[] args = new String[7];
+		args[0] = "-i";
+		args[1] = "./src/test/resources/test.fasta";
+		args[2] = "-a";
+		args[3] = "-o";
+		args[4] = "./src/test/resources/test.csv";
+		args[5] = "-f";
+		args[6] = "csv";
+		CommandPrompt.run(args);
+	}
+	
+	@Test
 	public void testExample2() throws Exception{
 		//-i test.fasta -1 -3 -7
 		String[] args = new String[5];

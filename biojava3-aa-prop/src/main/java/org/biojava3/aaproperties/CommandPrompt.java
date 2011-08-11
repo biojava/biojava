@@ -178,6 +178,7 @@ public class CommandPrompt {
 		 * 0 Composition of the specific amino acid
 		 */
 		List<String> sList = new ArrayList<String>();
+		sList.add("SequenceName");
 		for(Character c:propertyList){
 			switch(c){
 			case '1': sList.add(PropertyName.MolecularWeight.toString()); break;
@@ -288,9 +289,9 @@ public class CommandPrompt {
 			case '0': dList.add(pp.getEnrichment(pSequence, aaSet.getCompoundForString("" + specificList.get(specificCount++)))); break;
 			}
 		}
+		output.print(header.replace(delimiter, "_"));
 		for(int i = 0; i < dList.size(); i++){
-			if(i != 0) output.print(delimiter);
-			output.print(Utils.roundToDecimals(dList.get(i), decimalPlace));
+			output.print(delimiter + Utils.roundToDecimals(dList.get(i), decimalPlace));
 		}
 		output.println();
 		output.flush();
