@@ -10,7 +10,7 @@
   <version>3.0.2-SNAPSHOT</version>
   <name>biojava3-aa-prop</name>
   <url>http://maven.apache.org</url>
-  
+ 
   <build>
     <plugins>
       <plugin>
