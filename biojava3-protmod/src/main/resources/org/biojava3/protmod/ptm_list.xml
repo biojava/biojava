@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ProteinModifications>
     <Revisions>
+    <Revision>
+    	<Date>2011-08-12</Date>
+    		<Change>Added glycosylation entries 386-429</Change>
+   		</Revision>
     	<Revision>
     		<Date>2011-07-26</Date>
     		<Change>Added PDBCC cross-references</Change>
@@ -84,7 +88,7 @@
 		<CrossReference>
 			<Source>PDBCC</Source>
 			<Id>CSP</Id>
-			<Name>S-PHOSPHOCYSTEINE</Name>
+			<Name>S-phosphocysteine</Name>
 		</CrossReference>
 		<CrossReference>
 			<Source>RESID</Source>
@@ -10948,7 +10952,7 @@
 		<Description>Metal coordination</Description>
 		<CrossReference>
             <Source>PDBCC</Source>
-            <Id>AG</Id>
+            <Id>CU3</Id>
             <Name>copper (III) ion</Name>
         </CrossReference>
 		<Condition>
@@ -12190,5 +12194,1504 @@
 		<Occurrence>natural</Occurrence>
 		<Category>undefined</Category>
 		<Keyword>Metal coordination</Keyword>
+	</Entry>
+	<Entry>
+		<Id>0386</Id>
+		<Description>A protein modification that effectively converts an L-asparagine residue to an N4-glycosyl-L-asparagine.</Description>
+		<SystematicName>(S)-2-amino-4-(2-acetamido-2-deoxy-beta-D-glucopyranosyl)amino-4-oxobutanoic acid</SystematicName>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0151</Id>
+			<Name>N4-(N-acetylamino)glucosyl-L-asparagine</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00831</Id>
+			<Name>N4-(N-acetylamino)glucosyl-L-asparagine</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PDBCC</Source>
+			<Id>NDG</Id>
+			<Name>2-(acetylamino)-2-deoxy-alpha-D-glucopyranose</Name>
+		</CrossReference>
+		<Condition>
+			<Component component="1">
+				<Id source="PDBCC">ASN</Id>
+			</Component>			
+			<Component component="2">
+				<Id source="PDBCC">NDG</Id>
+			</Component>
+			<Bond>
+				<Atom component="1">ND2</Atom>
+				<Atom component="2">C1</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>attachment</Category>
+		<Keyword>glycoprotein</Keyword>
+	</Entry>
+	<Entry>
+		<Id>0387</Id>
+		<Description>A protein modification that effectively converts an L-asparagine residue to N4-(N-acetaminogalactosyl)-L-asparagine.</Description>
+		<SystematicName>(2S)-2-amino-4-(2-acetamido-2-deoxy-beta-D-galactopyranosyl)amino-4-oxobutanoic acid</SystematicName>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0420</Id>
+			<Name>N4-(N-acetylamino)galactosyl-L-asparagine</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00832</Id>
+			<Name>N4-(N-acetylamino)galactosyl-L-asparagine</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PDBCC</Source>
+			<Id>A2G</Id>
+			<Name>2-(acetylamino)-2-deoxy-alpha-D-galactopyranose</Name>
+		</CrossReference>
+		<Condition>
+			<Component component="1">
+				<Id source="PDBCC">ASN</Id>
+			</Component>			
+			<Component component="2">
+				<Id source="PDBCC">A2G</Id>
+			</Component>
+			<Bond>
+				<Atom component="1">ND2</Atom>
+				<Atom component="2">C1</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>attachment</Category>
+		<Keyword>glycoprotein</Keyword>
+	</Entry>
+	<Entry>
+		<Id>0388</Id>
+		<Description>A protein modification that effectively converts an L-asparagine residue to N4-(N-acetaminogalactosyl)-L-asparagine.</Description>
+		<SystematicName>(2S)-2-amino-4-(2-acetamido-2-deoxy-beta-D-galactopyranosyl)amino-4-oxobutanoic acid</SystematicName>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0420</Id>
+			<Name>N4-(N-acetylamino)galactosyl-L-asparagine</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00832</Id>
+			<Name>N4-(N-acetylamino)galactosyl-L-asparagine</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PDBCC</Source>
+			<Id>NGA</Id>
+			<Name>2-(acetylamino)-2-deoxy-beta-D-galactopyranose</Name>
+		</CrossReference>
+		<Condition>
+			<Component component="1">
+				<Id source="PDBCC">ASN</Id>
+			</Component>			
+			<Component component="2">
+				<Id source="PDBCC">NGA</Id>
+			</Component>
+			<Bond>
+				<Atom component="1">ND2</Atom>
+				<Atom component="2">C1</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>attachment</Category>
+		<Keyword>glycoprotein</Keyword>
+	</Entry>
+	<Entry>
+		<Id>0389</Id>
+		<Description>A protein modification that effectively converts an L-asparagine residue to N4-glucosyl-asparagine.</Description>
+		<SystematicName>(S)-2-amino-4-(D-glucopyranosyl)amino-4-oxobutanoic acid</SystematicName>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0421</Id>
+			<Name>N4-glucosyl-L-asparagine</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00833</Id>
+			<Name>N4-glucosyl-L-asparagine</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PDBCC</Source>
+			<Id>BGC</Id>
+			<Name>beta-D-glucopyranose</Name>
+		</CrossReference>
+		<Condition>
+			<Component component="1">
+				<Id source="PDBCC">ASN</Id>
+			</Component>			
+			<Component component="2">
+				<Id source="PDBCC">BGC</Id>
+			</Component>
+			<Bond>
+				<Atom component="1">ND2</Atom>
+				<Atom component="2">C1</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>attachment</Category>
+		<Keyword>glycoprotein</Keyword>
+	</Entry>
+	<Entry>
+		<Id>0390</Id>
+		<Description>A protein modification that effectively converts an L-asparagine residue to N4-glucosyl-asparagine.</Description>
+		<SystematicName>(S)-2-amino-4-(D-glucopyranosyl)amino-4-oxobutanoic acid</SystematicName>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0421</Id>
+			<Name>N4-glucosyl-L-asparagine</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00833</Id>
+			<Name>N4-glucosyl-L-asparagine</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PDBCC</Source>
+			<Id>GLC</Id>
+			<Name>alpha-D-glucopyranose</Name>
+		</CrossReference>
+		<Condition>
+			<Component component="1">
+				<Id source="PDBCC">ASN</Id>
+			</Component>			
+			<Component component="2">
+				<Id source="PDBCC">GLC</Id>
+			</Component>
+			<Bond>
+				<Atom component="1">ND2</Atom>
+				<Atom component="2">C1</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>attachment</Category>
+		<Keyword>glycoprotein</Keyword>
+	</Entry>
+	<Entry>
+		<Id>0391</Id>
+		<Description>A protein modification that effectively converts an L-arginine residue to N4-glucosyl-arginine.</Description>
+		<SystematicName>(S)-2-amino-5-[beta-glucopyranosyl(imino(methylamino)methyl)amino]pentanoic acid</SystematicName>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0327</Id>
+			<Name>omega-N-glucosyl-L-arginine</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00332</Id>
+			<Name>omega-N-glucosyl-L-arginine</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PDBCC</Source>
+			<Id>BGC</Id>
+			<Name>beta-D-glucopyranose</Name>
+		</CrossReference>
+		<Condition>
+			<Component component="1">
+				<Id source="PDBCC">ARG</Id>
+			</Component>			
+			<Component component="2">
+				<Id source="PDBCC">BGC</Id>
+			</Component>
+			<Bond>
+				<Atom component="1">NH1,NH2</Atom>
+				<Atom component="2">C1</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>attachment</Category>
+		<Keyword>glycoprotein</Keyword>
+	</Entry>
+	<Entry>
+		<Id>0392</Id>
+		<Description>A protein modification that effectively converts an L-arginine residue to N4-glucosyl-arginine.</Description>
+		<SystematicName>(S)-2-amino-5-[beta-glucopyranosyl(imino(methylamino)methyl)amino]pentanoic acid</SystematicName>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0327</Id>
+			<Name>omega-N-glucosyl-L-arginine</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00332</Id>
+			<Name>omega-N-glucosyl-L-arginine</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PDBCC</Source>
+			<Id>GLC</Id>
+			<Name>alpha-D-glucopyranose</Name>
+		</CrossReference>
+		<Condition>
+			<Component component="1">
+				<Id source="PDBCC">ARG</Id>
+			</Component>			
+			<Component component="2">
+				<Id source="PDBCC">GLC</Id>
+			</Component>
+			<Bond>
+				<Atom component="1">NH1,NH2</Atom>
+				<Atom component="2">C1</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>attachment</Category>
+		<Keyword>glycoprotein</Keyword>
+	</Entry>
+	<Entry>
+		<Id>0393</Id>
+		<Description>A protein modification that effectively converts an L-cysteine residue to S-(N-acetylamino)glucosyl-L-cysteine.</Description>
+		<SystematicName>(2R)-2-amino-3-[(beta-D-2-[N-acetylamino]-2-deoxyglucopyranosyl)sulfanyl]propanoic acid</SystematicName>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0560</Id>
+			<Name>S-(N-acetylamino)glucosyl-L-cysteine</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:01858</Id>
+			<Name>S-(N-acetylamino)glucosyl-L-cysteine</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PDBCC</Source>
+			<Id>NAG</Id>
+			<Name>N-acetyl-D-glucosamine</Name>
+		</CrossReference>
+		<Condition>
+			<Component component="1">
+				<Id source="PDBCC">CYS</Id>
+			</Component>			
+			<Component component="2">
+				<Id source="PDBCC">NAG</Id>
+			</Component>
+			<Bond>
+				<Atom component="1">SG</Atom>
+				<Atom component="2">C1</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>attachment</Category>
+		<Keyword>glycoprotein</Keyword>
+		<Keyword>thioether bond</Keyword>
+	</Entry>
+	<Entry>
+		<Id>0394</Id>
+		<Description>A protein modification that effectively converts an L-cysteine residue to S-(N-acetylamino)glucosyl-L-cysteine.</Description>
+		<SystematicName>(2R)-2-amino-3-[(beta-D-2-[N-acetylamino]-2-deoxyglucopyranosyl)sulfanyl]propanoic acid</SystematicName>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0560</Id>
+			<Name>S-(N-acetylamino)glucosyl-L-cysteine</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:01858</Id>
+			<Name>S-(N-acetylamino)glucosyl-L-cysteine</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PDBCC</Source>
+			<Id>NDG</Id>
+			<Name>2-(acetylamino)-2-deoxy-alpha-D-glucopyranose</Name>
+		</CrossReference>
+		<Condition>
+			<Component component="1">
+				<Id source="PDBCC">CYS</Id>
+			</Component>			
+			<Component component="2">
+				<Id source="PDBCC">NDG</Id>
+			</Component>
+			<Bond>
+				<Atom component="1">SG</Atom>
+				<Atom component="2">C1</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>attachment</Category>
+		<Keyword>glycoprotein</Keyword>
+		<Keyword>thioether bond</Keyword>
+	</Entry>
+	<Entry>
+		<Id>0395</Id>
+		<Description>A protein modification that effectively converts an L-cysteine residue to S-glucosylated L-cysteine.</Description>
+		<SystematicName>(2R)-2-amino-3-[(beta-D-glucopyranosyl)sulfanyl]propanoic acid</SystematicName>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0152</Id>
+			<Name>S-glucosyl-L-cysteine</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00161</Id>
+			<Name>S-glucosyl-L-cysteine</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PDBCC</Source>
+			<Id>BGC</Id>
+			<Name>beta-D-glucopyranose</Name>
+		</CrossReference>
+		<Condition>
+			<Component component="1">
+				<Id source="PDBCC">CYS</Id>
+			</Component>			
+			<Component component="2">
+				<Id source="PDBCC">BGC</Id>
+			</Component>
+			<Bond>
+				<Atom component="1">SG</Atom>
+				<Atom component="2">C1</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>attachment</Category>
+		<Keyword>glycoprotein</Keyword>
+		<Keyword>thioether bond</Keyword>
+	</Entry>
+	<Entry>
+		<Id>0396</Id>
+		<Description>A protein modification that effectively converts an L-cysteine residue to S-glucosylated L-cysteine.</Description>
+		<SystematicName>(2R)-2-amino-3-[(beta-D-glucopyranosyl)sulfanyl]propanoic acid</SystematicName>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0152</Id>
+			<Name>S-glucosyl-L-cysteine</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00161</Id>
+			<Name>S-glucosyl-L-cysteine</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PDBCC</Source>
+			<Id>GLC</Id>
+			<Name>alpha-D-glucopyranose</Name>
+		</CrossReference>
+		<Condition>
+			<Component component="1">
+				<Id source="PDBCC">CYS</Id>
+			</Component>			
+			<Component component="2">
+				<Id source="PDBCC">GLC</Id>
+			</Component>
+			<Bond>
+				<Atom component="1">SG</Atom>
+				<Atom component="2">C1</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>attachment</Category>
+		<Keyword>glycoprotein</Keyword>
+		<Keyword>thioether bond</Keyword>
+	</Entry>
+	<Entry>
+		<Id>0397</Id>
+		<Description>A protein modification that effectively converts an L-cysteine residue to S-galactosyl-L-cysteine.</Description>
+		<SystematicName>(R)-2-amino-3-(beta-D-galactopyranosylsulfanyl)propanoic acid</SystematicName>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0392</Id>
+			<Name>S-galactosyl-L-cysteine</Name>
+			<Status>deprecated</Status>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00799</Id>
+			<Name>S-galactosyl-L-cysteine</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PDBCC</Source>
+			<Id>GLA</Id>
+			<Name>alpha-D-galactopyranose</Name>
+		</CrossReference>
+		<Condition>
+			<Component component="1">
+				<Id source="PDBCC">CYS</Id>
+			</Component>			
+			<Component component="2">
+				<Id source="PDBCC">GLA</Id>
+			</Component>
+			<Bond>
+				<Atom component="1">SG</Atom>
+				<Atom component="2">C1</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>attachment</Category>
+		<Keyword>glycoprotein</Keyword>
+		<Keyword>thioether bond</Keyword>
+	</Entry>
+	<Entry>
+		<Id>0398</Id>
+		<Description>A protein modification that effectively converts an L-cysteine residue to S-galactosyl-L-cysteine.</Description>
+		<SystematicName>(R)-2-amino-3-(beta-D-galactopyranosylsulfanyl)propanoic acid</SystematicName>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0392</Id>
+			<Name>S-galactosyl-L-cysteine</Name>
+			<Status>deprecated</Status>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00799</Id>
+			<Name>S-galactosyl-L-cysteine</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PDBCC</Source>
+			<Id>GAL</Id>
+			<Name>beta-D-galactopyranose</Name>
+		</CrossReference>
+		<Condition>
+			<Component component="1">
+				<Id source="PDBCC">CYS</Id>
+			</Component>			
+			<Component component="2">
+				<Id source="PDBCC">GAL</Id>
+			</Component>
+			<Bond>
+				<Atom component="1">SG</Atom>
+				<Atom component="2">C1</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>attachment</Category>
+		<Keyword>glycoprotein</Keyword>
+		<Keyword>thioether bond</Keyword>
+	</Entry>
+	<Entry>
+        <Id>0399</Id>
+        <Description>a protein modification that effectively forms a O3-(N-acetylaminoglucosyl)serine</Description>
+        <SystematicName>(2S)-2-amino-3-(2-acetamido-2-deoxy-beta-D-glucopyranosyloxy)propanoic acid</SystematicName>
+        <CrossReference>
+            <Source>RESID</Source>
+            <Id>AA0398</Id>
+            <Name>O-(N-acetylamino)glucosyl-L-serine</Name>
+        </CrossReference>
+        <CrossReference>
+            <Source>PDBCC</Source>
+            <Id>NDG</Id>
+            <Name>2-(acetylamino)-2-deoxy-alpha-D-glucopyranose</Name>
+        </CrossReference>
+        <CrossReference>
+            <Source>PSI-MOD</Source>
+            <Id>MOD:00805</Id>
+            <Name>O-(N-acetylaminoglucosyl)-L-serine</Name>
+        </CrossReference>
+        <Condition>
+			<Component component="1">
+				<Id source="PDBCC">SER</Id>
+			</Component>
+		    <Component component="2">
+				<Id source="PDBCC">NDG</Id>
+			</Component>
+			<Bond>
+				<Atom component="1">OG</Atom>
+				<Atom component="2">C1</Atom>
+			</Bond>
+		</Condition>
+		<Category>attachment</Category>
+		<Occurrence>natural</Occurrence>
+        <Keyword>glycoprotein</Keyword>
+    </Entry>
+    <Entry>
+		<Id>0400</Id>
+		<Description>A protein modification that effectively converts an L-serine residue to O3-beta-glucosylated L-serine.</Description>
+		<SystematicName>(S)-2-amino-3-(beta-D-glucopyranosyloxy)propanoic acid</SystematicName>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0397</Id>
+			<Name>O-glucosyl-L-serine</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00804</Id>
+			<Name>O-glucosyl-L-serine</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PDBCC</Source>
+			<Id>BGC</Id>
+			<Name>beta-D-glucopyranose</Name>
+		</CrossReference>
+		<Condition>
+			<Component component="1">
+				<Id source="PDBCC">SER</Id>
+			</Component>			
+			<Component component="2">
+				<Id source="PDBCC">BGC</Id>
+			</Component>
+			<Bond>
+				<Atom component="1">OG</Atom>
+				<Atom component="2">C1</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>attachment</Category>
+		<Keyword>glycoprotein</Keyword>
+	</Entry>
+	<Entry>
+		<Id>0401</Id>
+		<Description>A protein modification that effectively converts an L-serine residue to O3-beta-glucosylated L-serine.</Description>
+		<SystematicName>(S)-2-amino-3-(beta-D-glucopyranosyloxy)propanoic acid</SystematicName>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0397</Id>
+			<Name>O-glucosyl-L-serine</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00804</Id>
+			<Name>O-glucosyl-L-serine</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PDBCC</Source>
+			<Id>GLC</Id>
+			<Name>alpha-D-glucopyranose</Name>
+		</CrossReference>
+		<Condition>
+			<Component component="1">
+				<Id source="PDBCC">SER</Id>
+			</Component>			
+			<Component component="2">
+				<Id source="PDBCC">GLC</Id>
+			</Component>
+			<Bond>
+				<Atom component="1">OG</Atom>
+				<Atom component="2">C1</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>attachment</Category>
+		<Keyword>glycoprotein</Keyword>
+	</Entry>
+	<Entry>
+		<Id>0402</Id>
+		<Description>A protein modification that effectively converts an L-serine residue to O3-galactosylserine.</Description>
+		<SystematicName>(S)-2-amino-3-(alpha-D-galactopyranosyloxy)propanoic acid</SystematicName>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0400</Id>
+			<Name>O-galactosyl-L-serine</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00808</Id>
+			<Name>O-glucosyl-L-serine</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PDBCC</Source>
+			<Id>GLA</Id>
+			<Name>alpha-D-galactopyranose</Name>
+		</CrossReference>
+		<Condition>
+			<Component component="1">
+				<Id source="PDBCC">SER</Id>
+			</Component>			
+			<Component component="2">
+				<Id source="PDBCC">GLA</Id>
+			</Component>
+			<Bond>
+				<Atom component="1">OG</Atom>
+				<Atom component="2">C1</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>attachment</Category>
+		<Keyword>glycoprotein</Keyword>
+	</Entry>
+	<Entry>
+		<Id>0403</Id>
+		<Description>A protein modification that effectively converts an L-serine residue to O3-galactosylserine.</Description>
+		<SystematicName>(S)-2-amino-3-(alpha-D-galactopyranosyloxy)propanoic acid</SystematicName>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0400</Id>
+			<Name>O-galactosyl-L-serine</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00808</Id>
+			<Name>O-glucosyl-L-serine</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PDBCC</Source>
+			<Id>GAL</Id>
+			<Name>beta-D-galactopyranose</Name>
+		</CrossReference>
+		<Condition>
+			<Component component="1">
+				<Id source="PDBCC">SER</Id>
+			</Component>			
+			<Component component="2">
+				<Id source="PDBCC">GAL</Id>
+			</Component>
+			<Bond>
+				<Atom component="1">OG</Atom>
+				<Atom component="2">C1</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>attachment</Category>
+		<Keyword>glycoprotein</Keyword>
+	</Entry>
+	<Entry>
+		<Id>0404</Id>
+		<Description>A protein modification that effectively converts an L-serine residue to an O-fucosylserine.</Description>
+		<SystematicName>(S)-2-amino-3-(alpha-6-deoxy-D-galactopyranosyloxy)propanoic acid</SystematicName>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0404</Id>
+			<Name>O-fucosyl-L-serine</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00812</Id>
+			<Name>O-fucosyl-L-serine</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PDBCC</Source>
+			<Id>FCA</Id>
+			<Name>alpha-D-fucose</Name>
+		</CrossReference>
+		<Condition>
+			<Component component="1">
+				<Id source="PDBCC">SER</Id>
+			</Component>			
+			<Component component="2">
+				<Id source="PDBCC">FCA</Id>
+			</Component>
+			<Bond>
+				<Atom component="1">OG</Atom>
+				<Atom component="2">C1</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>attachment</Category>
+		<Keyword>glycoprotein</Keyword>
+	</Entry>
+	<Entry>
+		<Id>0405</Id>
+		<Description>A protein modification that effectively converts an L-serine residue to an O-fucosylserine.</Description>
+		<SystematicName>(S)-2-amino-3-(alpha-6-deoxy-D-galactopyranosyloxy)propanoic acid</SystematicName>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0404</Id>
+			<Name>O-fucosyl-L-serine</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00812</Id>
+			<Name>O-fucosyl-L-serine</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PDBCC</Source>
+			<Id>FCB</Id>
+			<Name>beta-D-fucose</Name>
+		</CrossReference>
+		<Condition>
+			<Component component="1">
+				<Id source="PDBCC">SER</Id>
+			</Component>			
+			<Component component="2">
+				<Id source="PDBCC">FCB</Id>
+			</Component>
+			<Bond>
+				<Atom component="1">OG</Atom>
+				<Atom component="2">C1</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>attachment</Category>
+		<Keyword>glycoprotein</Keyword>
+	</Entry>
+	<Entry>
+		<Id>0406</Id>
+		<Description>A protein modification that effectively forms a O3-xylosylserine.</Description>
+		<SystematicName>(S)-2-amino-3-(alpha-D-xylopyranosyloxy)propanoic acid</SystematicName>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0406</Id>
+			<Name>O-xylosyl-L-serine</Name>
+			<Status>deprecated</Status>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00814</Id>
+			<Name>O-xylosyl-L-serine</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PDBCC</Source>
+			<Id>XYP</Id>
+			<Name>beta-D-xylopyranose</Name>
+		</CrossReference>
+		<Condition>
+			<Component component="1">
+				<Id source="PDBCC">SER</Id>
+			</Component>
+			<Component component="2">
+				<Id source="PDBCC">XYP</Id>
+			</Component>
+			<Bond>
+				<Atom component="1">OG</Atom>
+				<Atom component="2">C1</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>attachment</Category>
+		<Keyword>glycoprotein</Keyword>
+	</Entry>
+	<Entry>
+		<Id>0407</Id>
+		<Description>A protein modification that effectively converts an L-serine residue to O3-mannosylserine.</Description>
+		<SystematicName>(S)-2-amino-3-(alpha-D-mannopyranosyloxy)propanoic acid</SystematicName>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0402</Id>
+			<Name>O-mannosyl-L-serine</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00810</Id>
+			<Name>O-mannosyl-L-serine</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PDBCC</Source>
+			<Id>MAN</Id>
+			<Name>alpha-D-mannopyranose</Name>
+		</CrossReference>
+		<Condition>
+			<Component component="1">
+				<Id source="PDBCC">SER</Id>
+			</Component>
+			<Component component="2">
+				<Id source="PDBCC">MAN</Id>
+			</Component>
+			<Bond>
+				<Atom component="1">OG</Atom>
+				<Atom component="2">C1</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>attachment</Category>
+		<Keyword>glycoprotein</Keyword>
+	</Entry>
+	<Entry>
+		<Id>0408</Id>
+		<Description>A protein modification that effectively converts an L-serine residue to O3-mannosylserine.</Description>
+		<SystematicName>(S)-2-amino-3-(alpha-D-mannopyranosyloxy)propanoic acid</SystematicName>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0402</Id>
+			<Name>O-mannosyl-L-serine</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00810</Id>
+			<Name>O-mannosyl-L-serine</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PDBCC</Source>
+			<Id>BMA</Id>
+			<Name>beta-D-mannopyranose</Name>
+		</CrossReference>
+		<Condition>
+			<Component component="1">
+				<Id source="PDBCC">SER</Id>
+			</Component>
+			<Component component="2">
+				<Id source="PDBCC">BMA</Id>
+			</Component>
+			<Bond>
+				<Atom component="1">OG</Atom>
+				<Atom component="2">C1</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>attachment</Category>
+		<Keyword>glycoprotein</Keyword>
+	</Entry>
+	<Entry>
+		<Id>0409</Id>
+		<Description>A protein modification that effectively converts an L-serine residue to O-D-glucuronosyl-L-serine.</Description>
+		<SystematicName>(2S)-2-amino-3-(beta-D-glucopyranuronosyl)propanoic acid</SystematicName>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0291</Id>
+			<Name>O-D-glucuronosyl-L-serine</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00296</Id>
+			<Name>O-D-glucuronosyl-L-serine</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PDBCC</Source>
+			<Id>GCU</Id>
+			<Name>alpha-D-glucopyranuronic acid</Name>
+		</CrossReference>
+		<Condition>
+			<Component component="1">
+				<Id source="PDBCC">SER</Id>
+			</Component>
+			<Component component="2">
+				<Id source="PDBCC">GCU</Id>
+			</Component>
+			<Bond>
+				<Atom component="1">OG</Atom>
+				<Atom component="2">C1</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>attachment</Category>
+		<Keyword>glycoprotein</Keyword>
+	</Entry>
+	<Entry>
+		<Id>0410</Id>
+		<Description>A protein modification that effectively converts an L-serine residue to O-D-glucuronosyl-L-serine.</Description>
+		<SystematicName>(2S)-2-amino-3-(beta-D-glucopyranuronosyl)propanoic acid</SystematicName>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0291</Id>
+			<Name>O-D-glucuronosyl-L-serine</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00296</Id>
+			<Name>O-D-glucuronosyl-L-serine</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PDBCC</Source>
+			<Id>BDP</Id>
+			<Name>beta-D-glucopyranuronic acid</Name>
+		</CrossReference>
+		<Condition>
+			<Component component="1">
+				<Id source="PDBCC">SER</Id>
+			</Component>
+			<Component component="2">
+				<Id source="PDBCC">BDP</Id>
+			</Component>
+			<Bond>
+				<Atom component="1">OG</Atom>
+				<Atom component="2">C1</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>attachment</Category>
+		<Keyword>glycoprotein</Keyword>
+	</Entry>
+	<Entry>
+		<Id>0411</Id>
+		<Description>A protein modification that effectively converts an L-threonine residue to O3-(N-acetylaminoglucosyl)-L-threonine.</Description>
+		<SystematicName>(2S,3R)-2-amino-3-(alpha-D-2-acetamido-2-deoxyglucopyranosyloxy)butanoic acid</SystematicName>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0399</Id>
+			<Name>O-(N-acetylamino)glucosyl-L-threonine</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00806</Id>
+			<Name>O-(N-acetylamino)glucosyl-L-threonine</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PDBCC</Source>
+			<Id>NAG</Id>
+			<Name>N-acetyl-D-glucosamine</Name>
+		</CrossReference>
+		<Condition>
+			<Component component="1">
+				<Id source="PDBCC">THR</Id>
+			</Component>			
+			<Component component="2">
+				<Id source="PDBCC">NAG</Id>
+			</Component>
+			<Bond>
+				<Atom component="1">OG1</Atom>
+				<Atom component="2">C1</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>attachment</Category>
+		<Keyword>glycoprotein</Keyword>
+	</Entry>
+	<Entry>
+		<Id>0412</Id>
+		<Description>A protein modification that effectively converts an L-threonine residue to O3-(N-acetylaminoglucosyl)-L-threonine.</Description>
+		<SystematicName>(2S,3R)-2-amino-3-(alpha-D-2-acetamido-2-deoxyglucopyranosyloxy)butanoic acid</SystematicName>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0399</Id>
+			<Name>O-(N-acetylamino)glucosyl-L-threonine</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00806</Id>
+			<Name>O-(N-acetylamino)glucosyl-L-threonine</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PDBCC</Source>
+			<Id>NDG</Id>
+			<Name>2-(acetylamino)-2-deoxy-A-D-glucopyranose</Name>
+		</CrossReference>
+		<Condition>
+			<Component component="1">
+				<Id source="PDBCC">THR</Id>
+			</Component>			
+			<Component component="2">
+				<Id source="PDBCC">NDG</Id>
+			</Component>
+			<Bond>
+				<Atom component="1">OG1</Atom>
+				<Atom component="2">C1</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>attachment</Category>
+		<Keyword>glycoprotein</Keyword>
+	</Entry>
+	<Entry>
+		<Id>0413</Id>
+		<Description>A protein modification that effectively converts an L-threonine residue to O-glucosylated L-threonine.</Description>
+		<SystematicName>O-glucosyl-L-threonine</SystematicName>
+		<CrossReference>
+			<Source>PDBCC</Source>
+			<Id>BGC</Id>
+			<Name>beta-D-glucopyranose</Name>
+		</CrossReference>
+		<Condition>
+			<Component component="1">
+				<Id source="PDBCC">THR</Id>
+			</Component>			
+			<Component component="2">
+				<Id source="PDBCC">BGC</Id>
+			</Component>
+			<Bond>
+				<Atom component="1">OG1</Atom>
+				<Atom component="2">C1</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>attachment</Category>
+		<Keyword>glycoprotein</Keyword>
+	</Entry>
+	<Entry>
+		<Id>0414</Id>
+		<Description>A protein modification that effectively converts an L-threonine residue to O-glucosylated L-threonine.</Description>
+		<SystematicName>O-glucosyl-L-threonine</SystematicName>
+		<CrossReference>
+			<Source>PDBCC</Source>
+			<Id>GLC</Id>
+			<Name>alpha-D-glucopyranose</Name>
+		</CrossReference>
+		<Condition>
+			<Component component="1">
+				<Id source="PDBCC">THR</Id>
+			</Component>			
+			<Component component="2">
+				<Id source="PDBCC">GLC</Id>
+			</Component>
+			<Bond>
+				<Atom component="1">OG1</Atom>
+				<Atom component="2">C1</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>attachment</Category>
+		<Keyword>glycoprotein</Keyword>
+	</Entry>
+	<Entry>
+		<Id>0415</Id>
+		<Description>A protein modification that effectively converts an L-threonine residue to O3-galactosylthreonine.</Description>
+		<SystematicName>(2S,3R)-2-amino-3-(alpha-D-galactopyranosyloxy)butanoic acid</SystematicName>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0401</Id>
+			<Name>O-galactosyl-L-threonine</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00809</Id>
+			<Name>O-galactosyl-L-threonine</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PDBCC</Source>
+			<Id>GLA</Id>
+			<Name>alpha-D-galactopyranose</Name>
+		</CrossReference>
+		<Condition>
+			<Component component="1">
+				<Id source="PDBCC">THR</Id>
+			</Component>			
+			<Component component="2">
+				<Id source="PDBCC">GLA</Id>
+			</Component>
+			<Bond>
+				<Atom component="1">OG1</Atom>
+				<Atom component="2">C1</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>attachment</Category>
+		<Keyword>glycoprotein</Keyword>
+	</Entry>
+	<Entry>
+		<Id>0416</Id>
+		<Description>A protein modification that effectively converts an L-threonine residue to O3-galactosylthreonine.</Description>
+		<SystematicName>(2S,3R)-2-amino-3-(alpha-D-galactopyranosyloxy)butanoic acid</SystematicName>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0401</Id>
+			<Name>O-galactosyl-L-threonine</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00809</Id>
+			<Name>O-galactosyl-L-threonine</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PDBCC</Source>
+			<Id>GAL</Id>
+			<Name>beta-D-galactopyranose</Name>
+		</CrossReference>
+		<Condition>
+			<Component component="1">
+				<Id source="PDBCC">THR</Id>
+			</Component>			
+			<Component component="2">
+				<Id source="PDBCC">GAL</Id>
+			</Component>
+			<Bond>
+				<Atom component="1">OG1</Atom>
+				<Atom component="2">C1</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>attachment</Category>
+		<Keyword>glycoprotein</Keyword>
+	</Entry>
+	<Entry>
+		<Id>0417</Id>
+		<Description>A protein modification that effectively converts an threonine residue to an O-fucosylthreonine.</Description>
+		<SystematicName>(2S,3R)-2-amino-3-(alpha-6-deoxy-D-galactopyranosyloxy)butanoic acid</SystematicName>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0405</Id>
+			<Name>O-fucosyl-L-threonine</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00813</Id>
+			<Name>O-fucosyl-L-threonine</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PDBCC</Source>
+			<Id>FCA</Id>
+			<Name>alpha-D-fucose</Name>
+		</CrossReference>
+		<Condition>
+			<Component component="1">
+				<Id source="PDBCC">THR</Id>
+			</Component>			
+			<Component component="2">
+				<Id source="PDBCC">FCA</Id>
+			</Component>
+			<Bond>
+				<Atom component="1">OG1</Atom>
+				<Atom component="2">C1</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>attachment</Category>
+		<Keyword>glycoprotein</Keyword>
+	</Entry>
+	<Entry>
+		<Id>0418</Id>
+		<Description>A protein modification that effectively converts an threonine residue to an O-fucosylthreonine.</Description>
+		<SystematicName>(2S,3R)-2-amino-3-(alpha-6-deoxy-D-galactopyranosyloxy)butanoic acid</SystematicName>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0405</Id>
+			<Name>O-fucosyl-L-threonine</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00813</Id>
+			<Name>O-fucosyl-L-threonine</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PDBCC</Source>
+			<Id>FCB</Id>
+			<Name>beta-D-fucose</Name>
+		</CrossReference>
+		<Condition>
+			<Component component="1">
+				<Id source="PDBCC">THR</Id>
+			</Component>			
+			<Component component="2">
+				<Id source="PDBCC">FCB</Id>
+			</Component>
+			<Bond>
+				<Atom component="1">OG1</Atom>
+				<Atom component="2">C1</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>attachment</Category>
+		<Keyword>glycoprotein</Keyword>
+	</Entry>
+	<Entry>
+		<Id>0419</Id>
+		<Description>A protein modification that effectively forms a O3-mannosylthreonine</Description>
+		<SystematicName>(2S,3R)-2-amino-3-(alpha-D-mannopyranosyloxy)butanoic acid</SystematicName>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0403</Id>
+			<Name>O-mannosyl-L-threonine</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00811</Id>
+			<Name>O-mannosyl-L-threonine</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PDBCC</Source>
+			<Id>MAN</Id>
+			<Name>alpha-D-mannopyranose</Name>
+		</CrossReference>
+		<Condition>
+			<Component component="1">
+				<Id source="PDBCC">THR</Id>
+			</Component>
+			<Component component="2">
+				<Id source="PDBCC">MAN</Id>
+			</Component>
+			<Bond>
+				<Atom component="1">OG1</Atom>
+				<Atom component="2">C1</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>attachment</Category>
+		<Keyword>glycoprotein</Keyword>
+	</Entry>
+	<Entry>
+		<Id>0420</Id>
+		<Description>A protein modification that effectively forms a O3-mannosylthreonine</Description>
+		<SystematicName>(2S,3R)-2-amino-3-(alpha-D-mannopyranosyloxy)butanoic acid</SystematicName>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0403</Id>
+			<Name>O-mannosyl-L-threonine</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00811</Id>
+			<Name>O-mannosyl-L-threonine</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PDBCC</Source>
+			<Id>BMA</Id>
+			<Name>beta-D-mannopyranose</Name>
+		</CrossReference>
+		<Condition>
+			<Component component="1">
+				<Id source="PDBCC">THR</Id>
+			</Component>
+			<Component component="2">
+				<Id source="PDBCC">BMA</Id>
+			</Component>
+			<Bond>
+				<Atom component="1">OG1</Atom>
+				<Atom component="2">C1</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>attachment</Category>
+		<Keyword>glycoprotein</Keyword>
+	</Entry>
+	<Entry>
+		<Id>0421</Id>
+		<Description>A protein modification that effectively converts an L-tyrosine residue to O4'-glucosyl-tyrosine.</Description>
+		<SystematicName>(S)-2-amino-3-(4-alpha-glucopyranosyloxy)phenylpropanoic acid</SystematicName>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0157</Id>
+			<Name>O4'-glucosyl-L-tyrosine</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00166</Id>
+			<Name>O4'-glucosyl-L-tyrosine</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PDBCC</Source>
+			<Id>BGC</Id>
+			<Name>beta-D-glucopyranose</Name>
+		</CrossReference>
+		<Condition>
+			<Component component="1">
+				<Id source="PDBCC">TYR</Id>
+			</Component>			
+			<Component component="2">
+				<Id source="PDBCC">BGC</Id>
+			</Component>
+			<Bond>
+				<Atom component="1">OH</Atom>
+				<Atom component="2">C1</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>attachment</Category>
+		<Keyword>glycoprotein</Keyword>
+	</Entry>
+	<Entry>
+		<Id>0422</Id>
+		<Description>A protein modification that effectively converts an L-tyrosine residue to O4'-glucosyl-tyrosine.</Description>
+		<SystematicName>(S)-2-amino-3-(4-alpha-glucopyranosyloxy)phenylpropanoic acid</SystematicName>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0157</Id>
+			<Name>O4'-glucosyl-L-tyrosine</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00166</Id>
+			<Name>O4'-glucosyl-L-tyrosine</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PDBCC</Source>
+			<Id>GLC</Id>
+			<Name>alpha-D-glucopyranose</Name>
+		</CrossReference>
+		<Condition>
+			<Component component="1">
+				<Id source="PDBCC">TYR</Id>
+			</Component>			
+			<Component component="2">
+				<Id source="PDBCC">GLC</Id>
+			</Component>
+			<Bond>
+				<Atom component="1">OH</Atom>
+				<Atom component="2">C1</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>attachment</Category>
+		<Keyword>glycoprotein</Keyword>
+	</Entry>
+	<Entry>
+		<Id>0423</Id>
+		<Description>A protein modification that effectively converts an L-tyrosine residue to O-galactosyl-tyrosine.</Description>
+		<SystematicName>O-galactosyl-L-tyrosine</SystematicName>
+		<CrossReference>
+			<Source>PDBCC</Source>
+			<Id>GAL</Id>
+			<Name>alpha-D-glucopyranose</Name>
+		</CrossReference>
+		<Condition>
+			<Component component="1">
+				<Id source="PDBCC">TYR</Id>
+			</Component>			
+			<Component component="2">
+				<Id source="PDBCC">GAL</Id>
+			</Component>
+			<Bond>
+				<Atom component="1">OH</Atom>
+				<Atom component="2">C1</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>attachment</Category>
+		<Keyword>glycoprotein</Keyword>
+	</Entry>
+	<Entry>
+		<Id>0424</Id>
+		<Description>A protein modification that effectively converts an L-tyrosine residue to O-galactosyl-tyrosine.</Description>
+		<SystematicName>O-galactosyl-L-tyrosine</SystematicName>
+		<CrossReference>
+			<Source>PDBCC</Source>
+			<Id>GAL</Id>
+			<Name>beta-D-galactopyranose</Name>
+		</CrossReference>
+		<Condition>
+			<Component component="1">
+				<Id source="PDBCC">TYR</Id>
+			</Component>			
+			<Component component="2">
+				<Id source="PDBCC">GAL</Id>
+			</Component>
+			<Bond>
+				<Atom component="1">OH</Atom>
+				<Atom component="2">C1</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>attachment</Category>
+		<Keyword>glycoprotein</Keyword>
+	</Entry>
+	<Entry>
+		<Id>0425</Id>
+		<Description>A protein modification that effectively converts an L-tyrosine residue to O-galactosyl-tyrosine.</Description>
+		<SystematicName>O-galactosyl-L-tyrosine</SystematicName>
+		<CrossReference>
+			<Source>PDBCC</Source>
+			<Id>GLA</Id>
+			<Name>alpha-D-galactopyranose</Name>
+		</CrossReference>
+		<Condition>
+			<Component component="1">
+				<Id source="PDBCC">TYR</Id>
+			</Component>			
+			<Component component="2">
+				<Id source="PDBCC">GLA</Id>
+			</Component>
+			<Bond>
+				<Atom component="1">OH</Atom>
+				<Atom component="2">C1</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>attachment</Category>
+		<Keyword>glycoprotein</Keyword>
+	</Entry>
+	<Entry>
+		<Id>0426</Id>
+		<Description>A protein modification that effectively converts an L-tryptophan residue to 2'-alpha-mannosyl-L-tryptophan.</Description>
+		<SystematicName>(2S)-2-amino-3-(2-alpha-mannopyranosyl-1H-indol-3-yl)propanoic acid</SystematicName>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0217</Id>
+			<Name>2'-alpha-mannosyl-L-tryptophan</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00222</Id>
+			<Name>2'-alpha-mannosyl-L-tryptophan</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PDBCC</Source>
+			<Id>MAN</Id>
+			<Name>alpha-D-mannopyranose</Name>
+		</CrossReference>
+		<Condition>
+			<Component component="1">
+				<Id source="PDBCC">TRP</Id>
+			</Component>
+			<Component component="2">
+				<Id source="PDBCC">MAN</Id>
+			</Component>
+			<Bond>
+				<Atom component="1">CD1</Atom>
+				<Atom component="2">C1</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>attachment</Category>
+		<Keyword>glycoprotein</Keyword>
+	</Entry>
+	<Entry>
+		<Id>0427</Id>
+		<Description>A protein modification that effectively converts an L-tryptophan residue to 2'-alpha-mannosyl-L-tryptophan.</Description>
+		<SystematicName>(2S)-2-amino-3-(2-alpha-mannopyranosyl-1H-indol-3-yl)propanoic acid</SystematicName>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0217</Id>
+			<Name>2'-alpha-mannosyl-L-tryptophan</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00222</Id>
+			<Name>2'-alpha-mannosyl-L-tryptophan</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PDBCC</Source>
+			<Id>BMA</Id>
+			<Name>beta-D-mannopyranose</Name>
+		</CrossReference>
+		<Condition>
+			<Component component="1">
+				<Id source="PDBCC">TRP</Id>
+			</Component>
+			<Component component="2">
+				<Id source="PDBCC">BMA</Id>
+			</Component>
+			<Bond>
+				<Atom component="1">CD1</Atom>
+				<Atom component="2">C1</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>attachment</Category>
+		<Keyword>glycoprotein</Keyword>
+	</Entry>
+	<Entry>
+		<Id>0428</Id>
+		<Description>A protein modification that effectively converts a glycine residue to N-D-glucuronoylglycine.</Description>
+		<SystematicName>2-(glucuronoylamino)ethanoic acid</SystematicName>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0058</Id>
+			<Name>N-D-glucuronoyl-glycine</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00067</Id>
+			<Name>N-D-glucuronoylglycine</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PDBCC</Source>
+			<Id>GCU</Id>
+			<Name>alpha-D-glucopyranuronic acid</Name>
+		</CrossReference>
+		<Condition>
+			<Component component="1">
+				<Id source="PDBCC">GLY</Id>
+			</Component>
+			<Component component="2">
+				<Id source="PDBCC">GCU</Id>
+			</Component>
+			<Bond>
+				<Atom component="1">N</Atom>
+				<Atom component="2">C6</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>attachment</Category>
+		<Keyword>glycoprotein</Keyword>
+	</Entry>
+	<Entry>
+		<Id>0429</Id>
+		<Description>A protein modification that effectively converts a glycine residue to N-D-glucuronoylglycine.</Description>
+		<SystematicName>2-(glucuronoylamino)ethanoic acid</SystematicName>
+		<CrossReference>
+			<Source>RESID</Source>
+			<Id>AA0058</Id>
+			<Name>N-D-glucuronoyl-glycine</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PSI-MOD</Source>
+			<Id>MOD:00067</Id>
+			<Name>N-D-glucuronoylglycine</Name>
+		</CrossReference>
+		<CrossReference>
+			<Source>PDBCC</Source>
+			<Id>BDP</Id>
+			<Name>beta-D-glucopyranuronic acid</Name>
+		</CrossReference>
+		<Condition>
+			<Component component="1">
+				<Id source="PDBCC">GLY</Id>
+			</Component>
+			<Component component="2">
+				<Id source="PDBCC">BDP</Id>
+			</Component>
+			<Bond>
+				<Atom component="1">N</Atom>
+				<Atom component="2">C6</Atom>
+			</Bond>
+		</Condition>
+		<Occurrence>natural</Occurrence>
+		<Category>attachment</Category>
+		<Keyword>glycoprotein</Keyword>
 	</Entry>
 </ProteinModifications>
