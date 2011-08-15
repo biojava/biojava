@@ -482,6 +482,8 @@ public class DisplayAFP
 			System.out.println("got " + hetatms.size() + " hetatoms");
 		// we only add atom nr 1, since the getAlignedStructure method actually adds the parent group, and not the atoms...
 		for (Group g : hetatms){
+			if (g.size() < 1)
+				continue;
 			//if (debug)
 			//   System.out.println("adding group " + g);
 			Atom a = g.getAtom(0);
@@ -491,6 +493,8 @@ public class DisplayAFP
 			atoms.add(a);
 		}
 		for (Group g : nucleotides ){
+			if (g.size() < 1)
+				continue;
 			//if (debug)
 			//   System.out.println("adding group " + g);
 			Atom a = g.getAtom(0);
@@ -676,6 +680,7 @@ public class DisplayAFP
 				nucs2 = c2.getAtomGroups("nucleotide");
 			}
 		}
+
 		Atom[] arr1 = DisplayAFP.getAtomArray(ca1, hetatms, nucs1);
 		Atom[] arr2 = DisplayAFP.getAtomArray(twistedAtoms, hetatms2, nucs2);
 
