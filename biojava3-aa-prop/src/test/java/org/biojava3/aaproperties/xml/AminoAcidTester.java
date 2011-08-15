@@ -51,6 +51,25 @@ public class AminoAcidTester {
 	}
 	
 	@Test
+	public void readWithIDXml() throws JAXBException, IOException{
+		ElementTable iTable = new ElementTable();
+		// Get a JAXB Context for the object we created above
+		JAXBContext jc = JAXBContext.newInstance(iTable.getClass());
+		Unmarshaller u = jc.createUnmarshaller();
+		iTable = (ElementTable)u.unmarshal(new FileInputStream("./src/main/resources/MinElementMass.xml" ) );
+		iTable.populateMaps();
+		
+		AminoAcidCompositionTable aTable = new AminoAcidCompositionTable();
+		// Get a JAXB Context for the object we created above
+		JAXBContext jc2 = JAXBContext.newInstance(aTable.getClass());
+		Unmarshaller u2 = jc2.createUnmarshaller();
+		
+		aTable = (AminoAcidCompositionTable)u2.unmarshal(new FileInputStream("./src/main/resources/AminoAcidCompositionWithID.xml" ) );
+		aTable.computeMolecularWeight(iTable);
+	}
+	
+	
+	@Test
 	public void readMinXml() throws JAXBException, IOException{
 		ElementTable iTable = new ElementTable();
 		// Get a JAXB Context for the object we created above

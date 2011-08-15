@@ -27,6 +27,11 @@ public class AminoAcidComposition {
 	@XmlAttribute(name = "name")
 	private String name;
 	/**
+	 * Amino acid mass based on MOD ID
+	 */
+	@XmlAttribute(name = "id")
+	String id;
+	/**
 	 * Stores the name of the element and the amount this amino acid contains
 	 */
 	@XmlElement(name = "element")
