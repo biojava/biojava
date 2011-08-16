@@ -6,7 +6,8 @@ import org.biojava3.data.sequence.FastaSequence;
 import org.biojava3.ronn.Jronn.Range;
 import org.junit.Test;
 
-public class JronnTester {
+
+public class JronnTest {
 
 	@Test
 	public void verifyRanges() { 
