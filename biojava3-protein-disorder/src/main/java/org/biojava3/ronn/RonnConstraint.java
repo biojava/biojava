@@ -26,6 +26,7 @@ package org.biojava3.ronn;
  * 
  * @author Peter Troshin
  * @version 1.0
+ * @since 3.0.2
  */
 public final class RonnConstraint {
 

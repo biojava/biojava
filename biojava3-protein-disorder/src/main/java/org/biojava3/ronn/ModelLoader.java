@@ -31,8 +31,10 @@ import java.util.Scanner;
 /**
  * Class that loads data from the model files into {@link Model} objects
  * 
- * @author Petr Troshin
+ * @author Peter Troshin
  * @version 1.0
+ * @since 3.0.2
+
  */
 public final class ModelLoader {
 

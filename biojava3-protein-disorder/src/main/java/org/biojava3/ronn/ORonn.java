@@ -46,7 +46,8 @@ import org.biojava3.ronn.ModelLoader.Model;
  * 
  * @author Peter Troshin 
  * @version 1.0
- * 
+ * @since 3.0.2
+
  * TODO refactor 
  */
 public final class ORonn implements Callable<ORonn> {

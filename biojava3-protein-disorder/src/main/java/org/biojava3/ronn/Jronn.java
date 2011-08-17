@@ -18,14 +18,15 @@ import org.biojava3.ronn.ORonn.ResultLayout;
 /**
  * This class gives public API to RONN functions. 
  * It is build on top of the command line client. Due to this fact a few things 
- * could be improved and extended pending the command line client refactoring.  
+ * could be improved and extended pending the refactoring of the command line client.  
  *
  * The input sequence limitations - the input sequence must not contain any ambiguous characters, 
  * and have a minimum length of 19 amino acids. 
  * 
  * @author Peter Troshin
- *
- *
+ * @version 1.0
+ * @since 3.0.2
+ * 
  */
 public class Jronn {
 	

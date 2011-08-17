@@ -3,7 +3,7 @@
  * 
  * Copyright (c) 2009 Peter Troshin
  *  
- * Jalview Web Services version: 2.0     
+ * Java Bioinformatics Analyses Web Services (JABAWS) version: 1.0     
  * 
  *  This library is free software; you can redistribute it and/or modify it under the terms of the
  *  Apache License version 2 as published by the Apache Software Foundation
@@ -38,6 +38,7 @@ import java.util.regex.Pattern;
  * 
  * @author Peter Troshin
  * @version 1.0
+ * @since 3.0.2
  */
 public final class SequenceUtil {
 

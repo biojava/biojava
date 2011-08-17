@@ -10,7 +10,7 @@
 	<artifactId>biojava3-protein-disorder</artifactId>
 	<packaging>jar</packaging>
 	<name>biojava3-protein-disorder</name>
-	<version>1.0.0</version>
+	<version>3.0.2-SNAPSHOT</version>
 	<description>This module is for predicting disordered regions in protein sequences</description>
 	<build>
 		<plugins>

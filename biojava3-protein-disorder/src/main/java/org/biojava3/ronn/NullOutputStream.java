@@ -28,6 +28,7 @@ import java.io.OutputStream;
  * 
  * @author Petr Troshin
  * @version 1.0
+ * @since 3.0.2
  */
 public final class NullOutputStream extends OutputStream {
 
