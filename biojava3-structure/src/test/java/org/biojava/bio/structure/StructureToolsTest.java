@@ -157,6 +157,17 @@ public class StructureToolsTest extends TestCase {
     	chain = substr.getChain(0);
     	assertEquals("Did not find the expected number of residues in "+range, 5, chain.getAtomLength() );
 
+    	// some negative tests
+    	try {
+    		range = "7-10";
+        	substr = StructureTools.getSubRanges(structure2, range);
+        	fail("Illegal range '"+range+"'. Should throw StructureException");
+    	} catch(StructureException ex) {} //expected 
+    	try {
+    		range = "A7-10";
+        	substr = StructureTools.getSubRanges(structure2, range);
+        	fail("Illegal range '"+range+"'. Should throw StructureException");
+    	} catch(StructureException ex) {} //expected 
     }
     
     /**

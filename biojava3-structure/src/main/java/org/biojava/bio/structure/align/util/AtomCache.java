@@ -349,16 +349,18 @@ public class AtomCache {
 	 *  <ul>
 	 *	<li>To specify a particular chain write as: 4hhb.A (chain IDs are case sensitive, PDB ids are not)</li>
 	 * 	<li>To specify that the 1st chain in a structure should be used write: 4hhb:0 .</li>
+	 *  <li>To specify a range of residues write 4hhb.A:1-10 .</li>
+	 *  <li>To specify several ranges of residues write 4hhb(A:1-10,B:1-10)
 	 *  <li>To specify a SCOP domain write a scopId e.g. d2bq6a1. Some flexibility can be allowed in SCOP domain names, see {@link #setStrictSCOP(boolean)}</li>
 	 *  <li>URLs are accepted as well</li>
 	 *  </ul>
 	 *  
 	 * @param name
-	 * @return a Structure object
-	 * @throws IOException
-	 * @throws StructureException
+	 * @return a Structure object, or null if name appears improperly formated (eg too short, etc)
+	 * @throws IOException The PDB file cannot be cached due to IO errors
+	 * @throws StructureException The name appeared valid but did not correspond to a structure.
+	 * 	Also thrown by some submethods upon errors, eg for poorly formatted subranges.
 	 */
-
 	public Structure getStructure(String name) throws IOException, StructureException{
 
 		if ( name.length() < 4)

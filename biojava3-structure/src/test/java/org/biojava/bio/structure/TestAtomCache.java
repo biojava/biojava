@@ -25,6 +25,7 @@
 package org.biojava.bio.structure;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import org.biojava.bio.structure.align.util.AtomCache;
 import junit.framework.TestCase;
@@ -76,59 +77,77 @@ public class TestAtomCache extends TestCase
 		}
 	}
 
-	public void testAtomCacheNameParsing(){
+	public void testAtomCacheNameParsing() throws IOException, StructureException {
 
-		String name1= "4hhb";
-
-		String name2 = "4hhb.C";
-		String chainId2 = "C";
-
-		String name3 = "4hhb:1";
-		String chainId3 = "B";
-
-		String name4 = "4hhb:A:10-20,B:10-20,C:10-20";
-		String name5 = "4hhb:(A:10-20,A:30-40)";
 
 
 		AtomCache cache = TmpAtomCache.cache;
 
-		try {
-			Structure s = cache.getStructure(name1);
-			assertNotNull(s);
-			assertTrue(s.getChains().size() == 4);
-			s = cache.getStructure(name2);
 
-			assertTrue(s.getChains().size() == 1);
-			Chain c = s.getChainByPDB(chainId2);
-			assertEquals(c.getChainID(),chainId2);
+		String name1= "4hhb";
+		Structure s = cache.getStructure(name1);
+		assertNotNull(s);
+		assertTrue(s.getChains().size() == 4);
+		
+		String name2 = "4hhb.C";
+		String chainId2 = "C";
+		s = cache.getStructure(name2);
 
-			s = cache.getStructure(name3);
-			assertNotNull(s);
-			assertTrue(s.getChains().size() == 1);
+		assertTrue(s.getChains().size() == 1);
+		Chain c = s.getChainByPDB(chainId2);
+		assertEquals(c.getChainID(),chainId2);
 
-			c = s.getChainByPDB(chainId3);
-			assertEquals(c.getChainID(),chainId3);
+		
+		String name3 = "4hhb:1";
+		String chainId3 = "B";
+		s = cache.getStructure(name3);
+		assertNotNull(s);
+		assertTrue(s.getChains().size() == 1);
 
-			s = cache.getStructure(name4);
-			assertNotNull(s);
+		c = s.getChainByPDB(chainId3);
+		assertEquals(c.getChainID(),chainId3);
 
-			assertEquals(s.getChains().size(), 3);
+		
+		String name4 = "4hhb:A:10-20,B:10-20,C:10-20";
+		s = cache.getStructure(name4);
+		assertNotNull(s);
 
-			c = s.getChainByPDB("B");
-			assertEquals(c.getAtomLength(),11);
+		assertEquals(s.getChains().size(), 3);
 
-			s =cache.getStructure(name5);
-			assertNotNull(s);
+		c = s.getChainByPDB("B");
+		assertEquals(c.getAtomLength(),11);
 
-			assertEquals(s.getChains().size(),1 );
-			c = s.getChainByPDB("A");
-			assertEquals(c.getAtomLength(),22);
+		String name5 = "4hhb:(A:10-20,A:30-40)";
+		s =cache.getStructure(name5);
+		assertNotNull(s);
 
+		assertEquals(s.getChains().size(),1 );
+		c = s.getChainByPDB("A");
+		assertEquals(c.getAtomLength(),22);
 
-		} catch (Exception e){
-			e.printStackTrace();
-			fail(e.getMessage());
-		}
+		// This syntax also works, since the first paren is treated as a separator
+		String name6 = "4hhb(A:10-20,A:30-40)";
+		s =cache.getStructure(name6);
+		assertNotNull(s);
+
+		assertEquals(s.getChains().size(),1 );
+		c = s.getChainByPDB("A");
+		assertEquals(c.getAtomLength(),22);
+
+		// Doesn't work, since no ':' in name
+		// This behavior is questionable; perhaps it should return 4hhb.C?
+		// It's not a very likely/important case, I'm just documenting behavior here.
+		String name7 = "4hhb(C)";
+		s = cache.getStructure(name7);
+		assertNull("Invalid substructure style: "+name7,s);
+
+		// Works since we detect a ':'
+		String name8 = "4hhb:(C)";
+		s = cache.getStructure(name8);
+
+		assertTrue(s.getChains().size() == 1);
+		c = s.getChainByPDB(chainId2);
+		assertEquals(c.getChainID(),chainId2);
 
 	}
 	

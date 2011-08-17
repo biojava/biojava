@@ -601,27 +601,35 @@ public class StructureTools {
 	 * Pattern to describe subranges. Matches "A", "A:", "A:7-53", etc.
 	 * @see #getSubRanges(Structure, String)
 	 */
-	private static final Pattern pdbNumRangeRegex = Pattern.compile("\\s*(\\w):?(?:([-+]?[0-9]+[A-Za-z]?)\\s*-\\s*([-+]?[0-9]+[A-Za-z]?))?\\s*");
+	private static final Pattern pdbNumRangeRegex = Pattern.compile(
+			"\\s*(\\w)" + //chain ID
+			"(?:" + //begin optional range
+			  "$|:$|:" + //semicolon
+			  "([-+]?[0-9]+[A-Za-z]?)" + // first residue
+			  "\\s*-\\s*" + // -
+			  "([-+]?[0-9]+[A-Za-z]?)" + // second residue
+			")" + //end range
+			"\\s*");
 	
 	/** In addition to the functionality provided by getReducedStructure also provides a way to specify sub-regions of a structure with the following 
 	 * specification:
 	 * 
 	 * 
-	 * range can be surrounded by ( and ). (but will be removed).
+	 * ranges can be surrounded by ( and ). (but will be removed).
 	 * ranges are specified as
 	 * PDBresnum1 : PDBresnum2
 	 * 
 	 *  a list of ranges is separated by ,
 	 *  
 	 *  Example
-	 *  4GCR(A:1-83)
-	 *  1CDG(A:407-495,A:582-686)
+	 *  4GCR (A:1-83)
+	 *  1CDG (A:407-495,A:582-686)
 	 *  
 	 * 
 	 * 
-	 * @param s
-	 * @param ranges
-	 * @return a structure object
+	 * @param s The full structure
+	 * @param ranges A comma-seperated list of ranges, optionally surrounded by parentheses
+	 * @return Substructure of s specified by ranges
 	 */
 	@SuppressWarnings("deprecation")
 	public static final Structure getSubRanges(Structure s, String ranges ) 
