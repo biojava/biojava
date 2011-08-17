@@ -835,7 +835,7 @@ public class PDBFileParser  {
 			try {
 				current_group.setPDBName(threeLetter);
 			} catch (PDBParseException p){
-				System.err.println(p.getMessage() );
+				logger.fine(p.getMessage() );
 			}
 			if ( current_group instanceof AminoAcid){
 				AminoAcid aa = (AminoAcid)current_group;
@@ -1065,7 +1065,7 @@ public class PDBFileParser  {
 			try {
 				i = Integer.valueOf(value);
 			} catch (NumberFormatException e){
-				System.err.println(e.getMessage() + " while trying to parse COMPND line.");
+				logger.fine(e.getMessage() + " while trying to parse COMPND line.");
 			}
 			if (molTypeCounter != i) {
 				molTypeCounter++;
@@ -1291,7 +1291,7 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 			try {
 				current_compound = compounds.get(Integer.valueOf(value) - 1);
 			} catch (Exception e){
-				System.err.println("could not process SOURCE MOL_ID record correctly:" + e.getMessage());
+				logger.fine("could not process SOURCE MOL_ID record correctly:" + e.getMessage());
 				return;
 			}
 
@@ -1399,8 +1399,8 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 			try {
 				res = Float.parseFloat(resolution);
 			} catch (NumberFormatException e) {
-				System.err.println(e.getMessage());
-				System.err.println("could not parse resolution from line and ignoring it " + line);
+				logger.fine(e.getMessage());
+				logger.fine("could not parse resolution from line and ignoring it " + line);
 				return ;
 			}
 			//System.out.println("got resolution:" +res);
@@ -1950,8 +1950,8 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 
 			connects.add(cons);
 		} catch (Exception e){
-			System.err.println("could not parse CONECT line correctly.");
-			System.err.println(e.getMessage() + " at line " + line);
+			logger.fine("could not parse CONECT line correctly.");
+			logger.fine(e.getMessage() + " at line " + line);
 			return;
 		}
 	}
@@ -2092,9 +2092,9 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 	 * Heterogen sections are HET, HETNAM, HETSYN, FORMUL
 	 * @see http://www.wwpdb.org/documentation/format32/sect4.html
 	 */
-	private void pdb_HET_handler(String line) {
+	//private void pdb_HET_handler(String line) {
 
-	}
+	//}
 
 	/* process the disulfid bond info provided by an SSBOND record
 	 *
@@ -2321,7 +2321,7 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 			val = Integer.parseInt(intString.trim());
 		} catch (NumberFormatException ex){
 			//ex.printStackTrace();
-			System.err.println("NumberformatException: " + ex.getMessage());
+			logger.fine("NumberformatException: " + ex.getMessage());
 		}
 		return val;
 	}
@@ -2651,8 +2651,8 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 		try { 
 			linkSitesToGroups(); // will work now that setSites is called
 		} catch (Exception e){
-			System.err.println("Error while linking SITE records to groups. ..");
-			e.printStackTrace();
+			logger.fine("Error while linking SITE records to groups. ..");
+			logger.fine(e.getMessage());
 		}
 	}
 
@@ -2829,7 +2829,7 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 		//the return list
 
 		if ( siteMap == null || siteToResidueMap == null){
-			logger.warning("Sites can not be linked to residues!");
+			logger.fine("Sites can not be linked to residues!");
 
 			return;
 		}
@@ -2838,14 +2838,14 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 		//check that there are chains with which to associate the groups
 		if (structure.getChains().isEmpty()) {
 			sites = new ArrayList<Site>(siteMap.values());
-			logger.warning("No chains to link Site Groups with - Sites will not be present in the Structure");
+			logger.fine("No chains to link Site Groups with - Sites will not be present in the Structure");
 			return;
 		}
 
 		//check that the keys in the siteMap and SiteToResidueMap are equal 
 		if (! siteMap.keySet().equals(siteToResidueMap.keySet())) {
-			logger.warning("Not all sites have been properly described in the PDB " + pdbId + " header - some Sites will not be present in the Structure");
-			logger.warning(siteMap.keySet() + " | " + siteToResidueMap.keySet());
+			logger.fine("Not all sites have been properly described in the PDB " + pdbId + " header - some Sites will not be present in the Structure");
+			logger.fine(siteMap.keySet() + " | " + siteToResidueMap.keySet());
 			//return;
 		}
 
@@ -2869,7 +2869,7 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 					//TODO: implement findGroup(ResidueNumber resNum)
 					linkedGroup = structure.findGroup(chain, pdbCode);
 				} catch (StructureException ex) {
-					Logger.getLogger(PDBFileParser.class.getName()).log(Level.WARNING, "Can't find group in chain in order to link up SITE records", ex);
+					Logger.getLogger(PDBFileParser.class.getName()).log(Level.FINE, "Can't find group " + pdbCode + " in chain " + chain + " in order to link up SITE records (PDB ID " + pdbId +")");
 					//Logger.getLogger(PDBFileParser.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
 					continue;
 				}
@@ -2918,7 +2918,7 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 
 		for (String line : journalLines) {
 			if ( line.length() < 19 ) {
-				System.err.println("can not process Journal line: " + line);
+				logger.fine("can not process Journal line: " + line);
 				continue;
 			}
 			//            System.out.println("'" + line + "'");
@@ -2960,7 +2960,7 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 			//        JRNL        REFN                   ISSN 1529-2908
 			if (subField.equals("REFN")) {
 				if ( line.length() < 35 ) {
-					System.err.println("can not process Journal REFN line: " + line);
+					logger.fine("can not process Journal REFN line: " + line);
 					continue;
 				}
 				refn.append(line.substring(35, line.length()).trim());
@@ -3031,7 +3031,7 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 			}
 
 			if (ref.length() < 48) {
-				logger.warning("REF line too short - must be at least 48 characters to be valid for parsing.");
+				logger.fine("REF line too short - must be at least 48 characters to be valid for parsing.");
 				journalName = "";
 				volume = "";
 				startPage = "";
@@ -3085,7 +3085,7 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 				try {
 					publicationDate = Integer.valueOf(dateString);
 				} catch (NumberFormatException nfe) {
-					logger.warning(dateString + " is not a valid integer for a date in JRNL sub-section REF line 1");
+					logger.fine(dateString + " is not a valid integer for a date in JRNL sub-section REF line 1");
 				}
 				//				if (DEBUG) {
 				//					System.out.println("JournalParser set date " + publicationDate);
