@@ -1,4 +1,4 @@
-package org.biojava3.aaproperties.convertor;
+package org.biojava3.aaproperties.profeat.convertor;
 
 public class Convert2Charge extends Convertor{
 	/**

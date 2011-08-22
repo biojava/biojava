@@ -1,11 +1,11 @@
-package org.biojava3.aaproperties;
+package org.biojava3.aaproperties.profeat;
 
 import java.util.Map;
 
-import org.biojava3.aaproperties.IProfeatProperties.ATTRIBUTE;
-import org.biojava3.aaproperties.IProfeatProperties.DISTRIBUTION;
-import org.biojava3.aaproperties.IProfeatProperties.GROUPING;
-import org.biojava3.aaproperties.IProfeatProperties.TRANSITION;
+import org.biojava3.aaproperties.profeat.IProfeatProperties.ATTRIBUTE;
+import org.biojava3.aaproperties.profeat.IProfeatProperties.DISTRIBUTION;
+import org.biojava3.aaproperties.profeat.IProfeatProperties.GROUPING;
+import org.biojava3.aaproperties.profeat.IProfeatProperties.TRANSITION;
 import org.biojava3.core.sequence.ProteinSequence;
 
 /**
@@ -14,6 +14,7 @@ import org.biojava3.core.sequence.ProteinSequence;
  * 
  * @author kohchuanhock
  * @version 2011.06.16
+ * @since 3.0.2
  * @see IProfeatProperties
  * @see ProfeatPropertiesImpl
  */
@@ -44,6 +45,18 @@ public class ProfeatProperties {
 		return new ProfeatPropertiesImpl().getComposition(sequence);
 	}
 	
+	public static double getComposition(String sequence, ATTRIBUTE attribute, GROUPING group) throws Exception{
+		return ProfeatProperties.getComposition(new ProteinSequence(sequence), attribute, group);
+	}
+	
+	public static Map<GROUPING, Double> getComposition(String sequence, ATTRIBUTE attribute) throws Exception{
+		return ProfeatProperties.getComposition(new ProteinSequence(sequence), attribute);
+	}
+	
+	public static Map<ATTRIBUTE, Map<GROUPING, Double>> getComposition(String sequence) throws Exception{
+		return ProfeatProperties.getComposition(new ProteinSequence(sequence));
+	}
+	
 	/**
 	 * An adaptor method which returns the number of transition between the specified groups for the given attribute with respect to the length of sequence.
 	 * 
@@ -70,6 +83,18 @@ public class ProfeatProperties {
 		return new ProfeatPropertiesImpl().getTransition(sequence);
 	}
 	
+	public static double getTransition(String sequence, ATTRIBUTE attribute, TRANSITION transition) throws Exception{
+		return ProfeatProperties.getTransition(new ProteinSequence(sequence), attribute, transition);
+	}
+	
+	public static Map<TRANSITION, Double> getTransition(String sequence, ATTRIBUTE attribute) throws Exception{
+		return ProfeatProperties.getTransition(new ProteinSequence(sequence), attribute);
+	}
+	
+	public static Map<ATTRIBUTE, Map<TRANSITION, Double>> getTransition(String sequence) throws Exception{
+		return ProfeatProperties.getTransition(new ProteinSequence(sequence));
+	}
+	
 	/**
 	 * An adaptor method which computes and return the position with respect to the sequence where the given distribution of the grouping can be found.<br/>
 	 * Example: "1111122222"<br/>
@@ -91,19 +116,35 @@ public class ProfeatProperties {
 	 * @throws Exception
 	 * 	throws Exception if attribute or group are unknown
 	 */
-	public static double getPosition(ProteinSequence sequence, ATTRIBUTE attribute, GROUPING group, DISTRIBUTION distribution) throws Exception{
-		return new ProfeatPropertiesImpl().getPosition(sequence, attribute, group, distribution);
+	public static double getDistributionPosition(ProteinSequence sequence, ATTRIBUTE attribute, GROUPING group, DISTRIBUTION distribution) throws Exception{
+		return new ProfeatPropertiesImpl().getDistributionPosition(sequence, attribute, group, distribution);
 	}
 	
-	public static Map<DISTRIBUTION, Double> getPosition(ProteinSequence sequence, ATTRIBUTE attribute, GROUPING group) throws Exception{
-		return new ProfeatPropertiesImpl().getPosition(sequence, attribute, group);
+	public static Map<DISTRIBUTION, Double> getDistributionPosition(ProteinSequence sequence, ATTRIBUTE attribute, GROUPING group) throws Exception{
+		return new ProfeatPropertiesImpl().getDistributionPosition(sequence, attribute, group);
 	}
 	
-	public static Map<GROUPING, Map<DISTRIBUTION, Double>> getPosition(ProteinSequence sequence, ATTRIBUTE attribute) throws Exception{
-		return new ProfeatPropertiesImpl().getPosition(sequence, attribute);
+	public static Map<GROUPING, Map<DISTRIBUTION, Double>> getDistributionPosition(ProteinSequence sequence, ATTRIBUTE attribute) throws Exception{
+		return new ProfeatPropertiesImpl().getDistributionPosition(sequence, attribute);
 	}
 	
-	public static Map<ATTRIBUTE , Map<GROUPING, Map<DISTRIBUTION, Double>>> getPosition(ProteinSequence sequence) throws Exception{
-		return new ProfeatPropertiesImpl().getPosition(sequence);
+	public static Map<ATTRIBUTE , Map<GROUPING, Map<DISTRIBUTION, Double>>> getDistributionPosition(ProteinSequence sequence) throws Exception{
+		return new ProfeatPropertiesImpl().getDistributionPosition(sequence);
+	}
+	
+	public static double getDistributionPosition(String sequence, ATTRIBUTE attribute, GROUPING group, DISTRIBUTION distribution) throws Exception{
+		return ProfeatProperties.getDistributionPosition(new ProteinSequence(sequence), attribute, group, distribution);
+	}
+	
+	public static Map<DISTRIBUTION, Double> getDistributionPosition(String sequence, ATTRIBUTE attribute, GROUPING group) throws Exception{
+		return ProfeatProperties.getDistributionPosition(new ProteinSequence(sequence), attribute, group);
+	}
+	
+	public static Map<GROUPING, Map<DISTRIBUTION, Double>> getDistributionPosition(String sequence, ATTRIBUTE attribute) throws Exception{
+		return ProfeatProperties.getDistributionPosition(new ProteinSequence(sequence), attribute);
+	}
+	
+	public static Map<ATTRIBUTE , Map<GROUPING, Map<DISTRIBUTION, Double>>> getDistributionPosition(String sequence) throws Exception{
+		return ProfeatProperties.getDistributionPosition(new ProteinSequence(sequence));
 	}
 }

@@ -22,6 +22,13 @@ import org.biojava3.core.sequence.template.CompoundSet;
 
 public class CommandPrompt {
 	
+	/**
+	 * The main method
+	 * @param args
+	 * 	See showHelp for a list of available arguments
+	 * @throws Exception
+	 *  To handle exception thrown by reading of XML files
+	 */
 	public static void main(String[] args) throws Exception{
 		run(args);
 	}

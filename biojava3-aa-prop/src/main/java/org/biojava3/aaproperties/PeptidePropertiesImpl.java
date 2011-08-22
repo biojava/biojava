@@ -17,7 +17,20 @@ import org.biojava3.core.sequence.ProteinSequence;
 import org.biojava3.core.sequence.compound.AminoAcidCompound;
 import org.biojava3.core.sequence.compound.AminoAcidCompoundSet;
 
+/**
+ * This class contains the actual implementation of IPeptideProperties and is wrapped around by PeptideProperties for ease of use. 
+ * 
+ * @author kohchuanhock
+ * @version 2011.08.22
+ * @since 3.0.2
+ * @see IPeptideProperties
+ * @see PeptideProperties
+ */
 public class PeptidePropertiesImpl implements IPeptideProperties{
+	
+	/**
+	 * @return the molecular weight of water
+	 */
 	private double getWaterMoleculeWeight(){
 		final double hydrogenMW = 1.0079;
 		final double hydroxideMW = 17.0073;
@@ -355,28 +368,5 @@ public class PeptidePropertiesImpl implements IPeptideProperties{
 			}
 		}
 		return aa2Composition;
-	}
-	
-	/*
-	 * Quick Test Method
-	 */
-	public static void main(String[] args){
-		ProteinSequence sequence = new ProteinSequence("AAACCAAAWWTT");
-		IPeptideProperties pp = new PeptidePropertiesImpl();
-		AminoAcidCompoundSet aaSet = new AminoAcidCompoundSet();
-		System.out.println(aaSet.getCompoundForString("1"));
-		System.out.println(sequence);
-		System.out.println("A Composition: " + pp.getEnrichment(sequence, aaSet.getCompoundForString("A")));//CHECKED
-		
-		System.out.println("C Composition: " + pp.getEnrichment(sequence, aaSet.getCompoundForString("C")));//CHECKED
-		System.out.println("Molecular Weight: " + pp.getMolecularWeight(sequence));//CHECKED
-		System.out.println("All Composition: " + pp.getAAComposition(sequence));//CHECKED
-		System.out.println("AvgHydro: " + pp.getAvgHydropathy(sequence));//CHECKED
-		System.out.println("NetCharge: " + pp.getNetCharge(sequence));//CHECKED
-		System.out.println("PI: " + pp.getIsoelectricPoint(sequence));//CHECKED
-		System.out.println("Apliphatic: " + pp.getApliphaticIndex(sequence));//CHECKED
-		System.out.println("Instability: " + pp.getInstabilityIndex(sequence));//CHECKED
-		System.out.println("Extinct: " + pp.getExtinctionCoefficient(sequence, true));//CHECKED - 
-		System.out.println("Extinct: " + pp.getExtinctionCoefficient(sequence, false));
 	}
 }

@@ -1,4 +1,4 @@
-package org.biojava3.aaproperties;
+package org.biojava3.aaproperties.profeat;
 
 import java.util.Map;
 
@@ -19,7 +19,7 @@ public interface IProfeatProperties {
 	 * 
 	 * @author kohchuanhock
 	 * @version 2011.06.16
-	 * 
+	 * @since 3.0.2
 	 */
 	
 	/**
@@ -33,7 +33,7 @@ public interface IProfeatProperties {
 	/**
 	 * Enumeration of the transition between groupA and groupB 
 	 */
-	public enum TRANSITION {GROUP12, GROUP13, GROUP23};
+	public enum TRANSITION {BETWEEN_11, BETWEEN_22, BETWEEN_33, BETWEEN_12, BETWEEN_13, BETWEEN_23};
 	/**
 	 * Enumeration of the distribution for the first, first 25%, first 50%, first 75% and 100% of the grouping
 	 */
@@ -100,11 +100,11 @@ public interface IProfeatProperties {
 	 * @throws Exception
 	 * 	throws Exception if attribute or group are unknown
 	 */
-	public double getPosition(ProteinSequence sequence, ATTRIBUTE attribute, GROUPING group, DISTRIBUTION distribution) throws Exception;
+	public double getDistributionPosition(ProteinSequence sequence, ATTRIBUTE attribute, GROUPING group, DISTRIBUTION distribution) throws Exception;
 	
-	public Map<DISTRIBUTION, Double> getPosition(ProteinSequence sequence, ATTRIBUTE attribute, GROUPING group) throws Exception;
+	public Map<DISTRIBUTION, Double> getDistributionPosition(ProteinSequence sequence, ATTRIBUTE attribute, GROUPING group) throws Exception;
 	
-	public Map<GROUPING, Map<DISTRIBUTION, Double>> getPosition(ProteinSequence sequence, ATTRIBUTE attribute) throws Exception;
+	public Map<GROUPING, Map<DISTRIBUTION, Double>> getDistributionPosition(ProteinSequence sequence, ATTRIBUTE attribute) throws Exception;
 	
-	public Map<ATTRIBUTE , Map<GROUPING, Map<DISTRIBUTION, Double>>> getPosition(ProteinSequence sequence) throws Exception;
+	public Map<ATTRIBUTE , Map<GROUPING, Map<DISTRIBUTION, Double>>> getDistributionPosition(ProteinSequence sequence) throws Exception;
 }

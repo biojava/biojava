@@ -19,15 +19,25 @@ import org.biojava3.core.sequence.compound.AminoAcidCompoundSet;
  * At least one adaptor method is written for each available properties provided in IPeptideProperties. 
  * 
  * @author kohchuanhock
- * @version 2011.05.21
+ * @version 2011.08.22
+ * @since 3.0.2
  * @see IPeptideProperties
  * @see PeptidePropertiesImpl
  */
 public class PeptideProperties {
+	/**
+	 * Enumeration of 20 standard amino acid code
+	 */
 	public enum SingleLetterAACode { W, C, M, H, Y, F, Q, N, I, R, D, P, T, K, E, V, S, G, A, L}
 
+	/**
+	 * Contains the 20 standard AA code in a set
+	 */
 	public static Set<Character> standardAASet;
 
+	/**
+	 * To initialize the standardAASet
+	 */
 	static{
 		standardAASet = new HashSet<Character>();
 		for(SingleLetterAACode c:SingleLetterAACode.values()) standardAASet.add(c.toString().charAt(0));

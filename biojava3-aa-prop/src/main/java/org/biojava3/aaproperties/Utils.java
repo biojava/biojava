@@ -3,6 +3,13 @@ package org.biojava3.aaproperties;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * This is a utility class that contains utility methods which will facilitates the coding of other methods
+ * 
+ * @author kohchuanhock
+ * @version 2011.08.22
+ * @since 3.0.2
+ */
 public class Utils {
 
 	/**
@@ -143,11 +150,5 @@ public class Utils {
 		else{
 			return sequence;
 		}
-	}
-	
-	public static void main(String[] args){
-		String seq = "MTADGPCRELLCQLRAAVRHRWWCx";
-		System.out.println(doesSequenceContainInvalidChar(seq, null));
-		System.out.println(cleanSequence(seq, null));
 	}
 }

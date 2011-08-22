@@ -34,19 +34,6 @@ import org.biojava3.core.sequence.compound.AminoAcidCompound;
 
 
 /**
- *
- * TODO
- * 
- * Wednesday
- * 5) Two paragraphs to summarise the work completed so far
- * 
- * DONE
- * Added dummy id to be allowed in the xml file of AminoAcidComposition. It will be used in future to compute the mass of amino acid instead of based on elements. 
- * 
- * Question
- * The jar file does not seems to be up and running yet.
- * 
- * 
  * An interface to generate some basic physico-chemical properties of protein sequences.<br/>
  * The following properties could be generated:
  * <p/>

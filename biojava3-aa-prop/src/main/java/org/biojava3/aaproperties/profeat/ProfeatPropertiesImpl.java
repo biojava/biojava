@@ -1,16 +1,16 @@
-package org.biojava3.aaproperties;
+package org.biojava3.aaproperties.profeat;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import org.biojava3.aaproperties.convertor.Convert2Charge;
-import org.biojava3.aaproperties.convertor.Convert2Hydrophobicity;
-import org.biojava3.aaproperties.convertor.Convert2NormalizedVanDerWaalsVolume;
-import org.biojava3.aaproperties.convertor.Convert2Polarity;
-import org.biojava3.aaproperties.convertor.Convert2Polarizability;
-import org.biojava3.aaproperties.convertor.Convert2SecondaryStructure;
-import org.biojava3.aaproperties.convertor.Convert2SolventAccessibility;
-import org.biojava3.aaproperties.convertor.Convertor;
+import org.biojava3.aaproperties.profeat.convertor.Convert2Charge;
+import org.biojava3.aaproperties.profeat.convertor.Convert2Hydrophobicity;
+import org.biojava3.aaproperties.profeat.convertor.Convert2NormalizedVanDerWaalsVolume;
+import org.biojava3.aaproperties.profeat.convertor.Convert2Polarity;
+import org.biojava3.aaproperties.profeat.convertor.Convert2Polarizability;
+import org.biojava3.aaproperties.profeat.convertor.Convert2SecondaryStructure;
+import org.biojava3.aaproperties.profeat.convertor.Convert2SolventAccessibility;
+import org.biojava3.aaproperties.profeat.convertor.Convertor;
 import org.biojava3.core.sequence.ProteinSequence;
 
 public class ProfeatPropertiesImpl implements IProfeatProperties{
@@ -44,22 +44,25 @@ public class ProfeatPropertiesImpl implements IProfeatProperties{
 		char t1;
 		char t2;
 		switch(transition){
-		case GROUP12: t1 = '1'; t2 = '2'; break;
-		case GROUP13: t1 = '1'; t2 = '3'; break;
-		case GROUP23: t1 = '2'; t2 = '3'; break;
+		case BETWEEN_11: t1 = '1'; t2 = '1'; break;
+		case BETWEEN_22: t1 = '2'; t2 = '2'; break;
+		case BETWEEN_33: t1 = '3'; t2 = '3'; break;
+		case BETWEEN_12: t1 = '1'; t2 = '2'; break;
+		case BETWEEN_13: t1 = '1'; t2 = '3'; break;
+		case BETWEEN_23: t1 = '2'; t2 = '3'; break;
 		default: throw new Exception("Unhandled Case: " + transition);
 		}
 		int total = 0;
 		for(int i = 0; i < convertedSequence.length() - 1; i++){
 			char s1 = convertedSequence.charAt(i);
 			char s2 = convertedSequence.charAt(i + 1);
-			if((t1 == s1 && t2 == s1) || (t2 == s1 && t1 == s2)) total++;
+			if((t1 == s1 && t2 == s2) || (t2 == s1 && t1 == s2)) total++;
 		}
 		return total / (convertedSequence.length() - 1.0);
 	}
 
 	@Override
-	public double getPosition(ProteinSequence sequence, ATTRIBUTE attribute, GROUPING group, DISTRIBUTION distribution) throws Exception{
+	public double getDistributionPosition(ProteinSequence sequence, ATTRIBUTE attribute, GROUPING group, DISTRIBUTION distribution) throws Exception{
 		Convertor convertor = getConvertor(attribute);
 		String convertedSequence = convertor.convert(sequence);
 
@@ -138,27 +141,27 @@ public class ProfeatPropertiesImpl implements IProfeatProperties{
 	}
 
 	@Override
-	public Map<DISTRIBUTION, Double> getPosition(ProteinSequence sequence, ATTRIBUTE attribute, GROUPING group) throws Exception {
+	public Map<DISTRIBUTION, Double> getDistributionPosition(ProteinSequence sequence, ATTRIBUTE attribute, GROUPING group) throws Exception {
 		Map<DISTRIBUTION, Double> distribution2Double = new HashMap<DISTRIBUTION, Double>();
 		for(DISTRIBUTION distribution:DISTRIBUTION.values()) 
-			distribution2Double.put(distribution, getPosition(sequence, attribute, group, distribution));
+			distribution2Double.put(distribution, getDistributionPosition(sequence, attribute, group, distribution));
 		return distribution2Double;
 	}
 
 	@Override
-	public Map<GROUPING, Map<DISTRIBUTION, Double>> getPosition(ProteinSequence sequence, ATTRIBUTE attribute) throws Exception {
+	public Map<GROUPING, Map<DISTRIBUTION, Double>> getDistributionPosition(ProteinSequence sequence, ATTRIBUTE attribute) throws Exception {
 		Map<GROUPING, Map<DISTRIBUTION, Double>> grouping2Distribution2Double = new HashMap<GROUPING, Map<DISTRIBUTION, Double>>();
 		for(GROUPING group:GROUPING.values()) 
-			grouping2Distribution2Double.put(group, getPosition(sequence, attribute, group));
+			grouping2Distribution2Double.put(group, getDistributionPosition(sequence, attribute, group));
 		return grouping2Distribution2Double;
 	}
 
 	@Override
-	public Map<ATTRIBUTE, Map<GROUPING, Map<DISTRIBUTION, Double>>> getPosition(ProteinSequence sequence) throws Exception {
+	public Map<ATTRIBUTE, Map<GROUPING, Map<DISTRIBUTION, Double>>> getDistributionPosition(ProteinSequence sequence) throws Exception {
 		Map<ATTRIBUTE, Map<GROUPING, Map<DISTRIBUTION, Double>>> attribute2Grouping2Distribution2Double =
 			new HashMap<ATTRIBUTE, Map<GROUPING, Map<DISTRIBUTION, Double>>>();
 		for(ATTRIBUTE attribute:ATTRIBUTE.values())
-			attribute2Grouping2Distribution2Double.put(attribute, getPosition(sequence, attribute));
+			attribute2Grouping2Distribution2Double.put(attribute, getDistributionPosition(sequence, attribute));
 		return attribute2Grouping2Distribution2Double;
 	}
 
