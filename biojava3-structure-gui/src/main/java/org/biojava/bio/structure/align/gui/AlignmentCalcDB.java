@@ -24,19 +24,16 @@
 
 package org.biojava.bio.structure.align.gui;
 
-import java.io.BufferedOutputStream;
-import java.io.BufferedWriter;
+
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.FileWriter;
-import java.io.OutputStreamWriter;
+
 import java.util.SortedSet;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Logger;
-import java.util.zip.GZIPOutputStream;
+
 
 import org.biojava.bio.structure.Atom;
 
@@ -54,7 +51,7 @@ import org.biojava.bio.structure.align.model.AFPChain;
 import org.biojava.bio.structure.align.util.AtomCache;
 import org.biojava.bio.structure.align.util.SynchronizedOutFile;
 import org.biojava.bio.structure.align.util.UserConfiguration;
-import org.biojava.bio.structure.align.xml.AFPChainXMLConverter;
+
 import org.biojava3.core.util.ConcurrencyTools;
 
 public class AlignmentCalcDB implements AlignmentCalculationRunnable {
