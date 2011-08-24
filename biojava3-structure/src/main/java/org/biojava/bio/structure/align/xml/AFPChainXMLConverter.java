@@ -20,7 +20,7 @@ public class AFPChainXMLConverter {
 	 * @param afpChain
 	 * @return XML representation of the AFPCHain
 	 */
-	public static String toXML(AFPChain afpChain, Atom[] ca1, Atom[]ca2) throws IOException{
+	public synchronized static String toXML(AFPChain afpChain, Atom[] ca1, Atom[]ca2) throws IOException{
 		StringWriter result = new StringWriter();	
 		toXML(afpChain,result,ca1,ca2);
 		return result.toString();
@@ -34,7 +34,7 @@ public class AFPChainXMLConverter {
 	 * @param swriter
 	 * @throws IOException
 	 */
-	public static void toXML(AFPChain afpChain, StringWriter swriter,Atom[] ca1, Atom[]ca2) throws IOException{
+	public synchronized static void toXML(AFPChain afpChain, StringWriter swriter,Atom[] ca1, Atom[]ca2) throws IOException{
 
 		PrintWriter writer = new PrintWriter(swriter);
 		PrettyXMLWriter xml = new PrettyXMLWriter(writer);
