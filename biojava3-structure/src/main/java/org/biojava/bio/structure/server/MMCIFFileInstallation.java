@@ -24,7 +24,11 @@ import org.biojava.bio.structure.io.mmcif.SimpleMMcifConsumer;
 import org.biojava.bio.structure.io.mmcif.SimpleMMcifParser;
 import org.biojava3.core.util.InputStreamProvider;
 
-
+/**
+ * 
+ * @deprecated
+ *
+ */
 public class MMCIFFileInstallation implements PDBInstallation
 {
 

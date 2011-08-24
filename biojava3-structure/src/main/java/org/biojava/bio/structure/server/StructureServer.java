@@ -25,7 +25,7 @@ package org.biojava.bio.structure.server;
 /** a server that pre-loads PDB files in memory, for quicker processing by StructureListeners
  * 
  * @author Andreas Prlic
- *
+ * @deprecated
  */
 public interface StructureServer {
 

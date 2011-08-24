@@ -58,7 +58,7 @@ import org.biojava.bio.structure.io.PDBFileReader;
  * @see PrepareIndexFile
  * 
  * @author Andreas Prlic
- *
+ * @deprecated
  */
 public class FlatFileInstallation 
 implements PDBInstallation
