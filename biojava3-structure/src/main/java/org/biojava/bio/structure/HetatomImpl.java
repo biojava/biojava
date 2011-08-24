@@ -248,9 +248,6 @@ public class HetatomImpl implements Group,Serializable {
 		if ( a != null)
 			return a;
 
-		// something is deeply wrong...
-
-
 		for (int i=0;i<atoms.size();i++){
 			Atom atom = atoms.get(i);
 
@@ -277,6 +274,9 @@ public class HetatomImpl implements Group,Serializable {
 			for ( Group alt : altLocs){
 				try {
 					a = alt.getAtom(name);
+					// dirty hack
+					// we are adding this group to the main one...
+					addAtom(a);
 					if ( a != null)
 						return a;
 				} catch (StructureException e){
