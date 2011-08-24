@@ -27,6 +27,10 @@ package org.biojava.bio.structure.align.ce;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.biojava3.alignment.SubstitutionMatrixHelper;
+import org.biojava3.alignment.template.SubstitutionMatrix;
+import org.biojava3.core.sequence.compound.AminoAcidCompound;
+
 
 /** Contains the parameters that can be sent to CE
  * 
@@ -66,6 +70,8 @@ public class CeParameters implements ConfigStrucAligParams  {
 
 	int maxNrIterationsForOptimization;
 
+	SubstitutionMatrix<AminoAcidCompound> substitutionMatrix;	
+	double seqWeight;
 
 	public CeParameters(){
 		reset();
@@ -82,7 +88,8 @@ public class CeParameters implements ConfigStrucAligParams  {
 		+ ", winSize=" + winSize 
 		+ ", showAFPRanges=" + showAFPRanges 
 		+ ", checkCircular=" + checkCircular 
-		+ ", maxOptRMSD=" + maxOptRMSD      
+		+ ", maxOptRMSD=" + maxOptRMSD
+		+ ", seqWeight=" + seqWeight
 		+ "]";
 	}
 
@@ -104,6 +111,7 @@ public class CeParameters implements ConfigStrucAligParams  {
 		oRmsdThr = DEFAULT_oRmsdThr;
 
 		maxNrIterationsForOptimization = Integer.MAX_VALUE;
+		seqWeight = 0;
 	}
 
 	/** The window size to look at
@@ -366,6 +374,52 @@ public class CeParameters implements ConfigStrucAligParams  {
 	public void setMaxNrIterationsForOptimization(int maxNrIterationsForOptimization) {
 		this.maxNrIterationsForOptimization = maxNrIterationsForOptimization;
 	}
+
+
+	/** Should sequence conservation be considered as part of the alignment? If yes, this weight factor allows to determine how much.
+	 *  By default this is set to 0, meaning no contribution of the sequence alignment score.
+	 * 
+	 * @return seqWeight the weight factor (default 0)
+	 */
+
+	public double getSeqWeight() {
+		return seqWeight;
+	}
+
+
+	/** Should sequence conservation be considered as part of the alignment? If yes, this weight factor allows to determine how much.
+	 *  By default this is set to 0, meaning no contribution of the sequence alignment score.
+	 * 
+	 * @param seqWeight the weight factor (default 0)
+	 */
+	public void setSeqWeight(double seqWeight) {
+		this.seqWeight = seqWeight;
+	}
+
+
+	/** Sets the  substitution matrix to be used for influencing the alignment with sequence conservation information.
+	 * Default: SDM matrix (Prlic et al 2000)
+	 * @return substitutionMatrix 
+	 */
+	public SubstitutionMatrix<AminoAcidCompound> getSubstitutionMatrix() {
+		if ( substitutionMatrix == null){
+			String matrixName = "PRLA000101";
+			substitutionMatrix = SubstitutionMatrixHelper.getMatrixFromAAINDEX(matrixName);
+
+		}
+		return substitutionMatrix;
+	}
+
+
+	/** Sets the  substitution matrix to be used for influencing the alignment with sequence conservation information.
+	 * Default: SDM matrix (Prlic et al 2000)
+	 * @param substitutionMatrix 
+	 */
+	public void setSubstitutionMatrix(
+			SubstitutionMatrix<AminoAcidCompound> substitutionMatrix) {
+		this.substitutionMatrix = substitutionMatrix;
+	}
+
 
 
 
