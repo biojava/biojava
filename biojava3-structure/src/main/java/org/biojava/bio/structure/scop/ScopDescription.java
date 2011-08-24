@@ -18,115 +18,119 @@ import java.io.StringWriter;
  *
  */
 public class ScopDescription implements Serializable{
-   int sunID;
-   ScopCategory category;
-   String classificationId;
-   String name;
-   String description;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 8579808155176839161L;
+	int sunID;
+	ScopCategory category;
+	String classificationId;
+	String name;
+	String description;
 
 
-   public String toString(){
-      StringWriter buf = new StringWriter();
-      
-      buf.append(sunID+"");
-      buf.append("\t");
-      buf.append(category.toString());
-      buf.append("\t");
-      buf.append(classificationId);
-      buf.append("\t");
-      buf.append(name);
-      buf.append("\t");
-      buf.append(description);
-    
-      return buf.toString();
-   }
-   
+	public String toString(){
+		StringWriter buf = new StringWriter();
 
-   public int getSunID()
-   {
-      return sunID;
-   }
-   public void setSunID(int sunID)
-   {
-      this.sunID = sunID;
-   }
-   public ScopCategory getCategory()
-   {
-      return category;
-   }
-   public void setCategory(ScopCategory category)
-   {
-      this.category = category;
-   }
-   public String getClassificationId()
-   {
-      return classificationId;
-   }
-   public void setClassificationId(String classificationId)
-   {
-      this.classificationId = classificationId;
-   }
-   public String getName()
-   {
-      return name;
-   }
-   public void setName(String name)
-   {
-      this.name = name;
-   }
-   public String getDescription()
-   {
-      return description;
-   }
-   public void setDescription(String description)
-   {
-      this.description = description;
-   }
+		buf.append(sunID+"");
+		buf.append("\t");
+		buf.append(category.toString());
+		buf.append("\t");
+		buf.append(classificationId);
+		buf.append("\t");
+		buf.append(name);
+		buf.append("\t");
+		buf.append(description);
 
-   // Methods to return parts of the classificationID
-   
-   /**
-    * Return a portion of the classificationID corresponding to the specified
-    * category (class, fold, superfamily, family).
-    * 
-    * <p>Example: for SCOP family "b.5.1.1",
-    * getClassificationId(ScopCategory.Superfamily) => "b.5.1"
-    */
-   public String getClassificationId(ScopCategory category) {
-	   if(classificationId == null || classificationId.isEmpty()) {
-		   return null;
-	   }
-	   	   
-	   int numParts = 0;
-	   switch(category) {
-	   case Family:      numParts++;
-	   case Superfamily: numParts++;
-	   case Fold:        numParts++;
-	   case Class:       numParts++; break;
-	   default:
-		   throw new IllegalArgumentException("Only Class, Fold, Superfamily, and Family are supported.");
-	   }
-	   
-	   int endChar = -1;
-	   for(int i = 0;i<numParts-1;i++) {
-		   endChar = classificationId.indexOf('.', endChar+1);
-		   if(endChar<0) {
-			   // Not enough items in the classification for this category
-			   return null;
-		   }
-	   }
-	   endChar = classificationId.indexOf('.', endChar+1);
-	   if(endChar<0) {
-		   // category goes to the end
-		   return classificationId;
-	   }
-	   else {
-		   return classificationId.substring(0, endChar);
-	   }
-	   
-   }
-   
-   /**
+		return buf.toString();
+	}
+
+
+	public int getSunID()
+	{
+		return sunID;
+	}
+	public void setSunID(int sunID)
+	{
+		this.sunID = sunID;
+	}
+	public ScopCategory getCategory()
+	{
+		return category;
+	}
+	public void setCategory(ScopCategory category)
+	{
+		this.category = category;
+	}
+	public String getClassificationId()
+	{
+		return classificationId;
+	}
+	public void setClassificationId(String classificationId)
+	{
+		this.classificationId = classificationId;
+	}
+	public String getName()
+	{
+		return name;
+	}
+	public void setName(String name)
+	{
+		this.name = name;
+	}
+	public String getDescription()
+	{
+		return description;
+	}
+	public void setDescription(String description)
+	{
+		this.description = description;
+	}
+
+	// Methods to return parts of the classificationID
+
+	/**
+	 * Return a portion of the classificationID corresponding to the specified
+	 * category (class, fold, superfamily, family).
+	 * 
+	 * <p>Example: for SCOP family "b.5.1.1",
+	 * getClassificationId(ScopCategory.Superfamily) => "b.5.1"
+	 */
+	public String getClassificationId(ScopCategory category) {
+		if(classificationId == null || classificationId.isEmpty()) {
+			return null;
+		}
+
+		int numParts = 0;
+		switch(category) {
+		case Family:      numParts++;
+		case Superfamily: numParts++;
+		case Fold:        numParts++;
+		case Class:       numParts++; break;
+		default:
+			throw new IllegalArgumentException("Only Class, Fold, Superfamily, and Family are supported.");
+		}
+
+		int endChar = -1;
+		for(int i = 0;i<numParts-1;i++) {
+			endChar = classificationId.indexOf('.', endChar+1);
+			if(endChar<0) {
+				// Not enough items in the classification for this category
+				return null;
+			}
+		}
+		endChar = classificationId.indexOf('.', endChar+1);
+		if(endChar<0) {
+			// category goes to the end
+			return classificationId;
+		}
+		else {
+			return classificationId.substring(0, endChar);
+		}
+
+	}
+
+	/**
 	 * @return
 	 * @see java.lang.Object#hashCode()
 	 */
@@ -135,10 +139,10 @@ public class ScopDescription implements Serializable{
 		final int prime = 31;
 		int result = 1;
 		result = prime * result
-				+ ((category == null) ? 0 : category.hashCode());
+		+ ((category == null) ? 0 : category.hashCode());
 		result = prime
-				* result
-				+ ((classificationId == null) ? 0 : classificationId.hashCode());
+		* result
+		+ ((classificationId == null) ? 0 : classificationId.hashCode());
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
 		result = prime * result + sunID;
 		return result;
