@@ -17,7 +17,7 @@ public interface StructureProvider {
 	 * @param pdbId
 	 * @return
 	 */
-	public Structure getStructureById(String pdbId) throws IOException;
+	public Structure getStructureById(String pdbId) throws StructureException,IOException;
 	
 	/** get the biological unit for a file
 	 * 
