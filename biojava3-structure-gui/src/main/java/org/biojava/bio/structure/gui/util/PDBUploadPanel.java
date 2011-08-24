@@ -48,7 +48,7 @@ import org.biojava.bio.structure.io.MMCIFFileReader;
 import org.biojava.bio.structure.io.PDBFileReader;
 import org.biojava.bio.structure.io.StructureIOFile;
 
-/** A JPanel to upload 2 PDB files.
+/** A JPanel to upload 2 custom PDB files.
  * 
  * @author Andreas Prlic
  * @since 1.7
