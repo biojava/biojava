@@ -26,6 +26,7 @@ package org.biojava.bio.structure.gui.util;
 
 import org.biojava.bio.structure.align.util.UserConfiguration;
 import org.biojava.bio.structure.align.webstart.WebStartMain;
+import org.biojava.bio.structure.scop.ScopDatabase;
 import org.biojava.bio.structure.scop.ScopInstallation;
 
 public class ScopInstallationInstance
@@ -33,7 +34,7 @@ public class ScopInstallationInstance
    
    
    static ScopInstallationInstance me = new ScopInstallationInstance();
-   ScopInstallation install;
+   ScopDatabase install;
    private ScopInstallationInstance(){
       UserConfiguration config = WebStartMain.getWebStartConfig();
       String cacheLocation = config.getPdbFilePath();
@@ -45,7 +46,7 @@ public class ScopInstallationInstance
    public static ScopInstallationInstance getInstance(){
       return me;
    }
-   public  ScopInstallation getSCOP(){
+   public  ScopDatabase getSCOP(){
       return install;
    }
 }
