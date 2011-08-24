@@ -46,6 +46,9 @@ public class JFatCatClient {
    
    private static String newline = System.getProperty("line.separator");
    
+   private static String KILL_JOB = "KILL_JOB";
+   private static String COME_BACK_LATER = "COME_BACK_LATER";
+   
    static {
       generator = new Random();
    }
@@ -227,6 +230,11 @@ public class JFatCatClient {
             if (! responseS.contains("OK"))
                System.err.println("server returned " + responseS);
 
+            // server is busy... wait a bit and try again
+            if ( responseS.startsWith(COME_BACK_LATER)){
+            	submitted = false;
+            }
+            
          } catch (Exception e){
             System.err.println("Error in JFatCatClient: while sending results back to server : " + e.getMessage());
 
@@ -240,10 +248,12 @@ public class JFatCatClient {
          }
       } 
 
-      if ( responseS.startsWith("KILL_JOB")){
+      if ( responseS.startsWith(KILL_JOB)){
          throw new JobKillException("Server responded with KILL message.");
 
       }
+      
+    	
       return responseS;
    }
 
