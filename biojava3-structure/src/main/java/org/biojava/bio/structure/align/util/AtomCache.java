@@ -23,10 +23,10 @@ import org.biojava.bio.structure.StructureException;
 import org.biojava.bio.structure.StructureTools;
 import org.biojava.bio.structure.align.ce.AbstractUserArgumentProcessor;
 import org.biojava.bio.structure.io.FileParsingParameters;
-import org.biojava.bio.structure.io.LocalCacheStructureProvider;
 import org.biojava.bio.structure.io.PDBFileReader;
-import org.biojava.bio.structure.io.StructureProvider;
+import org.biojava.bio.structure.scop.ScopDatabase;
 import org.biojava.bio.structure.scop.ScopDomain;
+import org.biojava.bio.structure.scop.ScopFactory;
 import org.biojava.bio.structure.scop.ScopInstallation;
 import org.biojava3.core.util.InputStreamProvider;
 
@@ -54,7 +54,7 @@ public class AtomCache {
 	// make sure IDs are loaded uniquely
 	Collection<String> currentlyLoading = Collections.synchronizedCollection(new TreeSet<String>());
 
-	private static ScopInstallation scopInstallation ;
+	private static ScopDatabase scopInstallation ;
 	boolean autoFetch;
 	boolean isSplit;
 	boolean strictSCOP;
@@ -99,6 +99,7 @@ public class AtomCache {
 		// no secstruc either 
 		params.setParseSecStruc(false);
 		// 
+		
 
 		this.strictSCOP = true;
 
@@ -296,7 +297,7 @@ public class AtomCache {
 	 * @throws IOException
 	 * @throws StructureException
 	 */
-	public synchronized Atom[] getAtoms(String name) throws IOException,StructureException{
+	public  Atom[] getAtoms(String name) throws IOException,StructureException{
 
 		Atom[] atoms = null;
 
@@ -550,6 +551,16 @@ public class AtomCache {
 		if ( queryS != null && (queryS.startsWith("chainId="))) {
 			chainId = queryS.substring(8);
 		
+			String fullu = url.toString();
+			
+			if (fullu.startsWith("file:") && fullu.endsWith("?"+queryS)) {
+				// for windowze, drop the query part from the URL again
+				// otherwise there will be a "file not found error" ...
+
+				String newu = fullu.substring(0,(fullu.length()-(("?"+queryS).length())));
+				//System.out.println(newu);
+				url = new URL(newu);
+			}
 		}
 		
 		
@@ -658,14 +669,14 @@ public class AtomCache {
 	{
 
 		if ( scopInstallation == null) {
-			scopInstallation = new ScopInstallation(path);
+			scopInstallation = ScopFactory.getSCOP();
 		}
 
 		return scopInstallation.getDomainByScopID(scopId);
 	}
-	public ScopInstallation getScopInstallation() {
+	public ScopDatabase getScopInstallation() {
 		if ( scopInstallation == null) {
-			scopInstallation = new ScopInstallation(path);
+			scopInstallation = ScopFactory.getSCOP();
 		}
 
 		return scopInstallation;
