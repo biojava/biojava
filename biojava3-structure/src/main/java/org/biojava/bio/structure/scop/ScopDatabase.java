@@ -2,6 +2,11 @@ package org.biojava.bio.structure.scop;
 
 import java.util.List;
 
+/** General API how to interact with SCOP
+ * 
+ * @author Andreas Prlic
+ * @since 3.0.2
+ */
 public interface ScopDatabase {
 
 	/** Get all records of a particular classification.
@@ -18,8 +23,19 @@ public interface ScopDatabase {
 	 */
 	public abstract List<ScopDescription> filterByClassificationId(String query);
 
+	/** get the SCOP sub-tree for a particular domain. 
+	 * 
+	 * @param domain
+	 * @return list of ScopNodes providing the path to this domain
+	 */
 	public abstract List<ScopNode> getTree(ScopDomain domain);
 
+	
+	/** search through SCOP and filter based on domain name
+	 * 
+	 * @param query a (part) of a name
+	 * @return list of matchin ScopDomains
+	 */
 	public abstract List<ScopDomain> filterByDomainName(String query);
 
 	/** Get all scop descriptions that start with a certain name. e.g. Globin
@@ -57,6 +73,11 @@ public interface ScopDatabase {
 	 * @return a ScopNode that matches this sunid
 	 */
 	public abstract ScopNode getScopNode(int sunid);
+	
+	/** Returns the SCOP version
+	 * 
+	 * @return version of SCOP
+	 */
 
 	public abstract String getScopVersion();
 
