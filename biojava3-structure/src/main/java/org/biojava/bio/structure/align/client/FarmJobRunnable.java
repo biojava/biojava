@@ -18,6 +18,7 @@ import org.biojava.bio.structure.StructureException;
 import org.biojava.bio.structure.align.StructureAlignment;
 import org.biojava.bio.structure.align.StructureAlignmentFactory;
 import org.biojava.bio.structure.align.events.AlignmentProgressListener;
+import org.biojava.bio.structure.align.fatcat.FatCatRigid;
 import org.biojava.bio.structure.align.model.AFPChain;
 import org.biojava.bio.structure.align.util.AFPChainScorer;
 import org.biojava.bio.structure.align.util.AtomCache;
@@ -69,14 +70,14 @@ public class FarmJobRunnable implements Runnable {
 
 	String userName = null;
 	AtomCache cache;
-	
+
 	boolean verbose = false;
 
 	public FarmJobRunnable(FarmJobParameters params){
 		terminated = false;
 		this.params = params;
 		verbose = false;
-		
+
 		// multiple farm jobs share the same SoftHashMap for caching coordinates
 		cache = new AtomCache( params.getPdbFilePath(), params.isPdbDirSplit());
 
@@ -90,7 +91,7 @@ public class FarmJobRunnable implements Runnable {
 		counter  = new CountProgressListener();
 		addAlignmentProgressListener(counter);
 		waitForAlignments = true;
-		
+
 		if ( params.isVerbose()){
 			verbose = true;
 		}
@@ -201,7 +202,7 @@ public class FarmJobRunnable implements Runnable {
 				if ( progressListeners != null)
 					notifyStartAlignment(name1,name2);
 
-				
+
 				try {
 					//System.out.println("calculating alignent: " + name1 + "  " + name2);
 					String resultXML = alignPair(name1, name2);
@@ -213,8 +214,8 @@ public class FarmJobRunnable implements Runnable {
 					results.add(resultXML);
 
 				} catch (Exception e){
-					if (e.getMessage() == null)
-						e.printStackTrace();
+					//if (e.getMessage() == null)
+					e.printStackTrace();
 					// log that an exception has occurred and send it back to server!1
 					log("Error: " + e.getMessage() + " while aligning " + name1 + " vs. " + name2);
 					System.err.println(e.getMessage());
@@ -234,7 +235,13 @@ public class FarmJobRunnable implements Runnable {
 					} catch(IOException ex){
 						ex.printStackTrace();
 					}
+
+					if ( progressListeners != null)
+						notifyEndAlignment();
+
 					results.add(sw.toString());
+
+
 				}
 
 				alignmentsCalculated++;
@@ -312,7 +319,9 @@ public class FarmJobRunnable implements Runnable {
 
 	public String alignPair(String name1, String name2) throws StructureException, IOException{
 
-		StructureAlignment fatCatRigid = StructureAlignmentFactory.getAlgorithm("jFatCat_rigid");
+		//StructureAlignment fatCatRigid = StructureAlignmentFactory.getAlgorithm("jFatCat_rigid");
+		// 	make sure each thread is independent...
+		StructureAlignment fatCatRigid    = new FatCatRigid();
 
 		// we are running with default parameters
 
@@ -320,7 +329,7 @@ public class FarmJobRunnable implements Runnable {
 		if ( verbose ) {
 			log("aligning " + name1 + " vs. " + name2);
 		}
-		
+
 		long startTime = System.currentTimeMillis();
 
 		if ( prevName1 == null)
@@ -338,8 +347,8 @@ public class FarmJobRunnable implements Runnable {
 
 		//		if ( FatCatAligner.printTimeStamps){
 		long endTime = System.currentTimeMillis();
-		
-		
+
+
 		//			System.out.println("time to get " + name1 + " " + name2 + " : " + (endTime-startTime) / 1000.0 + " sec.");
 		//		}
 		AFPChain afpChain = fatCatRigid.align(ca1, ca2);
@@ -347,14 +356,19 @@ public class FarmJobRunnable implements Runnable {
 		afpChain.setName1(name1);
 		afpChain.setName2(name2);
 
-		// add tmScore
-		double tmScore = AFPChainScorer.getTMScore(afpChain, ca1, ca2);
-		afpChain.setTMScore(tmScore);
-		
+		try {
+			// add tmScore
+			double tmScore = AFPChainScorer.getTMScore(afpChain, ca1, ca2);
+			afpChain.setTMScore(tmScore);
+		} catch (Exception e){
+			e.printStackTrace();
+			System.out.println("ca1 size:" + ca1.length + " ca2 length: " + ca2.length + " " + afpChain.getName1() + " " + afpChain.getName2());
+			
+		}
 		if ( verbose ){
 			log("  finished alignment: " + name1 + " vs. " + name2 + " in " + (endTime-startTime) / 1000.0 + " sec." + afpChain );
 		}
-		
+
 		String xml = AFPChainXMLConverter.toXML(afpChain, ca1, ca2);
 		return xml;
 	}
@@ -407,9 +421,9 @@ public class FarmJobRunnable implements Runnable {
 				notifyRequestingAlignments(nrPairs);
 
 			if ( ! waitForAlignments) {
-				
+
 				allPairs = JFatCatClient.getPdbPairs(url, nrPairs, userName);
-				
+
 			} else {
 
 				while (allPairs.size() == 0) {
