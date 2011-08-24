@@ -1,6 +1,12 @@
 package org.biojava.bio.structure.domain.pdp;
 
-public class Segment {
+import java.io.Serializable;
+
+public class Segment implements Serializable, Comparable<Segment> {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1393487067559539657L;
 	public int from;
 	public int to;
 	double score;
@@ -41,6 +47,20 @@ public class Segment {
 
 	public void setScore(double score) {
 		this.score = score;
+	}
+
+
+
+	public int compareTo(Segment o) {
+		int s1 = getFrom();
+		int s2 = o.getFrom();
+		
+		if (s1 > s2)
+			return 1;
+		if ( s1 == s2)
+			return 0;
+		return -1;
+			
 	}
 
 
