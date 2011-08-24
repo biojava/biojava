@@ -131,7 +131,7 @@ public class LocalCacheStructureProvider implements StructureProvider{
 	 * @param pdbId the PDB ID
 	 * @param localFile where to store the file locally
 	 */
-	private void downloadBiolUnit(String pdbId, File localFile){
+	private void downloadBiolUnit(String pdbId, File localFile) throws IOException{
 		String u = "http://www.rcsb.org/pdb/files/%s.pdb1.gz";
 		
 		String ur = String.format(u,pdbId);
@@ -167,7 +167,8 @@ public class LocalCacheStructureProvider implements StructureProvider{
 
 		} catch (Exception e){
 			System.err.println("Problem while downloading PDB ID " + pdbId + " from FTP server." );
-			e.printStackTrace();
+			//e.printStackTrace();
+			throw new IOException("Could not download biol. unit for PDB ID " + pdbId);
 			
 		}
 	}
