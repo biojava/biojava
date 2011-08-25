@@ -189,7 +189,7 @@ public class StructureImpl implements Structure, Serializable {
 		Iterator<Group> giter = groups.iterator();
 		while (giter.hasNext()){
 			Group g =  giter.next();
-			String rnum = g.getPDBCode();
+			String rnum = g.getResidueNumber().toString();
 			//System.out.println(g + " >" + rnum + "< >" + pdbResnum + "<");
 			// we only mutate amino acids
 			// and ignore hetatoms and nucleotides in this case
@@ -220,7 +220,7 @@ public class StructureImpl implements Structure, Serializable {
 		while (iter.hasNext()){
 			Chain c = iter.next();
 
-			if (c.getName().equals(chainId)) {
+			if (c.getChainID().equals(chainId)) {
 				return c;
 			}
 		}
@@ -433,7 +433,7 @@ public class StructureImpl implements Structure, Serializable {
 				List<Group> hgr = cha.getAtomGroups("hetatm");
 				List<Group> ngr = cha.getAtomGroups("nucleotide");
 
-				str.append("chain " + j + ": >"+cha.getName()+"< ");
+				str.append("chain " + j + ": >"+cha.getChainID()+"< ");
 				if ( cha.getHeader() != null){
 					Compound comp = cha.getHeader();
 					String molName = comp.getMolName();
@@ -545,7 +545,7 @@ public class StructureImpl implements Structure, Serializable {
 		Iterator<Chain> iter = chains.iterator();
 		while ( iter.hasNext()){
 			Chain c = iter.next();
-			if ( c.getName().equals(chainId))
+			if ( c.getChainID().equals(chainId))
 				return c;
 		}
 		throw new StructureException("did not find chain with chainId >" + chainId+"<");
@@ -582,7 +582,7 @@ public class StructureImpl implements Structure, Serializable {
 		while ( iter.hasNext()){
 			Chain c = iter.next();
 			// we check here with equals because we might want to distinguish between upper and lower case chains!
-			if ( c.getName().equals(chainId))
+			if ( c.getChainID().equals(chainId))
 				return true;
 		}
 		return false;
