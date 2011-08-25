@@ -14,7 +14,7 @@ import org.biojava.bio.structure.io.mmcif.chem.ResidueType;
  * @author Andreas Prlic
  *
  */
-public class ChemComp implements Serializable{
+public class ChemComp implements Serializable, Comparable<ChemComp>{
 	/**
 	 * 
 	 */
@@ -295,6 +295,256 @@ public class ChemComp implements Serializable{
 
 	public void setDescriptors(List<ChemCompDescriptor> descriptors) {
 		this.descriptors = descriptors;
+	}
+
+	@Override
+	public int compareTo(ChemComp arg0) {
+		if ( this.equals(arg0))
+			return 0;
+		return this.getId().compareTo(arg0.getId());
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result
+				+ ((descriptors == null) ? 0 : descriptors.hashCode());
+		result = prime * result + ((formula == null) ? 0 : formula.hashCode());
+		result = prime * result
+				+ ((formula_weight == null) ? 0 : formula_weight.hashCode());
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = prime * result
+				+ ((mon_nstd_flag == null) ? 0 : mon_nstd_flag.hashCode());
+		result = prime
+				* result
+				+ ((mon_nstd_parent_comp_id == null) ? 0
+						: mon_nstd_parent_comp_id.hashCode());
+		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		result = prime * result
+				+ ((one_letter_code == null) ? 0 : one_letter_code.hashCode());
+		result = prime
+				* result
+				+ ((pdbx_ambiguous_flag == null) ? 0 : pdbx_ambiguous_flag
+						.hashCode());
+		result = prime
+				* result
+				+ ((pdbx_formal_charge == null) ? 0 : pdbx_formal_charge
+						.hashCode());
+		result = prime
+				* result
+				+ ((pdbx_ideal_coordinates_details == null) ? 0
+						: pdbx_ideal_coordinates_details.hashCode());
+		result = prime
+				* result
+				+ ((pdbx_ideal_coordinates_missing_flag == null) ? 0
+						: pdbx_ideal_coordinates_missing_flag.hashCode());
+		result = prime
+				* result
+				+ ((pdbx_initial_date == null) ? 0 : pdbx_initial_date
+						.hashCode());
+		result = prime
+				* result
+				+ ((pdbx_model_coordinates_db_code == null) ? 0
+						: pdbx_model_coordinates_db_code.hashCode());
+		result = prime
+				* result
+				+ ((pdbx_model_coordinates_details == null) ? 0
+						: pdbx_model_coordinates_details.hashCode());
+		result = prime
+				* result
+				+ ((pdbx_model_coordinates_missing_flag == null) ? 0
+						: pdbx_model_coordinates_missing_flag.hashCode());
+		result = prime
+				* result
+				+ ((pdbx_modified_date == null) ? 0 : pdbx_modified_date
+						.hashCode());
+		result = prime
+				* result
+				+ ((pdbx_processing_site == null) ? 0 : pdbx_processing_site
+						.hashCode());
+		result = prime
+				* result
+				+ ((pdbx_release_status == null) ? 0 : pdbx_release_status
+						.hashCode());
+		result = prime
+				* result
+				+ ((pdbx_replaced_by == null) ? 0 : pdbx_replaced_by.hashCode());
+		result = prime * result
+				+ ((pdbx_replaces == null) ? 0 : pdbx_replaces.hashCode());
+		result = prime
+				* result
+				+ ((pdbx_subcomponent_list == null) ? 0
+						: pdbx_subcomponent_list.hashCode());
+		result = prime * result
+				+ ((pdbx_synonyms == null) ? 0 : pdbx_synonyms.hashCode());
+		result = prime * result
+				+ ((pdbx_type == null) ? 0 : pdbx_type.hashCode());
+		result = prime * result
+				+ ((polymerType == null) ? 0 : polymerType.hashCode());
+		result = prime * result
+				+ ((residueType == null) ? 0 : residueType.hashCode());
+		result = prime * result + (standard ? 1231 : 1237);
+		result = prime
+				* result
+				+ ((three_letter_code == null) ? 0 : three_letter_code
+						.hashCode());
+		result = prime * result + ((type == null) ? 0 : type.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		ChemComp other = (ChemComp) obj;
+		if (descriptors == null) {
+			if (other.descriptors != null)
+				return false;
+		} else if (!descriptors.equals(other.descriptors))
+			return false;
+		if (formula == null) {
+			if (other.formula != null)
+				return false;
+		} else if (!formula.equals(other.formula))
+			return false;
+		if (formula_weight == null) {
+			if (other.formula_weight != null)
+				return false;
+		} else if (!formula_weight.equals(other.formula_weight))
+			return false;
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
+			return false;
+		if (mon_nstd_flag == null) {
+			if (other.mon_nstd_flag != null)
+				return false;
+		} else if (!mon_nstd_flag.equals(other.mon_nstd_flag))
+			return false;
+		if (mon_nstd_parent_comp_id == null) {
+			if (other.mon_nstd_parent_comp_id != null)
+				return false;
+		} else if (!mon_nstd_parent_comp_id
+				.equals(other.mon_nstd_parent_comp_id))
+			return false;
+		if (name == null) {
+			if (other.name != null)
+				return false;
+		} else if (!name.equals(other.name))
+			return false;
+		if (one_letter_code == null) {
+			if (other.one_letter_code != null)
+				return false;
+		} else if (!one_letter_code.equals(other.one_letter_code))
+			return false;
+		if (pdbx_ambiguous_flag == null) {
+			if (other.pdbx_ambiguous_flag != null)
+				return false;
+		} else if (!pdbx_ambiguous_flag.equals(other.pdbx_ambiguous_flag))
+			return false;
+		if (pdbx_formal_charge == null) {
+			if (other.pdbx_formal_charge != null)
+				return false;
+		} else if (!pdbx_formal_charge.equals(other.pdbx_formal_charge))
+			return false;
+		if (pdbx_ideal_coordinates_details == null) {
+			if (other.pdbx_ideal_coordinates_details != null)
+				return false;
+		} else if (!pdbx_ideal_coordinates_details
+				.equals(other.pdbx_ideal_coordinates_details))
+			return false;
+		if (pdbx_ideal_coordinates_missing_flag == null) {
+			if (other.pdbx_ideal_coordinates_missing_flag != null)
+				return false;
+		} else if (!pdbx_ideal_coordinates_missing_flag
+				.equals(other.pdbx_ideal_coordinates_missing_flag))
+			return false;
+		if (pdbx_initial_date == null) {
+			if (other.pdbx_initial_date != null)
+				return false;
+		} else if (!pdbx_initial_date.equals(other.pdbx_initial_date))
+			return false;
+		if (pdbx_model_coordinates_db_code == null) {
+			if (other.pdbx_model_coordinates_db_code != null)
+				return false;
+		} else if (!pdbx_model_coordinates_db_code
+				.equals(other.pdbx_model_coordinates_db_code))
+			return false;
+		if (pdbx_model_coordinates_details == null) {
+			if (other.pdbx_model_coordinates_details != null)
+				return false;
+		} else if (!pdbx_model_coordinates_details
+				.equals(other.pdbx_model_coordinates_details))
+			return false;
+		if (pdbx_model_coordinates_missing_flag == null) {
+			if (other.pdbx_model_coordinates_missing_flag != null)
+				return false;
+		} else if (!pdbx_model_coordinates_missing_flag
+				.equals(other.pdbx_model_coordinates_missing_flag))
+			return false;
+		if (pdbx_modified_date == null) {
+			if (other.pdbx_modified_date != null)
+				return false;
+		} else if (!pdbx_modified_date.equals(other.pdbx_modified_date))
+			return false;
+		if (pdbx_processing_site == null) {
+			if (other.pdbx_processing_site != null)
+				return false;
+		} else if (!pdbx_processing_site.equals(other.pdbx_processing_site))
+			return false;
+		if (pdbx_release_status == null) {
+			if (other.pdbx_release_status != null)
+				return false;
+		} else if (!pdbx_release_status.equals(other.pdbx_release_status))
+			return false;
+		if (pdbx_replaced_by == null) {
+			if (other.pdbx_replaced_by != null)
+				return false;
+		} else if (!pdbx_replaced_by.equals(other.pdbx_replaced_by))
+			return false;
+		if (pdbx_replaces == null) {
+			if (other.pdbx_replaces != null)
+				return false;
+		} else if (!pdbx_replaces.equals(other.pdbx_replaces))
+			return false;
+		if (pdbx_subcomponent_list == null) {
+			if (other.pdbx_subcomponent_list != null)
+				return false;
+		} else if (!pdbx_subcomponent_list.equals(other.pdbx_subcomponent_list))
+			return false;
+		if (pdbx_synonyms == null) {
+			if (other.pdbx_synonyms != null)
+				return false;
+		} else if (!pdbx_synonyms.equals(other.pdbx_synonyms))
+			return false;
+		if (pdbx_type == null) {
+			if (other.pdbx_type != null)
+				return false;
+		} else if (!pdbx_type.equals(other.pdbx_type))
+			return false;
+		if (polymerType != other.polymerType)
+			return false;
+		if (residueType != other.residueType)
+			return false;
+		if (standard != other.standard)
+			return false;
+		if (three_letter_code == null) {
+			if (other.three_letter_code != null)
+				return false;
+		} else if (!three_letter_code.equals(other.three_letter_code))
+			return false;
+		if (type == null) {
+			if (other.type != null)
+				return false;
+		} else if (!type.equals(other.type))
+			return false;
+		return true;
 	}
 
 
