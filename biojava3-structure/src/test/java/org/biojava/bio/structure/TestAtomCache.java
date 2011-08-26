@@ -27,6 +27,9 @@ package org.biojava.bio.structure;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import org.biojava.bio.structure.align.util.AtomCache;
 import junit.framework.TestCase;
 
@@ -83,7 +86,6 @@ public class TestAtomCache extends TestCase
 
 		AtomCache cache = TmpAtomCache.cache;
 
-
 		String name1= "4hhb";
 		Structure s = cache.getStructure(name1);
 		assertNotNull(s);
@@ -108,7 +110,7 @@ public class TestAtomCache extends TestCase
 		assertEquals(c.getChainID(),chainId3);
 
 		
-		String name4 = "4hhb:A:10-20,B:10-20,C:10-20";
+		String name4 = "4hhb:A:10-20,B:10-20,C:10-20";		
 		s = cache.getStructure(name4);
 		assertNotNull(s);
 
@@ -129,7 +131,7 @@ public class TestAtomCache extends TestCase
 		String name6 = "4hhb(A:10-20,A:30-40)";
 		s =cache.getStructure(name6);
 		assertNotNull(s);
-
+	
 		assertEquals(s.getChains().size(),1 );
 		c = s.getChainByPDB("A");
 		assertEquals(c.getAtomLength(),22);
@@ -149,6 +151,67 @@ public class TestAtomCache extends TestCase
 		c = s.getChainByPDB(chainId2);
 		assertEquals(c.getChainID(),chainId2);
 
+		
+		
+
+	}
+	
+	public void testStructureToolsRegexp(){
+		
+		
+		Pattern p =  StructureTools.pdbNumRangeRegex;
+		
+		String t2 = "A_10-20";
+		Matcher m2 = p.matcher(t2);
+		assertNotNull(m2);
+		assertTrue(m2.find());
+		assertTrue(m2.matches());
+		
+//		for (int i=0;i< m2.groupCount();i++){
+//			String s = m2.group(i);
+//			System.out.println(s);
+//		}
+		assertEquals(4,m2.groupCount());
+		
+		
+		String t1 = "A:10-20";
+		Matcher m1  = p.matcher(t1);
+		assertNotNull(m1);
+		assertTrue(m1.find());
+		assertTrue(m1.matches());
+		assertEquals(4,m1.groupCount());
+		
+		
+		String t3 = "A";
+		Matcher m3  = p.matcher(t3);
+		
+		assertNotNull(m3);
+		assertTrue(m3.find());
+		assertTrue(m3.matches());
+		assertEquals(4,m3.groupCount());
+		
+		
+	}
+	
+	public void testRevisedConvention() throws IOException, StructureException{
+		
+		AtomCache cache = TmpAtomCache.cache;
+		
+		String name9 = "4hhb.C_1-83";
+		String chainId = "C";
+		Structure s = cache.getStructure(name9);
+
+		assertTrue(s.getChains().size() == 1);
+		Chain c = s.getChainByPDB(chainId);
+		assertEquals(c.getChainID(),chainId);
+		Atom[] ca = StructureTools.getAtomCAArray(s);
+		assertEquals(83,ca.length);
+		
+		String name10 = "4hhb.C_1-83,A_1-10";
+		s = cache.getStructure(name10);
+		assertTrue(s.getChains().size() == 2);
+		ca = StructureTools.getAtomCAArray(s);
+		assertEquals(93, ca.length);
 	}
 	
 	public void testFetchCurrent() {
