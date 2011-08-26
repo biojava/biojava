@@ -97,12 +97,14 @@ public class StructureTools {
 	 * @see #getSubRanges(Structure, String)
 	 */
 	public static final Pattern pdbNumRangeRegex = Pattern.compile(
-			"\\s*(\\w)" + //chain ID
-			"(?:" + //begin optional range, this is a "non-capturing group"
-			  "($|:$|:|_|_$)?" + //colon or underscore, optionally at the end of a line
-			  "([-+]?[0-9]+[A-Za-z]?)" + // first residue
-			  "\\s*-\\s*" + // -
-			  "([-+]?[0-9]+[A-Za-z]?)" + // second residue
+			"^\\s*(\\w)" + //chain ID
+			"(?:" + //begin range, this is a "non-capturing group"
+			  "(?::|_|:$|_$|$)" + //colon or underscore, could be at the end of a line, another non-capt. group.
+			  	"(?:"+ // another non capturing group for the residue range
+			  	 "([-+]?[0-9]+[A-Za-z]?)" + // first residue
+			  	 "\\s*-\\s*" + // -
+			  	 "([-+]?[0-9]+[A-Za-z]?)" + // second residue
+			  	")?+"+
 			")?" + //end range
 			"\\s*");
 	
@@ -663,8 +665,9 @@ public class StructureTools {
 
 		
 		for ( String r: rangS){
-			
+			//System.out.println(">"+r+"<");
 			// Match a single range, eg "A_4-27"
+			
 			Matcher matcher = pdbNumRangeRegex.matcher(r);
 			if( ! matcher.matches() ){
 				throw new StructureException("wrong range specification, should be provided as chainID_pdbResnum1-pdbRensum2");
@@ -674,8 +677,8 @@ public class StructureTools {
 			Chain chain = struc.getChainByPDB(chainId);
 			Group[] groups;
 			
-			String pdbresnumStart = matcher.group(3);
-			String pdbresnumEnd   = matcher.group(4);
+			String pdbresnumStart = matcher.group(2);
+			String pdbresnumEnd   = matcher.group(3);
 			
 
 			if( pdbresnumStart != null && pdbresnumEnd != null) {
