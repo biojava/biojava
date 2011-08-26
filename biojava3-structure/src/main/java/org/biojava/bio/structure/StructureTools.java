@@ -92,6 +92,21 @@ public class StructureTools {
 
 	public static Logger logger =  Logger.getLogger("org.biojava.bio.structure");
 
+	/**
+	 * Pattern to describe subranges. Matches "A", "A:", "A:7-53","A_7-53", etc.
+	 * @see #getSubRanges(Structure, String)
+	 */
+	public static final Pattern pdbNumRangeRegex = Pattern.compile(
+			"\\s*(\\w)" + //chain ID
+			"(?:" + //begin optional range, this is a "non-capturing group"
+			  "($|:$|:|_|_$)?" + //colon or underscore, optionally at the end of a line
+			  "([-+]?[0-9]+[A-Za-z]?)" + // first residue
+			  "\\s*-\\s*" + // -
+			  "([-+]?[0-9]+[A-Za-z]?)" + // second residue
+			")?" + //end range
+			"\\s*");
+	
+	
 	static {
 		nucleotides30 = new HashMap<String,Integer>();
 		nucleotides30.put("DA",1);
@@ -597,19 +612,7 @@ public class StructureTools {
 		return newS;
 	}
 
-	/**
-	 * Pattern to describe subranges. Matches "A", "A:", "A:7-53", etc.
-	 * @see #getSubRanges(Structure, String)
-	 */
-	private static final Pattern pdbNumRangeRegex = Pattern.compile(
-			"\\s*(\\w)" + //chain ID
-			"(?:" + //begin optional range
-			  "$|:$|:" + //semicolon
-			  "([-+]?[0-9]+[A-Za-z]?)" + // first residue
-			  "\\s*-\\s*" + // -
-			  "([-+]?[0-9]+[A-Za-z]?)" + // second residue
-			")" + //end range
-			"\\s*");
+	
 	
 	/** In addition to the functionality provided by getReducedStructure also provides a way to specify sub-regions of a structure with the following 
 	 * specification:
@@ -624,7 +627,7 @@ public class StructureTools {
 	 *  Example
 	 *  4GCR (A:1-83)
 	 *  1CDG (A:407-495,A:582-686)
-	 *  
+	 *  1CDG (A_407-495,A_582-686)
 	 * 
 	 * 
 	 * @param s The full structure
@@ -660,18 +663,19 @@ public class StructureTools {
 
 		
 		for ( String r: rangS){
-			// Match a single range, eg "A:4-27"
+			
+			// Match a single range, eg "A_4-27"
 			Matcher matcher = pdbNumRangeRegex.matcher(r);
 			if( ! matcher.matches() ){
-				throw new StructureException("wrong range specification, should be provided as chainID:pdbResnum1-pdbRensum2");
+				throw new StructureException("wrong range specification, should be provided as chainID_pdbResnum1-pdbRensum2");
 			}
 			String chainId = matcher.group(1);
 			
 			Chain chain = struc.getChainByPDB(chainId);
 			Group[] groups;
 			
-			String pdbresnumStart = matcher.group(2);
-			String pdbresnumEnd   = matcher.group(3);
+			String pdbresnumStart = matcher.group(3);
+			String pdbresnumEnd   = matcher.group(4);
 			
 
 			if( pdbresnumStart != null && pdbresnumEnd != null) {
