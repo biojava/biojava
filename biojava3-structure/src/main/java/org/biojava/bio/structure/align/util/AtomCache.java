@@ -44,7 +44,7 @@ import org.biojava3.core.util.InputStreamProvider;
 public class AtomCache {
 
 	public static final String CHAIN_NR_SYMBOL = ":";
-
+	public static final String UNDERSCORE = "_";
 	public static final String CHAIN_SPLIT_SYMBOL = ".";
 
 	private static final String FILE_SEPARATOR = System.getProperty("file.separator");
@@ -345,13 +345,36 @@ public class AtomCache {
 
 
 	/** Request a Structure based on a <i>name</i>.
-	 * The following rules are applied to this name:
-	 *  If only a PDB code is provided, the whole structure will be used for the alignment.
+	 * 
+	 * <pre>
+		Formal specification for how to specify the <i>name</i>:
+		
+		name     := pdbID
+		               | pdbID '.' chainID
+		               | pdbID '.' range
+		               | scopID
+		range         := '('? range (',' range)? ')'?
+		               | chainID
+		               | chainID '_' resNum '-' resNum
+		pdbID         := [0-9][a-zA-Z0-9]{3}
+		chainID       := [a-zA-Z0-9]
+		scopID        := 'd' pdbID [a-z_][0-9_]
+		resNum        := [-+]?[0-9]+[A-Za-z]?
+		
+		
+		Example structures:
+		1TIM     #whole structure
+		4HHB.C     #single chain
+		4GCR.A_1-83     #one domain, by residue number
+		3AA0.A,B     #two chains treated as one structure
+		d2bq6a1     #scop domain
+		</pre>
+	 * 
+	 * With the additional set of rules:
+	 *  
 	 *  <ul>
-	 *	<li>To specify a particular chain write as: 4hhb.A (chain IDs are case sensitive, PDB ids are not)</li>
-	 * 	<li>To specify that the 1st chain in a structure should be used write: 4hhb:0 .</li>
-	 *  <li>To specify a range of residues write 4hhb.A:1-10 .</li>
-	 *  <li>To specify several ranges of residues write 4hhb(A:1-10,B:1-10)
+	 *  <li>If only a PDB code is provided, the whole structure will be return including ligands, but the first model only (for NMR).
+	 *	<li>Chain IDs are case sensitive, PDB ids are not. To specify a particular chain write as: 4hhb.A or 4HHB.A </li>
 	 *  <li>To specify a SCOP domain write a scopId e.g. d2bq6a1. Some flexibility can be allowed in SCOP domain names, see {@link #setStrictSCOP(boolean)}</li>
 	 *  <li>URLs are accepted as well</li>
 	 *  </ul>
@@ -402,7 +425,7 @@ public class AtomCache {
 				}
 				
 			} else if ( (name.length() > 6) &&  
-					(name.contains(CHAIN_NR_SYMBOL)) && (! (name.startsWith("file:/") || name.startsWith("http:/")))) {
+					(name.contains(CHAIN_NR_SYMBOL) || name.contains(UNDERSCORE)) && (! (name.startsWith("file:/") || name.startsWith("http:/")))) {
 				
 				// this is a name + range 
 				
