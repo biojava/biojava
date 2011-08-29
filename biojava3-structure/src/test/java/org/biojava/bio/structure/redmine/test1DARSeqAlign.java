@@ -1,6 +1,5 @@
 package org.biojava.bio.structure.redmine;
 
-import java.io.IOException;
 
 import org.biojava.bio.structure.AminoAcid;
 import org.biojava.bio.structure.Chain;
@@ -8,7 +7,6 @@ import org.biojava.bio.structure.Group;
 import org.biojava.bio.structure.NucleotideImpl;
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.TmpAtomCache;
-import org.biojava.bio.structure.io.FileConvert;
 import org.biojava.bio.structure.io.FileParsingParameters;
 
 import junit.framework.TestCase;
