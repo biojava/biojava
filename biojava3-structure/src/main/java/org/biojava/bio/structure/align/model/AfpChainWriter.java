@@ -233,7 +233,7 @@ public class AfpChainWriter
 		int     bp = alnbeg2;
 		int     k, len;
 
-		System.out.println(alnseq1.length + " " + alnseq1.toString());
+		//System.out.println(alnseq1.length + " " + alnseq1.toString());
 		
 		while((alnLength - t) > 0)      {
 			if(alnLength - t > linelen)     len = linelen;
