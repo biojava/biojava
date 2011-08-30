@@ -4,6 +4,10 @@ import java.io.Serializable;
 import java.io.StringWriter;
 import java.util.List;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlRootElement;
+
 
 /** Container for the information for a domain. Contains a line in the file
  * dir.cla.scop.txt_1.75
@@ -12,6 +16,8 @@ import java.util.List;
  * @author Andreas Prlic
  *
  */
+@XmlRootElement(name = "ScopDomain", namespace ="http://source.rcsb.org")
+@XmlAccessorType(XmlAccessType.PUBLIC_MEMBER)
 public class ScopDomain implements Serializable{
 
 	/**

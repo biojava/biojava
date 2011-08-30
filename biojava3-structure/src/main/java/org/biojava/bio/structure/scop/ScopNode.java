@@ -27,6 +27,12 @@ package org.biojava.bio.structure.scop;
 import java.io.Serializable;
 import java.util.List;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlRootElement;
+
+@XmlRootElement(name = "ScopNode", namespace ="http://source.rcsb.org")
+@XmlAccessorType(XmlAccessType.PUBLIC_MEMBER)
 public class ScopNode implements Serializable
 {
 

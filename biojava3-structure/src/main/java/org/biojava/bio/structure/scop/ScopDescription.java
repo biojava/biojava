@@ -3,6 +3,10 @@ package org.biojava.bio.structure.scop;
 import java.io.Serializable;
 import java.io.StringWriter;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlRootElement;
+
 /** Contains data from
  * dir.des.scop.txt_1.75
  * 
@@ -17,6 +21,8 @@ import java.io.StringWriter;
  * @author Andreas Prlic
  *
  */
+@XmlRootElement(name = "ScopDescription", namespace ="http://source.rcsb.org")
+@XmlAccessorType(XmlAccessType.PUBLIC_MEMBER)
 public class ScopDescription implements Serializable{
 	/**
 	 * 
