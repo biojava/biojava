@@ -89,7 +89,10 @@ public class NCBIQBlastAlignmentProperties implements
 		boolean isValid = false;
 		String[] blastPr = new String []{ "blastn", "blastp", "blastx", "tblastn", "tblastx" };
 
-		
+		/*
+		 * To check if the program called for belongs to the blastPr array
+		 * 
+		 */
 		if(Arrays.binarySearch(blastPr,program)>=0){
 			this.param.put("PROGRAM", program);
 			isValid = true;			
