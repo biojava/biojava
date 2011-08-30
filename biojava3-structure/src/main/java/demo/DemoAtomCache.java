@@ -12,9 +12,7 @@ import org.biojava.bio.structure.io.FileParsingParameters;
  */
 public class DemoAtomCache {
 	public static void main(String[] args){
-		
-		boolean splitFileOrganisation = true;
-		AtomCache cache = new AtomCache("/tmp",splitFileOrganisation);
+		AtomCache cache = new AtomCache();
 		
 		FileParsingParameters params = cache.getFileParsingParams();
 		

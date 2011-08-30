@@ -17,6 +17,7 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import org.biojava.bio.structure.align.util.UserConfiguration;
 import org.biojava3.core.util.InputStreamProvider;
 
 
@@ -94,6 +95,14 @@ public class ScopInstallation implements ScopDatabase {
 		
 	}
 
+	/**
+	 * Create a new SCOP installation, downloading the file to "the right place".
+	 * This will first check for system properties or environmental variables
+	 * called 'PDB_DIR', or else will use a temporary directory
+	 */
+	public ScopInstallation() {
+		this((new UserConfiguration()).getPdbFilePath());
+	}
 	public void ensureClaInstalled(){
 		if ( installedCla.get())
 			return;

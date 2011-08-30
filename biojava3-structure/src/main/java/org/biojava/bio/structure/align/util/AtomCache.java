@@ -64,6 +64,18 @@ public class AtomCache {
 
 	private boolean fetchCurrent;
 
+	/**
+	 * Default AtomCache constructor.
+	 * 
+	 * Usually stores files in a temp directory, but this can be overriden
+	 * by setting the PDB_DIR variable at runtime.
+	 * 
+	 * @see UserConfiguration#UserConfiguration()
+	 */
+	public AtomCache() {
+		this(new UserConfiguration());
+	}
+	
 	/** Creates an instance of an AtomCache that is pointed to the a particular
 	 * path in the file system.
 	 * 
@@ -105,6 +117,7 @@ public class AtomCache {
 
 		scopInstallation = null;
 	}
+
 
 	/** Creates a new AtomCache object based on the provided UserConfiguration.
 	 * 

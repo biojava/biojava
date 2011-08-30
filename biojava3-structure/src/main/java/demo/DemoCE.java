@@ -47,10 +47,6 @@ public class DemoCE {
 
 	public static void main(String[] args){
 		
-		String pdbFilePath="/tmp/";
-		
-		boolean isSplit = true;
-		
 		//String name1 = "4hhb.A";
 		//String name2 = "4hhb.B";
 		
@@ -59,7 +55,7 @@ public class DemoCE {
 		
 	
 		
-		AtomCache cache = new AtomCache(pdbFilePath, isSplit);
+		AtomCache cache = new AtomCache();
 				
 		Structure structure1 = null;
 		Structure structure2 = null;

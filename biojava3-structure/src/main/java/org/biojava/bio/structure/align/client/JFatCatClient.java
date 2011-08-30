@@ -57,7 +57,7 @@ public class JFatCatClient {
    
    public static void main(String[] args){
       //System.out.println(hasPrecalculatedResult("http://emmy.rcsb.org/jfatcatserver/align/", "jCE Circular Permutation", "1CDG.A", "1TIM.A"));
-      AtomCache cache = new AtomCache("/tmp/", true);
+      AtomCache cache = new AtomCache();
       String name1= "2W72.A";
       String name2= "1D2Z.D";
       try {

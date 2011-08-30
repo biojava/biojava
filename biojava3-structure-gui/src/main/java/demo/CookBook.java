@@ -55,15 +55,9 @@ public class CookBook
          // for this example we are going to use the jFatCat-rigid algorithm
          StructureAlignment algorithm = StructureAlignmentFactory.getAlgorithm(FatCatFlexible.algorithmName);
 
-         // where can the PDB files be found?
-         // if they are not there, they will be automatically downloaded and installed there.
-         String pdbFilePath = "/tmp/";      
-
-         // is the PDB installation split into subdirectories (as on the PDB ftp servers)
-         boolean isSplitInstallation = true;
-
          // the cache takes care of loading the structures
-         AtomCache cache = new AtomCache(pdbFilePath,isSplitInstallation);
+         // Downloads files to a temp dir by default
+         AtomCache cache = new AtomCache();
 
 
          //////////////////////////////

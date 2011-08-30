@@ -17,8 +17,7 @@ public class ScopTest extends TestCase {
 	
 	public void testSCOP(){
 		
-		String cacheLocation = TmpAtomCache.tmpDir;
-		ScopInstallation scop = new ScopInstallation(cacheLocation);
+		ScopInstallation scop = new ScopInstallation();
 		
 		List<ScopDomain> domains = scop.getDomainsForPDB("4HHB");
 		

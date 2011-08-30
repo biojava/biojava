@@ -66,6 +66,12 @@ public class CeMain extends AbstractStructureAlignment implements StructureAlign
 	}
 
 
+	/**
+	 * Example Parameters:
+	 * 
+	 * -pdbFilePath /tmp -autoFetch -printCE -pdb1 1cnv -pdb2 3cna 
+	 * 
+	 */
 	public static void main(String[] args){
 
 		CeMain ce = new CeMain(); //Used only for printing help

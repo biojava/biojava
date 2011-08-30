@@ -64,10 +64,9 @@ public class DemoSCOP
     */
    private void traverseHierarchy()
    {
-      String cacheLocation = "/tmp/";
       String pdbId = "4HHB";
       // download SCOP if required and load into memory
-      ScopInstallation scop = new ScopInstallation(cacheLocation);
+      ScopInstallation scop = new ScopInstallation();
       
       List<ScopDomain> domains = scop.getDomainsForPDB(pdbId);
       
@@ -87,11 +86,9 @@ public class DemoSCOP
    /** Get various categories
     * 
     */
-   public void getCategories(){
-      String cacheLocation = "/tmp/";
-      
+   public void getCategories(){      
       // download SCOP if required and load into memory
-      ScopInstallation scop = new ScopInstallation(cacheLocation);
+      ScopInstallation scop = new ScopInstallation();
       List<ScopDescription> superfams = scop.getByCategory(ScopCategory.Superfamily);
 
       System.out.println("Total nr. of superfamilies:" + superfams.size());
@@ -101,12 +98,9 @@ public class DemoSCOP
             
    }
 
-   public void alignSuperfamily(){
-      
-      String cacheLocation = "/tmp/";
-     
+   public void alignSuperfamily(){     
       // download SCOP if required and load into memory
-      ScopInstallation scop = new ScopInstallation(cacheLocation);
+      ScopInstallation scop = new ScopInstallation();
       List<ScopDescription> superfams = scop.getByCategory(ScopCategory.Superfamily);
 
       System.out.println("Total nr. of superfamilies:" + superfams.size());
@@ -114,7 +108,7 @@ public class DemoSCOP
       
       // configure where to load PDB files from and 
       // what information to load
-      AtomCache cache = new AtomCache(cacheLocation, true);      
+      AtomCache cache = new AtomCache();      
       FileParsingParameters fileparams = new FileParsingParameters() ;
       fileparams.setAlignSeqRes(false);
       fileparams.setLoadChemCompInfo(true);
@@ -159,11 +153,10 @@ public class DemoSCOP
    }
    
    public void printDomainsForPDB(){
-      String cacheLocation = "/tmp/";
       String pdbId = "4HHB";
       
       // download SCOP if required and load into memory
-      ScopInstallation scop = new ScopInstallation(cacheLocation);
+      ScopInstallation scop = new ScopInstallation();
 
       List<ScopDomain> domains = scop.getDomainsForPDB(pdbId);
 

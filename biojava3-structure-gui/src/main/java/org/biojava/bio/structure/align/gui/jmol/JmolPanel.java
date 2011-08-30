@@ -250,8 +250,7 @@ implements ActionListener
 		String pdbId = structure.getPDBCode();
 		if ( pdbId == null)
 			return;
-		String pdbLocation = System.getProperty(AbstractUserArgumentProcessor.PDB_DIR);
-		ScopDatabase scop = new ScopInstallation(pdbLocation);
+		ScopDatabase scop = new ScopInstallation();
 
 		List<ScopDomain> domains = scop.getDomainsForPDB(pdbId);
 		if ( domains == null) {
