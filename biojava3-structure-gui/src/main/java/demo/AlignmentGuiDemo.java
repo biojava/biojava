@@ -32,12 +32,11 @@ import org.biojava.bio.structure.align.gui.AlignmentGui;
  */
 public class AlignmentGuiDemo {
 
-	//  /Users/ap3/WORK/PDB/hy/pdb2hyn.ent.gz
-	//  /Users/ap3/WORK/PDB/zl/pdb1zll.ent.gz
-	
+	/** e.g. try to align 2hyn vs 1zll
+	 * 
+	 */
 	public static void main(String[] args) {
-		System.setProperty("PDB_DIR","/tmp/");
-	
+			
 		AlignmentGui.getInstance();
 		
 	}
