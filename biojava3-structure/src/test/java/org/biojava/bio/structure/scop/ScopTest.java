@@ -14,10 +14,32 @@ import junit.framework.TestCase;
 public class ScopTest extends TestCase {
 
 	
-	
-	public void testSCOP(){
+	public void testLocalScop(){
+		ScopDatabase scop = new ScopInstallation();
+		ScopDatabase defaultScop = ScopFactory.getSCOP();
+		ScopFactory.setScopDatabase(scop);
 		
-		ScopInstallation scop = new ScopInstallation();
+		runSCOPTests();
+		
+		ScopFactory.setScopDatabase(defaultScop);
+	}
+	
+	
+	public void testRemoteScop(){
+		ScopDatabase scop = new RemoteScopInstallation();
+		ScopDatabase defaultScop = ScopFactory.getSCOP();
+		ScopFactory.setScopDatabase(scop);
+		
+		runSCOPTests();
+		
+		ScopFactory.setScopDatabase(defaultScop);
+	}
+	
+	
+	private void runSCOPTests(){
+		
+		ScopDatabase scop = ScopFactory.getSCOP();
+		
 		
 		List<ScopDomain> domains = scop.getDomainsForPDB("4HHB");
 		
