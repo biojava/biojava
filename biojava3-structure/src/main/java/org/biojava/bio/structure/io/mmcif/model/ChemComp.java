@@ -297,7 +297,7 @@ public class ChemComp implements Serializable, Comparable<ChemComp>{
 		this.descriptors = descriptors;
 	}
 
-	@Override
+	
 	public int compareTo(ChemComp arg0) {
 		if ( this.equals(arg0))
 			return 0;
