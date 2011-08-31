@@ -68,8 +68,6 @@ public class UserConfiguration
       isSplit = true;
       autoFetch = true;
       // accessing temp. OS directory:         
-      
-      System.out.println(System.getProperties().toString());
       String userProvidedDir = System.getProperty(PDB_DIR);
 
       if ( userProvidedDir != null ) {

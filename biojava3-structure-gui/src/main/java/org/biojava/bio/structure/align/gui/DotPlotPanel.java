@@ -30,6 +30,7 @@ import javax.swing.JFrame;
 import org.biojava.bio.structure.Atom;
 import org.biojava.bio.structure.StructureException;
 import org.biojava.bio.structure.align.StructureAlignmentFactory;
+import org.biojava.bio.structure.align.ce.CeCPMain;
 import org.biojava.bio.structure.align.ce.CeMain;
 import org.biojava.bio.structure.align.ce.CeParameters;
 import org.biojava.bio.structure.align.helper.JointFragments;
@@ -238,7 +239,7 @@ public class DotPlotPanel extends ScaleableMatrixPanel {
 			
 			//////////////////////////
 			// Now make it circular
-			params.setCheckCircular(true);
+			ceA = (CeMain) StructureAlignmentFactory.getAlgorithm(CeCPMain.algorithmName);
 	
 			System.out.format("Aligning %s[%d] with %s[%d] with CPs\n",name1,ca1.length,name2,ca2.length);
 			afpChain = ceA.align(ca1,ca2);

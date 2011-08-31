@@ -55,7 +55,6 @@ public class CeParameters implements ConfigStrucAligParams  {
 	private int maxGapSize;
 
 	boolean showAFPRanges;
-	boolean checkCircular;
 	int  sideChainScoringType;
 
 	private static final double DEFAULT_GAP_OPEN = 5.0;
@@ -87,7 +86,6 @@ public class CeParameters implements ConfigStrucAligParams  {
 		+ ", rmsdThrJoin="+ rmsdThrJoin 
 		+ ", winSize=" + winSize 
 		+ ", showAFPRanges=" + showAFPRanges 
-		+ ", checkCircular=" + checkCircular 
 		+ ", maxOptRMSD=" + maxOptRMSD
 		+ ", seqWeight=" + seqWeight
 		+ "]";
@@ -102,7 +100,6 @@ public class CeParameters implements ConfigStrucAligParams  {
 		scoringStrategy = DEFAULT_SCORING_STRATEGY;
 		maxGapSize = 30;
 		showAFPRanges = false;
-		checkCircular = false;
 		maxOptRMSD = 99;
 
 		gapOpen = DEFAULT_GAP_OPEN;
@@ -190,12 +187,10 @@ public class CeParameters implements ConfigStrucAligParams  {
 		String helpMaxGap = "This parameter configures the maximum gap size G, that is applied during the AFP extension. The larger the value, the longer the calculation time can become, Default value is 30. Set to 0 for no limit. " ;
 		//String helpRmsdThr = "This configures the RMSD threshold applied during the trace of the fragment matrix.";
 		String helpWinSize = "This configures the fragment size m of Aligned Fragment Pairs (AFPs).";
-		String helpCircular = "Should the algoritm check for circular permutations? Increases calculation time.";
 		String helpScoring = "Which scoring function to use.";
 		params.add(helpMaxGap);
 		//params.add(helpRmsdThr);
 		params.add(helpWinSize);
-		params.add(helpCircular);
 		params.add(helpScoring);
 		params.add("The maximum RMSD at which to stop alignment optimization. (default: unlimited=99)");
 		params.add("Gap opening penalty during alignment optimization.");
@@ -208,7 +203,6 @@ public class CeParameters implements ConfigStrucAligParams  {
 		params.add("MaxGapSize");
 		//params.add("RmsdThr");
 		params.add("WinSize");
-		params.add("CheckCircular");
 		params.add(SCORING_STRATEGY);
 		params.add("MaxOptRMSD");
 		params.add("GapOpen");
@@ -222,7 +216,6 @@ public class CeParameters implements ConfigStrucAligParams  {
 		params.add("max. gap size G (during AFP extension).");
 		//params.add("RMSD threshold during trace of the fragment matrix.");
 		params.add("fragment size m");
-		params.add("check for circular permutations");
 		params.add("Which scoring function to use");
 		params.add("RMSD threshold for alignment.");
 		params.add("Gap open");
@@ -230,13 +223,12 @@ public class CeParameters implements ConfigStrucAligParams  {
 		return params;
 	}
 
-	@SuppressWarnings("rawtypes")
+	@SuppressWarnings("unchecked")
 	public List<Class> getUserConfigTypes() {
 		List<Class> params = new ArrayList<Class>();
 		params.add(Integer.class);
 		//params.add(Double.class);
 		params.add(Integer.class);
-		params.add(Boolean.class);
 		params.add(Integer.class);
 		params.add(Double.class);
 		params.add(Double.class);
@@ -259,19 +251,7 @@ public class CeParameters implements ConfigStrucAligParams  {
 	}
 
 
-	/**
-	 * @return whether the protein should be checked for circular permutations.
-	 */
 
-	public Boolean getCheckCircular() {
-		return checkCircular;
-	}
-	/**
-	 * @param checkCircular whether the protein should be checked for circular permutations
-	 */
-	public void setCheckCircular(Boolean checkCircular) {
-		this.checkCircular = checkCircular;
-	}
 
 
 	/** set the maximum RMSD cutoff to be applied during alignment optimization. (default: 99 = unlimited)
