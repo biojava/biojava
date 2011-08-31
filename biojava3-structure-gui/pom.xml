@@ -1,15 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<parent>
 		<artifactId>biojava</artifactId>
 		<groupId>org.biojava</groupId>
 		<version>3.0.2-SNAPSHOT</version>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>org.biojava</groupId>
 	<artifactId>biojava3-structure-gui</artifactId>
 	<name>biojava3-structure-gui</name>
-	<version>3.0.2-SNAPSHOT</version>
 	<url>http://maven.apache.org</url>
 	<repositories>
 		<repository>
@@ -56,33 +55,30 @@
 			<groupId>org.biojava</groupId>
 			<artifactId>biojava3-structure</artifactId>
 			<version>3.0.2-SNAPSHOT</version>
-			<type>jar</type>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.biojava</groupId>
 			<artifactId>biojava3-core</artifactId>
 			<version>3.0.2-SNAPSHOT</version>
-			<type>jar</type>
 			<scope>compile</scope>
 		</dependency>
 	</dependencies>
 	<properties>
-		<jdk.version>1.5</jdk.version>
+		<jdk.version>1.6</jdk.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.build.targetEncoding>UTF-8</project.build.targetEncoding>
 	</properties>
 	<build>
 		<plugins>
 			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>2.0.2</version>
 				<configuration>
-					<source>1.5</source>
-					<target>1.5</target>
+					<source>${jdk.version}</source>
+					<target>${jdk.version}</target>
 				</configuration>
 			</plugin>
 		</plugins>
 	</build>
+
 </project>

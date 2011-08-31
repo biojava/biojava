@@ -6,7 +6,6 @@
     <version>3.0.2-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
-  <groupId>org.biojava</groupId>
   <artifactId>biojava3-phylo</artifactId>
   <name>biojava3-phylo</name>
   <repositories>
@@ -34,14 +33,12 @@
 			<layout>default</layout>
 		</repository>
 	</distributionManagement>
-  <version>3.0.2-SNAPSHOT</version>
   <url>http://maven.apache.org</url>
   <build>
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
-        <version>2.0.2</version>
         <configuration>
           <source>1.6</source>
           <target>1.6</target>
@@ -53,7 +50,6 @@
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
-      <version>4.7</version>
       <scope>test</scope>
     </dependency>
     <dependency>
