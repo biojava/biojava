@@ -32,6 +32,7 @@ public class Struct {
 	String pdbx_descriptor;
 	String pdbx_model_details;
 	String pdbx_model_type_details;
+	String pdbx_CASP_flag;
 
 	public String toString(){
 		return "entry_id:" +entry_id + " title:" + title + " pdbx_descriptor:" +pdbx_descriptor + " pdbx_model_details:"+pdbx_model_details;
@@ -68,6 +69,14 @@ public class Struct {
 
 	public void setPdbx_model_type_details(String pdbx_model_type_details) {
 		this.pdbx_model_type_details = pdbx_model_type_details;
+	}
+
+	public String getPdbx_CASP_flag() {
+		return pdbx_CASP_flag;
+	}
+
+	public void setPdbx_CASP_flag(String pdbx_CASP_flag) {
+		this.pdbx_CASP_flag = pdbx_CASP_flag;
 	}
 
 
