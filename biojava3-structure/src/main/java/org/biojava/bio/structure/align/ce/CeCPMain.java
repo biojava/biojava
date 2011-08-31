@@ -113,10 +113,13 @@ public class CeCPMain extends CeMain {
 		}
 	}
 
-	@Override
-	public AFPChain align(Atom[] ca1, Atom[] ca2, Object param) throws StructureException{
-		long startTime = System.currentTimeMillis();
-
+	/** Circular permutation specific code to be run before a standard CE alignment
+	 * 
+	 * @param ca2 original C-alpha atom array
+	 * @return new Atom array (a duplicated ca2)
+	 * @throws StructureException
+	 */
+	public static Atom[] prepareAtomsForAlign(Atom[] ca2) throws StructureException{
 		// Duplicate ca2
 		Atom[] ca2m = new Atom[ca2.length*2];
 
@@ -131,7 +134,16 @@ public class CeCPMain extends CeMain {
 			ca2m[pos] = g.getAtom(StructureTools.caAtomName);
 			pos++;
 		}
+		return ca2m;
+		
+	}
+	
+	@Override
+	public AFPChain align(Atom[] ca1, Atom[] ca2, Object param) throws StructureException{
+		long startTime = System.currentTimeMillis();
 
+		Atom[] ca2m = prepareAtomsForAlign(ca2);
+		
 		if(debug) {
 			System.out.format("Duplicating ca2 took %s ms\n",System.currentTimeMillis()-startTime);
 			startTime = System.currentTimeMillis();
@@ -144,7 +156,25 @@ public class CeCPMain extends CeMain {
 			System.out.format("Running Nx2N alignment took %s ms\n",System.currentTimeMillis()-startTime);
 			startTime = System.currentTimeMillis();
 		}
+		postProcessAlignment(afpChain, ca1, ca2m, calculator);
+		
+		if(debug) {
+			System.out.format("Finding CP point took %s ms\n",System.currentTimeMillis()-startTime);
+			startTime = System.currentTimeMillis();
+		}
 
+		return afpChain;
+	}
+
+	/** Circular permutation specific code to be run after the standard CE alignment
+	 * 
+	 * @param afpChain
+	 * @param ca1
+	 * @param ca2m
+	 * @param calculator
+	 * @throws StructureException
+	 */
+	public static void postProcessAlignment(AFPChain afpChain, Atom[] ca1, Atom[] ca2m,CECalculator calculator ) throws StructureException{
 		// Draw a little green line across the center of the distance matrix
 		/* TODO do this more elegantly. If anyone uses afpChain.getDistanceMatrix()
 		 * for anything besides displaying a dotplot, they will be confused by
@@ -154,7 +184,7 @@ public class CeCPMain extends CeMain {
 		Matrix doubledMatrix = afpChain.getDistanceMatrix();
 
 		assert(doubledMatrix.getRowDimension() == ca1.length);
-		assert(doubledMatrix.getColumnDimension() == ca2.length*2);
+		assert(doubledMatrix.getColumnDimension() == ca2m.length);
 		/*double[][] doubledArray = doubledMatrix.getArray();
 
 		double[][] singleArray = new double[ca1.length][ca2.length];
@@ -165,21 +195,17 @@ public class CeCPMain extends CeMain {
 			}
 		afpChain.setDistanceMatrix(new Matrix(singleArray));
 		}*/
-		Matrix singleMatrix = doubledMatrix.getMatrix(0, ca1.length-1, 0, ca2.length-1);
+		Matrix singleMatrix = doubledMatrix.getMatrix(0, ca1.length-1, 0, (ca2m.length/2)-1);
 		assert(singleMatrix.getRowDimension() == ca1.length);
-		assert(singleMatrix.getColumnDimension() == ca2.length);
+		assert(singleMatrix.getColumnDimension() == (ca2m.length/2));
 
 		afpChain.setDistanceMatrix(singleMatrix);
+		
+		
 
 		// Check for circular permutations
 		afpChain = filterDuplicateAFPs(afpChain,calculator,ca1,ca2m);
-
-		if(debug) {
-			System.out.format("Finding CP point took %s ms\n",System.currentTimeMillis()-startTime);
-			startTime = System.currentTimeMillis();
-		}
-
-		return afpChain;
+		
 	}
 
 	/**
