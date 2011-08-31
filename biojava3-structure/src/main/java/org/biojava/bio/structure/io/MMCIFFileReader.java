@@ -76,10 +76,9 @@ public class MMCIFFileReader implements StructureIOFile {
 	
 	
 	public static void main(String[] args){
-		//String filename =  "/Users/andreas/WORK/PDB/mmcif_files/a9/2a9w.cif.gz" ;
+	
 
 		StructureIOFile reader = new MMCIFFileReader();
-		reader.setPath("/Users/ap3/WORK/PDB/");
 		FileParsingParameters params = new FileParsingParameters();
 		reader.setFileParsingParameters(params);
 		
