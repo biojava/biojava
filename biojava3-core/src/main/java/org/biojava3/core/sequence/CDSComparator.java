@@ -33,7 +33,7 @@ import java.util.Comparator;
  * Used to sort two CDSSequences where Negative Strand makes it tough
  * @param o1
  * @param o2
- * @return
+ * @return val
  */
         public int compare(CDSSequence o1, CDSSequence o2) {
             if(o1.getStrand() != o2.getStrand()){

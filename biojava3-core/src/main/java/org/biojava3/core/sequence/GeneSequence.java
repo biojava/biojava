@@ -70,7 +70,7 @@ public class GeneSequence extends DNASequence {
 
     /**
      * The parent ChromosomeSequence which contains the actual DNA sequence data
-     * @return
+     * @return Chromosome sequence
      */
     public ChromosomeSequence getParentChromosomeSequence() {
         return chromosomeSequence;
@@ -142,7 +142,7 @@ public class GeneSequence extends DNASequence {
     /**
      * Get the transcript sequence by accession
      * @param accession
-     * @return
+     * @return the transcript
      */
     public TranscriptSequence getTranscript(String accession) {
         return transcriptSequenceHashMap.get(accession);
@@ -150,7 +150,7 @@ public class GeneSequence extends DNASequence {
 
     /**
      * Get the collection of transcription sequences assigned to this gene
-     * @return
+     * @return transcripts
      */
     public LinkedHashMap<String, TranscriptSequence> getTranscripts() {
         return transcriptSequenceHashMap;
@@ -159,7 +159,7 @@ public class GeneSequence extends DNASequence {
     /**
      * Remove the transcript sequence from the gene
      * @param accession
-     * @return
+     * @return transcriptsequence
      */
     public TranscriptSequence removeTranscript(String accession) {
 
@@ -172,7 +172,7 @@ public class GeneSequence extends DNASequence {
      * @param accession
      * @param begin
      * @param end
-     * @return
+     * @return transcript sequence
      * @throws Exception If the accession id is already used
      */
     public TranscriptSequence addTranscript(AccessionID accession, int begin, int end) throws Exception {
@@ -188,7 +188,7 @@ public class GeneSequence extends DNASequence {
     /**
      * Remove the intron by accession
      * @param accession
-     * @return
+     * @return intron sequence
      */
     public IntronSequence removeIntron(String accession) {
         for (IntronSequence intronSequence : intronSequenceList) {
@@ -206,7 +206,7 @@ public class GeneSequence extends DNASequence {
      * @param accession
      * @param begin
      * @param end
-     * @return
+     * @return intron sequence
      */
     public IntronSequence addIntron(AccessionID accession, int begin, int end) throws Exception {
         if (intronSequenceHashMap.containsKey(accession.getID())) {
@@ -223,7 +223,7 @@ public class GeneSequence extends DNASequence {
     /**
      * Remove the exon sequence
      * @param accession
-     * @return
+     * @return exon sequence
      */
     public ExonSequence removeExon(String accession) {
         for (ExonSequence exonSequence : exonSequenceList) {
@@ -250,7 +250,7 @@ public class GeneSequence extends DNASequence {
      * @param accession
      * @param begin
      * @param end
-     * @return
+     * @return exon sequence
      */
     public ExonSequence addExon(AccessionID accession, int begin, int end) throws Exception {
         if (exonSequenceHashMap.containsKey(accession.getID())) {
@@ -266,7 +266,7 @@ public class GeneSequence extends DNASequence {
 
     /**
      * Get the exons as an ArrayList
-     * @return
+     * @return exons
      */
     public ArrayList<ExonSequence> getExonSequences() {
         return exonSequenceList;
@@ -274,7 +274,7 @@ public class GeneSequence extends DNASequence {
 
     /**
      * Get the introns as an ArrayList
-     * @return
+     * @return introns 
      */
     public ArrayList<IntronSequence> getIntronSequences() {
         return intronSequenceList;
@@ -283,7 +283,7 @@ public class GeneSequence extends DNASequence {
     /**
      * Try to give method clarity where you want a DNASequence coding in the 5' to 3' direction
      * Returns the DNASequence representative of the 5' and 3' reading based on strand
-     * @return
+     * @return dna sequence
      */
     public DNASequence getSequence5PrimeTo3Prime() {
         String sequence = getSequenceAsString(this.getBioBegin(), this.getBioEnd(), this.getStrand());
