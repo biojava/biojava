@@ -1,3 +1,26 @@
+/*
+ *                    BioJava development code
+ *
+ * This code may be freely distributed and modified under the
+ * terms of the GNU Lesser General Public Licence.  This should
+ * be distributed with the code.  If you do not have a copy,
+ * see:
+ *
+ *      http://www.gnu.org/copyleft/lesser.html
+ *
+ * Copyright for this code is held jointly by the individual
+ * authors.  These should be listed in @author doc comments.
+ *
+ * For more information on the BioJava project and its aims,
+ * or to join the biojava-l mailing list, visit the home page
+ * at:
+ *
+ *      http://www.biojava.org/
+ *
+ * 
+ * Author: Andreas Prlic 
+ *
+ */
 package org.biojava.bio.structure.domain;
 
 import java.util.List;
@@ -31,7 +54,7 @@ Veretnik S, Bourne PE, Alexandrov NN, Shindyalov IN.
  *   
  * 
  * @author Andreas Prlic
- *
+ * @since 3.0.2
  */
 public class ProteinDomainParser {
 
@@ -74,10 +97,10 @@ public class ProteinDomainParser {
 		Domain dom = new Domain();
 		Chain c = ca[0].getGroup().getChain();
 		dom.setId("D"+c.getParent().getPDBCode()+c.getId()+"1");
-		dom.size = ca.length;
-		dom.nseg=1;
-		dom.getSegment(0).setFrom(0);
-		dom.getSegment(0).setTo(ca.length-1);
+		dom.setSize(ca.length);
+		dom.setNseg(1);
+		dom.getSegmentAtPos(0).setFrom(0);
+		dom.getSegmentAtPos(0).setTo(ca.length-1);
 
 		CutSites cutSites = new CutSites();
 
