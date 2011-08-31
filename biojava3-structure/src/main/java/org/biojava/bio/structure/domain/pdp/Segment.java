@@ -2,13 +2,16 @@ package org.biojava.bio.structure.domain.pdp;
 
 import java.io.Serializable;
 
+
+
+
 public class Segment implements Serializable, Comparable<Segment> {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1393487067559539657L;
-	public int from;
-	public int to;
+	private int from;
+	private int to;
 	double score;
 
 	public Segment(){
@@ -24,7 +27,7 @@ public class Segment implements Serializable, Comparable<Segment> {
 	}
 
 
-
+	
 	public int getFrom() {
 		return from;
 	}

@@ -4,6 +4,14 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 import java.util.List;
+
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlRootElement;
+
+@XmlRootElement(name = "Domain", namespace ="http://www.biojava.org")
+@XmlAccessorType(XmlAccessType.PUBLIC_MEMBER)
+
 public class Domain implements Comparable<Domain>, Serializable{
 	
 	/**
@@ -12,17 +20,16 @@ public class Domain implements Comparable<Domain>, Serializable{
 	private static final long serialVersionUID = -1293994033102271366L;
 	
 	String id;
-	public int size;
-	public int nseg;
-	public double score;
+	int size;
+	int nseg;
+	double score;
 
-	public List<Segment>segments = new ArrayList<Segment>();
+	List<Segment>segments = new ArrayList<Segment>();
 
 	public Domain(){
 		
 	}
 	
-
 	public String getId() {
 		return id;
 	}
@@ -41,13 +48,13 @@ public class Domain implements Comparable<Domain>, Serializable{
 				
 				+ "]";
 	}
-
+	
 	public List<Segment> getSegments() {
 		
 		return segments;
 	}
 	
-	public Segment getSegment(int pos){
+	public Segment getSegmentAtPos(int pos){
 		int size = segments.size();
 		while ( pos >= size){
 			segments.add(new Segment());
@@ -67,6 +74,35 @@ public class Domain implements Comparable<Domain>, Serializable{
 			return -1;
 		return this.getId().compareTo(other.getId());
 	}
+
+	public int getSize() {
+		return size;
+	}
+
+	public void setSize(int size) {
+		this.size = size;
+	}
+
+	public int getNseg() {
+		return nseg;
+	}
+
+	public void setNseg(int nseg) {
+		this.nseg = nseg;
+	}
+
+	public double getScore() {
+		return score;
+	}
+
+	public void setScore(double score) {
+		this.score = score;
+	}
+
+	public void setSegments(List<Segment> segments) {
+		this.segments = segments;
+	}
+	
 	
 	
 }

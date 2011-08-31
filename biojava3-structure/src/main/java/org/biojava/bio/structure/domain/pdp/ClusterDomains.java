@@ -46,7 +46,7 @@ public class ClusterDomains {
 					Domain d1 = domains.get(i);
 					Domain d2 = domains.get(j);
 					long total_contacts = getTotalContacts(domains,pdpDistMatrix,d1,d2);
-					System.out.println(" pos: d1:" + i + " vs d2:" +j + " d1:" + d1.getSegment(0).from + "-" + d1.getSegment(0).to + " " +  d2.getSegment(0).from + "-" + d2.getSegment(0).to + " " + total_contacts);
+					System.out.println(" pos: d1:" + i + " vs d2:" +j + " d1:" + d1.getSegmentAtPos(0).getFrom() + "-" + d1.getSegmentAtPos(0).getTo() + " " +  d2.getSegmentAtPos(0).getFrom() + "-" + d2.getSegmentAtPos(0).getTo() + " " + total_contacts);
 					int size1dom1=domains.get(i).size;
 					int size2dom2=domains.get(j).size;
 					double minDomSize=Math.min(size1dom1,size2dom2);
@@ -188,10 +188,10 @@ public class ClusterDomains {
 		
 		for(int k=0;k<i.nseg;k++) {
 			for(int l=0;l<j.nseg;l++) {
-				long contacts = calc_S(j.getSegment(l).from, 
-						j.getSegment(l).to,
-						i.getSegment(k).from,
-						i.getSegment(k).to,
+				long contacts = calc_S(j.getSegmentAtPos(l).getFrom(), 
+						j.getSegmentAtPos(l).getTo(),
+						i.getSegmentAtPos(k).getFrom(),
+						i.getSegmentAtPos(k).getTo(),
 						pdpDistMatrix);
 				total_contacts += contacts;
 			}
@@ -210,16 +210,16 @@ public class ClusterDomains {
 
 		//int ndom = domains.size();
 		for(int i=0;i<domains.get(Sj).nseg;i++) {
-			domains.get(Si).getSegment(domains.get(Si).nseg).from=domains.get(Sj).getSegment(i).from;
-			domains.get(Si).getSegment(domains.get(Si).nseg).to=domains.get(Sj).getSegment(i).to;
+			domains.get(Si).getSegmentAtPos(domains.get(Si).nseg).setFrom(domains.get(Sj).getSegmentAtPos(i).getFrom());
+			domains.get(Si).getSegmentAtPos(domains.get(Si).nseg).setTo(domains.get(Sj).getSegmentAtPos(i).getTo());
 			domains.get(Si).nseg++;
 		}
 		domains.get(Si).size+=domains.get(Sj).size;
 
 
 		for(int i=0;i<domains.get(ndom-1).nseg;i++) {
-			domains.get(Sj).getSegment(i).from=domains.get(ndom-1).getSegment(i).from;
-			domains.get(Sj).getSegment(i).to=domains.get(ndom-1).getSegment(i).to;
+			domains.get(Sj).getSegmentAtPos(i).setFrom(domains.get(ndom-1).getSegmentAtPos(i).getFrom());
+			domains.get(Sj).getSegmentAtPos(i).setTo(domains.get(ndom-1).getSegmentAtPos(i).getTo());
 
 		}
 		for ( int i =0; i < domains.size(); i++){
