@@ -87,7 +87,7 @@ public class TestFlexibleRotationMatrices extends TestCase{
          AFPChain newChain = AFPChainXMLParser.fromXML (xml, ca1, ca3);
 
          Matrix[] maxs1 = afpChain.getBlockRotationMatrix();
-         Atom[] shifts1 = afpChain.getBlockShiftVector();
+         //Atom[] shifts1 = afpChain.getBlockShiftVector();
          double[] blockRmsd = afpChain.getBlockRmsd();
 
          assertTrue( afpChain.getBlockNum() == newChain.getBlockNum());
@@ -154,11 +154,11 @@ public class TestFlexibleRotationMatrices extends TestCase{
       Atom[] ca2Copy = StructureTools.cloneCAArray(ca2);
       Atom[] ca2Copy2 = StructureTools.cloneCAArray(ca2);
 
-      int[][][] blocks1 = afpChain.getOptAln();
+     // int[][][] blocks1 = afpChain.getOptAln();
       int[][][] blocks2 = newChain.getOptAln();
 
-      Matrix[] maxs1 = afpChain.getBlockRotationMatrix();
-      Atom[] shifts1 = afpChain.getBlockShiftVector();
+     // Matrix[] maxs1 = afpChain.getBlockRotationMatrix();
+     // Atom[] shifts1 = afpChain.getBlockShiftVector();
 
       Matrix[] maxs2 = newChain.getBlockRotationMatrix();
       Atom[] shifts2 = newChain.getBlockShiftVector();
@@ -210,7 +210,7 @@ public class TestFlexibleRotationMatrices extends TestCase{
 
       // this is the value from the file. it never seems to match precisely, probably is calculated from initial block.
       // we can't reproduce the initial block, since we don;t serialize it.
-      double rmsdOrig =afpChain.getBlockRmsd()[blockNr];
+      //double rmsdOrig =afpChain.getBlockRmsd()[blockNr];
 
 
       // THIS IS CALCULATING THE "correct" rotation matrix, that should be in the file

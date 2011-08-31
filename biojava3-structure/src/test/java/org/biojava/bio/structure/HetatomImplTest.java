@@ -15,7 +15,7 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import static org.junit.Assert.*;
+
 
 /**
  *
@@ -466,7 +466,7 @@ public class HetatomImplTest extends TestCase{
     public void testSetGetChain() {
 //        System.out.println("setGetChain");
         Chain chain = new ChainImpl();
-        chain.setName("A");
+        chain.setChainID("A");
         HetatomImpl instance = new HetatomImpl();
         instance.setChain(chain);
         Chain expResult = chain;
@@ -481,7 +481,7 @@ public class HetatomImplTest extends TestCase{
     public void testGetChainId() {
 //        System.out.println("getChainId");
         Chain chain = new ChainImpl();
-        chain.setName("A");
+        chain.setChainID("A");
         HetatomImpl instance = new HetatomImpl();
         instance.setChain(chain);
         String expResult = "A";

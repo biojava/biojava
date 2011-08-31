@@ -44,8 +44,8 @@ public class TestDNAAlignment extends TestCase
 
       AtomCache cache = TmpAtomCache.cache;
       try {
-         Atom[] ca1 = cache.getAtoms(name1,true);
-         Atom[] ca2 = cache.getAtoms(name2,true);
+         Atom[] ca1 = cache.getAtoms(name1);
+         Atom[] ca2 = cache.getAtoms(name2);
          CeMain ce = new CeMain();
          AFPChain afpChain = ce.align(ca1,ca2);
          assertNotNull(afpChain);

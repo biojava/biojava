@@ -18,7 +18,7 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import static org.junit.Assert.*;
+
 
 /**
  * Tests functionality of Site class.
@@ -41,7 +41,7 @@ public class SiteTest extends TestCase {
             //SITE     2 AC1  6 HOH H 464  HOH H 497
             //groups for site CAT
             Chain chain = new ChainImpl();
-            chain.setName("H");
+            chain.setChainID("H");
             Group his57 = new AminoAcidImpl();
 //            his57.setPDBCode("57");
             his57.setResidueNumber("H", 57, ' ');
@@ -211,8 +211,8 @@ public class SiteTest extends TestCase {
     @Test
     public void testGetGroups() {
 //        System.out.println("getGroups");
-        List expResult = bindingSiteGroups;
-        List result = bindingSite.getGroups();
+        List<Group> expResult = bindingSiteGroups;
+        List<Group> result = bindingSite.getGroups();
         assertEquals(expResult, result);
     }
 

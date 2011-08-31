@@ -1,6 +1,5 @@
 package org.biojava.bio.structure;
 
-import java.util.Iterator;
 import java.util.List;
 
 import org.biojava.bio.structure.io.mmcif.chem.PolymerType;
@@ -90,11 +89,11 @@ public class TestAltLocs extends TestCase {
 			
 			Chain a = s.getChainByPDB("A");
 			
-			Group val1 = a.getGroupByPDB("1");
+			Group val1 = a.getGroupByPDB(ResidueNumber.fromString("1"));
 			Atom ca1 = val1.getAtom(" CA ");
 			assertNotNull(ca1);
 			
-			Group lys7 = a.getGroupByPDB("7");
+			Group lys7 = a.getGroupByPDB(ResidueNumber.fromString("7"));
 			Atom ca7 = lys7.getAtom(" CA ");			
 			assertNotNull(ca7);
 			

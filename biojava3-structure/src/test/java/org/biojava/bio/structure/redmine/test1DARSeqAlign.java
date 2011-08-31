@@ -5,6 +5,7 @@ import org.biojava.bio.structure.AminoAcid;
 import org.biojava.bio.structure.Chain;
 import org.biojava.bio.structure.Group;
 import org.biojava.bio.structure.NucleotideImpl;
+import org.biojava.bio.structure.ResidueNumber;
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.TmpAtomCache;
 import org.biojava.bio.structure.io.FileParsingParameters;
@@ -34,11 +35,11 @@ public class test1DARSeqAlign extends TestCase {
 			Chain c = struc.getChainByPDB("A");
 			//System.out.println(c.getSeqResGroups());
 			
-			Group g = c.getGroupByPDB("692");
+			Group g = c.getGroupByPDB(ResidueNumber.fromString("692"));
 			//System.out.println(g);
 			//System.out.println(FileConvert.toPDB(g.getAtom(0)));
 			
-			Group g3 = c.getGroupByPDB("689");
+			Group g3 = c.getGroupByPDB(ResidueNumber.fromString("689"));
 			//System.out.println(g3);
 			//System.out.println(FileConvert.toPDB(g3.getAtom(0)));
 			

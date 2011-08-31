@@ -24,15 +24,7 @@
 
 package org.biojava.bio.structure.align;
 
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 
-import org.biojava.bio.structure.Atom;
-import org.biojava.bio.structure.Structure;
-import org.biojava.bio.structure.StructureTools;
-import org.biojava.bio.structure.align.ce.CeMain;
-import org.biojava.bio.structure.align.util.AtomCache;
 
 import junit.framework.TestCase;
 

@@ -267,20 +267,7 @@ public class Test1a4w extends TestCase{
 //                FORMUL   8  HOH   *157(H2 O)
 
                 List<Group> hets = struct.getHetGroups();
-                for (Group group : hets) {
-                    //System.out.println(group);
-//                    System.out.println(group.getChemComp().getDescriptors());
-                    List<Group> fourAngstromShell = StructureTools.getGroupsWithinShell(struct, group, 4.00, false);
-                    //System.out.println("Groups within 4.00 Angstroms of " + group + ":");
-                    for (Group fourAngstromgroup : fourAngstromShell) {
-                    	//System.out.println(fourAngstromgroup);
-//                        System.out.println(fourAngstromgroup.getChemComp().getDescriptors());
-                        
-                    }
-                    for (Bond bond : StructureTools.findBonds(group, fourAngstromShell)) {
-                    	//System.out.println(bond);
-                        }
-                }
+           
                 assertEquals(7, hets.size());
 
                 

@@ -127,8 +127,8 @@ public class ScopTest extends TestCase {
 		}
 		assertNotNull(g1);
 		assertNotNull(g2);
-		String chainId = g1.getParent().getName();
-		String rangeTest = chainId + ":"+ g1.getPDBCode()+"-"+ g2.getPDBCode();
+		String chainId = g1.getChain().getChainID();
+		String rangeTest = chainId + ":"+ g1.getResidueNumber().toString()+"-"+ g2.getResidueNumber().toString();
 		
 		assertEquals("The expected range and the detected range don;t match!", rangeTest, range);
 		
