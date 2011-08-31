@@ -1,9 +1,30 @@
+/*
+ *                    BioJava development code
+ *
+ * This code may be freely distributed and modified under the
+ * terms of the GNU Lesser General Public Licence.  This should
+ * be distributed with the code.  If you do not have a copy,
+ * see:
+ *
+ *      http://www.gnu.org/copyleft/lesser.html
+ *
+ * Copyright for this code is held jointly by the individual
+ * authors.  These should be listed in @author doc comments.
+ *
+ * For more information on the BioJava project and its aims,
+ * or to join the biojava-l mailing list, visit the home page
+ * at:
+ *
+ *      http://www.biojava.org/
+ *
+ * 
+ * 
+ *
+ */
 package org.biojava.bio.structure.align.util;
 
 import java.io.IOException;
 import java.net.URL;
-
-
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
@@ -14,12 +35,10 @@ import java.util.regex.Pattern;
 import java.util.Iterator;
 
 import org.biojava.bio.structure.Atom;
-
 import org.biojava.bio.structure.Chain;
 import org.biojava.bio.structure.Group;
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureException;
-
 import org.biojava.bio.structure.StructureTools;
 import org.biojava.bio.structure.align.ce.AbstractUserArgumentProcessor;
 import org.biojava.bio.structure.io.FileParsingParameters;
@@ -39,6 +58,8 @@ import org.biojava3.core.util.InputStreamProvider;
  *  Java virtual machine needs to free up space. The AtomCache is thread-safe.
  * 
  * @author Andreas Prlic
+ * @author Spencer Bliven
+ * @author Peter Rose
  * @since 3.0
  */
 public class AtomCache {
