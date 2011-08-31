@@ -732,7 +732,6 @@ public class PDBFileReader implements StructureIOFile {
 	 * @author Peter Rose
 	 * @since 3.2
 	 */
-	@SuppressWarnings("unused")
 	private  File downloadPDBBiologicalAssembly(String pdbId, String pathOnServer){	
 		loadedBioAssembly = true;
 
