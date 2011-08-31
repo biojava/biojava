@@ -86,7 +86,8 @@ public class DemoLoadStructure
          System.out.println(structure);
          
          Chain c = structure.getChainByPDB("C");
-         
+       
+         System.out.print(c);
 
       } catch (Exception e){
          e.printStackTrace();
