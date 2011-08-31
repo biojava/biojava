@@ -25,8 +25,6 @@
 package org.biojava.bio.structure.align.ce;
 
 
-import java.util.ArrayList;
-import java.util.List;
 import org.biojava.bio.structure.Atom;
 import org.biojava.bio.structure.Group;
 import org.biojava.bio.structure.StructureException;
@@ -34,7 +32,6 @@ import org.biojava.bio.structure.StructureTools;
 import org.biojava.bio.structure.align.AbstractStructureAlignment;
 import org.biojava.bio.structure.align.StructureAlignment;
 import org.biojava.bio.structure.align.model.AFPChain;
-import org.biojava.bio.structure.align.util.AFPAlignmentDisplay;
 import org.biojava.bio.structure.jama.Matrix;
 
 /** The main class of the Java implementation of the Combinatorial Extension Algorithm (CE),

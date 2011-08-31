@@ -32,6 +32,7 @@ public class ParameterGUI extends JFrame{
 
    
    
+   @SuppressWarnings("unchecked")
    public ParameterGUI(StructureAlignment alignment){
 
       ConfigStrucAligParams params = alignment.getParameters();
@@ -49,6 +50,12 @@ public class ParameterGUI extends JFrame{
       List<Class> types  = params.getUserConfigTypes();
 
       List<String> helps = params.getUserConfigHelp();
+      
+      // quick check for bugs in params
+      assert(names.size() == keys.size());
+      assert(names.size() == types.size());
+      assert(names.size() == helps.size());
+      
       textFields = new ArrayList<Component>();
       Box vBox = Box.createVerticalBox();
 
@@ -152,6 +159,7 @@ public class ParameterGUI extends JFrame{
 
    }
 
+   @SuppressWarnings("unchecked")
    protected void setDefault() {
       params.reset();
 
@@ -287,7 +295,7 @@ public class ParameterGUI extends JFrame{
 
          Class paramC = params.getClass();
 
-         Method m =paramC.getMethod(methodName,null);
+         Method m =paramC.getMethod(methodName,(Class[])null);
 
          Object value = m.invoke(params);
 
