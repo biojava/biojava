@@ -5,19 +5,26 @@
  *  
  * JRONN version: 3.1     
  *  
- *  This library is free software; you can redistribute it and/or modify it under the terms of the
- *  Apache License version 2 as published by the Apache Software Foundation
- * 
- *  This library is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
- *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the Apache 
- *  License for more details.
- * 
- *  A copy of the license is in apache_license.txt. It is also available here:
- * see: http://www.apache.org/licenses/LICENSE-2.0.txt
- * 
- * Any republication or derived work distributed in source code form
- * must include this copyright and license notice.
+ *        BioJava development code
+ *
+ * This code may be freely distributed and modified under the
+ * terms of the GNU Lesser General Public Licence.  This should
+ * be distributed with the code.  If you do not have a copy,
+ * see:
+ *
+ *      http://www.gnu.org/copyleft/lesser.html
+ *
+ * Copyright for this code is held jointly by the individual
+ * authors.  These should be listed in @author doc comments.
+ *
+ * For more information on the BioJava project and its aims,
+ * or to join the biojava-l mailing list, visit the home page
+ * at:
+ *
+ *      http://www.biojava.org/
+ *
  */
+ 
 package org.biojava3.ronn;
 
 
