@@ -122,6 +122,13 @@ public class CeMain extends AbstractStructureAlignment implements StructureAlign
 		afpChain.setAlgorithmName(getAlgorithmName());
 		afpChain.setVersion(version);
 		
+		// Try to guess names
+		try {
+			afpChain.setName1(ca1[0].getGroup().getChain().getParent().getName());
+		} catch( Exception e) {}
+		try {
+			afpChain.setName2(ca2[0].getGroup().getChain().getParent().getName());
+		} catch( Exception e) {}
 		
 		if ( afpChain.getNrEQR() == 0)
 		   return afpChain;

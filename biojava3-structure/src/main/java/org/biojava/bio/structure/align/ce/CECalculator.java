@@ -121,6 +121,7 @@ public class CECalculator {
 	 * @param afpChain A new AFPChain, which will be filled in by this function
 	 * @param ca1
 	 * @param ca2
+	 * @return afpChain
 	 * @throws StructureException
 	 */
 	public AFPChain extractFragments(AFPChain afpChain,

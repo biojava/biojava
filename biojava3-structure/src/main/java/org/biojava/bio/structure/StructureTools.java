@@ -542,8 +542,17 @@ public class StructureTools {
 		newS.setHeader(s.getHeader());
 		newS.setPDBCode(s.getPDBCode());
 		newS.setPDBHeader(s.getPDBHeader());
+		newS.setName(s.getName());
+		newS.setSSBonds(s.getSSBonds());
+		newS.setDBRefs(s.getDBRefs());
 		newS.setSites(s.getSites());
-
+		newS.setNmr(s.isNmr());
+		newS.setBiologicalAssembly(s.isBiologicalAssembly());
+		newS.setCompounds(s.getCompounds());
+		newS.setConnections(s.getConnections());
+		newS.setSSBonds(s.getSSBonds());
+		newS.setSites(s.getSites());
+		
 		if ( chainId != null)
 			chainId = chainId.trim();
 
@@ -573,7 +582,10 @@ public class StructureTools {
 	}
 
 
-	/** Reduce a structure to provide a smaller representation . Only takes the first model of the structure. If chainNr >=0 only takes the chain at that position into account.	 * 
+	/** Reduce a structure to provide a smaller representation.
+	 * Only takes the first model of the structure. If chainNr >=0 only takes
+	 * the chain at that position into account.
+	 * 
 	 * @param s
 	 * @param chainNr can be -1 to request all chains of model 0, otherwise will only add chain at this position 
 	 * @return Structure object
@@ -588,8 +600,15 @@ public class StructureTools {
 		newS.setHeader(s.getHeader());
 		newS.setPDBCode(s.getPDBCode());
 		newS.setPDBHeader(s.getPDBHeader());
+		newS.setName(s.getName());
 		newS.setSSBonds(s.getSSBonds());
 		newS.setDBRefs(s.getDBRefs());
+		newS.setSites(s.getSites());
+		newS.setNmr(s.isNmr());
+		newS.setBiologicalAssembly(s.isBiologicalAssembly());
+		newS.setCompounds(s.getCompounds());
+		newS.setConnections(s.getConnections());
+		newS.setSSBonds(s.getSSBonds());
 		newS.setSites(s.getSites());
 		
 		if ( chainNr < 0 ) {
@@ -600,16 +619,12 @@ public class StructureTools {
 				newS.addChain(c);
 			}
 			return newS;
-
 		}
-
-
 		Chain c =  null;
 
-		c = s.getChain(chainNr);
+		c = s.getChain(0, chainNr);
 
 		newS.addChain(c);
-
 
 		return newS;
 	}
@@ -657,13 +672,24 @@ public class StructureTools {
 		newS.setHeader(s.getHeader());
 		newS.setPDBCode(s.getPDBCode());
 		newS.setPDBHeader(s.getPDBHeader());
+		newS.setName(s.getName());
+		newS.setDBRefs(s.getDBRefs());
+		newS.setNmr(s.isNmr());
+		newS.setBiologicalAssembly(s.isBiologicalAssembly());
 
+		// TODO The following should be only copied for atoms which are present in the range.
+		//newS.setCompounds(s.getCompounds());
+		//newS.setConnections(s.getConnections());
+		//newS.setSSBonds(s.getSSBonds());
+		//newS.setSites(s.getSites());
+		
+		
 		String[] rangS =ranges.split(",");
 
 
 		String prevChainId = null;
 
-		
+		// parse the ranges, adding the specified residues to newS
 		for ( String r: rangS){
 			//System.out.println(">"+r+"<");
 			// Match a single range, eg "A_4-27"
@@ -723,7 +749,6 @@ public class StructureTools {
 
 			prevChainId = c.getName();
 		}
-
 
 		return newS;
 	}

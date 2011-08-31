@@ -509,20 +509,21 @@ public class AtomCache {
 			//System.out.println("time to load " + pdbId + " " + (end-start) + "\t  size :" + StructureTools.getNrAtoms(s) + "\t cached: " + cache.size());
 			if ( chainId == null && chainNr < 0 && range == null) {								
 				// we only want the 1st model in this case
-				return StructureTools.getReducedStructure(s,-1);
+				n = StructureTools.getReducedStructure(s,-1);
 
 			}
+			else {
 
-
-			if ( useChainNr) {
-				//System.out.println("using ChainNr");
-				n = StructureTools.getReducedStructure(s, chainNr);
-			} else if ( useDomainInfo) {
-				//System.out.println("calling getSubRanges");
-				n = StructureTools.getSubRanges(s, range);
-			} else  {
-				//System.out.println("reducing Chain Id " + chainId);
-				n = StructureTools.getReducedStructure(s, chainId);
+				if ( useChainNr) {
+					//System.out.println("using ChainNr");
+					n = StructureTools.getReducedStructure(s, chainNr);
+				} else if ( useDomainInfo) {
+					//System.out.println("calling getSubRanges");
+					n = StructureTools.getSubRanges(s, range);
+				} else  {
+					//System.out.println("reducing Chain Id " + chainId);
+					n = StructureTools.getReducedStructure(s, chainId);
+				}
 			}
 
 
@@ -533,7 +534,8 @@ public class AtomCache {
 			throw new StructureException(e.getMessage() + " while parsing " + name,e);
 
 		}
-
+		
+		n.setName(name);
 		return n;
 
 

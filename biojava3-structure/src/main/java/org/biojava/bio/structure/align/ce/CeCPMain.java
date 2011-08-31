@@ -88,16 +88,15 @@ public class CeCPMain extends CeMain {
 
 			Atom[] ca1 = cache.getAtoms(name1);
 			Atom[] ca2 = cache.getAtoms(name2);
-			ca1[0].getGroup().getChain().getParent().setName(name1);
-			ca2[0].getGroup().getChain().getParent().setName(name2);
 
-
-			System.out.format("Aligning %s to %s\n",
+			System.out.format("Aligning %s (%s) to %s (%s)\n",
 					ca1[1].getGroup().getChain().getParent().getName(),
-					ca2[1].getGroup().getChain().getParent().getName());
+					ca1[1].getGroup().getChain().getParent().getPDBCode(),
+					ca2[1].getGroup().getChain().getParent().getName(),
+					ca2[1].getGroup().getChain().getParent().getPDBCode() );
 			AFPChain afpChain = ce.align(ca1, ca2);
-
-
+			System.out.format("Finished aligning %s to %s\n", afpChain.getName1(),afpChain.getName2());
+			
 			// try showing a GUI
 			// requires additional dependancies biojava3-structure-gui and JmolApplet
 			if (! GuiWrapper.isGuiModuleInstalled()) {
@@ -205,8 +204,11 @@ public class CeCPMain extends CeMain {
 		newAFPChain.setName1(afpChain.getName1());
 		newAFPChain.setName2(afpChain.getName2());
 		newAFPChain.setTMScore(afpChain.getTMScore());
+		
 		int ca2len = afpChain.getCa2Length()/2;
-
+		newAFPChain.setCa1Length(afpChain.getCa1Length());
+		newAFPChain.setCa2Length(ca2len);
+		
 		// Fix optimal alignment		
 		int[][][] align = afpChain.getOptAln();
 		int alignLen = afpChain.getOptLength();
