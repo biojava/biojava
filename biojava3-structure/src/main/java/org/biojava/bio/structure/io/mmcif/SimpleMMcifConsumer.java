@@ -140,7 +140,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
       header.setDescription(kw.getPdbx_keywords());
       header.setClassification(kw.getPdbx_keywords());
       Map<String, Object> h = structure.getHeader();
-      h.put("classification", kw.getPdbx_keywords());
+      h.put("classification", kw.getPdbx_keywords());      
    }
 
    public void setStruct(Struct struct) {
@@ -1093,7 +1093,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
       for (Chain c: matchinChains){
          Group target = null;
          for (Group g: c.getAtomGroups()){
-
+        	 
             if ( g instanceof AminoAcidImpl){
                AminoAcidImpl aa = (AminoAcidImpl)g;
                if (aa.getId() == sid ) {
@@ -1108,10 +1108,17 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
                   target = g;
                   break;
                }
+            } else if ( g instanceof HetatomImpl){
+            	HetatomImpl h = (HetatomImpl)g;
+            	if ( h.getId() == sid){
+            		target =h;
+            		break;
+            	}
             }
          }
          if (target == null){
-            logger.info("could not find group at seq. position " + ppss.getSeq_id() + " in internal chain. " + ppss);
+            logger.info("could not find group at seq. position " + 
+         ppss.getSeq_id() + " in internal chain " + c.getChainID() + ". " + ppss);
             continue;
          }
 
