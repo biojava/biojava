@@ -37,7 +37,7 @@ public class TestAtomCache extends TestCase
 
 	public void setUp() {
 		// Delete files which were cached in previous tests
-		String cacheDir = TmpAtomCache.tmpDir;
+		String cacheDir = TmpAtomCache.cache.getPath();
 		String[] uncacheIDs = new String[] {
 				"1cmw", "1hhb","4hhb"
 		};

@@ -29,8 +29,8 @@ import org.biojava.bio.structure.io.FileParsingParameters;
 
 public class TmpAtomCache
 {
-   public static String tmpDir = System.getProperty("java.io.tmpdir");
-   public static AtomCache cache = new AtomCache(tmpDir,true );
+   
+   public static AtomCache cache = new AtomCache();
    static {
       FileParsingParameters params = new FileParsingParameters();
       params.setLoadChemCompInfo(false);
