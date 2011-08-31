@@ -54,6 +54,7 @@ public class PDBHeader implements PDBRecord, Serializable{
 
 		try {
 
+			@SuppressWarnings("rawtypes")
 			Class c = Class.forName("org.biojava.bio.structure.PDBHeader");
 			Method[] methods  = c.getMethods();
 
@@ -330,6 +331,8 @@ public class PDBHeader implements PDBRecord, Serializable{
 	 * @see #getId()
 	 *
 	 */
+
+	@SuppressWarnings("unused")
 	private void setId(Long id) {
 		this.id = id;
 	}
@@ -342,6 +345,7 @@ public class PDBHeader implements PDBRecord, Serializable{
 	public boolean equals(PDBHeader other){
 		try {
 
+			@SuppressWarnings("rawtypes")
 			Class c = Class.forName("org.biojava.bio.structure.PDBHeader");
 			Method[] methods  = c.getMethods();
 

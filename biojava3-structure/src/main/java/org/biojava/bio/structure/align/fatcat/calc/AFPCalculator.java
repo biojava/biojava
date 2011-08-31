@@ -46,7 +46,8 @@ public class AFPCalculator
 {
    public static final boolean debug = FatCatAligner.debug;
    
-   public static final  void extractAFPChains(FatCatParameters params, AFPChain afpChain,Atom[] ca1,Atom[] ca2){
+   @SuppressWarnings("unused")
+public static final  void extractAFPChains(FatCatParameters params, AFPChain afpChain,Atom[] ca1,Atom[] ca2){
       
      
       
@@ -58,7 +59,8 @@ public class AFPCalculator
 
 
 
-      int     p1, p2, n0, n, n1, n2;
+      int     p1, p2;
+      int n0, n, n1, n2;
       double  filter1;
       double rmsd = 0;
       //double[] r = new double[9]; // rotation matrix

@@ -150,7 +150,7 @@ public class Calc {
      * @param b  an Atom object
      * @return an Atom object
      * @throws StructureException ...
-     * @deprecated
+     * @deprecated use {@link subtract} instead.
      */
     
     public static final Atom substract(Atom a, Atom b) 

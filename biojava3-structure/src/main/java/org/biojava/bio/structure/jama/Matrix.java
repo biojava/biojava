@@ -996,7 +996,8 @@ public class Matrix implements Cloneable, java.io.Serializable {
    @throws java.io.IOException
    */
 
-   public static Matrix read (BufferedReader input) throws java.io.IOException {
+   @SuppressWarnings({ "rawtypes", "unchecked" })
+public static Matrix read (BufferedReader input) throws java.io.IOException {
       StreamTokenizer tokenizer= new StreamTokenizer(input);
 
       // Although StreamTokenizer will parse numbers, it doesn't recognize

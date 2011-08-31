@@ -25,10 +25,9 @@
 
 package org.biojava.bio.structure.align.fatcat;
 
-import java.util.List;
+
 
 import org.biojava.bio.structure.Atom;
-import org.biojava.bio.structure.Group;
 import org.biojava.bio.structure.StructureException;
 import org.biojava.bio.structure.align.StructureAlignment;
 import org.biojava.bio.structure.align.ce.ConfigStrucAligParams;

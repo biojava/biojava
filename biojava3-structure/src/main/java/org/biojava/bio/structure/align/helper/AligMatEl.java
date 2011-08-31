@@ -27,7 +27,11 @@ extends IndexPair{
 
    
    
-        int value;       
+        /**
+	 * 
+	 */
+	private static final long serialVersionUID = -4040926588803887471L;
+		int value;       
         int contig;
        
         

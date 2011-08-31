@@ -244,7 +244,8 @@ public class Gotoh {
       
         
     }*/
-    private void setPath(){
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+	private void setPath(){
         
         int  n;
         IndexPair[] backId = new IndexPair[a.getRows()+1+a.getCols()+1];

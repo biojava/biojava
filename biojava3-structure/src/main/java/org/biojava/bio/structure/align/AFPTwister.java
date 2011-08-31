@@ -300,8 +300,8 @@ public class AFPTwister
          //Calc.rotate(a, r);
          //Calc.shift(a, t);
 
-         Calc.rotate(a.getParent(),r);
-         Calc.shift(a.getParent(),t);
+         Calc.rotate(a.getGroup(),r);
+         Calc.shift(a.getGroup(),t);
 
       }
 
@@ -318,7 +318,7 @@ public class AFPTwister
          Atom a;
          if ( clone ){
             a = (Atom)ca[p].clone();
-            a.setParent((Group)ca[p].getParent().clone());
+            a.setGroup((Group)ca[p].getGroup().clone());
          }
          else {
             a = ca[p];
@@ -350,16 +350,16 @@ public class AFPTwister
       List<Chain> model = new ArrayList<Chain>();
       for(int i = r1; i < r2; i ++) {
 
-         Group g = p2[i].getParent();
+         Group g = p2[i].getGroup();
          Group newG = (Group)g.clone();
 
          p1[i] = newG.getAtom(StructureTools.caAtomName);
-         Chain parentC = g.getParent();
+         Chain parentC = g.getChain();
 
          Chain newChain = null;
 
          for( Chain c: model){
-            if (c.getName().equals(parentC.getName())){
+            if (c.getChainID().equals(parentC.getChainID())){
                newChain = c;
                break;
             }
@@ -367,7 +367,7 @@ public class AFPTwister
 
          if ( newChain == null){
             newChain = new ChainImpl();
-            newChain.setName(parentC.getName());
+            newChain.setChainID(parentC.getChainID());
             model.add(newChain);
          }
 
@@ -412,8 +412,8 @@ public class AFPTwister
          //Calc.rotate(a, r);
          //Calc.shift(a, t);
 
-         Calc.rotate(a.getParent(), r);
-         Calc.shift(a.getParent(),  t);
+         Calc.rotate(a.getGroup(), r);
+         Calc.shift(a.getGroup(),  t);
       }
 
 //      if ( showAlignmentSteps){

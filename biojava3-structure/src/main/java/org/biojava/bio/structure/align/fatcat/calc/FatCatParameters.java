@@ -395,7 +395,7 @@ public class FatCatParameters implements ConfigStrucAligParams
 	 }
 
 
-	 @SuppressWarnings("unchecked")
+	 @SuppressWarnings({  "rawtypes" })
 	public List<Class> getUserConfigTypes() {
 		 
 		 List<Class> params = new ArrayList<Class>();
@@ -427,7 +427,7 @@ public class FatCatParameters implements ConfigStrucAligParams
 	    return writer.toString();
 	 }
 	 
-	 @SuppressWarnings("unchecked")
+	 @SuppressWarnings({ "unchecked", "rawtypes" })
 	   private Object  getValue(String name){
 
 	      try {
@@ -435,7 +435,7 @@ public class FatCatParameters implements ConfigStrucAligParams
 
 	         Class paramC = this.getClass();
 
-	         Method m =paramC.getMethod(methodName,null);
+	         Method m =paramC.getMethod(methodName,(Class[])null);
 
 	         Object value = m.invoke(this);
 

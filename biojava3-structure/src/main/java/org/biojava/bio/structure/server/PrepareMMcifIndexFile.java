@@ -43,23 +43,6 @@ public class PrepareMMcifIndexFile extends PrepareIndexFile{
 
 	public static Logger logger =  Logger.getLogger("org.biojava.bio.structure");
 
-	public static void main (String[] args){
-		try {
-			File pdbLocation = new File("/Users/andreas/WORK/PDB/mmCIF/");
-			FlatFileInstallation installation = new FlatFileInstallation(pdbLocation);
-
-			//File indexFile = new File("/Users/andreas/WORK/PDB/pdbindex.idx");
-			//File chainFile = new File("/Users/andreas/WORK/PDB/chainindex.idx");
-			//installation.setPDBInfoFile(indexFile);
-			//installation.setChainInfoFile(chainFile);
-
-			PrepareMMcifIndexFile prep = new PrepareMMcifIndexFile();
-			prep.prepareIndexFileForInstallation(installation);
-
-		} catch(Exception e){
-			e.printStackTrace();
-		}
-	}
 
 	public File[] getAllMMcif(File dir){
 		if ( ! dir.isDirectory()){
@@ -102,6 +85,7 @@ public class PrepareMMcifIndexFile extends PrepareIndexFile{
 	 *
 	 * @param installation
 	 */
+	@SuppressWarnings("deprecation")
 	public void prepareIndexFileForInstallation(FlatFileInstallation installation)
 	throws FileNotFoundException,IOException{
 

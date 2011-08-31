@@ -157,7 +157,7 @@ public class FarmJobRunnable implements Runnable {
 		terminated = false;
 
 		alignmentsCalculated = 0;
-		int totalAligs = 0;
+
 		maxNrAlignments = params.getNrAlignments();
 
 		if ( maxNrAlignments < 0 ){
@@ -244,7 +244,7 @@ public class FarmJobRunnable implements Runnable {
 				}
 
 				alignmentsCalculated++;
-				totalAligs++;
+
 			}
 
 			// send results back to server

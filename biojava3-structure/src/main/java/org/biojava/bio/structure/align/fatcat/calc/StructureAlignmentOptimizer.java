@@ -101,7 +101,7 @@ public class StructureAlignmentOptimizer
       for(int i = 0; i < len1; i ++)      {           
          Atom a = c1[i+b1];
          //cod1[i] = (Atom)a.clone();
-         Group parent = (Group)a.getParent().clone();
+         Group parent = (Group)a.getGroup().clone();
          //cod1[i].setParent(parent);
          cod1[i] = parent.getAtom(StructureTools.caAtomName);
          //cod1[i] = c1[i];
@@ -109,7 +109,7 @@ public class StructureAlignmentOptimizer
       for(int i = 0; i < len2; i ++)      {
          Atom a = c2[i+b2];
          //cod2[i]= (Atom)a.clone();
-         Group parent = (Group)a.getParent().clone();
+         Group parent = (Group)a.getGroup().clone();
          //cod2[i].setParent(parent);
          cod2[i] = parent.getAtom(StructureTools.caAtomName);
          //cod2[i] = c2[i];

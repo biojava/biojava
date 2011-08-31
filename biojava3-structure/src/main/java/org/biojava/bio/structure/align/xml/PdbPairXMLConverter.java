@@ -14,7 +14,6 @@ import org.biojava.bio.structure.align.client.PdbPair;
 import org.biojava3.core.util.PrettyXMLWriter;
 
 import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -37,7 +36,7 @@ public class PdbPairXMLConverter {
 			doc.getDocumentElement().normalize();
 
 
-			Element rootElement = doc.getDocumentElement();
+			//Element rootElement = doc.getDocumentElement();
 
 			NodeList listOfPairs = doc.getElementsByTagName("pair");
 			//int numArrays = listOfArrays.getLength();
@@ -46,8 +45,8 @@ public class PdbPairXMLConverter {
 			for(int i=0; i<listOfPairs.getLength() ; i++)
 			{
 				Node pair       = listOfPairs.item(i);
-				NodeList valList = pair.getChildNodes();
-				int numChildren  = valList.getLength();
+				//NodeList valList = pair.getChildNodes();
+				//int numChildren  = valList.getLength();
 
 				NamedNodeMap map = pair.getAttributes();
 

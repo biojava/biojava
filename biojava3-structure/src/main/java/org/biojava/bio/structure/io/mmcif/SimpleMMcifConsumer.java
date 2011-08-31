@@ -133,7 +133,8 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
       return null;
    }
 
-   public void newStructKeywords(StructKeywords kw){
+   @SuppressWarnings("deprecation")
+public void newStructKeywords(StructKeywords kw){
       PDBHeader header = structure.getPDBHeader();
       if ( header == null)
          header = new PDBHeader();
@@ -143,7 +144,8 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
       h.put("classification", kw.getPdbx_keywords());      
    }
 
-   public void setStruct(Struct struct) {
+   @SuppressWarnings("deprecation")
+public void setStruct(Struct struct) {
       //System.out.println(struct);
 
       PDBHeader header = structure.getPDBHeader();
@@ -702,7 +704,8 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
       return structure;
    }
 
-   public void newDatabasePDBrev(DatabasePDBrev dbrev) {
+   @SuppressWarnings("deprecation")
+public void newDatabasePDBrev(DatabasePDBrev dbrev) {
       //System.out.println("got a database revision:" + dbrev);
       SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
       PDBHeader header = structure.getPDBHeader();
@@ -785,7 +788,8 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
       }
    }
 
-   public void newRefine(Refine r){
+   @SuppressWarnings("deprecation")
+public void newRefine(Refine r){
       // copy the resolution to header
       PDBHeader pdbHeader = structure.getPDBHeader();
       try {

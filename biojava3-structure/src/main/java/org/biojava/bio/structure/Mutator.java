@@ -108,11 +108,11 @@ public class Mutator{
         Iterator<Chain> iter = chains.iterator();
         while (iter.hasNext()){
             Chain c = (Chain)iter.next();
-            if (c.getName().equals(chainId)) {
+            if (c.getChainID().equals(chainId)) {
                 // here is our chain!
                 
                 Chain newchain = new ChainImpl();
-                newchain.setName(c.getName());
+                newchain.setChainID(c.getChainID());
                 
                 List<Group> groups = c.getAtomGroups();
                 
@@ -122,7 +122,7 @@ public class Mutator{
                 Iterator<Group> giter = groups.iterator();
                 while (giter.hasNext()){
                     Group g = (Group) giter.next();
-                    String rnum = g.getPDBCode();
+                    String rnum = g.getResidueNumber().toString();
                     
                     // we only mutate amino acids
                     // and ignore hetatoms and nucleotides in this case                   
@@ -161,7 +161,7 @@ public class Mutator{
         
         AminoAcid newgroup = new AminoAcidImpl();
         
-        newgroup.setPDBCode(oldAmino.getPDBCode());
+        newgroup.setResidueNumber(oldAmino.getResidueNumber());
         newgroup.setPDBName(newType);
         
         

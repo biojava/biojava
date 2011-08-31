@@ -294,9 +294,9 @@ public class CECalculator {
 			if ( cb1 != null && cb2 != null) {
 				// If the CA were overlaid, what is the distance between the CB?
 				// Recall c^2 = a^2 + b^2 -2ab*cos(theta), so this is a function of angle
-				Atom c1 = Calc.substract(cb1, ca1);
-				Atom c2 = Calc.substract(cb2, ca2);
-				Atom newA = Calc.substract(c2, c1);
+				Atom c1 = Calc.subtract(cb1, ca1);
+				Atom c2 = Calc.subtract(cb2, ca2);
+				Atom newA = Calc.subtract(c2, c1);
 				dist = Calc.amount(newA); 
 			}  else {
 				//dist += Calc.getDistance(ca1,ca2);
@@ -312,9 +312,9 @@ public class CECalculator {
 			// CA distance + cos(angle)
 			dist = 0;
 			if ( cb1 != null && cb2 != null) {
-				Atom cacb1 = Calc.substract(cb1, ca1);
-				Atom cacb2 = Calc.substract(cb2, ca2);
-				Atom newA = Calc.substract(cacb2, cacb1);
+				Atom cacb1 = Calc.subtract(cb1, ca1);
+				Atom cacb2 = Calc.subtract(cb2, ca2);
+				Atom newA = Calc.subtract(cacb2, cacb1);
 				//System.out.format("CACB 1: %s\nCACB 2: %s\ndiff: %s\nd: %f\n",cacb1.toString(),cacb2.toString(),newA.toString(),Calc.amount(newA));
 				dist += Calc.amount(newA);
 			}
@@ -394,6 +394,7 @@ public class CECalculator {
 
 
 
+	@SuppressWarnings("unused")
 	public void traceFragmentMatrix( AFPChain afpChain,
 			Atom[] ca1, Atom[] ca2) {
 
@@ -900,6 +901,7 @@ nBestTrace=nTrace;
 
 
 	// this part is modified from the original CeCalculator
+	@SuppressWarnings("unused")
 	private void checkBestTraces( AFPChain afpChain,
 			Atom[] ca1, Atom[] ca2) throws StructureException{
 

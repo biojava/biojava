@@ -3,7 +3,7 @@ package org.biojava.bio.structure.domain.pdp;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.biojava.bio.structure.domain.ProteinDomainParser;
+
 
 public class ClusterDomains {
 

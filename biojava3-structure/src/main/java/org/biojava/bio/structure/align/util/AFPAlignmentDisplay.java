@@ -409,7 +409,7 @@ public class AFPAlignmentDisplay
 	public static int getBlockNrForAlignPos(AFPChain afpChain, int aligPos){
 		// moved here from DisplayAFP;
 		
-		int ungappedPos = -1;
+		//int ungappedPos = -1;
 		int blockNum = afpChain.getBlockNum();
 
 		int[] optLen = afpChain.getOptLen();
@@ -439,7 +439,7 @@ public class AFPAlignmentDisplay
 				}
 
 				len++;
-				ungappedPos++;
+				//ungappedPos++;
 				p1b = p1;
 				p2b = p2;
 				if ( len >= aligPos) {

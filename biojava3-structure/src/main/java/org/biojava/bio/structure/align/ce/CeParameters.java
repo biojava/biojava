@@ -223,7 +223,7 @@ public class CeParameters implements ConfigStrucAligParams  {
 		return params;
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("rawtypes")
 	public List<Class> getUserConfigTypes() {
 		List<Class> params = new ArrayList<Class>();
 		params.add(Integer.class);

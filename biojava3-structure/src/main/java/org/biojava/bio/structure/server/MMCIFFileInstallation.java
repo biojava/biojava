@@ -17,8 +17,7 @@ import java.util.zip.GZIPOutputStream;
 import org.biojava.bio.structure.PDBHeader;
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.io.MMCIFFileReader;
-import org.biojava.bio.structure.io.PDBFileParser;
-import org.biojava.bio.structure.io.mmcif.MMcifConsumer;
+
 import org.biojava.bio.structure.io.mmcif.MMcifParser;
 import org.biojava.bio.structure.io.mmcif.SimpleMMcifConsumer;
 import org.biojava.bio.structure.io.mmcif.SimpleMMcifParser;

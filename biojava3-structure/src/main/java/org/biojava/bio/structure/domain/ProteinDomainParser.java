@@ -13,7 +13,6 @@ import org.biojava.bio.structure.domain.pdp.CutSites;
 import org.biojava.bio.structure.domain.pdp.Domain;
 import org.biojava.bio.structure.domain.pdp.GetDistanceMatrix;
 import org.biojava.bio.structure.domain.pdp.PDPDistanceMatrix;
-import org.biojava.bio.structure.domain.pdp.Segment;
 import org.biojava.bio.structure.domain.pdp.ShortSegmentRemover;
 
 

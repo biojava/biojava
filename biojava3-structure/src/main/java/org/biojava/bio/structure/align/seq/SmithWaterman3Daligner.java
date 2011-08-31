@@ -189,8 +189,8 @@ public class SmithWaterman3Daligner extends AbstractStructureAlignment implement
 				strBuf1[nAtom] = ca1[pos1];
 				strBuf2[nAtom] = ca2[pos2];
 				//
-				char l1 = getOneLetter(ca1[pos1].getParent());
-				char l2 = getOneLetter(ca2[pos2].getParent());
+				char l1 = getOneLetter(ca1[pos1].getGroup());
+				char l2 = getOneLetter(ca2[pos2].getGroup());
 				//
 				alnseq1[myI] = Character.toUpperCase(l1);
 				alnseq2[myI] = Character.toUpperCase(l2);
@@ -225,7 +225,7 @@ public class SmithWaterman3Daligner extends AbstractStructureAlignment implement
 					alnseq1[myI] = '-';
 
 				} else {
-					char l1 = getOneLetter(ca1[pos1].getParent());
+					char l1 = getOneLetter(ca1[pos1].getGroup());
 					alnseq1[myI] = Character.toUpperCase(l1);
 					align_se1[myI] = pos1;
 				}
@@ -233,7 +233,7 @@ public class SmithWaterman3Daligner extends AbstractStructureAlignment implement
 					alnseq2[myI] = '-';
 
 				} else {
-					char l2 = getOneLetter(ca2[pos2].getParent());
+					char l2 = getOneLetter(ca2[pos2].getGroup());
 					alnseq2[myI] = Character.toUpperCase(l2);
 					align_se2[myI] = pos2;
 
