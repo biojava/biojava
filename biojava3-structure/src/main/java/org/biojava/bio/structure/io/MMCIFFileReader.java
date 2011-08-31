@@ -69,15 +69,14 @@ public class MMCIFFileReader implements StructureIOFile {
 	List<String> extensions;
 	boolean autoFetch;
 	boolean pdbDirectorySplit;
+	
 	public static final String lineSplit = System.getProperty("file.separator");
 	
-
 	FileParsingParameters params;
 	
 	
 	public static void main(String[] args){
 	
-
 		StructureIOFile reader = new MMCIFFileReader();
 		FileParsingParameters params = new FileParsingParameters();
 		reader.setFileParsingParameters(params);
@@ -87,14 +86,10 @@ public class MMCIFFileReader implements StructureIOFile {
 			System.out.println(struc);
 			System.out.println(struc.toPDB());
 
-
 		} catch (Exception e) {
 			e.printStackTrace();
-		}
-		
-		
+		}		
 	}
-
 
 	public MMCIFFileReader(){
 		extensions    = new ArrayList<String>();
@@ -108,7 +103,6 @@ public class MMCIFFileReader implements StructureIOFile {
 		autoFetch     = config.getAutoFetch();
 		pdbDirectorySplit = config.isSplit();
 		params = new FileParsingParameters();
-
 
 	}
 
