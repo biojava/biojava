@@ -304,8 +304,8 @@ implements ActionListener
 					//System.out.println("   Segment: " + s);
 					//Color c1 = ColorUtils.rotateHue(c, fraction);
 				//	fraction += 1.0/(float)segments.size();
-					int start = s.from;
-					int end = s.to;
+					int start = s.getFrom();
+					int end = s.getTo();
 					Group startG = ca[start].getGroup();
 					Group endG = ca[end].getGroup();
 					System.out.println("   Segment: " +startG.getResidueNumber() +":" + startG.getChainId() + " - " + endG.getResidueNumber()+":"+endG.getChainId() + " " + s);
