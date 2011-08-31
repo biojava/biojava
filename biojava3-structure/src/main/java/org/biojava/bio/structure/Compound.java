@@ -120,6 +120,7 @@ public class Compound implements Cloneable, Serializable {
 
 		 */
 		try {
+			@SuppressWarnings("rawtypes")
 			Class c = Class.forName("org.biojava.bio.structure.Compound");
 			Method[] methods  = c.getMethods();
 
