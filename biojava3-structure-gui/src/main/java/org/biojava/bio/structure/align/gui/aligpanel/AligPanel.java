@@ -166,7 +166,8 @@ public class AligPanel  extends JPrintPanel implements AlignmentPositionListener
       
    }
 
-   public void paintComponent(Graphics g){
+
+public void paintComponent(Graphics g){
 
       super.paintComponent(g);
 
@@ -279,7 +280,7 @@ public class AligPanel  extends JPrintPanel implements AlignmentPositionListener
                         colorPos = ColorUtils.colorWheel.length % colorPos ;
                      }
                   } else {
-                     colorPos = DisplayAFP.getBlockNrForAlignPos(afpChain, i);
+                     colorPos = AFPAlignmentDisplay.getBlockNrForAlignPos(afpChain, i);
                      bg  = ColorUtils.getIntermediate(ColorUtils.orange, end1, blockNum, colorPos);
                      bg2   = ColorUtils.getIntermediate(ColorUtils.cyan, end2, blockNum, colorPos);
                      //bg = ColorUtils.rotateHue(ColorUtils.orange,  (1.0f  / 24.0f) * colorPos );

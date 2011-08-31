@@ -28,10 +28,9 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.io.IOException;
 import java.util.logging.Logger;
-import javax.swing.Action;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
-import javax.swing.JButton;
+
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -152,22 +151,22 @@ implements StructurePairSelector{
 	}
 
 
-	private JPanel getPDBDirPanel(JTextField f){
-		JPanel panel = new JPanel();
-		panel.setBorder(BorderFactory.createLineBorder(Color.black));
-
-
-		JLabel l01 = new JLabel("Select PDB directory");
-		panel.add(l01);
-
-		panel.add(f);
-
-		Action action = new ChooseDirAction(pdbDir);
-
-		JButton chooser = new JButton(action);
-		panel.add(chooser);
-		return panel;
-	}
+//	private JPanel getPDBDirPanel(JTextField f){
+//		JPanel panel = new JPanel();
+//		panel.setBorder(BorderFactory.createLineBorder(Color.black));
+//
+//
+//		JLabel l01 = new JLabel("Select PDB directory");
+//		panel.add(l01);
+//
+//		panel.add(f);
+//
+//		Action action = new ChooseDirAction(pdbDir);
+//
+//		JButton chooser = new JButton(action);
+//		panel.add(chooser);
+//		return panel;
+//	}
 
 	private JPanel getPDBFilePanel(int pos ,JTextField f, JTextField c){
 

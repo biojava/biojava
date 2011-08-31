@@ -41,7 +41,6 @@ import org.biojava.bio.structure.Atom;
 import org.biojava.bio.structure.Group;
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureTools;
-import org.biojava.bio.structure.align.ce.AbstractUserArgumentProcessor;
 import org.biojava.bio.structure.align.gui.JPrintPanel;
 import org.biojava.bio.structure.align.gui.jmol.MyJmolStatusListener;
 import org.biojava.bio.structure.domain.ProteinDomainParser;
@@ -300,11 +299,11 @@ implements ActionListener
 				//System.out.println("DOMAIN:" + i + " size:" + dom.size + " " +  dom.score);
 				List<Segment> segments = dom.getSegments();
 				Color c1 = ColorUtils.colorWheel[i];
-				float fraction = 0f;
+				//float fraction = 0f;
 				for ( Segment s : segments){
 					//System.out.println("   Segment: " + s);
 					//Color c1 = ColorUtils.rotateHue(c, fraction);
-					fraction += 1.0/(float)segments.size();
+				//	fraction += 1.0/(float)segments.size();
 					int start = s.from;
 					int end = s.to;
 					Group startG = ca[start].getGroup();

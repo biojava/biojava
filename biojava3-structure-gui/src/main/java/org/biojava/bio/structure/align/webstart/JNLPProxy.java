@@ -28,6 +28,7 @@ public final class  JNLPProxy
 private static final Object  basicServiceObject
   = getBasicServiceObject ( );
 
+@SuppressWarnings("rawtypes")
 private static final Class   basicServiceClass
   = getBasicServiceClass ( );
 
@@ -44,6 +45,7 @@ public static void  main ( String [ ]  args )
 //////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////
 
+@SuppressWarnings("unchecked")
 public static boolean  showDocument ( URL  url )
 //////////////////////////////////////////////////////////////////////
 {
@@ -77,6 +79,7 @@ public static boolean  showDocument ( URL  url )
 //////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////
 
+@SuppressWarnings({ "unchecked", "rawtypes" })
 private static Object  getBasicServiceObject ( )
 //////////////////////////////////////////////////////////////////////
 {
@@ -97,6 +100,7 @@ private static Object  getBasicServiceObject ( )
   }
 }
 
+@SuppressWarnings("rawtypes")
 private static Class  getBasicServiceClass ( )
 //////////////////////////////////////////////////////////////////////
 {

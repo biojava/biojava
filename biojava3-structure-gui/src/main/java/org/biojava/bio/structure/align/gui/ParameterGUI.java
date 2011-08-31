@@ -32,8 +32,9 @@ public class ParameterGUI extends JFrame{
 
    
    
-   @SuppressWarnings("unchecked")
-   public ParameterGUI(StructureAlignment alignment){
+   
+   @SuppressWarnings("rawtypes")
+public ParameterGUI(StructureAlignment alignment){
 
       ConfigStrucAligParams params = alignment.getParameters();
 
@@ -159,7 +160,7 @@ public class ParameterGUI extends JFrame{
 
    }
 
-   @SuppressWarnings("unchecked")
+   @SuppressWarnings({  "rawtypes" })
    protected void setDefault() {
       params.reset();
 
@@ -211,7 +212,7 @@ public class ParameterGUI extends JFrame{
       params = null;
    }
 
-   @SuppressWarnings("unchecked")
+   @SuppressWarnings("rawtypes")
    protected void storeParameters() {
       //List<String> names = params.getUserConfigParameterNames();
       List<String> keys = params.getUserConfigParameters();
@@ -247,7 +248,7 @@ public class ParameterGUI extends JFrame{
 
    }
 
-   @SuppressWarnings("unchecked")
+   @SuppressWarnings({ "unchecked", "rawtypes" })
    private void setValue(String name, Class type, String value) {
       try {
          String methodName = "set" + name;
@@ -287,7 +288,7 @@ public class ParameterGUI extends JFrame{
 
    }
 
-   @SuppressWarnings("unchecked")
+   @SuppressWarnings({ "unchecked", "rawtypes" })
    private Object  getValue(String name){
 
       try {

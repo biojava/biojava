@@ -194,18 +194,18 @@ public class AligPanelMouseMotionListener implements MouseMotionListener, MouseL
 	}
 	
 
-	private void triggerToggleRange(AlignedPosition start,
-			AlignedPosition end) {
-		for (AlignmentPositionListener li : aligPosListeners){
-			for ( int i = start.getPos1() ; i < end.getPos1() ; i++){
-				AlignedPosition pos = new AlignedPosition();
-				pos.setPos1(i);
-				pos.setPos2(i);
-				li.toggleSelection(pos);
-			}
-		}
-		
-	}
+//	private void triggerToggleRange(AlignedPosition start,
+//			AlignedPosition end) {
+//		for (AlignmentPositionListener li : aligPosListeners){
+//			for ( int i = start.getPos1() ; i < end.getPos1() ; i++){
+//				AlignedPosition pos = new AlignedPosition();
+//				pos.setPos1(i);
+//				pos.setPos2(i);
+//				li.toggleSelection(pos);
+//			}
+//		}
+//		
+//	}
 
 	public void mouseEntered(MouseEvent e) {
 		// TODO Auto-generated method stub

@@ -24,8 +24,6 @@
 
 package org.biojava.bio.structure.align.webstart;
 
-import javax.swing.LookAndFeel;
-import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
 
@@ -48,14 +46,14 @@ public class AligUIManager
          LookAndFeelInfo[] feels = UIManager.getInstalledLookAndFeels();
          
          if ( feels != null){
-            for ( LookAndFeelInfo info: feels){
+            //for ( LookAndFeelInfo info: feels){
                //System.out.println(info.getName() + " " + info.getClassName());
-            }
+           // }
          }
          
          
          System.out.println("Auxiliary Look And Feels:");
-         LookAndFeel[] looks = UIManager.getAuxiliaryLookAndFeels();
+        // LookAndFeel[] looks = UIManager.getAuxiliaryLookAndFeels();
          //printLookAndFeel(looks);
          
          
@@ -67,17 +65,17 @@ public class AligUIManager
 
    }
 
-   private static void printLookAndFeel(LookAndFeel[] looks)
-   {
-
-      if ( looks != null){
-         System.out.println("got " + looks.length + " lookAndFeels");
-         for (LookAndFeel laf : looks){
-            System.out.println(laf.getDescription());
-         }
-      } else {
-         System.out.println("No other LookAndFeels found.");
-      }
-      
-   }
+//   private static void printLookAndFeel(LookAndFeel[] looks)
+//   {
+//
+//      if ( looks != null){
+//         System.out.println("got " + looks.length + " lookAndFeels");
+//         for (LookAndFeel laf : looks){
+//            System.out.println(laf.getDescription());
+//         }
+//      } else {
+//         System.out.println("No other LookAndFeels found.");
+//      }
+//      
+//   }
 }
