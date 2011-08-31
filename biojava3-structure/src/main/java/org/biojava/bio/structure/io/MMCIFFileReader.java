@@ -35,6 +35,7 @@ import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
 import org.biojava.bio.structure.Structure;
+import org.biojava.bio.structure.align.util.UserConfiguration;
 import org.biojava.bio.structure.io.StructureIOFile;
 import org.biojava.bio.structure.io.mmcif.MMcifParser;
 import org.biojava.bio.structure.io.mmcif.SimpleMMcifConsumer;
@@ -98,15 +99,15 @@ public class MMCIFFileReader implements StructureIOFile {
 
 	public MMCIFFileReader(){
 		extensions    = new ArrayList<String>();
-		path = "" ;
 		extensions.add(".cif");
 		extensions.add(".mmcif");
 		extensions.add(".cif.gz");
 		extensions.add(".mmcif.gz");
 
-		autoFetch     = false;
-	
-		pdbDirectorySplit = false;
+		UserConfiguration config = new UserConfiguration();
+		path = config.getPdbFilePath() ;
+		autoFetch     = config.getAutoFetch();
+		pdbDirectorySplit = config.isSplit();
 		params = new FileParsingParameters();
 
 
