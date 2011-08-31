@@ -166,9 +166,9 @@ public class FastaReader<S extends Sequence<?>, C extends Compound> {
             for(String key : proteinProxySequences.keySet()){
                 ProteinSequence proteinSequence = proteinProxySequences.get(key);
                 System.out.println(key);
-                if(key.equals("Q98SJ1_CHICK/15-61")){
-                    int dummy = 1;
-                }
+//                if(key.equals("Q98SJ1_CHICK/15-61")){
+//                    int dummy = 1;
+//                }
                 System.out.println(proteinSequence.toString());
 
             }

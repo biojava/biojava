@@ -318,7 +318,7 @@ public class SequenceMixin {
      * @param sequence The input sequence
      * @return The inverted sequence which is optionally complemented
      */
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public static <C extends Compound> SequenceView<C> inverse(Sequence<C> sequence) {
         SequenceView<C> reverse = new ReversedSequenceView<C>(sequence);
         if(sequence.getCompoundSet().isComplementable()) {

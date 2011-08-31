@@ -87,7 +87,7 @@ public class FastaWriter<S extends Sequence<?>, C extends Compound> {
     }
 
     public void process() throws Exception {
-        boolean closeit = false;
+       // boolean closeit = false;
        
         
 
