@@ -60,7 +60,7 @@ public class DemoDomainsplit {
 
 			System.out.println("RESULTS: =====");
 			for ( Domain dom : domains){
-				System.out.println("DOMAIN:" + dom.size + " " +  dom.score);
+				System.out.println("DOMAIN:" + dom.getSize() + " " +  dom.getScore());
 				List<Segment> segments = dom.getSegments();
 				for ( Segment s : segments){
 					System.out.println("   Segment: " + s);
