@@ -60,7 +60,7 @@ public class RemoteScopInstallation implements ScopDatabase {
 		this.server = server;
 	}
 
-	@Override
+	//@Override
 	public List<ScopDescription> getByCategory(ScopCategory category) {
 		List<ScopDescription> results = null;
 		try {
@@ -77,7 +77,7 @@ public class RemoteScopInstallation implements ScopDatabase {
 		return results;
 	}
 
-	@Override
+	//@Override
 	public List<ScopDescription> filterByClassificationId(String query) {
 		List<ScopDescription> results = null;
 		try {
@@ -93,7 +93,7 @@ public class RemoteScopInstallation implements ScopDatabase {
 		return results;
 	}
 
-	@Override
+	//@Override
 	public List<ScopNode> getTree(ScopDomain domain) {
 		List<ScopNode> results = null;
 		try {
@@ -109,7 +109,7 @@ public class RemoteScopInstallation implements ScopDatabase {
 		return results;
 	}
 
-	@Override
+	//@Override
 	public List<ScopDomain> filterByDomainName(String query) {
 		List<ScopDomain> results = null;
 		try {
@@ -125,7 +125,7 @@ public class RemoteScopInstallation implements ScopDatabase {
 		return results;
 	}
 
-	@Override
+	//@Override
 	public List<ScopDescription> filterByDescription(String query) {
 		List<ScopDescription> results = null;
 		try {
@@ -141,7 +141,7 @@ public class RemoteScopInstallation implements ScopDatabase {
 		return results;
 	}
 
-	@Override
+	//@Override
 	public ScopDescription getScopDescriptionBySunid(int sunid) {
 		ScopDescription desc = null;
 		try {
@@ -157,7 +157,7 @@ public class RemoteScopInstallation implements ScopDatabase {
 		return desc;
 	}
 
-	@Override
+	//@Override
 	public List<ScopDomain> getDomainsForPDB(String pdbId) {
 		List<ScopDomain> results = null;
 		try {
@@ -173,7 +173,7 @@ public class RemoteScopInstallation implements ScopDatabase {
 		return results;
 	}
 
-	@Override
+	//@Override
 	public ScopDomain getDomainByScopID(String scopId) {
 		ScopDomain desc = null;
 		try {
@@ -189,7 +189,7 @@ public class RemoteScopInstallation implements ScopDatabase {
 		return desc;
 	}
 
-	@Override
+	//@Override
 	public ScopNode getScopNode(int sunid) {
 		ScopNode desc = null;
 		try {
@@ -205,7 +205,7 @@ public class RemoteScopInstallation implements ScopDatabase {
 		return desc;
 	}
 
-	@Override
+	//@Override
 	public String getScopVersion() {
 		String version = null;
 		try {
@@ -219,7 +219,7 @@ public class RemoteScopInstallation implements ScopDatabase {
 		return version;
 	}
 
-	@Override
+	//@Override
 	public List<ScopDomain> getScopDomainsBySunid(Integer sunid) {
 		List<ScopDomain> results = null;
 		try {
