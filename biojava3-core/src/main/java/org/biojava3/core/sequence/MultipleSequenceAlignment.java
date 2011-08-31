@@ -63,7 +63,7 @@ public class MultipleSequenceAlignment<S extends Sequence<C>, C extends Compound
     /**
      * Remove a sequence
      * @param sequence
-     * @return
+     * @return flag
      */
     public boolean removeAlignedSequence(S sequence){
         return sequences.remove(sequence);
@@ -73,7 +73,7 @@ public class MultipleSequenceAlignment<S extends Sequence<C>, C extends Compound
     /**
      * Uses bioIndex starting at 1 instead of 0
      * @param listIndex
-     * @return
+     * @return sequence
      */
      
 
@@ -84,7 +84,7 @@ public class MultipleSequenceAlignment<S extends Sequence<C>, C extends Compound
 
     /**
      * Get the list of sequences
-     * @return
+     * @return list of sequences
      */
     @Override
     public List<S> getAlignedSequences() {
@@ -94,7 +94,7 @@ public class MultipleSequenceAlignment<S extends Sequence<C>, C extends Compound
     /**
      * Get a list of compounds at a sequence position
      * @param alignmentIndex
-     * @return
+     * @return compounds
      */
     @Override
     public List<C> getCompoundsAt(int alignmentIndex) {
@@ -107,7 +107,7 @@ public class MultipleSequenceAlignment<S extends Sequence<C>, C extends Compound
 
     /**
      * Get the Compounds defined in the first sequence
-     * @return
+     * @return get compound set
      */
     @Override
     public CompoundSet<C> getCompoundSet() {
@@ -117,7 +117,7 @@ public class MultipleSequenceAlignment<S extends Sequence<C>, C extends Compound
     /**
      * Get the length of the MSA where it is assumed that
      * all sequence position
-     * @return
+     * @return length of MSA
      */
     @Override
     public int getLength() {
@@ -126,7 +126,7 @@ public class MultipleSequenceAlignment<S extends Sequence<C>, C extends Compound
 
     /**
      * Get the number of sequences in the MSA
-     * @return
+     * @return nr of sequences
      */
     @Override
     public int getSize() {
@@ -136,7 +136,7 @@ public class MultipleSequenceAlignment<S extends Sequence<C>, C extends Compound
     /**
      * Get a string representation of the MSA with a fixed width
      * @param width
-     * @return
+     * @return String
      */
     @Override
     public String toString(int width) {
@@ -146,7 +146,7 @@ public class MultipleSequenceAlignment<S extends Sequence<C>, C extends Compound
     /**
      * Support for different MSA formats
      * @param format
-     * @return
+     * @return String in one of the supported file formats.
      */
     @Override
     public String toString(StringFormat format) {
@@ -169,7 +169,7 @@ public class MultipleSequenceAlignment<S extends Sequence<C>, C extends Compound
 
     /**
      * String representation of the MSA
-     * @return
+     * @return String
      */
 
     @Override
@@ -188,7 +188,7 @@ public class MultipleSequenceAlignment<S extends Sequence<C>, C extends Compound
      * @param aligIndices
      * @param aligConservation
      * @param webDisplay
-     * @return
+     * @return String
      */
     // creates formatted String
     private String toString(int width, String header, String idFormat, boolean interlaced, boolean aligIndices,
