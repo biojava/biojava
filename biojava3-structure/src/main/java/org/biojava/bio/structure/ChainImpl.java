@@ -551,15 +551,15 @@ public class ChainImpl implements Chain, Serializable {
 		//List<Group> groups = c.getSeqResGroups();
 		String seq = getSeqResSequence();
 
-		String name = "";
-		if ( this.getParent() != null )
-			name = getParent().getPDBCode();
-		name += "." + getName();
+//		String name = "";
+//		if ( this.getParent() != null )
+//			name = getParent().getPDBCode();
+//		name += "." + getName();
 
 		Sequence<AminoAcidCompound> s = null;
 
 		s = new ProteinSequence(seq);
-
+		
 		//TODO: return a DNA sequence if the content is DNA...
 		return s;
 
