@@ -162,7 +162,7 @@ public enum Element implements Serializable {
     // should these be declared final?
     private int atomicNumber;
     private int period;
-    private int hillOrder;
+    //private int hillOrder;
     private float VDWRadius; // in Angstroms
     private float covalentRadius; // in Angstroms
     private int valenceElectronCount;
@@ -214,7 +214,7 @@ public enum Element implements Serializable {
 
         this.atomicNumber = atomicNumber;
         this.period = period;
-        this.hillOrder = hillOrder;
+        //this.hillOrder = hillOrder;
         this.VDWRadius = VDWRadius;
         this.covalentRadius = covalentRadius;
         this.valenceElectronCount = valenceElectronCount;
