@@ -13,8 +13,8 @@ import org.biojava.bio.structure.AtomImpl;
 import org.biojava.bio.structure.Chain;
 import org.biojava.bio.structure.ChainImpl;
 import org.biojava.bio.structure.Group;
-import org.biojava.bio.structure.StructureException;
 import org.biojava.bio.structure.align.ce.CECalculator;
+import org.biojava.bio.structure.align.ce.CeCPMain;
 import org.biojava.bio.structure.align.ce.CeMain;
 import org.biojava.bio.structure.align.model.AFPChain;
 import org.junit.*;
@@ -70,13 +70,7 @@ public class CeMainTest {
 			afp.setBlockNum(1);
 			afp.setOptLen(new int[] {dupAlign[0][1].length});
 			
-			//Use reflection to get around private function
-			Method method = CeMain.class.getDeclaredMethod("filterDuplicateAFPs",
-					AFPChain.class, CECalculator.class, Atom[].class, Atom[].class);
-			method.setAccessible(true);
-			
-			AFPChain newAFP = (AFPChain) method.invoke(null, afp, new CECalculator(null), ca1, ca2);
-			//AFPChain newAFP = CeMain.filterDuplicateAFPs(afp, new CECalculator(null), ca1, ca2);
+			AFPChain newAFP = CeCPMain.filterDuplicateAFPs(afp, new CECalculator(null), ca1, ca2);
 			
 			int[][][] align = newAFP.getOptAln();
 			int[] blkLen = newAFP.getOptLen();
