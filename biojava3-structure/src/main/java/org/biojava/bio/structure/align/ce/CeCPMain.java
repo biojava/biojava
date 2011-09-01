@@ -197,7 +197,7 @@ public class CeCPMain extends CeMain {
 		}*/
 		Matrix singleMatrix = doubledMatrix.getMatrix(0, ca1.length-1, 0, (ca2m.length/2)-1);
 		assert(singleMatrix.getRowDimension() == ca1.length);
-		assert(singleMatrix.getColumnDimension() == (ca2m.length/2)-1);
+		assert(singleMatrix.getColumnDimension() == (ca2m.length/2));
 
 		afpChain.setDistanceMatrix(singleMatrix);
 		
