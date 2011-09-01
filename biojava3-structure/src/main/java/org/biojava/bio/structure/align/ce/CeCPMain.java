@@ -156,7 +156,7 @@ public class CeCPMain extends CeMain {
 			System.out.format("Running Nx2N alignment took %s ms\n",System.currentTimeMillis()-startTime);
 			startTime = System.currentTimeMillis();
 		}
-		postProcessAlignment(afpChain, ca1, ca2m, calculator);
+		afpChain = postProcessAlignment(afpChain, ca1, ca2m, calculator);
 		
 		if(debug) {
 			System.out.format("Finding CP point took %s ms\n",System.currentTimeMillis()-startTime);
@@ -174,7 +174,7 @@ public class CeCPMain extends CeMain {
 	 * @param calculator
 	 * @throws StructureException
 	 */
-	public static void postProcessAlignment(AFPChain afpChain, Atom[] ca1, Atom[] ca2m,CECalculator calculator ) throws StructureException{
+	public static AFPChain postProcessAlignment(AFPChain afpChain, Atom[] ca1, Atom[] ca2m,CECalculator calculator ) throws StructureException{
 		// Draw a little green line across the center of the distance matrix
 		/* TODO do this more elegantly. If anyone uses afpChain.getDistanceMatrix()
 		 * for anything besides displaying a dotplot, they will be confused by
@@ -197,7 +197,7 @@ public class CeCPMain extends CeMain {
 		}*/
 		Matrix singleMatrix = doubledMatrix.getMatrix(0, ca1.length-1, 0, (ca2m.length/2)-1);
 		assert(singleMatrix.getRowDimension() == ca1.length);
-		assert(singleMatrix.getColumnDimension() == (ca2m.length/2));
+		assert(singleMatrix.getColumnDimension() == (ca2m.length/2)-1);
 
 		afpChain.setDistanceMatrix(singleMatrix);
 		
@@ -205,7 +205,7 @@ public class CeCPMain extends CeMain {
 
 		// Check for circular permutations
 		afpChain = filterDuplicateAFPs(afpChain,calculator,ca1,ca2m);
-		
+		return afpChain;
 	}
 
 	/**
