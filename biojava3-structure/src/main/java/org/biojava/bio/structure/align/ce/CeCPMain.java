@@ -25,6 +25,7 @@
 package org.biojava.bio.structure.align.ce;
 
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,8 +42,14 @@ import org.biojava.bio.structure.jama.Matrix;
 
 /** 
  * A wrapper for {@link CeMain} which sets default parameters to be appropriate for finding
- * circular permutations
- * 
+ * circular permutations.
+ * <p>
+ * A circular permutation consists of a single cleavage point and rearrangement 
+ * between two structures, for example:
+ * <pre>
+ * ABCDEFG
+ * DEFGABC
+ * </pre>  
  * @author Spencer Bliven.
  *
  */
@@ -52,6 +59,7 @@ public class CeCPMain extends CeMain {
 	public static final String algorithmName = "jCE Circular Permutation";
 
 	public static final String version = "1.0";
+	
 
 	public CeCPMain(){
 		super();
@@ -59,14 +67,12 @@ public class CeCPMain extends CeMain {
 	}
 
 	public String getAlgorithmName() {
-
 		return algorithmName;
 	}
 
 	public String getVersion() {
 		return version;
 	}
-
 
 	public static void main(String[] args){
 		try {
@@ -77,36 +83,39 @@ public class CeCPMain extends CeMain {
 			name2 = "3cna";
 
 			//small case
+			//name1 = "d1qdmA1";
 			//name1 = "1QDM.A";
-			//name2 = "1NKL";
+			//name2 = "d1nklA_";
 
-			CeMain ce = (CeMain) StructureAlignmentFactory.getAlgorithm(CeMain.algorithmName);
+			//1itb selfsymmetry
+			//name1 = "1ITB.A";
+			//name2 = "1ITB.A";
+			
+			CeCPMain ce = (CeCPMain) StructureAlignmentFactory.getAlgorithm(CeCPMain.algorithmName);
 			CeParameters params = (CeParameters) ce.getParameters();
 			ce.setParameters(params);
-
+			
 			AtomCache cache = new AtomCache();
 
 			Atom[] ca1 = cache.getAtoms(name1);
 			Atom[] ca2 = cache.getAtoms(name2);
 
-			System.out.format("Aligning %s (%s) to %s (%s)\n",
-					ca1[1].getGroup().getChain().getParent().getName(),
-					ca1[1].getGroup().getChain().getParent().getPDBCode(),
-					ca2[1].getGroup().getChain().getParent().getName(),
-					ca2[1].getGroup().getChain().getParent().getPDBCode() );
-			AFPChain afpChain = ce.align(ca1, ca2);
-			System.out.format("Finished aligning %s to %s\n", afpChain.getName1(),afpChain.getName2());
-			
-			// try showing a GUI
-			// requires additional dependancies biojava3-structure-gui and JmolApplet
-			if (! GuiWrapper.isGuiModuleInstalled()) {
-				System.err.println("The biojava-structure-gui and/or JmolApplet modules are not installed. Please install!");
-				// display alignment in console
-				System.out.println(afpChain.toCE(ca1, ca2));
-			} else {
-				Object jmol = GuiWrapper.display(afpChain,ca1,ca2);
-				GuiWrapper.showAlignmentImage(afpChain, ca1,ca2,jmol);
+
+			if(debug) {
+				System.out.format("Aligning %s to %s\n",
+					ca1[0].getGroup().getChain().getParent().getName(),
+					ca2[0].getGroup().getChain().getParent().getName() );
 			}
+			AFPChain afpChain = ce.align(ca1, ca2);
+			if(debug) {
+				System.out.format("Finished aligning %s to %s\n", afpChain.getName1(),afpChain.getName2());
+				System.out.format("Heuristic Score: %.2f\n", afpChain.getAlignScore());
+			}
+			
+			int cp = afpChain.getOptAln()[0][1][0];
+			System.out.println("CP at "+cp);
+			
+			displayAlignment(afpChain,ca1,ca2);
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -135,9 +144,20 @@ public class CeCPMain extends CeMain {
 			pos++;
 		}
 		return ca2m;
-		
+
 	}
-	
+
+
+	/**
+	 * Aligns ca1 and ca2 using a heuristic to check for CPs.
+	 * <p>
+	 * Aligns ca1 against a doubled ca2, then cleans up the alignment.
+	 * @param ca1
+	 * @param ca2
+	 * @param param
+	 * @return the alignment, possibly containing a CP.
+	 * @throws StructureException 
+	 */
 	@Override
 	public AFPChain align(Atom[] ca1, Atom[] ca2, Object param) throws StructureException{
 		long startTime = System.currentTimeMillis();
@@ -151,13 +171,18 @@ public class CeCPMain extends CeMain {
 
 		// Do alignment
 		AFPChain afpChain = super.align(ca1, ca2m,params);
-
+		
+		// since the process of creating ca2m strips the name info away, set it explicitely
+		try {
+			afpChain.setName2(ca2[0].getGroup().getChain().getParent().getName());
+		} catch( Exception e) {}
+		
 		if(debug) {
-			System.out.format("Running Nx2N alignment took %s ms\n",System.currentTimeMillis()-startTime);
+			System.out.format("Running %dx2*%d alignment took %s ms\n",ca1.length,ca2.length,System.currentTimeMillis()-startTime);
 			startTime = System.currentTimeMillis();
 		}
 		afpChain = postProcessAlignment(afpChain, ca1, ca2m, calculator);
-		
+
 		if(debug) {
 			System.out.format("Finding CP point took %s ms\n",System.currentTimeMillis()-startTime);
 			startTime = System.currentTimeMillis();
@@ -175,33 +200,16 @@ public class CeCPMain extends CeMain {
 	 * @throws StructureException
 	 */
 	public static AFPChain postProcessAlignment(AFPChain afpChain, Atom[] ca1, Atom[] ca2m,CECalculator calculator ) throws StructureException{
-		// Draw a little green line across the center of the distance matrix
-		/* TODO do this more elegantly. If anyone uses afpChain.getDistanceMatrix()
-		 * for anything besides displaying a dotplot, they will be confused by
-		 * the row of -1 through the middle
-		 */
-
+		// remove bottom half of the matrix
 		Matrix doubledMatrix = afpChain.getDistanceMatrix();
-
 		assert(doubledMatrix.getRowDimension() == ca1.length);
 		assert(doubledMatrix.getColumnDimension() == ca2m.length);
-		/*double[][] doubledArray = doubledMatrix.getArray();
 
-		double[][] singleArray = new double[ca1.length][ca2.length];
-		// copy the first half of the matrix, discarding the rest
-		for(int i=0;i<ca1.length;i++) {
-			for(int j=0;j<ca2.length;j++) {
-				singleArray[i][j] = doubledArray[i][j];
-			}
-		afpChain.setDistanceMatrix(new Matrix(singleArray));
-		}*/
 		Matrix singleMatrix = doubledMatrix.getMatrix(0, ca1.length-1, 0, (ca2m.length/2)-1);
 		assert(singleMatrix.getRowDimension() == ca1.length);
 		assert(singleMatrix.getColumnDimension() == (ca2m.length/2));
 
 		afpChain.setDistanceMatrix(singleMatrix);
-		
-		
 
 		// Check for circular permutations
 		afpChain = filterDuplicateAFPs(afpChain,calculator,ca1,ca2m);
@@ -223,8 +231,9 @@ public class CeCPMain extends CeMain {
 	 *  at most 1 AFP.
 	 * @throws StructureException 
 	 */
-	public static AFPChain filterDuplicateAFPs(AFPChain afpChain, CECalculator ceCalc, Atom[] ca1, Atom[] ca2duplicated) throws StructureException {
+	private static AFPChain filterDuplicateAFPs(AFPChain afpChain, CECalculator ceCalc, Atom[] ca1, Atom[] ca2duplicated) throws StructureException {
 		AFPChain newAFPChain = new AFPChain(afpChain);
+		//TODO redundant properties, set in the constructor
 		newAFPChain.setAlgorithmName(afpChain.getAlgorithmName());
 		newAFPChain.setVersion(afpChain.getVersion());
 		newAFPChain.setName1(afpChain.getName1());
@@ -301,11 +310,14 @@ public class CeCPMain extends CeMain {
 				//Adjust alignment length for trimming
 				alignLen -= minResCount;
 
-
-				//System.out.format("Found a CP at residue %d. Trimming %d residues (%d-%d,%d-%d).\n",
-				//		firstRes,minResCount,nStart,firstRes-1,firstRes+ca2len, cEnd);
+				if(debug) {
+					System.out.format("Found a CP at residue %d. Trimming %d residues (%d-%d,%d-%d).\n",
+							firstRes,minResCount,nStart,firstRes-1,firstRes+ca2len, cEnd);
+				}
 				//TODO Now have CP site, and could do a nxm alignment for further optimization.
 				// For now, does not appear to be worth the 50% increase in time
+				
+				//TODO Bug: scores need to be recalculated
 			}
 		}
 
@@ -424,7 +436,7 @@ public class CeCPMain extends CeMain {
 
 
 	/**
-	 * A light class to store an alignment between two residues
+	 * A light class to store an alignment between two residues.
 	 * @author Spencer Bliven
 	 * @see #filterDuplicateAFPs()
 	 */
@@ -434,6 +446,21 @@ public class CeCPMain extends CeMain {
 		public ResiduePair(int a, int b) {
 			this.a=a;
 			this.b=b;
+		}
+	}
+	
+	// try showing a GUI
+	// requires additional dependencies biojava3-structure-gui and JmolApplet
+	private static void displayAlignment(AFPChain afpChain, Atom[] ca1, Atom[] ca2) throws ClassNotFoundException, NoSuchMethodException, InvocationTargetException, IllegalAccessException, StructureException {
+		Atom[] ca1clone = StructureTools.cloneCAArray(ca1);
+		Atom[] ca2clone = StructureTools.cloneCAArray(ca2);
+		if (! GuiWrapper.isGuiModuleInstalled()) {
+			System.err.println("The biojava-structure-gui and/or JmolApplet modules are not installed. Please install!");
+			// display alignment in console
+			System.out.println(afpChain.toCE(ca1clone, ca2clone));
+		} else {
+			Object jmol = GuiWrapper.display(afpChain,ca1clone,ca2clone);
+			GuiWrapper.showAlignmentImage(afpChain, ca1clone,ca2clone,jmol);
 		}
 	}
 }

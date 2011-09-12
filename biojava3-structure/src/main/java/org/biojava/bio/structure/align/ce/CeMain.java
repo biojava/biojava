@@ -139,7 +139,7 @@ public class CeMain extends AbstractStructureAlignment implements StructureAlign
 		int winSizeComb1 = (winSize-1)*(winSize-2)/2;	
 		double[][] m = calculator.initSumOfDistances(ca1.length, ca2.length, winSize, winSizeComb1, ca1, ca2clone);
 		afpChain.setDistanceMatrix(new Matrix(m));
-		afpChain.setSequentialAlignment(false);
+		afpChain.setSequentialAlignment(true);
 
 		return afpChain;
 	}

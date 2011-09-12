@@ -1030,6 +1030,7 @@ public class AFPChain implements Serializable, Cloneable
 
 
 	/**
+	 * @return The total length of the alignment, including gaps
 	 * @see #getOptLength(), the number of aligned residues in the final alignment.
 	 */
 	public int getAlnLength()
@@ -1042,6 +1043,9 @@ public class AFPChain implements Serializable, Cloneable
 		this.alnLength = alnLength;
 	}
 
+	/**
+	 * @return The index of the first aligned residue in protein 1
+	 */
 	public int getAlnbeg1()
 	{
 		return alnbeg1;
@@ -1051,7 +1055,9 @@ public class AFPChain implements Serializable, Cloneable
 	{
 		this.alnbeg1 = alnbeg1;
 	}
-
+	/**
+	 * @return The index of the first aligned residue in protein 2
+	 */
 	public int getAlnbeg2()
 	{
 		return alnbeg2;
@@ -1298,13 +1304,15 @@ public class AFPChain implements Serializable, Cloneable
 	}
 
 	/**
-	 * A ca1length x ca2length matrix.
+	 * A matrix with <i>ca1length</i> rows and <i>ca2length</i> columns.
 	 * For CE this is the distance matrix, but the exact interpretation is left
 	 * up to the alignment algorithm.
-	 * <p>
-	 * Special Note:<br/>
-	 * When using CE to check for circular permutations, a row of -1 is written
-	 * after the end of the first repeat of ca2. (See {@link CeMain#align(Atom[], Atom[])}  )
+	 * 
+	 * <p>Note:
+	 * A {@link org.biojava.bio.structure.gui.JMatrixPanel}, which is used in
+	 * the structure-gui package to display distance matrices, will display the
+	 * transpose of this matrix. Be sure to take that into account when debugging
+	 * visually.
 	 * 
 	 * @return A matrix with dimensions ca1length x ca2length, or null
 	 */
@@ -1313,7 +1321,7 @@ public class AFPChain implements Serializable, Cloneable
 	}
 
 	/**
-	 * A ca1length x ca2length matrix.
+	 * A matrix with <i>ca1length</i> rows and <i>ca2length</i> columns.
 	 * For CE this is the distance matrix, but the exact interpretation is left
 	 * up to the alignment algorithm.
 	 * @param distanceMatrix A matrix with dimensions ca1length x ca2length

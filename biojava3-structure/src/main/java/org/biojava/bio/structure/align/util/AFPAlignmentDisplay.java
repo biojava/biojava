@@ -134,14 +134,20 @@ public class AFPAlignmentDisplay
 
 
 	/**
-   //extract the alignment output
-   // eg
-//       STWNTWACTWHLKQP--WSTILILA
-//       111111111111     22222222
-//       SQNNTYACSWKLKSWNNNSTILILG
-   // those position pairs labeled by 1 and 2 are equivalent positions, belongs to
-   // two blocks 1 and 2. The residues between labeled residues are non-equivalent,
-   // with '-' filling in their resulting gaps
+     * Extract the alignment output
+     * <p>eg<pre>
+     * STWNTWACTWHLKQP--WSTILILA
+     * 111111111111     22222222
+     * SQNNTYACSWKLKSWNNNSTILILG
+     * </pre>
+     * Those position pairs labeled by 1 and 2 are equivalent positions, belongs to
+     * two blocks 1 and 2. The residues between labeled residues are non-equivalent,
+     * with '-' filling in their resulting gaps.
+     * <p>
+     * The three lines can be accessed using 
+     * {@link AFPChain#getAlnseq1()}, {@link AFPChain#getAlnsymb()},
+     * and {@link AFPChain#getAlnseq2()}.
+     * 
 	 */
 	public static void getAlign(AFPChain afpChain,Atom[] ca1,Atom[] ca2)
 	{
@@ -149,6 +155,33 @@ public class AFPAlignmentDisplay
 		getAlign(afpChain, ca1, ca2, showSeq);
 	}
 
+	/**
+	 * Sets the following properties:
+	 * <ul>
+	 * <li>The alignment strings {@link AFPChain#setAlnseq1(char[]) alnseq1},
+	 *  {@link AFPChain#setAlnseq2(char[]) alnseq2},
+	 *  and {@link AFPChain#setAlnsymb(char[]) alnsymb}</li>
+	 * <li>{@link AFPChain#setAlnbeg1(int) alnbeg1} and 2</li>
+	 * <li>{@link AFPChain#setAlnLength(int) alnLength} and 
+	 *  {@link AFPChain#setGapLen(int) gapLen}</li>
+	 * </ul>
+	 * <p>
+	 * Expects the following properties to be previously computed:
+	 * <ul>
+	 * <li>{@link AFPChain#getOptAln()} and lengths
+	 * </ul>
+	 * 
+	 * <section>Known Bugs</section>
+	 * Expects the alignment to have linear topology. May give odd results
+	 * for circular permutations and other complicated topologies.
+	 * 
+	 * @param afpChain Alignment between ca1 and ca2
+	 * @param ca1 CA atoms of the first protein
+	 * @param ca2 CA atoms of the second protein
+	 * @param showSeq Use symbols reflecting sequence similarity: '|' for identical,
+	 *  ':' for similar, '.' for dissimilar. Otherwise, use the block number
+	 *  to show aligned residues.
+	 */
 	public static void getAlign(AFPChain afpChain,Atom[] ca1,Atom[] ca2, boolean showSeq) {
 
 		char[] alnsymb = afpChain.getAlnsymb();
@@ -185,9 +218,9 @@ public class AFPAlignmentDisplay
 		int[] optLen = afpChain.getOptLen();
 		int[][][] optAln = afpChain.getOptAln();
 
-		int alnbeg1 = afpChain.getAlnbeg1();
-		int alnbeg2 = afpChain.getAlnbeg2();
-		int alnLength = afpChain.getAlnLength();
+		int alnbeg1 = afpChain.getAlnbeg1(); // immediately overwritten
+		int alnbeg2 = afpChain.getAlnbeg2(); // immediately overwritten
+		int alnLength = afpChain.getAlnLength(); // immediately overwritten
 		int optLength = afpChain.getOptLength();
 
 		if ( optLen == null) {
@@ -232,6 +265,7 @@ public class AFPAlignmentDisplay
 					alnseq1[len] = getOneLetter(ca1[p1].getGroup());              
 					alnseq2[len] = getOneLetter(ca2[p2].getGroup());
 				} else {
+					//TODO handle permutations
 					alnseq1[len]='?';
 					alnseq2[len]='?';
 				}
@@ -267,10 +301,6 @@ public class AFPAlignmentDisplay
 		afpChain.setAlnbeg2(alnbeg2);
 		afpChain.setAlnLength(alnLength);
 		afpChain.setGapLen(alnLength-optLength);
-
-
-
-
 	}
 
 	private static char getOneLetter(Group g){
