@@ -429,6 +429,71 @@ public class StructureTools {
 		}
 		return newGroup;
 	}
+	
+	/** Utility method for working with circular permutations. Creates a duplicated and cloned set of Calpha atoms from the input array.
+	 * 
+	 * @param ca2 atom array
+	 * @return cloned and duplicated set of input array
+	 * @throws StructureException
+	 */
+	public static Atom[] duplicateCA2(Atom[] ca2) throws StructureException{
+		// we don't want to rotate input atoms, do we?
+		Atom[] ca2clone = new Atom[ca2.length*2];
+
+		int pos = 0;
+
+		Chain c = null;
+		String prevChainId = "";
+		for (Atom a : ca2){			
+			Group g = (Group) a.getGroup().clone(); // works because each group has only a CA atom
+			
+			if (c == null ) {
+				c = new ChainImpl();
+				Chain orig= a.getGroup().getChain();
+				c.setChainID(orig.getChainID());
+			} else {
+				Chain orig= a.getGroup().getChain();
+				if ( ! orig.getChainID().equals(prevChainId)){
+					c = new ChainImpl();
+					c.setChainID(orig.getChainID());
+				}
+			}
+			
+			c.addGroup(g);
+			ca2clone[pos] = g.getAtom(StructureTools.caAtomName);
+
+			pos++;
+		}
+
+		// Duplicate ca2!
+		c = null;
+		prevChainId = "";
+		for (Atom a : ca2){
+			Group g = (Group)a.getGroup().clone();
+			
+			if (c == null ) {
+				c = new ChainImpl();
+				Chain orig= a.getGroup().getChain();
+				c.setChainID(orig.getChainID());
+			} else {
+				Chain orig= a.getGroup().getChain();
+				if ( ! orig.getChainID().equals(prevChainId)){
+					c = new ChainImpl();
+					c.setChainID(orig.getChainID());
+				}
+			}
+			
+			c.addGroup(g);
+			ca2clone[pos] = g.getAtom(StructureTools.caAtomName);
+
+			pos++;
+		}
+
+		return ca2clone;
+
+	}
+
+	
 
 	/** Returns an Atom array of the CA atoms.
 	 * @param s the structure object
