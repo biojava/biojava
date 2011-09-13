@@ -68,12 +68,12 @@ public class CeCPMain extends CeMain {
 
 	@Override
 	public String getAlgorithmName() {
-		return algorithmName;
+		return CeCPMain.algorithmName;
 	}
 
 	@Override
 	public String getVersion() {
-		return version;
+		return CeCPMain.version;
 	}
 
 	public static void main(String[] args){

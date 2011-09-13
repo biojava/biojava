@@ -73,12 +73,12 @@ public class OptimalCECPMain extends CeMain {
 	
 	@Override
 	public String getAlgorithmName() {
-		return algorithmName;
+		return OptimalCECPMain.algorithmName;
 	}
 
 	@Override
 	public String getVersion() {
-		return version;
+		return OptimalCECPMain.version;
 	}
 	
 	/**

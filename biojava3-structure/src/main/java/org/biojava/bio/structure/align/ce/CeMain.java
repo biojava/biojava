@@ -173,7 +173,7 @@ public class CeMain extends AbstractStructureAlignment implements StructureAlign
 	}
 
 	public String getVersion() {
-		return version;
+		return CeMain.version;
 	}
 
 	public CECalculator getCECalculator() {
