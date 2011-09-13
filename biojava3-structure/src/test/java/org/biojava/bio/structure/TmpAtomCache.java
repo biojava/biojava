@@ -34,7 +34,9 @@ public class TmpAtomCache
    static {
       FileParsingParameters params = new FileParsingParameters();
       params.setLoadChemCompInfo(false);
+      params.setUpdateRemediatedFiles(true);
       cache.setFileParsingParams(params);
       cache.setAutoFetch(true);
+      
    }
 }

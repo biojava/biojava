@@ -120,30 +120,7 @@ public class CeCPMain extends CeMain {
 		}
 	}
 
-	/** Circular permutation specific code to be run before a standard CE alignment
-	 * 
-	 * @param ca2 original C-alpha atom array
-	 * @return new Atom array (a duplicated ca2)
-	 * @throws StructureException
-	 */
-	public static Atom[] prepareAtomsForAlign(Atom[] ca2) throws StructureException{
-		// Duplicate ca2
-		Atom[] ca2m = new Atom[ca2.length*2];
-
-		int pos = 0;
-		for (Atom a : ca2){
-			Group g = (Group)a.getGroup().clone(); // works because each group has only a CA atom
-			ca2m[pos] = g.getAtom(StructureTools.caAtomName);
-			pos++;
-		}
-		for (Atom a : ca2){
-			Group g = (Group)a.getGroup().clone();
-			ca2m[pos] = g.getAtom(StructureTools.caAtomName);
-			pos++;
-		}
-		return ca2m;
-
-	}
+	
 
 
 	/**
@@ -160,7 +137,7 @@ public class CeCPMain extends CeMain {
 	public AFPChain align(Atom[] ca1, Atom[] ca2, Object param) throws StructureException{
 		long startTime = System.currentTimeMillis();
 
-		Atom[] ca2m = prepareAtomsForAlign(ca2);
+		Atom[] ca2m = StructureTools.duplicateCA2(ca2);
 		
 		if(debug) {
 			System.out.format("Duplicating ca2 took %s ms\n",System.currentTimeMillis()-startTime);
@@ -229,7 +206,7 @@ public class CeCPMain extends CeMain {
 	 *  at most 1 AFP.
 	 * @throws StructureException 
 	 */
-	private static AFPChain filterDuplicateAFPs(AFPChain afpChain, CECalculator ceCalc, Atom[] ca1, Atom[] ca2duplicated) throws StructureException {
+	public static AFPChain filterDuplicateAFPs(AFPChain afpChain, CECalculator ceCalc, Atom[] ca1, Atom[] ca2duplicated) throws StructureException {
 		AFPChain newAFPChain = new AFPChain(afpChain);
 		//TODO redundant properties, set in the constructor
 		newAFPChain.setAlgorithmName(afpChain.getAlgorithmName());

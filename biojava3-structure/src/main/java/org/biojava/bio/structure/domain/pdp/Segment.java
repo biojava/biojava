@@ -4,18 +4,17 @@ import java.io.Serializable;
 
 
 
-
 public class Segment implements Serializable, Comparable<Segment> {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1393487067559539657L;
-	private int from;
-	private int to;
+	private Integer from;
+	private Integer to;
 	double score;
 
 	public Segment(){
-
+		
 	}
 	
 	
@@ -28,19 +27,19 @@ public class Segment implements Serializable, Comparable<Segment> {
 
 
 	
-	public int getFrom() {
+	public Integer getFrom() {
 		return from;
 	}
 
-	public void setFrom(int from) {
+	public void setFrom(Integer from) {
 		this.from = from;
 	}
 
-	public int getTo() {
+	public Integer getTo() {
 		return to;
 	}
 
-	public void setTo(int to) {
+	public void setTo(Integer to) {
 		this.to = to;
 	}
 
@@ -55,14 +54,18 @@ public class Segment implements Serializable, Comparable<Segment> {
 
 
 	public int compareTo(Segment o) {
-		int s1 = getFrom();
-		int s2 = o.getFrom();
 		
-		if (s1 > s2)
-			return 1;
-		if ( s1 == s2)
-			return 0;
-		return -1;
+		Integer s1 = getFrom();
+		Integer s2 = o.getFrom();
+		
+		int comp = s1.compareTo(s2);
+		if ( comp != 0)
+			return comp;
+		
+		Integer e1 = getTo();
+		Integer e2 = o.getTo();
+		
+		return e1.compareTo(e2);
 			
 	}
 

@@ -28,11 +28,14 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.util.List;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 
+import org.biojava.bio.structure.domain.pdp.Domain;
 import org.biojava.bio.structure.scop.ScopDescription;
 import org.biojava.bio.structure.scop.ScopDomain;
 import org.biojava.bio.structure.scop.ScopNode;
@@ -68,6 +71,24 @@ public class XMLUtil {
 	static {
 		try {
 			jaxbContextScopNode= JAXBContext.newInstance(ScopNode.class);
+		} catch (Exception e){
+			e.printStackTrace();
+		}
+	}
+	
+	static JAXBContext jaxbContextDomains;
+	static {
+		try {
+			jaxbContextDomains= JAXBContext.newInstance(TreeSet.class);
+		} catch (Exception e){
+			e.printStackTrace();
+		}
+	}
+	
+	static JAXBContext jaxbContextStringSortedSet;
+	static {
+		try {
+			jaxbContextStringSortedSet= JAXBContext.newInstance(TreeSetStringWrapper.class);
 		} catch (Exception e){
 			e.printStackTrace();
 		}
@@ -220,5 +241,88 @@ public class XMLUtil {
 		container.setScopDomain(domains);
 		
 		return container.toXML();
+	}
+
+	
+	public static String getDomainsXML(SortedSet<Domain> domains){
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+
+		PrintStream ps = new PrintStream(baos);
+
+		try {
+
+			Marshaller m = jaxbContextDomains.createMarshaller();
+
+			m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+
+			m.marshal( domains, ps);
+			
+
+		} catch (Exception e){
+			e.printStackTrace();
+		}
+
+		return baos.toString();
+	}
+	public static SortedSet<Domain> getDomainsFromXML(String xml) {
+		
+		SortedSet<Domain> domains = null;
+		try {
+
+			Unmarshaller un = jaxbContextDomains.createUnmarshaller();
+
+			ByteArrayInputStream bais = new ByteArrayInputStream(xml.getBytes());
+
+			domains = (SortedSet<Domain>) un.unmarshal(bais);
+
+		} catch (Exception e){
+			e.printStackTrace();
+		}
+
+		return domains;
+	}
+	
+	public static String getDomainRangesXML(SortedSet<String> domainRanges){
+		if ( ! (domainRanges instanceof TreeSet)) {
+			throw new IllegalArgumentException("SortedSet needs to be a TreeSet!");
+		}
+		TreeSet<String> data = (TreeSet<String>)domainRanges;
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+
+		PrintStream ps = new PrintStream(baos);
+
+		try {
+
+			Marshaller m = jaxbContextStringSortedSet.createMarshaller();
+
+			m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+			TreeSetStringWrapper wrapper = new TreeSetStringWrapper();
+			wrapper.setData(data);
+			m.marshal( wrapper, ps);
+			
+
+		} catch (Exception e){
+			e.printStackTrace();
+		}
+
+		return baos.toString();
+	}
+	
+	public static SortedSet<String> getDomainRangesFromXML(String xml){
+		SortedSet<String> domains = null;
+		try {
+
+			Unmarshaller un = jaxbContextStringSortedSet.createUnmarshaller();
+
+			ByteArrayInputStream bais = new ByteArrayInputStream(xml.getBytes());
+
+			TreeSetStringWrapper wrapper = (TreeSetStringWrapper) un.unmarshal(bais);
+			domains = wrapper.getData();
+
+		} catch (Exception e){
+			e.printStackTrace();
+		}
+
+		return domains;
 	}
 }
