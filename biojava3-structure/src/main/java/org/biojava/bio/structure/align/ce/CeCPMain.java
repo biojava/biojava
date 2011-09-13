@@ -66,10 +66,12 @@ public class CeCPMain extends CeMain {
 		this.params.setMaxGapSize(0);
 	}
 
+	@Override
 	public String getAlgorithmName() {
 		return algorithmName;
 	}
 
+	@Override
 	public String getVersion() {
 		return version;
 	}
@@ -83,13 +85,9 @@ public class CeCPMain extends CeMain {
 			name2 = "3cna";
 
 			//small case
-			//name1 = "d1qdmA1";
+			name1 = "d1qdmA1";
 			//name1 = "1QDM.A";
-			//name2 = "d1nklA_";
-
-			//1itb selfsymmetry
-			//name1 = "1ITB.A";
-			//name2 = "1ITB.A";
+			name2 = "d1nklA_";
 			
 			CeCPMain ce = (CeCPMain) StructureAlignmentFactory.getAlgorithm(CeCPMain.algorithmName);
 			CeParameters params = (CeParameters) ce.getParameters();

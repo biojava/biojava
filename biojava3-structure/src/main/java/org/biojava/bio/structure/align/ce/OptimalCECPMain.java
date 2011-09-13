@@ -56,10 +56,21 @@ import org.biojava.bio.structure.jama.Matrix;
 public class OptimalCECPMain extends CeMain {
 	private static boolean debug = false;
 
+
 	public static final String algorithmName = "jCE Optimal Circular Permutation";
 
 	public static final String version = "1.0";
 
+	protected OptimalCECPParameters params;
+	
+	/**
+	 * 
+	 */
+	public OptimalCECPMain() {
+		super();
+		params = new OptimalCECPParameters();
+	}
+	
 	@Override
 	public String getAlgorithmName() {
 		return algorithmName;
@@ -69,6 +80,26 @@ public class OptimalCECPMain extends CeMain {
 	public String getVersion() {
 		return version;
 	}
+	
+	/**
+	 * @return an {@link OptimalCECPParameters} object 
+	 */
+	@Override
+	public ConfigStrucAligParams getParameters() {
+		return params;
+	}
+
+	/**
+	 * @param params Should be an {@link OptimalCECPParameters} object specifying alignment options
+	 */
+	@Override
+	public void setParameters(ConfigStrucAligParams params){
+		if (! (params instanceof OptimalCECPParameters )){
+			throw new IllegalArgumentException("provided parameter object is not of type CeParameter");
+		}
+		this.params = (OptimalCECPParameters) params;
+	}
+	
 	/**
 	 * Circularly permutes arr in place.
 	 * 
@@ -393,9 +424,12 @@ public class OptimalCECPMain extends CeMain {
 	 * Finds the optimal alignment between two proteins allowing for a circular
 	 * permutation (CP).
 	 * 
-	 * This algorithm performs a CE alignment for each possible CP site. This is
-	 * quite slow. Use {@link #alignHeuristic(Atom[], Atom[], Object)} for a
-	 * faster algorithm.
+	 * The precise algorithm is controlled by the 
+	 * {@link OptimalCECPParameters parameters}. If the parameter
+	 * {@link OptimalCECPParameters#isTryAllCPs() tryAllCPs} is true, all possible
+	 * CP sites are tried and the optimal site is returned. Otherwise, the
+	 * {@link OptimalCECPParameters#getCPPoint() cpPoint} parameter is used to
+	 * determine the CP point, greatly reducing the computation required.
 	 * 
 	 * @param ca1 CA atoms of the first protein
 	 * @param ca2 CA atoms of the second protein
@@ -409,7 +443,12 @@ public class OptimalCECPMain extends CeMain {
 	public AFPChain align(Atom[] ca1, Atom[] ca2, Object param)
 	throws StructureException
 	{
-		return alignOptimal(ca1,ca2,param,null);
+		if(params.isTryAllCPs()) {
+			return alignOptimal(ca1,ca2,param,null);
+		} else {
+			int cpPoint = params.getCPPoint();
+			return alignPermuted(ca1, ca2, param, cpPoint);
+		}
 	}
 
 	/**
