@@ -33,6 +33,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 
 import java.util.logging.Logger;
 
@@ -83,7 +84,7 @@ implements PDBInstallation
 
     boolean filtersApplied ;
     
-    public static SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+    public static SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
     
     
     /** create a new FlatFile Installation and point it to the directory that contains all PDB files

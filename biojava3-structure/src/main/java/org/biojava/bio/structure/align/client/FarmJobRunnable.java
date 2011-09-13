@@ -9,6 +9,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.UUID;
@@ -45,7 +46,7 @@ public class FarmJobRunnable implements Runnable {
 	private static ResourceManager resourceManager = ResourceManager.getResourceManager("jfatcat");
 
 
-	private static DateFormat dateFormat = new SimpleDateFormat("MMMM dd, yyyy h:mm a");
+	private static DateFormat dateFormat = new SimpleDateFormat("MMMM dd, yyyy h:mm a",Locale.US);
 
 	FarmJobParameters params;
 

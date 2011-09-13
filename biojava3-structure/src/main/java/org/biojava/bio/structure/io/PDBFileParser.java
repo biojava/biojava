@@ -36,6 +36,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.StringTokenizer;
 import java.util.logging.Level;
@@ -281,7 +282,7 @@ public class PDBFileParser  {
 		current_compound = new Compound();
 		dbrefs        = new ArrayList<DBRef>();
 		siteMap = null;
-		dateFormat = new SimpleDateFormat("dd-MMM-yy", java.util.Locale.ENGLISH);
+		dateFormat = new SimpleDateFormat("dd-MMM-yy", Locale.US);
 		atomCount = 0;
 		atomOverflow = false;
 		parseCAonly = false;

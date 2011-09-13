@@ -57,7 +57,7 @@ import org.biojava3.ronn.ModelLoader.Model;
 public final class ORonn implements Callable<ORonn> {
 
 	private static final DateFormat DATE_FORMAT = DateFormat
-	.getDateTimeInstance(DateFormat.LONG, DateFormat.LONG, Locale.UK);
+	.getDateTimeInstance(DateFormat.LONG, DateFormat.LONG, Locale.US);
 
 	private static final NumberFormat nformat = NumberFormat.getInstance();
 	static {
