@@ -288,15 +288,23 @@ public ParameterGUI(StructureAlignment alignment){
 
    }
 
-   @SuppressWarnings({ "unchecked", "rawtypes" })
+   @SuppressWarnings("unchecked")
    private Object  getValue(String name){
-
+      // first try with get form
       try {
          String methodName = "get" + name;
 
          Class paramC = params.getClass();
-
-         Method m =paramC.getMethod(methodName,(Class[])null);
+         
+         Method m;
+         try {
+            //try boolean getter
+            m = paramC.getMethod(methodName,(Class[])null);
+         } catch(NoSuchMethodException e) {
+            //try boolean getter
+            methodName = "is" + name;
+            m = paramC.getMethod(methodName,(Class[])null);
+         }
 
          Object value = m.invoke(params);
 
