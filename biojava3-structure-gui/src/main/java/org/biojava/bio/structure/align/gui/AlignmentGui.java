@@ -441,10 +441,10 @@ public class AlignmentGui extends JFrame{
 
       String name1 = "custom1"; 
 
-
       if  ( pos == 0) {
 
-         name1 = dbsearch.getSelectPDBPanel().getName1();
+         //name1 = dbsearch.getSelectPDBPanel().getName1();
+    	  name1 = s.getName();
 
       } else {
 
