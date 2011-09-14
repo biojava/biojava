@@ -22,6 +22,7 @@
  */
 package org.biojava.bio.structure;
 
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -35,6 +36,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import org.biojava.bio.structure.align.util.AtomCache;
 
 
 
@@ -716,6 +719,7 @@ public class StructureTools {
 	 * @param ranges A comma-seperated list of ranges, optionally surrounded by parentheses
 	 * @return Substructure of s specified by ranges
 	 */
+	
 	@SuppressWarnings("deprecation")
 	public static final Structure getSubRanges(Structure s, String ranges ) 
 	throws StructureException
@@ -734,6 +738,7 @@ public class StructureTools {
 		}
 
 		Structure newS = new StructureImpl();
+		
 		newS.setHeader(s.getHeader());
 		newS.setPDBCode(s.getPDBCode());
 		newS.setPDBHeader(s.getPDBHeader());
@@ -748,10 +753,11 @@ public class StructureTools {
 		//newS.setSSBonds(s.getSSBonds());
 		//newS.setSites(s.getSites());
 		
-		
 		String[] rangS =ranges.split(",");
 
-
+		StringWriter name = new StringWriter();
+		name.append(s.getName());
+		boolean firstRange = true;
 		String prevChainId = null;
 
 		// parse the ranges, adding the specified residues to newS
@@ -771,7 +777,11 @@ public class StructureTools {
 			String pdbresnumStart = matcher.group(2);
 			String pdbresnumEnd   = matcher.group(3);
 			
-
+			if ( ! firstRange){
+				name.append( ",");
+			} else {
+				name.append(AtomCache.CHAIN_SPLIT_SYMBOL);
+			}
 			if( pdbresnumStart != null && pdbresnumEnd != null) {
 				// not a full chain
 				//since Java doesn't allow '+' before integers, fix this up.
@@ -780,29 +790,33 @@ public class StructureTools {
 				if(pdbresnumEnd.charAt(0) == '+')
 					pdbresnumEnd = pdbresnumEnd.substring(1);
 				groups = chain.getGroupsByPDB(pdbresnumStart, pdbresnumEnd);
+				
+				name.append( chainId + AtomCache.UNDERSCORE + pdbresnumStart+"-" + pdbresnumEnd);
+				
 			} else {
 				// full chain
 				groups = chain.getAtomGroups().toArray(new Group[chain.getAtomGroups().size()]);
+				name.append(chainId);
 			}
-			
+			firstRange = true;
 			
 			// Create new chain, if needed
 			Chain c = null;
 			if ( prevChainId == null) {
 				// first chain...
 				c = new ChainImpl();
-				c.setName(chain.getName());
+				c.setChainID(chain.getChainID());
 				newS.addChain(c);
-			} else if ( prevChainId.equals(chain.getName())) {
+			} else if ( prevChainId.equals(chain.getChainID())) {
 				c = newS.getChainByPDB(prevChainId);
 
 			} else {
 				try {
-					c = newS.getChainByPDB(chain.getName());
+					c = newS.getChainByPDB(chain.getChainID());
 				} catch (StructureException e){
 					// chain not in structure yet...
 					c = new ChainImpl();
-					c.setName(chain.getName());
+					c.setChainID(chain.getChainID());
 					newS.addChain(c);
 				}
 			}
@@ -812,9 +826,10 @@ public class StructureTools {
 				c.addGroup(g);
 			}
 
-			prevChainId = c.getName();
+			prevChainId = c.getChainID();
 		}
-
+		
+		newS.setName(name.toString());
 		return newS;
 	}
 
