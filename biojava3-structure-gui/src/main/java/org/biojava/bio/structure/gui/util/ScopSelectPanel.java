@@ -141,7 +141,8 @@ implements StructurePairSelector
       Structure s = null;
       try {
          s =cache.getStructureForDomain(domain);
-         s.setName(domainID);
+         if ( s.getName() == null || s.getName().equals(""))
+        	 s.setName(domainID);
          s.setPDBCode(domainID);
       } catch (Exception e){
          e.printStackTrace();
