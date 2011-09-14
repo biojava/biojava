@@ -88,17 +88,6 @@ public class PDBFileParserTest extends TestCase {
 
 	}
 
-	private void compareString(String t, String pdb){
-		for (int i =0 ; i < t.length() ; i++){
-			System.out.println(">"+t.charAt(i)+":"+ pdb.charAt(i)+"<");
-			if ( Character.toUpperCase(t.charAt(i)) != Character.toUpperCase(pdb.charAt(i))){
-
-				break;
-			}
-		}
-	}
-
-
 	public void testCorrectFloatingPointDisplay() {
 
 		// from 1a4w:
@@ -148,7 +137,7 @@ public class PDBFileParserTest extends TestCase {
 			String pdb = s.toPDB();
 
 			if (! pdb.equalsIgnoreCase(t)){
-				compareString(t, pdb);
+				StringManipulationTestsHelper.compareString(t, pdb);
 				System.out.println(t);
 				System.out.println(pdb);
 			}

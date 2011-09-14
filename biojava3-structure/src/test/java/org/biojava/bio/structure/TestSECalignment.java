@@ -22,10 +22,7 @@
  */
 package org.biojava.bio.structure;
 
-import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 
 import org.biojava.bio.structure.align.StructureAlignment;
 import org.biojava.bio.structure.align.StructureAlignmentFactory;
@@ -50,7 +47,7 @@ public class TestSECalignment extends  TestCase {
 
 		InputStream inStream = this.getClass().getResourceAsStream("/ce_1fdo.A_2iv2.X.out");
 		assertNotNull(inStream);
-		String xml = convertStreamToString(inStream);
+		String xml = StringManipulationTestsHelper.convertStreamToString(inStream);
 
 		AtomCache cache = TmpAtomCache.cache;
 		try {
@@ -65,9 +62,8 @@ public class TestSECalignment extends  TestCase {
 			
 			String xmlComp =  AFPChainXMLConverter.toXML(afpChainOrig, ca1, ca2);
 			
-			// FIXME new line character difference?
-			assertEquals( xml, xmlComp);
-			
+//			assertEquals( xml, xmlComp);
+			StringManipulationTestsHelper.assertEqualsIgnoreEndline(xml, xmlComp);
 			StructureAlignment ce = StructureAlignmentFactory.getAlgorithm(CeMain.algorithmName);
 			
 			AFPChain afpChainNew = ce.align(ca1,ca2);
@@ -78,7 +74,8 @@ public class TestSECalignment extends  TestCase {
 			String xmlNew = AFPChainXMLConverter.toXML(afpChainNew,ca1,ca2);
 			//String ce2 = afpChainNew.toFatcat(ca1, ca2);
 			// FIXME version number, new line character difference?
-			assertEquals(xml,xmlNew);
+//			assertEquals(xml,xmlNew);
+			StringManipulationTestsHelper.assertEqualsIgnoreEndline(xml,xmlNew);
 			
 			//assertEquals(ce1,ce2);
 			
@@ -87,27 +84,5 @@ public class TestSECalignment extends  TestCase {
 			fail(e.getMessage());
 		}
 
-	}
-
-	public static String convertStreamToString(InputStream stream){
-		BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
-		StringBuilder sb = new StringBuilder();
-
-		String line = null;
-		try {
-			while ((line = reader.readLine()) != null) {
-				sb.append(line + "\n");
-			}
-		} catch (IOException e) {
-			//e.printStackTrace();
-		} finally {
-			try {
-				stream.close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-
-		return sb.toString();
 	}
 }
