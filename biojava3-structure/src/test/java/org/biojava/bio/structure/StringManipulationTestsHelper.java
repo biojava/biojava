@@ -1,3 +1,26 @@
+/*
+ *                    BioJava development code
+ *
+ * This code may be freely distributed and modified under the
+ * terms of the GNU Lesser General Public Licence.  This should
+ * be distributed with the code.  If you do not have a copy,
+ * see:
+ *
+ *      http://www.gnu.org/copyleft/lesser.html
+ *
+ * Copyright for this code is held jointly by the individual
+ * authors.  These should be listed in @author doc comments.
+ *
+ * For more information on the BioJava project and its aims,
+ * or to join the biojava-l mailing list, visit the home page
+ * at:
+ *
+ *      http://www.biojava.org/
+ *
+ * Created on Sep 14, 2011
+ * Author: Amr AL-Hossary 
+ *
+ */
 package org.biojava.bio.structure;
 
 import java.io.BufferedReader;
@@ -8,6 +31,10 @@ import java.util.Scanner;
 
 import junit.framework.TestCase;
 
+/**A utility class for common string manipulation tasks.
+ * <B>put here till it an be moved to some other more suitable package</B>
+ * @author Amr AL-Hossary
+ */
 public abstract class StringManipulationTestsHelper extends TestCase {
 
 	private StringManipulationTestsHelper() {
