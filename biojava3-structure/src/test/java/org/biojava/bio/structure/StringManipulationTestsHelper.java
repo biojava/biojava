@@ -37,6 +37,10 @@ import junit.framework.TestCase;
  */
 public abstract class StringManipulationTestsHelper extends TestCase {
 
+	// we are using unix endline here, since this is used for testing XML and it is part of the XML recommendations:
+	// http://www.w3.org/TR/REC-xml/#sec-line-ends
+	private static final String UNIX_NEWLINE = "\n";
+	
 	private StringManipulationTestsHelper() {
 //		to prevent instantiation
 	}
@@ -72,7 +76,8 @@ public abstract class StringManipulationTestsHelper extends TestCase {
 		String line = null;
 		try {
 			while ((line = reader.readLine()) != null) {
-				sb.append(line + "\n");
+			
+				sb.append(line + UNIX_NEWLINE);
 			}
 		} catch (IOException e) {
 			//e.printStackTrace();
