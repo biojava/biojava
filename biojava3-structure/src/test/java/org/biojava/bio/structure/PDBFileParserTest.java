@@ -33,6 +33,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.biojava.bio.structure.io.PDBFileParser;
+import org.biojava3.core.util.StringManipulationTestsHelper;
 
 import junit.framework.TestCase;
 

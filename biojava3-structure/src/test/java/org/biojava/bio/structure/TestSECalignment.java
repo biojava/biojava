@@ -31,6 +31,7 @@ import org.biojava.bio.structure.align.model.AFPChain;
 import org.biojava.bio.structure.align.util.AtomCache;
 import org.biojava.bio.structure.align.xml.AFPChainXMLConverter;
 import org.biojava.bio.structure.align.xml.AFPChainXMLParser;
+import org.biojava3.core.util.StringManipulationTestsHelper;
 
 import junit.framework.TestCase;
 
