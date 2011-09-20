@@ -28,9 +28,7 @@ package org.biojava.bio.structure.align.ce;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
-
 import org.biojava.bio.structure.Atom;
-import org.biojava.bio.structure.Group;
 import org.biojava.bio.structure.StructureException;
 import org.biojava.bio.structure.StructureTools;
 import org.biojava.bio.structure.align.StructureAlignmentFactory;
@@ -168,10 +166,10 @@ public class CeCPMain extends CeMain {
 
 	/** Circular permutation specific code to be run after the standard CE alignment
 	 * 
-	 * @param afpChain
-	 * @param ca1
-	 * @param ca2m
-	 * @param calculator
+	 * @param afpChain The finished alignement
+	 * @param ca1 CA atoms of the first protein
+	 * @param ca2m A duplicated copy of the second protein
+	 * @param calculator The CECalculator used to create afpChain
 	 * @throws StructureException
 	 */
 	public static AFPChain postProcessAlignment(AFPChain afpChain, Atom[] ca1, Atom[] ca2m,CECalculator calculator ) throws StructureException{
