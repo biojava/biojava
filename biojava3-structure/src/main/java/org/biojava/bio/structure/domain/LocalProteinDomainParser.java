@@ -27,6 +27,7 @@ import java.util.List;
 
 import org.biojava.bio.structure.Atom;
 import org.biojava.bio.structure.Chain;
+import org.biojava.bio.structure.ResidueNumber;
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureException;
 import org.biojava.bio.structure.StructureTools;
@@ -56,13 +57,13 @@ Veretnik S, Bourne PE, Alexandrov NN, Shindyalov IN.
  * @author Andreas Prlic
  * @since 3.0.2
  */
-public class ProteinDomainParser {
+public class LocalProteinDomainParser {
 
 
 	/** make sure this class can only get accessed via the static method calls
 	 * 
 	 */
-	private ProteinDomainParser(){
+	private LocalProteinDomainParser(){
 		
 	}
 	
