@@ -31,7 +31,10 @@ import org.biojava.bio.structure.align.model.AFPChain;
 import org.biojava.bio.structure.align.util.AtomCache;
 import org.biojava.bio.structure.align.xml.AFPChainXMLConverter;
 import org.biojava.bio.structure.align.xml.AFPChainXMLParser;
-import org.biojava3.core.util.StringManipulationTestsHelper;
+import org.biojava.bio.structure.util.StringManipulationTestsHelper;
+import org.biojava3.core.util.StringManipulationHelper;
+
+
 
 import junit.framework.TestCase;
 
@@ -48,7 +51,7 @@ public class TestSECalignment extends  TestCase {
 
 		InputStream inStream = this.getClass().getResourceAsStream("/ce_1fdo.A_2iv2.X.out");
 		assertNotNull(inStream);
-		String xml = StringManipulationTestsHelper.convertStreamToString(inStream);
+		String xml = StringManipulationHelper.convertStreamToString(inStream);
 
 		AtomCache cache = TmpAtomCache.cache;
 		try {
