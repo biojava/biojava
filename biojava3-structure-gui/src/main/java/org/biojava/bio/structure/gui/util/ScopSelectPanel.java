@@ -36,6 +36,9 @@ import javax.swing.JTextField;
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureException;
 
+import org.biojava.bio.structure.align.gui.autosuggest.AutoSuggestProvider;
+import org.biojava.bio.structure.align.gui.autosuggest.JAutoSuggest;
+import org.biojava.bio.structure.align.gui.autosuggest.SCOPAutoSuggestProvider;
 import org.biojava.bio.structure.align.util.AtomCache;
 import org.biojava.bio.structure.align.util.UserConfiguration;
 import org.biojava.bio.structure.align.webstart.WebStartMain;
@@ -51,29 +54,40 @@ implements StructurePairSelector
     * 
     */
    private static final long serialVersionUID = 757947454156959178L;
-   JTextField dom1;
-   JTextField dom2;
+   JAutoSuggest dom1;
+   JAutoSuggest dom2;
 
    
    public static Logger logger =  Logger.getLogger("org.biojava");
    
    public ScopSelectPanel(){
       
-      Box vBox = Box.createVerticalBox();
-      
-      dom1 = new JTextField(10);
-      dom2 = new JTextField(10);
-      
-            
-      Box b1 = getDomainPanel(1,dom1);
-      Box b2 = getDomainPanel(2,dom2);
-      
-      
-      vBox.add(b1);
-      vBox.add(b2);
-      
-
-      this.add(vBox);
+     this(true);
+   }
+   
+   public ScopSelectPanel(boolean show2boxes){
+	   Box vBox = Box.createVerticalBox();
+	      
+	      //dom1 = new JTextField(10);
+	      //dom2 = new JTextField(10);
+	      
+	      AutoSuggestProvider autoSuggesP = new SCOPAutoSuggestProvider();
+			
+	      dom1 = new JAutoSuggest(10);		
+	      dom1.setAutoSuggestProvider(autoSuggesP);
+	      
+	      dom2 = new JAutoSuggest(10);
+	      dom2.setAutoSuggestProvider(autoSuggesP);
+	            
+	      Box b1 = getDomainPanel(1,dom1);
+	      Box b2 = getDomainPanel(2,dom2);
+	      
+	      
+	      vBox.add(b1);
+	      if ( show2boxes)
+	    	  vBox.add(b2);
+	      
+	      this.add(vBox);
    }
    
    private Box getDomainPanel(int pos ,JTextField f){
@@ -108,48 +122,62 @@ implements StructurePairSelector
    
    public Structure getStructure1() throws StructureException
    {
-      return getStructure(dom1);
+	   String scop1 = dom1.getText();
+      return getStructure(scop1);
    }
 
    public Structure getStructure2() throws StructureException
    {
-      return getStructure(dom2);
+      return getStructure(dom2.getText());
    }
    
-   private Structure getStructure(JTextField filePath) throws StructureException{
+   private Structure getStructure(String domainID) throws StructureException{
       //PDBFileReader reader = new PDBFileReader();
       
+	   if ( domainID == null || domainID.equals(""))
+		   return null;
       
-      String domainID = filePath.getText();
+      
       
       UserConfiguration config = WebStartMain.getWebStartConfig();
-      String cacheLocation = config.getPdbFilePath();
-      boolean isSplit = config.isSplit();
+      //String cacheLocation = config.getPdbFilePath();
       
-      AtomCache cache = new AtomCache(cacheLocation,isSplit );
+      AtomCache cache = new AtomCache(config);
       
-      ScopDatabase scop = ScopInstallationInstance.getInstance().getSCOP();
+     Structure s = null;
+     try {
+     	s =	cache.getStructure(domainID);
+     } catch (Exception e){
+    	 e.printStackTrace();
+     }
+     return s;
       
-      ScopDomain domain = scop.getDomainByScopID(domainID) ;
-      
-      System.out.println("found scop domain :" + domain);
-      
-      if ( domain == null)
-         return null;
-      
-      
-      Structure s = null;
-      try {
-         s =cache.getStructureForDomain(domain);
-         if ( s.getName() == null || s.getName().equals(""))
-        	 s.setName(domainID);
-         s.setPDBCode(domainID);
-      } catch (Exception e){
-         e.printStackTrace();
-         logger.warning(e.getMessage());
-      }
-      
-      return s;
+//      boolean isSplit = config.isSplit();
+//      
+//      AtomCache cache = new AtomCache(cacheLocation,isSplit );
+//      
+//      ScopDatabase scop = ScopInstallationInstance.getInstance().getSCOP();
+//      
+//      ScopDomain domain = scop.getDomainByScopID(domainID) ;
+//      
+//      System.out.println("found scop domain :" + domain);
+//      
+//      if ( domain == null)
+//         return null;
+//      
+//      
+//      Structure s = null;
+//      try {
+//         s =cache.getStructureForDomain(domain);
+//         if ( s.getName() == null || s.getName().equals(""))
+//        	 s.setName(domainID);
+//         s.setPDBCode(domainID);
+//      } catch (Exception e){
+//         e.printStackTrace();
+//         logger.warning(e.getMessage());
+//      }
+//      
+//      return s;
 
   }
 
