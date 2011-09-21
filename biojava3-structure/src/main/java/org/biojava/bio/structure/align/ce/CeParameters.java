@@ -48,6 +48,7 @@ public class CeParameters implements ConfigStrucAligParams  {
 	public static final int SIDE_CHAIN_SCORING = 1;
 	public static final int SIDE_CHAIN_ANGLE_SCORING = 2;
 	public static final int CA_AND_SIDE_CHAIN_ANGLE_SCORING = 3;
+	public static final int SEQUENCE_CONSERVATION = 4;
 
 	public static final String SCORING_STRATEGY = "ScoringStrategy";
 	protected int scoringStrategy;
