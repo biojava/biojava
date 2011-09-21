@@ -61,8 +61,8 @@ import org.biojava.bio.structure.io.StructureIOFile;
 
 public class DBResultTable implements ActionListener{
 
-	public static final String[] ceColumnNames = {"name1","tname2","score","z-score","rmsd","len1","len2","sim1","sim2",""};
-	public static final String[] fatColumnNames = {"name1","tname2","score","probability","rmsd","len1","len2","sim1","sim2",""};
+	public static final String[] ceColumnNames = {"name1","tname2","score","z-score","rmsd","len1","len2","cov1","cov2","%ID",""};
+	public static final String[] fatColumnNames = {"name1","tname2","score","probability","rmsd","len1","len2","cov1","cov2","%ID",""};
 
 	Object[][] data;
 	JTable table;
@@ -151,10 +151,11 @@ public class DBResultTable implements ActionListener{
 
 			Object[] o = new Object[spl.length + 1];
 			for ( int j=0; j< spl.length;j++){
-				if (  j >4)
-					o[j] = Integer.parseInt(spl[j]);
-				else if ( j >= 2 && j <= 4) {	    			
-					o[j] = Double.parseDouble(spl[j]);	    	    	
+				
+				if (( j >= 2 && j <= 4)|| (j==9)) {
+					o[j] = Double.parseDouble(spl[j]);
+				} else if (  j >4) {
+					o[j] = Integer.parseInt(spl[j]);										    	    
 				} else {
 					o[j] = spl[j];
 				}
