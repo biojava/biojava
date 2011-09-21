@@ -42,6 +42,7 @@ import javax.swing.JTextField;
 import org.biojava.bio.structure.align.StructureAlignment;
 import org.biojava.bio.structure.align.util.ResourceManager;
 import org.biojava.bio.structure.gui.util.PDBUploadPanel;
+import org.biojava.bio.structure.gui.util.ScopSelectPanel;
 
 public class DBSearchGUI extends JPanel {
 
@@ -56,6 +57,8 @@ public class DBSearchGUI extends JPanel {
 	JTabbedPane tabPane;
 
 	PDBUploadPanel tab2;
+	ScopSelectPanel tab3;
+	
 	JTabbedPane listPane;
 	JButton abortB;
 	AlignmentCalcDB alicalc;
@@ -72,10 +75,12 @@ public class DBSearchGUI extends JPanel {
 		tab1 = new SelectPDBPanel(false);
 		
 		tab2 = new PDBUploadPanel(false);
+		tab3 = new ScopSelectPanel(false);
 		
 		tabPane = new JTabbedPane();
 		tabPane.addTab("Select PDB ID", null, tab1,"Select PDB ID to align");
 
+		tabPane.addTab("SCOP domains",null, tab3,"SCOP domains");
 		
 		tabPane.addTab("Custom files",null, tab2,"Align your own files.");
 		
@@ -108,6 +113,9 @@ public class DBSearchGUI extends JPanel {
       this.tabPane = tabPane;
    }
 
+   public ScopSelectPanel getScopSelectPanel(){
+	   return tab3;
+   }
 
 
    public SelectPDBPanel getSelectPDBPanel(){
@@ -154,7 +162,7 @@ public class DBSearchGUI extends JPanel {
 				int returnVal = chooser.showSaveDialog(null);
 				if ( returnVal == JFileChooser.APPROVE_OPTION) {
 					File file = chooser.getSelectedFile();
-					outFileLocation.setText(file.getAbsolutePath());
+					outFileLocation.setText(file.getPath());
 					outFileLocation.repaint();
 				}
 				
