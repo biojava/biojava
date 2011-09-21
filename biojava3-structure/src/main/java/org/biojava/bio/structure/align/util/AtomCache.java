@@ -41,6 +41,7 @@ import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureException;
 import org.biojava.bio.structure.StructureTools;
 import org.biojava.bio.structure.align.ce.AbstractUserArgumentProcessor;
+import org.biojava.bio.structure.domain.RemotePDPProvider;
 import org.biojava.bio.structure.io.FileParsingParameters;
 import org.biojava.bio.structure.io.PDBFileReader;
 import org.biojava.bio.structure.scop.ScopDatabase;
@@ -85,6 +86,8 @@ public class AtomCache {
 
 	private boolean fetchCurrent;
 
+	public static final String PDP_DOMAIN_IDENTIFIER = "PDP:";
+	
 	/**
 	 * Default AtomCache constructor.
 	 * 
@@ -483,6 +486,16 @@ public class AtomCache {
 				}
 
 
+			} else if ( name.startsWith(PDP_DOMAIN_IDENTIFIER)){
+
+				// this is a PDP domain definition
+				
+				try {
+					return getPDPStructure(name);
+				} catch (Exception e){
+					e.printStackTrace();
+					return null;
+				}
 			}
 
 			//System.out.println("got: " + name + " " + pdbId + " " + chainId + " useChainNr:" + useChainNr + " " +chainNr + " useDomainInfo:" + useDomainInfo + " " + range);
@@ -560,6 +573,15 @@ public class AtomCache {
 		return n;
 
 
+	}
+
+	private Structure getPDPStructure(String pdpDomainName) {
+		
+		System.out.println("loading PDP domain from server " + pdpDomainName);
+		RemotePDPProvider pdpprovider = new RemotePDPProvider();
+		
+		return pdpprovider.getDomain(pdpDomainName,this);
+		
 	}
 
 	private Structure getStructureFromSCOPDomain(String name)
