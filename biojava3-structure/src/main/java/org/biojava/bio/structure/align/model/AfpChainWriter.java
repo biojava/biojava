@@ -1071,6 +1071,8 @@ public class AfpChainWriter
 		str.append("\t");
 		str.append(afpChain.getCoverage2());
 		str.append("\t");
+		str.append(String.format("%.2f",afpChain.getIdentity()));
+		str.append("\t");
 		str.append(newline);
 
 		return str.toString();
@@ -1130,12 +1132,13 @@ public class AfpChainWriter
 
 		double similarity = afpChain.getSimilarity();
 		double identity = afpChain.getIdentity();
-		if (similarity == -1 || identity == -1){
+		if (similarity <0 || identity <0  ){
 			afpChain.calcSimilarity();
 			similarity = afpChain.getSimilarity();
 			identity = afpChain.getIdentity();
 		}
 
+	
 
 		double probability = afpChain.getProbability();
 
