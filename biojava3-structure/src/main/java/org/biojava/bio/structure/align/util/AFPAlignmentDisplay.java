@@ -347,8 +347,8 @@ public class AFPAlignmentDisplay
 		
 		if ( seq1 == null || seq2 == null){
 			Map<String, Double> m = new HashMap<String, Double>();
-			m.put("similarity", 0d);
-			m.put("identity", 0d);
+			m.put("similarity", similarity);
+			m.put("identity", identity);
 			return m;
 		}
 		
@@ -367,14 +367,16 @@ public class AFPAlignmentDisplay
 		}
 
 
-		similarity = (identity + similarity) / (double)alnLength;
-		identity = identity/(double)alnLength;
-
+		if ( alnLength > 0){
+			similarity = (identity + similarity) / (double)alnLength;
+			identity = identity/(double)alnLength;
+		} else {
+			
+		}
 		Map<String, Double> m = new HashMap<String, Double>();
 		m.put("similarity", similarity);
 		m.put("identity", identity);
-
-		//System.out.println(m);
+		
 		return m;
 	}
 
