@@ -88,7 +88,7 @@ public class AlignmentCalcDB implements AlignmentCalculationRunnable {
 	}
 
 	public void run() {
-		System.out.println("running AlignmentCalcDB. Results will be in " + outFile);
+		
 		AtomCache cache = new AtomCache(config);
 		StructureAlignment algorithm = parent.getStructureAlignment();	
 		String serverLocation = FarmJobParameters.DEFAULT_SERVER_URL;
@@ -100,10 +100,10 @@ public class AlignmentCalcDB implements AlignmentCalculationRunnable {
 
 		String header = "# algorithm:" + algorithm.getAlgorithmName(); 
 
-		String legend = "# name1\tname2\tscore\tprobability\trmsd\tlen1\tlen2\tsim1\tsim2\t " ;
+		String legend = "# name1\tname2\tscore\tprobability\trmsd\tlen1\tlen2\tcov1\tcov2\t%ID\t " ;
 		if (    algorithm.getAlgorithmName().equalsIgnoreCase(CeMain.algorithmName) || 
 				algorithm.getAlgorithmName().equalsIgnoreCase(CeSideChainMain.algorithmName)){
-			legend =  "# name1\tname2\tscore\tz-score\trmsd\tlen1\tlen2\tsim1\tsim2\t " ;
+			legend =  "# name1\tname2\tscore\tz-score\trmsd\tlen1\tlen2\tcov1\tcov2\t%ID\t " ;
 		}
 
 
@@ -120,8 +120,6 @@ public class AlignmentCalcDB implements AlignmentCalculationRunnable {
 		SynchronizedOutFile out ;
 
 		resultList = new File(outFileF,"results_" + name1 + ".out");
-
-
 
 		try {
 
