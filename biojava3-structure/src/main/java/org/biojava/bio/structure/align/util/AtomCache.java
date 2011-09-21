@@ -422,7 +422,7 @@ public class AtomCache {
 	public Structure getStructure(String name) throws IOException, StructureException{
 
 		if ( name.length() < 4)
-			throw new IllegalArgumentException("Can't interpred IDs that are shorter than 4 residues!");
+			throw new IllegalArgumentException("Can't interpret IDs that are shorter than 4 residues!");
 		
 		Structure n = null;
 
