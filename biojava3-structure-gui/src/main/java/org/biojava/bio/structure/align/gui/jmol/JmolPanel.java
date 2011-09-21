@@ -43,7 +43,7 @@ import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureTools;
 import org.biojava.bio.structure.align.gui.JPrintPanel;
 import org.biojava.bio.structure.align.gui.jmol.MyJmolStatusListener;
-import org.biojava.bio.structure.domain.ProteinDomainParser;
+import org.biojava.bio.structure.domain.LocalProteinDomainParser;
 import org.biojava.bio.structure.domain.pdp.Domain;
 import org.biojava.bio.structure.domain.pdp.Segment;
 import org.biojava.bio.structure.gui.util.color.ColorUtils;
@@ -78,7 +78,6 @@ implements ActionListener
 		viewer = JmolViewer.allocateViewer(this,
 				adapter,
 				null,null,null,null,
-
 				statusListener);
 
 	}
@@ -290,7 +289,7 @@ implements ActionListener
 
 		try {
 			Atom[] ca = StructureTools.getAtomCAArray(structure);
-			List<Domain> domains = ProteinDomainParser.suggestDomains(ca);
+			List<Domain> domains = LocalProteinDomainParser.suggestDomains(ca);
 			int i = -1;
 			for ( Domain dom : domains){
 				i++;
