@@ -38,6 +38,10 @@ import org.biojava.bio.structure.align.model.AFP;
 import org.biojava.bio.structure.align.model.AFPChain;
 import org.biojava.bio.structure.align.util.AFPAlignmentDisplay;
 import org.biojava.bio.structure.jama.Matrix;
+import org.biojava3.alignment.aaindex.ScaledSubstitutionMatrix;
+import org.biojava3.alignment.template.SubstitutionMatrix;
+import org.biojava3.core.sequence.compound.AminoAcidCompound;
+import org.biojava3.core.sequence.compound.AminoAcidCompoundSet;
 
 
 
@@ -145,6 +149,11 @@ public class CECalculator {
 		if ( debug )
 			System.out.println("parameters: " + params);
 		
+		if ( params.getScoringStrategy() == CeParameters.SEQUENCE_CONSERVATION){
+			if ( params.getSeqWeight() < 1)
+				params.setSeqWeight(2);
+		}
+		
 		int winSize = params.getWinSize();
 
 		int winSizeComb1 = (winSize-1)*(winSize-2)/2;		
@@ -238,6 +247,10 @@ public class CECalculator {
 	 * <dd>Equivalent to DEFAULT_SCORING_STRATEGY + SIDE_CHAIN_ANGLE_SCORING</dd>
 	 * </dl>
 	 * 
+	 *  <dt>SEQUENCE_CONSERVATION</dt>
+	 * <dd>A mix between the DEFAULT_SCORING_STRATEGY and a scoring function that favors the alignment of sequence conserved positions in the alignment</dd>
+	 * </dl>
+	 * 
 	 *   
 	 * 
 	 * @param ca1 The CA of the first residue
@@ -322,6 +335,17 @@ public class CECalculator {
 
 			return dist;
 
+		} else if ( params.getScoringStrategy() == CeParameters.SEQUENCE_CONSERVATION){
+			if ( cb1 != null && cb2 != null) {
+				// CB distance
+				dist = Calc.getDistance(cb1,cb2);
+				//dist = dist / 2.;
+			} else {
+				dist = Calc.getDistance(ca1,ca2);
+			}
+			return dist;
+			
+			
 		}
 		else {
 			// unsupported scoring scheme
@@ -1378,6 +1402,10 @@ nBestTrace=nTrace;
 
 			mat = notifyMatrixListener(mat);
 			
+			if ( params.getScoringStrategy() == CeParameters.SEQUENCE_CONSERVATION){
+				mat = updateMatrixWithSequenceConservation(mat,ca1,ca2);
+			}
+			
 			double gapOpen = params.getGapOpen();
 			double gapExtension = params.getGapExtension();
 			
@@ -1481,6 +1509,54 @@ nBestTrace=nTrace;
 
 	}
 
+	// same as CE-symm;
+	private double[][] updateMatrixWithSequenceConservation(double[][] max, Atom[] ca1, Atom[] ca2) {
+		Matrix origM = new Matrix(max);
+		
+		SubstitutionMatrix<AminoAcidCompound> substMatrix =
+			params.getSubstitutionMatrix();
+		
+		int internalScale = 1;
+		if ( substMatrix instanceof ScaledSubstitutionMatrix) {
+			ScaledSubstitutionMatrix scaledMatrix = (ScaledSubstitutionMatrix) substMatrix;
+			internalScale = scaledMatrix.getScale();
+		}
+
+		
+		AminoAcidCompoundSet set = AminoAcidCompoundSet.getAminoAcidCompoundSet();
+
+		for (int i = 0 ; i < origM.getRowDimension() ; i++){
+			for ( int j =0; j < origM.getColumnDimension() ; j ++ ) {
+				double val = origM.get(i,j);
+				Atom a1 = ca1[i];
+				Atom a2 = ca2[j];
+
+				AminoAcidCompound ac1 =
+					set.getCompoundForString(a1.getGroup().getChemComp().getOne_letter_code());
+				AminoAcidCompound ac2 =
+					set.getCompoundForString(a2.getGroup().getChemComp().getOne_letter_code());
+				
+				
+				if ( ac1 == null || ac2 == null)
+					continue;
+				
+				short aaScore = substMatrix.getValue(ac1,ac2);
+				
+				double weightedScore = (aaScore / internalScale) * params.getSeqWeight();
+				
+				
+				val += weightedScore;
+				origM.set(i,j,val);
+
+			}
+		}
+		max = origM.getArray();
+
+		//SymmetryTools.showMatrix((Matrix)origM.clone(), "in optimizer "  + loopCount  );
+		//SymmetryTools.showMatrix(origM, "iteration  matrix " + loopCount + " after");
+		
+		return max;
+	}
 
 	private double[][] notifyMatrixListener(double[][] mat2) {
 		for (MatrixListener li : matrixListeners) {
@@ -2134,9 +2210,13 @@ nBestTrace=nTrace;
 
 
 		 // CE uses the aligned pairs as reference not the whole alignment including gaps...
-		 afpChain.setIdentity(nrIdent*1.0/pos);
-		 afpChain.setSimilarity(nrSim*1.0/pos);
-
+		 if ( pos > 0) {
+			 afpChain.setIdentity(nrIdent*1.0/pos);
+			 afpChain.setSimilarity(nrSim*1.0/pos);
+		 } else {
+			 afpChain.setIdentity(0);
+			 afpChain.setSimilarity(0);
+		 }
 
 		 //AFPAlignmentDisplay.getAlign( afpChain,ca1,ca2);
 
