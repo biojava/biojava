@@ -461,7 +461,7 @@ public class AtomCache {
 					chainNr = Integer.parseInt(name.substring(5,6));
 				}
 				
-			} else if ( (name.length() > 6) &&  
+			} else if ( (name.length() > 6) &&  ( ! name.startsWith(PDP_DOMAIN_IDENTIFIER) ) && 
 					(name.contains(CHAIN_NR_SYMBOL) || name.contains(UNDERSCORE)) && (! (name.startsWith("file:/") || name.startsWith("http:/")))) {
 				
 				// this is a name + range 
@@ -487,7 +487,7 @@ public class AtomCache {
 
 
 			} else if ( name.startsWith(PDP_DOMAIN_IDENTIFIER)){
-
+								
 				// this is a PDP domain definition
 				
 				try {
@@ -498,7 +498,7 @@ public class AtomCache {
 				}
 			}
 
-			//System.out.println("got: " + name + " " + pdbId + " " + chainId + " useChainNr:" + useChainNr + " " +chainNr + " useDomainInfo:" + useDomainInfo + " " + range);
+			//System.out.println("got: >" + name + "< " + pdbId + " " + chainId + " useChainNr:" + useChainNr + " " +chainNr + " useDomainInfo:" + useDomainInfo + " " + range);
 
 			if (pdbId == null) {
 
