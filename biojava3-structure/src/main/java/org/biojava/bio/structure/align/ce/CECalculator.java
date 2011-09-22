@@ -1403,7 +1403,7 @@ nBestTrace=nTrace;
 			mat = notifyMatrixListener(mat);
 			
 			if ( params.getScoringStrategy() == CeParameters.SEQUENCE_CONSERVATION){
-				mat = updateMatrixWithSequenceConservation(mat,ca1,ca2);
+				mat = updateMatrixWithSequenceConservation(mat,ca1,ca2, params);
 			}
 			
 			double gapOpen = params.getGapOpen();
@@ -1509,8 +1509,15 @@ nBestTrace=nTrace;
 
 	}
 
-	// same as CE-symm;
-	private double[][] updateMatrixWithSequenceConservation(double[][] max, Atom[] ca1, Atom[] ca2) {
+	/** Modifies an alignment matrix by favoring the alignment of similar and identical amino acids and penalizing the alignment of unrelated ones.
+	 * 
+	 * @param max alignment matrix
+	 * @param ca1 Atoms for protein 1
+	 * @param ca2 Atoms for Protein 2
+	 * @param params alignment parameters
+	 * @return modified alignment matrix
+	 */
+	public static double[][] updateMatrixWithSequenceConservation(double[][] max, Atom[] ca1, Atom[] ca2, CeParameters params) {
 		Matrix origM = new Matrix(max);
 		
 		SubstitutionMatrix<AminoAcidCompound> substMatrix =
