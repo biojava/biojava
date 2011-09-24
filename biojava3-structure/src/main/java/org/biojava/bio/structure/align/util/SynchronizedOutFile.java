@@ -27,6 +27,7 @@ public class SynchronizedOutFile {
 			throw new FileNotFoundException("please provide a file and not a directory");
 
 		if ( ! f.exists()){
+			System.out.println("creating output file: " + f.getAbsolutePath());
 			f.createNewFile();
 		}
 		file = f;
@@ -55,16 +56,18 @@ public class SynchronizedOutFile {
 
 	private void writeArr() throws IOException{
 
-
+		
 		OutputStream out = null;
 		try {
 			out = new BufferedOutputStream(new  FileOutputStream(file, true));
 			for ( int i = 0 ; i <= counter ; i++){
+				if ( tmp[i] == null )
+					continue;
 				byte data[] = tmp[i].getBytes();
 				out.write(data, 0, data.length);
 			}
 
-		} catch (IOException x) {
+		} catch (Exception x) {
 			System.err.println(x);
 		} finally {
 			if (out != null) {
