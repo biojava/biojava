@@ -16,7 +16,7 @@ public class SynchronizedOutFile {
 	String[] tmp;
 
 	int ARR_SIZE=100;
-	int counter;
+	Integer counter;
 
 	/** create a thread safe wrapper for working with this file
 	 * 
@@ -34,13 +34,17 @@ public class SynchronizedOutFile {
 		counter = -1;
 	}
 
-	public synchronized void write(String message) throws IOException{ 
-		counter++;
-		tmp[counter] = message;
-		if (counter >= ARR_SIZE - 1 ) {
-			writeArr();
-			counter = -1;
+	public synchronized void write(String message) throws IOException{
+
+		synchronized (counter){
+			counter++;
+			tmp[counter] = message;
+			if (counter >= ARR_SIZE - 1 ) {
+				writeArr();
+				counter = -1;
+			}
 		}
+
 
 	}
 

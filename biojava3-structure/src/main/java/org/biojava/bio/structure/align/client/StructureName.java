@@ -3,6 +3,9 @@ package org.biojava.bio.structure.align.client;
 
 import java.io.Serializable;
 import java.io.StringWriter;
+import java.util.regex.Matcher;
+
+import org.biojava.bio.structure.align.util.AtomCache;
 
 
 /** A utility class that makes working with names of strucutres, domains and ranges easier
@@ -55,11 +58,15 @@ public class StructureName implements Comparable<StructureName>, Serializable{
 			s.append(" is a SCOP name");
 		}
 		
-		if ( hasChainID()) {
+		String chainID= getChainId();
+		if ( chainID != null) {
 			s.append(" has chain ID: ");
-			s.append(getChainId());
+			s.append(chainID);
 					
 		}
+		
+		if ( isPDPDomain())
+			s.append(" is a PDP domain");
 		
 		return s.toString();
 		
@@ -70,28 +77,50 @@ public class StructureName implements Comparable<StructureName>, Serializable{
 			return true;
 		return false;
 	}
+	
 	public boolean hasChainID(){
-		return name.contains(".");
+		//return name.contains(AtomCache.CHAIN_SPLIT_SYMBOL);
+		
+		String id= getChainId();
+		if ( id != null)
+			return true;
+		return false;
+	}
+	
+	public String getChainId(){
+		if (name.length() == 6){
+			// name is PDB.CHAINID style (e.g. 4hhb.A)
+			
+		
+			if ( name.substring(4,5).equals(AtomCache.CHAIN_SPLIT_SYMBOL)) {
+				return name.substring(5,6);
+			}
+		} else  if ( name.startsWith("d")){
+			
+
+			Matcher scopMatch = AtomCache.scopIDregex.matcher(name);
+			if( scopMatch.matches() ) {
+				//String pdbID = scopMatch.group(1);
+				String chainID = scopMatch.group(2);
+				//String domainID = scopMatch.group(3);
+				return chainID;
+			}
+			
+			
+		} else if ( name.startsWith(AtomCache.PDP_DOMAIN_IDENTIFIER)){
+			// eg. PDP:4HHBAa
+			String chainID = name.substring(8,9);
+			//System.out.println("chain " + chainID + " for " + name);
+			return chainID;
+		}
+		
+		return null;
 	}
 
-	public String getChainId() {
-		// looks like PDB.chainID syntax
-		String[] spl = name.split("\\.");
-		String chain = null;
-
-		if ( spl.length == 2) {
-
-			chain = spl[1];
-
-			if ( chain.length()>1)
-				chain = chain.substring(0,1);
-
-		} else if ( isScopName()){
-			// chain ID is the 
-			chain = name.substring(5,6);
-		}
-
-		return chain;
+	
+	
+	public boolean isPDPDomain(){
+		return name.startsWith(AtomCache.PDP_DOMAIN_IDENTIFIER);
 	}
 
 	@Override

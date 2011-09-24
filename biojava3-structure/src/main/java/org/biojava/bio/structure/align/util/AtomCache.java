@@ -614,6 +614,7 @@ public class AtomCache {
 				if(struct != null) {
 					System.err.println("Trying chain "+pdbID);
 				}
+				
 				return struct;
 			}
 		}
@@ -662,7 +663,7 @@ public class AtomCache {
 	}
 
 
-	private static final Pattern scopIDregex = Pattern.compile("d(....)(.)(.)" );
+	public static final Pattern scopIDregex = Pattern.compile("d(....)(.)(.)" );
 	/**
 	 * <p>Guess a scop domain. If an exact match is found, return that.
 	 * 

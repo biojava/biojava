@@ -61,6 +61,15 @@ public class RemotePDPProvider {
 	}
 
 
+	public RemotePDPProvider(){
+		this(false);
+	}
+	
+	
+	public RemotePDPProvider(boolean useCache) {
+		
+	}
+	
 	public String getServer() {
 		return server;
 	}
