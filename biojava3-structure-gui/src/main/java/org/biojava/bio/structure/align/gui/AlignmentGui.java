@@ -145,9 +145,11 @@ public class AlignmentGui extends JFrame{
 
 		tabPane.addTab("Select PDB ID", null, tab1, "Select PDB ID to align");
 
+		tabPane.addTab("SCOP domains",null, tab3,"Select SCOP domains to align.");
+		
 		tabPane.addTab("Custom files",null, tab2,"Align your own files.");
 
-		tabPane.addTab("SCOP domains",null, tab3,"Select SCOP domains to align.");
+		
 
 		Box hBoxAlgo = setupAlgorithm();
 
@@ -354,10 +356,10 @@ public class AlignmentGui extends JFrame{
 			tab = tab1;         
 
 		} else if (pos == 1){
-			tab = tab2;
+			tab = tab3;
 
 		} else if (pos == 2){
-			tab = tab3;
+			tab = tab2;
 		}
 
 
@@ -382,9 +384,11 @@ public class AlignmentGui extends JFrame{
 				name1 = tab1.getName1();
 				name2 = tab1.getName2();
 			} else {
-				name1 = s1.getPDBCode();
-				name2 = s2.getPDBCode();
+				name1 = s1.getName();
+				name2 = s2.getName();
 			}
+			
+			System.out.println("aligning: " + name1 + " " + name2);
 
 
 			alicalc = new AlignmentCalc(this,s1,s2, name1, name2);
@@ -409,8 +413,8 @@ public class AlignmentGui extends JFrame{
 		System.out.println("run DB search " + tabPane.getSelectedIndex());
 
 		Structure s = null;
-
-
+		boolean domainSplit = dbsearch.isDomainSplit();
+		
 		StructurePairSelector tab = null;
 		int pos = tabPane.getSelectedIndex();
 
@@ -481,8 +485,8 @@ public class AlignmentGui extends JFrame{
 			useNrCPUs = (Integer) options[n];
 			System.out.println("will use " + useNrCPUs + " CPUs." );
 		}
-
-		alicalc = new AlignmentCalcDB(this, s,  name1,config,file);
+		System.out.println("using domainSplit data");
+		alicalc = new AlignmentCalcDB(this, s,  name1,config,file, domainSplit);
 		alicalc.setNrCPUs(useNrCPUs);
 		abortB.setEnabled(true);
 		progress.setIndeterminate(true);

@@ -147,6 +147,7 @@ implements StructurePairSelector
      Structure s = null;
      try {
      	s =	cache.getStructure(domainID);
+     	s.setName(domainID);
      } catch (Exception e){
     	 e.printStackTrace();
      }

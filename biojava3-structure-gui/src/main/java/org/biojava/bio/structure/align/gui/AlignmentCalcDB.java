@@ -51,6 +51,9 @@ import org.biojava.bio.structure.align.model.AFPChain;
 import org.biojava.bio.structure.align.util.AtomCache;
 import org.biojava.bio.structure.align.util.SynchronizedOutFile;
 import org.biojava.bio.structure.align.util.UserConfiguration;
+import org.biojava.bio.structure.domain.DomainProvider;
+import org.biojava.bio.structure.domain.DomainProviderFactory;
+import org.biojava.bio.structure.domain.RemoteDomainProvider;
 
 import org.biojava3.core.util.ConcurrencyTools;
 
@@ -72,8 +75,8 @@ public class AlignmentCalcDB implements AlignmentCalculationRunnable {
 	String outFile;
 	File resultList;
 	int nrCPUs;
-
-	public AlignmentCalcDB(AlignmentGui parent, Structure s1,  String name1, UserConfiguration config,String outFile) {
+Boolean domainSplit ;
+	public AlignmentCalcDB(AlignmentGui parent, Structure s1,  String name1, UserConfiguration config,String outFile, Boolean domainSplit) {
 
 		this.parent= parent;
 
@@ -85,6 +88,7 @@ public class AlignmentCalcDB implements AlignmentCalculationRunnable {
 		//this.representatives = representatives;
 		interrupted = new AtomicBoolean(false);
 		this.outFile = outFile;
+		this.domainSplit = domainSplit;
 	}
 
 	public void run() {
@@ -152,34 +156,28 @@ public class AlignmentCalcDB implements AlignmentCalculationRunnable {
 
 
 
-
+		DomainProvider domainProvider = DomainProviderFactory.getDomainProvider();
 
 		ConcurrencyTools.setThreadPoolSize(nrCPUs);
-
 
 		Atom[] ca1 = StructureTools.getAtomCAArray(structure1);
 		for (String repre : representatives){
 
-			CallableStructureAlignment ali = new CallableStructureAlignment();
-
-			PdbPair pair = new PdbPair(name1, repre);
-			try {
-				ali.setCa1(ca1);
-			} catch (Exception e){
-				e.printStackTrace();
-				ConcurrencyTools.shutdown();
-				return;
-			}
-			ali.setAlgorithmName(algorithm.getAlgorithmName());
-			ali.setParameters(algorithm.getParameters());
-			ali.setPair(pair);
-			ali.setOutFile(out);			
-			ali.setOutputDir(outFileF);
-			ali.setCache(cache);
-
-			ConcurrencyTools.submit(ali);
-
-
+			if( domainSplit ) {
+				SortedSet<String> domainNames = domainProvider.getDomainNames(repre);
+				//System.out.println(repre +" got domains: " +domainNames);
+				if( domainNames == null || domainNames.size()==0){
+					// no domains found, use whole chain.
+					submit(name1, repre, ca1, algorithm, outFileF, out, cache);
+					continue;
+				}
+				//System.out.println("got " + domainNames.size() + " for " + repre);
+				for( String domain : domainNames){
+					submit(name1, domain, ca1, algorithm, outFileF, out, cache);
+				}
+			} else {
+				submit(name1, repre, ca1, algorithm, outFileF, out, cache);
+			}			
 
 		}
 
@@ -213,7 +211,10 @@ public class AlignmentCalcDB implements AlignmentCalculationRunnable {
 			cleanup();
 		}
 
-
+		if (domainProvider instanceof RemoteDomainProvider){
+			RemoteDomainProvider remote = (RemoteDomainProvider) domainProvider;
+			remote.flushCache();
+		}
 		long now = System.currentTimeMillis();
 		System.out.println("Calculation took : " + (now-startTime)/1000 + " sec.");
 		System.out.println( pool.getCompletedTaskCount() + " "  + pool.getPoolSize() + " " + pool.getActiveCount()  + " " + pool.getTaskCount()  );
@@ -232,6 +233,28 @@ public class AlignmentCalcDB implements AlignmentCalculationRunnable {
 	}
 
 
+
+	private void submit(String name12, String repre, Atom[] ca1, StructureAlignment algorithm , File outFileF , SynchronizedOutFile out , AtomCache cache ) {
+		CallableStructureAlignment ali = new CallableStructureAlignment();
+
+		PdbPair pair = new PdbPair(name1, repre);
+		try {
+			ali.setCa1(ca1);
+		} catch (Exception e){
+			e.printStackTrace();
+			ConcurrencyTools.shutdown();
+			return;
+		}
+		ali.setAlgorithmName(algorithm.getAlgorithmName());
+		ali.setParameters(algorithm.getParameters());
+		ali.setPair(pair);
+		ali.setOutFile(out);			
+		ali.setOutputDir(outFileF);
+		ali.setCache(cache);
+
+		ConcurrencyTools.submit(ali);
+		
+	}
 
 	/** stops what is currently happening and does not continue
 	 * 
