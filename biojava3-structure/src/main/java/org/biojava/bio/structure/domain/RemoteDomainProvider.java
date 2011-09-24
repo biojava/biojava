@@ -1,26 +1,21 @@
 package org.biojava.bio.structure.domain;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
 
+import org.biojava.bio.structure.align.ce.AbstractUserArgumentProcessor;
 import org.biojava.bio.structure.align.client.StructureName;
-import org.biojava.bio.structure.align.util.AtomCache;
+
 
 import org.biojava.bio.structure.scop.ScopDatabase;
 import org.biojava.bio.structure.scop.ScopDomain;
 import org.biojava.bio.structure.scop.ScopFactory;
 
 
-public class RemoteDomainProvider implements DomainProvider{
+public class RemoteDomainProvider extends SerializableCache implements DomainProvider{
 
 	public String url = RemotePDPProvider.DEFAULT_SERVER;
 
@@ -29,7 +24,7 @@ public class RemoteDomainProvider implements DomainProvider{
 
 	private static String CACHE_FILE_NAME = "remotedomaincache.ser";
 
-	Map<String, SortedSet<String>> serializedCache ;
+	
 	public RemoteDomainProvider(){
 		this(false);
 	}
@@ -39,53 +34,17 @@ public class RemoteDomainProvider implements DomainProvider{
 	 * @param cache
 	 */
 	public RemoteDomainProvider(boolean cache){
-
+		super(CACHE_FILE_NAME);
+		
+		if( ! cache)
+			disableCache();
+		
 		scop = ScopFactory.getSCOP();
 		pdp = new RemotePDPProvider(true);
 
-		if ( cache ){
-			serializedCache = reloadFromFile();
-
-		}
+		
 	}
 
-	public void flushCache(){
-		synchronized(serializedCache){
-
-			File f = getCacheFile();
-			try {
-				FileOutputStream fos = new FileOutputStream(f);
-				ObjectOutputStream oos = new ObjectOutputStream(fos);
-				oos.writeObject(serializedCache);
-				oos.close();
-			} catch (Exception e){
-				e.printStackTrace();
-			}
-		}
-	}
-
-	private Map<String, SortedSet<String>> reloadFromFile() {
-
-		File f = getCacheFile();
-
-		serializedCache = new HashMap<String,SortedSet<String>>();
-
-		// has never been cached here before
-		if( ! f.exists())
-			return serializedCache;
-
-		try{
-
-			FileInputStream fis = new FileInputStream(f);
-			ObjectInputStream ois = new ObjectInputStream(fis);
-			serializedCache = (HashMap<String,SortedSet<String>>) ois.readObject();
-			ois.close();
-		} catch (Exception e){
-			e.printStackTrace();
-			return null;
-		}
-		return serializedCache;
-	}
 
 	@Override
 	public SortedSet<String> getDomainNames(String name) {
@@ -131,29 +90,8 @@ public class RemoteDomainProvider implements DomainProvider{
 
 	}
 
-	private void cache(String name, SortedSet<String> data) {
-		if ( serializedCache != null){
-			serializedCache.put(name,data);
+	
 
-
-			// every 1000 objects we are writing to disk
-			if ( serializedCache.keySet().size() % 1000 == 0 ) {
-
-				flushCache();
-
-			}
-
-		}
-
-
-	}
-
-	private File getCacheFile() {
-		AtomCache cache =new AtomCache();
-		String path = cache.getPath();
-		File f = new File(path + System.getProperty("file.separator") + CACHE_FILE_NAME);
-		return f;
-	}
 
 	private SortedSet<String> getPDPDomains(StructureName n) {
 		SortedSet<String> pdpDomains = pdp.getPDPDomainNamesForPDB(n.getPdbId());
@@ -173,13 +111,16 @@ public class RemoteDomainProvider implements DomainProvider{
 	}
 
 	public static void main(String[] args){
+		System.setProperty(AbstractUserArgumentProcessor.PDB_DIR,"/Users/andreas/WORK/PDB");
+		
 		String name ="3KIH.A";
 		try {
-			RemoteDomainProvider me = new RemoteDomainProvider();
+			RemoteDomainProvider me = new RemoteDomainProvider(true);
 			System.out.println(me.getDomainNames(name));
 			StructureName n = new StructureName(name);
 			System.out.println(n);
 			//System.out.println(new  AtomCache().getStructure(name));
+			me.flushCache();
 		} catch (Exception e){
 			e.printStackTrace();
 		}

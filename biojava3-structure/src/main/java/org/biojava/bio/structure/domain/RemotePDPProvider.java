@@ -25,11 +25,13 @@
 package org.biojava.bio.structure.domain;
 
 import java.io.InputStream;
+
 import java.net.URL;
 import java.util.SortedSet;
 
 
 import org.biojava.bio.structure.Structure;
+import org.biojava.bio.structure.align.ce.AbstractUserArgumentProcessor;
 import org.biojava.bio.structure.align.client.JFatCatClient;
 import org.biojava.bio.structure.align.util.AtomCache;
 import org.biojava.bio.structure.align.util.HTTPConnectionTools;
@@ -41,35 +43,52 @@ import org.biojava.bio.structure.scop.server.XMLUtil;
  * @author Andreas Prlic
  *
  */
-public class RemotePDPProvider {
+public class RemotePDPProvider extends SerializableCache {
+
 	public static final String DEFAULT_SERVER = "http://source.rcsb.org/scopserver/rest/";
 
 	String server = DEFAULT_SERVER;
 
+	private static String CACHE_FILE_NAME = "remotepdpdomaindefs.ser";
+
+
 	public static void main(String[] args){
 
-		RemotePDPProvider me = new RemotePDPProvider();
+		System.setProperty(AbstractUserArgumentProcessor.PDB_DIR,"/Users/andreas/WORK/PDB");	
+
+		RemotePDPProvider me = new RemotePDPProvider(true);
 
 		//System.out.println(scop.getByCategory(ScopCategory.Superfamily));
 		SortedSet<String> pdpdomains = me.getPDPDomainNamesForPDB("4HHB");
 		System.out.println(pdpdomains);
-		
-		
+
+
 		AtomCache cache = new AtomCache();
 		Structure s = me.getDomain(pdpdomains.first(), cache);
 		System.out.println(s);
+
+		me.flushCache();
+
 	}
 
 
 	public RemotePDPProvider(){
 		this(false);
 	}
-	
-	
+
+
 	public RemotePDPProvider(boolean useCache) {
-		
+
+		super(CACHE_FILE_NAME);
+
+		if ( ! useCache)
+			disableCache();
+
 	}
-	
+
+
+
+
 	public String getServer() {
 		return server;
 	}
@@ -77,30 +96,46 @@ public class RemotePDPProvider {
 	public void setServer(String server) {
 		this.server = server;
 	}
-	
+
 	public Structure getDomain(String pdbDomainName, AtomCache cache){
+
+		SortedSet<String> domainRanges = null;
+		if ( serializedCache != null){
+			if ( serializedCache.containsKey(pdbDomainName)){
+				domainRanges= serializedCache.get(pdbDomainName);
+				System.out.println("got ranges: " + domainRanges);
+			}
+		}
+
+
+
 		Structure s = null;
 		try {
-			URL u = new URL(server + "getPDPDomain?pdpId="+pdbDomainName);
-			System.out.println(u);
-			InputStream response = HTTPConnectionTools.getInputStream(u);
-			String xml = JFatCatClient.convertStreamToString(response);
-			//System.out.println(xml);
-			SortedSet<String> domainRanges = XMLUtil.getDomainRangesFromXML(xml);
+
+			if ( domainRanges == null || domainRanges.size() == 0){
+				URL u = new URL(server + "getPDPDomain?pdpId="+pdbDomainName);
+				System.out.println(u);
+				InputStream response = HTTPConnectionTools.getInputStream(u);
+				String xml = JFatCatClient.convertStreamToString(response);
+				//System.out.println(xml);
+				domainRanges = XMLUtil.getDomainRangesFromXML(xml);
+				cache(pdbDomainName,domainRanges);
+			}
 			
+
 			if ( domainRanges.size() >0 ){
 				String domainRange = domainRanges.first();
 				s= cache.getStructure(domainRange);
 				s.setName(pdbDomainName);								
 			}
-			
+
 		} catch (Exception e){
 			e.printStackTrace();
 		}
-		
+
 		return s;
 	}
-	
+
 	public SortedSet<String> getPDPDomainNamesForPDB(String pdbId){
 		SortedSet<String> results = null;
 		try {
@@ -110,7 +145,7 @@ public class RemotePDPProvider {
 			String xml = JFatCatClient.convertStreamToString(response);
 			//System.out.println(xml);
 			results  = XMLUtil.getDomainRangesFromXML(xml);
-			
+
 		} catch (Exception e){
 			e.printStackTrace();
 		}
