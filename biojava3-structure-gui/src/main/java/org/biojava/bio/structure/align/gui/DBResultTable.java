@@ -30,6 +30,8 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -63,7 +65,7 @@ import org.biojava.bio.structure.io.StructureIOFile;
 
 public class DBResultTable implements ActionListener{
 
-	public static final String[] ceColumnNames = {"name1","tname2","score","z-score","rmsd","len1","len2","cov1","cov2","%ID","Description",""};
+	public static final String[] ceColumnNames =  {"name1","tname2","score","z-score"    ,"rmsd","len1","len2","cov1","cov2","%ID","Description",""};
 	public static final String[] fatColumnNames = {"name1","tname2","score","probability","rmsd","len1","len2","cov1","cov2","%ID","Description",""};
 
 	Object[][] data;
@@ -103,87 +105,78 @@ public class DBResultTable implements ActionListener{
 		userChain = null;
 	}
 
-	public void show(File file, UserConfiguration config){
-		this.config = config;
-
-		cache = new AtomCache(config);
-
+	public void show(BufferedReader in, UserConfiguration config) throws IOException{
+		String str;
 		List<String[]> tmpdat = new ArrayList<String[]>();
-
-		try {
-			BufferedReader in = new BufferedReader(new FileReader(file));
-			String str;
-			while ((str = in.readLine()) != null) {
-				if ( str.startsWith("#")) {
-					if ( str.startsWith("# algorithm:")) {
-						String[] spl = str.split(":");
-						if ( spl.length == 2) {
-							algorithmName = spl[1];
-							if (algorithmName.startsWith("jCE"))
-								isCE = true;
-							else
-								isCE = false;
-						}
-						initAlgorithm(algorithmName);
-
+		while ((str = in.readLine()) != null) {
+			if ( str.startsWith("#")) {
+				if ( str.startsWith("# algorithm:")) {
+					String[] spl = str.split(":");
+					if ( spl.length == 2) {
+						algorithmName = spl[1];
+						if (algorithmName.startsWith("jCE"))
+							isCE = true;
+						else
+							isCE = false;
 					}
+					initAlgorithm(algorithmName);
 
-					else if ( str.startsWith("#param:file1=")){
-						String path = str.substring(13);
-						userPath = path.trim();
-					}
-
-					else if ( str.startsWith("#param:chain1=")){
-						String chain = str.substring(14);
-						userChain = chain.trim();
-					} 
-					
-					else if ( str.startsWith("#param:scoring=")){
-						try {
-							String[] spl = str.split("=");
-							String scoreS = spl[1];
-							int scoring = Integer.parseInt(scoreS);
-							if (algorithm != null){
-								// scoring is a parameter of CE...
-								ConfigStrucAligParams params = algorithm.getParameters();
-								if ( params instanceof CeParameters){
-									CeParameters ceParams = (CeParameters) params;
-									ceParams.setScoringStrategy(scoring);
-								}
-							}
-						} catch (Exception e){
-							System.err.println("Unknown parameter can't read parameters from line: " + str);
-							e.printStackTrace();
-						}
-
-					}
-					continue;
 				}
-				String[] spl = str.split("\t");
-				tmpdat.add(spl);
 
+				else if ( str.startsWith("#param:file1=")){
+					String path = str.substring(13);
+					userPath = path.trim();
+				}
+
+				else if ( str.startsWith("#param:chain1=")){
+					String chain = str.substring(14);
+					userChain = chain.trim();
+				} 
+				
+				else if ( str.startsWith("#param:scoring=")){
+					try {
+						String[] spl = str.split("=");
+						String scoreS = spl[1];
+						int scoring = Integer.parseInt(scoreS);
+						if (algorithm != null){
+							// scoring is a parameter of CE...
+							ConfigStrucAligParams params = algorithm.getParameters();
+							if ( params instanceof CeParameters){
+								CeParameters ceParams = (CeParameters) params;
+								ceParams.setScoringStrategy(scoring);
+							}
+						}
+					} catch (Exception e){
+						System.err.println("Unknown parameter can't read parameters from line: " + str);
+						e.printStackTrace();
+					}
+
+				}
+				continue;
 			}
-			in.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+			String[] spl = str.split("\t");
+			if ( spl.length != ceColumnNames.length -1) {
+				System.err.println("wrong table width! " + spl.length + " should be: " + (ceColumnNames.length -1 ));
+				System.err.println(str);
+				continue;
+			}
+			tmpdat.add(spl);
 
+		}
+		in.close();
+		
 		Object[][] d = new Object[tmpdat.size()][ceColumnNames.length + 1];
 
 		int i = -1; 
 		for (String[] spl : tmpdat){
+			
 			i++;
-
-
-
 			Object[] o = new Object[spl.length + 1];
 			for ( int j=0; j< spl.length;j++){
 
 				if (( j >= 2 && j <= 4)|| (j==9)) {
 					o[j] = Double.parseDouble(spl[j]);
-				} else if ( j > 9 ) {
-					o[j] = spl[j];
-				} else if (  j >4) {
+				}  else if (  j >4 && j< 10) {
 				
 					o[j] = Integer.parseInt(spl[j]);										    	    
 				} else {
@@ -218,11 +211,38 @@ public class DBResultTable implements ActionListener{
 		f.getContentPane().add(scrollPane);
 		f.pack();
 		f.setVisible(true);
+		
+	}
+	
+	public void show(File file, UserConfiguration config){
+		this.config = config;
 
-
+		cache = new AtomCache(config);
+		try {
+			BufferedReader in = new BufferedReader(new FileReader(file));
+			show(in, config);
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 
 	}
 
+	public void show(URL url, UserConfiguration config){
+		this.config = config;
+
+		cache = new AtomCache(config);
+		try {
+			BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
+			show(in, config);
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+	}
+
+	
 	private void initAlgorithm(String algorithmName) {
 		try {
 			algorithm = StructureAlignmentFactory.getAlgorithm(algorithmName);
