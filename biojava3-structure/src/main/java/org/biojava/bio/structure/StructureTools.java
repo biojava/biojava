@@ -640,10 +640,18 @@ public class StructureTools {
 		} catch (StructureException e){
 			System.err.println(e.getMessage() + " trying upper case Chain id...");
 			c = s.getChainByPDB(chainId.toUpperCase());
-
+			
+			
 		}
-		if ( c != null)
+		if ( c != null) {
 			newS.addChain(c);
+			for ( Compound comp : s.getCompounds()){
+				if ( comp.getChainId().contains(c.getChainID())){
+					// found matching compound. set description...
+					newS.getPDBHeader().setDescription("Chain " + c.getChainID() + " of " + s.getPDBCode() + " " + comp.getMolName());
+				}
+			}
+		}
 
 
 		return newS;
@@ -678,6 +686,7 @@ public class StructureTools {
 		newS.setConnections(s.getConnections());
 		newS.setSSBonds(s.getSSBonds());
 		newS.setSites(s.getSites());
+		newS.getPDBHeader().setDescription("subset of " + s.getPDBCode() + " " + s.getPDBHeader().getDescription() );
 		
 		if ( chainNr < 0 ) {
 
