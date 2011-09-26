@@ -1,7 +1,6 @@
 package org.biojava.bio.structure.domain;
 
 import java.util.List;
-import java.util.Map;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -127,6 +126,14 @@ public class RemoteDomainProvider extends SerializableCache implements DomainPro
 
 
 	}
+
+	@Override
+	public void flushCache() {
+		super.flushCache();
+		pdp.flushCache();
+	}
+	
+	
 
 
 }
