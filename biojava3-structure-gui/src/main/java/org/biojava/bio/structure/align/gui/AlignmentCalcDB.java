@@ -43,7 +43,9 @@ import org.biojava.bio.structure.StructureTools;
 import org.biojava.bio.structure.align.CallableStructureAlignment;
 import org.biojava.bio.structure.align.StructureAlignment;
 import org.biojava.bio.structure.align.ce.CeMain;
+import org.biojava.bio.structure.align.ce.CeParameters;
 import org.biojava.bio.structure.align.ce.CeSideChainMain;
+import org.biojava.bio.structure.align.ce.ConfigStrucAligParams;
 import org.biojava.bio.structure.align.client.FarmJobParameters;
 import org.biojava.bio.structure.align.client.JFatCatClient;
 import org.biojava.bio.structure.align.client.PdbPair;
@@ -145,6 +147,18 @@ Boolean domainSplit ;
 				out.write(AFPChain.newline);
 
 			}
+			
+			if ( algorithm.getAlgorithmName().startsWith("jCE")){
+				ConfigStrucAligParams params = algorithm.getParameters();
+				if ( params instanceof CeParameters){
+					CeParameters ceParams = (CeParameters) params;
+					if ( ceParams.getScoringStrategy() != CeParameters.DEFAULT_SCORING_STRATEGY) {
+						String scoring = "#param:scoring=" + ceParams.getScoringStrategy();
+						out.write(scoring);
+						out.write(AFPChain.newline);
+					}
+				}
+			}
 
 		} catch (Exception e){
 			System.err.println("Error while loading representative structure " + name1);
@@ -161,6 +175,8 @@ Boolean domainSplit ;
 		ConcurrencyTools.setThreadPoolSize(nrCPUs);
 
 		Atom[] ca1 = StructureTools.getAtomCAArray(structure1);
+		
+		int nrJobs = 0;
 		for (String repre : representatives){
 
 			if( domainSplit ) {
@@ -169,14 +185,17 @@ Boolean domainSplit ;
 				if( domainNames == null || domainNames.size()==0){
 					// no domains found, use whole chain.
 					submit(name1, repre, ca1, algorithm, outFileF, out, cache);
+					nrJobs++;
 					continue;
 				}
 				//System.out.println("got " + domainNames.size() + " for " + repre);
 				for( String domain : domainNames){
 					submit(name1, domain, ca1, algorithm, outFileF, out, cache);
+					nrJobs++;
 				}
 			} else {
 				submit(name1, repre, ca1, algorithm, outFileF, out, cache);
+				nrJobs++;
 			}			
 
 		}
@@ -188,7 +207,7 @@ Boolean domainSplit ;
 		long startTime = System.currentTimeMillis();
 
 		try {
-			while ( pool.getCompletedTaskCount() < representatives.size()-1  ) {
+			while ( pool.getCompletedTaskCount() < nrJobs-1  ) {
 				//long now = System.currentTimeMillis();
 				//System.out.println( pool.getCompletedTaskCount() + " " + (now-startTime)/1000 + " " + pool.getPoolSize() + " " + pool.getActiveCount()  + " " + pool.getTaskCount()  );
 //				if ((now-startTime)/1000 > 60) {
@@ -200,7 +219,7 @@ Boolean domainSplit ;
 				if ( interrupted.get())
 					break;
 
-				Thread.sleep(1000);
+				Thread.sleep(2000);
 
 			}
 			out.close();
