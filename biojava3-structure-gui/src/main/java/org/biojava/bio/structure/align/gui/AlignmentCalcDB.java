@@ -106,10 +106,10 @@ Boolean domainSplit ;
 
 		String header = "# algorithm:" + algorithm.getAlgorithmName(); 
 
-		String legend = "# name1\tname2\tscore\tprobability\trmsd\tlen1\tlen2\tcov1\tcov2\t%ID\t " ;
+		String legend = "# name1\tname2\tscore\tprobability\trmsd\tlen1\tlen2\tcov1\tcov2\t%ID\tDescription\t " ;
 		if (    algorithm.getAlgorithmName().equalsIgnoreCase(CeMain.algorithmName) || 
 				algorithm.getAlgorithmName().equalsIgnoreCase(CeSideChainMain.algorithmName)){
-			legend =  "# name1\tname2\tscore\tz-score\trmsd\tlen1\tlen2\tcov1\tcov2\t%ID\t " ;
+			legend =  "# name1\tname2\tscore\tz-score\trmsd\tlen1\tlen2\tcov1\tcov2\t%ID\tDescription\t " ;
 		}
 
 
