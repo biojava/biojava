@@ -2531,7 +2531,7 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 				} catch (Exception e){
 					// the line is badly formatted, ignore it!
 					e.printStackTrace();
-					System.err.println("badly formatted line ... " + line);
+					System.err.println("badly formatted line ... " +pdbId +": " + line);
 				}
 				line = buf.readLine ();
 			}
