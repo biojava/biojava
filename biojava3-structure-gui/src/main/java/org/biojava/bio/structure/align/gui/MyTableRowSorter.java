@@ -57,7 +57,7 @@ public class MyTableRowSorter extends TableRowSorter<TableModel>
   public int compare(String s1, String s2){
 	  if (( column >= 2 && column <= 4)|| (column==9)){
 		  return compare(Float.parseFloat(s1), Float.parseFloat(s2));
-	  } else if  (  column > 4) {
+	  } else if  (  column > 4 && column < 10) {
         return compare(Integer.parseInt(s1), Integer.parseInt(s2));
      } else
         return s1.compareTo(s2);
