@@ -50,6 +50,8 @@ import org.biojava.bio.structure.StructureTools;
 import org.biojava.bio.structure.align.StructureAlignment;
 import org.biojava.bio.structure.align.StructureAlignmentFactory;
 import org.biojava.bio.structure.align.ce.CeMain;
+import org.biojava.bio.structure.align.ce.CeParameters;
+import org.biojava.bio.structure.align.ce.ConfigStrucAligParams;
 import org.biojava.bio.structure.align.gui.jmol.StructureAlignmentJmol;
 import org.biojava.bio.structure.align.model.AFPChain;
 import org.biojava.bio.structure.align.util.AtomCache;
@@ -71,13 +73,17 @@ public class DBResultTable implements ActionListener{
 	String oldName2;
 
 	String algorithmName;
+	StructureAlignment algorithm;
+	
 	boolean isCE = true;
 	UserConfiguration config;
 	AtomCache cache ;
 
 	String userPath ;
 	String userChain;
+
 	
+
 	public static void main(String[] args){
 
 		String file = "/tmp/results_4hhb.A.out";
@@ -112,23 +118,44 @@ public class DBResultTable implements ActionListener{
 					if ( str.startsWith("# algorithm:")) {
 						String[] spl = str.split(":");
 						if ( spl.length == 2) {
-						 algorithmName = spl[1];
-						 if (algorithmName.startsWith("jCE"))
-							 isCE = true;
-						 else
-							 isCE = false;
+							algorithmName = spl[1];
+							if (algorithmName.startsWith("jCE"))
+								isCE = true;
+							else
+								isCE = false;
 						}
-						
+						initAlgorithm(algorithmName);
+
 					}
-					
+
 					else if ( str.startsWith("#param:file1=")){
 						String path = str.substring(13);
 						userPath = path.trim();
 					}
-					
+
 					else if ( str.startsWith("#param:chain1=")){
 						String chain = str.substring(14);
 						userChain = chain.trim();
+					} 
+					
+					else if ( str.startsWith("#param:scoring=")){
+						try {
+							String[] spl = str.split("=");
+							String scoreS = spl[1];
+							int scoring = Integer.parseInt(scoreS);
+							if (algorithm != null){
+								// scoring is a parameter of CE...
+								ConfigStrucAligParams params = algorithm.getParameters();
+								if ( params instanceof CeParameters){
+									CeParameters ceParams = (CeParameters) params;
+									ceParams.setScoringStrategy(scoring);
+								}
+							}
+						} catch (Exception e){
+							System.err.println("Unknown parameter can't read parameters from line: " + str);
+							e.printStackTrace();
+						}
+
 					}
 					continue;
 				}
@@ -151,7 +178,7 @@ public class DBResultTable implements ActionListener{
 
 			Object[] o = new Object[spl.length + 1];
 			for ( int j=0; j< spl.length;j++){
-				
+
 				if (( j >= 2 && j <= 4)|| (j==9)) {
 					o[j] = Double.parseDouble(spl[j]);
 				} else if (  j >4) {
@@ -160,9 +187,9 @@ public class DBResultTable implements ActionListener{
 					o[j] = spl[j];
 				}
 			}
-			
+
 			o[spl.length ] = "Align";
-			
+
 			d[i] = o;
 
 		}
@@ -171,7 +198,7 @@ public class DBResultTable implements ActionListener{
 		if ( ! isCE)
 			columnNames = fatColumnNames;
 		table = new JTable(data, columnNames);
-		
+
 		TableRowSorter<TableModel> sorter = new MyTableRowSorter(table.getModel());
 		table.setRowSorter(sorter);
 		//table.setAutoCreateRowSorter(true);
@@ -193,6 +220,22 @@ public class DBResultTable implements ActionListener{
 
 	}
 
+	private void initAlgorithm(String algorithmName) {
+		try {
+			algorithm = StructureAlignmentFactory.getAlgorithm(algorithmName);
+		} catch (Exception e){
+			e.printStackTrace();
+			System.err.println("Can't guess algorithm from output. Using jCE as default...");
+			try {
+				algorithm = StructureAlignmentFactory.getAlgorithm(CeMain.algorithmName);
+			} catch (Exception ex){
+				ex.printStackTrace();
+				return;
+			}
+		}
+
+	}
+
 	private void outputSelection() {
 		StringBuffer output = new StringBuffer();
 		output.append(String.format("Lead: %d, %d. ",
@@ -203,7 +246,7 @@ public class DBResultTable implements ActionListener{
 		for (int c : table.getSelectedRows()) {
 			output.append(String.format(" %d", c));
 		}
-		
+
 		output.append(". Columns:");
 		for (int c : table.getSelectedColumns()) {
 			output.append(String.format(" %d", c));
@@ -235,28 +278,17 @@ public class DBResultTable implements ActionListener{
 	}
 
 	private void showAlignment( String name1, String name2){
-		StructureAlignment algorithm;
-		try {
-			algorithm = StructureAlignmentFactory.getAlgorithm(algorithmName);
-		} catch (Exception e){
-			e.printStackTrace();
-			System.err.println("Can't guess algorithm from output. Using jCE as default...");
-			try {
-			algorithm = StructureAlignmentFactory.getAlgorithm(CeMain.algorithmName);
-			} catch (Exception ex){
-				ex.printStackTrace();
-			return;
-			}
-		}
-		
-		
+
+
+
+
 		try {
 			Structure structure1 = null;
 			if ( name1.equals("CUSTOM")) {
 				// user uploaded a custom PDB file...
 				structure1 = loadCustomStructure(userPath,userChain);
 			} else {						
-			 structure1 = cache.getStructure(name1);
+				structure1 = cache.getStructure(name1);
 			}
 			Structure structure2 = cache.getStructure(name2);
 
@@ -294,19 +326,19 @@ public class DBResultTable implements ActionListener{
 		try {
 			s = reader.getStructure(userPath2);
 		} catch (IOException  e){
-			
+
 			//e.printStackTrace();
 			throw new StructureException(e);
 		}
-		
-		
+
+
 		return StructureTools.getReducedStructure(s, userChain2);
 	}
 
 	public void actionPerformed(ActionEvent e) {
 
-		
-		
+
+
 	}
 
 
