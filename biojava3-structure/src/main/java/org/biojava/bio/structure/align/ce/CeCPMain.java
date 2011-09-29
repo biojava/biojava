@@ -220,7 +220,7 @@ public class CeCPMain extends CeMain {
 		// Fix optimal alignment		
 		int[][][] align = afpChain.getOptAln();
 		int alignLen = afpChain.getOptLength();
-		assert(align.length == 1); // Assume that CE returns just one block
+		assert(afpChain.getBlockNum() == 1); // Assume that CE returns just one block
 
 		// Determine the region where ca2 and ca2' overlap
 		int nStart = align[0][1][0]; //alignment N-terminal
