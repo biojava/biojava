@@ -159,6 +159,8 @@ public class AFPChain implements Serializable, Cloneable
 
 	// background distances
 	Matrix distanceMatrix;
+	
+	String description2;
 
 	public AFPChain(){
 		init();
@@ -172,6 +174,7 @@ public class AFPChain implements Serializable, Cloneable
 		sequentialAlignment = true;
 		distanceMatrix = null;
 		tmScore = -1;
+		description2=null;
 	}
 
 	/**
@@ -298,8 +301,7 @@ public class AFPChain implements Serializable, Cloneable
 		//probability = idMap.get("probability");
 		similarity = idMap.get("similarity");
 		identity   = idMap.get("identity");
-
-
+		
 	}
 
 
@@ -1217,6 +1219,7 @@ public class AFPChain implements Serializable, Cloneable
 
 
 	public void setIdentity(double identity) {
+		
 		this.identity = identity;
 	}
 
@@ -1349,6 +1352,26 @@ public class AFPChain implements Serializable, Cloneable
       return tmScore;
    }
 
+
+   
+   /** Get a textual description for the protein 2 of the alignment.
+    * 
+    * @return
+    */
+	public String getDescription2() {
+		return description2;
+	}
+	
+	
+	/** Set the textual description for protein 2.
+	 * 
+	 * @param desc
+	 */
+	public void setDescription2(String desc){
+		this.description2 = desc;
+	}
+
+
 	/* (non-Javadoc)
 	 * @see java.lang.Object#hashCode()
 	 */
@@ -1421,5 +1444,6 @@ public class AFPChain implements Serializable, Cloneable
 			return false;
 		return true;
 	}
+
 
 }
