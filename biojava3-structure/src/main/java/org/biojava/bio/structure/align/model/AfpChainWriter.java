@@ -40,6 +40,11 @@ import org.biojava.bio.structure.align.seq.SmithWaterman3Daligner;
 import org.biojava.bio.structure.align.util.AFPAlignmentDisplay;
 import org.biojava.bio.structure.jama.Matrix;
 
+/** A class to convert the data in an AfpChain object to various String outputs.
+ *  
+ * @author Andreas Prlic
+ *
+ */
 public class AfpChainWriter
 {
 
