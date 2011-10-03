@@ -68,7 +68,7 @@ public class RemoteScopInstallation implements ScopDatabase {
 			System.out.println(u);
 			InputStream response = HTTPConnectionTools.getInputStream(u);
 			String xml = JFatCatClient.convertStreamToString(response);
-			System.out.println(xml);
+			//System.out.println(xml);
 			ScopDescriptions container = ScopDescriptions.fromXML(xml);
 			results = container.getScopDescription();
 		} catch (Exception e){
