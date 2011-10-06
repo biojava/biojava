@@ -58,7 +58,7 @@ import org.biojava3.core.sequence.compound.AminoAcidCompoundSet;
  */
 public class CECalculator {
 
-	private static final boolean isPrint = false;
+	protected static final boolean isPrint = false;
 	private static final boolean showAlignmentSteps = false;
 	private static final boolean debug = false;  
 
@@ -66,22 +66,22 @@ public class CECalculator {
 	int[] f2;
 	double[][]dist1;
 	double[][]dist2;
-	double[][]mat;
-	int[] bestTrace1;
-	int[] bestTrace2;
-	int[][] bestTraces1;
-	int[][] bestTraces2;
-	private int nBestTrace;
-	int nBestTraces;
+	protected double[][]mat;
+	protected int[] bestTrace1;
+	protected int[] bestTrace2;
+	protected int[][] bestTraces1;
+	protected int[][] bestTraces2;
+	protected int nBestTrace;
+	protected int nBestTraces;
 	double d_[] = new double[20];
-	private int[] bestTracesN;
-	private double bestTraceScore;
-	private int nTrace;
-	private double[] bestTracesScores;
-	private int[] trace1;
-	private int[] trace2;
+	protected int[] bestTracesN;
+	protected double bestTraceScore;
+	protected int nTrace;
+	protected double[] bestTracesScores;
+	protected int[] trace1;
+	protected int[] trace2;
 
-	private static final 	double  zThr=-0.1;
+	protected static final 	double  zThr=-0.1;
 
 	long timeStart ;
 	long timeEnd;
@@ -96,15 +96,15 @@ public class CECalculator {
 	private int[] bestTraceLen;
 	private Matrix r;
 	private Atom t;
-	private int nTraces;
+	protected int nTraces;
 
 	private double z;
 	private int[] traceIndexContainer;
 
-	CeParameters params;
+	protected CeParameters params;
 	// SHOULD these fields be PARAMETERS?
 
-	private static final int nIter = 1;
+	protected static final int nIter = 1;
 	private static final boolean distAll = false;
 
 	List<MatrixListener> matrixListeners;
@@ -796,7 +796,7 @@ public class CECalculator {
 
 	}
 
-	private double getScore2(int jse1, int jse2, double[][] traceScore, int traceIndex_,int[] traceIndex,int winSizeComb1, int winSizeComb2, double score0, double score1 ) {
+	protected double getScore2(int jse1, int jse2, double[][] traceScore, int traceIndex_,int[] traceIndex,int winSizeComb1, int winSizeComb2, double score0, double score1 ) {
 
 
 
@@ -819,7 +819,7 @@ public class CECalculator {
 
 	}
 
-	private int doIter0(int newBestTrace, double traceTotalScore, double bestTracesMax) {
+	protected int doIter0(int newBestTrace, double traceTotalScore, double bestTracesMax) {
 
 
 		// only do the whole method if this criteria is fulfilled...
@@ -884,7 +884,7 @@ nBestTrace=nTrace;
 	}
 
 
-	private double getScoreFromDistanceMatrices(int mse1, int mse2,int winSize) {
+	protected double getScoreFromDistanceMatrices(int mse1, int mse2,int winSize) {
 
 		double score = 0;
 		// (winSize) "best" dist
@@ -1977,7 +1977,7 @@ nBestTrace=nTrace;
 		return(pToZ(p1*p2));
 	}
 
-	private double zStrAlign(int winSize, int nTrace, double score, int nGaps) {
+	protected double zStrAlign(int winSize, int nTrace, double score, int nGaps) {
 		double z1=zScore(winSize, nTrace, score);
 		double z2=zGaps(winSize, nTrace, nGaps);
 		return(zByZ(z1, z2));
