@@ -77,7 +77,18 @@ public class AlignmentCalcDB implements AlignmentCalculationRunnable {
 	String outFile;
 	File resultList;
 	int nrCPUs;
-Boolean domainSplit ;
+	Boolean domainSplit ;
+	
+	StructureAlignment customAlgorithm;
+	
+	public StructureAlignment getAlgorithm() {
+		return customAlgorithm;
+	}
+
+	public void setAlgorithm(StructureAlignment algo) {
+		this.customAlgorithm = algo;
+	}
+
 	public AlignmentCalcDB(AlignmentGui parent, Structure s1,  String name1, UserConfiguration config,String outFile, Boolean domainSplit) {
 
 		this.parent= parent;
@@ -94,9 +105,15 @@ Boolean domainSplit ;
 	}
 
 	public void run() {
-		
+
 		AtomCache cache = new AtomCache(config);
-		StructureAlignment algorithm = parent.getStructureAlignment();	
+		
+		StructureAlignment algorithm = null;
+		if ( parent != null )
+			algorithm = parent.getStructureAlignment();
+		else {
+			algorithm = customAlgorithm;
+		}
 		String serverLocation = FarmJobParameters.DEFAULT_SERVER_URL;
 		if ( representatives == null){
 			SortedSet<String> repre = JFatCatClient.getRepresentatives(serverLocation,40);
@@ -147,7 +164,7 @@ Boolean domainSplit ;
 				out.write(AFPChain.newline);
 
 			}
-			
+
 			if ( algorithm.getAlgorithmName().startsWith("jCE")){
 				ConfigStrucAligParams params = algorithm.getParameters();
 				if ( params instanceof CeParameters){
@@ -175,7 +192,7 @@ Boolean domainSplit ;
 		ConcurrencyTools.setThreadPoolSize(nrCPUs);
 
 		Atom[] ca1 = StructureTools.getAtomCAArray(structure1);
-		
+
 		int nrJobs = 0;
 		for (String repre : representatives){
 
@@ -210,11 +227,11 @@ Boolean domainSplit ;
 			while ( pool.getCompletedTaskCount() < nrJobs-1  ) {
 				//long now = System.currentTimeMillis();
 				//System.out.println( pool.getCompletedTaskCount() + " " + (now-startTime)/1000 + " " + pool.getPoolSize() + " " + pool.getActiveCount()  + " " + pool.getTaskCount()  );
-//				if ((now-startTime)/1000 > 60) {
-//					
-//					interrupt();
-//					System.out.println("completed: " + pool.getCompletedTaskCount());
-//				}
+				//				if ((now-startTime)/1000 > 60) {
+				//					
+				//					interrupt();
+				//					System.out.println("completed: " + pool.getCompletedTaskCount());
+				//				}
 
 				if ( interrupted.get())
 					break;
@@ -237,8 +254,8 @@ Boolean domainSplit ;
 		long now = System.currentTimeMillis();
 		System.out.println("Calculation took : " + (now-startTime)/1000 + " sec.");
 		System.out.println( pool.getCompletedTaskCount() + " "  + pool.getPoolSize() + " " + pool.getActiveCount()  + " " + pool.getTaskCount()  );
-//		if ((now-startTime)/1000 > 30) {
-		
+		//		if ((now-startTime)/1000 > 30) {
+
 
 		//		try {
 		//			out.flush();
@@ -246,9 +263,12 @@ Boolean domainSplit ;
 		//		} catch (Exception e) {
 		//			e.printStackTrace();
 		//		}
-		parent.notifyCalcFinished();
-		DBResultTable table = new DBResultTable();
-		table.show(resultList,config);
+		if ( parent != null ) {
+			parent.notifyCalcFinished();
+			DBResultTable table = new DBResultTable();
+			table.show(resultList,config);
+		}
+		
 	}
 
 
@@ -272,7 +292,7 @@ Boolean domainSplit ;
 		ali.setCache(cache);
 
 		ConcurrencyTools.submit(ali);
-		
+
 	}
 
 	/** stops what is currently happening and does not continue
