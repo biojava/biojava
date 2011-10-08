@@ -288,11 +288,11 @@ public class SeqRes2AtomAligner {
 	 * @param positionIndex a Map to keep track of which group is at which sequence position
 	 * @return string representations
 	 */
-	public String getFullAtomSequence(List<Group> groups, Map<Integer, Integer> positionIndex){
+	public static String getFullAtomSequence(List<Group> groups, Map<Integer, Integer> positionIndex){
 
 
 		StringBuffer sequence = new StringBuffer() ;
-		int seqIndex = 0;
+		int seqIndex = 0; // track sequence.length()
 		for ( int i=0 ; i< groups.size(); i++){
 			Group g = (Group) groups.get(i);
 
