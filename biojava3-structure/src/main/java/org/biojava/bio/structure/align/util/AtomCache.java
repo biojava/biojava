@@ -598,6 +598,7 @@ public class AtomCache {
 			return s;
 		}
 
+		// Guessing didn't work, so just use the PDBID and Chain from name
 		if( !this.strictSCOP) {
 			Matcher scopMatch = scopIDregex.matcher(name);
 			if( scopMatch.matches() ) {
@@ -698,7 +699,7 @@ public class AtomCache {
 			String domainID = scopMatch.group(3);
 
 			if ( scopInstallation == null) {
-				scopInstallation = new ScopInstallation(path);
+				scopInstallation = ScopFactory.getSCOP();
 			}
 
 			for( ScopDomain potentialSCOP : scopInstallation.getDomainsForPDB(pdbID) ) {

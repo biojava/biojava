@@ -56,6 +56,9 @@ public class StructureToolsTest extends TestCase {
 
 		assertEquals("structure does not contain one chain ", 1 ,structure.size());
 
+		Chain chain = structure.getChain(0);
+		assertEquals("Wrong number of residues.",123,chain.getAtomLength());
+		
 		inStream.close();
 
 		// Load structure2
@@ -160,6 +163,25 @@ public class StructureToolsTest extends TestCase {
 		chain = substr.getChain(0);
 		assertEquals("Did not find the expected number of residues in "+range, 5, chain.getAtomLength() );
 
+		// Special '-' case
+		range = "-";
+		substr = StructureTools.getSubRanges(structure2, range);
+		assertEquals("Should have gotten whole structure",structure2, substr);
+		
+		// Test single-chain syntax
+		range = "_:";
+		substr = StructureTools.getSubRanges(structure, range);
+		assertEquals("Wrong number of chains in "+range, 1, substr.size());
+		
+		chain = substr.getChain(0);
+		assertEquals("Did not find the expected number of residues in first chain of "+range, 123, chain.getAtomLength() );
+		
+		try {
+			range = "_:";
+			substr = StructureTools.getSubRanges(structure2, range);
+			fail("Illegal chain name in '"+range+"'. Should throw StructureException");
+		} catch(StructureException ex) {} //expected 
+		
 		// some negative tests
 		try {
 			range = "7-10";

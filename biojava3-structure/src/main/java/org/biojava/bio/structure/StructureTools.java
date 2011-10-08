@@ -723,7 +723,6 @@ public class StructureTools {
 	 *  1CDG (A:407-495,A:582-686)
 	 *  1CDG (A_407-495,A_582-686)
 	 * 
-	 * 
 	 * @param s The full structure
 	 * @param ranges A comma-seperated list of ranges, optionally surrounded by parentheses
 	 * @return Substructure of s specified by ranges
@@ -744,6 +743,11 @@ public class StructureTools {
 			ranges = ranges.substring(1);
 		if ( ranges.endsWith(")")) {
 			ranges = ranges.substring(0,ranges.length()-1);
+		}
+
+		//special case: '-' means 'everything'
+		if ( ranges.equals("-") ) {
+			return s;
 		}
 
 		Structure newS = new StructureImpl();
@@ -776,11 +780,19 @@ public class StructureTools {
 			
 			Matcher matcher = pdbNumRangeRegex.matcher(r);
 			if( ! matcher.matches() ){
-				throw new StructureException("wrong range specification, should be provided as chainID_pdbResnum1-pdbRensum2");
+				throw new StructureException("wrong range specification, should be provided as chainID_pdbResnum1-pdbRensum2: "+ranges);
 			}
 			String chainId = matcher.group(1);
+			Chain chain;
 			
-			Chain chain = struc.getChainByPDB(chainId);
+			if(chainId.equals("_") && struc.size() == 1) {
+				// Handle special case of "_" chain for single-chain proteins
+				chain = struc.getChain(0);
+			} else {
+				// Explicit chain
+				chain = struc.getChainByPDB(chainId);
+			}
+			
 			Group[] groups;
 			
 			String pdbresnumStart = matcher.group(2);

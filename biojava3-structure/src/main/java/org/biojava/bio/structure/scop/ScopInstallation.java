@@ -41,6 +41,7 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import org.biojava.bio.structure.StructureTools;
 import org.biojava.bio.structure.align.util.UserConfiguration;
 import org.biojava3.core.util.InputStreamProvider;
 
@@ -504,14 +505,13 @@ public class ScopInstallation implements ScopDatabase {
 			 Integer sunid = Integer.parseInt(spl[4]);
 			 String tree = spl[5];
 
-			 String[] rangeSpl = range.split(",");
 
 
 			 ScopDomain d = new ScopDomain();
 			 d.setScopId(scopId);
 			 d.setPdbId(pdbId);
 
-			 d.setRanges(Arrays.asList(rangeSpl));
+			 d.setRanges(extractRanges(range));
 
 			 d.setClassificationId(classificationId);
 			 d.setSunid(sunid);
@@ -554,6 +554,42 @@ public class ScopInstallation implements ScopDatabase {
 
 	 }
 
+	 /** 
+	  * Converts the SCOP range field into a list of subranges suitable for
+	  * storage in a ScopDomain object. Each range should be of a format
+	  * compatible with {@link StructureTools#getSubRanges(Structure,String)}.
+	  * @param range
+	  * @return
+	  */
+	 private List<String> extractRanges(String range) {
+		 List<String> ranges;
+		 String[] rangeSpl = range.split(",");
+		 
+		 // Recent versions of scop always specify a chain, so no processing is needed
+		 if(scopVersion.compareTo("1.73") < 0 ) {
+			 for(int i=0; i<rangeSpl.length;i++) {
+				 String subRange = rangeSpl[i];
+				 
+				 // Allow single-chains, as well as the '-' special case
+				 if(subRange.length()<2) {
+					 continue;
+				 }
+				 
+				 // Allow explicit chain syntax
+				 if(subRange.charAt(1) == ':') {
+					 continue;
+				 }
+				 else {
+					 // Early versions sometimes skip the chain identifier for single-chain domains
+					 // Indicate this with a chain "_"
+					 rangeSpl[i] = "_:"+subRange;
+				 }
+			 }
+		 }
+		 ranges = Arrays.asList(rangeSpl);
+		 return ranges;
+	 }
+	 
 	 private void downloadClaFile() throws FileNotFoundException, IOException{
 		 String remoteFilename = claFileName + scopVersion;
 		 URL url = new URL(SCOP_DOWNLOAD + remoteFilename);
