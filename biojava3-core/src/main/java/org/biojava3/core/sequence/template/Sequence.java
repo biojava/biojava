@@ -56,7 +56,7 @@ public interface Sequence<C extends Compound> extends Iterable<C>, Accessioned {
      * compound
      *
      * @param compound Compounds to look for
-     * @return Index of the first position of the compound in the sequence
+     * @return Index of the first position of the compound in the sequence (1 to n)
      */
     public int getIndexOf(C compound);
 
@@ -65,7 +65,7 @@ public interface Sequence<C extends Compound> extends Iterable<C>, Accessioned {
      * compound
      *
      * @param compound Compounds to look for
-     * @return Index of the last position of the compound in the sequence
+     * @return Index of the last position of the compound in the sequence (1 to n)
      */
     public int getLastIndexOf(C compound);
 
