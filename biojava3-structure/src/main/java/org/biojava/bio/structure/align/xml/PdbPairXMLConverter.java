@@ -40,7 +40,7 @@ public class PdbPairXMLConverter {
 			// normalize text representation
 			doc.getDocumentElement().normalize();
 
-			NodeList algorithms =  doc.getElementsByTagName("algorithm");
+			NodeList algorithms =  doc.getElementsByTagName("pairs");
 			//System.out.println(algorithms.getLength());
 			for(int i=0; i<algorithms.getLength() ; i++) {
 				
@@ -48,7 +48,7 @@ public class PdbPairXMLConverter {
 				
 				NamedNodeMap map = algo.getAttributes();
 				
-				String name = map.getNamedItem("name").getTextContent();
+				String name = map.getNamedItem("algorithm").getTextContent();
 				
 				if ( name != null) {
 					
@@ -92,13 +92,13 @@ public class PdbPairXMLConverter {
 			method = DEFAULT_METHOD_NAME;
 		}
 		
+		
 		PrettyXMLWriter xml = new PrettyXMLWriter(writer);
 		try {
-			xml.openTag("method");
-			xml.attribute("name", method);
-			xml.closeTag("method");
+			
+			
 			xml.openTag("pairs");
-
+			xml.attribute("algorithm", method);
 			for ( PdbPair pair : pairs){
 				xml.openTag("pair");
 				xml.attribute("name1", pair.getName1());
