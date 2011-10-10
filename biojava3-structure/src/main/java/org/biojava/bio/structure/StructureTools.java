@@ -40,14 +40,6 @@ import java.util.regex.Pattern;
 import org.biojava.bio.structure.align.util.AtomCache;
 
 
-
-//import org.biojava.bio.seq.ProteinTools;
-//import org.biojava.bio.seq.io.SymbolTokenization;
-//import org.biojava.bio.symbol.Alphabet;
-//import org.biojava.bio.symbol.IllegalSymbolException;
-//import org.biojava.bio.symbol.Symbol;
-
-
 /**
  * A class that provides some tool methods.
  *
@@ -759,7 +751,8 @@ public class StructureTools {
 		newS.setDBRefs(s.getDBRefs());
 		newS.setNmr(s.isNmr());
 		newS.setBiologicalAssembly(s.isBiologicalAssembly());
-
+		newS.getPDBHeader().setDescription("sub-range " + ranges + " of "  + newS.getPDBCode() + " " + s.getPDBHeader().getDescription());
+		
 		// TODO The following should be only copied for atoms which are present in the range.
 		//newS.setCompounds(s.getCompounds());
 		//newS.setConnections(s.getConnections());
@@ -851,6 +844,7 @@ public class StructureTools {
 		}
 		
 		newS.setName(name.toString());
+		
 		return newS;
 	}
 
