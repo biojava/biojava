@@ -55,7 +55,6 @@ public class CallableStructureAlignment implements  Callable<AFPChain> {
 				ca1 = StructureTools.cloneCAArray(ca1);
 			}
 			Structure structure2 = cache.getStructure(pair.getName2());
-
 			
 			Atom[] ca2;
 
@@ -65,7 +64,11 @@ public class CallableStructureAlignment implements  Callable<AFPChain> {
 			afpChain = algorithm.align(ca1, ca2);
 			afpChain.setName1(pair.getName1());
 			afpChain.setName2(pair.getName2());
-
+			
+			String desc2 = structure2.getPDBHeader().getDescription();
+			if ( desc2 == null)
+				desc2="";
+			afpChain.setDescription2(desc2);
 			String result = afpChain.toDBSearchResult();
 			System.out.print(result);
 
