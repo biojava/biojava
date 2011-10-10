@@ -11,6 +11,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.biojava.bio.structure.align.client.PdbPair;
+import org.biojava.bio.structure.align.fatcat.FatCatRigid;
 import org.biojava3.core.util.PrettyXMLWriter;
 
 import org.w3c.dom.Document;
@@ -20,9 +21,13 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
 public class PdbPairXMLConverter {
-	public static SortedSet<PdbPair> convertXMLtoPairs(String xml) {
+	
+	
+	public static final String DEFAULT_METHOD_NAME = FatCatRigid.algorithmName;
+	
+	public static PdbPairsMessage convertXMLtoPairs(String xml) {
 		SortedSet<PdbPair>  pairs = new TreeSet<PdbPair>();
-
+		PdbPairsMessage message = new PdbPairsMessage();
 		try
 		{
 			//Convert string to XML document
@@ -35,11 +40,27 @@ public class PdbPairXMLConverter {
 			// normalize text representation
 			doc.getDocumentElement().normalize();
 
-
-			//Element rootElement = doc.getDocumentElement();
+			NodeList algorithms =  doc.getElementsByTagName("algorithm");
+			//System.out.println(algorithms.getLength());
+			for(int i=0; i<algorithms.getLength() ; i++) {
+				
+				Node algo       = algorithms.item(i);
+				
+				NamedNodeMap map = algo.getAttributes();
+				
+				String name = map.getNamedItem("name").getTextContent();
+				
+				if ( name != null) {
+					
+					message.setMethod(name);
+				
+				}
+				
+			}
+			
 
 			NodeList listOfPairs = doc.getElementsByTagName("pair");
-			//int numArrays = listOfArrays.getLength();
+			//System.out.println(listOfPairs.getLength());
 
 			// go over the blocks
 			for(int i=0; i<listOfPairs.getLength() ; i++)
@@ -59,16 +80,23 @@ public class PdbPairXMLConverter {
 		} catch (Exception e){
 			e.printStackTrace();
 		}
-
-		return pairs;
+		message.setPairs(pairs);
+		return message;
 	}
 
-	public static String convertPairsToXML(SortedSet<PdbPair> pairs){
+	public static String convertPairsToXML(SortedSet<PdbPair> pairs, String method){
 		StringWriter sw = new StringWriter();
 		PrintWriter writer = new PrintWriter(sw);
 
+		if (method == null){
+			method = DEFAULT_METHOD_NAME;
+		}
+		
 		PrettyXMLWriter xml = new PrettyXMLWriter(writer);
 		try {
+			xml.openTag("method");
+			xml.attribute("name", method);
+			xml.closeTag("method");
 			xml.openTag("pairs");
 
 			for ( PdbPair pair : pairs){

@@ -17,13 +17,18 @@ import java.util.UUID;
 import org.biojava.bio.structure.Atom;
 import org.biojava.bio.structure.StructureException;
 import org.biojava.bio.structure.align.StructureAlignment;
+import org.biojava.bio.structure.align.StructureAlignmentFactory;
+import org.biojava.bio.structure.align.ce.CeCPMain;
+import org.biojava.bio.structure.align.ce.CeMain;
 import org.biojava.bio.structure.align.events.AlignmentProgressListener;
+import org.biojava.bio.structure.align.fatcat.FatCatFlexible;
 import org.biojava.bio.structure.align.fatcat.FatCatRigid;
 import org.biojava.bio.structure.align.model.AFPChain;
 import org.biojava.bio.structure.align.util.AFPChainScorer;
 import org.biojava.bio.structure.align.util.AtomCache;
 import org.biojava.bio.structure.align.util.ResourceManager;
 import org.biojava.bio.structure.align.xml.AFPChainXMLConverter;
+import org.biojava.bio.structure.align.xml.PdbPairsMessage;
 import org.biojava3.core.util.FlatFileCache;
 import org.biojava3.core.util.PrettyXMLWriter;
 
@@ -175,10 +180,18 @@ public class FarmJobRunnable implements Runnable {
 			// if maxNrAlignments > 100 we split up the calculations in junks of 100.
 			// otherwise we request all of them at once.
 			// we request
-			SortedSet<PdbPair> alignmentPairs = getAlignmentPairsFromServer(); 
+			PdbPairsMessage msg = getAlignmentPairsFromServer();
+			if ( msg == null) {
+				System.err.println("Got null instead of alignment pairs from server.");
+				randomSleep();
+				continue;
+			}
+			SortedSet<PdbPair> alignmentPairs = msg.getPairs(); 
 			log(userName+": Server responded with " + alignmentPairs.size() + " pairs.");
 			List<String> results = new ArrayList<String>();
 
+			String algorithmName = msg.getMethod();
+			
 			for(PdbPair pair : alignmentPairs){
 
 				if ( terminated)
@@ -205,7 +218,7 @@ public class FarmJobRunnable implements Runnable {
 
 				try {
 					//System.out.println("calculating alignent: " + name1 + "  " + name2);
-					String resultXML = alignPair(name1, name2);
+					String resultXML = alignPair(name1, name2,algorithmName);
 
 					if ( progressListeners != null)
 						notifyEndAlignment();
@@ -317,14 +330,21 @@ public class FarmJobRunnable implements Runnable {
 		}
 	}
 
-	public String alignPair(String name1, String name2) throws StructureException, IOException{
-
-		//StructureAlignment fatCatRigid = StructureAlignmentFactory.getAlgorithm("jFatCat_rigid");
-		// 	make sure each thread is independent...
-		StructureAlignment fatCatRigid    = new FatCatRigid();
+	
+	public String alignPair(String name1, String name2) 
+		throws StructureException, IOException {
+		return alignPair(name1, name2, FatCatRigid.algorithmName);
+	}
+	
+	public String alignPair(String name1, String name2, String algorithmName) 
+		throws StructureException, IOException {
+		
+		// 	make sure each thread has an independent instance of the algorithm object ...
+		
+		StructureAlignment algorithm = getAlgorithm(algorithmName); 
+		//StructureAlignment fatCatRigid    = new FatCatRigid();
 
 		// we are running with default parameters
-
 
 		if ( verbose ) {
 			log("aligning " + name1 + " vs. " + name2);
@@ -335,12 +355,10 @@ public class FarmJobRunnable implements Runnable {
 		if ( prevName1 == null)
 			initMaster(name1);
 
-		if ( ! prevName1.equals(name1)){
+		if ( ! prevName1.equals(name1) ) {
 			// we need to reload the master
 			initMaster(name1);
 		}
-
-
 
 		// get a copy of the atoms, but clone them, since they will be rotated...
 		Atom[] ca2 =  cache.getAtoms(name2);
@@ -351,7 +369,7 @@ public class FarmJobRunnable implements Runnable {
 
 		//			System.out.println("time to get " + name1 + " " + name2 + " : " + (endTime-startTime) / 1000.0 + " sec.");
 		//		}
-		AFPChain afpChain = fatCatRigid.align(ca1, ca2);
+		AFPChain afpChain = algorithm.align(ca1, ca2);
 
 		afpChain.setName1(name1);
 		afpChain.setName2(name2);
@@ -376,6 +394,52 @@ public class FarmJobRunnable implements Runnable {
 
 
 
+	private StructureAlignment getAlgorithm(String algorithmName) {
+		
+	
+		StructureAlignment algorithm    = null;
+		
+		if ( algorithmName == null){
+			
+			algorithm = new FatCatRigid();
+			
+		} else if ( algorithmName.equalsIgnoreCase(FatCatRigid.algorithmName)){
+			
+				algorithm = new FatCatRigid();		
+				
+		} else if ( algorithmName.equalsIgnoreCase(CeMain.algorithmName)){
+			
+			algorithm = new CeMain();
+			
+		} else if ( algorithmName.equalsIgnoreCase(CeCPMain.algorithmName)){
+			
+			algorithm = new CeCPMain();
+			
+		} else if ( algorithmName.equalsIgnoreCase(FatCatFlexible.algorithmName)){
+			
+			algorithm = new FatCatFlexible();
+			
+		} else {
+			
+			try {
+				
+				algorithm = StructureAlignmentFactory.getAlgorithm(algorithmName);
+		
+			} catch (StructureException ex){
+				ex.printStackTrace();
+			}
+		}
+		
+		if ( algorithm == null) {
+			
+			algorithm = new FatCatRigid();
+			
+		}
+		
+		
+		return algorithm;
+	}
+
 	private void initMaster(String name1) throws IOException, StructureException{
 		//AtomCache cache = AtomCache.getInstance();
 
@@ -391,7 +455,7 @@ public class FarmJobRunnable implements Runnable {
 	 * 
 	 * @return a list of pairs to align.
 	 */
-	protected SortedSet<PdbPair> getAlignmentPairsFromServer() {
+	protected PdbPairsMessage getAlignmentPairsFromServer() {
 
 
 		String url = params.getServer();
@@ -403,42 +467,28 @@ public class FarmJobRunnable implements Runnable {
 
 		SortedSet<PdbPair> allPairs = new TreeSet<PdbPair>();
 
-		//		int pairDelay = DEFAULT_PAIR_FETCH_DELAY;
-		//
-		//		String pairDelayS=resourceManager.getString(CONNECTION_PAIR_DELAY);
-		//		if ( pairDelayS !=null) {
-		//
-		//			try {
-		//				pairDelay = Integer.parseInt(pairDelayS);				
-		//			} catch (NumberFormatException ex){
-		//				ex.printStackTrace();
-		//			}
-		//		}
+		PdbPairsMessage msg = null;
+	
 
 		try {
 
 			if ( progressListeners != null)
 				notifyRequestingAlignments(nrPairs);
 
+			
+			
 			if ( ! waitForAlignments) {
-
-				allPairs = JFatCatClient.getPdbPairs(url, nrPairs, userName);
+				msg = JFatCatClient.getPdbPairs(url, nrPairs, userName);
+				allPairs = msg.getPairs();
 
 			} else {
 
 				while (allPairs.size() == 0) {
-
-					allPairs = JFatCatClient.getPdbPairs(url, nrPairs, userName);
+					msg = JFatCatClient.getPdbPairs(url, nrPairs, userName);
+					allPairs = msg.getPairs();
 
 					if ( allPairs.size() == 0 ) {
-						try {
-
-							int delay = JFatCatClient.getRandomSleepTime();
-							System.err.println("sleeping "+ delay/1000 + " sec.");
-							Thread.sleep(delay);
-						} catch (InterruptedException ex){
-							ex.printStackTrace();
-						}
+						randomSleep();
 					}
 				}
 			}
@@ -446,24 +496,30 @@ public class FarmJobRunnable implements Runnable {
 
 			terminate();
 
-		} catch (Exception e){
+		} catch (Exception e) {
 			if ( e.getMessage() == null)
 				e.printStackTrace();
 			System.err.println("Error while requesting alignment pairs: " + e.getMessage());
 			// an error has occured sleep 30 sec.
 
-			try {
-				int delay = JFatCatClient.getRandomSleepTime();
-				System.err.println("sleeping "+ delay/1000 + " sec.");
-				Thread.sleep(delay);
-			} catch (InterruptedException ex){
-				ex.printStackTrace();
-			}
+			randomSleep();
 
 
 		}
 
-		return allPairs;
+		return msg;
+	}
+
+	private void randomSleep() {
+		try {
+
+			int delay = JFatCatClient.getRandomSleepTime();
+			System.err.println("sleeping "+ delay/1000 + " sec.");
+			Thread.sleep(delay);
+		} catch (InterruptedException ex){
+			ex.printStackTrace();
+		}
+		
 	}
 
 	protected void sendResultsToServer(List<String> results) {
