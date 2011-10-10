@@ -150,9 +150,7 @@ public class SmithWaterman3Daligner extends AbstractStructureAlignment implement
 		int nAtom=0; 
 		int nGaps=0;
 
-		System.out.println(pair.toString(60));
-
-
+		//System.out.println(pair.toString(60));
 
 		Atom[] strBuf1 = new Atom[nrCols];
 		Atom[] strBuf2 = new Atom[nrCols];
