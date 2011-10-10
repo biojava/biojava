@@ -24,6 +24,7 @@
 package org.biojava.bio.structure.align.util;
 
 import java.io.IOException;
+import java.io.StringWriter;
 import java.net.URL;
 import java.util.Collection;
 import java.util.Collections;
@@ -45,9 +46,9 @@ import org.biojava.bio.structure.domain.RemotePDPProvider;
 import org.biojava.bio.structure.io.FileParsingParameters;
 import org.biojava.bio.structure.io.PDBFileReader;
 import org.biojava.bio.structure.scop.ScopDatabase;
+import org.biojava.bio.structure.scop.ScopDescription;
 import org.biojava.bio.structure.scop.ScopDomain;
 import org.biojava.bio.structure.scop.ScopFactory;
-import org.biojava.bio.structure.scop.ScopInstallation;
 import org.biojava3.core.util.InputStreamProvider;
 
 
@@ -87,7 +88,7 @@ public class AtomCache {
 	private boolean fetchCurrent;
 
 	public static final String PDP_DOMAIN_IDENTIFIER = "PDP:";
-	
+
 	/**
 	 * Default AtomCache constructor.
 	 * 
@@ -99,7 +100,7 @@ public class AtomCache {
 	public AtomCache() {
 		this(new UserConfiguration());
 	}
-	
+
 	/** Creates an instance of an AtomCache that is pointed to the a particular
 	 * path in the file system.
 	 * 
@@ -135,7 +136,7 @@ public class AtomCache {
 		// no secstruc either 
 		params.setParseSecStruc(false);
 		// 
-		
+
 
 		this.strictSCOP = true;
 
@@ -273,7 +274,9 @@ public class AtomCache {
 	 */
 
 	public Structure getStructureForDomain(ScopDomain domain) throws IOException, StructureException{
-
+		if ( scopInstallation == null) {
+			scopInstallation = ScopFactory.getSCOP();
+		}
 
 		Structure s = null;
 
@@ -304,6 +307,7 @@ public class AtomCache {
 
 		Structure n = StructureTools.getSubRanges(s, range);
 
+
 		// get free ligands of first chain...
 		if ( n.getChains().size()> 0) {
 			Chain c1 = n.getChains().get(0);
@@ -323,6 +327,24 @@ public class AtomCache {
 		n.setName(domain.getScopId());
 		n.setPDBCode(domain.getScopId());
 
+
+		StringWriter d = new StringWriter();
+		d.append(domain.getClassificationId());
+
+		
+		
+		if ( scopInstallation != null) {
+			int sf = domain.getSuperfamilyId();
+			
+			ScopDescription scopDesc = scopInstallation.getScopDescriptionBySunid(sf);
+
+			if( scopDesc != null){
+				d.append( " | " );
+				d.append(scopDesc.getDescription());
+
+			}
+		}
+		n.getPDBHeader().setDescription(d.toString());
 		return n;
 	}
 
@@ -385,7 +407,7 @@ public class AtomCache {
 	 * 
 	 * <pre>
 		Formal specification for how to specify the <i>name</i>:
-		
+
 		name     := pdbID
 		               | pdbID '.' chainID
 		               | pdbID '.' range
@@ -397,8 +419,8 @@ public class AtomCache {
 		chainID       := [a-zA-Z0-9]
 		scopID        := 'd' pdbID [a-z_][0-9_]
 		resNum        := [-+]?[0-9]+[A-Za-z]?
-		
-		
+
+
 		Example structures:
 		1TIM     #whole structure
 		4HHB.C     #single chain
@@ -426,7 +448,7 @@ public class AtomCache {
 
 		if ( name.length() < 4)
 			throw new IllegalArgumentException("Can't interpret IDs that are shorter than 4 residues!");
-		
+
 		Structure n = null;
 
 		boolean useChainNr = false;
@@ -451,7 +473,7 @@ public class AtomCache {
 
 			} else if (name.length() == 6){
 				// name is PDB.CHAINID style (e.g. 4hhb.A)
-				
+
 				pdbId = name.substring(0,4);
 				if ( name.substring(4,5).equals(CHAIN_SPLIT_SYMBOL)) {
 					chainId = name.substring(5,6);
@@ -460,26 +482,28 @@ public class AtomCache {
 					useChainNr = true;	
 					chainNr = Integer.parseInt(name.substring(5,6));
 				}
-				
+
+
+
 			} else if ( (name.length() > 6) &&  ( ! name.startsWith(PDP_DOMAIN_IDENTIFIER) ) && 
 					(name.contains(CHAIN_NR_SYMBOL) || name.contains(UNDERSCORE)) && (! (name.startsWith("file:/") || name.startsWith("http:/")))) {
-				
+
 				// this is a name + range 
-				
+
 				pdbId = name.substring(0,4);
 				// this ID has domain split information...
 				useDomainInfo = true;
 				range = name.substring(5);
-				
+
 			} else if ( name.startsWith("file:/") || name.startsWith("http:/") ) {
-				
+
 				// this is a URL
 				try {
-					
+
 					URL url = new URL(name);
-					
+
 					return getStructureFromURL(url);
-					
+
 				} catch (Exception e){
 					e.printStackTrace();
 					return null;
@@ -487,9 +511,9 @@ public class AtomCache {
 
 
 			} else if ( name.startsWith(PDP_DOMAIN_IDENTIFIER)){
-								
+
 				// this is a PDP domain definition
-				
+
 				try {
 					return getPDPStructure(name);
 				} catch (Exception e){
@@ -562,13 +586,13 @@ public class AtomCache {
 
 
 		} catch (Exception e){
-
+			System.err.println("problem loading:" + name);
 			e.printStackTrace();
 
 			throw new StructureException(e.getMessage() + " while parsing " + name,e);
 
 		}
-		
+
 		n.setName(name);
 		return n;
 
@@ -576,16 +600,16 @@ public class AtomCache {
 	}
 
 	private Structure getPDPStructure(String pdpDomainName) {
-		
-		System.out.println("loading PDP domain from server " + pdpDomainName);
+
+		//System.out.println("loading PDP domain from server " + pdpDomainName);
 		RemotePDPProvider pdpprovider = new RemotePDPProvider();
-		
+
 		return pdpprovider.getDomain(pdpDomainName,this);
-		
+
 	}
 
 	private Structure getStructureFromSCOPDomain(String name)
-			throws IOException, StructureException {
+	throws IOException, StructureException {
 		// looks like a SCOP domain!
 		ScopDomain domain;
 		if( this.strictSCOP) {
@@ -615,7 +639,7 @@ public class AtomCache {
 				if(struct != null) {
 					System.err.println("Trying chain "+pdbID);
 				}
-				
+
 				return struct;
 			}
 		}
@@ -627,15 +651,15 @@ public class AtomCache {
 	private Structure getStructureFromURL(URL url) throws IOException, StructureException {
 		// looks like a URL for a file was provided:
 		System.out.println("fetching structure from URL:" + url);
-		
+
 		String queryS = url.getQuery();
-				
+
 		String chainId = null;
 		if ( queryS != null && (queryS.startsWith("chainId="))) {
 			chainId = queryS.substring(8);
-		
+
 			String fullu = url.toString();
-			
+
 			if (fullu.startsWith("file:") && fullu.endsWith("?"+queryS)) {
 				// for windowze, drop the query part from the URL again
 				// otherwise there will be a "file not found error" ...
@@ -645,8 +669,8 @@ public class AtomCache {
 				url = new URL(newu);
 			}
 		}
-		
-		
+
+
 		PDBFileReader reader = new PDBFileReader();
 		reader.setPath(path);
 		reader.setPdbDirectorySplit(isSplit);
@@ -655,7 +679,7 @@ public class AtomCache {
 		reader.setFetchCurrent(fetchCurrent);
 
 		reader.setFileParsingParameters(params);
-		
+
 		Structure s = reader.getStructure(url);
 		if ( chainId == null)
 			return StructureTools.getReducedStructure(s,-1);
@@ -783,7 +807,7 @@ public class AtomCache {
 	 * 
 	 * @param pdbId the PDB ID
 	 * @return a structure object
- 	 * @throws IOException 
+	 * @throws IOException 
 	 * @throws StructureException 
 	 * @since 3.2
 	 */
@@ -792,7 +816,7 @@ public class AtomCache {
 		boolean bioAssemblyFallback = true;
 		return getBiologicalAssembly(pdbId, bioAssemblyId, bioAssemblyFallback);
 	}
-	
+
 	/** 
 	 * Loads the biological assembly for a given PDB ID and bioAssemblyId. 
 	 * If a bioAssemblyId > 0 is specified, the corresponding biological assembly file will be loaded. Note, the
