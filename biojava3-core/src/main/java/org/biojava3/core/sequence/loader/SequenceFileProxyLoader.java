@@ -101,6 +101,7 @@ public class SequenceFileProxyLoader<C extends Compound> implements ProxySequenc
             randomAccessFile.seek(sequenceStartIndex);
             String sequence = sequenceParser.getSequence(randomAccessFile, sequenceLength);
             setContents(sequence);
+            randomAccessFile.close(); // close file to prevent too many being open
         } catch (Exception e) {
             throw new FileAccessError("Error accessing " + file + " offset=" + sequenceStartIndex + " sequenceLength=" + sequenceLength + " " + e.toString());
         }
