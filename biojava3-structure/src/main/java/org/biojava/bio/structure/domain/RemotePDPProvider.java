@@ -45,7 +45,7 @@ import org.biojava.bio.structure.scop.server.XMLUtil;
  */
 public class RemotePDPProvider extends SerializableCache {
 
-	public static final String DEFAULT_SERVER = "http://source.rcsb.org/scopserver/rest/";
+	public static final String DEFAULT_SERVER = "http://source.rcsb.org/jfatcatserver/domains/";
 
 	String server = DEFAULT_SERVER;
 
