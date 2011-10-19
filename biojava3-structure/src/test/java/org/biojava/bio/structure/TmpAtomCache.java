@@ -27,16 +27,22 @@ package org.biojava.bio.structure;
 import org.biojava.bio.structure.align.util.AtomCache;
 import org.biojava.bio.structure.io.FileParsingParameters;
 
+/**
+ * @deprecated The zero-argument constructor to AtomCache mostly replaces this.
+ *  The singleton pattern is not really needed--just make a new AtomCache
+ *  instance and set the updateRemediatedFiles parameter if needed.
+ *  (deprecated by Spencer Bliven)
+ */
+@Deprecated
 public class TmpAtomCache
 {
    
    public static AtomCache cache = new AtomCache();
    static {
       FileParsingParameters params = new FileParsingParameters();
-      params.setLoadChemCompInfo(false);
-      params.setUpdateRemediatedFiles(true);
+      params.setLoadChemCompInfo(false); //default value
+      params.setUpdateRemediatedFiles(true); //non-default value
       cache.setFileParsingParams(params);
       cache.setAutoFetch(true);
-      
    }
 }
