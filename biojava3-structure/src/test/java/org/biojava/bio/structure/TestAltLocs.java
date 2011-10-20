@@ -2,6 +2,7 @@ package org.biojava.bio.structure;
 
 import java.util.List;
 
+import org.biojava.bio.structure.align.util.AtomCache;
 import org.biojava.bio.structure.io.mmcif.chem.PolymerType;
 import org.biojava.bio.structure.io.mmcif.chem.ResidueType;
 import org.biojava.bio.structure.io.mmcif.model.ChemComp;
@@ -13,7 +14,8 @@ public class TestAltLocs extends TestCase {
 	public void testAltLocParsing(){
 
 		try {
-			Structure s = TmpAtomCache.cache.getStructure("2CI1");
+			AtomCache cache = new AtomCache();
+			Structure s = cache.getStructure("2CI1");
 
 			//System.out.println(s);
 
@@ -84,8 +86,8 @@ public class TestAltLocs extends TestCase {
 	
 	public void test2W72(){
 		try {
-			
-			Structure s = TmpAtomCache.cache.getStructure("2W72");
+			AtomCache cache = new AtomCache();
+			Structure s = cache.getStructure("2W72");
 			
 			Chain a = s.getChainByPDB("A");
 			

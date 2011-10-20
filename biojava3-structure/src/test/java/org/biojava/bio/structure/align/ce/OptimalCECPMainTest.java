@@ -117,7 +117,7 @@ public class OptimalCECPMainTest extends TestCase {
 		permuteArray.invoke(null, ca2p, 63);
 		
 		AFPChain cpAlignment = ce.align(ca1, ca2);
-		System.out.println(cpAlignment.toCE(ca1, ca2));
+		//System.out.println(cpAlignment.toCE(ca1, ca2));
 		//printOptAln(cpAlignment);
 		
 		assertNotNull(cpAlignment);
@@ -151,9 +151,9 @@ public class OptimalCECPMainTest extends TestCase {
 
 		
 		// permute! should align at 0,0
-		System.out.println("Permuting by 63 residues...");
+		//System.out.println("Permuting by 63 residues...");
 		permuteOptAln.invoke(null, cpAlignment, 63);
-		System.out.println(cpAlignment.toCE(ca1, ca2p));
+		//System.out.println(cpAlignment.toCE(ca1, ca2p));
 		//printOptAln(cpAlignment);
 		
 		optLen = cpAlignment.getOptLen();
@@ -179,9 +179,9 @@ public class OptimalCECPMainTest extends TestCase {
 
 		
 		// undo permutation
-		System.out.println("Permuting by -63 residues...");
+		//System.out.println("Permuting by -63 residues...");
 		permuteOptAln.invoke(null, cpAlignment, -63);
-		System.out.println(cpAlignment.toCE(ca1, ca2));
+		//System.out.println(cpAlignment.toCE(ca1, ca2));
 		//printOptAln(cpAlignment);
 		
 		optLen = cpAlignment.getOptLen();

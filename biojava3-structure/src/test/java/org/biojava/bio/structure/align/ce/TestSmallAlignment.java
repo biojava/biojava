@@ -23,10 +23,10 @@
 package org.biojava.bio.structure.align.ce;
 
 import org.biojava.bio.structure.Atom;
-import org.biojava.bio.structure.TmpAtomCache;
 import org.biojava.bio.structure.align.StructureAlignment;
 import org.biojava.bio.structure.align.StructureAlignmentFactory;
 import org.biojava.bio.structure.align.model.AFPChain;
+import org.biojava.bio.structure.align.util.AtomCache;
 import org.biojava.bio.structure.align.xml.AFPChainFlipper;
 import org.biojava.bio.structure.align.xml.AFPChainXMLConverter;
 import org.biojava.bio.structure.align.xml.AFPChainXMLParser;
@@ -40,9 +40,10 @@ public class TestSmallAlignment extends TestCase{
 
 		String name1 = "1a4w.I";
 		String name2 = "1a4w.H";
+		AtomCache cache = new AtomCache();
 		try {
-			Atom[] ca1 = TmpAtomCache.cache.getAtoms(name1);
-			Atom[] ca2 = TmpAtomCache.cache.getAtoms(name2);
+			Atom[] ca1 = cache.getAtoms(name1);
+			Atom[] ca2 = cache.getAtoms(name2);
 
 			StructureAlignment ce =StructureAlignmentFactory.getAlgorithm(CeMain.algorithmName);
 

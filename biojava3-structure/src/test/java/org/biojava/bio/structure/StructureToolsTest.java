@@ -197,7 +197,7 @@ public class StructureToolsTest extends TestCase {
 
 	public void testRevisedConvention() throws IOException, StructureException{
 
-		AtomCache cache = TmpAtomCache.cache;
+		AtomCache cache = new AtomCache();
 
 		
 		String name11 = "4hhb.A";

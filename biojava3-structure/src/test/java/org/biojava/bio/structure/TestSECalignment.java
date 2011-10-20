@@ -53,7 +53,7 @@ public class TestSECalignment extends  TestCase {
 		assertNotNull(inStream);
 		String xml = StringManipulationHelper.convertStreamToString(inStream);
 
-		AtomCache cache = TmpAtomCache.cache;
+		AtomCache cache = new AtomCache();
 		try {
 			String name1="1FDO.A";
 			String name2="2IV2.X";
@@ -61,6 +61,9 @@ public class TestSECalignment extends  TestCase {
 			Atom[] ca2 = cache.getAtoms(name2);
 
 			AFPChain afpChainOrig = AFPChainXMLParser.fromXML(xml, ca1, ca2);
+			
+			// calc time is hardware dependent.... overwrite...
+			afpChainOrig.setCalculationTime(-1);
 			
 			//String ce1 = afpChainOrig.toFatcat(ca1, ca2);
 			
@@ -71,7 +74,7 @@ public class TestSECalignment extends  TestCase {
 			StructureAlignment ce = StructureAlignmentFactory.getAlgorithm(CeMain.algorithmName);
 			
 			AFPChain afpChainNew = ce.align(ca1,ca2);
-			
+			afpChainNew.setCalculationTime(-1);
 			afpChainNew.setName1(name1);
 			afpChainNew.setName2(name2);
 			

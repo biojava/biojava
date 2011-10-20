@@ -34,10 +34,11 @@ import junit.framework.TestCase;
 public class TestAtomCache extends TestCase
 {
 	public static final String lineSplit = System.getProperty("file.separator");
-
+	AtomCache cache = new AtomCache();
 	public void setUp() {
 		// Delete files which were cached in previous tests
-		String cacheDir = TmpAtomCache.cache.getPath();
+		
+		String cacheDir = cache.getPath();
 		String[] uncacheIDs = new String[] {
 				"1cmw", "1hhb","4hhb"
 		};
@@ -82,7 +83,7 @@ public class TestAtomCache extends TestCase
 
 
 
-		AtomCache cache = TmpAtomCache.cache;
+		
 
 		String name1= "4hhb";
 		Structure s = cache.getStructure(name1);
@@ -156,7 +157,7 @@ public class TestAtomCache extends TestCase
 	
 	
 	public void testFetchCurrent() {
-		AtomCache cache = TmpAtomCache.cache;
+		
 		
 		cache.setAutoFetch(true);
 		cache.setFetchCurrent(true);
@@ -182,7 +183,7 @@ public class TestAtomCache extends TestCase
 	}
 
 	public void testFetchObsolete() {
-		AtomCache cache = TmpAtomCache.cache;
+		
 		
 		cache.setAutoFetch(true);
 		cache.setFetchCurrent(false);

@@ -35,7 +35,6 @@ import org.biojava.bio.structure.StructureTools;
 
 import org.biojava.bio.structure.StructureException;
 
-import org.biojava.bio.structure.TmpAtomCache;
 import org.biojava.bio.structure.align.StructureAlignment;
 import org.biojava.bio.structure.align.StructureAlignmentFactory;
 
@@ -45,6 +44,7 @@ import org.biojava.bio.structure.align.model.AfpChainWriter;
 import org.biojava.bio.structure.align.seq.SmithWaterman3Daligner;
 import org.biojava.bio.structure.align.util.AFPAlignmentDisplay;
 import org.biojava.bio.structure.align.util.AFPChainScorer;
+import org.biojava.bio.structure.align.util.AtomCache;
 
 import org.biojava.bio.structure.align.xml.AFPChainFlipper;
 import org.biojava.bio.structure.align.xml.AFPChainXMLConverter;
@@ -90,9 +90,11 @@ public class FlipAFPChainTest extends TestCase {
 
 	private void align (StructureAlignment algorithm, String name1, String name2)
 	throws StructureException, IOException{
-
-		Atom[] ca1 = TmpAtomCache.cache.getAtoms(name1);
-		Atom[] ca2 = TmpAtomCache.cache.getAtoms(name2);
+		
+		
+		AtomCache cache = new AtomCache();
+		Atom[] ca1 = cache.getAtoms(name1);
+		Atom[] ca2 = cache.getAtoms(name2);
 
 
 		AFPChain afpChain = algorithm.align(ca1,ca2);

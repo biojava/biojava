@@ -33,7 +33,6 @@ import junit.framework.TestCase;
 import org.biojava.bio.structure.Atom;
 import org.biojava.bio.structure.Calc;
 import org.biojava.bio.structure.SVDSuperimposer;
-import org.biojava.bio.structure.TmpAtomCache;
 
 import org.biojava.bio.structure.StructureException;
 import org.biojava.bio.structure.StructureTools;
@@ -69,7 +68,7 @@ public class TestFlexibleRotationMatrices extends TestCase{
 
    private void compare(String name1, String name2, boolean doRigid){
 
-      AtomCache cache =    TmpAtomCache.cache;
+	   AtomCache cache = new AtomCache();
 
       try {
          Atom[] ca1orig = cache.getAtoms(name1);
@@ -81,11 +80,11 @@ public class TestFlexibleRotationMatrices extends TestCase{
          Atom[] ca3 = StructureTools.cloneCAArray(ca2);
 
          AFPChain afpChain = getAlignment(name1, name2, ca1, ca2, doRigid);
-
+         afpChain.setCalculationTime(-1);
          String xml = AFPChainXMLConverter.toXML(afpChain,ca1,ca2);
          //System.out.println(xml);
          AFPChain newChain = AFPChainXMLParser.fromXML (xml, ca1, ca3);
-
+         
          Matrix[] maxs1 = afpChain.getBlockRotationMatrix();
          //Atom[] shifts1 = afpChain.getBlockShiftVector();
          double[] blockRmsd = afpChain.getBlockRmsd();

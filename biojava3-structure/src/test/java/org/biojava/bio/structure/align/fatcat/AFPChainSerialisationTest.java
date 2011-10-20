@@ -27,7 +27,6 @@ import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureException;
 import org.biojava.bio.structure.StructureImpl;
 import org.biojava.bio.structure.StructureTools;
-import org.biojava.bio.structure.TmpAtomCache;
 import org.biojava.bio.structure.align.fatcat.calc.FatCatParameters;
 import org.biojava.bio.structure.align.model.AFPChain;
 import org.biojava.bio.structure.align.util.AtomCache;
@@ -138,7 +137,7 @@ extends TestCase
 
 
    private Structure getStructure(String pdbId, String chainId) throws IOException, StructureException{
-      AtomCache cache =    TmpAtomCache.cache;
+	   AtomCache cache = new AtomCache();
       Structure structure1 = cache.getStructure(pdbId);
 
       Chain c = structure1.getChainByPDB(chainId);

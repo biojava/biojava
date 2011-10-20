@@ -34,7 +34,6 @@ import org.biojava.bio.structure.SVDSuperimposer;
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureException;
 import org.biojava.bio.structure.StructureTools;
-import org.biojava.bio.structure.TmpAtomCache;
 import org.biojava.bio.structure.align.ce.CeCPMain;
 import org.biojava.bio.structure.align.ce.CeMain;
 import org.biojava.bio.structure.align.model.AFPChain;
@@ -81,7 +80,7 @@ public class FlipAFPChainTest extends TestCase {
 
 	private void flip(String name1, String name2, String algorithmName) throws StructureException, IOException{
 
-		AtomCache cache = TmpAtomCache.cache;
+		AtomCache cache = new AtomCache();
 
 		Structure s1 = cache.getStructure(name1);
 		Structure s2 = cache.getStructure(name2);

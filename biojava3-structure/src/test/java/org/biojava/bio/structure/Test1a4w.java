@@ -31,6 +31,7 @@ import java.util.List;
 
 import junit.framework.TestCase;
 
+import org.biojava.bio.structure.align.util.AtomCache;
 import org.biojava.bio.structure.io.FileParsingParameters;
 import org.biojava.bio.structure.io.PDBFileParser;
 import org.biojava.bio.structure.io.mmcif.MMcifParser;
@@ -145,8 +146,8 @@ public class Test1a4w extends TestCase{
 
 	public void testChemComps(){
 		try {
-
-			Structure s = TmpAtomCache.cache.getStructure("1a4w");
+			AtomCache cache = new AtomCache();
+			Structure s = cache.getStructure("1a4w");
 
 			assertTrue(s.getChains().size() == 3);
 
