@@ -9,6 +9,9 @@ import org.biojava.bio.structure.align.client.FarmJobRunnable;
 import org.biojava.bio.structure.align.events.AlignmentProgressListener;
 import org.biojava.bio.structure.align.util.CliTools;
 import org.biojava.bio.structure.align.util.ConfigurationException;
+import org.biojava.bio.structure.scop.CachedRemoteScopInstallation;
+import org.biojava.bio.structure.scop.ScopDatabase;
+import org.biojava.bio.structure.scop.ScopFactory;
 
 
 /** A job as it can be run on the farm.
@@ -36,6 +39,10 @@ public class FarmJob implements Runnable {
 		
 		// send a flag to the PDb file loader to cache the gzip compressed files.
 		System.setProperty("biojava.cache.files","true");
+		
+		// declare SCOP to be locally cached, but fetching new stuff from remote
+		ScopDatabase scop = new CachedRemoteScopInstallation(true);
+		ScopFactory.setScopDatabase(scop);
 	}
 	
 	public FarmJobParameters getParams() {
@@ -75,7 +82,7 @@ public class FarmJob implements Runnable {
 		}
 
 		FarmJobParameters params = new FarmJobParameters();
-
+		
 		for (int i = 0 ; i < argv.length; i++){
 			String arg   = argv[i];
 
