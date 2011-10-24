@@ -41,10 +41,12 @@ public class CachedRemoteScopInstallation extends SerializableCache<String,ScopD
 	
 	RemoteScopInstallation proxy ;
 	
-	SerializableCache<Integer,ScopDescription> scopDescriptionCache = new SerializableCache<Integer,ScopDescription>("scopDescriptionCache.ser");
+	SerializableCache<Integer,ScopDescription> scopDescriptionCache ;
 	
 	public CachedRemoteScopInstallation() {
 		this(true);
+		
+		
 
 	}
 	
@@ -54,9 +56,13 @@ public class CachedRemoteScopInstallation extends SerializableCache<String,ScopD
 
 		proxy = new RemoteScopInstallation();
 		
+		scopDescriptionCache = new SerializableCache<Integer,ScopDescription>("scopDescriptionCache.ser");
+		//scopDescriptionCache.setDebug(true);
+		
 		if ( ! useCache) {
 			System.err.println("CachedRemoteScopInstallation disableing cache");
 			disableCache();
+			scopDescriptionCache.disableCache();
 		}
 
 	}
