@@ -43,7 +43,7 @@ import org.biojava.bio.structure.scop.server.XMLUtil;
  * @author Andreas Prlic
  *
  */
-public class RemotePDPProvider extends SerializableCache {
+public class RemotePDPProvider extends SerializableCache<String,SortedSet<String>> {
 
 	public static final String DEFAULT_SERVER = "http://source.rcsb.org/jfatcatserver/domains/";
 
@@ -103,7 +103,7 @@ public class RemotePDPProvider extends SerializableCache {
 		if ( serializedCache != null){
 			if ( serializedCache.containsKey(pdbDomainName)){
 				domainRanges= serializedCache.get(pdbDomainName);
-				System.out.println("got ranges: " + domainRanges);
+				//System.out.println("got ranges: " + domainRanges);
 			}
 		}
 

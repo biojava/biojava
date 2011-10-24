@@ -7,14 +7,23 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.SortedSet;
 
 import org.biojava.bio.structure.align.util.AtomCache;
 
-public class SerializableCache {
+
+/** A class that provides all that is necessary to create a Serializable Cache
+ * 
+ * @author Andreas Prlic
+ *
+ * @param <K> The key type of the cache
+ * @param <V> the value type to be stored on the cache
+ * 
+ * @since 3.0.3
+ */
+public class SerializableCache <K,V>{
 
 	protected String cacheFileName;
-	protected Map<String, SortedSet<String>> serializedCache ;
+	protected Map<K,V> serializedCache ;
 	
 	boolean debug = false;
 	
@@ -31,7 +40,11 @@ public class SerializableCache {
 		
 	}
 	
-	public void cache(String name, SortedSet<String> data) {
+	public boolean isCacheEnabled(){
+		return ( serializedCache != null ); 
+	}
+	
+	public void cache(K name, V data) {
 		if ( serializedCache != null){
 			
 			if ( debug )
@@ -52,6 +65,12 @@ public class SerializableCache {
 
 	}
 	
+	public V get(K name) {
+		if ( serializedCache == null)
+			return null;
+		return (serializedCache.get(name));
+	}
+	
 	public void disableCache(){
 		//flushCache();
 		serializedCache = null;
@@ -64,11 +83,11 @@ public class SerializableCache {
 	
 	
 	
-	public Map<String, SortedSet<String>> reloadFromFile() {
+	public Map<K,V> reloadFromFile() {
 
 		File f = getCacheFile();
 
-		serializedCache = new HashMap<String,SortedSet<String>>();
+		serializedCache = new HashMap<K,V>();
 
 		// has never been cached here before
 		if( ! f.exists())
@@ -79,15 +98,15 @@ public class SerializableCache {
 				System.out.println("reloading from cache " + f.getAbsolutePath());
 			FileInputStream fis = new FileInputStream(f);
 			ObjectInputStream ois = new ObjectInputStream(fis);
-			serializedCache = (HashMap<String,SortedSet<String>>) ois.readObject();
+			serializedCache = (HashMap<K,V>) ois.readObject();
 			ois.close();
 		} catch (Exception e){
 			e.printStackTrace();
 			return null;
 		}
 		
-		if ( debug )
-			System.out.println("Cache size: " + serializedCache.keySet().size());
+		//if ( debug )
+			System.out.println("reloaded from cache: " + f.getName()+ " size: " + serializedCache.keySet().size() + " cached records.");
 		return serializedCache;
 	}
 	

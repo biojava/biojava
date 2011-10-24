@@ -14,7 +14,7 @@ import org.biojava.bio.structure.scop.ScopDomain;
 import org.biojava.bio.structure.scop.ScopFactory;
 
 
-public class RemoteDomainProvider extends SerializableCache implements DomainProvider{
+public class RemoteDomainProvider extends SerializableCache<String,SortedSet<String>> implements DomainProvider{
 
 	public String url = RemotePDPProvider.DEFAULT_SERVER;
 
