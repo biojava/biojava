@@ -30,17 +30,26 @@ import java.util.List;
 
 import org.biojava.bio.structure.align.client.JFatCatClient;
 import org.biojava.bio.structure.align.util.HTTPConnectionTools;
+import org.biojava.bio.structure.domain.SerializableCache;
 import org.biojava.bio.structure.scop.server.ScopDescriptions;
 import org.biojava.bio.structure.scop.server.ScopDomains;
 import org.biojava.bio.structure.scop.server.ScopNodes;
 import org.biojava.bio.structure.scop.server.XMLUtil;
 
+
+/** A class that fetches information about SCOP from a remote data-source. It requires port 80 to open for HTTP connection.
+ * 
+ * @author Andreas Prlic
+ *
+ */
 public class RemoteScopInstallation implements ScopDatabase {
 
 	public static final String DEFAULT_SERVER = "http://source.rcsb.org/jfatcatserver/domains/";
 
 	String server = DEFAULT_SERVER;
 
+
+	
 	public static void main(String[] args){
 
 		ScopDatabase scop = new RemoteScopInstallation();
@@ -147,8 +156,12 @@ public class RemoteScopInstallation implements ScopDatabase {
 
 	@Override
 	public ScopDescription getScopDescriptionBySunid(int sunid) {
+				
 		ScopDescription desc = null;
+		
+		
 		try {
+		
 			URL u = new URL(server + "getScopDescriptionBySunid?sunid="+sunid);
 			System.out.println(u);
 			InputStream response = HTTPConnectionTools.getInputStream(u);
@@ -156,6 +169,7 @@ public class RemoteScopInstallation implements ScopDatabase {
 
 			desc = XMLUtil.getScopDescriptionFromXML(xml);
 
+			
 		} catch (Exception e){
 			e.printStackTrace();
 		}

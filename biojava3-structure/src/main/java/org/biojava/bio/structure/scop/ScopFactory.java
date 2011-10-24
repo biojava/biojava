@@ -1,7 +1,6 @@
 package org.biojava.bio.structure.scop;
 
-import org.biojava.bio.structure.Structure;
-import org.biojava.bio.structure.align.util.AtomCache;
+
 
 /**
  * Controls the global ScopDatabase being used.
@@ -35,6 +34,7 @@ public class ScopFactory {
 	}
 	
 	public static void setScopDatabase(ScopDatabase s){
+		System.out.println("Setting ScopDatabase to type: " + s.getClass().getName());
 		scop = s;
 	}
 		

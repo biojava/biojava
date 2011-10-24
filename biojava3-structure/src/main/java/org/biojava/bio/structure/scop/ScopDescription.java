@@ -23,7 +23,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @XmlRootElement(name = "ScopDescription", namespace ="http://source.rcsb.org")
 @XmlAccessorType(XmlAccessType.PUBLIC_MEMBER)
-public class ScopDescription implements Serializable{
+public class ScopDescription implements Serializable,Cloneable{
 	/**
 	 * 
 	 */
@@ -201,4 +201,19 @@ public class ScopDescription implements Serializable{
 		return true;
 	}
 
+
+	@Override
+	protected Object clone() throws CloneNotSupportedException {
+		ScopDescription n = new ScopDescription();
+		
+		n.setCategory(getCategory());
+		n.setClassificationId(getClassificationId());
+		n.setDescription(getDescription());
+		n.setName(getName());
+		n.setSunID(getSunID());
+		return n;
+	}
+
+	
+	
 }

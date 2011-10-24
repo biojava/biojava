@@ -211,7 +211,7 @@ public class ScopInstallation implements ScopDatabase {
 	/* (non-Javadoc)
 	 * @see org.biojava.bio.structure.scop.ScopDatabase#getByCategory(org.biojava.bio.structure.scop.ScopCategory)
 	 */
-	 public List<ScopDescription> getByCategory(ScopCategory category){
+	public List<ScopDescription> getByCategory(ScopCategory category){
 
 		ensureDesInstalled();
 
@@ -219,528 +219,554 @@ public class ScopInstallation implements ScopDatabase {
 		for (Integer i : sunidMap.keySet()){
 			ScopDescription sc = sunidMap.get(i);
 			if ( sc.getCategory().equals(category))
-				matches.add(sc);
+				try {
+					matches.add((ScopDescription)sc.clone());
+				} catch (CloneNotSupportedException e){
+					e.printStackTrace();
+				}
 		}
 		return matches;
-	 }
+	}
 
-	 /* (non-Javadoc)
-	  * @see org.biojava.bio.structure.scop.ScopDatabase#filterByClassificationId(java.lang.String)
-	  */
-	 public List<ScopDescription> filterByClassificationId(String query){
-		 ensureDesInstalled();
+	/* (non-Javadoc)
+	 * @see org.biojava.bio.structure.scop.ScopDatabase#filterByClassificationId(java.lang.String)
+	 */
+	public List<ScopDescription> filterByClassificationId(String query){
+		ensureDesInstalled();
 
-		 List<ScopDescription> matches = new ArrayList<ScopDescription>();
-		 for (Integer i : sunidMap.keySet()){
-			 ScopDescription sc = sunidMap.get(i);
+		List<ScopDescription> matches = new ArrayList<ScopDescription>();
+		for (Integer i : sunidMap.keySet()){
+			ScopDescription sc = sunidMap.get(i);
 
 
-			 if( sc.getClassificationId().startsWith(query)){
-				 matches.add(sc);
-				 continue;
-			 }
-		 }
-
-		 return matches;
-	 }
-
-
-	 /* (non-Javadoc)
-	  * @see org.biojava.bio.structure.scop.ScopDatabase#getTree(org.biojava.bio.structure.scop.ScopDomain)
-	  */
-	 public List<ScopNode> getTree(ScopDomain domain){
-		 ScopNode node = getScopNode(domain.getSunid());
-
-
-		 List<ScopNode> tree = new ArrayList<ScopNode>();
-		 while (node != null){
-
-			 //System.out.println("This node: sunid:" + node.getSunid() );
-			 //System.out.println(getScopDescriptionBySunid(node.getSunid()));
-			 node = getScopNode(node.getParentSunid());
-			 if ( node != null)
-				 tree.add(node);
-		 }
-		 Collections.reverse(tree);
-		 return tree;
-	 }
-
-	 /* (non-Javadoc)
-	  * @see org.biojava.bio.structure.scop.ScopDatabase#filterByDomainName(java.lang.String)
-	  */
-	 public List<ScopDomain> filterByDomainName(String query) {
+			if( sc.getClassificationId().startsWith(query)){
+				matches.add(sc);
+				continue;
+			}
+		}
+
+		return matches;
+	}
+
+
+	/* (non-Javadoc)
+	 * @see org.biojava.bio.structure.scop.ScopDatabase#getTree(org.biojava.bio.structure.scop.ScopDomain)
+	 */
+	public List<ScopNode> getTree(ScopDomain domain){
+		ScopNode node = getScopNode(domain.getSunid());
 
-		 List<ScopDomain > domains = new ArrayList<ScopDomain>();
-		 if (query.length() <5){
-			 return domains;
-		 }
+
+		List<ScopNode> tree = new ArrayList<ScopNode>();
+		while (node != null){
+
+			//System.out.println("This node: sunid:" + node.getSunid() );
+			//System.out.println(getScopDescriptionBySunid(node.getSunid()));
+			node = getScopNode(node.getParentSunid());
+			if ( node != null)
+				tree.add(node);
+		}
+		Collections.reverse(tree);
+		return tree;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.biojava.bio.structure.scop.ScopDatabase#filterByDomainName(java.lang.String)
+	 */
+	public List<ScopDomain> filterByDomainName(String query) {
+
+		List<ScopDomain > domains = new ArrayList<ScopDomain>();
+		if (query.length() <5){
+			return domains;
+		}
+
+		String pdbId = query.substring(1,5);
+
+		List<ScopDomain> doms = getDomainsForPDB(pdbId);
+
+
+		if ( doms == null)
+			return domains;
+
+		query = query.toLowerCase();
+		for ( ScopDomain d: doms){
+			if ( d.getScopId().toLowerCase().contains(query)){
+				domains.add(d);
+			}
+		}
+
+		return domains;
+	}
 
-		 String pdbId = query.substring(1,5);
+	/* (non-Javadoc)
+	 * @see org.biojava.bio.structure.scop.ScopDatabase#filterByDescription(java.lang.String)
+	 */
+	public List<ScopDescription> filterByDescription(String query){
+		ensureDesInstalled();
 
-		 List<ScopDomain> doms = getDomainsForPDB(pdbId);
+		query = query.toLowerCase();
+		List<ScopDescription> matches = new ArrayList<ScopDescription>();
+		for (Integer i : sunidMap.keySet()){
+			ScopDescription sc = sunidMap.get(i);
 
 
-		 if ( doms == null)
-			 return domains;
+			if( sc.getDescription().toLowerCase().startsWith(query)){
+				matches.add(sc);
+				continue;
+			}
+		}
 
-		 query = query.toLowerCase();
-		 for ( ScopDomain d: doms){
-			 if ( d.getScopId().toLowerCase().contains(query)){
-				 domains.add(d);
-			 }
-		 }
+		return matches;
+	}
 
-		 return domains;
-	 }
 
-	 /* (non-Javadoc)
-	  * @see org.biojava.bio.structure.scop.ScopDatabase#filterByDescription(java.lang.String)
-	  */
-	 public List<ScopDescription> filterByDescription(String query){
-		 ensureDesInstalled();
+	/* (non-Javadoc)
+	 * @see org.biojava.bio.structure.scop.ScopDatabase#getScopDescriptionBySunid(int)
+	 */
+	public ScopDescription getScopDescriptionBySunid(int sunid){
+		ensureDesInstalled();
+		return sunidMap.get(sunid);
+	}
 
-		 query = query.toLowerCase();
-		 List<ScopDescription> matches = new ArrayList<ScopDescription>();
-		 for (Integer i : sunidMap.keySet()){
-			 ScopDescription sc = sunidMap.get(i);
+	/* (non-Javadoc)
+	 * @see org.biojava.bio.structure.scop.ScopDatabase#getDomainsForPDB(java.lang.String)
+	 */
+	public  List<ScopDomain> getDomainsForPDB(String pdbId){
+		ensureClaInstalled();
 
 
-			 if( sc.getDescription().toLowerCase().startsWith(query)){
-				 matches.add(sc);
-				 continue;
-			 }
-		 }
+		List<ScopDomain> doms = domainMap.get(pdbId.toLowerCase());
+		
+		List<ScopDomain> retdoms = new ArrayList<ScopDomain>();
+		
+		if ( doms == null)
+			return retdoms;
 
-		 return matches;
-	 }
+		for ( ScopDomain d : doms){
+			try {
+				ScopDomain n = (ScopDomain) d.clone();
+				retdoms.add(n);
+			}  catch (CloneNotSupportedException e){
+				e.printStackTrace();
+			}
 
 
-	 /* (non-Javadoc)
-	  * @see org.biojava.bio.structure.scop.ScopDatabase#getScopDescriptionBySunid(int)
-	  */
-	 public ScopDescription getScopDescriptionBySunid(int sunid){
-		 ensureDesInstalled();
-		 return sunidMap.get(sunid);
-	 }
+		}
+		return retdoms;
+	}
 
-	 /* (non-Javadoc)
-	  * @see org.biojava.bio.structure.scop.ScopDatabase#getDomainsForPDB(java.lang.String)
-	  */
-	 public  List<ScopDomain> getDomainsForPDB(String pdbId){
-		 ensureClaInstalled();
+	/* (non-Javadoc)
+	 * @see org.biojava.bio.structure.scop.ScopDatabase#getDomainByScopID(java.lang.String)
+	 */
+	public ScopDomain getDomainByScopID(String scopId) {
+		ensureClaInstalled();
 
-		 return domainMap.get(pdbId.toLowerCase());
-	 }
+		if ( scopId.length() < 6) {
+			throw new IllegalArgumentException("Does not look like a scop ID! " + scopId);
+		}
+		String pdbId = scopId.substring(1,5);
+		List<ScopDomain> doms = getDomainsForPDB(pdbId);
+		if ( doms == null)
+			return null;
+		for ( ScopDomain d : doms){
+			if ( d.getScopId().equalsIgnoreCase(scopId)) 
+				return d;
+		}
 
-	 /* (non-Javadoc)
-	  * @see org.biojava.bio.structure.scop.ScopDatabase#getDomainByScopID(java.lang.String)
-	  */
-	 public ScopDomain getDomainByScopID(String scopId) {
-		 ensureClaInstalled();
+		return null;
+	}
 
-		 if ( scopId.length() < 6) {
-			 throw new IllegalArgumentException("Does not look like a scop ID! " + scopId);
-		 }
-		 String pdbId = scopId.substring(1,5);
-		 List<ScopDomain> doms = getDomainsForPDB(pdbId);
-		 if ( doms == null)
-			 return null;
-		 for ( ScopDomain d : doms){
-			 if ( d.getScopId().equalsIgnoreCase(scopId)) 
-				 return d;
-		 }
+	/* (non-Javadoc)
+	 * @see org.biojava.bio.structure.scop.ScopDatabase#getScopNode(int)
+	 */
+	public ScopNode getScopNode(int sunid){
+		ensureHieInstalled();
+		ScopNode node = scopTree.get(sunid);
 
-		 return null;
-	 }
+		return node;
+	}
 
-	 /* (non-Javadoc)
-	  * @see org.biojava.bio.structure.scop.ScopDatabase#getScopNode(int)
-	  */
-	 public ScopNode getScopNode(int sunid){
-		 ensureHieInstalled();
-		 ScopNode node = scopTree.get(sunid);
 
-		 return node;
-	 }
+	private void parseClassification() throws IOException{
 
+		File file = new File(getClaFilename());
 
-	 private void parseClassification() throws IOException{
 
-		 File file = new File(getClaFilename());
+		InputStreamProvider ips = new InputStreamProvider();
+		BufferedReader buffer = new BufferedReader (new InputStreamReader(ips.getInputStream(file)));
 
+		parseClassification(buffer);
 
-		 InputStreamProvider ips = new InputStreamProvider();
-		 BufferedReader buffer = new BufferedReader (new InputStreamReader(ips.getInputStream(file)));
+	}
 
-		 parseClassification(buffer);
+	private void parseHierarchy() throws IOException{
 
-	 }
+		File file = new File(getHieFilename());
 
-	 private void parseHierarchy() throws IOException{
 
-		 File file = new File(getHieFilename());
+		InputStreamProvider ips = new InputStreamProvider();
+		BufferedReader buffer = new BufferedReader (new InputStreamReader(ips.getInputStream(file)));
 
+		parseHierarchy(buffer);
 
-		 InputStreamProvider ips = new InputStreamProvider();
-		 BufferedReader buffer = new BufferedReader (new InputStreamReader(ips.getInputStream(file)));
+	}
 
-		 parseHierarchy(buffer);
+	private void parseHierarchy(BufferedReader buffer) throws IOException {
+		String line = null;
 
-	 }
+		int counter =0;
+		while ((line = buffer.readLine ()) != null) {
+			if ( line.startsWith("#"))
+				continue;
 
-	 private void parseHierarchy(BufferedReader buffer) throws IOException {
-		 String line = null;
+			String[] spl  = line.split("\t");
 
-		 int counter =0;
-		 while ((line = buffer.readLine ()) != null) {
-			 if ( line.startsWith("#"))
-				 continue;
+			if ( spl.length != 3 ) {
+				System.err.println("parseHierarchy: Can't parse line " + line +" (length: " + spl.length+")");
+				continue;
+			}
+			counter++;
+			int sunid       = Integer.parseInt(spl[0]);
+			int parentSunid = -1;
 
-			 String[] spl  = line.split("\t");
+			if ( sunid != 0)
+				parentSunid = Integer.parseInt(spl[1]);
 
-			 if ( spl.length != 3 ) {
-				 System.err.println("parseHierarchy: Can't parse line " + line +" (length: " + spl.length+")");
-				 continue;
-			 }
-			 counter++;
-			 int sunid       = Integer.parseInt(spl[0]);
-			 int parentSunid = -1;
+			String children = spl[2];
+			String[] childIds = children.split(",");
 
-			 if ( sunid != 0)
-				 parentSunid = Integer.parseInt(spl[1]);
+			List<Integer> chis = new ArrayList<Integer>();
 
-			 String children = spl[2];
-			 String[] childIds = children.split(",");
+			for ( String id : childIds){
+				if ( id.equals("-"))
+					continue;
+				chis.add(Integer.parseInt(id));
+			}
 
-			 List<Integer> chis = new ArrayList<Integer>();
+			ScopNode node = new ScopNode();
 
-			 for ( String id : childIds){
-				 if ( id.equals("-"))
-					 continue;
-				 chis.add(Integer.parseInt(id));
-			 }
+			node.setSunid(sunid);
+			node.setParentSunid(parentSunid);
+			node.setChildren(chis);
 
-			 ScopNode node = new ScopNode();
+			scopTree.put(sunid, node);
+		}
+		System.out.println("parsed " + counter + " scop sunid nodes.");
+	}
 
-			 node.setSunid(sunid);
-			 node.setParentSunid(parentSunid);
-			 node.setChildren(chis);
 
-			 scopTree.put(sunid, node);
-		 }
-		 System.out.println("parsed " + counter + " scop sunid nodes.");
-	 }
+	private void parseDescriptions() throws IOException{
 
+		File file = new File(getDesFilename());
 
-	 private void parseDescriptions() throws IOException{
 
-		 File file = new File(getDesFilename());
+		InputStreamProvider ips = new InputStreamProvider();
+		BufferedReader buffer = new BufferedReader (new InputStreamReader(ips.getInputStream(file)));
 
+		parseDescriptions(buffer);
 
-		 InputStreamProvider ips = new InputStreamProvider();
-		 BufferedReader buffer = new BufferedReader (new InputStreamReader(ips.getInputStream(file)));
+	}
+	private void parseDescriptions(BufferedReader buffer) throws IOException {
+		String line = null;
 
-		 parseDescriptions(buffer);
+		int counter = 0;
+		while ((line = buffer.readLine ()) != null) {
+			if ( line.startsWith("#"))
+				continue;
 
-	 }
-	 private void parseDescriptions(BufferedReader buffer) throws IOException {
-		 String line = null;
+			String[] spl  = line.split("\t");
 
-		 int counter = 0;
-		 while ((line = buffer.readLine ()) != null) {
-			 if ( line.startsWith("#"))
-				 continue;
+			if ( spl.length != 5 ) {
+				System.err.println("parseDescriptions: Can't parse line " + line +" (length: " + spl.length+")");
+				continue;
+			}
+			counter++;
 
-			 String[] spl  = line.split("\t");
+			//46464  dm  a.1.1.2 -   Hemoglobin I
+			int sunID = Integer.parseInt(spl[0]);
+			ScopCategory category =  ScopCategory.fromString(spl[1]);
+			String classificationId = spl[2];
+			String name = spl[3];
+			String desc = spl[4];
 
-			 if ( spl.length != 5 ) {
-				 System.err.println("parseDescriptions: Can't parse line " + line +" (length: " + spl.length+")");
-				 continue;
-			 }
-			 counter++;
+			ScopDescription c = new ScopDescription();
+			c.setSunID(sunID);
+			c.setCategory(category);
+			c.setClassificationId(classificationId);
+			c.setName(name);
+			c.setDescription(desc);
 
-			 //46464  dm  a.1.1.2 -   Hemoglobin I
-			 int sunID = Integer.parseInt(spl[0]);
-			 ScopCategory category =  ScopCategory.fromString(spl[1]);
-			 String classificationId = spl[2];
-			 String name = spl[3];
-			 String desc = spl[4];
+			sunidMap.put(new Integer(sunID), c);
 
-			 ScopDescription c = new ScopDescription();
-			 c.setSunID(sunID);
-			 c.setCategory(category);
-			 c.setClassificationId(classificationId);
-			 c.setName(name);
-			 c.setDescription(desc);
+		}
+		System.out.println("parsed " + counter + " scop sunid descriptions.");
+	}
 
-			 sunidMap.put(new Integer(sunID), c);
 
-		 }
-		 System.out.println("parsed " + counter + " scop sunid descriptions.");
-	 }
 
+	private void parseClassification(BufferedReader buffer) throws IOException {
+		String line = null;
 
+		int counter = 0;
+		while ((line = buffer.readLine ()) != null) {
+			if ( line.startsWith("#"))
+				continue;
 
-	 private void parseClassification(BufferedReader buffer) throws IOException {
-		 String line = null;
+			String[] spl  = line.split("\t");
 
-		 int counter = 0;
-		 while ((line = buffer.readLine ()) != null) {
-			 if ( line.startsWith("#"))
-				 continue;
-
-			 String[] spl  = line.split("\t");
-
-			 if ( spl.length != 6){
-				 System.err.println("Can't parse line " + line);
-				 continue;
-
-			 }
-			 counter++;
-
-			 String scopId = spl[0];
-			 String pdbId = spl[1];
-			 String range = spl[2];
-			 String classificationId = spl[3];
-			 Integer sunid = Integer.parseInt(spl[4]);
-			 String tree = spl[5];
-
+			if ( spl.length != 6){
+				System.err.println("Can't parse line " + line);
+				continue;
 
+			}
+			counter++;
 
-			 ScopDomain d = new ScopDomain();
-			 d.setScopId(scopId);
-			 d.setPdbId(pdbId);
+			String scopId = spl[0];
+			String pdbId = spl[1];
+			String range = spl[2];
+			String classificationId = spl[3];
+			Integer sunid = Integer.parseInt(spl[4]);
+			String tree = spl[5];
 
-			 d.setRanges(extractRanges(range));
 
-			 d.setClassificationId(classificationId);
-			 d.setSunid(sunid);
 
-			 String[] treeSplit = tree.split(",");
+			ScopDomain d = new ScopDomain();
+			d.setScopId(scopId);
+			d.setPdbId(pdbId);
 
-			 if (  treeSplit.length != 7 ) {
-				 System.err.println("can't process: " + tree );
-			 }
+			d.setRanges(extractRanges(range));
 
-			 int classId =Integer.parseInt(treeSplit[0].substring(3));
-			 int foldId = Integer.parseInt(treeSplit[1].substring(3));
-			 int familyId = Integer.parseInt(treeSplit[2].substring(3));
-			 int superfamilyId = Integer.parseInt(treeSplit[3].substring(3));			
-			 int domainId = Integer.parseInt(treeSplit[4].substring(3));
-			 int speciesId = Integer.parseInt(treeSplit[5].substring(3));
-			 int px = Integer.parseInt(treeSplit[6].substring(3));
+			d.setClassificationId(classificationId);
+			d.setSunid(sunid);
 
-			 d.setClassId(classId);
-			 d.setFoldId(foldId);
-			 d.setSuperfamilyId(superfamilyId);
-			 d.setFamilyId(familyId);
-			 d.setDomainId(domainId);
-			 d.setSpeciesId(speciesId);
-			 d.setPx(px);
+			String[] treeSplit = tree.split(",");
 
-			 List<ScopDomain> domainList;
-			 if ( domainMap.containsKey(pdbId)){
-				 domainList = domainMap.get(pdbId);
-			 } else {
-				 domainList = new ArrayList<ScopDomain>();
-				 domainMap.put(pdbId,domainList);
-			 }
+			if (  treeSplit.length != 7 ) {
+				System.err.println("can't process: " + tree );
+			}
 
-			 domainList.add(d);
-			 if ( sunid == 47763)
-				 System.out.println("FOUND DOMAIN!!!! " + sunid + " " + d);
-		 }
-		 System.out.println("parsed "+ counter + " scop sunid domains.");
+			int classId =Integer.parseInt(treeSplit[0].substring(3));
+			int foldId = Integer.parseInt(treeSplit[1].substring(3));
+			int familyId = Integer.parseInt(treeSplit[2].substring(3));
+			int superfamilyId = Integer.parseInt(treeSplit[3].substring(3));			
+			int domainId = Integer.parseInt(treeSplit[4].substring(3));
+			int speciesId = Integer.parseInt(treeSplit[5].substring(3));
+			int px = Integer.parseInt(treeSplit[6].substring(3));
 
-	 }
+			d.setClassId(classId);
+			d.setFoldId(foldId);
+			d.setSuperfamilyId(superfamilyId);
+			d.setFamilyId(familyId);
+			d.setDomainId(domainId);
+			d.setSpeciesId(speciesId);
+			d.setPx(px);
 
-	 /** 
-	  * Converts the SCOP range field into a list of subranges suitable for
-	  * storage in a ScopDomain object. Each range should be of a format
-	  * compatible with {@link StructureTools#getSubRanges(Structure,String)}.
-	  * @param range
-	  * @return
-	  */
-	 private List<String> extractRanges(String range) {
-		 List<String> ranges;
-		 String[] rangeSpl = range.split(",");
-		 
-		 // Recent versions of scop always specify a chain, so no processing is needed
-		 if(scopVersion.compareTo("1.73") < 0 ) {
-			 for(int i=0; i<rangeSpl.length;i++) {
-				 String subRange = rangeSpl[i];
-				 
-				 // Allow single-chains, as well as the '-' special case
-				 if(subRange.length()<2) {
-					 continue;
-				 }
-				 
-				 // Allow explicit chain syntax
-				 if(subRange.charAt(1) == ':') {
-					 continue;
-				 }
-				 else {
-					 // Early versions sometimes skip the chain identifier for single-chain domains
-					 // Indicate this with a chain "_"
-					 rangeSpl[i] = "_:"+subRange;
-				 }
-			 }
-		 }
-		 ranges = Arrays.asList(rangeSpl);
-		 return ranges;
-	 }
-	 
-	 private void downloadClaFile() throws FileNotFoundException, IOException{
-		 String remoteFilename = claFileName + scopVersion;
-		 URL url = new URL(SCOP_DOWNLOAD + remoteFilename);
+			List<ScopDomain> domainList;
+			if ( domainMap.containsKey(pdbId)){
+				domainList = domainMap.get(pdbId);
+			} else {
+				domainList = new ArrayList<ScopDomain>();
+				domainMap.put(pdbId,domainList);
+			}
 
-		 String localFileName = getClaFilename();
-		 File localFile = new File(localFileName);
+			domainList.add(d);
+			if ( sunid == 47763)
+				System.out.println("FOUND DOMAIN!!!! " + sunid + " " + d);
+		}
+		System.out.println("parsed "+ counter + " scop sunid domains.");
 
-		 downloadFileFromRemote(url, localFile);
+	}
 
-	 }
+	/** 
+	 * Converts the SCOP range field into a list of subranges suitable for
+	 * storage in a ScopDomain object. Each range should be of a format
+	 * compatible with {@link StructureTools#getSubRanges(Structure,String)}.
+	 * @param range
+	 * @return
+	 */
+	private List<String> extractRanges(String range) {
+		List<String> ranges;
+		String[] rangeSpl = range.split(",");
 
-	 private void downloadDesFile() throws FileNotFoundException, IOException{
-		 String remoteFilename = desFileName + scopVersion;
-		 URL url = new URL(SCOP_DOWNLOAD + remoteFilename);
+		// Recent versions of scop always specify a chain, so no processing is needed
+		if(scopVersion.compareTo("1.73") < 0 ) {
+			for(int i=0; i<rangeSpl.length;i++) {
+				String subRange = rangeSpl[i];
 
-		 String localFileName = getDesFilename();
-		 File localFile = new File(localFileName);
+				// Allow single-chains, as well as the '-' special case
+				if(subRange.length()<2) {
+					continue;
+				}
 
-		 downloadFileFromRemote(url, localFile);
+				// Allow explicit chain syntax
+				if(subRange.charAt(1) == ':') {
+					continue;
+				}
+				else {
+					// Early versions sometimes skip the chain identifier for single-chain domains
+					// Indicate this with a chain "_"
+					rangeSpl[i] = "_:"+subRange;
+				}
+			}
+		}
+		ranges = Arrays.asList(rangeSpl);
+		return ranges;
+	}
 
-	 }
+	private void downloadClaFile() throws FileNotFoundException, IOException{
+		String remoteFilename = claFileName + scopVersion;
+		URL url = new URL(SCOP_DOWNLOAD + remoteFilename);
 
-	 private void downloadHieFile() throws FileNotFoundException, IOException{
-		 String remoteFilename = hieFileName + scopVersion;
-		 URL url = new URL(SCOP_DOWNLOAD + remoteFilename);
+		String localFileName = getClaFilename();
+		File localFile = new File(localFileName);
 
-		 String localFileName = getHieFilename();
-		 File localFile = new File(localFileName);
+		downloadFileFromRemote(url, localFile);
 
-		 downloadFileFromRemote(url, localFile);
+	}
 
-	 }
+	private void downloadDesFile() throws FileNotFoundException, IOException{
+		String remoteFilename = desFileName + scopVersion;
+		URL url = new URL(SCOP_DOWNLOAD + remoteFilename);
 
-	 private void downloadFileFromRemote(URL remoteURL, File localFile) throws FileNotFoundException, IOException{
-		 System.out.println("downloading " + remoteURL + " to: " + localFile);
-		 FileOutputStream out = new FileOutputStream(localFile);
+		String localFileName = getDesFilename();
+		File localFile = new File(localFileName);
 
-		 InputStream in = remoteURL.openStream();
-		 byte[] buf = new byte[4 * 1024]; // 4K buffer
-		 int bytesRead;
-		 while ((bytesRead = in.read(buf)) != -1) {
-			 out.write(buf, 0, bytesRead);
-		 }
-		 in.close();
-		 out.close();
+		downloadFileFromRemote(url, localFile);
 
+	}
 
-	 }
+	private void downloadHieFile() throws FileNotFoundException, IOException{
+		String remoteFilename = hieFileName + scopVersion;
+		URL url = new URL(SCOP_DOWNLOAD + remoteFilename);
 
-	 private boolean claFileAvailable(){
-		 String fileName = getClaFilename();
+		String localFileName = getHieFilename();
+		File localFile = new File(localFileName);
 
-		 File f = new File(fileName);
+		downloadFileFromRemote(url, localFile);
 
-		 return f.exists();
-	 }
+	}
 
-	 private boolean desFileAvailable(){
-		 String fileName = getDesFilename();
+	private void downloadFileFromRemote(URL remoteURL, File localFile) throws FileNotFoundException, IOException{
+		System.out.println("downloading " + remoteURL + " to: " + localFile);
+		FileOutputStream out = new FileOutputStream(localFile);
 
-		 File f = new File(fileName);
+		InputStream in = remoteURL.openStream();
+		byte[] buf = new byte[4 * 1024]; // 4K buffer
+		int bytesRead;
+		while ((bytesRead = in.read(buf)) != -1) {
+			out.write(buf, 0, bytesRead);
+		}
+		in.close();
+		out.close();
 
-		 return f.exists();
-	 }
 
-	 private boolean hieFileAvailable(){
-		 String fileName = getHieFilename();
+	}
 
-		 File f = new File(fileName);
+	private boolean claFileAvailable(){
+		String fileName = getClaFilename();
 
-		 return f.exists();
-	 }
+		File f = new File(fileName);
 
-	 private String getClaFilename(){
-		 String f = cacheLocation + claFileName + scopVersion;
-		 return f;
-	 }
+		return f.exists();
+	}
 
-	 private String getDesFilename(){
-		 String f = cacheLocation + desFileName + scopVersion;
-		 return f;
+	private boolean desFileAvailable(){
+		String fileName = getDesFilename();
 
-	 }
+		File f = new File(fileName);
 
-	 private String getHieFilename(){
-		 String f = cacheLocation + hieFileName + scopVersion;
-		 return f;
+		return f.exists();
+	}
 
-	 }
+	private boolean hieFileAvailable(){
+		String fileName = getHieFilename();
 
-	 public String getCacheLocation() {
-		 return cacheLocation;
-	 }
+		File f = new File(fileName);
 
-	 public void setCacheLocation(String cacheLocation) {
+		return f.exists();
+	}
 
-		 if (! cacheLocation.endsWith(FILESPLIT))
-			 cacheLocation += FILESPLIT;
-		 this.cacheLocation = cacheLocation;
+	private String getClaFilename(){
+		String f = cacheLocation + claFileName + scopVersion;
+		return f;
+	}
 
+	private String getDesFilename(){
+		String f = cacheLocation + desFileName + scopVersion;
+		return f;
 
-	 }
-	 /* (non-Javadoc)
-	  * @see org.biojava.bio.structure.scop.ScopDatabase#getScopVersion()
-	  */
-	 public String getScopVersion() {
-		 return scopVersion;
-	 }
-	 public void setScopVersion(String scopVersion) {
-		 this.scopVersion = scopVersion;
-	 }
+	}
 
-	 /* (non-Javadoc)
-	  * @see org.biojava.bio.structure.scop.ScopDatabase#getScopDomainsBySunid(java.lang.Integer)
-	  */
-	 public List<ScopDomain> getScopDomainsBySunid(Integer sunid)
-	 {
+	private String getHieFilename(){
+		String f = cacheLocation + hieFileName + scopVersion;
+		return f;
 
-		 ensureClaInstalled();
+	}
 
-		 List<ScopDomain> domains = new ArrayList<ScopDomain>();
+	public String getCacheLocation() {
+		return cacheLocation;
+	}
 
-		 for (String pdbId: domainMap.keySet()){
-			 for (ScopDomain d : domainMap.get(pdbId)){
-				 if ( d.getPx() == sunid) {
-					 domains.add(d);
-					 continue;
-				 } else if ( d.getSpeciesId() == sunid ){
-					 domains.add(d);
-					 continue;
-				 }else if ( d.getDomainId() == sunid ){
-					 domains.add(d);
-					 continue;
-				 }else if ( d.getFamilyId() == sunid ){
-					 domains.add(d);
-					 continue;
-				 }else if ( d.getSuperfamilyId() == sunid ){
-					 domains.add(d);
-					 continue;
-				 }else if ( d.getFoldId() == sunid ){
-					 domains.add(d);
-					 continue;
-				 }else if ( d.getClassId() == sunid ){
-					 domains.add(d);
-					 continue;
-				 }
-			 }
-		 }
-		 return domains;
+	public void setCacheLocation(String cacheLocation) {
 
-	 }
+		if (! cacheLocation.endsWith(FILESPLIT))
+			cacheLocation += FILESPLIT;
+		this.cacheLocation = cacheLocation;
+
+
+	}
+	/* (non-Javadoc)
+	 * @see org.biojava.bio.structure.scop.ScopDatabase#getScopVersion()
+	 */
+	public String getScopVersion() {
+		return scopVersion;
+	}
+	public void setScopVersion(String scopVersion) {
+		this.scopVersion = scopVersion;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.biojava.bio.structure.scop.ScopDatabase#getScopDomainsBySunid(java.lang.Integer)
+	 */
+	public List<ScopDomain> getScopDomainsBySunid(Integer sunid)
+	{
+
+		ensureClaInstalled();
+
+		List<ScopDomain> domains = new ArrayList<ScopDomain>();
+
+		for (String pdbId: domainMap.keySet()){
+			for (ScopDomain d : domainMap.get(pdbId)){
+				try {
+					if ( d.getPx() == sunid) {
+						domains.add((ScopDomain)d.clone());
+						continue;
+					} else if ( d.getSpeciesId() == sunid ){
+						domains.add((ScopDomain)d.clone());
+						continue;
+					}else if ( d.getDomainId() == sunid ){
+						domains.add((ScopDomain)d.clone());
+						continue;
+					}else if ( d.getFamilyId() == sunid ){
+						domains.add((ScopDomain)d.clone());
+						continue;
+					}else if ( d.getSuperfamilyId() == sunid ){
+						domains.add((ScopDomain)d.clone());
+						continue;
+					}else if ( d.getFoldId() == sunid ){
+						domains.add((ScopDomain)d.clone());
+						continue;
+					}else if ( d.getClassId() == sunid ){
+						domains.add((ScopDomain)d.clone());
+						continue;
+					}
+				} catch (CloneNotSupportedException e){
+					e.printStackTrace();
+				}
+			}
+		}
+		return domains;
+
+	}
 
 
 
