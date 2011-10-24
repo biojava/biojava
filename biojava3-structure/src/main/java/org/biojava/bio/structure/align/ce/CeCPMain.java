@@ -57,7 +57,7 @@ public class CeCPMain extends CeMain {
 	public static final String algorithmName = "jCE Circular Permutation";
 
 	public static final String version = "1.0";
-	
+
 
 	public CeCPMain(){
 		super();
@@ -86,11 +86,11 @@ public class CeCPMain extends CeMain {
 			name1 = "d1qdmA1";
 			//name1 = "1QDM.A";
 			name2 = "d1nklA_";
-			
+
 			CeCPMain ce = (CeCPMain) StructureAlignmentFactory.getAlgorithm(CeCPMain.algorithmName);
 			CeParameters params = (CeParameters) ce.getParameters();
 			ce.setParameters(params);
-			
+
 			AtomCache cache = new AtomCache();
 
 			Atom[] ca1 = cache.getAtoms(name1);
@@ -99,18 +99,18 @@ public class CeCPMain extends CeMain {
 
 			if(debug) {
 				System.out.format("Aligning %s to %s\n",
-					ca1[0].getGroup().getChain().getParent().getName(),
-					ca2[0].getGroup().getChain().getParent().getName() );
+						ca1[0].getGroup().getChain().getParent().getName(),
+						ca2[0].getGroup().getChain().getParent().getName() );
 			}
 			AFPChain afpChain = ce.align(ca1, ca2);
 			if(debug) {
 				System.out.format("Finished aligning %s to %s\n", afpChain.getName1(),afpChain.getName2());
 				System.out.format("Heuristic Score: %.2f\n", afpChain.getAlignScore());
 			}
-			
+
 			int cp = afpChain.getOptAln()[0][1][0];
 			System.out.println("CP at "+cp);
-			
+
 			displayAlignment(afpChain,ca1,ca2);
 
 		} catch (Exception e) {
@@ -118,7 +118,7 @@ public class CeCPMain extends CeMain {
 		}
 	}
 
-	
+
 
 
 	/**
@@ -136,7 +136,7 @@ public class CeCPMain extends CeMain {
 		long startTime = System.currentTimeMillis();
 
 		Atom[] ca2m = StructureTools.duplicateCA2(ca2);
-		
+
 		if(debug) {
 			System.out.format("Duplicating ca2 took %s ms\n",System.currentTimeMillis()-startTime);
 			startTime = System.currentTimeMillis();
@@ -144,12 +144,12 @@ public class CeCPMain extends CeMain {
 
 		// Do alignment
 		AFPChain afpChain = super.align(ca1, ca2m,params);
-		
+
 		// since the process of creating ca2m strips the name info away, set it explicitely
 		try {
 			afpChain.setName2(ca2[0].getGroup().getChain().getParent().getName());
 		} catch( Exception e) {}
-		
+
 		if(debug) {
 			System.out.format("Running %dx2*%d alignment took %s ms\n",ca1.length,ca2.length,System.currentTimeMillis()-startTime);
 			startTime = System.currentTimeMillis();
@@ -173,19 +173,26 @@ public class CeCPMain extends CeMain {
 	 * @throws StructureException
 	 */
 	public static AFPChain postProcessAlignment(AFPChain afpChain, Atom[] ca1, Atom[] ca2m,CECalculator calculator ) throws StructureException{
+
 		// remove bottom half of the matrix
 		Matrix doubledMatrix = afpChain.getDistanceMatrix();
-		assert(doubledMatrix.getRowDimension() == ca1.length);
-		assert(doubledMatrix.getColumnDimension() == ca2m.length);
 
-		Matrix singleMatrix = doubledMatrix.getMatrix(0, ca1.length-1, 0, (ca2m.length/2)-1);
-		assert(singleMatrix.getRowDimension() == ca1.length);
-		assert(singleMatrix.getColumnDimension() == (ca2m.length/2));
+		// the matrix can be null if the alignment is too short.
+		if ( doubledMatrix != null ) { 
+			assert(doubledMatrix.getRowDimension() == ca1.length);
+			assert(doubledMatrix.getColumnDimension() == ca2m.length);
 
-		afpChain.setDistanceMatrix(singleMatrix);
+			Matrix singleMatrix = doubledMatrix.getMatrix(0, ca1.length-1, 0, (ca2m.length/2)-1);
+			assert(singleMatrix.getRowDimension() == ca1.length);
+			assert(singleMatrix.getColumnDimension() == (ca2m.length/2));
 
+			afpChain.setDistanceMatrix(singleMatrix);
+		}
 		// Check for circular permutations
-		afpChain = filterDuplicateAFPs(afpChain,calculator,ca1,ca2m);
+		int alignLen = afpChain.getOptLength();
+		if ( alignLen > 0) {
+			afpChain = filterDuplicateAFPs(afpChain,calculator,ca1,ca2m);
+		}
 		return afpChain;
 	}
 
@@ -212,15 +219,16 @@ public class CeCPMain extends CeMain {
 		newAFPChain.setName1(afpChain.getName1());
 		newAFPChain.setName2(afpChain.getName2());
 		newAFPChain.setTMScore(afpChain.getTMScore());
-		
+
 		int ca2len = afpChain.getCa2Length()/2;
 		newAFPChain.setCa1Length(afpChain.getCa1Length());
 		newAFPChain.setCa2Length(ca2len);
-		
+
 		// Fix optimal alignment		
 		int[][][] align = afpChain.getOptAln();
 		int alignLen = afpChain.getOptLength();
 		assert(afpChain.getBlockNum() == 1); // Assume that CE returns just one block
+
 
 		// Determine the region where ca2 and ca2' overlap
 		int nStart = align[0][1][0]; //alignment N-terminal
@@ -289,7 +297,7 @@ public class CeCPMain extends CeMain {
 				}
 				//TODO Now have CP site, and could do a nxm alignment for further optimization.
 				// For now, does not appear to be worth the 50% increase in time
-				
+
 				//TODO Bug: scores need to be recalculated
 			}
 		}
@@ -421,7 +429,7 @@ public class CeCPMain extends CeMain {
 			this.b=b;
 		}
 	}
-	
+
 	// try showing a GUI
 	// requires additional dependencies biojava3-structure-gui and JmolApplet
 	private static void displayAlignment(AFPChain afpChain, Atom[] ca1, Atom[] ca2) throws ClassNotFoundException, NoSuchMethodException, InvocationTargetException, IllegalAccessException, StructureException {
