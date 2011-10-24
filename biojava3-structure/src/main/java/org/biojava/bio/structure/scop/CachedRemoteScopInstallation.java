@@ -145,6 +145,7 @@ public class CachedRemoteScopInstallation extends SerializableCache<String,ScopD
 	public void flushCache() {
 		System.out.println("flushing CachedRemoteScopInstallation");
 		super.flushCache();
+		scopDescriptionCache.flushCache();
 	}
 
 	
