@@ -24,32 +24,32 @@ public class SerializableCache <K,V>{
 
 	protected String cacheFileName;
 	protected Map<K,V> serializedCache ;
-	
+
 	boolean debug = false;
-	
+
 	/** set cacheFileName to null to disable caching
 	 * 
 	 * @param cacheFileName
 	 */
 	public SerializableCache(String cacheFileName ) {
 		this.cacheFileName = cacheFileName;
-		
+
 		if ( cacheFileName != null) {
 			reloadFromFile();
 		}
-		
+
 	}
-	
+
 	public boolean isCacheEnabled(){
 		return ( serializedCache != null ); 
 	}
-	
+
 	public void cache(K name, V data) {
 		if ( serializedCache != null){
-			
+
 			if ( debug )
 				System.out.println("Caching " + name + "  " + data);
-			
+
 			serializedCache.put(name,data);
 
 
@@ -64,25 +64,25 @@ public class SerializableCache <K,V>{
 
 
 	}
-	
+
 	public V get(K name) {
 		if ( serializedCache == null)
 			return null;
 		return (serializedCache.get(name));
 	}
-	
+
 	public void disableCache(){
 		//flushCache();
 		serializedCache = null;
 	}
-	
+
 	public void enableCache(){
 		reloadFromFile();
 	}
-	
-	
-	
-	
+
+
+
+
 	public Map<K,V> reloadFromFile() {
 
 		File f = getCacheFile();
@@ -90,8 +90,10 @@ public class SerializableCache <K,V>{
 		serializedCache = new HashMap<K,V>();
 
 		// has never been cached here before
-		if( ! f.exists())
+		if( ! f.exists()) {
+			System.out.println("creating new cache " + f.getAbsolutePath());
 			return serializedCache;
+		}
 
 		try{
 			if  ( debug )
@@ -104,22 +106,22 @@ public class SerializableCache <K,V>{
 			e.printStackTrace();
 			return null;
 		}
-		
+
 		//if ( debug )
-			System.out.println("reloaded from cache: " + f.getName()+ " size: " + serializedCache.keySet().size() + " cached records.");
+		System.out.println("reloaded from cache: " + f.getName()+ " size: " + serializedCache.keySet().size() + " cached records.");
 		return serializedCache;
 	}
-	
+
 	private File getCacheFile() {
 		AtomCache cache =new AtomCache();
 		String path = cache.getPath();
 		File f = new File(path + System.getProperty("file.separator") + cacheFileName);
-		
+
 		if (debug)
 			System.out.println(f.getAbsolutePath());
 		return f;
 	}
-	
+
 	public void flushCache(){
 		if ( serializedCache == null)
 			return;
@@ -136,4 +138,14 @@ public class SerializableCache <K,V>{
 			}
 		}
 	}
+
+	public boolean isDebug() {
+		return debug;
+	}
+
+	public void setDebug(boolean debug) {
+		this.debug = debug;
+	}
+	
+	
 }
