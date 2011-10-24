@@ -1078,6 +1078,8 @@ public class AfpChainWriter
 		str.append("\t");
 		str.append(String.format("%.2f",afpChain.getIdentity()));
 		str.append("\t");
+		str.append(afpChain.getDescription2());
+		str.append("\t");
 		str.append(newline);
 
 		return str.toString();
