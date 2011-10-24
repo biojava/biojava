@@ -29,6 +29,7 @@ import org.biojava.bio.structure.align.util.AtomCache;
 import org.biojava.bio.structure.align.util.ResourceManager;
 import org.biojava.bio.structure.align.xml.AFPChainXMLConverter;
 import org.biojava.bio.structure.align.xml.PdbPairsMessage;
+import org.biojava.bio.structure.io.FileParsingParameters;
 import org.biojava3.core.util.FlatFileCache;
 import org.biojava3.core.util.PrettyXMLWriter;
 
@@ -85,7 +86,11 @@ public class FarmJobRunnable implements Runnable {
 
 		// multiple farm jobs share the same SoftHashMap for caching coordinates
 		cache = new AtomCache( params.getPdbFilePath(), params.isPdbDirSplit());
-
+		
+		// enforce to replace remediated files with new versions...
+		FileParsingParameters fparams = cache.getFileParsingParams();
+		fparams.setUpdateRemediatedFiles(true);
+		
 		maxNrAlignments = params.getNrAlignments();
 		progressListeners = null;
 		if (params.getUsername() == null) {
@@ -228,6 +233,7 @@ public class FarmJobRunnable implements Runnable {
 
 				} catch (Exception e){
 					//if (e.getMessage() == null)
+					System.err.println("Problem aligning " + name1 + " " + name2);
 					e.printStackTrace();
 					// log that an exception has occurred and send it back to server!1
 					log("Error: " + e.getMessage() + " while aligning " + name1 + " vs. " + name2);
@@ -292,6 +298,9 @@ public class FarmJobRunnable implements Runnable {
 
 		// clean up in the end...
 		clearListeners();
+		
+		cache.notifyShutdown();
+		
 	}
 
 
@@ -364,7 +373,7 @@ public class FarmJobRunnable implements Runnable {
 		Atom[] ca2 =  cache.getAtoms(name2);
 
 		//		if ( FatCatAligner.printTimeStamps){
-		long endTime = System.currentTimeMillis();
+		
 
 
 		//			System.out.println("time to get " + name1 + " " + name2 + " : " + (endTime-startTime) / 1000.0 + " sec.");
@@ -383,9 +392,13 @@ public class FarmJobRunnable implements Runnable {
 			System.out.println("ca1 size:" + ca1.length + " ca2 length: " + ca2.length + " " + afpChain.getName1() + " " + afpChain.getName2());
 			
 		}
+		long endTime = System.currentTimeMillis();
+		
+		long calcTime = (endTime-startTime);
 		if ( verbose ){
-			log("  finished alignment: " + name1 + " vs. " + name2 + " in " + (endTime-startTime) / 1000.0 + " sec." + afpChain );
+			log("  finished alignment: " + name1 + " vs. " + name2 + " in " + (calcTime) / 1000.0 + " sec." + afpChain );
 		}
+		afpChain.setCalculationTime(calcTime);
 
 		String xml = AFPChainXMLConverter.toXML(afpChain, ca1, ca2);
 		return xml;
@@ -556,7 +569,7 @@ public class FarmJobRunnable implements Runnable {
 	 * 
 	 */
 	public synchronized void terminate(){
-		terminated = true;
+		terminated = true;	
 	}
 
 	public boolean isWaitForAlignments() {

@@ -46,6 +46,7 @@ public class FarmJobParameters {
 		
 		stepSize = 	DEFAULT_BATCH_SIZE;
 		
+		username = FarmJobRunnable.getRandomUsername();
 		if ( nrPairsProp != null){
 			try {
 				stepSize = Integer.parseInt(nrPairsProp);
