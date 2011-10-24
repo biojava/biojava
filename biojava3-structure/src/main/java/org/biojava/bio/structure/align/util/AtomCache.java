@@ -45,6 +45,7 @@ import org.biojava.bio.structure.align.ce.AbstractUserArgumentProcessor;
 import org.biojava.bio.structure.domain.RemotePDPProvider;
 import org.biojava.bio.structure.io.FileParsingParameters;
 import org.biojava.bio.structure.io.PDBFileReader;
+import org.biojava.bio.structure.scop.CachedRemoteScopInstallation;
 import org.biojava.bio.structure.scop.ScopDatabase;
 import org.biojava.bio.structure.scop.ScopDescription;
 import org.biojava.bio.structure.scop.ScopDomain;
@@ -77,7 +78,10 @@ public class AtomCache {
 	// make sure IDs are loaded uniquely
 	Collection<String> currentlyLoading = Collections.synchronizedCollection(new TreeSet<String>());
 
-	private static ScopDatabase scopInstallation ;
+	private  ScopDatabase scopInstallation ;
+	
+	RemotePDPProvider pdpprovider;
+	
 	boolean autoFetch;
 	boolean isSplit;
 	boolean strictSCOP;
@@ -602,7 +606,8 @@ public class AtomCache {
 	private Structure getPDPStructure(String pdpDomainName) {
 
 		//System.out.println("loading PDP domain from server " + pdpDomainName);
-		RemotePDPProvider pdpprovider = new RemotePDPProvider();
+		 if (pdpprovider == null)
+			 pdpprovider = new RemotePDPProvider(true);
 
 		return pdpprovider.getDomain(pdpDomainName,this);
 
@@ -854,6 +859,26 @@ public class AtomCache {
 	}
 
 
+	
+	/** Send a signal to the cache that the system is shutting down.
+	 * Notifies underlying SerializableCache instances to flush themselves...
+	 */
+	public void notifyShutdown(){
+		//System.out.println(" AtomCache got notify shutdown..");
+		if ( pdpprovider != null ){
+			pdpprovider.flushCache();
+		}
+		
+		
+		// todo: use a SCOP implementation that is backed by SerializableCache 
+		if ( scopInstallation != null ){
+			if ( scopInstallation instanceof CachedRemoteScopInstallation ){
+				CachedRemoteScopInstallation cacheScop = (CachedRemoteScopInstallation) scopInstallation;			
+				cacheScop.flushCache();
+			} 
+		} 
+		
+	}
 
 
 
