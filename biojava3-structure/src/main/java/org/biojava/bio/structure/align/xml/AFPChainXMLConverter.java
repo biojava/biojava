@@ -239,8 +239,12 @@ public class AFPChainXMLConverter {
 		xml.attribute("ca2Length", afpChain.getCa2Length()+"");
 		xml.attribute("afpNum",afpChain.getAfpSet().size()+"");
 		xml.attribute("alignScoreUpdate",String.format("%5.2f",afpChain.getAlignScoreUpdate()).trim());
+		xml.attribute("time", String.format("%d",afpChain.getCalculationTime()));
 		if ( afpChain.getTMScore() != -1){
 			xml.attribute("tmScore", String.format("%.2f",afpChain.getTMScore()));
 		}
+		
+		// if alignment is CP:
+		//xml.attribute("cp","true");
 	}
 }
