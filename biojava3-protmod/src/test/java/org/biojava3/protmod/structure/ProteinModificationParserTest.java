@@ -1,12 +1,12 @@
 /*
- *                    BioJava development code
+ *			BioJava development code
  *
  * This code may be freely distributed and modified under the
  * terms of the GNU Lesser General Public Licence.  This should
  * be distributed with the code.  If you do not have a copy,
  * see:
  *
- *      http://www.gnu.org/copyleft/lesser.html
+ *	  http://www.gnu.org/copyleft/lesser.html
  *
  * Copyright for this code is held jointly by the individual
  * authors.  These should be listed in @author doc comments.
@@ -15,7 +15,7 @@
  * or to join the biojava-l mailing list, visit the home page
  * at:
  *
- *      http://www.biojava.org/
+ *	  http://www.biojava.org/
  *
  * Created on Jun 8, 2010
  * Author: Jianjiong Gao 
@@ -26,12 +26,16 @@ package org.biojava3.protmod.structure;
 
 import java.io.IOException;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 import junit.framework.TestCase;
 
+import org.biojava.bio.structure.ResidueNumber;
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureException;
+import org.biojava.bio.structure.io.PDBFileReader;
 
 import org.biojava3.protmod.ProteinModification;
 import org.biojava3.protmod.ProteinModificationRegistry;
@@ -370,5 +374,53 @@ public class ProteinModificationParserTest extends TestCase {
 		}
 		
 		System.out.println(sb.toString());
+	}
+	
+	
+	/**
+	 * Note: if you change this unit test, also change the cook book:
+	 * http://www.biojava.org/wiki/BioJava:CookBook3:ProtMod
+	 */
+	public void testCookBookTestCases() throws StructureException, IOException {
+		// identify all modificaitons from PDB:1CAD and print them
+		String pdbId = "1CAD";
+		Structure struc = TmpAtomCache.cache.getStructure(pdbId);
+		Set<ModifiedCompound> mcs = identifyAllModfications(struc);
+		assertFalse(mcs.isEmpty());
+ 
+		// identify all phosphosites from PDB:3MVJ and print them
+		pdbId = "3MVJ";
+		struc = TmpAtomCache.cache.getStructure(pdbId);
+		List<ResidueNumber> psites = identifyPhosphosites(struc);
+		assertFalse(psites.isEmpty());
+	}
+	
+	/**
+	 * Note: if you change this unit test, also change the cook book:
+	 * http://www.biojava.org/wiki/BioJava:CookBook3:ProtMod
+	 */
+	private Set<ModifiedCompound> identifyAllModfications(Structure struc) {
+		ProteinModificationIdentifier parser = new ProteinModificationIdentifier();
+		parser.identify(struc);
+		Set<ModifiedCompound> mcs = parser.getIdentifiedModifiedCompound();
+		return mcs;
+	}
+
+	/**
+	 * Note: if you change this unit test, also change the cook book:
+	 * http://www.biojava.org/wiki/BioJava:CookBook3:ProtMod
+	 */
+	private List<ResidueNumber> identifyPhosphosites(Structure struc) {
+		List<ResidueNumber> phosphosites = new ArrayList<ResidueNumber>();
+		ProteinModificationIdentifier parser = new ProteinModificationIdentifier();
+		parser.identify(struc, ProteinModificationRegistry.getByKeyword("phosphoprotein"));
+		Set<ModifiedCompound> mcs = parser.getIdentifiedModifiedCompound();
+		for (ModifiedCompound mc : mcs) {
+			Set<StructureGroup> groups = mc.getGroups(true);
+			for (StructureGroup group : groups) {
+				phosphosites.add(group.getPDBResidueNumber());
+			}
+		}
+		return phosphosites;
 	}
 }
