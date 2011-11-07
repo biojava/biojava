@@ -103,8 +103,8 @@ public class CachedRemoteScopInstallation extends SerializableCache<String,ScopD
 		
 		
 		desc =  proxy.getScopDescriptionBySunid(sunid);
-		
-		scopDescriptionCache.cache(sunid,desc);
+		if ( desc != null)
+			scopDescriptionCache.cache(sunid,desc);
 		return desc;
 	}
 
@@ -116,17 +116,21 @@ public class CachedRemoteScopInstallation extends SerializableCache<String,ScopD
 
 	
 	public ScopDomain getDomainByScopID(String scopId) {
+		ScopDomain dom;
 		
 		if ( serializedCache != null){			
 			if ( serializedCache.containsKey(scopId)) {
-				return serializedCache.get(scopId);
+				dom = serializedCache.get(scopId);
+				if ( dom != null) {
+					return dom;
+				}
 			}			
 		}
 		
-		ScopDomain dom = proxy.getDomainByScopID(scopId);
+		 dom = proxy.getDomainByScopID(scopId);
 		
-		
-		cache(scopId, dom);
+		if ( dom != null)
+			cache(scopId, dom);
 		
 		
 		return dom;
