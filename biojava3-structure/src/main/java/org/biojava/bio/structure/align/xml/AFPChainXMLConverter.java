@@ -7,6 +7,7 @@ import java.io.StringWriter;
 import org.biojava.bio.structure.Atom;
 import org.biojava.bio.structure.StructureException;
 import org.biojava.bio.structure.align.model.AFPChain;
+import org.biojava.bio.structure.align.util.AlignmentTools;
 import org.biojava.bio.structure.jama.Matrix;
 import org.biojava3.core.util.PrettyXMLWriter;
 
@@ -244,7 +245,9 @@ public class AFPChainXMLConverter {
 			xml.attribute("tmScore", String.format("%.2f",afpChain.getTMScore()));
 		}
 		
-		// if alignment is CP:
-		//xml.attribute("cp","true");
+		// test if alignment is CP:
+		if ( ! AlignmentTools.isSequentialAlignment(afpChain,false)) {
+			xml.attribute("cp","true");
+		}
 	}
 }
