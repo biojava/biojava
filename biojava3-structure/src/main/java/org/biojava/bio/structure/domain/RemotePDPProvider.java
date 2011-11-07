@@ -119,7 +119,8 @@ public class RemotePDPProvider extends SerializableCache<String,SortedSet<String
 				String xml = JFatCatClient.convertStreamToString(response);
 				//System.out.println(xml);
 				domainRanges = XMLUtil.getDomainRangesFromXML(xml);
-				cache(pdbDomainName,domainRanges);
+				if ( domainRanges != null)
+					cache(pdbDomainName,domainRanges);
 			}
 			
 
