@@ -24,13 +24,13 @@
  */
 package org.biojava.bio.structure.scop;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.List;
 
 import org.biojava.bio.structure.align.client.JFatCatClient;
 import org.biojava.bio.structure.align.util.HTTPConnectionTools;
-import org.biojava.bio.structure.domain.SerializableCache;
 import org.biojava.bio.structure.scop.server.ScopDescriptions;
 import org.biojava.bio.structure.scop.server.ScopDomains;
 import org.biojava.bio.structure.scop.server.ScopNodes;
@@ -49,14 +49,13 @@ public class RemoteScopInstallation implements ScopDatabase {
 	String server = DEFAULT_SERVER;
 
 
-	
 	public static void main(String[] args){
 
 		ScopDatabase scop = new RemoteScopInstallation();
 		ScopFactory.setScopDatabase(scop);
 
 		//System.out.println(scop.getByCategory(ScopCategory.Superfamily));
-		
+
 		System.out.println(scop.getDomainsForPDB("4HHB"));
 	}
 
@@ -156,12 +155,12 @@ public class RemoteScopInstallation implements ScopDatabase {
 
 	@Override
 	public ScopDescription getScopDescriptionBySunid(int sunid) {
-				
+
 		ScopDescription desc = null;
-		
-		
+
+
 		try {
-		
+
 			URL u = new URL(server + "getScopDescriptionBySunid?sunid="+sunid);
 			System.out.println(u);
 			InputStream response = HTTPConnectionTools.getInputStream(u);
@@ -169,7 +168,7 @@ public class RemoteScopInstallation implements ScopDatabase {
 
 			desc = XMLUtil.getScopDescriptionFromXML(xml);
 
-			
+
 		} catch (Exception e){
 			e.printStackTrace();
 		}
@@ -193,19 +192,38 @@ public class RemoteScopInstallation implements ScopDatabase {
 		return results;
 	}
 
+	private ScopDomain requestRemoteDomainByScopID(String scopId) 
+	throws IOException{
+		URL u = new URL(server + "getDomainByScopID?scopId="+scopId);
+		System.out.println(u);
+		InputStream response = HTTPConnectionTools.getInputStream(u);
+		String xml = JFatCatClient.convertStreamToString(response);
+
+		return XMLUtil.getScopDomainFromXML(xml);
+
+	}
+
 	@Override
 	public ScopDomain getDomainByScopID(String scopId) {
 		ScopDomain desc = null;
-		try {
-			URL u = new URL(server + "getDomainByScopID?scopId="+scopId);
-			System.out.println(u);
-			InputStream response = HTTPConnectionTools.getInputStream(u);
-			String xml = JFatCatClient.convertStreamToString(response);
-
-			desc = XMLUtil.getScopDomainFromXML(xml);
-
-		} catch (Exception e){
-			e.printStackTrace();
+		int i = 0;
+		while ( desc == null && i < 3){
+			i++;
+			try {
+				desc = requestRemoteDomainByScopID(scopId);
+				i = 100;
+				break;
+			} catch (Exception e){
+				e.printStackTrace();
+				// sleep 3 seconds and try again
+				try {
+					Thread.sleep(3000);
+				} catch (InterruptedException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
+		
 		}
 		return desc;
 	}
