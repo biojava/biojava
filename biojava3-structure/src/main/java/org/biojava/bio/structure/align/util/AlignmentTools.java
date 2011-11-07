@@ -41,6 +41,7 @@ public class AlignmentTools {
 		int blocks = afpChain.getBlockNum();
 		
 		if(blocks < 1) return true; //trivial case
+		if ( alnLen[0] < 1) return true;
 		
 		// Check that blocks are sequential
 		if(checkWithinBlocks) {
