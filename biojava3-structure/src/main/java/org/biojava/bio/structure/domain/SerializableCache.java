@@ -44,7 +44,18 @@ public class SerializableCache <K,V>{
 		return ( serializedCache != null ); 
 	}
 
+	/** This will not cache null values.
+	 *  Null means not cached yet.
+	 *  If you want to cache "no data exists" use e.g. empty collections to represent this.
+	 *  
+	 * @param name
+	 * @param data
+	 */
 	public void cache(K name, V data) {
+		
+		if ( data == null){
+			return;
+		}
 		if ( serializedCache != null){
 
 			if ( debug )
