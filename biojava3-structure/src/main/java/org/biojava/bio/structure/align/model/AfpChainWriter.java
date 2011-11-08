@@ -111,16 +111,28 @@ public class AfpChainWriter
 		return writer.toString();
 	}
 
+	/**
+	 * Output in FatCatCore format
+	 * 
+	 * <p>Note that if a circular permutation has occured the residue numbers may
+	 * be innaccurate.
+	 * 
+	 * @param afpChain
+	 * @param ca1
+	 * @param ca2
+	 * @param printLegend
+	 * @param longHeader
+	 * @param showHTML
+	 * @param showAlignmentBlock
+	 * @return
+	 */
 	public static String toFatCatCore(
 			AFPChain afpChain, 
 			Atom[] ca1, 
 			Atom[] ca2, 
 			boolean printLegend, boolean longHeader, boolean showHTML, boolean showAlignmentBlock){
 
-		if(!afpChain.isSequentialAlignment()) {
-			//TODO find some topology-independent output format
-			return "Can't display circular permutations";
-		}
+		//TODO The sequence numbers are inaccurate if a !afpChain.isSequential()
 
 		String name1 = afpChain.getName1();
 		String name2 = afpChain.getName2();
