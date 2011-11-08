@@ -6,8 +6,8 @@
     <groupId>org.biojava</groupId>
     <version>3.0.3-SNAPSHOT</version>
   </parent>
-  <artifactId>biojava3-protmod</artifactId>  
-  <name>biojava3-protmod</name>
+  <artifactId>biojava3-modfinder</artifactId>  
+  <name>biojava3-modfinder</name>
    <distributionManagement>
 		<downloadUrl>http://www.biojava.org/download/maven/</downloadUrl>
 		<repository>
