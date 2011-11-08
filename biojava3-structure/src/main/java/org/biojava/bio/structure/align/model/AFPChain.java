@@ -1379,17 +1379,12 @@ public class AFPChain implements Serializable, Cloneable
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result
-				+ ((algorithmName == null) ? 0 : algorithmName.hashCode());
 		result = prime * result + blockNum;
 		result = prime * result + ca1Length;
 		result = prime * result + ca2Length;
-		result = prime * result + ((name1 == null) ? 0 : name1.hashCode());
-		result = prime * result + ((name2 == null) ? 0 : name2.hashCode());
 		result = prime * result + Arrays.hashCode(optAln);
 		result = prime * result + Arrays.hashCode(optLen);
 		result = prime * result + optLength;
-		result = prime * result + ((version == null) ? 0 : version.hashCode());
 		return result;
 	}
 
@@ -1410,37 +1405,17 @@ public class AFPChain implements Serializable, Cloneable
 		if (getClass() != obj.getClass())
 			return false;
 		AFPChain other = (AFPChain) obj;
-		if (algorithmName == null) {
-			if (other.algorithmName != null)
-				return false;
-		} else if (!algorithmName.equals(other.algorithmName))
-			return false;
 		if (blockNum != other.blockNum)
 			return false;
 		if (ca1Length != other.ca1Length)
 			return false;
 		if (ca2Length != other.ca2Length)
 			return false;
-		if (name1 == null) {
-			if (other.name1 != null)
-				return false;
-		} else if (!name1.equals(other.name1))
-			return false;
-		if (name2 == null) {
-			if (other.name2 != null)
-				return false;
-		} else if (!name2.equals(other.name2))
-			return false;
 		if (!Arrays.deepEquals(optAln, other.optAln))
 			return false;
 		if (!Arrays.equals(optLen, other.optLen))
 			return false;
 		if (optLength != other.optLength)
-			return false;
-		if (version == null) {
-			if (other.version != null)
-				return false;
-		} else if (!version.equals(other.version))
 			return false;
 		return true;
 	}

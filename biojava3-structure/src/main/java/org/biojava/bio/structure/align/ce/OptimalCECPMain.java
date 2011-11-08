@@ -54,7 +54,7 @@ import org.biojava.bio.structure.jama.Matrix;
  *
  */
 public class OptimalCECPMain extends CeMain {
-	private static boolean debug = false;
+	private static boolean debug = true;
 
 
 	public static final String algorithmName = "jCE Optimal Circular Permutation";
@@ -189,7 +189,7 @@ public class OptimalCECPMain extends CeMain {
 	public AFPChain alignPermuted(Atom[] ca1, Atom[] ca2, Object param, int cp) throws StructureException {
 		// initial permutation
 		permuteArray(ca2,cp);
-		
+				
 		// perform alignment
 		AFPChain afpChain = super.align(ca1, ca2, param);
 		
@@ -290,8 +290,6 @@ public class OptimalCECPMain extends CeMain {
 			mat.get(cpRows%mat.getRowDimension(), cpCols%mat.getColumnDimension()));
 		
 		
-		newMat.set(0, 0, -1);
-		newMat.set(10, 20, -1);
 		return newMat;
 	}
 
@@ -476,13 +474,17 @@ public class OptimalCECPMain extends CeMain {
 		if(alignments.length != ca2.length) {
 			throw new IllegalArgumentException("scores param should have same length as ca2");
 		}
-		// clone ca2 to prevent side effects from propegating
-		Atom[] ca2p = StructureTools.cloneCAArray(ca2);
 		
 		AFPChain unaligned = super.align(ca1, ca2, param);
 		AFPChain bestAlignment = unaligned;
 		
 		if(debug) {
+			// print progress bar header
+			System.out.print("|");
+			for(int cp=1;cp<ca2.length-1;cp++) {
+				System.out.print("=");
+			}
+			System.out.println("|");
 			System.out.print(".");
 		}
 
@@ -491,9 +493,13 @@ public class OptimalCECPMain extends CeMain {
 		}
 		
 		for(int cp=1;cp<ca2.length;cp++) {
+			// clone ca2 to prevent side effects from propegating
+			Atom[] ca2p = StructureTools.cloneCAArray(ca2);
+
 			//permute one each time. Alters ca2p as a side effect
-			AFPChain currentAlignment = alignPermuted(ca1,ca2p,param,1);
+			AFPChain currentAlignment = alignPermuted(ca1,ca2p,param,cp);
 			
+			// increment progress bar
 			if(debug) System.out.print(".");
 			
 			// fix up names, since cloning ca2 wipes it
@@ -531,24 +537,30 @@ public class OptimalCECPMain extends CeMain {
 		try {
 			String name1, name2;
 
-			int cp=0;
+			int[] cps= new int[] {};
 			
 			//Concanavalin
 			name1 = "2pel.A";
 			name2 = "3cna";
-			cp = 122;
+			cps = new int[] {122,0,3};
 
 			//small case
 			//name1 = "d1qdmA1";
 			//name1 = "1QDM.A";
 			//name2 = "d1nklA_";
-			//cp = 41;
+			/*cps = new int[] {
+					//41, // CECP optimum
+					19,59, // unpermuted local minima in TM-score
+					//39, // TM-score optimum
+					0,
+			};*/
 			
 			//1itb selfsymmetry
 			//name1 = "1ITB.A";
 			//name2 = "1ITB.A";
-			//cp = 92;
+			//cps = new int[] {92};
 			
+
 			OptimalCECPMain ce = (OptimalCECPMain) StructureAlignmentFactory.getAlgorithm(OptimalCECPMain.algorithmName);
 			CeParameters params = (CeParameters) ce.getParameters();
 			ce.setParameters(params);
@@ -559,20 +571,9 @@ public class OptimalCECPMain extends CeMain {
 			Atom[] ca2 = cache.getAtoms(name2);
 
 			AFPChain afpChain;
-			/*
-			// unpermuted alignment
-			afpChain = ce.alignPermuted(ca1, ca2, params, 0);
-
-			displayAlignment(afpChain, ca1, ca2);
-			*/
 			
-			// permuted alignment
-			// new copy of ca2, since alignPermuted has side effects
-			Atom[] ca2clone = cache.getAtoms(name2);
-			afpChain = ce.alignPermuted(ca1, ca2clone, params, cp);
 
-			displayAlignment(afpChain, ca1, ca2);
-
+			
 			// find optimal solution			
 			AFPChain[] alignments = new AFPChain[ca2.length];
 			afpChain = ce.alignOptimal(ca1, ca2, params, alignments);
@@ -591,15 +592,23 @@ public class OptimalCECPMain extends CeMain {
 				);
 			}	
 			
+			//displayAlignment(afpChain,ca1,ca2);
+			
+			// permuted alignment
+			for(int cp : cps) {
+				// new copy of ca2, since alignPermuted has side effects
+				//Atom[] ca2clone = cache.getAtoms(name2);
+				//afpChain = ce.alignPermuted(ca1, ca2clone, params, cp);
+				//displayAlignment(afpChain, ca1, ca2);
+				
+				displayAlignment(alignments[cp],ca1,ca2);
+			}
+			
+			// CECP alignment
+			CeCPMain cecp = new CeCPMain();
+			afpChain = cecp.align(ca1, ca2);
 			displayAlignment(afpChain,ca1,ca2);
 			
-			for(int cpPos=0;cpPos<alignments.length;cpPos++) {
-				AFPChain curr = alignments[cpPos];
-				if( (!curr.isSequentialAlignment()) || curr.getBlockNum() > 1) {
-					System.out.format("%d\t%s\t%d\n", cpPos,curr.isSequentialAlignment(),curr.getBlockNum());
-					
-				}
-			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
