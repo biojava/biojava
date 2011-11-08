@@ -52,7 +52,7 @@ import org.biojava.bio.structure.jama.Matrix;
  *
  */
 public class CeCPMain extends CeMain {
-	private static boolean debug = false;
+	private static boolean debug = true;
 
 	public static final String algorithmName = "jCE Circular Permutation";
 
@@ -87,6 +87,11 @@ public class CeCPMain extends CeMain {
 			//name1 = "1QDM.A";
 			name2 = "d1nklA_";
 
+			// CECP had some trouble with the cutsite here
+			name1 = "PDP:3B33Aa";
+			name2 = "PDP:2R78Aa";
+			
+			
 			CeCPMain ce = (CeCPMain) StructureAlignmentFactory.getAlgorithm(CeCPMain.algorithmName);
 			CeParameters params = (CeParameters) ce.getParameters();
 			ce.setParameters(params);
@@ -202,8 +207,11 @@ public class CeCPMain extends CeMain {
 	 * multiple AFPs. This method filters out duplicates and makes sure that
 	 * all AFPs are numbered relative to the original ca2.
 	 * 
-	 * The current version chooses a CP site such that the length of the
+	 * <p>The current version chooses a CP site such that the length of the
 	 * alignment is maximized.
+	 * 
+	 * <p>This method does <i>not</i> update scores to reflect the filtered alignment.
+	 * It <i>does</i> update the RMSD and superposition.
 	 * 
 	 * @param afpChain The alignment between ca1 and ca2-ca2. Blindly assumes 
 	 *  that ca2 has been duplicated.
@@ -212,29 +220,29 @@ public class CeCPMain extends CeMain {
 	 * @throws StructureException 
 	 */
 	public static AFPChain filterDuplicateAFPs(AFPChain afpChain, CECalculator ceCalc, Atom[] ca1, Atom[] ca2duplicated) throws StructureException {
+		final int minCPlength = 0;
+		
 		AFPChain newAFPChain = new AFPChain(afpChain);
-		//TODO redundant properties, set in the constructor
-		newAFPChain.setAlgorithmName(afpChain.getAlgorithmName());
-		newAFPChain.setVersion(afpChain.getVersion());
-		newAFPChain.setName1(afpChain.getName1());
-		newAFPChain.setName2(afpChain.getName2());
-		newAFPChain.setTMScore(afpChain.getTMScore());
 
 		int ca2len = afpChain.getCa2Length()/2;
-		newAFPChain.setCa1Length(afpChain.getCa1Length());
 		newAFPChain.setCa2Length(ca2len);
 
 		// Fix optimal alignment		
-		int[][][] align = afpChain.getOptAln();
+		int[][][] optAln = afpChain.getOptAln();
+		int[] optLen = afpChain.getOptLen();
 		int alignLen = afpChain.getOptLength();
+		
 		assert(afpChain.getBlockNum() == 1); // Assume that CE returns just one block
-
+		
 
 		// Determine the region where ca2 and ca2' overlap
-		int nStart = align[0][1][0]; //alignment N-terminal
-		int cEnd = align[0][1][alignLen-1]; // alignment C-terminal 
+		
+		// The bounds of the alignment wrt ca2-ca2'
+		int nStart = optAln[0][1][0]; //alignment N-terminal
+		int cEnd = optAln[0][1][alignLen-1]; // alignment C-terminal 
 		// overlap is between nStart and cEnd
 
+		
 		int firstRes = nStart; // start res number after trimming
 		int lastRes = nStart+ca2len;  // last res number after trimming
 		if(nStart >= ca2len || cEnd < ca2len) { // no circular permutation
@@ -243,6 +251,15 @@ public class CeCPMain extends CeMain {
 		} else {
 			// Rule: maximize the length of the alignment
 
+			// We require at least minCPlength residues in a block.
+			//TODO calculate these explicitely based on the alignment
+			
+			// The last valid n-term
+			int minCPnterm = ca2len - minCPlength-1; 
+			// The first valid c-term
+			int minCPcterm = ca2len + minCPlength;
+			
+			
 			int overlapLength = cEnd+1 - nStart - ca2len;
 			if(overlapLength <= 0) {
 				// no overlap!
@@ -259,7 +276,7 @@ public class CeCPMain extends CeMain {
 				int alignPos = 1; // index of the next aligned pair
 
 				for(int i=1;i<overlapLength;i++) {
-					if(align[0][1][alignPos] == nStart + i ) { // matches the aligned pair
+					if(optAln[0][1][alignPos] == nStart + i ) { // matches the aligned pair
 						// the n-term contains the ith overlapping residue
 						nTermResCount[i] = nTermResCount[i-1]+1;
 						alignPos++;
@@ -268,21 +285,33 @@ public class CeCPMain extends CeMain {
 						nTermResCount[i] = nTermResCount[i-1];
 					}
 				}
+				
+				
 
 				// Determine the position with the largest sum of lengths
-				int cTermResCount = 0;
+				int cTermResCount = 0; // # res at or to the right of i within overlap
 				alignPos = alignLen - 1;
 				int minResCount = overlapLength+1;
-				for(int i=0;i<overlapLength;i++) {
+				for(int i=0;i<overlapLength;i++) { // i starts at the c-term and increases to the left
+					// Calculate number of residues which will be removed by a cut i-residues from the end
+					int nCut,cCut;
+//					if(cEnd-i <= minCPcTerm) {
+						nCut = nTermResCount[overlapLength-1-i];
+//					} else {
+//						nCut = 0;
+//					}
+					cCut = cTermResCount;
 
-					if(nTermResCount[overlapLength-1-i] + cTermResCount <= minResCount ) {
+					// Look for the cut point which cuts off the minimum number of res
+					if(nCut + cCut <= minResCount ) { // '<=' biases towards keeping the n-term 
 						minResCount=nTermResCount[overlapLength-1-i] + cTermResCount;
 						firstRes = nStart+overlapLength - i;
 						lastRes = cEnd - i;
 						assert(lastRes == firstRes+ca2len-1);
 					}
 
-					if(align[0][1][alignPos] == cEnd - i) {
+					// Update cTermResCount if this position of the overlap was aligned
+					if(optAln[0][1][alignPos] == cEnd - i) {
 						cTermResCount++;
 						alignPos--;
 					}
@@ -292,10 +321,10 @@ public class CeCPMain extends CeMain {
 				alignLen -= minResCount;
 
 				if(debug) {
-					System.out.format("Found a CP at residue %d. Trimming %d residues (%d-%d,%d-%d).\n",
-							firstRes,minResCount,nStart,firstRes-1,firstRes+ca2len, cEnd);
+					System.out.format("Found a CP at residue %d. Trimming %d aligned residues from %d-%d of block 0 and %d-%d of block 1.\n",
+							firstRes,minResCount,nStart,firstRes-1,firstRes, cEnd-ca2len);
 				}
-				//TODO Now have CP site, and could do a nxm alignment for further optimization.
+				//TODO Now have CP site, and could do a NxM alignment for further optimization.
 				// For now, does not appear to be worth the 50% increase in time
 
 				//TODO Bug: scores need to be recalculated
@@ -309,13 +338,13 @@ public class CeCPMain extends CeMain {
 		List< ResiduePair > left = new ArrayList<ResiduePair>(); // residues from left of duplication
 		List< ResiduePair > right = new ArrayList<ResiduePair>(); // residues from right of duplication
 
-		for(int i=0;i<afpChain.getOptLength();i++) {
-			if( align[0][1][i] >= firstRes && align[0][1][i] <= lastRes ) { // not trimmed
-				if(align[0][1][i] < ca2len) { // in first half of ca2
-					left.add(new ResiduePair(align[0][0][i],align[0][1][i]));
+		for(int i=0;i<optLen[0];i++) {
+			if( optAln[0][1][i] >= firstRes && optAln[0][1][i] <= lastRes ) { // not trimmed
+				if(optAln[0][1][i] < ca2len) { // in first half of ca2
+					left.add(new ResiduePair(optAln[0][0][i],optAln[0][1][i]));
 				}
 				else {
-					right.add(new ResiduePair(align[0][0][i],align[0][1][i]-ca2len));
+					right.add(new ResiduePair(optAln[0][0][i],optAln[0][1][i]-ca2len));
 				}
 			}
 		}
@@ -427,6 +456,9 @@ public class CeCPMain extends CeMain {
 		public ResiduePair(int a, int b) {
 			this.a=a;
 			this.b=b;
+		}
+		public String toString() {
+			return a+":"+b;
 		}
 	}
 
