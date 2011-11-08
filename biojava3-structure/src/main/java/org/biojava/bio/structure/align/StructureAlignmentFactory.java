@@ -21,7 +21,7 @@ public class StructureAlignmentFactory {
 	static {
 		algorithms.add( new CeMain() );
 		algorithms.add( new CeCPMain() );
-		algorithms.add( new OptimalCECPMain() );
+		//algorithms.add( new OptimalCECPMain() );
 		//algorithms.add(new CeSideChainMain());
 
 		StructureAlignment fatcatRigid    = new FatCatRigid();
