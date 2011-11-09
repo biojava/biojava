@@ -56,7 +56,14 @@ public class CeCPMain extends CeMain {
 
 	public static final String algorithmName = "jCE Circular Permutation";
 
-	public static final String version = "1.0";
+	
+	/**
+	 *  version history:
+	 *  1.2 - now supports check AlignmentTools.isSequentialAlignment. XML protocol
+	 *  1.1 - skipped, (trying to avoid confusion with jfatcat in all vs. all comparisons) 
+	 *  1.0 - initial release
+	 */
+	public static final String version = "1.2";
 
 
 	public CeCPMain(){
