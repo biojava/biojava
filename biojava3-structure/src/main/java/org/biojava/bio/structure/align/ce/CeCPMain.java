@@ -27,6 +27,7 @@ package org.biojava.bio.structure.align.ce;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import org.biojava.bio.structure.Atom;
 import org.biojava.bio.structure.StructureException;
@@ -52,18 +53,19 @@ import org.biojava.bio.structure.jama.Matrix;
  *
  */
 public class CeCPMain extends CeMain {
-	private static boolean debug = true;
+	private static boolean debug = false;
 
 	public static final String algorithmName = "jCE Circular Permutation";
 
-	
+
 	/**
 	 *  version history:
+	 *  1.3 - Short CPs are now discarded
 	 *  1.2 - now supports check AlignmentTools.isSequentialAlignment. XML protocol
 	 *  1.1 - skipped, (trying to avoid confusion with jfatcat in all vs. all comparisons) 
 	 *  1.0 - initial release
 	 */
-	public static final String version = "1.2";
+	public static final String version = "1.3";
 
 
 	public CeCPMain(){
@@ -227,8 +229,9 @@ public class CeCPMain extends CeMain {
 	 * @throws StructureException 
 	 */
 	public static AFPChain filterDuplicateAFPs(AFPChain afpChain, CECalculator ceCalc, Atom[] ca1, Atom[] ca2duplicated) throws StructureException {
-		final int minCPlength = 0;
-		
+		return filterDuplicateAFPs(afpChain, ceCalc, ca1, ca2duplicated, 5);
+	}
+	public static AFPChain filterDuplicateAFPs(AFPChain afpChain, CECalculator ceCalc, Atom[] ca1, Atom[] ca2duplicated, int minCPlength) throws StructureException {		
 		AFPChain newAFPChain = new AFPChain(afpChain);
 
 		int ca2len = afpChain.getCa2Length()/2;
@@ -257,15 +260,6 @@ public class CeCPMain extends CeMain {
 			lastRes=cEnd;
 		} else {
 			// Rule: maximize the length of the alignment
-
-			// We require at least minCPlength residues in a block.
-			//TODO calculate these explicitely based on the alignment
-			
-			// The last valid n-term
-			int minCPnterm = ca2len - minCPlength-1; 
-			// The first valid c-term
-			int minCPcterm = ca2len + minCPlength;
-			
 			
 			int overlapLength = cEnd+1 - nStart - ca2len;
 			if(overlapLength <= 0) {
@@ -276,61 +270,15 @@ public class CeCPMain extends CeMain {
 			else {
 				// overlap!
 
-				// # res at or to the left of i within the overlap
-				int[] nTermResCount = new int[overlapLength]; // increases monotonically
-				nTermResCount[0] = 1;
+				CutPoint cp = calculateCutPoint(optAln[0][1], nStart, cEnd, 
+						overlapLength, alignLen, minCPlength, ca2len, firstRes);
 
-				int alignPos = 1; // index of the next aligned pair
-
-				for(int i=1;i<overlapLength;i++) {
-					if(optAln[0][1][alignPos] == nStart + i ) { // matches the aligned pair
-						// the n-term contains the ith overlapping residue
-						nTermResCount[i] = nTermResCount[i-1]+1;
-						alignPos++;
-					}
-					else {
-						nTermResCount[i] = nTermResCount[i-1];
-					}
-				}
+				// Adjust alignment length for trimming
+				//alignLen -= cp.numResiduesCut; //TODO inaccurate
 				
+				firstRes = cp.firstRes;
+				lastRes = cp.lastRes;
 				
-
-				// Determine the position with the largest sum of lengths
-				int cTermResCount = 0; // # res at or to the right of i within overlap
-				alignPos = alignLen - 1;
-				int minResCount = overlapLength+1;
-				for(int i=0;i<overlapLength;i++) { // i starts at the c-term and increases to the left
-					// Calculate number of residues which will be removed by a cut i-residues from the end
-					int nCut,cCut;
-//					if(cEnd-i <= minCPcTerm) {
-						nCut = nTermResCount[overlapLength-1-i];
-//					} else {
-//						nCut = 0;
-//					}
-					cCut = cTermResCount;
-
-					// Look for the cut point which cuts off the minimum number of res
-					if(nCut + cCut <= minResCount ) { // '<=' biases towards keeping the n-term 
-						minResCount=nTermResCount[overlapLength-1-i] + cTermResCount;
-						firstRes = nStart+overlapLength - i;
-						lastRes = cEnd - i;
-						assert(lastRes == firstRes+ca2len-1);
-					}
-
-					// Update cTermResCount if this position of the overlap was aligned
-					if(optAln[0][1][alignPos] == cEnd - i) {
-						cTermResCount++;
-						alignPos--;
-					}
-				}
-
-				//Adjust alignment length for trimming
-				alignLen -= minResCount;
-
-				if(debug) {
-					System.out.format("Found a CP at residue %d. Trimming %d aligned residues from %d-%d of block 0 and %d-%d of block 1.\n",
-							firstRes,minResCount,nStart,firstRes-1,firstRes, cEnd-ca2len);
-				}
 				//TODO Now have CP site, and could do a NxM alignment for further optimization.
 				// For now, does not appear to be worth the 50% increase in time
 
@@ -355,8 +303,8 @@ public class CeCPMain extends CeMain {
 				}
 			}
 		}
-		assert(left.size()+right.size() == alignLen);
-
+		//assert(left.size()+right.size() == alignLen);
+		alignLen = left.size() + right.size();
 
 		// Now we don't care about left/right, so just call them "blocks"
 		List<List<ResiduePair>> blocks = new ArrayList<List<ResiduePair>>(2);
@@ -410,20 +358,22 @@ public class CeCPMain extends CeMain {
 		assert(pos == alignLen);
 
 		// Sets the rotation matrix in ceCalc to the proper value
-		double rmsd = ceCalc.calc_rmsd(atoms1, atoms2, alignLen, true, false);
-
+		double rmsd;
 		double[] blockRMSDs = new double[blocks.size()];
 		Matrix[] blockRotationMatrices = new Matrix[blocks.size()];
 		Atom[] blockShifts = new Atom[blocks.size()];
 
-		blockRMSDs[0] = rmsd;
-		blockRotationMatrices[0] = ceCalc.getRotationMatrix();
-		blockShifts[0] = ceCalc.getShift();
-		for(int i=1;i<blocks.size();i++) {
-			blockRMSDs[i] = rmsd;
+		if(alignLen>0) {
+			rmsd = ceCalc.calc_rmsd(atoms1, atoms2, alignLen, true, false);
+			blockRMSDs[0] = rmsd;
+			blockRotationMatrices[0] = ceCalc.getRotationMatrix();
+			blockShifts[0] = ceCalc.getShift();
 
-			// Don't move blocks relative to the first block
-			/*Matrix identity = new Matrix(3,3);
+			for(int i=1;i<blocks.size();i++) {
+				blockRMSDs[i] = rmsd;
+				
+				// Don't move blocks relative to the first block
+				/*Matrix identity = new Matrix(3,3);
 			for(int j=0;j<3;j++)
 				identity.set(j, j, 1.);
 			blockRotationMatrices[i] = identity;
@@ -431,9 +381,10 @@ public class CeCPMain extends CeMain {
 			Atom zero = new AtomImpl();
 			zero.setX(0.); zero.setY(0.); zero.setZ(0.);
 			blockShifts[i] = zero;
-			 */
-			blockRotationMatrices[i] = (Matrix) blockRotationMatrices[0].clone();
-			blockShifts[i] = (Atom) blockShifts[0].clone();
+				 */
+				blockRotationMatrices[i] = (Matrix) blockRotationMatrices[0].clone();
+				blockShifts[i] = (Atom) blockShifts[0].clone();
+			}
 		}
 		newAFPChain.setOptRmsd(blockRMSDs);
 		newAFPChain.setBlockRmsd(blockRMSDs);
@@ -449,6 +400,41 @@ public class CeCPMain extends CeMain {
 		//		return afpChain;
 
 		return newAFPChain;
+	}
+
+	private static int[] countCtermResidues(int[] block, int blockLen,
+			int cEnd, int overlapLength) {
+		int[] cTermResCount = new int[overlapLength+1]; // # res at or to the right of i within overlap
+		cTermResCount[overlapLength] = 0;
+		int alignPos = blockLen - 1;
+		for(int i=overlapLength-1;i>=0;i--) { // i starts at the c-term and increases to the left
+			if(block[alignPos] == cEnd - overlapLength+1 + i) { // matches the aligned pair
+				// the c-term contains the -ith overlapping residue
+				cTermResCount[i] = cTermResCount[i+1]+1;
+				alignPos--;
+			} else {
+				cTermResCount[i] = cTermResCount[i+1];
+			}
+		}
+		return cTermResCount;
+	}
+
+	private static int[] countNtermResidues(int[] block, int nStart,
+			int overlapLength) {
+		int[] nTermResCount = new int[overlapLength+1]; // increases monotonically
+		nTermResCount[0] = 0;
+		int alignPos = 0; // index of the next aligned pair
+
+		for(int i=1;i<=overlapLength;i++) {
+			if(block[alignPos] == nStart + i-1 ) { // matches the aligned pair
+				// the n-term contains the ith overlapping residue
+				nTermResCount[i] = nTermResCount[i-1]+1;
+				alignPos++;
+			} else {
+				nTermResCount[i] = nTermResCount[i-1];
+			}
+		}
+		return nTermResCount;
 	}
 
 
@@ -468,6 +454,162 @@ public class CeCPMain extends CeMain {
 			return a+":"+b;
 		}
 	}
+	
+	
+	/**
+	 * Tiny wrapper for the disallowed regions of an alignment.
+	 * @see CeCPMain#calculateMinCP(int[], int, int, int)
+	 * @author Spencer Bliven
+	 *
+	 */
+	protected static class CPRange {
+		/**
+		 * last allowed n-term
+		 */
+		public int n;
+		/**
+		 * midpoint of the alignment
+		 */
+		public int mid;
+		/**
+		 * first allowed c-term
+		 */
+		public int c;
+	}
+	
+	/**
+	 * Finds the index of the last residue which could be a valid n-terminus.
+	 * 
+	 * A residue i is valid if at least minCPlength residues are present in block
+	 * in the interval [i,ca2len).
+	 *  
+	 * @param block
+	 * @param blockLen
+	 * @param ca2len
+	 * @param minCPlength
+	 * @return
+	 */
+	protected static CPRange calculateMinCP(int[] block, int blockLen, int ca2len, int minCPlength) {
+		CPRange range = new CPRange();
+		
+		// Find the cut point within the alignment.
+		// Either returns the index i of the alignment such that block[i] == ca2len,
+		// or else returns -i-1 where block[i] is the first element > ca2len.
+		int middle = Arrays.binarySearch(block, ca2len);
+		if(middle < 0) {
+			middle = -middle -1;
+		}
+		// Middle is now the first res after the duplication
+		range.mid = middle;
+		
+		int minCPntermIndex = middle-minCPlength;
+		if(minCPntermIndex >= 0) {
+			range.n = block[minCPntermIndex];
+		} else {
+			range.n = -1;
+		}
+		
+		int minCPctermIndex = middle+minCPlength-1;
+		if(minCPctermIndex < blockLen) {
+			range.c = block[minCPctermIndex];
+		} else {
+			range.c = ca2len*2;
+		}
+
+		// Stub:
+		// Best-case: assume all residues in the termini are aligned
+		//range.n = ca2len - minCPlength; 
+		//range.c = ca2len + minCPlength-1;
+		
+		return range;
+	}
+	
+	
+	private static class CutPoint {
+		public int numResiduesCut;
+		public int firstRes;
+		public int lastRes;
+	}
+	
+	private static CutPoint calculateCutPoint(int[] block,int nStart, int cEnd,
+			int overlapLength, int alignLen, int minCPlength, int ca2len, int firstRes) {
+		
+		// We require at least minCPlength residues in a block.
+		//TODO calculate these explicitely based on the alignment
+		
+		// The last valid n-term
+		CPRange minCP = calculateMinCP(block, alignLen, ca2len, minCPlength);
+		int minCPnterm = minCP.n;
+		// The first valid c-term
+		int minCPcterm = minCP.c;
+		
+
+		// # res at or to the left of i within the overlap
+		int[] nTermResCount = countNtermResidues(block, nStart,
+				overlapLength);
+		
+		// Determine the position with the largest sum of lengths
+		int[] cTermResCount = countCtermResidues(block, alignLen,
+				cEnd, overlapLength);
+		
+		// Alignment length for a cut at the left of the overlap
+		int maxResCount=-1;
+		for(int i=0;i<=overlapLength;i++) { // i is the position of the CP within the overlap region
+			// Calculate number of residues which remain after the CP
+			int nRemain,cRemain;
+			if(nStart+i <= minCPnterm) {
+				nRemain = nTermResCount[overlapLength]-nTermResCount[i];
+			} else {
+				nRemain = 0;
+			}
+			if(cEnd-overlapLength+i >= minCPcterm) {
+				cRemain = cTermResCount[0] - cTermResCount[i];
+			} else {
+				cRemain = 0;
+			}
+
+			// Look for the cut point which cuts off the minimum number of res
+			if(nRemain + cRemain > maxResCount ) { // '>' biases towards keeping the n-term 
+				maxResCount = nRemain + cRemain;
+				firstRes = nStart+ i;
+			}
+		}
+
+		// Calculate the number of residues cut within the overlap
+		int numResiduesCut = nTermResCount[overlapLength]+cTermResCount[0]-maxResCount;
+		
+		// Remove short blocks
+		if(firstRes > minCPnterm) {
+			// update number of residues cut for those outside the overlap
+			numResiduesCut += 0; //TODO
+			
+			firstRes = ca2len;
+		} 
+
+		int lastRes = firstRes+ca2len-1;
+		if(lastRes < minCPcterm) {
+			// update number of residues cut for those outside the overlap
+			numResiduesCut += 0; //TODO
+
+			lastRes = ca2len-1;
+		}
+		
+		
+		
+		
+		CutPoint cp = new CutPoint();
+		cp.firstRes=firstRes;
+		cp.numResiduesCut = numResiduesCut;
+		cp.lastRes = lastRes;
+
+		if(debug) {
+			System.out.format("Found a CP at residue %d. Trimming %d aligned residues from %d-%d of block 0 and %d-%d of block 1.\n",
+					firstRes,cp.numResiduesCut,nStart,firstRes-1,firstRes, cEnd-ca2len);
+		}
+		
+		return cp;
+	}
+
 
 	// try showing a GUI
 	// requires additional dependencies biojava3-structure-gui and JmolApplet
