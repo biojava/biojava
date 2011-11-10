@@ -27,12 +27,17 @@ package org.biojava.bio.structure.domain;
 import java.io.InputStream;
 
 import java.net.URL;
+import java.util.Map;
 import java.util.SortedSet;
+import java.util.TreeSet;
 
 
 import org.biojava.bio.structure.Structure;
+
+import org.biojava.bio.structure.StructureTools;
 import org.biojava.bio.structure.align.ce.AbstractUserArgumentProcessor;
 import org.biojava.bio.structure.align.client.JFatCatClient;
+import org.biojava.bio.structure.align.client.StructureName;
 import org.biojava.bio.structure.align.util.AtomCache;
 import org.biojava.bio.structure.align.util.HTTPConnectionTools;
 import org.biojava.bio.structure.scop.server.XMLUtil;
@@ -83,10 +88,54 @@ public class RemotePDPProvider extends SerializableCache<String,SortedSet<String
 
 		if ( ! useCache)
 			disableCache();
+		else if ( serializedCache.keySet().size() < 10000){
+			loadRepresentativeDomains();
+		}
 
 	}
 
 
+
+	/** get the ranges of representative domains from the centralized server
+	 * 
+	 */
+	private void loadRepresentativeDomains() {
+		
+			AssignmentXMLSerializer results = null;
+			try {
+				URL u = new URL(server + "getRepresentativePDPDomains");
+				System.out.println(u);
+				InputStream response = HTTPConnectionTools.getInputStream(u);
+				String xml = JFatCatClient.convertStreamToString(response);			
+				//System.out.println(xml);
+				results  = AssignmentXMLSerializer.fromXML(xml);
+
+				Map<String,String> data = results.getAssignments();
+				System.out.println("got " + data.size() + " domain ranges for PDP domains from server.");
+				for (String key: data.keySet()){
+					String range = data.get(key);
+					
+					// work around list in results;
+					
+					String[] spl = range.split(",");
+					SortedSet<String> value = new TreeSet<String>();
+					
+					for (String s : spl){
+						value.add(s);
+						
+					}
+					serializedCache.put(key, value);
+				}
+				
+			} catch (Exception e){
+				e.printStackTrace();
+			}
+			return ;
+			
+		
+
+		
+	}
 
 
 	public String getServer() {
@@ -123,12 +172,33 @@ public class RemotePDPProvider extends SerializableCache<String,SortedSet<String
 					cache(pdbDomainName,domainRanges);
 			}
 			
-
-			if ( domainRanges.size() >0 ){
-				String domainRange = domainRanges.first();
-				s= cache.getStructure(domainRange);
-				s.setName(pdbDomainName);								
+			int i =0 ;
+			StringBuffer r = new StringBuffer();
+			for (String domainRange : domainRanges){
+				if ( ! domainRange.contains("."))
+					r.append(domainRange);
+				else {
+					String[] spl = domainRange.split("\\.");
+					if ( spl.length>1)
+						r.append(spl[1]);
+					else {
+						System.out.println("not sure what to do with " + domainRange);
+					}
+				}
+				i++;
+				if ( i < domainRanges.size()) {
+					r.append(",");
+				}
 			}
+			
+			String ranges = r.toString();
+			
+			StructureName sname = new  StructureName(pdbDomainName);
+			Structure tmp = cache.getStructure(sname.getPdbId());
+			s = StructureTools.getSubRanges(tmp, ranges);
+			
+			
+			s.setName(pdbDomainName);
 
 		} catch (Exception e){
 			e.printStackTrace();
