@@ -169,6 +169,29 @@ public class Constraints {
 		aa2PKa.put(C, 8.33);
 		//		Y, Tyr	10.0
 		aa2PKa.put(Y, 10.0);
+		
+//		Values from Reference points for comparisons of two-dimensional maps of proteins from different human cell types defined in a pH scale where
+//		isoelectric points correlate with polypeptide compositions, Electrophoresis 1994, 15, 529-539
+//		C-terminal	3.55 
+//		N-terminal
+//			Ala	7.59 
+//			Met	7.00 
+//			Ser	6.93 
+//			Pro	8.36 
+//			Thr	6.82 
+//			Val	7.44 
+//			Glu	7.70
+//		Internal 
+//			Asp 4.05 
+//			Glu	4.45 
+//			His	5.98
+//			CYS	9 
+//			Tyr	10 
+//			Lys	10 
+//			Arg	12
+//		C-terminal side chain groups
+//			Asp 4.55 
+//			Glu	4.75
 	}
 
 	/** 
