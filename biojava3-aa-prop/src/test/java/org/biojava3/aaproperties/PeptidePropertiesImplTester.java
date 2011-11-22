@@ -243,10 +243,43 @@ public class PeptidePropertiesImplTester {
 	}
 	
 	@Test
-	public void testIsoelectricPoint(){
+	public void testIsoelectricPointInnovagen(){
+		/*
+		 * Test for Innovagen
+		 */
 		//http://www.innovagen.se/custom-peptide-synthesis/peptide-property-calculator/peptide-property-calculator.asp
-		assertEquals(8.6, Utils.roundToDecimals(PeptideProperties.getIsoelectricPoint(sequence), 1));
-		assertEquals(7.0, Utils.roundToDecimals(PeptideProperties.getIsoelectricPoint(fullInvalidSequence), 1));
+		assertEquals(8.6, Utils.roundToDecimals(PeptideProperties.getIsoelectricPoint(sequence, false), 1));
+		assertEquals(7.0, Utils.roundToDecimals(PeptideProperties.getIsoelectricPoint(fullInvalidSequence, false), 1));
+		
+		assertEquals(2.8, Utils.roundToDecimals(PeptideProperties.getIsoelectricPoint("ACCACAAADADADACA", false), 1));
+	}
+	
+	@Test
+	public void testIsoelectricPointExpasy(){
+		/*
+		 * Test for Expasy
+		 */
+		
+		assertEquals(3.42, Utils.roundToDecimals(PeptideProperties.getIsoelectricPoint("ACCACAAADADADACA"), 2));
+		assertEquals(3.42, Utils.roundToDecimals(PeptideProperties.getIsoelectricPoint("ACCACAAADADADACM"), 2));
+//		
+		assertEquals(3.37, Utils.roundToDecimals(PeptideProperties.getIsoelectricPoint("ECCACAAADADADACS", true), 2));
+		
+		
+		assertEquals(3.24, Utils.roundToDecimals(PeptideProperties.getIsoelectricPoint("ADCCACAAADADADACDAAAAAAAAAAAA", true), 2));
+		
+		//3.32 at Expasy
+		assertEquals(3.32, Utils.roundToDecimals(PeptideProperties.getIsoelectricPoint("DCCACAAADADADACS", true), 2));
+		
+		//Gives me shit when ends with D or E
+		assertEquals(3.17, Utils.roundToDecimals(PeptideProperties.getIsoelectricPoint("DCCACAAADADADACDAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD", true), 2));
+		assertEquals(3.37, Utils.roundToDecimals(PeptideProperties.getIsoelectricPoint("ACCACAAADADADACE", true), 2));
+		assertEquals(3.32, Utils.roundToDecimals(PeptideProperties.getIsoelectricPoint("ACCACAAADADADACAAAAAAAAAAAAAAD", true), 2));
+		assertEquals(3.28, Utils.roundToDecimals(PeptideProperties.getIsoelectricPoint("DCCACAAADADADACE", true), 2));
+		
+		assertEquals(8.71, Utils.roundToDecimals(PeptideProperties.getIsoelectricPoint("MTADGPCRELLCQLRAAVRHRWWC", true), 2));
+		assertEquals(8.71, Utils.roundToDecimals(PeptideProperties.getIsoelectricPoint(sequence, true), 2));
+		assertEquals(0.0, Utils.roundToDecimals(PeptideProperties.getIsoelectricPoint(fullInvalidSequence, true), 1));
 	}
 	
 	@Test (expected = NullPointerException.class)
@@ -256,9 +289,14 @@ public class PeptidePropertiesImplTester {
 	
 	@Test
 	public void testNetCharge(){
+		/*
+		 * Test for Innovagen
+		 */
 		//http://www.innovagen.se/custom-peptide-synthesis/peptide-property-calculator/peptide-property-calculator.asp
-		assertEquals(2.0, Utils.roundToDecimals(PeptideProperties.getNetCharge(sequence), 1));
-		assertEquals(0.0, Utils.roundToDecimals(PeptideProperties.getNetCharge(fullInvalidSequence), 1));
+		assertEquals(2.0, Utils.roundToDecimals(PeptideProperties.getNetCharge(sequence, false), 1));
+		assertEquals(0.0, Utils.roundToDecimals(PeptideProperties.getNetCharge(fullInvalidSequence, false), 1));
+		
+		assertEquals(-3.2, Utils.roundToDecimals(PeptideProperties.getNetCharge("ACCACAAADADADACA", false), 1));
 	}
 	
 	@Test (expected = NullPointerException.class)
