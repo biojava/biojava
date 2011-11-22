@@ -240,12 +240,18 @@ public interface IPeptideProperties{
 	 * approach stated in 
 	 * <a href="http://www.innovagen.se/custom-peptide-synthesis/peptide-property-calculator/peptide-property-calculator-notes.asp#PI">here</a>
 	 * 
+	 * pKa values used will be either those used by Expasy which referenced "Electrophoresis 1994, 15, 529-539" or based on Lehninger Principles of Biochemistry, Third Edition
+	 * 
 	 * @param sequence
 	 * 		a protein sequence consisting of non-ambiguous characters only
+	 * @param useExpasyValues
+	 * 		whether to use Expasy values (Default) or Innovagen values
 	 * @return the isoelectric point of sequence
 	 * @see ProteinSequence
 	 */
-	public double getIsoelectricPoint(ProteinSequence sequence);
+	public double getIsoelectricPoint(ProteinSequence sequence, boolean useExpasyValues);
+	
+	public double getIsoelectricPoint(ProteinSequence seuqence);
 
 	/**
 	 * Returns the net charge of sequence at pH 7. The sequence argument must be
@@ -253,11 +259,17 @@ public interface IPeptideProperties{
 	 * The net charge will be computed using the approach stated in 
 	 * <a href="http://www.innovagen.se/custom-peptide-synthesis/peptide-property-calculator/peptide-property-calculator-notes.asp#NetCharge>here</a>
 	 * 
+	 * pKa values used will be either those used by Expasy which referenced "Electrophoresis 1994, 15, 529-539" or based on Lehninger Principles of Biochemistry, Third Edition
+	 * 
 	 * @param sequence
 	 * 		a protein sequence consisting of non-ambiguous characters only
+	 * @param useExpasyValues
+	 * 		whether to use Expasy values (Default) or Innovagen values
 	 * @return the net charge of sequence at pH 7
 	 * @see ProteinSequence
 	 */
+	public double getNetCharge(ProteinSequence sequence, boolean useExpasyValues);
+	
 	public double getNetCharge(ProteinSequence sequence);
 
 	/**

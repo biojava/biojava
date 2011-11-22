@@ -240,14 +240,27 @@ public class PeptidePropertiesImpl implements IPeptideProperties{
 	}
 
 	@Override
-	public double getIsoelectricPoint(ProteinSequence sequence) {
+	public double getIsoelectricPoint(ProteinSequence sequence, boolean useExpasyValues) {
+		if(useExpasyValues){
+			return this.getIsoelectricPointExpasy(sequence.toString().toUpperCase());
+		}else{
+			return this.getIsoelectricPointInnovagen(sequence);
+		}
+	}
+	
+	private double getIsoelectricPointInnovagen(ProteinSequence sequence){
 		double currentPH = 7.0;
 		double changeSize = 7.0;
+		String sequenceString = sequence.toString();
+		char nTerminalChar = sequenceString.charAt(0);
+		char cTerminalChar = sequenceString.charAt(sequenceString.length() - 1);
+		
 		Map<AminoAcidCompound, Integer> chargedAA2Count = this.getChargedAACount(sequence);
 		double margin;
-		final double difference = 0.0000001;
+		final double difference = 0.0001;
+		
 		while(true){
-			margin = this.getNetCharge(chargedAA2Count, currentPH);
+			margin = this.getNetCharge(chargedAA2Count, currentPH, nTerminalChar, cTerminalChar);
 			//Within allowed difference
 			if(margin <= difference && margin >= -difference) break;
 			changeSize /= 2.0;
@@ -259,21 +272,180 @@ public class PeptidePropertiesImpl implements IPeptideProperties{
 		}
 		return currentPH;
 	}
+	
+	/*
+	 *  Pseudo code obtained from email correspondance with ExPASy Helpdesk, Gregoire Rossier
+	 */
+	//
+	// Table of pk values :
+	// Note: the current algorithm does not use the last two columns.
+	// Each row corresponds to an amino acid starting with Ala. J, O and U are
+	// inexistant, but here only in order to have the complete alphabet.
+	//
+	// Ct Nt Sm Sc Sn
+	//
+	private final double cPk[][] = {
+			{3.55, 7.59, 0.0},  // A
+			{3.55, 7.50, 0.0},  // B
+			{3.55, 7.50, 9.00}, // C
+//			{4.55, 7.50, 4.05}, // D
+//			{4.75, 7.70, 4.45}, // E
+			{3.55, 7.50, 4.05}, // D
+			{3.55, 7.70, 4.45}, // E
+			{3.55, 7.50, 0}, // F
+			{3.55, 7.50, 0}, // G
+			{3.55, 7.50, 5.98}, // H
+			{3.55, 7.50, 0.0}, // I
+			{0.0, 0.0, 0.0}, // J
+			{3.55, 7.50, 10.00}, // K
+			{3.55, 7.50, 0.0}, // L
+			{3.55, 7.00, 0.0},// M
+			{3.55, 7.50, 0.0},// N
+			{0.00, 0.00, 0.0},// O
+			{3.55, 8.36, 0.0},// P
+			{3.55, 7.50, 0.0}, // Q
+			{3.55, 7.50, 12.0},// R
+			{3.55, 6.93, 0.0},// S
+			{3.55, 6.82, 0.0}, // T
+			{0.00, 0.00, 0.0}, // U
+			{3.55, 7.44, 0.0},// V
+			{3.55, 7.50, 0.0},// W
+			{3.55, 7.50, 0.0},// X
+			{3.55, 7.50, 10.00},// Y
+			{3.55, 7.50, 0.0}}; // Z
+
+	private final double PH_MIN = 0.0; /* minimum pH value */
+	private final double PH_MAX = 14.0; /* maximum pH value */
+	private final double MAXLOOP = 2000.0; /* maximum number of iterations */
+	private final double EPSI = 0.0001; /* desired precision */
+	
+	private double exp10(double pka){
+		return Math.pow(10, pka);
+	}
+	
+	private double getIsoelectricPointExpasy(String sequence){
+		//
+		// Compute the amino-acid composition.
+		//
+		int comp[] = new int[26];
+		for(int i = 0; i < sequence.length(); i++){
+			int index = sequence.charAt(i) - 'A';
+			if(index < 0 || index >= 26) continue;
+			comp[index]++;
+		}
+		//
+		// Look up N-terminal and C-terminal residue.
+		//
+		int nTermResidue = -1;
+		int index = 0;
+		while((nTermResidue < 0 || nTermResidue >= 26) && index < 25){
+			nTermResidue = sequence.charAt(index++) - 'A';
+		}
+		
+		int cTermResidue = -1;
+		index = 1;
+		while((cTermResidue < 0 || cTermResidue >= 26) && index < 25){
+			cTermResidue = sequence.charAt(sequence.length() - index++) - 'A';
+		}
+
+		double phMin = PH_MIN;
+		double phMax = PH_MAX;
+		
+		double phMid = 0.0;
+		double charge = 1.0;
+		for (int i = 0; i < MAXLOOP && (phMax - phMin) > EPSI; i++){
+			phMid = phMin + (phMax - phMin) / 2.0;
+	
+			charge = getNetChargeExpasy(comp, nTermResidue, cTermResidue, phMid);
+	
+			if (charge > 0.0) phMin = phMid;
+			else phMax = phMid;
+		}
+		return phMid;
+	}
+	
+	@Override
+	public double getIsoelectricPoint(ProteinSequence sequence){
+		return getIsoelectricPoint(sequence, true);
+	}
 
 	@Override
 	public double getNetCharge(ProteinSequence sequence) {
-		Map<AminoAcidCompound, Integer> chargedAA2Count = this.getChargedAACount(sequence);
-		return getNetCharge(chargedAA2Count, 7.0);
+		return getNetCharge(sequence, true);
 	}
 	
-	private double getNetCharge(Map<AminoAcidCompound, Integer> chargedAA2Count, double ph){
+	@Override
+	public double getNetCharge(ProteinSequence sequence, boolean useExpasyValues){
+		if(useExpasyValues){
+			return getNetChargeExpasy(sequence.toString().toUpperCase());
+		}else{
+			return getNetChargeInnovagen(sequence);
+		}
+	}
+	
+	private double getNetChargeExpasy(String sequence){
+		//
+		// Compute the amino-acid composition.
+		//
+		int comp[] = new int[26];
+		for(int i = 0; i < sequence.length(); i++){
+			int index = sequence.charAt(i) - 'A';
+			if(index < 0 || index >= 26) continue;
+			comp[index]++;
+		}
+		//
+		// Look up N-terminal and C-terminal residue.
+		//
+		int nTermResidue = -1;
+		int index = 0;
+		while((nTermResidue < 0 || nTermResidue >= 26) && index < 25){
+			nTermResidue = sequence.charAt(index++) - 'A';
+		}
+		
+		int cTermResidue = -1;
+		index = 1;
+		while((cTermResidue < 0 || cTermResidue >= 26) && index < 25){
+			cTermResidue = sequence.charAt(sequence.length() - index++) - 'A';
+		}
+		return getNetChargeExpasy(comp, nTermResidue, cTermResidue, 7.0);
+	}
+	
+	private double getNetChargeExpasy(int comp[], int nTermResidue, int cTermResidue, double phMid){
+		double cter = 0.0; 
+		if(cTermResidue >= 0 && cTermResidue < 26) cter = exp10(-cPk[cTermResidue][0]) / (exp10(-cPk[cTermResidue][0]) + exp10(-phMid));
+		double nter = 0.0; 
+		if(nTermResidue >= 0 && nTermResidue < 26) nter = exp10(-phMid) / (exp10(-cPk[nTermResidue][1]) + exp10(-phMid));
+
+		double carg = comp['R' - 'A'] * exp10(-phMid) / (exp10(-cPk['R' - 'A'][2]) + exp10(-phMid)); 
+		double chis = comp['H' - 'A'] * exp10(-phMid) / (exp10(-cPk['H' - 'A'][2]) + exp10(-phMid));
+		double clys = comp['K' - 'A'] * exp10(-phMid) / (exp10(-cPk['K' - 'A'][2]) + exp10(-phMid));
+
+		double casp = comp['D' - 'A'] * exp10(-cPk['D' - 'A'][2]) / (exp10(-cPk['D' - 'A'][2]) + exp10(-phMid));
+		double cglu = comp['E' - 'A'] * exp10(-cPk['E' - 'A'][2]) / (exp10(-cPk['E' - 'A'][2]) + exp10(-phMid));
+
+		double ccys = comp['C' - 'A'] * exp10(-cPk['C' - 'A'][2]) / (exp10(-cPk['C' - 'A'][2]) + exp10(-phMid));
+		double ctyr = comp['Y' - 'A'] * exp10(-cPk['Y' - 'A'][2]) / (exp10(-cPk['Y' - 'A'][2]) + exp10(-phMid));
+
+		return (carg + clys + chis + nter) - (casp + cglu + ctyr + ccys + cter);
+	}
+	
+	private double getNetChargeInnovagen(ProteinSequence sequence) {
+		Map<AminoAcidCompound, Integer> chargedAA2Count = this.getChargedAACount(sequence);
+		String sequenceString = sequence.getSequenceAsString();
+		return getNetCharge(chargedAA2Count, 7.0, sequenceString.charAt(0), sequenceString.charAt(sequenceString.length() - 1));
+	}
+	
+	private double getNetCharge(Map<AminoAcidCompound, Integer> chargedAA2Count, double ph, char nTerminalChar, char cTerminalChar){
+		//Constraints.aa2PKa is aleady reinitialized in getChargedAACount hence no need to do it again
+		
 		//Lys => K, Arg => R, His => H
 		//Asp => D, Glu => E, Cys => C, Tyr => Y
-		//(NH2-)	9.69	(-COOH)	2.34
-		final double pkaOfNH2 = 9.69;
-		final double pkaOfCOOH = 2.34;
 		AminoAcidCompoundSet aaSet = new AminoAcidCompoundSet();
-		double nTerminalCharge = this.getPosCharge(pkaOfNH2, ph);
+		
+		double nTerminalCharge = this.getPosCharge(Constraints.pkaOfNH2, ph);
+		
+		double cTerminalCharge = this.getNegCharge(Constraints.pkaOfCOOH, ph);
+		
 		double kCharge = chargedAA2Count.get(aaSet.getCompoundForString("K")) * this.getPosCharge(Constraints.aa2PKa.get(aaSet.getCompoundForString("K")), ph);
 		double rCharge = chargedAA2Count.get(aaSet.getCompoundForString("R")) * this.getPosCharge(Constraints.aa2PKa.get(aaSet.getCompoundForString("R")), ph);
 		double hCharge = chargedAA2Count.get(aaSet.getCompoundForString("H")) * this.getPosCharge(Constraints.aa2PKa.get(aaSet.getCompoundForString("H")), ph);
@@ -281,7 +453,6 @@ public class PeptidePropertiesImpl implements IPeptideProperties{
 		double eCharge = chargedAA2Count.get(aaSet.getCompoundForString("E")) * this.getNegCharge(Constraints.aa2PKa.get(aaSet.getCompoundForString("E")), ph);
 		double cCharge = chargedAA2Count.get(aaSet.getCompoundForString("C")) * this.getNegCharge(Constraints.aa2PKa.get(aaSet.getCompoundForString("C")), ph);
 		double yCharge = chargedAA2Count.get(aaSet.getCompoundForString("Y")) * this.getNegCharge(Constraints.aa2PKa.get(aaSet.getCompoundForString("Y")), ph);
-		double cTerminalCharge = this.getNegCharge(pkaOfCOOH, ph);
 		if((kCharge + rCharge + hCharge) == 0.0 && (dCharge + eCharge + cCharge + yCharge) == 0.0){
 			return 0.0;
 		}
