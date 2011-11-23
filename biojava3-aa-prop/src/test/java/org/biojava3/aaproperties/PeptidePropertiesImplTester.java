@@ -248,10 +248,10 @@ public class PeptidePropertiesImplTester {
 		 * Test for Innovagen
 		 */
 		//http://www.innovagen.se/custom-peptide-synthesis/peptide-property-calculator/peptide-property-calculator.asp
-		assertEquals(8.6, Utils.roundToDecimals(PeptideProperties.getIsoelectricPoint(sequence, false), 1));
-		assertEquals(7.0, Utils.roundToDecimals(PeptideProperties.getIsoelectricPoint(fullInvalidSequence, false), 1));
+		assertEquals(9.01, Utils.roundToDecimals(PeptideProperties.getIsoelectricPoint(sequence, false), 2));
+		assertEquals(7.00, Utils.roundToDecimals(PeptideProperties.getIsoelectricPoint(fullInvalidSequence, false), 2));
 		
-		assertEquals(2.8, Utils.roundToDecimals(PeptideProperties.getIsoelectricPoint("ACCACAAADADADACA", false), 1));
+		assertEquals(2.70, Utils.roundToDecimals(PeptideProperties.getIsoelectricPoint("ACCACAAADADADACA", false), 2));
 	}
 	
 	@Test
