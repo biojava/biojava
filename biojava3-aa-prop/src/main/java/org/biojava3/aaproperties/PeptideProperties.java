@@ -278,7 +278,10 @@ public class PeptideProperties {
 	 * approach stated in 
 	 * <a href="http://www.innovagen.se/custom-peptide-synthesis/peptide-property-calculator/peptide-property-calculator-notes.asp#PI">here</a>
 	 * 
-	 * pKa values used will be either those used by Expasy which referenced "Electrophoresis 1994, 15, 529-539" or based on Lehninger Principles of Biochemistry, Third Edition
+	 * pKa values used will be either 
+	 * those used by Expasy which referenced "Electrophoresis 1994, 15, 529-539" 
+	 * OR
+	 * A.Lehninger, Principles of Biochemistry, 4th Edition (2005), Chapter 3, page78, Table 3-1.
 	 * 
 	 * @param sequence
 	 * 		a protein sequence consisting of non-ambiguous characters only
@@ -303,7 +306,10 @@ public class PeptideProperties {
 	 * The net charge will be computed using the approach stated in 
 	 * <a href="http://www.innovagen.se/custom-peptide-synthesis/peptide-property-calculator/peptide-property-calculator-notes.asp#PI">here</a>
 	 * 
-	 * pKa values used will be either those used by Expasy which referenced "Electrophoresis 1994, 15, 529-539" or based on Lehninger Principles of Biochemistry, Third Edition
+	 * pKa values used will be either 
+	 * those used by Expasy which referenced "Electrophoresis 1994, 15, 529-539" 
+	 * OR
+	 * A.Lehninger, Principles of Biochemistry, 4th Edition (2005), Chapter 3, page78, Table 3-1.
 	 * 
 	 * @param sequence
 	 * 		a protein sequence consisting of non-ambiguous characters only

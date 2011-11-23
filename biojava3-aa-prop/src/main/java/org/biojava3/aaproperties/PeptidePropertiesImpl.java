@@ -396,17 +396,17 @@ public class PeptidePropertiesImpl implements IPeptideProperties{
 		//
 		// Look up N-terminal and C-terminal residue.
 		//
-		int nTermResidue = -1;
-		int index = 0;
-		while((nTermResidue < 0 || nTermResidue >= 26) && index < 25){
-			nTermResidue = sequence.charAt(index++) - 'A';
-		}
+		int nTermResidue = sequence.charAt(0) - 'A';
+//		int index = 0;
+//		while((nTermResidue < 0 || nTermResidue >= 26) && index < 25){
+//			nTermResidue 
+//		}
 		
-		int cTermResidue = -1;
-		index = 1;
-		while((cTermResidue < 0 || cTermResidue >= 26) && index < 25){
-			cTermResidue = sequence.charAt(sequence.length() - index++) - 'A';
-		}
+		int cTermResidue = sequence.charAt(sequence.length() - 1) - 'A';
+//		index = 1;
+//		while((cTermResidue < 0 || cTermResidue >= 26) && index < 25){
+//			cTermResidue = sequence.charAt(sequence.length() - index++) - 'A';
+//		}
 		return getNetChargeExpasy(comp, nTermResidue, cTermResidue, 7.0);
 	}
 	
@@ -442,9 +442,17 @@ public class PeptidePropertiesImpl implements IPeptideProperties{
 		//Asp => D, Glu => E, Cys => C, Tyr => Y
 		AminoAcidCompoundSet aaSet = new AminoAcidCompoundSet();
 		
-		double nTerminalCharge = this.getPosCharge(Constraints.pkaOfNH2, ph);
+		double nTerminalCharge = 0.0; 
+		AminoAcidCompound nTermCompound = aaSet.getCompoundForString(nTerminalChar + "");
+		if(Constraints.aa2NTerminalPka.containsKey(nTermCompound)){
+			nTerminalCharge = this.getPosCharge(Constraints.aa2NTerminalPka.get(nTermCompound), ph);
+		}			
 		
-		double cTerminalCharge = this.getNegCharge(Constraints.pkaOfCOOH, ph);
+		double cTerminalCharge = 0.0;
+		AminoAcidCompound cTermCompound = aaSet.getCompoundForString(cTerminalChar + "");
+		if(Constraints.aa2CTerminalPka.containsKey(cTermCompound)){
+			cTerminalCharge = this.getNegCharge(Constraints.aa2CTerminalPka.get(cTermCompound), ph);
+		}
 		
 		double kCharge = chargedAA2Count.get(aaSet.getCompoundForString("K")) * this.getPosCharge(Constraints.aa2PKa.get(aaSet.getCompoundForString("K")), ph);
 		double rCharge = chargedAA2Count.get(aaSet.getCompoundForString("R")) * this.getPosCharge(Constraints.aa2PKa.get(aaSet.getCompoundForString("R")), ph);
