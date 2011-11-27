@@ -790,19 +790,15 @@ public class PDBFileParser  {
         SEQRES   3 D   30  THR PRO LYS ALA
 		 */
 
-		//System.out.println(line);
 		String recordName = line.substring(0, 6).trim();
 		String chainID    = line.substring(11, 12);
 		String newLength   = line.substring(13,17).trim();
-		String subSequence = line.substring(18, 70);
-
-		//System.out.println("newLength " + newLength );
+		String subSequence = line.substring(18);		
 
 		if ( lengthCheck == -1 ){
 			lengthCheck = Integer.parseInt(newLength);
 		}
 
-		//String resNum = line.substring(22, 27).trim() ;
 		StringTokenizer subSequenceResidues = new StringTokenizer(subSequence);
 
 		Character aminoCode1 = null;
@@ -824,12 +820,10 @@ public class PDBFileParser  {
 			String threeLetter = subSequenceResidues.nextToken();
 
 			aminoCode1 = StructureTools.get1LetterCode(threeLetter);
-			//System.out.println(aminoCode1);
+
 			//if (aminoCode1 == null) {
 			// could be a nucleotide...
 			// but getNewGroup takes care of that and converts ATOM records with aminoCode1 == nnull to nucleotide...
-			//System.out.println(line);
-			// b
 			//}
 			current_group = getNewGroup("ATOM", aminoCode1, threeLetter);
 
