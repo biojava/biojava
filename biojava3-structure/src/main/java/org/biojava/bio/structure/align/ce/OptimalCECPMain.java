@@ -146,7 +146,7 @@ public class OptimalCECPMain extends CeMain {
 	 * @param arr The array to be permuted
 	 * @param cp The number of residues to shift leftward, or equivalently, the index of
 	 *  the first element after the permutation point.
-	 */
+	 *
 	private static void permuteArray(int[] arr, int cp) {
 		// Allow negative cp points for convenience.
 		if(cp == 0) {
@@ -173,6 +173,7 @@ public class OptimalCECPMain extends CeMain {
 			arr[arr.length-cp+i] = temp.get(i);
 		}
 	}
+	*/
 
 	/**
 	 * Aligns ca1 with ca2 permuted by <i>cp</i> residues.
@@ -617,7 +618,7 @@ public class OptimalCECPMain extends CeMain {
 	/**
 	 * Try showing a the afpChain in a GUI.
 	 * 
-	 * <p>requires additional dependancies biojava3-structure-gui and JmolApplet
+	 * <p>requires additional dependencies biojava3-structure-gui and JmolApplet
 	 * 
 	 * @param afpChain
 	 * @param ca1
