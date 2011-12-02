@@ -54,7 +54,7 @@ public class NCBIQBlastAlignmentProperties implements
 		this.param.put("DATABASE","not_set");
 		// Nice parameters to set
 		this.param.put("WORD_SIZE","default");
-		this.param.put("EXPECT","-1");
+		this.param.put("EXPECT","default");
 		// Optional
 		this.param.put("QUERY_FROM","-1");
 		this.param.put("QUERY_TO","-1");

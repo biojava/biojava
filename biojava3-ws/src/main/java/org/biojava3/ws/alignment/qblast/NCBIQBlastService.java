@@ -175,13 +175,18 @@ public class NCBIQBlastService implements RemotePairwiseAlignmentService {
 		if (rpa.getAlignmentOption("WORD_SIZE")!="default") {
 			cmd = cmd + "&WORD_SIZE=" + rpa.getAlignmentOption("WORD_SIZE");
 		}
-
+		
 		if (rpa.getAlignmentOption("OTHER_ADVANCED")!="not_set") {
 			cmd = cmd + "&" + rpa.getAlignmentOption("OTHER_ADVANCED");
 		}
 
 		// Let's end with the sequence's string
 		cmd = cmd + "&"+ seq;
+
+		/*
+		 * DEBUG LINE
+		 */
+		System.out.println(cmd);
 		
 		try {
 
