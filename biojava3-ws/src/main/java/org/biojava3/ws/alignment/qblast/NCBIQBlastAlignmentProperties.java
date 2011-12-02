@@ -207,9 +207,16 @@ public class NCBIQBlastAlignmentProperties implements
 	}
 	/**
 	 * 
+	 * Returns the value of the start position for actual BLAST analysis.
+	 * 
 	 */
 	public int getBlastFromPosition(){
-		return Integer.parseInt(this.param.get("QUERY_FROM"));
+		int a = 0;
+		if(this.param.get("QUERY_FROM")!="-1")
+			a = Integer.parseInt(this.param.get("QUERY_FROM"));
+		else if(this.param.get("QUERY_FROM")=="-1")
+			a = -1;
+		return a;
 	}
 
 	/**
@@ -225,7 +232,12 @@ public class NCBIQBlastAlignmentProperties implements
 	 * 
 	 */
 	public int getBlastToPosition(){
-		return Integer.parseInt(this.param.get("QUERY_TO"));		
+		int a = 0;
+		if(this.param.get("QUERY_TO")!="-1")
+			a = Integer.parseInt(this.param.get("QUERY_TO"));
+		else if(this.param.get("QUERY_TO")=="-1")
+			a = -1;
+		return a;
 	}
 
 	/**
