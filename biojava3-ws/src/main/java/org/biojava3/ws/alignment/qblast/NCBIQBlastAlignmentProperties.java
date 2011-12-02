@@ -107,6 +107,8 @@ public class NCBIQBlastAlignmentProperties implements
 	/**
 	 * This method returns the value of the database used for this particular
 	 * blast run.
+
+	 * Blastall equivalent: -p
 	 * 
 	 * @return db :the name of the database used
 	 */
@@ -127,10 +129,12 @@ public class NCBIQBlastAlignmentProperties implements
 	 * This method returns the value of EXPECT parameter used for this particular
 	 * blast run.
 	 * 
+	 * Blastall equivalent: -d
+	 * 
 	 * @return double :the value for EXPECT used by this search
 	 */	
 	public double getBlastExpect() {
-		if(this.param.get("EXPECT")!="-1")
+		if(this.param.get("EXPECT")!="default")
 			return Double.parseDouble(this.param.get("EXPECT"));
 		else
 			return 10;
@@ -142,6 +146,9 @@ public class NCBIQBlastAlignmentProperties implements
 	 * Example: if you want a EXPECT of 1e-10, try this
 	 * 
 	 *   setBlastExpect(Double.parseDouble("1e-10"))
+     *
+	 * Blastall equivalent: -e
+	 * 
 	 * 
 	 * @param expect: a double used to set EXPECT 
 	 */
@@ -170,7 +177,15 @@ public class NCBIQBlastAlignmentProperties implements
 	}
 
 	/**
-	 * This method set the WORD_SIZE parameter to be use with blastall
+	 * This method set the WORD_SIZE parameter to be use with blastall.
+	 * 
+	 * WARNING!! At this point, the method does not verify the validity of your 
+	 * choice; for example, word size of greater than 5 returns error messages 
+	 * from QBlast. Word size range depends on the algorithm chosen.
+	 * 
+	 * More at http://www.ncbi.nlm.nih.gov/staff/tao/URLAPI/new/node74.html
+	 * 
+ 	 * Blastall equivalent: -W
 	 * 
 	 * @param expect: a double used to set WORD_SIZE 
 	 */
@@ -178,7 +193,6 @@ public class NCBIQBlastAlignmentProperties implements
 		this.param.put("WORD_SIZE",Integer.toString(word));
 	}
 
-	
 	/**
 	 * 
 	 * This method set the QUERY_FROM parameter to be use by blast. It needs the corresponding

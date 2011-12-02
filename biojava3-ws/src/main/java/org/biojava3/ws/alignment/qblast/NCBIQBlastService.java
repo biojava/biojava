@@ -186,7 +186,7 @@ public class NCBIQBlastService implements RemotePairwiseAlignmentService {
 		/*
 		 * DEBUG LINE
 		 */
-		System.out.println(cmd);
+//		System.out.println(cmd);
 		
 		try {
 
