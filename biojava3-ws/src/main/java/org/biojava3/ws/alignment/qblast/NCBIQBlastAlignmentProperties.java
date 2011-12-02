@@ -87,14 +87,17 @@ public class NCBIQBlastAlignmentProperties implements
 	public void setBlastProgram(String program) throws Exception {
 
 		boolean isValid = false;
-		String[] blastPr = new String []{ "blastn", "blastp", "blastx", "tblastn", "tblastx" };
+		String[] blastPr = new String []{ "blastn","megablast", "blastp", "blastx", "tblastn", "tblastx" };
 
 		/*
 		 * To check if the program called for belongs to the blastPr array
 		 * 
 		 */
 		if(Arrays.binarySearch(blastPr,program)>=0){
-			this.param.put("PROGRAM", program);
+			if(program!="megablast")
+				this.param.put("PROGRAM", program);
+			else
+				this.param.put("PROGRAM", program+"&MEGABLAST=on");
 			isValid = true;			
 		}
 		
@@ -170,7 +173,7 @@ public class NCBIQBlastAlignmentProperties implements
 			return 11;
 		else if(this.param.get("PROGRAM")=="blastp" || this.param.get("PROGRAM")=="blastx" || this.param.get("PROGRAM")=="tblastn"|| this.param.get("PROGRAM")=="tblastx")
 			return 3;
-		else if(this.param.get("PROGRAM")=="megablast")
+		else if(this.param.get("PROGRAM")=="blastn&MEGABLAST=on")
 			return 28;
 		else
 			return -1;
@@ -180,8 +183,8 @@ public class NCBIQBlastAlignmentProperties implements
 	 * This method set the WORD_SIZE parameter to be use with blastall.
 	 * 
 	 * WARNING!! At this point, the method does not verify the validity of your 
-	 * choice; for example, word size of greater than 5 returns error messages 
-	 * from QBlast. Word size range depends on the algorithm chosen.
+	 * choice; for example, word size of greater than 5 with blastp returns 
+	 * error messages from QBlast. Word size range depends on the algorithm chosen.
 	 * 
 	 * More at http://www.ncbi.nlm.nih.gov/staff/tao/URLAPI/new/node74.html
 	 * 
