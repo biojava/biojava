@@ -22,8 +22,8 @@ package org.biojava3.ws.alignment;
 
 import java.io.InputStream;
 
-//import org.biojavax.bio.seq.RichSequence;
 import org.biojava3.core.sequence.template.Sequence;
+import org.biojava3.core.sequence.template.Compound;
 /**
  * This interface specifies minimal information needed to execute a pairwise alignment on a remote service.
  * 
@@ -41,7 +41,7 @@ public interface RemotePairwiseAlignmentService {
 	 * 
 	 * @throws Exception
 	 */
-	public String sendAlignmentRequest(Sequence seq, RemotePairwiseAlignmentProperties rpa) throws Exception;
+	public String sendAlignmentRequest(Sequence<Compound> seq, RemotePairwiseAlignmentProperties rpa) throws Exception;
 	
 	/**
 	 * Doing the actual analysis on the instantiated service using specified parameters on the string representation

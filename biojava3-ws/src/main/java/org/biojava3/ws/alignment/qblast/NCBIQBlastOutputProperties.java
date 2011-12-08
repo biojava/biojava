@@ -63,7 +63,7 @@ public class NCBIQBlastOutputProperties implements
 	 * ALIGNMENTS = 100;
 	 * 
 	 */
-	public void NCBIQBlastOutputProperties() {
+	public NCBIQBlastOutputProperties() {
 		this.out.put("FORMAT_TYPE", outFormat);
 		this.out.put("ALIGNMENT_VIEW", alignFormat);
 		this.out.put("DESCRIPTIONS", "DESCRIPTIONS=" + descNumbers);

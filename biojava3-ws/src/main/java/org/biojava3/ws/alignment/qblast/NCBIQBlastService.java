@@ -31,8 +31,7 @@ import java.net.URLConnection;
 import java.util.HashMap;
 
 import org.biojava3.core.sequence.template.Sequence;
-import org.biojava3.core.sequence.DNASequence;
-import org.biojava3.core.sequence.ProteinSequence;
+import org.biojava3.core.sequence.template.Compound;
 
 import org.biojava3.ws.alignment.RemotePairwiseAlignmentProperties;
 import org.biojava3.ws.alignment.RemotePairwiseAlignmentService;
@@ -83,9 +82,6 @@ public class NCBIQBlastService implements RemotePairwiseAlignmentService {
 	private String cmd = null;
 	private String seq = null;
 	private String tmp = null;
-	private String prog = null;
-	private String db = null;
-//	private String advanced = null;
 
 	private String rid;
 	private long step;
@@ -123,70 +119,43 @@ public class NCBIQBlastService implements RemotePairwiseAlignmentService {
 	}
 
 	/**
+	 * 
 	 * This class is the actual worker doing all the dirty stuff related to
 	 * sending the Blast request to the CGI_BIN interface. It should never be
 	 * used as is but any method wanting to send a Blast request should manage
 	 * to use it by feeding it the right parameters.
 	 * 
 	 * @param str : a <code>String</code> representation of a sequence from either of the
-	 *              three wrapper methods
+	 *              three wrapper methods: Sequence, sequence string, gid             
 	 * @param rpa :a <code>RemotePairwiseAlignmentProperties</code> object
+	 * 
 	 * @return rid : the ID of this request on the NCBI QBlast server
-	 * @throws Exception if unable to connect to the NCBI QBlast service or if any of the required parameters (QUERY,PROGRAM or DATABASE) are not set
+	 * 
+	 * @throws Exception if unable to connect to the NCBI QBlast service
+	 * 
 	 */
 	private String sendActualAlignementRequest(String str,
-			RemotePairwiseAlignmentProperties rpa) throws Exception {
-
-		if(rpa.getAlignmentOption("PROGRAM")=="not_set"){
-			throw new Exception(
-			"Impossible to execute QBlast request. Your program has not been set correctly.\n");			
-		}
-		else{
-			prog = "PROGRAM=" + rpa.getAlignmentOption("PROGRAM");			
-		}
+			NCBIQBlastAlignmentProperties rpa) throws Exception {
 		
-		if(rpa.getAlignmentOption("DATABASE")=="not_set"){
-			throw new Exception(
-			"Impossible to execute QBlast request.  Your database has not been set correctly.\n");			
-		}
-		else{
-			db = "DATABASE=" + rpa.getAlignmentOption("DATABASE");			
-		}
+		rpa.setBlastCommandsToQBlast();
 		
 		if(str.length() == 0 || str == null){
 			throw new Exception(
-			"Impossible to execute QBlast request. Your sequence has not been set correctly.\n");			
+			"Impossible to execute QBlast request. Your sequence info has not been set correctly.\n");			
 		}
-		
 		else{
-			seq = "QUERY=" + str;
+			seq = "&QUERY=" + str;
 		}
 		
-		cmd = "CMD=Put&" + prog + "&" + db + "&" + "FORMAT_TYPE=HTML"+"&TOOL="+this.getTool()+"&EMAIL="+this.getEmail();
-		
-		/* 
-		 * This code block deals with what to do with the various non-mendatory parameters 
-		 *
-		 * */
-		if (rpa.getAlignmentOption("EXPECT")!="default") {
-			cmd = cmd + "&EXPECT=" + rpa.getAlignmentOption("EXPECT");
-		}
-
-		if (rpa.getAlignmentOption("WORD_SIZE")!="default") {
-			cmd = cmd + "&WORD_SIZE=" + rpa.getAlignmentOption("WORD_SIZE");
-		}
-		
-		if (rpa.getAlignmentOption("OTHER_ADVANCED")!="not_set") {
-			cmd = cmd + "&" + rpa.getAlignmentOption("OTHER_ADVANCED");
-		}
+		cmd = rpa.getBlastCommandsToQBlast() + "&TOOL="+this.getTool()+"&EMAIL="+this.getEmail();
 
 		// Let's end with the sequence's string
-		cmd = cmd + "&"+ seq;
+		cmd = cmd + seq;
 
 		/*
 		 * DEBUG LINE
 		 */
-//		System.out.println(cmd);
+		System.out.println(cmd);
 		
 		try {
 
@@ -234,8 +203,8 @@ public class NCBIQBlastService implements RemotePairwiseAlignmentService {
 	 * the actual results after completion.
 	 * </p>
 	 * 
-	 * @param str : a <code>String</code> with a sequence
-	 * @param rpa : a <code>RemotePairwiseAlignmentProperties</code> object
+	 * @param str : a <code>String</code> with an identifier like RefSeq, etc.
+	 * @param rpa : a <code>NCBIQBlastAlignmentProperties</code> object
 	 * @return rid : a <code>String</code> with the request ID for this sequence
 	 * @throws Exception if it is not possible to sent the BLAST command
 	 */
@@ -245,7 +214,7 @@ public class NCBIQBlastService implements RemotePairwiseAlignmentService {
 		/*
 		 * sending the command to execute the Blast analysis
 		 */
-		return rid = sendActualAlignementRequest(str, rpa);
+		return rid = sendActualAlignementRequest(str, (NCBIQBlastAlignmentProperties) rpa);
 	}
 
 	/**
@@ -261,17 +230,17 @@ public class NCBIQBlastService implements RemotePairwiseAlignmentService {
 	 * </p>
 	 * 
 	 * @param rs :a <code>Sequence</code> object
-	 * @param rpa :a <code>RemotePairwiseAlignmentProperties</code> object
+	 * @param rpa :a <code>NCBIQBlastAlignmentProperties</code> object
 	 * @return rid : a <code>String</code> with the request ID for this sequence
 	 * 
 	 * @throws Exception if it is not possible to sent the BLAST command
 	 */
-	public String sendAlignmentRequest(Sequence rs,
+	public String sendAlignmentRequest(Sequence<Compound> rs,
 			RemotePairwiseAlignmentProperties rpa) throws Exception {
 
 		tmp = rs.getSequenceAsString();
 
-		return rid = sendActualAlignementRequest(tmp, rpa);
+		return rid = sendActualAlignementRequest(tmp, (NCBIQBlastAlignmentProperties) rpa);
 	}
 
 	/**
@@ -287,7 +256,7 @@ public class NCBIQBlastService implements RemotePairwiseAlignmentService {
 	 * </p>
 	 * 
 	 * @param gid :an integer with a Genbank GID
-	 * @param rpa :a <code>RemotePairwiseAlignmentProperties</code> object
+	 * @param rpa :a <code>NCBIQBlastAlignmentProperties</code> object
 	 * @return rid : a String with the request ID for this sequence
 	 * @throws Exception if it is not possible to sent the BLAST command
 	 */
@@ -295,7 +264,7 @@ public class NCBIQBlastService implements RemotePairwiseAlignmentService {
 			RemotePairwiseAlignmentProperties rpa) throws Exception {
 
 		tmp = Integer.toString(gid);
-		return rid = sendActualAlignementRequest(tmp, rpa);
+		return rid = sendActualAlignementRequest(tmp, (NCBIQBlastAlignmentProperties) rpa);
 	}
 
 	/**
@@ -319,6 +288,7 @@ public class NCBIQBlastService implements RemotePairwiseAlignmentService {
 			 * 
 			 * This is done so that we do not send zillions of requests to the
 			 * server. We do the waiting internally first.
+			 * 
 			 */
 			if (present < start) {
 				isReady = false;
@@ -373,9 +343,12 @@ public class NCBIQBlastService implements RemotePairwiseAlignmentService {
 	 * @param id :a valid request ID
 	 * @param rb : a <code>RemotePairwiseAlignmentOutputProperties</code> that
 	 *             will specify specific output formatting commands
+	 * 
 	 * @return an <code>InputStream</code> that can be use any way one might
 	 *         desire
+	 * 
 	 * @throws Exception if it is not possible to recover the results.
+	 *
 	 */
 	public InputStream getAlignmentResults(String id,
 			RemotePairwiseAlignmentOutputProperties rb) throws Exception {
@@ -394,15 +367,14 @@ public class NCBIQBlastService implements RemotePairwiseAlignmentService {
 				fromQBlast.write(srid);
 				fromQBlast.flush();
 
-				
-				
 				return uConn.getInputStream();
 
 			} catch (IOException ioe) {
 				throw new Exception(
 						"It is not possible to fetch Blast report from NCBI at this time.\n");
 			}
-		} else {
+		}
+		else{
 			throw new Exception(
 					"Impossible to get output for request ID named " + id
 							+ " because it does not exists!\n");
@@ -485,5 +457,5 @@ public class NCBIQBlastService implements RemotePairwiseAlignmentService {
      */
     public String getEmail() {
         return this.email;
-    }	
+    }
 }
