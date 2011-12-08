@@ -323,7 +323,7 @@ public class NCBIQBlastAlignmentProperties implements
 	 */
 	public void setBlastMatrix(String mtx) throws Exception {
 		boolean isValid = false;
-		String[] blastMat = new String[] {"BLOSUM45","BLOSUM50","BLOSUM62", "BLOSUM80", "PAM30", "PAM70", "PAM90", "PAM250"};
+		String[] blastMat = new String[] {"BLOSUM45","BLOSUM50","BLOSUM62", "BLOSUM80", "PAM250", "PAM30", "PAM70", "PAM90"};
 
 		/*
 		 * To check if the matrix called for belongs to the blastMat array
@@ -366,7 +366,7 @@ public class NCBIQBlastAlignmentProperties implements
 					if (this.getBlastGapCreation() == -1
 							&& this.getBlastGapExtension() == -1){
 							this.setBlastGapCreation(14);
-							this.setBlastGapExtension(1);
+							this.setBlastGapExtension(2);
 					}
 
 				} else if (mtx == "BLOSUM45") {
@@ -393,7 +393,7 @@ public class NCBIQBlastAlignmentProperties implements
 
 		if (!isValid)
 			throw new Exception(
-					"Invalid blastp substitution matrix selection! Use one of valid values: PAM30,PAM70,BLOSUM45,BLOSUM62,BLOSUM80\n");
+					"Invalid blastp substitution matrix selection! Use one of valid values: PAM30,PAM70,PAM90,PAM250,BLOSUM45,BLOSUM50,BLOSUM62,BLOSUM80\n");
 	}
 
 	/**
@@ -602,7 +602,6 @@ public class NCBIQBlastAlignmentProperties implements
 //		if (this.getBlastAdvancedOptions()!="not_set") {
 //			cmd = cmd + "&OTHER_ADVANCED=" + this.getAlignmentOption("OTHER_ADVANCED");
 //		}
-
 	}
 	
 	/**
@@ -614,6 +613,7 @@ public class NCBIQBlastAlignmentProperties implements
 	public void reinitializeBlastCommandsToQBlast(){
 		this.cmd = "CMD=Put";
 	}
+	
 	
 	/*
 	 * 
