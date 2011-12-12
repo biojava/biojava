@@ -33,8 +33,9 @@ import org.biojava3.ws.alignment.RemotePairwiseAlignmentProperties;
  * This class implements RemotePairwiseAlignmentProperties by specifying several
  * convenient methods used to wrap the addition of Blast alignment parameters.
  * 
- * It is responsible for collecting, doing some basic sanity checks and to create
- * the part of the URL that will hold all alignment parameters to be used.
+ * It is responsible for collecting, doing some basic sanity checks and to
+ * create the part of the URL that will hold all alignment parameters to be
+ * used.
  * 
  * <p>
  * Many thanks to Matthew Busse for helping in debugging after the migration
@@ -51,7 +52,7 @@ public class NCBIQBlastAlignmentProperties implements
 	private static final long serialVersionUID = 1L;
 	private HashMap<String, String> param = new HashMap<String, String>();
 	private String cmd;
-	
+
 	/**
 	 * 
 	 * Initialization of default values
@@ -66,12 +67,12 @@ public class NCBIQBlastAlignmentProperties implements
 		this.param.put("EXPECT", "-1");
 		this.param.put("QUERY_FROM", "-1");
 		this.param.put("QUERY_TO", "-1");
-		this.param.put("MATRIX_NAME","BLOSUM62");
+		this.param.put("MATRIX_NAME", "BLOSUM62");
 		this.param.put("GAP_CREATION", "-1");
 		this.param.put("GAP_EXTENSION", "-1");
 		// Everything else
 		this.param.put("OTHER_ADVANCED", "not_set");
-		
+
 		cmd = "CMD=Put";
 	}
 
@@ -101,8 +102,8 @@ public class NCBIQBlastAlignmentProperties implements
 	public void setBlastProgram(String program) throws Exception {
 
 		boolean isValid = false;
-		String[] blastPr = new String[] { "blastn", "blastp",
-				"blastx","megablast", "tblastn", "tblastx" };
+		String[] blastPr = new String[] { "blastn", "blastp", "blastx",
+				"megablast", "tblastn", "tblastx" };
 
 		/*
 		 * To check if the program called for belongs to the blastPr array
@@ -240,7 +241,8 @@ public class NCBIQBlastAlignmentProperties implements
 	 * 
 	 * Blastall equivalent : -G
 	 * 
-	 * @param g : an integer to use as gap creation value
+	 * @param g
+	 *            : an integer to use as gap creation value
 	 * 
 	 */
 	public void setBlastGapCreation(int g) {
@@ -251,7 +253,8 @@ public class NCBIQBlastAlignmentProperties implements
 	 * 
 	 * This method returns the value for the GAP_EXTENSION parameter
 	 * 
-	 * @return e : an integer for the value for GAP_EXTENSION used by this search
+	 * @return e : an integer for the value for GAP_EXTENSION used by this
+	 *         search
 	 * 
 	 */
 	public int getBlastGapExtension() {
@@ -264,21 +267,23 @@ public class NCBIQBlastAlignmentProperties implements
 	 * 
 	 * Blastall equivalent: -E
 	 * 
-	 * @param e : an integer to use as gap extension value
+	 * @param e
+	 *            : an integer to use as gap extension value
 	 */
 	public void setBlastGapExtension(int e) {
 		this.param.put("GAP_EXTENSION", Integer.toString(e));
 	}
 
 	/**
-	 * This method return the actual string for the GAPCOSTS parameter
-	 * which is used to build the URL
-	 *  
-	 * @return str : the string representation of the GAPCOSTS parameter formatted for the URL
-	 *  
+	 * This method return the actual string for the GAPCOSTS parameter which is
+	 * used to build the URL
+	 * 
+	 * @return str : the string representation of the GAPCOSTS parameter
+	 *         formatted for the URL
+	 * 
 	 */
-	public String getBlastGapCosts(){
-		if(this.param.get("GAPCOSTS")!=null)
+	public String getBlastGapCosts() {
+		if (this.param.get("GAPCOSTS") != null)
 			return this.param.get("GAPCOSTS");
 		else
 			return "defaults";
@@ -311,89 +316,92 @@ public class NCBIQBlastAlignmentProperties implements
 	/**
 	 * This method set the value for the MATRIX parameter to use for blastall
 	 * 
-	 * Allowed matrices: PAM30,PAM70,PAM90,PAM250,BLOSUM45,BLOSUM50,BLOSUM62,BLOSUM80
-	 * (Other matrices are not useable via QBlast)
+	 * Allowed matrices:
+	 * PAM30,PAM70,PAM90,PAM250,BLOSUM45,BLOSUM50,BLOSUM62,BLOSUM80 (Other
+	 * matrices are not useable via QBlast)
 	 * 
 	 * Blastall equivalent: -M
 	 * 
-	 * @param mtx : a String to use as gap creation value
+	 * @param mtx
+	 *            : a String to use as gap creation value
 	 * 
 	 * @throws Exception
 	 *             if matrix name is not part of allowed BLAST matrices
 	 */
 	public void setBlastMatrix(String mtx) throws Exception {
 		boolean isValid = false;
-		String[] blastMat = new String[] {"BLOSUM45","BLOSUM50","BLOSUM62", "BLOSUM80", "PAM250", "PAM30", "PAM70", "PAM90"};
+		String[] blastMat = new String[] { "BLOSUM45", "BLOSUM50", "BLOSUM62",
+				"BLOSUM80", "BLOSUM90", "PAM250", "PAM30", "PAM70" };
 
 		/*
 		 * To check if the matrix called for belongs to the blastMat array
 		 */
-		if (Arrays.binarySearch(blastMat,mtx) >= 0) {
+		if (Arrays.binarySearch(blastMat, mtx) >= 0) {
 			this.param.put("MATRIX_NAME", mtx);
 			isValid = true;
 
 			/*
-			 * This step is necessary because, since BLOSUM62 is default, the expected
-			 * values are -G 11 -E 1. If your matrix choice is different, the
-			 * request will fail, implicitly expecting &GAPCOSTS=11+1
-			 * 
+			 * This step is necessary because, since BLOSUM62 is default, the
+			 * expected values are -G 11 -E 1. If your matrix choice is
+			 * different, the request will fail, implicitly expecting
+			 * &GAPCOSTS=11+1
 			 */
 			if (mtx != "BLOSUM62") {
 				/*
 				 * Setting default values for -G/-E if no other values have been
 				 * set via setBlastGapCreation/setBlastGapExtension
-				 *  
 				 */
 				if (mtx == "PAM30") {
 					if (this.getBlastGapCreation() == -1
-							&& this.getBlastGapExtension() == -1){
-							this.setBlastGapCreation(9);
-							this.setBlastGapExtension(1);
+							&& this.getBlastGapExtension() == -1) {
+						this.setBlastGapCreation(9);
+						this.setBlastGapExtension(1);
 					}
 				} else if (mtx == "PAM70") {
 					if (this.getBlastGapCreation() == -1
-							&& this.getBlastGapExtension() == -1){
-							this.setBlastGapCreation(10);
-							this.setBlastGapExtension(1);
+							&& this.getBlastGapExtension() == -1) {
+						this.setBlastGapCreation(10);
+						this.setBlastGapExtension(1);
 					}
-				} else if (mtx == "PAM90") {
-					if (this.getBlastGapCreation() == -1
-							&& this.getBlastGapExtension() == -1){
-							this.setBlastGapCreation(10);
-							this.setBlastGapExtension(1);
-					}
+
 				} else if (mtx == "PAM250") {
 					if (this.getBlastGapCreation() == -1
-							&& this.getBlastGapExtension() == -1){
-							this.setBlastGapCreation(14);
-							this.setBlastGapExtension(2);
+							&& this.getBlastGapExtension() == -1) {
+						this.setBlastGapCreation(14);
+						this.setBlastGapExtension(2);
 					}
 
 				} else if (mtx == "BLOSUM45") {
 					if (this.getBlastGapCreation() == -1
-							&& this.getBlastGapExtension() == -1){
-							this.setBlastGapCreation(15);
-							this.setBlastGapExtension(2);
+							&& this.getBlastGapExtension() == -1) {
+						this.setBlastGapCreation(15);
+						this.setBlastGapExtension(2);
 					}
 				} else if (mtx == "BLOSUM50") {
 					if (this.getBlastGapCreation() == -1
-							&& this.getBlastGapExtension() == -1){
-							this.setBlastGapCreation(13);
-							this.setBlastGapExtension(2);
+							&& this.getBlastGapExtension() == -1) {
+						this.setBlastGapCreation(13);
+						this.setBlastGapExtension(2);
 					}
 				} else if (mtx == "BLOSUM80") {
 					if (this.getBlastGapCreation() == -1
-							&& this.getBlastGapExtension() == -1){
-							this.setBlastGapCreation(10);
-							this.setBlastGapExtension(1);
+							&& this.getBlastGapExtension() == -1) {
+						this.setBlastGapCreation(10);
+						this.setBlastGapExtension(1);
+					}
+				} else if (mtx == "BLOSUM90") {
+					if (this.getBlastGapCreation() == -1
+							&& this.getBlastGapExtension() == -1) {
+						this.setBlastGapCreation(10);
+						this.setBlastGapExtension(1);
 					}
 				}
 			}
 		}
-
+		
 		if (!isValid)
 			throw new Exception(
-					"Invalid blastp substitution matrix selection! Use one of valid values: PAM30,PAM70,PAM90,PAM250,BLOSUM45,BLOSUM50,BLOSUM62,BLOSUM80\n");
+					"Invalid blastp substitution matrix selection! Use one of valid values: PAM30,PAM70,PAM250,BLOSUM45,BLOSUM50,BLOSUM62,BLOSUM80\n");
 	}
 
 	/**
@@ -527,8 +535,8 @@ public class NCBIQBlastAlignmentProperties implements
 
 	/**
 	 * 
-	 * This method will return the part of the URL submitted to QBlast that
-	 * has all the alignment parameters defined for this alignment.
+	 * This method will return the part of the URL submitted to QBlast that has
+	 * all the alignment parameters defined for this alignment.
 	 * 
 	 * Warning!! It does not contain any sequence, gid or Genbank Identifier
 	 * These are added in the workings of the NCBIQBlastService class.
@@ -536,92 +544,92 @@ public class NCBIQBlastAlignmentProperties implements
 	 * @return cmd: part of the URL used for this alignment request
 	 * 
 	 */
-	public String getBlastCommandsToQBlast(){	
+	public String getBlastCommandsToQBlast() {
 		return this.cmd;
 	}
-	
+
 	/**
 	 * 
 	 * This method is responsible for building the String with all the alignment
 	 * parameters to use with a given request via your program
 	 * 
-	 * It does basic sanity checks on the values but nothing else at this point...
-	 *  
+	 * It does basic sanity checks on the values but nothing else at this
+	 * point...
+	 * 
 	 */
-	public void setBlastCommandsToQBlast() throws Exception{
-		
+	public void setBlastCommandsToQBlast() throws Exception {
+
 		/*
 		 * blastall program has to be set...
-		 * 
 		 */
-		if(this.getBlastProgram()=="not_set"){
+		if (this.getBlastProgram() == "not_set") {
 			throw new Exception(
-			"Impossible to execute QBlast request. Your program has not been set correctly.\n");			
+					"Impossible to execute QBlast request. Your program has not been set correctly.\n");
+		} else {
+			this.cmd = this.cmd + "&PROGRAM=" + this.getBlastProgram();
 		}
-		else{
-			this.cmd = this.cmd+"&PROGRAM=" + this.getBlastProgram();
-		}
-		
+
 		/*
 		 * A database has to be specified...
-		 * 
 		 */
-		if(this.getBlastDatabase()=="not_set"){
+		if (this.getBlastDatabase() == "not_set") {
 			throw new Exception(
-			"Impossible to execute QBlast request. Your database has not been set correctly.\n");			
+					"Impossible to execute QBlast request. Your database has not been set correctly.\n");
+		} else {
+			this.cmd = this.cmd + "&DATABASE=" + this.getBlastDatabase();
 		}
-		else{
-			this.cmd = this.cmd +"&DATABASE=" + this.getBlastDatabase();			
-		}
-		
-		/* 
-		 * This code block deals with what to do with the various non-mandatory parameters 
-		 *
-		 * */
-		if (this.getBlastExpect()!=-1) {
+
+		/*
+		 * This code block deals with what to do with the various non-mandatory
+		 * parameters
+		 */
+		if (this.getBlastExpect() != -1) {
 			this.cmd = this.cmd + "&EXPECT=" + this.getBlastExpect();
 		}
-		
-		if (this.getBlastWordSize()!=-1) {
-			this.cmd = this.cmd + "&WORD_SIZE=" + this.getAlignmentOption("WORD_SIZE");
-		}
-	
-		if (this.getBlastFromPosition()!=-1 && this.getBlastToPosition()!=-1) {
-			this.cmd = this.cmd + "&QUERY_FROM=" + this.getBlastFromPosition()+"&QUERY_TO="+this.getBlastToPosition();
-		}		
 
-		if(this.getBlastProgram()!="blastn"){
-			if(this.getBlastMatrix()!="BLOSUM62"){
-				this.cmd = this.cmd + "&MATRIX_NAME="+this.getBlastMatrix();	
-				if(this.getBlastGapCreation()!=-1 && this.getBlastGapCreation()!=-1){
-						this.setBlastGapCosts();
-						cmd = cmd + "&GAPCOSTS="+this.getBlastGapCosts();
-					}
+		if (this.getBlastWordSize() != -1) {
+			this.cmd = this.cmd + "&WORD_SIZE="
+					+ this.getAlignmentOption("WORD_SIZE");
+		}
+
+		if (this.getBlastFromPosition() != -1
+				&& this.getBlastToPosition() != -1) {
+			this.cmd = this.cmd + "&QUERY_FROM=" + this.getBlastFromPosition()
+					+ "&QUERY_TO=" + this.getBlastToPosition();
+		}
+
+		if (this.getBlastProgram() != "blastn") {
+			if (this.getBlastMatrix() != "BLOSUM62") {
+				this.cmd = this.cmd + "&MATRIX_NAME=" + this.getBlastMatrix();
+				if (this.getBlastGapCreation() != -1
+						&& this.getBlastGapCreation() != -1) {
+					this.setBlastGapCosts();
+					cmd = cmd + "&GAPCOSTS=" + this.getBlastGapCosts();
+				}
 			}
 		}
-//		if (this.getBlastAdvancedOptions()!="not_set") {
-//			cmd = cmd + "&OTHER_ADVANCED=" + this.getAlignmentOption("OTHER_ADVANCED");
-//		}
+		// if (this.getBlastAdvancedOptions()!="not_set") {
+		// cmd = cmd + "&OTHER_ADVANCED=" +
+		// this.getAlignmentOption("OTHER_ADVANCED");
+		// }
 	}
-	
+
 	/**
 	 * 
-	 * A way to start a new URL from scratch after analyzing one sequence 
-	 * before going to the next if new parameters are necessary
+	 * A way to start a new URL from scratch after analyzing one sequence before
+	 * going to the next if new parameters are necessary
 	 * 
 	 */
-	public void reinitializeBlastCommandsToQBlast(){
+	public void reinitializeBlastCommandsToQBlast() {
 		this.cmd = "CMD=Put";
 	}
-	
-	
+
 	/*
 	 * 
 	 * These three methods are necessary to comply with Interface definition
 	 * 
 	 * Could be useful
-	 * 
-	 */	
+	 */
 	public String getAlignmentOption(String key) throws Exception {
 		if (param.containsKey(key)) {
 			return this.param.get(key);
