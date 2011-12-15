@@ -71,7 +71,7 @@ public class BufferedReaderBytesRead extends Reader {
      * @param  in   A Reader
      * @param  sz   Input-buffer size
      *
-     * @exception  IllegalArgumentException  If sz is <= 0
+     * @exception  IllegalArgumentException  If sz is &lt;= 0
      */
     public BufferedReaderBytesRead(Reader in, int sz) {
         super(in);
