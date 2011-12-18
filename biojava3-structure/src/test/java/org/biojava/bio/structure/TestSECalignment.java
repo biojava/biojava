@@ -24,6 +24,8 @@ package org.biojava.bio.structure;
 
 import java.io.InputStream;
 
+import junit.framework.TestCase;
+
 import org.biojava.bio.structure.align.StructureAlignment;
 import org.biojava.bio.structure.align.StructureAlignmentFactory;
 import org.biojava.bio.structure.align.ce.CeMain;
@@ -33,11 +35,6 @@ import org.biojava.bio.structure.align.xml.AFPChainXMLConverter;
 import org.biojava.bio.structure.align.xml.AFPChainXMLParser;
 import org.biojava.bio.structure.util.StringManipulationTestsHelper;
 import org.biojava3.core.util.StringManipulationHelper;
-
-
-
-import junit.framework.TestCase;
-
 
 /** This test makes sure that the new representation of selenocysteins as SEC amino acids does not
  * affect the structure alignment results.

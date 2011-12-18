@@ -1,10 +1,11 @@
 package org.biojava.bio.structure.util;
 
-import java.util.Scanner;
-
 import junit.framework.TestCase;
 
+import org.biojava3.core.util.StringManipulationHelper;
+
 public class StringManipulationTestsHelper extends TestCase {
+
 	/**
 	 * Asserts that two strings are equal, line by line, ignoring any difference
 	 * of end line delimiters contained within the 2 Strings. This method should
@@ -16,18 +17,7 @@ public class StringManipulationTestsHelper extends TestCase {
 	 * @param actual
 	 */
 	public static void assertEqualsIgnoreEndline(String expected, String actual) {
-		Scanner scanner1 = new Scanner(expected);
-		Scanner scanner2 = new Scanner(actual);
-		String line1, line2;
-		while (scanner1.hasNextLine()) {
-			line1 = scanner1.nextLine();
-			line2 = scanner2.nextLine();
-			assertEquals(line1, line2);
-		}
-		if (scanner2.hasNextLine()) {
-			// force fail
-			assertEquals(expected, actual);
-		}
+		assertTrue(StringManipulationHelper.equalsToIgnoreEndline(expected, actual));
 	}
 
 	/**
@@ -40,16 +30,19 @@ public class StringManipulationTestsHelper extends TestCase {
 	 * @param actualXml
 	 */
 	public static void assertEqualsXml(String expectedXml, String actualXml) {
-		throw new UnsupportedOperationException("not yet implemented");
+		assertTrue(StringManipulationHelper.equalsToXml(expectedXml, actualXml));
 	}
 	
-	public static void compareString(String t, String pdb) {
-		for (int i = 0; i < t.length(); i++) {
-			System.out.println("@" + i + "\t>" + t.charAt(i) + ":"
-					+ pdb.charAt(i) + "<\t" + Integer.toHexString(t.charAt(i))
+	/**
+	 * @param s
+	 * @param pdb
+	 */
+	public static void compareString(String s, String pdb) {
+		for (int i = 0; i < s.length(); i++) {
+			System.out.println("@" + i + "\t>" + s.charAt(i) + ":"
+					+ pdb.charAt(i) + "<\t" + Integer.toHexString(s.charAt(i))
 					+ ":" + Integer.toHexString(pdb.charAt(i)));
-			if (Character.toUpperCase(t.charAt(i)) != Character.toUpperCase(pdb
-					.charAt(i))) {
+			if (Character.toUpperCase(s.charAt(i)) != Character.toUpperCase(pdb.charAt(i))) {
 				break;
 			}
 		}

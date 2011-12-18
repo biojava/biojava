@@ -25,7 +25,7 @@
 			<artifactId>junit</artifactId>
 			<scope>test</scope>
 		</dependency>
-		<dependency>
+ 		<dependency>
 			<groupId>org.biojava</groupId>
 			<artifactId>biojava3-alignment</artifactId>
 			<version>3.0.3-SNAPSHOT</version>
@@ -37,6 +37,14 @@
 			<version>3.0.3-SNAPSHOT</version>
 			<scope>compile</scope>
 		</dependency>
+
+<!--  		<dependency>
+			<groupId>org.biojava</groupId>
+			<artifactId>biojava3-core</artifactId>
+			<version>3.0.3-SNAPSHOT</version>
+			<scope>test</scope>
+		</dependency>
+ -->
 	</dependencies>
 	<properties>
 		<jdk.version>1.6</jdk.version>
