@@ -9,7 +9,7 @@ import org.biojava3.core.sequence.ProteinSequence;
 /** Interface for performing Hmmscans on sequences.
  * 
  * @author Andreas Prlic
- *
+ * @since 3.0.3
  */
 public interface HmmerScan {
 

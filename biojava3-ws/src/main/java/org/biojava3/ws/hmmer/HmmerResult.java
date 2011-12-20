@@ -5,7 +5,7 @@ import java.util.SortedSet;
 /** The results of a Hmmer search for a single sequence
  * 
  * @author Andreas Prlic
- *
+ * @since 3.0.3
  */
 public class HmmerResult implements Comparable<HmmerResult>{
 

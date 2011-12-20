@@ -20,7 +20,7 @@ import org.json.JSONObject;
 /** Makes remote calls to the Hmmer3 web site and returns Pfam domain annotations for an input protein sequence.
  * 
  * @author Andreas Prlic
- *
+ * @since 3.0.3
  */
 public class RemoteHmmerScan implements HmmerScan {
 

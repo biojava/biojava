@@ -3,7 +3,7 @@ package org.biojava3.ws.hmmer;
 /** Provides the details of a domain hit 
  * 
  * @author Andreas Prlic
- *
+ * @since 3.0.3
  */
 public class HmmerDomain implements Comparable<HmmerDomain>{
 

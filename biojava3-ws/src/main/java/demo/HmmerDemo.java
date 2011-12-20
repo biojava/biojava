@@ -12,13 +12,16 @@ import org.biojava3.ws.hmmer.HmmerResult;
 import org.biojava3.ws.hmmer.HmmerScan;
 import org.biojava3.ws.hmmer.RemoteHmmerScan;
 
+/** The cookbook recipe for how to request Pfam annotations for a protein sequence using the Hmmer3 service
+ * 
+ * @author Andreas Prlic
+ * @since 3.0.3
+ */
 public class HmmerDemo {
 
 	public static void main(String[] args){
 
 		try {
-
-			
 			// first we get a UniProt sequence
 			String uniProtID = "P26663";
 			ProteinSequence seq = getUniprot(uniProtID);
@@ -31,7 +34,7 @@ public class HmmerDemo {
 
 			
 			
-			// and now just some print statements for fun
+			// and now let's print out the obtained annotations
 			
 			System.out.println(String.format("#\t%15s\t%10s\t%s\t%s\t%8s\t%s",
 					"Domain","ACC", "Start","End","eValue","Description"));
@@ -57,15 +60,19 @@ public class HmmerDemo {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
-
-
-
-
 	}
 
+	/** Fetch a protein sequence from the UniProt web site
+	 * 
+	 * @param uniProtID
+	 * @return a Protein Sequence
+	 * @throws Exception
+	 */
 	private static ProteinSequence getUniprot(String uniProtID) throws Exception {
-		UniprotProxySequenceReader<AminoAcidCompound> uniprotSequence = new UniprotProxySequenceReader<AminoAcidCompound>(uniProtID, AminoAcidCompoundSet.getAminoAcidCompoundSet());
+		
+		AminoAcidCompoundSet set = AminoAcidCompoundSet.getAminoAcidCompoundSet();
+		UniprotProxySequenceReader<AminoAcidCompound> uniprotSequence = new UniprotProxySequenceReader<AminoAcidCompound>(uniProtID,set);
+		
 		ProteinSequence seq = new ProteinSequence(uniprotSequence);
 		
 		return seq;
