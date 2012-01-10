@@ -181,7 +181,7 @@ public class PrepareIndexFile {
 		int pos = 1;
 		for ( String id : dbIds){
 			buf.append(id);
-			if ( pos < dbIds.size());
+			if ( pos < dbIds.size())
 				buf.append(":");
 		}
 
