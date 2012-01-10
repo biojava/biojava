@@ -83,7 +83,7 @@ implements StructureAlignment  {
 	}
 
 	public ConfigStrucAligParams getParameters() {
-		return getParameters();
+		return null;
 	}
 	
 	public void setParameters(ConfigStrucAligParams o){
