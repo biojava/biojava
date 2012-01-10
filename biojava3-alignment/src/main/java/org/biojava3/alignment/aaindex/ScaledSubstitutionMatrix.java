@@ -126,7 +126,7 @@ public class ScaledSubstitutionMatrix implements
 	
 	@Override
 	public CompoundSet<AminoAcidCompound> getCompoundSet() {
-		return getCompoundSet();
+		return compoundSet;
 	}
 	  @Override
 	    public String getMatrixAsString() {
