@@ -2928,7 +2928,7 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 			if (subField.equals("TITL")) {
 				//add a space to the end of a line so that when wrapped the
 				//words on the join won't be concatenated
-				titl.append(line.substring(19, line.length()).trim() + " ");
+                titl.append(line.substring(19, line.length()).trim()).append(" ");
 				if (DEBUG) {
 					System.out.println("TITL '" + titl.toString() + "'");
 				}
@@ -2941,13 +2941,13 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 			}
 			//        JRNL        REF    NAT.IMMUNOL.                  V.   8   430 2007
 			if (subField.equals("REF ")) {
-				ref.append(line.substring(19, line.length()).trim() + " ");
+                ref.append(line.substring(19, line.length()).trim()).append(" ");
 				if (DEBUG) {
 					System.out.println("REF '" + ref.toString() + "'");
 				}
 			}
 			if (subField.equals("PUBL")) {
-				publ.append(line.substring(19, line.length()).trim() + " ");
+                publ.append(line.substring(19, line.length()).trim()).append(" ");
 				if (DEBUG) {
 					System.out.println("PUBL '" + publ.toString() + "'");
 				}

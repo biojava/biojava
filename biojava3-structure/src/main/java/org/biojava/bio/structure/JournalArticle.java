@@ -232,36 +232,36 @@ public class JournalArticle implements Serializable{
         StringBuffer doiString = new StringBuffer("JRNL        DOI    ");
 
         for (Author author : authorList) {
-            authString.append(author + ",");
+            authString.append(author).append(",");
         }
-        jrnlString.append(authString.toString() + eol);
+        jrnlString.append(authString.toString()).append(eol);
         titlString.append(title);
-        jrnlString.append(titlString.toString() + eol);
+        jrnlString.append(titlString.toString()).append(eol);
         if (!editorList.isEmpty()) {
             for (Author editor : editorList) {
-                editString.append(editor + ",");
+                editString.append(editor).append(",");
             }
-            jrnlString.append(editString.toString() + eol);
+            jrnlString.append(editString.toString()).append(eol);
         }
 //        if (ref.equals("TO BE PUBLISHED")) {
             refString.append(ref);
-            jrnlString.append(refString.toString() + eol);
+        jrnlString.append(refString.toString()).append(eol);
 //        }
         if (!publisher.equals("")) {
             publString.append(publisher);
-            jrnlString.append(publString.toString() + eol);
+            jrnlString.append(publString.toString()).append(eol);
         }
         if (!refn.equals("")) {
             refnString.append(refn);
-            jrnlString.append(refnString.toString() + eol);
+            jrnlString.append(refnString.toString()).append(eol);
         }
         if (!pmid.equals("")) {
             pmidString.append(pmid);
-            jrnlString.append(pmidString.toString() + eol);
+            jrnlString.append(pmidString.toString()).append(eol);
         }
         if (!doi.equals("")) {
             doiString.append(doi);
-            jrnlString.append(doiString.toString() + eol);
+            jrnlString.append(doiString.toString()).append(eol);
         }
 
         return jrnlString.toString();

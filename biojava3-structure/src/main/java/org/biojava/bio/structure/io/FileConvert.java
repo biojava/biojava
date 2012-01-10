@@ -179,7 +179,7 @@ public class FileConvert {
 			String connectLine = "CONECT" + atomserial + bond1 + bond2 + bond3 +
 			bond4 + hyd1 + hyd2 + salt1 + hyd3 + hyd4 + salt2;
 
-			str.append(connectLine + newline);
+            str.append(connectLine).append(newline);
 		}
 		return str.toString();
 	}
@@ -205,8 +205,8 @@ public class FileConvert {
 
 		//REMARK 800
 		if (!structure.getSites().isEmpty()) {
-			str.append("REMARK 800                                                                      " + newline);
-			str.append("REMARK 800 SITE                                                                 " + newline);
+            str.append("REMARK 800                                                                      ").append(newline);
+            str.append("REMARK 800 SITE                                                                 ").append(newline);
 			for (Site site : structure.getSites()) {
 				site.remark800toPDB(str);
 			}
@@ -265,7 +265,7 @@ public class FileConvert {
 			}
 
 			if ( structure.isNmr()) {
-				str.append("ENDMDL"+newline);
+                str.append("ENDMDL").append(newline);
 			}
 
 

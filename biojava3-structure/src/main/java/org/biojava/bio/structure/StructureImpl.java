@@ -444,23 +444,23 @@ public class StructureImpl implements Structure, Serializable {
 
 
 				str.append(newline);
-                str.append(" length SEQRES: " +cha.getSeqResLength());
-				str.append(" length ATOM: " +cha.getAtomLength());
-				str.append(" aminos: " +agr.size());
-				str.append(" hetatms: "+hgr.size());
+                str.append(" length SEQRES: ").append(cha.getSeqResLength());
+                str.append(" length ATOM: ").append(cha.getAtomLength());
+                str.append(" aminos: ").append(agr.size());
+                str.append(" hetatms: ").append(hgr.size());
 				str.append(" nucleotides: "+ngr.size() + newline);
 			}
 
 		}
         str.append("DBRefs: "+ dbrefs.size()+ newline);
         for (DBRef dbref: dbrefs){
-        	str.append(dbref.toPDB() + newline);
+            str.append(dbref.toPDB()).append(newline);
         }
-		str.append("Molecules: " + newline);
+        str.append("Molecules: ").append(newline);
 		Iterator<Compound> iter = compounds.iterator();
 		while (iter.hasNext()){
 			Compound mol = iter.next();
-			str.append(mol+newline);
+            str.append(mol).append(newline);
 		}
 
 

@@ -141,14 +141,14 @@ public class Compound implements Cloneable, Serializable {
 					}
 					if ( o instanceof List){
 						if ( o != null)
-							buf.append(name.substring(3,name.length())+": ");
+                            buf.append(name.substring(3, name.length())).append(": ");
 
 						List<Object>lst = (List<Object>)o;
 						for (Object obj : lst){
 							if ( obj instanceof Chain){
 								continue;
 							}
-							buf.append(obj + " ");
+                            buf.append(obj).append(" ");
 						}
 
 					}

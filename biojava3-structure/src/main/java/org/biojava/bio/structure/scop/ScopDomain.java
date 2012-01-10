@@ -62,23 +62,23 @@ public class ScopDomain implements Serializable, Cloneable{
 		buf.append("\t") ;
 		buf.append(classificationId);
 		buf.append("\t") ;
-		buf.append(sunid+"");
+        buf.append(String.valueOf(sunid)).append("");
 		buf.append("\t") ;
 		
 		buf.append("cl=");
-		buf.append(classId+"");
+        buf.append(String.valueOf(classId)).append("");
 		buf.append(",cf=");
-		buf.append(foldId+"");
+        buf.append(String.valueOf(foldId)).append("");
 		buf.append(",sf=");
-		buf.append(familyId+"");
+        buf.append(String.valueOf(familyId)).append("");
 		buf.append(",fa=");
-		buf.append(superfamilyId+"");
+        buf.append(String.valueOf(superfamilyId)).append("");
 		buf.append(",dm=");
-		buf.append(domainId+"");
+        buf.append(String.valueOf(domainId)).append("");
 		buf.append(",sp=");
-		buf.append(speciesId+"");
+        buf.append(String.valueOf(speciesId)).append("");
 		buf.append(",px=");
-		buf.append(px+"");
+        buf.append(String.valueOf(px)).append("");
 		
 		
 		return buf.toString();

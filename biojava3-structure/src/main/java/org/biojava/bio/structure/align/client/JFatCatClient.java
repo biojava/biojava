@@ -210,7 +210,7 @@ public class JFatCatClient {
 		String line = null;
 		try {
 			while ((line = reader.readLine()) != null) {
-				sb.append(line + newline);
+                sb.append(line).append(newline);
 			}
 		} catch (IOException e) {
 			//e.printStackTrace();

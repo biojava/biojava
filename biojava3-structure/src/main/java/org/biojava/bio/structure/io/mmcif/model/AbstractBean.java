@@ -36,7 +36,7 @@ public abstract class AbstractBean {
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public String toString(){
 		StringBuffer buf = new StringBuffer();
-		buf.append(this.getClass().getName() + ": ");
+        buf.append(this.getClass().getName()).append(": ");
 		/* disabled for the moment
 
     	 buf.append(" chains: " );
@@ -63,15 +63,15 @@ public abstract class AbstractBean {
 							buf.append(name.substring(3, name.length())+": "+ o + " ");
 					}
 					else if ( o instanceof List){
-						if ( o != null)                        	
-							buf.append(name.substring(3,name.length())+": ");
+						if ( o != null)
+                            buf.append(name.substring(3, name.length())).append(": ");
 
 						List<Object>lst = (List<Object>)o;
 						for (Object obj : lst){
 							if ( obj instanceof Chain){
 								continue;
 							}
-							buf.append(obj + " ");
+                            buf.append(obj).append(" ");
 						}
 
 					} 

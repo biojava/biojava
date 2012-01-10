@@ -96,15 +96,15 @@ public class ModificationConditionImpl implements ModificationCondition {
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("Components:");
-		for (Component comp : components) {	
-			sb.append(comp+";");
+		for (Component comp : components) {
+            sb.append(comp).append(";");
 		}
 		sb.deleteCharAt(sb.length()-1);
 		
 		if (!linkages.isEmpty()) {
 			sb.append("\nLinkages:");
 			for (ModificationLinkage link : linkages) {
-				sb.append(link+";");
+                sb.append(link).append(";");
 			}
 			sb.deleteCharAt(sb.length()-1);
 		}

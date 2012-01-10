@@ -525,7 +525,7 @@ public class ChainImpl implements Chain, Serializable {
 		str.append("Chain >"+getName()+"<"+newline) ;
 		if ( mol != null ){
 			if ( mol.getMolName() != null){
-				str.append(mol.getMolName()+newline);
+                str.append(mol.getMolName()).append(newline);
 			}
 		}
 		str.append("total SEQRES length: " + getSeqResGroups().size() +
@@ -535,7 +535,7 @@ public class ChainImpl implements Chain, Serializable {
 
 		for ( int i = 0 ; i < seqResGroups.size();i++){
 			Group gr = (Group) seqResGroups.get(i);
-			str.append(gr.toString() + newline) ;
+            str.append(gr.toString()).append(newline);
 		}
 		return str.toString() ;
 

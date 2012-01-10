@@ -78,7 +78,7 @@ public class StringManipulationHelper  {
 		try {
 			while ((line = reader.readLine()) != null) {
 
-				sb.append(line + UNIX_NEWLINE);
+                sb.append(line).append(UNIX_NEWLINE);
 			}
 		} catch (IOException e) {
 			// e.printStackTrace();
