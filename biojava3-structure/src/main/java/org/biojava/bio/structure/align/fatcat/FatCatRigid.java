@@ -96,7 +96,7 @@ public class FatCatRigid extends FatCat implements StructureAlignment{
 		if (! (parameters instanceof FatCatParameters)){
 			throw new IllegalArgumentException("Provided parameters are not of type FatCatParameters!");
 		}
-		params = (FatCatParameters) params;
+		params = (FatCatParameters) parameters;
 	}
 
 
