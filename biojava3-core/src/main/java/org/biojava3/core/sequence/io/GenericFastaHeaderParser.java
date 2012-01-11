@@ -68,13 +68,15 @@ public class GenericFastaHeaderParser<S extends AbstractSequence<C>, C extends C
         String[] data = new String[0];
         ArrayList<String> values = new ArrayList<String>();
         StringBuffer sb = new StringBuffer();
-        if(header.indexOf("length=") != -1){
-            data = new String[1];
-            int index = header.indexOf("length=");
-            data[0] = header.substring(0, index).trim();
+        //commented out 1/11/2012 to resolve an issue where headers do contain a length= at the end that are not recognized
+        //if(header.indexOf("length=") != -1){
+        //    data = new String[1];
+        //    int index = header.indexOf("length=");
+        //    data[0] = header.substring(0, index).trim();
     //        System.out.println("accession=" + data[0]);
-            return data;
-        } else if (header.startsWith("PDB:") == false) {
+        //    return data;
+        //} else
+         if (header.startsWith("PDB:") == false) {
             for (int i = 0; i < header.length(); i++) {
                 if (header.charAt(i) == '|') {
                     values.add(sb.toString());
