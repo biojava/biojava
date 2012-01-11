@@ -86,9 +86,11 @@ public class RemotePDPProvider extends SerializableCache<String,SortedSet<String
 
 		super(CACHE_FILE_NAME);
 
-		if ( ! useCache)
+		if ( ! useCache) {
 			disableCache();
-		else if ( serializedCache.keySet().size() < 10000){
+			//else if ( serializedCache.keySet().size() < 10000){
+		} else {
+			// make sure we always have the latest assignments...
 			loadRepresentativeDomains();
 		}
 
@@ -100,41 +102,41 @@ public class RemotePDPProvider extends SerializableCache<String,SortedSet<String
 	 * 
 	 */
 	private void loadRepresentativeDomains() {
-		
-			AssignmentXMLSerializer results = null;
-			try {
-				URL u = new URL(server + "getRepresentativePDPDomains");
-				System.out.println(u);
-				InputStream response = HTTPConnectionTools.getInputStream(u);
-				String xml = JFatCatClient.convertStreamToString(response);			
-				//System.out.println(xml);
-				results  = AssignmentXMLSerializer.fromXML(xml);
 
-				Map<String,String> data = results.getAssignments();
-				System.out.println("got " + data.size() + " domain ranges for PDP domains from server.");
-				for (String key: data.keySet()){
-					String range = data.get(key);
-					
-					// work around list in results;
-					
-					String[] spl = range.split(",");
-					SortedSet<String> value = new TreeSet<String>();
-					
-					for (String s : spl){
-						value.add(s);
-						
-					}
-					serializedCache.put(key, value);
+		AssignmentXMLSerializer results = null;
+		try {
+			URL u = new URL(server + "getRepresentativePDPDomains");
+			System.out.println(u);
+			InputStream response = HTTPConnectionTools.getInputStream(u);
+			String xml = JFatCatClient.convertStreamToString(response);			
+			//System.out.println(xml);
+			results  = AssignmentXMLSerializer.fromXML(xml);
+
+			Map<String,String> data = results.getAssignments();
+			System.out.println("got " + data.size() + " domain ranges for PDP domains from server.");
+			for (String key: data.keySet()){
+				String range = data.get(key);
+
+				// work around list in results;
+
+				String[] spl = range.split(",");
+				SortedSet<String> value = new TreeSet<String>();
+
+				for (String s : spl){
+					value.add(s);
+
 				}
-				
-			} catch (Exception e){
-				e.printStackTrace();
+				serializedCache.put(key, value);
 			}
-			return ;
-			
-		
 
-		
+		} catch (Exception e){
+			e.printStackTrace();
+		}
+		return ;
+
+
+
+
 	}
 
 
@@ -152,7 +154,7 @@ public class RemotePDPProvider extends SerializableCache<String,SortedSet<String
 		if ( serializedCache != null){
 			if ( serializedCache.containsKey(pdbDomainName)){
 				domainRanges= serializedCache.get(pdbDomainName);
-				//System.out.println("got ranges: " + domainRanges);
+
 			}
 		}
 
@@ -161,7 +163,11 @@ public class RemotePDPProvider extends SerializableCache<String,SortedSet<String
 		Structure s = null;
 		try {
 
-			if ( domainRanges == null || domainRanges.size() == 0){
+			
+
+			boolean shouldRequestDomainRanges = checkDomainRanges(domainRanges);
+			
+			if (shouldRequestDomainRanges){
 				URL u = new URL(server + "getPDPDomain?pdpId="+pdbDomainName);
 				System.out.println(u);
 				InputStream response = HTTPConnectionTools.getInputStream(u);
@@ -171,6 +177,7 @@ public class RemotePDPProvider extends SerializableCache<String,SortedSet<String
 				if ( domainRanges != null)
 					cache(pdbDomainName,domainRanges);
 			}
+
 			
 			int i =0 ;
 			StringBuffer r = new StringBuffer();
@@ -190,14 +197,14 @@ public class RemotePDPProvider extends SerializableCache<String,SortedSet<String
 					r.append(",");
 				}
 			}
-			
+
 			String ranges = r.toString();
-			
+			System.out.println(ranges);
 			StructureName sname = new  StructureName(pdbDomainName);
 			Structure tmp = cache.getStructure(sname.getPdbId());
 			s = StructureTools.getSubRanges(tmp, ranges);
-			
-			
+
+
 			s.setName(pdbDomainName);
 
 		} catch (Exception e){
@@ -206,6 +213,28 @@ public class RemotePDPProvider extends SerializableCache<String,SortedSet<String
 
 		return s;
 	}
+
+	/** returns true if client should fetch domain definitions from server
+	 * 
+	 * @param domainRanges
+	 * @return
+	 */
+	private boolean checkDomainRanges(SortedSet<String> domainRanges) {
+		
+		if ( (domainRanges == null) || (domainRanges.size() == 0)){
+			return true;
+		}
+		
+		for ( String d : domainRanges){
+			//System.out.println("domainRange: >" + d +"< " + d.length());
+			if ( (d != null) && (d.length() >0)){
+				return false;
+			}
+		}
+		
+		return true;
+	}
+
 
 	public SortedSet<String> getPDPDomainNamesForPDB(String pdbId){
 		SortedSet<String> results = null;
