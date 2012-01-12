@@ -143,7 +143,7 @@ public class NCBIQBlastService implements RemotePairwiseAlignmentService {
 
 		rpa.setBlastCommandsToQBlast();
 
-		if (str.length() == 0 || str == null) {
+		if (str == null || str.length() == 0) {
 			throw new Exception(
 					"Impossible to execute QBlast request. Your sequence info has not been set correctly.\n");
 		} else {
