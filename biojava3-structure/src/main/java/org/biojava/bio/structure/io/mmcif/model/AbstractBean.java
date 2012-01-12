@@ -59,12 +59,10 @@ public abstract class AbstractBean {
 
 					Object o  = m.invoke(this, new Object[]{});
 					if ( o instanceof String){
-						if ( o != null)
-							buf.append(name.substring(3, name.length())+": "+ o + " ");
+                        buf.append(name.substring(3, name.length())+": "+ o + " ");
 					}
 					else if ( o instanceof List){
-						if ( o != null)
-                            buf.append(name.substring(3, name.length())).append(": ");
+                        buf.append(name.substring(3, name.length())).append(": ");
 
 						List<Object>lst = (List<Object>)o;
 						for (Object obj : lst){
