@@ -26,7 +26,7 @@ import java.util.Map;
 /**
  * FASTQ sequence format variant.
  *
- * @since 1.7.1
+ * @since 3.0.3
  */
 public enum FastqVariant
 {

@@ -25,7 +25,7 @@ import java.io.IOException;
 /**
  * Reader for {@link FastqVariant#FASTQ_ILLUMINA} formatted sequences.
  *
- * @since 1.7.1
+ * @since 3.0.3
  */
 public final class IlluminaFastqReader
     extends AbstractFastqReader

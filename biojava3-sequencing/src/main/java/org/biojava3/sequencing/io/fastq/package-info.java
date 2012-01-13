@@ -56,6 +56,11 @@
  * Nucleic Acids Research, <a href="http://dx.doi.org/10.1093/nar/gkp1137">doi:10.1093/nar/gkp1137</a>
  * </p>
  *
- * @since 1.7.1
+ * <p>
+ * This package was copied from biojava-legacy-trunk/sequencing and refactored from its original package
+ * <code>org.biojava.bio.program.fastq</code>.
+ * </p>
+ *
+ * @since 3.0.3
  */
 package org.biojava3.sequencing.io.fastq;

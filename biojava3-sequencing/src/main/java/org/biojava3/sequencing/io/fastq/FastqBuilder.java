@@ -23,7 +23,7 @@ package org.biojava3.sequencing.io.fastq;
 /**
  * Fluent builder API for creating FASTQ formatted sequences.
  *
- * @since 1.7.1
+ * @since 3.0.3
  */
 public final class FastqBuilder
 {

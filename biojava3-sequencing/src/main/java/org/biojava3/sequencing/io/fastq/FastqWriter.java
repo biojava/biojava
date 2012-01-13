@@ -27,7 +27,7 @@ import java.io.OutputStream;
 /**
  * Writer for FASTQ formatted sequences.
  *
- * @since 1.7.1
+ * @since 3.0.3
  */
 public interface FastqWriter
 {
