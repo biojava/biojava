@@ -237,6 +237,7 @@
 
 		<module>biojava3-core</module>
 		<module>biojava3-phylo</module>
+		<module>biojava3-sequencing</module>
 		<module>biojava3-structure</module>
 		<module>biojava3-structure-gui</module>
 		<module>biojava3-genome</module>
