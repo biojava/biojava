@@ -44,7 +44,7 @@ public class Utils {
 	 */
 	public final static boolean doesSequenceContainInvalidChar(String sequence, Set<Character> cSet){
 		for(char c:sequence.toCharArray()){
-			if(cSet.contains(c) == false) return true;
+			if(!cSet.contains(c)) return true;
 		}
 		return false;
 	}
@@ -68,7 +68,7 @@ public class Utils {
 		else cArray = sequence.toCharArray();
 		if(cSet == null) cSet = PeptideProperties.standardAASet;
 		for(char c:cArray){
-			if(cSet.contains(c) == false) total++;
+			if(!cSet.contains(c)) total++;
 		}
 		return total;
 	}
@@ -89,7 +89,7 @@ public class Utils {
 		String cleanSeq = "";
 		if(cSet == null) cSet = PeptideProperties.standardAASet; 
 		for(char c:sequence.toCharArray()){
-			if(cSet.contains(c) == false){
+			if(!cSet.contains(c)){
 				cleanSeq += "-";
 				invalidCharSet.add(c);
 			}else{

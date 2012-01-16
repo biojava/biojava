@@ -1889,7 +1889,7 @@ nBestTrace=nTrace;
 				prevGapEnd = alignmentPositionOrLength;
 			alignmentPositionOrLength++;
 
-			if(brk_flg[i][j]==true) {
+			if(brk_flg[i][j]) {
 				//System.out.println("hit break flag at: " + i + "  " + j + " sum " + sum_ret + " lcmp " + alignmentPositionOrLength);				
 				break;
 

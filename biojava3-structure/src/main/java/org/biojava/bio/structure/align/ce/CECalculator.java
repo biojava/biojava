@@ -1820,7 +1820,7 @@ nBestTrace=nTrace;
 			align_se2[lcmp]=jMax; 
 			lcmp++;
 
-			if(brk_flg[i][j]==true) {
+			if(brk_flg[i][j]) {
 				//System.out.println("hit break flag at: " + i + "  " + j + " sum " + sum_ret + " lcmp " + lcmp);				
 				break;
 

@@ -29,10 +29,10 @@ public class OutputHitsGFF {
             FeatureList gene = listGenes.selectByAttribute("gene_id", gene_id);
             for (FeatureI geneFeature : gene) {
 
-                if (includeNegativeStrand == false && geneFeature.location().isNegative()) {
+                if (!includeNegativeStrand && geneFeature.location().isNegative()) {
                     continue;
                 }
-                if (includeFrameShift == false) {
+                if (!includeFrameShift) {
                     boolean frameShift = false;
                     FeatureList cdsList = gene.selectByType("CDS");
                     for(FeatureI cdsFeature : cdsList){

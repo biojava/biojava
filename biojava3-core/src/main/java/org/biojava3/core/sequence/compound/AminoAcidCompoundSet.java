@@ -133,7 +133,7 @@ public class AminoAcidCompoundSet implements CompoundSet<AminoAcidCompound> {
 
     public boolean compoundsEquivalent(AminoAcidCompound compoundOne, AminoAcidCompound compoundTwo) {
         Set<AminoAcidCompound> equivalents = getEquivalentCompounds(compoundOne);
-        return (equivalents == null) ? false : equivalents.contains(compoundTwo);
+        return (equivalents != null) && equivalents.contains(compoundTwo);
     }
 
     public Set<AminoAcidCompound> getEquivalentCompounds(AminoAcidCompound compound) {

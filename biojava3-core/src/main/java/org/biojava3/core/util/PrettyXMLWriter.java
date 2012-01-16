@@ -59,7 +59,7 @@ public class PrettyXMLWriter implements XMLWriter {
         throws IOException
     {
         if (!namespacePrefixes.containsKey(nsURI)) {
-            if (isOpeningTag == true) {
+            if (isOpeningTag) {
                 String prefix = allocPrefix(nsURI);
                 attribute("xmlns:" + prefix, nsURI);
             } else {

@@ -66,7 +66,7 @@ public class PeptidePropertiesImpl implements IPeptideProperties{
 	@Override
 	public double getMolecularWeight(ProteinSequence sequence, File aminoAcidCompositionFile) throws JAXBException, FileNotFoundException {
 		File elementMassFile = new File("./src/main/resources/ElementMass.xml");
-		if(elementMassFile.exists() == false){
+		if(!elementMassFile.exists()){
 			throw new FileNotFoundException("Cannot locate ElementMass.xml. " +
 					"Please use getMolecularWeight(ProteinSequence, File, File) to specify ElementMass.xml location.");
 		}
@@ -99,7 +99,7 @@ public class PeptidePropertiesImpl implements IPeptideProperties{
 	public AminoAcidCompositionTable obtainAminoAcidCompositionTable(File aminoAcidCompositionFile) 
 		throws JAXBException, FileNotFoundException{
 		File elementMassFile = new File("./src/main/resources/ElementMass.xml");
-		if(elementMassFile.exists() == false){
+		if(!elementMassFile.exists()){
 			throw new FileNotFoundException("Cannot locate ElementMass.xml. " +
 					"Please use getMolecularWeight(ProteinSequence, File, File) to specify ElementMass.xml location.");
 		}
@@ -140,7 +140,7 @@ public class PeptidePropertiesImpl implements IPeptideProperties{
 		Map<AminoAcidCompound, Integer> extinctAA2Count = this.getExtinctAACount(sequence);
 		
 		double eProt;
-		if(assumeCysReduced == false){
+		if(!assumeCysReduced){
 			eProt = extinctAA2Count.get(aaSet.getCompoundForString("Y")) * 
 				Constraints.aa2ExtinctionCoefficient.get(aaSet.getCompoundForString("Y")) + 
 				extinctAA2Count.get(aaSet.getCompoundForString("W")) * 

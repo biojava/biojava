@@ -76,7 +76,7 @@ public class GenericFastaHeaderParser<S extends AbstractSequence<C>, C extends C
     //        System.out.println("accession=" + data[0]);
         //    return data;
         //} else
-         if (header.startsWith("PDB:") == false) {
+         if (!header.startsWith("PDB:")) {
             for (int i = 0; i < header.length(); i++) {
                 if (header.charAt(i) == '|') {
                     values.add(sb.toString());
