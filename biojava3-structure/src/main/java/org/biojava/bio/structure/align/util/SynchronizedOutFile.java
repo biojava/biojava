@@ -8,6 +8,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.zip.GZIPOutputStream;
 
 public class SynchronizedOutFile {
 
@@ -18,11 +19,17 @@ public class SynchronizedOutFile {
 	int ARR_SIZE=100;
 	Integer counter;
 
-	/** create a thread safe wrapper for working with this file
+	boolean useGzipCompression = false;
+	
+	
+	/** Create a thread safe wrapper for writing to this file, the file will be gzip compressed.
 	 * 
-	 * @param f
+	 * @param f file to write to
+	 * @param gzipCompress flag if file should be gzip compressed
+	 * @throws FileNotFoundException
+	 * @throws IOException
 	 */
-	public SynchronizedOutFile(File f) throws FileNotFoundException, IOException{
+	public SynchronizedOutFile(File f, boolean gzipCompress) throws FileNotFoundException, IOException{
 		if ( f.isDirectory())
 			throw new FileNotFoundException("please provide a file and not a directory");
 
@@ -33,8 +40,20 @@ public class SynchronizedOutFile {
 		file = f;
 		tmp = new String[ARR_SIZE];
 		counter = -1;
-	}
+		useGzipCompression = gzipCompress;
 
+	}
+	
+	/** create a thread safe wrapper for working with this file
+	 * 
+	 * @param f
+	 */
+	public SynchronizedOutFile(File f) throws FileNotFoundException, IOException{
+		
+		this(f,false);
+		
+	}
+		
 	public synchronized void write(String message) throws IOException{
 
 		synchronized (counter){
@@ -59,7 +78,11 @@ public class SynchronizedOutFile {
 		
 		OutputStream out = null;
 		try {
-			out = new BufferedOutputStream(new  FileOutputStream(file, true));
+			if ( useGzipCompression){
+				out = new BufferedOutputStream(new GZIPOutputStream(new FileOutputStream(file, true)));
+			} else {
+				out = new BufferedOutputStream(new  FileOutputStream(file, true));
+			}
 			for ( int i = 0 ; i <= counter ; i++){
 				if ( tmp[i] == null )
 					continue;
