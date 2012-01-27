@@ -240,17 +240,15 @@ public class PDBFileParser  {
 
 	int atomCount;
 
-	/** the maximum number of atoms that will be parsed before the parser switches to a CA-only
-	 * representation of the PDB file. If this limit is exceeded also the SEQRES groups will be
-	 * ignored.
-	 */
-	public static final int ATOM_CA_THRESHOLD = 500000;
+	
 
-	/**  the maximum number of atoms we will add to a structure
-     this protects from memory overflows in the few really big protein structures.
-	 */
-	public static final int MAX_ATOMS = 700000; // tested with java -Xmx300M
-
+	private int my_ATOM_CA_THRESHOLD ;
+	
+	
+	
+	
+	private int load_max_atoms;
+	
 	private boolean atomOverflow;
 
 	/** flag to tell parser to only read Calpha coordinates **/
@@ -286,8 +284,9 @@ public class PDBFileParser  {
 		atomCount = 0;
 		atomOverflow = false;
 		parseCAonly = false;
+		load_max_atoms = params.getMaxAtoms();
 
-
+		my_ATOM_CA_THRESHOLD = params.getAtomCaThreshold();
 
 	}
 
@@ -1674,9 +1673,9 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 
 		atomCount++;
 
-		if ( atomCount == ATOM_CA_THRESHOLD ) {
+		if ( atomCount == my_ATOM_CA_THRESHOLD ) {
 			// throw away the SEQRES lines - too much to deal with...
-			System.err.println("more than " + ATOM_CA_THRESHOLD + " atoms in this structure, ignoring the SEQRES lines");
+			System.err.println("more than " + my_ATOM_CA_THRESHOLD + " atoms in this structure, ignoring the SEQRES lines");
 			seqResChains.clear();
 
 			switchCAOnly();
@@ -1685,12 +1684,12 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 		
 		
 
-		if ( atomCount == MAX_ATOMS){
-			System.err.println("too many atoms (>"+MAX_ATOMS+"in this protein structure.");
+		if ( atomCount == load_max_atoms){
+			System.err.println("too many atoms (>"+load_max_atoms+"in this protein structure.");
 			System.err.println("ignoring lines after: " + line);
 			return;
 		}
-		if ( atomCount > MAX_ATOMS){
+		if ( atomCount > load_max_atoms){
 			//System.out.println("too many atoms in this protein structure.");
 			//System.out.println("ignoring line: " + line);
 			return;
