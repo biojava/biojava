@@ -1682,6 +1682,8 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 			switchCAOnly();
 
 		}
+		
+		
 
 		if ( atomCount == MAX_ATOMS){
 			System.err.println("too many atoms (>"+MAX_ATOMS+"in this protein structure.");
@@ -1711,6 +1713,23 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 			// only parse CA atoms...
 			if (! fullname.equals(" CA ")){
 				//System.out.println("ignoring " + line);
+				atomCount--;
+				return;
+			}
+		}
+		
+		if ( params.getAcceptedAtomNames() != null) {
+			
+			boolean found = false;
+			for (String ok : params.getAcceptedAtomNames()){
+				//System.out.println(ok + "< >" + fullname +"<");
+				
+				if ( ok.equals(fullname)) {
+					found = true;
+					break;
+				}
+			}
+			if ( ! found) {
 				atomCount--;
 				return;
 			}
@@ -1794,7 +1813,9 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 		else {
 			current_group.addAtom(atom);
 		}
-		//System.out.println(current_group);
+		
+		
+		//System.out.println("current group: " + current_group);
 	}
 
 
@@ -3219,6 +3240,7 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 	public void setFileParsingParameters(FileParsingParameters params)
 	{
 		this.params= params;
+				
 		if ( !params.isLoadChemCompInfo()) {
 			ChemCompGroupFactory.setChemCompProvider(new ReducedChemCompProvider());
 		}
