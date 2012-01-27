@@ -86,6 +86,8 @@ public class FileParsingParameters implements Serializable
 	private boolean storeEmptySeqRes;
 
 
+	String[] fullAtomNames;
+	
 	public FileParsingParameters(){
 		setDefault();
 	}
@@ -105,6 +107,7 @@ public class FileParsingParameters implements Serializable
 		storeEmptySeqRes = false;
 
 		updateRemediatedFiles = false;
+		fullAtomNames = null;
 	}
 
 	/** is secondary structure assignment being parsed from the file?
@@ -232,6 +235,24 @@ public class FileParsingParameters implements Serializable
 	 */
 	public void setUpdateRemediatedFiles(boolean updateRemediatedFiles) {
 		this.updateRemediatedFiles = updateRemediatedFiles;
+	}
+
+	/** by default the parser will read in all atoms (unless using the CAonly switch). This allows to specify a set of atoms to be read. e.g.
+	 * {" CA ", " CB " }. Returns null if all atoms are accepted.
+	 * @return accepted atom names, or null if all atoms are accepted. default null
+	 */
+	public String[] getAcceptedAtomNames() {
+		return fullAtomNames;
+	}
+
+	
+	/** by default the parser will read in all atoms (unless using the CAonly switch). This allows to specify a set of atoms to be read. e.g.
+	 * {" CA ", " CB " }. Returns null if all atoms are accepted.
+	 * @param accepted atom names, or null if all atoms are accepted. default null
+	 */
+	
+	public void setAcceptedAtomNames(String[] fullAtomNames) {
+		this.fullAtomNames = fullAtomNames;
 	}
 
 
