@@ -42,7 +42,10 @@ public class RemoteDomainProvider extends SerializableCache<String,SortedSet<Str
 		
 		if( ! cache) {
 			disableCache();
-		} else if ( serializedCache.keySet().size() < 20000){
+		//} else if ( serializedCache.keySet().size() < 20000){
+		} else {
+			// always load the representaitve assignments from server...
+			// this makes sure we always have the latest assignments
 			loadRepresentativeDomainAssignments();
 			
 		}
