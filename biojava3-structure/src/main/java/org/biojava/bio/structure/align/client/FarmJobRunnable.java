@@ -25,6 +25,7 @@ import org.biojava.bio.structure.align.fatcat.FatCatFlexible;
 import org.biojava.bio.structure.align.fatcat.FatCatRigid;
 import org.biojava.bio.structure.align.model.AFPChain;
 import org.biojava.bio.structure.align.util.AFPChainScorer;
+import org.biojava.bio.structure.align.util.AlignmentTools;
 import org.biojava.bio.structure.align.util.AtomCache;
 import org.biojava.bio.structure.align.util.ResourceManager;
 import org.biojava.bio.structure.align.xml.AFPChainXMLConverter;
@@ -78,7 +79,8 @@ public class FarmJobRunnable implements Runnable {
 	AtomCache cache;
 
 	boolean verbose = false;
-
+	String version = null;
+	
 	public FarmJobRunnable(FarmJobParameters params){
 		terminated = false;
 		this.params = params;
@@ -196,7 +198,10 @@ public class FarmJobRunnable implements Runnable {
 			List<String> results = new ArrayList<String>();
 
 			String algorithmName = msg.getMethod();
-			
+			if ( version == null) {
+				setVersion(algorithmName);
+				
+			}
 			for(PdbPair pair : alignmentPairs){
 
 				if ( terminated)
@@ -304,6 +309,20 @@ public class FarmJobRunnable implements Runnable {
 	}
 
 
+	private void setVersion(String algorithmName) {
+		StructureAlignment algorithm;
+		try {
+			algorithm = StructureAlignmentFactory.getAlgorithm(algorithmName);
+			version = algorithm.getVersion();
+		} catch (StructureException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			version = resourceManager.getString(JFATCAT_VERSION);
+		}
+		
+		
+	}
+
 	private void notifyStartAlignment(String name1, String name2) {
 		if ( progressListeners != null){
 			for (AlignmentProgressListener li : progressListeners){
@@ -396,7 +415,15 @@ public class FarmJobRunnable implements Runnable {
 		
 		long calcTime = (endTime-startTime);
 		if ( verbose ){
-			log("  finished alignment: " + name1 + " vs. " + name2 + " in " + (calcTime) / 1000.0 + " sec." + afpChain );
+			boolean isCP = !AlignmentTools.isSequentialAlignment(afpChain, false);
+			String msg = "finished alignment: " + name1 + " vs. " + name2 + " in " + (calcTime) / 1000.0 + " sec.";
+			msg += " algo: " + algorithmName + " v:" + version + " " + afpChain;
+			
+			if ( isCP ) msg += "HAS A CIRCULAR PERMUTATION!!!";
+			log(msg);
+		}
+		if (verbose){
+			printMemory();
 		}
 		afpChain.setCalculationTime(calcTime);
 
@@ -406,6 +433,26 @@ public class FarmJobRunnable implements Runnable {
 
 
 
+
+	private void printMemory() {
+		int size = 1048576;
+		long heapSize = Runtime.getRuntime().totalMemory() / size;
+
+		// Get maximum size of heap in bytes. The heap cannot grow beyond this size.
+		// Any attempt will result in an OutOfMemoryException.
+		long heapMaxSize = Runtime.getRuntime().maxMemory() / size;
+
+		// Get amount of free memory within the heap in bytes. This size will increase
+		// after garbage collection and decrease as new objects are created.
+		long heapFreeSize = Runtime.getRuntime().freeMemory() / size;
+		StringBuffer msg = new StringBuffer();
+		msg.append("  total: " +  heapSize +" M");
+		msg.append(" max: " +  heapMaxSize +" M");
+		msg.append(" free: " +  heapFreeSize +" M");
+		
+		System.out.println(msg.toString());
+		
+	}
 
 	private StructureAlignment getAlgorithm(String algorithmName) {
 		
@@ -552,7 +599,7 @@ public class FarmJobRunnable implements Runnable {
 		fullXml += "</alignments>";
 		String msg = "";
 		try {
-			msg = JFatCatClient.sendMultiAFPChainToServer(serverLocation,fullXml, userName);
+			msg = JFatCatClient.sendMultiAFPChainToServer(serverLocation,fullXml, userName, version );
 		} catch (JobKillException e){
 			e.printStackTrace();
 			terminate();
