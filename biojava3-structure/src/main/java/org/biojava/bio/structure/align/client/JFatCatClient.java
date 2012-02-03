@@ -226,12 +226,15 @@ public class JFatCatClient {
 	}
 
 	public static String sendMultiAFPChainToServer(String serverLocation, String multiXML, String username) throws JobKillException{
-
+		String version = resourceManager.getString("jfatcat.version");
+		return sendMultiAFPChainToServer(serverLocation, multiXML, username, version);
+	}
+	
+	public static String sendMultiAFPChainToServer(String serverLocation, String multiXML, String username, String version) throws JobKillException{
 		String multiSendURL = serverLocation + multiSendAPPEND;
 
 		String responseS = "";
-		String version = resourceManager.getString("jfatcat.version");
-
+		
 		String u = String.format(multiSendURL,username,version);
 
 		int timeout = getTimeout();
