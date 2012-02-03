@@ -199,7 +199,7 @@ public class RemotePDPProvider extends SerializableCache<String,SortedSet<String
 			}
 
 			String ranges = r.toString();
-			System.out.println(ranges);
+
 			StructureName sname = new  StructureName(pdbDomainName);
 			Structure tmp = cache.getStructure(sname.getPdbId());
 			s = StructureTools.getSubRanges(tmp, ranges);
