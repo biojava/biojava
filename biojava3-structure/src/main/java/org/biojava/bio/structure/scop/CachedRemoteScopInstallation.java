@@ -24,10 +24,19 @@
  */
 package org.biojava.bio.structure.scop;
 
+import java.io.InputStream;
+import java.net.URL;
 import java.util.List;
+import java.util.Map;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 
+import org.biojava.bio.structure.align.client.JFatCatClient;
+import org.biojava.bio.structure.align.util.HTTPConnectionTools;
+import org.biojava.bio.structure.domain.AssignmentXMLSerializer;
 import org.biojava.bio.structure.domain.SerializableCache;
+import org.biojava.bio.structure.scop.server.ScopDomains;
 
 
 /** An extension of the RemoteScopInstallation that caches some of the data locally.
@@ -63,10 +72,47 @@ public class CachedRemoteScopInstallation extends SerializableCache<String,ScopD
 			System.err.println("CachedRemoteScopInstallation disableing cache");
 			disableCache();
 			scopDescriptionCache.disableCache();
+		} else {
+			
+			if ( serializedCache.size() < 8000){
+				loadRepresentativeDomains();
+			}
 		}
 
 	}
 
+
+	/** get the ranges of representative domains from the centralized server
+	 * 
+	 */
+	private void loadRepresentativeDomains() {
+		
+			ScopDomains results = null;
+			try {
+				URL u = new URL(RemoteScopInstallation.DEFAULT_SERVER + "getRepresentativeScopDomains");
+				System.out.println(u);
+				InputStream response = HTTPConnectionTools.getInputStream(u);
+				String xml = JFatCatClient.convertStreamToString(response);			
+				//System.out.println(xml);
+				results  = ScopDomains.fromXML(xml);
+
+				
+				System.out.println("got " + results.getScopDomain().size() + " domain ranges for Scop domains from server.");
+				for (ScopDomain dom : results.getScopDomain()){
+					String scopId = dom.getScopId();
+					serializedCache.put(scopId, dom);
+				}
+				
+				
+			} catch (Exception e){
+				e.printStackTrace();
+			}
+			return ;
+			
+		
+
+		
+	}
 	
 	
 	
