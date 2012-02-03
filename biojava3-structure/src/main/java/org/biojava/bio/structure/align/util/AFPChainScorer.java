@@ -24,6 +24,8 @@
 
 package org.biojava.bio.structure.align.util;
 
+
+
 import org.biojava.bio.structure.Atom;
 import org.biojava.bio.structure.Calc;
 import org.biojava.bio.structure.SVDSuperimposer;
@@ -33,12 +35,14 @@ import org.biojava.bio.structure.jama.Matrix;
 
 public class AFPChainScorer
 {
-
-	public static double getTMScore(AFPChain align, Atom[] ca1, Atom[] ca2) throws StructureException
+	
+	
+	public  static double getTMScore(AFPChain align, Atom[] ca1, Atom[] ca2) throws StructureException
 	{
 		if ( align.getNrEQR() == 0)
 			return -1;
 
+		
 		// Create new arrays for the subset of atoms in the alignment.
 		Atom[] ca1aligned = new Atom[align.getOptLength()];
 		Atom[] ca2aligned = new Atom[align.getOptLength()];
@@ -54,8 +58,21 @@ public class AFPChainScorer
 			}
 
 			for(int i=0;i<blockLens[block];i++) {
-				Atom a1 = ca1[optAln[block][0][i]];
-				Atom a2 = (Atom) ca2[optAln[block][1][i]].clone();
+				int pos1 = optAln[block][0][i];
+				int pos2 = optAln[block][1][i];
+//				if ( pos1 >= ca1.length) {
+//					System.err.println("getTMScore: pos1 " + pos1 + " > ca1.length " + ca1.length + " " + align.getName1() + ":" +align.getName2());
+//					System.err.println(ca1[0].getGroup().getChain().getChainID());
+//					System.err.println(ca1[0].getGroup().getChain().getParent().getPDBCode());
+//					
+//				}
+//				if ( pos2 >= ca2.length) {
+//					System.err.println("getTMScore: pos2 " + pos2 + " > ca2.length " + ca2.length + " " + align.getName2() + ":" + align.getName1());
+//					System.err.println(ca2[0].getGroup().getChain().getChainID());
+//					System.err.println(ca2[0].getGroup().getChain().getParent().getPDBCode());
+//				}
+				Atom a1 = ca1[pos1];
+				Atom a2 = (Atom) ca2[pos2].clone();
 								
 				ca1aligned[pos] = a1;
 				ca2aligned[pos] = a2;
