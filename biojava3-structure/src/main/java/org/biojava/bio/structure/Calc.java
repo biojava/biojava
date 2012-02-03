@@ -133,14 +133,12 @@ public class Calc {
 	 * @return an Atom object
 	 */
 	public static final Atom add(Atom a, Atom b){
-		double[] coords = new double[3] ;
-
-		coords[0] = a.getX() + b.getX();
-		coords[1] = a.getY() + b.getY();
-		coords[2] = a.getZ() + b.getZ();
 
 		Atom c = new AtomImpl();
-		c.setCoords(coords);
+		c.setX( a.getX() + b.getX() );
+		c.setY( a.getY() + b.getY() );
+		c.setZ( a.getZ() + b.getZ() );
+
 		return c ;
 	}
 
