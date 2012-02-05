@@ -139,9 +139,8 @@ public class ResidueNumber implements Serializable, Comparable<ResidueNumber>
 			//		   writer.append(chainId);
 			//		   writer.append(":");
 			//	   }
-        writer.append(String.valueOf(seqNum)).append("");
-		if (  insCode != null && 
-				( insCode != ' '))
+        writer.append(String.valueOf(seqNum));
+		if (  insCode != null && ( insCode != ' '))
 			writer.append(insCode);
 
 		return writer.toString();
