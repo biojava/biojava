@@ -83,11 +83,11 @@ implements StructureAlignment  {
 	}
 
 	public ConfigStrucAligParams getParameters() {
-		return null;
+		return null;//TODO shall we update it?
 	}
 	
 	public void setParameters(ConfigStrucAligParams o){
-		
+		//TODO what is the relation between StrucAligParameters and ConfigStrucAligParams?
 		if ( ! (o instanceof StrucAligParameters)){
 			throw new IllegalArgumentException("Provided parameters are not of type StrucAligParameters!");
 		}

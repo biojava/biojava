@@ -78,11 +78,11 @@ public class SynchronizedOutFile {
 		
 		OutputStream out = null;
 		try {
-			if ( useGzipCompression){
-				out = new BufferedOutputStream(new GZIPOutputStream(new FileOutputStream(file, true)));
-			} else {
-				out = new BufferedOutputStream(new  FileOutputStream(file, true));
-			}
+			//This is less code-redundant
+			FileOutputStream fileOutputStream = new FileOutputStream(file, true);
+			OutputStream outputstream = useGzipCompression? new GZIPOutputStream(fileOutputStream) : fileOutputStream;
+			out = new BufferedOutputStream(outputstream);
+			
 			for ( int i = 0 ; i <= counter ; i++){
 				if ( tmp[i] == null )
 					continue;
