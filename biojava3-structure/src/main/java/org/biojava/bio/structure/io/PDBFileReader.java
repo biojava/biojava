@@ -399,8 +399,8 @@ public class PDBFileReader implements StructureIOFile {
 	 */
 
 	private InputStream getInputStream(String pdbId)
-	throws IOException
-	{
+			throws IOException
+			{
 
 		if ( pdbId.length() < 4)
 			throw new IOException("the provided ID does not look like a PDB ID : " + pdbId);
@@ -409,71 +409,26 @@ public class PDBFileReader implements StructureIOFile {
 
 		InputStream inputStream =null;
 
-		String pdbFile = null ;
-		File f = null ;
 
-		// this are the possible PDB file names...
-		String fpath ;
-		String ppath ;
 
-		if ( pdbDirectorySplit){
-			// pdb files are split into subdirectories based on their middle position...
-			String middle = pdbId.substring(1,3).toLowerCase();
-			fpath = path+lineSplit + middle + lineSplit + pdbId;
-			ppath = path +lineSplit +  middle + lineSplit + "pdb"+pdbId;
-		} else {
-			fpath = path+lineSplit + pdbId;
-			ppath = path +lineSplit + "pdb"+pdbId;
+
+		String pdbFile = getLocalPDBFilePath(pdbId);
+
+
+		//System.out.println("found!");
+
+		InputStreamProvider isp = new InputStreamProvider();
+
+		try {
+			inputStream = isp.getInputStream(pdbFile);
+			return inputStream;
+		} catch (Exception e){
+			e.printStackTrace();
+			// something is wrong with the file!
+			// it probably should be downloaded again...
+			pdbFile = null;
 		}
 
-		String[] paths = new String[]{fpath,ppath};
-
-		mainLoop:
-		for ( int p=0;p<paths.length;p++ ){
-			String testpath = paths[p];
-			//System.out.println(testpath);
-			for (int i=0 ; i<extensions.size();i++){
-				String ex = (String)extensions.get(i) ;
-				//System.out.println("PDBFileReader testing: "+testpath+ex);
-				f = new File(testpath+ex) ;
-
-				if ( f.exists()) {
-
-					pdbFile = testpath+ex ;
-
-					// we have found the file locally
-
-					if ( params.isUpdateRemediatedFiles()){
-						long lastModified = f.lastModified();
-
-						if (lastModified < lastRemediationDate) {
-							// the file is too old, replace with newer version
-							System.out.println("replacing file " + pdbFile +" with latest remediated file from PDB.");
-							pdbFile = null;
-							break mainLoop;
-						}
-					}
-
-
-					//System.out.println("found!");
-
-					InputStreamProvider isp = new InputStreamProvider();
-
-					try {
-						inputStream = isp.getInputStream(pdbFile);
-					} catch (Exception e){
-						e.printStackTrace();
-						// something is wrong with the file!
-						// it probably should be downloaded again...
-						pdbFile = null;
-					}
-
-					break;
-				}
-
-				if ( pdbFile != null) break;
-			}
-		}
 
 		if ( pdbFile == null ) {
 			if (autoFetch){//from here we try our online search
@@ -495,8 +450,74 @@ public class PDBFileReader implements StructureIOFile {
 				throw new IOException (message);
 			}
 		}
-		return inputStream ;
+		return null ;
+			}
+
+	/** Returns null if local PDB file does not exist or should be downloaded again...
+	 * 
+	 * @param pdbId
+	 * @return
+	 */
+	private String getLocalPDBFilePath(String pdbId) {
+
+		String pdbFile = null ;
+		File f = null ;
+
+		// this are the possible PDB file names...
+		String fpath ;
+		String ppath ;
+
+		if ( pdbDirectorySplit){
+			// pdb files are split into subdirectories based on their middle position...
+			String middle = pdbId.substring(1,3).toLowerCase();
+			fpath = path+lineSplit + middle + lineSplit + pdbId;
+			ppath = path +lineSplit +  middle + lineSplit + "pdb"+pdbId;
+		} else {
+			fpath = path+lineSplit + pdbId;
+			ppath = path +lineSplit + "pdb"+pdbId;
+		}
+
+		String[] paths = new String[]{fpath,ppath};
+
+
+		for ( int p=0;p<paths.length;p++ ){
+			String testpath = paths[p];
+			//System.out.println(testpath);
+			for (int i=0 ; i<extensions.size();i++){
+				String ex = (String)extensions.get(i) ;
+				//System.out.println("PDBFileReader testing: "+testpath+ex);
+				f = new File(testpath+ex) ;
+
+				if ( f.exists()) {
+
+					pdbFile = testpath+ex ;
+
+					// we have found the file locally
+
+					if ( params.isUpdateRemediatedFiles()){
+						long lastModified = f.lastModified();
+
+						if (lastModified < lastRemediationDate) {
+							// the file is too old, replace with newer version
+							System.out.println("replacing file " + pdbFile +" with latest remediated file from PDB.");
+							pdbFile = null;
+
+							return null;
+						}
+					}
+
+					return pdbFile;
+				}
+
+				if ( pdbFile != null) break;
+			}
+		}
+		return null;
 	}
+
+
+
+
 
 	/**
 	 * Returns an input stream for a biological assembly file based on the passed in pdbId and 
@@ -508,8 +529,8 @@ public class PDBFileReader implements StructureIOFile {
 	 * @since 3.2
 	 */
 	private InputStream getInputStreamBioAssembly(String pdbId)
-	throws IOException
-	{
+			throws IOException
+			{
 		loadedBioAssembly = true;
 		InputStream inputStream = null;
 
@@ -609,13 +630,13 @@ public class PDBFileReader implements StructureIOFile {
 			inputStream = getInputStream(pdbId);		
 			if (inputStream != null) {
 				System.out.println("Biological assembly file for PDB ID: " + pdbId+  " is not available. " +
-				"Loaded original PDB file as a fallback from local cache.");
+						"Loaded original PDB file as a fallback from local cache.");
 				return getInputStream(pdbId);
 			}
 		}
 
 		return null;
-	}
+			}
 
 	private  File downloadPDB(String pdbId, String pathOnServer){
 
@@ -664,7 +685,7 @@ public class PDBFileReader implements StructureIOFile {
 
 		System.out.println("Fetching " + ftp);
 
-		
+
 		try {
 			URL url = new URL(ftp);
 
@@ -694,7 +715,7 @@ public class PDBFileReader implements StructureIOFile {
 			System.out.println("writing to " + realFile);
 
 			copy(tempFile, realFile);
-			
+
 			// delete the tmp file			
 			tempFile.delete();
 
@@ -736,16 +757,7 @@ public class PDBFileReader implements StructureIOFile {
 	private  File downloadPDBBiologicalAssembly(String pdbId, String pathOnServer){	
 		loadedBioAssembly = true;
 
-		if ((path == null) || (path.equals(""))){
-			// accessing temp. OS directory:         
-			String property = "java.io.tmpdir";
-
-			String tempdir = System.getProperty(property);
-
-			System.err.println("you did not set the path in PDBFileReader, don't know where to write the downloaded file to");
-			System.err.println("assuming default location is temp directory: " + tempdir);
-			path = tempdir;
-		}
+		checkPath();
 
 		String fileName = getBiologicalAsssemblyFileName(pdbId, bioAssemblyId);
 
@@ -772,16 +784,36 @@ public class PDBFileReader implements StructureIOFile {
 
 		// check if the file exists on the FTP site. If biological assembly file does not exist
 		// and the fallback has been set, get the original PDB file instead (i.e. for NMR structures).
-		if (! isFileAvailable(ftp)) {
+		
+		File f = downloadFileIfAvailable(url, pdbId,fileName);
+		
+		if ( f == null) {
+			
 			if (bioAssemblyFallback) {
+				
 				System.out.println("Biological unit file for PDB ID: " + pdbId+  " is not available. " +
-				"Downloading original PDB file as a fallback.");
+						"Downloading original PDB file as a fallback.");
+				
 				loadedBioAssembly = false;
+
+				String fallBackPDBF = getLocalPDBFilePath(pdbId);
+
+				if ( fallBackPDBF != null)
+					return new File(fallBackPDBF);
+
 				return downloadPDB(pdbId, CURRENT_FILES_PATH);
 			} 
 			return null;
 		}
+		
+		return f;
 
+		
+	}
+
+
+	private File downloadFileIfAvailable(URL url, String pdbId, String fileName) {
+				
 		InputStream uStream = null;
 		InputStream conn = null;
 		try {
@@ -789,19 +821,23 @@ public class PDBFileReader implements StructureIOFile {
 			conn = new GZIPInputStream(uStream);
 		} catch (IOException e1) {
 			System.err.println("Problem while downloading Biological Assembly " + pdbId + " from FTP server." );
-			e1.printStackTrace();
+			//e1.printStackTrace();
 			try {
-				if (conn != null) {
-					conn.close();
-				}
 				if (uStream != null) {
 					uStream.close();
 				}	
+				
+				if (conn != null) {
+					conn.close();
+				}
+				
 			} catch (IOException e) {
+				e.printStackTrace();
 			}
 			return null;
 		} 
 
+		String middle = pdbId.substring(1,3);
 		String uPath = toUnixPath(path);
 		File tempFile = null;
 		if (pdbDirectorySplit) {
@@ -841,6 +877,21 @@ public class PDBFileReader implements StructureIOFile {
 			e.printStackTrace();
 			return null;
 		} finally {	
+			if ( conn != null){
+				try {
+
+					conn.close();
+				} catch (IOException e){
+					e.printStackTrace();
+				}
+			}
+			if ( uStream != null){
+				try { 
+					uStream.close();					
+				}catch (IOException e){
+					e.printStackTrace();
+				}
+			}
 			try {
 				if (outPut != null) {
 					outPut.close();
@@ -856,8 +907,11 @@ public class PDBFileReader implements StructureIOFile {
 	}
 
 
+
+
+
 	private  InputStream downloadAndGetInputStream(String pdbId, String pathOnServer)
-	throws IOException{
+			throws IOException{
 
 		File tmp = downloadPDB(pdbId, pathOnServer);
 
@@ -882,7 +936,7 @@ public class PDBFileReader implements StructureIOFile {
 	 * @since 3.2
 	 */
 	private  InputStream downloadAndGetInputStreamBioAssembly(String pdbId, String pathOnServer)
-	throws IOException{
+			throws IOException{
 
 		File tmp = downloadPDBBiologicalAssembly(pdbId, pathOnServer);
 
@@ -928,12 +982,12 @@ public class PDBFileReader implements StructureIOFile {
 	 * @throws IOException ...
 	 */
 	public Structure getStructure(String filename)
-	throws IOException
-	{
+			throws IOException
+			{
 		File f = new File(filename);
 		return getStructure(f);
 
-	}
+			}
 
 	/** opens filename, parses it and returns a Structure object
 	 *
@@ -1062,51 +1116,48 @@ public class PDBFileReader implements StructureIOFile {
 	}
 
 
-	/**
-	 * Check if file exists on FTP site.
-	 * Note: this method should be reviewed. There should be an easier way to do this.
-	 * @param fileName 
-	 * @return true if file exists
-	 * @author Peter Rose
-	 * @since 3.2
-	 */
-	private boolean isFileAvailable(String fileName) {
-		URL url = null;
-		try {
-			url = new URL(fileName);
-		} catch (MalformedURLException e1) {
-			return false;
-		}
-		InputStream uStream = null;
-		InputStream conn = null;
-		try {
-			uStream = url.openStream();
-			conn = new GZIPInputStream(uStream);
-			conn.close();
-			uStream.close();
-			return true;
-		} catch (IOException e1) {
-		} finally {
-			try {
-				if (conn != null) {
-					conn.close();
-				}
-				if (uStream != null) {
-					uStream.close();
-				}
-			} catch (IOException e) {
-				return false;
-			}
-		}
-		return false;
-
-		// The following code doesn't work. ???
-		//		File ftpFile = null;
-		//		try {
-		//			ftpFile = new File(url.toURI());
-		//		} catch (URISyntaxException e) {
-		//			return false;
-		//		}
-		//		return ftpFile.exists();
-	}
+//	/**
+//	 * Check if file exists on FTP site.
+//	 * Note: this method should be reviewed. There should be an easier way to do this.
+//	 * @param fileName 
+//	 * @return true if file exists
+//	 * @author Peter Rose
+//	 * @since 3.2
+//	 */
+//	private boolean isFileAvailable(URL url) {
+//
+//		InputStream uStream = null;
+//		InputStream conn = null;
+//		try {
+//			uStream = url.openStream();
+//			conn = new GZIPInputStream(uStream);
+//			
+//			conn.close();
+//			uStream.close();
+//			return true;
+//		} catch (IOException e1) {
+//		} finally {
+//			try {
+//				if (conn != null) {
+//					conn.close();
+//				}
+//				if (uStream != null) {
+//					uStream.close();
+//				}
+//			} catch (IOException e) {
+//				e.printStackTrace();
+//				return false;
+//			}
+//		}
+//		return false;
+//
+//		// The following code doesn't work. ???
+//		//		File ftpFile = null;
+//		//		try {
+//		//			ftpFile = new File(url.toURI());
+//		//		} catch (URISyntaxException e) {
+//		//			return false;
+//		//		}
+//		//		return ftpFile.exists();
+//	}
 }
