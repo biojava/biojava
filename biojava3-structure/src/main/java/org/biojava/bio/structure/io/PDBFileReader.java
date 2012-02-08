@@ -1044,6 +1044,7 @@ public class PDBFileReader implements StructureIOFile {
 	}
 
 	/**
+	 * <b>N.B.</b> This feature won't work unless the structure wasn't found & autoFetch is set to <code>true</code>.
 	 * @param fetchFileEvenIfObsolete the fetchFileEvenIfObsolete to set
 	 */
 	public void setFetchFileEvenIfObsolete(boolean fetchFileEvenIfObsolete) {
@@ -1051,7 +1052,8 @@ public class PDBFileReader implements StructureIOFile {
 	}
 
 	/**forces the reader to fetch the file if its status is OBSOLETE.
-	 * This feature has a higher priority than {@link #setFetchCurrent(boolean)}
+	 * This feature has a higher priority than {@link #setFetchCurrent(boolean)}. <br>
+	 * <b>N.B.</b> This feature won't work unless the structure wasn't found & autoFetch is set to <code>true</code>.
 	 * @return the fetchFileEvenIfObsolete
 	 * @author Amr AL-Hossary
 	 * @see #fetchCurrent
@@ -1063,7 +1065,8 @@ public class PDBFileReader implements StructureIOFile {
 
 
 	/**if enabled, the reader searches for the newest possible PDB ID, if not present in he local installation.
-	 * The {@link #setFetchFileEvenIfObsolete(boolean)} function has a higher priority than this function.
+	 * The {@link #setFetchFileEvenIfObsolete(boolean)} function has a higher priority than this function. <br>
+	 * <b>N.B.</b> This feature won't work unless the structure wasn't found & autoFetch is set to <code>true</code>.
 	 * @param fetchCurrent the fetchCurrent to set
 	 * @author Amr AL-Hossary
 	 * @see #setFetchFileEvenIfObsolete(boolean)
@@ -1074,6 +1077,7 @@ public class PDBFileReader implements StructureIOFile {
 	}
 
 	/**
+	 * <b>N.B.</b> This feature won't work unless the structure wasn't found & autoFetch is set to <code>true</code>.
 	 * @return the fetchCurrent
 	 */
 	public boolean isFetchCurrent() {
