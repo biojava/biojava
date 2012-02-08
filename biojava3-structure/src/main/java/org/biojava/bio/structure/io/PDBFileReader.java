@@ -409,13 +409,8 @@ public class PDBFileReader implements StructureIOFile {
 
 		InputStream inputStream =null;
 
-
-
-
 		String pdbFile = getLocalPDBFilePath(pdbId);
 
-
-		//System.out.println("found!");
 		if ( pdbFile != null) {
 			InputStreamProvider isp = new InputStreamProvider();
 
