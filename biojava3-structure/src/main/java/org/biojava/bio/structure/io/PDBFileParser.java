@@ -1850,15 +1850,20 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 		// build it up.
 
 		if ( groupCode3.equals(current_group.getPDBName())) {
-			if ( current_group.getAtoms().size() == 0)
+			if ( current_group.getAtoms().size() == 0) {
+				//System.out.println("current group is empty " + current_group + " " + altLoc);
 				return current_group;
-			//System.out.println("cloning current group");
+			}
+			//System.out.println("cloning current group " + current_group + " " + current_group.getAtoms().get(0).getAltLoc() + " altLoc " + altLoc);
 			Group altLocG = (Group) current_group.clone();
+			// drop atoms from cloned group...
+			// https://redmine.open-bio.org/issues/3307
+			altLocG.setAtoms(new ArrayList<Atom>());
 			current_group.addAltLoc(altLocG);
 			return altLocG;	
 		}
 
-
+	//	System.out.println("new  group " + recordName + " " + aminoCode1 + " " +groupCode3);
 		Group altLocG = getNewGroup(recordName,aminoCode1,groupCode3);
 
 		try {
