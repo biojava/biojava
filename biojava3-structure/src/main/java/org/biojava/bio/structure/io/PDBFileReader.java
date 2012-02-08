@@ -416,20 +416,20 @@ public class PDBFileReader implements StructureIOFile {
 
 
 		//System.out.println("found!");
+		if ( pdbFile != null) {
+			InputStreamProvider isp = new InputStreamProvider();
 
-		InputStreamProvider isp = new InputStreamProvider();
+			try {
+				inputStream = isp.getInputStream(pdbFile);
+				return inputStream;
+			} catch (Exception e){
+				e.printStackTrace();
+				// something is wrong with the file!
+				// it probably should be downloaded again...
+				pdbFile = null;
+			}
 
-		try {
-			inputStream = isp.getInputStream(pdbFile);
-			return inputStream;
-		} catch (Exception e){
-			e.printStackTrace();
-			// something is wrong with the file!
-			// it probably should be downloaded again...
-			pdbFile = null;
 		}
-
-
 		if ( pdbFile == null ) {
 			if (autoFetch){//from here we try our online search
 				if(fetchCurrent && !fetchFileEvenIfObsolete) {
@@ -784,16 +784,16 @@ public class PDBFileReader implements StructureIOFile {
 
 		// check if the file exists on the FTP site. If biological assembly file does not exist
 		// and the fallback has been set, get the original PDB file instead (i.e. for NMR structures).
-		
+
 		File f = downloadFileIfAvailable(url, pdbId,fileName);
-		
+
 		if ( f == null) {
-			
+
 			if (bioAssemblyFallback) {
-				
+
 				System.out.println("Biological unit file for PDB ID: " + pdbId+  " is not available. " +
 						"Downloading original PDB file as a fallback.");
-				
+
 				loadedBioAssembly = false;
 
 				String fallBackPDBF = getLocalPDBFilePath(pdbId);
@@ -805,15 +805,15 @@ public class PDBFileReader implements StructureIOFile {
 			} 
 			return null;
 		}
-		
+
 		return f;
 
-		
+
 	}
 
 
 	private File downloadFileIfAvailable(URL url, String pdbId, String fileName) {
-				
+
 		InputStream uStream = null;
 		InputStream conn = null;
 		try {
@@ -826,11 +826,11 @@ public class PDBFileReader implements StructureIOFile {
 				if (uStream != null) {
 					uStream.close();
 				}	
-				
+
 				if (conn != null) {
 					conn.close();
 				}
-				
+
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -1116,48 +1116,48 @@ public class PDBFileReader implements StructureIOFile {
 	}
 
 
-//	/**
-//	 * Check if file exists on FTP site.
-//	 * Note: this method should be reviewed. There should be an easier way to do this.
-//	 * @param fileName 
-//	 * @return true if file exists
-//	 * @author Peter Rose
-//	 * @since 3.2
-//	 */
-//	private boolean isFileAvailable(URL url) {
-//
-//		InputStream uStream = null;
-//		InputStream conn = null;
-//		try {
-//			uStream = url.openStream();
-//			conn = new GZIPInputStream(uStream);
-//			
-//			conn.close();
-//			uStream.close();
-//			return true;
-//		} catch (IOException e1) {
-//		} finally {
-//			try {
-//				if (conn != null) {
-//					conn.close();
-//				}
-//				if (uStream != null) {
-//					uStream.close();
-//				}
-//			} catch (IOException e) {
-//				e.printStackTrace();
-//				return false;
-//			}
-//		}
-//		return false;
-//
-//		// The following code doesn't work. ???
-//		//		File ftpFile = null;
-//		//		try {
-//		//			ftpFile = new File(url.toURI());
-//		//		} catch (URISyntaxException e) {
-//		//			return false;
-//		//		}
-//		//		return ftpFile.exists();
-//	}
+	//	/**
+	//	 * Check if file exists on FTP site.
+	//	 * Note: this method should be reviewed. There should be an easier way to do this.
+	//	 * @param fileName 
+	//	 * @return true if file exists
+	//	 * @author Peter Rose
+	//	 * @since 3.2
+	//	 */
+	//	private boolean isFileAvailable(URL url) {
+	//
+	//		InputStream uStream = null;
+	//		InputStream conn = null;
+	//		try {
+	//			uStream = url.openStream();
+	//			conn = new GZIPInputStream(uStream);
+	//			
+	//			conn.close();
+	//			uStream.close();
+	//			return true;
+	//		} catch (IOException e1) {
+	//		} finally {
+	//			try {
+	//				if (conn != null) {
+	//					conn.close();
+	//				}
+	//				if (uStream != null) {
+	//					uStream.close();
+	//				}
+	//			} catch (IOException e) {
+	//				e.printStackTrace();
+	//				return false;
+	//			}
+	//		}
+	//		return false;
+	//
+	//		// The following code doesn't work. ???
+	//		//		File ftpFile = null;
+	//		//		try {
+	//		//			ftpFile = new File(url.toURI());
+	//		//		} catch (URISyntaxException e) {
+	//		//			return false;
+	//		//		}
+	//		//		return ftpFile.exists();
+	//	}
 }
