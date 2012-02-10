@@ -2420,6 +2420,11 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 	public  Structure parsePDBFile(BufferedReader buf)
 	throws IOException
 	{
+		// set the correct max values for parsing...
+		load_max_atoms = params.getMaxAtoms();
+		my_ATOM_CA_THRESHOLD = params.getAtomCaThreshold();
+		
+		
 		// (re)set structure
 
 		structure     = new StructureImpl() ;
@@ -3244,10 +3249,11 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 	public void setFileParsingParameters(FileParsingParameters params)
 	{
 		this.params= params;
+		
+		// set the correct max values for parsing...
 		load_max_atoms = params.getMaxAtoms();
 		my_ATOM_CA_THRESHOLD = params.getAtomCaThreshold();
-		//System.out.println("setting ca threshold to " + my_ATOM_CA_THRESHOLD);
-		
+
 		if ( !params.isLoadChemCompInfo()) {
 			ChemCompGroupFactory.setChemCompProvider(new ReducedChemCompProvider());
 		}
