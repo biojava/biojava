@@ -284,10 +284,10 @@ public class PDBFileParser  {
 		atomCount = 0;
 		atomOverflow = false;
 		parseCAonly = false;
-		load_max_atoms = params.getMaxAtoms();
-
-		my_ATOM_CA_THRESHOLD = params.getAtomCaThreshold();
-
+		
+		setFileParsingParameters(params);
+		
+		
 	}
 
 
@@ -3244,7 +3244,10 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 	public void setFileParsingParameters(FileParsingParameters params)
 	{
 		this.params= params;
-				
+		load_max_atoms = params.getMaxAtoms();
+		my_ATOM_CA_THRESHOLD = params.getAtomCaThreshold();
+		//System.out.println("setting ca threshold to " + my_ATOM_CA_THRESHOLD);
+		
 		if ( !params.isLoadChemCompInfo()) {
 			ChemCompGroupFactory.setChemCompProvider(new ReducedChemCompProvider());
 		}
