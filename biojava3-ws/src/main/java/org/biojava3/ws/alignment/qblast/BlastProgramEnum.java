@@ -21,30 +21,22 @@
  *
  */
 
-package org.biojava3.ws.alignment.qblast2.enums;
+package org.biojava3.ws.alignment.qblast;
 
 /**
- * Enum representing available blast output formats. To use it as a parameter in
- * QBlast search use the {@linkplain #getValue()} method
+ * Enum representing available blast programs.
+ * <p/>
+ * Values are as used by QBlast URL API.
  * 
  * @author Gediminas Rimsa
  */
-public enum BlastOutputFormat2 {
-	TEXT("Text"),
-	XML("XML"),
-	HTML("HTML");
+public enum BlastProgramEnum {
 
-	private final String type;
+	blastn,
+	blastp,
+	blastx,
+	megablast,
+	tblastn,
+	tblastx
 
-	private BlastOutputFormat2(String type) {
-		this.type = type;
-	}
-
-	/**
-	 * @return the value associated with this enum constant for use as a
-	 *         parameter in QBlast search
-	 */
-	public String getValue() {
-		return type;
-	}
 }

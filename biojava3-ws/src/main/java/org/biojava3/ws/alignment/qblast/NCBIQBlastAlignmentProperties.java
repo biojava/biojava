@@ -17,633 +17,386 @@
  *
  *      http://www.biojava.org/
  *
+ * Created on 2011-11-20
+ *
  */
 
 package org.biojava3.ws.alignment.qblast;
 
-import java.lang.Integer;
+import static org.biojava3.ws.alignment.qblast.BlastAlignmentParameterEnum.DATABASE;
+import static org.biojava3.ws.alignment.qblast.BlastAlignmentParameterEnum.EXPECT;
+import static org.biojava3.ws.alignment.qblast.BlastAlignmentParameterEnum.GAPCOSTS;
+import static org.biojava3.ws.alignment.qblast.BlastAlignmentParameterEnum.MATRIX_NAME;
+import static org.biojava3.ws.alignment.qblast.BlastAlignmentParameterEnum.MEGABLAST;
+import static org.biojava3.ws.alignment.qblast.BlastAlignmentParameterEnum.OTHER_ADVANCED;
+import static org.biojava3.ws.alignment.qblast.BlastAlignmentParameterEnum.PROGRAM;
+import static org.biojava3.ws.alignment.qblast.BlastAlignmentParameterEnum.QUERY_FROM;
+import static org.biojava3.ws.alignment.qblast.BlastAlignmentParameterEnum.QUERY_TO;
+import static org.biojava3.ws.alignment.qblast.BlastAlignmentParameterEnum.WORD_SIZE;
+
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
-import java.util.Arrays;
 
 import org.biojava3.ws.alignment.RemotePairwiseAlignmentProperties;
 
 /**
- * 
- * This class implements RemotePairwiseAlignmentProperties by specifying several
- * convenient methods used to wrap the addition of Blast alignment parameters.
- * 
- * It is responsible for collecting, doing some basic sanity checks and to
- * create the part of the URL that will hold all alignment parameters to be
- * used.
- * 
- * <p>
- * Many thanks to Matthew Busse for helping in debugging after the migration
- * from BJ1.7 to BJ3.0.
- * </p>
+ * This class wraps a QBlast search request parameter {@code Map} by adding several convenient parameter addition
+ * methods. Other QBlast URL API parameters should be added using
+ * {@link #setAlignmentOption(BlastAlignmentParameterEnum, String)}
+ * <p/>
+ * Required parameters are {@code PROGRAM} and {@code DATABASE}, other parameters are optional
  * 
  * @author Sylvain Foisy, Diploide BioIT
- * @since Biojava 3
- * 
+ * @author Gediminas Rimsa
  */
-public class NCBIQBlastAlignmentProperties implements
-		RemotePairwiseAlignmentProperties {
+public class NCBIQBlastAlignmentProperties implements RemotePairwiseAlignmentProperties {
+	private static final long serialVersionUID = 7158270364392309841L;
 
-	private static final long serialVersionUID = 1L;
-	private HashMap<String, String> param = new HashMap<String, String>();
-	private String cmd;
+	private Map<BlastAlignmentParameterEnum, String> param = new HashMap<BlastAlignmentParameterEnum, String>();
 
 	/**
-	 * 
-	 * Initialization of default values
-	 * 
+	 * This method forwards to {@link #getAlignmentOption(BlastAlignmentParameterEnum)}. Consider using it instead.
 	 */
-	public NCBIQBlastAlignmentProperties() {
-		// Only mandatory parameters
-		this.param.put("PROGRAM", "not_set");
-		this.param.put("DATABASE", "not_set");
-		// Optional parameters to set
-		this.param.put("WORD_SIZE", "-1");
-		this.param.put("EXPECT", "-1");
-		this.param.put("QUERY_FROM", "-1");
-		this.param.put("QUERY_TO", "-1");
-		this.param.put("MATRIX_NAME", "BLOSUM62");
-		this.param.put("GAP_CREATION", "-1");
-		this.param.put("GAP_EXTENSION", "-1");
-		// Everything else
-		this.param.put("OTHER_ADVANCED", "not_set");
-
-		cmd = "CMD=Put";
+	@Override
+	public String getAlignmentOption(String key) {
+		return getAlignmentOption(BlastAlignmentParameterEnum.valueOf(key));
 	}
 
 	/**
-	 * This method returns the value of the program used for this particular
-	 * blast run.
-	 * 
-	 * @return program:the name of the blastall program used.
-	 * 
+	 * This method forwards to {@link #setAlignmentOption(BlastAlignmentParameterEnum, String)}. Consider using it
+	 * instead.
 	 */
-	public String getBlastProgram() {
-		return this.param.get("PROGRAM");
+	@Override
+	public void setAlignementOption(String key, String val) {
+		setAlignmentOption(BlastAlignmentParameterEnum.valueOf(key), val);
 	}
 
 	/**
-	 * This method set the program to be use with pairwise alignment. This
-	 * method does a validation before running on the valid blastall programs:
-	 * blastn / megablast / blastp / blastx / tblastn / tblastx
-	 * 
-	 * @param program
-	 *            : one of blastall programs
-	 * 
-	 * @exception Exception
-	 *                if the named program is not a valid blastall options
-	 * 
+	 * Gets parameters, which are currently set
 	 */
-	public void setBlastProgram(String program) throws Exception {
-
-		boolean isValid = false;
-		String[] blastPr = new String[] { "blastn", "blastp", "blastx",
-				"megablast", "tblastn", "tblastx" };
-
-		/*
-		 * To check if the program called for belongs to the blastPr array
-		 */
-		if (Arrays.binarySearch(blastPr, program) >= 0) {
-			if (program != "megablast")
-				this.param.put("PROGRAM", program);
-			else
-				this.param.put("PROGRAM", "blastn&MEGABLAST=on");
-			isValid = true;
+	public Set<String> getAlignmentOptions() {
+		Set<String> result = new HashSet<String>();
+		for (BlastAlignmentParameterEnum parameter : param.keySet()) {
+			result.add(parameter.name());
 		}
+		return result;
+	}
 
-		if (!isValid) {
-			throw new Exception(
-					"Invalid blastall program selection! Use one of valid values: blastn/blastp/blastx/tblastn/tblastx");
+	/**
+	 * Gets the value of specified parameter or {@code null} if it is not set.
+	 */
+	public String getAlignmentOption(BlastAlignmentParameterEnum key) {
+		return param.get(key);
+	}
+
+	/**
+	 * Sets the value of specified parameter
+	 */
+	public void setAlignmentOption(BlastAlignmentParameterEnum key, String val) {
+		param.put(key, val);
+	}
+
+	/**
+	 * Removes given parameter
+	 */
+	public void removeAlignmentOption(BlastAlignmentParameterEnum key) {
+		param.remove(key);
+	}
+
+	/**
+	 * @return {@linkplain BlastProgramEnum} used for blast run
+	 */
+	public BlastProgramEnum getBlastProgram() {
+		BlastProgramEnum program = BlastProgramEnum.valueOf(getAlignmentOption(PROGRAM));
+		boolean isMegablast = BlastProgramEnum.blastn == program && getAlignmentOption(MEGABLAST).equals("on");
+		return !isMegablast ? program : BlastProgramEnum.megablast;
+	}
+
+	/**
+	 * Sets the program to be used with blastall
+	 * 
+	 * @param program : one of blastall programs
+	 */
+	public void setBlastProgram(BlastProgramEnum program) {
+		if (BlastProgramEnum.megablast != program) {
+			setAlignmentOption(PROGRAM, program.name());
+			removeAlignmentOption(MEGABLAST);
+		} else {
+			setAlignmentOption(PROGRAM, BlastProgramEnum.blastn.name());
+			setAlignmentOption(MEGABLAST, "on");
 		}
 	}
 
 	/**
-	 * This method returns the value of the database used for this particular
-	 * blast run.
-	 * 
-	 * @return db :the name of the database used
+	 * @return name of database used with blastall
 	 */
 	public String getBlastDatabase() {
-		return this.param.get("DATABASE");
+		return getAlignmentOption(DATABASE);
 	}
 
+	/*
+	 * TODO: update comment when URL is available:
+	 * A quite exhaustive list of the databases available for QBlast
+	 * requests can be found here: <p> http://&lt to_be_completed &gt <p> Blastall equivalent: -d
+	 */
+
 	/**
-	 * This method set the database to be used with blastall
-	 * 
-	 * A quite exhaustive list of the databases available for QBlast requests
-	 * can be found here:
-	 * 
-	 * http://<to_be_completed>
-	 * 
+	 * Sets the database to be used with blastall
+	 * <p>
+	 * A list of available databases can be acquired by calling {@link NCBIQBlastService#printRemoteBlastInfo()}
+	 * <p>
 	 * Blastall equivalent: -d
 	 * 
-	 * @param db
-	 *            :a valid name to a NCBI blastable database
+	 * @param db : a valid name to a NCBI blastable database
 	 */
-	public void setBlastDatabase(String db) {
-		this.param.put("DATABASE", db);
+	public void setBlastDatabase(String database) {
+		setAlignmentOption(DATABASE, database);
 	}
 
 	/**
-	 * This method returns the value of EXPECT parameter used for this
-	 * particular blast run.
-	 * 
-	 * @return double :the value for EXPECT used by this search
+	 * @return double value of EXPECT parameter used for blast run
 	 */
 	public double getBlastExpect() {
-		if (this.param.get("EXPECT") != "-1")
-			return Double.parseDouble(this.param.get("EXPECT"));
-		else
-			return 10;
+		if (param.containsKey(EXPECT)) {
+			return Double.parseDouble(getAlignmentOption(EXPECT));
+		}
+		return 10;
 	}
 
 	/**
-	 * This method set the EXPECT parameter to be use with blastall
-	 * 
-	 * Example: if you want a EXPECT of 1e-10, try this:
-	 * 
-	 * setBlastExpect(Double.parseDouble("1e-10"))
-	 * 
+	 * Sets the EXPECT parameter to be use with blastall
+	 * <p>
+	 * Example: if you want a EXPECT of 1e-10, pass {@code Double.parseDouble("1e-10")} as a parameter
+	 * <p>
 	 * Blastall equivalent: -e
 	 * 
-	 * @param expect
-	 *            : a double used to set EXPECT
+	 * @param expect: a double value of EXPECT parameter
 	 */
 	public void setBlastExpect(double expect) {
-		String str = Double.toString(expect);
-		this.param.put("EXPECT", str);
+		setAlignmentOption(EXPECT, Double.toString(expect));
 	}
 
 	/**
-	 * This method returns the value of the WORD_SIZE parameter used for this
-	 * particular blast run.
+	 * Returns the value of the WORD_SIZE parameter used for this blast run
 	 * 
-	 * @return word :the value for WORD_SIZE used by this search
+	 * @return int value of WORD_SIZE used by this search
+	 * @throws IllegalArgumentException when program type is not set and program type is not supported
 	 */
 	public int getBlastWordSize() {
-
-		int word = -1;
-
-		if (this.param.get("WORD_SIZE") != "-1")
-			word = Integer.parseInt(this.param.get("WORD_SIZE"));
-		else {
-			if (this.param.get("PROGRAM") == "blastn")
-				word = 11;
-			else if (this.param.get("PROGRAM") == "blastp"
-					|| this.param.get("PROGRAM") == "blastx"
-					|| this.param.get("PROGRAM") == "tblastn"
-					|| this.param.get("PROGRAM") == "tblastx")
-				word = 3;
-			else if (this.param.get("PROGRAM") == "blastn&MEGABLAST=on")
-				word = 28;
+		if (param.containsKey(WORD_SIZE)) {
+			return Integer.parseInt(getAlignmentOption(WORD_SIZE));
 		}
-		return word;
+
+		// return default word size value
+		try {
+			BlastProgramEnum programType = getBlastProgram();
+			switch (programType) {
+			case blastn:
+				return 11;
+			case megablast:
+				return 28;
+			case blastp:
+			case blastx:
+			case tblastn:
+			case tblastx:
+				return 3;
+			default:
+				throw new UnsupportedOperationException("Blast program " + programType.name() + " is not supported.");
+			}
+		} catch (IllegalArgumentException e) {
+			throw new IllegalArgumentException("Blast program " + getBlastProgram() + " is not supported.", e);
+		}
 	}
 
 	/**
-	 * This method set the WORD_SIZE parameter to be use with blastall.
-	 * 
-	 * WARNING!! At this point, the method does not verify the validity of your
-	 * choice; for example, word size of greater than 5 with blastp returns
-	 * error messages from QBlast. Word size range depends on the algorithm
-	 * chosen.
-	 * 
+	 * Sets the WORD_SIZE parameter to be use with blastall
+	 * <p>
+	 * <b>WARNING!!</b> At this point, the method does not verify the validity of your choice; for example, word size of
+	 * greater than 5 with blastp returns error messages from QBlast. Word size range depends on the algorithm chosen.
+	 * <p>
 	 * More at http://www.ncbi.nlm.nih.gov/staff/tao/URLAPI/new/node74.html
-	 * 
+	 * <p>
 	 * Blastall equivalent: -W
 	 * 
-	 * @param word
-	 *            : an integer used to set WORD_SIZE
+	 * @param word: an int used to set WORD_SIZE
 	 */
 	public void setBlastWordSize(int word) {
-		this.param.put("WORD_SIZE", Integer.toString(word));
+		setAlignmentOption(WORD_SIZE, Integer.toString(word));
 	}
 
 	/**
+	 * Returns the value for the GAP_CREATION parameter (first half of GAPCOSTS parameter)
 	 * 
-	 * This method returns the value for the GAP_CREATION parameter
-	 * 
-	 * @return g :the value for GAP_CREATION used by this search
-	 * 
+	 * @return an integer value for gap creation used by this search, -1 if not set or not a number
 	 */
 	public int getBlastGapCreation() {
-		return Integer.parseInt(this.param.get("GAP_CREATION"));
+		String gapCosts = getAlignmentOption(GAPCOSTS);
+		try {
+			String gapCreation = gapCosts.split("\\+")[0];
+			return Integer.parseInt(gapCreation);
+		} catch (Exception e) {
+			return -1;
+		}
 	}
 
 	/**
-	 * This method set the gap creation value for the GAPCOST parameter to use
-	 * for blastall
+	 * Returns the value for the gap extension parameter (second half of GAPCOSTS parameter)
 	 * 
-	 * Blastall equivalent : -G
-	 * 
-	 * @param g
-	 *            : an integer to use as gap creation value
-	 * 
-	 */
-	public void setBlastGapCreation(int g) {
-		this.param.put("GAP_CREATION", Integer.toString(g));
-	}
-
-	/**
-	 * 
-	 * This method returns the value for the GAP_EXTENSION parameter
-	 * 
-	 * @return e : an integer for the value for GAP_EXTENSION used by this
-	 *         search
-	 * 
+	 * @return an integer for the value for gap extension used by this search, -1 if not set or not a number
 	 */
 	public int getBlastGapExtension() {
-		return Integer.parseInt(this.param.get("GAP_EXTENSION"));
+		String gapCosts = getAlignmentOption(GAPCOSTS);
+		try {
+			String gapExtension = gapCosts.split("\\+")[1];
+			return Integer.parseInt(gapExtension);
+		} catch (Exception e) {
+			return -1;
+		}
 	}
 
 	/**
-	 * This method set the gap extension value for the GAPCOST parameter to use
-	 * for blastall
+	 * Returns the actual string for the GAPCOSTS parameter which is used to build the URL
 	 * 
-	 * Blastall equivalent: -E
-	 * 
-	 * @param e
-	 *            : an integer to use as gap extension value
-	 */
-	public void setBlastGapExtension(int e) {
-		this.param.put("GAP_EXTENSION", Integer.toString(e));
-	}
-
-	/**
-	 * This method return the actual string for the GAPCOSTS parameter which is
-	 * used to build the URL
-	 * 
-	 * @return str : the string representation of the GAPCOSTS parameter
-	 *         formatted for the URL
-	 * 
+	 * @return the string representation of the GAPCOSTS parameter formatted for the URL
 	 */
 	public String getBlastGapCosts() {
-		if (this.param.get("GAPCOSTS") != null)
-			return this.param.get("GAPCOSTS");
-		else
-			return "defaults";
+		return getAlignmentOption(GAPCOSTS);
 	}
 
 	/**
+	 * Sets the GAPCOSTS parameter
 	 * 
-	 * This method process the values from GAP_CREATION and GAP_EXTENSION to
-	 * generate the values for the actual GAPCOSTS parameter
-	 * 
+	 * @param gapCreation integer to use as gap creation value
+	 * @param gapExtension integer to use as gap extension value
 	 */
-	private void setBlastGapCosts() {
-
-		String gc = Integer.toString(this.getBlastGapCreation());
-		String ge = Integer.toString(this.getBlastGapExtension());
-
-		this.param.put("GAPCOSTS", gc + "+" + ge);
+	public void setBlastGapCosts(int gapCreation, int gapExtension) {
+		String gc = Integer.toString(gapCreation);
+		String ge = Integer.toString(gapExtension);
+		setAlignmentOption(GAPCOSTS, gc + "+" + ge);
 	}
 
 	/**
-	 * 
-	 * This method returns the value of the specified substitution matrix
+	 * Returns the value of the specified substitution matrix
 	 * 
 	 * @return matrix: the name of the specified substitution matrix
 	 */
 	public String getBlastMatrix() {
-		return this.param.get("MATRIX_NAME");
+		return getAlignmentOption(MATRIX_NAME);
 	}
 
 	/**
-	 * This method set the value for the MATRIX parameter to use for blastall
-	 * 
-	 * Allowed matrices:
-	 * PAM30,PAM70,PAM90,PAM250,BLOSUM45,BLOSUM50,BLOSUM62,BLOSUM80 (Other
-	 * matrices are not useable via QBlast)
-	 * 
+	 * Sets the value for the MATRIX parameter to use for blastall
+	 * <p>
 	 * Blastall equivalent: -M
 	 * 
-	 * @param mtx
-	 *            : a String to use as gap creation value
-	 * 
-	 * @throws Exception
-	 *             if matrix name is not part of allowed BLAST matrices
+	 * @param matrix : a String to use as gap creation value
+	 * @see BlastMatrixEnum
 	 */
-	public void setBlastMatrix(String mtx) throws Exception {
-		boolean isValid = false;
-		String[] blastMat = new String[] { "BLOSUM45", "BLOSUM50", "BLOSUM62",
-				"BLOSUM80", "BLOSUM90", "PAM250", "PAM30", "PAM70" };
+	public void setBlastMatrix(BlastMatrixEnum matrix) {
+		setAlignmentOption(MATRIX_NAME, matrix.name());
 
-		/*
-		 * To check if the matrix called for belongs to the blastMat array
-		 */
-		if (Arrays.binarySearch(blastMat, mtx) >= 0) {
-			this.param.put("MATRIX_NAME", mtx);
-			isValid = true;
+		boolean gapCostsSet = getBlastGapCreation() != -1 || getBlastGapExtension() != -1;
 
+		if (!gapCostsSet) {
 			/*
-			 * This step is necessary because, since BLOSUM62 is default, the
-			 * expected values are -G 11 -E 1. If your matrix choice is
-			 * different, the request will fail, implicitly expecting
-			 * &GAPCOSTS=11+1
+			 * Setting default values for -G/-E if no other values have been set is necessary because, since BLOSUM62 is
+			 * default, the expected values are -G 11 -E 1. If your matrix choice is different, the request will fail,
+			 * implicitly expecting GAPCOSTS=11+1
 			 */
-			if (mtx != "BLOSUM62") {
-				/*
-				 * Setting default values for -G/-E if no other values have been
-				 * set via setBlastGapCreation/setBlastGapExtension
-				 */
-				if (mtx == "PAM30") {
-					if (this.getBlastGapCreation() == -1
-							&& this.getBlastGapExtension() == -1) {
-						this.setBlastGapCreation(9);
-						this.setBlastGapExtension(1);
-					}
-				} else if (mtx == "PAM70") {
-					if (this.getBlastGapCreation() == -1
-							&& this.getBlastGapExtension() == -1) {
-						this.setBlastGapCreation(10);
-						this.setBlastGapExtension(1);
-					}
-
-				} else if (mtx == "PAM250") {
-					if (this.getBlastGapCreation() == -1
-							&& this.getBlastGapExtension() == -1) {
-						this.setBlastGapCreation(14);
-						this.setBlastGapExtension(2);
-					}
-
-				} else if (mtx == "BLOSUM45") {
-					if (this.getBlastGapCreation() == -1
-							&& this.getBlastGapExtension() == -1) {
-						this.setBlastGapCreation(15);
-						this.setBlastGapExtension(2);
-					}
-				} else if (mtx == "BLOSUM50") {
-					if (this.getBlastGapCreation() == -1
-							&& this.getBlastGapExtension() == -1) {
-						this.setBlastGapCreation(13);
-						this.setBlastGapExtension(2);
-					}
-				} else if (mtx == "BLOSUM80") {
-					if (this.getBlastGapCreation() == -1
-							&& this.getBlastGapExtension() == -1) {
-						this.setBlastGapCreation(10);
-						this.setBlastGapExtension(1);
-					}
-				} else if (mtx == "BLOSUM90") {
-					if (this.getBlastGapCreation() == -1
-							&& this.getBlastGapExtension() == -1) {
-						this.setBlastGapCreation(10);
-						this.setBlastGapExtension(1);
-					}
-				}
+			switch (matrix) {
+			case PAM30:
+				setBlastGapCosts(9, 1);
+				break;
+			case PAM70:
+				setBlastGapCosts(10, 1);
+				break;
+			case PAM250:
+				setBlastGapCosts(14, 2);
+				break;
+			case BLOSUM45:
+				setBlastGapCosts(15, 2);
+				break;
+			case BLOSUM50:
+				setBlastGapCosts(13, 2);
+				break;
+			case BLOSUM80:
+			case BLOSUM90:
+				setBlastGapCosts(10, 1);
+				break;
 			}
 		}
-		
-		if (!isValid)
-			throw new Exception(
-					"Invalid blastp substitution matrix selection! Use one of valid values: PAM30,PAM70,PAM250,BLOSUM45,BLOSUM50,BLOSUM62,BLOSUM80\n");
 	}
 
 	/**
-	 * This method returns the value for the QUERY_FROM parameter
+	 * Sets the QUERY_FROM and QUERY_TO parameters to be use by blast. Do not use if you want to use the whole sequence.<br/>
+	 * Blastall equivalent: -L
 	 * 
+	 * @param start QUERY_FROM parameter
+	 * @param end QUERY_TO parameter
+	 */
+	public void setBlastFromToPosition(int start, int end) {
+		if (start >= end) {
+			throw new IllegalArgumentException("Start index must be less than end index");
+		}
+		setAlignmentOption(QUERY_FROM, String.valueOf(start));
+		setAlignmentOption(QUERY_TO, String.valueOf(end));
+	}
+
+	/**
 	 * @return an integer value for the QUERY_FROM parameter
-	 * 
+	 * @see #setBlastFromToPosition(int, int)
 	 */
 	public int getBlastFromPosition() {
-		int a = 0;
-		if (this.param.get("QUERY_FROM") != "-1")
-			a = Integer.parseInt(this.param.get("QUERY_FROM"));
-		else if (this.param.get("QUERY_FROM") == "-1")
-			a = -1;
-		return a;
+		return Integer.parseInt(getAlignmentOption(QUERY_FROM));
 	}
 
 	/**
-	 * 
-	 * This method set the QUERY_FROM parameter to be use by blast. It needs the
-	 * corresponding setBlastToPosition() to work. If you decide to use the
-	 * whole sequence, do not use...
-	 * 
-	 * Blastall equivalent: -L
-	 * 
-	 * @param start
-	 *            : an integer to use for QUERY_FROM
-	 * 
-	 */
-	public void setBlastFromPosition(int start) {
-		this.param.put("QUERY_FROM", String.valueOf(start));
-	}
-
-	/**
-	 * 
-	 * This method returns the value for the QUERY_TO parameter
-	 * 
-	 * @return an integer value for the QUERY_TO parameter
-	 * 
+	 * @return QUERY_TO parameter
+	 * @see #setBlastFromToPosition(int, int)
 	 */
 	public int getBlastToPosition() {
-		int a = 0;
-		if (this.param.get("QUERY_TO") != "-1")
-			a = Integer.parseInt(this.param.get("QUERY_TO"));
-		else if (this.param.get("QUERY_TO") == "-1")
-			a = -1;
-		return a;
+		return Integer.parseInt(getAlignmentOption(QUERY_TO));
 	}
 
 	/**
-	 * 
-	 * This method set the QUERY_TO parameter to be use by blast. It needs the
-	 * corresponding setBlastFromPosition(). If you decide to use the whole
-	 * sequence, do not use...
-	 * 
-	 * Blastall equivalent: -L
-	 * 
-	 * @param stop
-	 *            : an integer to use as QUERY_TO
-	 */
-	public void setBlastToPosition(int stop) {
-		this.param.put("QUERY_TO", String.valueOf(stop));
-	}
-
-	/**
-	 * 
-	 * This method is to be used if a request is to use non-default values at
-	 * submission. According to QBlast info, the accepted parameters for PUT
-	 * requests are:
-	 * 
-	 * 
-	 * Useful for the following blastall parameters:
-	 * 
+	 * This method is to be used if a request is to use non-default values at submission. Useful for the following
+	 * blastall parameters:
 	 * <ul>
 	 * <li>-r: integer to reward for match. Default = 1</li>
 	 * <li>-q: negative integer for penalty to allow mismatch. Default = -3</li>
-	 * <li>-y: dropoff for blast extensions in bits, using default if not
-	 * specified. Default = 20 for blastn, 7 for all others (except megablast
-	 * for which it is not applicable).</li>
-	 * <li>-X: X dropoff value for gapped alignment, in bits. Default = 30 for
-	 * blastn/megablast, 15 for all others.</li>
-	 * <li>-Z: final X dropoff value for gapped alignement, in bits. Default =
-	 * 50 for blastn, 25 for all others (except megablast for which it is not
-	 * applicable)</li>
-	 * <li>-P: equals 0 for multiple hits 1-pass, 1 for single hit 1-pass. Does
-	 * not apply to blastn ou megablast.</li>
-	 * <li>-A: multiple hits window size. Default = 0 (for single hit algorithm)
-	 * </li>
+	 * <li>-y: dropoff for blast extensions in bits, using default if not specified. Default = 20 for blastn, 7 for all
+	 * others (except megablast for which it is not applicable).</li>
+	 * <li>-X: X dropoff value for gapped alignment, in bits. Default = 30 for blastn/megablast, 15 for all others.</li>
+	 * <li>-Z: final X dropoff value for gapped alignement, in bits. Default = 50 for blastn, 25 for all others (except
+	 * megablast for which it is not applicable)</li>
+	 * <li>-P: equals 0 for multiple hits 1-pass, 1 for single hit 1-pass. Does not apply to blastn ou megablast.</li>
+	 * <li>-A: multiple hits window size. Default = 0 (for single hit algorithm)</li>
 	 * <li>-I: number of database sequences to save hits for. Default = 500</li>
-	 * <li>-Y: effective length of the search space. Default = 0 (0 represents
-	 * using the whole space)</li>
-	 * <li>-z: a real specifying the effective length of the database to use.
-	 * Default = 0 (0 represents the real size)</li>
-	 * <li>-c: an integer representing pseudocount constant for PSI-BLAST.
-	 * Default = 7</li>
+	 * <li>-Y: effective length of the search space. Default = 0 (0 represents using the whole space)</li>
+	 * <li>-z: a real specifying the effective length of the database to use. Default = 0 (0 represents the real size)</li>
+	 * <li>-c: an integer representing pseudocount constant for PSI-BLAST. Default = 7</li>
 	 * <li>-F: any filtering directive</li>
 	 * </ul>
-	 * 
 	 * <p>
-	 * WARNING!! This method is still very much in flux and might not work as
-	 * expected...
+	 * WARNING!! This method is still very much in flux and might not work as expected...
 	 * </p>
 	 * <p>
-	 * You have to be aware that at no moment is there any error checking on the
-	 * use of these parameters by this class.
+	 * You have to be aware that at no moment is there any error checking on the use of these parameters by this class.
 	 * </p>
 	 * 
-	 * @param aStr
-	 *            : a String with any number of optional parameters with an
-	 *            associated value.
-	 * 
+	 * @param advancedOptions : a String with any number of optional parameters with an associated value.
 	 */
-	public void setBlastAdvancedOptions(String aStr) {
-
-		// Escaping white spaces with + char to
-		// comply with QBlast specifications
-		String tmp = aStr.replaceAll(" ", "+");
-
-		this.param.put("OTHER_ADVANCED", tmp);
+	public void setBlastAdvancedOptions(String advancedOptions) {
+		// Escaping white spaces with + char to comply with QBlast specifications
+		setAlignmentOption(OTHER_ADVANCED, advancedOptions.replaceAll(" ", "+"));
 	}
 
 	/**
-	 * 
-	 * Simply return the string given as argument via setBlastAdvancedOptions
-	 * 
-	 * @return advanced :the string with the advanced options
+	 * @return the String with the advanced options
 	 */
 	public String getBlastAdvancedOptions() {
-		return this.param.get("OTHER_ADVANCED");
-	}
-
-	/**
-	 * 
-	 * This method will return the part of the URL submitted to QBlast that has
-	 * all the alignment parameters defined for this alignment.
-	 * 
-	 * Warning!! It does not contain any sequence, gid or Genbank Identifier
-	 * These are added in the workings of the NCBIQBlastService class.
-	 * 
-	 * @return cmd: part of the URL used for this alignment request
-	 * 
-	 */
-	public String getBlastCommandsToQBlast() {
-		return this.cmd;
-	}
-
-	/**
-	 * 
-	 * This method is responsible for building the String with all the alignment
-	 * parameters to use with a given request via your program
-	 * 
-	 * It does basic sanity checks on the values but nothing else at this
-	 * point...
-	 * 
-	 */
-	public void setBlastCommandsToQBlast() throws Exception {
-
-		/*
-		 * blastall program has to be set...
-		 */
-		if (this.getBlastProgram() == "not_set") {
-			throw new Exception(
-					"Impossible to execute QBlast request. Your program has not been set correctly.\n");
-		} else {
-			this.cmd = this.cmd + "&PROGRAM=" + this.getBlastProgram();
-		}
-
-		/*
-		 * A database has to be specified...
-		 */
-		if (this.getBlastDatabase() == "not_set") {
-			throw new Exception(
-					"Impossible to execute QBlast request. Your database has not been set correctly.\n");
-		} else {
-			this.cmd = this.cmd + "&DATABASE=" + this.getBlastDatabase();
-		}
-
-		/*
-		 * This code block deals with what to do with the various non-mandatory
-		 * parameters
-		 */
-		if (this.getBlastExpect() != -1) {
-			this.cmd = this.cmd + "&EXPECT=" + this.getBlastExpect();
-		}
-
-		if (this.getBlastWordSize() != -1) {
-			this.cmd = this.cmd + "&WORD_SIZE="
-					+ this.getAlignmentOption("WORD_SIZE");
-		}
-
-		if (this.getBlastFromPosition() != -1
-				&& this.getBlastToPosition() != -1) {
-			this.cmd = this.cmd + "&QUERY_FROM=" + this.getBlastFromPosition()
-					+ "&QUERY_TO=" + this.getBlastToPosition();
-		}
-
-		if (this.getBlastProgram() != "blastn") {
-			if (this.getBlastMatrix() != "BLOSUM62") {
-				this.cmd = this.cmd + "&MATRIX_NAME=" + this.getBlastMatrix();
-				if (this.getBlastGapCreation() != -1
-						&& this.getBlastGapCreation() != -1) {
-					this.setBlastGapCosts();
-					cmd = cmd + "&GAPCOSTS=" + this.getBlastGapCosts();
-				}
-			}
-		}
-		// if (this.getBlastAdvancedOptions()!="not_set") {
-		// cmd = cmd + "&OTHER_ADVANCED=" +
-		// this.getAlignmentOption("OTHER_ADVANCED");
-		// }
-	}
-
-	/**
-	 * 
-	 * A way to start a new URL from scratch after analyzing one sequence before
-	 * going to the next if new parameters are necessary
-	 * 
-	 */
-	public void reinitializeBlastCommandsToQBlast() {
-		this.cmd = "CMD=Put";
-	}
-
-	/*
-	 * 
-	 * These three methods are necessary to comply with Interface definition
-	 * 
-	 * Could be useful
-	 */
-	public String getAlignmentOption(String key) throws Exception {
-		if (param.containsKey(key)) {
-			return this.param.get(key);
-		} else {
-			throw new Exception("The key named " + key
-					+ " is not set in this RemoteQBlastOutputProperties object");
-		}
-	}
-
-	public void setAlignementOption(String key, String val) {
-		this.param.put(key, val);
-	}
-
-	public Set<String> getAlignmentOptions() {
-		return param.keySet();
+		return getAlignmentOption(OTHER_ADVANCED);
 	}
 }

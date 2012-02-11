@@ -17,28 +17,26 @@
  *
  *      http://www.biojava.org/
  *
+ * Created on 2011-11-20
+ *
  */
 
 package org.biojava3.ws.alignment.qblast;
+
 /**
- * The RemoteQBlastOutputFormat enum acts like static fields for specifiying various
- * values for certain output options.
+ * Enum representing available output alignment types.
+ * <p/>
+ * Values as used in QBlast URL API.
  * 
- * <p>
- * Many thanks to Matthew Busse for helping in debugging after the migration from BJ1.7 to BJ3.0.
- * </p>
- * 
- * @author Sylvain Foisy, Diploide BioIT
- * @since Biojava 3 
+ * @author Gediminas Rimsa
  */
-public enum NCBIQBlastOutputFormat {
-	TEXT,
-	XML,
-	HTML,
-	PAIRWISE,
-	QUERY_ANCHORED,
-	QUERY_ANCHORED_NO_IDENTITIES,
-	FLAT_QUERY_ANCHORED,
-	FLAT_QUERY_ANCHORED_NO_IDENTITIES,
-	TABULAR;
+public enum BlastOutputAlignmentFormatEnum {
+
+	Pairwise,
+	QueryAnchored,
+	QueryAnchoredNoIdentities,
+	FlatQueryAnchored,
+	FlatQueryAnchoredNoIdentities,
+	Tabular
+
 }

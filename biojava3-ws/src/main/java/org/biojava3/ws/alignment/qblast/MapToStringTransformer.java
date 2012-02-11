@@ -21,14 +21,14 @@
  *
  */
 
-package org.biojava3.ws.alignment.qblast2.utils;
+package org.biojava3.ws.alignment.qblast;
 
 import java.util.Map;
 
-import org.biojava3.ws.alignment.qblast2.NCBIQBlastService2;
+
 
 /**
- * Transforms Map to String. Used by {@linkplain NCBIQBlastService2} to join
+ * Transforms Map to String. Used by {@linkplain NCBIQBlastService} to join
  * given map of arguments to a single String to pass to QBlast service
  * 
  * @author Gediminas Rimsa

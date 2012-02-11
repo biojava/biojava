@@ -21,19 +21,22 @@
  *
  */
 
-package org.biojava3.ws.alignment.qblast2;
+package org.biojava3.ws.alignment.qblast;
 
 /**
- * Used to store information about QBlast search job, namely: request ID, start
- * time, expected execution time
+ * Information about QBlast search job
  * 
  * @author Gediminas Rimsa
  */
-public class NCBIQBlastJob {
+public class BlastJob {
 	private String id;
 	private long startTimestamp;
 	private long expectedExecutionTime;
 
+	/**
+	 * Request id (RID) as received from QBlast server
+	 * @return
+	 */
 	public String getId() {
 		return id;
 	}
@@ -57,4 +60,18 @@ public class NCBIQBlastJob {
 	public void setExpectedExecutionTime(long expectedExecutionTime) {
 		this.expectedExecutionTime = expectedExecutionTime;
 	}
+
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("BlastJob [id=");
+		builder.append(id);
+		builder.append(", startTimestamp=");
+		builder.append(startTimestamp);
+		builder.append(", expectedExecutionTime=");
+		builder.append(expectedExecutionTime);
+		builder.append("]");
+		return builder.toString();
+	}
+
 }

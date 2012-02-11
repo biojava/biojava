@@ -17,24 +17,23 @@
  *
  *      http://www.biojava.org/
  *
- * Created on 2011-12-25
+ * Created on 2011-11-20
  *
  */
 
-package org.biojava3.ws.alignment.qblast2.enums;
+package org.biojava3.ws.alignment.qblast;
 
 /**
- * Enum representing blast matrices supported by QBlast
+ * Enum representing available output formats.
+ * <p/>
+ * Values are as used by QBlast URL API.
  * 
  * @author Gediminas Rimsa
  */
-public enum BlastMatrix {
-	BLOSUM45,
-	BLOSUM50,
-	BLOSUM62,
-	BLOSUM80,
-	BLOSUM90,
-	PAM250,
-	PAM30,
-	PAM70
+public enum BlastOutputFormatEnum {
+
+	Text,
+	XML,
+	HTML
+
 }
