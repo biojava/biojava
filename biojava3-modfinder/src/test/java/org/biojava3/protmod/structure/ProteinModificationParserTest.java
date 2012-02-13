@@ -325,7 +325,11 @@ public class ProteinModificationParserTest extends TestCase {
 
 		parser.identify(struc, mods);
 
-		assertFalse(pdbId + " is not false" , 
+		if (! parser.getIdentifiedModifiedCompound().isEmpty() ){
+			System.err.println("Did not identify any modified compounds for " + pdbId);
+		}
+		
+		assertFalse("Did not identify any modified compounds for " + pdbId , 
 				parser.getIdentifiedModifiedCompound().isEmpty());
 		
 		boolean print = false;
