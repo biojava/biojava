@@ -36,7 +36,7 @@ public class TmpAtomCache
 	   params.setLoadChemCompInfo(true);
 	   params.setAlignSeqRes(true);
 	   params.setParseSecStruc(false);
-	   
+	   params.setUpdateRemediatedFiles(true);
 	   cache.setFileParsingParams(params);
 	   cache.setAutoFetch(true);
    }
