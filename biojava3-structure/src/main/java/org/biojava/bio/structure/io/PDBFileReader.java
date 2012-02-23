@@ -24,15 +24,10 @@
  */
 package org.biojava.bio.structure.io;
 
-import java.io.BufferedReader;
+
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.PrintWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -42,8 +37,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-import java.util.zip.GZIPInputStream;
-import java.util.zip.GZIPOutputStream;
 
 import org.biojava.bio.structure.Chain;
 import org.biojava.bio.structure.Compound;
@@ -54,6 +47,7 @@ import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.align.ce.AbstractUserArgumentProcessor;
 import org.biojava.bio.structure.io.mmcif.ChemCompGroupFactory;
 import org.biojava.bio.structure.io.mmcif.ReducedChemCompProvider;
+import org.biojava.bio.structure.io.util.FileDownloadUtils;
 import org.biojava3.core.util.InputStreamProvider;
 
 /**
@@ -535,7 +529,7 @@ public class PDBFileReader implements StructureIOFile {
 		checkPath();
 
 		// make sure path follows unix convention
-		String uPath = toUnixPath(path);
+		String uPath = FileDownloadUtils.toUnixPath(path);
 
 		// create local subdirectory for biological assembly files if it doesn't exist
 		String dir = uPath + LOCAL_BIO_ASSEMBLY_DIRECTORY;
@@ -649,13 +643,11 @@ public class PDBFileReader implements StructureIOFile {
 		}
 
 
-		File tempFile = null;
+
 		File realFile = null;
 
 		pdbId = pdbId.toLowerCase();
 		String middle = pdbId.substring(1,3);
-
-		String tmpName = System.currentTimeMillis()+"";
 
 		if ( pdbDirectorySplit) {
 			String dir = path+lineSplit+middle;
@@ -663,10 +655,10 @@ public class PDBFileReader implements StructureIOFile {
 			if ( ! directoryCheck.exists()){
 				directoryCheck.mkdir();
 			}
-			tempFile =new File(dir+lineSplit+"pdb"+ pdbId+tmpName+".ent.gz");
+
 			realFile =new File(dir+lineSplit+"pdb"+ pdbId+".ent.gz");
 		} else {
-			tempFile = new File(path+lineSplit+"pdb"+pdbId+tmpName+".ent.gz");
+
 			realFile = new File(path+lineSplit+"pdb"+pdbId+".ent.gz");
 		}
 
@@ -678,41 +670,13 @@ public class PDBFileReader implements StructureIOFile {
 
 		String ftp = String.format("ftp://%s%s%s/pdb%s.ent.gz", serverName,pathOnServer,middle, pdbId);
 
-		System.out.println("Fetching " + ftp);
+		//System.out.println("Fetching " + ftp);
 
 
 		try {
 			URL url = new URL(ftp);
 
-			InputStream uStream = url.openStream();
-			InputStream conn = new GZIPInputStream(uStream);
-
-
-			FileOutputStream outPut = new FileOutputStream(tempFile);
-			GZIPOutputStream gzOutPut = new GZIPOutputStream(outPut);
-			PrintWriter pw = new PrintWriter(gzOutPut);
-
-			BufferedReader fileBuffer = new BufferedReader(new InputStreamReader(conn));
-			String line;
-			while ((line = fileBuffer.readLine()) != null) {
-				pw.println(line);
-			}
-			pw.flush();
-			pw.close();
-
-			outPut.flush();
-			outPut.close();
-			conn.close();
-			uStream.close();
-
-			// copy file name to **real** location (without the tmpFileName)
-			// prepare destination
-			System.out.println("writing to " + realFile);
-
-			copy(tempFile, realFile);
-
-			// delete the tmp file			
-			tempFile.delete();
+			FileDownloadUtils.downloadGzipCompressedFile(url, realFile);
 
 		} catch (Exception e){
 			System.err.println("Problem while downloading PDB ID " + pdbId + " from FTP server." );
@@ -724,20 +688,7 @@ public class PDBFileReader implements StructureIOFile {
 		return realFile;
 	}
 
-	private void copy(File src, File dst) throws IOException {
 
-		InputStream in = new FileInputStream(src);
-		OutputStream out = new FileOutputStream(dst);
-
-		// Transfer bytes from in to out
-		byte[] buf = new byte[1024];
-		int len;
-		while ((len = in.read(buf)) > 0) {
-			out.write(buf, 0, len);
-		}
-		in.close();
-		out.close();
-	}
 
 
 	/**
@@ -780,7 +731,13 @@ public class PDBFileReader implements StructureIOFile {
 		// check if the file exists on the FTP site. If biological assembly file does not exist
 		// and the fallback has been set, get the original PDB file instead (i.e. for NMR structures).
 
-		File f = downloadFileIfAvailable(url, pdbId,fileName);
+		File f = null;
+		
+		try {
+			f = downloadFileIfAvailable(url, pdbId,fileName);
+		} catch (IOException ioe){
+			// ignore here because it prob. means the file does not exist...
+		}
 
 		if ( f == null) {
 
@@ -807,33 +764,13 @@ public class PDBFileReader implements StructureIOFile {
 	}
 
 
-	private File downloadFileIfAvailable(URL url, String pdbId, String fileName) {
 
-		InputStream uStream = null;
-		InputStream conn = null;
-		try {
-			uStream = url.openStream();
-			conn = new GZIPInputStream(uStream);
-		} catch (IOException e1) {
-			System.err.println("Problem while downloading Biological Assembly " + pdbId + " from FTP server." );
-			//e1.printStackTrace();
-			try {
-				if (uStream != null) {
-					uStream.close();
-				}	
 
-				if (conn != null) {
-					conn.close();
-				}
 
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			return null;
-		} 
+	private File downloadFileIfAvailable(URL url, String pdbId, String fileName) throws IOException {
 
 		String middle = pdbId.substring(1,3);
-		String uPath = toUnixPath(path);
+		String uPath = FileDownloadUtils.toUnixPath(path);
 		File tempFile = null;
 		if (pdbDirectorySplit) {
 			String dir = uPath + LOCAL_BIO_ASSEMBLY_DIRECTORY + "/" + middle;
@@ -845,60 +782,8 @@ public class PDBFileReader implements StructureIOFile {
 		} else {
 			tempFile = new File(path + LOCAL_BIO_ASSEMBLY_DIRECTORY + "/" + fileName);
 		}
-
-		FileOutputStream outPut = null;
-		GZIPOutputStream gzOutPut = null;
-
-		try {
-			outPut = new FileOutputStream(tempFile);
-			gzOutPut = new GZIPOutputStream(outPut);
-			PrintWriter pw = new PrintWriter(gzOutPut);
-
-			BufferedReader fileBuffer = new BufferedReader(new InputStreamReader(conn));
-			String line;
-			while ((line = fileBuffer.readLine()) != null) {
-				pw.println(line);
-			}
-			pw.flush();
-			pw.close();
-
-			outPut.flush();
-			outPut.close();
-			conn.close();
-			uStream.close();
-
-		} catch (Exception e){
-			System.err.println("Problem while downloading PDB ID " + pdbId + " from FTP server." );
-			e.printStackTrace();
-			return null;
-		} finally {	
-			if ( conn != null){
-				try {
-
-					conn.close();
-				} catch (IOException e){
-					e.printStackTrace();
-				}
-			}
-			if ( uStream != null){
-				try { 
-					uStream.close();					
-				}catch (IOException e){
-					e.printStackTrace();
-				}
-			}
-			try {
-				if (outPut != null) {
-					outPut.close();
-				}
-				if (gzOutPut != null) {
-					gzOutPut.close();
-				}
-			} catch (IOException e) {
-			}
-		}
-		System.out.println("Writing to " + tempFile);
-		return tempFile;
+		
+		return FileDownloadUtils.downloadFileIfAvailable(url, tempFile);
 	}
 
 
@@ -1092,71 +977,7 @@ public class PDBFileReader implements StructureIOFile {
 		return pdbId + ".pdb" + biologicalAssemblyId + ".gz";
 	}
 
-	/**
-	 * Converts path to Unix convention and adds a terminating slash if it was omitted
-	 * @param path original platform dependent path
-	 * @return path in Unix convention
-	 * @author Peter Rose
-	 * @since 3.2
-	 */
-	private String toUnixPath(String path) {
-		String uPath = path;
-		if (uPath.contains("\\")) {
-			uPath = uPath.replaceAll("\\\\", "/");			
-		}
-		// this should be removed, it's need since "\" is added AtomCache code
-		if (uPath.endsWith("//")) {
-			uPath = uPath.substring(0, uPath.length()-1);
-		}
-		if (! uPath.endsWith("/")) {
-			uPath = uPath + "/";
-		}
-		return uPath;
-	}
+	
 
 
-	//	/**
-	//	 * Check if file exists on FTP site.
-	//	 * Note: this method should be reviewed. There should be an easier way to do this.
-	//	 * @param fileName 
-	//	 * @return true if file exists
-	//	 * @author Peter Rose
-	//	 * @since 3.2
-	//	 */
-	//	private boolean isFileAvailable(URL url) {
-	//
-	//		InputStream uStream = null;
-	//		InputStream conn = null;
-	//		try {
-	//			uStream = url.openStream();
-	//			conn = new GZIPInputStream(uStream);
-	//			
-	//			conn.close();
-	//			uStream.close();
-	//			return true;
-	//		} catch (IOException e1) {
-	//		} finally {
-	//			try {
-	//				if (conn != null) {
-	//					conn.close();
-	//				}
-	//				if (uStream != null) {
-	//					uStream.close();
-	//				}
-	//			} catch (IOException e) {
-	//				e.printStackTrace();
-	//				return false;
-	//			}
-	//		}
-	//		return false;
-	//
-	//		// The following code doesn't work. ???
-	//		//		File ftpFile = null;
-	//		//		try {
-	//		//			ftpFile = new File(url.toURI());
-	//		//		} catch (URISyntaxException e) {
-	//		//			return false;
-	//		//		}
-	//		//		return ftpFile.exists();
-	//	}
 }
