@@ -507,7 +507,7 @@ public class PDBFileParserTest extends TestCase {
 		try {
 			Structure s = cache.getStructure("4HHB");
 			
-			System.out.println(s.toPDB());
+			//System.out.println(s.toPDB());
 			Atom[] ca = StructureTools.getAtomCAArray(s);
 			Atom[] cb = StructureTools.getAtomArray(s, new String[]{" CB ",});
 
