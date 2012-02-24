@@ -72,14 +72,14 @@ public class FileDownloadUtils {
 		//System.out.println("Extension ="+ext);
 		return ext;
 	}
-	
+
 	public static String getFilePrefix(File f){
 		String fileName = f.getName();
 		String fname="";
-		
+
 		int mid= fileName.indexOf(".");
 		fname=fileName.substring(0,mid);
-		  		
+
 		return fname;
 	}
 
@@ -97,25 +97,34 @@ public class FileDownloadUtils {
 		InputStream conn = new GZIPInputStream(uStream);
 
 		File tempFile  = File.createTempFile(getFilePrefix(destination), "."+ getFileExtension(destination));
-		
-		System.out.println("downloading " + url + " to " + tempFile.getAbsolutePath());
-		FileOutputStream outPut = new FileOutputStream(tempFile);
-		GZIPOutputStream gzOutPut = new GZIPOutputStream(outPut);
-		PrintWriter pw = new PrintWriter(gzOutPut);
 
-		BufferedReader fileBuffer = new BufferedReader(new InputStreamReader(conn));
-		String line;
-		while ((line = fileBuffer.readLine()) != null) {
-			pw.println(line);
+		try {
+			System.out.println("downloading " + url + " to " + tempFile.getAbsolutePath());
+			FileOutputStream outPut = new FileOutputStream(tempFile);
+			GZIPOutputStream gzOutPut = new GZIPOutputStream(outPut);
+			PrintWriter pw = new PrintWriter(gzOutPut);
+
+			BufferedReader fileBuffer = new BufferedReader(new InputStreamReader(conn));
+			String line;
+			while ((line = fileBuffer.readLine()) != null) {
+				pw.println(line);
+			}
+			pw.flush();
+			pw.close();
+
+			outPut.flush();
+			outPut.close();
+			conn.close();
+			uStream.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+			if ( conn != null)
+				conn.close();
+			if (uStream != null) 
+				uStream.close();
+			throw new IOException(e.getMessage());
+			
 		}
-		pw.flush();
-		pw.close();
-
-		outPut.flush();
-		outPut.close();
-		conn.close();
-		uStream.close();
-
 		// copy file name to **real** location (without the tmpFileName)
 		// prepare destination
 		System.out.println("copying to " + destination);
@@ -126,7 +135,7 @@ public class FileDownloadUtils {
 		tempFile.delete();
 
 	}
-	
+
 	public static File downloadFileIfAvailable(URL url, File destination) throws IOException {
 
 		InputStream uStream = null;
@@ -151,14 +160,14 @@ public class FileDownloadUtils {
 			}
 			return null;
 		} 
-		
+
 
 		FileOutputStream outPut = null;
 		GZIPOutputStream gzOutPut = null;
 		File tempFile  = File.createTempFile(getFilePrefix(destination), "."+ getFileExtension(destination));
 		try {
-			
-			
+
+
 			outPut = new FileOutputStream(tempFile);
 			gzOutPut = new GZIPOutputStream(outPut);
 			PrintWriter pw = new PrintWriter(gzOutPut);
@@ -207,12 +216,12 @@ public class FileDownloadUtils {
 			}
 		}
 		System.out.println("Writing to " + destination);
-		
+
 		copy(tempFile, destination);
-		
+
 		return destination;
 	}
-	
+
 	/**
 	 * Converts path to Unix convention and adds a terminating slash if it was omitted
 	 * @param path original platform dependent path
