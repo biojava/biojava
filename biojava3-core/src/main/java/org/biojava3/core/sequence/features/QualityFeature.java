@@ -50,14 +50,14 @@ public class QualityFeature<S extends AbstractSequence<C>, C extends Compound> e
     /**
      * @return the qualities
      */
-    public List<Number> getQuantities() {
+    public List<Number> getQualities() {
         return qualities;
     }
 
     /**
      * @param qualities the qualities to set
      */
-    public void setQuantities(List<Number> qualities) {
+    public void setQualities(List<Number> qualities) {
         this.qualities = qualities;
     }
 
