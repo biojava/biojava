@@ -20,25 +20,24 @@
  */
 package org.biojava3.sequencing.io.fastq;
 
-import java.net.URL;
-
 import java.io.File;
-import java.io.InputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 
 /**
  * Reader for FASTQ formatted sequences.
  *
  * @since 3.0.3
  */
-public interface FastqReader
-{
+public interface FastqReader {
 
     /**
      * Read zero or more FASTQ formatted sequences from the specified file.
      *
      * @param file file to read from, must not be null
-     * @return zero or more FASTQ formatted sequences read from the specified file
+     * @return zero or more FASTQ formatted sequences read from the specified
+     * file
      * @throws IOException if an IO error occurs
      */
     Iterable<Fastq> read(File file) throws IOException;
@@ -47,16 +46,19 @@ public interface FastqReader
      * Read zero or more FASTQ formatted sequences from the specified url.
      *
      * @param url URL to read from, must not be null
-     * @return zero or more FASTQ formatted sequences read from the specified url
+     * @return zero or more FASTQ formatted sequences read from the specified
+     * url
      * @throws IOException if an IO error occurs
      */
     Iterable<Fastq> read(URL url) throws IOException;
 
     /**
-     * Read zero or more FASTQ formatted sequences from the specified input stream.
+     * Read zero or more FASTQ formatted sequences from the specified input
+     * stream.
      *
      * @param inputStream input stream to read from, must not be null
-     * @return zero or more FASTQ formatted sequences read from the specified input stream
+     * @return zero or more FASTQ formatted sequences read from the specified
+     * input stream
      * @throws IOException if an IO error occurs
      */
     Iterable<Fastq> read(InputStream inputStream) throws IOException;

@@ -22,44 +22,35 @@
 /**
  * FASTQ and variants sequence format IO.
  *
- * <p>
- * To read from an Illumina variant FASTQ sequence file:
+ * <p> To read from an Illumina variant FASTQ sequence file:
  * <pre>
  * FastqReader reader = new IlluminaFastqReader();
  * for (Fastq fastq : reader.read(new File("illumina.fastq"))
  * {
  *   // ...
  * }
- * </pre>
- * </p>
+ * </pre> </p>
  *
- * <p>
- * To write to an Sanger variant FASTQ sequence file:
+ * <p> To write to an Sanger variant FASTQ sequence file:
  * <pre>
  * Collection&lt;Fastq&gt; fastq = ...;
  * SangerFastqWriter writer = new SangerFastqWriter();
  * writer.write(new File("sanger.fastq"), fastq);
- * </pre>
- * </p>
+ * </pre> </p>
  *
- * <p>
- * For further documentation on the FASTQ sequence format,
- * its variants, and how they are handled in O|B|F projects,
- * see:
- * </p>
+ * <p> For further documentation on the FASTQ sequence format, its variants, and
+ * how they are handled in O|B|F projects, see: </p>
  *
- * <p>
- * <a href="http://dx.doi.org/10.1093/nar/gkp1137">The Sanger FASTQ file format for sequences
- * with quality scores, and the Solexa/Illumina FASTQ variants</a><br/>
- * Peter J. A. Cock (Biopython), Christopher J. Fields (BioPerl), Naohisa Goto (BioRuby),
- * Michael L. Heuer (BioJava) and Peter M. Rice (EMBOSS).<br/>
- * Nucleic Acids Research, <a href="http://dx.doi.org/10.1093/nar/gkp1137">doi:10.1093/nar/gkp1137</a>
- * </p>
+ * <p> <a href="http://dx.doi.org/10.1093/nar/gkp1137">The Sanger FASTQ file
+ * format for sequences with quality scores, and the Solexa/Illumina FASTQ
+ * variants</a><br/> Peter J. A. Cock (Biopython), Christopher J. Fields
+ * (BioPerl), Naohisa Goto (BioRuby), Michael L. Heuer (BioJava) and Peter M.
+ * Rice (EMBOSS).<br/> Nucleic Acids Research, <a
+ * href="http://dx.doi.org/10.1093/nar/gkp1137">doi:10.1093/nar/gkp1137</a> </p>
  *
- * <p>
- * This package was copied from biojava-legacy-trunk/sequencing and refactored from its original package
- * <code>org.biojava.bio.program.fastq</code>.
- * </p>
+ * <p> This package was copied from biojava-legacy-trunk/sequencing and
+ * refactored from its original package
+ * <code>org.biojava.bio.program.fastq</code>. </p>
  *
  * @since 3.0.3
  */

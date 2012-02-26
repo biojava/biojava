@@ -21,47 +21,38 @@
 package org.biojava3.sequencing.io.fastq;
 
 import junit.framework.TestCase;
-
 import static org.biojava3.sequencing.io.fastq.FastqVariant.*;
 
 /**
  * Unit test for FastqVariant.
  */
-public final class FastqVariantTest
-    extends TestCase
-{
+public final class FastqVariantTest extends TestCase {
 
-    public void testDescription()
-    {
-        for (FastqVariant variant : values())
-        {
+    public void testDescription() {
+        for (FastqVariant variant : values()) {
             assertNotNull(variant.getDescription());
         }
     }
 
-    public void testIsSanger()
-    {
+    public void testIsSanger() {
         assertTrue(FASTQ_SANGER.isSanger());
         assertFalse(FASTQ_SOLEXA.isSanger());
         assertFalse(FASTQ_ILLUMINA.isSanger());
     }
 
-    public void testIsSolexa()
-    {
+    public void testIsSolexa() {
         assertFalse(FASTQ_SANGER.isSolexa());
         assertTrue(FASTQ_SOLEXA.isSolexa());
         assertFalse(FASTQ_ILLUMINA.isSolexa());
     }
 
-    public void testIsIllumina()
-    {
+    public void testIsIllumina() {
         assertFalse(FASTQ_SANGER.isIllumina());
         assertFalse(FASTQ_SOLEXA.isIllumina());
         assertTrue(FASTQ_ILLUMINA.isIllumina());
     }
 
-    public void testParseFastqVariant()
-    {
+    public void testParseFastqVariant() {
         assertEquals(null, parseFastqVariant(null));
         assertEquals(null, parseFastqVariant(""));
         assertEquals(null, parseFastqVariant("not a valid FASTQ variant"));

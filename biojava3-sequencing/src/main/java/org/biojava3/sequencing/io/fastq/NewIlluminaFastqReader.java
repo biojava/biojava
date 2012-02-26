@@ -23,18 +23,19 @@ package org.biojava3.sequencing.io.fastq;
 import java.io.IOException;
 
 /**
- * Reader for {@link FastqVariant#FASTQ_ILLUMINA} formatted sequences.
+ * Reader for {@link FastqVariant#FASTQ_NEW_ILLUMINA} formatted sequences.
  *
  * @since 3.0.3
+ * @author brandstaetter
  */
-public final class IlluminaFastqReader extends AbstractFastqReader {
+public final class NewIlluminaFastqReader extends AbstractFastqReader {
 
     /**
      * {@inheritDoc}
      */
     @Override
     protected FastqVariant getVariant() {
-        return FastqVariant.FASTQ_ILLUMINA;
+        return FastqVariant.FASTQ_NEW_ILLUMINA;
     }
 
     /**
@@ -75,8 +76,8 @@ public final class IlluminaFastqReader extends AbstractFastqReader {
     protected void validateQuality(final FastqBuilder builder, final String quality, final int lineNumber) throws IOException {
         for (int i = 0; i < quality.length(); i++) {
             int c = (int) quality.charAt(i);
-            if (c < 64 || c > 126) {
-                throw new IOException("quality scores must contain ASCII codes 64 to 126, found " + c
+            if (c < 33 || c > 126) {
+                throw new IOException("quality scores must contain ASCII codes 33 to 126, found " + c
                         + " at line " + lineNumber);
             }
         }

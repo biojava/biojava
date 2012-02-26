@@ -25,53 +25,57 @@ package org.biojava3.sequencing.io.fastq;
  *
  * @since 3.0.3
  */
-public final class FastqBuilder
-{
-    /** Description for this FASTQ formatted sequence builder. */
+public final class FastqBuilder {
+
+    /**
+     * Description for this FASTQ formatted sequence builder.
+     */
     private String description;
-
-    /** Sequence for this FASTQ formatted sequence builder. */
+    /**
+     * Sequence for this FASTQ formatted sequence builder.
+     */
     private StringBuilder sequence;
-
-    /** Quality scores for this FASTQ formatted sequence builder. */
+    /**
+     * Quality scores for this FASTQ formatted sequence builder.
+     */
     private StringBuilder quality;
-
-    /** FASTQ sequence format variant for this FASTQ formatted sequence builder. */
+    /**
+     * FASTQ sequence format variant for this FASTQ formatted sequence builder.
+     */
     private FastqVariant variant = DEFAULT_VARIANT;
-
-    /** Default FASTQ sequence format variant, <code>FastqVariant.FASTQ_SANGER</code>. */
+    /**
+     * Default FASTQ sequence format variant,
+     * <code>FastqVariant.FASTQ_SANGER</code>.
+     */
     public static final FastqVariant DEFAULT_VARIANT = FastqVariant.FASTQ_SANGER;
-
 
     /**
      * Create a new FASTQ formatted sequence builder.
      */
-    public FastqBuilder()
-    {
+    public FastqBuilder() {
         // empty
     }
-
 
     /**
      * Return the description for this FASTQ formatted sequence builder.
      *
      * @return the description for this FASTQ formatted sequence builder
      */
-    public String getDescription()
-    {
+    public String getDescription() {
         return description;
     }
 
     /**
-     * Return this FASTQ formatted sequence builder configured with the specified description.
+     * Return this FASTQ formatted sequence builder configured with the
+     * specified description.
      *
-     * @param description description for this FASTQ formatted sequence builder, must not be null
-     * @return this FASTQ formatted sequence builder configured with the specified description
+     * @param description description for this FASTQ formatted sequence builder,
+     * must not be null
+     * @return this FASTQ formatted sequence builder configured with the
+     * specified description
      */
-    public FastqBuilder withDescription(final String description)
-    {
-        if (description == null)
-        {
+    public FastqBuilder withDescription(final String description) {
+        if (description == null) {
             throw new IllegalArgumentException("description must not be null");
         }
         this.description = description;
@@ -79,19 +83,19 @@ public final class FastqBuilder
     }
 
     /**
-     * Return this FASTQ formatted sequence builder configured with the specified sequence.
+     * Return this FASTQ formatted sequence builder configured with the
+     * specified sequence.
      *
-     * @param sequence sequence for this FASTQ formatted sequence builder, must not be null
-     * @return this FASTQ formatted sequence builder configured with the specified sequence
+     * @param sequence sequence for this FASTQ formatted sequence builder, must
+     * not be null
+     * @return this FASTQ formatted sequence builder configured with the
+     * specified sequence
      */
-    public FastqBuilder withSequence(final String sequence)
-    {
-        if (sequence == null)
-        {
+    public FastqBuilder withSequence(final String sequence) {
+        if (sequence == null) {
             throw new IllegalArgumentException("sequence must not be null");
         }
-        if (this.sequence == null)
-        {
+        if (this.sequence == null) {
             this.sequence = new StringBuilder(sequence.length());
         }
         this.sequence.replace(0, this.sequence.length(), sequence);
@@ -99,21 +103,19 @@ public final class FastqBuilder
     }
 
     /**
-     * Return this FASTQ formatted sequence builder configured with the specified sequence
-     * appended to its current sequence.
+     * Return this FASTQ formatted sequence builder configured with the
+     * specified sequence appended to its current sequence.
      *
-     * @param sequence sequence to append to the sequence for this FASTQ formatted sequence builder, must not be null
-     * @return this FASTQ formatted sequence builder configured with the specified sequence
-     *    appended to its current sequence
+     * @param sequence sequence to append to the sequence for this FASTQ
+     * formatted sequence builder, must not be null
+     * @return this FASTQ formatted sequence builder configured with the
+     * specified sequence appended to its current sequence
      */
-    public FastqBuilder appendSequence(final String sequence)
-    {
-        if (sequence == null)
-        {
+    public FastqBuilder appendSequence(final String sequence) {
+        if (sequence == null) {
             throw new IllegalArgumentException("sequence must not be null");
         }
-        if (this.sequence == null)
-        {
+        if (this.sequence == null) {
             this.sequence = new StringBuilder(sequence.length());
         }
         this.sequence.append(sequence);
@@ -121,19 +123,19 @@ public final class FastqBuilder
     }
 
     /**
-     * Return this FASTQ formatted sequence builder configured with the specified quality scores.
+     * Return this FASTQ formatted sequence builder configured with the
+     * specified quality scores.
      *
-     * @param quality quality scores for this FASTQ formatted sequence builder, must not be null
-     * @return this FASTQ formatted sequence builder configured with the specified quality scores
+     * @param quality quality scores for this FASTQ formatted sequence builder,
+     * must not be null
+     * @return this FASTQ formatted sequence builder configured with the
+     * specified quality scores
      */
-    public FastqBuilder withQuality(final String quality)
-    {
-        if (quality == null)
-        {
+    public FastqBuilder withQuality(final String quality) {
+        if (quality == null) {
             throw new IllegalArgumentException("quality must not be null");
         }
-        if (this.quality == null)
-        {
+        if (this.quality == null) {
             this.quality = new StringBuilder(quality.length());
         }
         this.quality.replace(0, this.quality.length(), quality);
@@ -141,22 +143,19 @@ public final class FastqBuilder
     }
 
     /**
-     * Return this FASTQ formatted sequence builder configured with the specified quality scores
-     * appended to its current quality scores.
+     * Return this FASTQ formatted sequence builder configured with the
+     * specified quality scores appended to its current quality scores.
      *
-     * @param quality quality scores to append to the quality scores for this FASTQ formatted sequence
-     *    builder, must not be null
-     * @return this FASTQ formatted sequence builder configured with the specified quality scores
-     *    appended to its current quality scores
+     * @param quality quality scores to append to the quality scores for this
+     * FASTQ formatted sequence builder, must not be null
+     * @return this FASTQ formatted sequence builder configured with the
+     * specified quality scores appended to its current quality scores
      */
-    public FastqBuilder appendQuality(final String quality)
-    {
-        if (quality == null)
-        {
+    public FastqBuilder appendQuality(final String quality) {
+        if (quality == null) {
             throw new IllegalArgumentException("quality must not be null");
         }
-        if (this.quality == null)
-        {
+        if (this.quality == null) {
             this.quality = new StringBuilder(quality.length());
         }
         this.quality.append(quality);
@@ -164,26 +163,28 @@ public final class FastqBuilder
     }
 
     /**
-     * Return true if the sequence and quality scores for this FASTQ formatted sequence builder are equal in length.
+     * Return true if the sequence and quality scores for this FASTQ formatted
+     * sequence builder are equal in length.
      *
-     * @return true if the sequence and quality scores for this FASTQ formatted sequence builder are equal in length
+     * @return true if the sequence and quality scores for this FASTQ formatted
+     * sequence builder are equal in length
      */
-    public boolean sequenceAndQualityLengthsMatch()
-    {
+    public boolean sequenceAndQualityLengthsMatch() {
         // todo: null check?
         return sequence.length() == quality.length();
     }
 
     /**
-     * Return this FASTQ formatted sequence builder configured with the specified FASTQ sequence format variant.
+     * Return this FASTQ formatted sequence builder configured with the
+     * specified FASTQ sequence format variant.
      *
-     * @param variant FASTQ sequence format variant for this FASTQ formatted sequence builder, must not be null
-     * @return this FASTQ formatted sequence builder configured with the specified FASTQ sequence format variant
+     * @param variant FASTQ sequence format variant for this FASTQ formatted
+     * sequence builder, must not be null
+     * @return this FASTQ formatted sequence builder configured with the
+     * specified FASTQ sequence format variant
      */
-    public FastqBuilder withVariant(final FastqVariant variant)
-    {
-        if (variant == null)
-        {
+    public FastqBuilder withVariant(final FastqVariant variant) {
+        if (variant == null) {
             throw new IllegalArgumentException("variant must not be null");
         }
         this.variant = variant;
@@ -191,31 +192,28 @@ public final class FastqBuilder
     }
 
     /**
-     * Build and return a new FASTQ formatted sequence configured from the properties of this builder.
+     * Build and return a new FASTQ formatted sequence configured from the
+     * properties of this builder.
      *
-     * @return a new FASTQ formatted sequence configured from the properties of this builder
-     * @throws IllegalStateException if the configuration of this builder results in an illegal state
+     * @return a new FASTQ formatted sequence configured from the properties of
+     * this builder
+     * @throws IllegalStateException if the configuration of this builder
+     * results in an illegal state
      */
-    public Fastq build()
-    {
-        if (description == null)
-        {
+    public Fastq build() {
+        if (description == null) {
             throw new IllegalStateException("description must not be null");
         }
-        if (sequence == null)
-        {
+        if (sequence == null) {
             throw new IllegalStateException("sequence must not be null");
         }
-        if (quality == null)
-        {
+        if (quality == null) {
             throw new IllegalStateException("quality must not be null");
         }
-        if (variant == null)
-        {
+        if (variant == null) {
             throw new IllegalStateException("variant must not be null");
         }
-        if (!sequenceAndQualityLengthsMatch())
-        {
+        if (!sequenceAndQualityLengthsMatch()) {
             throw new IllegalStateException("sequence and quality scores must be the same length");
         }
         Fastq fastq = new Fastq(description, sequence.toString(), quality.toString(), variant);

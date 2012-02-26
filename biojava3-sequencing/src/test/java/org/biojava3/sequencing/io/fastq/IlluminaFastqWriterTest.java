@@ -25,44 +25,30 @@ import java.io.IOException;
 /**
  * Unit test for IlluminaFastqWriter.
  */
-public final class IlluminaFastqWriterTest
-    extends AbstractFastqWriterTest
-{
+public final class IlluminaFastqWriterTest extends AbstractFastqWriterTest {
 
-    /** {@inheritDoc} */
-    public FastqWriter createFastqWriter()
-    {
+    /**
+     * {@inheritDoc}
+     */
+    public FastqWriter createFastqWriter() {
         return new IlluminaFastqWriter();
     }
 
-    /** {@inheritDoc} */
-    public Fastq createFastq()
-    {
-        return new FastqBuilder()
-            .withDescription("description")
-            .withSequence("sequence")
-            .withQuality("quality_")
-            .withVariant(FastqVariant.FASTQ_ILLUMINA)
-            .build();
+    /**
+     * {@inheritDoc}
+     */
+    public Fastq createFastq() {
+        return new FastqBuilder().withDescription("description").withSequence("sequence").withQuality("quality_").withVariant(FastqVariant.FASTQ_ILLUMINA).build();
     }
 
-    public void testValidateNotIlluminaVariant()
-    {
+    public void testValidateNotIlluminaVariant() {
         IlluminaFastqWriter writer = new IlluminaFastqWriter();
         Appendable appendable = new StringBuilder();
-        Fastq invalid = new FastqBuilder()
-            .withDescription("description")
-            .withSequence("sequence")
-            .withQuality("quality_")
-            .withVariant(FastqVariant.FASTQ_SANGER)
-            .build();
-        try
-        {
+        Fastq invalid = new FastqBuilder().withDescription("description").withSequence("sequence").withQuality("quality_").withVariant(FastqVariant.FASTQ_SANGER).build();
+        try {
             writer.append(appendable, invalid);
             fail("validate not fastq-illumina variant expected IOException");
-        }
-        catch (IOException e)
-        {
+        } catch (IOException e) {
             // expected
         }
     }

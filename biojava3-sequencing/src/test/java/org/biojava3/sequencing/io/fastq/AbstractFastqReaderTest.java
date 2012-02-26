@@ -21,45 +21,43 @@
 package org.biojava3.sequencing.io.fastq;
 
 import java.io.File;
-import java.io.InputStream;
 import java.io.IOException;
-
+import java.io.InputStream;
 import java.net.URL;
-
 import junit.framework.TestCase;
 
 /**
  * Abstract unit test for implementations of FastqReader.
  */
-abstract class AbstractFastqReaderTest
-    extends TestCase
-{
-    /** Array of example files that should throw IOExceptions. */
-    static final String[] ERROR_EXAMPLES = new String[]
-        {
-            "error_diff_ids.fastq",
-            "error_double_qual.fastq",
-            "error_double_seq.fastq",
-            "error_long_qual.fastq",
-            "error_no_qual.fastq",
-            "error_qual_del.fastq",
-            "error_qual_escape.fastq",
-            "error_qual_null.fastq",
-            "error_qual_space.fastq",
-            "error_qual_tab.fastq",
-            "error_qual_unit_sep.fastq",
-            "error_qual_vtab.fastq",
-            "error_short_qual.fastq",
-            "error_spaces.fastq",
-            "error_tabs.fastq",
-            "error_trunc_at_plus.fastq",
-            "error_trunc_at_qual.fastq",
-            "error_trunc_at_seq.fastq",
-            "error_trunc_in_plus.fastq",
-            "error_trunc_in_qual.fastq",
-            "error_trunc_in_seq.fastq",
-            "error_trunc_in_title.fastq"
-        };
+abstract class AbstractFastqReaderTest extends TestCase {
+
+    /**
+     * Array of example files that should throw IOExceptions.
+     */
+    static final String[] ERROR_EXAMPLES = new String[]{
+        "error_diff_ids.fastq",
+        "error_double_qual.fastq",
+        "error_double_seq.fastq",
+        "error_long_qual.fastq",
+        "error_no_qual.fastq",
+        "error_qual_del.fastq",
+        "error_qual_escape.fastq",
+        "error_qual_null.fastq",
+        "error_qual_space.fastq",
+        "error_qual_tab.fastq",
+        "error_qual_unit_sep.fastq",
+        "error_qual_vtab.fastq",
+        "error_short_qual.fastq",
+        "error_spaces.fastq",
+        "error_tabs.fastq",
+        "error_trunc_at_plus.fastq",
+        "error_trunc_at_qual.fastq",
+        "error_trunc_at_seq.fastq",
+        "error_trunc_in_plus.fastq",
+        "error_trunc_in_qual.fastq",
+        "error_trunc_in_seq.fastq",
+        "error_trunc_in_title.fastq"
+    };
 
     /**
      * Create and return a new FASTQ formatted sequence suitable for testing.
@@ -69,83 +67,73 @@ abstract class AbstractFastqReaderTest
     public abstract Fastq createFastq();
 
     /**
-     * Create and return a new instance of an implementation of FastqReader to test.
+     * Create and return a new instance of an implementation of FastqReader to
+     * test.
      *
      * @return a new instnace of an implementation of FastqReader to test
      */
     public abstract FastqReader createFastqReader();
 
     /**
-     * Create and return a new instance of an implementation of FastqWriter to test round-tripping.
+     * Create and return a new instance of an implementation of FastqWriter to
+     * test round-tripping.
      *
-     * @return a new instance of an implementation of FastqWriter to test round-tripping.
+     * @return a new instance of an implementation of FastqWriter to test
+     * round-tripping.
      */
     public abstract FastqWriter createFastqWriter();
 
-    public void testCreateFastq()
-    {
+    public void testCreateFastq() {
         try {
             Fastq fastq = createFastq();
             assertNotNull(fastq);
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             fail(e.getMessage());
         }
     }
 
-    public void testCreateFastqReader()
-    {
+    public void testCreateFastqReader() {
         FastqReader reader = createFastqReader();
         assertNotNull(reader);
     }
 
-    public void testCreateFastqWriter()
-    {
+    public void testCreateFastqWriter() {
         FastqWriter writer = createFastqWriter();
         assertNotNull(writer);
     }
 
-    public void testReadFile() throws Exception
-    {
+    public void testReadFile() throws Exception {
         FastqReader reader = createFastqReader();
-        try
-        {
+        try {
             reader.read((File) null);
             fail("read((File) null) expected IllegalArgumentException");
-        }
-        catch (IllegalArgumentException e)
-        {
+        } catch (IllegalArgumentException e) {
             // expected
         }
-        try
-        {
+        try {
             File noSuchFile = new File("no such file");
             reader.read(noSuchFile);
             fail("read(no such file) expected IOException");
-        }
-        catch (IOException e)
-        {
+        } catch (IOException e) {
             // expected
         }
     }
 
-    public void testReadEmptyFile() throws Exception
-    {
+    public void testReadEmptyFile() throws Exception {
         FastqReader reader = createFastqReader();
         File empty = File.createTempFile("abstractFastqReaderTest", null);
         Iterable<Fastq> iterable = reader.read(empty);
         assertNotNull(iterable);
         int count = 0;
-        for (Fastq f : iterable)
-        {
+        for (Fastq f : iterable) {
             assertNotNull(f);
             count++;
         }
         assertEquals(0, count);
     }
 
-    public void testReadRoundTripSingleFile() throws Exception
-    {
+    public void testReadRoundTripSingleFile() throws Exception {
         FastqReader reader = createFastqReader();
         File single = File.createTempFile("abstractFastqReaderTest", null);
         Fastq fastq = createFastq();
@@ -154,16 +142,14 @@ abstract class AbstractFastqReaderTest
         Iterable<Fastq> iterable = reader.read(single);
         assertNotNull(iterable);
         int count = 0;
-        for (Fastq f : iterable)
-        {
+        for (Fastq f : iterable) {
             assertNotNull(f);
             count++;
         }
         assertEquals(1, count);
     }
 
-    public void testReadRoundTripMultipleFile() throws Exception
-    {
+    public void testReadRoundTripMultipleFile() throws Exception {
         FastqReader reader = createFastqReader();
         File multiple = File.createTempFile("abstractFastqReaderTest", null);
         Fastq fastq0 = createFastq();
@@ -174,76 +160,60 @@ abstract class AbstractFastqReaderTest
         Iterable<Fastq> iterable = reader.read(multiple);
         assertNotNull(iterable);
         int count = 0;
-        for (Fastq f : iterable)
-        {
+        for (Fastq f : iterable) {
             assertNotNull(f);
             count++;
         }
         assertEquals(3, count);
     }
 
-    public void testReadURL() throws Exception
-    {
+    public void testReadURL() throws Exception {
         FastqReader reader = createFastqReader();
-        try
-        {
+        try {
             reader.read((URL) null);
             fail("read((URL) null) expected IllegalArgumentException");
-        }
-        catch (IllegalArgumentException e)
-        {
+        } catch (IllegalArgumentException e) {
             // expected
         }
-        try
-        {
+        try {
             URL noSuchURL = new URL("file:///no such url");
             reader.read(noSuchURL);
             fail("read(no such URL) expected IOException");
-        }
-        catch (IOException e)
-        {
+        } catch (IOException e) {
             // expected
         }
     }
 
-    public void testReadEmptyURL() throws Exception
-    {
+    public void testReadEmptyURL() throws Exception {
         FastqReader reader = createFastqReader();
         URL empty = getClass().getResource("empty.fastq");
         Iterable<Fastq> iterable = reader.read(empty);
         assertNotNull(iterable);
         int count = 0;
-        for (Fastq f : iterable)
-        {
+        for (Fastq f : iterable) {
             assertNotNull(f);
             count++;
         }
         assertEquals(0, count);
     }
 
-    public void testReadInputStream() throws Exception
-    {
+    public void testReadInputStream() throws Exception {
         FastqReader reader = createFastqReader();
-        try
-        {
+        try {
             reader.read((InputStream) null);
             fail("read((InputStream) null) expected IllegalArgumentException");
-        }
-        catch (IllegalArgumentException e)
-        {
+        } catch (IllegalArgumentException e) {
             // expected
         }
     }
 
-    public void testReadEmptyInputStream() throws Exception
-    {
+    public void testReadEmptyInputStream() throws Exception {
         FastqReader reader = createFastqReader();
         InputStream empty = getClass().getResourceAsStream("empty.fastq");
         Iterable<Fastq> iterable = reader.read(empty);
         assertNotNull(iterable);
         int count = 0;
-        for (Fastq f : iterable)
-        {
+        for (Fastq f : iterable) {
             assertNotNull(f);
             count++;
         }
@@ -251,15 +221,13 @@ abstract class AbstractFastqReaderTest
         empty.close();
     }
 
-    public void testWrappedSequence() throws Exception
-    {
+    public void testWrappedSequence() throws Exception {
         FastqReader reader = createFastqReader();
         InputStream wrappedSequence = getClass().getResourceAsStream("wrapped-sequence.fastq");
         Iterable<Fastq> iterable = reader.read(wrappedSequence);
         assertNotNull(iterable);
         int count = 0;
-        for (Fastq f : iterable)
-        {
+        for (Fastq f : iterable) {
             assertNotNull(f);
             assertEquals("ACTG", f.getSequence());
             count++;
@@ -268,15 +236,13 @@ abstract class AbstractFastqReaderTest
         wrappedSequence.close();
     }
 
-    public void testWrappedQuality() throws Exception
-    {
+    public void testWrappedQuality() throws Exception {
         FastqReader reader = createFastqReader();
         InputStream wrappedQuality = getClass().getResourceAsStream("wrapped-quality.fastq");
         Iterable<Fastq> iterable = reader.read(wrappedQuality);
         assertNotNull(iterable);
         int count = 0;
-        for (Fastq f : iterable)
-        {
+        for (Fastq f : iterable) {
             assertNotNull(f);
             assertEquals("ZZZZ", f.getQuality());
             count++;
@@ -285,15 +251,13 @@ abstract class AbstractFastqReaderTest
         wrappedQuality.close();
     }
 
-    public void testMultipleWrappedQuality() throws Exception
-    {
+    public void testMultipleWrappedQuality() throws Exception {
         FastqReader reader = createFastqReader();
         InputStream wrappedQuality = getClass().getResourceAsStream("multiple-wrapped-quality.fastq");
         Iterable<Fastq> iterable = reader.read(wrappedQuality);
         assertNotNull(iterable);
         int count = 0;
-        for (Fastq f : iterable)
-        {
+        for (Fastq f : iterable) {
             assertNotNull(f);
             assertEquals("ZZZZ", f.getQuality());
             count++;
@@ -302,31 +266,20 @@ abstract class AbstractFastqReaderTest
         wrappedQuality.close();
     }
 
-    public void testErrorExamples() throws Exception
-    {
+    public void testErrorExamples() throws Exception {
         FastqReader reader = createFastqReader();
-        for (String errorExample : ERROR_EXAMPLES)
-        {
+        for (String errorExample : ERROR_EXAMPLES) {
             InputStream inputStream = getClass().getResourceAsStream(errorExample);
-            try
-            {
+            try {
                 reader.read(inputStream);
                 fail("error example " + errorExample + " expected IOException");
-            }
-            catch (IOException e)
-            {
+            } catch (IOException e) {
                 // expected
-            }
-            finally
-            {
-                if (inputStream != null)
-                {
-                    try
-                    {
+            } finally {
+                if (inputStream != null) {
+                    try {
                         inputStream.close();
-                    }
-                    catch (IOException e)
-                    {
+                    } catch (IOException e) {
                         // ignore
                     }
                 }

@@ -20,80 +20,65 @@
  */
 package org.biojava3.sequencing.io.fastq;
 
-import java.io.InputStream;
 import java.io.IOException;
-
+import java.io.InputStream;
 import java.net.URL;
 
 /**
  * Unit test for SolexaFastqReader.
  */
-public final class SolexaFastqReaderTest
-    extends AbstractFastqReaderTest
-{
+public final class SolexaFastqReaderTest extends AbstractFastqReaderTest {
 
-    /** {@inheritDoc} */
-    public Fastq createFastq()
-    {
-        return new FastqBuilder()
-            .withDescription("description")
-            .withSequence("sequence")
-            .withQuality("quality_")
-            .withVariant(FastqVariant.FASTQ_SOLEXA)
-            .build();
+    /**
+     * {@inheritDoc}
+     */
+    public Fastq createFastq() {
+        return new FastqBuilder().withDescription("description").withSequence("sequence").withQuality("quality_").withVariant(FastqVariant.FASTQ_SOLEXA).build();
     }
 
-    /** {@inheritDoc} */
-    public FastqReader createFastqReader()
-    {
+    /**
+     * {@inheritDoc}
+     */
+    public FastqReader createFastqReader() {
         return new SolexaFastqReader();
     }
 
-    /** {@inheritDoc} */
-    public FastqWriter createFastqWriter()
-    {
+    /**
+     * {@inheritDoc}
+     */
+    public FastqWriter createFastqWriter() {
         return new SolexaFastqWriter();
     }
 
-    public void testValidateDescription() throws Exception
-    {
+    public void testValidateDescription() throws Exception {
         SolexaFastqReader reader = new SolexaFastqReader();
         URL invalidDescription = getClass().getResource("solexa-invalid-description.fastq");
-        try
-        {
+        try {
             reader.read(invalidDescription);
             fail("read(invalidDescription) expected IOException");
-        }
-        catch (IOException e)
-        {
+        } catch (IOException e) {
             assertTrue(e.getMessage().contains("description must begin with a '@' character"));
         }
     }
 
-    public void testValidateRepeatDescription() throws Exception
-    {
+    public void testValidateRepeatDescription() throws Exception {
         SolexaFastqReader reader = new SolexaFastqReader();
         URL invalidRepeatDescription = getClass().getResource("solexa-invalid-repeat-description.fastq");
-        try
-        {
+        try {
             reader.read(invalidRepeatDescription);
             fail("read(invalidRepeatDescription) expected IOException");
-        }
-        catch (IOException e)
-        {
+        } catch (IOException e) {
             assertTrue(e.getMessage().contains("repeat description must match description"));
         }
     }
 
-    public void testWrappingAsSolexa() throws Exception
-    {
+    public void testWrappingAsSolexa() throws Exception {
         FastqReader reader = createFastqReader();
         InputStream inputStream = getClass().getResourceAsStream("wrapping_as_solexa.fastq");
         Iterable<Fastq> iterable = reader.read(inputStream);
         assertNotNull(iterable);
         int count = 0;
-        for (Fastq f : iterable)
-        {
+        for (Fastq f : iterable) {
             assertNotNull(f);
             count++;
         }
@@ -101,15 +86,13 @@ public final class SolexaFastqReaderTest
         inputStream.close();
     }
 
-    public void testFullRangeAsSolexa() throws Exception
-    {
+    public void testFullRangeAsSolexa() throws Exception {
         FastqReader reader = createFastqReader();
         InputStream inputStream = getClass().getResourceAsStream("solexa_full_range_as_solexa.fastq");
         Iterable<Fastq> iterable = reader.read(inputStream);
         assertNotNull(iterable);
         int count = 0;
-        for (Fastq f : iterable)
-        {
+        for (Fastq f : iterable) {
             assertNotNull(f);
             count++;
         }
@@ -117,15 +100,13 @@ public final class SolexaFastqReaderTest
         inputStream.close();
     }
 
-    public void testMiscDnaAsSolexa() throws Exception
-    {
+    public void testMiscDnaAsSolexa() throws Exception {
         FastqReader reader = createFastqReader();
         InputStream inputStream = getClass().getResourceAsStream("misc_dna_as_solexa.fastq");
         Iterable<Fastq> iterable = reader.read(inputStream);
         assertNotNull(iterable);
         int count = 0;
-        for (Fastq f : iterable)
-        {
+        for (Fastq f : iterable) {
             assertNotNull(f);
             count++;
         }
@@ -133,15 +114,13 @@ public final class SolexaFastqReaderTest
         inputStream.close();
     }
 
-    public void testMiscRnaAsSolexa() throws Exception
-    {
+    public void testMiscRnaAsSolexa() throws Exception {
         FastqReader reader = createFastqReader();
         InputStream inputStream = getClass().getResourceAsStream("misc_rna_as_solexa.fastq");
         Iterable<Fastq> iterable = reader.read(inputStream);
         assertNotNull(iterable);
         int count = 0;
-        for (Fastq f : iterable)
-        {
+        for (Fastq f : iterable) {
             assertNotNull(f);
             count++;
         }
@@ -149,15 +128,13 @@ public final class SolexaFastqReaderTest
         inputStream.close();
     }
 
-    public void testLongReadsAsSolexa() throws Exception
-    {
+    public void testLongReadsAsSolexa() throws Exception {
         FastqReader reader = createFastqReader();
         InputStream inputStream = getClass().getResourceAsStream("longreads_as_solexa.fastq");
         Iterable<Fastq> iterable = reader.read(inputStream);
         assertNotNull(iterable);
         int count = 0;
-        for (Fastq f : iterable)
-        {
+        for (Fastq f : iterable) {
             assertNotNull(f);
             count++;
         }

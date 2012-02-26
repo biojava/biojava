@@ -29,27 +29,34 @@ import java.io.OutputStream;
  *
  * @since 3.0.3
  */
-public interface FastqWriter
-{
+public interface FastqWriter {
 
     /**
-     * Append the specified FASTQ formatted sequences to the specified appendable.
+     * Append the specified FASTQ formatted sequences to the specified
+     * appendable.
      *
      * @param <T> extends Appendable
-     * @param appendable appendable to append the specified FASTQ formatted sequences to, must not be null
-     * @param fastq variable number of FASTQ formatted sequences to append, must not be null
-     * @return the specified appendable with the specified FASTQ formatted sequences appended
+     * @param appendable appendable to append the specified FASTQ formatted
+     * sequences to, must not be null
+     * @param fastq variable number of FASTQ formatted sequences to append, must
+     * not be null
+     * @return the specified appendable with the specified FASTQ formatted
+     * sequences appended
      * @throws IOException if an IO error occurs
      */
     <T extends Appendable> T append(T appendable, Fastq... fastq) throws IOException;
 
     /**
-     * Append the specified FASTQ formatted sequences to the specified appendable.
+     * Append the specified FASTQ formatted sequences to the specified
+     * appendable.
      *
      * @param <T> extends Appendable
-     * @param appendable appendable to append the specified FASTQ formatted sequences to, must not be null
-     * @param fastq zero or more FASTQ formatted sequences to append, must not be null
-     * @return the specified appendable with the specified FASTQ formatted sequences appended
+     * @param appendable appendable to append the specified FASTQ formatted
+     * sequences to, must not be null
+     * @param fastq zero or more FASTQ formatted sequences to append, must not
+     * be null
+     * @return the specified appendable with the specified FASTQ formatted
+     * sequences appended
      * @throws IOException if an IO error occurs
      */
     <T extends Appendable> T append(T appendable, Iterable<Fastq> fastq) throws IOException;
@@ -58,7 +65,8 @@ public interface FastqWriter
      * Write the specified FASTQ formatted sequences to the specified file.
      *
      * @param file file to write to, must not be null
-     * @param fastq variable number of FASTQ formatted sequences to write, must not be null
+     * @param fastq variable number of FASTQ formatted sequences to write, must
+     * not be null
      * @throws IOException if an IO error occurs
      */
     void write(File file, Fastq... fastq) throws IOException;
@@ -67,25 +75,30 @@ public interface FastqWriter
      * Write the specified FASTQ formatted sequences to the specified file.
      *
      * @param file file to write to, must not be null
-     * @param fastq zero or more FASTQ formatted sequences to write, must not be null
+     * @param fastq zero or more FASTQ formatted sequences to write, must not be
+     * null
      * @throws IOException if an IO error occurs
      */
     void write(File file, Iterable<Fastq> fastq) throws IOException;
 
     /**
-     * Write the specified FASTQ formatted sequences to the specified output stream.
+     * Write the specified FASTQ formatted sequences to the specified output
+     * stream.
      *
      * @param outputStream output stream to write to, must not be null
-     * @param fastq variable number of FASTQ formatted sequences to write, must not be null
+     * @param fastq variable number of FASTQ formatted sequences to write, must
+     * not be null
      * @throws IOException if an IO error occurs
      */
     void write(OutputStream outputStream, Fastq... fastq) throws IOException;
 
     /**
-     * Write the specified FASTQ formatted sequences to the specified output stream.
+     * Write the specified FASTQ formatted sequences to the specified output
+     * stream.
      *
      * @param outputStream output stream to write to, must not be null
-     * @param fastq zero or more FASTQ formatted sequences to write, must not be null
+     * @param fastq zero or more FASTQ formatted sequences to write, must not be
+     * null
      * @throws IOException if an IO error occurs
      */
     void write(OutputStream outputStream, Iterable<Fastq> fastq) throws IOException;

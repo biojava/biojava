@@ -27,21 +27,19 @@ import java.io.IOException;
  *
  * @since 3.0.3
  */
-public final class SangerFastqWriter
-    extends AbstractFastqWriter
-{
+public final class SangerFastqWriter extends AbstractFastqWriter {
 
-    /** {@inheritDoc} */
-    protected void validate(final Fastq fastq) throws IOException
-    {
-        if (fastq == null)
-        {
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected void validate(final Fastq fastq) throws IOException {
+        if (fastq == null) {
             return;
         }
-        if (!fastq.getVariant().isSanger())
-        {
+        if (!fastq.getVariant().isSanger()) {
             throw new IOException("sequence " + fastq.getDescription()
-                                  + " not fastq-sanger format, was " + fastq.getVariant().lowercaseName());
+                    + " not fastq-sanger format, was " + fastq.getVariant().lowercaseName());
         }
     }
 }

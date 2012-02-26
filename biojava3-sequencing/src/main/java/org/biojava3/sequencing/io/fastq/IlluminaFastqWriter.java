@@ -27,21 +27,19 @@ import java.io.IOException;
  *
  * @since 3.0.3
  */
-public final class IlluminaFastqWriter
-    extends AbstractFastqWriter
-{
+public final class IlluminaFastqWriter extends AbstractFastqWriter {
 
-    /** {@inheritDoc} */
-    protected void validate(final Fastq fastq) throws IOException
-    {
-        if (fastq == null)
-        {
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected void validate(final Fastq fastq) throws IOException {
+        if (fastq == null) {
             return;
         }
-        if (!fastq.getVariant().isIllumina())
-        {
+        if (!fastq.getVariant().isIllumina()) {
             throw new IOException("sequence " + fastq.getDescription()
-                                  + " not fastq-illumina format, was " + fastq.getVariant().lowercaseName());
+                    + " not fastq-illumina format, was " + fastq.getVariant().lowercaseName());
         }
     }
 }

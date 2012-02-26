@@ -20,80 +20,65 @@
  */
 package org.biojava3.sequencing.io.fastq;
 
-import java.io.InputStream;
 import java.io.IOException;
-
+import java.io.InputStream;
 import java.net.URL;
 
 /**
  * Unit test for SangerFastqReader.
  */
-public final class SangerFastqReaderTest
-    extends AbstractFastqReaderTest
-{
+public final class SangerFastqReaderTest extends AbstractFastqReaderTest {
 
-    /** {@inheritDoc} */
-    public Fastq createFastq()
-    {
-        return new FastqBuilder()
-            .withDescription("description")
-            .withSequence("sequence")
-            .withQuality("quality_")
-            .withVariant(FastqVariant.FASTQ_SANGER)
-            .build();
+    /**
+     * {@inheritDoc}
+     */
+    public Fastq createFastq() {
+        return new FastqBuilder().withDescription("description").withSequence("sequence").withQuality("quality_").withVariant(FastqVariant.FASTQ_SANGER).build();
     }
 
-    /** {@inheritDoc} */
-    public FastqReader createFastqReader()
-    {
+    /**
+     * {@inheritDoc}
+     */
+    public FastqReader createFastqReader() {
         return new SangerFastqReader();
     }
 
-    /** {@inheritDoc} */
-    public FastqWriter createFastqWriter()
-    {
+    /**
+     * {@inheritDoc}
+     */
+    public FastqWriter createFastqWriter() {
         return new SangerFastqWriter();
     }
 
-    public void testValidateDescription() throws Exception
-    {
+    public void testValidateDescription() throws Exception {
         SangerFastqReader reader = new SangerFastqReader();
         URL invalidDescription = getClass().getResource("sanger-invalid-description.fastq");
-        try
-        {
+        try {
             reader.read(invalidDescription);
             fail("read(invalidDescription) expected IOException");
-        }
-        catch (IOException e)
-        {
+        } catch (IOException e) {
             assertTrue(e.getMessage().contains("description must begin with a '@' character"));
         }
     }
 
-    public void testValidateRepeatDescription() throws Exception
-    {
+    public void testValidateRepeatDescription() throws Exception {
         SangerFastqReader reader = new SangerFastqReader();
         URL invalidRepeatDescription = getClass().getResource("sanger-invalid-repeat-description.fastq");
-        try
-        {
+        try {
             reader.read(invalidRepeatDescription);
             fail("read(invalidRepeatDescription) expected IOException");
-        }
-        catch (IOException e)
-        {
+        } catch (IOException e) {
             assertTrue(e.getMessage().contains("repeat description must match description"));
         }
     }
 
-    public void testWrappingOriginal() throws Exception
-    {
+    public void testWrappingOriginal() throws Exception {
         FastqReader reader = createFastqReader();
         InputStream inputStream = getClass().getResourceAsStream("wrapping_original_sanger.fastq");
         Iterable<Fastq> iterable = reader.read(inputStream);
         assertNotNull(iterable);
         int count = 0;
-        for (Fastq f : iterable)
-        {
+        for (Fastq f : iterable) {
             assertNotNull(f);
             count++;
         }
@@ -101,15 +86,13 @@ public final class SangerFastqReaderTest
         inputStream.close();
     }
 
-    public void testWrappingAsSanger() throws Exception
-    {
+    public void testWrappingAsSanger() throws Exception {
         FastqReader reader = createFastqReader();
         InputStream inputStream = getClass().getResourceAsStream("wrapping_as_sanger.fastq");
         Iterable<Fastq> iterable = reader.read(inputStream);
         assertNotNull(iterable);
         int count = 0;
-        for (Fastq f : iterable)
-        {
+        for (Fastq f : iterable) {
             assertNotNull(f);
             count++;
         }
@@ -117,15 +100,13 @@ public final class SangerFastqReaderTest
         inputStream.close();
     }
 
-    public void testFullRangeOriginal() throws Exception
-    {
+    public void testFullRangeOriginal() throws Exception {
         FastqReader reader = createFastqReader();
         InputStream inputStream = getClass().getResourceAsStream("sanger_full_range_original_sanger.fastq");
         Iterable<Fastq> iterable = reader.read(inputStream);
         assertNotNull(iterable);
         int count = 0;
-        for (Fastq f : iterable)
-        {
+        for (Fastq f : iterable) {
             assertNotNull(f);
             count++;
         }
@@ -133,15 +114,13 @@ public final class SangerFastqReaderTest
         inputStream.close();
     }
 
-    public void testFullRangeAsSanger() throws Exception
-    {
+    public void testFullRangeAsSanger() throws Exception {
         FastqReader reader = createFastqReader();
         InputStream inputStream = getClass().getResourceAsStream("sanger_full_range_as_sanger.fastq");
         Iterable<Fastq> iterable = reader.read(inputStream);
         assertNotNull(iterable);
         int count = 0;
-        for (Fastq f : iterable)
-        {
+        for (Fastq f : iterable) {
             assertNotNull(f);
             count++;
         }
@@ -149,15 +128,13 @@ public final class SangerFastqReaderTest
         inputStream.close();
     }
 
-    public void testMiscDnaOriginal() throws Exception
-    {
+    public void testMiscDnaOriginal() throws Exception {
         FastqReader reader = createFastqReader();
         InputStream inputStream = getClass().getResourceAsStream("misc_dna_original_sanger.fastq");
         Iterable<Fastq> iterable = reader.read(inputStream);
         assertNotNull(iterable);
         int count = 0;
-        for (Fastq f : iterable)
-        {
+        for (Fastq f : iterable) {
             assertNotNull(f);
             count++;
         }
@@ -165,15 +142,13 @@ public final class SangerFastqReaderTest
         inputStream.close();
     }
 
-    public void testMiscDnaAsSanger() throws Exception
-    {
+    public void testMiscDnaAsSanger() throws Exception {
         FastqReader reader = createFastqReader();
         InputStream inputStream = getClass().getResourceAsStream("misc_dna_as_sanger.fastq");
         Iterable<Fastq> iterable = reader.read(inputStream);
         assertNotNull(iterable);
         int count = 0;
-        for (Fastq f : iterable)
-        {
+        for (Fastq f : iterable) {
             assertNotNull(f);
             count++;
         }
@@ -181,15 +156,13 @@ public final class SangerFastqReaderTest
         inputStream.close();
     }
 
-    public void testMiscRnaOriginal() throws Exception
-    {
+    public void testMiscRnaOriginal() throws Exception {
         FastqReader reader = createFastqReader();
         InputStream inputStream = getClass().getResourceAsStream("misc_rna_original_sanger.fastq");
         Iterable<Fastq> iterable = reader.read(inputStream);
         assertNotNull(iterable);
         int count = 0;
-        for (Fastq f : iterable)
-        {
+        for (Fastq f : iterable) {
             assertNotNull(f);
             count++;
         }
@@ -197,15 +170,13 @@ public final class SangerFastqReaderTest
         inputStream.close();
     }
 
-    public void testMiscRnaAsSanger() throws Exception
-    {
+    public void testMiscRnaAsSanger() throws Exception {
         FastqReader reader = createFastqReader();
         InputStream inputStream = getClass().getResourceAsStream("misc_rna_as_sanger.fastq");
         Iterable<Fastq> iterable = reader.read(inputStream);
         assertNotNull(iterable);
         int count = 0;
-        for (Fastq f : iterable)
-        {
+        for (Fastq f : iterable) {
             assertNotNull(f);
             count++;
         }
@@ -213,15 +184,13 @@ public final class SangerFastqReaderTest
         inputStream.close();
     }
 
-    public void testLongReadsOriginal() throws Exception
-    {
+    public void testLongReadsOriginal() throws Exception {
         FastqReader reader = createFastqReader();
         InputStream inputStream = getClass().getResourceAsStream("longreads_original_sanger.fastq");
         Iterable<Fastq> iterable = reader.read(inputStream);
         assertNotNull(iterable);
         int count = 0;
-        for (Fastq f : iterable)
-        {
+        for (Fastq f : iterable) {
             assertNotNull(f);
             count++;
         }
@@ -229,15 +198,13 @@ public final class SangerFastqReaderTest
         inputStream.close();
     }
 
-    public void testLongReadsAsSanger() throws Exception
-    {
+    public void testLongReadsAsSanger() throws Exception {
         FastqReader reader = createFastqReader();
         InputStream inputStream = getClass().getResourceAsStream("longreads_as_sanger.fastq");
         Iterable<Fastq> iterable = reader.read(inputStream);
         assertNotNull(iterable);
         int count = 0;
-        for (Fastq f : iterable)
-        {
+        for (Fastq f : iterable) {
             assertNotNull(f);
             count++;
         }

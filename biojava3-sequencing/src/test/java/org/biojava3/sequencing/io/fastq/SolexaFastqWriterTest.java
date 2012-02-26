@@ -25,44 +25,30 @@ import java.io.IOException;
 /**
  * Unit test for SolexaFastqWriter.
  */
-public final class SolexaFastqWriterTest
-    extends AbstractFastqWriterTest
-{
+public final class SolexaFastqWriterTest extends AbstractFastqWriterTest {
 
-    /** {@inheritDoc} */
-    public FastqWriter createFastqWriter()
-    {
+    /**
+     * {@inheritDoc}
+     */
+    public FastqWriter createFastqWriter() {
         return new SolexaFastqWriter();
     }
 
-    /** {@inheritDoc} */
-    public Fastq createFastq()
-    {
-        return new FastqBuilder()
-            .withDescription("description")
-            .withSequence("sequence")
-            .withQuality("quality_")
-            .withVariant(FastqVariant.FASTQ_SOLEXA)
-            .build();
+    /**
+     * {@inheritDoc}
+     */
+    public Fastq createFastq() {
+        return new FastqBuilder().withDescription("description").withSequence("sequence").withQuality("quality_").withVariant(FastqVariant.FASTQ_SOLEXA).build();
     }
 
-    public void testValidateNotSolexaVariant()
-    {
+    public void testValidateNotSolexaVariant() {
         SolexaFastqWriter writer = new SolexaFastqWriter();
         Appendable appendable = new StringBuilder();
-        Fastq invalid = new FastqBuilder()
-            .withDescription("description")
-            .withSequence("sequence")
-            .withQuality("quality_")
-            .withVariant(FastqVariant.FASTQ_ILLUMINA)
-            .build();
-        try
-        {
+        Fastq invalid = new FastqBuilder().withDescription("description").withSequence("sequence").withQuality("quality_").withVariant(FastqVariant.FASTQ_ILLUMINA).build();
+        try {
             writer.append(appendable, invalid);
             fail("validate not fastq-solexa variant expected IOException");
-        }
-        catch (IOException e)
-        {
+        } catch (IOException e) {
             // expected
         }
     }

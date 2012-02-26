@@ -23,11 +23,11 @@ package org.biojava3.sequencing.io.fastq;
 import java.io.IOException;
 
 /**
- * Writer for {@link FastqVariant#FASTQ_SOLEXA} formatted sequences.
+ * Writer for {@link FastqVariant#FASTQ_ILLUMINA} formatted sequences.
  *
  * @since 3.0.3
  */
-public final class SolexaFastqWriter extends AbstractFastqWriter {
+public final class NewIlluminaFastqWriter extends AbstractFastqWriter {
 
     /**
      * {@inheritDoc}
@@ -37,9 +37,9 @@ public final class SolexaFastqWriter extends AbstractFastqWriter {
         if (fastq == null) {
             return;
         }
-        if (!fastq.getVariant().isSolexa()) {
+        if (!fastq.getVariant().isIllumina()) {
             throw new IOException("sequence " + fastq.getDescription()
-                    + " not fastq-solexa format, was " + fastq.getVariant().lowercaseName());
+                    + " not fastq-illumina format, was " + fastq.getVariant().lowercaseName());
         }
     }
 }

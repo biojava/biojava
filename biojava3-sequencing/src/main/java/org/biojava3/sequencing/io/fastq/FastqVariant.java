@@ -28,57 +28,62 @@ import java.util.Map;
  *
  * @since 3.0.3
  */
-public enum FastqVariant
-{
-    /** Sanger FASTQ sequence format variant. */
+public enum FastqVariant {
+
+    /**
+     * Sanger FASTQ sequence format variant.
+     */
     FASTQ_SANGER("Original or Sanger format"),
-
-    /** Solexa FASTQ sequence format variant. */
+    /**
+     * Solexa FASTQ sequence format variant.
+     */
     FASTQ_SOLEXA("Solexa and early Illumina format"),
-
-    /** Illumina FASTQ sequence format variant. */
-    FASTQ_ILLUMINA("Illumina 1.3+ format");
-
-
-    /** Map of FASTQ sequence format variants keyed by name and lowercase-with-dashes name. */
+    /**
+     * Illumina FASTQ sequence format variant, 1.3+/1.5+.
+     */
+    FASTQ_ILLUMINA("Illumina 1.3+/1.5+ format"),
+    /**
+     * Illumina FASTQ sequence format variant, 1.8+.
+     */
+    FASTQ_NEW_ILLUMINA("Illumina 1.8+ format");
+    /**
+     * Map of FASTQ sequence format variants keyed by name and
+     * lowercase-with-dashes name.
+     */
     private static final Map<String, FastqVariant> FASTQ_VARIANTS = new HashMap<String, FastqVariant>(6);
 
-    static
-    {
-        for (FastqVariant fastqVariant : values())
-        {
+    static {
+        for (FastqVariant fastqVariant : values()) {
             FASTQ_VARIANTS.put(fastqVariant.name(), fastqVariant);
             FASTQ_VARIANTS.put(fastqVariant.lowercaseName(), fastqVariant);
         }
     }
-
-    /** Description of this FASTQ sequence format variant. */
+    /**
+     * Description of this FASTQ sequence format variant.
+     */
     private final String description;
 
-
     /**
-     * Create a new FASTQ sequence format variant with the specified description.
+     * Create a new FASTQ sequence format variant with the specified
+     * description.
      *
-     * @param description description of this FASTQ sequence format variant, must not be null
+     * @param description description of this FASTQ sequence format variant,
+     * must not be null
      */
-    private FastqVariant(final String description)
-    {
-        if (description == null)
-        {
+    private FastqVariant(final String description) {
+        if (description == null) {
             throw new IllegalArgumentException("description must not be null");
         }
         this.description = description;
     }
 
-
     /**
-     * Return the description of this FASTQ sequence format variant.
-     * The description will not be null.
+     * Return the description of this FASTQ sequence format variant. The
+     * description will not be null.
      *
      * @return the description of this FASTQ sequence format variant
      */
-    public String getDescription()
-    {
+    public String getDescription() {
         return description;
     }
 
@@ -87,8 +92,7 @@ public enum FastqVariant
      *
      * @return true if this FASTQ sequence format variant is {@link #FASTQ_SANGER}
      */
-    public boolean isSanger()
-    {
+    public boolean isSanger() {
         return (this == FASTQ_SANGER);
     }
 
@@ -97,8 +101,7 @@ public enum FastqVariant
      *
      * @return true if this FASTQ sequence format variant is {@link #FASTQ_SOLEXA}
      */
-    public boolean isSolexa()
-    {
+    public boolean isSolexa() {
         return (this == FASTQ_SOLEXA);
     }
 
@@ -107,33 +110,32 @@ public enum FastqVariant
      *
      * @return true if this FASTQ sequence format variant is {@link #FASTQ_ILLUMINA}
      */
-    public boolean isIllumina()
-    {
+    public boolean isIllumina() {
         return (this == FASTQ_ILLUMINA);
     }
 
     /**
-     * Return the name of this FASTQ sequence format variant in <code>lowercase-with-dashes</code> style.
+     * Return the name of this FASTQ sequence format variant in
+     * <code>lowercase-with-dashes</code> style.
      *
-     * @return the name of this FASTQ sequence format variant in <code>lowercase-with-dashes</code> style
+     * @return the name of this FASTQ sequence format variant in
+     * <code>lowercase-with-dashes</code> style
      */
-    public String lowercaseName()
-    {
+    public String lowercaseName() {
         return name().toLowerCase().replace('_', '-');
     }
 
-
     /**
-     * Return the FASTQ sequence format variant with the specified name, if any.  The name may
-     * be specified in either <code>UPPERCASE_WITH_UNDERSCORES</code>
-     * or <code>lowercase-with-dashes</code> style.
+     * Return the FASTQ sequence format variant with the specified name, if any.
+     * The name may be specified in either
+     * <code>UPPERCASE_WITH_UNDERSCORES</code> or
+     * <code>lowercase-with-dashes</code> style.
      *
      * @param name name
-     * @return the FASTQ sequence format variant with the specified name, or <code>null</code>
-     *    if no such FASTQ sequence format variant exists
+     * @return the FASTQ sequence format variant with the specified name, or
+     * <code>null</code> if no such FASTQ sequence format variant exists
      */
-    public static FastqVariant parseFastqVariant(final String name)
-    {
+    public static FastqVariant parseFastqVariant(final String name) {
         return FASTQ_VARIANTS.get(name);
     }
 }
