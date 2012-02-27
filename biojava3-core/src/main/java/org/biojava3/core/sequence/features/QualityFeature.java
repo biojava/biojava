@@ -39,7 +39,6 @@ public class QualityFeature<S extends AbstractSequence<C>, C extends Compound> e
     private List<Number> qualities = new ArrayList<Number>();
 
     /**
-     *
      * @param type
      * @param source
      */
@@ -62,11 +61,19 @@ public class QualityFeature<S extends AbstractSequence<C>, C extends Compound> e
     }
 
     /**
-     *
-     * @param bioindex
-     * @return
+     * @param bioindex the biological index (starts with 1)
+     * @return the quality value at the given biological index (starts with 1)
      */
     public Number getQualityAt(int bioindex) {
         return qualities.get(bioindex - 1);
+    }
+    
+    /**
+     * @param biostart biological start index (starts with 1)
+     * @param bioend biological end index (starts with 1)
+     * @return a sublist of the qualities between the given biological indices
+     */
+    public List<Number> getQualities(int biostart, int bioend) {
+        return qualities.subList(biostart - 1, bioend - 1);
     }
 }
