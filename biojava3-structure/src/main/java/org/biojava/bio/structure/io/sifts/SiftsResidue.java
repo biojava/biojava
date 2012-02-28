@@ -38,8 +38,10 @@ public class SiftsResidue implements Serializable{
 	String uniProtResName;
 	Integer uniProtPos;
 	Integer naturalPos;
+	String seqResName;
 	String pdbId;
 	String uniProtAccessionId;
+	Boolean notObserved;
 	
 	public String getPdbResNum() {
 		return pdbResNum;
@@ -84,87 +86,35 @@ public class SiftsResidue implements Serializable{
 	public String getUniProtAccessionId(){
 		return uniProtAccessionId;
 	}
-	@Override
-	public String toString() {
-		return "SiftsResidue [pdbResNum=" + pdbResNum + ", pdbResName="
-				+ pdbResName + ", chainId=" + chainId + ", uniProtResName="
-				+ uniProtResName + ", uniProtPos=" + uniProtPos + ", pdbId="
-				+ pdbId + ", uniProtAccessionId=" + uniProtAccessionId + "]";
-	}
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((chainId == null) ? 0 : chainId.hashCode());
-		result = prime * result + ((pdbId == null) ? 0 : pdbId.hashCode());
-		result = prime * result
-				+ ((pdbResName == null) ? 0 : pdbResName.hashCode());
-		result = prime * result
-				+ ((pdbResNum == null) ? 0 : pdbResNum.hashCode());
-		result = prime
-				* result
-				+ ((uniProtAccessionId == null) ? 0 : uniProtAccessionId
-						.hashCode());
-		result = prime * result
-				+ ((uniProtPos == null) ? 0 : uniProtPos.hashCode());
-		result = prime * result
-				+ ((uniProtResName == null) ? 0 : uniProtResName.hashCode());
-		return result;
-	}
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		SiftsResidue other = (SiftsResidue) obj;
-		if (chainId == null) {
-			if (other.chainId != null)
-				return false;
-		} else if (!chainId.equals(other.chainId))
-			return false;
-		if (pdbId == null) {
-			if (other.pdbId != null)
-				return false;
-		} else if (!pdbId.equals(other.pdbId))
-			return false;
-		if (pdbResName == null) {
-			if (other.pdbResName != null)
-				return false;
-		} else if (!pdbResName.equals(other.pdbResName))
-			return false;
-		if (pdbResNum == null) {
-			if (other.pdbResNum != null)
-				return false;
-		} else if (!pdbResNum.equals(other.pdbResNum))
-			return false;
-		if (uniProtAccessionId == null) {
-			if (other.uniProtAccessionId != null)
-				return false;
-		} else if (!uniProtAccessionId.equals(other.uniProtAccessionId))
-			return false;
-		if (uniProtPos == null) {
-			if (other.uniProtPos != null)
-				return false;
-		} else if (!uniProtPos.equals(other.uniProtPos))
-			return false;
-		if (uniProtResName == null) {
-			if (other.uniProtResName != null)
-				return false;
-		} else if (!uniProtResName.equals(other.uniProtResName))
-			return false;
-		return true;
-	}
 	public Integer getNaturalPos() {
 		return naturalPos;
 	}
 	public void setNaturalPos(Integer naturalPos) {
 		this.naturalPos = naturalPos;
 	}
+	public Boolean getNotObserved() {
+		return notObserved;
+	}
+	public void setNotObserved(Boolean notObserved) {
+		this.notObserved = notObserved;
+	}
+	public String getSeqResName() {
+		return seqResName;
+	}
+	public void setSeqResName(String seqResName) {
+		this.seqResName = seqResName;
+	}
+	@Override
+	public String toString() {
+		return "SiftsResidue [pdbResNum=" + pdbResNum + ", pdbResName="
+				+ pdbResName + ", chainId=" + chainId + ", uniProtResName="
+				+ uniProtResName + ", uniProtPos=" + uniProtPos
+				+ ", naturalPos=" + naturalPos + ", seqResName=" + seqResName
+				+ ", pdbId=" + pdbId + ", uniProtAccessionId="
+				+ uniProtAccessionId + ", notObserved=" + notObserved + "]";
+	}
 
 	
 
-
+	
 }

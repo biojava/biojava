@@ -192,6 +192,22 @@ public class SiftsXMLParser {
 			String dbResNumS = residue.getAttribute("dbResNum");
 			res.setNaturalPos(Integer.parseInt(dbResNumS));
 			
+			String seqResName = residue.getAttribute("dbResName");
+			res.setSeqResName(seqResName);
+			
+			boolean observed = true;
+			
+			String detail = getTextValue(residue, "residueDetail");
+			if ( detail != null)
+			//System.out.println(">"+detail+"<");
+			if ( detail != null && detail.trim().equalsIgnoreCase("Not_Observed")){
+				observed = false;
+			}
+			res.setNotObserved(! observed);
+			//else if ( detail != null && detail.trim().equalsIgnoreCase("Conflict")){
+				//
+			//}
+			
 			NodeList nl = residue.getElementsByTagName("crossRefDb");
 			if(nl != null && nl.getLength() > 0) {
 				for(int i = 0 ; i < nl.getLength();i++) {

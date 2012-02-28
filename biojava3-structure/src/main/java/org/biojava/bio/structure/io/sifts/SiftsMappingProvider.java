@@ -45,7 +45,7 @@ public class SiftsMappingProvider {
 		
 	public static void main(String[] args){
 		try {
-			List<SiftsEntity> entities = getSiftsMapping("4hhb");
+			List<SiftsEntity> entities = getSiftsMapping("1gc1");
 			
 			for (SiftsEntity e : entities){
 				System.out.println(e.getEntityId() + " " +e.getType());
