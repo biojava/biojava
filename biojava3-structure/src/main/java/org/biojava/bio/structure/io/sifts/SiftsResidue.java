@@ -37,8 +37,10 @@ public class SiftsResidue implements Serializable{
 	String chainId;
 	String uniProtResName;
 	Integer uniProtPos;
+	Integer naturalPos;
 	String pdbId;
 	String uniProtAccessionId;
+	
 	public String getPdbResNum() {
 		return pdbResNum;
 	}
@@ -154,6 +156,12 @@ public class SiftsResidue implements Serializable{
 		} else if (!uniProtResName.equals(other.uniProtResName))
 			return false;
 		return true;
+	}
+	public Integer getNaturalPos() {
+		return naturalPos;
+	}
+	public void setNaturalPos(Integer naturalPos) {
+		this.naturalPos = naturalPos;
 	}
 
 	

@@ -189,6 +189,9 @@ public class SiftsXMLParser {
 
 			SiftsResidue res = new SiftsResidue();
 			
+			String dbResNumS = residue.getAttribute("dbResNum");
+			res.setNaturalPos(Integer.parseInt(dbResNumS));
+			
 			NodeList nl = residue.getElementsByTagName("crossRefDb");
 			if(nl != null && nl.getLength() > 0) {
 				for(int i = 0 ; i < nl.getLength();i++) {
