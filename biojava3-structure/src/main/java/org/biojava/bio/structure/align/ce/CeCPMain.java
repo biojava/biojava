@@ -57,6 +57,7 @@ public class CeCPMain extends CeMain {
 
 	public static final String algorithmName = "jCE Circular Permutation";
 
+	public static final int DEFAULT_MIN_CP_LENGTH = 5; //The minimum block length for CPs. Blocks shorter than this will be ignored.
 
 	/**
 	 *  version history:
@@ -100,6 +101,12 @@ public class CeCPMain extends CeMain {
 			name1 = "PDP:3B33Aa";
 			name2 = "PDP:2R78Aa";
 			
+			// Test case for a bug with n-terminal, single residue CPs
+			name1 = "PDP:3A2KAc";
+			name2 = "d1wy5a2";
+			
+			name1 = "1A22.A";
+			name2 = "2FFX.J";
 			
 			CeCPMain ce = (CeCPMain) StructureAlignmentFactory.getAlgorithm(CeCPMain.algorithmName);
 			CeParameters params = (CeParameters) ce.getParameters();
@@ -109,6 +116,7 @@ public class CeCPMain extends CeMain {
 
 			Atom[] ca1 = cache.getAtoms(name1);
 			Atom[] ca2 = cache.getAtoms(name2);
+			//ca2 = Arrays.copyOf(ca2, ca2.length-1);
 
 
 			if(debug) {
@@ -229,9 +237,10 @@ public class CeCPMain extends CeMain {
 	 * @throws StructureException 
 	 */
 	public static AFPChain filterDuplicateAFPs(AFPChain afpChain, CECalculator ceCalc, Atom[] ca1, Atom[] ca2duplicated) throws StructureException {
-		return filterDuplicateAFPs(afpChain, ceCalc, ca1, ca2duplicated, 5);
+		return filterDuplicateAFPs(afpChain, ceCalc, ca1, ca2duplicated, DEFAULT_MIN_CP_LENGTH);
 	}
-	public static AFPChain filterDuplicateAFPs(AFPChain afpChain, CECalculator ceCalc, Atom[] ca1, Atom[] ca2duplicated, int minCPlength) throws StructureException {		
+	public static AFPChain filterDuplicateAFPs(AFPChain afpChain, CECalculator ceCalc,
+			Atom[] ca1, Atom[] ca2duplicated, int minCPlength) throws StructureException {		
 		AFPChain newAFPChain = new AFPChain(afpChain);
 
 		int ca2len = afpChain.getCa2Length()/2;
@@ -264,8 +273,33 @@ public class CeCPMain extends CeMain {
 			int overlapLength = cEnd+1 - nStart - ca2len;
 			if(overlapLength <= 0) {
 				// no overlap!
+				
+				CPRange minCP = calculateMinCP(optAln[0][1], alignLen, ca2len, minCPlength);
+
 				firstRes=nStart;
 				lastRes=cEnd;
+
+				// Remove short blocks
+				if(firstRes > minCP.n) {
+					firstRes = ca2len;
+
+					if(debug) {
+						System.out.format("Discarding n-terminal block as too " +
+								"short (%d residues, needs %d)\n",
+								minCP.mid, minCPlength);
+					}
+				}
+				
+				if(lastRes < minCP.c) {
+					lastRes = ca2len-1;
+					
+					if(debug) {
+						System.out.format("Discarding c-terminal block as too " +
+								"short (%d residues, needs %d)\n",
+								optLen[0] - minCP.mid, minCPlength);
+					}
+				}
+				
 			}
 			else {
 				// overlap!
@@ -304,15 +338,17 @@ public class CeCPMain extends CeMain {
 			}
 		}
 		//assert(left.size()+right.size() == alignLen);
-		alignLen = left.size() + right.size();
+		alignLen = 0;
 
 		// Now we don't care about left/right, so just call them "blocks"
 		List<List<ResiduePair>> blocks = new ArrayList<List<ResiduePair>>(2);
 		if( !left.isEmpty() ) {
 			blocks.add(left);
+			alignLen += left.size();
 		}
 		if( !right.isEmpty()) {
 			blocks.add(right);
+			alignLen += right.size();
 		}
 		left=null; right = null;
 
@@ -478,16 +514,21 @@ public class CeCPMain extends CeMain {
 	}
 	
 	/**
-	 * Finds the index of the last residue which could be a valid n-terminus.
-	 * 
-	 * A residue i is valid if at least minCPlength residues are present in block
-	 * in the interval [i,ca2len).
+	 * Finds the alignment index of the residues minCPlength before and after
+	 * the duplication.
 	 *  
-	 * @param block
-	 * @param blockLen
-	 * @param ca2len
-	 * @param minCPlength
-	 * @return
+	 * @param block The permuted block being considered, generally optAln[0][1]
+	 * @param blockLen The length of the block (in case extra memory was allocated in block)
+	 * @param ca2len The length, in residues, of the protein specified by block
+	 * @param minCPlength The minimum number of residues allowed for a CP
+	 * @return a CPRange with the following components:
+	 *  <dl><dt>n</dt><dd>Index into <code>block</code> of the residue such that
+	 *  	<code>minCPlength</code> residues remain to the end of <code>ca2len</code>,
+	 *  	or -1 if no residue fits that criterium.</dd>
+	 *  <dt>mid</dt><dd>Index of the first residue higher than <code>ca2len</code>.</dd>
+	 *  <dt>c</dt><dd>Index of <code>minCPlength</code>-th residue after ca2len,
+	 *  	or ca2len*2 if no residue fits that criterium.</dd>
+	 *  </dl>
 	 */
 	protected static CPRange calculateMinCP(int[] block, int blockLen, int ca2len, int minCPlength) {
 		CPRange range = new CPRange();

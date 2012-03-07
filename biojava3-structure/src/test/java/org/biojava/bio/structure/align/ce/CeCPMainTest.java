@@ -23,7 +23,7 @@ import org.biojava.bio.structure.StructureTools;
 import org.biojava.bio.structure.align.ce.CECalculator;
 import org.biojava.bio.structure.align.ce.CeCPMain;
 import org.biojava.bio.structure.align.model.AFPChain;
-
+import org.biojava.bio.structure.align.util.AtomCache;
 import org.biojava.bio.structure.io.PDBParseException;
 import org.junit.*;
 
@@ -42,13 +42,13 @@ public class CeCPMainTest extends TestCase {
 		dupAlign[0][0] = new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9,10,11,12,13 };
 		dupAlign[0][1] = new int[] { 3, 5, 6, 7, 8, 9,10,11, 0+ca2len, 1+ca2len, 2+ca2len, 3+ca2len, 4+ca2len, 7+ca2len };
 		Atom[] ca1,ca2;
-
+		
 		ca1 = makeDummyCA(dupAlign[0][0].length);
 		ca2 = makeDummyCA(ca2len);
 		ca2 = StructureTools.duplicateCA2(ca2);
 		AFPChain afp = makeDummyAFPChain(dupAlign, ca1, ca2);
 
-		//		AFPChain newAFP = (AFPChain) filterDuplicateAFPs.invoke(null, afp, new CECalculator(null), ca1, ca2);
+//		AFPChain newAFP = (AFPChain) filterDuplicateAFPs.invoke(null, afp, new CECalculator(null), ca1, ca2);
 		AFPChain newAFP = CeCPMain.filterDuplicateAFPs(afp, new CECalculator(null), ca1, ca2, 0);
 
 		int[][][] align = newAFP.getOptAln();
@@ -66,20 +66,20 @@ public class CeCPMainTest extends TestCase {
 						new int[] { 0,  1,  2,  3,  4, },
 				},
 		};
-
+		
 		int[] expectedLen = new int[] { expected[0][0].length, expected[1][0].length };
-
+		
 		assertTrue(Arrays.deepEquals(expected, align));
 		assertTrue(Arrays.equals(expectedLen, blkLen));
-
+		
 	}
 
 	@Test
 	public void testFilterDuplicateAFPsMinLenCTerm() throws PDBParseException, StructureException {
 		int[][][] startAln, filteredAln;
+		int[] filteredLen;
 		int ca2len;
-
-		// minCPLen == 5
+		
 		ca2len = 10;
 		startAln = new int[][][] {
 				new int[][] {
@@ -87,9 +87,17 @@ public class CeCPMainTest extends TestCase {
 						new int[] {  0, 3, 5, 6, 7, 8, 9, 0+ca2len, 1+ca2len, 2+ca2len, 3+ca2len,},
 				},
 		};
+		
+		Atom[] ca1, ca2;
+		AFPChain afpChain,result;
+		ca1 = makeDummyCA(startAln[0][0].length);
+		ca2 = makeDummyCA(ca2len);
+		ca2 = StructureTools.duplicateCA2(ca2);
+		afpChain = makeDummyAFPChain(startAln, ca1, ca2);
 
-		// The longest alignment would include the second 0-3
-		// However, this leads to a short block
+		
+		
+		// Best block with minCPlen 0-3
 		filteredAln = new int[][][] {
 				new int[][] {
 						new int[] {  1, 2, 3, 4, 5, 6,},
@@ -100,23 +108,17 @@ public class CeCPMainTest extends TestCase {
 						new int[] { 0, 1, 2,},
 				},
 		};
-
-		int[] filteredLen = new int[] { filteredAln[0][0].length, filteredAln[1][0].length };
-
-		Atom[] ca1, ca2;
-		AFPChain afpChain,result;
-		ca1 = makeDummyCA(startAln[0][0].length);
-		ca2 = makeDummyCA(ca2len);
-		ca2 = StructureTools.duplicateCA2(ca2);
-		afpChain = makeDummyAFPChain(startAln, ca1, ca2);
-
+		filteredLen = new int[] { filteredAln[0][0].length, filteredAln[1][0].length };
+		
+		
+		
 		int minCPlength;
 		for(minCPlength=0;minCPlength<4;minCPlength++) {
 			result = CeCPMain.filterDuplicateAFPs(afpChain, new CECalculator(null), ca1, ca2,minCPlength);
-
+		
 			assertTrue("Wrong optAln for minCPlength="+minCPlength,Arrays.deepEquals(filteredAln, result.getOptAln()));
 			assertTrue("Wrong optLen for minCPlength="+minCPlength,Arrays.equals(filteredLen, result.getOptLen()));
-		}
+	}
 
 		// For minCPlength=4, filtering changes
 		minCPlength=4;
@@ -270,6 +272,13 @@ public class CeCPMainTest extends TestCase {
 	}
 
 
+	/**
+	 * Creates a minimal AFPChain from the specified alignment and proteins
+	 * @param dupAlign
+	 * @param ca1
+	 * @param ca2
+	 * @return
+	 */
 	private AFPChain makeDummyAFPChain(int[][][] dupAlign, Atom[] ca1,Atom[] ca2) {
 		AFPChain afp = new AFPChain();
 		afp.setOptAln(dupAlign);
@@ -280,8 +289,8 @@ public class CeCPMainTest extends TestCase {
 		afp.setOptLen(new int[] {dupAlign[0][1].length});
 		return afp;
 	}
-
-
+	
+	
 	@Test
 	public void testCalculateMinCP() throws SecurityException, NoSuchMethodException, IllegalArgumentException, IllegalAccessException, InvocationTargetException {
 		int[] block;
@@ -378,6 +387,39 @@ public class CeCPMainTest extends TestCase {
 		}
 		return ca1;
 	}
-
 	
+	public void testCECP1(){
+
+		String name1 = "PDP:3A2KAc";
+		String name2 = "d1wy5a2";
+
+		try {
+			CeCPMain algorithm = new CeCPMain();
+
+			AtomCache cache = new AtomCache();
+
+			Atom[] ca1 = cache.getAtoms(name1);
+			Atom[] ca2 = cache.getAtoms(name2);
+
+			AFPChain afpChain = algorithm.align(ca1, ca2);
+			CECalculator calculator = algorithm.getCECalculator();
+
+			//               System.out.println(calculator.get);
+			//StructureAlignmentJmol jmol =
+			//StructureAlignmentDisplay.display(afpChain, ca1, ca2);
+			if ( ! (afpChain.getBlockNum() == 1)){
+				System.out.println(calculator.getLcmp());
+				System.out.println(afpChain.toFatcat(ca1, ca2));
+			}
+			assertEquals(1,afpChain.getBlockNum());
+
+
+
+
+		} catch (Exception e){
+			e.printStackTrace();
+		}
+
+	}
+
 }

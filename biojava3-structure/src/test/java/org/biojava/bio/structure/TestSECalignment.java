@@ -44,49 +44,43 @@ import org.biojava3.core.util.StringManipulationHelper;
  */
 public class TestSECalignment extends  TestCase {
 
-	public void testOldSecOutput(){
+	public void testOldSecOutput() throws Exception {
 
 		InputStream inStream = this.getClass().getResourceAsStream("/ce_1fdo.A_2iv2.X.out");
 		assertNotNull(inStream);
 		String xml = StringManipulationHelper.convertStreamToString(inStream);
 
 		AtomCache cache = new AtomCache();
-		try {
-			String name1="1FDO.A";
-			String name2="2IV2.X";
-			Atom[] ca1 = cache.getAtoms(name1);
-			Atom[] ca2 = cache.getAtoms(name2);
+		String name1="1FDO.A";
+		String name2="2IV2.X";
+		Atom[] ca1 = cache.getAtoms(name1);
+		Atom[] ca2 = cache.getAtoms(name2);
 
-			AFPChain afpChainOrig = AFPChainXMLParser.fromXML(xml, ca1, ca2);
-			
-			// calc time is hardware dependent.... overwrite...
-			afpChainOrig.setCalculationTime(-1);
-			
-			//String ce1 = afpChainOrig.toFatcat(ca1, ca2);
-			
-			String xmlComp =  AFPChainXMLConverter.toXML(afpChainOrig, ca1, ca2);
-			
-//			assertEquals( xml, xmlComp);
-			StringManipulationTestsHelper.assertEqualsIgnoreEndline(xml, xmlComp);
-			StructureAlignment ce = StructureAlignmentFactory.getAlgorithm(CeMain.algorithmName);
-			
-			AFPChain afpChainNew = ce.align(ca1,ca2);
-			afpChainNew.setCalculationTime(-1);
-			afpChainNew.setName1(name1);
-			afpChainNew.setName2(name2);
-			
-			String xmlNew = AFPChainXMLConverter.toXML(afpChainNew,ca1,ca2);
-			//String ce2 = afpChainNew.toFatcat(ca1, ca2);
-			// FIXME version number, new line character difference?
-//			assertEquals(xml,xmlNew);
-			StringManipulationTestsHelper.assertEqualsIgnoreEndline(xml,xmlNew);
-			
-			//assertEquals(ce1,ce2);
-			
-		} catch (Exception e){
-			e.printStackTrace();
-			fail(e.getMessage());
-		}
+		AFPChain afpChainOrig = AFPChainXMLParser.fromXML(xml, ca1, ca2);
+
+		// calc time is hardware dependent.... overwrite...
+		afpChainOrig.setCalculationTime(-1);
+
+		//String ce1 = afpChainOrig.toFatcat(ca1, ca2);
+
+		String xmlComp =  AFPChainXMLConverter.toXML(afpChainOrig, ca1, ca2);
+
+		//			assertEquals( xml, xmlComp);
+		StringManipulationTestsHelper.assertEqualsIgnoreEndline(xml, xmlComp);
+		StructureAlignment ce = StructureAlignmentFactory.getAlgorithm(CeMain.algorithmName);
+
+		AFPChain afpChainNew = ce.align(ca1,ca2);
+		afpChainNew.setCalculationTime(-1);
+		afpChainNew.setName1(name1);
+		afpChainNew.setName2(name2);
+
+		String xmlNew = AFPChainXMLConverter.toXML(afpChainNew,ca1,ca2);
+		//String ce2 = afpChainNew.toFatcat(ca1, ca2);
+		// FIXME version number, new line character difference?
+		//			assertEquals(xml,xmlNew);
+		StringManipulationTestsHelper.assertEqualsIgnoreEndline(xml,xmlNew);
+
+		//assertEquals(ce1,ce2);
 
 	}
 }
