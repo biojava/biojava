@@ -77,8 +77,8 @@ public class PDBFileParserTest extends TestCase {
 
 			// from 1a4w:
 			String t =
-					"HETATM 2242 NA    NA   541       5.845 -14.122  30.560  0.88 23.48 "+newline+
-					"HETATM 2243 NA    NA   542      18.411 -16.475  38.464  0.88 24.77 "+newline;
+					"HETATM 2242 NA    NA   541       5.845 -14.122  30.560  0.88 23.48          NA"+newline+
+					"HETATM 2243 NA    NA   542      18.411 -16.475  38.464  0.88 24.77          NA"+newline;
 			BufferedReader br = new BufferedReader(new StringReader(t));
 			Structure s = parser.parsePDBFile(br);
 			String pdb = s.toPDB();
@@ -96,21 +96,22 @@ public class PDBFileParserTest extends TestCase {
 
 		// from 1a4w:
 
+		
 		String t =
-				"ATOM      1  N   ASP L   1A     11.095  19.341  20.188  1.00 30.14 "+newline+
-				"ATOM      2  CA  ASP L   1A     10.070  18.634  19.379  1.00 28.34 "+newline+
-				"ATOM      3  C   ASP L   1A      9.846  17.102  19.503  1.00 26.08 "+newline+
-				"ATOM      4  O   ASP L   1A      8.744  16.584  19.162  1.00 23.47 "+newline+
-				"ATOM      5  CB  ASP L   1A     10.255  18.858  17.853  1.00 37.55 "+newline+
-				"ATOM      6  CG  ASP L   1A      8.836  19.264  17.401  1.00 42.76 "+newline+
-				"ATOM      7  OD1 ASP L   1A      8.058  19.292  18.400  1.00 44.03 "+newline+
-				"ATOM      8  OD2 ASP L   1A      8.616  19.668  16.244  1.00 46.88 "+newline+
-				"ATOM      9  N   CYS L   1      10.835  16.440  20.113  1.00 23.72 "+newline+
-				"ATOM     10  CA  CYS L   1      10.769  14.970  20.210  1.00 20.89 "+newline+
-				"ATOM     11  C   CYS L   1       9.580  14.524  21.006  1.00 18.64 "+newline+
-				"ATOM     12  O   CYS L   1       9.110  15.220  21.912  1.00 19.03 "+newline+
-				"ATOM     13  CB  CYS L   1      12.117  14.468  20.771  1.00 21.77 "+newline+
-				"ATOM     14  SG  CYS L   1      12.247  14.885  22.538  1.00 20.55 "+newline;
+				"ATOM      1  N   ASP L   1A     11.095  19.341  20.188  1.00 30.14           N"+newline+  
+				"ATOM      2  CA  ASP L   1A     10.070  18.634  19.379  1.00 28.34           C"+newline+  
+				"ATOM      3  C   ASP L   1A      9.846  17.102  19.503  1.00 26.08           C"+newline+  
+				"ATOM      4  O   ASP L   1A      8.744  16.584  19.162  1.00 23.47           O"+newline+  
+				"ATOM      5  CB  ASP L   1A     10.255  18.858  17.853  1.00 37.55           C"+newline+  
+				"ATOM      6  CG  ASP L   1A      8.836  19.264  17.401  1.00 42.76           C"+newline+  
+				"ATOM      7  OD1 ASP L   1A      8.058  19.292  18.400  1.00 44.03           O"+newline+  
+				"ATOM      8  OD2 ASP L   1A      8.616  19.668  16.244  1.00 46.88           O"+newline+  
+				"ATOM      9  N   CYS L   1      10.835  16.440  20.113  1.00 23.72           N"+newline+  
+				"ATOM     10  CA  CYS L   1      10.769  14.970  20.210  1.00 20.89           C"+newline+  
+				"ATOM     11  C   CYS L   1       9.580  14.524  21.006  1.00 18.64           C"+newline+  
+				"ATOM     12  O   CYS L   1       9.110  15.220  21.912  1.00 19.03           O"+newline+  
+				"ATOM     13  CB  CYS L   1      12.117  14.468  20.771  1.00 21.77           C"+newline+  
+				"ATOM     14  SG  CYS L   1      12.247  14.885  22.538  1.00 20.55           S"+newline;
 
 		BufferedReader br = new BufferedReader(new StringReader(t));
 		try {
@@ -502,11 +503,11 @@ public class PDBFileParserTest extends TestCase {
 		String[] acceptedAtoms = {StructureTools.caAtomName, " CB "};
 		params.setAcceptedAtomNames(acceptedAtoms);
 		AtomCache cache = new AtomCache();
-		
+
 		cache.setFileParsingParams(params);
 		try {
 			Structure s = cache.getStructure("4HHB");
-			
+
 			//System.out.println(s.toPDB());
 			Atom[] ca = StructureTools.getAtomCAArray(s);
 			Atom[] cb = StructureTools.getAtomArray(s, new String[]{" CB ",});
@@ -516,9 +517,9 @@ public class PDBFileParserTest extends TestCase {
 			assertTrue(cb.length > 500);
 
 			Atom[] allwithoutGLY = StructureTools.getAtomArray(s, acceptedAtoms);
-			
+
 			assertEquals(allwithoutGLY.length, (ca.length + cb.length - (ca.length-cb.length)));
-			
+
 		} catch (Exception e){
 			e.printStackTrace();
 			fail(e.getMessage());
