@@ -1385,7 +1385,7 @@ nBestTrace=nTrace;
 
 					double dist = getDistanceWithSidechain(ca1[ise1], ca3[ise2]);
 					mat[ise1][ise2] = oRmsdThr - dist;
-
+					
 					//double distold = Calc.getDistance(ca1[ise1],ca3[ise2]);
 					//double scoreOld  = oRmsdThr - distold ;
 					//mat[ise1][ise2] = scoreOld;
@@ -1584,9 +1584,21 @@ nBestTrace=nTrace;
 	}
 	
 	
+	/**
+	 * On input, mat[i][j] should give the score for aligning positions i and j.
+	 * On output, mat[i][j] gives the maximum score possible for aligning 1..i 
+	 * of protein 1 with 1..j of protein 2.
+	 * 
+	 * @param nSeq1 The length of protein 1 (mat.length)
+	 * @param nSeq2 The length of protein 2 (mat[0].length)
+	 * @param gapI gap initiation penalty
+	 * @param gapE gap extension penalty
+	 * @param isGlobal1 The alignment is global for protein 1
+	 * @param isGlobal2 The alignment is global for protein 2
+	 * @return The maximum score
+	 */
 	private double dpAlign(int nSeq1, int nSeq2, double gapI, double gapE, 
 			boolean isGlobal1, boolean isGlobal2) {
-
 
 		// isGlobal1,isGlobal2 are always false...
 
