@@ -28,9 +28,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+
 import org.biojava.bio.structure.Atom;
 import org.biojava.bio.structure.Chain;
 import org.biojava.bio.structure.DBRef;
+import org.biojava.bio.structure.Element;
 import org.biojava.bio.structure.Group;
 import org.biojava.bio.structure.PDBHeader;
 import org.biojava.bio.structure.SSBond;
@@ -414,7 +416,14 @@ Angstroms.
 		s.append(occupancy);
 		s.append(tempfactor);
 
-		str.append(String.format("%-76s%2s", s.toString(),a.getElement().toString() ));
+		Element e = a.getElement();
+		
+		String eString = e.toString().toUpperCase();
+		
+		if ( e.equals(Element.R)) {
+			eString = "X";
+		}
+		str.append(String.format("%-76s%2s", s.toString(),eString));
 		str.append(newline);
 
 	}
