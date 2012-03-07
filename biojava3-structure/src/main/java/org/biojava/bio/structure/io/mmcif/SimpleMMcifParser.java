@@ -273,6 +273,10 @@ public class SimpleMMcifParser implements MMcifParser {
 		//System.out.println("SS processSingleLine " + line);
 		List<String> data = new ArrayList<String>();
 
+		if ( line.trim().length() == 0){
+			return data;
+		}
+		
 		if ( line.trim().length() == 1){
 			if ( line.startsWith(STRING_LIMIT))
 				return data;
