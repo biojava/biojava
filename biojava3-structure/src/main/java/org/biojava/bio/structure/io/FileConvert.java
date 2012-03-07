@@ -324,6 +324,34 @@ public class FileConvert {
 
 	}
 
+	/**
+	 * print ATOM record in the following syntax
+	<pre>
+    ATOM      1  N   ASP A  15     110.964  24.941  59.191  1.00 83.44           N
+*
+COLUMNS        DATA TYPE       FIELD         DEFINITION
+---------------------------------------------------------------------------------
+1 -  6        Record name     "ATOM  "
+7 - 11        Integer         serial        Atom serial number.
+13 - 16        Atom            name          Atom name.
+17             Character       altLoc        Alternate location indicator.
+18 - 20        Residue name    resName       Residue name.
+22             Character       chainID       Chain identifier.
+23 - 26        Integer         resSeq        Residue sequence number.
+27             AChar           iCode         Code for insertion of residues.
+31 - 38        Real(8.3)       x             Orthogonal coordinates for X in
+Angstroms.
+39 - 46        Real(8.3)       y             Orthogonal coordinates for Y in
+Angstroms.
+47 - 54        Real(8.3)       z             Orthogonal coordinates for Z in
+Angstroms.
+55 - 60        Real(6.2)       occupancy     Occupancy.
+61 - 66        Real(6.2)       tempFactor    Temperature factor.
+73 - 76        LString(4)      segID         Segment identifier, left-justified.
+77 - 78        LString(2)      element       Element symbol, right-justified.
+79 - 80        LString(2)      charge        Charge on the atom.
+</pre>
+*/
 	public static void toPDB(Atom a, StringBuffer str) {
 
 		Group g = a.getGroup();
@@ -369,23 +397,24 @@ public class FileConvert {
 
 		String leftResName = alignLeft(resName,3);
 
-		str.append(record);
-		str.append(serial);
-		str.append(" ");
-		str.append(fullname);
-		str.append(altLoc);
-		str.append(leftResName);
-		str.append(" ");
-		str.append(chainID);
-		str.append(resseq);
-		str.append("   ");
-		str.append(x);
-		str.append(y);
-		str.append(z);
-		str.append(occupancy);
-		str.append(tempfactor);
+		StringBuffer s = new StringBuffer();
+		s.append(record);
+		s.append(serial);
+		s.append(" ");
+		s.append(fullname);
+		s.append(altLoc);
+		s.append(leftResName);
+		s.append(" ");
+		s.append(chainID);
+		s.append(resseq);
+		s.append("   ");
+		s.append(x);
+		s.append(y);
+		s.append(z);
+		s.append(occupancy);
+		s.append(tempfactor);
 
-		str.append(" ");
+		str.append(String.format("%-76s%2s", s.toString(),a.getElement().toString() ));
 		str.append(newline);
 
 	}
