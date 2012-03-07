@@ -161,7 +161,7 @@ public class CeCPMainTest extends TestCase {
 		assertTrue("Wrong optLen for minCPlength="+minCPlength,Arrays.equals(filteredLen, result.getOptLen()));
 
 		// Eventually, no alignment!
-		/*minCPlength=8;
+		minCPlength=8;
 		filteredAln = new int[0][][];
 		filteredLen = new int[0];
 
@@ -170,7 +170,6 @@ public class CeCPMainTest extends TestCase {
 
 		assertTrue("Wrong optAln for minCPlength="+minCPlength,Arrays.deepEquals(filteredAln, result.getOptAln()));
 		assertTrue("Wrong optLen for minCPlength="+minCPlength,Arrays.equals(filteredLen, result.getOptLen()));
-		 */
 
 	}
 
