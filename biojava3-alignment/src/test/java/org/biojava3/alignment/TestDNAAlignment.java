@@ -81,37 +81,39 @@ public class TestDNAAlignment extends TestCase {
     /**
      * @author brandstaetter
      */
-    public void testDNAMultipleAlignmentWithAmbiguity() {
+    public void testDNAMultipleAlignmentWithMixedCompoundSets() {
 
         DNASequence target = new DNASequence("ACTGACGTGTAGCTGACTGA", DNACompoundSet.getDNACompoundSet());
-        DNASequence query = new DNASequence("ACTGACGTGTAGCTGACTGTA", DNACompoundSet.getDNACompoundSet());
-        // fails when used instead: DNASequence query = new DNASequence("ACTGACGTGTAGCTGACTGTA", AmbiguityDNACompoundSet.getDNACompoundSet());
+        DNASequence query = new DNASequence("ACTGACGTGTAGCTGACTGTA", AmbiguityDNACompoundSet.getDNACompoundSet());
 
         List<DNASequence> lst = new ArrayList<DNASequence>();
         lst.add(target);
         lst.add(query);
 
-        Profile<DNASequence, NucleotideCompound> profile = Alignments.getMultipleSequenceAlignment(lst);
-
-        assertEquals(2, profile.getSize());
-
-        assertTrue(profile.getAlignedSequence(1).getSequenceAsString().length() > 20);
+        try {
+        	Profile<DNASequence, NucleotideCompound> profile = Alignments.getMultipleSequenceAlignment(lst);
+        	fail("Alignments.getMultipleSequenceAlignment(lst) expected exception with differing compound sets");
+        } catch (IllegalArgumentException ex) {
+        	// expected exception
+        }
     }
 
     /**
      * @author brandstaetter
      */
-    public void testDNAPairwiseAlignmentWithAmbiguity() {
+    public void testDNAPairwiseAlignmentWithMixedCompoundSets() {
         DNASequence target = new DNASequence("ACTGACGTGTAGCTGACTGA", DNACompoundSet.getDNACompoundSet());
-        DNASequence query = new DNASequence("ACTGACGTGTAGCTGACTGG", DNACompoundSet.getDNACompoundSet());
-        // fails when used instead: DNASequence query = new DNASequence("ACTGACGTGTAGCTGACTGT", AmbiguityDNACompoundSet.getDNACompoundSet());
+        DNASequence query = new DNASequence("ACTGACGTGTAGCTGACTGT", AmbiguityDNACompoundSet.getDNACompoundSet());
         SubstitutionMatrix<NucleotideCompound> matrix = SubstitutionMatrixHelper.getNuc4_4();
         SimpleGapPenalty gapP = new SimpleGapPenalty();
         gapP.setOpenPenalty((short) 5);
         gapP.setExtensionPenalty((short) 2);
-        SequencePair<DNASequence, NucleotideCompound> psa = Alignments.getPairwiseAlignment(query, target, PairwiseSequenceAlignerType.LOCAL, gapP, matrix);
         
-        assertEquals(19, psa.getNumIdenticals());
-        //assertEquals(0, psa.getNumSimilars());
+        try {
+        	SequencePair<DNASequence, NucleotideCompound> psa = Alignments.getPairwiseAlignment(query, target, PairwiseSequenceAlignerType.LOCAL, gapP, matrix);
+        	fail("Alignments.getPairwiseAlignment() expected exception with differing compound sets");
+        } catch (IllegalArgumentException ex) {
+        	// expected exception
+        }
     }
 }
