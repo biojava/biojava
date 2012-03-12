@@ -20,11 +20,6 @@
  */
 package org.biojava3.genome.parsers.fastq;
 
-import org.biojava3.genome.parsers.fastq.IlluminaFastqWriter;
-import org.biojava3.genome.parsers.fastq.FastqVariant;
-import org.biojava3.genome.parsers.fastq.FastqBuilder;
-import org.biojava3.genome.parsers.fastq.FastqWriter;
-import org.biojava3.genome.parsers.fastq.Fastq;
 import java.io.IOException;
 
 /**
@@ -43,13 +38,23 @@ public final class IlluminaFastqWriterTest extends AbstractFastqWriterTest {
      * {@inheritDoc}
      */
     public Fastq createFastq() {
-        return new FastqBuilder().withDescription("description").withSequence("sequence").withQuality("quality_").withVariant(FastqVariant.FASTQ_ILLUMINA).build();
+        return new FastqBuilder()
+                .withDescription("description")
+                .withSequence("sequence")
+                .withQuality("quality_")
+                .withVariant(FastqVariant.FASTQ_ILLUMINA)
+                .build();
     }
 
     public void testValidateNotIlluminaVariant() {
         IlluminaFastqWriter writer = new IlluminaFastqWriter();
         Appendable appendable = new StringBuilder();
-        Fastq invalid = new FastqBuilder().withDescription("description").withSequence("sequence").withQuality("quality_").withVariant(FastqVariant.FASTQ_SANGER).build();
+        Fastq invalid = new FastqBuilder()
+                .withDescription("description")
+                .withSequence("sequence")
+                .withQuality("quality_")
+                .withVariant(FastqVariant.FASTQ_SANGER)
+                .build();
         try {
             writer.append(appendable, invalid);
             fail("validate not fastq-illumina variant expected IOException");

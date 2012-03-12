@@ -20,13 +20,6 @@
  */
 package org.biojava3.genome.parsers.fastq;
 
-import org.biojava3.genome.parsers.fastq.IlluminaFastqWriter;
-import org.biojava3.genome.parsers.fastq.FastqVariant;
-import org.biojava3.genome.parsers.fastq.FastqBuilder;
-import org.biojava3.genome.parsers.fastq.FastqReader;
-import org.biojava3.genome.parsers.fastq.IlluminaFastqReader;
-import org.biojava3.genome.parsers.fastq.FastqWriter;
-import org.biojava3.genome.parsers.fastq.Fastq;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -40,7 +33,12 @@ public final class IlluminaFastqReaderTest extends AbstractFastqReaderTest {
      * {@inheritDoc}
      */
     public Fastq createFastq() {
-        return new FastqBuilder().withDescription("description").withSequence("sequence").withQuality("quality_").withVariant(FastqVariant.FASTQ_ILLUMINA).build();
+        return new FastqBuilder()
+                .withDescription("description")
+                .withSequence("sequence")
+                .withQuality("quality_")
+                .withVariant(FastqVariant.FASTQ_ILLUMINA)
+                .build();
     }
 
     /**

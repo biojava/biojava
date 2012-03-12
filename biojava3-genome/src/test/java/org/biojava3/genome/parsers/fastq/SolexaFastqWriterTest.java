@@ -20,11 +20,6 @@
  */
 package org.biojava3.genome.parsers.fastq;
 
-import org.biojava3.genome.parsers.fastq.FastqVariant;
-import org.biojava3.genome.parsers.fastq.FastqBuilder;
-import org.biojava3.genome.parsers.fastq.SolexaFastqWriter;
-import org.biojava3.genome.parsers.fastq.FastqWriter;
-import org.biojava3.genome.parsers.fastq.Fastq;
 import java.io.IOException;
 
 /**
@@ -43,13 +38,23 @@ public final class SolexaFastqWriterTest extends AbstractFastqWriterTest {
      * {@inheritDoc}
      */
     public Fastq createFastq() {
-        return new FastqBuilder().withDescription("description").withSequence("sequence").withQuality("quality_").withVariant(FastqVariant.FASTQ_SOLEXA).build();
+        return new FastqBuilder()
+                .withDescription("description")
+                .withSequence("sequence")
+                .withQuality("quality_")
+                .withVariant(FastqVariant.FASTQ_SOLEXA)
+                .build();
     }
 
     public void testValidateNotSolexaVariant() {
         SolexaFastqWriter writer = new SolexaFastqWriter();
         Appendable appendable = new StringBuilder();
-        Fastq invalid = new FastqBuilder().withDescription("description").withSequence("sequence").withQuality("quality_").withVariant(FastqVariant.FASTQ_ILLUMINA).build();
+        Fastq invalid = new FastqBuilder()
+                .withDescription("description")
+                .withSequence("sequence")
+                .withQuality("quality_")
+                .withVariant(FastqVariant.FASTQ_ILLUMINA)
+                .build();
         try {
             writer.append(appendable, invalid);
             fail("validate not fastq-solexa variant expected IOException");

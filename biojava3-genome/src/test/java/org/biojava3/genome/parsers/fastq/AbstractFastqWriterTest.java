@@ -20,8 +20,6 @@
  */
 package org.biojava3.genome.parsers.fastq;
 
-import org.biojava3.genome.parsers.fastq.FastqWriter;
-import org.biojava3.genome.parsers.fastq.Fastq;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.OutputStream;
