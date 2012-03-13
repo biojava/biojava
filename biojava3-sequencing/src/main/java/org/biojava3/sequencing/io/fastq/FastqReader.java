@@ -22,9 +22,12 @@ package org.biojava3.sequencing.io.fastq;
 
 import java.net.URL;
 
+import java.io.Closeable;
 import java.io.File;
 import java.io.InputStream;
 import java.io.IOException;
+
+import com.google.common.io.InputSupplier;
 
 /**
  * Reader for FASTQ formatted sequences.
@@ -33,6 +36,24 @@ import java.io.IOException;
  */
 public interface FastqReader
 {
+
+    /**
+     * Parse the specified input supplier.
+     *
+     * @param supplier input supplier, must not be null
+     * @param listener low-level event based parser callback, must not be null
+     * @param IOException if an I/O error occurs
+     */
+    <R extends Readable & Closeable> void parse(InputSupplier<R> supplier, ParseListener listener) throws IOException;
+
+    /**
+     * Stream the specified input supplier.
+     *
+     * @param supplier input supplier, must not be null
+     * @param listener event based reader callback, must not be null
+     * @throws IOException if an I/O error occurs
+     */
+    <R extends Readable & Closeable> void stream(InputSupplier<R> supplier, StreamListener listener) throws IOException;
 
     /**
      * Read zero or more FASTQ formatted sequences from the specified file.

@@ -22,11 +22,8 @@ package org.biojava3.sequencing.io.fastq;
 
 import java.io.InputStream;
 import java.io.IOException;
-import java.io.StringReader;
 
 import java.net.URL;
-
-import com.google.common.io.InputSupplier;
 
 /**
  * Unit test for SangerFastqReader.
@@ -246,125 +243,5 @@ public final class SangerFastqReaderTest
         }
         assertEquals(10, count);
         inputStream.close();
-    }
-
-    public void testParse() throws Exception
-    {
-        SangerFastqReader sangerFastqReader = (SangerFastqReader) createFastqReader();
-        final String input = "";
-        sangerFastqReader.parse(new InputSupplier<StringReader>()
-                                {
-                                    /** {@inheritDoc} */
-                                    public StringReader getInput() throws IOException {
-                                        return new StringReader(input);
-                                    }
-                                },
-                                new ParseListener() {
-                                    /** {@inheritDoc} */
-                                    public void description(final String description) throws IOException {
-                                        // empty
-                                    }
- 
-                                    /** {@inheritDoc} */
-                                    public void sequence(final String sequence) throws IOException {
-                                        // empty
-                                    }
- 
-                                    /** {@inheritDoc} */
-                                    public void appendSequence(final String sequence) throws IOException {
-                                        // empty
-                                    }
- 
-                                    /** {@inheritDoc} */
-                                    public void repeatDescription(final String repeatDescription) throws IOException {
-                                        // empty
-                                    }
- 
-                                    /** {@inheritDoc} */
-                                    public void quality(final String quality) throws IOException {
-                                        // empty
-                                    }
- 
-                                    /** {@inheritDoc} */
-                                    public void appendQuality(final String quality) throws IOException {
-                                        // empty
-                                    }
- 
-                                    /** {@inheritDoc} */
-                                    public void complete() throws IOException {
-                                        // empty
-                                    }
-                                });
-    }
- 
-    public void testParseNullInputSupplier() throws Exception
-    {
-        SangerFastqReader sangerFastqReader = (SangerFastqReader) createFastqReader();
-        try
-        {
-            sangerFastqReader.parse((InputSupplier<StringReader>) null,
-                                    new ParseListener() {
-                                        /** {@inheritDoc} */
-                                        public void description(final String description) throws IOException {
-                                            // empty
-                                        }
- 
-                                        /** {@inheritDoc} */
-                                        public void sequence(final String sequence) throws IOException {
-                                            // empty
-                                        }
- 
-                                        /** {@inheritDoc} */
-                                        public void appendSequence(final String sequence) throws IOException {
-                                            // empty
-                                        }
- 
-                                        /** {@inheritDoc} */
-                                        public void repeatDescription(final String repeatDescription) throws IOException {
-                                            // empty
-                                        }
- 
-                                        /** {@inheritDoc} */
-                                        public void quality(final String quality) throws IOException {
-                                            // empty
-                                        }
- 
-                                        /** {@inheritDoc} */
-                                        public void appendQuality(final String quality) throws IOException {
-                                            // empty
-                                        }
-
-                                        /** {@inheritDoc} */
-                                        public void complete() throws IOException {
-                                            // empty
-                                        }
-                                    });
-            fail("parse(null, ) expected IllegalArgumentException");
-        }
-        catch (IllegalArgumentException e)
-        {
-            // expected
-        }
-    }
- 
-    public void testParseNullParseListener() throws Exception
-    {
-        SangerFastqReader sangerFastqReader = (SangerFastqReader) createFastqReader();
-        final String input = "";
-        try
-        {
-            sangerFastqReader.parse(new InputSupplier<StringReader>()
-                                    {
-                                        /** {@inheritDoc} */
-                                        public StringReader getInput() throws IOException {
-                                            return new StringReader(input);
-                                        }
-                                    }, null);
-            fail("parse(, null) expected IllegalArgumentException");
-        }
-        catch (IllegalArgumentException e)
-        {
-            // expected
-        }
     }
 }
