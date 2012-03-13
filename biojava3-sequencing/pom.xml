@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <parent>
-    <artifactId>biojava-legacy</artifactId>
+    <artifactId>biojava</artifactId>
     <groupId>org.biojava</groupId>
-    <version>1.8.2-SNAPSHOT</version>
+    <version>3.0.3-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <artifactId>sequencing</artifactId>
-  <version>1.8.2-SNAPSHOT</version>
+  <version>3.0.3-SNAPSHOT</version>
   <name>sequencing</name>
   <distributionManagement>
     <downloadUrl>http://www.biojava.org/download/maven/</downloadUrl>
@@ -41,7 +41,7 @@
     </dependency>
     <dependency>
       <groupId>org.biojava</groupId>
-      <artifactId>core</artifactId>
+      <artifactId>biojava3-core</artifactId>
       <version>${project.version}</version>
       <scope>compile</scope>
     </dependency>
