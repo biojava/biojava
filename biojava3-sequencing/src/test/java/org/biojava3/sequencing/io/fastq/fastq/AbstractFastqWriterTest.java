@@ -18,7 +18,7 @@
  *      http://www.biojava.org/
  *
  */
-package org.biojava.bio.program.fastq;
+package org.biojava3.sequencing.io.fastq;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;

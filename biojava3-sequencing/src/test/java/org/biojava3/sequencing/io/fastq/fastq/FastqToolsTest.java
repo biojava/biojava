@@ -18,16 +18,9 @@
  *      http://www.biojava.org/
  *
  */
-package org.biojava.bio.program.fastq;
+package org.biojava3.sequencing.io.fastq;
 
 import junit.framework.TestCase;
-
-import org.biojava.bio.dist.Distribution;
-
-import org.biojava.bio.program.phred.PhredSequence;
-import org.biojava.bio.seq.Sequence;
-
-import org.biojava.bio.symbol.SymbolList;
 
 /**
  * Unit test for FastqTools.
@@ -35,132 +28,6 @@ import org.biojava.bio.symbol.SymbolList;
 public final class FastqToolsTest extends TestCase
 {
     private final FastqBuilder builder = new FastqBuilder().withDescription("foo").withSequence("ACTG").withQuality("ZZZZ");
-
-    public void testCreateDNA() throws Exception
-    {
-        SymbolList dna = FastqTools.createDNA(builder.build());
-        assertNotNull(dna);
-        assertEquals(4, dna.length());
-    }
-
-    public void testCreateDNANullFastq() throws Exception
-    {
-        try
-        {
-            FastqTools.createDNA(null);
-            fail("createDNA(null) expected IllegalArgumentException");
-        }
-        catch (IllegalArgumentException e)
-        {
-            // expected
-        }
-    }
-
-    public void testCreateQuality() throws Exception
-    {
-        SymbolList quality = FastqTools.createQuality(builder.build());
-        assertNotNull(quality);
-        assertEquals(4, quality.length());
-    }
-
-    public void testCreateQualityNullFastq() throws Exception
-    {
-        try
-        {
-            FastqTools.createQuality(null);
-            fail("createQuality(null) expected IllegalArgumentException");
-        }
-        catch (IllegalArgumentException e)
-        {
-            // expected
-        }
-    }
-
-    public void testCreateDNASequence() throws Exception
-    {
-        Sequence sequence = FastqTools.createDNASequence(builder.build());
-        assertNotNull(sequence);
-        assertEquals(4, sequence.length());
-    }
-
-    public void testCreateDNASequenceNullFastq() throws Exception
-    {
-        try
-        {
-            FastqTools.createDNASequence(null);
-            fail("createDNASequence(null) expected IllegalArgumentException");
-        }
-        catch (IllegalArgumentException e)
-        {
-            // expected
-        }
-    }
-
-    public void testPhredSequence() throws Exception
-    {
-        PhredSequence sequence = FastqTools.createPhredSequence(builder.build());
-        assertNotNull(sequence);
-        assertEquals(4, sequence.length());
-    }
-
-    public void testCreatePhredSequenceNullFastq() throws Exception
-    {
-        try
-        {
-            FastqTools.createPhredSequence(null);
-            fail("createPhredSequence(null) expected IllegalArgumentException");
-        }
-        catch (IllegalArgumentException e)
-        {
-            // expected
-        }
-    }
-
-    public void testPhredSequenceNotSangerVariant() throws Exception
-    {
-        try
-        {
-            FastqTools.createPhredSequence(builder.withVariant(FastqVariant.FASTQ_ILLUMINA).build());
-            fail("createPhredSequence(not sanger variant) expected IllegalArgumentException");
-        }
-        catch (IllegalArgumentException e)
-        {
-            // expected
-        }
-    }
-
-    public void testCreateSymbolDistribution() throws Exception
-    {
-        Distribution[] symbolDistribution = FastqTools.createSymbolDistribution(builder.build());
-        assertNotNull(symbolDistribution);
-        assertEquals(4, symbolDistribution.length);
-    }
-
-    public void testCreateSymbolDistributionNullFastq() throws Exception
-    {
-        try
-        {
-            FastqTools.createSymbolDistribution(null);
-            fail("createSymbolDistribution(null) expected IllegalArgumentException");
-        }
-        catch (IllegalArgumentException e)
-        {
-            // expected
-        }
-    }
-
-    public void testCreateSymbolDistributionNotSangerVariant() throws Exception
-    {
-        try
-        {
-            FastqTools.createSymbolDistribution(builder.withVariant(FastqVariant.FASTQ_ILLUMINA).build());
-            fail("createSymbolDistribution(not sanger variant) expected IllegalArgumentException");
-        }
-        catch (IllegalArgumentException e)
-        {
-            // expected
-        }
-    }
 
     public void testQualityScores()
     {

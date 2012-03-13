@@ -18,7 +18,7 @@
  *      http://www.biojava.org/
  *
  */
-package org.biojava.bio.program.fastq;
+package org.biojava3.sequencing.io.fastq;
 
 import java.net.URL;
 
@@ -42,7 +42,7 @@ import com.google.common.io.Resources;
 /**
  * Abstract reader implementation for FASTQ formatted sequences.
  *
- * @since 1.7.1
+ * @since 3.0.3
  */
 abstract class AbstractFastqReader
     implements FastqReader
@@ -58,7 +58,6 @@ abstract class AbstractFastqReader
     /**
      * Parse the specified input supplier.
      *
-     * @since 1.8.2
      * @param supplier input supplier, must not be null
      * @param listener low-level event based parser callback, must not be null
      * @param IOException if an I/O error occurs
@@ -73,7 +72,6 @@ abstract class AbstractFastqReader
     /**
      * Stream the specified input supplier.
      *
-     * @since 1.8.2
      * @param supplier input supplier, must not be null
      * @param listener event based reader callback, must not be null
      * @throws IOException if an I/O error occurs

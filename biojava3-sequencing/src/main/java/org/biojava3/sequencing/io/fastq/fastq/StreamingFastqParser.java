@@ -18,7 +18,7 @@
  *      http://www.biojava.org/
  *
  */
-package org.biojava.bio.program.fastq;
+package org.biojava3.sequencing.io.fastq;
 
 import java.io.Closeable;
 import java.io.IOException;
@@ -28,7 +28,7 @@ import com.google.common.io.InputSupplier;
 /**
  * Event based parser for FASTQ formatted sequences.
  *
- * @since 1.8.2
+ * @since 3.0.3
  */
 final class StreamingFastqParser
 {

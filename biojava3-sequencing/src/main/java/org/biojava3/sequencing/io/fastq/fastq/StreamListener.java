@@ -23,7 +23,7 @@ package org.biojava.bio.program.fastq;
 /**
  * Event based parser callback.
  *
- * @since 1.8.2
+ * @since 3.0.3
  */
 public interface StreamListener
 {

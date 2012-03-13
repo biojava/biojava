@@ -30,7 +30,7 @@ import com.google.common.io.LineProcessor;
 /**
  * Low-level event based parser for FASTQ formatted sequences.
  *
- * @since 1.8.2
+ * @since 3.0.3
  */
 final class FastqParser
 {

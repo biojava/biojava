@@ -18,7 +18,7 @@
  *      http://www.biojava.org/
  *
  */
-package org.biojava.bio.program.fastq;
+package org.biojava3.sequencing.io.fastq;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -26,7 +26,7 @@ import java.util.Map;
 /**
  * FASTQ sequence format variant.
  *
- * @since 1.7.1
+ * @since 3.0.3
  */
 public enum FastqVariant
 {
@@ -191,7 +191,6 @@ public enum FastqVariant
     /**
      * Return the minimum quality score for this FASTQ sequence format variant.
      *
-     * @since 1.8.2
      * @return the minimum quality score for this FASTQ sequence format variant.
      */
     public abstract int minimumQualityScore();
@@ -199,7 +198,6 @@ public enum FastqVariant
     /**
      * Return the maximum quality score for this FASTQ sequence format variant.
      *
-     * @since 1.8.2
      * @return the maximum quality score for this FASTQ sequence format variant.
      */
     public abstract int maximumQualityScore();
@@ -207,7 +205,6 @@ public enum FastqVariant
     /**
      * Convert the specified quality in ASCII format to a quality score.
      *
-     * @since 1.8.2
      * @param c quality in ASCII format
      * @return the specified quality in ASCII format converted to a quality score
      */
@@ -216,7 +213,6 @@ public enum FastqVariant
     /**
      * Convert the specified quality in ASCII format to an error probability.
      *
-     * @since 1.8.2
      * @param c quality in ASCII format
      * @return the specified quality in ASCII format converted to an error probability
      */
@@ -228,7 +224,6 @@ public enum FastqVariant
     /**
      * Calculate the error probability given the specified quality score.
      *
-     * @since 1.8.2
      * @param qualityScore quality score
      * @return the error probability given the specified quality score
      */

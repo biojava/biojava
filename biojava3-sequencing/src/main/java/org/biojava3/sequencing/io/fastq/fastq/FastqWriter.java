@@ -18,7 +18,7 @@
  *      http://www.biojava.org/
  *
  */
-package org.biojava.bio.program.fastq;
+package org.biojava3.sequencing.io.fastq;
 
 import java.io.File;
 import java.io.IOException;
@@ -27,7 +27,7 @@ import java.io.OutputStream;
 /**
  * Writer for FASTQ formatted sequences.
  *
- * @since 1.7.1
+ * @since 3.0.3
  */
 public interface FastqWriter
 {

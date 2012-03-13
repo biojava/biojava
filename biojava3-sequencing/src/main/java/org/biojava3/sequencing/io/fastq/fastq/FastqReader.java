@@ -29,7 +29,7 @@ import java.io.IOException;
 /**
  * Reader for FASTQ formatted sequences.
  *
- * @since 1.7.1
+ * @since 3.0.3
  */
 public interface FastqReader
 {

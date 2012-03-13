@@ -18,11 +18,11 @@
  *      http://www.biojava.org/
  *
  */
-package org.biojava.bio.program.fastq;
+package org.biojava3.sequencing.io.fastq;
 
 import junit.framework.TestCase;
 
-import static org.biojava.bio.program.fastq.FastqVariant.*;
+import static org.biojava3.sequencing.io.fastq.FastqVariant.*;
 
 /**
  * Unit test for FastqVariant.

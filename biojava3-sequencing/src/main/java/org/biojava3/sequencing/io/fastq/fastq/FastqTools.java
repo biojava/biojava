@@ -18,34 +18,17 @@
  *      http://www.biojava.org/
  *
  */
-package org.biojava.bio.program.fastq;
+package org.biojava3.sequencing.io.fastq;
 
 import java.util.List;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.ImmutableList;
 
-import org.biojava.bio.Annotation;
-
-import org.biojava.bio.dist.Distribution;
-
-import org.biojava.bio.program.phred.PhredSequence;
-import org.biojava.bio.program.phred.PhredTools;
-
-import org.biojava.bio.seq.DNATools;
-import org.biojava.bio.seq.Sequence;
-
-import org.biojava.bio.symbol.IllegalAlphabetException;
-import org.biojava.bio.symbol.IllegalSymbolException;
-import org.biojava.bio.symbol.IntegerAlphabet;
-import org.biojava.bio.symbol.IntegerAlphabet.SubIntegerAlphabet;
-import org.biojava.bio.symbol.SymbolList;
-import org.biojava.bio.symbol.SimpleSymbolList;
-
 /**
  * Utility methods for FASTQ formatted sequences.
  *
- * @since 1.8.2
+ * @since 3.0.3
  */
 public final class FastqTools
 {
@@ -58,111 +41,6 @@ public final class FastqTools
         // empty
     }
 
-
-    /**
-     * Create and return a new DNA {@link SymbolList} from the specified FASTQ formatted sequence.
-     *
-     * @param fastq FASTQ formatted sequence, must not be null
-     * @return a new DNA {@link SymbolList} from the specified FASTQ formatted sequence
-     * @throws IllegalSymbolException if an illegal symbol is found
-     */
-    public static SymbolList createDNA(final Fastq fastq) throws IllegalSymbolException
-    {
-        if (fastq == null)
-        {
-            throw new IllegalArgumentException("fastq must not be null");
-        }
-        return DNATools.createDNA(fastq.getSequence());
-    }
-
-    /**
-     * Create and return a new {@link SymbolList} of quality scores from the specified FASTQ formatted sequence.
-     *
-     * @param fastq FASTQ formatted sequence, must not be null
-     * @return a new {@link SymbolList} of quality scores from the specified FASTQ formatted sequence
-     * @throws IllegalSymbolException if an illegal symbol is found
-     */
-    public static SymbolList createQuality(final Fastq fastq) throws IllegalSymbolException
-    {
-        if (fastq == null)
-        {
-            throw new IllegalArgumentException("fastq must not be null");
-        }
-        FastqVariant variant = fastq.getVariant();
-        SubIntegerAlphabet alphabet = IntegerAlphabet.getSubAlphabet(variant.minimumQualityScore(), variant.maximumQualityScore());
-        SimpleSymbolList qualitySymbols = new SimpleSymbolList(alphabet);
-        for (int i = 0, size = fastq.getQuality().length(); i < size; i++)
-        {
-            char c = fastq.getQuality().charAt(i);
-            qualitySymbols.addSymbol(alphabet.getSymbol(variant.qualityScore(c)));
-        }
-        return qualitySymbols;
-    }
-
-    /**
-     * Create and return a new DNA {@link Sequence} from the specified FASTQ formatted sequence.
-     *
-     * @param fastq FASTQ formatted sequence, must not be null
-     * @return a new {@link Sequence} from the specified FASTQ formatted sequence
-     * @throws IllegalSymbolException if an illegal symbol is found
-     */
-    public static Sequence createDNASequence(final Fastq fastq) throws IllegalSymbolException
-    {
-        if (fastq == null)
-        {
-            throw new IllegalArgumentException("fastq must not be null");
-        }
-        return DNATools.createDNASequence(fastq.getSequence(), fastq.getDescription());
-    }
-
-    /**
-     * Create and return a new {@link PhredSequence} from the specified FASTQ formatted sequence.
-     * Only Sanger variant FASTQ formatted sequences are supported.
-     *
-     * @param fastq FASTQ formatted sequence, must not be null and must be Sanger variant
-     * @return a new {@link PhredSequence} from the specified FASTQ formatted sequence
-     * @throws IllegalAlphabetException if an illegal alphabet is used
-     * @throws IllegalSymbolException if an illegal symbol is found
-     */
-    public static PhredSequence createPhredSequence(final Fastq fastq) throws IllegalAlphabetException, IllegalSymbolException
-    {
-        if (fastq == null)
-        {
-            throw new IllegalArgumentException("fastq must not be null");
-        }
-        if (!fastq.getVariant().isSanger())
-        {
-            throw new IllegalArgumentException("fastq must be sanger variant, was " + fastq.getVariant());
-        }
-        SymbolList dnaSymbols = createDNA(fastq);
-
-        // 0-99 subinteger alphabet required by PhredSequence, thus only Sanger variant is supported
-        SubIntegerAlphabet alphabet = IntegerAlphabet.getSubAlphabet(0, 99);
-        SimpleSymbolList qualitySymbols = new SimpleSymbolList(alphabet);
-        for (int i = 0, size = fastq.getQuality().length(); i < size; i++)
-        {
-            char c = fastq.getQuality().charAt(i);
-            qualitySymbols.addSymbol(alphabet.getSymbol(FastqVariant.FASTQ_SANGER.qualityScore(c)));
-        }
-
-        SymbolList phredSymbols = PhredTools.createPhred(dnaSymbols, qualitySymbols);
-        return new PhredSequence(phredSymbols, fastq.getDescription(), null, Annotation.EMPTY_ANNOTATION);
-    }
-
-    /**
-     * Create and return a new array of symbol {@link Distribution}s from the specified FASTQ formatted sequence.
-     * Only Sanger variant FASTQ formatted sequences are supported.
-     *
-     * @param fastq FASTQ formatted sequence, must not be null and must be Sanger variant
-     * @return a new array of symbol {@link Distribution}s from the specified FASTQ formatted sequence
-     * @throws IllegalAlphabetException if an illegal alphabet is used
-     * @throws IllegalSymbolException if an illegal symbol is found
-     */
-    public static Distribution[] createSymbolDistribution(final Fastq fastq) throws IllegalAlphabetException, IllegalSymbolException
-    {
-        PhredSequence phredSequence = createPhredSequence(fastq);
-        return PhredTools.phredToDistArray(phredSequence);
-    }
 
     /**
      * Return the quality scores from the specified FASTQ formatted sequence.

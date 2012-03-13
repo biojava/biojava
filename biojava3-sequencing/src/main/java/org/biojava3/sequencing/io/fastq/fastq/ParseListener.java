@@ -18,14 +18,14 @@
  *      http://www.biojava.org/
  *
  */
-package org.biojava.bio.program.fastq;
+package org.biojava3.sequencing.io.fastq;
 
 import java.io.IOException;
 
 /**
  * Low-level event based parser callback.
  *
- * @since 1.8.2
+ * @since 3.0.3
  */
 public interface ParseListener
 {
