@@ -25,6 +25,12 @@ import java.util.List;
 import com.google.common.collect.Lists;
 import com.google.common.collect.ImmutableList;
 
+import org.biojava3.core.sequence.DNASequence;
+import org.biojava3.core.sequence.compound.NucleotideCompound;
+import org.biojava3.core.sequence.features.QualityFeature;
+import org.biojava3.core.sequence.features.QuantityFeature;
+import org.biojava3.core.sequence.template.AbstractSequence;
+
 /**
  * Utility methods for FASTQ formatted sequences.
  *
@@ -41,6 +47,61 @@ public final class FastqTools
         // empty
     }
 
+
+    public static DNASequence createDNASequence(final Fastq fastq)
+    {
+        if (fastq == null)
+        {
+            throw new IllegalArgumentException("fastq must not be null");
+        }
+        DNASequence sequence = new DNASequence(fastq.getSequence());
+        sequence.setOriginalHeader(fastq.getDescription());
+        return sequence;
+    }
+
+    public static DNASequence createDNASequenceWithQualityScores(final Fastq fastq)
+    {
+        DNASequence sequence = createDNASequence(fastq);
+        sequence.addFeature(1, sequence.getLength(), createQualityScores(fastq));
+        return sequence;
+    }
+
+    public static DNASequence createDNASequenceWithErrorProbabilities(final Fastq fastq)
+    {
+        DNASequence sequence = createDNASequence(fastq);
+        sequence.addFeature(1, sequence.getLength(), createErrorProbabilities(fastq));
+        return sequence;
+    }
+
+    public static DNASequence createDNASequenceWithQualityScoresAndErrorProbabilities(final Fastq fastq)
+    {
+        DNASequence sequence = createDNASequence(fastq);
+        sequence.addFeature(1, sequence.getLength(), createQualityScores(fastq));
+        sequence.addFeature(1, sequence.getLength(), createErrorProbabilities(fastq));
+        return sequence;
+    }
+
+    public static QualityFeature createQualityScores(final Fastq fastq)
+    {
+        if (fastq == null)
+        {
+            throw new IllegalArgumentException("fastq must not be null");
+        }
+        QualityFeature qualityScores = new QualityFeature<AbstractSequence<NucleotideCompound>, NucleotideCompound>("qualityScores", "sequencing");
+        qualityScores.setQualities(toList(qualityScores(fastq)));
+        return qualityScores;
+    }
+
+    public static QuantityFeature createErrorProbabilities(final Fastq fastq)
+    {
+        if (fastq == null)
+        {
+            throw new IllegalArgumentException("fastq must not be null");
+        }
+        QuantityFeature errorProbabilities = new QuantityFeature<AbstractSequence<NucleotideCompound>, NucleotideCompound>("errorProbabilities", "sequencing");
+        errorProbabilities.setQuantities(toList(errorProbabilities(fastq)));
+        return errorProbabilities;
+    }
 
     /**
      * Return the quality scores from the specified FASTQ formatted sequence.
@@ -150,5 +211,20 @@ public final class FastqTools
             errorProbabilities[i] = variant.errorProbability(c);
         }
         return errorProbabilities;
+    }
+
+    /**
+     * Return the specified iterable as a list.
+     *
+     * @param iterable iterable
+     * @return the specified iterable as a list
+     */
+    private static <T> List<T> toList(final Iterable<? extends T> iterable)
+    {
+        if (iterable instanceof List)
+        {
+            return (List<T>) iterable;
+        }
+        return ImmutableList.copyOf(iterable);
     }
 }
