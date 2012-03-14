@@ -48,6 +48,12 @@ public final class FastqTools
     }
 
 
+    /**
+     * Create and return a new {@link DNASequence} from the specified FASTQ formatted sequence.
+     *
+     * @param fastq FASTQ formatted sequence, must not be null
+     * @return a new {@link DNASequence} from the specified FASTQ formatted sequence
+     */
     public static DNASequence createDNASequence(final Fastq fastq)
     {
         if (fastq == null)
@@ -59,6 +65,14 @@ public final class FastqTools
         return sequence;
     }
 
+    /**
+     * Create and return a new {@link DNASequence} with quality scores from the specified
+     * FASTQ formatted sequence.  The quality scores are stored in a {@link QualityFeature}
+     * with a type <code>"qualityScores"</code> the same length as the sequence.
+     *
+     * @param fastq FASTQ formatted sequence, must not be null
+     * @return a new {@link DNASequence} with quality scores from the specified FASTQ formatted sequence
+     */
     public static DNASequence createDNASequenceWithQualityScores(final Fastq fastq)
     {
         DNASequence sequence = createDNASequence(fastq);
@@ -66,6 +80,14 @@ public final class FastqTools
         return sequence;
     }
 
+    /**
+     * Create and return a new {@link DNASequence} with error probabilities from the specified
+     * FASTQ formatted sequence.  The error probabilities are stored in a {@link QuantityFeature}
+     * with a type <code>"errorProbabilities"</code> the same length as the sequence.
+     *
+     * @param fastq FASTQ formatted sequence, must not be null
+     * @return a new {@link DNASequence} with error probabilities from the specified FASTQ formatted sequence
+     */
     public static DNASequence createDNASequenceWithErrorProbabilities(final Fastq fastq)
     {
         DNASequence sequence = createDNASequence(fastq);
@@ -73,6 +95,17 @@ public final class FastqTools
         return sequence;
     }
 
+    /**
+     * Create and return a new {@link DNASequence} with quality scores and error probabilities from the
+     * specified FASTQ formatted sequence.  The quality scores are stored in a {@link QualityFeature}
+     * with a type <code>"qualityScores"</code> the same length as the sequence and the error
+     * probabilities are stored in a {@link QuantityFeature} with a type <code>"errorProbabilities"</code>
+     * the same length as the sequence.
+     *
+     * @param fastq FASTQ formatted sequence, must not be null
+     * @return a new {@link DNASequence} with quality scores and error probabilities from the specified
+     *    FASTQ formatted sequence
+     */
     public static DNASequence createDNASequenceWithQualityScoresAndErrorProbabilities(final Fastq fastq)
     {
         DNASequence sequence = createDNASequence(fastq);
@@ -81,6 +114,15 @@ public final class FastqTools
         return sequence;
     }
 
+    /**
+     * Create and return a new {@link QualityFeature} from the quality scores of the specified
+     * FASTQ formatted sequence.  The quality scores feature has a type <code>"qualityScores"</code>
+     * and will be the same length as the sequence.
+     *
+     * @param fastq FASTQ formatted sequence, must not be null
+     * @return a new {@link QualityFeature} from the quality scores of the specified FASTQ
+     *    formatted sequence
+     */
     public static QualityFeature createQualityScores(final Fastq fastq)
     {
         if (fastq == null)
@@ -92,6 +134,15 @@ public final class FastqTools
         return qualityScores;
     }
 
+    /**
+     * Create and return a new {@link QuantityFeature} from the error probabilities of the specified
+     * FASTQ formatted sequence.  The error probabilities feature has a type <code>"errorProbabilities"</code>
+     * and will be the same length as the sequence.
+     *
+     * @param fastq FASTQ formatted sequence, must not be null
+     * @return a new {@link QualityFeature} from the error probabilities of the specified FASTQ
+     *    formatted sequence
+     */
     public static QuantityFeature createErrorProbabilities(final Fastq fastq)
     {
         if (fastq == null)
@@ -219,7 +270,7 @@ public final class FastqTools
      * @param iterable iterable
      * @return the specified iterable as a list
      */
-    private static <T> List<T> toList(final Iterable<? extends T> iterable)
+    static <T> List<T> toList(final Iterable<? extends T> iterable)
     {
         if (iterable instanceof List)
         {
