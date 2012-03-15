@@ -6,9 +6,8 @@
     <version>3.0.3-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
-  <artifactId>sequencing</artifactId>
-  <version>3.0.3-SNAPSHOT</version>
-  <name>sequencing</name>
+  <artifactId>biojava3-sequencing</artifactId>
+  <name>biojava3-sequencing</name>
   <distributionManagement>
     <downloadUrl>http://www.biojava.org/download/maven/</downloadUrl>
     <repository>
