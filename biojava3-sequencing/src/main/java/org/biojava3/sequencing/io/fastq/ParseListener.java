@@ -33,7 +33,7 @@ public interface ParseListener
      * Notify this parse listener of a description line.
      *
      * @param description description line
-     * @param IOException if an I/O error occurs
+     * @throws IOException if an I/O error occurs
      */
     void description(String description) throws IOException;
 
@@ -47,7 +47,7 @@ public interface ParseListener
      * </p>
      *
      * @param sequence sequence line
-     * @param IOException if an I/O error occurs
+     * @throws IOException if an I/O error occurs
      */
     void sequence(String sequence) throws IOException;
 
@@ -60,7 +60,7 @@ public interface ParseListener
      * </p>
      *
      * @param sequence additional sequence line
-     * @param IOException if an I/O error occurs
+     * @throws IOException if an I/O error occurs
      */
     void appendSequence(String sequence) throws IOException;
 
@@ -68,7 +68,7 @@ public interface ParseListener
      * Notify this parse listener of a repeat description line.
      *
      * @param repeatDescription repeat description line
-     * @param IOException if an I/O error occurs
+     * @throws IOException if an I/O error occurs
      */
     void repeatDescription(String repeatDescription) throws IOException;
 
@@ -82,7 +82,7 @@ public interface ParseListener
      * </p>
      *
      * @param quality quality line
-     * @param IOException if an I/O error occurs
+     * @throws IOException if an I/O error occurs
      */
     void quality(String quality) throws IOException;
 
@@ -95,14 +95,14 @@ public interface ParseListener
      * </p>
      *
      * @param quality additional quality line
-     * @param IOException if an I/O error occurs
+     * @throws IOException if an I/O error occurs
      */
     void appendQuality(String quality) throws IOException;
 
     /**
      * Notify this listener the FASTQ formatted sequence is complete.
      *
-     * @param IOException if an I/O error occurs
+     * @throws IOException if an I/O error occurs
      */
     void complete() throws IOException;
 }
