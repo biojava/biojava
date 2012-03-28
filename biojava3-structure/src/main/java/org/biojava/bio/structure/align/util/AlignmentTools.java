@@ -12,8 +12,12 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.Map.Entry;
 
+import org.biojava.bio.structure.Atom;
+import org.biojava.bio.structure.ResidueNumber;
 import org.biojava.bio.structure.StructureException;
 import org.biojava.bio.structure.align.model.AFPChain;
+import org.biojava.bio.structure.align.xml.AFPChainXMLParser;
+import org.biojava.bio.structure.jama.Matrix;
 
 /**
  * Some utility methods for analyzing and manipulating AFPChains.
@@ -413,4 +417,61 @@ public class AlignmentTools {
 			return true;
 		}
 	}
+
+	/**
+	 * Fundimentally, an alignment is just a list of aligned residues in each
+	 * protein. This method converts two lists of ResidueNumbers into an
+	 * AFPChain.
+	 * @param ca1 CA atoms of the first protein
+	 * @param ca2 CA atoms of the second protein
+	 * @param aligned1 A list of aligned residues from the first protein
+	 * @param aligned2 A list of aligned residues from the second protein.
+	 *  Must be the same length as aligned1.
+	 * @return An AFPChain representing the alignment. Many properties may be
+	 *  null or another default.
+	 * @throws IllegalArgumentException if aligned1 and aligned2 have different
+	 *  lengths
+	 */
+	public static AFPChain createAFPChain(Atom[] ca1, Atom[] ca2,
+			ResidueNumber[] aligned1, ResidueNumber[] aligned2 ) {
+		//input validation
+		int alnLen = aligned1.length;
+		if(alnLen != aligned2.length) {
+			throw new IllegalArgumentException("Alignment lengths are not equal");
+		}
+		
+		AFPChain a = new AFPChain();
+		a.setName1(ca1[0].getGroup().getChain().getParent().getName());
+		a.setName2(ca2[0].getGroup().getChain().getParent().getName());
+		
+		a.setBlockNum(1);
+		a.setCa1Length(ca1.length);
+		a.setCa2Length(ca2.length);
+		
+		a.setOptLength(alnLen);
+		a.setOptLen(new int[] {alnLen});
+		
+
+		Matrix[] ms = new Matrix[a.getBlockNum()];
+		a.setBlockRotationMatrix(ms);
+		Atom[] blockShiftVector = new Atom[a.getBlockNum()];
+		a.setBlockShiftVector(blockShiftVector);
+		// TODO run superimposer (not required for display)
+		// TODO more properties
+
+		
+		String[][][] pdbAln = new String[1][2][alnLen];
+		for(int i=0;i<alnLen;i++) {
+			pdbAln[0][0][i] = aligned1[i].getChainId()+":"+aligned1[i].toString();
+			pdbAln[0][1][i] = aligned2[i].getChainId()+":"+aligned2[i].toString();
+		}
+		
+		a.setPdbAln(pdbAln);
+		
+		// convert pdbAln to optAln, and fill in some other basic parameters
+		AFPChainXMLParser.rebuildAFPChain(a, ca1, ca2);
+
+		return a;
+	}
+
 }
