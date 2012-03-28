@@ -122,7 +122,7 @@ public class StructureSequenceMatcher {
 
 		assert(alignedSeq.getLength() == alignedStruct.getLength());
 		
-		System.out.println(pair.toString(80));
+//		System.out.println(pair.toString(80));
 //		System.out.format("%d/min{%d,%d}\n", pair.getNumIdenticals(),
 //				alignedSeq.getLength()-alignedSeq.getNumGaps(),
 //				alignedStruct.getLength()-alignedStruct.getNumGaps());
