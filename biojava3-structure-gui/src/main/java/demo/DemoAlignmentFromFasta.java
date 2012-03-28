@@ -4,17 +4,23 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
+
+import org.biojava.bio.structure.Atom;
 import org.biojava.bio.structure.ResidueNumber;
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureException;
+import org.biojava.bio.structure.StructureTools;
+import org.biojava.bio.structure.align.gui.StructureAlignmentDisplay;
+import org.biojava.bio.structure.align.model.AFPChain;
+import org.biojava.bio.structure.align.util.AlignmentTools;
 import org.biojava.bio.structure.align.util.AtomCache;
-import org.biojava.bio.structure.gui.BiojavaJmol;
 import org.biojava.bio.structure.io.FastaStructureParser;
+import org.biojava.bio.structure.io.StructureSequenceMatcher;
 import org.biojava3.core.sequence.ProteinSequence;
 import org.biojava3.core.sequence.compound.AminoAcidCompound;
 import org.biojava3.core.sequence.compound.AminoAcidCompoundSet;
+import org.biojava3.core.sequence.io.CasePreservingProteinSequenceCreator;
 import org.biojava3.core.sequence.io.GenericFastaHeaderParser;
-import org.biojava3.core.sequence.io.ProteinSequenceCreator;
 import org.biojava3.core.sequence.io.template.FastaHeaderParserInterface;
 import org.biojava3.core.sequence.io.template.SequenceCreatorInterface;
 
@@ -25,19 +31,22 @@ import org.biojava3.core.sequence.io.template.SequenceCreatorInterface;
  * @author Spencer Bliven
  *
  */
-public class DemoStructureFromFasta {
-	
-	@SuppressWarnings("unused")
-	public static void getStructureFromFasta() {
+public class DemoAlignmentFromFasta {
+
+	public static void getAlignmentFromFasta() {
 		
 		// Load a test sequence
 		// Normally this would come from a file, eg
 		// File fasta = new File("/path/to/file.fa");
 		String fastaStr =
-			"> 4HHB\n" +
-			"VLSPADKTNVKAAWGKVGAHAGEYGAEALERMFLSFPTTKTYFPHFDLSHGSAQVKGHGK\n" +
-			"KVADALTNAVAHVDDMPNALSALSDLHAHKLRVDPVNFKLLSHCLLVTLAAHLPAEFTPA\n" +
-			"VHASLDKFLASVSTVLTSKYR\n";
+			"> 1KQ1.A\n" +
+			"mianeniqdkalenfkanqtevtvfflngFQ.MKGVIEEYDK.....YVVSLNsqgkQHLIYKh......\n" +
+			".......................AISTYTVetegqastesee\n" +
+			"> 1C4Q.D\n" +
+			"............................tPDcVTGKVEYTKYndddtFTVKVG....DKELATnranlqs\n" +
+			"lllsaqitgmtvtiktnachnggGFSEVIFr...........\n";
+		
+		
 		InputStream fasta;
 		try {
 			fasta = new ByteArrayInputStream(fastaStr.getBytes("UTF-8"));
@@ -60,7 +69,7 @@ public class DemoStructureFromFasta {
 		// Create SequenceCreator. This converts a String to a ProteinSequence
 		AminoAcidCompoundSet aaSet = AminoAcidCompoundSet.getAminoAcidCompoundSet();
 		SequenceCreatorInterface<AminoAcidCompound> creator;
-		creator = new ProteinSequenceCreator(aaSet);
+		creator = new CasePreservingProteinSequenceCreator(aaSet);
 		
 		// parse file
 		FastaStructureParser parser = new FastaStructureParser(
@@ -75,63 +84,36 @@ public class DemoStructureFromFasta {
 			return;
 		}
 
-		// Get info from the parser
 		ResidueNumber[][] residues = parser.getResidues();
 		ProteinSequence[] sequences = parser.getSequences();
 		Structure[] structures = parser.getStructures();
-		String[] accessions = parser.getAccessions();
-
-		// Use it! For example:
-		// Display the structure, highlighting the sequence 
-		displayStructure( structures[0], residues[0]);
-	}
-
-
-	/**
-	 * Displays the given structure and highlights the given residues.
-	 *  
-	 * @param structure The structure to display
-	 * @param residues A list of residues to highlight
-	 */
-	private static void displayStructure(Structure structure,
-			ResidueNumber[] residues) {
-		//Display each structure
-		BiojavaJmol jmol = new BiojavaJmol();
-		jmol.setStructure(structure);
-
-		//Highlight non-null atoms
-		jmol.evalString("select *; spacefill off; wireframe off; color chain; backbone 0.4;  ");
-		String selectionCmd = buildJmolSelection(residues);
-		jmol.evalString(selectionCmd);
-		jmol.evalString("backbone 1.0; select none;");
-	}
-
-
-
-	/**
-	 * Converts an array of ResidueNumbers into a jMol selection.
-	 * 
-	 * <p>For example, "select 11^ :A.CA or 12^ :A.CA;" would select the
-	 * CA atoms of residues 11-12 on chain A.
-	 * @param residues Residues to include in the selection. Nulls are ignored.
-	 * @return
-	 */
-	private static String buildJmolSelection(ResidueNumber[] residues) {
-		StringBuilder cmd = new StringBuilder("select ");
-		for(ResidueNumber res : residues) {
-			if(res != null) {
-				cmd.append(String.format("%d^%s:%s.CA or ", res.getSeqNum(),
-						res.getInsCode()==null?" ":res.getInsCode(),
-								res.getChainId()));
-			}
+		
+		// Set lowercase residues to null too
+		for(int structNum = 0; structNum<sequences.length;structNum++) {
+			CasePreservingProteinSequenceCreator.setLowercaseToNull(
+					sequences[structNum],residues[structNum]);
 		}
-		cmd.append("none;");//easier than removing the railing 'or'
-		return cmd.toString();
-	}
 
+		// Remove alignment columns with a gap
+		residues = StructureSequenceMatcher.removeGaps(residues);
+
+		
+		// Create AFPChain from the alignment
+		Atom[] ca1 = StructureTools.getAtomCAArray(structures[0]);
+		Atom[] ca2 = StructureTools.getAtomCAArray(structures[1]);
+		AFPChain afp = AlignmentTools.createAFPChain(ca1, ca2, residues[0], residues[1]);
+		
+		
+		try {
+			StructureAlignmentDisplay.display(afp, ca1, ca2);
+		} catch (StructureException e) {
+			e.printStackTrace();
+			return;
+		}
+	}
 
 
 	public static void main(String[] args) {
-		getStructureFromFasta();
+		getAlignmentFromFasta();
 	}
 }
