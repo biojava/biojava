@@ -65,6 +65,22 @@ public class TestChemCompProvider extends TestCase {
 		String name1 = prov.getClass().getName();
 		String name2 = prov2.getClass().getName();
 		assertEquals("The ChemCompProvider got modified from " + name1 + " to " + name2, name1, name2);
+	
 		
+		params.setLoadChemCompInfo(false);
+		r.setFileParsingParameters(params);
+		
+		try {
+			r.getStructureById(pdbId);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			fail(e.getMessage());
+		}
+		
+		ChemCompProvider prov3 = ChemCompGroupFactory.getChemCompProvider();
+		String name3 = prov3.getClass().getName();
+		
+		assertEquals( "org.biojava.bio.structure.io.mmcif.ReducedChemCompProvider",name3);
 	}
 }
