@@ -185,14 +185,14 @@ public class PDBFileParser  {
 					"MOL_ID:", "MOLECULE:", "CHAIN:", "SYNONYM:",
 					"EC:", "FRAGMENT:", "ENGINEERED:", "MUTATION:",
 					"BIOLOGICAL_UNIT:", "OTHER_DETAILS:"
-			));
+					));
 
 
 	private static final List<String> ignoreCompndFieldValues = new ArrayList<String>(
 			Arrays.asList(
 					"HETEROGEN:","ENGINEEREED:","FRAGMENT,",
 					"MUTANT:","SYNTHETIC:"
-			));
+					));
 	// ENGINEEREED in pdb219d
 
 	private static final List<String> sourceFieldValues = new ArrayList<String>(
@@ -240,15 +240,15 @@ public class PDBFileParser  {
 
 	int atomCount;
 
-	
+
 
 	private int my_ATOM_CA_THRESHOLD ;
-	
-	
-	
-	
+
+
+
+
 	private int load_max_atoms;
-	
+
 	private boolean atomOverflow;
 
 	/** flag to tell parser to only read Calpha coordinates **/
@@ -284,10 +284,14 @@ public class PDBFileParser  {
 		atomCount = 0;
 		atomOverflow = false;
 		parseCAonly = false;
-		
-		setFileParsingParameters(params);
-		
-		
+
+		// this SHOULD not be done
+		// DONOT:setFileParsingParameters(params);
+		// set the correct max values for parsing...
+		load_max_atoms = params.getMaxAtoms();
+		my_ATOM_CA_THRESHOLD = params.getAtomCaThreshold();
+
+
 	}
 
 
@@ -756,7 +760,7 @@ public class PDBFileParser  {
 	 * 68 - 70        Residue name    resName       Residue name.
 	 */
 	private void pdb_SEQRES_Handler(String line)
-	throws PDBParseException {
+			throws PDBParseException {
 		//		System.out.println("PDBFileParser.pdb_SEQRES_Handler: BEGIN");
 		//		System.out.println(line);
 
@@ -1523,8 +1527,8 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 	 </pre>
 	 */
 	private void  pdb_ATOM_Handler(String line)
-	throws PDBParseException
-	{
+			throws PDBParseException
+			{
 		// build up chains first.
 		// headerOnly just goes down to chain resolution.
 
@@ -1681,8 +1685,8 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 			switchCAOnly();
 
 		}
-		
-		
+
+
 
 		if ( atomCount == load_max_atoms){
 			System.err.println("too many atoms (>"+load_max_atoms+"in this protein structure.");
@@ -1716,13 +1720,13 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 				return;
 			}
 		}
-		
+
 		if ( params.getAcceptedAtomNames() != null) {
-			
+
 			boolean found = false;
 			for (String ok : params.getAcceptedAtomNames()){
 				//System.out.println(ok + "< >" + fullname +"<");
-				
+
 				if ( ok.equals(fullname)) {
 					found = true;
 					break;
@@ -1812,10 +1816,10 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 		else {
 			current_group.addAtom(atom);
 		}
-		
-		
+
+
 		//System.out.println("current group: " + current_group);
-	}
+			}
 
 
 	private Group getCorrectAltLocGroup( Character altLoc,
@@ -1863,7 +1867,7 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 			return altLocG;	
 		}
 
-	//	System.out.println("new  group " + recordName + " " + aminoCode1 + " " +groupCode3);
+		//	System.out.println("new  group " + recordName + " " + aminoCode1 + " " +groupCode3);
 		Group altLocG = getNewGroup(recordName,aminoCode1,groupCode3);
 
 		try {
@@ -2369,7 +2373,7 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 
 
 	private BufferedReader getBufferedReader(InputStream inStream)
-	throws IOException {
+			throws IOException {
 
 		BufferedReader buf ;
 		if (inStream == null) {
@@ -2391,8 +2395,8 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 	 * @throws IOException
 	 */
 	public Structure parsePDBFile(InputStream inStream)
-	throws IOException
-	{
+			throws IOException
+			{
 
 		//System.out.println("preparing buffer");
 		BufferedReader buf ;
@@ -2407,7 +2411,7 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 
 		return parsePDBFile(buf);
 
-	}
+			}
 
 	/** parse a PDB file and return a datastructure implementing
 	 * PDBStructure interface.
@@ -2418,13 +2422,13 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 	 */
 
 	public  Structure parsePDBFile(BufferedReader buf)
-	throws IOException
-	{
+			throws IOException
+			{
 		// set the correct max values for parsing...
 		load_max_atoms = params.getMaxAtoms();
 		my_ATOM_CA_THRESHOLD = params.getAtomCaThreshold();
-		
-		
+
+
 		// (re)set structure
 
 		structure     = new StructureImpl() ;
@@ -2500,7 +2504,7 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 				} catch (StringIndexOutOfBoundsException e){
 
 					System.err.println("StringIndexOutOfBoundsException at line >" + line + "<" + NEWLINE +
-					"this does not look like an expected PDB file") ;
+							"this does not look like an expected PDB file") ;
 					e.printStackTrace();
 					throw new StringIndexOutOfBoundsException(e.getMessage());
 
@@ -2576,7 +2580,7 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 
 		return structure;
 
-	}
+			}
 
 	/**
 	 * This is the new method for building the COMPND and SOURCE records. Now each method is self-contained.
@@ -2684,10 +2688,10 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 
 	private void storeUnAlignedSeqRes(Structure structure, List<Chain> seqResChains) {
 		SeqRes2AtomAligner aligner = new SeqRes2AtomAligner();
-		
+
 		for (int i = 0; i < structure.nrModels(); i++) {
 			List<Chain> atomList   = structure.getModel(i);
-			
+
 			for (Chain seqRes: seqResChains){
 				Chain atomRes;
 				try {
@@ -2958,7 +2962,7 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 			if (subField.equals("TITL")) {
 				//add a space to the end of a line so that when wrapped the
 				//words on the join won't be concatenated
-                titl.append(line.substring(19, line.length()).trim()).append(" ");
+				titl.append(line.substring(19, line.length()).trim()).append(" ");
 				if (DEBUG) {
 					System.out.println("TITL '" + titl.toString() + "'");
 				}
@@ -2971,13 +2975,13 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 			}
 			//        JRNL        REF    NAT.IMMUNOL.                  V.   8   430 2007
 			if (subField.equals("REF ")) {
-                ref.append(line.substring(19, line.length()).trim()).append(" ");
+				ref.append(line.substring(19, line.length()).trim()).append(" ");
 				if (DEBUG) {
 					System.out.println("REF '" + ref.toString() + "'");
 				}
 			}
 			if (subField.equals("PUBL")) {
-                publ.append(line.substring(19, line.length()).trim()).append(" ");
+				publ.append(line.substring(19, line.length()).trim()).append(" ");
 				if (DEBUG) {
 					System.out.println("PUBL '" + publ.toString() + "'");
 				}
@@ -3249,7 +3253,7 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 	public void setFileParsingParameters(FileParsingParameters params)
 	{
 		this.params= params;
-		
+
 		// set the correct max values for parsing...
 		load_max_atoms = params.getMaxAtoms();
 		my_ATOM_CA_THRESHOLD = params.getAtomCaThreshold();
