@@ -325,7 +325,7 @@ public class PeptideProperties {
 	}
 	
 	public static final double getNetCharge(String sequence){
-		return getIsoelectricPoint(sequence, true);
+		return getNetCharge(sequence, true);
 	}
 
 	/**

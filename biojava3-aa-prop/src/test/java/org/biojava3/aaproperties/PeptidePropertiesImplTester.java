@@ -293,7 +293,7 @@ public class PeptidePropertiesImplTester {
 		 * Test for Innovagen
 		 */
 		//http://www.innovagen.se/custom-peptide-synthesis/peptide-property-calculator/peptide-property-calculator.asp
-		assertEquals(2.0, Utils.roundToDecimals(PeptideProperties.getNetCharge(sequence, false), 1));
+		assertEquals(2.9, Utils.roundToDecimals(PeptideProperties.getNetCharge(sequence, false), 1));
 		assertEquals(0.0, Utils.roundToDecimals(PeptideProperties.getNetCharge(fullInvalidSequence, false), 1));
 		
 		assertEquals(-3.2, Utils.roundToDecimals(PeptideProperties.getNetCharge("ACCACAAADADADACA", false), 1));
