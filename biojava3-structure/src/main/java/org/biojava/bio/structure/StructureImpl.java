@@ -62,6 +62,7 @@ public class StructureImpl implements Structure, Serializable {
 	String name ;
     private JournalArticle journalArticle;
 	private PDBHeader pdbHeader;
+	private PDBCrystallographicInfo crystallographicInfo;
 	boolean nmrflag ;
 	private Long id;
 	private boolean biologicalAssembly;
@@ -727,6 +728,25 @@ public class StructureImpl implements Structure, Serializable {
      */
     public boolean isBiologicalAssembly() {
     	return biologicalAssembly;
+    }
+    
+    /**
+     * Sets crystallographic information for this structure
+     * @param PDBCrystallographicInfo crystallographic information
+     * @since 3.2
+     */
+    
+    public void setCrystallographicInfo(PDBCrystallographicInfo crystallographicInfo) {
+    	this.crystallographicInfo = crystallographicInfo;
+    }
+    
+    /**
+     * Gets crystallographic information for this structure
+     * @return PDBCrystallographicInfo crystallographic information
+     * @since 3.2
+     */
+    public PDBCrystallographicInfo getCrystallographicInfo() {
+    	return crystallographicInfo;
     }
 
 }
