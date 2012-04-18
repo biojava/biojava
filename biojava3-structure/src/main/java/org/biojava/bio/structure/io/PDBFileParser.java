@@ -58,6 +58,7 @@ import org.biojava.bio.structure.Compound;
 import org.biojava.bio.structure.GroupType;
 import org.biojava.bio.structure.JournalArticle;
 import org.biojava.bio.structure.NucleotideImpl;
+import org.biojava.bio.structure.PDBCrystallographicInfo;
 import org.biojava.bio.structure.PDBHeader;
 import org.biojava.bio.structure.ResidueNumber;
 import org.biojava.bio.structure.SSBond;
@@ -151,8 +152,10 @@ public class PDBFileParser  {
 	// for printing
 	private static final String NEWLINE;
 
+	@Deprecated
 	private Map <String,Object>  header ;
 	private PDBHeader pdbHeader;
+	private PDBCrystallographicInfo crystallographicInfo;
 	private JournalArticle journalArticle;
 	private List<Map<String, Integer>> connects ;
 	private List<Map<String,String>> helixList;
@@ -271,6 +274,7 @@ public class PDBFileParser  {
 		current_group = null           ;
 		header        = init_header() ;
 		pdbHeader 	  = new PDBHeader();
+		crystallographicInfo = new PDBCrystallographicInfo();
 		connects      = new ArrayList<Map<String,Integer>>() ;
 
 
@@ -1466,6 +1470,75 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 		if ( nmr != -1 ) structure.setNmr(true);  ;
 
 	}
+	
+	/** Handler for
+	 CRYST1 Record Format
+	 The CRYST1 record presents the unit cell parameters, space group, and Z value.
+	 If the entry describes a structure determined by a technique other than X-ray crystallography,
+     CRYST1 contains a = b = c = 1.0, alpha = beta = gamma = 90 degrees, space group = P 1, and Z =1.
+
+	 COLUMNS DATA TYPE    FIELD          DEFINITION
+     -------------------------------------------------------------
+      1 - 6  Record name  "CRYST1"
+      7 - 15 Real(9.3)    a              a (Angstroms).
+     16 - 24 Real(9.3)    b              b (Angstroms).
+     25 - 33 Real(9.3)    c              c (Angstroms).
+     34 - 40 Real(7.2)    alpha          alpha (degrees).
+     41 - 47 Real(7.2)    beta           beta (degrees).
+     48 - 54 Real(7.2)    gamma          gamma (degrees).
+     56 - 66 LString      sGroup         Space group.
+     67 - 70 Integer      z              Z value.
+
+	 */
+
+	private void pdb_CRYST1_Handler(String line) {    
+        // don't process incomplete CRYST1 records
+		if (line.length() < 69) {
+			return;
+		}
+		
+		float a;
+		float b;
+		float c;
+		float alpha;
+		float beta;
+		float gamma;
+		String spaceGroup = "";
+		int z;
+
+		try {
+			a = Float.parseFloat(line.substring(6,15).trim());
+			b = Float.parseFloat(line.substring(15,24).trim());
+			c = Float.parseFloat(line.substring(24,33).trim());
+			alpha = Float.parseFloat(line.substring(33,40).trim());
+			beta = Float.parseFloat(line.substring(40,47).trim());
+			gamma = Float.parseFloat(line.substring(47,54).trim());
+			z = Integer.parseInt(line.substring(66,70).trim());
+		} catch (NumberFormatException e) {
+			logger.fine(e.getMessage());
+			logger.fine("could not parse CRYST1 record from line and ignoring it " + line);
+			return ;
+		}
+		spaceGroup = line.substring(55,66).trim();
+		
+		// If the entry describes a structure determined by a technique other than X-ray crystallography,
+	    // CRYST1 contains a = b = c = 1.0, alpha = beta = gamma = 90 degrees, space group = P 1, and Z =1.
+		// In this case, ignore the record
+        if (a == 1.0f && b == 1.0f && c == 1.0f && 
+        		alpha == 90.0f && beta == 90.0f && gamma == 90.0f && 
+        		spaceGroup.equals("P 1") && z == 1) {
+        	return;
+        } 
+      
+        crystallographicInfo.setA(a);
+        crystallographicInfo.setB(b);
+        crystallographicInfo.setC(c);
+        crystallographicInfo.setAlpha(alpha);
+        crystallographicInfo.setBeta(beta);
+        crystallographicInfo.setGamma(gamma);
+        crystallographicInfo.setSpaceGroup(spaceGroup);
+        crystallographicInfo.setZ(z);
+	}
 
 	/**
 	 * Decides whether or not a Group is qualified to be added to the
@@ -2535,6 +2608,8 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 						pdb_JRNL_Handler(line);
 					else if (recordName.equals("EXPDTA"))
 						pdb_EXPDTA_Handler(line);
+					else if (recordName.equals("CRYST1"))
+						pdb_CRYST1_Handler(line);
 					else if (recordName.equals("REMARK"))
 						pdb_REMARK_Handler(line);
 					else if (recordName.equals("CONECT"))
@@ -2659,6 +2734,7 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 		structure.addModel(current_model);
 		structure.setHeader(header);
 		structure.setPDBHeader(pdbHeader);
+		structure.setCrystallographicInfo(crystallographicInfo);
 		structure.setConnections(connects);
 		structure.setCompounds(compounds);
 		structure.setDBRefs(dbrefs);
