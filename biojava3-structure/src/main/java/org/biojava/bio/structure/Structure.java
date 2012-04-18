@@ -215,6 +215,7 @@ public interface Structure extends Cloneable{
      *
      * @param h  a Map object specifying the header
      * @see #getHeader
+     * @deprecated
      */
     public void setHeader(Map<String,Object> h) ;
 
@@ -596,4 +597,18 @@ public interface Structure extends Cloneable{
      */
     public boolean isBiologicalAssembly();
 
+    /**
+     * Sets crystallographic information for this structure
+     * @param PDBCrystallographicInfo crystallographic information
+     * @since 3.2
+     */
+    
+    public void setCrystallographicInfo(PDBCrystallographicInfo crystallographicInfo);
+    /**
+     * Gets crystallographic information for this structure
+     * @return PDBCrystallographicInfo crystallographic information
+     * @since 3.2
+     */
+    public PDBCrystallographicInfo getCrystallographicInfo();
+    
 }
