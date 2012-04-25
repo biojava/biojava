@@ -80,7 +80,7 @@ public class AtomCache {
 
 	private  ScopDatabase scopInstallation ;
 	
-	RemotePDPProvider pdpprovider;
+	protected RemotePDPProvider pdpprovider;
 	
 	boolean autoFetch;
 	boolean isSplit;
@@ -93,6 +93,8 @@ public class AtomCache {
 
 	public static final String PDP_DOMAIN_IDENTIFIER = "PDP:";
 
+
+	
 	/**
 	 * Default AtomCache constructor.
 	 * 
@@ -885,6 +887,8 @@ public class AtomCache {
 	}
 
 
+	
+	
 
 
 }
