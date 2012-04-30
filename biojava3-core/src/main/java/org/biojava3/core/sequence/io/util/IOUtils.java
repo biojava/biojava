@@ -326,7 +326,7 @@ public class IOUtils {
       s.append("</pre></div>");
       s.append("          <div class=\"subText\">");
       s.append("          <b>Legend:</b>");
-      s.append("          <span class=\"m\">Black</span> - identical residues |"); 
+      s.append("          <span class=\"m\">Green</span> - identical residues |"); 
       s.append("          <span class=\"sm\">Pink</span> - similar residues | ");
       s.append("          <span class=\"qg\">Blue</span> - sequence mismatch |");
       s.append("          <span class=\"dm\">Brown</span> - insertion/deletion |");                  
