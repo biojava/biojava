@@ -22,6 +22,8 @@
 
 package org.biojava.bio.structure.io.mmcif.model;
 
+import java.io.Serializable;
+
 
 /** Container object for _pdbx_chem_comp_descriptor
  * 
@@ -29,7 +31,11 @@ package org.biojava.bio.structure.io.mmcif.model;
  * @since 3.2
  *
  */
-public class ChemCompDescriptor {
+public class ChemCompDescriptor implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1078685833800736278L;
 	String comp_id; 
 	String type; 
 	String program;
