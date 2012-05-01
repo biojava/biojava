@@ -48,7 +48,7 @@ import org.biojava.bio.structure.scop.server.XMLUtil;
  * @author Andreas Prlic
  *
  */
-public class RemotePDPProvider extends SerializableCache<String,SortedSet<String>> {
+public class RemotePDPProvider extends SerializableCache<String,SortedSet<String>>  implements PDPProvider{
 
 	public static final String DEFAULT_SERVER = "http://source.rcsb.org/jfatcatserver/domains/";
 
@@ -134,9 +134,6 @@ public class RemotePDPProvider extends SerializableCache<String,SortedSet<String
 		}
 		return ;
 
-
-
-
 	}
 
 
@@ -148,12 +145,12 @@ public class RemotePDPProvider extends SerializableCache<String,SortedSet<String
 		this.server = server;
 	}
 
-	public Structure getDomain(String pdbDomainName, AtomCache cache){
+	public Structure getDomain(String pdpDomainName, AtomCache cache){
 
 		SortedSet<String> domainRanges = null;
 		if ( serializedCache != null){
-			if ( serializedCache.containsKey(pdbDomainName)){
-				domainRanges= serializedCache.get(pdbDomainName);
+			if ( serializedCache.containsKey(pdpDomainName)){
+				domainRanges= serializedCache.get(pdpDomainName);
 
 			}
 		}
@@ -168,14 +165,14 @@ public class RemotePDPProvider extends SerializableCache<String,SortedSet<String
 			boolean shouldRequestDomainRanges = checkDomainRanges(domainRanges);
 			
 			if (shouldRequestDomainRanges){
-				URL u = new URL(server + "getPDPDomain?pdpId="+pdbDomainName);
+				URL u = new URL(server + "getPDPDomain?pdpId="+pdpDomainName);
 				System.out.println(u);
 				InputStream response = HTTPConnectionTools.getInputStream(u);
 				String xml = JFatCatClient.convertStreamToString(response);
 				//System.out.println(xml);
 				domainRanges = XMLUtil.getDomainRangesFromXML(xml);
 				if ( domainRanges != null)
-					cache(pdbDomainName,domainRanges);
+					cache(pdpDomainName,domainRanges);
 			}
 
 			
@@ -200,12 +197,13 @@ public class RemotePDPProvider extends SerializableCache<String,SortedSet<String
 
 			String ranges = r.toString();
 
-			StructureName sname = new  StructureName(pdbDomainName);
+			StructureName sname = new  StructureName(pdpDomainName);
 			Structure tmp = cache.getStructure(sname.getPdbId());
+			//System.out.println(ranges);
 			s = StructureTools.getSubRanges(tmp, ranges);
 
 
-			s.setName(pdbDomainName);
+			s.setName(pdpDomainName);
 
 		} catch (Exception e){
 			e.printStackTrace();

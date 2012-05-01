@@ -24,7 +24,7 @@ public class RemoteDomainProvider extends SerializableCache<String,SortedSet<Str
 	public String url = RemotePDPProvider.DEFAULT_SERVER;
 
 	ScopDatabase scop;
-	RemotePDPProvider pdp;
+	PDPProvider pdp;
 
 	private static String CACHE_FILE_NAME = "remotedomaincache.ser";
 
@@ -55,8 +55,7 @@ public class RemoteDomainProvider extends SerializableCache<String,SortedSet<Str
 
 		
 	}
-
-
+	
 	/** Requests the domain assignments for the current PDB IDs from the PDB.
 	 * 
 	 */
@@ -179,7 +178,10 @@ public class RemoteDomainProvider extends SerializableCache<String,SortedSet<Str
 	@Override
 	public void flushCache() {
 		super.flushCache();
-		pdp.flushCache();
+		if ( pdp instanceof RemotePDPProvider){
+			RemotePDPProvider remotePDP = (RemotePDPProvider)pdp;
+			remotePDP.flushCache();
+		}
 	}
 	
 	
