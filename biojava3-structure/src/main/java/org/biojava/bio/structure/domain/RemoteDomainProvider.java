@@ -17,6 +17,7 @@ import org.biojava.bio.structure.align.util.HTTPConnectionTools;
 import org.biojava.bio.structure.scop.ScopDatabase;
 import org.biojava.bio.structure.scop.ScopDomain;
 import org.biojava.bio.structure.scop.ScopFactory;
+import org.biojava.bio.structure.scop.server.XMLUtil;
 
 
 public class RemoteDomainProvider extends SerializableCache<String,SortedSet<String>> implements DomainProvider{
@@ -28,7 +29,7 @@ public class RemoteDomainProvider extends SerializableCache<String,SortedSet<Str
 
 	private static String CACHE_FILE_NAME = "remotedomaincache.ser";
 
-	
+
 	public RemoteDomainProvider(){
 		this(false);
 	}
@@ -39,23 +40,23 @@ public class RemoteDomainProvider extends SerializableCache<String,SortedSet<Str
 	 */
 	public RemoteDomainProvider(boolean cache){
 		super(CACHE_FILE_NAME);
-		
+
 		if( ! cache) {
 			disableCache();
-		//} else if ( serializedCache.keySet().size() < 20000){
+			//} else if ( serializedCache.keySet().size() < 20000){
 		} else {
 			// always load the representaitve assignments from server...
 			// this makes sure we always have the latest assignments
 			loadRepresentativeDomainAssignments();
-			
+
 		}
-		
+
 		scop = ScopFactory.getSCOP();
 		pdp = new RemotePDPProvider(true);
 
-		
+
 	}
-	
+
 	/** Requests the domain assignments for the current PDB IDs from the PDB.
 	 * 
 	 */
@@ -73,24 +74,24 @@ public class RemoteDomainProvider extends SerializableCache<String,SortedSet<Str
 			System.out.println("got " + data.size() + " ranges from server.");
 			for (String key: data.keySet()){
 				String range = data.get(key);
-				
+
 				// work around list in results;
-				
+
 				String[] spl = range.split(",");
 				SortedSet<String> value = new TreeSet<String>();
-				
+
 				for (String s : spl){
 					value.add(s);
-					
+
 				}
 				serializedCache.put(key, value);
 			}
-			
+
 		} catch (Exception e){
 			e.printStackTrace();
 		}
 		return ;
-		
+
 	}
 
 	@Override
@@ -137,7 +138,7 @@ public class RemoteDomainProvider extends SerializableCache<String,SortedSet<Str
 
 	}
 
-	
+
 
 
 	private SortedSet<String> getPDPDomains(StructureName n) {
@@ -159,7 +160,7 @@ public class RemoteDomainProvider extends SerializableCache<String,SortedSet<Str
 
 	public static void main(String[] args){
 		System.setProperty(AbstractUserArgumentProcessor.PDB_DIR,"/Users/ap3/WORK/PDB");
-		
+
 		String name ="3KIH.A";
 		try {
 			RemoteDomainProvider me = new RemoteDomainProvider(true);
@@ -183,8 +184,26 @@ public class RemoteDomainProvider extends SerializableCache<String,SortedSet<Str
 			remotePDP.flushCache();
 		}
 	}
-	
-	
+
+	@Override
+	public SortedSet<String> getRepresentativeDomains() {
+
+		String url = "http://source.rcsb.org/jfatcatserver/domains/getRepresentativeDomainNames";
+		SortedSet<String> domainRanges = null;
+		try {
+			URL u = new URL(url);
+
+			InputStream response = HTTPConnectionTools.getInputStream(u);
+			String xml = JFatCatClient.convertStreamToString(response);
+			//System.out.println(xml);
+			domainRanges = XMLUtil.getDomainRangesFromXML(xml);
+		} catch (Exception e){
+			e.printStackTrace();
+		}
+		return domainRanges;
+	}
+
+
 
 
 }
