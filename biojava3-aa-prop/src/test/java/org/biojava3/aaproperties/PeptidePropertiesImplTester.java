@@ -259,7 +259,6 @@ public class PeptidePropertiesImplTester {
 		/*
 		 * Test for Expasy
 		 */
-		
 		assertEquals(3.42, Utils.roundToDecimals(PeptideProperties.getIsoelectricPoint("ACCACAAADADADACA"), 2));
 		assertEquals(3.42, Utils.roundToDecimals(PeptideProperties.getIsoelectricPoint("ACCACAAADADADACM"), 2));
 //		
@@ -271,7 +270,6 @@ public class PeptidePropertiesImplTester {
 		//3.32 at Expasy
 		assertEquals(3.32, Utils.roundToDecimals(PeptideProperties.getIsoelectricPoint("DCCACAAADADADACS", true), 2));
 		
-		//Gives me shit when ends with D or E
 		assertEquals(3.17, Utils.roundToDecimals(PeptideProperties.getIsoelectricPoint("DCCACAAADADADACDAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD", true), 2));
 		assertEquals(3.37, Utils.roundToDecimals(PeptideProperties.getIsoelectricPoint("ACCACAAADADADACE", true), 2));
 		assertEquals(3.32, Utils.roundToDecimals(PeptideProperties.getIsoelectricPoint("ACCACAAADADADACAAAAAAAAAAAAAAD", true), 2));
@@ -297,6 +295,11 @@ public class PeptidePropertiesImplTester {
 		assertEquals(0.0, Utils.roundToDecimals(PeptideProperties.getNetCharge(fullInvalidSequence, false), 1));
 		
 		assertEquals(-3.2, Utils.roundToDecimals(PeptideProperties.getNetCharge("ACCACAAADADADACA", false), 1));
+		/*
+		 * Did not test for Expasy because in their website, net charge is not given.
+		 * However, since Isoelectric point is given which rely on getNetCharge values therefore, 
+		 * 	we infer that if getIsoelectricPoint is correct, getNetCharge would be correct for Expasy.
+		 */
 	}
 	
 	@Test (expected = NullPointerException.class)

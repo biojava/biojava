@@ -376,14 +376,19 @@ public class PeptidePropertiesImpl implements IPeptideProperties{
 	
 	@Override
 	public double getNetCharge(ProteinSequence sequence, boolean useExpasyValues){
+		return getNetCharge(sequence, true, 7.0);
+	}
+	
+	@Override
+	public double getNetCharge(ProteinSequence sequence, boolean useExpasyValues, double pHPoint){
 		if(useExpasyValues){
-			return getNetChargeExpasy(sequence.toString().toUpperCase());
+			return getNetChargeExpasy(sequence.toString().toUpperCase(), pHPoint);
 		}else{
-			return getNetChargeInnovagen(sequence);
+			return getNetChargeInnovagen(sequence, pHPoint);
 		}
 	}
 	
-	private double getNetChargeExpasy(String sequence){
+	private double getNetChargeExpasy(String sequence, double pHPoint){
 		//
 		// Compute the amino-acid composition.
 		//
@@ -407,32 +412,32 @@ public class PeptidePropertiesImpl implements IPeptideProperties{
 //		while((cTermResidue < 0 || cTermResidue >= 26) && index < 25){
 //			cTermResidue = sequence.charAt(sequence.length() - index++) - 'A';
 //		}
-		return getNetChargeExpasy(comp, nTermResidue, cTermResidue, 7.0);
+		return getNetChargeExpasy(comp, nTermResidue, cTermResidue, pHPoint);
 	}
 	
-	private double getNetChargeExpasy(int comp[], int nTermResidue, int cTermResidue, double phMid){
+	private double getNetChargeExpasy(int comp[], int nTermResidue, int cTermResidue, double ph){
 		double cter = 0.0; 
-		if(cTermResidue >= 0 && cTermResidue < 26) cter = exp10(-cPk[cTermResidue][0]) / (exp10(-cPk[cTermResidue][0]) + exp10(-phMid));
+		if(cTermResidue >= 0 && cTermResidue < 26) cter = exp10(-cPk[cTermResidue][0]) / (exp10(-cPk[cTermResidue][0]) + exp10(-ph));
 		double nter = 0.0; 
-		if(nTermResidue >= 0 && nTermResidue < 26) nter = exp10(-phMid) / (exp10(-cPk[nTermResidue][1]) + exp10(-phMid));
+		if(nTermResidue >= 0 && nTermResidue < 26) nter = exp10(-ph) / (exp10(-cPk[nTermResidue][1]) + exp10(-ph));
 
-		double carg = comp['R' - 'A'] * exp10(-phMid) / (exp10(-cPk['R' - 'A'][2]) + exp10(-phMid)); 
-		double chis = comp['H' - 'A'] * exp10(-phMid) / (exp10(-cPk['H' - 'A'][2]) + exp10(-phMid));
-		double clys = comp['K' - 'A'] * exp10(-phMid) / (exp10(-cPk['K' - 'A'][2]) + exp10(-phMid));
+		double carg = comp['R' - 'A'] * exp10(-ph) / (exp10(-cPk['R' - 'A'][2]) + exp10(-ph)); 
+		double chis = comp['H' - 'A'] * exp10(-ph) / (exp10(-cPk['H' - 'A'][2]) + exp10(-ph));
+		double clys = comp['K' - 'A'] * exp10(-ph) / (exp10(-cPk['K' - 'A'][2]) + exp10(-ph));
 
-		double casp = comp['D' - 'A'] * exp10(-cPk['D' - 'A'][2]) / (exp10(-cPk['D' - 'A'][2]) + exp10(-phMid));
-		double cglu = comp['E' - 'A'] * exp10(-cPk['E' - 'A'][2]) / (exp10(-cPk['E' - 'A'][2]) + exp10(-phMid));
+		double casp = comp['D' - 'A'] * exp10(-cPk['D' - 'A'][2]) / (exp10(-cPk['D' - 'A'][2]) + exp10(-ph));
+		double cglu = comp['E' - 'A'] * exp10(-cPk['E' - 'A'][2]) / (exp10(-cPk['E' - 'A'][2]) + exp10(-ph));
 
-		double ccys = comp['C' - 'A'] * exp10(-cPk['C' - 'A'][2]) / (exp10(-cPk['C' - 'A'][2]) + exp10(-phMid));
-		double ctyr = comp['Y' - 'A'] * exp10(-cPk['Y' - 'A'][2]) / (exp10(-cPk['Y' - 'A'][2]) + exp10(-phMid));
+		double ccys = comp['C' - 'A'] * exp10(-cPk['C' - 'A'][2]) / (exp10(-cPk['C' - 'A'][2]) + exp10(-ph));
+		double ctyr = comp['Y' - 'A'] * exp10(-cPk['Y' - 'A'][2]) / (exp10(-cPk['Y' - 'A'][2]) + exp10(-ph));
 
 		return (carg + clys + chis + nter) - (casp + cglu + ctyr + ccys + cter);
 	}
 	
-	private double getNetChargeInnovagen(ProteinSequence sequence) {
+	private double getNetChargeInnovagen(ProteinSequence sequence, double pHPoint) {
 		Map<AminoAcidCompound, Integer> chargedAA2Count = this.getChargedAACount(sequence);
 		String sequenceString = sequence.getSequenceAsString();
-		return getNetCharge(chargedAA2Count, 7.0, sequenceString.charAt(0), sequenceString.charAt(sequenceString.length() - 1));
+		return getNetCharge(chargedAA2Count, pHPoint, sequenceString.charAt(0), sequenceString.charAt(sequenceString.length() - 1));
 	}
 	
 	private double getNetCharge(Map<AminoAcidCompound, Integer> chargedAA2Count, double ph, char nTerminalChar, char cTerminalChar){
