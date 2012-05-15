@@ -161,7 +161,7 @@ public final class ModelLoader {
 
 	for (int i = 0; i < 10; i++) {
 	    final BufferedReader bfr = new BufferedReader(
-		    new InputStreamReader(ClassLoader.getSystemResourceAsStream(
+		    new InputStreamReader(ModelLoader.class.getResourceAsStream(
 			    "model" + i + ".rec"),
 			    "ISO-8859-1"));
 	    String line = null;
