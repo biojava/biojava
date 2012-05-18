@@ -30,6 +30,8 @@ import java.util.List;
 import junit.framework.TestCase;
 
 import org.biojava.bio.structure.align.util.AtomCache;
+import org.biojava.bio.structure.io.FileParsingParameters;
+import org.biojava.bio.structure.io.PDBFileReader;
 
 /** This class tests the correct loading of Nucleotides
  * 
@@ -78,14 +80,48 @@ public class TestNucleotides extends TestCase{
 		assertEquals("A", a.getChainID());
 		List<Group> ngrA = a.getAtomGroups("nucleotide");
 		assertEquals(10,ngrA.size());
-		
+
 		Chain b = s.getChains().get(1);
 		assertEquals("B", b.getChainID());
 		List<Group> ngrB = b.getAtomGroups("nucleotide");
 		assertEquals(10,ngrB.size());
 	}
 
-private Structure getStructure(String pdbId) throws IOException, StructureException {
-	return cache.getStructure(pdbId);
-}
+	private Structure getStructure(String pdbId) throws IOException, StructureException {
+		return cache.getStructure(pdbId);
+	}
+
+	public void test1REP(){
+		PDBFileReader reader = new PDBFileReader();
+		reader.setAutoFetch(true);
+		FileParsingParameters params = new FileParsingParameters();
+		params.setParseSecStruc(true);
+		params.setAlignSeqRes(true);
+		params.setParseCAOnly(false);
+		params.setLoadChemCompInfo(true);
+		reader.setFileParsingParameters(params);
+		
+		
+		try {
+			Structure s = reader.getStructureById("1REP");
+			//System.out.println(s);
+			
+			Chain b = s.getChainByPDB("B");
+			
+			assertEquals(22,b.getSeqResGroups().size());
+			assertEquals(23,b.getAtomGroups().size());
+			
+			Group n1 = b.getSeqResGroup(0);
+			Group n2 = b.getAtomGroup(0);
+			//System.out.println(n1);
+			//System.out.println(n2);
+			
+			assertNotNull(n1.getPDBName());
+			assertNotNull(n1.getResidueNumber());
+			assert(n1.getResidueNumber().equals(n2.getResidueNumber()));
+			
+		} catch (Exception e){
+			e.printStackTrace();
+		}
+	}
 }
