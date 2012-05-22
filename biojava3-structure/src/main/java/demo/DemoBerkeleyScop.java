@@ -4,9 +4,10 @@ import org.biojava.bio.structure.scop.BerkeleyScopInstallation;
 import org.biojava.bio.structure.scop.ScopDatabase;
 import org.biojava.bio.structure.scop.ScopFactory;
 
-/** A demo for how to use the Berkeley version of SCOP instead of the defaul UK-SCOP
+/** A demo for how to use the Berkeley version of SCOP instead of the default UK-SCOP
  * 
  * @author andreas
+ * @since 3.0.4
  *
  */
 public class DemoBerkeleyScop {
