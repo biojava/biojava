@@ -35,11 +35,16 @@ import org.biojava.bio.structure.align.StructureAlignmentFactory;
 import org.biojava.bio.structure.align.ce.CeMain;
 
 import org.biojava.bio.structure.align.model.AFPChain;
+import org.biojava.bio.structure.align.model.AfpChainWriter;
+import org.biojava.bio.structure.align.util.AFPChainScorer;
 import org.biojava.bio.structure.align.util.AtomCache;
 import org.biojava.bio.structure.io.FileParsingParameters;
+import org.biojava.bio.structure.scop.RemoteScopInstallation;
 import org.biojava.bio.structure.scop.ScopCategory;
+import org.biojava.bio.structure.scop.ScopDatabase;
 import org.biojava.bio.structure.scop.ScopDescription;
 import org.biojava.bio.structure.scop.ScopDomain;
+import org.biojava.bio.structure.scop.ScopFactory;
 import org.biojava.bio.structure.scop.ScopInstallation;
 import org.biojava.bio.structure.scop.ScopNode;
 
@@ -53,6 +58,16 @@ public class DemoSCOP
    public static void main(String[] args){
 
      DemoSCOP demo = new DemoSCOP();
+     
+     
+     // this creates a local copy of SCOP
+     ScopDatabase scop = new ScopInstallation();
+     
+     // an alternative would be this one, which fetches data dynamically
+     //ScopDatabase scop = new RemoteScopInstallation();
+     
+     ScopFactory.setScopDatabase(scop);
+     
      demo.getCategories();
      demo.printDomainsForPDB();
      demo.traverseHierarchy();
@@ -62,11 +77,11 @@ public class DemoSCOP
    /** Traverse throught the SCOP hierarchy
     * 
     */
-   private void traverseHierarchy()
+   public void traverseHierarchy()
    {
       String pdbId = "4HHB";
       // download SCOP if required and load into memory
-      ScopInstallation scop = new ScopInstallation();
+      ScopDatabase scop = ScopFactory.getSCOP();
       
       List<ScopDomain> domains = scop.getDomainsForPDB(pdbId);
       
@@ -88,7 +103,7 @@ public class DemoSCOP
     */
    public void getCategories(){      
       // download SCOP if required and load into memory
-      ScopInstallation scop = new ScopInstallation();
+	   ScopDatabase scop = ScopFactory.getSCOP();
       List<ScopDescription> superfams = scop.getByCategory(ScopCategory.Superfamily);
 
       System.out.println("Total nr. of superfamilies:" + superfams.size());
@@ -100,7 +115,7 @@ public class DemoSCOP
 
    public void alignSuperfamily(){     
       // download SCOP if required and load into memory
-      ScopInstallation scop = new ScopInstallation();
+	   ScopDatabase scop = ScopFactory.getSCOP();
       List<ScopDescription> superfams = scop.getByCategory(ScopCategory.Superfamily);
 
       System.out.println("Total nr. of superfamilies:" + superfams.size());
@@ -144,6 +159,9 @@ public class DemoSCOP
             //StructureAlignmentDisplay.display(afpChain, ca1, ca2);
             
             System.out.println(dom1.getScopId() + " vs. " + dom2.getScopId()+ " :" + afpChain.getProbability());
+            double tmScore = AFPChainScorer.getTMScore(afpChain, ca1, ca2);
+            afpChain.setTMScore(tmScore);
+            System.out.println(AfpChainWriter.toScoresList(afpChain));
             
          } catch (Exception e){
             e.printStackTrace();
@@ -156,7 +174,7 @@ public class DemoSCOP
       String pdbId = "4HHB";
       
       // download SCOP if required and load into memory
-      ScopInstallation scop = new ScopInstallation();
+      ScopDatabase scop = ScopFactory.getSCOP();
 
       List<ScopDomain> domains = scop.getDomainsForPDB(pdbId);
 
