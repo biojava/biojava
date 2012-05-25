@@ -620,8 +620,10 @@ public class ChainImpl implements Chain, Serializable {
 
 	}
 
-	/** {@inheritDoc}
-	 *
+	/**
+	 * Returns the PDB SEQRES sequence as a one-letter sequence string.
+	 * Non-standard residues are represented by an "X".
+	 * @return one-letter PDB SEQRES sequence as string
 	 */
 	public String getSeqResSequence(){
 
@@ -639,6 +641,8 @@ public class ChainImpl implements Chain, Serializable {
 					if ( oneLetter == null)
 						oneLetter = "X";
 					str.append(oneLetter);
+				} else {
+					str.append("X");
 				}
 			}
 			return str.toString();
@@ -649,8 +653,9 @@ public class ChainImpl implements Chain, Serializable {
 			if (group instanceof AminoAcid) {
 				AminoAcid aa = (AminoAcid)group;
 				str.append(aa.getAminoType()) ;
+			} else {
+				str.append("X");
 			}
-
 		}
 		return str.toString();
 
