@@ -12,6 +12,10 @@ import java.io.Serializable;
  *
  */
 public class PDBCrystallographicInfo implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -7949886749566087669L;
 	private float a = 1.0f;
 	private float b = 1.0f;
 	private float c = 1.0f;

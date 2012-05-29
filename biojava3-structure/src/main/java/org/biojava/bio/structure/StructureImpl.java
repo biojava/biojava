@@ -129,6 +129,7 @@ public class StructureImpl implements Structure, Serializable {
 	/** returns an identical copy of this structure .
 	 * @return an identical Structure object
 	 */
+	@SuppressWarnings("deprecation")
 	public Structure clone() {
 
 		Structure n = new StructureImpl();
