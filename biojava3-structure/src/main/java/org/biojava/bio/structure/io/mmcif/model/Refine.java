@@ -57,6 +57,7 @@ public class Refine {
 	String overall_FOM_free_R_set;
 	String overall_FOM_work_R_set;
 	String pdbx_refine_id;
+	String pdbx_diffrn_id;
 
 	public Refine(){
 		aniso_B = new String[3][3];
@@ -515,6 +516,14 @@ public class Refine {
 
 	public void setOverall_FOM_work_R_set(String overall_FOM_work_R_set) {
 		this.overall_FOM_work_R_set = overall_FOM_work_R_set;
+	}
+
+	public String getPdbx_diffrn_id() {
+		return pdbx_diffrn_id;
+	}
+
+	public void setPdbx_diffrn_id(String pdbx_diffrn_id) {
+		this.pdbx_diffrn_id = pdbx_diffrn_id;
 	}
 
 }
