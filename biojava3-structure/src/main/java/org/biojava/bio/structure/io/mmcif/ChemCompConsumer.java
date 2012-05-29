@@ -16,6 +16,9 @@ import org.biojava.bio.structure.io.mmcif.model.Exptl;
 import org.biojava.bio.structure.io.mmcif.model.PdbxEntityNonPoly;
 import org.biojava.bio.structure.io.mmcif.model.PdbxNonPolyScheme;
 import org.biojava.bio.structure.io.mmcif.model.PdbxPolySeqScheme;
+import org.biojava.bio.structure.io.mmcif.model.PdbxStructAssembly;
+import org.biojava.bio.structure.io.mmcif.model.PdbxStructAssemblyGen;
+import org.biojava.bio.structure.io.mmcif.model.PdbxStructOperList;
 import org.biojava.bio.structure.io.mmcif.model.Refine;
 import org.biojava.bio.structure.io.mmcif.model.Struct;
 import org.biojava.bio.structure.io.mmcif.model.StructAsym;
@@ -166,6 +169,24 @@ public class ChemCompConsumer implements MMcifConsumer {
 		ChemComp cc = dictionary.getChemComp(latestChemCompId);
 		cc.getDescriptors().add(ccd);
 
+	}
+
+	@Override
+	public void newPdbxStructOperList(PdbxStructOperList structOper) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void newPdbxStrucAssembly(PdbxStructAssembly strucAssembly) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void newPdbxStrucAssemblyGen(PdbxStructAssemblyGen strucAssembly) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

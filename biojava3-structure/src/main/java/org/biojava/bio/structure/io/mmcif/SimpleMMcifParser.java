@@ -46,12 +46,16 @@ import org.biojava.bio.structure.io.mmcif.model.Exptl;
 import org.biojava.bio.structure.io.mmcif.model.PdbxEntityNonPoly;
 import org.biojava.bio.structure.io.mmcif.model.PdbxNonPolyScheme;
 import org.biojava.bio.structure.io.mmcif.model.PdbxPolySeqScheme;
+import org.biojava.bio.structure.io.mmcif.model.PdbxStructAssembly;
+import org.biojava.bio.structure.io.mmcif.model.PdbxStructAssemblyGen;
+import org.biojava.bio.structure.io.mmcif.model.PdbxStructOperList;
 import org.biojava.bio.structure.io.mmcif.model.Refine;
 import org.biojava.bio.structure.io.mmcif.model.Struct;
 import org.biojava.bio.structure.io.mmcif.model.StructAsym;
 import org.biojava.bio.structure.io.mmcif.model.StructKeywords;
 import org.biojava.bio.structure.io.mmcif.model.StructRef;
 import org.biojava.bio.structure.io.mmcif.model.StructRefSeq;
+import org.biojava.bio.structure.jama.Matrix;
 
 
 /** A simple mmCif file parser
@@ -590,7 +594,30 @@ public class SimpleMMcifParser implements MMcifParser {
 			         "org.biojava.bio.structure.io.mmcif.model.ChemCompDescriptor",
 			         loopFields, lineData);
 			triggerNewChemCompDescriptor(ccd);
+		} else if (category.equals("_pdbx_struct_oper_list")) {
+			/* PdbxStructOperList structOper = (PdbxStructOperList) buildObject(
+					"org.biojava.bio.structure.io.mmcif.model.PdbxStructOperList",
+			         loopFields, lineData); */
+			
+			// this guy is special since we convert to Matrices and shift vectors...
+			PdbxStructOperList structOper = getPdbxStructOperList(loopFields,lineData);
+			triggerNewPdbxStructOper(structOper);
+			
+			
+		} else if (category.equals("_pdbx_struct_assembly")) {
+			PdbxStructAssembly sa = (PdbxStructAssembly) buildObject(
+			         "org.biojava.bio.structure.io.mmcif.model.PdbxStructAssembly",
+			         loopFields, lineData);			
+			triggerNewPdbxStructAssembly(sa);
+			
+		} else if (category.equals("_pdbx_struct_assembly_gen")) {
+			PdbxStructAssemblyGen sa = (PdbxStructAssemblyGen) buildObject(
+			         "org.biojava.bio.structure.io.mmcif.model.PdbxStructAssemblyGen",
+			         loopFields, lineData);			
+			triggerNewPdbxStructAssemblyGen(sa);
+			
 		} else {
+		
 		
 
 			// trigger a generic bean that can deal with all missing data types...
@@ -638,6 +665,55 @@ public class SimpleMMcifParser implements MMcifParser {
 //			System.err.println("trying to set key/value pair on object " +o.getClass().getName() + " but did not find in " + lineData);
 //		}
 //	}
+
+	
+
+	
+
+	private PdbxStructOperList getPdbxStructOperList(List<String> loopFields,
+			List<String> lineData) {
+		PdbxStructOperList so = new PdbxStructOperList();
+		
+		//System.out.println(loopFields);
+		//System.out.println(lineData);
+		
+		String id = lineData.get(loopFields.indexOf("id"));
+		so.setId(id);
+		so.setType(lineData.get(loopFields.indexOf("type")));
+		Matrix matrix = new Matrix(3,3);
+		for (int i = 1 ; i <=3 ; i++){
+			for (int j =1 ; j <= 3 ; j++){
+				String max = String.format("matrix[%d][%d]",i,j);
+		
+				String val = lineData.get(loopFields.indexOf(max));
+				Double d = Double.parseDouble(val);
+				 matrix.set(i-1,j-1,d);
+			}
+		}
+		
+		double[] coords =new double[3];
+		
+		for ( int i = 1; i <=3 ; i++){
+			String v = String.format("vector[%d]",i);
+			String val = lineData.get(loopFields.indexOf(v));
+			Double d = Double.parseDouble(val);
+			coords[i-1] = d;
+		}
+		
+		so.setMatrix(matrix);
+		so.setVector(coords);
+		
+		
+		
+		return so;
+	}
+
+	public void triggerNewPdbxStructOper(PdbxStructOperList structOper) {
+		for(MMcifConsumer c : consumers){
+			c.newPdbxStructOperList(structOper);
+		}
+		
+	}
 
 	@SuppressWarnings("rawtypes")
 	private void setArray(Class c, Object o, String key, String val){
@@ -817,6 +893,16 @@ public class SimpleMMcifParser implements MMcifParser {
 	public void triggerNewChemCompDescriptor(ChemCompDescriptor ccd) {
 		for(MMcifConsumer c : consumers){
 			c.newChemCompDescriptor(ccd);
+		}
+	}
+	private void triggerNewPdbxStructAssembly(PdbxStructAssembly sa) {
+		for(MMcifConsumer c : consumers){
+			c.newPdbxStrucAssembly(sa);
+		}
+	}
+	private void triggerNewPdbxStructAssemblyGen(PdbxStructAssemblyGen sa) {
+		for(MMcifConsumer c : consumers){
+			c.newPdbxStrucAssemblyGen(sa);
 		}
 	}
 

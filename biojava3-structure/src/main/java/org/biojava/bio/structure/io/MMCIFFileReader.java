@@ -37,9 +37,13 @@ import java.util.zip.GZIPOutputStream;
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.align.util.UserConfiguration;
 import org.biojava.bio.structure.io.StructureIOFile;
+import org.biojava.bio.structure.io.mmcif.MMcifConsumer;
 import org.biojava.bio.structure.io.mmcif.MMcifParser;
 import org.biojava.bio.structure.io.mmcif.SimpleMMcifConsumer;
 import org.biojava.bio.structure.io.mmcif.SimpleMMcifParser;
+import org.biojava.bio.structure.io.mmcif.model.PdbxStructAssembly;
+import org.biojava.bio.structure.io.mmcif.model.PdbxStructAssemblyGen;
+import org.biojava.bio.structure.quaternary.QuaternaryStructureBuilder;
 import org.biojava3.core.util.InputStreamProvider;
 
 
@@ -73,18 +77,37 @@ public class MMCIFFileReader implements StructureIOFile {
 	public static final String lineSplit = System.getProperty("file.separator");
 	
 	FileParsingParameters params;
-	
+	SimpleMMcifConsumer consumer;
 	
 	public static void main(String[] args){
 	
-		StructureIOFile reader = new MMCIFFileReader();
+		MMCIFFileReader reader = new MMCIFFileReader();
 		FileParsingParameters params = new FileParsingParameters();
 		reader.setFileParsingParameters(params);
 		
 		try{
-			Structure struc = reader.getStructureById("1gng");
+			Structure struc = reader.getStructureById("1m4x");
 			System.out.println(struc);
-			System.out.println(struc.toPDB());
+			//System.out.println(struc.toPDB());
+			SimpleMMcifConsumer consumer = reader.getMMcifConsumer();
+			//System.out.println(consumer.getStructOpers());
+			//System.out.println(consumer.getStructAssemblies());
+			//System.out.println(consumer.getStructAssemblyGens());
+			
+			PdbxStructAssembly psag = consumer.getStructAssemblies().get(0);
+					
+			PdbxStructAssemblyGen sag = consumer.getStructAssemblyGens().get(0);
+				
+			if ( ! sag.getAssembly_id().equals(psag.getId())) {
+				System.err.println("the assembly IDs don't match!");
+			}
+			
+			QuaternaryStructureBuilder quaternaryBuilder = new QuaternaryStructureBuilder();
+			
+			quaternaryBuilder.rebuildQuaternaryStructure(struc, psag, sag, consumer.getStructOpers());
+			
+			//quaternaryBuilder.getBioUnitTransformationList()
+			
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -150,7 +173,7 @@ public class MMCIFFileReader implements StructureIOFile {
 
 		MMcifParser parser = new SimpleMMcifParser();
 
-		SimpleMMcifConsumer consumer = new SimpleMMcifConsumer();
+		consumer = new SimpleMMcifConsumer();
 		   
 		consumer.setFileParsingParameters(params);
 		
@@ -160,6 +183,7 @@ public class MMCIFFileReader implements StructureIOFile {
 		parser.addMMcifConsumer(consumer);
 
 		parser.parse(new BufferedReader(new InputStreamReader(inStream)));
+
 
 		// now get the protein structure.
 		Structure cifStructure = consumer.getStructure();
@@ -359,6 +383,12 @@ public class MMCIFFileReader implements StructureIOFile {
       
    }
 
-
+   public SimpleMMcifConsumer getMMcifConsumer(){
+	   return consumer;
+   }
+   
+   public void setMMCifConsumer(SimpleMMcifConsumer consumer){
+	   this.consumer = consumer;
+   }
 
 }
