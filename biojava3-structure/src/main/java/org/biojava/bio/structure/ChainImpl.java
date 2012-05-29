@@ -76,7 +76,7 @@ public class ChainImpl implements Chain, Serializable {
 	Structure parent;
 
 	Map<String, Integer> pdbResnumMap;
-
+	String internalChainID;
 	/**
 	 *  Constructs a ChainImpl object.
 	 */
@@ -88,6 +88,7 @@ public class ChainImpl implements Chain, Serializable {
 
 		seqResGroups = new ArrayList<Group>();
 		pdbResnumMap = new HashMap<String,Integer>();
+		internalChainID = null;
 
 	}
 
@@ -139,7 +140,7 @@ public class ChainImpl implements Chain, Serializable {
 			n.addGroup((Group)g.clone());
 		}
 		n.setHeader(this.getHeader());
-
+		n.setInternalChainID(internalChainID);
 		return n ;
 	}
 
@@ -739,6 +740,18 @@ public class ChainImpl implements Chain, Serializable {
 		}
 		
 		return groups;
+	}
+
+	@Override
+	public String getInternalChainID() {
+		// TODO Auto-generated method stub
+		return internalChainID;
+	}
+
+	@Override
+	public void setInternalChainID(String internalChainID) {
+		this.internalChainID = internalChainID;
+		
 	}
 }
 
