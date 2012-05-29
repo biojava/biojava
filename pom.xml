@@ -246,5 +246,6 @@
 		<module>biojava3-ws</module>
 		<module>biojava3-protein-disorder</module>
 		<module>biojava3-aa-prop</module>
-	</modules>
+   		<module>integrationtest</module>
+  </modules>
 </project>
