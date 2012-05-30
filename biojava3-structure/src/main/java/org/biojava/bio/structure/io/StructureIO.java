@@ -35,6 +35,7 @@ import org.biojava.bio.structure.Structure;
  *
  * @author Andreas Prlic
  * @version %I% %G%
+ * @deprecated Do no use any longer, StructureIO is now a static utility calss on the org.biojava3.structure level..
  */
 
 public interface StructureIO {

@@ -49,26 +49,9 @@ public class QuaternaryStructureBuilder {
 	}
 
 
-	public Structure rebuildQuaternaryStructure(Structure asymUnit, PdbxStructAssembly psa, PdbxStructAssemblyGen psag, List<PdbxStructOperList> operators){
-		System.out.println("Rebuilding " + psa.getDetails() + " | " + psa.getOligomeric_details() + " | " + psa.getOligomeric_count());
-		System.out.println(psag);
-		init();
-		this.psa=psa;
-		this.psag = psag;
-		asymIds= Arrays.asList(psag.getAsym_id_list().split(","));
-		operatorResolver.parseOperatorExpressionString(psag.getOper_expression());
-		//this.operators = operators;
-
-		asymId = psa.getId();
-
-		for (PdbxStructOperList oper: operators){
-			ModelTransformationMatrix transform = new ModelTransformationMatrix();
-			transform.id = oper.getId();
-			transform.setTransformationMatrix(oper.getMatrix(), oper.getVector());
-			modelTransformations.add(transform);
-		}
-		
-		ArrayList<ModelTransformationMatrix> transformations = getBioUnitTransformationList();
+	 
+	
+	public Structure rebuildQuaternaryStructure(Structure asymUnit, ArrayList<ModelTransformationMatrix> transformations){
 		
 		Structure s = asymUnit.clone();
 		List<Chain> transformedChains = new ArrayList<Chain>();
@@ -114,7 +97,28 @@ public class QuaternaryStructureBuilder {
 	 * @param assemblyId Id of the macromolecular assembly to be generated
 	 * @return list of transformation matrices to generate macromolecular assembly
 	 */
-	public ArrayList<ModelTransformationMatrix> getBioUnitTransformationList() {
+	public ArrayList<ModelTransformationMatrix> getBioUnitTransformationList(PdbxStructAssembly psa, PdbxStructAssemblyGen psag, List<PdbxStructOperList> operators) {
+		
+		System.out.println("Rebuilding " + psa.getDetails() + " | " + psa.getOligomeric_details() + " | " + psa.getOligomeric_count());
+		System.out.println(psag);
+		init();
+		this.psa=psa;
+		this.psag = psag;
+		asymIds= Arrays.asList(psag.getAsym_id_list().split(","));
+		operatorResolver.parseOperatorExpressionString(psag.getOper_expression());
+		//this.operators = operators;
+
+		asymId = psa.getId();
+
+		for (PdbxStructOperList oper: operators){
+			ModelTransformationMatrix transform = new ModelTransformationMatrix();
+			transform.id = oper.getId();
+			transform.setTransformationMatrix(oper.getMatrix(), oper.getVector());
+			modelTransformations.add(transform);
+		}
+		
+		///
+		
 		ArrayList<ModelTransformationMatrix> transformations = getBioUnitTransformationsListUnaryOperators();
 		transformations.addAll(getBioUnitTransformationsListBinaryOperators());
 		transformations.trimToSize();
