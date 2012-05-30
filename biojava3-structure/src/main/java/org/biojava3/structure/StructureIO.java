@@ -91,7 +91,9 @@ public class StructureIO {
 	}
 	
 	
-	/** Returns the first biologicalAssembly that is available for a protein structure
+	/** Returns the first biologicalAssembly that is available for a protein structure. For more documentation on quaternary structures see:
+	 * {@link http://www.pdb.org/pdb/101/static101.do?p=education_discussion/Looking-at-Structures/bioassembly_tutorial.html}
+	 * 
 	 * 
 	 * @param pdbId
 	 * @return a Structure object or null if that assembly is not available
