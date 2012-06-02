@@ -163,7 +163,7 @@ public class HetatomImpl implements Group,Serializable {
 		//if (s.length() != 3) {
 		//throw new PDBParseException("amino acid name is not of length 3!");
 		//}
-		if (s.equals("?")) System.out.println("HetatomImpl: invalid pdbname: ?");
+		if (s != null && s.equals("?")) System.err.println("HetatomImpl: invalid pdbname: ?");
 		pdb_name =s ;
 	}
 
