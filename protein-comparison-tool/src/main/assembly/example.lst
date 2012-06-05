@@ -1,0 +1,10 @@
+# an example input for a DB search
+4hhb.C 4hhb.D
+4hhb:0 4hhb:1
+1cdg.A 1tim.B
+1hiv.A 1a4w.H
+1RLW 1BYN
+2sim 1nsb
+1CEW 1mol
+1TEN 3HHR
+4hhb:(A:10-40,B:10-40) 4hhb:(C:10-40,D:10-40)
