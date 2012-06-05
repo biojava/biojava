@@ -108,6 +108,9 @@
 				<plugin>
 					<artifactId>maven-surefire-plugin</artifactId>
 					<version>2.5</version>
+					<configuration>
+						<argLine>-Xms256m -Xmx512m</argLine>
+					</configuration> 
 				</plugin>
 				<plugin>
 					<groupId>net.sf</groupId>
@@ -139,10 +142,32 @@
 					<footer>&lt;script src="http://www.google-analytics.com/urchin.js" type="text/javascript"&gt;&lt;/script&gt;&lt;script type="text/javascript"&gt;_uacct = "UA-1326640-1";urchinTracker();&lt;/script&gt;</footer>
 					</configuration>
 					
+				</plugin>					
+				<plugin>
+					<artifactId>maven-assembly-plugin</artifactId>
+					<version>2.3</version>
+					<configuration>
+						<descriptors>
+							<descriptor>src/main/assembly/assembly.xml</descriptor>
+						</descriptors>
+					</configuration>
+
+					<!-- Attach the creation of the assembly to the package phase. -->
+					<executions>
+						<execution>
+							<id>assemble</id>
+							<phase>package</phase>
+							<goals>
+								<goal>single</goal>
+							</goals>
+						</execution>
+					</executions>
+
 				</plugin>
 			</plugins>
 		</pluginManagement>
 	</build>
+	
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
@@ -175,9 +200,10 @@
 				<groupId>xerces</groupId>
 				<artifactId>xercesImpl</artifactId>
 				<version>2.4.0</version>
-			</dependency>
+			</dependency>			
 		</dependencies>
 	</dependencyManagement>
+	
 	<reporting>
 		<plugins>
 			<plugin>
@@ -227,9 +253,7 @@
 					<cacheDir>/statsvn/</cacheDir>
 					<title>BioJava SVN statistics</title>
 				</configuration>
-			</plugin>
-
-
+			</plugin>			
 		</plugins>
 	</reporting>
 
@@ -247,5 +271,7 @@
 		<module>biojava3-protein-disorder</module>
 		<module>biojava3-aa-prop</module>
    		<module>integrationtest</module>
-  </modules>
+		<module>protein-comparison-tool</module>
+		
+	</modules>
 </project>
