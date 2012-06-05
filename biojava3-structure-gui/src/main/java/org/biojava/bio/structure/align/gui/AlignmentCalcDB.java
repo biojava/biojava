@@ -42,6 +42,7 @@ import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureTools;
 import org.biojava.bio.structure.align.CallableStructureAlignment;
 import org.biojava.bio.structure.align.StructureAlignment;
+import org.biojava.bio.structure.align.ce.CeCPMain;
 import org.biojava.bio.structure.align.ce.CeMain;
 import org.biojava.bio.structure.align.ce.CeParameters;
 import org.biojava.bio.structure.align.ce.CeSideChainMain;
@@ -104,6 +105,20 @@ public class AlignmentCalcDB implements AlignmentCalculationRunnable {
 		this.domainSplit = domainSplit;
 	}
 
+	public static String getLegend(String algorithmName){
+		
+		if ( algorithmName.equalsIgnoreCase(CeMain.algorithmName) || 
+				algorithmName.equalsIgnoreCase(CeSideChainMain.algorithmName) ||
+				algorithmName.equalsIgnoreCase(CeCPMain.algorithmName)) {
+			return "# name1\tname2\tscore\tz-score\trmsd\tlen1\tlen2\tcov1\tcov2\t%ID\tDescription\t " ;
+		}
+		
+		// looks like a FATCAT alignment
+				
+		return "# name1\tname2\tscore\tprobability\trmsd\tlen1\tlen2\tcov1\tcov2\t%ID\tDescription\t " ;
+		
+	}
+	
 	public void run() {
 
 		AtomCache cache = new AtomCache(config);
@@ -123,11 +138,8 @@ public class AlignmentCalcDB implements AlignmentCalculationRunnable {
 
 		String header = "# algorithm:" + algorithm.getAlgorithmName(); 
 
-		String legend = "# name1\tname2\tscore\tprobability\trmsd\tlen1\tlen2\tcov1\tcov2\t%ID\tDescription\t " ;
-		if (    algorithm.getAlgorithmName().equalsIgnoreCase(CeMain.algorithmName) || 
-				algorithm.getAlgorithmName().equalsIgnoreCase(CeSideChainMain.algorithmName)){
-			legend =  "# name1\tname2\tscore\tz-score\trmsd\tlen1\tlen2\tcov1\tcov2\t%ID\tDescription\t " ;
-		}
+		String legend = getLegend(algorithm.getAlgorithmName());
+		
 
 
 		File outFileF = new File(outFile);
