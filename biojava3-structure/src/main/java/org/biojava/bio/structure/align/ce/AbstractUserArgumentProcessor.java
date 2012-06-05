@@ -34,6 +34,7 @@ import java.io.FileWriter;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
 
+import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -47,6 +48,7 @@ import org.biojava.bio.structure.align.util.AFPAlignmentDisplay;
 import org.biojava.bio.structure.align.util.AtomCache;
 import org.biojava.bio.structure.align.util.CliTools;
 import org.biojava.bio.structure.align.util.ConfigurationException;
+import org.biojava.bio.structure.align.util.UserConfiguration;
 
 import org.biojava.bio.structure.align.xml.AFPChainXMLConverter;
 import org.biojava.bio.structure.io.PDBFileReader;
@@ -131,10 +133,15 @@ public abstract class AbstractUserArgumentProcessor implements UserArgumentProce
 		if ( params.getShowDBresult() != null){
 			// user wants to view DB search results:
 
-			System.err.println("not implemented full yet");
-			//DBResultTable table = new DBResultTable();
-			//UserConfiguration config = UserConfiguration.fromStartupParams(params);
-			//table.show(new File(params.getShowDBresult()),config);
+			
+			System.err.println("showing DB results...");
+			try {
+				GuiWrapper.showDBResults(params);
+			} catch (Exception e){
+				System.err.println(e.getMessage());
+				e.printStackTrace();
+			}
+			
 		}
 
 		String pdb1  = params.getPdb1();
@@ -149,6 +156,9 @@ public abstract class AbstractUserArgumentProcessor implements UserArgumentProce
 			runDBSearch();
 		}
 	}
+
+
+	
 
 
 	private void runDBSearch(){
@@ -190,6 +200,13 @@ public abstract class AbstractUserArgumentProcessor implements UserArgumentProce
 			BufferedReader is = new BufferedReader (new InputStreamReader(new FileInputStream(f)));
 
 			BufferedWriter out = new BufferedWriter(new FileWriter(outputFile, true));
+			
+			StructureAlignment algorithm =  getAlgorithm();
+			
+			String header = "# algorithm:" + algorithm.getAlgorithmName(); 
+			out.write(header);
+			out.write(newline);
+			
 			out.write("#Legend: " + newline );
 			String legend = getDbSearchLegend();
 			out.write(legend + newline );
@@ -221,7 +238,7 @@ public abstract class AbstractUserArgumentProcessor implements UserArgumentProce
 				ca2 = StructureTools.getAtomCAArray(structure2);
 
 
-				StructureAlignment algorithm =  getAlgorithm();
+				
 				Object jparams = getParameters();
 
 
