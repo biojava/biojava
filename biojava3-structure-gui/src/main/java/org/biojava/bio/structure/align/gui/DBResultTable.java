@@ -303,7 +303,9 @@ public class DBResultTable implements ActionListener{
 	private void showAlignment( String name1, String name2){
 
 
-
+		if ( algorithm == null) {
+			initAlgorithm(null);
+		}
 
 		try {
 			Structure structure1 = null;
