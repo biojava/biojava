@@ -34,7 +34,6 @@ import java.io.FileWriter;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
 
-import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -48,7 +47,6 @@ import org.biojava.bio.structure.align.util.AFPAlignmentDisplay;
 import org.biojava.bio.structure.align.util.AtomCache;
 import org.biojava.bio.structure.align.util.CliTools;
 import org.biojava.bio.structure.align.util.ConfigurationException;
-import org.biojava.bio.structure.align.util.UserConfiguration;
 
 import org.biojava.bio.structure.align.xml.AFPChainXMLConverter;
 import org.biojava.bio.structure.io.PDBFileReader;
@@ -454,7 +452,7 @@ public abstract class AbstractUserArgumentProcessor implements UserArgumentProce
 				fileName = params.getSaveOutputDir(); 
 				fileName += getAutoFileName(afpChain);
 			} else {
-				fileName += getAutoFileName(afpChain);
+				fileName = getAutoFileName(afpChain);
 			}
 		} else 
 
@@ -466,6 +464,7 @@ public abstract class AbstractUserArgumentProcessor implements UserArgumentProce
 			System.err.println("Can't write outputfile. Either provide a filename using -outFile or set -autoOutputFile to true .");
 			return;
 		}
+		//System.out.println("writing results to " + fileName);
 
 		FileOutputStream out; // declare a file output object
 		PrintStream p; // declare a print stream object
