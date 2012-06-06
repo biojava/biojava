@@ -46,6 +46,10 @@
 		<jdk.version>1.6</jdk.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.build.targetEncoding>UTF-8</project.build.targetEncoding>
+		
+		<maven.build.timestamp.format>yyyyMMdd-HHmm</maven.build.timestamp.format>    	    	
+    	<timestamp>${maven.build.timestamp}</timestamp>
+
 	</properties>
 	<build>
 		<plugins>
@@ -70,7 +74,14 @@
 				<directory>src/main/resources</directory>
 				<filtering>true</filtering>
 				<includes>
-					<include>**/*.properties</include>
+					<include>**/*.properties</include>					
+				</includes>
+			</resource>
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>false</filtering>
+				<includes>
+					<include>**/*.cif.gz</include>					
 				</includes>
 			</resource>
 		</resources>
