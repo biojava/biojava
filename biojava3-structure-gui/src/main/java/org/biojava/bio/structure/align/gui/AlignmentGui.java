@@ -45,6 +45,7 @@ import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureException;
 import org.biojava.bio.structure.align.StructureAlignment;
 import org.biojava.bio.structure.align.StructureAlignmentFactory;
+import org.biojava.bio.structure.align.ce.AbstractUserArgumentProcessor;
 import org.biojava.bio.structure.align.gui.AlignmentGui;
 import org.biojava.bio.structure.align.gui.ProgressThreadDrawer;
 import org.biojava.bio.structure.align.util.ResourceManager;
@@ -93,6 +94,7 @@ public class AlignmentGui extends JFrame{
 
 
 	public static void main(String[] args){
+		
 		AlignmentGui.getInstance();
 
 	}
@@ -104,7 +106,9 @@ public class AlignmentGui extends JFrame{
 	private static final AlignmentGui me = new AlignmentGui();
 
 	public static AlignmentGui getInstance(){
-
+				
+		AbstractUserArgumentProcessor.printAboutMe();
+		
 		AligUIManager.setLookAndFeel();
 
 		if (!  me.isVisible())
