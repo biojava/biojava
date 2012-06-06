@@ -52,13 +52,18 @@ import org.biojava3.alignment.template.GapPenalty;
 import org.biojava3.alignment.template.PairwiseSequenceAligner;
 import org.biojava3.alignment.template.SequencePair;
 import org.biojava3.alignment.template.SubstitutionMatrix;
+import org.biojava3.core.exceptions.CompoundNotFoundError;
 import org.biojava3.core.sequence.DNASequence;
 import org.biojava3.core.sequence.ProteinSequence;
+import org.biojava3.core.sequence.RNASequence;
+import org.biojava3.core.sequence.compound.AmbiguityDNACompoundSet;
+import org.biojava3.core.sequence.compound.AmbiguityRNACompoundSet;
 import org.biojava3.core.sequence.compound.AminoAcidCompound;
 import org.biojava3.core.sequence.compound.AminoAcidCompoundSet;
 import org.biojava3.core.sequence.compound.DNACompoundSet;
 import org.biojava3.core.sequence.compound.NucleotideCompound;
 import org.biojava3.core.sequence.template.Compound;
+import org.biojava3.core.sequence.template.Sequence;
 
 
 /** Aligns the SEQRES residues to the ATOM residues.
@@ -142,6 +147,9 @@ public class SeqRes2AtomAligner {
 				if ( seqRes.getAtomGroups(GroupType.AMINOACID).size() < 1) {
 					
 					if ( seqRes.getAtomGroups(GroupType.NUCLEOTIDE).size() > 1) {
+						if (DEBUG){
+							System.out.println("chain " + seqRes.getChainID() + " is a nucleotide chain, aligning nucs...");
+						}
 						align2NucleotideChains(seqRes,atomRes);
 						continue;
 					} else {
@@ -413,8 +421,23 @@ public class SeqRes2AtomAligner {
 			System.out.println("align seq1 ("+ seq1.length()+") " + seq1);
 			System.out.println("align seq2 ("+ seq2.length()+") " + seq2);
 		}
-		DNASequence s1 = new DNASequence(seq1);
-		DNASequence s2 = new DNASequence(seq2);
+		
+		
+		Sequence s1;
+		Sequence s2;
+		
+		try {
+			s1 = new DNASequence(seq1,AmbiguityDNACompoundSet.getDNACompoundSet());
+		} catch (CompoundNotFoundError e){
+			///oops perhaps a RNA sequence?
+			s1 = new RNASequence(seq1,AmbiguityRNACompoundSet.getRNACompoundSet());
+		}
+		try {
+			s2 = new DNASequence(seq2,AmbiguityDNACompoundSet.getDNACompoundSet());
+		} catch (CompoundNotFoundError e){
+			///oops perhaps a RNA sequence?
+			s2 = new RNASequence(seq2,AmbiguityRNACompoundSet.getRNACompoundSet());
+		}
 
 		SubstitutionMatrix<NucleotideCompound> matrix = SubstitutionMatrixHelper.getNuc4_2();
 
@@ -426,10 +449,10 @@ public class SeqRes2AtomAligner {
 		penalty.setExtensionPenalty(extend);
 
 		try {
-			PairwiseSequenceAligner<DNASequence, NucleotideCompound> smithWaterman =
+			PairwiseSequenceAligner smithWaterman =
 				Alignments.getPairwiseAligner(s1, s2, PairwiseSequenceAlignerType.LOCAL, penalty, matrix);
 
-			SequencePair<DNASequence, NucleotideCompound> pair = smithWaterman.getPair();
+			SequencePair pair = smithWaterman.getPair();
 
 
 
