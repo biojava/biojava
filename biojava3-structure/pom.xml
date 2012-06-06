@@ -81,7 +81,9 @@
 				<directory>src/main/resources</directory>
 				<filtering>false</filtering>
 				<includes>
-					<include>**/*.cif.gz</include>					
+					<include>**/*.cif.gz</include>		
+					<include>**/*.pdb</include>
+					<include>**/*.mat</include>			
 				</includes>
 			</resource>
 		</resources>
