@@ -19,7 +19,7 @@
 
 package org.biojava.bio.structure.secstruc;
 
-class SecStrucState{
+public class SecStrucState{
    double phi;
    double psi;
    double omega;
