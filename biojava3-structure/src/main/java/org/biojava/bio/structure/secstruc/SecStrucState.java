@@ -22,7 +22,8 @@ package org.biojava.bio.structure.secstruc;
 class SecStrucState{
    double phi;
    double psi;
-
+   double omega;
+   
    HBond accept1;
    HBond accept2;
    HBond donor1;
@@ -33,6 +34,7 @@ class SecStrucState{
    public SecStrucState(){
        phi = 0;
        psi = 0 ;
+       omega = 0;
        accept1 = new HBond();
        accept2 = new HBond();
        donor1  = new HBond();
@@ -93,6 +95,14 @@ class SecStrucState{
   public void setPsi(double psi) {
       this.psi = psi;
   }
+
+public double getOmega() {
+	return omega;
+}
+
+public void setOmega(double omega) {
+	this.omega = omega;
+}
    
    
    
