@@ -31,7 +31,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.biojava.bio.structure.AminoAcid;
 import org.biojava.bio.structure.Atom;
 import org.biojava.bio.structure.Calc;
 import org.biojava.bio.structure.Chain;
@@ -39,7 +38,6 @@ import org.biojava.bio.structure.Group;
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureException;
 import org.biojava.bio.structure.align.util.AtomCache;
-import org.biojava.bio.structure.io.PDBFileReader;
 import org.biojava.bio.structure.io.PDBParseException;
 
 
@@ -56,7 +54,7 @@ import org.biojava.bio.structure.io.PDBParseException;
  * 2nd Edition, Freeman 1994
  */
 public class SecStruc {
-	private static final boolean debug = true;
+	private static final boolean debug = false;
 
 	/** the minimal distance between two residues */
 	public static double MINDIST       = 0.5      ;
@@ -336,6 +334,7 @@ public class SecStruc {
 		return (SecStrucGroup[]) groupList.toArray(new SecStrucGroup[groupList.size()]);
 	}
 
+	
 
 	/** calculate the coordinates for the H atoms. They are usually
 	 * missing in the PDB files as only few experimental methods allow
@@ -658,7 +657,7 @@ public class SecStruc {
 		SecStrucState stateOne = (SecStrucState)one.getProperty("secstruc");
 		//SecStrucState stateTwo = (SecStrucState)two.getProperty("secstruc");
 
-		System.out.println("*** bonded? " + i + " " + j + " " + stateOne);
+		//System.out.println("*** bonded? " + i + " " + j + " " + stateOne);
 		double acc1e    = stateOne.getAccept1().getEnergy();
 		double acc2e    = stateOne.getAccept2().getEnergy();
 
@@ -670,7 +669,7 @@ public class SecStruc {
 				||
 				( ( partnerAcc2 == j ) && (acc2e < HBONDHIGHENERGY) )
 				) {
-			System.out.println("*** yes is bonded " + i + " " + j);
+			//System.out.println("*** yes is bonded " + i + " " + j);
 			return true ;
 		}
 		return false ;
@@ -738,6 +737,9 @@ public class SecStruc {
 
 	}
 
+	public SecStrucGroup[] getGroups(){
+		return groups;
+	}
 
 }
 
