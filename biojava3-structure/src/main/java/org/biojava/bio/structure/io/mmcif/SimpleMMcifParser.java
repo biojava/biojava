@@ -683,7 +683,7 @@ public class SimpleMMcifParser implements MMcifParser {
 		Matrix matrix = new Matrix(3,3);
 		for (int i = 1 ; i <=3 ; i++){
 			for (int j =1 ; j <= 3 ; j++){
-				String max = String.format("matrix[%d][%d]",i,j);
+				String max = String.format("matrix[%d][%d]",j,i);
 		
 				String val = lineData.get(loopFields.indexOf(max));
 				Double d = Double.parseDouble(val);
