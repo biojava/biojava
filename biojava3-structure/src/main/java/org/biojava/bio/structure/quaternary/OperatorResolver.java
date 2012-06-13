@@ -45,10 +45,10 @@ public class OperatorResolver {
 		// remove single quotes, i.e. '(1-49)' in 1CGM
 		expression = expression.replaceAll("'", "");
 
-		if (QuaternaryTools.isUnaryExpression(expression)) {
-			unaryOperators = QuaternaryTools.parseUnaryOperatorExpression(expression);
+		if (BioAssemblyTools.isUnaryExpression(expression)) {
+			unaryOperators = BioAssemblyTools.parseUnaryOperatorExpression(expression);
 		} else {
-			binaryOperators = QuaternaryTools.parseBinaryOperatorExpression(expression);
+			binaryOperators = BioAssemblyTools.parseBinaryOperatorExpression(expression);
 		}
 		
 		System.out.println("OperatorResolver: " + unaryOperators + " | " + binaryOperators);

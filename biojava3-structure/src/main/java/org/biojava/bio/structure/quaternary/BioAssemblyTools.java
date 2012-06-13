@@ -8,7 +8,10 @@ import org.biojava.bio.structure.Atom;
 import org.biojava.bio.structure.AtomImpl;
 import org.biojava.bio.structure.Calc;
 import org.biojava.bio.structure.Chain;
+import org.biojava.bio.structure.ChainImpl;
+import org.biojava.bio.structure.Group;
 import org.biojava.bio.structure.Structure;
+import org.biojava.bio.structure.StructureImpl;
 import org.biojava.bio.structure.StructureTools;
 import org.biojava.bio.structure.jama.Matrix;
 
@@ -21,7 +24,7 @@ import org.biojava.bio.structure.jama.Matrix;
  * 
  *
  */
-public class QuaternaryTools {
+public class BioAssemblyTools {
 
 
 	/**
@@ -309,4 +312,39 @@ public class QuaternaryTools {
 
 		return centroid;
 	}
+	
+	/** reduce a structure to a Calpha representation only
+	 * 
+	 * @param orig
+	 * @return
+	 */
+	public static Structure getReducedCAStructure(Structure orig){
+		Structure s = new StructureImpl();
+		s.setHeader(orig.getHeader());
+		s.setPDBHeader(orig.getPDBHeader());
+		for ( Chain c : orig.getChains()){
+			
+			Chain c1 = new ChainImpl();
+			c1.setChainID(c.getChainID());
+			s.addChain(c1);
+			
+			for (Group g : c.getAtomGroups()){
+				
+				try {
+					Atom a = g.getAtom(StructureTools.caAtomName);
+					if ( a != null){
+						
+						Group g1 = (Group)g.clone();
+						g1.clearAtoms();
+						g1.addAtom(a);
+						c1.addGroup(g1);
+						
+					}
+				} catch (Exception e){}
+			}
+			
+		}
+		return s;
+	}
+	
 }
