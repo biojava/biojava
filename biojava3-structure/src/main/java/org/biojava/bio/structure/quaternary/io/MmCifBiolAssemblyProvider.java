@@ -17,7 +17,7 @@ import org.biojava.bio.structure.io.mmcif.model.PdbxStructOperList;
  * @author Andreas Prlic
  *
  */
-public class MmCifBiolAssemblyProvider implements QuaternaryDataProvider{
+public class MmCifBiolAssemblyProvider implements BioUnitDataProvider{
 
 	String pdbId;
 	List<PdbxStructAssembly> pdbxStructAssemblies;

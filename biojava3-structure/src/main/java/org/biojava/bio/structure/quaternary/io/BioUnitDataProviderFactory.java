@@ -1,21 +1,21 @@
 package org.biojava.bio.structure.quaternary.io;
 
-public class QuaternaryDataProviderFactory {
+public class BioUnitDataProviderFactory {
 	//private static QuaternaryDataProvider provider = new MmCifBiolAssemblyProvider();
 	private static String providerClassName = "org.biojava.bio.structure.quaternary.io.MmCifBiolAssemblyProvider"; 
 	
-	private QuaternaryDataProviderFactory(){
+	private BioUnitDataProviderFactory(){
 		
 	}
 	
-	public static QuaternaryDataProvider getQuaternaryDataProvider() {
+	public static BioUnitDataProvider getBioUnitDataProvider() {
 		
 		// use reflection to return a new instance...
 		
 		try {
 			Class cls = Class.forName(providerClassName);
 			
-			return (QuaternaryDataProvider) cls.newInstance();
+			return (BioUnitDataProvider) cls.newInstance();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -25,11 +25,11 @@ public class QuaternaryDataProviderFactory {
 		
 	}
 
-	public static void setQuaternaryDataProvider(String className) {
+	public static void setBioUnitDataProvider(String className) {
 		
 		try {
 			Class cls = Class.forName(providerClassName);
-			Class interfaceClass = Class.forName("org.biojava.bio.structure.quaternary.io.QuaternaryDataProvider");
+			Class interfaceClass = Class.forName("org.biojava.bio.structure.quaternary.io.BioUnitDataProvider");
 			Class[] ifs = cls.getInterfaces();
 			boolean found = false;
 			for ( Class c : ifs){

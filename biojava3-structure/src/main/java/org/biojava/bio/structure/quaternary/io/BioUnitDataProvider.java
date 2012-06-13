@@ -7,12 +7,12 @@ import org.biojava.bio.structure.io.mmcif.model.PdbxStructAssemblyGen;
 import org.biojava.bio.structure.io.mmcif.model.PdbxStructOperList;
 
 
-/** Defines the methods that have to be implemented by a class that provides the data that is necessary to recreate a quaternary structure.
+/** Defines the methods that have to be implemented by a class that provides the data that is necessary to recreate the correct biological assembly of a protein.
  * 
  * @author Andreas Prlic
  * @since 3.0.5
  */
-public interface QuaternaryDataProvider {
+public interface BioUnitDataProvider {
 	
 	/** Tell the provider for which PDB ID the quaternary structure should be returned.
 	 * 

@@ -25,7 +25,7 @@ import org.biojava.bio.structure.jama.Matrix;
  * @author Andreas Prlic
  *
  */
-public class QuaternaryStructureBuilder {
+public class BiologicalAssemblyBuilder {
 
 	OperatorResolver operatorResolver;
 
@@ -38,7 +38,7 @@ public class QuaternaryStructureBuilder {
 	List<ModelTransformationMatrix> modelTransformations;
 	
 	List<String> asymIds;
-	public QuaternaryStructureBuilder(){
+	public BiologicalAssemblyBuilder(){
 		init();
 	}
 
