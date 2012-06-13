@@ -12,10 +12,10 @@ import org.biojava.bio.structure.io.mmcif.model.PdbxStructAssembly;
 import org.biojava.bio.structure.io.mmcif.model.PdbxStructAssemblyGen;
 import org.biojava.bio.structure.io.mmcif.model.PdbxStructOperList;
 import org.biojava.bio.structure.quaternary.ModelTransformationMatrix;
-import org.biojava.bio.structure.quaternary.QuaternaryStructureBuilder;
+import org.biojava.bio.structure.quaternary.BiologicalAssemblyBuilder;
 import org.biojava.bio.structure.quaternary.io.MmCifBiolAssemblyProvider;
-import org.biojava.bio.structure.quaternary.io.QuaternaryDataProvider;
-import org.biojava.bio.structure.quaternary.io.QuaternaryDataProviderFactory;
+import org.biojava.bio.structure.quaternary.io.BioUnitDataProvider;
+import org.biojava.bio.structure.quaternary.io.BioUnitDataProviderFactory;
 
 /** A class that provides static access methods for easy lookup of protein structure related components
  * 
@@ -112,7 +112,7 @@ public class StructureIO {
 	 */
 	public static Structure getBiologicalAssembly(String pdbId, int biolAssemblyNr) throws IOException, StructureException {
 		
-		QuaternaryDataProvider provider = QuaternaryDataProviderFactory.getQuaternaryDataProvider();
+		BioUnitDataProvider provider = BioUnitDataProviderFactory.getBioUnitDataProvider();
 				
 		provider.setPdbId(pdbId);
 		
@@ -138,7 +138,7 @@ public class StructureIO {
 		 * 
 		 */
 		
-		QuaternaryStructureBuilder builder = new QuaternaryStructureBuilder();
+		BiologicalAssemblyBuilder builder = new BiologicalAssemblyBuilder();
 		
 		// these are the transformations that need to be applied to our model
 		ArrayList<ModelTransformationMatrix> transformations = builder.getBioUnitTransformationList(psa, psag, operators);
@@ -168,7 +168,7 @@ public class StructureIO {
 	 */
 	public static boolean hasBiologicalAssembly(String pdbId){
 		
-		QuaternaryDataProvider provider = QuaternaryDataProviderFactory.getQuaternaryDataProvider();
+		BioUnitDataProvider provider = BioUnitDataProviderFactory.getBioUnitDataProvider();
 		
 		provider.setPdbId(pdbId);
 		
@@ -177,7 +177,7 @@ public class StructureIO {
 	}
 	
 	public static int getNrBiologicalAssemblies(String pdbId){
-		QuaternaryDataProvider provider = QuaternaryDataProviderFactory.getQuaternaryDataProvider();
+		BioUnitDataProvider provider = BioUnitDataProviderFactory.getBioUnitDataProvider();
 		
 		provider.setPdbId(pdbId);
 		
