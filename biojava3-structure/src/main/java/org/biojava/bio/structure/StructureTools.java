@@ -262,6 +262,22 @@ public class StructureTools {
 
 	}
 
+	
+	/** Convert all atoms of the structure (first model) into an Atom array
+	 * 
+	 * @param s input structure
+	 * @return all atom array
+	 */
+	public static final Atom[] getAllAtomArray(Structure s) {
+		List<Atom> atoms = new ArrayList<Atom>();
+		
+		AtomIterator iter = new AtomIterator(s);
+		while (iter.hasNext()){
+			Atom a = iter.next();
+			atoms.add(a);
+		}
+		return (Atom[]) atoms.toArray(new Atom[atoms.size()]);	
+	}
 
 
 	private static void extractCAatoms(String[] atomNames, List<Chain> chains,
