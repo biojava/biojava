@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureException;
+import org.biojava.bio.structure.align.ce.AbstractUserArgumentProcessor;
 import org.biojava.bio.structure.align.util.AtomCache;
 import org.biojava.bio.structure.io.mmcif.model.PdbxStructAssembly;
 import org.biojava.bio.structure.io.mmcif.model.PdbxStructAssemblyGen;
@@ -181,5 +182,18 @@ public class StructureIO {
 		provider.setPdbId(pdbId);
 		
 		return provider.getNrBiolAssemblies();
+	}
+	
+	private static final String FILE_SEPARATOR = System.getProperty("file.separator");
+	
+	/** Utility method to set the location where PDB files can be found
+	 * 
+	 * @param pathToPDBFiles
+	 */
+	public static void setPdbPath(String pathToPDBFiles){
+		
+		if ( ! pathToPDBFiles.endsWith(FILE_SEPARATOR))
+			pathToPDBFiles += FILE_SEPARATOR;
+		System.setProperty(AbstractUserArgumentProcessor.PDB_DIR,pathToPDBFiles);
 	}
 }
