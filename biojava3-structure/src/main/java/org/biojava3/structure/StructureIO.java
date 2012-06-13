@@ -7,9 +7,6 @@ import java.util.List;
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureException;
 import org.biojava.bio.structure.align.util.AtomCache;
-import org.biojava.bio.structure.io.FileParsingParameters;
-import org.biojava.bio.structure.io.MMCIFFileReader;
-import org.biojava.bio.structure.io.mmcif.SimpleMMcifConsumer;
 import org.biojava.bio.structure.io.mmcif.model.PdbxStructAssembly;
 import org.biojava.bio.structure.io.mmcif.model.PdbxStructAssemblyGen;
 import org.biojava.bio.structure.io.mmcif.model.PdbxStructOperList;
@@ -115,7 +112,7 @@ public class StructureIO {
 	public static Structure getBiologicalAssembly(String pdbId, int biolAssemblyNr) throws IOException, StructureException {
 		
 		QuaternaryDataProvider provider = QuaternaryDataProviderFactory.getQuaternaryDataProvider();
-		
+				
 		provider.setPdbId(pdbId);
 		
 		if ( ! provider.hasBiolAssembly()){
@@ -129,7 +126,12 @@ public class StructureIO {
 		
 		PdbxStructAssemblyGen psag = provider.getPdbxStructAssemblyGen(biolAssemblyNr);
 		
+		//System.out.println(psa);
+		//System.out.println(psag);
+		
 		List<PdbxStructOperList> operators = provider.getPdbxStructOperList();
+		//System.out.println(operators);
+		
 		
 		/** now we start to rebuild the quaternary structure
 		 * 
@@ -146,7 +148,10 @@ public class StructureIO {
 			MmCifBiolAssemblyProvider mmcifprov = (MmCifBiolAssemblyProvider) provider;
 			asymUnit = mmcifprov.getAsymUnit();
 		} else {
+			
+			// how to request internal chain IDs?
 			asymUnit = getStructure(pdbId);
+			
 		}
 		
 		
