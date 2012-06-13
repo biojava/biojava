@@ -55,24 +55,52 @@ public class QuaternaryStructureBuilder {
 		
 		Structure s = asymUnit.clone();
 		List<Chain> transformedChains = new ArrayList<Chain>();
+		System.out.print("rebuilding " + s.getPDBCode() + " ");
+		for (Chain c : s.getChains()) {
+			System.out.print(c.getChainID());
+			if ( c.getInternalChainID() != null) {
+				System.out.print("("+c.getInternalChainID()+")");
+			}
+			
+		}
 		
+		
+		
+		//double[] tmpcoords = new double[3]; 
 		for (ModelTransformationMatrix max : transformations){
 			boolean foundChain = false;
-			for ( Chain c : asymUnit.getChains()){
+			for ( Chain c : s.getChains()){
 				
-				if ( max.ndbChainId.equals(c.getInternalChainID())){
+				String intChainID = c.getInternalChainID();
+				if ( intChainID == null) {
+					System.err.println("no internal chain ID found, using " + c.getChainID() + " ( while looking for " + max.ndbChainId+")");
+					intChainID = c.getChainID();
+				}
+				
+				if ( max.ndbChainId.equals(intChainID)){
 					
+					/*System.out.println("transforming " + max.ndbChainId + " " + c.getChainID());
+					System.out.println(max );
+					System.out.println();
+					*/
 					foundChain = true;
 					Chain newChain = (Chain)c.clone();
 					Matrix m = max.getMatrix();
+					//m = m.transpose();
 					double[] vector = max.getVector();
 					Atom v = new AtomImpl();
 					v.setCoords(vector);
-					for ( Group a :newChain.getAtomGroups()) {
-						Calc.rotate(a, m);
-						Calc.shift(a, v);
+					for ( Group g :newChain.getAtomGroups()) {
+						for ( Atom a : g.getAtoms()) {
+							//max.transformPoint(a.getCoords(), tmpcoords);
+							//a.setX(tmpcoords[0]);
+							//a.setY(tmpcoords[1]);
+							//a.setZ(tmpcoords[2]);
+							Calc.rotate(a, m);
+							Calc.shift(a, v);
+						}
 					}
-					
+				
 					transformedChains.add(newChain);
 				}
 				
@@ -100,11 +128,12 @@ public class QuaternaryStructureBuilder {
 	public ArrayList<ModelTransformationMatrix> getBioUnitTransformationList(PdbxStructAssembly psa, PdbxStructAssemblyGen psag, List<PdbxStructOperList> operators) {
 		
 		System.out.println("Rebuilding " + psa.getDetails() + " | " + psa.getOligomeric_details() + " | " + psa.getOligomeric_count());
-		System.out.println(psag);
+		//System.out.println(psag);
 		init();
 		this.psa=psa;
 		this.psag = psag;
 		asymIds= Arrays.asList(psag.getAsym_id_list().split(","));
+		
 		operatorResolver.parseOperatorExpressionString(psag.getOper_expression());
 		//this.operators = operators;
 
@@ -135,6 +164,7 @@ public class QuaternaryStructureBuilder {
 		// apply binary operators to the specified chains
 		// Example 1M4X: generates all products of transformation matrices (1-60)(61-88)
 		for (String chainId : asymIds) {
+			
 			for (OrderedPair<String> operator : operators) {
 				ModelTransformationMatrix original1 = getModelTransformationMatrix(operator.getElement1());
 				ModelTransformationMatrix original2 = getModelTransformationMatrix(operator.getElement2());

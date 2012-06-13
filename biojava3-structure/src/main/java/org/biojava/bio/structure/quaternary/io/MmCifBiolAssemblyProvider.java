@@ -58,6 +58,10 @@ public class MmCifBiolAssemblyProvider implements QuaternaryDataProvider{
 			pdbxStructAssemblies 	= consumer.getStructAssemblies();
 			pdbxStructAssemblyGens 	= consumer.getStructAssemblyGens();
 			
+			//System.out.println(pdbxStructOperList);
+			//System.out.println(pdbxStructAssemblies);
+			//System.out.println(pdbxStructAssemblyGens);
+			
 			// reset the consumer data to avoid memory leaks
 			consumer.documentStart();
 		} catch (Exception e){
