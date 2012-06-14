@@ -47,6 +47,7 @@ import javax.swing.JList;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
+import javax.swing.SwingWorker;
 
 
 
@@ -304,6 +305,7 @@ public class JAutoSuggest extends JTextField{
 			//autoSuggestProvider.getSuggestion(lastWord);
 		
 		
+		
 		if (!getText().toLowerCase().contains(lastWord.toLowerCase())) {
 			suggestions.clear();
 		}
@@ -313,7 +315,8 @@ public class JAutoSuggest extends JTextField{
 		}
 		matcher = new SuggestionFetcher();
 
-		SwingUtilities.invokeLater(matcher);
+		//SwingUtilities.invokeLater(matcher);
+		matcher.execute();
 		lastWord = getText();
 		updateLocation();
 	}
@@ -354,7 +357,7 @@ public class JAutoSuggest extends JTextField{
 	 * 
 	 *
 	 */
-	private class SuggestionFetcher extends Thread {
+	private class SuggestionFetcher extends SwingWorker<String, Object> {
 		/** flag used to stop the thread */
 		private AtomicBoolean stop = new AtomicBoolean(false);
 		
@@ -364,16 +367,16 @@ public class JAutoSuggest extends JTextField{
 		 * responsible for the actual search
 		 */
 		@Override
-		public void run() {
+		public String doInBackground() {
 			try {
 				setFont(busy);
 				String userInput = getText();
 				if ( userInput == null || userInput.equals(""))
-					return;
+					return "";
 				
 				if ( previousWord != null){
 					if ( userInput.equals(previousWord))
-						return;
+						return "";
 				}
 				previousWord = userInput;
 			
@@ -392,8 +395,9 @@ public class JAutoSuggest extends JTextField{
 			} catch (Exception e) {
 				//e.printStackTrace();
 				// ignore...
-				return;
+				
 			}
+			return "Done.";
 		}
 
 		public void setStop(){
