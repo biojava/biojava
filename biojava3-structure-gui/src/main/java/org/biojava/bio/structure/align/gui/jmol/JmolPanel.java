@@ -344,4 +344,16 @@ implements ActionListener
 		}
 	}
 
+	/** Clean up this instance for garbage collection, to avoid memory leaks...
+	 * 
+	 */
+	public void destroy(){
+			
+		executeCmd("zap;");
+		structure = null;
+		
+		viewer = null;
+		adapter = null;
+	}
+
 }

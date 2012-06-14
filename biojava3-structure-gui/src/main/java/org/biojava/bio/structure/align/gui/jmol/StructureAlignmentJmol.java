@@ -165,9 +165,13 @@ public class StructureAlignmentJmol implements MouseMotionListener, MouseListene
          public void windowClosing(WindowEvent e) {
 
             nrOpenWindows--;
+            
+            destroy();
+            
+            if ( nrOpenWindows > 0) {
 
-            if ( nrOpenWindows > 0)
                frame.dispose();
+            }
             else  {
                // check if AlignmentGUI is visible..
 
@@ -339,9 +343,10 @@ public class StructureAlignmentJmol implements MouseMotionListener, MouseListene
    }
 
    public void destroy(){
-
+	   System.err.println("cleaning up structureAlignmentJmol window");
       jmolPanel.removeMouseListener(this);
       jmolPanel.removeMouseMotionListener(this);
+      jmolPanel.destroy();
       afpChain =null;
       ca1 = null;
       ca2 = null;
@@ -750,6 +755,8 @@ private static void printJmolScript4Block(Atom[] ca1, Atom[] ca2, int blockNum,
          jmolPanel.evalString("save STATE state_1");
       }
    }
+   
+   
 
 
 }
