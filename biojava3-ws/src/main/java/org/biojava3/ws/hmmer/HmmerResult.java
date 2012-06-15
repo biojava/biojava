@@ -1,5 +1,6 @@
 package org.biojava3.ws.hmmer;
 
+import java.io.Serializable;
 import java.util.SortedSet;
 
 /** The results of a Hmmer search for a single sequence
@@ -7,8 +8,13 @@ import java.util.SortedSet;
  * @author Andreas Prlic
  * @since 3.0.3
  */
-public class HmmerResult implements Comparable<HmmerResult>{
+public class HmmerResult implements Comparable<HmmerResult>, Serializable{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -6016026193090737943L;
+	
 	String desc ;
 	Float score;
 	Float evalue;
