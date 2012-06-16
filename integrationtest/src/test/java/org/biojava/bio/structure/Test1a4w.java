@@ -42,10 +42,14 @@ public class Test1a4w extends TestCase{
 
 	private static Structure structure = null;
 
-	public void test1a4wPDBFile()
-	{
-
-		//		structure = null;
+	
+	@Override
+	protected void setUp() throws Exception {
+		// TODO Auto-generated method stub
+		super.setUp();
+		
+		if ( structure != null )
+			return;
 		try {
 			InputStream inStream = this.getClass().getResourceAsStream("/1a4w.pdb");
 			assertNotNull(inStream);
@@ -60,6 +64,15 @@ public class Test1a4w extends TestCase{
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+
+
+
+	public void test1a4wPDBFile()
+	{
+
+		//		structure = null;
+		
 
 		assertNotNull(structure);
 
@@ -235,6 +248,7 @@ public class Test1a4w extends TestCase{
 			//System.out.println(ligands);
 			assertEquals("Did not find the correct nr of ligands in chain! " , 8, testSite.getGroups().size());
 		} catch (Exception e){
+			e.printStackTrace();
 			fail(e.getMessage());
 		}
 
