@@ -199,6 +199,8 @@ public class Test1a4w extends TestCase{
 	public void testSiteGroups(){
 		try {
 
+			assertNotNull(structure);
+			
 			//			Structure s = TmpAtomCache.cache.getStructure("1a4w");
 
 			//                    test1a4wPDBFile();
