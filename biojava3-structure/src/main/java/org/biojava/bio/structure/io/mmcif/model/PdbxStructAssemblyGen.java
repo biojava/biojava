@@ -2,6 +2,10 @@ package org.biojava.bio.structure.io.mmcif.model;
 
 import java.io.Serializable;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+
+@XmlAccessorType(XmlAccessType.PUBLIC_MEMBER)
 public class PdbxStructAssemblyGen implements Serializable{
 	/**
 	 * 
@@ -10,6 +14,8 @@ public class PdbxStructAssemblyGen implements Serializable{
 	String assembly_id; 
 	String oper_expression; 
 	String asym_id_list;
+	
+	
 	public String getAssembly_id() {
 		return assembly_id;
 	}
@@ -34,6 +40,9 @@ public class PdbxStructAssemblyGen implements Serializable{
 				+ ", oper_expression=" + oper_expression + ", asym_id_list="
 				+ asym_id_list + "]";
 	} 
+	
+	
+
 	
 	
 }

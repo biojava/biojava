@@ -1,6 +1,21 @@
 package org.biojava.bio.structure.io.mmcif.model;
 
-public class PdbxStructAssembly {
+
+import java.io.Serializable;
+
+
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+
+
+
+@XmlAccessorType(XmlAccessType.PUBLIC_MEMBER)
+public class PdbxStructAssembly implements Serializable{
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 3104504686693887219L;
 	
 	String id; 
 	String details; 
@@ -44,6 +59,8 @@ public class PdbxStructAssembly {
 				+ ", oligomeric_details=" + oligomeric_details
 				+ ", oligomeric_count=" + oligomeric_count + "]";
 	}
+	
+	
 	
 	
 
