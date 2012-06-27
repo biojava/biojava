@@ -13,8 +13,10 @@ import org.biojava.bio.structure.io.mmcif.model.PdbxStructAssemblyGen;
 import org.biojava.bio.structure.io.mmcif.model.PdbxStructOperList;
 import org.biojava.bio.structure.quaternary.ModelTransformationMatrix;
 import org.biojava.bio.structure.quaternary.BiologicalAssemblyBuilder;
-import org.biojava.bio.structure.quaternary.io.MmCifBiolAssemblyProvider;
 import org.biojava.bio.structure.quaternary.io.BioUnitDataProvider;
+import org.biojava.bio.structure.quaternary.io.MmCifBiolAssemblyProvider;
+import org.biojava.bio.structure.quaternary.io.MmCifPDBBiolAssemblyProvider;
+import org.biojava.bio.structure.quaternary.io.PDBBioUnitDataProvider;
 import org.biojava.bio.structure.quaternary.io.BioUnitDataProviderFactory;
 
 /** A class that provides static access methods for easy lookup of protein structure related components
@@ -24,10 +26,10 @@ import org.biojava.bio.structure.quaternary.io.BioUnitDataProviderFactory;
  * @since 3.0.5
  */
 public class StructureIO {
-	
-	
+
+
 	private static AtomCache cache ;
-	
+
 
 	/** Loads a structure based on a name. Supported naming conventions are:
 	 * 
@@ -71,13 +73,13 @@ public class StructureIO {
 	 * 	Also thrown by some submethods upon errors, eg for poorly formatted subranges.
 	 */
 	public static Structure getStructure(String name) throws IOException, StructureException{
-		
+
 		checkInitAtomCache();
-		
+
 		// delegate this functionality to AtomCache...
-		
+
 		return cache.getStructure(name);
-		
+
 	}
 
 
@@ -85,10 +87,10 @@ public class StructureIO {
 		if ( cache == null){
 			cache = new AtomCache();
 		}
-		
+
 	}
-	
-	
+
+
 	/** Returns the first biologicalAssembly that is available for a protein structure. For more documentation on quaternary structures see:
 	 * {@link http://www.pdb.org/pdb/101/static101.do?p=education_discussion/Looking-at-Structures/bioassembly_tutorial.html}
 	 * 
@@ -111,87 +113,61 @@ public class StructureIO {
 	 * @throws IOException 
 	 */
 	public static Structure getBiologicalAssembly(String pdbId, int biolAssemblyNr) throws IOException, StructureException {
-		
+
 		BioUnitDataProvider provider = BioUnitDataProviderFactory.getBioUnitDataProvider();
-				
-		provider.setPdbId(pdbId);
-		
-		if ( ! provider.hasBiolAssembly()){
-			return null;
+
+		List<ModelTransformationMatrix> transformations = provider.getBioUnitTransformationList(pdbId, biolAssemblyNr);
+
+		if ( transformations == null || transformations.size() == 0){
+			throw new StructureException("Could not load transformations to recreate biological assembly nr " + biolAssemblyNr + " of " + pdbId);
 		}
-				
-		/** First we read the required data from wherever we get it from (configured in the factory)
-		 * 
-		 */
-		PdbxStructAssembly psa = provider.getPdbxStructAssembly(biolAssemblyNr) ;
-		
-		PdbxStructAssemblyGen psag = provider.getPdbxStructAssemblyGen(biolAssemblyNr);
-		
-		//System.out.println(psa);
-		//System.out.println(psag);
-		
-		List<PdbxStructOperList> operators = provider.getPdbxStructOperList();
-		//System.out.println(operators);
-		
-		
-		/** now we start to rebuild the quaternary structure
-		 * 
-		 */
-		
-		BiologicalAssemblyBuilder builder = new BiologicalAssemblyBuilder();
-		
-		// these are the transformations that need to be applied to our model
-		ArrayList<ModelTransformationMatrix> transformations = builder.getBioUnitTransformationList(psa, psag, operators);
-		
+
 		Structure asymUnit = null;
-		
-		if ( provider instanceof MmCifBiolAssemblyProvider){
+
+		if ( provider instanceof MmCifBiolAssemblyProvider ) {
 			MmCifBiolAssemblyProvider mmcifprov = (MmCifBiolAssemblyProvider) provider;
-			asymUnit = mmcifprov.getAsymUnit();
+			asymUnit = mmcifprov.getAsymUnit(pdbId);
 		} else {
-			
-			// how to request internal chain IDs?
 			asymUnit = getStructure(pdbId);
-			
 		}
-		
-		
+
+		BiologicalAssemblyBuilder builder = new BiologicalAssemblyBuilder();
+
 		return builder.rebuildQuaternaryStructure(asymUnit, transformations);
-		
-		
+
+
 	}
-	
+
 	/** Does the provider PDB ID have a biological assembly?
 	 * 
 	 * @param pdbId
 	 * @return flag if one or more biological assemblies are available
 	 */
 	public static boolean hasBiologicalAssembly(String pdbId){
-		
+
 		BioUnitDataProvider provider = BioUnitDataProviderFactory.getBioUnitDataProvider();
-		
-		provider.setPdbId(pdbId);
-		
-		return provider.hasBiolAssembly();
-		
+
+
+		return provider.hasBiolAssembly(pdbId);
+
 	}
-	
+
 	public static int getNrBiologicalAssemblies(String pdbId){
 		BioUnitDataProvider provider = BioUnitDataProviderFactory.getBioUnitDataProvider();
-		
-		provider.setPdbId(pdbId);
-		
-		return provider.getNrBiolAssemblies();
+
+
+
+		return provider.getNrBiolAssemblies(pdbId);
 	}
-	
+
 	private static final String FILE_SEPARATOR = System.getProperty("file.separator");
-	
+
 	/** Utility method to set the location where PDB files can be found
 	 * 
 	 * @param pathToPDBFiles
 	 */
 	public static void setPdbPath(String pathToPDBFiles){
-		
+
 		if ( ! pathToPDBFiles.endsWith(FILE_SEPARATOR))
 			pathToPDBFiles += FILE_SEPARATOR;
 		System.setProperty(AbstractUserArgumentProcessor.PDB_DIR,pathToPDBFiles);
