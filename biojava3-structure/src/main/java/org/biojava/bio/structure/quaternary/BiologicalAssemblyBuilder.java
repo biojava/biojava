@@ -51,7 +51,7 @@ public class BiologicalAssemblyBuilder {
 
 	 
 	
-	public Structure rebuildQuaternaryStructure(Structure asymUnit, ArrayList<ModelTransformationMatrix> transformations){
+	public Structure rebuildQuaternaryStructure(Structure asymUnit, List<ModelTransformationMatrix> transformations){
 		
 		Structure s = asymUnit.clone();
 		List<Chain> transformedChains = new ArrayList<Chain>();
@@ -102,9 +102,7 @@ public class BiologicalAssemblyBuilder {
 					}
 				
 					transformedChains.add(newChain);
-				}
-				
-				
+				}								
 			}
 			if (! foundChain){
 				System.err.println("could not transform chain: " + max.ndbChainId);

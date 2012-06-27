@@ -1,136 +1,135 @@
 package org.biojava.bio.structure.quaternary.io;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.biojava.bio.structure.Structure;
-import org.biojava.bio.structure.io.FileParsingParameters;
-import org.biojava.bio.structure.io.MMCIFFileReader;
-import org.biojava.bio.structure.io.mmcif.SimpleMMcifConsumer;
+import org.biojava.bio.structure.StructureException;
 import org.biojava.bio.structure.io.mmcif.model.PdbxStructAssembly;
 import org.biojava.bio.structure.io.mmcif.model.PdbxStructAssemblyGen;
 import org.biojava.bio.structure.io.mmcif.model.PdbxStructOperList;
+import org.biojava.bio.structure.quaternary.BiologicalAssemblyBuilder;
+import org.biojava.bio.structure.quaternary.ModelTransformationMatrix;
+import org.biojava3.structure.StructureIO;
 
+public class MmCifBiolAssemblyProvider implements BioUnitDataProvider {
 
-/** A provider for information about biological units for PDB files that is based on reading local MMcif files.
- * 
- * @author Andreas Prlic
- *
- */
-public class MmCifBiolAssemblyProvider implements BioUnitDataProvider{
-
-	String pdbId;
-	List<PdbxStructAssembly> pdbxStructAssemblies;
-	List<PdbxStructAssemblyGen> pdbxStructAssemblyGens;
-	List<PdbxStructOperList> pdbxStructOperList;
-	Structure asymUnit;
-	
 	public MmCifBiolAssemblyProvider(){
-		//reset();
+		
+	}
+	
+	public Structure getAsymUnit(String pdbId){
+		MmCifPDBBiolAssemblyProvider provider = new MmCifPDBBiolAssemblyProvider();
+
+		provider.setPdbId(pdbId);
+		
+		return provider.getAsymUnit();
 	}
 	
 	@Override
-	public void setPdbId(String pdbId) {
+	public List<ModelTransformationMatrix> getBioUnitTransformationList(
+			String pdbId, int biolAssemblyNr) {
 		
-		if (
-				this.pdbId != null && 
-				(this.pdbId.equals(pdbId))
-				) {
-			// we already have all the data we need...
-			return;
+		MmCifPDBBiolAssemblyProvider provider = new MmCifPDBBiolAssemblyProvider();
+
+		provider.setPdbId(pdbId);
+		
+		PdbxStructAssembly psa = provider.getPdbxStructAssembly(biolAssemblyNr) ;
+		
+		PdbxStructAssemblyGen psag = provider.getPdbxStructAssemblyGen(biolAssemblyNr);
+		
+		if ( psa == null || psag == null) {
+			return null;
 		}
+		//System.out.println(psa);
+		//System.out.println(psag);
 		
-		this.pdbId= pdbId;
+		List<PdbxStructOperList> operators = provider.getPdbxStructOperList();
+		//System.out.println(operators);
 		
-		reset();
 		
-		MMCIFFileReader reader = new MMCIFFileReader();
-		FileParsingParameters params = new FileParsingParameters();
-		reader.setFileParsingParameters(params);
+		/** now we start to rebuild the quaternary structure
+		 * 
+		 */
 		
-		try{
-			asymUnit = reader.getStructureById(pdbId);
+		BiologicalAssemblyBuilder builder = new BiologicalAssemblyBuilder();
 		
-			SimpleMMcifConsumer consumer = reader.getMMcifConsumer();
-					
+		// these are the transformations that need to be applied to our model
+		List<ModelTransformationMatrix> transformations = builder.getBioUnitTransformationList(psa, psag, operators);
+		
+		return transformations;
+	}
+
+	@Override
+	public int getNrBiolAssemblies(String pdbId) {
+		MmCifPDBBiolAssemblyProvider provider = new MmCifPDBBiolAssemblyProvider();
+
+		provider.setPdbId(pdbId);
+		
+		return provider.getNrBiolAssemblies();
+	}
+
+	@Override
+	public boolean hasBiolAssembly(String pdbId) {
+		MmCifPDBBiolAssemblyProvider provider = new MmCifPDBBiolAssemblyProvider();
+
+		provider.setPdbId(pdbId);
+		
+		return provider.hasBiolAssembly();
+	}
+	
+	public Structure getBiolAssembly(String pdbId, int biolAssemblyNr) throws IOException, StructureException{
+		PDBBioUnitDataProvider provider = new MmCifPDBBiolAssemblyProvider();
+		
+		provider.setPdbId(pdbId);
+		
+		if ( ! provider.hasBiolAssembly()){
+			return null;
+		}
+				
+		if (  provider.getNrBiolAssemblies() <= biolAssemblyNr){
+			return null;
+		}
+		/** First we read the required data from wherever we get it from (configured in the factory)
+		 * 
+		 */
+		PdbxStructAssembly psa = provider.getPdbxStructAssembly(biolAssemblyNr) ;
+		
+		PdbxStructAssemblyGen psag = provider.getPdbxStructAssemblyGen(biolAssemblyNr);
+		
+		//System.out.println(psa);
+		//System.out.println(psag);
+		
+		List<PdbxStructOperList> operators = provider.getPdbxStructOperList();
+		//System.out.println(operators);
+		
+		
+		/** now we start to rebuild the quaternary structure
+		 * 
+		 */
+		
+		BiologicalAssemblyBuilder builder = new BiologicalAssemblyBuilder();
+		
+		// these are the transformations that need to be applied to our model
+		ArrayList<ModelTransformationMatrix> transformations = builder.getBioUnitTransformationList(psa, psag, operators);
+		
+		
+		
+		Structure asymUnit = null;
+		
+		if ( provider instanceof MmCifPDBBiolAssemblyProvider){
+			MmCifPDBBiolAssemblyProvider mmcifprov = (MmCifPDBBiolAssemblyProvider) provider;
+			asymUnit = mmcifprov.getAsymUnit();
+		} else {
 			
-			pdbxStructOperList 		= consumer.getStructOpers();
-			pdbxStructAssemblies 	= consumer.getStructAssemblies();
-			pdbxStructAssemblyGens 	= consumer.getStructAssemblyGens();
+			// how to request internal chain IDs?
 			
-			//System.out.println(pdbxStructOperList);
-			//System.out.println(pdbxStructAssemblies);
-			//System.out.println(pdbxStructAssemblyGens);
-			
-			// reset the consumer data to avoid memory leaks
-			consumer.documentStart();
-		} catch (Exception e){
-			e.printStackTrace();
+			asymUnit = StructureIO.getStructure(pdbId);
 			
 		}
-	}
-
-	private void reset() {
-		
-		pdbxStructOperList   	= new ArrayList<PdbxStructOperList>();
-		pdbxStructAssemblies	= new ArrayList<PdbxStructAssembly>();
-		pdbxStructAssemblyGens 	= new ArrayList<PdbxStructAssemblyGen>();
-		asymUnit = null;
-	}
-
-	public String getPdbId(){
-		return pdbId;
-	}
-	
-	@Override
-	public List<PdbxStructAssembly> getPdbxStructAssemblies() {
-		return pdbxStructAssemblies;
-	}
-
-	@Override
-	public List<PdbxStructAssemblyGen> getPdbxStructAssemblyGens() {
-		return pdbxStructAssemblyGens;
-	}
-
-	@Override
-	public List<PdbxStructOperList> getPdbxStructOperList() {
-		return pdbxStructOperList;
-	}
-
-	@Override
-	public int getNrBiolAssemblies() {
-		return pdbxStructAssemblies.size();
-	}
-
-	@Override
-	public boolean hasBiolAssembly() {
-		int nrAssemblies = getNrBiolAssemblies();
-		if ( nrAssemblies > 0) 
-			return true;
-		
-		return false;
-	}
-
-	@Override
-	public PdbxStructAssembly getPdbxStructAssembly(int biolAssemblyNr) {
-		if ( biolAssemblyNr < getNrBiolAssemblies())
-			return pdbxStructAssemblies.get(biolAssemblyNr);
-		return null;
-	}
-
-	@Override
-	public PdbxStructAssemblyGen getPdbxStructAssemblyGen(int biolAssemblyNr) {
-		if ( biolAssemblyNr < getNrBiolAssemblies())
-			return pdbxStructAssemblyGens.get(biolAssemblyNr);
-		return null;
-	}
-	
-	/** get the asym unit for this PDB ID
-	 * 
-	 * @return
-	 */
-	public Structure getAsymUnit(){
-		return asymUnit;
+						
+		return builder.rebuildQuaternaryStructure(asymUnit, transformations);
 	}
 
 }

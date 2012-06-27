@@ -2,70 +2,37 @@ package org.biojava.bio.structure.quaternary.io;
 
 import java.util.List;
 
-import org.biojava.bio.structure.io.mmcif.model.PdbxStructAssembly;
-import org.biojava.bio.structure.io.mmcif.model.PdbxStructAssemblyGen;
-import org.biojava.bio.structure.io.mmcif.model.PdbxStructOperList;
+import org.biojava.bio.structure.quaternary.ModelTransformationMatrix;
 
-
-/** Defines the methods that have to be implemented by a class that provides the data that is necessary to recreate the correct biological assembly of a protein.
+/** Provides access to the data that is needed in order to rebuild the correct biological assembly of a protein.
+ * 
+ * This is probably the simpler approach of accessing the necessary information. There is a second access layer, which is 
+ * closer to the way the PDB is representing the files.
  * 
  * @author Andreas Prlic
- * @since 3.0.5
+ *
  */
 public interface BioUnitDataProvider {
 	
-	/** Tell the provider for which PDB ID the quaternary structure should be returned.
+	/** get the data for a particular assembly, counting starts at 0...
 	 * 
-	 * @param pdbId
+	 * @param pdbId the PDB ID. E.g. 1STP
+	 * @param biolAssemblyNr the number of the assembly, the first one is nr 0.
+	 * @return list of transformations.
 	 */
-	public void setPdbId(String pdbId);
-	
-	/** Data access method for list describing all assemblies
-	 * 
-	 * @return
-	 */
-	public List<PdbxStructAssembly> getPdbxStructAssemblies();
-	
-	/** Data access method for list describing all assemblies
-	 * 
-	 * @return
-	 */
-	public List<PdbxStructAssemblyGen> getPdbxStructAssemblyGens();
-	
-	/** Get all the possible operators
-	 * 
-	 * @return
-	 */
-	public List<PdbxStructOperList> getPdbxStructOperList();
-	
+	public List<ModelTransformationMatrix> getBioUnitTransformationList(String pdbId, int biolAssemblyNr);
 	
 	/** Returns the number of available biological assemblies.
-	 * 
-	 * @return
+	 *  @param pdbId the PDB ID. E.g. 1STP
+	 * @return nr of available assemblies.
 	 */
-	public int getNrBiolAssemblies();
+	public int getNrBiolAssemblies(String pdbId);
 	
 	
 	/** Does the PDB ID have biological assembly information?
 	 * 
+	 * @param pdbId the PDB ID. E.g. 1STP
 	 * @return boolean flag
 	 */
-	public boolean hasBiolAssembly();
-	
-	/** get the data for a particular pdbxStructAssembly. We start counting at 0.
-	 * 
-	 * @param biolAssemblyNr
-	 * @return
-	 */
-	public PdbxStructAssembly getPdbxStructAssembly(int biolAssemblyNr);
-	
-	
-	/** get the data for a particular pdbxStructAssemblyGen. We start counting at 0.
-	 * 
-	 * @param biolAssemblyNr
-	 * @return
-	 */
-	public PdbxStructAssemblyGen getPdbxStructAssemblyGen(int biolAssemblyNr);
-	
-	
+	public boolean hasBiolAssembly(String pdbId);
 }

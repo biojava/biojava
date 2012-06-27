@@ -1,9 +1,27 @@
 package org.biojava.bio.structure.quaternary;
 
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringReader;
+import java.io.StringWriter;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.regex.Pattern;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+
 import org.biojava.bio.structure.jama.Matrix;
+import org.biojava3.core.util.PrettyXMLWriter;
+import org.w3c.dom.Document;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+
 
 
 /**
@@ -33,7 +51,7 @@ import org.biojava.bio.structure.jama.Matrix;
 public class ModelTransformationMatrix {
 	public void setTransformationMatrix(final Matrix matrix, final double[] vector) {
 		this.init();
-		
+
 		synchronized(this.values)
 		{
 			// column-major order for OpenGl
@@ -55,7 +73,7 @@ public class ModelTransformationMatrix {
 			this.values[15] = (1);
 		}
 	}
-	
+
 	/**
 	 * Default Constructor
 	 */
@@ -63,7 +81,7 @@ public class ModelTransformationMatrix {
 	{
 		init();
 	}
-	
+
 	/**
 	 * Copy Constructor
 	 * 
@@ -74,14 +92,14 @@ public class ModelTransformationMatrix {
 		init();
 		for (int ix = 0; ix < 16; ix++)
 			values[ix] = src.values[ix];
-		
+
 		this.id = src.id;
 		//this.cell = src.cell;
 		this.ndbChainId = src.ndbChainId;
 		this.symmetryShorthand = src.symmetryShorthand;
 		this.code = src.code;
 	}
-	
+
 	/**
 	 * This function will change the contents of result, but will not change point.
 	 */
@@ -90,8 +108,8 @@ public class ModelTransformationMatrix {
 		result[1] = this.values[1] * point[0] + this.values[5] * point[1] + this.values[9] * point[2] + this.values[13];
 		result[2] = this.values[2] * point[0] + this.values[6] * point[1] + this.values[10] * point[2] + this.values[14];
 	}
-	
-	
+
+
 
 	/**
 	 * The provided rotation matrix is:
@@ -103,7 +121,7 @@ public class ModelTransformationMatrix {
 	 */
 	public void setTransformationMatrix(final float m00, final float m01, final float m02, final float m10, final float m11, final float m12, final float m20, final float m21, final float m22, final float v0, final float v1, final float v2) {
 		this.init();
-		
+
 		synchronized(this.values) {
 			// column-major order for OpenGl
 			this.values[0] = (m00);
@@ -124,9 +142,9 @@ public class ModelTransformationMatrix {
 			this.values[15] = (1);
 		}
 	}
-	
+
 	public void setIdentity() {
-//		 column-major order for OpenGl
+		//		 column-major order for OpenGl
 		this.values[0] = (1);
 		this.values[1] = (0);
 		this.values[2] = (0);
@@ -145,7 +163,7 @@ public class ModelTransformationMatrix {
 		this.values[15] = (1);
 	}
 
-	
+
 
 	/**
 	 * Given a 4x4 array "matrix0", this function replaces it with the LU
@@ -363,15 +381,15 @@ public class ModelTransformationMatrix {
 			rv -= 4;
 			matrix2[cv + 4 * 1] = (matrix2[cv + 4 * 1] - matrix1[rv + 2]
 					* matrix2[cv + 4 * 2] - matrix1[rv + 3]
-					* matrix2[cv + 4 * 3])
-					/ matrix1[rv + 1];
+							* matrix2[cv + 4 * 3])
+							/ matrix1[rv + 1];
 
 			rv -= 4;
 			matrix2[cv + 4 * 0] = (matrix2[cv + 4 * 0] - matrix1[rv + 1]
 					* matrix2[cv + 4 * 1] - matrix1[rv + 2]
-					* matrix2[cv + 4 * 2] - matrix1[rv + 3]
-					* matrix2[cv + 4 * 3])
-					/ matrix1[rv + 0];
+							* matrix2[cv + 4 * 2] - matrix1[rv + 3]
+									* matrix2[cv + 4 * 3])
+									/ matrix1[rv + 0];
 		}
 	}
 
@@ -452,7 +470,7 @@ public class ModelTransformationMatrix {
 		result.printMatrix("**fractional * symmetry**");
 		result = multiply4square_x_4square2(result, fractional);
 		this.values = result.values;
-		
+
 		// quick fix, to remove rounding errors.
 		for(int i = 0; i < 16; i++) {
 			final float val = this.values[i];
@@ -561,12 +579,12 @@ public class ModelTransformationMatrix {
 		// this sets up the values in the upper left 3x3 matrix.
 		for (int i = 0; i < xyzRawArray.length; i++) {
 			final String xyzRaw = xyzRawArray[i];
-			
+
 			// zero out the values first.
 			this.values[i] = 0f;
 			this.values[i + 4] = 0f;
 			this.values[i + 8] = 0f;
-			
+
 			int coordIndexX = xyzRaw.indexOf('x');
 			if (coordIndexX >= 0) {
 				if (coordIndexX != 0 && xyzRaw.charAt(coordIndexX - 1) == '-') {
@@ -575,7 +593,7 @@ public class ModelTransformationMatrix {
 					this.values[i] = 1f;
 				}
 			}
-			
+
 			int coordIndexY = xyzRaw.indexOf('y');
 
 			if (coordIndexY >= 0) {
@@ -585,7 +603,7 @@ public class ModelTransformationMatrix {
 					this.values[i + 4] = 1f;
 				}
 			}
-			
+
 			int coordIndexZ = xyzRaw.indexOf('z');
 
 			if (coordIndexZ >= 0) {
@@ -596,7 +614,7 @@ public class ModelTransformationMatrix {
 					this.values[i + 8] = 1f;
 				}
 			}
-			
+
 			int coordIndex = -1;
 			if(coordIndexX >=0) {
 				coordIndex = coordIndexX;
@@ -620,7 +638,7 @@ public class ModelTransformationMatrix {
 				this.values = null;
 				return;
 			}
-			
+
 
 			// set the translation coordinate in case the translation is zero.
 			final int translationIndex = 12 + i;
@@ -683,11 +701,11 @@ public class ModelTransformationMatrix {
 
 	public void printMatrix(final String fullSymmetryOperation)
 	{
-/* ** DEBUGGING - printMatrix
+		/* ** DEBUGGING - printMatrix
 		System.err.println("Generated transformation matrix from full symmetry "
 						+ fullSymmetryOperation + ", chain id "
 						+ this.ndbChainId + ": ");
-		
+
 		for (int row = 0; row < 4; row++)
 		{
 			for (int column = 0; column < 4; column++)
@@ -696,7 +714,7 @@ public class ModelTransformationMatrix {
 			System.err.println();
 		}
 		System.err.println();
-* **/
+		 * **/
 	}
 
 	public void init() {
@@ -712,15 +730,15 @@ public class ModelTransformationMatrix {
 	public String symmetryShorthand = null;
 
 	public String code = null;
-	
-	
+
+
 
 	public float values[];
-	
+
 	public Matrix getMatrix(){
-		
-		
-		
+
+
+
 		Matrix m = new Matrix(3,3);
 		m.set(0,0,values[0]);
 		m.set(1,0,values[1]);
@@ -731,29 +749,208 @@ public class ModelTransformationMatrix {
 		m.set(0,2,values[8]);
 		m.set(1,2,values[9]);
 		m.set(2,2,values[10]);
-		
+
 		return m;
+	}
+
+	public void setMatrix(Matrix m){
+		values[0] = (float)m.get(0,0);
+		values[1] = (float)m.get(1,0);
+		values[2] = (float)m.get(2,0);
+		values[4] = (float)m.get(0,1);
+		values[5] = (float)m.get(1,1);
+		values[6] = (float)m.get(2,1);
+		values[8] = (float)m.get(0,2);
+		values[9] = (float)m.get(1,2);
+		values[10] = (float)m.get(2,2);
 	}
 	public double[] getVector(){
 		double[] v = new double[3];
 		v[0] = values[12];
 		v[1] = values[13];
 		v[2] = values[14];
-		
+
 		return v;
-		
+
+	}
+	public void setVector(double[] v){
+
+		values[12] = (float) v[0];
+		values[13] = (float) v[1];
+		values[14] = (float) v[2];
+
 	}
 
 	@Override
 	public String toString() {
-		
+
 		Matrix m = getMatrix();
 		double[] v = getVector();
 		return "ModelTransformationMatrix [id=" + id + ", ndbChainId="
-				+ ndbChainId + ", symmetryShorthand=" + symmetryShorthand
-				+ ", code=" + code + ", values=" + m.toString() + " " +  Arrays.toString(v)
-				+ "]";
+		+ ndbChainId + ", symmetryShorthand=" + symmetryShorthand
+		+ ", code=" + code + ", values=" + m.toString() + " " +  Arrays.toString(v)
+		+ "]";
+	}
+
+	
+	
+
+	public String toXML() throws IOException{
+
+		StringWriter sw = new StringWriter();
+		PrintWriter writer = new PrintWriter(sw);
+
+		PrettyXMLWriter xml = new PrettyXMLWriter(new PrintWriter(writer));
+		
+		toXML(xml);
+		
+		xml.close();
+		writer.close();
+		sw.close();
+		return sw.toString();
+	}
+	
+	public void toXML(PrettyXMLWriter xml) throws IOException{
+		xml.openTag("transformation");
+		xml.attribute("index",id);
+		xml.attribute("chainId", ndbChainId);
+
+		String shorthand = symmetryShorthand;
+		if ( shorthand != null)
+			xml.attribute("symmetryShorthand", shorthand);
+
+
+		if ( code != null) 
+			xml.attribute("code",code);
+
+		xml.openTag("matrix");
+		Matrix m = getMatrix();			
+		for ( int i = 0 ; i<3 ; i++){
+			for ( int j = 0 ; j<3 ;j++){
+				xml.attribute("m" + (i+1) + (j+1), String.format("%.3f",m.get(i,j)));
+			}
+		}
+		xml.closeTag("matrix");
+
+		double[] shift = getVector();
+		xml.openTag("shift");
+		for ( int i = 0 ; i<3 ; i++){
+			xml.attribute("v"+(i+1),String.format("%.3f", shift[i]));
+		}
+		xml.closeTag("shift");
+
+		xml.closeTag("transformation");
+		
+	}
+
+	public static ModelTransformationMatrix fromXML(String xml) 
+			throws SAXException, 
+			IOException, 
+			ParserConfigurationException{
+
+	
+		List<ModelTransformationMatrix> transformations = fromMultiXML(xml);
+		
+		if ( transformations.size() > 0)
+			return transformations.get(0);
+		
+		else
+			return null;
 	}
 	
 	
+	public static List<ModelTransformationMatrix> fromMultiXML(String xml) throws ParserConfigurationException, SAXException, IOException{
+		
+	
+		List<ModelTransformationMatrix> transformations = new ArrayList<ModelTransformationMatrix>();
+		
+		// read the XML of a string and returns a ModelTransformationmatrix
+		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+		DocumentBuilder db = factory.newDocumentBuilder();
+
+		InputSource inStream = new InputSource();
+		inStream.setCharacterStream(new StringReader(xml));
+		Document doc = db.parse(inStream);
+
+		// normalize text representation
+		doc.getDocumentElement().normalize();
+
+
+		//Element rootElement = doc.getDocumentElement();
+
+		NodeList listOfTransforms = doc.getElementsByTagName("transformation");
+
+		for(int pos=0; pos<listOfTransforms.getLength() ; pos++) {
+			Node rootElement       = listOfTransforms.item(pos);
+
+			ModelTransformationMatrix max = new ModelTransformationMatrix();
+			
+			max.id = getAttribute(rootElement,"index");				
+			max.ndbChainId = getAttribute(rootElement,"chainId");
+
+			max.code = getAttribute(rootElement, "code");
+			max.symmetryShorthand = getAttribute(rootElement, "symmetryShorthand");
+
+
+
+			NodeList listOfChildren = rootElement.getChildNodes();
+
+
+			for(int i=0; i<listOfChildren.getLength() ; i++)
+			{
+				// and now the matrix ...
+				Node block       = listOfChildren.item(i);
+
+				// we only look at blocks.
+				if ( block.getNodeName().equals("matrix")) 
+					max.setMatrix(getMatrixFromXML(block));
+
+				if ( block.getNodeName().equals("shift")) 
+					max.setVector(getVectorFromXML(block));
+
+			}
+
+			transformations.add(max);
+		}
+
+		return transformations;
+	}
+
+	private static double[] getVectorFromXML(Node block) {
+		double[] d = new double[3];
+		for ( int i = 0 ; i<3 ; i++){
+			d[i] = Float.parseFloat(getAttribute(block, "v" + (i+1) ));
+		}
+		return d;
+	}
+
+	private static Matrix getMatrixFromXML(Node block) {
+		Matrix m  = new Matrix(3,3);
+		for ( int i = 0 ; i<3 ; i++){
+			for ( int j = 0 ; j<3 ;j++){
+				String val = getAttribute(block, "m" + (i+1)+(j+1));			
+				m.set(i,j, Float.parseFloat(val));
+			}
+		}
+		return m;
+	}
+
+	private static String getAttribute(Node node, String attr){
+		if( ! node.hasAttributes()) 
+			return null;
+
+		NamedNodeMap atts = node.getAttributes();
+
+		if ( atts == null)
+			return null;
+
+		Node att = atts.getNamedItem(attr);
+		if ( att == null)
+			return null;
+
+		String value = att.getTextContent();
+
+		return value;
+
+	}
 }
