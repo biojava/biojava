@@ -39,6 +39,7 @@ import org.biojava.bio.structure.AtomImpl;
 import org.biojava.bio.structure.Chain;
 import org.biojava.bio.structure.ChainImpl;
 import org.biojava.bio.structure.DBRef;
+import org.biojava.bio.structure.Element;
 import org.biojava.bio.structure.Group;
 import org.biojava.bio.structure.HetatomImpl;
 import org.biojava.bio.structure.NucleotideImpl;
@@ -529,6 +530,12 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		} else {
 			a.setAltLoc(new Character(' '));
 		}
+		
+		Element element = Element.R;
+		try {
+			element = Element.valueOfIgnoreCase(atom.getType_symbol());
+		}  catch (IllegalArgumentException e){}
+		a.setElement(element);
 		return a;
 
 	}
