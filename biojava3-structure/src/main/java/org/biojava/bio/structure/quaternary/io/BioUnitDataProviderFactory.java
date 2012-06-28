@@ -6,7 +6,11 @@ public class BioUnitDataProviderFactory {
 	
 	private static final String remoteProviderClassName = "org.biojava.bio.structure.quaternary.io.RemoteBioUnitDataProvider";
 	
-	private static String providerClassName =  remoteProviderClassName;
+	private static final String pdbProviderClassName 	= "org.biojava.bio.structure.quaternary.io.PDBBioUnitDataProvider";
+	
+	public static String DEFAULT_PROVIDER_CLASSNAME =  mmcifProviderClassName;
+	
+	private static String providerClassName = DEFAULT_PROVIDER_CLASSNAME;
 	
 	private BioUnitDataProviderFactory(){
 		
