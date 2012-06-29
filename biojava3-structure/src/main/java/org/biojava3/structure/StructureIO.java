@@ -1,21 +1,16 @@
 package org.biojava3.structure;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureException;
 import org.biojava.bio.structure.align.ce.AbstractUserArgumentProcessor;
 import org.biojava.bio.structure.align.util.AtomCache;
-import org.biojava.bio.structure.io.mmcif.model.PdbxStructAssembly;
-import org.biojava.bio.structure.io.mmcif.model.PdbxStructAssemblyGen;
-import org.biojava.bio.structure.io.mmcif.model.PdbxStructOperList;
 import org.biojava.bio.structure.quaternary.ModelTransformationMatrix;
 import org.biojava.bio.structure.quaternary.BiologicalAssemblyBuilder;
 import org.biojava.bio.structure.quaternary.io.BioUnitDataProvider;
 import org.biojava.bio.structure.quaternary.io.MmCifBiolAssemblyProvider;
-import org.biojava.bio.structure.quaternary.io.MmCifPDBBiolAssemblyProvider;
 import org.biojava.bio.structure.quaternary.io.PDBBioUnitDataProvider;
 import org.biojava.bio.structure.quaternary.io.BioUnitDataProviderFactory;
 
@@ -107,7 +102,7 @@ public class StructureIO {
 	/** By default the getStructure method loads asym units. This access method allows to recreate the quaternary structure for a protein if it is available.
 	 * 
 	 * @param pdbId
-	 * @param biolAssemblyNr - the ith biological assembly that is available for a PDB ID (we start counting at 0).
+	 * @param biolAssemblyNr - the ith biological assembly that is available for a PDB ID (we start counting at 1, 0 represents the asym unit).
 	 * @return a Structure object or null if that assembly is not available
 	 * @throws StructureException 
 	 * @throws IOException 
@@ -116,21 +111,38 @@ public class StructureIO {
 
 		BioUnitDataProvider provider = BioUnitDataProviderFactory.getBioUnitDataProvider();
 
-		List<ModelTransformationMatrix> transformations = provider.getBioUnitTransformationList(pdbId, biolAssemblyNr);
-
-		if ( transformations == null || transformations.size() == 0){
-			throw new StructureException("Could not load transformations to recreate biological assembly nr " + biolAssemblyNr + " of " + pdbId);
-		}
-
 		Structure asymUnit = null;
 
 		if ( provider instanceof MmCifBiolAssemblyProvider ) {
 			MmCifBiolAssemblyProvider mmcifprov = (MmCifBiolAssemblyProvider) provider;
 			asymUnit = mmcifprov.getAsymUnit(pdbId);
+	
+			mmcifprov.setAsymUnit(null);
+			
+		} else if ( provider instanceof PDBBioUnitDataProvider ){
+			PDBBioUnitDataProvider pdbprov= (PDBBioUnitDataProvider) provider;
+			pdbprov.loadPDB(pdbId);
+			//System.out.println(asymUnit.getPDBHeader().getBioUnitTranformations());
+			asymUnit = pdbprov.getAsymUnit();
+			pdbprov.setAsymUnit(null);
+			
 		} else {
 			asymUnit = getStructure(pdbId);
+			
 		}
-
+		
+		// 0 ... asym unit
+		if ( biolAssemblyNr == 0) {
+			return asymUnit;
+		}
+		
+		//List<ModelTransformationMatrix> transformations = provider.getBioUnitTransformationList(pdbId, biolAssemblyNr -1);
+		List<ModelTransformationMatrix> transformations = asymUnit.getPDBHeader().getBioUnitTranformationMap().get(biolAssemblyNr );
+		if ( transformations == null || transformations.size() == 0){
+			
+			throw new StructureException("Could not load transformations to recreate biological assembly nr " + biolAssemblyNr + " of " + pdbId);
+		}
+		
 		BiologicalAssemblyBuilder builder = new BiologicalAssemblyBuilder();
 
 		return builder.rebuildQuaternaryStructure(asymUnit, transformations);
