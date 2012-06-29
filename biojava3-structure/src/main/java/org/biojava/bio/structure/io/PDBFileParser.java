@@ -152,6 +152,10 @@ public class PDBFileParser  {
 	// for printing
 	private static final String NEWLINE;
 
+	// for re-creating the biological assembly
+	
+	private PDBBioAssemblyParser bioAssemblyParser = null;
+	
 	@Deprecated
 	private Map <String,Object>  header ;
 	private PDBHeader pdbHeader;
@@ -246,9 +250,6 @@ public class PDBFileParser  {
 
 
 	private int my_ATOM_CA_THRESHOLD ;
-
-
-
 
 	private int load_max_atoms;
 
@@ -1425,9 +1426,23 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 
 		if (line.startsWith("REMARK 800")) {
 			pdb_REMARK_800_Handler(line);
+		}  else if ( line.startsWith("REMARK 350")){
+			
+			if ( params.isParseBioAssembly()) {
+				
+				if (bioAssemblyParser == null){
+					bioAssemblyParser = new PDBBioAssemblyParser();
+				}
+				
+				bioAssemblyParser.pdb_REMARK_350_Handler(line);
+			}
 		}
 
 	}
+
+
+	
+
 
 
 	/** Handler for
@@ -2758,6 +2773,14 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 		} catch (Exception e){
 			logger.fine("Error while linking SITE records to groups. ..");
 			logger.fine(e.getMessage());
+		}
+		
+		if ( bioAssemblyParser != null){
+			bioAssemblyParser.finalizeCurrentBioMolecule();
+			pdbHeader.setBioUnitTranformationMap(bioAssemblyParser.getTransformationMap());
+			pdbHeader.setNrBioAssemblies(bioAssemblyParser.getNrBioAssemblies());
+			//System.out.println("setting nr bioAssemblies: " + pdbHeader.getNrBioAssemblies());
+			//System.out.println(pdbHeader.getBioUnitTranformationMap().keySet());
 		}
 	}
 
