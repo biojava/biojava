@@ -601,6 +601,7 @@ public class FarmJobRunnable implements Runnable {
 		try {
 			msg = JFatCatClient.sendMultiAFPChainToServer(serverLocation,fullXml, userName, version );
 		} catch (JobKillException e){
+			log(userName+ " Got Job Kill message from server, terminating...");
 			e.printStackTrace();
 			terminate();
 		}
