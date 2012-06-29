@@ -29,7 +29,7 @@ import org.xml.sax.InputSource;
  * @author Andreas Prlic
  *
  */
-public class RemotePDBBioUnitDataProvider implements PDBBioUnitDataProvider {
+public class RemoteRawBioUnitDataProvider implements RawBioUnitDataProvider {
 
 	String pdbId;
 	
@@ -47,14 +47,14 @@ public class RemotePDBBioUnitDataProvider implements PDBBioUnitDataProvider {
 	private static final int DEFAULT_TIMEOUT = 5000;
 	
 	int timeout;
-	public RemotePDBBioUnitDataProvider(){
+	public RemoteRawBioUnitDataProvider(){
 		serverName = DEFAULT_SERVERNAME;
 		timeout = DEFAULT_TIMEOUT;
 	}
 	
 	public static void main(String[] args){
 		
-		RemotePDBBioUnitDataProvider me = new RemotePDBBioUnitDataProvider();
+		RemoteRawBioUnitDataProvider me = new RemoteRawBioUnitDataProvider();
 		
 		me.setPdbId("4hhb");
 		

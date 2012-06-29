@@ -17,7 +17,7 @@ import org.biojava.bio.structure.io.mmcif.model.PdbxStructOperList;
  * @author Andreas Prlic
  *
  */
-public class MmCifPDBBiolAssemblyProvider implements PDBBioUnitDataProvider{
+public class MmCifPDBBiolAssemblyProvider implements RawBioUnitDataProvider{
 
 	String pdbId;
 	List<PdbxStructAssembly> pdbxStructAssemblies;
@@ -46,6 +46,7 @@ public class MmCifPDBBiolAssemblyProvider implements PDBBioUnitDataProvider{
 		
 		MMCIFFileReader reader = new MMCIFFileReader();
 		FileParsingParameters params = new FileParsingParameters();
+		params.setParseBioAssembly(true);
 		reader.setFileParsingParameters(params);
 		
 		try{
@@ -131,6 +132,10 @@ public class MmCifPDBBiolAssemblyProvider implements PDBBioUnitDataProvider{
 	 */
 	public Structure getAsymUnit(){
 		return asymUnit;
+	}
+	
+	public void setAsymUnit(Structure s){
+		this.asymUnit = s;
 	}
 
 }

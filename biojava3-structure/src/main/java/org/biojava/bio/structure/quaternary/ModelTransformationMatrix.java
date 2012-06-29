@@ -48,32 +48,17 @@ import org.xml.sax.SAXException;
  * @author rickb
  *
  */
-public class ModelTransformationMatrix {
-	public void setTransformationMatrix(final Matrix matrix, final double[] vector) {
-		this.init();
+public class ModelTransformationMatrix implements Cloneable {
+	public String id = null;
 
-		synchronized(this.values)
-		{
-			// column-major order for OpenGl
-			this.values[0] = (float) (matrix.get(0,0));
-			this.values[1] = (float) (matrix.get(1,0));
-			this.values[2] = (float) (matrix.get(2,0));
-			this.values[3] = (0);
-			this.values[4] = (float) (matrix.get(0,1));
-			this.values[5] = (float) (matrix.get(1,1));
-			this.values[6] = (float) (matrix.get(2,1));
-			this.values[7] = (0);
-			this.values[8] = (float) (matrix.get(0,2));
-			this.values[9] = (float) (matrix.get(1,2));
-			this.values[10] = (float) (matrix.get(2,2));
-			this.values[11] = (0);
-			this.values[12] = (float) (vector[0]);
-			this.values[13] = (float) (vector[1]);
-			this.values[14] = (float) (vector[2]);
-			this.values[15] = (1);
-		}
-	}
+	public String ndbChainId = null;
 
+	public String symmetryShorthand = null;
+
+	public String code = null;
+
+	public float values[];
+	
 	/**
 	 * Default Constructor
 	 */
@@ -100,6 +85,33 @@ public class ModelTransformationMatrix {
 		this.code = src.code;
 	}
 
+	
+	public void setTransformationMatrix(final Matrix matrix, final double[] vector) {
+		this.init();
+
+		synchronized(this.values)
+		{
+			// column-major order for OpenGl
+			this.values[0] = (float) (matrix.get(0,0));
+			this.values[1] = (float) (matrix.get(1,0));
+			this.values[2] = (float) (matrix.get(2,0));
+			this.values[3] = (0);
+			this.values[4] = (float) (matrix.get(0,1));
+			this.values[5] = (float) (matrix.get(1,1));
+			this.values[6] = (float) (matrix.get(2,1));
+			this.values[7] = (0);
+			this.values[8] = (float) (matrix.get(0,2));
+			this.values[9] = (float) (matrix.get(1,2));
+			this.values[10] = (float) (matrix.get(2,2));
+			this.values[11] = (0);
+			this.values[12] = (float) (vector[0]);
+			this.values[13] = (float) (vector[1]);
+			this.values[14] = (float) (vector[2]);
+			this.values[15] = (1);
+		}
+	}
+
+	
 	/**
 	 * This function will change the contents of result, but will not change point.
 	 */
@@ -723,17 +735,7 @@ public class ModelTransformationMatrix {
 		setIdentity();
 	}
 
-	public String id = null;
 
-	public String ndbChainId = null;
-
-	public String symmetryShorthand = null;
-
-	public String code = null;
-
-
-
-	public float values[];
 
 	public Matrix getMatrix(){
 
@@ -953,4 +955,57 @@ public class ModelTransformationMatrix {
 		return value;
 
 	}
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public String getNdbChainId() {
+		return ndbChainId;
+	}
+
+	public void setNdbChainId(String ndbChainId) {
+		this.ndbChainId = ndbChainId;
+	}
+	
+
+	public String getSymmetryShorthand() {
+		return symmetryShorthand;
+	}
+
+	public void setSymmetryShorthand(String symmetryShorthand) {
+		this.symmetryShorthand = symmetryShorthand;
+	}
+	
+	
+
+	public String getCode() {
+		return code;
+	}
+
+	public void setCode(String code) {
+		this.code = code;
+	}
+
+	public ModelTransformationMatrix clone(){
+		ModelTransformationMatrix m = new ModelTransformationMatrix();
+		
+		m.setMatrix(getMatrix());
+		m.setVector(getVector());
+		m.setId(getId());
+		m.setNdbChainId(getNdbChainId());
+		m.setSymmetryShorthand(getSymmetryShorthand());
+		m.setCode(getCode());
+		return m;
+		
+	}
+
+	
+		
+	
+	
 }

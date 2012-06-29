@@ -2,7 +2,9 @@ package org.biojava.bio.structure.quaternary.io;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureException;
@@ -15,29 +17,37 @@ import org.biojava3.structure.StructureIO;
 
 public class MmCifBiolAssemblyProvider implements BioUnitDataProvider {
 
+	MmCifPDBBiolAssemblyProvider provider; 
+	
 	public MmCifBiolAssemblyProvider(){
-		
+		provider  = new MmCifPDBBiolAssemblyProvider();
 	}
 	
 	public Structure getAsymUnit(String pdbId){
-		MmCifPDBBiolAssemblyProvider provider = new MmCifPDBBiolAssemblyProvider();
-
+	 
 		provider.setPdbId(pdbId);
 		
-		return provider.getAsymUnit();
+		Structure s1 = provider.getAsymUnit();
+		
+		
+		
+		return s1;
+	}
+	
+	public void setAsymUnit(Structure s){
+		provider.setAsymUnit(s);
 	}
 	
 	@Override
 	public List<ModelTransformationMatrix> getBioUnitTransformationList(
 			String pdbId, int biolAssemblyNr) {
 		
-		MmCifPDBBiolAssemblyProvider provider = new MmCifPDBBiolAssemblyProvider();
-
+	// we start counting at 1!
 		provider.setPdbId(pdbId);
 		
-		PdbxStructAssembly psa = provider.getPdbxStructAssembly(biolAssemblyNr) ;
+		PdbxStructAssembly psa = provider.getPdbxStructAssembly(biolAssemblyNr-1) ;
 		
-		PdbxStructAssemblyGen psag = provider.getPdbxStructAssemblyGen(biolAssemblyNr);
+		PdbxStructAssemblyGen psag = provider.getPdbxStructAssemblyGen(biolAssemblyNr-1);
 		
 		if ( psa == null || psag == null) {
 			return null;
@@ -49,22 +59,21 @@ public class MmCifBiolAssemblyProvider implements BioUnitDataProvider {
 		//System.out.println(operators);
 		
 		
-		/** now we start to rebuild the quaternary structure
-		 * 
+		/** 
+		 * Now we start to rebuild the quaternary structure
 		 */
 		
 		BiologicalAssemblyBuilder builder = new BiologicalAssemblyBuilder();
 		
 		// these are the transformations that need to be applied to our model
 		List<ModelTransformationMatrix> transformations = builder.getBioUnitTransformationList(psa, psag, operators);
-		
+		//System.out.println(transformations);
 		return transformations;
 	}
 
 	@Override
 	public int getNrBiolAssemblies(String pdbId) {
-		MmCifPDBBiolAssemblyProvider provider = new MmCifPDBBiolAssemblyProvider();
-
+		
 		provider.setPdbId(pdbId);
 		
 		return provider.getNrBiolAssemblies();
@@ -72,7 +81,7 @@ public class MmCifBiolAssemblyProvider implements BioUnitDataProvider {
 
 	@Override
 	public boolean hasBiolAssembly(String pdbId) {
-		MmCifPDBBiolAssemblyProvider provider = new MmCifPDBBiolAssemblyProvider();
+
 
 		provider.setPdbId(pdbId);
 		
@@ -80,7 +89,7 @@ public class MmCifBiolAssemblyProvider implements BioUnitDataProvider {
 	}
 	
 	public Structure getBiolAssembly(String pdbId, int biolAssemblyNr) throws IOException, StructureException{
-		PDBBioUnitDataProvider provider = new MmCifPDBBiolAssemblyProvider();
+
 		
 		provider.setPdbId(pdbId);
 		

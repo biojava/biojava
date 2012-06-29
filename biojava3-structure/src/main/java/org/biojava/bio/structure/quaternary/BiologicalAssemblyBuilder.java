@@ -64,6 +64,7 @@ public class BiologicalAssemblyBuilder {
 			
 		}
 		
+		//asymUnit.getPDBHeader().setBioUnitTranformations(transformations);
 		
 		
 		//double[] tmpcoords = new double[3]; 

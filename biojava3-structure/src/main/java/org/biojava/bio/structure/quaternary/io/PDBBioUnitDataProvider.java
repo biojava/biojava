@@ -2,71 +2,93 @@ package org.biojava.bio.structure.quaternary.io;
 
 import java.util.List;
 
-import org.biojava.bio.structure.io.mmcif.model.PdbxStructAssembly;
-import org.biojava.bio.structure.io.mmcif.model.PdbxStructAssemblyGen;
-import org.biojava.bio.structure.io.mmcif.model.PdbxStructOperList;
+import org.biojava.bio.structure.PDBHeader;
+import org.biojava.bio.structure.Structure;
+import org.biojava.bio.structure.align.util.AtomCache;
+import org.biojava.bio.structure.io.FileParsingParameters;
+import org.biojava.bio.structure.quaternary.ModelTransformationMatrix;
+import org.biojava3.core.util.SoftHashMap;
 
 
-/** Defines the methods that have to be implemented by a class that provides the data that is necessary to recreate the correct biological assembly of a protein.
- * This is very close to the way PDB is representing biological assemblies. For the outside it is probably easier to use the other way of accessing the data
+/** A BioUnitDataProvider that extracts the necessary info from PDB files
  * 
  * @author Andreas Prlic
- * @since 3.0.5
+ *
  */
-public interface PDBBioUnitDataProvider {
+public class PDBBioUnitDataProvider implements BioUnitDataProvider{
+
 	
-	/** Tell the provider for which PDB ID the quaternary structure should be returned.
-	 * 
-	 * @param pdbId
-	 */
-	public void setPdbId(String pdbId);
+	SoftHashMap<String, PDBHeader> headerCache = new SoftHashMap<String, PDBHeader>(0);
 	
-	/** Data access method for list describing all assemblies
-	 * 
-	 * @return
-	 */
-	public List<PdbxStructAssembly> getPdbxStructAssemblies();
+	Structure s = null;
 	
-	/** Data access method for list describing all assemblies
-	 * 
-	 * @return
-	 */
-	public List<PdbxStructAssemblyGen> getPdbxStructAssemblyGens();
+	public PDBHeader loadPDB(String pdbId){
+		AtomCache cache = new AtomCache();
+
+		FileParsingParameters params = cache.getFileParsingParams();
+
+		params.setParseBioAssembly(true);
+		
+		PDBHeader header = null;
+		try {
+			s =  cache.getStructure(pdbId);
+			
+			header = s.getPDBHeader();
+			headerCache.put(s.getPDBCode(),header);
+		} catch (Exception e){
+			e.printStackTrace();
+		}	
+		return header ;
+	}
 	
-	/** Get all the possible operators
-	 * 
-	 * @return
-	 */
-	public List<PdbxStructOperList> getPdbxStructOperList();
+	public Structure getAsymUnit(){
+		return s;
+	}
+	public void setAsymUnit(Structure s){
+		this.s = s;
+	}
 	
+	@Override
+	public List<ModelTransformationMatrix> getBioUnitTransformationList(
+			String pdbId, int biolAssemblyNr) {
+
 	
-	/** Returns the number of available biological assemblies.
-	 * 
-	 * @return
-	 */
-	public int getNrBiolAssemblies();
-	
-	
-	/** Does the PDB ID have biological assembly information?
-	 * 
-	 * @return boolean flag
-	 */
-	public boolean hasBiolAssembly();
-	
-	/** get the data for a particular pdbxStructAssembly. We start counting at 0.
-	 * 
-	 * @param biolAssemblyNr
-	 * @return
-	 */
-	public PdbxStructAssembly getPdbxStructAssembly(int biolAssemblyNr);
-	
-	
-	/** get the data for a particular pdbxStructAssemblyGen. We start counting at 0.
-	 * 
-	 * @param biolAssemblyNr
-	 * @return
-	 */
-	public PdbxStructAssemblyGen getPdbxStructAssemblyGen(int biolAssemblyNr);
-	
-	
+		PDBHeader header = headerCache.get(pdbId);
+		
+		if ( header == null) {
+			header = loadPDB(pdbId);
+		}
+		
+		return header.getBioUnitTranformationMap().get(biolAssemblyNr);
+
+
+	}
+
+	@Override
+	public int getNrBiolAssemblies(String pdbId) {
+		PDBHeader header = headerCache.get(pdbId);
+		
+		if ( header == null) {
+			header = loadPDB(pdbId);
+		}
+		
+		return header.getNrBioAssemblies();
+	}
+
+	@Override
+	public boolean hasBiolAssembly(String pdbId) {
+		PDBHeader header = headerCache.get(pdbId);
+		
+		if ( header == null) {
+			header = loadPDB(pdbId);
+		}
+		
+		if ( header.getNrBioAssemblies() > 0) {
+			return true;
+		}
+		
+		return false;
+		
+	}
+
 }
