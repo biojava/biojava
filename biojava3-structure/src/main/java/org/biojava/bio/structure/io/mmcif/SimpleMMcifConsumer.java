@@ -75,6 +75,8 @@ import org.biojava.bio.structure.io.mmcif.model.StructAsym;
 import org.biojava.bio.structure.io.mmcif.model.StructKeywords;
 import org.biojava.bio.structure.io.mmcif.model.StructRef;
 import org.biojava.bio.structure.io.mmcif.model.StructRefSeq;
+import org.biojava.bio.structure.quaternary.BiologicalAssemblyBuilder;
+import org.biojava.bio.structure.quaternary.ModelTransformationMatrix;
 
 /** A MMcifConsumer implementation that build a in-memory representation of the
  * content of a mmcif file as a BioJava Structure object.
@@ -114,11 +116,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 	public  SimpleMMcifConsumer(){
 		params = new FileParsingParameters();
 		documentStart();
-
-
 	}
-
-
 
 	public void newEntity(Entity entity) {
 		if (DEBUG)
@@ -127,6 +125,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 	}
 
 	public void newPdbxStructOperList(PdbxStructOperList structOper){
+		
 		structOpers.add(structOper);
 	}
 
@@ -708,8 +707,34 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		}
 
 
+		// set the oligomeric state info in the header...
+		
+		PDBHeader header = structure.getPDBHeader();
+		header.setNrBioAssemblies(strucAssemblies.size());
 
-
+		// the more detailed mapping of chains to rotation operations happens in StructureIO...
+		// TODO clean this up and move it here...
+		//header.setBioUnitTranformationMap(tranformationMap);
+		Map<Integer,List<ModelTransformationMatrix>> transformationMap = new HashMap<Integer, List<ModelTransformationMatrix>>();
+		int total = strucAssemblies.size();
+		for ( int i =0 ; i < total ;i++){
+			//List<ModelTransformationMatrix>tmp = getBioUnitTransformationList(pdbId, i +1);
+			
+			PdbxStructAssembly psa = strucAssemblies.get(i);
+			PdbxStructAssemblyGen psag = strucAssemblyGens.get(i);
+			
+			
+			BiologicalAssemblyBuilder builder = new BiologicalAssemblyBuilder();
+			
+			// these are the transformations that need to be applied to our model
+			List<ModelTransformationMatrix> transformations = builder.getBioUnitTransformationList(psa, psag, structOpers);
+			
+			transformationMap.put(i+1,transformations);
+			//System.out.println("mmcif header: " + (i+1) + " " + transformations.size() +" " +  transformations);
+		}
+		
+		structure.getPDBHeader().setBioUnitTranformationMap(transformationMap);
+		
 
 	}
 
