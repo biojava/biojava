@@ -24,6 +24,7 @@
 package org.biojava3.alignment;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
@@ -153,6 +154,39 @@ public class SimpleProfile<S extends Sequence<C>, C extends Compound> implements
 		length = sx.size();
 	}
 
+	 /**
+     * Creates a profile for the already aligned sequences.
+     * @param alignedSequences the already aligned sequences
+     * @throws IllegalArgument if aligned sequences differ in length or
+     * collection is empty.
+     */
+    public SimpleProfile(Collection<AlignedSequence<S,C>> alignedSequences) {
+        list = new ArrayList<AlignedSequence<S,C>>();
+        originals = new ArrayList<S>();
+        
+        Iterator<AlignedSequence<S,C>> itr = alignedSequences.iterator();
+        if(!itr.hasNext()) {
+            throw new IllegalArgumentException("alignedSequences must not be empty");
+        }
+        
+        AlignedSequence<S, C> curAlignedSeq = itr.next();
+        length = curAlignedSeq.getLength();
+        list.add(curAlignedSeq);
+        originals.add((S) curAlignedSeq.getOriginalSequence());
+        
+        while (itr.hasNext()) {
+            curAlignedSeq = itr.next();
+            if (curAlignedSeq.getLength() != length) {
+                throw new IllegalArgumentException("Aligned sequences differ in size");
+            }
+            list.add(curAlignedSeq);
+            originals.add((S) curAlignedSeq.getOriginalSequence());
+        }
+        list = Collections.unmodifiableList(list);
+        originals = Collections.unmodifiableList(originals);
+    }
+	
+	
 	// methods for Profile
 
 	@Override
