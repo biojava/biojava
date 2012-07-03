@@ -52,6 +52,7 @@ import org.biojava.bio.structure.scop.ScopDescription;
 import org.biojava.bio.structure.scop.ScopDomain;
 import org.biojava.bio.structure.scop.ScopFactory;
 import org.biojava3.core.util.InputStreamProvider;
+import org.biojava3.structure.StructureIO;
 
 
 
@@ -93,7 +94,7 @@ public class AtomCache {
 	private boolean fetchCurrent;
 
 	public static final String PDP_DOMAIN_IDENTIFIER = "PDP:";
-
+	public static final String BIOL_ASSEMBLY_IDENTIFIER = "BIO:";
 
 	
 	/**
@@ -496,17 +497,7 @@ public class AtomCache {
 
 
 
-			} else if ( (name.length() > 6) &&  ( ! name.startsWith(PDP_DOMAIN_IDENTIFIER) ) && 
-					(name.contains(CHAIN_NR_SYMBOL) || name.contains(UNDERSCORE)) && (! (name.startsWith("file:/") || name.startsWith("http:/")))) {
-
-				// this is a name + range 
-
-				pdbId = name.substring(0,4);
-				// this ID has domain split information...
-				useDomainInfo = true;
-				range = name.substring(5);
-
-			} else if ( name.startsWith("file:/") || name.startsWith("http:/") ) {
+			}  else if ( name.startsWith("file:/") || name.startsWith("http:/") ) {
 
 				// this is a URL
 				try {
@@ -531,6 +522,30 @@ public class AtomCache {
 					e.printStackTrace();
 					return null;
 				}
+			} else if ( name.startsWith(BIOL_ASSEMBLY_IDENTIFIER)){
+								
+				try {
+					
+					return getBioAssembly(name);
+					
+				} catch (Exception e){
+					e.printStackTrace();
+					return null;
+				}
+			} else if ( (name.length() > 6) 
+					&&  ( ! name.startsWith(PDP_DOMAIN_IDENTIFIER) ) 
+					&& (name.contains(CHAIN_NR_SYMBOL) || name.contains(UNDERSCORE)) 
+					&& ( ! (name.startsWith("file:/") || name.startsWith("http:/")))
+														
+					) {
+
+				// this is a name + range 
+
+				pdbId = name.substring(0,4);
+				// this ID has domain split information...
+				useDomainInfo = true;
+				range = name.substring(5);
+
 			}
 
 			//System.out.println("got: >" + name + "< " + pdbId + " " + chainId + " useChainNr:" + useChainNr + " " +chainNr + " useDomainInfo:" + useDomainInfo + " " + range);
@@ -608,6 +623,23 @@ public class AtomCache {
 		return n;
 
 
+	}
+
+	private Structure getBioAssembly(String name) throws IOException, StructureException {
+		
+		// can be specified as:
+		// BIO:1fah   - first one
+		// BIO:1fah:0 - asym unit
+		// BIO:1fah:1 - first one
+		// BIO:1fah:2 - second one 
+		
+		String pdbId = name.substring(4,8);
+		int biolNr = 1;
+		if ( name.length() > 8)
+			biolNr = Integer.parseInt(name.substring(9,name.length()));
+				
+		return StructureIO.getBiologicalAssembly(pdbId,biolNr);
+				
 	}
 
 	private Structure getPDPStructure(String pdpDomainName) {
