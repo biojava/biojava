@@ -125,4 +125,47 @@ public class HmmerResult implements Comparable<HmmerResult>, Serializable{
 		return false;
 	}
 	
+	public int getOverlapLength(HmmerResult other){
+		
+		int overlap = 0;
+		for ( HmmerDomain d1 : getDomains()){
+			for (HmmerDomain d2 : other.getDomains()){
+				overlap += getOverlap(d1, d2);
+			}
+		}
+		return overlap;
+		
+	}
+	
+	private int getOverlap(HmmerDomain one, HmmerDomain other){
+		int xs = one.getSqFrom();
+		int ys = one.getSqTo();
+		int as = other.getSqFrom();
+		int bs = other.getSqTo();
+
+		int overlap = 0;
+		//1:
+		
+		if ((( xs< as)  && ( as<ys)) || ((xs < bs) && ( bs <= ys)) || (as<xs && ys<bs)) {
+			
+			//2:
+
+			if ( xs < as) {
+				if ( ys < bs) 
+					overlap = ys-as;
+				else
+					overlap = bs-as;
+			} else {
+				if  ( ys < bs) 
+					overlap = ys -xs;
+				else 
+					overlap = bs - xs;
+
+			} 
+
+		}
+
+		return overlap;
+	}
+	
 }
