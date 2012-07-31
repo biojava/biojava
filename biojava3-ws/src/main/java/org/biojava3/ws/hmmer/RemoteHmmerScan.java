@@ -115,8 +115,17 @@ public class RemoteHmmerScan implements HmmerScan {
 
 				HmmerResult hmmResult = new HmmerResult();
 
+				Object dclO = hit.get("dcl");
+				Integer dcl = -1;
+				if ( dclO instanceof Long){
+					Long dclL = (Long) dclO;
+					dcl = dclL.intValue();
+				} else if ( dclO instanceof Integer){
+					dcl = (Integer) dclO;
+				} 
+				
 				hmmResult.setAcc((String)hit.get("acc"));
-				hmmResult.setDcl((Integer)hit.get("dcl"));
+				hmmResult.setDcl(dcl);
 				hmmResult.setDesc((String)hit.get("desc"));
 				hmmResult.setEvalue(Float.parseFloat((String)hit.get("evalue")));
 				hmmResult.setName((String)hit.get("name"));
