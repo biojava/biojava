@@ -125,6 +125,12 @@ public class HmmerResult implements Comparable<HmmerResult>, Serializable{
 		return false;
 	}
 	
+	
+	/** Get the overlap between two HmmerResult objects
+	 * 
+	 * @param other
+	 * @return 0 if no overlap, otherwise the length of the overlap
+	 */
 	public int getOverlapLength(HmmerResult other){
 		
 		int overlap = 0;
