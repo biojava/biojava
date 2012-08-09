@@ -234,6 +234,15 @@ public final class ORonn implements Callable<ORonn> {
 			throw new IllegalArgumentException(message);
 		}
 		final String sequence = fsequence.getSequence();
+				
+		if ( SequenceUtil.isAmbiguosProtein(sequence)){
+			System.err.println("WARNING sequence is ambiguous!");
+		}
+		
+		if (!(SequenceUtil.isProteinSequence(sequence) )){
+			System.err.println("WARNING does not look like a protein sequence!");
+		}
+		
 		if (!(SequenceUtil.isProteinSequence(sequence) || SequenceUtil
 				.isAmbiguosProtein(sequence))) {
 			message = "IGNORING sequence " + fsequence.getId()

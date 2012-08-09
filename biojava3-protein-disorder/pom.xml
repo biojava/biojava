@@ -48,6 +48,11 @@
 			<artifactId>junit</artifactId>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>org.biojava</groupId>
+			<artifactId>biojava3-core</artifactId>
+			<version>3.0.5-SNAPSHOT</version>
+		</dependency>
 	</dependencies>
 
 	<properties>

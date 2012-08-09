@@ -30,9 +30,11 @@ import java.util.TreeMap;
 
 
 
+import org.biojava3.core.sequence.ProteinSequence;
+import org.biojava3.core.sequence.compound.AminoAcidCompound;
 import org.biojava3.data.sequence.FastaSequence;
 import org.biojava3.data.sequence.SequenceUtil;
-import org.biojava3.ronn.ORonn.ResultLayout;
+
 
 /**
  * This class gives public API to RONN functions. 
@@ -71,17 +73,19 @@ public class Jronn {
 		/**
 		 * Range starting position counts from 1 (the first position on the sequence is 1)
 		 */
-		final int from; 
+		public final int from; 
 		/**
 		 * The range ending position includes the last residue. 
 		 */
-		final int to; 
+		public final int to; 
 	
-		public Range(int from, int to) {
+		public final float score;
+		public Range(int from, int to, float score) {
 			assert from>=0; 
 			assert from<to; 
 			this.from = from; 
 			this.to = to; 
+			this.score = score;
 		}
 
 		@Override
@@ -127,6 +131,43 @@ public class Jronn {
 	 */
 	public static float[] getDisorderScores(FastaSequence sequence) {
 		    return predictSerial(sequence);
+	}
+	
+	/**
+	 * Calculates the probability value for each residue in the protein sequence, 
+	 * telling the probability that the residue belongs to disordered region. 
+	 * In general, values greater than 0.5 considered to be in the disordered regions. 
+	 *   
+	 * @param sequence an instance of FastaSequence object, holding the name and the sequence. 
+	 * @return the probability scores for each residue in the sequence
+	 */
+	public static float[] getDisorderScores(ProteinSequence sequence) {
+		
+		FastaSequence seq = convertProteinSequencetoFasta(sequence);
+		
+		return predictSerial(seq);
+	}
+	
+	/** Utility method to convert a BioJava ProteinSequence object to the FastaSequence 
+	 *  object used internally in JRonn.
+	 * 
+	 * @param sequence
+	 * @return
+	 */
+	public static FastaSequence convertProteinSequencetoFasta(ProteinSequence sequence){
+		StringBuffer buf = new StringBuffer();
+		for (AminoAcidCompound compound : sequence) {
+			
+			String c = compound.getShortName();
+			
+			if (! SequenceUtil.NON_AA.matcher(c).find()) {
+				buf.append(c);
+			} else {				
+				buf.append("X");
+			}									
+		}
+		
+		return new FastaSequence(sequence.getAccession().getID(),buf.toString());
 	}
 
 	private static float[] predictSerial(FastaSequence fsequence) {
@@ -181,14 +222,14 @@ public class Jronn {
 				regionLen++;
 			} else {
 				if(regionLen>0) {
-					ranges.add(new Range(count-regionLen, count-1));
+					ranges.add(new Range(count-regionLen, count-1,score));
 				}
 				regionLen=0;
 			}
 		}
 		// In case of the range to boundary runs to the very end of the sequence 
 		if(regionLen>1) {
-			ranges.add(new Range(count-regionLen+1, count));
+			ranges.add(new Range(count-regionLen+1, count,scores[scores.length-1]));
 		}
 		return ranges.toArray(new Range[ranges.size()]); 		
 
