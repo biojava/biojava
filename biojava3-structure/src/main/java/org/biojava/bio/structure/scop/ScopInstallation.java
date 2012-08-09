@@ -550,8 +550,8 @@ public class ScopInstallation implements ScopDatabase {
 
 			int classId =Integer.parseInt(treeSplit[0].substring(3));
 			int foldId = Integer.parseInt(treeSplit[1].substring(3));
-			int familyId = Integer.parseInt(treeSplit[2].substring(3));
-			int superfamilyId = Integer.parseInt(treeSplit[3].substring(3));			
+			int superfamilyId = Integer.parseInt(treeSplit[2].substring(3));
+			int familyId = Integer.parseInt(treeSplit[3].substring(3));						
 			int domainId = Integer.parseInt(treeSplit[4].substring(3));
 			int speciesId = Integer.parseInt(treeSplit[5].substring(3));
 			int px = Integer.parseInt(treeSplit[6].substring(3));
