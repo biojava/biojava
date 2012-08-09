@@ -73,7 +73,7 @@ public class ScopTest extends TestCase {
 		//System.out.println(domains);
 
 
-		String scop1m02 = "d1m02a_	1m02	A:	k.36.1.1	74353	cl=58788,cf=75796,sf=75797,fa=75798,dm=75799,sp=75800,px=74353";
+		String scop1m02 = "d1m02a_	1m02	A:	k.36.1.1	74353	cl=58788,cf=75796,sf=75798,fa=75797,dm=75799,sp=75800,px=74353";
 
 		List<ScopDomain> domains1m02 = scop.getDomainsForPDB("1m02");
 		assertTrue(domains1m02.size() == 1);
