@@ -60,7 +60,9 @@ public class GeneFeatureHelperTest extends TestCase {
         boolean throwExceptionGeneNotFound = false;
         LinkedHashMap<String, ChromosomeSequence> chromosomeSequenceHashMap = GeneFeatureHelper.loadFastaAddGeneFeaturesFromUpperCaseExonFastaFile( fastaSequenceFile, uppercaseFastaFile,  throwExceptionGeneNotFound);
 
-        FileOutputStream fo = new FileOutputStream("src/test/resources/testoutput/volvox_all_genes_exon_uppercase.gff3");
+        File tmp = File.createTempFile("volvox_all_genes_exon_uppercase", "gff3");
+        tmp.deleteOnExit();
+        FileOutputStream fo = new FileOutputStream(tmp);
         GFF3Writer gff3Writer = new GFF3Writer();
         gff3Writer.write(fo, chromosomeSequenceHashMap);
         fo.close();
@@ -74,7 +76,8 @@ public class GeneFeatureHelperTest extends TestCase {
 //        System.out.println("outputFastaSequenceLengthGFF3");
 
         File fastaSequenceFile = new File("src/test/resources/volvox_all.fna");
-        File gffFile = new File("src/test/resources/testoutput/volvox_length.gff3");
+        File gffFile = File.createTempFile("volvox_length", "gff3");
+        gffFile.deleteOnExit();
         GeneFeatureHelper.outputFastaSequenceLengthGFF3(fastaSequenceFile, gffFile);
         FileAssert.assertBinaryEquals("volvox_length.gff3 and volvox_length_output.gff3 are not equal", gffFile, new File("src/test/resources/volvox_length_reference.gff3"));
 
@@ -104,11 +107,10 @@ public class GeneFeatureHelperTest extends TestCase {
 //        for(ProteinSequence proteinSequence : proteinSequenceList.values()){
 //            System.out.println("Output=" + proteinSequence.getSequenceAsString());
 //        }
-        FastaWriterHelper.writeProteinSequence(new File("src/test/resources/testoutput/volvox_all.faa"), proteinSequenceList.values());
-
-        FileAssert.assertEquals("volvox_all_reference.faa and volvox_all.faa are not equal", new File("src/test/resources/volvox_all_reference.faa"), new File("src/test/resources/testoutput/volvox_all.faa"));
-
-
+        File tmp = File.createTempFile("volvox_all", "faa");
+        tmp.deleteOnExit();
+        FastaWriterHelper.writeProteinSequence(tmp, proteinSequenceList.values());
+        FileAssert.assertEquals("volvox_all_reference.faa and volvox_all.faa are not equal", new File("src/test/resources/volvox_all_reference.faa"), tmp);
     }
    
     /**
