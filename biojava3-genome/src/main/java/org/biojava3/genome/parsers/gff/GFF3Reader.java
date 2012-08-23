@@ -3,7 +3,9 @@ package org.biojava3.genome.parsers.gff;
 
 import java.io.*;
 import java.util.*;
-import java.util.logging.Logger;
+import java.util.regex.Pattern;
+
+import org.apache.log4j.Logger;
 
 /**
  * http://www.bioperl.org/wiki/GTF
@@ -24,9 +26,10 @@ import java.util.logging.Logger;
  * ease the task of accessing and using the attributes. The proper interpretation of any
  * particular attribute, however, is left to you.
  *
- * @author Hanno Hinsch
+ * @author Hanno Hinsch, Carmelo Foti
  */
 public class GFF3Reader {
+	private static final  Pattern p = Pattern.compile("\t");
 
     private static final Logger log = Logger.getLogger(GFF3Reader.class.getName());
 
@@ -37,10 +40,12 @@ public class GFF3Reader {
      * @return A FeatureList.
      * @throws IOException Something went wrong -- check exception detail message.
      */
-    public static FeatureList read(String filename) throws IOException {
-        log.info("Gff.read(): Reading " + filename);
+    
+    public static FeatureList read(String filename, List<String> indexes) throws IOException {
+    	log.info("Gff.read(): Reading " + filename);
 
         FeatureList features = new FeatureList();
+        features.addIndexes(indexes);
         BufferedReader br = new BufferedReader(new FileReader(filename));
 
         String s;
@@ -57,6 +62,7 @@ public class GFF3Reader {
                     FeatureI f = parseLine(s);
                     if (f != null) {
                         features.add(f);
+             
                     }
                 }
             }
@@ -66,49 +72,43 @@ public class GFF3Reader {
         br.close();
         return features;
     }
-
+    
+    
+    public static FeatureList read(String filename) throws IOException {
+       return read(filename,new ArrayList<String>(0));
+    }
+    
+    
     /**
      * create Feature from line of GFF file
      */
     private static Feature parseLine(String s) {
         //FIXME update to use regex split on tabs
         //FIXME better errors on parse failures
-
+    	String[] line = p.split(s);
         int start = 0;
         int end = 0;
+        String seqname =line[0].trim();
 
-        start = end;
-        end = s.indexOf('\t', start);
-        String seqname = s.substring(start, end).trim();
+        String source =line[1].trim();
 
-        start = end + 1;
-        end = s.indexOf('\t', start);
-        String source = s.substring(start, end).trim();
+        String type =line[2].trim();
 
-        start = end + 1;
-        end = s.indexOf('\t', start);
-        String type = s.substring(start, end);
 
-        start = end + 1;
-        end = s.indexOf('\t', start);
-        String locStart = s.substring(start, end);
+        String locStart =line[3].trim();
 
-        start = end + 1;
-        end = s.indexOf('\t', start);
-        String locEnd = s.substring(start, end);
+        String locEnd =line[4].trim();
 
         Double score;
-        start = end + 1;
-        end = s.indexOf('\t', start);
+
         try {
-            score = Double.parseDouble(s.substring(start, end));
+            score = Double.parseDouble(line[5].trim());
         } catch (Exception e) {
             score = 0.0;
         }
 
-        start = end + 1;
-        end = s.indexOf('\t', start);
-        char strand = s.charAt(end - 1);
+
+        char strand = line[6].trim().charAt(0);
         //added by scooter willis to deal with glimmer predictions that
         //have the start after the end but is a negative strand
         int locationStart = Integer.parseInt(locStart);
@@ -124,15 +124,13 @@ public class GFF3Reader {
         assert (strand == '-') == location.isNegative();
 
         int frame;
-        start = end + 1;
-        end = s.indexOf('\t', start);
         try {
-            frame = Integer.parseInt(s.substring(start, end));
+            frame = Integer.parseInt(line[7].trim());
         } catch (Exception e) {
             frame = -1;
         }
-
-        //grab everything until end of line (or # comment)
+        String attributes=line[8];
+    /*    //grab everything until end of line (or # comment)
         start = end + 1;
         end = s.indexOf('#', start);
         String attributes = null;
@@ -141,8 +139,8 @@ public class GFF3Reader {
         } else {
             attributes = new String(s.substring(start, end));
         }
-
-        return new Feature(seqname, source, type, location, score, frame, attributes);
+*/
+        return new Feature(seqname, source, type, location, score, frame, attributes.split("#")[0]);
 
     }
 
@@ -150,12 +148,10 @@ public class GFF3Reader {
 
 
     public static void main(String args[]) throws Exception {
-
-        FeatureList listGenes = GFF3Reader.read("/Users/Scooter/scripps/dyadic/GlimmerHMM/c1_glimmerhmm.gff");
-        System.out.println("Features");
-        for(FeatureI feature : listGenes){
-            System.out.println(feature);
-        }
+    	long start = System.currentTimeMillis();
+        FeatureList listGenes = GFF3Reader.read("/home/melo/workspace/release/stdout.combined.checked2.gtf");
+        long stop = System.currentTimeMillis();
+        System.out.println("Loading = "+ (stop-start));
 //        System.out.println(listGenes);
         //	GeneMarkGTF.write( list, args[1] );
     }
