@@ -4,8 +4,8 @@ package org.biojava3.genome.parsers.gff;
 import java.io.*;
 import java.util.*;
 import java.util.regex.Pattern;
+import java.util.logging.Logger;
 
-import org.apache.log4j.Logger;
 
 /**
  * http://www.bioperl.org/wiki/GTF
@@ -26,7 +26,7 @@ import org.apache.log4j.Logger;
  * ease the task of accessing and using the attributes. The proper interpretation of any
  * particular attribute, however, is left to you.
  *
- * @author Hanno Hinsch, Carmelo Foti
+ * @author Hanno Hinsch
  */
 public class GFF3Reader {
 	private static final  Pattern p = Pattern.compile("\t");
