@@ -2,11 +2,11 @@ package org.biojava.bio.structure.quaternary.io;
 
 public class BioUnitDataProviderFactory {
 
-	private static final String mmcifProviderClassName = "org.biojava.bio.structure.quaternary.io.MmCifBiolAssemblyProvider";
+	public static final String mmcifProviderClassName = "org.biojava.bio.structure.quaternary.io.MmCifBiolAssemblyProvider";
 	
-	private static final String remoteProviderClassName = "org.biojava.bio.structure.quaternary.io.RemoteBioUnitDataProvider";
+	public static final String remoteProviderClassName = "org.biojava.bio.structure.quaternary.io.RemoteBioUnitDataProvider";
 	
-	private static final String pdbProviderClassName 	= "org.biojava.bio.structure.quaternary.io.PDBBioUnitDataProvider";
+	public static final String pdbProviderClassName 	= "org.biojava.bio.structure.quaternary.io.PDBBioUnitDataProvider";
 	
 	public static String DEFAULT_PROVIDER_CLASSNAME =  pdbProviderClassName;
 	

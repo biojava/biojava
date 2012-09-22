@@ -8,7 +8,7 @@ import org.biojava.bio.structure.quaternary.ModelTransformationMatrix;
 /** Provides access to the data that is needed in order to rebuild the correct biological assembly of a protein.
  * 
  * This is probably the simpler approach of accessing the necessary information. There is a second access layer, which is 
- * closer to the way the PDB is representing the files.
+ * closer to the way the PDB is representing the files, it is defined by the interface RawBioUnitDataProvider.
  * 
  * @author Andreas Prlic
  *
