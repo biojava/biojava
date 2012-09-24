@@ -10,6 +10,7 @@ import org.biojava.bio.structure.Atom;
 import org.biojava.bio.structure.PDBHeader;
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureTools;
+import org.biojava.bio.structure.align.util.AtomCache;
 import org.biojava.bio.structure.quaternary.ModelTransformationMatrix;
 import org.biojava.bio.structure.quaternary.io.BioUnitDataProviderFactory;
 import org.biojava.bio.structure.quaternary.io.MmCifBiolAssemblyProvider;
@@ -65,12 +66,15 @@ public class TestQuaternaryStructureProviders {
 		
 			BioUnitDataProviderFactory.setBioUnitDataProvider(BioUnitDataProviderFactory.DEFAULT_PROVIDER_CLASSNAME);
 			
+			
+			
 			PDBHeader pHeader = pdbS.getPDBHeader();
 			PDBHeader mHeader = mmcifS.getPDBHeader();
+			//PDBHeader fHeader = flatFileS.getPDBHeader();
 			
 			assertTrue("not correct nr of bioassemblies " + pHeader.getNrBioAssemblies() + " " , pHeader.getNrBioAssemblies() >= bioMolecule);
 			assertTrue("not correct nr of bioassemblies " + mHeader.getNrBioAssemblies() + " " , mHeader.getNrBioAssemblies() >= bioMolecule);
-			
+			//assertTrue("not correct nr of bioassemblies " + fHeader.getNrBioAssemblies() + " " , fHeader.getNrBioAssemblies() >= bioMolecule);
 			
 			// mmcif files contain sometimes partial virus assemblies, so they can contain more info than pdb
 			assertTrue(pHeader.getNrBioAssemblies() <= mHeader.getNrBioAssemblies());
@@ -132,6 +136,12 @@ public class TestQuaternaryStructureProviders {
 			
 			assertEquals(pdbA[0].toPDB(), mmcifA[0].toPDB());
 			
+			
+			// compare with flat file version:
+			AtomCache cache = new AtomCache();
+			Structure flatFileS = cache.getBiologicalAssembly(pdbId, bioMolecule, false);
+			Atom[] fileA = StructureTools.getAllAtomArray(flatFileS);
+			assertEquals(pdbA.length, fileA.length);
 						
 		} catch (Exception e){
 			e.printStackTrace();
