@@ -34,22 +34,31 @@ public class StructureIO {
 		name     := pdbID
 		               | pdbID '.' chainID
 		               | pdbID '.' range
-		               | scopID
+		               | scopID 
+		               | biol
+		               | pdp
 		range         := '('? range (',' range)? ')'?
 		               | chainID
 		               | chainID '_' resNum '-' resNum
 		pdbID         := [0-9][a-zA-Z0-9]{3}
 		chainID       := [a-zA-Z0-9]
 		scopID        := 'd' pdbID [a-z_][0-9_]
+		biol		  := 'BIOL:' pdbID [:]? [0-9]+
+		pdp			  := 'PDP:' pdbID[A-Za-z0-9_]+ 
 		resNum        := [-+]?[0-9]+[A-Za-z]?
 
 
 		Example structures:
-		1TIM     #whole structure - asym unit
-		4HHB.C     #single chain
-		4GCR.A_1-83     #one domain, by residue number
-		3AA0.A,B     #two chains treated as one structure
+		1TIM     	#whole structure - asym unit
+		4HHB.C     	#single chain
+		4GCR.A_1-83 #one domain, by residue number
+		3AA0.A,B    #two chains treated as one structure
 		d2bq6a1     #scop domain
+		BIOL:1fah   #biological assembly nr 1 for 1fah
+		BIOL:1fah:0 #asym unit for 1fah
+		BIOL:1fah:1 #biological assembly nr 1 for 1fah
+		BIOL:1fah:2 #biological assembly nr 2 for 1fah
+		
 		</pre>
 	 * 
 	 * With the additional set of rules:
@@ -96,7 +105,7 @@ public class StructureIO {
 	 * @throws IOException 
 	 */
 	public static Structure getBiologicalAssembly(String pdbId) throws IOException, StructureException{
-		return getBiologicalAssembly(pdbId,0);
+		return getBiologicalAssembly(pdbId,1);
 	}
 
 	/** By default the getStructure method loads asym units. This access method allows to recreate the quaternary structure for a protein if it is available.
