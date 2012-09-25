@@ -298,13 +298,18 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 
 		//String chain_id      = atom.getAuth_asym_id();
 		String chain_id      = atom.getLabel_asym_id();		
-		String fullname      = fixFullAtomName(atom.getLabel_atom_id());
+		String fullname      = fixFullAtomName(atom.getLabel_atom_id());		
 		String recordName    = atom.getGroup_PDB();
 		String residueNumberS = atom.getAuth_seq_id();
 		Integer residueNrInt = Integer.parseInt(residueNumberS);
 		// the 3-letter name of the group:
 		String groupCode3    = atom.getLabel_comp_id();
-
+		if ( groupCode3.length() == 1){
+			groupCode3 = "  " + groupCode3;
+		}
+		if ( groupCode3.length() == 2){
+			groupCode3 = " " + groupCode3;
+		}
 		Character aminoCode1 = null;
 		if ( recordName.equals("ATOM") )
 			aminoCode1 = StructureTools.get1LetterCode(groupCode3);
@@ -491,6 +496,9 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		else {
 			current_group.addAtom(a);
 		}
+		
+		//System.out.println(">" + atom.getLabel_atom_id()+"< " + a.getGroup().getPDBName() + " " + a.getGroup().getChemComp()  );
+		
 		//System.out.println(current_group);
 
 	}
@@ -507,6 +515,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 
 		a.setPDBserial(Integer.parseInt(atom.getId()));
 		a.setName(atom.getLabel_atom_id());
+		
 		a.setFullName(fixFullAtomName(atom.getLabel_atom_id()));
 
 
@@ -535,6 +544,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 			element = Element.valueOfIgnoreCase(atom.getType_symbol());
 		}  catch (IllegalArgumentException e){}
 		a.setElement(element);
+		
 		return a;
 
 	}
