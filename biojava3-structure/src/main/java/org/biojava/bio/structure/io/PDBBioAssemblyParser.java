@@ -33,7 +33,8 @@ public class PDBBioAssemblyParser {
 		
 		transformations = new ArrayList<ModelTransformationMatrix>();
 		
-		currentMatrix = new Matrix(3,3);
+		currentMatrix = Matrix.identity(3,3);
+		currentBioMolecule = null;
 		shift = new double[3];
 		correct = 0;
 		
@@ -56,6 +57,7 @@ public class PDBBioAssemblyParser {
 			}
 			//System.out.println(line);
 			currentBioMolecule = Integer.parseInt(nr);
+			currentIndex = 1;
 	
 		} else if ( line.startsWith("REMARK 350 APPLY THE FOLLOWING TO CHAINS:")) {
 		
@@ -75,7 +77,7 @@ public class PDBBioAssemblyParser {
 
 	private void readMatrix(String line) {
 		
-		
+		//System.out.println(line);
 		String pos = line.substring(18,19);
 		int i = Integer.parseInt(pos);
 		
@@ -90,14 +92,12 @@ public class PDBBioAssemblyParser {
 			
 			currentIndex = id;
 			
-			currentMatrix = new Matrix(3,3);
+			currentMatrix = Matrix.identity(3,3);
 			
 			shift = new double[3];
 			
 		}
 		
-		//System.out.println(line);
-	
 		
 		String x = line.substring(24+correct,33+correct);
 		
@@ -131,7 +131,7 @@ public class PDBBioAssemblyParser {
 		max.setVector(shift);
 		max.id = currentIndex+"";
 		
-		//System.out.println("addnewMatrix: " + max);
+		
 		
 		for ( String chainId : currentChainIDs) {
 			ModelTransformationMatrix m = (ModelTransformationMatrix) max.clone();
@@ -167,7 +167,7 @@ public class PDBBioAssemblyParser {
 	}
 
 	public void finalizeCurrentBioMolecule() {
-		//System.out.println("finalizing biomolecule...");
+		//System.out.println("finalizing biomolecule..." + currentBioMolecule);
 		// the last matrix has not been added at this stage...
 		addNewMatrix();
 		
