@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.biojava.bio.structure.Structure;
+import org.biojava.bio.structure.StructureTools;
 import org.biojava.bio.structure.io.FileParsingParameters;
 import org.biojava.bio.structure.io.MMCIFFileReader;
 import org.biojava.bio.structure.io.mmcif.SimpleMMcifConsumer;
@@ -51,7 +52,11 @@ public class MmCifPDBBiolAssemblyProvider implements RawBioUnitDataProvider{
 		
 		try{
 			asymUnit = reader.getStructureById(pdbId);
-		
+			if ( asymUnit.nrModels() > 1) {
+				// why do some NMR structures have bio units???
+				asymUnit = StructureTools.removeModels(asymUnit);
+			}
+				
 			SimpleMMcifConsumer consumer = reader.getMMcifConsumer();
 					
 			
