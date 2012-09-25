@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.biojava.bio.structure.PDBHeader;
 import org.biojava.bio.structure.Structure;
+import org.biojava.bio.structure.StructureTools;
 import org.biojava.bio.structure.align.util.AtomCache;
 import org.biojava.bio.structure.io.FileParsingParameters;
 import org.biojava.bio.structure.quaternary.ModelTransformationMatrix;
@@ -28,6 +29,7 @@ public class PDBBioUnitDataProvider implements BioUnitDataProvider{
 		FileParsingParameters params = cache.getFileParsingParams();
 
 		params.setParseBioAssembly(true);
+		params.setUpdateRemediatedFiles(true);
 		
 		PDBHeader header = null;
 		try {
@@ -42,6 +44,9 @@ public class PDBBioUnitDataProvider implements BioUnitDataProvider{
 	}
 	
 	public Structure getAsymUnit(){
+		
+		if ( s.nrModels() > 1) 
+			s = StructureTools.removeModels(s);
 		return s;
 	}
 	public void setAsymUnit(Structure s){
