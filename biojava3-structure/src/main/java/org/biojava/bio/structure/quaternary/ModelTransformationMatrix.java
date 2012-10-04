@@ -815,7 +815,7 @@ public class ModelTransformationMatrix implements Cloneable {
 	public void toXML(PrettyXMLWriter xml) throws IOException{
 		xml.openTag("transformation");
 		xml.attribute("index",id);
-		xml.attribute("chainId", ndbChainId);
+		//xml.attribute("chainId", ndbChainId);
 
 		String shorthand = symmetryShorthand;
 		if ( shorthand != null)
