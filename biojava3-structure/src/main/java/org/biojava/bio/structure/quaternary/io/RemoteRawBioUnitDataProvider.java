@@ -174,9 +174,9 @@ public class RemoteRawBioUnitDataProvider implements RawBioUnitDataProvider {
 	}
 
 	@Override
-	public PdbxStructAssemblyGen getPdbxStructAssemblyGen(int biolAssemblyNr) {
+	public List<PdbxStructAssemblyGen> getPdbxStructAssemblyGen(int biolAssemblyNr) {
 		
-		PdbxStructAssemblyGen pdbxStructAssemblyGen = null;
+		List<PdbxStructAssemblyGen> pdbxStructAssemblyGen = null;
 		
 		return pdbxStructAssemblyGen;
 	}

@@ -13,6 +13,7 @@ import org.biojava.bio.structure.io.mmcif.model.PdbxStructAssemblyGen;
 import org.biojava.bio.structure.io.mmcif.model.PdbxStructOperList;
 
 
+
 /** A provider for information about biological units for PDB files that is based on reading local MMcif files.
  * 
  * @author Andreas Prlic
@@ -64,9 +65,11 @@ public class MmCifPDBBiolAssemblyProvider implements RawBioUnitDataProvider{
 			pdbxStructAssemblies 	= consumer.getStructAssemblies();
 			pdbxStructAssemblyGens 	= consumer.getStructAssemblyGens();
 			
-			//System.out.println(pdbxStructOperList);
-			//System.out.println(pdbxStructAssemblies);
-			//System.out.println(pdbxStructAssemblyGens);
+			System.out.println(asymUnit.getPDBHeader());
+			
+			System.out.println("OPER:" + pdbxStructOperList);
+			System.out.println("ASSEMBLIES:" + pdbxStructAssemblies);
+			System.out.println("ASSEMBLYGENS:" + pdbxStructAssemblyGens);
 			
 			// reset the consumer data to avoid memory leaks
 			consumer.documentStart();
@@ -125,10 +128,16 @@ public class MmCifPDBBiolAssemblyProvider implements RawBioUnitDataProvider{
 	}
 
 	@Override
-	public PdbxStructAssemblyGen getPdbxStructAssemblyGen(int biolAssemblyNr) {
-		if ( biolAssemblyNr < getNrBiolAssemblies())
-			return pdbxStructAssemblyGens.get(biolAssemblyNr);
-		return null;
+	public List<PdbxStructAssemblyGen> getPdbxStructAssemblyGen(int biolAssemblyNr) {
+		if ( biolAssemblyNr > getNrBiolAssemblies())
+			return null;
+		
+		List<PdbxStructAssemblyGen> psags = new ArrayList<PdbxStructAssemblyGen>();
+		for (PdbxStructAssemblyGen psag : pdbxStructAssemblyGens){
+			if ( psag.getAssembly_id().equals((biolAssemblyNr +1)+ ""))
+				psags.add(psag);
+		}
+		return psags;
 	}
 	
 	/** get the asym unit for this PDB ID

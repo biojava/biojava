@@ -2,9 +2,7 @@ package org.biojava.bio.structure.quaternary.io;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureException;
@@ -28,9 +26,6 @@ public class MmCifBiolAssemblyProvider implements BioUnitDataProvider {
 		provider.setPdbId(pdbId);
 		
 		Structure s1 = provider.getAsymUnit();
-		
-		
-		
 		return s1;
 	}
 	
@@ -42,18 +37,20 @@ public class MmCifBiolAssemblyProvider implements BioUnitDataProvider {
 	public List<ModelTransformationMatrix> getBioUnitTransformationList(
 			String pdbId, int biolAssemblyNr) {
 		
-	// we start counting at 1!
+
 		provider.setPdbId(pdbId);
+
 		
+		// we start counting at 1!
 		PdbxStructAssembly psa = provider.getPdbxStructAssembly(biolAssemblyNr-1) ;
 		
-		PdbxStructAssemblyGen psag = provider.getPdbxStructAssemblyGen(biolAssemblyNr-1);
-		
-		if ( psa == null || psag == null) {
+		List<PdbxStructAssemblyGen> psags = provider.getPdbxStructAssemblyGen(biolAssemblyNr-1);
+				
+		if ( psa == null || psags == null) {
 			return null;
 		}
 		//System.out.println(psa);
-		//System.out.println(psag);
+		//System.out.println(psags);
 		
 		List<PdbxStructOperList> operators = provider.getPdbxStructOperList();
 		//System.out.println(operators);
@@ -66,7 +63,7 @@ public class MmCifBiolAssemblyProvider implements BioUnitDataProvider {
 		BiologicalAssemblyBuilder builder = new BiologicalAssemblyBuilder();
 		
 		// these are the transformations that need to be applied to our model
-		List<ModelTransformationMatrix> transformations = builder.getBioUnitTransformationList(psa, psag, operators);
+		List<ModelTransformationMatrix> transformations = builder.getBioUnitTransformationList(psa, psags, operators);
 		//System.out.println(transformations);
 		return transformations;
 	}
@@ -105,10 +102,10 @@ public class MmCifBiolAssemblyProvider implements BioUnitDataProvider {
 		 */
 		PdbxStructAssembly psa = provider.getPdbxStructAssembly(biolAssemblyNr) ;
 		
-		PdbxStructAssemblyGen psag = provider.getPdbxStructAssemblyGen(biolAssemblyNr);
+		List<PdbxStructAssemblyGen> psags = provider.getPdbxStructAssemblyGen(biolAssemblyNr);
 		
-		//System.out.println(psa);
-		//System.out.println(psag);
+//		System.out.println(psa);
+//		System.out.println(psags);
 		
 		List<PdbxStructOperList> operators = provider.getPdbxStructOperList();
 		//System.out.println(operators);
@@ -121,7 +118,7 @@ public class MmCifBiolAssemblyProvider implements BioUnitDataProvider {
 		BiologicalAssemblyBuilder builder = new BiologicalAssemblyBuilder();
 		
 		// these are the transformations that need to be applied to our model
-		ArrayList<ModelTransformationMatrix> transformations = builder.getBioUnitTransformationList(psa, psag, operators);
+		ArrayList<ModelTransformationMatrix> transformations = builder.getBioUnitTransformationList(psa, psags, operators);
 		
 		
 		

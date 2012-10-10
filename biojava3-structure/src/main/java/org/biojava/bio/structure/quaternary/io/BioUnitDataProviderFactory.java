@@ -8,7 +8,7 @@ public class BioUnitDataProviderFactory {
 	
 	public static final String pdbProviderClassName 	= "org.biojava.bio.structure.quaternary.io.PDBBioUnitDataProvider";
 	
-	public static String DEFAULT_PROVIDER_CLASSNAME =  pdbProviderClassName;
+	public static String DEFAULT_PROVIDER_CLASSNAME =  mmcifProviderClassName;
 	
 	private static String providerClassName = DEFAULT_PROVIDER_CLASSNAME;
 	

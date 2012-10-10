@@ -836,7 +836,7 @@ public class ModelTransformationMatrix implements Cloneable {
 
 		double[] shift = getVector();
 		xml.openTag("shift");
-		for ( int i = 0 ; i<3 ; i++){
+		for ( int i = 0 ; i<3 ; i++) {
 			xml.attribute("v"+(i+1),String.format("%.8f", shift[i]));
 		}
 		xml.closeTag("shift");

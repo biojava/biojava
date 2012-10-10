@@ -51,7 +51,7 @@ public class OperatorResolver {
 			binaryOperators = BioAssemblyTools.parseBinaryOperatorExpression(expression);
 		}
 		
-		System.out.println("OperatorResolver: " + unaryOperators + " | " + binaryOperators);
+		System.out.println("OperatorResolver: unary: " + unaryOperators + " | binary: " + binaryOperators);
 	}
 
 

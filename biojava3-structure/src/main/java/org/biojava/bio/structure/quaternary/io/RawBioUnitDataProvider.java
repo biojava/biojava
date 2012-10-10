@@ -67,7 +67,7 @@ public interface RawBioUnitDataProvider {
 	 * @param biolAssemblyNr
 	 * @return
 	 */
-	public PdbxStructAssemblyGen getPdbxStructAssemblyGen(int biolAssemblyNr);
+	public List<PdbxStructAssemblyGen> getPdbxStructAssemblyGen(int biolAssemblyNr);
 	
 	
 }
