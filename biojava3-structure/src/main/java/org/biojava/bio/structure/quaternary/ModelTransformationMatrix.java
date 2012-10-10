@@ -826,10 +826,11 @@ public class ModelTransformationMatrix implements Cloneable {
 			xml.attribute("code",code);
 
 		xml.openTag("matrix");
-		Matrix m = getMatrix();			
-		for ( int i = 0 ; i<3 ; i++){
-			for ( int j = 0 ; j<3 ;j++){
-				xml.attribute("m" + (i+1) + (j+1), String.format("%.8f",m.get(i,j)));
+		Matrix m = getMatrix();
+		
+			for ( int i = 0 ; i<3 ; i++){
+				for ( int j = 0 ; j<3 ;j++){	
+				xml.attribute("m" +  (j+1) + (i+1), String.format("%.8f",m.get(j,i)));
 			}
 		}
 		xml.closeTag("matrix");
@@ -930,8 +931,8 @@ public class ModelTransformationMatrix implements Cloneable {
 		Matrix m  = new Matrix(3,3);
 		for ( int i = 0 ; i<3 ; i++){
 			for ( int j = 0 ; j<3 ;j++){
-				String val = getAttribute(block, "m" + (i+1)+(j+1));			
-				m.set(i,j, Float.parseFloat(val));
+				String val = getAttribute(block, "m" + (j+1)+(i+1));			
+				m.set(j,i, Float.parseFloat(val));
 			}
 		}
 		return m;
