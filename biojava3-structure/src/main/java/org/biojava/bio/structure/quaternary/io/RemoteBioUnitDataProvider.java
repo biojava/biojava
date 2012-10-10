@@ -9,6 +9,7 @@ import java.util.List;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
+import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.align.client.JFatCatClient;
 import org.biojava.bio.structure.align.util.HTTPConnectionTools;
 import org.biojava.bio.structure.quaternary.ModelTransformationMatrix;
@@ -143,5 +144,17 @@ public class RemoteBioUnitDataProvider implements BioUnitDataProvider {
 			e.printStackTrace();
 		}
 		return nrBiolAssemblies;
+	}
+
+	@Override
+	public Structure getAsymUnit(String pdbId) {
+		System.err.println("RemoteBioUnitDataProvider getAsymUnit Not implemented yet!");
+		return null;
+	
+	
+	}
+	
+	public void setAsymUnit(Structure s){
+		// nothing to be done here so far..
 	}
 }

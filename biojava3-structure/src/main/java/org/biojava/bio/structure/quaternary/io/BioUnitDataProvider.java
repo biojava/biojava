@@ -3,6 +3,7 @@ package org.biojava.bio.structure.quaternary.io;
 import java.util.List;
 import java.util.Map;
 
+import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.quaternary.ModelTransformationMatrix;
 
 /** Provides access to the data that is needed in order to rebuild the correct biological assembly of a protein.
@@ -36,4 +37,14 @@ public interface BioUnitDataProvider {
 	 * @return boolean flag
 	 */
 	public boolean hasBiolAssembly(String pdbId);
+	
+	
+	/** load the asym unit, but set the info how to re-create the bio unit in the PdbHeader object
+	 * 
+	 * @param pdbId
+	 * @return
+	 */
+	public Structure getAsymUnit(String pdbId);
+	
+	public void setAsymUnit(Structure asymUnit);
 }

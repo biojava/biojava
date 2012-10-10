@@ -43,7 +43,11 @@ public class PDBBioUnitDataProvider implements BioUnitDataProvider{
 		return header ;
 	}
 	
-	public Structure getAsymUnit(){
+	public Structure getAsymUnit(String pdbId){
+		
+		if (s == null ||( ! s.getPDBCode().equalsIgnoreCase(pdbId))) {
+			loadPDB(pdbId);
+		}
 		
 		if ( s.nrModels() > 1) 
 			s = StructureTools.removeModels(s);
