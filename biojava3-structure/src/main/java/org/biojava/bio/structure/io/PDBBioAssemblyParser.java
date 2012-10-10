@@ -60,7 +60,13 @@ public class PDBBioAssemblyParser {
 			currentIndex = 1;
 	
 		} else if ( line.startsWith("REMARK 350 APPLY THE FOLLOWING TO CHAINS:")) {
-		
+			System.out.println("NEW SECTION " + currentChainIDs.size()+ " " + line);
+			if ( currentChainIDs.size() > 0){
+				addNewMatrix();
+				currentChainIDs.clear();
+				currentIndex++;
+			}
+			
 			addToCurrentChainList(line);
 		
 		} else if ( line.startsWith("REMARK 350                    AND CHAINS:")) {
@@ -77,7 +83,7 @@ public class PDBBioAssemblyParser {
 
 	private void readMatrix(String line) {
 		
-		//System.out.println(line);
+		System.out.println(line);
 		String pos = line.substring(18,19);
 		int i = Integer.parseInt(pos);
 		
@@ -122,7 +128,7 @@ public class PDBBioAssemblyParser {
 	}
 
 	private void addNewMatrix() {
-	
+		System.out.println("adding new matrix " + currentIndex + " for " + currentChainIDs);
 		ModelTransformationMatrix max = new ModelTransformationMatrix();
 		
 		//System.out.println(currentMatrix);
@@ -131,8 +137,7 @@ public class PDBBioAssemblyParser {
 		max.setVector(shift);
 		max.id = currentIndex+"";
 		
-		
-		
+			
 		for ( String chainId : currentChainIDs) {
 			ModelTransformationMatrix m = (ModelTransformationMatrix) max.clone();
 			m.setNdbChainId(chainId);
@@ -148,6 +153,7 @@ public class PDBBioAssemblyParser {
 			//System.err.println("CORRECTION!");
 			correct +=1;
 		}
+		
 		
 		
 	}
@@ -167,20 +173,21 @@ public class PDBBioAssemblyParser {
 	}
 
 	public void finalizeCurrentBioMolecule() {
-		//System.out.println("finalizing biomolecule..." + currentBioMolecule);
+		System.out.println("finalizing biomolecule..." + currentBioMolecule);
 		// the last matrix has not been added at this stage...
 		addNewMatrix();
 		
-		
+		//System.out.println("transformations for current molec: " + transformations);	
 		transformationMap.put(currentBioMolecule,transformations);
 		
 		transformations = new ArrayList<ModelTransformationMatrix>();
-		//System.out.println("BioMolecule " + currentBioMolecule + " has chainIDs: " + currentChainIDs);
-		//System.out.println(transformations);		
+		System.out.println("BioMolecule " + currentBioMolecule + " has chainIDs: " + currentChainIDs);
+			
 		currentChainIDs.clear();
 	}
 
 	public Map<Integer,List<ModelTransformationMatrix>> getTransformationMap() {
+		//System.out.println(transformationMap);
 		return transformationMap;
 	}
 
