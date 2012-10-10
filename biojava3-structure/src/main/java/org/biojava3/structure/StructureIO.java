@@ -94,6 +94,9 @@ public class StructureIO {
 
 	}
 
+	public static void setAtomCache(AtomCache c){
+		cache = c;
+	}
 
 	/** Returns the first biologicalAssembly that is available for a protein structure. For more documentation on quaternary structures see:
 	 * {@link http://www.pdb.org/pdb/101/static101.do?p=education_discussion/Looking-at-Structures/bioassembly_tutorial.html}
@@ -122,23 +125,26 @@ public class StructureIO {
 
 		Structure asymUnit = null;
 
-		if ( provider instanceof MmCifBiolAssemblyProvider ) {
-			MmCifBiolAssemblyProvider mmcifprov = (MmCifBiolAssemblyProvider) provider;
-			asymUnit = mmcifprov.getAsymUnit(pdbId);
-	
-			mmcifprov.setAsymUnit(null);
-			
-		} else if ( provider instanceof PDBBioUnitDataProvider ){
-			PDBBioUnitDataProvider pdbprov= (PDBBioUnitDataProvider) provider;
-			pdbprov.loadPDB(pdbId);
-			//System.out.println(asymUnit.getPDBHeader().getBioUnitTranformations());
-			asymUnit = pdbprov.getAsymUnit();
-			pdbprov.setAsymUnit(null);
-			
-		} else {
-			asymUnit = getStructure(pdbId);
-			
-		}
+		asymUnit = provider.getAsymUnit(pdbId);
+		provider.setAsymUnit(null);
+		
+//		if ( provider instanceof MmCifBiolAssemblyProvider ) {
+//			MmCifBiolAssemblyProvider mmcifprov = (MmCifBiolAssemblyProvider) provider;
+//			asymUnit = mmcifprov.getAsymUnit(pdbId);
+//	
+//			mmcifprov.setAsymUnit(null);
+//			
+//		} else if ( provider instanceof PDBBioUnitDataProvider ){
+//			PDBBioUnitDataProvider pdbprov= (PDBBioUnitDataProvider) provider;
+//			//pdbprov.loadPDB(pdbId);
+//			//System.out.println(asymUnit.getPDBHeader().getBioUnitTranformations());
+//			asymUnit = pdbprov.getAsymUnit(pdbId);
+//			pdbprov.setAsymUnit(null);
+//			
+//		} else {
+//			asymUnit = getStructure(pdbId);
+//			
+//		}
 		
 		// 0 ... asym unit
 		if ( biolAssemblyNr == 0) {
