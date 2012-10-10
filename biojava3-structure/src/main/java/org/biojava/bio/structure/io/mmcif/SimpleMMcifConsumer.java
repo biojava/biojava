@@ -103,7 +103,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 	List<PdbxStructOperList> structOpers ; //
 	List<PdbxStructAssembly> strucAssemblies;
 	List<PdbxStructAssemblyGen> strucAssemblyGens;
-	
+
 
 	Map<String,String> asymStrandId;
 
@@ -125,7 +125,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 	}
 
 	public void newPdbxStructOperList(PdbxStructOperList structOper){
-		
+
 		structOpers.add(structOper);
 	}
 
@@ -496,9 +496,9 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		else {
 			current_group.addAtom(a);
 		}
-		
+
 		//System.out.println(">" + atom.getLabel_atom_id()+"< " + a.getGroup().getPDBName() + " " + a.getGroup().getChemComp()  );
-		
+
 		//System.out.println(current_group);
 
 	}
@@ -515,7 +515,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 
 		a.setPDBserial(Integer.parseInt(atom.getId()));
 		a.setName(atom.getLabel_atom_id());
-		
+
 		a.setFullName(fixFullAtomName(atom.getLabel_atom_id()));
 
 
@@ -538,13 +538,13 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		} else {
 			a.setAltLoc(new Character(' '));
 		}
-		
+
 		Element element = Element.R;
 		try {
 			element = Element.valueOfIgnoreCase(atom.getType_symbol());
 		}  catch (IllegalArgumentException e){}
 		a.setElement(element);
-		
+
 		return a;
 
 	}
@@ -658,7 +658,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 			Chain s = getEntityChain(asym.getEntity_id());
 			Chain seqres = (Chain)s.clone();
 			seqres.setChainID(asym.getId());
-			
+
 
 			seqResChains.add(seqres);
 			if ( DEBUG )
@@ -693,7 +693,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 			for (Chain chain : model) {
 				for (String asym : asymIds) {
 					if ( chain.getChainID().equals(asym)){
-						
+
 						if (DEBUG)
 							System.out.println("renaming " + asym  + " to : " + asymStrandId.get(asym));
 
@@ -718,7 +718,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 
 
 		// set the oligomeric state info in the header...
-		
+
 		PDBHeader header = structure.getPDBHeader();
 		header.setNrBioAssemblies(strucAssemblies.size());
 
@@ -727,24 +727,36 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		//header.setBioUnitTranformationMap(tranformationMap);
 		Map<Integer,List<ModelTransformationMatrix>> transformationMap = new HashMap<Integer, List<ModelTransformationMatrix>>();
 		int total = strucAssemblies.size();
-		for ( int i =0 ; i < total ;i++){
+
+
+		System.out.println( total + " bio assemblies available");
+
+
+
+		for ( int defaultBioAssembly = 1 ; defaultBioAssembly <= total; defaultBioAssembly++){
 			//List<ModelTransformationMatrix>tmp = getBioUnitTransformationList(pdbId, i +1);
-			
-			PdbxStructAssembly psa = strucAssemblies.get(i);
-			PdbxStructAssemblyGen psag = strucAssemblyGens.get(i);
-			
-			
+
+			PdbxStructAssembly psa = strucAssemblies.get(defaultBioAssembly-1);
+			List<PdbxStructAssemblyGen> psags = new ArrayList<PdbxStructAssemblyGen>(1);
+
+			for ( PdbxStructAssemblyGen psag: strucAssemblyGens ) {
+				if ( psag.getAssembly_id().equals(defaultBioAssembly+"")) {
+					psags.add(psag);
+				}
+			}
+
+			//System.out.println("psags: " + psags.size());
 			BiologicalAssemblyBuilder builder = new BiologicalAssemblyBuilder();
-			
+
 			// these are the transformations that need to be applied to our model
-			List<ModelTransformationMatrix> transformations = builder.getBioUnitTransformationList(psa, psag, structOpers);
-			
-			transformationMap.put(i+1,transformations);
-			//System.out.println("mmcif header: " + (i+1) + " " + transformations.size() +" " +  transformations);
+			List<ModelTransformationMatrix> transformations = builder.getBioUnitTransformationList(psa, psags, structOpers);
+
+			transformationMap.put(defaultBioAssembly,transformations);
+			//System.out.println("mmcif header: " + (defaultBioAssembly+1) + " " + transformations.size() +" " +  transformations);
+
 		}
-		
 		structure.getPDBHeader().setBioUnitTranformationMap(transformationMap);
-		
+
 
 	}
 
@@ -1156,8 +1168,8 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 					AminoAcidImpl aa = (AminoAcidImpl)g;
 					if (aa.getId() == sid ) {
 						// found it:
-							target = g;
-					break;
+						target = g;
+						break;
 					}
 				}
 				else if ( g instanceof NucleotideImpl) {
@@ -1290,9 +1302,9 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 	@Override
 	public void newPdbxStrucAssembly(PdbxStructAssembly strucAssembly) {
 		strucAssemblies.add(strucAssembly);
-		
+
 	}
-	
+
 	public List<PdbxStructAssembly> getStructAssemblies(){
 		return strucAssemblies;
 	}
@@ -1300,9 +1312,9 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 	@Override
 	public void newPdbxStrucAssemblyGen(PdbxStructAssemblyGen strucAssembly) {
 		strucAssemblyGens.add(strucAssembly);
-		
+
 	}
-	
+
 	public List<PdbxStructAssemblyGen> getStructAssemblyGens(){
 		return strucAssemblyGens;
 	}
