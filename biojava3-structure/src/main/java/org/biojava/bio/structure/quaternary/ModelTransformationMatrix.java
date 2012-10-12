@@ -93,15 +93,15 @@ public class ModelTransformationMatrix implements Cloneable {
 		{
 			// column-major order for OpenGl
 			this.values[0] = (float) (matrix.get(0,0));
-			this.values[1] = (float) (matrix.get(1,0));
-			this.values[2] = (float) (matrix.get(2,0));
+			this.values[1] = (float) (matrix.get(0,1));
+			this.values[2] = (float) (matrix.get(0,2));
 			this.values[3] = (0);
-			this.values[4] = (float) (matrix.get(0,1));
+			this.values[4] = (float) (matrix.get(1,0));
 			this.values[5] = (float) (matrix.get(1,1));
-			this.values[6] = (float) (matrix.get(2,1));
+			this.values[6] = (float) (matrix.get(1,2));
 			this.values[7] = (0);
-			this.values[8] = (float) (matrix.get(0,2));
-			this.values[9] = (float) (matrix.get(1,2));
+			this.values[8] = (float) (matrix.get(2,0));
+			this.values[9] = (float) (matrix.get(2,1));
 			this.values[10] = (float) (matrix.get(2,2));
 			this.values[11] = (0);
 			this.values[12] = (float) (vector[0]);
@@ -137,15 +137,15 @@ public class ModelTransformationMatrix implements Cloneable {
 		synchronized(this.values) {
 			// column-major order for OpenGl
 			this.values[0] = (m00);
-			this.values[1] = (m10);
-			this.values[2] = (m20);
+			this.values[1] = (m01);
+			this.values[2] = (m02);
 			this.values[3] = (0);
-			this.values[4] = (m01);
+			this.values[4] = (m10);
 			this.values[5] = (m11);
-			this.values[6] = (m21);
+			this.values[6] = (m12);
 			this.values[7] = (0);
-			this.values[8] = (m02);
-			this.values[9] = (m12);
+			this.values[8] = (m20);
+			this.values[9] = (m21);
 			this.values[10] = (m22);
 			this.values[11] = (0);
 			this.values[12] = (v0);
@@ -757,13 +757,13 @@ public class ModelTransformationMatrix implements Cloneable {
 
 	public void setMatrix(Matrix m){
 		values[0] = (float)m.get(0,0);
-		values[1] = (float)m.get(1,0);
-		values[2] = (float)m.get(2,0);
-		values[4] = (float)m.get(0,1);
+		values[1] = (float)m.get(0,1);
+		values[2] = (float)m.get(0,2);
+		values[4] = (float)m.get(1,0);
 		values[5] = (float)m.get(1,1);
-		values[6] = (float)m.get(2,1);
-		values[8] = (float)m.get(0,2);
-		values[9] = (float)m.get(1,2);
+		values[6] = (float)m.get(1,2);
+		values[8] = (float)m.get(2,0);
+		values[9] = (float)m.get(2,1);
 		values[10] = (float)m.get(2,2);
 	}
 	public double[] getVector(){
@@ -830,7 +830,7 @@ public class ModelTransformationMatrix implements Cloneable {
 		
 			for ( int i = 0 ; i<3 ; i++){
 				for ( int j = 0 ; j<3 ;j++){	
-				xml.attribute("m" +  (j+1) + (i+1), String.format("%.8f",m.get(j,i)));
+				xml.attribute("m" +  (i+1) + (j+1), String.format("%.8f",m.get(i,j)));
 			}
 		}
 		xml.closeTag("matrix");
