@@ -187,7 +187,7 @@ public class BiologicalAssemblyBuilder {
 		// apply binary operators to the specified chains
 		// Example 1M4X: generates all products of transformation matrices (1-60)(61-88)
 
-		System.out.println("BioUnitTrasnformListBinaryOperators " + assemblyId + " " + transformations.size());
+		//System.out.println("BioUnitTrasnformListBinaryOperators " + assemblyId + " " + transformations.size());
 		return transformations;
 	}
 
@@ -228,7 +228,7 @@ public class BiologicalAssemblyBuilder {
 				}
 			}
 		}
-		System.out.println("BioUnitTrasnformListUnary " + assemblyId + " " + transformations.size());
+		//System.out.println("BioUnitTrasnformListUnary " + assemblyId + " " + transformations.size());
 		return transformations;
 	}
 }
