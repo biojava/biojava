@@ -43,25 +43,25 @@ public class TestQuaternaryStructureProviders {
 		testID("2TBV",1);
 
 	}
-	@Test
-	public void test1EI7(){
-		testID("1ei7",1);
-
-	}
+//	@Test
+//	public void test1EI7(){
+//		testID("1ei7",1);
+//
+//	}
 	
 		
 	private void testID(String pdbId, int bioMolecule){
-		PDBBioUnitDataProvider pdbProvider = new PDBBioUnitDataProvider();
 		
-		MmCifBiolAssemblyProvider mmcifProvider = new MmCifBiolAssemblyProvider();
-		
-		BioUnitDataProviderFactory.setBioUnitDataProvider(pdbProvider.getClass().getCanonicalName());
 		
 		try {
+			// get bio assembly from PDB file
+			PDBBioUnitDataProvider pdbProvider = new PDBBioUnitDataProvider();
+			BioUnitDataProviderFactory.setBioUnitDataProvider(pdbProvider.getClass().getCanonicalName());
 			Structure pdbS = StructureIO.getBiologicalAssembly(pdbId, bioMolecule);
-			
-			BioUnitDataProviderFactory.setBioUnitDataProvider(mmcifProvider.getClass().getCanonicalName());
-			
+
+			// get bio assembly from mmcif file
+			MmCifBiolAssemblyProvider mmcifProvider = new MmCifBiolAssemblyProvider();
+			BioUnitDataProviderFactory.setBioUnitDataProvider(mmcifProvider.getClass().getCanonicalName());			
 			Structure mmcifS = StructureIO.getBiologicalAssembly(pdbId, bioMolecule);
 		
 			BioUnitDataProviderFactory.setBioUnitDataProvider(BioUnitDataProviderFactory.DEFAULT_PROVIDER_CLASSNAME);
