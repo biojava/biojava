@@ -66,14 +66,13 @@ public class GuideTreeTest {
         assertArrayEquals(tree.getAllPairsScores(), new int[] {4, 0, 3, 0, 3, 0});
     }
 
-    // FIXME [0][3] and [3][0] should be 0.4
     @Test
     public void testGetDistanceMatrix() {
         assertArrayEquals(tree.getDistanceMatrix(), new double[][] {
-                {0.0, 0.0, 1.0, 0.19999999999999996},
+                {0.0, 0.0, 1.0, 0.4},
                 {0.0, 0.0, 1.0, 0.4},
                 {1.0, 1.0, 0.0, 1.0},
-                {0.19999999999999996, 0.4, 1.0, 0.0}});
+                {0.4, 0.4, 1.0, 0.0}});
     }
 
     @Test
@@ -124,7 +123,7 @@ public class GuideTreeTest {
     @Test
     public void testToString() {
         assertEquals(tree.toString(),
-                "(((1:0.0,2:0.0):0.19999999999999996,3:0.8):0.09999999999999998,4:0.09999999999999998)");
+                "(((1:0.0,2:0.0):-1.4,3:0.8999999999999999):-0.7,4:-0.7)");
     }
 
 }

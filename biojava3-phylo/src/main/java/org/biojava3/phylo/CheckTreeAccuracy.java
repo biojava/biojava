@@ -5,11 +5,13 @@
 package org.biojava3.phylo;
 
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import org.forester.phylogeny.Phylogeny;
 import org.forester.phylogeny.PhylogenyNode;
-import org.forester.phylogenyinference.BasicSymmetricalDistanceMatrix;
-import org.forester.phylogenyinference.DistanceMatrix;
+import org.forester.evoinference.matrix.distance.BasicSymmetricalDistanceMatrix;
+import org.forester.evoinference.matrix.distance.DistanceMatrix;
 
 /**
  *
@@ -36,11 +38,12 @@ public class CheckTreeAccuracy {
 
     public void process(Phylogeny tree, DistanceMatrix matrix) {
         int numSequences = matrix.getSize();
-        Set<PhylogenyNode> externalNodes = tree.getExternalNodes();
+        List<PhylogenyNode> externalNodes = tree.getExternalNodes();
         HashMap<String, PhylogenyNode> externalNodesHashMap = new HashMap<String, PhylogenyNode>();
+        Set<PhylogenyNode> path = new HashSet<PhylogenyNode>();
 
         for (PhylogenyNode node : externalNodes) {
-            externalNodesHashMap.put(node.getNodeName(), node);
+            externalNodesHashMap.put(node.getName(), node);
         }
         int count = 0;
         double averageMatrixDistance = 0.0;
@@ -49,14 +52,14 @@ public class CheckTreeAccuracy {
         for (int row = 0; row < numSequences - 1; row++) {
             String nodeName1 = matrix.getIdentifier(row);
             PhylogenyNode node1 = externalNodesHashMap.get(nodeName1);
-            markPathToRoot(node1, true);
+            markPathToRoot(node1, path);
             for (int col = row + 1; col < numSequences; col++) {
                 count++;
                 String nodeName2 = matrix.getIdentifier(col);
                 PhylogenyNode node2 = externalNodesHashMap.get(nodeName2);
                 double distance = matrix.getValue(col, row);
                 averageMatrixDistance = averageMatrixDistance + distance;
-                PhylogenyNode commonParent = findCommonParent(node2);
+                PhylogenyNode commonParent = findCommonParent(node2, path);
                 if (commonParent != null) {
                     double treeDistance = getNodeDistance(commonParent, node1) + getNodeDistance(commonParent, node2);
 
@@ -67,7 +70,7 @@ public class CheckTreeAccuracy {
                     System.out.println("Unable to find common parent with " + node1 + " " + node2);
                 }
             }
-            markPathToRoot(node1, false);
+            path.clear();
         }
 
         System.out.println("Average matrix distance:" + averageMatrixDistance / count);
@@ -86,18 +89,18 @@ public class CheckTreeAccuracy {
         return distance;
     }
 
-    public PhylogenyNode findCommonParent(PhylogenyNode node) {
-        while (!node.getPathToParent()) {
+    public PhylogenyNode findCommonParent(PhylogenyNode node, Set<PhylogenyNode> path) {
+        while (!path.contains(node)) {
             node = node.getParent();
         }
         return node;
     }
 
-    public void markPathToRoot(PhylogenyNode node, boolean value) {
-        node.setPathToParent(value);
+    public void markPathToRoot(PhylogenyNode node, Set<PhylogenyNode> path) {
+        path.add(node);
         while (!node.isRoot()) {
             node = node.getParent();
-            node.setPathToParent(value);
+            path.add(node);
         }
     }
 }
