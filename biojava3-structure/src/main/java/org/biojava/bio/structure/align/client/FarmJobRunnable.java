@@ -76,7 +76,7 @@ public class FarmJobRunnable implements Runnable {
 	CountProgressListener counter ;
 
 	String userName = null;
-	AtomCache cache;
+	protected AtomCache cache;
 
 	boolean verbose = false;
 	String version = null;
