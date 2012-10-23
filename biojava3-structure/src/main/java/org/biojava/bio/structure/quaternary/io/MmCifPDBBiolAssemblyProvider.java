@@ -65,11 +65,11 @@ public class MmCifPDBBiolAssemblyProvider implements RawBioUnitDataProvider{
 			pdbxStructAssemblies 	= consumer.getStructAssemblies();
 			pdbxStructAssemblyGens 	= consumer.getStructAssemblyGens();
 			
-			System.out.println(asymUnit.getPDBHeader());
+			//System.out.println(asymUnit.getPDBHeader());
 			
-			System.out.println("OPER:" + pdbxStructOperList);
-			System.out.println("ASSEMBLIES:" + pdbxStructAssemblies);
-			System.out.println("ASSEMBLYGENS:" + pdbxStructAssemblyGens);
+			//System.out.println("OPER:" + pdbxStructOperList);
+			//System.out.println("ASSEMBLIES:" + pdbxStructAssemblies);
+			//System.out.println("ASSEMBLYGENS:" + pdbxStructAssemblyGens);
 			
 			// reset the consumer data to avoid memory leaks
 			consumer.documentStart();
