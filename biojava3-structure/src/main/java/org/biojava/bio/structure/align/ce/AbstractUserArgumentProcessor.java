@@ -48,6 +48,7 @@ import org.biojava.bio.structure.align.util.AtomCache;
 import org.biojava.bio.structure.align.util.CliTools;
 import org.biojava.bio.structure.align.util.ConfigurationException;
 import org.biojava.bio.structure.align.util.ResourceManager;
+import org.biojava.bio.structure.align.util.UserConfiguration;
 
 import org.biojava.bio.structure.align.xml.AFPChainXMLConverter;
 import org.biojava.bio.structure.io.PDBFileReader;
@@ -181,14 +182,13 @@ public abstract class AbstractUserArgumentProcessor implements UserArgumentProce
 	private void runDBSearch(){
 
 
-
 		String pdbFilePath = params.getPdbFilePath();
 
 		if ( pdbFilePath == null || pdbFilePath.equals("")){
 
-			System.err.println("Please specify mandatory argument -pdbFilePath!");
-			return;
-
+			System.err.println("You did not specify the -pdbFilePath. Can not find PDB files in file system and will assume a temporary location.");
+			UserConfiguration c = new UserConfiguration();
+			pdbFilePath = c.getPdbFilePath();
 		}
 
 
@@ -315,7 +315,9 @@ public abstract class AbstractUserArgumentProcessor implements UserArgumentProce
 
 		if ( file1 == null || file2 == null) {
 			if ( path == null){
-				throw new RuntimeException("You did not specify the -pdbFilePath parameter. Can not find the PDB files in your file system.");
+				System.err.println("You did not specify the -pdbFilePath parameter. Can not find the PDB files in your file system and assuming a temporary location.");
+				UserConfiguration c = new UserConfiguration();
+				path = c.getPdbFilePath();
 			}
 
 			AtomCache cache = new AtomCache(path, params.isPdbDirSplit());
