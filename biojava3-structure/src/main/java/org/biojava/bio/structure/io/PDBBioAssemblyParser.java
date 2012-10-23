@@ -1,6 +1,7 @@
 package org.biojava.bio.structure.io;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,6 +26,10 @@ public class PDBBioAssemblyParser {
 	
 	List<ModelTransformationMatrix> transformations;
 	int correct ;
+	
+	private boolean DEBUG = false;
+	private boolean justCommitted = false;
+	
 	public PDBBioAssemblyParser() {
 		
 		currentChainIDs = new ArrayList<String>();
@@ -58,6 +63,7 @@ public class PDBBioAssemblyParser {
 			//System.out.println(line);
 			currentBioMolecule = Integer.parseInt(nr);
 			currentIndex = 1;
+			currentChainIDs.clear();
 	
 		} else if ( line.startsWith("REMARK 350 APPLY THE FOLLOWING TO CHAINS:")) {
 			//System.out.println("NEW SECTION " + currentChainIDs.size()+ " " + line);
@@ -67,6 +73,15 @@ public class PDBBioAssemblyParser {
 				currentIndex++;
 			}
 			
+			if ( currentChainIDs.size() > 0) {
+				addNewMatrix();
+				
+				currentMatrix = Matrix.identity(3,3);
+				
+				shift = new double[3];
+				currentChainIDs.clear();
+				justCommitted = true;
+			}
 			addToCurrentChainList(line);
 		
 		} else if ( line.startsWith("REMARK 350                    AND CHAINS:")) {
@@ -83,7 +98,7 @@ public class PDBBioAssemblyParser {
 
 	private void readMatrix(String line) {
 		
-		//System.out.println(line);
+		System.out.println(line);
 		String pos = line.substring(18,19);
 		int i = Integer.parseInt(pos);
 		
@@ -92,8 +107,8 @@ public class PDBBioAssemblyParser {
 		
 		int id = Integer.parseInt(index);
 		
-		if ( id != currentIndex) {
-			
+		if ( id != currentIndex && (! justCommitted)) {
+			System.out.println("ID " + id + " != " + currentIndex + " " + currentChainIDs);
 			addNewMatrix();
 			
 			currentIndex = id;
@@ -115,8 +130,9 @@ public class PDBBioAssemblyParser {
 		
 		
 		String vec = line.substring(58+correct,line.length()).trim();
-		
-		//System.out.println(id + " |" + i + "| |" + x + "| |" + y + "| |" + z + "| >" + vec+"<");
+	
+		if (DEBUG)
+			System.out.println(id + " |" + i + "| |" + x + "| |" + y + "| |" + z + "| >" + vec+"<");
 		currentMatrix.set(0,(i-1),Float.parseFloat(x));
 		currentMatrix.set(1,(i-1),Float.parseFloat(y));
 		currentMatrix.set(2,(i-1),Float.parseFloat(z));
@@ -124,15 +140,20 @@ public class PDBBioAssemblyParser {
 		shift[i-1] = Float.parseFloat(vec);
 		//System.out.println(shift[i-1]);
 		//System.out.println(currentMatrix);
+		justCommitted = false;
 		
 	}
 
 	private void addNewMatrix() {
 		//System.out.println("adding new matrix " + currentIndex + " for " + currentChainIDs);
-		ModelTransformationMatrix max = new ModelTransformationMatrix();
 		
-		//System.out.println(currentMatrix);
-		//System.out.println(Arrays.toString(shift));
+		
+		ModelTransformationMatrix max = new ModelTransformationMatrix();
+		if ( DEBUG) {
+			System.out.println("AddNewMatrix bio ass: " + currentBioMolecule + " index: " + currentIndex + " " +  currentChainIDs);
+			System.out.println(currentMatrix);
+			System.out.println(Arrays.toString(shift));
+		}
 		max.setMatrix(currentMatrix);
 		max.setVector(shift);
 		max.id = currentIndex+"";
@@ -146,13 +167,15 @@ public class PDBBioAssemblyParser {
 			//System.out.println(m);
 		}
 		
-		currentMatrix = new Matrix(3,3);
+		currentMatrix = Matrix.identity(3,3);
 		shift = new double[3];
 		
 		if ( currentIndex == 999){
 			//System.err.println("CORRECTION!");
 			correct +=1;
 		}
+		
+		justCommitted  = true;
 		
 		
 		
@@ -173,7 +196,8 @@ public class PDBBioAssemblyParser {
 	}
 
 	public void finalizeCurrentBioMolecule() {
-		//System.out.println("finalizing biomolecule..." + currentBioMolecule);
+		if ( DEBUG )
+			System.out.println("finalizing biomolecule..." + currentBioMolecule);
 		// the last matrix has not been added at this stage...
 		addNewMatrix();
 		
