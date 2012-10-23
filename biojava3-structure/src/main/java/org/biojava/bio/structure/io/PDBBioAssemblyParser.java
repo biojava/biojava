@@ -98,7 +98,7 @@ public class PDBBioAssemblyParser {
 
 	private void readMatrix(String line) {
 		
-		System.out.println(line);
+		//System.out.println(line);
 		String pos = line.substring(18,19);
 		int i = Integer.parseInt(pos);
 		
@@ -108,7 +108,7 @@ public class PDBBioAssemblyParser {
 		int id = Integer.parseInt(index);
 		
 		if ( id != currentIndex && (! justCommitted)) {
-			System.out.println("ID " + id + " != " + currentIndex + " " + currentChainIDs);
+			//System.out.println("ID " + id + " != " + currentIndex + " " + currentChainIDs);
 			addNewMatrix();
 			
 			currentIndex = id;
