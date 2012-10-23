@@ -83,7 +83,7 @@ public class DBSearchGUI extends JPanel {
 		tabPane = new JTabbedPane();
 		tabPane.addTab("Select PDB ID", null, tab1,"Select PDB ID to align");
 
-		tabPane.addTab("SCOP domains",null, tab3,"SCOP domains");
+		tabPane.addTab("Domains",null, tab3,"Domains");
 
 		tabPane.addTab("Custom files",null, tab2,"Align your own files.");
 
