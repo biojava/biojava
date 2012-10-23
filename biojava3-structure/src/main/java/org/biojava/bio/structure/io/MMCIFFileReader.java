@@ -226,6 +226,19 @@ public class MMCIFFileReader implements StructureIOFile {
 				if ( f.exists()) {
 					//System.out.println("found!");
 					pdbFile = testpath+ex ;
+					
+					if ( params.isUpdateRemediatedFiles()){
+						long lastModified = f.lastModified();
+
+						if (lastModified < PDBFileReader.lastRemediationDate) {
+							// the file is too old, replace with newer version
+							System.out.println("replacing file " + pdbFile +" with latest remediated file from PDB.");
+							pdbFile = null;
+
+							return null;
+						}
+					}
+					
 
 					InputStreamProvider isp = new InputStreamProvider();
 
