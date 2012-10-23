@@ -8,6 +8,8 @@ public class BioUnitDataProviderFactory {
 	
 	public static final String pdbProviderClassName 	= "org.biojava.bio.structure.quaternary.io.PDBBioUnitDataProvider";
 	
+	public static final String fileBasedProviderClassName = "org.biojava.bio.structure.quaternary.io.FileBasedPDBBioUnitDataProvider";
+	
 	public static String DEFAULT_PROVIDER_CLASSNAME =  mmcifProviderClassName;
 	
 	private static String providerClassName = DEFAULT_PROVIDER_CLASSNAME;
@@ -22,7 +24,7 @@ public class BioUnitDataProviderFactory {
 		
 		try {
 			Class cls = Class.forName(providerClassName);
-			
+			System.out.println("Using BioUnitProvider: " + providerClassName);
 			return (BioUnitDataProvider) cls.newInstance();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
