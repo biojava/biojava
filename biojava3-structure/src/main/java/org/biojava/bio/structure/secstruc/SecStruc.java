@@ -86,10 +86,11 @@ public class SecStruc {
 	private SecStrucGroup[] groups;
 
 	List<DistEn> distVsEnergy;
-
+	List<Ladder> ladders;
 
 	public SecStruc(){
 		distVsEnergy = new ArrayList<DistEn>();
+		ladders = new ArrayList<Ladder>();
 
 	}
 
@@ -99,11 +100,11 @@ public class SecStruc {
 
 
 			AtomCache cache = new AtomCache();
-			cache.setAutoFetch(true);
-			cache.setPath("/Users/ap3/WORK/PDB/");
+			cache.setAutoFetch(false);
+			cache.setPath("/Users/andreas/WORK/PDB/");
 
 			// a small one
-			Structure s = cache.getStructure("1cag");
+			Structure s = cache.getStructure("5pti");
 			//Structure s = pdbr.getStructureById("1bsp");
 			//Structure s = pdbr.getStructureById("1co7");
 
@@ -155,17 +156,302 @@ public class SecStruc {
 		calculateHBonds();
 		calculateTurns();
 		calculateDihedralAngles();
+		buildHelices();
+
+		detectBends();
+		detectStrands();
 
 
-		//      SecStrucGroup g1 = groups[1];
-		//      SecStrucGroup g2 = groups[4];
-		//
-		//      System.out.println(g1);
-		//      System.out.println(g2);
-		//
-		//      System.out.println("energy " + calculateHBondEnergy(g1,g2));
-		//      System.out.println("energy " + calculateHBondEnergy(g2,g1));
+	}
 
+	private void detectStrands() {
+
+		for (int i =1 ; i < groups.length -1 ;i++){
+			testBridge(i);
+		}
+
+		// detect beta bulges
+		connectLadders();
+
+		// and store results for Sheets and Strands
+		updateSheets();
+	}
+
+
+	private void updateSheets() {
+		if ( debug)
+			System.out.println(" got "  +ladders.size() + "  ladders!");
+		for (Ladder ladder : ladders){
+
+			if ( debug)
+				System.out.println(ladder);
+
+			for ( int lcount = ladder.from;
+					lcount <= ladder.to;
+					lcount++  ) {
+
+
+				SecStrucState state = getSecStrucState(lcount);
+				SecStrucType stype = state.getSecStruc();
+
+				int diff = ladder.from - lcount;
+				int l2count = ladder.lfrom - diff ;
+
+				SecStrucState state2 = getSecStrucState(l2count);
+				SecStrucType stype2 = state2.getSecStruc();
+
+				if ( ladder.from != ladder.to ) {
+					if ( ! stype.isHelixType())
+						setSecStrucType(lcount, SecStrucType.extended);
+
+					if ( ! stype2.isHelixType()){
+						setSecStrucType(l2count,SecStrucType.extended);
+					}			    	  				
+				}
+				else {
+					if ( ! stype.isHelixType() && 
+							( ! stype.equals(SecStrucType.extended))) {
+						setSecStrucType(lcount,SecStrucType.bridge);
+					}
+
+					if ( ! stype2.isHelixType() &&
+							(! stype2.equals(SecStrucType.extended))) {
+						setSecStrucType(l2count,SecStrucType.bridge);
+					}	
+				}
+			}
+
+			// Check if two ladders are connected. both sides are 'E'  
+
+			if ( ladder.connectedTo == 0) 
+				continue;
+
+			Ladder conladder = ladders.get(ladder.connectedTo);
+
+			if ( ladder.getBtype().equals(BridgeType.antiparallel)) {
+				/* set one side */
+				for ( int lcount = ladder.from;
+						lcount <= conladder.to;
+						lcount++) {
+					testSetExtendedSecStrucState(lcount);
+
+				}
+				/* set other side */
+				for (int lcount = conladder.lto;
+						lcount <= ladder.lfrom;
+						lcount++) {
+					testSetExtendedSecStrucState(lcount);
+				}
+
+			} else {
+				/* set one side */
+				for ( int lcount = ladder.from;
+						lcount <= conladder.to;
+						lcount++) {
+
+					testSetExtendedSecStrucState(lcount);
+				}
+				/* set other side */
+				for ( int lcount =  ladder.lfrom;
+						lcount <= conladder.lto;
+						lcount++) {
+
+					testSetExtendedSecStrucState(lcount);
+				}
+
+			}
+
+		}
+
+	}
+
+	private void testSetExtendedSecStrucState(int lcount) {
+		SecStrucState state = getSecStrucState(lcount);
+		SecStrucType stype = state.getSecStruc();
+		if ( ! stype.isHelixType()){
+			setSecStrucType(lcount,SecStrucType.extended);
+		}
+	}
+
+	private void connectLadders() {
+
+		for ( int i = 0 ; i < ladders.size(); i++) {
+			for ( int j = i ; j < ladders.size() ; j++){
+				Ladder l1 = ladders.get(i);
+				Ladder l2 = ladders.get(j);
+				if ( hasBulge(l1,l2) ) {
+
+					l1.connectedTo = j;
+					l2.connectedFrom = i;
+					System.out.println("BUlge from " + i + " to " + j);
+				}
+			}
+		}
+
+
+	}
+
+	private boolean hasBulge(Ladder l1, Ladder l2) {
+		boolean bulge =  ( (l1.getBtype().equals(l2.getBtype()) ) &&
+				( l2.from - l1.to < 6) &&
+				( l1.to < l2.from) &&
+				(l2.connectedTo == 0) );
+
+		//	    		 ( ( ladder1->type == ladder2->type) &&
+		//	  	       ( ladder2->from - ladder1->to < 6 ) &&
+		//	  	       ( ladder1->to < ladder2->from) &&
+		//	  	       ( ladder2->conto == 0 ) ) ;
+
+		if ( ! bulge )
+			return bulge;
+
+		if ( l1.getBtype().equals(BridgeType.parallel)) {
+			bulge = ( (l2.lfrom - l1.lto > 0) &&
+					((( l2.lfrom -l1.lto < 6) &&
+							(l2.from - l1.to < 3)) ||
+							( l2.lfrom - l1.lto <3)));
+			//case parallel:
+			//			 bulge = ( ( ladder2->lfrom - ladder1->lto > 0 ) &&
+			//				   ((( ladder2->lfrom - ladder1->lto < 6 ) &&
+			//				    ( ladder2->from  - ladder1->to  < 3 )) ||
+			//				   ( ladder2->lfrom - ladder1->lto < 3 )) );
+			//			 break;
+		} else {
+			bulge = ( (l1.lfrom - l2.lto > 0) &&
+					(((l1.lfrom -l2.lto < 6) &&
+							( l2.from - l1.to <3  )) ||
+							(l1.lfrom - l2.lto < 3))
+					);
+		}
+		return bulge;
+
+
+		//	       case antiparallel:
+		//		 bulge = ( ( ladder1->lfrom - ladder2->lto > 0 ) &&
+		//			   ((( ladder1->lfrom - ladder2->lto < 6 ) &&
+		//			     ( ladder2->from - ladder1->to  < 3 )) ||
+		//			    ( ladder1->lfrom - ladder2->lto < 3 ))   );
+		//		 break;
+		//	       }
+		//	     }
+
+	}
+
+	private void registerBridge(int start, int end, BridgeType btype){
+		if ( start > end)
+			return;
+
+		boolean found = false;
+		for (Ladder ladder : ladders){
+			if (shouldExtendLadder(ladder, start,end,btype)) {
+				// extend laddder
+				found = true;
+				ladder.to++;
+				if ( btype.equals(BridgeType.parallel)) {
+					ladder.lto++;
+				} else {
+					ladder.lfrom--;
+				}
+				break;
+
+			}
+		}
+		if ( ! found){
+			// create new ladder!
+			Ladder l = new Ladder();
+			l.setFrom(start);
+			l.setTo(end);
+			l.setBtype(btype);
+			l.setLfrom(start);
+			l.setLto(end);
+			ladders.add(l);
+		}
+
+	}
+
+	private boolean shouldExtendLadder(Ladder ladder, int start, int end,
+			BridgeType btype) {
+
+		return ( (btype.equals(ladder.getBtype()) ) &&
+				( start  == ladder.getTo() +1) &&
+				(
+						(( end == ladder.getLto() + 1) &&
+								( btype.equals(BridgeType.parallel) )) ||
+								(( end == ladder.getLfrom() - 1 ) &&
+										(btype.equals(BridgeType.parallel) ))										
+						) );
+
+
+
+	}
+
+	private void testBridge(int i) {
+
+		int currpos = i + 3;
+		for ( int foundNrBridges = 0 ; foundNrBridges < 2 && ( currpos < groups.length-1); currpos++){
+
+
+
+			BridgeType btype = null;
+
+			if ( (isBonded(i+1, currpos) && isBonded(currpos, i-1) ) ||
+					( isBonded(currpos +1 , i) && isBonded(i, currpos-1)) ) {
+				// parallel
+				btype = BridgeType.parallel;
+			}
+			else if ( (isBonded(i, currpos) && isBonded(currpos, i)) ||
+					(isBonded(i+1, currpos -1 ) && (isBonded(currpos + 1 , i - 1)))) {
+				// antiparallel
+				btype = BridgeType.antiparallel;
+			}
+			if (btype != null){
+				foundNrBridges++;
+				registerBridge(i, currpos, btype);
+			}
+		}
+
+	}
+
+	private void detectBends() {
+		if ( groups.length < 5)
+			return;
+
+		for (int i =2 ; i < groups.length -2 ;i++){
+
+			/* Create vectors ( Ca i to Ca i-2 ) ; ( Ca i to CA i +2 ) */
+
+			SecStrucGroup im2 = groups[i-2];
+			SecStrucGroup g = groups[i];
+			SecStrucGroup ip2 = groups[i+2];
+
+
+			Atom caim2 = im2.getCA();
+			Atom cag   = g.getCA();
+			Atom caip2 = ip2.getCA();
+
+			try {
+				Atom caminus2 = Calc.subtract(caim2,cag);
+
+				Atom caplus2  = Calc.subtract(cag,caip2);
+
+				double angle    = Calc.angle(caminus2,caplus2);
+
+				SecStrucState state = getSecStrucState(i); 
+
+				state.setKappa((float)angle);
+
+				if (angle > 70.0) {
+					if ( state.getSecStruc().equals(SecStrucType.coil)) 
+						state.setSecStruc(SecStrucType.bend);
+
+					state.setBend(true);
+					//d[i].bend = 'S';
+				}
+			} catch (Exception e){
+				e.printStackTrace();
+			}
+
+		}
 	}
 
 	private void calculateDihedralAngles() throws StructureException {
@@ -176,36 +462,36 @@ public class SecStruc {
 		// Chi1: N-CA-CB-CG, N-CA-CB-OG(SER),N-CA-CB-OG1(Thr),
 		// N-CA-CB-CG1(ILE/VAL), N-CA-CB-SG(CYS)
 		// Omega: CA-C-N-CA
-		
+
 		for (int i=0 ; i < groups.length-1 ;  i++){
 
 			SecStrucGroup a = groups[i];
-						
+
 			SecStrucGroup b = groups[i+1];
-				
-			
+
+
 			Atom a_N   = a.getN();
 			Atom a_CA  = a.getCA();
 			Atom a_C  = a.getC();
-			
+
 			Atom b_N  = b.getN();
 			Atom b_CA = b.getCA();
 			Atom b_C  = b.getC();
-				
+
 			double phi = Calc.torsionAngle(a_C,b_N,b_CA,b_C);
-			
+
 			double psi = Calc.torsionAngle(a_N,a_CA,a_C,b_N);
-			
+
 			double omega = Calc.torsionAngle(a_CA,a_C,b_N,b_CA);
-			
-			SecStrucState state = (SecStrucState) a.getProperty("secstruc");
-			
-			state.setPhi(phi);
-			state.setPsi(psi);
-			state.setOmega(omega);
-			
+
+			SecStrucState state1 = (SecStrucState) a.getProperty("secstruc");
+			SecStrucState state2 = (SecStrucState) b.getProperty("secstruc");
+			state2.setPhi(phi);
+			state1.setPsi(psi);
+			state1.setOmega(omega);
+
 		}
-		
+
 	}
 
 	/*
@@ -238,7 +524,13 @@ public class SecStruc {
 			}
 
 			// tmp filler
-			buf.append("                    ");
+			buf.append(state.getSecStruc().type);
+			buf.append(" ");
+			if ( state.isBend())
+				buf.append('S');
+			else 
+				buf.append(" ");
+			buf.append("                 ");
 
 			int p1 = state.getAccept1().getPartner();
 			if ( p1 != 0)
@@ -264,12 +556,15 @@ public class SecStruc {
 			double e4 = (state.getDonor2().getEnergy() / 1000.0);
 			buf.append(String.format( "%6d,%4.1f",p4,e4 ));
 
+			double kappa = state.getKappa();
+
 			double phi = state.getPhi();
 			double psi = state.getPsi();
 			double omega = state.getOmega();
+			buf.append("        ");
+			buf.append(String.format("%6.1f",kappa));
+			buf.append("       ");
 
-			buf.append("                     ");
-			
 			buf.append(String.format("%6.1f %6.1f %6.1f", phi,psi, omega));
 
 			buf.append(nl);
@@ -334,7 +629,7 @@ public class SecStruc {
 		return (SecStrucGroup[]) groupList.toArray(new SecStrucGroup[groupList.size()]);
 	}
 
-	
+
 
 	/** calculate the coordinates for the H atoms. They are usually
 	 * missing in the PDB files as only few experimental methods allow
@@ -379,7 +674,10 @@ public class SecStruc {
 	private void calculateHBonds()
 			throws StructureException
 			{
-		System.out.println("groups length: " + groups.length);
+		//System.out.println("groups length: " + groups.length);
+
+		if ( groups.length < 5)
+			return;
 
 		// skip the first residue , unable to calc H for it ...
 		for (int i=1 ; i < groups.length ;  i++){
@@ -390,8 +688,6 @@ public class SecStruc {
 				System.out.println(" no H at " + i);
 				continue;
 			}
-
-
 
 			for ( int j = i+1 ; j < groups.length ; j++){
 
@@ -424,18 +720,20 @@ public class SecStruc {
 
 	private void checkAddHBond(int i, int j){
 		SecStrucGroup one = groups[i];
+
+		if (one.getPDBName().equals("PRO")){
+			if (debug)
+				System.out.println("     ignore: PRO " +     one.getResidueNumber().toString());
+			return ;
+		}
+
 		SecStrucGroup two = groups[j];
 		if ( ! two.hasAtom("H")) {
 			System.err.println("two has no H " + j);
 			return;
 		}
 
-		if (one.getPDBName().equals("PRO")){
-			if (debug)
-				System.out.println("     ignore: PRO " +     one.getResidueNumber().toString());
 
-			return ;
-		}
 
 		double energy = 0;
 		try {
@@ -505,12 +803,13 @@ public class SecStruc {
 			System.out.println(String.format("      N (%d) O(%d): %4.1f : %4.2f ",N.getPDBserial(),O.getPDBserial(), (float)dno , energy));
 
 		// bond too weak
-		if ( energy > HBONDHIGHENERGY)
-			return 0;
+		//if ( energy > HBONDHIGHENERGY)
+		//	return energy;
 
 		// test to avoid bond too strong
 		if ( energy > HBONDLOWENERGY)
 			return energy;
+
 
 		return HBONDLOWENERGY ;
 
@@ -549,9 +848,13 @@ public class SecStruc {
 		Group one = groups[i];
 		Group two = groups[j];
 
+		if ( one.getPDBName().equals("PRO"))
+			return;
 
 		SecStrucState stateOne = (SecStrucState) one.getProperty("secstruc");
 		SecStrucState stateTwo = (SecStrucState) two.getProperty("secstruc");
+
+
 
 		double acc1e = stateOne.getAccept1().getEnergy();
 		double acc2e = stateOne.getAccept2().getEnergy();
@@ -740,6 +1043,172 @@ public class SecStruc {
 	public SecStrucGroup[] getGroups(){
 		return groups;
 	}
+
+	private void buildHelices(){
+
+
+
+		// check for minimum size
+
+		if ( groups.length < 5 )
+
+			return;
+
+
+
+
+		/** test if two groups are forming an H-Bond
+
+		 * DSSP defines H-Bonds if the energy < -500 cal /mol
+
+		 * @param one group one
+
+		 * @param two group two
+
+		 * @return flag if the two are forming an Hbond
+
+		 */
+
+
+		// Alpha Helix (i+4)
+
+
+
+		checkSetHelix(4, SecStrucType.helix4);
+
+		checkSetHelix(3, SecStrucType.helix3);
+
+		checkSetHelix(5, SecStrucType.helix5);
+
+		checkSetTurns();
+
+	}
+
+	private void checkSetTurns() {
+		for (int i =0 ; i < groups.length -3 ;i++){
+
+			Group g = groups[i];
+
+			SecStrucState state = (SecStrucState) g.getProperty("secstruc");
+
+			SecStrucType type = state.getSecStruc();
+
+			if ( type.isHelixType() )
+				continue;
+
+			boolean[] turns = state.getTurn();
+			for ( int t = 0 ; t < 3 ; t ++){
+				if ( turns[t])
+				{
+
+					for ( int l = i+1 ; l < i+t+3; l++) {
+						//System.out.println("turn: " + i + " " + type);
+						if ( l >= groups.length)
+							break;
+						SecStrucType typel =getSecStrucType(l);
+						if ( typel.equals(SecStrucType.coil))
+							setSecStrucType(l, SecStrucType.turn);
+
+					}
+				}
+			}
+		}
+	}
+
+	private void checkSetHelix( int prange,SecStrucType type){
+
+		int range = prange - 3;
+		//System.out.println("set helix " + type + " " + prange + " " + range);
+		for (int i =1 ; i < groups.length -range -1 ;i++){
+
+			Group g = groups[i];
+
+			SecStrucState state = (SecStrucState) g.getProperty("secstruc");
+
+
+			Group prevG = groups[i-1];
+
+			SecStrucState prevState = (SecStrucState) prevG.getProperty("secstruc");
+
+			Group nextG = groups[i+1];
+
+			SecStrucState nextState = (SecStrucState) nextG.getProperty("secstruc");
+
+			boolean[] turns = state.getTurn();
+
+			boolean[] pturns = prevState.getTurn();
+
+			boolean[] nturns = nextState.getTurn();
+
+			// DSSP sets helices one amino acid too short....
+
+			if ( turns[range] && pturns[range] && nturns[range]) {
+
+				//Check if no secstruc assigned
+
+				boolean empty = true;
+
+				for ( int curr =i; curr <= i+range ;curr++){
+					//System.out.println("   " + i + " range: " + prange + " " + range);
+					SecStrucType cstate = getSecStrucType(curr);
+
+					if (  cstate.isHelixType()){
+
+						empty = false;
+
+						break;
+
+					}
+
+				}
+
+
+				// none is assigned yet, set to helix type
+
+				if ( empty ) {
+
+					for ( int curr =i; curr <= i+range ;curr++){
+
+						setSecStrucType(curr,type);
+
+					}
+
+				}
+
+			}
+
+		}
+
+	}
+
+	private void setSecStrucType(int pos, SecStrucType state){
+
+		Group g = groups[pos];
+
+		SecStrucState s= (SecStrucState) g.getProperty("secstruc");
+
+		s.setSecStruc(state);
+
+	}
+
+	private SecStrucType getSecStrucType(int pos){
+
+		SecStrucState s = getSecStrucState(pos);
+
+		return s.getSecStruc();
+
+	}
+
+
+	private SecStrucState getSecStrucState(int pos){
+		Group g = groups[pos];
+		SecStrucState state = (SecStrucState) g.getProperty("secstruc");
+		return state;
+	}
+
+
+
+
 
 }
 
