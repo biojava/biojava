@@ -143,28 +143,95 @@ public class AlignmentTools {
 		return map;
 	}
 	
-	public static <T> Map<T,T> applyAlignment(Map<T, T> alignmentMap) {
-		return applyAlignment(alignmentMap, new IdentityMap<T>());
+	/**
+	 * Applies an alignment k times. Eg if alignmentMap defines function f(x),
+	 * this returns a function f^k(x)=f(f(...f(x)...)).
+	 * 
+	 * @param <T>
+	 * @param alignmentMap The input function, as a map (see {@link AlignmentTools#alignmentAsMap(AFPChain)})
+	 * @param k The number of times to apply the alignment
+	 * @return A new alignment. If the input function is not automorphic
+	 *  (one-to-one), then some inputs may map to null, indicating that the
+	 *  function is undefined for that input.
+	 */
+	public static <T> Map<T,T> applyAlignment(Map<T, T> alignmentMap, int k) {
+		return applyAlignment(alignmentMap, new IdentityMap<T>(), k);
 	}
 	
-	public static <S,T> Map<S,T> applyAlignment(Map<S, T> alignmentMap, Map<T,S> identity) {
-		Map<S, T> image = new HashMap<S,T>(alignmentMap.size());
+	/**
+	 * Applies an alignment k times. Eg if alignmentMap defines function f(x),
+	 * this returns a function f^k(x)=f(f(...f(x)...)).
+	 * 
+	 * To allow for functions with different domains and codomains, the identity
+	 * function allows converting back in a reasonable way. For instance, if 
+	 * alignmentMap represented an alignment between two proteins with different
+	 * numbering schemes, the identity function could calculate the offset
+	 * between residue numbers, eg I(x) = x-offset.
+	 * 
+	 * When an identity function is provided, the returned function calculates
+	 * f^k(x) = f(I( f(I( ... f(x) ... )) )).
+	 * 
+	 * @param <S>
+	 * @param <T>
+	 * @param alignmentMap The input function, as a map (see {@link AlignmentTools#alignmentAsMap(AFPChain)})
+	 * @param identity An identity-like function providing the isomorphism between
+	 *  the codomain of alignmentMap (of type <T>) and the domain (type <S>).
+	 * @param k The number of times to apply the alignment
+	 * @return A new alignment. If the input function is not automorphic
+	 *  (one-to-one), then some inputs may map to null, indicating that the
+	 *  function is undefined for that input.
+	 */
+	public static <S,T> Map<S,T> applyAlignment(Map<S, T> alignmentMap, Map<T,S> identity, int k) {
 		
-		// apply alignment
-		for(S key : alignmentMap.keySet()) {
-			//Calculate result of two applications
-			T pre = alignmentMap.get(key);
-			S intermediate = (pre==null?null: identity.get(pre));
-			T post = (intermediate==null?null: alignmentMap.get(intermediate));
-			//Add result of two applications
-			image.put(key, post);
-			//Also add result of one application, in case it doesn't get set later
-			if(!image.containsKey(intermediate)) {
-				image.put(intermediate, null);
+		// This implementation simply applies the map k times.
+		// If k were large, it would be more efficient to do this recursively,
+		// (eg f^4 = (f^2)^2) but k will usually be small.
+		
+		if(k<0) throw new IllegalArgumentException("k must be positive");
+		if(k==1) {
+			return new HashMap<S,T>(alignmentMap); 
+		}
+		// Convert to lists to establish a fixed order
+		List<S> preimage = new ArrayList<S>(alignmentMap.keySet()); // currently unmodified
+		List<S> image = new ArrayList<S>(preimage);
+		
+		for(int n=1;n<k;n++) {
+			int deltasSq = 0;
+			int numDeltas = 0;
+			// apply alignment
+			for(int i=0;i<image.size();i++) {
+				S pre = image.get(i);
+				T intermediate = (pre==null?null: alignmentMap.get(pre));
+				S post = (intermediate==null?null: identity.get(intermediate));
+				image.set(i, post);
 			}
 		}
 		
-		return image;
+		
+
+		Map<S, T> imageMap = new HashMap<S,T>(alignmentMap.size());
+		
+		//TODO handle nulls consistently.
+		// assure that all the residues in the domain are valid keys
+		/*
+		for(int i=0;i<preimage.size();i++) {
+			S pre = preimage.get(i);
+			T intermediate = (pre==null?null: alignmentMap.get(pre));
+			S post = (intermediate==null?null: identity.get(intermediate));
+			imageMap.put(post, null);
+		}
+		*/
+		// now populate with actual values
+		for(int i=0;i<preimage.size();i++) {
+			S pre = preimage.get(i);
+			
+			// image is currently f^k-1(x), so take the final step
+			S preK1 = image.get(i);
+			T postK = (preK1==null?null: alignmentMap.get(preK1));
+			imageMap.put(pre,postK);
+			
+		}
+		return imageMap;
 	}
 	
 	/**

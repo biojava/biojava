@@ -234,10 +234,10 @@ public class AlignmentToolsTest extends TestCase {
 		int order = AlignmentTools.getSymmetryOrder(afpChain, maxSymmetry, minimumMetricChange);
 		long symmetryOrderTime = System.currentTimeMillis() - startSymmetryOrderTime;
 		
-		System.out.println("Len1\tLen2\tAlignT\tOrderT\tOrder");
-		System.out.format("%d\t%d\t%f\t%f\t%d", ca1.length,ca2.length,
-				alignmentTime/1000.,symmetryOrderTime/1000.,order);
-		System.out.println();
+		//System.out.println("Len1\tLen2\tAlignT\tOrderT\tOrder");
+		//System.out.format("%d\t%d\t%f\t%f\t%d", ca1.length,ca2.length,
+		//		alignmentTime/1000.,symmetryOrderTime/1000.,order);
+		//System.out.println();
 
 		assertEquals("Wrong order found for "+name1+" vs "+name2,trueOrder,order);
 	}
@@ -263,10 +263,11 @@ public class AlignmentToolsTest extends TestCase {
 		image1.put(9, 6);
 		image1.put(10, null);
 		image1.put(11, 7);
-		image1.put(5, null);
-		image1.put(3, null);
+		//image1.put(5, null);
+		//image1.put(3, null);
+		//TODO handle nulls consistently. Either include all of them, or none.
 		
-		Map<Integer,Integer> result1 = AlignmentTools.applyAlignment(alignment1);
+		Map<Integer,Integer> result1 = AlignmentTools.applyAlignment(alignment1,2);
 		assertEquals("Alignment1 incorrectly applied",image1,result1);
 	}
 	
@@ -291,14 +292,14 @@ public class AlignmentToolsTest extends TestCase {
 		image1.put(9, 16);
 		image1.put(10, null);
 		image1.put(11, 17);
-		image1.put(5, null);
-		image1.put(3, null);
+		//image1.put(5, null);
+		//image1.put(3, null);
 		
 		Map<Integer,Integer> identity1 = new HashMap<Integer, Integer>();
 		for(int i=1;i<12;i++) {
 			identity1.put(i+10,i);
 		}
-		Map<Integer,Integer> result1 = AlignmentTools.applyAlignment(alignment1,identity1);
+		Map<Integer,Integer> result1 = AlignmentTools.applyAlignment(alignment1,identity1,2);
 		assertEquals("Alignment1 incorrectly applied with identity x->x-10",image1,result1);
 	}
 }
