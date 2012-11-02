@@ -29,10 +29,27 @@ import org.xml.sax.helpers.DefaultHandler;
  *
  */
 public class PDBDomainProvider implements DomainProvider{
+	public static final String DEFAULT_PDB_HOST = "http://www.rcsb.org";
+	public static final String DEFAULT_PDB_API_URL = DEFAULT_PDB_HOST + "/pdb/rest/";
 
-	private String base = "http://www.rcsb.org/pdb/rest/";
-	private int cutoff = 40; // default %id cutoff for clusters
-
+	private String base;
+	private int cutoff;
+	
+	/**
+	 */
+	public PDBDomainProvider() {
+		this(DEFAULT_PDB_API_URL,40);
+	}
+	/**
+	 * @param base
+	 * @param cutoff
+	 */
+	public PDBDomainProvider(String base, int cutoff) {
+		this.base = base;
+		this.cutoff = cutoff;
+	}
+	
+	
 	/**
 	 * Gets a list of domain representatives for a given PDB ID.
 	 */
