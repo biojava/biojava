@@ -26,7 +26,7 @@ import org.biojava.bio.structure.jama.Matrix;
  *
  */
 public class AlignmentTools {
-	static final boolean debug = false;
+	public static boolean debug = false;
 
 	/**
 	 * Checks that the alignment given by afpChain is sequential. This means
@@ -143,7 +143,30 @@ public class AlignmentTools {
 		return map;
 	}
 	
-
+	public static <T> Map<T,T> applyAlignment(Map<T, T> alignmentMap) {
+		return applyAlignment(alignmentMap, new IdentityMap<T>());
+	}
+	
+	public static <S,T> Map<S,T> applyAlignment(Map<S, T> alignmentMap, Map<T,S> identity) {
+		Map<S, T> image = new HashMap<S,T>(alignmentMap.size());
+		
+		// apply alignment
+		for(S key : alignmentMap.keySet()) {
+			//Calculate result of two applications
+			T pre = alignmentMap.get(key);
+			S intermediate = (pre==null?null: identity.get(pre));
+			T post = (intermediate==null?null: alignmentMap.get(intermediate));
+			//Add result of two applications
+			image.put(key, post);
+			//Also add result of one application, in case it doesn't get set later
+			if(!image.containsKey(intermediate)) {
+				image.put(intermediate, null);
+			}
+		}
+		
+		return image;
+	}
+	
 	/**
 	 * Helper for {@link #getSymmetryOrder(Map, Map, int, float)} with a true
 	 * identity function (X->X).
