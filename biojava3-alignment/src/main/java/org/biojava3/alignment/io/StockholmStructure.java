@@ -116,7 +116,7 @@ public class StockholmStructure {
 		return seqsAnnotation.get(seqName);
 	}
 
-	/** TODO set or append? WTF
+	/** 
 	 * @param seqName
 	 * @param text
 	 */
