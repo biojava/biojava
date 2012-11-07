@@ -27,6 +27,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
 import java.util.Scanner;
+import java.util.Vector;
 
 import org.biojava3.alignment.io.StockholmFileAnnotation.StockholmFileAnnotationReference;
 import org.biojava3.core.exceptions.ParserException;
@@ -246,54 +247,117 @@ public class StockholmFileParser {
 	private static final int STATUS_IN_SEQUENCE  = 20;
 	
 	private int status=STATUS_OUTSIDE_FILE;
+	Scanner internalScanner= null;
+	private InputStream cashedInputStream;
 
 
 	/**
-	 * Parses a Stockholm file and returns a {@link StockholmStructure} object with its content
+	 * Parses a Stockholm file and returns a {@link StockholmStructure} object with its content.<br>
+	 * This function is meant to be used for single access to specific 
+	 * file and it closes the file after doing its assigned job. Any subsequent call 
+	 * to {@link #parseNext(int)} will throw an exception or will function with unpredicted behavior.
 	 * 
 	 * @param filename complete(?) path to the file from where to read the content
 	 * @return stockholm file content
-	 * @throws Exception
+	 * @throws IOException when an exception occurred while opening/reading/closing the file+
+	 * @throws ParserException if unexpected format is encountered
 	 */
-	public StockholmStructure parseFile(String filename) throws Exception {
+	public StockholmStructure parse(String filename) throws IOException,ParserException{
+		InputStream inStream = new InputStreamProvider().getInputStream(filename);
+		StockholmStructure structure = parse(inStream);
+		inStream.close();
+		return structure;
+	}
+	/**
+	 * Parses a Stockholm file and returns a {@link StockholmStructure} object with its content.<br>
+	 * This function doesn't close the file after doing its assigned job; to allow for further calls of {@link #parseNext(int)}.
+	 * @see #parseNext(int)
+	 * 
+	 * @param filename complete(?) path to the file from where to read the content
+	 * @param max maximum number of files to read, <code>-1</code> for all
+	 * @return a vector of {@link StockholmStructure} containing parsed structures.
+	 * @throws IOException when an exception occurred while opening/reading/closing the file+
+	 * @throws ParserException if unexpected format is encountered
+	 */
+	public Vector<StockholmStructure> parse(String filename, int max) throws IOException,ParserException{
 		InputStreamProvider isp = new InputStreamProvider();
-		InputStream inStream = null;
-		try {
-			inStream = isp.getInputStream(filename);
-		} catch (Exception e) {
-			// something is wrong with the file!
-			e.printStackTrace();
-			throw new IOException("Error reading the file");
-		}
-
-		return parseFile(inStream);
+		InputStream inStream = isp.getInputStream(filename);
+		Vector<StockholmStructure> structures = parse(inStream, max);
+		return structures;
 	}
 
-	/**parses {@link InputStream} and returns {@link StockholmStructure} object containing its contents.
+	/**parses {@link InputStream} and returns a the first contained alignment in a {@link StockholmStructure} object.
 	 * Used mainly for multiple files within the same input stream, (e.g. when 
 	 * reading from Pfam flat files. <br>
-	 * TODO This method should leave the stream unclosed.
+	 * This method leaves the stream open for further calls of {@link #parseNext(int)}.
+	 * @see #parseNext(int)
 	 * @param inStream the {@link InputStream} containing the file to read.
 	 * @return a {@link StockholmStructure} object representing file contents.
-	 * @throws IOException
-	 * @throws Exception
+	 * @throws IOException 
+	 * @throws ParserException 
 	 */
-	public StockholmStructure parseFile(InputStream inStream) throws Exception {
-		Scanner scanner= new Scanner(inStream);
-		return parseFile(scanner);
+	public StockholmStructure parse(InputStream inStream) throws ParserException, IOException {
+		return parse(inStream,1).firstElement();
 	}
 
+	/**parses an {@link InputStream} and returns maximum <code>max</code> object contained in
+	 * that file.<br>
+	 * This method leaves the stream open for further calls of {@link #parseNext(int)}.
+	 * 
+	 * @see #parseNext(int)
+	 * @param inStream the stream to parse
+	 * @param max maximum number of structures to try to parse 
+	 * @return a {@link Vector} of {@link StockholmStructure} objects.
+	 * @throws IOException in case an I/O Exception occurred.
+	 */
+	public Vector<StockholmStructure> parse(InputStream inStream, int max) throws IOException {
+		if (inStream != this.cashedInputStream) {
+			this.cashedInputStream=inStream;
+			this.internalScanner=null;
+		}
+		
+		if (internalScanner == null) {
+			internalScanner= new Scanner(inStream);
+		}
+		Vector<StockholmStructure> structures= new Vector<StockholmStructure>();
+		while (max != -1 && max-- >0) {
+			StockholmStructure structure = parse(internalScanner);
+			if(structure != null){
+				structures.add(structure);
+			}
+		}
+		return structures;
+	}
+	
+	/**Tries to parse and return as maximum as <code>max</code> structures in the last used file or input stream.<br>
+	 * Please consider calling either {@link #parse(InputStream)}, 
+	 * {@link #parse(InputStream, int)}, or {@link #parse(String, int)} before calling this function.
+	 * @param max
+	 * @return
+	 * @throws IOException
+	 */
+	public Vector<StockholmStructure> parseNext(int max) throws IOException {
+		return parse(this.cashedInputStream, max);
+	}
 
 	/**
-	 * Parses a stockholm file and returns a {@link StockholmStructure} object with its content
+	 * Parses a Stockholm file and returns a {@link StockholmStructure} object with its content.
+	 * This method returns just after reaching the end of structure delimiter line ("//"), leaving any remaining empty lines unconsumed.
 	 * 
 	 * @param scanner from where to read the file content
-	 * @return stockholm file content
+	 * @return Stockholm file content
 	 * @throws IOException 
 	 * @throws Exception
 	 */
-	public StockholmStructure parseFile(Scanner scanner) throws ParserException, IOException {
-		stockholmStructure = new StockholmStructure();
+	StockholmStructure parse(Scanner scanner) throws ParserException, IOException {
+		if (scanner == null) {
+			if(internalScanner != null){
+				scanner = internalScanner;
+			}else {
+				throw new IllegalArgumentException("No Scanner defined");
+			}
+		}
+		this.stockholmStructure = new StockholmStructure();
 		String line = null;
 		int linesCount = 0;
 		try {
@@ -332,7 +396,7 @@ public class StockholmFileParser {
 						// #=GS <seqname> <featurename> <generic per-sequence annotation, free text>
 						int index1=line.indexOf(' ', 5);
 						String seqName=line.substring(5, index1);
-						while (line.charAt(++index1)== ' ') 
+						while (line.charAt(++index1)<= ' ')//i.e. white space
 							;//keep advancing
 						int index2=line.indexOf(' ', index1);
 						String featureName=line.substring(index1, index2);
@@ -360,14 +424,14 @@ public class StockholmFileParser {
 					}
 				} else if (line.trim().equals("//")) {
 					status=STATUS_OUTSIDE_FILE;
-					break;//TODO should we just break immediately or jump next empty lines?
+					break;//should we just break immediately or jump next empty lines?
 				} else /*if (!line.startsWith("#")) */{
 					if (status == STATUS_IN_SEQUENCE) {
 						// This line corresponds to a sequence. Something like:
 						// O83071/192-246 MTCRAQLIAVPRASSLAEAIACAQKMRVSRVPVYERS
 						handleSequenceLine(line);
-					}else if (status==STATUS_OUTSIDE_FILE) {//TODO change this condition to enable reading multiple MSA in single file.
-						throw new ParserException("The end of file character was allready reached but there are still sequence lines");
+//					}else if (status==STATUS_OUTSIDE_FILE) {
+//						throw new ParserException("The end of file character was allready reached but there are still sequence lines");
 					}else {
 						System.err.println("Error: Unknown or unexpected line [" +line+"].\nPlease contact the Biojava team.");
 						throw new ParserException("Error: Unknown or unexpected line [" +line+"].");
@@ -393,7 +457,7 @@ public class StockholmFileParser {
 			}
 		}
 
-		return stockholmStructure;
+		return this.stockholmStructure;
 	}
 
 	/**
@@ -455,8 +519,8 @@ public class StockholmFileParser {
 			stockholmStructure.getFileAnnotation().setGFNumSequences(value);
 		} else if (featureName.equals(GF_DB_COMMENT)) {
 			stockholmStructure.getFileAnnotation().setGFDBComment(value);
-		} else if (featureName.equals(GF_DB_REFERENCE)) {
-			stockholmStructure.getFileAnnotation().addDBReference(value);
+//		} else if (featureName.equals(GF_DB_REFERENCE)) {
+//			stockholmStructure.getFileAnnotation().addDBReference(value);
 		} else if (featureName.equals(GF_REFERENCE_COMMENT)) {
 			stockholmStructure.getFileAnnotation().setGFRefComment(value);
 		} else if (featureName.equals(GF_REFERENCE_NUMBER)) {
@@ -498,7 +562,7 @@ public class StockholmFileParser {
 
 	/**usually a single line of:<br>
 	 * #=GC &lt;feature&gt; &lt;Generic per-Column annotation, exactly 1 char per column&gt;
-	 * @param featureName TODO
+	 * @param featureName the feature name :)
 	 * @param value the line to be parsed.
 	 */
 	private void handleConsensusAnnotation(String featureName, String value) {
@@ -592,15 +656,22 @@ public class StockholmFileParser {
 	//TODO implement toString()
 	
 	
-	public static void main(String[] args) throws Exception {
+//	public static void main(String[] args) throws Exception {
 //		StockholmFileParser fileParser = new StockholmFileParser();
-//		StockholmStructure parsedFile = fileParser.parseFile(ClassLoader.getSystemClassLoader().getResourceAsStream("longTest(Ankyrin repeat).sto"));
-//		
-//		Map<String, StringBuffer> sequences = parsedFile.getSequences();
-//		Set<String> keySet = sequences.keySet();
-//		for (String key: keySet) {
-//			System.out.println("seq: "+key);
-//			System.out.println("\t\t\t"+sequences.get(key));
+//		Vector<StockholmStructure> structures = fileParser.parse("D:\\BII-PhD\\Research\\Pfam23.0\\Pfam-A.seed.gz",5);
+//		displaySequences(structures);
+//		structures= fileParser.parseNext(5);
+//		displaySequences(structures);
+//	}
+//	public static void displaySequences(Vector<StockholmStructure> structures) {
+//		for (StockholmStructure structure : structures) {
+//			System.out.println("----------------- Structure "+structure.getFileAnnotation().getIdentification()+" -----------");
+//			Map<String, StringBuffer> sequences = structure.getSequences();
+//			Set<String> keySet = sequences.keySet();
+//			for (String key: keySet) {
+//				System.out.println("seq: "+key);
+//				System.out.println("\t\t\t"+sequences.get(key));
+//			}
 //		}
-	}
+//	}
 }
