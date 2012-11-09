@@ -263,9 +263,9 @@ class StockholmFileAnnotation {
 		if (this.buildMethod == null) {
 			this.buildMethod = new StringBuffer(buildMethod);
 		} else if (this.buildMethod instanceof StringBuffer){
-			((StringBuffer) this.buildMethod).append(System.lineSeparator()).append(buildMethod);
+			((StringBuffer) this.buildMethod).append(System.getProperty("line.seperator")).append(buildMethod);
 		}else {
-			this.buildMethod = new StringBuffer(this.buildMethod).append(System.lineSeparator()).append(buildMethod);
+			this.buildMethod = new StringBuffer(this.buildMethod).append(System.getProperty("line.seperator")).append(buildMethod);
 		}
 	}
 
