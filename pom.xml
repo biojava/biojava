@@ -110,7 +110,7 @@
 					<version>2.12.1</version>
 					<configuration>
 						<forkMode>pertest</forkMode>
-						<argLine>-Xms256m -Xmx1500M</argLine>
+						<argLine>-Xms256m -Xmx2000M</argLine>
 					</configuration> 
 				</plugin>
 				<plugin>
