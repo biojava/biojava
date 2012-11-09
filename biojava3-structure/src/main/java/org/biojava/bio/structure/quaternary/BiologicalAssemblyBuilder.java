@@ -106,7 +106,7 @@ public class BiologicalAssemblyBuilder {
 				}								
 			}
 			if (! foundChain){
-				System.err.println("could not transform chain: " + max.ndbChainId);
+				//System.err.println("could not transform chain: " + max.ndbChainId);
 			}
 		}
 
