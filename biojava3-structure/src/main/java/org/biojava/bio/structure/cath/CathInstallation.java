@@ -635,7 +635,7 @@ public class CathInstallation implements CathDatabase{
     protected void downloadFileFromRemote(URL remoteURL, File localFile) throws FileNotFoundException, IOException{
         System.out.println("downloading " + remoteURL + " to: " + localFile);
         
-        
+        long timeS = System.currentTimeMillis();
     	File tempFile  = File.createTempFile(FileDownloadUtils.getFilePrefix(localFile), "."+ FileDownloadUtils.getFileExtension(localFile));
         
         FileOutputStream out = new FileOutputStream(tempFile);
@@ -662,8 +662,8 @@ public class CathInstallation implements CathDatabase{
      		unit = " MB";
      		disp = disp / 1024.0;
      	}
-     	
-        System.out.println("downloaded " + String.format("%.1f",disp) + unit);
+     	long timeE = System.currentTimeMillis();
+        System.out.println("downloaded " + String.format("%.1f",disp) + unit  + " in " + (timeE - timeS)/1000 + " sec.");
 	}
 
     private boolean domainDescriptionFileAvailable(){
