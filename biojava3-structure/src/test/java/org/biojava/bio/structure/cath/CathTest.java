@@ -49,13 +49,17 @@ public class CathTest extends TestCase{
 	List<CathSegment> knownSegments;
 	List<CathFragment> knownFragments;
 
-	
+
 	@Override
 	@BeforeClass
 	public void setUp() throws Exception {
+
+		System.out.println(" CathTest: Current memory: " + Runtime.getRuntime().totalMemory() / 1024/1024 + " Mb");
+
 		
 		database     = new CathInstallation((new UserConfiguration()).getPdbFilePath(),false,true);
 		databaseCDDF = new CathInstallation((new UserConfiguration()).getPdbFilePath(),true,false);
+		
 
 		knownDomain = new CathDomain();
 		knownDomain.setDomainName( "1oaiA00" );
