@@ -109,7 +109,8 @@
 					<artifactId>maven-surefire-plugin</artifactId>
 					<version>2.12.1</version>
 					<configuration>
-						<argLine>-Xms256m -Xmx800m</argLine>
+						<forkMode>pertest</forkMode>
+						<argLine>-Xms256m -Xmx1G</argLine>
 					</configuration> 
 				</plugin>
 				<plugin>
