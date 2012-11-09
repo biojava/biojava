@@ -114,6 +114,7 @@ public class CathTest extends TestCase{
 
 	}
 
+	@Test
 	public void test4HHBCath(){
 
 		String pdbID = "4hhb";
