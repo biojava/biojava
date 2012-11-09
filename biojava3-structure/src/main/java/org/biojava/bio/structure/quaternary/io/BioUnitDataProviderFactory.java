@@ -24,7 +24,7 @@ public class BioUnitDataProviderFactory {
 		
 		try {
 			Class cls = Class.forName(providerClassName);
-			System.out.println("Using BioUnitProvider: " + providerClassName);
+			//System.out.println("Using BioUnitProvider: " + providerClassName);
 			return (BioUnitDataProvider) cls.newInstance();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
