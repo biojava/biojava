@@ -27,7 +27,6 @@ import junit.framework.TestCase;
 
 import org.biojava.bio.structure.align.client.StructureName;
 import org.biojava.bio.structure.align.util.UserConfiguration;
-import org.biojava3.structure.StructureIO;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -56,10 +55,11 @@ public class CathTest extends TestCase{
 
 		System.out.println(" CathTest: Current memory: " + Runtime.getRuntime().totalMemory() / 1024/1024 + " Mb");
 
-		
-		database     = new CathInstallation((new UserConfiguration()).getPdbFilePath(),false,true);
-		databaseCDDF = new CathInstallation((new UserConfiguration()).getPdbFilePath(),true,false);
-		
+		if ( database == null) {
+			System.out.println("initializng CATH installation");
+			database     = new CathInstallation((new UserConfiguration()).getPdbFilePath(),false,true);
+			databaseCDDF = new CathInstallation((new UserConfiguration()).getPdbFilePath(),true,false);
+		}
 
 		knownDomain = new CathDomain();
 		knownDomain.setDomainName( "1oaiA00" );
@@ -150,6 +150,15 @@ public class CathTest extends TestCase{
 		}
 
 	}
+	@Test
+	public void testCathNode() {
+		CathNode node = database.getCathNode("1.10.8.10");
+		assertEquals(knownNode.getNodeId(),node.getNodeId());
+		assertEquals(knownNode.getParentId(),node.getParentId());
+		assertEquals(knownNode.getRepresentative(),node.getRepresentative());
+		assertEquals(knownNode.getDescription(),node.getDescription());
+		assertEquals(knownNode.getCategory(),node.getCategory());
+	}
 
 
 	@Test
@@ -196,15 +205,6 @@ public class CathTest extends TestCase{
 		}
 	}
 
-	@Test
-	public void testCathNode() {
-		CathNode node = database.getCathNode("1.10.8.10");
-		assertEquals(knownNode.getNodeId(),node.getNodeId());
-		assertEquals(knownNode.getParentId(),node.getParentId());
-		assertEquals(knownNode.getRepresentative(),node.getRepresentative());
-		assertEquals(knownNode.getDescription(),node.getDescription());
-		assertEquals(knownNode.getCategory(),node.getCategory());
-	}
 
 	@Test
 	public void testCathFragment() {
