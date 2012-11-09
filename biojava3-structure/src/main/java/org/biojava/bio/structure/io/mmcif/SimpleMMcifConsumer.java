@@ -728,11 +728,6 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		Map<Integer,List<ModelTransformationMatrix>> transformationMap = new HashMap<Integer, List<ModelTransformationMatrix>>();
 		int total = strucAssemblies.size();
 
-
-		System.out.println( total + " bio assemblies available");
-
-
-
 		for ( int defaultBioAssembly = 1 ; defaultBioAssembly <= total; defaultBioAssembly++){
 			//List<ModelTransformationMatrix>tmp = getBioUnitTransformationList(pdbId, i +1);
 
