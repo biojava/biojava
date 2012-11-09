@@ -27,6 +27,7 @@ import junit.framework.TestCase;
 
 import org.biojava.bio.structure.align.client.StructureName;
 import org.biojava.bio.structure.align.util.UserConfiguration;
+import org.biojava3.structure.StructureIO;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -48,11 +49,11 @@ public class CathTest extends TestCase{
 	List<CathSegment> knownSegments;
 	List<CathFragment> knownFragments;
 
+	
 	@Override
 	@BeforeClass
 	public void setUp() throws Exception {
-
-
+		
 		database     = new CathInstallation((new UserConfiguration()).getPdbFilePath(),false,true);
 		databaseCDDF = new CathInstallation((new UserConfiguration()).getPdbFilePath(),true,false);
 
@@ -113,7 +114,7 @@ public class CathTest extends TestCase{
 
 	}
 
-	public void test4HHB(){
+	public void test4HHBCath(){
 
 		String pdbID = "4hhb";
 
