@@ -56,7 +56,7 @@ public class CathTest extends TestCase{
 		System.out.println(" CathTest: Current memory: " + Runtime.getRuntime().totalMemory() / 1024/1024 + " Mb");
 
 		if ( database == null) {
-			System.out.println("initializng CATH installation");
+			System.out.println("initializing CATH installation");
 			database     = new CathInstallation((new UserConfiguration()).getPdbFilePath(),false,true);
 			databaseCDDF = new CathInstallation((new UserConfiguration()).getPdbFilePath(),true,false);
 		}
