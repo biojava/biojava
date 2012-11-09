@@ -57,8 +57,6 @@
 			<groupId>org</groupId>
 			<artifactId>forester</artifactId>
 			<version>1.005</version>
-			<type>jar</type>
-			<scope>test</scope>
 		</dependency>
 	</dependencies>
 </project>
