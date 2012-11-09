@@ -157,7 +157,7 @@ public class StructureIO {
 			
 			throw new StructureException("Could not load transformations to recreate biological assembly nr " + biolAssemblyNr + " of " + pdbId);
 		}
-		
+		//System.out.println("StructureIO:" + transformations.get(0).toXML());
 		BiologicalAssemblyBuilder builder = new BiologicalAssemblyBuilder();
 
 		return builder.rebuildQuaternaryStructure(asymUnit, transformations);
