@@ -74,7 +74,7 @@ public class BiologicalAssemblyBuilder {
 
 				String intChainID = c.getInternalChainID();
 				if ( intChainID == null) {
-					System.err.println("no internal chain ID found, using " + c.getChainID() + " ( while looking for " + max.ndbChainId+")");
+					//System.err.println("no internal chain ID found, using " + c.getChainID() + " ( while looking for " + max.ndbChainId+")");
 					intChainID = c.getChainID();
 				}
 
