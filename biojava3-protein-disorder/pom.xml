@@ -34,7 +34,7 @@
 							</manifest>
 							 <manifestEntries>
 				                <product>JRONN a Java RONN (www.strubi.ox.ac.uk/RONN)</product>
-              					<url>${pom.url}</url>
+              					<url>${project.url}</url>
 								<author>Peter Troshin</author>
 				            </manifestEntries>
 						</archive>
