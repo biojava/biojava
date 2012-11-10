@@ -40,26 +40,25 @@ import java.util.List;
  */
 public class CathTest extends TestCase{
 
-	CathDatabase database;
-	CathDatabase databaseCDDF;
-	CathDomain knownDomain;
-	CathNode knownNode;
-	CathSegment knownSegment;
-	List<CathSegment> knownSegments;
-	List<CathFragment> knownFragments;
 
 
-	@Override
-	@BeforeClass
-	public void setUp() throws Exception {
+	@Test
+	public void testCATH(){
+
+		CathDatabase database;
+		CathDatabase databaseCDDF;
+		CathDomain knownDomain;
+		CathNode knownNode;
+		CathSegment knownSegment;
+		List<CathSegment> knownSegments;
+		List<CathFragment> knownFragments;
 
 		System.out.println(" CathTest: Current memory: " + Runtime.getRuntime().totalMemory() / 1024/1024 + " Mb");
-
-		if ( database == null) {
-			System.out.println("initializing CATH installation");
-			database     = new CathInstallation((new UserConfiguration()).getPdbFilePath(),false,true);
-			databaseCDDF = new CathInstallation((new UserConfiguration()).getPdbFilePath(),true,false);
-		}
+		
+		database     = new CathInstallation((new UserConfiguration()).getPdbFilePath(),false,true);
+		databaseCDDF = new CathInstallation((new UserConfiguration()).getPdbFilePath(),true,false);
+		
+		System.out.println(" CathTest: After CATH init: " + Runtime.getRuntime().totalMemory() / 1024/1024 + " Mb");
 
 		knownDomain = new CathDomain();
 		knownDomain.setDomainName( "1oaiA00" );
@@ -116,11 +115,11 @@ public class CathTest extends TestCase{
 		knownFragments.add(fragment1);
 		knownFragments.add(fragment2);
 
-	}
+	
 
-	@Test
-	public void test4HHBCath(){
-
+	
+		
+		// test 4HHB
 		String pdbID = "4hhb";
 
 		List<CathDomain> cathDomains = database.getDomainsForPdb(pdbID);
@@ -149,20 +148,16 @@ public class CathTest extends TestCase{
 			}
 		}
 
-	}
-	@Test
-	public void testCathNode() {
+		// test CATH node
 		CathNode node = database.getCathNode("1.10.8.10");
 		assertEquals(knownNode.getNodeId(),node.getNodeId());
 		assertEquals(knownNode.getParentId(),node.getParentId());
 		assertEquals(knownNode.getRepresentative(),node.getRepresentative());
 		assertEquals(knownNode.getDescription(),node.getDescription());
 		assertEquals(knownNode.getCategory(),node.getCategory());
-	}
-
-
-	@Test
-	public void testCathDomain() {
+	
+		// test CATH domain
+		
 		CathDomain domain = database.getDomainByCathId("1oaiA00");
 		System.out.println(domain);
 		assertEquals(knownDomain.getDomainName(),domain.getDomainName());
@@ -170,10 +165,9 @@ public class CathTest extends TestCase{
 		assertEquals(knownDomain.getResolution(),domain.getResolution());
 		assertEquals(knownDomain.getCATH(),domain.getCATH());
 		assertEquals(knownDomain.getSOILD(),domain.getSOILD());
-	}
-
-	@Test
-	public void testCathDescription() {
+	
+		
+		// test CATH desc
 		CathDomain descriptionCDDF = databaseCDDF.getDescriptionByCathId("1oaiA00");
 		assertEquals(knownDomain.getFormat(),descriptionCDDF.getFormat());
 		assertEquals(knownDomain.getDate(),descriptionCDDF.getDate());
@@ -191,10 +185,10 @@ public class CathTest extends TestCase{
 			assertEquals(knownSegments.get(i).getStart(),segmentsCDDF.get(i).getStart());
 			assertEquals(knownSegments.get(i).getStop(),segmentsCDDF.get(i).getStop());
 		}
-	}
-
-	@Test
-	public void testCathSegment() {
+	
+		
+		// test CATH segment
+		
 		List<CathSegment> segments = database.getDescriptionByCathId("1oaiA00").getSegments();
 		assertEquals(segments.size(),knownSegments.size());
 		for (int i = 0; i<segments.size(); i++) {
@@ -203,11 +197,12 @@ public class CathTest extends TestCase{
 			assertEquals(knownSegments.get(i).getStart(),segments.get(i).getStart());
 			assertEquals(knownSegments.get(i).getStop(),segments.get(i).getStop());
 		}
-	}
+	
+		
+		// test CATH fragments
 
 
-	@Test
-	public void testCathFragment() {
+	
 		List<CathFragment> fragments = database.getFragmentsByPdbId("17gsA");
 		for (int i=0; i<fragments.size(); i++) {
 			assertEquals(knownFragments.get(i).getFragmentId(),fragments.get(i).getFragmentId());
@@ -215,6 +210,9 @@ public class CathTest extends TestCase{
 			assertEquals(knownFragments.get(i).getStop(),fragments.get(i).getStop());
 			assertEquals(knownFragments.get(i).getLength(),fragments.get(i).getLength());
 		}
+		
+		
+		System.out.println(" CathTest: After CATH tests: " + Runtime.getRuntime().totalMemory() / 1024/1024 + " Mb");
 	}
 
 }
