@@ -10,7 +10,7 @@
   <groupId>org.biojava3</groupId>
   <artifactId>integrationtest</artifactId>
   <name>integrationtest</name>
-  <url>http://maven.apache.org</url>
+  <url>http://www.biojava.org</url>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
