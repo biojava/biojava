@@ -19,6 +19,13 @@
 			<url>scp://portal.open-bio.org/home/websites/biojava.org/html/static/download/maven/</url>
 			<layout>default</layout>
 		</repository>
+		<snapshotRepository>
+			<uniqueVersion>false</uniqueVersion>
+			<id>biojava-maven-repo</id>
+			<name>BioJava Maven Repository</name>
+			<url>scp://portal.open-bio.org/home/websites/biojava.org/html/static/download/maven/</url>
+			<layout>default</layout>
+		</snapshotRepository>
 	</distributionManagement>
 	<dependencies>
 		<dependency>
