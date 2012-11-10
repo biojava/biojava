@@ -8,16 +8,6 @@
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>biojava3-genome</artifactId>
 	<name>biojava3-genome</name>
-	<distributionManagement>
-		<downloadUrl>http://www.biojava.org/download/maven/</downloadUrl>
-		<repository>
-			<uniqueVersion>false</uniqueVersion>
-			<id>biojava-maven-repo</id>
-			<name>BioJava Maven Repository</name>
-			<url>scp://portal.open-bio.org/home/websites/biojava.org/html/static/download/maven/</url>
-			<layout>default</layout>
-		</repository>
-	</distributionManagement>
 	<repositories>
 		<repository>
 			<id>biojava-maven-repo</id>
