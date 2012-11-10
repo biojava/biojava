@@ -31,6 +31,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -72,7 +73,13 @@ public class CathTest extends TestCase{
 		//        knownDomain.setDomain(knownDomain);
 		knownDomain.setVersion("3.5.0");
 		DateFormat format = new SimpleDateFormat("dd-MMM-yyyy");
-		knownDomain.setDate(format.parse("21-Sep-2011"));
+		try {
+			knownDomain.setDate(format.parse("21-Sep-2011"));
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			fail(e.getMessage());
+		}
 		knownDomain.setName("Nuclear RNA export factor. Chain: a. Fragment: uba domain, residues 56" +
 				"1-619. Synonym: tap, tip associating protein, mRNA export factor  tap." +
 				" Engineered: yes. Fxfg nucleoporin peptide. Chain: b. Fragment: nucleo" +
