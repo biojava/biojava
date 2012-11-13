@@ -60,9 +60,9 @@ public abstract class AbstractNucleotideCompoundSet<C extends NucleotideCompound
     }
 
     for(NucleotideCompound sourceCompound: ambiguousCompounds) {
-      Set<NucleotideCompound> compoundConstituents = sourceCompound.getConsituents();
+      Set<NucleotideCompound> compoundConstituents = sourceCompound.getConstituents();
       for(NucleotideCompound targetCompound: ambiguousCompounds) {
-        Set<NucleotideCompound> targetConstituents = targetCompound.getConsituents();
+        Set<NucleotideCompound> targetConstituents = targetCompound.getConstituents();
         if(targetConstituents.containsAll(compoundConstituents)) {
           NucleotideCompound lcSourceCompound = toLowerCase(sourceCompound);
           NucleotideCompound lcTargetCompound = toLowerCase(targetCompound);
@@ -126,12 +126,12 @@ private NucleotideCompound toLowerCase(NucleotideCompound compound) {
   public NucleotideCompound getAmbiguity(NucleotideCompound... compounds) {
     Set<NucleotideCompound> settedCompounds = new HashSet<NucleotideCompound>();
     for(NucleotideCompound compound: compounds) {
-      for(NucleotideCompound subCompound: compound.getConsituents()) {
+      for(NucleotideCompound subCompound: compound.getConstituents()) {
         settedCompounds.add(getCompoundForString(subCompound.getBase().toUpperCase()));
       }
     }
     for(NucleotideCompound compound: getAllCompounds()) {
-      if(compound.getConsituents().equals(settedCompounds)) {
+      if(compound.getConstituents().equals(settedCompounds)) {
         return compound;
       }
     }
