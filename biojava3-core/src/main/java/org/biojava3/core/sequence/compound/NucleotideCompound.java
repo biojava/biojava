@@ -99,6 +99,11 @@ public class NucleotideCompound extends AbstractCompound implements ComplementCo
     public Set<NucleotideCompound> getConstituents() {
       return constituents;
     }
+    
+    /**@deprecated replaced with {@link #getConstituents()} due to typographical error */
+    public Set<NucleotideCompound> getConsituents() {
+    	return getConstituents();
+    }
 
     public boolean isAmbiguous() {
       return !constituents.isEmpty();
