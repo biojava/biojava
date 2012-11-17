@@ -13,8 +13,11 @@ import java.util.TreeSet;
 import java.util.Map.Entry;
 
 import org.biojava.bio.structure.Atom;
+import org.biojava.bio.structure.Calc;
 import org.biojava.bio.structure.ResidueNumber;
+import org.biojava.bio.structure.SVDSuperimposer;
 import org.biojava.bio.structure.StructureException;
+import org.biojava.bio.structure.align.ce.CECalculator;
 import org.biojava.bio.structure.align.model.AFPChain;
 import org.biojava.bio.structure.align.xml.AFPChainXMLParser;
 import org.biojava.bio.structure.jama.Matrix;
@@ -282,7 +285,7 @@ public class AlignmentTools {
 	 *  the calculation time and can lead to overfitting. 
 	 * @param minimumMetricChange Percent decrease in root mean squared offsets
 	 *  in order to declare symmetry. 0.4f seems to work well for CeSymm.
-	 * @return The order of symmetry of alignment, or -1 if no order <= 
+	 * @return The order of symmetry of alignment, or 1 if no order <= 
 	 *  maxSymmetry is found.
 	 *  
 	 * @see IdentityMap For a simple identity function
@@ -292,7 +295,7 @@ public class AlignmentTools {
 		List<Integer> preimage = new ArrayList<Integer>(alignment.keySet()); // currently unmodified
 		List<Integer> image = new ArrayList<Integer>(preimage);
 				
-		int bestSymmetry = -1;
+		int bestSymmetry = 1;
 		double bestMetric = Double.POSITIVE_INFINITY; //lower is better
 		boolean foundSymmetry = false;
 		
@@ -349,7 +352,7 @@ public class AlignmentTools {
 		if(foundSymmetry) {
 			return bestSymmetry;
 		} else {
-			return -1;
+			return 1;
 		}
 	}
 	
@@ -564,4 +567,61 @@ public class AlignmentTools {
 		return a;
 	}
 
+	/**
+	 * After the alignment changes (optAln, optLen, blockNum, at a minimum),
+	 * many other properties which depend on the superposition will be invalid.
+	 * 
+	 * This method re-runs a rigid superposition over the whole alignment
+	 * and repopulates the required properties, including RMSD (TotalRMSD) and
+	 * TM-Score.
+	 * @param afpChain
+	 * @param ca1
+	 * @param ca2
+	 * @throws StructureException
+	 * @see {@link CECalculator#calc_rmsd(Atom[], Atom[], int, boolean, boolean)}
+	 *  contains much of the same code, but stores results in a CECalculator
+	 *  instance rather than an AFPChain 
+	 */
+	public static void updateSuperposition(AFPChain afpChain, Atom[] ca1, Atom[] ca2) throws StructureException {
+		
+		// Create arrays of aligned atoms
+		int optLength = afpChain.getOptLength();
+		int alnPos = 0;
+		Atom[] aln1 = new Atom[optLength];
+		Atom[] aln2 = new Atom[optLength];
+		
+		int[] optLen = afpChain.getOptLen();
+		int[][][] optAln = afpChain.getOptAln();
+		int blockNum = afpChain.getBlockNum();
+		for(int blk=0;blk<blockNum;blk++) {
+			for(int pos=0;pos<optLen[blk];pos++) {
+				int res1 = optAln[blk][0][pos];
+				int res2 = optAln[blk][1][pos];
+				aln1[alnPos] = ca1[res1];
+				aln2[alnPos] = ca2[res2];
+				alnPos++;
+			}
+		}
+		
+		// Superimpose
+		SVDSuperimposer svd = new SVDSuperimposer(aln1, aln2);
+		
+		Matrix matrix = svd.getRotation();
+		Atom shift = svd.getTranslation();
+		
+		// Apply transformation to ca2
+		for(Atom a : ca2) {
+			Calc.rotate(a.getGroup(), matrix);
+			Calc.shift(a.getGroup(), shift);
+		}
+		
+		double rmsd = svd.getRMS(ca1, ca2);
+		double tm = svd.getTMScore(aln1, aln2, ca1.length, ca2.length);
+
+		// Store new transformation back to AFPChain
+		//TODO convolve current superposition with previous transformation?
+		afpChain.setTotalRmsdOpt(rmsd);
+		afpChain.setOptRmsd(null);
+		afpChain.setBlockRmsd(null);
+	}
 }

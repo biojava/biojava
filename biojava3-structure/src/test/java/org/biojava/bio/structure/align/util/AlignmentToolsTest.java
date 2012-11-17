@@ -113,7 +113,7 @@ public class AlignmentToolsTest extends TestCase {
 		}
 		
 		order = AlignmentTools.getSymmetryOrder(alignment2, identity, maxSymmetry, minimumMetricChange);
-		assertEquals("Wrong order for alignment 2",-1,order);
+		assertEquals("Wrong order for alignment 2",1,order);
 		
 		// now try to get symmetry order with an imperfect identity
 		Map<Integer,Integer> alignment3 = new HashMap<Integer,Integer>();
@@ -138,10 +138,10 @@ public class AlignmentToolsTest extends TestCase {
 		/* These tests don't work because there are no paths longer than maxSymmetry, so they hit 0 error (NaN metric change)
 		//Stringent minimumMetric values cause it to miss the alignment
 		order = AlignmentTools.getSymmetryOrder(alignment3, identityMinus10, maxSymmetry, .001f);
-		assertEquals("Wrong order for alignment 1 with I(x)=x+1 & minMetric=.01",-1,order);
+		assertEquals("Wrong order for alignment 1 with I(x)=x+1 & minMetric=.01",1,order);
 
 		order = AlignmentTools.getSymmetryOrder(alignment1, identity, maxSymmetry, .001f);
-		assertEquals("Wrong order for alignment 1 & minMetric=.01",-1,order);
+		assertEquals("Wrong order for alignment 1 & minMetric=.01",1,order);
 		*/
 	}
 	
@@ -203,16 +203,16 @@ public class AlignmentToolsTest extends TestCase {
 //		// Non-symmetric
 //		name1 = "1NLS.A";
 //		name2 = "1RIN.A";
-//		trueOrder = -1;
+//		trueOrder = 1;
 //		
 //		// non-symmetric
 //		name1 = "1ATG.A";
 //		name2 = "2B4L.A";
-//		trueOrder = -1;
+//		trueOrder = 1;
 //		
 //		name1 = "1TIM.A";
 //		name2 = "1CDG";
-//		trueOrder = -1;
+//		trueOrder = 1;
 //		
 //		name1 = "1a22.A";
 //		name2 = "2ffx.J";
