@@ -39,9 +39,9 @@ import org.biojava3.core.sequence.template.AbstractSequence.AnnotationType;
  * 
  * If the user has a custom header with local data then they can create their own implementation
  * of a FastaHeaderParserInterface
- *
+ *<pre>
  * GenBank                           gi|gi-number|gb|accession|locus
- * ENA Data Library                 gi|gi-number|emb|accession|locus
+ * ENA Data Library                  gi|gi-number|emb|accession|locus
  * DDBJ, DNA Database of Japan       gi|gi-number|dbj|accession|locus
  * NBRF PIR                          pir||entry
  * Protein Research Foundation       prf||name
@@ -54,7 +54,7 @@ import org.biojava3.core.sequence.template.AbstractSequence.AnnotationType;
  * General database identifier       gnl|database|identifier
  * NCBI Reference Sequence           ref|accession|locus
  * Local Sequence identifier         lcl|identifier
- *
+ *</pre>
  * @author Scooter Willis <willishf at gmail dot com>
  */
 public class GenericFastaHeaderParser<S extends AbstractSequence<C>, C extends Compound> implements FastaHeaderParserInterface<S,C> {
