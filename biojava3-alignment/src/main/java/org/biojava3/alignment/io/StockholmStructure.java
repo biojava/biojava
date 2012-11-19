@@ -191,24 +191,30 @@ public class StockholmStructure {
 		getResidueAnnotation(seqName).setSecondaryStructure(text);
 	}
 
-//	public boolean endFileReached() {
-//		return endFile;
-//	}
-//
-//	public void setEndFile(boolean endFile) {
-//		this.endFile = endFile;
-//	}
 
 	/**
 	 * 
 	 * @return
 	 */
 	public List<AbstractSequence<? extends AbstractCompound>> getBioSequences() {
-		List<AbstractSequence<? extends AbstractCompound>> seqs = new ArrayList<AbstractSequence<? extends AbstractCompound>>();
+		return getBioSequences(false);
+	}
 
+	/**Because some database files have incorrectly small letters (e.g. Pfam23 structure 
+	 * PF00389.22 sequence TKRA_BACSU/6-322), this 
+	 * function is used to ignore the small letters case.
+	 * 
+	 * @param ignoreCase if <code>true</code>, the function will deal with small letters as if they are capital ones
+	 * @return
+	 */
+	public List<AbstractSequence<? extends AbstractCompound>> getBioSequences(boolean ignoreCase) {
+		List<AbstractSequence<? extends AbstractCompound>> seqs = new ArrayList<AbstractSequence<? extends AbstractCompound>>();
 		for (String sequencename : sequences.keySet()) {
 			AbstractSequence<? extends AbstractCompound> seq;
 			String sequence = sequences.get(sequencename).toString();
+			if (ignoreCase) {
+				sequence=sequence.toUpperCase();
+			}
 			if (fileAnnotation.isPFam()) {
 				seq = new ProteinSequence(sequence);
 			} else {
@@ -217,16 +223,11 @@ public class StockholmStructure {
 
 			String[] seqDetails = splitSeqName(sequencename);
 			seq.setDescription(seqDetails[0]);
-			seq.setBioBegin((seqDetails[1] == null
-					|| seqDetails[1].trim().equals("") ? 0 : new Integer(
-					seqDetails[1])));
-			seq.setBioEnd((seqDetails[2] == null
-					|| seqDetails[2].trim().equals("") ? 0 : new Integer(
-					seqDetails[2])));
+			seq.setBioBegin((seqDetails[1] == null || seqDetails[1].trim().equals("") ? null : new Integer(seqDetails[1])));
+			seq.setBioEnd  ((seqDetails[2] == null || seqDetails[2].trim().equals("") ? null : new Integer(seqDetails[2])));
 
 			seqs.add(seq);
 		}
-
 		return seqs;
 	}
 
@@ -264,7 +265,7 @@ public class StockholmStructure {
 	@Override
 	public String toString() {
 		StringBuffer result = new StringBuffer();
-		List<AbstractSequence<? extends AbstractCompound>> bioSeqs = getBioSequences();
+		List<AbstractSequence<? extends AbstractCompound>> bioSeqs = getBioSequences(false);
 		int sequenceLength = -1;
 		for (AbstractSequence<? extends AbstractCompound> sequence : bioSeqs) {
 			String sequenceAsString = sequence.getSequenceAsString();
@@ -272,15 +273,13 @@ public class StockholmStructure {
 			if (sequenceLength > 50) {
 				result.append(sequenceAsString.substring(0, 40));
 				result.append("...");
-				result.append(sequenceAsString.substring(sequenceLength - 3,
-						sequenceLength));
+				result.append(sequenceAsString.substring(sequenceLength - 3, sequenceLength));
 			} else {
 				result.append(sequenceAsString);
 			}
 			result.append(" " + sequence.getDescription() + "\n");
 		}
-		result.append("Alignment with " + bioSeqs.size() + " rows and "
-				+ sequenceLength + " columns");
+		result.append("Alignment with " + bioSeqs.size() + " rows and "+ sequenceLength + " columns");
 
 		return result.toString();
 	}

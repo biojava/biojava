@@ -56,9 +56,9 @@ public class TestStockholmParser extends TestCase {
 
 			StockholmStructure data = fileParser.parse(inStream);					
 			
-			assertTrue("Did not get enough sequences!", data.getBioSequences().size()==20);
+			assertTrue("Did not get enough sequences!", data.getBioSequences(false).size()==20);
 
-			AbstractSequence<?> seq = data.getBioSequences().get(0);
+			AbstractSequence<?> seq = data.getBioSequences(false).get(0);
 			assertTrue(seq != null );
 			
 			assertTrue(seq.getSequenceAsString().length() > 20);
