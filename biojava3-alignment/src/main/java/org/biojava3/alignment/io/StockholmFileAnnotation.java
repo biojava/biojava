@@ -42,10 +42,10 @@ import org.biojava3.alignment.io.StockholmStructure.DatabaseReference;
  * @author Marko Vaz
  * 
  */
-class StockholmFileAnnotation {
+public class StockholmFileAnnotation {
 	public static class StockholmFileAnnotationReference {
 		private String refMedline;//TODO 8 digits
-		private CharSequence refTitle;//TODO on several lines
+		private CharSequence refTitle;//on several lines
 		private CharSequence refAuthor;//TODO comma-separated, semicolon terminated list;
 		/**<b>TODO to be formatted later on.</b><br>
 		 * RL  Journal abbreviation year;volume:page-page.<br>
@@ -305,7 +305,8 @@ class StockholmFileAnnotation {
 		}
 	}
 
-	/**Not always 2. It may undergo further change.
+	/**Not always 2.<br>
+	 * It may undergo further change.
 	 * @return
 	 */
 	public float[] getGatheringThreshs() {
@@ -316,7 +317,8 @@ class StockholmFileAnnotation {
 		this.gatheringThreshs = stringToFloats(gatheringThresh);
 	}
 
-	/**Not always 2. It may undergo further change.
+	/**Not always 2.<br>
+	 * It may undergo further change.
 	 * @return
 	 */
 	public float[] getNoiseCutoffs() {
@@ -328,7 +330,8 @@ class StockholmFileAnnotation {
 	}
 
 
-	/**Not always 2. It may undergo further change.
+	/**Not always 2.<br>
+	 * It may undergo further change.
 	 * @return
 	 */
 	public float[] getTrustedCutoffs() {
@@ -401,8 +404,7 @@ class StockholmFileAnnotation {
 
 	public boolean isPFam() {
 		return accessionNumber != null
-				&& (accessionNumber.startsWith(PF_PFAM_STRING) || accessionNumber
-						.startsWith(PB_PFAM_STRING));
+				&& (accessionNumber.startsWith(PF_PFAM_STRING) || accessionNumber.startsWith(PB_PFAM_STRING));
 	}
 
 	public boolean isRFam() {

@@ -25,9 +25,10 @@ package org.biojava3.alignment.io;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
-import java.util.Vector;
 
 import org.biojava3.alignment.io.StockholmFileAnnotation.StockholmFileAnnotationReference;
 import org.biojava3.core.exceptions.ParserException;
@@ -279,11 +280,10 @@ public class StockholmFileParser {
 	 * @throws IOException when an exception occurred while opening/reading/closing the file+
 	 * @throws ParserException if unexpected format is encountered
 	 */
-	public Vector<StockholmStructure> parse(String filename, int max) throws IOException,ParserException{
+	public List<StockholmStructure> parse(String filename, int max) throws IOException,ParserException{
 		InputStreamProvider isp = new InputStreamProvider();
 		InputStream inStream = isp.getInputStream(filename);
-		Vector<StockholmStructure> structures = parse(inStream, max);
-		return structures;
+		return parse(inStream, max);
 	}
 
 	/**parses {@link InputStream} and returns a the first contained alignment in a {@link StockholmStructure} object.
@@ -297,7 +297,7 @@ public class StockholmFileParser {
 	 * @throws ParserException 
 	 */
 	public StockholmStructure parse(InputStream inStream) throws ParserException, IOException {
-		return parse(inStream,1).firstElement();
+		return parse(inStream,1).get(0);
 	}
 
 	/**parses an {@link InputStream} and returns maximum <code>max</code> object contained in
@@ -307,10 +307,10 @@ public class StockholmFileParser {
 	 * @see #parseNext(int)
 	 * @param inStream the stream to parse
 	 * @param max maximum number of structures to try to parse 
-	 * @return a {@link Vector} of {@link StockholmStructure} objects.
+	 * @return a {@link List} of {@link StockholmStructure} objects.
 	 * @throws IOException in case an I/O Exception occurred.
 	 */
-	public Vector<StockholmStructure> parse(InputStream inStream, int max) throws IOException {
+	public List<StockholmStructure> parse(InputStream inStream, int max) throws IOException {
 		if (inStream != this.cashedInputStream) {
 			this.cashedInputStream=inStream;
 			this.internalScanner=null;
@@ -319,7 +319,7 @@ public class StockholmFileParser {
 		if (internalScanner == null) {
 			internalScanner= new Scanner(inStream);
 		}
-		Vector<StockholmStructure> structures= new Vector<StockholmStructure>();
+		ArrayList<StockholmStructure> structures= new ArrayList<StockholmStructure>();
 		while (max != -1 && max-- >0) {
 			StockholmStructure structure = parse(internalScanner);
 			if(structure != null){
@@ -336,7 +336,7 @@ public class StockholmFileParser {
 	 * @return
 	 * @throws IOException
 	 */
-	public Vector<StockholmStructure> parseNext(int max) throws IOException {
+	public List<StockholmStructure> parseNext(int max) throws IOException {
 		return parse(this.cashedInputStream, max);
 	}
 
@@ -652,26 +652,4 @@ public class StockholmFileParser {
 			System.err.println("Warning: Unknown Residue Feature [" +featureName+"].\nPlease contact the Biojava team.");
 		}
 	}
-
-	//TODO implement toString()
-	
-	
-//	public static void main(String[] args) throws Exception {
-//		StockholmFileParser fileParser = new StockholmFileParser();
-//		Vector<StockholmStructure> structures = fileParser.parse("D:\\BII-PhD\\Research\\Pfam23.0\\Pfam-A.seed.gz",5);
-//		displaySequences(structures);
-//		structures= fileParser.parseNext(5);
-//		displaySequences(structures);
-//	}
-//	public static void displaySequences(Vector<StockholmStructure> structures) {
-//		for (StockholmStructure structure : structures) {
-//			System.out.println("----------------- Structure "+structure.getFileAnnotation().getIdentification()+" -----------");
-//			Map<String, StringBuffer> sequences = structure.getSequences();
-//			Set<String> keySet = sequences.keySet();
-//			for (String key: keySet) {
-//				System.out.println("seq: "+key);
-//				System.out.println("\t\t\t"+sequences.get(key));
-//			}
-//		}
-//	}
 }
