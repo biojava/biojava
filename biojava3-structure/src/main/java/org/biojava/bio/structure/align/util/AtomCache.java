@@ -42,6 +42,10 @@ import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureException;
 import org.biojava.bio.structure.StructureTools;
 import org.biojava.bio.structure.align.ce.AbstractUserArgumentProcessor;
+import org.biojava.bio.structure.align.client.StructureName;
+import org.biojava.bio.structure.cath.CathDomain;
+import org.biojava.bio.structure.cath.CathInstallation;
+import org.biojava.bio.structure.cath.CathSegment;
 import org.biojava.bio.structure.domain.PDPProvider;
 import org.biojava.bio.structure.domain.RemotePDPProvider;
 import org.biojava.bio.structure.io.FileParsingParameters;
@@ -304,38 +308,35 @@ public class AtomCache {
 		}
 
 
-		String range = "(";
+		StringWriter range = new StringWriter();
+		range.append("(");
 		int rangePos = 0;
 		for ( String r : domain.getRanges()) {
 			rangePos++;
-			range+= r;
+			range.append(r);
 			if ( ( domain.getRanges().size()> 1) && (rangePos < domain.getRanges().size())){
-				range+=",";
+				range.append(",");
 			}
 
 		}
-		range+=")";
+		range.append(")");
 		//System.out.println("getting range for "+ pdbId + " " + range);
 
-		Structure n = StructureTools.getSubRanges(s, range);
+		Structure n = StructureTools.getSubRanges(s, range.toString());
 
-
-		// get free ligands of first chain...
-		if ( n.getChains().size()> 0) {
-			Chain c1 = n.getChains().get(0);
-			for ( Chain c : s.getChains()) {
-				if ( c1.getChainID().equals(c.getChainID())) {
-					List<Group> ligands = c.getAtomLigands();
-
-					for(Group g: ligands){
-						if ( ! c1.getAtomGroups().contains(g)) {
-							c1.addGroup(g);
-						}
-					}
-				}
-
+		// get ligands of chain
+		// add the ligands of the chain...
+		StructureName structureName = new StructureName(domain.getScopId());
+		Chain newChain  = n.getChainByPDB(structureName.getChainId());
+		Chain origChain = s.getChainByPDB(structureName.getChainId());
+		List<Group> ligands = origChain.getAtomLigands();
+				
+		for(Group g: ligands){
+			if ( ! newChain.getAtomGroups().contains(g)) {
+				newChain.addGroup(g);
 			}
 		}
+		
 		n.setName(domain.getScopId());
 		n.setPDBCode(domain.getScopId());
 
@@ -469,7 +470,8 @@ public class AtomCache {
 		int chainNr = -1;
 
 		try {
-
+			
+			StructureName structureName = new StructureName(name);
 
 			String pdbId   = null;
 			String chainId = null;
@@ -478,11 +480,12 @@ public class AtomCache {
 
 				pdbId = name; 
 
-			} else if ( name.startsWith("d")){
+			} else if ( structureName.isScopName()){
 
 				// return based on SCOP domain ID
 				return getStructureFromSCOPDomain(name);
-
+			} else if ( structureName.isCathID()) {
+				return getStructureFromCATHDomain(structureName);
 			} else if (name.length() == 6){
 				// name is PDB.CHAINID style (e.g. 4hhb.A)
 
@@ -512,7 +515,7 @@ public class AtomCache {
 				}
 
 
-			} else if ( name.startsWith(PDP_DOMAIN_IDENTIFIER)){
+			} else if ( structureName.isPDPDomain()){
 
 				// this is a PDP domain definition
 
@@ -625,6 +628,7 @@ public class AtomCache {
 
 	}
 
+	
 	private Structure getBioAssembly(String name) throws IOException, StructureException {
 		
 		// can be specified as:
@@ -689,6 +693,74 @@ public class AtomCache {
 		}
 
 		throw new StructureException("Unable to get structure for SCOP domain: "+name);
+	}
+
+	
+	private Structure getStructureFromCATHDomain(StructureName structureName)
+			throws IOException, StructureException {
+			
+		
+		
+		CathInstallation cathInstall = new CathInstallation(path);
+		
+		CathDomain cathDomain = cathInstall.getDomainByCathId(structureName.getName());
+		
+		List<CathSegment> segments = cathDomain.getSegments();
+		
+		StringWriter range = new StringWriter();
+		
+		int rangePos = 0;
+		String chainId = structureName.getChainId();
+		for ( CathSegment segment : segments) {
+			rangePos++;
+			
+			range.append(chainId);
+			range.append("_");
+			
+			range.append(segment.getStart());
+			range.append("-");
+			range.append(segment.getStop());
+			if ( ( segments.size()> 1) && (rangePos < segments.size())){
+				range.append(",");
+			}
+		}
+				
+		String pdbId = structureName.getPdbId();
+		
+		Structure s = null;
+		
+		try {
+			s = getStructure(pdbId);
+
+		} catch (StructureException ex){
+			System.err.println("error getting Structure for " + pdbId);
+
+			throw new StructureException(ex);
+		}
+		
+		String rangeS = range.toString();
+		System.out.println(rangeS);
+		Structure n = StructureTools.getSubRanges(s, rangeS);
+
+		// add the ligands of the chain...
+				
+		Chain newChain = n.getChainByPDB(structureName.getChainId());
+		Chain origChain = s.getChainByPDB(structureName.getChainId());
+		List<Group> ligands = origChain.getAtomLigands();
+		
+		for(Group g: ligands){
+			if ( ! newChain.getAtomGroups().contains(g)) {
+				newChain.addGroup(g);
+			}
+		}
+				
+		// set new Header..
+		n.setName(structureName.getName());
+		n.setPDBCode(structureName.getPdbId());
+		
+		n.getPDBHeader().setDescription(cathDomain.getDomainName());
+		
+		return n;
 	}
 
 
