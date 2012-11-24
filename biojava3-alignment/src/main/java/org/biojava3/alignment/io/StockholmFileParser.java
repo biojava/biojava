@@ -302,7 +302,7 @@ public class StockholmFileParser {
 
 	/**parses an {@link InputStream} and returns maximum <code>max</code> object contained in
 	 * that file.<br>
-	 * This method leaves the stream open for further calls of {@link #parseNext(int)}.
+	 * This method leaves the stream open for further calls of {@link #parse(InputStream, int)} (same function) or {@link #parseNext(int)}.
 	 * 
 	 * @see #parseNext(int)
 	 * @param inStream the stream to parse
