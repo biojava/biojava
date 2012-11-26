@@ -439,7 +439,7 @@ public class StockholmFileParser {
 				}
 
 				linesCount++;
-			} while (line != null);
+			} while (scanner.hasNextLine());
 
 		} catch (IOException e) {
 			e.printStackTrace();
