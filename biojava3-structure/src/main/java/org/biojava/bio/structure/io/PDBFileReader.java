@@ -680,6 +680,7 @@ public class PDBFileReader implements StructureIOFile {
 
 		} catch (Exception e){
 			System.err.println("Problem while downloading PDB ID " + pdbId + " from FTP server." );
+			System.err.println("Failed URL: " + ftp);
 			e.printStackTrace();
 			return null;
 		}
