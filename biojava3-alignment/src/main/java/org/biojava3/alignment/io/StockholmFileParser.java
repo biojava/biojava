@@ -92,6 +92,8 @@ import org.biojava3.core.util.InputStreamProvider;
  */
 public class StockholmFileParser {
 
+	/**indicates reading as much as possible, without limits */
+	public static final int INFINITY = -1;
 	/** #=GF &lt;feature&gt; &lt;Generic per-File annotation, free text&gt; */
 	private static final String GENERIC_PER_FILE_ANNOTATION = "GF";
 	/** #=GC &lt;feature&gt; &lt;Generic per-Column annotation, exactly 1 char per column&gt;  */
@@ -274,10 +276,10 @@ public class StockholmFileParser {
 	 * This function doesn't close the file after doing its assigned job; to allow for further calls of {@link #parseNext(int)}.
 	 * @see #parseNext(int)
 	 * 
-	 * @param filename complete(?) path to the file from where to read the content
-	 * @param max maximum number of files to read, <code>-1</code> for all
+	 * @param filename file from where to read the content. see {@link InputStreamProvider} for more details.
+	 * @param max maximum number of files to read, {@link #INFINITY} for all.
 	 * @return a vector of {@link StockholmStructure} containing parsed structures.
-	 * @throws IOException when an exception occurred while opening/reading/closing the file+
+	 * @throws IOException when an exception occurred while opening/reading/closing the file.
 	 * @throws ParserException if unexpected format is encountered
 	 */
 	public List<StockholmStructure> parse(String filename, int max) throws IOException,ParserException{
@@ -300,17 +302,22 @@ public class StockholmFileParser {
 		return parse(inStream,1).get(0);
 	}
 
-	/**parses an {@link InputStream} and returns maximum <code>max</code> object contained in
+	/**parses an {@link InputStream} and returns at maximum <code>max</code> objects contained in
 	 * that file.<br>
 	 * This method leaves the stream open for further calls of {@link #parse(InputStream, int)} (same function) or {@link #parseNext(int)}.
 	 * 
 	 * @see #parseNext(int)
 	 * @param inStream the stream to parse
-	 * @param max maximum number of structures to try to parse 
-	 * @return a {@link List} of {@link StockholmStructure} objects.
+	 * @param max maximum number of structures to try to 
+	 * parse, {@link #INFINITY} to try to obtain as much as possible. 
+	 * @return a {@link List} of {@link StockholmStructure} objects. If there are no more
+	 * structures, an empty list is returned.
 	 * @throws IOException in case an I/O Exception occurred.
 	 */
 	public List<StockholmStructure> parse(InputStream inStream, int max) throws IOException {
+		if (max < INFINITY) {
+			throw new IllegalArgumentException("max can't be -ve value "+max);
+		}
 		if (inStream != this.cashedInputStream) {
 			this.cashedInputStream=inStream;
 			this.internalScanner=null;
@@ -320,10 +327,12 @@ public class StockholmFileParser {
 			internalScanner= new Scanner(inStream);
 		}
 		ArrayList<StockholmStructure> structures= new ArrayList<StockholmStructure>();
-		while (max != -1 && max-- >0) {
+		while (max != INFINITY && max-- >0) {
 			StockholmStructure structure = parse(internalScanner);
 			if(structure != null){
 				structures.add(structure);
+			}else {
+				break;
 			}
 		}
 		return structures;
@@ -345,7 +354,7 @@ public class StockholmFileParser {
 	 * This method returns just after reaching the end of structure delimiter line ("//"), leaving any remaining empty lines unconsumed.
 	 * 
 	 * @param scanner from where to read the file content
-	 * @return Stockholm file content
+	 * @return Stockholm file content, <code>null</code> if couldn't or no more structures.
 	 * @throws IOException 
 	 * @throws Exception
 	 */
@@ -357,11 +366,10 @@ public class StockholmFileParser {
 				throw new IllegalArgumentException("No Scanner defined");
 			}
 		}
-		this.stockholmStructure = new StockholmStructure();
 		String line = null;
 		int linesCount = 0;
 		try {
-			do {
+			while(scanner.hasNextLine()){
 				line = scanner.nextLine();
 				// if the file is empty
 				//this condition will not happen, just left in case we decided to go for buffereedReader again for performance purpose.
@@ -417,8 +425,9 @@ public class StockholmFileParser {
 					if (status== STATUS_OUTSIDE_FILE) {
 						status= STATUS_INSIDE_FILE;
 						String[] header = line.split("\\s+");
-						stockholmStructure.getFileAnnotation().setFormat(header[1]);
-						stockholmStructure.getFileAnnotation().setVersion(header[2]);
+						this.stockholmStructure = new StockholmStructure();
+						this.stockholmStructure.getFileAnnotation().setFormat(header[1]);
+						this.stockholmStructure.getFileAnnotation().setVersion(header[2]);
 					} else {
 						throw new ParserException("Uexpected Format line: ["+line+"]");
 					}
@@ -437,34 +446,35 @@ public class StockholmFileParser {
 						throw new ParserException("Error: Unknown or unexpected line [" +line+"].");
 					}
 				}
-
 				linesCount++;
-			} while (scanner.hasNextLine());
-
+			}
 		} catch (IOException e) {
 			e.printStackTrace();
 			throw new IOException("Error parsing Stockholm file");
 		}
-
-		int length = -1;
-		Map<String, StringBuffer> sequences = stockholmStructure.getSequences();
-		for (String sequencename : sequences.keySet()) {
-			StringBuffer sequence = sequences.get(sequencename);
-			if (length == -1) {
-				length = sequence.length();
-			} else if (length != sequence.length()) {
-				throw new RuntimeException("Sequences have different lengths");
+		StockholmStructure structure = this.stockholmStructure;
+		this.stockholmStructure=null;
+		if (structure != null) {
+			int length = -1;
+			Map<String, StringBuffer> sequences = structure.getSequences();
+			for (String sequencename : sequences.keySet()) {
+				StringBuffer sequence = sequences.get(sequencename);
+				if (length == -1) {
+					length = sequence.length();
+				} else if (length != sequence.length()) {
+					throw new RuntimeException(
+							"Sequences have different lengths");
+				}
 			}
 		}
-
-		return this.stockholmStructure;
+		return structure;
 	}
 
 	/**
 	 * Handles a line that corresponds to a sequence. <br>
 	 * e.g.: COATB_BPIKE/30-81
-	 * AEPNAATNYATEAMDSLKTQAIDLISQTWPVVTTVVVAGLVIRLFKKFSSKA
-	 * <b>Warning: This function seems to fail when dealing with sequence with intrinsic space</b>
+	 * AEPNAATNYATEAMDSLKTQAIDLISQTWPVVTTVVVAGLVIRLFKKFSSKA<br>
+	 * N.B.: This function can't tolerate sequences with intrinsic white space.
 	 * @param line
 	 *            the line to be parsed
 	 * @throws Exception
@@ -479,7 +489,7 @@ public class StockholmFileParser {
 	}
 
 	/**
-	 * #=GF <feature> <Generic per-File annotation, free text>
+	 * #=GF &lt;feature&gt; &lt;Generic per-File annotation, free text&gt;
 	 * @param featureName 
 	 * @param value the line to be parsed
 	 */
@@ -621,8 +631,7 @@ public class StockholmFileParser {
 	}
 
 	/**
-	 * #=GR <seqname> <feature> <Generic per-Residue annotation, exactly 1 char
-	 * per residue>
+	 * #=GR &lt;seqname&gt; &lt;feature&gt; &lt;Generic per-Residue annotation, exactly 1 char per residue&gt;
 	 * 
 	 * @param line
 	 *            the line to be parsed
