@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureTools;
+import org.biojava.bio.structure.align.util.AtomCache;
 import org.biojava.bio.structure.io.FileParsingParameters;
 import org.biojava.bio.structure.io.MMCIFFileReader;
 import org.biojava.bio.structure.io.mmcif.SimpleMMcifConsumer;
@@ -27,12 +28,16 @@ public class MmCifPDBBiolAssemblyProvider implements RawBioUnitDataProvider{
 	List<PdbxStructOperList> pdbxStructOperList;
 	Structure asymUnit;
 	
+	AtomCache cache ;
+	
 	public MmCifPDBBiolAssemblyProvider(){
 		//reset();
 	}
 	
 	@Override
 	public void setPdbId(String pdbId) {
+		if ( cache == null)
+			cache =new AtomCache();
 		
 		if (
 				this.pdbId != null && 
@@ -47,7 +52,8 @@ public class MmCifPDBBiolAssemblyProvider implements RawBioUnitDataProvider{
 		reset();
 		
 		MMCIFFileReader reader = new MMCIFFileReader();
-		FileParsingParameters params = new FileParsingParameters();
+		FileParsingParameters params = cache.getFileParsingParams();
+		params.setAlignSeqRes(true);
 		params.setParseBioAssembly(true);
 		reader.setFileParsingParameters(params);
 		
