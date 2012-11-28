@@ -139,8 +139,14 @@ public class TestQuaternaryStructureProviders {
 			
 			// compare with flat file version:
 			AtomCache cache = new AtomCache();
+			FileParsingParameters params = cache.getFileParsingParams();
+			params.setAlignSeqRes(true);
+			params.setParseCAOnly(false);
+
 			Structure flatFileS = cache.getBiologicalAssembly(pdbId, bioMolecule, false);
+			
 			Atom[] fileA = StructureTools.getAllAtomArray(flatFileS);
+			
 			assertEquals(pdbA.length, fileA.length);
 						
 		} catch (Exception e){
