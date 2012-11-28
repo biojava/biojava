@@ -130,25 +130,10 @@ public class StructureIO {
 		Structure asymUnit = null;
 
 		asymUnit = provider.getAsymUnit(pdbId);
-		provider.setAsymUnit(null);
 		
-//		if ( provider instanceof MmCifBiolAssemblyProvider ) {
-//			MmCifBiolAssemblyProvider mmcifprov = (MmCifBiolAssemblyProvider) provider;
-//			asymUnit = mmcifprov.getAsymUnit(pdbId);
-//	
-//			mmcifprov.setAsymUnit(null);
-//			
-//		} else if ( provider instanceof PDBBioUnitDataProvider ){
-//			PDBBioUnitDataProvider pdbprov= (PDBBioUnitDataProvider) provider;
-//			//pdbprov.loadPDB(pdbId);
-//			//System.out.println(asymUnit.getPDBHeader().getBioUnitTranformations());
-//			asymUnit = pdbprov.getAsymUnit(pdbId);
-//			pdbprov.setAsymUnit(null);
-//			
-//		} else {
-//			asymUnit = getStructure(pdbId);
-//			
-//		}
+		//cleanup to avoid memory leaks
+		provider.setAsymUnit(null);
+		provider.setAtomCache(null);
 		
 		// 0 ... asym unit
 		if ( biolAssemblyNr == 0) {
