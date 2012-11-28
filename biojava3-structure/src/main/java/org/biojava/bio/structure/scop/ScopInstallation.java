@@ -545,7 +545,7 @@ public class ScopInstallation implements ScopDatabase {
 			String[] treeSplit = tree.split(",");
 
 			if (  treeSplit.length != 7 ) {
-				System.err.println("can't process: " + tree );
+				System.err.println("can't process: " + line );
 			}
 
 			int classId =Integer.parseInt(treeSplit[0].substring(3));
