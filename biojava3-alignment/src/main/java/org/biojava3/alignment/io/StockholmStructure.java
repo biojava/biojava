@@ -297,6 +297,7 @@ public class StockholmStructure {
 		public static final String URL="URL"; 
 		public static final String LOAD="LOAD"; 
 		public static final String HOMSTRAD="HOMSTRAD"; 
+		public static final String INTERPRO="INTERPRO"; 
 
 		
 		private String database;
