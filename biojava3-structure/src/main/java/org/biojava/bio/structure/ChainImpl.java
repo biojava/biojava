@@ -70,7 +70,7 @@ public class ChainImpl implements Chain, Serializable {
 	List <Group> groups;
 
 
-	List<Group> seqResGroups;
+	protected List<Group> seqResGroups;
 	private Long id;
 	Compound mol;
 	Structure parent;
@@ -130,17 +130,32 @@ public class ChainImpl implements Chain, Serializable {
 	 */
 	public Object clone() {
 		// go through all groups and add to new Chain.
-		Chain n = new ChainImpl();
+		ChainImpl n = new ChainImpl();
 		// copy chain data:
 
 		n.setChainID( getChainID());
 		n.setSwissprotId ( getSwissprotId());
+
+		// clone also seqres...
+		for ( int i = 0 ; i < seqResGroups.size();i++){
+			Group gr = (Group) seqResGroups.get(i);
+			Group newGroup = (Group) gr.clone();
+			
+			n.addSeqResGroup(newGroup);
+			
+			if (newGroup.has3D())
+				n.addGroup(newGroup);
+			
+		}
+		
 		for (int i=0;i<groups.size();i++){
 			Group g = (Group)groups.get(i);
 			n.addGroup((Group)g.clone());
 		}
 		n.setHeader(this.getHeader());
 		n.setInternalChainID(internalChainID);
+		
+
 		return n ;
 	}
 
@@ -693,6 +708,10 @@ public class ChainImpl implements Chain, Serializable {
 			g.setChain(this);
 		}
 		this.seqResGroups = groups;
+	}
+	
+	protected void addSeqResGroup(Group g){
+		seqResGroups.add(g);
 	}
 
 
