@@ -10,8 +10,6 @@ import org.biojava.bio.structure.align.util.AtomCache;
 import org.biojava.bio.structure.quaternary.ModelTransformationMatrix;
 import org.biojava.bio.structure.quaternary.BiologicalAssemblyBuilder;
 import org.biojava.bio.structure.quaternary.io.BioUnitDataProvider;
-import org.biojava.bio.structure.quaternary.io.MmCifBiolAssemblyProvider;
-import org.biojava.bio.structure.quaternary.io.PDBBioUnitDataProvider;
 import org.biojava.bio.structure.quaternary.io.BioUnitDataProviderFactory;
 
 /** A class that provides static access methods for easy lookup of protein structure related components
@@ -108,6 +106,7 @@ public class StructureIO {
 	 * @throws IOException 
 	 */
 	public static Structure getBiologicalAssembly(String pdbId) throws IOException, StructureException{
+				
 		return getBiologicalAssembly(pdbId,1);
 	}
 
@@ -121,8 +120,13 @@ public class StructureIO {
 	 */
 	public static Structure getBiologicalAssembly(String pdbId, int biolAssemblyNr) throws IOException, StructureException {
 
+		pdbId = pdbId.toLowerCase();
+		
 		BioUnitDataProvider provider = BioUnitDataProviderFactory.getBioUnitDataProvider();
 
+		if ( cache != null)
+			provider.setAtomCache(cache);
+		
 		Structure asymUnit = null;
 
 		asymUnit = provider.getAsymUnit(pdbId);
@@ -152,7 +156,7 @@ public class StructureIO {
 		}
 		
 		//List<ModelTransformationMatrix> transformations = provider.getBioUnitTransformationList(pdbId, biolAssemblyNr -1);
-		List<ModelTransformationMatrix> transformations = asymUnit.getPDBHeader().getBioUnitTranformationMap().get(biolAssemblyNr );
+		List<ModelTransformationMatrix> transformations = asymUnit.getPDBHeader().getBioUnitTranformationMap().get(biolAssemblyNr  );
 		if ( transformations == null || transformations.size() == 0){
 			
 			throw new StructureException("Could not load transformations to recreate biological assembly nr " + biolAssemblyNr + " of " + pdbId);
@@ -172,6 +176,8 @@ public class StructureIO {
 	 */
 	public static boolean hasBiologicalAssembly(String pdbId){
 
+		pdbId = pdbId.toLowerCase();
+		
 		BioUnitDataProvider provider = BioUnitDataProviderFactory.getBioUnitDataProvider();
 
 
@@ -180,9 +186,10 @@ public class StructureIO {
 	}
 
 	public static int getNrBiologicalAssemblies(String pdbId){
+
+		pdbId = pdbId.toLowerCase();
+		
 		BioUnitDataProvider provider = BioUnitDataProviderFactory.getBioUnitDataProvider();
-
-
 
 		return provider.getNrBiolAssemblies(pdbId);
 	}
