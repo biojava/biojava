@@ -158,4 +158,14 @@ public class MmCifPDBBiolAssemblyProvider implements RawBioUnitDataProvider{
 		this.asymUnit = s;
 	}
 
+	public AtomCache getAtomCache() {
+		return cache;
+	}
+
+	public void setAtomCache(AtomCache cache) {
+		this.cache = cache;
+	}
+	
+	
+
 }
