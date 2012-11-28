@@ -145,7 +145,7 @@ public class MmCifBiolAssemblyProvider implements BioUnitDataProvider {
 	public void setAtomCache(AtomCache cache) {
 
 		this.cache =cache;
-		
+		provider.setAtomCache(cache);
 	}
 
 	@Override
