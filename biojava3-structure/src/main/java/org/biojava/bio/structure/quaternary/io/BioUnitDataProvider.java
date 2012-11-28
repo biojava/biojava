@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.biojava.bio.structure.Structure;
+import org.biojava.bio.structure.align.util.AtomCache;
 import org.biojava.bio.structure.quaternary.ModelTransformationMatrix;
 
 /** Provides access to the data that is needed in order to rebuild the correct biological assembly of a protein.
@@ -47,4 +48,8 @@ public interface BioUnitDataProvider {
 	public Structure getAsymUnit(String pdbId);
 	
 	public void setAsymUnit(Structure asymUnit);
+	
+	public void setAtomCache(AtomCache cache);
+	
+	public AtomCache getAtomCache();
 }

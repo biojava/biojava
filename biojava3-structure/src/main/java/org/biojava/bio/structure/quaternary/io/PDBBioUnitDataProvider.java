@@ -2,6 +2,7 @@ package org.biojava.bio.structure.quaternary.io;
 
 import java.util.List;
 
+import org.biojava.bio.structure.Chain;
 import org.biojava.bio.structure.PDBHeader;
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureTools;
@@ -23,13 +24,16 @@ public class PDBBioUnitDataProvider implements BioUnitDataProvider{
 	
 	Structure s = null;
 	
+	AtomCache cache = new AtomCache();
+	
 	public PDBHeader loadPDB(String pdbId){
-		AtomCache cache = new AtomCache();
-
+		
+		System.out.println("loading PDB asym unit...");
+		
 		FileParsingParameters params = cache.getFileParsingParams();
 
-		params.setParseBioAssembly(true);
-		params.setUpdateRemediatedFiles(true);
+		params.setParseBioAssembly(true);		
+		params.setAlignSeqRes(true);
 		
 		PDBHeader header = null;
 		try {
@@ -40,6 +44,8 @@ public class PDBBioUnitDataProvider implements BioUnitDataProvider{
 		} catch (Exception e){
 			e.printStackTrace();
 		}	
+		
+		
 		return header ;
 	}
 	
@@ -51,6 +57,8 @@ public class PDBBioUnitDataProvider implements BioUnitDataProvider{
 		
 		if ( s.nrModels() > 1) 
 			s = StructureTools.removeModels(s);
+		
+		
 		return s;
 	}
 	public void setAsymUnit(Structure s){
@@ -98,6 +106,17 @@ public class PDBBioUnitDataProvider implements BioUnitDataProvider{
 		
 		return false;
 		
+	}
+
+	@Override
+	public void setAtomCache(AtomCache cache) {
+		this.cache = cache;
+		
+	}
+
+	@Override
+	public AtomCache getAtomCache() {
+		return cache;
 	}
 
 }

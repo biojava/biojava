@@ -48,7 +48,7 @@ public class FileBasedPDBBioUnitDataProvider implements BioUnitDataProvider{
 
 	Structure s = null;
 	
-	AtomCache cache;
+	AtomCache cache = new AtomCache();
 	
 	public Structure getBioUnit(String pdbId, int bioUnit) throws IOException{
 		//System.out.println("load PDB + bioUnit " + bioUnit + " " );
@@ -160,12 +160,18 @@ public class FileBasedPDBBioUnitDataProvider implements BioUnitDataProvider{
 
 	}
 
-	public AtomCache getCache() {
-		return cache;
+	
+
+	@Override
+	public void setAtomCache(AtomCache cache) {
+		this.cache = cache;
+		
 	}
 
-	public void setCache(AtomCache cache) {
-		this.cache = cache;
+
+	@Override
+	public AtomCache getAtomCache() {
+		return cache;
 	}
 
 	

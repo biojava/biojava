@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureException;
+import org.biojava.bio.structure.align.util.AtomCache;
 import org.biojava.bio.structure.io.mmcif.model.PdbxStructAssembly;
 import org.biojava.bio.structure.io.mmcif.model.PdbxStructAssemblyGen;
 import org.biojava.bio.structure.io.mmcif.model.PdbxStructOperList;
@@ -16,6 +17,8 @@ import org.biojava3.structure.StructureIO;
 public class MmCifBiolAssemblyProvider implements BioUnitDataProvider {
 
 	MmCifPDBBiolAssemblyProvider provider; 
+	
+	AtomCache cache = null;
 	
 	public MmCifBiolAssemblyProvider(){
 		provider  = new MmCifPDBBiolAssemblyProvider();
@@ -136,6 +139,18 @@ public class MmCifBiolAssemblyProvider implements BioUnitDataProvider {
 		}
 						
 		return builder.rebuildQuaternaryStructure(asymUnit, transformations);
+	}
+
+	@Override
+	public void setAtomCache(AtomCache cache) {
+
+		this.cache =cache;
+		
+	}
+
+	@Override
+	public AtomCache getAtomCache() {
+		return cache;
 	}
 
 }
