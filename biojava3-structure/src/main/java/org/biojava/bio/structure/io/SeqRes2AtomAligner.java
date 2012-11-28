@@ -133,53 +133,8 @@ public class SeqRes2AtomAligner {
 
 				Chain atomRes = getMatchingAtomRes(seqRes,atomList);
 
-				boolean simpleMatchSuccessful = trySimpleMatch(seqRes, atomRes);
-
-				if ( simpleMatchSuccessful) {
-					// update the new SEQRES list
-					List<Group> seqResGroups = seqRes.getAtomGroups();
-					atomRes.setSeqResGroups(seqResGroups);
-					continue;
-				}
-
-				//System.err.println("Could not map SEQRES to ATOM records easily, need to align...");
-
-				if ( seqRes.getAtomGroups(GroupType.AMINOACID).size() < 1) {
-
-					if ( seqRes.getAtomGroups(GroupType.NUCLEOTIDE).size() > 1) {
-						if (DEBUG){
-							System.out.println("chain " + seqRes.getChainID() + " is a nucleotide chain, aligning nucs...");
-						}
-						align2NucleotideChains(seqRes,atomRes);
-						continue;
-					} else {
-
-						if (DEBUG){
-							System.out.println("chain " + seqRes.getChainID() + " does not contain amino acids, ignoring...");
-						}
-						continue;
-					}
-				}
-
-
-
-
-
-				if ( atomRes.getAtomGroups(GroupType.AMINOACID).size() < 1) {
-					if (DEBUG){
-						System.out.println("chain " + atomRes.getChainID() + " does not contain amino acids, ignoring...");
-					}
-					continue;
-				}
-				if ( DEBUG )
-					System.out.println("Alignment for chain "+ atomRes.getChainID() );
-
-				List<Group> seqResGroups = seqRes.getAtomGroups();
-				boolean noMatchFound = align(seqResGroups,atomRes.getAtomGroups());
-				if ( ! noMatchFound){
-					atomRes.setSeqResGroups(seqResGroups);
-				}
-
+				mapSeqresRecords(atomRes,seqRes);
+				
 				//chains.add(mapped);
 			} catch (StructureException e){
 				e.printStackTrace();
@@ -191,6 +146,72 @@ public class SeqRes2AtomAligner {
 
 	}
 
+	/** map the seqres groups to the atomRes chain.
+	 *  updates the atomRes chain object with the mapped data
+	 *  seqRes chain shuold not be needed after this and atomRes should be continued to be used.
+	 *  
+	 * @param atomRes
+	 * @param seqRes
+	 * @throws StructureException 
+	 */
+	public void mapSeqresRecords(Chain atomRes, Chain seqRes) throws StructureException {
+		List<Group> seqResGroups = seqRes.getAtomGroups();
+		List<Group> atmResGroups = atomRes.getAtomGroups();
+		
+		
+		if (DEBUG) {
+			System.err.println("COMPARING " + atomRes.getChainID() + " (" + atmResGroups.size()+") " + seqRes.getChainID() + " (" +seqResGroups.size() +") ");
+		}
+		
+		
+		boolean simpleMatchSuccessful = trySimpleMatch(seqResGroups, atmResGroups);
+
+		if ( simpleMatchSuccessful) {
+			// update the new SEQRES list
+			
+			atomRes.setSeqResGroups(seqResGroups);
+			return;
+		}
+
+		//System.err.println("Could not map SEQRES to ATOM records easily, need to align...");
+
+		if ( seqRes.getAtomGroups(GroupType.AMINOACID).size() < 1) {
+
+			if ( seqRes.getAtomGroups(GroupType.NUCLEOTIDE).size() > 1) {
+				if (DEBUG){
+					System.out.println("chain " + seqRes.getChainID() + " is a nucleotide chain, aligning nucs...");
+				}
+				align2NucleotideChains(seqRes,atomRes);
+				return;
+			} else {
+
+				if (DEBUG){
+					System.out.println("chain " + seqRes.getChainID() + " does not contain amino acids, ignoring...");
+				}
+				return;
+			}
+		}
+
+
+
+
+
+		if ( atomRes.getAtomGroups(GroupType.AMINOACID).size() < 1) {
+			if (DEBUG){
+				System.out.println("chain " + atomRes.getChainID() + " does not contain amino acids, ignoring...");
+			}
+			return;
+		}
+		if ( DEBUG )
+			System.out.println("Alignment for chain "+ atomRes.getChainID() );
+
+		
+		boolean noMatchFound = align(seqResGroups,atomRes.getAtomGroups());
+		if ( ! noMatchFound){
+			atomRes.setSeqResGroups(seqResGroups);
+		}
+		
+	}
 
 	private void align2NucleotideChains(Chain seqRes, Chain atomRes) throws StructureException {
 
@@ -218,14 +239,8 @@ public class SeqRes2AtomAligner {
 	 * @param atomList
 	 * @return
 	 */
-	private boolean trySimpleMatch(Chain seqRes, Chain atomRes) {
-
-		List<Group> seqResGroups = seqRes.getAtomGroups();
-		List<Group> atmResGroups = atomRes.getAtomGroups();
-
-		if (DEBUG) {
-			System.err.println("COMPARING " + atomRes.getChainID() + " (" + atmResGroups.size()+") " + seqRes.getChainID() + " (" +seqResGroups.size() +") ");
-		}
+	
+	public boolean trySimpleMatch(List<Group> seqResGroups,List<Group> atmResGroups) {
 		// by default first ATOM position is 1
 		//
 		boolean startAt1 = true;
@@ -297,10 +312,10 @@ public class SeqRes2AtomAligner {
 			}
 
 
-			if ( seqResPos < 0){
-
-				System.err.println("What is going on??? " + atomRes.getChainID() + " " + atomResGroup);
-			}
+			//			if ( seqResPos < 0){
+			//
+			//				System.err.println("What is going on??? " + atomRes.getChainID() + " " + atomResGroup);
+			//			}
 
 			if ( seqResPos >= seqResGroups.size()){
 				if ( DEBUG)
