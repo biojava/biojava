@@ -27,9 +27,7 @@ public class PDBBioUnitDataProvider implements BioUnitDataProvider{
 	AtomCache cache = new AtomCache();
 	
 	public PDBHeader loadPDB(String pdbId){
-		
-		System.out.println("loading PDB asym unit...");
-		
+				
 		FileParsingParameters params = cache.getFileParsingParams();
 
 		params.setParseBioAssembly(true);		
