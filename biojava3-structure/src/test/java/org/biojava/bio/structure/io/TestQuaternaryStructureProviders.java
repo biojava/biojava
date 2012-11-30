@@ -2,7 +2,6 @@ package org.biojava.bio.structure.io;
 
 import static org.junit.Assert.*;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -148,6 +147,8 @@ public class TestQuaternaryStructureProviders {
 			Atom[] fileA = StructureTools.getAllAtomArray(flatFileS);
 			
 			assertEquals(pdbA.length, fileA.length);
+			
+			assertEquals(pdbS.nrModels(),flatFileS.nrModels());
 						
 		} catch (Exception e){
 			e.printStackTrace();
