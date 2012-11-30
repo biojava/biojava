@@ -53,6 +53,7 @@ public class BiologicalAssemblyBuilder {
 
 		Structure s = asymUnit.clone();
 		List<Chain> transformedChains = new ArrayList<Chain>();
+		s.setChains(transformedChains);
 		//System.out.print("rebuilding " + s.getPDBCode() + " ");
 		//for (Chain c : s.getChains()) {
 			//System.out.print(c.getChainID());
@@ -68,7 +69,7 @@ public class BiologicalAssemblyBuilder {
 		//double[] tmpcoords = new double[3]; 
 		for (ModelTransformationMatrix max : transformations){
 			boolean foundChain = false;
-			for ( Chain c : s.getChains()){
+			for ( Chain c : asymUnit.getChains()){
 
 				String intChainID = c.getInternalChainID();
 				if ( intChainID == null) {
@@ -100,7 +101,9 @@ public class BiologicalAssemblyBuilder {
 						}
 					}
 
-					transformedChains.add(newChain);
+					
+					addCheckChainModel(s,newChain);
+
 				}								
 			}
 			if (! foundChain){
@@ -108,12 +111,37 @@ public class BiologicalAssemblyBuilder {
 			}
 		}
 
-		s.setChains(transformedChains);
+		//s.setChains(transformedChains);
 		return s;
 
 
 	}
 
+
+	private void addCheckChainModel(Structure s, Chain newChain) {
+		for ( int i = 0 ; i < s.nrModels() ; i ++){
+			List<Chain> model = s.getModel(i);
+			boolean found = false;
+			for ( Chain c : model){
+				if ( c.getChainID().equals(newChain.getChainID())) {
+					found = true;
+					break;
+				}
+			}
+			if ( ! found){
+			
+				model.add(newChain);
+				return;
+			}
+			
+		}
+		
+		// all existing models contain already a chain with the same ID. add a new model
+		List<Chain> newModel = new ArrayList<Chain>();
+		newModel.add(newChain);
+		s.addModel(newModel);
+		
+	}
 
 	/**
 	 * Returns a list of transformation matrices for the generation of a macromolecular
