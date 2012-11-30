@@ -315,7 +315,8 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 			aminoCode1 = StructureTools.get1LetterCode(groupCode3);
 		else {
 			aminoCode1 = StructureTools.get1LetterCode(groupCode3);
-			if ( aminoCode1.equals(StructureTools.UNKNOWN_GROUP_LABEL)) 
+			// for nucleotides this will be null..
+			if (aminoCode1 != null &&  aminoCode1.equals(StructureTools.UNKNOWN_GROUP_LABEL)) 
 				aminoCode1 = null;
 		}
 		String insCodeS = atom.getPdbx_PDB_ins_code();
