@@ -224,7 +224,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 			HetatomImpl h = new HetatomImpl();
 			h.setId(seq_id);
 			group = h;
-		}
+		}		
 		//System.out.println("new group type: "+ group.getType() );
 		return  group ;
 	}
@@ -669,7 +669,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 
 		if ( params.isAlignSeqRes() ){
 
-			SeqRes2AtomAligner aligner = new SeqRes2AtomAligner();
+			SeqRes2AtomAligner aligner = new SeqRes2AtomAligner();			
 			aligner.align(structure,seqResChains);
 		}
 
@@ -1091,6 +1091,11 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 				// the group is actually a nucleotide group...
 				NucleotideImpl n = new NucleotideImpl();
 				n.setResidueNumber(ResidueNumber.fromString(epolseq.getNum()));
+				try {
+					n.setPDBName(epolseq.getMon_id());
+				} catch (PDBParseException pex){
+					pex.printStackTrace();
+				}
 				entityChain.addGroup(n);
 			}
 			else {
