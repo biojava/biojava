@@ -227,44 +227,30 @@ public class RCSBDescriptionFactory {
 	 * @param e
 	 */
 	public static void printError(Exception e) {
-		System.out.println(runtimeError(e, ""));
+		System.err.println(printError(e, ""));
 	}
 
 	/**
 	 * @see #printError(Exception)
 	 */
-	private static String runtimeError(Exception e, String tabs) {
+	private static String printError(Exception e, String tabs) {
 		StringBuilder sb = new StringBuilder();
 		Throwable prime = e;
 		while (prime != null) {
 			if (tabs.length() > 0) sb.append(tabs + "Cause:" + "\n");
-			sb.append(tabs + prime.getClass().getSimpleName() + "\n");
-			if (prime.getMessage() != null) sb.append(tabs + prime.getMessage() + "\n");
+			sb.append(tabs + prime.getClass().getSimpleName());
+			if (prime.getMessage() != null) sb.append(": " + prime.getMessage());
+			sb.append("\n");
 			if (prime instanceof Exception) {
 				StackTraceElement[] trace = ((Exception) prime).getStackTrace();
 				for (StackTraceElement element : trace) {
 					sb.append(tabs + element.toString() + "\n");
 				}
 			}
-			try {
-				if (prime.getSuppressed() != null) {
-					System.err.println(tabs + "Suppressed:" + "\n");
-					for (Throwable t : prime.getSuppressed()) {
-						if (t instanceof Exception) {
-							sb.append(runtimeError((Exception) t, tabs) + "\n");
-						} else {
-							sb.append(t.getClass().getSimpleName());
-							if (t.getMessage() != null) sb.append(t.getMessage() + "\n");
-						}
-					}
-				}
-			} catch (NoSuchMethodError e1) {
-				sb.append("Can't get suppressed errors, if any (NoSuchMethodError)" + "\n");
-			}
 			prime = prime.getCause();
 			tabs += "\t";
-			sb.append("\n");
 		}
+		sb.append("\n");
 		return sb.toString();
 	}
 
