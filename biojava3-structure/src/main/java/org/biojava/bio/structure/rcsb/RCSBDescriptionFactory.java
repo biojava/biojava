@@ -63,7 +63,7 @@ public class RCSBDescriptionFactory {
 	// this IS needed
 	private static boolean documentBuilderFactorySet = false;
 
-	private static final String URL_STUB = "http://www.pdb.org/pdb/rest/describeMol?structureId=";
+	private static final String URL_STUB = "http://www.rcsb.org/pdb/rest/describeMol?structureId=";
 
 	/**
 	 * @return An {@link RCSBDescription} from the XML file loaded as {@code stream}. Prefer calling {@link #get(String)} if
