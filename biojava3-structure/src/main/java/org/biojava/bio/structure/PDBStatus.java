@@ -551,7 +551,7 @@ public class PDBStatus {
 		}
 
 		try {
-			//System.out.println("Fetching " + urlStr);
+			System.out.println("Fetching " + urlStr);
 
 			URL url = new URL(urlStr);
 
