@@ -112,6 +112,7 @@ public class BiologicalAssemblyBuilder {
 		}
 
 		//s.setChains(transformedChains);
+		s.setBiologicalAssembly(true);
 		return s;
 
 
