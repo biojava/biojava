@@ -140,6 +140,7 @@ public class BiologicalAssemblyBuilder {
 		List<Chain> newModel = new ArrayList<Chain>();
 		newModel.add(newChain);
 		s.addModel(newModel);
+		s.setNmr(true);
 		
 	}
 
