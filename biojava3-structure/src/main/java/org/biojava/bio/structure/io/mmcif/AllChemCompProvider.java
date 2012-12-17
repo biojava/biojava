@@ -78,7 +78,7 @@ public class AllChemCompProvider implements ChemCompProvider, Runnable{
 			if ( !(tempdir.endsWith(lineSplit) ) )
 				tempdir = tempdir + lineSplit;
 
-			System.err.println("you did not set the path in PDBFileReader, don't know where to write the downloaded file to");
+			System.err.println("you did not set the environment variable PDB_DIR, don't know where to write the downloaded file to...");
 			System.err.println("assuming default location is temp directory: " + tempdir);
 			path = tempdir;
 		}
@@ -155,6 +155,7 @@ public class AllChemCompProvider implements ChemCompProvider, Runnable{
 	 */
 	private void loadAllChemComps() {
 		String fileName = getLocalFileName();
+		System.out.println("loading " + fileName);
 		InputStreamProvider isp = new InputStreamProvider();
 
 		try {
