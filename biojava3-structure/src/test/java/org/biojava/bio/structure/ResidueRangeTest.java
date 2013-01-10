@@ -47,7 +47,7 @@ public class ResidueRangeTest {
 
 	@Before
 	public void setUp() throws Exception {
-		cache = new AtomCache("/tmp/PDB", false);
+		cache = new AtomCache();
 	}
 
 	/**
