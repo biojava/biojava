@@ -27,7 +27,7 @@ public class PDBBioAssemblyParser {
 	List<ModelTransformationMatrix> transformations;
 	int correct ;
 	
-	private boolean DEBUG = false;
+	private boolean DEBUG = true;
 	private boolean justCommitted = false;
 	
 	public PDBBioAssemblyParser() {
@@ -108,9 +108,12 @@ public class PDBBioAssemblyParser {
 		int id = Integer.parseInt(index);
 		
 		if ( id != currentIndex && (! justCommitted)) {
-			//System.out.println("ID " + id + " != " + currentIndex + " " + currentChainIDs);
-			addNewMatrix();
-			
+			if ( id > currentIndex) {
+				// otherwise we have a problem with 2J4Z bioassembly 2 and 2JBP
+				System.err.println("WARNING ID " + id + " > " + currentIndex + " " + currentChainIDs);
+			} else {
+				addNewMatrix();
+			}
 			currentIndex = id;
 			
 			currentMatrix = Matrix.identity(3,3);
@@ -149,6 +152,11 @@ public class PDBBioAssemblyParser {
 		
 		
 		ModelTransformationMatrix max = new ModelTransformationMatrix();
+		
+		// this can happen and be valid e.g 1hv4
+//		if ( currentBioMolecule > currentIndex) {
+//			System.err.println("WARNING current molecule index " + currentBioMolecule +" > global index " + currentIndex + "! current chains: " + Arrays.toString(currentChainIDs.toArray()) );
+//		}
 		if ( DEBUG) {
 			System.out.println("AddNewMatrix bio ass: " + currentBioMolecule + " index: " + currentIndex + " " +  currentChainIDs);
 			System.out.println(currentMatrix);
@@ -197,7 +205,7 @@ public class PDBBioAssemblyParser {
 
 	public void finalizeCurrentBioMolecule() {
 		if ( DEBUG )
-			System.out.println("finalizing biomolecule..." + currentBioMolecule);
+			System.out.println("finalizing biomolecule..." + currentBioMolecule + " (current index: " + currentIndex +")");
 		// the last matrix has not been added at this stage...
 		addNewMatrix();
 		
