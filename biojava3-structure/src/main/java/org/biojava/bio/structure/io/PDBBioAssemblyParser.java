@@ -27,7 +27,7 @@ public class PDBBioAssemblyParser {
 	List<ModelTransformationMatrix> transformations;
 	int correct ;
 	
-	private boolean DEBUG = true;
+	private boolean DEBUG = false;
 	private boolean justCommitted = false;
 	
 	public PDBBioAssemblyParser() {
