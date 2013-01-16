@@ -108,8 +108,9 @@ public class PDBBioAssemblyParser {
 		int id = Integer.parseInt(index);
 		
 		if ( id != currentIndex && (! justCommitted)) {
-			if ( id > currentIndex) {
-				// otherwise we have a problem with 2J4Z bioassembly 2 and 2JBP
+			if ( id > currentIndex + 1) {
+				//  2JBP
+				// todo: still need to fix:  2J4Z bioassembly 2  somehow...
 				System.err.println("WARNING ID " + id + " > " + currentIndex + " " + currentChainIDs);
 			} else {
 				addNewMatrix();
