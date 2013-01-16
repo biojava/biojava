@@ -18,11 +18,17 @@ package org.biojava.bio.structure.jama;
 
 public class EigenvalueDecomposition implements java.io.Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 3557806515310435894L;
+	
+	
 /* ------------------------
    Class variables
  * ------------------------ */
 
-   /** Row and column dimension (square matrix).
+/** Row and column dimension (square matrix).
    @serial matrix dimension.
    */
    private int n;
