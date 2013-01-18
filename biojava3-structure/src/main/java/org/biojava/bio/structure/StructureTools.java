@@ -694,6 +694,7 @@ public class StructureTools {
 		newS.setConnections(s.getConnections());
 		newS.setSSBonds(s.getSSBonds());
 		newS.setSites(s.getSites());
+		newS.setCrystallographicInfo(s.getCrystallographicInfo());
 		newS.getPDBHeader().setDescription("subset of " + s.getPDBCode() + " " + s.getPDBHeader().getDescription() );
 
 		if ( chainNr < 0 ) {
@@ -768,7 +769,7 @@ public class StructureTools {
 		newS.setNmr(s.isNmr());
 		newS.setBiologicalAssembly(s.isBiologicalAssembly());
 		newS.getPDBHeader().setDescription("sub-range " + ranges + " of "  + newS.getPDBCode() + " " + s.getPDBHeader().getDescription());
-
+		newS.setCrystallographicInfo(s.getCrystallographicInfo());
 		// TODO The following should be only copied for atoms which are present in the range.
 		//newS.setCompounds(s.getCompounds());
 		//newS.setConnections(s.getConnections());
@@ -1060,6 +1061,7 @@ public class StructureTools {
 		n.setDBRefs(s.getDBRefs());
 		n.setConnections(s.getConnections());
 		n.setSites(s.getSites());
+		n.setCrystallographicInfo(s.getCrystallographicInfo());
 		
 		n.setChains(s.getModel(0));
 		
