@@ -665,8 +665,10 @@ public class ChainImpl implements Chain, Serializable {
 			StringBuffer str = new StringBuffer();
 			for (Group g : seqResGroups) {
 				ChemComp cc = g.getChemComp();
-
-				if ( PolymerType.PROTEIN_ONLY.contains(cc.getPolymerType()) ||
+				if ( cc == null) {
+					System.err.println("Could not load ChemComp for group " + g);
+					str.append("X");
+				} else if ( PolymerType.PROTEIN_ONLY.contains(cc.getPolymerType()) ||
 						PolymerType.POLYNUCLEOTIDE_ONLY.contains(cc.getPolymerType())){
 					// an amino acid residue.. use for alignment
 					String oneLetter= ChemCompGroupFactory.getOneLetterCode(cc);
