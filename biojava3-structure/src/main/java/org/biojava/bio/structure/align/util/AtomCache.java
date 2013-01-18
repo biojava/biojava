@@ -485,7 +485,8 @@ public class AtomCache {
 			if ( name.length() == 4){
 
 				pdbId = name; 
-
+				Structure s = loadStructureFromByPdbId(pdbId);
+				return s;
 			} else if ( structureName.isScopName()){
 
 				// return based on SCOP domain ID
@@ -578,32 +579,14 @@ public class AtomCache {
 
 			//long start  = System.currentTimeMillis();
 
-			Structure s;
-			flagLoading(pdbId);
-			try {
-				PDBFileReader reader = new PDBFileReader();
-				reader.setPath(path);
-				reader.setPdbDirectorySplit(isSplit);
-				reader.setAutoFetch(autoFetch);
-				reader.setFetchFileEvenIfObsolete(fetchFileEvenIfObsolete);
-				reader.setFetchCurrent(fetchCurrent);
-
-				reader.setFileParsingParameters(params);
-
-				s = reader.getStructureById(pdbId.toLowerCase());
-
-			} catch (Exception e){
-				flagLoadingFinished(pdbId);
-				throw new StructureException(e.getMessage() + " while parsing " + pdbId,e);
-			}
-			flagLoadingFinished(pdbId);
+			Structure s = loadStructureFromByPdbId(pdbId);
 
 			//long end  = System.currentTimeMillis();
 			//System.out.println("time to load " + pdbId + " " + (end-start) + "\t  size :" + StructureTools.getNrAtoms(s) + "\t cached: " + cache.size());
+			
 			if ( chainId == null && chainNr < 0 && range == null) {								
 				// we only want the 1st model in this case
 				n = StructureTools.getReducedStructure(s,-1);
-
 			}
 			else {
 
@@ -632,6 +615,30 @@ public class AtomCache {
 		return n;
 
 
+	}
+
+	private Structure loadStructureFromByPdbId(String pdbId)
+			throws StructureException {
+		Structure s;
+		flagLoading(pdbId);
+		try {
+			PDBFileReader reader = new PDBFileReader();
+			reader.setPath(path);
+			reader.setPdbDirectorySplit(isSplit);
+			reader.setAutoFetch(autoFetch);
+			reader.setFetchFileEvenIfObsolete(fetchFileEvenIfObsolete);
+			reader.setFetchCurrent(fetchCurrent);
+
+			reader.setFileParsingParameters(params);
+
+			s = reader.getStructureById(pdbId.toLowerCase());
+
+		} catch (Exception e){
+			flagLoadingFinished(pdbId);
+			throw new StructureException(e.getMessage() + " while parsing " + pdbId,e);
+		}
+		flagLoadingFinished(pdbId);
+		return s;
 	}
 
 
