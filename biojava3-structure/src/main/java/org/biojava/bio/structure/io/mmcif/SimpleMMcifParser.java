@@ -37,12 +37,15 @@ import org.biojava.bio.structure.io.StructureIOFile;
 import org.biojava.bio.structure.io.mmcif.model.AtomSite;
 import org.biojava.bio.structure.io.mmcif.model.AuditAuthor;
 import org.biojava.bio.structure.io.mmcif.model.ChemComp;
+import org.biojava.bio.structure.io.mmcif.model.ChemCompAtom;
+import org.biojava.bio.structure.io.mmcif.model.ChemCompBond;
 import org.biojava.bio.structure.io.mmcif.model.ChemCompDescriptor;
 import org.biojava.bio.structure.io.mmcif.model.DatabasePDBremark;
 import org.biojava.bio.structure.io.mmcif.model.DatabasePDBrev;
 import org.biojava.bio.structure.io.mmcif.model.Entity;
 import org.biojava.bio.structure.io.mmcif.model.EntityPolySeq;
 import org.biojava.bio.structure.io.mmcif.model.Exptl;
+import org.biojava.bio.structure.io.mmcif.model.PdbxChemCompIdentifier;
 import org.biojava.bio.structure.io.mmcif.model.PdbxEntityNonPoly;
 import org.biojava.bio.structure.io.mmcif.model.PdbxNonPolyScheme;
 import org.biojava.bio.structure.io.mmcif.model.PdbxPolySeqScheme;
@@ -615,7 +618,23 @@ public class SimpleMMcifParser implements MMcifParser {
 			         "org.biojava.bio.structure.io.mmcif.model.PdbxStructAssemblyGen",
 			         loopFields, lineData);			
 			triggerNewPdbxStructAssemblyGen(sa);
+		} else if ( category.equals("_chem_comp_atom")){
+			ChemCompAtom atom = (ChemCompAtom)buildObject(
+					"org.biojava.bio.structure.io.mmcif.model.ChemCompAtom",
+					loopFields,lineData);
+			triggerNewChemCompAtom(atom);
 			
+		}else if ( category.equals("_chem_comp_bond")){
+			ChemCompBond bond = (ChemCompBond)buildObject(
+					"org.biojava.bio.structure.io.mmcif.model.ChemCompBond",
+					loopFields,lineData);
+			triggerNewChemCompBond(bond);
+		} else if ( category.equals("_pdbx_chem_comp_identifier")){
+			PdbxChemCompIdentifier id = (PdbxChemCompIdentifier)buildObject(
+					"org.biojava.bio.structure.io.mmcif.model.PdbxChemCompIdentifier",
+					loopFields,lineData);
+			triggerNewPdbxChemCompIdentifier(id);
+					
 		} else {
 		
 		
@@ -906,4 +925,21 @@ public class SimpleMMcifParser implements MMcifParser {
 		}
 	}
 
+	private void triggerNewChemCompAtom(ChemCompAtom atom) {
+		for(MMcifConsumer c : consumers){
+			c.newChemCompAtom(atom);
+		}
+	}
+	
+	private void triggerNewChemCompBond(ChemCompBond bond) {
+		for(MMcifConsumer c : consumers){
+			c.newChemCompBond(bond);
+		}
+	}
+	
+	private void triggerNewPdbxChemCompIdentifier(PdbxChemCompIdentifier id) {
+		for(MMcifConsumer c : consumers){
+			c.newPdbxChemCompIndentifier(id);
+		}
+	}
 }

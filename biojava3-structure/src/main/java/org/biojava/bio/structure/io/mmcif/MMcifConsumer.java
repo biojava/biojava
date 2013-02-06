@@ -27,12 +27,15 @@ import org.biojava.bio.structure.io.FileParsingParameters;
 import org.biojava.bio.structure.io.mmcif.model.AtomSite;
 import org.biojava.bio.structure.io.mmcif.model.AuditAuthor;
 import org.biojava.bio.structure.io.mmcif.model.ChemComp;
+import org.biojava.bio.structure.io.mmcif.model.ChemCompAtom;
+import org.biojava.bio.structure.io.mmcif.model.ChemCompBond;
 import org.biojava.bio.structure.io.mmcif.model.ChemCompDescriptor;
 import org.biojava.bio.structure.io.mmcif.model.DatabasePDBremark;
 import org.biojava.bio.structure.io.mmcif.model.DatabasePDBrev;
 import org.biojava.bio.structure.io.mmcif.model.Entity;
 import org.biojava.bio.structure.io.mmcif.model.EntityPolySeq;
 import org.biojava.bio.structure.io.mmcif.model.Exptl;
+import org.biojava.bio.structure.io.mmcif.model.PdbxChemCompIdentifier;
 import org.biojava.bio.structure.io.mmcif.model.PdbxEntityNonPoly;
 import org.biojava.bio.structure.io.mmcif.model.PdbxNonPolyScheme;
 import org.biojava.bio.structure.io.mmcif.model.PdbxPolySeqScheme;
@@ -89,6 +92,9 @@ public interface MMcifConsumer {
 	public void newPdbxStructOperList(PdbxStructOperList structOper);
 	public void newPdbxStrucAssembly(PdbxStructAssembly strucAssembly);
 	public void newPdbxStrucAssemblyGen(PdbxStructAssemblyGen strucAssembly);
+	public void newChemCompAtom(ChemCompAtom atom);
+	public void newPdbxChemCompIndentifier(PdbxChemCompIdentifier id);
+	public void newChemCompBond(ChemCompBond bond);
 	
 	/** AuditAuthor contains the info from the PDB-AUTHOR records.
 	 *
@@ -107,5 +113,5 @@ public interface MMcifConsumer {
 	public void setFileParsingParameters(FileParsingParameters params);
 	public FileParsingParameters getFileParsingParameters();
 
-
+	
 }
