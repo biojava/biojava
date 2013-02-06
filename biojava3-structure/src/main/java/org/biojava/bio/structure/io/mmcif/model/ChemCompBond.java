@@ -41,7 +41,7 @@ public class ChemCompBond {
 	String value_order;
 	String pdbx_aromatic_flag;
 	String pdbx_stereo_config;
-	Integer pdbx_ordinal;
+	String pdbx_ordinal;
 	public String getComp_id() {
 		return comp_id;
 	}
@@ -78,10 +78,10 @@ public class ChemCompBond {
 	public void setPdbx_stereo_config(String pdbx_stereo_config) {
 		this.pdbx_stereo_config = pdbx_stereo_config;
 	}
-	public Integer getPdbx_ordinal() {
+	public String getPdbx_ordinal() {
 		return pdbx_ordinal;
 	}
-	public void setPdbx_ordinal(Integer pdbx_ordinal) {
+	public void setPdbx_ordinal(String pdbx_ordinal) {
 		this.pdbx_ordinal = pdbx_ordinal;
 	}
 	
