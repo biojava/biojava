@@ -35,6 +35,7 @@ import org.biojava.bio.structure.io.mmcif.model.DatabasePDBrev;
 import org.biojava.bio.structure.io.mmcif.model.Entity;
 import org.biojava.bio.structure.io.mmcif.model.EntityPolySeq;
 import org.biojava.bio.structure.io.mmcif.model.Exptl;
+import org.biojava.bio.structure.io.mmcif.model.PdbxChemCompDescriptor;
 import org.biojava.bio.structure.io.mmcif.model.PdbxChemCompIdentifier;
 import org.biojava.bio.structure.io.mmcif.model.PdbxEntityNonPoly;
 import org.biojava.bio.structure.io.mmcif.model.PdbxNonPolyScheme;
@@ -95,6 +96,7 @@ public interface MMcifConsumer {
 	public void newChemCompAtom(ChemCompAtom atom);
 	public void newPdbxChemCompIndentifier(PdbxChemCompIdentifier id);
 	public void newChemCompBond(ChemCompBond bond);
+	public void newPdbxChemCompDescriptor(PdbxChemCompDescriptor desc);
 	
 	/** AuditAuthor contains the info from the PDB-AUTHOR records.
 	 *

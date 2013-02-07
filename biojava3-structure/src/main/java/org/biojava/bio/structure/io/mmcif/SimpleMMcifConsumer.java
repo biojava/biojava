@@ -65,6 +65,7 @@ import org.biojava.bio.structure.io.mmcif.model.DatabasePDBrev;
 import org.biojava.bio.structure.io.mmcif.model.Entity;
 import org.biojava.bio.structure.io.mmcif.model.EntityPolySeq;
 import org.biojava.bio.structure.io.mmcif.model.Exptl;
+import org.biojava.bio.structure.io.mmcif.model.PdbxChemCompDescriptor;
 import org.biojava.bio.structure.io.mmcif.model.PdbxChemCompIdentifier;
 import org.biojava.bio.structure.io.mmcif.model.PdbxEntityNonPoly;
 import org.biojava.bio.structure.io.mmcif.model.PdbxNonPolyScheme;
@@ -1337,6 +1338,12 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 
 	@Override
 	public void newChemCompBond(ChemCompBond bond) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void newPdbxChemCompDescriptor(PdbxChemCompDescriptor desc) {
 		// TODO Auto-generated method stub
 		
 	}

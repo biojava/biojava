@@ -45,6 +45,7 @@ import org.biojava.bio.structure.io.mmcif.model.DatabasePDBrev;
 import org.biojava.bio.structure.io.mmcif.model.Entity;
 import org.biojava.bio.structure.io.mmcif.model.EntityPolySeq;
 import org.biojava.bio.structure.io.mmcif.model.Exptl;
+import org.biojava.bio.structure.io.mmcif.model.PdbxChemCompDescriptor;
 import org.biojava.bio.structure.io.mmcif.model.PdbxChemCompIdentifier;
 import org.biojava.bio.structure.io.mmcif.model.PdbxEntityNonPoly;
 import org.biojava.bio.structure.io.mmcif.model.PdbxNonPolyScheme;
@@ -634,7 +635,12 @@ public class SimpleMMcifParser implements MMcifParser {
 					"org.biojava.bio.structure.io.mmcif.model.PdbxChemCompIdentifier",
 					loopFields,lineData);
 			triggerNewPdbxChemCompIdentifier(id);
-					
+		} else if ( category.equals("_pdbx_chem_comp_descriptor")){
+				PdbxChemCompDescriptor id = (PdbxChemCompDescriptor)buildObject(
+						"org.biojava.bio.structure.io.mmcif.model.PdbxChemCompDescriptor",
+						loopFields,lineData);
+				triggerNewPdbxChemCompDescriptor(id);
+						
 		} else {
 		
 		
@@ -940,6 +946,11 @@ public class SimpleMMcifParser implements MMcifParser {
 	private void triggerNewPdbxChemCompIdentifier(PdbxChemCompIdentifier id) {
 		for(MMcifConsumer c : consumers){
 			c.newPdbxChemCompIndentifier(id);
+		}
+	}
+	private void triggerNewPdbxChemCompDescriptor(PdbxChemCompDescriptor id) {
+		for(MMcifConsumer c : consumers){
+			c.newPdbxChemCompDescriptor(id);
 		}
 	}
 }
