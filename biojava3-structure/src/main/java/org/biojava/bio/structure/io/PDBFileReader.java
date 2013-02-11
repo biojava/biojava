@@ -832,6 +832,37 @@ public class PDBFileReader implements StructureIOFile {
 
 	}
 
+	public boolean checkFileExists(String pdbId){
+		String path =  getLocalPDBFilePath(pdbId);
+		if ( path != null)
+			return true;
+		return false;
+		
+	}
+	
+	public void downloadPDB(String pdbId){
+		//don't overwrite existing files
+		if ( checkFileExists(pdbId))
+			return;
+		
+		if (autoFetch){//from here we try our online search
+			if(fetchCurrent && !fetchFileEvenIfObsolete) {
+				String current = PDBStatus.getCurrent(pdbId);
+
+				if(current == null) {
+					// either an error or there is not current entry
+					current = pdbId;
+				}
+				downloadPDB(current, CURRENT_FILES_PATH);
+			} else if(fetchFileEvenIfObsolete && PDBStatus.getStatus(pdbId) == Status.OBSOLETE) {
+				downloadPDB(pdbId, OBSOLETE_FILES_PATH);
+			} else {
+				downloadPDB(pdbId, CURRENT_FILES_PATH);
+			}
+		}
+		
+	}
+	
 
 	/** load a structure from local file system and return a PDBStructure object
 
