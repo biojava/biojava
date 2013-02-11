@@ -31,6 +31,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
 
@@ -41,6 +42,7 @@ import java.util.List;
 import org.biojava.bio.structure.Atom;
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureTools;
+import org.biojava.bio.structure.align.MultiThreadedDBSearch;
 import org.biojava.bio.structure.align.StructureAlignment;
 import org.biojava.bio.structure.align.model.AFPChain;
 import org.biojava.bio.structure.align.util.AFPAlignmentDisplay;
@@ -157,6 +159,11 @@ public abstract class AbstractUserArgumentProcessor implements UserArgumentProce
 		if ( params.getAlignPairs() != null){
 			runDBSearch();
 		}
+		
+		if ( params.getSearchFile() != null){
+			runDBSearch();
+		}
+		
 	}
 
 
@@ -194,13 +201,17 @@ public abstract class AbstractUserArgumentProcessor implements UserArgumentProce
 
 		AtomCache cache = new AtomCache(pdbFilePath, params.isPdbDirSplit());
 
-		String inputFile = params.getAlignPairs();
+		String alignPairs = params.getAlignPairs();
 
-		if ( inputFile == null || inputFile.equals("")){
-			System.err.println("Please specify the mandatory argument -inputFile!");
-			return;
+		String searchFile = params.getSearchFile();
+		
+		if ( alignPairs == null || alignPairs.equals("")) {
+			if ( searchFile == null || searchFile.equals("")){
+				System.err.println("Please specify -alignPairs or -searchFile !");
+				return;
+			}
 		}
-
+		
 		String outputFile = params.getOutFile();
 
 		if ( outputFile == null || outputFile.equals("")){
@@ -210,9 +221,62 @@ public abstract class AbstractUserArgumentProcessor implements UserArgumentProce
 
 		System.out.println("running DB search with parameters:" + params);
 
+		if ( alignPairs != null && ! alignPairs.equals("")) {
+			runAlignPairs(cache, alignPairs, outputFile);
+		}  else {
+			// must be a searchFile request...
+						
+			int useNrCPUs = params.getNrCPU();
+			
+			runDbSearch(cache,searchFile, outputFile, useNrCPUs, params);
+		}
+	}
 
+
+	/** Do a DB search with the input file against representative PDB domains
+	 * 
+	 * @param cache
+	 * @param searchFile
+	 * @param outputFile
+	 */
+	private void runDbSearch(AtomCache cache, String searchFile,
+			String outputFile,int useNrCPUs, StartupParameters params) {
+		
+		
+		System.out.println("will use " + useNrCPUs + " CPUs.");
+		
+		PDBFileReader reader = new PDBFileReader();
+		Structure structure1 = null ;
 		try {
-			File f = new File(inputFile);
+			structure1 = reader.getStructure(searchFile);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			System.err.println("could not parse as PDB file: " + searchFile);
+			return;
+		}
+		StructureAlignment algorithm =  getAlgorithm();
+		
+		MultiThreadedDBSearch dbSearch = new MultiThreadedDBSearch(structure1.getName(), 
+				structure1, 
+				outputFile, 
+				algorithm,
+				useNrCPUs,
+				true);
+		
+		dbSearch.run();
+		
+		
+		
+			
+	
+	}
+
+
+	private void runAlignPairs(AtomCache cache, String alignPairs,
+			String outputFile) {
+		try {
+			File f = new File(alignPairs);
 
 			BufferedReader is = new BufferedReader (new InputStreamReader(new FileInputStream(f)));
 
