@@ -32,7 +32,9 @@ public class StartupParameters {
 	
 	// for DB searches
 	String alignPairs;
+	String searchFile;
 	String saveOutputDir;
+	int nrCPU;
 	
 	int maxGapSize;
 	
@@ -48,7 +50,9 @@ public class StartupParameters {
 		showAFPRanges = false;
 		showMenu = false;
 		maxOptRMSD = 99d;
-		
+		nrCPU = Runtime.getRuntime().availableProcessors() -1;
+		if ( nrCPU < 1)
+			nrCPU = 1;
 	}
 	
 	
@@ -58,7 +62,8 @@ public class StartupParameters {
 	@Override
    public String toString()
    {
-      return "StartupParameters [alignPairs=" + alignPairs + ", autoFetch=" + autoFetch + ", file1=" + file1 + ", file2=" + file2
+      return "StartupParameters [alignPairs=" + alignPairs + ", searchFile=" + searchFile 
+    		+ ", autoFetch=" + autoFetch + ", file1=" + file1 + ", file2=" + file2
             + ", flexible=" + flexible + ", maxGapSize=" + maxGapSize + ", outFile=" + outFile + ", pdb1=" + pdb1 + ", pdb2=" + pdb2
             + ", pdbDirSplit=" + pdbDirSplit + ", pdbFilePath=" + pdbFilePath + ", printCE=" + printCE + ", printFatCat=" + printFatCat
             + ", printXML=" + printXML + ", saveOutputDir=" + saveOutputDir + ", show3d=" + show3d + ", showDBresult=" + showDBresult
@@ -67,11 +72,24 @@ public class StartupParameters {
             + "]";
    }
 
-
-
-
-
-   public String getAlignPairs() {
+	
+	/** An input file to be used for the DB search
+	 * 
+	 * @return
+	 */
+	public String getSearchFile() {
+		return searchFile;
+	}
+	public void setSearchFile(String searchFile) {
+		this.searchFile = searchFile;
+	}
+	
+	
+	/** The file that contains a list of PDB pairs to be aligned
+	 * 
+	 * @return
+	 */
+	public String getAlignPairs() {
 		return alignPairs;
 	}
 
@@ -195,6 +213,13 @@ public class StartupParameters {
 	}
 	public void setShowDBresult(String showDBresult) {
 		this.showDBresult = showDBresult;
+	}
+
+	public int getNrCPU() {
+		return nrCPU;
+	}
+	public void setNrCPU(int nrCPU) {
+		this.nrCPU = nrCPU;
 	}
 
 	/** CE specific parameter: set the Max gap size parameter G (during AFP extension). Default: 30
