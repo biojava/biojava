@@ -255,9 +255,13 @@ public abstract class AbstractUserArgumentProcessor implements UserArgumentProce
 			System.err.println("could not parse as PDB file: " + searchFile);
 			return;
 		}
+		
+		File searchF = new File(searchFile);
+		String name1 = searchF.getName(); 
+			
 		StructureAlignment algorithm =  getAlgorithm();
 		
-		MultiThreadedDBSearch dbSearch = new MultiThreadedDBSearch(structure1.getName(), 
+		MultiThreadedDBSearch dbSearch = new MultiThreadedDBSearch(name1, 
 				structure1, 
 				outputFile, 
 				algorithm,
