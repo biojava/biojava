@@ -57,10 +57,7 @@ import org.biojava3.core.util.ConcurrencyTools;
  * @author Andreas Prlic
  *
  */
-/**
- * @author ap3
- *
- */
+
 public class MultiThreadedDBSearch {
 
 	AtomicBoolean interrupted  ;
@@ -231,9 +228,11 @@ public class MultiThreadedDBSearch {
 				out.write(config1);
 				out.write(AFPChain.newline);
 
+				if ( customChain1 != null) {
 				String config2 = "#param:chain1=" + customChain1;
 				out.write(config2);
 				out.write(AFPChain.newline);
+				}
 
 			}
 
