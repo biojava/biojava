@@ -257,7 +257,9 @@ public abstract class AbstractUserArgumentProcessor implements UserArgumentProce
 		}
 		
 		File searchF = new File(searchFile);
-		String name1 = searchF.getName(); 
+		String name1 = "CUSTOM";
+		
+				
 			
 		StructureAlignment algorithm =  getAlgorithm();
 		
@@ -268,10 +270,9 @@ public abstract class AbstractUserArgumentProcessor implements UserArgumentProce
 				useNrCPUs,
 				true);
 		
+		dbSearch.setCustomFile1(searchF.getAbsolutePath());
+		
 		dbSearch.run();
-		
-		
-		
 			
 	
 	}
