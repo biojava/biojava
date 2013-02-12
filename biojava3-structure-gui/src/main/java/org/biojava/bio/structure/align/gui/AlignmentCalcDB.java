@@ -102,10 +102,15 @@ public class AlignmentCalcDB implements AlignmentCalculationRunnable {
 		}
 
 
+		if ( name1.startsWith("file:/"))
+			name1= "CUSTOM";
+		
 		job = new MultiThreadedDBSearch(name1,structure1, outFile, algorithm, nrCPUs, domainSplit);
 
 		AtomCache cache = new AtomCache(config);
 		System.out.println("using cache: " + cache.getPath());
+		System.out.println("name1: " + name1);
+		System.out.println("structure:" + structure1.getName());
 		job.setAtomCache(cache);
 
 		if ( name1.equals("CUSTOM")) {
