@@ -8,7 +8,6 @@ import org.biojava.bio.structure.StructureException;
 import org.biojava.bio.structure.align.StructureAlignment;
 import org.biojava.bio.structure.align.StructureAlignmentFactory;
 import org.biojava.bio.structure.align.ce.CeMain;
-import org.biojava.bio.structure.align.gui.StructureAlignmentDisplay;
 import org.biojava.bio.structure.align.gui.jmol.StructureAlignmentJmol;
 import org.biojava.bio.structure.align.model.AFPChain;
 import org.biojava.bio.structure.align.util.AtomCache;
@@ -70,6 +69,14 @@ public final class RotationAxis {
 		return otherTranslation;
 	}
 
+	/**
+	 * @param afpChain
+	 * @throws NullPointerException of afpChain does not contain a valid rotation matrix and shift vector
+	 */
+	public RotationAxis(AFPChain afpChain) {
+		this(afpChain.getBlockRotationMatrix()[0],afpChain.getBlockShiftVector()[0]);
+	}
+	
 	/**
 	 * Determine the location of the rotation axis based on a rotation matrix and a translation vector
 	 * @param rotation
