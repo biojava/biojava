@@ -110,14 +110,6 @@ public class Calc {
 		return distSquared ;
 			}
 
-	private static final void nullCheck(Atom a) 
-			throws StructureException
-			{
-		if  (a == null) {
-			throw new StructureException("Atom is null!");
-		}
-			}
-
 	public static final Atom invert(Atom a) throws StructureException{
 		double[] coords = new double[]{0.0,0.0,0.0} ;
 		Atom zero = new AtomImpl();
@@ -162,26 +154,20 @@ public class Calc {
 	 *
 	 * @param a  an Atom object
 	 * @param b  an Atom object
-	 * @return an Atom object
+	 * @return n new Atom object representing the difference
 	 * @throws StructureException ...
 
 	 */
-	public static final Atom subtract(Atom a, Atom b) 
-			throws StructureException
-			{
-		nullCheck(a) ;
-		nullCheck(b) ;
-
+	public static final Atom subtract(Atom a, Atom b) {
 		Atom c = new AtomImpl();
 		c.setX( a.getX() - b.getX() );
 		c.setY( a.getY() - b.getY() );
 		c.setZ( a.getZ() - b.getZ() );
 
 		return c ;
+	}
 
-			}
-
-	/** Vector product .
+	/** Vector product (cross product).
 	 *
 	 * @param a  an Atom object
 	 * @param b  an Atom object
@@ -197,7 +183,7 @@ public class Calc {
 
 	}
 
-	/** skalar product.
+	/** skalar product (dot product).
 	 *
 	 * @param a  an Atom object
 	 * @param b  an Atom object
@@ -210,20 +196,20 @@ public class Calc {
 	}
 
 
-	/** amount.
+	/** Gets the length of the vector (2-norm)
 	 *
 	 * @param a  an Atom object
-	 * @return a double
+	 * @return Square root of the sum of the squared elements
 	 */
 	public static final double amount(Atom a){
 		return Math.sqrt(skalarProduct(a,a));
 	}
 
-	/** angle.
+	/** Get the angle between two vectors
 	 *
 	 * @param a  an Atom object
 	 * @param b  an Atom object
-	 * @return a double
+	 * @return Angle between a and b, in degrees
 	 */
 	public static final double angle(Atom a, Atom b){
 
@@ -641,11 +627,17 @@ public class Calc {
 			center = scaleAdd(mass, a, center);
 		}
 
-		center = scale(center, 1.0f/totalMass);
+		center = scaleEquals(center, 1.0f/totalMass);
 		return center;
 	}
 
-	private static Atom scale(Atom a, float s) {
+	/**
+	 * Multiply elements of a by s (in place)
+	 * @param a
+	 * @param s
+	 * @return the modified a
+	 */
+	public static Atom scaleEquals(Atom a, double s) {
 		double x = a.getX();
 		double y = a.getY();
 		double z = a.getZ();
@@ -662,20 +654,45 @@ public class Calc {
 		return a;
 	}
 
+	/**
+	 * Multiply elements of a by s
+	 * @param a
+	 * @param s
+	 * @return A new Atom with s*a
+	 */
+	public static Atom scale(Atom a, double s) {
+		double x = a.getX();
+		double y = a.getY();
+		double z = a.getZ();
 
-	public static Atom scaleAdd(float s, Atom t1, Atom t2){
+		Atom b = new AtomImpl();
+		b.setX(x*s);
+		b.setY(y*s);
+		b.setZ(z*s);
 
-		double x = s*t1.getX() + t2.getX();
-		double y = s*t1.getY() + t2.getY();
-		double z = s*t1.getZ() + t2.getZ();
+		return b;
+	}
+
+
+	/**
+	 * Perform linear transformation s*X+B, and store the result in b
+	 * @param s Amount to scale x
+	 * @param x Input coordinate
+	 * @param b Vector to translate (will be modified)
+	 * @return b, after modification
+	 */
+	public static Atom scaleAdd(double s, Atom x, Atom b){
+
+		double xc = s*x.getX() + b.getX();
+		double yc = s*x.getY() + b.getY();
+		double zc = s*x.getZ() + b.getZ();
 
 		//Atom a = new AtomImpl();
-		t2.setX(x);
-		t2.setY(y);
-		t2.setZ(z);
+		b.setX(xc);
+		b.setY(yc);
+		b.setZ(zc);
 
-		return t2;
-
+		return b;
 	}
 
 	/** Returns the Vector that needs to be applied to shift a set of atoms
