@@ -37,7 +37,7 @@
 		<dependency>
 			<groupId>jmolapplet</groupId>
 			<artifactId>JmolApplet</artifactId>
-			<version>12.0.22</version>
+			<version>13.0.13</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
