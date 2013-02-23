@@ -49,8 +49,8 @@
       <scope>compile</scope>
     </dependency>
     <dependency>
-    	<groupId>org</groupId>
-    	<artifactId>forester</artifactId>
+    	<groupId>org.forester</groupId>
+    	<artifactId>forester-lgpl</artifactId>
     	<version>1.005</version>
     	<type>jar</type>
     	<scope>compile</scope>
