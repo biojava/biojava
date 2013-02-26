@@ -1,4 +1,4 @@
-/**
+/*
  *                    BioJava development code
  *
  * This code may be freely distributed and modified under the
@@ -17,39 +17,48 @@
  *
  *      http://www.biojava.org/
  *
- * Created on 2012-10-27
- * Created by dmyerstu
+ * Created on 2012-12-01
  *
  */
+
 package org.biojava.bio.structure;
 
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.NavigableMap;
+import java.util.Set;
 import java.util.TreeMap;
+import java.util.TreeSet;
+
+import org.biojava.bio.structure.Atom;
+import org.biojava.bio.structure.Group;
+import org.biojava.bio.structure.ResidueNumber;
+import org.biojava.bio.structure.StructureTools;
+import org.biojava.bio.structure.io.mmcif.chem.ResidueType;
 
 /**
- * A map from each {@link ResidueNumber} corresponding to a {@link Group} in an array of {@link Atom Atoms} from a
- * single {@link Structure} to its position in the corresponding PDB file's ATOM records. Can map only Groups matching
- * particular criteria (see {@link AtomPositionMap.GroupMatcher GroupMatcher}). Like Structure, this is a
- * memory-intensive class. Thus client code should allow an AtomPositionMap to be released from scope in order to free
- * memory.
- * 
+ * A map from {@link ResidueNumber ResidueNumbers} to ATOM record positions in a PDB file.
+ * To use:
+ * <code>
+ * AtomPositionMap map = new AtomPositionMap(new AtomCache().getAtoms("1w0p"));
+ * ResidueNumber start = new ResidueNumber("A", 100, null);
+ * ResidueNumber end = map.getEnd("A");
+ * int pos = map.getPosition(start);
+ * int length = map.calcLength(start, end);
+ * </code>
  * @author dmyerstu
- * @see ResidueRange
- * @since 3.0.6
  */
 public class AtomPositionMap {
 
-	/**
-	 * Something that can match a subset (proper or not) of {@link Group Groups}.
-	 * 
-	 * @author dmyerstu
-	 * @see {@link AtomPositionMap#AtomPositionMap(Atom[], GroupMatcher)}.
-	 */
-	public interface GroupMatcher {
-		boolean matches(Group group);
+	private HashMap<ResidueNumber, Integer> hashMap;
+	private TreeMap<ResidueNumber, Integer> treeMap;
+
+	private static Set<String> aminoAcidNames = new TreeSet<String>();
+	static {
+		aminoAcidNames.addAll(Arrays.asList(new String[] {"ALA", "ARG", "ASN", "ASP", "CYS", "GLU", "GLN", "GLY", "HIS", "ILE", "LEU", "LYS", "MET", "PHE", "PRO", "SER", "THR", "TRP", "TYR", "VAL"}));
+		aminoAcidNames.addAll(Arrays.asList(new String[] {"ASX", "GLX", "XLE", "XAA"}));
 	}
 
 	/**
@@ -62,16 +71,10 @@ public class AtomPositionMap {
 	 * @param <V>
 	 *            The value type
 	 */
-	public class ValueComparator<T, V extends Comparable<V>> implements Comparator<T> {
+	private static class ValueComparator<T, V extends Comparable<V>> implements Comparator<T> {
 
 		private Map<T, V> map;
 
-		/**
-		 * Creates a new ValueComparator with specified map. Note that the map is stored in the ValueComparator. Client
-		 * code should thus allow the ValueComparator to exit from scope.
-		 * 
-		 * @param map
-		 */
 		public ValueComparator(Map<T, V> map) {
 			this.map = map;
 		}
@@ -84,45 +87,17 @@ public class AtomPositionMap {
 	}
 
 	/**
-	 * Matches only amino acids.
-	 */
-	public static final GroupMatcher AMINO_ACID_MATCHER = new GroupMatcher() {
-		@Override
-		public boolean matches(Group group) {
-			return group.getType().equals(GroupType.AMINOACID);
-		}
-	};
-
-	private HashMap<ResidueNumber, Integer> hashMap;
-
-	private TreeMap<ResidueNumber, Integer> treeMap;
-
-	/**
-	 * Factory method that constructs a new AtomPostionMap using the specified Atom array and
-	 * {@link #AMINO_ACID_MATCHER}.
-	 * 
+	 * Creates a new AtomPositionMap containing only amino acids C-alpha atoms. C-alpha atoms are identified somewhat liberally.
 	 * @param atoms
-	 * @return
-	 * @see #AtomPositionMap(Atom[], GroupMatcher).
 	 */
-	public static AtomPositionMap ofAminoAcids(Atom[] atoms) {
-		return new AtomPositionMap(atoms, AMINO_ACID_MATCHER);
-	}
-
-	/**
-	 * Constructs a new AtomPositionMap precisely between every Group in the Atom array for which
-	 * {@link GroupMatcher#matches(Group)} is true.
-	 * 
-	 * @param atoms
-	 * @param matcher
-	 * @see GroupMatcher
-	 */
-	public AtomPositionMap(Atom[] atoms, GroupMatcher matcher) {
+	public AtomPositionMap(Atom[] atoms) {
 		hashMap = new HashMap<ResidueNumber, Integer>();
 		for (int i = 0; i < atoms.length; i++) {
-			Group group = atoms[i].getGroup();
-			ResidueNumber rn = group.getResidueNumber();
-			if (matcher.matches(group)) {
+			Group g = atoms[i].getGroup();
+			ResidueType type = g.getChemComp().getResidueType();
+			ResidueNumber rn = g.getResidueNumber();
+			// We might as well include D amino acids
+			if (g.hasAtom(StructureTools.caAtomName) || aminoAcidNames.contains(g.getPDBName()) || type == ResidueType.lPeptideLinking || type == ResidueType.glycine || type == ResidueType.lPeptideAminoTerminus || type == ResidueType.lPeptideCarboxyTerminus || type == ResidueType.dPeptideLinking || type == ResidueType.dPeptideAminoTerminus || type == ResidueType.dPeptideCarboxyTerminus) { 
 				if (!hashMap.containsKey(rn)) {
 					hashMap.put(rn, i + 1);
 				}
@@ -134,16 +109,14 @@ public class AtomPositionMap {
 	}
 
 	/**
-	 * {@code positionA} and {@code positionB} must be from the same chain.
-	 * 
+	 * This is <strong>not</em> the same as subtracting {@link #getPosition(ResidueNumber)} for {@code positionB} from {@link #getPosition(ResidueNumber)} for {@code positionA}.
+	 * The latter considers only positions of ATOM entries in the PDB file and ignores chains. This method only includes ATOMs from the same chain.
 	 * @param positionA
-	 *            The {@code postionA}th ATOM in the PDB file.
 	 * @param positionB
-	 *            The {@code postionB}th ATOM in the PDB file
-	 * @param chain
-	 * @return The length between positionA and positionB.
+	 * @param startingChain
+	 * @return
 	 */
-	public int calcLength(int positionA, int positionB, String chain) {
+	public int calcLength(int positionA, int positionB, char startingChain) {
 		int positionStart, positionEnd;
 		if (positionA <= positionB) {
 			positionStart = positionA;
@@ -152,9 +125,32 @@ public class AtomPositionMap {
 			positionStart = positionB;
 			positionEnd = positionA;
 		}
+		return calcLengthDirectional(positionStart, positionEnd, startingChain);
+	}
+
+	/**
+	 * Calculates the distance between {@code positionStart} and {@code positionEnd}. Will return a negative value if the start is past the end.
+	 * @param start
+	 * @param end
+	 * @return
+	 */
+	public int calcLengthDirectional(ResidueNumber start, ResidueNumber end) {
+		return calcLengthDirectional(getPosition(start), getPosition(end), start.getChainId().charAt(0));
+	}
+
+	/**
+	 * Calculates the distance between {@code positionStart} and {@code positionEnd}. Will return a negative value if the start is past the end.
+	 * @param positionStart
+	 * @param positionEnd
+	 * @param startingChain
+	 * @return
+	 */
+	public int calcLengthDirectional(int positionStart, int positionEnd, char startingChain) {
 		int count = 0;
 		for (Map.Entry<ResidueNumber, Integer> entry : treeMap.entrySet()) {
-			if (entry.getKey().getChainId().equals(chain)) {
+			// subtle bugs possible if chain has more than 1 char
+			// More importantly: do we need this check?
+			if (entry.getKey().getChainId().charAt(0) == startingChain) {
 				if (entry.getValue() == positionStart) {
 					count = 0;
 				}
@@ -166,50 +162,72 @@ public class AtomPositionMap {
 	}
 
 	/**
-	 * {@code positionA} and {@code positionB} must be from the same chain.
-	 * 
+	 * Convenience method for {@link #calcLength(int, int, char)}.
 	 * @param positionA
 	 * @param positionB
-	 * @param startingChain
-	 * @return The length between positionA and positionB.
+	 * @return
+	 * @see #calcLength(int, int, char)
 	 */
 	public int calcLength(ResidueNumber positionA, ResidueNumber positionB) {
-		if (!positionA.getChainId().equals(positionB.getChainId())) throw new IllegalArgumentException(
-				"The ResidueNumbers are not from the same chain.");
-		int pA, pB;
-		try {
-			pA = hashMap.get(positionA);
-		} catch (NullPointerException e) {
-			throw new IllegalArgumentException("The specified atom " + positionA
-					+ " does not exist in this AtomPositionMap.", e);
-		}
-		try {
-			pB = hashMap.get(positionB);
-		} catch (NullPointerException e) {
-			throw new IllegalArgumentException("The specified atom " + positionB
-					+ " does not exist in this AtomPositionMap.", e);
-		}
-		String chain = positionA.getChainId();
-		if (pA > pB) chain = positionB.getChainId();
+		int pA = hashMap.get(positionA);
+		int pB = hashMap.get(positionB);
+		char chain = positionA.getChainId().charAt(0); // subtle bugs possible if chain has more than 1 char
+		if (pA > pB) chain = positionB.getChainId().charAt(0);
 		return calcLength(pA, pB, chain);
 	}
 
-	/**
-	 * @return A {@link NavigableMap} implementing this AtomPositionMap. Use this if the map needs to be accessed
-	 *         directly for efficiency; otherwise {@link #getPosition(ResidueNumber)} is preferred.
-	 */
 	public NavigableMap<ResidueNumber, Integer> getNavMap() {
 		return treeMap;
 	}
 
 	/**
 	 * @param residueNumber
-	 * @return The position in this AtomPositionMap at which {@code residueNumber} appears. Note that this depends on
-	 *         how this AtomPositionMap was defined: the result may be different for different {@link GroupMatcher
-	 *         GroupMatchers}.
+	 * @return The position of the ATOM record in the PDB file corresponding to the {@code residueNumber}
 	 */
-	public int getPosition(ResidueNumber residueNumber) {
+	public Integer getPosition(ResidueNumber residueNumber) {
 		return hashMap.get(residueNumber);
+	}
+
+	/**
+	 * @param chainId
+	 * @return The first {@link ResidueNumber} of the specified chain (the one highest down in the PDB file)
+	 */
+	public ResidueNumber getFirst(String chainId) {
+		Map.Entry<ResidueNumber,Integer> entry = treeMap.firstEntry();
+		while (true) {
+			if (entry.getKey().getChainId().equals(chainId)) return entry.getKey();
+			entry = treeMap.higherEntry(entry.getKey());
+			if (entry == null) return null;
+		}
+	}
+
+	/**
+	 * @param chainId
+	 * @return The last {@link ResidueNumber} of the specified chain (the one farthest down in the PDB file)
+	 */
+	public ResidueNumber getLast(String chainId) {
+		Map.Entry<ResidueNumber,Integer> entry = treeMap.lastEntry();
+		while (true) {
+			if (entry.getKey().getChainId().equals(chainId)) return entry.getKey();
+			entry = treeMap.lowerEntry(entry.getKey());
+			if (entry == null) return null;
+		}
+	}
+
+	/**
+	 * @param chainId
+	 * @return The first {@link ResidueNumber} of any chain (the one farthest down in the PDB file)
+	 */
+	public ResidueNumber getFirst() {
+		return treeMap.firstKey();
+	}
+
+	/**
+	 * @param chainId
+	 * @return The last {@link ResidueNumber} of any chain (the one farthest down in the PDB file)
+	 */
+	public ResidueNumber getLast() {
+		return treeMap.lastKey();
 	}
 
 }

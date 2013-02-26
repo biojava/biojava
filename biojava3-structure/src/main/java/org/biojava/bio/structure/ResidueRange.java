@@ -1,4 +1,4 @@
-/**
+/*
  *                    BioJava development code
  *
  * This code may be freely distributed and modified under the
@@ -17,70 +17,68 @@
  *
  *      http://www.biojava.org/
  *
- * Created on 2012-10-18
- * Created by Douglas Myers-Turnbull
+ * Created on 2012-11-20
  *
  */
+
 package org.biojava.bio.structure;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
+import org.biojava.bio.structure.Atom;
+import org.biojava.bio.structure.ResidueNumber;
+import org.biojava.bio.structure.Structure;
+
 /**
- * A chain, a start {@link ResidueNumber} and an end ResidueNumber, optionally with length (number of residues). Due to
- * insertion codes, the length of a structure is not necessarily its end position minus its start. However, since
- * residue numbers are unique within any particular PDB file, each ResidueNumber in a {@link Structure} can be mapped to
- * a unique ATOM record in that Structure's PDB file; this is done by {@link AtomPositionMap}. ResidueRange can use this
- * information to determine the length of a range of residues accurately. Example use: <code>
- * AtomPositionMap map = AtomPositionMap.ofAminoAcids(cache.getAtoms("1qdm"));
- * ResidueRange range = ResidueRange.parse("A_246-85S", map);
- * System.out.println(range.getLength()); // should print 59
- * </code>
+ * A chain, a start residue, and an end residue. May also store a length value. Because of insertion codes, this length
+ * is not necessarily end-start. Since residue numbers are unique within a PDB file, each ResidueNumber in a
+ * {@link Structure} can be mapped to a unique ATOM record in that Structure's PDB file. ResidueRange provides a static
+ * method {@link #getAminoAcidPositions(Atom[])} that returns a {@link HashMap} that maps each {@link ResidueNumber} to
+ * its position in the PDB file's ATOM records. It also provides static methods for working with this map. Note that
+ * these are defined as static utility methods only for performance reasons; it is not economical to store this data in
+ * each ResidueRange.
  * 
  * @author dmyerstu
  * @see ResidueNumber
- * @since 3.0.6
  */
 public class ResidueRange {
-
-	private final String chain;
+	private final char chain;
 	private final ResidueNumber end;
 	private final Integer length;
 	private final ResidueNumber start;
 
 	/**
-	 * Calculates the combined number of residues of the ResidueRanges in {@code ranges},
-	 * <em>given that each ResidueRange has a length calculated</em>. Does not check for overlap between the
-	 * ResidueRanges.
+	 * Calculates the combined number of residues of the ResidueRanges in {@code rrs},
+	 * <em>given that each ResidueRange has a length calculated</em>. The value, if calculated,
+	 * <em>will include any alignment gaps</em>.
 	 * 
-	 * @param ranges
+	 * @param rrs
 	 *            A list of ResidueRanges
 	 * @return The combined length
 	 * @throws IllegalArgumentException
 	 *             If the {@link #getLength() length} of one or more ResidueRange is null
 	 * @see #getLength()
 	 */
-	public static int calcLength(List<ResidueRange> ranges) {
-		int length = 0;
-		for (ResidueRange range : ranges) {
-			if (range.getLength() == null) throw new IllegalArgumentException(
+	public static int calcLength(List<ResidueRange> rrs) {
+		int l = 0;
+		for (ResidueRange rr : rrs) {
+			if (rr.getLength() == null) throw new IllegalArgumentException(
 					"At least one ResidueRange does not have a length.");
-			length += range.getLength();
+			l += rr.getLength();
 		}
-		return length;
+		return l;
 	}
 
 	/**
-	 * @param string
-	 *            A string of the form chain_start-end or chain.start-end. For example: <code>A.5-100</code> and
-	 *            <code>A_5-100</code>.
-	 * @return The unique ResidueRange corresponding to {@code string}. The result will have a null {@link #getLength()
-	 *         length}.
+	 * @param s
+	 *            A string of the form chain_start-end. For example: <code>A.5-100</code>.
+	 * @return The unique ResidueRange corresponding to {@code s}.
 	 */
-	public static ResidueRange parse(String string) {
-		String[] supParts = string.split("[\\._]");
-		String chain = supParts[0];
-		String[] parts = supParts[1].split("-");
+	public static ResidueRange parse(String s) {
+		char chain = s.charAt(0);
+		String[] parts = s.substring(2).split("-");
 		ResidueNumber start = ResidueNumber.fromString(parts[0]);
 		start.setChainId(String.valueOf(chain));
 		ResidueNumber end = ResidueNumber.fromString(parts[1]);
@@ -89,26 +87,24 @@ public class ResidueRange {
 	}
 
 	/**
-	 * @param string
+	 * @param s
 	 *            A string of the form chain_start-end. For example: <code>A.5-100</code>.
-	 * @return The unique ResidueRange corresponding to {@code string}. The result will have the correct
-	 *         {@link #getLength() length}.
+	 * @return The unique ResidueRange corresponding to {@code s}.
 	 */
-	public static ResidueRange parse(String string, AtomPositionMap map) {
-		ResidueRange rr = parse(string);
+	public static ResidueRange parse(String s, AtomPositionMap map) {
+		ResidueRange rr = parse(s);
 		int length = map.calcLength(rr.getStart(), rr.getEnd());
 		return new ResidueRange(rr.getChain(), rr.getStart(), rr.getEnd(), length);
 	}
 
 	/**
-	 * @param string
+	 * @param s
 	 *            A string of the form chain_start-end,chain_start-end, ... For example:
 	 *            <code>A.5-100,R_110-190,Z_200-250</code>.
-	 * @return The unique list of ResidueRanges corresponding to {@code string}. Each ResidueRange will have a null
-	 *         {@link #getLength() length}.
+	 * @return The unique ResidueRange corresponding to {@code s}.
 	 */
-	public static List<ResidueRange> parseMultiple(String string) {
-		String[] parts = string.split(",");
+	public static List<ResidueRange> parseMultiple(String s) {
+		String[] parts = s.split(",");
 		List<ResidueRange> list = new ArrayList<ResidueRange>(parts.length);
 		for (String part : parts) {
 			list.add(parse(part));
@@ -117,16 +113,13 @@ public class ResidueRange {
 	}
 
 	/**
-	 * @param string
+	 * @param s
 	 *            A string of the form chain_start-end,chain_start-end, ... For example:
 	 *            <code>A.5-100,R_110-190,Z_200-250</code>.
-	 * @param map
-	 *            An {@link AtomPositionMap} containing one e
-	 * @return The unique ResidueRange corresponding to {@code string}. Each ResidueRange will have the correct
-	 *         {@link #getLength() length}.
+	 * @return The unique ResidueRange corresponding to {@code s}.
 	 */
-	public static List<ResidueRange> parseMultiple(String string, AtomPositionMap map) {
-		String[] parts = string.split(",");
+	public static List<ResidueRange> parseMultiple(String s, AtomPositionMap map) {
+		String[] parts = s.split(",");
 		List<ResidueRange> list = new ArrayList<ResidueRange>(parts.length);
 		for (String part : parts) {
 			list.add(parse(part, map));
@@ -134,26 +127,20 @@ public class ResidueRange {
 		return list;
 	}
 
-	public ResidueRange(String chain, ResidueNumber start, ResidueNumber end, Integer length) {
+	public ResidueRange(char chain, ResidueNumber start, ResidueNumber end, Integer length) {
 		this.chain = chain;
 		this.start = start;
 		this.end = end;
 		this.length = length;
 	}
 
-	/**
-	 * Two ResidueRanges are equal iff they have the same chain, start residue, and end residue. Note that length is not
-	 * included.
-	 */
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj) return true;
 		if (obj == null) return false;
 		if (getClass() != obj.getClass()) return false;
 		ResidueRange other = (ResidueRange) obj;
-		if (chain == null) {
-			if (other.chain != null) return false;
-		} else if (!chain.equals(other.chain)) return false;
+		if (chain != other.chain) return false;
 		if (end == null) {
 			if (other.end != null) return false;
 		} else if (!end.equals(other.end)) return false;
@@ -163,7 +150,7 @@ public class ResidueRange {
 		return true;
 	}
 
-	public String getChain() {
+	public char getChain() {
 		return chain;
 	}
 
@@ -187,7 +174,7 @@ public class ResidueRange {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + (chain == null ? 0 : chain.hashCode());
+		result = prime * result + chain;
 		result = prime * result + (end == null ? 0 : end.hashCode());
 		result = prime * result + (start == null ? 0 : start.hashCode());
 		return result;

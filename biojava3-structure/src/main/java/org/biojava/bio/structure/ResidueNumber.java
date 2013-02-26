@@ -217,5 +217,10 @@ public class ResidueNumber implements Serializable, Comparable<ResidueNumber>
 		
 		return 0;
 	}
+
+	public String printFull() {
+		final String chain = chainId==null? "" : chainId;
+		return chain + toString();
+	}
 	
 }
