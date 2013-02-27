@@ -1,6 +1,8 @@
 package org.biojava.bio.structure.gui;
 
 import java.io.IOException;
+import java.io.StringWriter;
+
 import org.biojava.bio.structure.Atom;
 import org.biojava.bio.structure.AtomImpl;
 import org.biojava.bio.structure.Calc;
@@ -26,7 +28,7 @@ public final class RotationAxis {
 	private Atom rotationPos; // a point on the axis of rotation
 	private Atom screwTranslation; //translation parallel to the axis of rotation
 	private Atom otherTranslation; // translation perpendicular to the axis of rotation
-	
+
 	/**
 	 * The rotation angle
 	 * @return theta
@@ -76,7 +78,7 @@ public final class RotationAxis {
 	public RotationAxis(AFPChain afpChain) {
 		this(afpChain.getBlockRotationMatrix()[0],afpChain.getBlockShiftVector()[0]);
 	}
-	
+
 	/**
 	 * Determine the location of the rotation axis based on a rotation matrix and a translation vector
 	 * @param rotation
@@ -86,12 +88,12 @@ public final class RotationAxis {
 		if(rotation.getColumnDimension() != 3 || rotation.getRowDimension() != 3) {
 			throw new IllegalArgumentException("Expected 3x3 rotation matrix");
 		}
-		
-		
+
+
 		// Calculate angle
 		double c = (rotation.trace()-1)/2.0; //=cos(theta)
 		this.theta = Math.acos(c);
-		
+
 		if(theta < MIN_ANGLE) {
 			calculateTranslationalAxis(rotation,translation);
 		} else {
@@ -111,12 +113,12 @@ public final class RotationAxis {
 		for(int i=0;i<3;i++) {
 			rotAx[i] /= Math.sqrt(sum);
 		}
-				
+
 		// Now determine signs
 		double d0 = rotation.get(2,1)-rotation.get(1,2); //=2u[0]*sin(theta)
 		double d1 = rotation.get(0,2)-rotation.get(2,0); //=2u[1]*sin(theta)
 		double d2 = rotation.get(1,0)-rotation.get(0,1); //=2u[2]*sin(theta)
-		
+
 		double s12 = rotation.get(2,1)+rotation.get(1,2); //=2*u[1]*u[2]*(1-cos(theta))
 		double s02 = rotation.get(0,2)+rotation.get(2,0); //=2*u[0]*u[2]*(1-cos(theta))
 		double s01 = rotation.get(1,0)+rotation.get(0,1); //=2*u[0]*u[1]*(1-cos(theta))
@@ -155,152 +157,169 @@ public final class RotationAxis {
 
 		rotationAxis = new AtomImpl();
 		rotationAxis.setCoords(rotAx);
-		
+
 		// Calculate screw = (rotationAxis dot translation)*u
 		double dotProduct = Calc.skalarProduct(rotationAxis, translation);
-		
+
 		screwTranslation = Calc.scale(rotationAxis, dotProduct);
 		otherTranslation = Calc.subtract(translation, screwTranslation);
 
 		Atom hypot = Calc.vectorProduct(rotationAxis, otherTranslation);
 		Calc.scaleEquals(hypot,.5/Math.tan(theta/2.0));
-		
+
 		// Calculate rotation axis position
 		rotationPos = Calc.scaleAdd(.5,otherTranslation, hypot);
 	}
-	
+
 	private void calculateTranslationalAxis(Matrix rotation, Atom translation) {
 		// set axis parallel to translation
 		rotationAxis = Calc.scale(translation, 1./Calc.amount(translation));
-		
+
 		// position is undefined
 		rotationPos = null;
-		
+
 		screwTranslation = translation;
 		otherTranslation = new AtomImpl();
 		otherTranslation.setCoords(new double[] {0,0,0});
 	}
 
-	public void displayRotationAxis(StructureAlignmentJmol jmolPanel, Atom[] atoms) {
+	public String getJmolScript(Atom[] atoms){
 		final double width=.5;// width of JMol object
-		
+
 		// Project each Atom onto the rotation axis to determine limits
 		double min, max;
-//		double mean;
+		//		double mean;
 		min = max = Calc.skalarProduct(rotationAxis,atoms[0]);
-//		mean = min;
+		//		mean = min;
 		for(int i=1;i<atoms.length;i++) {
 			double prod = Calc.skalarProduct(rotationAxis,atoms[i]);
-//			mean += prod;
+			//			mean += prod;
 			if(prod<min) min = prod;
 			if(prod>max) max = prod;
 		}
 		double uLen = Calc.skalarProduct(rotationAxis,rotationAxis);// Should be 1, but double check
 		min/=uLen;
 		max/=uLen;
-//		mean/=atoms.length;
-		
+		//		mean/=atoms.length;
+
 		Atom axialPt;
 		if(rotationPos == null) {
 			Atom center = Calc.centerOfMass(atoms);
-//			jmolPanel.evalString(String.format("draw ID center ARROW {0,0,0} {%f,%f,%f} WIDTH %f COLOR orange \">center\";",
-//					center.getX(),center.getY(),center.getZ(), width ));
+			//			jmolPanel.evalString(String.format("draw ID center ARROW {0,0,0} {%f,%f,%f} WIDTH %f COLOR orange \">center\";",
+			//					center.getX(),center.getY(),center.getZ(), width ));
 
 
 			// Project center onto the axis
 			Atom centerOnAxis = Calc.scale(rotationAxis, Calc.skalarProduct(center, rotationAxis));
-//			jmolPanel.evalString(String.format("draw ID centerOnAxis VECTOR {%f,%f,%f} {%f,%f,%f} WIDTH %f COLOR red \">onU\";",
-//					center.getX(),center.getY(),center.getZ(),
-//					centerOnAxis.getX(),centerOnAxis.getY(),centerOnAxis.getZ(), width ));
-			
+			//			jmolPanel.evalString(String.format("draw ID centerOnAxis VECTOR {%f,%f,%f} {%f,%f,%f} WIDTH %f COLOR red \">onU\";",
+			//					center.getX(),center.getY(),center.getZ(),
+			//					centerOnAxis.getX(),centerOnAxis.getY(),centerOnAxis.getZ(), width ));
+
 			// Remainder is projection of origin onto axis
 			axialPt = Calc.subtract(center, centerOnAxis);
-//			jmolPanel.evalString(String.format("draw ID axialPt ARROW {0,0,0} {%f,%f,%f} WIDTH %f COLOR yellow \">axialPt\";",
-//					axialPt.getX(),axialPt.getY(),axialPt.getZ(), width ));
-			
+			//			jmolPanel.evalString(String.format("draw ID axialPt ARROW {0,0,0} {%f,%f,%f} WIDTH %f COLOR yellow \">axialPt\";",
+			//					axialPt.getX(),axialPt.getY(),axialPt.getZ(), width ));
+
 		} else {
 			axialPt = rotationPos;
 		}
-		
+
 		Atom axisMin = (Atom) axialPt.clone();
 		Calc.scaleAdd(min, rotationAxis, axisMin);
 		Atom axisMax = (Atom) axialPt.clone();
 		Calc.scaleAdd(max, rotationAxis, axisMax);
-//		Atom axisMean = (Atom) axialPt.clone();
-//		Calc.scaleAdd(mean,rotationAxis, axisMean);
-		
-		// draw coordinate axes
-//		jmolPanel.evalString("draw ID x VECTOR {0,0,0} {5,0,0} WIDTH 0.5 COLOR red \">x\";");
-//		jmolPanel.evalString("draw ID y VECTOR {0,0,0} {0,5,0} WIDTH 0.5 COLOR green \">y\";");
-//		jmolPanel.evalString("draw ID z VECTOR {0,0,0} {0,0,5} WIDTH 0.5 COLOR blue \">z\";");
 
+
+		StringWriter result = new StringWriter();
 		// draw axis of rotation
-		jmolPanel.evalString(String.format("draw ID rot ARROW {%f,%f,%f} {%f,%f,%f} WIDTH %f COLOR cyan ;",
-				axisMin.getX(),axisMin.getY(),axisMin.getZ(),
-				axisMax.getX(),axisMax.getY(),axisMax.getZ(), width ));
+		result.append(	
+				String.format("draw ID rot ARROW {%f,%f,%f} {%f,%f,%f} WIDTH %f COLOR cyan ;",
+						axisMin.getX(),axisMin.getY(),axisMin.getZ(),
+						axisMax.getX(),axisMax.getY(),axisMax.getZ(), width ));
 
 		if(rotationPos != null) {
-			jmolPanel.evalString(String.format("draw ID rotArc ARROW ARC {%f,%f,%f} {%f,%f,%f} {0,0,0} {0,%f,1} SCALE 500 DIAMETER %f COLOR cyan;",
+			result.append(System.getProperty("line.separator"));
+			result.append(String.format("draw ID rotArc ARROW ARC {%f,%f,%f} {%f,%f,%f} {0,0,0} {0,%f,1} SCALE 500 DIAMETER %f COLOR cyan;",
 					axisMin.getX(),axisMin.getY(),axisMin.getZ(),
 					axisMax.getX(),axisMax.getY(),axisMax.getZ(),
 					Math.toDegrees(theta), width ));
 		}
+
+		return result.toString();
+	}
+
+	public void displayRotationAxis(StructureAlignmentJmol jmolPanel, Atom[] atoms) {
+
+		//		Atom axisMean = (Atom) axialPt.clone();
+		//		Calc.scaleAdd(mean,rotationAxis, axisMean);
+
+		// draw coordinate axes
+		//		jmolPanel.evalString("draw ID x VECTOR {0,0,0} {5,0,0} WIDTH 0.5 COLOR red \">x\";");
+		//		jmolPanel.evalString("draw ID y VECTOR {0,0,0} {0,5,0} WIDTH 0.5 COLOR green \">y\";");
+		//		jmolPanel.evalString("draw ID z VECTOR {0,0,0} {0,0,5} WIDTH 0.5 COLOR blue \">z\";");
+
+
+		String jmolString = getJmolScript(atoms);
+		jmolPanel.evalString(jmolString);
+
+
 		
-//		double uScale = 10;
-//		jmolPanel.evalString(String.format("draw ID u VECTOR {0,0,0} {%f,%f,%f} WIDTH %f COLOR orange \">u\";",
-//				uScale*rotationAxis.getX(),uScale*rotationAxis.getY(),uScale*rotationAxis.getZ(), width ));
+
+		//		double uScale = 10;
+		//		jmolPanel.evalString(String.format("draw ID u VECTOR {0,0,0} {%f,%f,%f} WIDTH %f COLOR orange \">u\";",
+		//				uScale*rotationAxis.getX(),uScale*rotationAxis.getY(),uScale*rotationAxis.getZ(), width ));
 
 	}
-	
+
 	public static void main(String[] args) {
-		
+
 		// Compare two chains of a dimer to force CE to give a symmetric alignment.
 		String name1 = "1AVD.A";
 		String name2 = "1AVD.B";
 		String display = "1AVD";
-		
-//		name1 = "4HHB.A:,B:";
-//		name2 = "4HHB.C:,D:";
-//		display = "4HHB";
-		
+
+		//		name1 = "4HHB.A:,B:";
+		//		name2 = "4HHB.C:,D:";
+		//		display = "4HHB";
+
 		AtomCache cache = new AtomCache();
 		try {
 			Atom[] ca1 = cache.getAtoms(name1);
 			Atom[] ca2 = cache.getAtoms(name2);
 			Atom[] caD = cache.getAtoms(display);
-			
+
 			StructureAlignment ce = StructureAlignmentFactory.getAlgorithm(CeMain.algorithmName);
-			
+
 			AFPChain afpChain = ce.align(ca1, ca2);
 			Matrix mat = afpChain.getBlockRotationMatrix()[0];
 			Atom shift = afpChain.getBlockShiftVector()[0];
-			
+
 			System.out.println("Shift:");
 			System.out.println(shift);
 			System.out.println("Matrix:");
 			System.out.println(mat);
-			
+
 			RotationAxis axis = new RotationAxis(mat,shift);
 
 			double theta = Math.toDegrees(axis.getTheta());
 			System.out.format("Angle: %f degrees%n",theta);
-			
+
 			//StructureAlignmentJmol jmolPanel = StructureAlignmentDisplay.display(afpChain, caD, caD);
 			StructureAlignmentJmol jmolPanel = new StructureAlignmentJmol();
 			jmolPanel.setAtoms(caD);
-			
+
 			jmolPanel.evalString("select * ; color chain;");
 			jmolPanel.evalString("select nucleic; cartoon on;");
 			jmolPanel.evalString("select *; spacefill off; wireframe off; cartoon on;  ");
-			
+
 			// draw coordinate axes
 			jmolPanel.evalString("draw ID x VECTOR {0,0,0} {5,0,0} WIDTH 0.5 COLOR red \">x\";");
 			jmolPanel.evalString("draw ID y VECTOR {0,0,0} {0,5,0} WIDTH 0.5 COLOR green \">y\";");
 			jmolPanel.evalString("draw ID z VECTOR {0,0,0} {0,0,5} WIDTH 0.5 COLOR blue \">z\";");
-			
+
 			// draw axis
 			axis.displayRotationAxis(jmolPanel, caD);
-	
+
 			/*
 			// draw intermediate vectors for debugging
 			jmolPanel.evalString(String.format("draw ID s VECTOR {0,0,0} {%f,%f,%f} WIDTH %f COLOR orange \">s\";",
@@ -312,7 +331,7 @@ public final class RotationAxis {
 			double uScale = 10;
 			jmolPanel.evalString(String.format("draw ID u VECTOR {0,0,0} {%f,%f,%f} WIDTH %f COLOR orange \">u\";",
 					uScale*u.getX(),uScale*u.getY(),uScale*u.getZ(), width ));
-			
+
 			jmolPanel.evalString(String.format("draw ID perp VECTOR {0,0,0} {%f,%f,%f} WIDTH %f COLOR yellow \">tPerp\";",
 					perp.getX(),perp.getY(),perp.getZ(), width));
 			jmolPanel.evalString(String.format("draw ID screw VECTOR {0,0,0} {%f,%f,%f} WIDTH %f COLOR yellow \">screw\";",
@@ -320,7 +339,7 @@ public final class RotationAxis {
 
 			jmolPanel.evalString(String.format("draw ID t VECTOR {0,0,0} {%f,%f,%f} WIDTH %f COLOR yellow \">t\";",
 					shift.getX(),shift.getY(),shift.getZ(), width));
-			*/
+			 */
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
