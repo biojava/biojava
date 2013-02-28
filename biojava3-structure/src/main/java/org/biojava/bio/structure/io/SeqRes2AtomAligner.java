@@ -393,7 +393,11 @@ public class SeqRes2AtomAligner {
 				}
 
 				ChemComp cc = g.getChemComp();
-				if ( 
+				if ( cc == null) {
+					// not sure what to do in that case!
+					continue;
+				}
+				if (
 						ResidueType.lPeptideLinking.equals(cc.getResidueType()) ||
 						PolymerType.PROTEIN_ONLY.contains(cc.getPolymerType())  ||
 						PolymerType.POLYNUCLEOTIDE_ONLY.contains(cc.getPolymerType())
