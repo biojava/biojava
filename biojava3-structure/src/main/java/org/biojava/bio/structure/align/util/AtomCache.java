@@ -387,7 +387,7 @@ public class AtomCache {
 
 		} catch (StructureException ex){
 			System.err.println("error getting Structure for " + name);
-			throw new StructureException(ex);
+			throw new StructureException(ex.getMessage(),ex);
 		}
 
 		atoms =  StructureTools.getAtomCAArray(s);
