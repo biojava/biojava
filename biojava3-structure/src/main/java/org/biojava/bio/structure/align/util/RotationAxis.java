@@ -187,7 +187,7 @@ public final class RotationAxis {
 		screwTranslation = Calc.scale(rotationAxis, dotProduct);
 		otherTranslation = Calc.subtract(translation, screwTranslation);
 
-		Atom hypot = Calc.vectorProduct(rotationAxis, otherTranslation);
+		Atom hypot = Calc.vectorProduct(otherTranslation,rotationAxis);
 		Calc.scaleEquals(hypot,.5/Math.tan(theta/2.0));
 
 		// Calculate rotation axis position
@@ -227,7 +227,9 @@ public final class RotationAxis {
 	 */
 	public String getJmolScript(Atom[] atoms){
 		final double width=.5;// width of JMol object
-
+		final double extraAxis = 5.; //Amount to extend the axis beyond the protein
+		final String color = "yellow"; //axis color
+		
 		// Project each Atom onto the rotation axis to determine limits
 		double min, max;
 		//		double mean;
@@ -244,6 +246,7 @@ public final class RotationAxis {
 		max/=uLen;
 		//		mean/=atoms.length;
 
+		// Project the origin onto the axis. If the axis is undefined, use the center of mass
 		Atom axialPt;
 		if(rotationPos == null) {
 			Atom center = Calc.centerOfMass(atoms);
@@ -258,28 +261,31 @@ public final class RotationAxis {
 			axialPt = rotationPos;
 		}
 
+		// Find end points of the rotation axis to display
 		Atom axisMin = (Atom) axialPt.clone();
-		Calc.scaleAdd(min, rotationAxis, axisMin);
+		Calc.scaleAdd(min-extraAxis, rotationAxis, axisMin);
 		Atom axisMax = (Atom) axialPt.clone();
-		Calc.scaleAdd(max, rotationAxis, axisMax);
+		Calc.scaleAdd(max+extraAxis, rotationAxis, axisMax);
 
 
 		StringWriter result = new StringWriter();
+		
 		// set arrow heads to a reasonable length
 		result.append("set defaultDrawArrowScale 2.0;");
 		
 		// draw axis of rotation
 		result.append(	
-				String.format("draw ID rot ARROW {%f,%f,%f} {%f,%f,%f} WIDTH %f COLOR cyan ;",
+				String.format("draw ID rot ARROW {%f,%f,%f} {%f,%f,%f} WIDTH %f COLOR %s ;",
 						axisMin.getX(),axisMin.getY(),axisMin.getZ(),
-						axisMax.getX(),axisMax.getY(),axisMax.getZ(), width ));
+						axisMax.getX(),axisMax.getY(),axisMax.getZ(), width, color ));
 
+		// draw angle of rotation
 		if(rotationPos != null) {
 			result.append(System.getProperty("line.separator"));
-			result.append(String.format("draw ID rotArc ARC {%f,%f,%f} {%f,%f,%f} {0,0,0} {0,%f,1} SCALE 500 DIAMETER %f COLOR cyan;",
+			result.append(String.format("draw ID rotArc ARC {%f,%f,%f} {%f,%f,%f} {0,0,0} {0,%f,1} SCALE 500 DIAMETER %f COLOR %s;",
 					axisMin.getX(),axisMin.getY(),axisMin.getZ(),
 					axisMax.getX(),axisMax.getY(),axisMax.getZ(),
-					Math.toDegrees(theta), width ));
+					Math.toDegrees(theta), width, color ));
 		}
 
 		return result.toString();
