@@ -1,26 +1,38 @@
-package org.biojava.bio.structure.gui;
+package org.biojava.bio.structure.align.util;
 
-import java.io.IOException;
 import java.io.StringWriter;
 
 import org.biojava.bio.structure.Atom;
 import org.biojava.bio.structure.AtomImpl;
 import org.biojava.bio.structure.Calc;
-import org.biojava.bio.structure.StructureException;
-import org.biojava.bio.structure.align.StructureAlignment;
-import org.biojava.bio.structure.align.StructureAlignmentFactory;
-import org.biojava.bio.structure.align.ce.CeMain;
-import org.biojava.bio.structure.align.gui.jmol.StructureAlignmentJmol;
 import org.biojava.bio.structure.align.model.AFPChain;
-import org.biojava.bio.structure.align.util.AtomCache;
 import org.biojava.bio.structure.jama.Matrix;
 
 /**
  * Calculates the rotation axis for an alignment
+ * 
+ * <p>A superposition of two structures is generally represented as a rotation
+ * matrix plus a translation vector. However, it can also be represented as an
+ * axis of rotation plus some translation.
+ * 
+ * <p>This class calculates the rotation axis and stores it as four properties:
+ * <ul><li>A unit vector parallel to the rotation axis ({@link #getRotationAxis()})
+ * <li>The angle of rotation ({@link #getAngle()})
+ * <li>A point on the rotation axis ({@link #getRotationPos()})
+ * <li>Some translation parallel to the axis ({@link #getScrewTranslation()})
+ * </ul>
+ * 
+ * <p>The axis of rotation is poorly defined and numerically unstable for small
+ * angles. Therefor it's direction is left as null for angles less than 
+ * {@link #MIN_ANGLE}.
+ * 
  * @author Spencer Bliven
  *
  */
 public final class RotationAxis {
+	/**
+	 * Minimum angle to calculate rotation axes. 5 degrees.
+	 */
 	static final double MIN_ANGLE = Math.toRadians(5.);
 
 	private double theta;
@@ -31,9 +43,9 @@ public final class RotationAxis {
 
 	/**
 	 * The rotation angle
-	 * @return theta
+	 * @return the angle, in radians
 	 */
-	public double getTheta() {
+	public double getAngle() {
 		return theta;
 	}
 
@@ -64,16 +76,20 @@ public final class RotationAxis {
 	}
 
 	/**
-	 * Get the component of translation perpendicular to the axis of rotation
+	 * Get the component of translation perpendicular to the axis of rotation.
+	 * This isn't particularly meaningful, but is calculated internally and
+	 * was useful for debugging.
 	 * @return
 	 */
+	@Deprecated
 	public Atom getOtherTranslation() {
 		return otherTranslation;
 	}
 
 	/**
+	 * Calculate the rotation axis for the first block of an AFPChain
 	 * @param afpChain
-	 * @throws NullPointerException of afpChain does not contain a valid rotation matrix and shift vector
+	 * @throws NullPointerException if afpChain does not contain a valid rotation matrix and shift vector
 	 */
 	public RotationAxis(AFPChain afpChain) {
 		this(afpChain.getBlockRotationMatrix()[0],afpChain.getBlockShiftVector()[0]);
@@ -101,6 +117,13 @@ public final class RotationAxis {
 		}
 	}
 
+	/**
+	 * Calculate the rotation axis for the normal case, where there is a
+	 * significant rotation angle
+	 * @param rotation
+	 * @param translation
+	 * @param c
+	 */
 	private void calculateRotationalAxis(Matrix rotation, Atom translation,
 			double c) {
 		// Calculate magnitude of rotationAxis components, but not signs
@@ -171,6 +194,11 @@ public final class RotationAxis {
 		rotationPos = Calc.scaleAdd(.5,otherTranslation, hypot);
 	}
 
+	/**
+	 * Handle cases with small angles of rotation
+	 * @param rotation
+	 * @param translation
+	 */
 	private void calculateTranslationalAxis(Matrix rotation, Atom translation) {
 		// set axis parallel to translation
 		rotationAxis = Calc.scale(translation, 1./Calc.amount(translation));
@@ -183,6 +211,20 @@ public final class RotationAxis {
 		otherTranslation.setCoords(new double[] {0,0,0});
 	}
 
+	/**
+	 * Returns a Jmol script which will display the axis of rotation. This
+	 * consists of a cyan arrow along the axis, plus an arc showing the angle
+	 * of rotation.
+	 * 
+	 * <p>As the rotation angle gets smaller, the axis of rotation becomes poorly
+	 * defined and would need to get farther and farther away from the protein.
+	 * This is not particularly useful, so we arbitrarily draw it parallel to
+	 * the translation and omit the arc.
+	 * @param atoms Some atoms from the protein, used for determining the bounds
+	 *  	  of the axis.
+	 * @return The Jmol script, suitable for calls to
+	 * {@link org.biojava.bio.structure.align.gui.jmol.StructureAlignmentJmol#evalString() jmol.evalString()}
+	 */
 	public String getJmolScript(Atom[] atoms){
 		final double width=.5;// width of JMol object
 
@@ -205,20 +247,12 @@ public final class RotationAxis {
 		Atom axialPt;
 		if(rotationPos == null) {
 			Atom center = Calc.centerOfMass(atoms);
-			//			jmolPanel.evalString(String.format("draw ID center ARROW {0,0,0} {%f,%f,%f} WIDTH %f COLOR orange \">center\";",
-			//					center.getX(),center.getY(),center.getZ(), width ));
-
 
 			// Project center onto the axis
 			Atom centerOnAxis = Calc.scale(rotationAxis, Calc.skalarProduct(center, rotationAxis));
-			//			jmolPanel.evalString(String.format("draw ID centerOnAxis VECTOR {%f,%f,%f} {%f,%f,%f} WIDTH %f COLOR red \">onU\";",
-			//					center.getX(),center.getY(),center.getZ(),
-			//					centerOnAxis.getX(),centerOnAxis.getY(),centerOnAxis.getZ(), width ));
 
 			// Remainder is projection of origin onto axis
 			axialPt = Calc.subtract(center, centerOnAxis);
-			//			jmolPanel.evalString(String.format("draw ID axialPt ARROW {0,0,0} {%f,%f,%f} WIDTH %f COLOR yellow \">axialPt\";",
-			//					axialPt.getX(),axialPt.getY(),axialPt.getZ(), width ));
 
 		} else {
 			axialPt = rotationPos;
@@ -231,6 +265,9 @@ public final class RotationAxis {
 
 
 		StringWriter result = new StringWriter();
+		// set arrow heads to a reasonable length
+		result.append("set defaultDrawArrowScale 2.0;");
+		
 		// draw axis of rotation
 		result.append(	
 				String.format("draw ID rot ARROW {%f,%f,%f} {%f,%f,%f} WIDTH %f COLOR cyan ;",
@@ -239,113 +276,12 @@ public final class RotationAxis {
 
 		if(rotationPos != null) {
 			result.append(System.getProperty("line.separator"));
-			result.append(String.format("draw ID rotArc ARROW ARC {%f,%f,%f} {%f,%f,%f} {0,0,0} {0,%f,1} SCALE 500 DIAMETER %f COLOR cyan;",
+			result.append(String.format("draw ID rotArc ARC {%f,%f,%f} {%f,%f,%f} {0,0,0} {0,%f,1} SCALE 500 DIAMETER %f COLOR cyan;",
 					axisMin.getX(),axisMin.getY(),axisMin.getZ(),
 					axisMax.getX(),axisMax.getY(),axisMax.getZ(),
 					Math.toDegrees(theta), width ));
 		}
 
 		return result.toString();
-	}
-
-	public void displayRotationAxis(StructureAlignmentJmol jmolPanel, Atom[] atoms) {
-
-		//		Atom axisMean = (Atom) axialPt.clone();
-		//		Calc.scaleAdd(mean,rotationAxis, axisMean);
-
-		// draw coordinate axes
-		//		jmolPanel.evalString("draw ID x VECTOR {0,0,0} {5,0,0} WIDTH 0.5 COLOR red \">x\";");
-		//		jmolPanel.evalString("draw ID y VECTOR {0,0,0} {0,5,0} WIDTH 0.5 COLOR green \">y\";");
-		//		jmolPanel.evalString("draw ID z VECTOR {0,0,0} {0,0,5} WIDTH 0.5 COLOR blue \">z\";");
-
-
-		String jmolString = getJmolScript(atoms);
-		jmolPanel.evalString(jmolString);
-
-
-		
-
-		//		double uScale = 10;
-		//		jmolPanel.evalString(String.format("draw ID u VECTOR {0,0,0} {%f,%f,%f} WIDTH %f COLOR orange \">u\";",
-		//				uScale*rotationAxis.getX(),uScale*rotationAxis.getY(),uScale*rotationAxis.getZ(), width ));
-
-	}
-
-	public static void main(String[] args) {
-
-		// Compare two chains of a dimer to force CE to give a symmetric alignment.
-		String name1 = "1AVD.A";
-		String name2 = "1AVD.B";
-		String display = "1AVD";
-
-		//		name1 = "4HHB.A:,B:";
-		//		name2 = "4HHB.C:,D:";
-		//		display = "4HHB";
-
-		AtomCache cache = new AtomCache();
-		try {
-			Atom[] ca1 = cache.getAtoms(name1);
-			Atom[] ca2 = cache.getAtoms(name2);
-			Atom[] caD = cache.getAtoms(display);
-
-			StructureAlignment ce = StructureAlignmentFactory.getAlgorithm(CeMain.algorithmName);
-
-			AFPChain afpChain = ce.align(ca1, ca2);
-			Matrix mat = afpChain.getBlockRotationMatrix()[0];
-			Atom shift = afpChain.getBlockShiftVector()[0];
-
-			System.out.println("Shift:");
-			System.out.println(shift);
-			System.out.println("Matrix:");
-			System.out.println(mat);
-
-			RotationAxis axis = new RotationAxis(mat,shift);
-
-			double theta = Math.toDegrees(axis.getTheta());
-			System.out.format("Angle: %f degrees%n",theta);
-
-			//StructureAlignmentJmol jmolPanel = StructureAlignmentDisplay.display(afpChain, caD, caD);
-			StructureAlignmentJmol jmolPanel = new StructureAlignmentJmol();
-			jmolPanel.setAtoms(caD);
-
-			jmolPanel.evalString("select * ; color chain;");
-			jmolPanel.evalString("select nucleic; cartoon on;");
-			jmolPanel.evalString("select *; spacefill off; wireframe off; cartoon on;  ");
-
-			// draw coordinate axes
-			jmolPanel.evalString("draw ID x VECTOR {0,0,0} {5,0,0} WIDTH 0.5 COLOR red \">x\";");
-			jmolPanel.evalString("draw ID y VECTOR {0,0,0} {0,5,0} WIDTH 0.5 COLOR green \">y\";");
-			jmolPanel.evalString("draw ID z VECTOR {0,0,0} {0,0,5} WIDTH 0.5 COLOR blue \">z\";");
-
-			// draw axis
-			axis.displayRotationAxis(jmolPanel, caD);
-
-			/*
-			// draw intermediate vectors for debugging
-			jmolPanel.evalString(String.format("draw ID s VECTOR {0,0,0} {%f,%f,%f} WIDTH %f COLOR orange \">s\";",
-					s.getX(),s.getY(),s.getZ(), width ));
-
-			Atom perp = axis.getOtherTranslation();
-			Atom screw = axis.getScrewTranslation();
-
-			double uScale = 10;
-			jmolPanel.evalString(String.format("draw ID u VECTOR {0,0,0} {%f,%f,%f} WIDTH %f COLOR orange \">u\";",
-					uScale*u.getX(),uScale*u.getY(),uScale*u.getZ(), width ));
-
-			jmolPanel.evalString(String.format("draw ID perp VECTOR {0,0,0} {%f,%f,%f} WIDTH %f COLOR yellow \">tPerp\";",
-					perp.getX(),perp.getY(),perp.getZ(), width));
-			jmolPanel.evalString(String.format("draw ID screw VECTOR {0,0,0} {%f,%f,%f} WIDTH %f COLOR yellow \">screw\";",
-					screw.getX(),screw.getY(),screw.getZ(), width));
-
-			jmolPanel.evalString(String.format("draw ID t VECTOR {0,0,0} {%f,%f,%f} WIDTH %f COLOR yellow \">t\";",
-					shift.getX(),shift.getY(),shift.getZ(), width));
-			 */
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (StructureException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	}
 }
