@@ -213,6 +213,7 @@ public class CeCPMain extends CeMain {
 		int[][][] optAln = afpChain.getOptAln();
 		int[] optLen = afpChain.getOptLen();
 		int alignLen = afpChain.getOptLength();
+		if (alignLen < 1) return newAFPChain;
 		
 		assert(afpChain.getBlockNum() == 1); // Assume that CE returns just one block
 		

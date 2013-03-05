@@ -5,6 +5,7 @@ import java.io.StringWriter;
 import org.biojava.bio.structure.Atom;
 import org.biojava.bio.structure.AtomImpl;
 import org.biojava.bio.structure.Calc;
+import org.biojava.bio.structure.StructureException;
 import org.biojava.bio.structure.align.model.AFPChain;
 import org.biojava.bio.structure.jama.Matrix;
 
@@ -89,10 +90,14 @@ public final class RotationAxis {
 	/**
 	 * Calculate the rotation axis for the first block of an AFPChain
 	 * @param afpChain
+	 * @throws StructureException 
 	 * @throws NullPointerException if afpChain does not contain a valid rotation matrix and shift vector
 	 */
-	public RotationAxis(AFPChain afpChain) {
-		this(afpChain.getBlockRotationMatrix()[0],afpChain.getBlockShiftVector()[0]);
+	public RotationAxis(AFPChain afpChain) throws StructureException {
+		if(afpChain.getAlnLength() < 1) {
+			throw new StructureException("No aligned residues");
+		}
+		init(afpChain.getBlockRotationMatrix()[0],afpChain.getBlockShiftVector()[0]);
 	}
 
 	/**
@@ -101,6 +106,10 @@ public final class RotationAxis {
 	 * @param translation
 	 */
 	public RotationAxis(Matrix rotation, Atom translation) {
+		init(rotation, translation);
+	}
+	
+	private void init(Matrix rotation, Atom translation) {
 		if(rotation.getColumnDimension() != 3 || rotation.getRowDimension() != 3) {
 			throw new IllegalArgumentException("Expected 3x3 rotation matrix");
 		}
