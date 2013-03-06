@@ -38,7 +38,7 @@
 		<dependency>
 			<groupId>net.sourceforge.jmol</groupId>
 			<artifactId>jmol</artifactId>
-			<version>13.0.10</version>
+			<version>13.0.12</version>
 		</dependency>
 		<dependency>
 			<groupId>org.biojava</groupId>
