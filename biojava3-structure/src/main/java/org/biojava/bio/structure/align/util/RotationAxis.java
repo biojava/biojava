@@ -247,24 +247,20 @@ public final class RotationAxis {
 	 */
 	public String getJmolScript(Atom[] atoms){
 		final double width=.5;// width of JMol object
-		final double extraAxis = 5.; //Amount to extend the axis beyond the protein
-		final String color = "yellow"; //axis color
+		final String axisColor = "yellow"; //axis color
+		final String screwColor = "orange"; //screw translation color
 		
 		// Project each Atom onto the rotation axis to determine limits
 		double min, max;
-		//		double mean;
 		min = max = Calc.skalarProduct(rotationAxis,atoms[0]);
-		//		mean = min;
 		for(int i=1;i<atoms.length;i++) {
 			double prod = Calc.skalarProduct(rotationAxis,atoms[i]);
-			//			mean += prod;
 			if(prod<min) min = prod;
 			if(prod>max) max = prod;
 		}
 		double uLen = Calc.skalarProduct(rotationAxis,rotationAxis);// Should be 1, but double check
 		min/=uLen;
 		max/=uLen;
-		//		mean/=atoms.length;
 
 		// Project the origin onto the axis. If the axis is undefined, use the center of mass
 		Atom axialPt;
@@ -283,10 +279,9 @@ public final class RotationAxis {
 
 		// Find end points of the rotation axis to display
 		Atom axisMin = (Atom) axialPt.clone();
-		Calc.scaleAdd(min-extraAxis, rotationAxis, axisMin);
+		Calc.scaleAdd(min, rotationAxis, axisMin);
 		Atom axisMax = (Atom) axialPt.clone();
-		Calc.scaleAdd(max+extraAxis, rotationAxis, axisMax);
-
+		Calc.scaleAdd(max, rotationAxis, axisMax);
 
 		StringWriter result = new StringWriter();
 		
@@ -295,17 +290,37 @@ public final class RotationAxis {
 		
 		// draw axis of rotation
 		result.append(	
-				String.format("draw ID rot ARROW {%f,%f,%f} {%f,%f,%f} WIDTH %f COLOR %s ;",
+				String.format("draw ID rot CYLINDER {%f,%f,%f} {%f,%f,%f} WIDTH %f COLOR %s ;",
 						axisMin.getX(),axisMin.getY(),axisMin.getZ(),
-						axisMax.getX(),axisMax.getY(),axisMax.getZ(), width, color ));
+						axisMax.getX(),axisMax.getY(),axisMax.getZ(), width, axisColor ));
 
+		// draw screw component
+		boolean positiveScrew = Math.signum(rotationAxis.getX()) == Math.signum(screwTranslation.getX()); 
+		if( positiveScrew ) {
+			// screw is in the same direction as the axis
+			result.append( String.format(
+					"draw ID screw VECTOR {%f,%f,%f} {%f,%f,%f} WIDTH %f COLOR %s ;",
+					axisMax.getX(),axisMax.getY(),axisMax.getZ(),
+					screwTranslation.getX(),screwTranslation.getY(),screwTranslation.getZ(),
+					width, screwColor ));
+		} else {
+			// screw is in the opposite direction as the axis
+			result.append( String.format(
+					"draw ID screw VECTOR {%f,%f,%f} {%f,%f,%f} WIDTH %f COLOR %s ;",
+					axisMin.getX(),axisMin.getY(),axisMin.getZ(),
+					screwTranslation.getX(),screwTranslation.getY(),screwTranslation.getZ(),
+					width, screwColor ));
+		}
+				
 		// draw angle of rotation
 		if(rotationPos != null) {
 			result.append(System.getProperty("line.separator"));
-			result.append(String.format("draw ID rotArc ARC {%f,%f,%f} {%f,%f,%f} {0,0,0} {0,%f,1} SCALE 500 DIAMETER %f COLOR %s;",
+			result.append(String.format("draw ID rotArc ARC {%f,%f,%f} {%f,%f,%f} {0,0,0} {0,%f,%d} SCALE 500 DIAMETER %f COLOR %s;",
 					axisMin.getX(),axisMin.getY(),axisMin.getZ(),
 					axisMax.getX(),axisMax.getY(),axisMax.getZ(),
-					Math.toDegrees(theta), width, color ));
+					Math.toDegrees(theta),
+					positiveScrew ? 0 : 1 , // draw at the opposite end from the screw arrow
+					width, axisColor ));
 		}
 
 		return result.toString();
