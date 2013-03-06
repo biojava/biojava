@@ -109,6 +109,12 @@ public final class RotationAxis {
 		init(rotation, translation);
 	}
 	
+	/**
+	 * Initialize variables
+	 * 
+	 * @param rotation
+	 * @param translation
+	 */
 	private void init(Matrix rotation, Atom translation) {
 		if(rotation.getColumnDimension() != 3 || rotation.getRowDimension() != 3) {
 			throw new IllegalArgumentException("Expected 3x3 rotation matrix");
@@ -324,5 +330,33 @@ public final class RotationAxis {
 		}
 
 		return result.toString();
+	}
+
+	/**
+	 * Calculate the rotation angle for a structure
+	 * @param afpChain
+	 * @return The rotation angle, in radians
+	 * @throws StructureException If the alignment doesn't contain any blocks
+	 * @throws NullPointerException If the alignment doesn't have a rotation matrix set
+	 */
+	public static double getAngle(AFPChain afpChain) throws StructureException {
+		if(afpChain.getBlockNum() < 1) {
+			throw new StructureException("No aligned residues");
+		}
+		Matrix rotation = afpChain.getBlockRotationMatrix()[0];
+		
+		if(rotation == null) {
+			throw new NullPointerException("AFPChain does not contain a rotation matrix");
+		}
+		return getAngle(rotation);
+	}
+	/**
+	 * Calculate the rotation angle for a given matrix
+	 * @param rotation Rotation matrix
+	 * @return The angle, in radians
+	 */
+	public static double getAngle(Matrix rotation) {
+		double c = (rotation.trace()-1)/2.0; //=cos(theta)
+		return Math.acos(c);
 	}
 }
