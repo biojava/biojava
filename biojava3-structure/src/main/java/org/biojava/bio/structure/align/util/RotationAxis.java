@@ -156,7 +156,7 @@ public final class RotationAxis {
 		double s01 = rotation.get(1,0)+rotation.get(0,1); //=2*u[0]*u[1]*(1-cos(theta))
 
 		//Only use biggest d for the sign directly, for numerical stability around 180deg
-		if( Math.abs(d0) < Math.abs(d1) ) {
+		if( Math.abs(d0) < Math.abs(d1) ) { // not d0
 			if( Math.abs(d1) < Math.abs(d2) ) { //d2
 				if(d2>=0){ //u[2] positive
 					if( s02 < 0 ) rotAx[0] = -rotAx[0];
@@ -176,14 +176,25 @@ public final class RotationAxis {
 					if( s12 >= 0) rotAx[2] = -rotAx[2];
 				}
 			}
-		} else { //d0
-			if(d0>=0) { //u[0] positive
-				if( s01 < 0 ) rotAx[0] = -rotAx[0];
-				if( s02 < 0 ) rotAx[2] = -rotAx[2];
-			} else { //u[0] negative
-				rotAx[0] = -rotAx[0];
-				if( s01 >= 0 ) rotAx[0] = -rotAx[0];
-				if( s02 >= 0 ) rotAx[2] = -rotAx[2];
+		} else { // not d1
+			if( Math.abs(d0) < Math.abs(d2) ) { //d2
+				if(d2>=0){ //u[2] positive
+					if( s02 < 0 ) rotAx[0] = -rotAx[0];
+					if( s12 < 0 ) rotAx[1] = -rotAx[1];
+				} else { //u[2] negative
+					rotAx[2] = -rotAx[2];
+					if( s02 >= 0 ) rotAx[0] = -rotAx[0];
+					if( s12 >= 0 ) rotAx[1] = -rotAx[1];
+				}
+			} else { //d0
+				if(d0>=0) { //u[0] positive
+					if( s01 < 0 ) rotAx[1] = -rotAx[1];
+					if( s02 < 0 ) rotAx[2] = -rotAx[2];
+				} else { //u[0] negative
+					rotAx[0] = -rotAx[0];
+					if( s01 >= 0 ) rotAx[1] = -rotAx[1];
+					if( s02 >= 0 ) rotAx[2] = -rotAx[2];
+				}
 			}
 		}
 
