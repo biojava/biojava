@@ -108,25 +108,25 @@ public class MyJmolStatusListener implements JmolStatusListener {
 		
 	}
 
-	@Override
+	
 	public void notifyCallback(EnumCallback arg0, Object[] arg1) {
 		// TODO Auto-generated method stub
 		
 	}
 
-	@Override
+	
 	public boolean notifyEnabled(EnumCallback arg0) {
 		// TODO Auto-generated method stub
 		return false;
 	}
 
-	@Override
+	
 	public Map<String, Object> getProperty(String arg0) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	@Override
+	
 	public void resizeInnerPanel(String arg0) {
 		// TODO Auto-generated method stub
 		
