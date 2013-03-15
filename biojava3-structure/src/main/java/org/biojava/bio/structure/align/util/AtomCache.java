@@ -81,6 +81,8 @@ public class AtomCache {
 
 	String path;
 
+	String cachePath;
+	
 	// make sure IDs are loaded uniquely
 	Collection<String> currentlyLoading = Collections.synchronizedCollection(new TreeSet<String>());
 
@@ -121,7 +123,6 @@ public class AtomCache {
 	 */
 	public AtomCache(String pdbFilePath, boolean isSplit){
 
-
 		if ( ! pdbFilePath.endsWith(FILE_SEPARATOR))
 			pdbFilePath += FILE_SEPARATOR;
 
@@ -130,9 +131,17 @@ public class AtomCache {
 		// set the input stream provider to caching mode
 		System.setProperty(InputStreamProvider.CACHE_PROPERTY, "true");
 
-		path = pdbFilePath;
-
+		path = pdbFilePath;		
 		System.setProperty(AbstractUserArgumentProcessor.PDB_DIR,path);
+		
+		
+		String tmpCache = System.getProperty(AbstractUserArgumentProcessor.CACHE_DIR);
+		if ( tmpCache == null || tmpCache.equals(""))
+			tmpCache = pdbFilePath;
+		
+		cachePath = tmpCache;
+		System.setProperty(AbstractUserArgumentProcessor.CACHE_DIR, cachePath);
+		
 		//this.cache = cache;
 		this.isSplit = isSplit;
 
@@ -182,7 +191,28 @@ public class AtomCache {
 		System.setProperty(AbstractUserArgumentProcessor.PDB_DIR,path);
 		this.path = path;
 	}
+	
+	
+	/** Returns the path that contains the caching file for utility data, such as domain definitons.
+	 *  
+	 * @return
+	 */
+	public String getCachePath(){
+		if ( cachePath == null || cachePath.equals(""))
+			return getPath();
+		return cachePath;
+	}
 
+	/** set the location at which utility data should be cached.
+	 * 
+	 * @param cachePath
+	 */
+	public void setCachePath(String cachePath){
+		this.cachePath = cachePath;
+		System.setProperty(AbstractUserArgumentProcessor.CACHE_DIR, cachePath);
+		
+	}
+	
 	/** Is the organization of files within the directory split, as on the PDB FTP servers,
 	 * or are all files contained in one directory.
 	 * @return flag 
