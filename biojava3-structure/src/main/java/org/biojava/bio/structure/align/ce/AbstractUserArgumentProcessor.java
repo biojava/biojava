@@ -69,6 +69,12 @@ public abstract class AbstractUserArgumentProcessor implements UserArgumentProce
 	 * default location for PDB files.
 	 */
 	public static final String PDB_DIR = "PDB_DIR";
+	
+	
+	/** The system property PDB_CACHE_DIR can be used to configure the default location for various data related to working with PDB files, such as domain definitions.
+	 * 
+	 */
+	public static final String CACHE_DIR = "PDB_CACHE_DIR";
 
 	protected AbstractUserArgumentProcessor(){ 
 		params = new StartupParameters();
@@ -122,6 +128,10 @@ public abstract class AbstractUserArgumentProcessor implements UserArgumentProce
 
 		if ( params.getPdbFilePath() != null){
 			System.setProperty(PDB_DIR,params.getPdbFilePath());
+		}
+		
+		if ( params.getCacheFilePath() != null){
+			System.setProperty(CACHE_DIR,params.getCacheFilePath());
 		}
 
 		if ( params.isShowMenu()){
@@ -196,6 +206,13 @@ public abstract class AbstractUserArgumentProcessor implements UserArgumentProce
 			System.err.println("You did not specify the -pdbFilePath. Can not find PDB files in file system and will assume a temporary location.");
 			UserConfiguration c = new UserConfiguration();
 			pdbFilePath = c.getPdbFilePath();
+		}
+
+		String cacheFilePath = params.getCacheFilePath();
+
+		if ( cacheFilePath == null || cacheFilePath.equals("")){
+			cacheFilePath = pdbFilePath;
+			
 		}
 
 
@@ -536,11 +553,22 @@ public abstract class AbstractUserArgumentProcessor implements UserArgumentProce
 
 		if ( dbsearch ){
 			if ( params.getSaveOutputDir() != null) {
+				
+				// we currently don't have a naming convention for how to store results for custom files
+				// they will be re-created on the fly
+				if ( afpChain.getName1().startsWith("file:") || afpChain.getName2().startsWith("file:"))
+					return;
 				fileName = params.getSaveOutputDir(); 
 				fileName += getAutoFileName(afpChain);
+				
 			} else {
-				fileName = getAutoFileName(afpChain);
+				return;
 			}
+			
+			// 
+			//else {
+			//	fileName = getAutoFileName(afpChain);
+			//}
 		} else 
 
 			if ( params.getOutFile() != null) {
@@ -551,7 +579,7 @@ public abstract class AbstractUserArgumentProcessor implements UserArgumentProce
 			System.err.println("Can't write outputfile. Either provide a filename using -outFile or set -autoOutputFile to true .");
 			return;
 		}
-		//System.out.println("writing results to " + fileName);
+		//System.out.println("writing results to " + fileName + " " + params.getSaveOutputDir());
 
 		FileOutputStream out; // declare a file output object
 		PrintStream p; // declare a print stream object
@@ -570,7 +598,8 @@ public abstract class AbstractUserArgumentProcessor implements UserArgumentProce
 		}
 		catch (Exception e)
 		{
-			System.err.println ("Error writing to file " + params.getOutFile());
+			e.printStackTrace();
+			System.err.println ("Error writing to file " + fileName);
 		}
 
 
@@ -579,7 +608,7 @@ public abstract class AbstractUserArgumentProcessor implements UserArgumentProce
 
 	private String getAutoFileName(AFPChain afpChain){
 		String fileName =afpChain.getName1()+"_" + afpChain.getName2()+"_"+afpChain.getAlgorithmName();
-
+		
 		if (params.isOutputPDB() )
 			fileName += ".pdb";
 		else
