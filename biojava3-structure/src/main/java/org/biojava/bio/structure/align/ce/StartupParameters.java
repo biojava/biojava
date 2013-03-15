@@ -11,6 +11,7 @@ public class StartupParameters {
 	
 	
 	String pdbFilePath;
+	String cacheFilePath;
 	String outFile;
 	String pdb1;
 	String pdb2;
@@ -54,24 +55,6 @@ public class StartupParameters {
 		if ( nrCPU < 1)
 			nrCPU = 1;
 	}
-	
-	
-
-	
-	
-	@Override
-   public String toString()
-   {
-      return "StartupParameters [alignPairs=" + alignPairs + ", searchFile=" + searchFile 
-    		+ ", autoFetch=" + autoFetch + ", file1=" + file1 + ", file2=" + file2
-            + ", flexible=" + flexible + ", maxGapSize=" + maxGapSize + ", outFile=" + outFile + ", pdb1=" + pdb1 + ", pdb2=" + pdb2
-            + ", pdbDirSplit=" + pdbDirSplit + ", pdbFilePath=" + pdbFilePath + ", printCE=" + printCE + ", printFatCat=" + printFatCat
-            + ", printXML=" + printXML + ", saveOutputDir=" + saveOutputDir + ", show3d=" + show3d + ", showDBresult=" + showDBresult
-            + ", showMenu=" + showMenu + ", showAFPRanges=" + showAFPRanges
-            + ", printPDB=" + printPDB 
-            + "]";
-   }
-
 	
 	/** An input file to be used for the DB search
 	 * 
@@ -190,6 +173,15 @@ public class StartupParameters {
 	public void setPdbFilePath(String pdbFilePath) {
 		this.pdbFilePath = pdbFilePath;
 	}
+	
+	public String getCacheFilePath() {
+		return cacheFilePath;
+	}
+
+	public void setCacheFilePath(String cacheFilePath) {
+		this.cacheFilePath = cacheFilePath;
+	}
+
 	public boolean isShow3d() {
 		return show3d;
 	}
@@ -301,11 +293,22 @@ public class StartupParameters {
 		this.maxOptRMSD = maxOptRMSD;
 	}
 
-
-
-
-	
-	
+	@Override
+	public String toString() {
+		return "StartupParameters [pdbFilePath=" + pdbFilePath
+				+ ", cacheFilePath=" + cacheFilePath + ", outFile=" + outFile
+				+ ", pdb1=" + pdb1 + ", pdb2=" + pdb2 + ", file1=" + file1
+				+ ", file2=" + file2 + ", showDBresult=" + showDBresult
+				+ ", printXML=" + printXML + ", printFatCat=" + printFatCat
+				+ ", show3d=" + show3d + ", autoFetch=" + autoFetch
+				+ ", flexible=" + flexible + ", pdbDirSplit=" + pdbDirSplit
+				+ ", printCE=" + printCE + ", showMenu=" + showMenu
+				+ ", showAFPRanges=" + showAFPRanges + ", printPDB=" + printPDB
+				+ ", maxOptRMSD=" + maxOptRMSD + ", alignPairs=" + alignPairs
+				+ ", searchFile=" + searchFile + ", saveOutputDir="
+				+ saveOutputDir + ", nrCPU=" + nrCPU + ", maxGapSize="
+				+ maxGapSize + "]";
+	}
 
 	
 }
