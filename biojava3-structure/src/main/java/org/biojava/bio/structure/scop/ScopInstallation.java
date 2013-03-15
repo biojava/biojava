@@ -125,10 +125,10 @@ public class ScopInstallation implements ScopDatabase {
 	/**
 	 * Create a new SCOP installation, downloading the file to "the right place".
 	 * This will first check for system properties or environmental variables
-	 * called 'PDB_DIR', or else will use a temporary directory
+	 * called 'CACHE_PDB_DIR', or else will use a temporary directory
 	 */
 	public ScopInstallation() {
-		this((new UserConfiguration()).getPdbFilePath());
+		this((new UserConfiguration()).getCacheFilePath());
 	}
 	public void ensureClaInstalled(){
 		if ( installedCla.get())
