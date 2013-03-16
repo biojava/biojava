@@ -62,7 +62,7 @@ public class AllChemCompProvider implements ChemCompProvider, Runnable{
 	public static void checkPath(){
 
 		UserConfiguration config = new UserConfiguration();
-		path = config.getPdbFilePath();
+		path = config.getCacheFilePath();
 		
 	}
 
