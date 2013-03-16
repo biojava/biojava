@@ -10,9 +10,13 @@
 	<artifactId>protein-comparison-tool</artifactId>
 	<name>protein-comparison-tool</name>
 	<url>http://source.rcsb.org</url>
-	<properties>
+	<properties>	
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.build.targetEncoding>UTF-8</project.build.targetEncoding>		
+		<maven.build.timestamp.format>yyyyMMdd</maven.build.timestamp.format>    	    	
+    	<timestamp>${maven.build.timestamp}</timestamp>		
 	</properties>
+	
 	<dependencies>
 		<dependency>
 			<groupId>junit</groupId>
@@ -41,6 +45,11 @@
 			<groupId>org.biojava</groupId>
 			<artifactId>biojava3-structure-gui</artifactId>
 			<version>3.0.6-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>net.sourceforge.jmol</groupId>
+			<artifactId>jmol</artifactId>
+			<version>13.0.12</version>
 		</dependency>		
 	</dependencies>
 
@@ -62,6 +71,10 @@
 						<goals>
 							<goal>single</goal>
 						</goals>
+						<configuration>
+							<finalName>${project.name}_${timestamp}</finalName>
+							<appendAssemblyId>false</appendAssemblyId>
+						</configuration>
 					</execution>
 				</executions>
 
