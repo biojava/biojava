@@ -91,7 +91,7 @@ public class FarmJobRunnable implements Runnable {
 		
 		// enforce to replace remediated files with new versions...
 		FileParsingParameters fparams = cache.getFileParsingParams();
-		fparams.setUpdateRemediatedFiles(true);
+		fparams.setUpdateRemediatedFiles(params.isUpdateRemediatedFiles());
 		
 		maxNrAlignments = params.getNrAlignments();
 		progressListeners = null;
