@@ -374,7 +374,6 @@ public class StructureAlignmentJmol implements MouseMotionListener, MouseListene
    }
 
    public void evalString(String rasmolScript){
-	   System.out.println(rasmolScript);
       if ( jmolPanel == null ){
          System.err.println("please install Jmol first");
          return;
