@@ -75,17 +75,6 @@ public class FarmJobParameters {
 		this.cacheFilePath = cacheFilePath;
 	}
 
-
-	@Override
-	public String toString() {
-		return "FarmJobParameters [nrAlignments=" + nrAlignments + ", time="
-				+ time + ", threads=" + threads + ", server=" + server
-				+ ", pdbFilePath=" + pdbFilePath + ", pdbDirSplit="
-				+ pdbDirSplit + ", username=" + username + ", runBackground="
-				+ runBackground + ", verbose=" + verbose + ", stepSize="
-				+ stepSize + ", cacheFilePath=" + cacheFilePath + "]";
-	}
-
 	public int getNrAlignments() {
 		return nrAlignments;
 	}
@@ -178,6 +167,18 @@ public class FarmJobParameters {
 
 	public void setUpdateRemediatedFiles(boolean updateRemediatedFiles) {
 		this.updateRemediatedFiles = updateRemediatedFiles;
+	}
+
+	@Override
+	public String toString() {
+		return "FarmJobParameters [nrAlignments=" + nrAlignments + ", time="
+				+ time + ", threads=" + threads + ", server=" + server
+				+ ", pdbFilePath=" + pdbFilePath + ", pdbDirSplit="
+				+ pdbDirSplit + ", username=" + username + ", runBackground="
+				+ runBackground + ", verbose=" + verbose
+				+ ", updateRemediatedFiles=" + updateRemediatedFiles
+				+ ", stepSize=" + stepSize + ", cacheFilePath=" + cacheFilePath
+				+ "]";
 	}
 	
 	
