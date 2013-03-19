@@ -30,6 +30,7 @@ public class FarmJobParameters {
 	String username;
 	boolean runBackground;
 	boolean verbose;
+	boolean updateRemediatedFiles;
 	int stepSize;
 	String cacheFilePath;
 
@@ -43,7 +44,7 @@ public class FarmJobParameters {
 		pdbDirSplit = DEFAULT_DIR_SPLIT;
 		runBackground = false;
 		cacheFilePath = DEFAULT_PDB_PATH;
-		
+		updateRemediatedFiles = false;
 		String nrPairsProp = resourceManager.getString(DEFAULT_BATCH_SIZE_PROP);
 		
 		stepSize = 	DEFAULT_BATCH_SIZE;
@@ -169,6 +170,14 @@ public class FarmJobParameters {
 
 	public void setVerbose(boolean verbose) {
 		this.verbose = verbose;
+	}
+
+	public boolean isUpdateRemediatedFiles() {
+		return updateRemediatedFiles;
+	}
+
+	public void setUpdateRemediatedFiles(boolean updateRemediatedFiles) {
+		this.updateRemediatedFiles = updateRemediatedFiles;
 	}
 	
 	
