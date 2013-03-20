@@ -358,7 +358,7 @@ public class CeCPMain extends CeMain {
 		assert(pos == alignLen);
 
 		// Sets the rotation matrix in ceCalc to the proper value
-		double rmsd;
+		double rmsd = -1;
 		double[] blockRMSDs = new double[blocks.size()];
 		Matrix[] blockRotationMatrices = new Matrix[blocks.size()];
 		Atom[] blockShifts = new Atom[blocks.size()];
@@ -370,7 +370,7 @@ public class CeCPMain extends CeMain {
 			blockShifts[0] = ceCalc.getShift();
 
 			for(int i=1;i<blocks.size();i++) {
-				blockRMSDs[i] = rmsd;
+				blockRMSDs[i] = rmsd; //TODO shouldn't this be recalculated?? --sbliven
 				
 				// Don't move blocks relative to the first block
 				/*Matrix identity = new Matrix(3,3);
@@ -390,7 +390,8 @@ public class CeCPMain extends CeMain {
 		newAFPChain.setBlockRmsd(blockRMSDs);
 		newAFPChain.setBlockRotationMatrix(blockRotationMatrices);
 		newAFPChain.setBlockShiftVector(blockShifts);
-
+		newAFPChain.setTotalRmsdOpt(rmsd);
+		
 		// Clean up remaining properties using the FatCat helper method
 		Atom[] ca2 = new Atom[ca2len];
 		for(int i=0;i<ca2len;i++) {

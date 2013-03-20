@@ -244,6 +244,8 @@ public class SVDSuperimposer {
 
     /** Calculate the RMS (root mean square) deviation of two sets of atoms.
      *
+     * Atom sets must be pre-rotated.
+     * 
      * @param atomSet1 atom array 1
      * @param atomSet2 atom array 2
      * @return the RMS of two atom sets
@@ -270,6 +272,8 @@ public class SVDSuperimposer {
 
     /**
      * Calculate the TM-Score for the superposition.
+     * 
+     * Atom sets must be pre-rotated.
      * 
      * <p>Citation:<br/>
      * <i>Zhang Y and Skolnick J (2004). "Scoring function for automated assessment 

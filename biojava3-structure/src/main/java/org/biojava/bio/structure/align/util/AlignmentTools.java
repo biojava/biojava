@@ -2,6 +2,7 @@ package org.biojava.bio.structure.align.util;
 
 import java.util.AbstractMap;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -16,7 +17,9 @@ import org.biojava.bio.structure.Atom;
 import org.biojava.bio.structure.Calc;
 import org.biojava.bio.structure.ResidueNumber;
 import org.biojava.bio.structure.SVDSuperimposer;
+import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureException;
+import org.biojava.bio.structure.StructureTools;
 import org.biojava.bio.structure.align.ce.CECalculator;
 import org.biojava.bio.structure.align.model.AFPChain;
 import org.biojava.bio.structure.align.xml.AFPChainXMLParser;
@@ -576,7 +579,7 @@ public class AlignmentTools {
 	 * TM-Score.
 	 * @param afpChain
 	 * @param ca1
-	 * @param ca2
+	 * @param ca2 Second set of ca atoms. Will be modified based on the superposition
 	 * @throws StructureException
 	 * @see {@link CECalculator#calc_rmsd(Atom[], Atom[], int, boolean, boolean)}
 	 *  contains much of the same code, but stores results in a CECalculator
@@ -610,18 +613,31 @@ public class AlignmentTools {
 		Atom shift = svd.getTranslation();
 		
 		// Apply transformation to ca2
-		for(Atom a : ca2) {
-			Calc.rotate(a.getGroup(), matrix);
-			Calc.shift(a.getGroup(), shift);
+		if(ca2.length>0 && ca2[0].getGroup() != null &&
+				ca2[0].getGroup().getChain() != null &&
+				ca2[0].getGroup().getChain().getParent() != null) {
+			// Assume that ca2 comes from a single structure for efficiency
+			Structure struct = ca2[0].getGroup().getChain().getParent();
+			Calc.rotate(struct, matrix);
+			Calc.shift(struct, shift);
+		} else {
+			// No underlying structure, so do groups individually
+			for(Atom a : ca2) {
+				Calc.rotate(a.getGroup(), matrix);
+				Calc.shift(a.getGroup(), shift);
+			}
 		}
 		
-		double rmsd = svd.getRMS(ca1, ca2);
-		double tm = svd.getTMScore(aln1, aln2, ca1.length, ca2.length);
+		double rms = SVDSuperimposer.getRMS(ca1, ca2);
+		double tm = SVDSuperimposer.getTMScore(aln1, aln2, ca1.length, ca2.length);
 
 		// Store new transformation back to AFPChain
 		//TODO convolve current superposition with previous transformation?
-		afpChain.setTotalRmsdOpt(rmsd);
-		afpChain.setOptRmsd(null);
-		afpChain.setBlockRmsd(null);
+		afpChain.setTotalRmsdOpt(Math.sqrt(rms));
+		afpChain.setTMScore(tm);
+		double[] dummy = new double[blockNum];
+		Arrays.fill(dummy, -1.);
+		afpChain.setOptRmsd(dummy);
+		afpChain.setBlockRmsd(dummy);
 	}
 }
