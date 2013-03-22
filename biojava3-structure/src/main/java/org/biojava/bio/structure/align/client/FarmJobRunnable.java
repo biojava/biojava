@@ -30,7 +30,10 @@ import org.biojava.bio.structure.align.util.AtomCache;
 import org.biojava.bio.structure.align.util.ResourceManager;
 import org.biojava.bio.structure.align.xml.AFPChainXMLConverter;
 import org.biojava.bio.structure.align.xml.PdbPairsMessage;
+import org.biojava.bio.structure.domain.RemotePDPProvider;
 import org.biojava.bio.structure.io.FileParsingParameters;
+import org.biojava.bio.structure.scop.RemoteScopInstallation;
+import org.biojava.bio.structure.scop.ScopFactory;
 import org.biojava3.core.util.FlatFileCache;
 import org.biojava3.core.util.PrettyXMLWriter;
 
@@ -88,6 +91,22 @@ public class FarmJobRunnable implements Runnable {
 
 		// multiple farm jobs share the same SoftHashMap for caching coordinates
 		cache = new AtomCache( params.getPdbFilePath(), params.isPdbDirSplit());
+		
+		
+		if ( params.getServer()!= null && (!params.getServer().equals("") ) ) {
+			RemotePDPProvider pdpprovider = new RemotePDPProvider();
+		
+			pdpprovider.setServer(params.getServer()+"/domains/");
+			
+			cache.setPdpprovider(pdpprovider);
+			
+			RemoteScopInstallation scop = new RemoteScopInstallation();
+			
+			scop.setServer(params.getServer()+"/domains/");
+			ScopFactory.setScopDatabase(scop);
+			
+		}
+		
 		
 		// enforce to replace remediated files with new versions...
 		FileParsingParameters fparams = cache.getFileParsingParams();
