@@ -84,6 +84,7 @@ public class FarmJobRunnable implements Runnable {
 	boolean verbose = false;
 	String version = null;
 	
+	private static final String alignURL = "/align/";
 	public FarmJobRunnable(FarmJobParameters params){
 		terminated = false;
 		this.params = params;
@@ -92,17 +93,26 @@ public class FarmJobRunnable implements Runnable {
 		// multiple farm jobs share the same SoftHashMap for caching coordinates
 		cache = new AtomCache( params.getPdbFilePath(), params.isPdbDirSplit());
 		
-		
+			
 		if ( params.getServer()!= null && (!params.getServer().equals("") ) ) {
+			
 			RemotePDPProvider pdpprovider = new RemotePDPProvider();
 		
-			pdpprovider.setServer(params.getServer()+"/domains/");
+			String serverURL = params.getServer();
+			if ( ! serverURL.endsWith("/"))
+				serverURL += "/";
+			
+			if (  serverURL.endsWith(alignURL)) {
+				serverURL = serverURL.substring(0,serverURL.length()-alignURL.length());
+			}
+			
+			pdpprovider.setServer(serverURL+"/domains/");
 			
 			cache.setPdpprovider(pdpprovider);
 			
 			RemoteScopInstallation scop = new RemoteScopInstallation();
 			
-			scop.setServer(params.getServer()+"/domains/");
+			scop.setServer(serverURL+"/domains/");
 			ScopFactory.setScopDatabase(scop);
 			
 		}
