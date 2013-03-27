@@ -93,7 +93,8 @@ public class AtomCache {
 	boolean autoFetch;
 	boolean isSplit;
 	boolean strictSCOP;
-	FileParsingParameters params;
+	
+	protected FileParsingParameters params;
 
 	private boolean fetchFileEvenIfObsolete;
 
@@ -647,8 +648,10 @@ public class AtomCache {
 
 	}
 
-	private Structure loadStructureFromByPdbId(String pdbId)
+	protected Structure loadStructureFromByPdbId(String pdbId)
 			throws StructureException {
+		
+		
 		Structure s;
 		flagLoading(pdbId);
 		try {
@@ -668,6 +671,7 @@ public class AtomCache {
 			throw new StructureException(e.getMessage() + " while parsing " + pdbId,e);
 		}
 		flagLoadingFinished(pdbId);
+		
 		return s;
 	}
 
@@ -924,12 +928,12 @@ public class AtomCache {
 
 	}
 
-	private  void flagLoading(String name){
+	protected  void flagLoading(String name){
 		if ( ! currentlyLoading.contains(name))	
 			currentlyLoading.add(name);
 	}
 
-	private  void flagLoadingFinished(String name){
+	protected  void flagLoadingFinished(String name){
 		currentlyLoading.remove(name);   
 	}
 
