@@ -29,9 +29,8 @@ import org.biojava.bio.structure.Atom;
 import org.biojava.bio.structure.Calc;
 import org.biojava.bio.structure.StructureException;
 import org.biojava.bio.structure.align.helper.JointFragments;
-import org.biojava.bio.structure.gui.JMatrixPanel;
-import org.biojava.bio.structure.gui.ScaleableMatrixPanel;
 import org.biojava.bio.structure.jama.Matrix;
+
 
 /** A class to listen to progress of the structure alignmnent calcualtions
  *
@@ -66,7 +65,7 @@ public class AlignmentProgressListener
       System.out.println("got: " + fragments.size() + " fragments");
 
       String title = "Initial FragmentPairs for:" +  n1 + "("+l1+")"+ " vs. " + n2 + " ("+l2+")";
-      ScaleableMatrixPanel panel = new ScaleableMatrixPanel();
+     // ScaleableMatrixPanel panel = new ScaleableMatrixPanel();
 
 
       Matrix m = new Matrix(l1,l2,99);
@@ -99,7 +98,7 @@ public class AlignmentProgressListener
          }
 
       }
-      panel.setMatrix(m);
+    //  panel.setMatrix(m);
       JFrame frame = new JFrame();
 
       frame.setTitle(title);
@@ -114,7 +113,7 @@ public class AlignmentProgressListener
 
 
       });
-      frame.getContentPane().add(panel);
+      //frame.getContentPane().add(panel);
       frame.pack();
       frame.setVisible(true);
 
@@ -127,7 +126,7 @@ public class AlignmentProgressListener
       System.out.println("numberof Joint fragments: " + fragments.length);
 
       String title = "JointFragment for:" +  n1 + "("+l1+")"+ " vs. " + n2 + " ("+l2+")";
-      ScaleableMatrixPanel panel = new ScaleableMatrixPanel();
+     // ScaleableMatrixPanel panel = new ScaleableMatrixPanel();
 
       Matrix m = new Matrix(l1,l2,99);
 
@@ -136,7 +135,7 @@ public class AlignmentProgressListener
             m.set(idx[0],idx[1],p.getRms());
          }
       }
-      panel.setMatrix(m);
+     // panel.setMatrix(m);
       JFrame frame = new JFrame();
 
       frame.setTitle(title);
@@ -151,7 +150,7 @@ public class AlignmentProgressListener
 
 
       });
-      frame.getContentPane().add(panel);
+     // frame.getContentPane().add(panel);
       frame.pack();
       frame.setVisible(true);
 

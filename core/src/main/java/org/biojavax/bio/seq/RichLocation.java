@@ -44,6 +44,7 @@ import org.biojavax.ontology.ComparableTerm;
  * annotations, and cross-references to other databases. Also includes strands.
  * 
  * @author Richard Holland
+ * @author George Waldon - bug fix
  * @since 1.5
  */
 public interface RichLocation extends Location, RichAnnotatable, Comparable {
@@ -366,9 +367,10 @@ public interface RichLocation extends Location, RichAnnotatable, Comparable {
 		public static RichLocation construct(Collection<Location> members) {
 			if (members.size() == 0)
 				return RichLocation.EMPTY_LOCATION;
-			else if (members.size() == 1)
-				return members.toArray(new SimpleRichLocation[0])[0];
-			else if (isMultiSource(members))
+			else if (members.size() == 1){
+                            Location loc =  members.toArray(new Location[0])[0];
+                            return RichLocation.Tools.enrich(loc);
+                        } else if (isMultiSource(members))
 				return new MultiSourceCompoundRichLocation(members);
 			else
 				return new CompoundRichLocation(members);
@@ -424,10 +426,10 @@ public interface RichLocation extends Location, RichAnnotatable, Comparable {
 			// operations
 			if (membersList.size() > 1) {
 				for (int p = 0; p < (membersList.size() - 1); p++) {
-					RichLocation parent = (RichLocation) membersList.get(p);
+					Location parent = membersList.get(p);
 					for (int c = p + 1; c < membersList.size(); c++) {
-						RichLocation child = (RichLocation) membersList.get(c);
-						RichLocation union = (RichLocation) parent.union(child);
+						Location child = membersList.get(c);
+						Location union = parent.union(child);
 						// if parent can merge with child
 						if (union.isContiguous()) {
 							// replace parent with union
@@ -435,7 +437,8 @@ public interface RichLocation extends Location, RichAnnotatable, Comparable {
 							// remove child
 							membersList.remove(c);
 							// check all children again
-							c = p + 1;
+							p--;
+                                                        break;
 						}
 					}
 				}
@@ -469,7 +472,7 @@ public interface RichLocation extends Location, RichAnnotatable, Comparable {
 		public static Collection<Location> flatten(Collection<Location> members) {
 			List<Location> flattened = new ArrayList<Location>(members);
 			for (int i = 0; i < flattened.size(); i++) {
-				RichLocation member = (RichLocation) flattened.get(i);
+				Location member = flattened.get(i);
 				if (!member.isContiguous()) {
 					flattened.remove(i);
 					int insertPos = i;

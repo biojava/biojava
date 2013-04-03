@@ -21,15 +21,13 @@
 
 package org.biojava.bio.structure.io;
 
-import org.biojava.bio.BioException;
-
 /**
  * An exception during the parsing of a PDB file.
  *
- * @author Andreas Prlic, Thomas Down, Benjamin Schuster-Böckler
+ * @author Andreas Prlic, Thomas Down, Benjamin Schuster-Bï¿½ckler
  */
 
-public class PDBParseException extends BioException {
+public class PDBParseException extends Exception{
     public static final long serialVersionUID = 219047230178423923l;
     /**
      * Constructs a PDBParseException object.
@@ -39,17 +37,6 @@ public class PDBParseException extends BioException {
     
     public PDBParseException(String s) {
         super(s);
-    }
-    /**
-     * Constructs a PDBParseException object.
-     *
-     * @param t  a Throwable object
-     * @param s  a String ...
-     * @deprecated use new BioException(message, ex) instead
-     */
-    
-    public PDBParseException (Throwable t, String s) {
-        super(t, s);
     }
     /**
      * Constructs a PDBParseException object.

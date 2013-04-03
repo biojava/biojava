@@ -26,6 +26,8 @@ import java.io.IOException;
 import java.lang.reflect.Method;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -39,7 +41,7 @@ public class InteractionDasSource extends Das1Source{
     private boolean isConverted; // if the query has been converted from e.g. uniprot to entrez
     private boolean registered ; // a flag to trace if source comes from registry or from user config
     public static String DEFAULT_NICKNAME = "ownSource";
-    public static String DEFAULT_CAPABILITY = "interaction";
+    public static Capabilities DEFAULT_CAPABILITY = Capabilities.INTERACTION;
         
     
     /**
@@ -53,8 +55,10 @@ public class InteractionDasSource extends Das1Source{
         isActive = true;  // default source is actived and used .
         registered = true; // default true = source comes from registry
         setNickname(DEFAULT_NICKNAME);
-        String[] caps = new String[1];
-        caps[0] = DEFAULT_CAPABILITY;
+        ////String[] caps = new String[1];
+        //caps[0] = DEFAULT_CAPABILITY;
+       ArrayList<Capabilities> caps=new ArrayList();
+       caps.add(DEFAULT_CAPABILITY);
         setCapabilities(caps);
     }
     
@@ -132,9 +136,9 @@ public class InteractionDasSource extends Das1Source{
      */
     public boolean getIsCompatible(DasCoordinateSystem queryCoordSys){
     	if (queryCoordSys != null){
-    		DasCoordinateSystem[] cse = this.getCoordinateSystem();
-    		for (int i = 0; i < cse.length; i++){
-    			if (cse[i].equals(queryCoordSys)){
+    		List<DasCoordinateSystem> cse = this.getCoordinateSystem();
+    		for (int i = 0; i < cse.size(); i++){
+    			if (cse.get(i).equals(queryCoordSys)){
     				this.isCompatible = true;
     				return true;
     			}
@@ -225,21 +229,21 @@ public class InteractionDasSource extends Das1Source{
         
         // coordinateSystems
         xw.openTag("coordinateSystems");
-        DasCoordinateSystem[] coords = getCoordinateSystem();
-        for (int i = 0; i < coords.length; i++){
+        List<DasCoordinateSystem> coords = getCoordinateSystem();
+        for (int i = 0; i < coords.size(); i++){
             xw.openTag("coordinateSystem");
-            xw.attribute("name",coords[i].toString());
-            xw.attribute("uniqId",coords[i].getUniqueId());
+            xw.attribute("name",coords.get(i).toString());
+            xw.attribute("uniqId",coords.get(i).getUniqueId());
             xw.closeTag("coordinateSystem");
         } 
         xw.closeTag("coordinateSystems");
         
         // capabilities
         xw.openTag("capabilities");
-        String[] caps = getCapabilities();
-        for (int i = 0; i < caps.length; i++){
+        List<Capabilities> caps = getCapabilities();
+        for (int i = 0; i < caps.size(); i++){
             xw.openTag("capability");
-            xw.attribute("service",caps[i]);
+            xw.attribute("service",caps.get(i).toString());
             xw.closeTag("capability");
         } 
         xw.closeTag("capabilities");

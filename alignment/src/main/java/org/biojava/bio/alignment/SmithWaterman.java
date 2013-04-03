@@ -412,6 +412,7 @@ public class SmithWaterman extends NeedlemanWunsch {
 				// Don't waste any memory.
 				int value = scoreMatrix[maxI][maxJ];
 				scoreMatrix = null;
+				pairalign.setScore(value);
 				// Runtime.getRuntime().gc();
 				return value;
 

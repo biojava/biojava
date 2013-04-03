@@ -26,9 +26,11 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.biojava.dasobert.das.Capabilities;
 import org.biojava.dasobert.das.DasTimeFormat;
 import org.biojava.dasobert.das2.Das2Capability;
 import org.biojava.dasobert.das2.Das2CapabilityImpl;
@@ -103,10 +105,10 @@ public class DasSourceWriterImpl implements DasSourceWriter {
 		xw.attribute("created", DasTimeFormat.toDASString(d));
 
 		// System.out.println("before coords");
-		DasCoordinateSystem[] coords = source.getCoordinateSystem();
+		List<DasCoordinateSystem> coords = source.getCoordinateSystem();
 
-		for (int i = 0; i < coords.length; i++) {
-			DasCoordinateSystem co = coords[i];
+		for (int i = 0; i < coords.size(); i++) {
+			DasCoordinateSystem co = coords.get(i);
 			writeCoordinateSystem(xw, co);
 
 		}
@@ -128,9 +130,9 @@ public class DasSourceWriterImpl implements DasSourceWriter {
 
 		} else if (source instanceof Das1Source) {
 			// System.out.println("das1source");
-			String[] capabilities = source.getCapabilities();
-			for (int i = 0; i < capabilities.length; i++) {
-				String c = capabilities[i];
+			List<Capabilities> capabilities = source.getCapabilities();
+			for (int i = 0; i < capabilities.size(); i++) {
+				Capabilities c = capabilities.get(i);
 				xw.openTag("CAPABILITY");
 				xw.attribute("type", Das2CapabilityImpl.DAS1_CAPABILITY_PREFIX
 						+ c);
@@ -140,14 +142,14 @@ public class DasSourceWriterImpl implements DasSourceWriter {
 
 		}
 
-		String[] labels = source.getLabels();
+		List<String> labels = source.getLabels();
 		if (labels != null) {
 
-			for (int i = 0; i < labels.length; i++) {
+			for (int i = 0; i < labels.size(); i++) {
 
 				xw.openTag("PROP");
 				xw.attribute("name", Das2SourceHandler.LABELPROPERTY);
-				xw.attribute("value", labels[i]);
+				xw.attribute("value", labels.get(i));
 				xw.closeTag("PROP");
 			}
 

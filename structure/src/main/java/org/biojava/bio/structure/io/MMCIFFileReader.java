@@ -66,16 +66,21 @@ public class MMCIFFileReader implements StructureIOFile {
 	String path;
 	List<String> extensions;
 	boolean autoFetch;
-
+	boolean pdbDirectorySplit;
+	public static final String lineSplit = System.getProperty("file.separator");
+	
+	boolean headerOnly;
+	
 	public static void main(String[] args){
-		String filename =  "/Users/andreas/WORK/PDB/mmcif_files/a9/2a9w.cif.gz" ;
+		//String filename =  "/Users/andreas/WORK/PDB/mmcif_files/a9/2a9w.cif.gz" ;
 
 		StructureIOFile reader = new MMCIFFileReader();
+		reader.setPath("/Users/ap3/WORK/PDB/");
 		reader.setAutoFetch(true);
 		try{
-			Structure struc = reader.getStructure(filename);
+			Structure struc = reader.getStructureById("1gng");
 			System.out.println(struc);
-
+			System.out.println(struc.toPDB());
 
 
 		} catch (Exception e) {
@@ -94,6 +99,7 @@ public class MMCIFFileReader implements StructureIOFile {
 		extensions.add(".mmcif.gz");
 
 		autoFetch     = false;
+		headerOnly    = false;
 
 	}
 
@@ -143,10 +149,11 @@ public class MMCIFFileReader implements StructureIOFile {
 
 		SimpleMMcifConsumer consumer = new SimpleMMcifConsumer();
 
+		consumer.setHeaderOnly(headerOnly);
+		
 		// The Consumer builds up the BioJava - structure object.
 		// you could also hook in your own and build up you own data model.
 		parser.addMMcifConsumer(consumer);
-
 
 		parser.parse(new BufferedReader(new InputStreamReader(inStream)));
 
@@ -177,16 +184,30 @@ public class MMCIFFileReader implements StructureIOFile {
 	}
 
 	private InputStream getInputStream(String pdbId) throws IOException{
+		
+		if ( pdbId.length() < 4)
+			throw new IOException("the provided ID does not look like a PDB ID : " + pdbId);
+		
 		InputStream inputStream =null;
 
 		String pdbFile = null ;
 		File f = null ;
 
 		// this are the possible PDB file names...
-		String fpath = path+"/"+pdbId;
-		//String ppath = path +"/pdb"+pdbId;
+		String fpath ;
+		String ppath ;
 
-		String[] paths = new String[]{fpath,};
+		if ( pdbDirectorySplit){
+			// pdb files are split into subdirectories based on their middle position...
+			String middle = pdbId.substring(1,3).toLowerCase();
+			fpath = path+lineSplit + middle + lineSplit + pdbId;
+			ppath = path +lineSplit +  middle + lineSplit + "pdb"+pdbId;
+		} else {
+			fpath = path+lineSplit + pdbId;
+			ppath = path +lineSplit + "pdb"+pdbId;
+		}
+
+		String[] paths = new String[]{fpath,ppath};
 
 		for ( int p=0;p<paths.length;p++ ){
 			String testpath = paths[p];
@@ -240,14 +261,30 @@ public class MMCIFFileReader implements StructureIOFile {
 
 	public File downloadPDB(String pdbId){
 
-		File tempFile = new File(path+"/"+pdbId+".cif.gz");
-		File pdbHome = new File(path);
-
-		if ( ! pdbHome.canWrite() ){
-			System.err.println("can not write to " + pdbHome);
-			return null;
+		if ((path == null) || (path.equals(""))){
+			System.err.println("you did not set the path in PDBFileReader, don;t know where to write the downloaded file to");
+			System.err.println("assuming default location is local directory.");
+			path = ".";
 		}
+				
+		File tempFile ;
 
+		if ( pdbDirectorySplit) {
+			String middle = pdbId.substring(1,3).toLowerCase();
+			String dir = path+lineSplit+middle;
+			File directoryCheck = new File (dir);
+			if ( ! directoryCheck.exists()){
+				directoryCheck.mkdir();
+			}
+
+			tempFile = new File(dir+lineSplit+ pdbId.toLowerCase()+".cif.gz");
+
+		} else {
+
+			tempFile = new File(path+lineSplit+pdbId.toLowerCase()+".cif.gz");
+		}
+		
+		
 		String ftp = String.format("ftp://ftp.wwpdb.org/pub/pdb/data/structures/all/mmCIF/%s.cif.gz", pdbId.toLowerCase());
 
 		System.out.println("Fetching " + ftp);
@@ -288,6 +325,32 @@ public class MMCIFFileReader implements StructureIOFile {
 
 	}
 
+	/** Flag that defines if the PDB directory is containing all PDB files or is split into sub dirs (like the FTP site).
+	 *  
+	 * @return boolean. default is false (all files in one directory)
+	 */
+	public boolean isPdbDirectorySplit() {
+		return pdbDirectorySplit;
+	}
+
+	/** Flag that defines if the PDB directory is containing all PDB files or is split into sub dirs (like the FTP site).
+	 *  
+	 * @param boolean. If set to false all files are in one directory.
+	 */
+	public void setPdbDirectorySplit(boolean pdbDirectorySplit) {
+		this.pdbDirectorySplit = pdbDirectorySplit;
+	}
+
+
+	public boolean isHeaderOnly() {
+		return headerOnly;
+	}
+
+
+	public void setHeaderOnly(boolean flag) {
+		headerOnly = flag;
+		
+	}
 
 
 }

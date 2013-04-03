@@ -124,10 +124,10 @@ public class PDBFileParser  {
 
 	private final boolean DEBUG = false;
 
-        private Logger logger = Logger.getLogger(PDBFileParser.class.getName());
+	private Logger logger = Logger.getLogger(PDBFileParser.class.getName());
 
 	// required for parsing:
-    private String pdbId; //the actual id of the entry
+	private String pdbId; //the actual id of the entry
 	private Structure     structure;
 	private List<Chain>   current_model; // contains the ATOM records for each model
 	private Chain         current_chain;
@@ -142,7 +142,7 @@ public class PDBFileParser  {
 
 	private Map <String,Object>  header ;
 	private PDBHeader pdbHeader;
-    private JournalArticle journalArticle;
+	private JournalArticle journalArticle;
 	private List<Map<String, Integer>> connects ;
 	private List<Map<String,String>> helixList;
 	private List<Map<String,String>> strandList;
@@ -156,7 +156,7 @@ public class PDBFileParser  {
 	private List<Compound> compounds = new ArrayList<Compound>();
 	private List<String> compndLines = new ArrayList<String>();
 	private List<String> sourceLines = new ArrayList<String>();
-    private List<String> journalLines = new ArrayList<String>();
+	private List<String> journalLines = new ArrayList<String>();
 	private List<DBRef> dbrefs;
 
 	// for parsing COMPOUND and SOURCE Header lines
@@ -245,6 +245,8 @@ public class PDBFileParser  {
 	 *
 	 */
 	public boolean parseCAOnly;
+
+	private boolean headerOnly;
 
 
 	static {
@@ -389,7 +391,13 @@ public class PDBFileParser  {
 			}
 		}
 		else {
-			group = new HetatomImpl();
+			if (aminoCode1 != null ) {
+				AminoAcidImpl aa = new AminoAcidImpl() ;
+				aa.setAminoType(aminoCode1);
+				group = aa ;
+			} else {
+				group = new HetatomImpl();
+			}
 		}
 		//System.out.println("new group type: "+ group.getType() );
 		return  group ;
@@ -419,10 +427,10 @@ public class PDBFileParser  {
 		String deposition_date = line.substring (50, 59).trim() ;
 		String pdbCode         = line.substring (62, 66).trim() ;
 
-        pdbId = pdbCode;
-        if (DEBUG) {
-            System.out.println("Parsing entry " + pdbId);
-        }
+		pdbId = pdbCode;
+		if (DEBUG) {
+			System.out.println("Parsing entry " + pdbId);
+		}
 		header.put("idCode",pdbCode);
 		structure.setPDBCode(pdbCode);
 		header.put("classification",classification);
@@ -458,15 +466,15 @@ public class PDBFileParser  {
 	 */
 	private void pdb_AUTHOR_Handler(String line) {
 
-	   String authors = line.substring(10).trim();
+		String authors = line.substring(10).trim();
 
-	   String auth = pdbHeader.getAuthors();
-	   if (auth == null){
-	      pdbHeader.setAuthors(authors);
-	   } else {
-	      auth +=  authors;
-	      pdbHeader.setAuthors(auth);
-	   }
+		String auth = pdbHeader.getAuthors();
+		if (auth == null){
+			pdbHeader.setAuthors(authors);
+		} else {
+			auth +=  authors;
+			pdbHeader.setAuthors(auth);
+		}
 
 	}
 
@@ -836,7 +844,6 @@ public class PDBFileParser  {
 
 		}
 
-
 		while (subSequenceResidues.hasMoreTokens()) {
 
 			String threeLetter = subSequenceResidues.nextToken();
@@ -871,7 +878,6 @@ public class PDBFileParser  {
 
 		current_group = null;
 		current_chain = null;
-		//structure.setSeqRes(seqResChains);
 
 		//		 the current chain is finished!
 		//if ( current_chain.getLength() != lengthCheck ){
@@ -912,11 +918,11 @@ public class PDBFileParser  {
 		pdbHeader.setTitle(t);
 	}
 
-     /**
-     * JRNL handler.
-     * The JRNL record contains the primary literature citation that describes the experiment which resulted
-     * in the deposited coordinate set. There is at most one JRNL reference per entry. If there is no primary
-     * reference, then there is no JRNL reference. Other references are given in REMARK 1.
+	/**
+	 * JRNL handler.
+	 * The JRNL record contains the primary literature citation that describes the experiment which resulted
+	 * in the deposited coordinate set. There is at most one JRNL reference per entry. If there is no primary
+	 * reference, then there is no JRNL reference. Other references are given in REMARK 1.
 
     Record Format
 
@@ -926,24 +932,24 @@ public class PDBFileParser  {
 
     13 - 70       LString        text         See Details below.
 
-     */
-    private void pdb_JRNL_Handler(String line) {
-        //add the strings to the journalLines
-        //the actual JournalArticle is then built when the whole entry is being
-        //finalized with triggerEndFileChecks()
-        //JRNL        TITL   NMR SOLUTION STRUCTURE OF RECOMBINANT TICK           1TAP  10
-        if (line.substring(line.length() - 8, line.length() - 4).equals(pdbId)) {
-            //trim off the trailing PDB id from legacy files.
-            //are we really trying to still cater for these museum pieces?
-            if (DEBUG) {
-                System.out.println("trimming legacy PDB id from end of JRNL section line");
-            }
-            line = line.substring(0, line.length() - 8);
-            journalLines.add(line);
-        } else {
-            journalLines.add(line);
-        }
-    }
+	 */
+	private void pdb_JRNL_Handler(String line) {
+		//add the strings to the journalLines
+		//the actual JournalArticle is then built when the whole entry is being
+		//finalized with triggerEndFileChecks()
+		//JRNL        TITL   NMR SOLUTION STRUCTURE OF RECOMBINANT TICK           1TAP  10
+		if (line.substring(line.length() - 8, line.length() - 4).equals(pdbId)) {
+			//trim off the trailing PDB id from legacy files.
+			//are we really trying to still cater for these museum pieces?
+			if (DEBUG) {
+				System.out.println("trimming legacy PDB id from end of JRNL section line");
+			}
+			line = line.substring(0, line.length() - 8);
+			journalLines.add(line);
+		} else {
+			journalLines.add(line);
+		}
+	}
 
 	/**
 	 * This should not be accessed directly, other than by </code>makeCompounds</code>. It still deals with the same
@@ -1077,9 +1083,9 @@ public class PDBFileParser  {
 						+ value);
 			int i = -1;
 			try {
-			   i = Integer.valueOf(value);
+				i = Integer.valueOf(value);
 			} catch (NumberFormatException e){
-			   System.err.println(e.getMessage() + " while trying to parse COMPND line.");
+				System.err.println(e.getMessage() + " while trying to parse COMPND line.");
 			}
 			if (molTypeCounter != i) {
 				molTypeCounter++;
@@ -1513,6 +1519,111 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 	throws PDBParseException
 	{
 
+		// build up chains first.
+		// headerOnly just goes down to chain resolution.
+
+		boolean startOfNewChain = false;
+
+		String chain_id      = line.substring(21,22);
+
+		if (current_chain == null) {
+			current_chain = new ChainImpl();
+			current_chain.setName(chain_id);
+			startOfNewChain = true;
+			current_model.add(current_chain);		
+		}
+
+
+		if ( ! chain_id.equals(current_chain.getName()) ) {
+
+			startOfNewChain = true;
+
+			// end up old chain...
+			current_chain.addGroup(current_group);
+
+			// see if old chain is known ...
+			Chain testchain ;
+			testchain = isKnownChain(current_chain.getName(),current_model);
+
+			//System.out.println("trying to re-using known chain " + current_chain.getName() + " " + chain_id);		
+			if ( testchain != null && testchain.getName().equals(chain_id)){
+				//System.out.println("re-using known chain " + current_chain.getName() + " " + chain_id);				
+
+			} else {
+
+				testchain = isKnownChain(chain_id,current_model);
+			}
+
+			if ( testchain == null) {
+				//System.out.println("unknown chain. creating new chain.");
+
+				current_chain = new ChainImpl();
+				current_chain.setName(chain_id);
+
+			}   else {
+				current_chain = testchain;
+			}
+
+			if ( ! current_model.contains(current_chain))
+				current_model.add(current_chain);
+
+
+		} 
+
+		// process group data:
+		// join residue numbers and insertion codes together
+		String recordName     = line.substring (0, 6).trim ();
+		String residueNumber  = line.substring(22,27).trim();
+		String groupCode3     = line.substring(17,20);
+
+		Character aminoCode1 = null;
+
+		if ( recordName.equals("ATOM") ){
+			aminoCode1 = StructureTools.get1LetterCode(groupCode3);
+		} else {
+			// HETATOM RECORDS are treated slightly differently
+			// some modified amino acids that we want to treat as amino acids
+			// can be found as HETATOM records
+			aminoCode1 = StructureTools.get1LetterCode(groupCode3);
+			if ( aminoCode1 != null)
+			   if ( aminoCode1.equals(StructureTools.UNKNOWN_GROUP_LABEL))
+			      aminoCode1 = null;
+		}
+
+		if (current_group == null) {
+
+			current_group = getNewGroup(recordName,aminoCode1);
+			current_group.setPDBCode(residueNumber);
+			current_group.setPDBName(groupCode3);
+		}
+
+
+		if ( startOfNewChain) {
+			//System.out.println("end of chain: "+current_chain.getName()+" >"+chain_id+"<");
+
+			current_group = getNewGroup(recordName,aminoCode1);
+
+			current_group.setPDBCode(residueNumber);
+			current_group.setPDBName(groupCode3);			
+		}
+
+
+		// check if residue number is the same ...
+		// insertion code is part of residue number
+		if ( ! residueNumber.equals(current_group.getPDBCode())) {
+			//System.out.println("end of residue: "+current_group.getPDBCode()+" "+residueNumber);
+			current_chain.addGroup(current_group);
+
+			current_group = getNewGroup(recordName,aminoCode1);
+
+			current_group.setPDBCode(residueNumber);
+			current_group.setPDBName(groupCode3);
+
+		}
+
+		if ( headerOnly)
+			return;
+
 		atomCount++;
 
 		if ( atomCount == ATOM_CA_THRESHOLD ) {
@@ -1521,7 +1632,6 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 			seqResChains.clear();
 
 			switchCAOnly();
-
 
 		}
 
@@ -1535,8 +1645,6 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 			//System.out.println("ignoring line: " + line);
 			return;
 		}
-
-
 
 		//TODO: treat the following residues as amino acids?
 		/*
@@ -1574,7 +1682,7 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 			}
 		}
 		// create new atom
-		String recordName = line.substring (0, 6).trim ();
+
 		int pdbnumber = Integer.parseInt (line.substring (6, 11).trim ());
 		AtomImpl atom = new AtomImpl() ;
 		atom.setPDBserial(pdbnumber) ;
@@ -1612,77 +1720,6 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 			atom.setOccupancy(  occu  );
 			atom.setTempFactor( tempf );
 
-			String chain_id      = line.substring(21,22);
-
-			// join residue numbers and insertion codes together
-			String residueNumber = line.substring(22,27).trim();
-			String groupCode3     = line.substring(17,20);
-
-			Character aminoCode1 = null;
-
-			if ( recordName.equals("ATOM") ){
-				aminoCode1 = StructureTools.get1LetterCode(groupCode3);
-			}
-
-			if (current_chain == null) {
-				current_chain = new ChainImpl();
-				current_chain.setName(chain_id);
-			}
-			if (current_group == null) {
-
-				current_group = getNewGroup(recordName,aminoCode1);
-
-				current_group.setPDBCode(residueNumber);
-				current_group.setPDBName(groupCode3);
-			}
-
-			//System.out.println("chainid: >"+chain_id+"<, current_chain.id:"+ current_chain.getName() );
-			// check if chain id is the same
-			if ( ! chain_id.equals(current_chain.getName())){
-				//System.out.println("end of chain: "+current_chain.getName()+" >"+chain_id+"<");
-
-				// end up old chain...
-				current_chain.addGroup(current_group);
-
-				// see if old chain is known ...
-				Chain testchain ;
-				testchain = isKnownChain(current_chain.getName(),current_model);
-				if ( testchain == null) {
-					current_model.add(current_chain);
-				}
-
-				//see if chain_id of new residue is one of the previous chains ...
-				testchain = isKnownChain(chain_id,current_model);
-				if (testchain != null) {
-					//System.out.println("already known..."+ chain_id);
-					current_chain = (ChainImpl)testchain ;
-
-				} else {
-					//System.out.println("creating new chain..."+ chain_id);
-					//current_model.add(current_chain);
-					current_chain = new ChainImpl();
-					current_chain.setName(chain_id);
-				}
-
-				current_group = getNewGroup(recordName,aminoCode1);
-
-				current_group.setPDBCode(residueNumber);
-				current_group.setPDBName(groupCode3);
-			}
-
-
-			// check if residue number is the same ...
-			// insertion code is part of residue number
-			if ( ! residueNumber.equals(current_group.getPDBCode())) {
-				//System.out.println("end of residue: "+current_group.getPDBCode()+" "+residueNumber);
-				current_chain.addGroup(current_group);
-
-				current_group = getNewGroup(recordName,aminoCode1);
-
-				current_group.setPDBCode(residueNumber);
-				current_group.setPDBName(groupCode3);
-
-			}
 			//see if chain_id is one of the previous chains ...
 			current_group.addAtom(atom);
 			//System.out.println(current_group);
@@ -1849,9 +1886,9 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
                                                     the reference.
 	 */
 	private void pdb_DBREF_Handler(String line){
-            if (DEBUG) {
-                logger.info("Parsing DBREF " + line);
-            }
+		if (DEBUG) {
+			logger.info("Parsing DBREF " + line);
+		}
 		DBRef dbref = new DBRef();
 		String idCode      = line.substring(7,11);
 		String chainId     = line.substring(12,13);
@@ -1936,7 +1973,7 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 			val = Integer.parseInt(intString.trim());
 		} catch (NumberFormatException ex){
 			//ex.printStackTrace();
-		   System.err.println("NumberformatException: " + ex.getMessage());
+			System.err.println("NumberformatException: " + ex.getMessage());
 		}
 		return val;
 	}
@@ -2106,14 +2143,14 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 					else if (recordName.equals("HEADER"))
 						pdb_HEADER_Handler(line);
 					else if (recordName.equals("AUTHOR"))
-					   pdb_AUTHOR_Handler(line);
+						pdb_AUTHOR_Handler(line);
 					else if (recordName.equals("TITLE"))
 						pdb_TITLE_Handler(line);
 					else if (recordName.equals("SOURCE"))
 						sourceLines.add(line); //pdb_SOURCE_Handler
 					else if (recordName.equals("COMPND"))
 						compndLines.add(line); //pdb_COMPND_Handler
-                    else if (recordName.equals("JRNL"))
+					else if (recordName.equals("JRNL"))
 						pdb_JRNL_Handler(line);
 					else if (recordName.equals("EXPDTA"))
 						pdb_EXPDTA_Handler(line);
@@ -2221,20 +2258,21 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 
 		}
 
-		// a problem occured earlier so current_chain = null ...
+		// a problem occurred earlier so current_chain = null ...
 		// most likely the buffered reader did not provide data ...
-		if ( current_chain != null ) {
+		if ( current_chain != null ) {			
 			current_chain.addGroup(current_group);
+
 			if (isKnownChain(current_chain.getName(),current_model) == null) {
 				current_model.add(current_chain);
 			}
 		}
 
-        //set the JournalArticle, if there is one
-        if (!journalLines.isEmpty()) {
-            buildjournalArticle();
-            structure.setJournalArticle(journalArticle);
-        }
+		//set the JournalArticle, if there is one
+		if (!journalLines.isEmpty()) {
+			buildjournalArticle();
+			structure.setJournalArticle(journalArticle);
+		}
 
 		structure.addModel(current_model);
 		structure.setHeader(header);
@@ -2248,6 +2286,7 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 			SeqRes2AtomAligner aligner = new SeqRes2AtomAligner();
 			aligner.align(structure,seqResChains);
 		}
+
 
 		linkChains2Compound(structure);
 
@@ -2388,299 +2427,307 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 		}
 
 	}
-    private void buildjournalArticle() {
-        if (DEBUG) {
-            System.out.println("building new JournalArticle");
-//            for (String line : journalLines) {
-//                System.out.println(line);
-//            }
-        }
-        this.journalArticle = new JournalArticle();
-//        JRNL        AUTH   M.HAMMEL,G.SFYROERA,D.RICKLIN,P.MAGOTTI,
-//        JRNL        AUTH 2 J.D.LAMBRIS,B.V.GEISBRECHT
-//        JRNL        TITL   A STRUCTURAL BASIS FOR COMPLEMENT INHIBITION BY
-//        JRNL        TITL 2 STAPHYLOCOCCUS AUREUS.
-//        JRNL        REF    NAT.IMMUNOL.                  V.   8   430 2007
-//        JRNL        REFN                   ISSN 1529-2908
-//        JRNL        PMID   17351618
-//        JRNL        DOI    10.1038/NI1450
-        StringBuffer auth = new StringBuffer();
-        StringBuffer titl = new StringBuffer();
-        StringBuffer edit = new StringBuffer();
-        StringBuffer ref = new StringBuffer();
-        StringBuffer publ = new StringBuffer();
-        StringBuffer refn = new StringBuffer();
-        StringBuffer pmid = new StringBuffer();
-        StringBuffer doi = new StringBuffer();
+	private void buildjournalArticle() {
+		if (DEBUG) {
+			System.out.println("building new JournalArticle");
+			//            for (String line : journalLines) {
+			//                System.out.println(line);
+			//            }
+		}
+		this.journalArticle = new JournalArticle();
+		//        JRNL        AUTH   M.HAMMEL,G.SFYROERA,D.RICKLIN,P.MAGOTTI,
+		//        JRNL        AUTH 2 J.D.LAMBRIS,B.V.GEISBRECHT
+		//        JRNL        TITL   A STRUCTURAL BASIS FOR COMPLEMENT INHIBITION BY
+		//        JRNL        TITL 2 STAPHYLOCOCCUS AUREUS.
+		//        JRNL        REF    NAT.IMMUNOL.                  V.   8   430 2007
+		//        JRNL        REFN                   ISSN 1529-2908
+		//        JRNL        PMID   17351618
+		//        JRNL        DOI    10.1038/NI1450
+		StringBuffer auth = new StringBuffer();
+		StringBuffer titl = new StringBuffer();
+		StringBuffer edit = new StringBuffer();
+		StringBuffer ref = new StringBuffer();
+		StringBuffer publ = new StringBuffer();
+		StringBuffer refn = new StringBuffer();
+		StringBuffer pmid = new StringBuffer();
+		StringBuffer doi = new StringBuffer();
 
-        for (String line : journalLines) {
-           if ( line.length() < 19 ) {
-              System.err.println("can not process Journal line: " + line);
-              continue;
-           }
-//            System.out.println("'" + line + "'");
-            String subField = line.substring(12, 16);
-//            System.out.println("'" + subField + "'");
-            if (subField.equals("AUTH")) {
-                auth.append(line.substring(19, line.length()).trim());
-                if (DEBUG) {
-                    System.out.println("AUTH '" + auth.toString() + "'");
-                }
-            }
-            if (subField.equals("TITL")) {
-                //add a space to the end of a line so that when wrapped the
-                //words on the join won't be concatenated
-                titl.append(line.substring(19, line.length()).trim() + " ");
-                if (DEBUG) {
-                    System.out.println("TITL '" + titl.toString() + "'");
-                }
-            }
-            if (subField.equals("EDIT")) {
-                edit.append(line.substring(19, line.length()).trim());
-                if (DEBUG) {
-                    System.out.println("EDIT '" + edit.toString() + "'");
-                }
-            }
-            //        JRNL        REF    NAT.IMMUNOL.                  V.   8   430 2007
-            if (subField.equals("REF ")) {
-                ref.append(line.substring(19, line.length()).trim() + " ");
-                if (DEBUG) {
-                    System.out.println("REF '" + ref.toString() + "'");
-                }
-            }
-            if (subField.equals("PUBL")) {
-                publ.append(line.substring(19, line.length()).trim() + " ");
-                if (DEBUG) {
-                    System.out.println("PUBL '" + publ.toString() + "'");
-                }
-            }
-            //        JRNL        REFN                   ISSN 1529-2908
-            if (subField.equals("REFN")) {
-               if ( line.length() < 35 ) {
-                  System.err.println("can not process Journal REFN line: " + line);
-                  continue;
-               }
-                refn.append(line.substring(35, line.length()).trim());
-                if (DEBUG) {
-                    System.out.println("REFN '" + refn.toString() + "'");
-                }
-            }
-            //        JRNL        PMID   17351618
-            if (subField.equals("PMID")) {
-                pmid.append(line.substring(19, line.length()).trim());
-                if (DEBUG) {
-                    System.out.println("PMID '" + pmid.toString() + "'");
-                }
-            }
-            //        JRNL        DOI    10.1038/NI1450
-            if (subField.equals("DOI ")) {
-                doi.append(line.substring(19, line.length()).trim());
-                if (DEBUG) {
-                    System.out.println("DOI '" + doi.toString() + "'");
-                }
-            }
-        }
+		for (String line : journalLines) {
+			if ( line.length() < 19 ) {
+				System.err.println("can not process Journal line: " + line);
+				continue;
+			}
+			//            System.out.println("'" + line + "'");
+			String subField = line.substring(12, 16);
+			//            System.out.println("'" + subField + "'");
+			if (subField.equals("AUTH")) {
+				auth.append(line.substring(19, line.length()).trim());
+				if (DEBUG) {
+					System.out.println("AUTH '" + auth.toString() + "'");
+				}
+			}
+			if (subField.equals("TITL")) {
+				//add a space to the end of a line so that when wrapped the
+				//words on the join won't be concatenated
+				titl.append(line.substring(19, line.length()).trim() + " ");
+				if (DEBUG) {
+					System.out.println("TITL '" + titl.toString() + "'");
+				}
+			}
+			if (subField.equals("EDIT")) {
+				edit.append(line.substring(19, line.length()).trim());
+				if (DEBUG) {
+					System.out.println("EDIT '" + edit.toString() + "'");
+				}
+			}
+			//        JRNL        REF    NAT.IMMUNOL.                  V.   8   430 2007
+			if (subField.equals("REF ")) {
+				ref.append(line.substring(19, line.length()).trim() + " ");
+				if (DEBUG) {
+					System.out.println("REF '" + ref.toString() + "'");
+				}
+			}
+			if (subField.equals("PUBL")) {
+				publ.append(line.substring(19, line.length()).trim() + " ");
+				if (DEBUG) {
+					System.out.println("PUBL '" + publ.toString() + "'");
+				}
+			}
+			//        JRNL        REFN                   ISSN 1529-2908
+			if (subField.equals("REFN")) {
+				if ( line.length() < 35 ) {
+					System.err.println("can not process Journal REFN line: " + line);
+					continue;
+				}
+				refn.append(line.substring(35, line.length()).trim());
+				if (DEBUG) {
+					System.out.println("REFN '" + refn.toString() + "'");
+				}
+			}
+			//        JRNL        PMID   17351618
+			if (subField.equals("PMID")) {
+				pmid.append(line.substring(19, line.length()).trim());
+				if (DEBUG) {
+					System.out.println("PMID '" + pmid.toString() + "'");
+				}
+			}
+			//        JRNL        DOI    10.1038/NI1450
+			if (subField.equals("DOI ")) {
+				doi.append(line.substring(19, line.length()).trim());
+				if (DEBUG) {
+					System.out.println("DOI '" + doi.toString() + "'");
+				}
+			}
+		}
 
-        //now set the parts of the JournalArticle
-        journalArticle.setAuthorList(authorBuilder(auth.toString()));
-        journalArticle.setEditorList(authorBuilder(edit.toString()));
-        journalArticle.setRef(ref.toString());
-        JournalParser journalParser = new JournalParser(ref.toString());
-        journalArticle.setJournalName(journalParser.getJournalName());
-        if (!journalArticle.getJournalName().equals("TO BE PUBLISHED")) {
-            journalArticle.setIsPublished(true);
-        }
-        journalArticle.setVolume(journalParser.getVolume());
-        journalArticle.setStartPage(journalParser.getStartPage());
-        journalArticle.setPublicationDate(journalParser.getPublicationDate());
-        journalArticle.setPublisher(publ.toString().trim());
-        journalArticle.setTitle(titl.toString().trim());
-        journalArticle.setRefn(refn.toString().trim());
-        journalArticle.setPmid(pmid.toString().trim());
-        journalArticle.setDoi(doi.toString().trim());
+		//now set the parts of the JournalArticle
+		journalArticle.setAuthorList(authorBuilder(auth.toString()));
+		journalArticle.setEditorList(authorBuilder(edit.toString()));
+		journalArticle.setRef(ref.toString());
+		JournalParser journalParser = new JournalParser(ref.toString());
+		journalArticle.setJournalName(journalParser.getJournalName());
+		if (!journalArticle.getJournalName().equals("TO BE PUBLISHED")) {
+			journalArticle.setIsPublished(true);
+		}
+		journalArticle.setVolume(journalParser.getVolume());
+		journalArticle.setStartPage(journalParser.getStartPage());
+		journalArticle.setPublicationDate(journalParser.getPublicationDate());
+		journalArticle.setPublisher(publ.toString().trim());
+		journalArticle.setTitle(titl.toString().trim());
+		journalArticle.setRefn(refn.toString().trim());
+		journalArticle.setPmid(pmid.toString().trim());
+		journalArticle.setDoi(doi.toString().trim());
 
-    }
+	}
 
-    //inner class to deal with all the journal info
-    private class JournalParser {
+	//inner class to deal with all the journal info
+	private class JournalParser {
 
-        private String journalName;
-        private String volume;
-        private String startPage;
-        private int publicationDate;
-
-
-        public JournalParser(String ref) {
-            if (DEBUG) {
-                System.out.println("JournalParser init '" + ref + "'");
-            }
-
-            if (ref.equals("TO BE PUBLISHED ")) {
-                journalName = ref.trim();
-                return;
-            }
-
-             //check the line is the correct length
-            if (ref.length() != 48) {
-                logger.warning(pdbId + " REF line not of correct length. Found " + ref.length() + ", should be 48. Returning dummy JRNL object.");
-                journalName = "TO BE PUBLISHED";
-                return;
-            }
+		private String journalName;
+		private String volume;
+		private String startPage;
+		private int publicationDate;
 
 
-            //REF    NUCLEIC ACIDS RES.                         2009
-            //REF    MOL.CELL                                   2009
-            //REF    NAT.STRUCT.MOL.BIOL.          V.  16   238 2009
-            //REF    ACTA CRYSTALLOGR.,SECT.F      V.  65   199 2009
-            //check if the date is present at the end of the line.
-            //                             09876543210987654321
-            //'J.AM.CHEM.SOC.                V. 130 16011 2008 '
-            //'NAT.STRUCT.MOL.BIOL.          V.  16   238 2009'
-            String dateString = ref.substring(ref.length() - 5 , ref.length() - 1).trim();
-            String startPageString = ref.substring(ref.length() - 11 , ref.length() - 6).trim();
-            String volumeString = ref.substring(ref.length() - 14 , ref.length() - 12).trim();
-            String journalString = ref.substring(0 , ref.length() - 18).trim();
-            if (DEBUG) {
-                System.out.println("JournalParser found volumeString " + volumeString);
-                System.out.println("JournalParser found startPageString " + startPageString);
-                System.out.println("JournalParser found dateString " + dateString);
-            }
+		public JournalParser(String ref) {
+			if (DEBUG) {
+				System.out.println("JournalParser init '" + ref + "'");
+			}
 
-            if (!dateString.equals("    ")) {
-                publicationDate = Integer.valueOf(dateString);
-                if (DEBUG) {
-                    System.out.println("JournalParser set date " + publicationDate);
-                }
-            }
+			if (ref.equals("TO BE PUBLISHED ")) {
+				journalName = ref.trim();
+				return;
+			}
 
-            if (!startPageString.equals("    ")) {
-                startPage = startPageString;
-                if (DEBUG) {
-                    System.out.println("JournalParser set startPage " + startPage);
-                }
-            }
+			//check the line is the correct length
+			if (ref.length() != 48) {
+				logger.warning(pdbId + " REF line not of correct length. Found " + ref.length() + ", should be 48. Returning dummy JRNL object.");
+				journalName = "TO BE PUBLISHED";
+				return;
+			}
 
-            if (!volumeString.equals("    ")) {
-                volume = volumeString;
-                if (DEBUG) {
-                    System.out.println("JournalParser set volume " + volume);
-                }
-            }
 
-            if (!journalString.equals("    ")) {
-                journalName = journalString;
-                if (DEBUG) {
-                    System.out.println("JournalParser set journalName " + journalName);
-                }
-            }
-        }
+			//REF    NUCLEIC ACIDS RES.                         2009
+			//REF    MOL.CELL                                   2009
+			//REF    NAT.STRUCT.MOL.BIOL.          V.  16   238 2009
+			//REF    ACTA CRYSTALLOGR.,SECT.F      V.  65   199 2009
+			//check if the date is present at the end of the line.
+			//                             09876543210987654321
+			//'J.AM.CHEM.SOC.                V. 130 16011 2008 '
+			//'NAT.STRUCT.MOL.BIOL.          V.  16   238 2009'
+			String dateString = ref.substring(ref.length() - 5 , ref.length() - 1).trim();
+			String startPageString = ref.substring(ref.length() - 11 , ref.length() - 6).trim();
+			String volumeString = ref.substring(ref.length() - 14 , ref.length() - 12).trim();
+			String journalString = ref.substring(0 , ref.length() - 18).trim();
+			if (DEBUG) {
+				System.out.println("JournalParser found volumeString " + volumeString);
+				System.out.println("JournalParser found startPageString " + startPageString);
+				System.out.println("JournalParser found dateString " + dateString);
+			}
 
-        private String getJournalName() {
-            return journalName;
-        }
+			if (!dateString.equals("    ")) {
+				publicationDate = Integer.valueOf(dateString);
+				if (DEBUG) {
+					System.out.println("JournalParser set date " + publicationDate);
+				}
+			}
 
-        private int getPublicationDate() {
-            return publicationDate;
-        }
+			if (!startPageString.equals("    ")) {
+				startPage = startPageString;
+				if (DEBUG) {
+					System.out.println("JournalParser set startPage " + startPage);
+				}
+			}
 
-        private String getStartPage() {
-            return startPage;
-        }
+			if (!volumeString.equals("    ")) {
+				volume = volumeString;
+				if (DEBUG) {
+					System.out.println("JournalParser set volume " + volume);
+				}
+			}
 
-        private String getVolume() {
-            return volume;
-        }
-    }
+			if (!journalString.equals("    ")) {
+				journalName = journalString;
+				if (DEBUG) {
+					System.out.println("JournalParser set journalName " + journalName);
+				}
+			}
+		}
 
-    private List<Author> authorBuilder(String authorString) {
-        ArrayList<Author> authorList = new ArrayList<Author>();
+		private String getJournalName() {
+			return journalName;
+		}
 
-        if (authorString.equals("")) {
-            return authorList;
-        }
+		private int getPublicationDate() {
+			return publicationDate;
+		}
 
-        String[] authors = authorString.split(",");
-//        if (DEBUG) {
-//            for (int i = 0; i < authors.length; i++) {
-//                String string = authors[i];
-//                System.out.println("authorBuilder author: '" + string + "'");
-//            }
-//        }
-//        AUTH   SEATTLE STRUCTURAL GENOMICS CENTER FOR INFECTIOUS
-//        AUTH 2 DISEASE (SSGCID)
-//        or
-//        AUTH   E.DOBROVETSKY,A.DONG,A.SEITOVA,B.DUNCAN,L.CROMBET,
-//        AUTH 2 M.SUNDSTROM,C.H.ARROWSMITH,A.M.EDWARDS,C.BOUNTRA,
-//        AUTH 3 A.BOCHKAREV,D.COSSAR,
-//        AUTH 4 STRUCTURAL GENOMICS CONSORTIUM (SGC)
-//        or
-//        AUTH   T.-C.MOU,S.R.SPRANG,N.MASADA,D.M.F.COOPER
-        if (authors.length == 1) {
-            //only one element means it's a consortium only
-            Author author = new Author();
-            author.setSurname(authors[0]);
-            if (DEBUG) {
-                System.out.println("Set consortium author name " + author.getSurname());
-            }
-            authorList.add(author);
-        } else {
-            for (int i = 0; i < authors.length; i++) {
-                String authorFullName = authors[i];
-                if (DEBUG) {
-                    System.out.println("Building author " + authorFullName);
-                }
-                Author author = new Author();
-                String regex = "\\.";
-                String[] authorNames = authorFullName.split(regex);
-//                if (DEBUG) {
-//                    System.out.println("authorNames size " + authorNames.length);
-//                    for (int j = 0; j < authorNames.length; j++) {
-//                        String name = authorNames[j];
-//                        System.out.println("split authName '" + name + "'");
-//
-//                    }
-//                }
-                if (authorNames.length == 0) {
-                    author.setSurname(authorFullName);
-                    if (DEBUG) {
-                        System.out.println("Unable to split using '" + regex + "' Setting whole name " + author.getSurname());
-                    }
-                }
-                //again there might be a consortium name so there may be no elements
-                else if (authorNames.length == 1) {
-                    author.setSurname(authorNames[0]);
-                    if (DEBUG) {
-                        System.out.println("Set consortium author name in multiple author block " + author.getSurname
-());
-                    }
-                } else {
-                    String initials = "";
-                    for (int j = 0; j < authorNames.length - 1; j++) {
-                        String initial = authorNames[j];
-//                        if (DEBUG) {
-//                            System.out.println("adding initial '" + initial + "'");
-//                        }
-                        //build the initials back up again
-                        initials += initial + ".";
-                    }
-                    if (DEBUG) {
-                        System.out.println("built initials '" + initials + "'");
-                    }
-                    author.setInitials(initials);
-                    //surname is always last
-                    int lastName = authorNames.length - 1;
-                    String surname = authorNames[lastName];
-                    if (DEBUG) {
-                        System.out.println("built author surname " + surname);
-                    }
-                    author.setSurname(surname);
+		private String getStartPage() {
+			return startPage;
+		}
 
-                }
-                authorList.add(author);
-            }
-        }
-        return authorList;
-    }
+		private String getVolume() {
+			return volume;
+		}
+	}
+
+	private List<Author> authorBuilder(String authorString) {
+		ArrayList<Author> authorList = new ArrayList<Author>();
+
+		if (authorString.equals("")) {
+			return authorList;
+		}
+
+		String[] authors = authorString.split(",");
+		//        if (DEBUG) {
+		//            for (int i = 0; i < authors.length; i++) {
+		//                String string = authors[i];
+		//                System.out.println("authorBuilder author: '" + string + "'");
+		//            }
+		//        }
+		//        AUTH   SEATTLE STRUCTURAL GENOMICS CENTER FOR INFECTIOUS
+		//        AUTH 2 DISEASE (SSGCID)
+		//        or
+		//        AUTH   E.DOBROVETSKY,A.DONG,A.SEITOVA,B.DUNCAN,L.CROMBET,
+		//        AUTH 2 M.SUNDSTROM,C.H.ARROWSMITH,A.M.EDWARDS,C.BOUNTRA,
+		//        AUTH 3 A.BOCHKAREV,D.COSSAR,
+		//        AUTH 4 STRUCTURAL GENOMICS CONSORTIUM (SGC)
+		//        or
+		//        AUTH   T.-C.MOU,S.R.SPRANG,N.MASADA,D.M.F.COOPER
+		if (authors.length == 1) {
+			//only one element means it's a consortium only
+			Author author = new Author();
+			author.setSurname(authors[0]);
+			if (DEBUG) {
+				System.out.println("Set consortium author name " + author.getSurname());
+			}
+			authorList.add(author);
+		} else {
+			for (int i = 0; i < authors.length; i++) {
+				String authorFullName = authors[i];
+				if (DEBUG) {
+					System.out.println("Building author " + authorFullName);
+				}
+				Author author = new Author();
+				String regex = "\\.";
+				String[] authorNames = authorFullName.split(regex);
+				//                if (DEBUG) {
+				//                    System.out.println("authorNames size " + authorNames.length);
+				//                    for (int j = 0; j < authorNames.length; j++) {
+				//                        String name = authorNames[j];
+				//                        System.out.println("split authName '" + name + "'");
+				//
+				//                    }
+				//                }
+				if (authorNames.length == 0) {
+					author.setSurname(authorFullName);
+					if (DEBUG) {
+						System.out.println("Unable to split using '" + regex + "' Setting whole name " + author.getSurname());
+					}
+				}
+				//again there might be a consortium name so there may be no elements
+				else if (authorNames.length == 1) {
+					author.setSurname(authorNames[0]);
+					if (DEBUG) {
+						System.out.println("Set consortium author name in multiple author block " + author.getSurname
+								());
+					}
+				} else {
+					String initials = "";
+					for (int j = 0; j < authorNames.length - 1; j++) {
+						String initial = authorNames[j];
+						//                        if (DEBUG) {
+						//                            System.out.println("adding initial '" + initial + "'");
+						//                        }
+						//build the initials back up again
+						initials += initial + ".";
+					}
+					if (DEBUG) {
+						System.out.println("built initials '" + initials + "'");
+					}
+					author.setInitials(initials);
+					//surname is always last
+					int lastName = authorNames.length - 1;
+					String surname = authorNames[lastName];
+					if (DEBUG) {
+						System.out.println("built author surname " + surname);
+					}
+					author.setSurname(surname);
+
+				}
+				authorList.add(author);
+			}
+		}
+		return authorList;
+	}
+	public void setHeaderOnly(boolean headerOnly) {
+		this.headerOnly = headerOnly;
+
+	}
+
+	public boolean isHeaderOnly(){
+		return headerOnly;
+	}
 
 
 }

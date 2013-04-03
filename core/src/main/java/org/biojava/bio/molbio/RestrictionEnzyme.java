@@ -26,20 +26,23 @@ import java.io.Serializable;
 import org.biojava.bio.BioError;
 import org.biojava.bio.BioException;
 import org.biojava.bio.seq.DNATools;
+import org.biojava.bio.symbol.FiniteAlphabet;
 import org.biojava.bio.symbol.IllegalAlphabetException;
 import org.biojava.bio.symbol.IllegalSymbolException;
 import org.biojava.bio.symbol.MotifTools;
+import org.biojava.bio.symbol.Symbol;
 import org.biojava.bio.symbol.SymbolList;
 
 /**
  * <code>RestrictionEnzyme</code> represents a restriction enzyme
  * according to the REBASE standard. The cut positions are indicated
  * relative to the 5' end of the recognition site and occur downstream
- * of the given residue. Note that some enzmyes cut in more than one
+ * of the given residue. Note that some enzymes cut in more than one
  * position and that cut positions may occur outside the recognition
  * site.
  *
  * @author Keith James
+ * @author George Waldon
  * @since 1.3
  */
 public class RestrictionEnzyme implements Serializable
@@ -59,13 +62,15 @@ public class RestrictionEnzyme implements Serializable
 
     /**
      * <code>OVERHANG_5PRIME</code> the sticky end type created by
-     * enzymes which leave a 5' overhang.
+     * enzymes which leave a 5' overhang (e.g. a stretch of single-stranded
+     * DNA with a free 5' end).
      */
     public static final int OVERHANG_5PRIME = 0;
 
     /**
      * <code>OVERHANG_3PRIME</code> the sticky end type created by
-     * enzymes which leave a 3' overhang.
+     * enzymes which leave a 3' overhang (e.g. a stretch of single-stranded
+     * DNA with a free 3' end).
      */
     public static final int OVERHANG_3PRIME = 1;
 
@@ -80,11 +85,14 @@ public class RestrictionEnzyme implements Serializable
     protected int cutType;
     protected int [] dsCutPositions;
     protected int [] usCutPositions;
+    private double size = 0.0;
 
     protected String forwardRegex;
     protected String reverseRegex;
 
     private String summary;
+
+    private RestrictionEnzyme prototype;
 
     /**
      * Creates a new <code>RestrictionEnzyme</code> which cuts within
@@ -304,7 +312,7 @@ public class RestrictionEnzyme implements Serializable
      * downstream of the recognition site.
      *
      * @return an <code>int []</code> array with the position in the
-     * 5'- strand at index 0 and the 3'- strand at index 1.
+     * 5'-strand at index 0 and the 3'-strand at index 1.
      */
     public int [] getDownstreamCut()
     {
@@ -316,7 +324,11 @@ public class RestrictionEnzyme implements Serializable
      * the recognition site.
      *
      * @return an <code>int []</code> array with the position in the
-     * 5'- strand at index 0 and the 3'- strand at index 1.
+     * 5'-strand at index 0 and the 3'-strand at index 1. For example,
+     * Bsp24I will return -8 and -13:
+     *
+     *          5'      ^NNNNNNNNGACNNNNNNTGGNNNNNNNNNNNN^   3'
+     *          3' ^NNNNNNNNNNNNNCTGNNNNNNACCNNNNNNN^        5'
      *
      * @exception BioException if the enzyme does not cleave on both
      * sides of its recognition site.
@@ -340,9 +352,9 @@ public class RestrictionEnzyme implements Serializable
     public int getDownstreamEndType()
     {
         if (dsCutPositions[0] > dsCutPositions[1])
-            return OVERHANG_5PRIME;
-        else if (dsCutPositions[0] < dsCutPositions[1])
             return OVERHANG_3PRIME;
+        else if (dsCutPositions[0] < dsCutPositions[1])
+            return OVERHANG_5PRIME;
         else
             return BLUNT;
     }
@@ -363,11 +375,61 @@ public class RestrictionEnzyme implements Serializable
             throw new BioException(name + " does not cut upstream of the recognition site");
 
         if (usCutPositions[0] > usCutPositions[1])
-            return OVERHANG_5PRIME;
-        else if (usCutPositions[0] < usCutPositions[1])
             return OVERHANG_3PRIME;
+        else if (usCutPositions[0] < usCutPositions[1])
+            return OVERHANG_5PRIME;
         else
             return BLUNT;
+    }
+
+    /** Set the prototype of this <code>RestrictionEnzyme</code>.
+     *
+     * @param proto an isoschizomer of this enzyme.
+     */
+    public void setProtype(RestrictionEnzyme proto) {
+        prototype = proto;
+    }
+
+    /** The prototype is a <code>RestrictionEnzyme</code> that represents a set
+     * of isoshizomers. The choice of the representative/prototype is arbitrary;
+     * there is one and only one prototype per set of
+     * isoschizomers.
+     *
+     * @return A representative isoschisomer or null if prototypes are not defined.
+     */
+    public RestrictionEnzyme getPrototype() {
+        return prototype;
+    }
+
+    public boolean isPrototype() {
+        if(prototype==null)
+            return false;
+        return this==prototype;
+    }
+
+    /** The cutting size of a restriction enzyme is defined has the number
+     * of nucleotides that are directly involved in the recognition sequence.
+     * The size is ponderated as follow: 1 for a single nucleotide, 1/2
+     * for a degeneracy of 2, 1/4 for a degeneracy of 3, and 0 for any N nucleotides.
+     */
+    public synchronized double getCuttingSize() {
+        if(size == 0) {
+            SymbolList symbols = getRecognitionSite();
+            double tempsize = 0;
+            for (int i = 1; i <= symbols.length(); i++) {
+                Symbol s = symbols.symbolAt(i);
+                FiniteAlphabet a = (FiniteAlphabet) s.getMatches();
+                int cs = a.size();
+                if(cs==1)
+                    tempsize++;
+                else if(cs==2)
+                    tempsize += 0.5;
+                else if(cs==3)
+                    tempsize += 0.25;
+            }
+            size = tempsize;
+        }
+      return size;
     }
 
     public int hashCode()

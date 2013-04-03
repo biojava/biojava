@@ -61,7 +61,6 @@ public class SeqRes2AtomAligner {
 
     boolean DEBUG = false;
 
-
     static final List<String> excludeTypes;
     private static final FiniteAlphabet alphabet;
     private static final Symbol gapSymbol ;
@@ -235,6 +234,7 @@ public class SeqRes2AtomAligner {
             	System.out.println("seq1: " + bjseq1.seqString());
             	System.out.println("seq2: " + bjseq2.seqString());
             }
+         
             org.biojava.bio.alignment.Alignment ali = aligner.getAlignment(bjseq1,bjseq2);
             if ( ! (ali instanceof SimpleAlignment )) {
                 throw new Exception ("Alignment is not a SimpleAlignment!");
@@ -242,8 +242,9 @@ public class SeqRes2AtomAligner {
             }
 
             simpleAli = (SimpleAlignment) ali;
-
+     
             alignmentString = aligner.getAlignmentString();
+     
             if (DEBUG)
                 System.out.println(alignmentString);
         } catch (Exception e){

@@ -69,11 +69,15 @@ public class RemoteQBlastService implements RemotePairwiseAlignmentService {
 	private URLConnection uConn;
 	private OutputStreamWriter fromQBlast;
 	private BufferedReader rd;
+	
+	private String email = "anonymous@biojava.org";
+	private String tool = "biojavax";
+	 
 
 	private String seq = null;
 	private String prog = null;
 	private String db = null;
-	private String advanced = null;
+//	private String advanced = null;
 
 	private String rid;
 	private long step;
@@ -98,14 +102,14 @@ public class RemoteQBlastService implements RemotePairwiseAlignmentService {
 		 */
 		catch (MalformedURLException e) {
 			throw new BioException(
-					"It looks like the URL for NCBI QBlast service is wrong");
+					"It looks like the URL for NCBI QBlast service is wrong.\n");
 		}
 		/*
 		 * Intercept if the program can't connect to QBlast service
 		 */
 		catch (IOException e) {
 			throw new BioException(
-					"Impossible to connect to QBlast service at this time. Check your network connection");
+					"Impossible to connect to QBlast service at this time. Check your network connection.\n");
 		}
 	}
 
@@ -130,11 +134,11 @@ public class RemoteQBlastService implements RemotePairwiseAlignmentService {
 
 		if (prog == null || db == null || str == null || str.length() == 0) {
 			throw new BioException(
-					"Impossible to execute QBlast request. One or more of sequence|database|program has not been set correctly");
+					"Impossible to execute QBlast request. One or more of sequence|database|program has not been set correctly.\n");
 		}
 
 		String cmd = "CMD=Put&SERVICE=plain" + "&" + seq + "&" + prog + "&"
-				+ db + "&" + "FORMAT_TYPE=HTML";
+				+ db + "&" + "FORMAT_TYPE=HTML"+"&TOOL="+getTool()+"&EMAIL="+getEmail();
 
 		// This is a not so good hack to be fix by forcing key 
 		// checking in RemoteQBlastAlignmentProperties
@@ -170,7 +174,7 @@ public class RemoteQBlastService implements RemotePairwiseAlignmentService {
 			}
 		} catch (IOException e) {
 			throw new BioException(
-					"Can't submit sequence to BLAST server at this time.");
+					"Can't submit sequence to BLAST server at this time.\n");
 		}
 
 		return rid;
@@ -313,7 +317,7 @@ public class RemoteQBlastService implements RemotePairwiseAlignmentService {
 			}
 		} else {
 			throw new BioException("Impossible to check for request ID named "
-					+ id + " because it does not exists!");
+					+ id + " because it does not exists!\n");
 		}
 		return ready;
 	}
@@ -339,7 +343,8 @@ public class RemoteQBlastService implements RemotePairwiseAlignmentService {
 					+ rb.getOutputOption("FORMAT_TYPE") + "&"
 					+ rb.getOutputOption("ALIGNMENT_VIEW") + "&"
 					+ rb.getOutputOption("DESCRIPTIONS") + "&"
-					+ rb.getOutputOption("ALIGNMENTS");
+					+ rb.getOutputOption("ALIGNMENTS")
+					+ "&TOOL="+getTool()+"&EMAIL="+getEmail();
 
 			try {
 				uConn = setQBlastServiceProperties(aUrl.openConnection());
@@ -352,12 +357,12 @@ public class RemoteQBlastService implements RemotePairwiseAlignmentService {
 
 			} catch (IOException ioe) {
 				throw new BioException(
-						"It is not possible to fetch Blast report from NCBI at this time");
+						"It is not possible to fetch Blast report from NCBI at this time.\n");
 			}
 		} else {
 			throw new BioException(
 					"Impossible to get output for request ID named " + id
-							+ " because it does not exists!");
+							+ " because it does not exists!\n");
 		}
 	}
 
@@ -388,7 +393,7 @@ public class RemoteQBlastService implements RemotePairwiseAlignmentService {
 			rd.close();
 		} catch (IOException e) {
 			throw new BioException(
-					"Impossible to get info from QBlast service at this time. Check your network connection");
+					"Impossible to get info from QBlast service at this time. Check your network connection.\n");
 		}
 	}
 
@@ -407,4 +412,35 @@ public class RemoteQBlastService implements RemotePairwiseAlignmentService {
 
 		return tmp;
 	}
+    /** 
+     * Set the tool identifier for QBlast. Defaults to 'biojavax'.
+     * @param tool the new identifier.
+     */
+    public void setTool(String tool) {
+        this.tool = tool;
+    }
+
+    /** 
+     * Get the tool identifier for QBlast. Defaults to 'biojavax'.
+     * @return the identifier.
+     */
+    public String getTool() {
+        return this.tool;
+    }
+
+    /** 
+     * Set the email for QBlast. Defaults to 'anonymous@biojava.org'.
+     * @param email the new email.
+     */
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    /** 
+     * Get the email for QBlast. Defaults to 'anonymous@biojava.org'.
+     * @return the email.
+     */
+    public String getEmail() {
+        return this.email;
+    }	
 }

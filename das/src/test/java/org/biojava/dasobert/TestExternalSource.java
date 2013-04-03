@@ -26,6 +26,7 @@ package org.biojava.dasobert;
 import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.List;
 
 import org.biojava.dasobert.das2.Das2Source;
 import org.biojava.dasobert.das2.io.DasSourceReaderImpl;
@@ -79,9 +80,9 @@ public class TestExternalSource extends TestCase {
 			assertFalse("Found a DAS/2 source while parsing a DAS/1 sources listing",  isDAS2Source);
 			
 			
-			DasCoordinateSystem[] dcsses = s.getCoordinateSystem();
+			List<DasCoordinateSystem> dcsses = s.getCoordinateSystem();
 			assertTrue(dcsses != null);
-			assertTrue(dcsses.length > 0);
+			assertTrue(dcsses.size() > 0);
 		}
 		
 		

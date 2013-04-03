@@ -22,7 +22,7 @@
 package org.biojava.bio.seq.db;
 
 import java.io.Serializable;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
@@ -40,6 +40,7 @@ import org.biojava.utils.ChangeVetoException;
  *
  * @author Matthew Pocock
  * @author <A href="mailto:Gerald.Loeffler@vienna.at">Gerald Loeffler</A>
+ * @author Matias Pilpari (LinkedHashMap)
  */
 public class HashSequenceDB
   extends
@@ -203,6 +204,6 @@ public class HashSequenceDB
   public HashSequenceDB(org.biojava.bio.seq.db.IDMaker idMaker, String name) {
     this.idMaker = idMaker;
     this.name = name;
-    this.sequenceByID = new HashMap();
+    this.sequenceByID = new LinkedHashMap();
   }
 }

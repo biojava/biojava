@@ -182,9 +182,9 @@ public class Das2SourceHandler extends DefaultHandler{
 		if ( qName.equals("SOURCE")) {
 			currentSource.setDas2Capabilities((Das2Capability[])capabilities.toArray(new Das2Capability[capabilities.size()]));
 			//System.out.println("got coordinates " + coordinates.size());
-			currentSource.setCoordinateSystem((DasCoordinateSystem[])coordinates.toArray(new DasCoordinateSystem[coordinates.size()]));
+			currentSource.setCoordinateSystem(coordinates);
 
-			currentSource.setLabels((String[])labels.toArray(new String[labels.size()]));
+			currentSource.setLabels(labels);
 			labels.clear();
 
 			if (currentSource.hasDas1Capabilities()){

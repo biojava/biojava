@@ -65,6 +65,7 @@ public class ChainImpl implements Chain, Serializable {
 	private Long id;
 	Compound mol;
 	Structure parent;
+	
 	Map<String, Integer> pdbResnumMap;
 
 	/**

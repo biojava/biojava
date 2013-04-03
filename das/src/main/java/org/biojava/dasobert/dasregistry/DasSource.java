@@ -23,7 +23,10 @@
 package org.biojava.dasobert.dasregistry;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
+
+import org.biojava.dasobert.das.Capabilities;
 
 public interface DasSource {
 
@@ -65,9 +68,9 @@ public interface DasSource {
 
     public  void setDescription(String u);
 
-    public  void setCoordinateSystem(DasCoordinateSystem[] u);
+    public  void setCoordinateSystem(List<DasCoordinateSystem> u);
 
-    public  void setCapabilities(String[] u);
+    public  void setCapabilities(List<Capabilities> u);
 
     /** test if a this source has a particular capability
      * 
@@ -82,9 +85,9 @@ public interface DasSource {
 
     public  String getDescription();
 
-    public  String[] getCapabilities();
+    public  List<Capabilities> getCapabilities();
 
-    public  DasCoordinateSystem[] getCoordinateSystem();
+    public  List<DasCoordinateSystem> getCoordinateSystem();
 
     public  void setRegisterDate(Date d);
 
@@ -94,9 +97,9 @@ public interface DasSource {
 
     public  Date getLeaseDate();
 
-    public  void setLabels(String[] ls);
+    public  void setLabels(List<String> ls);
 
-    public  String[] getLabels();
+    public  List<String> getLabels();
 
     public  void setHelperurl(String url);
 

@@ -83,6 +83,7 @@ import org.biojavax.utils.StringTools;
  * @author David Scott
  * @author Bubba Puryear
  * @author George Waldon
+ * @author Deepak Sheoran
  * @since 1.5
  */
 public class GenbankFormat extends RichSequenceFormat.HeaderlessFormat {
@@ -570,7 +571,12 @@ public class GenbankFormat extends RichSequenceFormat.HeaderlessFormat {
                 br.mark(320);
                 line = br.readLine();
                 String firstSecKey = section.size() == 0 ? "" : ((String[])section.get(0))[0];
-                if (line==null || line.length()==0 || (!line.startsWith(" ") && linecount++>0 && ( !firstSecKey.equals(START_SEQUENCE_TAG)  || line.startsWith(END_SEQUENCE_TAG)))) {
+                if (line != null && line.matches("\\p{Space}*")) {
+		   // regular expression \p{Space}* will match line 
+                   // having only white space characters
+                   continue;
+                }
+                if (line==null || (!line.startsWith(" ") && linecount++>0 && ( !firstSecKey.equals(START_SEQUENCE_TAG)  || line.startsWith(END_SEQUENCE_TAG)))) {
                     // dump out last part of section
                     section.add(new String[]{currKey,currVal.toString()});
                     br.reset();
@@ -759,8 +765,8 @@ public class GenbankFormat extends RichSequenceFormat.HeaderlessFormat {
         }
         
         // comments - if any
-        if (!rs.getComments().isEmpty()) {
-            Set comments = rs.getComments();
+        Set comments = rs.getComments();
+        if (!comments.isEmpty()) {
             StringBuffer sb = new StringBuffer();
             for (Iterator i = comments.iterator(); i.hasNext(); ) {
                 Comment c = (SimpleComment)i.next();

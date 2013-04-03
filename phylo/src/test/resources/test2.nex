@@ -1,0 +1,10 @@
+#NEXUS
+
+Begin TREES;
+    TRANSLATE
+    1 'One name',
+    2 'Another name',
+    ;
+	tree test1 = (1,2);
+
+End;
