@@ -53,7 +53,7 @@ public class GeneFeatureHelper {
         for(DNASequence dnaSequence : geneSequenceList.values()){
             String geneSequence = dnaSequence.getSequenceAsString();
             String lcGeneSequence = geneSequence.toLowerCase();
-            String reverseGeneSequence = dnaSequence.getReverseComplement().getSequenceAsString();
+            String reverseGeneSequence = dnaSequence.getReverse().getSequenceAsString();
             String lcReverseGeneSequence = reverseGeneSequence.toLowerCase();
             Integer bioStart = null;
             Integer bioEnd = null;
@@ -769,12 +769,13 @@ public class GeneFeatureHelper {
         for (ChromosomeSequence dnaSequence : chromosomeSequences) {
             for (GeneSequence geneSequence : dnaSequence.getGeneSequences().values()) {
                 for (TranscriptSequence transcriptSequence : geneSequence.getTranscripts().values()) {
-                    DNASequence dnaCodingSequence = transcriptSequence.getDNACodingSequence();
-                    System.out.println("CDS=" + dnaCodingSequence.getSequenceAsString());
+                    //TODO remove?
+//                    DNASequence dnaCodingSequence = transcriptSequence.getDNACodingSequence();
+//                    System.out.println("CDS=" + dnaCodingSequence.getSequenceAsString());
 
                     try {
                         ProteinSequence proteinSequence = transcriptSequence.getProteinSequence();
-                        System.out.println(proteinSequence.getAccession().getID() + " " + proteinSequence);
+//                        System.out.println(proteinSequence.getAccession().getID() + " " + proteinSequence);
                         if (proteinSequenceHashMap.containsKey(proteinSequence.getAccession().getID())) {
                             throw new Exception("Duplicate protein sequence id=" + proteinSequence.getAccession().getID() + " found at Gene id=" + geneSequence.getAccession().getID());
                         } else {

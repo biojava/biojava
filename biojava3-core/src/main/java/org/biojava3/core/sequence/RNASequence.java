@@ -56,10 +56,10 @@ public class RNASequence extends AbstractSequence<NucleotideCompound> {
   }
 
   public SequenceView<NucleotideCompound> getReverseComplement() {
-    return new ComplementSequenceView<NucleotideCompound>(getReverse());
+    return new ComplementSequenceView<NucleotideCompound>(getInverse());
   }
 
-  public SequenceView<NucleotideCompound> getReverse() {
+  public SequenceView<NucleotideCompound> getInverse() {
     return new ReversedSequenceView<NucleotideCompound>(this);
   }
 

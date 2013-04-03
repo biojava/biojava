@@ -53,6 +53,7 @@ import org.biojava3.core.sequence.features.FeaturesKeyWordInterface;
 import org.biojava3.core.sequence.storage.SequenceAsStringHelper;
 import org.biojava3.core.sequence.template.CompoundSet;
 import org.biojava3.core.sequence.template.ProxySequenceReader;
+import org.biojava3.core.sequence.template.SequenceMixin;
 import org.biojava3.core.sequence.template.SequenceView;
 import org.biojava3.core.util.XMLHelper;
 import org.w3c.dom.Document;
@@ -130,6 +131,11 @@ public class UniprotProxySequenceReader<C extends Compound> implements ProxySequ
 
     public List<C> getAsList() {
         return this.parsedCompounds;
+    }
+
+    @Override
+    public SequenceView<C> getInverse() {
+        return SequenceMixin.inverse(this);
     }
 
     

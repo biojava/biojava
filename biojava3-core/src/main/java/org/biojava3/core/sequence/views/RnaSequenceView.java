@@ -28,7 +28,6 @@ import java.util.Map;
 import org.biojava3.core.sequence.Strand;
 import org.biojava3.core.sequence.compound.NucleotideCompound;
 import org.biojava3.core.sequence.compound.RNACompoundSet;
-import org.biojava3.core.sequence.template.Compound;
 import org.biojava3.core.sequence.template.CompoundSet;
 import org.biojava3.core.sequence.template.ProxySequenceReader;
 import org.biojava3.core.sequence.template.SequenceProxyView;
@@ -60,11 +59,6 @@ public class RnaSequenceView extends SequenceProxyView<NucleotideCompound> imple
     @Override
     public String getSequenceAsString() {
         return SequenceMixin.toString(this);
-    }
-
-    @Override
-    public String getSequenceAsString(Integer start, Integer end, Strand strand) {
-        throw new UnsupportedOperationException("Cannot do this");
     }
 
     @SuppressWarnings("unchecked")

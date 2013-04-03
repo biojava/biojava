@@ -37,6 +37,7 @@ import org.biojava3.protmod.ComponentType;
 import org.biojava3.protmod.ModificationCategory;
 import org.biojava3.protmod.ProteinModification;
 
+
 /**
  * 
  * @author Jianjiong Gao
@@ -44,51 +45,21 @@ import org.biojava3.protmod.ProteinModification;
  */
 public class ModifiedCompoundImpl
 implements ModifiedCompound, Serializable {
-	private static final long serialVersionUID = -3809110608450334460L;
+	public static final long serialVersionUID = -3809110608450334460L;
+
+
+	ProteinModification modification;
+	Set<StructureGroup> groups;
+	Map<Set<StructureGroup>, Set<StructureAtomLinkage>> atomLinkages;
+
 
 	public static final String newline = System.getProperty("line.separator");
-	
-    private static class SerializationProxy implements Serializable {
-        private static final long serialVersionUID = -5345107617243742042L;
-        
-        private final String modificationId;
-    	private final Set<StructureGroup> groups;
-    	private final Set<StructureAtomLinkage> atomLinkages;
-        SerializationProxy(ModifiedCompoundImpl actualObj) {
-            this.modificationId = actualObj.modification.getId();
-            this.groups = actualObj.groups;
-            if (actualObj.atomLinkages == null)
-            	this.atomLinkages = null;
-            else
-            	this.atomLinkages = actualObj.getAtomLinkages();
-        }
 
-        private Object readResolve() {
-        	ProteinModification modification = ProteinModification.getById(modificationId);
-        	if (atomLinkages==null) {
-        		if (groups==null || groups.size()!=1) {
-        			throw new IllegalStateException("Only one group is allowed without linkage.");
-        		}
-        		return new ModifiedCompoundImpl(modification, groups.iterator().next());
-        	}
-        	
-            return new ModifiedCompoundImpl(modification, atomLinkages);
-        }
-    }
 
-    private Object writeReplace() {
-        return new SerializationProxy(this);
-    }
+	public ModifiedCompoundImpl(){
 
-    private void readObject(java.io.ObjectInputStream stream)
-    		throws java.io.InvalidObjectException {
-        throw new java.io.InvalidObjectException("Proxy required");
-    }
-	
-	private ProteinModification modification;
-	private final Set<StructureGroup> groups;
-	private Map<Set<StructureGroup>, Set<StructureAtomLinkage>> atomLinkages;
-	
+	}
+
 	/**
 	 * Create a ModifiedCompoundImpl that has only one involved component.
 	 * Use this constructor for a modified residue.
@@ -98,21 +69,21 @@ implements ModifiedCompound, Serializable {
 	 * @throws IllegalArgumentException if either argument is null.
 	 */
 	public ModifiedCompoundImpl (
-			final ProteinModification modification,
-			final StructureGroup modifiedResidue) {
+			ProteinModification modification,
+			StructureGroup modifiedResidue) {
 		if (modification==null || modifiedResidue==null) {
 			throw new IllegalArgumentException("Null argument(s)");
 		}
-		
+
 		this.modification = modification;
-		
+
 		groups = new HashSet<StructureGroup>(1);
 		groups.add(modifiedResidue);
 
 		// is it possible that components be added by addLinkage later?
 		atomLinkages = null;
 	}
-	
+
 	/**
 	 * 
 	 * @param modification ProteinModification.
@@ -120,8 +91,8 @@ implements ModifiedCompound, Serializable {
 	 * @see ProteinModification
 	 * @see StructureAtomLinkage
 	 */
-	public ModifiedCompoundImpl(final ProteinModification modification,
-			final Collection<StructureAtomLinkage> linkages) {
+	public ModifiedCompoundImpl( ProteinModification modification,
+			Collection<StructureAtomLinkage> linkages) {
 		if (modification==null) {
 			throw new IllegalArgumentException("modification cannot be null");
 		}
@@ -129,28 +100,35 @@ implements ModifiedCompound, Serializable {
 		if (linkages==null||linkages.isEmpty()) {
 			throw new IllegalArgumentException("at least one linkage.");
 		}
-		
+
 		this.modification = modification;
-		
+
 		this.groups = new HashSet<StructureGroup>();
-				
+
 		addAtomLinkages(linkages);
-		
+
 	}
-	
+
+	public void setModification(ProteinModification protmod){
+		modification = protmod;
+	}
+
 	@Override
 	public ProteinModification getModification() {
+		if (modification == null)
+			return null;
+
 		if (modification.getCategory()!=ModificationCategory.UNDEFINED) {
 			return modification;
 		}
-		
+
 		int nRes = 0;
 		for (StructureGroup group : groups) {
 			if (group.getType() == ComponentType.AMINOACID) {
 				nRes ++;
 			}
 		}
-		
+
 		ModificationCategory cat;
 		switch (nRes) {
 		case 0:
@@ -172,10 +150,10 @@ implements ModifiedCompound, Serializable {
 		default:
 			cat = ModificationCategory.CROSS_LINK_8_OR_LARGE; break;
 		}
-		
+
 		// TODO: name crashing?
 		String newId = modification.getId() + "." + cat.name();
-		
+
 		ProteinModification mod = ProteinModification.getById(newId);
 		if (mod != null) {
 			return mod;
@@ -195,12 +173,15 @@ implements ModifiedCompound, Serializable {
 				.setSystematicName(modification.getSystematicName())
 				.asModification();
 	}
-	
+
 	@Override
 	public Set<StructureGroup> getGroups() {
+		if ( groups == null)
+			return null;
+
 		return Collections.unmodifiableSet(groups);
 	}
-	
+
 	@Override
 	public Set<StructureGroup> getGroups(ComponentType type) {
 		Set<StructureGroup> result = new HashSet<StructureGroup>();
@@ -212,6 +193,10 @@ implements ModifiedCompound, Serializable {
 		return result;
 	}
 
+	public void setGroups(Set<StructureGroup> groups){
+		this.groups = groups;
+	}
+
 	@Override
 	public Set<StructureAtomLinkage> getAtomLinkages() {
 		if (atomLinkages==null) {
@@ -221,9 +206,17 @@ implements ModifiedCompound, Serializable {
 			for (Set<StructureAtomLinkage> linkages : atomLinkages.values()) {
 				result.addAll(linkages);
 			}
-			
+
 			return result;
 		}
+	}
+
+
+	public void setAtomLinkages(Set<StructureAtomLinkage> linkages) {
+		for (StructureAtomLinkage sali : linkages){
+			addAtomLinkage(sali);
+		}
+
 	}
 
 	@Override
@@ -231,11 +224,11 @@ implements ModifiedCompound, Serializable {
 		if (linkage==null) {
 			throw new IllegalArgumentException("Null linkage");
 		}
-		
+
 		Set<StructureGroup> gs = new HashSet<StructureGroup>(2);
 		gs.add(linkage.getAtom1().getGroup());
 		gs.add(linkage.getAtom2().getGroup());
-		
+
 		if (atomLinkages==null) {
 			atomLinkages = new HashMap<Set<StructureGroup>, Set<StructureAtomLinkage>>();
 		}
@@ -249,22 +242,24 @@ implements ModifiedCompound, Serializable {
 
 		return linkages.add(linkage);
 	}
-	
+
 	@Override
 	public void addAtomLinkages(Collection<StructureAtomLinkage> linkages) {
 		if (linkages==null) {
 			throw new IllegalArgumentException("Null linkages");
 		}
-		
+
 		for (StructureAtomLinkage link : linkages) {
 			addAtomLinkage(link);
 		}
 	}
-	
-	
+
+
 	public String toString(){
 		StringBuilder sb = new StringBuilder();
-		
+		if ( modification == null)
+			return "ModifiedCompoundImpl -- not initialized";
+
 		sb.append("Modification_");
 		sb.append(modification.getId());
 		ModificationCategory cat ;
@@ -276,11 +271,17 @@ implements ModifiedCompound, Serializable {
 		sb.append(cat.toString());
 		return sb.toString();
 	}
-	
-	
+
+
 	public String getDescription() {
+
 		StringBuilder sb = new StringBuilder();
 		sb.append("Category: ");
+
+		if ( getModification()  == null) {
+			sb.append(" !!! not initialized !!!");
+			return sb.toString();
+		}
 		sb.append(getModification().getCategory());
 		if (!modification.getKeywords().isEmpty()) {
 			sb.append("; ");
@@ -288,7 +289,7 @@ implements ModifiedCompound, Serializable {
 		}
 		sb.append("; Modification ID: ");
 		sb.append(modification.getId());
-		
+
 		if (modification.getResidId()!=null) {
 			sb.append("; RESID: ");
 			sb.append(modification.getResidId());
@@ -296,9 +297,9 @@ implements ModifiedCompound, Serializable {
 			sb.append(modification.getResidName());
 			sb.append(']');
 		}
-		
+
 		sb.append(" | ");
-		
+
 		if (atomLinkages==null) {
 			for (StructureGroup group : groups) {
 				sb.append(group);
@@ -315,7 +316,12 @@ implements ModifiedCompound, Serializable {
 
 		return sb.toString();
 	}
-	
+
+	public void setDescription(String desc){
+		// do nothing....
+
+	}
+
 	/**
 	 * @return true if same modification and same components; false, otherwise.
 	 */
@@ -324,34 +330,81 @@ implements ModifiedCompound, Serializable {
 		if (!(obj instanceof ModifiedCompound)) {
 			return false;
 		}
-		
+
 		ModifiedCompound mci = (ModifiedCompound)obj;
 		if (mci.getModification() != modification) {
 			return false;
 		}
-		
+
 		if (!groups.equals(mci.getGroups())) {
 			return false;
 		}
-		
+
 		return true;
-		
+
 		// Do not need to consider linkage, since they can be determined by
 		// modification and groups.
 	}
-	
+
 	@Override
 	public int hashCode() {
 		int result = 17;
 		result = result * 32 + modification.hashCode();
-		
+
 		int sum = 0;
 		for (StructureGroup group : groups) {
 			sum += group.hashCode();
 		}
-		
+
 		result = result * 32 + sum;
-		
+
 		return result;
 	}
+
+
+	
+	
+
+
+	private static class SerializationProxy implements Serializable {
+		private static final long serialVersionUID = -5345107617243742042L;
+
+		private final String modificationId;
+		private  Set<StructureGroup> groups;
+		private  Set<StructureAtomLinkage> atomLinkages;
+		SerializationProxy(ModifiedCompoundImpl actualObj) {
+			this.modificationId = actualObj.modification.getId();
+			this.groups = actualObj.groups;
+			if (actualObj.atomLinkages == null)
+				this.atomLinkages = null;
+			else
+				this.atomLinkages = actualObj.getAtomLinkages();
+		}
+
+		private Object readResolve() {
+			ProteinModification modification = ProteinModification.getById(modificationId);
+			if (atomLinkages==null) {
+				if (groups==null || groups.size()!=1) {
+					throw new IllegalStateException("Only one group is allowed without linkage.");
+				}
+				return new ModifiedCompoundImpl(modification, groups.iterator().next());
+			}
+
+			return new ModifiedCompoundImpl(modification, atomLinkages);
+		}
+	}
+
+	private Object writeReplace() {
+		return new SerializationProxy(this);
+	}
+
+	private void readObject(java.io.ObjectInputStream stream)
+	throws java.io.InvalidObjectException {
+		throw new java.io.InvalidObjectException("Proxy required");
+	}
+
+
+
+
+
 }

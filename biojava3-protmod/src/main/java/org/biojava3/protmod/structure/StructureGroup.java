@@ -39,12 +39,17 @@ public class StructureGroup
 implements Serializable, Comparable<StructureGroup> {
 	private static final long serialVersionUID = -5648208521422258019L;
 	
-	private final ResidueNumber resNum;
-	private final String pdbName;
-	private final ComponentType type;
+	private  ResidueNumber resNum;
+	private  String pdbName;
+	private  ComponentType type;
 	
-	public StructureGroup(final ResidueNumber resNum,
-			final String pdbName, final ComponentType type) {
+	public StructureGroup(){
+		resNum = new ResidueNumber();
+		type = ComponentType.AMINOACID;
+	}
+	
+	public StructureGroup( ResidueNumber resNum,
+			 String pdbName,  ComponentType type) {
 		this.resNum = resNum;
 		this.pdbName = pdbName;
 		this.type = type;
@@ -54,25 +59,56 @@ implements Serializable, Comparable<StructureGroup> {
 		return resNum;
 	}
 	
+	public void setPDBResidueNumber(ResidueNumber resNum) {
+		this.resNum = resNum;
+	}
 	public String getChainId() {
 		return resNum.getChainId();
+	}
+	
+	public void setChainId(String chainId){
+		if ( resNum == null)
+			resNum = new ResidueNumber();
+		resNum.setChainId(chainId);
 	}
 	
 	public int getResidueNumber() {
 		return resNum.getSeqNum();
 	}
 	
+	public void setResidueNumber(int seqNr){
+		if ( resNum == null)
+			resNum = new ResidueNumber();
+		resNum.setSeqNum(seqNr);
+	}
+	
 	public Character getInsCode() {
 		return resNum.getInsCode();
+	}
+	
+	public void setInsCode(Character c){
+		if ( resNum == null)
+			resNum = new ResidueNumber();
+		resNum.setInsCode(c);
 	}
 
 	public String getPDBName() {
 		return pdbName;
 	}
+	
+	public void setPDBName(String pdbName){
+		this.pdbName = pdbName;
+		
+	}
 
 	public ComponentType getType() {
 		return type;
 	}
+	
+	public void setType(ComponentType type){
+		this.type  = type;
+	}
+	
 	
 	public boolean isAminoAcid() {
 		return type == ComponentType.AMINOACID;

@@ -44,6 +44,8 @@ import org.biojava3.core.sequence.location.SimpleLocation;
 import org.biojava3.core.sequence.location.template.Location;
 
 import org.biojava3.core.sequence.storage.ArrayListSequenceReader;
+import org.biojava3.core.sequence.views.ComplementSequenceView;
+import org.biojava3.core.sequence.views.ReversedSequenceView;
 
 public abstract class AbstractSequence<C extends Compound> implements Sequence<C> {
 
@@ -532,5 +534,10 @@ public abstract class AbstractSequence<C extends Compound> implements Sequence<C
 
     public int countCompounds(C... compounds) {
         return SequenceMixin.countCompounds(this, compounds);
+    }
+
+    @Override
+    public SequenceView<C> getInverse() {
+        return SequenceMixin.inverse(this);
     }
 }

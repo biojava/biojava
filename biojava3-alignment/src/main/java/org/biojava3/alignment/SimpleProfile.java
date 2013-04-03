@@ -480,7 +480,7 @@ public class SimpleProfile<S extends Sequence<C>, C extends Compound> implements
 							s.append(String.format(seqIndexFormatPre, as.getSequenceIndexAt(start)));
 						}
 
-						s.append(as.getSequenceAsString(start, end, Strand.UNDEFINED));
+						s.append(as.getSubSequence(start, end).getSequenceAsString());
 
 						if (seqIndexPost) {
 							s.append(String.format(seqIndexFormatPost, as.getSequenceIndexAt(end)));
@@ -505,7 +505,7 @@ public class SimpleProfile<S extends Sequence<C>, C extends Compound> implements
 					if (seqIndexPre) {
 						s.append(String.format(seqIndexFormatPre, as.getSequenceIndexAt(start)));
 					}
-					s.append(as.getSequenceAsString(start, end, Strand.UNDEFINED));
+					s.append(as.getSubSequence(start, end).getSequenceAsString());
 					if (seqIndexPost) {
 						s.append(String.format(seqIndexFormatPost, as.getSequenceIndexAt(end)));
 					}
@@ -546,11 +546,10 @@ public class SimpleProfile<S extends Sequence<C>, C extends Compound> implements
 			s.append(String.format(seqIndexFormatPre, as.getSequenceIndexAt(start)));
 		}
 
-		
-		String mySeq = as.getSequenceAsString(start, end, Strand.UNDEFINED);
-		
-		String s1 = as1.getSequenceAsString(start, end, Strand.UNDEFINED);
-		String s2 = as2.getSequenceAsString(start, end, Strand.UNDEFINED);
+        String mySeq = as.getSubSequence(start, end).getSequenceAsString();
+
+        String s1 = as1.getSubSequence(start, end).getSequenceAsString();
+        String s2 = as2.getSubSequence(start, end).getSequenceAsString();
 		
 		for ( int i =0 ; i < s1.length(); i++){
 			if (  i >= s2.length())
@@ -606,8 +605,8 @@ public class SimpleProfile<S extends Sequence<C>, C extends Compound> implements
 				s.append(String.format("%" + (seqIndexPad + 1) + "s", ""));
 			}
 
-			String subseq1 = as1.getSequenceAsString(start, end, Strand.UNDEFINED);
-			String subseq2 = as2.getSequenceAsString(start, end, Strand.UNDEFINED);
+			String subseq1 = as1.getSubSequence(start, end).getSequenceAsString();
+            String subseq2 = as2.getSubSequence(start, end).getSequenceAsString();
 
 			for ( int ii =0 ; ii < subseq1.length() ; ii++){
 				if ( ii >= subseq2.length())

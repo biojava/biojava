@@ -513,6 +513,10 @@ public final class ProteinModification {
 	 */
 	public static Builder register(final String id, final ModificationCategory cat,
 			final ModificationOccurrenceType occType, final ModificationCondition condition) {
+		if ( id == null) throw new IllegalArgumentException("id == null!");
+		if ( cat == null) throw new IllegalArgumentException("cat == null!");
+		if ( occType == null) throw new IllegalArgumentException("occType == null!");
+		if ( condition == null) throw new IllegalArgumentException("condition == null!");
 		if (id==null || cat==null || occType==null || condition==null) {
 			throw new IllegalArgumentException("Null argument(s)!");
 		}

@@ -22,12 +22,21 @@
  *
  */
 
-package org.biojava3.protmod;
+package org.biojava3.protmod.structure;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
+
+import org.biojava3.protmod.Component;
+import org.biojava3.protmod.ComponentType;
+import org.biojava3.protmod.ModificationCategory;
+import org.biojava3.protmod.ModificationCondition;
+import org.biojava3.protmod.ModificationConditionImpl;
+import org.biojava3.protmod.ModificationLinkage;
+import org.biojava3.protmod.ModificationOccurrenceType;
+import org.biojava3.protmod.ProteinModification;
 
 import junit.framework.TestCase;
 

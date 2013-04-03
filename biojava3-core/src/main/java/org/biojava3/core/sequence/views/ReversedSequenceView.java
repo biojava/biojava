@@ -1,6 +1,5 @@
 package org.biojava3.core.sequence.views;
 
-import org.biojava3.core.sequence.Strand;
 import org.biojava3.core.sequence.template.Compound;
 import org.biojava3.core.sequence.template.Sequence;
 import org.biojava3.core.sequence.template.SequenceMixin;
@@ -29,11 +28,6 @@ public class ReversedSequenceView<C extends Compound> extends SequenceProxyView<
         return SequenceMixin.toString(this);
     }
 
-    @Override
-    public String getSequenceAsString(Integer start, Integer end, Strand strand) {
-        throw new UnsupportedOperationException("Cannot do this");
-    }
-
     protected int toIndex(int index) {
         return (sequenceSize - index) + 1;
     }
@@ -41,15 +35,5 @@ public class ReversedSequenceView<C extends Compound> extends SequenceProxyView<
     @Override
     public C getCompoundAt(int position) {
         return super.getCompoundAt(toIndex(position));
-    }
-
-    @Override
-    public int getIndexOf(C compound) {
-        return toIndex(super.getIndexOf(compound));
-    }
-
-    @Override
-    public int getLastIndexOf(C compound) {
-        return toIndex(super.getLastIndexOf(compound));
     }
 }

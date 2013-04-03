@@ -66,21 +66,6 @@ public class DNASequence extends AbstractSequence<NucleotideCompound> {
         super(proxyLoader, compoundSet);
     }
 
-
-
-
-    public SequenceView<NucleotideCompound> getReverseComplement() {
-        return new ComplementSequenceView<NucleotideCompound>(getReverse());
-    }
-
-    public SequenceView<NucleotideCompound> getReverse() {
-        return new ReversedSequenceView<NucleotideCompound>(this);
-    }
-
-    public SequenceView<NucleotideCompound> getComplement() {
-        return new ComplementSequenceView<NucleotideCompound>(this);
-    }
-
     public RNASequence getRNASequence() {
       return getRNASequence(Frame.getDefaultFrame());
     }
@@ -99,6 +84,27 @@ public class DNASequence extends AbstractSequence<NucleotideCompound> {
 
     public int getGCCount() {
         return SequenceMixin.countGC(this);
+    }
+
+    /**
+     * Returns a Sequence which runs in the current reverse order
+     */
+    public SequenceView<NucleotideCompound> getReverse() {
+        return new ReversedSequenceView<NucleotideCompound>(this);
+    }
+
+    /**
+     * Returns a Sequence which will complement every base
+     */
+    public SequenceView<NucleotideCompound> getComplement() {
+        return new ComplementSequenceView<NucleotideCompound>(this);
+    }
+
+    /**
+     * Delegates to {@link #getInverse() } for the reverse complement
+     */
+    public SequenceView<NucleotideCompound> getReverseComplement() {
+        return getInverse();
     }
 
     /**

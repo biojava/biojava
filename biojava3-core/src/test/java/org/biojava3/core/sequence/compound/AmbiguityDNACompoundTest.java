@@ -7,7 +7,7 @@ import java.util.List;
 
 import org.junit.Test;
 
-public class AmbiguityDNACompoundTests {
+public class AmbiguityDNACompoundTest {
 
   private AmbiguityDNACompoundSet set = AmbiguityDNACompoundSet.getDNACompoundSet();
 

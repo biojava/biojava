@@ -46,6 +46,7 @@ import org.biojava.bio.structure.StructureException;
 
 import org.biojava3.protmod.Component;
 import org.biojava3.protmod.ComponentType;
+import org.biojava3.protmod.ModificationCategory;
 import org.biojava3.protmod.ModificationCondition;
 import org.biojava3.protmod.ModificationLinkage;
 import org.biojava3.protmod.ProteinModification;
@@ -260,7 +261,7 @@ public class ProteinModificationIdentifier {
 			List<ModifiedCompound> modComps = new ArrayList<ModifiedCompound>();
 			
 			List<Group> residues = StructureUtil.getAminoAcids(chain);
-			if ( residues.size() == 0)
+			if (residues.isEmpty())
 				System.err.println("WARNING: no amino acids found. Did you parse PDB file with alignSEQRES records?");
 			List<Group> ligands = chain.getAtomLigands();
 			
@@ -341,10 +342,10 @@ public class ProteinModificationIdentifier {
 		for (StructureGroup num : mc.getGroups(ComponentType.LIGAND)) {
 			Group group;
 			try {
-				String numIns = "" + num.getResidueNumber();
-				if (num.getInsCode() != null) {
-					numIns += num.getInsCode();
-				}
+				//String numIns = "" + num.getResidueNumber();
+				//if (num.getInsCode() != null) {
+				//	numIns += num.getInsCode();
+				//}
 				ResidueNumber resNum = new ResidueNumber();
 				resNum.setChainId(chain.getChainID());
 				resNum.setSeqNum(num.getResidueNumber());
@@ -399,7 +400,7 @@ public class ProteinModificationIdentifier {
 			for (int j=0; j<i; j++) {
 				if (remove.contains(j))	continue;
 				ModifiedCompound pre = modComps.get(j);
-				if (!Collections.disjoint(pre.getGroups(), curr.getGroups())) {
+				if (!Collections.disjoint(pre.getGroups(ComponentType.LIGAND), curr.getGroups(ComponentType.LIGAND))) {
 					merging.add(j);
 				}
 			}

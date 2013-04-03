@@ -1,5 +1,6 @@
 package org.biojava3.core.sequence.location;
 
+import org.biojava3.core.sequence.AccessionID;
 import org.biojava3.core.sequence.Strand;
 import org.biojava3.core.sequence.location.template.Location;
 import org.junit.Assert;
@@ -42,9 +43,8 @@ public class LocationParserTest {
                 new SimplePoint(1), new SimplePoint(8), Strand.UNDEFINED,
                 new SimpleLocation(1, 2, Strand.POSITIVE),
                 new SimpleLocation(4, 8, Strand.UNDEFINED,
-                    new SimpleLocation(4, 5, Strand.POSITIVE),
-                    new SimpleLocation(6, 8, Strand.NEGATIVE)
-                )));
+                new SimpleLocation(4, 5, Strand.POSITIVE),
+                new SimpleLocation(6, 8, Strand.NEGATIVE))));
 
         assertInsdcLoc("join(5..10,1..3)", new SimpleLocation(
                 new SimplePoint(5), new SimplePoint(13), Strand.POSITIVE,
@@ -56,6 +56,20 @@ public class LocationParserTest {
                 new SimplePoint(1), new SimplePoint(8), Strand.POSITIVE,
                 new SimpleLocation(1, 2, Strand.POSITIVE),
                 new SimpleLocation(7, 8, Strand.POSITIVE)));
+    }
+
+    @Test
+    public void moreComplex() {
+        assertInsdcLoc("complement(order(1,2..34,complement(34..45),A00001.5:34..45))",
+                new InsdcLocations.OrderLocation(
+                    new SimplePoint(1), new SimplePoint(45), Strand.UNDEFINED,
+                    new SimpleLocation(1, 1, Strand.NEGATIVE),
+                    new SimpleLocation(2, 34, Strand.NEGATIVE),
+                    new SimpleLocation(34, 45, Strand.POSITIVE),
+                    new SimpleLocation(
+                    new SimplePoint(34), new SimplePoint(45),
+                    Strand.NEGATIVE,
+                    new AccessionID("A00001.5", PARSER.getDataSource()))));
     }
 
     public void assertInsdcLoc(String stringLoc, Location expected) {

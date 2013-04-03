@@ -45,12 +45,12 @@ public class ProteinModificationParserTest extends TestCase {
 	private String[][] strucs;
 	
 	public void setUp() {
-		setUpShortTest();
+		strucs = setUpShortTest();
 //		setUpLongTest();
 	}
 	
-	public void setUpShortTest() {
-		strucs = new String[][] {
+	public static String[][] setUpShortTest() {
+		String[][] strucs = new String[][] {
 				// Attachments
 				{"3HN3", "AA0151"}, // NAG
 				{"1ZNF", "AA0053"}, // ACE on THR
@@ -58,12 +58,14 @@ public class ProteinModificationParserTest extends TestCase {
 				{"1SCY", "AA0089"}, // NH2 on HIS
 				
 				// Modified resdiues
+				{"1UIS", "AA0183"}, // NRQ
 				{"3MVJ", "AA0037"}, // SEP
 				{"1DOJ", "AA0065"}, // MEA
 				{"1DOJ", "AA0172"}, // TYS
 				{"3H5R", "AA0302"}, // SNN, note: SNN is not at C-terminal in some structures, e.g. 3I4W
 
 				// Cross link
+				{"1UIS", "AA0379"}, // NRQ
 				{"3M6S", "AA0025"}, // Disulfide bond
 				{"1A6L", "AA0139"}, // F3S
 				{"1A70", "AA0137"}, // FES
@@ -77,10 +79,11 @@ public class ProteinModificationParserTest extends TestCase {
 				{"1CAD", null}, // FE and 4 Cys, cross-link4
 				
 		};
+		return strucs;
 	}
 	
-	public void setUpLongTest() {
-		strucs = new String[][] {
+	public static String[][] setUpLongTest() {
+		String[][] strucs = new String[][] {
 				// Attachments
 				{"3HN3", "AA0151"}, // NAG
 				{"1CPO", "AA0406"}, // XYS
@@ -271,6 +274,7 @@ public class ProteinModificationParserTest extends TestCase {
 				{"3H8L", "AA0513"}, // CYS-S3H-CYS
 				{"1CAD", null}, // FE and 4 Cys, cross-link4
 		};
+		return strucs;
 	}
 	
 	public void testParser() throws IOException, StructureException {

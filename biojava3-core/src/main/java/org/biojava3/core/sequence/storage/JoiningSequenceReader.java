@@ -295,8 +295,8 @@ public class JoiningSequenceReader<C extends Compound> implements ProxySequenceR
         return SequenceMixin.createSubSequence(this, start, end);
     }
 
-    
-    public String getSequenceAsString(Integer start, Integer end, Strand strand) throws UnsupportedOperationException {
-        throw new UnsupportedOperationException("Not supported yet.");
+    @Override
+    public SequenceView<C> getInverse() {
+        return SequenceMixin.inverse(this);
     }
 }

@@ -60,4 +60,6 @@ public interface CompoundSet<C extends Compound> {
 	public boolean hasCompound(C compound);
 
 	public List<C> getAllCompounds();
+
+    boolean isComplementable();
 }

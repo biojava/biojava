@@ -107,14 +107,6 @@ public class SingleCompoundSequenceReader<C extends Compound> implements ProxySe
     }
 
     /**
-     * Unsupported
-     */
-    
-    public String getSequenceAsString(Integer start, Integer end, Strand strand) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    /**
      * Delegates to {@link SequenceMixin#toList(org.biojava3.core.sequence.template.Sequence) }
      */
     
@@ -160,5 +152,10 @@ public class SingleCompoundSequenceReader<C extends Compound> implements ProxySe
     
     public Iterator<C> iterator() {
         return new SequenceMixin.SequenceIterator<C>(this);
+    }
+
+    @Override
+    public SequenceView<C> getInverse() {
+        return SequenceMixin.inverse(this);
     }
 }
