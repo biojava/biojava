@@ -168,7 +168,7 @@ public class PDBFileReader implements StructureIOFile {
 	private static final String LOCAL_BIO_ASSEMBLY_DIRECTORY = "bio_assembly";
 	FileParsingParameters params ;
 
-	private static final long lastRemediationDate ;
+	public static final long lastRemediationDate ;
 
 	static {
 
@@ -551,7 +551,7 @@ public class PDBFileReader implements StructureIOFile {
 
 		String fileName = fpath + getBiologicalAsssemblyFileName(pdbId.toLowerCase(), bioAssemblyId);
 		File f = new File(fileName) ;
-
+		
 		// check if bio assembly file exists in local cache
 		if ( f.exists()) {
 			InputStreamProvider isp = new InputStreamProvider();
@@ -680,6 +680,7 @@ public class PDBFileReader implements StructureIOFile {
 
 		} catch (Exception e){
 			System.err.println("Problem while downloading PDB ID " + pdbId + " from FTP server." );
+			System.err.println("Failed URL: " + ftp);
 			e.printStackTrace();
 			return null;
 		}
@@ -844,6 +845,7 @@ public class PDBFileReader implements StructureIOFile {
 		if (bioAssemblyId == 0) {
 			inStream = getInputStream(pdbId);
 		} else {
+			//System.out.println("loading bioassembly " + bioAssemblyId);
 			inStream = getInputStreamBioAssembly(pdbId);
 		}
 

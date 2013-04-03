@@ -166,7 +166,8 @@ public class LocalCacheStructureProvider implements StructureProvider{
 			uStream.close();
 
 		} catch (Exception e){
-			System.err.println("Problem while downloading PDB ID " + pdbId + " from FTP server." );
+			System.err.println("Problem while downloading PDB ID " + pdbId + " from " + ur );
+			
 			//e.printStackTrace();
 			throw new IOException("Could not download biol. unit for PDB ID " + pdbId);
 			

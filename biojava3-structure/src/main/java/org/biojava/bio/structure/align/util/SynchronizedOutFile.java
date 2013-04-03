@@ -77,9 +77,10 @@ public class SynchronizedOutFile {
 
 		
 		OutputStream out = null;
+		FileOutputStream fileOutputStream=null;
 		try {
 			//This is less code-redundant
-			FileOutputStream fileOutputStream = new FileOutputStream(file, true);
+			fileOutputStream = new FileOutputStream(file, true);
 			OutputStream outputstream = useGzipCompression? new GZIPOutputStream(fileOutputStream) : fileOutputStream;
 			out = new BufferedOutputStream(outputstream);
 			

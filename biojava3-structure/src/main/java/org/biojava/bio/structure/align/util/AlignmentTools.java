@@ -13,8 +13,11 @@ import java.util.TreeSet;
 import java.util.Map.Entry;
 
 import org.biojava.bio.structure.Atom;
+import org.biojava.bio.structure.Calc;
 import org.biojava.bio.structure.ResidueNumber;
+import org.biojava.bio.structure.SVDSuperimposer;
 import org.biojava.bio.structure.StructureException;
+import org.biojava.bio.structure.align.ce.CECalculator;
 import org.biojava.bio.structure.align.model.AFPChain;
 import org.biojava.bio.structure.align.xml.AFPChainXMLParser;
 import org.biojava.bio.structure.jama.Matrix;
@@ -26,7 +29,7 @@ import org.biojava.bio.structure.jama.Matrix;
  *
  */
 public class AlignmentTools {
-	static final boolean debug = false;
+	public static boolean debug = false;
 
 	/**
 	 * Checks that the alignment given by afpChain is sequential. This means
@@ -143,7 +146,97 @@ public class AlignmentTools {
 		return map;
 	}
 	
+	/**
+	 * Applies an alignment k times. Eg if alignmentMap defines function f(x),
+	 * this returns a function f^k(x)=f(f(...f(x)...)).
+	 * 
+	 * @param <T>
+	 * @param alignmentMap The input function, as a map (see {@link AlignmentTools#alignmentAsMap(AFPChain)})
+	 * @param k The number of times to apply the alignment
+	 * @return A new alignment. If the input function is not automorphic
+	 *  (one-to-one), then some inputs may map to null, indicating that the
+	 *  function is undefined for that input.
+	 */
+	public static <T> Map<T,T> applyAlignment(Map<T, T> alignmentMap, int k) {
+		return applyAlignment(alignmentMap, new IdentityMap<T>(), k);
+	}
+	
+	/**
+	 * Applies an alignment k times. Eg if alignmentMap defines function f(x),
+	 * this returns a function f^k(x)=f(f(...f(x)...)).
+	 * 
+	 * To allow for functions with different domains and codomains, the identity
+	 * function allows converting back in a reasonable way. For instance, if 
+	 * alignmentMap represented an alignment between two proteins with different
+	 * numbering schemes, the identity function could calculate the offset
+	 * between residue numbers, eg I(x) = x-offset.
+	 * 
+	 * When an identity function is provided, the returned function calculates
+	 * f^k(x) = f(I( f(I( ... f(x) ... )) )).
+	 * 
+	 * @param <S>
+	 * @param <T>
+	 * @param alignmentMap The input function, as a map (see {@link AlignmentTools#alignmentAsMap(AFPChain)})
+	 * @param identity An identity-like function providing the isomorphism between
+	 *  the codomain of alignmentMap (of type <T>) and the domain (type <S>).
+	 * @param k The number of times to apply the alignment
+	 * @return A new alignment. If the input function is not automorphic
+	 *  (one-to-one), then some inputs may map to null, indicating that the
+	 *  function is undefined for that input.
+	 */
+	public static <S,T> Map<S,T> applyAlignment(Map<S, T> alignmentMap, Map<T,S> identity, int k) {
+		
+		// This implementation simply applies the map k times.
+		// If k were large, it would be more efficient to do this recursively,
+		// (eg f^4 = (f^2)^2) but k will usually be small.
+		
+		if(k<0) throw new IllegalArgumentException("k must be positive");
+		if(k==1) {
+			return new HashMap<S,T>(alignmentMap); 
+		}
+		// Convert to lists to establish a fixed order
+		List<S> preimage = new ArrayList<S>(alignmentMap.keySet()); // currently unmodified
+		List<S> image = new ArrayList<S>(preimage);
+		
+		for(int n=1;n<k;n++) {
+			int deltasSq = 0;
+			int numDeltas = 0;
+			// apply alignment
+			for(int i=0;i<image.size();i++) {
+				S pre = image.get(i);
+				T intermediate = (pre==null?null: alignmentMap.get(pre));
+				S post = (intermediate==null?null: identity.get(intermediate));
+				image.set(i, post);
+			}
+		}
+		
+		
 
+		Map<S, T> imageMap = new HashMap<S,T>(alignmentMap.size());
+		
+		//TODO handle nulls consistently.
+		// assure that all the residues in the domain are valid keys
+		/*
+		for(int i=0;i<preimage.size();i++) {
+			S pre = preimage.get(i);
+			T intermediate = (pre==null?null: alignmentMap.get(pre));
+			S post = (intermediate==null?null: identity.get(intermediate));
+			imageMap.put(post, null);
+		}
+		*/
+		// now populate with actual values
+		for(int i=0;i<preimage.size();i++) {
+			S pre = preimage.get(i);
+			
+			// image is currently f^k-1(x), so take the final step
+			S preK1 = image.get(i);
+			T postK = (preK1==null?null: alignmentMap.get(preK1));
+			imageMap.put(pre,postK);
+			
+		}
+		return imageMap;
+	}
+	
 	/**
 	 * Helper for {@link #getSymmetryOrder(Map, Map, int, float)} with a true
 	 * identity function (X->X).
@@ -192,7 +285,7 @@ public class AlignmentTools {
 	 *  the calculation time and can lead to overfitting. 
 	 * @param minimumMetricChange Percent decrease in root mean squared offsets
 	 *  in order to declare symmetry. 0.4f seems to work well for CeSymm.
-	 * @return The order of symmetry of alignment, or -1 if no order <= 
+	 * @return The order of symmetry of alignment, or 1 if no order <= 
 	 *  maxSymmetry is found.
 	 *  
 	 * @see IdentityMap For a simple identity function
@@ -202,7 +295,7 @@ public class AlignmentTools {
 		List<Integer> preimage = new ArrayList<Integer>(alignment.keySet()); // currently unmodified
 		List<Integer> image = new ArrayList<Integer>(preimage);
 				
-		int bestSymmetry = -1;
+		int bestSymmetry = 1;
 		double bestMetric = Double.POSITIVE_INFINITY; //lower is better
 		boolean foundSymmetry = false;
 		
@@ -259,7 +352,7 @@ public class AlignmentTools {
 		if(foundSymmetry) {
 			return bestSymmetry;
 		} else {
-			return -1;
+			return 1;
 		}
 	}
 	
@@ -474,4 +567,61 @@ public class AlignmentTools {
 		return a;
 	}
 
+	/**
+	 * After the alignment changes (optAln, optLen, blockNum, at a minimum),
+	 * many other properties which depend on the superposition will be invalid.
+	 * 
+	 * This method re-runs a rigid superposition over the whole alignment
+	 * and repopulates the required properties, including RMSD (TotalRMSD) and
+	 * TM-Score.
+	 * @param afpChain
+	 * @param ca1
+	 * @param ca2
+	 * @throws StructureException
+	 * @see {@link CECalculator#calc_rmsd(Atom[], Atom[], int, boolean, boolean)}
+	 *  contains much of the same code, but stores results in a CECalculator
+	 *  instance rather than an AFPChain 
+	 */
+	public static void updateSuperposition(AFPChain afpChain, Atom[] ca1, Atom[] ca2) throws StructureException {
+		
+		// Create arrays of aligned atoms
+		int optLength = afpChain.getOptLength();
+		int alnPos = 0;
+		Atom[] aln1 = new Atom[optLength];
+		Atom[] aln2 = new Atom[optLength];
+		
+		int[] optLen = afpChain.getOptLen();
+		int[][][] optAln = afpChain.getOptAln();
+		int blockNum = afpChain.getBlockNum();
+		for(int blk=0;blk<blockNum;blk++) {
+			for(int pos=0;pos<optLen[blk];pos++) {
+				int res1 = optAln[blk][0][pos];
+				int res2 = optAln[blk][1][pos];
+				aln1[alnPos] = ca1[res1];
+				aln2[alnPos] = ca2[res2];
+				alnPos++;
+			}
+		}
+		
+		// Superimpose
+		SVDSuperimposer svd = new SVDSuperimposer(aln1, aln2);
+		
+		Matrix matrix = svd.getRotation();
+		Atom shift = svd.getTranslation();
+		
+		// Apply transformation to ca2
+		for(Atom a : ca2) {
+			Calc.rotate(a.getGroup(), matrix);
+			Calc.shift(a.getGroup(), shift);
+		}
+		
+		double rmsd = svd.getRMS(ca1, ca2);
+		double tm = svd.getTMScore(aln1, aln2, ca1.length, ca2.length);
+
+		// Store new transformation back to AFPChain
+		//TODO convolve current superposition with previous transformation?
+		afpChain.setTotalRmsdOpt(rmsd);
+		afpChain.setOptRmsd(null);
+		afpChain.setBlockRmsd(null);
+	}
 }

@@ -47,4 +47,8 @@ public class StringManipulationTestsHelper extends TestCase {
 			}
 		}
 	}
+	
+	public void testNothing(){
+		assertTrue(true);
+	}
 }

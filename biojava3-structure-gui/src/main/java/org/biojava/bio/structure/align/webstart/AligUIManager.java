@@ -52,7 +52,7 @@ public class AligUIManager
          }
          
          
-         System.out.println("Auxiliary Look And Feels:");
+         //System.out.println("Auxiliary Look And Feels:");
         // LookAndFeel[] looks = UIManager.getAuxiliaryLookAndFeels();
          //printLookAndFeel(looks);
          

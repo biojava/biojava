@@ -285,6 +285,21 @@ public interface Chain {
      */
     public String getChainID();
     
+    
+    /** If available, returns the internal chain ID that is used in mmCif files, otherwise null
+     * 
+     * @return String or null
+     * @since 3.0.5
+     */
+    public String getInternalChainID();
+    
+    /** Sets the internal chain ID that is used in mmCif files
+     * 
+     * @param internalChainID
+     * @since 3.0.5
+     */
+    public void setInternalChainID(String internalChainID);
+    
     /** string representation.  */
     public String toString();
 	

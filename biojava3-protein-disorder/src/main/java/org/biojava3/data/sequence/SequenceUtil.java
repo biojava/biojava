@@ -71,7 +71,7 @@ public final class SequenceUtil {
      * inversion of AA pattern
      */
     public static final Pattern NON_AA = Pattern.compile(
-	    "[^ARNDCQEGHILKMFPSTWYV]+", Pattern.CASE_INSENSITIVE);
+	    "[^ARNDCQEGHILKMFPSTWYVX]+", Pattern.CASE_INSENSITIVE);
 
     /**
      * Same as AA pattern but with two additional letters - XU
@@ -184,6 +184,7 @@ public final class SequenceUtil {
 	    return false;
 	}
 	if (SequenceUtil.NON_AA.matcher(sequence).find()) {
+		System.out.println("found non aa!");
 	    return false;
 	}
 	final Matcher protmatcher = SequenceUtil.AA.matcher(sequence);

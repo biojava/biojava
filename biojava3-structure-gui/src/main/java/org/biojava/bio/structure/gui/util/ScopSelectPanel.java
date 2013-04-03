@@ -95,7 +95,7 @@ implements StructurePairSelector
       //JPanel panel = new JPanel();
       //panel.setBorder(BorderFactory.createLineBorder(Color.black));
 
-      JLabel l01 = new JLabel("SCOP id:");
+      JLabel l01 = new JLabel("SCOP or domain id:");
 
       //panel.add(l01);
       Box hBox = Box.createHorizontalBox();

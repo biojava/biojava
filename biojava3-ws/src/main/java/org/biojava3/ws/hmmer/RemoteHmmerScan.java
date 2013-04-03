@@ -13,8 +13,8 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 import org.biojava3.core.sequence.ProteinSequence;
-import org.json.JSONArray;
-import org.json.JSONObject;
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 
 
 /** Makes remote calls to the Hmmer3 web site and returns Pfam domain annotations for an input protein sequence.
@@ -102,21 +102,30 @@ public class RemoteHmmerScan implements HmmerScan {
 
 		SortedSet<HmmerResult> results = new TreeSet<HmmerResult>();
 		try {
-			JSONObject json = new JSONObject(result.toString());
+			JSONObject json =  JSONObject.fromObject(result.toString());
 
 			JSONObject hmresults = json.getJSONObject("results");
 
 
 			JSONArray hits = hmresults.getJSONArray("hits");
 
-			for(int i =0 ; i < hits.length() ; i++){
+			for(int i =0 ; i < hits.size() ; i++){
 				JSONObject hit = hits.getJSONObject(i);
 				//System.out.println("hit: "+ hit);
 
 				HmmerResult hmmResult = new HmmerResult();
 
+				Object dclO = hit.get("dcl");
+				Integer dcl = -1;
+				if ( dclO instanceof Long){
+					Long dclL = (Long) dclO;
+					dcl = dclL.intValue();
+				} else if ( dclO instanceof Integer){
+					dcl = (Integer) dclO;
+				} 
+				
 				hmmResult.setAcc((String)hit.get("acc"));
-				hmmResult.setDcl((Integer)hit.get("dcl"));
+				hmmResult.setDcl(dcl);
 				hmmResult.setDesc((String)hit.get("desc"));
 				hmmResult.setEvalue(Float.parseFloat((String)hit.get("evalue")));
 				hmmResult.setName((String)hit.get("name"));
@@ -128,7 +137,7 @@ public class RemoteHmmerScan implements HmmerScan {
 				JSONArray hmmdomains = hit.getJSONArray("domains");
 
 				SortedSet<HmmerDomain> domains = new TreeSet<HmmerDomain>();
-				for ( int j= 0 ; j < hmmdomains.length() ; j++){
+				for ( int j= 0 ; j < hmmdomains.size() ; j++){
 					JSONObject d = hmmdomains.getJSONObject(j);
 					//System.out.println(d);
 					Integer is_reported = getInteger(d.get("is_reported"));

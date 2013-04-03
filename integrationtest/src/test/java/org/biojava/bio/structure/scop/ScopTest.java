@@ -16,7 +16,7 @@ public class ScopTest extends TestCase {
 	boolean debug = false;
 
 	public void testLocalScop(){
-		
+
 		if ( debug ){
 			System.out.println("local");
 		}
@@ -38,18 +38,21 @@ public class ScopTest extends TestCase {
 
 
 	public void testRemoteScop(){
-		
+
 		if (debug) {
 			System.out.println("remote");
 		}
 		long timeS = System.currentTimeMillis();
-		ScopDatabase scop = new RemoteScopInstallation();
-		ScopDatabase defaultScop = ScopFactory.getSCOP();
-		ScopFactory.setScopDatabase(scop);
 
-		runSCOPTests();
+		if (false){
+			ScopDatabase scop = new RemoteScopInstallation();
+			ScopDatabase defaultScop = ScopFactory.getSCOP();
+			ScopFactory.setScopDatabase(scop);
 
-		ScopFactory.setScopDatabase(defaultScop);
+			runSCOPTests();
+
+			ScopFactory.setScopDatabase(defaultScop);
+		}
 		long timeE = System.currentTimeMillis();
 
 		if ( debug ){
@@ -106,8 +109,8 @@ public class ScopTest extends TestCase {
 		// check a domain with multiple ranges
 		List<ScopDomain> domains1xzp = scop.getDomainsForPDB("1xzp");
 		assertTrue(domains1xzp.size() ==4 );
-		
-	
+
+
 		try {
 			Structure s = cache.getStructureForDomain(domains1xzp.get(0));
 			Chain a = s.getChainByPDB("A");

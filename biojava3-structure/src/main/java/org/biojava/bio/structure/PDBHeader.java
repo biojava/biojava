@@ -7,7 +7,12 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+
+import org.biojava.bio.structure.quaternary.ModelTransformationMatrix;
 
 
 /** A class that contains PDB Header information.
@@ -18,10 +23,10 @@ import java.util.Locale;
  */
 public class PDBHeader implements PDBRecord, Serializable{
 	/**
-    *
-    */
-   private static final long serialVersionUID = -5834326174085429508L;
-   String method;
+	 *
+	 */
+	private static final long serialVersionUID = -5834326174085429508L;
+	String method;
 	String title;
 	String description;
 	String idCode;
@@ -31,7 +36,7 @@ public class PDBHeader implements PDBRecord, Serializable{
 	String technique;
 	float resolution;
 	String authors;
-
+	int nrBioAssemblies ;
 	public static final float DEFAULT_RESOLUTION = 99;
 
 	private Long id;
@@ -39,12 +44,16 @@ public class PDBHeader implements PDBRecord, Serializable{
 
 	DateFormat dateFormat;
 
+	Map<Integer,List<ModelTransformationMatrix>> tranformationMap ;
+
 	public PDBHeader(){
 
 		depDate = new Date(0);
 		modDate = new Date(0);
 		dateFormat = new SimpleDateFormat("dd-MMM-yy",Locale.US);
 		resolution = DEFAULT_RESOLUTION;
+		tranformationMap = new HashMap<Integer, List<ModelTransformationMatrix>>();
+		nrBioAssemblies = -1;
 	}
 
 	/** String representation
@@ -122,9 +131,9 @@ public class PDBHeader implements PDBRecord, Serializable{
 		}
 
 		DecimalFormat d2 = (DecimalFormat)NumberFormat.getInstance(java.util.Locale.UK);
-        d2.setMaximumIntegerDigits(2);
-        d2.setMinimumFractionDigits(2);
-        d2.setMaximumFractionDigits(2);
+		d2.setMaximumIntegerDigits(2);
+		d2.setMinimumFractionDigits(2);
+		d2.setMaximumFractionDigits(2);
 
 		buf.append("REMARK   2 RESOLUTION. ");
 		String x = d2.format(resolution);
@@ -152,100 +161,100 @@ public class PDBHeader implements PDBRecord, Serializable{
 	}
 
 	private void printAuthors(StringBuffer buf){
-	   String authors = getAuthors();
-	   if ( authors == null)
-	      return;
-	   if ( authors.equals("")){
-	      return;
-	   }
+		String authors = getAuthors();
+		if ( authors == null)
+			return;
+		if ( authors.equals("")){
+			return;
+		}
 
-	   printMultiLine(buf, "AUTHOR   ", authors,',');
+		printMultiLine(buf, "AUTHOR   ", authors,',');
 
 	}
 
 	private void printMultiLine(StringBuffer buf, String lineStart, String data, char breakChar){
-	   if ( lineStart.length() !=  9)
-	      System.err.println("lineStart != 9, there will be problems :" + lineStart);
+		if ( lineStart.length() !=  9)
+			System.err.println("lineStart != 9, there will be problems :" + lineStart);
 
-	   if ( data.length() < 58) {
-          buf.append(lineStart);
-          buf.append(" ");
-          buf.append(data);
-          buf.append(newline);
-          return;
-      }
-      String thisLine = "";
-      int count = 1;
-      while (data.length() > 57) {
-          // find first whitespace from left
-          // there are 10 chars to the left, so the cutoff position is 56
-         boolean charFound = false;
-         for ( int i =57;i>-1;i--){
-              char c = data.charAt(i);
-              if (c == breakChar){                
-                  // found the whitespace
+		if ( data.length() < 58) {
+			buf.append(lineStart);
+			buf.append(" ");
+			buf.append(data);
+			buf.append(newline);
+			return;
+		}
+		String thisLine = "";
+		int count = 1;
+		while (data.length() > 57) {
+			// find first whitespace from left
+			// there are 10 chars to the left, so the cutoff position is 56
+			boolean charFound = false;
+			for ( int i =57;i>-1;i--){
+				char c = data.charAt(i);
+				if (c == breakChar){                
+					// found the whitespace
 
-                  thisLine = data.substring(0,i+1);
-                  
-                  // prevent endless loop
-                  if (i == 0 )
-                	  i++;
-                  data = data.substring(i);
-                  charFound = true;
-                  //System.out.println(thisLine);
-                  //System.out.println(title);
-                  break;
-              }
-          }
-          // for emergencies...  prevents an endless loop
-          if ( ! charFound){
-             thisLine = data.substring(0,58);
-             data = data.substring(57);             
-          }
-          if ( ( breakChar == ',' ) && ( data.charAt(0)== ',')) {
-             data =   data.substring(1);
-          }
+					thisLine = data.substring(0,i+1);
 
-          //TODO: check structures that have more than 10  lines...
-          // start printing..
+					// prevent endless loop
+					if (i == 0 )
+						i++;
+					data = data.substring(i);
+					charFound = true;
+					//System.out.println(thisLine);
+					//System.out.println(title);
+					break;
+				}
+			}
+			// for emergencies...  prevents an endless loop
+			if ( ! charFound){
+				thisLine = data.substring(0,58);
+				data = data.substring(57);             
+			}
+			if ( ( breakChar == ',' ) && ( data.charAt(0)== ',')) {
+				data =   data.substring(1);
+			}
 
-          buf.append(lineStart);
-          if ( count > 1) {
-              buf.append(count);
-              if ( breakChar != ' ' )
-                 buf.append(" ");
-          }
-          else
-              buf.append(" ");
-          buf.append(thisLine);
+			//TODO: check structures that have more than 10  lines...
+			// start printing..
 
-          // fill up the white space to the right column
-          int l =  thisLine.length()+ 10;
-          while (l < 67){
-              l++;
-              buf.append(" ");
-          }
+			buf.append(lineStart);
+			if ( count > 1) {
+				buf.append(count);
+				if ( breakChar != ' ' )
+					buf.append(" ");
+			}
+			else
+				buf.append(" ");
+			buf.append(thisLine);
 
-          buf.append(newline);
-          count++;
+			// fill up the white space to the right column
+			int l =  thisLine.length()+ 10;
+			while (l < 67){
+				l++;
+				buf.append(" ");
+			}
 
-      }
+			buf.append(newline);
+			count++;
 
-      // last line...
-      if ( data.trim().length() > 0){
-          buf.append(lineStart);
-          buf.append(count);
-          int filledLeft = 10;
-          if ( breakChar != ' ' ) {
-             buf.append(" ");
-             filledLeft++;
-          }
-          buf.append(data);
-          // fill up the white space to the right column
-          int l =  data.length()+ filledLeft;
-          fillLine(buf,l);
-          buf.append(newline);
-      }
+		}
+
+		// last line...
+		if ( data.trim().length() > 0){
+			buf.append(lineStart);
+			buf.append(count);
+			int filledLeft = 10;
+			if ( breakChar != ' ' ) {
+				buf.append(" ");
+				filledLeft++;
+			}
+			buf.append(data);
+			// fill up the white space to the right column
+			int l =  data.length()+ filledLeft;
+			fillLine(buf,l);
+			buf.append(newline);
+		}
 
 	}
 
@@ -468,14 +477,33 @@ public class PDBHeader implements PDBRecord, Serializable{
 	 *
 	 * @return Authors as a string
 	 */
-   public String getAuthors()
-   {
-      return authors;
-   }
+	public String getAuthors()
+	{
+		return authors;
+	}
 
-   public void setAuthors(String authors)
-   {
-      this.authors = authors;
-   }
+	public void setAuthors(String authors)
+	{
+		this.authors = authors;
+	}
+
+	public Map<Integer,List<ModelTransformationMatrix>> getBioUnitTranformationMap() {
+		return tranformationMap ;
+	}
+
+	public void setBioUnitTranformationMap(Map<Integer,List<ModelTransformationMatrix>> tranformationMap) {
+		this.tranformationMap = tranformationMap;
+	}
+
+	public void setNrBioAssemblies(int nrBioAssemblies) {
+		this.nrBioAssemblies = nrBioAssemblies;
+		
+	}
+	
+	public int getNrBioAssemblies() {
+		return nrBioAssemblies;
+	}
+
+
 
 }

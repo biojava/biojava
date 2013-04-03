@@ -74,56 +74,45 @@ public class ResidueNumber implements Serializable, Comparable<ResidueNumber>
 		this.seqNum = seqNum;
 	}
 
-	/**
-	 * Require chainId, insCode, and seqNum to be equal
-	 * @param obj
-	 * @return
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
+	
+
+	
+
 	@Override
 	public boolean equals(Object obj) {
-		if (!(obj instanceof ResidueNumber))
-			return false;
-
-		if (obj==this)
+		if (this == obj)
 			return true;
-
-		ResidueNumber anNumber = (ResidueNumber) obj;
-
-
-
-		if (insCode!=null) {
-			if (insCode != anNumber.getInsCode()) 
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		ResidueNumber other = (ResidueNumber) obj;
+		if (chainId == null) {
+			if (other.chainId != null)
 				return false;
-		} else {
-			if (anNumber.getInsCode()!=null)
+		} else if (!chainId.equals(other.chainId))
+			return false;
+		if (insCode == null) {
+			if (other.insCode != null)
 				return false;
-		}
-		if (seqNum!=null) {
-			if (!seqNum.equals(anNumber.getSeqNum()))
+		} else if (!insCode.equals(other.insCode))
+			return false;
+		if (seqNum == null) {
+			if (other.seqNum != null)
 				return false;
-		} else {
-			if (anNumber.getSeqNum()!=null)
-				return false;
-		}
-
-		if ( chainId != null) {
-			if ( ! chainId.equals(anNumber.getChainId()))
-				return false;
-		} else {
-			if ( anNumber.getChainId() != null)
-				return false;
-		}
-
+		} else if (!seqNum.equals(other.seqNum))
+			return false;
+		
 		return true;
 	}
-
+	
 	@Override
 	public int hashCode() {
-		int result = 17;
-		result = 31 * result + (chainId != null ? chainId.hashCode() : 0);
-		result = 31 * result + (seqNum != null ? seqNum.hashCode() : 0);
-		result = 31 * result + (insCode==null ? 0 : insCode.hashCode());
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((chainId == null) ? 0 : chainId.hashCode());
+		result = prime * result + ((insCode == null) ? 0 : insCode.hashCode());
+		result = prime * result + ((seqNum == null) ? 0 : seqNum.hashCode());
 		return result;
 	}
 
@@ -193,27 +182,40 @@ public class ResidueNumber implements Serializable, Comparable<ResidueNumber>
 		return residueNumber;
 	}
 
-	@Override
+
 	public int compareTo(ResidueNumber other) {
-	
-		// compare chain ID
-		if ( this.getChainId() != null && other.getChainId() != null ) {
-			int chainComp = this.getChainId().compareTo(other.getChainId()); 
-			if (  chainComp != 0 )
-				return chainComp;
-			
-		}
-			
-		// if equal sequence position, compare insCode
-		if ( this.getSeqNum() == other.getSeqNum()) {
-			if (this.getInsCode() != null && other.getInsCode() != null) {
-				return this.getInsCode().compareTo(other.getInsCode());
-			}
-			if ( this.getInsCode() == null && other.getInsCode() != null)
-				return -1;
-			else return 1;
-		}
-		return getSeqNum().compareTo(other.getSeqNum());
 		
+		// chain id
+		if (chainId != null && other.chainId != null) {
+			if (!chainId.equals(other.chainId)) return chainId.compareTo(other.chainId);
+		}
+		if (chainId != null && other.chainId == null) {
+			return 1;
+		} else if (chainId == null && other.chainId != null) {
+			return -1;
+		}
+		
+		// sequence number
+		if (seqNum != null && other.seqNum != null) {
+			if (!seqNum.equals(other.seqNum)) return seqNum.compareTo(other.seqNum);
+		}
+		if (seqNum != null && other.seqNum == null) {
+			return 1;
+		} else if (seqNum == null && other.seqNum != null) {
+			return -1;
+		}
+		
+		// insertion code
+		if (insCode != null && other.insCode != null) {
+			if (!insCode.equals(other.insCode)) return insCode.compareTo(other.insCode);
+		}
+		if (insCode != null && other.insCode == null) {
+			return 1;
+		} else if (insCode == null && other.insCode != null) {
+			return -1;
+		}
+		
+		return 0;
 	}
+	
 }

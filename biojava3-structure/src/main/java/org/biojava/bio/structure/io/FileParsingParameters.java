@@ -94,6 +94,11 @@ public class FileParsingParameters implements Serializable
 	int atomCaThreshold;
 
 
+	/** should we parse the biological assembly information from a file?
+	 * 
+	 */
+	boolean parseBioAssembly;
+
 	/**  the maximum number of atoms we will add to a structure
     this protects from memory overflows in the few really big protein structures.
 	 */
@@ -128,6 +133,8 @@ public class FileParsingParameters implements Serializable
 		maxAtoms = MAX_ATOMS;
 
 		atomCaThreshold = ATOM_CA_THRESHOLD;
+
+		parseBioAssembly = false;
 	}
 
 	/** is secondary structure assignment being parsed from the file?
@@ -312,6 +319,24 @@ public class FileParsingParameters implements Serializable
 	 */
 	public void setAtomCaThreshold(int atomCaThreshold) {
 		this.atomCaThreshold = atomCaThreshold;
+	}
+
+
+	/** Should the biological assembly info (REMARK 350) be parsed from the PDB file?
+	 * 
+	 * @return boolean flag yes/no
+	 */
+	public boolean isParseBioAssembly() {
+		return parseBioAssembly;
+	}
+
+	/** Should the biological assembly info (REMARK 350) be parsed from the PDB file?
+	 *  
+	 * @param parseBioAssembly  boolean flag yes/no
+	 */
+
+	public void setParseBioAssembly(boolean parseBioAssembly) {
+		this.parseBioAssembly = parseBioAssembly;
 	}
 
 

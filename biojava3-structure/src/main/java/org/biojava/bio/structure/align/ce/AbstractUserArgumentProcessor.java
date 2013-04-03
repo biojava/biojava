@@ -47,6 +47,8 @@ import org.biojava.bio.structure.align.util.AFPAlignmentDisplay;
 import org.biojava.bio.structure.align.util.AtomCache;
 import org.biojava.bio.structure.align.util.CliTools;
 import org.biojava.bio.structure.align.util.ConfigurationException;
+import org.biojava.bio.structure.align.util.ResourceManager;
+import org.biojava.bio.structure.align.util.UserConfiguration;
 
 import org.biojava.bio.structure.align.xml.AFPChainXMLConverter;
 import org.biojava.bio.structure.io.PDBFileReader;
@@ -76,6 +78,8 @@ public abstract class AbstractUserArgumentProcessor implements UserArgumentProce
 	public abstract String getDbSearchLegend();
 
 	public void process(String[] argv){
+
+		printAboutMe();
 
 		List<String> mandatoryArgs = getMandatoryArgs();
 
@@ -131,10 +135,15 @@ public abstract class AbstractUserArgumentProcessor implements UserArgumentProce
 		if ( params.getShowDBresult() != null){
 			// user wants to view DB search results:
 
-			System.err.println("not implemented full yet");
-			//DBResultTable table = new DBResultTable();
-			//UserConfiguration config = UserConfiguration.fromStartupParams(params);
-			//table.show(new File(params.getShowDBresult()),config);
+
+			System.err.println("showing DB results...");
+			try {
+				GuiWrapper.showDBResults(params);
+			} catch (Exception e){
+				System.err.println(e.getMessage());
+				e.printStackTrace();
+			}
+
 		}
 
 		String pdb1  = params.getPdb1();
@@ -151,17 +160,35 @@ public abstract class AbstractUserArgumentProcessor implements UserArgumentProce
 	}
 
 
-	private void runDBSearch(){
 
+
+
+	public static void printAboutMe() {
+		try {
+			ResourceManager about = ResourceManager.getResourceManager("about");
+
+			String version = about.getString("project_version");
+			String build   = about.getString("build");
+
+			System.out.println("Protein Comparison Tool " + version + " " + build);
+		} catch (Exception e){
+			e.printStackTrace();
+		}
+
+
+	}
+
+
+	private void runDBSearch(){
 
 
 		String pdbFilePath = params.getPdbFilePath();
 
 		if ( pdbFilePath == null || pdbFilePath.equals("")){
 
-			System.err.println("Please specify mandatory argument -pdbFilePath!");
-			return;
-
+			System.err.println("You did not specify the -pdbFilePath. Can not find PDB files in file system and will assume a temporary location.");
+			UserConfiguration c = new UserConfiguration();
+			pdbFilePath = c.getPdbFilePath();
 		}
 
 
@@ -190,6 +217,13 @@ public abstract class AbstractUserArgumentProcessor implements UserArgumentProce
 			BufferedReader is = new BufferedReader (new InputStreamReader(new FileInputStream(f)));
 
 			BufferedWriter out = new BufferedWriter(new FileWriter(outputFile, true));
+
+			StructureAlignment algorithm =  getAlgorithm();
+
+			String header = "# algorithm:" + algorithm.getAlgorithmName(); 
+			out.write(header);
+			out.write(newline);
+
 			out.write("#Legend: " + newline );
 			String legend = getDbSearchLegend();
 			out.write(legend + newline );
@@ -220,10 +254,7 @@ public abstract class AbstractUserArgumentProcessor implements UserArgumentProce
 				ca1 = StructureTools.getAtomCAArray(structure1);
 				ca2 = StructureTools.getAtomCAArray(structure2);
 
-
-				StructureAlignment algorithm =  getAlgorithm();
 				Object jparams = getParameters();
-
 
 				AFPChain afpChain;
 
@@ -284,7 +315,9 @@ public abstract class AbstractUserArgumentProcessor implements UserArgumentProce
 
 		if ( file1 == null || file2 == null) {
 			if ( path == null){
-				throw new RuntimeException("You did not specify the -pdbFilePath parameter. Can not find the PDB files in your file system.");
+				System.err.println("You did not specify the -pdbFilePath parameter. Can not find the PDB files in your file system and assuming a temporary location.");
+				UserConfiguration c = new UserConfiguration();
+				path = c.getPdbFilePath();
 			}
 
 			AtomCache cache = new AtomCache(path, params.isPdbDirSplit());
@@ -297,8 +330,8 @@ public abstract class AbstractUserArgumentProcessor implements UserArgumentProce
 			structure2 = getStructure(null, name2, file2);			
 		}      
 
-		
-		
+
+
 		if ( structure1 == null){
 			System.err.println("structure 1 is null, can't run alignment.");
 			return;
@@ -315,7 +348,7 @@ public abstract class AbstractUserArgumentProcessor implements UserArgumentProce
 		if ( name2 == null) {
 			name2 = structure2.getName();
 		}
-		
+
 		//                   default:      new:
 		// 1buz - 1ali : time: 8.3s eqr 68 rmsd 3.1 score 161 | time 6.4 eqr 58 rmsd 3.0 scre 168
 		// 5pti - 1tap : time: 6.2s eqr 48 rmsd 2.67 score 164 | time 5.2 eqr 49 rmsd 2.9 score 151
@@ -437,7 +470,7 @@ public abstract class AbstractUserArgumentProcessor implements UserArgumentProce
 				fileName = params.getSaveOutputDir(); 
 				fileName += getAutoFileName(afpChain);
 			} else {
-				fileName += getAutoFileName(afpChain);
+				fileName = getAutoFileName(afpChain);
 			}
 		} else 
 
@@ -449,6 +482,7 @@ public abstract class AbstractUserArgumentProcessor implements UserArgumentProce
 			System.err.println("Can't write outputfile. Either provide a filename using -outFile or set -autoOutputFile to true .");
 			return;
 		}
+		//System.out.println("writing results to " + fileName);
 
 		FileOutputStream out; // declare a file output object
 		PrintStream p; // declare a print stream object

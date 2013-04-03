@@ -46,8 +46,9 @@ public class TestSECalignment extends  TestCase {
 
 	public void testOldSecOutput() throws Exception {
 
-		InputStream inStream = this.getClass().getResourceAsStream("/ce_1fdo.A_2iv2.X.out");
-		assertNotNull(inStream);
+		String fileName = "/ce_1fdo.A_2iv2.X.out";
+		InputStream inStream = this.getClass().getResourceAsStream(fileName);
+		assertNotNull("Could not find file " + fileName +" in resource path. Config error?", inStream);
 		String xml = StringManipulationHelper.convertStreamToString(inStream);
 
 		AtomCache cache = new AtomCache();

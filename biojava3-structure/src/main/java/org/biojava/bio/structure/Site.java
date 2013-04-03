@@ -98,17 +98,16 @@ public class Site implements PDBRecord, Serializable, Comparable<Site> {
         int seqNum = 0;
         int groupsWritten = 0;
         int groupNum = 0;
-        //new StringBuilder for addingthe groups to
+        //new StringBuilder for adding the groups to
         StringBuffer stringBuilder = new StringBuffer();
-        Formatter form = new Formatter(stringBuilder, Locale.UK);
+//        Formatter form = new Formatter(stringBuilder, Locale.UK);
         
         while (groupsWritten < groups.size()) {
             StringBuilder groupsString = new StringBuilder();
             for (int i = 0; i < 4 && groupsWritten < groups.size(); i++) {
                 Group group = groups.get(groupNum);
-                String groupString = String.format("%s %s",
-                        group.getPDBName(),
-                        group.getResidueNumber().toPDB());
+                String groupString = String.format(Locale.UK, "%s %s",
+                        group.getPDBName(), group.getResidueNumber().toPDB());
                 groupsWritten++;
                 groupNum++;
                 //remove the trailing whitespace of the last element of a line
@@ -117,13 +116,13 @@ public class Site implements PDBRecord, Serializable, Comparable<Site> {
                 }
                 groupsString.append(groupString);
             }
-            stringBuilder.append(String.format("SITE   %3d %3s %2d %-62s", seqNum + 1, siteID, groups.size(), groupsString.toString()));
+            stringBuilder.append(String.format(Locale.UK, "SITE   %3d %3s %2d %-62s", seqNum + 1, siteID, groups.size(), groupsString.toString()));
             //iterate the line counter, add the end of line character
             seqNum++;
             stringBuilder.append(lineEnd);
         }
 
-        buf.append(form.toString());
+        buf.append(stringBuilder.toString());
     }
 
     /**

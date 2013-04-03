@@ -106,7 +106,7 @@ public class ResidueNumberTest extends TestCase {
     public void testHashCode() {
 //        System.out.println("hashCode");
         ResidueNumber instance = new ResidueNumber("A", 42, ' ');
-        int expResult = 570246;
+        int expResult = 93290;
         int result = instance.hashCode();
         assertEquals(expResult, result);
     }

@@ -3,7 +3,9 @@
  */
 package org.biojava.bio.structure;
 
+import java.io.BufferedReader;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -14,10 +16,13 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
+import org.biojava.bio.structure.align.util.HTTPConnectionTools;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -64,14 +69,14 @@ import org.xml.sax.helpers.DefaultHandler;
 public class PDBStatus {
 	public static final String DEFAULT_PDB_SERVER = "www.rcsb.org";
 	public static final String PDB_SERVER_PROPERTY = "PDB.SERVER";
-	
+
 	/**
 	 * saves the returned results for further use.
 	 * 
 	 */
 	//TODO Use SoftReferences to allow garbage collection
 	private static Map<String, Map<String, String>> recordsCache= new Hashtable<String, Map<String, String>>(); 
-	
+
 	/**
 	 * Represents the status of PDB IDs. 'OBSOLETE' and 'CURRENT' are the most
 	 * common.
@@ -92,8 +97,8 @@ public class PDBStatus {
 		WDRN,
 		MODEL,
 		UNKNOWN;
-		
-		
+
+
 		/**
 		 * 
 		 * @param statusStrUpper
@@ -135,7 +140,7 @@ public class PDBStatus {
 			return status;
 		}
 	}
-	
+
 	/**
 	 * Get the status of the PDB in question.
 	 * 
@@ -151,7 +156,7 @@ public class PDBStatus {
 			return null;
 		}
 	}
-	
+
 	/**
 	 * Get the status of the a collection of PDBs in question in a single query.
 	 * 
@@ -161,15 +166,15 @@ public class PDBStatus {
 	 */
 	public static Status[] getStatus(String[] pdbIds) {
 		Status[] statuses = new Status[pdbIds.length];
-		
+
 		List<Map<String,String>> attrList = getStatusIdRecords(pdbIds);
 		//Expect a single record
 		if(attrList == null || attrList.size() != pdbIds.length) {
 			System.err.println("Error getting Status for "+pdbIds+" from the PDB website.");
 			return null;
 		}
-		
-		
+
+
 		for(int pdbNum = 0;pdbNum<pdbIds.length;pdbNum++) {
 			//Locate first element of attrList with matching structureId.
 			//attrList is usually short, so don't worry about performance
@@ -194,7 +199,7 @@ public class PDBStatus {
 					System.err.println("Error: Unknown status '"+statusStr+"'");
 					statuses[pdbNum] = null;
 				}
-				
+
 				statuses[pdbNum] = status;
 				foundAttr = true;
 			}
@@ -203,10 +208,10 @@ public class PDBStatus {
 				statuses[pdbNum] = null;
 			}
 		}
-		
+
 		return statuses;
 	}
-	
+
 	/**
 	 * Gets the current version of a PDB ID. This is equivalent to selecting
 	 * the first element from
@@ -222,7 +227,7 @@ public class PDBStatus {
 		else
 			return null;
 	}
-	
+
 	/**
 	 * Gets the PDB which superseded oldPdbId. For CURRENT IDs, this will
 	 * be itself. For obsolete IDs, the behavior depends on the recursion 
@@ -248,129 +253,129 @@ public class PDBStatus {
 			System.err.println("Error getting Status for "+oldPdbId+" from the PDB website.");
 			return null;
 		}
-		
+
 		Map<String,String> attrs = attrList.get(0);
-		
+
 		//Check that the record matches pdbId
 		String id = attrs.get("structureId");
 		if(id == null || !id.equalsIgnoreCase(oldPdbId)) {
 			System.err.println("Error: Results returned from the query don't match "+oldPdbId);
 			return null;
 		}
-		
+
 		//Check that the status is given
 		String statusStr = attrs.get("status");
 		if(statusStr == null ) {
 			System.err.println("Error: No status returned for "+oldPdbId);
 			return null;
 		}
-		
+
 		Status status = Status.fromString(statusStr);
 		if(status == null ) {
 			System.err.println("Error: Unknown status '"+statusStr+"'");
 			return null;
 		}
-		
+
 		// If we're current, just return
 		LinkedList<String> results = new LinkedList<String>();
 		switch(status) {
-			case CURRENT:
+		case CURRENT:
+			results.add(oldPdbId);
+			return results;
+		case OBSOLETE: {
+			String replacementStr = attrs.get("replacedBy");
+			if(replacementStr == null) {
+				System.err.format("Error: %s is OBSOLETE but lacks a replacedBy attribute.\n",oldPdbId);
+				return null;
+			}
+			replacementStr = replacementStr.toUpperCase();
+			//include this result
+			if(includeObsolete) {
 				results.add(oldPdbId);
-				return results;
-			case OBSOLETE: {
-				String replacementStr = attrs.get("replacedBy");
-				if(replacementStr == null) {
-					System.err.format("Error: %s is OBSOLETE but lacks a replacedBy attribute.\n",oldPdbId);
-					return null;
-				}
-				replacementStr = replacementStr.toUpperCase();
-				//include this result
-				if(includeObsolete) {
-					results.add(oldPdbId);
-				}
-				// Some PDBs are not replaced.
-				if(replacementStr.equals("NONE")) {
-					return results; //empty
-				}
-				
-				String[] replacements = replacementStr.split(" ");
-				Arrays.sort(replacements, new Comparator<String>() {
-					public int compare(String o1, String o2) {
-						return o2.compareToIgnoreCase(o1);
-					}
-				});
-				for(String replacement : replacements) {
+			}
+			// Some PDBs are not replaced.
+			if(replacementStr.equals("NONE")) {
+				return results; //empty
+			}
 
-					// Return the replacement.
-					if(recurse) {
-						List<String> others = PDBStatus.getReplacement(replacement, recurse, includeObsolete);
-						mergeReversed(results,others);
-					}
-					else {
-						if(includeObsolete) {
+			String[] replacements = replacementStr.split(" ");
+			Arrays.sort(replacements, new Comparator<String>() {
+				public int compare(String o1, String o2) {
+					return o2.compareToIgnoreCase(o1);
+				}
+			});
+			for(String replacement : replacements) {
+
+				// Return the replacement.
+				if(recurse) {
+					List<String> others = PDBStatus.getReplacement(replacement, recurse, includeObsolete);
+					mergeReversed(results,others);
+				}
+				else {
+					if(includeObsolete) {
+						mergeReversed(results,Arrays.asList(replacement));
+					} else {
+						// check status of replacement
+						Status replacementStatus = getStatus(replacement);
+						switch(replacementStatus) {
+						case OBSOLETE:
+							//ignore obsolete
+							break;
+						case CURRENT:
+						default:
+							// include it
 							mergeReversed(results,Arrays.asList(replacement));
-						} else {
-							// check status of replacement
-							Status replacementStatus = getStatus(replacement);
-							switch(replacementStatus) {
-							case OBSOLETE:
-								//ignore obsolete
-								break;
-							case CURRENT:
-							default:
-								// include it
-								mergeReversed(results,Arrays.asList(replacement));
-							}
 						}
 					}
 				}
-				
-				
-				return results;
 			}
-			case UNKNOWN:
-				return null;
-			default: { //TODO handle other cases explicitly. They might have other syntax than "replacedBy"
-				String replacementStr = attrs.get("replacedBy");
-				
-				if(replacementStr == null) {
-					// If no "replacedBy" attribute, treat like we're current
-					// TODO is this correct?
-					results.add(oldPdbId);
-					return results;
-				}
 
-				replacementStr = replacementStr.toUpperCase();
-				// Some PDBs are not replaced.
-				if(replacementStr.equals("NONE")) {
-					return null;
-				}
-				
-				
-				//include this result, since it's not obsolete
+
+			return results;
+		}
+		case UNKNOWN:
+			return null;
+		default: { //TODO handle other cases explicitly. They might have other syntax than "replacedBy"
+			String replacementStr = attrs.get("replacedBy");
+
+			if(replacementStr == null) {
+				// If no "replacedBy" attribute, treat like we're current
+				// TODO is this correct?
 				results.add(oldPdbId);
-				
-				String[] replacements = replacementStr.split(" ");
-				Arrays.sort(replacements, new Comparator<String>() {
-					public int compare(String o1, String o2) {
-						return o2.compareToIgnoreCase(o1);
-					}
-				});
-				for(String replacement : replacements) {
-
-					// Return the replacement.
-					if(recurse) {
-						List<String> others = PDBStatus.getReplacement(replacement, recurse, includeObsolete);
-						mergeReversed(results,others);
-					}
-					else {
-						mergeReversed(results,Arrays.asList(replacement));
-					}
-				}
-				
-				
 				return results;
 			}
+
+			replacementStr = replacementStr.toUpperCase();
+			// Some PDBs are not replaced.
+			if(replacementStr.equals("NONE")) {
+				return null;
+			}
+
+
+			//include this result, since it's not obsolete
+			results.add(oldPdbId);
+
+			String[] replacements = replacementStr.split(" ");
+			Arrays.sort(replacements, new Comparator<String>() {
+				public int compare(String o1, String o2) {
+					return o2.compareToIgnoreCase(o1);
+				}
+			});
+			for(String replacement : replacements) {
+
+				// Return the replacement.
+				if(recurse) {
+					List<String> others = PDBStatus.getReplacement(replacement, recurse, includeObsolete);
+					mergeReversed(results,others);
+				}
+				else {
+					mergeReversed(results,Arrays.asList(replacement));
+				}
+			}
+
+
+			return results;
+		}
 		}
 	}
 
@@ -384,7 +389,7 @@ public class PDBStatus {
 	 */
 	private static void mergeReversed(List<String> merged,
 			final List<String> other) {
-		
+
 		if(other.isEmpty())
 			return;
 
@@ -392,17 +397,17 @@ public class PDBStatus {
 			merged.addAll(other);
 			return;
 		}
-		
+
 		ListIterator<String> m = merged.listIterator();
 		ListIterator<String> o = other.listIterator();
-		
+
 		String nextM, prevO;
 		prevO = o.next();
 		while(m.hasNext()) {
 			// peek at m
 			nextM = m.next();
 			m.previous();
-			
+
 			//insert from O until exhausted or occurs after nextM
 			while(prevO.compareTo(nextM) > 0) {
 				m.add(prevO);
@@ -418,16 +423,16 @@ public class PDBStatus {
 				}
 				prevO = o.next();
 			}
-			
+
 			m.next();
 		}
 		m.add(prevO);
 		while(o.hasNext()) {
 			m.add(o.next());
 		}
-		
+
 	}
-	
+
 
 	/**
 	 * Get the ID of the protein which was made obsolete by newPdbId.
@@ -447,24 +452,24 @@ public class PDBStatus {
 			System.err.println("Error getting Status for "+newPdbId+" from the PDB website.");
 			return null;
 		}
-		
+
 		Map<String,String> attrs = attrList.get(0);
-		
+
 		//Check that the record matches pdbId
 		String id = attrs.get("structureId");
 		if(id == null || !id.equals(newPdbId)) {
 			System.err.println("Error: Results returned from the query don't match "+newPdbId);
 			return null;
 		}
-		
-		
+
+
 		String replacedList = attrs.get("replaces"); //space-delimited list
 		if(replacedList == null) {
 			// no replaces value; assume root
 			return new ArrayList<String>();
 		}
 		String[] directDescendents = replacedList.split("\\s");
-		
+
 		// Not the root! Return the replaced PDB.
 		if(recurse) {
 			// Note: Assumes a proper directed acyclic graph of revisions
@@ -475,13 +480,13 @@ public class PDBStatus {
 				mergeReversed(allDescendents,roots);
 			}
 			mergeReversed(allDescendents,Arrays.asList(directDescendents));
-			
+
 			return allDescendents;
 		} else {
 			return Arrays.asList(directDescendents);
 		}
 	}
-	
+
 
 	/**
 	 * The status of PDB IDs are cached to reduce server overload.
@@ -491,7 +496,7 @@ public class PDBStatus {
 	public static void clearCache() {
 		recordsCache.clear();
 	}
-	
+
 	/**
 	 * Fetches the status of one or more pdbIDs from the server.
 	 * 
@@ -514,7 +519,7 @@ public class PDBStatus {
 	 * @return A map between attributes and values
 	 */
 	private static List<Map<String, String>> getStatusIdRecords(String[] pdbIDs) {
-		
+
 		List<Map<String,String>> result = new ArrayList<Map<String,String>>(pdbIDs.length);
 
 		String serverName = System.getProperty(PDB_SERVER_PROPERTY);
@@ -539,7 +544,7 @@ public class PDBStatus {
 				urlStr += pdbId + ",";
 			}
 		}
-		
+
 		// check if any ids still need fetching
 		if(urlStr.charAt(urlStr.length()-1) == '=') {
 			return result;
@@ -551,7 +556,7 @@ public class PDBStatus {
 			URL url = new URL(urlStr);
 
 			InputStream uStream = url.openStream();
-			
+
 			/* // Print file directly
 			BufferedReader r = new BufferedReader(new InputStreamReader(uStream));
 			String line = r.readLine();
@@ -560,24 +565,24 @@ public class PDBStatus {
 				line = r.readLine();
 			}
 			r.close();
-			
+
 			uStream = url.openStream();
-			*/
-			
-			
+			 */
+
+
 			InputSource source = new InputSource(uStream);
 			SAXParserFactory parserFactory = SAXParserFactory.newInstance();
 			SAXParser parser = parserFactory.newSAXParser();
 			XMLReader reader = parser.getXMLReader();
-			
+
 			PDBStatusXMLHandler handler = new PDBStatusXMLHandler();
-			
+
 			reader.setContentHandler(handler);
 			reader.parse(source);
-			
+
 			// Fetch results of SAX parsing
 			List<Map<String,String>> records = handler.getRecords();
-			
+
 			//add to cache
 			for(Map<String,String> record : records) {
 				String pdbId = record.get("structureId").toUpperCase();
@@ -585,7 +590,7 @@ public class PDBStatus {
 					recordsCache.put(pdbId, record);
 				}
 			}
-			
+
 			// return results
 			result.addAll(handler.getRecords());			
 		} catch (Exception e){
@@ -596,7 +601,7 @@ public class PDBStatus {
 
 		return result;
 	}
-	
+
 	/**
 	 * Handles idStatus xml by storing attributes for all record elements.
 	 * 
@@ -605,11 +610,11 @@ public class PDBStatus {
 	 */
 	private static class PDBStatusXMLHandler extends DefaultHandler {
 		private List<Map<String,String>> records;
-		
+
 		public PDBStatusXMLHandler() {
 			records = new ArrayList<Map<String,String>>();
 		}
-		
+
 		/**
 		 * @param uri
 		 * @param localName
@@ -645,10 +650,54 @@ public class PDBStatus {
 			super.error(e);
 		}
 
-		
+
 		public List<Map<String, String>> getRecords() {
 			return records;
 		}
+	}
+
+	/** Returns a list of current PDB IDs
+	 * 
+	 * @return a list of PDB IDs, or null if a problem occurred
+	 */
+
+	public static SortedSet<String> getCurrentPDBIds(){
+
+		SortedSet<String> allPDBs = new TreeSet<String>();
+		String serverName = System.getProperty(PDB_SERVER_PROPERTY);
+
+		if ( serverName == null)
+			serverName = DEFAULT_PDB_SERVER;
+		else 
+			System.out.format("Got System property %s=%s\n",PDB_SERVER_PROPERTY,serverName);
+
+		// Build REST query URL
+
+		String urlStr = String.format("http://%s/pdb/rest/getCurrent",serverName);
+		try {
+			URL u = new URL(urlStr);
+
+			InputStream stream = HTTPConnectionTools.getInputStream(u, 60000);
+
+			if (stream != null) {
+				BufferedReader reader = new BufferedReader(
+						new InputStreamReader(stream));
+
+				String line = null;
+
+				while ((line = reader.readLine()) != null) {
+					int index = line.lastIndexOf("structureId=");
+					if (index > 0) {
+						allPDBs.add(line.substring(index + 13, index + 17));
+					}
+				}
+			}
+		} catch (Exception e){
+			e.printStackTrace();
+			return null;
+		}
+		return allPDBs;
+
 	}
 
 }

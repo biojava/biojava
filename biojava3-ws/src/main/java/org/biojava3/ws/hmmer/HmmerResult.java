@@ -1,5 +1,6 @@
 package org.biojava3.ws.hmmer;
 
+import java.io.Serializable;
 import java.util.SortedSet;
 
 /** The results of a Hmmer search for a single sequence
@@ -7,8 +8,13 @@ import java.util.SortedSet;
  * @author Andreas Prlic
  * @since 3.0.3
  */
-public class HmmerResult implements Comparable<HmmerResult>{
+public class HmmerResult implements Comparable<HmmerResult>, Serializable{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -6016026193090737943L;
+	
 	String desc ;
 	Float score;
 	Float evalue;
@@ -117,6 +123,55 @@ public class HmmerResult implements Comparable<HmmerResult>{
 		if ( o.getDomains() == null || o.getDomains().size() == 0)
 			return true;
 		return false;
+	}
+	
+	
+	/** Get the overlap between two HmmerResult objects
+	 * 
+	 * @param other
+	 * @return 0 if no overlap, otherwise the length of the overlap
+	 */
+	public int getOverlapLength(HmmerResult other){
+		
+		int overlap = 0;
+		for ( HmmerDomain d1 : getDomains()){
+			for (HmmerDomain d2 : other.getDomains()){
+				overlap += getOverlap(d1, d2);
+			}
+		}
+		return overlap;
+		
+	}
+	
+	private int getOverlap(HmmerDomain one, HmmerDomain other){
+		int xs = one.getSqFrom();
+		int ys = one.getSqTo();
+		int as = other.getSqFrom();
+		int bs = other.getSqTo();
+
+		int overlap = 0;
+		//1:
+		
+		if ((( xs< as)  && ( as<ys)) || ((xs < bs) && ( bs <= ys)) || (as<xs && ys<bs)) {
+			
+			//2:
+
+			if ( xs < as) {
+				if ( ys < bs) 
+					overlap = ys-as;
+				else
+					overlap = bs-as;
+			} else {
+				if  ( ys < bs) 
+					overlap = ys -xs;
+				else 
+					overlap = bs - xs;
+
+			} 
+
+		}
+
+		return overlap;
 	}
 	
 }

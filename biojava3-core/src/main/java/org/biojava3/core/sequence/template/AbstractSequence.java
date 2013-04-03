@@ -90,7 +90,7 @@ public abstract class AbstractSequence<C extends Compound> implements Sequence<C
 
     /**
      * A ProxySequenceReader allows abstraction of both the storage of the sequence data and the location
-     * of the sequence data. A variety of use cases are possible. A ProxySequenceReader that knows the offset and of teh sequence in
+     * of the sequence data. A variety of use cases are possible. A ProxySequenceReader that knows the offset and of the sequence in
      * a large fasta file. A ProxySequenceReader that can pull Sequence data from Uniprot, NCBI or a custom database.
      * If the ProxySequecneReader implements various interfaces then the sequence will set those interfaces so that calls to
      * various methods will be valid.
@@ -164,7 +164,7 @@ public abstract class AbstractSequence<C extends Compound> implements Sequence<C
     }
 
     /**
-     * Provided for convience if the developer needs to associate data with a sequence
+     * Provided for convince if the developer needs to associate data with a sequence
      *
      * @return
      */

@@ -3,7 +3,7 @@
 	<parent>
 		<artifactId>biojava</artifactId>
 		<groupId>org.biojava</groupId>
-		<version>3.0.4</version>
+		<version>3.0.5</version>
 	</parent>
 	<artifactId>biojava3-protein-disorder</artifactId>
 	<packaging>jar</packaging>
@@ -34,7 +34,7 @@
 							</manifest>
 							 <manifestEntries>
 				                <product>JRONN a Java RONN (www.strubi.ox.ac.uk/RONN)</product>
-              					<url>${pom.url}</url>
+              					<url>${project.url}</url>
 								<author>Peter Troshin</author>
 				            </manifestEntries>
 						</archive>
@@ -47,6 +47,11 @@
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.biojava</groupId>
+			<artifactId>biojava3-core</artifactId>
+			<version>3.0.5</version>
 		</dependency>
 	</dependencies>
 

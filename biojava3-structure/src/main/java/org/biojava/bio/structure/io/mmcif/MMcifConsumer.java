@@ -36,6 +36,9 @@ import org.biojava.bio.structure.io.mmcif.model.Exptl;
 import org.biojava.bio.structure.io.mmcif.model.PdbxEntityNonPoly;
 import org.biojava.bio.structure.io.mmcif.model.PdbxNonPolyScheme;
 import org.biojava.bio.structure.io.mmcif.model.PdbxPolySeqScheme;
+import org.biojava.bio.structure.io.mmcif.model.PdbxStructAssembly;
+import org.biojava.bio.structure.io.mmcif.model.PdbxStructAssemblyGen;
+import org.biojava.bio.structure.io.mmcif.model.PdbxStructOperList;
 import org.biojava.bio.structure.io.mmcif.model.Refine;
 import org.biojava.bio.structure.io.mmcif.model.StructAsym;
 import org.biojava.bio.structure.io.mmcif.model.StructKeywords;
@@ -83,6 +86,9 @@ public interface MMcifConsumer {
 	public void newRefine(Refine r);
 	public void newChemComp(ChemComp c);
 	public void newChemCompDescriptor(ChemCompDescriptor ccd);
+	public void newPdbxStructOperList(PdbxStructOperList structOper);
+	public void newPdbxStrucAssembly(PdbxStructAssembly strucAssembly);
+	public void newPdbxStrucAssemblyGen(PdbxStructAssemblyGen strucAssembly);
 	
 	/** AuditAuthor contains the info from the PDB-AUTHOR records.
 	 *

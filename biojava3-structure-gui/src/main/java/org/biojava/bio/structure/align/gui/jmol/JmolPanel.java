@@ -30,6 +30,7 @@ import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.DecimalFormat;
 import java.util.List;
 
 import javax.swing.JComboBox;
@@ -38,6 +39,7 @@ import javax.swing.JComboBox;
 
 
 import org.biojava.bio.structure.Atom;
+import org.biojava.bio.structure.Calc;
 import org.biojava.bio.structure.Group;
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureTools;
@@ -47,6 +49,7 @@ import org.biojava.bio.structure.domain.LocalProteinDomainParser;
 import org.biojava.bio.structure.domain.pdp.Domain;
 import org.biojava.bio.structure.domain.pdp.Segment;
 import org.biojava.bio.structure.gui.util.color.ColorUtils;
+import org.biojava.bio.structure.jama.Matrix;
 import org.biojava.bio.structure.scop.ScopDatabase;
 import org.biojava.bio.structure.scop.ScopDomain;
 import org.biojava.bio.structure.scop.ScopInstallation;
@@ -127,39 +130,39 @@ implements ActionListener
 	 */
 	public void jmolColorByChain(){
 		String script = 			
-			"function color_by_chain(objtype, color_list) {"+ String.format("%n") +
-			""+ String.format("%n") +
-			"		 if (color_list) {"+ String.format("%n") +
-			"		   if (color_list.type == \"string\") {"+ String.format("%n") +
-			"		     color_list = color_list.split(\",\").trim();"+ String.format("%n") +
-			"		   }"+ String.format("%n") +
-			"		 } else {"+ String.format("%n") +
-			"		   color_list = [\"104BA9\",\"AA00A2\",\"C9F600\",\"FFA200\",\"284A7E\",\"7F207B\",\"9FB82E\",\"BF8B30\",\"052D6E\",\"6E0069\",\"83A000\",\"A66A00\",\"447BD4\",\"D435CD\",\"D8FA3F\",\"FFBA40\",\"6A93D4\",\"D460CF\",\"E1FA71\",\"FFCC73\"];"+ String.format("%n") +
-			"		 }"+ String.format("%n") +
+				"function color_by_chain(objtype, color_list) {"+ String.format("%n") +
+				""+ String.format("%n") +
+				"		 if (color_list) {"+ String.format("%n") +
+				"		   if (color_list.type == \"string\") {"+ String.format("%n") +
+				"		     color_list = color_list.split(\",\").trim();"+ String.format("%n") +
+				"		   }"+ String.format("%n") +
+				"		 } else {"+ String.format("%n") +
+				"		   color_list = [\"104BA9\",\"AA00A2\",\"C9F600\",\"FFA200\",\"284A7E\",\"7F207B\",\"9FB82E\",\"BF8B30\",\"052D6E\",\"6E0069\",\"83A000\",\"A66A00\",\"447BD4\",\"D435CD\",\"D8FA3F\",\"FFBA40\",\"6A93D4\",\"D460CF\",\"E1FA71\",\"FFCC73\"];"+ String.format("%n") +
+				"		 }"+ String.format("%n") +
 
-			"		 var cmd2 = \"\";"+ String.format("%n") +
+				"		 var cmd2 = \"\";"+ String.format("%n") +
 
-			"		 if (!objtype) {"+ String.format("%n") +
-			"		   var type_list  = [ \"backbone\",\"cartoon\",\"dots\",\"halo\",\"label\",\"meshribbon\",\"polyhedra\",\"rocket\",\"star\",\"strand\",\"strut\",\"trace\"];"+ String.format("%n") +
-			"		   cmd2 = \"color \" + type_list.join(\" none; color \") + \" none;\";"+ String.format("%n") +
-			"		   objtype = \"atoms\";"+ String.format("%n") +
+				"		 if (!objtype) {"+ String.format("%n") +
+				"		   var type_list  = [ \"backbone\",\"cartoon\",\"dots\",\"halo\",\"label\",\"meshribbon\",\"polyhedra\",\"rocket\",\"star\",\"strand\",\"strut\",\"trace\"];"+ String.format("%n") +
+				"		   cmd2 = \"color \" + type_list.join(\" none; color \") + \" none;\";"+ String.format("%n") +
+				"		   objtype = \"atoms\";"+ String.format("%n") +
 
-			"		 }"+ String.format("%n") +
+				"		 }"+ String.format("%n") +
 
-			"		 var chain_list  = script(\"show chain\").trim().lines;"+ String.format("%n") +
-			"		 var chain_count = chain_list.length;"+ String.format("%n") +
+				"		 var chain_list  = script(\"show chain\").trim().lines;"+ String.format("%n") +
+				"		 var chain_count = chain_list.length;"+ String.format("%n") +
 
-			"		 var color_count = color_list.length;"+ String.format("%n") +
-			"		 var sel = {selected};"+ String.format("%n") +
-			"		 var cmds = \"\";"+ String.format("%n") +
+				"		 var color_count = color_list.length;"+ String.format("%n") +
+				"		 var sel = {selected};"+ String.format("%n") +
+				"		 var cmds = \"\";"+ String.format("%n") +
 
 
-			"		 for (var chain_number=1; chain_number<=chain_count; chain_number++) {"+ String.format("%n") +
-			"		   // remember, Jmol arrays start with 1, but % can return 0"+ String.format("%n") +
-			"		   cmds += \"select sel and :\" + chain_list[chain_number] + \";color \" + objtype + \" [x\" + color_list[(chain_number-1) % color_count + 1] + \"];\" + cmd2;"+ String.format("%n") +
-			"		 }"+ String.format("%n") +
-			"		 script INLINE @{cmds + \"select sel\"}"+ String.format("%n") +
-			"}";
+				"		 for (var chain_number=1; chain_number<=chain_count; chain_number++) {"+ String.format("%n") +
+				"		   // remember, Jmol arrays start with 1, but % can return 0"+ String.format("%n") +
+				"		   cmds += \"select sel and :\" + chain_list[chain_number] + \";color \" + objtype + \" [x\" + color_list[(chain_number-1) % color_count + 1] + \"];\" + cmd2;"+ String.format("%n") +
+				"		 }"+ String.format("%n") +
+				"		 script INLINE @{cmds + \"select sel\"}"+ String.format("%n") +
+				"}";
 
 		executeCmd(script);
 	}
@@ -172,36 +175,36 @@ implements ActionListener
 		JComboBox source = (JComboBox) event.getSource();
 		String value = source.getSelectedItem().toString();
 
-		
-		
+
+
 		String selectLigand = "select ligand;wireframe 0.16;spacefill 0.5; color cpk ;";
 
 		if ( value.equals("Cartoon")){
 			String script = "hide null; select all;  spacefill off; wireframe off; backbone off;" +
-			" cartoon on; " +
-			" select ligand; wireframe 0.16;spacefill 0.5; color cpk; " +
-			" select *.FE; spacefill 0.7; color cpk ; " +
-			" select *.CU; spacefill 0.7; color cpk ; " +
-			" select *.ZN; spacefill 0.7; color cpk ; " +
-			" select all; ";
+					" cartoon on; " +
+					" select ligand; wireframe 0.16;spacefill 0.5; color cpk; " +
+					" select *.FE; spacefill 0.7; color cpk ; " +
+					" select *.CU; spacefill 0.7; color cpk ; " +
+					" select *.ZN; spacefill 0.7; color cpk ; " +
+					" select all; ";
 			this.executeCmd(script);
 		} else if (value.equals("Backbone")){
 			String script = "hide null; select all; spacefill off; wireframe off; backbone 0.4;" +
-			" cartoon off; " +
-			" select ligand; wireframe 0.16;spacefill 0.5; color cpk; " +
-			" select *.FE; spacefill 0.7; color cpk ; " +
-			" select *.CU; spacefill 0.7; color cpk ; " +
-			" select *.ZN; spacefill 0.7; color cpk ; " +
-			" select all; ";
+					" cartoon off; " +
+					" select ligand; wireframe 0.16;spacefill 0.5; color cpk; " +
+					" select *.FE; spacefill 0.7; color cpk ; " +
+					" select *.CU; spacefill 0.7; color cpk ; " +
+					" select *.ZN; spacefill 0.7; color cpk ; " +
+					" select all; ";
 			this.executeCmd(script);
 		} else if (value.equals("CPK")){
 			String script = "hide null; select all; spacefill off; wireframe off; backbone off;" +
-			" cartoon off; cpk on;" +
-			" select ligand; wireframe 0.16;spacefill 0.5; color cpk; " +
-			" select *.FE; spacefill 0.7; color cpk ; " +
-			" select *.CU; spacefill 0.7; color cpk ; " +
-			" select *.ZN; spacefill 0.7; color cpk ; " +
-			" select all; ";
+					" cartoon off; cpk on;" +
+					" select ligand; wireframe 0.16;spacefill 0.5; color cpk; " +
+					" select *.FE; spacefill 0.7; color cpk ; " +
+					" select *.CU; spacefill 0.7; color cpk ; " +
+					" select *.ZN; spacefill 0.7; color cpk ; " +
+					" select all; ";
 			this.executeCmd(script);
 
 		} else if (value.equals("Ligands")){
@@ -210,12 +213,12 @@ implements ActionListener
 			this.executeCmd(" select within (6.0,ligand); cartoon off; wireframe on; backbone off; display selected; ");
 		} else if ( value.equals("Ball and Stick")){
 			String script = "hide null; restrict not water;  wireframe 0.2; spacefill 25%;" +
-			" cartoon off; backbone off; " +
-			" select ligand; wireframe 0.16; spacefill 0.5; color cpk; " +
-			" select *.FE; spacefill 0.7; color cpk ; " +
-			" select *.CU; spacefill 0.7; color cpk ; " +
-			" select *.ZN; spacefill 0.7; color cpk ; " +
-			" select all; ";
+					" cartoon off; backbone off; " +
+					" select ligand; wireframe 0.16; spacefill 0.5; color cpk; " +
+					" select *.FE; spacefill 0.7; color cpk ; " +
+					" select *.CU; spacefill 0.7; color cpk ; " +
+					" select *.ZN; spacefill 0.7; color cpk ; " +
+					" select all; ";
 			this.executeCmd(script);
 		} else if ( value.equals("By Chain")){
 			jmolColorByChain();
@@ -262,7 +265,7 @@ implements ActionListener
 				i = 0;
 			Color c1 = ColorUtils.colorWheel[i];
 			List<String>ranges = domain.getRanges();
-			
+
 			for (String range : ranges){
 				System.out.println(range);
 				String[] spl = range.split(":");
@@ -275,7 +278,7 @@ implements ActionListener
 				script += " color cartoon [" + c1.getRed() + ","+c1.getGreen() + "," +c1.getBlue()+"] ;";
 				System.out.println(script);
 				evalString(script);
-				
+
 			}
 		}
 
@@ -302,7 +305,7 @@ implements ActionListener
 				for ( Segment s : segments){
 					//System.out.println("   Segment: " + s);
 					//Color c1 = ColorUtils.rotateHue(c, fraction);
-				//	fraction += 1.0/(float)segments.size();
+					//	fraction += 1.0/(float)segments.size();
 					int start = s.getFrom();
 					int end = s.getTo();
 					Group startG = ca[start].getGroup();
@@ -321,6 +324,36 @@ implements ActionListener
 		} catch (Exception e){
 			e.printStackTrace();
 		}
+	}
+
+	public void rotateJmol(Matrix jmolRotation) {
+
+		if ( jmolRotation != null) {
+			double[] zyz = Calc.getZYZEuler(jmolRotation);
+			DecimalFormat df = new DecimalFormat("0.##");
+
+			String script = "reset; rotate z " 
+					+ df.format(zyz[0]) 
+					+ "; rotate y " 
+					+ df.format(zyz[1]) 
+					+"; rotate z "
+					+ df.format(zyz[2])+";";
+
+			executeCmd(script);
+
+		}
+	}
+
+	/** Clean up this instance for garbage collection, to avoid memory leaks...
+	 * 
+	 */
+	public void destroy(){
+			
+		executeCmd("zap;");
+		structure = null;
+		
+		viewer = null;
+		adapter = null;
 	}
 
 }

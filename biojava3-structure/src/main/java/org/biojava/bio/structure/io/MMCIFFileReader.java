@@ -73,19 +73,20 @@ public class MMCIFFileReader implements StructureIOFile {
 	public static final String lineSplit = System.getProperty("file.separator");
 	
 	FileParsingParameters params;
-	
+	SimpleMMcifConsumer consumer;
 	
 	public static void main(String[] args){
 	
-		StructureIOFile reader = new MMCIFFileReader();
+		MMCIFFileReader reader = new MMCIFFileReader();
 		FileParsingParameters params = new FileParsingParameters();
 		reader.setFileParsingParameters(params);
 		
 		try{
-			Structure struc = reader.getStructureById("1gng");
+			Structure struc = reader.getStructureById("1m4x");
 			System.out.println(struc);
 			System.out.println(struc.toPDB());
-
+			
+		
 		} catch (Exception e) {
 			e.printStackTrace();
 		}		
@@ -150,7 +151,7 @@ public class MMCIFFileReader implements StructureIOFile {
 
 		MMcifParser parser = new SimpleMMcifParser();
 
-		SimpleMMcifConsumer consumer = new SimpleMMcifConsumer();
+		consumer = new SimpleMMcifConsumer();
 		   
 		consumer.setFileParsingParameters(params);
 		
@@ -160,6 +161,7 @@ public class MMCIFFileReader implements StructureIOFile {
 		parser.addMMcifConsumer(consumer);
 
 		parser.parse(new BufferedReader(new InputStreamReader(inStream)));
+
 
 		// now get the protein structure.
 		Structure cifStructure = consumer.getStructure();
@@ -224,6 +226,19 @@ public class MMCIFFileReader implements StructureIOFile {
 				if ( f.exists()) {
 					//System.out.println("found!");
 					pdbFile = testpath+ex ;
+					
+					if ( params.isUpdateRemediatedFiles()){
+						long lastModified = f.lastModified();
+
+						if (lastModified < PDBFileReader.lastRemediationDate) {
+							// the file is too old, replace with newer version
+							System.out.println("replacing file " + pdbFile +" with latest remediated file from PDB.");
+							pdbFile = null;
+
+							return null;
+						}
+					}
+					
 
 					InputStreamProvider isp = new InputStreamProvider();
 
@@ -359,6 +374,12 @@ public class MMCIFFileReader implements StructureIOFile {
       
    }
 
-
+   public SimpleMMcifConsumer getMMcifConsumer(){
+	   return consumer;
+   }
+   
+   public void setMMCifConsumer(SimpleMMcifConsumer consumer){
+	   this.consumer = consumer;
+   }
 
 }

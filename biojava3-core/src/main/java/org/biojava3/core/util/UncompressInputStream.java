@@ -481,5 +481,6 @@ public class UncompressInputStream extends FilterInputStream {
     long end = System.currentTimeMillis();
     System.err.println("Decompressed " + tot + " bytes");
     System.err.println("Time: " + (end - beg) / 1000. + " seconds");
+    in.close();
   }
 }

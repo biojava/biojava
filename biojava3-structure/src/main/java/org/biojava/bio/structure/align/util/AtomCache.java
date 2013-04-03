@@ -42,6 +42,10 @@ import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureException;
 import org.biojava.bio.structure.StructureTools;
 import org.biojava.bio.structure.align.ce.AbstractUserArgumentProcessor;
+import org.biojava.bio.structure.align.client.StructureName;
+import org.biojava.bio.structure.cath.CathDomain;
+import org.biojava.bio.structure.cath.CathInstallation;
+import org.biojava.bio.structure.cath.CathSegment;
 import org.biojava.bio.structure.domain.PDPProvider;
 import org.biojava.bio.structure.domain.RemotePDPProvider;
 import org.biojava.bio.structure.io.FileParsingParameters;
@@ -52,6 +56,7 @@ import org.biojava.bio.structure.scop.ScopDescription;
 import org.biojava.bio.structure.scop.ScopDomain;
 import org.biojava.bio.structure.scop.ScopFactory;
 import org.biojava3.core.util.InputStreamProvider;
+import org.biojava3.structure.StructureIO;
 
 
 
@@ -80,9 +85,9 @@ public class AtomCache {
 	Collection<String> currentlyLoading = Collections.synchronizedCollection(new TreeSet<String>());
 
 	private  ScopDatabase scopInstallation ;
-	
+
 	protected PDPProvider pdpprovider;
-	
+
 	boolean autoFetch;
 	boolean isSplit;
 	boolean strictSCOP;
@@ -93,9 +98,9 @@ public class AtomCache {
 	private boolean fetchCurrent;
 
 	public static final String PDP_DOMAIN_IDENTIFIER = "PDP:";
+	public static final String BIOL_ASSEMBLY_IDENTIFIER = "BIO:";
 
 
-	
 	/**
 	 * Default AtomCache constructor.
 	 * 
@@ -303,38 +308,41 @@ public class AtomCache {
 		}
 
 
-		String range = "(";
+		StringWriter range = new StringWriter();
+		range.append("(");
 		int rangePos = 0;
 		for ( String r : domain.getRanges()) {
 			rangePos++;
-			range+= r;
+			range.append(r);
 			if ( ( domain.getRanges().size()> 1) && (rangePos < domain.getRanges().size())){
-				range+=",";
+				range.append(",");
 			}
 
 		}
-		range+=")";
+		range.append(")");
 		//System.out.println("getting range for "+ pdbId + " " + range);
 
-		Structure n = StructureTools.getSubRanges(s, range);
+		Structure n = StructureTools.getSubRanges(s, range.toString());
 
 
-		// get free ligands of first chain...
-		if ( n.getChains().size()> 0) {
-			Chain c1 = n.getChains().get(0);
-			for ( Chain c : s.getChains()) {
-				if ( c1.getChainID().equals(c.getChainID())) {
-					List<Group> ligands = c.getAtomLigands();
+		// get ligands of chain
+		// add the ligands of the chain...
+		StructureName structureName = new StructureName(domain.getScopId());
+		
+		// this does not work for multi-chain domains as of yet...
+		// ignore multi-chain domains
+		if (! structureName.getChainId().equals(".")){
+			Chain newChain  = n.getChainByPDB(structureName.getChainId());
+			Chain origChain = s.getChainByPDB(structureName.getChainId());
+			List<Group> ligands = origChain.getAtomLigands();
 
-					for(Group g: ligands){
-						if ( ! c1.getAtomGroups().contains(g)) {
-							c1.addGroup(g);
-						}
-					}
+			for(Group g: ligands){
+				if ( ! newChain.getAtomGroups().contains(g)) {
+					newChain.addGroup(g);
 				}
-
 			}
 		}
+
 		n.setName(domain.getScopId());
 		n.setPDBCode(domain.getScopId());
 
@@ -342,11 +350,11 @@ public class AtomCache {
 		StringWriter d = new StringWriter();
 		d.append(domain.getClassificationId());
 
-		
-		
+
+
 		if ( scopInstallation != null) {
 			int sf = domain.getSuperfamilyId();
-			
+
 			ScopDescription scopDesc = scopInstallation.getScopDescriptionBySunid(sf);
 
 			if( scopDesc != null){
@@ -469,6 +477,7 @@ public class AtomCache {
 
 		try {
 
+			StructureName structureName = new StructureName(name);
 
 			String pdbId   = null;
 			String chainId = null;
@@ -477,11 +486,12 @@ public class AtomCache {
 
 				pdbId = name; 
 
-			} else if ( name.startsWith("d")){
+			} else if ( structureName.isScopName()){
 
 				// return based on SCOP domain ID
 				return getStructureFromSCOPDomain(name);
-
+			} else if ( structureName.isCathID()) {
+				return getStructureFromCATHDomain(structureName);
 			} else if (name.length() == 6){
 				// name is PDB.CHAINID style (e.g. 4hhb.A)
 
@@ -496,17 +506,7 @@ public class AtomCache {
 
 
 
-			} else if ( (name.length() > 6) &&  ( ! name.startsWith(PDP_DOMAIN_IDENTIFIER) ) && 
-					(name.contains(CHAIN_NR_SYMBOL) || name.contains(UNDERSCORE)) && (! (name.startsWith("file:/") || name.startsWith("http:/")))) {
-
-				// this is a name + range 
-
-				pdbId = name.substring(0,4);
-				// this ID has domain split information...
-				useDomainInfo = true;
-				range = name.substring(5);
-
-			} else if ( name.startsWith("file:/") || name.startsWith("http:/") ) {
+			}  else if ( name.startsWith("file:/") || name.startsWith("http:/") ) {
 
 				// this is a URL
 				try {
@@ -521,7 +521,7 @@ public class AtomCache {
 				}
 
 
-			} else if ( name.startsWith(PDP_DOMAIN_IDENTIFIER)){
+			} else if ( structureName.isPDPDomain()){
 
 				// this is a PDP domain definition
 
@@ -531,6 +531,30 @@ public class AtomCache {
 					e.printStackTrace();
 					return null;
 				}
+			} else if ( name.startsWith(BIOL_ASSEMBLY_IDENTIFIER)){
+
+				try {
+
+					return getBioAssembly(name);
+
+				} catch (Exception e){
+					e.printStackTrace();
+					return null;
+				}
+			} else if ( (name.length() > 6) 
+					&&  ( ! name.startsWith(PDP_DOMAIN_IDENTIFIER) ) 
+					&& (name.contains(CHAIN_NR_SYMBOL) || name.contains(UNDERSCORE)) 
+					&& ( ! (name.startsWith("file:/") || name.startsWith("http:/")))
+
+					) {
+
+				// this is a name + range 
+
+				pdbId = name.substring(0,4);
+				// this ID has domain split information...
+				useDomainInfo = true;
+				range = name.substring(5);
+
 			}
 
 			//System.out.println("got: >" + name + "< " + pdbId + " " + chainId + " useChainNr:" + useChainNr + " " +chainNr + " useDomainInfo:" + useDomainInfo + " " + range);
@@ -610,18 +634,36 @@ public class AtomCache {
 
 	}
 
+
+	private Structure getBioAssembly(String name) throws IOException, StructureException {
+
+		// can be specified as:
+		// BIO:1fah   - first one
+		// BIO:1fah:0 - asym unit
+		// BIO:1fah:1 - first one
+		// BIO:1fah:2 - second one 
+
+		String pdbId = name.substring(4,8);
+		int biolNr = 1;
+		if ( name.length() > 8)
+			biolNr = Integer.parseInt(name.substring(9,name.length()));
+
+		return StructureIO.getBiologicalAssembly(pdbId,biolNr);
+
+	}
+
 	private Structure getPDPStructure(String pdpDomainName) {
 
 		//System.out.println("loading PDP domain from server " + pdpDomainName);
-		 if (pdpprovider == null)
-			 pdpprovider = new RemotePDPProvider(true);
+		if (pdpprovider == null)
+			pdpprovider = new RemotePDPProvider(true);
 
 		return pdpprovider.getDomain(pdpDomainName,this);
 
 	}
 
 	private Structure getStructureFromSCOPDomain(String name)
-	throws IOException, StructureException {
+			throws IOException, StructureException {
 		// looks like a SCOP domain!
 		ScopDomain domain;
 		if( this.strictSCOP) {
@@ -629,6 +671,8 @@ public class AtomCache {
 		} else {
 			domain = guessScopDomain(name);
 		}
+
+		System.out.println(domain);
 		if ( domain != null){
 			Structure s = getStructureForDomain(domain);
 			return s;
@@ -657,6 +701,74 @@ public class AtomCache {
 		}
 
 		throw new StructureException("Unable to get structure for SCOP domain: "+name);
+	}
+
+
+	private Structure getStructureFromCATHDomain(StructureName structureName)
+			throws IOException, StructureException {
+
+
+
+		CathInstallation cathInstall = new CathInstallation(path);
+
+		CathDomain cathDomain = cathInstall.getDomainByCathId(structureName.getName());
+
+		List<CathSegment> segments = cathDomain.getSegments();
+
+		StringWriter range = new StringWriter();
+
+		int rangePos = 0;
+		String chainId = structureName.getChainId();
+		for ( CathSegment segment : segments) {
+			rangePos++;
+
+			range.append(chainId);
+			range.append("_");
+
+			range.append(segment.getStart());
+			range.append("-");
+			range.append(segment.getStop());
+			if ( ( segments.size()> 1) && (rangePos < segments.size())){
+				range.append(",");
+			}
+		}
+
+		String pdbId = structureName.getPdbId();
+
+		Structure s = null;
+
+		try {
+			s = getStructure(pdbId);
+
+		} catch (StructureException ex){
+			System.err.println("error getting Structure for " + pdbId);
+
+			throw new StructureException(ex);
+		}
+
+		String rangeS = range.toString();
+		System.out.println(rangeS);
+		Structure n = StructureTools.getSubRanges(s, rangeS);
+
+		// add the ligands of the chain...
+
+		Chain newChain = n.getChainByPDB(structureName.getChainId());
+		Chain origChain = s.getChainByPDB(structureName.getChainId());
+		List<Group> ligands = origChain.getAtomLigands();
+
+		for(Group g: ligands){
+			if ( ! newChain.getAtomGroups().contains(g)) {
+				newChain.addGroup(g);
+			}
+		}
+
+		// set new Header..
+		n.setName(structureName.getName());
+		n.setPDBCode(structureName.getPdbId());
+
+		n.getPDBHeader().setDescription(cathDomain.getDomainName());
+
+		return n;
 	}
 
 
@@ -866,7 +978,7 @@ public class AtomCache {
 	}
 
 
-	
+
 	/** Send a signal to the cache that the system is shutting down.
 	 * Notifies underlying SerializableCache instances to flush themselves...
 	 */
@@ -878,8 +990,8 @@ public class AtomCache {
 				remotePDP.flushCache();
 			}
 		}
-		
-		
+
+
 		// todo: use a SCOP implementation that is backed by SerializableCache 
 		if ( scopInstallation != null ){
 			if ( scopInstallation instanceof CachedRemoteScopInstallation ){
@@ -887,7 +999,7 @@ public class AtomCache {
 				cacheScop.flushCache();
 			} 
 		} 
-		
+
 	}
 
 	public PDPProvider getPdpprovider() {

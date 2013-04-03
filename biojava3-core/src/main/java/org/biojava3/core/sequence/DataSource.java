@@ -5,7 +5,7 @@
 package org.biojava3.core.sequence;
 
 /**
- *
+ *<pre>
  * GenBank                           gi|gi-number|gb|accession|locus
  * ENA Data Library                  gi|gi-number|emb|accession|locus
  * DDBJ, DNA Database of Japan       gi|gi-number|dbj|accession|locus
@@ -19,6 +19,7 @@ package org.biojava3.core.sequence;
  * General database identifier       gnl|database|identifier
  * NCBI Reference Sequence           ref|accession|locus
  * Local Sequence identifier         lcl|identifier
+ * </pr>
  * @author Scooter Willis <willishf at gmail dot com>
  */
 

@@ -4,65 +4,79 @@
 	<parent>
 		<artifactId>biojava</artifactId>
 		<groupId>org.biojava</groupId>
-		<version>3.0.4</version>
+		<version>3.0.5</version>
 	</parent>
-	<artifactId>biojava3-structure</artifactId>  	
+	<artifactId>biojava3-structure</artifactId>
 	<name>biojava3-structure</name>
-	<description>The protein structure modules of BioJava.</description>
-	<distributionManagement>
-		<downloadUrl>http://www.biojava.org/download/maven/</downloadUrl>
-		<repository>
-			<uniqueVersion>false</uniqueVersion>
-			<id>biojava-maven-repo</id>
-			<name>BioJava Maven Repository</name>
-			<url>scp://portal.open-bio.org/home/websites/biojava.org/html/static/download/maven/</url>
-			<layout>default</layout>
-		</repository>
-	</distributionManagement>
+	<description>The protein structure modules of BioJava.</description>	
 	<dependencies>
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<scope>test</scope>
 		</dependency>
- 		<dependency>
+		<dependency>
 			<groupId>org.biojava</groupId>
 			<artifactId>biojava3-alignment</artifactId>
-			<version>3.0.4</version>
+			<version>3.0.5</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.biojava</groupId>
 			<artifactId>biojava3-core</artifactId>
-			<version>3.0.4</version>
+			<version>3.0.5</version>
 			<scope>compile</scope>
 		</dependency>
 
-<!--  		<dependency>
-			<groupId>org.biojava</groupId>
-			<artifactId>biojava3-core</artifactId>
-			<version>3.0.3-SNAPSHOT</version>
-			<scope>test</scope>
-		</dependency>
- -->
+		<!-- <dependency> <groupId>org.biojava</groupId> <artifactId>biojava3-core</artifactId> 
+			<version>3.0.3-SNAPSHOT</version> <scope>test</scope> </dependency> -->
 	</dependencies>
 	<properties>
 		<jdk.version>1.6</jdk.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.build.targetEncoding>UTF-8</project.build.targetEncoding>
+
+		<maven.build.timestamp.format>yyyyMMdd-HHmm</maven.build.timestamp.format>
+		<timestamp>${maven.build.timestamp}</timestamp>
+
 	</properties>
 	<build>
-		<plugins>			
-				<plugin>
-					<artifactId>maven-compiler-plugin</artifactId>
+		<plugins>
+			<plugin>
+				<artifactId>maven-compiler-plugin</artifactId>
 
-					<configuration>
-						<source>${jdk.version}</source>
-						<target>${jdk.version}</target>
-					</configuration>
-				</plugin>
-			
+				<configuration>
+					<source>${jdk.version}</source>
+					<target>${jdk.version}</target>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-resources-plugin</artifactId>
+				<version>2.5</version>
+			</plugin>
+
 		</plugins>
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>true</filtering>
+				<includes>
+					<include>**/*.properties</include>
+				</includes>
+			</resource>
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>false</filtering>
+				<includes>
+					<include>**/*.cif.gz</include>
+					<include>**/*.pdb</include>
+					<include>**/*.mat</include>
+				</includes>
+			</resource>
+		</resources>
+
 	</build>
 </project>
 

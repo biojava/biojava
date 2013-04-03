@@ -76,7 +76,7 @@ public class FarmJobRunnable implements Runnable {
 	CountProgressListener counter ;
 
 	String userName = null;
-	AtomCache cache;
+	protected AtomCache cache;
 
 	boolean verbose = false;
 	String version = null;
@@ -601,6 +601,7 @@ public class FarmJobRunnable implements Runnable {
 		try {
 			msg = JFatCatClient.sendMultiAFPChainToServer(serverLocation,fullXml, userName, version );
 		} catch (JobKillException e){
+			log(userName+ " Got Job Kill message from server, terminating...");
 			e.printStackTrace();
 			terminate();
 		}

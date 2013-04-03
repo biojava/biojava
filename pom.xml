@@ -4,7 +4,7 @@
 	<groupId>org.biojava</groupId>
 	<artifactId>biojava</artifactId>
 	<packaging>pom</packaging>
-	<version>3.0.4</version>
+	<version>3.0.5</version>
 	<name>biojava</name>
 	<description>BioJava is an open-source project dedicated to providing a Java framework for processing biological data. It provides analytical and statistical routines, parsers for common file formats and allows the manipulation of sequences and 3D structures. The goal of the biojava project is to facilitate rapid application development for bioinformatics.</description>
 	<url>http://www.biojava.org</url>
@@ -20,9 +20,9 @@
   </license>
   </licenses>
 	<scm>
-		<connection>scm:svn:svn://code.open-bio.org/biojava/biojava-live/tags/biojava-3.0.4</connection>
-		<developerConnection>scm:svn:svn+ssh://dev.open-bio.org/home/svn-repositories/biojava/biojava-live/tags/biojava-3.0.4</developerConnection>
-		<url>http://code.open-bio.org/svnweb/index.cgi/biojava/browse/biojava-live/tags/biojava-3.0.4</url>
+		<connection>scm:svn:svn://code.open-bio.org/biojava/biojava-live/tags/biojava-3.0.5</connection>
+		<developerConnection>scm:svn:svn+ssh://dev.open-bio.org/home/svn-repositories/biojava/biojava-live/tags/biojava-3.0.5</developerConnection>
+		<url>http://code.open-bio.org/svnweb/index.cgi/biojava/browse/biojava-live/tags/biojava-3.0.5</url>
 	</scm>
 	<repositories>
 		<repository>
@@ -61,15 +61,22 @@
 			<layout>default</layout>
 		</pluginRepository>
 	</pluginRepositories>
-	<distributionManagement>
-		<downloadUrl>http://www.biojava.org/download/maven/</downloadUrl>
+	<distributionManagement>	
+		<downloadUrl>http://www.biojava.org/download/maven/</downloadUrl>		
 		<repository>
 			<uniqueVersion>false</uniqueVersion>
 			<id>biojava-maven-repo</id>
 			<name>BioJava Maven Repository</name>
-			<url>scp://portal.open-bio.org/home/websites/biojava.org/html/static/download/maven/</url>
+			<url>scp://cloudportal.open-bio.org/home/websites/biojava.org/html/static/download/maven/</url>
 			<layout>default</layout>
 		</repository>
+		<snapshotRepository>
+		<uniqueVersion>false</uniqueVersion>
+			<id>biojava-maven-repo</id>
+			<name>BioJava Maven Repository</name>
+			<url>scp://cloudportal.open-bio.org/home/websites/biojava.org/html/static/download/maven/</url>
+			<layout>default</layout>
+		</snapshotRepository>
 	</distributionManagement>
 	<properties>
 		<jdk.version>1.6</jdk.version>
@@ -82,11 +89,11 @@
 			<plugins>
 				<plugin>
 					<artifactId>maven-clean-plugin</artifactId>
-					<version>2.4</version>
+					<version>2.5</version>
 				</plugin>
 				<plugin>
 					<artifactId>maven-compiler-plugin</artifactId>
-					<version>2.0.2</version>
+					<version>2.5.1</version>
 					<configuration>
 						<source>${jdk.version}</source>
 						<target>${jdk.version}</target>
@@ -94,20 +101,23 @@
 				</plugin>
 				<plugin>
 					<artifactId>maven-dependency-plugin</artifactId>
-					<version>2.0</version>
+					<version>2.5.1</version>
 				</plugin>
 				<plugin>
 					<artifactId>maven-jar-plugin</artifactId>
-					<version>2.3</version>
+					<version>2.4</version>
 				</plugin>
 				<plugin>
 					<artifactId>maven-scm-plugin</artifactId>
-					<version>1.0</version>
+					<version>1.8</version>
 				</plugin>
 
 				<plugin>
 					<artifactId>maven-surefire-plugin</artifactId>
-					<version>2.5</version>
+					<version>2.12.1</version>
+					<configuration>						
+						<argLine>-Xms256m -Xmx2000M</argLine>
+					</configuration> 
 				</plugin>
 				<plugin>
 					<groupId>net.sf</groupId>
@@ -117,12 +127,12 @@
 				<plugin>
 					<groupId>org.jvnet.jaxb2.maven2</groupId>
 					<artifactId>maven-jaxb2-plugin</artifactId>
-					<version>0.7.2</version>
+					<version>0.8.2</version>
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-release-plugin</artifactId>
-					<version>2.1</version>
+					<version>2.3.2</version>
 					<configuration>
 						<tagBase>svn+ssh://dev.open-bio.org/home/svn-repositories/biojava/biojava-live/tags</tagBase>
 						<remoteTagging>true</remoteTagging>
@@ -134,21 +144,54 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-javadoc-plugin</artifactId>
-					<version>2.7</version>
+					<version>2.9</version>
 					<configuration>
+					<maxmemory>256m</maxmemory>
 					<footer>&lt;script src="http://www.google-analytics.com/urchin.js" type="text/javascript"&gt;&lt;/script&gt;&lt;script type="text/javascript"&gt;_uacct = "UA-1326640-1";urchinTracker();&lt;/script&gt;</footer>
 					</configuration>
 					
+				</plugin>					
+				<plugin>
+					<artifactId>maven-assembly-plugin</artifactId>
+					<version>2.4</version>
+					<configuration>
+						<descriptors>
+							<descriptor>src/main/assembly/assembly.xml</descriptor>
+						</descriptors>
+					</configuration>
+
+					<!-- Attach the creation of the assembly to the package phase. -->
+					<executions>
+						<execution>
+							<id>assemble</id>
+							<phase>package</phase>
+							<goals>
+								<goal>single</goal>
+							</goals>
+						</execution>
+					</executions>
+
 				</plugin>
 			</plugins>
 		</pluginManagement>
+		
+		
+		<extensions>
+			<extension>
+				<groupId>org.apache.maven.wagon</groupId>
+				<artifactId>wagon-ssh</artifactId>
+				<version>2.3</version>
+			</extension>
+		</extensions>
+		
 	</build>
+	
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
 				<groupId>junit</groupId>
 				<artifactId>junit</artifactId>
-				<version>4.7</version>
+				<version>4.10</version>
 				<scope>test</scope>
 			</dependency>
 			<dependency>
@@ -175,20 +218,21 @@
 				<groupId>xerces</groupId>
 				<artifactId>xercesImpl</artifactId>
 				<version>2.4.0</version>
-			</dependency>
+			</dependency>			
 		</dependencies>
 	</dependencyManagement>
+	
 	<reporting>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-project-info-reports-plugin</artifactId>
-				<version>2.1.2</version>
+				<version>2.6</version>
 			</plugin>
 			<plugin>
-				<artifactId>maven-javadoc-plugin</artifactId>
-				<version>2.7</version>
-				<configuration>
+				<artifactId>maven-javadoc-plugin</artifactId>		
+				<version>2.9</version>		
+				<configuration>				
 					<aggregate>true</aggregate>
 					<minmemory>140m</minmemory>
 					<maxmemory>140m</maxmemory>
@@ -227,9 +271,7 @@
 					<cacheDir>/statsvn/</cacheDir>
 					<title>BioJava SVN statistics</title>
 				</configuration>
-			</plugin>
-
-
+			</plugin>			
 		</plugins>
 	</reporting>
 
@@ -246,5 +288,8 @@
 		<module>biojava3-ws</module>
 		<module>biojava3-protein-disorder</module>
 		<module>biojava3-aa-prop</module>
+   		<module>integrationtest</module>
+		<module>protein-comparison-tool</module>
+		
 	</modules>
 </project>

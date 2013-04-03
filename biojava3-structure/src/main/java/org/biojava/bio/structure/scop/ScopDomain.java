@@ -70,9 +70,9 @@ public class ScopDomain implements Serializable, Cloneable{
 		buf.append(",cf=");
         buf.append(String.valueOf(foldId));
 		buf.append(",sf=");
-        buf.append(String.valueOf(familyId));
+		buf.append(String.valueOf(superfamilyId));
 		buf.append(",fa=");
-        buf.append(String.valueOf(superfamilyId));
+		buf.append(String.valueOf(familyId));        
 		buf.append(",dm=");
         buf.append(String.valueOf(domainId));
 		buf.append(",sp=");

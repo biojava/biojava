@@ -26,9 +26,9 @@ import org.biojava3.core.sequence.template.Compound;
 
 import org.forester.io.writers.PhylogenyWriter;
 import org.forester.phylogeny.Phylogeny;
-import org.forester.phylogenyinference.BasicSymmetricalDistanceMatrix;
-import org.forester.phylogenyinference.DistanceMatrix;
-import org.forester.phylogenyinference.NeighborJoining;
+import org.forester.evoinference.matrix.distance.BasicSymmetricalDistanceMatrix;
+import org.forester.evoinference.matrix.distance.DistanceMatrix;
+import org.forester.evoinference.distance.NeighborJoining;
 
 /**
  * Tree constructor uses the forrester tree library to build phylogenetic trees using neighbor joining algorithm. The distance matrix
@@ -51,7 +51,7 @@ public class TreeConstructor<C extends AbstractSequence<D>, D extends Compound> 
 
     }
 
-    public TreeConstructor(DistanceMatrix _matrix, TreeType _treeType, TreeConstructionAlgorithm _treeConstructionAlgorithm, NJTreeProgressListener _treeProgessListener) {
+    public TreeConstructor(BasicSymmetricalDistanceMatrix _matrix, TreeType _treeType, TreeConstructionAlgorithm _treeConstructionAlgorithm, NJTreeProgressListener _treeProgessListener) {
         matrix = _matrix;
         copyDistanceMatrix = CheckTreeAccuracy.copyMatrix(matrix);
         treeType = _treeType;
@@ -166,7 +166,7 @@ public class TreeConstructor<C extends AbstractSequence<D>, D extends Compound> 
     }
     boolean verbose = false;
     Phylogeny p = null;
-    DistanceMatrix matrix = null;
+    BasicSymmetricalDistanceMatrix matrix = null;
     DistanceMatrix copyDistanceMatrix = null;
 
     public void process() throws Exception {
@@ -188,8 +188,7 @@ public class TreeConstructor<C extends AbstractSequence<D>, D extends Compound> 
         }
 
         final List<Phylogeny> ps = new ArrayList<Phylogeny>();
-        final NeighborJoining nj = NeighborJoining.createInstance();
-        nj.setVerbose(verbose);
+        final NeighborJoining nj = NeighborJoining.createInstance(verbose);
 
         ps.add(nj.execute(matrix));
         p = ps.get(0);

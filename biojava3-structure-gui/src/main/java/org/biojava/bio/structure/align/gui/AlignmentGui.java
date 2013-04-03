@@ -45,6 +45,7 @@ import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureException;
 import org.biojava.bio.structure.align.StructureAlignment;
 import org.biojava.bio.structure.align.StructureAlignmentFactory;
+import org.biojava.bio.structure.align.ce.AbstractUserArgumentProcessor;
 import org.biojava.bio.structure.align.gui.AlignmentGui;
 import org.biojava.bio.structure.align.gui.ProgressThreadDrawer;
 import org.biojava.bio.structure.align.util.ResourceManager;
@@ -93,6 +94,7 @@ public class AlignmentGui extends JFrame{
 
 
 	public static void main(String[] args){
+		
 		AlignmentGui.getInstance();
 
 	}
@@ -104,7 +106,9 @@ public class AlignmentGui extends JFrame{
 	private static final AlignmentGui me = new AlignmentGui();
 
 	public static AlignmentGui getInstance(){
-
+				
+		AbstractUserArgumentProcessor.printAboutMe();
+		
 		AligUIManager.setLookAndFeel();
 
 		if (!  me.isVisible())
@@ -145,7 +149,7 @@ public class AlignmentGui extends JFrame{
 
 		tabPane.addTab("Select PDB ID", null, tab1, "Select PDB ID to align");
 
-		tabPane.addTab("SCOP domains",null, tab3,"Select SCOP domains to align.");
+		tabPane.addTab("Domains",null, tab3,"Select domains to align.");
 		
 		tabPane.addTab("Custom files",null, tab2,"Align your own files.");
 

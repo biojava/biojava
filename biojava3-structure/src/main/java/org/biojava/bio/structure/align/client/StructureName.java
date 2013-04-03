@@ -21,15 +21,28 @@ public class StructureName implements Comparable<StructureName>, Serializable{
 	protected String name;
 	protected String pdbId;
 	protected String chainId;
-	
+
+	String cathPattern = "[0-9][a-z0-9][a-z0-9][a-z0-9].[0-9][0-9]";
+
+
+	private enum Source {
+		PDB,
+		SCOP,
+		PDP,
+		CATH
+	};
+
+
+	Source mySource = null; 
+
 	public StructureName(String name){
 		if ( name.length() <  4)
 			throw new IllegalArgumentException("This is not a valid StructureName:" + name);
-		
+
 		this.name = name;
-		
+
 		this.pdbId = parsePdbId();
-		
+
 		this.chainId = parseChainId();
 	}
 
@@ -38,45 +51,45 @@ public class StructureName implements Comparable<StructureName>, Serializable{
 	 * @return upper case PDB ID
 	 */
 	public String getPdbId(){
-		
+
 		return pdbId;
 	}
-	
-	
+
+
 	public String getChainId(){
-		
+
 		return chainId;
 	}
-		
+
 	public String getName(){
-		
+
 		return name;
 	}
-	
+
 	public String toString(){
 		StringWriter s = new StringWriter();
-		
+
 		s.append(name);
-		
+
 		s.append(" PDB ID: ");
 		s.append(getPdbId());
-		
+
 		if ( isScopName()) {
 			s.append(" is a SCOP name");
 		}
-		
+
 		String chainID= getChainId();
 		if ( chainID != null) {
 			s.append(" has chain ID: ");
 			s.append(chainID);
-					
+
 		}
-		
+
 		if ( isPDPDomain())
 			s.append(" is a PDP domain");
-		
+
 		return s.toString();
-		
+
 	}
 
 	public boolean isScopName() {
@@ -84,16 +97,18 @@ public class StructureName implements Comparable<StructureName>, Serializable{
 			return true;
 		return false;
 	}
-	
+
+
+
 	public boolean hasChainID(){
 		//return name.contains(AtomCache.CHAIN_SPLIT_SYMBOL);
-		
-		
+
+
 		if ( chainId != null)
 			return true;
 		return false;
 	}
-	
+
 	public boolean isPDPDomain(){
 		return name.startsWith(AtomCache.PDP_DOMAIN_IDENTIFIER);
 	}
@@ -130,42 +145,50 @@ public class StructureName implements Comparable<StructureName>, Serializable{
 			return -1;
 		if ( this.getPdbId() == null)
 			return 1;
-		
+
 		if ( ! o.getPdbId().equals(this.getPdbId())){
 			return this.getPdbId().compareTo(o.getPdbId());
 		}
 
 		return this.getName().compareTo(o.getName());
-		
+
 	}
-	
+
 	private String parsePdbId(){
 		if ( isScopName() ) {
+			mySource = Source.SCOP;
 			return name.substring(1,5).toUpperCase();
 		}
 		else if ( name.startsWith(AtomCache.PDP_DOMAIN_IDENTIFIER)){
 			// starts with PDP:
 			// eg: PDP:3LGFAa
+			mySource = Source.PDP;
 			return name.substring(4,8).toUpperCase();
-		}
-		else  {
-			
+		} else  if ( isCathID()){
+			mySource = Source.CATH;
+			return name.substring(0,4);
+		} else  {
+			mySource = Source.PDB;
 			// all other names start with PDB id
 			return name.substring(0,4).toUpperCase();
 		}
 
 	}
 
+
 	private String parseChainId(){
 		if (name.length() == 6){
 			// name is PDB.CHAINID style (e.g. 4hhb.A)
-			
-		
+
+
 			if ( name.substring(4,5).equals(AtomCache.CHAIN_SPLIT_SYMBOL)) {
 				return name.substring(5,6);
 			}
+		}  else if ( isCathID()){
+			return name.substring(4,5);
 		} else  if ( name.startsWith("d")){
-			
+
+
 
 			Matcher scopMatch = AtomCache.scopIDregex.matcher(name);
 			if( scopMatch.matches() ) {
@@ -175,17 +198,26 @@ public class StructureName implements Comparable<StructureName>, Serializable{
 				// unfortunately SCOP chain IDS are lowercase!
 				return chainID.toUpperCase();
 			}
-			
-			
+
+
 		} else if ( name.startsWith(AtomCache.PDP_DOMAIN_IDENTIFIER)){
 			// eg. PDP:4HHBAa
 			String chainID = name.substring(8,9);
 			//System.out.println("chain " + chainID + " for " + name);
 			return chainID;
 		}
-		
+
 		return null;
 	}
-	
-	
+
+	public boolean isCathID(){
+
+		if ( name.length() != 7 )
+			return false;
+
+		return name.matches(cathPattern);
+	}
+
+
+
 }

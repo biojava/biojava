@@ -57,6 +57,11 @@ public class Refine {
 	String overall_FOM_free_R_set;
 	String overall_FOM_work_R_set;
 	String pdbx_refine_id;
+	String pdbx_diffrn_id;
+	String pdbx_TLS_residual_ADP_flag;
+	String pdbx_overall_SU_R_free_Cruickshank_DPI;
+	String pdbx_overall_SU_R_Blow_DPI;
+	String pdbx_overall_SU_R_free_Blow_DPI;
 
 	public Refine(){
 		aniso_B = new String[3][3];
@@ -516,5 +521,48 @@ public class Refine {
 	public void setOverall_FOM_work_R_set(String overall_FOM_work_R_set) {
 		this.overall_FOM_work_R_set = overall_FOM_work_R_set;
 	}
+
+	public String getPdbx_diffrn_id() {
+		return pdbx_diffrn_id;
+	}
+
+	public void setPdbx_diffrn_id(String pdbx_diffrn_id) {
+		this.pdbx_diffrn_id = pdbx_diffrn_id;
+	}
+
+	public String getPdbx_TLS_residual_ADP_flag() {
+		return pdbx_TLS_residual_ADP_flag;
+	}
+
+	public void setPdbx_TLS_residual_ADP_flag(String pdbx_TLS_residual_ADP_flag) {
+		this.pdbx_TLS_residual_ADP_flag = pdbx_TLS_residual_ADP_flag;
+	}
+
+	public String getPdbx_overall_SU_R_free_Cruickshank_DPI() {
+		return pdbx_overall_SU_R_free_Cruickshank_DPI;
+	}
+
+	public void setPdbx_overall_SU_R_free_Cruickshank_DPI(
+			String pdbx_overall_SU_R_free_Cruickshank_DPI) {
+		this.pdbx_overall_SU_R_free_Cruickshank_DPI = pdbx_overall_SU_R_free_Cruickshank_DPI;
+	}
+
+	public String getPdbx_overall_SU_R_Blow_DPI() {
+		return pdbx_overall_SU_R_Blow_DPI;
+	}
+
+	public void setPdbx_overall_SU_R_Blow_DPI(String pdbx_overall_SU_R_Blow_DPI) {
+		this.pdbx_overall_SU_R_Blow_DPI = pdbx_overall_SU_R_Blow_DPI;
+	}
+
+	public String getPdbx_overall_SU_R_free_Blow_DPI() {
+		return pdbx_overall_SU_R_free_Blow_DPI;
+	}
+
+	public void setPdbx_overall_SU_R_free_Blow_DPI(
+			String pdbx_overall_SU_R_free_Blow_DPI) {
+		this.pdbx_overall_SU_R_free_Blow_DPI = pdbx_overall_SU_R_free_Blow_DPI;
+	}
+	
 
 }

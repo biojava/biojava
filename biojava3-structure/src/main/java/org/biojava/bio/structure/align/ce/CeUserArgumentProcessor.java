@@ -57,8 +57,12 @@ public class CeUserArgumentProcessor extends AbstractUserArgumentProcessor {
 
 
 	public String getDbSearchLegend(){
-		String legend = "# name1\tname2\tscore\tz-score\trmsd\tlen1\tlen2\tsim1\tsim2\t " ;
-		return legend;
+		//String legend = "# name1\tname2\tscore\tz-score\trmsd\tlen1\tlen2\tsim1\tsim2\t " ;
+		//return legend;
+		
+		return "# name1\tname2\tscore\tz-score\trmsd\tlen1\tlen2\tcov1\tcov2\t%ID\tDescription\t " ;
+		
+		
 	}
 	
 

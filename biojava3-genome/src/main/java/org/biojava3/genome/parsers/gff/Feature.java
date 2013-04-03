@@ -1,6 +1,8 @@
 package org.biojava3.genome.parsers.gff;
 
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -17,7 +19,7 @@ public class Feature implements FeatureI {
     private double mScore;			//or . if none
     private int mFrame;				//0,1,2
     private String mAttributes;			//any trailing stuff
-    private HashMap<String, Object> mUserMap;
+    private HashMap<String, String> mUserMap;
 
     /**
      * Get the sequence name. (GFF field 1). Note that feature objects have
@@ -129,7 +131,7 @@ public class Feature implements FeatureI {
         mFrame = feature.mFrame;
         mAttributes = feature.mAttributes;
         initAttributeHashMap();
-        mUserMap = new HashMap<String, Object>(feature.mUserMap);
+        mUserMap = new HashMap<String, String>(feature.mUserMap);
     }
 
     /**
@@ -153,7 +155,7 @@ public class Feature implements FeatureI {
         mFrame = frame;
         mAttributes = attributes;
         initAttributeHashMap();
-        mUserMap = new HashMap<String, Object>();
+        mUserMap = new HashMap<String, String>();
 
     }
 
@@ -170,11 +172,11 @@ public class Feature implements FeatureI {
      *
      * @return The user HashMap.
      */
-    public HashMap<String, Object> userData() {
+    public HashMap<String, String> userData() {
         return mUserMap;
     }
 
-    HashMap<String,String> attributeHashMap = new HashMap<String,String>();
+     HashMap<String,String> attributeHashMap = new HashMap<String,String>();
     
     private void initAttributeHashMap(){
        String[] values = mAttributes.split(";");
@@ -193,7 +195,6 @@ public class Feature implements FeatureI {
            }
            attributeHashMap.put(data[0].trim(), value);
        }
-
     }
     
     /**
@@ -304,4 +305,10 @@ public class Feature implements FeatureI {
         //	assert f.getAttribute( "transcript").equals( "gene_id fantom2" );
         //Log.log( "passed test." );
     }
+
+	@Override
+	public HashMap<String, String> getAttributes() {
+		
+		return attributeHashMap;
+	}
 }

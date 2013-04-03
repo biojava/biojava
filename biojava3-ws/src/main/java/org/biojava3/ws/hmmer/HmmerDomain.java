@@ -1,12 +1,19 @@
 package org.biojava3.ws.hmmer;
 
+import java.io.Serializable;
+
 /** Provides the details of a domain hit 
  * 
  * @author Andreas Prlic
  * @since 3.0.3
  */
-public class HmmerDomain implements Comparable<HmmerDomain>{
+public class HmmerDomain implements Comparable<HmmerDomain>, Serializable{
 
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 8004302800150892757L;
 	
 	Integer sqFrom;
 	Integer sqTo;

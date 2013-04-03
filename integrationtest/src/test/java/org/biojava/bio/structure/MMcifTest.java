@@ -89,7 +89,7 @@ public class MMcifTest extends TestCase {
 	protected void comparePDB2cif(String id, String chainId){
 		String fileName = "/"+id+".cif";
 		InputStream inStream = this.getClass().getResourceAsStream(fileName);
-		assertNotNull(inStream);
+		assertNotNull("Could not find file " + fileName + ". Config problem?" , inStream);
 
 		MMcifParser parser = new SimpleMMcifParser();
 
