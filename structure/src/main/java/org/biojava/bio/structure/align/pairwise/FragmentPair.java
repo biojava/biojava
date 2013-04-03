@@ -205,4 +205,7 @@ public class FragmentPair {
         this.center2 = center2;
     }
     
+    public String toString() {
+    	return String.format("Fragment (%d,%d) len %d", pos1, pos2, length);
+    }
 }

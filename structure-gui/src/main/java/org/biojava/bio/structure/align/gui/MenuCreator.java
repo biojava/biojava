@@ -25,6 +25,8 @@ package org.biojava.bio.structure.align.gui;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.File;
 
 import javax.swing.Box;
@@ -40,6 +42,7 @@ import org.biojava.bio.structure.align.gui.jmol.StructureAlignmentJmol;
 import org.biojava.bio.structure.align.model.AFPChain;
 import org.biojava.bio.structure.align.util.UserConfiguration;
 import org.biojava.bio.structure.align.webstart.WebStartMain;
+import org.biojava.bio.structure.jama.Matrix;
 
 
 
@@ -60,6 +63,7 @@ public class MenuCreator {
 	public static final String LOAD_DB_RESULTS = "Load DB search results";
 	public static final String SAVE_ALIGNMENT_XML = "Save Alignment XML";
 	public static final String LOAD_ALIGNMENT_XML = "Load Alignment XML";
+    public static final String FATCAT_TEXT = "View as FATCAT result";
 	/** provide a JMenuBar that can be added to a JFrame
 	 * 
 	 * @return a JMenuBar
@@ -117,21 +121,12 @@ public class MenuCreator {
 		JMenu align = new JMenu("Align");
 		JMenuItem pairI = getPairwiseAlignmentMenuItem();
 		align.add(pairI);
-		JMenuItem dbI = getDBSearchMenuItem();
-		align.add(dbI);
-
-		if ( afpChain != null){
-			JMenuItem distMax = new  JMenuItem("Show Distance Matrices Current Alignment");
-			distMax.addActionListener(new MyDistMaxListener(afpChain));
-			align.add(distMax);
-		}
-
+		
 		menu.add(align);
 
 		JMenu view = new JMenu("View");
 		view.getAccessibleContext().setAccessibleDescription("View Menu");
 		view.setMnemonic(KeyEvent.VK_V);
-		menu.add(view);
 
 		if ( parent != null){
 			JMenuItem aligpI = MenuCreator.getIcon(parent,ALIGNMENT_PANEL);
@@ -139,7 +134,23 @@ public class MenuCreator {
 
 			JMenuItem textI = MenuCreator.getIcon(parent,TEXT_ONLY);
 			view.add(textI);
+			
+			JMenuItem textF = MenuCreator.getIcon(parent,FATCAT_TEXT);
+            view.add(textF);
 		}
+		
+		if ( afpChain != null){
+			JMenuItem distMax = new  JMenuItem("Show Distance Matrices");
+			distMax.addActionListener(new MyDistMaxListener(afpChain));
+			view.add(distMax);
+			
+			JMenuItem dotplot = new JMenuItem("Show Dot Plot");
+
+			dotplot.addActionListener(new DotPlotListener(afpChain));
+			view.add(dotplot);
+		}
+
+		menu.add(view);
 
 
 		JMenu about = new JMenu("Help");
@@ -160,7 +171,16 @@ public class MenuCreator {
 
 
 	public static JMenuItem getDBResultMenuItem() {
-		JMenuItem item = getIcon(new ActionListener() {
+	   
+	   ImageIcon saveicon = createImageIcon("/icons/kpdf.png");
+       JMenuItem saveI = null;
+
+       if ( saveicon == null)
+           saveI = new JMenuItem(LOAD_DB_RESULTS);
+       else 
+           saveI = new JMenuItem(LOAD_DB_RESULTS, saveicon);
+	   
+		saveI.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {
 				final JFileChooser fc = new JFileChooser();
@@ -176,9 +196,9 @@ public class MenuCreator {
 				}
 
 			}
-		}, LOAD_DB_RESULTS );
+		} );
 
-		return item;
+		return saveI;
 	}
 
 
@@ -271,6 +291,8 @@ public class MenuCreator {
 		JMenuItem textI = MenuCreator.getIcon(actionListener,TEXT_ONLY);
 		view.add(textI);
 
+		JMenuItem textF = MenuCreator.getIcon(actionListener,FATCAT_TEXT);
+        view.add(textF);
 
 
 
@@ -377,6 +399,30 @@ public class MenuCreator {
 		return aboutM;
 	}
 
+
+	   private static JMenuItem getSystemInfoItem()
+	   {
+
+	      ImageIcon helpIcon = createImageIcon("/icons/help.png");
+
+	      JMenuItem aboutM = null;
+
+	      if ( helpIcon == null)
+	          aboutM = new  JMenuItem("System Info");
+	      else
+	          aboutM = new  JMenuItem("System Info", helpIcon);
+
+	      aboutM.setMnemonic(KeyEvent.VK_S);
+	      aboutM.addActionListener(new ActionListener(){
+
+	          public void actionPerformed(ActionEvent e) {
+	              MenuCreator.showSystemInfo();
+
+	          }           
+	      });
+	      return aboutM;
+	   }
+	
 	public static JMenuItem getExitMenuItem(){
 
 		ImageIcon exitIcon = createImageIcon("/icons/exit.png");
@@ -479,6 +525,11 @@ public class MenuCreator {
 
 
 	}
+	
+	public static void showSystemInfo(){
+	   SystemInfo dialog = new SystemInfo();
+	   dialog.showDialog();
+	}
 
 	/** Returns an ImageIcon, or null if the path was invalid. 
 	 * @param path the path to the icon
@@ -503,45 +554,57 @@ public class MenuCreator {
 
 		JMenuItem pairI ;
 		if ( alignIcon == null) 
-			pairI = new JMenuItem("Pairwise Alignment");
+			pairI = new JMenuItem("New Alignment");
 		else 
-			pairI = new JMenuItem("Pairwise Alignment", alignIcon);
+			pairI = new JMenuItem("New Alignment", alignIcon);
 		pairI.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				String cmd = e.getActionCommand();
 
-				if ( cmd.equals("Pairwise Alignment")){
+				if ( cmd.equals("New Alignment")){
 					MenuCreator.showPairDialog();
 				}				
 			}
 		});
 		return pairI;
 	}
-
-
-	public static JMenuItem getDBSearchMenuItem() {
-		JMenuItem dbI = null;
-
-		ImageIcon dbSearchIcon = createImageIcon("/icons/kpdf.png");
-
-		if ( dbSearchIcon == null )
-			dbI = new JMenuItem("DB search");
-		else {
-			dbI = new JMenuItem("DB search", dbSearchIcon);
+	
+	/**
+	 * Creates a frame to display a DotPlotPanel.
+	 * 
+	 * Used by the 'View>Show Dot Plot' menu item
+	 * @author Spencer Bliven
+	 *
+	 */
+	private static class DotPlotListener implements ActionListener {
+		private final AFPChain afpChain;
+		public DotPlotListener(AFPChain afpChain) {
+			this.afpChain = afpChain;
 		}
+		public void actionPerformed(ActionEvent e) {
+			String title = String.format("%s vs. %s", afpChain.getName1(),afpChain.getName2());
 
-		dbI.addActionListener(new ActionListener(){
+			// Create window
+			JFrame frame = new JFrame(title);
+			frame.addWindowListener(new WindowAdapter(){
+				public void windowClosing(WindowEvent e){
+					JFrame f = (JFrame) e.getSource();
+					f.setVisible(false);
+					f.dispose();
+				}
+			});
 
-			public void actionPerformed(ActionEvent e) {
-				DBSearchGUI.getInstance();
+			DotPlotPanel dotplot = new DotPlotPanel(afpChain);			
 
-			}			
-		});
+			frame.getContentPane().add(dotplot);
 
-
-		return dbI;
-
+			frame.pack();
+			frame.setVisible(true);
+		}
 	}
+
+
+	
 
 
 	public static JMenuBar initAlignmentGUIMenu(JFrame frame) {
@@ -560,6 +623,10 @@ public class MenuCreator {
 		JMenuItem dbI = MenuCreator.getDBResultMenuItem();
 		file.add(dbI);
 		file.addSeparator();
+		
+		JMenuItem configI = MenuCreator.getConfigMenuItem();
+		file.add(configI);
+		file.addSeparator();
 
 		JMenuItem closeI = MenuCreator.getCloseMenuItem(frame);
 		file.add(closeI);
@@ -569,27 +636,60 @@ public class MenuCreator {
 		JMenuBar menu = new JMenuBar();
 		menu.add(file);
 
-		JMenu alig = new JMenu("Align");
-		menu.add(alig);
+		//JMenu alig = new JMenu("Align");
+		//menu.add(alig);
 
-		JMenuItem pw = MenuCreator.getPairwiseAlignmentMenuItem();
-		alig.add(pw);
+		//JMenuItem pw = MenuCreator.getPairwiseAlignmentMenuItem();
+		//alig.add(pw);
 
-		JMenuItem dbF = MenuCreator.getDBSearchMenuItem();
-		alig.add(dbF);
-
+		
 		JMenu about = new JMenu("Help");
 		about.setMnemonic(KeyEvent.VK_A);
 
 		JMenuItem aboutM = MenuCreator.getAboutMenuItem();
 		about.add(aboutM);
 
+		
+		JMenuItem techM = MenuCreator.getSystemInfoItem();
+		about.add(techM);
+		
 		menu.add(Box.createGlue());
 		menu.add(about);
 
 		return menu;
 
 	}
+
+
+   private static JMenuItem getConfigMenuItem()
+   {
+      
+      ImageIcon configIcon = createImageIcon("/icons/configure.png");
+
+
+      JMenuItem configI;
+
+      if ( configIcon == null)
+          configI = new JMenuItem("Settings");
+      else 
+          configI = new JMenuItem("Settings",configIcon);
+      configI.setMnemonic(KeyEvent.VK_S);
+      configI.addActionListener(new ActionListener(){
+
+          public void actionPerformed(ActionEvent e) {
+              String cmd = e.getActionCommand();
+
+              if ( cmd.equals("Settings")){
+                 ConfigPDBInstallPanel.showDialog();
+              }               
+          }           
+      });
+      return configI;
+     
+     
+   }
+
+
 
 
 

@@ -28,6 +28,7 @@ import org.biojava.utils.AbstractChangeable;
 import org.biojava.utils.ChangeEvent;
 import org.biojava.utils.ChangeSupport;
 import org.biojava.utils.ChangeVetoException;
+import org.biojavax.ontology.ComparableTerm;
 import org.biojavax.utils.CRC64Checksum;
 
 /**
@@ -99,6 +100,33 @@ public class SimpleDocRef extends AbstractChangeable implements DocRef {
         this.title = title;
         this.location = location;
         this.remark = null;
+    }
+
+    /**
+     * Construct a doc ref with populated cross ref.
+     * @param authors
+     * @param location
+     * @param title
+     * @param crossRefKey
+     * @param crossRefValue
+     * @param crossRefVersion
+     */
+    public SimpleDocRef(String authors, String location, String title, String crossRefKey, String crossRefValue, Integer crossRefVersion) {
+    	this(DocRefAuthor.Tools.parseAuthorString(authors), location, title, crossRefKey, crossRefValue, crossRefVersion);
+    }
+    
+    /**
+     * Construct a doc ref with populated cross ref.
+     * @param authors
+     * @param location
+     * @param title
+     * @param crossRefKey
+     * @param crossRefValue
+     * @param crossRefVersion
+     */
+    public SimpleDocRef(List authors, String location, String title, String crossRefKey, String crossRefValue, Integer crossRefVersion) {
+    	this(authors, location, title);
+        this.setCrossref((CrossRef) RichObjectFactory.getObject(SimpleCrossRef.class, new Object[]{crossRefKey, crossRefValue, crossRefVersion}));
     }
     
     // Hibernate requirement - not for public use.

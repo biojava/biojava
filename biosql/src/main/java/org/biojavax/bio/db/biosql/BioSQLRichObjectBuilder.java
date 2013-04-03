@@ -45,6 +45,7 @@ import org.biojavax.ontology.SimpleComparableOntology;
  * makes it memory-efficient.
  * @author Richard Holland
  * @author David Scott
+ * @author Deepak Sheoran
  * @since 1.5
  */
 public class BioSQLRichObjectBuilder implements RichObjectBuilder {
@@ -92,79 +93,104 @@ public class BioSQLRichObjectBuilder implements RichObjectBuilder {
      * wrapper object it made to do the search with and returns that.
      */
     public Object buildObject(Class clazz, List paramsList) {
-        // convert the params list to remove nulls as we can't process those.
-        List ourParamsList = new ArrayList(paramsList);
-        for (Iterator i = ourParamsList.iterator(); i.hasNext(); ) 
-        	if (i.next()==null) i.remove();
-        // Create the Hibernate query to look it up with
-        String queryText;
-        String queryType;
-        if (SimpleNamespace.class.isAssignableFrom(clazz)) {
-            queryText = "from Namespace as ns where ns.name = ?";
-            queryType = "Namespace";
-        } else if (SimpleComparableOntology.class.isAssignableFrom(clazz)) {
-            queryText = "from Ontology as o where o.name = ?";
-            queryType = "Ontology";
-        } else if (SimpleNCBITaxon.class.isAssignableFrom(clazz)) {
-            queryText = "from Taxon as o where o.NCBITaxID = ?";
-            queryType = "Taxon";
-        } else if (SimpleCrossRef.class.isAssignableFrom(clazz)) {
-            queryText = "from CrossRef as cr where cr.dbname = ? and cr.accession = ? and cr.version = ?";
-            queryType = "CrossRef";
-        } else if (SimpleDocRef.class.isAssignableFrom(clazz)) {
-        	queryType = "DocRef";
-        	// convert List constructor to String representation for query
-        	ourParamsList.set(0, DocRefAuthor.Tools.generateAuthorString((List)ourParamsList.get(0), true));
-        	if (ourParamsList.size()<3) {
-        		queryText = "from DocRef as cr where cr.authors = ? and cr.location = ? and cr.title is null";
-        	} else {
-        		queryText = "from DocRef as cr where cr.authors = ? and cr.location = ? and cr.title = ?";
-        	}        
-        } else throw new IllegalArgumentException("Don't know how to handle objects of type "+clazz);
-        // Run the query.
-        try {
-            // Build the query object
-            Object query = this.createQuery.invoke(this.session, new Object[]{queryText});
-            // Set the parameters
-            for (int i = 0; i < ourParamsList.size(); i++) {
-                query = this.setParameter.invoke(query, new Object[]{new Integer(i), ourParamsList.get(i)});
-            }
-            // Get the results
-            Object result = this.uniqueResult.invoke(query, (Object[])null);
-            // Return the found object, if found
-            if (result!=null) return result;
-            // Create, persist and return the new object otherwise
-            else {
-                // Load the class
-                Class[] types = new Class[ourParamsList.size()];
-                // Find its constructor with given params
-                for (int i = 0; i < ourParamsList.size(); i++) {
-                    if (ourParamsList.get(i) instanceof Set) types[i] = Set.class;
-                    else if (ourParamsList.get(i) instanceof Map) types[i] = Map.class;
-                    else if (ourParamsList.get(i) instanceof List) types[i] = List.class;
-                    else types[i] = ourParamsList.get(i).getClass();
-                }
-                Constructor c = clazz.getConstructor(types);
-                // Instantiate it with the parameters
-                Object o = c.newInstance(ourParamsList.toArray());
-                // Persist and return it.
-                this.persist.invoke(this.session, new Object[]{queryType,o});
-                return o;
-            }
-        } catch (Exception e) {
-            // Write a useful message explaining what we were trying to do. It will
-            // be in the form "class(param,param...)".
-            StringBuffer paramsstuff = new StringBuffer();
-            paramsstuff.append(clazz);
-            paramsstuff.append("(");
-            for (int i = 0; i < ourParamsList.size(); i++) {
-                if (i>0) paramsstuff.append(",");
-            	paramsstuff.append(ourParamsList.get(i).getClass());
-            }
-            paramsstuff.append(")");
-            // Throw the exception with our nice message
-            throw new RuntimeException("Error while trying to call new "+paramsstuff,e);
-        }
+    	// convert the params list to remove nulls as we can't process those.
+    	List ourParamsList = new ArrayList(paramsList);
+    	for (Iterator i = ourParamsList.iterator(); i.hasNext(); ) 
+    		if (i.next()==null) i.remove();
+    	// Run the query.
+    	try {
+    		// Create the Hibernate query to look it up with
+    		String queryText;
+    		String queryType;
+    		if (SimpleNamespace.class.isAssignableFrom(clazz)) {
+    			queryText = "from Namespace as ns where ns.name = ?";
+    			queryType = "Namespace";
+    		} else if (SimpleComparableOntology.class.isAssignableFrom(clazz)) {
+    			queryText = "from Ontology as o where o.name = ?";
+    			queryType = "Ontology";
+    		} else if (SimpleNCBITaxon.class.isAssignableFrom(clazz)) {
+    			queryText = "from Taxon as o where o.NCBITaxID = ?";
+    			queryType = "Taxon";
+    		} else if (SimpleCrossRef.class.isAssignableFrom(clazz)) {
+    			queryText = "from CrossRef as cr where cr.dbname = ? and cr.accession = ? and cr.version = ?";
+    			queryType = "CrossRef";
+    		} else if (SimpleDocRef.class.isAssignableFrom(clazz)) {
+    			// First check if record exists with pubmed or medline id, if provided
+    			if (ourParamsList.size() > 3) {
+    				List crossRefParams = new ArrayList();
+    				String crossRefQueryText = "from DocRef as dr where dr.crossref = (select id from CrossRef as cref where cref.dbname = ? and cref.accession = ? and cref.version = ?)";
+    				crossRefParams.add(ourParamsList.get(ourParamsList.size() - 3)); // get dbname
+    				crossRefParams.add(ourParamsList.get(ourParamsList.size() - 2)); // get accession
+    				crossRefParams.add(ourParamsList.get(ourParamsList.size() - 1)); // get version
+    				// Build the query object
+    				Object query = this.createQuery.invoke(this.session, new Object[]{crossRefQueryText});
+    				// Set the parameters
+    				for (int i = 0; i < crossRefParams.size(); i++) {
+    					query = this.setParameter.invoke(query, new Object[]{new Integer(i), crossRefParams.get(i)});
+    				}
+    				// Get the results
+    				Object result = this.uniqueResult.invoke(query, (Object[])null);
+    				// Return the found object, if found
+    				if (result!=null) return result;
+    				// If we get here, resort to looking up by author and title and remove all references
+    				// to pubmed/medline from params list.
+    				ourParamsList.remove(ourParamsList.size() - 3);
+    				ourParamsList.remove(ourParamsList.size() - 2);
+    				ourParamsList.remove(ourParamsList.size() - 1);
+    			}
+    			queryType = "DocRef";
+    			// convert List constructor to String representation for query
+    			ourParamsList.set(0, DocRefAuthor.Tools.generateAuthorString((List)ourParamsList.get(0), true));
+    			if (ourParamsList.size()<3) {
+    				queryText = "from DocRef as cr where cr.authors = ? and cr.location = ? and cr.title is null";
+    			} else {
+    				queryText = "from DocRef as cr where cr.authors = ? and cr.location = ? and cr.title = ?";
+    			}        
+    		} else throw new IllegalArgumentException("Don't know how to handle objects of type "+clazz);
+    		// Build the query object
+    		Object query = this.createQuery.invoke(this.session, new Object[]{queryText});
+    		// Set the parameters
+    		for (int i = 0; i < ourParamsList.size(); i++) {
+    			query = this.setParameter.invoke(query, new Object[]{new Integer(i), ourParamsList.get(i)});
+    		}
+    		// Get the results
+    		Object result = this.uniqueResult.invoke(query, (Object[])null);
+    		// Return the found object, if found
+    		if (result!=null) return result;
+    		// Create, persist and return the new object otherwise
+    		else {
+    			// Load the class
+    			Class[] types = new Class[ourParamsList.size()];
+    			// Find its constructor with given params
+    			for (int i = 0; i < ourParamsList.size(); i++) {
+    				if (ourParamsList.get(i) instanceof Set) types[i] = Set.class;
+    				else if (ourParamsList.get(i) instanceof Map) types[i] = Map.class;
+    				else if (ourParamsList.get(i) instanceof List) types[i] = List.class;
+    				else types[i] = ourParamsList.get(i).getClass();
+    			}
+    			Constructor c = clazz.getConstructor(types);
+    			// Instantiate it with the parameters
+    			Object o = c.newInstance(ourParamsList.toArray());
+    			// Persist and return it.
+    			this.persist.invoke(this.session, new Object[]{queryType,o});
+    			return o;
+    		}
+    	} catch (IllegalArgumentException ex) {
+    		throw ex;
+    	} catch (Exception e) {
+    		// Write a useful message explaining what we were trying to do. It will
+    		// be in the form "class(param,param...)".
+    		StringBuffer paramsstuff = new StringBuffer();
+    		paramsstuff.append(clazz);
+    		paramsstuff.append("(");
+    		for (int i = 0; i < ourParamsList.size(); i++) {
+    			if (i>0) paramsstuff.append(",");
+    			paramsstuff.append(ourParamsList.get(i).getClass());
+    		}
+    		paramsstuff.append(")");
+    		// Throw the exception with our nice message
+    		throw new RuntimeException("Error while trying to call new "+paramsstuff,e);
+    	}
     }
     
 }

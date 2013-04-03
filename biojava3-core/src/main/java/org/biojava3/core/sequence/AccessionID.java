@@ -37,12 +37,12 @@ public class AccessionID {
     }
 
     public AccessionID(String id) {
-        this.id = id;
+        this.id = id.trim();
         this.source = DataSource.LOCAL;
     }
 
     public AccessionID(String id, DataSource source) {
-        this.id = id;
+        this.id = id.trim();
         this.source = source;
     }
 

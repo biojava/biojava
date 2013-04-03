@@ -24,37 +24,28 @@
 
 package org.biojava.bio.structure.align.gui;
 
-import java.awt.Dimension;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 
-import javax.swing.AbstractAction;
-import javax.swing.Action;
+
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.JButton;
-import javax.swing.JComboBox;
+
 import javax.swing.JFileChooser;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JMenuBar;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 
-import org.biojava.bio.structure.Structure;
-import org.biojava.bio.structure.StructureException;
+
 import org.biojava.bio.structure.align.StructureAlignment;
-import org.biojava.bio.structure.align.StructureAlignmentFactory;
 import org.biojava.bio.structure.align.util.ResourceManager;
-import org.biojava.bio.structure.align.util.UserConfiguration;
-import org.biojava.bio.structure.gui.util.PDBDirPanel;
 import org.biojava.bio.structure.gui.util.PDBUploadPanel;
 
-public class DBSearchGUI extends JFrame {
+public class DBSearchGUI extends JPanel {
 
 	/**
 	 * 
@@ -65,7 +56,7 @@ public class DBSearchGUI extends JFrame {
 	StructureAlignment algorithm;
 	SelectPDBPanel tab1;
 	JTabbedPane tabPane;
-	JTextField pdbDir;
+
 	PDBUploadPanel tab2;
 	JTabbedPane listPane;
 	JButton abortB;
@@ -75,97 +66,12 @@ public class DBSearchGUI extends JFrame {
 	JTextField outFileLocation;
 	
 	static final ResourceManager resourceManager = ResourceManager.getResourceManager("ce");
-	private static final String DB_SEARCH_TITLE = "DB Search Structure Alignment - Main - V." + resourceManager.getString("ce.version");
 	
-	private static final  DBSearchGUI me = new DBSearchGUI();
 	
-	public static void main(String[] args){
-		
-		System.setProperty(PDBDirPanel.PDB_DIR,"/Users/andreas/WORK/PDB/");
-		DBSearchGUI.getInstance();
-		
-		
-	}
+	public DBSearchGUI(){
 	
-	private DBSearchGUI(){
-		JMenuBar menu = MenuCreator.initAlignmentGUIMenu(this);
-
-		this.setJMenuBar(menu);
-
-		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		this.setTitle(DB_SEARCH_TITLE);
-
-
-		Action action2 = new AbstractAction("Exit") {
-			public static final long serialVersionUID = 0l;
-			// This method is called when the button is pressed
-			public void actionPerformed(ActionEvent evt) {
-				// Perform action...
-				abortCalc();
-				dispose();
-				System.exit(0);
-			}
-		};
-		JButton closeB = new JButton(action2);
-
-		Action action1 = new AbstractAction("Align") {
-			public static final long serialVersionUID = 0l;
-			// This method is called when the button is pressed
-			public void actionPerformed(ActionEvent evt) {
-				// Perform action...
-				//System.out.println("calc structure alignment");
-				calcDBSearch();
-
-			}
-
-		};
-
-		JButton submitB = new JButton(action1);
-
-		JLabel algoLabel = new JLabel("Select alignment algorithm: ");
-		String[] algorithms = StructureAlignmentFactory.getAllAlgorithmNames();
-		try {
-			algorithm = StructureAlignmentFactory.getAlgorithm(algorithms[0]);
-		} catch (StructureException e){
-			e.printStackTrace();
-		}
-		JComboBox algorithmList = new JComboBox(algorithms);
-		algorithmList.setSelectedIndex(0);
-
-		Action actionAlgorithm = new AbstractAction("Algorithm") {
-			public static final long serialVersionUID = 0l;
-			// This method is called when the button is pressed
-			public void actionPerformed(ActionEvent evt) {
-				JComboBox cb = (JComboBox)evt.getSource();
-				String algorithmName = (String)cb.getSelectedItem();
-				// Perform action...
-				//System.out.println("calc structure alignment");
-				updateAlgorithm(algorithmName);
-
-			}
-		};
-
-		progress =new JProgressBar();
-		progress.setIndeterminate(false);
-		progress.setMaximumSize(new Dimension(10,100));
-
 		
-		Action action3 = new AbstractAction("Abort") {
-			public static final long serialVersionUID = 0l;
-			// This method is called when the button is pressed
-			public void actionPerformed(ActionEvent evt) {
-				// Perform action...
-				abortCalc();
-			}
-		};
-		abortB = new JButton(action3);
-
-		abortB.setEnabled(false);
-
-		algorithmList.addActionListener(actionAlgorithm);
-
 		tab1 = new SelectPDBPanel(false);
-		pdbDir = tab1.getPDBDirField();
 		
 		tab2 = new PDBUploadPanel(false);
 		
@@ -175,53 +81,45 @@ public class DBSearchGUI extends JFrame {
 		
 		tabPane.addTab("Custom files",null, tab2,"Align your own files.");
 		
-	
-		JPanel dir = tab1.getPDBDirPanel(pdbDir);
-
-		JTabbedPane configPane = new JTabbedPane();
-
-		configPane.addTab("Local PDB install", null, dir,
-		"Configure your local PDB setup.");
-
-	
 		listPane = createListPane();
 		
 		// build up UO
 
-
 		Box vBox = Box.createVerticalBox();
-
-		Box hBoxAlgo = Box.createHorizontalBox();
-		hBoxAlgo.add(Box.createGlue());
-		hBoxAlgo.add(algoLabel);		
-		hBoxAlgo.add(algorithmList);
-		hBoxAlgo.add(Box.createGlue());
-		vBox.add(hBoxAlgo);
-		
+				
 		vBox.add(tabPane);
-		vBox.add(configPane);
+	
 		vBox.add(listPane);
 					
-		Box hBox = Box.createHorizontalBox();
-	
-		hBox.add(closeB);
-
+		//vBox.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+		vBox.add(Box.createGlue());
+				
+		this.add(vBox);
 		
-		hBox.add(Box.createGlue());
-		hBox.add(progress);
-		//hBox.add(Box.createGlue());
-		hBox.add(abortB);
-		//hBox.add(Box.createGlue());
-		hBox.add(submitB);
-		
-		vBox.add(hBox);
-
-		vBox.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
-
-		this.getContentPane().add(vBox);
-		this.pack();
 		this.setVisible(true);
 
+	}
+	
+	public JTabbedPane getTabPane()
+   {
+      return tabPane;
+   }
+
+   public void setTabPane(JTabbedPane tabPane)
+   {
+      this.tabPane = tabPane;
+   }
+
+
+
+   public SelectPDBPanel getSelectPDBPanel(){
+	   return tab1;
+	}
+	public PDBUploadPanel getPDBUploadPanel(){
+	   return tab2;
+	}
+	public String getOutFileLocation(){
+	   return outFileLocation.getText();
 	}
 
 
@@ -245,8 +143,8 @@ public class DBSearchGUI extends JFrame {
 			
 			public void actionPerformed(ActionEvent e) {
 				JFileChooser chooser = new JFileChooser();
-				chooser.setDialogTitle("Select output file.");
-				chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+				chooser.setDialogTitle("Select Output Directory");
+				chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 				//
 				// disable the "All files" option.
 				//
@@ -265,71 +163,13 @@ public class DBSearchGUI extends JFrame {
 			}
 		});
 		
-		tabP.addTab("Select output file", null, dir,
-		"Configure the file that will contain the results.");
+		tabP.addTab("Select Output Directory", null, dir,
+		"Configure the folder that will contain the results.");
 		
 		return tabP;
 	}
 
 
-	private void updateAlgorithm(String algorithmName) {
-
-		//String algorithmName = (String)algorithmList.getSelectedItem();
-		try {
-			algorithm = StructureAlignmentFactory.getAlgorithm(algorithmName);
-		} catch (StructureException ex){
-			ex.printStackTrace();
-		}
-
-	}
-
-	private void calcDBSearch() {
-		// TODO Auto-generated method stub
-		System.out.println("run DB search");
-		
-		String name1 = tab1.getName1();
-		tab1.persistCurrentConfig();
-		Structure s = null;
-		try {
-			s = tab1.getStructure1();
-		} catch (Exception e){
-			e.printStackTrace();
-			JOptionPane.showMessageDialog(null,"Could not perform DB search. Exception: " + e.getMessage());
-			return;
-		}
-		if ( s == null) {
-			JOptionPane.showMessageDialog(null,"Could not perform DB search. Structure: "  + name1 + " not found!");
-			return;
-		}
-		
-		String file = outFileLocation.getText();
-		if ( file == null || file.equals("")){
-			JOptionPane.showMessageDialog(null,"Plrease select a file to contain the DB search results.");
-			return;
-		}
-		
-		UserConfiguration config = tab1.getConfiguration();
-		alicalc = new AlignmentCalcDB(this, s,  name1,config,file);
-		
-		
-		
-		abortB.setEnabled(true);
-		progress.setIndeterminate(true);
-		drawer = new ProgressThreadDrawer(progress);
-		drawer.start();
-		
-		Thread t = new Thread(alicalc);
-		t.start();
-	}
-
-	private void abortCalc(){
-		System.err.println("Interrupting alignment ...");
-		if ( alicalc != null )
-			alicalc.interrupt();
-		notifyCalcFinished();
-		
-
-	}
 	
 	public void notifyCalcFinished(){
 		if ( drawer != null)
@@ -339,17 +179,7 @@ public class DBSearchGUI extends JFrame {
 		
 	}
 
-	public static final DBSearchGUI getInstance(){
-				
-		if (!  me.isVisible())
-			me.setVisible(true);
-		
-		if ( ! me.isActive())
-			me.requestFocus();
-		
-		return me;
-	}
-
+	
 
 	public StructureAlignment getStructureAlignment() {
 

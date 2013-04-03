@@ -37,7 +37,7 @@ package org.biojava.bio.structure;
  * @since 1.4
  * 
  */
-public interface Atom {
+public interface Atom extends Cloneable {
     
     /** set trimmed version of atom name, e.g. "CA". 
      * @param s  a String specifying the name value
@@ -62,6 +62,18 @@ public interface Atom {
      * @see #setFullName
      */
     public String getFullName();
+    
+    /** set element of the atom name, e.g. Element.Fe
+     * @param e  an Element enumeration
+     * @see #getElement
+     */
+    public void   setElement(Element e);
+    
+    /** get element of the atom, e.g. Element.Ca
+     * @return an Element enumeration 
+     * @see #setElement
+     */
+    public Element getElement();
     
     /** set PDB atom number. 
      * @param i  an int specifying the PDBserial value 

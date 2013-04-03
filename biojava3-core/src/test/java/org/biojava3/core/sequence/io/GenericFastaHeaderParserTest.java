@@ -6,6 +6,7 @@ package org.biojava3.core.sequence.io;
 
 import org.biojava3.core.sequence.DataSource;
 import org.biojava3.core.sequence.ProteinSequence;
+import org.biojava3.core.sequence.compound.AminoAcidCompound;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -61,7 +62,7 @@ public class GenericFastaHeaderParserTest {
         System.out.println("parseHeader");
         String header = "";
         ProteinSequence sequence = new ProteinSequence("");
-        GenericFastaHeaderParser instance = new GenericFastaHeaderParser();
+        GenericFastaHeaderParser<ProteinSequence,AminoAcidCompound> instance = new GenericFastaHeaderParser<ProteinSequence,AminoAcidCompound>();
 
         header = "gi|gi-number|gb|accession|locus";
         instance.parseHeader(header, sequence);

@@ -61,16 +61,35 @@ import org.biojava.bio.symbol.Symbol;
  * @author Andreas Dr&auml;ger <andreas.draeger@uni-tuebingen.de>
  */
 public class SubstitutionMatrix {
-	protected Map<Symbol, Integer> rowSymbols, colSymbols;
+	
+	/**
+	 * 
+	 */
+	private Map<Symbol, Integer> rowSymbols, colSymbols;
 
-	protected short[][] matrix;
+	/**
+	 * 
+	 */
+	private short[][] matrix;
 
-	protected short min, max;
+	/**
+	 * Minimal and maximal entry in this matrix
+	 */
+	private short min, max;
 
-	protected FiniteAlphabet alphabet;
+	/**
+	 * The alphabet used by this matrix.
+	 */
+	private FiniteAlphabet alphabet;
 
-	protected String description, name;
+	/**
+	 * Name and description of this matrix.
+	 */
+	private String description, name;
 
+	/**
+	 * Just the new line symbol of the system.
+	 */
 	private static final String newLine = System.getProperty("line.separator");
 
 	/**
@@ -250,8 +269,9 @@ public class SubstitutionMatrix {
 			if (line == null)
 				break;
 			trim = line.trim();
-			if (trim.charAt(0) == '#')
+			if (trim.length()==0 || trim.charAt(0) == '#')
 				continue;
+			// Use line in next if-clause because trim will have lost leading important whitespace.
 			else if ((line.charAt(0) == ' ') || (line.charAt(0) == '\t')) {
 				String alphabets[] = new String[] { "DNA", "RNA", "PROTEIN",
 						"PROTEIN-TERM" };
@@ -318,7 +338,9 @@ public class SubstitutionMatrix {
 			if (trim.charAt(0) == '#') {
 				description += line.substring(1);
 				continue;
-			} else if (!trim.startsWith(newLine)) {
+			} 
+			// Use line in next if-clause because trim will have lost leading important whitespace.
+			else if (!line.startsWith(newLine)) {
 				if ((line.charAt(0) == ' ') || (line.charAt(0) == '\t')) {
 					st = new StringTokenizer(trim);
 					for (j = 0; st.hasMoreElements(); j++) {
@@ -328,7 +350,7 @@ public class SubstitutionMatrix {
 					cols = j;
 				} else {
 					// the matrix.
-					st = new StringTokenizer(line);
+					st = new StringTokenizer(trim);
 					if (st.hasMoreElements())
 						rowSymbols.put(symtok.parseToken(st.nextElement()
 								.toString()), Integer.valueOf(rows++));
@@ -360,7 +382,8 @@ public class SubstitutionMatrix {
 				continue;
 			else if ((line.charAt(0) == ' ') || (line.charAt(0) == '\t'))
 				continue;
-			else if (!trim.startsWith(newLine)) { // lines:
+			// Use line in next if-clause because trim will have lost leading important whitespace.
+			else if (!line.startsWith(newLine)) { // lines:
 				st = new StringTokenizer(trim);
 				if (st.hasMoreElements())
 					st.nextElement(); // throw away Symbol at
@@ -397,9 +420,9 @@ public class SubstitutionMatrix {
 	 */
 	public short getValueAt(Symbol row, Symbol col) throws BioException {
 		if ((!rowSymbols.containsKey(row)) || (!colSymbols.containsKey(col))) {
-			System.err.println("SubstitutionMatrix: No entry for the symbols " + row.getName()
-					+ " and " + col.getName());
-			
+			System.err.printf("SubstitutionMatrix: No entry for the symbols %s and %s\n",
+					row.getName(), col.getName());
+
 			// treat the two records as X:
 			return 0;
 		}

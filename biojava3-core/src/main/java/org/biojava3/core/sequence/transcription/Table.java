@@ -24,6 +24,14 @@ public interface Table {
       final CompoundSet<AminoAcidCompound> aminoAcidCompounds);
 
   /**
+   * Returns true if the given compound could have been a start amino acid;
+   * this does not assert if the codon that actually coded for the amino
+   * acid was a start codon. This is as accurate a call as we can make with an
+   * {@link AminoAcidCompound}.
+   */
+  boolean isStart(AminoAcidCompound compound);
+
+  /**
    * Instance of a Codon which is 3 {@link NucleotideCompound}s, its
    * corresponding {@link AminoAcidCompound} and if it is a start or stop codon.
    * The object implements hashCode & equals but according to the nucleotide
@@ -120,17 +128,17 @@ public interface Table {
       return stringified;
     }
 
-    
+
     public boolean equalsIgnoreCase(Compound compound) {
       return toString().equalsIgnoreCase(compound.toString());
     }
 
-    
+
     public String getDescription() {
       throw new UnsupportedOperationException("Not supported");
     }
 
-    
+
     public String getLongName() {
       throw new UnsupportedOperationException("Not supported");
     }

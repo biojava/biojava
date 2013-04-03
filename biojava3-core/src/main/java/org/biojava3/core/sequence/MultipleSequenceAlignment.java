@@ -34,7 +34,7 @@ import org.biojava3.core.sequence.template.Compound;
  *
  * @author Scooter Willis
  */
-public class MultipleSequenceAlignment<C extends AbstractSequence,D extends Compound> {
+public class MultipleSequenceAlignment<C extends AbstractSequence<D>, D extends Compound> {
     int alignedSequenceLength = -1;
     ArrayList<C> sequences = new ArrayList<C>();
 

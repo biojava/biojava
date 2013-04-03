@@ -5,12 +5,14 @@
 package org.biojava3.core.sequence.io;
 
 import java.util.ArrayList;
-import org.biojava3.core.exceptions.HeaderParseException;
+
 import org.biojava3.core.sequence.AccessionID;
 import org.biojava3.core.sequence.DataSource;
 import org.biojava3.core.sequence.ProteinSequence;
+import org.biojava3.core.sequence.compound.AminoAcidCompound;
 import org.biojava3.core.sequence.io.template.FastaHeaderParserInterface;
 import org.biojava3.core.sequence.template.AbstractSequence;
+import org.biojava3.core.sequence.template.Compound;
 import org.biojava3.core.sequence.template.AbstractSequence.AnnotationType;
 
 /**
@@ -31,13 +33,19 @@ import org.biojava3.core.sequence.template.AbstractSequence.AnnotationType;
  *
  * @author Scooter Willis <willishf at gmail dot com>
  */
-public class GenericFastaHeaderParser implements FastaHeaderParserInterface {
+public class GenericFastaHeaderParser<S extends AbstractSequence<C>, C extends Compound> implements FastaHeaderParserInterface<S,C> {
 
     public String[] getHeaderValues(String header) {
         String[] data = new String[0];
         ArrayList<String> values = new ArrayList<String>();
         StringBuffer sb = new StringBuffer();
-        if (header.startsWith("PDB:") == false) {
+        if(header.indexOf("length=") != -1){
+            data = new String[1];
+            int index = header.indexOf("length=");
+            data[0] = header.substring(0, index).trim();
+    //        System.out.println("accession=" + data[0]);
+            return data;
+        } else if (header.startsWith("PDB:") == false) {
             for (int i = 0; i < header.length(); i++) {
                 if (header.charAt(i) == '|') {
                     values.add(sb.toString());
@@ -58,16 +66,15 @@ public class GenericFastaHeaderParser implements FastaHeaderParserInterface {
         return data;
     }
 
-    public void parseHeader(String header, AbstractSequence sequence) {
+    public void parseHeader(String header, S sequence) {
         //uniptrot
         // tr|Q0TET7|Q0TET7_ECOL5 Putative uncharacterized protein OS=Escherichia coli O6:K15:H31 (strain 536 / UPEC) GN=ECP_2553 PE=4 SV=1
         sequence.setOriginalHeader(header);
         String[] data = getHeaderValues(header);
 
         if (data.length == 1) {
-            sequence.setAccession(new AccessionID(header));
-        }
-        if (data[0].equalsIgnoreCase("sp") || data[0].equalsIgnoreCase("tr")) {
+            sequence.setAccession(new AccessionID(data[0]));
+        } else  if (data[0].equalsIgnoreCase("sp") || data[0].equalsIgnoreCase("tr")) {
             if (data[0].equalsIgnoreCase("sp")) {
                 sequence.setAnnotationType(AnnotationType.CURATED);
             } else {
@@ -127,7 +134,8 @@ public class GenericFastaHeaderParser implements FastaHeaderParserInterface {
         System.out.println("parseHeader");
         String header = "";
         ProteinSequence sequence = new ProteinSequence("");
-        GenericFastaHeaderParser instance = new GenericFastaHeaderParser();
+        GenericFastaHeaderParser<ProteinSequence,AminoAcidCompound> instance =
+          new GenericFastaHeaderParser<ProteinSequence,AminoAcidCompound>();
 
         header = "gi|gi-number|gb|accession|locus";
         instance.parseHeader(header, sequence);

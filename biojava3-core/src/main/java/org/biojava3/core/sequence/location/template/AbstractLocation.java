@@ -1,44 +1,87 @@
 package org.biojava3.core.sequence.location.template;
 
+import static java.lang.String.format;
 import static org.biojava3.core.util.Equals.classEqual;
 import static org.biojava3.core.util.Equals.equal;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Stack;
 
 import org.biojava3.core.sequence.Strand;
 import org.biojava3.core.util.Hashcoder;
 
+/**
+ * Basic implementation of a location which has a start, end and a strand.
+ *
+ * @author ayates
+ */
 public abstract class AbstractLocation implements Location {
 
-  private final int            min;
-  private final int            max;
-  private final Strand         strand;
-  private final List<Location> subLocations;
+  private final int             start;
+  private final int             end;
+  private final Strand          strand;
+  private final List<Location>  subLocations;
+  private final boolean         circular;
 
-  public AbstractLocation(int min, int max, Strand strand) {
-    this.min = min;
-    this.max = max;
+  public AbstractLocation(int start, int end, Strand strand) {
+    this(start, end, strand, false);
+  }
+
+  public AbstractLocation(int start, int end, Strand strand, boolean circular) {
+    this.start = start;
+    this.end = end;
     this.strand = strand;
     this.subLocations = Collections.emptyList();
+    this.circular = circular;
+    assertLocation();
   }
 
-  public AbstractLocation(int min, int max, Strand strand,
+  public AbstractLocation(int start, int end, Strand strand,
       List<Location> subLocations) {
-    this.min = min;
-    this.max = max;
+    this(start, end, strand, false, subLocations);
+  }
+
+  public AbstractLocation(int start, int end, Strand strand, boolean circular,
+      List<Location> subLocations) {
+    this.start = start;
+    this.end = end;
     this.strand = strand;
+    this.circular = circular;
     this.subLocations = Collections.unmodifiableList(subLocations);
+    assertLocation();
   }
 
-  public int getMax() {
-    return max;
+  public AbstractLocation(int start, int end, Strand strand,
+      Location... subLocations) {
+    this(start, end, strand, false, Arrays.asList(subLocations));
   }
 
-  public int getMin() {
-    return min;
+  public AbstractLocation(int start, int end, Strand strand, boolean circular,
+      Location... subLocations) {
+    this(start, end, strand, circular, Arrays.asList(subLocations));
+  }
+
+  protected void assertLocation() {
+    if(!isCircular()) {
+      //TODO Is this right?!?
+      if(getStart() > getEnd()) {
+        throw new IllegalArgumentException(
+            String.format("Start (%d) is greater than end (%d); if this is " +
+            		"meant to be cicular then mark as so during construction",
+            		getStart(), getEnd()));
+      }
+    }
+  }
+
+  public int getEnd() {
+    return end;
+  }
+
+  public int getStart() {
+    return start;
   }
 
   public Strand getStrand() {
@@ -54,50 +97,29 @@ public abstract class AbstractLocation implements Location {
   }
 
   public Iterator<Location> iterator() {
-    if(!isComplex()) {
-      //Basic iterator
-      return new Iterator<Location>() {
-        private int index = 0;
-        public boolean hasNext() {
-          return index++ < 1;
-        }
-        public Location next() {
-          return AbstractLocation.this;
-        }
-        public void remove() {
-          throw new UnsupportedOperationException("Cannot remove from a Location");
-        };
-      };
+    List<Location> locations;
+    if(isComplex()) {
+      locations = new ArrayList<Location>(getSubLocations());
     }
     else {
-      //more complex one which decends down each location in turn
-      return new Iterator<Location>() {
-        private Stack<Iterator<Location>> iteratorStack = new Stack<Iterator<Location>>();
-        private Iterator<Location> currentIterator = AbstractLocation.this.getSubLocations().iterator();
-        {
-          iteratorStack.push(currentIterator);
-        }
-
-        public boolean hasNext() {
-          boolean hasNext = currentIterator.hasNext();
-          return hasNext;
-        }
-
-        public Location next() {
-          Location nextLocation = currentIterator.next();
-          if(nextLocation == null) {
-          }
-          else if(nextLocation.isComplex()) {
-            //TODO How do we descend down from here?!? Need to jump into the sub-locations
-          }
-          return nextLocation;
-        }
-
-        public void remove() {
-          throw new UnsupportedOperationException("Cannot remove from a Location");
-        }
-      };
+      locations = new ArrayList<Location>(Arrays.asList(AbstractLocation.this));
     }
+    return locations.iterator();
+  }
+
+  public List<Location> getAllSubLocations() {
+    return getAllSubLocations(this);
+  }
+
+  private List<Location> getAllSubLocations(Location location) {
+    List<Location> subLocations = new ArrayList<Location>();
+    for(Location l: location) {
+      subLocations.add(l);
+      if(l.isComplex()) {
+        subLocations.addAll(getAllSubLocations(l));
+      }
+    }
+    return subLocations;
   }
 
   public boolean equals(Object obj) {
@@ -105,9 +127,10 @@ public abstract class AbstractLocation implements Location {
     if (classEqual(this, obj)) {
       AbstractLocation l = (AbstractLocation) obj;
       equals = (
-          equal(getMin(), l.getMin()) &&
-          equal(getMax(), l.getMax()) &&
+          equal(getStart(), l.getStart()) &&
+          equal(getEnd(), l.getEnd()) &&
           equal(getStrand(), l.getStrand()) &&
+          equal(isCircular(), l.isCircular()) &&
           equal(getSubLocations(), l.getSubLocations())
       );
     }
@@ -116,10 +139,21 @@ public abstract class AbstractLocation implements Location {
 
   public int hashCode() {
     int r = Hashcoder.SEED;
-    r = Hashcoder.hash(r, getMin());
-    r = Hashcoder.hash(r, getMax());
+    r = Hashcoder.hash(r, getStart());
+    r = Hashcoder.hash(r, getEnd());
     r = Hashcoder.hash(r, getStrand());
+    r = Hashcoder.hash(r, isCircular());
     r = Hashcoder.hash(r, getSubLocations());
     return r;
+  }
+
+  public boolean isCircular() {
+    return circular;
+  }
+
+  public String toString() {
+    String circ = (isCircular()) ? " - circular" : "";
+    return format("%d:%d(%s%s)", getStart(), getEnd(),
+        getStrand().getStringRepresentation(), circ);
   }
 }

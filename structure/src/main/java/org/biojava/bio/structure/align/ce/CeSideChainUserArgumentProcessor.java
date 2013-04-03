@@ -6,6 +6,7 @@ import org.biojava.bio.structure.align.StructureAlignment;
 public class CeSideChainUserArgumentProcessor extends AbstractUserArgumentProcessor {
 
 
+   
 	
 	
 	public StructureAlignment getAlgorithm() {
@@ -15,10 +16,11 @@ public class CeSideChainUserArgumentProcessor extends AbstractUserArgumentProces
 
 	@Override
 	public Object getParameters() {
+	   
 		CeParameters params = new CeParameters();
 	
-		// default sidechain alignment atoms are CA, O, CB
-		params.setAlignmentAtoms(new String[]{StructureTools.caAtomName, StructureTools.oAtomName , StructureTools.cbAtomName });
+		params.setScoringStrategy(CeParameters.SIDE_CHAIN_SCORING);
+		//params.setMaxGapSize(0);
 		return params;
 	}
 

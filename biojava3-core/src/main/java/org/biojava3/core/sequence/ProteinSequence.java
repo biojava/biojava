@@ -24,10 +24,10 @@ package org.biojava3.core.sequence;
 
 import org.biojava3.core.sequence.compound.AminoAcidCompound;
 import org.biojava3.core.sequence.compound.AminoAcidCompoundSet;
-import org.biojava3.core.sequence.loader.SequenceStringProxyLoader;
+import org.biojava3.core.sequence.loader.StringProxySequenceReader;
 import org.biojava3.core.sequence.template.AbstractSequence;
 import org.biojava3.core.sequence.template.CompoundSet;
-import org.biojava3.core.sequence.template.SequenceProxyLoader;
+import org.biojava3.core.sequence.template.ProxySequenceReader;
 
 /**
  *
@@ -35,9 +35,7 @@ import org.biojava3.core.sequence.template.SequenceProxyLoader;
  */
 public class ProteinSequence extends AbstractSequence<AminoAcidCompound> {
 
-    private DNASequence parentDNASequence = null;
-    private Integer begin;
-    private Integer end;
+
 
     public ProteinSequence(String seqString) {
         this(seqString, new AminoAcidCompoundSet());
@@ -47,45 +45,29 @@ public class ProteinSequence extends AbstractSequence<AminoAcidCompound> {
         super(seqString, compoundSet);
     }
 
-    public ProteinSequence(SequenceProxyLoader<AminoAcidCompound> proxyLoader) {
+    public ProteinSequence(ProxySequenceReader<AminoAcidCompound> proxyLoader) {
         this(proxyLoader, new AminoAcidCompoundSet());
     }
 
-    public ProteinSequence(SequenceProxyLoader<AminoAcidCompound> proxyLoader, CompoundSet<AminoAcidCompound> compoundSet) {
+    public ProteinSequence(ProxySequenceReader<AminoAcidCompound> proxyLoader, CompoundSet<AminoAcidCompound> compoundSet) {
         super(proxyLoader, compoundSet);
     }
 
-    public void setParentDNASequence(DNASequence parentDNASequence, Integer begin, Integer end) {
-        this.begin = begin;
-        this.end = end;
+    public void setParentDNASequence(AbstractSequence parentDNASequence, Integer begin, Integer end) {
+        this.setParentSequence(parentDNASequence);
+        setBioBegin(begin);
+        setBioEnd(end);
     }
 
-    /**
-     * @return the parentTranscriptSequence
-     */
-    public DNASequence getParentDNASequence() {
-        return parentDNASequence;
-    }
+    
 
-    /**
-     * @return the begin
-     */
-    public Integer getBegin() {
-        return begin;
-    }
 
-    /**
-     * @return the end
-     */
-    public Integer getEnd() {
-        return end;
-    }
 
     public static void main(String[] args) {
         ProteinSequence proteinSequence = new ProteinSequence("ARNDCEQGHILKMFPSTWYVBZJX");
         System.out.println(proteinSequence.toString());
 
-        SequenceStringProxyLoader<AminoAcidCompound> sequenceStringProxyLoader = new SequenceStringProxyLoader<AminoAcidCompound>("XRNDCEQGHILKMFPSTWYVBZJA", AminoAcidCompoundSet.getAminoAcidCompoundSet());
+        StringProxySequenceReader<AminoAcidCompound> sequenceStringProxyLoader = new StringProxySequenceReader<AminoAcidCompound>("XRNDCEQGHILKMFPSTWYVBZJA", AminoAcidCompoundSet.getAminoAcidCompoundSet());
         ProteinSequence proteinSequenceFromProxy = new ProteinSequence(sequenceStringProxyLoader);
         System.out.println(proteinSequenceFromProxy.toString());
 

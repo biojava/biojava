@@ -34,6 +34,7 @@ implements Das2Source
 {
 
     Das2Capability[] capabilities;
+	private List<String> validCapabilities;
     
     public Das2SourceImpl() {
         super();
@@ -138,6 +139,9 @@ implements Das2Source
         // TODO Auto-generated method stub
         this.capabilities = capabilities;
         
+    }
+    public void setValidCapabilities(List capabilties){
+    	super.setValidCapabilities(capabilties);
     }
     
     

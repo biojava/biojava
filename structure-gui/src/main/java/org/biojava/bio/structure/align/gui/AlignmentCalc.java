@@ -23,21 +23,18 @@
 package org.biojava.bio.structure.align.gui;
 
 
-import java.util.List;
 import java.util.logging.Logger;
-
-
-
 import org.biojava.bio.structure.Atom;
-import org.biojava.bio.structure.Group;
+
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureException;
 import org.biojava.bio.structure.StructureTools;
 import org.biojava.bio.structure.align.StructureAlignment;
+
+import org.biojava.bio.structure.align.ce.ConfigStrucAligParams;
 import org.biojava.bio.structure.align.gui.AlignmentGui;
 import org.biojava.bio.structure.align.gui.jmol.StructureAlignmentJmol;
 import org.biojava.bio.structure.align.model.AFPChain;
-
 
 
 /** A class that obtains two structures via DAS and aligns them
@@ -48,131 +45,108 @@ import org.biojava.bio.structure.align.model.AFPChain;
  * @since 1.7
  * @version %I% %G%
  */
-public class AlignmentCalc implements Runnable {
+public class AlignmentCalc implements AlignmentCalculationRunnable {
 
-    public static Logger logger =  Logger.getLogger("org.biojava");
+   public static Logger logger =  Logger.getLogger("org.biojava");
 
-    boolean interrupted = false;
+   boolean interrupted = false;
 
-    String pdb1;
-    String pdb2;
-    
-    String name1;
-    String name2;
+   String pdb1;
+   String pdb2;
 
-    Structure structure1;
-    Structure structure2;
+   String name1;
+   String name2;
 
-    AlignmentGui parent;
+   Structure structure1;
+   Structure structure2;
 
-    /** requests an alignment of pdb1 vs pdb 2.
-     * Chain 1 and chain2 are optional.
-     * If they are empty strings, they are ignored
-     * @param parent the alignment gui frame that interacts with this class          
-     * @param s1 structure 1
-     * @param s2 structure 2
-     */
-    public AlignmentCalc(AlignmentGui parent, Structure s1, Structure s2 , String name1, String name2) {
+   AlignmentGui parent;
 
-        this.parent= parent;
+   /** requests an alignment of pdb1 vs pdb 2.
+    * Chain 1 and chain2 are optional.
+    * If they are empty strings, they are ignored
+    * @param parent the alignment gui frame that interacts with this class          
+    * @param s1 structure 1
+    * @param s2 structure 2
+    */
+   public AlignmentCalc(AlignmentGui parent, Structure s1, Structure s2 , String name1, String name2) {
 
-        structure1 = s1;
-        structure2 = s2;
+      this.parent= parent;
+
+      structure1 = s1;
+      structure2 = s2;
+
+      this.name1 = name1;
+      this.name2 = name2;
+
+   }
+
+   public void run() {
+
+      // both structure have been downloaded, now calculate the alignment ...
+
+      StructureAlignment algorithm = parent.getStructureAlignment();  
+      //StructurePairAligner aligner = new StructurePairAligner();
+      //aligner.setDebug(true);
+      try {
+
+         Atom[] ca1 = StructureTools.getAtomCAArray(structure1);
+         Atom[] ca2 = StructureTools.getAtomCAArray(structure2);
+
+         //System.out.println("ca1 size:" + ca1.length + " ca2 size: " + ca2.length);
+         AFPChain afpChain = algorithm.align(ca1, ca2);
+
+         afpChain.setName1(name1);
+         afpChain.setName2(name2);
+   
+         StructureAlignmentJmol jmol =   StructureAlignmentDisplay.display(afpChain, ca1, ca2);
+           
+         String title = jmol.getTitle();
+         ConfigStrucAligParams params = algorithm.getParameters();
+         if ( params != null)
+        	 title += " " + algorithm.getParameters().toString();
+         jmol.setTitle(title);
+
+         DisplayAFP.showAlignmentImage(afpChain,ca1,ca2,jmol);           
+
+         System.out.println(afpChain.toCE(ca1,ca2));
         
-        this.name1 = name1;
-        this.name2 = name2;
+      } catch (StructureException e){
+         e.printStackTrace();
+         logger.warning(e.getMessage());
 
-    }
-
-    public void run() {
-
-        // both structure have been downloaded, now calculate the alignment ...
-
-        StructureAlignment algorithm = parent.getStructureAlignment();  
-        //StructurePairAligner aligner = new StructurePairAligner();
-        //aligner.setDebug(true);
-        try {
-           
-           Atom[] ca1 = StructureTools.getAtomCAArray(structure1);
-           Atom[] ca2 = StructureTools.getAtomCAArray(structure2);
-                    
-           System.out.println("ca1 size:" + ca1.length + " ca2 size: " + ca2.length);
-           AFPChain afpChain = algorithm.align(ca1, ca2);
-           
-           afpChain.setName1(name1);
-           afpChain.setName2(name2);
-           
-          //System.out.println(afpChain);
-
-           List<Group> hetatms = structure1.getChain(0).getAtomGroups("hetatm");
-           List<Group> nucs    = structure1.getChain(0).getAtomGroups("nucleotide");
-        
-           List<Group> hetatms2 = structure2.getChain(0).getAtomGroups("hetatm");
-           List<Group> nucs2    = structure2.getChain(0).getAtomGroups("nucleotide");
-         
-           StructureAlignmentJmol jmol = StructureAlignmentDisplay.display(afpChain, ca1, ca2, hetatms, nucs,hetatms2, nucs2);
-           
-           //String result = afpChain.toFatcat(ca1, ca2);
-
-           //String rot = afpChain.toRotMat();
-           
-       		DisplayAFP.showAlignmentImage(afpChain,ca1,ca2,jmol);           
-           
-           System.out.println(afpChain.toCE(ca1,ca2));
-           /*
-			JFrame frame = new JFrame();
-			frame.setTitle(algorithm.getAlgorithmName()+ " : " + name1 + " vs. " + name2);
-			frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-
-			String html = "<html><body><pre>"+result+"</pre></body></html>";
-
-			//JTextPane tp = new JTextPane();
-			JEditorPane tp = new JEditorPane("text/html", html);
-			tp.setEditable(false);
-			JScrollPane js = new JScrollPane();
-			js.getViewport().add(tp);
+      }
 
 
-			frame.getContentPane().add(js);
-			frame.pack();      
-			frame.setVisible(true);*/
-           
-           //aligner.align(structure1,structure2);
-        } catch (StructureException e){
-            logger.warning(e.getMessage());
 
-        }
+      //logger.info("done!");
 
-       
-        
-        //logger.info("done!");
+      parent.notifyCalcFinished();
 
-        parent.notifyCalcFinished();
-
-    }
+   }
 
 
 
 
-    /** stops what is currently happening and does not continue
-     * 
-     *
-     */
-    public void interrupt() {
-        interrupted = true;
-    }
+   /** stops what is currently happening and does not continue
+    * 
+    *
+    */
+   public void interrupt() {
+      interrupted = true;
+   }
 
-    public void cleanup() {
+   public void cleanup() {
 
-        parent.notifyCalcFinished();
+      parent.notifyCalcFinished();
 
-        parent=null;
-        // cleanup...
+      parent=null;
+      // cleanup...
 
-        structure1 = null;
-        structure2 = null;
+      structure1 = null;
+      structure2 = null;
 
-    }
+   }
 
 
 

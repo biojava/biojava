@@ -22,6 +22,7 @@
  */
 package demo;
 
+
 import org.biojava.bio.structure.align.gui.AlignmentGui;
 
 /**
@@ -38,5 +39,6 @@ public class AlignmentGuiDemo {
 		System.setProperty("PDB_DIR","/tmp/");
 	
 		AlignmentGui.getInstance();
+		
 	}
 }

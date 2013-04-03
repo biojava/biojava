@@ -33,38 +33,49 @@ import org.xml.sax.Attributes ;
  */
 public class ConfigXMLHandler extends DefaultHandler {
 
-	UserConfiguration config ;
+   UserConfiguration config ;
 
-	/**
-	 * 
-	 */
-	public ConfigXMLHandler() {
-		super();
+   /**
+    * 
+    */
+   public ConfigXMLHandler() {
+      super();
 
-		config         = new UserConfiguration();
-	}
+      config         = new UserConfiguration();
+   }
 
-	public void startElement (String uri, String name, String qName, Attributes atts){
-		//System.out.println("new element >" + name + "< >" + qName+"<" + uri);
-		if ( qName.equals("PDBFILEPATH")){
+   public void startElement (String uri, String name, String qName, Attributes atts){
+      //System.out.println("new element >" + name + "< >" + qName+"<" + uri);
+      if ( qName.equals("PDBFILEPATH")){
 
-			config.setPdbFilePath(atts.getValue("path"));	    
-			String isSplit = atts.getValue("split");
-			config.setSplit(true);
-			if ( isSplit != null)     {   	 
-				if ( isSplit.equals("false"))
-					config.setSplit(false);
-			}
+         String path = atts.getValue("path");
+         // default path is system tmp...
+         if ( path != null)
+            config.setPdbFilePath(path);
 
-			String autoFetch = atts.getValue("autoFetch");
-			config.setAutoFetch(true);
-			if ( autoFetch != null){
-				if ( autoFetch.equals("false"))
-					config.setAutoFetch(false);
-			}
+         String isSplit = atts.getValue("split");
+         config.setSplit(true);
+         if ( isSplit != null)     {   	 
+            if ( isSplit.equals("false"))
+               config.setSplit(false);
+         }
 
-		}
-	}
+         String autoFetch = atts.getValue("autoFetch");
+         config.setAutoFetch(true);
+         if ( autoFetch != null){
+            if ( autoFetch.equals("false"))
+               config.setAutoFetch(false);
+         }
+
+         String fileFormat = atts.getValue("fileFormat");
+         config.setFileFormat(UserConfiguration.PDB_FORMAT);
+         if ( fileFormat != null) {
+            if ( fileFormat.equals(UserConfiguration.MMCIF_FORMAT))
+               config.setFileFormat(UserConfiguration.MMCIF_FORMAT);
+         }
+
+      }
+   }
 
 
 
@@ -72,8 +83,8 @@ public class ConfigXMLHandler extends DefaultHandler {
 
 
 
-	public UserConfiguration getConfig() {
-		return config ;
-	}
+   public UserConfiguration getConfig() {
+      return config ;
+   }
 
 }

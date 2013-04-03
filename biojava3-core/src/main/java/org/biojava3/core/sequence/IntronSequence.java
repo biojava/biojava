@@ -23,34 +23,24 @@
 
 package org.biojava3.core.sequence;
 
+
+
 /**
  *
  * @author Scooter Willis
  */
 public class IntronSequence extends DNASequence{
-private AccessionID accession;
-public DNASequence parentGeneSequence = null;
-int begin = -1;
-int end = -1;
 
-    public IntronSequence(TranscriptSequence parentGeneSequence, int begin, int end){
-        this.parentGeneSequence = parentGeneSequence;
-        this.begin = begin;
-        this.end = end;
+
+
+
+    public IntronSequence(GeneSequence parentGeneSequence, int begin, int end){
+        this.setParentSequence(parentGeneSequence);
+        setBioBegin(begin);
+        setBioEnd(end);
+
     }
 
 
-        /**
-     * @return the accession
-     */
-    public AccessionID getAccession() {
-        return accession;
-    }
 
-    /**
-     * @param accession the accession to set
-     */
-    public void setAccession(AccessionID accession) {
-        this.accession = accession;
-    }
 }

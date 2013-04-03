@@ -105,13 +105,13 @@ extends Thread {
             try {
                 version = "";
                 
-                String sequence = retrieveSequence(connstr);
+                String seq= retrieveSequence(connstr);
                 // bug in aristotle das source?
-                sequence.replaceAll(" ","");
+                seq.replaceAll(" ","");
                 gotSequence = true ;
                 // set the sequence ...
                 
-                triggerNewSequence(sp_accession,sequence,ds,version);
+                triggerNewSequence(sp_accession,seq,ds,version);
                 
                 
                 return;

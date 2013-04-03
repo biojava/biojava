@@ -97,17 +97,17 @@ public class SimpleStatePath
     return delegate.symbolAt(col);
   }
 
-  public Symbol symbolAt(Object label, int col)
+  public Symbol symbolAt(String label, int col)
   throws IndexOutOfBoundsException, NoSuchElementException {
     return delegate.symbolAt(label, col);
   }
 
-  public SymbolList symbolListForLabel(Object label)
+  public SymbolList symbolListForLabel(String label)
   throws NoSuchElementException {
     return delegate.symbolListForLabel(label);
   }
 
-  public Iterator iterator() {
+  public Iterator<Symbol> iterator() {
     return delegate.iterator();
   }
 
@@ -115,7 +115,7 @@ public class SimpleStatePath
     return delegate.subList(start, end);
   }
 
-  public List toList() {
+  public List<Symbol> toList() {
     return delegate.toList();
   }
 
@@ -133,7 +133,7 @@ public class SimpleStatePath
     throw new ChangeVetoException("Can't edit SimpleStatePath");
   }
 
-  public Iterator symbolListIterator() {
+  public Iterator<SymbolList> symbolListIterator() {
     return new Alignment.SymbolListIterator(this);
   }
 }

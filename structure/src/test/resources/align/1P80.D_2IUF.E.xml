@@ -1,0 +1,755 @@
+<AFPChain name1="1P80.D" name2="2IUF.E" method="JFatCat_rigid"
+	version="1.0" alnLength="710" blockNum="1" gapLen="45" optLength="665"
+	totalLenIni="624" alignScore="1733.29" chainRmsd="1.25" identity="0.41"
+	normAlignScore="130.65" probability="0.00e+00" similarity="0.56"
+	similarity1="91" similarity2="96" totalRmsdIni="1.25" totalRmsdOpt="1.57"
+	ca1Length="727" ca2Length="692" afpNum="161306" alignScoreUpdate="1733.00">
+	<block blockNr="0" blockSize="78" blockScore="1733.29" blockRmsd="1.25"
+		blockGap="79">
+		<eqr eqrNr="0" pdbres1="65" chain1="D" pdbres2="2" chain2="E"></eqr>
+		<eqr eqrNr="1" pdbres1="66" chain1="D" pdbres2="3" chain2="E"></eqr>
+		<eqr eqrNr="2" pdbres1="67" chain1="D" pdbres2="4" chain2="E"></eqr>
+		<eqr eqrNr="3" pdbres1="68" chain1="D" pdbres2="5" chain2="E"></eqr>
+		<eqr eqrNr="4" pdbres1="69" chain1="D" pdbres2="6" chain2="E"></eqr>
+		<eqr eqrNr="5" pdbres1="70" chain1="D" pdbres2="7" chain2="E"></eqr>
+		<eqr eqrNr="6" pdbres1="71" chain1="D" pdbres2="8" chain2="E"></eqr>
+
+		<eqr eqrNr="7" pdbres1="72" chain1="D" pdbres2="9" chain2="E"></eqr>
+		<eqr eqrNr="8" pdbres1="73" chain1="D" pdbres2="10" chain2="E"></eqr>
+		<eqr eqrNr="9" pdbres1="74" chain1="D" pdbres2="11" chain2="E"></eqr>
+		<eqr eqrNr="10" pdbres1="75" chain1="D" pdbres2="12" chain2="E"></eqr>
+		<eqr eqrNr="11" pdbres1="76" chain1="D" pdbres2="13" chain2="E"></eqr>
+		<eqr eqrNr="12" pdbres1="77" chain1="D" pdbres2="14" chain2="E"></eqr>
+		<eqr eqrNr="13" pdbres1="78" chain1="D" pdbres2="15" chain2="E"></eqr>
+		<eqr eqrNr="14" pdbres1="79" chain1="D" pdbres2="16" chain2="E"></eqr>
+		<eqr eqrNr="15" pdbres1="80" chain1="D" pdbres2="17" chain2="E"></eqr>
+
+		<eqr eqrNr="16" pdbres1="81" chain1="D" pdbres2="18" chain2="E"></eqr>
+		<eqr eqrNr="17" pdbres1="82" chain1="D" pdbres2="19" chain2="E"></eqr>
+		<eqr eqrNr="18" pdbres1="83" chain1="D" pdbres2="20" chain2="E"></eqr>
+		<eqr eqrNr="19" pdbres1="84" chain1="D" pdbres2="21" chain2="E"></eqr>
+		<eqr eqrNr="20" pdbres1="85" chain1="D" pdbres2="22" chain2="E"></eqr>
+		<eqr eqrNr="21" pdbres1="86" chain1="D" pdbres2="23" chain2="E"></eqr>
+		<eqr eqrNr="22" pdbres1="87" chain1="D" pdbres2="24" chain2="E"></eqr>
+		<eqr eqrNr="23" pdbres1="88" chain1="D" pdbres2="25" chain2="E"></eqr>
+		<eqr eqrNr="24" pdbres1="90" chain1="D" pdbres2="26" chain2="E"></eqr>
+
+		<eqr eqrNr="25" pdbres1="91" chain1="D" pdbres2="27" chain2="E"></eqr>
+		<eqr eqrNr="26" pdbres1="92" chain1="D" pdbres2="28" chain2="E"></eqr>
+		<eqr eqrNr="27" pdbres1="93" chain1="D" pdbres2="29" chain2="E"></eqr>
+		<eqr eqrNr="28" pdbres1="94" chain1="D" pdbres2="30" chain2="E"></eqr>
+		<eqr eqrNr="29" pdbres1="95" chain1="D" pdbres2="31" chain2="E"></eqr>
+		<eqr eqrNr="30" pdbres1="96" chain1="D" pdbres2="32" chain2="E"></eqr>
+		<eqr eqrNr="31" pdbres1="97" chain1="D" pdbres2="33" chain2="E"></eqr>
+		<eqr eqrNr="32" pdbres1="98" chain1="D" pdbres2="34" chain2="E"></eqr>
+		<eqr eqrNr="33" pdbres1="99" chain1="D" pdbres2="35" chain2="E"></eqr>
+
+		<eqr eqrNr="34" pdbres1="100" chain1="D" pdbres2="36" chain2="E"></eqr>
+		<eqr eqrNr="35" pdbres1="101" chain1="D" pdbres2="37" chain2="E"></eqr>
+		<eqr eqrNr="36" pdbres1="102" chain1="D" pdbres2="38" chain2="E"></eqr>
+		<eqr eqrNr="37" pdbres1="103" chain1="D" pdbres2="39" chain2="E"></eqr>
+		<eqr eqrNr="38" pdbres1="104" chain1="D" pdbres2="40" chain2="E"></eqr>
+		<eqr eqrNr="39" pdbres1="105" chain1="D" pdbres2="41" chain2="E"></eqr>
+		<eqr eqrNr="40" pdbres1="106" chain1="D" pdbres2="42" chain2="E"></eqr>
+		<eqr eqrNr="41" pdbres1="107" chain1="D" pdbres2="43" chain2="E"></eqr>
+		<eqr eqrNr="42" pdbres1="108" chain1="D" pdbres2="44" chain2="E"></eqr>
+
+		<eqr eqrNr="43" pdbres1="109" chain1="D" pdbres2="45" chain2="E"></eqr>
+		<eqr eqrNr="44" pdbres1="110" chain1="D" pdbres2="46" chain2="E"></eqr>
+		<eqr eqrNr="45" pdbres1="111" chain1="D" pdbres2="47" chain2="E"></eqr>
+		<eqr eqrNr="46" pdbres1="112" chain1="D" pdbres2="48" chain2="E"></eqr>
+		<eqr eqrNr="47" pdbres1="113" chain1="D" pdbres2="49" chain2="E"></eqr>
+		<eqr eqrNr="48" pdbres1="114" chain1="D" pdbres2="50" chain2="E"></eqr>
+		<eqr eqrNr="49" pdbres1="115" chain1="D" pdbres2="51" chain2="E"></eqr>
+		<eqr eqrNr="50" pdbres1="116" chain1="D" pdbres2="52" chain2="E"></eqr>
+		<eqr eqrNr="51" pdbres1="117" chain1="D" pdbres2="53" chain2="E"></eqr>
+
+		<eqr eqrNr="52" pdbres1="118" chain1="D" pdbres2="54" chain2="E"></eqr>
+		<eqr eqrNr="53" pdbres1="119" chain1="D" pdbres2="55" chain2="E"></eqr>
+		<eqr eqrNr="54" pdbres1="120" chain1="D" pdbres2="56" chain2="E"></eqr>
+		<eqr eqrNr="55" pdbres1="121" chain1="D" pdbres2="57" chain2="E"></eqr>
+		<eqr eqrNr="56" pdbres1="122" chain1="D" pdbres2="58" chain2="E"></eqr>
+		<eqr eqrNr="57" pdbres1="123" chain1="D" pdbres2="59" chain2="E"></eqr>
+		<eqr eqrNr="58" pdbres1="124" chain1="D" pdbres2="60" chain2="E"></eqr>
+		<eqr eqrNr="59" pdbres1="125" chain1="D" pdbres2="61" chain2="E"></eqr>
+		<eqr eqrNr="60" pdbres1="126" chain1="D" pdbres2="62" chain2="E"></eqr>
+
+		<eqr eqrNr="61" pdbres1="127" chain1="D" pdbres2="63" chain2="E"></eqr>
+		<eqr eqrNr="62" pdbres1="128" chain1="D" pdbres2="64" chain2="E"></eqr>
+		<eqr eqrNr="63" pdbres1="129" chain1="D" pdbres2="65" chain2="E"></eqr>
+		<eqr eqrNr="64" pdbres1="130" chain1="D" pdbres2="66" chain2="E"></eqr>
+		<eqr eqrNr="65" pdbres1="131" chain1="D" pdbres2="67" chain2="E"></eqr>
+		<eqr eqrNr="66" pdbres1="132" chain1="D" pdbres2="68" chain2="E"></eqr>
+		<eqr eqrNr="67" pdbres1="133" chain1="D" pdbres2="69" chain2="E"></eqr>
+		<eqr eqrNr="68" pdbres1="134" chain1="D" pdbres2="70" chain2="E"></eqr>
+		<eqr eqrNr="69" pdbres1="135" chain1="D" pdbres2="71" chain2="E"></eqr>
+
+		<eqr eqrNr="70" pdbres1="136" chain1="D" pdbres2="72" chain2="E"></eqr>
+		<eqr eqrNr="71" pdbres1="137" chain1="D" pdbres2="73" chain2="E"></eqr>
+		<eqr eqrNr="72" pdbres1="138" chain1="D" pdbres2="74" chain2="E"></eqr>
+		<eqr eqrNr="73" pdbres1="139" chain1="D" pdbres2="75" chain2="E"></eqr>
+		<eqr eqrNr="74" pdbres1="140" chain1="D" pdbres2="76" chain2="E"></eqr>
+		<eqr eqrNr="75" pdbres1="141" chain1="D" pdbres2="77" chain2="E"></eqr>
+		<eqr eqrNr="76" pdbres1="142" chain1="D" pdbres2="78" chain2="E"></eqr>
+		<eqr eqrNr="77" pdbres1="143" chain1="D" pdbres2="79" chain2="E"></eqr>
+		<eqr eqrNr="78" pdbres1="144" chain1="D" pdbres2="80" chain2="E"></eqr>
+
+		<eqr eqrNr="79" pdbres1="145" chain1="D" pdbres2="81" chain2="E"></eqr>
+		<eqr eqrNr="80" pdbres1="146" chain1="D" pdbres2="82" chain2="E"></eqr>
+		<eqr eqrNr="81" pdbres1="147" chain1="D" pdbres2="83" chain2="E"></eqr>
+		<eqr eqrNr="82" pdbres1="148" chain1="D" pdbres2="84" chain2="E"></eqr>
+		<eqr eqrNr="83" pdbres1="149" chain1="D" pdbres2="85" chain2="E"></eqr>
+		<eqr eqrNr="84" pdbres1="150" chain1="D" pdbres2="86" chain2="E"></eqr>
+		<eqr eqrNr="85" pdbres1="151" chain1="D" pdbres2="87" chain2="E"></eqr>
+		<eqr eqrNr="86" pdbres1="152" chain1="D" pdbres2="88" chain2="E"></eqr>
+		<eqr eqrNr="87" pdbres1="153" chain1="D" pdbres2="89" chain2="E"></eqr>
+
+		<eqr eqrNr="88" pdbres1="154" chain1="D" pdbres2="90" chain2="E"></eqr>
+		<eqr eqrNr="89" pdbres1="155" chain1="D" pdbres2="91" chain2="E"></eqr>
+		<eqr eqrNr="90" pdbres1="156" chain1="D" pdbres2="92" chain2="E"></eqr>
+		<eqr eqrNr="91" pdbres1="157" chain1="D" pdbres2="93" chain2="E"></eqr>
+		<eqr eqrNr="92" pdbres1="158" chain1="D" pdbres2="94" chain2="E"></eqr>
+		<eqr eqrNr="93" pdbres1="159" chain1="D" pdbres2="95" chain2="E"></eqr>
+		<eqr eqrNr="94" pdbres1="160" chain1="D" pdbres2="96" chain2="E"></eqr>
+		<eqr eqrNr="95" pdbres1="161" chain1="D" pdbres2="97" chain2="E"></eqr>
+		<eqr eqrNr="96" pdbres1="162" chain1="D" pdbres2="98" chain2="E"></eqr>
+
+		<eqr eqrNr="97" pdbres1="163" chain1="D" pdbres2="99" chain2="E"></eqr>
+		<eqr eqrNr="98" pdbres1="164" chain1="D" pdbres2="100" chain2="E"></eqr>
+		<eqr eqrNr="99" pdbres1="165" chain1="D" pdbres2="101" chain2="E"></eqr>
+		<eqr eqrNr="100" pdbres1="166" chain1="D" pdbres2="102" chain2="E"></eqr>
+		<eqr eqrNr="101" pdbres1="167" chain1="D" pdbres2="103" chain2="E"></eqr>
+		<eqr eqrNr="102" pdbres1="168" chain1="D" pdbres2="104" chain2="E"></eqr>
+		<eqr eqrNr="103" pdbres1="169" chain1="D" pdbres2="105" chain2="E"></eqr>
+		<eqr eqrNr="104" pdbres1="170" chain1="D" pdbres2="106" chain2="E"></eqr>
+		<eqr eqrNr="105" pdbres1="171" chain1="D" pdbres2="107" chain2="E"></eqr>
+
+		<eqr eqrNr="106" pdbres1="172" chain1="D" pdbres2="108" chain2="E"></eqr>
+		<eqr eqrNr="107" pdbres1="173" chain1="D" pdbres2="109" chain2="E"></eqr>
+		<eqr eqrNr="108" pdbres1="174" chain1="D" pdbres2="110" chain2="E"></eqr>
+		<eqr eqrNr="109" pdbres1="175" chain1="D" pdbres2="111" chain2="E"></eqr>
+		<eqr eqrNr="110" pdbres1="176" chain1="D" pdbres2="112" chain2="E"></eqr>
+		<eqr eqrNr="111" pdbres1="177" chain1="D" pdbres2="113" chain2="E"></eqr>
+		<eqr eqrNr="112" pdbres1="178" chain1="D" pdbres2="114" chain2="E"></eqr>
+		<eqr eqrNr="113" pdbres1="179" chain1="D" pdbres2="115" chain2="E"></eqr>
+		<eqr eqrNr="114" pdbres1="180" chain1="D" pdbres2="116" chain2="E"></eqr>
+
+		<eqr eqrNr="115" pdbres1="181" chain1="D" pdbres2="117" chain2="E"></eqr>
+		<eqr eqrNr="116" pdbres1="182" chain1="D" pdbres2="118" chain2="E"></eqr>
+		<eqr eqrNr="117" pdbres1="183" chain1="D" pdbres2="119" chain2="E"></eqr>
+		<eqr eqrNr="118" pdbres1="184" chain1="D" pdbres2="120" chain2="E"></eqr>
+		<eqr eqrNr="119" pdbres1="185" chain1="D" pdbres2="121" chain2="E"></eqr>
+		<eqr eqrNr="120" pdbres1="186" chain1="D" pdbres2="122" chain2="E"></eqr>
+		<eqr eqrNr="121" pdbres1="187" chain1="D" pdbres2="123" chain2="E"></eqr>
+		<eqr eqrNr="122" pdbres1="188" chain1="D" pdbres2="124" chain2="E"></eqr>
+		<eqr eqrNr="123" pdbres1="189" chain1="D" pdbres2="125" chain2="E"></eqr>
+
+		<eqr eqrNr="124" pdbres1="190" chain1="D" pdbres2="126" chain2="E"></eqr>
+		<eqr eqrNr="125" pdbres1="191" chain1="D" pdbres2="127" chain2="E"></eqr>
+		<eqr eqrNr="126" pdbres1="192" chain1="D" pdbres2="128" chain2="E"></eqr>
+		<eqr eqrNr="127" pdbres1="193" chain1="D" pdbres2="129" chain2="E"></eqr>
+		<eqr eqrNr="128" pdbres1="194" chain1="D" pdbres2="130" chain2="E"></eqr>
+		<eqr eqrNr="129" pdbres1="195" chain1="D" pdbres2="131" chain2="E"></eqr>
+		<eqr eqrNr="130" pdbres1="196" chain1="D" pdbres2="132" chain2="E"></eqr>
+		<eqr eqrNr="131" pdbres1="197" chain1="D" pdbres2="133" chain2="E"></eqr>
+		<eqr eqrNr="132" pdbres1="198" chain1="D" pdbres2="134" chain2="E"></eqr>
+
+		<eqr eqrNr="133" pdbres1="199" chain1="D" pdbres2="135" chain2="E"></eqr>
+		<eqr eqrNr="134" pdbres1="200" chain1="D" pdbres2="136" chain2="E"></eqr>
+		<eqr eqrNr="135" pdbres1="201" chain1="D" pdbres2="137" chain2="E"></eqr>
+		<eqr eqrNr="136" pdbres1="202" chain1="D" pdbres2="138" chain2="E"></eqr>
+		<eqr eqrNr="137" pdbres1="203" chain1="D" pdbres2="139" chain2="E"></eqr>
+		<eqr eqrNr="138" pdbres1="204" chain1="D" pdbres2="140" chain2="E"></eqr>
+		<eqr eqrNr="139" pdbres1="205" chain1="D" pdbres2="141" chain2="E"></eqr>
+		<eqr eqrNr="140" pdbres1="206" chain1="D" pdbres2="142" chain2="E"></eqr>
+		<eqr eqrNr="141" pdbres1="207" chain1="D" pdbres2="143" chain2="E"></eqr>
+
+		<eqr eqrNr="142" pdbres1="208" chain1="D" pdbres2="144" chain2="E"></eqr>
+		<eqr eqrNr="143" pdbres1="209" chain1="D" pdbres2="145" chain2="E"></eqr>
+		<eqr eqrNr="144" pdbres1="210" chain1="D" pdbres2="146" chain2="E"></eqr>
+		<eqr eqrNr="145" pdbres1="211" chain1="D" pdbres2="147" chain2="E"></eqr>
+		<eqr eqrNr="146" pdbres1="212" chain1="D" pdbres2="148" chain2="E"></eqr>
+		<eqr eqrNr="147" pdbres1="213" chain1="D" pdbres2="149" chain2="E"></eqr>
+		<eqr eqrNr="148" pdbres1="214" chain1="D" pdbres2="150" chain2="E"></eqr>
+		<eqr eqrNr="149" pdbres1="215" chain1="D" pdbres2="151" chain2="E"></eqr>
+		<eqr eqrNr="150" pdbres1="216" chain1="D" pdbres2="152" chain2="E"></eqr>
+
+		<eqr eqrNr="151" pdbres1="217" chain1="D" pdbres2="153" chain2="E"></eqr>
+		<eqr eqrNr="152" pdbres1="218" chain1="D" pdbres2="154" chain2="E"></eqr>
+		<eqr eqrNr="153" pdbres1="219" chain1="D" pdbres2="155" chain2="E"></eqr>
+		<eqr eqrNr="154" pdbres1="220" chain1="D" pdbres2="156" chain2="E"></eqr>
+		<eqr eqrNr="155" pdbres1="221" chain1="D" pdbres2="157" chain2="E"></eqr>
+		<eqr eqrNr="156" pdbres1="222" chain1="D" pdbres2="158" chain2="E"></eqr>
+		<eqr eqrNr="157" pdbres1="223" chain1="D" pdbres2="159" chain2="E"></eqr>
+		<eqr eqrNr="158" pdbres1="224" chain1="D" pdbres2="160" chain2="E"></eqr>
+		<eqr eqrNr="159" pdbres1="225" chain1="D" pdbres2="161" chain2="E"></eqr>
+
+		<eqr eqrNr="160" pdbres1="226" chain1="D" pdbres2="162" chain2="E"></eqr>
+		<eqr eqrNr="161" pdbres1="227" chain1="D" pdbres2="163" chain2="E"></eqr>
+		<eqr eqrNr="162" pdbres1="228" chain1="D" pdbres2="164" chain2="E"></eqr>
+		<eqr eqrNr="163" pdbres1="229" chain1="D" pdbres2="165" chain2="E"></eqr>
+		<eqr eqrNr="164" pdbres1="230" chain1="D" pdbres2="166" chain2="E"></eqr>
+		<eqr eqrNr="165" pdbres1="231" chain1="D" pdbres2="167" chain2="E"></eqr>
+		<eqr eqrNr="166" pdbres1="232" chain1="D" pdbres2="168" chain2="E"></eqr>
+		<eqr eqrNr="167" pdbres1="233" chain1="D" pdbres2="169" chain2="E"></eqr>
+		<eqr eqrNr="168" pdbres1="234" chain1="D" pdbres2="170" chain2="E"></eqr>
+
+		<eqr eqrNr="169" pdbres1="235" chain1="D" pdbres2="171" chain2="E"></eqr>
+		<eqr eqrNr="170" pdbres1="236" chain1="D" pdbres2="172" chain2="E"></eqr>
+		<eqr eqrNr="171" pdbres1="237" chain1="D" pdbres2="173" chain2="E"></eqr>
+		<eqr eqrNr="172" pdbres1="238" chain1="D" pdbres2="174" chain2="E"></eqr>
+		<eqr eqrNr="173" pdbres1="239" chain1="D" pdbres2="175" chain2="E"></eqr>
+		<eqr eqrNr="174" pdbres1="240" chain1="D" pdbres2="176" chain2="E"></eqr>
+		<eqr eqrNr="175" pdbres1="241" chain1="D" pdbres2="177" chain2="E"></eqr>
+		<eqr eqrNr="176" pdbres1="242" chain1="D" pdbres2="178" chain2="E"></eqr>
+		<eqr eqrNr="177" pdbres1="243" chain1="D" pdbres2="179" chain2="E"></eqr>
+
+		<eqr eqrNr="178" pdbres1="244" chain1="D" pdbres2="180" chain2="E"></eqr>
+		<eqr eqrNr="179" pdbres1="245" chain1="D" pdbres2="181" chain2="E"></eqr>
+		<eqr eqrNr="180" pdbres1="246" chain1="D" pdbres2="182" chain2="E"></eqr>
+		<eqr eqrNr="181" pdbres1="247" chain1="D" pdbres2="183" chain2="E"></eqr>
+		<eqr eqrNr="182" pdbres1="248" chain1="D" pdbres2="184" chain2="E"></eqr>
+		<eqr eqrNr="183" pdbres1="249" chain1="D" pdbres2="185" chain2="E"></eqr>
+		<eqr eqrNr="184" pdbres1="250" chain1="D" pdbres2="186" chain2="E"></eqr>
+		<eqr eqrNr="185" pdbres1="251" chain1="D" pdbres2="187" chain2="E"></eqr>
+		<eqr eqrNr="186" pdbres1="252" chain1="D" pdbres2="188" chain2="E"></eqr>
+
+		<eqr eqrNr="187" pdbres1="253" chain1="D" pdbres2="189" chain2="E"></eqr>
+		<eqr eqrNr="188" pdbres1="254" chain1="D" pdbres2="190" chain2="E"></eqr>
+		<eqr eqrNr="189" pdbres1="255" chain1="D" pdbres2="191" chain2="E"></eqr>
+		<eqr eqrNr="190" pdbres1="256" chain1="D" pdbres2="192" chain2="E"></eqr>
+		<eqr eqrNr="191" pdbres1="257" chain1="D" pdbres2="193" chain2="E"></eqr>
+		<eqr eqrNr="192" pdbres1="258" chain1="D" pdbres2="194" chain2="E"></eqr>
+		<eqr eqrNr="193" pdbres1="259" chain1="D" pdbres2="195" chain2="E"></eqr>
+		<eqr eqrNr="194" pdbres1="260" chain1="D" pdbres2="196" chain2="E"></eqr>
+		<eqr eqrNr="195" pdbres1="261" chain1="D" pdbres2="197" chain2="E"></eqr>
+
+		<eqr eqrNr="196" pdbres1="262" chain1="D" pdbres2="198" chain2="E"></eqr>
+		<eqr eqrNr="197" pdbres1="263" chain1="D" pdbres2="199" chain2="E"></eqr>
+		<eqr eqrNr="198" pdbres1="264" chain1="D" pdbres2="200" chain2="E"></eqr>
+		<eqr eqrNr="199" pdbres1="265" chain1="D" pdbres2="201" chain2="E"></eqr>
+		<eqr eqrNr="200" pdbres1="266" chain1="D" pdbres2="202" chain2="E"></eqr>
+		<eqr eqrNr="201" pdbres1="267" chain1="D" pdbres2="203" chain2="E"></eqr>
+		<eqr eqrNr="202" pdbres1="268" chain1="D" pdbres2="204" chain2="E"></eqr>
+		<eqr eqrNr="203" pdbres1="269" chain1="D" pdbres2="205" chain2="E"></eqr>
+		<eqr eqrNr="204" pdbres1="270" chain1="D" pdbres2="206" chain2="E"></eqr>
+
+		<eqr eqrNr="205" pdbres1="271" chain1="D" pdbres2="207" chain2="E"></eqr>
+		<eqr eqrNr="206" pdbres1="272" chain1="D" pdbres2="208" chain2="E"></eqr>
+		<eqr eqrNr="207" pdbres1="273" chain1="D" pdbres2="209" chain2="E"></eqr>
+		<eqr eqrNr="208" pdbres1="274" chain1="D" pdbres2="210" chain2="E"></eqr>
+		<eqr eqrNr="209" pdbres1="275" chain1="D" pdbres2="211" chain2="E"></eqr>
+		<eqr eqrNr="210" pdbres1="276" chain1="D" pdbres2="212" chain2="E"></eqr>
+		<eqr eqrNr="211" pdbres1="277" chain1="D" pdbres2="213" chain2="E"></eqr>
+		<eqr eqrNr="212" pdbres1="278" chain1="D" pdbres2="214" chain2="E"></eqr>
+		<eqr eqrNr="213" pdbres1="279" chain1="D" pdbres2="215" chain2="E"></eqr>
+
+		<eqr eqrNr="214" pdbres1="280" chain1="D" pdbres2="216" chain2="E"></eqr>
+		<eqr eqrNr="215" pdbres1="281" chain1="D" pdbres2="217" chain2="E"></eqr>
+		<eqr eqrNr="216" pdbres1="282" chain1="D" pdbres2="218" chain2="E"></eqr>
+		<eqr eqrNr="217" pdbres1="283" chain1="D" pdbres2="219" chain2="E"></eqr>
+		<eqr eqrNr="218" pdbres1="284" chain1="D" pdbres2="220" chain2="E"></eqr>
+		<eqr eqrNr="219" pdbres1="285" chain1="D" pdbres2="221" chain2="E"></eqr>
+		<eqr eqrNr="220" pdbres1="286" chain1="D" pdbres2="222" chain2="E"></eqr>
+		<eqr eqrNr="221" pdbres1="287" chain1="D" pdbres2="223" chain2="E"></eqr>
+		<eqr eqrNr="222" pdbres1="288" chain1="D" pdbres2="224" chain2="E"></eqr>
+
+		<eqr eqrNr="223" pdbres1="289" chain1="D" pdbres2="225" chain2="E"></eqr>
+		<eqr eqrNr="224" pdbres1="290" chain1="D" pdbres2="226" chain2="E"></eqr>
+		<eqr eqrNr="225" pdbres1="291" chain1="D" pdbres2="227" chain2="E"></eqr>
+		<eqr eqrNr="226" pdbres1="292" chain1="D" pdbres2="228" chain2="E"></eqr>
+		<eqr eqrNr="227" pdbres1="293" chain1="D" pdbres2="229" chain2="E"></eqr>
+		<eqr eqrNr="228" pdbres1="294" chain1="D" pdbres2="230" chain2="E"></eqr>
+		<eqr eqrNr="229" pdbres1="295" chain1="D" pdbres2="231" chain2="E"></eqr>
+		<eqr eqrNr="230" pdbres1="296" chain1="D" pdbres2="232" chain2="E"></eqr>
+		<eqr eqrNr="231" pdbres1="297" chain1="D" pdbres2="233" chain2="E"></eqr>
+
+		<eqr eqrNr="232" pdbres1="298" chain1="D" pdbres2="234" chain2="E"></eqr>
+		<eqr eqrNr="233" pdbres1="299" chain1="D" pdbres2="235" chain2="E"></eqr>
+		<eqr eqrNr="234" pdbres1="300" chain1="D" pdbres2="236" chain2="E"></eqr>
+		<eqr eqrNr="235" pdbres1="301" chain1="D" pdbres2="237" chain2="E"></eqr>
+		<eqr eqrNr="236" pdbres1="302" chain1="D" pdbres2="238" chain2="E"></eqr>
+		<eqr eqrNr="237" pdbres1="303" chain1="D" pdbres2="239" chain2="E"></eqr>
+		<eqr eqrNr="238" pdbres1="304" chain1="D" pdbres2="240" chain2="E"></eqr>
+		<eqr eqrNr="239" pdbres1="305" chain1="D" pdbres2="241" chain2="E"></eqr>
+		<eqr eqrNr="240" pdbres1="306" chain1="D" pdbres2="242" chain2="E"></eqr>
+
+		<eqr eqrNr="241" pdbres1="307" chain1="D" pdbres2="243" chain2="E"></eqr>
+		<eqr eqrNr="242" pdbres1="308" chain1="D" pdbres2="244" chain2="E"></eqr>
+		<eqr eqrNr="243" pdbres1="309" chain1="D" pdbres2="245" chain2="E"></eqr>
+		<eqr eqrNr="244" pdbres1="310" chain1="D" pdbres2="246" chain2="E"></eqr>
+		<eqr eqrNr="245" pdbres1="311" chain1="D" pdbres2="247" chain2="E"></eqr>
+		<eqr eqrNr="246" pdbres1="312" chain1="D" pdbres2="248" chain2="E"></eqr>
+		<eqr eqrNr="247" pdbres1="313" chain1="D" pdbres2="249" chain2="E"></eqr>
+		<eqr eqrNr="248" pdbres1="314" chain1="D" pdbres2="250" chain2="E"></eqr>
+		<eqr eqrNr="249" pdbres1="315" chain1="D" pdbres2="251" chain2="E"></eqr>
+
+		<eqr eqrNr="250" pdbres1="316" chain1="D" pdbres2="252" chain2="E"></eqr>
+		<eqr eqrNr="251" pdbres1="317" chain1="D" pdbres2="253" chain2="E"></eqr>
+		<eqr eqrNr="252" pdbres1="319" chain1="D" pdbres2="255" chain2="E"></eqr>
+		<eqr eqrNr="253" pdbres1="320" chain1="D" pdbres2="256" chain2="E"></eqr>
+		<eqr eqrNr="254" pdbres1="321" chain1="D" pdbres2="257" chain2="E"></eqr>
+		<eqr eqrNr="255" pdbres1="322" chain1="D" pdbres2="258" chain2="E"></eqr>
+		<eqr eqrNr="256" pdbres1="323" chain1="D" pdbres2="259" chain2="E"></eqr>
+		<eqr eqrNr="257" pdbres1="324" chain1="D" pdbres2="260" chain2="E"></eqr>
+		<eqr eqrNr="258" pdbres1="325" chain1="D" pdbres2="261" chain2="E"></eqr>
+
+		<eqr eqrNr="259" pdbres1="326" chain1="D" pdbres2="262" chain2="E"></eqr>
+		<eqr eqrNr="260" pdbres1="327" chain1="D" pdbres2="263" chain2="E"></eqr>
+		<eqr eqrNr="261" pdbres1="328" chain1="D" pdbres2="264" chain2="E"></eqr>
+		<eqr eqrNr="262" pdbres1="329" chain1="D" pdbres2="265" chain2="E"></eqr>
+		<eqr eqrNr="263" pdbres1="330" chain1="D" pdbres2="266" chain2="E"></eqr>
+		<eqr eqrNr="264" pdbres1="331" chain1="D" pdbres2="267" chain2="E"></eqr>
+		<eqr eqrNr="265" pdbres1="332" chain1="D" pdbres2="268" chain2="E"></eqr>
+		<eqr eqrNr="266" pdbres1="333" chain1="D" pdbres2="269" chain2="E"></eqr>
+		<eqr eqrNr="267" pdbres1="334" chain1="D" pdbres2="270" chain2="E"></eqr>
+
+		<eqr eqrNr="268" pdbres1="335" chain1="D" pdbres2="271" chain2="E"></eqr>
+		<eqr eqrNr="269" pdbres1="336" chain1="D" pdbres2="272" chain2="E"></eqr>
+		<eqr eqrNr="270" pdbres1="337" chain1="D" pdbres2="273" chain2="E"></eqr>
+		<eqr eqrNr="271" pdbres1="338" chain1="D" pdbres2="274" chain2="E"></eqr>
+		<eqr eqrNr="272" pdbres1="339" chain1="D" pdbres2="275" chain2="E"></eqr>
+		<eqr eqrNr="273" pdbres1="340" chain1="D" pdbres2="276" chain2="E"></eqr>
+		<eqr eqrNr="274" pdbres1="341" chain1="D" pdbres2="277" chain2="E"></eqr>
+		<eqr eqrNr="275" pdbres1="342" chain1="D" pdbres2="278" chain2="E"></eqr>
+		<eqr eqrNr="276" pdbres1="343" chain1="D" pdbres2="279" chain2="E"></eqr>
+
+		<eqr eqrNr="277" pdbres1="344" chain1="D" pdbres2="280" chain2="E"></eqr>
+		<eqr eqrNr="278" pdbres1="345" chain1="D" pdbres2="281" chain2="E"></eqr>
+		<eqr eqrNr="279" pdbres1="346" chain1="D" pdbres2="282" chain2="E"></eqr>
+		<eqr eqrNr="280" pdbres1="347" chain1="D" pdbres2="283" chain2="E"></eqr>
+		<eqr eqrNr="281" pdbres1="348" chain1="D" pdbres2="284" chain2="E"></eqr>
+		<eqr eqrNr="282" pdbres1="349" chain1="D" pdbres2="285" chain2="E"></eqr>
+		<eqr eqrNr="283" pdbres1="350" chain1="D" pdbres2="286" chain2="E"></eqr>
+		<eqr eqrNr="284" pdbres1="351" chain1="D" pdbres2="287" chain2="E"></eqr>
+		<eqr eqrNr="285" pdbres1="352" chain1="D" pdbres2="288" chain2="E"></eqr>
+
+		<eqr eqrNr="286" pdbres1="353" chain1="D" pdbres2="289" chain2="E"></eqr>
+		<eqr eqrNr="287" pdbres1="354" chain1="D" pdbres2="290" chain2="E"></eqr>
+		<eqr eqrNr="288" pdbres1="355" chain1="D" pdbres2="291" chain2="E"></eqr>
+		<eqr eqrNr="289" pdbres1="356" chain1="D" pdbres2="292" chain2="E"></eqr>
+		<eqr eqrNr="290" pdbres1="357" chain1="D" pdbres2="293" chain2="E"></eqr>
+		<eqr eqrNr="291" pdbres1="358" chain1="D" pdbres2="294" chain2="E"></eqr>
+		<eqr eqrNr="292" pdbres1="359" chain1="D" pdbres2="295" chain2="E"></eqr>
+		<eqr eqrNr="293" pdbres1="360" chain1="D" pdbres2="296" chain2="E"></eqr>
+		<eqr eqrNr="294" pdbres1="361" chain1="D" pdbres2="297" chain2="E"></eqr>
+
+		<eqr eqrNr="295" pdbres1="362" chain1="D" pdbres2="298" chain2="E"></eqr>
+		<eqr eqrNr="296" pdbres1="363" chain1="D" pdbres2="299" chain2="E"></eqr>
+		<eqr eqrNr="297" pdbres1="364" chain1="D" pdbres2="300" chain2="E"></eqr>
+		<eqr eqrNr="298" pdbres1="365" chain1="D" pdbres2="301" chain2="E"></eqr>
+		<eqr eqrNr="299" pdbres1="366" chain1="D" pdbres2="302" chain2="E"></eqr>
+		<eqr eqrNr="300" pdbres1="367" chain1="D" pdbres2="303" chain2="E"></eqr>
+		<eqr eqrNr="301" pdbres1="368" chain1="D" pdbres2="304" chain2="E"></eqr>
+		<eqr eqrNr="302" pdbres1="369" chain1="D" pdbres2="305" chain2="E"></eqr>
+		<eqr eqrNr="303" pdbres1="370" chain1="D" pdbres2="306" chain2="E"></eqr>
+
+		<eqr eqrNr="304" pdbres1="371" chain1="D" pdbres2="307" chain2="E"></eqr>
+		<eqr eqrNr="305" pdbres1="372" chain1="D" pdbres2="308" chain2="E"></eqr>
+		<eqr eqrNr="306" pdbres1="373" chain1="D" pdbres2="309" chain2="E"></eqr>
+		<eqr eqrNr="307" pdbres1="374" chain1="D" pdbres2="310" chain2="E"></eqr>
+		<eqr eqrNr="308" pdbres1="375" chain1="D" pdbres2="311" chain2="E"></eqr>
+		<eqr eqrNr="309" pdbres1="376" chain1="D" pdbres2="312" chain2="E"></eqr>
+		<eqr eqrNr="310" pdbres1="377" chain1="D" pdbres2="313" chain2="E"></eqr>
+		<eqr eqrNr="311" pdbres1="378" chain1="D" pdbres2="314" chain2="E"></eqr>
+		<eqr eqrNr="312" pdbres1="379" chain1="D" pdbres2="315" chain2="E"></eqr>
+
+		<eqr eqrNr="313" pdbres1="380" chain1="D" pdbres2="316" chain2="E"></eqr>
+		<eqr eqrNr="314" pdbres1="381" chain1="D" pdbres2="317" chain2="E"></eqr>
+		<eqr eqrNr="315" pdbres1="382" chain1="D" pdbres2="318" chain2="E"></eqr>
+		<eqr eqrNr="316" pdbres1="383" chain1="D" pdbres2="319" chain2="E"></eqr>
+		<eqr eqrNr="317" pdbres1="384" chain1="D" pdbres2="320" chain2="E"></eqr>
+		<eqr eqrNr="318" pdbres1="385" chain1="D" pdbres2="321" chain2="E"></eqr>
+		<eqr eqrNr="319" pdbres1="386" chain1="D" pdbres2="322" chain2="E"></eqr>
+		<eqr eqrNr="320" pdbres1="387" chain1="D" pdbres2="323" chain2="E"></eqr>
+		<eqr eqrNr="321" pdbres1="388" chain1="D" pdbres2="324" chain2="E"></eqr>
+
+		<eqr eqrNr="322" pdbres1="389" chain1="D" pdbres2="325" chain2="E"></eqr>
+		<eqr eqrNr="323" pdbres1="390" chain1="D" pdbres2="326" chain2="E"></eqr>
+		<eqr eqrNr="324" pdbres1="391" chain1="D" pdbres2="327" chain2="E"></eqr>
+		<eqr eqrNr="325" pdbres1="392" chain1="D" pdbres2="328" chain2="E"></eqr>
+		<eqr eqrNr="326" pdbres1="393" chain1="D" pdbres2="329" chain2="E"></eqr>
+		<eqr eqrNr="327" pdbres1="394" chain1="D" pdbres2="330" chain2="E"></eqr>
+		<eqr eqrNr="328" pdbres1="395" chain1="D" pdbres2="331" chain2="E"></eqr>
+		<eqr eqrNr="329" pdbres1="396" chain1="D" pdbres2="332" chain2="E"></eqr>
+		<eqr eqrNr="330" pdbres1="397" chain1="D" pdbres2="333" chain2="E"></eqr>
+
+		<eqr eqrNr="331" pdbres1="398" chain1="D" pdbres2="334" chain2="E"></eqr>
+		<eqr eqrNr="332" pdbres1="399" chain1="D" pdbres2="335" chain2="E"></eqr>
+		<eqr eqrNr="333" pdbres1="400" chain1="D" pdbres2="336" chain2="E"></eqr>
+		<eqr eqrNr="334" pdbres1="401" chain1="D" pdbres2="337" chain2="E"></eqr>
+		<eqr eqrNr="335" pdbres1="402" chain1="D" pdbres2="338" chain2="E"></eqr>
+		<eqr eqrNr="336" pdbres1="403" chain1="D" pdbres2="339" chain2="E"></eqr>
+		<eqr eqrNr="337" pdbres1="404" chain1="D" pdbres2="340" chain2="E"></eqr>
+		<eqr eqrNr="338" pdbres1="405" chain1="D" pdbres2="341" chain2="E"></eqr>
+		<eqr eqrNr="339" pdbres1="406" chain1="D" pdbres2="342" chain2="E"></eqr>
+
+		<eqr eqrNr="340" pdbres1="407" chain1="D" pdbres2="343" chain2="E"></eqr>
+		<eqr eqrNr="341" pdbres1="408" chain1="D" pdbres2="344" chain2="E"></eqr>
+		<eqr eqrNr="342" pdbres1="409" chain1="D" pdbres2="345" chain2="E"></eqr>
+		<eqr eqrNr="343" pdbres1="410" chain1="D" pdbres2="346" chain2="E"></eqr>
+		<eqr eqrNr="344" pdbres1="411" chain1="D" pdbres2="347" chain2="E"></eqr>
+		<eqr eqrNr="345" pdbres1="412" chain1="D" pdbres2="348" chain2="E"></eqr>
+		<eqr eqrNr="346" pdbres1="413" chain1="D" pdbres2="349" chain2="E"></eqr>
+		<eqr eqrNr="347" pdbres1="414" chain1="D" pdbres2="350" chain2="E"></eqr>
+		<eqr eqrNr="348" pdbres1="415" chain1="D" pdbres2="351" chain2="E"></eqr>
+
+		<eqr eqrNr="349" pdbres1="416" chain1="D" pdbres2="352" chain2="E"></eqr>
+		<eqr eqrNr="350" pdbres1="417" chain1="D" pdbres2="353" chain2="E"></eqr>
+		<eqr eqrNr="351" pdbres1="418" chain1="D" pdbres2="354" chain2="E"></eqr>
+		<eqr eqrNr="352" pdbres1="419" chain1="D" pdbres2="355" chain2="E"></eqr>
+		<eqr eqrNr="353" pdbres1="420" chain1="D" pdbres2="356" chain2="E"></eqr>
+		<eqr eqrNr="354" pdbres1="421" chain1="D" pdbres2="357" chain2="E"></eqr>
+		<eqr eqrNr="355" pdbres1="422" chain1="D" pdbres2="358" chain2="E"></eqr>
+		<eqr eqrNr="356" pdbres1="423" chain1="D" pdbres2="359" chain2="E"></eqr>
+		<eqr eqrNr="357" pdbres1="424" chain1="D" pdbres2="360" chain2="E"></eqr>
+
+		<eqr eqrNr="358" pdbres1="425" chain1="D" pdbres2="361" chain2="E"></eqr>
+		<eqr eqrNr="359" pdbres1="426" chain1="D" pdbres2="362" chain2="E"></eqr>
+		<eqr eqrNr="360" pdbres1="427" chain1="D" pdbres2="363" chain2="E"></eqr>
+		<eqr eqrNr="361" pdbres1="428" chain1="D" pdbres2="364" chain2="E"></eqr>
+		<eqr eqrNr="362" pdbres1="429" chain1="D" pdbres2="365" chain2="E"></eqr>
+		<eqr eqrNr="363" pdbres1="430" chain1="D" pdbres2="366" chain2="E"></eqr>
+		<eqr eqrNr="364" pdbres1="431" chain1="D" pdbres2="367" chain2="E"></eqr>
+		<eqr eqrNr="365" pdbres1="432" chain1="D" pdbres2="368" chain2="E"></eqr>
+		<eqr eqrNr="366" pdbres1="433" chain1="D" pdbres2="369" chain2="E"></eqr>
+
+		<eqr eqrNr="367" pdbres1="434" chain1="D" pdbres2="370" chain2="E"></eqr>
+		<eqr eqrNr="368" pdbres1="435" chain1="D" pdbres2="371" chain2="E"></eqr>
+		<eqr eqrNr="369" pdbres1="436" chain1="D" pdbres2="372" chain2="E"></eqr>
+		<eqr eqrNr="370" pdbres1="437" chain1="D" pdbres2="373" chain2="E"></eqr>
+		<eqr eqrNr="371" pdbres1="438" chain1="D" pdbres2="374" chain2="E"></eqr>
+		<eqr eqrNr="372" pdbres1="439" chain1="D" pdbres2="375" chain2="E"></eqr>
+		<eqr eqrNr="373" pdbres1="440" chain1="D" pdbres2="376" chain2="E"></eqr>
+		<eqr eqrNr="374" pdbres1="441" chain1="D" pdbres2="377" chain2="E"></eqr>
+		<eqr eqrNr="375" pdbres1="442" chain1="D" pdbres2="378" chain2="E"></eqr>
+
+		<eqr eqrNr="376" pdbres1="443" chain1="D" pdbres2="379" chain2="E"></eqr>
+		<eqr eqrNr="377" pdbres1="444" chain1="D" pdbres2="380" chain2="E"></eqr>
+		<eqr eqrNr="378" pdbres1="445" chain1="D" pdbres2="381" chain2="E"></eqr>
+		<eqr eqrNr="379" pdbres1="446" chain1="D" pdbres2="382" chain2="E"></eqr>
+		<eqr eqrNr="380" pdbres1="447" chain1="D" pdbres2="383" chain2="E"></eqr>
+		<eqr eqrNr="381" pdbres1="448" chain1="D" pdbres2="384" chain2="E"></eqr>
+		<eqr eqrNr="382" pdbres1="449" chain1="D" pdbres2="385" chain2="E"></eqr>
+		<eqr eqrNr="383" pdbres1="450" chain1="D" pdbres2="386" chain2="E"></eqr>
+		<eqr eqrNr="384" pdbres1="451" chain1="D" pdbres2="387" chain2="E"></eqr>
+
+		<eqr eqrNr="385" pdbres1="452" chain1="D" pdbres2="388" chain2="E"></eqr>
+		<eqr eqrNr="386" pdbres1="453" chain1="D" pdbres2="389" chain2="E"></eqr>
+		<eqr eqrNr="387" pdbres1="454" chain1="D" pdbres2="390" chain2="E"></eqr>
+		<eqr eqrNr="388" pdbres1="455" chain1="D" pdbres2="391" chain2="E"></eqr>
+		<eqr eqrNr="389" pdbres1="456" chain1="D" pdbres2="392" chain2="E"></eqr>
+		<eqr eqrNr="390" pdbres1="457" chain1="D" pdbres2="393" chain2="E"></eqr>
+		<eqr eqrNr="391" pdbres1="458" chain1="D" pdbres2="394" chain2="E"></eqr>
+		<eqr eqrNr="392" pdbres1="459" chain1="D" pdbres2="395" chain2="E"></eqr>
+		<eqr eqrNr="393" pdbres1="460" chain1="D" pdbres2="396" chain2="E"></eqr>
+
+		<eqr eqrNr="394" pdbres1="461" chain1="D" pdbres2="397" chain2="E"></eqr>
+		<eqr eqrNr="395" pdbres1="462" chain1="D" pdbres2="398" chain2="E"></eqr>
+		<eqr eqrNr="396" pdbres1="463" chain1="D" pdbres2="399" chain2="E"></eqr>
+		<eqr eqrNr="397" pdbres1="464" chain1="D" pdbres2="400" chain2="E"></eqr>
+		<eqr eqrNr="398" pdbres1="465" chain1="D" pdbres2="401" chain2="E"></eqr>
+		<eqr eqrNr="399" pdbres1="466" chain1="D" pdbres2="402" chain2="E"></eqr>
+		<eqr eqrNr="400" pdbres1="467" chain1="D" pdbres2="403" chain2="E"></eqr>
+		<eqr eqrNr="401" pdbres1="468" chain1="D" pdbres2="404" chain2="E"></eqr>
+		<eqr eqrNr="402" pdbres1="469" chain1="D" pdbres2="405" chain2="E"></eqr>
+
+		<eqr eqrNr="403" pdbres1="470" chain1="D" pdbres2="406" chain2="E"></eqr>
+		<eqr eqrNr="404" pdbres1="471" chain1="D" pdbres2="407" chain2="E"></eqr>
+		<eqr eqrNr="405" pdbres1="472" chain1="D" pdbres2="408" chain2="E"></eqr>
+		<eqr eqrNr="406" pdbres1="473" chain1="D" pdbres2="409" chain2="E"></eqr>
+		<eqr eqrNr="407" pdbres1="474" chain1="D" pdbres2="410" chain2="E"></eqr>
+		<eqr eqrNr="408" pdbres1="475" chain1="D" pdbres2="411" chain2="E"></eqr>
+		<eqr eqrNr="409" pdbres1="476" chain1="D" pdbres2="412" chain2="E"></eqr>
+		<eqr eqrNr="410" pdbres1="478" chain1="D" pdbres2="413" chain2="E"></eqr>
+		<eqr eqrNr="411" pdbres1="479" chain1="D" pdbres2="414" chain2="E"></eqr>
+
+		<eqr eqrNr="412" pdbres1="480" chain1="D" pdbres2="415" chain2="E"></eqr>
+		<eqr eqrNr="413" pdbres1="481" chain1="D" pdbres2="416" chain2="E"></eqr>
+		<eqr eqrNr="414" pdbres1="482" chain1="D" pdbres2="417" chain2="E"></eqr>
+		<eqr eqrNr="415" pdbres1="483" chain1="D" pdbres2="418" chain2="E"></eqr>
+		<eqr eqrNr="416" pdbres1="484" chain1="D" pdbres2="419" chain2="E"></eqr>
+		<eqr eqrNr="417" pdbres1="485" chain1="D" pdbres2="420" chain2="E"></eqr>
+		<eqr eqrNr="418" pdbres1="486" chain1="D" pdbres2="421" chain2="E"></eqr>
+		<eqr eqrNr="419" pdbres1="487" chain1="D" pdbres2="423" chain2="E"></eqr>
+		<eqr eqrNr="420" pdbres1="488" chain1="D" pdbres2="424" chain2="E"></eqr>
+
+		<eqr eqrNr="421" pdbres1="489" chain1="D" pdbres2="425" chain2="E"></eqr>
+		<eqr eqrNr="422" pdbres1="490" chain1="D" pdbres2="426" chain2="E"></eqr>
+		<eqr eqrNr="423" pdbres1="491" chain1="D" pdbres2="427" chain2="E"></eqr>
+		<eqr eqrNr="424" pdbres1="492" chain1="D" pdbres2="428" chain2="E"></eqr>
+		<eqr eqrNr="425" pdbres1="493" chain1="D" pdbres2="429" chain2="E"></eqr>
+		<eqr eqrNr="426" pdbres1="494" chain1="D" pdbres2="430" chain2="E"></eqr>
+		<eqr eqrNr="427" pdbres1="495" chain1="D" pdbres2="431" chain2="E"></eqr>
+		<eqr eqrNr="428" pdbres1="496" chain1="D" pdbres2="432" chain2="E"></eqr>
+		<eqr eqrNr="429" pdbres1="497" chain1="D" pdbres2="433" chain2="E"></eqr>
+
+		<eqr eqrNr="430" pdbres1="498" chain1="D" pdbres2="434" chain2="E"></eqr>
+		<eqr eqrNr="431" pdbres1="499" chain1="D" pdbres2="435" chain2="E"></eqr>
+		<eqr eqrNr="432" pdbres1="500" chain1="D" pdbres2="436" chain2="E"></eqr>
+		<eqr eqrNr="433" pdbres1="501" chain1="D" pdbres2="437" chain2="E"></eqr>
+		<eqr eqrNr="434" pdbres1="502" chain1="D" pdbres2="438" chain2="E"></eqr>
+		<eqr eqrNr="435" pdbres1="503" chain1="D" pdbres2="439" chain2="E"></eqr>
+		<eqr eqrNr="436" pdbres1="504" chain1="D" pdbres2="440" chain2="E"></eqr>
+		<eqr eqrNr="437" pdbres1="505" chain1="D" pdbres2="441" chain2="E"></eqr>
+		<eqr eqrNr="438" pdbres1="506" chain1="D" pdbres2="442" chain2="E"></eqr>
+
+		<eqr eqrNr="439" pdbres1="507" chain1="D" pdbres2="443" chain2="E"></eqr>
+		<eqr eqrNr="440" pdbres1="508" chain1="D" pdbres2="444" chain2="E"></eqr>
+		<eqr eqrNr="441" pdbres1="509" chain1="D" pdbres2="445" chain2="E"></eqr>
+		<eqr eqrNr="442" pdbres1="510" chain1="D" pdbres2="446" chain2="E"></eqr>
+		<eqr eqrNr="443" pdbres1="511" chain1="D" pdbres2="447" chain2="E"></eqr>
+		<eqr eqrNr="444" pdbres1="512" chain1="D" pdbres2="448" chain2="E"></eqr>
+		<eqr eqrNr="445" pdbres1="513" chain1="D" pdbres2="449" chain2="E"></eqr>
+		<eqr eqrNr="446" pdbres1="514" chain1="D" pdbres2="450" chain2="E"></eqr>
+		<eqr eqrNr="447" pdbres1="515" chain1="D" pdbres2="451" chain2="E"></eqr>
+
+		<eqr eqrNr="448" pdbres1="516" chain1="D" pdbres2="452" chain2="E"></eqr>
+		<eqr eqrNr="449" pdbres1="517" chain1="D" pdbres2="453" chain2="E"></eqr>
+		<eqr eqrNr="450" pdbres1="518" chain1="D" pdbres2="454" chain2="E"></eqr>
+		<eqr eqrNr="451" pdbres1="519" chain1="D" pdbres2="455" chain2="E"></eqr>
+		<eqr eqrNr="452" pdbres1="520" chain1="D" pdbres2="456" chain2="E"></eqr>
+		<eqr eqrNr="453" pdbres1="521" chain1="D" pdbres2="457" chain2="E"></eqr>
+		<eqr eqrNr="454" pdbres1="522" chain1="D" pdbres2="458" chain2="E"></eqr>
+		<eqr eqrNr="455" pdbres1="523" chain1="D" pdbres2="459" chain2="E"></eqr>
+		<eqr eqrNr="456" pdbres1="524" chain1="D" pdbres2="460" chain2="E"></eqr>
+
+		<eqr eqrNr="457" pdbres1="525" chain1="D" pdbres2="461" chain2="E"></eqr>
+		<eqr eqrNr="458" pdbres1="526" chain1="D" pdbres2="462" chain2="E"></eqr>
+		<eqr eqrNr="459" pdbres1="527" chain1="D" pdbres2="463" chain2="E"></eqr>
+		<eqr eqrNr="460" pdbres1="528" chain1="D" pdbres2="464" chain2="E"></eqr>
+		<eqr eqrNr="461" pdbres1="529" chain1="D" pdbres2="465" chain2="E"></eqr>
+		<eqr eqrNr="462" pdbres1="530" chain1="D" pdbres2="466" chain2="E"></eqr>
+		<eqr eqrNr="463" pdbres1="531" chain1="D" pdbres2="467" chain2="E"></eqr>
+		<eqr eqrNr="464" pdbres1="532" chain1="D" pdbres2="468" chain2="E"></eqr>
+		<eqr eqrNr="465" pdbres1="533" chain1="D" pdbres2="469" chain2="E"></eqr>
+
+		<eqr eqrNr="466" pdbres1="534" chain1="D" pdbres2="470" chain2="E"></eqr>
+		<eqr eqrNr="467" pdbres1="535" chain1="D" pdbres2="471" chain2="E"></eqr>
+		<eqr eqrNr="468" pdbres1="536" chain1="D" pdbres2="472" chain2="E"></eqr>
+		<eqr eqrNr="469" pdbres1="537" chain1="D" pdbres2="473" chain2="E"></eqr>
+		<eqr eqrNr="470" pdbres1="538" chain1="D" pdbres2="474" chain2="E"></eqr>
+		<eqr eqrNr="471" pdbres1="539" chain1="D" pdbres2="475" chain2="E"></eqr>
+		<eqr eqrNr="472" pdbres1="540" chain1="D" pdbres2="476" chain2="E"></eqr>
+		<eqr eqrNr="473" pdbres1="541" chain1="D" pdbres2="477" chain2="E"></eqr>
+		<eqr eqrNr="474" pdbres1="542" chain1="D" pdbres2="478" chain2="E"></eqr>
+
+		<eqr eqrNr="475" pdbres1="543" chain1="D" pdbres2="479" chain2="E"></eqr>
+		<eqr eqrNr="476" pdbres1="544" chain1="D" pdbres2="480" chain2="E"></eqr>
+		<eqr eqrNr="477" pdbres1="545" chain1="D" pdbres2="481" chain2="E"></eqr>
+		<eqr eqrNr="478" pdbres1="546" chain1="D" pdbres2="482" chain2="E"></eqr>
+		<eqr eqrNr="479" pdbres1="547" chain1="D" pdbres2="483" chain2="E"></eqr>
+		<eqr eqrNr="480" pdbres1="548" chain1="D" pdbres2="484" chain2="E"></eqr>
+		<eqr eqrNr="481" pdbres1="549" chain1="D" pdbres2="485" chain2="E"></eqr>
+		<eqr eqrNr="482" pdbres1="550" chain1="D" pdbres2="486" chain2="E"></eqr>
+		<eqr eqrNr="483" pdbres1="551" chain1="D" pdbres2="487" chain2="E"></eqr>
+
+		<eqr eqrNr="484" pdbres1="552" chain1="D" pdbres2="488" chain2="E"></eqr>
+		<eqr eqrNr="485" pdbres1="553" chain1="D" pdbres2="489" chain2="E"></eqr>
+		<eqr eqrNr="486" pdbres1="554" chain1="D" pdbres2="490" chain2="E"></eqr>
+		<eqr eqrNr="487" pdbres1="555" chain1="D" pdbres2="491" chain2="E"></eqr>
+		<eqr eqrNr="488" pdbres1="556" chain1="D" pdbres2="492" chain2="E"></eqr>
+		<eqr eqrNr="489" pdbres1="557" chain1="D" pdbres2="493" chain2="E"></eqr>
+		<eqr eqrNr="490" pdbres1="558" chain1="D" pdbres2="494" chain2="E"></eqr>
+		<eqr eqrNr="491" pdbres1="559" chain1="D" pdbres2="495" chain2="E"></eqr>
+		<eqr eqrNr="492" pdbres1="560" chain1="D" pdbres2="496" chain2="E"></eqr>
+
+		<eqr eqrNr="493" pdbres1="561" chain1="D" pdbres2="497" chain2="E"></eqr>
+		<eqr eqrNr="494" pdbres1="562" chain1="D" pdbres2="498" chain2="E"></eqr>
+		<eqr eqrNr="495" pdbres1="563" chain1="D" pdbres2="499" chain2="E"></eqr>
+		<eqr eqrNr="496" pdbres1="564" chain1="D" pdbres2="500" chain2="E"></eqr>
+		<eqr eqrNr="497" pdbres1="565" chain1="D" pdbres2="501" chain2="E"></eqr>
+		<eqr eqrNr="498" pdbres1="566" chain1="D" pdbres2="502" chain2="E"></eqr>
+		<eqr eqrNr="499" pdbres1="570" chain1="D" pdbres2="503" chain2="E"></eqr>
+		<eqr eqrNr="500" pdbres1="571" chain1="D" pdbres2="504" chain2="E"></eqr>
+		<eqr eqrNr="501" pdbres1="572" chain1="D" pdbres2="505" chain2="E"></eqr>
+
+		<eqr eqrNr="502" pdbres1="573" chain1="D" pdbres2="506" chain2="E"></eqr>
+		<eqr eqrNr="503" pdbres1="574" chain1="D" pdbres2="507" chain2="E"></eqr>
+		<eqr eqrNr="504" pdbres1="575" chain1="D" pdbres2="508" chain2="E"></eqr>
+		<eqr eqrNr="505" pdbres1="576" chain1="D" pdbres2="509" chain2="E"></eqr>
+		<eqr eqrNr="506" pdbres1="577" chain1="D" pdbres2="510" chain2="E"></eqr>
+		<eqr eqrNr="507" pdbres1="578" chain1="D" pdbres2="511" chain2="E"></eqr>
+		<eqr eqrNr="508" pdbres1="582" chain1="D" pdbres2="512" chain2="E"></eqr>
+		<eqr eqrNr="509" pdbres1="583" chain1="D" pdbres2="513" chain2="E"></eqr>
+		<eqr eqrNr="510" pdbres1="584" chain1="D" pdbres2="514" chain2="E"></eqr>
+
+		<eqr eqrNr="511" pdbres1="585" chain1="D" pdbres2="515" chain2="E"></eqr>
+		<eqr eqrNr="512" pdbres1="586" chain1="D" pdbres2="516" chain2="E"></eqr>
+		<eqr eqrNr="513" pdbres1="587" chain1="D" pdbres2="517" chain2="E"></eqr>
+		<eqr eqrNr="514" pdbres1="588" chain1="D" pdbres2="518" chain2="E"></eqr>
+		<eqr eqrNr="515" pdbres1="589" chain1="D" pdbres2="519" chain2="E"></eqr>
+		<eqr eqrNr="516" pdbres1="590" chain1="D" pdbres2="520" chain2="E"></eqr>
+		<eqr eqrNr="517" pdbres1="591" chain1="D" pdbres2="521" chain2="E"></eqr>
+		<eqr eqrNr="518" pdbres1="592" chain1="D" pdbres2="522" chain2="E"></eqr>
+		<eqr eqrNr="519" pdbres1="593" chain1="D" pdbres2="523" chain2="E"></eqr>
+
+		<eqr eqrNr="520" pdbres1="594" chain1="D" pdbres2="524" chain2="E"></eqr>
+		<eqr eqrNr="521" pdbres1="595" chain1="D" pdbres2="525" chain2="E"></eqr>
+		<eqr eqrNr="522" pdbres1="596" chain1="D" pdbres2="526" chain2="E"></eqr>
+		<eqr eqrNr="523" pdbres1="597" chain1="D" pdbres2="527" chain2="E"></eqr>
+		<eqr eqrNr="524" pdbres1="598" chain1="D" pdbres2="528" chain2="E"></eqr>
+		<eqr eqrNr="525" pdbres1="599" chain1="D" pdbres2="529" chain2="E"></eqr>
+		<eqr eqrNr="526" pdbres1="600" chain1="D" pdbres2="530" chain2="E"></eqr>
+		<eqr eqrNr="527" pdbres1="601" chain1="D" pdbres2="531" chain2="E"></eqr>
+		<eqr eqrNr="528" pdbres1="602" chain1="D" pdbres2="532" chain2="E"></eqr>
+
+		<eqr eqrNr="529" pdbres1="603" chain1="D" pdbres2="533" chain2="E"></eqr>
+		<eqr eqrNr="530" pdbres1="604" chain1="D" pdbres2="534" chain2="E"></eqr>
+		<eqr eqrNr="531" pdbres1="605" chain1="D" pdbres2="535" chain2="E"></eqr>
+		<eqr eqrNr="532" pdbres1="606" chain1="D" pdbres2="536" chain2="E"></eqr>
+		<eqr eqrNr="533" pdbres1="607" chain1="D" pdbres2="537" chain2="E"></eqr>
+		<eqr eqrNr="534" pdbres1="608" chain1="D" pdbres2="538" chain2="E"></eqr>
+		<eqr eqrNr="535" pdbres1="609" chain1="D" pdbres2="539" chain2="E"></eqr>
+		<eqr eqrNr="536" pdbres1="610" chain1="D" pdbres2="542" chain2="E"></eqr>
+		<eqr eqrNr="537" pdbres1="611" chain1="D" pdbres2="543" chain2="E"></eqr>
+
+		<eqr eqrNr="538" pdbres1="612" chain1="D" pdbres2="544" chain2="E"></eqr>
+		<eqr eqrNr="539" pdbres1="613" chain1="D" pdbres2="545" chain2="E"></eqr>
+		<eqr eqrNr="540" pdbres1="614" chain1="D" pdbres2="546" chain2="E"></eqr>
+		<eqr eqrNr="541" pdbres1="615" chain1="D" pdbres2="547" chain2="E"></eqr>
+		<eqr eqrNr="542" pdbres1="616" chain1="D" pdbres2="548" chain2="E"></eqr>
+		<eqr eqrNr="543" pdbres1="617" chain1="D" pdbres2="549" chain2="E"></eqr>
+		<eqr eqrNr="544" pdbres1="618" chain1="D" pdbres2="550" chain2="E"></eqr>
+		<eqr eqrNr="545" pdbres1="619" chain1="D" pdbres2="551" chain2="E"></eqr>
+		<eqr eqrNr="546" pdbres1="620" chain1="D" pdbres2="552" chain2="E"></eqr>
+
+		<eqr eqrNr="547" pdbres1="621" chain1="D" pdbres2="553" chain2="E"></eqr>
+		<eqr eqrNr="548" pdbres1="622" chain1="D" pdbres2="554" chain2="E"></eqr>
+		<eqr eqrNr="549" pdbres1="623" chain1="D" pdbres2="555" chain2="E"></eqr>
+		<eqr eqrNr="550" pdbres1="624" chain1="D" pdbres2="556" chain2="E"></eqr>
+		<eqr eqrNr="551" pdbres1="625" chain1="D" pdbres2="557" chain2="E"></eqr>
+		<eqr eqrNr="552" pdbres1="626" chain1="D" pdbres2="558" chain2="E"></eqr>
+		<eqr eqrNr="553" pdbres1="627" chain1="D" pdbres2="559" chain2="E"></eqr>
+		<eqr eqrNr="554" pdbres1="628" chain1="D" pdbres2="560" chain2="E"></eqr>
+		<eqr eqrNr="555" pdbres1="629" chain1="D" pdbres2="561" chain2="E"></eqr>
+
+		<eqr eqrNr="556" pdbres1="630" chain1="D" pdbres2="562" chain2="E"></eqr>
+		<eqr eqrNr="557" pdbres1="631" chain1="D" pdbres2="563" chain2="E"></eqr>
+		<eqr eqrNr="558" pdbres1="632" chain1="D" pdbres2="564" chain2="E"></eqr>
+		<eqr eqrNr="559" pdbres1="633" chain1="D" pdbres2="565" chain2="E"></eqr>
+		<eqr eqrNr="560" pdbres1="634" chain1="D" pdbres2="566" chain2="E"></eqr>
+		<eqr eqrNr="561" pdbres1="635" chain1="D" pdbres2="567" chain2="E"></eqr>
+		<eqr eqrNr="562" pdbres1="636" chain1="D" pdbres2="568" chain2="E"></eqr>
+		<eqr eqrNr="563" pdbres1="637" chain1="D" pdbres2="569" chain2="E"></eqr>
+		<eqr eqrNr="564" pdbres1="638" chain1="D" pdbres2="570" chain2="E"></eqr>
+
+		<eqr eqrNr="565" pdbres1="639" chain1="D" pdbres2="571" chain2="E"></eqr>
+		<eqr eqrNr="566" pdbres1="649" chain1="D" pdbres2="572" chain2="E"></eqr>
+		<eqr eqrNr="567" pdbres1="650" chain1="D" pdbres2="573" chain2="E"></eqr>
+		<eqr eqrNr="568" pdbres1="651" chain1="D" pdbres2="574" chain2="E"></eqr>
+		<eqr eqrNr="569" pdbres1="652" chain1="D" pdbres2="575" chain2="E"></eqr>
+		<eqr eqrNr="570" pdbres1="653" chain1="D" pdbres2="576" chain2="E"></eqr>
+		<eqr eqrNr="571" pdbres1="654" chain1="D" pdbres2="577" chain2="E"></eqr>
+		<eqr eqrNr="572" pdbres1="655" chain1="D" pdbres2="578" chain2="E"></eqr>
+		<eqr eqrNr="573" pdbres1="656" chain1="D" pdbres2="579" chain2="E"></eqr>
+
+		<eqr eqrNr="574" pdbres1="657" chain1="D" pdbres2="580" chain2="E"></eqr>
+		<eqr eqrNr="575" pdbres1="658" chain1="D" pdbres2="581" chain2="E"></eqr>
+		<eqr eqrNr="576" pdbres1="659" chain1="D" pdbres2="582" chain2="E"></eqr>
+		<eqr eqrNr="577" pdbres1="660" chain1="D" pdbres2="583" chain2="E"></eqr>
+		<eqr eqrNr="578" pdbres1="661" chain1="D" pdbres2="584" chain2="E"></eqr>
+		<eqr eqrNr="579" pdbres1="662" chain1="D" pdbres2="585" chain2="E"></eqr>
+		<eqr eqrNr="580" pdbres1="663" chain1="D" pdbres2="586" chain2="E"></eqr>
+		<eqr eqrNr="581" pdbres1="664" chain1="D" pdbres2="587" chain2="E"></eqr>
+		<eqr eqrNr="582" pdbres1="665" chain1="D" pdbres2="588" chain2="E"></eqr>
+
+		<eqr eqrNr="583" pdbres1="666" chain1="D" pdbres2="589" chain2="E"></eqr>
+		<eqr eqrNr="584" pdbres1="667" chain1="D" pdbres2="590" chain2="E"></eqr>
+		<eqr eqrNr="585" pdbres1="668" chain1="D" pdbres2="591" chain2="E"></eqr>
+		<eqr eqrNr="586" pdbres1="669" chain1="D" pdbres2="592" chain2="E"></eqr>
+		<eqr eqrNr="587" pdbres1="670" chain1="D" pdbres2="593" chain2="E"></eqr>
+		<eqr eqrNr="588" pdbres1="671" chain1="D" pdbres2="594" chain2="E"></eqr>
+		<eqr eqrNr="589" pdbres1="672" chain1="D" pdbres2="595" chain2="E"></eqr>
+		<eqr eqrNr="590" pdbres1="673" chain1="D" pdbres2="596" chain2="E"></eqr>
+		<eqr eqrNr="591" pdbres1="674" chain1="D" pdbres2="597" chain2="E"></eqr>
+
+		<eqr eqrNr="592" pdbres1="675" chain1="D" pdbres2="598" chain2="E"></eqr>
+		<eqr eqrNr="593" pdbres1="676" chain1="D" pdbres2="599" chain2="E"></eqr>
+		<eqr eqrNr="594" pdbres1="677" chain1="D" pdbres2="600" chain2="E"></eqr>
+		<eqr eqrNr="595" pdbres1="678" chain1="D" pdbres2="619" chain2="E"></eqr>
+		<eqr eqrNr="596" pdbres1="679" chain1="D" pdbres2="620" chain2="E"></eqr>
+		<eqr eqrNr="597" pdbres1="680" chain1="D" pdbres2="621" chain2="E"></eqr>
+		<eqr eqrNr="598" pdbres1="681" chain1="D" pdbres2="622" chain2="E"></eqr>
+		<eqr eqrNr="599" pdbres1="682" chain1="D" pdbres2="623" chain2="E"></eqr>
+		<eqr eqrNr="600" pdbres1="683" chain1="D" pdbres2="624" chain2="E"></eqr>
+
+		<eqr eqrNr="601" pdbres1="684" chain1="D" pdbres2="625" chain2="E"></eqr>
+		<eqr eqrNr="602" pdbres1="685" chain1="D" pdbres2="626" chain2="E"></eqr>
+		<eqr eqrNr="603" pdbres1="686" chain1="D" pdbres2="627" chain2="E"></eqr>
+		<eqr eqrNr="604" pdbres1="687" chain1="D" pdbres2="628" chain2="E"></eqr>
+		<eqr eqrNr="605" pdbres1="688" chain1="D" pdbres2="629" chain2="E"></eqr>
+		<eqr eqrNr="606" pdbres1="689" chain1="D" pdbres2="630" chain2="E"></eqr>
+		<eqr eqrNr="607" pdbres1="690" chain1="D" pdbres2="631" chain2="E"></eqr>
+		<eqr eqrNr="608" pdbres1="691" chain1="D" pdbres2="632" chain2="E"></eqr>
+		<eqr eqrNr="609" pdbres1="692" chain1="D" pdbres2="633" chain2="E"></eqr>
+
+		<eqr eqrNr="610" pdbres1="693" chain1="D" pdbres2="634" chain2="E"></eqr>
+		<eqr eqrNr="611" pdbres1="694" chain1="D" pdbres2="635" chain2="E"></eqr>
+		<eqr eqrNr="612" pdbres1="695" chain1="D" pdbres2="636" chain2="E"></eqr>
+		<eqr eqrNr="613" pdbres1="696" chain1="D" pdbres2="637" chain2="E"></eqr>
+		<eqr eqrNr="614" pdbres1="697" chain1="D" pdbres2="638" chain2="E"></eqr>
+		<eqr eqrNr="615" pdbres1="698" chain1="D" pdbres2="639" chain2="E"></eqr>
+		<eqr eqrNr="616" pdbres1="699" chain1="D" pdbres2="640" chain2="E"></eqr>
+		<eqr eqrNr="617" pdbres1="700" chain1="D" pdbres2="641" chain2="E"></eqr>
+		<eqr eqrNr="618" pdbres1="701" chain1="D" pdbres2="642" chain2="E"></eqr>
+
+		<eqr eqrNr="619" pdbres1="702" chain1="D" pdbres2="643" chain2="E"></eqr>
+		<eqr eqrNr="620" pdbres1="703" chain1="D" pdbres2="644" chain2="E"></eqr>
+		<eqr eqrNr="621" pdbres1="704" chain1="D" pdbres2="645" chain2="E"></eqr>
+		<eqr eqrNr="622" pdbres1="705" chain1="D" pdbres2="646" chain2="E"></eqr>
+		<eqr eqrNr="623" pdbres1="706" chain1="D" pdbres2="647" chain2="E"></eqr>
+		<eqr eqrNr="624" pdbres1="707" chain1="D" pdbres2="648" chain2="E"></eqr>
+		<eqr eqrNr="625" pdbres1="708" chain1="D" pdbres2="649" chain2="E"></eqr>
+		<eqr eqrNr="626" pdbres1="709" chain1="D" pdbres2="650" chain2="E"></eqr>
+		<eqr eqrNr="627" pdbres1="710" chain1="D" pdbres2="651" chain2="E"></eqr>
+
+		<eqr eqrNr="628" pdbres1="711" chain1="D" pdbres2="652" chain2="E"></eqr>
+		<eqr eqrNr="629" pdbres1="713" chain1="D" pdbres2="653" chain2="E"></eqr>
+		<eqr eqrNr="630" pdbres1="714" chain1="D" pdbres2="654" chain2="E"></eqr>
+		<eqr eqrNr="631" pdbres1="715" chain1="D" pdbres2="655" chain2="E"></eqr>
+		<eqr eqrNr="632" pdbres1="716" chain1="D" pdbres2="656" chain2="E"></eqr>
+		<eqr eqrNr="633" pdbres1="717" chain1="D" pdbres2="657" chain2="E"></eqr>
+		<eqr eqrNr="634" pdbres1="718" chain1="D" pdbres2="658" chain2="E"></eqr>
+		<eqr eqrNr="635" pdbres1="719" chain1="D" pdbres2="659" chain2="E"></eqr>
+		<eqr eqrNr="636" pdbres1="720" chain1="D" pdbres2="660" chain2="E"></eqr>
+
+		<eqr eqrNr="637" pdbres1="721" chain1="D" pdbres2="661" chain2="E"></eqr>
+		<eqr eqrNr="638" pdbres1="722" chain1="D" pdbres2="662" chain2="E"></eqr>
+		<eqr eqrNr="639" pdbres1="723" chain1="D" pdbres2="663" chain2="E"></eqr>
+		<eqr eqrNr="640" pdbres1="724" chain1="D" pdbres2="664" chain2="E"></eqr>
+		<eqr eqrNr="641" pdbres1="725" chain1="D" pdbres2="665" chain2="E"></eqr>
+		<eqr eqrNr="642" pdbres1="726" chain1="D" pdbres2="666" chain2="E"></eqr>
+		<eqr eqrNr="643" pdbres1="727" chain1="D" pdbres2="667" chain2="E"></eqr>
+		<eqr eqrNr="644" pdbres1="728" chain1="D" pdbres2="668" chain2="E"></eqr>
+		<eqr eqrNr="645" pdbres1="729" chain1="D" pdbres2="669" chain2="E"></eqr>
+
+		<eqr eqrNr="646" pdbres1="730" chain1="D" pdbres2="670" chain2="E"></eqr>
+		<eqr eqrNr="647" pdbres1="731" chain1="D" pdbres2="671" chain2="E"></eqr>
+		<eqr eqrNr="648" pdbres1="732" chain1="D" pdbres2="672" chain2="E"></eqr>
+		<eqr eqrNr="649" pdbres1="733" chain1="D" pdbres2="673" chain2="E"></eqr>
+		<eqr eqrNr="650" pdbres1="734" chain1="D" pdbres2="674" chain2="E"></eqr>
+		<eqr eqrNr="651" pdbres1="735" chain1="D" pdbres2="675" chain2="E"></eqr>
+		<eqr eqrNr="652" pdbres1="736" chain1="D" pdbres2="676" chain2="E"></eqr>
+		<eqr eqrNr="653" pdbres1="737" chain1="D" pdbres2="677" chain2="E"></eqr>
+		<eqr eqrNr="654" pdbres1="738" chain1="D" pdbres2="678" chain2="E"></eqr>
+
+		<eqr eqrNr="655" pdbres1="739" chain1="D" pdbres2="679" chain2="E"></eqr>
+		<eqr eqrNr="656" pdbres1="740" chain1="D" pdbres2="680" chain2="E"></eqr>
+		<eqr eqrNr="657" pdbres1="741" chain1="D" pdbres2="681" chain2="E"></eqr>
+		<eqr eqrNr="658" pdbres1="742" chain1="D" pdbres2="682" chain2="E"></eqr>
+		<eqr eqrNr="659" pdbres1="743" chain1="D" pdbres2="683" chain2="E"></eqr>
+		<eqr eqrNr="660" pdbres1="744" chain1="D" pdbres2="684" chain2="E"></eqr>
+		<eqr eqrNr="661" pdbres1="745" chain1="D" pdbres2="685" chain2="E"></eqr>
+		<eqr eqrNr="662" pdbres1="746" chain1="D" pdbres2="686" chain2="E"></eqr>
+		<eqr eqrNr="663" pdbres1="747" chain1="D" pdbres2="687" chain2="E"></eqr>
+
+		<eqr eqrNr="664" pdbres1="753" chain1="D" pdbres2="1710" chain2="E"></eqr>
+		<matrix mat11="0.42969427307634656" mat12="-0.787501223104772"
+			mat13="0.441819709037382" mat21="-0.8991659621488066" mat22="-0.3282725252701903"
+			mat23="0.2893747080616109" mat31="-0.08284566493426268" mat32="-0.5216118986001179"
+			mat33="-0.8491511190832755"></matrix>
+		<shift x="102.14614327643307" y="5.3603032676365245" z="81.06291639168475"></shift>
+	</block>
+</AFPChain>
+

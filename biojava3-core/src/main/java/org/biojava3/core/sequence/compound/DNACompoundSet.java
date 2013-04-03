@@ -20,6 +20,7 @@ public class DNACompoundSet extends AbstractNucleotideCompoundSet<NucleotideComp
     addNucleotideCompound("T", "A");
     addNucleotideCompound("G", "C");
     addNucleotideCompound("C", "G");
+    addNucleotideCompound("N", "N");
   }
 
   protected NucleotideCompound newNucleotideCompound(String base, String complement, String... equivalents) {

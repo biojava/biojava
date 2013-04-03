@@ -32,10 +32,13 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 
 import java.awt.event.MouseMotionListener;
+import java.io.StringWriter;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.Box;
@@ -51,18 +54,22 @@ import org.biojava.bio.structure.PDBHeader;
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureException;
 import org.biojava.bio.structure.StructureImpl;
+import org.biojava.bio.structure.align.gui.AlignmentGui;
 import org.biojava.bio.structure.align.gui.DisplayAFP;
 import org.biojava.bio.structure.align.gui.MenuCreator;
 import org.biojava.bio.structure.align.model.AFPChain;
+import org.biojava.bio.structure.align.model.AfpChainWriter;
 import org.biojava.bio.structure.align.util.AtomCache;
 import org.biojava.bio.structure.align.util.ResourceManager;
 import org.biojava.bio.structure.align.util.UserConfiguration;
+import org.biojava.bio.structure.align.webstart.AligUIManager;
 import org.biojava.bio.structure.align.gui.jmol.AtomInfo;
 import org.biojava.bio.structure.align.gui.jmol.AtomInfoParser;
 import org.biojava.bio.structure.align.gui.jmol.JmolPanel;
 import org.biojava.bio.structure.align.gui.jmol.MyJmolStatusListener;
 import org.biojava.bio.structure.align.gui.jmol.RasmolCommandListener;
-import org.biojava.bio.structure.io.PDBFileReader;
+import org.biojava.bio.structure.gui.util.ColorUtils;
+
 
 import org.jmol.api.JmolViewer;
 
@@ -95,7 +102,9 @@ public class StructureAlignmentJmol implements MouseMotionListener, MouseListene
 
    public static final String DEFAULT_SCRIPT = ResourceManager.getResourceManager("ce").getString("default.alignment.jmol.script");
 
-   private static final Object LIGAND_DISPLAY_SCRIPT = ResourceManager.getResourceManager("ce").getString("default.ligand.jmol.script");
+   private static final String LIGAND_DISPLAY_SCRIPT = ResourceManager.getResourceManager("ce").getString("default.ligand.jmol.script");
+
+   static int nrOpenWindows = 0;
 
    public static void main(String[] args){
       try {
@@ -127,8 +136,11 @@ public class StructureAlignmentJmol implements MouseMotionListener, MouseListene
    }
 
 
-   public StructureAlignmentJmol(AFPChain afpChain, Atom[] ca1, Atom[] ca2) {		
+   public StructureAlignmentJmol(AFPChain afpChain, Atom[] ca1, Atom[] ca2) {
 
+      AligUIManager.setLookAndFeel();
+
+      nrOpenWindows++;
       jmolPanel = new JmolPanel();
 
       frame = new JFrame();
@@ -136,17 +148,33 @@ public class StructureAlignmentJmol implements MouseMotionListener, MouseListene
       JMenuBar menu = MenuCreator.initMenu(frame,this, afpChain);
 
       frame.setJMenuBar(menu);
-      frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+      //frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
       this.afpChain = afpChain;
       this.ca1 = ca1;
       this.ca2 = ca2;
 
-      /*frame.addWindowListener( new WindowAdapter() {
-			public void windowClosing(WindowEvent e) {
-				frame.dispose();
-				//System.exit(0);
-			}
-		});*/
+      frame.addWindowListener( new WindowAdapter()
+      {
+
+         public void windowClosing(WindowEvent e) {
+
+            nrOpenWindows--;
+
+            if ( nrOpenWindows > 0)
+               frame.dispose();
+            else  {
+               // check if AlignmentGUI is visible..
+
+               AlignmentGui gui = AlignmentGui.getInstanceNoVisibilityChange();
+               if ( gui.isVisible()) {
+                  frame.dispose();
+                  gui.requestFocus();
+               } else {
+                  System.exit(0);
+               }
+            }
+         }
+      });
 
       Container contentPane = frame.getContentPane();
 
@@ -318,6 +346,9 @@ public class StructureAlignmentJmol implements MouseMotionListener, MouseListene
       frame.setTitle(label);
       frame.repaint();
    }
+   public String getTitle(){
+      return frame.getTitle();
+   }
 
    public void mouseDragged(MouseEvent e) {
       // TODO Auto-generated method stub
@@ -419,9 +450,8 @@ public class StructureAlignmentJmol implements MouseMotionListener, MouseListene
             System.err.println("Currently not viewing an alignment!");
             return;
          }
-         String result = afpChain.toFatcat(ca1, ca2);
-         result += AFPChain.newline;
-         result += afpChain.toRotMat();
+         String result = AfpChainWriter.toWebSiteDisplay(afpChain, ca1, ca2) ;
+
          DisplayAFP.showAlignmentImage(afpChain, result);
       } else if (cmd.equals(MenuCreator.ALIGNMENT_PANEL)){
          if ( afpChain == null) {
@@ -430,15 +460,31 @@ public class StructureAlignmentJmol implements MouseMotionListener, MouseListene
          }
          DisplayAFP.showAlignmentImage(afpChain, ca1, ca2, this);
 
+      } else if (cmd.equals(MenuCreator.FATCAT_TEXT)){
+         if ( afpChain == null) {
+            System.err.println("Currently not viewing an alignment!");
+            return;
+         }
+         String result = afpChain.toFatcat(ca1, ca2) ;
+         result += AFPChain.newline;
+         result += afpChain.toRotMat();
+         DisplayAFP.showAlignmentImage(afpChain, result);
       }
 
    }
 
    public static String getJmolString(AFPChain afpChain, Atom[] ca1, Atom[] ca2){
+     
+      if ( afpChain.getBlockNum() > 1){
+         return getMultiBlockJmolScript( afpChain,  ca1,  ca2);
+      }
+
+      
+      
       StringBuffer j = new StringBuffer();
       j.append(DEFAULT_SCRIPT);
 
-
+     
       // now color the equivalent residues ...
       StringBuffer sel = new StringBuffer();
       List<String> pdb1 = DisplayAFP.getPDBresnum(0,afpChain,ca1);
@@ -500,6 +546,86 @@ public class StructureAlignmentJmol implements MouseMotionListener, MouseListene
       j.append(buf);
 
       return j.toString();
+   }
+   
+   
+   
+
+   private static String getMultiBlockJmolScript(AFPChain afpChain, Atom[] ca1, Atom[] ca2)
+   {
+
+      int blockNum = afpChain.getBlockNum();      
+      int[] optLen = afpChain.getOptLen();
+      int[][][] optAln = afpChain.getOptAln();
+
+      if ( optLen == null)
+         return DEFAULT_SCRIPT;
+
+      StringWriter jmol = new StringWriter();
+      jmol.append(DEFAULT_SCRIPT);
+
+      jmol.append("select */2; color lightgrey; model 2; ");
+      
+      for(int bk = 0; bk < blockNum; bk ++)       {
+
+         //the block nr determines the color...
+         int colorPos = bk;
+         if ( colorPos > ColorUtils.colorWheel.length){
+            colorPos = ColorUtils.colorWheel.length % colorPos ;
+         }
+         
+         Color end1 = ColorUtils.rotateHue(ColorUtils.orange,  (1.0f  / 24.0f) * blockNum  );
+         Color end2 = ColorUtils.rotateHue(ColorUtils.cyan,    (1.0f  / 24.0f) * (blockNum +1)  ) ;
+         
+         Color c   = ColorUtils.getIntermediate(ColorUtils.orange, end1, blockNum, bk);
+         Color cd   = ColorUtils.getIntermediate(ColorUtils.cyan, end2, blockNum, bk);
+         
+         
+         List<String> pdb1 = new ArrayList<String>();
+         List<String> pdb2 = new ArrayList<String>();
+         for ( int i=0;i< optLen[bk];i++) {
+            ///
+            int pos1 = optAln[bk][0][i];
+            pdb1.add(JmolTools.getPdbInfo(ca1[pos1]));
+            int pos2 = optAln[bk][1][i];
+            pdb2.add(JmolTools.getPdbInfo(ca2[pos2]));
+         }
+
+         // and now select the aligned residues...
+         StringBuffer buf = new StringBuffer("select ");
+         int count = 0;
+         for (String res : pdb1 ){
+            if ( count > 0)
+               buf.append(",");
+            buf.append(res);
+            buf.append("/1");
+            count++;
+         }
+
+         buf.append("; backbone 0.6 ; color [" + cd.getRed() +"," + cd.getGreen() +"," +cd.getBlue()+"]; select ");
+         
+         count = 0;
+         for (String res :pdb2 ){
+            if ( count > 0)
+               buf.append(",");
+         
+            buf.append(res);
+            buf.append("/2");
+            count++;
+         }
+         //buf.append("; set display selected;");
+
+         buf.append("; backbone 0.6 ; color [" + c.getRed() +"," + c.getGreen() +"," +c.getBlue()+"];");
+
+         // now color this block:
+         jmol.append(buf);
+      }
+      jmol.append("model 0;  ");
+      jmol.append(LIGAND_DISPLAY_SCRIPT);
+      //System.out.println(jmol);
+      return jmol.toString();
+
+
    }
 
    public void resetDisplay(){

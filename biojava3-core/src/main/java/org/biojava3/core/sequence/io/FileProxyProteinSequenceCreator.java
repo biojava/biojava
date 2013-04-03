@@ -13,7 +13,7 @@ import org.biojava3.core.sequence.io.template.SequenceCreatorInterface;
 import org.biojava3.core.sequence.loader.SequenceFileProxyLoader;
 import org.biojava3.core.sequence.template.AbstractSequence;
 import org.biojava3.core.sequence.template.CompoundSet;
-import org.biojava3.core.sequence.template.SequenceProxyLoader;
+import org.biojava3.core.sequence.template.ProxySequenceReader;
 
 /**
  *
@@ -36,11 +36,11 @@ public class FileProxyProteinSequenceCreator implements
         SequenceFileProxyLoader<AminoAcidCompound> sequenceFileProxyLoader = new SequenceFileProxyLoader<AminoAcidCompound>(
                 fastaFile, new FastaSequenceParser(), index, sequence.length(),
                 compoundSet);
-        return new ProteinSequence(sequence, compoundSet);
+        return new ProteinSequence(sequenceFileProxyLoader, compoundSet);
     }
 
     public AbstractSequence<AminoAcidCompound> getSequence(
-            SequenceProxyLoader<AminoAcidCompound> proxyLoader, long index) {
+            ProxySequenceReader<AminoAcidCompound> proxyLoader, long index) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 

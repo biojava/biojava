@@ -37,7 +37,7 @@ import org.biojava.bio.symbol.SymbolList;
 
 public interface AlignmentElement{
     
-    public Object getLabel();
+    public String getLabel();
     public Location getLoc();
     public SymbolList getSymbolList();
     public void setLoc(Location nLoc)throws BioError;

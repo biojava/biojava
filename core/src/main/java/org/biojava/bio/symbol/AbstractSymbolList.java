@@ -83,11 +83,11 @@ public abstract class AbstractSymbolList extends AbstractChangeable implements
 					"end must not be lower than start: start=" + start
 							+ ", end=" + end);
 		}
-		return new SubList(start, end);
+		return new SubList<Symbol>(start, end);
 	}
 
-	public List toList() {
-		return new ListView(this);
+	public List<Symbol> toList() {
+		return new ListView<Symbol>(this);
 	}
 
 	public String seqString() {
@@ -127,7 +127,7 @@ public abstract class AbstractSymbolList extends AbstractChangeable implements
 	public int hashCode() {
 		if (hashCode == 0) {
 			int result = 17;
-			for (Iterator i = iterator(); i.hasNext();) {
+			for (Iterator<Symbol> i = iterator(); i.hasNext();) {
 				result = 37 * result + i.next().hashCode();
 			}
 			hashCode = result;
@@ -148,8 +148,8 @@ public abstract class AbstractSymbolList extends AbstractChangeable implements
 			return false;
 		}
 
-		Iterator si1 = sl1.iterator();
-		Iterator si2 = sl2.iterator();
+		Iterator<Symbol> si1 = sl1.iterator();
+		Iterator<Symbol> si2 = sl2.iterator();
 		while (si1.hasNext()) {
 			if (!(si1.next() == si2.next())) {
 				return false;
@@ -194,8 +194,8 @@ public abstract class AbstractSymbolList extends AbstractChangeable implements
 			pos = min;
 		}
 
-		protected SymbolIterator() {
-		}
+		// protected SymbolIterator() {
+		// }
 
 		public boolean hasNext() {
 			return (pos <= max);
@@ -227,8 +227,13 @@ public abstract class AbstractSymbolList extends AbstractChangeable implements
 	 * @author Matthew Pocock
 	 */
 
-	private class SubList extends AbstractChangeable implements SymbolList,
-			Serializable {
+	private class SubList<T extends Symbol> extends AbstractChangeable
+			implements SymbolList, Serializable {
+		/**
+		 * Generated serial version identifier.
+		 */
+		private static final long serialVersionUID = -4299952037536894744L;
+
 		private int start, end;
 
 		private transient EditTranslater editTranslater = null;
@@ -243,7 +248,7 @@ public abstract class AbstractSymbolList extends AbstractChangeable implements
 			return AbstractSymbolList.this.getAlphabet();
 		}
 
-		public Iterator iterator() {
+		public Iterator<Symbol> iterator() {
 			return new SymbolIterator(start, end);
 		}
 
@@ -272,7 +277,7 @@ public abstract class AbstractSymbolList extends AbstractChangeable implements
 								+ sstart + ", end=" + send);
 			}
 
-			return new SubList(sstart + start - 1, send + start - 1);
+			return new SubList<Symbol>(sstart + start - 1, send + start - 1);
 		}
 
 		public String seqString() {
@@ -289,8 +294,8 @@ public abstract class AbstractSymbolList extends AbstractChangeable implements
 			return subList(start, end).seqString();
 		}
 
-		public List toList() {
-			return new ListView(this);
+		public List<Symbol> toList() {
+			return new ListView<Symbol>(this);
 		}
 
 		// fixme: doesn't do range checking on edit object
@@ -341,7 +346,7 @@ public abstract class AbstractSymbolList extends AbstractChangeable implements
 		public int hashCode() {
 			if (hashCode == 0) {
 				int result = 17;
-				for (Iterator i = iterator(); i.hasNext();) {
+				for (Iterator<Symbol> i = iterator(); i.hasNext();) {
 					result = 37 * result + i.next().hashCode();
 				}
 				hashCode = result;
@@ -381,7 +386,12 @@ public abstract class AbstractSymbolList extends AbstractChangeable implements
 	 * @author Thomas Down
 	 */
 
-	private static class ListView extends AbstractList implements Serializable {
+	private static class ListView<T extends Symbol> extends AbstractList<T>
+			implements Serializable {
+		/**
+		 * Generated serial version identifier.
+		 */
+		private static final long serialVersionUID = 1481437420273354153L;
 		private SymbolList rl;
 
 		/**
@@ -395,8 +405,9 @@ public abstract class AbstractSymbolList extends AbstractChangeable implements
 			this.rl = symList;
 		}
 
-		public Object get(int pos) {
-			return rl.symbolAt(pos + 1);
+		@SuppressWarnings("unchecked")
+		public T get(int pos) {
+			return (T) rl.symbolAt(pos + 1);
 		}
 
 		public int size() {

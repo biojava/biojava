@@ -242,6 +242,9 @@ public class StructureTest extends TestCase {
 		Atom ca1    =       g1.getAtom("CA");
 		Atom oldca2 =       g2.getAtom("CA");
 		Atom newca2 = newGroup.getAtom("CA");
+		Element e1 = ca1.getElement();
+		
+		assertEquals(Element.C, e1);
 
 		// this also tests the cloning ...
 		double olddistance = Calc.getDistance(ca1,oldca2);
@@ -255,6 +258,17 @@ public class StructureTest extends TestCase {
 
 	}
 
+	public void testElement() throws Exception {
+		// there should be no wild card elements
+		// in a structure (!= Element.R)
+		for (Chain c: structure.getChains()) {
+			for (Group g: c.getAtomGroups()) {
+				for (Atom a: g.getAtoms()) {
+					assertFalse(a.getElement().equals(Element.R));
+				}
+			}
+		}
+	}
 
 
 }

@@ -71,7 +71,7 @@ public class DasSourceConverter {
             
             String c = cap.getCapability();
 
-            das1capabilitites.add(Capabilities.valueOf(c.substring(DASPREFIXLENGTH,c.length())));
+            das1capabilitites.add(Capabilities.valueOf((c.substring(DASPREFIXLENGTH,c.length())).toUpperCase()));
 
             String query_uri = cap.getQueryUri();
             
@@ -80,7 +80,7 @@ public class DasSourceConverter {
             	
             }else{
             String url = query_uri.substring(0,(query_uri.length() - c.length() + DASPREFIXLENGTH));
-            System.out.println("setting url in converter="+url);
+            //System.out.println("setting url in converter="+url);
             ds.setUrl(url);
             }
            
@@ -88,6 +88,9 @@ public class DasSourceConverter {
         }
         
         ds.setCapabilities(das1capabilitites);
+        List validCaps=das2source.getValidCapabilities();
+        
+        ds.setValidCapabilities(validCaps);
         
         return ds ;
     }

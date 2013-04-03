@@ -341,7 +341,7 @@ public final class DistributionTools {
                                                  double nullWeight,
                                                  int[] cols)
   throws IllegalAlphabetException {
-        List seqs = a.getLabels();
+        List<String> seqs = a.getLabels();
         FiniteAlphabet alpha =
           (FiniteAlphabet)((SymbolList)a.symbolListForLabel(seqs.get(0))).getAlphabet();
         for(int i = 1; i < seqs.size();i++){
@@ -351,7 +351,7 @@ public final class DistributionTools {
                         "mixed alphabets");
                 }
         }
-        List a_list = new ArrayList();
+        List<Alphabet> a_list = new ArrayList();
         for(int i=0; i<cols.length; i++){
                 a_list.add(alpha);
         }
@@ -405,7 +405,7 @@ public final class DistributionTools {
                                                  double nullWeight)
   throws IllegalAlphabetException {
 
-    List seqs = a.getLabels();
+    List<String> seqs = a.getLabels();
 
     FiniteAlphabet alpha = (FiniteAlphabet)((SymbolList)a.symbolListForLabel(seqs.get(0))).getAlphabet();
     for(int i = 1; i < seqs.size();i++){
@@ -433,8 +433,8 @@ public final class DistributionTools {
         pos[i] = DistributionFactory.DEFAULT.createDistribution(alpha);
         dtc.registerDistribution(pos[i]);
 
-        for(Iterator j = seqs.iterator(); j.hasNext();){// of each sequence
-          Object seqLabel = j.next();
+        for(Iterator<String> j = seqs.iterator(); j.hasNext();){// of each sequence
+          String seqLabel = j.next();
           Symbol s = a.symbolAt(seqLabel,i + 1);
 
           /*If this is working over a flexible alignment there is a possibility

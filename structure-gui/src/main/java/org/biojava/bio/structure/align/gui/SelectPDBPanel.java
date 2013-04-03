@@ -19,7 +19,7 @@ import javax.swing.JTextField;
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureException;
 import org.biojava.bio.structure.StructureTools;
-import org.biojava.bio.structure.align.webstart.PersistentConfig;
+
 import org.biojava.bio.structure.align.util.UserConfiguration;
 import org.biojava.bio.structure.align.webstart.WebStartMain;
 import org.biojava.bio.structure.io.MMCIFFileReader;
@@ -33,14 +33,11 @@ public class SelectPDBPanel
 extends JPanel 
 implements StructurePairSelector{
 
-	/** the system property PDB_DIR can be used to configure the 
-	 * default location for PDB files.
-	 */
-	public static final String PDB_DIR = "PDB_DIR";
+
 
 	boolean debug = true;
 
-	JTextField pdbDir;
+	
 	JTextField f1;
 	JTextField f2;
 	JTextField c1;
@@ -48,12 +45,10 @@ implements StructurePairSelector{
 	JTextField r1;
 	JTextField r2;
 
-	JCheckBox pdbSplit;
-	JCheckBox fromFtp;
 
 	UserConfiguration config;
 
-	JComboBox fileType;
+	
 	JTabbedPane configPane;
 
 	/**
@@ -67,9 +62,6 @@ implements StructurePairSelector{
 		this(true);
 	}
 	public SelectPDBPanel(boolean show2PDBs) {	
-
-
-		fileType = PDBUploadPanel.getFileFormatSelect();
 
 		Box vBox = Box.createVerticalBox();
 
@@ -97,25 +89,6 @@ implements StructurePairSelector{
 
 		if ( show2PDBs)
 			vBox.add(p2);	
-
-
-		pdbDir = new JTextField(20);
-
-		String conf = System.getProperty(PDB_DIR);
-		if ( conf != null){
-			pdbDir.setText(conf);
-		}
-
-		if ( show2PDBs) {
-			JPanel dir = getPDBDirPanel(pdbDir);
-
-			JTabbedPane configPane = new JTabbedPane();
-
-			configPane.addTab("Local PDB install", null, dir,
-			"Configure your local PDB setup.");
-
-			vBox.add(configPane);
-		}
 
 		//vBox.setBorder(BorderFactory.createLineBorder(Color.black));
 		this.add(vBox);
@@ -151,41 +124,15 @@ implements StructurePairSelector{
 	}
 
 
-	public JTextField getPDBDirField(){
-		return pdbDir;
-	}
-	public void persistCurrentConfig(){
-
-		config = getConfiguration();
-
-		try {
-			PersistentConfig webstartConfig = new PersistentConfig();
-
-			webstartConfig.save(config);
-
-		} catch (Exception e){
-			e.printStackTrace();
-		}
-
-	}
 	
-	public UserConfiguration getConfiguration(){
-		if ( config == null){
-			config = WebStartMain.getWebStartConfig();
-		}
-
-		String dir = pdbDir.getText();
-		config.setPdbFilePath(dir);
-		boolean isSplit = pdbSplit.isSelected();
-		config.setSplit(isSplit);
-		boolean fromFtpF = fromFtp.isSelected();
-		config.setAutoFetch(fromFtpF);
-		return config;
-	}
-
+	
+	
+	
 	private Structure fromPDB(JTextField f, JTextField c,JTextField r) throws StructureException{
 		String pdb = f.getText().trim();
 
+		UserConfiguration config = WebStartMain.getWebStartConfig();
+		
 		if ( pdb.length() < 4) {
 			f.setText("!!!");
 			return null;
@@ -197,30 +144,28 @@ implements StructurePairSelector{
 
 
 		String range = r.getText().trim();
-
-		String fileFormat = (String)fileType.getSelectedItem();
+		
+		String fileFormat = config.getFileFormat();
 
 		StructureIOFile reader = null;
-		if ( fileFormat.equals(PDBUploadPanel.PDB_FORMAT)){
+		if ( fileFormat.equals(UserConfiguration.PDB_FORMAT)){
 			PDBFileReader re = new PDBFileReader();
 			re.setAlignSeqRes(false);
 			reader = re;
-		} else if ( fileFormat.equals(PDBUploadPanel.MMCIF_FORMAT)){						
+		} else if ( fileFormat.equals(UserConfiguration.MMCIF_FORMAT)){						
 			reader = new MMCIFFileReader();
 		} else {
 			throw new StructureException("Unkown file format " + fileFormat);
 		}
 
-		String dir = pdbDir.getText();
-		reader.setPath(dir);
-		boolean isSplit = pdbSplit.isSelected();
-		reader.setPdbDirectorySplit(isSplit);
-		boolean fromFtpF = fromFtp.isSelected();
-		reader.setAutoFetch(fromFtpF);
 		
-		if ( debug )
-			System.out.println("dir: " + dir);
-
+		reader.setPath(config.getPdbFilePath());
+		
+		reader.setPdbDirectorySplit(config.isSplit());
+		
+		reader.setAutoFetch(config.getAutoFetch());
+		
+	
 		Structure structure ;
 		try {
 			structure = reader.getStructureById(pdb);
@@ -299,77 +244,6 @@ implements StructurePairSelector{
 
 
 
-	public  JPanel getPDBDirPanel(JTextField f){
-
-		if ( config == null)
-			config = WebStartMain.getWebStartConfig();
-
-		JPanel panel = new JPanel();
-		//panel.setBorder(BorderFactory.createLineBorder(Color.black));
-
-		Box vBox = Box.createVerticalBox();
-		Box hBox = Box.createHorizontalBox();
-
-		JLabel l01 = new JLabel("Directory containing PDBs");
-		//panel.add(l01);
-		//panel.add(f);
-
-		hBox.add(l01);
-		hBox.add(f);
-		vBox.add(hBox);
-
-		if ( config != null){
-			pdbDir.setText( config.getPdbFilePath() );
-		}
-
-		Action action = new ChooseDirAction(pdbDir, config);
-
-		JButton chooser = new JButton(action);
-		hBox.add(chooser);
-
-		Box hBox2 = Box.createHorizontalBox();
-
-		JLabel label = new JLabel("Files in split directories:");
-
-		pdbSplit = new JCheckBox();
-		pdbSplit.setMnemonic(KeyEvent.VK_S);
-
-		pdbSplit.setSelected(true);
-		if ( config != null){
-			pdbSplit.setSelected(config.isSplit());
-		}
-
-		hBox2.add(Box.createGlue());
-		hBox2.add(label);
-		hBox2.add(pdbSplit);
-
-		vBox.add(hBox2);
-
-		Box hBox3 = Box.createHorizontalBox();
-		JLabel label2 = new JLabel("Fetch missing PDBs from ftp site:");
-		fromFtp = new JCheckBox();
-		fromFtp.setMnemonic(KeyEvent.VK_F);
-		fromFtp.setSelected(true);
-		if ( config != null)
-			fromFtp.setSelected(config.getAutoFetch());
-
-
-
-
-		JLabel ftype = new JLabel("File format:");
-
-		hBox3.add(Box.createGlue());
-		hBox3.add(ftype);
-		hBox3.add(fileType);
-		hBox3.add(Box.createGlue());
-		hBox3.add(label2);
-		hBox3.add(fromFtp);
-
-		vBox.add(hBox3);
-
-		panel.add(vBox);
-		return panel;
-	}
 
 
 }

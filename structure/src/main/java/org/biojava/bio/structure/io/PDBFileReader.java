@@ -32,6 +32,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.URL;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -316,7 +317,7 @@ public class PDBFileReader implements StructureIOFile {
 
    /** Flag that defines if the PDB directory is containing all PDB files or is split into sub dirs (like the FTP site).
     *  
-    * @param boolean. If set to false all files are in one directory.
+    * @param pdbDirectorySplit boolean. If set to false all files are in one directory.
     */
    public void setPdbDirectorySplit(boolean pdbDirectorySplit) {
       this.pdbDirectorySplit = pdbDirectorySplit;
@@ -442,7 +443,9 @@ public class PDBFileReader implements StructureIOFile {
 
       try {
          URL url = new URL(ftp);
-         InputStream conn = new GZIPInputStream(url.openStream());
+         
+         InputStream uStream = url.openStream();
+         InputStream conn = new GZIPInputStream(uStream);
 
 
          FileOutputStream outPut = new FileOutputStream(tempFile);
@@ -456,8 +459,11 @@ public class PDBFileReader implements StructureIOFile {
          }
          pw.flush();
          pw.close();
+         
          outPut.close();
          conn.close();
+         uStream.close();
+         
       } catch (Exception e){
          e.printStackTrace();
          return null;

@@ -28,22 +28,24 @@ package org.biojava3.core.sequence;
  */
 import java.util.LinkedHashMap;
 
+
 import org.biojava3.core.sequence.compound.DNACompoundSet;
 import org.biojava3.core.sequence.compound.NucleotideCompound;
-import org.biojava3.core.sequence.loader.SequenceStringProxyLoader;
+import org.biojava3.core.sequence.loader.StringProxySequenceReader;
 import org.biojava3.core.sequence.template.AbstractSequence;
 import org.biojava3.core.sequence.template.CompoundSet;
-import org.biojava3.core.sequence.template.SequenceProxyLoader;
+import org.biojava3.core.sequence.template.ProxySequenceReader;
+import org.biojava3.core.sequence.template.SequenceMixin;
 import org.biojava3.core.sequence.template.SequenceView;
+import org.biojava3.core.sequence.transcription.Frame;
 import org.biojava3.core.sequence.transcription.TranscriptionEngine;
 import org.biojava3.core.sequence.views.ComplementSequenceView;
 import org.biojava3.core.sequence.views.ReversedSequenceView;
 
 public class DNASequence extends AbstractSequence<NucleotideCompound> {
 
-    private DNASequence parentDNASequence = null;
-    private Integer begin = null;
-    private Integer end = null;
+    
+    
     private LinkedHashMap<String, GeneSequence> geneSequenceHashMap = new LinkedHashMap<String, GeneSequence>();
 
     public enum DNAType {
@@ -53,14 +55,14 @@ public class DNASequence extends AbstractSequence<NucleotideCompound> {
     private DNAType dnaType = DNAType.UNKNOWN;
 
     public DNASequence() {
-        throw new UnsupportedOperationException("Null constructor not supported");
+//        throw new UnsupportedOperationException("Null constructor not supported");
     }
 
     public DNASequence(String seqString) {
         super(seqString, DNACompoundSet.getDNACompoundSet());
     }
 
-    public DNASequence(SequenceProxyLoader<NucleotideCompound> proxyLoader) {
+    public DNASequence(ProxySequenceReader<NucleotideCompound> proxyLoader) {
         super(proxyLoader, DNACompoundSet.getDNACompoundSet());
     }
 
@@ -68,16 +70,13 @@ public class DNASequence extends AbstractSequence<NucleotideCompound> {
         super(seqString, compoundSet);
     }
 
-    public DNASequence(SequenceProxyLoader<NucleotideCompound> proxyLoader, CompoundSet<NucleotideCompound> compoundSet) {
+    public DNASequence(ProxySequenceReader<NucleotideCompound> proxyLoader, CompoundSet<NucleotideCompound> compoundSet) {
         super(proxyLoader, compoundSet);
     }
 
-    public void setParentDNASequence(DNASequence parentDNASequence) {
-        this.parentDNASequence = parentDNASequence;
-    }
 
-    public DNASequence getParentDNASequence() {
-        return parentDNASequence;
+    public LinkedHashMap<String,GeneSequence> getGeneSequences(){
+        return geneSequenceHashMap;
     }
 
     public GeneSequence removeGeneSequence(String accession) {
@@ -108,43 +107,23 @@ public class DNASequence extends AbstractSequence<NucleotideCompound> {
     }
 
     public RNASequence getRNASequence() {
-      return getRNASequence(TranscriptionEngine.getDefault());
+      return getRNASequence(Frame.getDefaultFrame());
     }
 
     public RNASequence getRNASequence(TranscriptionEngine engine) {
-      return (RNASequence) engine.getDnaRnaTranslator().createSequence(this);
+      return getRNASequence(engine, Frame.getDefaultFrame());
     }
 
-    public double getGC() {
-        throw new UnsupportedOperationException("Not supported yet");
+    public RNASequence getRNASequence(Frame frame) {
+      return getRNASequence(TranscriptionEngine.getDefault(), Frame.getDefaultFrame());
     }
 
-    /**
-     * @return the begin
-     */
-    public int getBegin() {
-        return begin;
+    public RNASequence getRNASequence(TranscriptionEngine engine, Frame frame) {
+      return (RNASequence) engine.getDnaRnaTranslator().createSequence(this, frame);
     }
 
-    /**
-     * @param begin the begin to set
-     */
-    public void setBegin(Integer begin) {
-        this.begin = begin;
-    }
-
-    /**
-     * @return the end
-     */
-    public Integer getEnd() {
-        return end;
-    }
-
-    /**
-     * @param end the end to set
-     */
-    public void setEnd(Integer end) {
-        this.end = end;
+    public int getGCCount() {
+        return SequenceMixin.countGC(this);
     }
 
     /**
@@ -165,8 +144,8 @@ public class DNASequence extends AbstractSequence<NucleotideCompound> {
         DNASequence dnaSequence = new DNASequence("ATCG");
         System.out.println(dnaSequence.toString());
 
-        SequenceStringProxyLoader<NucleotideCompound> sequenceStringProxyLoader =
-                new SequenceStringProxyLoader<NucleotideCompound>("GCTA", DNACompoundSet.getDNACompoundSet());
+        StringProxySequenceReader<NucleotideCompound> sequenceStringProxyLoader =
+                new StringProxySequenceReader<NucleotideCompound>("GCTA", DNACompoundSet.getDNACompoundSet());
         DNASequence dnaSequenceFromProxy = new DNASequence(sequenceStringProxyLoader);
         System.out.println(dnaSequenceFromProxy.toString());
 

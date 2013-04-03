@@ -35,413 +35,426 @@ import org.biojava.utils.xml.PrettyXMLWriter;
 public class FarmJobRunnable implements Runnable {
 
 
-	private static final int DEFAULT_PAIR_FETCH_DELAY   = 30000;
-	private static final String CONNECTION_PAIR_DELAY   = "connection.pair.delay";
-	private static final String JFATCAT_NAME            = "jfatcat.name";
-	private static final String JFATCAT_VERSION         = "jfatcat.version";
+   private static final int DEFAULT_PAIR_FETCH_DELAY   = 30000;
+   private static final String CONNECTION_PAIR_DELAY   = "connection.pair.delay";
+   private static final String JFATCAT_NAME            = "jfatcat.name";
+   private static final String JFATCAT_VERSION         = "jfatcat.version";
 
-	private static ResourceManager resourceManager = ResourceManager.getResourceManager("jfatcat");
+   private static ResourceManager resourceManager = ResourceManager.getResourceManager("jfatcat");
 
-  
-	private static DateFormat dateFormat = new SimpleDateFormat("MMMM dd, yyyy h:mm a");
 
-	FarmJobParameters params;
+   private static DateFormat dateFormat = new SimpleDateFormat("MMMM dd, yyyy h:mm a");
 
-	String prevName1;
-	Atom[] ca1 ;
+   FarmJobParameters params;
 
+   String prevName1;
+   Atom[] ca1 ;
 
-	long startTime;
-	long maxTime;
-	int maxNrAlignments;
-	int alignmentsCalculated;
 
+   long startTime;
+   long maxTime;
+   int maxNrAlignments;
+   int alignmentsCalculated;
 
-	private static final String randomUsername = getRandomUsername();
 
-	boolean terminated ;
+   private static final String randomUsername = getRandomUsername();
 
-	List<AlignmentProgressListener> progressListeners;
-	CountProgressListener counter ;
+   boolean terminated ;
 
-	String userName = null;
-	AtomCache cache;
-	
-	public FarmJobRunnable(FarmJobParameters params){
-		terminated = false;
-		this.params = params;
+   List<AlignmentProgressListener> progressListeners;
+   CountProgressListener counter ;
 
-		// multiple farm jobs share the same SoftHashMap for caching coordinates
-		cache = new AtomCache( params.getPdbFilePath(), params.isPdbDirSplit());
-		
-		maxNrAlignments = params.getNrAlignments();
-		progressListeners = null;
-		if (params.getUsername() == null) {
-			userName = randomUsername;						
-		} else {
-			userName = params.getUsername();
-		}
-		counter  = new CountProgressListener();
-		addAlignmentProgressListener(counter);
+   String userName = null;
+   AtomCache cache;
 
-	}
+   public FarmJobRunnable(FarmJobParameters params){
+      terminated = false;
+      this.params = params;
 
-	public void addAlignmentProgressListener(AlignmentProgressListener listener){
+      // multiple farm jobs share the same SoftHashMap for caching coordinates
+      cache = new AtomCache( params.getPdbFilePath(), params.isPdbDirSplit());
 
-		if (progressListeners == null)
-			progressListeners = new ArrayList<AlignmentProgressListener>();
+      maxNrAlignments = params.getNrAlignments();
+      progressListeners = null;
+      if (params.getUsername() == null) {
+         userName = randomUsername;						
+      } else {
+         userName = params.getUsername();
+      }
+      counter  = new CountProgressListener();
+      addAlignmentProgressListener(counter);
 
-		progressListeners.add(listener);
-	}
+   }
 
-	public void clearListeners(){
-		if ( progressListeners == null) 
-			return;
-		progressListeners.clear();
-		progressListeners = null;
-	}
+   public void addAlignmentProgressListener(AlignmentProgressListener listener){
 
-	protected static String getRandomUsername(){
-		String name = "";
-		try {
-			InetAddress i = InetAddress.getLocalHost();
-			name += i.getHostAddress();
-			name += "_";
-		} catch (Exception e){
-			//e.printStackTrace();
-		}
-		name +=  UUID.randomUUID();
+      if (progressListeners == null)
+         progressListeners = new ArrayList<AlignmentProgressListener>();
 
-		return name;
+      progressListeners.add(listener);
+   }
 
-	}
+   public void clearListeners(){
+      if ( progressListeners == null) 
+         return;
+      progressListeners.clear();
+      progressListeners = null;
+   }
 
-	public static void log(String message){
-		StringBuffer buf = new StringBuffer();
+   protected static String getRandomUsername(){
+      String name = "";
+      try {
+         InetAddress i = InetAddress.getLocalHost();
+         name += i.getHostAddress();
+         name += "_";
+      } catch (Exception e){
+         //e.printStackTrace();
+      }
+      name +=  UUID.randomUUID();
 
-		buf.append("[");
-		Date date = new Date();
-		buf.append(dateFormat.format(date));
-		buf.append("] ");
-		buf.append(message);
-		System.out.println(buf.toString());
-	}
+      return name;
 
-	public void run() {
+   }
 
-		// Retrieve resource
-		String appVersion = resourceManager.getString(JFATCAT_VERSION);
-		String appName    = resourceManager.getString(JFATCAT_NAME);
-		log(appName + " version:" + appVersion);
+   public static void log(String message){
+      StringBuffer buf = new StringBuffer();
 
+      buf.append("[");
+      Date date = new Date();
+      buf.append(dateFormat.format(date));
+      buf.append("] ");
+      buf.append(message);
+      System.out.println(buf.toString());
+   }
 
-		startTime = System.currentTimeMillis();
-		// -t ime is in seconds.
-		long maxSec = params.getTime();
-
-		if ( maxSec < 5 ) 
-			maxTime = Long.MAX_VALUE;
-		else 
-			maxTime = startTime + params.getTime() * 1000;
+   public void run() {
 
-		terminated = false;
+      // Retrieve resource
+      String appVersion = resourceManager.getString(JFATCAT_VERSION);
+      String appName    = resourceManager.getString(JFATCAT_NAME);
+      log(appName + " version:" + appVersion);
 
-		alignmentsCalculated = 0;
-		int totalAligs = 0;
-		maxNrAlignments = params.getNrAlignments();
 
-		if ( maxNrAlignments < 0 ){
-			maxNrAlignments = Integer.MAX_VALUE;
-		}
+      startTime = System.currentTimeMillis();
+      // -t ime is in seconds.
+      long maxSec = params.getTime();
+
+      if ( maxSec < 5 ) 
+         maxTime = Long.MAX_VALUE;
+      else 
+         maxTime = startTime + params.getTime() * 1000;
 
-		log("running job for max: " + maxNrAlignments + " alignments");
+      terminated = false;
 
-
-		while (! terminated){
+      alignmentsCalculated = 0;
+      int totalAligs = 0;
+      maxNrAlignments = params.getNrAlignments();
 
-			// talk to server
-			// get list of alignments to run
-			// if maxNrAlignments > 100 we split up the calculations in junks of 100.
-			// otherwise we request all of them at once.
-			// we request
-			SortedSet<PdbPair> alignmentPairs = getAlignmentPairsFromServer(); 
-			log(userName+": Server responded with " + alignmentPairs.size() + " pairs.");
-			List<String> results = new ArrayList<String>();
+      if ( maxNrAlignments < 0 ){
+         maxNrAlignments = Integer.MAX_VALUE;
+      }
 
-			for(PdbPair pair : alignmentPairs){
+      log("running job for max: " + maxNrAlignments + " alignments");
 
-				if ( terminated)
-					break;
+
+      while (! terminated){
 
-				long now = System.currentTimeMillis();
-				if ( now >= maxTime)  {
-					terminated = true;
-					break;
-				}
+         // talk to server
+         // get list of alignments to run
+         // if maxNrAlignments > 100 we split up the calculations in junks of 100.
+         // otherwise we request all of them at once.
+         // we request
+         SortedSet<PdbPair> alignmentPairs = getAlignmentPairsFromServer(); 
+         log(userName+": Server responded with " + alignmentPairs.size() + " pairs.");
+         List<String> results = new ArrayList<String>();
 
-				if ( alignmentsCalculated >= maxNrAlignments) {
-					terminated = true;
-					break;
-				}
+         for(PdbPair pair : alignmentPairs){
 
-
-				String name1 = pair.getName1();
-				String name2 = pair.getName2();
+            if ( terminated)
+               break;
 
-				if ( progressListeners != null)
-					notifyStartAlignment(name1,name2);
+            long now = System.currentTimeMillis();
+            if ( now >= maxTime)  {
+               terminated = true;
+               break;
+            }
 
-				try {
-					//System.out.println("calculating alignent: " + name1 + "  " + name2);
-					String resultXML = alignPair(name1, name2);
-
-					if ( progressListeners != null)
-						notifyEndAlignment();
-
-					//System.out.println("got XML: " + resultXML);
-					results.add(resultXML);
-
-				} catch (Exception e){
-					if (e.getMessage() == null)
-						e.printStackTrace();
-					// log that an exception has occurred and send it back to server!1
-					log("Error: " + e.getMessage() + " while aligning " + name1 + " vs. " + name2);
-					System.err.println(e.getMessage());
-					//e.printStackTrace();
+            if ( alignmentsCalculated >= maxNrAlignments) {
+               terminated = true;
+               break;
+            }
 
-					StringWriter sw = new StringWriter();
-					PrintWriter writer = new PrintWriter(sw);
+
+            String name1 = pair.getName1();
+            String name2 = pair.getName2();
 
-					PrettyXMLWriter xml = new PrettyXMLWriter(writer);
-					try {
-						xml.openTag("AFPChain");
+            if ( progressListeners != null)
+               notifyStartAlignment(name1,name2);
 
-						xml.attribute("name1", name1);
-						xml.attribute("name2", name2);
-						xml.attribute("error", e.getMessage());
-						xml.closeTag("AFPChain");
-					} catch(IOException ex){
-						ex.printStackTrace();
-					}
-					results.add(sw.toString());
-				}
-
-				alignmentsCalculated++;
-				totalAligs++;
-			}
-
-			// send results back to server
-			sendResultsToServer(results);
-			//log("sent results to server: " + counter.toString());
-
-			long end = System.currentTimeMillis();
-			if ( end >= maxTime)  {
-				System.out.println("OK end of job: reached maxTime.");
-				terminated = true;
+            try {
+               //System.out.println("calculating alignent: " + name1 + "  " + name2);
+               String resultXML = alignPair(name1, name2);
+
+               if ( progressListeners != null)
+                  notifyEndAlignment();
+
+               //System.out.println("got XML: " + resultXML);
+               results.add(resultXML);
+
+            } catch (Exception e){
+               if (e.getMessage() == null)
+                  e.printStackTrace();
+               // log that an exception has occurred and send it back to server!1
+               log("Error: " + e.getMessage() + " while aligning " + name1 + " vs. " + name2);
+               System.err.println(e.getMessage());
+               //e.printStackTrace();
 
-			}
+               StringWriter sw = new StringWriter();
+               PrintWriter writer = new PrintWriter(sw);
 
-			if ( alignmentsCalculated >= maxNrAlignments) {
-				System.out.println("OK end of job: reached maxNrAlignments");
-				terminated = true;
+               PrettyXMLWriter xml = new PrettyXMLWriter(writer);
+               try {
+                  xml.openTag("AFPChain");
 
-			}		
+                  xml.attribute("name1", name1);
+                  xml.attribute("name2", name2);
+                  xml.attribute("error", e.getMessage());
+                  xml.closeTag("AFPChain");
+               } catch(IOException ex){
+                  ex.printStackTrace();
+               }
+               results.add(sw.toString());
+            }
 
-			long tdiff = (end - startTime);
-			if ( tdiff != 0) {
+            alignmentsCalculated++;
+            totalAligs++;
+         }
 
-				log(userName + String.format(": job has run for :  %.2f", ( tdiff)/1000.0/60) + " min.");
-				log(userName + ": total nr of alignments calculated: " +alignmentsCalculated );
-				if ( alignmentsCalculated > 0)
-					log(userName + String.format(": average time / alignment: %.2f", ( tdiff / alignmentsCalculated / 1000.0 )) + " sec.");
-			}
-		}	
+         // send results back to server
+         sendResultsToServer(results);
+         //log("sent results to server: " + counter.toString());
 
-		log(userName+": JFatCat job result: " + counter.toString());
+         long end = System.currentTimeMillis();
+         if ( end >= maxTime)  {
+            System.out.println("OK end of job: reached maxTime.");
+            terminated = true;
 
-		// clean up in the end...
-		clearListeners();
-	}
+         }
 
+         if ( alignmentsCalculated >= maxNrAlignments) {
+            System.out.println("OK end of job: reached maxNrAlignments");
+            terminated = true;
 
-	private void notifyStartAlignment(String name1, String name2) {
-		if ( progressListeners != null){
-			for (AlignmentProgressListener li : progressListeners){
-				li.alignmentStarted(name1, name2);
-			}
-		}		
-	}
+         }		
 
-	private void notifyEndAlignment(){
-		if ( progressListeners != null){
-			for (AlignmentProgressListener li : progressListeners){
-				li.alignmentEnded();
+         long tdiff = (end - startTime);
+         if ( tdiff != 0) {
 
-			}
-		}
-	}
+            log(userName + String.format(": job has run for :  %.2f", ( tdiff)/1000.0/60) + " min.");
+            log(userName + ": total nr of alignments calculated: " +alignmentsCalculated );
+            if ( alignmentsCalculated > 0)
+               log(userName + String.format(": average time / alignment: %.2f", ( tdiff / alignmentsCalculated / 1000.0 )) + " sec.");
+         }
+      }	
 
-	private void notifyRequestingAlignments(int nrAlignments){
-		if ( progressListeners != null){
-			for (AlignmentProgressListener li : progressListeners){
-				li.requestingAlignmentsFromServer(nrAlignments);
+      log(userName+": JFatCat job result: " + counter.toString());
 
-			}
-		}
-	}
+      // clean up in the end...
+      clearListeners();
+   }
 
-	private void notifySubmittingAlignments(int nrAlignments, String message){
-		if ( progressListeners != null){
-			for (AlignmentProgressListener li : progressListeners){
-				li.sentResultsToServer(nrAlignments,message);
 
-			}
-		}
-	}
+   private void notifyStartAlignment(String name1, String name2) {
+      if ( progressListeners != null){
+         for (AlignmentProgressListener li : progressListeners){
+            li.alignmentStarted(name1, name2);
+         }
+      }		
+   }
 
-	public String alignPair(String name1, String name2) throws StructureException, IOException{
+   private void notifyEndAlignment(){
+      if ( progressListeners != null){
+         for (AlignmentProgressListener li : progressListeners){
+            li.alignmentEnded();
 
-		StructureAlignment fatCatRigid = StructureAlignmentFactory.getAlgorithm("jFatCat_rigid");
+         }
+      }
+   }
 
-		// we are running with default parameters
+   private void notifyRequestingAlignments(int nrAlignments){
+      if ( progressListeners != null){
+         for (AlignmentProgressListener li : progressListeners){
+            li.requestingAlignmentsFromServer(nrAlignments);
 
-		long startTime = System.currentTimeMillis();
-		
-		if ( prevName1 == null)
-			initMaster(name1);
+         }
+      }
+   }
 
-		if ( ! prevName1.equals(name1)){
-			// we need to reload the master
-			initMaster(name1);
-		}
+   private void notifySubmittingAlignments(int nrAlignments, String message){
+      if ( progressListeners != null){
+         for (AlignmentProgressListener li : progressListeners){
+            li.sentResultsToServer(nrAlignments,message);
 
-		
-	
-		// get a copy of the atoms, but clone them, since they will be rotated...
-		Atom[] ca2 =  cache.getAtoms(name2,true);
-		
-//		if ( FatCatAligner.printTimeStamps){
-//			long endTime = System.currentTimeMillis();
-//			System.out.println("time to get " + name1 + " " + name2 + " : " + (endTime-startTime) / 1000.0 + " sec.");
-//		}
-		AFPChain afpChain = fatCatRigid.align(ca1, ca2);
-		
-		afpChain.setName1(name1);
-		afpChain.setName2(name2);
+         }
+      }
+   }
 
-		String xml = AFPChainXMLConverter.toXML(afpChain, ca1, ca2);
-		return xml;
-	}
+   public String alignPair(String name1, String name2) throws StructureException, IOException{
 
+      StructureAlignment fatCatRigid = StructureAlignmentFactory.getAlgorithm("jFatCat_rigid");
 
+      // we are running with default parameters
 
+      long startTime = System.currentTimeMillis();
 
-	private void initMaster(String name1) throws IOException, StructureException{
-		//AtomCache cache = AtomCache.getInstance();
+      if ( prevName1 == null)
+         initMaster(name1);
 
-		ca1 = cache.getAtoms(name1,true);
+      if ( ! prevName1.equals(name1)){
+         // we need to reload the master
+         initMaster(name1);
+      }
 
-		prevName1 = name1;
 
 
-	}
+      // get a copy of the atoms, but clone them, since they will be rotated...
+      Atom[] ca2 =  cache.getAtoms(name2,true);
 
+      //		if ( FatCatAligner.printTimeStamps){
+      //			long endTime = System.currentTimeMillis();
+      //			System.out.println("time to get " + name1 + " " + name2 + " : " + (endTime-startTime) / 1000.0 + " sec.");
+      //		}
+      AFPChain afpChain = fatCatRigid.align(ca1, ca2);
 
-	/** talk to centralized server and fetch all alignments to run.
-	 * 
-	 * @return a list of pairs to align.
-	 */
-	protected SortedSet<PdbPair> getAlignmentPairsFromServer() {
+      afpChain.setName1(name1);
+      afpChain.setName2(name2);
 
+      String xml = AFPChainXMLConverter.toXML(afpChain, ca1, ca2);
+      return xml;
+   }
 
-		String url = params.getServer();
 
-		int nrPairs = params.getStepSize();
 
-		if ( maxNrAlignments < nrPairs )
-			nrPairs = maxNrAlignments;
 
-		SortedSet<PdbPair> allPairs = new TreeSet<PdbPair>();
+   private void initMaster(String name1) throws IOException, StructureException{
+      //AtomCache cache = AtomCache.getInstance();
 
-//		int pairDelay = DEFAULT_PAIR_FETCH_DELAY;
-//
-//		String pairDelayS=resourceManager.getString(CONNECTION_PAIR_DELAY);
-//		if ( pairDelayS !=null) {
-//
-//			try {
-//				pairDelay = Integer.parseInt(pairDelayS);				
-//			} catch (NumberFormatException ex){
-//				ex.printStackTrace();
-//			}
-//		}
+      ca1 = cache.getAtoms(name1,true);
 
-		try {
+      prevName1 = name1;
 
-			if ( progressListeners != null)
-				notifyRequestingAlignments(nrPairs);
 
-			allPairs = JFatCatClient.getPdbPairs(url, nrPairs, userName);
+   }
 
-		} catch ( JobKillException k ){
 
-			terminate();
+   /** talk to centralized server and fetch all alignments to run.
+    * 
+    * @return a list of pairs to align.
+    */
+   protected SortedSet<PdbPair> getAlignmentPairsFromServer() {
 
-		} catch (Exception e){
-			if ( e.getMessage() == null)
-				e.printStackTrace();
-			System.err.println("Error while requesting alignment pairs: " + e.getMessage());
-			// an error has occured sleep 30 sec.
-			
-			try {
-				int delay = JFatCatClient.getRandomSleepTime();
-				System.err.println("sleeping "+ delay/1000 + " sec.");
-				Thread.sleep(delay);
-			} catch (InterruptedException ex){
-				ex.printStackTrace();
-			}
 
+      String url = params.getServer();
 
-		}
+      int nrPairs = params.getStepSize();
 
-		return allPairs;
-	}
+      if ( maxNrAlignments < nrPairs )
+         nrPairs = maxNrAlignments;
 
-	protected void sendResultsToServer(List<String> results) {
+      SortedSet<PdbPair> allPairs = new TreeSet<PdbPair>();
 
-	   String serverLocation = params.getServer();
-	   
-		if ( results.size() < 1)
-			return;
+      //		int pairDelay = DEFAULT_PAIR_FETCH_DELAY;
+      //
+      //		String pairDelayS=resourceManager.getString(CONNECTION_PAIR_DELAY);
+      //		if ( pairDelayS !=null) {
+      //
+      //			try {
+      //				pairDelay = Integer.parseInt(pairDelayS);				
+      //			} catch (NumberFormatException ex){
+      //				ex.printStackTrace();
+      //			}
+      //		}
 
-		//System.out.println("sending " + results.size() + " results back to server");
+      try {
 
-		String fullXml = "<alignments>";
+         if ( progressListeners != null)
+            notifyRequestingAlignments(nrPairs);
 
-		for (String xml: results){
-			fullXml +=xml;
-		}
-		fullXml += "</alignments>";
-		String msg = "";
-		try {
-			msg = JFatCatClient.sendMultiAFPChainToServer(serverLocation,fullXml, userName);
-		} catch (JobKillException e){
-			e.printStackTrace();
-			terminate();
-		}
+         while (allPairs.size() == 0) {
 
-		if ( progressListeners != null)
-			notifySubmittingAlignments(results.size(), msg);
-		log (userName + ": Sent " + results.size() +" results to server. job status:" + counter.toString());
-		log (userName + ": fileCache size:" + FlatFileCache.getInstance().size());
-	}
+            allPairs = JFatCatClient.getPdbPairs(url, nrPairs, userName);
 
+            if ( allPairs.size() == 0 ) {
+               try {
 
-	/** Send signal to terminate calculations
-	 * 
-	 */
-	public synchronized void terminate(){
-		terminated = true;
-	}
+                  int delay = JFatCatClient.getRandomSleepTime();
+                  System.err.println("sleeping "+ delay/1000 + " sec.");
+                  Thread.sleep(delay);
+               } catch (InterruptedException ex){
+                  ex.printStackTrace();
+               }
+            }
+         }
+      } catch ( JobKillException k ){
+
+         terminate();
+
+      } catch (Exception e){
+         if ( e.getMessage() == null)
+            e.printStackTrace();
+         System.err.println("Error while requesting alignment pairs: " + e.getMessage());
+         // an error has occured sleep 30 sec.
+
+         try {
+            int delay = JFatCatClient.getRandomSleepTime();
+            System.err.println("sleeping "+ delay/1000 + " sec.");
+            Thread.sleep(delay);
+         } catch (InterruptedException ex){
+            ex.printStackTrace();
+         }
+
+
+      }
+
+      return allPairs;
+   }
+
+   protected void sendResultsToServer(List<String> results) {
+
+      String serverLocation = params.getServer();
+
+      if ( results.size() < 1)
+         return;
+
+      //System.out.println("sending " + results.size() + " results back to server");
+
+      String fullXml = "<alignments>";
+
+      for (String xml: results){
+         fullXml +=xml;
+      }
+      fullXml += "</alignments>";
+      String msg = "";
+      try {
+         msg = JFatCatClient.sendMultiAFPChainToServer(serverLocation,fullXml, userName);
+      } catch (JobKillException e){
+         e.printStackTrace();
+         terminate();
+      }
+
+      if ( progressListeners != null)
+         notifySubmittingAlignments(results.size(), msg);
+      log (userName + ": Sent " + results.size() +" results to server. job status:" + counter.toString());
+      log (userName + ": fileCache size:" + FlatFileCache.getInstance().size());
+   }
+
+
+   /** Send signal to terminate calculations
+    * 
+    */
+   public synchronized void terminate(){
+      terminated = true;
+   }
 
 
 

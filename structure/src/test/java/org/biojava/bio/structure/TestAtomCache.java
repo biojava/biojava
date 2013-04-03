@@ -45,10 +45,8 @@ public class TestAtomCache extends TestCase
       String name4 = "4hhb:A:10-20,B:10-20,C:10-20";
       String name5 = "4hhb:(A:10-20,A:30-40)";
       
-      String tmpDir = System.getProperty("java.io.tmpdir");
       
-      boolean isSplit = true;
-      AtomCache cache = new AtomCache(tmpDir,isSplit);
+      AtomCache cache = TmpAtomCache.cache;
 
       try {
          Structure s = cache.getStructure(name1);

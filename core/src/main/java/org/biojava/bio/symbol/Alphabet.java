@@ -91,7 +91,7 @@ public interface Alphabet extends Annotatable {
    *
    * @return a List of alphabets
    */
-  List getAlphabets();
+  List<Alphabet> getAlphabets();
 
   /**
    * <p>
@@ -111,7 +111,7 @@ public interface Alphabet extends Annotatable {
    *            not Symbols over the alphabets returned from
    *            <code>getAlphabets</code>
    */
-  Symbol getSymbol(List rl) 
+  Symbol getSymbol(List<Symbol> rl) 
     throws IllegalSymbolException;
 
   /**
@@ -128,7 +128,7 @@ public interface Alphabet extends Annotatable {
    *            returned symbol
    * @return a Symbol (possibly fly-weighted) for the Set of symbols in syms
    */
-  Symbol getAmbiguity(Set syms)
+  Symbol getAmbiguity(Set<Symbol> syms)
   throws IllegalSymbolException;
   
   /**
@@ -195,7 +195,7 @@ public interface Alphabet extends Annotatable {
    * uses the symbol token characters to translate a string into a
    * SymbolList. Likewise, there should be a SymbolTokenization under the name
    * 'name' that uses symbol names to identify symbols. Any other names may
-   * also be defined, but the behaviour of the returned SymbolTokenization is
+   * also be defined, but the behavior of the returned SymbolTokenization is
    * not defined here.
    * </p>
    * <p>

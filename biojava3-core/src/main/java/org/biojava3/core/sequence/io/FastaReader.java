@@ -6,43 +6,55 @@ package org.biojava3.core.sequence.io;
 
 import java.io.File;
 import java.io.FileInputStream;
-import org.biojava3.core.sequence.io.template.FastaHeaderParserInterface;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.LinkedHashMap;
+
 import org.biojava3.core.sequence.ProteinSequence;
+import org.biojava3.core.sequence.compound.AminoAcidCompound;
 import org.biojava3.core.sequence.compound.AminoAcidCompoundSet;
+import org.biojava3.core.sequence.io.template.FastaHeaderParserInterface;
 import org.biojava3.core.sequence.io.template.SequenceCreatorInterface;
-import org.biojava3.core.sequence.template.AbstractSequence;
+import org.biojava3.core.sequence.template.Compound;
+import org.biojava3.core.sequence.template.Sequence;
 
 /**
  *
  * @author Scooter Willis <willishf at gmail dot com>
  */
-public class FastaReader<S extends AbstractSequence> {
+public class FastaReader<S extends Sequence<?>, C extends Compound> {
 
-    SequenceCreatorInterface sequenceCreator;
-    FastaHeaderParserInterface headerParser;
+    SequenceCreatorInterface<C> sequenceCreator;
+    FastaHeaderParserInterface<S,C> headerParser;
     BufferedReaderBytesRead br;
     InputStreamReader isr;
     FileInputStream fi = null;
 
     /**
-     *
+     * If you are going to use FileProxyProteinSequenceCreator then do not use this constructor because we need details about
+     * local file offsets for quick reads. InputStreams don't give you the name of the stream to access quickly via file seek. A seek in
+     * an inputstream is forced to read all the data so you don't gain anything.
      * @param br
      * @param headerParser
      * @param sequenceCreator
      */
-    public FastaReader(InputStream is, FastaHeaderParserInterface headerParser, SequenceCreatorInterface sequenceCreator) {
+    public FastaReader(InputStream is, FastaHeaderParserInterface<S,C> headerParser, SequenceCreatorInterface<C> sequenceCreator) {
         this.headerParser = headerParser;
         isr = new InputStreamReader(is);
         this.br = new BufferedReaderBytesRead(isr);
         this.sequenceCreator = sequenceCreator;
     }
 
-    public FastaReader(File file, FastaHeaderParserInterface headerParser, SequenceCreatorInterface sequenceCreator) throws Exception {
+    /**
+     * If you are going to use the FileProxyProteinSequenceCreator then you need to use this constructor because we need details about
+     * the location of the file.
+     * @param file
+     * @param headerParser
+     * @param sequenceCreator
+     * @throws Exception
+     */
+    public FastaReader(File file, FastaHeaderParserInterface<S,C> headerParser, SequenceCreatorInterface<C> sequenceCreator) throws Exception {
+        this.headerParser = headerParser;
         fi = new FileInputStream(file);
         isr = new InputStreamReader(fi);
         this.br = new BufferedReaderBytesRead(isr);
@@ -54,8 +66,9 @@ public class FastaReader<S extends AbstractSequence> {
      * @return
      * @throws Exception
      */
-    public List<S> process() throws Exception {
-        ArrayList<S> sequences = new ArrayList<S>();
+    @SuppressWarnings("unchecked")
+    public LinkedHashMap<String,S> process() throws Exception {
+        LinkedHashMap<String,S> sequences = new LinkedHashMap<String,S>();
 
 
         String line = "";
@@ -70,9 +83,10 @@ public class FastaReader<S extends AbstractSequence> {
             if (line.length() != 0) {
                 if (line.startsWith(">")) {
                     if (sb.length() > 0) {
-                        S sequence = (S) sequenceCreator.getSequence(sb.toString(), sequenceIndex);
+                    //    System.out.println("Sequence index=" + sequenceIndex);
+                        S sequence = (S)sequenceCreator.getSequence(sb.toString(), sequenceIndex);
                         headerParser.parseHeader(header, sequence);
-                        sequences.add(sequence);
+                        sequences.put(sequence.getAccession().getID(),sequence);
                         if (maxSequenceLength < sb.length()) {
                             maxSequenceLength = sb.length();
                         }
@@ -91,9 +105,10 @@ public class FastaReader<S extends AbstractSequence> {
             fileIndex = br.getBytesRead();
             line = br.readLine();
             if (line == null) {
-                S sequence = (S) sequenceCreator.getSequence(sb.toString(), fileIndex);
+            //    System.out.println("Sequence index=" + sequenceIndex + " " + fileIndex );
+                S sequence = (S)sequenceCreator.getSequence(sb.toString(), sequenceIndex);
                 headerParser.parseHeader(header, sequence);
-                sequences.add(sequence);
+                sequences.put(sequence.getAccession().getID(),sequence);
                 keepGoing = false;
             }
         } while (keepGoing);
@@ -111,18 +126,26 @@ public class FastaReader<S extends AbstractSequence> {
             String inputFile = "src/test/resources/PF00104_small.fasta";
             FileInputStream is = new FileInputStream(inputFile);
 
-            FastaReader<ProteinSequence> fastaReader = new FastaReader<ProteinSequence>(is, new GenericFastaHeaderParser(), new ProteinSequenceCreator(AminoAcidCompoundSet.getAminoAcidCompoundSet()));
-            Collection<ProteinSequence> proteinSequences = fastaReader.process();
+            FastaReader<ProteinSequence, AminoAcidCompound> fastaReader = new FastaReader<ProteinSequence, AminoAcidCompound>(is, new GenericFastaHeaderParser<ProteinSequence,AminoAcidCompound>(), new ProteinSequenceCreator(AminoAcidCompoundSet.getAminoAcidCompoundSet()));
+            LinkedHashMap<String,ProteinSequence> proteinSequences = fastaReader.process();
             is.close();
 
 
             System.out.println(proteinSequences);
 
             File file = new File(inputFile);
-            FastaReader<ProteinSequence> fastaProxyReader = new FastaReader<ProteinSequence>(file, new GenericFastaHeaderParser(), new FileProxyProteinSequenceCreator(file, AminoAcidCompoundSet.getAminoAcidCompoundSet()));
-            Collection<ProteinSequence> proteinProxySequences = fastaProxyReader.process();
+            FastaReader<ProteinSequence,AminoAcidCompound> fastaProxyReader = new FastaReader<ProteinSequence,AminoAcidCompound>(file, new GenericFastaHeaderParser<ProteinSequence,AminoAcidCompound>(), new FileProxyProteinSequenceCreator(file, AminoAcidCompoundSet.getAminoAcidCompoundSet()));
+            LinkedHashMap<String,ProteinSequence> proteinProxySequences = fastaProxyReader.process();
 
-            System.out.println(proteinProxySequences);
+            for(String key : proteinProxySequences.keySet()){
+                ProteinSequence proteinSequence = proteinProxySequences.get(key);
+                System.out.println(key);
+                if(key.equals("Q98SJ1_CHICK/15-61")){
+                    int dummy = 1;
+                }
+                System.out.println(proteinSequence.toString());
+
+            }
 
         } catch (Exception e) {
             e.printStackTrace();

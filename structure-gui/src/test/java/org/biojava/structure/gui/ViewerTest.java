@@ -1,7 +1,7 @@
 package org.biojava.structure.gui;
 
 import java.awt.Color;
-import java.io.File;
+
 
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureImpl;
@@ -39,10 +39,11 @@ public class ViewerTest extends TestCase {
 	/**
 	 * then load a PDB file.
 	 */
-	protected void testStructureLoad(){
+	public void testStructureLoad(){
 		PDBFileReader parser = new PDBFileReader();
+		parser.setAutoFetch(true);
 		try {
-			structure = parser.getStructure(new File(""));
+			structure = parser.getStructureById("4hhb");
 
 			viewer.setStructure(structure);
 

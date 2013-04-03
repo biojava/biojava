@@ -1,3 +1,5 @@
+
+
 package org.biojava.dasobert.das;
 
 import java.util.ArrayList;
@@ -116,32 +118,5 @@ public enum Capabilities {
 		
 		if(Capabilities.SEQUENCE.equals(Capabilities.SEQUENCE.toString()))System.out.println("is true");
 	}
-	
-//	public static ArrayList<String> getCapabilityStringsInCoreOrder(){
-//		return capabilitiesStringsInCoreOrder;
-//	}
-//	public static ArrayList<Capabilities> getCapabilitiesInCoreOrder(){
-//		return capabilitiesInCoreOrder;
-//	}
-//	private static final ArrayList <Capabilities> capabilitiesInCoreOrder=new ArrayList<Capabilities>();
-//	private static final ArrayList <String> capabilitiesStringsInCoreOrder=new ArrayList<String>();
-//
-
-//    static{
-//    	capabilitiesInCoreOrder.add(SOURCES);
-//    	capabilitiesInCoreOrder.add(STYLESHEET);
-//    	capabilitiesInCoreOrder.add(FEATURES);
-//    	capabilitiesInCoreOrder.add(TYPES);
-//    	capabilitiesInCoreOrder.add(SEQUENCE);
-//				capabilitiesInCoreOrder.add(ENTRY_POINTS);
-//				capabilitiesInCoreOrder.add(ALIGNMENT);
-//				capabilitiesInCoreOrder.add(STRUCTURE);
-//				capabilitiesInCoreOrder.add(INTERACTION);
-//    }
-//	static{
-//		for(Capabilities cap:EnumSet.allOf(Capabilities.class)){
-//			capabilitiesStringsInCoreOrder.add(cap.toString());
-//		}
-//	}
 
 }

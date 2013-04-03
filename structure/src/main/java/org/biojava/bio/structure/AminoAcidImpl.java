@@ -102,7 +102,7 @@ implements AminoAcid, Serializable
 	 * @return an Atom object
 	 * @throws StructureException ...
 	 */
-	public Atom getCA() throws StructureException {return getAtom("CA"); }
+	public Atom getCA() throws StructureException {return getAtom(" CA "); }
 
 	/** get C atom.
 	 * @return an Atom object
@@ -171,7 +171,7 @@ implements AminoAcid, Serializable
 	public void setPDBName(String s)
 	throws PDBParseException
 	{
-		if (s.length() != 3) {
+		if (s != null && s.length() != 3) {
 			throw new PDBParseException("amino acid name is not of length 3! (" + s +")");
 		}
 		pdb_name =s ;

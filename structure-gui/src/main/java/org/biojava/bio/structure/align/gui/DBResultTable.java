@@ -40,6 +40,8 @@ import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
 
 import org.biojava.bio.structure.Atom;
 import org.biojava.bio.structure.Group;
@@ -73,7 +75,7 @@ public class DBResultTable implements ActionListener{
 
 	public static void main(String[] args){
 
-		String file = "/Users/ap3/tmp/1cdg.A.ce.db";
+		String file = "/tmp/results_4hhb.A.out";
 
 		DBResultTable table = new DBResultTable();
 		UserConfiguration config = WebStartMain.getDefaultConfig();
@@ -151,7 +153,10 @@ public class DBResultTable implements ActionListener{
 		if ( ! isCE)
 			columnNames = fatColumnNames;
 		table = new JTable(data, columnNames);
-		table.setAutoCreateRowSorter(true);
+		
+		TableRowSorter<TableModel> sorter = new MyTableRowSorter(table.getModel());
+		table.setRowSorter(sorter);
+		//table.setAutoCreateRowSorter(true);
 
 		JScrollPane scrollPane = new JScrollPane(table);
 		table.setFillsViewportHeight(true);
@@ -232,11 +237,6 @@ public class DBResultTable implements ActionListener{
 			Atom[] ca1;
 			Atom[] ca2;
 
-			List<Group> hetatms1 = structure1.getChain(0).getAtomGroups("hetatm");
-			List<Group> nucs1    = structure1.getChain(0).getAtomGroups("nucleotide");
-			List<Group> hetatms2 = new ArrayList<Group>();
-			List<Group> nucs2    = new ArrayList<Group>();
-
 			ca1 = StructureTools.getAtomCAArray(structure1);
 			ca2 = StructureTools.getAtomCAArray(structure2);
 
@@ -248,12 +248,7 @@ public class DBResultTable implements ActionListener{
 
 
 
-			if ( (afpChain.getBlockNum() - 1) == 0){
-				hetatms2 = structure2.getChain(0).getAtomGroups("hetatm");
-				nucs2    = structure2.getChain(0).getAtomGroups("nucleotide");
-			}
-
-			StructureAlignmentJmol jmol = StructureAlignmentDisplay.display(afpChain,ca1,ca2,hetatms1, nucs1, hetatms2, nucs2);
+			StructureAlignmentJmol jmol = StructureAlignmentDisplay.display(afpChain,ca1,ca2);
 
 			//String result = afpChain.toFatcat(ca1, ca2);
 

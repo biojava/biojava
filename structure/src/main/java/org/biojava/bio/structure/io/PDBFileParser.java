@@ -46,6 +46,7 @@ import org.biojava.bio.structure.Author;
 import org.biojava.bio.structure.Chain;
 import org.biojava.bio.structure.ChainImpl;
 import org.biojava.bio.structure.DBRef;
+import org.biojava.bio.structure.Element;
 import org.biojava.bio.structure.Group;
 import org.biojava.bio.structure.GroupIterator;
 import org.biojava.bio.structure.HetatomImpl;
@@ -276,7 +277,7 @@ public class PDBFileParser  {
 		current_compound = new Compound();
 		dbrefs        = new ArrayList<DBRef>();
 
-		dateFormat = new SimpleDateFormat("dd-MMM-yy");
+		dateFormat = new SimpleDateFormat("dd-MMM-yy", java.util.Locale.ENGLISH);
 		atomCount = 0;
 		atomOverflow = false;
 
@@ -1586,8 +1587,8 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 			// can be found as HETATOM records
 			aminoCode1 = StructureTools.get1LetterCode(groupCode3);
 			if ( aminoCode1 != null)
-			   if ( aminoCode1.equals(StructureTools.UNKNOWN_GROUP_LABEL))
-			      aminoCode1 = null;
+				if ( aminoCode1.equals(StructureTools.UNKNOWN_GROUP_LABEL))
+					aminoCode1 = null;
 		}
 
 		if (current_group == null) {
@@ -1712,17 +1713,51 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 		}
 
 		double tempf = 0.0;
-		if ( line.length() > 65)
+		if ( line.length() > 65) {
 			try {
 				tempf = Double.parseDouble (line.substring (60, 66).trim());
 			}  catch (NumberFormatException e){}
+		}
 
-			atom.setOccupancy(  occu  );
-			atom.setTempFactor( tempf );
+		atom.setOccupancy(  occu  );
+		atom.setTempFactor( tempf );
 
-			//see if chain_id is one of the previous chains ...
-			current_group.addAtom(atom);
-			//System.out.println(current_group);
+
+
+		
+		// Parse element from the element field. If this field is
+		// missing (i.e. misformatted PDB file), then parse the
+		// name from the atom name.
+		Element element = Element.R;
+		if ( line.length() > 77 ) {
+			// parse element from element field
+			try {
+				element = Element.valueOfIgnoreCase(line.substring (76, 78).trim());
+			}  catch (IllegalArgumentException e){}
+		} else {
+			// parse the name from the atom name
+			String elementSymbol = null;
+			// for atom names with 4 characters, the element is
+			// at the first position, example HG23 in Valine
+			if (fullname.trim().length() == 4) {
+				elementSymbol = fullname.substring(0, 1);
+			} else if ( fullname.trim().length() > 1){
+				elementSymbol = fullname.substring(0, 2).trim();
+			} else {
+				// unknown element...
+				elementSymbol = "R";
+			}
+				
+			try {
+			element = Element.valueOfIgnoreCase(elementSymbol);
+			}  catch (IllegalArgumentException e){}
+		}
+		atom.setElement(element);
+		
+		
+		//see if chain_id is one of the previous chains ...
+		current_group.addAtom(atom);
+		//System.out.println(current_group);
 	}
 
 

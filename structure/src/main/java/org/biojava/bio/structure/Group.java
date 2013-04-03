@@ -65,7 +65,7 @@ public interface Group {
 	 * Every amino acid in a PDB file is
 	 * identified uniquely by 3 things: The chain ID, the residue number and
 	 * the insertion code. To make sure one does not forget about the
-	 * insertion code, in BJ it is appended to the residue number.
+	 * insertion code, in BioJava it is appended to the residue number.
 	 *
 	 * To add to this, residue numbers can be negative, non-consecutive and
 	 * also non-sequential. As such it is often easiest, to treat them as
@@ -147,7 +147,7 @@ public interface Group {
 
 	  
     /**  Get an atom by the full PDB name e.g. " N  " for N. Throws StructureException if atom not found.
-     * @param name  a String
+     * @param pdbName  a String
      * @return an Atom object
      * @throws StructureException ...
      */

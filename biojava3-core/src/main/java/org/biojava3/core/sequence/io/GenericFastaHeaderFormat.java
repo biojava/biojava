@@ -7,14 +7,15 @@ package org.biojava3.core.sequence.io;
 
 import org.biojava3.core.sequence.io.template.FastaHeaderFormatInterface;
 import org.biojava3.core.sequence.template.AbstractSequence;
+import org.biojava3.core.sequence.template.Compound;
 
 /**
  *
  * @author Scooter Willis <willishf at gmail dot com>
  */
-public class GenericFastaHeaderFormat implements FastaHeaderFormatInterface {
+public class GenericFastaHeaderFormat<S extends AbstractSequence<?>, C extends Compound> implements FastaHeaderFormatInterface<S,C> {
 
-    public String getHeader(AbstractSequence sequence) {
+    public String getHeader(S sequence) {
         String header = "";
 
         if(sequence.getOriginalHeader() != null && sequence.getOriginalHeader().length() > 0){
@@ -24,7 +25,6 @@ public class GenericFastaHeaderFormat implements FastaHeaderFormatInterface {
         }
 
         return header;
-
     }
 
 }

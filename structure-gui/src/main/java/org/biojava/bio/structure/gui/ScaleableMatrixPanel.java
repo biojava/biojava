@@ -71,7 +71,7 @@ implements ChangeListener{
 
 		PDBFileReader pdbr = new PDBFileReader();  
 		pdbr.setAutoFetch(true);
-		pdbr.setPath("/Users/andreas/WORK/PDB/");
+		pdbr.setPath("/tmp/");
 
 
 		//String pdb1 = "1crl";
@@ -156,6 +156,10 @@ implements ChangeListener{
 		vBox.add(slider);
 
 		scroll = new JScrollPane(mPanel);
+		scroll.getHorizontalScrollBar().setUnitIncrement(60);
+		scroll.getVerticalScrollBar().setUnitIncrement(60);
+		scroll.getHorizontalScrollBar().setBlockIncrement(60);
+		scroll.getVerticalScrollBar().setBlockIncrement(60);
 		vBox.add(scroll);
 		this.setPreferredSize(new Dimension(400,400));
 		this.add(vBox);
@@ -212,8 +216,14 @@ implements ChangeListener{
 	public void setAlternativeAligs(AlternativeAlignment[] aligs) {
 		mPanel.setAlternativeAligs(aligs);
 	}
-
-
 	
+	public int getSelectedAlignmentPos() {
+		return mPanel.getSelectedAlignmentPos();
+	}
+
+	public void setSelectedAlignmentPos(int selectedAlignmentPos) {
+		mPanel.setSelectedAlignmentPos(selectedAlignmentPos);
+	}
+
 
 }

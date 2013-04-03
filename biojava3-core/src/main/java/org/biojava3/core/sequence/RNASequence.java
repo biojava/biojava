@@ -30,7 +30,7 @@ import org.biojava3.core.sequence.compound.NucleotideCompound;
 import org.biojava3.core.sequence.compound.RNACompoundSet;
 import org.biojava3.core.sequence.template.AbstractSequence;
 import org.biojava3.core.sequence.template.CompoundSet;
-import org.biojava3.core.sequence.template.SequenceProxyLoader;
+import org.biojava3.core.sequence.template.ProxySequenceReader;
 import org.biojava3.core.sequence.template.SequenceView;
 import org.biojava3.core.sequence.transcription.TranscriptionEngine;
 import org.biojava3.core.sequence.views.ComplementSequenceView;
@@ -42,16 +42,16 @@ public class RNASequence extends AbstractSequence<NucleotideCompound> {
     super(seqString, RNACompoundSet.getRNACompoundSet());
   }
 
-  public RNASequence(SequenceProxyLoader<NucleotideCompound> proxyLoader) {
+  public RNASequence(ProxySequenceReader<NucleotideCompound> proxyLoader) {
     super(proxyLoader, RNACompoundSet.getRNACompoundSet());
   }
 
-  public RNASequence(String seqString, CompoundSet compoundSet) {
+  public RNASequence(String seqString, CompoundSet<NucleotideCompound> compoundSet) {
     super(seqString, compoundSet);
   }
 
-  public RNASequence(SequenceProxyLoader<NucleotideCompound> proxyLoader,
-      CompoundSet compoundSet) {
+  public RNASequence(ProxySequenceReader<NucleotideCompound> proxyLoader,
+      CompoundSet<NucleotideCompound> compoundSet) {
     super(proxyLoader, compoundSet);
   }
 

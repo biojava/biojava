@@ -84,7 +84,7 @@ public interface SymbolList extends Changeable {
    *
    * @return  a List of Symbols
    */
-  List toList();
+  List<Symbol> toList();
   
   /**
    * An Iterator over all Symbols in this SymbolList.
@@ -94,7 +94,7 @@ public interface SymbolList extends Changeable {
    *
    * @return  an iterator
    */
-  Iterator iterator();
+  Iterator<Symbol> iterator();
   
   /**
    * Return a new SymbolList for the symbols start to end inclusive.

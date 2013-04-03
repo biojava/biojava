@@ -78,7 +78,7 @@ public class AtomCache {
 
 	
 
-	/** Returns the CA atoms for the provided name. see getStructure method for supported naming conventions.
+	/** Returns the CA atoms for the provided name. See {@link #getStructure()} for supported naming conventions.
 	 * 
 	 * @param name
 	 * @return

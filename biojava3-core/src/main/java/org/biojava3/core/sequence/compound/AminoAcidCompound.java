@@ -25,6 +25,7 @@ package org.biojava3.core.sequence.compound;
 
 import org.biojava3.core.sequence.template.AbstractCompound;
 import org.biojava3.core.sequence.template.Compound;
+import org.biojava3.core.sequence.template.CompoundSet;
 
 /**
  * @author Richard Holland
@@ -79,4 +80,7 @@ public class AminoAcidCompound extends AbstractCompound {
     return getLongName().equalsIgnoreCase(them.getLongName());
   }
 
+  public CompoundSet<AminoAcidCompound> getCompoundSet() {
+    return compoundSet;
+  }
 }

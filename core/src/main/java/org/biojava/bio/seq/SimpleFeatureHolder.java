@@ -80,7 +80,7 @@ public class SimpleFeatureHolder extends AbstractFeatureHolder implements Serial
     return features.size();
   }
 
-  public Iterator features() {
+  public Iterator<Feature> features() {
     return ListTools.nonRemoveIterator(features.iterator());
   }
 

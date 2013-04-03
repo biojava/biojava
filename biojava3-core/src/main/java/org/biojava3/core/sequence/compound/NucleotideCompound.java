@@ -34,14 +34,14 @@ import java.util.Set;
 import org.biojava3.core.sequence.template.AbstractCompound;
 import org.biojava3.core.sequence.template.Compound;
 import org.biojava3.core.sequence.template.CompoundSet;
-import org.biojava3.core.sequence.template.NucleotideCompoundInterface;
+import org.biojava3.core.sequence.template.ComplementCompound;
 
 /**
  *
  * @author Scooter Willis
  * @author Andy Yates
  */
-public class NucleotideCompound extends AbstractCompound implements NucleotideCompoundInterface {
+public class NucleotideCompound extends AbstractCompound implements ComplementCompound {
 
     private final CompoundSet<NucleotideCompound> compoundSet;
     private final String complementStr;
@@ -66,7 +66,7 @@ public class NucleotideCompound extends AbstractCompound implements NucleotideCo
       return getBase();
     }
 
-    public NucleotideCompoundInterface getComplement() {
+    public ComplementCompound getComplement() {
         return compoundSet.getCompoundForString(complementStr);
     }
 

@@ -41,7 +41,7 @@ import org.biojava3.core.sequence.transcription.Table;
  *
  * Taken from <a
  * href="http://www.ncbi.nlm.nih.gov/Taxonomy/Utils/wprintgc.cgi?mode=c"
- * >NCBI</a>
+ * >NCBI</a> with slight modification and put into the classpath resource.
  *
  * Takes in an ID, name, amino acid string and the locations of amino acids
  * which acts as start codons in the translation table. You can give the 3 codon
@@ -67,21 +67,31 @@ public class IUPACParser {
     return IOD.INSTANCE;
   }
 
-  private static final String      IUPAC_LOCATION = "org/biojava3/core/sequence/iupac.txt";
+  public static final String      IUPAC_LOCATION = "org/biojava3/core/sequence/iupac.txt";
 
   private InputStream              is;
   private List<IUPACTable>         tables;
   private Map<String, IUPACTable>  nameLookup;
   private Map<Integer, IUPACTable> idLookup;
 
+  /**
+   * Default version and uses the classpath based IUPAC table
+   */
   public IUPACParser() {
+    //use the preCache version to make sure we don't keep a IO handle open
     is = new ClasspathResource(IUPAC_LOCATION, true).getInputStream();
   }
 
+  /**
+   * Allows you to specify a different IUPAC table.
+   */
   public IUPACParser(InputStream is) {
     this.is = is;
   }
 
+  /**
+   * Returns a list of all available IUPAC tables
+   */
   public List<IUPACTable> getTables() {
     if (tables == null) {
       tables = parseTables();
@@ -89,11 +99,17 @@ public class IUPACParser {
     return tables;
   }
 
+  /**
+   * Returns a table by its name
+   */
   public IUPACTable getTable(String name) {
     populateLookups();
     return nameLookup.get(name);
   }
 
+  /**
+   * Returns a table by its identifier i.e. 1 means universal codon tables
+   */
   public IUPACTable getTable(Integer id) {
     populateLookups();
     return idLookup.get(id);
@@ -179,6 +195,11 @@ public class IUPACParser {
       this.baseThree = baseThree;
     }
 
+    /**
+     * Constructor which uses the basic IUPAC codon table format. Useful
+     * if you need to specify your own IUPAC table with minimal
+     * definitions from your side.
+     */
     public IUPACTable(String name, Integer id, String aminoAcidString,
         String startCodons) {
       this(name, id, aminoAcidString, startCodons,
@@ -195,6 +216,33 @@ public class IUPACParser {
       return name;
     }
 
+    /**
+     * Returns true if the given compound was a start codon in this
+     * codon table. This will report true if the compound could ever have
+     * been a start codon.
+     *
+     * @throws IllegalStateException Thrown if
+     * {@link #getCodons(CompoundSet, CompoundSet)} was not called first.
+     */
+    public boolean isStart(AminoAcidCompound compound) throws IllegalStateException {
+      if(this.codons.isEmpty()) {
+        throw new IllegalStateException("Codons are empty; please request getCodons() fist before asking this");
+      }
+      for(Codon codon: codons) {
+        //Only check if the codon was a start codon and then ask if the compound was encoded by it
+        if(codon.isStart()) {
+          if(codon.getAminoAcid().equalsIgnoreCase(compound)) {
+            return true;
+          }
+        }
+      }
+      return false;
+    }
+
+    /**
+     * Returns a list of codons where the source and target compounds
+     * are the same as those given by the parameters.
+     */
     public List<Codon> getCodons(CompoundSet<NucleotideCompound> nucelotides,
         CompoundSet<AminoAcidCompound> aminoAcids) {
 
@@ -242,6 +290,9 @@ public class IUPACParser {
       return returnCompound;
     }
 
+    /**
+     * Returns the compound set of codons
+     */
     public CompoundSet<Codon> getCodonCompoundSet(
         final CompoundSet<NucleotideCompound> rnaCompounds,
         final CompoundSet<AminoAcidCompound> aminoAcidCompounds) {

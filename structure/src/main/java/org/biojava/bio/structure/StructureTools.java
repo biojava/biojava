@@ -48,7 +48,7 @@ public class StructureTools {
 	/** The Atom name of C-alpha atoms.
 	 *
 	 */
-	public static final String caAtomName = "CA";
+	public static final String caAtomName = " CA ";
 	
 	public static final String nAtomName = "N";
 	
@@ -294,7 +294,7 @@ public class StructureTools {
 	 * @return an Atom[] array
 	 */
 	public static final Atom[] getAtomCAArray(Chain c){
-		String[] atomNames = {caAtomName};
+		String[] atomNames = {" CA " };
 		return getAtomArray(c,atomNames);
 	}
 
@@ -302,7 +302,7 @@ public class StructureTools {
 	 * groups and chains. The chain will only contain groups that are part of the CA array.
 	 * 
 	 * @param ca array of CA atoms
-	 * @return
+	 * @return Atom array
 	 */
 	public static final Atom[] cloneCAArray(Atom[] ca) throws StructureException{
 		Atom[] newCA = new Atom[ca.length];
@@ -328,7 +328,8 @@ public class StructureTools {
 			}
 
 			Group parentN = (Group)parentG.clone();
-			newCA[apos] = parentN.getAtom("CA");
+			
+			newCA[apos] = parentN.getAtom(" CA ");
 			newChain.addGroup(parentN);
 		}
 		return newCA;
@@ -336,8 +337,8 @@ public class StructureTools {
 
 	/** Clone a set of CA Atoms, but returns the parent groups
 	 *  
-	 * @param optTwistPdb
-	 * @return
+	 * @param ca Atom array
+	 * @return Group array
 	 */
 	public static Group[] cloneGroups(Atom[] ca) {
 		Group[] newGroup = new Group[ca.length]; 
@@ -374,7 +375,7 @@ public class StructureTools {
 	 * @return an Atom[] array
 	 */
 	public static Atom[] getAtomCAArray(Structure s){
-		String[] atomNames = {caAtomName};
+		String[] atomNames = {" CA "};
 		return getAtomArray(s,atomNames);
 	}
 
@@ -469,7 +470,7 @@ public class StructureTools {
 	 * 
 	 * @param s
 	 * @param chainId
-	 * @return
+	 * @return Structure
 	 * @since 3.0
 	 */
 	public static final Structure getReducedStructure(Structure s, String chainId) throws StructureException{
@@ -513,7 +514,7 @@ public class StructureTools {
 	/** Reduce a structure to provide a smaller representation . Only takes the first model of the structure. If chainNr >=0 only takes the chain at that position into account.	 * 
 	 * @param s
 	 * @param chainNr
-	 * @return
+	 * @return Structure object
 	 * @since 3.0
 	 */
 	public static final Structure getReducedStructure(Structure s, int chainNr) throws StructureException{
@@ -565,9 +566,8 @@ public class StructureTools {
 	 * 
 	 * 
 	 * @param s
-	 * @param chainId
-	 * @param range
-	 * @return
+	 * @param ranges
+	 * @return a structure object
 	 */
 	public static final Structure getSubRanges(Structure s, String ranges ) 
 	throws StructureException

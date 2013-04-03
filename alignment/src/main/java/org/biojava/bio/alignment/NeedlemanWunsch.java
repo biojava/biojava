@@ -20,17 +20,9 @@
  */
 package org.biojava.bio.alignment;
 
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.NoSuchElementException;
-
 import org.biojava.bio.BioException;
 import org.biojava.bio.SimpleAnnotation;
 import org.biojava.bio.seq.Sequence;
-import org.biojava.bio.seq.SequenceIterator;
-import org.biojava.bio.seq.db.SequenceDB;
 import org.biojava.bio.seq.impl.SimpleGappedSequence;
 import org.biojava.bio.seq.impl.SimpleSequence;
 import org.biojava.bio.seq.io.SymbolTokenization;
@@ -52,32 +44,84 @@ import org.biojava.bio.symbol.SymbolList;
  * @since 1.5
  */
 
-public class NeedlemanWunsch extends SequenceAlignment {
+public class NeedlemanWunsch extends AlignmentAlgorithm {
+
+	/**
+	 * This just computes the minimum of three integer values.
+	 * 
+	 * @param x
+	 * @param y
+	 * @param z
+	 * @return Gives the minimum of three integers
+	 */
+	protected static int min(int x, int y, int z) {
+		if ((x < y) && (x < z))
+			return x;
+		if (y < z)
+			return y;
+		return z;
+	}
+
+	/**
+	 * Prints a String representation of the CostMatrix for the given Alignment
+	 * on the screen. This can be used to get a better understanding of the
+	 * algorithm. There is no other purpose. This method also works for all
+	 * extensions of this class with all kinds of matrices.
+	 * 
+	 * @param CostMatrix
+	 *            The matrix that contains all expenses for swapping symbols.
+	 * @param queryChar
+	 *            a character representation of the query sequence (
+	 *            <code>mySequence.seqString().toCharArray()</code>).
+	 * @param targetChar
+	 *            a character representation of the target sequence.
+	 * @return a String representation of the matrix.
+	 */
+	public static String printCostMatrix(int[][] CostMatrix, char[] queryChar,
+			char[] targetChar) {
+		int line, col;
+		StringBuilder output = new StringBuilder();
+		output.append('\t');
+		String ls = System.getProperty("line.separator");
+
+		for (col = 0; col <= targetChar.length; col++)
+			if (col == 0) {
+				output.append('['); 
+				output.append(col);
+				output.append("]\t");
+			} else {
+				output.append('[');
+				output.append(targetChar[col - 1]);
+				output.append("]\t");
+			}
+		for (line = 0; line <= queryChar.length; line++) {
+			if (line == 0) {
+				output.append(ls);
+				output.append('[');
+				output.append(line);
+				output.append("]\t");
+			} else {
+				output.append(ls);
+				output.append('[');
+				output.append(queryChar[line - 1]);
+				output.append("]\t");
+			}
+			for (col = 0; col <= targetChar.length; col++) {
+				output.append(CostMatrix[line][col]);
+				output.append('\t');
+			}
+		}
+		output.append(ls);
+		output.append("delta[Edit] = ");
+		output.append(CostMatrix[line - 1][col - 1]);
+		output.append(ls);
+		return output.toString();
+	}
 
 	/**
 	 * A matrix with the size length(sequence1) times length(sequence2)
 	 */
 	protected int[][] CostMatrix;
-
-	/**
-	 * A matrix with the size length(alphabet) times length(alphabet)
-	 */
-	protected SubstitutionMatrix subMatrix;
-
-	/**
-	 * The result of a successful alignment
-	 */
-	protected SimpleAlignment pairalign;
-
-	/**
-	 * The result of a successful alignment as a simple String.
-	 */
-	protected String alignment;
-
-	/**
-	 * Expenses for inserts.
-	 */
-	private short insert;
 
 	/**
 	 * Expenses for deletes.
@@ -90,6 +134,11 @@ public class NeedlemanWunsch extends SequenceAlignment {
 	private short gapExt;
 
 	/**
+	 * Expenses for inserts.
+	 */
+	private short insert;
+
+	/**
 	 * Expenses for matches.
 	 */
 	private short match;
@@ -98,6 +147,11 @@ public class NeedlemanWunsch extends SequenceAlignment {
 	 * Expenses for replaces.
 	 */
 	private short replace;
+
+	/**
+	 * A matrix with the size length(alphabet) times length(alphabet)
+	 */
+	protected SubstitutionMatrix subMatrix;
 
 	/**
 	 * Constructs a new Object with the given parameters based on the
@@ -132,79 +186,6 @@ public class NeedlemanWunsch extends SequenceAlignment {
 		this.gapExt = gapExtend;
 		this.match = match;
 		this.replace = replace;
-		this.alignment = "";
-	}
-
-	/**
-	 * Sets the substitution matrix to be used to the specified one. Afterwards
-	 * it is only possible to align sequences of the alphabet of this
-	 * substitution matrix.
-	 * 
-	 * @param matrix
-	 *            an instance of a substitution matrix.
-	 */
-	public void setSubstitutionMatrix(SubstitutionMatrix matrix) {
-		this.subMatrix = matrix;
-	}
-
-	/**
-	 * Sets the penalty for an insert operation to the specified value.
-	 * 
-	 * @param ins
-	 *            costs for a single insert operation
-	 */
-	public void setInsert(short ins) {
-		this.insert = ins;
-	}
-
-	/**
-	 * Sets the penalty for a delete operation to the specified value.
-	 * 
-	 * @param del
-	 *            costs for a single deletion operation
-	 */
-	public void setDelete(short del) {
-		this.delete = del;
-	}
-
-	/**
-	 * Sets the penalty for an extension of any gap (insert or delete) to the
-	 * specified value.
-	 * 
-	 * @param ge
-	 *            costs for any gap extension
-	 */
-	public void setGapExt(short ge) {
-		this.gapExt = ge;
-	}
-
-	/**
-	 * Sets the penalty for a match operation to the specified value.
-	 * 
-	 * @param ma
-	 *            costs for a single match operation
-	 */
-	public void setMatch(short ma) {
-		this.match = ma;
-	}
-
-	/**
-	 * Sets the penalty for a replace operation to the specified value.
-	 * 
-	 * @param rep
-	 *            costs for a single replace operation
-	 */
-	public void setReplace(short rep) {
-		this.replace = rep;
-	}
-
-	/**
-	 * Returns the current expenses of a single insert operation.
-	 * 
-	 * @return insert
-	 */
-	public short getInsert() {
-		return insert;
 	}
 
 	/**
@@ -217,12 +198,34 @@ public class NeedlemanWunsch extends SequenceAlignment {
 	}
 
 	/**
+	 * This gives the edit distance according to the given parameters of this
+	 * certain object. It returns just the last element of the internal cost
+	 * matrix (left side down). So if you extend this class, you can just do the
+	 * following:
+	 * <code>int myDistanceValue = foo; this.CostMatrix = new int[1][1]; this.CostMatrix[0][0] = myDistanceValue;</code>
+	 * 
+	 * @return returns the edit_distance computed with the given parameters.
+	 */
+	public int getEditDistance() {
+		return CostMatrix[CostMatrix.length - 1][CostMatrix[CostMatrix.length - 1].length - 1];
+	}
+
+	/**
 	 * Returns the current expenses of any extension of a gap operation.
 	 * 
 	 * @return gapExt
 	 */
 	public short getGapExt() {
 		return gapExt;
+	}
+
+	/**
+	 * Returns the current expenses of a single insert operation.
+	 * 
+	 * @return insert
+	 */
+	public short getInsert() {
+		return insert;
 	}
 
 	/**
@@ -244,148 +247,41 @@ public class NeedlemanWunsch extends SequenceAlignment {
 	}
 
 	/**
-	 * Prints a String representation of the CostMatrix for the given Alignment
-	 * on the screen. This can be used to get a better understanding of the
-	 * algorithm. There is no other purpose. This method also works for all
-	 * extensions of this class with all kinds of matrices.
+	 * This method computes the scores for the substitution of the i-th symbol
+	 * of query by the j-th symbol of subject.
 	 * 
-	 * @param CostMatrix
-	 *            The matrix that contains all expenses for swapping symbols.
-	 * @param queryChar
-	 *            a character representation of the query sequence (
-	 *            <code>mySequence.seqString().toCharArray()</code>).
-	 * @param targetChar
-	 *            a character representation of the target sequence.
-	 * @return a String representation of the matrix.
+	 * @param query
+	 *            The query sequence
+	 * @param subject
+	 *            The target sequence
+	 * @param i
+	 *            The position of the symbol under consideration within the
+	 *            query sequence (starting from one)
+	 * @param j
+	 *            The position of the symbol under consideration within the
+	 *            target sequence
+	 * @return The score for the given substitution.
 	 */
-	public static String printCostMatrix(int[][] CostMatrix, char[] queryChar,
-			char[] targetChar) {
-		int line, col;
-		String output = "\t";
-
-		for (col = 0; col <= targetChar.length; col++)
-			if (col == 0)
-				output += "[" + col + "]\t";
-			else
-				output += "[" + targetChar[col - 1] + "]\t";
-		for (line = 0; line <= queryChar.length; line++) {
-			if (line == 0)
-				output += System.getProperty("line.separator") + "[" + line
-						+ "]\t";
-			else
-				output += System.getProperty("line.separator") + "["
-						+ queryChar[line - 1] + "]\t";
-			for (col = 0; col <= targetChar.length; col++)
-				output += CostMatrix[line][col] + "\t";
+	private int matchReplace(Sequence query, Sequence subject, int i, int j) {
+		try {
+			return subMatrix.getValueAt(query.symbolAt(i), subject.symbolAt(j));
+		} catch (Exception exc) {
+			if (query.symbolAt(i).getMatches().contains(subject.symbolAt(j))
+					|| subject.symbolAt(j).getMatches().contains(
+							query.symbolAt(i)))
+				return -match;
+			return -replace;
 		}
-		output += System.getProperty("line.separator") + "delta[Edit] = "
-				+ CostMatrix[line - 1][col - 1]
-				+ System.getProperty("line.separator");
-		return output;
-	}
-
-	/**
-	 * prints the alignment String on the screen (standard output).
-	 * 
-	 * @param align
-	 *            The parameter is typically given by the
-	 *            {@link #getAlignmentString() getAlignmentString()} method.
-	 */
-	public static void printAlignment(String align) {
-		System.out.print(align);
-	}
-
-	/**
-	 * This method is good if one wants to reuse the alignment calculated by
-	 * this class in another BioJava class. It just performs
-	 * {@link #pairwiseAlignment(SymbolList, SymbolList) pairwiseAlignment} and
-	 * returns an <code>Alignment</code> instance containing the two aligned
-	 * sequences.
-	 * 
-	 * @return Alignment object containing the two gapped sequences constructed
-	 *         from query and target.
-	 * @throws Exception
-	 */
-	public Alignment getAlignment(SymbolList query, SymbolList target)
-			throws Exception {
-		pairwiseAlignment(query, target);
-		return pairalign;
-	}
-
-	/**
-	 * This gives the edit distance according to the given parameters of this
-	 * certain object. It returns just the last element of the internal cost
-	 * matrix (left side down). So if you extend this class, you can just do the
-	 * following:
-	 * <code>int myDistanceValue = foo; this.CostMatrix = new int[1][1]; this.CostMatrix[0][0] = myDistanceValue;</code>
-	 * 
-	 * @return returns the edit_distance computed with the given parameters.
-	 */
-	public int getEditDistance() {
-		return CostMatrix[CostMatrix.length - 1][CostMatrix[CostMatrix.length - 1].length - 1];
-	}
-
-	/**
-	 * This just computes the minimum of three integer values.
-	 * 
-	 * @param x
-	 * @param y
-	 * @param z
-	 * @return Gives the minimum of three integers
-	 */
-	protected static int min(int x, int y, int z) {
-		if ((x < y) && (x < z))
-			return x;
-		if (y < z)
-			return y;
-		return z;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see toolbox.align.SequenceAlignment#getAlignment()
-	 */
-	public String getAlignmentString() throws BioException {
-		return alignment;
-	}
-
-	public Alignment getAlignment() {
-		return pairalign;
-	}
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * toolbox.align.SequenceAlignment#alignAll(org.biojava.bio.seq.SequenceIterator
-	 * , org.biojava.bio.seq.db.SequenceDB)
-	 */
-	public List<Alignment> alignAll(SequenceIterator source,
-			SequenceDB subjectDB) throws NoSuchElementException, BioException {
-		List<Alignment> l = new LinkedList<Alignment>();
-		while (source.hasNext()) {
-			Sequence query = source.nextSequence();
-			// compare all the sequences of both sets.
-			SequenceIterator target = subjectDB.sequenceIterator();
-			while (target.hasNext())
-				try {
-					l.add(getAlignment(query, target.nextSequence()));
-					// pairwiseAlignment(query, target.nextSequence());
-				} catch (Exception exc) {
-					exc.printStackTrace();
-				}
-		}
-		return l;
 	}
 
 	/**
 	 * Global pairwise sequence alignment of two BioJava-Sequence objects
 	 * according to the Needleman-Wunsch-algorithm.
 	 * 
-	 * @see org.biojava.bio.alignment.SequenceAlignment#pairwiseAlignment(org.biojava.bio.symbol.SymbolList,
+	 * @see org.biojava.bio.alignment.AlignmentAlgorithm#pairwiseAlignment(org.biojava.bio.symbol.SymbolList,
 	 *      org.biojava.bio.symbol.SymbolList)
 	 */
-	public int pairwiseAlignment(SymbolList query, SymbolList subject)
+	public AlignmentPair pairwiseAlignment(SymbolList query, SymbolList subject)
 			throws BioException {
 		Sequence squery = null;
 		Sequence ssubject = null;
@@ -471,7 +367,7 @@ public class NeedlemanWunsch extends SequenceAlignment {
 					do {
 						// only Insert.
 						if (i == 0) {
-							align[0].insert(0, '~');
+							align[0].insert(0, '-');
 							align[1].insert(0, st.tokenizeSymbol(ssubject
 									.symbolAt(j--)));
 							path.insert(0, ' ');
@@ -480,7 +376,7 @@ public class NeedlemanWunsch extends SequenceAlignment {
 						} else if (j == 0) {
 							align[0].insert(0, st.tokenizeSymbol(squery
 									.symbolAt(i--)));
-							align[1].insert(0, '~');
+							align[1].insert(0, '-');
 							path.insert(0, ' ');
 
 							// Match/Replace
@@ -557,7 +453,7 @@ public class NeedlemanWunsch extends SequenceAlignment {
 					do {
 						// only Insert.
 						if (i == 0) {
-							align[0].insert(0, '~');
+							align[0].insert(0, '-');
 							align[1].insert(0, st.tokenizeSymbol(ssubject
 									.symbolAt(j--)));
 							path.insert(0, ' ');
@@ -566,7 +462,7 @@ public class NeedlemanWunsch extends SequenceAlignment {
 						} else if (j == 0) {
 							align[0].insert(0, st.tokenizeSymbol(squery
 									.symbolAt(i--)));
-							align[1].insert(0, '~');
+							align[1].insert(0, '-');
 							path.insert(0, ' ');
 
 							// Match/Replace
@@ -614,73 +510,76 @@ public class NeedlemanWunsch extends SequenceAlignment {
 							.getTokenization("token"), align[1].toString()),
 					ssubject.getURN(), ssubject.getName(), ssubject
 							.getAnnotation()));
-			Map<String, Sequence> m = new HashMap<String, Sequence>();
-			m.put(squery.getName(), squery);
-			m.put(ssubject.getName(), ssubject);
-			pairalign = new SimpleAlignment(m);
-
-			// this.printCostMatrix(queryChar, targetChar); // only for
-			// tests
-			// important
-			this.alignment = formatOutput(squery.getName(), // name of the
-					// query
-					// sequence
-					ssubject.getName(), // name of the target sequence
-					align, // the String representation of the alignment
-					path, // String match/missmatch representation
-					0, // Start position of the alignment in the query
-					// sequence
-					CostMatrix.length - 1, // End position of the alignment
-					// in the query sequence
-					CostMatrix.length - 1, // length of the query sequence
-					0, // Start position of the alignment in the target
-					// sequence
-					CostMatrix[0].length - 1, // End position of the
-					// alignment in the target sequence
-					CostMatrix[0].length - 1, // length of the target
-					// sequence
-					getEditDistance(), // the edit distance
-					System.currentTimeMillis() - time, subMatrix, st)
-					+ System.getProperty("line.separator"); // time
-			// consumption
-
-			// System.out.println(printCostMatrix(CostMatrix,
-			// query.seqString().toCharArray(),
-			// subject.seqString().toCharArray()));
-			int score = getEditDistance();
-			pairalign.setScore(score);
-			return score;
+			AlignmentPair pairalign = new AlignmentPair(squery, ssubject, 1, CostMatrix.length, 1, CostMatrix[0].length, subMatrix);
+			pairalign.setComputationTime(System.currentTimeMillis() - time);
+			pairalign.setScore((-1) * getEditDistance());
+			return pairalign;
 		} else
 			throw new BioException(
 					"Alphabet missmatch occured: sequences with different alphabet cannot be aligned.");
 	}
 
 	/**
-	 * This method computes the scores for the substitution of the i-th symbol
-	 * of query by the j-th symbol of subject.
+	 * Sets the penalty for a delete operation to the specified value.
 	 * 
-	 * @param query
-	 *            The query sequence
-	 * @param subject
-	 *            The target sequence
-	 * @param i
-	 *            The position of the symbol under consideration within the
-	 *            query sequence (starting from one)
-	 * @param j
-	 *            The position of the symbol under consideration within the
-	 *            target sequence
-	 * @return The score for the given substitution.
+	 * @param del
+	 *            costs for a single deletion operation
 	 */
-	private int matchReplace(Sequence query, Sequence subject, int i, int j) {
-		try {
-			return subMatrix.getValueAt(query.symbolAt(i), subject.symbolAt(j));
-		} catch (Exception exc) {
-			if (query.symbolAt(i).getMatches().contains(subject.symbolAt(j))
-					|| subject.symbolAt(j).getMatches().contains(
-							query.symbolAt(i)))
-				return -match;
-			return -replace;
-		}
+	public void setDelete(short del) {
+		this.delete = del;
+	}
+
+	/**
+	 * Sets the penalty for an extension of any gap (insert or delete) to the
+	 * specified value.
+	 * 
+	 * @param ge
+	 *            costs for any gap extension
+	 */
+	public void setGapExt(short ge) {
+		this.gapExt = ge;
+	}
+
+	/**
+	 * Sets the penalty for an insert operation to the specified value.
+	 * 
+	 * @param ins
+	 *            costs for a single insert operation
+	 */
+	public void setInsert(short ins) {
+		this.insert = ins;
+	}
+
+	/**
+	 * Sets the penalty for a match operation to the specified value.
+	 * 
+	 * @param ma
+	 *            costs for a single match operation
+	 */
+	public void setMatch(short ma) {
+		this.match = ma;
+	}
+
+	/**
+	 * Sets the penalty for a replace operation to the specified value.
+	 * 
+	 * @param rep
+	 *            costs for a single replace operation
+	 */
+	public void setReplace(short rep) {
+		this.replace = rep;
+	}
+
+	/**
+	 * Sets the substitution matrix to be used to the specified one. Afterwards
+	 * it is only possible to align sequences of the alphabet of this
+	 * substitution matrix.
+	 * 
+	 * @param matrix
+	 *            an instance of a substitution matrix.
+	 */
+	public void setSubstitutionMatrix(SubstitutionMatrix matrix) {
+		this.subMatrix = matrix;
 	}
 
 }

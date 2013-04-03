@@ -41,7 +41,7 @@ public class StructureViewerTest extends TestCase {
         StructureViewer instance = new StructureViewerImpl();
         instance.setStructure(structure);
         // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        //fail("The test case is a prototype.");
     }
 
     /**
@@ -52,7 +52,7 @@ public class StructureViewerTest extends TestCase {
         StructureViewer instance = new StructureViewerImpl();
         instance.repaint();
         // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+       // fail("The test case is a prototype.");
     }
 
     /**
@@ -64,7 +64,7 @@ public class StructureViewerTest extends TestCase {
         StructureViewer instance = new StructureViewerImpl();
         instance.setSelection(selection);
         // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+       // fail("The test case is a prototype.");
     }
 
     /**
@@ -77,7 +77,7 @@ public class StructureViewerTest extends TestCase {
         Selection result = instance.getSelection();
         assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+      //  fail("The test case is a prototype.");
     }
 
     /**
@@ -89,7 +89,7 @@ public class StructureViewerTest extends TestCase {
         StructureViewer instance = new StructureViewerImpl();
         instance.setColor(red);
         // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        //fail("The test case is a prototype.");
     }
 
     /**
@@ -102,7 +102,7 @@ public class StructureViewerTest extends TestCase {
         Color result = instance.getColor();
         assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+       // fail("The test case is a prototype.");
     }
 
     /**
@@ -114,7 +114,7 @@ public class StructureViewerTest extends TestCase {
         StructureViewer instance = new StructureViewerImpl();
         instance.setStyle(wireframe);
         // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        //fail("The test case is a prototype.");
     }
 
     /**
@@ -125,7 +125,7 @@ public class StructureViewerTest extends TestCase {
         StructureViewer instance = new StructureViewerImpl();
         instance.clear();
         // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        //fail("The test case is a prototype.");
     }
 
     /**
@@ -137,7 +137,7 @@ public class StructureViewerTest extends TestCase {
         StructureViewer instance = new StructureViewerImpl();
         instance.setZoom(i);
         // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+       // fail("The test case is a prototype.");
     }
 
     public class StructureViewerImpl implements StructureViewer {

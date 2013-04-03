@@ -1,102 +1,68 @@
 package org.biojava.bio.structure.align;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.biojava.bio.structure.StructureException;
+import org.biojava.bio.structure.align.ce.CeCPMain;
 import org.biojava.bio.structure.align.ce.CeMain;
+import org.biojava.bio.structure.align.fatcat.FatCatFlexible;
+import org.biojava.bio.structure.align.fatcat.FatCatRigid;
 import org.biojava.bio.structure.align.seq.SmithWaterman3Daligner;
 
 
 public class StructureAlignmentFactory {
 
-	public static StructureAlignment[] getAllAlgorithms(){
-	   
-	   int nrAlgorithms = 2;
-	   
-	   StructureAlignment fatcatRigid    = null;
-	   StructureAlignment fatcatFlexible = null;
-	   try {
-	      fatcatRigid = getFatCatRigid();
-	      nrAlgorithms++;
-	      fatcatFlexible = getFatCatFlexible();
-	      nrAlgorithms++;
-	   } catch (Exception e){
-	      // ignore if not available...
-	   }
-	   
-		StructureAlignment[] algorithms = new StructureAlignment[nrAlgorithms];
+   public static StructureAlignment[] getAllAlgorithms(){
 
-		int pos = 0;
-		algorithms[pos] = new CeMain();
-		pos++;
-		//algorithms[1] = new CeSideChainMain();
-		if ( fatcatRigid != null) {
-           algorithms[pos] = fatcatRigid;
-           pos++;
-        }
-        if ( fatcatFlexible != null){
-           algorithms[pos] = fatcatFlexible;
-           pos++;
-        }
-		algorithms[pos] = new SmithWaterman3Daligner();
-		
-		//algorithms[3] = new BioJavaStructureAlignment();
-		return algorithms;
 
-	}
+      List<StructureAlignment> algorithms = new LinkedList<StructureAlignment>();
 
-	public static StructureAlignment getAlgorithm(String name) throws StructureException{
-		StructureAlignment[] algorithms = getAllAlgorithms();
-		for ( StructureAlignment algo : algorithms){
-			if (algo.getAlgorithmName().equalsIgnoreCase(name))
-				return algo;
-		}
+      algorithms.add( new CeMain() );
+      algorithms.add( new CeCPMain() );
+      //algorithms.add(new CeSideChainMain());
 
-		// check if the fatcat source code is in the class path
-		// we still need to seek permission to get jFatCat released under the LGPL
-		if  ( name.equals("jFatCat_rigid")){
-			return getFatCatRigid();
-		}
-		
-		if ( name.equals("jFatCat_flexible")){
-			return getFatCatFlexible();
-		}
-		throw new StructureException("Unknown alignment algorithm: " + name);
-	}
+      StructureAlignment fatcatRigid    = new FatCatRigid();
+      StructureAlignment fatcatFlexible = new FatCatFlexible();
 
-	private static StructureAlignment getFatCatRigid() throws StructureException{
+      if ( fatcatRigid != null) {
+         algorithms.add( fatcatRigid) ;
 
-		String className = "org.rcsb.fatcat.FatCatRigid";
-		try {
-			Class c = Class.forName(className);
-			Object o = c.newInstance();
-			return (StructureAlignment)o;
-		} catch (Exception e){
-			throw new StructureException("Could not find FatCatRigid in the classpath.");
-		}
-	}
-	
-	private static StructureAlignment getFatCatFlexible() throws StructureException{
+      }
+      if ( fatcatFlexible != null){
+         algorithms.add( fatcatFlexible );
 
-		String className = "org.rcsb.fatcat.FatCatFlexible";
-		try {
-			Class c = Class.forName(className);
-			Object o = c.newInstance();
-			return (StructureAlignment)o;
-		} catch (Exception e){
-			throw new StructureException("Could not find FatCatFlexible in the classpath.");
-		}
-	}
-	
-	public static String[] getAllAlgorithmNames(){
-		StructureAlignment[] algos = getAllAlgorithms();
-		List<String> names = new ArrayList<String>();
+      }
+      algorithms.add( new SmithWaterman3Daligner()) ;
 
-		for (StructureAlignment alg : algos){
-			names.add(alg.getAlgorithmName());
-		}
 
-		return (String[])names.toArray(new String[names.size()]);
-	}
+      //algorithms.add( new BioJavaStructureAlignment());
+      return algorithms.toArray(new StructureAlignment[algorithms.size()]);
+
+   }
+
+   public static StructureAlignment getAlgorithm(String name) throws StructureException{
+      StructureAlignment[] algorithms = getAllAlgorithms();
+      for ( StructureAlignment algo : algorithms){
+         if (algo.getAlgorithmName().equalsIgnoreCase(name))
+            return algo;
+      }
+
+
+      throw new StructureException("Unknown alignment algorithm: " + name);
+   }
+
+
+
+   public static String[] getAllAlgorithmNames(){
+      StructureAlignment[] algos = getAllAlgorithms();
+      List<String> names = new ArrayList<String>();
+
+      for (StructureAlignment alg : algos){
+         names.add(alg.getAlgorithmName());
+      }
+
+      return (String[])names.toArray(new String[names.size()]);
+   }
 }
