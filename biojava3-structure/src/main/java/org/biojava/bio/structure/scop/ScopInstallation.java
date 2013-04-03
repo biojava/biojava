@@ -67,12 +67,16 @@ public class ScopInstallation implements ScopDatabase {
 
 	public static final String DEFAULT_VERSION = "1.75";
 
+	protected String scopVersion;
+	
 	public static final String claFileName = "dir.cla.scop.txt_";
 	public static final String desFileName = "dir.des.scop.txt_";
 	public static final String hieFileName = "dir.hie.scop.txt_";
 
 	public static final String SCOP_DOWNLOAD = "http://scop.mrc-lmb.cam.ac.uk/scop/parse/";
 
+	protected String scopDownloadURL ;
+	
 	public static final String NEWLINE;
 	public static final String FILESPLIT ;
 
@@ -83,8 +87,6 @@ public class ScopInstallation implements ScopDatabase {
 	}
 
 	String cacheLocation ;
-
-	String scopVersion ;
 
 	AtomicBoolean installedCla;
 	AtomicBoolean installedDes;
@@ -110,7 +112,9 @@ public class ScopInstallation implements ScopDatabase {
 		installedHie.set(false);
 
 		scopVersion = DEFAULT_VERSION;
-
+		scopDownloadURL = SCOP_DOWNLOAD;
+		
+		
 		domainMap = new HashMap<String, List<ScopDomain>>();
 
 		sunidMap  = new HashMap<Integer, ScopDescription>();
@@ -612,9 +616,9 @@ public class ScopInstallation implements ScopDatabase {
 		return ranges;
 	}
 
-	private void downloadClaFile() throws FileNotFoundException, IOException{
+	protected void downloadClaFile() throws FileNotFoundException, IOException{
 		String remoteFilename = claFileName + scopVersion;
-		URL url = new URL(SCOP_DOWNLOAD + remoteFilename);
+		URL url = new URL(scopDownloadURL + remoteFilename);
 
 		String localFileName = getClaFilename();
 		File localFile = new File(localFileName);
@@ -623,9 +627,9 @@ public class ScopInstallation implements ScopDatabase {
 
 	}
 
-	private void downloadDesFile() throws FileNotFoundException, IOException{
+	protected void downloadDesFile() throws FileNotFoundException, IOException{
 		String remoteFilename = desFileName + scopVersion;
-		URL url = new URL(SCOP_DOWNLOAD + remoteFilename);
+		URL url = new URL(scopDownloadURL + remoteFilename);
 
 		String localFileName = getDesFilename();
 		File localFile = new File(localFileName);
@@ -634,9 +638,9 @@ public class ScopInstallation implements ScopDatabase {
 
 	}
 
-	private void downloadHieFile() throws FileNotFoundException, IOException{
+	protected void downloadHieFile() throws FileNotFoundException, IOException{
 		String remoteFilename = hieFileName + scopVersion;
-		URL url = new URL(SCOP_DOWNLOAD + remoteFilename);
+		URL url = new URL(scopDownloadURL + remoteFilename);
 
 		String localFileName = getHieFilename();
 		File localFile = new File(localFileName);
@@ -645,7 +649,7 @@ public class ScopInstallation implements ScopDatabase {
 
 	}
 
-	private void downloadFileFromRemote(URL remoteURL, File localFile) throws FileNotFoundException, IOException{
+	protected void downloadFileFromRemote(URL remoteURL, File localFile) throws FileNotFoundException, IOException{
 		System.out.println("downloading " + remoteURL + " to: " + localFile);
 		FileOutputStream out = new FileOutputStream(localFile);
 
@@ -685,18 +689,18 @@ public class ScopInstallation implements ScopDatabase {
 		return f.exists();
 	}
 
-	private String getClaFilename(){
+	protected String getClaFilename(){
 		String f = cacheLocation + claFileName + scopVersion;
 		return f;
 	}
 
-	private String getDesFilename(){
+	protected String getDesFilename(){
 		String f = cacheLocation + desFileName + scopVersion;
 		return f;
 
 	}
 
-	private String getHieFilename(){
+	protected String getHieFilename(){
 		String f = cacheLocation + hieFileName + scopVersion;
 		return f;
 
@@ -722,6 +726,15 @@ public class ScopInstallation implements ScopDatabase {
 	}
 	public void setScopVersion(String scopVersion) {
 		this.scopVersion = scopVersion;
+	}
+	
+
+	public String getScopDownloadURL() {
+		return scopDownloadURL;
+	}
+
+	public void setScopDownloadURL(String scopDownloadURL) {
+		this.scopDownloadURL = scopDownloadURL;
 	}
 
 	/* (non-Javadoc)
@@ -767,8 +780,4 @@ public class ScopInstallation implements ScopDatabase {
 		return domains;
 
 	}
-
-
-
-
 }

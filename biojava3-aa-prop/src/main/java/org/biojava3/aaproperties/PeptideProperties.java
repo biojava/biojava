@@ -315,17 +315,23 @@ public class PeptideProperties {
 	 * 		a protein sequence consisting of non-ambiguous characters only
 	 * @param useExpasyValues
 	 * 		whether to use Expasy values (Default) or Innovagen values
-	 * @return the net charge of sequence at pH 7.0
+	 * @param pHPoint
+	 * 		the pH value to use for computation of the net charge. Default at 7.
+	 * @return the net charge of sequence at given pHPoint
 	 */
-	public static final double getNetCharge(String sequence, boolean useExpasyValues) {
+	public static final double getNetCharge(String sequence, boolean useExpasyValues, double pHPoint){
 		sequence = Utils.checkSequence(sequence);
 		ProteinSequence pSequence = new ProteinSequence(sequence);
 		IPeptideProperties pp = new PeptidePropertiesImpl();
-		return pp.getNetCharge(pSequence, useExpasyValues);
+		return pp.getNetCharge(pSequence, useExpasyValues, pHPoint);
+	}
+	
+	public static final double getNetCharge(String sequence, boolean useExpasyValues) {
+		return getNetCharge(sequence, useExpasyValues, 7.0);
 	}
 	
 	public static final double getNetCharge(String sequence){
-		return getIsoelectricPoint(sequence, true);
+		return getNetCharge(sequence, true);
 	}
 
 	/**

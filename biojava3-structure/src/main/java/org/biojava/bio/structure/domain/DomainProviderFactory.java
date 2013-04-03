@@ -12,7 +12,7 @@ public class DomainProviderFactory {
 		
 	}
 	
-	static DomainProvider domainProvider = new RemoteDomainProvider(true);
+	static DomainProvider domainProvider ;
 	
 	
 	
@@ -22,6 +22,9 @@ public class DomainProviderFactory {
 	}
 	
 	public static DomainProvider getDomainProvider(){
+		if ( domainProvider == null)
+			domainProvider = new RemoteDomainProvider(true);
+		
 		return domainProvider;
 	}
 }

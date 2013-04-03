@@ -27,14 +27,9 @@ package org.biojava.bio.structure.scop;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.List;
-import java.util.Map;
-import java.util.SortedSet;
-import java.util.TreeSet;
-
 
 import org.biojava.bio.structure.align.client.JFatCatClient;
 import org.biojava.bio.structure.align.util.HTTPConnectionTools;
-import org.biojava.bio.structure.domain.AssignmentXMLSerializer;
 import org.biojava.bio.structure.domain.SerializableCache;
 import org.biojava.bio.structure.scop.server.ScopDomains;
 

@@ -58,6 +58,7 @@ import org.biojava.bio.structure.Compound;
 import org.biojava.bio.structure.GroupType;
 import org.biojava.bio.structure.JournalArticle;
 import org.biojava.bio.structure.NucleotideImpl;
+import org.biojava.bio.structure.PDBCrystallographicInfo;
 import org.biojava.bio.structure.PDBHeader;
 import org.biojava.bio.structure.ResidueNumber;
 import org.biojava.bio.structure.SSBond;
@@ -151,8 +152,10 @@ public class PDBFileParser  {
 	// for printing
 	private static final String NEWLINE;
 
+	@Deprecated
 	private Map <String,Object>  header ;
 	private PDBHeader pdbHeader;
+	private PDBCrystallographicInfo crystallographicInfo;
 	private JournalArticle journalArticle;
 	private List<Map<String, Integer>> connects ;
 	private List<Map<String,String>> helixList;
@@ -185,14 +188,14 @@ public class PDBFileParser  {
 					"MOL_ID:", "MOLECULE:", "CHAIN:", "SYNONYM:",
 					"EC:", "FRAGMENT:", "ENGINEERED:", "MUTATION:",
 					"BIOLOGICAL_UNIT:", "OTHER_DETAILS:"
-			));
+					));
 
 
 	private static final List<String> ignoreCompndFieldValues = new ArrayList<String>(
 			Arrays.asList(
 					"HETEROGEN:","ENGINEEREED:","FRAGMENT,",
 					"MUTANT:","SYNTHETIC:"
-			));
+					));
 	// ENGINEEREED in pdb219d
 
 	private static final List<String> sourceFieldValues = new ArrayList<String>(
@@ -240,15 +243,15 @@ public class PDBFileParser  {
 
 	int atomCount;
 
-	
+
 
 	private int my_ATOM_CA_THRESHOLD ;
-	
-	
-	
-	
+
+
+
+
 	private int load_max_atoms;
-	
+
 	private boolean atomOverflow;
 
 	/** flag to tell parser to only read Calpha coordinates **/
@@ -271,6 +274,7 @@ public class PDBFileParser  {
 		current_group = null           ;
 		header        = init_header() ;
 		pdbHeader 	  = new PDBHeader();
+		crystallographicInfo = new PDBCrystallographicInfo();
 		connects      = new ArrayList<Map<String,Integer>>() ;
 
 
@@ -284,10 +288,14 @@ public class PDBFileParser  {
 		atomCount = 0;
 		atomOverflow = false;
 		parseCAonly = false;
-		
-		setFileParsingParameters(params);
-		
-		
+
+		// this SHOULD not be done
+		// DONOT:setFileParsingParameters(params);
+		// set the correct max values for parsing...
+		load_max_atoms = params.getMaxAtoms();
+		my_ATOM_CA_THRESHOLD = params.getAtomCaThreshold();
+
+
 	}
 
 
@@ -756,7 +764,7 @@ public class PDBFileParser  {
 	 * 68 - 70        Residue name    resName       Residue name.
 	 */
 	private void pdb_SEQRES_Handler(String line)
-	throws PDBParseException {
+			throws PDBParseException {
 		//		System.out.println("PDBFileParser.pdb_SEQRES_Handler: BEGIN");
 		//		System.out.println(line);
 
@@ -1462,6 +1470,75 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 		if ( nmr != -1 ) structure.setNmr(true);  ;
 
 	}
+	
+	/** Handler for
+	 CRYST1 Record Format
+	 The CRYST1 record presents the unit cell parameters, space group, and Z value.
+	 If the entry describes a structure determined by a technique other than X-ray crystallography,
+     CRYST1 contains a = b = c = 1.0, alpha = beta = gamma = 90 degrees, space group = P 1, and Z =1.
+
+	 COLUMNS DATA TYPE    FIELD          DEFINITION
+     -------------------------------------------------------------
+      1 - 6  Record name  "CRYST1"
+      7 - 15 Real(9.3)    a              a (Angstroms).
+     16 - 24 Real(9.3)    b              b (Angstroms).
+     25 - 33 Real(9.3)    c              c (Angstroms).
+     34 - 40 Real(7.2)    alpha          alpha (degrees).
+     41 - 47 Real(7.2)    beta           beta (degrees).
+     48 - 54 Real(7.2)    gamma          gamma (degrees).
+     56 - 66 LString      sGroup         Space group.
+     67 - 70 Integer      z              Z value.
+
+	 */
+
+	private void pdb_CRYST1_Handler(String line) {    
+        // don't process incomplete CRYST1 records
+		if (line.length() < 69) {
+			return;
+		}
+		
+		float a;
+		float b;
+		float c;
+		float alpha;
+		float beta;
+		float gamma;
+		String spaceGroup = "";
+		int z;
+
+		try {
+			a = Float.parseFloat(line.substring(6,15).trim());
+			b = Float.parseFloat(line.substring(15,24).trim());
+			c = Float.parseFloat(line.substring(24,33).trim());
+			alpha = Float.parseFloat(line.substring(33,40).trim());
+			beta = Float.parseFloat(line.substring(40,47).trim());
+			gamma = Float.parseFloat(line.substring(47,54).trim());
+			z = Integer.parseInt(line.substring(66,70).trim());
+		} catch (NumberFormatException e) {
+			logger.fine(e.getMessage());
+			logger.fine("could not parse CRYST1 record from line and ignoring it " + line);
+			return ;
+		}
+		spaceGroup = line.substring(55,66).trim();
+		
+		// If the entry describes a structure determined by a technique other than X-ray crystallography,
+	    // CRYST1 contains a = b = c = 1.0, alpha = beta = gamma = 90 degrees, space group = P 1, and Z =1.
+		// In this case, ignore the record
+        if (a == 1.0f && b == 1.0f && c == 1.0f && 
+        		alpha == 90.0f && beta == 90.0f && gamma == 90.0f && 
+        		spaceGroup.equals("P 1") && z == 1) {
+        	return;
+        } 
+      
+        crystallographicInfo.setA(a);
+        crystallographicInfo.setB(b);
+        crystallographicInfo.setC(c);
+        crystallographicInfo.setAlpha(alpha);
+        crystallographicInfo.setBeta(beta);
+        crystallographicInfo.setGamma(gamma);
+        crystallographicInfo.setSpaceGroup(spaceGroup);
+        crystallographicInfo.setZ(z);
+	}
 
 	/**
 	 * Decides whether or not a Group is qualified to be added to the
@@ -1523,8 +1600,8 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 	 </pre>
 	 */
 	private void  pdb_ATOM_Handler(String line)
-	throws PDBParseException
-	{
+			throws PDBParseException
+			{
 		// build up chains first.
 		// headerOnly just goes down to chain resolution.
 
@@ -1681,8 +1758,8 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 			switchCAOnly();
 
 		}
-		
-		
+
+
 
 		if ( atomCount == load_max_atoms){
 			System.err.println("too many atoms (>"+load_max_atoms+"in this protein structure.");
@@ -1716,13 +1793,13 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 				return;
 			}
 		}
-		
+
 		if ( params.getAcceptedAtomNames() != null) {
-			
+
 			boolean found = false;
 			for (String ok : params.getAcceptedAtomNames()){
 				//System.out.println(ok + "< >" + fullname +"<");
-				
+
 				if ( ok.equals(fullname)) {
 					found = true;
 					break;
@@ -1812,10 +1889,10 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 		else {
 			current_group.addAtom(atom);
 		}
-		
-		
+
+
 		//System.out.println("current group: " + current_group);
-	}
+			}
 
 
 	private Group getCorrectAltLocGroup( Character altLoc,
@@ -1863,7 +1940,7 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 			return altLocG;	
 		}
 
-	//	System.out.println("new  group " + recordName + " " + aminoCode1 + " " +groupCode3);
+		//	System.out.println("new  group " + recordName + " " + aminoCode1 + " " +groupCode3);
 		Group altLocG = getNewGroup(recordName,aminoCode1,groupCode3);
 
 		try {
@@ -2369,7 +2446,7 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 
 
 	private BufferedReader getBufferedReader(InputStream inStream)
-	throws IOException {
+			throws IOException {
 
 		BufferedReader buf ;
 		if (inStream == null) {
@@ -2391,8 +2468,8 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 	 * @throws IOException
 	 */
 	public Structure parsePDBFile(InputStream inStream)
-	throws IOException
-	{
+			throws IOException
+			{
 
 		//System.out.println("preparing buffer");
 		BufferedReader buf ;
@@ -2407,7 +2484,7 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 
 		return parsePDBFile(buf);
 
-	}
+			}
 
 	/** parse a PDB file and return a datastructure implementing
 	 * PDBStructure interface.
@@ -2418,13 +2495,13 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 	 */
 
 	public  Structure parsePDBFile(BufferedReader buf)
-	throws IOException
-	{
+			throws IOException
+			{
 		// set the correct max values for parsing...
 		load_max_atoms = params.getMaxAtoms();
 		my_ATOM_CA_THRESHOLD = params.getAtomCaThreshold();
-		
-		
+
+
 		// (re)set structure
 
 		structure     = new StructureImpl() ;
@@ -2500,7 +2577,7 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 				} catch (StringIndexOutOfBoundsException e){
 
 					System.err.println("StringIndexOutOfBoundsException at line >" + line + "<" + NEWLINE +
-					"this does not look like an expected PDB file") ;
+							"this does not look like an expected PDB file") ;
 					e.printStackTrace();
 					throw new StringIndexOutOfBoundsException(e.getMessage());
 
@@ -2531,6 +2608,8 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 						pdb_JRNL_Handler(line);
 					else if (recordName.equals("EXPDTA"))
 						pdb_EXPDTA_Handler(line);
+					else if (recordName.equals("CRYST1"))
+						pdb_CRYST1_Handler(line);
 					else if (recordName.equals("REMARK"))
 						pdb_REMARK_Handler(line);
 					else if (recordName.equals("CONECT"))
@@ -2576,7 +2655,7 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 
 		return structure;
 
-	}
+			}
 
 	/**
 	 * This is the new method for building the COMPND and SOURCE records. Now each method is self-contained.
@@ -2655,6 +2734,7 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 		structure.addModel(current_model);
 		structure.setHeader(header);
 		structure.setPDBHeader(pdbHeader);
+		structure.setCrystallographicInfo(crystallographicInfo);
 		structure.setConnections(connects);
 		structure.setCompounds(compounds);
 		structure.setDBRefs(dbrefs);
@@ -2684,10 +2764,10 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 
 	private void storeUnAlignedSeqRes(Structure structure, List<Chain> seqResChains) {
 		SeqRes2AtomAligner aligner = new SeqRes2AtomAligner();
-		
+
 		for (int i = 0; i < structure.nrModels(); i++) {
 			List<Chain> atomList   = structure.getModel(i);
-			
+
 			for (Chain seqRes: seqResChains){
 				Chain atomRes;
 				try {
@@ -2958,7 +3038,7 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 			if (subField.equals("TITL")) {
 				//add a space to the end of a line so that when wrapped the
 				//words on the join won't be concatenated
-                titl.append(line.substring(19, line.length()).trim()).append(" ");
+				titl.append(line.substring(19, line.length()).trim()).append(" ");
 				if (DEBUG) {
 					System.out.println("TITL '" + titl.toString() + "'");
 				}
@@ -2971,13 +3051,13 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 			}
 			//        JRNL        REF    NAT.IMMUNOL.                  V.   8   430 2007
 			if (subField.equals("REF ")) {
-                ref.append(line.substring(19, line.length()).trim()).append(" ");
+				ref.append(line.substring(19, line.length()).trim()).append(" ");
 				if (DEBUG) {
 					System.out.println("REF '" + ref.toString() + "'");
 				}
 			}
 			if (subField.equals("PUBL")) {
-                publ.append(line.substring(19, line.length()).trim()).append(" ");
+				publ.append(line.substring(19, line.length()).trim()).append(" ");
 				if (DEBUG) {
 					System.out.println("PUBL '" + publ.toString() + "'");
 				}
@@ -3249,7 +3329,7 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 	public void setFileParsingParameters(FileParsingParameters params)
 	{
 		this.params= params;
-		
+
 		// set the correct max values for parsing...
 		load_max_atoms = params.getMaxAtoms();
 		my_ATOM_CA_THRESHOLD = params.getAtomCaThreshold();

@@ -85,59 +85,22 @@ public class CeCPMain extends CeMain {
 	}
 
 	public static void main(String[] args){
-		try {
-			String name1, name2;
-
-			//Concanavalin
-			name1 = "2pel.A";
-			name2 = "3cna";
-
-			//small case
-			name1 = "d1qdmA1";
-			//name1 = "1QDM.A";
-			name2 = "d1nklA_";
-
-			// CECP had some trouble with the cutsite here
-			name1 = "PDP:3B33Aa";
-			name2 = "PDP:2R78Aa";
-			
-			// Test case for a bug with n-terminal, single residue CPs
-			name1 = "PDP:3A2KAc";
-			name2 = "d1wy5a2";
-			
-			name1 = "1A22.A";
-			name2 = "2FFX.J";
-			
-			CeCPMain ce = (CeCPMain) StructureAlignmentFactory.getAlgorithm(CeCPMain.algorithmName);
-			CeParameters params = (CeParameters) ce.getParameters();
-			ce.setParameters(params);
-
-			AtomCache cache = new AtomCache();
-
-			Atom[] ca1 = cache.getAtoms(name1);
-			Atom[] ca2 = cache.getAtoms(name2);
-			//ca2 = Arrays.copyOf(ca2, ca2.length-1);
-
-
-			if(debug) {
-				System.out.format("Aligning %s to %s\n",
-						ca1[0].getGroup().getChain().getParent().getName(),
-						ca2[0].getGroup().getChain().getParent().getName() );
-			}
-			AFPChain afpChain = ce.align(ca1, ca2);
-			if(debug) {
-				System.out.format("Finished aligning %s to %s\n", afpChain.getName1(),afpChain.getName2());
-				System.out.format("Heuristic Score: %.2f\n", afpChain.getAlignScore());
-			}
-
-			int cp = afpChain.getOptAln()[0][1][0];
-			System.out.println("CP at "+cp);
-
-			displayAlignment(afpChain,ca1,ca2);
-
-		} catch (Exception e) {
-			e.printStackTrace();
+		CeCPMain ce = new CeCPMain(); //Used only for printing help
+		if (args.length  == 0 ) {			
+			System.out.println(ce.printHelp());
+			return;			
 		}
+
+		if ( args.length == 1){
+			if (args[0].equalsIgnoreCase("-h") || args[0].equalsIgnoreCase("-help")|| args[0].equalsIgnoreCase("--help")){
+				System.out.println(ce.printHelp());								
+				return;
+			}
+
+		}
+
+		CeCPUserArgumentProcessor processor = new CeCPUserArgumentProcessor(); //Responsible for creating a CeCPMain instance
+		processor.process(args);
 	}
 
 

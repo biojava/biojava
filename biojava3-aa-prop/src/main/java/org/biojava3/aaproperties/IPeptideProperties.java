@@ -270,9 +270,13 @@ public interface IPeptideProperties{
 	 * 		a protein sequence consisting of non-ambiguous characters only
 	 * @param useExpasyValues
 	 * 		whether to use Expasy values (Default) or Innovagen values
-	 * @return the net charge of sequence at pH 7
+	 * @param pHPoint
+	 * 		the pH value to use for computation of the net charge. Default at 7.
+	 * @return the net charge of sequence at given pHPoint
 	 * @see ProteinSequence
 	 */
+	public double getNetCharge(ProteinSequence sequence, boolean useExpasyValues, double pHPoint);
+	
 	public double getNetCharge(ProteinSequence sequence, boolean useExpasyValues);
 	
 	public double getNetCharge(ProteinSequence sequence);

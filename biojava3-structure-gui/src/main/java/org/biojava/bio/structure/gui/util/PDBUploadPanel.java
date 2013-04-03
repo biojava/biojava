@@ -177,6 +177,7 @@ implements StructurePairSelector {
 		}
 		
 		reduced.setPDBCode(fileURL);
+		reduced.setName(fileURL);
 		return reduced;
 
 	}

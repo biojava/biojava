@@ -3,7 +3,7 @@
 	<parent>
 		<artifactId>biojava</artifactId>
 		<groupId>org.biojava</groupId>
-		<version>3.0.3</version>
+		<version>3.0.4</version>
 	</parent>
 	<artifactId>biojava3-protein-disorder</artifactId>
 	<packaging>jar</packaging>

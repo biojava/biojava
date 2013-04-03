@@ -42,6 +42,7 @@ import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureException;
 import org.biojava.bio.structure.StructureTools;
 import org.biojava.bio.structure.align.ce.AbstractUserArgumentProcessor;
+import org.biojava.bio.structure.domain.PDPProvider;
 import org.biojava.bio.structure.domain.RemotePDPProvider;
 import org.biojava.bio.structure.io.FileParsingParameters;
 import org.biojava.bio.structure.io.PDBFileReader;
@@ -80,7 +81,7 @@ public class AtomCache {
 
 	private  ScopDatabase scopInstallation ;
 	
-	RemotePDPProvider pdpprovider;
+	protected PDPProvider pdpprovider;
 	
 	boolean autoFetch;
 	boolean isSplit;
@@ -93,6 +94,8 @@ public class AtomCache {
 
 	public static final String PDP_DOMAIN_IDENTIFIER = "PDP:";
 
+
+	
 	/**
 	 * Default AtomCache constructor.
 	 * 
@@ -870,7 +873,10 @@ public class AtomCache {
 	public void notifyShutdown(){
 		//System.out.println(" AtomCache got notify shutdown..");
 		if ( pdpprovider != null ){
-			pdpprovider.flushCache();
+			if ( pdpprovider instanceof RemotePDPProvider){
+				RemotePDPProvider remotePDP = (RemotePDPProvider) pdpprovider;
+				remotePDP.flushCache();
+			}
 		}
 		
 		
@@ -884,7 +890,13 @@ public class AtomCache {
 		
 	}
 
+	public PDPProvider getPdpprovider() {
+		return pdpprovider;
+	}
 
+	public void setPdpprovider(PDPProvider pdpprovider) {
+		this.pdpprovider = pdpprovider;
+	}
 
 
 }
