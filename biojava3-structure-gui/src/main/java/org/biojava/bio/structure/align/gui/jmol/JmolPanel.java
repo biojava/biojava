@@ -24,20 +24,32 @@
 
 package org.biojava.bio.structure.align.gui.jmol;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
 
 import javax.swing.JComboBox;
 
 
 
 
+import org.biojava.bio.structure.Atom;
+import org.biojava.bio.structure.Group;
 import org.biojava.bio.structure.Structure;
+import org.biojava.bio.structure.StructureTools;
+import org.biojava.bio.structure.align.ce.AbstractUserArgumentProcessor;
 import org.biojava.bio.structure.align.gui.JPrintPanel;
 import org.biojava.bio.structure.align.gui.jmol.MyJmolStatusListener;
+import org.biojava.bio.structure.domain.ProteinDomainParser;
+import org.biojava.bio.structure.domain.pdp.Domain;
+import org.biojava.bio.structure.domain.pdp.Segment;
+import org.biojava.bio.structure.gui.util.ColorUtils;
+import org.biojava.bio.structure.scop.ScopDomain;
+import org.biojava.bio.structure.scop.ScopInstallation;
 import org.jmol.adapter.smarter.SmarterJmolAdapter;
 import org.jmol.api.JmolAdapter;
 
@@ -57,20 +69,22 @@ implements ActionListener
 	final Dimension currentSize = new Dimension();
 	final Rectangle rectClip = new Rectangle();
 
+	Structure structure;
+
 	public JmolPanel() {
 		super();
-		 statusListener = new MyJmolStatusListener();
+		statusListener = new MyJmolStatusListener();
 		adapter = new SmarterJmolAdapter();
 		viewer = JmolViewer.allocateViewer(this,
-                adapter,
-                null,null,null,null,
-                 
-                 statusListener);
-    
+				adapter,
+				null,null,null,null,
+
+				statusListener);
+
 	}
 
 	public void paint(Graphics g) {
-		
+
 		getSize(currentSize);
 		g.getClipBounds(rectClip);
 		viewer.renderScreenImage(g, currentSize, rectClip);
@@ -93,7 +107,7 @@ implements ActionListener
 	public JmolAdapter getAdapter(){
 		return adapter;
 	}
-	
+
 	public JmolStatusListener getStatusListener(){
 		return statusListener;
 	}
@@ -103,6 +117,7 @@ implements ActionListener
 
 	public void setStructure(Structure s)
 	{
+		this.structure = s;
 		String pdb = s.toPDB();
 		viewer.openStringInline(pdb);		
 		evalString("save STATE state_1");
@@ -146,10 +161,10 @@ implements ActionListener
 			"		 }"+ String.format("%n") +
 			"		 script INLINE @{cmds + \"select sel\"}"+ String.format("%n") +
 			"}";
-		
+
 		executeCmd(script);
 	}
-	
+
 	/** The user selected one of the Combo boxes...
 	 * 
 	 * @param event an ActionEvent
@@ -158,6 +173,8 @@ implements ActionListener
 		JComboBox source = (JComboBox) event.getSource();
 		String value = source.getSelectedItem().toString();
 
+		
+		
 		String selectLigand = "select ligand;wireframe 0.16;spacefill 0.5; color cpk ;";
 
 		if ( value.equals("Cartoon")){
@@ -209,14 +226,100 @@ implements ActionListener
 			this.executeCmd("hide null; select all; set defaultColors Jmol; color group; color cartoon group; " + selectLigand + "; select all; " );
 		} else if ( value.equals("Secondary Structure")){
 			this.executeCmd("hide null; select all; set defaultColors Jmol; color structure; color cartoon structure;" + selectLigand + "; select all; " );
-			
+
 		} else if ( value.equals("By Element")){
 			this.executeCmd("hide null; select all; set defaultColors Jmol; color cpk; color cartoon cpk; " + selectLigand + "; select all; "); 
 		} else if ( value.equals("By Amino Acid")){
 			this.executeCmd("hide null; select all; set defaultColors Jmol; color amino; color cartoon amino; " + selectLigand + "; select all; " );
 		} else if ( value.equals("Hydrophobicity") ){
 			this.executeCmd("hide null; set defaultColors Jmol; select hydrophobic; color red; color cartoon red; select not hydrophobic ; color blue ; color cartoon blue; "+ selectLigand+"; select all; ");
+		} else if ( value.equals("Suggest Domains")){
+			colorByPDP();
+		} else if ( value.equals("Show SCOP Domains")){
+			colorBySCOP();
+		}
+
+	}
+
+	private void colorBySCOP() {
+
+		if ( structure == null)
+			return;
+
+		String pdbId = structure.getPDBCode();
+		if ( pdbId == null)
+			return;
+		String pdbLocation = System.getProperty(AbstractUserArgumentProcessor.PDB_DIR);
+		ScopInstallation scop = new ScopInstallation(pdbLocation);
+
+		List<ScopDomain> domains = scop.getDomainsForPDB(pdbId);
+
+		int i = -1;
+		for ( ScopDomain domain : domains){
+			i++;
+			if ( i >= ColorUtils.colorWheel.length)
+				i = 0;
+			Color c1 = ColorUtils.colorWheel[i];
+			List<String>ranges = domain.getRanges();
+			
+			for (String range : ranges){
+				System.out.println(range);
+				String[] spl = range.split(":");
+				String script = " select  ";
+				if ( spl.length > 1 )
+					script += spl[1]+":"+spl[0] +"/1;";
+				else 
+					script += "*" + spl[0]+"/1;";
+				script += " color [" + c1.getRed() + ","+c1.getGreen() + "," +c1.getBlue()+"];";
+				script += " color cartoon [" + c1.getRed() + ","+c1.getGreen() + "," +c1.getBlue()+"] ;";
+				System.out.println(script);
+				evalString(script);
+				
+			}
+		}
+
+
+	}
+
+	private void colorByPDP() {
+		System.out.println("colorByPDP");
+		if ( structure == null)
+			return;
+
+		try {
+			Atom[] ca = StructureTools.getAtomCAArray(structure);
+			List<Domain> domains = ProteinDomainParser.suggestDomains(ca);
+			int i = -1;
+			for ( Domain dom : domains){
+				i++;
+				if ( i > ColorUtils.colorWheel.length)
+					i = 0;
+				//System.out.println("DOMAIN:" + i + " size:" + dom.size + " " +  dom.score);
+				List<Segment> segments = dom.getSegments();
+				Color c1 = ColorUtils.colorWheel[i];
+				float fraction = 0f;
+				for ( Segment s : segments){
+					//System.out.println("   Segment: " + s);
+					//Color c1 = ColorUtils.rotateHue(c, fraction);
+					fraction += 1.0/(float)segments.size();
+					int start = s.from;
+					int end = s.to;
+					Group startG = ca[start].getGroup();
+					Group endG = ca[end].getGroup();
+					System.out.println("   Segment: " +startG.getResidueNumber() +":" + startG.getChainId() + " - " + endG.getResidueNumber()+":"+endG.getChainId() + " " + s);
+					String j1 = startG.getResidueNumber()+"";
+					String j2 = endG.getResidueNumber()+":"+endG.getChainId();
+					String script = " select  " +j1 +"-" +j2 +"/1;";
+					script += " color [" + c1.getRed() + ","+c1.getGreen() + "," +c1.getBlue()+"];";
+					script += " color cartoon [" + c1.getRed() + ","+c1.getGreen() + "," +c1.getBlue()+"] ;";
+					//System.out.println(script);
+					evalString(script);
+				}
+
+			}
+		} catch (Exception e){
+			e.printStackTrace();
 		}
 	}
-	
+
 }

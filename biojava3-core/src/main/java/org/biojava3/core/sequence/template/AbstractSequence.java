@@ -39,6 +39,7 @@ import org.biojava3.core.sequence.features.AbstractFeature;
 import org.biojava3.core.sequence.features.DatabaseReferenceInterface;
 import org.biojava3.core.sequence.features.FeatureInterface;
 import org.biojava3.core.sequence.features.FeaturesKeyWordInterface;
+import org.biojava3.core.sequence.loader.UniprotProxySequenceReader;
 import org.biojava3.core.sequence.location.SequenceLocation;
 import org.biojava3.core.sequence.location.SimpleLocation;
 import org.biojava3.core.sequence.location.template.Location;
@@ -97,7 +98,7 @@ public abstract class AbstractSequence<C extends Compound> implements Sequence<C
      * @param proxyLoader
      * @param compoundSet
      */
-    public AbstractSequence(ProxySequenceReader<C> proxyLoader, CompoundSet<C> compoundSet) {
+    public AbstractSequence(SequenceReader<C> proxyLoader, CompoundSet<C> compoundSet) {
         setCompoundSet(compoundSet);
         setProxySequenceReader(proxyLoader);
     }
@@ -109,7 +110,7 @@ public abstract class AbstractSequence<C extends Compound> implements Sequence<C
      *  
      * @param proxyLoader
      */
-    public void setProxySequenceReader(ProxySequenceReader<C> proxyLoader) {
+    public void setProxySequenceReader(SequenceReader<C> proxyLoader) {
         this.sequenceStorage = proxyLoader;
         if (proxyLoader instanceof FeaturesKeyWordInterface) {
             this.setFeaturesKeyWord((FeaturesKeyWordInterface) sequenceStorage);
@@ -117,10 +118,13 @@ public abstract class AbstractSequence<C extends Compound> implements Sequence<C
         if (proxyLoader instanceof DatabaseReferenceInterface) {
             this.setDatabaseReferences((DatabaseReferenceInterface) sequenceStorage);
         }
+        if(getAccession() == null && proxyLoader instanceof UniprotProxySequenceReader){ // we have lots of unsupported operations for this call so quick fix to allow this tow rork
+            this.setAccession(proxyLoader.getAccession());
+        }
     }
 
-    public ProxySequenceReader<C> getProxySequenceReader() {
-        return (ProxySequenceReader<C>) sequenceStorage;
+    public SequenceReader<C> getProxySequenceReader() {
+        return (SequenceReader<C>) sequenceStorage;
     }
 
     /**

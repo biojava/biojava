@@ -140,8 +140,11 @@ public class PDBFileParser  {
 	private Group         current_group;
 
 	private List<Chain>   seqResChains; // contains all the chains for the SEQRES records
-
-
+        //we're going to work on the assumption that the files are current -
+        //if the pdb_HEADER_Handler detects a legacy format, this will be changed to true.
+        //if true then lines will be truncated at 72 characters in certain cases
+        //(pdb_COMPOUND_handler for example)
+        private boolean isLegacyFormat = false;
 
 	// for printing
 	private static final String NEWLINE;
@@ -285,9 +288,6 @@ public class PDBFileParser  {
 
 
 
-
-
-
 	/** initialize the header. */
 	private Map<String,Object> init_header(){
 
@@ -389,6 +389,18 @@ public class PDBFileParser  {
 		if (DEBUG) {
 			System.out.println("Parsing entry " + pdbId);
 		}
+                //*really* old files (you'll need to hunt to find these as they
+                //should have been remediated) have headers like below. Plus the
+                //pdbId at positions 72-76 is present in every line
+
+     //HEADER    PROTEINASE INHIBITOR (TRYPSIN)          05-OCT-84   5PTI      5PTI   3
+     //HEADER    TRANSFERASE (ACYLTRANSFERASE)           02-SEP-92   1LAC      1LAC   2
+                if (line.trim().length() > 66) {
+                    if (pdbId.equals(line.substring (72, 76))){
+                        isLegacyFormat = true;
+                        System.out.println(pdbId + " is a LEGACY entry - this will most likely not parse correctly.");
+                    }
+                }
 		header.put("idCode",pdbCode);
 		structure.setPDBCode(pdbCode);
 		header.put("classification",classification);
@@ -863,8 +875,8 @@ public class PDBFileParser  {
 	 */
 	private void pdb_TITLE_Handler(String line) {
 		String title;
-		if ( line.length() > 69)
-			title = line.substring(10,70).trim();
+		if ( line.length() > 79)
+			title = line.substring(10,80).trim();
 		else
 			title = line.substring(10,line.length()).trim();
 
@@ -932,8 +944,14 @@ public class PDBFileParser  {
 					+ current_compound);
 		}
 
-		// in some PDB files the line ends with the PDB code and a serial number, chop those off!
-		if (line.length() > 72) {
+		// In legacy PDB files the line ends with the PDB code and a serial number, chop those off!
+                //format version 3.0 onwards will have 80 characters in a line
+//		if (line.length() > 72) {
+                if (isLegacyFormat) {
+//                    if (DEBUG) {
+//                        System.out.println("We have a legacy file - truncating line length to 71 characters:");
+//                        System.out.println(line);
+//                    }
 			line = line.substring(0, 72);
 		}
 
@@ -2853,6 +2871,10 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 		journalArticle.setPmid(pmid.toString().trim());
 		journalArticle.setDoi(doi.toString().trim());
 
+                if (DEBUG) {
+                    System.out.println("Made JournalArticle:");
+                    System.out.println(journalArticle);
+                }
 	}
 
 	//inner class to deal with all the journal info
@@ -2871,54 +2893,86 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 
 			if (ref.equals("TO BE PUBLISHED ")) {
 				journalName = ref.trim();
+                                if (DEBUG) {
+                                    System.out.println(String.format("JournalParser found journalString '%s'", journalName));
+                                }
 				return;
 			}
 
-			//check the line is the correct length
-			if (ref.length() != 48) {
-				logger.warning(pdbId + " REF line not of correct length. Found " + ref.length() + ", should be 48. Returning dummy JRNL object.");
-				journalName = "TO BE PUBLISHED";
-				return;
-			}
+                        if (ref.length() < 48) {
+                            logger.warning("REF line too short - must be at least 48 characters to be valid for parsing.");
+                            journalName = "";
+                            volume = "";
+                            startPage = "";
+                            publicationDate = 0;
+                            return;
+                        }
+                        //can be multi line:
+                        //REF    PHILOS.TRANS.R.SOC.LONDON,    V. 293    53 1981
+                        //REF  2 SER.B
 
+                        //or
 
+                        //REF    GLYCOGEN PHOSPHORYLASE B:                1 1991
+                        //REF  2 DESCRIPTION OF THE PROTEIN
+                        //REF  3 STRUCTURE
+
+                        //but usually single line
 			//REF    NUCLEIC ACIDS RES.                         2009
 			//REF    MOL.CELL                                   2009
 			//REF    NAT.STRUCT.MOL.BIOL.          V.  16   238 2009
 			//REF    ACTA CRYSTALLOGR.,SECT.F      V.  65   199 2009
 			//check if the date is present at the end of the line.
 			//                             09876543210987654321
+                        //'J.BIOL.CHEM.                  V. 280 23000 2005 '
 			//'J.AM.CHEM.SOC.                V. 130 16011 2008 '
 			//'NAT.STRUCT.MOL.BIOL.          V.  16   238 2009'
-			String dateString = ref.substring(ref.length() - 5 , ref.length() - 1).trim();
-			String startPageString = ref.substring(ref.length() - 11 , ref.length() - 6).trim();
-			String volumeString = ref.substring(ref.length() - 14 , ref.length() - 12).trim();
-			String journalString = ref.substring(0 , ref.length() - 18).trim();
-			if (DEBUG) {
-				System.out.println("JournalParser found volumeString " + volumeString);
-				System.out.println("JournalParser found startPageString " + startPageString);
-				System.out.println("JournalParser found dateString " + dateString);
+                        String volumeInformation = ref.substring(30, 48);
+                        if (DEBUG) {
+                            System.out.println(String.format("Parsing volumeInformation: '%s'", volumeInformation));
+                        }
+			//volumeInformation: 'V. 293    53 1981 '
+//                      String dateString = ref.substring(ref.length() - 5 , ref.length() - 1).trim();
+//			String startPageString = ref.substring(ref.length() - 11 , ref.length() - 6).trim();
+//			String volumeString = ref.substring(ref.length() - 16 , ref.length() - 12).trim();
+//			String journalString = ref.substring(0 , ref.length() - 18).trim();
+                        String dateString = volumeInformation.substring(volumeInformation.length() - 5 , volumeInformation.length() - 1).trim();
+			String startPageString = volumeInformation.substring(volumeInformation.length() - 11 , volumeInformation.length() - 6).trim();
+			String volumeString = volumeInformation.substring(volumeInformation.length() - 16 , volumeInformation.length() - 12).trim();
+                        //for the journal string we need to remove the volume information which might be in the middle of the string (e.g. 1gpb, 3pfk)
+                        String journalString = ref.substring(0 , 29).trim() + " " + ref.substring(30, ref.length() - 1).replace(volumeInformation.trim(), "").trim();
+                        journalString = journalString.trim();
+//                        System.out.println("journalString: " + journalString);
+                        if (DEBUG) {
+				System.out.println(String.format("JournalParser found volumeString '%s'", volumeString));
+				System.out.println(String.format("JournalParser found startPageString '%s'", startPageString));
+				System.out.println(String.format("JournalParser found dateString '%s'", dateString));
+                                System.out.println(String.format("JournalParser found journalString '%s'", journalString));
 			}
 
 			if (!dateString.equals("    ")) {
-				publicationDate = Integer.valueOf(dateString);
-				if (DEBUG) {
-					System.out.println("JournalParser set date " + publicationDate);
-				}
+				try {
+                                    publicationDate = Integer.valueOf(dateString);
+                                } catch (NumberFormatException nfe) {
+                                    logger.warning(dateString + " is not a valid integer for a date in JRNL sub-section REF line 1");
+                                }
+//				if (DEBUG) {
+//					System.out.println("JournalParser set date " + publicationDate);
+//				}
 			}
 
 			if (!startPageString.equals("    ")) {
 				startPage = startPageString;
-				if (DEBUG) {
-					System.out.println("JournalParser set startPage " + startPage);
-				}
+//				if (DEBUG) {
+//					System.out.println("JournalParser set startPage " + startPage);
+//				}
 			}
 
 			if (!volumeString.equals("    ")) {
 				volume = volumeString;
-				if (DEBUG) {
-					System.out.println("JournalParser set volume " + volume);
-				}
+//				if (DEBUG) {
+//					System.out.println("JournalParser set volume " + volume);
+//				}
 			}
 
 			if (!journalString.equals("    ")) {

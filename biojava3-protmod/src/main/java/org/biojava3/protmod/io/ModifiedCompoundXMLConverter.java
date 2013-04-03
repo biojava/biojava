@@ -45,14 +45,8 @@ public class ModifiedCompoundXMLConverter {
 
 		PrettyXMLWriter xml = new PrettyXMLWriter(new PrintWriter(out));
 		
-		String modificationId = null;
-		if (mc instanceof ModifiedCompoundImpl) {
-			modificationId = ((ModifiedCompoundImpl)mc).getOriginalModificationId();
-		} else {
-			if (mc.getModification()!=null) {
-				modificationId = mc.getModification().getId();
-			}
-		}
+		ProteinModification protMod = mc.getModification();
+		String modificationId = protMod==null?null:protMod.getId();
 
 		xml.openTag("modifiedCompound");
 		if ( modificationId != null) {

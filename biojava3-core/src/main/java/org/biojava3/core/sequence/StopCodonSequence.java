@@ -39,4 +39,8 @@ public DNASequence parentGeneSequence = null;
     }
 
 
+        @Override
+    public int getLength() {
+        return Math.abs(this.getBioEnd() - this.getBioBegin()) + 1;
+    }
 }

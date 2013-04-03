@@ -57,6 +57,11 @@ public class TranscriptSequence extends DNASequence {
 
     }
 
+        @Override
+    public int getLength() {
+        return Math.abs(this.getBioEnd() - this.getBioBegin()) + 1;
+    }
+
     /**
      * @return the strand
      */

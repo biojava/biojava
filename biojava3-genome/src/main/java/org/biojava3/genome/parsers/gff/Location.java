@@ -786,7 +786,7 @@ public class Location implements Iterable<Location>
 	 */
 	public boolean isNegative()
 	{
-		return ( mStart < 0 && mEnd < 0 );
+		return ( mStart <= 0 && mEnd <= 0 );
 	}
 	
 	/**	

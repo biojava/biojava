@@ -132,7 +132,7 @@ public class SeqRes2AtomAligner {
 			try {
 
 				Chain atomRes = getMatchingAtomRes(seqRes,atomList);
-				
+
 				if ( atomRes.getAtomGroups("amino").size() < 1) {
 					if (DEBUG){
 						System.out.println("chain " + atomRes.getChainID() + " does not contain amino acids, ignoring...");
@@ -174,18 +174,18 @@ public class SeqRes2AtomAligner {
 		int seqIndex = 0;
 		for ( int i=0 ; i< groups.size(); i++){
 			Group g = (Group) groups.get(i);
-			
+
 			if ( g instanceof AminoAcid ){
 				AminoAcid a = (AminoAcid)g;
 				char oneLetter =a.getAminoType();
 				if ( oneLetter == '?')
 					oneLetter = 'X';
-				
+
 				positionIndex.put(seqIndex,i);
 				sequence.append(oneLetter );
 				seqIndex++;
 			} else {
-				
+
 				// exclude solvents
 				if (  excludeTypes.contains(g.getPDBName()))
 					continue;
@@ -214,7 +214,7 @@ public class SeqRes2AtomAligner {
 					String c = cc.getOne_letter_code();
 					if ( c.equals("?"))
 						c = "X";
-					
+
 					positionIndex.put(seqIndex,i);
 					sequence.append(c);
 					seqIndex++;
@@ -270,23 +270,30 @@ public class SeqRes2AtomAligner {
 		penalty.setOpenPenalty(gop);
 		penalty.setExtensionPenalty(extend);
 
-		PairwiseSequenceAligner<ProteinSequence, AminoAcidCompound> smithWaterman =
-			Alignments.getPairwiseAligner(s1, s2, PairwiseSequenceAlignerType.LOCAL, penalty, matrix);
+		try {
+			PairwiseSequenceAligner<ProteinSequence, AminoAcidCompound> smithWaterman =
+				Alignments.getPairwiseAligner(s1, s2, PairwiseSequenceAlignerType.LOCAL, penalty, matrix);
 
-		SequencePair<ProteinSequence, AminoAcidCompound> pair = smithWaterman.getPair();
-
-
-
-		if ( pair == null)
-			throw new StructureException("could not align objects!");
+			SequencePair<ProteinSequence, AminoAcidCompound> pair = smithWaterman.getPair();
 
 
-		if ( DEBUG ) {
-			System.out.println(pair.toString(60));
+
+			if ( pair == null)
+				throw new StructureException("could not align objects!");
+
+
+			if ( DEBUG ) {
+				System.out.println(pair.toString(60));
+			}
+
+			boolean noMatchFound = mapChains(seqRes,atomRes,pair,seqresIndexPosition, atomIndexPosition );
+
+			return noMatchFound;
+		} catch (Exception e){
+			System.err.println("Problem while aligning ATOM and SEQRES records for " + atomRes.get(0).getChain().getParent().getPDBCode() + " chain: "  +atomRes.get(0).getChain().getChainID());
+			//e.printStackTrace();
+			return true;
 		}
-
-		boolean noMatchFound = mapChains(seqRes,atomRes,pair,seqresIndexPosition, atomIndexPosition );
-		return noMatchFound;
 
 	}
 
@@ -298,15 +305,15 @@ public class SeqRes2AtomAligner {
 	) throws StructureException{
 
 
-		
+
 		// at the present stage the future seqREs are still stored as Atom groups in the seqRes parent...
-		
+
 
 		int aligLength = pair.getLength();
 
-//		System.out.println("sequence length seqres:");
-//		System.out.println(seqresIndexPosition.keySet().size());
-//		System.out.println("alignment length: " + aligLength);
+		//		System.out.println("sequence length seqres:");
+		//		System.out.println(seqresIndexPosition.keySet().size());
+		//		System.out.println("alignment length: " + aligLength);
 		// System.out.println(gapSymbol.getName());
 
 		// make sure we actually find an alignment
@@ -341,7 +348,7 @@ public class SeqRes2AtomAligner {
 						System.err.println("can't map " + i + ":" + s + " " + posSeq +" " + s1 + " atom: " + posAtom + " " + a1 );
 						continue mainLoop;
 					}
-					
+
 					// need to trim the names to allow matching e.g in
 					// pdb1b2m
 					String pdbNameS = s1.getPDBName();
@@ -368,9 +375,9 @@ public class SeqRes2AtomAligner {
 					}
 
 					// do the actual replacing of the SEQRES group with the ATOM group
-//					if ( s1.getChain().getChainID().equals("A")) {
-//						System.out.println(" setting " + posSeq +" " + a1);
-//					}
+					//					if ( s1.getChain().getChainID().equals("A")) {
+					//						System.out.println(" setting " + posSeq +" " + a1);
+					//					}
 					seqResGroups.set(seqresIndexPosition.get(posSeq),a1);
 					noMatchFound = false;
 				}

@@ -23,7 +23,11 @@ package org.biojava3.ws.alignment.qblast;
 /**
  * The RemoteQBlastOutputFormat enum acts like static fields for specifiying various
  * values for certain output options.
- *  
+ * 
+ * <p>
+ * Many thanks to Matthew Busse for helping in debugging after the migration from BJ1.7 to BJ3.0.
+ * </p>
+ * 
  * @author Sylvain Foisy, Diploide BioIT
  * @since Biojava 3 
  */

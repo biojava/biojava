@@ -99,11 +99,35 @@ public class DemoCE {
 			double tmScore = AFPChainScorer.getTMScore(afpChain, ca1, ca2);
 			afpChain.setTMScore(tmScore);
 			
-			System.out.println(AfpChainWriter.toWebSiteDisplay(afpChain, ca1, ca2));
-						
+			//System.out.println(AfpChainWriter.toWebSiteDisplay(afpChain, ca1, ca2));
+			
+			printScores(afpChain);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return;
 		}
+	}
+
+	private static void printScores(AFPChain afpChain) {
+		System.out.println("=====================");
+		System.out.println("The main scores for the alignment:");
+		
+		System.out.println("EQR       :\t" + afpChain.getNrEQR() + "\t The number of residues on structurally equivalent positions.")  ;
+		System.out.println("RMSD      :\t" + String.format("%.2f",afpChain.getTotalRmsdOpt() )+ "\t The RMSD of the alignment");
+		System.out.println("Z-score   :\t" + afpChain.getProbability() + "\t The Z-score of the alignment (CE)");
+		System.out.println("TM-score  :\t" + String.format("%.2f",afpChain.getTMScore()) + "\t The TM-score of the alignment.");
+		System.out.println("");
+		System.out.println("Other scores:");
+		System.out.println("Identity  :\t" + String.format("%.2f",afpChain.getIdentity())   + "\t The percent of residues that are sequence-identical in the alignment.");
+		System.out.println("Similarity:\t" + String.format("%.2f",afpChain.getSimilarity()) + "\t The percent of residues in the alignment that are sequence-similar.");
+		System.out.println("Coverage1 :\t" + afpChain.getCoverage1() + " %\t Percent of protein 1 that is covered with the alignment.");
+		System.out.println("Coverage2 :\t" + afpChain.getCoverage2() + " %\t Percent of protein 2 that is covered with the alignment.");
+		int dab = afpChain.getCa1Length()+afpChain.getCa2Length() - 2 * afpChain.getNrEQR();
+		System.out.println("Distance  :\t" + dab + "\t Distance between folds a,b ");
+		double sab = 2 * afpChain.getNrEQR() / (double)( afpChain.getCa1Length() + afpChain.getCa2Length());
+		System.out.println("Rel. Sim. :\t" + String.format("%.2f",sab) + "\t Relative similarity");
+		
+		
+		
 	}
 }

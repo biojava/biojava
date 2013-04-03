@@ -4,10 +4,13 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
 
+import javax.swing.JPanel;
+
 import org.biojava.bio.structure.Atom;
 import org.biojava.bio.structure.Group;
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.align.model.AFPChain;
+import org.biojava.bio.structure.jama.Matrix;
 
 /** A class to wrap some of the strucutre.gui classes using Reflection
  *  
@@ -23,6 +26,8 @@ public class GuiWrapper {
 	static final String alignmentGUI = "org.biojava.bio.structure.align.gui.AlignmentGui";
 	static final String strucAligJmol = "org.biojava.bio.structure.align.gui.jmol.StructureAlignmentJmol";
 
+	static final String scaleMatrixPanel = "org.biojava.bio.structure.gui.ScaleableMatrixPanel";
+	
 	public static boolean isGuiModuleInstalled(){
 		String className = displayAFP;
 		try {
@@ -81,9 +86,25 @@ public class GuiWrapper {
 		Method show = c.getMethod("getAlignedStructure", new Class[] { Atom[].class, Atom[].class});
 
 		Structure s = (Structure) show.invoke(null, ca1, ca2);
-
+	
 		return s;
-
+		
+	}
+	
+	public static JPanel getScaleableMatrixPanel(Matrix m)
+	throws ClassNotFoundException, NoSuchMethodException,
+	InvocationTargetException, IllegalAccessException, InstantiationException{
+		
+		Class scaleMatrixPanelC = Class.forName(scaleMatrixPanel);
+		
+		Method setMatrix = scaleMatrixPanelC.getMethod("setMatrix", new Class[] { Matrix.class});
+		
+		JPanel panel = (JPanel) scaleMatrixPanelC.newInstance();
+		
+		setMatrix.invoke(panel, m);
+		
+		return panel;
+		
 	}
 	
 	public static Group[] prepareGroupsForDisplay(AFPChain afpChain, Atom[] ca1,

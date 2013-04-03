@@ -131,11 +131,14 @@ public class SequenceProxyView<C extends Compound> implements SequenceView<C> {
         if(sequence == null) {
             throw new NullPointerException("No sequence given before setting the end coordinate; cannot be done");
         }
-        if (bioEnd > sequence.getLength()) {
-            throw new IllegalArgumentException("The given end "
-                    + bioEnd + " is greater than sequence length"
-                    + sequence.getLength());
-        }
+        // had a bug in the code that allowed this to work. The length of a any exon or cds sequence was always the length of the
+        //parent sequence. Sequence class doesn't have bioStart and bioEnd exposed to do a proper comparison of getting
+        // a subsequence. Januar-20=2011 Scooter
+     //   if (bioEnd > sequence.getLength()) {
+     //       throw new IllegalArgumentException("The given end "
+     //               + bioEnd + " is greater than sequence length"
+     //               + sequence.getLength());
+     //   }
         this.bioEnd = bioEnd;
     }
 

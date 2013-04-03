@@ -94,7 +94,8 @@ public class RNAToAminoAcidTranslator extends AbstractCompoundTranslator<Nucleot
      * a windowed version of the given sequence. Any trailing DNA base pairs
      * are ignored according to the specification of {@link WindowedSequence}.
      */
-    @Override
+
+
     public List<Sequence<AminoAcidCompound>> createSequences(
             Sequence<NucleotideCompound> originalSequence) {
 

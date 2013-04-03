@@ -30,7 +30,9 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.HashMap;
 
-import org.biojavax.bio.seq.RichSequence;
+import org.biojava3.core.sequence.template.Sequence;
+import org.biojava3.core.sequence.DNASequence;
+import org.biojava3.core.sequence.ProteinSequence;
 
 import org.biojava3.ws.alignment.RemotePairwiseAlignmentProperties;
 import org.biojava3.ws.alignment.RemotePairwiseAlignmentService;
@@ -58,6 +60,10 @@ import org.biojava3.ws.alignment.RemotePairwiseAlignmentOutputProperties;
  * high-priorities.
  * </p>
  * 
+ * <p>
+ * Many thanks to Matthew Busse for helping in debugging after the migration from BJ1.7 to BJ3.0.
+ * </p>
+ * 
  * @author Sylvain Foisy, Diploide BioIT
  * @since Biojava 3
  * 
@@ -71,10 +77,11 @@ public class NCBIQBlastService implements RemotePairwiseAlignmentService {
 	private BufferedReader rd;
 	
 	private String email = "anonymous@biojava.org";
-	private String tool = "biojavax";
+	private String tool = "biojava3";
 	 
 
 	private String seq = null;
+	private String tmp = null;
 	private String prog = null;
 	private String db = null;
 //	private String advanced = null;
@@ -82,7 +89,7 @@ public class NCBIQBlastService implements RemotePairwiseAlignmentService {
 	private String rid;
 	private long step;
 	private long start;
-	private HashMap<String, Long> holder = new HashMap<String, Long>();
+	private HashMap<String, Long> holder;
 
 	/**
 	 * The constructor for a QBlast service request.
@@ -91,10 +98,11 @@ public class NCBIQBlastService implements RemotePairwiseAlignmentService {
 	 *             if the NCBI URL is unresponsive
 	 * 
 	 */
-	public void NCBIQBlastService() throws Exception {
+	public NCBIQBlastService() throws Exception {
 		try {
-			aUrl = new URL(baseurl);
-			uConn = setQBlastServiceProperties(aUrl.openConnection());
+			this.aUrl = new URL(baseurl);
+			this.uConn = setQBlastServiceProperties(aUrl.openConnection());
+			this.holder = new HashMap<String, Long>();
 		}
 		/*
 		 * Needed but should never be thrown since the URL is static and known
@@ -145,7 +153,7 @@ public class NCBIQBlastService implements RemotePairwiseAlignmentService {
 		 * checking in RemoteQBlastAlignmentProperties 
 		 *
 		 * */
-		if (rpa.getAlignmentOption("OTHER_ADVANCED") != null) {
+		if (rpa.getAlignmentOption("OTHER_ADVANCED") != "not_set") {
 			cmd += cmd + "&" + rpa.getAlignmentOption("OTHER_ADVANCED");
 		}
 
@@ -207,13 +215,13 @@ public class NCBIQBlastService implements RemotePairwiseAlignmentService {
 		/*
 		 * sending the command to execute the Blast analysis
 		 */
-		return rid = sendActualAlignementRequest(seq, rpa);
+		return rid = sendActualAlignementRequest(str, rpa);
 	}
 
 	/**
 	 * This method is a wrapper that executes the Blast request via the Put
 	 * command of the CGI-BIN interface with the specified parameters and a
-	 * RichSequence. It gets the estimated time of completion by capturing the
+	 * Sequence. It gets the estimated time of completion by capturing the
 	 * value of the RTOE variable and sets a loop that will check for completion
 	 * of analysis at intervals specified by RTOE.
 	 * 
@@ -222,18 +230,18 @@ public class NCBIQBlastService implements RemotePairwiseAlignmentService {
 	 * the actual results after completion.
 	 * </p>
 	 * 
-	 * @param rs :a <code>RichSequence</code> object
+	 * @param rs :a <code>Sequence</code> object
 	 * @param rpa :a <code>RemotePairwiseAlignmentProperties</code> object
 	 * @return rid : a <code>String</code> with the request ID for this sequence
 	 * 
 	 * @throws Exception if it is not possible to sent the BLAST command
 	 */
-	public String sendAlignmentRequest(RichSequence rs,
+	public String sendAlignmentRequest(Sequence rs,
 			RemotePairwiseAlignmentProperties rpa) throws Exception {
 
-		seq = rs.seqString();
+		tmp = rs.getSequenceAsString();
 
-		return rid = sendActualAlignementRequest(seq, rpa);
+		return rid = sendActualAlignementRequest(tmp, rpa);
 	}
 
 	/**
@@ -256,8 +264,8 @@ public class NCBIQBlastService implements RemotePairwiseAlignmentService {
 	public String sendAlignmentRequest(int gid,
 			RemotePairwiseAlignmentProperties rpa) throws Exception {
 
-		seq = Integer.toString(gid);
-		return rid = sendActualAlignementRequest(seq, rpa);
+		tmp = Integer.toString(gid);
+		return rid = sendActualAlignementRequest(tmp, rpa);
 	}
 
 	/**
@@ -407,7 +415,7 @@ public class NCBIQBlastService implements RemotePairwiseAlignmentService {
 		conn.setDoOutput(true);
 		conn.setUseCaches(false);
 
-		tmp.setRequestProperty("User-Agent", "Biojava/RemoteQBlastService");
+		tmp.setRequestProperty("User-Agent", "Biojava/NCBIQBlastService");
 		tmp.setRequestProperty("Connection", "Keep-Alive");
 		tmp.setRequestProperty("Content-type",
 				"application/x-www-form-urlencoded");
@@ -416,7 +424,7 @@ public class NCBIQBlastService implements RemotePairwiseAlignmentService {
 		return tmp;
 	}
     /** 
-     * Set the tool identifier for QBlast. Defaults to 'biojavax'.
+     * Set the tool identifier for QBlast. Defaults to 'biojava3'.
      * @param tool the new identifier.
      */
     public void setTool(String tool) {
@@ -424,7 +432,7 @@ public class NCBIQBlastService implements RemotePairwiseAlignmentService {
     }
 
     /** 
-     * Get the tool identifier for QBlast. Defaults to 'biojavax'.
+     * Get the tool identifier for QBlast. Defaults to 'biojava3'.
      * @return the identifier.
      */
     public String getTool() {

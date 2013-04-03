@@ -32,6 +32,10 @@ import org.biojava3.ws.alignment.RemotePairwiseAlignmentProperties;
  * This class implements RemotePairwiseAlignmentProperties by specifying several
  * convenient methods used to wrap the addition of Blast alignment parameters.
  * 
+ * <p>
+ * Many thanks to Matthew Busse for helping in debugging after the migration from BJ1.7 to BJ3.0.
+ * </p>
+ * 
  * @author Sylvain Foisy, Diploide BioIT
  * @since Biojava 3
  *
@@ -41,6 +45,14 @@ public class NCBIQBlastAlignmentProperties implements
 
 	private static final long serialVersionUID = 1L;
 	private HashMap<String, String> param = new HashMap<String, String>();
+
+	
+	public void NCBIQBlastAlignmentProperties() {
+		this.param.put("PROGRAM","not_set");
+		this.param.put("DATABASE","not_set");
+		this.param.put("OTHER_ADVANCED","not_set");
+	}
+//	this.param.put("OTHER_ADVANCED","not_used");
 
 	/**
 	 * This method returns the value of the program used for this particular
@@ -76,6 +88,7 @@ public class NCBIQBlastAlignmentProperties implements
 //		}
 		
 		if(Arrays.binarySearch(blastPr,program)>=0){
+			this.param.put("PROGRAM", program);
 			isValid = true;			
 		}
 		

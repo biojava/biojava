@@ -1,28 +1,26 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <parent>
-    <artifactId>biojava</artifactId>
-    <groupId>org.biojava</groupId>
-    <version>3.0</version>
-  </parent>
-  <groupId>org.biojava</groupId>
-  <artifactId>biojava3-ws</artifactId>
-  <name>biojava3-ws</name>
-  <version>3.0</version>
-  <description>This module deals with bioinformatics web services that could be used to process Biojava objects in a useful manner.</description>
-  <dependencies>
-  <dependency>
-  <groupId>org.biojava</groupId>
-  <artifactId>biojava3-core</artifactId>
-  <version>3.0-alpha1</version>
-  <scope>compile</scope>
-  </dependency>
-  <dependency>
-  <groupId>org.biojava</groupId>
-  <artifactId>core</artifactId>
-  <version>3.0-alpha1</version>
-  <scope>compile</scope>
-  </dependency>
-  
-  </dependencies>
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<artifactId>biojava</artifactId>
+		<groupId>org.biojava</groupId>
+		<version>3.0.1</version>
+	</parent>
+	<groupId>org.biojava</groupId>
+	<artifactId>biojava3-ws</artifactId>
+	<name>biojava3-ws</name>
+	<version>3.0.1</version>
+	<description>This module deals with bioinformatics web services that could be used to process Biojava objects in a useful manner.</description>
+	<dependencies>
+		<dependency>
+			<groupId>org.biojava</groupId>
+			<artifactId>biojava3-core</artifactId>
+			<version>3.0.1</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
 </project>

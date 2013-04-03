@@ -26,7 +26,7 @@ import java.util.LinkedHashMap;
 import org.biojava3.core.sequence.compound.DNACompoundSet;
 import org.biojava3.core.sequence.compound.NucleotideCompound;
 import org.biojava3.core.sequence.template.CompoundSet;
-import org.biojava3.core.sequence.template.ProxySequenceReader;
+import org.biojava3.core.sequence.template.SequenceReader;
 
 /**
  * A ChromosomeSequence is a DNASequence but keeps track of geneSequences
@@ -60,7 +60,7 @@ public class ChromosomeSequence extends DNASequence {
      * data as needed from remote web server.
      * @param proxyLoader
      */
-    public ChromosomeSequence(ProxySequenceReader<NucleotideCompound> proxyLoader) {
+    public ChromosomeSequence(SequenceReader<NucleotideCompound> proxyLoader) {
         super(proxyLoader, DNACompoundSet.getDNACompoundSet());
     }
 
@@ -78,7 +78,7 @@ public class ChromosomeSequence extends DNASequence {
      * @param proxyLoader
      * @param compoundSet
      */
-    public ChromosomeSequence(ProxySequenceReader<NucleotideCompound> proxyLoader, CompoundSet<NucleotideCompound> compoundSet) {
+    public ChromosomeSequence(SequenceReader<NucleotideCompound> proxyLoader, CompoundSet<NucleotideCompound> compoundSet) {
         super(proxyLoader, compoundSet);
     }
 

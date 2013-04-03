@@ -11,6 +11,8 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.zip.GZIPOutputStream;
 
@@ -48,6 +50,13 @@ public class DownloadChemCompProvider implements ChemCompProvider {
 	// flags to make sure there is only one thread running that is loading the dictionary
 	static AtomicBoolean loading = new AtomicBoolean(false);
 
+	static final List<String> protectedIDs = new ArrayList<String> ();
+	static {
+		protectedIDs.add("CON");
+		protectedIDs.add("PRN");
+		protectedIDs.add("AUX");
+		protectedIDs.add("NUL");
+	}
 	
 	/** by default we will download only some of the files. User has to request that all files should be downloaded...
 	 * 
@@ -67,6 +76,9 @@ public class DownloadChemCompProvider implements ChemCompProvider {
 		if ( ! downloadAll ) {
 			return;
 		}
+		
+		if ( path == null)
+			path =  System.getProperty(AbstractUserArgumentProcessor.PDB_DIR);
 		
 		String filename = path + 	
 		DownloadChemCompProvider.CHEM_COMP_CACHE_DIRECTORY +
@@ -154,6 +166,8 @@ public class DownloadChemCompProvider implements ChemCompProvider {
 
 		//System.out.println("writing ID " + currentID);
 
+		
+		
 		String localName = DownloadChemCompProvider.getLocalFileName(currentID);
 
 		FileOutputStream outPut = new FileOutputStream(localName);
@@ -199,6 +213,7 @@ public class DownloadChemCompProvider implements ChemCompProvider {
 
 			String filename = getLocalFileName(recordName);
 
+			System.out.println("reading " + filename);
 			InputStreamProvider isp = new InputStreamProvider();
 
 			InputStream inStream = isp.getInputStream(filename);
@@ -261,6 +276,10 @@ public class DownloadChemCompProvider implements ChemCompProvider {
 	 */
 	public static String getLocalFileName(String recordName){
 
+		if ( protectedIDs.contains(recordName)){
+			recordName = "_" + recordName;
+		}
+		
 		String dir = path + CHEM_COMP_CACHE_DIRECTORY + FILE_SEPARATOR;
 
 		File f = new File(dir);
@@ -342,6 +361,10 @@ public class DownloadChemCompProvider implements ChemCompProvider {
 		path = p;
 		if ( ! path.endsWith(FILE_SEPARATOR))
 			path += FILE_SEPARATOR;
+		
+		System.setProperty(AbstractUserArgumentProcessor.PDB_DIR,path);
+		
+		
 
 	}
 

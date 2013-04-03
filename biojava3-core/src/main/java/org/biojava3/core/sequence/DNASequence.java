@@ -27,8 +27,8 @@ import org.biojava3.core.sequence.compound.NucleotideCompound;
 import org.biojava3.core.sequence.loader.StringProxySequenceReader;
 import org.biojava3.core.sequence.template.AbstractSequence;
 import org.biojava3.core.sequence.template.CompoundSet;
-import org.biojava3.core.sequence.template.ProxySequenceReader;
 import org.biojava3.core.sequence.template.SequenceMixin;
+import org.biojava3.core.sequence.template.SequenceReader;
 import org.biojava3.core.sequence.template.SequenceView;
 import org.biojava3.core.sequence.transcription.Frame;
 import org.biojava3.core.sequence.transcription.TranscriptionEngine;
@@ -68,7 +68,7 @@ public class DNASequence extends AbstractSequence<NucleotideCompound> {
      * Create a sequence where the actual storage of the sequence data is somewhere else
      * @param proxyLoader
      */
-    public DNASequence(ProxySequenceReader<NucleotideCompound> proxyLoader) {
+    public DNASequence(SequenceReader<NucleotideCompound> proxyLoader) {
         super(proxyLoader, DNACompoundSet.getDNACompoundSet());
     }
 
@@ -86,7 +86,7 @@ public class DNASequence extends AbstractSequence<NucleotideCompound> {
      * @param proxyLoader
      * @param compoundSet
      */
-    public DNASequence(ProxySequenceReader<NucleotideCompound> proxyLoader, CompoundSet<NucleotideCompound> compoundSet) {
+    public DNASequence(SequenceReader<NucleotideCompound> proxyLoader, CompoundSet<NucleotideCompound> compoundSet) {
         super(proxyLoader, compoundSet);
     }
 

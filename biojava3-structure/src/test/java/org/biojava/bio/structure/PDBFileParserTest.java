@@ -25,9 +25,12 @@
 package org.biojava.bio.structure;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.biojava.bio.structure.io.PDBFileParser;
 
@@ -329,4 +332,173 @@ public class PDBFileParserTest extends TestCase {
 			fail(e.getMessage());
 		}
 	}
+
+        public void testMultiLineJRNL(){
+//            System.out.println("Testing JRNL record parsing from 3pfk");
+            String jrnlString =
+            "JRNL        AUTH   P.R.EVANS,G.W.FARRANTS,P.J.HUDSON                            " + newline +
+            "JRNL        TITL   PHOSPHOFRUCTOKINASE: STRUCTURE AND CONTROL.                  " + newline +
+            "JRNL        REF    PHILOS.TRANS.R.SOC.LONDON,    V. 293    53 1981              " + newline +
+            "JRNL        REF  2 SER.B                                                        " + newline +
+            "JRNL        REFN                   ISSN 0080-4622                               " + newline +
+            "JRNL        PMID   6115424                                                      ";
+
+
+            BufferedReader br = new BufferedReader(new StringReader(jrnlString));
+            Structure s = null;
+        try {
+            s = parser.parsePDBFile(br);
+        } catch (IOException ex) {
+            Logger.getLogger(PDBFileParserTest.class.getName()).log(Level.SEVERE, null, ex);
+        }
+            String jrnl = s.getJournalArticle().toString();
+//            System.out.println(jrnl);
+            JournalArticle journalArticle = s.getJournalArticle();
+            assertEquals("293", journalArticle.getVolume());
+            assertEquals("53", journalArticle.getStartPage());
+            assertEquals(1981, journalArticle.getPublicationDate());
+            assertEquals("PHILOS.TRANS.R.SOC.LONDON, SER.B", journalArticle.getJournalName());
+        }
+
+       public void testIncorrectDateFormatMultiLineJRNL(){
+//            System.out.println("Testing JRNL record parsing from 3pfk");
+            String jrnlString =
+            "JRNL        AUTH   P.R.EVANS,G.W.FARRANTS,P.J.HUDSON                            " + newline +
+            "JRNL        TITL   PHOSPHOFRUCTOKINASE: STRUCTURE AND CONTROL.                  " + newline +
+            "JRNL        REF    PHILOS.TRANS.R.SOC.LONDON,    V. 293    53 19SE              " + newline +
+            "JRNL        REF  2 SER.B                                                        " + newline +
+            "JRNL        REFN                   ISSN 0080-4622                               " + newline +
+            "JRNL        PMID   6115424                                                      ";
+
+
+            BufferedReader br = new BufferedReader(new StringReader(jrnlString));
+            Structure s = null;
+        try {
+            s = parser.parsePDBFile(br);
+        } catch (IOException ex) {
+            Logger.getLogger(PDBFileParserTest.class.getName()).log(Level.SEVERE, null, ex);
+        }
+            String jrnl = s.getJournalArticle().toString();
+//            System.out.println(jrnl);
+            JournalArticle journalArticle = s.getJournalArticle();
+            assertEquals("293", journalArticle.getVolume());
+            assertEquals("53", journalArticle.getStartPage());
+            assertEquals(0, journalArticle.getPublicationDate());
+            assertEquals("PHILOS.TRANS.R.SOC.LONDON, SER.B", journalArticle.getJournalName());
+        }
+
+      public void testInvalidFormatREFsectionJRNL(){
+//            System.out.println("Testing JRNL record parsing from 3pfk");
+            String jrnlString =
+            "JRNL        AUTH   P.R.EVANS,G.W.FARRANTS,P.J.HUDSON                            " + newline +
+//            "JRNL        TITL   PHOSPHOFRUCTOKINASE: STRUCTURE AND CONTROL.                  " + newline +
+            "JRNL        REF    INTERESTING TIMES                                            " + newline +
+            "JRNL        REFN                   ISSN 0080-4622                               " + newline +
+            "JRNL        PMID   6115424                                                      ";
+
+
+            BufferedReader br = new BufferedReader(new StringReader(jrnlString));
+            Structure s = null;
+        try {
+            s = parser.parsePDBFile(br);
+        } catch (IOException ex) {
+            Logger.getLogger(PDBFileParserTest.class.getName()).log(Level.SEVERE, null, ex);
+        }
+            String jrnl = s.getJournalArticle().toString();
+//            System.out.println(jrnl);
+            JournalArticle journalArticle = s.getJournalArticle();
+            assertEquals("", journalArticle.getVolume());
+            assertEquals("", journalArticle.getStartPage());
+            assertEquals(0, journalArticle.getPublicationDate());
+            assertEquals("", journalArticle.getJournalName());
+        }
+
+
+        public void testSecondMultiLineJRNL(){
+//            System.out.println("Testing JRNL record parsing from 1gpb");
+            String jrnlString =
+            "JRNL        AUTH   K.R.ACHARYA,D.I.STUART,K.M.VARVILL,L.N.JOHNSON               " + newline +
+            "JRNL        TITL   GLYCOGEN PHOSPHORYLASE B: DESCRIPTION OF THE                 " + newline +
+            "JRNL        TITL 2 PROTEIN STRUCTURE                                            " + newline +
+            "JRNL        REF    GLYCOGEN PHOSPHORYLASE B:                1 1991              " + newline +
+            "JRNL        REF  2 DESCRIPTION OF THE PROTEIN                                   " + newline +
+            "JRNL        REF  3 STRUCTURE                                                    " + newline +
+            "JRNL        PUBL   WORLD SCIENTIFIC PUBLISHING CO.,SINGAPORE                    " + newline +
+            "JRNL        REFN                                                                ";
+
+
+            BufferedReader br = new BufferedReader(new StringReader(jrnlString));
+            Structure s = null;
+        try {
+            s = parser.parsePDBFile(br);
+        } catch (IOException ex) {
+            Logger.getLogger(PDBFileParserTest.class.getName()).log(Level.SEVERE, null, ex);
+        }
+            String jrnl = s.getJournalArticle().toString();
+//            System.out.println(jrnl);
+            JournalArticle journalArticle = s.getJournalArticle();
+            assertEquals("", journalArticle.getVolume());
+            assertEquals("1", journalArticle.getStartPage());
+            assertEquals(1991, journalArticle.getPublicationDate());
+            assertEquals("GLYCOGEN PHOSPHORYLASE B: DESCRIPTION OF THE PROTEIN STRUCTURE", journalArticle.getJournalName());
+        }
+
+        public void testSingleLineJRNL(){
+//            System.out.println("Testing JRNL record parsing from 2bln");
+            String jrnlString =
+            "JRNL        AUTH   G.J.WILLIAMS,S.D.BREAZEALE,C.R.H.RAETZ,J.H.NAISMITH          " + newline +
+            "JRNL        TITL   STRUCTURE AND FUNCTION OF BOTH DOMAINS OF ARNA, A            " + newline +
+            "JRNL        TITL 2 DUAL FUNCTION DECARBOXYLASE AND A                            " + newline +
+            "JRNL        TITL 3 FORMYLTRANSFERASE, INVOLVED IN 4-AMINO-4-DEOXY-L-            " + newline +
+            "JRNL        TITL 4 ARABINOSE BIOSYNTHESIS.                                      " + newline +
+            "JRNL        REF    J.BIOL.CHEM.                  V. 280 23000 2005              " + newline +
+            "JRNL        REFN                   ISSN 0021-9258                               " + newline +
+            "JRNL        PMID   15809294                                                     " + newline +
+            "JRNL        DOI    10.1074/JBC.M501534200                                       ";
+
+
+            BufferedReader br = new BufferedReader(new StringReader(jrnlString));
+            Structure s = null;
+        try {
+            s = parser.parsePDBFile(br);
+        } catch (IOException ex) {
+            Logger.getLogger(PDBFileParserTest.class.getName()).log(Level.SEVERE, null, ex);
+        }
+            String jrnl = s.getJournalArticle().toString();
+//            System.out.println(jrnl);
+            JournalArticle journalArticle = s.getJournalArticle();
+//            System.out.println(journalArticle.getRef());
+            assertEquals("280", journalArticle.getVolume());
+            assertEquals("23000", journalArticle.getStartPage());
+            assertEquals(2005, journalArticle.getPublicationDate());
+            assertEquals("J.BIOL.CHEM.", journalArticle.getJournalName());
+        }
+
+        public void testToBePublishedJRNL(){
+//            System.out.println("Testing JRNL record parsing from 1i2c");
+            String jrnlString =
+            "JRNL        AUTH   M.J.THEISEN,S.L.SANDA,S.L.GINELL,C.BENNING,                  " + newline +
+            "JRNL        AUTH 2 R.M.GARAVITO                                                 " + newline +
+            "JRNL        TITL   CHARACTERIZATION OF THE ACTIVE SITE OF                       " + newline +
+            "JRNL        TITL 2 UDP-SULFOQUINOVOSE SYNTHASE: FORMATION OF THE                " + newline +
+            "JRNL        TITL 3 SULFONIC ACID PRODUCT IN THE CRYSTALLINE STATE.              " + newline +
+            "JRNL        REF    TO BE PUBLISHED                                              " + newline +
+            "JRNL        REFN                                                                ";
+
+
+            BufferedReader br = new BufferedReader(new StringReader(jrnlString));
+            Structure s = null;
+        try {
+            s = parser.parsePDBFile(br);
+        } catch (IOException ex) {
+            Logger.getLogger(PDBFileParserTest.class.getName()).log(Level.SEVERE, null, ex);
+        }
+            String jrnl = s.getJournalArticle().toString();
+//            System.out.println(jrnl);
+            JournalArticle journalArticle = s.getJournalArticle();
+            assertNull(journalArticle.getVolume());
+            assertNull(journalArticle.getStartPage());
+            assertEquals(0,journalArticle.getPublicationDate());
+            assertEquals("TO BE PUBLISHED", journalArticle.getJournalName());
+        }
 }

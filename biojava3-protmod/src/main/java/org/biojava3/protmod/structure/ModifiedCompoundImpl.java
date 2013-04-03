@@ -24,6 +24,7 @@
 
 package org.biojava3.protmod.structure;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
@@ -36,6 +37,7 @@ import org.biojava3.protmod.ComponentType;
 import org.biojava3.protmod.ModificationCategory;
 import org.biojava3.protmod.ProteinModification;
 import org.biojava3.protmod.ProteinModificationImpl;
+import org.biojava3.protmod.io.ModifiedCompoundXMLConverter;
 
 
 /**
@@ -44,15 +46,22 @@ import org.biojava3.protmod.ProteinModificationImpl;
  * @since 3.0
  */
 public class ModifiedCompoundImpl
-implements ModifiedCompound {
+implements ModifiedCompound, Serializable, Comparable<ModifiedCompound> {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1656563037849815427L;
+
+	ProteinModification originalModification;
+
 	ProteinModification modification;
+	
 	Set<StructureGroup> groups;
+	
 	Map<Set<StructureGroup>, Set<StructureAtomLinkage>> atomLinkages;
 
-
 	public static final String newline = System.getProperty("line.separator");
-
 
 	public ModifiedCompoundImpl(){
 
@@ -73,13 +82,13 @@ implements ModifiedCompound {
 			throw new IllegalArgumentException("Null argument(s)");
 		}
 
-		this.modification = modification;
-
 		groups = new HashSet<StructureGroup>(1);
 		groups.add(modifiedResidue);
 
 		// is it possible that components be added by addLinkage later?
 		atomLinkages = null;
+
+		setModification(modification);
 	}
 
 	/**
@@ -99,72 +108,78 @@ implements ModifiedCompound {
 			throw new IllegalArgumentException("at least one linkage.");
 		}
 
-		this.modification = modification;
-
 		this.groups = new HashSet<StructureGroup>();
 
 		addAtomLinkages(linkages);
 
+		setModification(modification);
+
 	}
 
 	public void setModification(ProteinModification protmod){
-		modification = protmod;
+		originalModification = protmod;
+		
+		resetModification();
 	}
 
 	@Override
 	public ProteinModification getModification() {
-		if (modification == null)
-			return null;
-
-		if (modification.getCategory()!=ModificationCategory.UNDEFINED) {
-			return modification;
-		}
-
-		int nRes = 0;
-		Set<String> ligands = new HashSet<String>();
-		for (StructureGroup group : groups) {
-			if (group.getType() == ComponentType.AMINOACID) {
-				nRes ++;
-			} else {
-				ligands.add(group.getPDBName().trim());
+		return modification;
+	}
+	
+	private void resetModification() {
+		if (originalModification == null)
+			modification = originalModification;
+		else if (originalModification.getCategory()!=ModificationCategory.UNDEFINED)
+			modification = originalModification;
+		else {
+			int nRes = 0;
+			Set<String> ligands = new HashSet<String>();
+			for (StructureGroup group : groups) {
+				if (group.getType() == ComponentType.AMINOACID) {
+					nRes ++;
+				} else {
+					ligands.add(group.getPDBName().trim());
+				}
 			}
-		}
 
-		ModificationCategory cat;
-		switch (nRes) {
-		case 0:
-			return modification;
-		case 1:
-			cat = ModificationCategory.ATTACHMENT; break;
-		case 2:
-			cat = ModificationCategory.CROSS_LINK_2; break;
-		case 3:
-			cat = ModificationCategory.CROSS_LINK_3; break;
-		case 4:
-			cat = ModificationCategory.CROSS_LINK_4; break;
-		case 5:
-			cat = ModificationCategory.CROSS_LINK_5; break;
-		case 6:
-			cat = ModificationCategory.CROSS_LINK_6; break;
-		case 7:
-			cat = ModificationCategory.CROSS_LINK_7; break;
-		default:
-			cat = ModificationCategory.CROSS_LINK_8_OR_LARGE; break;
-		}
-		
-		return new ProteinModificationImpl.Builder(modification)
-				.setCategory(cat).addKeywords(ligands).build();
+			ModificationCategory cat;
+			switch (nRes) {
+			case 0:
+				modification = originalModification; return;
+			case 1:
+				cat = ModificationCategory.ATTACHMENT; break;
+			case 2:
+				cat = ModificationCategory.CROSS_LINK_2; break;
+			case 3:
+				cat = ModificationCategory.CROSS_LINK_3; break;
+			case 4:
+				cat = ModificationCategory.CROSS_LINK_4; break;
+			case 5:
+				cat = ModificationCategory.CROSS_LINK_5; break;
+			case 6:
+				cat = ModificationCategory.CROSS_LINK_6; break;
+			case 7:
+				cat = ModificationCategory.CROSS_LINK_7; break;
+			default:
+				cat = ModificationCategory.CROSS_LINK_8_OR_LARGE; break;
+			}
+			
+			modification = new ProteinModificationImpl.Builder(originalModification)
+					.setCategory(cat).addKeywords(ligands).build();			
+		}		
 	}
 	
 	/**
 	 * 
 	 * @return the original modification ID.
+	 * @deprecated use getModification().getId()
 	 */
 	public String getOriginalModificationId() {
-		if (modification==null)
+		if (originalModification==null)
 			return null;
 		
-		return modification.getId();
+		return originalModification.getId();
 	}
 
 	@Override
@@ -188,6 +203,7 @@ implements ModifiedCompound {
 
 	public void setGroups(Set<StructureGroup> groups){
 		this.groups = groups;
+		resetModification();
 	}
 
 	@Override
@@ -209,7 +225,7 @@ implements ModifiedCompound {
 		for (StructureAtomLinkage sali : linkages){
 			addAtomLinkage(sali);
 		}
-
+		resetModification();
 	}
 
 	@Override
@@ -245,6 +261,8 @@ implements ModifiedCompound {
 		for (StructureAtomLinkage link : linkages) {
 			addAtomLinkage(link);
 		}
+		
+		resetModification();
 	}
 	
 	public boolean crossChains() {
@@ -264,16 +282,16 @@ implements ModifiedCompound {
 
 	public String toString(){
 		StringBuilder sb = new StringBuilder();
-		if ( modification == null)
+		if ( originalModification == null)
 			return "ModifiedCompoundImpl -- not initialized";
 
-		sb.append("Modification_");
-		sb.append(modification.getId());
+		//sb.append("Modification_");
+		sb.append(originalModification.getId());
 		ModificationCategory cat ;
-		if (modification.getCategory()==ModificationCategory.UNDEFINED) {
+		if (originalModification.getCategory()==ModificationCategory.UNDEFINED) {
 			cat = getModification().getCategory();
 		} else
-			cat = modification.getCategory();
+			cat = originalModification.getCategory();
 		sb.append("_");
 		sb.append(cat.toString());
 		return sb.toString();
@@ -283,43 +301,45 @@ implements ModifiedCompound {
 	public String getDescription() {
 
 		StringBuilder sb = new StringBuilder();
-		sb.append("Category: ");
+		//sb.append("Category: ");
 
 		if ( getModification()  == null) {
 			sb.append(" !!! not initialized !!!");
 			return sb.toString();
 		}
-		sb.append(getModification().getCategory());
-		if (!modification.getKeywords().isEmpty()) {
-			sb.append("; ");
-			sb.append(modification.getKeywords());
-		}
-		sb.append("; Modification ID: ");
-		sb.append(modification.getId());
-
-		if (modification.getResidId()!=null) {
-			sb.append("; RESID: ");
-			sb.append(modification.getResidId());
-			sb.append(" [");
-			sb.append(modification.getResidName());
-			sb.append(']');
-		}
-
-		sb.append(" | ");
-
-		if (atomLinkages==null) {
-			for (StructureGroup group : groups) {
-				sb.append(group);
-				sb.append(" | ");
-			}
-		} else {
-			for (Set<StructureAtomLinkage> linkages : atomLinkages.values()) {
-				for (StructureAtomLinkage linkage : linkages) {
-					sb.append(linkage);
-					sb.append(" | ");
-				}
-			}
-		}
+		
+		sb.append(originalModification.toString());
+//		sb.append(getModification().getCategory());
+//		if (!modification.getKeywords().isEmpty()) {
+//			sb.append("; ");
+//			sb.append(modification.getKeywords());
+//		}
+//		sb.append("; Modification ID: ");
+//		sb.append(modification.getId());
+//
+//		if (modification.getResidId()!=null) {
+//			sb.append("; RESID: ");
+//			sb.append(modification.getResidId());
+//			sb.append(" [");
+//			sb.append(modification.getResidName());
+//			sb.append(']');
+//		}
+//
+//		sb.append(" | ");
+//
+//		if (atomLinkages==null) {
+//			for (StructureGroup group : groups) {
+//				sb.append(group);
+//				sb.append(" | ");
+//			}
+//		} else {
+//			for (Set<StructureAtomLinkage> linkages : atomLinkages.values()) {
+//				for (StructureAtomLinkage linkage : linkages) {
+//					sb.append(linkage);
+//					sb.append(" | ");
+//				}
+//			}
+//		}
 
 		return sb.toString();
 	}
@@ -329,6 +349,19 @@ implements ModifiedCompound {
 
 	}
 
+	public int compareTo(ModifiedCompound compound){
+		try {
+			// quite complex objects so the easiest is to just wrap it as XML
+			// and compare the two strings...
+			String xml  = ModifiedCompoundXMLConverter.toXML(this);
+			String xml2 = ModifiedCompoundXMLConverter.toXML(compound);
+			return xml.compareTo(xml2);
+		} catch (Exception e){
+			
+		}
+		return this.toString().compareTo(compound.toString());
+	}
+	
 	/**
 	 * @return true if same modification and same components; false, otherwise.
 	 */
@@ -339,7 +372,7 @@ implements ModifiedCompound {
 		}
 
 		ModifiedCompound mci = (ModifiedCompound)obj;
-		if (mci.getModification() != modification) {
+		if (mci.getModification() != originalModification) {
 			return false;
 		}
 
@@ -356,7 +389,7 @@ implements ModifiedCompound {
 	@Override
 	public int hashCode() {
 		int result = 17;
-		result = result * 32 + modification.hashCode();
+		result = result * 32 + originalModification.hashCode();
 
 		int sum = 0;
 		for (StructureGroup group : groups) {

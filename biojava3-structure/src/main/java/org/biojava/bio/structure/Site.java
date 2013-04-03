@@ -1,7 +1,23 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ *
+ * This code may be freely distributed and modified under the
+ * terms of the GNU Lesser General Public Licence.  This should
+ * be distributed with the code.  If you do not have a copy,
+ * see:
+ *
+ *      http://www.gnu.org/copyleft/lesser.html
+ *
+ * Copyright for this code is held jointly by the individual
+ * authors.  These should be listed in @author doc comments.
+ *
+ * For more information on the BioJava project and its aims,
+ * or to join the biojava-l mailing list, visit the home page
+ * at:
+ *
+ *      http://www.biojava.org/
+ *
  */
+
 package org.biojava.bio.structure;
 
 import java.io.Serializable;
@@ -11,16 +27,18 @@ import java.util.List;
 import java.util.Locale;
 
 /**
- * Holds the data of sites presented in PDB files
+ * Holds the data of sites presented in PDB files. <br/>
  * Example from the PDB flatfile:
- * SITE     1 AC1  3 GLY A  65  CYS A  67  HOH A 180
- * SITE     1 AC2 10 HIS C  37  ALA C  39  THR C 152  LEU C 153
- * SITE     2 AC2 10 HIS D  37  ALA D  39  THR D 152  LEU D 153
- * SITE     3 AC2 10 SER D 154  GOL D 172
+ * <pre>
+  SITE     1 AC1  3 GLY A  65  CYS A  67  HOH A 180
+  SITE     1 AC2 10 HIS C  37  ALA C  39  THR C 152  LEU C 153
+  SITE     2 AC2 10 HIS D  37  ALA D  39  THR D 152  LEU D 153
+  SITE     3 AC2 10 SER D 154  GOL D 172
+  </pre>
  * @author Amr AL-Hossary
  * @author Jules Jacobsen
  */
-public class Site implements PDBRecord, Serializable {
+public class Site implements PDBRecord, Serializable, Comparable<Site> {
 
     private static final long serialVersionUID = -4577047072916341237L;
     private static final String lineEnd = System.getProperty("line.separator");
@@ -85,24 +103,18 @@ public class Site implements PDBRecord, Serializable {
         Formatter form = new Formatter(stringBuilder, Locale.UK);
         
         while (groupsWritten < groups.size()) {
-//            stringBuilder.append("SITE  ");
-//            stringBuilder.append(String.format("SITE   %3d %3s %2d ", seqNum + 1, siteID, groups.size()));
             StringBuilder groupsString = new StringBuilder();
             for (int i = 0; i < 4 && groupsWritten < groups.size(); i++) {
                 Group group = groups.get(groupNum);
                 String groupString = String.format("%s %s",
-//                String groupString = String.format("%s %s%4d%-2s",
                         group.getPDBName(),
                         group.getResidueNumber().toPDB());
                 groupsWritten++;
                 groupNum++;
                 //remove the trailing whitespace of the last element of a line
                 if (i == 3 || groupsWritten == groups.size()) {
-//                    System.out.println("i = " + i +" last element '" + groupString + "'");
                     groupString = groupString.trim();
                 }
-//                System.out.println("i = " + i + " group = '" + groupString + "'");
-//                stringBuilder.append(groupString);
                 groupsString.append(groupString);
             }
             stringBuilder.append(String.format("SITE   %3d %3s %2d %-62s", seqNum + 1, siteID, groups.size(), groupsString.toString()));
@@ -246,6 +258,10 @@ public class Site implements PDBRecord, Serializable {
         hash = 37 * hash + (this.description != null ? this.description.hashCode() : 0);
         return hash;
     }
+    
+    
 
-
+	public int compareTo(Site other) {
+		return this.toString().compareTo(other.toString());
+	}
 }

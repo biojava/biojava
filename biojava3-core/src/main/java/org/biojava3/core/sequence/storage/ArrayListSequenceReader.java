@@ -48,187 +48,202 @@ import org.biojava3.core.sequence.template.SequenceView;
 public class ArrayListSequenceReader<C extends Compound> implements SequenceReader<C> {
 
     private CompoundSet<C> compoundSet;
-    private List<C> parsedCompounds = new ArrayList<C>();
-/**
- *
- */
+    private ArrayList<C> parsedCompounds = new ArrayList<C>();
+
+    /**
+     *
+     */
     public ArrayListSequenceReader() {
         //Do nothing
     }
-/**
- *
- * @param compounds
- * @param compoundSet
- */
+
+    /**
+     *
+     * @param compounds
+     * @param compoundSet
+     */
     public ArrayListSequenceReader(List<C> compounds, CompoundSet<C> compoundSet) {
         setCompoundSet(compoundSet);
         setContents(compounds);
     }
-/**
- *
- * @param sequence
- * @param compoundSet
- */
+
+    /**
+     *
+     * @param sequence
+     * @param compoundSet
+     */
     public ArrayListSequenceReader(String sequence, CompoundSet<C> compoundSet) {
         setCompoundSet(compoundSet);
         setContents(sequence);
     }
 
-/**
- *
- * @return
- */
+    /**
+     *
+     * @return
+     */
     public String getSequenceAsString() {
         return getSequenceAsString(1, getLength(), Strand.POSITIVE);
     }
 
-/**
- * 
- * @param begin
- * @param end
- * @param strand
- * @return
- */
-
+    /**
+     *
+     * @param begin
+     * @param end
+     * @param strand
+     * @return
+     */
     public String getSequenceAsString(Integer begin, Integer end, Strand strand) {
         // TODO Optimise/cache.
         SequenceAsStringHelper<C> sequenceAsStringHelper = new SequenceAsStringHelper<C>();
         return sequenceAsStringHelper.getSequenceAsString(this.parsedCompounds, compoundSet, begin, end, strand);
     }
-/**
- *
- * @return
- */
-    
+
+    /**
+     *
+     * @return
+     */
     public List<C> getAsList() {
         return this.parsedCompounds;
     }
 
- /**
-  *
-  * @param position
-  * @return
-  */
+    /**
+     *
+     * @param position
+     * @return
+     */
     public C getCompoundAt(int position) {
         return this.parsedCompounds.get(position - 1);
     }
 
- /**
-  *
-  * @param compound
-  * @return
-  */
+    /**
+     *
+     * @param compound
+     * @return
+     */
     public int getIndexOf(C compound) {
         return this.parsedCompounds.indexOf(compound) + 1;
     }
-/**
- *
- * @param compound
- * @return
- */
-    
+
+    /**
+     *
+     * @param compound
+     * @return
+     */
     public int getLastIndexOf(C compound) {
         return this.parsedCompounds.lastIndexOf(compound) + 1;
     }
-/**
- *
- * @return
- */
-    
+
+    /**
+     *
+     * @return
+     */
     public int getLength() {
         return this.parsedCompounds.size();
     }
-/**
- *
- * @return
- */
-    
+
+    /**
+     *
+     * @return
+     */
     public Iterator<C> iterator() {
         return this.parsedCompounds.iterator();
     }
-/**
- *
- * @param compoundSet
- */
-    
+
+    /**
+     *
+     * @param compoundSet
+     */
     public void setCompoundSet(CompoundSet<C> compoundSet) {
         this.compoundSet = compoundSet;
     }
-/**
- *
- * @return
- */
-    
+
+    /**
+     *
+     * @return
+     */
     public CompoundSet<C> getCompoundSet() {
         return compoundSet;
     }
-/**
- *
- * @param sequence
- */
-    
+
+    /**
+     *
+     * @param sequence
+     */
     public void setContents(String sequence) {
         // Horrendously inefficient - pretty much the way the old BJ did things.
         // TODO Should be optimised.
         this.parsedCompounds.clear();
         int maxCompoundLength = compoundSet.getMaxSingleCompoundStringLength();
+        boolean maxCompundLengthEqual1 = true;
+        if (maxCompoundLength > 1) {
+            maxCompundLengthEqual1 = false;
+        }
         int length = sequence.length();
+        parsedCompounds.ensureCapacity(length); //get the array size correct
         for (int i = 0; i < length;) {
             String compoundStr = null;
             C compound = null;
-            for (int compoundStrLength = 1; compound == null && compoundStrLength <= maxCompoundLength; compoundStrLength++) {
-                compoundStr = sequence.substring(i, i + compoundStrLength);
+            if (maxCompundLengthEqual1) { // trying to save some steps where typically the answer is 1 so avoid complicated for loop
+                compoundStr = sequence.substring(i, i + 1);
                 compound = compoundSet.getCompoundForString(compoundStr);
+            } else {
+                for (int compoundStrLength = 1; compound == null && compoundStrLength <= maxCompoundLength; compoundStrLength++) {
+                    compoundStr = sequence.substring(i, i + compoundStrLength);
+                    compound = compoundSet.getCompoundForString(compoundStr);
+                }
             }
             if (compound == null) {
-                throw new CompoundNotFoundError("Cannot find compound for: "+compoundStr);
+                throw new CompoundNotFoundError("Cannot find compound for: " + compoundStr);
             } else {
                 i += compoundStr.length();
             }
             this.parsedCompounds.add(compound);
         }
+        parsedCompounds.trimToSize(); // just in case it increases capacity free up extra memory
     }
-/**
- *
- * @param list
- */
+
+    /**
+     *
+     * @param list
+     */
     public void setContents(List<C> list) {
         parsedCompounds.clear();
         for (C c : list) {
             parsedCompounds.add(c);
         }
     }
-/**
- *
- * @param bioBegin
- * @param bioEnd
- * @return
- */
-    
+
+    /**
+     *
+     * @param bioBegin
+     * @param bioEnd
+     * @return
+     */
     public SequenceView<C> getSubSequence(final Integer bioBegin, final Integer bioEnd) {
         return new SequenceProxyView<C>(ArrayListSequenceReader.this, bioBegin, bioEnd);
     }
 
- /**
-  *
-  * @return
-  */
+    /**
+     *
+     * @return
+     */
     public AccessionID getAccession() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
-/**
- *
- * @param compounds
- * @return
- */
-    
+
+    /**
+     *
+     * @param compounds
+     * @return
+     */
     public int countCompounds(C... compounds) {
-       return SequenceMixin.countCompounds(this, compounds);
+        return SequenceMixin.countCompounds(this, compounds);
     }
-/**
- * 
- * @return
- */
+
+    /**
+     *
+     * @return
+     */
     @Override
     public SequenceView<C> getInverse() {
         return SequenceMixin.inverse(this);

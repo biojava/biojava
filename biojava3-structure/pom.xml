@@ -3,12 +3,12 @@
 	<parent>
 		<artifactId>biojava</artifactId>
 		<groupId>org.biojava</groupId>
-		<version>3.0</version>
+		<version>3.0.1</version>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.biojava</groupId>
 	<artifactId>biojava3-structure</artifactId>
-  <version>3.0</version>
+  <version>3.0.1</version>
 	<name>biojava3-structure</name>
 	<description>The protein structure modules of BioJava.</description>
 	<distributionManagement>
@@ -30,13 +30,13 @@
 		<dependency>
 			<groupId>org.biojava</groupId>
 			<artifactId>biojava3-alignment</artifactId>
-			<version>3.0</version>
+			<version>3.0.1</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.biojava</groupId>
 			<artifactId>biojava3-core</artifactId>
-			<version>3.0</version>
+			<version>3.0.1</version>
 			<type>jar</type>
 			<scope>compile</scope>
 		</dependency>

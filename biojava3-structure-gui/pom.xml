@@ -3,13 +3,13 @@
 	<parent>
 		<artifactId>biojava</artifactId>
 		<groupId>org.biojava</groupId>
-		<version>3.0</version>
+		<version>3.0.1</version>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.biojava</groupId>
 	<artifactId>biojava3-structure-gui</artifactId>
 	<name>biojava3-structure-gui</name>
-	<version>3.0</version>
+	<version>3.0.1</version>
 	<url>http://maven.apache.org</url>
 	<repositories>
 		<repository>
@@ -47,12 +47,6 @@
 			<version>1.0</version>
 		</dependency>
 		<dependency>
-			<groupId>org.biojava</groupId>
-			<artifactId>biojava3-structure</artifactId>
-			<version>3.0-alpha1</version>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
 			<groupId>jmolapplet</groupId>
 			<artifactId>JmolApplet</artifactId>
 			<version>12.0.22</version>
@@ -62,6 +56,12 @@
 			<groupId>org.biojava</groupId>
 			<artifactId>biojava3-core</artifactId>
 			<version>3.0-alpha1</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.biojava</groupId>
+			<artifactId>biojava3-structure</artifactId>
+			<version>3.0.1</version>
 			<scope>compile</scope>
 		</dependency>
 	</dependencies>
