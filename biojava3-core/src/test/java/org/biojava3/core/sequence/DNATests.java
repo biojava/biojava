@@ -233,6 +233,17 @@ public class DNATests {
         assertThat("Asserting second k-mer", l.get(2).getSequenceAsString(), is("GTT"));
     }
 
+    @Test
+    public void kmerOverlapExceedingSequenceLength() {
+        DNASequence d = new DNASequence("ATGTT");
+        List<SequenceView<NucleotideCompound>> l =
+                SequenceMixin.overlappingKmers(d, 2);
+        assertThat("Asserting we generate 4 k-mers", l.size(), is(4));
+        assertThat("Asserting first k-mer", l.get(0).getSequenceAsString(), is("AT"));
+        assertThat("Asserting second k-mer", l.get(2).getSequenceAsString(), is("GT"));
+        assertThat("Asserting second k-mer", l.get(3).getSequenceAsString(), is("TT"));
+    }
+
 //  @Test
 //  public void randomTwoBit() throws Exception {
 //    int[] ar = new int[1000000];

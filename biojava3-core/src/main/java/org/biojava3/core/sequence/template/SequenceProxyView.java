@@ -29,6 +29,8 @@ import java.util.Iterator;
 import java.util.List;
 import org.biojava3.core.sequence.AccessionID;
 import org.biojava3.core.sequence.Strand;
+import org.biojava3.core.sequence.location.SimpleLocation;
+import org.biojava3.core.sequence.location.template.Location;
 
 public class SequenceProxyView<C extends Compound> implements SequenceView<C> {
 
@@ -55,8 +57,9 @@ public class SequenceProxyView<C extends Compound> implements SequenceView<C> {
     }
 
 
-    public String getSequenceAsString(Integer start, Integer end, Strand strand) {
-        return getViewedSequence().getSequenceAsString(start, end, strand);
+    public String getSequenceAsString(Integer bioStart, Integer bioEnd, Strand strand) {
+        Location loc = new SimpleLocation(bioStart, bioEnd, strand);
+        return loc.getSubSequence(this).getSequenceAsString();
     }
 
 
