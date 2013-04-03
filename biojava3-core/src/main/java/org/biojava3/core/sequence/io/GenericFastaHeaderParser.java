@@ -1,6 +1,23 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ *                    BioJava development code
+ *
+ * This code may be freely distributed and modified under the
+ * terms of the GNU Lesser General Public Licence.  This should
+ * be distributed with the code.  If you do not have a copy,
+ * see:
+ *
+ *      http://www.gnu.org/copyleft/lesser.html
+ *
+ * Copyright for this code is held jointly by the individual
+ * authors.  These should be listed in @author doc comments.
+ *
+ * For more information on the BioJava project and its aims,
+ * or to join the biojava-l mailing list, visit the home page
+ * at:
+ *
+ *      http://www.biojava.org/
+ *
+ * Created on 01-21-2010
  */
 package org.biojava3.core.sequence.io;
 
@@ -16,6 +33,13 @@ import org.biojava3.core.sequence.template.Compound;
 import org.biojava3.core.sequence.template.AbstractSequence.AnnotationType;
 
 /**
+ * The default fasta header parser where some headers are well defined based on the source
+ * database which allows us to set the source of the protein sequence and the identifier
+ * that can be used in future implementations to load features from external sources
+ * 
+ * If the user has a custom header with local data then they can create their own implementation
+ * of a FastaHeaderParserInterface
+ *
  * GenBank                           gi|gi-number|gb|accession|locus
  * ENA Data Library                 gi|gi-number|emb|accession|locus
  * DDBJ, DNA Database of Japan       gi|gi-number|dbj|accession|locus
@@ -35,7 +59,12 @@ import org.biojava3.core.sequence.template.AbstractSequence.AnnotationType;
  */
 public class GenericFastaHeaderParser<S extends AbstractSequence<C>, C extends Compound> implements FastaHeaderParserInterface<S,C> {
 
-    public String[] getHeaderValues(String header) {
+    /**
+     * Parse out the components where some have a | and others do not
+     * @param header
+     * @return
+     */
+    private String[] getHeaderValues(String header) {
         String[] data = new String[0];
         ArrayList<String> values = new ArrayList<String>();
         StringBuffer sb = new StringBuffer();
@@ -66,6 +95,11 @@ public class GenericFastaHeaderParser<S extends AbstractSequence<C>, C extends C
         return data;
     }
 
+    /**
+     * Parse the header and set the values in the sequence
+     * @param header
+     * @param sequence
+     */
     public void parseHeader(String header, S sequence) {
         //uniptrot
         // tr|Q0TET7|Q0TET7_ECOL5 Putative uncharacterized protein OS=Escherichia coli O6:K15:H31 (strain 536 / UPEC) GN=ECP_2553 PE=4 SV=1
@@ -129,6 +163,10 @@ public class GenericFastaHeaderParser<S extends AbstractSequence<C>, C extends C
 
     }
 
+    /**
+     * 
+     * @param args
+     */
     public static void main(String[] args) {
 
         System.out.println("parseHeader");

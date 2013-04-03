@@ -45,6 +45,18 @@ import org.biojava3.core.sequence.template.ProxySequenceReader;
 import org.biojava3.core.sequence.template.SequenceMixin;
 import org.biojava3.core.sequence.template.SequenceView;
 
+/**
+ * This class represents the storage container of a sequence stored in a fasta file where
+ * the initial parsing of the file we store the offset and length of the sequence. When a call
+ * is made to any method that needs sequence data then the file will be opened and the sequence
+ * loaded. This class could be improved by using the hints or a some algorithm that indicates
+ * the sequence data once loaded should stay loaded. Could keep track of the last time sequence
+ * data was loaded and then after X amount of time clear the contents to free up memory.
+ *
+ *
+ * @author Scooter Willis <willishf at gmail dot com>
+ * @param <C>
+ */
 public class SequenceFileProxyLoader<C extends Compound> implements ProxySequenceReader<C> {
 
     SequenceParserInterface sequenceParser;
@@ -55,6 +67,14 @@ public class SequenceFileProxyLoader<C extends Compound> implements ProxySequenc
     int sequenceLength = -1;
     private boolean initialized = false;
 
+    /**
+     *
+     * @param file The file where the sequence will be found
+     * @param sequenceParser The parser to use to load the sequence
+     * @param sequenceStartIndex The file offset to the start of the sequence
+     * @param sequenceLength The length of the sequence
+     * @param compoundSet
+     */
     public SequenceFileProxyLoader(File file, SequenceParserInterface sequenceParser, long sequenceStartIndex, int sequenceLength, CompoundSet<C> compoundSet) {
         this.sequenceParser = sequenceParser;
         this.file = file;
@@ -63,10 +83,18 @@ public class SequenceFileProxyLoader<C extends Compound> implements ProxySequenc
         setCompoundSet(compoundSet);
     }
 
+    /**
+     *
+     * @param compoundSet
+     */
     public void setCompoundSet(CompoundSet<C> compoundSet) {
         this.compoundSet = compoundSet;
     }
 
+    /**
+     *  Load the sequence
+     * @return
+     */
     private boolean init() {
         try {
             RandomAccessFile randomAccessFile = new RandomAccessFile(file, "r");
@@ -79,6 +107,10 @@ public class SequenceFileProxyLoader<C extends Compound> implements ProxySequenc
         return true;
     }
 
+    /**
+     *
+     * @param sequence
+     */
     public void setContents(String sequence) {
         // Horrendously inefficient - pretty much the way the old BJ did things.
         // TODO Should be optimised.
@@ -101,10 +133,19 @@ public class SequenceFileProxyLoader<C extends Compound> implements ProxySequenc
         setInitialized(true);
     }
 
+    /**
+     *
+     * @return
+     */
     public int getLength() {
         return sequenceLength;
     }
 
+    /**
+     *
+     * @param position
+     * @return
+     */
     public C getCompoundAt(int position) {
         if (this.isInitialized() == false) {
             init();
@@ -112,6 +153,11 @@ public class SequenceFileProxyLoader<C extends Compound> implements ProxySequenc
         return this.parsedCompounds.get(position - 1);
     }
 
+    /**
+     *
+     * @param compound
+     * @return
+     */
     public int getIndexOf(C compound) {
         if (this.isInitialized() == false) {
             init();
@@ -119,6 +165,11 @@ public class SequenceFileProxyLoader<C extends Compound> implements ProxySequenc
         return this.parsedCompounds.indexOf(compound) + 1;
     }
 
+    /**
+     *
+     * @param compound
+     * @return
+     */
     public int getLastIndexOf(C compound) {
         if (this.isInitialized() == false) {
             init();
@@ -126,7 +177,10 @@ public class SequenceFileProxyLoader<C extends Compound> implements ProxySequenc
         return this.parsedCompounds.lastIndexOf(compound) + 1;
     }
 
-    
+    /**
+     *
+     * @return
+     */
     public String toString() {
         if (this.isInitialized() == false) {
             init();
@@ -134,13 +188,23 @@ public class SequenceFileProxyLoader<C extends Compound> implements ProxySequenc
         return getSequenceAsString();
     }
 
-    
+    /**
+     *
+     * @return
+     */
     public String getSequenceAsString() {
-        return getSequenceAsString(1, getLength(),Strand.POSITIVE);
+        return getSequenceAsString(1, getLength(), Strand.POSITIVE);
     }
 
-    public String getSequenceAsString(Integer bioBegin, Integer bioEnd,Strand strand) {
-       
+    /**
+     *
+     * @param bioBegin
+     * @param bioEnd
+     * @param strand
+     * @return
+     */
+    public String getSequenceAsString(Integer bioBegin, Integer bioEnd, Strand strand) {
+
         if (this.isInitialized() == false) {
             init();
         }
@@ -148,6 +212,10 @@ public class SequenceFileProxyLoader<C extends Compound> implements ProxySequenc
         return sequenceAsStringHelper.getSequenceAsString(this.parsedCompounds, compoundSet, bioBegin, bioEnd, strand);
     }
 
+    /**
+     *
+     * @return
+     */
     public List<C> getAsList() {
         if (this.isInitialized() == false) {
             init();
@@ -156,13 +224,23 @@ public class SequenceFileProxyLoader<C extends Compound> implements ProxySequenc
 
     }
 
+    /**
+     *
+     * @param bioBegin
+     * @param bioEnd
+     * @return
+     */
     public SequenceView<C> getSubSequence(final Integer bioBegin, final Integer bioEnd) {
         if (this.isInitialized() == false) {
             init();
         }
-        return new SequenceProxyView<C>(SequenceFileProxyLoader.this,bioBegin, bioEnd);
+        return new SequenceProxyView<C>(SequenceFileProxyLoader.this, bioBegin, bioEnd);
     }
 
+    /**
+     *
+     * @return
+     */
     public Iterator<C> iterator() {
         if (this.isInitialized() == false) {
             init();
@@ -170,6 +248,10 @@ public class SequenceFileProxyLoader<C extends Compound> implements ProxySequenc
         return this.parsedCompounds.iterator();
     }
 
+    /**
+     *
+     * @return
+     */
     public CompoundSet<C> getCompoundSet() {
         return compoundSet;
     }
@@ -188,15 +270,27 @@ public class SequenceFileProxyLoader<C extends Compound> implements ProxySequenc
         this.initialized = initialized;
     }
 
-    
+    /**
+     *
+     * @return
+     */
     public AccessionID getAccession() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
+    /**
+     *
+     * @param compounds
+     * @return
+     */
     public int countCompounds(C... compounds) {
-      return SequenceMixin.countCompounds(this, compounds);
+        return SequenceMixin.countCompounds(this, compounds);
     }
 
+    /**
+     *
+     * @return
+     */
     @Override
     public SequenceView<C> getInverse() {
         return SequenceMixin.inverse(this);

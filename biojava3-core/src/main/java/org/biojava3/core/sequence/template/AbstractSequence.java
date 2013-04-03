@@ -44,6 +44,11 @@ import org.biojava3.core.sequence.location.SimpleLocation;
 import org.biojava3.core.sequence.location.template.Location;
 import org.biojava3.core.sequence.storage.ArrayListSequenceReader;
 
+/**
+ *
+ * The base class for DNA, RNA and Protein sequences.
+ * @param <C>
+ */
 public abstract class AbstractSequence<C extends Compound> implements Sequence<C> {
 
     private TaxonomyID taxonomy;
@@ -75,7 +80,6 @@ public abstract class AbstractSequence<C extends Compound> implements Sequence<C
      * @param seqString
      * @param compoundSet
      */
-
     public AbstractSequence(String seqString, CompoundSet<C> compoundSet) {
         setCompoundSet(compoundSet);
         sequenceStorage = new ArrayListSequenceReader<C>();
@@ -93,7 +97,6 @@ public abstract class AbstractSequence<C extends Compound> implements Sequence<C
      * @param proxyLoader
      * @param compoundSet
      */
-
     public AbstractSequence(ProxySequenceReader<C> proxyLoader, CompoundSet<C> compoundSet) {
         setCompoundSet(compoundSet);
         setProxySequenceReader(proxyLoader);
@@ -106,7 +109,7 @@ public abstract class AbstractSequence<C extends Compound> implements Sequence<C
      *  
      * @param proxyLoader
      */
-    public void setProxySequenceReader(ProxySequenceReader<C> proxyLoader){
+    public void setProxySequenceReader(ProxySequenceReader<C> proxyLoader) {
         this.sequenceStorage = proxyLoader;
         if (proxyLoader instanceof FeaturesKeyWordInterface) {
             this.setFeaturesKeyWord((FeaturesKeyWordInterface) sequenceStorage);
@@ -116,8 +119,8 @@ public abstract class AbstractSequence<C extends Compound> implements Sequence<C
         }
     }
 
-    public ProxySequenceReader<C> getProxySequenceReader(){
-        return (ProxySequenceReader<C>)sequenceStorage;
+    public ProxySequenceReader<C> getProxySequenceReader() {
+        return (ProxySequenceReader<C>) sequenceStorage;
     }
 
     /**
@@ -334,6 +337,10 @@ public abstract class AbstractSequence<C extends Compound> implements Sequence<C
         return featureHits;
     }
 
+    /**
+     *
+     * @return
+     */
     public List<FeatureInterface<AbstractSequence<C>, C>> getFeatures() {
         return features;
     }
@@ -385,10 +392,16 @@ public abstract class AbstractSequence<C extends Compound> implements Sequence<C
         }
     }
 
+    /**
+     *
+     * @param type
+     * @return
+     */
     public List<FeatureInterface<AbstractSequence<C>, C>> getFeaturesByType(String type) {
         List<FeatureInterface<AbstractSequence<C>, C>> features = groupedFeatures.get(type);
-        if(features == null)
+        if (features == null) {
             features = new ArrayList<FeatureInterface<AbstractSequence<C>, C>>();
+        }
         return features;
     }
 
@@ -505,38 +518,80 @@ public abstract class AbstractSequence<C extends Compound> implements Sequence<C
 
     }
 
+    /**
+     *
+     * @return
+     */
     public List<C> getAsList() {
         return SequenceMixin.toList(this);
     }
 
+    /**
+     *
+     * @param position
+     * @return
+     */
     public C getCompoundAt(int position) {
         return getSequenceStorage().getCompoundAt(position);
     }
 
+    /**
+     *
+     * @param compound
+     * @return
+     */
     public int getIndexOf(C compound) {
         return getSequenceStorage().getIndexOf(compound);
     }
 
+    /**
+     *
+     * @param compound
+     * @return
+     */
     public int getLastIndexOf(C compound) {
         return getSequenceStorage().getLastIndexOf(compound);
     }
 
+    /**
+     *
+     * @return
+     */
     public int getLength() {
         return getSequenceStorage().getLength();
     }
 
+    /**
+     *
+     * @param bioStart
+     * @param bioEnd
+     * @return
+     */
     public SequenceView<C> getSubSequence(final Integer bioStart, final Integer bioEnd) {
         return new SequenceProxyView<C>(this, bioStart, bioEnd);
     }
 
+    /**
+     *
+     * @return
+     */
     public Iterator<C> iterator() {
         return getSequenceStorage().iterator();
     }
 
+    /**
+     *
+     * @param compounds
+     * @return
+     */
     public int countCompounds(C... compounds) {
         return SequenceMixin.countCompounds(this, compounds);
     }
 
+    /**
+     *
+     * @return
+     */
     @Override
     public SequenceView<C> getInverse() {
         return SequenceMixin.inverse(this);

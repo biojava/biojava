@@ -1,6 +1,23 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ *                    BioJava development code
+ *
+ * This code may be freely distributed and modified under the
+ * terms of the GNU Lesser General Public Licence.  This should
+ * be distributed with the code.  If you do not have a copy,
+ * see:
+ *
+ *      http://www.gnu.org/copyleft/lesser.html
+ *
+ * Copyright for this code is held jointly by the individual
+ * authors.  These should be listed in @author doc comments.
+ *
+ * For more information on the BioJava project and its aims,
+ * or to join the biojava-l mailing list, visit the home page
+ * at:
+ *
+ *      http://www.biojava.org/
+ *
+ * Created on 01-21-2010
  */
 package org.biojava3.core.sequence.io;
 
@@ -60,6 +77,12 @@ public class FastaReaderHelper {
     return fastaReader.process();
   }
 
+  /**
+   * Read a fasta DNA sequence
+   * @param inStream
+   * @return
+   * @throws Exception
+   */
   public static LinkedHashMap<String, DNASequence> readFastaDNASequence(
       InputStream inStream) throws Exception {
     FastaReader<DNASequence, NucleotideCompound> fastaReader = new FastaReader<DNASequence, NucleotideCompound>(
@@ -69,6 +92,12 @@ public class FastaReaderHelper {
     return fastaReader.process();
   }
 
+  /**
+   *
+   * @param file
+   * @return
+   * @throws Exception
+   */
   public static LinkedHashMap<String, DNASequence> readFastaDNASequence(
       File file) throws Exception {
     FileInputStream inStream = new FileInputStream(file);

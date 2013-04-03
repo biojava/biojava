@@ -109,8 +109,17 @@ public class GFF3Reader {
         start = end + 1;
         end = s.indexOf('\t', start);
         char strand = s.charAt(end - 1);
-
-        Location location = Location.fromBio(Integer.parseInt(locStart), Integer.parseInt(locEnd), strand);
+        //added by scooter willis to deal with glimmer predictions that
+        //have the start after the end but is a negative strand
+        int locationStart = Integer.parseInt(locStart);
+        int locationEnd = Integer.parseInt(locEnd);
+        if(locationStart > locationEnd){
+            int temp = locationStart;
+            locationStart = locationEnd;
+            locationEnd = temp;
+           
+        }
+        Location location = Location.fromBio(locationStart, locationEnd, strand);
 
         assert (strand == '-') == location.isNegative();
 

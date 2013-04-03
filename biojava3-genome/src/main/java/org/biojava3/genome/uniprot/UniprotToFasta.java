@@ -24,14 +24,22 @@ public class UniprotToFasta {
 
     public static void main( String[] args ){
         try{
-            String uniprotDatFileName = "/Users/Scooter/scripps/dyadic/uniprot_fungi/uniprot_trembl_fungi.dat";
-            String fastaFileName = "/Users/Scooter/scripps/dyadic/uniprot_fungi/uniprot__trembel_fungi.faa";
+            String uniprotDatFileName = "uniprot_trembl_fungi.dat";
+            String fastaFileName = "uniprot__trembel_fungi.faa";
             UniprotToFasta uniprotToFasta = new UniprotToFasta();
             uniprotToFasta.process(uniprotDatFileName, fastaFileName);
         }catch(Exception e){
             e.printStackTrace();
         }
     }
+
+    /**
+     * Convert a Uniprot sequence file to a fasta file. Allows you to download all sequence data for a species
+     * and convert to fasta to be used in a blast database
+     * @param uniprotDatFileName
+     * @param fastaFileName
+     * @throws Exception
+     */
 
     public void process( String uniprotDatFileName,String fastaFileName ) throws Exception{
 
@@ -78,17 +86,17 @@ public class UniprotToFasta {
                 }
                 line = br.readLine();
             }
-            System.out.println("Unique Genes=" + uniqueGenes.size());
-            System.out.println("Unique Species=" + uniqueSpecies.size());
-            System.out.println("Total sequences=" + seqCodingRegionsList.size());
+       //     System.out.println("Unique Genes=" + uniqueGenes.size());
+       //     System.out.println("Unique Species=" + uniqueSpecies.size());
+       //     System.out.println("Total sequences=" + seqCodingRegionsList.size());
             FastaWriterHelper.writeProteinSequence(new File(fastaFileName), seqCodingRegionsList);
             
             br.close();
             fr.close();
 
-            System.out.println(uniqueGenes.keySet());
-            System.out.println("====================");
-            System.out.println(uniqueSpecies.keySet());
+      //      System.out.println(uniqueGenes.keySet());
+      //      System.out.println("====================");
+      //      System.out.println(uniqueSpecies.keySet());
 
 
     }

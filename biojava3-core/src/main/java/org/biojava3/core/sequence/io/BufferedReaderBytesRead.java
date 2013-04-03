@@ -10,12 +10,9 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 
 /**
- *
- * @author Scooter Willis <willishf at gmail dot com>
- */
-/**
  * Need to keep track of actual bytes read and take advantage of buffered reader
- * performance. Took java source for BufferedReader and added BytesRead functionallity
+ * performance. Took java source for BufferedReader and added BytesRead functionality
+ * @author Scooter Willis <willishf at gmail dot com>
  * 
  * Reads text from a character-input stream, buffering characters so as to
  * provide for the efficient reading of characters, arrays, and lines.

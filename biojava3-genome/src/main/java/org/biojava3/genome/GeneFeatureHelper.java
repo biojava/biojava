@@ -37,20 +37,19 @@ public class GeneFeatureHelper {
 
     private static final Logger log = Logger.getLogger(GeneFeatureHelper.class.getName());
 
-    
-    static public LinkedHashMap<String, ChromosomeSequence> loadFastaAddGeneFeaturesFromUpperCaseExonFastaFile(File fastaSequenceFile,File uppercaseFastaFile, boolean throwExceptionGeneNotFound) throws Exception{
+    static public LinkedHashMap<String, ChromosomeSequence> loadFastaAddGeneFeaturesFromUpperCaseExonFastaFile(File fastaSequenceFile, File uppercaseFastaFile, boolean throwExceptionGeneNotFound) throws Exception {
         LinkedHashMap<String, ChromosomeSequence> chromosomeSequenceList = new LinkedHashMap<String, ChromosomeSequence>();
         LinkedHashMap<String, DNASequence> dnaSequenceList = FastaReaderHelper.readFastaDNASequence(fastaSequenceFile);
-        for(String accession : dnaSequenceList.keySet()){
+        for (String accession : dnaSequenceList.keySet()) {
             DNASequence contigSequence = dnaSequenceList.get(accession);
-            ChromosomeSequence chromsomeSequence = new ChromosomeSequence(contigSequence.getSequenceAsString()); 
+            ChromosomeSequence chromsomeSequence = new ChromosomeSequence(contigSequence.getSequenceAsString());
             chromsomeSequence.setAccession(contigSequence.getAccession());
             chromosomeSequenceList.put(accession, chromsomeSequence);
         }
-        
-        
+
+
         LinkedHashMap<String, DNASequence> geneSequenceList = FastaReaderHelper.readFastaDNASequence(uppercaseFastaFile);
-        for(DNASequence dnaSequence : geneSequenceList.values()){
+        for (DNASequence dnaSequence : geneSequenceList.values()) {
             String geneSequence = dnaSequence.getSequenceAsString();
             String lcGeneSequence = geneSequence.toLowerCase();
             String reverseGeneSequence = dnaSequence.getReverse().getSequenceAsString();
@@ -61,88 +60,95 @@ public class GeneFeatureHelper {
             boolean geneFound = false;
             String accession = "";
             DNASequence contigDNASequence = null;
-            for(String id : dnaSequenceList.keySet()){
+            for (String id : dnaSequenceList.keySet()) {
                 accession = id;
                 contigDNASequence = dnaSequenceList.get(id);
                 String contigSequence = contigDNASequence.getSequenceAsString().toLowerCase();
                 bioStart = contigSequence.indexOf(lcGeneSequence);
-                if(bioStart != -1){
+                if (bioStart != -1) {
                     bioStart = bioStart + 1;
                     bioEnd = bioStart + geneSequence.length() - 1;
                     geneFound = true;
                     break;
-                }else{
+                } else {
                     bioStart = contigSequence.indexOf(lcReverseGeneSequence);
-                    if(bioStart != -1){
+                    if (bioStart != -1) {
                         bioStart = bioStart + 1;
                         bioEnd = bioStart - geneSequence.length() - 1;
                         strand = Strand.NEGATIVE;
                         geneFound = true;
                         break;
                     }
-                } 
+                }
             }
-            
-            if(geneFound){
+
+            if (geneFound) {
                 System.out.println("Gene " + dnaSequence.getAccession().toString() + " found at " + contigDNASequence.getAccession().toString() + " " + bioStart + " " + bioEnd + " " + strand);
                 ChromosomeSequence chromosomeSequence = chromosomeSequenceList.get(accession);
-                
+
                 ArrayList<Integer> exonBoundries = new ArrayList<Integer>();
 
                 //look for transitions from lowercase to upper case
-                for(int i = 0; i < geneSequence.length(); i++){
-                        if(i == 0 && Character.isUpperCase(geneSequence.charAt(i))){
-                            exonBoundries.add(i);
-                        }else if(i == geneSequence.length() - 1) {
-                            exonBoundries.add(i);
-                        }else if(Character.isUpperCase(geneSequence.charAt(i)) && Character.isLowerCase(geneSequence.charAt(i - 1))){
-                            exonBoundries.add(i);
-                        }else if(Character.isUpperCase(geneSequence.charAt(i)) && Character.isLowerCase(geneSequence.charAt(i + 1))){
-                            exonBoundries.add(i);
-                        }
+                for (int i = 0; i < geneSequence.length(); i++) {
+                    if (i == 0 && Character.isUpperCase(geneSequence.charAt(i))) {
+                        exonBoundries.add(i);
+                    } else if (i == geneSequence.length() - 1) {
+                        exonBoundries.add(i);
+                    } else if (Character.isUpperCase(geneSequence.charAt(i)) && Character.isLowerCase(geneSequence.charAt(i - 1))) {
+                        exonBoundries.add(i);
+                    } else if (Character.isUpperCase(geneSequence.charAt(i)) && Character.isLowerCase(geneSequence.charAt(i + 1))) {
+                        exonBoundries.add(i);
                     }
-                if(strand == Strand.NEGATIVE){
-                     Collections.reverse(exonBoundries);
+                }
+                if (strand == Strand.NEGATIVE) {
+                    Collections.reverse(exonBoundries);
                 }
 
 
+                String geneaccession = dnaSequence.getAccession().getID();
+                String note = geneaccession;
+                String[] values = geneaccession.split(" ");
+                geneaccession = values[0];
 
-                GeneSequence geneSeq = chromosomeSequence.addGene(dnaSequence.getAccession(), bioStart, bioEnd, strand);
+
+
+                GeneSequence geneSeq = chromosomeSequence.addGene(new AccessionID(geneaccession), bioStart, bioEnd, strand);
+                geneSeq.addNote(note);
                 geneSeq.setSource(uppercaseFastaFile.getName());
-                String transcriptName = dnaSequence.getAccession().getID() + "-transcript";
+                String transcriptName = geneaccession + "-transcript";
                 TranscriptSequence transcriptSequence = geneSeq.addTranscript(new AccessionID(transcriptName), bioStart, bioEnd);
 
                 int runningFrameLength = 0;
-                for(int i = 0; i < exonBoundries.size() - 1; i = i + 2){
+                for (int i = 0; i < exonBoundries.size() - 1; i = i + 2) {
                     int cdsBioStart = exonBoundries.get(i) + bioStart;
                     int cdsBioEnd = exonBoundries.get(i + 1) + bioStart;
                     runningFrameLength = runningFrameLength + Math.abs(cdsBioEnd - cdsBioStart) + 1;
-                    String  cdsName = transcriptName + "-cds-" + cdsBioStart + "-" + cdsBioEnd;
-                    
+                    String cdsName = transcriptName + "-cds-" + cdsBioStart + "-" + cdsBioEnd;
+
                     AccessionID cdsAccessionID = new AccessionID(cdsName);
                     ExonSequence exonSequence = geneSeq.addExon(cdsAccessionID, cdsBioStart, cdsBioEnd);
                     int remainder = runningFrameLength % 3;
                     int frame = 0;
-                    if(remainder == 1){
+                    if (remainder == 1) {
                         frame = 2; // borrow 2 from next CDS region
-                    }else if(remainder == 2){
+                    } else if (remainder == 2) {
                         frame = 1;
                     }
                     CDSSequence cdsSequence = transcriptSequence.addCDS(cdsAccessionID, cdsBioStart, cdsBioEnd, frame);
                 }
-                
-                
-            }else{
-                if(throwExceptionGeneNotFound){
+
+
+            } else {
+                if (throwExceptionGeneNotFound) {
                     throw new Exception(dnaSequence.getAccession().toString() + " not found");
                 }
                 System.out.println("Gene not found " + dnaSequence.getAccession().toString());
             }
-            
+
         }
         return chromosomeSequenceList;
     }
-    
+
     /**
      * Output a gff3 feature file that will give the length of each scaffold/chromosome in the fasta file.
      * Used for gbrowse so it knows length.
@@ -328,20 +334,55 @@ public class GeneFeatureHelper {
         return chromosomeSequenceList;
     }
 
+    /**
+     * Load GFF3 file using mRNA as the gene feature as not all GFF3 files are complete
+     * @param chromosomeSequenceList
+     * @param listGenes
+     * @throws Exception
+     */
     static public void addGmodGFF3GeneFeatures(LinkedHashMap<String, ChromosomeSequence> chromosomeSequenceList, FeatureList listGenes) throws Exception {
-        FeatureList mRNAFeatures = listGenes.selectByType("mRNA");
-        for (FeatureI f : mRNAFeatures) {
-            Feature mRNAFeature = (Feature) f;
-            String geneid = mRNAFeature.getAttribute("ID");
-            String source = mRNAFeature.source();
 
-            FeatureList gene = listGenes.selectByAttribute("Parent", geneid);
-            FeatureI geneFeature = gene.get(0);
-            ChromosomeSequence seq = chromosomeSequenceList.get(geneFeature.seqname());
-            AccessionID geneAccessionID = new AccessionID(geneid);
+
+        // key off mRNA as being a known feature that may or may not have a parent gene
+
+        FeatureList mRNAFeatures = listGenes.selectByType("mRNA");
+
+        for (FeatureI f : mRNAFeatures) {
+            String geneID;
+            String geneNote = null;
+            String geneSource = null;
+            String sequenceName = null;
+            ChromosomeSequence seq = null;
             GeneSequence geneSequence = null;
 
-            FeatureList cdsFeatures = gene.selectByType("CDS");
+            Feature mRNAFeature = (Feature) f;
+            String mRNAID = mRNAFeature.getAttribute("ID");
+            String mRNAsource = mRNAFeature.source();
+            String mRNANote = mRNAFeature.getAttribute("Note");
+            String mRNAParent = mRNAFeature.getAttribute("Parent");
+            if (mRNAParent != null && mRNAParent.length() > 0) {
+                FeatureList geneFeatureList = listGenes.selectByAttribute("ID", mRNAParent);
+                Feature geneFeature = (Feature) geneFeatureList.get(0);
+                geneID = geneFeature.getAttribute("ID");
+                geneNote = geneFeature.getAttribute("Note");
+                geneSource = ((Feature) geneFeature).source();
+                sequenceName = geneFeature.seqname();
+
+                //
+            } else {
+                //deal with cases where no parent gene is given
+                geneID = mRNAID;
+                geneSource = mRNAsource;
+                sequenceName = mRNAFeature.seqname();
+            }
+
+            seq = chromosomeSequenceList.get(sequenceName);
+
+            AccessionID geneAccessionID = new AccessionID(geneID);
+
+            FeatureList mRNAChildren = listGenes.selectByAttribute("Parent", mRNAID);
+
+            FeatureList cdsFeatures = mRNAChildren.selectByType("CDS");
             FeatureI feature = cdsFeatures.get(0);
             Strand strand = Strand.POSITIVE;
 
@@ -363,7 +404,7 @@ public class GeneFeatureHelper {
             Integer stopCodonEnd = null;
             String startCodonName = "";
             String stopCodonName = "";
-            FeatureList startCodonList = gene.selectByType("five_prime_UTR");
+            FeatureList startCodonList = mRNAChildren.selectByType("five_prime_UTR");
             if (startCodonList != null && startCodonList.size() > 0) {
                 startCodon = startCodonList.get(0);
                 if (strand == Strand.NEGATIVE) {
@@ -374,7 +415,7 @@ public class GeneFeatureHelper {
                 startCodonName = startCodon.getAttribute("ID");
             }
 
-            FeatureList stopCodonList = gene.selectByType("three_prime_UTR");
+            FeatureList stopCodonList = mRNAChildren.selectByType("three_prime_UTR");
 
             if (stopCodonList != null && stopCodonList.size() > 0) {
                 stopCodon = stopCodonList.get(0);
@@ -420,10 +461,14 @@ public class GeneFeatureHelper {
 
 
 
-            AccessionID transcriptAccessionID = new AccessionID(geneid);
+            AccessionID transcriptAccessionID = new AccessionID(mRNAID);
+            geneSequence = seq.getGene(geneID);
             if (geneSequence == null) {
                 geneSequence = seq.addGene(geneAccessionID, startCodonBegin, stopCodonEnd, strand);
-                geneSequence.setSource(source);
+                geneSequence.setSource(geneSource);
+                if (geneNote != null && geneNote.length() > 0) {
+                    geneSequence.addNote(geneNote);
+                }
             } else {
 
                 if (startCodonBegin < geneSequence.getBioBegin()) {
@@ -435,29 +480,41 @@ public class GeneFeatureHelper {
 
             }
             TranscriptSequence transcriptSequence = geneSequence.addTranscript(transcriptAccessionID, startCodonBegin, stopCodonEnd);
+            transcriptSequence.setSource(mRNAsource);
+            if (mRNANote != null && mRNANote.length() > 0) {
+                transcriptSequence.addNote(mRNANote);
+
+            }
             if (startCodon != null) {
                 if (startCodonName == null || startCodonName.length() == 0) {
-                    startCodonName = geneid + "-start_codon-" + startCodon.location().bioStart() + "-" + startCodon.location().bioEnd();
+                    startCodonName = mRNAID + "-start_codon-" + startCodon.location().bioStart() + "-" + startCodon.location().bioEnd();
                 }
                 transcriptSequence.addStartCodonSequence(new AccessionID(startCodonName), startCodon.location().bioStart(), startCodon.location().bioEnd());
             }
             if (stopCodon != null) {
                 if (stopCodonName == null || stopCodonName.length() == 0) {
-                    stopCodonName = geneid + "-stop_codon-" + stopCodon.location().bioStart() + "-" + stopCodon.location().bioEnd();
+                    stopCodonName = mRNAID + "-stop_codon-" + stopCodon.location().bioStart() + "-" + stopCodon.location().bioEnd();
                 }
                 transcriptSequence.addStopCodonSequence(new AccessionID(stopCodonName), stopCodon.location().bioStart(), stopCodon.location().bioEnd());
             }
 
             for (FeatureI cdsFeature : cdsFeatures) {
                 Feature cds = (Feature) cdsFeature;
+                String cdsNote = cdsFeature.getAttribute("Note");
+                String cdsSource = cds.source();
                 String cdsName = cds.getAttribute("ID");
                 if (cdsName == null || cdsName.length() == 0) {
-                    cdsName = geneid + "-cds-" + cds.location().bioStart() + "-" + cds.location().bioEnd();
+                    cdsName = mRNAID + "-cds-" + cds.location().bioStart() + "-" + cds.location().bioEnd();
                 }
                 AccessionID cdsAccessionID = new AccessionID(cdsName);
                 ExonSequence exonSequence = geneSequence.addExon(cdsAccessionID, cdsFeature.location().bioStart(), cdsFeature.location().bioEnd());
+                exonSequence.setSource(cdsSource);
+                if (cdsNote != null && cdsNote.length() > 0) {
+                    exonSequence.addNote(cdsNote);
+                }
                 transcriptSequence.addCDS(cdsAccessionID, cdsFeature.location().bioStart(), cdsFeature.location().bioEnd(), cds.frame());
             }
+
 
         }
 
@@ -825,7 +882,16 @@ public class GeneFeatureHelper {
 
 
         try {
+
             if (true) {
+                File fastaSequenceFile = new File("/Users/Scooter/scripps/dyadic/analysis/454Scaffolds/454Scaffolds.fna");
+                File gff3File = new File("/Users/Scooter/scripps/dyadic/delivered/gmod/gbrowse2/databases/c1scaffold/c1_geneid-v6.gff3");
+                LinkedHashMap<String, ChromosomeSequence> chromosomeSequenceHashMap = GeneFeatureHelper.loadFastaAddGeneFeaturesFromGmodGFF3(fastaSequenceFile, gff3File);
+
+
+            }
+
+            if (false) {
                 LinkedHashMap<String, ChromosomeSequence> dnaSequenceHashMap = GeneFeatureHelper.loadFastaAddGeneFeaturesFromGlimmerGFF3(new File("/Users/Scooter/scripps/dyadic/analysis/454Scaffolds/454Scaffolds-16.fna"), new File("/Users/Scooter/scripps/dyadic/GlimmerHMM/c1_glimmerhmm-16.gff"));
 
                 LinkedHashMap<String, GeneSequence> geneSequenceHashMap = GeneFeatureHelper.getGeneSequences(dnaSequenceHashMap.values());

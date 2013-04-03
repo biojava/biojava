@@ -1,6 +1,23 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ *                    BioJava development code
+ *
+ * This code may be freely distributed and modified under the
+ * terms of the GNU Lesser General Public Licence.  This should
+ * be distributed with the code.  If you do not have a copy,
+ * see:
+ *
+ *      http://www.gnu.org/copyleft/lesser.html
+ *
+ * Copyright for this code is held jointly by the individual
+ * authors.  These should be listed in @author doc comments.
+ *
+ * For more information on the BioJava project and its aims,
+ * or to join the biojava-l mailing list, visit the home page
+ * at:
+ *
+ *      http://www.biojava.org/
+ *
+ * Created on 01-21-2010
  */
 package org.biojava3.core.sequence.io;
 
@@ -18,7 +35,11 @@ import org.biojava3.core.sequence.template.Compound;
 import org.biojava3.core.sequence.template.Sequence;
 
 /**
- * 
+ * The FastaWriter writes a collection of sequences to an outputStream. FastaWriterHelper should be
+ * used to write out sequences. Each sequence loaded from a fasta file retains the original Fasta header
+ * and that is used when writing to the stream. This behavior can be overwritten by implementing
+ * a custom FastaHeaderFormatInterface.
+ *
  * @author Scooter Willis <willishf at gmail dot com>
  */
 public class FastaWriter<S extends Sequence<?>, C extends Compound> {
@@ -27,12 +48,25 @@ public class FastaWriter<S extends Sequence<?>, C extends Compound> {
     Collection<S> sequences;
     FastaHeaderFormatInterface<S, C> headerFormat;
     private int lineLength = 60;
-
+/**
+ * Use default line length of 60
+ * @param os
+ * @param sequences
+ * @param headerFormat
+ */
     public FastaWriter(OutputStream os, Collection<S> sequences, FastaHeaderFormatInterface<S, C> headerFormat) {
         this.os = os;
         this.sequences = sequences;
         this.headerFormat = headerFormat;
     }
+
+/**
+ * Set custom lineLength
+ * @param os
+ * @param sequences
+ * @param headerFormat
+ * @param lineLength
+ */
 
     public FastaWriter(OutputStream os, Collection<S> sequences, FastaHeaderFormatInterface<S, C> headerFormat, int lineLength) {
         this.os = os;
@@ -86,7 +120,7 @@ public class FastaWriter<S extends Sequence<?>, C extends Compound> {
 
     public static void main(String[] args) {
         try {
-            FileInputStream is = new FileInputStream("/Users/Scooter/mutualinformation/project/nuclear_receptor/PF00104_small.fasta");
+            FileInputStream is = new FileInputStream("test.fasta");
 
 
             FastaReader<ProteinSequence, AminoAcidCompound> fastaReader = new FastaReader<ProteinSequence, AminoAcidCompound>(is, new GenericFastaHeaderParser<ProteinSequence, AminoAcidCompound>(), new ProteinSequenceCreator(AminoAcidCompoundSet.getAminoAcidCompoundSet()));
@@ -96,7 +130,7 @@ public class FastaWriter<S extends Sequence<?>, C extends Compound> {
 
             System.out.println(proteinSequences);
 
-            FileOutputStream fileOutputStream = new FileOutputStream("/Users/Scooter/mutualinformation/project/nuclear_receptor/PF00104_small_test.fasta");
+            FileOutputStream fileOutputStream = new FileOutputStream("test_out.fasta");
 
             FastaWriter<ProteinSequence, AminoAcidCompound> fastaWriter = new FastaWriter<ProteinSequence, AminoAcidCompound>(fileOutputStream, proteinSequences.values(), new GenericFastaHeaderFormat<ProteinSequence, AminoAcidCompound>());
             fastaWriter.process();

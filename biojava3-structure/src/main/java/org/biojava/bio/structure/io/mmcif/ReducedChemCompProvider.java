@@ -10,11 +10,11 @@ import org.biojava.bio.structure.io.mmcif.chem.ResidueType;
 import org.biojava.bio.structure.io.mmcif.model.ChemComp;
 
 
-/** This Chem Comp provider does not download any chem comp definitions, but has access to a limited set of local files that are contained in the .jar file.
- *  
- * 
+/** Unlike the {@link DownloadChemCompProvider}, this  {@link ChemCompProvider} does not download any chem comp definitions. 
+ * It has access to a limited set of files that are part of the biojava distribution. 
+ *   
  * @author Andreas Prlic
- *
+ * @since 3.0
  */
 public class ReducedChemCompProvider implements ChemCompProvider {
 
