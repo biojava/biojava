@@ -52,7 +52,7 @@ public class TestSECalignment extends  TestCase {
 		assertNotNull(inStream);
 		String xml = convertStreamToString(inStream);
 
-		AtomCache cache = new AtomCache(".",true);
+		AtomCache cache = TmpAtomCache.cache;
 		try {
 			String name1="1FDO.A";
 			String name2="2IV2.X";
@@ -66,7 +66,7 @@ public class TestSECalignment extends  TestCase {
 			String xmlComp =  AFPChainXMLConverter.toXML(afpChainOrig, ca1, ca2);
 			
 			// FIXME new line character difference?
-			//assertEquals( xml, xmlComp);
+			assertEquals( xml, xmlComp);
 			
 			StructureAlignment ce = StructureAlignmentFactory.getAlgorithm(CeMain.algorithmName);
 			
@@ -78,7 +78,7 @@ public class TestSECalignment extends  TestCase {
 			String xmlNew = AFPChainXMLConverter.toXML(afpChainNew,ca1,ca2);
 			//String ce2 = afpChainNew.toFatcat(ca1, ca2);
 			// FIXME version number, new line character difference?
-			//assertEquals(xml,xmlNew);
+			assertEquals(xml,xmlNew);
 			
 			//assertEquals(ce1,ce2);
 			

@@ -4,7 +4,7 @@
 	<groupId>org.biojava</groupId>
 	<artifactId>biojava</artifactId>
 	<packaging>pom</packaging>
-	<version>3.0-beta1</version>
+	<version>3.0-beta3</version>
 	<name>biojava</name>
 	<description>BioJava is an open-source project dedicated to providing a Java framework for processing biological data. It provides analytical and statistical routines, parsers for common file formats and allows the manipulation of sequences and 3D structures. The goal of the biojava project is to facilitate rapid application development for bioinformatics.</description>
 	<url>http://www.biojava.org</url>
@@ -12,10 +12,17 @@
 		<name>BioJava</name>
 		<url>http://www.biojava.org</url>
 	</organization>
+	<licenses>
+   <license>
+    <name>GNU LGPL v2</name>
+    <url>http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt</url>
+    <distribution>repo</distribution>
+  </license>
+  </licenses>
 	<scm>
-		<connection>scm:svn:svn://code.open-bio.org/biojava/biojava-live/tags/biojava-3.0-beta1</connection>
-		<developerConnection>scm:svn:svn+ssh://dev.open-bio.org/home/svn-repositories/biojava/biojava-live/tags/biojava-3.0-beta1</developerConnection>
-		<url>http://code.open-bio.org/svnweb/index.cgi/biojava/browse/biojava-live/tags/biojava-3.0-beta1</url>
+		<connection>scm:svn:svn://code.open-bio.org/biojava/biojava-live/tags/biojava-3.0-beta3</connection>
+		<developerConnection>scm:svn:svn+ssh://dev.open-bio.org/home/svn-repositories/biojava/biojava-live/tags/biojava-3.0-beta3</developerConnection>
+		<url>http://code.open-bio.org/svnweb/index.cgi/biojava/browse/biojava-live/tags/biojava-3.0-beta3</url>
 	</scm>
 	<repositories>
 		<repository>
@@ -123,6 +130,15 @@
 					</configuration>
 
 				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-javadoc-plugin</artifactId>
+					<version>2.7</version>
+					<configuration>
+					<footer>&lt;script src="http://www.google-analytics.com/urchin.js" type="text/javascript"&gt;&lt;/script&gt;&lt;script type="text/javascri
+pt"&gt;_uacct = "UA-460553-1";urchinTracker();&lt;/script&gt;</footer>
+					</configuration>
+				</plugin>
 			</plugins>
 		</pluginManagement>
 	</build>
@@ -224,7 +240,7 @@
 	</reporting>
 
 	<modules>
-				
+
 		<module>biojava3-core</module>
 		<module>biojava3-phylo</module>
 		<module>biojava3-structure</module>
@@ -233,6 +249,6 @@
 		<module>biojava3-protmod</module>
 		<module>biojava3-alignment</module>
 		<module>biojava3-ws</module>
-		
+
 	</modules>
 </project>

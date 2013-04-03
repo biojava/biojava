@@ -32,6 +32,20 @@ public class TestAltLocs extends TestCase {
 						//System.out.println(g);
 						groupCount ++;
 					}
+				} else {
+					// when using the Reduced Chem Comp provider
+					// there are 3 groups in 2CI1 which are non-standard: SNC, KOR, CIT
+					// they are not in the reduced set of standard definitions that will
+					// be shipped in the .jar file.
+					
+					// if the download chem comp provider is used
+					// there will be CIT, which is not a peptide, but
+					// should still be counted as a valid HETATOM group...
+					if (! ChainImpl.waternames.contains(g.getPDBName())) {
+						//System.out.println(cc);
+						//System.out.println(g);
+						groupCount++;
+					}
 				}
 			}
 
@@ -53,7 +67,7 @@ public class TestAltLocs extends TestCase {
 
 			assertEquals(altLocG.getPDBName(),"K1R");
 
-			assertEquals(275,groupCount);
+			assertEquals(276,groupCount);
 
 
 			ResidueNumber resNum2 = ResidueNumber.fromString("265");

@@ -9,7 +9,7 @@
     </atom1>
     <atom2>
       <structureAtom name="CA">
-        <structureGroup chainID="A" pdbName=" CA" residueNr="692" type="Ligand" />
+        <structureGroup chainID="A" pdbName=" CA" residueNr="692" type="Attachment" />
       </structureAtom>
     </atom2>
   </linkage>
@@ -21,7 +21,7 @@
     </atom1>
     <atom2>
       <structureAtom name="CA">
-        <structureGroup chainID="A" pdbName=" CA" residueNr="692" type="Ligand" />
+        <structureGroup chainID="A" pdbName=" CA" residueNr="692" type="Attachment" />
       </structureAtom>
     </atom2>
   </linkage>
@@ -33,7 +33,7 @@
     </atom1>
     <atom2>
       <structureAtom name="CA">
-        <structureGroup chainID="A" pdbName=" CA" residueNr="692" type="Ligand" />
+        <structureGroup chainID="A" pdbName=" CA" residueNr="692" type="Attachment" />
       </structureAtom>
     </atom2>
   </linkage>
@@ -45,7 +45,7 @@
     </atom1>
     <atom2>
       <structureAtom name="CA">
-        <structureGroup chainID="A" pdbName=" CA" residueNr="692" type="Ligand" />
+        <structureGroup chainID="A" pdbName=" CA" residueNr="692" type="Attachment" />
       </structureAtom>
     </atom2>
   </linkage>

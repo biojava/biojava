@@ -293,7 +293,7 @@ public class SimpleMMcifParser implements MMcifParser {
 
 				if ( ! inString){
 					if ( ! word.equals(""))
-						data.add(word);
+						data.add(word.trim());
 					word = "";
 				} else {
 					// we are in a string, add the space
@@ -320,7 +320,7 @@ public class SimpleMMcifParser implements MMcifParser {
 
 						// at end of string
 						if ( ! word.equals(""))
-							data.add(word);
+							data.add(word.trim());
 						word     = "";
 						inString = false;
 						inS1     = false;
@@ -351,7 +351,7 @@ public class SimpleMMcifParser implements MMcifParser {
 
 						// at end of string
 						if ( ! word.equals(""))
-							data.add(word);
+							data.add(word.trim());
 						word     = "";
 						inString = false;
 						inS2     = false;
@@ -371,6 +371,7 @@ public class SimpleMMcifParser implements MMcifParser {
 		if ( ! word.trim().equals(""))
 			data.add(word);
 
+		
 		return data;
 
 	}
@@ -670,6 +671,7 @@ public class SimpleMMcifParser implements MMcifParser {
 
 					} else {
 						System.err.println("Trying to set field " + key + " in "+ c.getName() +", but not found! (value:" + val + ")");
+						//System.err.println(lineData);
 					}
 				}
 			}

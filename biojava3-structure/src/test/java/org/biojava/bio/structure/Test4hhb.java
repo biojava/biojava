@@ -44,8 +44,6 @@ import junit.framework.TestCase;
  */
 public class Test4hhb  extends TestCase {
 
-
-
 	public void test4hhbPDBFile()
 	{
 
@@ -115,27 +113,27 @@ public class Test4hhb  extends TestCase {
 		assertEquals("4HHB should have 4 chains. " , 4 , chains.size());
 
 		Chain a = chains.get(0);
-		assertEquals("4HHB first chain should be A. " , a.getName(), "A");
+		assertEquals("4HHB first chain should be A. " , a.getChainID(), "A");
 
 		Chain b = chains.get(1);
-		assertEquals("4HHB second chain should be B. " , b.getName(), "B");
+		assertEquals("4HHB second chain should be B. " , b.getChainID(), "B");
 
 		Chain c = chains.get(2);
-		assertEquals("4HHB third chain should be C. " , c.getName(), "C");
+		assertEquals("4HHB third chain should be C. " , c.getChainID(), "C");
 
 		Chain d = chains.get(3);
-		assertEquals("4HHB fourth chain should be D. " , d.getName(), "D");
+		assertEquals("4HHB fourth chain should be D. " , d.getChainID(), "D");
 
-		assertTrue("chain " + a.getName() + " length should be 141. was: " + a.getAtomGroups(GroupType.AMINOACID).size(), ( a.getAtomGroups(GroupType.AMINOACID).size() == 141 ));
-		assertTrue("chain " + b.getName() + " length should be 146. was: " + b.getAtomGroups(GroupType.AMINOACID).size(), ( b.getAtomGroups(GroupType.AMINOACID).size() == 146 ));		
-		assertTrue("chain " + c.getName() + " length should be 141. was: " + c.getAtomGroups(GroupType.AMINOACID).size(), ( c.getAtomGroups(GroupType.AMINOACID).size() == 141 ));
-		assertTrue("chain " + d.getName() + " length should be 146. was: " + d.getAtomGroups(GroupType.AMINOACID).size(), ( d.getAtomGroups(GroupType.AMINOACID).size() == 146 ));
+		assertTrue("chain " + a.getChainID() + " length should be 141. was: " + a.getAtomGroups(GroupType.AMINOACID).size(), ( a.getAtomGroups(GroupType.AMINOACID).size() == 141 ));
+		assertTrue("chain " + b.getChainID() + " length should be 146. was: " + b.getAtomGroups(GroupType.AMINOACID).size(), ( b.getAtomGroups(GroupType.AMINOACID).size() == 146 ));		
+		assertTrue("chain " + c.getChainID() + " length should be 141. was: " + c.getAtomGroups(GroupType.AMINOACID).size(), ( c.getAtomGroups(GroupType.AMINOACID).size() == 141 ));
+		assertTrue("chain " + d.getChainID() + " length should be 146. was: " + d.getAtomGroups(GroupType.AMINOACID).size(), ( d.getAtomGroups(GroupType.AMINOACID).size() == 146 ));
 
-		assertTrue("chain " + a.getName() + " length should be 141, but is " + a.getSeqResLength(), ( a.getSeqResLength() == 141 ));
-		assertTrue("chain " + b.getName() + " length should be 146.", ( b.getSeqResLength() == 146 ));
+		assertTrue("chain " + a.getChainID() + " length should be 141, but is " + a.getSeqResLength(), ( a.getSeqResLength() == 141 ));
+		assertTrue("chain " + b.getChainID() + " length should be 146.", ( b.getSeqResLength() == 146 ));
 
-		assertTrue("chain " + c.getName() + " length should be 141.", ( a.getSeqResLength() == 141 ));
-		assertTrue("chain " + d.getName() + " length should be 146.", ( b.getSeqResLength() == 146 ));
+		assertTrue("chain " + c.getChainID() + " length should be 141.", ( a.getSeqResLength() == 141 ));
+		assertTrue("chain " + d.getChainID() + " length should be 146.", ( b.getSeqResLength() == 146 ));
 
 		testEqualChains(a,c);
 
@@ -159,15 +157,15 @@ public class Test4hhb  extends TestCase {
 			}
 		}
 
-		assertTrue("Chain " + x.getName() + " does not contain a HEM group. " , containsHem);
+		assertTrue("Chain " + x.getChainID() + " does not contain a HEM group. " , containsHem);
 
 	}
 
 
 	private void testEqualChains(Chain a,Chain b){
 
-		assertEquals("length of seqres " + a.getName() + " and "+b.getName()+" should be same. " , a.getSeqResLength(), b.getSeqResLength() );
-		assertEquals("length of atom "   + a.getName() + " and "+b.getName()+" should be same. " , a.getAtomGroups(GroupType.AMINOACID).size(), b.getAtomGroups(GroupType.AMINOACID).size());
+		assertEquals("length of seqres " + a.getChainID() + " and "+b.getChainID()+" should be same. " , a.getSeqResLength(), b.getSeqResLength() );
+		assertEquals("length of atom "   + a.getChainID() + " and "+b.getChainID()+" should be same. " , a.getAtomGroups(GroupType.AMINOACID).size(), b.getAtomGroups(GroupType.AMINOACID).size());
 		assertEquals("sequences should be identical. " , a.getAtomSequence(),   b.getAtomSequence());
 		assertEquals("sequences should be identical. " , a.getSeqResSequence(), b.getSeqResSequence());
 	}

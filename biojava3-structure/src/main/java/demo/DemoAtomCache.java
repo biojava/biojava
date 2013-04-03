@@ -4,6 +4,12 @@ import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.align.util.AtomCache;
 import org.biojava.bio.structure.io.FileParsingParameters;
 
+
+/** Example of how to load PDB files using the AtomCache class.
+ * 
+ * @author Andreas Prlic
+ *
+ */
 public class DemoAtomCache {
 	public static void main(String[] args){
 		

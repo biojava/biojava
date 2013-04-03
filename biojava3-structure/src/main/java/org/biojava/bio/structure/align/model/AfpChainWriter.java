@@ -52,8 +52,9 @@ public class AfpChainWriter
 
 		boolean printLegend = true;
 		boolean longHeader  = true;
+		boolean showHTML = false;
 
-		return toFatCatCore(afpChain, ca1, ca2, printLegend, longHeader);   
+		return toFatCatCore(afpChain, ca1, ca2, printLegend, longHeader, showHTML);   
 	}
 
 	public static String toScoresList(AFPChain afpChain){
@@ -101,7 +102,7 @@ public class AfpChainWriter
 			AFPChain afpChain, 
 			Atom[] ca1, 
 			Atom[] ca2, 
-			boolean printLegend, boolean longHeader){
+			boolean printLegend, boolean longHeader, boolean showHTML){
 
 		if(!afpChain.isSequentialAlignment()) {
 			//TODO find some topology-independent output format
@@ -230,12 +231,60 @@ public class AfpChainWriter
 
 
 			//System.err.println("t,len:"+t+":"+len);
-			a = new String(alnseq1).substring(t,t+len);
-			b = new String(alnseq2).substring(t,t+len);
-			c = new String(alnsymb).substring(t,t+len);
+			String lseq1 = new String(alnseq1).substring(t,t+len); 
+			String lseq2 = new String(alnseq2).substring(t,t+len); 
+			String lsymb = new String(alnsymb).substring(t,t+len); 
+
 			//System.err.println("B:" + b);
 
 
+			// check conservation and color accordingly, if requested by user.
+			if ( showHTML ) {
+				a = "";
+				b = "";
+				c = "";
+
+				//	<span class=\"m\">|</span> ... Structurally equivalent and identical residues 
+				//  <span class=\"sm\">:</span> ... Structurally equivalent and similar residues  
+				//  <span class=\"qg\">.</span> ... Structurally equivalent, but not similar residues. 
+
+				for (int pos = 0 ; pos < lseq1.length() ; pos ++){
+					char c1 = lseq1.charAt(pos);
+					char c2 = lseq2.charAt(pos);
+					char cl = lsymb.charAt(pos);
+
+					if ( cl != ' ' ){
+						
+						a += "<span class=\"m\">" + c1 + "</span>";
+						b += "<span class=\"m\">" + c2 + "</span>";
+						c += "<span class=\"m\">" + cl + "</span>";
+					
+					} else if ( c1 != '-' && c2 != '-') {
+					
+						a += "<span class=\"sm\">" + c1 + "</span>";
+						b += "<span class=\"sm\">" + c2 + "</span>";
+						c += "<span class=\"sm\">" + cl + "</span>";
+						
+						
+					} else {
+						
+						a += "<span class=\"qg\">" + c1 + "</span>";
+						b += "<span class=\"qg\">" + c2 + "</span>";
+						c += "<span class=\"qg\">" + cl + "</span>";
+						
+					}
+					
+					if(c1 != '-') ap ++;
+					if(c2 != '-') bp ++;
+				}
+
+
+			} else {
+
+				a = lseq1;
+				b = lseq2;
+				c = lsymb;
+			}
 
 			txt.append(newline);
 			if ( longHeader )
@@ -270,9 +319,12 @@ public class AfpChainWriter
 					pdb1, a, " ", c, pdb2, b));
 
 			txt.append(newline);
-			for(k = 0; k < len; k ++)       {
-				if(a.charAt(k) != '-') ap ++;
-				if(b.charAt(k) != '-') bp ++;
+			
+			if ( ! showHTML){
+				for(k = 0; k < len; k ++)       {
+					if(a.charAt(k) != '-') ap ++;
+					if(b.charAt(k) != '-') bp ++;
+				}
 			}
 			t += len;
 
@@ -289,6 +341,7 @@ public class AfpChainWriter
 				txt.append("Note: positions are from PDB; the numbers between alignments are block index");
 			}
 			txt.append(newline);
+			
 		}
 		return txt.toString();
 
@@ -359,8 +412,13 @@ public class AfpChainWriter
 	 */
 	public static String toWebSiteDisplay(AFPChain afpChain, Atom[] ca1, Atom[] ca2){
 		if ( afpChain.getAlgorithmName().equalsIgnoreCase(FatCatFlexible.algorithmName)) {
-			String msg =  toFatCat(afpChain,ca1,ca2) ;
 
+			boolean printLegend = true;
+			boolean longHeader  = true;
+			boolean showHTML = true;
+
+			String msg =  toFatCatCore(afpChain,ca1,ca2,printLegend,longHeader,showHTML);
+				
 			return msg;
 		}
 
@@ -375,7 +433,7 @@ public class AfpChainWriter
 
 		String msg = toPrettyAlignment(afpChain, ca1, ca2, true);
 
-		
+
 		msg = msg + newline + 
 		"     <span class=\"m\">|</span> ... Structurally equivalent and identical residues " + newline +
 		"     <span class=\"sm\">:</span> ... Structurally equivalent and similar residues " + newline + 
@@ -391,7 +449,7 @@ public class AfpChainWriter
 
 	}
 
-	
+
 
 	private static String toPrettyAlignment(AFPChain afpChain, Atom[] ca1, Atom[] ca2, boolean showHTML) {
 		String name1 = afpChain.getName1();
@@ -660,21 +718,21 @@ public class AfpChainWriter
 
 	private static CharSequence getPrefix(char oneletter1, char oneletter2,
 			int i) {
-		
+
 		if ( oneletter1 == '-' || oneletter2 == '-' ) {
 			// a gap in the alignment. 
 			// label as mismatch
 			return "<span class=\"qg\">";
 		}
-		
+
 		// an aligned position
 		if ( oneletter1 == oneletter2)
 			return "<span class=\"m\">";
-		
+
 		double score = AFPAlignmentDisplay.aaScore(oneletter1,oneletter2);
 		if ( score > 0 )
 			return "<span class=\"sm\">";
-		
+
 		// not similar
 		return "<span class=\"qg\">";
 	}
@@ -746,12 +804,12 @@ public class AfpChainWriter
 		char c1 =  getOneLetter(ca1[p1].getGroup());
 		char c2 =  getOneLetter(ca2[p2].getGroup());
 		double score = AFPAlignmentDisplay.aaScore(c1,c2);
-		
+
 		if ( showHTML) {
 			alnseq1.append(getPrefix(c1,c2,  0));
 			alnseq2.append(getPrefix(c1,c2,  1));
 		}
-		
+
 		alnseq1.append(c1);              
 		alnseq2.append(c2);
 
@@ -768,7 +826,7 @@ public class AfpChainWriter
 			}
 			//alnsymb[len ++] = '|';
 		} else {
-			
+
 
 			if ( score > 1) {
 				if ( showHTML){

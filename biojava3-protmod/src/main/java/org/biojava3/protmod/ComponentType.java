@@ -36,7 +36,7 @@ import java.util.Map;
  */
 public enum ComponentType {
 	AMINOACID("AminoAcid"),
-	LIGAND("Ligand")
+	LIGAND("Attachment")
 	;
 	
 	ComponentType(String label) {

@@ -18,7 +18,7 @@
  *      http://www.biojava.org/
  *
  * Created on Jun 30, 2010
- * Author: ap3 
+ * Author: Andreas Prlic 
  *
  */
 
@@ -43,6 +43,11 @@ import org.biojava.bio.structure.scop.ScopDomain;
 import org.biojava.bio.structure.scop.ScopInstallation;
 import org.biojava.bio.structure.scop.ScopNode;
 
+/** A class demonstrating the use of the SCOP parsing tools
+ * 
+ * @author Andreas Prlic
+ *
+ */
 public class DemoSCOP
 {
    public static void main(String[] args){

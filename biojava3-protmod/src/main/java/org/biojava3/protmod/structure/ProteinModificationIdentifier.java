@@ -257,69 +257,76 @@ public class ProteinModificationIdentifier {
 			return;
 		}
 		
+		Map<String, Chain> mapChainIdChain = new HashMap<String, Chain>(chains.size());
+		List<Group> residues = new ArrayList<Group>();
+		List<Group> ligands = new ArrayList<Group>();
+		Map<Component, Set<Group>> mapCompGroups = new HashMap<Component, Set<Group>>();
+		
 		for (Chain chain : chains) {
-			List<ModifiedCompound> modComps = new ArrayList<ModifiedCompound>();
+			mapChainIdChain.put(chain.getChainID(), chain);
+			List<Group> ress = StructureUtil.getAminoAcids(chain);
+			List<Group> ligs = chain.getAtomLigands();
+			residues.addAll(ress);
+			ligands.addAll(ligs);
+			addModificationGroups(potentialModifications, ress, ligs, mapCompGroups);
+		}
+		
+		if (residues.isEmpty())
+			System.err.println("WARNING: no amino acids found. Did you parse PDB file with alignSEQRES records?");
+		
+		List<ModifiedCompound> modComps = new ArrayList<ModifiedCompound>();
+		
+		for (ProteinModification mod : potentialModifications) {
+			ModificationCondition condition = mod.getCondition();
+			List<Component> components = condition.getComponents();
+			if (!mapCompGroups.keySet().containsAll(components)) {
+				// not all components exist for this mod.
+				continue;
+			}
 			
-			List<Group> residues = StructureUtil.getAminoAcids(chain);
-			if (residues.isEmpty())
-				System.err.println("WARNING: no amino acids found. Did you parse PDB file with alignSEQRES records?");
-			List<Group> ligands = chain.getAtomLigands();
-			
-			Map<Component, Set<Group>> mapCompGroups = 
-				getModificationGroups(potentialModifications, residues, ligands);
-			
-			for (ProteinModification mod : potentialModifications) {
-				ModificationCondition condition = mod.getCondition();
-				List<Component> components = condition.getComponents();
-				if (!mapCompGroups.keySet().containsAll(components)) {
-					// not all components exist for this mod.
+			int sizeComps = components.size();
+			if (sizeComps==1) {
+				// modified residue
+				// TODO: is this the correct logic for CROSS_LINK_1?
+				Set<Group> modifiedResidues = mapCompGroups.get(components.get(0));
+				if (modifiedResidues != null) {
+					for (Group residue : modifiedResidues) {
+						StructureGroup strucGroup = StructureUtil.getStructureGroup(residue, ComponentType.AMINOACID);
+						ModifiedCompound modRes = new ModifiedCompoundImpl(mod, strucGroup);
+						modComps.add(modRes);
+					}
+				}
+			} else {
+				// for multiple components
+				
+				// find linkages first
+				List<List<Atom[]>> matchedAtomsOfLinkages =
+						getMatchedAtomsOfLinkages(condition, mapCompGroups);
+				
+				if (matchedAtomsOfLinkages.size() != condition.getLinkages().size()) {
 					continue;
 				}
 				
-				int sizeComps = components.size();
-				if (sizeComps==1) {
-					// modified residue
-					// TODO: is this the correct logic for CROSS_LINK_1?
-					Set<Group> modifiedResidues = mapCompGroups.get(components.get(0));
-					if (modifiedResidues != null) {
-						for (Group residue : modifiedResidues) {
-							StructureGroup strucGroup = StructureUtil.getStructureGroup(residue, ComponentType.AMINOACID);
-							ModifiedCompound modRes = new ModifiedCompoundImpl(mod, strucGroup);
-							modComps.add(modRes);
-						}
-					}
-				} else {
-					// for multiple components
-					
-					// find linkages first
-					List<List<Atom[]>> matchedAtomsOfLinkages =
-							getMatchedAtomsOfLinkages(condition, mapCompGroups);
-					
-					if (matchedAtomsOfLinkages.size() != condition.getLinkages().size()) {
-						continue;
-					}
-					
-					assembleLinkages(matchedAtomsOfLinkages, mod, modComps);
-				}
+				assembleLinkages(matchedAtomsOfLinkages, mod, modComps);
 			}
+		}
 
-			if (recordAdditionalAttachments) {
-				// identify additional groups that are not directly attached to amino acids.
-				for (ModifiedCompound mc : modComps) {
-					identifyAdditionalAttachments(mc, ligands, chain);
-				}
+		if (recordAdditionalAttachments) {
+			// identify additional groups that are not directly attached to amino acids.
+			for (ModifiedCompound mc : modComps) {
+				identifyAdditionalAttachments(mc, ligands, mapChainIdChain);
 			}
-			
-			mergeModComps(modComps);
-			
-			identifiedModifiedCompounds.addAll(modComps);
-			
-			
-			// record unidentifiable linkage
-			if (recordUnidentifiableModifiedCompounds) {
-				recordUnidentifiableAtomLinkages(modComps, residues, ligands);
-				recordUnidentifiableModifiedResidues(modComps, residues);
-			}
+		}
+		
+		mergeModComps(modComps);
+		
+		identifiedModifiedCompounds.addAll(modComps);
+		
+		
+		// record unidentifiable linkage
+		if (recordUnidentifiableModifiedCompounds) {
+			recordUnidentifiableAtomLinkages(modComps, residues, ligands);
+			recordUnidentifiableModifiedResidues(modComps, residues);
 		}
 	}
 	
@@ -330,7 +337,7 @@ public class ProteinModificationIdentifier {
 	 * @return a list of added groups.
 	 */
 	private void identifyAdditionalAttachments(ModifiedCompound mc, 
-			List<Group> ligands, Chain chain) {
+			List<Group> ligands, Map<String, Chain> mapChainIdChain) {
 		if (ligands.isEmpty()) {
 			return;
 		}
@@ -347,11 +354,11 @@ public class ProteinModificationIdentifier {
 				//	numIns += num.getInsCode();
 				//}
 				ResidueNumber resNum = new ResidueNumber();
-				resNum.setChainId(chain.getChainID());
+				resNum.setChainId(num.getChainId());
 				resNum.setSeqNum(num.getResidueNumber());
 				resNum.setInsCode(num.getInsCode());
 				//group = chain.getGroupByPDB(numIns);
-				group = chain.getGroupByPDB(resNum);
+				group = mapChainIdChain.get(num.getChainId()).getGroupByPDB(resNum);
 			} catch (StructureException e) {
 				// should not happen
 				continue;
@@ -506,13 +513,15 @@ public class ProteinModificationIdentifier {
 	 * @param modifications a set of {@link ProteinModification}s.
 	 * @param residues
 	 * @param ligands 
+	 * @param saveTo save result to
 	 * @return map from component to list of corresponding residues
 	 *  in the chain.
 	 */
-	private Map<Component, Set<Group>> getModificationGroups(
+	private void addModificationGroups(
 			final Set<ProteinModification> modifications,
 			final List<Group> residues,
-			final List<Group> ligands) {
+			final List<Group> ligands,
+			final Map<Component, Set<Group>> saveTo) {
 		if (residues==null || ligands==null || modifications==null) {
 			throw new IllegalArgumentException("Null argument(s).");
 		}
@@ -534,9 +543,6 @@ public class ProteinModificationIdentifier {
 			}
 		}
 		
-		Map<Component, Set<Group>> mapCompRes = 
-			new HashMap<Component, Set<Group>>();
-		
 		{
 			// ligands
 			Set<Component> ligandsWildCard = mapSingleMultiComps.get(
@@ -547,10 +553,10 @@ public class ProteinModificationIdentifier {
 						Component.of(pdbccId, ComponentType.LIGAND));
 				
 				for (Component comp : unionComponentSet(ligandsWildCard, comps)) {
-					Set<Group> gs = mapCompRes.get(comp);
+					Set<Group> gs = saveTo.get(comp);
 					if (gs==null) {
 						gs = new LinkedHashSet<Group>();
-						mapCompRes.put(comp, gs);
+						saveTo.put(comp, gs);
 					}
 					gs.add(group);
 				}
@@ -560,7 +566,7 @@ public class ProteinModificationIdentifier {
 		{
 			// residues
 			if (residues.isEmpty()) {
-				return mapCompRes;
+				return;
 			}
 			
 			Set<Component> residuesWildCard = mapSingleMultiComps.get(
@@ -573,10 +579,10 @@ public class ProteinModificationIdentifier {
 						Component.of(pdbccId, ComponentType.AMINOACID));
 				
 				for (Component comp : unionComponentSet(residuesWildCard, comps)) {
-					Set<Group> gs = mapCompRes.get(comp);
+					Set<Group> gs = saveTo.get(comp);
 					if (gs==null) {
 						gs = new LinkedHashSet<Group>();
-						mapCompRes.put(comp, gs);
+						saveTo.put(comp, gs);
 					}
 					gs.add(group);
 				}
@@ -597,10 +603,10 @@ public class ProteinModificationIdentifier {
 						Component.of(res.getPDBName(), ComponentType.AMINOACID, true, false));
 				
 				for (Component comp : unionComponentSet(nTermWildCard, comps)) {
-					Set<Group> gs = mapCompRes.get(comp);
+					Set<Group> gs = saveTo.get(comp);
 					if (gs==null) {
 						gs = new LinkedHashSet<Group>();
-						mapCompRes.put(comp, gs);
+						saveTo.put(comp, gs);
 					}
 					gs.add(res);
 				}
@@ -619,17 +625,15 @@ public class ProteinModificationIdentifier {
 						Component.of(res.getPDBName(), ComponentType.AMINOACID, false, true));
 
 				for (Component comp : unionComponentSet(cTermWildCard, comps)) {
-					Set<Group> gs = mapCompRes.get(comp);
+					Set<Group> gs = saveTo.get(comp);
 					if (gs==null) {
 						gs = new LinkedHashSet<Group>();
-						mapCompRes.put(comp, gs);
+						saveTo.put(comp, gs);
 					}
 					gs.add(res);
 				}
 			} while (iRes>=0 && ligands.contains(res));
 		}
-
-		return mapCompRes;
 	}
 	
 	private Set<Component> unionComponentSet(Set<Component> set1, Set<Component> set2) {

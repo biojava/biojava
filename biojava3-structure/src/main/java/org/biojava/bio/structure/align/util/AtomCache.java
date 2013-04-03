@@ -23,7 +23,11 @@ import org.biojava3.core.util.InputStreamProvider;
 
 
 
-
+/** Utility class that provides easy access to Structure objects.
+ * 
+ * @author Andreas Prlic
+ *
+ */
 public class AtomCache {
 
 	public static final String CHAIN_NR_SYMBOL = ":";

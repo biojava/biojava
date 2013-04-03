@@ -31,7 +31,11 @@ import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.io.MMCIFFileReader;
 import org.biojava.bio.structure.io.StructureIOFile;
 
-
+/** An example of how to read MMcif files
+ * 
+ * @author Andreas Prlic
+ * 
+ */
 public class DemoMMCIFReader
 {
 

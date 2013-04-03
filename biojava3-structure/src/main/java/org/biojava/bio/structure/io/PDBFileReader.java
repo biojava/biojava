@@ -46,6 +46,7 @@ import org.biojava.bio.structure.Group;
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.align.ce.AbstractUserArgumentProcessor;
 import org.biojava.bio.structure.io.mmcif.ChemCompGroupFactory;
+import org.biojava.bio.structure.io.mmcif.ReducedChemCompProvider;
 import org.biojava3.core.util.InputStreamProvider;
 
 
@@ -256,7 +257,7 @@ public class PDBFileReader implements StructureIOFile {
 	/** directory where to find PDB files */
 	public void setPath(String p){
 		System.setProperty(AbstractUserArgumentProcessor.PDB_DIR,p);
-		ChemCompGroupFactory.setPath(p);
+		
 		path = p ;
 	}
 
@@ -552,7 +553,10 @@ public class PDBFileReader implements StructureIOFile {
 
 	public void setFileParsingParameters(FileParsingParameters params)
 	   {
-	      this.params= params;
+		this.params= params;
+		if ( ! params.isLoadChemCompInfo()) {
+			ChemCompGroupFactory.setChemCompProvider(new ReducedChemCompProvider());
+		}
 	      
 	   }
 	    
