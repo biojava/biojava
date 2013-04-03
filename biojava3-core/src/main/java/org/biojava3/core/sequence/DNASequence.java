@@ -36,44 +36,83 @@ import org.biojava3.core.sequence.views.ComplementSequenceView;
 import org.biojava3.core.sequence.views.ReversedSequenceView;
 
 /**
+ * This is class should model the attributes associated with a DNA sequence
  *
  * @author Scooter Willis
  */
 public class DNASequence extends AbstractSequence<NucleotideCompound> {
-
+/**
+ * The type of DNA sequence
+ */
     public enum DNAType {
         CHROMOSOME, MITOCHONDRIAL, PLASMID, PLASTID, UNKNOWN
     }
     private DNAType dnaType = DNAType.UNKNOWN;
 
+    /**
+     * Shouldn't be used but makes it bean happy
+     */
     public DNASequence() {
 //        throw new UnsupportedOperationException("Null constructor not supported");
     }
 
+    /**
+     * String is king and create a sequence from DNA with default DNA compound set
+     * @param seqString
+     */
     public DNASequence(String seqString) {
         super(seqString, DNACompoundSet.getDNACompoundSet());
     }
 
+    /**
+     * Create a sequence where the actual storage of the sequence data is somewhere else
+     * @param proxyLoader
+     */
     public DNASequence(ProxySequenceReader<NucleotideCompound> proxyLoader) {
         super(proxyLoader, DNACompoundSet.getDNACompoundSet());
     }
 
+    /**
+     * Create a sequence from a string with user defined compound set
+     * @param seqString
+     * @param compoundSet
+     */
     public DNASequence(String seqString, CompoundSet<NucleotideCompound> compoundSet) {
         super(seqString, compoundSet);
     }
 
+    /**
+     * Create a sequence from a ProxySequencereader and user defined compound set
+     * @param proxyLoader
+     * @param compoundSet
+     */
     public DNASequence(ProxySequenceReader<NucleotideCompound> proxyLoader, CompoundSet<NucleotideCompound> compoundSet) {
         super(proxyLoader, compoundSet);
     }
 
+    /**
+     * Return the RNASequence equivalent of the DNASequence using default Transcription Engine. Not all
+     * species follow the same rules. If you don't know better use this method
+     * @return
+     */
     public RNASequence getRNASequence() {
       return getRNASequence(Frame.getDefaultFrame());
     }
 
+    /**
+     * Allow a user to pass in a rules engine to do the DNA to RNA translation
+     * @param engine
+     * @return
+     */
     public RNASequence getRNASequence(TranscriptionEngine engine) {
       return getRNASequence(engine, Frame.getDefaultFrame());
     }
 
+    /**
+     * Allows the user to pass in the Frame shift.
+     * @param frame
+     * @return
+     */
     public RNASequence getRNASequence(Frame frame) {
       return getRNASequence(TranscriptionEngine.getDefault(), Frame.getDefaultFrame());
     }
@@ -82,6 +121,10 @@ public class DNASequence extends AbstractSequence<NucleotideCompound> {
       return (RNASequence) engine.getDnaRnaTranslator().createSequence(this, frame);
     }
 
+    /**
+     * Get the GC count in the DNA Sequence
+     * @return
+     */
     public int getGCCount() {
         return SequenceMixin.countGC(this);
     }

@@ -39,7 +39,7 @@ import org.biojava.bio.structure.gui.BiojavaJmol;
 /** a utility class that listens to Ramsol script commands in the @link {@link BiojavaJmol} class
  * 
  * @author Andreas Prlic
- * @Deprecated use  org.biojava.bio.structure.align.gui.jmol.RasmolCommandListener instead
+ * @deprecated use  org.biojava.bio.structure.align.gui.jmol.RasmolCommandListener instead
  */
 @Deprecated 
 public class RasmolCommandListener 

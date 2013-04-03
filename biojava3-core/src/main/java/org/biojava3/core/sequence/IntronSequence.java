@@ -32,7 +32,12 @@ package org.biojava3.core.sequence;
 public class IntronSequence extends DNASequence{
 
 
-
+    /**
+     * Place holder for Intron sequence features
+     * @param parentGeneSequence
+     * @param begin
+     * @param end
+     */
 
     public IntronSequence(GeneSequence parentGeneSequence, int begin, int end){
         this.setParentSequence(parentGeneSequence);

@@ -27,7 +27,7 @@ import java.util.Comparator;
 import org.biojava3.core.sequence.template.AbstractSequence;
 
 /**
- * 
+ * Used to sort sequences
  * @author Scooter Willis <willishf at gmail dot com>
  */
 public class SequenceComparator implements Comparator<AbstractSequence<?>>{

@@ -24,7 +24,7 @@
 package org.biojava3.core.sequence;
 
 /**
- *
+ * Used to map the stop codon sequence on a gene
  * @author Scooter Willis
  */
 public class StopCodonSequence extends DNASequence {

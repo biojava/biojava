@@ -241,7 +241,7 @@ public class HTTPConnectionTools {
     * 
     * 
     * @param url
-    * @return
+    * @return InputStream of response
     * @throws IOException
     */
    public static InputStream doPOST(URL url, String data)
@@ -254,7 +254,7 @@ public class HTTPConnectionTools {
     * 
     * 
     * @param url
-    * @return
+    * @return InputStream of response
     * @throws IOException
     */
    public static InputStream doPOST(URL url, String data, int timeout)

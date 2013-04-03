@@ -1,6 +1,23 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ *                    BioJava development code
+ *
+ * This code may be freely distributed and modified under the
+ * terms of the GNU Lesser General Public Licence.  This should
+ * be distributed with the code.  If you do not have a copy,
+ * see:
+ *
+ *      http://www.gnu.org/copyleft/lesser.html
+ *
+ * Copyright for this code is held jointly by the individual
+ * authors.  These should be listed in @author doc comments.
+ *
+ * For more information on the BioJava project and its aims,
+ * or to join the biojava-l mailing list, visit the home page
+ * at:
+ *
+ *      http://www.biojava.org/
+ *
+ * Created on 01-21-2010
  */
 
 package org.biojava3.core.sequence.features;
@@ -13,7 +30,9 @@ import org.biojava3.core.sequence.template.AbstractSequence;
 import org.biojava3.core.sequence.template.Compound;
 
 /**
- *
+ * A feature is currently any descriptive item that can be associated with a sequence position(s)
+ * A feature has a type and a source which is currently a string to allow flexibility for the user
+ * Ideally well defined features should have a class to describe attributes of that feature
  * @author Scooter Willis <willishf at gmail dot com>
  */
 public abstract class AbstractFeature<S extends AbstractSequence<C>, C extends Compound>
@@ -27,56 +46,108 @@ public abstract class AbstractFeature<S extends AbstractSequence<C>, C extends C
     private String shortDescription = "";
     private Object userObject = null;
 
+    /**
+     * A feature has a type and a source
+     * @param type
+     * @param source
+     */
     public AbstractFeature(String type,String source){
         this.type = type;
         this.source = source;
     }
+
+    /**
+     * A feature could be a single sequence position like a mutation or a post translational modification of an amino acid.
+     * It could also be the docking interface of N number of amino acids on the surface. The location wold then be a collection
+     * of sequence positions instead of a single sequence position or the begin and end of a sequence seqment.
+     * @return
+     */
 
     @Override
     public SequenceLocation<S, C> getLocations() {
         return sequenceLocation;
     }
 
+    /**
+     *  A feature could be a single sequence position like a mutation or a post translational modification of an amino acid.
+     * It could also be the docking interface of N number of amino acids on the surface. The location wold then be a collection
+     * of sequence positions instead of a single sequence position or the begin and end of a sequence seqment.
+     * @param loc
+     */
     @Override
     public void setLocation(SequenceLocation<S, C> loc) {
         sequenceLocation = loc;
     }
 
+    /**
+     * The feature type
+     * @return
+     */
     @Override
     public String getType() {
         return type;
     }
 
+    /**
+     * Set the feature type
+     * @param type
+     */
     @Override
     public void setType(String type) {
         this.type = type;
     }
+
+    /**
+     * The feature source
+     * @return
+     */
 
     @Override
     public String getSource() {
         return source;
     }
 
+    /**
+     * Set the feature source
+     * @param source
+     */
     @Override
     public void setSource(String source) {
         this.source = source;
     }
 
+    /**
+     * A feature can be the child or contained by a parent feature. An example is a Helix feature could contain
+     * children features. A PFAM domain could contain secondary structures.
+     * @param feature
+     */
     @Override
     public void setParentFeature(FeatureInterface<S, C> feature) {
         parentFeature = feature;
     }
 
+    /**
+     * Get the parent Feature
+     * @return
+     */
     @Override
     public FeatureInterface<S, C> getParentFeature() {
        return parentFeature;
     }
 
+    /**
+     * Get the children features
+     * @return
+     */
     @Override
     public List<FeatureInterface<S, C>> getChildrenFeatures() {
         return childrenFeatures;
     }
 
+    /**
+     * Set the children features
+     * @param features
+     */
     @Override
     public void setChildrenFeatures(List<FeatureInterface<S, C>> features) {
         childrenFeatures = features;
@@ -169,6 +240,8 @@ public abstract class AbstractFeature<S extends AbstractSequence<C>, C extends C
     }
 
     /**
+     * Allow the user to associate an object with the feature. This way if a feature which is displayed in a GUI
+     * is clicked on the application can then get a user defined object associated with the feature.
      * @param userObject the userObject to set
      */
     public void setUserObject(Object userObject) {

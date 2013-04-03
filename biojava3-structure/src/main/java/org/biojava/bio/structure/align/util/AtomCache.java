@@ -2,10 +2,11 @@ package org.biojava.bio.structure.align.util;
 
 import java.io.IOException;
 
-import java.util.ArrayList;
+
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.TreeSet;
 
 import org.biojava.bio.structure.Atom;
 
@@ -23,10 +24,14 @@ import org.biojava3.core.util.InputStreamProvider;
 
 
 
-/** Utility class that provides easy access to Structure objects.
+/** A utility class that provides easy access to Structure objects. If you are running a
+ *  script that is frequently re-using the same PDB structures, the AtomCache keeps an 
+ *  in-memory cache of the files for quicker access. The cache is a soft-cache, this 
+ *  means it won't cause out of memory exceptions, but garbage collects the data if the 
+ *  Java virtual machine needs to free up space. The AtomCache is thread-safe.
  * 
  * @author Andreas Prlic
- *
+ * @since 3.0
  */
 public class AtomCache {
 
@@ -37,13 +42,19 @@ public class AtomCache {
 
 
 	// make sure IDs are loaded uniquely
-	Collection<String> currentlyLoading = Collections.synchronizedCollection(new ArrayList<String>());
+	Collection<String> currentlyLoading = Collections.synchronizedCollection(new TreeSet<String>());
 
 	private static ScopInstallation scopInstallation ;
 	boolean autoFetch;
 	boolean isSplit;
 	FileParsingParameters params;
 
+	/** Creates an instance of an AtomCache that is pointed to the a particular
+	 * path in the file system.
+	 * 
+	 * @param pdbFilePath a directory in the file system to use as a location to cache files.
+	 * @param isSplit a flag to indiacte if the directory organisation is "split" as on the PDB ftp servers, or if all files are contained in one directory.
+	 */
 	public AtomCache(String pdbFilePath, boolean isSplit){
 
 		// we are caching the binary files that contain the PDBs gzipped
@@ -70,33 +81,60 @@ public class AtomCache {
 		scopInstallation = null;
 	}
 
+	/** Creates a new AtomCache object based on the provided UserConfiguration.
+	 * 
+	 * @param config the UserConfiguration to use for this cache.
+	 */
 	public AtomCache(UserConfiguration config){
 		this(config.getPdbFilePath(),config.isSplit());
 		autoFetch = config.getAutoFetch();
 	}
 
 
-
+	/** Get the path that is used to cache PDB files.
+	 * 
+	 * @return path to a directory
+	 */
 	public String getPath() {
 		return path;
 	}
 
+	/** Set the path that is used to cache PDB files.
+	 * 
+	 * @param path to a directory
+	 */
 	public void setPath(String path) {
 		this.path = path;
 	}
 
+	/** Is the organization of files within the directory split, as on the PDB FTP servers,
+	 * or are all files contained in one directory.
+	 * @return flag 
+	 */
 	public boolean isSplit() {
 		return isSplit;
 	}
 
+	/** Is the organization of files within the directory split, as on the PDB FTP servers,
+	 * or are all files contained in one directory.
+	 * @param isSplit flag 
+	 */
 	public void setSplit(boolean isSplit) {
 		this.isSplit = isSplit;
 	}
 
+	/** Does the cache automatically download files that are missing from the local installation from the PDB FTP site?
+	 * 
+	 * @return flag
+	 */
 	public boolean isAutoFetch() {
 		return autoFetch;
 	}
 
+	/** Does the cache automatically download files that are missing from the local installation from the PDB FTP site?
+	 * 
+	 * @param autoFetch flag
+	 */
 	public void setAutoFetch(boolean autoFetch) {
 		this.autoFetch = autoFetch;
 	}
@@ -145,7 +183,7 @@ public class AtomCache {
 		if ( n.getChains().size()> 0) {
 			Chain c1 = n.getChains().get(0);
 			for ( Chain c : s.getChains()) {
-				if ( c1.getName().equals(c.getName())) {
+				if ( c1.getChainID().equals(c.getChainID())) {
 					List<Group> ligands = c.getAtomLigands();
 
 					for(Group g: ligands){
@@ -196,6 +234,16 @@ public class AtomCache {
 		return atoms;
 	}
 
+
+	/** Returns the CA atoms for the provided name. See {@link #getStructure(String)} for supported naming conventions.
+	 * 
+	 * @param name
+	 * @param clone flag to make  sure that the atoms are getting coned
+	 * @return an array of Atoms. 
+	 * @throws IOException
+	 * @throws StructureException
+	 * @deprecated does the same as {@link #getAtoms(String)} ;
+	 */
 	public  Atom[] getAtoms(String name, boolean clone)throws IOException,StructureException{
 		Atom[] atoms =  getAtoms(name);
 
@@ -211,9 +259,12 @@ public class AtomCache {
 	/** Request a Structure based on a <i>name</i>.
 	 * The following rules are applied to this name:
 	 *  If only a PDB code is provided, the whole structure will be used for the alignment.
-	 *	To specify a particular chain write as: 4hhb.A (chain IDs are case sensitive, PDB ids are not)
-	 * 	To specify that the 1st chain in a structure should be used write: 4hhb:0 .
-	 * 
+	 *  <ul>
+	 *	<li>To specify a particular chain write as: 4hhb.A (chain IDs are case sensitive, PDB ids are not)</li>
+	 * 	<li>To specify that the 1st chain in a structure should be used write: 4hhb:0 .</li>
+	 *  <li>To specify a SCOP domain write a scopId e.g. d2bq6a1 </li>
+	 *  </ul>
+	 *  
 	 * @param name
 	 * @return a Structure object
 	 * @throws IOException
@@ -287,12 +338,12 @@ public class AtomCache {
 
 			while ( checkLoading(pdbId) ){
 				// waiting for loading to be finished...
-				// sleep half a second...
-				//				try {
-				//					Thread.sleep(500);
-				//				} catch (InterruptedException e){
-				//					System.err.println(e.getMessage());
-				//				}
+
+				try {
+					Thread.sleep(100);
+				} catch (InterruptedException e){
+					System.err.println(e.getMessage());
+				}
 
 			}
 
@@ -361,7 +412,8 @@ public class AtomCache {
 	}
 
 	private  void flagLoading(String name){
-		currentlyLoading.add(name);
+		if ( ! currentlyLoading.contains(name))	
+			currentlyLoading.add(name);
 	}
 
 	private  void flagLoadingFinished(String name){

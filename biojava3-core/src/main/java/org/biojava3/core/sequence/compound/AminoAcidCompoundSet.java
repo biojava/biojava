@@ -38,6 +38,8 @@ import org.biojava3.core.sequence.template.Sequence;
  * Set of proteinogenic amino acids.  Molecular weights are recorded in daltons (Da) as residues of a chain; monomers
  * outside of a chain would likely have an additional mass of 18.01524 Da contributed by an associated water molecule.
  *
+ * Currently we have different symbols to handle inserts so not as clean as it should be
+ *
  * @author Richard Holland
  * @author Scooter Willis
  * @author Mark Chapman

@@ -59,10 +59,20 @@ import org.biojava3.core.util.XMLHelper;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+/**
+ * 
+ * Pass in a Uniprot ID and this ProxySequenceReader when passed to a ProteinSequence will get the sequence data and other data elements
+ * associated with the ProteinSequence by Uniprot. This is an example of how to map external databases of proteins and features to the BioJava3
+ * ProteinSequence.
+ * Important to call @see setUniprotDirectoryCache to allow caching of XML files so they don't need to be reloaded each time. Does
+ * not manage cache.
+ * @param <C>
+ */
+
 public class UniprotProxySequenceReader<C extends Compound> implements ProxySequenceReader<C>, FeaturesKeyWordInterface, DatabaseReferenceInterface {
 
     private static final Logger logger = Logger.getLogger(UniprotProxySequenceReader.class.getName());
-    private static String uniprotbaseURL = "http://pir.uniprot.org";
+    private static String uniprotbaseURL = "http://www.uniprot.org"; //"http://pir.uniprot.org";
     private static String uniprotDirectoryCache = null;
 
 
@@ -71,6 +81,15 @@ public class UniprotProxySequenceReader<C extends Compound> implements ProxySequ
     private List<C> parsedCompounds = new ArrayList<C>();
     Document uniprotDoc;
 
+
+    /**
+     * The uniprot id is used to retrieve the uniprot XML which is then parsed as a DOM object
+     * so we know everything about the protein. If an error occurs throw an exception. We could
+     * have a bad uniprot id or network error
+     * @param accession
+     * @param compoundSet
+     * @throws Exception
+     */
     public UniprotProxySequenceReader(String accession, CompoundSet<C> compoundSet) throws Exception {
 
         setCompoundSet(compoundSet);
@@ -83,6 +102,10 @@ public class UniprotProxySequenceReader<C extends Compound> implements ProxySequ
         this.compoundSet = compoundSet;
     }
 
+    /**
+     * Once the sequence is retrieved set the contents and make sure everything this is valid
+     * @param sequence
+     */
     public void setContents(String sequence) {
         // Horrendously inefficient - pretty much the way the old BJ did things.
         // TODO Should be optimised.
@@ -104,75 +127,134 @@ public class UniprotProxySequenceReader<C extends Compound> implements ProxySequ
         }
     }
 
+    /**
+     * The sequence length
+     * @return
+     */
     public int getLength() {
         return this.parsedCompounds.size();
     }
 
+    /**
+     *
+     * @param position
+     * @return
+     */
     public C getCompoundAt(int position) {
         return this.parsedCompounds.get(position - 1);
     }
-
+/**
+ *
+ * @param compound
+ * @return
+ */
     public int getIndexOf(C compound) {
         return this.parsedCompounds.indexOf(compound) + 1;
     }
-
+/**
+ *
+ * @param compound
+ * @return
+ */
     public int getLastIndexOf(C compound) {
         return this.parsedCompounds.lastIndexOf(compound) + 1;
     }
-
+/**
+ *
+ * @return
+ */
     
+    @Override
     public String toString() {
         return getSequenceAsString();
     }
-
+/**
+ *
+ * @return
+ */
     public String getSequenceAsString() {
         return sequence;
     }
-
+/**
+ *
+ * @return
+ */
     public List<C> getAsList() {
         return this.parsedCompounds;
     }
-
+/**
+ *
+ * @return
+ */
     @Override
     public SequenceView<C> getInverse() {
         return SequenceMixin.inverse(this);
     }
-
+/**
+ *
+ * @param bioBegin
+ * @param bioEnd
+ * @param strand
+ * @return
+ */
     
     public String getSequenceAsString(Integer bioBegin, Integer bioEnd, Strand strand) {
         SequenceAsStringHelper<C> sequenceAsStringHelper = new SequenceAsStringHelper<C>();
         return sequenceAsStringHelper.getSequenceAsString(this.parsedCompounds, compoundSet, bioBegin, bioEnd, strand);
     }
-
+/**
+ *
+ * @param bioBegin
+ * @param bioEnd
+ * @return
+ */
     public SequenceView<C> getSubSequence(final Integer bioBegin, final Integer bioEnd) {
         return new SequenceProxyView<C>(UniprotProxySequenceReader.this, bioBegin, bioEnd);
     }
-
+/**
+ *
+ * @return
+ */
     public Iterator<C> iterator() {
         return this.parsedCompounds.iterator();
     }
-
+/**
+ *
+ * @return
+ */
     public CompoundSet<C> getCompoundSet() {
         return compoundSet;
     }
-
+/**
+ *
+ * @return
+ */
     
     public AccessionID getAccession() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
-
+/**
+ *
+ * @param compounds
+ * @return
+ */
     
     public int countCompounds(C... compounds) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
-
+/**
+ *
+ * @param accession
+ * @return
+ * @throws Exception
+ */
     private Document getUniprotXML(String accession) throws Exception {
         int index = accession.lastIndexOf(".");
         String key = accession;
         if (index != -1) {
             key = accession.substring(0, index);
         }
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         File f = null;
         if (uniprotDirectoryCache != null && uniprotDirectoryCache.length() > 0) {
             f = new File(uniprotDirectoryCache + File.separatorChar + key + ".xml");
@@ -193,7 +275,7 @@ public class UniprotProxySequenceReader<C extends Compound> implements ProxySequ
         }
         if (sb.length() == 0) {
             String uniprotURL = getUniprotbaseURL() + "/uniprot/" + key + ".xml";
-            logger.severe("Loading " + uniprotURL);
+            logger.info("Loading " + uniprotURL);
             URL uniprot = new URL(uniprotURL);
             URLConnection uniprotConnection = uniprot.openConnection();
             BufferedReader in = new BufferedReader(
@@ -217,7 +299,7 @@ public class UniprotProxySequenceReader<C extends Compound> implements ProxySequ
             }
         }
 
-        logger.severe("Load complete");
+        logger.info("Load complete");
         try {
             //       System.out.println(sb.toString());
             Document document = XMLHelper.inputStreamToDocument(new ByteArrayInputStream(sb.toString().getBytes()));
@@ -227,7 +309,12 @@ public class UniprotProxySequenceReader<C extends Compound> implements ProxySequ
         }
         return null;
     }
-
+/**
+ *
+ * @param uniprotDoc
+ * @return
+ * @throws Exception
+ */
     private String getSequence(Document uniprotDoc) throws Exception {
         Element uniprotElement = uniprotDoc.getDocumentElement();
         Element entryElement = XMLHelper.selectSingleElement(uniprotElement, "entry");
@@ -254,7 +341,8 @@ public class UniprotProxySequenceReader<C extends Compound> implements ProxySequ
         uniprotbaseURL = aUniprotbaseURL;
     }
 
-        /**
+     /**
+      * Local directory cache of XML that can be downloaded
      * @return the uniprotDirectoryCache
      */
     public static String getUniprotDirectoryCache() {
@@ -285,6 +373,51 @@ public class UniprotProxySequenceReader<C extends Compound> implements ProxySequ
 
     }
 
+    /**
+     * Get the gene name associated with this sequence. 
+     * @return
+     * @throws Exception
+     */
+
+    public String getGeneName() throws Exception{
+        if(uniprotDoc == null)
+            return "";
+        Element uniprotElement = uniprotDoc.getDocumentElement();
+        Element entryElement = XMLHelper.selectSingleElement(uniprotElement, "entry");
+        Element geneElement = XMLHelper.selectSingleElement(entryElement, "gene");
+        if(geneElement == null)
+            return "";
+        Element nameElement = XMLHelper.selectSingleElement(geneElement, "name");
+        if(nameElement == null)
+            return "";
+        return nameElement.getTextContent();
+    }
+
+    /**
+     * Get the organism name assigned to this sequence
+     * @return
+     * @throws Exception
+     */
+
+    public String getOrganismName() throws Exception{
+        if(uniprotDoc == null)
+            return "";
+        Element uniprotElement = uniprotDoc.getDocumentElement();
+        Element entryElement = XMLHelper.selectSingleElement(uniprotElement, "entry");
+        Element organismElement = XMLHelper.selectSingleElement(entryElement, "organism");
+        if(organismElement == null)
+            return "";
+        Element nameElement = XMLHelper.selectSingleElement(organismElement, "name");
+        if(nameElement == null)
+            return "";
+        return nameElement.getTextContent();
+    }
+
+    /**
+     * Pull uniprot key words which is a mixed bag of words associated with this sequence
+     * @return
+     * @throws Exception
+     */
     
     public ArrayList<String> getKeyWords() throws Exception {
         ArrayList<String> keyWordsList = new ArrayList<String>();
@@ -301,6 +434,11 @@ public class UniprotProxySequenceReader<C extends Compound> implements ProxySequ
         return keyWordsList;
     }
 
+    /**
+     * The Uniprot mappings to other database identifiers for this sequence
+     * @return
+     * @throws Exception
+     */
     
     public LinkedHashMap<String, ArrayList<DBReferenceInfo>> getDatabaseReferences() throws Exception {
         LinkedHashMap<String, ArrayList<DBReferenceInfo>> databaseReferencesHashMap = new LinkedHashMap<String, ArrayList<DBReferenceInfo>>();

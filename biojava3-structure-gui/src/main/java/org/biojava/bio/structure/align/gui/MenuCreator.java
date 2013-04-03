@@ -252,7 +252,7 @@ public class MenuCreator {
 	 * @param frame
 	 * @param actionListener
 	 * @param afpChain
-	 * @return
+	 * @return a JMenuBar
 	 */
 	public static JMenuBar getAlignmentTextMenu(JFrame frame, ActionListener actionListener,AFPChain afpChain){
 

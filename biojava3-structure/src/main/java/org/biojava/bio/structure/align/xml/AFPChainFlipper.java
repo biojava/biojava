@@ -37,7 +37,7 @@ public class AFPChainFlipper {
 	 * This is a utility function for AFPChainXMLParser.
 	 * You will have to call AFPCHainXMLParser.rebuildAFPChain in order to get twisted groups...
 	 * 
-	 * @param orig
+	 * @param o ... the original AFPCHain that should be flipped
 	 * @return a cloned AFPCHain which the positions of name1 and name2 flipped.
 	 */
 	public static AFPChain flipChain(AFPChain o) throws StructureException{

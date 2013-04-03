@@ -9,6 +9,7 @@ import org.biojava.bio.structure.AtomImpl;
 import org.biojava.bio.structure.Chain;
 import org.biojava.bio.structure.ChainImpl;
 import org.biojava.bio.structure.Group;
+import org.biojava.bio.structure.ResidueNumber;
 
 public class JmolTools {
 
@@ -17,7 +18,7 @@ public class JmolTools {
 	 *  insertion code: [ASP]1^A:A.CA/1 #2
 	 * @param a .. the Atom
 	 * 
-	 * @return
+	 * @return a String representation in Jmol style of the PDB information of this atom
 	 */
 	public static final String getPdbInfo(Atom a){
 		return getPdbInfo(a,true);
@@ -30,10 +31,10 @@ public class JmolTools {
 	public static void main(String[] args){
 
 		Chain c = new ChainImpl();
-		c.setName("X");
+		c.setChainID("X");
 
 		Group g = new AminoAcidImpl();
-		g.setPDBCode("1A");
+		g.setResidueNumber(ResidueNumber.fromString("1A"));
 		try {
 			g.setPDBName("ALA");
 		} catch (Exception e){}
@@ -55,13 +56,13 @@ public class JmolTools {
 		String res1 = "";
 
 		if ( a != null){
-			Group g1 = a.getParent();
+			Group g1 = a.getGroup();
 			if ( g1 != null){
 				aa3 = g1.getPDBName();
-				res1 = g1.getPDBCode();
-				Chain ch1 = g1.getParent();
+				res1 = g1.getResidueNumber().toString();
+				Chain ch1 = g1.getChain();
 				if (ch1 != null)
-					chain1 = ch1.getName();
+					chain1 = ch1.getChainID();
 			}
 		}
 

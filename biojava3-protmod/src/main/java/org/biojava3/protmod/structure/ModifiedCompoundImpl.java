@@ -28,6 +28,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
@@ -244,6 +245,20 @@ implements ModifiedCompound {
 		for (StructureAtomLinkage link : linkages) {
 			addAtomLinkage(link);
 		}
+	}
+	
+	public boolean crossChains() {
+		if (groups==null || groups.isEmpty())
+			return false;
+		
+		Iterator<StructureGroup> it = groups.iterator();
+		String chain = it.next().getChainId();
+		while (it.hasNext()) {
+			if (!it.next().getChainId().equals(chain))
+				return true;
+		}
+		
+		return false;
 	}
 
 

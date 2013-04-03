@@ -28,6 +28,7 @@ import org.biojava3.core.sequence.template.Compound;
 import org.biojava3.core.sequence.template.CompoundSet;
 
 /**
+ * Used to describe an Amino Acid.
  * @author Richard Holland
  * @author Scooter Willis
  * @author Andy Yates

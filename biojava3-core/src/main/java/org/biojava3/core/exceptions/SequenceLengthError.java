@@ -24,7 +24,7 @@
 package org.biojava3.core.exceptions;
 
 /**
- *
+ * Currently not used
  * @author Scooter Willis
  */
 public class SequenceLengthError extends Error{
