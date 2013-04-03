@@ -107,6 +107,11 @@ public class AminoAcidCompoundSet implements CompoundSet<AminoAcidCompound> {
         return 1;
     }
 
+    @Override
+    public boolean isCompoundStringLengthEqual() {
+        return true;
+    }
+
     private final static AminoAcidCompoundSet aminoAcidCompoundSet = new AminoAcidCompoundSet();
 
     public static AminoAcidCompoundSet getAminoAcidCompoundSet() {

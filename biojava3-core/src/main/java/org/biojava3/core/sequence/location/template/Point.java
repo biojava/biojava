@@ -52,4 +52,9 @@ public interface Point extends Comparable<Point> {
      * Returns true if the point is higher in value to the current point
      */
     boolean isHigher(Point point);
+
+    /**
+     * Returns a copy of this point
+     */
+    Point clonePoint();
 }

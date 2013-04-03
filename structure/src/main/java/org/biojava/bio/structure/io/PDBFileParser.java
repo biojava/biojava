@@ -2087,9 +2087,9 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 		List<ResidueNumber> siteResidues = siteToResidueMap.get(siteID);
 
 		//if the siteResidues doesn't yet exist, make a new one.
-		if (siteResidues == null |! siteToResidueMap.containsKey(siteID)){
+		if (siteResidues == null |! siteToResidueMap.containsKey(siteID.trim())){
 			siteResidues = new ArrayList<ResidueNumber>();
-			siteToResidueMap.put(siteID, siteResidues);
+			siteToResidueMap.put(siteID.trim(), siteResidues);
 			if (DEBUG || siteDebug) {
 				System.out.println(String.format("New Site made: %s %s", siteID,  siteResidues));
 				System.out.println("Now made " + siteMap.size() + " sites");
@@ -2700,8 +2700,9 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 
 		//check that the keys in the siteMap and SiteToResidueMap are equal 
 		if (! siteMap.keySet().equals(siteToResidueMap.keySet())) {
-			logger.warning("Not all sites have been properly described in the PDB " + pdbId + " header - Sites will not be present in the Structure");
-			return;
+			logger.warning("Not all sites have been properly described in the PDB " + pdbId + " header - some Sites will not be present in the Structure");
+			logger.warning(siteMap.keySet() + " | " + siteToResidueMap.keySet());
+			//return;
 		}
 
 		//so we have chains - associate the siteResidues-related groups with the ones
@@ -2709,6 +2710,8 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 		for (String key : siteMap.keySet()) {
 			Site currentSite = siteMap.get(key);
 			List<ResidueNumber> linkedGroups = siteToResidueMap.get(key);
+			if ( linkedGroups == null)
+				continue;
 			for (ResidueNumber residueNumber : linkedGroups) {
 
 				String pdbCode = residueNumber.toString();

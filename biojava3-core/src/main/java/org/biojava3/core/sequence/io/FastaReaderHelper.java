@@ -79,8 +79,9 @@ public class FastaReaderHelper {
 
   public static void main(String args[]) throws Exception {
 
-    FastaReaderHelper
-        .readFastaDNASequence(new File(
-            "/Users/Scooter/scripps/dyadic/analysis/454Scaffolds/454Scaffolds.fna"));
+    LinkedHashMap<String, DNASequence> dnaSequences = FastaReaderHelper.readFastaDNASequence(new File("/Users/Scooter/scripps/dyadic/analysis/454Scaffolds/454Scaffolds.fna"));
+    for(DNASequence sequence : dnaSequences.values() ){
+        sequence.getRNASequence().getProteinSequence().getSequenceAsString();
+    }
   }
 }

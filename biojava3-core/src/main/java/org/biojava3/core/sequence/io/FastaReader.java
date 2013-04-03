@@ -73,7 +73,7 @@ public class FastaReader<S extends Sequence<?>, C extends Compound> {
 
         String line = "";
         String header = "";
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         int maxSequenceLength = -1;
         long fileIndex = 0;
         long sequenceIndex = 0;
@@ -90,7 +90,7 @@ public class FastaReader<S extends Sequence<?>, C extends Compound> {
                         if (maxSequenceLength < sb.length()) {
                             maxSequenceLength = sb.length();
                         }
-                        sb = new StringBuffer(maxSequenceLength);
+                        sb = new StringBuilder(maxSequenceLength);
                     }
                     header = line.substring(1);
                 } else if (line.startsWith(";")) {

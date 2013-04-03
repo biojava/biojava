@@ -1,6 +1,7 @@
 package org.biojava3.core.sequence.template;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -20,6 +21,7 @@ public abstract class AbstractCompoundSet<C extends Compound> implements Compoun
 
   private Map<CharSequence, C> charSeqToCompound = new HashMap<CharSequence, C>();
   private int maxCompoundCharSequenceLength = -1;
+  private Boolean compoundStringLengthEqual = null;
   
   Map<C,Set<C>> equivalentsMap = new HashMap<C, Set<C>>();
 
@@ -40,9 +42,7 @@ public abstract class AbstractCompoundSet<C extends Compound> implements Compoun
 
   protected void addCompound(C compound, C lowerCasedCompound, C... equivalents) {
     List<C> equiv = new ArrayList<C>(equivalents.length);
-    for(C c: equivalents) {
-      equiv.add(c);
-    }
+    equiv.addAll(Arrays.asList(equivalents));
     addCompound(compound, lowerCasedCompound, equiv);
   }
 
@@ -59,6 +59,7 @@ public abstract class AbstractCompoundSet<C extends Compound> implements Compoun
   protected void addCompound(C compound) {
     charSeqToCompound.put(compound.toString(), compound);
     maxCompoundCharSequenceLength = -1;
+    compoundStringLengthEqual = null;
   }
 
   public String getStringForCompound(C compound) {
@@ -92,6 +93,26 @@ public abstract class AbstractCompoundSet<C extends Compound> implements Compoun
     }
     return maxCompoundCharSequenceLength;
   }
+
+    @Override
+    public boolean isCompoundStringLengthEqual() {
+        if(compoundStringLengthEqual == null) {
+            int lastSize = -1;
+            compoundStringLengthEqual = Boolean.TRUE;
+            for(CharSequence c: charSeqToCompound.keySet()) {
+                int size = c.length();
+                if(lastSize != -1) {
+                    lastSize = size;
+                    continue;
+                }
+                if(lastSize != size) {
+                    compoundStringLengthEqual = Boolean.FALSE;
+                    break;
+                }
+            }
+        }
+        return compoundStringLengthEqual;
+    }
 
   public boolean hasCompound(C compound) {
     C retrievedCompound = getCompoundForString(compound.toString());

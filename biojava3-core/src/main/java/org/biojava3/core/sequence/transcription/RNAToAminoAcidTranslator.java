@@ -31,6 +31,8 @@ public class RNAToAminoAcidTranslator extends AbstractCompoundTranslator<Nucleot
     private final boolean initMetOnly;
     private final Map<Table.CaseInsensitiveTriplet, Codon> quickLookup;
     private final Map<AminoAcidCompound, List<Codon>> aminoAcidToCodon;
+    //Cheeky lookup which uses a hashing value; key is to switch to using this all the time
+    private final Codon[] codonArray = new Codon[64000];
     private final AminoAcidCompound unknownAminoAcidCompound;
     private final boolean translateNCodons;
 
@@ -51,6 +53,7 @@ public class RNAToAminoAcidTranslator extends AbstractCompoundTranslator<Nucleot
         List<Codon> codonList = table.getCodons(nucleotides, aminoAcids);
         for (Codon codon : codonList) {
             quickLookup.put(codon.getTriplet(), codon);
+            codonArray[codon.getTriplet().intValue()] = codon;
             
             List<Codon> codonL = aminoAcidToCodon.get(codon.getAminoAcid());
             if ( codonL == null){
@@ -85,8 +88,20 @@ public class RNAToAminoAcidTranslator extends AbstractCompoundTranslator<Nucleot
             Table.CaseInsensitiveTriplet triplet = new Table.CaseInsensitiveTriplet(
               element.get(i++), element.get(i++), element.get(i++));
 
-            Codon target = quickLookup.get(triplet);
-            aminoAcid = target.getAminoAcid();
+            Codon target;
+
+            int arrayIndex = triplet.intValue();
+            //So long as we're within range then access
+            if(arrayIndex > -1 && arrayIndex < codonArray.length) {
+                target = codonArray[arrayIndex];
+                aminoAcid = target.getAminoAcid();
+            }
+            //Otherwise we have to use the Map
+            else {
+                target = quickLookup.get(triplet);
+                aminoAcid = target.getAminoAcid();
+            }
+            
             if(aminoAcid == null && translateNCodons()) {
                 aminoAcid = unknownAminoAcidCompound;
             }

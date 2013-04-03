@@ -1,5 +1,8 @@
 package org.biojava3.core.sequence.template;
 
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -129,8 +132,25 @@ public class SequenceMixin {
     }
 
     /**
+     * Used as a way of sending a Sequence to a writer without the cost of
+     * converting to a full length String and then writing the data out
+     *
+     * @param <C> Type of compound
+     * @param writer The writer to send data to
+     * @param sequence The sequence to write out
+     * @throws IOException Thrown if we encounter a problem
+     */
+    public static <C extends Compound> void write(Appendable appendable, Sequence<C> sequence) throws IOException {
+        for(C compound: sequence) {
+            appendable.append(compound.toString());
+        }
+    }
+
+    /**
      * For the given Sequence this will return a {@link StringBuilder} object
-     * filled with the results of {@link Compound#toString()}.
+     * filled with the results of {@link Compound#toString()}. Does not
+     * used {@link #write(java.lang.Appendable, org.biojava3.core.sequence.template.Sequence) }
+     * because of its {@link IOException} signature.
      */
     public static <C extends Compound> StringBuilder toStringBuilder(Sequence<C> sequence) {
         StringBuilder sb = new StringBuilder(sequence.getLength());

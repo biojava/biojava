@@ -102,7 +102,7 @@ public class InsdcParser {
                     else {
                         typeOfJoin = sb.toString();
                         List<Location> subs = parse(reader, strand);
-                        locationList.add(parseComplex(subs, typeOfJoin));
+                        locationList.add(LocationHelper.location(subs, typeOfJoin));
                     }
                     clearStringBuilder(sb);
                     break;
@@ -138,38 +138,6 @@ public class InsdcParser {
 
     private void clearStringBuilder(StringBuilder sb) {
         sb.delete(0, sb.length());
-    }
-
-    protected Location parseComplex(List<Location> subLocations, String type) {
-        if(subLocations.size() == 1) {
-            return subLocations.get(0);
-        }
-        
-        boolean circular = detectCicular(subLocations);
-        Strand strand = detectStrand(subLocations);
-        Point start = detectStart(subLocations);
-        Point end = detectEnd(subLocations, circular);
-        Location l;
-        if("join".equals(type)) {
-            l = new SimpleLocation(start, end, strand, circular, subLocations);
-        }
-        else if("order".equals(type)) {
-            l = new InsdcLocations.OrderLocation(start, end, strand, circular, subLocations);
-        }
-        else if("one-of".equals(type)) {
-            l = new InsdcLocations.OneOfLocation(subLocations);
-        }
-        else if("group".equals(type)) {
-            l = new InsdcLocations.GroupLocation(start, end, strand, circular, subLocations);
-        }
-        else if("bond".equals(type)) {
-            l = new InsdcLocations.BondLocation(subLocations);
-        }
-        else {
-            throw new ParserException("Unknown join type "+type);
-        }
-
-        return l;
     }
 
     protected Location parseLocation(String location, Strand strand) {
@@ -227,51 +195,5 @@ public class InsdcParser {
 
     protected AccessionID getAccession(String accession) {
         return new AccessionID(accession, getDataSource());
-    }
-
-    protected boolean detectCicular(List<Location> subLocations) {
-        boolean isCircular = false;
-        int lastMax = 0;
-        for (Location sub : subLocations) {
-            if (sub.getEnd().getPosition() > lastMax) {
-                lastMax = sub.getEnd().getPosition();
-            }
-            else {
-                isCircular = true;
-                break;
-            }
-        }
-        return isCircular;
-    }
-
-    protected Strand detectStrand(List<Location> subLocations) {
-        Strand strand = subLocations.get(0).getStrand();
-        for (Location sub : subLocations) {
-            if (strand != sub.getStrand()) {
-                strand = Strand.UNDEFINED;
-                break;
-            }
-        }
-        return strand;
-    }
-
-    protected Point detectStart(List<Location> subLocations) {
-        return subLocations.get(0).getStart().offset(0); //Easy way to clone
-    }
-
-    protected Point detectEnd(List<Location> subLocations, boolean isCircular) {
-        int end = 0;
-        Point lastPoint = null;
-        if(isCircular) {
-            for (Location sub : subLocations) {
-                lastPoint = sub.getEnd();
-                end += lastPoint.getPosition();
-            }
-        }
-        else {
-            lastPoint = subLocations.get(subLocations.size()-1).getEnd();
-            end = lastPoint.getPosition();
-        }
-        return new SimplePoint(end, lastPoint.isUnknown(), lastPoint.isUncertain());
     }
 }

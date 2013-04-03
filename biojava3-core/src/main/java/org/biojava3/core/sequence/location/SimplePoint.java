@@ -29,7 +29,7 @@ public class SimplePoint implements Point {
         this.uncertain = uncertain;
     }
 
-    
+    @Override
     public Integer getPosition() {
         return position;
     }
@@ -38,7 +38,7 @@ public class SimplePoint implements Point {
         this.position = position;
     }
 
-    
+    @Override
     public boolean isUnknown() {
         return unknown;
     }
@@ -47,7 +47,7 @@ public class SimplePoint implements Point {
         this.unknown = unknown;
     }
 
-    
+    @Override
     public boolean isUncertain() {
         return uncertain;
     }
@@ -56,13 +56,13 @@ public class SimplePoint implements Point {
         this.uncertain = uncertain;
     }
 
-    
+    @Override
     public Point reverse(int length) {
         int translatedPosition = reverse(getPosition(), length);
         return new SimplePoint(translatedPosition, isUnknown(), isUncertain());
     }
 
-    
+    @Override
     public Point offset(int distance) {
         int offsetPosition = getPosition() + distance;
         return new SimplePoint(offsetPosition, isUnknown(), isUncertain());
@@ -72,7 +72,7 @@ public class SimplePoint implements Point {
         return (length - position) + 1;
     }
 
-    
+    @Override
     @SuppressWarnings("EqualsWhichDoesntCheckParameterClass")
     public boolean equals(Object obj) {
         boolean equals = false;
@@ -85,7 +85,7 @@ public class SimplePoint implements Point {
         return equals;
     }
 
-    
+    @Override
     public int hashCode() {
         int r = Hashcoder.SEED;
         r = Hashcoder.hash(r, getPosition());
@@ -94,23 +94,28 @@ public class SimplePoint implements Point {
         return r;
     }
 
-    
+    @Override
     public String toString() {
         return Integer.toString(getPosition());
     }
 
-    
+    @Override
     public int compareTo(Point o) {
         return getPosition().compareTo(o.getPosition());
     }
 
-    
+    @Override
     public boolean isLower(Point point) {
         return (compareTo(point) < 0);
     }
 
-    
+    @Override
     public boolean isHigher(Point point) {
         return (compareTo(point) > 0);
+    }
+
+    @Override
+    public Point clonePoint() {
+        return this.offset(0);
     }
 }

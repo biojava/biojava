@@ -81,6 +81,27 @@ public class TranscriptionEngine {
         this.aminoAcidCompounds = aminoAcidCompounds;
     }
 
+    /**
+     * Quick method to let you go from a CDS to a Peptide quickly. It assumes
+     * you are translating only in the first frame
+     *
+     * @param dna The CDS to translate
+     * @return The Protein Sequence
+     */
+    public Sequence<AminoAcidCompound> translate(Sequence<NucleotideCompound> dna) {
+        Map<Frame, Sequence<AminoAcidCompound>> trans =
+                multipleFrameTranslation(dna, Frame.ONE);
+        return trans.get(Frame.ONE);
+    }
+
+    /**
+     * A way of translating DNA in a number of frames
+     *
+     * @param dna The CDS to translate
+     * @param frames The Frames to translate in
+     * @return All generated protein sequences in the given frames. Can have
+     * null entries
+     */
     public Map<Frame, Sequence<AminoAcidCompound>> multipleFrameTranslation(
             Sequence<NucleotideCompound> dna, Frame... frames) {
         Map<Frame, Sequence<AminoAcidCompound>> results =
@@ -143,6 +164,7 @@ public class TranscriptionEngine {
         private boolean initMet = true;
         private boolean trimStop = true;
         private boolean translateNCodons = true;
+        private boolean decorateRna = false;
 
         /**
          * The method to finish any calls to the builder with which returns
@@ -236,6 +258,15 @@ public class TranscriptionEngine {
             return this;
         }
 
+        /**
+         * Performs an optimisation where RNASequences are not translated into
+         * their own objects but are views onto the base DNA sequence.
+         */
+        public Builder decorateRna(boolean decorateRna) {
+            this.decorateRna = decorateRna;
+            return this;
+        }
+
         //------ INTERNAL BUILDERS with defaults if exists
         private CompoundSet<NucleotideCompound> getDnaCompounds() {
             if (dnaCompounds != null) {
@@ -263,7 +294,7 @@ public class TranscriptionEngine {
                 return dnaRnaTranslator;
             }
             return new DNAToRNATranslator(new RNASequenceCreator(getRnaCompounds()),
-                    getDnaCompounds(), getRnaCompounds());
+                    getDnaCompounds(), getRnaCompounds(), isDecorateRna());
         }
 
         private RNAToAminoAcidTranslator getRnaAminoAcidTranslator() {
@@ -310,6 +341,9 @@ public class TranscriptionEngine {
         }
         private boolean isTranslateNCodons() {
             return translateNCodons;
+        }
+        private boolean isDecorateRna() {
+            return decorateRna;
         }
     }
 }
