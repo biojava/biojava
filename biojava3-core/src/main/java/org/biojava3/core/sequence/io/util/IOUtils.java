@@ -15,13 +15,20 @@ import java.util.logging.Logger;
 import java.util.zip.GZIPInputStream;
 
 import org.biojava3.core.exceptions.ParserException;
+import org.biojava3.core.sequence.compound.AmbiguityDNACompoundSet;
+import org.biojava3.core.sequence.compound.AmbiguityRNACompoundSet;
+import org.biojava3.core.sequence.compound.DNACompoundSet;
+import org.biojava3.core.sequence.compound.RNACompoundSet;
+import org.biojava3.core.sequence.template.Compound;
+import org.biojava3.core.sequence.template.CompoundSet;
+import org.biojava3.core.sequence.template.Sequence;
 
 public class IOUtils {
 
   private static final int BUFFER = 4096;
 
   /**
-   * Closes any Object which implements the interface @ link Closeable} and
+   * Closes any Object which implements the interface {@link Closeable} and
    * sending any error to the logger but not forcing any explicit catching of
    * stream errors.
    *
@@ -167,6 +174,144 @@ public class IOUtils {
    */
   public static interface ReaderProcessor {
     void process(String line) throws IOException;
+  }
+
+  /**
+   * Calculates GCG checksum for entire list of sequences
+   *
+   * @param sequences list of sequences
+   * @return GCG checksum
+   */
+  public static <S extends Sequence<C>, C extends Compound> int getGCGChecksum(List<S> sequences) {
+      int check = 0;
+      for (S as : sequences) {
+          check += getGCGChecksum(as);
+      }
+      return check % 10000;
+  }
+
+  /**
+   * Calculates GCG checksum for a given sequence
+   *
+   * @param sequence given sequence
+   * @return GCG checksum
+   */
+  public static <S extends Sequence<C>, C extends Compound> int getGCGChecksum(S sequence) {
+      String s = sequence.toString().toUpperCase();
+      int count = 0, check = 0;
+      for (int i = 0; i < s.length(); i++) {
+          count++;
+          check += count * s.charAt(i);
+          if (count == 57) {
+              count = 0;
+          }
+      }
+      return check % 10000;
+  }
+
+  /**
+   * Assembles a GCG file header
+   *
+   * @param sequences list of sequences
+   * @return GCG header
+   */
+  public static <S extends Sequence<C>, C extends Compound> String getGCGHeader(List<S> sequences) {
+      StringBuilder header = new StringBuilder();
+      S s1 = sequences.get(0);
+      header.append(String.format("MSA from BioJava%n%n MSF: %d  Type: %s  Check: %d ..%n%n",
+              s1.getLength(), getGCGType(s1.getCompoundSet()), getGCGChecksum(sequences)));
+      String format = " Name: " + getIDFormat(sequences) + " Len: " + s1.getLength() + "  Check: %4d  Weight: 1.0%n";
+      for (S as : sequences) {
+          header.append(String.format(format, as.getAccession(), getGCGChecksum(as)));
+          // TODO show weights in MSF header
+      }
+      header.append(String.format("%n//%n%n"));
+      // TODO? convert gap characters to '.'
+      return header.toString();
+  }
+
+  /**
+   * Determines GCG type
+   * @param cs compound set of sequences
+   * @return GCG type
+   */
+  public static <C extends Compound> String getGCGType(CompoundSet<C> cs) {
+      return (cs == DNACompoundSet.getDNACompoundSet() || cs == AmbiguityDNACompoundSet.getDNACompoundSet()) ? "D" :
+          (cs == RNACompoundSet.getRNACompoundSet() || cs == AmbiguityRNACompoundSet.getRNACompoundSet()) ? "R" : "P";
+  }
+
+  /**
+   * Creates format String for accession IDs
+   *
+   * @param sequences list of sequences
+   * @return format String for accession IDs
+   */
+  public static <S extends Sequence<C>, C extends Compound> String getIDFormat(List<S> sequences) {
+      int length = 0;
+      for (S as : sequences) {
+          length = Math.max(length, (as.getAccession() == null) ? 0 : as.getAccession().toString().length());
+      }
+      return (length == 0) ? null : "%-" + (length + 1) + "s";
+  }
+
+  /**
+   * Creates formatted String for a single character of PDB output
+   *
+   * @param web true for HTML display
+   * @param c1 character in first sequence
+   * @param c2 character in second sequence
+   * @param similar true if c1 and c2 are considered similar compounds
+   * @param c character to display
+   * @return formatted String
+   */
+  public static String getPDBCharacter(boolean web, char c1, char c2, boolean similar, char c) {
+      String s = c + "";
+      return getPDBString(web, c1, c2, similar, s, s, s, s);
+  }
+
+  /**
+   * Creates formatted String for displaying conservation in PDB output
+   *
+   * @param web true for HTML display
+   * @param c1 character in first sequence
+   * @param c2 character in second sequence
+   * @param similar true if c1 and c2 are considered similar compounds
+   * @return formatted String
+   */
+  public static String getPDBConservation(boolean web, char c1, char c2, boolean similar) {
+      return getPDBString(web, c1, c2, similar, "|", ".", " ", web ? "&nbsp;" : " ");
+  }
+
+  // helper method for getPDBCharacter and getPDBConservation
+  private static String getPDBString(boolean web, char c1, char c2, boolean similar, String m, String sm, String dm,
+          String qg) {
+      if (c1 == c2)
+          return web ? "<span class=\"m\">" + m + "</span>" : m;                             
+      else if (similar)
+          return web ? "<span class=\"sm\">" + sm + "</span>" : sm;
+      else if (c1 == '-' || c2 == '-')
+          return web ? "<span class=\"dm\">" + dm + "</span>" : dm;
+      else
+          return web ? "<span class=\"qg\">" + qg + "</span>" : qg;
+  }
+
+  /**
+   * Creates formatted String for displaying conservation legend in PDB output
+   *
+   * @return legend String
+   */
+  public static String getPDBLegend() {
+      StringBuilder s = new StringBuilder();
+      s.append("</pre></div>");
+      s.append("          <div class=\"subText\">");
+      s.append("          <b>Legend:</b>");
+      s.append("          <span class=\"m\">Black</span> - identical residues |"); 
+      s.append("          <span class=\"sm\">Pink</span> - similar residues | ");
+      s.append("          <span class=\"qg\">Blue</span> - sequence mismatch |");
+      s.append("          <span class=\"dm\">Brown</span> - insertion/deletion |");                  
+      s.append("      </div>");
+      s.append(String.format("%n"));
+      return s.toString();
   }
 
 }

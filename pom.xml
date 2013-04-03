@@ -4,7 +4,7 @@
 	<groupId>org.biojava</groupId>
 	<artifactId>biojava</artifactId>
 	<packaging>pom</packaging>
-	<version>3.0-alpha6</version>
+	<version>3.0-beta1</version>
 	<name>biojava</name>
 	<description>BioJava is an open-source project dedicated to providing a Java framework for processing biological data. It provides analytical and statistical routines, parsers for common file formats and allows the manipulation of sequences and 3D structures. The goal of the biojava project is to facilitate rapid application development for bioinformatics.</description>
 	<url>http://www.biojava.org</url>
@@ -13,9 +13,9 @@
 		<url>http://www.biojava.org</url>
 	</organization>
 	<scm>
-		<connection>scm:svn:svn://code.open-bio.org/biojava/biojava-live/tags/biojava-3.0-alpha6</connection>
-		<developerConnection>scm:svn:svn+ssh://dev.open-bio.org/home/svn-repositories/biojava/biojava-live/tags/biojava-3.0-alpha6</developerConnection>
-		<url>http://code.open-bio.org/svnweb/index.cgi/biojava/browse/biojava-live/tags/biojava-3.0-alpha6</url>
+		<connection>scm:svn:svn://code.open-bio.org/biojava/biojava-live/tags/biojava-3.0-beta1</connection>
+		<developerConnection>scm:svn:svn+ssh://dev.open-bio.org/home/svn-repositories/biojava/biojava-live/tags/biojava-3.0-beta1</developerConnection>
+		<url>http://code.open-bio.org/svnweb/index.cgi/biojava/browse/biojava-live/tags/biojava-3.0-beta1</url>
 	</scm>
 	<repositories>
 		<repository>
@@ -27,7 +27,7 @@
 			<id>maven-repository.dev.java.net</id>
 			<name>Java.net Maven 1 Repository (legacy)</name>
 			<url>http://download.java.net/maven/1</url>
-			<layout>legacy</layout>
+			<layout>default</layout>
 		</repository>
 		<repository>
 			<id>biojava-maven-repo</id>
@@ -177,7 +177,7 @@
 					<maxmemory>140m</maxmemory>
 					<breakiterator>true</breakiterator>
 					<quiet>true</quiet>
-					<source>1.5</source>
+					<source>1.6</source>
 					<verbose>false</verbose>
 					<linksource>true</linksource>
 					<!-- <detectLinks>true</detectLinks> -->
@@ -224,22 +224,15 @@
 	</reporting>
 
 	<modules>
-		<module>core</module>
-		<module>alignment</module>
-		<module>blast</module>
-		<module>das</module>
-		<module>sequencing</module>
-		<module>phylo</module>
-		<module>biosql</module>
-		<module>gui</module>
-		<module>bytecode</module>
+				
 		<module>biojava3-core</module>
 		<module>biojava3-phylo</module>
-		<module>structure</module>
-		<module>structure-gui</module>
+		<module>biojava3-structure</module>
+		<module>biojava3-structure-gui</module>
 		<module>biojava3-genome</module>
 		<module>biojava3-protmod</module>
 		<module>biojava3-alignment</module>
 		<module>biojava3-ws</module>
+		
 	</modules>
 </project>

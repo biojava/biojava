@@ -34,12 +34,9 @@ import org.biojava3.alignment.template.Profile;
 import org.biojava3.alignment.template.ProfileView;
 import org.biojava3.alignment.template.SubstitutionMatrix;
 import org.biojava3.core.sequence.AccessionID;
-import org.biojava3.core.sequence.compound.AmbiguityDNACompoundSet;
-import org.biojava3.core.sequence.compound.AmbiguityRNACompoundSet;
 import org.biojava3.core.sequence.compound.AminoAcidCompound;
 import org.biojava3.core.sequence.compound.AminoAcidCompoundSet;
-import org.biojava3.core.sequence.compound.DNACompoundSet;
-import org.biojava3.core.sequence.compound.RNACompoundSet;
+import org.biojava3.core.sequence.io.util.IOUtils;
 import org.biojava3.core.sequence.location.template.Location;
 import org.biojava3.core.sequence.template.Compound;
 import org.biojava3.core.sequence.template.CompoundSet;
@@ -339,43 +336,33 @@ public class SimpleProfile<S extends Sequence<C>, C extends Compound> implements
 
 	@Override
 	public String toString(int width) {
-		return toString(width, null, getIDFormat(), true, true, true, true, true,false);
+		return toString(width, null, IOUtils.getIDFormat(list), true, true, true, true, true, false);
 	}
 
 	@Override
 	public String toString(StringFormat format) {
-		switch (format) {
-		case ALN:
-		case CLUSTALW:
-		default:
-			return toString(60, String.format("CLUSTAL W MSA from BioJava%n%n"), getIDFormat() + "   ", false, true,
-					true, false, true,false);
-		case FASTA:
-			return toString(60, null, ">%s%n", false, false, false, false, false,false);
-		case GCG:
-		case MSF:
-			String idFormat = getIDFormat();
-			StringBuilder header = new StringBuilder();
-			header.append(String.format("MSA from BioJava%n%n MSF: %d  Type: %s  Check: %d ..%n%n", getLength(),
-					getGCGType(), getGCGChecksum()));
-			for (AlignedSequence<S, C> as : list) {
-				header.append(String.format(" Name: " + idFormat + " Len: %d  Check: %4d  Weight: %.1f%n",
-						as.getAccession(), getLength(), getGCGChecksum(as), 1.0f)); // TODO show weights in MSF header
-			}
-			header.append(String.format("%n//%n%n"));
-			// TODO? convert gap characters to '.'
-			return toString(50, header.toString(), idFormat, false, false, true, false, false,false);
-		case PDBWEB:            
-			String pdbFormat = "%s";
-			return toString(60,null,pdbFormat, true,true,true,false,true,true );
-		}
+        switch (format) {
+        case ALN:
+        case CLUSTALW:
+        default:
+            return toString(60, String.format("CLUSTAL W MSA from BioJava%n%n"), IOUtils.getIDFormat(list) + "   ",
+                    false, true, true, false, true, false);
+        case FASTA:
+            return toString(60, null, ">%s%n", false, false, false, false, false, false);
+        case GCG:
+        case MSF:
+            return toString(50, IOUtils.getGCGHeader(list), IOUtils.getIDFormat(list), false, false, true, false,
+                    false, false);
+        case PDBWEB:
+            return toString(60, null, "%s", true, true, true, false, true, true);
+        }
 	}
 
 	// method from Object
 
 	@Override
 	public String toString() {
-		return toString(getLength(), null, null, false, false, false, false, false,false);
+		return toString(getLength(), null, null, false, false, false, false, false, false);
 	}
 
 	// method for Iterable
@@ -386,46 +373,6 @@ public class SimpleProfile<S extends Sequence<C>, C extends Compound> implements
 	}
 
 	// helper methods
-
-	// calculates GCG checksum for entire Profile
-	private int getGCGChecksum() {
-		int check = 0;
-		for (AlignedSequence<S, C> as : list) {
-			check += getGCGChecksum(as);
-		}
-		return check % 10000;
-	}
-
-	// calculates GCG checksum for a given Sequence
-	private int getGCGChecksum(AlignedSequence<S, C> sequence) {
-		String s = sequence.toString().toUpperCase();
-		int count = 0, check = 0;
-		for (int i = 0; i < s.length(); i++) {
-			count++;
-			check += count * s.charAt(i);
-			if (count == 57) {
-				count = 0;
-			}
-		}
-		return check % 10000;
-	}
-
-	// determines GCG type
-	private String getGCGType() {
-		CompoundSet<C> cs = getCompoundSet();
-		return (cs == DNACompoundSet.getDNACompoundSet() || cs == AmbiguityDNACompoundSet.getDNACompoundSet()) ? "D" :
-			(cs == RNACompoundSet.getRNACompoundSet() || cs == AmbiguityRNACompoundSet.getRNACompoundSet()) ? "R" :
-				"P";
-	}
-
-	// creates format String for accession IDs
-	private String getIDFormat() {
-		int length = 0;
-		for (AlignedSequence<S, C> as : list) {
-			length = Math.max(length, (as.getAccession() == null) ? 0 : as.getAccession().toString().length());
-		}
-		return (length == 0) ? null : "%-" + (length + 1) + "s";
-	}
 
 	// creates formatted String
 	private String toString(int width, String header, String idFormat, boolean seqIndexPre, boolean seqIndexPost,
@@ -463,15 +410,15 @@ public class SimpleProfile<S extends Sequence<C>, C extends Compound> implements
 					}
 					s.append(String.format(aligIndFormat, start, end));
 				}
+
 				int counter = 0;
 				for (AlignedSequence<S, C> as : list) {
 					counter++;
 
 					if ( webDisplay && list.size() == 2){
-
-						printSequenceAlignmentWeb(s,list, counter, idFormat,  seqIndexPre,  seqIndexFormatPre,  seqIndexPost,  seqIndexFormatPost,  start,  end);
+						printSequenceAlignmentWeb(s, counter, idFormat, seqIndexPre, seqIndexFormatPre, seqIndexPost,
+						        seqIndexFormatPost, start, end);
 					} else {
-
 						if (idFormat != null) {
 							s.append(String.format(idFormat, as.getAccession()));
 						}
@@ -487,9 +434,8 @@ public class SimpleProfile<S extends Sequence<C>, C extends Compound> implements
 						s.append(String.format("%n"));
 					}
 
-					if ( aligConservation && list.size() == 2){
-						if ( counter == 1)
-							printConservation(s,idFormat,seqIndexPad,seqIndexPre, start,end,list, webDisplay);
+					if (aligConservation && list.size() == 2 && counter == 1) {
+					    printConservation(s, idFormat, seqIndexPad, seqIndexPre, start, end, webDisplay);
 					}
 				}
 
@@ -513,29 +459,15 @@ public class SimpleProfile<S extends Sequence<C>, C extends Compound> implements
 			}
 		}
 
-		if ( webDisplay &&  aligConservation && list.size() == 2){
-			s.append("</pre></div>");
-			s.append("			<div class=\"subText\">");
-			s.append("			<b>Legend:</b>");
-			s.append("			<span class=\"m\">Black</span> - identical residues |"); 
-			s.append("			<span class=\"sm\">Pink</span> - similar residues | ");
-			s.append("			<span class=\"qg\">Blue</span> - sequence mismatch |");
-			s.append("			<span class=\"dm\">Brown</span> - insertion/deletion |");			       
-			s.append("		</div>");
-			s.append(String.format("%n"));
-
+		if (webDisplay && aligConservation && list.size() == 2) {
+			s.append(IOUtils.getPDBLegend());
 		}
 		return s.toString();
 	}
 
-	private void printSequenceAlignmentWeb(StringBuilder s,
-			List<AlignedSequence<S, C>> list2, int counter, String idFormat, boolean seqIndexPre, String seqIndexFormatPre, boolean seqIndexPost, String seqIndexFormatPost, int start, int end) {
-
-		AlignedSequence<S,C> as1 = list.get(0);
-		AlignedSequence<S,C> as2 = list.get(1);
-
-		
-		AlignedSequence<S,C> as = list.get(counter - 1);
+	private void printSequenceAlignmentWeb(StringBuilder s, int counter, String idFormat, boolean seqIndexPre,
+	        String seqIndexFormatPre, boolean seqIndexPost, String seqIndexFormatPost, int start, int end) {
+		AlignedSequence<S,C> as1 = list.get(0), as2 = list.get(1), as = list.get(counter - 1);
 
 		if (idFormat != null) {
 			s.append(String.format(idFormat, as.getAccession()));
@@ -545,31 +477,18 @@ public class SimpleProfile<S extends Sequence<C>, C extends Compound> implements
 		}
 
         String mySeq = as.getSubSequence(start, end).getSequenceAsString();
-
         String s1 = as1.getSubSequence(start, end).getSequenceAsString();
         String s2 = as2.getSubSequence(start, end).getSequenceAsString();
-		
-		for ( int i =0 ; i < s1.length(); i++){
-			if (  i >= s2.length())
+
+		for (int i = 0; i < s1.length(); i++) {
+			if (i >= s2.length() || i >= mySeq.length())
 				break;
-			if ( i >= mySeq.length())
-				break;
-			
+
 			char c1 = s1.charAt(i);
 			char c2 = s2.charAt(i);
 			char c = mySeq.charAt(i);
-			if ( c1 == c2) 
-				s.append("<span class=\"m\">"+c+"</span>");                    			
-			else if (  isSimilar(c1,c2))  
-				s.append("<span class=\"sm\">"+c+"</span>");
-			else  if ( c1 == '-' || c2 == '-')				
-				s.append("<span class=\"dm\">"+c+"</span>");
-			else 
-				s.append("<span class=\"qg\">"+c+"</span>");
-			
+			s.append(IOUtils.getPDBCharacter(true, c1, c2, isSimilar(c1, c2), c));
 		}
-		
-		
 
 		if (seqIndexPost) {
 			s.append(String.format(seqIndexFormatPost, as.getSequenceIndexAt(end)));
@@ -578,79 +497,45 @@ public class SimpleProfile<S extends Sequence<C>, C extends Compound> implements
 
 	}
 
-	private void printConservation(StringBuilder s, String idFormat,
-			int seqIndexPad, boolean seqIndexPre, int start, int end, List<AlignedSequence<S, C>> list2, boolean webDisplay) {
-		if ( list.size() == 2) {
+	private void printConservation(StringBuilder s, String idFormat, int seqIndexPad, boolean seqIndexPre, int start,
+	        int end, boolean webDisplay) {
+	    AlignedSequence<S,C> as1 = list.get(0), as2 = list.get(1);
 
-			AlignedSequence<S,C> as1 = list.get(0);
-			AlignedSequence<S,C> as2 = list.get(1);
+	    if (idFormat != null) {
+	        AccessionID ac1 = as1.getAccession();
+	        String id1 = (ac1 == null) ? "null" : ac1.getID();
+	        id1 = id1.replaceAll(".", " ");
+	        s.append(String.format(idFormat, id1));
+	    }
 
+	    if (seqIndexPre) {
+	        s.append(String.format("%" + (seqIndexPad + 1) + "s", ""));
+	    }
 
+	    String subseq1 = as1.getSubSequence(start, end).getSequenceAsString();
+	    String subseq2 = as2.getSubSequence(start, end).getSequenceAsString();
 
-			if (idFormat != null) {
-				AccessionID ac1 = as1.getAccession();
-				String id1 = "null";
-				if ( ac1 != null)
-					id1 = ac1.getID();
+	    for ( int ii =0 ; ii < subseq1.length() ; ii++){
+	        if ( ii >= subseq2.length())
+	            break;
+	        char c1 = subseq1.charAt(ii);
+	        char c2 = subseq2.charAt(ii);
+	        s.append(IOUtils.getPDBConservation(webDisplay, c1, c2, isSimilar(c1, c2)));
+	    }
 
-				id1 = id1.replaceAll(".", " ");
-				s.append(String.format(idFormat, id1));
-			}
-
-			if (seqIndexPre) {
-				s.append(String.format("%" + (seqIndexPad + 1) + "s", ""));
-			}
-
-			String subseq1 = as1.getSubSequence(start, end).getSequenceAsString();
-            String subseq2 = as2.getSubSequence(start, end).getSequenceAsString();
-
-			for ( int ii =0 ; ii < subseq1.length() ; ii++){
-				if ( ii >= subseq2.length())
-					break;
-				char c1 = subseq1.charAt(ii);
-				char c2 = subseq2.charAt(ii);
-
-				if ( webDisplay) {
-
-					if ( c1 == c2) 
-						s.append("<span class=\"m\">|</span>");                    			
-					else if (  isSimilar(c1,c2))  
-						s.append("<span class=\"sm\">.</span>");
-					else  if ( c1 == '-' || c2 == '-')
-						s.append("<span class=\"dm\"> </span>");					
-					else 
-						s.append("<span class=\"qg\">&nbsp;</span>");
-				} else {
-					if ( c1 == c2) 
-						s.append("|");                    			
-					else if (  isSimilar(c1,c2))  
-						s.append(".");					
-					else 	
-						s.append(" ");
-				}
-
-			}
-
-			s.append(String.format("%n"));
-
-		}
-
+	    s.append(String.format("%n"));
 	}
 
 	protected static final SubstitutionMatrix<AminoAcidCompound> matrix = SubstitutionMatrixHelper.getBlosum65();
 
 	private boolean isSimilar(char c1, char c2) {
-
 		AminoAcidCompoundSet set = AminoAcidCompoundSet.getAminoAcidCompoundSet();
 
 		AminoAcidCompound aa1 = set.getCompoundForString(""+c1);
 		AminoAcidCompound aa2 = set.getCompoundForString(""+c2);
 
 		short val = matrix.getValue(aa1,aa2);
-		if ( val > 0 )
-			return true;
-
-		return false;
+		return val > 0;
 	}
 
 }

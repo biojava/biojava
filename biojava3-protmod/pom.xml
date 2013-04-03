@@ -4,11 +4,11 @@
   <parent>
     <artifactId>biojava</artifactId>
     <groupId>org.biojava</groupId>
-    <version>3.0-alpha6</version>
+    <version>3.0-beta1</version>
   </parent>
   <groupId>org.biojava</groupId>
   <artifactId>biojava3-protmod</artifactId>  
-  <version>3.0-alpha6</version>
+  <version>3.0-beta1</version>
   <name>biojava3-protmod</name>
    <distributionManagement>
 		<downloadUrl>http://www.biojava.org/download/maven/</downloadUrl>
@@ -24,8 +24,8 @@
   <properties>  	   
   	  	<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.build.targetEncoding>UTF-8</project.build.targetEncoding> 
-		<jdk.version>1.5</jdk.version>
-	</properties>
+		<jdk.version>1.6</jdk.version>
+  </properties>
   <dependencies>
     <dependency>
       <groupId>junit</groupId>
@@ -36,9 +36,23 @@
     <dependency>
     	<groupId>org.biojava</groupId>
     	<artifactId>biojava3-structure</artifactId>
-    	<version>3.0-alpha6</version>
+    	<version>3.0-beta1</version>
     	<type>jar</type>
     	<scope>compile</scope>
     </dependency>
   </dependencies>
+  <build>
+  <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>2.0.2</version>
+                <configuration>
+                    <source>1.6</source>
+                    <target>1.6</target>
+                    <debug>true</debug>
+                </configuration>
+            </plugin>
+        </plugins>
+  </build>
 </project>

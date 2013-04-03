@@ -20,96 +20,231 @@
  * Created on DATE
  *
  */
+
 package org.biojava3.core.sequence;
 
-import org.biojava3.core.exceptions.SequenceLengthError;
 import java.util.ArrayList;
-import java.util.Collection;
-import org.biojava3.core.sequence.compound.AminoAcidCompound;
-import org.biojava3.core.sequence.compound.NucleotideCompound;
-import org.biojava3.core.sequence.template.AbstractSequence;
+import java.util.Collections;
+import java.util.List;
+
+import org.biojava3.core.sequence.io.util.IOUtils;
 import org.biojava3.core.sequence.template.Compound;
+import org.biojava3.core.sequence.template.CompoundSet;
+import org.biojava3.core.sequence.template.LightweightProfile;
+import org.biojava3.core.sequence.template.Sequence;
 
 /**
+ * Implements a minimal data structure for reading and writing a sequence alignment.  The full {@code Profile} data
+ * structure in the alignment module provides additional functionality.
  *
  * @author Scooter Willis
+ * @author Mark Chapman
  */
-public class MultipleSequenceAlignment<C extends AbstractSequence<D>, D extends Compound> {
-    int alignedSequenceLength = -1;
-    ArrayList<C> sequences = new ArrayList<C>();
+public class MultipleSequenceAlignment<S extends Sequence<C>, C extends Compound> implements LightweightProfile<S, C> {
 
-    public void addAlignedSequence(C sequence){
-        if(alignedSequenceLength == -1){
-            alignedSequenceLength = sequence.getLength();
+    private List<S> sequences = new ArrayList<S>();
+    private int length = -1;
+
+    public void addAlignedSequence(S sequence){
+        if(length == -1){
+            length = sequence.getLength();
         }
-        if(sequence.getLength() != alignedSequenceLength){
-            throw new SequenceLengthError(sequence.getAccession() + " length = " + sequence.getLength()  +  " not equal to msa length = " + alignedSequenceLength);
+        if(sequence.getLength() != length){
+            throw new IllegalArgumentException(sequence.getAccession() + " length = " + sequence.getLength() +
+                    " not equal to MSA length = " + length);
         }
         sequences.add(sequence);
     }
 
-    public boolean removeAlignedSequence(C sequence){
+    public boolean removeAlignedSequence(S sequence){
         return sequences.remove(sequence);
     }
 
-    public C getSequence(int i ){
-        return sequences.get(i);
+    // methods for LightweightProfile
+
+    @Override
+    public S getAlignedSequence(int listIndex) {
+        return sequences.get(listIndex - 1);
     }
 
-    public int getNumberOfSequences(){
+    @Override
+    public List<S> getAlignedSequences() {
+        return Collections.unmodifiableList(sequences);
+    }
+
+    @Override
+    public List<C> getCompoundsAt(int alignmentIndex) {
+        List<C> column = new ArrayList<C>();
+        for (S s : sequences) {
+            column.add(s.getCompoundAt(alignmentIndex));
+        }
+        return Collections.unmodifiableList(column);
+    }
+
+    @Override
+    public CompoundSet<C> getCompoundSet() {
+        return sequences.get(0).getCompoundSet();
+    }
+
+    @Override
+    public int getLength() {
+        return length;
+    }
+
+    @Override
+    public int getSize() {
         return sequences.size();
     }
 
-    public Collection<C> getSequences(){
-        return sequences;
+    @Override
+    public String toString(int width) {
+        return toString(width, null, IOUtils.getIDFormat(sequences), true, true, true, false);
     }
 
-    public int getAlignedSequenceLength(){
-        return alignedSequenceLength;
+    @Override
+    public String toString(StringFormat format) {
+        switch (format) {
+        case ALN:
+        case CLUSTALW:
+        default:
+            return toString(60, String.format("CLUSTAL W MSA from BioJava%n%n"), IOUtils.getIDFormat(sequences) +
+                    "   ", true, false, true, false);
+        case FASTA:
+            return toString(60, null, ">%s%n", false, false, false, false);
+        case GCG:
+        case MSF:
+            return toString(50, IOUtils.getGCGHeader(sequences), IOUtils.getIDFormat(sequences), true, false, false,
+                    false);
+        case PDBWEB:
+            return toString(60, null, "%s", true, false, true, true);
+        }
     }
 
-    public Collection<D> getCompoundsAtColumn(int column){
-        if(column > alignedSequenceLength){
-            throw new SequenceLengthError("Column=" + column + " is greater than the sequence length=" + alignedSequenceLength);
+    // method from Object
+
+    @Override
+    public String toString() {
+        return toString(getLength(), null, null, false, false, false, false);
+    }
+
+    // helper methods
+
+    // creates formatted String
+    private String toString(int width, String header, String idFormat, boolean interlaced, boolean aligIndices,
+            boolean aligConservation, boolean webDisplay) {
+
+        // TODO handle circular alignments
+        StringBuilder s = (header == null) ? new StringBuilder() : new StringBuilder(header);
+
+        if (webDisplay && sequences.size() == 2) {
+            s.append("<div><pre>");
         }
 
-        ArrayList<D> columnList = new ArrayList<D>();
-
-        for(C sequence : sequences){
-            D compound = (D)sequence.getCompoundAt(column);
-            columnList.add(compound);
+        width = Math.max(1, width);
+        if (interlaced) {
+            String aligIndFormat = "%-" + Math.max(1, width / 2) + "d %" + Math.max(1, width - (width / 2) - 1) +
+                    "d%n";
+            for (int i = 0; i < getLength(); i += width) {
+                int start = i + 1, end = Math.min(getLength(), i + width);
+                if (i > 0) {
+                    s.append(String.format("%n"));
+                }
+                if (aligIndices) {
+                    if (end < i + width) {
+                        int line = end - start + 1;
+                        aligIndFormat = "%-" + Math.max(1, line / 2) + "d %" + Math.max(1, line - (line / 2) - 1) +
+                                "d%n";
+                    }
+                    if (idFormat != null) {
+                        s.append(String.format(idFormat, ""));
+                    }
+                    s.append(String.format(aligIndFormat, start, end));
+                }
+                int counter = 0;
+                for (S as : sequences) {
+                    counter++;
+                    if (webDisplay && sequences.size() == 2) {
+                        printSequenceAlignmentWeb(s, counter, idFormat, start, end);
+                    } else {
+                        if (idFormat != null) {
+                            s.append(String.format(idFormat, as.getAccession()));
+                        }
+                        s.append(as.getSubSequence(start, end).getSequenceAsString());
+                        s.append(String.format("%n"));
+                    }
+                    if (aligConservation && sequences.size() == 2 && counter == 1) {
+                        printConservation(s, idFormat, start, end, webDisplay);
+                    }
+                }
+            }
+        } else {
+            for (S as : sequences) {
+                if (idFormat != null) {
+                    s.append(String.format(idFormat, as.getAccession()));
+                }
+                for (int i = 0; i < getLength(); i += width) {
+                    int start = i + 1, end = Math.min(getLength(), i + width);
+                    s.append(as.getSubSequence(start, end).getSequenceAsString());
+                    s.append(String.format("%n"));
+                }
+            }
         }
 
-        return columnList;
+        if (webDisplay && aligConservation && sequences.size() == 2) {
+            s.append(IOUtils.getPDBLegend());
+        }
+        return s.toString();
     }
 
+    private void printSequenceAlignmentWeb(StringBuilder s, int counter, String idFormat, int start, int end) {
+        S as = sequences.get(counter - 1), seq1 = sequences.get(0), seq2 = sequences.get(1);
 
-    public static void main(String[] args) {
-        MultipleSequenceAlignment<ProteinSequence,AminoAcidCompound> msaProteins = new MultipleSequenceAlignment<ProteinSequence,AminoAcidCompound>();
-        msaProteins.addAlignedSequence(new ProteinSequence("ARNDCEQGHILKMFPSTWYVBZJX"));
-        msaProteins.addAlignedSequence(new ProteinSequence("ARNDCEQGHILKMFPSTWYVBZJX"));
-        msaProteins.addAlignedSequence(new ProteinSequence("ARNDCEQGHILKMFPSTWYVBZJX"));
-        msaProteins.addAlignedSequence(new ProteinSequence("ARNDCEQGHILKMFPSTWYVBZJX"));
-        msaProteins.addAlignedSequence(new ProteinSequence("ARNDCEQGHILKMFPSTWYVBZJX"));
-        msaProteins.addAlignedSequence(new ProteinSequence("ARNDCEQGHILKMFPSTWYVBZJX"));
-        msaProteins.addAlignedSequence(new ProteinSequence("ARNDCEQGHILKMFPSTWYVBZJX"));
-        msaProteins.addAlignedSequence(new ProteinSequence("ARNDCEQGHILKMFPSTWYVBZJX"));
+        if (idFormat != null) {
+            s.append(String.format(idFormat, as.getAccession()));
+        }
 
-        Collection<AminoAcidCompound> columnAA = msaProteins.getCompoundsAtColumn(3);
+        String mySeq = as.getSubSequence(start, end).getSequenceAsString();
+        String s1 = seq1.getSubSequence(start, end).getSequenceAsString();
+        String s2 = seq2.getSubSequence(start, end).getSequenceAsString();
+        CompoundSet<C> cs = getCompoundSet();
 
-        System.out.println(columnAA);
+        for (int i = 0; i < s1.length(); i++) {
+            if (i >= s2.length() || i >= mySeq.length())
+                break;
+            char c1 = s1.charAt(i);
+            char c2 = s2.charAt(i);
+            char c = mySeq.charAt(i);
+            s.append(IOUtils.getPDBCharacter(true, c1, c2, cs.compoundsEquivalent(seq1.getCompoundAt(i),
+                    seq2.getCompoundAt(i)), c));
+        }
 
-        MultipleSequenceAlignment<DNASequence,NucleotideCompound> msaDNA = new MultipleSequenceAlignment<DNASequence,NucleotideCompound>();
-        msaDNA.addAlignedSequence(new DNASequence("ATCGATCGATCGATCG"));
-        msaDNA.addAlignedSequence(new DNASequence("ATCGATCGATCGATCG"));
-        msaDNA.addAlignedSequence(new DNASequence("ATCGATCGATCGATCG"));
-        msaDNA.addAlignedSequence(new DNASequence("ATCGATCGATCGATCG"));
-        msaDNA.addAlignedSequence(new DNASequence("ATCGATCGATCGATCG"));
-        msaDNA.addAlignedSequence(new DNASequence("ATCGATCGATCGATCG"));
-        msaDNA.addAlignedSequence(new DNASequence("ATCGATCGATCGATCG"));
-        msaDNA.addAlignedSequence(new DNASequence("ATCGATCGATCGATCG"));
-
-        Collection<NucleotideCompound> columnDNA = msaDNA.getCompoundsAtColumn(3);
-        System.out.println(columnDNA);
+        s.append(String.format("%n"));
     }
+
+    private void printConservation(StringBuilder s, String idFormat, int start, int end, boolean webDisplay) {
+        S seq1 = sequences.get(0), seq2 = sequences.get(1);
+
+        if (idFormat != null) {
+            AccessionID ac1 = sequences.get(0).getAccession();
+            String id1 = (ac1 == null) ? "null" : ac1.getID();
+            id1 = id1.replaceAll(".", " ");
+            s.append(String.format(idFormat, id1));
+        }
+
+        String s1 = seq1.getSubSequence(start, end).getSequenceAsString();
+        String s2 = seq2.getSubSequence(start, end).getSequenceAsString();
+        CompoundSet<C> cs = getCompoundSet();
+
+        for (int i = 0; i < s1.length(); i++) {
+            if (i >= s2.length())
+                break;
+            char c1 = s1.charAt(i);
+            char c2 = s2.charAt(i);
+            s.append(IOUtils.getPDBConservation(webDisplay, c1, c2, cs.compoundsEquivalent(seq1.getCompoundAt(i),
+                    seq2.getCompoundAt(i))));
+        }
+
+        s.append(String.format("%n"));
+    }
+
 }
