@@ -7,7 +7,7 @@ import org.biojava.bio.structure.Group;
 import org.biojava.bio.structure.NucleotideImpl;
 import org.biojava.bio.structure.ResidueNumber;
 import org.biojava.bio.structure.Structure;
-import org.biojava.bio.structure.TmpAtomCache;
+import org.biojava.bio.structure.align.util.AtomCache;
 import org.biojava.bio.structure.io.FileParsingParameters;
 
 import junit.framework.TestCase;
@@ -20,17 +20,17 @@ import junit.framework.TestCase;
 public class test1DARSeqAlign extends TestCase {
 
 	public void test1DAR(){
-		
-		FileParsingParameters orig = TmpAtomCache.cache.getFileParsingParams();
+		AtomCache cache = new AtomCache();
+		FileParsingParameters orig = cache.getFileParsingParams();
 		FileParsingParameters params = new FileParsingParameters();
 		params.setAlignSeqRes(true);
 		params.setLoadChemCompInfo(true);
 		
-		TmpAtomCache.cache.setFileParsingParams(params);
+		cache.setFileParsingParams(params);
 		
 		
 		try {
-			Structure struc = TmpAtomCache.cache.getStructure("1DAR");
+			Structure struc = cache.getStructure("1DAR");
 			//System.out.println(struc);
 			Chain c = struc.getChainByPDB("A");
 			//System.out.println(c.getSeqResGroups());
@@ -63,6 +63,6 @@ public class test1DARSeqAlign extends TestCase {
 		
 		
 		
-		TmpAtomCache.cache.setFileParsingParams(orig);
+		cache.setFileParsingParams(orig);
 	}
 }

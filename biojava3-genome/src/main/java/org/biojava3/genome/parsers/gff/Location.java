@@ -23,7 +23,7 @@ package org.biojava3.genome.parsers.gff;
  * About the negative (reverse) strand: The location object stores reverse strand locations as
  * negative indices. For example, the positive strand location from index 12 to index 97 is
  * on the opposite side as index -97 (start) to index -12 (end). Note that the larger index is 
- * always downstream from the smaller index, ie start <= end, regardless of strand. 
+ * always downstream from the smaller index, (i.e. start &lt;= end, regardless of strand). 
  * Obviously this representation makes it trivial
  * to convert a location from one strand to the other.
  * <br><br>
@@ -52,11 +52,11 @@ public class Location implements Iterable<Location>
 	private int mStart;
 	private int mEnd;
 
-	/**
-	 */
-	private Location()
-	{
-	}
+//	/**
+//	 */
+//	private Location()
+//	{
+//	}
 	
 	/**
 	 * Construct new location from coordinates.

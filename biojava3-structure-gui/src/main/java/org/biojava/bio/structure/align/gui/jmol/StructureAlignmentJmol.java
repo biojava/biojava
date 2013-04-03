@@ -694,9 +694,11 @@ private static void printJmolScript4Block(Atom[] ca1, Atom[] ca2, int blockNum,
 	 
 	 Color end1 = ColorUtils.rotateHue(ColorUtils.orange,  (1.0f  / 24.0f) * blockNum  );
 	 Color end2 = ColorUtils.rotateHue(ColorUtils.cyan,    (1.0f  / 24.0f) * (blockNum +1)  ) ;
+	 	 
+	 Color c1   = ColorUtils.getIntermediate(ColorUtils.orange, end1, blockNum, bk);
+	 Color c2   = ColorUtils.getIntermediate(ColorUtils.cyan, end2, blockNum, bk);
 	 
-	 Color c   = ColorUtils.getIntermediate(ColorUtils.orange, end1, blockNum, bk);
-	 Color cd   = ColorUtils.getIntermediate(ColorUtils.cyan, end2, blockNum, bk);
+	 
 	 
 	 
 	 List<String> pdb1 = new ArrayList<String>();
@@ -720,7 +722,7 @@ private static void printJmolScript4Block(Atom[] ca1, Atom[] ca2, int blockNum,
 	    count++;
 	 }
 
-	 buf.append("; backbone 0.6 ; color [" + cd.getRed() +"," + cd.getGreen() +"," +cd.getBlue()+"]; select ");
+	 buf.append("; backbone 0.6 ; color [" + c1.getRed() +"," + c1.getGreen() +"," +c1.getBlue()+"]; select ");
 	 
 	 count = 0;
 	 for (String res :pdb2 ){
@@ -733,7 +735,7 @@ private static void printJmolScript4Block(Atom[] ca1, Atom[] ca2, int blockNum,
 	 }
 	 //buf.append("; set display selected;");
 
-	 buf.append("; backbone 0.6 ; color [" + c.getRed() +"," + c.getGreen() +"," +c.getBlue()+"];");
+	 buf.append("; backbone 0.6 ; color [" + c2.getRed() +"," + c2.getGreen() +"," +c2.getBlue()+"];");
 
 	 // now color this block:
 	 jmol.append(buf);

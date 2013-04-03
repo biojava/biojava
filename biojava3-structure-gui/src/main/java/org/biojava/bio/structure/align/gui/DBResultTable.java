@@ -30,6 +30,8 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -50,6 +52,8 @@ import org.biojava.bio.structure.StructureTools;
 import org.biojava.bio.structure.align.StructureAlignment;
 import org.biojava.bio.structure.align.StructureAlignmentFactory;
 import org.biojava.bio.structure.align.ce.CeMain;
+import org.biojava.bio.structure.align.ce.CeParameters;
+import org.biojava.bio.structure.align.ce.ConfigStrucAligParams;
 import org.biojava.bio.structure.align.gui.jmol.StructureAlignmentJmol;
 import org.biojava.bio.structure.align.model.AFPChain;
 import org.biojava.bio.structure.align.util.AtomCache;
@@ -61,8 +65,8 @@ import org.biojava.bio.structure.io.StructureIOFile;
 
 public class DBResultTable implements ActionListener{
 
-	public static final String[] ceColumnNames = {"name1","tname2","score","z-score","rmsd","len1","len2","sim1","sim2",""};
-	public static final String[] fatColumnNames = {"name1","tname2","score","probability","rmsd","len1","len2","sim1","sim2",""};
+	public static final String[] ceColumnNames =  {"name1","tname2","score","z-score"    ,"rmsd","len1","len2","cov1","cov2","%ID","Description",""};
+	public static final String[] fatColumnNames = {"name1","tname2","score","probability","rmsd","len1","len2","cov1","cov2","%ID","Description",""};
 
 	Object[][] data;
 	JTable table;
@@ -71,13 +75,17 @@ public class DBResultTable implements ActionListener{
 	String oldName2;
 
 	String algorithmName;
+	StructureAlignment algorithm;
+	
 	boolean isCE = true;
 	UserConfiguration config;
 	AtomCache cache ;
 
 	String userPath ;
 	String userChain;
+
 	
+
 	public static void main(String[] args){
 
 		String file = "/tmp/results_4hhb.A.out";
@@ -97,71 +105,87 @@ public class DBResultTable implements ActionListener{
 		userChain = null;
 	}
 
-	public void show(File file, UserConfiguration config){
-		this.config = config;
-
-		cache = new AtomCache(config);
-
+	public void show(BufferedReader in, UserConfiguration config) throws IOException{
+		String str;
 		List<String[]> tmpdat = new ArrayList<String[]>();
+		while ((str = in.readLine()) != null) {
+			if ( str.startsWith("#")) {
+				if ( str.startsWith("# algorithm:")) {
+					String[] spl = str.split(":");
+					if ( spl.length == 2) {
+						algorithmName = spl[1];
+						if (algorithmName.startsWith("jCE"))
+							isCE = true;
+						else
+							isCE = false;
+					}
+					initAlgorithm(algorithmName);
 
-		try {
-			BufferedReader in = new BufferedReader(new FileReader(file));
-			String str;
-			while ((str = in.readLine()) != null) {
-				if ( str.startsWith("#")) {
-					if ( str.startsWith("# algorithm:")) {
-						String[] spl = str.split(":");
-						if ( spl.length == 2) {
-						 algorithmName = spl[1];
-						 if (algorithmName.startsWith("jCE"))
-							 isCE = true;
-						 else
-							 isCE = false;
-						}
-						
-					}
-					
-					else if ( str.startsWith("#param:file1=")){
-						String path = str.substring(13);
-						userPath = path.trim();
-					}
-					
-					else if ( str.startsWith("#param:chain1=")){
-						String chain = str.substring(14);
-						userChain = chain.trim();
-					}
-					continue;
 				}
-				String[] spl = str.split("\t");
-				tmpdat.add(spl);
 
+				else if ( str.startsWith("#param:file1=")){
+					String path = str.substring(13);
+					userPath = path.trim();
+				}
+
+				else if ( str.startsWith("#param:chain1=")){
+					String chain = str.substring(14);
+					userChain = chain.trim();
+				} 
+				
+				else if ( str.startsWith("#param:scoring=")){
+					try {
+						String[] spl = str.split("=");
+						String scoreS = spl[1];
+						int scoring = Integer.parseInt(scoreS);
+						if (algorithm != null){
+							// scoring is a parameter of CE...
+							ConfigStrucAligParams params = algorithm.getParameters();
+							if ( params instanceof CeParameters){
+								CeParameters ceParams = (CeParameters) params;
+								ceParams.setScoringStrategy(scoring);
+							}
+						}
+					} catch (Exception e){
+						System.err.println("Unknown parameter can't read parameters from line: " + str);
+						e.printStackTrace();
+					}
+
+				}
+				continue;
 			}
-			in.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+			String[] spl = str.split("\t");
+			if ( spl.length != ceColumnNames.length -1) {
+				System.err.println("wrong table width! " + spl.length + " should be: " + (ceColumnNames.length -1 ));
+				System.err.println(str);
+				continue;
+			}
+			tmpdat.add(spl);
 
+		}
+		in.close();
+		
 		Object[][] d = new Object[tmpdat.size()][ceColumnNames.length + 1];
 
 		int i = -1; 
 		for (String[] spl : tmpdat){
+			
 			i++;
-
-
-
 			Object[] o = new Object[spl.length + 1];
 			for ( int j=0; j< spl.length;j++){
-				if (  j >4)
-					o[j] = Integer.parseInt(spl[j]);
-				else if ( j >= 2 && j <= 4) {	    			
-					o[j] = Double.parseDouble(spl[j]);	    	    	
+
+				if (( j >= 2 && j <= 4)|| (j==9)) {
+					o[j] = Double.parseDouble(spl[j]);
+				}  else if (  j >4 && j< 10) {
+				
+					o[j] = Integer.parseInt(spl[j]);										    	    
 				} else {
 					o[j] = spl[j];
 				}
 			}
-			
+
 			o[spl.length ] = "Align";
-			
+
 			d[i] = o;
 
 		}
@@ -170,7 +194,7 @@ public class DBResultTable implements ActionListener{
 		if ( ! isCE)
 			columnNames = fatColumnNames;
 		table = new JTable(data, columnNames);
-		
+
 		TableRowSorter<TableModel> sorter = new MyTableRowSorter(table.getModel());
 		table.setRowSorter(sorter);
 		//table.setAutoCreateRowSorter(true);
@@ -187,8 +211,51 @@ public class DBResultTable implements ActionListener{
 		f.getContentPane().add(scrollPane);
 		f.pack();
 		f.setVisible(true);
+		
+	}
+	
+	public void show(File file, UserConfiguration config){
+		this.config = config;
 
+		cache = new AtomCache(config);
+		try {
+			BufferedReader in = new BufferedReader(new FileReader(file));
+			show(in, config);
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 
+	}
+
+	public void show(URL url, UserConfiguration config){
+		this.config = config;
+
+		cache = new AtomCache(config);
+		try {
+			BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
+			show(in, config);
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+	}
+
+	
+	private void initAlgorithm(String algorithmName) {
+		try {
+			algorithm = StructureAlignmentFactory.getAlgorithm(algorithmName);
+		} catch (Exception e){
+			e.printStackTrace();
+			System.err.println("Can't guess algorithm from output. Using jCE as default...");
+			try {
+				algorithm = StructureAlignmentFactory.getAlgorithm(CeMain.algorithmName);
+			} catch (Exception ex){
+				ex.printStackTrace();
+				return;
+			}
+		}
 
 	}
 
@@ -202,7 +269,7 @@ public class DBResultTable implements ActionListener{
 		for (int c : table.getSelectedRows()) {
 			output.append(String.format(" %d", c));
 		}
-		
+
 		output.append(". Columns:");
 		for (int c : table.getSelectedColumns()) {
 			output.append(String.format(" %d", c));
@@ -234,28 +301,17 @@ public class DBResultTable implements ActionListener{
 	}
 
 	private void showAlignment( String name1, String name2){
-		StructureAlignment algorithm;
-		try {
-			algorithm = StructureAlignmentFactory.getAlgorithm(algorithmName);
-		} catch (Exception e){
-			e.printStackTrace();
-			System.err.println("Can't guess algorithm from output. Using jCE as default...");
-			try {
-			algorithm = StructureAlignmentFactory.getAlgorithm(CeMain.algorithmName);
-			} catch (Exception ex){
-				ex.printStackTrace();
-			return;
-			}
-		}
-		
-		
+
+
+
+
 		try {
 			Structure structure1 = null;
 			if ( name1.equals("CUSTOM")) {
 				// user uploaded a custom PDB file...
 				structure1 = loadCustomStructure(userPath,userChain);
 			} else {						
-			 structure1 = cache.getStructure(name1);
+				structure1 = cache.getStructure(name1);
 			}
 			Structure structure2 = cache.getStructure(name2);
 
@@ -293,19 +349,19 @@ public class DBResultTable implements ActionListener{
 		try {
 			s = reader.getStructure(userPath2);
 		} catch (IOException  e){
-			
+
 			//e.printStackTrace();
 			throw new StructureException(e);
 		}
-		
-		
+
+
 		return StructureTools.getReducedStructure(s, userChain2);
 	}
 
 	public void actionPerformed(ActionEvent e) {
 
-		
-		
+
+
 	}
 
 

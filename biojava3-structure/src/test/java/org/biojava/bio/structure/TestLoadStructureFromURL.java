@@ -13,8 +13,8 @@ public class TestLoadStructureFromURL extends TestCase{
 	
 	private static final String FILE_SEPARATOR = System.getProperty("file.separator");
 	public void testLoadStructureFromURL() throws IOException, StructureException{
-		
-		String path = TmpAtomCache.cache.getPath();
+		AtomCache cache = new AtomCache();
+		String path = cache.getPath();
 		
 		path += "SUB DIR" + FILE_SEPARATOR;
 		

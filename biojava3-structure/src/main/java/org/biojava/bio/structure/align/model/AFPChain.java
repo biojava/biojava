@@ -21,6 +21,7 @@ package org.biojava.bio.structure.align.model;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -158,6 +159,8 @@ public class AFPChain implements Serializable, Cloneable
 
 	// background distances
 	Matrix distanceMatrix;
+	
+	String description2;
 
 	public AFPChain(){
 		init();
@@ -171,6 +174,7 @@ public class AFPChain implements Serializable, Cloneable
 		sequentialAlignment = true;
 		distanceMatrix = null;
 		tmScore = -1;
+		description2=null;
 	}
 
 	/**
@@ -297,8 +301,7 @@ public class AFPChain implements Serializable, Cloneable
 		//probability = idMap.get("probability");
 		similarity = idMap.get("similarity");
 		identity   = idMap.get("identity");
-
-
+		
 	}
 
 
@@ -1030,6 +1033,7 @@ public class AFPChain implements Serializable, Cloneable
 
 
 	/**
+	 * @return The total length of the alignment, including gaps
 	 * @see #getOptLength(), the number of aligned residues in the final alignment.
 	 */
 	public int getAlnLength()
@@ -1042,6 +1046,9 @@ public class AFPChain implements Serializable, Cloneable
 		this.alnLength = alnLength;
 	}
 
+	/**
+	 * @return The index of the first aligned residue in protein 1
+	 */
 	public int getAlnbeg1()
 	{
 		return alnbeg1;
@@ -1051,7 +1058,9 @@ public class AFPChain implements Serializable, Cloneable
 	{
 		this.alnbeg1 = alnbeg1;
 	}
-
+	/**
+	 * @return The index of the first aligned residue in protein 2
+	 */
 	public int getAlnbeg2()
 	{
 		return alnbeg2;
@@ -1210,6 +1219,7 @@ public class AFPChain implements Serializable, Cloneable
 
 
 	public void setIdentity(double identity) {
+		
 		this.identity = identity;
 	}
 
@@ -1298,13 +1308,15 @@ public class AFPChain implements Serializable, Cloneable
 	}
 
 	/**
-	 * A ca1length x ca2length matrix.
+	 * A matrix with <i>ca1length</i> rows and <i>ca2length</i> columns.
 	 * For CE this is the distance matrix, but the exact interpretation is left
 	 * up to the alignment algorithm.
-	 * <p>
-	 * Special Note:<br/>
-	 * When using CE to check for circular permutations, a row of -1 is written
-	 * after the end of the first repeat of ca2. (See {@link CeMain#align(Atom[], Atom[])}  )
+	 * 
+	 * <p>Note:
+	 * A {@link org.biojava.bio.structure.gui.JMatrixPanel}, which is used in
+	 * the structure-gui package to display distance matrices, will display the
+	 * transpose of this matrix. Be sure to take that into account when debugging
+	 * visually.
 	 * 
 	 * @return A matrix with dimensions ca1length x ca2length, or null
 	 */
@@ -1313,7 +1325,7 @@ public class AFPChain implements Serializable, Cloneable
 	}
 
 	/**
-	 * A ca1length x ca2length matrix.
+	 * A matrix with <i>ca1length</i> rows and <i>ca2length</i> columns.
 	 * For CE this is the distance matrix, but the exact interpretation is left
 	 * up to the alignment algorithm.
 	 * @param distanceMatrix A matrix with dimensions ca1length x ca2length
@@ -1339,5 +1351,74 @@ public class AFPChain implements Serializable, Cloneable
      
       return tmScore;
    }
+
+
+   
+   /** Get a textual description for the protein 2 of the alignment.
+    * 
+    * @return
+    */
+	public String getDescription2() {
+		return description2;
+	}
+	
+	
+	/** Set the textual description for protein 2.
+	 * 
+	 * @param desc
+	 */
+	public void setDescription2(String desc){
+		this.description2 = desc;
+	}
+
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + blockNum;
+		result = prime * result + ca1Length;
+		result = prime * result + ca2Length;
+		result = prime * result + Arrays.hashCode(optAln);
+		result = prime * result + Arrays.hashCode(optLen);
+		result = prime * result + optLength;
+		return result;
+	}
+
+	/**
+	 * A week equality metric.
+	 * 
+	 * Checks if the optAlign is the same, and if the objects being compared
+	 * seem to be the same (same names, lengths). Does not check properties
+	 * of the alignment such as scores or superposition matrices.
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		AFPChain other = (AFPChain) obj;
+		if (blockNum != other.blockNum)
+			return false;
+		if (ca1Length != other.ca1Length)
+			return false;
+		if (ca2Length != other.ca2Length)
+			return false;
+		if (!Arrays.deepEquals(optAln, other.optAln))
+			return false;
+		if (!Arrays.equals(optLen, other.optLen))
+			return false;
+		if (optLength != other.optLength)
+			return false;
+		return true;
+	}
+
 
 }

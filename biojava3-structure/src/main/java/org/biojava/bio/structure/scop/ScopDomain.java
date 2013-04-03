@@ -18,7 +18,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @XmlRootElement(name = "ScopDomain", namespace ="http://source.rcsb.org")
 @XmlAccessorType(XmlAccessType.PUBLIC_MEMBER)
-public class ScopDomain implements Serializable{
+public class ScopDomain implements Serializable, Cloneable{
 
 	/**
 	 * 
@@ -62,23 +62,23 @@ public class ScopDomain implements Serializable{
 		buf.append("\t") ;
 		buf.append(classificationId);
 		buf.append("\t") ;
-		buf.append(sunid+"");
+        buf.append(String.valueOf(sunid));
 		buf.append("\t") ;
 		
 		buf.append("cl=");
-		buf.append(classId+"");
+        buf.append(String.valueOf(classId));
 		buf.append(",cf=");
-		buf.append(foldId+"");
+        buf.append(String.valueOf(foldId));
 		buf.append(",sf=");
-		buf.append(familyId+"");
+        buf.append(String.valueOf(familyId));
 		buf.append(",fa=");
-		buf.append(superfamilyId+"");
+        buf.append(String.valueOf(superfamilyId));
 		buf.append(",dm=");
-		buf.append(domainId+"");
+        buf.append(String.valueOf(domainId));
 		buf.append(",sp=");
-		buf.append(speciesId+"");
+        buf.append(String.valueOf(speciesId));
 		buf.append(",px=");
-		buf.append(px+"");
+        buf.append(String.valueOf(px));
 		
 		
 		return buf.toString();
@@ -157,6 +157,31 @@ public class ScopDomain implements Serializable{
 		this.px = px;
 	}
 
+	@Override
+	protected Object clone() throws CloneNotSupportedException {
+	
+		
+		ScopDomain n = new ScopDomain();
+		n.setClassId(getClassId());
+		n.setClassificationId(getClassificationId());
+		n.setDomainId(getDomainId());
+		n.setFamilyId(getFamilyId());
+		n.setFoldId(getFoldId());
+		n.setPdbId(getPdbId());
+		n.setPx(getPx());
+		n.setRanges(getRanges());
+		n.setScopId(getScopId());
+		n.setSpeciesId(getSpeciesId());
+		n.setSunid(getSunid());
+		n.setSuperfamilyId(getSuperfamilyId());
+		
+		
+		return n;
+		
+		
+	}
+
+	
 
 
 }

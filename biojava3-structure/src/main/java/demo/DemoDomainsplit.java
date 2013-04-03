@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.biojava.bio.structure.Structure;
 
-import org.biojava.bio.structure.domain.ProteinDomainParser;
+import org.biojava.bio.structure.domain.LocalProteinDomainParser;
 import org.biojava.bio.structure.domain.pdp.Domain;
 import org.biojava.bio.structure.domain.pdp.Segment;
 import org.biojava.bio.structure.io.FileParsingParameters;
@@ -56,7 +56,7 @@ public class DemoDomainsplit {
 			
 			System.out.println("structure loaded: " + struc);
 			
-			List<Domain> domains = ProteinDomainParser.suggestDomains(struc);
+			List<Domain> domains = LocalProteinDomainParser.suggestDomains(struc);
 
 			System.out.println("RESULTS: =====");
 			for ( Domain dom : domains){

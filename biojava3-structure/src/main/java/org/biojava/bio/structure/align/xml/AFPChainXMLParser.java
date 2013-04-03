@@ -278,6 +278,20 @@ public class AFPChainXMLParser
 					}
 					a.setTMScore(tmScore);
 				}
+				
+				String calcTimeS = getAttribute(rootElement,"time");
+				Long calcTime = -1L;
+				if ( calcTimeS != null){
+				
+					try {
+						calcTime = Long.parseLong(calcTimeS);
+						
+					} catch (Exception e){
+						e.printStackTrace();
+					}					
+				}
+				a.setCalculationTime(calcTime);
+				
 				Matrix[] ms = new Matrix[a.getBlockNum()];
 				a.setBlockRotationMatrix(ms);
 				Atom[] blockShiftVector = new Atom[a.getBlockNum()];

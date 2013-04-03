@@ -38,6 +38,10 @@ import org.biojava.bio.structure.align.model.AFP;
 import org.biojava.bio.structure.align.model.AFPChain;
 import org.biojava.bio.structure.align.util.AFPAlignmentDisplay;
 import org.biojava.bio.structure.jama.Matrix;
+import org.biojava3.alignment.aaindex.ScaledSubstitutionMatrix;
+import org.biojava3.alignment.template.SubstitutionMatrix;
+import org.biojava3.core.sequence.compound.AminoAcidCompound;
+import org.biojava3.core.sequence.compound.AminoAcidCompoundSet;
 
 
 
@@ -54,7 +58,7 @@ import org.biojava.bio.structure.jama.Matrix;
  */
 public class CECalculator {
 
-	private static final boolean isPrint = false;
+	protected static final boolean isPrint = false;
 	private static final boolean showAlignmentSteps = false;
 	private static final boolean debug = false;  
 
@@ -62,22 +66,22 @@ public class CECalculator {
 	int[] f2;
 	double[][]dist1;
 	double[][]dist2;
-	double[][]mat;
-	int[] bestTrace1;
-	int[] bestTrace2;
-	int[][] bestTraces1;
-	int[][] bestTraces2;
-	private int nBestTrace;
-	int nBestTraces;
+	protected double[][]mat;
+	protected int[] bestTrace1;
+	protected int[] bestTrace2;
+	protected int[][] bestTraces1;
+	protected int[][] bestTraces2;
+	protected int nBestTrace;
+	protected int nBestTraces;
 	double d_[] = new double[20];
-	private int[] bestTracesN;
-	private double bestTraceScore;
-	private int nTrace;
-	private double[] bestTracesScores;
-	private int[] trace1;
-	private int[] trace2;
+	protected int[] bestTracesN;
+	protected double bestTraceScore;
+	protected int nTrace;
+	protected double[] bestTracesScores;
+	protected int[] trace1;
+	protected int[] trace2;
 
-	private static final 	double  zThr=-0.1;
+	protected static final 	double  zThr=-0.1;
 
 	long timeStart ;
 	long timeEnd;
@@ -92,15 +96,15 @@ public class CECalculator {
 	private int[] bestTraceLen;
 	private Matrix r;
 	private Atom t;
-	private int nTraces;
+	protected int nTraces;
 
 	private double z;
 	private int[] traceIndexContainer;
 
-	CeParameters params;
+	protected CeParameters params;
 	// SHOULD these fields be PARAMETERS?
 
-	private static final int nIter = 1;
+	protected static final int nIter = 1;
 	private static final boolean distAll = false;
 
 	List<MatrixListener> matrixListeners;
@@ -144,6 +148,11 @@ public class CECalculator {
 		
 		if ( debug )
 			System.out.println("parameters: " + params);
+		
+		if ( params.getScoringStrategy() == CeParameters.SEQUENCE_CONSERVATION){
+			if ( params.getSeqWeight() < 1)
+				params.setSeqWeight(2);
+		}
 		
 		int winSize = params.getWinSize();
 
@@ -238,6 +247,10 @@ public class CECalculator {
 	 * <dd>Equivalent to DEFAULT_SCORING_STRATEGY + SIDE_CHAIN_ANGLE_SCORING</dd>
 	 * </dl>
 	 * 
+	 *  <dt>SEQUENCE_CONSERVATION</dt>
+	 * <dd>A mix between the DEFAULT_SCORING_STRATEGY and a scoring function that favors the alignment of sequence conserved positions in the alignment</dd>
+	 * </dl>
+	 * 
 	 *   
 	 * 
 	 * @param ca1 The CA of the first residue
@@ -322,6 +335,17 @@ public class CECalculator {
 
 			return dist;
 
+		} else if ( params.getScoringStrategy() == CeParameters.SEQUENCE_CONSERVATION){
+			if ( cb1 != null && cb2 != null) {
+				// CB distance
+				dist = Calc.getDistance(cb1,cb2);
+				//dist = dist / 2.;
+			} else {
+				dist = Calc.getDistance(ca1,ca2);
+			}
+			return dist;
+			
+			
 		}
 		else {
 			// unsupported scoring scheme
@@ -772,7 +796,7 @@ public class CECalculator {
 
 	}
 
-	private double getScore2(int jse1, int jse2, double[][] traceScore, int traceIndex_,int[] traceIndex,int winSizeComb1, int winSizeComb2, double score0, double score1 ) {
+	protected double getScore2(int jse1, int jse2, double[][] traceScore, int traceIndex_,int[] traceIndex,int winSizeComb1, int winSizeComb2, double score0, double score1 ) {
 
 
 
@@ -795,7 +819,7 @@ public class CECalculator {
 
 	}
 
-	private int doIter0(int newBestTrace, double traceTotalScore, double bestTracesMax) {
+	protected int doIter0(int newBestTrace, double traceTotalScore, double bestTracesMax) {
 
 
 		// only do the whole method if this criteria is fulfilled...
@@ -860,7 +884,7 @@ nBestTrace=nTrace;
 	}
 
 
-	private double getScoreFromDistanceMatrices(int mse1, int mse2,int winSize) {
+	protected double getScoreFromDistanceMatrices(int mse1, int mse2,int winSize) {
 
 		double score = 0;
 		// (winSize) "best" dist
@@ -1361,7 +1385,7 @@ nBestTrace=nTrace;
 
 					double dist = getDistanceWithSidechain(ca1[ise1], ca3[ise2]);
 					mat[ise1][ise2] = oRmsdThr - dist;
-
+					
 					//double distold = Calc.getDistance(ca1[ise1],ca3[ise2]);
 					//double scoreOld  = oRmsdThr - distold ;
 					//mat[ise1][ise2] = scoreOld;
@@ -1377,6 +1401,10 @@ nBestTrace=nTrace;
 			}
 
 			mat = notifyMatrixListener(mat);
+			
+			if ( params.getScoringStrategy() == CeParameters.SEQUENCE_CONSERVATION){
+				mat = updateMatrixWithSequenceConservation(mat,ca1,ca2, params);
+			}
 			
 			double gapOpen = params.getGapOpen();
 			double gapExtension = params.getGapExtension();
@@ -1481,6 +1509,61 @@ nBestTrace=nTrace;
 
 	}
 
+	/** Modifies an alignment matrix by favoring the alignment of similar and identical amino acids and penalizing the alignment of unrelated ones.
+	 * 
+	 * @param max alignment matrix
+	 * @param ca1 Atoms for protein 1
+	 * @param ca2 Atoms for Protein 2
+	 * @param params alignment parameters
+	 * @return modified alignment matrix
+	 */
+	public static double[][] updateMatrixWithSequenceConservation(double[][] max, Atom[] ca1, Atom[] ca2, CeParameters params) {
+		Matrix origM = new Matrix(max);
+		
+		SubstitutionMatrix<AminoAcidCompound> substMatrix =
+			params.getSubstitutionMatrix();
+		
+		int internalScale = 1;
+		if ( substMatrix instanceof ScaledSubstitutionMatrix) {
+			ScaledSubstitutionMatrix scaledMatrix = (ScaledSubstitutionMatrix) substMatrix;
+			internalScale = scaledMatrix.getScale();
+		}
+
+		
+		AminoAcidCompoundSet set = AminoAcidCompoundSet.getAminoAcidCompoundSet();
+
+		for (int i = 0 ; i < origM.getRowDimension() ; i++){
+			for ( int j =0; j < origM.getColumnDimension() ; j ++ ) {
+				double val = origM.get(i,j);
+				Atom a1 = ca1[i];
+				Atom a2 = ca2[j];
+
+				AminoAcidCompound ac1 =
+					set.getCompoundForString(a1.getGroup().getChemComp().getOne_letter_code());
+				AminoAcidCompound ac2 =
+					set.getCompoundForString(a2.getGroup().getChemComp().getOne_letter_code());
+				
+				
+				if ( ac1 == null || ac2 == null)
+					continue;
+				
+				short aaScore = substMatrix.getValue(ac1,ac2);
+				
+				double weightedScore = (aaScore / internalScale) * params.getSeqWeight();
+				
+				
+				val += weightedScore;
+				origM.set(i,j,val);
+
+			}
+		}
+		max = origM.getArray();
+
+		//SymmetryTools.showMatrix((Matrix)origM.clone(), "in optimizer "  + loopCount  );
+		//SymmetryTools.showMatrix(origM, "iteration  matrix " + loopCount + " after");
+		
+		return max;
+	}
 
 	private double[][] notifyMatrixListener(double[][] mat2) {
 		for (MatrixListener li : matrixListeners) {
@@ -1501,9 +1584,21 @@ nBestTrace=nTrace;
 	}
 	
 	
+	/**
+	 * On input, mat[i][j] should give the score for aligning positions i and j.
+	 * On output, mat[i][j] gives the maximum score possible for aligning 1..i 
+	 * of protein 1 with 1..j of protein 2.
+	 * 
+	 * @param nSeq1 The length of protein 1 (mat.length)
+	 * @param nSeq2 The length of protein 2 (mat[0].length)
+	 * @param gapI gap initiation penalty
+	 * @param gapE gap extension penalty
+	 * @param isGlobal1 The alignment is global for protein 1
+	 * @param isGlobal2 The alignment is global for protein 2
+	 * @return The maximum score
+	 */
 	private double dpAlign(int nSeq1, int nSeq2, double gapI, double gapE, 
 			boolean isGlobal1, boolean isGlobal2) {
-
 
 		// isGlobal1,isGlobal2 are always false...
 
@@ -1737,7 +1832,7 @@ nBestTrace=nTrace;
 			align_se2[lcmp]=jMax; 
 			lcmp++;
 
-			if(brk_flg[i][j]==true) {
+			if(brk_flg[i][j]) {
 				//System.out.println("hit break flag at: " + i + "  " + j + " sum " + sum_ret + " lcmp " + lcmp);				
 				break;
 
@@ -1894,7 +1989,7 @@ nBestTrace=nTrace;
 		return(pToZ(p1*p2));
 	}
 
-	private double zStrAlign(int winSize, int nTrace, double score, int nGaps) {
+	protected double zStrAlign(int winSize, int nTrace, double score, int nGaps) {
 		double z1=zScore(winSize, nTrace, score);
 		double z2=zGaps(winSize, nTrace, nGaps);
 		return(zByZ(z1, z2));
@@ -2134,9 +2229,13 @@ nBestTrace=nTrace;
 
 
 		 // CE uses the aligned pairs as reference not the whole alignment including gaps...
-		 afpChain.setIdentity(nrIdent*1.0/pos);
-		 afpChain.setSimilarity(nrSim*1.0/pos);
-
+		 if ( pos > 0) {
+			 afpChain.setIdentity(nrIdent*1.0/pos);
+			 afpChain.setSimilarity(nrSim*1.0/pos);
+		 } else {
+			 afpChain.setIdentity(0);
+			 afpChain.setSimilarity(0);
+		 }
 
 		 //AFPAlignmentDisplay.getAlign( afpChain,ca1,ca2);
 

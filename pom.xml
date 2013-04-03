@@ -4,7 +4,7 @@
 	<groupId>org.biojava</groupId>
 	<artifactId>biojava</artifactId>
 	<packaging>pom</packaging>
-	<version>3.0.2</version>
+	<version>3.0.3</version>
 	<name>biojava</name>
 	<description>BioJava is an open-source project dedicated to providing a Java framework for processing biological data. It provides analytical and statistical routines, parsers for common file formats and allows the manipulation of sequences and 3D structures. The goal of the biojava project is to facilitate rapid application development for bioinformatics.</description>
 	<url>http://www.biojava.org</url>
@@ -20,9 +20,9 @@
   </license>
   </licenses>
 	<scm>
-		<connection>scm:svn:svn://code.open-bio.org/biojava/biojava-live/tags/biojava-3.0.2</connection>
-		<developerConnection>scm:svn:svn+ssh://dev.open-bio.org/home/svn-repositories/biojava/biojava-live/tags/biojava-3.0.2</developerConnection>
-		<url>http://code.open-bio.org/svnweb/index.cgi/biojava/browse/biojava-live/tags/biojava-3.0.2</url>
+		<connection>scm:svn:svn://code.open-bio.org/biojava/biojava-live/tags/biojava-3.0.3</connection>
+		<developerConnection>scm:svn:svn+ssh://dev.open-bio.org/home/svn-repositories/biojava/biojava-live/tags/biojava-3.0.3</developerConnection>
+		<url>http://code.open-bio.org/svnweb/index.cgi/biojava/browse/biojava-live/tags/biojava-3.0.3</url>
 	</scm>
 	<repositories>
 		<repository>
@@ -237,10 +237,11 @@
 
 		<module>biojava3-core</module>
 		<module>biojava3-phylo</module>
+		<module>biojava3-sequencing</module>
 		<module>biojava3-structure</module>
 		<module>biojava3-structure-gui</module>
 		<module>biojava3-genome</module>
-		<module>biojava3-protmod</module>
+		<module>biojava3-modfinder</module>
 		<module>biojava3-alignment</module>
 		<module>biojava3-ws</module>
 		<module>biojava3-protein-disorder</module>

@@ -21,7 +21,6 @@
 package org.biojava3.ws.alignment;
 
 import java.io.Serializable;
-import java.util.Properties;
 import java.util.Set;
 
 /**
@@ -32,7 +31,7 @@ import java.util.Set;
  * wrapper methods that actually call either getAlignementOption or setAlignementOption
  * with specific values for parameter names and checking values for options.
  * 
- * For an example, go see RemoteQBlastProperties
+ * For an example, go see NCBIQBlastProperties
  * 
  * @author Sylvain Foisy, Diploide BioIT
  * @since Biojava 3

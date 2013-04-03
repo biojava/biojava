@@ -74,7 +74,7 @@ public ParameterGUI(StructureAlignment alignment){
          String data = value.toString();
          Component field;
          if ( key.equals(CeParameters.SCORING_STRATEGY) ){
-            String[] values = new String[]{"CA only","Sidechain orientation","Angle between sidechains", "CA distance+Angle between sidechains"};
+            String[] values = new String[]{"CA only","Sidechain orientation","Angle between sidechains", "CA distance+Angle between sidechains","Sequence Conservation"};
             JComboBox jcbox = new JComboBox(values);
             Integer val = (Integer)value;
             jcbox.setSelectedIndex(val);
@@ -288,15 +288,24 @@ public ParameterGUI(StructureAlignment alignment){
 
    }
 
-   @SuppressWarnings({ "unchecked", "rawtypes" })
+   @SuppressWarnings("unchecked")
    private Object  getValue(String name){
-
+      // first try with get form
       try {
          String methodName = "get" + name;
 
-         Class paramC = params.getClass();
-
-         Method m =paramC.getMethod(methodName,(Class[])null);
+         @SuppressWarnings("rawtypes")
+		Class paramC = params.getClass();
+         
+         Method m;
+         try {
+            //try boolean getter
+            m = paramC.getMethod(methodName,(Class[])null);
+         } catch(NoSuchMethodException e) {
+            //try boolean getter
+            methodName = "is" + name;
+            m = paramC.getMethod(methodName,(Class[])null);
+         }
 
          Object value = m.invoke(params);
 

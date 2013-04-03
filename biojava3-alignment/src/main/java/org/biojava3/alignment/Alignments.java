@@ -311,6 +311,9 @@ public class Alignments {
     public static <S extends Sequence<C>, C extends Compound> PairwiseSequenceAligner<S, C> getPairwiseAligner(
             S query, S target, PairwiseSequenceAlignerType type, GapPenalty gapPenalty,
             SubstitutionMatrix<C> subMatrix) {
+    	if (!query.getCompoundSet().equals(target.getCompoundSet())) {
+    		throw new IllegalArgumentException("Sequence compound sets must be the same");
+    	}
         switch (type) {
         default:
         case GLOBAL:

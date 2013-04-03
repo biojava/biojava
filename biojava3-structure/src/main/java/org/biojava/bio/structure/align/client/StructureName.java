@@ -3,11 +3,14 @@ package org.biojava.bio.structure.align.client;
 
 import java.io.Serializable;
 import java.io.StringWriter;
+import java.util.regex.Matcher;
+
+import org.biojava.bio.structure.align.util.AtomCache;
 
 
-/** A utility class that makes working with names of strucutres, domains and ranges easier
+/** A utility class that makes working with names of structures, domains and ranges easier.
  * 
- * @param name the name. e.g. 4hhb, 4hhb.A, d4hhba_, etc.
+ * @param name the name. e.g. 4hhb, 4hhb.A, d4hhba_, PDP:4HHBAa etc.
  */
 public class StructureName implements Comparable<StructureName>, Serializable{
 
@@ -15,13 +18,19 @@ public class StructureName implements Comparable<StructureName>, Serializable{
 	 * 
 	 */
 	private static final long serialVersionUID = 4021229518711762954L;
-	String name;
-
+	protected String name;
+	protected String pdbId;
+	protected String chainId;
 	
 	public StructureName(String name){
 		if ( name.length() <  4)
 			throw new IllegalArgumentException("This is not a valid StructureName:" + name);
+		
 		this.name = name;
+		
+		this.pdbId = parsePdbId();
+		
+		this.chainId = parseChainId();
 	}
 
 	/** PDB IDs are always returned as upper case
@@ -29,17 +38,18 @@ public class StructureName implements Comparable<StructureName>, Serializable{
 	 * @return upper case PDB ID
 	 */
 	public String getPdbId(){
-		if ( isScopName() ) {
-			return name.substring(1,5).toUpperCase();
-		}
-		else  {
-			// all other names start with PDB id
-			return name.substring(0,4).toUpperCase();
-		}
-
+		
+		return pdbId;
 	}
 	
+	
+	public String getChainId(){
+		
+		return chainId;
+	}
+		
 	public String getName(){
+		
 		return name;
 	}
 	
@@ -55,11 +65,15 @@ public class StructureName implements Comparable<StructureName>, Serializable{
 			s.append(" is a SCOP name");
 		}
 		
-		if ( hasChainID()) {
+		String chainID= getChainId();
+		if ( chainID != null) {
 			s.append(" has chain ID: ");
-			s.append(getChainId());
+			s.append(chainID);
 					
 		}
+		
+		if ( isPDPDomain())
+			s.append(" is a PDP domain");
 		
 		return s.toString();
 		
@@ -70,28 +84,18 @@ public class StructureName implements Comparable<StructureName>, Serializable{
 			return true;
 		return false;
 	}
+	
 	public boolean hasChainID(){
-		return name.contains(".");
+		//return name.contains(AtomCache.CHAIN_SPLIT_SYMBOL);
+		
+		
+		if ( chainId != null)
+			return true;
+		return false;
 	}
-
-	public String getChainId() {
-		// looks like PDB.chainID syntax
-		String[] spl = name.split("\\.");
-		String chain = null;
-
-		if ( spl.length == 2) {
-
-			chain = spl[1];
-
-			if ( chain.length()>1)
-				chain = chain.substring(0,1);
-
-		} else if ( isScopName()){
-			// chain ID is the 
-			chain = name.substring(5,6);
-		}
-
-		return chain;
+	
+	public boolean isPDPDomain(){
+		return name.startsWith(AtomCache.PDP_DOMAIN_IDENTIFIER);
 	}
 
 	@Override
@@ -120,12 +124,68 @@ public class StructureName implements Comparable<StructureName>, Serializable{
 	}
 
 	public int compareTo(StructureName o) {
+		if ( this.equals(o))
+			return 0;
+		if ( o.getPdbId() == null)
+			return -1;
+		if ( this.getPdbId() == null)
+			return 1;
 		
-		return name.compareTo(o.getName());
+		if ( ! o.getPdbId().equals(this.getPdbId())){
+			return this.getPdbId().compareTo(o.getPdbId());
+		}
+
+		return this.getName().compareTo(o.getName());
 		
 	}
+	
+	private String parsePdbId(){
+		if ( isScopName() ) {
+			return name.substring(1,5).toUpperCase();
+		}
+		else if ( name.startsWith(AtomCache.PDP_DOMAIN_IDENTIFIER)){
+			// starts with PDP:
+			// eg: PDP:3LGFAa
+			return name.substring(4,8).toUpperCase();
+		}
+		else  {
+			
+			// all other names start with PDB id
+			return name.substring(0,4).toUpperCase();
+		}
 
+	}
 
+	private String parseChainId(){
+		if (name.length() == 6){
+			// name is PDB.CHAINID style (e.g. 4hhb.A)
+			
+		
+			if ( name.substring(4,5).equals(AtomCache.CHAIN_SPLIT_SYMBOL)) {
+				return name.substring(5,6);
+			}
+		} else  if ( name.startsWith("d")){
+			
+
+			Matcher scopMatch = AtomCache.scopIDregex.matcher(name);
+			if( scopMatch.matches() ) {
+				//String pdbID = scopMatch.group(1);
+				String chainID = scopMatch.group(2);
+				//String domainID = scopMatch.group(3);
+				// unfortunately SCOP chain IDS are lowercase!
+				return chainID.toUpperCase();
+			}
+			
+			
+		} else if ( name.startsWith(AtomCache.PDP_DOMAIN_IDENTIFIER)){
+			// eg. PDP:4HHBAa
+			String chainID = name.substring(8,9);
+			//System.out.println("chain " + chainID + " for " + name);
+			return chainID;
+		}
+		
+		return null;
+	}
 	
 	
 }

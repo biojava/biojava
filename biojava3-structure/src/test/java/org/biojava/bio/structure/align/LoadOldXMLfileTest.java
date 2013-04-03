@@ -30,10 +30,10 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 
 import org.biojava.bio.structure.Atom;
-import org.biojava.bio.structure.TmpAtomCache;
 import org.biojava.bio.structure.align.model.AFPChain;
 import org.biojava.bio.structure.align.model.AfpChainWriter;
 
+import org.biojava.bio.structure.align.util.AtomCache;
 import org.biojava.bio.structure.align.xml.AFPChainXMLParser;
 
 
@@ -74,10 +74,10 @@ public class LoadOldXMLfileTest extends TestCase
 
          String xml = convertStreamToString(inStream);
          
-        
+         AtomCache cache = new AtomCache();
          
-         Atom[] ca1 = TmpAtomCache.cache.getAtoms(name1);
-         Atom[] ca2 = TmpAtomCache.cache.getAtoms(name2);
+         Atom[] ca1 = cache.getAtoms(name1);
+         Atom[] ca2 = cache.getAtoms(name2);
          
          AFPChain afpChain = AFPChainXMLParser.fromXML(xml, ca1, ca2);
          
@@ -101,7 +101,7 @@ public class LoadOldXMLfileTest extends TestCase
       String line = null;
       try {
          while ((line = reader.readLine()) != null) {
-            sb.append(line + "\n");
+             sb.append(line).append("\n");
          }
       } catch (IOException e) {
          //e.printStackTrace();

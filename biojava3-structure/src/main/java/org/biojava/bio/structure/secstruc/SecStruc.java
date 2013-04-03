@@ -179,9 +179,9 @@ public class SecStruc {
          Group g = groups[i];
          SecStrucState state = (SecStrucState) g.getProperty("secstruc");
          //	System.out.println("XX"+i+" "+g.getResidueNumber().toString() + " " + g.getPDBName() + iter.getCurrentChain().getName() + " " + state);
-         buf.append((i+1) + "\t");
-         buf.append(g.getPDBName()+ " ");
-         buf.append(g.getResidueNumber().toString() + "\t");
+         buf.append(i + 1).append("\t");
+         buf.append(g.getPDBName()).append(" ");
+         buf.append(g.getResidueNumber().toString()).append("\t");
 
          boolean[] turns = state.getTurn();
          for (int t=0;t<3;t++){

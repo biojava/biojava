@@ -20,7 +20,7 @@ import org.biojava3.core.sequence.io.FastaWriterHelper;
 public class SplitFasta {
 
     public void processNucleotides(File fastaFileName,String uniqueid, File outputDirectory ) throws Exception{
-        if(outputDirectory.exists() == false)
+        if(!outputDirectory.exists())
             outputDirectory.mkdirs();
 
         LinkedHashMap<String,DNASequence> dnaSequenceHashMap = FastaReaderHelper.readFastaDNASequence(fastaFileName);

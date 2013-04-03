@@ -194,7 +194,7 @@ public class SystemInfo
           * are loaded into the property list. We toss them
           * to avoid confusion.
           */
-         if (propValue != null && name.equals(propValue) == false) {
+         if (propValue != null && !name.equals(propValue)) {
             append("<b>"+name + "</b>:");
             boolean isReadable = true;
             for (int i = 0; i < propValue.length(); i++) {
@@ -204,7 +204,7 @@ public class SystemInfo
                   break;
                }
             }
-            if (isReadable == false) {
+            if (!isReadable) {
                for (int i = 0; i < propValue.length(); i++) {
                   char    c   = propValue.charAt(i);
                   if (Character.isLetterOrDigit(c)) {

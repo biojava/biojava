@@ -85,6 +85,24 @@ public class FileParsingParameters implements Serializable
 
 	private boolean storeEmptySeqRes;
 
+	/** the maximum number of atoms that will be parsed before the parser switches to a CA-only
+	 * representation of the PDB file. If this limit is exceeded also the SEQRES groups will be
+	 * ignored.
+	 */
+	public static final int ATOM_CA_THRESHOLD = 500000;
+
+	int atomCaThreshold;
+
+
+	/**  the maximum number of atoms we will add to a structure
+    this protects from memory overflows in the few really big protein structures.
+	 */
+	//public static final int MAX_ATOMS = 700000; // tested with java -Xmx300M
+	public static final int MAX_ATOMS = Integer.MAX_VALUE; // no limit, we don't want to trunkate molecules, but the user should make sure there is more memory available
+
+	int maxAtoms ;
+
+	String[] fullAtomNames;
 
 	public FileParsingParameters(){
 		setDefault();
@@ -105,6 +123,11 @@ public class FileParsingParameters implements Serializable
 		storeEmptySeqRes = false;
 
 		updateRemediatedFiles = false;
+		fullAtomNames = null;
+
+		maxAtoms = MAX_ATOMS;
+
+		atomCaThreshold = ATOM_CA_THRESHOLD;
 	}
 
 	/** is secondary structure assignment being parsed from the file?
@@ -217,7 +240,7 @@ public class FileParsingParameters implements Serializable
 		this.storeEmptySeqRes = storeEmptySeqRes;
 	}
 
-	
+
 	/** A flag if local files should be replaced with the latest version of remediated PDB files. Default: false
 	 * 
 	 * @returns updateRemediatedFiles flag
@@ -233,6 +256,64 @@ public class FileParsingParameters implements Serializable
 	public void setUpdateRemediatedFiles(boolean updateRemediatedFiles) {
 		this.updateRemediatedFiles = updateRemediatedFiles;
 	}
+
+	/** by default the parser will read in all atoms (unless using the CAonly switch). This allows to specify a set of atoms to be read. e.g.
+	 * {" CA ", " CB " }. Returns null if all atoms are accepted.
+	 * @return accepted atom names, or null if all atoms are accepted. default null
+	 */
+	public String[] getAcceptedAtomNames() {
+		return fullAtomNames;
+	}
+
+
+	/** by default the parser will read in all atoms (unless using the CAonly switch). This allows to specify a set of atoms to be read. e.g.
+	 * {" CA ", " CB " }. Returns null if all atoms are accepted.
+	 * @param accepted atom names, or null if all atoms are accepted. default null
+	 */
+
+	public void setAcceptedAtomNames(String[] fullAtomNames) {
+		this.fullAtomNames = fullAtomNames;
+	}
+
+
+	/** the maximum numbers of atoms to load in a protein structure (prevents memory overflows)
+	 * 
+	 * @return maximum nr of atoms to load, default Integer.MAX_VALUE;
+	 */
+	public int getMaxAtoms() {
+		return maxAtoms;
+	}
+
+	/**the maximum numbers of atoms to load in a protein structure (prevents memory overflows)
+	 * 
+	 * @param maxAtoms maximun nr of atoms to load
+	 */
+	public void setMaxAtoms(int maxAtoms) {
+		this.maxAtoms = maxAtoms;
+	}
+
+
+	/** the maximum number of atoms that will be parsed before the parser switches to a CA-only
+	 * representation of the PDB file. If this limit is exceeded also the SEQRES groups will be
+	 * ignored.
+	 * 
+	 * 	 
+	 * @return atomCaThreshold.
+	 */
+	public int getAtomCaThreshold() {
+		return atomCaThreshold;
+	}
+
+
+	/** the maximum number of atoms that will be parsed before the parser switches to a CA-only
+	 * representation of the PDB file. If this limit is exceeded also the SEQRES groups will be
+	 * ignored.
+	 * @param atomCaThreshold maximum number of atoms for all atom representation.
+	 */
+	public void setAtomCaThreshold(int atomCaThreshold) {
+		this.atomCaThreshold = atomCaThreshold;
+	}
+
 
 
 

@@ -87,7 +87,7 @@ public class CheckTreeAccuracy {
     }
 
     public PhylogenyNode findCommonParent(PhylogenyNode node) {
-        while (node.getPathToParent() == false) {
+        while (!node.getPathToParent()) {
             node = node.getParent();
         }
         return node;
@@ -95,7 +95,7 @@ public class CheckTreeAccuracy {
 
     public void markPathToRoot(PhylogenyNode node, boolean value) {
         node.setPathToParent(value);
-        while (node.isRoot() == false) {
+        while (!node.isRoot()) {
             node = node.getParent();
             node.setPathToParent(value);
         }

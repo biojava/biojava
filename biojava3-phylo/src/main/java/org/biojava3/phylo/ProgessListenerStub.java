@@ -13,7 +13,7 @@ package org.biojava3.phylo;
 public class ProgessListenerStub implements NJTreeProgressListener {
 String priorState = "";
     public void progress(Object njtree,String state, int percentageComplete) {
-        if(priorState.equals(state) == false){
+        if(!priorState.equals(state)){
             priorState = state;
             System.out.println();
         }
@@ -24,7 +24,7 @@ String priorState = "";
 
 
     public void progress(Object njtree,String state, int currentCount, int totalCount) {
-               if(priorState.equals(state) == false){
+        if (!priorState.equals(state)){
             priorState = state;
             System.out.println();
         }

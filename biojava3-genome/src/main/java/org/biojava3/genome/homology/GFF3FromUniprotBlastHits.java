@@ -83,7 +83,7 @@ public class GFF3FromUniprotBlastHits {
                     for (ProteinSequence cdsProteinSequence : cdsProteinList) {
                         testSequence = testSequence + cdsProteinSequence.getSequenceAsString();
                     }
-                    if (testSequence.equals(predictedProteinSequence) == false && (predictedProteinSequence.equals(testSequence.substring(0, testSequence.length() - 1)) == false)) {
+                    if (!testSequence.equals(predictedProteinSequence) && (!predictedProteinSequence.equals(testSequence.substring(0, testSequence.length() - 1)))) {
                         DNASequence codingSequence = transcriptSequence.getDNACodingSequence();
                         System.out.println(codingSequence.getSequenceAsString());
                         System.out.println("Sequence agreement error");

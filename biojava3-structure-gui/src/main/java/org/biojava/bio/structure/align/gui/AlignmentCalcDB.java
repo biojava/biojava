@@ -43,7 +43,9 @@ import org.biojava.bio.structure.StructureTools;
 import org.biojava.bio.structure.align.CallableStructureAlignment;
 import org.biojava.bio.structure.align.StructureAlignment;
 import org.biojava.bio.structure.align.ce.CeMain;
+import org.biojava.bio.structure.align.ce.CeParameters;
 import org.biojava.bio.structure.align.ce.CeSideChainMain;
+import org.biojava.bio.structure.align.ce.ConfigStrucAligParams;
 import org.biojava.bio.structure.align.client.FarmJobParameters;
 import org.biojava.bio.structure.align.client.JFatCatClient;
 import org.biojava.bio.structure.align.client.PdbPair;
@@ -51,6 +53,9 @@ import org.biojava.bio.structure.align.model.AFPChain;
 import org.biojava.bio.structure.align.util.AtomCache;
 import org.biojava.bio.structure.align.util.SynchronizedOutFile;
 import org.biojava.bio.structure.align.util.UserConfiguration;
+import org.biojava.bio.structure.domain.DomainProvider;
+import org.biojava.bio.structure.domain.DomainProviderFactory;
+import org.biojava.bio.structure.domain.RemoteDomainProvider;
 
 import org.biojava3.core.util.ConcurrencyTools;
 
@@ -72,8 +77,19 @@ public class AlignmentCalcDB implements AlignmentCalculationRunnable {
 	String outFile;
 	File resultList;
 	int nrCPUs;
+	Boolean domainSplit ;
+	
+	StructureAlignment customAlgorithm;
+	
+	public StructureAlignment getAlgorithm() {
+		return customAlgorithm;
+	}
 
-	public AlignmentCalcDB(AlignmentGui parent, Structure s1,  String name1, UserConfiguration config,String outFile) {
+	public void setAlgorithm(StructureAlignment algo) {
+		this.customAlgorithm = algo;
+	}
+
+	public AlignmentCalcDB(AlignmentGui parent, Structure s1,  String name1, UserConfiguration config,String outFile, Boolean domainSplit) {
 
 		this.parent= parent;
 
@@ -85,12 +101,19 @@ public class AlignmentCalcDB implements AlignmentCalculationRunnable {
 		//this.representatives = representatives;
 		interrupted = new AtomicBoolean(false);
 		this.outFile = outFile;
+		this.domainSplit = domainSplit;
 	}
 
 	public void run() {
-		System.out.println("running AlignmentCalcDB. Results will be in " + outFile);
+
 		AtomCache cache = new AtomCache(config);
-		StructureAlignment algorithm = parent.getStructureAlignment();	
+		
+		StructureAlignment algorithm = null;
+		if ( parent != null )
+			algorithm = parent.getStructureAlignment();
+		else {
+			algorithm = customAlgorithm;
+		}
 		String serverLocation = FarmJobParameters.DEFAULT_SERVER_URL;
 		if ( representatives == null){
 			SortedSet<String> repre = JFatCatClient.getRepresentatives(serverLocation,40);
@@ -100,10 +123,10 @@ public class AlignmentCalcDB implements AlignmentCalculationRunnable {
 
 		String header = "# algorithm:" + algorithm.getAlgorithmName(); 
 
-		String legend = "# name1\tname2\tscore\tprobability\trmsd\tlen1\tlen2\tsim1\tsim2\t " ;
+		String legend = "# name1\tname2\tscore\tprobability\trmsd\tlen1\tlen2\tcov1\tcov2\t%ID\tDescription\t " ;
 		if (    algorithm.getAlgorithmName().equalsIgnoreCase(CeMain.algorithmName) || 
 				algorithm.getAlgorithmName().equalsIgnoreCase(CeSideChainMain.algorithmName)){
-			legend =  "# name1\tname2\tscore\tz-score\trmsd\tlen1\tlen2\tsim1\tsim2\t " ;
+			legend =  "# name1\tname2\tscore\tz-score\trmsd\tlen1\tlen2\tcov1\tcov2\t%ID\tDescription\t " ;
 		}
 
 
@@ -120,8 +143,6 @@ public class AlignmentCalcDB implements AlignmentCalculationRunnable {
 		SynchronizedOutFile out ;
 
 		resultList = new File(outFileF,"results_" + name1 + ".out");
-
-
 
 		try {
 
@@ -144,6 +165,18 @@ public class AlignmentCalcDB implements AlignmentCalculationRunnable {
 
 			}
 
+			if ( algorithm.getAlgorithmName().startsWith("jCE")){
+				ConfigStrucAligParams params = algorithm.getParameters();
+				if ( params instanceof CeParameters){
+					CeParameters ceParams = (CeParameters) params;
+					if ( ceParams.getScoringStrategy() != CeParameters.DEFAULT_SCORING_STRATEGY) {
+						String scoring = "#param:scoring=" + ceParams.getScoringStrategy();
+						out.write(scoring);
+						out.write(AFPChain.newline);
+					}
+				}
+			}
+
 		} catch (Exception e){
 			System.err.println("Error while loading representative structure " + name1);
 			e.printStackTrace();
@@ -154,34 +187,33 @@ public class AlignmentCalcDB implements AlignmentCalculationRunnable {
 
 
 
-
+		DomainProvider domainProvider = DomainProviderFactory.getDomainProvider();
 
 		ConcurrencyTools.setThreadPoolSize(nrCPUs);
 
-
 		Atom[] ca1 = StructureTools.getAtomCAArray(structure1);
+
+		int nrJobs = 0;
 		for (String repre : representatives){
 
-			CallableStructureAlignment ali = new CallableStructureAlignment();
-
-			PdbPair pair = new PdbPair(name1, repre);
-			try {
-				ali.setCa1(ca1);
-			} catch (Exception e){
-				e.printStackTrace();
-				ConcurrencyTools.shutdown();
-				return;
-			}
-			ali.setAlgorithmName(algorithm.getAlgorithmName());
-			ali.setParameters(algorithm.getParameters());
-			ali.setPair(pair);
-			ali.setOutFile(out);			
-			ali.setOutputDir(outFileF);
-			ali.setCache(cache);
-
-			ConcurrencyTools.submit(ali);
-
-
+			if( domainSplit ) {
+				SortedSet<String> domainNames = domainProvider.getDomainNames(repre);
+				//System.out.println(repre +" got domains: " +domainNames);
+				if( domainNames == null || domainNames.size()==0){
+					// no domains found, use whole chain.
+					submit(name1, repre, ca1, algorithm, outFileF, out, cache);
+					nrJobs++;
+					continue;
+				}
+				//System.out.println("got " + domainNames.size() + " for " + repre);
+				for( String domain : domainNames){
+					submit(name1, domain, ca1, algorithm, outFileF, out, cache);
+					nrJobs++;
+				}
+			} else {
+				submit(name1, repre, ca1, algorithm, outFileF, out, cache);
+				nrJobs++;
+			}			
 
 		}
 
@@ -192,19 +224,19 @@ public class AlignmentCalcDB implements AlignmentCalculationRunnable {
 		long startTime = System.currentTimeMillis();
 
 		try {
-			while ( pool.getCompletedTaskCount() < representatives.size()-1  ) {
+			while ( pool.getCompletedTaskCount() < nrJobs-1  ) {
 				//long now = System.currentTimeMillis();
 				//System.out.println( pool.getCompletedTaskCount() + " " + (now-startTime)/1000 + " " + pool.getPoolSize() + " " + pool.getActiveCount()  + " " + pool.getTaskCount()  );
-//				if ((now-startTime)/1000 > 60) {
-//					
-//					interrupt();
-//					System.out.println("completed: " + pool.getCompletedTaskCount());
-//				}
+				//				if ((now-startTime)/1000 > 60) {
+				//					
+				//					interrupt();
+				//					System.out.println("completed: " + pool.getCompletedTaskCount());
+				//				}
 
 				if ( interrupted.get())
 					break;
 
-				Thread.sleep(1000);
+				Thread.sleep(2000);
 
 			}
 			out.close();
@@ -215,12 +247,15 @@ public class AlignmentCalcDB implements AlignmentCalculationRunnable {
 			cleanup();
 		}
 
-
+		if (domainProvider instanceof RemoteDomainProvider){
+			RemoteDomainProvider remote = (RemoteDomainProvider) domainProvider;
+			remote.flushCache();
+		}
 		long now = System.currentTimeMillis();
 		System.out.println("Calculation took : " + (now-startTime)/1000 + " sec.");
 		System.out.println( pool.getCompletedTaskCount() + " "  + pool.getPoolSize() + " " + pool.getActiveCount()  + " " + pool.getTaskCount()  );
-//		if ((now-startTime)/1000 > 30) {
-		
+		//		if ((now-startTime)/1000 > 30) {
+
 
 		//		try {
 		//			out.flush();
@@ -228,12 +263,37 @@ public class AlignmentCalcDB implements AlignmentCalculationRunnable {
 		//		} catch (Exception e) {
 		//			e.printStackTrace();
 		//		}
-		parent.notifyCalcFinished();
-		DBResultTable table = new DBResultTable();
-		table.show(resultList,config);
+		if ( parent != null ) {
+			parent.notifyCalcFinished();
+			DBResultTable table = new DBResultTable();
+			table.show(resultList,config);
+		}
+		
 	}
 
 
+
+	private void submit(String name12, String repre, Atom[] ca1, StructureAlignment algorithm , File outFileF , SynchronizedOutFile out , AtomCache cache ) {
+		CallableStructureAlignment ali = new CallableStructureAlignment();
+
+		PdbPair pair = new PdbPair(name1, repre);
+		try {
+			ali.setCa1(ca1);
+		} catch (Exception e){
+			e.printStackTrace();
+			ConcurrencyTools.shutdown();
+			return;
+		}
+		ali.setAlgorithmName(algorithm.getAlgorithmName());
+		ali.setParameters(algorithm.getParameters());
+		ali.setPair(pair);
+		ali.setOutFile(out);			
+		ali.setOutputDir(outFileF);
+		ali.setCache(cache);
+
+		ConcurrencyTools.submit(ali);
+
+	}
 
 	/** stops what is currently happening and does not continue
 	 * 

@@ -59,7 +59,7 @@ public class SimpleSubstitutionMatrix<C extends Compound> implements Substitutio
     private List<C> rows, cols;
 
     /**
-     * Creates a substitution matrix using the defaults.
+     * Creates a substitution matrix using the defaults (BLOSUM 62).
      *
      * @throws ClassCastException if type parameter C is not {@link AminoAcidCompound}
      */

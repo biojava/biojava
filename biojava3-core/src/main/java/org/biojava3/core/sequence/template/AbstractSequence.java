@@ -532,7 +532,7 @@ public abstract class AbstractSequence<C extends Compound> implements Sequence<C
 
     /**
      *
-     * @param position
+     * @param position The 1-indexed position of the amino acid
      * @return
      */
     public C getCompoundAt(int position) {
@@ -542,7 +542,7 @@ public abstract class AbstractSequence<C extends Compound> implements Sequence<C
     /**
      *
      * @param compound
-     * @return
+     * @return The first index of compound in this sequence (1-based)
      */
     public int getIndexOf(C compound) {
         return getSequenceStorage().getIndexOf(compound);
@@ -551,7 +551,7 @@ public abstract class AbstractSequence<C extends Compound> implements Sequence<C
     /**
      *
      * @param compound
-     * @return
+     * @return The last index of compound in this sequence (1-based)
      */
     public int getLastIndexOf(C compound) {
         return getSequenceStorage().getLastIndexOf(compound);
@@ -600,4 +600,6 @@ public abstract class AbstractSequence<C extends Compound> implements Sequence<C
     public SequenceView<C> getInverse() {
         return SequenceMixin.inverse(this);
     }
+    
+    //TODO needs equals and hashcode
 }

@@ -46,6 +46,12 @@ import org.biojava.bio.structure.jama.Matrix;
 /** a JPanel that can display a difference of distance matrix and paths that have been
  * taken for the alignment
  * 
+ * <p>Note: This panel displays the transpose of its underlying matrix.
+ * Thus its width will be the same as {@link Matrix#getRowDimension()} and its
+ * height the same as {@link Matrix#getColumnDimension()}. This stems from the
+ * unfortunate ordering of {@link Matrix#get(int, int)} parameters as (row, col),
+ * which is opposite from the normal (x,y) order used when displaying graphics.
+ *  
  * @author Andreas Prlic
  *
  */

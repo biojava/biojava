@@ -374,7 +374,7 @@ public class StructureAlignmentOptimizer
       }
    }
 
-   /**the equivalent residues: residues where Dij <= Dc and i,j is an aligned pair
+   /**the equivalent residues: residues where Dij &lt;= Dc and i,j is an aligned pair
  use the previous superimposing
     */
 

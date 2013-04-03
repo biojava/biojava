@@ -1,6 +1,5 @@
 package org.biojava3.core.sequence;
 
-import org.biojava3.core.sequence.template.SequenceReader;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
@@ -9,19 +8,20 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+
 import junit.framework.Assert;
 
 import org.biojava3.core.exceptions.CompoundNotFoundError;
 import org.biojava3.core.sequence.compound.AmbiguityDNACompoundSet;
 import org.biojava3.core.sequence.compound.DNACompoundSet;
 import org.biojava3.core.sequence.compound.NucleotideCompound;
-import org.biojava3.core.sequence.storage.BitSequenceReader;
 import org.biojava3.core.sequence.storage.FourBitSequenceReader;
 import org.biojava3.core.sequence.storage.SingleCompoundSequenceReader;
 import org.biojava3.core.sequence.storage.TwoBitSequenceReader;
 import org.biojava3.core.sequence.template.CompoundSet;
 import org.biojava3.core.sequence.template.ProxySequenceReader;
 import org.biojava3.core.sequence.template.SequenceMixin;
+import org.biojava3.core.sequence.template.SequenceReader;
 import org.biojava3.core.sequence.template.SequenceView;
 import org.biojava3.core.sequence.transcription.Frame;
 import org.biojava3.core.sequence.views.ComplementSequenceView;

@@ -49,7 +49,7 @@ public class FastaReaderHelper {
      * @throws Exception
      */
     public static LinkedHashMap<String, DNASequence> readFastaDNASequence(File file, boolean lazySequenceLoad) throws Exception {
-        if (lazySequenceLoad == false) {
+        if (!lazySequenceLoad) {
             return readFastaDNASequence(file);
         }
 

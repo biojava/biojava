@@ -1,7 +1,5 @@
-Welcome to Biojava v.3
+Welcome to BioJava v.3
 
-The BioJava code base has been migrated to use Maven as a build system. We also modularized the code base into several sub-projects.
+BioJava is an open-source project dedicated to providing a Java framework for processing biological data. Please visit our homepage:
 
-For more information please see our biojava-dev mailing list or check the wiki page
-
-http://biojava.org/wiki/BioJava:MavenMigration
+http://www.biojava.org/

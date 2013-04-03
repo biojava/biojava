@@ -107,7 +107,7 @@ public interface Location extends Iterable<Location>, Accessioned {
      * Will return a SequenceReader object which represents the outer bounds
      * of this Location
      *
-     * @param <C> The type of compound to use
+     * @param &lt;C&gt; The type of compound to use
      * @param sequence The sequence object to work with
      * @return The sequence
      */
@@ -118,7 +118,7 @@ public interface Location extends Iterable<Location>, Accessioned {
      * locations i.e. those locations which are not complex and define the
      * true Sequence represented
      *
-     * @param <C> The type of compound to use
+     * @param &lt;C&gt; The type of compound to use
      * @param sequence The sequence object to work with
      * @return The full assembled sequence
      */

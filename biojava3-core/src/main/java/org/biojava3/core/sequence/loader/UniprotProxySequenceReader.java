@@ -375,7 +375,7 @@ public class UniprotProxySequenceReader<C extends Compound> implements ProxySequ
      */
     public static void setUniprotDirectoryCache(String aUniprotDirectoryCache) {
         File f = new File(aUniprotDirectoryCache);
-        if (f.exists() == false) {
+        if (!f.exists()) {
             f.mkdirs();
         }
         uniprotDirectoryCache = aUniprotDirectoryCache;

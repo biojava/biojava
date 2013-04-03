@@ -278,32 +278,54 @@ public class PeptideProperties {
 	 * approach stated in 
 	 * <a href="http://www.innovagen.se/custom-peptide-synthesis/peptide-property-calculator/peptide-property-calculator-notes.asp#PI">here</a>
 	 * 
+	 * pKa values used will be either 
+	 * those used by Expasy which referenced "Electrophoresis 1994, 15, 529-539" 
+	 * OR
+	 * A.Lehninger, Principles of Biochemistry, 4th Edition (2005), Chapter 3, page78, Table 3-1.
+	 * 
 	 * @param sequence
 	 * 		a protein sequence consisting of non-ambiguous characters only
+	 * @param useExpasyValues
+	 * 		whether to use Expasy values (Default) or Innovagen values
 	 * @return the isoelectric point of sequence
 	 */
-	public static final double getIsoelectricPoint(String sequence) {
+	public static final double getIsoelectricPoint(String sequence, boolean useExpasyValues) {
 		sequence = Utils.checkSequence(sequence);
 		ProteinSequence pSequence = new ProteinSequence(sequence);
 		IPeptideProperties pp = new PeptidePropertiesImpl();
-		return pp.getIsoelectricPoint(pSequence);
+		return pp.getIsoelectricPoint(pSequence, useExpasyValues);
+	}
+	
+	public static final double getIsoelectricPoint(String sequence){
+		return getIsoelectricPoint(sequence, true);
 	}
 
 	/**
 	 * An adaptor method to return the net charge of sequence at pH 7. The sequence argument must be
 	 * a protein sequence consisting of only non-ambiguous characters.
 	 * The net charge will be computed using the approach stated in 
-	 * <a href="http://www.innovagen.se/custom-peptide-synthesis/peptide-property-calculator/peptide-property-calculator-notes.asp#NetCharge>here</a>
+	 * <a href="http://www.innovagen.se/custom-peptide-synthesis/peptide-property-calculator/peptide-property-calculator-notes.asp#PI">here</a>
+	 * 
+	 * pKa values used will be either 
+	 * those used by Expasy which referenced "Electrophoresis 1994, 15, 529-539" 
+	 * OR
+	 * A.Lehninger, Principles of Biochemistry, 4th Edition (2005), Chapter 3, page78, Table 3-1.
 	 * 
 	 * @param sequence
 	 * 		a protein sequence consisting of non-ambiguous characters only
-	 * @return the net charge of sequence at pH 7
+	 * @param useExpasyValues
+	 * 		whether to use Expasy values (Default) or Innovagen values
+	 * @return the net charge of sequence at pH 7.0
 	 */
-	public static final double getNetCharge(String sequence) {
+	public static final double getNetCharge(String sequence, boolean useExpasyValues) {
 		sequence = Utils.checkSequence(sequence);
 		ProteinSequence pSequence = new ProteinSequence(sequence);
 		IPeptideProperties pp = new PeptidePropertiesImpl();
-		return pp.getNetCharge(pSequence);
+		return pp.getNetCharge(pSequence, useExpasyValues);
+	}
+	
+	public static final double getNetCharge(String sequence){
+		return getIsoelectricPoint(sequence, true);
 	}
 
 	/**

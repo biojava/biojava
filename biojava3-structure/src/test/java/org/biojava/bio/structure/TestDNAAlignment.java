@@ -42,7 +42,7 @@ public class TestDNAAlignment extends TestCase
       String name1="1l3s.A";
       String name2="1t7p.P";
 
-      AtomCache cache = TmpAtomCache.cache;
+      AtomCache cache = new AtomCache();
       try {
          Atom[] ca1 = cache.getAtoms(name1);
          Atom[] ca2 = cache.getAtoms(name2);

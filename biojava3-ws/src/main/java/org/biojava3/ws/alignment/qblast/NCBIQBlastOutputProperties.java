@@ -17,209 +17,187 @@
  *
  *      http://www.biojava.org/
  *
+ * Created on 2011-11-20
+ *
  */
-
 package org.biojava3.ws.alignment.qblast;
 
+import static org.biojava3.ws.alignment.qblast.BlastOutputParameterEnum.ALIGNMENTS;
+import static org.biojava3.ws.alignment.qblast.BlastOutputParameterEnum.ALIGNMENT_VIEW;
+import static org.biojava3.ws.alignment.qblast.BlastOutputParameterEnum.DESCRIPTIONS;
+import static org.biojava3.ws.alignment.qblast.BlastOutputParameterEnum.FORMAT_TYPE;
+import static org.biojava3.ws.alignment.qblast.BlastOutputParameterEnum.NOHEADER;
+import static org.biojava3.ws.alignment.qblast.BlastOutputParameterEnum.SHOW_LINKOUT;
+import static org.biojava3.ws.alignment.qblast.BlastOutputParameterEnum.SHOW_OVERVIEW;
+
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import org.biojava3.ws.alignment.RemotePairwiseAlignmentOutputProperties;
 
 /**
- * The actual implementation of the RemotePairwiseAlignmentOutputProperties 
- * interface for the QBlast service.
- * 
- * The constructor for this class builds an object with default format values. Any modification will 
- * either use the generic setOutputOption method or use the wrapper methods that are actually 
- * build around the generic method.
- * 
- * <p>
- * Many thanks to Matthew Busse for helping in debugging after the migration from BJ1.7 to BJ3.0.
- * </p>
+ * This class wraps a QBlast output parameter {@code Map} by adding several convenient parameter addition methods. Other
+ * QBlast URL API parameters should be added using {@link #setOutputOption(BlastOutputParameterEnum, String)}
  * 
  * @author Sylvain Foisy, Diploide BioIT
- * @since Biojava 3
- *
+ * @author Gediminas Rimsa
  */
-public class NCBIQBlastOutputProperties implements
-		RemotePairwiseAlignmentOutputProperties {
+public class NCBIQBlastOutputProperties implements RemotePairwiseAlignmentOutputProperties {
+	private static final long serialVersionUID = -9202060390925345163L;
 
-	private static final long serialVersionUID = 1L;
-	private HashMap<String, String> out = new HashMap<String, String>();
-	private String outFormat = "FORMAT_TYPE=Text";
-	private String alignFormat = "ALIGNMENT_VIEW=Pairwise";
-
-	private int descNumbers = 100;
-	private int alignNumbers = 100;
+	private Map<BlastOutputParameterEnum, String> param = new HashMap<BlastOutputParameterEnum, String>();
 
 	/**
-	 * This constructor build the parameters for the default output of the GET command sent to the QBlast service.
-	 * Here are the default values:
+	 * This constructor builds the parameters for the output of the GET command sent to the QBlast service with default
+	 * values:
 	 * 
-	 * FORMAT_TYPE = Text;
-	 * ALIGNMENT_VIEW = Pairwise
+	 * <pre>
+	 * FORMAT_TYPE = XML;
+	 * ALIGNMENT_VIEW = Pairwise;
 	 * DESCRIPTIONS = 100;
 	 * ALIGNMENTS = 100;
-	 * 
+	 * </pre>
 	 */
-	public void NCBIQBlastOutputProperties() {
-		this.out.put("FORMAT_TYPE", outFormat);
-		this.out.put("ALIGNMENT_VIEW", alignFormat);
-		this.out.put("DESCRIPTIONS", "DESCRIPTIONS=" + descNumbers);
-		this.out.put("ALIGNMENTS", "ALIGNMENTS=" + alignNumbers);
+	public NCBIQBlastOutputProperties() {
+		setOutputOption(FORMAT_TYPE, BlastOutputFormatEnum.XML.name());
+		setOutputOption(ALIGNMENT_VIEW, BlastOutputAlignmentFormatEnum.Pairwise.name());
+		setOutputOption(DESCRIPTIONS, "100");
+		setOutputOption(ALIGNMENTS, "100");
 	}
 
 	/**
-	 * Simply returns stream output format for the actual RemoteQBlastOutputProperties object
-	 * 
-	 * @return a String with the value of key FORMAT_TYPE.
+	 * This method forwards to {@link #getOutputOption(BlastOutputParameterEnum)}. Consider using it instead.
+	 */
+	@Override
+	public String getOutputOption(String key) {
+		return getOutputOption(BlastOutputParameterEnum.valueOf(key));
+	}
+
+	/**
+	 * This method forwards to {@link #setOutputOption(BlastOutputParameterEnum, String)}. Consider using it instead.
+	 */
+	@Override
+	public void setOutputOption(String key, String val) {
+		setOutputOption(BlastOutputParameterEnum.valueOf(key), val);
+	}
+
+	/**
+	 * Gets the value of specified parameter or {@code null} if it is not set
+	 */
+	public String getOutputOption(BlastOutputParameterEnum key) {
+		return param.get(key);
+	}
+
+	/**
+	 * Sets the value of specified output parameter
+	 */
+	public void setOutputOption(BlastOutputParameterEnum key, String value) {
+		param.put(key, value);
+	}
+
+	/**
+	 * Gets output parameters, which are currently set
+	 */
+	@Override
+	public Set<String> getOutputOptions() {
+		Set<String> result = new HashSet<String>();
+		for (BlastOutputParameterEnum parameter : param.keySet()) {
+			result.add(parameter.name());
+		}
+		return result;
+	}
+
+	/**
+	 * Removes given parameter
+	 */
+	public void removeOutputOption(BlastOutputParameterEnum key) {
+		param.remove(key);
+	}
+
+	/**
+	 * @return stream output format - a String with the value of key FORMAT_TYPE
 	 */
 	public String getOutputFormat() {
-		return this.out.get("FORMAT_TYPE");
+		return getOutputOption(FORMAT_TYPE);
 	}
 
 	/**
-	 * This method is use to set the stream output format to get from the QBlast service
+	 * Sets the stream output format to get from the QBlast service
+	 * <p/>
+	 * If {@code HTML} format is selected, also adds the following parameters (which are removed if another output
+	 * format is chosen):
 	 * 
-	 * @param rf :an enum from RemoteQBlastOutputFormat
-	 * @throws Exception if the enum is neither of RemoteQBlastOutputFormat.TEXT/XML/HTML
+	 * <pre>
+	 * NOHEADER = true;
+	 * SHOW_OVERVIEW = false;
+	 * SHOW_LINKOUT = false;
+	 * </pre>
+	 * 
+	 * @param formatType : one of the output format types defined in enum
 	 */
-	public void setOutputFormat(NCBIQBlastOutputFormat rf)
-			throws Exception {
-		switch (rf) {
-		case TEXT:
-			this.outFormat = "FORMAT_TYPE=Text";
-			this.out.put("FORMAT_TYPE", outFormat);
-			break;
-		case XML:
-			this.outFormat = "FORMAT_TYPE=XML";
-			this.out.put("FORMAT_TYPE", outFormat);
-			break;
-		case HTML:
-			this.outFormat = "FORMAT_TYPE=HTML&NOHEADER=true&SHOW_OVERVIEW=false&SHOW_LINKOUT=false";
-			this.out.put("FORMAT_TYPE", outFormat);
-			break;
-		default:
-			throw new Exception(
-					"Unacceptable selection of format type. Only values text / XML / HTML accepted");
+	public void setOutputFormat(BlastOutputFormatEnum formatType) {
+		setOutputOption(FORMAT_TYPE, formatType.name());
+		if (BlastOutputFormatEnum.HTML.equals(formatType)) {
+			// add default parameters associated with HTML
+			setOutputOption(NOHEADER, "true");
+			setOutputOption(SHOW_OVERVIEW, "false");
+			setOutputOption(SHOW_LINKOUT, "false");
+		} else {
+			// remove default parameters associated with HTML
+			removeOutputOption(NOHEADER);
+			removeOutputOption(SHOW_OVERVIEW);
+			removeOutputOption(SHOW_LINKOUT);
 		}
 	}
 
 	/**
-	 * Method that returns the alignment output format for this actual RemoteQBlastOutputProperties object
-	 * 
-	 * @return a String with the value of key ALIGNMENT_VIEW
+	 * @return alignment output format - a String with the value of key ALIGNMENT_VIEW
 	 */
 	public String getAlignmentOutputFormat() {
-		return this.out.get("ALIGNMENT_VIEW");
+		return getOutputOption(ALIGNMENT_VIEW);
 	}
 
 	/**
-	 * This method is use to set the alignment output format to get from the QBlast service
+	 * Sets the alignment output format to get from the QBlast service
 	 * 
-	 * @param rf :an enum from RemoteQBlastOutputFormat
-	 * @throws Exception if the enum is neither of RemoteQBlastOutputFormat.PAIRWISE/QUERY_ANCHORED/QUERY_ANCHORED_NO_IDENTITIES/FLAT_QUERY_ANCHORED
-	 *         FLAT_QUERY_ANCHORED_NO_IDENTITIES/TABULAR
+	 * @param alignmentFormat : one of available alignment types
 	 */
-	public void setAlignmentOutputFormat(NCBIQBlastOutputFormat rf)
-			throws Exception {
-		switch (rf) {
-		case PAIRWISE:
-			this.alignFormat = "ALIGNMENT_VIEW=Pairwise";
-			this.out.put("ALIGNMENT_VIEW", alignFormat);
-			break;
-		case QUERY_ANCHORED:
-			this.alignFormat = "ALIGNMENT_VIEW=QueryAnchored";
-			this.out.put("ALIGNMENT_VIEW", alignFormat);
-			break;
-		case QUERY_ANCHORED_NO_IDENTITIES:
-			this.alignFormat = "ALIGNMENT_VIEW=QueryAnchoredNoIdentities";
-			this.out.put("ALIGNMENT_VIEW", alignFormat);
-			break;
-		case FLAT_QUERY_ANCHORED:
-			this.alignFormat = "ALIGNMENT_VIEW=FlatQueryAnchored";
-			this.out.put("ALIGNMENT_VIEW", alignFormat);
-			break;
-		case FLAT_QUERY_ANCHORED_NO_IDENTITIES:
-			this.alignFormat = "ALIGNMENT_VIEW=FlatQueryAnchoredNoIdentities";
-			this.out.put("ALIGNMENT_VIEW", alignFormat);
-			break;
-		case TABULAR:
-			this.alignFormat = "ALIGNMENT_VIEW=Tabular";
-			this.out.put("ALIGNMENT_VIEW", alignFormat);
-			break;
-		default:
-			throw new Exception(
-					"Unacceptable selection of alignment type. Only values Pairwise / QueryAnchored / QueryAnchoredNoIdentities / FlatQueryAnchored / FlatQueryAnchoredNoIdentities / Tabular accepted");
-		}
+	public void setAlignmentOutputFormat(BlastOutputAlignmentFormatEnum alignmentFormat) {
+		setOutputOption(ALIGNMENT_VIEW, alignmentFormat.name());
 	}
 
 	/**
-	 * A method that simply returns the number of descriptions fetched with this RemoteQBlastOutputProperties object.
-	 * 
-	 * @return an int with the value of the key DESCRIPTIONS
+	 * @return number of descriptions fetched - an int with the value of the key DESCRIPTIONS
 	 */
 	public int getDescriptionNumber() {
-		String val = this.out.get("DESCRIPTIONS");
-		String vals[] = val.split("=");
-		int i = Integer.parseInt(vals[1]);
-
-		return i;
+		return Integer.parseInt(getOutputOption(DESCRIPTIONS));
 	}
 
 	/**
-	 * A method to set the number of descriptions to fetch to the GET command.
+	 * Sets the number of descriptions to fetch
 	 * 
-	 * @param i :an int with the required number of descriptions to fetch.
+	 * @param number : an int with the required number of descriptions to fetch
 	 */
-	public void setDescriptionNumber(int i) {
-		this.descNumbers = i;
-		this.out.put("DESCRIPTIONS", "DESCRIPTIONS=" + descNumbers);
+	public void setDescriptionNumber(int number) {
+		setOutputOption(DESCRIPTIONS, Integer.toString(number));
 	}
 
 	/**
-	 * A method that simply returns the number of alignments fetched with this RemoteQBlastOutputProperties object.
-	 * 
-	 * @return an int with the value of the key ALIGNMENTS.
-	 */	
+	 * @return number of alignments fetched - an int with the value of the key ALIGNMENTS
+	 */
 	public int getAlignmentNumber() {
-		String val = this.out.get("ALIGNMENTS");
-		String vals[] = val.split("=");
-		int i = Integer.parseInt(vals[1]);
-
-		return i;
+		return Integer.parseInt(getOutputOption(ALIGNMENTS));
 	}
 
 	/**
-	 * A method to set the number of alignments to fetch to the GET command.
+	 * Set the number of alignments to fetch
 	 * 
-	 * @param i :an int with the required number of alignments to fetch.
+	 * @param number : an int with the required number of alignments to fetch
 	 */
-
-	public void setAlignmentNumber(int i) {
-		this.alignNumbers = i;
-		this.out.put("ALIGNMENTS", "ALIGNMENTS=" + alignNumbers);
-	}
-
-	/**
-	 * Method that returns any value associated to any key for this RemoteQBlastOutputProperties object.
-	 * 
-	 */
-	public String getOutputOption(String o) throws Exception{
-		if(out.containsKey(o)){
-			return this.out.get(o);}
-		else{
-			throw new Exception("The key named "+o+" is not set in this RemoteQBlastOutputProperties object");
-		}
-	}
-
-	public void setOutputOption(String o, String v) {
-		this.out.put(o, v);
-	}
-
-	public Set<String> getOutputOptions() {
-		return out.keySet();
+	public void setAlignmentNumber(int number) {
+		setOutputOption(ALIGNMENTS, Integer.toString(number));
 	}
 
 }

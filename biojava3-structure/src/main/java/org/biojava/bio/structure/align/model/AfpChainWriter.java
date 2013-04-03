@@ -40,6 +40,11 @@ import org.biojava.bio.structure.align.seq.SmithWaterman3Daligner;
 import org.biojava.bio.structure.align.util.AFPAlignmentDisplay;
 import org.biojava.bio.structure.jama.Matrix;
 
+/** A class to convert the data in an AfpChain object to various String outputs.
+ *  
+ * @author Andreas Prlic
+ *
+ */
 public class AfpChainWriter
 {
 
@@ -72,50 +77,62 @@ public class AfpChainWriter
 
 
 		writer.append("Sab (nr. equivalent residues): " );
-		writer.append(afpChain.getNrEQR()+"");
+        writer.append(String.valueOf(afpChain.getNrEQR())).append("");
 		writer.append(newline);
 
 		writer.append("Dab (distance between folds a,b): ");
 		int dab = afpChain.getCa1Length()+afpChain.getCa2Length() - 2 * afpChain.getNrEQR();
-		writer.append(dab+"");
+        writer.append(String.valueOf(dab)).append("");
 		writer.append(newline);
 
 		writer.append("sab (relative similarity): ");
 		double sab = 2 * afpChain.getNrEQR() / (double)( afpChain.getCa1Length() + afpChain.getCa2Length());
-		writer.append(sab+"");
+        writer.append(String.valueOf(sab)).append("");
 		writer.append(newline);
 
 		writer.append("cab (coverage a): ");
 		double cab = afpChain.getNrEQR() / (double) afpChain.getCa1Length();
-		writer.append(cab+"");
+        writer.append(String.valueOf(cab)).append("");
 		writer.append(newline);
 
 		writer.append("cba (coverage b): ");
 		double cba = afpChain.getNrEQR() / (double) afpChain.getCa2Length();
-		writer.append(cba+"");
+        writer.append(String.valueOf(cba)).append("");
 		writer.append(newline);
 
 		writer.append("seq similarity: ");
-		writer.append(afpChain.getSimilarity()+"");
+        writer.append(String.valueOf(afpChain.getSimilarity())).append("");
 		writer.append(newline);
 
 		writer.append("TM-score: ");
-		writer.append(afpChain.getTMScore()+"");
+        writer.append(String.valueOf(afpChain.getTMScore())).append("");
 		writer.append(newline);
 
 		return writer.toString();
 	}
 
+	/**
+	 * Output in FatCatCore format
+	 * 
+	 * <p>Note that if a circular permutation has occured the residue numbers may
+	 * be innaccurate.
+	 * 
+	 * @param afpChain
+	 * @param ca1
+	 * @param ca2
+	 * @param printLegend
+	 * @param longHeader
+	 * @param showHTML
+	 * @param showAlignmentBlock
+	 * @return
+	 */
 	public static String toFatCatCore(
 			AFPChain afpChain, 
 			Atom[] ca1, 
 			Atom[] ca2, 
 			boolean printLegend, boolean longHeader, boolean showHTML, boolean showAlignmentBlock){
 
-		if(!afpChain.isSequentialAlignment()) {
-			//TODO find some topology-independent output format
-			return "Can't display circular permutations";
-		}
+		//TODO The sequence numbers are inaccurate if a !afpChain.isSequential()
 
 		String name1 = afpChain.getName1();
 		String name2 = afpChain.getName2();
@@ -1071,6 +1088,10 @@ public class AfpChainWriter
 		str.append("\t");
 		str.append(afpChain.getCoverage2());
 		str.append("\t");
+		str.append(String.format("%.2f",afpChain.getIdentity()));
+		str.append("\t");
+		str.append(afpChain.getDescription2());
+		str.append("\t");
 		str.append(newline);
 
 		return str.toString();
@@ -1130,12 +1151,13 @@ public class AfpChainWriter
 
 		double similarity = afpChain.getSimilarity();
 		double identity = afpChain.getIdentity();
-		if (similarity == -1 || identity == -1){
+		if (similarity <0 || identity <0  ){
 			afpChain.calcSimilarity();
 			similarity = afpChain.getSimilarity();
 			identity = afpChain.getIdentity();
 		}
 
+	
 
 		double probability = afpChain.getProbability();
 

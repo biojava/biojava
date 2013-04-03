@@ -101,6 +101,7 @@ public class SequenceFileProxyLoader<C extends Compound> implements ProxySequenc
             randomAccessFile.seek(sequenceStartIndex);
             String sequence = sequenceParser.getSequence(randomAccessFile, sequenceLength);
             setContents(sequence);
+            randomAccessFile.close(); // close file to prevent too many being open
         } catch (Exception e) {
             throw new FileAccessError("Error accessing " + file + " offset=" + sequenceStartIndex + " sequenceLength=" + sequenceLength + " " + e.toString());
         }
@@ -147,7 +148,7 @@ public class SequenceFileProxyLoader<C extends Compound> implements ProxySequenc
      * @return
      */
     public C getCompoundAt(int position) {
-        if (this.isInitialized() == false) {
+        if (!this.isInitialized()) {
             init();
         }
         return this.parsedCompounds.get(position - 1);
@@ -159,7 +160,7 @@ public class SequenceFileProxyLoader<C extends Compound> implements ProxySequenc
      * @return
      */
     public int getIndexOf(C compound) {
-        if (this.isInitialized() == false) {
+        if (!this.isInitialized()) {
             init();
         }
         return this.parsedCompounds.indexOf(compound) + 1;
@@ -171,7 +172,7 @@ public class SequenceFileProxyLoader<C extends Compound> implements ProxySequenc
      * @return
      */
     public int getLastIndexOf(C compound) {
-        if (this.isInitialized() == false) {
+        if (!this.isInitialized()) {
             init();
         }
         return this.parsedCompounds.lastIndexOf(compound) + 1;
@@ -182,7 +183,7 @@ public class SequenceFileProxyLoader<C extends Compound> implements ProxySequenc
      * @return
      */
     public String toString() {
-        if (this.isInitialized() == false) {
+        if (!this.isInitialized()) {
             init();
         }
         return getSequenceAsString();
@@ -205,7 +206,7 @@ public class SequenceFileProxyLoader<C extends Compound> implements ProxySequenc
      */
     public String getSequenceAsString(Integer bioBegin, Integer bioEnd, Strand strand) {
 
-        if (this.isInitialized() == false) {
+        if (!this.isInitialized()) {
             init();
         }
         SequenceAsStringHelper<C> sequenceAsStringHelper = new SequenceAsStringHelper<C>();
@@ -217,7 +218,7 @@ public class SequenceFileProxyLoader<C extends Compound> implements ProxySequenc
      * @return
      */
     public List<C> getAsList() {
-        if (this.isInitialized() == false) {
+        if (!this.isInitialized()) {
             init();
         }
         return this.parsedCompounds;
@@ -231,7 +232,7 @@ public class SequenceFileProxyLoader<C extends Compound> implements ProxySequenc
      * @return
      */
     public SequenceView<C> getSubSequence(final Integer bioBegin, final Integer bioEnd) {
-        if (this.isInitialized() == false) {
+        if (!this.isInitialized()) {
             init();
         }
         return new SequenceProxyView<C>(SequenceFileProxyLoader.this, bioBegin, bioEnd);
@@ -242,7 +243,7 @@ public class SequenceFileProxyLoader<C extends Compound> implements ProxySequenc
      * @return
      */
     public Iterator<C> iterator() {
-        if (this.isInitialized() == false) {
+        if (!this.isInitialized()) {
             init();
         }
         return this.parsedCompounds.iterator();

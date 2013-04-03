@@ -47,6 +47,8 @@ import org.biojava3.core.sequence.template.Sequence;
 public class AminoAcidCompoundSet implements CompoundSet<AminoAcidCompound> {
 
     private final Map<String, AminoAcidCompound> aminoAcidCompoundCache = new HashMap<String, AminoAcidCompound>();
+    private final Map<String, AminoAcidCompound> aminoAcidCompoundCache3Letter = new HashMap<String, AminoAcidCompound>();
+
     private final Map<AminoAcidCompound, Set<AminoAcidCompound>> equivalentsCache =
             new HashMap<AminoAcidCompound, Set<AminoAcidCompound>>();
 
@@ -89,6 +91,12 @@ public class AminoAcidCompoundSet implements CompoundSet<AminoAcidCompound> {
         //this amino acid under the presence of pylT which creates an anti-codon CUA & pylS
         //which then does the actual conversion to Pyl.
         aminoAcidCompoundCache.put("O", new AminoAcidCompound(this, "O", "Pyl", "Pyrrolysine", 255.3172f));
+        
+        for(String oneLtr : aminoAcidCompoundCache.keySet()) {
+        	AminoAcidCompound aa = aminoAcidCompoundCache.get(oneLtr);
+        	String threeLtr = aa.getLongName().toUpperCase();
+        	aminoAcidCompoundCache3Letter.put(threeLtr, aa);
+        }
     }
 
     public String getStringForCompound(AminoAcidCompound compound) {
@@ -98,6 +106,9 @@ public class AminoAcidCompoundSet implements CompoundSet<AminoAcidCompound> {
     public AminoAcidCompound getCompoundForString(String string) {
         if (string.length() == 0) {
             return null;
+        }
+        if (string.length() == 3) {
+        	return this.aminoAcidCompoundCache3Letter.get(string.toUpperCase());
         }
         if (string.length() > this.getMaxSingleCompoundStringLength()) {
             throw new IllegalArgumentException("String supplied ("+string+") is too long. Max is "+getMaxSingleCompoundStringLength());
@@ -122,7 +133,7 @@ public class AminoAcidCompoundSet implements CompoundSet<AminoAcidCompound> {
 
     public boolean compoundsEquivalent(AminoAcidCompound compoundOne, AminoAcidCompound compoundTwo) {
         Set<AminoAcidCompound> equivalents = getEquivalentCompounds(compoundOne);
-        return (equivalents == null) ? false : equivalents.contains(compoundTwo);
+        return (equivalents != null) && equivalents.contains(compoundTwo);
     }
 
     public Set<AminoAcidCompound> getEquivalentCompounds(AminoAcidCompound compound) {

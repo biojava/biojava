@@ -36,6 +36,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.StringTokenizer;
 import java.util.logging.Level;
@@ -239,17 +240,15 @@ public class PDBFileParser  {
 
 	int atomCount;
 
-	/** the maximum number of atoms that will be parsed before the parser switches to a CA-only
-	 * representation of the PDB file. If this limit is exceeded also the SEQRES groups will be
-	 * ignored.
-	 */
-	public static final int ATOM_CA_THRESHOLD = 500000;
+	
 
-	/**  the maximum number of atoms we will add to a structure
-     this protects from memory overflows in the few really big protein structures.
-	 */
-	public static final int MAX_ATOMS = 700000; // tested with java -Xmx300M
-
+	private int my_ATOM_CA_THRESHOLD ;
+	
+	
+	
+	
+	private int load_max_atoms;
+	
 	private boolean atomOverflow;
 
 	/** flag to tell parser to only read Calpha coordinates **/
@@ -281,13 +280,14 @@ public class PDBFileParser  {
 		current_compound = new Compound();
 		dbrefs        = new ArrayList<DBRef>();
 		siteMap = null;
-		dateFormat = new SimpleDateFormat("dd-MMM-yy", java.util.Locale.ENGLISH);
+		dateFormat = new SimpleDateFormat("dd-MMM-yy", Locale.US);
 		atomCount = 0;
 		atomOverflow = false;
 		parseCAonly = false;
-
-
-
+		
+		setFileParsingParameters(params);
+		
+		
 	}
 
 
@@ -789,19 +789,15 @@ public class PDBFileParser  {
         SEQRES   3 D   30  THR PRO LYS ALA
 		 */
 
-		//System.out.println(line);
 		String recordName = line.substring(0, 6).trim();
 		String chainID    = line.substring(11, 12);
 		String newLength   = line.substring(13,17).trim();
-		String subSequence = line.substring(18, 70);
-
-		//System.out.println("newLength " + newLength );
+		String subSequence = line.substring(18);		
 
 		if ( lengthCheck == -1 ){
 			lengthCheck = Integer.parseInt(newLength);
 		}
 
-		//String resNum = line.substring(22, 27).trim() ;
 		StringTokenizer subSequenceResidues = new StringTokenizer(subSequence);
 
 		Character aminoCode1 = null;
@@ -823,12 +819,10 @@ public class PDBFileParser  {
 			String threeLetter = subSequenceResidues.nextToken();
 
 			aminoCode1 = StructureTools.get1LetterCode(threeLetter);
-			//System.out.println(aminoCode1);
+
 			//if (aminoCode1 == null) {
 			// could be a nucleotide...
 			// but getNewGroup takes care of that and converts ATOM records with aminoCode1 == nnull to nucleotide...
-			//System.out.println(line);
-			// b
 			//}
 			current_group = getNewGroup("ATOM", aminoCode1, threeLetter);
 
@@ -1679,21 +1673,23 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 
 		atomCount++;
 
-		if ( atomCount == ATOM_CA_THRESHOLD ) {
+		if ( atomCount == my_ATOM_CA_THRESHOLD ) {
 			// throw away the SEQRES lines - too much to deal with...
-			System.err.println("more than " + ATOM_CA_THRESHOLD + " atoms in this structure, ignoring the SEQRES lines");
+			System.err.println("more than " + my_ATOM_CA_THRESHOLD + " atoms in this structure, ignoring the SEQRES lines");
 			seqResChains.clear();
 
 			switchCAOnly();
 
 		}
+		
+		
 
-		if ( atomCount == MAX_ATOMS){
-			System.err.println("too many atoms (>"+MAX_ATOMS+"in this protein structure.");
+		if ( atomCount == load_max_atoms){
+			System.err.println("too many atoms (>"+load_max_atoms+"in this protein structure.");
 			System.err.println("ignoring lines after: " + line);
 			return;
 		}
-		if ( atomCount > MAX_ATOMS){
+		if ( atomCount > load_max_atoms){
 			//System.out.println("too many atoms in this protein structure.");
 			//System.out.println("ignoring line: " + line);
 			return;
@@ -1716,6 +1712,23 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 			// only parse CA atoms...
 			if (! fullname.equals(" CA ")){
 				//System.out.println("ignoring " + line);
+				atomCount--;
+				return;
+			}
+		}
+		
+		if ( params.getAcceptedAtomNames() != null) {
+			
+			boolean found = false;
+			for (String ok : params.getAcceptedAtomNames()){
+				//System.out.println(ok + "< >" + fullname +"<");
+				
+				if ( ok.equals(fullname)) {
+					found = true;
+					break;
+				}
+			}
+			if ( ! found) {
 				atomCount--;
 				return;
 			}
@@ -1799,7 +1812,9 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 		else {
 			current_group.addAtom(atom);
 		}
-		//System.out.println(current_group);
+		
+		
+		//System.out.println("current group: " + current_group);
 	}
 
 
@@ -1835,15 +1850,20 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 		// build it up.
 
 		if ( groupCode3.equals(current_group.getPDBName())) {
-			if ( current_group.getAtoms().size() == 0)
+			if ( current_group.getAtoms().size() == 0) {
+				//System.out.println("current group is empty " + current_group + " " + altLoc);
 				return current_group;
-			//System.out.println("cloning current group");
+			}
+			//System.out.println("cloning current group " + current_group + " " + current_group.getAtoms().get(0).getAltLoc() + " altLoc " + altLoc);
 			Group altLocG = (Group) current_group.clone();
+			// drop atoms from cloned group...
+			// https://redmine.open-bio.org/issues/3307
+			altLocG.setAtoms(new ArrayList<Atom>());
 			current_group.addAltLoc(altLocG);
 			return altLocG;	
 		}
 
-
+	//	System.out.println("new  group " + recordName + " " + aminoCode1 + " " +groupCode3);
 		Group altLocG = getNewGroup(recordName,aminoCode1,groupCode3);
 
 		try {
@@ -2400,6 +2420,11 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 	public  Structure parsePDBFile(BufferedReader buf)
 	throws IOException
 	{
+		// set the correct max values for parsing...
+		load_max_atoms = params.getMaxAtoms();
+		my_ATOM_CA_THRESHOLD = params.getAtomCaThreshold();
+		
+		
 		// (re)set structure
 
 		structure     = new StructureImpl() ;
@@ -2530,7 +2555,7 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 				} catch (Exception e){
 					// the line is badly formatted, ignore it!
 					e.printStackTrace();
-					System.err.println("badly formatted line ... " + line);
+					System.err.println("badly formatted line ... " +pdbId +": " + line);
 				}
 				line = buf.readLine ();
 			}
@@ -2933,7 +2958,7 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 			if (subField.equals("TITL")) {
 				//add a space to the end of a line so that when wrapped the
 				//words on the join won't be concatenated
-				titl.append(line.substring(19, line.length()).trim() + " ");
+                titl.append(line.substring(19, line.length()).trim()).append(" ");
 				if (DEBUG) {
 					System.out.println("TITL '" + titl.toString() + "'");
 				}
@@ -2946,13 +2971,13 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 			}
 			//        JRNL        REF    NAT.IMMUNOL.                  V.   8   430 2007
 			if (subField.equals("REF ")) {
-				ref.append(line.substring(19, line.length()).trim() + " ");
+                ref.append(line.substring(19, line.length()).trim()).append(" ");
 				if (DEBUG) {
 					System.out.println("REF '" + ref.toString() + "'");
 				}
 			}
 			if (subField.equals("PUBL")) {
-				publ.append(line.substring(19, line.length()).trim() + " ");
+                publ.append(line.substring(19, line.length()).trim()).append(" ");
 				if (DEBUG) {
 					System.out.println("PUBL '" + publ.toString() + "'");
 				}
@@ -3224,6 +3249,11 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 	public void setFileParsingParameters(FileParsingParameters params)
 	{
 		this.params= params;
+		
+		// set the correct max values for parsing...
+		load_max_atoms = params.getMaxAtoms();
+		my_ATOM_CA_THRESHOLD = params.getAtomCaThreshold();
+
 		if ( !params.isLoadChemCompInfo()) {
 			ChemCompGroupFactory.setChemCompProvider(new ReducedChemCompProvider());
 		}

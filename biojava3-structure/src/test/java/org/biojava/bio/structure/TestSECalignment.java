@@ -22,10 +22,9 @@
  */
 package org.biojava.bio.structure;
 
-import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
+
+import junit.framework.TestCase;
 
 import org.biojava.bio.structure.align.StructureAlignment;
 import org.biojava.bio.structure.align.StructureAlignmentFactory;
@@ -34,9 +33,8 @@ import org.biojava.bio.structure.align.model.AFPChain;
 import org.biojava.bio.structure.align.util.AtomCache;
 import org.biojava.bio.structure.align.xml.AFPChainXMLConverter;
 import org.biojava.bio.structure.align.xml.AFPChainXMLParser;
-
-import junit.framework.TestCase;
-
+import org.biojava.bio.structure.util.StringManipulationTestsHelper;
+import org.biojava3.core.util.StringManipulationHelper;
 
 /** This test makes sure that the new representation of selenocysteins as SEC amino acids does not
  * affect the structure alignment results.
@@ -46,68 +44,43 @@ import junit.framework.TestCase;
  */
 public class TestSECalignment extends  TestCase {
 
-	public void testOldSecOutput(){
+	public void testOldSecOutput() throws Exception {
 
 		InputStream inStream = this.getClass().getResourceAsStream("/ce_1fdo.A_2iv2.X.out");
 		assertNotNull(inStream);
-		String xml = convertStreamToString(inStream);
+		String xml = StringManipulationHelper.convertStreamToString(inStream);
 
-		AtomCache cache = TmpAtomCache.cache;
-		try {
-			String name1="1FDO.A";
-			String name2="2IV2.X";
-			Atom[] ca1 = cache.getAtoms(name1);
-			Atom[] ca2 = cache.getAtoms(name2);
+		AtomCache cache = new AtomCache();
+		String name1="1FDO.A";
+		String name2="2IV2.X";
+		Atom[] ca1 = cache.getAtoms(name1);
+		Atom[] ca2 = cache.getAtoms(name2);
 
-			AFPChain afpChainOrig = AFPChainXMLParser.fromXML(xml, ca1, ca2);
-			
-			//String ce1 = afpChainOrig.toFatcat(ca1, ca2);
-			
-			String xmlComp =  AFPChainXMLConverter.toXML(afpChainOrig, ca1, ca2);
-			
-			// FIXME new line character difference?
-			assertEquals( xml, xmlComp);
-			
-			StructureAlignment ce = StructureAlignmentFactory.getAlgorithm(CeMain.algorithmName);
-			
-			AFPChain afpChainNew = ce.align(ca1,ca2);
-			
-			afpChainNew.setName1(name1);
-			afpChainNew.setName2(name2);
-			
-			String xmlNew = AFPChainXMLConverter.toXML(afpChainNew,ca1,ca2);
-			//String ce2 = afpChainNew.toFatcat(ca1, ca2);
-			// FIXME version number, new line character difference?
-			assertEquals(xml,xmlNew);
-			
-			//assertEquals(ce1,ce2);
-			
-		} catch (Exception e){
-			e.printStackTrace();
-			fail(e.getMessage());
-		}
+		AFPChain afpChainOrig = AFPChainXMLParser.fromXML(xml, ca1, ca2);
 
-	}
+		// calc time is hardware dependent.... overwrite...
+		afpChainOrig.setCalculationTime(-1);
 
-	public static String convertStreamToString(InputStream stream){
-		BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
-		StringBuilder sb = new StringBuilder();
+		//String ce1 = afpChainOrig.toFatcat(ca1, ca2);
 
-		String line = null;
-		try {
-			while ((line = reader.readLine()) != null) {
-				sb.append(line + "\n");
-			}
-		} catch (IOException e) {
-			//e.printStackTrace();
-		} finally {
-			try {
-				stream.close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
+		String xmlComp =  AFPChainXMLConverter.toXML(afpChainOrig, ca1, ca2);
 
-		return sb.toString();
+		//			assertEquals( xml, xmlComp);
+		StringManipulationTestsHelper.assertEqualsIgnoreEndline(xml, xmlComp);
+		StructureAlignment ce = StructureAlignmentFactory.getAlgorithm(CeMain.algorithmName);
+
+		AFPChain afpChainNew = ce.align(ca1,ca2);
+		afpChainNew.setCalculationTime(-1);
+		afpChainNew.setName1(name1);
+		afpChainNew.setName2(name2);
+
+		String xmlNew = AFPChainXMLConverter.toXML(afpChainNew,ca1,ca2);
+		//String ce2 = afpChainNew.toFatcat(ca1, ca2);
+		// FIXME version number, new line character difference?
+		//			assertEquals(xml,xmlNew);
+		StringManipulationTestsHelper.assertEqualsIgnoreEndline(xml,xmlNew);
+
+		//assertEquals(ce1,ce2);
+
 	}
 }

@@ -48,7 +48,7 @@ public class HTTPConnectionTools {
 
    public static final String USERAGENT = "JFatCat Java client";
 
-   public static final int    DEFAULT_CONNECTION_TIMEOUT = 5000; // timeout for http connection = 5. sec
+   public static final int    DEFAULT_CONNECTION_TIMEOUT = 15000; // timeout for http connection = 15. sec
 
 
    public HTTPConnectionTools() {

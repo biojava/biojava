@@ -58,7 +58,7 @@ public class UniprotToFasta {
                     id = data[3];
                 }else if(line.startsWith("SQ")){
                     line = br.readLine();
-                    while(line.startsWith("//") == false){
+                    while(!line.startsWith("//")){
 
                         for(int i = 0; i < line.length(); i++){
                             char aa = line.charAt(i);

@@ -50,6 +50,9 @@ public class Constraints {
 	public static Map<AminoAcidCompound, Double> aa2PKa = new HashMap<AminoAcidCompound, Double>();
 	public static Map<String, Double> diAA2Instability = new HashMap<String, Double>();
 
+	public static Map<AminoAcidCompound, Double> aa2NTerminalPka = new HashMap<AminoAcidCompound, Double>();
+	public static Map<AminoAcidCompound, Double> aa2CTerminalPka = new HashMap<AminoAcidCompound, Double>();
+	
 	static{
 		initMolecularWeight();
 		initHydropathicity();
@@ -154,21 +157,79 @@ public class Constraints {
 	 * Does the initialization of PKa based on
 	 * http://www.innovagen.se/custom-peptide-synthesis/peptide-property-calculator/peptide-property-calculator-notes.asp#NetCharge
 	 */
-	private static void initPKa(){
-		//		K, Lys	10.5	
-		aa2PKa.put(K, 10.5);
-		//		D, Asp	3.86
-		aa2PKa.put(D, 3.86);
-		//		R, Arg	12.4	
-		aa2PKa.put(R, 12.4);
+	private static void initPKaInnovagen(){
+		/*
+		 * A.Lehninger, Principles of Biochemistry, 4th Edition (2005), Chapter 3, page78, Table 3-1.
+		 */
+		//(NH2-)	9.69	(-COOH)	2.34
+		aa2CTerminalPka.put(G, 2.34);
+		aa2CTerminalPka.put(A, 2.34);
+		aa2CTerminalPka.put(P, 1.99);
+		aa2CTerminalPka.put(V, 2.32);
+		aa2CTerminalPka.put(L, 2.36);
+		aa2CTerminalPka.put(I, 2.36);
+		aa2CTerminalPka.put(M, 2.28);
+		
+		aa2CTerminalPka.put(F, 1.83);
+		aa2CTerminalPka.put(Y, 2.20);
+		aa2CTerminalPka.put(W, 2.38);
+		
+		aa2CTerminalPka.put(S, 2.21);
+		aa2CTerminalPka.put(T, 2.11);
+		aa2CTerminalPka.put(C, 1.96);
+		aa2CTerminalPka.put(N, 2.02);
+		aa2CTerminalPka.put(Q, 2.17);
+		
+		aa2CTerminalPka.put(K, 2.18);
+		aa2CTerminalPka.put(H, 1.82);
+		aa2CTerminalPka.put(R, 2.17);
+		
+		aa2CTerminalPka.put(D, 1.88);
+		aa2CTerminalPka.put(E, 2.19);
+		
+		aa2NTerminalPka.put(G, 9.60);
+		aa2NTerminalPka.put(A, 9.69);
+		aa2NTerminalPka.put(P, 10.96);
+		aa2NTerminalPka.put(V, 9.62);
+		aa2NTerminalPka.put(L, 9.60);
+		aa2NTerminalPka.put(I, 9.68);
+		aa2NTerminalPka.put(M, 9.21);
+		
+		aa2NTerminalPka.put(F, 9.13);
+		aa2NTerminalPka.put(Y, 9.11);
+		aa2NTerminalPka.put(W, 9.39);
+		
+		aa2NTerminalPka.put(S, 9.15);
+		aa2NTerminalPka.put(T, 9.62);
+		aa2NTerminalPka.put(C, 10.28);
+		aa2NTerminalPka.put(N, 8.80);
+		aa2NTerminalPka.put(Q, 9.13);
+		
+		aa2NTerminalPka.put(K, 8.95);
+		aa2NTerminalPka.put(H, 9.17);
+		aa2NTerminalPka.put(R, 9.04);
+		
+		aa2NTerminalPka.put(D, 9.60);
+		aa2NTerminalPka.put(E, 9.67);
+		
+		//		K, Lys	10.53	
+		aa2PKa.put(K, 10.53);
+		//		D, Asp	3.65
+		aa2PKa.put(D, 3.65);
+		//		R, Arg	12.48	
+		aa2PKa.put(R, 12.48);
 		//		E, Glu	4.25
 		aa2PKa.put(E, 4.25);
 		//		H, His	6.00	
 		aa2PKa.put(H, 6.00);
-		//		C, Cys	8.33
-		aa2PKa.put(C, 8.33);
-		//		Y, Tyr	10.0
-		aa2PKa.put(Y, 10.0);
+		//		C, Cys	8.18
+		aa2PKa.put(C, 8.18);
+		//		Y, Tyr	10.07
+		aa2PKa.put(Y, 10.07);
+	}
+	
+	private static void initPKa(){
+		initPKaInnovagen();
 	}
 
 	/** 

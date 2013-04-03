@@ -39,38 +39,39 @@ import org.biojava3.core.sequence.compound.AminoAcidCompound;
  */
 public class CeParameters implements ConfigStrucAligParams  {
 
-	int winSize;
-	double rmsdThr;
-	double rmsdThrJoin;
-	private double maxOptRMSD;
+	protected int winSize;
+	protected double rmsdThr;
+	protected double rmsdThrJoin;
+	protected double maxOptRMSD;
 
 	public static final int DEFAULT_SCORING_STRATEGY = 0;
 	public static final int SIDE_CHAIN_SCORING = 1;
 	public static final int SIDE_CHAIN_ANGLE_SCORING = 2;
 	public static final int CA_AND_SIDE_CHAIN_ANGLE_SCORING = 3;
+	public static final int SEQUENCE_CONSERVATION = 4;
 
 	public static final String SCORING_STRATEGY = "ScoringStrategy";
-	int scoringStrategy;
+	protected int scoringStrategy;
 	//String[] alignmentAtoms;
-	private int maxGapSize;
+	protected int maxGapSize;
 
-	boolean showAFPRanges;
-	int  sideChainScoringType;
+	protected boolean showAFPRanges;
+	protected int  sideChainScoringType;
 
-	private static final double DEFAULT_GAP_OPEN = 5.0;
-	private static final double DEFAULT_GAP_EXTENSION  = 0.5;
-	private static final double DISTANCE_INCREMENT=0.5;
-	private static final double DEFAULT_oRmsdThr = 2.0; 
+	protected static final double DEFAULT_GAP_OPEN = 5.0;
+	protected static final double DEFAULT_GAP_EXTENSION  = 0.5;
+	protected static final double DISTANCE_INCREMENT=0.5;
+	protected static final double DEFAULT_oRmsdThr = 2.0; 
 
-	double gapOpen;
-	double gapExtension;
-	double distanceIncrement;
-	double oRmsdThr;
+	protected double gapOpen;
+	protected double gapExtension;
+	protected double distanceIncrement;
+	protected double oRmsdThr;
 
-	int maxNrIterationsForOptimization;
+	protected int maxNrIterationsForOptimization;
 
-	SubstitutionMatrix<AminoAcidCompound> substitutionMatrix;	
-	double seqWeight;
+	protected SubstitutionMatrix<AminoAcidCompound> substitutionMatrix;	
+	protected double seqWeight;
 
 	public CeParameters(){
 		reset();

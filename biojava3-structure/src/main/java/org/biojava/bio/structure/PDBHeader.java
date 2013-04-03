@@ -7,6 +7,7 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 
 /** A class that contains PDB Header information.
@@ -42,7 +43,7 @@ public class PDBHeader implements PDBRecord, Serializable{
 
 		depDate = new Date(0);
 		modDate = new Date(0);
-		dateFormat = new SimpleDateFormat("dd-MMM-yy");
+		dateFormat = new SimpleDateFormat("dd-MMM-yy",Locale.US);
 		resolution = DEFAULT_RESOLUTION;
 	}
 
@@ -281,7 +282,7 @@ public class PDBHeader implements PDBRecord, Serializable{
 		Date d = getDepDate();
 		if ( d !=  null){
 			// provide correct display of Dep date...
-			buf.append(dateFormat.format(getDepDate()));
+			buf.append(dateFormat.format(d));
 		} else {
 			buf.append("         ");
 		}

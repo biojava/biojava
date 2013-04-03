@@ -3,7 +3,7 @@
 	<parent>
 		<artifactId>biojava</artifactId>
 		<groupId>org.biojava</groupId>
-		<version>3.0.2</version>
+		<version>3.0.3</version>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>biojava3-structure-gui</artifactId>
@@ -53,13 +53,13 @@
 		<dependency>
 			<groupId>org.biojava</groupId>
 			<artifactId>biojava3-structure</artifactId>
-			<version>3.0.2</version>
+			<version>3.0.3</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.biojava</groupId>
 			<artifactId>biojava3-core</artifactId>
-			<version>3.0.2</version>
+			<version>3.0.3</version>
 			<scope>compile</scope>
 		</dependency>
 	</dependencies>

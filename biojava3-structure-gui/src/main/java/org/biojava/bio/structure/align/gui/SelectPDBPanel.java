@@ -177,12 +177,16 @@ implements StructurePairSelector{
 
 		//System.out.println(" got range: " + range);
 		if ( range != null && ( ! range.equals(""))){
+			if ( structure.getName() == null || structure.getName().equals(""))
+				structure.setName(pdb);
 			Structure s = StructureTools.getSubRanges(structure, range);
 			//System.out.println("got atoms: " + StructureTools.getAtomCAArray(s).length);
 			return s;
 		} 
 		Structure s = StructureTools.getReducedStructure(structure,chain);
 		//System.out.println("got atoms: " + StructureTools.getAtomCAArray(s).length);
+		if ( s.getName() == null || s.getName().equals(""))
+			s.setName(pdb+"."+chain);
 		return s;
 
 	}

@@ -30,7 +30,6 @@ import java.io.StringWriter;
 
 import org.biojava.bio.structure.Atom;
 import org.biojava.bio.structure.StructureException;
-import org.biojava.bio.structure.TmpAtomCache;
 import org.biojava.bio.structure.align.StructureAlignment;
 import org.biojava.bio.structure.align.StructureAlignmentFactory;
 
@@ -78,8 +77,8 @@ public class TestWebStartClient extends TestCase
 			return;
 		}
 			
-		System.out.println("testing " + name1 + " " + name2 + " " + algorithm.getAlgorithmName());
-		AtomCache cache = TmpAtomCache.cache;
+		//System.out.println("testing " + name1 + " " + name2 + " " + algorithm.getAlgorithmName());
+		AtomCache cache = new AtomCache();
 
 
 		Atom[] ca1 = cache.getAtoms(name1);

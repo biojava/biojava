@@ -9,8 +9,14 @@ import org.biojava3.core.sequence.compound.AminoAcidCompoundSet;
 import org.biojava3.core.sequence.template.CompoundSet;
 
 
-/** The biojava-alignment module represents substitution matrices with short values. This is for performance reasons. Some substitution matrices however are provided as float values with up to 2 after-comma precision.
- * In order to be able to use them in the alignment module these are scaled in order to be able to represent as short values.  The method {@link #getScale()} provides access to the scaling factor.
+/**
+ * The biojava-alignment module represents substitution matrices with short
+ * values. This is for performance reasons. Some substitution matrices, however,
+ * are provided as float values with up to 2 decimal places.
+ * <p>
+ * In order to be able to use them in the alignment module these are scaled in
+ * order to be able to represent as short values.
+ * The method {@link #getScale()} provides access to the scaling factor.
  *  
  *  
  * @author Andreas Prlic
@@ -120,7 +126,7 @@ public class ScaledSubstitutionMatrix implements
 	
 	@Override
 	public CompoundSet<AminoAcidCompound> getCompoundSet() {
-		return getCompoundSet();
+		return compoundSet;
 	}
 	  @Override
 	    public String getMatrixAsString() {

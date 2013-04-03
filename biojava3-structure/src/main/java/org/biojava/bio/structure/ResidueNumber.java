@@ -32,7 +32,7 @@ import java.io.StringWriter;
  * @author Andreas Prlic
  *
  */
-public class ResidueNumber implements Serializable
+public class ResidueNumber implements Serializable, Comparable<ResidueNumber>
 {
 
 	private static final long serialVersionUID = 1773011704758536083L;
@@ -139,9 +139,8 @@ public class ResidueNumber implements Serializable
 			//		   writer.append(chainId);
 			//		   writer.append(":");
 			//	   }
-		writer.append(seqNum+"");
-		if (  insCode != null && 
-				( insCode != ' '))
+        writer.append(String.valueOf(seqNum));
+		if (  insCode != null && ( insCode != ' '))
 			writer.append(insCode);
 
 		return writer.toString();
@@ -192,5 +191,29 @@ public class ResidueNumber implements Serializable
 		else if ( icode.length() > 0)
 			residueNumber.setInsCode(icode.charAt(0));
 		return residueNumber;
+	}
+
+	@Override
+	public int compareTo(ResidueNumber other) {
+	
+		// compare chain ID
+		if ( this.getChainId() != null && other.getChainId() != null ) {
+			int chainComp = this.getChainId().compareTo(other.getChainId()); 
+			if (  chainComp != 0 )
+				return chainComp;
+			
+		}
+			
+		// if equal sequence position, compare insCode
+		if ( this.getSeqNum() == other.getSeqNum()) {
+			if (this.getInsCode() != null && other.getInsCode() != null) {
+				return this.getInsCode().compareTo(other.getInsCode());
+			}
+			if ( this.getInsCode() == null && other.getInsCode() != null)
+				return -1;
+			else return 1;
+		}
+		return getSeqNum().compareTo(other.getSeqNum());
+		
 	}
 }

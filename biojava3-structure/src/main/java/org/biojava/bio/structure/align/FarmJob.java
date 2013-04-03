@@ -4,11 +4,16 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.biojava.bio.structure.align.ce.AbstractUserArgumentProcessor;
 import org.biojava.bio.structure.align.client.FarmJobParameters;
 import org.biojava.bio.structure.align.client.FarmJobRunnable;
 import org.biojava.bio.structure.align.events.AlignmentProgressListener;
 import org.biojava.bio.structure.align.util.CliTools;
 import org.biojava.bio.structure.align.util.ConfigurationException;
+import org.biojava.bio.structure.scop.CachedRemoteScopInstallation;
+import org.biojava.bio.structure.scop.ScopDatabase;
+import org.biojava.bio.structure.scop.ScopFactory;
+import org.biojava3.core.util.InputStreamProvider;
 
 
 /** A job as it can be run on the farm.
@@ -35,7 +40,9 @@ public class FarmJob implements Runnable {
 		progressListeners = null;
 		
 		// send a flag to the PDb file loader to cache the gzip compressed files.
-		System.setProperty("biojava.cache.files","true");
+		System.setProperty(InputStreamProvider.CACHE_PROPERTY, "true");
+
+		
 	}
 	
 	public FarmJobParameters getParams() {
@@ -75,7 +82,7 @@ public class FarmJob implements Runnable {
 		}
 
 		FarmJobParameters params = new FarmJobParameters();
-
+		
 		for (int i = 0 ; i < argv.length; i++){
 			String arg   = argv[i];
 
@@ -115,6 +122,9 @@ public class FarmJob implements Runnable {
 			return;
 		}
 		
+		
+
+		
 		FarmJobRunnable.log("Using parameters: " + params.toString());
 		
 		job.setParams(params);
@@ -124,6 +134,16 @@ public class FarmJob implements Runnable {
 	
 	public void run(){
 
+		
+		// set the system wide PDB path
+
+		String path = params.getPdbFilePath();
+		System.setProperty(AbstractUserArgumentProcessor.PDB_DIR,path);
+				
+		// declare SCOP to be locally cached, but fetching new stuff from remote
+		ScopDatabase scop = new CachedRemoteScopInstallation(true);
+		ScopFactory.setScopDatabase(scop);
+		
 		String username = params.getUsername();
 		jobs = new ArrayList<FarmJobRunnable>();
 		for ( int i = 0 ; i < params.getThreads();i++){
@@ -138,6 +158,9 @@ public class FarmJob implements Runnable {
 				}
 			}
 				
+			
+			
+			
 			//javax.swing.SwingUtilities.invokeLater(runner);
 			Thread t = new Thread(runner);
 			if ( ( (params.getThreads() > 1 ) && ( i < params.getThreads() - 1) )|| ( params.isRunBackground())) {

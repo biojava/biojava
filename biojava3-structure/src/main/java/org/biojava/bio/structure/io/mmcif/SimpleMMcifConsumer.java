@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.logging.Logger;
@@ -707,7 +708,7 @@ public void setStruct(Struct struct) {
    @SuppressWarnings("deprecation")
 public void newDatabasePDBrev(DatabasePDBrev dbrev) {
       //System.out.println("got a database revision:" + dbrev);
-      SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+      SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd",Locale.US);
       PDBHeader header = structure.getPDBHeader();
       Map<String, Object> h = structure.getHeader();
 

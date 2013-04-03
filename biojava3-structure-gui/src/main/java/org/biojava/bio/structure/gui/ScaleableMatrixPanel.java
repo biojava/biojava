@@ -231,6 +231,18 @@ implements ChangeListener, ActionListener {
 		gradients.put((++i)+". Rainbow", GradientMapper.getGradientMapper(GradientMapper.RAINBOW_INTENSITY_GRADIENT, 10, 0));
 		*/
 		
+
+		interp = new LinearColorInterpolator(hsv);
+		interp.setInterpolationDirection(0, InterpolationDirection.INNER);
+		gradient = new GradientMapper(Color.green, Color.black, hsv);
+		gradient.put( -50., new Color(hsv,new float[] {0f, .9f, 0f},1f));
+		gradient.put( 10., new Color(hsv,new float[] {1f, .9f, 1f},1f));
+		gradient.setInterpolator(interp);
+		
+		gradients.put((++i)+". -50 to 10", gradient);	
+		
+		
+		
 		// Mimic DefaultMapper
 		interp = new LinearColorInterpolator(hsv);
 		interp.setInterpolationDirection(0, InterpolationDirection.INNER);

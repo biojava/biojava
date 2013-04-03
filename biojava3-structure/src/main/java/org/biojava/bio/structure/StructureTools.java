@@ -22,6 +22,7 @@
  */
 package org.biojava.bio.structure;
 
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -36,13 +37,7 @@ import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-
-
-//import org.biojava.bio.seq.ProteinTools;
-//import org.biojava.bio.seq.io.SymbolTokenization;
-//import org.biojava.bio.symbol.Alphabet;
-//import org.biojava.bio.symbol.IllegalSymbolException;
-//import org.biojava.bio.symbol.Symbol;
+import org.biojava.bio.structure.align.util.AtomCache;
 
 
 /**
@@ -429,6 +424,71 @@ public class StructureTools {
 		}
 		return newGroup;
 	}
+	
+	/** Utility method for working with circular permutations. Creates a duplicated and cloned set of Calpha atoms from the input array.
+	 * 
+	 * @param ca2 atom array
+	 * @return cloned and duplicated set of input array
+	 * @throws StructureException
+	 */
+	public static Atom[] duplicateCA2(Atom[] ca2) throws StructureException{
+		// we don't want to rotate input atoms, do we?
+		Atom[] ca2clone = new Atom[ca2.length*2];
+
+		int pos = 0;
+
+		Chain c = null;
+		String prevChainId = "";
+		for (Atom a : ca2){			
+			Group g = (Group) a.getGroup().clone(); // works because each group has only a CA atom
+			
+			if (c == null ) {
+				c = new ChainImpl();
+				Chain orig= a.getGroup().getChain();
+				c.setChainID(orig.getChainID());
+			} else {
+				Chain orig= a.getGroup().getChain();
+				if ( ! orig.getChainID().equals(prevChainId)){
+					c = new ChainImpl();
+					c.setChainID(orig.getChainID());
+				}
+			}
+			
+			c.addGroup(g);
+			ca2clone[pos] = g.getAtom(StructureTools.caAtomName);
+
+			pos++;
+		}
+
+		// Duplicate ca2!
+		c = null;
+		prevChainId = "";
+		for (Atom a : ca2){
+			Group g = (Group)a.getGroup().clone();
+			
+			if (c == null ) {
+				c = new ChainImpl();
+				Chain orig= a.getGroup().getChain();
+				c.setChainID(orig.getChainID());
+			} else {
+				Chain orig= a.getGroup().getChain();
+				if ( ! orig.getChainID().equals(prevChainId)){
+					c = new ChainImpl();
+					c.setChainID(orig.getChainID());
+				}
+			}
+			
+			c.addGroup(g);
+			ca2clone[pos] = g.getAtom(StructureTools.caAtomName);
+
+			pos++;
+		}
+
+		return ca2clone;
+
+	}
+
+	
 
 	/** Returns an Atom array of the CA atoms.
 	 * @param s the structure object
@@ -572,10 +632,18 @@ public class StructureTools {
 		} catch (StructureException e){
 			System.err.println(e.getMessage() + " trying upper case Chain id...");
 			c = s.getChainByPDB(chainId.toUpperCase());
-
+			
+			
 		}
-		if ( c != null)
+		if ( c != null) {
 			newS.addChain(c);
+			for ( Compound comp : s.getCompounds()){
+				if ( comp.getChainId().contains(c.getChainID())){
+					// found matching compound. set description...
+					newS.getPDBHeader().setDescription("Chain " + c.getChainID() + " of " + s.getPDBCode() + " " + comp.getMolName());
+				}
+			}
+		}
 
 
 		return newS;
@@ -610,6 +678,7 @@ public class StructureTools {
 		newS.setConnections(s.getConnections());
 		newS.setSSBonds(s.getSSBonds());
 		newS.setSites(s.getSites());
+		newS.getPDBHeader().setDescription("subset of " + s.getPDBCode() + " " + s.getPDBHeader().getDescription() );
 		
 		if ( chainNr < 0 ) {
 
@@ -646,11 +715,11 @@ public class StructureTools {
 	 *  1CDG (A:407-495,A:582-686)
 	 *  1CDG (A_407-495,A_582-686)
 	 * 
-	 * 
 	 * @param s The full structure
 	 * @param ranges A comma-seperated list of ranges, optionally surrounded by parentheses
 	 * @return Substructure of s specified by ranges
 	 */
+	
 	@SuppressWarnings("deprecation")
 	public static final Structure getSubRanges(Structure s, String ranges ) 
 	throws StructureException
@@ -668,7 +737,13 @@ public class StructureTools {
 			ranges = ranges.substring(0,ranges.length()-1);
 		}
 
+		//special case: '-' means 'everything'
+		if ( ranges.equals("-") ) {
+			return s;
+		}
+
 		Structure newS = new StructureImpl();
+		
 		newS.setHeader(s.getHeader());
 		newS.setPDBCode(s.getPDBCode());
 		newS.setPDBHeader(s.getPDBHeader());
@@ -676,17 +751,19 @@ public class StructureTools {
 		newS.setDBRefs(s.getDBRefs());
 		newS.setNmr(s.isNmr());
 		newS.setBiologicalAssembly(s.isBiologicalAssembly());
-
+		newS.getPDBHeader().setDescription("sub-range " + ranges + " of "  + newS.getPDBCode() + " " + s.getPDBHeader().getDescription());
+		
 		// TODO The following should be only copied for atoms which are present in the range.
 		//newS.setCompounds(s.getCompounds());
 		//newS.setConnections(s.getConnections());
 		//newS.setSSBonds(s.getSSBonds());
 		//newS.setSites(s.getSites());
 		
-		
 		String[] rangS =ranges.split(",");
 
-
+		StringWriter name = new StringWriter();
+		name.append(s.getName());
+		boolean firstRange = true;
 		String prevChainId = null;
 
 		// parse the ranges, adding the specified residues to newS
@@ -696,17 +773,29 @@ public class StructureTools {
 			
 			Matcher matcher = pdbNumRangeRegex.matcher(r);
 			if( ! matcher.matches() ){
-				throw new StructureException("wrong range specification, should be provided as chainID_pdbResnum1-pdbRensum2");
+				throw new StructureException("wrong range specification, should be provided as chainID_pdbResnum1-pdbRensum2: "+ranges);
 			}
 			String chainId = matcher.group(1);
+			Chain chain;
 			
-			Chain chain = struc.getChainByPDB(chainId);
+			if(chainId.equals("_") && struc.size() == 1) {
+				// Handle special case of "_" chain for single-chain proteins
+				chain = struc.getChain(0);
+			} else {
+				// Explicit chain
+				chain = struc.getChainByPDB(chainId);
+			}
+			
 			Group[] groups;
 			
 			String pdbresnumStart = matcher.group(2);
 			String pdbresnumEnd   = matcher.group(3);
 			
-
+			if ( ! firstRange){
+				name.append( ",");
+			} else {
+				name.append(AtomCache.CHAIN_SPLIT_SYMBOL);
+			}
 			if( pdbresnumStart != null && pdbresnumEnd != null) {
 				// not a full chain
 				//since Java doesn't allow '+' before integers, fix this up.
@@ -715,29 +804,33 @@ public class StructureTools {
 				if(pdbresnumEnd.charAt(0) == '+')
 					pdbresnumEnd = pdbresnumEnd.substring(1);
 				groups = chain.getGroupsByPDB(pdbresnumStart, pdbresnumEnd);
+				
+				name.append( chainId + AtomCache.UNDERSCORE + pdbresnumStart+"-" + pdbresnumEnd);
+				
 			} else {
 				// full chain
 				groups = chain.getAtomGroups().toArray(new Group[chain.getAtomGroups().size()]);
+				name.append(chainId);
 			}
-			
+			firstRange = true;
 			
 			// Create new chain, if needed
 			Chain c = null;
 			if ( prevChainId == null) {
 				// first chain...
 				c = new ChainImpl();
-				c.setName(chain.getName());
+				c.setChainID(chain.getChainID());
 				newS.addChain(c);
-			} else if ( prevChainId.equals(chain.getName())) {
+			} else if ( prevChainId.equals(chain.getChainID())) {
 				c = newS.getChainByPDB(prevChainId);
 
 			} else {
 				try {
-					c = newS.getChainByPDB(chain.getName());
+					c = newS.getChainByPDB(chain.getChainID());
 				} catch (StructureException e){
 					// chain not in structure yet...
 					c = new ChainImpl();
-					c.setName(chain.getName());
+					c.setChainID(chain.getChainID());
 					newS.addChain(c);
 				}
 			}
@@ -747,9 +840,11 @@ public class StructureTools {
 				c.addGroup(g);
 			}
 
-			prevChainId = c.getName();
+			prevChainId = c.getChainID();
 		}
-
+		
+		newS.setName(name.toString());
+		
 		return newS;
 	}
 
