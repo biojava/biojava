@@ -79,7 +79,8 @@ implements Serializable {
 	}
 	
 	public String toString() {
-		return atom1.toString() + "\n" + atom2.toString() +
-				"\n" + distance;
+		String dat =  atom1.toString() + "-" + atom2.toString() + " distance: " + String.format("%.2f",distance);
+		dat = dat.replaceAll("\t"," ");
+		return dat;
 	}
 }

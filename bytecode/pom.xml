@@ -3,12 +3,12 @@
   <parent>
     <artifactId>biojava</artifactId>
     <groupId>org.biojava</groupId>
-    <version>3.0-alpha2</version>
+    <version>3.0-alpha3</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.biojava</groupId>
   <artifactId>bytecode</artifactId>
-  <version>3.0-alpha2</version>
+  <version>3.0-alpha3</version>
   <name>bytecode</name>
   <dependencies>
     <dependency>

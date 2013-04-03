@@ -25,12 +25,10 @@
 package org.biojava3.protmod.structure;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -41,15 +39,13 @@ import org.biojava.bio.structure.Atom;
 import org.biojava.bio.structure.Chain;
 import org.biojava.bio.structure.Group;
 import org.biojava.bio.structure.GroupType;
+import org.biojava.bio.structure.ResidueNumber;
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureException;
-//import org.biojava.bio.structure.io.mmcif.chem.ResidueType;
-//import org.biojava.bio.structure.io.mmcif.chem.PolymerType;
-//import org.biojava.bio.structure.io.mmcif.model.ChemComp;
+
 
 import org.biojava3.protmod.Component;
 import org.biojava3.protmod.ComponentType;
-import org.biojava3.protmod.ModificationCategory;
 import org.biojava3.protmod.ModificationCondition;
 import org.biojava3.protmod.ModificationLinkage;
 import org.biojava3.protmod.ProteinModification;
@@ -240,6 +236,7 @@ public class ProteinModificationIdentifier {
 	 */
 	public void identify(final List<Chain> chains,
 			final Set<ProteinModification> potentialModifications) {
+		
 		if (chains==null) {
 			throw new IllegalArgumentException("Null structure.");
 		}
@@ -248,6 +245,7 @@ public class ProteinModificationIdentifier {
 			throw new IllegalArgumentException("Null potentialModifications.");
 		}
 		
+			
 		identifiedModifiedCompounds = new LinkedHashSet<ModifiedCompound>();
 		if (recordUnidentifiableModifiedCompounds) {
 			unidentifiableAtomLinkages = new LinkedHashSet<StructureAtomLinkage>();
@@ -262,6 +260,8 @@ public class ProteinModificationIdentifier {
 			List<ModifiedCompound> modComps = new ArrayList<ModifiedCompound>();
 			
 			List<Group> residues = StructureUtil.getAminoAcids(chain);
+			if ( residues.size() == 0)
+				System.err.println("WARNING: no amino acids found. Did you parse PDB file with alignSEQRES records?");
 			List<Group> ligands = chain.getAtomLigands();
 			
 			Map<Component, Set<Group>> mapCompGroups = 
@@ -345,7 +345,12 @@ public class ProteinModificationIdentifier {
 				if (num.getInsCode() != null) {
 					numIns += num.getInsCode();
 				}
-				group = chain.getGroupByPDB(numIns);
+				ResidueNumber resNum = new ResidueNumber();
+				resNum.setChainId(chain.getChainID());
+				resNum.setSeqNum(num.getResidueNumber());
+				resNum.setInsCode(num.getInsCode());
+				//group = chain.getGroupByPDB(numIns);
+				group = chain.getGroupByPDB(resNum);
 			} catch (StructureException e) {
 				// should not happen
 				continue;
@@ -463,7 +468,7 @@ public class ProteinModificationIdentifier {
 			Group group1 = residues.get(i);
 			for (int j=0; j<nLig; j++) {
 				Group group2 = ligands.get(j);
-				if (group1==group2) { // overlap between residues and ligands
+				if (group1.equals(group2)) { // overlap between residues and ligands
 					continue;
 				}
 				List<Atom[]> linkages = StructureUtil.findNonNCAtomLinkages(
@@ -687,7 +692,7 @@ public class ProteinModificationIdentifier {
 
 			for (Group g1 : groups1) {
 				for (Group g2 : groups2) {
-					if (g1 == g2) {
+					if (g1.equals(g2)) {
 						continue;
 					}
 		
@@ -789,13 +794,13 @@ public class ProteinModificationIdentifier {
 				
 				// check components
 				if (((link1.getIndexOfComponent1()==link2.getIndexOfComponent1())
-							!= (atoms1[0].getParent()==atoms2[0].getParent()))
+							!= (atoms1[0].getGroup().equals(atoms2[0].getGroup())))
 					|| ((link1.getIndexOfComponent1()==link2.getIndexOfComponent2())
-							!= (atoms1[0].getParent()==atoms2[1].getParent()))
+							!= (atoms1[0].getGroup().equals(atoms2[1].getGroup())))
 					|| ((link1.getIndexOfComponent2()==link2.getIndexOfComponent1())
-							!= (atoms1[1].getParent()==atoms2[0].getParent()))
+							!= (atoms1[1].getGroup().equals(atoms2[0].getGroup())))
 					|| ((link1.getIndexOfComponent2()==link2.getIndexOfComponent2())
-							!= (atoms1[1].getParent()==atoms2[1].getParent()))) {
+							!= (atoms1[1].getGroup().equals(atoms2[1].getGroup())))) {
 					return false;
 				}
 				
@@ -805,13 +810,13 @@ public class ProteinModificationIdentifier {
 				String label21 = link2.getLabelOfAtomOnComponent1();
 				String label22 = link2.getLabelOfAtomOnComponent2();
 				if ((label11!=null && label21!=null && label11.equals(label21))
-							!= (atoms1[0]==atoms2[0])
+							!= (atoms1[0].equals(atoms2[0]))
 					 || (label11!=null && label22!=null && label11.equals(label22))
-							!= (atoms1[0]==atoms2[1])
+							!= (atoms1[0].equals(atoms2[1]))
 					 || (label12!=null && label21!=null && label12.equals(label21))
-							!= (atoms1[1]==atoms2[0])
+							!= (atoms1[1].equals(atoms2[0]))
 					 || (label12!=null && label22!=null && label12.equals(label22))
-							!= (atoms1[1]==atoms2[1])) {
+							!= (atoms1[1].equals(atoms2[1]))) {
 					return false;
 				}
 			}

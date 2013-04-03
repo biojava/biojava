@@ -86,7 +86,7 @@ public class NeedlemanWunsch extends AlignmentAlgorithm {
 
 		for (col = 0; col <= targetChar.length; col++)
 			if (col == 0) {
-				output.append('['); 
+				output.append('[');
 				output.append(col);
 				output.append("]\t");
 			} else {
@@ -281,6 +281,7 @@ public class NeedlemanWunsch extends AlignmentAlgorithm {
 	 * @see org.biojava.bio.alignment.AlignmentAlgorithm#pairwiseAlignment(org.biojava.bio.symbol.SymbolList,
 	 *      org.biojava.bio.symbol.SymbolList)
 	 */
+	@Override
 	public AlignmentPair pairwiseAlignment(SymbolList query, SymbolList subject)
 			throws BioException {
 		Sequence squery = null;
@@ -510,13 +511,15 @@ public class NeedlemanWunsch extends AlignmentAlgorithm {
 							.getTokenization("token"), align[1].toString()),
 					ssubject.getURN(), ssubject.getName(), ssubject
 							.getAnnotation()));
-			AlignmentPair pairalign = new AlignmentPair(squery, ssubject, 1, CostMatrix.length, 1, CostMatrix[0].length, subMatrix);
+			AlignmentPair pairalign = new AlignmentPair(squery, ssubject, 1,
+					squery.length(), 1, ssubject.length(), subMatrix);
 			pairalign.setComputationTime(System.currentTimeMillis() - time);
 			pairalign.setScore((-1) * getEditDistance());
 			return pairalign;
-		} else
+		} else {
 			throw new BioException(
 					"Alphabet missmatch occured: sequences with different alphabet cannot be aligned.");
+		}
 	}
 
 	/**

@@ -46,6 +46,8 @@ public class ModifiedCompoundImpl
 implements ModifiedCompound, Serializable {
 	private static final long serialVersionUID = -3809110608450334460L;
 
+	public static final String newline = System.getProperty("line.separator");
+	
     private static class SerializationProxy implements Serializable {
         private static final long serialVersionUID = -5345107617243742042L;
         
@@ -131,12 +133,9 @@ implements ModifiedCompound, Serializable {
 		this.modification = modification;
 		
 		this.groups = new HashSet<StructureGroup>();
+				
+		addAtomLinkages(linkages);
 		
-		if (linkages==null) {
-			this.atomLinkages = null;
-		} else {
-			addAtomLinkages(linkages);
-		}
 	}
 	
 	@Override
@@ -262,13 +261,34 @@ implements ModifiedCompound, Serializable {
 		}
 	}
 	
-	@Override
-	public String toString() {
+	
+	public String toString(){
 		StringBuilder sb = new StringBuilder();
-		sb.append("Modification ID: ");
+		
+		sb.append("Modification_");
 		sb.append(modification.getId());
-		sb.append("; Category: ");
+		ModificationCategory cat ;
+		if (modification.getCategory()==ModificationCategory.UNDEFINED) {
+			cat = getModification().getCategory();
+		} else
+			cat = modification.getCategory();
+		sb.append("_");
+		sb.append(cat.toString());
+		return sb.toString();
+	}
+	
+	
+	public String getDescription() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("Category: ");
 		sb.append(getModification().getCategory());
+		if (!modification.getKeywords().isEmpty()) {
+			sb.append("; ");
+			sb.append(modification.getKeywords());
+		}
+		sb.append("; Modification ID: ");
+		sb.append(modification.getId());
+		
 		if (modification.getResidId()!=null) {
 			sb.append("; RESID: ");
 			sb.append(modification.getResidId());
@@ -276,22 +296,19 @@ implements ModifiedCompound, Serializable {
 			sb.append(modification.getResidName());
 			sb.append(']');
 		}
-		if (!modification.getKeywords().isEmpty()) {
-			sb.append("; keywords: ");
-			sb.append(modification.getKeywords());
-		}
-		sb.append('\n');
+		
+		sb.append(" | ");
 		
 		if (atomLinkages==null) {
 			for (StructureGroup group : groups) {
 				sb.append(group);
-				sb.append('\n');
+				sb.append(" | ");
 			}
 		} else {
 			for (Set<StructureAtomLinkage> linkages : atomLinkages.values()) {
 				for (StructureAtomLinkage linkage : linkages) {
 					sb.append(linkage);
-					sb.append("\n");
+					sb.append(" | ");
 				}
 			}
 		}

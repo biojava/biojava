@@ -11,6 +11,7 @@ import java.util.List;
 
 import org.biojava3.core.sequence.RNASequence;
 import org.biojava3.core.sequence.compound.NucleotideCompound;
+import org.biojava3.core.sequence.template.SequenceView;
 import org.junit.Test;
 
 public class WindowViewTests {
@@ -20,14 +21,14 @@ public class WindowViewTests {
     RNASequence rna = new RNASequence("AUGCCU");
     WindowedSequence<NucleotideCompound> window = new WindowedSequence<NucleotideCompound>(rna, 3);
 
-    Iterator<List<NucleotideCompound>> iter = window.iterator();
+    Iterator<SequenceView<NucleotideCompound>> iter = window.iterator();
     assertTrue("hasNext() returns true", iter.hasNext());
 
     int count = 0;
-    for(List<NucleotideCompound> c: window) {
+    for(SequenceView<NucleotideCompound> c: window) {
       count++;
       if(count == 0) {
-        String extracted = c.get(0).getBase() + c.get(1).getBase() + c.get(2).getBase();
+        String extracted = c.getCompoundAt(0).toString() + c.getCompoundAt(1).toString() + c.getCompoundAt(2).toString();
         assertEquals("Checking codon string", "AUG", extracted);
       }
     }
@@ -38,11 +39,11 @@ public class WindowViewTests {
   public void reaminderWindow() {
     RNASequence rna = new RNASequence("AUGCC");
     WindowedSequence<NucleotideCompound> window = new WindowedSequence<NucleotideCompound>(rna, 3);
-    List<List<NucleotideCompound>> list = new ArrayList<List<NucleotideCompound>>();
-    for(List<NucleotideCompound> c: window) {
+    List<SequenceView<NucleotideCompound>> list = new ArrayList<SequenceView<NucleotideCompound>>();
+    for(SequenceView<NucleotideCompound> c: window) {
       list.add(c);
     }
-    assertThat("First window is size 3", list.get(0).size(), is(3));
+    assertThat("First window is size 3", list.get(0).getLength(), is(3));
     assertThat("Only 1 window", list.size(), is(1));
   }
 }

@@ -28,7 +28,6 @@ import java.util.Collection;
 import java.util.Set;
 
 import org.biojava3.protmod.ComponentType;
-import org.biojava3.protmod.ModificationCategory;
 import org.biojava3.protmod.ProteinModification;
 
 /**
@@ -38,6 +37,14 @@ import org.biojava3.protmod.ProteinModification;
  * @since 3.0
  */
 public interface ModifiedCompound {
+	
+	
+	/** return a description of this compound
+	 * 
+	 * @return a description
+	 */
+	public String getDescription();
+	
 	/**
 	 * 
 	 * @return {@link ProteinModification} occurred on the residue.

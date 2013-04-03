@@ -103,12 +103,12 @@ public class SeqRes2AtomAligner {
 	throws StructureException {
 		Iterator<Chain> iter = atomList.iterator();
 		while(iter.hasNext()){
-			Chain atom = iter.next();
-			if ( atom.getName().equals(seqRes.getName())){
-				return atom;
+			Chain atomChain = iter.next();
+			if ( atomChain.getChainID().equals(seqRes.getChainID())){
+				return atomChain;
 			}
 		}
-		throw new StructureException("could not match seqres chainID >" + seqRes.getName() + "< to ATOM chains!");
+		throw new StructureException("could not match seqres chainID >" + seqRes.getChainID() + "< to ATOM chains!");
 	}
 	public void align(Structure s, List<Chain> seqResList){
 
@@ -122,7 +122,7 @@ public class SeqRes2AtomAligner {
 
 			if ( seqRes.getAtomGroups("amino").size() < 1) {
 				if (DEBUG){
-					System.out.println("chain " + seqRes.getName() + " does not contain amino acids, ignoring...");
+					System.out.println("chain " + seqRes.getChainID() + " does not contain amino acids, ignoring...");
 				}
 				continue;
 			}
@@ -132,12 +132,12 @@ public class SeqRes2AtomAligner {
 				Chain atomRes = getMatchingAtomRes(seqRes,atomList);
 				if ( atomRes.getAtomGroups("amino").size() < 1) {
 					if (DEBUG){
-						System.out.println("chain " + atomRes.getName() + " does not contain amino acids, ignoring...");
+						System.out.println("chain " + atomRes.getChainID() + " does not contain amino acids, ignoring...");
 					}
 					continue;
 				}
 				if ( DEBUG )
-					System.out.println("Alignment for chain "+ atomRes.getName());
+					System.out.println("Alignment for chain "+ atomRes.getChainID());
 
 				List<Group> seqResGroups = seqRes.getAtomGroups();
 				boolean noMatchFound = align(seqResGroups,atomRes.getAtomGroups());
@@ -260,7 +260,7 @@ public class SeqRes2AtomAligner {
 		penalty.setOpenPenalty(gop);
 		penalty.setExtensionPenalty(extend);
 
-		PairwiseSequenceAligner smithWaterman =
+		PairwiseSequenceAligner<ProteinSequence, AminoAcidCompound> smithWaterman =
 			Alignments.getPairwiseAligner(s1, s2, PairwiseSequenceAlignerType.LOCAL, penalty, matrix);
 
 		SequencePair<ProteinSequence, AminoAcidCompound> pair = smithWaterman.getPair();

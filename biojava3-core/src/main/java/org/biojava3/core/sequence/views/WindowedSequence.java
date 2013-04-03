@@ -1,16 +1,16 @@
 package org.biojava3.core.sequence.views;
 
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 import org.biojava3.core.sequence.template.Compound;
 import org.biojava3.core.sequence.template.Sequence;
+import org.biojava3.core.sequence.template.SequenceView;
 
 /**
  * A sliding window view of a sequence which does not implement any
  * interfaces like {@link Sequence} because they do not fit how this works.
- * For each index requested we return a List of compounds back.
+ * For each index requested we return a SequenceView or List of compounds back.
  *
  * If you perform a view on a Sequence whose length is not a multiple of the
  * window the final window will be omitted i.e. if we have the sequence AGCGG
@@ -25,7 +25,7 @@ import org.biojava3.core.sequence.template.Sequence;
  *
  * @param <C> The type of compound we return from a window
  */
-public class WindowedSequence<C extends Compound> implements Iterable<List<C>> {
+public class WindowedSequence<C extends Compound> implements Iterable<SequenceView<C>> {
 
     private final Sequence<C> sequence;
     private final int windowSize;
@@ -74,54 +74,57 @@ public class WindowedSequence<C extends Compound> implements Iterable<List<C>> {
      * @return The List of compounds
      */
     public List<C> getCompounds(int index) {
+        return get(index).getAsList();
+    }
+
+    /**
+     * Returns the window specified at the given index in offsets i.e. asking
+     * for position 2 in a moving window sequence of size 3 will get you
+     * the window starting at position 4.
+     */
+    public SequenceView<C> get(int index) {
         int start = toStartIndex(index);
-        int window = getWindowSize();
-        Sequence<C> backing = getBackingSequence();
-        List<C> output = new ArrayList<C>(window);
-        for (int i = 0; i < window; i++) {
-            output.add(backing.getCompoundAt(start + i));
-        }
-        return output;
+        int end  = index + (getWindowSize() - 1);
+        return getBackingSequence().getSubSequence(start, end);
+    }
+
+    /**
+     * Returns an iterator which will return the windows in a sequence in
+     * sequential order.
+     */
+    @Override
+    public Iterator<SequenceView<C>> iterator() {
+        return new WindowedSequenceIterator<C>(this);
     }
 
     /**
      * Iterator of all List of compounds available in a windowed sequence.
      */
-    @Override
-    public Iterator<List<C>> iterator() {
-        return new WindowedIterator<C>(this);
-    }
-
-    /**
-     * Used rather than an inline iterator which does its own iteration
-     * not delegating back to the original class due to speed
-     */
-    private static class WindowedIterator<C extends Compound> implements Iterator<List<C>> {
+    private static class WindowedSequenceIterator<C extends Compound> implements Iterator<SequenceView<C>> {
 
         private final int end;
         private final int window;
+        private final int offset;
         private int currentIndex = 1;
-        private final Iterator<C> iter;
+        private final Sequence<C> seq;
 
-        public WindowedIterator(WindowedSequence<C> sequence) {
+        public WindowedSequenceIterator(WindowedSequence<C> sequence) {
             this.window = sequence.getWindowSize();
-            this.iter = sequence.getBackingSequence().iterator();
-            this.end = sequence.getLength();
+            this.offset = window - 1;
+            this.seq = sequence.getBackingSequence();
+            this.end = seq.getLength();
         }
 
         @Override
         public boolean hasNext() {
-            return currentIndex <= end;
+            return (currentIndex+offset) <= end;
         }
 
         @Override
-        public List<C> next() {
-            List<C> results = new ArrayList<C>(window);
-            for(int i = 0; i < window; i++) {
-                results.add(iter.next());
-            }
-            currentIndex++;
-            return results;
+        public SequenceView<C> next() {
+            SequenceView<C> v = seq.getSubSequence(currentIndex, currentIndex + offset);
+            currentIndex = currentIndex + window;
+            return v;
         }
 
         @Override

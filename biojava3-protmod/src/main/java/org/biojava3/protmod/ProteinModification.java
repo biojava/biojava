@@ -729,21 +729,57 @@ public final class ProteinModification {
 	 */
 	@Override
 	public String toString() {
+		return printModification(this);
+//		StringBuilder sb = new StringBuilder();
+//		
+//		sb.append("ID:"+getId());
+//		sb.append("\nPDBCC ID:"+getPdbccId());
+//		sb.append("\tPDBCC name:"+getPdbccName());
+//		sb.append("\nRESID ID:"+getResidId());
+//		sb.append("\tRESID name:"+getResidName());
+//		sb.append("\nPSI-MOD ID:"+getPsimodId());
+//		sb.append("\tPSI-MOD name:"+getPsimodName());
+//		sb.append("\nDescription:"+getDescription());
+//		sb.append("\nSystematic name:"+getSystematicName());
+//		sb.append("\nCategory:"+getCategory().label());
+//		sb.append("\nOccurrence type:"+getOccurrenceType().label());
+//		sb.append("\nKeywords:"+getKeywords());
+//		sb.append("\nCondition:"+getCondition());
+//		return sb.toString();
+	}
+	
+	private String printModification(ProteinModification mod) {
 		StringBuilder sb = new StringBuilder();
+						
+		Set<String> keywords = mod.getKeywords();
+		if (keywords!=null && !keywords.isEmpty()) {
+
+			for (String keyword : keywords) {
+				sb.append(keyword);
+				sb.append(", ");
+			}
+			sb.delete(sb.length()-2,sb.length());
+		}
+		sb.append(" [ID:");
+		sb.append(mod.getId());
+		sb.append("] [");
+		sb.append(mod.getCategory());
+		sb.append("] ");
 		
-		sb.append("ID:"+getId());
-		sb.append("\nPDBCC ID:"+getPdbccId());
-		sb.append("\tPDBCC name:"+getPdbccName());
-		sb.append("\nRESID ID:"+getResidId());
-		sb.append("\tRESID name:"+getResidName());
-		sb.append("\nPSI-MOD ID:"+getPsimodId());
-		sb.append("\tPSI-MOD name:"+getPsimodName());
-		sb.append("\nDescription:"+getDescription());
-		sb.append("\nSystematic name:"+getSystematicName());
-		sb.append("\nCategory:"+getCategory().label());
-		sb.append("\nOccurrence type:"+getOccurrenceType().label());
-		sb.append("\nKeywords:"+getKeywords());
-		sb.append("\nCondition:"+getCondition());
+		
+		String resid = mod.getResidId();
+		if (resid != null) {
+			sb.append("; ");
+			sb.append("RESID:");
+			sb.append(resid);
+			String residname = mod.getResidName();
+			if (residname != null) {
+				sb.append(" (");
+				sb.append(residname);
+				sb.append(')');
+			}
+		}
+		
 		return sb.toString();
 	}
 }

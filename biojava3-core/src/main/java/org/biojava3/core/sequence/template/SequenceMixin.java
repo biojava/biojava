@@ -1,8 +1,6 @@
 package org.biojava3.core.sequence.template;
 
 import java.io.IOException;
-import java.io.OutputStream;
-import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -16,6 +14,7 @@ import org.biojava3.core.sequence.views.ReversedSequenceView;
 import org.biojava3.core.util.CRC64Checksum;
 
 import java.util.NoSuchElementException;
+import org.biojava3.core.sequence.views.WindowedSequence;
 
 /**
  * Provides a set of static methods to be used as static imports when needed
@@ -51,7 +50,9 @@ public class SequenceMixin {
         int count = 0;
         Map<C, Integer> compositon = getComposition(sequence);
         for (C compound : compounds) {
-            count = compositon.get(compound) + count;
+            if(compositon.containsKey(compound)) {
+                count = compositon.get(compound) + count;
+            }
         }
         return count;
     }
@@ -102,7 +103,6 @@ public class SequenceMixin {
         Map<C, Integer> composition = getComposition(sequence);
         double length = (double) sequence.getLength();
         for (Map.Entry<C, Integer> entry : composition.entrySet()) {
-        	
             double dist = entry.getValue().doubleValue() / length;
             results.put(entry.getKey(), dist);
         }
@@ -247,6 +247,57 @@ public class SequenceMixin {
             checksum.update(compound.getShortName());
         }
         return checksum.toString();
+    }
+
+    /**
+     * Produces kmers of the specified size e.g. ATGTGA returns two views which
+     * have ATG TGA
+     *
+     * @param <C> Compound to use
+     * @param sequence Sequence to build from
+     * @param kmer Kmer size
+     * @return The list of non-overlapping K-mers
+     */
+    public static <C extends Compound> List<SequenceView<C>> nonOverlappingKmers(Sequence<C> sequence, int kmer) {
+        List<SequenceView<C>> l = new ArrayList<SequenceView<C>>();
+        WindowedSequence<C> w = new WindowedSequence<C>(sequence, kmer);
+        for(SequenceView<C> view: w) {
+            l.add(view);
+        }
+        return l;
+    }
+
+    /**
+     * Used to generate overlapping k-mers such i.e. ATGTA will give rise to
+     * ATG, TGT & GTA
+     *
+     * @param <C> Compound to use
+     * @param sequence Sequence to build from
+     * @param kmer Kmer size
+     * @return The list of overlapping K-mers
+     */
+    public static <C extends Compound> List<SequenceView<C>> overlappingKmers(Sequence<C> sequence, int kmer) {
+        List<SequenceView<C>> l = new ArrayList<SequenceView<C>>();
+        List<Iterator<SequenceView<C>>> windows
+                = new ArrayList<Iterator<SequenceView<C>>>();
+
+        for(int i=1; i<=kmer; i++) {
+            if(i == 1) {
+                windows.add(new WindowedSequence<C>(sequence, kmer).iterator());
+            }
+            else {
+                SequenceView<C> sv = sequence.getSubSequence(i, sequence.getLength());
+                windows.add(new WindowedSequence<C>(sv, kmer).iterator());
+            }
+        }
+
+        for(int i=0; i<kmer; i++) {
+            Iterator<SequenceView<C>> iterator = windows.get(i);
+            if(iterator.hasNext()) {
+                l.add(iterator.next());
+            }
+        }
+        return l;
     }
 
     /**

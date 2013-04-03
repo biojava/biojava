@@ -495,8 +495,8 @@ public abstract class AbstractSequence<C extends Compound> implements Sequence<C
      * @return
      */
     public String getSequenceAsString() {
-
-        return getSequenceAsString(this.getBioBegin(), this.getBioEnd(), Strand.POSITIVE);
+        return SequenceMixin.toString(this);
+//        return getSequenceAsString(this.getBioBegin(), this.getBioEnd(), Strand.POSITIVE);
 
     }
 

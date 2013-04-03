@@ -212,6 +212,27 @@ public class DNATests {
         assertThat("Last index of N compound reports length", seq.getLastIndexOf(n), is(length));
     }
 
+    @Test
+    public void kmerNonOverlap() {
+        DNASequence d = new DNASequence("ATGTGCA");
+        List<SequenceView<NucleotideCompound>> l =
+                SequenceMixin.nonOverlappingKmers(d, 3);
+        assertThat("Asserting we generate only 2 k-mers", l.size(), is(2));
+        assertThat("Asserting first k-mer", l.get(0).getSequenceAsString(), is("ATG"));
+        assertThat("Asserting second k-mer", l.get(1).getSequenceAsString(), is("TGC"));
+    }
+
+    @Test
+    public void kmerOverlap() {
+        DNASequence d = new DNASequence("ATGTT");
+        List<SequenceView<NucleotideCompound>> l =
+                SequenceMixin.overlappingKmers(d, 3);
+        assertThat("Asserting we generate only 3 k-mers", l.size(), is(3));
+        assertThat("Asserting first k-mer", l.get(0).getSequenceAsString(), is("ATG"));
+        assertThat("Asserting second k-mer", l.get(1).getSequenceAsString(), is("TGT"));
+        assertThat("Asserting second k-mer", l.get(2).getSequenceAsString(), is("GTT"));
+    }
+
 //  @Test
 //  public void randomTwoBit() throws Exception {
 //    int[] ar = new int[1000000];
