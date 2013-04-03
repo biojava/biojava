@@ -25,7 +25,7 @@
 package org.biojava3.protmod;
 
 import java.util.Collection;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 /**
@@ -36,7 +36,7 @@ import java.util.Set;
  * @since 3.0
  */
 public class ProteinModificationImpl 
-implements ProteinModification {
+implements ProteinModification , Comparable<ProteinModification> {
 	
 	private final String id;	
 	private final ModificationCondition condition;
@@ -113,23 +113,13 @@ implements ProteinModification {
 	
 	@Override
 	public String toString() {
-		return printModification(this);
-//		StringBuilder sb = new StringBuilder();
-//		
-//		sb.append("ID:"+getId());
-//		sb.append("\nPDBCC ID:"+getPdbccId());
-//		sb.append("\tPDBCC name:"+getPdbccName());
-//		sb.append("\nRESID ID:"+getResidId());
-//		sb.append("\tRESID name:"+getResidName());
-//		sb.append("\nPSI-MOD ID:"+getPsimodId());
-//		sb.append("\tPSI-MOD name:"+getPsimodName());
-//		sb.append("\nDescription:"+getDescription());
-//		sb.append("\nSystematic name:"+getSystematicName());
-//		sb.append("\nCategory:"+getCategory().label());
-//		sb.append("\nOccurrence type:"+getOccurrenceType().label());
-//		sb.append("\nKeywords:"+getKeywords());
-//		sb.append("\nCondition:"+getCondition());
-//		return sb.toString();
+		return "ProteinModificationImpl [id=" + id + ", condition=" + condition
+				+ ", category=" + category + ", occurrenceType="
+				+ occurrenceType + ", pdbccId=" + pdbccId + ", pdbccName="
+				+ pdbccName + ", residId=" + residId + ", residName="
+				+ residName + ", psimodId=" + psimodId + ", psimodName="
+				+ psimodName + ", sysName=" + sysName + ", formula=" + formula
+				+ ", keywords=" + keywords + "]";
 	}
 	
 	private String printModification(ProteinModificationImpl mod) {
@@ -220,6 +210,7 @@ implements ProteinModification {
 		return true;
 	}
 	
+	
 
 	
 	/**
@@ -241,7 +232,7 @@ implements ProteinModification {
 		private String sysName = null;
 		private String formula = null;
 		
-		private Set<String> keywords = new HashSet<String>();
+		private Set<String> keywords = new LinkedHashSet<String>();
 		
 		/**
 		 * 
@@ -279,7 +270,7 @@ implements ProteinModification {
 			this.sysName = copyFrom.getSystematicName();
 			this.formula = copyFrom.getFormula();
 			
-			this.keywords = new HashSet<String>(copyFrom.getKeywords());
+			this.keywords = new LinkedHashSet<String>(copyFrom.getKeywords());
 		}
 		
 		public Builder setCategory(final ModificationCategory cat) {
@@ -438,6 +429,14 @@ implements ProteinModification {
 		this.sysName = builder.sysName;
 		this.formula = builder.formula;
 		
-		this.keywords = new HashSet<String>(builder.keywords);
+		this.keywords = new LinkedHashSet<String>(builder.keywords);
+	}
+
+	@Override
+	public int compareTo(ProteinModification arg0) {
+		if ( this.equals(arg0))
+			return 0;
+		
+		return this.toString().compareTo(arg0.toString());
 	}
 }

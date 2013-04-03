@@ -80,6 +80,7 @@ public class NCBIQBlastService implements RemotePairwiseAlignmentService {
 	private String tool = "biojava3";
 	 
 
+	private String cmd = null;
 	private String seq = null;
 	private String tmp = null;
 	private String prog = null;
@@ -131,32 +132,57 @@ public class NCBIQBlastService implements RemotePairwiseAlignmentService {
 	 *              three wrapper methods
 	 * @param rpa :a <code>RemotePairwiseAlignmentProperties</code> object
 	 * @return rid : the ID of this request on the NCBI QBlast server
-	 * @throws Exception if unable to connect to the NCBI QBlast service
+	 * @throws Exception if unable to connect to the NCBI QBlast service or if any of the required parameters (QUERY,PROGRAM or DATABASE) are not set
 	 */
 	private String sendActualAlignementRequest(String str,
 			RemotePairwiseAlignmentProperties rpa) throws Exception {
 
-		seq = "QUERY=" + str;
-		prog = "PROGRAM=" + rpa.getAlignmentOption("PROGRAM");
-		db = "DATABASE=" + rpa.getAlignmentOption("DATABASE");
-
-		if (prog == null || db == null || str == null || str.length() == 0) {
+		if(rpa.getAlignmentOption("PROGRAM")=="not_set"){
 			throw new Exception(
-					"Impossible to execute QBlast request. One or more of sequence|database|program has not been set correctly.\n");
+			"Impossible to execute QBlast request. Your program has not been set correctly.\n");			
 		}
-
-		String cmd = "CMD=Put&SERVICE=plain&" + seq + "&" + prog + "&"
-				+ db + "&" + "FORMAT_TYPE=HTML"+"&TOOL="+getTool()+"&EMAIL="+getEmail();
-
+		else{
+			prog = "PROGRAM=" + rpa.getAlignmentOption("PROGRAM");			
+		}
+		
+		if(rpa.getAlignmentOption("DATABASE")=="not_set"){
+			throw new Exception(
+			"Impossible to execute QBlast request.  Your database has not been set correctly.\n");			
+		}
+		else{
+			db = "DATABASE=" + rpa.getAlignmentOption("DATABASE");			
+		}
+		
+		if(str.length() == 0 || str == null){
+			throw new Exception(
+			"Impossible to execute QBlast request. Your sequence has not been set correctly.\n");			
+		}
+		
+		else{
+			seq = "QUERY=" + str;
+		}
+		
+		cmd = "CMD=Put&" + prog + "&" + db + "&" + "FORMAT_TYPE=HTML"+"&TOOL="+this.getTool()+"&EMAIL="+this.getEmail();
+		
 		/* 
-		 * This is a not so good hack to be fix by forcing key 
-		 * checking in RemoteQBlastAlignmentProperties 
+		 * This code block deals with what to do with the various non-mendatory parameters 
 		 *
 		 * */
-		if (rpa.getAlignmentOption("OTHER_ADVANCED") != "not_set") {
-			cmd += cmd + "&" + rpa.getAlignmentOption("OTHER_ADVANCED");
+		if (rpa.getAlignmentOption("EXPECT")!="default") {
+			cmd = cmd + "&EXPECT=" + rpa.getAlignmentOption("EXPECT");
 		}
 
+		if (rpa.getAlignmentOption("WORD_SIZE")!="default") {
+			cmd = cmd + "&WORD_SIZE=" + rpa.getAlignmentOption("WORD_SIZE");
+		}
+
+		if (rpa.getAlignmentOption("OTHER_ADVANCED")!="not_set") {
+			cmd = cmd + "&" + rpa.getAlignmentOption("OTHER_ADVANCED");
+		}
+
+		// Let's end with the sequence's string
+		cmd = cmd + "&"+ seq;
+		
 		try {
 
 			uConn = setQBlastServiceProperties(aUrl.openConnection());
@@ -167,8 +193,7 @@ public class NCBIQBlastService implements RemotePairwiseAlignmentService {
 			fromQBlast.flush();
 
 			// Get the response
-			rd = new BufferedReader(new InputStreamReader(uConn
-					.getInputStream()));
+			rd = new BufferedReader(new InputStreamReader(uConn.getInputStream()));
 
 			String line = "";
 
@@ -349,14 +374,14 @@ public class NCBIQBlastService implements RemotePairwiseAlignmentService {
 	 */
 	public InputStream getAlignmentResults(String id,
 			RemotePairwiseAlignmentOutputProperties rb) throws Exception {
-		if (holder.containsKey(id)) {
+		if (holder.containsKey(id)) {			
 			String srid = "CMD=Get&RID=" + id + "&"
 					+ rb.getOutputOption("FORMAT_TYPE") + "&"
 					+ rb.getOutputOption("ALIGNMENT_VIEW") + "&"
 					+ rb.getOutputOption("DESCRIPTIONS") + "&"
-					+ rb.getOutputOption("ALIGNMENTS")
+					+ rb.getOutputOption("ALIGNMENTS")+ "&"
 					+ "&TOOL="+getTool()+"&EMAIL="+getEmail();
-
+			
 			try {
 				uConn = setQBlastServiceProperties(aUrl.openConnection());
 
@@ -364,6 +389,8 @@ public class NCBIQBlastService implements RemotePairwiseAlignmentService {
 				fromQBlast.write(srid);
 				fromQBlast.flush();
 
+				
+				
 				return uConn.getInputStream();
 
 			} catch (IOException ioe) {

@@ -66,6 +66,7 @@ public class CliTools {
 	 * @throws ConfigurationException
 	 */
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public static String[] configureBean(Object bean, String[] args) 
 	throws ConfigurationException
 	{

@@ -363,16 +363,16 @@ public class SequenceDisplay extends JPanel implements ChangeListener {
 		}
 		Atom[] ca1 = structurePairAligner.getAlignmentAtoms(s);
 		Chain c = new ChainImpl();
-		c.setName("1");
+		c.setChainID("1");
 		for (Atom atom : ca1) {
 			
-			Group g = atom.getParent();
+			Group g = atom.getGroup();
 			
-			Chain parentChain = g.getParent();
+			Chain parentChain = g.getChain();
 			
 			c.addGroup(g);
 			// hack for Jmol?			
-			g.setParent(parentChain);
+			g.setChain(parentChain);
 		}
 		panel.setChain(c);
 

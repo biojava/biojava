@@ -91,8 +91,8 @@ public class MyTestHelper
          // keep an independent copy of them for tests further down..
          Atom[] ca3 = new Atom[ca2.length];
          for (int i = 0 ; i < ca2.length; i++){
-            Group g = (Group)ca2[i].getParent().clone();
-            g.setChain(ca2[i].getParent().getChain());
+            Group g = (Group)ca2[i].getGroup().clone();
+            g.setChain(ca2[i].getGroup().getChain());
             ca3[i] = g.getAtom(StructureTools.caAtomName);
          }
 

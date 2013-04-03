@@ -23,6 +23,7 @@ public class ClusterAltAligs {
 		cluster(aligs, DEFAULT_CLUSTER_CUTOFF);
 	}
 	
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public static void cluster(AlternativeAlignment[] aligs, int cutoff){
 		
 		

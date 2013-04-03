@@ -21,6 +21,7 @@ package org.biojava.bio.structure.align.util;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Map;
 
 import org.biojava.bio.structure.align.ce.StartupParameters;
 import org.biojava.bio.structure.io.PDBFileReader;
@@ -50,12 +51,23 @@ public class UserConfiguration
    public static final String TMP_DIR = "java.io.tmpdir";
    public static final String PDB_DIR = "PDB_DIR";
    
+   /**
+    * Default UserConfiguration:
+    * <ul>
+    * <li>split directory</li>
+    * <li>autofetch files</li>
+    * <li>default download location. This is the first specified of:
+    * 	<ol><li>PDB_DIR system property (for instance, -DPDB_DIR=/tmp)</li>
+    *   <li>PDB_DIR environment variable</li>
+    *   <li>System temp directory (java.io.tmpdir property)</li>
+    *   </ol>
+    * </li>
+    * </ul>
+    */
    public UserConfiguration(){
       isSplit = true;
       autoFetch = true;
       // accessing temp. OS directory:         
-      
-
       String userProvidedDir = System.getProperty(PDB_DIR);
 
       if ( userProvidedDir != null ) {
@@ -63,10 +75,13 @@ public class UserConfiguration
          pdbFilePath = userProvidedDir;
          
       } else {
+         Map<String,String> env = System.getenv();
 
-         String tempdir = System.getProperty(TMP_DIR);
-         
-         pdbFilePath = tempdir;
+         if( env.containsKey(PDB_DIR)) {
+            pdbFilePath = env.get(PDB_DIR);
+         } else {
+            pdbFilePath = System.getProperty(TMP_DIR);
+         }   
       }
       if ( ! pdbFilePath.endsWith(PDBFileReader.lineSplit) )
          pdbFilePath = pdbFilePath + PDBFileReader.lineSplit;

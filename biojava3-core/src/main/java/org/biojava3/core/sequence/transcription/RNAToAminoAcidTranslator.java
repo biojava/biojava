@@ -56,6 +56,7 @@ public class RNAToAminoAcidTranslator extends AbstractCompoundTranslator<Nucleot
     //Cheeky lookup which uses a hashing value; key is to switch to using this all the time
     private final Codon[] codonArray = new Codon[64000];
     private final AminoAcidCompound unknownAminoAcidCompound;
+    private final AminoAcidCompound methionineAminoAcidCompound;
     private final boolean translateNCodons;
 
     public RNAToAminoAcidTranslator(
@@ -85,8 +86,8 @@ public class RNAToAminoAcidTranslator extends AbstractCompoundTranslator<Nucleot
             codonL.add(codon);
             
         }
-
         unknownAminoAcidCompound = aminoAcids.getCompoundForString("X");
+        methionineAminoAcidCompound = aminoAcids.getCompoundForString("M");
     }
 
     /**
@@ -95,7 +96,7 @@ public class RNAToAminoAcidTranslator extends AbstractCompoundTranslator<Nucleot
      * are ignored according to the specification of {@link WindowedSequence}.
      */
 
-
+    @Override
     public List<Sequence<AminoAcidCompound>> createSequences(
             Sequence<NucleotideCompound> originalSequence) {
 
@@ -103,34 +104,44 @@ public class RNAToAminoAcidTranslator extends AbstractCompoundTranslator<Nucleot
         
         Iterable<SequenceView<NucleotideCompound>> iter =
             new WindowedSequence<NucleotideCompound>(originalSequence, 3);
+
+        boolean first = true;
                 
         for (SequenceView<NucleotideCompound> element : iter) {
-            AminoAcidCompound aminoAcid;
+            AminoAcidCompound aminoAcid = null;
 
             int i =1;
             Table.CaseInsensitiveTriplet triplet = new Table.CaseInsensitiveTriplet(
               element.getCompoundAt(i++), element.getCompoundAt(i++), element.getCompoundAt(i++));
 
-            Codon target;
+            Codon target = null;
 
             int arrayIndex = triplet.intValue();
             //So long as we're within range then access
             if(arrayIndex > -1 && arrayIndex < codonArray.length) {
                 target = codonArray[arrayIndex];
-                aminoAcid = target.getAminoAcid();
+                if (target != null) {
+                    aminoAcid = target.getAminoAcid();
+                }
             }
             //Otherwise we have to use the Map
             else {
                 target = quickLookup.get(triplet);
                 aminoAcid = target.getAminoAcid();
             }
-            
             if(aminoAcid == null && translateNCodons()) {
                 aminoAcid = unknownAminoAcidCompound;
             }
-            addCompoundsToList(Arrays.asList(aminoAcid), workingList);
-        }
 
+            else {
+                if(first && initMetOnly && target.isStart()) {
+                    aminoAcid = methionineAminoAcidCompound;
+                }
+            }
+
+            addCompoundsToList(Arrays.asList(aminoAcid), workingList);
+            first = false;
+        }
         postProcessCompoundLists(workingList);
 
         return workingListToSequences(workingList);
@@ -144,28 +155,9 @@ public class RNAToAminoAcidTranslator extends AbstractCompoundTranslator<Nucleot
     protected void postProcessCompoundLists(
             List<List<AminoAcidCompound>> compoundLists) {
         for (List<AminoAcidCompound> compounds : compoundLists) {
-            if (initMetOnly) {
-                initMet(compounds);
-            }
             if (trimStops) {
                 trimStop(compounds);
             }
-        }
-    }
-
-    private void initMet(List<AminoAcidCompound> sequence) {
-        AminoAcidCompound initMet = getToCompoundSet().getCompoundForString("M");
-        AminoAcidCompound start = sequence.get(0);
-        boolean isStart = false;
-        for (Codon c : aminoAcidToCodon.get(start)) {
-            if (c.isStart()) {
-                isStart = true;
-                break;
-            }
-        }
-
-        if (isStart) {
-            sequence.set(0, initMet);
         }
     }
 
@@ -176,11 +168,13 @@ public class RNAToAminoAcidTranslator extends AbstractCompoundTranslator<Nucleot
     protected void trimStop(List<AminoAcidCompound> sequence) {
         AminoAcidCompound stop = sequence.get(sequence.size() - 1);
         boolean isStop = false;
-        for (Codon c : aminoAcidToCodon.get(stop)) {
-            if (c.isStop()) {
-                isStop = true;
-                break;
-            }
+        if (aminoAcidToCodon.containsKey(stop)) {
+          for (Codon c : aminoAcidToCodon.get(stop)) {
+              if (c.isStop()) {
+                  isStop = true;
+                  break;
+              }
+          }
         }
 
         if (isStop) {

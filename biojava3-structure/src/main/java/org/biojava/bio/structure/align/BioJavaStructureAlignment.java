@@ -24,10 +24,8 @@
 
 package org.biojava.bio.structure.align;
 
-import java.util.List;
 
 import org.biojava.bio.structure.Atom;
-import org.biojava.bio.structure.Calc;
 import org.biojava.bio.structure.Group;
 import org.biojava.bio.structure.StructureException;
 import org.biojava.bio.structure.StructureTools;
@@ -187,8 +185,8 @@ implements StructureAlignment  {
 				optAln[0][0][pos] = align_se.getRow();
 				optAln[0][1][pos] = align_se.getCol();
 				
-				char l1 = getOneLetter(ca1[align_se.getRow()].getParent());
-				char l2 = getOneLetter(ca2[align_se.getCol()].getParent());
+				char l1 = getOneLetter(ca1[align_se.getRow()].getGroup());
+				char l2 = getOneLetter(ca2[align_se.getCol()].getGroup());
 				
 				alnseq1[ia] = Character.toUpperCase(l1);
 				alnseq2[ia] = Character.toUpperCase(l2);
@@ -201,13 +199,13 @@ implements StructureAlignment  {
 				if (align_se.getRow() == -1 ) {
 					alnseq1[ia] = '-';
 				} else {
-					char l1 = getOneLetter(ca1[align_se.getRow()].getParent());
+					char l1 = getOneLetter(ca1[align_se.getRow()].getGroup());
 					alnseq1[ia] = Character.toLowerCase(l1);
 				}
 				if ( align_se.getCol() == -1 ) {
 					alnseq2[ia] = '-';
 				} else {
-					char l2 = getOneLetter(ca2[align_se.getCol()].getParent());
+					char l2 = getOneLetter(ca2[align_se.getCol()].getGroup());
 					alnseq2[ia] = Character.toLowerCase(l2);
 				}
 				

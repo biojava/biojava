@@ -22,7 +22,7 @@
  */
 package org.biojava3.core.sequence;
 
-import java.util.logging.Logger;
+
 import org.biojava3.core.sequence.compound.NucleotideCompound;
 import org.biojava3.core.sequence.template.CompoundSet;
 
@@ -30,12 +30,12 @@ import org.biojava3.core.sequence.template.CompoundSet;
  * Represents a exon or coding sequence in a gene. It has a parent {@link TranscriptSequence}
  * where a TranscriptSequence is the child of a GeneSequence
  * Not important for protein construction but the phase is used if outputting the gene
- * to a gff3 file. {@linkplain http://www.sequenceontology.org/gff3.shtml}
+ * to a gff3 file. {@link http://www.sequenceontology.org/gff3.shtml}
  * @author Scooter Willis
  */
 public class CDSSequence extends DNASequence {
 
-    private static final Logger log = Logger.getLogger(CDSSequence.class.getName());
+    //private static final Logger log = Logger.getLogger(CDSSequence.class.getName());
     Integer phase = 0; // 0, 1, 2 
     TranscriptSequence parentTranscriptSequence;
 
@@ -62,7 +62,7 @@ public class CDSSequence extends DNASequence {
 
     /**
      *
-     * @return
+     * @return get the phase
      */
     public Integer getPhase() {
         return phase;
@@ -70,7 +70,7 @@ public class CDSSequence extends DNASequence {
 
     /**
      *
-     * @return
+     * @return get the strand
      */
     public Strand getStrand() {
         return parentTranscriptSequence.getStrand();
@@ -80,9 +80,9 @@ public class CDSSequence extends DNASequence {
      * A CDS sequence if negative stranded needs to be reverse complement
      * to represent the actual coding sequence. When getting a ProteinSequence
      * from a TranscriptSequence this method is callled for each CDSSequence
-     * {@linkplain http://www.sequenceontology.org/gff3.shtml}
-     * {@linkplain http://biowiki.org/~yam/bioe131/GFF.ppt}
-     * @return
+     * {@link http://www.sequenceontology.org/gff3.shtml}
+     * {@link http://biowiki.org/~yam/bioe131/GFF.ppt}
+     * @return coding sequence
      */
     public String getCodingSequence() {
         String sequence = this.getSequenceAsString(getBioBegin(), getBioEnd(), getStrand());

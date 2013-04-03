@@ -26,8 +26,6 @@ package demo;
 
 import org.biojava.bio.structure.Atom;
 import org.biojava.bio.structure.Chain;
-import org.biojava.bio.structure.GroupType;
-import org.biojava.bio.structure.HetatomImpl;
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.align.util.AtomCache;
 import org.biojava.bio.structure.io.FileParsingParameters;
@@ -88,7 +86,8 @@ public class DemoLoadStructure
          System.out.println(structure);
          
          Chain c = structure.getChainByPDB("C");
-         
+       
+         System.out.print(c);
 
       } catch (Exception e){
          e.printStackTrace();
@@ -101,18 +100,13 @@ public class DemoLoadStructure
       String chainName = "4hhb.A";
       String entityName = "4hhb:0";
 
-      // split PDB file installation?
-      boolean isPdbDirectorySplit = true;
-
-      String pdbFilePath = "/tmp/";
-
       // we can set a flag if the file should be cached in memory
       // this will enhance IO massively if the same files have to be accessed over and over again.
       // since this is a soft cache, no danger of memory leak
       // this is actually not necessary to provide, since the default is "true" if the AtomCache is being used.
       System.setProperty(InputStreamProvider.CACHE_PROPERTY, "true");
 
-      AtomCache cache = new AtomCache(pdbFilePath,isPdbDirectorySplit);
+      AtomCache cache = new AtomCache();
 
       try {
          System.out.println("======================");

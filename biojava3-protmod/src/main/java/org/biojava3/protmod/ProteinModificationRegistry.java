@@ -58,13 +58,15 @@ public class ProteinModificationRegistry {
 	
 	private static String DIR_XML_PTM_LIST = "ptm_list.xml";
 	
+	
+	
 	/**
 	 * register common protein modifications from XML file.
 	 */
-	private static void registerCommonProteinModifications() {
+	private static void registerCommonProteinModifications(InputStream inStream) {
 		try {
-			InputStream isXml = ProteinModification.class.getResourceAsStream(DIR_XML_PTM_LIST);
-			ProteinModificationXmlReader.registerProteinModificationFromXml(isXml);
+			
+			ProteinModificationXmlReader.registerProteinModificationFromXml(inStream);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -75,13 +77,39 @@ public class ProteinModificationRegistry {
 	 */
 	public static void init() {
 		lazyInit();
+		
 	}
+	
+	/** Initialization the static variables and register common modifications.
+	 * Allows external user to provide alternative ptm_list.xml file instead of the one contained in this jar file.
+	 * 
+	 * @param inStream InputStream to a XML file containing the list of PTMs (as in ptm_list.xml)
+	 */
+	 
+	public static void init(InputStream inStream) {
+		lazyInit(inStream);
+	}
+	
+	
+	
+	/**
+	 * Lazy Initialization the static variables and register common modifications.
+	 * just opens the stream to ptm_list.xml and delegates to lazyInit(InputStream) for parsing. 
+	 */
+	private static synchronized void lazyInit() {
+		if (registry==null) {	
+			InputStream isXml = ProteinModification.class.getResourceAsStream(DIR_XML_PTM_LIST);
+			lazyInit(isXml);
+		}
+	}
+	
 	
 	/**
 	 * Lazy Initialization the static variables and register common modifications. 
 	 */
-	private static void lazyInit() {
+	private static synchronized void lazyInit(InputStream inStream) {
 		if (registry==null) {	
+						
 			registry = 	new HashSet<ProteinModification>();
 			byId = new HashMap<String, ProteinModification>();
 			byResidId = new HashMap<String, Set<ProteinModification>>();
@@ -99,7 +127,7 @@ public class ProteinModificationRegistry {
 			for (ModificationOccurrenceType occ:ModificationOccurrenceType.values()) {
 				byOccurrenceType.put(occ, new HashSet<ProteinModification>());
 			}
-			registerCommonProteinModifications();
+			registerCommonProteinModifications(inStream);					
 		}
 	}
 

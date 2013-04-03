@@ -30,6 +30,8 @@ import java.util.Map;
 import java.util.Set;
 
 import org.biojava3.core.exceptions.CompoundNotFoundError;
+import org.biojava3.core.util.Equals;
+import org.biojava3.core.util.Hashcoder;
 
 
 /**
@@ -179,4 +181,25 @@ public abstract class AbstractCompoundSet<C extends Compound> implements Compoun
     public boolean isComplementable() {
         return false;
     }
+
+    @Override
+    public int hashCode() {
+        int s = Hashcoder.SEED;
+        s = Hashcoder.hash(s, charSeqToCompound);
+        s = Hashcoder.hash(s, equivalentsMap);
+        return s;
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public boolean equals(Object o) {
+        if(Equals.classEqual(this, o)) {
+            AbstractCompoundSet<C> that = (AbstractCompoundSet<C>)o;
+            return  Equals.equal(charSeqToCompound, that.charSeqToCompound) &&
+                    Equals.equal(equivalentsMap, that.equivalentsMap);
+        }
+        return false;
+    }
+
+
 }

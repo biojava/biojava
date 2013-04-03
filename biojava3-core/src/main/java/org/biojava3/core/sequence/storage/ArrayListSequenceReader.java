@@ -39,6 +39,8 @@ import org.biojava3.core.sequence.template.CompoundSet;
 import org.biojava3.core.sequence.template.SequenceMixin;
 import org.biojava3.core.sequence.template.SequenceReader;
 import org.biojava3.core.sequence.template.SequenceView;
+import org.biojava3.core.util.Equals;
+import org.biojava3.core.util.Hashcoder;
 
 /**
  * Stores a Sequence as a collection of compounds in an ArrayList
@@ -49,6 +51,8 @@ public class ArrayListSequenceReader<C extends Compound> implements SequenceRead
 
     private CompoundSet<C> compoundSet;
     private ArrayList<C> parsedCompounds = new ArrayList<C>();
+
+    private volatile Integer hashcode = null;
 
     /**
      *
@@ -173,6 +177,7 @@ public class ArrayListSequenceReader<C extends Compound> implements SequenceRead
         // Horrendously inefficient - pretty much the way the old BJ did things.
         // TODO Should be optimised.
         this.parsedCompounds.clear();
+        hashcode = null;
         int maxCompoundLength = compoundSet.getMaxSingleCompoundStringLength();
         boolean maxCompundLengthEqual1 = true;
         if (maxCompoundLength > 1) {
@@ -247,5 +252,27 @@ public class ArrayListSequenceReader<C extends Compound> implements SequenceRead
     @Override
     public SequenceView<C> getInverse() {
         return SequenceMixin.inverse(this);
+    }
+
+    @Override
+    public int hashCode() {
+        if(hashcode == null) {
+            int s = Hashcoder.SEED;
+            s = Hashcoder.hash(s, parsedCompounds);
+            s = Hashcoder.hash(s, compoundSet);
+            hashcode = s;
+        }
+        return hashcode;
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public boolean equals(Object o) {
+        if(Equals.classEqual(this, o)) {
+            ArrayListSequenceReader<C> that = (ArrayListSequenceReader<C>)o;
+            return  Equals.equal(parsedCompounds, that.parsedCompounds) &&
+                    Equals.equal(compoundSet, that.compoundSet);
+        }
+        return false;
     }
 }

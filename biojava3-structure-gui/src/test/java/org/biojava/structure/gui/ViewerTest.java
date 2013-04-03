@@ -1,15 +1,7 @@
 package org.biojava.structure.gui;
 
-import java.awt.Color;
-
 
 import org.biojava.bio.structure.Structure;
-import org.biojava.bio.structure.StructureImpl;
-import org.biojava.bio.structure.io.PDBFileReader;
-import org.biojava3.structure.gui.JmolViewerImpl;
-import org.biojava3.structure.gui.RenderStyle;
-import org.biojava3.structure.gui.Selection;
-import org.biojava3.structure.gui.SelectionImpl;
 import org.biojava3.structure.gui.StructureViewer;
 
 

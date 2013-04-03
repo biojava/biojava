@@ -41,13 +41,13 @@ import org.biojava.bio.structure.Atom;
 import org.biojava.bio.structure.Group;
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureTools;
-import org.biojava.bio.structure.align.ce.AbstractUserArgumentProcessor;
 import org.biojava.bio.structure.align.gui.JPrintPanel;
 import org.biojava.bio.structure.align.gui.jmol.MyJmolStatusListener;
 import org.biojava.bio.structure.domain.ProteinDomainParser;
 import org.biojava.bio.structure.domain.pdp.Domain;
 import org.biojava.bio.structure.domain.pdp.Segment;
-import org.biojava.bio.structure.gui.util.ColorUtils;
+import org.biojava.bio.structure.gui.util.color.ColorUtils;
+import org.biojava.bio.structure.scop.ScopDatabase;
 import org.biojava.bio.structure.scop.ScopDomain;
 import org.biojava.bio.structure.scop.ScopInstallation;
 import org.jmol.adapter.smarter.SmarterJmolAdapter;
@@ -249,11 +249,13 @@ implements ActionListener
 		String pdbId = structure.getPDBCode();
 		if ( pdbId == null)
 			return;
-		String pdbLocation = System.getProperty(AbstractUserArgumentProcessor.PDB_DIR);
-		ScopInstallation scop = new ScopInstallation(pdbLocation);
+		ScopDatabase scop = new ScopInstallation();
 
 		List<ScopDomain> domains = scop.getDomainsForPDB(pdbId);
-
+		if ( domains == null) {
+			System.err.println("No SCOP domains found for " + pdbId);
+			return;
+		}
 		int i = -1;
 		for ( ScopDomain domain : domains){
 			i++;
@@ -297,13 +299,13 @@ implements ActionListener
 				//System.out.println("DOMAIN:" + i + " size:" + dom.size + " " +  dom.score);
 				List<Segment> segments = dom.getSegments();
 				Color c1 = ColorUtils.colorWheel[i];
-				float fraction = 0f;
+				//float fraction = 0f;
 				for ( Segment s : segments){
 					//System.out.println("   Segment: " + s);
 					//Color c1 = ColorUtils.rotateHue(c, fraction);
-					fraction += 1.0/(float)segments.size();
-					int start = s.from;
-					int end = s.to;
+				//	fraction += 1.0/(float)segments.size();
+					int start = s.getFrom();
+					int end = s.getTo();
 					Group startG = ca[start].getGroup();
 					Group endG = ca[end].getGroup();
 					System.out.println("   Segment: " +startG.getResidueNumber() +":" + startG.getChainId() + " - " + endG.getResidueNumber()+":"+endG.getChainId() + " " + s);

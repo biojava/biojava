@@ -74,7 +74,7 @@ import org.biojava.bio.structure.align.gui.jmol.AtomInfoParser;
 import org.biojava.bio.structure.align.gui.jmol.JmolPanel;
 import org.biojava.bio.structure.align.gui.jmol.MyJmolStatusListener;
 import org.biojava.bio.structure.align.gui.jmol.RasmolCommandListener;
-import org.biojava.bio.structure.gui.util.ColorUtils;
+import org.biojava.bio.structure.gui.util.color.ColorUtils;
 
 
 import org.jmol.api.JmolViewer;
@@ -629,7 +629,32 @@ public class StructureAlignmentJmol implements MouseMotionListener, MouseListene
       return j.toString();
    }
    
-   
+   public static String getJmolScript4Block(AFPChain afpChain, Atom[] ca1, Atom[] ca2, int blockNr){
+	   int blockNum = afpChain.getBlockNum();
+	   
+	   if ( blockNr >= blockNum)
+		   return DEFAULT_SCRIPT;
+		   		   
+	   int[] optLen = afpChain.getOptLen();
+	   int[][][] optAln = afpChain.getOptAln();
+
+	   if ( optLen == null)
+		   return DEFAULT_SCRIPT;
+
+	   StringWriter jmol = new StringWriter();
+	   jmol.append(DEFAULT_SCRIPT);
+
+	   jmol.append("select */2; color lightgrey; model 2; ");
+	      
+	   printJmolScript4Block(ca1, ca2, blockNum, optLen, optAln, jmol, blockNr);
+	   
+	   jmol.append("model 0;  ");
+	   jmol.append(LIGAND_DISPLAY_SCRIPT);
+	   //System.out.println(jmol);
+	   return jmol.toString();
+
+	   
+   }
    
 
    private static String getMultiBlockJmolScript(AFPChain afpChain, Atom[] ca1, Atom[] ca2)
@@ -649,57 +674,7 @@ public class StructureAlignmentJmol implements MouseMotionListener, MouseListene
       
       for(int bk = 0; bk < blockNum; bk ++)       {
 
-         //the block nr determines the color...
-         int colorPos = bk;
-         if ( colorPos > ColorUtils.colorWheel.length){
-            colorPos = ColorUtils.colorWheel.length % colorPos ;
-         }
-         
-         Color end1 = ColorUtils.rotateHue(ColorUtils.orange,  (1.0f  / 24.0f) * blockNum  );
-         Color end2 = ColorUtils.rotateHue(ColorUtils.cyan,    (1.0f  / 24.0f) * (blockNum +1)  ) ;
-         
-         Color c   = ColorUtils.getIntermediate(ColorUtils.orange, end1, blockNum, bk);
-         Color cd   = ColorUtils.getIntermediate(ColorUtils.cyan, end2, blockNum, bk);
-         
-         
-         List<String> pdb1 = new ArrayList<String>();
-         List<String> pdb2 = new ArrayList<String>();
-         for ( int i=0;i< optLen[bk];i++) {
-            ///
-            int pos1 = optAln[bk][0][i];
-            pdb1.add(JmolTools.getPdbInfo(ca1[pos1]));
-            int pos2 = optAln[bk][1][i];
-            pdb2.add(JmolTools.getPdbInfo(ca2[pos2]));
-         }
-
-         // and now select the aligned residues...
-         StringBuffer buf = new StringBuffer("select ");
-         int count = 0;
-         for (String res : pdb1 ){
-            if ( count > 0)
-               buf.append(",");
-            buf.append(res);
-            buf.append("/1");
-            count++;
-         }
-
-         buf.append("; backbone 0.6 ; color [" + cd.getRed() +"," + cd.getGreen() +"," +cd.getBlue()+"]; select ");
-         
-         count = 0;
-         for (String res :pdb2 ){
-            if ( count > 0)
-               buf.append(",");
-         
-            buf.append(res);
-            buf.append("/2");
-            count++;
-         }
-         //buf.append("; set display selected;");
-
-         buf.append("; backbone 0.6 ; color [" + c.getRed() +"," + c.getGreen() +"," +c.getBlue()+"];");
-
-         // now color this block:
-         jmol.append(buf);
+         printJmolScript4Block(ca1, ca2, blockNum, optLen, optAln, jmol, bk);
       }
       jmol.append("model 0;  ");
       jmol.append(LIGAND_DISPLAY_SCRIPT);
@@ -708,6 +683,61 @@ public class StructureAlignmentJmol implements MouseMotionListener, MouseListene
 
 
    }
+
+private static void printJmolScript4Block(Atom[] ca1, Atom[] ca2, int blockNum,
+		int[] optLen, int[][][] optAln, StringWriter jmol, int bk) {
+	//the block nr determines the color...
+	 int colorPos = bk;
+	 if ( colorPos > ColorUtils.colorWheel.length){
+	    colorPos = ColorUtils.colorWheel.length % colorPos ;
+	 }
+	 
+	 Color end1 = ColorUtils.rotateHue(ColorUtils.orange,  (1.0f  / 24.0f) * blockNum  );
+	 Color end2 = ColorUtils.rotateHue(ColorUtils.cyan,    (1.0f  / 24.0f) * (blockNum +1)  ) ;
+	 
+	 Color c   = ColorUtils.getIntermediate(ColorUtils.orange, end1, blockNum, bk);
+	 Color cd   = ColorUtils.getIntermediate(ColorUtils.cyan, end2, blockNum, bk);
+	 
+	 
+	 List<String> pdb1 = new ArrayList<String>();
+	 List<String> pdb2 = new ArrayList<String>();
+	 for ( int i=0;i< optLen[bk];i++) {
+	    ///
+	    int pos1 = optAln[bk][0][i];
+	    pdb1.add(JmolTools.getPdbInfo(ca1[pos1]));
+	    int pos2 = optAln[bk][1][i];
+	    pdb2.add(JmolTools.getPdbInfo(ca2[pos2]));
+	 }
+
+	 // and now select the aligned residues...
+	 StringBuffer buf = new StringBuffer("select ");
+	 int count = 0;
+	 for (String res : pdb1 ){
+	    if ( count > 0)
+	       buf.append(",");
+	    buf.append(res);
+	    buf.append("/1");
+	    count++;
+	 }
+
+	 buf.append("; backbone 0.6 ; color [" + cd.getRed() +"," + cd.getGreen() +"," +cd.getBlue()+"]; select ");
+	 
+	 count = 0;
+	 for (String res :pdb2 ){
+	    if ( count > 0)
+	       buf.append(",");
+	 
+	    buf.append(res);
+	    buf.append("/2");
+	    count++;
+	 }
+	 //buf.append("; set display selected;");
+
+	 buf.append("; backbone 0.6 ; color [" + c.getRed() +"," + c.getGreen() +"," +c.getBlue()+"];");
+
+	 // now color this block:
+	 jmol.append(buf);
+}
 
    public void resetDisplay(){
 

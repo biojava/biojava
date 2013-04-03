@@ -4,11 +4,9 @@
   <parent>
     <artifactId>biojava</artifactId>
     <groupId>org.biojava</groupId>
-    <version>3.0.1</version>
+    <version>3.0.2</version>
   </parent>
-  <groupId>org.biojava</groupId>
   <artifactId>biojava3-protmod</artifactId>  
-  <version>3.0.1</version>
   <name>biojava3-protmod</name>
    <distributionManagement>
 		<downloadUrl>http://www.biojava.org/download/maven/</downloadUrl>
@@ -30,13 +28,12 @@
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
-      <version>3.8.1</version>
       <scope>test</scope>
     </dependency>
     <dependency>
     	<groupId>org.biojava</groupId>
     	<artifactId>biojava3-structure</artifactId>
-    	<version>3.0.1</version>
+    	<version>3.0.2</version>
     	<type>jar</type>
     	<scope>compile</scope>
     </dependency>
@@ -46,7 +43,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>2.0.2</version>
                 <configuration>
                     <source>1.6</source>
                     <target>1.6</target>

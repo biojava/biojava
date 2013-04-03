@@ -178,10 +178,10 @@ public class SecStruc {
       for (int i =0 ; i < groups.length ;i++){
          Group g = groups[i];
          SecStrucState state = (SecStrucState) g.getProperty("secstruc");
-         //	System.out.println("XX"+i+" "+g.getPDBCode() + " " + g.getPDBName() + iter.getCurrentChain().getName() + " " + state);
+         //	System.out.println("XX"+i+" "+g.getResidueNumber().toString() + " " + g.getPDBName() + iter.getCurrentChain().getName() + " " + state);
          buf.append((i+1) + "\t");
          buf.append(g.getPDBName()+ " ");
-         buf.append(g.getPDBCode() + "\t");
+         buf.append(g.getResidueNumber().toString() + "\t");
 
          boolean[] turns = state.getTurn();
          for (int t=0;t<3;t++){
@@ -236,7 +236,7 @@ public class SecStruc {
             if ( g.hasAminoAtoms()) {
 
                SecStrucGroup sg = new SecStrucGroup();
-               sg.setPDBCode(g.getPDBCode());
+               sg.setResidueNumber(g.getResidueNumber());
                sg.setPDBFlag(true);
                try {
                   sg.setPDBName(g.getPDBName());
@@ -262,9 +262,9 @@ public class SecStruc {
                }
 
                SecStrucState state = new SecStrucState();
-               Map m = sg.getProperties();
+               Map<String,Object> m = sg.getProperties();
                if ( m == null) {
-                  m = new HashMap();
+                  m = new HashMap<String, Object>();
                   sg.setProperties(m);
                }
 
@@ -376,7 +376,7 @@ public class SecStruc {
 
       if (one.getPDBName().equals("PRO")){
          if (debug)
-            System.out.println("     ignore: PRO " +     one.getPDBCode());
+            System.out.println("     ignore: PRO " +     one.getResidueNumber().toString());
 
          return ;
       }
@@ -426,7 +426,7 @@ public class SecStruc {
 
       if  ( debug ){
 
-         System.out.println("     cccc: " + one.getPDBCode() + " " + one.getPDBName() + " " +two.getPDBCode() + " " + two.getPDBName() +
+         System.out.println("     cccc: " + one.getResidueNumber().toString() + " " + one.getPDBName() + " " +two.getResidueNumber().toString() + " " + two.getPDBName() +
                String.format(" O ("+O.getPDBserial()+")..N ("+ N.getPDBserial()+"):%4.1f  |  ho:%4.1f - hc:%4.1f + nc:%4.1f - no:%4.1f " , dno,dho,dhc,dnc,dno));
 
       }
@@ -632,14 +632,15 @@ public class SecStruc {
     *
     *
     */
-   private static Atom calc_H(Atom C, Atom N, Atom CA)
+   @SuppressWarnings("unused")
+private static Atom calc_H(Atom C, Atom N, Atom CA)
    throws StructureException
    {
 
 
 
-      Atom nc  = Calc.substract(N,C);
-      Atom nca = Calc.substract(N,CA);
+      Atom nc  = Calc.subtract(N,C);
+      Atom nca = Calc.subtract(N,CA);
 
       Atom u_nc  = Calc.unitVector(nc)   ;
       Atom u_nca = Calc.unitVector(nca);
@@ -662,7 +663,7 @@ public class SecStruc {
 
    private static Atom calcSimple_H(Atom c,Atom o, Atom n) throws StructureException{
 
-      Atom h = Calc.substract(c,o);
+      Atom h = Calc.subtract(c,o);
       double dist = Calc.getDistance(o,c);
       //System.out.println(dist);
       double x = n.getX() + h.getX() / dist;

@@ -115,7 +115,7 @@ public class AFPChainFlipper {
 		n.setTotalLenIni(o.getTotalLenIni());		
 		n.setTotalRmsdIni(o.getTotalRmsdIni());
 		n.setTotalRmsdOpt(o.getTotalRmsdOpt());
-		
+		n.setTMScore(o.getTMScore());
 		
 		
 		// change direction of the Matrix and shift!

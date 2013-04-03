@@ -21,6 +21,7 @@
  */
 package org.biojava3.core.sequence.io;
 
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
@@ -54,7 +55,9 @@ public class FastaWriterHelper {
     public static void writeProteinSequence(File file,
             Collection<ProteinSequence> proteinSequences) throws Exception {
         FileOutputStream outputStream = new FileOutputStream(file);
-        writeProteinSequence(outputStream, proteinSequences);
+        BufferedOutputStream bo = new BufferedOutputStream(outputStream);
+        writeProteinSequence(bo, proteinSequences);
+        bo.close();
         outputStream.close();
     }
 
@@ -67,6 +70,7 @@ public class FastaWriterHelper {
 
     public static void writeProteinSequence(OutputStream outputStream,
             Collection<ProteinSequence> proteinSequences) throws Exception {
+
         FastaWriter<ProteinSequence, AminoAcidCompound> fastaWriter = new FastaWriter<ProteinSequence, AminoAcidCompound>(
                 outputStream, proteinSequences,
                 new GenericFastaHeaderFormat<ProteinSequence, AminoAcidCompound>());
@@ -83,7 +87,9 @@ public class FastaWriterHelper {
 
     public static void writeGeneSequence(File file, Collection<GeneSequence> geneSequences,boolean showExonUppercase) throws Exception {
         FileOutputStream outputStream = new FileOutputStream(file);
-        writeGeneSequence(outputStream, geneSequences,showExonUppercase);
+        BufferedOutputStream bo = new BufferedOutputStream(outputStream);
+        writeGeneSequence(bo, geneSequences,showExonUppercase);
+        bo.close();
         outputStream.close();
     }
 
@@ -112,7 +118,9 @@ public class FastaWriterHelper {
 
     public static void writeNucleotideSequence(File file, Collection<DNASequence> dnaSequences) throws Exception {
         FileOutputStream outputStream = new FileOutputStream(file);
-        writeNucleotideSequence(outputStream, dnaSequences);
+        BufferedOutputStream bo = new BufferedOutputStream(outputStream);
+        writeNucleotideSequence(bo, dnaSequences);
+        bo.close();
         outputStream.close();
     }
 
@@ -138,7 +146,11 @@ public class FastaWriterHelper {
      * @throws Exception
      */
     public static void writeSequence(File file, Sequence<?> sequence) throws Exception {
-        writeSequences(new FileOutputStream(file), singleSeqToCollection(sequence));
+        FileOutputStream outputStream = new FileOutputStream(file);
+        BufferedOutputStream bo = new BufferedOutputStream(outputStream);
+        writeSequences(bo, singleSeqToCollection(sequence));
+        bo.close();
+        outputStream.close();
     }
 
     /**

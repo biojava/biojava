@@ -2,12 +2,12 @@ package org.biojava.bio.structure.io.mmcif;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
-import java.net.URLConnection;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 
@@ -105,41 +105,34 @@ public class AllChemCompProvider implements ChemCompProvider, Runnable{
 	/** Downloads the components.cif.gz file from the wwPDB site.
 	 * 
 	 */
-	public static void downloadFile() throws IOException{
+	public static void downloadFile() throws IOException,FileNotFoundException{
 
 
 		String localName = getLocalFileName();
 
 		String u = serverLocation +  "components.cif.gz";
 
-		System.out.println("downloading " + u);
-
-		try {
-
-			URL url = new URL(u);
-
-			URLConnection uconn = url.openConnection();
-
-			InputStream in = uconn.getInputStream();			
-			
-			FileOutputStream out = new FileOutputStream(localName);
-			int c;
-            while ((c = in.read()) != -1) {
-                out.write(c);
-            }
-
-			in.close();
-			out.flush();
-			out.close();
-			
-
-		} catch (Exception e){
-			e.printStackTrace();
-		}
-
+		downloadFileFromRemote(new URL(u), new File(localName));
+		
 
 	}
 
+
+	private static  void downloadFileFromRemote(URL remoteURL, File localFile) throws FileNotFoundException, IOException{
+		System.out.println("downloading " + remoteURL + " to: " + localFile);
+		FileOutputStream out = new FileOutputStream(localFile);
+
+		InputStream in = remoteURL.openStream();
+		byte[] buf = new byte[4 * 1024]; // 4K buffer
+		int bytesRead;
+		while ((bytesRead = in.read(buf)) != -1) {
+			out.write(buf, 0, bytesRead);
+		}
+		in.close();
+		out.close();
+
+
+	}
 
 
 	private static String getLocalFileName(){
@@ -203,6 +196,8 @@ public class AllChemCompProvider implements ChemCompProvider, Runnable{
 				e.printStackTrace();
 			}
 		}
+		
+		
 
 		return dict.getChemComp(recordName);
 	}

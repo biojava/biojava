@@ -36,7 +36,43 @@ public class AFPChainXMLParser
 {
 
 	
+	/** new utility method that checks that the order of the pair in the XML alignment is correct and flips the direction if needed
+	 * 
+	 * @param xml
+	 * @param name1
+	 * @param name1
+	 * @param ca1
+	 * @param ca2
+	 * @return
+	 */
+	 public static AFPChain fromXML(String xml, String name1, String name2, Atom[] ca1, Atom[] ca2) throws StructureException{
+			AFPChain[] afps = parseMultiXML( xml);
+			if ( afps.length > 0 ) {
 
+				AFPChain afpChain = afps[0];
+				
+				String n1 = afpChain.getName1();
+				String n2 = afpChain.getName2();
+				
+				if ( n1 == null )
+					n1 = "";
+				if ( n2 == null)
+					n2 = "";
+				
+				//System.out.println("from AFPCHAIN: " + n1 + " " + n2);
+				if ( n1.equals(name2) && n2.equals(name1)){
+					// flipped order
+					//System.out.println("AfpChain in wrong order, flipping...");
+					afpChain  = AFPChainFlipper.flipChain(afpChain);
+				}
+				rebuildAFPChain(afpChain, ca1, ca2);
+
+				return afpChain;
+			}
+			return null;
+		 
+	 }
+	
    public static AFPChain fromXML(String xml, Atom[] ca1, Atom[] ca2)
 	{
 		AFPChain[] afps = parseMultiXML( xml);
@@ -233,6 +269,15 @@ public class AFPChainXMLParser
 				int ca2Length = new Integer(getAttribute(rootElement,"ca2Length")).intValue();						
 				a.setCa2Length(ca2Length);
 
+				String tmScoreS = getAttribute(rootElement,"tmScore");
+				if ( tmScoreS != null) {
+					Double tmScore = null;
+					try {
+					 tmScore = Double.parseDouble(tmScoreS);
+					} catch (Exception e){						
+					}
+					a.setTMScore(tmScore);
+				}
 				Matrix[] ms = new Matrix[a.getBlockNum()];
 				a.setBlockRotationMatrix(ms);
 				Atom[] blockShiftVector = new Atom[a.getBlockNum()];

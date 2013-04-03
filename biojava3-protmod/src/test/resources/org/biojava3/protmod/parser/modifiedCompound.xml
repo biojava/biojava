@@ -4,7 +4,7 @@
   <linkage pos="0" total="4" distance="2.58146218256243">
     <atom1>
       <structureAtom name="O">
-        <structureGroup chainID="A" pdbName="ILE" residueNr="190" type="AminoAcid" />
+        <structureGroup chainID="A" pdbName="ILE" residueNr="190" isAminoAcid="true" />
       </structureAtom>
     </atom1>
     <atom2>
@@ -16,36 +16,36 @@
   <linkage pos="1" total="4" distance="2.344670126051853">
     <atom1>
       <structureAtom name="O">
-        <structureGroup chainID="A" pdbName="HIS" residueNr="233" type="AminoAcid" />
+        <structureGroup chainID="A" pdbName="HIS" residueNr="233" isAminoAcid="true" />
       </structureAtom>
     </atom1>
     <atom2>
       <structureAtom name="CA">
-        <structureGroup chainID="A" pdbName=" CA" residueNr="692" type="Attachment" />
+        <structureGroup chainID="A" pdbName=" CA" residueNr="692" isAminoAcid="false" />
       </structureAtom>
     </atom2>
   </linkage>
   <linkage pos="2" total="4" distance="2.4644238677630086">
     <atom1>
       <structureAtom name="OD1">
-        <structureGroup chainID="A" pdbName="ASP" residueNr="199" type="AminoAcid" />
+        <structureGroup chainID="A" pdbName="ASP" residueNr="199" isAminoAcid="true" />
       </structureAtom>
     </atom1>
     <atom2>
       <structureAtom name="CA">
-        <structureGroup chainID="A" pdbName=" CA" residueNr="692" type="Attachment" />
+        <structureGroup chainID="A" pdbName=" CA" residueNr="692" isAminoAcid="false" />
       </structureAtom>
     </atom2>
   </linkage>
   <linkage pos="3" total="4" distance="2.2961465545561377">
     <atom1>
       <structureAtom name="OD1">
-        <structureGroup chainID="A" pdbName="ASN" residueNr="139" type="AminoAcid" />
+        <structureGroup chainID="A" pdbName="ASN" residueNr="139" isAminoAcid="true" />
       </structureAtom>
     </atom1>
     <atom2>
       <structureAtom name="CA">
-        <structureGroup chainID="A" pdbName=" CA" residueNr="692" type="Attachment" />
+        <structureGroup chainID="A" pdbName=" CA" residueNr="692" isAminoAcid="false" />
       </structureAtom>
     </atom2>
   </linkage>

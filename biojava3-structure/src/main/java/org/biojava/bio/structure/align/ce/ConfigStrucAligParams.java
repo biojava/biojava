@@ -23,7 +23,7 @@ public interface ConfigStrucAligParams {
 	 * 
 	 * @return list of parameter classes
 	 */
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("rawtypes")
 	public List<Class> getUserConfigTypes();
 	
 	

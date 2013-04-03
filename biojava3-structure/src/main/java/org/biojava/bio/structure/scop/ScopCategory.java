@@ -24,6 +24,8 @@
 
 package org.biojava.bio.structure.scop;
 
+import java.io.Serializable;
+
 /** The various categories provided by SCOP.
  * 
  * The SCOP node types are 'cl' (Class), 
@@ -33,7 +35,7 @@ package org.biojava.bio.structure.scop;
  * @author Andreas Prlic
  *
  */
-public enum ScopCategory
+public enum ScopCategory implements Serializable
 {
 
    Class,Fold, Superfamily,  Family, Domain, Species, Px;

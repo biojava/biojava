@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ns2:compoundtable xmlns:ns2="http://biojava.org">
+    <compound name="Alanine" shortname="Ala" symbol="A">
+        <element count="3" name="Carbon"/>
+        <element count="5" name="Hydrogen"/>
+        <element count="1" name="Nitrogen"/>
+        <element count="1" name="Oxygen"/>
+    </compound>
+    <compound name="Arginine" shortname="Arg" symbol="R">
+        <element count="6" name="Carbon"/>
+        <element count="12" name="Hydrogen"/>
+        <element count="4" name="Nitrogen"/>
+        <element count="1" name="Oxygen"/>
+    </compound>
+    <compound name="Asparagine" shortname="Asn" symbol="N">
+        <element count="4" name="Carbon"/>
+        <element count="6" name="Hydrogen"/>
+        <element count="2" name="Nitrogen"/>
+        <element count="2" name="Oxygen"/>
+    </compound>
+    <compound name="Aspartic Acid" shortname="Asp" symbol="D">
+        <element count="4" name="Carbon"/>
+        <element count="5" name="Hydrogen"/>
+        <element count="1" name="Nitrogen"/>
+        <element count="3" name="Oxygen"/>
+    </compound>
+    <compound name="Cysteine" shortname="Cys" symbol="C">
+        <element count="3" name="Carbon"/>
+        <element count="5" name="Hydrogen"/>
+        <element count="1" name="Nitrogen"/>
+        <element count="1" name="Oxygen"/>
+        <element count="1" name="Sulfur"/>
+    </compound>
+    <compound name="Glutamic Acid" shortname="Glu" symbol="E">
+        <element count="5" name="Carbon"/>
+        <element count="7" name="Hydrogen"/>
+        <element count="1" name="Nitrogen"/>
+        <element count="3" name="Oxygen"/>
+    </compound>
+    <compound name="Glutamine" shortname="Gln" symbol="Q">
+        <element count="5" name="Carbon"/>
+        <element count="8" name="Hydrogen"/>
+        <element count="2" name="Nitrogen"/>
+        <element count="2" name="Oxygen"/>
+    </compound>
+    <compound name="Glycine" shortname="Gly" symbol="G">
+        <element count="2" name="Carbon"/>
+        <element count="3" name="Hydrogen"/>
+        <element count="1" name="Nitrogen"/>
+        <element count="1" name="Oxygen"/>
+    </compound>
+    <compound name="Histidine" shortname="His" symbol="H">
+        <element count="6" name="Carbon"/>
+        <element count="7" name="Hydrogen"/>
+        <element count="3" name="Nitrogen"/>
+        <element count="1" name="Oxygen"/>
+    </compound>
+    <compound name="Isoleucine" shortname="Ile" symbol="I">
+        <element count="6" name="Carbon"/>
+        <element count="11" name="Hydrogen"/>
+        <element count="1" name="Nitrogen"/>
+        <element count="1" name="Oxygen"/>
+    </compound>
+    <compound name="Leucine" shortname="Leu" symbol="L">
+        <element count="6" name="Carbon"/>
+        <element count="11" name="Hydrogen"/>
+        <element count="1" name="Nitrogen"/>
+        <element count="1" name="Oxygen"/>
+    </compound>
+    <compound name="Lysine" shortname="Lys" symbol="K">
+        <element count="6" name="Carbon"/>
+        <element count="12" name="Hydrogen"/>
+        <element count="2" name="Nitrogen"/>
+        <element count="1" name="Oxygen"/>
+    </compound>
+    <compound name="Methionine" shortname="Met" symbol="M">
+        <element count="5" name="Carbon"/>
+        <element count="9" name="Hydrogen"/>
+        <element count="1" name="Nitrogen"/>
+        <element count="1" name="Oxygen"/>
+        <element count="1" name="Sulfur"/>
+    </compound>
+    <compound name="Phenylalanine" shortname="Phe" symbol="F">
+        <element count="9" name="Carbon"/>
+        <element count="9" name="Hydrogen"/>
+        <element count="1" name="Nitrogen"/>
+        <element count="1" name="Oxygen"/>
+    </compound>
+    <compound name="Proline" shortname="Pro" symbol="P">
+        <element count="5" name="Carbon"/>
+        <element count="7" name="Hydrogen"/>
+        <element count="1" name="Nitrogen"/>
+        <element count="1" name="Oxygen"/>
+    </compound>
+    <compound name="Serine" shortname="Ser" symbol="S">
+        <element count="3" name="Carbon"/>
+        <element count="5" name="Hydrogen"/>
+        <element count="1" name="Nitrogen"/>
+        <element count="2" name="Oxygen"/>
+    </compound>
+    <compound name="Threonine" shortname="Thr" symbol="T">
+        <element count="4" name="Carbon"/>
+        <element count="7" name="Hydrogen"/>
+        <element count="1" name="Nitrogen"/>
+        <element count="2" name="Oxygen"/>
+    </compound>
+    <compound name="Tryptophan" shortname="Trp" symbol="W">
+        <element count="11" name="Carbon"/>
+        <element count="10" name="Hydrogen"/>
+        <element count="2" name="Nitrogen"/>
+        <element count="1" name="Oxygen"/>
+    </compound>
+    <compound name="Tyrosine" shortname="Tyr" symbol="Y">
+        <element count="9" name="Carbon"/>
+        <element count="9" name="Hydrogen"/>
+        <element count="1" name="Nitrogen"/>
+        <element count="2" name="Oxygen"/>
+    </compound>
+    <compound name="Valine" shortname="Val" symbol="V">
+        <element count="5" name="Carbon"/>
+        <element count="9" name="Hydrogen"/>
+        <element count="1" name="Nitrogen"/>
+        <element count="1" name="Oxygen"/>
+    </compound>
+</ns2:compoundtable>

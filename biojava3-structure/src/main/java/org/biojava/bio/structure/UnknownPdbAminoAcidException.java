@@ -28,6 +28,10 @@ package org.biojava.bio.structure;
 public class UnknownPdbAminoAcidException extends Exception {
 
     /**
+	 * 
+	 */
+	private static final long serialVersionUID = -5571696240026118421L;
+	/**
      * Constructs a PDBParseException object.
      *
      * @param s  a String ...

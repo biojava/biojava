@@ -81,4 +81,30 @@ public class TestAltLocs extends TestCase {
 		}
 
 	}
+	
+	public void test2W72(){
+		try {
+			
+			Structure s = TmpAtomCache.cache.getStructure("2W72");
+			
+			Chain a = s.getChainByPDB("A");
+			
+			Group val1 = a.getGroupByPDB(ResidueNumber.fromString("1"));
+			Atom ca1 = val1.getAtom(" CA ");
+			assertNotNull(ca1);
+			
+			Group lys7 = a.getGroupByPDB(ResidueNumber.fromString("7"));
+			Atom ca7 = lys7.getAtom(" CA ");			
+			assertNotNull(ca7);
+			
+			Atom[] caA = StructureTools.getAtomCAArray(a);
+						
+			assertEquals(caA.length,141);
+			
+		} catch(Exception e){
+			e.printStackTrace();
+			fail(e.getMessage());
+		}
+		
+	}
 }

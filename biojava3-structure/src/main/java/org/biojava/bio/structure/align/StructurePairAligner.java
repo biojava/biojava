@@ -256,10 +256,10 @@ public class StructurePairAligner {
 					return;
 				}
 
-				AlternativeAlignment aa1 =aligs[0];
+				//AlternativeAlignment aa1 =aligs[0];
 
 				// first get an artificial structure for the alignment
-				Structure artificial = aa1.getAlignedStructure(s1, s2);
+				//Structure artificial = aa1.getAlignedStructure(s1, s2);
 
 
 				// and then send it to Jmol (only will work if Jmol is in the Classpath)

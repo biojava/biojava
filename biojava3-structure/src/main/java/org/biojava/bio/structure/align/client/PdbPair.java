@@ -10,35 +10,37 @@ package org.biojava.bio.structure.align.client;
 public class PdbPair implements Comparable<PdbPair> {
 
 	
-	String name1;
-	String name2;
+	StructureName name1;
+	StructureName name2;
 	public PdbPair(String name1, String name2) {
 		super();
 		
-		/*if ( name1.compareTo(name2) < 0){
-			String tmp = name2;
-			name2= name1;
-			name1 = tmp;
-		}*/
+	
 		// always make sure the first 4 chars are upper case...
+			
+		this.name1= getCheckName(name1);
+		this.name2= getCheckName(name2);
+				
+	}
+	private StructureName getCheckName(String name) {
 		
-		String pdb1 = name1.substring(0,4);
-		String pdb2 = name2.substring(0,4);
+		StructureName rname = new StructureName(name);
 		
-		this.name1 = pdb1.toUpperCase() + name1.substring(4,name1.length());
-		this.name2 = pdb2.toUpperCase() + name2.substring(4,name2.length());
+		return rname;
+		
+		
 	}
 	public String getName1() {
-		return name1;
+		return name1.getName();
 	}
 	public void setName1(String name1) {
-		this.name1 = name1;
+		this.name1 = new StructureName(name1);
 	}
 	public String getName2() {
-		return name2;
+		return name2.getName();
 	}
 	public void setName2(String name2) {
-		this.name2 = name2;
+		this.name2 = new StructureName(name2);
 	}
 	
 	public String toString() {
@@ -73,49 +75,42 @@ public class PdbPair implements Comparable<PdbPair> {
 			return false;
 		return true;
 	}
+	
 	public int compareTo(PdbPair o) {
 		if ( this.equals(o))
 			return 0;
 		
-		int c = name1.compareTo(o.getName1()); 
+		int c = name1.getName().compareTo(o.getName1()); 
 		if ( c == 0 )
-			return name2.compareTo(o.getName2());
+			return name2.getName().compareTo(o.getName2());
 		 else
 			return c;
 	}
 	
 	public String getPDBCode1() {
-		return getPDBFromCode(name1);
+		return name1.getPdbId();
 	
 	}
 	
-	private String getPDBFromCode(String name) {
-		if ( name.length() > 4)
-			return name.substring(0,4);
-		return null;
-	}
+
 	public String getPDBCode2(){
-		return getPDBFromCode(name2);
+		return name2.getPdbId();
 		
 	}
 	public String getChainId1(){
-		return getChainFromName(name1);
+		return  name1.getChainId();
 		
 	}
 	public String getChainId2(){
-		return getChainFromName(name2);
+		return name2.getChainId();
 		
 	}
-	private String getChainFromName(String name) {
-
-		if ( name.length() == 6)
-			return name.substring(5,6);
-		
-		return null;
-	}
+	
 	public PdbPair getReverse() {
-		PdbPair newPair = new PdbPair(name2, name1);
+		PdbPair newPair = new PdbPair(name2.getName(), name1.getName());
 		return newPair;
 	}
+	
+	
 	
 }

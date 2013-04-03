@@ -158,26 +158,23 @@ public class Test1a4w extends TestCase{
 
 			boolean noWater = true;
 			boolean darPresent = false;
-			boolean twoepPresent = false;
+		
 
 			for ( Group g : ligands){
 				String pdbName = g.getPDBName();
-				if ( pdbName.equals("DAR"))
+				if ( pdbName.equals("QWE"))
 					darPresent = true;
-				else if ( pdbName.equals("2EP"))
-					twoepPresent = true;
+			
 				else if ( pdbName.equals("H2O"))
 					noWater = false;
 			}
 
 			assertTrue("Found water in ligands list!", noWater );
 
-			assertTrue("Did not find DAR in ligands list!", darPresent);
-
-			assertTrue("Did not find 2EP in ligands list!", twoepPresent);
-
+			assertTrue("Did not find QWE in ligands list!", darPresent);
+			
 			//System.out.println("LIGANDS:" + ligands);
-			assertEquals("Did not find the correct nr of ligands in chain! " , 6,ligands.size());
+			assertEquals("Did not find the correct nr of ligands in chain! " , 3,ligands.size());
 		} catch (Exception e){
 			e.printStackTrace();
 			fail(e.getMessage());
@@ -241,4 +238,43 @@ public class Test1a4w extends TestCase{
 		}
 
 	}
+
+        public void testGetHetGroups() {
+//            try {
+                Structure struct = structure;
+
+//                HET    TYS  I 363      16
+//                HET     NA  H 541       1
+//                HET     NA  H 542       1
+//                HET    ANS  H 373      16
+//                HET    DAR  H 350      11
+//                HET    2EP  H 375       8
+//                HET    KTH  H 377       7
+//                HETNAM     TYS O-SULFO-L-TYROSINE
+//                HETNAM      NA SODIUM ION
+//                HETNAM     ANS 5-(DIMETHYLAMINO)-1-NAPHTHALENESULFONIC ACID(DANSYL
+//                HETNAM   2 ANS  ACID)
+//                HETNAM     DAR D-ARGININE
+//                HETNAM     2EP 2-ETHYLPIPERIDINE
+//                HETNAM     KTH 2-KETOTHIAZOLE
+//                HETSYN     ANS DANSYL ACID
+//                FORMUL   3  TYS    C9 H11 N O6 S
+//                FORMUL   4   NA    2(NA 1+)
+//                FORMUL   6  ANS    C12 H13 N O3 S
+//                FORMUL   6  DAR    C6 H15 N4 O2 1+
+//                FORMUL   6  2EP    C7 H15 N
+//                FORMUL   7  KTH    C4 H3 N O S
+//                FORMUL   8  HOH   *157(H2 O)
+
+                List<Group> hets = struct.getHetGroups();
+           
+                assertEquals(7, hets.size());
+
+                
+
+
+//            } catch (Exception e) {
+//                fail(e.getMessage());
+//            }
+        }
 }

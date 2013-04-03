@@ -2,14 +2,12 @@ package org.biojava.bio.structure.align.gui;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.event.KeyEvent;
+
 import java.io.IOException;
 
-import javax.swing.Action;
+
 import javax.swing.Box;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
+
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
@@ -26,18 +24,19 @@ import org.biojava.bio.structure.io.FileParsingParameters;
 import org.biojava.bio.structure.io.MMCIFFileReader;
 import org.biojava.bio.structure.io.PDBFileReader;
 import org.biojava.bio.structure.io.StructureIOFile;
-import org.biojava.bio.structure.gui.util.PDBUploadPanel;
 import org.biojava.bio.structure.gui.util.StructurePairSelector;
 
 
+/** A Panel that allows user to specify PDB & chain ID, as well as sub-ranges
+ * 
+ * @author Andreas
+ *
+ */
 public class SelectPDBPanel 
 extends JPanel 
 implements StructurePairSelector{
 
-
-
 	boolean debug = true;
-
 	
 	JTextField f1;
 	JTextField f2;
@@ -46,10 +45,7 @@ implements StructurePairSelector{
 	JTextField r1;
 	JTextField r2;
 
-
 	UserConfiguration config;
-
-	
 	JTabbedPane configPane;
 
 	/**

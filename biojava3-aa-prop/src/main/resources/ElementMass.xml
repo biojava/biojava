@@ -1,0 +1,456 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ns2:elements xmlns:ns2="http://biojava.org">
+    <element mass="1.00794" atomicnumber="1" symbol="H" name="Hydrogen">
+        <isotope mass="1.00782503207" neutronsnum="1" name="Hydrogen"/>
+        <isotope mass="2.0141017778" neutronsnum="2" name="Deuterium"/>
+        <isotope mass="3.0160492777" neutronsnum="3" name="Tritium"/>
+    </element>
+    <element mass="4.002602" atomicnumber="2" symbol="He" name="Helium">
+        <isotope mass="3.0160293191" neutronsnum="3" name="Helium-3"/>
+        <isotope mass="4.00260325415" neutronsnum="4" name="Helium-4"/>
+    </element>
+    <element mass="6.941" atomicnumber="3" symbol="Li" name="Lithium">
+        <isotope mass="6.015122795" neutronsnum="6" name="Lithium-6"/>
+        <isotope mass="7.01600455" neutronsnum="7" name="Lithium-7"/>
+    </element>
+    <element mass="9.012182" atomicnumber="4" symbol="Be" name="Beryllium">
+        <isotope mass="9.0121822" neutronsnum="9" name="Beryllium-9"/>
+    </element>
+    <element mass="10.811" atomicnumber="5" symbol="B" name="Boron">
+        <isotope mass="10.012937" neutronsnum="10" name="Boron-10"/>
+        <isotope mass="11.0093054" neutronsnum="11" name="Boron-11"/>
+    </element>
+    <element mass="12.0107" atomicnumber="6" symbol="C" name="Carbon">
+        <isotope mass="12.0" neutronsnum="12" name="Carbon-12"/>
+        <isotope mass="13.0033548378" neutronsnum="13" name="Carbon-13"/>
+        <isotope mass="14.003241989" neutronsnum="14" name="Carbon-14"/>
+    </element>
+    <element mass="14.0067" atomicnumber="7" symbol="N" name="Nitrogen">
+        <isotope mass="14.0030740048" neutronsnum="14" name="Nitrogen-14"/>
+        <isotope mass="15.0001088982" neutronsnum="15" name="Nitrogen-15"/>
+    </element>
+    <element mass="15.9994" atomicnumber="8" symbol="O" name="Oxygen">
+        <isotope mass="15.99491461956" neutronsnum="16" name="Oxygen-16"/>
+        <isotope mass="16.9991317" neutronsnum="17" name="Oxygen-17"/>
+        <isotope mass="17.999161" neutronsnum="18" name="Oxygen-18"/>
+    </element>
+    <element mass="18.9984032" atomicnumber="9" symbol="F" name="Fluorine">
+        <isotope mass="18.99840322" neutronsnum="19" name="Fluorine-19"/>
+    </element>
+    <element mass="20.1797" atomicnumber="10" symbol="Ne" name="Neon">
+        <isotope mass="19.9924401754" neutronsnum="20" name="Neon-20"/>
+        <isotope mass="20.99384668" neutronsnum="21" name="Neon-21"/>
+        <isotope mass="21.991385114" neutronsnum="22" name="Neon-22"/>
+    </element>
+    <element mass="22.98976928" atomicnumber="11" symbol="Na" name="Sodium">
+        <isotope mass="22.9897692809" neutronsnum="23" name="Sodium-23"/>
+    </element>
+    <element mass="24.305" atomicnumber="12" symbol="Mg" name="Magnesium">
+        <isotope mass="23.9850417" neutronsnum="24" name="Magnesium-24"/>
+        <isotope mass="24.98583692" neutronsnum="25" name="Magnesium-25"/>
+        <isotope mass="25.982592929" neutronsnum="26" name="Magnesium-26"/>
+    </element>
+    <element mass="26.9815386" atomicnumber="13" symbol="Al" name="Aluminium">
+        <isotope mass="26.98153863" neutronsnum="27" name="Aluminium-27"/>
+    </element>
+    <element mass="28.0855" atomicnumber="14" symbol="Si" name="Silicon">
+        <isotope mass="27.9769265325" neutronsnum="28" name="Silicon-28"/>
+        <isotope mass="28.9764947" neutronsnum="29" name="Silicon-29"/>
+        <isotope mass="29.97377017" neutronsnum="30" name="Silicon-30"/>
+    </element>
+    <element mass="30.973762" atomicnumber="15" symbol="P" name="Phosphorus">
+        <isotope mass="30.97376163" neutronsnum="31" name="Phosphorus-31"/>
+    </element>
+    <element mass="32.065" atomicnumber="16" symbol="S" name="Sulfur">
+        <isotope mass="31.972071" neutronsnum="32" name="Sulfur-32"/>
+        <isotope mass="32.97145876" neutronsnum="33" name="Sulfur-33"/>
+        <isotope mass="33.9678669" neutronsnum="34" name="Sulfur-34"/>
+        <isotope mass="35.96708076" neutronsnum="36" name="Sulfur-36"/>
+    </element>
+    <element mass="35.453" atomicnumber="17" symbol="Cl" name="Chlorine">
+        <isotope mass="34.96885268" neutronsnum="35" name="Chlorine-35"/>
+        <isotope mass="36.96590259" neutronsnum="37" name="Chlorine-37"/>
+    </element>
+    <element mass="39.948" atomicnumber="18" symbol="Ar" name="Argon">
+        <isotope mass="35.967545106" neutronsnum="36" name="Argon-36"/>
+        <isotope mass="37.9627324" neutronsnum="38" name="Argon-38"/>
+        <isotope mass="39.9623831225" neutronsnum="40" name="Argon-40"/>
+    </element>
+    <element mass="39.0983" atomicnumber="19" symbol="K" name="Potassium">
+        <isotope mass="38.96370668" neutronsnum="39" name="Potassium-39"/>
+        <isotope mass="39.96399848" neutronsnum="40" name="Potassium-40"/>
+        <isotope mass="40.96182576" neutronsnum="41" name="Potassium-41"/>
+    </element>
+    <element mass="40.078" atomicnumber="20" symbol="Ca" name="Calcium">
+        <isotope mass="39.96259098" neutronsnum="40" name="Calcium-40"/>
+        <isotope mass="41.95861801" neutronsnum="42" name="Calcium-42"/>
+        <isotope mass="42.9587666" neutronsnum="43" name="Calcium-43"/>
+        <isotope mass="43.9554818" neutronsnum="44" name="Calcium-44"/>
+        <isotope mass="45.9536926" neutronsnum="46" name="Calcium-46"/>
+        <isotope mass="47.952534" neutronsnum="48" name="Calcium-48"/>
+    </element>
+    <element mass="44.955912" atomicnumber="21" symbol="Sc" name="Scandium">
+        <isotope mass="44.9559119" neutronsnum="45" name="Scandium-45"/>
+    </element>
+    <element mass="47.867" atomicnumber="22" symbol="Ti" name="Titanium">
+        <isotope mass="45.9526316" neutronsnum="46" name="Titanium-46"/>
+        <isotope mass="46.9517631" neutronsnum="47" name="Titanium-47"/>
+        <isotope mass="47.9479463" neutronsnum="48" name="Titanium-48"/>
+        <isotope mass="48.94787" neutronsnum="49" name="Titanium-49"/>
+        <isotope mass="49.9447912" neutronsnum="50" name="Titanium-50"/>
+    </element>
+    <element mass="50.9415" atomicnumber="23" symbol="V" name="Vanadium">
+        <isotope mass="49.9471585" neutronsnum="50" name="Vanadium-50"/>
+        <isotope mass="50.9439595" neutronsnum="51" name="Vanadium-51"/>
+    </element>
+    <element mass="51.9961" atomicnumber="24" symbol="Cr" name="Chromium">
+        <isotope mass="49.9460442" neutronsnum="50" name="Chromium-50"/>
+        <isotope mass="51.9405075" neutronsnum="52" name="Chromium-52"/>
+        <isotope mass="52.9406494" neutronsnum="53" name="Chromium-53"/>
+        <isotope mass="53.9388804" neutronsnum="54" name="Chromium-54"/>
+    </element>
+    <element mass="54.938045" atomicnumber="25" symbol="Mn" name="Manganese">
+        <isotope mass="54.9380451" neutronsnum="55" name="Manganese-55"/>
+    </element>
+    <element mass="55.845" atomicnumber="26" symbol="Fe" name="Iron">
+        <isotope mass="53.9396105" neutronsnum="54" name="Iron-54"/>
+        <isotope mass="55.9349375" neutronsnum="56" name="Iron-56"/>
+        <isotope mass="56.935394" neutronsnum="57" name="Iron-57"/>
+        <isotope mass="57.9332756" neutronsnum="58" name="Iron-58"/>
+    </element>
+    <element mass="58.933195" atomicnumber="27" symbol="Co" name="Cobalt">
+        <isotope mass="58.933195" neutronsnum="59" name="Cobalt-59"/>
+    </element>
+    <element mass="58.6934" atomicnumber="28" symbol="Ni" name="Nickel">
+        <isotope mass="57.9353429" neutronsnum="58" name="Nickel-58"/>
+        <isotope mass="59.9307864" neutronsnum="60" name="Nickel-60"/>
+        <isotope mass="60.931056" neutronsnum="61" name="Nickel-61"/>
+        <isotope mass="61.9283451" neutronsnum="62" name="Nickel-62"/>
+        <isotope mass="63.927966" neutronsnum="64" name="Nickel-64"/>
+    </element>
+    <element mass="63.546" atomicnumber="29" symbol="Cu" name="Copper">
+        <isotope mass="62.9295975" neutronsnum="63" name="Copper-63"/>
+        <isotope mass="64.9277895" neutronsnum="65" name="Copper-65"/>
+    </element>
+    <element mass="65.38" atomicnumber="30" symbol="Zn" name="Zinc">
+        <isotope mass="63.9291422" neutronsnum="64" name="Zinc-64"/>
+        <isotope mass="65.9260334" neutronsnum="66" name="Zinc-66"/>
+        <isotope mass="66.9271273" neutronsnum="67" name="Zinc-67"/>
+        <isotope mass="67.9248442" neutronsnum="68" name="Zinc-68"/>
+        <isotope mass="69.9253193" neutronsnum="70" name="Zinc-70"/>
+    </element>
+    <element mass="69.723" atomicnumber="31" symbol="Ga" name="Gallium">
+        <isotope mass="68.9255736" neutronsnum="69" name="Gallium-69"/>
+        <isotope mass="70.9247013" neutronsnum="71" name="Gallium-71"/>
+    </element>
+    <element mass="72.64" atomicnumber="32" symbol="Ge" name="Germanium">
+        <isotope mass="69.9242474" neutronsnum="70" name="Germanium-70"/>
+        <isotope mass="71.9220758" neutronsnum="72" name="Germanium-72"/>
+        <isotope mass="72.9234589" neutronsnum="73" name="Germanium-73"/>
+        <isotope mass="73.9211778" neutronsnum="74" name="Germanium-74"/>
+        <isotope mass="75.9214026" neutronsnum="76" name="Germanium-76"/>
+    </element>
+    <element mass="74.9216" atomicnumber="33" symbol="As" name="Arsenic">
+        <isotope mass="74.9215965" neutronsnum="75" name="Arsenic-75"/>
+    </element>
+    <element mass="78.96" atomicnumber="34" symbol="Se" name="Selenium">
+        <isotope mass="73.9224764" neutronsnum="74" name="Selenium-74"/>
+        <isotope mass="75.9192136" neutronsnum="76" name="Selenium-76"/>
+        <isotope mass="76.919914" neutronsnum="77" name="Selenium-77"/>
+        <isotope mass="77.9173091" neutronsnum="78" name="Selenium-78"/>
+        <isotope mass="79.9165213" neutronsnum="80" name="Selenium-80"/>
+        <isotope mass="81.9166994" neutronsnum="82" name="Selenium-82"/>
+    </element>
+    <element mass="79.904" atomicnumber="35" symbol="Br" name="Bromine">
+        <isotope mass="78.9183371" neutronsnum="79" name="Bromine-79"/>
+        <isotope mass="80.9162906" neutronsnum="81" name="Bromine-81"/>
+    </element>
+    <element mass="83.798" atomicnumber="36" symbol="Kr" name="Krypton">
+        <isotope mass="77.9203648" neutronsnum="78" name="Krypton-78"/>
+        <isotope mass="79.916379" neutronsnum="80" name="Krypton-80"/>
+        <isotope mass="81.9134836" neutronsnum="82" name="Krypton-82"/>
+        <isotope mass="82.914136" neutronsnum="83" name="Krypton-83"/>
+        <isotope mass="83.911507" neutronsnum="84" name="Krypton-84"/>
+        <isotope mass="85.91061073" neutronsnum="86" name="Krypton-86"/>
+    </element>
+    <element mass="85.4678" atomicnumber="37" symbol="Rb" name="Rubidium">
+        <isotope mass="84.911789738" neutronsnum="85" name="Rubidium-85"/>
+        <isotope mass="86.909180527" neutronsnum="87" name="Rubidium-87"/>
+    </element>
+    <element mass="87.62" atomicnumber="38" symbol="Sr" name="Strontium">
+        <isotope mass="83.913425" neutronsnum="84" name="Strontium-84"/>
+        <isotope mass="85.9092602" neutronsnum="86" name="Strontium-86"/>
+        <isotope mass="86.9088771" neutronsnum="87" name="Strontium-87"/>
+        <isotope mass="87.9056121" neutronsnum="88" name="Strontium-88"/>
+    </element>
+    <element mass="88.90585" atomicnumber="39" symbol="Y" name="Yttrium">
+        <isotope mass="88.9058483" neutronsnum="89" name="Yttrium-89"/>
+    </element>
+    <element mass="91.224" atomicnumber="40" symbol="Zr" name="Zirconium">
+        <isotope mass="89.9047044" neutronsnum="90" name="Zirconium-90"/>
+        <isotope mass="90.9056458" neutronsnum="91" name="Zirconium-91"/>
+        <isotope mass="91.9050408" neutronsnum="92" name="Zirconium-92"/>
+        <isotope mass="93.9063152" neutronsnum="94" name="Zirconium-94"/>
+        <isotope mass="95.9082734" neutronsnum="96" name="Zirconium-96"/>
+    </element>
+    <element mass="92.90638" atomicnumber="41" symbol="Nb" name="Niobium">
+        <isotope mass="92.9063781" neutronsnum="93" name="Niobium-93"/>
+    </element>
+    <element mass="95.96" atomicnumber="42" symbol="Mo" name="Molybdenum">
+        <isotope mass="91.906811" neutronsnum="92" name="Molybdenum-92"/>
+        <isotope mass="93.9050883" neutronsnum="94" name="Molybdenum-94"/>
+        <isotope mass="94.9058421" neutronsnum="95" name="Molybdenum-95"/>
+        <isotope mass="95.9046795" neutronsnum="96" name="Molybdenum-96"/>
+        <isotope mass="96.9060215" neutronsnum="97" name="Molybdenum-97"/>
+        <isotope mass="97.9054082" neutronsnum="98" name="Molybdenum-98"/>
+        <isotope mass="99.907477" neutronsnum="100" name="Molybdenum-100"/>
+    </element>
+    <element mass="98.0" atomicnumber="43" symbol="Tc" name="Technetium">
+        <isotope mass="96.906365" neutronsnum="97" name="Technetium-97"/>
+        <isotope mass="97.907216" neutronsnum="98" name="Technetium-98"/>
+        <isotope mass="98.9062547" neutronsnum="99" name="Technetium-99"/>
+    </element>
+    <element mass="101.07" atomicnumber="44" symbol="Ru" name="Ruthenium">
+        <isotope mass="95.907598" neutronsnum="96" name="Ruthenium-96"/>
+        <isotope mass="97.905287" neutronsnum="98" name="Ruthenium-98"/>
+        <isotope mass="98.9059393" neutronsnum="99" name="Ruthenium-99"/>
+        <isotope mass="99.9042195" neutronsnum="100" name="Ruthenium-100"/>
+        <isotope mass="100.9055821" neutronsnum="101" name="Ruthenium-101"/>
+        <isotope mass="101.9043493" neutronsnum="102" name="Ruthenium-102"/>
+        <isotope mass="103.905433" neutronsnum="104" name="Ruthenium-104"/>
+    </element>
+    <element mass="102.9055" atomicnumber="45" symbol="Rh" name="Rhodium">
+        <isotope mass="102.905504" neutronsnum="103" name="Rhodium-103"/>
+    </element>
+    <element mass="106.42" atomicnumber="46" symbol="Pd" name="Palladium">
+        <isotope mass="101.905609" neutronsnum="102" name="Palladium-102"/>
+        <isotope mass="103.904036" neutronsnum="104" name="Palladium-104"/>
+        <isotope mass="104.905085" neutronsnum="105" name="Palladium-105"/>
+        <isotope mass="105.903486" neutronsnum="106" name="Palladium-106"/>
+        <isotope mass="107.903892" neutronsnum="108" name="Palladium-108"/>
+        <isotope mass="109.905153" neutronsnum="110" name="Palladium-110"/>
+    </element>
+    <element mass="107.8682" atomicnumber="47" symbol="Ag" name="Silver">
+        <isotope mass="106.905097" neutronsnum="107" name="Silver-107"/>
+        <isotope mass="108.904752" neutronsnum="109" name="Silver-109"/>
+    </element>
+    <element mass="112.411" atomicnumber="48" symbol="Cd" name="Cadmium">
+        <isotope mass="105.906459" neutronsnum="106" name="Cadmium-106"/>
+        <isotope mass="107.904184" neutronsnum="108" name="Cadmium-108"/>
+        <isotope mass="109.9030021" neutronsnum="110" name="Cadmium-110"/>
+        <isotope mass="110.9041781" neutronsnum="111" name="Cadmium-111"/>
+        <isotope mass="111.9027578" neutronsnum="112" name="Cadmium-112"/>
+        <isotope mass="112.9044017" neutronsnum="113" name="Cadmium-113"/>
+        <isotope mass="113.9033585" neutronsnum="114" name="Cadmium-114"/>
+        <isotope mass="115.904756" neutronsnum="116" name="Cadmium-116"/>
+    </element>
+    <element mass="114.818" atomicnumber="49" symbol="In" name="Indium">
+        <isotope mass="112.904058" neutronsnum="113" name="Indium-113"/>
+        <isotope mass="114.903878" neutronsnum="115" name="Indium-115"/>
+    </element>
+    <element mass="118.71" atomicnumber="50" symbol="Sn" name="Tin">
+        <isotope mass="111.904818" neutronsnum="112" name="Tin-112"/>
+        <isotope mass="113.902779" neutronsnum="114" name="Tin-114"/>
+        <isotope mass="114.903342" neutronsnum="115" name="Tin-115"/>
+        <isotope mass="115.901741" neutronsnum="116" name="Tin-116"/>
+        <isotope mass="116.902952" neutronsnum="117" name="Tin-117"/>
+        <isotope mass="117.901603" neutronsnum="118" name="Tin-118"/>
+        <isotope mass="118.903308" neutronsnum="119" name="Tin-119"/>
+        <isotope mass="119.9021947" neutronsnum="120" name="Tin-120"/>
+        <isotope mass="121.903439" neutronsnum="122" name="Tin-122"/>
+        <isotope mass="123.9052739" neutronsnum="124" name="Tin-124"/>
+    </element>
+    <element mass="121.76" atomicnumber="51" symbol="Sb" name="Antimony">
+        <isotope mass="120.9038157" neutronsnum="121" name="Antimony-121"/>
+        <isotope mass="122.904214" neutronsnum="123" name="Antimony-123"/>
+    </element>
+    <element mass="127.6" atomicnumber="52" symbol="Te" name="Tellurium">
+        <isotope mass="119.90402" neutronsnum="120" name="Tellurium-120"/>
+        <isotope mass="121.9030439" neutronsnum="122" name="Tellurium-122"/>
+        <isotope mass="122.90427" neutronsnum="123" name="Tellurium-123"/>
+        <isotope mass="123.9028179" neutronsnum="124" name="Tellurium-124"/>
+        <isotope mass="124.9044307" neutronsnum="125" name="Tellurium-125"/>
+        <isotope mass="125.9033117" neutronsnum="126" name="Tellurium-126"/>
+        <isotope mass="127.9044631" neutronsnum="128" name="Tellurium-128"/>
+        <isotope mass="129.9062244" neutronsnum="130" name="Tellurium-130"/>
+    </element>
+    <element mass="126.90447" atomicnumber="53" symbol="I" name="Iodine">
+        <isotope mass="126.904473" neutronsnum="127" name="Iodine-127"/>
+    </element>
+    <element mass="131.293" atomicnumber="54" symbol="Xe" name="Xenon">
+        <isotope mass="123.905893" neutronsnum="124" name="Xenon-124"/>
+        <isotope mass="125.904274" neutronsnum="126" name="Xenon-126"/>
+        <isotope mass="127.9035313" neutronsnum="128" name="Xenon-128"/>
+        <isotope mass="128.9047794" neutronsnum="129" name="Xenon-129"/>
+        <isotope mass="129.903508" neutronsnum="130" name="Xenon-130"/>
+        <isotope mass="130.9050824" neutronsnum="131" name="Xenon-131"/>
+        <isotope mass="131.9041535" neutronsnum="132" name="Xenon-132"/>
+        <isotope mass="133.9053945" neutronsnum="134" name="Xenon-134"/>
+        <isotope mass="135.907219" neutronsnum="136" name="Xenon-136"/>
+    </element>
+    <element mass="132.9054519" atomicnumber="55" symbol="Cs" name="Caesium">
+        <isotope mass="132.905451933" neutronsnum="133" name="Caesium-133"/>
+    </element>
+    <element mass="137.327" atomicnumber="56" symbol="Ba" name="Barium">
+        <isotope mass="129.9063208" neutronsnum="130" name="Barium-130"/>
+        <isotope mass="131.9050613" neutronsnum="132" name="Barium-132"/>
+        <isotope mass="133.9045084" neutronsnum="134" name="Barium-134"/>
+        <isotope mass="134.9056886" neutronsnum="135" name="Barium-135"/>
+        <isotope mass="135.9045759" neutronsnum="136" name="Barium-136"/>
+        <isotope mass="136.9058274" neutronsnum="137" name="Barium-137"/>
+        <isotope mass="137.9052472" neutronsnum="138" name="Barium-138"/>
+    </element>
+    <element mass="138.90547" atomicnumber="57" symbol="La" name="Lanthanum">
+        <isotope mass="137.907112" neutronsnum="138" name="Lanthanum-138"/>
+        <isotope mass="138.9063533" neutronsnum="139" name="Lanthanum-139"/>
+    </element>
+    <element mass="140.116" atomicnumber="58" symbol="Ce" name="Cerium">
+        <isotope mass="135.907172" neutronsnum="136" name="Cerium-136"/>
+        <isotope mass="137.905991" neutronsnum="138" name="Cerium-138"/>
+        <isotope mass="139.9054387" neutronsnum="140" name="Cerium-140"/>
+        <isotope mass="141.909244" neutronsnum="142" name="Cerium-142"/>
+    </element>
+    <element mass="140.90765" atomicnumber="59" symbol="Pr" name="Praseodymium">
+        <isotope mass="140.9076528" neutronsnum="141" name="Praseodymium-141"/>
+    </element>
+    <element mass="144.242" atomicnumber="60" symbol="Nd" name="Neodymium">
+        <isotope mass="141.9077233" neutronsnum="142" name="Neodymium-142"/>
+        <isotope mass="142.9098143" neutronsnum="143" name="Neodymium-143"/>
+        <isotope mass="143.9100873" neutronsnum="144" name="Neodymium-144"/>
+        <isotope mass="144.9125736" neutronsnum="145" name="Neodymium-145"/>
+        <isotope mass="145.9131169" neutronsnum="146" name="Neodymium-146"/>
+        <isotope mass="147.916893" neutronsnum="148" name="Neodymium-148"/>
+        <isotope mass="149.920891" neutronsnum="150" name="Neodymium-150"/>
+    </element>
+    <element mass="145.0" atomicnumber="61" symbol="Pm" name="Promethium">
+        <isotope mass="144.912749" neutronsnum="145" name="Promethium-145"/>
+        <isotope mass="146.9151385" neutronsnum="147" name="Promethium-147"/>
+    </element>
+    <element mass="150.36" atomicnumber="62" symbol="Sm" name="Samarium">
+        <isotope mass="143.911999" neutronsnum="144" name="Samarium-144"/>
+        <isotope mass="146.9148979" neutronsnum="147" name="Samarium-147"/>
+        <isotope mass="147.9148227" neutronsnum="148" name="Samarium-148"/>
+        <isotope mass="148.9171847" neutronsnum="149" name="Samarium-149"/>
+        <isotope mass="149.9172755" neutronsnum="150" name="Samarium-150"/>
+        <isotope mass="151.9197324" neutronsnum="152" name="Samarium-152"/>
+        <isotope mass="153.9222093" neutronsnum="154" name="Samarium-154"/>
+    </element>
+    <element mass="151.964" atomicnumber="63" symbol="Eu" name="Europium">
+        <isotope mass="150.9198502" neutronsnum="151" name="Europium-151"/>
+        <isotope mass="152.9212303" neutronsnum="153" name="Europium-153"/>
+    </element>
+    <element mass="157.25" atomicnumber="64" symbol="Gd" name="Gadolinium">
+        <isotope mass="151.919791" neutronsnum="152" name="Gadolinium-152"/>
+        <isotope mass="153.9208656" neutronsnum="154" name="Gadolinium-154"/>
+        <isotope mass="154.922622" neutronsnum="155" name="Gadolinium-155"/>
+        <isotope mass="155.9221227" neutronsnum="156" name="Gadolinium-156"/>
+        <isotope mass="156.9239601" neutronsnum="157" name="Gadolinium-157"/>
+        <isotope mass="157.9241039" neutronsnum="158" name="Gadolinium-158"/>
+        <isotope mass="159.9270541" neutronsnum="160" name="Gadolinium-160"/>
+    </element>
+    <element mass="158.92535" atomicnumber="65" symbol="Tb" name="Terbium">
+        <isotope mass="158.9253468" neutronsnum="159" name="Terbium-159"/>
+    </element>
+    <element mass="162.5" atomicnumber="66" symbol="Dy" name="Dysprosium">
+        <isotope mass="155.924283" neutronsnum="156" name="Dysprosium-156"/>
+        <isotope mass="157.924409" neutronsnum="158" name="Dysprosium-158"/>
+        <isotope mass="159.9251975" neutronsnum="160" name="Dysprosium-160"/>
+        <isotope mass="160.9269334" neutronsnum="161" name="Dysprosium-161"/>
+        <isotope mass="161.9267984" neutronsnum="162" name="Dysprosium-162"/>
+        <isotope mass="162.9287312" neutronsnum="163" name="Dysprosium-163"/>
+        <isotope mass="163.9291748" neutronsnum="164" name="Dysprosium-164"/>
+    </element>
+    <element mass="164.93032" atomicnumber="67" symbol="Ho" name="Holmium">
+        <isotope mass="164.9303221" neutronsnum="165" name="Holmium-165"/>
+    </element>
+    <element mass="167.259" atomicnumber="68" symbol="Er" name="Erbium">
+        <isotope mass="161.928778" neutronsnum="162" name="Erbium-162"/>
+        <isotope mass="163.9292" neutronsnum="164" name="Erbium-164"/>
+        <isotope mass="165.9302931" neutronsnum="166" name="Erbium-166"/>
+        <isotope mass="166.9320482" neutronsnum="167" name="Erbium-167"/>
+        <isotope mass="167.9323702" neutronsnum="168" name="Erbium-168"/>
+        <isotope mass="169.9354643" neutronsnum="170" name="Erbium-170"/>
+    </element>
+    <element mass="168.93421" atomicnumber="69" symbol="Tm" name="Thulium">
+        <isotope mass="168.9342133" neutronsnum="169" name="Thulium-169"/>
+    </element>
+    <element mass="173.054" atomicnumber="70" symbol="Yb" name="Ytterbium">
+        <isotope mass="167.933897" neutronsnum="168" name="Ytterbium-168"/>
+        <isotope mass="169.9347618" neutronsnum="170" name="Ytterbium-170"/>
+        <isotope mass="170.9363258" neutronsnum="171" name="Ytterbium-171"/>
+        <isotope mass="171.9363815" neutronsnum="172" name="Ytterbium-172"/>
+        <isotope mass="172.9382108" neutronsnum="173" name="Ytterbium-173"/>
+        <isotope mass="173.9388621" neutronsnum="174" name="Ytterbium-174"/>
+        <isotope mass="175.9425717" neutronsnum="176" name="Ytterbium-176"/>
+    </element>
+    <element mass="174.9668" atomicnumber="71" symbol="Lu" name="Lutetium">
+        <isotope mass="174.9407718" neutronsnum="175" name="Lutetium-175"/>
+        <isotope mass="175.9426863" neutronsnum="176" name="Lutetium-176"/>
+    </element>
+    <element mass="178.49" atomicnumber="72" symbol="Hf" name="Hafnium">
+        <isotope mass="173.940046" neutronsnum="174" name="Hafnium-174"/>
+        <isotope mass="175.9414086" neutronsnum="176" name="Hafnium-176"/>
+        <isotope mass="176.9432207" neutronsnum="177" name="Hafnium-177"/>
+        <isotope mass="177.9436988" neutronsnum="178" name="Hafnium-178"/>
+        <isotope mass="178.9458161" neutronsnum="179" name="Hafnium-179"/>
+        <isotope mass="179.94655" neutronsnum="180" name="Hafnium-180"/>
+    </element>
+    <element mass="180.94788" atomicnumber="73" symbol="Ta" name="Tantalum">
+        <isotope mass="179.9474648" neutronsnum="180" name="Tantalum-180"/>
+        <isotope mass="180.9479958" neutronsnum="181" name="Tantalum-181"/>
+    </element>
+    <element mass="183.84" atomicnumber="74" symbol="W" name="Tungsten">
+        <isotope mass="179.946704" neutronsnum="180" name="Tungsten-180"/>
+        <isotope mass="181.9482042" neutronsnum="182" name="Tungsten-182"/>
+        <isotope mass="182.950223" neutronsnum="183" name="Tungsten-183"/>
+        <isotope mass="183.9509312" neutronsnum="184" name="Tungsten-184"/>
+        <isotope mass="185.9543641" neutronsnum="186" name="Tungsten-186"/>
+    </element>
+    <element mass="186.207" atomicnumber="75" symbol="Re" name="Rhenium">
+        <isotope mass="184.952955" neutronsnum="185" name="Rhenium-185"/>
+        <isotope mass="186.9557531" neutronsnum="187" name="Rhenium-187"/>
+    </element>
+    <element mass="190.23" atomicnumber="76" symbol="Os" name="Osmium">
+        <isotope mass="183.9524891" neutronsnum="184" name="Osmium-184"/>
+        <isotope mass="185.9538382" neutronsnum="186" name="Osmium-186"/>
+        <isotope mass="186.9557505" neutronsnum="187" name="Osmium-187"/>
+        <isotope mass="187.9558382" neutronsnum="188" name="Osmium-188"/>
+        <isotope mass="188.9581475" neutronsnum="189" name="Osmium-189"/>
+        <isotope mass="189.958447" neutronsnum="190" name="Osmium-190"/>
+        <isotope mass="191.9614807" neutronsnum="192" name="Osmium-192"/>
+    </element>
+    <element mass="192.217" atomicnumber="77" symbol="Ir" name="Iridium">
+        <isotope mass="190.960594" neutronsnum="191" name="Iridium-191"/>
+        <isotope mass="192.9629264" neutronsnum="193" name="Iridium-193"/>
+    </element>
+    <element mass="195.084" atomicnumber="78" symbol="Pt" name="Platinum">
+        <isotope mass="189.959932" neutronsnum="190" name="Platinum-190"/>
+        <isotope mass="191.961038" neutronsnum="192" name="Platinum-192"/>
+        <isotope mass="193.9626803" neutronsnum="194" name="Platinum-194"/>
+        <isotope mass="194.9647911" neutronsnum="195" name="Platinum-195"/>
+        <isotope mass="195.9649515" neutronsnum="196" name="Platinum-196"/>
+        <isotope mass="197.967893" neutronsnum="198" name="Platinum-198"/>
+    </element>
+    <element mass="196.966569" atomicnumber="79" symbol="Au" name="Gold">
+        <isotope mass="196.9665687" neutronsnum="197" name="Gold-197"/>
+    </element>
+    <element mass="200.59" atomicnumber="80" symbol="Hg" name="Mercury">
+        <isotope mass="195.965833" neutronsnum="196" name="Mercury-196"/>
+        <isotope mass="197.966769" neutronsnum="198" name="Mercury-198"/>
+        <isotope mass="198.9682799" neutronsnum="199" name="Mercury-199"/>
+        <isotope mass="199.968326" neutronsnum="200" name="Mercury-200"/>
+        <isotope mass="200.9703023" neutronsnum="201" name="Mercury-201"/>
+        <isotope mass="201.970643" neutronsnum="202" name="Mercury-202"/>
+        <isotope mass="203.9734939" neutronsnum="204" name="Mercury-204"/>
+    </element>
+    <element mass="204.3833" atomicnumber="81" symbol="Tl" name="Thallium">
+        <isotope mass="202.9723442" neutronsnum="203" name="Thallium-203"/>
+        <isotope mass="204.9744275" neutronsnum="205" name="Thallium-205"/>
+    </element>
+    <element mass="207.2" atomicnumber="82" symbol="Pb" name="Lead">
+        <isotope mass="203.9730436" neutronsnum="204" name="Lead-204"/>
+        <isotope mass="205.9744653" neutronsnum="206" name="Lead-206"/>
+        <isotope mass="206.9758969" neutronsnum="207" name="Lead-207"/>
+        <isotope mass="207.9766521" neutronsnum="208" name="Lead-208"/>
+    </element>
+</ns2:elements>

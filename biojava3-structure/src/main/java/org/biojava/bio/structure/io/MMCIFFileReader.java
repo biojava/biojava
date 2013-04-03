@@ -35,6 +35,7 @@ import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
 import org.biojava.bio.structure.Structure;
+import org.biojava.bio.structure.align.util.UserConfiguration;
 import org.biojava.bio.structure.io.StructureIOFile;
 import org.biojava.bio.structure.io.mmcif.MMcifParser;
 import org.biojava.bio.structure.io.mmcif.SimpleMMcifConsumer;
@@ -68,17 +69,15 @@ public class MMCIFFileReader implements StructureIOFile {
 	List<String> extensions;
 	boolean autoFetch;
 	boolean pdbDirectorySplit;
+	
 	public static final String lineSplit = System.getProperty("file.separator");
 	
-
 	FileParsingParameters params;
 	
 	
 	public static void main(String[] args){
-		//String filename =  "/Users/andreas/WORK/PDB/mmcif_files/a9/2a9w.cif.gz" ;
-
+	
 		StructureIOFile reader = new MMCIFFileReader();
-		reader.setPath("/Users/ap3/WORK/PDB/");
 		FileParsingParameters params = new FileParsingParameters();
 		reader.setFileParsingParameters(params);
 		
@@ -87,28 +86,23 @@ public class MMCIFFileReader implements StructureIOFile {
 			System.out.println(struc);
 			System.out.println(struc.toPDB());
 
-
 		} catch (Exception e) {
 			e.printStackTrace();
-		}
-		
-		
+		}		
 	}
-
 
 	public MMCIFFileReader(){
 		extensions    = new ArrayList<String>();
-		path = "" ;
 		extensions.add(".cif");
 		extensions.add(".mmcif");
 		extensions.add(".cif.gz");
 		extensions.add(".mmcif.gz");
 
-		autoFetch     = false;
-	
-		pdbDirectorySplit = false;
+		UserConfiguration config = new UserConfiguration();
+		path = config.getPdbFilePath() ;
+		autoFetch     = config.getAutoFetch();
+		pdbDirectorySplit = config.isSplit();
 		params = new FileParsingParameters();
-
 
 	}
 

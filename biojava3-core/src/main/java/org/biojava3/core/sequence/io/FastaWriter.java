@@ -21,6 +21,7 @@
  */
 package org.biojava3.core.sequence.io;
 
+import java.io.BufferedOutputStream;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
@@ -48,6 +49,7 @@ public class FastaWriter<S extends Sequence<?>, C extends Compound> {
     Collection<S> sequences;
     FastaHeaderFormatInterface<S, C> headerFormat;
     private int lineLength = 60;
+    byte[] lineSep = System.getProperty("line.separator").getBytes();
 /**
  * Use default line length of 60
  * @param os
@@ -55,6 +57,7 @@ public class FastaWriter<S extends Sequence<?>, C extends Compound> {
  * @param headerFormat
  */
     public FastaWriter(OutputStream os, Collection<S> sequences, FastaHeaderFormatInterface<S, C> headerFormat) {
+
         this.os = os;
         this.sequences = sequences;
         this.headerFormat = headerFormat;
@@ -75,9 +78,18 @@ public class FastaWriter<S extends Sequence<?>, C extends Compound> {
         this.lineLength = lineLength;
     }
 
-    public void process() throws Exception {
+    /**
+     * Allow an override of operating system line separator for programs that needs a specific CRLF or CR or LF option
+     * @param lineSeparator
+     */
+    public void setLineSeparator(String lineSeparator){
+        lineSep = lineSeparator.getBytes();
+    }
 
-        byte[] lineSep = System.getProperty("line.separator").getBytes();
+    public void process() throws Exception {
+       // boolean closeit = false;
+       
+        
 
         for (S sequence : sequences) {
             String header = headerFormat.getHeader(sequence);
@@ -99,15 +111,7 @@ public class FastaWriter<S extends Sequence<?>, C extends Compound> {
                 }
 
             }
-//          for(Compound c: sequence) {
-//            os.write(c.getShortName().getBytes());
-//            compoundCount++;
-//            if(compoundCount == lineLength) {
-//              os.write(lineSep);
-//              compoundCount = 0;
-//            }
 
-//          }
 
             //If we had sequence which was a reciprocal of line length
             //then don't write the line terminator as this has already written
@@ -116,11 +120,12 @@ public class FastaWriter<S extends Sequence<?>, C extends Compound> {
                 os.write(lineSep);
             }
         }
+        
     }
 
     public static void main(String[] args) {
         try {
-            FileInputStream is = new FileInputStream("test.fasta");
+            FileInputStream is = new FileInputStream("/Users/Scooter/scripps/dyadic/c1-454Scaffolds.faa");
 
 
             FastaReader<ProteinSequence, AminoAcidCompound> fastaReader = new FastaReader<ProteinSequence, AminoAcidCompound>(is, new GenericFastaHeaderParser<ProteinSequence, AminoAcidCompound>(), new ProteinSequenceCreator(AminoAcidCompoundSet.getAminoAcidCompoundSet()));
@@ -128,12 +133,18 @@ public class FastaWriter<S extends Sequence<?>, C extends Compound> {
             is.close();
 
 
-            System.out.println(proteinSequences);
+          //  System.out.println(proteinSequences);
 
-            FileOutputStream fileOutputStream = new FileOutputStream("test_out.fasta");
-
-            FastaWriter<ProteinSequence, AminoAcidCompound> fastaWriter = new FastaWriter<ProteinSequence, AminoAcidCompound>(fileOutputStream, proteinSequences.values(), new GenericFastaHeaderFormat<ProteinSequence, AminoAcidCompound>());
+            FileOutputStream fileOutputStream = new FileOutputStream("/Users/Scooter/scripps/dyadic/c1-454Scaffolds_temp.faa");
+           
+            BufferedOutputStream bo = new BufferedOutputStream(fileOutputStream);
+            long start = System.currentTimeMillis();
+            FastaWriter<ProteinSequence, AminoAcidCompound> fastaWriter = new FastaWriter<ProteinSequence, AminoAcidCompound>(bo, proteinSequences.values(), new GenericFastaHeaderFormat<ProteinSequence, AminoAcidCompound>());
             fastaWriter.process();
+            bo.close();
+            long end = System.currentTimeMillis();
+            System.out.println("Took " + (end - start) + " seconds");
+         
             fileOutputStream.close();
 
 

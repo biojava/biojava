@@ -123,8 +123,10 @@ public class ChemCompGroupFactory {
 
 	public  static String getOneLetterCode(ChemComp cc){
 		String oneLetter = cc.getOne_letter_code();
-		if ( oneLetter.equals("X") || oneLetter.equals("?")) {
+		if ( oneLetter == null || oneLetter.equals("X") || oneLetter.equals("?")) {
 			String parentId = cc.getMon_nstd_parent_comp_id() ;
+			if ( parentId == null)
+				return oneLetter;
 			ChemComp parentCC = ChemCompGroupFactory.getChemComp(parentId);
 			if ( parentCC == null)
 				return oneLetter;

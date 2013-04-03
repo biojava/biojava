@@ -73,6 +73,7 @@ public class SmithWaterman3DParameters implements ConfigStrucAligParams
 		return params;
 	}
 
+	@SuppressWarnings("rawtypes")
 	public List<Class> getUserConfigTypes()
 	{
 		List<Class> params = new ArrayList<Class>();

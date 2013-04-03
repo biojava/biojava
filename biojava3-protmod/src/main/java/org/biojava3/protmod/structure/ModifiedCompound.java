@@ -27,8 +27,6 @@ package org.biojava3.protmod.structure;
 import java.util.Collection;
 import java.util.Set;
 
-import org.biojava3.protmod.ComponentType;
-
 import org.biojava3.protmod.ProteinModification;
 
 /**
@@ -65,11 +63,10 @@ public interface ModifiedCompound {
 	
 	/**
 	 * 
-	 * @param type the type of groups.
+	 * @param isAminoAcid true if amino acids.
 	 * @return a set of involved group of the type.
-	 * @see ComponentType
 	 */
-	public Set<StructureGroup> getGroups(ComponentType type);
+	public Set<StructureGroup> getGroups(boolean isAminoAcid);
 	
 	
 	

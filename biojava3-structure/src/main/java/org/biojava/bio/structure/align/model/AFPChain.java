@@ -414,10 +414,15 @@ public class AFPChain implements Serializable, Cloneable
 		str.append("%\tSeqSim:");
 		str.append(String.format("%.0f",getSimilarity()*100));
 		str.append("%\tCov1:");
-		str.append(this.getSimilarity1());
+		str.append(this.getCoverage1());
 		str.append("%\tCov2:");
-		str.append(this.getSimilarity2());
+		str.append(this.getCoverage2());
 		str.append("%");
+		
+		if (  tmScore != -1)  {
+			str.append("\ttmScore:");
+			str.append(String.format("%.2f",tmScore));
+		}
 		str.append(newline);
 
 
@@ -1024,6 +1029,9 @@ public class AFPChain implements Serializable, Cloneable
 	}
 
 
+	/**
+	 * @see #getOptLength(), the number of aligned residues in the final alignment.
+	 */
 	public int getAlnLength()
 	{
 		return alnLength;
@@ -1074,12 +1082,16 @@ public class AFPChain implements Serializable, Cloneable
 		this.totalLenOpt = totalLenOpt;
 	}
 
+	/** this is the init-RMSD, not the final RMSD after refinement.
+	 * 
+	 * @return totalRmsdIni
+	 */
 	public double getTotalRmsdIni()
 	{
 		return totalRmsdIni;
 	}
 
-	/** this is the ini-RMSD
+	/** this is the init-RMSD, not the final RMSD after refinement.
 	 * 
 	 * @param totalRmsdIni
 	 */
@@ -1089,11 +1101,19 @@ public class AFPChain implements Serializable, Cloneable
 	}
 
 
+	/** The RMSD of the final alignment. Use this to print overal alignment RMSD.
+	 * 
+	 * @return total RMSD of the optimal alignment.
+	 */
 	public double getTotalRmsdOpt()
 	{
 		return totalRmsdOpt;
 	}
 
+	/** The RMSD of the final alignment. Use this to print overal alignment RMSD.
+	 * 
+	 * @param totalRmsdOpt : total RMSD of the optimal alignment
+	 */
 	public void setTotalRmsdOpt(double totalRmsdOpt)
 	{
 		this.totalRmsdOpt = totalRmsdOpt;

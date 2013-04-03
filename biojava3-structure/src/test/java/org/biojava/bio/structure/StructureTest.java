@@ -134,6 +134,7 @@ public class StructureTest extends TestCase {
 	}
 
 
+	@SuppressWarnings("deprecation")
 	public void testHeader() {
 		Map<String, Object> m = structure.getHeader();
 
@@ -168,6 +169,7 @@ public class StructureTest extends TestCase {
 	}
 
 
+	@SuppressWarnings("deprecation")
 	public void testPDBHeader(){
 		Map<String, Object> m = structure.getHeader();
 		PDBHeader header = structure.getPDBHeader();
@@ -214,10 +216,10 @@ public class StructureTest extends TestCase {
 
 
 		assertEquals("The group at position 22 is not a PHE","PHE", g1.getPDBName());
-		assertEquals("The group position is  not number 22","22", g1.getPDBCode());
+		assertEquals("The group position is  not number 22","22", g1.getResidueNumber().toString());
 
 		assertEquals("The group at position 54 is not a THR","THR", g2.getPDBName());
-		assertEquals("The group position is not number 54","54", g2.getPDBCode());
+		assertEquals("The group position is not number 54","54", g2.getResidueNumber().toString());
 
 		Atom[] atoms1 = new Atom[3];
 		Atom[] atoms2 = new Atom[3];

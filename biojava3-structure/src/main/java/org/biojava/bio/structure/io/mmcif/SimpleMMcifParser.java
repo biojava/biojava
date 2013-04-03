@@ -37,6 +37,7 @@ import org.biojava.bio.structure.io.StructureIOFile;
 import org.biojava.bio.structure.io.mmcif.model.AtomSite;
 import org.biojava.bio.structure.io.mmcif.model.AuditAuthor;
 import org.biojava.bio.structure.io.mmcif.model.ChemComp;
+import org.biojava.bio.structure.io.mmcif.model.ChemCompDescriptor;
 import org.biojava.bio.structure.io.mmcif.model.DatabasePDBremark;
 import org.biojava.bio.structure.io.mmcif.model.DatabasePDBrev;
 import org.biojava.bio.structure.io.mmcif.model.Entity;
@@ -573,13 +574,20 @@ public class SimpleMMcifParser implements MMcifParser {
 					"org.biojava.bio.structure.io.mmcif.model.ChemComp",
 					loopFields, lineData
 					);
+			
 			triggerNewChemComp(c);
 		} else if (category.equals("_audit_author")) {
 		   AuditAuthor aa = (AuditAuthor)buildObject(
 		         "org.biojava.bio.structure.io.mmcif.model.AuditAuthor",
 		         loopFields, lineData);
 		      triggerNewAuditAuthor(aa);
+		} else if (category.equals("_pdbx_chem_comp_descriptor")) {
+			ChemCompDescriptor ccd = (ChemCompDescriptor) buildObject(
+			         "org.biojava.bio.structure.io.mmcif.model.ChemCompDescriptor",
+			         loopFields, lineData);
+			triggerNewChemCompDescriptor(ccd);
 		} else {
+		
 
 			// trigger a generic bean that can deal with all missing data types...
 			triggerGeneric(category,loopFields,lineData);
@@ -588,42 +596,46 @@ public class SimpleMMcifParser implements MMcifParser {
 
 	}
 
-	private void setPair(Object o, List<String> lineData){
-		Class c = o.getClass();
+	
 
-		if (lineData.size() == 2){
-			String key = lineData.get(0);
-			String val = lineData.get(1);
+//	@SuppressWarnings({ "rawtypes", "unchecked"})
+//	private void setPair(Object o, List<String> lineData){
+//		Class c = o.getClass();
+//
+//		if (lineData.size() == 2){
+//			String key = lineData.get(0);
+//			String val = lineData.get(1);
+//
+//			int dotPos = key.indexOf('.');
+//
+//			if ( dotPos > -1){
+//				key = key.substring(dotPos+1,key.length());
+//			}
+//
+//			String u = key.substring(0,1).toUpperCase();
+//			try {
+//				Method m = c.getMethod("set" + u + key.substring(1,key.length()) , String.class);
+//				m.invoke(o,val);
+//			}
+//			catch (InvocationTargetException iex){
+//				iex.printStackTrace();
+//			}
+//			catch (IllegalAccessException aex){
+//				aex.printStackTrace();
+//			}
+//			catch( NoSuchMethodException nex){
+//				if ( val.equals("?") || val.equals(".")) {
+//					logger.info("trying to set field >" + key + "< in >"+ c.getName() + "<, but not found. Since value is >"+val+"<  most probably just ignore this.");
+//				} else {
+//					logger.warning("trying to set field >" + key + "< in >"+ c.getName() + "<, but not found! (value:" + val + ")");
+//				}
+//			}
+//		} else {
+//			System.err.println("trying to set key/value pair on object " +o.getClass().getName() + " but did not find in " + lineData);
+//		}
+//	}
 
-			int dotPos = key.indexOf('.');
-
-			if ( dotPos > -1){
-				key = key.substring(dotPos+1,key.length());
-			}
-
-			String u = key.substring(0,1).toUpperCase();
-			try {
-				Method m = c.getMethod("set" + u + key.substring(1,key.length()) , String.class);
-				m.invoke(o,val);
-			}
-			catch (InvocationTargetException iex){
-				iex.printStackTrace();
-			}
-			catch (IllegalAccessException aex){
-				aex.printStackTrace();
-			}
-			catch( NoSuchMethodException nex){
-				if ( val.equals("?") || val.equals(".")) {
-					logger.info("trying to set field >" + key + "< in >"+ c.getName() + "<, but not found. Since value is >"+val+"<  most probably just ignore this.");
-				} else {
-					logger.warning("trying to set field >" + key + "< in >"+ c.getName() + "<, but not found! (value:" + val + ")");
-				}
-			}
-		} else {
-			System.err.println("trying to set key/value pair on object " +o.getClass().getName() + " but did not find in " + lineData);
-		}
-	}
-
+	@SuppressWarnings("rawtypes")
 	private void setArray(Class c, Object o, String key, String val){
 
 
@@ -643,6 +655,7 @@ public class SimpleMMcifParser implements MMcifParser {
 
 	}
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private Object buildObject(String className, List<String> loopFields, List<String> lineData) {
 		Object o = null;
 		try {
@@ -795,6 +808,11 @@ public class SimpleMMcifParser implements MMcifParser {
 	public void triggerDocumentEnd(){
 		for(MMcifConsumer c : consumers){
 			c.documentEnd();
+		}
+	}
+	public void triggerNewChemCompDescriptor(ChemCompDescriptor ccd) {
+		for(MMcifConsumer c : consumers){
+			c.newChemCompDescriptor(ccd);
 		}
 	}
 

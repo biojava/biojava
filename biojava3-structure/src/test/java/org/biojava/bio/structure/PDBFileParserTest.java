@@ -55,6 +55,7 @@ public class PDBFileParserTest extends TestCase {
 	 * @return the resolution as a Float or null if no resolution found
 	 * @throws Exception
 	 */
+	@SuppressWarnings("deprecation")
 	private Object testREMARK2Parsing(String fakeFile) throws Exception{
 		BufferedReader br = new BufferedReader(new StringReader(fakeFile));
 
@@ -288,7 +289,7 @@ public class PDBFileParserTest extends TestCase {
 			Structure s = parser.parsePDBFile(inStream);
 			//                        System.out.print(s.getSites());
 			Chain chain = new ChainImpl();
-			chain.setName("H");
+			chain.setChainID("H");
 			for (Site site : s.getSites()) {
 				//System.out.println("Site: " + site.getSiteID());
 				for (Group group : site.getGroups()) {
@@ -351,7 +352,7 @@ public class PDBFileParserTest extends TestCase {
         } catch (IOException ex) {
             Logger.getLogger(PDBFileParserTest.class.getName()).log(Level.SEVERE, null, ex);
         }
-            String jrnl = s.getJournalArticle().toString();
+           // String jrnl = s.getJournalArticle().toString();
 //            System.out.println(jrnl);
             JournalArticle journalArticle = s.getJournalArticle();
             assertEquals("293", journalArticle.getVolume());
@@ -378,7 +379,7 @@ public class PDBFileParserTest extends TestCase {
         } catch (IOException ex) {
             Logger.getLogger(PDBFileParserTest.class.getName()).log(Level.SEVERE, null, ex);
         }
-            String jrnl = s.getJournalArticle().toString();
+        //    String jrnl = s.getJournalArticle().toString();
 //            System.out.println(jrnl);
             JournalArticle journalArticle = s.getJournalArticle();
             assertEquals("293", journalArticle.getVolume());
@@ -404,7 +405,7 @@ public class PDBFileParserTest extends TestCase {
         } catch (IOException ex) {
             Logger.getLogger(PDBFileParserTest.class.getName()).log(Level.SEVERE, null, ex);
         }
-            String jrnl = s.getJournalArticle().toString();
+           // String jrnl = s.getJournalArticle().toString();
 //            System.out.println(jrnl);
             JournalArticle journalArticle = s.getJournalArticle();
             assertEquals("", journalArticle.getVolume());
@@ -434,7 +435,7 @@ public class PDBFileParserTest extends TestCase {
         } catch (IOException ex) {
             Logger.getLogger(PDBFileParserTest.class.getName()).log(Level.SEVERE, null, ex);
         }
-            String jrnl = s.getJournalArticle().toString();
+           // String jrnl = s.getJournalArticle().toString();
 //            System.out.println(jrnl);
             JournalArticle journalArticle = s.getJournalArticle();
             assertEquals("", journalArticle.getVolume());
@@ -464,7 +465,7 @@ public class PDBFileParserTest extends TestCase {
         } catch (IOException ex) {
             Logger.getLogger(PDBFileParserTest.class.getName()).log(Level.SEVERE, null, ex);
         }
-            String jrnl = s.getJournalArticle().toString();
+         //   String jrnl = s.getJournalArticle().toString();
 //            System.out.println(jrnl);
             JournalArticle journalArticle = s.getJournalArticle();
 //            System.out.println(journalArticle.getRef());
@@ -493,8 +494,7 @@ public class PDBFileParserTest extends TestCase {
         } catch (IOException ex) {
             Logger.getLogger(PDBFileParserTest.class.getName()).log(Level.SEVERE, null, ex);
         }
-            String jrnl = s.getJournalArticle().toString();
-//            System.out.println(jrnl);
+          
             JournalArticle journalArticle = s.getJournalArticle();
             assertNull(journalArticle.getVolume());
             assertNull(journalArticle.getStartPage());

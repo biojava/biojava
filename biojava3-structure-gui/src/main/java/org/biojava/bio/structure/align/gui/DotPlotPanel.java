@@ -28,21 +28,15 @@ import java.util.List;
 import javax.swing.JFrame;
 
 import org.biojava.bio.structure.Atom;
-import org.biojava.bio.structure.Group;
 import org.biojava.bio.structure.StructureException;
-import org.biojava.bio.structure.StructureTools;
-import org.biojava.bio.structure.align.StructureAlignment;
 import org.biojava.bio.structure.align.StructureAlignmentFactory;
-import org.biojava.bio.structure.align.ce.CECalculator;
+import org.biojava.bio.structure.align.ce.CeCPMain;
 import org.biojava.bio.structure.align.ce.CeMain;
 import org.biojava.bio.structure.align.ce.CeParameters;
-import org.biojava.bio.structure.align.ce.ConfigStrucAligParams;
-import org.biojava.bio.structure.align.gui.jmol.StructureAlignmentJmol;
 import org.biojava.bio.structure.align.helper.JointFragments;
 import org.biojava.bio.structure.align.model.AFP;
 import org.biojava.bio.structure.align.model.AFPChain;
 import org.biojava.bio.structure.align.pairwise.AlternativeAlignment;
-import org.biojava.bio.structure.align.pairwise.FragmentPair;
 import org.biojava.bio.structure.align.util.AtomCache;
 import org.biojava.bio.structure.jama.Matrix;
 import org.biojava.bio.structure.gui.ScaleableMatrixPanel;
@@ -70,7 +64,8 @@ public class DotPlotPanel extends ScaleableMatrixPanel {
 	 *
 	 *  If this set to null, the background is set to black.
 	 */
-	DotPlotPanel(AFPChain alignment ){
+	public DotPlotPanel(AFPChain alignment ){
+		super();
 		
 		final double defaultBackground = 100.;
 				
@@ -155,7 +150,7 @@ public class DotPlotPanel extends ScaleableMatrixPanel {
 	private static JFrame showDotPlotJFrame(AFPChain afpChain ) {
 		
 		DotPlotPanel dotplot = new DotPlotPanel(afpChain);			
-		
+				
 		//Create JFrame
 		
 		String title = String.format("Dot plot of %s vs. %s", afpChain.getName1(),afpChain.getName2());
@@ -177,8 +172,7 @@ public class DotPlotPanel extends ScaleableMatrixPanel {
 		frame.setVisible(true);
 		
 		return frame;
-	}
-	
+	}	
 	
 	public static void main(String[] args) {
 
@@ -192,7 +186,7 @@ public class DotPlotPanel extends ScaleableMatrixPanel {
 //		String name1= "1uiz.A";
 //		String name2= "1xxa.C";
 
-		AtomCache cache = new AtomCache("/tmp/", true);
+		AtomCache cache = new AtomCache();
 
 
 		try {
@@ -201,8 +195,8 @@ public class DotPlotPanel extends ScaleableMatrixPanel {
 			CeParameters params = (CeParameters) ceA.getParameters();
 			params.setMaxGapSize(0);
 			
-			Atom[] ca1 = cache.getAtoms(name1, true);
-			Atom[] ca2 = cache.getAtoms(name2, true);
+			Atom[] ca1 = cache.getAtoms(name1);
+			Atom[] ca2 = cache.getAtoms(name2);
 			
 			// Create initial alignment
 			AFPChain afpChain = ceA.align(ca1,ca2);
@@ -212,6 +206,7 @@ public class DotPlotPanel extends ScaleableMatrixPanel {
 				System.out.println(afpI);
 			}
 			
+			/*
 			// Get background distances
 			CECalculator calculator = ceA.getCECalculator();
 			int winSize = params.getWinSize();
@@ -219,6 +214,22 @@ public class DotPlotPanel extends ScaleableMatrixPanel {
 			double[][] m = calculator.initSumOfDistances(ca1.length, ca2.length, params.getWinSize(), winSizeComb1, ca1, ca2);
 			//double[][] m = calculator.getMatMatrix();
 			Matrix mat = new Matrix(m);
+			
+			//Find range
+			double min = mat.get(0, 0);
+			double max = min;
+			for(int r=0;r<mat.getRowDimension();r++) {
+				for(int c=0;c<mat.getColumnDimension();c++) {
+					double y = mat.get(r,c);
+					if(y<min)
+						min = y;
+					if(y>max)
+						max = y;
+				}
+			}
+			System.out.format("[%f, %f]\n", min, max);
+			*/
+			
 			//afpChain.setDistanceMatrix(mat);
 			showDotPlotJFrame(afpChain);
 			
@@ -228,7 +239,7 @@ public class DotPlotPanel extends ScaleableMatrixPanel {
 			
 			//////////////////////////
 			// Now make it circular
-			params.setCheckCircular(true);
+			ceA = (CeMain) StructureAlignmentFactory.getAlgorithm(CeCPMain.algorithmName);
 	
 			System.out.format("Aligning %s[%d] with %s[%d] with CPs\n",name1,ca1.length,name2,ca2.length);
 			afpChain = ceA.align(ca1,ca2);

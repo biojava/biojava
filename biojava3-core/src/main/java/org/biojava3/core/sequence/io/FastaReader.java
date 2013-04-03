@@ -23,6 +23,8 @@ package org.biojava3.core.sequence.io;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.LinkedHashMap;
@@ -56,7 +58,8 @@ public class FastaReader<S extends Sequence<?>, C extends Compound> {
      * @param headerParser
      * @param sequenceCreator
      */
-    public FastaReader(InputStream is, FastaHeaderParserInterface<S,C> headerParser, SequenceCreatorInterface<C> sequenceCreator) {
+    public FastaReader(InputStream is, FastaHeaderParserInterface<S,C> headerParser,
+    		SequenceCreatorInterface<C> sequenceCreator) {
         this.headerParser = headerParser;
         isr = new InputStreamReader(is);
         this.br = new BufferedReaderBytesRead(isr);
@@ -69,9 +72,14 @@ public class FastaReader<S extends Sequence<?>, C extends Compound> {
      * @param file
      * @param headerParser
      * @param sequenceCreator
-     * @throws Exception
+     * @throws FileNotFoundException if the file does not exist, is a directory 
+     * 	rather than a regular file, or for some other reason cannot be opened
+     * 	for reading.
+     * @throws SecurityException if a security manager exists and its checkRead
+     * 	method denies read access to the file.
      */
-    public FastaReader(File file, FastaHeaderParserInterface<S,C> headerParser, SequenceCreatorInterface<C> sequenceCreator) throws Exception {
+    public FastaReader(File file, FastaHeaderParserInterface<S,C> headerParser,
+    		SequenceCreatorInterface<C> sequenceCreator) throws FileNotFoundException {
         this.headerParser = headerParser;
         fi = new FileInputStream(file);
         isr = new InputStreamReader(fi);
@@ -82,10 +90,10 @@ public class FastaReader<S extends Sequence<?>, C extends Compound> {
     /**
      * The parsing is done in this method
      * @return
-     * @throws Exception
+     * @throws IOException if an error occurs reading the input file
      */
     @SuppressWarnings("unchecked")
-    public LinkedHashMap<String,S> process() throws Exception {
+    public LinkedHashMap<String,S> process() throws IOException {
         LinkedHashMap<String,S> sequences = new LinkedHashMap<String,S>();
 
 
@@ -158,9 +166,9 @@ public class FastaReader<S extends Sequence<?>, C extends Compound> {
             for(String key : proteinProxySequences.keySet()){
                 ProteinSequence proteinSequence = proteinProxySequences.get(key);
                 System.out.println(key);
-                if(key.equals("Q98SJ1_CHICK/15-61")){
-                    int dummy = 1;
-                }
+//                if(key.equals("Q98SJ1_CHICK/15-61")){
+//                    int dummy = 1;
+//                }
                 System.out.println(proteinSequence.toString());
 
             }

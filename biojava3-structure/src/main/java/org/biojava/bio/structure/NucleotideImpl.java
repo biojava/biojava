@@ -74,7 +74,7 @@ public class NucleotideImpl
 	NucleotideImpl n = new NucleotideImpl();
 
 	n.setPDBFlag(has3D());
-	n.setPDBCode(getPDBCode());
+	n.setResidueNumber(getResidueNumber());
 	try {
 	    n.setPDBName(getPDBName());
 	} catch (PDBParseException e) {

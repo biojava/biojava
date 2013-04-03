@@ -187,8 +187,8 @@ implements AminoAcid, Serializable
 	 */
 	public Object clone(){
 		AminoAcidImpl n = new AminoAcidImpl();
-		n.setPDBFlag(has3D());
-		n.setPDBCode(getPDBCode());
+		n.setPDBFlag(has3D());		
+		n.setResidueNumber(getResidueNumber());
 		try {
 			n.setPDBName(getPDBName());
 		} catch (PDBParseException e) {

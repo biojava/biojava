@@ -33,6 +33,7 @@ import org.biojava.bio.structure.Chain;
  */ 
 public abstract class AbstractBean {
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public String toString(){
 		StringBuffer buf = new StringBuffer();
 		buf.append(this.getClass().getName() + ": ");

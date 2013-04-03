@@ -50,6 +50,7 @@ import junit.framework.TestCase;
 public class TestWebStartClient extends TestCase
 {
 
+	@SuppressWarnings("unused")
 	public void testCPAlignment(){
 
 		//String name1="1cdg.A";
@@ -69,6 +70,7 @@ public class TestWebStartClient extends TestCase
 		}
 	}
 
+	@SuppressWarnings("unused")
 	private void align(String name1, String name2, StructureAlignment algorithm) 
 	throws StructureException, IOException {
 		if ( algorithm.getAlgorithmName().startsWith("Smith")) {

@@ -58,11 +58,13 @@ public class StructureImpl implements Structure, Serializable {
         List<DBRef> dbrefs;
         List<SSBond> ssbonds;
         List<Site> sites;
+        List<Group> hetAtoms;
 	String name ;
     private JournalArticle journalArticle;
 	private PDBHeader pdbHeader;
 	boolean nmrflag ;
 	private Long id;
+	private boolean biologicalAssembly;
 
 
 	/**
@@ -81,6 +83,7 @@ public class StructureImpl implements Structure, Serializable {
         pdbHeader      = new PDBHeader();
         ssbonds        = new ArrayList<SSBond>();
         sites          = new ArrayList<Site>();
+        hetAtoms          = new ArrayList<Group>();
 	}
 
 	/** get the ID used by Hibernate
@@ -186,7 +189,7 @@ public class StructureImpl implements Structure, Serializable {
 		Iterator<Group> giter = groups.iterator();
 		while (giter.hasNext()){
 			Group g =  giter.next();
-			String rnum = g.getPDBCode();
+			String rnum = g.getResidueNumber().toString();
 			//System.out.println(g + " >" + rnum + "< >" + pdbResnum + "<");
 			// we only mutate amino acids
 			// and ignore hetatoms and nucleotides in this case
@@ -217,7 +220,7 @@ public class StructureImpl implements Structure, Serializable {
 		while (iter.hasNext()){
 			Chain c = iter.next();
 
-			if (c.getName().equals(chainId)) {
+			if (c.getChainID().equals(chainId)) {
 				return c;
 			}
 		}
@@ -430,7 +433,7 @@ public class StructureImpl implements Structure, Serializable {
 				List<Group> hgr = cha.getAtomGroups("hetatm");
 				List<Group> ngr = cha.getAtomGroups("nucleotide");
 
-				str.append("chain " + j + ": >"+cha.getName()+"< ");
+				str.append("chain " + j + ": >"+cha.getChainID()+"< ");
 				if ( cha.getHeader() != null){
 					Compound comp = cha.getHeader();
 					String molName = comp.getMolName();
@@ -542,7 +545,7 @@ public class StructureImpl implements Structure, Serializable {
 		Iterator<Chain> iter = chains.iterator();
 		while ( iter.hasNext()){
 			Chain c = iter.next();
-			if ( c.getName().equals(chainId))
+			if ( c.getChainID().equals(chainId))
 				return c;
 		}
 		throw new StructureException("did not find chain with chainId >" + chainId+"<");
@@ -579,7 +582,7 @@ public class StructureImpl implements Structure, Serializable {
 		while ( iter.hasNext()){
 			Chain c = iter.next();
 			// we check here with equals because we might want to distinguish between upper and lower case chains!
-			if ( c.getName().equals(chainId))
+			if ( c.getChainID().equals(chainId))
 				return true;
 		}
 		return false;
@@ -697,6 +700,33 @@ public class StructureImpl implements Structure, Serializable {
  
     public void setSites(List<Site> sites) {
             this.sites = sites;
+    }
+
+    /**
+     *
+     * @return a list of Groups listed in the HET records - this will not
+     * include any waters.
+     */
+    public List<Group> getHetGroups() {
+        return hetAtoms;
+    }
+    
+    /**
+     * Sets a flag to indicate if this structure is a biological assembly
+     * @param biologicalAssembly true if biological assembly, otherwise false
+     * @since 3.2
+     */
+    public void setBiologicalAssembly(boolean biologicalAssembly) {
+    	this.biologicalAssembly = biologicalAssembly;
+    }
+
+    /**
+     * Gets flag that indicates if this structure is a biological assembly
+     * @return the sites contained in this structure
+     * @since 3.2
+     */
+    public boolean isBiologicalAssembly() {
+    	return biologicalAssembly;
     }
 
 }

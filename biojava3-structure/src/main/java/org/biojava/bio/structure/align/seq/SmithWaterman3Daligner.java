@@ -25,16 +25,14 @@ import org.biojava3.core.sequence.ProteinSequence;
 import org.biojava3.core.sequence.compound.AminoAcidCompound;
 import org.biojava3.core.sequence.compound.AminoAcidCompoundSet;
 import org.biojava3.core.sequence.template.Compound;
-import org.biojava3.core.sequence.template.Sequence;
 
 
 /** provides a 3D superimposition based on the sequence alignment
  * 
  * @author Andreas Prlic
- * @param <S>
  *
  */
-public class SmithWaterman3Daligner<S> extends AbstractStructureAlignment implements StructureAlignment {
+public class SmithWaterman3Daligner extends AbstractStructureAlignment implements StructureAlignment {
 
 	public static final String algorithmName = "Smith-Waterman superposition";
 
@@ -108,7 +106,7 @@ public class SmithWaterman3Daligner<S> extends AbstractStructureAlignment implem
 			penalty.setOpenPenalty(params.getGapOpen());
 			penalty.setExtensionPenalty(params.getGapExtend());
 			
-			PairwiseSequenceAligner smithWaterman =
+			PairwiseSequenceAligner<ProteinSequence, AminoAcidCompound> smithWaterman =
 				Alignments.getPairwiseAligner(s1, s2, PairwiseSequenceAlignerType.LOCAL, penalty, matrix);
 
 			SequencePair<ProteinSequence, AminoAcidCompound> pair = smithWaterman.getPair();
@@ -127,23 +125,23 @@ public class SmithWaterman3Daligner<S> extends AbstractStructureAlignment implem
 
 	/**
 	 * Converts a sequence alignment into a structural alignment
-	 * @param aligner The sequence aligner
+	 * @param smithWaterman The sequence aligner
 	 * @param ca1 CA atoms from the query sequence
 	 * @param ca2 CA atoms from the target sequence
-	 * @param aligner pairwise Sequence aligner
+	 * @param smithWaterman pairwise Sequence aligner
 	 * @param aligPair The sequence alignment calculated by aligner
 	 * @return an AFPChain encapsulating the alignment in aligPair
 	 * @throws StructureException
 	 */
 	private AFPChain convert(Atom[] ca1, Atom[] ca2,  SequencePair<ProteinSequence, 
-			AminoAcidCompound> pair, PairwiseSequenceAligner< Sequence<Compound>,  Compound> aligner) throws StructureException {
+			AminoAcidCompound> pair, PairwiseSequenceAligner<ProteinSequence, AminoAcidCompound> smithWaterman) throws StructureException {
 		AFPChain afpChain = new AFPChain();
 		int ca1Length = ca1.length;
 		int ca2Length = ca2.length;		
 
 		//System.out.println(aligner.getScore());
 
-		afpChain.setAlignScore(aligner.getScore());
+		afpChain.setAlignScore(smithWaterman.getScore());
 		afpChain.setCa1Length(ca1Length);
 		afpChain.setCa2Length(ca2Length);
 
@@ -191,8 +189,8 @@ public class SmithWaterman3Daligner<S> extends AbstractStructureAlignment implem
 				strBuf1[nAtom] = ca1[pos1];
 				strBuf2[nAtom] = ca2[pos2];
 				//
-				char l1 = getOneLetter(ca1[pos1].getParent());
-				char l2 = getOneLetter(ca2[pos2].getParent());
+				char l1 = getOneLetter(ca1[pos1].getGroup());
+				char l2 = getOneLetter(ca2[pos2].getGroup());
 				//
 				alnseq1[myI] = Character.toUpperCase(l1);
 				alnseq2[myI] = Character.toUpperCase(l2);
@@ -227,7 +225,7 @@ public class SmithWaterman3Daligner<S> extends AbstractStructureAlignment implem
 					alnseq1[myI] = '-';
 
 				} else {
-					char l1 = getOneLetter(ca1[pos1].getParent());
+					char l1 = getOneLetter(ca1[pos1].getGroup());
 					alnseq1[myI] = Character.toUpperCase(l1);
 					align_se1[myI] = pos1;
 				}
@@ -235,7 +233,7 @@ public class SmithWaterman3Daligner<S> extends AbstractStructureAlignment implem
 					alnseq2[myI] = '-';
 
 				} else {
-					char l2 = getOneLetter(ca2[pos2].getParent());
+					char l2 = getOneLetter(ca2[pos2].getGroup());
 					alnseq2[myI] = Character.toUpperCase(l2);
 					align_se2[myI] = pos2;
 
@@ -254,10 +252,10 @@ public class SmithWaterman3Daligner<S> extends AbstractStructureAlignment implem
 		afpChain.setAlnseq2(alnseq2);
 		afpChain.setAlnsymb(alnsymb);
 
-		System.out.println("nr aligned positions:" + pos + " " + nAtom);
-		System.out.println(new String(alnseq1));
-		System.out.println(new String(alnsymb));
-		System.out.println(new String(alnseq2));
+//		System.out.println("nr aligned positions:" + pos + " " + nAtom);
+//		System.out.println(new String(alnseq1));
+//		System.out.println(new String(alnsymb));
+//		System.out.println(new String(alnseq2));
 
 		// CE uses the aligned pairs as reference not the whole alignment including gaps...
 		afpChain.setIdentity(nrIdent*1.0/pos);

@@ -551,15 +551,15 @@ public class ChainImpl implements Chain, Serializable {
 		//List<Group> groups = c.getSeqResGroups();
 		String seq = getSeqResSequence();
 
-		String name = "";
-		if ( this.getParent() != null )
-			name = getParent().getPDBCode();
-		name += "." + getName();
+//		String name = "";
+//		if ( this.getParent() != null )
+//			name = getParent().getPDBCode();
+//		name += "." + getName();
 
 		Sequence<AminoAcidCompound> s = null;
 
 		s = new ProteinSequence(seq);
-
+		
 		//TODO: return a DNA sequence if the content is DNA...
 		return s;
 
@@ -599,6 +599,8 @@ public class ChainImpl implements Chain, Serializable {
 						PolymerType.POLYNUCLEOTIDE_ONLY.contains(cc.getPolymerType())){
 					// an amino acid residue.. use for alignment
 					String oneLetter= ChemCompGroupFactory.getOneLetterCode(cc);
+					if ( oneLetter == null)
+						oneLetter = "X";
 					sequence.append(oneLetter);
 				}
 
@@ -634,6 +636,8 @@ public class ChainImpl implements Chain, Serializable {
 						PolymerType.POLYNUCLEOTIDE_ONLY.contains(cc.getPolymerType())){
 					// an amino acid residue.. use for alignment
 					String oneLetter= ChemCompGroupFactory.getOneLetterCode(cc);
+					if ( oneLetter == null)
+						oneLetter = "X";
 					str.append(oneLetter);
 				}
 			}
@@ -728,6 +732,7 @@ public class ChainImpl implements Chain, Serializable {
 				groups.add(g);
 			}
 		}
+		
 		return groups;
 	}
 }

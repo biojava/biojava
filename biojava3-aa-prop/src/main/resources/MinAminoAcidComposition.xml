@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ns2:compoundtable xmlns:ns2="http://biojava.org">
+    <compound symbol="A">
+        <element count="3" name="Carbon"/>
+        <element count="1" name="Nitrogen"/>
+        <element count="1" name="Oxygen"/>
+        <element count="5" name="Hydrogen"/>
+    </compound>
+    <compound symbol="R">
+        <element count="6" name="Carbon"/>
+        <element count="4" name="Nitrogen"/>
+        <element count="1" name="Oxygen"/>
+        <element count="12" name="Hydrogen"/>
+    </compound>
+    <compound symbol="N">
+        <element count="4" name="Carbon"/>
+        <element count="2" name="Nitrogen"/>
+        <element count="2" name="Oxygen"/>
+        <element count="6" name="Hydrogen"/>
+    </compound>
+    <compound symbol="D">
+        <element count="4" name="Carbon"/>
+        <element count="1" name="Nitrogen"/>
+        <element count="3" name="Oxygen"/>
+        <element count="5" name="Hydrogen"/>
+    </compound>
+    <compound symbol="C">
+        <element count="3" name="Carbon"/>
+        <element count="1" name="Nitrogen"/>
+        <element count="1" name="Oxygen"/>
+        <element count="1" name="Sulfur"/>
+        <element count="5" name="Hydrogen"/>
+    </compound>
+    <compound symbol="E">
+        <element count="5" name="Carbon"/>
+        <element count="1" name="Nitrogen"/>
+        <element count="3" name="Oxygen"/>
+        <element count="7" name="Hydrogen"/>
+    </compound>
+    <compound symbol="Q">
+        <element count="5" name="Carbon"/>
+        <element count="2" name="Nitrogen"/>
+        <element count="2" name="Oxygen"/>
+        <element count="8" name="Hydrogen"/>
+    </compound>
+    <compound symbol="G">
+        <element count="2" name="Carbon"/>
+        <element count="1" name="Nitrogen"/>
+        <element count="1" name="Oxygen"/>
+        <element count="3" name="Hydrogen"/>
+    </compound>
+    <compound symbol="H">
+        <element count="6" name="Carbon"/>
+        <element count="3" name="Nitrogen"/>
+        <element count="1" name="Oxygen"/>
+        <element count="7" name="Hydrogen"/>
+    </compound>
+    <compound symbol="I">
+        <element count="6" name="Carbon"/>
+        <element count="1" name="Nitrogen"/>
+        <element count="1" name="Oxygen"/>
+        <element count="11" name="Hydrogen"/>
+    </compound>
+    <compound symbol="L">
+        <element count="6" name="Carbon"/>
+        <element count="1" name="Nitrogen"/>
+        <element count="1" name="Oxygen"/>
+        <element count="11" name="Hydrogen"/>
+    </compound>
+    <compound symbol="K">
+        <element count="6" name="Carbon"/>
+        <element count="2" name="Nitrogen"/>
+        <element count="1" name="Oxygen"/>
+        <element count="12" name="Hydrogen"/>
+    </compound>
+    <compound symbol="M">
+        <element count="5" name="Carbon"/>
+        <element count="1" name="Nitrogen"/>
+        <element count="1" name="Oxygen"/>
+        <element count="1" name="Sulfur"/>
+        <element count="9" name="Hydrogen"/>
+    </compound>
+    <compound symbol="F">
+        <element count="9" name="Carbon"/>
+        <element count="1" name="Nitrogen"/>
+        <element count="1" name="Oxygen"/>
+        <element count="9" name="Hydrogen"/>
+    </compound>
+    <compound symbol="P">
+        <element count="5" name="Carbon"/>
+        <element count="1" name="Nitrogen"/>
+        <element count="1" name="Oxygen"/>
+        <element count="7" name="Hydrogen"/>
+    </compound>
+    <compound symbol="S">
+        <element count="3" name="Carbon"/>
+        <element count="1" name="Nitrogen"/>
+        <element count="2" name="Oxygen"/>
+        <element count="5" name="Hydrogen"/>
+    </compound>
+    <compound symbol="T">
+        <element count="4" name="Carbon"/>
+        <element count="7" name="Hydrogen"/>
+        <element count="1" name="Nitrogen"/>
+        <element count="2" name="Oxygen"/>
+    </compound>
+    <compound symbol="W">
+        <element count="11" name="Carbon"/>
+        <element count="2" name="Nitrogen"/>
+        <element count="1" name="Oxygen"/>
+        <element count="10" name="Hydrogen"/>
+    </compound>
+    <compound symbol="Y">
+        <element count="9" name="Carbon"/>
+        <element count="1" name="Nitrogen"/>
+        <element count="2" name="Oxygen"/>
+        <element count="9" name="Hydrogen"/>
+    </compound>
+    <compound symbol="V">
+        <element count="5" name="Carbon"/>
+        <element count="1" name="Nitrogen"/>
+        <element count="1" name="Oxygen"/>
+        <element count="9" name="Hydrogen"/>
+    </compound>
+</ns2:compoundtable>

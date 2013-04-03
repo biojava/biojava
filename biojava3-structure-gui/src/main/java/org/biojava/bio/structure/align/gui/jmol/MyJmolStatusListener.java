@@ -61,6 +61,7 @@ public class MyJmolStatusListener implements JmolStatusListener {
 		return null;
 	}
 
+	@SuppressWarnings("rawtypes")
 	public Hashtable getRegistryInfo() {
 		// TODO Auto-generated method stub
 		return null;

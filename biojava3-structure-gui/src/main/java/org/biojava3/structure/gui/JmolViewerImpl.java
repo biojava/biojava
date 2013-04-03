@@ -150,19 +150,20 @@ public class JmolViewerImpl implements StructureViewer {
     public void setZoom(int i) {
         // TODO Auto-generated method stub
     }
-
+    @SuppressWarnings("rawtypes")
     static class JmolPanel extends JPanel {
 
         /**
          *
          */
         private static final long serialVersionUID = -3661941083797644242L;
-        @SuppressWarnings("unchecked")
+        
 		Class viewerC;
-        @SuppressWarnings("unchecked")
+        
         Class adapterC;
-        @SuppressWarnings("unchecked")
-        Class smartAdapterC;
+        
+        
+		Class smartAdapterC;
         Object viewerO;
         Object adapterO;
         Method evalString;
@@ -211,7 +212,7 @@ public class JmolViewerImpl implements StructureViewer {
 
         }
 
-        @SuppressWarnings("unchecked")
+        
         public Class getViewer() {
             return viewerC;
         }

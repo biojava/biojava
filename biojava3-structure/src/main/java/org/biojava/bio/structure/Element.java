@@ -23,6 +23,8 @@
 package org.biojava.bio.structure;
 
 import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Element is an enumeration of the elements of the periodic table. In addition,
@@ -160,7 +162,7 @@ public enum Element implements Serializable {
     // should these be declared final?
     private int atomicNumber;
     private int period;
-    private int hillOrder;
+    //private int hillOrder;
     private float VDWRadius; // in Angstroms
     private float covalentRadius; // in Angstroms
     private int valenceElectronCount;
@@ -175,17 +177,25 @@ public enum Element implements Serializable {
     private float paulingElectronegativity;
     // Element type: http://www.ptable.com/
     private ElementType elementType;
-    private static final Element[] hillOrderIndex;
+    //private static final Element[] hillOrderIndex;
     
+//
+//    static {
+//        hillOrderIndex = new Element[Element.values().length + 1];
+//        for (Element e : Element.values()) {
+//            hillOrderIndex[e.getHillOrder()] = e;
+//        }
+//        hillOrderIndex[Element.H.getHillOrder()] = Element.H; // special case for hydrogen
+//    }
 
+    private static final Map<String,Element> allElements ;
+   
     static {
-        hillOrderIndex = new Element[Element.values().length + 1];
-        for (Element e : Element.values()) {
-            hillOrderIndex[e.getHillOrder()] = e;
-        }
-        hillOrderIndex[Element.H.getHillOrder()] = Element.H; // special case for hydrogen
+    	allElements = new HashMap<String,Element>();
+    	for (Element e : Element.values()){
+    		allElements.put(e.toString().toLowerCase(), e);
+    	}
     }
-
     private Element(int atomicNumber,
             int period,
             int hillOrder,
@@ -204,7 +214,7 @@ public enum Element implements Serializable {
 
         this.atomicNumber = atomicNumber;
         this.period = period;
-        this.hillOrder = hillOrder;
+        //this.hillOrder = hillOrder;
         this.VDWRadius = VDWRadius;
         this.covalentRadius = covalentRadius;
         this.valenceElectronCount = valenceElectronCount;
@@ -217,8 +227,9 @@ public enum Element implements Serializable {
         this.oxidationState = oxidationState;
         this.paulingElectronegativity = paulingElectronegativity;
         this.elementType = elementType;
+        
+       
     }
-
     /**
      * Returns the atomic number of this Element.
      * @return the atomic number of this Element.
@@ -254,7 +265,9 @@ public enum Element implements Serializable {
      * @return the Hill Order of this Element.
      */
     public int getHillOrder() {
-        return hillOrder;
+    	throw new RuntimeException("Not implemented, yet!");
+    	//throw new NotImplementedYetException();
+        //return hillOrder;
     }
 
     /**
@@ -361,12 +374,10 @@ public enum Element implements Serializable {
      * @return the Element specified by the element symbol.
      */
     public static Element valueOfIgnoreCase(String elementSymbol) throws IllegalArgumentException {
-        Element[] list = Element.values();
-        for (Element element : list) {
-            if (element.toString().equalsIgnoreCase(elementSymbol)) {
-                return element;
-            }
-        }
+
+    	Element e = allElements.get(elementSymbol.toLowerCase());
+        if ( e != null)
+        	return e;
         throw new IllegalArgumentException("Invalid element symbol: " + elementSymbol);
     }
 
@@ -443,6 +454,7 @@ public enum Element implements Serializable {
      * @see #getHillOrder()
      */
     public static Element getElementFromHillIndex(int index) {
-        return hillOrderIndex[index];
+    	throw new RuntimeException("Not implemented, yet!");
+        //return hillOrderIndex[index];
     }
 }

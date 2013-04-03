@@ -93,7 +93,7 @@ public class DNASequence extends AbstractSequence<NucleotideCompound> {
     /**
      * Return the RNASequence equivalent of the DNASequence using default Transcription Engine. Not all
      * species follow the same rules. If you don't know better use this method
-     * @return
+     * @return RNA sequence
      */
     public RNASequence getRNASequence() {
       return getRNASequence(Frame.getDefaultFrame());
@@ -102,8 +102,8 @@ public class DNASequence extends AbstractSequence<NucleotideCompound> {
     /**
      * Allow a user to pass in a rules engine to do the DNA to RNA translation
      * @param engine
-     * @return
-     */
+     * @return RNA sequence
+     */ 
     public RNASequence getRNASequence(TranscriptionEngine engine) {
       return getRNASequence(engine, Frame.getDefaultFrame());
     }
@@ -111,10 +111,10 @@ public class DNASequence extends AbstractSequence<NucleotideCompound> {
     /**
      * Allows the user to pass in the Frame shift.
      * @param frame
-     * @return
+     * @return rna sequence
      */
     public RNASequence getRNASequence(Frame frame) {
-      return getRNASequence(TranscriptionEngine.getDefault(), Frame.getDefaultFrame());
+      return getRNASequence(TranscriptionEngine.getDefault(), frame);
     }
 
     public RNASequence getRNASequence(TranscriptionEngine engine, Frame frame) {
@@ -123,7 +123,7 @@ public class DNASequence extends AbstractSequence<NucleotideCompound> {
 
     /**
      * Get the GC count in the DNA Sequence
-     * @return
+     * @return GC count
      */
     public int getGCCount() {
         return SequenceMixin.countGC(this);

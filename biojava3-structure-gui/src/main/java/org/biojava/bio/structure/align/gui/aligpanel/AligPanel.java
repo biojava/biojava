@@ -36,7 +36,7 @@ import org.biojava.bio.structure.align.webstart.WebStartMain;
 import org.biojava.bio.structure.align.xml.AFPChainXMLParser;
 import org.biojava.bio.structure.gui.events.AlignmentPositionListener;
 import org.biojava.bio.structure.gui.util.AlignedPosition;
-import org.biojava.bio.structure.gui.util.ColorUtils;
+import org.biojava.bio.structure.gui.util.color.ColorUtils;
 
 
 /** A JPanel that can display an AFPChain in a nice way and interact with Jmol.
@@ -166,7 +166,8 @@ public class AligPanel  extends JPrintPanel implements AlignmentPositionListener
       
    }
 
-   public void paintComponent(Graphics g){
+
+public void paintComponent(Graphics g){
 
       super.paintComponent(g);
 
@@ -279,7 +280,7 @@ public class AligPanel  extends JPrintPanel implements AlignmentPositionListener
                         colorPos = ColorUtils.colorWheel.length % colorPos ;
                      }
                   } else {
-                     colorPos = DisplayAFP.getBlockNrForAlignPos(afpChain, i);
+                     colorPos = AFPAlignmentDisplay.getBlockNrForAlignPos(afpChain, i);
                      bg  = ColorUtils.getIntermediate(ColorUtils.orange, end1, blockNum, colorPos);
                      bg2   = ColorUtils.getIntermediate(ColorUtils.cyan, end2, blockNum, colorPos);
                      //bg = ColorUtils.rotateHue(ColorUtils.orange,  (1.0f  / 24.0f) * colorPos );

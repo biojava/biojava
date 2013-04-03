@@ -70,28 +70,14 @@ public class AFPPostProcessor
 
    }
 
-
-
-   private static int[] getSubrange(int[] orig, int startPos){
-
-      int nl1 = orig.length - startPos + 1;
-      int[] subrange =  new int[nl1];
-      int posi = -1;
-      for ( int itmp = startPos ; itmp< orig.length ; itmp++){
-         posi++;
-         subrange[posi] = orig[itmp];
-      }
-      return subrange;
-   }
-
    /**
-    * //in some special cases, there is no maginificent twists in the
-   //final chaining result; however, their rmsd (original and after
-   //optimizing) are very large. Therefore, a post-process is taken
-   //to split the blocks further at the ralative bad connections (
-   //with relative high distance variation)
-   //to be tested:
-   //  split or not according to optimized or initial chaining???
+    * in some special cases, there is no maginificent twists in the
+   final chaining result; however, their rmsd (original and after
+   optimizing) are very large. Therefore, a post-process is taken
+   to split the blocks further at the ralative bad connections (
+   with relative high distance variation)
+   to be tested:
+     split or not according to optimized or initial chaining???
     */
 
    private static void splitBlock(FatCatParameters params, AFPChain afpChain, Atom[] ca1, Atom[] ca2)

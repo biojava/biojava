@@ -25,7 +25,6 @@
 package demo;
 
 import org.biojava.bio.structure.Atom;
-import org.biojava.bio.structure.SVDSuperimposer;
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureTools;
 import org.biojava.bio.structure.align.StructureAlignment;
@@ -37,18 +36,12 @@ import org.biojava.bio.structure.align.model.AFPChain;
 import org.biojava.bio.structure.align.model.AfpChainWriter;
 import org.biojava.bio.structure.align.util.AFPChainScorer;
 import org.biojava.bio.structure.align.util.AtomCache;
-import org.biojava.bio.structure.align.xml.AFPChainXMLConverter;
 
 public class DemoCE
 {
 
 
    public static void main(String[] args){
-       
-       String pdbFilePath="/tmp/";
-       
-       boolean isSplit = true;
-       
        //String name1 = "4hhb.A";
        //String name2 = "4hhb.B";
        
@@ -57,7 +50,7 @@ public class DemoCE
        
    
        
-       AtomCache cache = new AtomCache(pdbFilePath, isSplit);
+       AtomCache cache = new AtomCache();
                
        Structure structure1 = null;
        Structure structure2 = null;

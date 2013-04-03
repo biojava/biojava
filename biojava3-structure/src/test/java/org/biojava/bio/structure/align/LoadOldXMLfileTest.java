@@ -33,9 +33,9 @@ import org.biojava.bio.structure.Atom;
 import org.biojava.bio.structure.TmpAtomCache;
 import org.biojava.bio.structure.align.model.AFPChain;
 import org.biojava.bio.structure.align.model.AfpChainWriter;
-import org.biojava.bio.structure.align.xml.AFPChainXMLConverter;
+
 import org.biojava.bio.structure.align.xml.AFPChainXMLParser;
-import org.biojava.bio.structure.io.PDBFileParser;
+
 
 import junit.framework.TestCase;
 

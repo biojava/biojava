@@ -58,7 +58,7 @@ import org.biojava.bio.structure.io.PDBFileReader;
  * @see PrepareIndexFile
  * 
  * @author Andreas Prlic
- *
+ * @deprecated
  */
 public class FlatFileInstallation 
 implements PDBInstallation
@@ -66,10 +66,7 @@ implements PDBInstallation
 
     public static final Logger logger = Logger.getLogger("org.biojava.bio.structure");
 
-    /**
-     * 
-     */
-    private static final long serialVersionUID = 115210067625210878L;
+   
     private File filePath;
 
     private List<PDBFilter> filters;

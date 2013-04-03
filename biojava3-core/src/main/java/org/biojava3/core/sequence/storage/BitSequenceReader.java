@@ -12,6 +12,8 @@ import org.biojava3.core.sequence.template.SequenceMixin;
 import org.biojava3.core.sequence.template.ProxySequenceReader;
 import org.biojava3.core.sequence.template.Sequence;
 import org.biojava3.core.sequence.template.SequenceView;
+import org.biojava3.core.util.Equals;
+import org.biojava3.core.util.Hashcoder;
 
 /**
  * An implementation of the popular bit encodings. This class provides the
@@ -142,7 +144,7 @@ public class BitSequenceReader<C extends Compound> implements ProxySequenceReade
     /**
      * Provides basic iterable access to this class
      */
-    
+    @Override
     public Iterator<C> iterator() {
         return SequenceMixin.createIterator(this);
     }
@@ -154,6 +156,25 @@ public class BitSequenceReader<C extends Compound> implements ProxySequenceReade
     @Override
     public SequenceView<C> getInverse() {
         return SequenceMixin.inverse(this);
+    }
+
+    @Override
+    public int hashCode() {
+        int s = Hashcoder.SEED;
+        s = Hashcoder.hash(s, accession);
+        s = Hashcoder.hash(s, worker);
+        return s;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if(Equals.classEqual(this, o)) {
+            @SuppressWarnings("unchecked")
+            BitSequenceReader<C> that = (BitSequenceReader<C>)o;
+            return  Equals.equal(this.accession, that.accession) &&
+                    Equals.equal(this.worker, that.worker);
+        }
+        return false;
     }
 
     /**
@@ -176,6 +197,8 @@ public class BitSequenceReader<C extends Compound> implements ProxySequenceReade
         private transient List<C> indexToCompoundsLookup = null;
         private transient Map<C, Integer> compoundsToIndexLookup = null;
         public static final int BYTES_PER_INT = 32;
+
+        private volatile Integer hashcode = null;
 
         public BitArrayWorker(Sequence<C> sequence) {
             this(sequence.getCompoundSet(), sequence.getLength());
@@ -269,6 +292,7 @@ public class BitSequenceReader<C extends Compound> implements ProxySequenceReade
          * Sets the compound at the specified biological index
          */
         public void setCompoundAt(C compound, int position) {
+            hashcode = null;
             int arrayIndex = biologicalIndexToArrayIndex(position);
             int currentInt = sequence[arrayIndex];
             int shiftBy = shiftBy(position);
@@ -395,6 +419,30 @@ public class BitSequenceReader<C extends Compound> implements ProxySequenceReade
 
         public int getLength() {
             return length;
+        }
+
+        @Override
+        public int hashCode() {
+            if(hashcode == null) {
+                int s = Hashcoder.SEED;
+                s = Hashcoder.hash(s, sequence);
+                s = Hashcoder.hash(s, indexToCompoundsLookup);
+                s = Hashcoder.hash(s, compoundSet);
+                hashcode = s;
+            }
+            return hashcode;
+        }
+
+        @Override
+        @SuppressWarnings("unchecked")
+        public boolean equals(Object o) {
+            if(Equals.classEqual(this, o)) {
+                BitArrayWorker<C> that = (BitArrayWorker<C>)o;
+                return  Equals.equal(compoundSet, that.compoundSet) &&
+                        Equals.equal(indexToCompoundsLookup, that.indexToCompoundsLookup) &&
+                        Equals.equal(sequence, that.sequence);
+            }
+            return false;
         }
     }
 }

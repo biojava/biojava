@@ -53,8 +53,9 @@ public class AfpChainWriter
 		boolean printLegend = true;
 		boolean longHeader  = true;
 		boolean showHTML = false;
-
-		return toFatCatCore(afpChain, ca1, ca2, printLegend, longHeader, showHTML);   
+		boolean showAlignmentBlock = false;
+		
+		return toFatCatCore(afpChain, ca1, ca2, printLegend, longHeader, showHTML, showAlignmentBlock);   
 	}
 
 	public static String toScoresList(AFPChain afpChain){
@@ -62,6 +63,13 @@ public class AfpChainWriter
 		// see sippl On distance and similarity in fold space 2008 bioinformatics
 
 		StringWriter writer = new StringWriter();
+
+		if ( afpChain.getAlgorithmName().startsWith("CE")) {
+			writer.append("Z-score " );
+			writer.append(String.format("%.2f", afpChain.getProbability()));
+			writer.append(newline);
+		}
+
 
 		writer.append("Sab (nr. equivalent residues): " );
 		writer.append(afpChain.getNrEQR()+"");
@@ -102,7 +110,7 @@ public class AfpChainWriter
 			AFPChain afpChain, 
 			Atom[] ca1, 
 			Atom[] ca2, 
-			boolean printLegend, boolean longHeader, boolean showHTML){
+			boolean printLegend, boolean longHeader, boolean showHTML, boolean showAlignmentBlock){
 
 		if(!afpChain.isSequentialAlignment()) {
 			//TODO find some topology-independent output format
@@ -225,10 +233,20 @@ public class AfpChainWriter
 		int     bp = alnbeg2;
 		int     k, len;
 
+		//System.out.println(alnseq1.length + " " + alnseq1.toString());
+		
 		while((alnLength - t) > 0)      {
 			if(alnLength - t > linelen)     len = linelen;
 			else    len = alnLength - t;
 
+			if ( ap >= ca1.length)
+				break;
+			if ( bp >= ca2.length)
+				break;
+
+			String pdb1 = ca1[ap].getGroup().getResidueNumber().toString();
+			String pdb2 = ca2[bp].getGroup().getResidueNumber().toString();
+			
 
 			//System.err.println("t,len:"+t+":"+len);
 			String lseq1 = new String(alnseq1).substring(t,t+len); 
@@ -252,28 +270,41 @@ public class AfpChainWriter
 					char c1 = lseq1.charAt(pos);
 					char c2 = lseq2.charAt(pos);
 					char cl = lsymb.charAt(pos);
-
+					int block = -1 ;
+					if ( cl != ' ') {
+						try { 
+							block = Integer.parseInt(cl+"");
+						} catch (Exception e){
+							//
+						}
+					}
 					if ( cl != ' ' ){
 						
-						a += "<span class=\"m\">" + c1 + "</span>";
-						b += "<span class=\"m\">" + c2 + "</span>";
-						c += "<span class=\"m\">" + cl + "</span>";
-					
+						if ( showAlignmentBlock && block > -1 ) {
+							a += "<span class=\"alignmentBlock1"+block+"\">" + c1 + "</span>";
+							b += "<span class=\"alignmentBlock2"+block+"\">" + c2 + "</span>";
+							c += "<span class=\"m\">" + cl + "</span>";
+						} else {
+							a += getPrefix(c1, c2, 0, block, false).toString() + c1 + "</span>";
+							b += getPrefix(c1, c2, 1, block, false).toString() + c2 + "</span>";
+							c += "<span class=\"m\">" + cl + "</span>";
+						}
+
 					} else if ( c1 != '-' && c2 != '-') {
-					
+
 						a += "<span class=\"sm\">" + c1 + "</span>";
 						b += "<span class=\"sm\">" + c2 + "</span>";
 						c += "<span class=\"sm\">" + cl + "</span>";
-						
-						
+
+
 					} else {
-						
+
 						a += "<span class=\"qg\">" + c1 + "</span>";
 						b += "<span class=\"qg\">" + c2 + "</span>";
 						c += "<span class=\"qg\">" + cl + "</span>";
-						
+
 					}
-					
+
 					if(c1 != '-') ap ++;
 					if(c2 != '-') bp ++;
 				}
@@ -306,20 +337,14 @@ public class AfpChainWriter
 
 			}
 
-			if ( ap >= ca1.length)
-				break;
-			if ( bp >= ca2.length)
-				break;
-
-			String pdb1 = ca1[ap].getGroup().getResidueNumber().toString();
-			String pdb2 = ca2[bp].getGroup().getResidueNumber().toString();
+			
 
 			txt.append(newline);
 			txt.append(String.format("Chain 1:%5s %s"+newline +"%14s%s"+newline+"Chain 2:%5s %s",
 					pdb1, a, " ", c, pdb2, b));
 
 			txt.append(newline);
-			
+
 			if ( ! showHTML){
 				for(k = 0; k < len; k ++)       {
 					if(a.charAt(k) != '-') ap ++;
@@ -341,7 +366,7 @@ public class AfpChainWriter
 				txt.append("Note: positions are from PDB; the numbers between alignments are block index");
 			}
 			txt.append(newline);
-			
+
 		}
 		return txt.toString();
 
@@ -410,15 +435,32 @@ public class AfpChainWriter
 	 * @param ca2
 	 * @return a String representation as it is used on the RCSB PDB web site for display.
 	 */
-	public static String toWebSiteDisplay(AFPChain afpChain, Atom[] ca1, Atom[] ca2){
+	public static String toWebSiteDisplay(AFPChain afpChain, Atom[] ca1, Atom[] ca2 ){
+		boolean showAlignmentBlock   = true;
+		return toWebSiteDisplay(afpChain, ca1, ca2, showAlignmentBlock);
+	}
+	
+	/**
+	 * Prints the afpChain as a nicely formatted alignment, including alignment
+	 * statistics, the aligned sequences themselves, and information about the 
+	 * superposition.
+	 * @param afpChain
+	 * @param ca1
+	 * @param ca2
+	 * 
+	 * @return a String representation as it is used on the RCSB PDB web site for display.
+	 */
+	public static String toWebSiteDisplay(AFPChain afpChain, Atom[] ca1, Atom[] ca2, boolean showAlignmentBlock){
+		
+		boolean printLegend = true;
+		boolean longHeader  = true;
+		boolean showHTML = true;
+		
 		if ( afpChain.getAlgorithmName().equalsIgnoreCase(FatCatFlexible.algorithmName)) {
 
-			boolean printLegend = true;
-			boolean longHeader  = true;
-			boolean showHTML = true;
+		
+			String msg =  toFatCatCore(afpChain,ca1,ca2,printLegend,longHeader,showHTML, showAlignmentBlock);
 
-			String msg =  toFatCatCore(afpChain,ca1,ca2,printLegend,longHeader,showHTML);
-				
 			return msg;
 		}
 
@@ -431,7 +473,7 @@ public class AfpChainWriter
 		//
 
 
-		String msg = toPrettyAlignment(afpChain, ca1, ca2, true);
+		String msg = toPrettyAlignment(afpChain, ca1, ca2, showHTML, showAlignmentBlock);
 
 
 		msg = msg + newline + 
@@ -451,7 +493,7 @@ public class AfpChainWriter
 
 
 
-	private static String toPrettyAlignment(AFPChain afpChain, Atom[] ca1, Atom[] ca2, boolean showHTML) {
+	private static String toPrettyAlignment(AFPChain afpChain, Atom[] ca1, Atom[] ca2, boolean showHTML, boolean showAlignmentBlock) {
 		String name1 = afpChain.getName1();
 		String name2 = afpChain.getName2();
 		int ca1Length = afpChain.getCa1Length();
@@ -521,12 +563,14 @@ public class AfpChainWriter
 		StringWriter footer2  = new StringWriter();
 		StringWriter block    = new StringWriter();
 
+		int aligPos = -1;
 		for(i = 0; i < blockNum; i ++)  {   
 
 			for(j = 0; j < optLen[i]; j ++) {
 
 				p1 = optAln[i][0][j];
 				p2 = optAln[i][1][j];
+				aligPos++;
 
 				//               System.out.println(p1 + " " + p2 + " " +  footer2.toString());
 
@@ -553,7 +597,7 @@ public class AfpChainWriter
 				//           System.out.println(len + " >" + alnsymb.toString() +"< ");
 				//           System.out.println(len + " >" + alnseq2.toString() +"< ");
 				//           System.out.println(len + " >" + footer1.toString() +"< ");
-				formatAlignedRegion(ca1, ca2, p1, p2, alnseq1, alnseq2, alnsymb, header1, footer1, header2, footer2, block,len, showHTML);
+				formatAlignedRegion(afpChain, ca1, ca2, p1, p2, alnseq1, alnseq2, alnsymb, header1, footer1, header2, footer2, block,len, aligPos, showHTML, showAlignmentBlock);
 				//            System.out.println(len + " >" + header1.toString() +"< ");
 				//            System.out.println(len + " >" + header2.toString() +"< ");   
 				//            System.out.println(len + " >" + alnseq1.toString() +"< "); 
@@ -639,8 +683,7 @@ public class AfpChainWriter
 
 	private static void formatGappedRegion(Atom[] ca1, Atom[] ca2, StringBuffer txt, int p1, int p2, int k, int p1b, int p2b,
 			StringWriter alnseq1, StringWriter alnseq2, StringWriter alnsymb, StringWriter header1, StringWriter footer1,
-			StringWriter header2, StringWriter footer2, StringWriter block, int len, boolean formatHTML)
-	{
+			StringWriter header2, StringWriter footer2, StringWriter block, int len, boolean formatHTML)	{
 
 		// DEAL WITH GAPS
 		int tmppos = (p1 - p1b - 1);
@@ -675,7 +718,7 @@ public class AfpChainWriter
 		}
 		else {
 			if ( formatHTML){
-				alnseq1.append(getPrefix(oneletter1,oneletter2,0));
+				alnseq1.append(getPrefix(oneletter1,oneletter2,0,-1, false));
 			}
 			alnseq1.append(oneletter1);
 			if (formatHTML){
@@ -700,7 +743,7 @@ public class AfpChainWriter
 		}
 		else  {
 			if ( formatHTML){
-				alnseq2.append(getPrefix(oneletter1,oneletter2,1));
+				alnseq2.append(getPrefix(oneletter1,oneletter2,1, -1, false));
 			}
 			alnseq2.append(oneletter2);			
 			if (formatHTML){
@@ -717,7 +760,7 @@ public class AfpChainWriter
 
 
 	private static CharSequence getPrefix(char oneletter1, char oneletter2,
-			int i) {
+			int i, int blockNr, boolean showAlignmentBlock) {
 
 		if ( oneletter1 == '-' || oneletter2 == '-' ) {
 			// a gap in the alignment. 
@@ -726,6 +769,13 @@ public class AfpChainWriter
 		}
 
 		// an aligned position
+		
+		if ( showAlignmentBlock && blockNr > -1){
+			return "<span class=\"alignmentBlock"+(i+1)+(blockNr+1)+"\">";
+		}
+		
+		// we return the "default" sequence alignment view...
+		
 		if ( oneletter1 == oneletter2)
 			return "<span class=\"m\">";
 
@@ -796,18 +846,34 @@ public class AfpChainWriter
 
 
 
-	private static void formatAlignedRegion(Atom[] ca1, Atom[] ca2, int p1, int p2, 
+	private static void formatAlignedRegion(AFPChain afpChain, Atom[] ca1, Atom[] ca2, int p1, int p2, 
 			StringWriter alnseq1, StringWriter alnseq2,
 			StringWriter alnsymb, StringWriter header1, StringWriter footer1, StringWriter header2, 
-			StringWriter footer2, StringWriter block, int len, boolean showHTML)
+			StringWriter footer2, StringWriter block, int len, int aligPos,
+			boolean showHTML, boolean showAlignmentBlock)
 	{
-		char c1 =  getOneLetter(ca1[p1].getGroup());
-		char c2 =  getOneLetter(ca2[p2].getGroup());
+		char c1;
+		char c2;
+		if (( p1 < ca1.length) && (p2< ca2.length)){
+			c1=  getOneLetter(ca1[p1].getGroup());
+			c2 =  getOneLetter(ca2[p2].getGroup());
+		} else {
+			c1 = 'X';
+			c2 = 'X';
+		}
+		
+		int blockPos = -1;
+		if ( afpChain.getBlockNum() > 0) {
+			blockPos = AFPAlignmentDisplay.getBlockNrForAlignPos(afpChain, aligPos);
+		}	
+		
+		
+		
 		double score = AFPAlignmentDisplay.aaScore(c1,c2);
 
 		if ( showHTML) {
-			alnseq1.append(getPrefix(c1,c2,  0));
-			alnseq2.append(getPrefix(c1,c2,  1));
+			alnseq1.append(getPrefix(c1,c2,  0, blockPos, showAlignmentBlock));
+			alnseq2.append(getPrefix(c1,c2,  1, blockPos, showAlignmentBlock));
 		}
 
 		alnseq1.append(c1);              
@@ -820,7 +886,9 @@ public class AfpChainWriter
 
 		if ( c1 == c2){
 			if ( showHTML){
+				
 				alnsymb.append("<span class=\"m\">|</span>");
+				
 			} else {
 				alnsymb.append('|');
 			}
@@ -843,10 +911,11 @@ public class AfpChainWriter
 			}
 		}
 
+		if ( p1 < ca1.length)
+			formatPosition(p1, ca1,len, header1, header2);
 
-		formatPosition(p1, ca1,len, header1, header2);
-
-		formatPosition(p2,ca2,len, footer1, footer2);
+		if ( p2 < ca2.length)
+			formatPosition(p2,ca2,len, footer1, footer2);
 
 	}
 
@@ -998,9 +1067,9 @@ public class AfpChainWriter
 		str.append("\t");
 		str.append(afpChain.getCa2Length());      
 		str.append("\t");
-		str.append(afpChain.getSimilarity1());
+		str.append(afpChain.getCoverage1());
 		str.append("\t");
-		str.append(afpChain.getSimilarity2());
+		str.append(afpChain.getCoverage2());
 		str.append("\t");
 		str.append(newline);
 
@@ -1018,7 +1087,7 @@ public class AfpChainWriter
 
 		if ( blockRotationMatrix == null || blockRotationMatrix.length < 1)
 			return "";
-
+	
 
 		for ( int blockNr = 0 ; blockNr < blockNum  ; blockNr++){
 			Matrix m = blockRotationMatrix[blockNr];
@@ -1155,6 +1224,9 @@ public class AfpChainWriter
 
 	}
 
+
+	
+	
 
 
 }

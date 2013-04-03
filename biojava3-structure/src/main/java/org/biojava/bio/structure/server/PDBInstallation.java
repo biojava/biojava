@@ -31,7 +31,7 @@ import org.biojava.bio.structure.Structure;
  * 
  * 
  * @author Andreas Prlic
- *
+ * @deprecated
  */
 public interface PDBInstallation{
 	

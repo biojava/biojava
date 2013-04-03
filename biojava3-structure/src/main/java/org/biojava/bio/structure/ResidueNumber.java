@@ -74,6 +74,12 @@ public class ResidueNumber implements Serializable
 		this.seqNum = seqNum;
 	}
 
+	/**
+	 * Require chainId, insCode, and seqNum to be equal
+	 * @param obj
+	 * @return
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
 	@Override
 	public boolean equals(Object obj) {
 		if (!(obj instanceof ResidueNumber))
@@ -93,19 +99,21 @@ public class ResidueNumber implements Serializable
 			if (anNumber.getInsCode()!=null)
 				return false;
 		}
+		if (seqNum!=null) {
+			if (!seqNum.equals(anNumber.getSeqNum()))
+				return false;
+		} else {
+			if (anNumber.getSeqNum()!=null)
+				return false;
+		}
 
-		if (!seqNum.equals(anNumber.getSeqNum()))
-			return false;
-
-		if ( chainId == null)
+		if ( chainId != null) {
+			if ( ! chainId.equals(anNumber.getChainId()))
+				return false;
+		} else {
 			if ( anNumber.getChainId() != null)
 				return false;
-		if ( chainId != null)
-			if ( anNumber.getChainId() == null)
-				return false;
-			else if ( ! chainId.equals(anNumber.getChainId()))
-				return false;
-
+		}
 
 		return true;
 	}
@@ -113,12 +121,16 @@ public class ResidueNumber implements Serializable
 	@Override
 	public int hashCode() {
 		int result = 17;
-		result = 31 * result + chainId.hashCode();
-		result = 31 * result + seqNum.hashCode();
+		result = 31 * result + (chainId != null ? chainId.hashCode() : 0);
+		result = 31 * result + (seqNum != null ? seqNum.hashCode() : 0);
 		result = 31 * result + (insCode==null ? 0 : insCode.hashCode());
 		return result;
 	}
 
+	/**
+	 * @return The residue number and insertion code as a string, eg "74A"
+	 * @see java.lang.Object#toString()
+	 */
 	@Override
 	public String toString() {
 
@@ -135,6 +147,9 @@ public class ResidueNumber implements Serializable
 		return writer.toString();
 	}
 
+	/**
+	 * @return The chain, number, and insertion code as a string, eg "B  74A" or "A    1 "
+	 */
 	public String toPDB() {
 		String insCodeS ;
 		if ( insCode != null)

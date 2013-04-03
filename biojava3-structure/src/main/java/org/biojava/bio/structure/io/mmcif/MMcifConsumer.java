@@ -27,6 +27,7 @@ import org.biojava.bio.structure.io.FileParsingParameters;
 import org.biojava.bio.structure.io.mmcif.model.AtomSite;
 import org.biojava.bio.structure.io.mmcif.model.AuditAuthor;
 import org.biojava.bio.structure.io.mmcif.model.ChemComp;
+import org.biojava.bio.structure.io.mmcif.model.ChemCompDescriptor;
 import org.biojava.bio.structure.io.mmcif.model.DatabasePDBremark;
 import org.biojava.bio.structure.io.mmcif.model.DatabasePDBrev;
 import org.biojava.bio.structure.io.mmcif.model.Entity;
@@ -81,7 +82,8 @@ public interface MMcifConsumer {
 	public void newStructKeywords(StructKeywords kw);
 	public void newRefine(Refine r);
 	public void newChemComp(ChemComp c);
-
+	public void newChemCompDescriptor(ChemCompDescriptor ccd);
+	
 	/** AuditAuthor contains the info from the PDB-AUTHOR records.
 	 *
 	 * @param aa

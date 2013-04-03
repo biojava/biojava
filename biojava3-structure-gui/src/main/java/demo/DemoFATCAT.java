@@ -29,8 +29,6 @@ import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureTools;
 import org.biojava.bio.structure.align.StructureAlignment;
 import org.biojava.bio.structure.align.StructureAlignmentFactory;
-import org.biojava.bio.structure.align.ce.CeMain;
-import org.biojava.bio.structure.align.ce.CeParameters;
 import org.biojava.bio.structure.align.fatcat.FatCatRigid;
 import org.biojava.bio.structure.align.fatcat.calc.FatCatParameters;
 import org.biojava.bio.structure.align.gui.StructureAlignmentDisplay;
@@ -44,11 +42,7 @@ public class DemoFATCAT
 
 
    public static void main(String[] args){
-       
-       String pdbFilePath="/tmp/";
-       
-       boolean isSplit = true;
-       
+              
        String name1 = "4hhb.A";
        String name2 = "4hhb.B";
        
@@ -57,7 +51,7 @@ public class DemoFATCAT
        
    
        
-       AtomCache cache = new AtomCache(pdbFilePath, isSplit);
+       AtomCache cache = new AtomCache();
                
        Structure structure1 = null;
        Structure structure2 = null;

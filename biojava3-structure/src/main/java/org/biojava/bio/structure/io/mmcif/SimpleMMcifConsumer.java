@@ -54,6 +54,8 @@ import org.biojava.bio.structure.io.SeqRes2AtomAligner;
 import org.biojava.bio.structure.io.mmcif.model.AtomSite;
 import org.biojava.bio.structure.io.mmcif.model.AuditAuthor;
 import org.biojava.bio.structure.io.mmcif.model.ChemComp;
+
+import org.biojava.bio.structure.io.mmcif.model.ChemCompDescriptor;
 import org.biojava.bio.structure.io.mmcif.model.DatabasePDBremark;
 import org.biojava.bio.structure.io.mmcif.model.DatabasePDBrev;
 import org.biojava.bio.structure.io.mmcif.model.Entity;
@@ -131,17 +133,19 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
       return null;
    }
 
-   public void newStructKeywords(StructKeywords kw){
+   @SuppressWarnings("deprecation")
+public void newStructKeywords(StructKeywords kw){
       PDBHeader header = structure.getPDBHeader();
       if ( header == null)
          header = new PDBHeader();
       header.setDescription(kw.getPdbx_keywords());
       header.setClassification(kw.getPdbx_keywords());
       Map<String, Object> h = structure.getHeader();
-      h.put("classification", kw.getPdbx_keywords());
+      h.put("classification", kw.getPdbx_keywords());      
    }
 
-   public void setStruct(Struct struct) {
+   @SuppressWarnings("deprecation")
+public void setStruct(Struct struct) {
       //System.out.println(struct);
 
       PDBHeader header = structure.getPDBHeader();
@@ -700,7 +704,8 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
       return structure;
    }
 
-   public void newDatabasePDBrev(DatabasePDBrev dbrev) {
+   @SuppressWarnings("deprecation")
+public void newDatabasePDBrev(DatabasePDBrev dbrev) {
       //System.out.println("got a database revision:" + dbrev);
       SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
       PDBHeader header = structure.getPDBHeader();
@@ -783,7 +788,8 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
       }
    }
 
-   public void newRefine(Refine r){
+   @SuppressWarnings("deprecation")
+public void newRefine(Refine r){
       // copy the resolution to header
       PDBHeader pdbHeader = structure.getPDBHeader();
       try {
@@ -1091,7 +1097,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
       for (Chain c: matchinChains){
          Group target = null;
          for (Group g: c.getAtomGroups()){
-
+        	 
             if ( g instanceof AminoAcidImpl){
                AminoAcidImpl aa = (AminoAcidImpl)g;
                if (aa.getId() == sid ) {
@@ -1106,10 +1112,17 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
                   target = g;
                   break;
                }
+            } else if ( g instanceof HetatomImpl){
+            	HetatomImpl h = (HetatomImpl)g;
+            	if ( h.getId() == sid){
+            		target =h;
+            		break;
+            	}
             }
          }
          if (target == null){
-            logger.info("could not find group at seq. position " + ppss.getSeq_id() + " in internal chain. " + ppss);
+            logger.info("could not find group at seq. position " + 
+         ppss.getSeq_id() + " in internal chain " + c.getChainID() + ". " + ppss);
             continue;
          }
 
@@ -1205,6 +1218,12 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
       this.params = params;
 
    }
+   
+   public void newChemCompDescriptor(ChemCompDescriptor ccd) {
+	
+	   // todo: nothing happening here yet.
+
+	}
 
 }
 

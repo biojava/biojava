@@ -462,7 +462,7 @@ public class AFPChainer
 
      boolean isConnected = false;
      int     prevafp;
-     int     alnlen = afpSet.get(afpchain[s]).getFragLen();
+    // int     alnlen = afpSet.get(afpchain[s]).getFragLen();
 
      //Double  conn = new Double(0) ;
      //Double dvar =  new Double(0);
@@ -479,7 +479,7 @@ public class AFPChainer
         afptwilist[s - 1] = dvar;
         //note s - 1: the transformation of prevafp-currafp is recorded in currafp
         currafp = prevafp;
-        alnlen += afpSet.get(currafp).getFragLen();
+       // alnlen += afpSet.get(currafp).getFragLen();
         afpchain[s ++] = currafp;
      }
      
@@ -492,8 +492,8 @@ public class AFPChainer
      else
         afptwibin[s - 1] = 0;
 
-     if(debug)
-        System.out.println(String.format("including %d AFPs, %d residues\n", afpChainLen, alnlen));
+     //if(debug)
+     //   System.out.println(String.format("including %d AFPs, %d residues\n", afpChainLen, alnlen));
 
      //record the optimal alignment in afpChainList (afpChainLen)
 

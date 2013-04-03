@@ -25,7 +25,6 @@ import java.io.IOException;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -258,30 +257,10 @@ public class FileConvert {
 
 					Group g= chain.getAtomGroup(h);
 
-					// format output ...
-					int groupsize  = g.size();
-
-
-					// iteratate over all atoms ...
-					for ( int atompos = 0 ; atompos < groupsize; atompos++) {
-						Atom a = null ;
-						try {
-							a = g.getAtom(atompos);
-						} catch ( StructureException e) {
-							System.err.println(e);
-							continue ;
-						}
-
-						toPDB(a, str);
-
-
-						//line = record + serial + " " + fullname +altLoc
-						//+ leftResName + " " + chainID + resseq
-						//+ "   " + x+y+z
-						//+ occupancy + tempfactor;
-						//str.append(line + newline);
-						//System.out.println(line);
-					}
+					
+					toPDB(g,str);
+					
+					
 				}
 			}
 
@@ -297,6 +276,38 @@ public class FileConvert {
 			str.append(printPDBConnections());
 
 		return str.toString() ;
+	}
+
+	private void toPDB(Group g, StringBuffer str) {
+		// iterate over all atoms ...
+		// format output ...
+		int groupsize  = g.size();
+
+		for ( int atompos = 0 ; atompos < groupsize; atompos++) {
+			Atom a = null ;
+			try {
+				a = g.getAtom(atompos);
+			} catch ( StructureException e) {
+				System.err.println(e);
+				continue ;
+			}
+
+			toPDB(a, str);
+
+
+			//line = record + serial + " " + fullname +altLoc
+			//+ leftResName + " " + chainID + resseq
+			//+ "   " + x+y+z
+			//+ occupancy + tempfactor;
+			//str.append(line + newline);
+			//System.out.println(line);
+		}
+		if ( g.hasAltLoc()){
+			for (Group alt : g.getAltLocs() ) {
+				toPDB(alt,str);
+			}
+		}
+		
 	}
 
 	/** Prints the content of an Atom object as a PDB formatted line.
@@ -395,6 +406,7 @@ public class FileConvert {
 	 * @throws IOException ...
 	 *
 	 */
+	@SuppressWarnings("deprecation")
 	public void toDASStructure(XMLWriter xw)
 	throws IOException
 	{
@@ -406,7 +418,7 @@ public class FileConvert {
 			return;
 		}
 
-		HashMap header = (HashMap) structure.getHeader();
+		Map<String,Object> header = structure.getHeader();
 
 		xw.openTag("object");
 		xw.attribute("dbAccessionId",structure.getPDBCode());

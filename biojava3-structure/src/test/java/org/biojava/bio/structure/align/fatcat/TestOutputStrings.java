@@ -120,82 +120,83 @@ public class TestOutputStrings extends TestCase
 //      }		
 //   }
    
+// disabled since so slow...
+//   public void test1jbe1ord(){
+//      String pdb1 = "1jbe";
+//      String chain1 = "A";
+//      String pdb2 = "1ord";
+//      String chain2 ="A";
+//
+//      
+//      
+//      String originalOutput="Align 1jbeA.pdb 126 with 1ordA.pdb 730" + newline +
+//      "Twists 0 ini-len 72 ini-rmsd 3.09 opt-equ 101 opt-rmsd 3.03 chain-rmsd 3.09 Score 123.13 align-len 127 gaps 26 (20.47%)" + newline +
+//      "P-value 3.45e-01 Afp-num 30029 Identity 11.02% Similarity 22.05%" + newline +
+//      "Block  0 afp  9 score 123.13 rmsd  3.09 gap 53 (0.42%)" + newline +
+//      "" + newline +
+//      "                  .    :    .    :    .    :    .    :    .    :    .    :    .    :" + newline +
+//      "Chain 1:    3 DKELKFLVVDDFSTMRRIVRNLLKELGFNNVEEAEDGVDALNKLQAGGYGFVISDWNMPNMDGLELLKTI" + newline +
+//      "              11111111111   11111  111   1111111        111111111111111     11111111" + newline +
+//      "Chain 2:    1 SSSLKIASTQE---ARQYF--DTD---RVVVDAV--------GSDFTDVGAVIAMDY-----ETDVIDAA" + newline +
+//      "" + newline +
+//      "                  .    :    .    :    .    :    .    :    .    :    ." + newline +
+//      "Chain 1:   73 RAAMSALPVLMVTAEAKKENIIAAAQAGASGYVVKPFT--AATLEEKLNKIFEKLGM" + newline +
+//      "              11111111111111111 11111111 11111111111  111111111111 1111" + newline +
+//      "Chain 2:   50 DATKFGIPVFAVTKDAQ-AISADELK-KIFHIIDLENKFDATVNAREIETAVNNYED" + newline +
+//      "" + newline +
+//      "Note: positions are from PDB; the numbers between alignments are block index" + newline ;
+//      String result = MyTestHelper.compareAlignment(pdb1, chain1, pdb2, chain2, originalOutput,true);
+//      if (! result.equals("")){
+//         String msg = "the created alignment images are not identical! ";
+//         printMismatch(originalOutput,result);
+//         printFirstMismatch(result, originalOutput);
+//         fail(msg);
+//      }
+//
+//      // no point in testing flexible here, since it is identical...
+//   }
 
-   public void test1jbe1ord(){
-      String pdb1 = "1jbe";
-      String chain1 = "A";
-      String pdb2 = "1ord";
-      String chain2 ="A";
 
-      
-      
-      String originalOutput="Align 1jbeA.pdb 126 with 1ordA.pdb 730" + newline +
-      "Twists 0 ini-len 72 ini-rmsd 3.09 opt-equ 101 opt-rmsd 3.03 chain-rmsd 3.09 Score 123.13 align-len 127 gaps 26 (20.47%)" + newline +
-      "P-value 3.45e-01 Afp-num 30029 Identity 11.02% Similarity 22.05%" + newline +
-      "Block  0 afp  9 score 123.13 rmsd  3.09 gap 53 (0.42%)" + newline +
-      "" + newline +
-      "                  .    :    .    :    .    :    .    :    .    :    .    :    .    :" + newline +
-      "Chain 1:    3 DKELKFLVVDDFSTMRRIVRNLLKELGFNNVEEAEDGVDALNKLQAGGYGFVISDWNMPNMDGLELLKTI" + newline +
-      "              11111111111   11111  111   1111111        111111111111111     11111111" + newline +
-      "Chain 2:    1 SSSLKIASTQE---ARQYF--DTD---RVVVDAV--------GSDFTDVGAVIAMDY-----ETDVIDAA" + newline +
-      "" + newline +
-      "                  .    :    .    :    .    :    .    :    .    :    ." + newline +
-      "Chain 1:   73 RAAMSALPVLMVTAEAKKENIIAAAQAGASGYVVKPFT--AATLEEKLNKIFEKLGM" + newline +
-      "              11111111111111111 11111111 11111111111  111111111111 1111" + newline +
-      "Chain 2:   50 DATKFGIPVFAVTKDAQ-AISADELK-KIFHIIDLENKFDATVNAREIETAVNNYED" + newline +
-      "" + newline +
-      "Note: positions are from PDB; the numbers between alignments are block index" + newline ;
-      String result = MyTestHelper.compareAlignment(pdb1, chain1, pdb2, chain2, originalOutput,true);
-      if (! result.equals("")){
-         String msg = "the created alignment images are not identical! ";
-         printMismatch(originalOutput,result);
-         printFirstMismatch(result, originalOutput);
-         fail(msg);
-      }
-
-      // no point in testing flexible here, since it is identical...
-   }
-
-
+   // speed up of junit tests
    //exact
-   public void test1buz1ali(){
-      String pdb1 = "1buz";
-      String chain1 = "A";
-      String pdb2 = "1ali";
-      String chain2 ="A";
-
-
-      String originalOutput ="Align 1buzA.pdb 116 with 1aliA.pdb 446" + newline +
-      "Twists 0 ini-len 64 ini-rmsd 5.32 opt-equ 80 opt-rmsd 3.50 chain-rmsd 5.32 Score 103.72 align-len 153 gaps 73 (47.71%)" +newline +
-      "P-value 2.97e-01 Afp-num 15578 Identity 4.58% Similarity 15.03%" +newline +
-      "Block  0 afp  8 score 103.72 rmsd  5.32 gap 55 (0.46%)" +newline +
-      "" +newline +
-      "                  .    :    .    :    .    :    .    :    .    :    .    :    .    :" +newline +
-      "Chain 1:   23 HHTAETLKQKVTQSLEKDDIRHIVLNLEDLSF-------------MDSSGLGVILGRYKQIKQIGGEMVV" +newline +
-      "              11111111111111 111111111111 1111             1111111111111111111111111" +newline +
-      "Chain 2:  297 PTLAQMTDKAIELL-SKNEKGFFLQVEGASIDKQDHAANPCGQIGETVDLDEAVQRALEFAKKEGNTLVI" +newline +
-      "" +newline +
-      "                  .    :    .    :    .    :    .    :    .    :    .    :    .    :" +newline +
-      "Chain 1:   80 CAISPAVKRLFDMSGL--------------------------------------FKIIRF--------EQ" +newline +
-      "              1111111                                               111           11" +newline +
-      "Chain 2:  366 VTADHAHASQIVAPDTKAPGLTQALNTKDGAVMVMSYGNSEEDSQENTGSQLRIAAYGPHAANVVGLTDQ" +newline +
-      "" +newline +
-      "                  .    :" +newline +
-      "Chain 1:  104 SEQQALLTLGVAS" +newline +
-      "              1111111111111" +newline +
-      "Chain 2:  436 TDLFYTMKAALGL" +newline +
-      "" +newline +
-      "Note: positions are from PDB; the numbers between alignments are block index" + newline ;
-
-      String result = MyTestHelper.compareAlignment(pdb1, chain1, pdb2, chain2, originalOutput,true);
-      if (! result.equals("")){
-         String msg = "the created alignment images are not identical! ";
-         printMismatch(originalOutput,result);
-         printFirstMismatch(result, originalOutput);
-         fail(msg);
-      }
-
-   }
+//   public void test1buz1ali(){
+//      String pdb1 = "1buz";
+//      String chain1 = "A";
+//      String pdb2 = "1ali";
+//      String chain2 ="A";
+//
+//
+//      String originalOutput ="Align 1buzA.pdb 116 with 1aliA.pdb 446" + newline +
+//      "Twists 0 ini-len 64 ini-rmsd 5.32 opt-equ 80 opt-rmsd 3.50 chain-rmsd 5.32 Score 103.72 align-len 153 gaps 73 (47.71%)" +newline +
+//      "P-value 2.97e-01 Afp-num 15578 Identity 4.58% Similarity 15.03%" +newline +
+//      "Block  0 afp  8 score 103.72 rmsd  5.32 gap 55 (0.46%)" +newline +
+//      "" +newline +
+//      "                  .    :    .    :    .    :    .    :    .    :    .    :    .    :" +newline +
+//      "Chain 1:   23 HHTAETLKQKVTQSLEKDDIRHIVLNLEDLSF-------------MDSSGLGVILGRYKQIKQIGGEMVV" +newline +
+//      "              11111111111111 111111111111 1111             1111111111111111111111111" +newline +
+//      "Chain 2:  297 PTLAQMTDKAIELL-SKNEKGFFLQVEGASIDKQDHAANPCGQIGETVDLDEAVQRALEFAKKEGNTLVI" +newline +
+//      "" +newline +
+//      "                  .    :    .    :    .    :    .    :    .    :    .    :    .    :" +newline +
+//      "Chain 1:   80 CAISPAVKRLFDMSGL--------------------------------------FKIIRF--------EQ" +newline +
+//      "              1111111                                               111           11" +newline +
+//      "Chain 2:  366 VTADHAHASQIVAPDTKAPGLTQALNTKDGAVMVMSYGNSEEDSQENTGSQLRIAAYGPHAANVVGLTDQ" +newline +
+//      "" +newline +
+//      "                  .    :" +newline +
+//      "Chain 1:  104 SEQQALLTLGVAS" +newline +
+//      "              1111111111111" +newline +
+//      "Chain 2:  436 TDLFYTMKAALGL" +newline +
+//      "" +newline +
+//      "Note: positions are from PDB; the numbers between alignments are block index" + newline ;
+//
+//      String result = MyTestHelper.compareAlignment(pdb1, chain1, pdb2, chain2, originalOutput,true);
+//      if (! result.equals("")){
+//         String msg = "the created alignment images are not identical! ";
+//         printMismatch(originalOutput,result);
+//         printFirstMismatch(result, originalOutput);
+//         fail(msg);
+//      }
+//
+//   }
 
    // exact
    public void test1buz1aliFlexible(){
@@ -238,80 +239,82 @@ public class TestOutputStrings extends TestCase
    }
 
 
+   // speed up of junit tests
    //exact
-   public void test4hhbs(){
-      String pdb1= "4hhb";
-      String pdb2 = "4hhb";
-      String chain1 = "A";
-      String chain2 = "B";
+//   public void test4hhbs(){
+//      String pdb1= "4hhb";
+//      String pdb2 = "4hhb";
+//      String chain1 = "A";
+//      String chain2 = "B";
+//
+//      String originalOutput="Align 4hhbA.pdb 141 with 4hhbB.pdb 146" +newline +
+//      "Twists 0 ini-len 128 ini-rmsd 1.36 opt-equ 139 opt-rmsd 1.49 chain-rmsd 1.36 Score 364.84 align-len 147 gaps 8 (5.44%)" +newline +
+//      "P-value 0.00e+00 Afp-num 13309 Identity 40.82% Similarity 57.82%" +newline +
+//      "Block  0 afp 16 score 364.84 rmsd  1.36 gap 17 (0.12%)" +newline +
+//      "" +newline +
+//      "                  .    :    .    :    .    :    .    :    .    :    .    :    .    :" +newline +
+//      "Chain 1:    1 VLSPADKTNVKAAWGKVGAHAGEYGAEALERMFLSFPTTKTYFPHFDL------SHGSAQVKGHGKKVAD" +newline +
+//      "              11111111111111111  11111111111111111111111111111      1111111111111111" +newline +
+//      "Chain 2:    2 HLTPEEKSAVTALWGKV--NVDEVGGEALGRLLVVYPWTQRFFESFGDLSTPDAVMGNPKVKAHGKKVLG" +newline +
+//      "" +newline +
+//      "                  .    :    .    :    .    :    .    :    .    :    .    :    .    :" +newline +
+//      "Chain 1:   65 ALTNAVAHVDDMPNALSALSDLHAHKLRVDPVNFKLLSHCLLVTLAAHLPAEFTPAVHASLDKFLASVST" +newline +
+//      "              1111111111111111111111111111111111111111111111111111111111111111111111" +newline +
+//      "Chain 2:   70 AFSDGLAHLDNLKGTFATLSELHCDKLHVDPENFRLLGNVLVCVLAHHFGKEFTPPVQAAYQKVVAGVAN" +newline +
+//      "" +newline +
+//      "                  ." +newline +
+//      "Chain 1:  135 VLTSKYR" +newline +
+//      "              1111111" +newline +
+//      "Chain 2:  140 ALAHKYH" +newline +
+//      "" +newline +
+//      "Note: positions are from PDB; the numbers between alignments are block index" +newline ;
+//      String result = MyTestHelper.compareAlignment(pdb1, chain1, pdb2, chain2, originalOutput,true);
+//      if (! result.equals("")){
+//         String msg = "the created alignment images are not identical! ";
+//         printMismatch(originalOutput,result);
+//         printFirstMismatch(result, originalOutput);
+//         fail(msg);
+//      }     
+//   }
 
-      String originalOutput="Align 4hhbA.pdb 141 with 4hhbB.pdb 146" +newline +
-      "Twists 0 ini-len 128 ini-rmsd 1.36 opt-equ 139 opt-rmsd 1.49 chain-rmsd 1.36 Score 364.84 align-len 147 gaps 8 (5.44%)" +newline +
-      "P-value 0.00e+00 Afp-num 13309 Identity 40.82% Similarity 57.82%" +newline +
-      "Block  0 afp 16 score 364.84 rmsd  1.36 gap 17 (0.12%)" +newline +
-      "" +newline +
-      "                  .    :    .    :    .    :    .    :    .    :    .    :    .    :" +newline +
-      "Chain 1:    1 VLSPADKTNVKAAWGKVGAHAGEYGAEALERMFLSFPTTKTYFPHFDL------SHGSAQVKGHGKKVAD" +newline +
-      "              11111111111111111  11111111111111111111111111111      1111111111111111" +newline +
-      "Chain 2:    2 HLTPEEKSAVTALWGKV--NVDEVGGEALGRLLVVYPWTQRFFESFGDLSTPDAVMGNPKVKAHGKKVLG" +newline +
-      "" +newline +
-      "                  .    :    .    :    .    :    .    :    .    :    .    :    .    :" +newline +
-      "Chain 1:   65 ALTNAVAHVDDMPNALSALSDLHAHKLRVDPVNFKLLSHCLLVTLAAHLPAEFTPAVHASLDKFLASVST" +newline +
-      "              1111111111111111111111111111111111111111111111111111111111111111111111" +newline +
-      "Chain 2:   70 AFSDGLAHLDNLKGTFATLSELHCDKLHVDPENFRLLGNVLVCVLAHHFGKEFTPPVQAAYQKVVAGVAN" +newline +
-      "" +newline +
-      "                  ." +newline +
-      "Chain 1:  135 VLTSKYR" +newline +
-      "              1111111" +newline +
-      "Chain 2:  140 ALAHKYH" +newline +
-      "" +newline +
-      "Note: positions are from PDB; the numbers between alignments are block index" +newline ;
-      String result = MyTestHelper.compareAlignment(pdb1, chain1, pdb2, chain2, originalOutput,true);
-      if (! result.equals("")){
-         String msg = "the created alignment images are not identical! ";
-         printMismatch(originalOutput,result);
-         printFirstMismatch(result, originalOutput);
-         fail(msg);
-      }     
-   }
-
+   // speed up of junit tests
    //exact
-   public void test4hhbsFlexible(){
-      String pdb1= "4hhb";
-      String pdb2 = "4hhb";
-      String chain1 = "A";
-      String chain2 = "B";
-
-      String originalOutput="Align 4hhbA.pdb 141 with 4hhbB.pdb 146" +newline +
-      "Twists 0 ini-len 128 ini-rmsd 1.36 opt-equ 139 opt-rmsd 1.49 chain-rmsd 1.36 Score 364.84 align-len 147 gaps 8 (5.44%)" +newline +
-      "P-value 0.00e+00 Afp-num 13309 Identity 40.82% Similarity 57.82%" +newline +
-      "Block  0 afp 16 score 364.84 rmsd  1.36 gap 17 (0.12%)" +newline +
-      "" +newline +
-      "                  .    :    .    :    .    :    .    :    .    :    .    :    .    :" +newline +
-      "Chain 1:    1 VLSPADKTNVKAAWGKVGAHAGEYGAEALERMFLSFPTTKTYFPHFDL------SHGSAQVKGHGKKVAD" +newline +
-      "              11111111111111111  11111111111111111111111111111      1111111111111111" +newline +
-      "Chain 2:    2 HLTPEEKSAVTALWGKV--NVDEVGGEALGRLLVVYPWTQRFFESFGDLSTPDAVMGNPKVKAHGKKVLG" +newline +
-      "" +newline +
-      "                  .    :    .    :    .    :    .    :    .    :    .    :    .    :" +newline +
-      "Chain 1:   65 ALTNAVAHVDDMPNALSALSDLHAHKLRVDPVNFKLLSHCLLVTLAAHLPAEFTPAVHASLDKFLASVST" +newline +
-      "              1111111111111111111111111111111111111111111111111111111111111111111111" +newline +
-      "Chain 2:   70 AFSDGLAHLDNLKGTFATLSELHCDKLHVDPENFRLLGNVLVCVLAHHFGKEFTPPVQAAYQKVVAGVAN" +newline +
-      "" +newline +
-      "                  ." +newline +
-      "Chain 1:  135 VLTSKYR" +newline +
-      "              1111111" +newline +
-      "Chain 2:  140 ALAHKYH" +newline +
-      "" +newline +
-      "Note: positions are from PDB; the numbers between alignments are block index" +newline ;
-      String result = MyTestHelper.compareAlignment(pdb1, chain1, pdb2, chain2, originalOutput,false);
-      if (! result.equals("")){
-         String msg = "the created alignment images are not identical! ";
-         printMismatch(originalOutput,result);
-         printFirstMismatch(result, originalOutput);
-         fail(msg);
-      }     
-   }
-   
+//   public void test4hhbsFlexible(){
+//      String pdb1= "4hhb";
+//      String pdb2 = "4hhb";
+//      String chain1 = "A";
+//      String chain2 = "B";
+//
+//      String originalOutput="Align 4hhbA.pdb 141 with 4hhbB.pdb 146" +newline +
+//      "Twists 0 ini-len 128 ini-rmsd 1.36 opt-equ 139 opt-rmsd 1.49 chain-rmsd 1.36 Score 364.84 align-len 147 gaps 8 (5.44%)" +newline +
+//      "P-value 0.00e+00 Afp-num 13309 Identity 40.82% Similarity 57.82%" +newline +
+//      "Block  0 afp 16 score 364.84 rmsd  1.36 gap 17 (0.12%)" +newline +
+//      "" +newline +
+//      "                  .    :    .    :    .    :    .    :    .    :    .    :    .    :" +newline +
+//      "Chain 1:    1 VLSPADKTNVKAAWGKVGAHAGEYGAEALERMFLSFPTTKTYFPHFDL------SHGSAQVKGHGKKVAD" +newline +
+//      "              11111111111111111  11111111111111111111111111111      1111111111111111" +newline +
+//      "Chain 2:    2 HLTPEEKSAVTALWGKV--NVDEVGGEALGRLLVVYPWTQRFFESFGDLSTPDAVMGNPKVKAHGKKVLG" +newline +
+//      "" +newline +
+//      "                  .    :    .    :    .    :    .    :    .    :    .    :    .    :" +newline +
+//      "Chain 1:   65 ALTNAVAHVDDMPNALSALSDLHAHKLRVDPVNFKLLSHCLLVTLAAHLPAEFTPAVHASLDKFLASVST" +newline +
+//      "              1111111111111111111111111111111111111111111111111111111111111111111111" +newline +
+//      "Chain 2:   70 AFSDGLAHLDNLKGTFATLSELHCDKLHVDPENFRLLGNVLVCVLAHHFGKEFTPPVQAAYQKVVAGVAN" +newline +
+//      "" +newline +
+//      "                  ." +newline +
+//      "Chain 1:  135 VLTSKYR" +newline +
+//      "              1111111" +newline +
+//      "Chain 2:  140 ALAHKYH" +newline +
+//      "" +newline +
+//      "Note: positions are from PDB; the numbers between alignments are block index" +newline ;
+//      String result = MyTestHelper.compareAlignment(pdb1, chain1, pdb2, chain2, originalOutput,false);
+//      if (! result.equals("")){
+//         String msg = "the created alignment images are not identical! ";
+//         printMismatch(originalOutput,result);
+//         printFirstMismatch(result, originalOutput);
+//         fail(msg);
+//      }     
+//   }
+//   
 
   
 
@@ -349,53 +352,54 @@ public class TestOutputStrings extends TestCase
 
    }
 
+   // disabled since so slow
    // 100% identical
-   public void test1nbw1kidFlexible(){
-      String pdb1 = "1nbw";
-      String chain1 = "A";
-      String pdb2 = "1kid";
-      String chain2 ="A";
-
-      String originalOutput="Align 1nbwA.pdb 606 with 1kidA.pdb 193" +newline +
-      "Twists 5 ini-len 120 ini-rmsd 5.60 opt-equ 155 opt-rmsd 3.58 chain-rmsd 21.86 Score 133.98 align-len 248 gaps 93 (37.50%)" +newline +
-      "P-value 6.48e-01 Afp-num 37019 Identity 5.65% Similarity 18.55%" +newline +
-      "Block  0 afp  6 score 68.26 rmsd  4.20 gap 13 (0.21%)" +newline +
-      "Block  1 afp  2 score 42.05 rmsd  1.96 gap 1 (0.06%)" +newline +
-      "Block  2 afp  1 score 22.05 rmsd  1.14 gap 0 (0.00%)" +newline +
-      "Block  3 afp  2 score 40.82 rmsd  2.48 gap 0 (0.00%)" +newline +
-      "Block  4 afp  2 score 40.27 rmsd  2.24 gap 0 (0.00%)" +newline +
-      "Block  5 afp  2 score 47.60 rmsd  0.60 gap 0 (0.00%)" +newline +
-      "" +newline +
-      "                  .    :    .    :    .    :    .    :    .    :    .    :    .    :" +newline +
-      "Chain 1:   93 TESTMIGHNPQTPGGVG-------VGVGTTIALGRLATLPAAQYAEGWIVLIDDAVDFLDAVWWLNEALD" +newline +
-      "              1 111111111111111       1111                  111111111111111111111111" +newline +
-      "Chain 2:  190 SEGMQFDRGYLSPYFINKPETGAVELES------------------PFILLADKKISNIREMLPVLEAVA" +newline +
-      "" +newline +
-      "                  .    :    .    :    .    :    .    :    .    :    .    :    .    :" +newline +
-      "Chain 1:  156 RGINVVAAILKKDD--GVLVNNRLR---KTLPVVDEVTLLEQVPEGVMAAVEVAAPGQVVRILSNPYGIA" +newline +
-      "              11111111111111  111111111   1111111                                222" +newline +
-      "Chain 2:  242 KAGKPLLIIAEDVEGEALATLVVNTMRGIVKVAAV--------------------------------KAP" +newline +
-      "" +newline +
-      "                  .    :    .    :    .    :    .    :    .    :    .    :    .    :" +newline +
-      "Chain 1:  221 TFFGLSPEETQAIVPIARALIGNRSAVVLKTPQGDVQSRVIPA-----GNLYISGEKRRGEADVAEGAEA" +newline +
-      "                  22222222222222222    33333333               444444444444444  55555" +newline +
-      "Chain 2:  280 ----GFGDRRKAMLQDIATLT----GGTVISEEIGMELEKATLEDLGQAKRVVINKDTTTIIDGVGEEAA" +newline +
-      "" +newline +
-      "                  .    :    .    :    .    :    ." +newline +
-      "Chain 1:  286 IMQAMSACAPVRDIRGEPGTHAGGMLERVRKVMASLTG" +newline +
-      "              555555555555     666666666666666666666" +newline +
-      "Chain 2:  342 IQGRVAQIRQQIEE---ATSDYDREKLQERVAKLAGGV" +newline +
-      "" +newline +
-      "Note: positions are from PDB; the numbers between alignments are block index" +newline;
-      String result = MyTestHelper.compareAlignment(pdb1, chain1, pdb2, chain2, originalOutput,false);
-      if (! result.equals("")){
-         String msg = "the created alignment images are not identical! ";
-         printMismatch(originalOutput,result);
-         printFirstMismatch(result, originalOutput);
-
-         fail(msg);
-      }
-   }
+//   public void test1nbw1kidFlexible(){
+//      String pdb1 = "1nbw";
+//      String chain1 = "A";
+//      String pdb2 = "1kid";
+//      String chain2 ="A";
+//
+//      String originalOutput="Align 1nbwA.pdb 606 with 1kidA.pdb 193" +newline +
+//      "Twists 5 ini-len 120 ini-rmsd 5.60 opt-equ 155 opt-rmsd 3.58 chain-rmsd 21.86 Score 133.98 align-len 248 gaps 93 (37.50%)" +newline +
+//      "P-value 6.48e-01 Afp-num 37019 Identity 5.65% Similarity 18.55%" +newline +
+//      "Block  0 afp  6 score 68.26 rmsd  4.20 gap 13 (0.21%)" +newline +
+//      "Block  1 afp  2 score 42.05 rmsd  1.96 gap 1 (0.06%)" +newline +
+//      "Block  2 afp  1 score 22.05 rmsd  1.14 gap 0 (0.00%)" +newline +
+//      "Block  3 afp  2 score 40.82 rmsd  2.48 gap 0 (0.00%)" +newline +
+//      "Block  4 afp  2 score 40.27 rmsd  2.24 gap 0 (0.00%)" +newline +
+//      "Block  5 afp  2 score 47.60 rmsd  0.60 gap 0 (0.00%)" +newline +
+//      "" +newline +
+//      "                  .    :    .    :    .    :    .    :    .    :    .    :    .    :" +newline +
+//      "Chain 1:   93 TESTMIGHNPQTPGGVG-------VGVGTTIALGRLATLPAAQYAEGWIVLIDDAVDFLDAVWWLNEALD" +newline +
+//      "              1 111111111111111       1111                  111111111111111111111111" +newline +
+//      "Chain 2:  190 SEGMQFDRGYLSPYFINKPETGAVELES------------------PFILLADKKISNIREMLPVLEAVA" +newline +
+//      "" +newline +
+//      "                  .    :    .    :    .    :    .    :    .    :    .    :    .    :" +newline +
+//      "Chain 1:  156 RGINVVAAILKKDD--GVLVNNRLR---KTLPVVDEVTLLEQVPEGVMAAVEVAAPGQVVRILSNPYGIA" +newline +
+//      "              11111111111111  111111111   1111111                                222" +newline +
+//      "Chain 2:  242 KAGKPLLIIAEDVEGEALATLVVNTMRGIVKVAAV--------------------------------KAP" +newline +
+//      "" +newline +
+//      "                  .    :    .    :    .    :    .    :    .    :    .    :    .    :" +newline +
+//      "Chain 1:  221 TFFGLSPEETQAIVPIARALIGNRSAVVLKTPQGDVQSRVIPA-----GNLYISGEKRRGEADVAEGAEA" +newline +
+//      "                  22222222222222222    33333333               444444444444444  55555" +newline +
+//      "Chain 2:  280 ----GFGDRRKAMLQDIATLT----GGTVISEEIGMELEKATLEDLGQAKRVVINKDTTTIIDGVGEEAA" +newline +
+//      "" +newline +
+//      "                  .    :    .    :    .    :    ." +newline +
+//      "Chain 1:  286 IMQAMSACAPVRDIRGEPGTHAGGMLERVRKVMASLTG" +newline +
+//      "              555555555555     666666666666666666666" +newline +
+//      "Chain 2:  342 IQGRVAQIRQQIEE---ATSDYDREKLQERVAKLAGGV" +newline +
+//      "" +newline +
+//      "Note: positions are from PDB; the numbers between alignments are block index" +newline;
+//      String result = MyTestHelper.compareAlignment(pdb1, chain1, pdb2, chain2, originalOutput,false);
+//      if (! result.equals("")){
+//         String msg = "the created alignment images are not identical! ";
+//         printMismatch(originalOutput,result);
+//         printFirstMismatch(result, originalOutput);
+//
+//         fail(msg);
+//      }
+//   }
 
   // 100% identical
 //   public void test1cdg8tim(){

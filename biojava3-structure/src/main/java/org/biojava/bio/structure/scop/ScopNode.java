@@ -24,53 +24,65 @@
 
 package org.biojava.bio.structure.scop;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class ScopNode
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlRootElement;
+
+@XmlRootElement(name = "ScopNode", namespace ="http://source.rcsb.org")
+@XmlAccessorType(XmlAccessType.PUBLIC_MEMBER)
+public class ScopNode implements Serializable
 {
 
-   int sunid;
-   int parentSunid;
-   List<Integer> children;
-   
-   public ScopNode(){
-      
-   }
-   
-   
-   
-   @Override
-   public String toString()
-   {
-      return "ScopNode [children=" + children + ", parentSunid=" + parentSunid + ", sunid=" + sunid + "]";
-   }
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1187083944488580995L;
+
+	int sunid;
+	int parentSunid;
+	List<Integer> children;
+
+	public ScopNode(){
+
+	}
 
 
 
-   public int getSunid()
-   {
-      return sunid;
-   }
-   public void setSunid(int sunid)
-   {
-      this.sunid = sunid;
-   }
-   public int getParentSunid()
-   {
-      return parentSunid;
-   }
-   public void setParentSunid(int parentSunid)
-   {
-      this.parentSunid = parentSunid;
-   }
-   public List<Integer> getChildren()
-   {
-      return children;
-   }
-   public void setChildren(List<Integer> children)
-   {
-      this.children = children;
-   }
-   
-   
+	@Override
+	public String toString()
+	{
+		return "ScopNode [children=" + children + ", parentSunid=" + parentSunid + ", sunid=" + sunid + "]";
+	}
+
+
+
+	public int getSunid()
+	{
+		return sunid;
+	}
+	public void setSunid(int sunid)
+	{
+		this.sunid = sunid;
+	}
+	public int getParentSunid()
+	{
+		return parentSunid;
+	}
+	public void setParentSunid(int parentSunid)
+	{
+		this.parentSunid = parentSunid;
+	}
+	public List<Integer> getChildren()
+	{
+		return children;
+	}
+	public void setChildren(List<Integer> children)
+	{
+		this.children = children;
+	}
+
+
 }

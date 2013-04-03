@@ -148,7 +148,8 @@ public class DBRef implements PDBRecord, Serializable{
 
         try {
 
-            Class c = Class.forName("org.biojava.bio.structure.DBRef");
+            @SuppressWarnings("rawtypes")
+			Class c = Class.forName("org.biojava.bio.structure.DBRef");
             Method[] methods  = c.getMethods();
 
             for (int i = 0; i < methods.length; i++) {

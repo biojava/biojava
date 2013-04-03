@@ -5,17 +5,15 @@ package org.biojava.bio.structure.align;
 
 import static org.junit.Assert.*;
 
-import java.lang.reflect.Method;
-
 import org.biojava.bio.structure.AminoAcidImpl;
 import org.biojava.bio.structure.Atom;
 import org.biojava.bio.structure.AtomImpl;
 import org.biojava.bio.structure.Chain;
 import org.biojava.bio.structure.ChainImpl;
 import org.biojava.bio.structure.Group;
-import org.biojava.bio.structure.StructureException;
+import org.biojava.bio.structure.ResidueNumber;
 import org.biojava.bio.structure.align.ce.CECalculator;
-import org.biojava.bio.structure.align.ce.CeMain;
+import org.biojava.bio.structure.align.ce.CeCPMain;
 import org.biojava.bio.structure.align.model.AFPChain;
 import org.junit.*;
 
@@ -45,7 +43,7 @@ public class CeMainTest {
 				ca1[i].setCoords(new double[] { i, 0, 0 });
 				Group aa = new AminoAcidImpl();
 				aa.setPDBName("GLY");
-				aa.setPDBCode(Integer.toString(i));
+				aa.setResidueNumber( ResidueNumber.fromString(i+""));
 				aa.addAtom(ca1[i]);
 				chain1.addGroup(aa);
 			}
@@ -59,7 +57,7 @@ public class CeMainTest {
 				Group aa = new AminoAcidImpl();
 				aa.addAtom(ca2[i]);
 				aa.setPDBName("GLY");
-				aa.setPDBCode(Integer.toString(i));
+				aa.setResidueNumber( ResidueNumber.fromString(i+""));
 				chain2.addGroup(aa);
 			}
 
@@ -70,13 +68,7 @@ public class CeMainTest {
 			afp.setBlockNum(1);
 			afp.setOptLen(new int[] {dupAlign[0][1].length});
 			
-			//Use reflection to get around private function
-			Method method = CeMain.class.getDeclaredMethod("filterDuplicateAFPs",
-					AFPChain.class, CECalculator.class, Atom[].class, Atom[].class);
-			method.setAccessible(true);
-			
-			AFPChain newAFP = (AFPChain) method.invoke(null, afp, new CECalculator(null), ca1, ca2);
-			//AFPChain newAFP = CeMain.filterDuplicateAFPs(afp, new CECalculator(null), ca1, ca2);
+			AFPChain newAFP = CeCPMain.filterDuplicateAFPs(afp, new CECalculator(null), ca1, ca2);
 			
 			int[][][] align = newAFP.getOptAln();
 			int[] blkLen = newAFP.getOptLen();

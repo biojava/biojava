@@ -34,7 +34,7 @@ import org.biojava.bio.structure.Chain;
 import org.biojava.bio.structure.Group;
 import org.biojava.bio.structure.ResidueNumber;
 import org.biojava.bio.structure.StructureException;
-import org.biojava3.protmod.ComponentType;
+
 
 public final class StructureUtil {
 	private StructureUtil() {
@@ -44,38 +44,37 @@ public final class StructureUtil {
 	/**
 	 * 
 	 * @param group a {@link Group} in structure.
-	 * @param type the {@link ComponentType}.
+	 * @param isAminoAcid true if it is an amino acid.
 	 * @return the {@link StructureGroup} of the group.
 	 */
-	public static StructureGroup getStructureGroup(Group group, ComponentType type) {
+	public static StructureGroup getStructureGroup(Group group, boolean isAminoAcid) {
 		ResidueNumber resNum = group.getResidueNumber();
-		return new StructureGroup(resNum, group.getPDBName(), type);
+		return new StructureGroup(resNum, group.getPDBName(), isAminoAcid);
 	}
 	
 	/**
 	 * 
 	 * @param atom a {@link Atom} in structure.
-	 * @param parentGroupType the {@link ComponentType} of the atom's parent {@link Group}. 
+	 * @param isParentAminoAcid true if the containing group is an amino acid.
 	 * @return the {@link StructureAtom} of the atom.
 	 */
-	public static StructureAtom getStructureAtom(Atom atom, ComponentType parentGroupType) {
-		StructureGroup strucGroup = getStructureGroup(atom.getGroup(), parentGroupType);
+	public static StructureAtom getStructureAtom(Atom atom, boolean isParentAminoAcid) {
+		StructureGroup strucGroup = getStructureGroup(atom.getGroup(), isParentAminoAcid);
 		return new StructureAtom(strucGroup, atom.getName());
 	}
 	
 	/**
 	 * 
 	 * @param atom1 the first {@link Atom} in structure.
-	 * @param parentGroupType1 the {@link ComponentType} of the first atom's parent {@link Group}. 
+	 * @param isParentAminoAcid1 true if the first containing group is an amino acid..
 	 * @param atom2 the second {@link Atom} in structure.
-	 * @param parentGroupType2 the {@link ComponentType} of the second atom's parent {@link Group}. 
+	 * @param isParentAminoAcid2 true if the second containing group is an amino acid..
 	 * @return the {@link StructureAtomLinkage} of the two atoms.
 	 */
-	public static StructureAtomLinkage getStructureAtomLinkage(
-			Atom atom1, ComponentType parentGroupType1,
-			Atom atom2, ComponentType parentGroupType2) {
-		StructureAtom strucAtom1 = getStructureAtom(atom1, parentGroupType1);
-		StructureAtom strucAtom2 = getStructureAtom(atom2, parentGroupType2);
+	public static StructureAtomLinkage getStructureAtomLinkage(Atom atom1, 
+                boolean isParentAminoAcid1, Atom atom2, boolean isParentAminoAcid2) {
+		StructureAtom strucAtom1 = getStructureAtom(atom1, isParentAminoAcid1);
+		StructureAtom strucAtom2 = getStructureAtom(atom2, isParentAminoAcid2);
 		double distance = getAtomDistance(atom1, atom2);
 		return new StructureAtomLinkage(strucAtom1, strucAtom2, distance);
 	}
@@ -101,23 +100,22 @@ public final class StructureUtil {
 	 * Find a linkage between two groups within tolerance of bond length,
 	 * from potential atoms.
 	 * @param group1 the first {@link Group}.
-	 * @param isGroup1AminoAcid true if group1 is an amino acid.
 	 * @param group2 the second {@link Group}.
-	 * @param isGroup2AminoAcid true if group2 is an amino acid.
 	 * @param potentialNamesOfAtomOnGroup1 potential names of the atom on the first group.
 	 * 		  If null, search all atoms on the first group.
 	 * @param potentialNamesOfAtomOnGroup2 potential names of the atom on the second group.
 	 * 		  If null, search all atoms on the second group.
+         * @param ignoreNCLinkage true to ignore all N-C linkages
 	 * @param bondLengthTolerance bond length error tolerance.
 	 * @return an array of two Atoms that form bond between each other
 	 *  if found; null, otherwise.
 	 */
-	public static Atom[] findNearestNonNCAtomLinkage(final Group group1,
-			final boolean isGroup1AminoAcid, final Group group2, final boolean isGroup2AminoAcid,
+	public static Atom[] findNearestAtomLinkage(final Group group1, final Group group2,
 			List<String> potentialNamesOfAtomOnGroup1, List<String> potentialNamesOfAtomOnGroup2,
-			double bondLengthTolerance) {
-		List<Atom[]> linkages = findNonNCAtomLinkages(group1, isGroup1AminoAcid, group2, isGroup2AminoAcid,
-				potentialNamesOfAtomOnGroup1, potentialNamesOfAtomOnGroup2, bondLengthTolerance);
+			final boolean ignoreNCLinkage, double bondLengthTolerance) {
+		List<Atom[]> linkages = findAtomLinkages(group1, group2, 
+				potentialNamesOfAtomOnGroup1, potentialNamesOfAtomOnGroup2,
+                                ignoreNCLinkage, bondLengthTolerance);
 		
 		Atom[] ret = null;
 		double minDistance = Double.POSITIVE_INFINITY;
@@ -140,42 +138,41 @@ public final class StructureUtil {
 	}
 	
 	/**
-	 * Find non-N-C linkages between two groups within tolerance of bond length,
+	 * Find linkages between two groups within tolerance of bond length,
 	 * from potential atoms.
 	 * @param group1 the first {@link Group}.
-	 * @param isGroup1AminoAcid true if group1 is an amino acid.
 	 * @param group2 the second {@link Group}.
-	 * @param isGroup2AminoAcid true if group2 is an amino acid.
+         * @param ignoreNCLinkage true to ignore all N-C linkages
 	 * @param bondLengthTolerance bond length error tolerance.
 	 * @return a list, each element of which is an array of two Atoms that form bond 
 	 * between each other.
 	 */
-	public static List<Atom[]> findNonNCAtomLinkages(final Group group1, final boolean isGroup1AminoAcid,
-			final Group group2, final boolean isGroup2AminoAcid, final double bondLengthTolerance) {
-		return findNonNCAtomLinkages(group1, isGroup1AminoAcid, group2,
-				isGroup2AminoAcid, null, null, bondLengthTolerance);
+	public static List<Atom[]> findAtomLinkages(final Group group1,
+			final Group group2, final boolean ignoreNCLinkage,
+                        final double bondLengthTolerance) {
+		return findAtomLinkages(group1, group2,
+				null, null, ignoreNCLinkage, bondLengthTolerance);
 	}
 	
 	/**
-	 * Find non-N-C linkages between two groups within tolerance of bond length,
+	 * Find linkages between two groups within tolerance of bond length,
 	 * from potential atoms.
 	 * @param group1 the first {@link Group}.
-	 * @param isGroup1AminoAcid true if group1 is an amino acid.
 	 * @param group2 the second {@link Group}.
-	 * @param isGroup2AminoAcid true if group2 is an amino acid.
 	 * @param potentialNamesOfAtomOnGroup1 potential names of the atom on the first group.
 	 * 		  If null, search all atoms on the first group.
 	 * @param potentialNamesOfAtomOnGroup2 potential names of the atom on the second group.
 	 * 		  If null, search all atoms on the second group.
+         * @param ignoreNCLinkage true to ignore all N-C linkages
 	 * @param bondLengthTolerance bond length error tolerance.
 	 * @return a list, each element of which is an array of two Atoms that form bond 
 	 * between each other.
 	 */
-	public static List<Atom[]> findNonNCAtomLinkages(final Group group1, 
-			final boolean isGroup1AminoAcid,  final Group group2,
-			final boolean isGroup2AminoAcid,
+	public static List<Atom[]> findAtomLinkages(final Group group1, 
+			final Group group2,
 			List<String> potentialNamesOfAtomOnGroup1,
 			List<String> potentialNamesOfAtomOnGroup2,
+                        final boolean ignoreNCLinkage,
 			final double bondLengthTolerance) {
 		if (group1==null || group2==null) {
 			throw new IllegalArgumentException("Null group(s).");
@@ -202,7 +199,7 @@ public final class StructureUtil {
 				Atom[] atoms = findLinkage(group1, group2, namesOfAtomOnGroup1,
 						namesOfAtomOnGroup2, bondLengthTolerance);
 				if (atoms != null) {
-					if (isGroup1AminoAcid && isGroup2AminoAcid &&
+					if (ignoreNCLinkage &&
 							((atoms[0].getName().equals("N") && atoms[1].getName().equals("C"))
 									|| (atoms[0].getName().equals("C") && atoms[1].getName().equals("N")))
 								) {
@@ -283,7 +280,8 @@ public final class StructureUtil {
 	 * @return
 	 */
 	public static List<Group> getAminoAcids(Chain chain) {
-//		List<Group> residues = new ArrayList<Group>();
+		//List<Group> residues = new ArrayList<Group>();
+		//return chain.getSeqResGroups();
 //		for (Group group : chain.getAtomGroups()) {
 //			ChemComp cc = group.getChemComp();
 //			if (ResidueType.lPeptideLinking.equals(cc.getResidueType()) ||
@@ -291,9 +289,21 @@ public final class StructureUtil {
 //				residues.add(group);
 //			}
 //		}
-		List<Group> residues = new ArrayList<Group>(chain.getSeqResGroups());
-		residues.retainAll(chain.getAtomGroups());
+		
+		List<Group> residues = new ArrayList<Group>(chain.getAtomGroups());
+		residues.retainAll(chain.getSeqResGroups()); // not work because chain.getAtomGroups() may return different object from chain.getSeqResGroups()
+		
+		// add amino acids that do not alinged with the sequence residues
+		List<Group> otherGroups = new ArrayList<Group>(chain.getAtomGroups());
+		otherGroups.removeAll(chain.getSeqResGroups());
+		for (Group g : otherGroups) {
+			if (g.hasAminoAtoms()) {
+				residues.add(g);
+			}
+		}
 		
 		return residues;
+		
+//		return chain.getAtomGroups("amino");
 	}
 }

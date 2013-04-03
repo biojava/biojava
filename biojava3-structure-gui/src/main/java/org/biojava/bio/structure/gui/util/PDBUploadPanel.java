@@ -26,6 +26,7 @@ import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.util.logging.Logger;
 
 import javax.swing.AbstractAction;
@@ -47,7 +48,7 @@ import org.biojava.bio.structure.io.MMCIFFileReader;
 import org.biojava.bio.structure.io.PDBFileReader;
 import org.biojava.bio.structure.io.StructureIOFile;
 
-/** A JPanel to upload 2 PDB files.
+/** A JPanel to upload 2 custom PDB files.
  * 
  * @author Andreas Prlic
  * @since 1.7
@@ -156,7 +157,27 @@ implements StructurePairSelector {
 			throw new StructureException(e);
 		}
 		
-		return StructureTools.getReducedStructure(s, chainId.getText());
+		Structure reduced = StructureTools.getReducedStructure(s, chainId.getText());
+		
+		String fileURL = "";
+		try {
+						
+			URL u ;
+			
+			if ( chainId.getText() == null || chainId.getText().equals("")){
+			
+				u = f.toURI().toURL();
+			} else {
+				u = new URL(f.toURI().toURL().toString() + "?chainId=" + chainId.getText());
+			}
+			fileURL = u.toString() ; 
+					
+		} catch (Exception e){
+			e.printStackTrace();
+		}
+		
+		reduced.setPDBCode(fileURL);
+		return reduced;
 
 	}
 

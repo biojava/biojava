@@ -17,6 +17,7 @@ import org.biojava.bio.structure.jama.Matrix;
  * @author Andreas Prlic
  *
  */
+
 public class GuiWrapper {
 
 	static final String guiPackage = "org.biojava.bio.structure.gui";
@@ -28,9 +29,11 @@ public class GuiWrapper {
 
 	static final String scaleMatrixPanel = "org.biojava.bio.structure.gui.ScaleableMatrixPanel";
 	
+	@SuppressWarnings("rawtypes")
 	public static boolean isGuiModuleInstalled(){
 		String className = displayAFP;
 		try {
+			@SuppressWarnings("unused")
 			Class c = Class.forName(className);
 		} catch (ClassNotFoundException ex){
 			return false;
@@ -38,7 +41,7 @@ public class GuiWrapper {
 		return true;
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public static Object display(AFPChain afpChain, Atom[] ca1, Atom[] ca2) 
 	throws ClassNotFoundException, NoSuchMethodException, InvocationTargetException, IllegalAccessException{
 
@@ -52,7 +55,7 @@ public class GuiWrapper {
 		return structureAlignmentJmol;
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public static void showAlignmentImage(AFPChain afpChain, Atom[] ca1,
 			Atom[] ca2, Object jmol)
 	throws ClassNotFoundException, NoSuchMethodException, InvocationTargetException, IllegalAccessException{
@@ -65,17 +68,18 @@ public class GuiWrapper {
 		show.invoke(null,afpChain, ca1, ca2, jmol);
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public static void showAlignmentGUI()
 	throws ClassNotFoundException, NoSuchMethodException, InvocationTargetException, IllegalAccessException {
 		// proxy for AlignmentGui.getInstance();
 
 
 		Class c = Class.forName(alignmentGUI);
-		Method m = c.getMethod("getInstance", null);
-		m.invoke(c,null);
+		Method m = c.getMethod("getInstance", (Class[])null);
+		m.invoke(c,(Object[])null);
 	}
 
+	@SuppressWarnings({ "unchecked", "unused", "rawtypes" })
 	public static Structure getAlignedStructure(Atom[] ca1, Atom[] ca2)
 	throws ClassNotFoundException, NoSuchMethodException,
 	InvocationTargetException, IllegalAccessException{
@@ -91,6 +95,7 @@ public class GuiWrapper {
 		
 	}
 	
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public static JPanel getScaleableMatrixPanel(Matrix m)
 	throws ClassNotFoundException, NoSuchMethodException,
 	InvocationTargetException, IllegalAccessException, InstantiationException{
@@ -107,6 +112,7 @@ public class GuiWrapper {
 		
 	}
 	
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public static Group[] prepareGroupsForDisplay(AFPChain afpChain, Atom[] ca1,
 			Atom[] ca2)
 		throws ClassNotFoundException, NoSuchMethodException,
@@ -121,6 +127,7 @@ public class GuiWrapper {
 			return (Group[]) groups;
 	}
 	
+	@SuppressWarnings({ "rawtypes", "unchecked", "unused" })
 	public static Atom[] getAtomArray(Atom[] ca, List<Group> hetatoms, List<Group> nucs)
 	throws ClassNotFoundException, NoSuchMethodException,
 	InvocationTargetException, IllegalAccessException{

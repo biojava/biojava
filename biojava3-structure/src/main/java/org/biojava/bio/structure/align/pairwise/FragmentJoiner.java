@@ -62,7 +62,8 @@ public class FragmentJoiner {
     * @param newSize   the new array size.
     * @return          A new array with the same contents.
     */
-   public static Object resizeArray (Object oldArray, int newSize) {
+   @SuppressWarnings("rawtypes")
+public static Object resizeArray (Object oldArray, int newSize) {
       int oldSize = java.lang.reflect.Array.getLength(oldArray);
       Class elementType = oldArray.getClass().getComponentType();
       Object newArray = java.lang.reflect.Array.newInstance(
@@ -299,8 +300,8 @@ public class FragmentJoiner {
       double d1 = 0;
       double d2 = 0;
 
-      double d1n = 0 ;
-      double d2n = 0 ;
+     // double d1n = 0 ;
+      //double d2n = 0 ;
       for ( int i = 0 ; i < ca1subset.length;i++){
          double dd1 = Calc.getDistance(centroid1, ca1subset[i]);
          double dd2 = Calc.getDistance(centroid2, ca2subset[i]);
@@ -308,12 +309,12 @@ public class FragmentJoiner {
          d1 += dd1;
          d2 += dd2;
          // new
-         for ( int j = 0 ; j < ca1subset.length;j++){
-            double dd1m = Calc.getDistance(ca1subset[i],ca1subset[j]);
-            double dd2m = Calc.getDistance(ca2subset[i],ca2subset[j]);
-            d1n += dd1m;
-            d2n += dd2m;
-         }
+        // for ( int j = 0 ; j < ca1subset.length;j++){
+         //   double dd1m = Calc.getDistance(ca1subset[i],ca1subset[j]);
+        //    double dd2m = Calc.getDistance(ca2subset[i],ca2subset[j]);
+           // d1n += dd1m;
+          //  d2n += dd2m;
+        // }
 
       }
 
@@ -468,7 +469,7 @@ public class FragmentJoiner {
       //the final list of joined fragments stores as apairs
       List<JointFragments> fll = new ArrayList<JointFragments>();
 
-      int cnt = 0;
+     // int cnt = 0;
       double adiff = angleDiff * Math.PI / 180d;
       logger.finer("addiff" + adiff);
       //distance between two unit vectors with angle adiff
@@ -510,7 +511,7 @@ public class FragmentJoiner {
                      if ( dd < 0)
                         dd = -dd;
                      if ( dd < fragCompatDist){
-                        cnt +=1;
+                       // cnt +=1;
                         maxi = p2i+l2;
                         used[j]=1;
                         f.add(p2i,p2j,0,tmpfidx[j].getLength());
@@ -569,7 +570,7 @@ public class FragmentJoiner {
 
       List<int[]> pos = fragments.getIdxlist();
 
-      int lstart = pos.size();
+     // int lstart = pos.size();
 
       // idxlist is always sorted...
 

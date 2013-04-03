@@ -36,6 +36,7 @@ import org.biojava.bio.structure.Atom;
 import org.biojava.bio.structure.Chain;
 import org.biojava.bio.structure.Group;
 import org.biojava.bio.structure.HetatomImpl;
+import org.biojava.bio.structure.ResidueNumber;
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureException;
 import org.biojava.bio.structure.io.mmcif.chem.PolymerType;
@@ -53,8 +54,6 @@ import org.biojava3.core.sequence.ProteinSequence;
 import org.biojava3.core.sequence.compound.AminoAcidCompound;
 import org.biojava3.core.sequence.compound.AminoAcidCompoundSet;
 import org.biojava3.core.sequence.template.Compound;
-
-
 
 
 /** Aligns the SEQRES residues to the ATOM residues.
@@ -83,8 +82,6 @@ public class SeqRes2AtomAligner {
 
 	}
 
-
-
 	public SeqRes2AtomAligner(){
 		alignmentString = "";
 	}
@@ -101,7 +98,7 @@ public class SeqRes2AtomAligner {
 		DEBUG = debug;
 	}
 
-	private Chain getMatchingAtomRes(Chain seqRes, List<Chain> atomList)
+	public Chain getMatchingAtomRes(Chain seqRes, List<Chain> atomList)
 	throws StructureException {
 		Iterator<Chain> iter = atomList.iterator();
 		while(iter.hasNext()){
@@ -117,21 +114,32 @@ public class SeqRes2AtomAligner {
 		//List<Chain> seqResList = s.getSeqRes();
 		List<Chain> atomList   = s.getModel(0);
 
-		Iterator<Chain> iter = seqResList.iterator();
-		// List<Chain> chains = new ArrayList<Chain>();
-		while ( iter.hasNext()){
-			Chain seqRes = iter.next();
-
-			if ( seqRes.getAtomGroups("amino").size() < 1) {
-				if (DEBUG){
-					System.out.println("chain " + seqRes.getChainID() + " does not contain amino acids, ignoring...");
-				}
-				continue;
-			}
-
+		for (Chain seqRes: seqResList){
 			try {
 
 				Chain atomRes = getMatchingAtomRes(seqRes,atomList);
+
+				boolean simpleMatchSuccessful = trySimpleMatch(seqRes, atomRes);
+
+				if ( simpleMatchSuccessful) {
+					// update the new SEQRES list
+					List<Group> seqResGroups = seqRes.getAtomGroups();
+					atomRes.setSeqResGroups(seqResGroups);
+					continue;
+				}
+
+				//System.err.println("Could not map SEQRES to ATOM records easily, need to align...");
+				
+				if ( seqRes.getAtomGroups("amino").size() < 1) {
+					if (DEBUG){
+						System.out.println("chain " + seqRes.getChainID() + " does not contain amino acids, ignoring...");
+					}
+					continue;
+				}
+
+
+
+
 
 				if ( atomRes.getAtomGroups("amino").size() < 1) {
 					if (DEBUG){
@@ -159,6 +167,119 @@ public class SeqRes2AtomAligner {
 
 	}
 
+
+	/** a simple matching approach that tries to do a 1:1 mapping between SEQRES and ATOM records
+	 *  returns true if this simple matching approach worked fine
+	 *  
+	 * @param seqRes
+	 * @param atomList
+	 * @return
+	 */
+	private boolean trySimpleMatch(Chain seqRes, Chain atomRes) {
+
+		List<Group> seqResGroups = seqRes.getAtomGroups();
+		List<Group> atmResGroups = atomRes.getAtomGroups();
+		
+		if (DEBUG) {
+			System.err.println("COMPARING " + atomRes.getChainID() + " " + seqRes.getChainID());
+		}
+		// by default first ATOM position is 1
+		//
+		boolean startAt1 = true;
+		
+		for ( int atomResPos = 0 ; atomResPos < atmResGroups.size() ; atomResPos++){
+			
+			// let's try to match this case
+			Group atomResGroup = atmResGroups.get(atomResPos);
+			
+			// let's ignore waters
+			String threeLetterCode = atomResGroup.getPDBName();
+			if ( excludeTypes.contains(threeLetterCode)){
+				continue;
+			}
+			
+			ResidueNumber atomResNum = atomResGroup.getResidueNumber();
+			
+			int seqResPos = atomResNum.getSeqNum();
+			
+			
+			
+			if ( seqResPos < 0) {
+				if ( DEBUG )
+				System.err.println("ATOM residue number < 0");
+				return false;
+			}
+			
+			if ( seqResPos == 0){
+				// make sure the first SEQRES is matching.
+				Group seqResGroup = seqResGroups.get(0);
+				if (  seqResGroup.getPDBName().equals(atomResGroup.getPDBName())){
+					// they match! seems in this case the numbering starts with 0...
+					startAt1 = false;
+				} else {
+					if ( DEBUG){
+						System.err.println("SEQRES position 1  ("+seqResGroup.getPDBName()+
+								") does not match ATOM PDB res num 0 (" + atomResGroup.getPDBName()+")");
+						 
+					}
+					return false;
+				
+				}
+			}
+			
+		 	
+			if ( startAt1 )
+				seqResPos--;
+			
+			// another check that would require the alignment approach
+			if ( startAt1 && seqResPos >=  seqResGroups.size()  )
+					 {
+				
+				// could be a HETATOM...
+				if ( atomResGroup instanceof AminoAcid) {
+					if ( DEBUG )
+						System.err.println(" ATOM residue nr: " + seqResPos + " > seqres! " + seqResGroups.size() + " " + atomResGroup);
+					return false;
+				} else {
+					// we won't map HETATOM groups...
+					continue;
+				}
+			}
+			
+			
+			if ( seqResPos < 0){
+				
+				System.err.println("What is going on??? " + atomRes.getChainID() + " " + atomResGroup);
+			}
+
+			if ( seqResPos >= seqResGroups.size()){
+				//System.err.println("seqres groups don't match atom indeces");
+				if ( atomResGroup instanceof AminoAcid )
+					return false;
+				else
+					continue;
+			}
+			
+			Group seqResGroup = seqResGroups.get(seqResPos );
+			
+			if ( ! seqResGroup.getPDBName().trim().equals(atomResGroup.getPDBName().trim())){
+				// a mismatch! something is wrong in the mapping and we need to do an alignment
+				if ( DEBUG )
+				System.err.println("Mismatch of SEQRES pos " + seqResPos + " and ATOM record: " + atomResGroup + " | " + seqResGroup);
+				return false;
+			}
+			
+			// the two groups are identical and we can merge them
+			// replace the SEQRES group with the ATOM group...
+			
+			seqResGroups.set(seqResPos, atomResGroup);
+			
+		}
+		
+		// all atom records could get matched correctly!
+		return true;
+
+	}
 
 	/** returns the full sequence of the Atom records of a parent
 	 * with X instead of HETATMSs. The advantage of this is
@@ -395,7 +516,5 @@ public class SeqRes2AtomAligner {
 		return noMatchFound;
 
 	}
-
-
 
 }

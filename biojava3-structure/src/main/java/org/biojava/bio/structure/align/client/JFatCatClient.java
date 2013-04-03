@@ -46,20 +46,25 @@ public class JFatCatClient {
    
    private static String newline = System.getProperty("line.separator");
    
+   private static String KILL_JOB = "KILL_JOB";
+   private static String COME_BACK_LATER = "COME_BACK_LATER";
+   
    static {
       generator = new Random();
    }
 
+   static final boolean debug = false;
+   
    public static void main(String[] args){
       //System.out.println(hasPrecalculatedResult("http://emmy.rcsb.org/jfatcatserver/align/", "jCE Circular Permutation", "1CDG.A", "1TIM.A"));
-      AtomCache cache = new AtomCache("/tmp/", true);
-      String name1= "1CDG.A";
-      String name2= "1TIM.A";
+      AtomCache cache = new AtomCache();
+      String name1= "2W72.A";
+      String name2= "1D2Z.D";
       try {
          Atom[] ca1 = cache.getAtoms(name1);
          Atom[] ca2 = cache.getAtoms(name2);
          int timeout = 10000;
-         System.out.println(getAFPChainFromServer("http://emmy.rcsb.org/jfatcatserver/align/", "jCE Circular Permutation", name1, name2, ca1, ca2, timeout));
+         System.out.println(getAFPChainFromServer("http://emmy.rcsb.org/jfatcatserver/align/", FatCatRigid.algorithmName, name1, name2, ca1, ca2, timeout));
       } catch (Exception e){
          e.printStackTrace();
       }
@@ -87,7 +92,8 @@ public class JFatCatClient {
          if ( stream != null) {
 
             xml = convertStreamToString(stream);
-            //System.out.println("got XML from server: " + xml);
+            if ( debug )
+            	System.out.println(" has PrecalcResults got XML from server: " + xml);
             HasResultXMLConverter conv = new HasResultXMLConverter();
             hasResults = conv.fromXML(xml);
          }
@@ -163,8 +169,8 @@ public class JFatCatClient {
 
             //System.out.println("got XML from server: " + xml);
 
-            AFPChain newChain = AFPChainXMLParser.fromXML (xml, ca1, ca2);
-
+            AFPChain newChain = AFPChainXMLParser.fromXML (xml, name1, name2, ca1, ca2);
+        				
             return newChain;
 
          } else {
@@ -224,6 +230,11 @@ public class JFatCatClient {
             if (! responseS.contains("OK"))
                System.err.println("server returned " + responseS);
 
+            // server is busy... wait a bit and try again
+            if ( responseS.startsWith(COME_BACK_LATER)){
+            	submitted = false;
+            }
+            
          } catch (Exception e){
             System.err.println("Error in JFatCatClient: while sending results back to server : " + e.getMessage());
 
@@ -237,10 +248,12 @@ public class JFatCatClient {
          }
       } 
 
-      if ( responseS.startsWith("KILL_JOB")){
+      if ( responseS.startsWith(KILL_JOB)){
          throw new JobKillException("Server responded with KILL message.");
 
       }
+      
+    	
       return responseS;
    }
 

@@ -391,7 +391,7 @@ public interface Structure extends Cloneable{
      * @param modelnr  an int
      * @return a Chain object
     */
-    public Chain getChain(int pos, int modelnr);
+    public Chain getChain( int modelnr, int pos);
 
 
 
@@ -579,5 +579,21 @@ public interface Structure extends Cloneable{
      * @return the sites contained in this structure
      */
     public List<Site> getSites();
+
+    public List<Group> getHetGroups();
+    
+    /**
+     * Sets a flag to indicate if this structure is a biological assembly
+     * @param biologicalAssembly true if biological assembly, otherwise false
+     * @since 3.2
+     */
+    public void setBiologicalAssembly(boolean biologicalAssembly);
+
+    /**
+     * Gets flag that indicates if this structure is a biological assembly
+     * @return  true if biological assembly, otherwise false
+     * @since 3.2
+     */
+    public boolean isBiologicalAssembly();
 
 }

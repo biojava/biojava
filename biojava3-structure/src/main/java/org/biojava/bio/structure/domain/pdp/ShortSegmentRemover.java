@@ -15,7 +15,7 @@ public class ShortSegmentRemover {
 			boolean allshort=true;
 			// count the length of segments for this domain.
 			for (int i=0;i<domains.get(j).nseg;i++) { 
-				int seglen=(domains.get(j).getSegment(i).to-domains.get(j).getSegment(i).from+1);
+				int seglen=(domains.get(j).getSegmentAtPos(i).getTo()-domains.get(j).getSegmentAtPos(i).getFrom()+1);
 				if(seglen>=30) allshort = false;
 				n+=seglen;
 			}

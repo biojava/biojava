@@ -75,12 +75,12 @@ public class JmolAlignedPositionListener implements AlignmentPositionListener{
 		
 		if ( p1 >-1) {
 			Atom a = ca1[p1];
-			Group parent = a.getParent();
-			Chain c = parent.getParent();
-			pdbpos1 = parent.getPDBCode();
-			//System.out.println("chainid 1 is >"+c.getName()+"<");
-			if (! c.getName().equals( " ")) {
-				pdbpos1 += ":" + c.getName();
+			Group parent = a.getGroup();
+			Chain c = parent.getChain();
+			pdbpos1 = parent.getResidueNumber().toString();
+			//System.out.printlng"chainid 1 is >"+c.getName()+"<");
+			if (! c.getChainID().equals( " ")) {
+				pdbpos1 += ":" + c.getChainID();
 			} 
 				
 			
@@ -90,13 +90,13 @@ public class JmolAlignedPositionListener implements AlignmentPositionListener{
 		
 		if ( p2 >-1) {
 			Atom a = ca2[p2];
-			Group parent = a.getParent();
-			Chain c = parent.getParent();
-			pdbpos2 = parent.getPDBCode();
+			Group parent = a.getGroup();
+			Chain c = parent.getChain();
+			pdbpos2 = parent.getResidueNumber().toString();
 			//System.out.println("2:" + parent);
 			//System.out.println("chainid 2 is >"+c.getName()+"<");
-			if (! c.getName().equals( " ")) {
-				pdbpos2 += ":" + c.getName();
+			if (! c.getChainID().equals( " ")) {
+				pdbpos2 += ":" + c.getChainID();
 			}
 			if ( p1 > -1)
 				s +=",";

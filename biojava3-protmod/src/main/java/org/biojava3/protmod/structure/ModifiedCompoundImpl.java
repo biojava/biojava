@@ -33,7 +33,6 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
-import org.biojava3.protmod.ComponentType;
 import org.biojava3.protmod.ModificationCategory;
 import org.biojava3.protmod.ProteinModification;
 import org.biojava3.protmod.ProteinModificationImpl;
@@ -136,7 +135,7 @@ implements ModifiedCompound, Serializable, Comparable<ModifiedCompound> {
 			int nRes = 0;
 			Set<String> ligands = new HashSet<String>();
 			for (StructureGroup group : groups) {
-				if (group.getType() == ComponentType.AMINOACID) {
+				if (group.isAminoAcid()) {
 					nRes ++;
 				} else {
 					ligands.add(group.getPDBName().trim());
@@ -191,10 +190,10 @@ implements ModifiedCompound, Serializable, Comparable<ModifiedCompound> {
 	}
 
 	@Override
-	public Set<StructureGroup> getGroups(ComponentType type) {
+	public Set<StructureGroup> getGroups(boolean isAminoAcid) {
 		Set<StructureGroup> result = new HashSet<StructureGroup>();
 		for (StructureGroup group : groups) {
-			if (group.getType() == type) {
+			if (group.isAminoAcid() == isAminoAcid) {
 				result.add(group);
 			}
 		}

@@ -49,18 +49,18 @@ public class DemoMMCIFReader
           Structure s = pdbreader.getStructureById(pdbId);
           System.out.println(s);
        
-          Chain c = s.getChainByPDB("C");
+          Chain c = s.getChainByPDB("A");
 
           System.out.println(c.getSeqResSequence());
           System.out.println(c.getAtomSequence());
           System.out.println(c.getAtomGroups(GroupType.HETATM));
-          Chain d = s.getChainByPDB("D");
+          Chain d = s.getChainByPDB("B");
           System.out.println(d.getSeqResSequence());
           System.out.println(d.getAtomSequence());
         
           
           for (Group g : d.getAtomGroups(GroupType.HETATM)){
-             System.out.println(g.getPDBCode() +  " " +  g.getPDBName() + " " + g);
+             System.out.println(g.getResidueNumber() +  " " +  g.getPDBName() + " " + g);
           }
       } catch (Exception e) {
           e.printStackTrace();

@@ -50,23 +50,23 @@ public class Cut {
 			size1t=0;
 			size2t=0;
 			for(jseg=0;jseg<iseg;jseg++)
-				size1t+=(dom.getSegment(jseg).to - dom.getSegment(jseg).from + 1);
+				size1t+=(dom.getSegmentAtPos(jseg).getFrom() - dom.getSegmentAtPos(jseg).getFrom() + 1);
 			for(jseg=iseg+1;jseg<dom.nseg;jseg++)
-				size2t+=(dom.getSegment(jseg).to - dom.getSegment(jseg).from + 1);
+				size2t+=(dom.getSegmentAtPos(jseg).getTo() - dom.getSegmentAtPos(jseg).getFrom() + 1);
 			for(jseg=0;jseg<iseg;jseg++) {
-				from1 = dom.getSegment(jseg).from;
-				to1 = dom.getSegment(jseg).to;
+				from1 = dom.getSegmentAtPos(jseg).getFrom();
+				to1 = dom.getSegmentAtPos(jseg).getTo();
 				for(int i=from1;i<to1;i++) {
 					for(kseg=iseg+1;kseg<dom.nseg;kseg++) {
-						from2 = dom.getSegment(kseg).from;
-						to2 = dom.getSegment(kseg).to;
+						from2 = dom.getSegmentAtPos(kseg).getFrom();
+						to2 = dom.getSegmentAtPos(kseg).getFrom();
 						for(int j=from2;j<to2;j++)
 							if(Math.abs(i-j)>4) contactsd+=(int)(dist[i][j]);
 					}
 				}
 			}
-			from = dom.getSegment(iseg).from;
-			to = dom.getSegment(iseg).to;
+			from = dom.getSegmentAtPos(iseg).getFrom();
+			to = dom.getSegmentAtPos(iseg).getTo();
 			for(k=from;k<to;k++) {
 				contacts[k] = contactsd;
 				/*
@@ -76,8 +76,8 @@ public class Cut {
 				size22=size2t+(to-k);
 				for(int i=from;i<=k;i++) {
 					for(kseg=iseg+1;kseg<dom.nseg;kseg++) {
-						from2 = dom.getSegment(kseg).from;
-						to2 = dom.getSegment(kseg).to;
+						from2 = dom.getSegmentAtPos(kseg).getFrom();
+						to2 = dom.getSegmentAtPos(kseg).getTo();
 						for(int j=from2;j<=to2;j++)
 							if(Math.abs(i-j)>4) contacts[k]+=(int)(dist[i][j]);
 					}
@@ -94,8 +94,8 @@ public class Cut {
 				 */
 				for(int i=k+1;i<=to;i++) {
 					for(kseg=0;kseg<iseg;kseg++) {
-						from2 = dom.getSegment(kseg).from;
-						to2 = dom.getSegment(kseg).to;
+						from2 = dom.getSegmentAtPos(kseg).getFrom();
+						to2 = dom.getSegmentAtPos(kseg).getTo();
 						for(int j=from2;j<to2;j++)
 							if(Math.abs(i-j)>4) contacts[k]+=(int)(dist[j][i]);
 					}
@@ -151,7 +151,7 @@ public class Cut {
 
 		if ( verbose )
 			for(kseg=0;kseg<dom.nseg;kseg++) 
-				System.out.println(String.format("	--- segment %d from %d to %d",kseg,dom.getSegment(kseg).from,dom.getSegment(kseg).to) + " av density: " + average_density);
+				System.out.println(String.format("	--- segment %d from %d to %d",kseg,dom.getSegmentAtPos(kseg).getFrom(),dom.getSegmentAtPos(kseg).getTo()) + " av density: " + average_density);
 
 
 		if(val.first_cut) {
@@ -182,8 +182,8 @@ public class Cut {
 			/************ find iseg, jseg ****************/
 			iseg=jseg=-1;
 			for(kseg=0;kseg<dom.nseg;kseg++) {
-				from=dom.getSegment(kseg).from;
-				to=dom.getSegment(kseg).to;
+				from=dom.getSegmentAtPos(kseg).getFrom();
+				to=dom.getSegmentAtPos(kseg).getTo();
 				if(from==0) endsf = PDPParameters.ENDSEND;
 				else endsf = PDPParameters.ENDS;
 				if(to==ca.length-1) endst = PDPParameters.ENDSEND;
@@ -199,10 +199,10 @@ public class Cut {
 			 */
 			/*********************************************/
 
-			from=dom.getSegment(iseg).from;
-			to=dom.getSegment(iseg).to;
-			from1=dom.getSegment(jseg).from;
-			to1=dom.getSegment(jseg).to;
+			from=dom.getSegmentAtPos(iseg).getFrom();
+			to=dom.getSegmentAtPos(iseg).getTo();
+			from1=dom.getSegmentAtPos(jseg).getFrom();
+			to1=dom.getSegmentAtPos(jseg).getTo();
 
 			/************ count contacts *****************/
 			contacts[nc] = 1;
@@ -211,8 +211,8 @@ public class Cut {
 			/******* contacts between [0,iseg[ and ]iseg,jseg[ ********/
 			for(kseg=0;kseg<iseg;kseg++)
 				for(lseg=iseg+1;lseg<jseg;lseg++)
-					for( int i=dom.getSegment(kseg).from;i<dom.getSegment(kseg).to;i++)
-						for(int j=dom.getSegment(lseg).from;j<dom.getSegment(lseg).to;j++) {
+					for( int i=dom.getSegmentAtPos(kseg).getFrom();i<dom.getSegmentAtPos(kseg).getTo();i++)
+						for(int j=dom.getSegmentAtPos(lseg).getFrom();j<dom.getSegmentAtPos(lseg).getTo();j++) {
 							contacts[nc]+=(dist[i][j]);
 						}
 
@@ -224,8 +224,8 @@ public class Cut {
 			/******* contacts between ]jseg,nseg[ and ]iseg,jseg[ ********/
 			for(kseg=jseg+1;kseg<dom.nseg;kseg++)
 				for(lseg=iseg+1;lseg<jseg;lseg++)
-					for(int i=dom.getSegment(kseg).from;i<dom.getSegment(kseg).to;i++)
-						for(int j=dom.getSegment(lseg).from;j<dom.getSegment(lseg).to;j++) {
+					for(int i=dom.getSegmentAtPos(kseg).getFrom();i<dom.getSegmentAtPos(kseg).getTo();i++)
+						for(int j=dom.getSegmentAtPos(lseg).getFrom();j<dom.getSegmentAtPos(lseg).getTo();j++) {
 							contacts[nc]+=(dist[j][i]);
 						}
 			/*
@@ -244,14 +244,14 @@ public class Cut {
 				}
 				for (int j=iclose[l]+1;j<jclose[l];j++) {
 					for(kseg=0;kseg<iseg;kseg++) 
-						for(int i=dom.getSegment(kseg).from;i<dom.getSegment(kseg).to;i++) {
+						for(int i=dom.getSegmentAtPos(kseg).getFrom();i<dom.getSegmentAtPos(kseg).getTo();i++) {
 							contacts[nc]+=(dist[i][j]);
 						}
 					for(int i=jclose[l];i<to;i++) {
 						contacts[nc]+=(dist[j][i]);
 					}
 					for(kseg=iseg+1;kseg<dom.nseg;kseg++) 
-						for(int i=dom.getSegment(kseg).from;i<dom.getSegment(kseg).to;i++) {
+						for(int i=dom.getSegmentAtPos(kseg).getFrom();i<dom.getSegmentAtPos(kseg).getTo();i++) {
 							contacts[nc]+=(dist[j][i]);
 						}
 				}
@@ -264,7 +264,7 @@ public class Cut {
 				//System.out.println(" ISEG!=JSEG " + " " + from + " " + iclose[l]);
 				for(int i=from;i<=iclose[l];i++) { 
 					for(kseg=iseg+1;kseg<jseg;kseg++) 
-						for(int j=dom.getSegment(kseg).from;j<dom.getSegment(kseg).to;j++) {
+						for(int j=dom.getSegmentAtPos(kseg).getFrom();j<dom.getSegmentAtPos(kseg).getTo();j++) {
 							contacts[nc]+=(dist[i][j]);
 						}
 					for(int j=from1;j<jclose[l];j++) {
@@ -276,11 +276,11 @@ public class Cut {
 				}
 				for(int i=iclose[l]+1;i<to;i++) {
 					for(kseg=0;kseg<iseg;kseg++) 
-						for(int j=dom.getSegment(kseg).from;j<dom.getSegment(kseg).to;j++) {
+						for(int j=dom.getSegmentAtPos(kseg).getFrom();j<dom.getSegmentAtPos(kseg).getTo();j++) {
 							contacts[nc]+=(dist[j][i]);
 						}
 					for(kseg=jseg+1;kseg<dom.nseg;kseg++) 
-						for(int j=dom.getSegment(kseg).from;j<dom.getSegment(kseg).to;j++) {
+						for(int j=dom.getSegmentAtPos(kseg).getFrom();j<dom.getSegmentAtPos(kseg).getTo();j++) {
 							contacts[nc]+=(dist[i][j]);
 						}
 					for(int j=jclose[l];j<=to1;j++) {
@@ -289,11 +289,11 @@ public class Cut {
 				}
 				for (int i=from1;i<jclose[l];i++) {
 					for(kseg=0;kseg<iseg;kseg++) 
-						for(int j=dom.getSegment(kseg).from;j<dom.getSegment(kseg).to;j++) {
+						for(int j=dom.getSegmentAtPos(kseg).getFrom();j<dom.getSegmentAtPos(kseg).getTo();j++) {
 							contacts[nc]+=(dist[j][i]);
 						}
 					for(kseg=jseg+1;kseg<dom.nseg;kseg++)  {
-						for(int j=dom.getSegment(kseg).from;j<dom.getSegment(kseg).to;j++)
+						for(int j=dom.getSegmentAtPos(kseg).getFrom();j<dom.getSegmentAtPos(kseg).getTo();j++)
 							contacts[nc]+=(dist[i][j]);
 					}
 					for(int j=jclose[l];j<to1;j++) {
@@ -302,7 +302,7 @@ public class Cut {
 				}
 				for(int i=jclose[l];i<to1;i++)
 					for(kseg=iseg+1;kseg<jseg;kseg++) 
-						for(int j=dom.getSegment(kseg).from;j<dom.getSegment(kseg).to;j++) {
+						for(int j=dom.getSegmentAtPos(kseg).getFrom();j<dom.getSegmentAtPos(kseg).getTo();j++) {
 							/*
 						if(iclose[l]==33&&jclose[l]==69&&dist[i][j]) printf("%d %s %d %s %d\n",i,protein.res[i].type,j,protein.res[j].type,dist[i][j]);
 							 */
@@ -315,16 +315,16 @@ public class Cut {
 			size11=0;
 			size22=0;
 			for(kseg=0;kseg<iseg;kseg++) 
-				size11+=(dom.getSegment(kseg).to-dom.getSegment(kseg).from+1);
+				size11+=(dom.getSegmentAtPos(kseg).getTo()-dom.getSegmentAtPos(kseg).getFrom()+1);
 			for(kseg=jseg+1;kseg<dom.nseg;kseg++) 
-				size11+=(dom.getSegment(kseg).to-dom.getSegment(kseg).from+1);
+				size11+=(dom.getSegmentAtPos(kseg).getTo()-dom.getSegmentAtPos(kseg).getFrom()+1);
 			size11+=(iclose[l]-from+1);
 			size11+=(to1-jclose[l]+1);
 			/*
 	printf("size11 = %d from = %d to1 = %d \n",size11,from,to1);
 			 */
 			for(kseg=iseg+1;kseg<jseg;kseg++) 
-				size22+=(dom.getSegment(kseg).to-dom.getSegment(kseg).from+1);
+				size22+=(dom.getSegmentAtPos(kseg).getTo()-dom.getSegmentAtPos(kseg).getFrom()+1);
 			if(iseg==jseg)
 				size22+=(jclose[l]-iclose[l]);
 			else {

@@ -1,7 +1,12 @@
 package org.biojava.bio.structure.scop;
 
+import java.io.Serializable;
 import java.io.StringWriter;
 import java.util.List;
+
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlRootElement;
 
 
 /** Container for the information for a domain. Contains a line in the file
@@ -11,8 +16,15 @@ import java.util.List;
  * @author Andreas Prlic
  *
  */
-public class ScopDomain {
+@XmlRootElement(name = "ScopDomain", namespace ="http://source.rcsb.org")
+@XmlAccessorType(XmlAccessType.PUBLIC_MEMBER)
+public class ScopDomain implements Serializable{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 5890476209571654301L;
+	
 	String scopId;
 	String pdbId;
 	List<String> ranges;

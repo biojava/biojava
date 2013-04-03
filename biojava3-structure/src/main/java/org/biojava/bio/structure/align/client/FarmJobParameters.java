@@ -29,7 +29,7 @@ public class FarmJobParameters {
 	boolean pdbDirSplit;
 	String username;
 	boolean runBackground;
-	
+	boolean verbose;
 	int stepSize;
 
 		
@@ -142,5 +142,20 @@ public class FarmJobParameters {
 	public void setStepSize(int stepSize) {
 		this.stepSize = stepSize;
 	}
+
+	
+	/** Flag if the job should be run in verbose mode. Default: false
+	 * 
+	 * @return flag if the job should be run in verbose mode
+	 */
+	public boolean isVerbose() {
+		return verbose;
+	}
+
+	public void setVerbose(boolean verbose) {
+		this.verbose = verbose;
+	}
+	
+	
 	
 }

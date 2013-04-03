@@ -26,7 +26,6 @@ public class StartupParameters {
 	boolean printCE;
 	boolean showMenu;
 	boolean showAFPRanges;
-	boolean checkCircular;
 	boolean printPDB;
 	Double maxOptRMSD;
 	
@@ -47,7 +46,6 @@ public class StartupParameters {
 		pdbDirSplit = true;
 		maxGapSize = 30;
 		showAFPRanges = false;
-		checkCircular = false;
 		showMenu = false;
 		maxOptRMSD = 99d;
 		
@@ -64,7 +62,7 @@ public class StartupParameters {
             + ", flexible=" + flexible + ", maxGapSize=" + maxGapSize + ", outFile=" + outFile + ", pdb1=" + pdb1 + ", pdb2=" + pdb2
             + ", pdbDirSplit=" + pdbDirSplit + ", pdbFilePath=" + pdbFilePath + ", printCE=" + printCE + ", printFatCat=" + printFatCat
             + ", printXML=" + printXML + ", saveOutputDir=" + saveOutputDir + ", show3d=" + show3d + ", showDBresult=" + showDBresult
-            + ", showMenu=" + showMenu + ", showAFPRanges=" + showAFPRanges + ", checkCircular=" + checkCircular 
+            + ", showMenu=" + showMenu + ", showAFPRanges=" + showAFPRanges
             + ", printPDB=" + printPDB 
             + "]";
    }
@@ -245,21 +243,6 @@ public class StartupParameters {
    {
       this.showAFPRanges = showAFP;
    }
-	
-   /**
-	 * @return Returns whether the protein should be checked for circular permutations. 
-	 */
-	public boolean isCheckCircular() {
-		return checkCircular;
-	}
-
-	/**
-	 * @param checkCircular Indicates whether the protein should be checked for circular permutations
-	 */
-	public void setCheckCircular(boolean checkCircular) {
-		this.checkCircular = checkCircular;
-	}
-
 
 	/** When writing the results to a file, don;t write as XML but write aligned PDB file
 	 * 
@@ -277,8 +260,6 @@ public class StartupParameters {
 	}
 
 
-
-	
 	/**(jCE specific): maximum RMSD that shall be calculated for the alignment.
 	 * 
 	 * @return maxOptRMSD parameter

@@ -32,7 +32,9 @@ public class ParameterGUI extends JFrame{
 
    
    
-   public ParameterGUI(StructureAlignment alignment){
+   
+   @SuppressWarnings("rawtypes")
+public ParameterGUI(StructureAlignment alignment){
 
       ConfigStrucAligParams params = alignment.getParameters();
 
@@ -49,6 +51,12 @@ public class ParameterGUI extends JFrame{
       List<Class> types  = params.getUserConfigTypes();
 
       List<String> helps = params.getUserConfigHelp();
+      
+      // quick check for bugs in params
+      assert(names.size() == keys.size());
+      assert(names.size() == types.size());
+      assert(names.size() == helps.size());
+      
       textFields = new ArrayList<Component>();
       Box vBox = Box.createVerticalBox();
 
@@ -152,6 +160,7 @@ public class ParameterGUI extends JFrame{
 
    }
 
+   @SuppressWarnings({  "rawtypes" })
    protected void setDefault() {
       params.reset();
 
@@ -203,7 +212,7 @@ public class ParameterGUI extends JFrame{
       params = null;
    }
 
-   @SuppressWarnings("unchecked")
+   @SuppressWarnings("rawtypes")
    protected void storeParameters() {
       //List<String> names = params.getUserConfigParameterNames();
       List<String> keys = params.getUserConfigParameters();
@@ -239,7 +248,7 @@ public class ParameterGUI extends JFrame{
 
    }
 
-   @SuppressWarnings("unchecked")
+   @SuppressWarnings({ "unchecked", "rawtypes" })
    private void setValue(String name, Class type, String value) {
       try {
          String methodName = "set" + name;
@@ -279,7 +288,7 @@ public class ParameterGUI extends JFrame{
 
    }
 
-   @SuppressWarnings("unchecked")
+   @SuppressWarnings({ "unchecked", "rawtypes" })
    private Object  getValue(String name){
 
       try {
@@ -287,7 +296,7 @@ public class ParameterGUI extends JFrame{
 
          Class paramC = params.getClass();
 
-         Method m =paramC.getMethod(methodName,null);
+         Method m =paramC.getMethod(methodName,(Class[])null);
 
          Object value = m.invoke(params);
 

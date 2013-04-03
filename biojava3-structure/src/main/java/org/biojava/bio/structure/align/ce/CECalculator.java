@@ -27,6 +27,7 @@ package org.biojava.bio.structure.align.ce;
 import java.util.ArrayList;
 import java.util.List;
 
+
 import org.biojava.bio.structure.Atom;
 import org.biojava.bio.structure.Calc;
 import org.biojava.bio.structure.Group;
@@ -40,9 +41,15 @@ import org.biojava.bio.structure.jama.Matrix;
 
 
 
-/** A crazy class. If I would not port the CE source code directly to Java I would not write it like this!
+/** This is based on the original Combinatorial Extension (CE) source code from 2003 or 2004 (CE version 2.3),
+ * as has been originally developed by I. Shindyalov and P.Bourne (1998).
+ * The original CE paper is available from here: <a href="http://peds.oxfordjournals.org/cgi/content/short/11/9/739">http://peds.oxfordjournals.org/cgi/content/short/11/9/739</a>.
+ * 
+ * This class is a pretty much exact 1:1 port from C, where I cared about exact reproduce of the CE results
+ * and not about Java style.
  * 
  * @author Andreas Prlic
+
  *
  */
 public class CECalculator {
@@ -88,7 +95,7 @@ public class CECalculator {
 	private int nTraces;
 
 	private double z;
-	private int[] a;
+	private int[] traceIndexContainer;
 
 	CeParameters params;
 	// SHOULD these fields be PARAMETERS?
@@ -96,6 +103,7 @@ public class CECalculator {
 	private static final int nIter = 1;
 	private static final boolean distAll = false;
 
+	List<MatrixListener> matrixListeners;
 
 
 
@@ -104,6 +112,7 @@ public class CECalculator {
 		dist1= new double[0][0];
 		dist2= new double[0][0];
 		this.params = params;
+		matrixListeners = new ArrayList<MatrixListener>();
 
 	}
 
@@ -112,6 +121,7 @@ public class CECalculator {
 	 * @param afpChain A new AFPChain, which will be filled in by this function
 	 * @param ca1
 	 * @param ca2
+	 * @return afpChain
 	 * @throws StructureException
 	 */
 	public AFPChain extractFragments(AFPChain afpChain,
@@ -127,28 +137,29 @@ public class CECalculator {
 
 		f1 = new int[nse1];
 		f2 = new int[nse2];
-
+		
 		dist1 = initIntraDistmatrix(ca1, nse1);
-		dist2 = initIntraDistmatrix(ca2, nse2);  
+		dist2 = initIntraDistmatrix(ca2, nse2);
+		
+		
 		if ( debug )
 			System.out.println("parameters: " + params);
+		
 		int winSize = params.getWinSize();
 
-
-
 		int winSizeComb1 = (winSize-1)*(winSize-2)/2;		
-		a = new int[traceMaxSize];
 
-
+		traceIndexContainer = new int[traceMaxSize];
 
 		// CE: unused code. distAll is always false and both loops do the same???
 		// CE v2.3 calls this Weight factors for trace extension
 		if(distAll ) {
 			for(int i=0; i<traceMaxSize; i++)
-				a[i]=(i+1)*i*winSize*winSize/2+(i+1)*winSizeComb1;
+				traceIndexContainer[i]=(i+1)*i*winSize*winSize/2+(i+1)*winSizeComb1;
 		} else {
 			for(int i=0; i<traceMaxSize; i++) {
-				a[i]=(i+1)*i*winSize/2+(i+1)*winSizeComb1;		
+				traceIndexContainer[i]=(i+1)*i*winSize/2+(i+1)*winSizeComb1;	
+				
 
 			}
 		}
@@ -157,6 +168,30 @@ public class CECalculator {
 
 		mat = initSumOfDistances(nse1, nse2, winSize, winSizeComb1, ca1, ca2);
 
+
+		
+//		try {
+//			Matrix m2 = new Matrix(mat).copy();
+//			JPanel panel = GuiWrapper.getScaleableMatrixPanel(m2);
+//			JFrame frame = new JFrame();
+//			frame.addWindowListener(new WindowAdapter(){
+//				public void windowClosing(WindowEvent e){
+//					JFrame f = (JFrame) e.getSource();
+//					f.setVisible(false);
+//					f.dispose();
+//				}				
+//			});
+//						
+//			
+//			frame.getContentPane().add(panel);
+//
+//			frame.pack();
+//			frame.setVisible(true);
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+
+		
 		// Set the distance matrix
 		//afpChain.setDistanceMatrix(new Matrix(mat.clone()));
 
@@ -214,11 +249,10 @@ public class CECalculator {
 	private double getDistanceWithSidechain(Atom ca1, Atom ca2) throws StructureException {
 		
 		if ( params.getScoringStrategy() == CeParameters.DEFAULT_SCORING_STRATEGY) {
-
+			
 			return Calc.getDistance(ca1,ca2);
 
 		}
-
 
 		double dist;
 		Group g1 = ca1.getGroup();
@@ -260,9 +294,9 @@ public class CECalculator {
 			if ( cb1 != null && cb2 != null) {
 				// If the CA were overlaid, what is the distance between the CB?
 				// Recall c^2 = a^2 + b^2 -2ab*cos(theta), so this is a function of angle
-				Atom c1 = Calc.substract(cb1, ca1);
-				Atom c2 = Calc.substract(cb2, ca2);
-				Atom newA = Calc.substract(c2, c1);
+				Atom c1 = Calc.subtract(cb1, ca1);
+				Atom c2 = Calc.subtract(cb2, ca2);
+				Atom newA = Calc.subtract(c2, c1);
 				dist = Calc.amount(newA); 
 			}  else {
 				//dist += Calc.getDistance(ca1,ca2);
@@ -278,9 +312,9 @@ public class CECalculator {
 			// CA distance + cos(angle)
 			dist = 0;
 			if ( cb1 != null && cb2 != null) {
-				Atom cacb1 = Calc.substract(cb1, ca1);
-				Atom cacb2 = Calc.substract(cb2, ca2);
-				Atom newA = Calc.substract(cacb2, cacb1);
+				Atom cacb1 = Calc.subtract(cb1, ca1);
+				Atom cacb2 = Calc.subtract(cb2, ca2);
+				Atom newA = Calc.subtract(cacb2, cacb1);
 				//System.out.format("CACB 1: %s\nCACB 2: %s\ndiff: %s\nd: %f\n",cacb1.toString(),cacb2.toString(),newA.toString(),Calc.amount(newA));
 				dist += Calc.amount(newA);
 			}
@@ -311,8 +345,7 @@ public class CECalculator {
 		// 
 		for(int ise1=0; ise1<nse; ise1++)  {
 
-			for(int ise2=0; ise2<nse; ise2++)  {
-
+			for(int ise2=0; ise2<nse; ise2++)  {				
 				intraDist[ise1][ise2] = getDistanceWithSidechain(ca[ise1], ca[ise2]);            
 
 			}
@@ -361,6 +394,7 @@ public class CECalculator {
 
 
 
+	@SuppressWarnings("unused")
 	public void traceFragmentMatrix( AFPChain afpChain,
 			Atom[] ca1, Atom[] ca2) {
 
@@ -708,6 +742,26 @@ public class CECalculator {
 
 			}
 
+//		try {
+//			Matrix m2 = new Matrix(traceScore).copy();
+//			JPanel panel = GuiWrapper.getScaleableMatrixPanel(m2);
+//			JFrame frame = new JFrame();
+//			frame.addWindowListener(new WindowAdapter(){
+//				public void windowClosing(WindowEvent e){
+//					JFrame f = (JFrame) e.getSource();
+//					f.setVisible(false);
+//					f.dispose();
+//				}				
+//			});
+//						
+//			
+//			frame.getContentPane().add(panel);
+//
+//			frame.pack();
+//			frame.setVisible(true);
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
 
 
 		if ( params.isShowAFPRanges()){
@@ -732,10 +786,9 @@ public class CECalculator {
 		else
 			val = score0;
 
+		double score2 =  (val * traceIndexContainer[nTrace-1]+score1*(traceIndexContainer[nTrace]-traceIndexContainer[nTrace-1]))/traceIndexContainer[nTrace];
 
-		double score2 =  (val * a[nTrace-1]+score1*(a[nTrace]-a[nTrace-1]))/a[nTrace];
-
-		//System.out.println("check: score0 " + score0 + " score 1 " + score1 + " sc2: " + score2 + " val: " + val + " nTrace:" + nTrace+ " " +  a[nTrace-1] + " " +  a[nTrace-1] + " " + a[nTrace] );
+		//System.out.println("check: score0 " + score0 + " score 1 " + score1 + " sc2: " + score2 + " val: " + val + " nTrace:" + nTrace+ " " +  traceIndexContainer[nTrace-1] + " " +  traceIndexContainer[nTrace-1] + " " + traceIndexContainer[nTrace] );
 
 		return score2;
 
@@ -827,6 +880,7 @@ nBestTrace=nTrace;
 						dist2[trace2[itrace]+id][mse2+winSize-1-id]);
 
 		}
+		
 		return score;
 	}
 
@@ -847,6 +901,7 @@ nBestTrace=nTrace;
 
 
 	// this part is modified from the original CeCalculator
+	@SuppressWarnings("unused")
 	private void checkBestTraces( AFPChain afpChain,
 			Atom[] ca1, Atom[] ca2) throws StructureException{
 
@@ -1284,8 +1339,9 @@ nBestTrace=nTrace;
 		nAtom=0;
 		int counter = -1;
 		
-		while(nAtom<strLen*0.95 || 
-				(isRmsdLenAssigned && rmsd<rmsdLen*1.1 && nAtomPrev!=nAtom)) {
+		int maxNrIterations = params.getMaxNrIterationsForOptimization();
+		while((nAtom<strLen*0.95 || 
+				(isRmsdLenAssigned && rmsd<rmsdLen*1.1 && nAtomPrev!=nAtom)) && ( counter< maxNrIterations)) {
 		  
 			counter++;
 			if ( debug)
@@ -1320,6 +1376,8 @@ nBestTrace=nTrace;
 				}
 			}
 
+			mat = notifyMatrixListener(mat);
+			
 			double gapOpen = params.getGapOpen();
 			double gapExtension = params.getGapExtension();
 			
@@ -1424,6 +1482,25 @@ nBestTrace=nTrace;
 	}
 
 
+	private double[][] notifyMatrixListener(double[][] mat2) {
+		for (MatrixListener li : matrixListeners) {
+			mat2 = li.matrixInOptimizer(mat2);
+		}
+		return mat2;
+	}
+	
+	private boolean[][] notifyBreakFlagListener(boolean[][] brkFlag){
+		for (MatrixListener li : matrixListeners) {
+			brkFlag = li.initializeBreakFlag(brkFlag);
+		}
+		return brkFlag;
+	}
+
+	public void addMatrixListener(MatrixListener li){
+		matrixListeners.add(li);
+	}
+	
+	
 	private double dpAlign(int nSeq1, int nSeq2, double gapI, double gapE, 
 			boolean isGlobal1, boolean isGlobal2) {
 
@@ -1437,6 +1514,8 @@ nBestTrace=nTrace;
 		boolean[][] brk_flg=new boolean [nSeq1][nSeq2];
 		for(i=0; i<nSeq1; i++) brk_flg[i]=new boolean [nSeq2];
 
+		brk_flg = notifyBreakFlagListener(brk_flg);
+		
 		// ge = true here...
 		/*  
 		  for(i=0; i<nSeq1; i++)
@@ -2119,6 +2198,10 @@ nBestTrace=nTrace;
 	 public double[][] getMatMatrix() {
 		 return mat;
 	 }
+	 
+	 public void setMatMatrix(double[][] matrix){
+		 mat = matrix;
+	 }
 
 	 /**
 	  * Gets the rotation matrix from the last call to 
@@ -2137,4 +2220,22 @@ nBestTrace=nTrace;
 	 public Atom getShift() {
 		 return t;
 	 }
+
+	public double[][] getDist1() {
+		return dist1;
+	}
+
+	public void setDist1(double[][] dist1) {
+		this.dist1 = dist1;
+	}
+
+	public double[][] getDist2() {
+		return dist2;
+	}
+
+	public void setDist2(double[][] dist2) {
+		this.dist2 = dist2;
+	}
+	 
+	 
 }

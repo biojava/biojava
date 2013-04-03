@@ -68,7 +68,8 @@ public class HTTPConnectionTools {
     *
     *
     */
-   public static HttpURLConnection openHttpURLConnection(URL url, int timeout)
+   @SuppressWarnings({ "rawtypes", "unchecked" })
+public static HttpURLConnection openHttpURLConnection(URL url, int timeout)
    throws IOException, ConnectException{
 
       HttpURLConnection huc = null;
@@ -167,7 +168,8 @@ public class HTTPConnectionTools {
     * @throws IOException
     * @throws DASException if DAS server returns error response code
     */
-   public static InputStream getInputStream(URL url, boolean acceptGzipEncoding, int timeout)
+   @SuppressWarnings("unused")
+public static InputStream getInputStream(URL url, boolean acceptGzipEncoding, int timeout)
    throws IOException {
       InputStream inStream = null ;
 

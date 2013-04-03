@@ -631,11 +631,11 @@ public class AlternativeAlignment implements Serializable{
 
 			int[] tmpidx1 = new int[j];
 			int[] tmpidx2 = new int[j];
-			String idx1str ="idx1: ";
-			String idx2str ="idx2: ";
+			//String idx1str ="idx1: ";
+			//String idx2str ="idx2: ";
 			for (int i = 0 ; i<j;i++){
-				idx1str += idx1[i]+ " ";
-				idx2str += idx2[i]+ " ";
+				//idx1str += idx1[i]+ " ";
+				//idx2str += idx2[i]+ " ";
 				tmpidx1[i] = idx1[i];
 				tmpidx2[i] = idx2[i];
 			}
@@ -675,16 +675,16 @@ public class AlternativeAlignment implements Serializable{
 		for (int i =0 ; i < idx1.length;i++){
 			Atom a1 = ca1[idx1[i]];
 			Atom a2 = ca2[idx2[i]];
-			Group p1 = a1.getParent();
-			Group p2 = a2.getParent();
-			Chain c1 = p1.getParent();
-			Chain c2 = p2.getParent();
+			Group p1 = a1.getGroup();
+			Group p2 = a2.getGroup();
+			Chain c1 = p1.getChain();
+			Chain c2 = p2.getChain();
 
-			String cid1 = c1.getName();
-			String cid2 = c2.getName();
+			String cid1 = c1.getChainID();
+			String cid2 = c2.getChainID();
 
-			String pdb1 = p1.getPDBCode();
-			String pdb2 = p2.getPDBCode();
+			String pdb1 = p1.getResidueNumber().toString();
+			String pdb2 = p2.getResidueNumber().toString();
 
 
 			if ( ! cid1.equals(" "))
@@ -835,8 +835,8 @@ public class AlternativeAlignment implements Serializable{
 			Atom a1 = ca1[idx1[i]];
 			Atom a2 = ca2[idx2[i]];
 
-			Group g1 = a1.getParent();
-			Group g2 = a2.getParent();
+			Group g1 = a1.getGroup();
+			Group g2 = a2.getGroup();
 			if ( g1.getPDBName().equals(g2.getPDBName())){
 				percId++;
 			}

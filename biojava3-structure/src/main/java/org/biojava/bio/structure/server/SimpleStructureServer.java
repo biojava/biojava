@@ -28,7 +28,11 @@ import java.util.logging.Logger;
 
 import org.biojava.bio.structure.Structure;
 
-
+/**
+ * @deprecated
+ * 
+ *
+ */
 public class SimpleStructureServer 
 implements StructureServer, 
 StructureListener {

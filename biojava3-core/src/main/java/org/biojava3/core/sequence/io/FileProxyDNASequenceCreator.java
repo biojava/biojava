@@ -25,7 +25,6 @@ import java.io.File;
 import java.util.List;
 
 import org.biojava3.core.sequence.DNASequence;
-import org.biojava3.core.sequence.compound.AminoAcidCompound;
 import org.biojava3.core.sequence.compound.NucleotideCompound;
 import org.biojava3.core.sequence.io.template.SequenceCreatorInterface;
 import org.biojava3.core.sequence.loader.SequenceFileProxyLoader;

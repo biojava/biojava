@@ -48,7 +48,7 @@ implements ActionListener {
           
           if ( pdbId != null) {
              try {
-                
+                pdbId = pdbId.trim();
                 UserConfiguration config = WebStartMain.getWebStartConfig();
                 AtomCache cache = new AtomCache(config.getPdbFilePath(),config.isSplit());
                 Structure s = cache.getStructure(pdbId); 

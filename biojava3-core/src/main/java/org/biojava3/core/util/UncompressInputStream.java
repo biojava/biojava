@@ -437,20 +437,20 @@ public class UncompressInputStream extends FilterInputStream {
 
     InputStream in = new UncompressInputStream(  new FileInputStream(fileInName));
 
-    int total = 0;
+  //  int total = 0;
     byte[] buffer = new byte[100000];
     while (true) {
       int bytesRead = in.read(buffer);
       if (bytesRead == -1) break;
       out.write(buffer, 0, bytesRead);
-      total += bytesRead;
+   //   total += bytesRead;
     }
     in.close();
     out.close();
 
     if (debugTiming) {
       long end = System.currentTimeMillis();
-      System.err.println("Decompressed " + total + " bytes");
+    //  System.err.println("Decompressed " + total + " bytes");
       System.err.println("Time: " + (end - start) / 1000. + " seconds");
     }
   }

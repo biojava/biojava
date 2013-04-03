@@ -24,10 +24,18 @@ package org.biojava.bio.structure;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+
+import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 
 
 //import org.biojava.bio.seq.ProteinTools;
@@ -77,12 +85,30 @@ public class StructureTools {
 	//amino acid 3 and 1 letter code definitions
 	private static final Map<String, Character> aminoAcids;
 
+        private static final Set<Element> hBondDonorAcceptors;
 	//	// for conversion 3code 1code
 	//	private static  SymbolTokenization threeLetter ;
 	//	private static  SymbolTokenization oneLetter ;
 
 	public static Logger logger =  Logger.getLogger("org.biojava.bio.structure");
 
+	/**
+	 * Pattern to describe subranges. Matches "A", "A:", "A:7-53","A_7-53", etc.
+	 * @see #getSubRanges(Structure, String)
+	 */
+	public static final Pattern pdbNumRangeRegex = Pattern.compile(
+			"^\\s*(\\w)" + //chain ID
+			"(?:" + //begin range, this is a "non-capturing group"
+			  "(?::|_|:$|_$|$)" + //colon or underscore, could be at the end of a line, another non-capt. group.
+			  	"(?:"+ // another non capturing group for the residue range
+			  	 "([-+]?[0-9]+[A-Za-z]?)" + // first residue
+			  	 "\\s*-\\s*" + // -
+			  	 "([-+]?[0-9]+[A-Za-z]?)" + // second residue
+			  	")?+"+
+			")?" + //end range
+			"\\s*");
+	
+	
 	static {
 		nucleotides30 = new HashMap<String,Integer>();
 		nucleotides30.put("DA",1);
@@ -153,16 +179,10 @@ public class StructureTools {
 		aminoAcids.put("PYH", new Character('O'));
 		aminoAcids.put("PYL", new Character('O'));
 
-		//		try {
-		//			Alphabet alpha_prot = ProteinTools.getAlphabet();
-		//			threeLetter = alpha_prot.getTokenization("name");
-		//			oneLetter  = alpha_prot.getTokenization("token");
-		//		} catch (Exception e) {
-		//			// this should not happen.
-		//			// only if BioJava has not been built correctly...
-		//			logger.config(e.getMessage());
-		//			e.printStackTrace() ;
-		//		}
+		hBondDonorAcceptors = new HashSet<Element>();
+                hBondDonorAcceptors.add(Element.N);
+                hBondDonorAcceptors.add(Element.O);
+                hBondDonorAcceptors.add(Element.S);
 
 	}
 
@@ -206,7 +226,7 @@ public class StructureTools {
 
 
 	/** Returns an array of the requested Atoms from the Structure object. Iterates over all groups
-	 * and checks if the requested atoms are in this group, no matter if this is a AminoAcid or Hetatom group.
+	 * and checks if the requested atoms are in this group, no matter if this is a  {@link AminoAcid} or {@link HetatomImpl} group.
 	 * For structures with more than one model, only model 0 will be used.
 	 *
 	 * @param s the structure to get the atoms from
@@ -219,6 +239,38 @@ public class StructureTools {
 
 		List<Atom> atoms = new ArrayList<Atom>();
 
+		extractCAatoms(atomNames, chains, atoms);
+		return (Atom[]) atoms.toArray(new Atom[atoms.size()]);
+
+	}
+	
+	/** Returns an array of the requested Atoms from the Structure object. 
+	 * In contrast to {@link #getAtomArray(Structure, String[])} this method iterates over all chains.
+	 * Iterates over all chains and groups
+	 * and checks if the requested atoms are in this group, no matter if this is a {@link AminoAcid} or {@link HetatomImpl} group.
+	 * For structures with more than one model, only model 0 will be used.
+	 *
+	 * @param s the structure to get the atoms from
+	 *
+	 * @param atomNames  contains the atom names to be used.
+	 * @return an Atom[] array
+	 */
+	public static final Atom[] getAtomArrayAllModels(Structure s, String[] atomNames){
+		
+		List<Atom> atoms = new ArrayList<Atom>();
+
+		for (int i =0 ; i < s.nrModels(); i++ ) {
+			List<Chain> chains = s.getModel(i);
+			extractCAatoms(atomNames, chains, atoms);
+		}
+		return (Atom[]) atoms.toArray(new Atom[atoms.size()]);
+
+	}
+
+
+
+	private static void extractCAatoms(String[] atomNames, List<Chain> chains,
+			List<Atom> atoms) {
 		for ( Chain c : chains) {
 			
 			for ( Group g : c.getAtomGroups()) {
@@ -249,8 +301,6 @@ public class StructureTools {
 
 			}
 		}
-		return (Atom[]) atoms.toArray(new Atom[atoms.size()]);
-
 	}
 
 	/** Returns an array of the requested Atoms from the Structure object. Iterates over all groups
@@ -492,8 +542,17 @@ public class StructureTools {
 		newS.setHeader(s.getHeader());
 		newS.setPDBCode(s.getPDBCode());
 		newS.setPDBHeader(s.getPDBHeader());
+		newS.setName(s.getName());
+		newS.setSSBonds(s.getSSBonds());
+		newS.setDBRefs(s.getDBRefs());
 		newS.setSites(s.getSites());
-
+		newS.setNmr(s.isNmr());
+		newS.setBiologicalAssembly(s.isBiologicalAssembly());
+		newS.setCompounds(s.getCompounds());
+		newS.setConnections(s.getConnections());
+		newS.setSSBonds(s.getSSBonds());
+		newS.setSites(s.getSites());
+		
 		if ( chainId != null)
 			chainId = chainId.trim();
 
@@ -523,7 +582,10 @@ public class StructureTools {
 	}
 
 
-	/** Reduce a structure to provide a smaller representation . Only takes the first model of the structure. If chainNr >=0 only takes the chain at that position into account.	 * 
+	/** Reduce a structure to provide a smaller representation.
+	 * Only takes the first model of the structure. If chainNr >=0 only takes
+	 * the chain at that position into account.
+	 * 
 	 * @param s
 	 * @param chainNr can be -1 to request all chains of model 0, otherwise will only add chain at this position 
 	 * @return Structure object
@@ -538,8 +600,15 @@ public class StructureTools {
 		newS.setHeader(s.getHeader());
 		newS.setPDBCode(s.getPDBCode());
 		newS.setPDBHeader(s.getPDBHeader());
+		newS.setName(s.getName());
 		newS.setSSBonds(s.getSSBonds());
 		newS.setDBRefs(s.getDBRefs());
+		newS.setSites(s.getSites());
+		newS.setNmr(s.isNmr());
+		newS.setBiologicalAssembly(s.isBiologicalAssembly());
+		newS.setCompounds(s.getCompounds());
+		newS.setConnections(s.getConnections());
+		newS.setSSBonds(s.getSSBonds());
 		newS.setSites(s.getSites());
 		
 		if ( chainNr < 0 ) {
@@ -550,40 +619,37 @@ public class StructureTools {
 				newS.addChain(c);
 			}
 			return newS;
-
 		}
-
-
 		Chain c =  null;
 
-		c = s.getChain(chainNr);
+		c = s.getChain(0, chainNr);
 
 		newS.addChain(c);
-
 
 		return newS;
 	}
 
+	
+	
 	/** In addition to the functionality provided by getReducedStructure also provides a way to specify sub-regions of a structure with the following 
 	 * specification:
-	 *
-	 * If range is null or "" returns the whole structure / chain.
 	 * 
-	 * range can be surrounded by ( and ). (but will be removed).
+	 * 
+	 * ranges can be surrounded by ( and ). (but will be removed).
 	 * ranges are specified as
 	 * PDBresnum1 : PDBresnum2
 	 * 
 	 *  a list of ranges is separated by ,
 	 *  
 	 *  Example
-	 *  4GCR(A:1-83)
-	 *  1CDG(A:407-495,A:582-686)
-	 *  
+	 *  4GCR (A:1-83)
+	 *  1CDG (A:407-495,A:582-686)
+	 *  1CDG (A_407-495,A_582-686)
 	 * 
 	 * 
-	 * @param s
-	 * @param ranges
-	 * @return a structure object
+	 * @param s The full structure
+	 * @param ranges A comma-seperated list of ranges, optionally surrounded by parentheses
+	 * @return Substructure of s specified by ranges
 	 */
 	@SuppressWarnings("deprecation")
 	public static final Structure getSubRanges(Structure s, String ranges ) 
@@ -606,38 +672,56 @@ public class StructureTools {
 		newS.setHeader(s.getHeader());
 		newS.setPDBCode(s.getPDBCode());
 		newS.setPDBHeader(s.getPDBHeader());
+		newS.setName(s.getName());
+		newS.setDBRefs(s.getDBRefs());
+		newS.setNmr(s.isNmr());
+		newS.setBiologicalAssembly(s.isBiologicalAssembly());
 
+		// TODO The following should be only copied for atoms which are present in the range.
+		//newS.setCompounds(s.getCompounds());
+		//newS.setConnections(s.getConnections());
+		//newS.setSSBonds(s.getSSBonds());
+		//newS.setSites(s.getSites());
+		
+		
 		String[] rangS =ranges.split(",");
 
 
 		String prevChainId = null;
 
+		// parse the ranges, adding the specified residues to newS
 		for ( String r: rangS){
-			String[] coords = r.split(":");
-			if ( coords.length > 2){
-				throw new StructureException("wrong range specification, should be provided as chainID:pdbResnum1=pdbRensum2");
+			//System.out.println(">"+r+"<");
+			// Match a single range, eg "A_4-27"
+			
+			Matcher matcher = pdbNumRangeRegex.matcher(r);
+			if( ! matcher.matches() ){
+				throw new StructureException("wrong range specification, should be provided as chainID_pdbResnum1-pdbRensum2");
 			}
-
-
-			Chain chain = struc.getChainByPDB(coords[0]);
+			String chainId = matcher.group(1);
+			
+			Chain chain = struc.getChainByPDB(chainId);
 			Group[] groups;
-			if  ( coords.length > 1){
-				// if length 1, only provided a Chain id...
+			
+			String pdbresnumStart = matcher.group(2);
+			String pdbresnumEnd   = matcher.group(3);
+			
 
-
-				String[] pdbRanges = coords[1].split("-");
-				if ( pdbRanges.length!= 2)
-					throw new StructureException("wrong range specification, should be provided as chainID:pdbResnum1=pdbRensum2");
-				String pdbresnumStart = pdbRanges[0].trim();
-				String pdbresnumEnd   = pdbRanges[1].trim();
-
+			if( pdbresnumStart != null && pdbresnumEnd != null) {
+				// not a full chain
+				//since Java doesn't allow '+' before integers, fix this up.
+				if(pdbresnumStart.charAt(0) == '+')
+					pdbresnumStart = pdbresnumStart.substring(1);
+				if(pdbresnumEnd.charAt(0) == '+')
+					pdbresnumEnd = pdbresnumEnd.substring(1);
 				groups = chain.getGroupsByPDB(pdbresnumStart, pdbresnumEnd);
-
 			} else {
-				// only chain ID provided ... add the whole chain...
+				// full chain
 				groups = chain.getAtomGroups().toArray(new Group[chain.getAtomGroups().size()]);
 			}
-
+			
+			
+			// Create new chain, if needed
 			Chain c = null;
 			if ( prevChainId == null) {
 				// first chain...
@@ -665,7 +749,6 @@ public class StructureTools {
 
 			prevChainId = c.getName();
 		}
-
 
 		return newS;
 	}
@@ -721,12 +804,124 @@ public class StructureTools {
 
 		Chain chain = struc.findChain(pdbResNum.getChainId());
 
-		String numIns = "" + pdbResNum.getSeqNum();
-		if (pdbResNum.getInsCode() != null) {
-			numIns += pdbResNum.getInsCode();
-		}
+//		String numIns = "" + pdbResNum.getSeqNum();
+//		if (pdbResNum.getInsCode() != null) {
+//			numIns += pdbResNum.getInsCode();
+//		}
 
-		return chain.getGroupByPDB(numIns);
+		
+		return chain.getGroupByPDB(pdbResNum);
 	}
 
+        /*
+         * Returns a List of Groups in a structure within the distance specified of a given group.
+         */
+        public static List<Group> getGroupsWithinShell(Structure structure, Group group, double distance, boolean includeWater) {
+            Set<Group> returnSet = new LinkedHashSet<Group>();
+
+            //square the distance to use as a comparison against getDistanceFast which returns the square of a distance.
+            distance = distance * distance;
+
+            for (Atom atomA : group.getAtoms()) {
+                for (Chain chain : structure.getChains()) {
+                    for (Group chainGroup : chain.getAtomGroups()) {
+//                        System.out.println("Checking group: " + chainGroup);
+                        if (chainGroup.getResidueNumber().equals(group.getResidueNumber())) {
+                            continue;
+                        }
+                        else if (!includeWater && chainGroup.getPDBName().equals("HOH")) {
+                            continue;
+                        }
+                        else {
+                            for (Atom atomB : chainGroup.getAtoms()) {
+                            try {
+                                //use getDistanceFast as we are doing a lot of comparisons
+                                double dist = Calc.getDistanceFast(atomA, atomB);
+                                if (dist <= distance) {
+                                    returnSet.add(chainGroup);
+//                                    System.out.println(String.format("%s within %s of %s", atomB, dist, atomA));
+                                    break;
+                                }
+                                
+                            } catch (StructureException ex) {
+                                Logger.getLogger(StructureTools.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+                                
+                            }
+                        }
+                    }
+                }
+            }
+            List<Group> returnList = new ArrayList<Group>();
+            returnList.addAll(returnSet);
+            return returnList;
+        }
+
+        /*
+         * Very simple distance-based bond calculator. Will give approximations,
+         * but do not rely on this to be chemically correct.
+         */
+        public static List<Bond> findBonds(Group group, List<Group> groups) {
+            List<Bond> bondList = new ArrayList<Bond>();
+            for (Atom atomA : group.getAtoms()) {
+                for (Group groupB : groups) {
+                    if (groupB.getType().equals(GroupType.HETATM)) {
+                        continue;
+                    }
+                    for (Atom atomB : groupB.getAtoms()) {
+                        try {
+                            double dist = Calc.getDistance(atomA, atomB);
+                            BondType bondType = BondType.UNDEFINED;
+                            if (dist <= 2) {
+                                bondType = BondType.COVALENT;
+                                Bond bond = new Bond(dist, bondType, group, atomA, groupB, atomB);
+                                bondList.add(bond);
+//                                    System.out.println(String.format("%s within %s of %s", atomB, dist, atomA));
+                            }
+                            else if (dist <= 3.25) {
+                                
+                                if (isHbondDonorAcceptor(atomA) && isHbondDonorAcceptor(atomB)) {
+                                    bondType = BondType.HBOND;
+                                }
+                                else if (atomA.getElement().isMetal() && isHbondDonorAcceptor(atomB)) {
+                                    bondType = BondType.METAL;
+                                }
+                                else if (atomA.getElement().equals(Element.C) && atomB.getElement().equals(Element.C)) {
+                                    bondType = BondType.HYDROPHOBIC;
+                                }
+                                //not really interested in 'undefined' types
+                                if (bondType != BondType.UNDEFINED) {
+                                    Bond bond = new Bond(dist, bondType, group, atomA, groupB, atomB);
+                                    bondList.add(bond);
+                                }
+//                                    System.out.println(String.format("%s within %s of %s", atomB, dist, atomA));
+                            } else if (dist <= 3.9) {
+                                if (atomA.getElement().equals(Element.C) && atomB.getElement().equals(Element.C)) {
+                                    bondType = BondType.HYDROPHOBIC;
+                                }
+                                //not really interested in 'undefined' types
+                                if (bondType != BondType.UNDEFINED) {
+                                    Bond bond = new Bond(dist, bondType, group, atomA, groupB, atomB);
+                                    bondList.add(bond);
+                                }
+                            }
+
+                        } catch (StructureException ex) {
+                            Logger.getLogger(StructureTools.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+
+                    }
+                }
+            }
+
+
+            return bondList;
+        }
+
+        private static boolean isHbondDonorAcceptor(Atom atom) {
+            if (hBondDonorAcceptors.contains(atom.getElement())) {
+                return true;
+            }
+            return false;
+        }
 }

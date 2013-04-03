@@ -45,25 +45,10 @@ import org.biojava.bio.structure.io.StructureIOFile;
 
 public class PrepareIndexFile {
 
+	@SuppressWarnings("deprecation")
 	private static final SimpleDateFormat dateFormat = FlatFileInstallation.dateFormat;
 
-	public static void main (String[] args){
-		try {
-			File pdbLocation = new File("/Users/andreas/WORK/PDB/mmCIF/");
-			FlatFileInstallation installation = new FlatFileInstallation(pdbLocation);
-
-			//File indexFile = new File("/Users/andreas/WORK/PDB/pdbindex.idx");
-			//File chainFile = new File("/Users/andreas/WORK/PDB/chainindex.idx");
-			//installation.setPDBInfoFile(indexFile);
-			//installation.setChainInfoFile(chainFile);
-
-			PrepareIndexFile prep = new PrepareIndexFile();
-			prep.prepareIndexFileForInstallation(installation);
-		} catch(Exception e){
-			e.printStackTrace();
-		}
-	}
-
+	
 	public PrepareIndexFile(){
 
 	}
@@ -72,6 +57,7 @@ public class PrepareIndexFile {
 	 *
 	 * @param installation
 	 */
+	@SuppressWarnings("deprecation")
 	public void prepareIndexFileForInstallation(FlatFileInstallation installation)
 	throws FileNotFoundException,IOException{
 
@@ -140,7 +126,7 @@ public class PrepareIndexFile {
 
 			File f = pdbfiles[i];
 
-            String pdb = f.getName().substring(3,7);
+            //String pdb = f.getName().substring(3,7);
 
 
 			long startTime = System.currentTimeMillis();
@@ -177,7 +163,7 @@ public class PrepareIndexFile {
 			List<String>chainIds =  comp.getChainId();
 			if ( chainIds == null)
 				continue;
-			if ( chainIds.contains(c.getName()))
+			if ( chainIds.contains(c.getChainID()))
 				return comp;
 		}
 
@@ -187,7 +173,7 @@ public class PrepareIndexFile {
 	private String getDBRefStringForChain(List<DBRef> dbrefs, Chain c){
 		List<String> dbIds = new ArrayList<String>();
 		for (DBRef dbref : dbrefs){
-			if (dbref.getChainId().equals(c.getName())){
+			if (dbref.getChainId().equals(c.getChainID())){
 				dbIds.add(dbref.getDbIdCode());
 			}
 		}
@@ -226,7 +212,7 @@ public class PrepareIndexFile {
 
 			String str = String.format("%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t",
 					pdbCode,
-					c.getName(),
+					c.getChainID(),
 					c.getSeqResLength(),
 					c.getAtomLength(),
 					agr.size(),
@@ -243,6 +229,7 @@ public class PrepareIndexFile {
 
 	}
 
+	@SuppressWarnings("deprecation")
 	private  void logPDBInfo(PrintWriter pdbWriter, Structure s, long startTime,long stopTime, File path ){
 		// only used first model in nmrs ...
 		if ( s.isNmr()){

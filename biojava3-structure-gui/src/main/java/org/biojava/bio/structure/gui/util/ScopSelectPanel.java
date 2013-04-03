@@ -39,8 +39,8 @@ import org.biojava.bio.structure.StructureException;
 import org.biojava.bio.structure.align.util.AtomCache;
 import org.biojava.bio.structure.align.util.UserConfiguration;
 import org.biojava.bio.structure.align.webstart.WebStartMain;
+import org.biojava.bio.structure.scop.ScopDatabase;
 import org.biojava.bio.structure.scop.ScopDomain;
-import org.biojava.bio.structure.scop.ScopInstallation;
 
 public class ScopSelectPanel 
 extends JPanel
@@ -128,7 +128,7 @@ implements StructurePairSelector
       
       AtomCache cache = new AtomCache(cacheLocation,isSplit );
       
-      ScopInstallation scop = ScopInstallationInstance.getInstance().getSCOP();
+      ScopDatabase scop = ScopInstallationInstance.getInstance().getSCOP();
       
       ScopDomain domain = scop.getDomainByScopID(domainID) ;
       

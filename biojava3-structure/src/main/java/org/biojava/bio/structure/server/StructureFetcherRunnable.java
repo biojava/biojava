@@ -31,7 +31,7 @@ import org.biojava.bio.structure.Structure;
  * are notified of the new structure.
  * 
  * @author Andreas Prlic
- *
+ * @deprecated
  */
 public class StructureFetcherRunnable 
 implements Runnable{
