@@ -83,16 +83,16 @@ public class SCF extends AbstractChromatogram {
     
     /** Base call alignment sequence label for the probability that call
      * should be A. */
-    public static final Object PROB_NUC_A = "quality-a";
+    public static final String PROB_NUC_A = "quality-a";
     /** Base call alignment sequence label for the probability that call
      * should be C. */
-    public static final Object PROB_NUC_C = "quality-c";
+    public static final String PROB_NUC_C = "quality-c";
     /** Base call alignment sequence label for the probability that call
      * should be G. */
-    public static final Object PROB_NUC_G = "quality-g";
+    public static final String PROB_NUC_G = "quality-g";
     /** Base call alignment sequence label for the probability that call
      * should be T. */
-    public static final Object PROB_NUC_T = "quality-t";
+    public static final String PROB_NUC_T = "quality-t";
     /**
      * Base call alignment sequence label for the substitution
      * probability. In versions of the SCF spec before 3.10, this is called
@@ -171,22 +171,22 @@ public class SCF extends AbstractChromatogram {
      *       sequence for the complement base.</li>
      * </ul>
      */
-    protected SymbolList reverseComplementBaseCallList(Object label) {
+    protected SymbolList reverseComplementBaseCallList(String label) {
         if (label == PROB_SUBSTITUTION ||
                 label == PROB_OVERCALL ||
                 label == PROB_UNDERCALL) {
             return
                     SymbolListViews.reverse(this.getBaseCalls().symbolListForLabel(label));
-        } else if (label == PROB_NUC_A) {
+        } else if (label.equals( PROB_NUC_A)) {
             return
                     SymbolListViews.reverse(this.getBaseCalls().symbolListForLabel(PROB_NUC_T));
-        } else if (label == PROB_NUC_C) {
+        } else if (label.equals(PROB_NUC_C)) {
             return
                     SymbolListViews.reverse(this.getBaseCalls().symbolListForLabel(PROB_NUC_G));
-        } else if (label == PROB_NUC_G) {
+        } else if (label.equals(PROB_NUC_G)) {
             return
                     SymbolListViews.reverse(this.getBaseCalls().symbolListForLabel(PROB_NUC_C));
-        } else if (label == PROB_NUC_T) {
+        } else if (label.equals( PROB_NUC_T)) {
             return
                     SymbolListViews.reverse(this.getBaseCalls().symbolListForLabel(PROB_NUC_A));
         } else {

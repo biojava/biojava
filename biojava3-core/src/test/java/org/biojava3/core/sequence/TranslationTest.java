@@ -101,6 +101,16 @@ public class TranslationTest {
       assertThat("Checking 6 frame translation", protein.toString(), is(expected));
     }
   }
+  
+  @Test
+  public void lowerCases() {
+    TranscriptionEngine e = TranscriptionEngine.getDefault();
+    DNASequence dna = new DNASequence("atgcCt");
+    RNASequence rna = dna.getRNASequence(e);
+    Sequence<AminoAcidCompound> peptide = rna.getProteinSequence(e);
+    assertThat("Checking lower casing is respected", peptide.getSequenceAsString(),
+        is("MP"));
+  }
 
   @Test
   public void translateBrca2ExonOne() {

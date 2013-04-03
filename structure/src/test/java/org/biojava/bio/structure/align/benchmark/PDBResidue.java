@@ -3,11 +3,13 @@
  */
 package org.biojava.bio.structure.align.benchmark;
 
+import org.biojava.bio.structure.ResidueNumber;
+
 /**
  * Small bean to hold information about a single residue in the PDB
  * if we don't want to create a full {@link org.biojava.bio.structure.Group Group} object.
  * @author Spencer Bliven
- *
+ * @deprecated replaced by {@link ResidueNumber}
  */
 public class PDBResidue {
 	private String residueCode;

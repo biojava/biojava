@@ -70,9 +70,12 @@ public class DasSourceConverter {
             Das2Capability cap = caps[i];
             
             String c = cap.getCapability();
-
+            
+            try {
             das1capabilitites.add(Capabilities.valueOf((c.substring(DASPREFIXLENGTH,c.length())).toUpperCase()));
-
+            } catch (IllegalArgumentException ex){
+            	System.err.println("unsupported capability: " + c);
+            }
             String query_uri = cap.getQueryUri();
             
             if(query_uri.endsWith("sources")||query_uri.endsWith("sources/")){

@@ -46,6 +46,7 @@ import org.biojavax.ontology.ComparableTerm;
 /**
  * Parses Genbank location strings into RichLocation objects.
  * @author Richard Holland
+ * @authour Deepak Sheoran
  * @since 1.5
  */
 public class GenbankLocationParser {
@@ -133,7 +134,7 @@ J00194:100..202           Points to bases 100 to 202, inclusive, in the entry
     
     // O beautiful regex, we worship you.
     // this matches grouped locations
-    private static Pattern gp = Pattern.compile("^([^\\(\\):]*?:)?(complement|join|order)?\\(*{0,1}(.*?)\\)*{0,1}$");
+    private static Pattern gp = Pattern.compile("^([^\\(\\):]*?:)?(complement|join|order)?\\({0,1}(.*?\\)*{0,1})$");
     // this matches range locations
     private static Pattern rp = Pattern.compile("^\\(*(.*?)\\)*(\\.\\.\\(*(.*)\\)*)?$");
     // this matches accession/version pairs

@@ -33,7 +33,7 @@ import org.biojava3.core.sequence.template.CompoundSet;
 public class CDSSequence extends DNASequence {
 
     private static final Logger log = Logger.getLogger(CDSSequence.class.getName());
-    int phase = 0; // 0, 1, 2 http://www.sequenceontology.org/gff3.shtml
+    Integer phase = 0; // 0, 1, 2 http://www.sequenceontology.org/gff3.shtml
     TranscriptSequence parentTranscriptSequence;
 
     public CDSSequence(TranscriptSequence parentSequence, int begin, int end, int phase) {
@@ -45,9 +45,15 @@ public class CDSSequence extends DNASequence {
 
     }
 
+    public Integer getPhase(){
+        return phase;
+    }
+
     public Strand getStrand() {
         return parentTranscriptSequence.getStrand();
     }
+
+
 
     /**
      * http://www.sequenceontology.org/gff3.shtml

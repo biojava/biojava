@@ -39,7 +39,8 @@ import org.biojava.bio.structure.io.StructureIOFile;
 import org.biojava.bio.structure.io.mmcif.MMcifParser;
 import org.biojava.bio.structure.io.mmcif.SimpleMMcifConsumer;
 import org.biojava.bio.structure.io.mmcif.SimpleMMcifParser;
-import org.biojava.utils.io.InputStreamProvider;
+import org.biojava3.core.util.InputStreamProvider;
+
 
 /** How to parse an mmCif file:
  * <pre>
@@ -69,14 +70,18 @@ public class MMCIFFileReader implements StructureIOFile {
 	boolean pdbDirectorySplit;
 	public static final String lineSplit = System.getProperty("file.separator");
 	
-	boolean headerOnly;
+
+	FileParsingParameters params;
+	
 	
 	public static void main(String[] args){
 		//String filename =  "/Users/andreas/WORK/PDB/mmcif_files/a9/2a9w.cif.gz" ;
 
 		StructureIOFile reader = new MMCIFFileReader();
 		reader.setPath("/Users/ap3/WORK/PDB/");
-		reader.setAutoFetch(true);
+		FileParsingParameters params = new FileParsingParameters();
+		reader.setFileParsingParameters(params);
+		
 		try{
 			Structure struc = reader.getStructureById("1gng");
 			System.out.println(struc);
@@ -86,7 +91,8 @@ public class MMCIFFileReader implements StructureIOFile {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
+		
+		
 	}
 
 
@@ -99,7 +105,10 @@ public class MMCIFFileReader implements StructureIOFile {
 		extensions.add(".mmcif.gz");
 
 		autoFetch     = false;
-		headerOnly    = false;
+	
+		pdbDirectorySplit = false;
+		params = new FileParsingParameters();
+
 
 	}
 
@@ -148,8 +157,9 @@ public class MMCIFFileReader implements StructureIOFile {
 		MMcifParser parser = new SimpleMMcifParser();
 
 		SimpleMMcifConsumer consumer = new SimpleMMcifConsumer();
-
-		consumer.setHeaderOnly(headerOnly);
+		   
+		consumer.setFileParsingParameters(params);
+		
 		
 		// The Consumer builds up the BioJava - structure object.
 		// you could also hook in your own and build up you own data model.
@@ -342,15 +352,19 @@ public class MMCIFFileReader implements StructureIOFile {
 	}
 
 
-	public boolean isHeaderOnly() {
-		return headerOnly;
-	}
+
+   public FileParsingParameters getFileParsingParameters()
+   {
+      return params;
+   }
 
 
-	public void setHeaderOnly(boolean flag) {
-		headerOnly = flag;
-		
-	}
+   public void setFileParsingParameters(FileParsingParameters params)
+   {
+     this.params=params;
+      
+   }
+
 
 
 }

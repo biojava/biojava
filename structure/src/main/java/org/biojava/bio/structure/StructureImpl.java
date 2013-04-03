@@ -55,8 +55,9 @@ public class StructureImpl implements Structure, Serializable {
 	Map<String,Object> header ;
 	List<Map <String,Integer>> connections ;
 	List<Compound> compounds;
-    List<DBRef> dbrefs;
-    List<SSBond> ssbonds;
+        List<DBRef> dbrefs;
+        List<SSBond> ssbonds;
+        List<Site> sites;
 	String name ;
     private JournalArticle journalArticle;
 	private PDBHeader pdbHeader;
@@ -79,7 +80,7 @@ public class StructureImpl implements Structure, Serializable {
         dbrefs         = new ArrayList<DBRef>();
         pdbHeader      = new PDBHeader();
         ssbonds        = new ArrayList<SSBond>();
-
+        sites          = new ArrayList<Site>();
 	}
 
 	/** get the ID used by Hibernate
@@ -139,7 +140,8 @@ public class StructureImpl implements Structure, Serializable {
 		n.setPDBHeader(pdbHeader);
 		n.setDBRefs(this.getDBRefs());
 		n.setConnections(getConnections());
-
+                n.setSites(getSites());
+                
 		// go through each chain and clone chain
 		for (int i=0;i<nrModels();i++){
 			List<Chain> cloned_model = new ArrayList<Chain>();
@@ -185,7 +187,7 @@ public class StructureImpl implements Structure, Serializable {
 		while (giter.hasNext()){
 			Group g =  giter.next();
 			String rnum = g.getPDBCode();
-
+			//System.out.println(g + " >" + rnum + "< >" + pdbResnum + "<");
 			// we only mutate amino acids
 			// and ignore hetatoms and nucleotides in this case
 			if (rnum.equals(pdbResnum))
@@ -681,7 +683,20 @@ public class StructureImpl implements Structure, Serializable {
         this.journalArticle = journalArticle;
     }
 
+    /**
+     * @return the sites contained in this structure
+     */
+  
+    public List<Site> getSites() {
+            return sites;
+    }
 
-
+    /**
+     * @param sites the sites to set in the structure
+     */
+ 
+    public void setSites(List<Site> sites) {
+            this.sites = sites;
+    }
 
 }

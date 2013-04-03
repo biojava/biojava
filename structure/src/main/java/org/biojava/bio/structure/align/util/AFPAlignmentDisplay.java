@@ -26,10 +26,13 @@ import java.util.List;
 import java.util.Map;
 
 import org.biojava.bio.structure.Atom;
+import org.biojava.bio.structure.Chain;
 import org.biojava.bio.structure.Group;
 import org.biojava.bio.structure.SVDSuperimposer;
+import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureException;
 import org.biojava.bio.structure.StructureTools;
+import org.biojava.bio.structure.align.ce.GuiWrapper;
 import org.biojava.bio.structure.align.model.AFPChain;
 import org.biojava.bio.structure.jama.Matrix;
 
@@ -332,5 +335,58 @@ public class AFPAlignmentDisplay
 		//System.out.println(m);
 		return m;
 	}
+	
+	
+	public static Structure createArtificalStructure(AFPChain afpChain, Atom[] ca1,
+			Atom[] ca2) throws Exception{
+
+		
+		if ( afpChain.getNrEQR() < 1){
+			return GuiWrapper.getAlignedStructure(ca1, ca2);
+		}
+		
+		Group[] twistedGroups = GuiWrapper.prepareGroupsForDisplay(afpChain,ca1, ca2);
+
+		List<Atom> twistedAs = new ArrayList<Atom>();
+
+		for ( Group g: twistedGroups){
+			if ( g == null )
+				continue;
+			if ( g.size() < 1)
+				continue;
+			Atom a = g.getAtom(0);
+			twistedAs.add(a);
+		}
+		Atom[] twistedAtoms = (Atom[])twistedAs.toArray(new Atom[twistedAs.size()]);
+
+		List<Group> hetatms  = new ArrayList<Group>();
+		List<Group> nucs1    = new ArrayList<Group>();
+		Group g1 = ca1[0].getParent();
+		Chain c1 = null;
+		if ( g1 != null) {
+			c1 = g1.getParent();
+			if ( c1 != null){
+				hetatms = c1.getAtomGroups("hetatm");;
+				nucs1  = c1.getAtomGroups("nucleotide");
+			}
+		}
+		List<Group> hetatms2 = new ArrayList<Group>();
+		List<Group> nucs2    = new ArrayList<Group>();
+		Group g2 = ca2[0].getParent();
+		Chain c2 = null;
+		if ( g2 != null){
+			c2 = g2.getParent();
+			if ( c2 != null){
+				hetatms2 = c2.getAtomGroups("hetatm");
+				nucs2 = c2.getAtomGroups("nucleotide");
+			}
+		}
+		Atom[] arr1 = GuiWrapper.getAtomArray(ca1, hetatms, nucs1);
+		Atom[] arr2 = GuiWrapper.getAtomArray(twistedAtoms, hetatms2, nucs2);
+
+		Structure artificial = GuiWrapper.getAlignedStructure(arr1,arr2);
+		return artificial;
+	}
+
 
 }

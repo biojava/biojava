@@ -135,7 +135,7 @@ public class EMBLFormat extends RichSequenceFormat.HeaderlessFormat {
     // date (Rel. N, Last updated, Version M)
     protected static final Pattern dp = Pattern.compile("([^\\s]+)\\s*(\\(Rel\\.\\s+(\\d+), ([^\\)\\d]+)(\\d*)\\))?$");
     // locus line
-    protected static final Pattern lp = Pattern.compile("^(\\S+);\\s+SV\\s+(\\d+);\\s+(linear|circular);\\s+(\\S+\\s?\\S+?);\\s+(\\S+);\\s+(\\S+);\\s+(\\d+)\\s+BP\\.$");
+    protected static final Pattern lp = Pattern.compile("^(\\S+);\\s+SV\\s+(\\d+);\\s+(linear|circular);\\s+(\\S+\\s?\\S+?);\\s+(\\S+);\\s+(\\S+);\\s+(\\d+)\\s+(BP|AA)\\.$");
     protected static final Pattern lpPre87 = Pattern.compile("^(\\S+)\\s+standard;\\s+(circular)?\\s*(genomic)?\\s*(\\S+);\\s+(\\S+);\\s+\\d+\\s+BP\\.$");
     // version line
     protected static final Pattern vp = Pattern.compile("^(\\S+?)\\.(\\d+)$");

@@ -51,7 +51,7 @@ public class CeMain extends AbstractStructureAlignment implements StructureAlign
 
 	public static final String algorithmName = "jCE";
 
-	public static final String version = "1.0";
+	public static final String version = "1.1";
 
 	protected CeParameters params;
 	protected CECalculator calculator;
@@ -133,6 +133,10 @@ public class CeMain extends AbstractStructureAlignment implements StructureAlign
 
 		afpChain.setAlgorithmName(getAlgorithmName());
 		afpChain.setVersion(version);
+		
+		
+		if ( afpChain.getNrEQR() == 0)
+		   return afpChain;
 
 		// Set the distance matrix
 		int winSize = params.getWinSize();
@@ -257,8 +261,8 @@ public class CeMain extends AbstractStructureAlignment implements StructureAlign
 				alignLen -= minResCount;
 				
 
-				System.out.format("Found a CP at residue %d. Trimming %d residues (%d-%d,%d-%d).\n",
-						firstRes,minResCount,nStart,firstRes-1,firstRes+ca2len, cEnd);
+				//System.out.format("Found a CP at residue %d. Trimming %d residues (%d-%d,%d-%d).\n",
+				//		firstRes,minResCount,nStart,firstRes-1,firstRes+ca2len, cEnd);
 				//TODO Now have CP site, and could do a nxm alignment for further optimization.
 				// For now, does not appear to be worth the 50% increase in time
 			}

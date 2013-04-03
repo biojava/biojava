@@ -27,6 +27,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
+import org.biojava.bio.structure.io.FileParsingParameters;
 import org.biojava.bio.structure.io.PDBFileParser;
 
 import junit.framework.TestCase;
@@ -94,7 +95,9 @@ public class PdbFileFormat30Test extends TestCase {
 		assertNotNull(inStream);
 		
 		PDBFileParser pdbpars = new PDBFileParser();
-		pdbpars.setAlignSeqRes(false);
+		FileParsingParameters params = new FileParsingParameters();
+		params.setAlignSeqRes(false);
+		pdbpars.setFileParsingParameters(params);
 		Structure structure = null;
 		try {
 			structure = pdbpars.parsePDBFile(inStream) ;

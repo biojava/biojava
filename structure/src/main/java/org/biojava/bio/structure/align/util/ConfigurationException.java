@@ -1,8 +1,7 @@
 package org.biojava.bio.structure.align.util;
 
-import org.biojava.bio.BioException;
 
-public class ConfigurationException extends BioException {
+public class ConfigurationException extends Exception {
     
     /**
 	 * 

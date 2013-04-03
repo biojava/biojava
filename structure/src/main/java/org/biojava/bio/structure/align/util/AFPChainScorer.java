@@ -36,6 +36,8 @@ public class AFPChainScorer
 
    public static double getTMScore(AFPChain align, Atom[] ca1, Atom[] ca2) throws StructureException
    {
+      if ( align.getNrEQR() == 0)
+         return -1;
 
       // Create new arrays for the subset of atoms in the alignment.
       Atom[] ca1aligned = new Atom[align.getOptLength()];

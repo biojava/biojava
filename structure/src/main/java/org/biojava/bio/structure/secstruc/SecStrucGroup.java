@@ -45,7 +45,7 @@ implements Group {
     public String toString(){
 
         StringBuffer str = new StringBuffer("SecStrucGroup ");
-        str.append(pdb_code);
+        str.append(residueNumber);
         str.append(" ");
         str.append(pdb_name);
         str.append(" ");

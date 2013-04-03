@@ -26,10 +26,9 @@
 package org.biojava3.core.sequence.template;
 
 import java.util.List;
-import org.biojava3.core.sequence.AccessionID;
 import org.biojava3.core.sequence.Strand;
 
-public interface Sequence<C extends Compound> extends Iterable<C> {
+public interface Sequence<C extends Compound> extends Iterable<C>, Accessioned {
 
     public int getLength();
 
@@ -48,8 +47,6 @@ public interface Sequence<C extends Compound> extends Iterable<C> {
     public SequenceView<C> getSubSequence(Integer start, Integer end);
 
     public CompoundSet<C> getCompoundSet();
-
-    public AccessionID getAccession();
 
     public int countCompounds(C... compounds);
 }

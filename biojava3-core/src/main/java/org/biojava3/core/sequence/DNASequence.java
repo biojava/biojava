@@ -22,13 +22,6 @@
  */
 package org.biojava3.core.sequence;
 
-/**
- *
- * @author Scooter Willis
- */
-import java.util.LinkedHashMap;
-
-
 import org.biojava3.core.sequence.compound.DNACompoundSet;
 import org.biojava3.core.sequence.compound.NucleotideCompound;
 import org.biojava3.core.sequence.loader.StringProxySequenceReader;
@@ -42,14 +35,13 @@ import org.biojava3.core.sequence.transcription.TranscriptionEngine;
 import org.biojava3.core.sequence.views.ComplementSequenceView;
 import org.biojava3.core.sequence.views.ReversedSequenceView;
 
+/**
+ *
+ * @author Scooter Willis
+ */
 public class DNASequence extends AbstractSequence<NucleotideCompound> {
 
-    
-    
-    private LinkedHashMap<String, GeneSequence> geneSequenceHashMap = new LinkedHashMap<String, GeneSequence>();
-
     public enum DNAType {
-
         CHROMOSOME, MITOCHONDRIAL, PLASMID, PLASTID, UNKNOWN
     }
     private DNAType dnaType = DNAType.UNKNOWN;
@@ -75,24 +67,7 @@ public class DNASequence extends AbstractSequence<NucleotideCompound> {
     }
 
 
-    public LinkedHashMap<String,GeneSequence> getGeneSequences(){
-        return geneSequenceHashMap;
-    }
 
-    public GeneSequence removeGeneSequence(String accession) {
-        return geneSequenceHashMap.remove(accession);
-    }
-
-    public GeneSequence addGene(AccessionID accession, int begin, int end) {
-        GeneSequence geneSequence = new GeneSequence(this, begin, end);
-        geneSequence.setAccession(accession);
-        geneSequenceHashMap.put(accession.toString(), geneSequence);
-        return geneSequence;
-    }
-
-    public GeneSequence getGene(String accession) {
-        return geneSequenceHashMap.get(accession);
-    }
 
     public SequenceView<NucleotideCompound> getReverseComplement() {
         return new ComplementSequenceView<NucleotideCompound>(getReverse());

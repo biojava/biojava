@@ -26,9 +26,9 @@ import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.biojava.bio.BioError;
+
 import org.biojava.bio.structure.io.PDBFileParser;
-import org.biojava.utils.ClassTools;
+
 
 /** A class that provides a set of standard amino acids.
  * 
@@ -43,7 +43,10 @@ public final class StandardAminoAcid {
     
     static private Map<String,AminoAcid> aminoAcids;
     
-    public StandardAminoAcid() {
+    /** can not be instanciated
+     * 
+     */
+    private StandardAminoAcid() {
         super();
         
     }
@@ -64,11 +67,11 @@ public final class StandardAminoAcid {
         aminoAcids = new HashMap<String,AminoAcid>();
     
         try {
-            InputStream fileStream = ClassTools.getClassLoader(StandardAminoAcid.class).getResourceAsStream(
+            InputStream fileStream = StandardAminoAcid.class.getClassLoader().getResourceAsStream(
                     "org/biojava/bio/structure/standardaminos.pdb"
             );
             if (fileStream == null) {
-                throw new BioError("Couldn't locate standardaminos.pdb.  This probably means that your biojava.jar file is corrupt or incorrectly built.");
+                throw new Exception("Couldn't locate standardaminos.pdb.  This probably means that your biojava.jar file is corrupt or incorrectly built.");
             }
             
             PDBFileParser parser = new PDBFileParser();
@@ -89,7 +92,7 @@ public final class StandardAminoAcid {
             }
             
         } catch (Exception t) {
-            throw new BioError( "Unable to initialize standard aminoacids", t);
+            throw new RuntimeException( "Unable to initialize standard aminoacids", t);
         }
     }
     

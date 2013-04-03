@@ -2,10 +2,10 @@ package org.biojava3.core.sequence.edits;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import org.biojava3.core.sequence.BasicSequence;
 import org.biojava3.core.sequence.storage.JoiningSequenceReader;
 import org.biojava3.core.sequence.template.Compound;
-import org.biojava3.core.sequence.template.CompoundSet;
 import org.biojava3.core.sequence.template.Sequence;
 
 /**
@@ -26,7 +26,6 @@ import org.biojava3.core.sequence.template.Sequence;
  * @param <C> The type of compound to edit
  */
 public interface Edit<C extends Compound> {
-
 
     Sequence<C> edit(Sequence<C> sequence);
 
@@ -50,11 +49,8 @@ public interface Edit<C extends Compound> {
          */
         protected abstract Sequence<C> getThreePrime(Sequence<C> editingSequence);
 
-        @Override
+      
         public Sequence<C> edit(Sequence<C> editingSequence) {
-//            assertEditWithinBounds(editingSequence);
-            
-            CompoundSet<C> compoundSet = editingSequence.getCompoundSet();
             Sequence<C> targetSequence = getTargetSequence(editingSequence);
             List<Sequence<C>> sequences = new ArrayList<Sequence<C>>();
 
@@ -62,9 +58,8 @@ public interface Edit<C extends Compound> {
             sequences.add(targetSequence);
             sequences.add(getThreePrime(editingSequence));
 
-            return new JoiningSequenceReader<C>(compoundSet, sequences);
+            return new JoiningSequenceReader<C>(sequences);
         }
-        
         private int start = -1;
         private int end = -1;
         private String stringSequence;
@@ -145,7 +140,7 @@ public interface Edit<C extends Compound> {
         @Override
         protected Sequence<C> getFivePrime(Sequence<C> editingSequence) {
             int start = getRealStart();
-            if(start == 0) {
+            if (start == 0) {
                 return getEmptySequence(editingSequence);
             }
             return editingSequence.getSubSequence(1, start);
@@ -154,7 +149,7 @@ public interface Edit<C extends Compound> {
         @Override
         protected Sequence<C> getThreePrime(Sequence<C> editingSequence) {
             int end = getRealEnd();
-            if(end > editingSequence.getLength()) {
+            if (end > editingSequence.getLength()) {
                 return getEmptySequence(editingSequence);
             }
             return editingSequence.getSubSequence(end, editingSequence.getLength());
@@ -206,17 +201,15 @@ public interface Edit<C extends Compound> {
 
         @Override
         protected Sequence<C> getFivePrime(Sequence<C> editingSequence) {
-            if(singlePosition) {
-                if(getStart() == 1) {
+            if (singlePosition) {
+                if (getStart() == 1) {
                     return getEmptySequence(editingSequence);
-                }
-                else if (getEnd() == editingSequence.getLength()) {
+                } else if (getEnd() == editingSequence.getLength()) {
                     return editingSequence;
-                }
-                else {
-                    throw new IllegalStateException("Given one position to " +
-                            "insert at but this is not the start or end " +
-                            "of the Sequence; cannot support this");
+                } else {
+                    throw new IllegalStateException("Given one position to "
+                            + "insert at but this is not the start or end "
+                            + "of the Sequence; cannot support this");
                 }
             }
             return editingSequence.getSubSequence(1, getStart());
@@ -224,17 +217,15 @@ public interface Edit<C extends Compound> {
 
         @Override
         protected Sequence<C> getThreePrime(Sequence<C> editingSequence) {
-            if(singlePosition) {
-                if(getStart() == 1) {
+            if (singlePosition) {
+                if (getStart() == 1) {
                     return editingSequence;
-                }
-                else if (getEnd() == editingSequence.getLength()) {
+                } else if (getEnd() == editingSequence.getLength()) {
                     return getEmptySequence(editingSequence);
-                }
-                else {
-                    throw new IllegalStateException("Given one position to " +
-                            "insert at but this is not the start or end " +
-                            "of the Sequence; cannot support this");
+                } else {
+                    throw new IllegalStateException("Given one position to "
+                            + "insert at but this is not the start or end "
+                            + "of the Sequence; cannot support this");
                 }
             }
             return editingSequence.getSubSequence(getEnd(), editingSequence.getLength());
@@ -250,12 +241,7 @@ public interface Edit<C extends Compound> {
      *    AAAA -> ATTA
      * </pre>
      *
-     * Or we can support edits which exceed the Sequence
-     *
-     * <pre>
-     *   Sub AAAA @ position 4
-     *   ACGT -> ACGAAAA (edit replaces 1 base, the final T, and adds 3 A's onto the end)
-     * </pre>
+     * We do not support
      *
      * Edits do not require the length of the insertion but do rely on the
      * presence of a CompoundSet to parse a String (if given) which means
@@ -272,7 +258,7 @@ public interface Edit<C extends Compound> {
             super(position);
             setSequence(sequence);
         }
-        
+
         /**
          * Must use this rather than the no-args getEnd as this can return
          * -1 and the length of a sub is dependent on the length of the
@@ -280,10 +266,10 @@ public interface Edit<C extends Compound> {
          * String and the number of compounds we will have to insert.
          */
         public int getEnd(Sequence<C> sequence) {
-            if(getEnd() == -1) {
-                int start  = getStart();
+            if (getEnd() == -1) {
+                int start = getStart();
                 int length = getTargetSequence(sequence).getLength();
-                return (start + length)-1;
+                return (start + length) - 1;
             }
             return getEnd();
         }
@@ -291,7 +277,7 @@ public interface Edit<C extends Compound> {
         @Override
         protected Sequence<C> getFivePrime(Sequence<C> editingSequence) {
             int start = getStart();
-            if(start == 1) {
+            if (start == 1) {
                 return getEmptySequence(editingSequence);
             }
             return editingSequence.getSubSequence(1, start - 1);
@@ -300,10 +286,15 @@ public interface Edit<C extends Compound> {
         @Override
         protected Sequence<C> getThreePrime(Sequence<C> editingSequence) {
             int end = getEnd(editingSequence);
-            if(end >= editingSequence.getLength()) {
+            if (end > editingSequence.getLength()) {
+                throw new IndexOutOfBoundsException(end +
+                        " is greater than the max index of " +
+                        "the editing sequence (" +
+                        editingSequence.getLength());
+            } else if (end == editingSequence.getLength()) {
                 return getEmptySequence(editingSequence);
             }
-            return editingSequence.getSubSequence(end+1, editingSequence.getLength());
+            return editingSequence.getSubSequence(end + 1, editingSequence.getLength());
         }
     }
 }

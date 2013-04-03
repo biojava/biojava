@@ -30,13 +30,13 @@ public final class SolexaFastqWriterTest
 {
 
     /** {@inheritDoc} */
-    protected FastqWriter createFastqWriter()
+    public FastqWriter createFastqWriter()
     {
         return new SolexaFastqWriter();
     }
 
     /** {@inheritDoc} */
-    protected Fastq createFastq()
+    public Fastq createFastq()
     {
         return new FastqBuilder()
             .withDescription("description")

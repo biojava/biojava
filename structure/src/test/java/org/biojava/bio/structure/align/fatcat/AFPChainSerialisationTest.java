@@ -33,8 +33,6 @@ import org.biojava.bio.structure.align.model.AFPChain;
 import org.biojava.bio.structure.align.util.AtomCache;
 import org.biojava.bio.structure.align.xml.AFPChainXMLConverter;
 import org.biojava.bio.structure.align.xml.AFPChainXMLParser;
-import org.biojava.bio.structure.io.PDBFileReader;
-
 
 import junit.framework.Test;
 import junit.framework.TestCase;
@@ -99,24 +97,26 @@ extends TestCase
       }
    }
 
-   public void testSerialization1cdg_1tim(){
-
-      try {
-
-         Structure s1 = getStructure("1cdg", "A");		
-         Structure s2 = getStructure("1tim","A");
-
-         Atom[] ca1 = StructureTools.getAtomCAArray(s1);
-         Atom[] ca2 = StructureTools.getAtomCAArray(s2);
-
-         testAlignment("1cdg.A","1tim.A",ca1,ca2,false);
-         testAlignment("1cdg.A","1tim.A",ca1,ca2,true);
-
-      } catch (Exception e) {
-         e.printStackTrace();
-         fail(e.getMessage());
-      }
-   }
+   
+   // slow...
+//   public void testSerialization1cdg_1tim(){
+//
+//      try {
+//
+//         Structure s1 = getStructure("1cdg", "A");		
+//         Structure s2 = getStructure("1tim","A");
+//
+//         Atom[] ca1 = StructureTools.getAtomCAArray(s1);
+//         Atom[] ca2 = StructureTools.getAtomCAArray(s2);
+//
+//         testAlignment("1cdg.A","1tim.A",ca1,ca2,false);
+//         testAlignment("1cdg.A","1tim.A",ca1,ca2,true);
+//
+//      } catch (Exception e) {
+//         e.printStackTrace();
+//         fail(e.getMessage());
+//      }
+//   }
    public void testSerialization4hhb(){
 
       try {
@@ -256,8 +256,8 @@ extends TestCase
       String name1 = "4hhb.A";
       String name2 = "4hhb.B";
 
-      String name3 ="1cdg.A";
-      String name4 ="1tim.A";
+      String name3 ="1hiv.A";
+      String name4 ="1a4w.H";
       try {
          Structure s1 = getStructure("4hhb","A");
          Structure s2 = getStructure("4hhb","B");
@@ -265,14 +265,14 @@ extends TestCase
          ca2 = StructureTools.getAtomCAArray(s2);
          ca3 = StructureTools.cloneCAArray(ca2);
 
-
          result1 = align(name1,name2,ca1, ca2,true);
 
-         Structure s3 = getStructure("1cdg","A");
-         Structure s4 = getStructure("1tim","A");
+         Structure s3 = getStructure("1hiv","A");
+         Structure s4 = getStructure("1a4w","H");
          ca4 = StructureTools.getAtomCAArray(s3);
          ca5 = StructureTools.getAtomCAArray(s4);
          ca6 = StructureTools.cloneCAArray(ca5);
+
          result2 = align(name3,name4,ca4, ca5,true);
 
 
@@ -306,15 +306,16 @@ extends TestCase
       try {
          AFPChainXMLParser.rebuildAFPChain(new1, ca1, ca3);				
          String fatcat1 = new1.toFatcat(ca1, ca3); 
-         assertTrue(fatcat1.equals(result1[0]));				
+         assertEquals(fatcat1, result1[0]);				
          String xmlnew1 = AFPChainXMLConverter.toXML(new1, ca1, ca3);
          assertTrue(xmlnew1.equals(result1[1]));
 
          AFPChainXMLParser.rebuildAFPChain(new2, ca4, ca6);
          String fatcat2 = new2.toFatcat(ca4, ca6);
-         assertTrue(fatcat2.equals(result2[0]));			
+        
+         assertEquals(fatcat2,result2[0]);			
          String xmlnew2 = AFPChainXMLConverter.toXML(new2, ca4, ca6);
-         assertTrue(xmlnew2.equals(result2[1]));
+         assertEquals(xmlnew2,result2[1]);
       } catch (IOException e){
          fail(e.getMessage());
       }

@@ -9,11 +9,12 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import org.biojava3.core.sequence.DNASequence;
-import org.biojava3.core.sequence.FastaReaderHelper;
-import org.biojava3.core.sequence.FastaWriterHelper;
+import org.biojava3.core.sequence.io.FastaReaderHelper;
+import org.biojava3.core.sequence.io.FastaWriterHelper;
+
 
 /**
- *
+ * Utility to write each Fasta entry to a unique file
  * @author Scooter Willis <willishf at gmail dot com>
  */
 public class SplitFasta {

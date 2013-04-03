@@ -42,8 +42,6 @@ import org.biojava.bio.structure.align.gui.jmol.StructureAlignmentJmol;
 import org.biojava.bio.structure.align.model.AFPChain;
 import org.biojava.bio.structure.align.util.UserConfiguration;
 import org.biojava.bio.structure.align.webstart.WebStartMain;
-import org.biojava.bio.structure.jama.Matrix;
-
 
 
 /**
@@ -56,6 +54,7 @@ public class MenuCreator {
 	public static final String PRINT     = "Print";
 	public static final String ALIGNMENT_PANEL = "Alignment Panel";
 	public static final String TEXT_ONLY = "View Text Only";
+	public static final String PAIRS_ONLY = "View Aligned Pairs";
 	public static final String SELECT_EQR = "Select Equivalent Positions";
 	public static final String SIMILARITY_COLOR = "Color By Similarity";
 	public static final String EQR_COLOR = "Color By EQR";
@@ -86,6 +85,8 @@ public class MenuCreator {
 		JMenuItem saveF = getSaveAlignmentMenuItem(afpChain);
 		file.add(saveF);
 
+		JMenuItem openPDB = getShowPDBMenuItem();
+		file.add(openPDB);
 
 		JMenuItem openI = getOpenPDBMenuItem();
 
@@ -134,6 +135,9 @@ public class MenuCreator {
 
 			JMenuItem textI = MenuCreator.getIcon(parent,TEXT_ONLY);
 			view.add(textI);
+			
+			JMenuItem pairsI = MenuCreator.getIcon(parent,PAIRS_ONLY);
+			view.add(pairsI);
 			
 			JMenuItem textF = MenuCreator.getIcon(parent,FATCAT_TEXT);
             view.add(textF);
@@ -201,7 +205,20 @@ public class MenuCreator {
 		return saveI;
 	}
 
+	public static JMenuItem getShowPDBMenuItem() {
+       ImageIcon loadI = createImageIcon("/icons/background.png");
+       JMenuItem openI = null;
 
+       if ( loadI == null)
+           openI =new JMenuItem("Show By ID");
+       else 
+           openI =new JMenuItem("Show By ID", loadI);
+       openI.setMnemonic(KeyEvent.VK_O);
+       openI.addActionListener(new ShowPDBIDListener());
+       return openI;
+	}
+	
+	
 	public static JMenuItem getOpenPDBMenuItem() {
 		ImageIcon loadI = createImageIcon("/icons/background.png");
 		JMenuItem openI = null;
@@ -230,6 +247,13 @@ public class MenuCreator {
 	}
 
 
+	/**
+	 * Create the menu for the "Text Only" representation of alignments
+	 * @param frame
+	 * @param actionListener
+	 * @param afpChain
+	 * @return
+	 */
 	public static JMenuBar getAlignmentTextMenu(JFrame frame, ActionListener actionListener,AFPChain afpChain){
 
 
@@ -290,6 +314,9 @@ public class MenuCreator {
 
 		JMenuItem textI = MenuCreator.getIcon(actionListener,TEXT_ONLY);
 		view.add(textI);
+		
+		JMenuItem pairsI = MenuCreator.getIcon(actionListener,PAIRS_ONLY);
+		view.add(pairsI);
 
 		JMenuItem textF = MenuCreator.getIcon(actionListener,FATCAT_TEXT);
         view.add(textF);
@@ -617,6 +644,9 @@ public class MenuCreator {
 		loadF.addActionListener(new MyAlignmentLoadListener(null));
 		file.add(loadF);
 
+		JMenuItem openPDB = MenuCreator.getShowPDBMenuItem();       
+        file.add(openPDB);
+		
 		JMenuItem openI = MenuCreator.getOpenPDBMenuItem();		
 		file.add(openI);
 

@@ -27,6 +27,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.List;
 
+import org.biojava.bio.structure.io.FileParsingParameters;
 import org.biojava.bio.structure.io.PDBFileParser;
 import org.biojava.bio.structure.io.mmcif.MMcifParser;
 import org.biojava.bio.structure.io.mmcif.SimpleMMcifConsumer;
@@ -57,7 +58,9 @@ public class MMcifTest extends TestCase {
 
 	public void testLoad(){
 		
-
+		// a structure with microheterogeneity
+		//comparePDB2cif("2CI1","A");
+		
 		// test a simple protein
 		comparePDB2cif("5pti","A");
 
@@ -70,15 +73,16 @@ public class MMcifTest extends TestCase {
 
 		// test a DNA binding protein
 		comparePDB2cif("1j59","A");
-		comparePDB2cif("1j59","B");
-		comparePDB2cif("1j59","C");
-		comparePDB2cif("1j59","D");
+		//comparePDB2cif("1j59","B");
+		//comparePDB2cif("1j59","C");
+		//comparePDB2cif("1j59","D");
 		comparePDB2cif("1j59","E");
-		comparePDB2cif("1j59","F");
+		//comparePDB2cif("1j59","F");
 
 		// test a NMR protein
 		comparePDB2cif("2kc9","A");
 
+		
 	}
 
 
@@ -90,7 +94,11 @@ public class MMcifTest extends TestCase {
 		MMcifParser parser = new SimpleMMcifParser();
 
 		SimpleMMcifConsumer consumer = new SimpleMMcifConsumer();
-		consumer.setHeaderOnly(headerOnly);
+		FileParsingParameters params = new FileParsingParameters();
+		params.setHeaderOnly(headerOnly);
+		consumer.setFileParsingParameters(params);
+		
+		
 		parser.addMMcifConsumer(consumer);
 		try {
 			parser.parse(new BufferedReader(new InputStreamReader(inStream)));
@@ -109,7 +117,8 @@ public class MMcifTest extends TestCase {
 		assertNotNull(inStream);
 
 		PDBFileParser pdbpars = new PDBFileParser();
-		pdbpars.setHeaderOnly(headerOnly);
+		pdbpars.setFileParsingParameters(params);
+		
 		try {
 			pdbStructure = pdbpars.parsePDBFile(pinStream) ;
 		} catch (IOException e) {
@@ -138,8 +147,8 @@ public class MMcifTest extends TestCase {
 			Chain a_cif = cifStructure.getChainByPDB(chainId);
 			//System.out.println(a_pdb.getAtomGroups());
 			
-			//	System.out.println("pdb atom groups: " + a_cif.getAtomGroups(GroupType.AMINOACID).size());
-			//	System.out.println("cif atom groups: " + a_cif.getAtomGroups(GroupType.AMINOACID).size());
+				//System.out.println(id + "_" + chainId + " pdb atom groups: " + a_pdb.getAtomGroups(GroupType.AMINOACID).size());
+				//System.out.println(id + "_" + chainId + " cif atom groups: " + a_cif.getAtomGroups(GroupType.AMINOACID).size());
 			
 			//for (Group g: a_cif.getAtomGroups()){
 			//	System.out.println(g);
@@ -217,12 +226,21 @@ public class MMcifTest extends TestCase {
 	private void checkGroups(Group g1, Group g2){
 
 		//System.out.print("comparing " +g1 + " " + g2);
-
+		String pdbId1 = g1.getChain().getParent().getPDBCode();
+		String pdbId2 = g1.getChain().getParent().getPDBCode();
+		assertEquals(pdbId1, pdbId2);
+		
 		assertEquals(g1.getType(),g2.getType());
-		assertEquals(g1.getPDBCode(),g2.getPDBCode());
+		assertEquals(g1.getResidueNumber().getSeqNum(),g2.getResidueNumber().getSeqNum());
+		assertEquals(g1.getResidueNumber().getInsCode(),g2.getResidueNumber().getInsCode());
 		assertEquals(g1.getPDBName(),g2.getPDBName());
 		assertEquals(g1.has3D(),g2.has3D());
-		assertEquals(g1.getAtoms().size(), g2.getAtoms().size());
+		
+		assertEquals(g1.hasAltLoc(), g2.hasAltLoc());
+		
+		assertEquals(pdbId1 + ":" + g1 + " - " + pdbId2+":"+ g2,g1.getAltLocs().size(), g2.getAltLocs().size());
+		
+		assertEquals(pdbId1 + ":" + g1 + " - " + pdbId2+":"+ g2 , g1.getAtoms().size(), g2.getAtoms().size());
 		if ( g1.has3D()){
 			try {
 				Atom a1 = g1.getAtom(0);
@@ -262,7 +280,7 @@ public class MMcifTest extends TestCase {
 				// can;t compare seq res, since this is only done for 1st...
 				//assertEquals("c1.getSeqResLength(),cx.getSeqResLength());
 				assertEquals(c1.getAtomSequence(),cx.getAtomSequence());
-				assertEquals(c1.getLengthAminos(),cx.getLengthAminos());
+				assertEquals(c1.getAtomGroups("amino").size(),cx.getAtomGroups("amino").size());
 				assertEquals(c1.getAtomGroups(GroupType.AMINOACID).size(),cx.getAtomGroups(GroupType.AMINOACID).size());
 				assertEquals(c1.getAtomGroups(GroupType.NUCLEOTIDE).size(),cx.getAtomGroups(GroupType.NUCLEOTIDE).size());
 				assertEquals(c1.getAtomGroups(GroupType.HETATM).size(),cx.getAtomGroups(GroupType.HETATM).size());

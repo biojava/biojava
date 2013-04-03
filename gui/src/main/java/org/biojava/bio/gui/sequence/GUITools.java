@@ -11,7 +11,7 @@ import org.biojava.bio.symbol.RangeLocation;
  *
  *
  * @author Matthew Pocock
- * @author Kalle Näslund
+ * @author Kalle N&auml;slund
  * @since 1.4
  */
 public final class GUITools {

@@ -16,9 +16,6 @@ import org.biojava3.core.sequence.template.Sequence;
 import org.biojava3.core.sequence.transcription.Table.Codon;
 import org.biojava3.core.sequence.views.WindowedSequence;
 
-import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.Multimap;
-
 /**
  * Takes a {@link Sequence} of {@link NucleotideCompound} which should
  * represent an RNA sequence ({@link RNASequence} is good for this) and returns
@@ -32,9 +29,8 @@ public class RNAToAminoAcidTranslator extends AbstractCompoundTranslator<Nucleot
 
     private final boolean trimStops;
     private final boolean initMetOnly;
-    private final Map<List<NucleotideCompound>, Codon> quickLookup;
-    private final Multimap<AminoAcidCompound, Codon> aminoAcidToCodon;
-    private final NucleotideCompound nCompound;
+    private final Map<Table.CaseInsensitiveTriplet, Codon> quickLookup;
+    private final Map<AminoAcidCompound, List<Codon>> aminoAcidToCodon;
     private final AminoAcidCompound unknownAminoAcidCompound;
     private final boolean translateNCodons;
 
@@ -49,30 +45,23 @@ public class RNAToAminoAcidTranslator extends AbstractCompoundTranslator<Nucleot
         this.initMetOnly = initMetOnly;
         this.translateNCodons = translateNCodons;
 
-        quickLookup = new HashMap<List<NucleotideCompound>, Codon>(codons.getAllCompounds().size());
-        aminoAcidToCodon = ArrayListMultimap.create();
+        quickLookup = new HashMap<Table.CaseInsensitiveTriplet, Codon>(codons.getAllCompounds().size());
+        aminoAcidToCodon = new HashMap<AminoAcidCompound, List<Codon>>();
 
         List<Codon> codonList = table.getCodons(nucleotides, aminoAcids);
         for (Codon codon : codonList) {
-            quickLookup.put(codon.getAsList(), codon);
-            aminoAcidToCodon.put(codon.getAminoAcid(), codon);
+            quickLookup.put(codon.getTriplet(), codon);
+            
+            List<Codon> codonL = aminoAcidToCodon.get(codon.getAminoAcid());
+            if ( codonL == null){
+            	codonL = new ArrayList<Codon>();
+            	aminoAcidToCodon.put(codon.getAminoAcid(), codonL);
+            }
+            codonL.add(codon);
+            
         }
 
-        nCompound = nucleotides.getCompoundForString("N");
         unknownAminoAcidCompound = aminoAcids.getCompoundForString("X");
-    }
-
-    /**
-     * Refuses to add the * compound (stop) to the available compounds if
-     * trimStops is on
-     */
-    @Override
-    protected void addCompoundToLists(List<List<AminoAcidCompound>> list,
-            AminoAcidCompound compound) {
-        if (trimStops && compound.getShortName().equals("*")) {
-            return;
-        }
-        super.addCompoundToLists(list, compound);
     }
 
     /**
@@ -85,33 +74,28 @@ public class RNAToAminoAcidTranslator extends AbstractCompoundTranslator<Nucleot
             Sequence<NucleotideCompound> originalSequence) {
 
         List<List<AminoAcidCompound>> workingList = new ArrayList<List<AminoAcidCompound>>();
-        Iterable<List<NucleotideCompound>> iter = new WindowedSequence<NucleotideCompound>(
-                originalSequence, 3);
+        
+        Iterable<List<NucleotideCompound>> iter = 
+            new WindowedSequence<NucleotideCompound>(originalSequence, 3);
+                
         for (List<NucleotideCompound> element : iter) {
             AminoAcidCompound aminoAcid;
-            if(hasN(element)) {
+
+            int i =0;
+            Table.CaseInsensitiveTriplet triplet = new Table.CaseInsensitiveTriplet(
+              element.get(i++), element.get(i++), element.get(i++));
+
+            Codon target = quickLookup.get(triplet);
+            aminoAcid = target.getAminoAcid();
+            if(aminoAcid == null && translateNCodons()) {
                 aminoAcid = unknownAminoAcidCompound;
-            }
-            else {
-                Codon target = quickLookup.get(element);
-                aminoAcid = target.getAminoAcid();
             }
             addCompoundsToList(Arrays.asList(aminoAcid), workingList);
         }
 
-        return workingListToSequences(workingList);
-    }
+        postProcessCompoundLists(workingList);
 
-    protected boolean hasN(List<NucleotideCompound> compounds) {
-        if(! translateNCodons()) {
-            return false;
-        }
-        for(NucleotideCompound c: compounds) {
-            if(c.equalsIgnoreCase(nCompound)) {
-                return true;
-            }
-        }
-        return false;
+        return workingListToSequences(workingList);
     }
 
     /**
@@ -147,7 +131,11 @@ public class RNAToAminoAcidTranslator extends AbstractCompoundTranslator<Nucleot
         }
     }
 
-    private void trimStop(List<AminoAcidCompound> sequence) {
+    /**
+     * Imperfect code. Checks the last amino acid to see if a codon could
+     * have translated a stop for it. Left in for the moment
+     */
+    protected void trimStop(List<AminoAcidCompound> sequence) {
         AminoAcidCompound stop = sequence.get(sequence.size() - 1);
         boolean isStop = false;
         for (Codon c : aminoAcidToCodon.get(stop)) {

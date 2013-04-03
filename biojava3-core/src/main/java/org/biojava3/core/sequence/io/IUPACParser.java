@@ -127,14 +127,14 @@ public class IUPACParser {
   }
 
   private List<IUPACTable> parseTables() {
-    List<IUPACTable> tables = new ArrayList<IUPACTable>();
+    List<IUPACTable> localTables = new ArrayList<IUPACTable>();
     List<String> lines = IOUtils.getList(is);
     Integer id = null;
     String name, aa, starts, baseone, basetwo, basethree;
     name = aa = starts = baseone = basetwo = basethree = null;
     for (String line : lines) {
       if (line.equalsIgnoreCase("//")) {
-        tables.add(new IUPACTable(name, id, aa, starts, baseone, basetwo,
+        localTables.add(new IUPACTable(name, id, aa, starts, baseone, basetwo,
             basethree));
         name = aa = starts = baseone = basetwo = basethree = null;
         id = null;
@@ -163,7 +163,7 @@ public class IUPACParser {
       }
     }
 
-    return tables;
+    return localTables;
   }
 
   /**
@@ -224,6 +224,7 @@ public class IUPACParser {
      * @throws IllegalStateException Thrown if
      * {@link #getCodons(CompoundSet, CompoundSet)} was not called first.
      */
+        @Override
     public boolean isStart(AminoAcidCompound compound) throws IllegalStateException {
       if(this.codons.isEmpty()) {
         throw new IllegalStateException("Codons are empty; please request getCodons() fist before asking this");
@@ -242,7 +243,12 @@ public class IUPACParser {
     /**
      * Returns a list of codons where the source and target compounds
      * are the same as those given by the parameters.
+     *
+     * @param nucleotides The nucleotide set to use when building BioJava 
+     * representations of codons
+     * @param aminoAcids The target amino acid compounds objects
      */
+        @Override
     public List<Codon> getCodons(CompoundSet<NucleotideCompound> nucelotides,
         CompoundSet<AminoAcidCompound> aminoAcids) {
 
@@ -253,15 +259,15 @@ public class IUPACParser {
 
         for (int i = 0; i < aminoAcidStrings.size(); i++) {
 
-          List<String> codonString = codonStrings.get(i);
-          NucleotideCompound one = getCompound(codonString, 0, nucelotides);
-          NucleotideCompound two = getCompound(codonString, 1, nucelotides);
-          NucleotideCompound three = getCompound(codonString, 2, nucelotides);
-          boolean start = (startCodonStrings.get(i) == "M");
-          boolean stop = aminoAcidStrings.get(i).equals("*");
+          List<String> codonString    = codonStrings.get(i);
+          NucleotideCompound one      = getCompound(codonString, 0, nucelotides);
+          NucleotideCompound two      = getCompound(codonString, 1, nucelotides);
+          NucleotideCompound three    = getCompound(codonString, 2, nucelotides);
+          boolean start               = ("M".equals(startCodonStrings.get(i)));
+          boolean stop                = ("*".equals(aminoAcidStrings.get(i)));
           AminoAcidCompound aminoAcid = aminoAcids
               .getCompoundForString(aminoAcidStrings.get(i));
-          codons.add(new Codon(one, two, three, aminoAcid, start, stop));
+          codons.add(new Codon(new CaseInsensitiveTriplet(one, two, three), aminoAcid, start, stop));
         }
       }
 
@@ -275,12 +281,7 @@ public class IUPACParser {
           .getCompoundForString(compound);
       if (returnCompound == null) {
         if ("T".equalsIgnoreCase(compound)) {
-          if (Character.isLowerCase(compound.charAt(0))) {
-            returnCompound = nucelotides.getCompoundForString("u");
-          }
-          else {
             returnCompound = nucelotides.getCompoundForString("U");
-          }
         }
         else {
           throw new ParserException("Cannot find a compound for string "

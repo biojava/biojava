@@ -5,6 +5,7 @@ import org.biojava.bio.structure.align.StructureAlignment;
 import org.biojava.bio.structure.align.ce.AbstractUserArgumentProcessor;
 
 
+
 public class SmithWatermanUserArgumentProcessor extends AbstractUserArgumentProcessor{
 
 	
@@ -18,7 +19,15 @@ public class SmithWatermanUserArgumentProcessor extends AbstractUserArgumentProc
 
 	@Override
 	public Object getParameters() {
-		return null;
+		StructureAlignment alignment = getAlgorithm();
+		
+		SmithWaterman3DParameters p = (SmithWaterman3DParameters) alignment.getParameters();
+		
+		if ( p == null)
+			p = new SmithWaterman3DParameters();
+		
+		
+		return p;
 	}
 	
 	public String getDbSearchLegend(){

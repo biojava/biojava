@@ -114,6 +114,13 @@ implements StructurePairSelector {
 	}
 
 
+	public String getFilePath1(){
+		return filePath1.getText();
+	}
+	
+	public String getChain1(){
+		return chain1.getText();
+	}
 
 	public Structure getStructure1() throws StructureException{
 

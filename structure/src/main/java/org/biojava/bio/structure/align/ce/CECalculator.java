@@ -97,10 +97,7 @@ public class CECalculator {
 	private static final boolean distAll = false;
 
 
-	private static final double DEFAULT_GAP_OPEN = 5.0;
-	private static final double DEFAULT_GAP_EXTENSION  = 0.5;
-	private static final double DISTANCE_INCREMENT=0.5;
-	private static final double DEFAULT_oRmsdThr = 2.0; 
+
 
 	public CECalculator(CeParameters params){
 		timeStart = System.currentTimeMillis();
@@ -224,16 +221,16 @@ public class CECalculator {
 
 
 		double dist;
-		Group g1 = ca1.getParent();
+		Group g1 = ca1.getGroup();
 		Atom cb1 = null;
-		if ( g1.hasAtom("CB")) {
-			cb1 = g1.getAtom("CB");
+		if ( g1.hasAtom(StructureTools.cbAtomName)) {
+			cb1 = g1.getAtom(StructureTools.cbAtomName);
 		}
 		//
-		Group g2 = ca2.getParent();
+		Group g2 = ca2.getGroup();
 		Atom cb2 = null;
-		if ( g2.hasAtom("CB")) {
-			cb2 = g2.getAtom("CB");
+		if ( g2.hasAtom(StructureTools.cbAtomName)) {
+			cb2 = g2.getAtom(StructureTools.cbAtomName);
 		}
 
 
@@ -447,7 +444,7 @@ public class CECalculator {
 
 		double traceTotalScore=0;
 		double traceScoreMax =0;
-
+		double userRMSDMax = params.getMaxOptRMSD();
 		int kse1;
 		int kse2;
 
@@ -511,7 +508,7 @@ public class CECalculator {
 
 								if(mat[ise1][ise2]<0.0) continue ise2Loop;
 								if(mat[ise1][ise2]>rmsdThr) continue ise2Loop;
-
+								if (mat[ise1][ise2]>userRMSDMax) continue ise2Loop;
 								nTrace=0;
 								trace1[nTrace]=ise1; 
 								trace2[nTrace]=ise2;
@@ -572,7 +569,8 @@ public class CECalculator {
 
 													if(mat[mse1][mse2]<0.0)     continue itLoop;
 													if(mat[mse1][mse2]>rmsdThr) continue itLoop;
-
+													if(mat[mse1][mse2]>userRMSDMax) continue itLoop;
+													
 													nTraces++;
 													if(nTraces>tracesLimit) {
 
@@ -602,7 +600,8 @@ public class CECalculator {
 														//System.out.println("up: " + nTrace + " "  + score + " " + score0 + " " + score1 + " " + winSize + " " + traceIndex_ + " " + it + " ");
 														if(score1>rmsdThrJoin) 
 															continue itLoop;
-
+														if(score1>userRMSDMax)
+														   continue itLoop;
 														score2=score1;
 
 														// this just got checked, no need to check again..
@@ -643,6 +642,8 @@ public class CECalculator {
 
 												if(score2>rmsdThrJoin) 
 													traceIndex_=-1;
+												else if ( score2 > userRMSDMax) 
+												   traceIndex_=-1;												
 												else {
 													traceScore[nTrace-1][traceIndex_]=score2;
 
@@ -1161,7 +1162,7 @@ nBestTrace=nTrace;
 	private void setStrBuf(Atom[] strBuf, int i, Atom[] ca, int j) {
 		// TODO Auto-generated method stub
 		//TODO
-		Group parent = ca[j].getParent();
+		Group parent = ca[j].getGroup();
 		int pos = 0;
 		String atomName = StructureTools.caAtomName;
 
@@ -1262,27 +1263,36 @@ nBestTrace=nTrace;
 
 		//System.out.println("optimizing Superimposition...");
 
-		nAtom=strLen;
+		//nAtom=strLen;
 		// optimization on superposition
 		Atom[] ca3=new Atom[nse2];
 
 
 		double rmsdLen  = 0.0;
 
+		// this flag tests if the RMSDLen has been assigned.
+		// this is to enforce that the alignment ends up 
+		// smaller than 95% of the original alignment.
+		// +/- 
 		boolean isRmsdLenAssigned=false;
 		int nAtomPrev=-1;
 
-		double oRmsdThr = DEFAULT_oRmsdThr;
-
+		double oRmsdThr = params.getORmsdThr();
+		
+		double distanceIncrement = params.getDistanceIncrement();
+		double maxUserRMSD = params.getMaxOptRMSD();
 		nAtom=0;
 		int counter = -1;
+		
 		while(nAtom<strLen*0.95 || 
 				(isRmsdLenAssigned && rmsd<rmsdLen*1.1 && nAtomPrev!=nAtom)) {
+		  
 			counter++;
-			//System.out.println("nAtom: " + nAtom);
+			if ( debug)
+			   System.out.println("nAtom: " + nAtom + " " + nAtomPrev + " " + rmsdLen + " " + isRmsdLenAssigned + " strLen:" + strLen);
 			nAtomPrev=nAtom;
-			oRmsdThr += DISTANCE_INCREMENT;
-
+			oRmsdThr += distanceIncrement;
+			
 			rot_mol(ca2, ca3, nse2, r,t);
 
 			for(int ise1=0; ise1<nse1; ise1++) {
@@ -1310,7 +1320,10 @@ nBestTrace=nTrace;
 				}
 			}
 
-			double score = dpAlign( nse1, nse2, DEFAULT_GAP_OPEN , DEFAULT_GAP_EXTENSION , false, false);
+			double gapOpen = params.getGapOpen();
+			double gapExtension = params.getGapExtension();
+			
+			double score = dpAlign( nse1, nse2, gapOpen , gapExtension , false, false);
 
 			if (debug)
 				System.out.println("iter: "+ counter + "  score:"  + score + " " + " nAtomPrev: " + nAtomPrev + " nAtom:" + nAtom + " oRmsdThr: " + oRmsdThr);
@@ -1344,6 +1357,7 @@ nBestTrace=nTrace;
 				System.out.println("iter: " + counter + " nAtom " + nAtom + " rmsd: " + rmsd);
 			//afpChain.setTotalRmsdOpt(rmsd);
 			//System.out.println("rmsd: " + rmsd);
+			
 			if(!(nAtom<strLen*0.95) && (!isRmsdLenAssigned)) { 
 				rmsdLen=rmsd;
 				isRmsdLenAssigned=true;
@@ -1355,6 +1369,10 @@ nBestTrace=nTrace;
 			afpChain.setOptRmsd(new double[]{rmsd});
 			afpChain.setTotalRmsdOpt(rmsd);
 			afpChain.setChainRmsd(rmsd);
+			
+			if ( rmsd >= maxUserRMSD) {
+	              break;
+			}
 
 		}
 
@@ -1660,7 +1678,7 @@ nBestTrace=nTrace;
 
 		for(int l=0; l<nse2; l++) {
 			Atom a = caA[l];
-			Group g = (Group)a.getParent().clone();
+			Group g = (Group)a.getGroup().clone();
 			//Group g = (Group)a.getParent();
 
 			Calc.rotate( g, m);
@@ -1715,8 +1733,8 @@ nBestTrace=nTrace;
 		}
 		for (Atom a : cod2){
 
-			Calc.rotate(a.getParent(), matrix);
-			Calc.shift(a.getParent(),  shift);
+			Calc.rotate(a.getGroup(), matrix);
+			Calc.shift(a.getGroup(),  shift);
 			//Calc.rotate(a,r);
 			//Calc.shift(a,t);
 		}
@@ -1751,7 +1769,7 @@ nBestTrace=nTrace;
 
 			Atom a;
 			if ( clone ){
-				Group g = (Group)ca[i].getParent().clone();
+				Group g = (Group)ca[i].getGroup().clone();
 				a = g.getAtom(" CA ");
 			}
 			else {
@@ -1994,8 +2012,8 @@ nBestTrace=nTrace;
 				 optAln[0][0][pos] = align_se1[ia];
 				 optAln[0][1][pos] = align_se2[ia];
 
-				 char l1 = getOneLetter(ca1[align_se1[ia]].getParent());
-				 char l2 = getOneLetter(ca2[align_se2[ia]].getParent());
+				 char l1 = getOneLetter(ca1[align_se1[ia]].getGroup());
+				 char l2 = getOneLetter(ca2[align_se2[ia]].getGroup());
 
 				 alnseq1[ia] = Character.toUpperCase(l1);
 				 alnseq2[ia] = Character.toUpperCase(l2);
@@ -2017,13 +2035,13 @@ nBestTrace=nTrace;
 				 if (align_se1[ia] == -1 ) {
 					 alnseq1[ia] = '-';
 				 } else {
-					 char l1 = getOneLetter(ca1[align_se1[ia]].getParent());
+					 char l1 = getOneLetter(ca1[align_se1[ia]].getGroup());
 					 alnseq1[ia] = Character.toUpperCase(l1);
 				 }
 				 if ( align_se2[ia] == -1 ) {
 					 alnseq2[ia] = '-';
 				 } else {
-					 char l2 = getOneLetter(ca2[align_se2[ia]].getParent());
+					 char l2 = getOneLetter(ca2[align_se2[ia]].getGroup());
 					 alnseq2[ia] = Character.toUpperCase(l2);
 				 }
 

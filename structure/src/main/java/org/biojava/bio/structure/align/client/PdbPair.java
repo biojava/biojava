@@ -113,5 +113,9 @@ public class PdbPair implements Comparable<PdbPair> {
 		
 		return null;
 	}
+	public PdbPair getReverse() {
+		PdbPair newPair = new PdbPair(name2, name1);
+		return newPair;
+	}
 	
 }

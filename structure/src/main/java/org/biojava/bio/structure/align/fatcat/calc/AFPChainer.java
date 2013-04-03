@@ -45,7 +45,7 @@ import org.biojava.bio.structure.jama.Matrix;
 public class AFPChainer
 {
    public static final boolean debug = FatCatAligner.debug;
-   private static final boolean showAlig = false;
+  // private static final boolean showAlig = false;
   
   /**
   // Key function: chain (assembly) the AFPs

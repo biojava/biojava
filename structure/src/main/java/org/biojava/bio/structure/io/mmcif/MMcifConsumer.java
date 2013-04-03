@@ -23,6 +23,7 @@ package org.biojava.bio.structure.io.mmcif;
 
 import java.util.List;
 
+import org.biojava.bio.structure.io.FileParsingParameters;
 import org.biojava.bio.structure.io.mmcif.model.AtomSite;
 import org.biojava.bio.structure.io.mmcif.model.AuditAuthor;
 import org.biojava.bio.structure.io.mmcif.model.ChemComp;
@@ -95,6 +96,8 @@ public interface MMcifConsumer {
 	 */
 	public void newGenericData(String category, List<String> loopFields, List<String> lineData);
 
+	public void setFileParsingParameters(FileParsingParameters params);
+	public FileParsingParameters getFileParsingParameters();
 
 
 }

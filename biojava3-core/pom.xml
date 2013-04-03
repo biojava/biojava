@@ -1,16 +1,32 @@
-<?xml version="1.0" encoding="UTF-8"?><project xmlns:pom="http://maven.apache.org/POM/4.0.0">
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <parent>
     <artifactId>biojava</artifactId>
     <groupId>org.biojava</groupId>
-    <version>3.0-SNAPSHOT</version>
+    <version>3.0-alpha1</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.biojava</groupId>
   <artifactId>biojava3-core</artifactId>
-  <name>biojava3-core</name>
-  <version>3.0-SNAPSHOT</version>
-  <url>http://maven.apache.org</url>
-    <build>
+  <name>biojava3-core</name>  
+  <version>3.0-alpha1</version>
+  <distributionManagement>
+		<downloadUrl>http://www.biojava.org/download/maven/</downloadUrl>
+		<repository>
+			<uniqueVersion>false</uniqueVersion>
+			<id>biojava-maven-repo</id>
+			<name>BioJava Maven Repository</name>
+			<url>scp://portal.open-bio.org/home/websites/biojava.org/html/static/download/maven/</url>
+			<layout>default</layout>
+		</repository>
+	</distributionManagement>
+	
+  <url>http://www.biojava.org</url>
+  <organization>
+  	<name>BioJava</name>
+  	<url>http://www.biojava.org</url>
+  </organization>
+  <build>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -29,19 +45,6 @@
       <artifactId>junit</artifactId>
       <version>4.7</version>
       <scope>test</scope>
-    </dependency>
-    <dependency>
-    	<groupId>org.biojava</groupId>
-    	<artifactId>core</artifactId>
-    	<version>3.0-SNAPSHOT</version>
-    	<scope>compile</scope>
-    </dependency>
-    <dependency>
-    	<groupId>com.google.collections</groupId>
-    	<artifactId>google-collections</artifactId>
-    	<version>1.0</version>
-    	<type>jar</type>
-    	<scope>compile</scope>
     </dependency>
   </dependencies>
 </project>

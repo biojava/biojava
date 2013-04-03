@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.biojava.bio.structure.Atom;
+import org.biojava.bio.structure.TmpAtomCache;
 import org.biojava.bio.structure.align.util.AtomCache;
 
 import junit.framework.TestCase;
@@ -54,7 +55,7 @@ public class MultipleAlignmentTest extends TestCase {
 		try {
 			MultipleAlignment align = new MultipleAlignment(pdbIDs, residues);
 
-			AtomCache cache = new AtomCache("/tmp/", true);
+			AtomCache cache = TmpAtomCache.cache;
 			List<Atom[]> structures = new ArrayList<Atom[]>();
 			for(String pdb :pdbIDs) {
 				structures.add(cache.getAtoms(pdb));
@@ -83,7 +84,7 @@ public class MultipleAlignmentTest extends TestCase {
 		try {
 
 			//Atoms for 1nls
-			AtomCache cache = new AtomCache("/tmp/", true);
+			AtomCache cache = TmpAtomCache.cache;
 			Atom[] struct = cache.getAtoms("1nls");
 
 			//Some residues which should be found in 1nls, and their corresponding numbers

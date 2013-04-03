@@ -28,6 +28,7 @@ import java.lang.reflect.*;
 public class CliTools {
 	private CliTools() {
 	}
+	
 
 	/**
 	 * Configure a JavaBean based on a set of command line arguments.  
@@ -133,7 +134,7 @@ public class CliTools {
 						} catch (Exception ex) {
 							throw new ConfigurationException("Option " + arg + " requires an integer parameter");
 						}
-					} else if (propType == Double.TYPE) {
+					} else if (propType == Double.TYPE || propType == Double.class ) {
 						try {
 							propVal = new Double(args[++i]);
 						} catch (Exception ex) {
@@ -217,7 +218,7 @@ public class CliTools {
 							}
 						}
 					} else {
-						System.err.println("Unsupported optionType for " + arg);
+						System.err.println("Unsupported optionType for " + arg + " propType:" + propType);
 						System.exit(1);
 					}
 				}

@@ -25,10 +25,15 @@
 package demo;
 
 import org.biojava.bio.structure.Atom;
+import org.biojava.bio.structure.Chain;
+import org.biojava.bio.structure.GroupType;
+import org.biojava.bio.structure.HetatomImpl;
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.align.util.AtomCache;
+import org.biojava.bio.structure.io.FileParsingParameters;
 import org.biojava.bio.structure.io.PDBFileReader;
-import org.biojava.utils.io.InputStreamProvider;
+import org.biojava3.core.util.InputStreamProvider;
+
 
 public class DemoLoadStructure
 {
@@ -42,7 +47,7 @@ public class DemoLoadStructure
 
       demo.basicLoad();
 
-      demo.loadStructureFromCache();
+      //demo.loadStructureFromCache();
    }
 
    public void basicLoad(){
@@ -60,15 +65,26 @@ public class DemoLoadStructure
          // should a missing PDB id be fetched automatically from the FTP servers?
          reader.setAutoFetch(true);
 
+         
+         // configure the parameters of file parsing
+         
+         FileParsingParameters params = new FileParsingParameters();
+         
          // should the ATOM and SEQRES residues be aligned when creating the internal data model?
-         reader.setAlignSeqRes(false);
+         params.setAlignSeqRes(true);
 
          // should secondary structure get parsed from the file
-         reader.setParseSecStruc(false);
+         params.setParseSecStruc(false);
 
-         Structure structure = reader.getStructureById("4hhb");
-
+         reader.setFileParsingParameters(params);
+         
+         Structure structure = reader.getStructureById("193D");
+         
          System.out.println(structure);
+         
+         Chain c = structure.getChainByPDB("C");
+         
+
       } catch (Exception e){
          e.printStackTrace();
       }

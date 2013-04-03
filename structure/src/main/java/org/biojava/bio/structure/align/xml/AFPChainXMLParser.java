@@ -13,6 +13,7 @@ import org.biojava.bio.structure.Atom;
 import org.biojava.bio.structure.AtomImpl;
 import org.biojava.bio.structure.Chain;
 import org.biojava.bio.structure.Group;
+import org.biojava.bio.structure.ResidueNumber;
 import org.biojava.bio.structure.StructureException;
 import org.biojava.bio.structure.align.ce.CeCPMain;
 import org.biojava.bio.structure.align.model.AFP;
@@ -49,6 +50,21 @@ public class AFPChainXMLParser
 		return null;
 	}
 
+   /** returns true if the alignment XML contains an error message
+    * 
+    * @param xml
+    * @return
+    */
+   public static boolean isErrorXML(String xml){
+      
+      if ( xml.contains("error=\""))
+         return true;
+      
+      return false;
+         
+      
+   }
+   
 	/** Takes an XML representation of the alignment and flips the positions of name1 and name2
 	 * 
 	 * @param xml String representing the alignment
@@ -91,6 +107,7 @@ public class AFPChainXMLParser
 
 		int minLength = Math.min(ca1Length, ca2Length);
 		int[][][] optAln = new int[blockNum][2][minLength];
+				
 		int[][][] blockResList = afpChain.getBlockResList();
 		if ( blockResList == null){
 		   blockResList = new int[blockNum][2][minLength];
@@ -98,9 +115,14 @@ public class AFPChainXMLParser
 		int[] optLen = afpChain.getOptLen();
 
 		String[][][] pdbAln = afpChain.getPdbAln();
-		
-		int[] verifiedOptLen =  afpChain.getOptLen().clone();
-		
+		int[] verifiedOptLen = null;
+		if ( optLen != null)
+		  verifiedOptLen = afpChain.getOptLen().clone();
+		else {
+			System.err.println("did not find optimal alignment, building up empty alignment.");
+			optLen = new int[1];
+			optLen[0] = 0;
+		}
 		for (int blockNr = 0 ; blockNr < blockNum ; blockNr++){
 
 			//System.out.println("got block " + blockNr + " size: " + optLen[blockNr]);
@@ -124,7 +146,7 @@ public class AFPChainXMLParser
 				
 				if ( pos1 == -1 || pos2 == -1 ){
 				   // this can happen when parsing old files that contained Calcium atoms...
-				   //System.err.println("AFPChainXMLParser: warning: pos1: " +pos1 + " " + pdbResnum1 + " pos2: " + pos2 + " " + pdbResnum2 +  " should never be -1. Probably parsing an.");
+				   System.err.println("AFPChainXMLParser: warning: pos1: " +pos1 + " " + pdbResnum1 + " pos2: " + pos2 + " " + pdbResnum2 +  " should never be -1. Probably parsing an.");
 				   verifiedOptLen[blockNr]-- ;
 				   continue;
 				}
@@ -338,7 +360,7 @@ public class AFPChainXMLParser
 				String pdbres2 = atts.getNamedItem("pdbres2").getTextContent();
 				String chain2 = atts.getNamedItem("chain2").getTextContent();
 
-				//System.out.println(blockNr + " " + eqrNr + " " + chain1+" " + pdbres1);
+				//System.out.println(blockNr + " " + eqrNr + " " + chain1+" " + pdbres1 + ":" + chain2 + " " + pdbres2);
 
 				pdbAln[blockNr][0][eqrNr] = chain1+":"+pdbres1;
 				pdbAln[blockNr][1][eqrNr] = chain2+":"+pdbres2;
@@ -423,13 +445,17 @@ public class AFPChainXMLParser
 	 * @return
 	 */
 	private static int getPositionForPDBresunm(String pdbresnum, String chainId , Atom[] atoms){
-
+		ResidueNumber residueNumber =  ResidueNumber.fromString(pdbresnum);
+		residueNumber.setChainId(chainId);
+		
 		for ( int i =0; i< atoms.length ;i++){
-			Group g = atoms[i].getParent();
-			//System.out.println(g + " ? " + pdbresnum);
-			if ( g.getPDBCode().equals(pdbresnum)){
-				Chain c = g.getParent();
-				if ( c.getName().equals(chainId)){
+			Group g = atoms[i].getGroup();
+			
+			//System.out.println(g.getResidueNumber() + "< ? >" + residueNumber +"<");
+			if ( g.getResidueNumber().equals(residueNumber)){
+				//System.out.println(g + " == " + residueNumber );
+				Chain c = g.getChain();
+				if ( c.getChainID().equals(chainId)){
 					return i;
 				}
 			}

@@ -1,11 +1,11 @@
 package org.biojava.bio.structure.align.util;
 
-import org.biojava.utils.io.SoftHashMap;
+import org.biojava3.core.util.SoftHashMap;
 
 
-public class CacheFactory {
+public class CacheFactory  {
 
-	private static SoftHashMap cache  = new SoftHashMap();
+	private static SoftHashMap  cache  = new SoftHashMap ();
 	
 	// no public constructor;
 	private CacheFactory(){

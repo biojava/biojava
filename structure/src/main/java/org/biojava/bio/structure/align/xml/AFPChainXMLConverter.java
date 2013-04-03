@@ -8,7 +8,8 @@ import org.biojava.bio.structure.Atom;
 import org.biojava.bio.structure.StructureException;
 import org.biojava.bio.structure.align.model.AFPChain;
 import org.biojava.bio.structure.jama.Matrix;
-import org.biojava.utils.xml.PrettyXMLWriter;
+import org.biojava3.core.util.PrettyXMLWriter;
+
 
 
 public class AFPChainXMLConverter {
@@ -51,9 +52,10 @@ public class AFPChainXMLConverter {
 
 		// get the alignment blocks
 		int blockNum = afpChain.getBlockNum();
-
+		int[] optLen       = afpChain.getOptLen();
+		int[] blockSize    = afpChain.getBlockSize();
 		for(int bk = 0; bk < blockNum; bk ++) {
-
+						
 			xml.openTag("block");
 
 			printXMLBlockHeader(xml,afpChain, bk);
@@ -119,16 +121,14 @@ public class AFPChainXMLConverter {
 	}
 
 
-	private static void printXMLEQRInferPositions(PrettyXMLWriter xml,			
+	public static void printXMLEQRInferPositions(PrettyXMLWriter xml,			
 			AFPChain afpChain, int bk, Atom[] ca1, Atom[] ca2)  throws IOException{
 		
 		int[] optLen       = afpChain.getOptLen();
 		
 		if ( optLen == null)
 			return;
-		
-		
-		
+				
 		int[][][] optAln   = afpChain.getOptAln();
 		
 		
@@ -137,17 +137,17 @@ public class AFPChainXMLConverter {
 			int pos2 = optAln[bk][1][pos];
 			xml.openTag("eqr");
 			xml.attribute("eqrNr",pos+"");
-			xml.attribute("pdbres1",ca1[pos1].getParent().getPDBCode());
-			xml.attribute("chain1", ca1[pos1].getParent().getParent().getName());
-			xml.attribute("pdbres2",ca2[pos2].getParent().getPDBCode());
-			xml.attribute("chain2", ca2[pos2].getParent().getParent().getName());
+			xml.attribute("pdbres1",ca1[pos1].getGroup().getResidueNumber().toString());
+			xml.attribute("chain1", ca1[pos1].getGroup().getChain().getChainID());
+			xml.attribute("pdbres2",ca2[pos2].getGroup().getResidueNumber().toString());
+			xml.attribute("chain2", ca2[pos2].getGroup().getChain().getChainID());
 			
 			xml.closeTag("eqr");
-			/*System.out.println("aligned position: " + pos1  + ":" + pos2 + 
-			" pdbresnum " + ca1[pos1].getParent().getPDBCode() + " " +
-			ca1[pos1].getParent().getPDBName()+":" + 
-			ca2[pos2].getParent().getPDBCode() + " " + ca2[pos2].getParent().getPDBName());
-	 */
+			//System.out.println("aligned position: " + pos1  + ":" + pos2 + 
+			//" pdbresnum " + ca1[pos1].getGroup().getResidueNumber().toString() + " " +
+			//ca1[pos1].getParent().getPDBName()+":" + 
+			//ca2[pos2].getGroup().getResidueNumber().toString() + " " + ca2[pos2].getParent().getPDBName());
+	 
 		}	 
 
 	}
@@ -157,8 +157,12 @@ public class AFPChainXMLConverter {
 			AFPChain afpChain,int blockNr) throws IOException{
 
 		int bk = blockNr;
-		int[] blockGap     = afpChain.getBlockGap();
 		int[] blockSize    = afpChain.getBlockSize();
+		//if ( blockSize[bk] == 0) {
+		//	return;
+		//}
+		int[] blockGap     = afpChain.getBlockGap();
+		
 		double[]blockScore = afpChain.getBlockScore();
 		double[] blockRmsd = afpChain.getBlockRmsd();
 
@@ -173,17 +177,21 @@ public class AFPChainXMLConverter {
 
 	private static void printXMLMatrixShift(PrettyXMLWriter xml,
 			AFPChain afpChain, int blockNr)  throws IOException {
-		xml.openTag("matrix");
-		Matrix[] ms     = afpChain.getBlockRotationMatrix();
+	   
+	   Matrix[] ms     = afpChain.getBlockRotationMatrix();
+	   if ( ms == null || ms.length == 0)
+          return;
+	   
+	   Matrix matrix = ms[blockNr];	
+	   if ( matrix == null)
+		   return;
+	   xml.openTag("matrix");
 		
-		if ( ms == null || ms.length == 0)
-			return;
-		
-		Matrix matrix = ms[blockNr];
+			
 		for (int x=0;x<3;x++){
 			for (int y=0;y<3;y++){
 				String key = "mat"+(x+1)+(y+1);
-				xml.attribute(key,matrix.get(x,y)+"");
+				xml.attribute(key,String.format("%.6f",matrix.get(x,y)));
 			}
 		}
 		xml.closeTag("matrix");
@@ -191,9 +199,9 @@ public class AFPChainXMLConverter {
 		Atom[]   shifts = afpChain.getBlockShiftVector();
 		Atom shift = shifts[blockNr];
 		xml.openTag("shift");
-		xml.attribute("x",shift.getX()+"");
-		xml.attribute("y",shift.getY()+"");
-		xml.attribute("z",shift.getZ()+"");
+		xml.attribute("x", String.format("%.3f",shift.getX()));
+		xml.attribute("y", String.format("%.3f",shift.getY()));
+		xml.attribute("z", String.format("%.3f",shift.getZ()));
 		xml.closeTag("shift");
 
 	}
@@ -205,7 +213,7 @@ public class AFPChainXMLConverter {
 	}
 
 
-	private static void printXMLHeader(PrettyXMLWriter xml, AFPChain afpChain) throws IOException{
+	public static void printXMLHeader(PrettyXMLWriter xml, AFPChain afpChain) throws IOException{
 		xml.attribute("name1", afpChain.getName1());
 		xml.attribute("name2", afpChain.getName2());
 		xml.attribute("method", afpChain.getAlgorithmName());

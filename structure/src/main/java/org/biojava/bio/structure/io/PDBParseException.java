@@ -24,7 +24,7 @@ package org.biojava.bio.structure.io;
 /**
  * An exception during the parsing of a PDB file.
  *
- * @author Andreas Prlic, Thomas Down, Benjamin Schuster-B�ckler
+ * @author Andreas Prlic, Thomas Down, Benjamin Schuster-B&ouml;ckler
  */
 
 public class PDBParseException extends Exception{

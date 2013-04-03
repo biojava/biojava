@@ -45,7 +45,7 @@ import org.biojava.bio.symbol.Location;
  * @author Thomas Down
  * @author David Huen
  * @author Keith James
- * @author Kalle Näslund
+ * @author Kalle N&auml;slund
  */
 public class RulerRenderer implements SequenceRenderer
 {

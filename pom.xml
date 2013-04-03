@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.biojava</groupId>
 	<artifactId>biojava</artifactId>
 	<packaging>pom</packaging>
-	<version>3.0-SNAPSHOT</version>
+	<version>3.0-alpha1</version>
 	<name>biojava</name>
 	<description>BioJava is an open-source project dedicated to providing a Java framework for processing biological data. It provides analytical and statistical routines, parsers for common file formats and allows the manipulation of sequences and 3D structures. The goal of the biojava project is to facilitate rapid application development for bioinformatics.</description>
 	<url>http://www.biojava.org</url>
@@ -14,8 +13,9 @@
 		<url>http://www.biojava.org</url>
 	</organization>
 	<scm>
-		<connection>scm:svn:svn://code.open-bio.org/biojava/biojava-live/trunk</connection>
-		<url>http://code.open-bio.org/svnweb/index.cgi/biojava/browse/biojava-live/trunk</url>
+		<connection>scm:svn:svn://code.open-bio.org/biojava/biojava-live/tags/biojava-3.0-alpha1</connection>
+		<developerConnection>scm:svn:svn+ssh://dev.open-bio.org/home/svn-repositories/biojava/biojava-live/tags/biojava-3.0-alpha1</developerConnection>
+		<url>http://code.open-bio.org/svnweb/index.cgi/biojava/browse/biojava-live/tags/biojava-3.0-alpha1</url>
 	</scm>
 	<repositories>
 		<repository>
@@ -111,6 +111,18 @@
 					<artifactId>maven-jaxb2-plugin</artifactId>
 					<version>0.7.2</version>
 				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-release-plugin</artifactId>
+					<version>2.1</version>
+					<configuration>
+						<tagBase>svn+ssh://dev.open-bio.org/home/svn-repositories/biojava/biojava-live/tags</tagBase>
+						<remoteTagging>true</remoteTagging>
+						<preparationGoals>clean install</preparationGoals>
+						<autoVersionSubmodules>true</autoVersionSubmodules>
+					</configuration>
+
+				</plugin>
 			</plugins>
 		</pluginManagement>
 	</build>
@@ -181,11 +193,8 @@
 						<link>http://java.sun.com/j2ee/sdk_1.3/techdocs/api/</link>
 
 						<!-- Libraries -->
-						<!--
-							<link>http://jakarta.apache.org/commons/collections/apidocs</link>
-							<link>http://jakarta.apache.org/commons/logging/apidocs/</link>
-							<link>http://www.junit.org/junit/javadoc/</link>
-						-->
+						<!-- <link>http://jakarta.apache.org/commons/collections/apidocs</link> 
+							<link>http://jakarta.apache.org/commons/logging/apidocs/</link> <link>http://www.junit.org/junit/javadoc/</link> -->
 						<link>http://logging.apache.org/log4j/docs/api/</link>
 						<link>http://jakarta.apache.org/regexp/apidocs/</link>
 						<link>http://jakarta.apache.org/velocity/api/</link>
@@ -209,14 +218,16 @@
 					<title>BioJava SVN statistics</title>
 				</configuration>
 			</plugin>
+
+
 		</plugins>
 	</reporting>
+
 	<modules>
 		<module>core</module>
 		<module>alignment</module>
 		<module>blast</module>
 		<module>das</module>
-		<module>sequence</module>
 		<module>sequencing</module>
 		<module>phylo</module>
 		<module>biosql</module>
@@ -226,7 +237,9 @@
 		<module>biojava3-phylo</module>
 		<module>structure</module>
 		<module>structure-gui</module>
-		<module>motif</module>
 		<module>biojava3-genome</module>
+		<module>biojava3-protmod</module>
+		<module>biojava3-alignment</module>
+		<module>biojava3-ws</module>
 	</modules>
 </project>

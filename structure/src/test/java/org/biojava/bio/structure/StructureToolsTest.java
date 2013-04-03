@@ -25,6 +25,7 @@ package org.biojava.bio.structure;
 import java.io.IOException;
 import java.io.InputStream;
 
+import org.biojava.bio.structure.io.FileParsingParameters;
 import org.biojava.bio.structure.io.PDBFileParser;
 
 import junit.framework.TestCase;
@@ -40,7 +41,10 @@ public class StructureToolsTest extends TestCase {
 
 
         PDBFileParser pdbpars = new PDBFileParser();
-        pdbpars.setAlignSeqRes(false);
+        FileParsingParameters params = new FileParsingParameters();
+        params.setAlignSeqRes(false);
+        pdbpars.setFileParsingParameters(params);
+        
         try {
             structure = pdbpars.parsePDBFile(inStream) ;
         } catch (IOException e) {
@@ -60,7 +64,7 @@ public class StructureToolsTest extends TestCase {
 
     public void testGetNrAtoms(){
         int length = StructureTools.getNrAtoms(structure);
-        assertEquals("did not find the expected number of Atoms (1104), but got " + length,1104,length);
+        assertEquals("did not find the expected number of Atoms (1070), but got " + length,1070,length);
 
 
     }

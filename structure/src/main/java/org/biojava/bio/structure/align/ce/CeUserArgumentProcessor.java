@@ -49,6 +49,7 @@ public class CeUserArgumentProcessor extends AbstractUserArgumentProcessor {
 		if ( p == null)
 			p = new CeParameters();
 		
+		p.setMaxOptRMSD(params.getMaxOptRMSD());
 		p.setMaxGapSize(params.getMaxGapSize());
 		p.setShowAFPRanges(params.isShowAFPRanges());
 		p.setCheckCircular(params.isCheckCircular());

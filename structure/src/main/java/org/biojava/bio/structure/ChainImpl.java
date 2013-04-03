@@ -26,15 +26,22 @@ package org.biojava.bio.structure;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.biojava.bio.Annotation;
-import org.biojava.bio.seq.ProteinTools;
-import org.biojava.bio.seq.Sequence;
-import org.biojava.bio.symbol.IllegalSymbolException;
+
+import org.biojava.bio.structure.io.PDBFileReader;
+import org.biojava.bio.structure.io.mmcif.ChemCompGroupFactory;
+import org.biojava.bio.structure.io.mmcif.chem.PolymerType;
+import org.biojava.bio.structure.io.mmcif.chem.ResidueType;
+import org.biojava.bio.structure.io.mmcif.model.ChemComp;
+import org.biojava3.core.sequence.compound.AminoAcidCompound;
+import org.biojava3.core.sequence.template.Sequence;
+import org.biojava3.core.sequence.ProteinSequence;
+
 
 /**
  * A Chain in a PDB file. It contains several groups which can be of
@@ -47,25 +54,27 @@ import org.biojava.bio.symbol.IllegalSymbolException;
 public class ChainImpl implements Chain, Serializable {
 
 	/**
-    *
-    */
-   private static final long serialVersionUID = 1990171805277911840L;
+	 *
+	 */
+	private static final long serialVersionUID = 1990171805277911840L;
 
-   /** The default chain identifier is an empty space.
+	/** The default chain identifier is an empty space.
 	 *
 	 */
 	public static String DEFAULT_CHAIN_ID = "A";
 
+	static final List<String> waternames = Arrays.asList(new String[]{"HOH", "DOD",  "WAT"});
+	
 	String swissprot_id ;
 	String name ; // like in PDBfile
 	List <Group> groups;
-	Annotation annotation ;
+
 
 	List<Group> seqResGroups;
 	private Long id;
 	Compound mol;
 	Structure parent;
-	
+
 	Map<String, Integer> pdbResnumMap;
 
 	/**
@@ -76,7 +85,7 @@ public class ChainImpl implements Chain, Serializable {
 
 		name = DEFAULT_CHAIN_ID;
 		groups = new ArrayList<Group>() ;
-		annotation = Annotation.EMPTY_ANNOTATION;
+
 		seqResGroups = new ArrayList<Group>();
 		pdbResnumMap = new HashMap<String,Integer>();
 
@@ -123,7 +132,7 @@ public class ChainImpl implements Chain, Serializable {
 		Chain n = new ChainImpl();
 		// copy chain data:
 
-		n.setName( getName());
+		n.setChainID( getChainID());
 		n.setSwissprotId ( getSwissprotId());
 		for (int i=0;i<groups.size();i++){
 			Group g = (Group)groups.get(i);
@@ -134,19 +143,7 @@ public class ChainImpl implements Chain, Serializable {
 		return n ;
 	}
 
-	/** {@inheritDoc}
-	 *
-	 */
-	public void setAnnotation(Annotation anno){
-		annotation = anno;
-	}
 
-	/** {@inheritDoc}
-	 *
-	 */
-	public Annotation getAnnotation(){
-		return annotation;
-	}
 
 	/** {@inheritDoc}
 	 *
@@ -184,12 +181,16 @@ public class ChainImpl implements Chain, Serializable {
 	 */
 	public void addGroup(Group group) {
 
-		group.setParent(this);
+		group.setChain(this);
 
 		groups.add(group);
 
 		// store the position internally for quick access of this group
-		String pdbResnum = group.getPDBCode();
+		
+		String pdbResnum = null ;
+		ResidueNumber resNum = group.getResidueNumber();
+		if ( resNum != null)
+			pdbResnum = resNum.toString();
 		if ( pdbResnum != null) {
 			Integer pos = new Integer(groups.size()-1);
 			// ARGH sometimes numbering in PDB files is confusing.
@@ -289,7 +290,7 @@ public class ChainImpl implements Chain, Serializable {
 	 */
 	public void setAtomGroups(List<Group> groups){
 		for (Group g:groups){
-			g.setParent(this);
+			g.setChain(this);
 		}
 		this.groups = groups;
 	}
@@ -300,22 +301,36 @@ public class ChainImpl implements Chain, Serializable {
 	public Group[] getGroupsByPDB(String pdbresnumStart, String pdbresnumEnd, boolean ignoreMissing)
 	throws StructureException {
 
+		ResidueNumber start = ResidueNumber.fromString(pdbresnumStart);
+		ResidueNumber end = ResidueNumber.fromString(pdbresnumEnd);
+		
 		if (! ignoreMissing )
-			return getGroupsByPDB(pdbresnumStart, pdbresnumEnd);
+			return getGroupsByPDB(start, end);
+
+		return getGroupsByPDB(start, end, ignoreMissing);
+		
+	}
+
+	public Group[] getGroupsByPDB(ResidueNumber start, ResidueNumber end, boolean ignoreMissing)
+	throws StructureException {
+
+		if (! ignoreMissing )
+			return getGroupsByPDB(start, end);
+		
 
 		List<Group> retlst = new ArrayList<Group>();
 
+		String pdbresnumStart = start.toString();
+		String pdbresnumEnd   = end.toString();
+
+
 		int startPos = Integer.MIN_VALUE;
 		int endPos   = Integer.MAX_VALUE;
-		boolean doIntCheck = true;
-		try {
-			startPos = Integer.parseInt(pdbresnumStart);
-			endPos   = Integer.parseInt(pdbresnumEnd);
 
-		} catch (Exception e){
-			// has insertion code, in this case this will not work...
-			doIntCheck = false;
-		}
+
+		startPos = start.getSeqNum();
+		endPos   = end.getSeqNum();
+
 
 
 		boolean adding = false;
@@ -323,46 +338,41 @@ public class ChainImpl implements Chain, Serializable {
 
 		for (Group g: groups){
 
-			if ( g.getPDBCode().equals(pdbresnumStart)) {
+			if ( g.getResidueNumber().toString().equals(pdbresnumStart)) {
 				adding = true;
 				foundStart = true;
 			}
 
 			if ( ! (foundStart && adding) ) {
-				if ( doIntCheck){
-					try {
-						int pos = Integer.parseInt(g.getPDBCode());
 
-						if ( pos >= startPos) {
-							foundStart = true;
-							adding = true;
-						}
-					} catch (Exception e){
-						// insertion code catch. will not work with them...
-					}
+
+				int pos = g.getResidueNumber().getSeqNum();
+
+				if ( pos >= startPos) {
+					foundStart = true;
+					adding = true;
 				}
+
+
 			}
 
 			if ( adding)
 				retlst.add(g);
 
-			if ( g.getPDBCode().equals(pdbresnumEnd)) {
+			if ( g.getResidueNumber().toString().equals(pdbresnumEnd)) {
 				if ( ! adding)
 					throw new StructureException("did not find start PDB residue number " + pdbresnumStart + " in chain " + name);
 				adding = false;
 				break;
 			}
-			if (doIntCheck && adding){
+			if (adding){
 
-				try {
-					int pos = Integer.parseInt(g.getPDBCode());
-					if (pos >= endPos) {
-						adding = false;
-						break;
-					}
-				} catch (Exception e){
-					// insertion code problem
+				int pos = g.getResidueNumber().getSeqNum();
+				if (pos >= endPos) {
+					adding = false;
+					break;
 				}
+
 			}
 		}
 
@@ -377,14 +387,28 @@ public class ChainImpl implements Chain, Serializable {
 	}
 
 
+	/**
+	 * {@inheritDoc}
+	 *
+	 */
 	public Group getGroupByPDB(String pdbresnum) throws StructureException {
+		ResidueNumber resNum = ResidueNumber.fromString(pdbresnum);
+		return getGroupByPDB(resNum);
+
+	}
+
+	/**
+	 * {@inheritDoc}
+	 *
+	 */
+	public Group getGroupByPDB(ResidueNumber resNum) throws StructureException {
+		String pdbresnum = resNum.toString();
 		if ( pdbResnumMap.containsKey(pdbresnum)) {
 			Integer pos = (Integer) pdbResnumMap.get(pdbresnum);
 			return (Group) groups.get(pos.intValue());
 		} else {
 			throw new StructureException("unknown PDB residue number " + pdbresnum + " in chain " + name);
 		}
-
 	}
 
 	/**
@@ -393,6 +417,22 @@ public class ChainImpl implements Chain, Serializable {
 	 */
 	public Group[] getGroupsByPDB(String pdbresnumStart, String pdbresnumEnd)
 	throws StructureException {
+		ResidueNumber start = ResidueNumber.fromString(pdbresnumStart);
+		ResidueNumber end = ResidueNumber.fromString(pdbresnumEnd);
+
+		return getGroupsByPDB(start,end);
+	}
+
+
+	/**
+	 * {@inheritDoc}
+	 *
+	 */
+	public Group[] getGroupsByPDB(ResidueNumber start, ResidueNumber end)
+	throws StructureException {
+
+		String pdbresnumStart = start.toString();
+		String pdbresnumEnd   = end.toString();
 
 		List<Group> retlst = new ArrayList<Group>();
 
@@ -402,7 +442,7 @@ public class ChainImpl implements Chain, Serializable {
 
 		while ( iter.hasNext()){
 			Group g = (Group) iter.next();
-			if ( g.getPDBCode().equals(pdbresnumStart)) {
+			if ( g.getResidueNumber().toString().equals(pdbresnumStart)) {
 				adding = true;
 				foundStart = true;
 			}
@@ -410,7 +450,7 @@ public class ChainImpl implements Chain, Serializable {
 			if ( adding)
 				retlst.add(g);
 
-			if ( g.getPDBCode().equals(pdbresnumEnd)) {
+			if ( g.getResidueNumber().toString().equals(pdbresnumEnd)) {
 				if ( ! adding)
 					throw new StructureException("did not find start PDB residue number " + pdbresnumStart + " in chain " + name);
 				adding = false;
@@ -451,19 +491,29 @@ public class ChainImpl implements Chain, Serializable {
 		return seqResGroups.size();
 	}
 
+
+
+	public void   setName(String nam) { setChainID(nam); }
+
+
+	public String getName()           {	return getChainID();  }
+
 	/** get and set the name of this chain (Chain id in PDB file ).
 	 * @param nam a String specifying the name value
-	 * @see #getName
+	 * @see #getChainID()
 	 *
 	 */
 
-	public void   setName(String nam) { name = nam;   }
+	public void   setChainID(String nam) { name = nam;   }
+
+
 
 	/** get and set the name of this chain (Chain id in PDB file ).
 	 * @return a String representing the name value
 	 * @see #setName
 	 */
-	public String getName()           {	return name;  }
+	public String getChainID()           {	return name;  }
+
 
 
 	/** String representation.
@@ -492,23 +542,28 @@ public class ChainImpl implements Chain, Serializable {
 	}
 
 	/** Convert the SEQRES groups of a Chain to a Biojava Sequence object.
-     *
-     * @return the SEQRES groups of the Chain as a Sequence object.
-     * @throws IllegalSymbolException
-     */
-    public Sequence getBJSequence() throws IllegalSymbolException {
+	 *
+	 * @return the SEQRES groups of the Chain as a Sequence object.
+	 * @throws IllegalSymbolException
+	 */
+	public Sequence<?> getBJSequence()  {
 
-    	//List<Group> groups = c.getSeqResGroups();
-    	String seq = getSeqResSequence();
+		//List<Group> groups = c.getSeqResGroups();
+		String seq = getSeqResSequence();
 
-    	String name = "";
-    	if ( this.getParent() != null )
-    		name = getParent().getPDBCode();
-    	name += "." + getName();
+		String name = "";
+		if ( this.getParent() != null )
+			name = getParent().getPDBCode();
+		name += "." + getName();
 
-    	return ProteinTools.createProteinSequence(seq, name );
+		Sequence<AminoAcidCompound> s = null;
 
-    }
+		s = new ProteinSequence(seq);
+
+		//TODO: return a DNA sequence if the content is DNA...
+		return s;
+
+	}
 
 
 
@@ -529,6 +584,29 @@ public class ChainImpl implements Chain, Serializable {
 	 */
 	public String getAtomSequence(){
 
+		String prop = System.getProperty(PDBFileReader.LOAD_CHEM_COMP_PROPERTY);
+
+		if ( prop != null && prop.equalsIgnoreCase("true")){
+
+
+			List<Group> groups = getAtomGroups();
+			StringBuffer sequence = new StringBuffer() ;
+
+			for ( Group g: groups){
+				ChemComp cc = g.getChemComp();
+
+				if ( PolymerType.PROTEIN_ONLY.contains(cc.getPolymerType()) ||
+						PolymerType.POLYNUCLEOTIDE_ONLY.contains(cc.getPolymerType())){
+					// an amino acid residue.. use for alignment
+					String oneLetter= ChemCompGroupFactory.getOneLetterCode(cc);
+					sequence.append(oneLetter);
+				}
+
+			}
+			return sequence.toString();
+		}
+
+		// not using ChemCOmp records...		
 		List<Group> aminos = getAtomGroups("amino");
 		StringBuffer sequence = new StringBuffer() ;
 		for ( int i=0 ; i< aminos.size(); i++){
@@ -544,6 +622,23 @@ public class ChainImpl implements Chain, Serializable {
 	 *
 	 */
 	public String getSeqResSequence(){
+
+		String prop = System.getProperty(PDBFileReader.LOAD_CHEM_COMP_PROPERTY);
+
+		if ( prop != null && prop.equalsIgnoreCase("true")){
+			StringBuffer str = new StringBuffer();
+			for (Group g : seqResGroups) {
+				ChemComp cc = g.getChemComp();
+
+				if ( PolymerType.PROTEIN_ONLY.contains(cc.getPolymerType()) ||
+						PolymerType.POLYNUCLEOTIDE_ONLY.contains(cc.getPolymerType())){
+					// an amino acid residue.. use for alignment
+					String oneLetter= ChemCompGroupFactory.getOneLetterCode(cc);
+					str.append(oneLetter);
+				}
+			}
+			return str.toString();
+		}
 
 		StringBuffer str = new StringBuffer();
 		for (Group group : seqResGroups) {
@@ -585,7 +680,7 @@ public class ChainImpl implements Chain, Serializable {
 	 */
 	public void setSeqResGroups(List<Group> groups){
 		for (Group g: groups){
-			g.setParent(this);
+			g.setChain(this);
 		}
 		this.seqResGroups = groups;
 	}
@@ -599,4 +694,43 @@ public class ChainImpl implements Chain, Serializable {
 		return groups.size();
 	}
 
+	/** {@inheritDoc}
+	 *
+	 */
+	public List<Group> getAtomLigands(){
+
+		return getLigands(getAtomGroups());
+
+	}
+
+	private List<Group> getLigands(List<Group> allGroups){
+		String prop = System.getProperty(PDBFileReader.LOAD_CHEM_COMP_PROPERTY);
+
+		if ( prop == null || ( ! prop.equalsIgnoreCase("true"))){
+			System.err.println("You did not specify PDBFileReader.setLoadChemCompInfo, need to fetch Chemical Components anyways.");
+		}
+
+
+		
+		List<Group> groups = new ArrayList<Group>();
+		for ( Group g: allGroups) {
+
+			ChemComp cc = g.getChemComp();
+
+
+
+			if ( ResidueType.lPeptideLinking.equals(cc.getResidueType()) ||
+					PolymerType.PROTEIN_ONLY.contains(cc.getPolymerType()) ||
+					PolymerType.POLYNUCLEOTIDE_ONLY.contains(cc.getPolymerType())
+			){
+				continue;
+			}
+			if ( ! waternames.contains(g.getPDBName())) {
+				//System.out.println("not a prot, nuc or solvent : " + g.getChemComp());
+				groups.add(g);
+			}
+		}
+		return groups;
+	}
 }
+

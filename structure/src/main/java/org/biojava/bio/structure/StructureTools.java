@@ -29,6 +29,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
+
 //import org.biojava.bio.seq.ProteinTools;
 //import org.biojava.bio.seq.io.SymbolTokenization;
 //import org.biojava.bio.symbol.Alphabet;
@@ -49,14 +50,14 @@ public class StructureTools {
 	 *
 	 */
 	public static final String caAtomName = " CA ";
-	
+
 	public static final String nAtomName = "N";
-	
+
 	public static final String oAtomName = "O";
 
 	public static final String cbAtomName = "CB";
 
-	
+
 	/** The names of the Atoms that form the backbone.
 	 *
 	 */
@@ -64,16 +65,21 @@ public class StructureTools {
 
 	public static final Character UNKNOWN_GROUP_LABEL = new Character('x');;
 
+
+	//private static final String insertionCodeRegExp = "([0-9]+)([a-zA-Z]*)";
+	//private static final Pattern insertionCodePattern = Pattern.compile(insertionCodeRegExp);
+
+
 	// there is a file format change in PDB 3.0 and nucleotides are being renamed
 	static private Map<String, Integer> nucleotides30 ;
 	static private Map<String, Integer> nucleotides23 ;
 
-        //amino acid 3 and 1 letter code definitions
-        private static final Map<String, Character> aminoAcids;
+	//amino acid 3 and 1 letter code definitions
+	private static final Map<String, Character> aminoAcids;
 
-//	// for conversion 3code 1code
-//	private static  SymbolTokenization threeLetter ;
-//	private static  SymbolTokenization oneLetter ;
+	//	// for conversion 3code 1code
+	//	private static  SymbolTokenization threeLetter ;
+	//	private static  SymbolTokenization oneLetter ;
 
 	public static Logger logger =  Logger.getLogger("org.biojava.bio.structure");
 
@@ -115,48 +121,48 @@ public class StructureTools {
 			nucleotides23.put(n,1);
 		}
 
-                aminoAcids = new HashMap<String, Character>();
-                aminoAcids.put("GLY", new Character('G'));
-                aminoAcids.put("ALA", new Character('A'));
-                aminoAcids.put("VAL", new Character('V'));
-                aminoAcids.put("LEU", new Character('L'));
-                aminoAcids.put("ILE", new Character('I'));
-                aminoAcids.put("PHE", new Character('F'));
-                aminoAcids.put("TYR", new Character('Y'));
-                aminoAcids.put("TRP", new Character('W'));
-                aminoAcids.put("PRO", new Character('P'));
-                aminoAcids.put("HIS", new Character('H'));
-                aminoAcids.put("LYS", new Character('K'));
-                aminoAcids.put("ARG", new Character('R'));
-                aminoAcids.put("SER", new Character('S'));
-                aminoAcids.put("THR", new Character('T'));
-                aminoAcids.put("GLU", new Character('E'));
-                aminoAcids.put("GLN", new Character('Q'));
-                aminoAcids.put("ASP", new Character('D'));
-                aminoAcids.put("ASN", new Character('N'));
-                aminoAcids.put("CYS", new Character('C'));
-                aminoAcids.put("MET", new Character('M'));
-                //MSE is only found as a molecular replacement for MET
-                aminoAcids.put("MSE", new Character('M'));
-                //'non-standard', genetically encoded
-                //http://www.chem.qmul.ac.uk/iubmb/newsletter/1999/item3.html
-                //IUBMB recommended name is 'SEC' but the wwPDB currently use 'CSE'
-                //likewise 'PYL' (IUBMB) and 'PYH' (PDB)
-                aminoAcids.put("CSE", new Character('U'));
-                aminoAcids.put("SEC", new Character('U'));
-                aminoAcids.put("PYH", new Character('O'));
-                aminoAcids.put("PYL", new Character('O'));
+		aminoAcids = new HashMap<String, Character>();
+		aminoAcids.put("GLY", new Character('G'));
+		aminoAcids.put("ALA", new Character('A'));
+		aminoAcids.put("VAL", new Character('V'));
+		aminoAcids.put("LEU", new Character('L'));
+		aminoAcids.put("ILE", new Character('I'));
+		aminoAcids.put("PHE", new Character('F'));
+		aminoAcids.put("TYR", new Character('Y'));
+		aminoAcids.put("TRP", new Character('W'));
+		aminoAcids.put("PRO", new Character('P'));
+		aminoAcids.put("HIS", new Character('H'));
+		aminoAcids.put("LYS", new Character('K'));
+		aminoAcids.put("ARG", new Character('R'));
+		aminoAcids.put("SER", new Character('S'));
+		aminoAcids.put("THR", new Character('T'));
+		aminoAcids.put("GLU", new Character('E'));
+		aminoAcids.put("GLN", new Character('Q'));
+		aminoAcids.put("ASP", new Character('D'));
+		aminoAcids.put("ASN", new Character('N'));
+		aminoAcids.put("CYS", new Character('C'));
+		aminoAcids.put("MET", new Character('M'));
+		//MSE is only found as a molecular replacement for MET
+		aminoAcids.put("MSE", new Character('M'));
+		//'non-standard', genetically encoded
+		//http://www.chem.qmul.ac.uk/iubmb/newsletter/1999/item3.html
+		//IUBMB recommended name is 'SEC' but the wwPDB currently use 'CSE'
+		//likewise 'PYL' (IUBMB) and 'PYH' (PDB)
+		aminoAcids.put("CSE", new Character('U'));
+		aminoAcids.put("SEC", new Character('U'));
+		aminoAcids.put("PYH", new Character('O'));
+		aminoAcids.put("PYL", new Character('O'));
 
-//		try {
-//			Alphabet alpha_prot = ProteinTools.getAlphabet();
-//			threeLetter = alpha_prot.getTokenization("name");
-//			oneLetter  = alpha_prot.getTokenization("token");
-//		} catch (Exception e) {
-//			// this should not happen.
-//			// only if BioJava has not been built correctly...
-//			logger.config(e.getMessage());
-//			e.printStackTrace() ;
-//		}
+		//		try {
+		//			Alphabet alpha_prot = ProteinTools.getAlphabet();
+		//			threeLetter = alpha_prot.getTokenization("name");
+		//			oneLetter  = alpha_prot.getTokenization("token");
+		//		} catch (Exception e) {
+		//			// this should not happen.
+		//			// only if BioJava has not been built correctly...
+		//			logger.config(e.getMessage());
+		//			e.printStackTrace() ;
+		//		}
 
 	}
 
@@ -312,7 +318,7 @@ public class StructureTools {
 		for(Atom a: ca){
 			apos++;
 			Group parentG = a.getParent();
-			Chain parentC = parentG.getParent();
+			Chain parentC = parentG.getChain();
 
 			Chain newChain = null;
 			for ( Chain c : model){
@@ -328,7 +334,7 @@ public class StructureTools {
 			}
 
 			Group parentN = (Group)parentG.clone();
-			
+
 			newCA[apos] = parentN.getAtom(" CA ");
 			newChain.addGroup(parentN);
 		}
@@ -342,13 +348,13 @@ public class StructureTools {
 	 */
 	public static Group[] cloneGroups(Atom[] ca) {
 		Group[] newGroup = new Group[ca.length]; 
-	
+
 		List<Chain> model = new ArrayList<Chain>();
 		int apos = -1;
 		for(Atom a: ca){
 			apos++;
 			Group parentG = a.getParent();
-			Chain parentC = parentG.getParent();
+			Chain parentC = parentG.getChain();
 
 			Chain newChain = null;
 			for ( Chain c : model){
@@ -397,21 +403,21 @@ public class StructureTools {
 	 *  @throws IllegalSymbolException
 	 */
 
-        public static final Character convert_3code_1code(String code3)
+	public static final Character convert_3code_1code(String code3)
 	throws UnknownPdbAminoAcidException {
-//	{
-//		Symbol sym   =  threeLetter.parseToken(code3) ;
-//		String code1 =  oneLetter.tokenizeSymbol(sym);
-//
-//		return new Character(code1.charAt(0)) ;
-            Character code1 = null;
-            code1 = aminoAcids.get(code3);
+		//	{
+		//		Symbol sym   =  threeLetter.parseToken(code3) ;
+		//		String code1 =  oneLetter.tokenizeSymbol(sym);
+		//
+		//		return new Character(code1.charAt(0)) ;
+		Character code1 = null;
+		code1 = aminoAcids.get(code3);
 
-            if (code1 == null) {
-                throw new UnknownPdbAminoAcidException(code3 + " not a standard amino acid");
-            } else {
-                return code1;
-            }
+		if (code1 == null) {
+			throw new UnknownPdbAminoAcidException(code3 + " not a standard amino acid");
+		} else {
+			return code1;
+		}
 
 	}
 
@@ -473,6 +479,7 @@ public class StructureTools {
 	 * @return Structure
 	 * @since 3.0
 	 */
+	@SuppressWarnings("deprecation")
 	public static final Structure getReducedStructure(Structure s, String chainId) throws StructureException{
 		// since we deal here with structure alignments,
 		// only use Model 1...
@@ -513,10 +520,11 @@ public class StructureTools {
 
 	/** Reduce a structure to provide a smaller representation . Only takes the first model of the structure. If chainNr >=0 only takes the chain at that position into account.	 * 
 	 * @param s
-	 * @param chainNr
+	 * @param chainNr can be -1 to request all chains of model 0, otherwise will only add chain at this position 
 	 * @return Structure object
 	 * @since 3.0
 	 */
+	@SuppressWarnings("deprecation")
 	public static final Structure getReducedStructure(Structure s, int chainNr) throws StructureException{
 		// since we deal here with structure alignments,
 		// only use Model 1...
@@ -525,7 +533,8 @@ public class StructureTools {
 		newS.setHeader(s.getHeader());
 		newS.setPDBCode(s.getPDBCode());
 		newS.setPDBHeader(s.getPDBHeader());
-
+		newS.setSSBonds(s.getSSBonds());
+		newS.setDBRefs(s.getDBRefs());
 		if ( chainNr < 0 ) {
 
 			// only get model 0
@@ -569,6 +578,7 @@ public class StructureTools {
 	 * @param ranges
 	 * @return a structure object
 	 */
+	@SuppressWarnings("deprecation")
 	public static final Structure getSubRanges(Structure s, String ranges ) 
 	throws StructureException
 	{
@@ -597,20 +607,30 @@ public class StructureTools {
 
 		for ( String r: rangS){
 			String[] coords = r.split(":");
-			if ( coords.length != 2){
+			if ( coords.length > 2){
 				throw new StructureException("wrong range specification, should be provided as chainID:pdbResnum1=pdbRensum2");
 			}
 
+
 			Chain chain = struc.getChainByPDB(coords[0]);
+			Group[] groups;
+			if  ( coords.length > 1){
+				// if length 1, only provided a Chain id...
 
-			String[] pdbRanges = coords[1].split("-");
-			if ( pdbRanges.length!= 2)
-				throw new StructureException("wrong range specification, should be provided as chainID:pdbResnum1=pdbRensum2");
-			String pdbresnumStart = pdbRanges[0].trim();
-			String pdbresnumEnd   = pdbRanges[1].trim();
 
-			Group[] groups = chain.getGroupsByPDB(pdbresnumStart, pdbresnumEnd);
+				String[] pdbRanges = coords[1].split("-");
+				if ( pdbRanges.length!= 2)
+					throw new StructureException("wrong range specification, should be provided as chainID:pdbResnum1=pdbRensum2");
+				String pdbresnumStart = pdbRanges[0].trim();
+				String pdbresnumEnd   = pdbRanges[1].trim();
 
+				groups = chain.getGroupsByPDB(pdbresnumStart, pdbresnumEnd);
+				
+			} else {
+				// only chain ID provided ... add the whole chain...
+				 groups = chain.getAtomGroups().toArray(new Group[chain.getAtomGroups().size()]);
+			}
+			
 			Chain c = null;
 			if ( prevChainId == null) {
 				// first chain...
@@ -667,5 +687,39 @@ public class StructureTools {
 		return buf.toString();
 	}
 
+	/** get a PDB residue number object for this group
+	 * 
+	 * @param g Group object
+	 * @return a ResidueNumber object
+	 * @deprecated replaced by  Group.getResidueNumber()
+	 */
+	public static final ResidueNumber getPDBResidueNumber(Group g){
+
+		return g.getResidueNumber();
+
+	}
 	
+	/** Get a group represented by a ResidueNumber.
+	 * 
+	 * @param struc a {@link Structure}
+	 * @param pdbResNum a {@link ResidueNumber}
+	 * @return a group in the structure that is represented by the pdbResNum. 
+	 * @throws StructureException if the group cannot be found.
+	 */
+	public static final Group getGroupByPDBResidueNumber(Structure struc, 
+			ResidueNumber pdbResNum) throws StructureException {
+		if (struc == null || pdbResNum==null) {
+			throw new IllegalArgumentException("Null argument(s).");
+		}
+		
+		Chain chain = struc.findChain(pdbResNum.getChainId());
+		
+		String numIns = "" + pdbResNum.getSeqNum();
+		if (pdbResNum.getInsCode() != null) {
+			numIns += pdbResNum.getInsCode();
+		}
+		
+		return chain.getGroupByPDB(numIns);
+	}
+
 }

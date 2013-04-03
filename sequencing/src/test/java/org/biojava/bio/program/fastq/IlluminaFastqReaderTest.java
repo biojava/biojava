@@ -33,7 +33,7 @@ public final class IlluminaFastqReaderTest
 {
 
     /** {@inheritDoc} */
-    protected Fastq createFastq()
+    public Fastq createFastq()
     {
         return new FastqBuilder()
             .withDescription("description")
@@ -44,13 +44,13 @@ public final class IlluminaFastqReaderTest
     }
 
     /** {@inheritDoc} */
-    protected FastqReader createFastqReader()
+    public FastqReader createFastqReader()
     {
         return new IlluminaFastqReader();
     }
 
     /** {@inheritDoc} */
-    protected FastqWriter createFastqWriter()
+    public FastqWriter createFastqWriter()
     {
         return new IlluminaFastqWriter();
     }

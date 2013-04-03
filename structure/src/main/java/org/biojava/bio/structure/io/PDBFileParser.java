@@ -34,13 +34,16 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
+import java.util.logging.Level;
 
 import java.util.logging.Logger;
 import org.biojava.bio.structure.AminoAcid;
 import org.biojava.bio.structure.AminoAcidImpl;
+import org.biojava.bio.structure.Atom;
 import org.biojava.bio.structure.AtomImpl;
 import org.biojava.bio.structure.Author;
 import org.biojava.bio.structure.Chain;
@@ -54,11 +57,14 @@ import org.biojava.bio.structure.Compound;
 import org.biojava.bio.structure.JournalArticle;
 import org.biojava.bio.structure.NucleotideImpl;
 import org.biojava.bio.structure.PDBHeader;
+import org.biojava.bio.structure.ResidueNumber;
 import org.biojava.bio.structure.SSBond;
+import org.biojava.bio.structure.Site;
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureException;
 import org.biojava.bio.structure.StructureImpl;
 import org.biojava.bio.structure.StructureTools;
+import org.biojava.bio.structure.io.mmcif.ChemCompGroupFactory;
 
 
 /**
@@ -67,14 +73,8 @@ import org.biojava.bio.structure.StructureTools;
  *
  * <h2>Parsing</h2>
  *
- * During the PDBfile parsing several Flags can be set:
- * <ul>
- * <li> {@link #setParseCAOnly(boolean)} - parse only the Atom records for C-alpha atoms</li>
- * <li> {@link #setParseSecStruc(boolean)} - a flag if the secondary structure information from the PDB file (author's assignment) should be parsed.
- *      If true the assignment can be accessed through {@link AminoAcid}.getSecStruc(); </li>
- * <li> {@link #setAlignSeqRes(boolean)} - should the AminoAcid sequences from the SEQRES
- *      and ATOM records of a PDB file be aligned? (default:yes)</li>
- * </ul>
+ * During the PDBfile parsing several Flags can be set. See the {@link #setFileParsingParameters(FileParsingParameters)} methods.
+ * 
  *
  * <p>
  * To provide excessive memory usage for large PDB files, there is the ATOM_CA_THRESHOLD.
@@ -125,6 +125,10 @@ public class PDBFileParser  {
 
 	private final boolean DEBUG = false;
 
+
+	// parsing options:
+
+
 	private Logger logger = Logger.getLogger(PDBFileParser.class.getName());
 
 	// required for parsing:
@@ -159,6 +163,9 @@ public class PDBFileParser  {
 	private List<String> sourceLines = new ArrayList<String>();
 	private List<String> journalLines = new ArrayList<String>();
 	private List<DBRef> dbrefs;
+	private Map<String, Site> siteMap = new LinkedHashMap<String, Site>();
+	private Map<String, List<ResidueNumber>> siteToResidueMap = new LinkedHashMap<String, List<ResidueNumber>>();
+
 
 	// for parsing COMPOUND and SOURCE Header lines
 	private int molTypeCounter = 1;
@@ -201,9 +208,7 @@ public class PDBFileParser  {
 					"EXPRESSION_SYSTEM_GENE:", "OTHER_DETAILS:"));
 
 
-	boolean parseSecStruc;
 
-	boolean alignSeqRes;
 
 	private String previousContinuationField = "";
 
@@ -242,13 +247,6 @@ public class PDBFileParser  {
 
 	private boolean atomOverflow;
 
-	/** Set the flag to only read in Ca atoms - this is useful for parsing large structures like 1htq.
-	 *
-	 */
-	public boolean parseCAOnly;
-
-	private boolean headerOnly;
-
 
 	static {
 
@@ -256,9 +254,10 @@ public class PDBFileParser  {
 
 	}
 
-
+	FileParsingParameters params;
 
 	public PDBFileParser() {
+		params = new FileParsingParameters();
 
 		structure     = null           ;
 		current_model = new ArrayList<Chain>();
@@ -268,75 +267,25 @@ public class PDBFileParser  {
 		pdbHeader 	  = new PDBHeader();
 		connects      = new ArrayList<Map<String,Integer>>() ;
 
-		parseSecStruc = false;
-		alignSeqRes   = true;
 
 		helixList     = new ArrayList<Map<String,String>>();
 		strandList    = new ArrayList<Map<String,String>>();
 		turnList      = new ArrayList<Map<String,String>>();
 		current_compound = new Compound();
 		dbrefs        = new ArrayList<DBRef>();
-
+		siteMap = null;
 		dateFormat = new SimpleDateFormat("dd-MMM-yy", java.util.Locale.ENGLISH);
 		atomCount = 0;
 		atomOverflow = false;
 
-		parseCAOnly = false;
-
-	}
-	/** the flag if only the C-alpha atoms of the structure should be parsed.
-	 *
-	 * @return the flag
-	 */
-	public boolean isParseCAOnly() {
-		return parseCAOnly;
-	}
-	/** the flag if only the C-alpha atoms of the structure should be parsed.
-	 *
-	 * @param parseCAOnly boolean flag to enable or disable C-alpha only parsing
-	 */
-	public void setParseCAOnly(boolean parseCAOnly) {
-		this.parseCAOnly = parseCAOnly;
-	}
 
 
-
-	/** Flag if the SEQRES amino acids should be aligned with the ATOM amino acids.
-	 *
-	 * @return flag if SEQRES - ATOM amino acids alignment is enabled
-	 */
-	public boolean isAlignSeqRes() {
-		return alignSeqRes;
-	}
-
-
-
-	/** define if the SEQRES in the structure should be aligned with the ATOM records
-	 * if yes, the AminoAcids in structure.getSeqRes will have the coordinates set.
-	 * @param alignSeqRes
-	 */
-	public void setAlignSeqRes(boolean alignSeqRes) {
-		this.alignSeqRes = alignSeqRes;
 	}
 
 
 
 
-	/** is secondary structure assignment being parsed from the file?
-	 * default is null
-	 * @return boolean if HELIX STRAND and TURN fields are being parsed
-	 */
-	public boolean isParseSecStruc() {
-		return parseSecStruc;
-	}
 
-	/** a flag to tell the parser to parse the Author's secondary structure assignment from the file
-	 * default is set to false, i.e. do NOT parse.
-	 * @param parseSecStruc if HELIX STRAND and TURN fields are being parsed
-	 */
-	public void setParseSecStruc(boolean parseSecStruc) {
-		this.parseSecStruc = parseSecStruc;
-	}
 
 	/** initialize the header. */
 	private Map<String,Object> init_header(){
@@ -372,8 +321,15 @@ public class PDBFileParser  {
 		return s ;
 	}
 
-	/** initiate new group, either Hetatom, Nucleotide, or AminoAcid */
-	private Group getNewGroup(String recordName,Character aminoCode1) {
+	/** initiate new resNum, either Hetatom, Nucleotide, or AminoAcid */
+	private Group getNewGroup(String recordName,Character aminoCode1, String aminoCode3) {
+
+		if ( params.isLoadChemCompInfo() ){
+			Group g =  ChemCompGroupFactory.getGroupFromChemCompDictionary(aminoCode3);
+			if ( g != null)
+				return g;
+		}
+
 
 		Group group;
 		if ( recordName.equals("ATOM") ) {
@@ -400,7 +356,7 @@ public class PDBFileParser  {
 				group = new HetatomImpl();
 			}
 		}
-		//System.out.println("new group type: "+ group.getType() );
+		//		System.out.println("new resNum type: "+ resNum.getType() );
 		return  group ;
 	}
 
@@ -828,7 +784,7 @@ public class PDBFileParser  {
 			lengthCheck = Integer.parseInt(newLength);
 		}
 
-		//String residueNumber = line.substring(22, 27).trim() ;
+		//String resNum = line.substring(22, 27).trim() ;
 		StringTokenizer subSequenceResidues = new StringTokenizer(subSequence);
 
 		Character aminoCode1 = null;
@@ -841,7 +797,7 @@ public class PDBFileParser  {
 		if ( current_chain == null) {
 
 			current_chain = new ChainImpl();
-			current_chain.setName(chainID);
+			current_chain.setChainID(chainID);
 
 		}
 
@@ -857,7 +813,7 @@ public class PDBFileParser  {
 			//System.out.println(line);
 			// b
 			//}
-			current_group = getNewGroup("ATOM", aminoCode1);
+			current_group = getNewGroup("ATOM", aminoCode1, threeLetter);
 
 			try {
 				current_group.setPDBName(threeLetter);
@@ -868,7 +824,7 @@ public class PDBFileParser  {
 				AminoAcid aa = (AminoAcid)current_group;
 				aa.setRecordType(AminoAcid.SEQRESRECORD);
 			}
-			// add the current group to the new chain.
+			// add the current resNum to the new chain.
 			current_chain.addGroup(current_group);
 
 		}
@@ -1442,6 +1398,10 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 		String l = line.substring(0,11).trim();
 		if (l.equals("REMARK   2"))pdb_REMARK_2_Handler(line);
 
+		if (line.startsWith("REMARK 800")) {
+			pdb_REMARK_800_Handler(line);
+		}
+
 	}
 
 
@@ -1492,7 +1452,10 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 	/**
 	 Handler for
 	 ATOM Record Format
+	 *
 	 <pre>
+         ATOM      1  N   ASP A  15     110.964  24.941  59.191  1.00 83.44           N
+	 *
 	 COLUMNS        DATA TYPE       FIELD         DEFINITION
 	 ---------------------------------------------------------------------------------
 	 1 -  6        Record name     "ATOM  "
@@ -1519,7 +1482,6 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 	private void  pdb_ATOM_Handler(String line)
 	throws PDBParseException
 	{
-
 		// build up chains first.
 		// headerOnly just goes down to chain resolution.
 
@@ -1529,13 +1491,13 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 
 		if (current_chain == null) {
 			current_chain = new ChainImpl();
-			current_chain.setName(chain_id);
+			current_chain.setChainID(chain_id);
 			startOfNewChain = true;
 			current_model.add(current_chain);		
 		}
 
 
-		if ( ! chain_id.equals(current_chain.getName()) ) {
+		if ( ! chain_id.equals(current_chain.getChainID()) ) {
 
 			startOfNewChain = true;
 
@@ -1544,10 +1506,10 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 
 			// see if old chain is known ...
 			Chain testchain ;
-			testchain = isKnownChain(current_chain.getName(),current_model);
+			testchain = isKnownChain(current_chain.getChainID(),current_model);
 
 			//System.out.println("trying to re-using known chain " + current_chain.getName() + " " + chain_id);		
-			if ( testchain != null && testchain.getName().equals(chain_id)){
+			if ( testchain != null && testchain.getChainID().equals(chain_id)){
 				//System.out.println("re-using known chain " + current_chain.getName() + " " + chain_id);				
 
 			} else {
@@ -1559,7 +1521,7 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 				//System.out.println("unknown chain. creating new chain.");
 
 				current_chain = new ChainImpl();
-				current_chain.setName(chain_id);
+				current_chain.setChainID(chain_id);
 
 			}   else {
 				current_chain = testchain;
@@ -1574,8 +1536,21 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 		// process group data:
 		// join residue numbers and insertion codes together
 		String recordName     = line.substring (0, 6).trim ();
-		String residueNumber  = line.substring(22,27).trim();
+		//String pdbCode = line.substring(22,27).trim();
 		String groupCode3     = line.substring(17,20);
+		// pdbCode is the old way of doing things...it's a concatenation
+		//of resNum and iCode which are now defined explicitly
+		String resNum  = line.substring(22,26).trim();
+		Character iCode = line.substring(26,27).charAt(0);
+		if ( iCode == ' ')
+			iCode = null;
+		ResidueNumber residueNumber = new ResidueNumber(chain_id, Integer.valueOf(resNum), iCode);
+
+		//recordName      groupCode3
+		//|                |    resNum
+		//|                |    |   iCode
+		//|     |          | |  |   ||
+		//ATOM      1  N   ASP A  15     110.964  24.941  59.191  1.00 83.44           N
 
 		Character aminoCode1 = null;
 
@@ -1593,36 +1568,56 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 
 		if (current_group == null) {
 
-			current_group = getNewGroup(recordName,aminoCode1);
-			current_group.setPDBCode(residueNumber);
+			current_group = getNewGroup(recordName,aminoCode1,groupCode3);
+			//               current_group.setPDBCode(pdbCode);
 			current_group.setPDBName(groupCode3);
+			current_group.setResidueNumber(residueNumber);
+			//                        System.out.println("Made new group: " + groupCode3 + " " + resNum + " " + iCode);
+
 		}
 
 
 		if ( startOfNewChain) {
 			//System.out.println("end of chain: "+current_chain.getName()+" >"+chain_id+"<");
 
-			current_group = getNewGroup(recordName,aminoCode1);
-
-			current_group.setPDBCode(residueNumber);
-			current_group.setPDBName(groupCode3);			
+			current_group = getNewGroup(recordName,aminoCode1,groupCode3);
+			//current_group.setPDBCode(pdbCode);
+			current_group.setPDBName(groupCode3);
+			current_group.setResidueNumber(residueNumber);
+			//                        System.out.println("Made new start of chain group:  " + groupCode3 + " " + resNum + " " + iCode);
 		}
 
+
+		Character altLoc   = new Character(line.substring (16, 17).charAt(0));
+		Group altGroup = null;
+
+		//System.out.println(current_group + " " + residueNumber);
 
 		// check if residue number is the same ...
 		// insertion code is part of residue number
-		if ( ! residueNumber.equals(current_group.getPDBCode())) {
-			//System.out.println("end of residue: "+current_group.getPDBCode()+" "+residueNumber);
+		if ( ! residueNumber.equals(current_group.getResidueNumber())) {
+
 			current_chain.addGroup(current_group);
 
-			current_group = getNewGroup(recordName,aminoCode1);
-
-			current_group.setPDBCode(residueNumber);
+			current_group = getNewGroup(recordName,aminoCode1,groupCode3);
+			//current_group.setPDBCode(pdbCode);
 			current_group.setPDBName(groupCode3);
+			current_group.setResidueNumber(residueNumber);
+			//                        System.out.println("Made new group:  " + groupCode3 + " " + resNum + " " + iCode);
 
+		} else {
+			// same residueNumber, but altLocs...
+
+			// test altLoc
+			if ( ! altLoc.equals(' ')) {												
+				altGroup = getCorrectAltLocGroup( altLoc,recordName,aminoCode1,groupCode3);
+				//System.out.println("found altLoc! " + current_group + " " + altGroup);
+			}
 		}
 
-		if ( headerOnly)
+
+
+		if ( params.isHeaderOnly())
 			return;
 
 		atomCount++;
@@ -1647,21 +1642,7 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 			return;
 		}
 
-		//TODO: treat the following residues as amino acids?
-		/*
-		MSE Selenomethionine
-		CSE Selenocysteine
-		PTR Phosphotyrosine
-		SEP Phosphoserine
-		TPO Phosphothreonine
-		HYP 4-hydroxyproline
-		5HP Pyroglutamic acid; 5-hydroxyproline
-		PCA Pyroglutamic Acid
-		LYZ 5-hydroxylysine
-		GLX Glu or Gln
-		ASX Asp or Asn
-		GLA gamma-carboxy-glutamic acid
-		 */
+
 		//          1         2         3         4         5         6
 		//012345678901234567890123456789012345678901234567890123456789
 		//ATOM      1  N   MET     1      20.154  29.699   5.276   1.0
@@ -1673,7 +1654,7 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 		String fullname = line.substring (12, 16);
 
 		// check for CA only if requested
-		if ( parseCAOnly){
+		if ( params.isParseCAOnly()){
 			// yes , user wants to get CA only
 			// only parse CA atoms...
 			if (! fullname.equals(" CA ")){
@@ -1687,8 +1668,6 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 		int pdbnumber = Integer.parseInt (line.substring (6, 11).trim ());
 		AtomImpl atom = new AtomImpl() ;
 		atom.setPDBserial(pdbnumber) ;
-
-		Character altLoc   = new Character(line.substring (16, 17).charAt(0));
 
 		atom.setAltLoc(altLoc);
 		atom.setFullName(fullname) ;
@@ -1724,7 +1703,7 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 
 
 
-		
+
 		// Parse element from the element field. If this field is
 		// missing (i.e. misformatted PDB file), then parse the
 		// name from the atom name.
@@ -1747,22 +1726,82 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 				// unknown element...
 				elementSymbol = "R";
 			}
-				
+
 			try {
-			element = Element.valueOfIgnoreCase(elementSymbol);
+				element = Element.valueOfIgnoreCase(elementSymbol);
 			}  catch (IllegalArgumentException e){}
 		}
 		atom.setElement(element);
-		
-		
+
+
 		//see if chain_id is one of the previous chains ...
-		current_group.addAtom(atom);
+		if ( altGroup != null) {
+			altGroup.addAtom(atom);
+			altGroup = null;
+		}
+		else {
+			current_group.addAtom(atom);
+		}
 		//System.out.println(current_group);
 	}
 
 
+	private Group getCorrectAltLocGroup( Character altLoc,
+			String recordName, Character aminoCode1, String groupCode3) {
+
+		// see if we know this altLoc already;
+		List<Atom> atoms = current_group.getAtoms();
+		if ( atoms.size() > 0) {
+			Atom a1 = atoms.get(0);
+			// we are just adding atoms to the current group
+			// probably there is a second group following later...
+			if (a1.getAltLoc().equals(altLoc)) {
+
+				return current_group;
+			}
+		}
+
+		List<Group> altLocs = current_group.getAltLocs();
+		for ( Group altLocG : altLocs ){
+			atoms = altLocG.getAtoms();
+			if ( atoms.size() > 0) {
+				for ( Atom a1 : atoms) {
+					if (a1.getAltLoc().equals( altLoc)) {
+
+						return altLocG;
+					}
+				}
+			}
+		}
+
+		// no matching altLoc group found.
+		// build it up.
+
+		if ( groupCode3.equals(current_group.getPDBName())) {
+			if ( current_group.getAtoms().size() == 0)
+				return current_group;
+			//System.out.println("cloning current group");
+			Group altLocG = (Group) current_group.clone();
+			current_group.addAltLoc(altLocG);
+			return altLocG;	
+		}
+
+
+		Group altLocG = getNewGroup(recordName,aminoCode1,groupCode3);
+
+		try {
+			altLocG.setPDBName(groupCode3);
+		} catch (PDBParseException e) {
+			e.printStackTrace();
+		}
+		altLocG.setResidueNumber(current_group.getResidueNumber());
+		current_group.addAltLoc(altLocG);
+		return altLocG;
+	}
+
 	private void switchCAOnly(){
-		parseCAOnly = true;
+		params.setParseCAOnly(true);
+
 
 		current_model = CAConverter.getCAOnly(current_model);
 
@@ -1878,7 +1917,7 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 			}
 			//System.out.println("starting new model "+(structure.nrModels()+1));
 
-			Chain ch = isKnownChain(current_chain.getName(),current_model) ;
+			Chain ch = isKnownChain(current_chain.getChainID(),current_model) ;
 			if ( ch == null ) {
 				current_model.add(current_chain);
 			}
@@ -2001,6 +2040,180 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 
 	}
 
+	/**
+	 * Handler for the SITE records. <br>
+	 *
+	 * <pre>
+	 *
+	 * COLUMNS	DATA TYPE 		FIELD 		DEFINITION
+	 * ---------------------------------------------------------------------------------
+	 * 1 - 6	Record name 	"SITE "
+	 * 8 - 10 	Integer 		seqNum 		Sequence number.
+	 * 12 - 14 	LString(3)		siteID 		Site name.
+	 * 16 - 17 	Integer 		numRes 		Number of residues that compose the siteResidues.
+	 * 19 - 21 	Residue name	resName1	Residue name for first residue that
+	 * 										creates the siteResidues.
+	 * 23 		Character 		chainID1 	Chain identifier for first residue of siteResidues.
+	 * 24 - 27 	Integer 		seq1 		Residue sequence number for first residue
+	 * 										of the siteResidues.
+	 * 28 		AChar 			iCode1 		Insertion code for first residue of the siteResidues.
+	 *
+	 * example:
+	 *          1         2         3         4         5         6         7         8
+	 * 12345678901234567890123456789012345678901234567890123456789012345678901234567890
+	 * SITE     1 AC1  3 HIS A  94 HIS A   96  HIS A 119
+	 * SITE     1 AC2  5 ASN A  62 GLY A   63  HIS A  64  HOH A 328
+	 * SITE     2 AC2  5 HOH A 634
+	 * SITE     1 AC3  5 GLN A 136 GLN A  137  PRO A 138  GLU A 205
+	 * SITE     2 AC3  5 CYS A 206
+	 * SITE     1 AC4 11 HIS A  64 HIS A   94  HIS A  96  HIS A 119
+	 * SITE     2 AC4 11 LEU A 198 THR A  199  THR A 200  TRP A 209
+	 * SITE     3 AC4 11 HOH A 572 HOH A  582  HOH A 635
+	 * </pre>
+	 * @param line the SITE line record being currently read
+	 * @author Amr AL-Hossary
+	 * @author Jules Jacobsen
+	 */
+	private void pdb_SITE_Handler(String line){
+		boolean siteDebug = false;
+
+		//  make a map of: SiteId to List<ResidueNumber>
+		if (DEBUG || siteDebug) {
+			System.out.println("Site Line:"+line);
+		}
+
+		String siteID = line.substring(11, 14);
+		//fetch the siteResidues from the map
+		List<ResidueNumber> siteResidues = siteToResidueMap.get(siteID);
+
+		//if the siteResidues doesn't yet exist, make a new one.
+		if (siteResidues == null |! siteToResidueMap.containsKey(siteID)){
+			siteResidues = new ArrayList<ResidueNumber>();
+			siteToResidueMap.put(siteID, siteResidues);
+			if (DEBUG || siteDebug) {
+				System.out.println(String.format("New Site made: %s %s", siteID,  siteResidues));
+				System.out.println("Now made " + siteMap.size() + " sites");
+			}
+		}
+
+		if (DEBUG || siteDebug) {
+			System.out.println(String.format("SiteId: %s", siteID));
+		}
+
+		//line = 'SITE     1 AC1  6 ARG H 221A LYS H 224  HOH H 403  HOH H 460'
+		//line.substring(18) = 'ARG H 221A LYS H 224  HOH H 403  HOH H 460'
+		line = line.substring(18);
+		String groupString = null;
+		//groupString = 'ARG H 221A'
+		//keep iterating through chunks of 10 characters - these are the groups in the siteResidues
+		while (!(groupString = line.substring(0, 10)).equals("          ")) {
+			//groupstring: 'ARG H 221A'
+			if (DEBUG || siteDebug) {
+				System.out.println("groupString: '" + groupString + "'");
+			}
+			//set the residue name
+			//residueName = 'ARG'
+			String residueName = groupString.substring(0, 3);
+			Character aminoCode1 = StructureTools.get1LetterCode(residueName);
+			if (aminoCode1 != null) {
+				if (aminoCode1.equals(StructureTools.UNKNOWN_GROUP_LABEL)) {
+					aminoCode1 = null;
+				}
+			}
+
+			//this is already in the right format, so no need to fiddle with it...
+			//pdbCode = 'H 221A'
+			//                    String pdbCode = groupString.substring(4, 10).trim();
+			String chainId = groupString.substring(4, 5);
+			Integer resNum = Integer.valueOf(groupString.substring(5, 9).trim());
+			Character insCode = groupString.substring(9, 10).charAt(0);
+			//set insCode to null as a measure to prevent storing thousands of empty Strings
+			//- the empty value is returned using Group.getInsCode() 
+			//                    if (insCode.equals(" ")) {
+			//                        insCode = null;
+			//                    }
+			if (DEBUG || siteDebug) {
+				System.out.println(String.format("Site: %s: 'resName:%s resNum:%s insCode:%s'", siteID, residueName, resNum, insCode));
+			}
+			//make a new resNum with the data - this will be linked up with a site later
+			ResidueNumber residueNumber = new ResidueNumber();
+
+			if (DEBUG || siteDebug) {
+				System.out.println("pdbCode: '" + resNum + insCode + "'");
+			}
+			residueNumber.setChainId(chainId);
+			residueNumber.setSeqNum(resNum);
+			residueNumber.setInsCode(insCode);
+			//add the resNum to the groups
+			siteResidues.add(residueNumber);
+			if (DEBUG || siteDebug) {
+				System.out.println("Adding residueNumber " + residueNumber + " to site " + siteID);
+			}
+			line = line.substring(11);
+		}
+		if (DEBUG || siteDebug) {
+			System.out.println("Current SiteMap (contains "+ siteToResidueMap.keySet().size() + " sites):");
+			for (String key : siteToResidueMap.keySet()) {
+				System.out.println(key + " : " + siteToResidueMap.get(key));
+			}
+		}
+	}
+
+	//Site variable related to parsing the REMARK 800 records.
+	Site site;
+	private void pdb_REMARK_800_Handler(String line){
+		boolean remark800debug = false;
+		if (DEBUG || remark800debug) {
+			//                System.out.println("Handling line: " + line);
+		}
+		// 'REMARK 800 SITE_IDENTIFIER: CAT                                                 '
+		line = line.substring(11);
+		String[] fields = line.split(": ");
+
+		if (fields.length == 2) {
+			if (fields[0].equals("SITE_IDENTIFIER")) {
+				//                    remark800Counter++;
+				String siteID = fields[1].trim();
+				if (DEBUG || remark800debug) {
+					System.out.println("siteID: '" + siteID +"'");
+				}
+				//fetch the siteResidues from the map
+				site = siteMap.get(siteID);
+
+				//if the siteResidues doesn't yet exist, make a new one.
+				if (site == null || !siteID.equals(site.getSiteID())) {
+					site = new Site(siteID, new ArrayList<Group>());
+					siteMap.put(site.getSiteID(), site);
+					if (DEBUG || remark800debug) {
+						System.out.print("New Site made: " + site);
+						System.out.println("Now made " + siteMap.size() + " sites");
+					}
+				}
+			}
+			if (fields[0].equals("EVIDENCE_CODE")) {
+				//                    remark800Counter++;
+				String evCode = fields[1].trim();
+				if (DEBUG || remark800debug) {
+					System.out.println("evCode: '" + evCode +"'");
+				}
+				//fetch the siteResidues from the map
+				site.setEvCode(evCode);
+			}
+			if (fields[0].equals("SITE_DESCRIPTION")) {
+				//                    remark800Counter++;
+				String desc = fields[1].trim();
+				if (DEBUG || remark800debug) {
+					System.out.println("desc: '" + desc +"'");
+				}
+				//fetch the siteResidues from the map
+				site.setDescription(desc);
+				if (DEBUG || remark800debug) {
+					System.out.println("Finished making REMARK 800 for site " + site.getSiteID());
+					System.out.print(site.remark800toPDB());
+				}
+			}
+		}
+	}
 
 	private int intFromString(String intString){
 		int val = Integer.MIN_VALUE;
@@ -2024,7 +2237,7 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 		for (int i = 0; i< chains.size();i++){
 			Chain testchain =  chains.get(i);
 			//System.out.println("comparing chainID >"+chainID+"< against testchain " + i+" >" +testchain.getName()+"<");
-			if (chainID.equals(testchain.getName())) {
+			if (chainID.equals(testchain.getChainID())) {
 				//System.out.println("chain "+ chainID+" already known ...");
 				return testchain;
 			}
@@ -2084,7 +2297,7 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 	 * @throws IOException ...
 	 */
 
-	public Structure parsePDBFile(BufferedReader buf)
+	public  Structure parsePDBFile(BufferedReader buf)
 	throws IOException
 	{
 		// (re)set structure
@@ -2092,6 +2305,7 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 		structure     = new StructureImpl() ;
 		current_model = new ArrayList<Chain>();
 		seqResChains  = new ArrayList<Chain>();
+		siteMap = new LinkedHashMap<String, Site>();
 		current_chain = null           ;
 		current_group = null           ;
 		header        = init_header();
@@ -2197,9 +2411,11 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 						pdb_REVDAT_Handler(line);
 					else if (recordName.equals("DBREF"))
 						pdb_DBREF_Handler(line);
+					else if (recordName.equals("SITE"))
+						pdb_SITE_Handler(line);
 					else if (recordName.equals("SSBOND"))
 						pdb_SSBOND_Handler(line);
-					else if ( parseSecStruc) {
+					else if ( params.isParseSecStruc()) {
 						if ( recordName.equals("HELIX") ) pdb_HELIX_Handler (  line ) ;
 						else if (recordName.equals("SHEET")) pdb_SHEET_Handler(line ) ;
 						else if (recordName.equals("TURN")) pdb_TURN_Handler(   line ) ;
@@ -2223,10 +2439,10 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 		} catch (Exception e) {
 			System.err.println(line);
 			e.printStackTrace();
-			throw new IOException ("Error parsing PDB file");
+			throw new IOException ("Error parsing PDB file " + structure.getPDBCode());
 		}
 
-		if ( parseSecStruc)
+		if ( params.isParseSecStruc())
 			setSecStruc();
 
 
@@ -2298,7 +2514,7 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 		if ( current_chain != null ) {			
 			current_chain.addGroup(current_group);
 
-			if (isKnownChain(current_chain.getName(),current_model) == null) {
+			if (isKnownChain(current_chain.getChainID(),current_model) == null) {
 				current_model.add(current_chain);
 			}
 		}
@@ -2316,7 +2532,7 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 		structure.setCompounds(compounds);
 		structure.setDBRefs(dbrefs);
 
-		if ( alignSeqRes ){
+		if ( params.isAlignSeqRes() ){
 
 			SeqRes2AtomAligner aligner = new SeqRes2AtomAligner();
 			aligner.align(structure,seqResChains);
@@ -2324,7 +2540,8 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 
 
 		linkChains2Compound(structure);
-
+		//associate the temporary Groups in the siteMap to the ones
+		linkSitesToGroups(); // will work now that setSites is called
 	}
 
 
@@ -2365,12 +2582,12 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 				boolean inRange = false;
 				while (gi.hasNext()){
 					Group g = (Group)gi.next();
-					Chain c = g.getParent();
+					Chain c = g.getChain();
 
-					if (c.getName().equals(initChainId)){
+					if (c.getChainID().equals(initChainId)){
 
 						String pdbCode = initSeqNum + initICode;
-						if ( g.getPDBCode().equals(pdbCode)  ) {
+						if ( g.getResidueNumber().toString().equals(pdbCode)  ) {
 							inRange = true;
 						}
 					}
@@ -2384,9 +2601,9 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 						}
 
 					}
-					if ( c.getName().equals(endChainId)){
+					if ( c.getChainID().equals(endChainId)){
 						String pdbCode = endSeqNum + endICode;
-						if (pdbCode.equals(g.getPDBCode())){
+						if (pdbCode.equals(g.getResidueNumber().toString())){
 							inRange = false;
 							continue nextElement;
 						}
@@ -2436,7 +2653,7 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 					// this is an old style PDB file - add the ChainI
 					Chain ch = chains.get(0);
 					List <String> chainIds = new ArrayList<String>();
-					chainIds.add(ch.getName());
+					chainIds.add(ch.getChainID());
 					comp.setChainId(chainIds);
 					comp.addChain(ch);
 				}
@@ -2462,6 +2679,65 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 		}
 
 	}
+
+	/**
+	 * Links the Sites in the siteMap to the Groups in the Structure via the
+	 * siteToResidueMap ResidueNumber.
+	 * @author Jules Jacobsen
+	 * @return
+	 */
+	private void linkSitesToGroups() {
+
+		//link the map of siteIds : <ResidueNumber> with the sites by using ResidueNumber to get the correct group back.
+		//the return list
+		List<Site> sites = null;
+		//check that there are chains with which to associate the groups
+		if (structure.getChains().isEmpty()) {
+			sites = new ArrayList<Site>(siteMap.values());
+			logger.warning("No chains to link Site Groups with - Sites will not be present in the Structure");
+			return;
+		}
+
+		//check that the keys in the siteMap and SiteToResidueMap are equal 
+		if (! siteMap.keySet().equals(siteToResidueMap.keySet())) {
+			logger.warning("Not all sites have been properly described in the PDB " + pdbId + " header - Sites will not be present in the Structure");
+			return;
+		}
+
+		//so we have chains - associate the siteResidues-related groups with the ones
+		//already in in the chains
+		for (String key : siteMap.keySet()) {
+			Site currentSite = siteMap.get(key);
+			List<ResidueNumber> linkedGroups = siteToResidueMap.get(key);
+			for (ResidueNumber residueNumber : linkedGroups) {
+
+				String pdbCode = residueNumber.toString();
+				String chain = residueNumber.getChainId();
+				//                    System.out.println("chain: '" + chain + "'");
+				//                    String resNum = resNum.getSeqNum().toString();
+				//                    System.out.println("resNum: '" + resNum + "'");
+
+				Group linkedGroup = null;
+				try {
+					//TODO: implement findGroup(ResidueNumber resNum)
+					linkedGroup = structure.findGroup(chain, pdbCode);
+				} catch (StructureException ex) {
+					Logger.getLogger(PDBFileParser.class.getName()).log(Level.SEVERE, null, ex);
+				}
+
+				//                    System.out.println("Adding group: " + linkedGroup.getSeqNum() + " to site " + site.getSiteID());
+				currentSite.getGroups().add(linkedGroup);
+			}
+		}
+		sites = new ArrayList<Site>(siteMap.values());
+		structure.setSites(sites);
+		//            for (Site site : structure.getSites()) {
+		//                System.out.println(site);
+		//            }
+		//            System.out.println("Linked Site Groups with Chains");
+
+	}
+
 	private void buildjournalArticle() {
 		if (DEBUG) {
 			System.out.println("building new JournalArticle");
@@ -2755,13 +3031,15 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 		}
 		return authorList;
 	}
-	public void setHeaderOnly(boolean headerOnly) {
-		this.headerOnly = headerOnly;
+
+	public void setFileParsingParameters(FileParsingParameters params)
+	{
+		this.params= params;
 
 	}
 
-	public boolean isHeaderOnly(){
-		return headerOnly;
+	public FileParsingParameters getFileParsingParameters(){
+		return params;
 	}
 
 

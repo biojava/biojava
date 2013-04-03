@@ -83,6 +83,10 @@ public enum ResidueType implements Serializable {
          {
             return rt;
          }
+         if ( rt.chem_comp_type.startsWith(chem_comp_type))
+            return rt;
+         if ( chem_comp_type.startsWith(rt.chem_comp_type))
+            return rt;
       }
       return null;
    }

@@ -31,6 +31,9 @@ import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.OutputStreamWriter;
 import java.util.SortedSet;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Logger;
 import java.util.zip.GZIPOutputStream;
@@ -40,177 +43,235 @@ import org.biojava.bio.structure.Atom;
 import org.biojava.bio.structure.Structure;
 
 import org.biojava.bio.structure.StructureTools;
+import org.biojava.bio.structure.align.CallableStructureAlignment;
 import org.biojava.bio.structure.align.StructureAlignment;
 import org.biojava.bio.structure.align.ce.CeMain;
 import org.biojava.bio.structure.align.ce.CeSideChainMain;
 import org.biojava.bio.structure.align.client.FarmJobParameters;
 import org.biojava.bio.structure.align.client.JFatCatClient;
+import org.biojava.bio.structure.align.client.PdbPair;
 import org.biojava.bio.structure.align.model.AFPChain;
 import org.biojava.bio.structure.align.util.AtomCache;
+import org.biojava.bio.structure.align.util.SynchronizedOutFile;
 import org.biojava.bio.structure.align.util.UserConfiguration;
 import org.biojava.bio.structure.align.xml.AFPChainXMLConverter;
+import org.biojava3.core.util.ConcurrencyTools;
 
 public class AlignmentCalcDB implements AlignmentCalculationRunnable {
-   public static Logger logger =  Logger.getLogger("org.biojava");
+	public static Logger logger =  Logger.getLogger("org.biojava");
 
-   AtomicBoolean interrupted ;
-
-
-   String name1;
-
-   Structure structure1;
-
-   AlignmentGui parent;
-
-   UserConfiguration config;
-   SortedSet<String> representatives;
-
-   String outFile;
-   File resultList;
-
-   public AlignmentCalcDB(AlignmentGui parent, Structure s1,  String name1, UserConfiguration config,String outFile) {
-
-      this.parent= parent;
-
-      structure1 = s1;
-
-      this.name1 = name1;
-
-      this.config = config;
-      //this.representatives = representatives;
-      interrupted = new AtomicBoolean(false);
-      this.outFile = outFile;
-   }
-
-   public void run() {
-      System.out.println("running AlignmentCalcDB. Results will be in " + outFile);
-      AtomCache cache = new AtomCache(config);
-      StructureAlignment algorithm = parent.getStructureAlignment();	
-      String serverLocation = FarmJobParameters.DEFAULT_SERVER_URL;
-      if ( representatives == null){
-         SortedSet<String> repre = JFatCatClient.getRepresentatives(serverLocation,40);
-         System.out.println("got  " + repre.size() + " representatives for comparison");
-         representatives = repre;
-      }
-
-      String header = "# algorithm:" + algorithm.getAlgorithmName(); 
-
-      String legend = "# name1\tname2\tscore\tprobability\trmsd\tlen1\tlen2\tsim1\tsim2\t " ;
-      if (    algorithm.getAlgorithmName().equalsIgnoreCase(CeMain.algorithmName) || 
-            algorithm.getAlgorithmName().equalsIgnoreCase(CeSideChainMain.algorithmName)){
-         legend =  "# name1\tname2\tscore\tz-score\trmsd\tlen1\tlen2\tsim1\tsim2\t " ;
-      }
+	AtomicBoolean interrupted ;
 
 
-      File outFileF = new File(outFile);
-      if ( ! outFileF.isDirectory()){
-         System.err.println( outFileF.getAbsolutePath() + " is not a directory, can't create result files in there... ");
-         interrupt();
-         cleanup();
-      }
+	String name1;
 
-      resultList = new File(outFileF,"results_" + name1 + ".out");
-      BufferedWriter out;
-      try {
-         structure1 = cache.getStructure(name1);
-         out = new BufferedWriter(new FileWriter(resultList));
-         out.write(header);
-         out.write(AFPChain.newline);
-         out.write(legend);
-         out.write(AFPChain.newline);
-      } catch (Exception e){
-         System.err.println("Error while loading representative structure " + name1);
-         e.printStackTrace();
-         interrupt();
-         cleanup();
-         return;
-      }
+	Structure structure1;
 
-      for (String repre : representatives){
-         if ( interrupted.get()) {
-            System.err.println("User interrupted alignments.");
-            break;
-         }
-         try {
-            
-            Structure structure2 = cache.getStructure(repre);
+	AlignmentGui parent;
 
-            Atom[] ca1;
-            Atom[] ca2;
+	UserConfiguration config;
+	SortedSet<String> representatives;
 
-            ca1 = StructureTools.getAtomCAArray(structure1);
-            ca2 = StructureTools.getAtomCAArray(structure2);
+	String outFile;
+	File resultList;
+	int nrCPUs;
 
-            AFPChain afpChain;
+	public AlignmentCalcDB(AlignmentGui parent, Structure s1,  String name1, UserConfiguration config,String outFile) {
 
-            afpChain = algorithm.align(ca1, ca2);
-            afpChain.setName1(name1);
-            afpChain.setName2(repre);
+		this.parent= parent;
 
-            String result = afpChain.toDBSearchResult();
-            System.out.print(result);
+		structure1 = s1;
 
-            out.write(result);
+		this.name1 = name1;
 
-            String xml = AFPChainXMLConverter.toXML(afpChain, ca1, ca2);
-            writeXML(outFileF,name1, repre, xml);
+		this.config = config;
+		//this.representatives = representatives;
+		interrupted = new AtomicBoolean(false);
+		this.outFile = outFile;
+	}
 
-         } catch ( Exception e){
-            e.printStackTrace();
-         }
+	public void run() {
+		System.out.println("running AlignmentCalcDB. Results will be in " + outFile);
+		AtomCache cache = new AtomCache(config);
+		StructureAlignment algorithm = parent.getStructureAlignment();	
+		String serverLocation = FarmJobParameters.DEFAULT_SERVER_URL;
+		if ( representatives == null){
+			SortedSet<String> repre = JFatCatClient.getRepresentatives(serverLocation,40);
+			System.out.println("got  " + repre.size() + " representatives for comparison");
+			representatives = repre;
+		}
 
-      }
+		String header = "# algorithm:" + algorithm.getAlgorithmName(); 
 
-      try {
-         out.flush();
-         out.close();
-      } catch (Exception e) {
-         e.printStackTrace();
-      }
-      parent.notifyCalcFinished();
-      DBResultTable table = new DBResultTable();
-      table.show(resultList,config);
-   }
+		String legend = "# name1\tname2\tscore\tprobability\trmsd\tlen1\tlen2\tsim1\tsim2\t " ;
+		if (    algorithm.getAlgorithmName().equalsIgnoreCase(CeMain.algorithmName) || 
+				algorithm.getAlgorithmName().equalsIgnoreCase(CeSideChainMain.algorithmName)){
+			legend =  "# name1\tname2\tscore\tz-score\trmsd\tlen1\tlen2\tsim1\tsim2\t " ;
+		}
 
-   private void writeXML(File outFileF, String name1, String name2, String xml)
-   {
-      try{
-         // Create file 
-         File newF = new File(outFileF, "dbsearch_" +name1+"_" + name2+".xml.gz");
-                  
-         FileOutputStream fstream = new FileOutputStream(newF);
-        
-         GZIPOutputStream gz = new GZIPOutputStream(fstream);
-         OutputStreamWriter writer = new OutputStreamWriter(gz);
-         writer.write(xml);
-         writer.close();
-      }catch (Exception e){//Catch exception if any
-         System.err.println("Error: " + e.getMessage());
-      }
 
-   }
+		File outFileF = new File(outFile);
+		if ( ! outFileF.isDirectory()){
+			System.err.println( outFileF.getAbsolutePath() + " is not a directory, can't create result files in there... ");
+			interrupt();
+			cleanup();
+		}
 
-   /** stops what is currently happening and does not continue
-    * 
-    *
-    */
-   public void interrupt() {
-      interrupted.set(true);
-     
-   }
+		if ( name1 == null) 
+			name1 = "CUSTOM";
 
-   public void cleanup()
-   {
-      parent.notifyCalcFinished();
-     
-      parent=null;
-      // cleanup...
+		SynchronizedOutFile out ;
 
-      structure1 = null;
-      config = null;
-      
-      
-      
-   }
+		resultList = new File(outFileF,"results_" + name1 + ".out");
+
+
+
+		try {
+
+			out = new SynchronizedOutFile(resultList);
+
+			out.write(header);
+			out.write(AFPChain.newline);
+			out.write(legend);
+			out.write(AFPChain.newline);
+
+			if ( name1.equals("CUSTOM")) {
+
+				String config1 = "#param:file1=" + parent.getDBSearch().getPDBUploadPanel().getFilePath1();
+				out.write(config1);
+				out.write(AFPChain.newline);
+
+				String config2 = "#param:chain1=" + parent.getDBSearch().getPDBUploadPanel().getChain1();
+				out.write(config2);
+				out.write(AFPChain.newline);
+
+			}
+
+		} catch (Exception e){
+			System.err.println("Error while loading representative structure " + name1);
+			e.printStackTrace();
+			interrupt();
+			cleanup();
+			return;
+		}
+
+
+
+
+
+		ConcurrencyTools.setThreadPoolSize(nrCPUs);
+
+
+		Atom[] ca1 = StructureTools.getAtomCAArray(structure1);
+		for (String repre : representatives){
+
+			CallableStructureAlignment ali = new CallableStructureAlignment();
+
+			PdbPair pair = new PdbPair(name1, repre);
+			try {
+				ali.setCa1(ca1);
+			} catch (Exception e){
+				e.printStackTrace();
+				ConcurrencyTools.shutdown();
+				return;
+			}
+			ali.setAlgorithmName(algorithm.getAlgorithmName());
+			ali.setParameters(algorithm.getParameters());
+			ali.setPair(pair);
+			ali.setOutFile(out);			
+			ali.setOutputDir(outFileF);
+			ali.setCache(cache);
+
+			ConcurrencyTools.submit(ali);
+
+
+
+		}
+
+
+		ThreadPoolExecutor  pool = ConcurrencyTools.getThreadPool();
+		System.out.println(pool.getPoolSize());
+
+		long startTime = System.currentTimeMillis();
+
+		try {
+			while ( pool.getCompletedTaskCount() < representatives.size()-1  ) {
+				//long now = System.currentTimeMillis();
+				//System.out.println( pool.getCompletedTaskCount() + " " + (now-startTime)/1000 + " " + pool.getPoolSize() + " " + pool.getActiveCount()  + " " + pool.getTaskCount()  );
+//				if ((now-startTime)/1000 > 60) {
+//					
+//					interrupt();
+//					System.out.println("completed: " + pool.getCompletedTaskCount());
+//				}
+
+				if ( interrupted.get())
+					break;
+
+				Thread.sleep(1000);
+
+			}
+			out.close();
+		}
+		catch (Exception e){
+			e.printStackTrace();
+			interrupt();
+			cleanup();
+		}
+
+
+		long now = System.currentTimeMillis();
+		System.out.println("Calculation took : " + (now-startTime)/1000 + " sec.");
+		System.out.println( pool.getCompletedTaskCount() + " "  + pool.getPoolSize() + " " + pool.getActiveCount()  + " " + pool.getTaskCount()  );
+//		if ((now-startTime)/1000 > 30) {
+		
+
+		//		try {
+		//			out.flush();
+		//			out.close();
+		//		} catch (Exception e) {
+		//			e.printStackTrace();
+		//		}
+		parent.notifyCalcFinished();
+		DBResultTable table = new DBResultTable();
+		table.show(resultList,config);
+	}
+
+
+
+	/** stops what is currently happening and does not continue
+	 * 
+	 *
+	 */
+	public void interrupt() {
+		interrupted.set(true);
+		ExecutorService pool = ConcurrencyTools.getThreadPool();
+		pool.shutdownNow();
+
+	}
+
+	public void cleanup()
+	{
+		parent.notifyCalcFinished();
+
+		parent=null;
+		// cleanup...
+
+		structure1 = null;
+		config = null;
+
+	}
+
+	public void setNrCPUs(int useNrCPUs) {
+		nrCPUs = useNrCPUs;
+
+	}
+
+	public synchronized boolean isInterrupted() {
+		return interrupted.get();
+	}
+
+
+
+
 
 }

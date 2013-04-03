@@ -53,7 +53,7 @@ public class TestServers extends TestCase implements SequenceListener{
 		
 		
 		uniprot =  new Das1Source();
-		uniprot.setUrl("http://www.ebi.ac.uk/das-srv/uniprot/das/aristotle/");
+		uniprot.setUrl("http://www.ebi.ac.uk/das-srv/uniprot/das/uniprot/");
 		
 		interactionMPI = new InteractionDasSource();
 		interactionMPI.setUrl("http://dasmi.bioinf.mpi-inf.mpg.de/das/intact/");
@@ -69,7 +69,9 @@ public class TestServers extends TestCase implements SequenceListener{
 		// this is now run in the main thread, not parallell. not sure how to do this with Junit...
 		
 		thread.getSequence();
+		System.out.println(seq);
 		assertNotNull(seq);
+		
 		assertTrue(seq.length() > 100);
 		
 	}
@@ -94,6 +96,7 @@ public class TestServers extends TestCase implements SequenceListener{
 	}
 
 	public void newSequence(SequenceEvent e) {
+		
 		seq = e.getSequence();
 		
 	}

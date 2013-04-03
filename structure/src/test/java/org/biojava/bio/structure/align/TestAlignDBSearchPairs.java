@@ -55,7 +55,7 @@ public class TestAlignDBSearchPairs extends TestCase
          while ( (line = is.readLine()) != null){
             if ( line.startsWith("#"))
                continue;
-            System.out.println("aligning: " + line);
+           // System.out.println("aligning: " + line);
             String[] spl = line.split(" ");
             String pdb1 = spl[0];
             String pdb2 = spl[1];

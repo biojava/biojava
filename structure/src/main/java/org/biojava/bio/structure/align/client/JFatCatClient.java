@@ -43,7 +43,9 @@ public class JFatCatClient {
    private static final String serverPositionInQueue =  "queuePosition?method=%s&name1=%s&name2=%s";
 
    private static Random generator;
-
+   
+   private static String newline = System.getProperty("line.separator");
+   
    static {
       generator = new Random();
    }
@@ -183,7 +185,7 @@ public class JFatCatClient {
       String line = null;
       try {
          while ((line = reader.readLine()) != null) {
-            sb.append(line + "\n");
+            sb.append(line + newline);
          }
       } catch (IOException e) {
          //e.printStackTrace();

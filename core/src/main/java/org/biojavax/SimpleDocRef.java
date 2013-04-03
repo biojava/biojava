@@ -23,12 +23,10 @@ package org.biojavax;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.zip.Checksum;
-
 import org.biojava.utils.AbstractChangeable;
 import org.biojava.utils.ChangeEvent;
 import org.biojava.utils.ChangeSupport;
 import org.biojava.utils.ChangeVetoException;
-import org.biojavax.ontology.ComparableTerm;
 import org.biojavax.utils.CRC64Checksum;
 
 /**
@@ -76,7 +74,7 @@ public class SimpleDocRef extends AbstractChangeable implements DocRef {
      * location are null, but a null title is allowable.
      * @param authors The authors of the referenced document, as a string to be parsed
      * with {@link DocRefAuthor.Tools#parseAuthorString(String)}.
-     * @param location The location of the document, eg. the journal name and page range.
+     * @param location The location of the document, e.g. the journal name and page range.
      * @param title The title of the document.
      */
     public SimpleDocRef(String authors, String location, String title) {
@@ -88,11 +86,11 @@ public class SimpleDocRef extends AbstractChangeable implements DocRef {
      * location and title. Will throw exceptions if either authors or
      * location are null, but a null title is allowable.
      * @param authors The authors of the referenced document, as a set of DocRefAuthor instances.
-     * @param location The location of the document, eg. the journal name and page range.
+     * @param location The location of the document, e.g. the journal name and page range.
      * @param title The title of the document.
      */
     public SimpleDocRef(List authors, String location, String title) {
-        if (authors==null || authors.isEmpty()) throw new IllegalArgumentException("Authors cannot be null or empty");
+        if (authors==null) throw new IllegalArgumentException("Authors cannot be null");
         if (location==null) throw new IllegalArgumentException("Location cannot be null");
         this.crossref = null;
         this.authors = new ArrayList();

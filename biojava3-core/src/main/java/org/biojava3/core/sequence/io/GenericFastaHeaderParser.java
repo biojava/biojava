@@ -17,7 +17,7 @@ import org.biojava3.core.sequence.template.AbstractSequence.AnnotationType;
 
 /**
  * GenBank                           gi|gi-number|gb|accession|locus
- * EMBL Data Library                 gi|gi-number|emb|accession|locus
+ * ENA Data Library                 gi|gi-number|emb|accession|locus
  * DDBJ, DNA Database of Japan       gi|gi-number|dbj|accession|locus
  * NBRF PIR                          pir||entry
  * Protein Research Foundation       prf||name
@@ -92,7 +92,7 @@ public class GenericFastaHeaderParser<S extends AbstractSequence<C>, C extends C
                 if (data[2].equalsIgnoreCase("gb")) {
                     giSource = DataSource.GENBANK;
                 } else if (data[2].equalsIgnoreCase("emb")) {
-                    giSource = DataSource.EMBL;
+                    giSource = DataSource.ENA;
                 } else if (data[2].equalsIgnoreCase("dbj")) {
                     giSource = DataSource.DDBJ;
                 }
@@ -123,7 +123,7 @@ public class GenericFastaHeaderParser<S extends AbstractSequence<C>, C extends C
         } else if (data[0].equalsIgnoreCase("lcl")) {
             sequence.setAccession(new AccessionID(data[1], DataSource.LOCAL));
         } else {
-            sequence.setAccession(new AccessionID(header));
+            sequence.setAccession(new AccessionID(data[0])); // avoid the common problem of picking up all the comments original header in getOriginalHeader
         }
 
 
@@ -145,7 +145,7 @@ public class GenericFastaHeaderParser<S extends AbstractSequence<C>, C extends C
         header = "gi|gi-number|emb|accession|locus";
         instance.parseHeader(header, sequence);
         System.out.println("accession" + "=" + sequence.getAccession());
-        System.out.println(sequence.getAccession().getDataSource() + "=" + DataSource.EMBL);
+        System.out.println(sequence.getAccession().getDataSource() + "=" + DataSource.ENA);
 
         header = "gi|gi-number|dbj|accession|locus";
         instance.parseHeader(header, sequence);

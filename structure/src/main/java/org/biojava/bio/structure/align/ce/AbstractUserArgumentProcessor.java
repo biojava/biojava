@@ -31,7 +31,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
-
 import java.io.InputStreamReader;
 import java.io.PrintStream;
 
@@ -40,11 +39,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.biojava.bio.structure.Atom;
-import org.biojava.bio.structure.Group;
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureTools;
 import org.biojava.bio.structure.align.StructureAlignment;
 import org.biojava.bio.structure.align.model.AFPChain;
+import org.biojava.bio.structure.align.util.AFPAlignmentDisplay;
 import org.biojava.bio.structure.align.util.AtomCache;
 import org.biojava.bio.structure.align.util.CliTools;
 import org.biojava.bio.structure.align.util.ConfigurationException;
@@ -118,9 +117,9 @@ public abstract class AbstractUserArgumentProcessor implements UserArgumentProce
       if ( params.getPdbFilePath() != null){
          System.setProperty(PDB_DIR,params.getPdbFilePath());
       }
-      
-      if ( params.showMenu){
 
+      if ( params.isShowMenu()){
+         System.err.println("showing menu...");
          try {
             GuiWrapper.showAlignmentGUI();
          } catch (Exception e){
@@ -140,8 +139,8 @@ public abstract class AbstractUserArgumentProcessor implements UserArgumentProce
 
       String pdb1  = params.getPdb1();
       String file1 = params.getFile1();
-      
-     
+
+
       if (pdb1 != null || file1 != null){
          runPairwise();
       }
@@ -225,7 +224,7 @@ public abstract class AbstractUserArgumentProcessor implements UserArgumentProce
             StructureAlignment algorithm =  getAlgorithm();
             Object jparams = getParameters();
 
-            
+
             AFPChain afpChain;
 
             afpChain = algorithm.align(ca1, ca2, jparams);
@@ -235,6 +234,8 @@ public abstract class AbstractUserArgumentProcessor implements UserArgumentProce
             String result = getDbSearchResult(afpChain);
             out.write(result);
             System.out.print(result);
+
+            checkWriteFile(afpChain,ca1,ca2,true);
          }
 
          out.close();
@@ -289,7 +290,7 @@ public abstract class AbstractUserArgumentProcessor implements UserArgumentProce
          structure1 = getStructure(cache, name1, file1);
          structure2 = getStructure(cache, name2, file2);
       } else {
-         
+
          structure1 = getStructure(null, name1, file1);
          structure2 = getStructure(null, name2, file2);
       }      
@@ -315,24 +316,11 @@ public abstract class AbstractUserArgumentProcessor implements UserArgumentProce
 
       try {
 
-
          Atom[] ca1;
          Atom[] ca2;
 
-
-         List<Group> hetatms1 = new ArrayList<Group>();
-         List<Group> nucs1    = new ArrayList<Group>();
-         List<Group> hetatms2 = new ArrayList<Group>();
-         List<Group> nucs2    = new ArrayList<Group>();
-
          ca1 = StructureTools.getAtomCAArray(structure1);
          ca2 = StructureTools.getAtomCAArray(structure2);
-
-         if ( params.isShow3d()){
-            hetatms1 = structure1.getChain(0).getAtomGroups("hetatm");
-            nucs1    = structure1.getChain(0).getAtomGroups("nucleotide");
-
-         }
 
          StructureAlignment algorithm =  getAlgorithm();
          Object jparams = getParameters();
@@ -345,18 +333,18 @@ public abstract class AbstractUserArgumentProcessor implements UserArgumentProce
 
          if ( params.isShow3d()){
 
-            if ( (afpChain.getBlockNum() - 1) == 0){
-               hetatms2 = structure2.getChain(0).getAtomGroups("hetatm");
-               nucs2    = structure2.getChain(0).getAtomGroups("nucleotide");
-            }
-
             if (! GuiWrapper.isGuiModuleInstalled()) {
                System.err.println("The biojava-structure-gui module is not installed. Please install!");
             } else {
+
                try {
-                  Object jmol = GuiWrapper.display(afpChain,ca1,ca2,hetatms1, nucs1, hetatms2, nucs2);
+
+                  Object jmol = GuiWrapper.display(afpChain,ca1,ca2);
+
                   GuiWrapper.showAlignmentImage(afpChain, ca1,ca2,jmol);
+
                } catch (Exception e){
+
                   System.err.println(e.getMessage());
                   e.printStackTrace();
                }
@@ -369,30 +357,11 @@ public abstract class AbstractUserArgumentProcessor implements UserArgumentProce
             }
          } 
 
-         if ( params.getOutFile() != null ){
 
-            // write the XML to a file...
-            String fatcatXML = AFPChainXMLConverter.toXML(afpChain,ca1,ca2);
-            FileOutputStream out; // declare a file output object
-            PrintStream p; // declare a print stream object
+         checkWriteFile(afpChain,ca1, ca2, false);
 
-            try
-            {
-               // Create a new file output stream
-               out = new FileOutputStream(params.getOutFile());
 
-               // Connect print stream to the output stream
-               p = new PrintStream( out );
 
-               p.println (fatcatXML);
-
-               p.close();
-            }
-            catch (Exception e)
-            {
-               System.err.println ("Error writing to file " + params.getOutFile());
-            }
-         }
 
          if ( params.isPrintXML()){
             String fatcatXML = AFPChainXMLConverter.toXML(afpChain,ca1,ca2);
@@ -407,56 +376,148 @@ public abstract class AbstractUserArgumentProcessor implements UserArgumentProce
          }
 
 
+
       } catch (Exception e) {
          e.printStackTrace();
          return;
       }
    }
 
-   private Structure getStructure(AtomCache cache, String name1, String file) 
+   /** check if the result should be written to the local file system
+    * 
+    * @param params2
+    * @param afpChain
+    * @param ca1
+    * @param ca2
+    */
+   private void checkWriteFile( AFPChain afpChain, Atom[] ca1, Atom[] ca2, boolean dbsearch)
+   throws Exception
    {
+      String output = null;
+      if ( params.isOutputPDB()){
+         if (! GuiWrapper.isGuiModuleInstalled()) {
+            System.err.println("The biojava-structure-gui module is not installed. Please install!");
+            output = AFPChainXMLConverter.toXML(afpChain,ca1,ca2);
+         } else {
 
-      PDBFileReader reader = new PDBFileReader();
-      if ( file != null ){
-         try {
-            // check if it is a URL:
-            try {
-               URL url = new URL(file);
-               System.out.println(url);
-                              
-               return reader.getStructure(url);
-               
-            } catch ( Exception e){
-               System.err.println(e.getMessage());
-            }
-            File f= new File(file);
-            System.out.println("file from local " + f.getAbsolutePath());
-            return reader.getStructure(f);
-         } catch (Exception e){
-            System.err.println("general exception:" + e.getMessage());
-            System.err.println("unable to load structure from " + file);
-            return null;
+            Structure tmp = AFPAlignmentDisplay.createArtificalStructure(afpChain, ca1, ca2);
+            output = "TITLE  " + afpChain.getAlgorithmName() + " " + afpChain.getVersion()  + " ";
+            output += afpChain.getName1() + " vs. " + afpChain.getName2();
+            output += newline;
+            output += tmp.toPDB();
          }
+      } else  if ( params.getOutFile() != null) {
+         // output by default is XML
+         // write the XML to a file...
+         output = AFPChainXMLConverter.toXML(afpChain,ca1,ca2);
+
+      } else if ( params.getSaveOutputDir() != null){
+         output = AFPChainXMLConverter.toXML(afpChain,ca1,ca2);
       }
+
+      // no output requested.
+      if ( output == null)
+         return;
+
+      String fileName = null;
+
+      if ( dbsearch ){
+         if ( params.getSaveOutputDir() != null) {
+            fileName = params.getSaveOutputDir(); 
+            fileName += getAutoFileName(afpChain);
+         } else {
+            fileName += getAutoFileName(afpChain);
+         }
+      } else 
+
+         if ( params.getOutFile() != null) {
+            fileName = params.getOutFile();
+         }
+
+      if (fileName == null) {
+         System.err.println("Can't write outputfile. Either provide a filename using -outFile or set -autoOutputFile to true .");
+         return;
+      }
+
+      FileOutputStream out; // declare a file output object
+      PrintStream p; // declare a print stream object
+
+      try
+      {
+         // Create a new file output stream
+         out = new FileOutputStream(fileName);
+
+         // Connect print stream to the output stream
+         p = new PrintStream( out );
+
+         p.println (output);
+
+         p.close();
+      }
+      catch (Exception e)
+      {
+         System.err.println ("Error writing to file " + params.getOutFile());
+      }
+
+
+   }
+
+
+private String getAutoFileName(AFPChain afpChain){
+   String fileName =afpChain.getName1()+"_" + afpChain.getName2()+"_"+afpChain.getAlgorithmName();
+
+   if (params.isOutputPDB() )
+      fileName += ".pdb";
+   else
+      fileName += ".xml";
+   return fileName;
+}
+
+
+private Structure getStructure(AtomCache cache, String name1, String file) 
+{
+
+   PDBFileReader reader = new PDBFileReader();
+   if ( file != null ){
       try {
-         Structure s = cache.getStructure(name1);
-         return s;
-      } catch ( Exception e){
-         System.err.println(e.getMessage());
-         System.err.println("unable to load structure from dir: " + cache.getPath() + "/"+ name1);
+         // check if it is a URL:
+         try {
+            URL url = new URL(file);
+            System.out.println(url);
+
+            return reader.getStructure(url);
+
+         } catch ( Exception e){
+            System.err.println(e.getMessage());
+         }
+         File f= new File(file);
+         System.out.println("file from local " + f.getAbsolutePath());
+         return reader.getStructure(f);
+      } catch (Exception e){
+         System.err.println("general exception:" + e.getMessage());
+         System.err.println("unable to load structure from " + file);
          return null;
       }
-
+   }
+   try {
+      Structure s = cache.getStructure(name1);
+      return s;
+   } catch ( Exception e){
+      System.err.println(e.getMessage());
+      System.err.println("unable to load structure from dir: " + cache.getPath() + "/"+ name1);
+      return null;
    }
 
+}
 
-   public List<String> getMandatoryArgs() {
-      return mandatoryArgs;
-   }
 
-   public String getDbSearchResult(AFPChain afpChain){
-      return afpChain.toDBSearchResult();
-   }
+public List<String> getMandatoryArgs() {
+   return mandatoryArgs;
+}
+
+public String getDbSearchResult(AFPChain afpChain){
+   return afpChain.toDBSearchResult();
+}
 
 
 

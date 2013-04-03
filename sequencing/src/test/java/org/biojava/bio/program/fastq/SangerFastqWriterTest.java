@@ -30,13 +30,13 @@ public final class SangerFastqWriterTest
 {
 
     /** {@inheritDoc} */
-    protected FastqWriter createFastqWriter()
+    public FastqWriter createFastqWriter()
     {
         return new SangerFastqWriter();
     }
 
     /** {@inheritDoc} */
-    protected Fastq createFastq()
+    public Fastq createFastq()
     {
         return new FastqBuilder()
             .withDescription("description")

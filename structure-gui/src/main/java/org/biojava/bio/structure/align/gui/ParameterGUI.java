@@ -44,7 +44,7 @@ public class ParameterGUI extends JFrame{
       this.setTitle("Parameters for " + method);
 
 
-      //List<String> names = params.getUserConfigParameters();
+      List<String> names = params.getUserConfigParameterNames();
       List<String> keys  = params.getUserConfigParameters();
       List<Class> types  = params.getUserConfigTypes();
 
@@ -56,16 +56,16 @@ public class ParameterGUI extends JFrame{
          Class type = types.get(i);
 
          Box hBox = Box.createHorizontalBox();
-         String name = keys.get(i);
+         String name = names.get(i);
          JLabel label = new JLabel(name);
          String help = helps.get(i);
          label.setToolTipText(help);
-
-         Object value = getValue(name);
+         String key = keys.get(i);
+         Object value = getValue(key);
 
          String data = value.toString();
          Component field;
-         if ( name.equals(CeParameters.SCORING_STRATEGY) ){
+         if ( key.equals(CeParameters.SCORING_STRATEGY) ){
             String[] values = new String[]{"CA only","Sidechain orientation","Angle between sidechains", "CA distance+Angle between sidechains"};
             JComboBox jcbox = new JComboBox(values);
             Integer val = (Integer)value;
@@ -214,7 +214,7 @@ public class ParameterGUI extends JFrame{
          String key  = keys.get(i);
         // String name = keys.get(i);
          String value = null;
-
+         System.out.println(key);
          if ( key.equals(CeParameters.SCORING_STRATEGY)){
             JComboBox field = (JComboBox)  textFields.get(i);
             Integer sel = field.getSelectedIndex();
@@ -259,9 +259,10 @@ public class ParameterGUI extends JFrame{
             data = Float.parseFloat(value);
          } else if ( type == Boolean.class) {
             data = Boolean.parseBoolean(value);
-         } else if ( type == String[].class) {
+         } else if ( type == Short.class) {
+            data = Short.parseShort(value);
+         } else if ( type == String[].class) {         
             data = value.split(" ");
-
          }
 
          if (data == null){

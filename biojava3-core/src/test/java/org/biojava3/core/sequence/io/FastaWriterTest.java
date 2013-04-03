@@ -24,7 +24,7 @@ public class FastaWriterTest {
     FastaWriterHelper.writeSequence(baos, s);
 
     String actual = new String(baos.toByteArray());
-    String expected = ">"+id+"\n"+dnaLineOne+"\n"+dnaLineTwo+"\n";
+    String expected = String.format(">%s%n%s%n%s%n", id, dnaLineOne, dnaLineTwo);
 
     assertThat("Writer not as expected", actual, is(expected));
   }
@@ -40,7 +40,7 @@ public class FastaWriterTest {
     FastaWriterHelper.writeSequence(baos, s);
 
     String actual = new String(baos.toByteArray());
-    String expected = ">"+id+"\n"+dna+"\n";
+    String expected = String.format(">%s%n%s%n", id, dna);
 
     assertThat("Writer not as expected", actual, is(expected));
   }

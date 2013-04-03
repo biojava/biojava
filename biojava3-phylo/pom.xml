@@ -1,27 +1,73 @@
-<?xml version="1.0" encoding="UTF-8"?><project>
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <parent>
     <artifactId>biojava</artifactId>
     <groupId>org.biojava</groupId>
-    <version>3.0-SNAPSHOT</version>
+    <version>3.0-alpha1</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.biojava</groupId>
   <artifactId>biojava3-phylo</artifactId>
   <name>biojava3-phylo</name>
-  <version>3.0-SNAPSHOT</version>
+  <repositories>
+		<repository>
+			<id>biojava-maven-repo</id>
+			<name>BioJava repository</name>
+			<url>http://www.biojava.org/download/maven/</url>
+			<snapshots>
+				<enabled>true</enabled>
+				<updatePolicy>always</updatePolicy>
+			</snapshots>
+			<releases>
+				<enabled>true</enabled>
+				<updatePolicy>always</updatePolicy>
+			</releases>
+		</repository>
+	</repositories>
+  <distributionManagement>
+		<downloadUrl>http://www.biojava.org/download/maven/</downloadUrl>
+		<repository>
+			<uniqueVersion>false</uniqueVersion>
+			<id>biojava-maven-repo</id>
+			<name>BioJava Maven Repository</name>
+			<url>scp://portal.open-bio.org/home/websites/biojava.org/html/static/download/maven/</url>
+			<layout>default</layout>
+		</repository>
+	</distributionManagement>
+  <version>3.0-alpha1</version>
   <url>http://maven.apache.org</url>
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>2.0.2</version>
+        <configuration>
+          <source>1.6</source>
+          <target>1.6</target>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
   <dependencies>
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
-      <version>3.8.1</version>
+      <version>4.7</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.biojava</groupId>
       <artifactId>biojava3-core</artifactId>
-      <version>3.0-SNAPSHOT</version>
+      <version>3.0-alpha1</version>
       <scope>compile</scope>
+    </dependency>
+    <dependency>
+    	<groupId>org</groupId>
+    	<artifactId>forester</artifactId>
+    	<version>0.955</version>
+    	<type>jar</type>
+    	<scope>compile</scope>
     </dependency>
   </dependencies>
 </project>

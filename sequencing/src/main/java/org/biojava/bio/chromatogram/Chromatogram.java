@@ -37,12 +37,12 @@ public interface Chromatogram {
     /**
      * The sequence label for the list of called bases.
      */
-    public static Object DNA = "dna";
+    public static String DNA = "dna";
 
     /**
      * The sequence label for the trace offsets of the called bases.
      */
-    public static Object OFFSETS = "trace-offsets";
+    public static String OFFSETS = "trace-offsets";
     
     /** Gets the max intensity from all the traces.  Must be equivalent
      *  to the max of calling {@link #getMax(AtomicSymbol)} on each

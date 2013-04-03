@@ -46,6 +46,7 @@ import javax.swing.table.TableRowSorter;
 import org.biojava.bio.structure.Atom;
 import org.biojava.bio.structure.Group;
 import org.biojava.bio.structure.Structure;
+import org.biojava.bio.structure.StructureException;
 import org.biojava.bio.structure.StructureTools;
 import org.biojava.bio.structure.align.StructureAlignment;
 import org.biojava.bio.structure.align.StructureAlignmentFactory;
@@ -55,6 +56,9 @@ import org.biojava.bio.structure.align.model.AFPChain;
 import org.biojava.bio.structure.align.util.AtomCache;
 import org.biojava.bio.structure.align.util.UserConfiguration;
 import org.biojava.bio.structure.align.webstart.WebStartMain;
+import org.biojava.bio.structure.io.PDBFileParser;
+import org.biojava.bio.structure.io.PDBFileReader;
+import org.biojava.bio.structure.io.StructureIOFile;
 
 
 public class DBResultTable implements ActionListener{
@@ -73,6 +77,9 @@ public class DBResultTable implements ActionListener{
 	UserConfiguration config;
 	AtomCache cache ;
 
+	String userPath ;
+	String userChain;
+	
 	public static void main(String[] args){
 
 		String file = "/tmp/results_4hhb.A.out";
@@ -88,6 +95,8 @@ public class DBResultTable implements ActionListener{
 	public DBResultTable(){
 		oldName1 = "";
 		oldName2 = "";
+		userPath = null;
+		userChain = null;
 	}
 
 	public void show(File file, UserConfiguration config){
@@ -112,6 +121,16 @@ public class DBResultTable implements ActionListener{
 							 isCE = false;
 						}
 						
+					}
+					
+					else if ( str.startsWith("#param:file1=")){
+						String path = str.substring(13);
+						userPath = path.trim();
+					}
+					
+					else if ( str.startsWith("#param:chain1=")){
+						String chain = str.substring(14);
+						userChain = chain.trim();
 					}
 					continue;
 				}
@@ -230,8 +249,16 @@ public class DBResultTable implements ActionListener{
 			return;
 			}
 		}
+		
+		
 		try {
-			Structure structure1 = cache.getStructure(name1);
+			Structure structure1 = null;
+			if ( name1.equals("CUSTOM")) {
+				// user uploaded a custom PDB file...
+				structure1 = loadCustomStructure(userPath,userChain);
+			} else {						
+			 structure1 = cache.getStructure(name1);
+			}
 			Structure structure2 = cache.getStructure(name2);
 
 			Atom[] ca1;
@@ -260,6 +287,21 @@ public class DBResultTable implements ActionListener{
 		} catch (Exception e){
 			e.printStackTrace();
 		}
+	}
+
+	private Structure loadCustomStructure(String userPath2, String userChain2) throws StructureException{
+		StructureIOFile reader = new PDBFileReader();
+		Structure s = null;
+		try {
+			s = reader.getStructure(userPath2);
+		} catch (IOException  e){
+			
+			//e.printStackTrace();
+			throw new StructureException(e);
+		}
+		
+		
+		return StructureTools.getReducedStructure(s, userChain2);
 	}
 
 	public void actionPerformed(ActionEvent e) {

@@ -61,7 +61,7 @@ public class NucleotideImpl
 
     public String toString(){
 
-	String str = "PDB: "+ pdb_name + " " + pdb_code +  " "+ pdb_flag;
+	String str = "PDB: "+ pdb_name + " " + residueNumber +  " "+ pdb_flag;
 	if (pdb_flag) {
 	    str = str + "atoms: "+atoms.size();
 	}

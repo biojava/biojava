@@ -31,6 +31,7 @@ import org.biojava.bio.structure.align.fatcat.calc.FatCatParameters;
 import org.biojava.bio.structure.align.model.AFPChain;
 import org.biojava.bio.structure.align.xml.AFPChainXMLConverter;
 import org.biojava.bio.structure.align.xml.AFPChainXMLParser;
+import org.biojava.bio.structure.io.FileParsingParameters;
 import org.biojava.bio.structure.io.PDBFileReader;
 
 
@@ -48,8 +49,13 @@ public class MyTestHelper
       PDBFileReader pdbpars = new PDBFileReader();
       pdbpars.setPath(pdbPath);
       pdbpars.setAutoFetch(true);
-      //pdbpars.setParseCAOnly(true);
-
+      
+      FileParsingParameters params = new FileParsingParameters();
+      params.setAlignSeqRes(true);
+      params.setLoadChemCompInfo(false);
+      params.setParseCAOnly(true);
+      pdbpars.setFileParsingParameters(params);
+      
       Structure structure1;
       Structure structure2;
 
@@ -86,20 +92,20 @@ public class MyTestHelper
          Atom[] ca3 = new Atom[ca2.length];
          for (int i = 0 ; i < ca2.length; i++){
             Group g = (Group)ca2[i].getParent().clone();
-            g.setParent(ca2[i].getParent().getParent());
-            ca3[i] = g.getAtom("CA");
+            g.setChain(ca2[i].getParent().getChain());
+            ca3[i] = g.getAtom(StructureTools.caAtomName);
          }
 
          StructureAlignment fatCat;
 
-         FatCatParameters params = new FatCatParameters();
+         FatCatParameters fparams = new FatCatParameters();
 
          if ( doRigid)
             fatCat = new FatCatRigid();            
          else 
             fatCat = new FatCatFlexible();
 
-         afpChain = fatCat.align(ca1, ca2, params);
+         afpChain = fatCat.align(ca1, ca2, fparams);
 
          afpChain.setName1(pdb1+chain1);
          afpChain.setName2(pdb2+chain2);
@@ -119,6 +125,7 @@ public class MyTestHelper
 
          if ( ! result.equals(resultSerialized)) {
             System.out.println("not identical toFatCat()!!!");
+            System.out.println(xml);
             System.out.println(result);
             System.out.println("***");
             System.out.println(resultSerialized);
