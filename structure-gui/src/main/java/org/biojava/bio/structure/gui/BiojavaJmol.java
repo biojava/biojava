@@ -25,28 +25,30 @@
 package org.biojava.bio.structure.gui;
 
 
-import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Rectangle;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 
 import javax.swing.Box;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JMenuBar;
-import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.io.PDBFileReader;
+import org.biojava.bio.structure.align.gui.jmol.JmolPanel;
 import org.biojava.bio.structure.gui.BiojavaJmol;
-import org.biojava.bio.structure.gui.RasmolCommandListener;
+
 import org.biojava.bio.structure.gui.util.MenuCreator;
 
 
@@ -58,7 +60,7 @@ import org.biojava.bio.structure.gui.util.MenuCreator;
  *
  *
  */
-public class BiojavaJmol {
+public class BiojavaJmol  {
 
 	public static final String viewer       = "org.jmol.api.JmolSimpleViewer";
 	public static final String adapter      = "org.jmol.api.JmolAdapter";
@@ -68,14 +70,15 @@ public class BiojavaJmol {
 
 	JmolPanel jmolPanel;
 	JFrame frame ;
-	
-	
+
+
 	public static void main(String[] args){
 		try {
 
-			PDBFileReader pdbr = new PDBFileReader();   
-			//pdbr.setAutoFetch(true);
-			pdbr.setPath("/Users/andreas/WORK/PDB/");
+			PDBFileReader pdbr = new PDBFileReader();
+
+			pdbr.setAutoFetch(true);
+			pdbr.setPath("/tmp/");
 
 			String pdbCode = "5pti";
 
@@ -88,44 +91,36 @@ public class BiojavaJmol {
 			// send some RASMOL style commands to Jmol
 			jmolPanel.evalString("select * ; color chain;");
 			jmolPanel.evalString("select *; spacefill off; wireframe off; backbone 0.4;  ");
-
+			jmolPanel.evalString("save STATE state_1");
 		} catch (Exception e){
 			e.printStackTrace();
 		}
 	}
 
-	
-	
+
+
 
 	public BiojavaJmol() {		
-		
+
 		frame = new JFrame();
-		
+
 		JMenuBar menu = MenuCreator.initMenu();
-		
 
 		frame.setJMenuBar(menu);
-		
+
 		frame.addWindowListener( new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
 				frame.dispose();
 				//System.exit(0);
 			}
 		});
-		
+
 		Container contentPane = frame.getContentPane();
-				
+
 		Box vBox = Box.createVerticalBox();
 
-		try {
-			
-			jmolPanel = new JmolPanel();
-			
-		} catch (ClassNotFoundException e){
-			e.printStackTrace();
-			System.err.println("Could not find Jmol in classpath, please install first. http://www.jmol.org");
-			return;
-		}
+		jmolPanel = new JmolPanel();
+	
 		jmolPanel.setPreferredSize(new Dimension(500,500));
 		vBox.add(jmolPanel);
 
@@ -134,24 +129,87 @@ public class BiojavaJmol {
 
 		field.setMaximumSize(new Dimension(Short.MAX_VALUE,30));   
 		field.setText("enter RASMOL like command...");
-		RasmolCommandListener listener = new RasmolCommandListener(jmolPanel,field) ;
+		org.biojava.bio.structure.align.gui.jmol.RasmolCommandListener listener = new org.biojava.bio.structure.align.gui.jmol.RasmolCommandListener(jmolPanel,field) ;
 
 		field.addActionListener(listener);
 		field.addMouseListener(listener);
 		field.addKeyListener(listener);
 		vBox.add(field);
 
+
+		/// COMBO BOXES 
+		Box hBox1 = Box.createHorizontalBox();
+
+
+		String[] styles = new String[] { "Cartoon", "Backbone", "CPK", "Ball and Stick", "Ligands","Ligands and Pocket"};
+		JComboBox style = new JComboBox(styles);
+
+		hBox1.add(new JLabel("Style"));
+		hBox1.add(style);
+		vBox.add(hBox1);
+		
+
+		style.addActionListener(jmolPanel);
+
+		String[] colorModes = new String[] { "Secondary Structure", "By Chain", "Rainbow", "By Element", "By Amino Acid", "Hydrophobicity" };
+		JComboBox colors = new JComboBox(colorModes);
+		colors.addActionListener(jmolPanel);
+		hBox1.add(Box.createGlue());
+		hBox1.add(new JLabel("Color"));
+		hBox1.add(colors);
+		
+		// Check boxes
+		Box hBox2 = Box.createHorizontalBox();
+		
+		
+		JButton resetDisplay = new JButton("Reset Display");
+		
+		resetDisplay.addActionListener(new ActionListener() {
+			
+			public void actionPerformed(ActionEvent e) {
+				System.out.println("reset!!");
+				jmolPanel.executeCmd("restore STATE state_1");
+				
+			}
+		});
+		
+		hBox2.add(resetDisplay); hBox2.add(Box.createGlue());
+		
+		JCheckBox toggleSelection = new JCheckBox("Show Selection");
+		toggleSelection.addItemListener(
+			    new ItemListener() {
+					
+					public void itemStateChanged(ItemEvent e) {
+						  boolean showSelection = (e.getStateChange() == ItemEvent.SELECTED);
+						  
+						  if (showSelection){
+							  jmolPanel.executeCmd("set display selected");
+						  } else {
+							  jmolPanel.executeCmd("set display off");
+						  }
+						
+					}
+				}
+			);
+		
+		
+		
+		hBox2.add(toggleSelection);
+		
+		hBox2.add(Box.createGlue());
+		vBox.add(hBox2);
+		
+	
+		// finish up
 		contentPane.add(vBox);
-
-
-
 		frame.pack();
 		frame.setVisible(true); 
-
+	
+	
 	}
 
-	
-	
+
+
 	/** returns true if Jmol can be found in the classpath, otherwise false.
 	 * 
 	 * @return true/false depending if Jmol can be found
@@ -180,9 +238,9 @@ public class BiojavaJmol {
 			System.err.println("please install Jmol first");
 			return;
 		}
-		
+
 		setTitle(s.getPDBCode());
-		
+
 		// actually this is very simple
 		// just convert the structure to a PDB file
 
@@ -201,7 +259,7 @@ public class BiojavaJmol {
 		// access the biojava structure object, but they require more
 		// code. See the SPICE code repository for how to do this.
 
-
+		
 
 
 	}
@@ -211,111 +269,7 @@ public class BiojavaJmol {
 		frame.repaint();
 	}
 
-
-
-
 	
 
-	static class JmolPanel extends JPanel {
-		/**
-		 * 
-		 */
-		private static final long serialVersionUID = -3661941083797644242L;
 
-		Class viewerC;
-		Class adapterC;
-		Class smartAdapterC;
-
-		Object viewerO;
-		Object adapterO;
-
-		Method evalString;
-		Method renderScreenImage;
-		Method openStringInline;
-
-		//JmolSimpleViewer viewer;
-		//JmolAdapter adapter;
-		JmolPanel() throws ClassNotFoundException {
-
-			try {
-				viewerC = Class.forName(viewer);
-
-				adapterC = Class.forName(adapter);
-				smartAdapterC = Class.forName(smartAdapter);
-
-				Method m = viewerC.getMethod("allocateSimpleViewer", new Class[]{Component.class,adapterC});
-
-				Constructor constructor = smartAdapterC.getConstructor(new Class[]{});
-				adapterO = constructor.newInstance(new Object[]{});
-
-				//viewerC = JmolSimpleViewer.allocateSimpleViewer(this, adapter);
-				viewerO = m.invoke(viewerC, this, adapterO);
-
-				evalString = viewerC.getMethod("evalString",String.class);
-
-				renderScreenImage = viewerC.getMethod("renderScreenImage",
-						new Class[]{Graphics.class,Dimension.class, Rectangle.class});
-
-				openStringInline = viewerC.getMethod("openStringInline", new Class[]{String.class});
-
-			} catch (InstantiationException e){
-				e.printStackTrace();
-			} catch (NoSuchMethodException e){
-				e.printStackTrace();        		
-			} catch ( InvocationTargetException e){
-				e.printStackTrace();
-			} catch ( IllegalAccessException e){
-				e.printStackTrace();
-			}
-			
-			evalString("set scriptQueue on;");
-
-		}
-
-		public Class getViewer() {
-			return viewerC;
-		}
-
-		public void evalString(String rasmolScript){
-			try {
-				evalString.invoke(viewerO, rasmolScript);
-			} catch (Exception e){
-				e.printStackTrace();
-			}
-		}
-
-		public void openStringInline(String pdbFile){
-			try {
-				openStringInline.invoke(viewerO, pdbFile);
-			} catch (Exception e){
-				e.printStackTrace();
-			}
-		}
-
-		public void executeCmd(String rasmolScript){
-			try {
-				evalString.invoke(viewerO, rasmolScript);
-			} catch (Exception e){
-				e.printStackTrace();
-			}
-		}
-
-
-		final Dimension currentSize = new Dimension();
-		final Rectangle rectClip = new Rectangle();
-
-		public void paint(Graphics g) {
-			getSize(currentSize);
-			g.getClipBounds(rectClip);
-			//viewer.renderScreenImage(g, currentSize, rectClip);
-
-			try {
-				renderScreenImage.invoke(viewerO,g,currentSize,rectClip);
-			} catch (Exception e){
-				e.printStackTrace();
-			}
-		}
-	}
-	
-	
 }

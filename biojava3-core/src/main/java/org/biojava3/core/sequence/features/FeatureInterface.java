@@ -7,6 +7,8 @@ package org.biojava3.core.sequence.features;
 
 import java.util.List;
 import org.biojava3.core.sequence.location.SequenceLocation;
+import org.biojava3.core.sequence.template.AbstractSequence;
+import org.biojava3.core.sequence.template.Compound;
 
 /**
  * Interface class to handle describing arbitrary features. A feature can be found at multiple locations in a sequence such as
@@ -19,7 +21,7 @@ import org.biojava3.core.sequence.location.SequenceLocation;
  * 
  * @author Scooter Willis <willishf at gmail dot com>
  */
-public interface FeatureInterface {
+public interface FeatureInterface<S extends AbstractSequence<C>, C extends Compound> {
 
     /**
      * Get the short description that can be used to describe the feature
@@ -59,7 +61,7 @@ public interface FeatureInterface {
      *
      * @return a Location anchoring this feature
      */
-    public SequenceLocation getLocations();
+    public SequenceLocation<S, C> getLocations();
 
         /**
      * The new location for this feature.
@@ -72,7 +74,7 @@ public interface FeatureInterface {
      * @param loc the new Location for this feature
      *
      */
-    public void setLocation(SequenceLocation loc);
+    public void setLocation(SequenceLocation<S, C> loc);
 
         /**
      * The type of the feature.
@@ -110,28 +112,28 @@ public interface FeatureInterface {
      * @param feature
      */
 
-    public void setParentFeature(FeatureInterface feature);
+    public void setParentFeature(FeatureInterface<S, C> feature);
 
     /**
      * Get the parent feature
      * @return
      */
 
-    public FeatureInterface getParentFeature();
+    public FeatureInterface<S, C> getParentFeature();
 
     /**
      * Get the features contained by this feature
      * @return
      */
 
-    public List<FeatureInterface> getChildrenFeatures();
+    public List<FeatureInterface<S, C>> getChildrenFeatures();
 
     /**
      * Set the children features
      * @param features
      */
 
-    public void setChildrenFeatures(List<FeatureInterface> features);
+    public void setChildrenFeatures(List<FeatureInterface<S, C>> features);
 
 
         /**

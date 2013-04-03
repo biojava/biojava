@@ -34,6 +34,7 @@ import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureException;
 
 import org.biojava3.protmod.ProteinModification;
+import org.biojava3.protmod.ProteinModificationRegistry;
 
 /**
  * 
@@ -51,6 +52,8 @@ public class ProteinModificationParserTest extends TestCase {
 	
 	public static String[][] setUpShortTest() {
 		String[][] strucs = new String[][] {
+				{"1cdg", null},
+				
 				// Attachments
 				{"3HN3", "AA0151"}, // NAG
 				{"1ZNF", "AA0053"}, // ACE on THR
@@ -296,9 +299,9 @@ public class ProteinModificationParserTest extends TestCase {
 	private void parserTest(String pdbId, String residId) throws IOException, StructureException {
 		Set<ProteinModification> mods;
 		if (residId==null) {
-			mods = ProteinModification.allModifications();
+			mods = ProteinModificationRegistry.allModifications();
 		} else {
-			mods = ProteinModification.getByResidId(residId);
+			mods = ProteinModificationRegistry.getByResidId(residId);
 		}
 		
 		parserTest(pdbId, mods);

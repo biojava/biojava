@@ -103,7 +103,7 @@ public class ConcurrencyTools {
     }
 
     /**
-     * Sets thread pool to any given {@link ExecutorService} to allow end user to use an alternative execution style.
+     * Sets thread pool to any given {@link ThreadPoolExecutor} to allow use of an alternative execution style.
      *
      * @param pool thread pool to share
      */

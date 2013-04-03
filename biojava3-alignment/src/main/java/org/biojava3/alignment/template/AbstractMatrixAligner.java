@@ -49,6 +49,7 @@ public abstract class AbstractMatrixAligner<S extends Sequence<C>, C extends Com
     private SubstitutionMatrix<C> subMatrix;
     private boolean local, storingScoreMatrix;
     protected int[] anchors;
+    protected int cutsPerSection;
 
     // output fields
     protected Profile<S, C> profile;
@@ -280,40 +281,71 @@ public abstract class AbstractMatrixAligner<S extends Sequence<C>, C extends Com
             scores[0] = new short[dim[1]][dim[2]];
             scores[1] = new short[dim[1]][dim[2]];
         }
-        Last[][][] traceback = new Last[dim[0]][][];
         boolean linear = (gapPenalty.getType() == GapPenalty.Type.LINEAR);
-        for (int x = 0; x < dim[0]; x++) {
-            if (local) {
-                traceback[x] = linear ? setScoreVector(x, gapPenalty.getExtensionPenalty(),
-                        getSubstitutionScoreVector(x), storingScoreMatrix, scores, xyMax, score) : setScoreVector(x,
-                        gapPenalty.getOpenPenalty(), gapPenalty.getExtensionPenalty(), getSubstitutionScoreVector(x),
-                        storingScoreMatrix, scores, xyMax, score);
-                if (xyMax[0] == x) {
-                    score = scores[x][xyMax[1]][0];
-                }
-            } else {
-                traceback[x] = linear ? setScoreVector(x, gapPenalty.getExtensionPenalty(),
-                        getSubstitutionScoreVector(x), storingScoreMatrix, scores) : setScoreVector(x,
-                        gapPenalty.getOpenPenalty(), gapPenalty.getExtensionPenalty(), getSubstitutionScoreVector(x),
-                        storingScoreMatrix, scores);
-            }
-        }
-        if (!local) {
+        Last[][][] traceback = new Last[dim[0]][][];
+        List<Step> sx = new ArrayList<Step>(), sy = new ArrayList<Step>();
+
+        if (anchors != null) {
+
             xyMax[0] = dim[0] - 1;
             xyMax[1] = dim[1] - 1;
-            for (int z = 0; z < scores[xyMax[0]][xyMax[1]].length; z++) {
-                score = (short) Math.max(score, scores[xyMax[0]][xyMax[1]][z]);
+            score = 0;
+            boolean[] addScore = new boolean[anchors.length];
+            for (int i = 0; i < anchors.length; i++) {
+                addScore[i] = (anchors[i] >= 0);
             }
-        }
-        List<Step> sx = new ArrayList<Step>(), sy = new ArrayList<Step>();
-        xyStart = local ? setSteps(traceback, xyMax, sx, sy) : setSteps(traceback, scores, sx, sy);
-        setProfile(sx, sy);
+            addScore[xyMax[0]] = true;
+            anchors[xyMax[0]] = xyMax[1];
 
-        time = System.nanoTime() - timeStart;
+            for (int[] subproblem; (subproblem = getNextSubproblem(anchors)) != null; ) {
+                Cut[] cuts = getCuts(cutsPerSection, subproblem, dim, anchors[0] >= 0);
+                for (int x = subproblem[0]; x <= subproblem[2]; x++) {
+                    Last[][] pointers = linear ? setScoreVector(x, subproblem, gapPenalty.getExtensionPenalty(),
+                            getSubstitutionScoreVector(x, subproblem), false, scores) : setScoreVector(x, subproblem,
+                            gapPenalty.getOpenPenalty(), gapPenalty.getExtensionPenalty(),
+                            getSubstitutionScoreVector(x, subproblem), false, scores);
+                    setCuts(x, subproblem, pointers, cuts);
+                }
+                score += addAnchors(cuts, scores[subproblem[2]][subproblem[3]], addScore[subproblem[2]], anchors);
+            }
+            xyStart = setSteps(anchors, sx, sy);
+
+        } else {
+
+            for (int x = 0; x < dim[0]; x++) {
+                if (local) {
+                    traceback[x] = linear ? setScoreVector(x, gapPenalty.getExtensionPenalty(),
+                            getSubstitutionScoreVector(x), storingScoreMatrix, scores, xyMax, score) :
+                            setScoreVector(x, gapPenalty.getOpenPenalty(), gapPenalty.getExtensionPenalty(),
+                            getSubstitutionScoreVector(x), storingScoreMatrix, scores, xyMax, score);
+                    if (xyMax[0] == x) {
+                        score = scores[x][xyMax[1]][0];
+                    }
+                } else {
+                    traceback[x] = linear ? setScoreVector(x, gapPenalty.getExtensionPenalty(),
+                            getSubstitutionScoreVector(x), storingScoreMatrix, scores) : setScoreVector(x,
+                            gapPenalty.getOpenPenalty(), gapPenalty.getExtensionPenalty(),
+                            getSubstitutionScoreVector(x), storingScoreMatrix, scores);
+                }
+            }
+            if (!local) {
+                xyMax[0] = dim[0] - 1;
+                xyMax[1] = dim[1] - 1;
+                for (int z = 0; z < scores[xyMax[0]][xyMax[1]].length; z++) {
+                    score = (short) Math.max(score, scores[xyMax[0]][xyMax[1]][z]);
+                }
+            }
+            xyStart = local ? setSteps(traceback, xyMax, sx, sy) : setSteps(traceback, scores, sx, sy);
+
+        }
+
+        setProfile(sx, sy);
 
         if (!storingScoreMatrix) {
             scores = null;
         }
+
+        time = System.nanoTime() - timeStart;
     }
 
     // returns score for the alignment of the query column to all target columns

@@ -23,9 +23,6 @@
 
 package org.biojava3.alignment.routines;
 
-import static org.biojava3.alignment.routines.AlignerHelper.*;
-
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -62,8 +59,6 @@ public class AnchoredPairwiseSequenceAligner<S extends Sequence<C>, C extends Co
     public static void setDefaultCutsPerSection(int defaultCutsPerSection) {
         AnchoredPairwiseSequenceAligner.defaultCutsPerSection = Math.max(1, defaultCutsPerSection);
     }
-
-    private int cutsPerSection;
 
     /**
      * Before running a pairwise global sequence alignment, data must be sent in via calls to
@@ -168,50 +163,6 @@ public class AnchoredPairwiseSequenceAligner<S extends Sequence<C>, C extends Co
     @Override
     protected void setProfile(List<Step> sx, List<Step> sy) {
         profile = pair = new SimpleSequencePair<S, C>(getQuery(), getTarget(), sx, sy);
-    }
-
-    // method from AbstractMatrixAligner
-
-    @Override
-    protected void align() {
-        if (!isReady()) {
-            return;
-        }
-
-        long timeStart = System.nanoTime();
-
-        int[] dim = getScoreMatrixDimensions();
-        xyMax[0] = dim[0] - 1;
-        xyMax[1] = dim[1] - 1;
-        scores = new short[dim[0]][][];
-        scores[0] = new short[dim[1]][dim[2]];
-        scores[1] = new short[dim[1]][dim[2]];
-        score = 0;
-        boolean[] addScore = new boolean[anchors.length];
-        for (int i = 0; i < anchors.length; i++) {
-            addScore[i] = (anchors[i] >= 0);
-        }
-        addScore[xyMax[0]] = true;
-        anchors[xyMax[0]] = xyMax[1];
-        boolean linear = (gapPenalty.getType() == GapPenalty.Type.LINEAR);
-
-        for (int[] subproblem; (subproblem = getNextSubproblem(anchors)) != null; ) {
-            Cut[] cuts = getCuts(cutsPerSection, subproblem, dim, anchors[0] >= 0);
-            for (int x = subproblem[0]; x <= subproblem[2]; x++) {
-                Last[][] pointers = linear ? setScoreVector(x, subproblem, gapPenalty.getExtensionPenalty(),
-                        getSubstitutionScoreVector(x, subproblem), false, scores) : setScoreVector(x, subproblem,
-                        gapPenalty.getOpenPenalty(), gapPenalty.getExtensionPenalty(), getSubstitutionScoreVector(x,
-                        subproblem), false, scores);
-                setCuts(x, subproblem, pointers, cuts);
-            }
-            score += addAnchors(cuts, scores[subproblem[2]][subproblem[3]], addScore[subproblem[2]], anchors);
-        }
-
-        List<Step> sx = new ArrayList<Step>(), sy = new ArrayList<Step>();
-        setSteps(anchors, sx, sy);
-        setProfile(sx, sy);
-
-        time = System.nanoTime() - timeStart;
     }
 
 }

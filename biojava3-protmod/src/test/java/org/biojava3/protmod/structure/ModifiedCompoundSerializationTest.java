@@ -26,25 +26,22 @@ package org.biojava3.protmod.structure;
 
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.io.Reader;
 import java.io.StringWriter;
 import java.io.Writer;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 import org.biojava.bio.structure.Chain;
 import org.biojava.bio.structure.Structure;
-import org.biojava.bio.structure.StructureException;
 
-import org.biojava3.protmod.ProteinModification;
+import org.biojava3.protmod.ModificationCategory;
+import org.biojava3.protmod.ProteinModificationRegistry;
 import org.biojava3.protmod.io.ModifiedCompoundXMLConverter;
 import org.biojava3.protmod.structure.ProteinModificationIdentifier;
 
@@ -78,60 +75,75 @@ public class ModifiedCompoundSerializationTest extends TestCase {
 		}
 	}
 
-	@SuppressWarnings("unchecked") 
-	public void testSerialization() throws StructureException, IOException, ClassNotFoundException {
-		String pdbId = "1CAD";
-		Structure struc = TmpAtomCache.cache.getStructure(pdbId);
-
-		ProteinModificationIdentifier parser = new ProteinModificationIdentifier();
-		parser.identify(struc, ProteinModification.allModifications());
-		Set<ModifiedCompound> mcs = parser.getIdentifiedModifiedCompound();
-
-		String file = System.getProperty("java.io.tmpdir") + File.separatorChar + pdbId;
-		FileOutputStream fos = new FileOutputStream(file);
-		ObjectOutputStream oos = new ObjectOutputStream(fos);
-		oos.writeObject(mcs);
-		oos.close();
-
-		FileInputStream fin = new FileInputStream(file);
-		ObjectInputStream ois = new ObjectInputStream(fin); 
-		mcs = (Set<ModifiedCompound>) ois.readObject();
-		ois.close();
-
-		//		System.out.println(mcs);
-
-		try {
-			new File(file).delete();
-		} catch (Exception e) {
-			fail(e.getMessage());
-		}
-
-		//System.out.println(mcs);
-	}
-
 	public void test1CAD(){
 		String pdbId = "1CAD";
 		testXMLSerialization(pdbId);
+	}
+
+	public void test1a4w(){
+		String pdbId = "1a4w";
+		List<ModifiedCompound> all = testXMLSerialization(pdbId);
+
+		try {
+		mainLoop:
+		for ( ModifiedCompound mc : all){
+			Set<StructureGroup> groups = mc.getGroups();
+			
+			for (StructureGroup g: groups){
+				if (! g.getChainId().equals("H"))
+					continue mainLoop;
+			}
+			ModificationCategory cat = mc.getModification().getCategory();
+			
+			// all modifications on chain H should be crosslink 2
+			
+//			if (  groups.size() != 2  ) {
+//				System.out.println(ModifiedCompoundXMLConverter.toXML(mc));
+//				System.out.println(cat);
+//				System.out.println(mc);
+//			
+//				System.out.println(mc.getAtomLinkages());
+//				
+//				for (StructureGroup structureGroup : groups) {
+//					System.out.println(structureGroup);
+//				}
+//			}
+//			assertEquals("Not the right number of groups! should be 2, but got " + groups.size() + " in: " + ModifiedCompoundXMLConverter.toXML(mc),2,groups.size());
+//			
+			if ( ! cat.equals(ModificationCategory.CROSS_LINK_2)) {
+				System.out.println(ModifiedCompoundXMLConverter.toXML(mc));
+				System.out.println(cat);
+				System.out.println(mc);
+			}
+			
+			assertEquals(ModificationCategory.CROSS_LINK_2, cat);
+		}
+		} catch (Exception e){
+			e.printStackTrace();
+			fail(e.getMessage());
+		}
+
 	}
 
 	public void test1UIS(){
 		String pdbId = "1UIS";
 		testXMLSerialization(pdbId);
 	}
-	
-//	public void test2TMD(){
-//		String pdbId = "2TMD";
-//		testXMLSerialization(pdbId);
-//	}
-	
+
+	//	public void test2TMD(){
+	//		String pdbId = "2TMD";
+	//		testXMLSerialization(pdbId);
+	//	}
+
 	public void test1CDG(){
 		String pdbId = "1CDG";
 		testXMLSerialization(pdbId);
 	}
 
-	public void testXMLSerialization(String pdbId){
+	public List<ModifiedCompound> testXMLSerialization(String pdbId){
 		String xml = null;
 		ModifiedCompound currentMC = null;
+		List<ModifiedCompound> all = new ArrayList<ModifiedCompound>();		
 		try {
 
 			Structure struc = TmpAtomCache.cache.getStructure(pdbId);
@@ -140,7 +152,7 @@ public class ModifiedCompoundSerializationTest extends TestCase {
 
 			for (Chain c : struc.getChains()) {
 
-				parser.identify(c, ProteinModification.allModifications());
+				parser.identify(c, ProteinModificationRegistry.allModifications());
 				Set<ModifiedCompound> mcs = parser.getIdentifiedModifiedCompound();
 
 				for (ModifiedCompound mc : mcs){
@@ -154,6 +166,7 @@ public class ModifiedCompoundSerializationTest extends TestCase {
 					//assertEquals("The two objects are not equal before and after XML serialization" , mc, newMC);
 					//System.out.println(mc.getDescription());
 					//System.out.println(newMC.getDescription());
+					all.add(mc);
 				}
 			}
 		} catch (Exception e){
@@ -165,6 +178,7 @@ public class ModifiedCompoundSerializationTest extends TestCase {
 		}
 		xml = null;
 		currentMC =null;
+		return all;
 	}
 
 	private ModifiedCompound getModifiedCompoundFromXML(String xml) {

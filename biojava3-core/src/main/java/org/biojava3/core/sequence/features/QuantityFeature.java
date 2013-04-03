@@ -8,11 +8,14 @@ package org.biojava3.core.sequence.features;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.biojava3.core.sequence.template.AbstractSequence;
+import org.biojava3.core.sequence.template.Compound;
+
 /**
  *
  * @author Scooter Willis <willishf at gmail dot com>
  */
-public class QuantityFeature extends AbstractFeature {
+public class QuantityFeature<S extends AbstractSequence<C>, C extends Compound> extends AbstractFeature<S, C> {
 
     private List<Number> quantities = new ArrayList<Number>();
 

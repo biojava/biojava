@@ -9,15 +9,18 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import org.biojava3.core.sequence.location.SequenceLocation;
+import org.biojava3.core.sequence.template.AbstractSequence;
+import org.biojava3.core.sequence.template.Compound;
 
 /**
  *
  * @author Scooter Willis <willishf at gmail dot com>
  */
-public abstract class AbstractFeature implements FeatureInterface {
-    List<FeatureInterface> childrenFeatures = new ArrayList<FeatureInterface>();
-    FeatureInterface parentFeature;
-    SequenceLocation sequenceLocation;
+public abstract class AbstractFeature<S extends AbstractSequence<C>, C extends Compound>
+        implements FeatureInterface<S, C> {
+    List<FeatureInterface<S, C>> childrenFeatures = new ArrayList<FeatureInterface<S, C>>();
+    FeatureInterface<S, C> parentFeature;
+    SequenceLocation<S, C> sequenceLocation;
     String type = "";
     String source = "";
     private String description = "";
@@ -30,12 +33,12 @@ public abstract class AbstractFeature implements FeatureInterface {
     }
 
     @Override
-    public SequenceLocation getLocations() {
+    public SequenceLocation<S, C> getLocations() {
         return sequenceLocation;
     }
 
     @Override
-    public void setLocation(SequenceLocation loc) {
+    public void setLocation(SequenceLocation<S, C> loc) {
         sequenceLocation = loc;
     }
 
@@ -60,22 +63,22 @@ public abstract class AbstractFeature implements FeatureInterface {
     }
 
     @Override
-    public void setParentFeature(FeatureInterface feature) {
+    public void setParentFeature(FeatureInterface<S, C> feature) {
         parentFeature = feature;
     }
 
     @Override
-    public FeatureInterface getParentFeature() {
+    public FeatureInterface<S, C> getParentFeature() {
        return parentFeature;
     }
 
     @Override
-    public List<FeatureInterface> getChildrenFeatures() {
+    public List<FeatureInterface<S, C>> getChildrenFeatures() {
         return childrenFeatures;
     }
 
     @Override
-    public void setChildrenFeatures(List<FeatureInterface> features) {
+    public void setChildrenFeatures(List<FeatureInterface<S, C>> features) {
         childrenFeatures = features;
 
     }
@@ -114,9 +117,9 @@ public abstract class AbstractFeature implements FeatureInterface {
      * of overlapping features so they are delivered in a proper order.
      */
 
-    static public final Comparator<FeatureInterface> LOCATION_LENGTH = new Comparator<FeatureInterface>() {
+    public static final Comparator<FeatureInterface<?, ?>> LOCATION_LENGTH = new Comparator<FeatureInterface<?, ?>>() {
 
-        public int compare(FeatureInterface e1, FeatureInterface e2) {
+        public int compare(FeatureInterface<?, ?> e1, FeatureInterface<?, ?> e2) {
             double v1 = e1.getLocations().getStart().getPosition();
             double v2 = e2.getLocations().getStart().getPosition();
             if (v1 < v2) {
@@ -142,9 +145,9 @@ public abstract class AbstractFeature implements FeatureInterface {
      *
      */
 
-    static public final Comparator<FeatureInterface> LENGTH = new Comparator<FeatureInterface>() {
+    static public final Comparator<FeatureInterface<?, ?>> LENGTH = new Comparator<FeatureInterface<?, ?>>() {
 
-        public int compare(FeatureInterface e1, FeatureInterface e2) {
+        public int compare(FeatureInterface<?, ?> e1, FeatureInterface<?, ?> e2) {
             double v1 = Math.abs(e1.getLocations().getEnd().getPosition()- e1.getLocations().getStart().getPosition());
             double v2 = Math.abs(e2.getLocations().getEnd().getPosition() -  e2.getLocations().getStart().getPosition());
             if (v1 < v2) {

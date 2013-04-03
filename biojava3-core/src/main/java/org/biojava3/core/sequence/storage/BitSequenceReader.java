@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.biojava3.core.sequence.AccessionID;
-import org.biojava3.core.sequence.Strand;
 import org.biojava3.core.sequence.compound.NucleotideCompound;
 import org.biojava3.core.sequence.template.Compound;
 import org.biojava3.core.sequence.template.CompoundSet;

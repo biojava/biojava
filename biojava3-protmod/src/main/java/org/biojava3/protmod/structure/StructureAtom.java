@@ -24,16 +24,12 @@
 
 package org.biojava3.protmod.structure;
 
-import java.io.Serializable;
-
 /**
  * Everything that is needed to uniquely describe a atom.
  * @author Jianjiong Gao
  * @since 3.0
  */
-public class StructureAtom
-implements Serializable {
-	private static final long serialVersionUID = -3586772436145093984L;
+public class StructureAtom {
 	
 	private final StructureGroup group;
 	private final String atomName;

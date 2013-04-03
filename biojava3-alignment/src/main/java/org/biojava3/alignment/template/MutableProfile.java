@@ -38,7 +38,7 @@ import org.biojava3.core.sequence.template.Sequence;
 public interface MutableProfile<S extends Sequence<C>, C extends Compound> extends Profile<S, C> {
 
     /**
-     * Sets entirely new set of {@link AlignedSequences}.
+     * Sets entirely new set of {@link AlignedSequence}s.
      *
      * @param sequences new set of sequences
      * @throws IllegalArgumentException if sequences have different lengths

@@ -32,14 +32,16 @@ import java.util.List;
 
 import javax.swing.JTextField;
 
+import org.biojava.bio.structure.align.gui.jmol.JmolPanel;
 import org.biojava.bio.structure.gui.BiojavaJmol;
-import org.biojava.bio.structure.gui.BiojavaJmol.JmolPanel;
+
 
 /** a utility class that listens to Ramsol script commands in the @link {@link BiojavaJmol} class
  * 
  * @author Andreas Prlic
- *
+ * @Deprecated use  org.biojava.bio.structure.align.gui.jmol.RasmolCommandListener instead
  */
+@Deprecated 
 public class RasmolCommandListener 
 extends KeyAdapter
 implements ActionListener,

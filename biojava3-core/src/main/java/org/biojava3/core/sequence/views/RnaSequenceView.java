@@ -25,7 +25,6 @@ package org.biojava3.core.sequence.views;
 
 import java.util.HashMap;
 import java.util.Map;
-import org.biojava3.core.sequence.Strand;
 import org.biojava3.core.sequence.compound.NucleotideCompound;
 import org.biojava3.core.sequence.compound.RNACompoundSet;
 import org.biojava3.core.sequence.template.CompoundSet;
@@ -61,20 +60,17 @@ public class RnaSequenceView extends SequenceProxyView<NucleotideCompound> imple
         return SequenceMixin.toString(this);
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public NucleotideCompound getCompoundAt(int position) {
         NucleotideCompound dna = getViewedSequence().getCompoundAt(position);
         return getDnaToRna().get(dna);
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public int getIndexOf(NucleotideCompound compound) {
         return getViewedSequence().getIndexOf(getRnaToDna().get(compound));
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public int getLastIndexOf(NucleotideCompound compound) {
         return getViewedSequence().getLastIndexOf(getRnaToDna().get(compound));

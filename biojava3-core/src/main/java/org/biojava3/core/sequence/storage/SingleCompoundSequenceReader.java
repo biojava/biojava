@@ -3,7 +3,6 @@ package org.biojava3.core.sequence.storage;
 import java.util.Iterator;
 import java.util.List;
 import org.biojava3.core.sequence.AccessionID;
-import org.biojava3.core.sequence.Strand;
 import org.biojava3.core.sequence.template.Compound;
 import org.biojava3.core.sequence.template.CompoundSet;
 import org.biojava3.core.sequence.template.ProxySequenceReader;

@@ -58,7 +58,7 @@ public class Alignments {
      */
     public static enum PairwiseSequenceAlignerType {
         GLOBAL,              // Needleman-Wunsch/Gotoh
-        GLOBAL_LINEAR_SPACE, // Myers-Miller/Thompson
+        GLOBAL_LINEAR_SPACE, // Guan-Uberbacher
         LOCAL,               // Smith-Waterman/Gotoh
         LOCAL_LINEAR_SPACE   // Smith-Waterman/Gotoh with smart traceback at each maximum
     }
@@ -131,7 +131,6 @@ public class Alignments {
      * @param <S> each {@link Sequence} of the {@link List} is of type S
      * @param <C> each element of a {@link Sequence} is a {@link Compound} of type C
      * @param sequences the {@link List} of {@link Sequence}s to align
-     * @param type chosen type from list of multiple sequence alignment routines
      * @param settings optional settings that adjust the alignment
      * @return multiple sequence alignment {@link Profile}
      */

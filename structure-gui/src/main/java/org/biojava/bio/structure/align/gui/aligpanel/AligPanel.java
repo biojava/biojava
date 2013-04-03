@@ -68,6 +68,9 @@ public class AligPanel  extends JPrintPanel implements AlignmentPositionListener
 
    private boolean colorByAlignmentBlock;
 
+   private static final Color COLOR_EQUAL   = Color.decode("#6A93D4");
+   private static final Color COLOR_SIMILAR = Color.decode("#D460CF");
+   
 
    public static void main(String[] args){
 
@@ -305,12 +308,12 @@ public class AligPanel  extends JPrintPanel implements AlignmentPositionListener
          }
          if ( colorBySimilarity){
             if ( c1 == c2){
-               Color bg = Color.red;
+               Color bg = COLOR_EQUAL;
                g2D.setPaint(bg);
                Rectangle rec = new Rectangle(p1.x-1,p1.y-11, (p2.x-p1.x)+12, (p2.y-p1.y)+12);				
                g2D.fill(rec);
             } else if (AFPAlignmentDisplay.aaScore(c1, c2) > 0) {
-               Color bg = Color.orange;
+               Color bg = COLOR_SIMILAR;
                g2D.setPaint(bg);
                Rectangle rec = new Rectangle(p1.x-1,p1.y-11, (p2.x-p1.x)+12, (p2.y-p1.y)+12);				
                g2D.fill(rec);

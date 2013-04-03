@@ -93,7 +93,7 @@ public interface GuideTreeNode<S extends Sequence<C>, C extends Compound> extend
     /**
      * Stores the given profile future.  This allows concurrent execution of alignment tasks.
      *
-     * @param profile new profile to be calculated and then stored at this node
+     * @param profileFuture new profile to be calculated and then stored at this node
      */
     void setProfileFuture(Future<ProfilePair<S, C>> profileFuture);
 

@@ -17,6 +17,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import org.biojava3.core.util.PrettyXMLWriter;
 
 import org.biojava3.protmod.ProteinModification;
+import org.biojava3.protmod.ProteinModificationRegistry;
 import org.biojava3.protmod.structure.ModifiedCompound;
 import org.biojava3.protmod.structure.ModifiedCompoundImpl;
 import org.biojava3.protmod.structure.StructureAtom;
@@ -44,11 +45,21 @@ public class ModifiedCompoundXMLConverter {
 
 		PrettyXMLWriter xml = new PrettyXMLWriter(new PrintWriter(out));
 		
-		ProteinModification modification = mc.getModification();
+		String modificationId = null;
+		if (mc instanceof ModifiedCompoundImpl) {
+			modificationId = ((ModifiedCompoundImpl)mc).getOriginalModificationId();
+		} else {
+			if (mc.getModification()!=null) {
+				modificationId = mc.getModification().getId();
+			}
+		}
 
 		xml.openTag("modifiedCompound");
-		if ( modification != null) {
-			ProteinModificationXMLConverter.toXML(modification, xml);
+		if ( modificationId != null) {
+//			ProteinModificationXMLConverter.toXML(modification, xml);
+			xml.openTag("proteinModification");
+			xml.attribute("id", modificationId);
+			xml.closeTag("proteinModification");
 		}
 
 
@@ -127,11 +138,13 @@ public class ModifiedCompoundXMLConverter {
 
 
 					if ( listOfConditions.getNodeName().equals("proteinModification")) {
-
-						modification = ProteinModificationXMLConverter.fromXML(listOfConditions);
-					}
-
-					if ( listOfConditions.getNodeName().equals("linkage")) {
+						//modification = ProteinModificationXMLConverter.fromXML(listOfConditions);
+						String modId = getAttribute(listOfConditions, "id");
+						modification = ProteinModificationRegistry.getById(modId);
+						if (modification==null) {
+							System.err.println("Error: no modification information.");
+						}
+					} else if ( listOfConditions.getNodeName().equals("linkage")) {
 						double dist = Double.parseDouble(getAttribute(listOfConditions, "distance"));
 						int pos = Integer.parseInt(getAttribute(listOfConditions,"pos"));
 						int total = Integer.parseInt(getAttribute(listOfConditions,"total"));
@@ -146,6 +159,7 @@ public class ModifiedCompoundXMLConverter {
 					} else if (listOfConditions.getNodeName().equals("structureGroup")) {
 						StructureGroup group = StructureGroupXMLConverter.fromXML(listOfConditions);
 						structureGroups.add(group);
+//						System.out.println("structureGroups size:" + structureGroups.size());
 					}
 				}
 			}
@@ -182,7 +196,6 @@ public class ModifiedCompoundXMLConverter {
 
 	private static StructureAtom getAtom(String elementName, Node n) {
 
-
 		NodeList children = n.getChildNodes();
 
 		int numChildren  = children.getLength();
@@ -194,10 +207,12 @@ public class ModifiedCompoundXMLConverter {
 			if ( atoms.getNodeName().equals(elementName)) {
 				NodeList child2 = atoms.getChildNodes();
 				int numAtoms = child2.getLength();
+				//System.out.println("got " + numAtoms + " atoms");
 				for ( int a=0;a< numAtoms; a++){
 					Node atomNode = child2.item(a);
 					if(!atomNode.hasAttributes()) continue;
 					atom = StructureAtomXMLConverter.fromXML(atomNode);
+					return atom;
 				}
 
 			}

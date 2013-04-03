@@ -34,20 +34,20 @@ import java.util.Map;
  * @since 3.0
  */
 public enum ModificationCategory {
-	ATTACHMENT("attachment"),
-	CHEMICAL_MODIFICATION("modified residue"), 
-	CROSS_LINK_1("crosslink1"),
-	CROSS_LINK_2("crosslink2"),
-	CROSS_LINK_3("crosslink3"),
-	CROSS_LINK_4("crosslink4"),
-	CROSS_LINK_5("crosslink5"),
-	CROSS_LINK_6("crosslink6"),
-	CROSS_LINK_7("crosslink7"),
-	CROSS_LINK_8_OR_LARGE("crosslink8 or large"), // 8 or high
-	UNDEFINED("undefined")
+	ATTACHMENT("attachment", "Attachment of a chemical group"),
+	CHEMICAL_MODIFICATION("modified residue", "Chemical modification of an residue"), 
+	CROSS_LINK_1("crosslink1", "A complicated cross-link (usually found in chromophores)"),
+	CROSS_LINK_2("crosslink2", "A cross-link of two residues"),
+	CROSS_LINK_3("crosslink3", "A cross-link of three residues"),
+	CROSS_LINK_4("crosslink4", "A cross-link of four residues"),
+	CROSS_LINK_5("crosslink5", "A cross-link of five residues"),
+	CROSS_LINK_6("crosslink6", "A cross-link of six residues"),
+	CROSS_LINK_7("crosslink7", "A cross-link of seven residues"),
+	CROSS_LINK_8_OR_LARGE("crosslink8 or large", "A cross-link of eight or more residues"), // 8 or high
+	UNDEFINED("undefined", "Undefined category")
 	;
 	
-	ModificationCategory(String label) {
+	ModificationCategory(String label, String desc) {
 		this.label = label;
 	}
 	
@@ -57,6 +57,14 @@ public enum ModificationCategory {
 	 */
 	public String label() {
 		return label;
+	}
+	
+	/**
+	 * 
+	 * @return the description
+	 */
+	public String description() {
+		return desc;
 	}
 	
 	/**
@@ -85,6 +93,8 @@ public enum ModificationCategory {
 	 * The variable is the same as the &ltType&gt; in the ptm_list XML file.
 	 */
 	private String label;
+	
+	private String desc;
 	
 	/**
 	 * 

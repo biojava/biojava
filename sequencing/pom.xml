@@ -3,12 +3,12 @@
   <parent>
     <artifactId>biojava</artifactId>
     <groupId>org.biojava</groupId>
-    <version>3.0-alpha5</version>
+    <version>3.0-alpha6</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.biojava</groupId>
   <artifactId>sequencing</artifactId>
-  <version>3.0-alpha5</version>
+  <version>3.0-alpha6</version>
   <name>sequencing</name>
   <distributionManagement>
 		<downloadUrl>http://www.biojava.org/download/maven/</downloadUrl>

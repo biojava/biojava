@@ -24,8 +24,6 @@
 
 package org.biojava3.protmod.structure;
 
-import java.io.Serializable;
-
 import org.biojava.bio.structure.ResidueNumber;
 
 import org.biojava3.protmod.ComponentType;
@@ -36,8 +34,7 @@ import org.biojava3.protmod.ComponentType;
  * @since 3.0
  */
 public class StructureGroup
-implements Serializable, Comparable<StructureGroup> {
-	private static final long serialVersionUID = -5648208521422258019L;
+implements Comparable<StructureGroup> {
 	
 	private  ResidueNumber resNum;
 	private  String pdbName;

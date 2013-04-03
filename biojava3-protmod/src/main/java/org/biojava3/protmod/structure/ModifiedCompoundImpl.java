@@ -24,8 +24,6 @@
 
 package org.biojava3.protmod.structure;
 
-import java.io.Serializable;
-
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
@@ -36,6 +34,7 @@ import java.util.Set;
 import org.biojava3.protmod.ComponentType;
 import org.biojava3.protmod.ModificationCategory;
 import org.biojava3.protmod.ProteinModification;
+import org.biojava3.protmod.ProteinModificationImpl;
 
 
 /**
@@ -44,10 +43,8 @@ import org.biojava3.protmod.ProteinModification;
  * @since 3.0
  */
 public class ModifiedCompoundImpl
-implements ModifiedCompound, Serializable {
-	public static final long serialVersionUID = -3809110608450334460L;
-
-
+implements ModifiedCompound {
+	
 	ProteinModification modification;
 	Set<StructureGroup> groups;
 	Map<Set<StructureGroup>, Set<StructureAtomLinkage>> atomLinkages;
@@ -123,9 +120,12 @@ implements ModifiedCompound, Serializable {
 		}
 
 		int nRes = 0;
+		Set<String> ligands = new HashSet<String>();
 		for (StructureGroup group : groups) {
 			if (group.getType() == ComponentType.AMINOACID) {
 				nRes ++;
+			} else {
+				ligands.add(group.getPDBName().trim());
 			}
 		}
 
@@ -150,28 +150,20 @@ implements ModifiedCompound, Serializable {
 		default:
 			cat = ModificationCategory.CROSS_LINK_8_OR_LARGE; break;
 		}
-
-		// TODO: name crashing?
-		String newId = modification.getId() + "." + cat.name();
-
-		ProteinModification mod = ProteinModification.getById(newId);
-		if (mod != null) {
-			return mod;
-		}
-
-		return ProteinModification.register(newId,
-				cat, modification.getOccurrenceType(), modification.getCondition())
-				.addKeywords(modification.getKeywords())
-				.setDescription(modification.getDescription())
-				.setFormula(modification.getFormula())
-				.setPdbccId(modification.getPdbccId())
-				.setPdbccName(modification.getPdbccName())
-				.setPsimodId(modification.getPdbccName())
-				.setPsimodName(modification.getPsimodName())
-				.setResidId(modification.getResidId())
-				.setResidName(modification.getResidName())
-				.setSystematicName(modification.getSystematicName())
-				.asModification();
+		
+		return new ProteinModificationImpl.Builder(modification)
+				.setCategory(cat).addKeywords(ligands).build();
+	}
+	
+	/**
+	 * 
+	 * @return the original modification ID.
+	 */
+	public String getOriginalModificationId() {
+		if (modification==null)
+			return null;
+		
+		return modification.getId();
 	}
 
 	@Override
@@ -360,51 +352,4 @@ implements ModifiedCompound, Serializable {
 
 		return result;
 	}
-
-
-	
-	
-
-
-	private static class SerializationProxy implements Serializable {
-		private static final long serialVersionUID = -5345107617243742042L;
-
-		private final String modificationId;
-		private  Set<StructureGroup> groups;
-		private  Set<StructureAtomLinkage> atomLinkages;
-		SerializationProxy(ModifiedCompoundImpl actualObj) {
-			this.modificationId = actualObj.modification.getId();
-			this.groups = actualObj.groups;
-			if (actualObj.atomLinkages == null)
-				this.atomLinkages = null;
-			else
-				this.atomLinkages = actualObj.getAtomLinkages();
-		}
-
-		private Object readResolve() {
-			ProteinModification modification = ProteinModification.getById(modificationId);
-			if (atomLinkages==null) {
-				if (groups==null || groups.size()!=1) {
-					throw new IllegalStateException("Only one group is allowed without linkage.");
-				}
-				return new ModifiedCompoundImpl(modification, groups.iterator().next());
-			}
-
-			return new ModifiedCompoundImpl(modification, atomLinkages);
-		}
-	}
-
-	private Object writeReplace() {
-		return new SerializationProxy(this);
-	}
-
-	private void readObject(java.io.ObjectInputStream stream)
-	throws java.io.InvalidObjectException {
-		throw new java.io.InvalidObjectException("Proxy required");
-	}
-
-
-
-
-
 }
