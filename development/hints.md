@@ -19,6 +19,11 @@ Set up your development environment (assuming the use of Eclipse) as follows:
 	* Add missing '@Deprecated' annotations
 	* Remove unnecessary casts
 	* Remove unnecessary '$NON-NLS$' tags
-	* Remove trailing white spaces on all lines 
+	* Remove trailing white spaces on all lines
+* configure XML formatting in `Preferences > XML > XML Files > Editor` 
+	* Line width: `120`
+	* Format comments (and join lines)
+	* Insert whitespace before closing empty end-tags
+	* Indent using `2` spaces
 * install the Checkstyle Plugin and import `biojava-checkstyle.xml`
 * (install the Findbugs Plugin)
