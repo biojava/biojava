@@ -1043,6 +1043,7 @@ public class StructureTools {
 	 * @return a structure that contains only  the first model
 	 * @since 3.0.5
 	 */
+	@SuppressWarnings("deprecation")
 	public static Structure removeModels(Structure s){
 		if ( ! s.isNmr())
 			return s;
@@ -1055,6 +1056,8 @@ public class StructureTools {
 
 		n.setPDBCode(s.getPDBCode());
 		n.setName(s.getName());
+		
+		// we are calling this legacy menthod for backwards compatibility
 		n.setHeader(s.getHeader());
 		//TODO: do deep copying of data!
 		n.setPDBHeader(s.getPDBHeader());
