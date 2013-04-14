@@ -28,7 +28,7 @@ Set up your development environment (assuming the use of Eclipse) as follows:
 * install the Checkstyle Plugin and import `biojava-checkstyle.xml`
 * (install the Findbugs Plugin)
 
-Other useful eclipse plugins (find these via the Eclipse Marketplace:
+Other useful eclipse plugins (find these via the Eclipse Marketplace):
 
 * AnyEdit tools
 * ObjectAid Class Diagram plugin
