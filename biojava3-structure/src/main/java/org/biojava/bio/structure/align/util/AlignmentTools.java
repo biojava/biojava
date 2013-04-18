@@ -612,6 +612,14 @@ public class AlignmentTools {
 		Matrix matrix = svd.getRotation();
 		Atom shift = svd.getTranslation();
 		
+		// Store into afpChain
+		Matrix[] blockMatrix = new Matrix[blockNum];
+		Arrays.fill(blockMatrix, matrix);
+		afpChain.setBlockRotationMatrix(blockMatrix);
+		Atom[] blockShift = new Atom[blockNum];
+		Arrays.fill(blockShift, shift);
+		afpChain.setBlockShiftVector(blockShift);
+		
 		// Apply transformation to ca2
 		if(ca2.length>0 && ca2[0].getGroup() != null &&
 				ca2[0].getGroup().getChain() != null &&
