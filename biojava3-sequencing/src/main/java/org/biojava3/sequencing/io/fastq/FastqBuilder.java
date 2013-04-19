@@ -170,7 +170,14 @@ public final class FastqBuilder
      */
     public boolean sequenceAndQualityLengthsMatch()
     {
-        // todo: null check?
+        if (sequence == null && quality == null)
+        {
+            return true;
+        }
+        if ((sequence != null && quality == null) || (sequence == null && quality != null))
+        {
+            return false;
+        }
         return sequence.length() == quality.length();
     }
 
