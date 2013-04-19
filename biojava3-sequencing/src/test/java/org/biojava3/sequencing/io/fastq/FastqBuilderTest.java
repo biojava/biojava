@@ -283,6 +283,35 @@ public final class FastqBuilderTest
         assertEquals(FastqVariant.FASTQ_SOLEXA, fastq.getVariant());
     }
 
+    public void testBuildNonMatchingSequenceQualityScoreLengthsBothNull()
+    {
+        FastqBuilder fastqBuilder = new FastqBuilder()
+            .withDescription("description")
+            .withVariant(FastqVariant.FASTQ_SOLEXA);
+
+        assertTrue(fastqBuilder.sequenceAndQualityLengthsMatch());
+    }
+
+    public void testBuildNonMatchingSequenceQualityScoreLengthsSequenceNull()
+    {
+        FastqBuilder fastqBuilder = new FastqBuilder()
+            .withDescription("description")
+            .withQuality("0123")
+            .withVariant(FastqVariant.FASTQ_SOLEXA);
+
+        assertEquals(false, fastqBuilder.sequenceAndQualityLengthsMatch());
+    }
+
+    public void testBuildNonMatchingSequenceQualityScoreLengthsQualityNull()
+    {
+        FastqBuilder fastqBuilder = new FastqBuilder()
+            .withDescription("description")
+            .withSequence("ACTG")
+            .withVariant(FastqVariant.FASTQ_SOLEXA);
+
+        assertEquals(false, fastqBuilder.sequenceAndQualityLengthsMatch());
+    }
+
     public void testBuildNonMatchingSequenceQualityScoreLengths0()
     {
         try
