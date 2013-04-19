@@ -68,4 +68,47 @@ public final class FastqVariantTest
         assertEquals(FASTQ_SANGER, parseFastqVariant("FASTQ_SANGER"));
         assertEquals(FASTQ_SANGER, parseFastqVariant("fastq-sanger"));
     }
+
+    public void testQualityLessThanMinimumQualityScore()
+    {
+        for (FastqVariant variant : values())
+        {
+            try
+            {
+                variant.quality(variant.minimumQualityScore() - 1);
+                fail("expected IllegalArgumentException");
+            }
+            catch (IllegalArgumentException e)
+            {
+                // expected
+            }
+        }
+    }
+
+    public void testQualityMoreThanMaximumQualityScore()
+    {
+        for (FastqVariant variant : values())
+        {
+            try
+            {
+                variant.quality(variant.maximumQualityScore() + 1);
+                fail("expected IllegalArgumentException");
+            }
+            catch (IllegalArgumentException e)
+            {
+                // expected
+            }
+        }
+    }
+
+    public void testQualityQualityScoreRoundTrip()
+    {
+        for (FastqVariant variant : values())
+        {
+            for (int i = variant.minimumQualityScore(); i < (variant.maximumQualityScore() + 1); i++)
+            {
+                assertEquals(i, variant.qualityScore(variant.quality(i)));
+            }
+        }
+    }
 }
