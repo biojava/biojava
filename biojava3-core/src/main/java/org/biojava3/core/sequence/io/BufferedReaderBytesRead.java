@@ -11,9 +11,8 @@ import java.io.Reader;
 
 /**
  * Need to keep track of actual bytes read and take advantage of buffered reader
- * performance. Took java source for BufferedReader and added BytesRead functionality
- * @author Scooter Willis <willishf at gmail dot com>
- * 
+ * performance. Took java source for BufferedReader and added BytesRead functionality<br>
+ * ---------- original buffered reader ----------------------<BR>
  * Reads text from a character-input stream, buffering characters so as to
  * provide for the efficient reading of characters, arrays, and lines.
  *
@@ -44,6 +43,7 @@ import java.io.Reader;
  *
  * @version 	1.37, 06/03/15
  * @author	Mark Reinhold
+ * @author Scooter Willis &lt;willishf at gmail dot com&gt;
  * @since	JDK1.1
  */
 public class BufferedReaderBytesRead extends Reader {
