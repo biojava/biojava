@@ -296,6 +296,7 @@ public class AFPChain implements Serializable, Cloneable
 	}
 
 	protected void calcSimilarity() {
+		System.out.println("calcSimilarity");
 		Map<String,Double> idMap = AFPAlignmentDisplay.calcIdSimilarity(alnseq1,alnseq2,alnLength);
 
 		//probability = idMap.get("probability");
@@ -1212,8 +1213,10 @@ public class AFPChain implements Serializable, Cloneable
  * @return a value between 0 and 1
  */
 	public double getIdentity() {
-		if ( identity <= 0)
+		if ( identity <= 0) {
+			System.out.println("recaclulating ID and SIM (" + identity +")");
 			calcSimilarity();
+		}
 		return identity;
 	}
 
