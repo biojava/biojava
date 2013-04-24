@@ -80,7 +80,7 @@ public class GenericFastaHeaderParser<S extends AbstractSequence<C>, C extends C
             for (int i = 0; i < header.length(); i++) {
                 if (header.charAt(i) == '|') {
                     values.add(sb.toString());
-                    sb = new StringBuffer();
+                    sb.setLength(0);//faster than  = new StringBuffer();
                 } else if (i == header.length() - 1) {
                     sb.append(header.charAt(i));
                     values.add(sb.toString());
