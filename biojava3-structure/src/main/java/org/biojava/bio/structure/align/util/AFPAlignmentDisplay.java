@@ -346,6 +346,7 @@ public class AFPAlignmentDisplay
 		double similarity = 0.0;
 		
 		if ( seq1 == null || seq2 == null){
+			System.err.println("AFPAlignmentDisplay can't calc ID if alignment strings are null! ");
 			Map<String, Double> m = new HashMap<String, Double>();
 			m.put("similarity", similarity);
 			m.put("identity", identity);
