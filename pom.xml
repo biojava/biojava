@@ -21,9 +21,9 @@
 		</license>
 	</licenses>
 	<scm>
-		<connection>scm:svn:svn://code.open-bio.org/biojava/biojava-live/trunk</connection>
-		<developerConnection>scm:svn:svn+ssh://dev.open-bio.org/home/svn-repositories/biojava/biojava-live/trunk</developerConnection>
-		<url>http://code.open-bio.org/svnweb/index.cgi/biojava/browse/biojava-live/trunk</url>
+		<connection>scm:git:git://github.com/biojava/biojava.git</connection>
+		<developerConnection>scm:git:git@github.com:biojava/biojava.git</developerConnection>
+		<url>https://github.com/biojava/biojava</url>
 	</scm>
 	<repositories>
 		<repository>
@@ -94,7 +94,7 @@
 				</plugin>
 				<plugin>
 					<artifactId>maven-compiler-plugin</artifactId>
-					<version>2.5.1</version>
+					<version>3.1</version>
 					<configuration>
 						<source>${jdk.version}</source>
 						<target>${jdk.version}</target>
@@ -102,7 +102,7 @@
 				</plugin>
 				<plugin>
 					<artifactId>maven-dependency-plugin</artifactId>
-					<version>2.5.1</version>
+					<version>2.7</version>
 				</plugin>
 				<plugin>
 					<artifactId>maven-jar-plugin</artifactId>
@@ -110,12 +110,15 @@
 				</plugin>
 				<plugin>
 					<artifactId>maven-scm-plugin</artifactId>
-					<version>1.8</version>
+					<version>1.8.1</version>
 				</plugin>
-
+				<plugin>
+					<artifactId>maven-source-plugin</artifactId>
+					<version>2.2.1</version>
+				</plugin>
 				<plugin>
 					<artifactId>maven-surefire-plugin</artifactId>
-					<version>2.12.1</version>
+					<version>2.14.1</version>
 					<configuration>
 						<argLine>-Xms256m -Xmx2000M</argLine>
 					</configuration>
@@ -128,7 +131,7 @@
 				<plugin>
 					<groupId>org.jvnet.jaxb2.maven2</groupId>
 					<artifactId>maven-jaxb2-plugin</artifactId>
-					<version>0.8.2</version>
+					<version>0.8.3</version>
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
@@ -215,7 +218,7 @@
 			<extension>
 				<groupId>org.apache.maven.wagon</groupId>
 				<artifactId>wagon-ssh</artifactId>
-				<version>2.3</version>
+				<version>2.4</version>
 			</extension>
 		</extensions>
 
@@ -332,4 +335,5 @@
 		<module>protein-comparison-tool</module>
 
 	</modules>
+	<inceptionYear>2000</inceptionYear>
 </project>
