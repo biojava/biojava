@@ -115,13 +115,13 @@ final class FastqParser
             this.state = state;
         }
 
-        /** {@inheritDoc} */
+        @Override
         public Object getResult()
         {
             return null;
         }
 
-        /** {@inheritDoc} */
+        @Override
         public boolean processLine(final String line) throws IOException
         {
             String sequence = null;
