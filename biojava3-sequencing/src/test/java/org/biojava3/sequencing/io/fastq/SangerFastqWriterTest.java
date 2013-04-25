@@ -29,13 +29,13 @@ public final class SangerFastqWriterTest
     extends AbstractFastqWriterTest
 {
 
-    /** {@inheritDoc} */
+    @Override
     public FastqWriter createFastqWriter()
     {
         return new SangerFastqWriter();
     }
 
-    /** {@inheritDoc} */
+    @Override
     public Fastq createFastq()
     {
         return new FastqBuilder()

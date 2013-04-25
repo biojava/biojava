@@ -29,13 +29,13 @@ public final class SolexaFastqWriterTest
     extends AbstractFastqWriterTest
 {
 
-    /** {@inheritDoc} */
+    @Override
     public FastqWriter createFastqWriter()
     {
         return new SolexaFastqWriter();
     }
 
-    /** {@inheritDoc} */
+    @Override
     public Fastq createFastq()
     {
         return new FastqBuilder()
