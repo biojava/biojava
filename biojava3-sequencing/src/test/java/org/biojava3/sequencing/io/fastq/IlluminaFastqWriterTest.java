@@ -29,13 +29,13 @@ public final class IlluminaFastqWriterTest
     extends AbstractFastqWriterTest
 {
 
-    /** {@inheritDoc} */
+    @Override
     public FastqWriter createFastqWriter()
     {
         return new IlluminaFastqWriter();
     }
 
-    /** {@inheritDoc} */
+    @Override
     public Fastq createFastq()
     {
         return new FastqBuilder()

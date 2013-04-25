@@ -338,43 +338,43 @@ public abstract class AbstractFastqReaderTest
         final String input = "";
         reader.parse(new InputSupplier<StringReader>()
                      {
-                         /** {@inheritDoc} */
+                         @Override
                          public StringReader getInput() throws IOException {
                              return new StringReader(input);
                          }
                      },
                      new ParseListener() {
-                         /** {@inheritDoc} */
+                         @Override
                          public void description(final String description) throws IOException {
                              // empty
                          }
  
-                         /** {@inheritDoc} */
+                         @Override
                          public void sequence(final String sequence) throws IOException {
                              // empty
                          }
  
-                         /** {@inheritDoc} */
+                         @Override
                          public void appendSequence(final String sequence) throws IOException {
                              // empty
                          }
  
-                         /** {@inheritDoc} */
+                         @Override
                          public void repeatDescription(final String repeatDescription) throws IOException {
                              // empty
                          }
  
-                         /** {@inheritDoc} */
+                         @Override
                          public void quality(final String quality) throws IOException {
                              // empty
                          }
  
-                         /** {@inheritDoc} */
+                         @Override
                          public void appendQuality(final String quality) throws IOException {
                              // empty
                          }
 
-                         /** {@inheritDoc} */
+                         @Override
                          public void complete() throws IOException {
                              // empty
                          }
@@ -388,37 +388,37 @@ public abstract class AbstractFastqReaderTest
         {
             reader.parse((InputSupplier<StringReader>) null,
                          new ParseListener() {
-                             /** {@inheritDoc} */
+                             @Override
                              public void description(final String description) throws IOException {
                                  // empty
                              }
  
-                             /** {@inheritDoc} */
+                             @Override
                              public void sequence(final String sequence) throws IOException {
                                  // empty
                              }
  
-                             /** {@inheritDoc} */
+                             @Override
                              public void appendSequence(final String sequence) throws IOException {
                                  // empty
                              }
  
-                             /** {@inheritDoc} */
+                             @Override
                              public void repeatDescription(final String repeatDescription) throws IOException {
                                  // empty
                              }
  
-                             /** {@inheritDoc} */
+                             @Override
                              public void quality(final String quality) throws IOException {
                                  // empty
                              }
  
-                             /** {@inheritDoc} */
+                             @Override
                              public void appendQuality(final String quality) throws IOException {
                                  // empty
                              }
 
-                             /** {@inheritDoc} */
+                             @Override
                              public void complete() throws IOException {
                                  // empty
                              }
@@ -439,7 +439,7 @@ public abstract class AbstractFastqReaderTest
         {
             reader.parse(new InputSupplier<StringReader>()
                          {
-                             /** {@inheritDoc} */
+                             @Override
                              public StringReader getInput() throws IOException {
                                  return new StringReader(input);
                              }

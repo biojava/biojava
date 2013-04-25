@@ -55,7 +55,7 @@ abstract class AbstractFastqReader
      */
     protected abstract FastqVariant getVariant();
 
-    /** {@inheritDoc} */
+    @Override
     public final <R extends Readable & Closeable> void parse(final InputSupplier<R> supplier,
                                                              final ParseListener listener)
         throws IOException
@@ -63,7 +63,7 @@ abstract class AbstractFastqReader
         FastqParser.parse(supplier, listener);
     }
 
-    /** {@inheritDoc} */
+    @Override
     public final <R extends Readable & Closeable> void stream(final InputSupplier<R> supplier,
                                                               final StreamListener listener)
         throws IOException
@@ -71,7 +71,7 @@ abstract class AbstractFastqReader
         StreamingFastqParser.stream(supplier, getVariant(), listener);
     }
 
-    /** {@inheritDoc} */
+    @Override
     public final Iterable<Fastq> read(final File file) throws IOException
     {
         if (file == null)
@@ -83,7 +83,7 @@ abstract class AbstractFastqReader
         return collect.getResult();
     }
 
-    /** {@inheritDoc} */
+    @Override
     public final Iterable<Fastq> read(final URL url) throws IOException
     {
         if (url == null)
@@ -95,7 +95,7 @@ abstract class AbstractFastqReader
         return collect.getResult();
     }
 
-    /** {@inheritDoc} */
+    @Override
     public final Iterable<Fastq> read(final InputStream inputStream) throws IOException
     {
         if (inputStream == null)
@@ -105,7 +105,7 @@ abstract class AbstractFastqReader
         Collect collect = new Collect();
         stream(new InputSupplier<InputStreamReader>()
                {
-                   /** {@inheritDoc} */
+                   @Override
                    public InputStreamReader getInput() throws IOException
                    {
                        return new InputStreamReader(inputStream);
@@ -122,7 +122,7 @@ abstract class AbstractFastqReader
         /** List of FASTQ formatted sequences. */
         private final List<Fastq> result = Lists.newLinkedList();
 
-        /** {@inheritDoc} */
+        @Override
         public void fastq(final Fastq fastq)
         {
             result.add(fastq);

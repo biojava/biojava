@@ -29,7 +29,7 @@ public final class IlluminaFastqReader
     extends AbstractFastqReader
 {
 
-    /** {@inheritDoc} */
+    @Override
     protected FastqVariant getVariant()
     {
         return FastqVariant.FASTQ_ILLUMINA;
