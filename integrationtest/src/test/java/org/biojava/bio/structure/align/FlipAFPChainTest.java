@@ -93,7 +93,7 @@ public class FlipAFPChainTest extends TestCase {
 		afpChain.setName1(name1);
 		afpChain.setName2(name2);
 
-
+		afpChain.setCalculationTime(0);
 
 		String xml = AFPChainXMLConverter.toXML(afpChain, ca1, ca2);
 
@@ -107,18 +107,7 @@ public class FlipAFPChainTest extends TestCase {
 		assertEquals(afpChain.getAlgorithmName(),flipped.getAlgorithmName());
 		assertEquals(afpChain.getVersion(), flipped.getVersion());
 
-		//System.out.println(AFPChainXMLConverter.toXML(flipped));
-
-		//AFPChainXMLParser.rebuildAFPChain(flipped, ca2, ca1);
-
-		//FatCat newCat = new FatCat();
-
-		//Group[] twistedGroups = AFPTwister.twistOptimized(flipped,ca2,ca1);
-
-		// FatCatAligner aligner =  newCat.getFatCatAligner();
-		//aligner.setTwistedGroups(twistedGroups);			
-		//newCat.display(flipped, ca2, ca1,  new ArrayList<Group>(),new ArrayList<Group>(),new ArrayList<Group>(),new ArrayList<Group>());
-
+		
 		String xmlNew = AFPChainXMLConverter.toXML(flipped, ca2, ca1);
 
 		AFPChain backChain = AFPChainXMLParser.fromXML(xmlNew, ca2, ca1);
