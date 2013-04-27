@@ -7,5 +7,4 @@ BioJava is licensed under LGPL 2.1.
 Please visit our [homepage](http://www.biojava.org/).
 
 ### Build Status
-![](https://travis-ci.org/biojava/biojava.png)
-
+[![Build Status](https://travis-ci.org/biojava/biojava.png)](https://travis-ci.org/biojava/biojava)
