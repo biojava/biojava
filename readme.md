@@ -5,3 +5,7 @@ BioJava is an open-source project dedicated to providing a Java framework for **
 BioJava is licensed under LGPL 2.1.
 
 Please visit our [homepage](http://www.biojava.org/).
+
+### Build Status
+![](https://travis-ci.org/biojava/biojava.png)
+
