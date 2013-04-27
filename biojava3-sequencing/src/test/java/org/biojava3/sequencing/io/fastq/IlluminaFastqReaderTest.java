@@ -32,7 +32,7 @@ public final class IlluminaFastqReaderTest
     extends AbstractFastqReaderTest
 {
 
-    /** {@inheritDoc} */
+    @Override
     public Fastq createFastq()
     {
         return new FastqBuilder()
@@ -43,13 +43,13 @@ public final class IlluminaFastqReaderTest
             .build();
     }
 
-    /** {@inheritDoc} */
+    @Override
     public FastqReader createFastqReader()
     {
         return new IlluminaFastqReader();
     }
 
-    /** {@inheritDoc} */
+    @Override
     public FastqWriter createFastqWriter()
     {
         return new IlluminaFastqWriter();
