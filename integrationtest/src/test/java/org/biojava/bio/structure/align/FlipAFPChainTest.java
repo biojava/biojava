@@ -114,7 +114,8 @@ public class FlipAFPChainTest extends TestCase {
 
 		AFPChain origFlip  = AFPChainFlipper.flipChain(backChain);
 		//AFPChainXMLParser.rebuildAFPChain(origFlip, ca1, ca2);
-
+		origFlip.setCalculationTime(0);
+		
 		String xmlBack = AFPChainXMLConverter.toXML(origFlip);
 		if ( ! xmlBack.equals(xml)){
 			printFirstMismatch(xmlBack, xml);
