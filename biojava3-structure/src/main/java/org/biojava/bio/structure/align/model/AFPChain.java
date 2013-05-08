@@ -285,7 +285,6 @@ public class AFPChain implements Serializable, Cloneable
 	}
 
 	protected void calcSimilarity() {
-		System.out.println("calcSimilarity");
 		Map<String,Double> idMap = AFPAlignmentDisplay.calcIdSimilarity(alnseq1,alnseq2,alnLength);
 
 		//probability = idMap.get("probability");
