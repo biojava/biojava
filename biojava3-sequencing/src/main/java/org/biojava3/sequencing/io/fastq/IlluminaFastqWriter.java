@@ -31,7 +31,7 @@ public final class IlluminaFastqWriter
     extends AbstractFastqWriter
 {
 
-    /** {@inheritDoc} */
+    @Override
     protected void validate(final Fastq fastq) throws IOException
     {
         if (fastq == null)
