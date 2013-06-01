@@ -113,7 +113,7 @@ public class AminoAcidCompoundSet implements CompoundSet<AminoAcidCompound> {
         if (string.length() > this.getMaxSingleCompoundStringLength()) {
             throw new IllegalArgumentException("String supplied ("+string+") is too long. Max is "+getMaxSingleCompoundStringLength());
         }
-        return this.aminoAcidCompoundCache.get(string.toLowerCase());
+        return this.aminoAcidCompoundCache.get(string.toUpperCase());
     }
 
     public int getMaxSingleCompoundStringLength() {
