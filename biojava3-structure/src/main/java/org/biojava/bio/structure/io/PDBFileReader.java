@@ -388,7 +388,7 @@ public class PDBFileReader implements StructureIOFile {
 	/** try to find the file in the filesystem and return a filestream in order to parse it
 	 * rules how to find file
 	 * - first check: if file is in path specified by PDBpath
-	 * - secnd check: if not found check in PDBpath/xy/ where xy is second and third char of PDBcode.
+	 * - second check: if not found check in PDBpath/xy/ where xy is second and third char of PDBcode.
 	 * if autoFetch is set it will try to download missing PDB files automatically.
 	 */
 
