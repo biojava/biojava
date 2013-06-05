@@ -392,7 +392,7 @@ public class PDBFileReader implements StructureIOFile {
 	 * if autoFetch is set it will try to download missing PDB files automatically.
 	 */
 
-	private InputStream getInputStream(String pdbId)
+	public InputStream getInputStream(String pdbId)
 			throws IOException {
 
 		if ( pdbId.length() < 4)
@@ -515,7 +515,7 @@ public class PDBFileReader implements StructureIOFile {
 	 * @author Peter Rose
 	 * @since 3.2
 	 */
-	private InputStream getInputStreamBioAssembly(String pdbId)
+	public InputStream getInputStreamBioAssembly(String pdbId)
 			throws IOException
 			{
 		loadedBioAssembly = true;
