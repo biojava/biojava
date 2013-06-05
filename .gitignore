@@ -2,4 +2,6 @@
 .profile
 .settings
 .classpath
-target
+.DS_Store
+/*/target
+*.swp
