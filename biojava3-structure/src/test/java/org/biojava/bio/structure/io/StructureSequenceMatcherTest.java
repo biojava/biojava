@@ -6,10 +6,11 @@ package org.biojava.bio.structure.io;
 
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
-import org.biojava.bio.structure.Atom;
+import junit.framework.TestCase;
+
+import org.biojava.bio.structure.AminoAcid;
 import org.biojava.bio.structure.Group;
 import org.biojava.bio.structure.ResidueNumber;
 import org.biojava.bio.structure.Structure;
@@ -18,8 +19,7 @@ import org.biojava.bio.structure.StructureTools;
 import org.biojava.bio.structure.UnknownPdbAminoAcidException;
 import org.biojava.bio.structure.align.util.AtomCache;
 import org.biojava3.core.sequence.ProteinSequence;
-
-import junit.framework.TestCase;
+import org.junit.Test;
 
 /**
  * @author Spencer Bliven
@@ -99,6 +99,23 @@ public class StructureSequenceMatcherTest extends TestCase {
 		*/
 	}
 
+	@Test
+	public void testSubstructureMatchingProteinSequence() throws UnknownPdbAminoAcidException {
+		ProteinSequence seq = new ProteinSequence(seq1.substring(30, 40));
+		Structure result = StructureSequenceMatcher.getSubstructureMatchingProteinSequence(seq, struct1);
+		assertEquals("Wrong number of groups", 10, StructureTools.getNrGroups(result));
+		assertEquals("Wrong number of chains", 1, result.getChains().size());
+		int i = 0;
+		for (Group group : result.getChain(0).getAtomGroups()) {
+			assertTrue("Contains non-amino acid group", group instanceof AminoAcid);
+			AminoAcid aa = (AminoAcid) group;
+			char c = StructureTools.convert_3code_1code(aa.getPDBName());
+			assertEquals("Wrong amino acid", seq.getSequenceAsString().charAt(i), c);
+			i++;
+		}
+	}
+	
+	@Test
 	public void testGetProteinSequenceForStructure() throws UnknownPdbAminoAcidException {
 		Map<Integer,Group> groupIndexPos = new HashMap<Integer,Group>();
 		ProteinSequence prot = StructureSequenceMatcher.getProteinSequenceForStructure(struct1, groupIndexPos);
@@ -123,7 +140,8 @@ public class StructureSequenceMatcherTest extends TestCase {
 			//System.out.format("%4d %.5s %s\n", res,resnum.toString(),aa.toString());
 		}
 	}
-	
+
+	@Test
 	public void testMatchSequenceToStructure() throws UnknownPdbAminoAcidException, StructureException {
 		// create modified sequence by removing 10 residues and adding 3
 		String sequenceStr = //>2PTC:E|PDBID|CHAIN|SEQUENCE
@@ -188,7 +206,8 @@ public class StructureSequenceMatcherTest extends TestCase {
 			}
 		}
 	}
-	
+
+	@Test
 	public void testRemoveGaps1() {
 		String ungapped = "ACDEFGHIKLMNPQRSTVWY";
 		String gapped = "--ACDE-F-GHI..KLM-NPQRSTVWY--";

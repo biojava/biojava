@@ -7,13 +7,16 @@ import java.util.List;
 import java.util.Map;
 
 import org.biojava.bio.structure.Chain;
+import org.biojava.bio.structure.ChainImpl;
 import org.biojava.bio.structure.Group;
 import org.biojava.bio.structure.ResidueNumber;
 import org.biojava.bio.structure.Structure;
+import org.biojava.bio.structure.StructureException;
+import org.biojava.bio.structure.StructureTools;
 import org.biojava3.alignment.Alignments;
+import org.biojava3.alignment.Alignments.PairwiseSequenceAlignerType;
 import org.biojava3.alignment.SimpleGapPenalty;
 import org.biojava3.alignment.SimpleSubstitutionMatrix;
-import org.biojava3.alignment.Alignments.PairwiseSequenceAlignerType;
 import org.biojava3.alignment.template.AlignedSequence;
 import org.biojava3.alignment.template.SequencePair;
 import org.biojava3.alignment.template.SubstitutionMatrix;
@@ -31,6 +34,45 @@ import org.biojava3.core.sequence.template.CompoundSet;
  */
 public class StructureSequenceMatcher {
 
+	/**
+	 * Get a substructure of {@code wholeStructure} containing only the {@link Group Groups} that are included in
+	 * {@code sequence}. The resulting structure will contain only {@code ATOM} residues; the SEQ-RES will be empty.
+	 * The {@link Chain Chains} of the Structure will be new instances (cloned), but the {@link Group Groups} will not.
+	 * @param sequence The input protein sequence
+	 * @param wholeStructure The structure from which to take a substructure
+	 * @return The resulting structure
+	 * @throws StructureException
+	 * @see {@link #matchSequenceToStructure(ProteinSequence, Structure)}
+	 */
+	public static Structure getSubstructureMatchingProteinSequence(ProteinSequence sequence, Structure wholeStructure) {
+		ResidueNumber[] rns = matchSequenceToStructure(sequence, wholeStructure);
+		Structure structure = wholeStructure.clone();
+		structure.getChains().clear();
+//		structure.getHetGroups().clear();
+		Chain currentChain = null;
+		for (ResidueNumber rn : rns) {
+			Group group; // note that we don't clone
+			try {
+				group = StructureTools.getGroupByPDBResidueNumber(wholeStructure, rn);
+			} catch (StructureException e) {
+				throw new IllegalArgumentException("Could not find residue " + rn + " in structure", e);
+			}
+			Chain chain = new ChainImpl();
+			chain.setChainID(group.getChainId());
+			if (currentChain == null || !currentChain.getChainID().equals(chain.getChainID())) {
+				structure.addChain(chain);
+				chain.setHeader(group.getChain().getHeader());
+				chain.setParent(structure);
+				chain.setSwissprotId(group.getChain().getSwissprotId());
+				chain.setInternalChainID(group.getChain().getInternalChainID());
+				chain.setId(group.getChain().getId());
+				currentChain = chain;
+			}
+			currentChain.addGroup(group);
+		}
+		return structure;
+	}
+	
 	/**
 	 * Generates a ProteinSequence corresponding to the sequence of struct,
 	 * and maintains a mapping from the sequence back to the original groups.
