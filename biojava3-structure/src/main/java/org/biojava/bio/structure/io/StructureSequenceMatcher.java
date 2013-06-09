@@ -51,6 +51,7 @@ public class StructureSequenceMatcher {
 //		structure.getHetGroups().clear();
 		Chain currentChain = null;
 		for (ResidueNumber rn : rns) {
+			if (rn == null) continue;
 			Group group; // note that we don't clone
 			try {
 				group = StructureTools.getGroupByPDBResidueNumber(wholeStructure, rn);
@@ -153,7 +154,7 @@ public class StructureSequenceMatcher {
 		"blosum100");
 		SequencePair<ProteinSequence, AminoAcidCompound> pair = 
 			Alignments.getPairwiseAlignment(seq, structSeq,
-					PairwiseSequenceAlignerType.GLOBAL, new SimpleGapPenalty(), matrix);
+					PairwiseSequenceAlignerType.LOCAL, new SimpleGapPenalty(), matrix);
 
 		//System.out.print(pair.toString());
 
