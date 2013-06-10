@@ -30,6 +30,11 @@
 
 		<!-- <dependency> <groupId>org.biojava</groupId> <artifactId>biojava3-core</artifactId> 
 			<version>3.0.3-SNAPSHOT</version> <scope>test</scope> </dependency> -->
+		<dependency>
+			<groupId>xmlunit</groupId>
+			<artifactId>xmlunit</artifactId>
+			<version>1.4</version>
+		</dependency>
 	</dependencies>
 	<properties>
 		<jdk.version>1.6</jdk.version>
