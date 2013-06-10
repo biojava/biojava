@@ -90,13 +90,6 @@ public class FastaAFPChainConverter {
 			throw new IllegalArgumentException("There must be exactly 2 sequences, but there were " + sequences.size());
 		}
 
-		if (structure1.getName() == null || structure2.getName() == null) {
-			throw new IllegalArgumentException("A structure name is null");
-		}
-		if (structure1.getName().equals(structure2.getName())) {
-			throw new IllegalArgumentException("");
-		}
-
 		List<ProteinSequence> seqs = new ArrayList<ProteinSequence>();
 		List<String> names = new ArrayList<String>(2);
 		for (Map.Entry<String, ProteinSequence> entry : sequences.entrySet()) {
