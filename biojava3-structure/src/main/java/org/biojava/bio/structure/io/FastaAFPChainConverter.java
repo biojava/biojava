@@ -90,6 +90,10 @@ public class FastaAFPChainConverter {
 			throw new IllegalArgumentException("There must be exactly 2 sequences, but there were " + sequences.size());
 		}
 
+		if (structure1 == null || structure2 == null) {
+			throw new IllegalArgumentException("A structure is null");
+		}
+		
 		List<ProteinSequence> seqs = new ArrayList<ProteinSequence>();
 		List<String> names = new ArrayList<String>(2);
 		for (Map.Entry<String, ProteinSequence> entry : sequences.entrySet()) {
@@ -107,9 +111,14 @@ public class FastaAFPChainConverter {
 	public static AFPChain fastaToAfpChain(ProteinSequence sequence1, ProteinSequence sequence2, Structure structure1,
 			Structure structure2) throws StructureException {
 
-		if (sequence1 == null || sequence2 == null || structure1 == null || structure2 == null)
-			return null;
+		if (structure1 == null || structure2 == null) {
+			throw new IllegalArgumentException("A structure is null");
+		}
 
+		if (sequence1 == null || sequence2 == null) {
+			throw new IllegalArgumentException("A sequence is null");
+		}
+		
 		ResidueNumber[] rn1 = StructureSequenceMatcher.matchSequenceToStructure(sequence1, structure1);
 		ResidueNumber[] rn2 = StructureSequenceMatcher.matchSequenceToStructure(sequence2, structure2);
 
