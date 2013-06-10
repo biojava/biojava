@@ -36,6 +36,7 @@ import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureException;
 import org.biojava.bio.structure.StructureTools;
 import org.biojava.bio.structure.align.model.AFPChain;
+import org.biojava.bio.structure.align.util.AFPChainScorer;
 import org.biojava.bio.structure.align.util.AlignmentTools;
 import org.biojava.bio.structure.align.util.AtomCache;
 import org.biojava.bio.structure.align.xml.AFPChainXMLConverter;
@@ -144,6 +145,7 @@ public class FastaAFPChainConverter {
 		Atom[] ca2 = StructureTools.getAtomCAArray(structure2);
 
 		AFPChain afpChain = AlignmentTools.createAFPChain(ca1, ca2, participating1Array, participating2Array);
+		afpChain.setTMScore(AFPChainScorer.getTMScore(afpChain, ca1, ca2));
 		return afpChain;
 
 	}
