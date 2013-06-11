@@ -31,15 +31,19 @@ import java.util.List;
 import java.util.Map;
 
 import org.biojava.bio.structure.Atom;
+import org.biojava.bio.structure.Calc;
 import org.biojava.bio.structure.ResidueNumber;
+import org.biojava.bio.structure.SVDSuperimposer;
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureException;
 import org.biojava.bio.structure.StructureTools;
+import org.biojava.bio.structure.align.model.AFP;
 import org.biojava.bio.structure.align.model.AFPChain;
 import org.biojava.bio.structure.align.util.AFPChainScorer;
 import org.biojava.bio.structure.align.util.AlignmentTools;
 import org.biojava.bio.structure.align.util.AtomCache;
 import org.biojava.bio.structure.align.xml.AFPChainXMLConverter;
+import org.biojava.bio.structure.jama.Matrix;
 import org.biojava3.alignment.template.AlignedSequence;
 import org.biojava3.alignment.template.SequencePair;
 import org.biojava3.core.sequence.ProteinSequence;
@@ -105,6 +109,16 @@ public class FastaAFPChainConverter {
 		return fastaToAfpChain(seqs.get(0), seqs.get(1), structure1, structure2);
 	}
 
+	private static Atom[] getAligned(Atom[] ca, List<ResidueNumber> residues) {
+		List<Atom> alignedList = new ArrayList<Atom>();
+		for (Atom atom : ca) {
+			if (residues.contains(atom.getGroup().getResidueNumber())) {
+				alignedList.add(atom);
+			}
+		}
+		return alignedList.toArray(new Atom[alignedList.size()]);
+	}
+	
 	/**
 	 * Returns an AFPChain corresponding to the alignment between {@code structure1} and {@code structure2}, which is given by the gapped protein sequences {@code sequence1} and {@code sequence2}. The
 	 * sequences need not correspond to the entire structures, since local alignment is performed to match the sequences to structures.
@@ -119,33 +133,61 @@ public class FastaAFPChainConverter {
 		if (sequence1 == null || sequence2 == null) {
 			throw new IllegalArgumentException("A sequence is null");
 		}
-		
-		ResidueNumber[] rn1 = StructureSequenceMatcher.matchSequenceToStructure(sequence1, structure1);
-		ResidueNumber[] rn2 = StructureSequenceMatcher.matchSequenceToStructure(sequence2, structure2);
-
-		List<ResidueNumber> participating1 = new ArrayList<ResidueNumber>();
-		List<ResidueNumber> participating2 = new ArrayList<ResidueNumber>();
-		for (int i = 0; i < rn1.length; i++) {
-			if (rn1[i] != null && rn2[i] != null) {
-				participating1.add(rn1[i]);
-				participating2.add(rn2[i]);
-			}
-		}
-
-		ResidueNumber[] participating1Array = new ResidueNumber[participating1.size()];
-		for (int i = 0; i < participating1.size(); i++) {
-			participating1Array[i] = participating1.get(i);
-		}
-		ResidueNumber[] participating2Array = new ResidueNumber[participating2.size()];
-		for (int i = 0; i < participating2.size(); i++) {
-			participating2Array[i] = participating2.get(i);
-		}
 
 		Atom[] ca1 = StructureTools.getAtomCAArray(structure1);
 		Atom[] ca2 = StructureTools.getAtomCAArray(structure2);
 
-		AFPChain afpChain = AlignmentTools.createAFPChain(ca1, ca2, participating1Array, participating2Array);
-		afpChain.setTMScore(AFPChainScorer.getTMScore(afpChain, ca1, ca2));
+		ResidueNumber[] residues1 = StructureSequenceMatcher.matchSequenceToStructure(sequence1, structure1);
+		ResidueNumber[] residues2 = StructureSequenceMatcher.matchSequenceToStructure(sequence2, structure2);
+
+		List<ResidueNumber> alignedResiduesList1 = new ArrayList<ResidueNumber>();
+		List<ResidueNumber> alignedResiduesList2 = new ArrayList<ResidueNumber>();
+		for (int i = 0; i < residues1.length; i++) {
+			if (residues1[i] != null && residues2[i] != null) {
+				alignedResiduesList1.add(residues1[i]);
+				alignedResiduesList2.add(residues2[i]);
+			}
+		}
+
+		ResidueNumber[] alignedResidues1 = alignedResiduesList1.toArray(new ResidueNumber[alignedResiduesList1.size()]);
+		ResidueNumber[] alignedResidues2 = alignedResiduesList2.toArray(new ResidueNumber[alignedResiduesList2.size()]);
+
+		AFPChain afpChain = AlignmentTools.createAFPChain(ca1, ca2, alignedResidues1, alignedResidues2);
+		
+		// Perform singular value decomposition to find translation and rotation
+		// This allows us to superimpose the aligned structures
+		// This is only important for visualization of an alignment
+		Atom[] alignedAtoms1 = getAligned(ca1, alignedResiduesList1);
+		Atom[] alignedAtoms2 = getAligned(ca2, alignedResiduesList2);
+		SVDSuperimposer svd = new SVDSuperimposer(alignedAtoms1, alignedAtoms2);
+		Matrix matrix = svd.getRotation();
+		Atom shift = svd.getTranslation();
+
+		// apply the rotation and translation to a clone of the second structure
+		// do NOT actually apply rotation to ca2
+		Atom[] aligned2Clone = StructureTools.cloneCAArray(alignedAtoms2); // do this so we don't modify the method argument as a side effect
+		for (Atom atom : aligned2Clone) {
+			Calc.rotate(atom, matrix);
+			Calc.shift(atom, shift);
+		}
+
+		// calculate RMSD and TM-score
+		double rmsd = SVDSuperimposer.getRMS(alignedAtoms1, aligned2Clone);
+		double tmScore = SVDSuperimposer.getTMScore(alignedAtoms1, aligned2Clone, ca1.length, ca2.length);
+
+		for (AFP afp : afpChain.getAfpSet()) {
+			afp.setFragLen(1);
+			afp.setM(matrix);
+			afp.setRmsd(rmsd);
+			afp.setScore(tmScore);
+		}
+
+		afpChain.setBlockRmsd(new double[] {rmsd});
+		afpChain.setBlockGap(new int[] {afpChain.getGapLen()});
+		afpChain.setBlockSize(new int[] {alignedAtoms1.length});
+		afpChain.setTotalRmsdOpt(rmsd);
+		afpChain.setTMScore(tmScore);
+		
 		return afpChain;
 
 	}
