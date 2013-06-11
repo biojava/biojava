@@ -42,7 +42,7 @@ public class DemoChangeChemCompProvider {
 
 		// Set the system wide property where PDB and chemcomp files are being cached.
 		// you can set the path to the local PDB installation either like this
-		reader.setPath(PDB_PATH);
+//		reader.setPath(PDB_PATH);
 		// or via
 		//System.setProperty(AbstractUserArgumentProcessor.PDB_DIR,PDB_PATH);		
 		
