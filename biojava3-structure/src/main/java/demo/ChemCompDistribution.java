@@ -6,8 +6,6 @@ public class ChemCompDistribution {
 
 	public static void main(String[] args){
 
-		
-		DownloadChemCompProvider.setPath("/Users/andreas/WORK/PDB/");
 		DownloadChemCompProvider c = new DownloadChemCompProvider();
 		c.setDownloadAll(true);
 		c.checkDoFirstInstall();

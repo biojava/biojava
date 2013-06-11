@@ -159,8 +159,6 @@ public class RemoteDomainProvider extends SerializableCache<String,SortedSet<Str
 	}
 
 	public static void main(String[] args){
-		System.setProperty(AbstractUserArgumentProcessor.PDB_DIR,"/Users/ap3/WORK/PDB");
-
 		String name ="3KIH.A";
 		try {
 			RemoteDomainProvider me = new RemoteDomainProvider(true);
