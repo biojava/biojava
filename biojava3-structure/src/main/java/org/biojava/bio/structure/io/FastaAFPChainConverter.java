@@ -224,6 +224,8 @@ public class FastaAFPChainConverter {
 				afp.setScore(tmScore);
 			}
 
+			afpChain.setBlockShiftVector(new Atom[] {shift});
+			afpChain.setBlockRotationMatrix(new Matrix[] {matrix});
 			afpChain.setBlockRmsd(new double[] {rmsd});
 			afpChain.setBlockGap(new int[] {afpChain.getGapLen()});
 			afpChain.setBlockSize(new int[] {alignedAtoms1.length});

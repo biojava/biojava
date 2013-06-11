@@ -33,5 +33,7 @@
     <eqr eqrNr="30" pdbres1="395" chain1="A" pdbres2="267" chain2="A" />
     <eqr eqrNr="31" pdbres1="396" chain1="A" pdbres2="268" chain2="A" />
     <eqr eqrNr="32" pdbres1="397" chain1="A" pdbres2="269" chain2="A" />
+    <matrix mat11="0.189722" mat12="0.286252" mat13="-0.939183" mat21="0.407219" mat22="0.847462" mat23="0.340558" mat31="0.893408" mat32="-0.447065" mat33="0.044215" />
+    <shift x="-59.902" y="19.306" z="132.950" />
   </block>
 </AFPChain>
