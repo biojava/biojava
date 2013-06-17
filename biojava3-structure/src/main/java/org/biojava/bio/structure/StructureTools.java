@@ -22,6 +22,10 @@
  */
 package org.biojava.bio.structure;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -38,6 +42,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.biojava.bio.structure.align.util.AtomCache;
+import org.biojava.bio.structure.io.PDBFileParser;
 
 
 /**
@@ -1071,5 +1076,55 @@ public class StructureTools {
 		return n;
 
 
+	}
+	
+	
+	/**
+	 * Short version of {@link #getStructure(String, PDBFileParser, AtomCache)}
+	 * which creates new parsers when needed
+	 * @param name
+	 * @return
+	 * @throws IOException
+	 * @throws StructureException
+	 */
+	public static Structure getStructure(String name) throws IOException, StructureException {
+		return StructureTools.getStructure(name,null,null);
+	}
+	/**
+	 * Flexibly get a structure from an input String. The intent of this method
+	 * is to allow any reasonable string which could refer to a structure to be
+	 * correctly parsed. The following are currently supported:
+	 * <ol>
+	 * <li>Filename (if name refers to an existing file)
+	 * <li>PDB ID
+	 * <li>SCOP domains
+	 * <li>PDP domains
+	 * <li>Residue ranges
+	 * <li>Other formats supported by AtomCache
+	 * </ol>
+	 * @param name Some reference to the protein structure
+	 * @param parser A clean PDBFileParser to use if it is a file. If null,
+	 * 	a PDBFileParser will be instantiated if needed.
+	 * @param cache An AtomCache to use if the structure can be fetched from the
+	 *  PDB.  If null, a AtomCache will be instantiated if needed.
+	 * @return A Structure object
+	 * @throws IOException if name is an existing file, but doesn't parse correctly
+	 * @throws StructureException if the format is unknown, or if AtomCache throws
+	 *  an exception.
+	 */
+	public static Structure getStructure(String name,PDBFileParser parser, AtomCache cache) throws IOException, StructureException {
+		File f = new File(name);
+		if(f.exists()) {
+			if(parser == null) {
+				parser = new PDBFileParser();
+			}
+			InputStream inStream = new FileInputStream(f);
+			return parser.parsePDBFile(inStream);
+		} else {
+			if( cache == null) {
+				cache = new AtomCache();
+			}
+			return cache.getStructure(name);
+		}
 	}
 }
