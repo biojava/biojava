@@ -26,6 +26,7 @@ package org.biojava.bio.structure.io;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -349,18 +350,16 @@ public class FastaAFPChainConverter {
 	 *            A String array of fasta-file structure-1-name structure-2-name
 	 * @throws Exception
 	 */
-	public void main(String[] args) throws Exception {
+	public static void main(String[] args) throws Exception {
 		if (args.length != 3) {
 			System.err.println("Usage: FastaAFPChainConverter fasta-file structure-1-name structure-2-name");
 			return;
 		}
 		File fasta = new File(args[0]);
-		AtomCache cache = new AtomCache();
-		Structure structure1 = cache.getStructure(args[1]);
-		Structure structure2 = cache.getStructure(args[2]);
+		Structure structure1 = StructureTools.getStructure(args[1]);
+		Structure structure2 = StructureTools.getStructure(args[2]);
 		AFPChain afpChain = fastaFileToAfpChain(fasta, structure1, structure2);
 		String xml = AFPChainXMLConverter.toXML(afpChain);
 		System.out.println(xml);
 	}
-
 }
