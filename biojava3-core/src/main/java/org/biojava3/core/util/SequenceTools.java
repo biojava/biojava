@@ -37,9 +37,7 @@ public class SequenceTools {
 	 */
 	public static <T> void permuteCyclic(T[] array, T[] fill, int n) {
 		if (array.length != fill.length) throw new IllegalArgumentException("Lengths do not match");
-		while (n < 0) {
-			n += array.length;
-		}
+		if (n < 0) n = array.length + n;
 		while (n > array.length) {
 			n -= array.length;
 		}
