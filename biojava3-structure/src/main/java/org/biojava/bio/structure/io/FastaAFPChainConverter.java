@@ -26,7 +26,6 @@ package org.biojava.bio.structure.io;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -43,7 +42,6 @@ import org.biojava.bio.structure.StructureTools;
 import org.biojava.bio.structure.align.model.AFP;
 import org.biojava.bio.structure.align.model.AFPChain;
 import org.biojava.bio.structure.align.util.AlignmentTools;
-import org.biojava.bio.structure.align.util.AtomCache;
 import org.biojava.bio.structure.align.xml.AFPChainXMLConverter;
 import org.biojava.bio.structure.jama.Matrix;
 import org.biojava3.alignment.template.AlignedSequence;
@@ -69,6 +67,13 @@ import org.biojava3.core.util.SequenceTools;
  */
 public class FastaAFPChainConverter {
 
+	public static AFPChain cpFastaToAfpChain(String first, String second, Structure structure, int cpSite) throws StructureException {
+		ProteinSequence s1 = new ProteinSequence(first);
+		s1.setUserCollection(getAlignedUserCollection(first));
+		ProteinSequence s2 = new ProteinSequence(second);
+		s2.setUserCollection(getAlignedUserCollection(second));
+		return cpFastaToAfpChain(s1, s2, structure, cpSite);
+	}
 	/**
 	 * Takes a structure and sequence corresponding to an alignment between a structure or sequence and itself (or even a structure with a sequence), where the result has a circular permutation site
 	 * {@link cpSite} residues to the right.
@@ -80,8 +85,6 @@ public class FastaAFPChainConverter {
 	public static AFPChain cpFastaToAfpChain(ProteinSequence sequence, ProteinSequence second, Structure structure, int cpSite)
 			throws StructureException {
 
-		setUserCollection(sequence);
-
 		if (structure == null) {
 			throw new IllegalArgumentException("The structure is null");
 		}
@@ -91,7 +94,7 @@ public class FastaAFPChainConverter {
 		}
 
 		Atom[] ca1 = StructureTools.getAtomCAArray(structure);
-		Atom[] ca2 = StructureTools.cloneCAArray(ca1);
+		Atom[] ca2 =  StructureTools.getAtomCAArray(structure); // can't use cloneCAArray because it doesn't set parent group.chain.structure
 
 		ProteinSequence antipermuted = new ProteinSequence(SequenceTools.permuteCyclic(second.getSequenceAsString(), -cpSite));
 
@@ -100,6 +103,14 @@ public class FastaAFPChainConverter {
 		
 		ResidueNumber[] nonpermutedResidues = new ResidueNumber[antipermutedResidues.length];
 		SequenceTools.permuteCyclic(antipermutedResidues, nonpermutedResidues, +cpSite);
+
+		// nullify ResidueNumbers that have a lowercase sequence character
+		if (sequence.getUserCollection() != null) {
+			CasePreservingProteinSequenceCreator.setLowercaseToNull(sequence, residues);
+		}
+		if (antipermuted.getUserCollection() != null) {
+			CasePreservingProteinSequenceCreator.setLowercaseToNull(second, nonpermutedResidues);
+		}
 
 		for (ResidueNumber r : residues) System.err.print(r + "\t");
 		System.err.println();
@@ -110,14 +121,6 @@ public class FastaAFPChainConverter {
 		System.err.println();
 		for (char c : second.getSequenceAsString().toCharArray()) System.err.print(c + "\t");
 		System.err.println();
-
-		// nullify ResidueNumbers that have a lowercase sequence character
-		if (sequence.getUserCollection() != null) {
-			CasePreservingProteinSequenceCreator.setLowercaseToNull(sequence, residues);
-		}
-		if (antipermuted.getUserCollection() != null) {
-			CasePreservingProteinSequenceCreator.setLowercaseToNull(second, nonpermutedResidues);
-		}
 
 		return buildAlignment(ca1, ca2, residues, nonpermutedResidues);
 
@@ -182,15 +185,31 @@ public class FastaAFPChainConverter {
 	}
 
 	/**
+	 * TODO Write comment
+	 * @param sequence1
+	 * @param sequence2
+	 * @param structure1
+	 * @param structure2
+	 * @return
+	 * @throws StructureException
+	 */
+	public static AFPChain fastaToAfpChain(String sequence1, String sequence2, Structure structure1,
+			Structure structure2) throws StructureException {
+		ProteinSequence s1 = new ProteinSequence(sequence1);
+		s1.setUserCollection(getAlignedUserCollection(sequence1));
+		ProteinSequence s2 = new ProteinSequence(sequence2);
+		s2.setUserCollection(getAlignedUserCollection(sequence2));
+		return fastaToAfpChain(s1, s2, structure1, structure2);
+	}
+	
+	/**
 	 * Returns an AFPChain corresponding to the alignment between {@code structure1} and {@code structure2}, which is given by the gapped protein sequences {@code sequence1} and {@code sequence2}. The
 	 * sequences need not correspond to the entire structures, since local alignment is performed to match the sequences to structures. Assumes that a residue is aligned if and only if it is given by
-	 * an uppercase letter. As a side effect, sets the {@link ProteinSequence#getUserCollection()} to a list of booleans.
+	 * an uppercase letter.
+	 * @param sequence1 <em>Must</em> have {@link ProteinSequence#getUserCollection()} set to document upper- and lower-case as aligned and unaligned; see {@link #getAlignedUserCollection(String)}
 	 */
 	public static AFPChain fastaToAfpChain(ProteinSequence sequence1, ProteinSequence sequence2, Structure structure1,
 			Structure structure2) throws StructureException {
-
-		setUserCollection(sequence1);
-		setUserCollection(sequence2);
 
 		if (structure1 == null || structure2 == null) {
 			throw new IllegalArgumentException("A structure is null");
@@ -329,18 +348,16 @@ public class FastaAFPChainConverter {
 		return alignedList.toArray(new Atom[alignedList.size()]);
 	}
 
-	private static void setUserCollection(ProteinSequence sequence) {
-		if (sequence.getUserCollection() != null)
-			return;
-		List<Object> aligned = new ArrayList<Object>(sequence.getLength());
-		for (char c : sequence.getSequenceAsString().toCharArray()) {
-			if (Character.isUpperCase(c)) {
-				aligned.add(true);
-			} else {
-				aligned.add(false);
-			}
+	/**
+	 * Takes a protein sequence string with capital and lowercase letters and sets its {@link ProteinSequence#getUserCollection() user collection} to record which letters are uppercase (aligned) and which are lowercase (unaligned).
+	 * @param sequence Make sure <em>not</em> to use {@link ProteinSequence#getSequenceAsString()} for this, as it won't preserve upper- and lower-case
+	 */
+	public static List<Object> getAlignedUserCollection(String sequence) {
+		List<Object> aligned = new ArrayList<Object>(sequence.length());
+		for (char c : sequence.toCharArray()) {
+			aligned.add(Character.isUpperCase(c));
 		}
-		sequence.setUserCollection(aligned);
+		return aligned;
 	}
 
 	/**
@@ -362,4 +379,5 @@ public class FastaAFPChainConverter {
 		String xml = AFPChainXMLConverter.toXML(afpChain);
 		System.out.println(xml);
 	}
+
 }
