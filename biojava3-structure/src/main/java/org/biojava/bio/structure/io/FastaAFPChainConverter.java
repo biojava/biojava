@@ -108,20 +108,44 @@ public class FastaAFPChainConverter {
 		if (sequence.getUserCollection() != null) {
 			CasePreservingProteinSequenceCreator.setLowercaseToNull(sequence, residues);
 		}
-		if (antipermuted.getUserCollection() != null) {
+		if (second.getUserCollection() != null) {
 			CasePreservingProteinSequenceCreator.setLowercaseToNull(second, nonpermutedResidues);
 		}
 
 		for (ResidueNumber r : residues) System.err.print(r + "\t");
-		System.err.println();
+		System.out.println();
 		for (char c : sequence.getSequenceAsString().toCharArray()) System.err.print(c + "\t");
-		System.err.println();
+		System.out.println();
 
 		for (ResidueNumber r : nonpermutedResidues) System.err.print(r + "\t");
-		System.err.println();
+		System.out.println();
 		for (char c : second.getSequenceAsString().toCharArray()) System.err.print(c + "\t");
-		System.err.println();
-
+		System.out.println();
+		
+		for (int i = 0; i < residues.length; i++) {
+			if (residues[i] == null && nonpermutedResidues[i] != null || residues[i] != null && nonpermutedResidues[i] == null) {
+				System.out.println("BAD AT " + i);
+			}
+		}
+		for (int i = 0; i < residues.length; i++) {
+			if (residues[i] == null) {
+				System.out.print("=");
+			} else {
+				System.out.print(sequence.getSequenceAsString().charAt(i));
+			}
+		}
+		System.out.println();
+		for (int i = 0; i < residues.length; i++) {
+			if (nonpermutedResidues[i] == null) {
+				System.out.print("=");
+			} else {
+				System.out.print(second.getSequenceAsString().charAt(i));
+			}
+		}
+		int x = 0;
+		for (int i = 0; i < nonpermutedResidues.length; i++) if (nonpermutedResidues[i] == null) x++;
+		System.out.println();
+		System.out.println("x=" + x);
 		return buildAlignment(ca1, ca2, residues, nonpermutedResidues);
 
 	}
