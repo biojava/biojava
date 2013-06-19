@@ -389,6 +389,11 @@ public class AlignmentToolsTest extends TestCase {
 		
 	}
 	
+	/**
+	 * Maps (Double d)->((int)(d+offset))
+	 * @author blivens
+	 *
+	 */
 	public static class OffsetMap extends AbstractMap<Double,Integer>
 	{
 		private int offset;
