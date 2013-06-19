@@ -93,16 +93,32 @@ public class FastaAFPChainConverter {
 			throw new IllegalArgumentException("The sequence is null");
 		}
 
+		// we need to find the ungapped CP site
+		int j = 0;
+		int ungappedCpShift = 0;
+		while (ungappedCpShift < Math.abs(cpSite)) {
+			char c;
+			if (cpSite > 0) {
+				c = sequence.getSequenceAsString().charAt(j);
+			} else {
+				c = sequence.getSequenceAsString().charAt(sequence.getLength() -1 - j);
+			}
+			if (c != '-') {
+				ungappedCpShift++;
+			}
+			j++;
+		}
+
 		Atom[] ca1 = StructureTools.getAtomCAArray(structure);
 		Atom[] ca2 =  StructureTools.getAtomCAArray(structure); // can't use cloneCAArray because it doesn't set parent group.chain.structure
 
-		ProteinSequence antipermuted = new ProteinSequence(SequenceTools.permuteCyclic(second.getSequenceAsString(), -cpSite));
+		ProteinSequence antipermuted = new ProteinSequence(SequenceTools.permuteCyclic(second.getSequenceAsString(), ungappedCpShift));
 
 		ResidueNumber[] residues = StructureSequenceMatcher.matchSequenceToStructure(sequence, structure);
 		ResidueNumber[] antipermutedResidues = StructureSequenceMatcher.matchSequenceToStructure(antipermuted, structure);
-		
+
 		ResidueNumber[] nonpermutedResidues = new ResidueNumber[antipermutedResidues.length];
-		SequenceTools.permuteCyclic(antipermutedResidues, nonpermutedResidues, +cpSite);
+		SequenceTools.permuteCyclic(antipermutedResidues, nonpermutedResidues, -ungappedCpShift);
 
 		// nullify ResidueNumbers that have a lowercase sequence character
 		if (sequence.getUserCollection() != null) {
@@ -112,40 +128,23 @@ public class FastaAFPChainConverter {
 			CasePreservingProteinSequenceCreator.setLowercaseToNull(second, nonpermutedResidues);
 		}
 
-		for (ResidueNumber r : residues) System.err.print(r + "\t");
-		System.out.println();
-		for (char c : sequence.getSequenceAsString().toCharArray()) System.err.print(c + "\t");
-		System.out.println();
-
-		for (ResidueNumber r : nonpermutedResidues) System.err.print(r + "\t");
-		System.out.println();
-		for (char c : second.getSequenceAsString().toCharArray()) System.err.print(c + "\t");
-		System.out.println();
+//		for (int i = 0; i < residues.length; i++) {
+//			if (residues[i] == null) {
+//				System.out.print("=");
+//			} else {
+//				System.out.print(sequence.getSequenceAsString().charAt(i));
+//			}
+//		}
+//		System.out.println();
+//		for (int i = 0; i < residues.length; i++) {
+//			if (nonpermutedResidues[i] == null) {
+//				System.out.print("=");
+//			} else {
+//				System.out.print(second.getSequenceAsString().charAt(i));
+//			}
+//		}
+//		System.out.println();
 		
-		for (int i = 0; i < residues.length; i++) {
-			if (residues[i] == null && nonpermutedResidues[i] != null || residues[i] != null && nonpermutedResidues[i] == null) {
-				System.out.println("BAD AT " + i);
-			}
-		}
-		for (int i = 0; i < residues.length; i++) {
-			if (residues[i] == null) {
-				System.out.print("=");
-			} else {
-				System.out.print(sequence.getSequenceAsString().charAt(i));
-			}
-		}
-		System.out.println();
-		for (int i = 0; i < residues.length; i++) {
-			if (nonpermutedResidues[i] == null) {
-				System.out.print("=");
-			} else {
-				System.out.print(second.getSequenceAsString().charAt(i));
-			}
-		}
-		int x = 0;
-		for (int i = 0; i < nonpermutedResidues.length; i++) if (nonpermutedResidues[i] == null) x++;
-		System.out.println();
-		System.out.println("x=" + x);
 		return buildAlignment(ca1, ca2, residues, nonpermutedResidues);
 
 	}
@@ -225,7 +224,7 @@ public class FastaAFPChainConverter {
 		s2.setUserCollection(getAlignedUserCollection(sequence2));
 		return fastaToAfpChain(s1, s2, structure1, structure2);
 	}
-	
+
 	/**
 	 * Returns an AFPChain corresponding to the alignment between {@code structure1} and {@code structure2}, which is given by the gapped protein sequences {@code sequence1} and {@code sequence2}. The
 	 * sequences need not correspond to the entire structures, since local alignment is performed to match the sequences to structures. Assumes that a residue is aligned if and only if it is given by
@@ -346,6 +345,7 @@ public class FastaAFPChainConverter {
 				afp.setScore(tmScore);
 			}
 
+//			afpChain.setAlnLength(afpChain.getAfpSet().size());
 			afpChain.setBlockShiftVector(new Atom[] { shift });
 			afpChain.setBlockRotationMatrix(new Matrix[] { matrix });
 			afpChain.setBlockRmsd(new double[] { rmsd });
