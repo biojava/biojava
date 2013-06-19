@@ -648,4 +648,83 @@ public class AlignmentTools {
 		afpChain.setOptRmsd(dummy);
 		afpChain.setBlockRmsd(dummy);
 	}
+	
+	/**
+	 * Print an alignment map in a concise representation. Edges are given
+	 * as two numbers separated by '>'. They are chained together where possible,
+	 * or separated by spaces where disjoint or branched.
+	 * 
+	 * <p>Note that more concise representations may be possible.
+	 *  
+	 * <p>Examples:
+	 * <li>1>2>3>1
+	 * <li>1>2>3>2 4>3
+	 * 
+	 * @param alignment The input function, as a map (see {@link AlignmentTools#alignmentAsMap(AFPChain)})
+	 * @param identity An identity-like function providing the isomorphism between
+	 *  the codomain of alignment (of type <T>) and the domain (type <S>).
+	 * @return
+	 */
+	public static <S,T> String toConciseAlignmentString(Map<S,T> alignment, Map<T,S> identity) {
+		// Clone input to prevent changes
+		Map<S,T> alig = new HashMap<S,T>(alignment);
+
+		// Generate inverse alignment
+		Map<S,List<S>> inverse = new HashMap<S,List<S>>();
+		for(Entry<S,T> e: alig.entrySet()) {
+			S val = identity.get(e.getValue());
+			if( inverse.containsKey(val) ) {
+				List<S> l = inverse.get(val);
+				l.add(e.getKey());
+			} else {
+				List<S> l = new ArrayList<S>();
+				l.add(e.getKey());
+				inverse.put(val,l);
+			}
+		}
+		
+		StringBuilder str = new StringBuilder();
+		
+		while( alig.size() > 0 ){
+			// Pick an edge and work upstream to a root or cycle
+			S seedNode = alig.keySet().iterator().next();
+			S node = seedNode;
+			if( inverse.containsKey(seedNode)) {
+				node = inverse.get(seedNode).iterator().next();
+				while( node != seedNode && inverse.containsKey(node)) {
+					node = inverse.get(node).iterator().next();
+				} 
+			}
+			
+			// Now work downstream, deleting edges as we go
+			seedNode = node;
+			str.append(node);
+				
+			while(alig.containsKey(node)) {
+				S lastNode = node;
+				node = identity.get( alig.get(lastNode) );
+				
+				// Output
+				str.append('>');
+				str.append(node);
+				
+				// Remove edge
+				alig.remove(lastNode);
+				List<S> inv = inverse.get(node);
+				if(inv.size() > 1) {
+					inv.remove(node);
+				} else {
+					inverse.remove(node);
+				}
+			}
+			if(alig.size() > 0) {
+				str.append(' ');
+			}
+		}
+		
+		return str.toString();
+	}
+	public static <T> String toConciseAlignmentString(Map<T, T> alignment) {
+		return toConciseAlignmentString(alignment, new IdentityMap<T>());
+	}
 }
