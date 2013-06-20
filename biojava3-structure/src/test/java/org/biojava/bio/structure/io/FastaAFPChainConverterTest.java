@@ -118,8 +118,13 @@ public class FastaAFPChainConverterTest {
 		String a = "--vRSLNCTLRDSQQ-KSLVMSG---PYELKALHLQgqdmeq-----QVVFSMSFVQGeesndkiPVALGLKEK-NLYLSSVLKdDKPTLQLESVdpknypkkkmekRFVFNKIEInn--KLEFESAQFpnWYISTSqAENmPVFLGGT----KGgqDITDFTMQFV---";
 		String b = "esnDKIPVALGLKEKnLYLSSVLkddKPTLQLESVDpknypkkkmekRFVFNKIEINN-------KLEFESAQFpNWYISTSQA-ENMPVFLGGTkggqd-------ITDFTMQFVvrslNCTLRDSQQ--KSLVMS-GPY-ELKALHLqgqdME--QQVVFSMSFVqge";
 		Structure structure = StructureTools.getStructure("31BI");
+//		int x = 0;
+//		for (char c : a.toCharArray()) if (c != '-') x++;
+//		System.out.println(x);
 		AFPChain afpChain = FastaAFPChainConverter.cpFastaToAfpChain(a, b, structure, 104);
 		assertEquals("Wrong TM-score", 0.6284, afpChain.getTMScore(), 0.001);
+		String xml = AFPChainXMLConverter.toXML(afpChain);
+//		System.out.println(xml);
 		// TODO
 	}
 	
@@ -133,9 +138,8 @@ public class FastaAFPChainConverterTest {
 		// TODO
 	}
 	
-	// TODO I probably broke this test
-//	@Test
-	public void testIncomplete() throws IOException, StructureException {
+	@Test
+	public void testFromFasta() throws IOException, StructureException {
 		Structure s1 = cache.getStructure("1w0p");
 		Structure s2 = cache.getStructure("1qdm");
 		ProteinSequence seq1 = new ProteinSequence("GWGG----SEL--YRRNTSLNS--QQDW-------QSNAKIRIVDGAA-----NQIQ");
@@ -143,7 +147,6 @@ public class FastaAFPChainConverterTest {
 		AFPChain afpChain = FastaAFPChainConverter.fastaToAfpChain(seq1, seq2, s1, s2);
 		assertEquals("Wrong number of EQRs", 33, afpChain.getNrEQR());
 		String xml = AFPChainXMLConverter.toXML(afpChain);
-		System.out.println(xml);
 		File expected = new File("src/test/resources/1w0p_1qdm.xml");
 		File x = File.createTempFile("1w0p_1qdm_output", "xml.tmp");
 		x.deleteOnExit();
