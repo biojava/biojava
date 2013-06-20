@@ -327,12 +327,7 @@ public class FastaAFPChainConverter {
 		afpChain.setAlgorithmName("unknown");
 
 		if (alignedResidues1.length > 0 && alignedResidues2.length > 0) {
-
 			AlignmentTools.updateSuperposition(afpChain, ca1, ca2);
-
-			double tmScore = AFPChainScorer.getTMScore(afpChain, ca1, ca2);
-			afpChain.setTMScore(tmScore);
-
 		} else {
 			afpChain.setTMScore(0);
 		}
