@@ -33,14 +33,20 @@ import java.util.List;
 import java.util.Map;
 
 import org.biojava.bio.structure.Atom;
+import org.biojava.bio.structure.AtomImpl;
 import org.biojava.bio.structure.Calc;
+import org.biojava.bio.structure.Chain;
+import org.biojava.bio.structure.Group;
 import org.biojava.bio.structure.ResidueNumber;
 import org.biojava.bio.structure.SVDSuperimposer;
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureException;
 import org.biojava.bio.structure.StructureTools;
-import org.biojava.bio.structure.align.model.AFP;
+import org.biojava.bio.structure.align.AFPTwister;
+import org.biojava.bio.structure.align.fatcat.FatCatFlexible;
+import org.biojava.bio.structure.align.fatcat.FatCatRigid;
 import org.biojava.bio.structure.align.model.AFPChain;
+import org.biojava.bio.structure.align.util.AFPChainScorer;
 import org.biojava.bio.structure.align.util.AlignmentTools;
 import org.biojava.bio.structure.align.xml.AFPChainXMLConverter;
 import org.biojava.bio.structure.jama.Matrix;
@@ -94,31 +100,35 @@ public class FastaAFPChainConverter {
 		}
 
 		// we need to find the ungapped CP site
-		int j = 0;
+		int gappedCpShift = 0;
 		int ungappedCpShift = 0;
 		while (ungappedCpShift < Math.abs(cpSite)) {
 			char c;
-			if (cpSite > 0) {
-				c = sequence.getSequenceAsString().charAt(j);
-			} else {
-				c = sequence.getSequenceAsString().charAt(sequence.getLength() -1 - j);
+			try {
+				if (cpSite > 0) {
+					c = sequence.getSequenceAsString().charAt(gappedCpShift);
+				} else {
+					c = sequence.getSequenceAsString().charAt(sequence.getLength() -1 - gappedCpShift);
+				}
+			} catch (StringIndexOutOfBoundsException e) {
+				throw new IllegalArgumentException("CP site of " + cpSite + " is wrong");
 			}
 			if (c != '-') {
 				ungappedCpShift++;
 			}
-			j++;
+			gappedCpShift++;
 		}
-
+		
 		Atom[] ca1 = StructureTools.getAtomCAArray(structure);
 		Atom[] ca2 =  StructureTools.getAtomCAArray(structure); // can't use cloneCAArray because it doesn't set parent group.chain.structure
 
-		ProteinSequence antipermuted = new ProteinSequence(SequenceTools.permuteCyclic(second.getSequenceAsString(), ungappedCpShift));
+		ProteinSequence antipermuted = new ProteinSequence(SequenceTools.permuteCyclic(second.getSequenceAsString(), gappedCpShift));
 
 		ResidueNumber[] residues = StructureSequenceMatcher.matchSequenceToStructure(sequence, structure);
 		ResidueNumber[] antipermutedResidues = StructureSequenceMatcher.matchSequenceToStructure(antipermuted, structure);
 
 		ResidueNumber[] nonpermutedResidues = new ResidueNumber[antipermutedResidues.length];
-		SequenceTools.permuteCyclic(antipermutedResidues, nonpermutedResidues, -ungappedCpShift);
+		SequenceTools.permuteCyclic(antipermutedResidues, nonpermutedResidues, -gappedCpShift);
 
 		// nullify ResidueNumbers that have a lowercase sequence character
 		if (sequence.getUserCollection() != null) {
@@ -144,7 +154,7 @@ public class FastaAFPChainConverter {
 //			}
 //		}
 //		System.out.println();
-		
+
 		return buildAlignment(ca1, ca2, residues, nonpermutedResidues);
 
 	}
@@ -317,41 +327,48 @@ public class FastaAFPChainConverter {
 
 		if (alignedResidues1.length > 0 && alignedResidues2.length > 0) {
 
-			// Perform singular value decomposition to find translation and rotation
-			// This allows us to superimpose the aligned structures
-			// This is only important for visualization of an alignment
-			Atom[] alignedAtoms1 = getAligned(ca1, alignedResiduesList1);
-			Atom[] alignedAtoms2 = getAligned(ca2, alignedResiduesList2);
-			SVDSuperimposer svd = new SVDSuperimposer(alignedAtoms1, alignedAtoms2);
-			Matrix matrix = svd.getRotation();
-			Atom shift = svd.getTranslation();
+			/*
+			 * I have NO idea why this works.
+			 */
+			
+			AFPTwister.twistOptimized(afpChain, ca1, ca2);
 
-			// apply the rotation and translation to a clone of the second structure
-			// do NOT actually apply rotation to ca2
-			Atom[] aligned2Clone = StructureTools.cloneCAArray(alignedAtoms2); // do this so we don't modify the method argument as a side effect
-			for (Atom atom : aligned2Clone) {
-				Calc.rotate(atom, matrix);
-				Calc.shift(atom, shift);
+			List<Group> hetatms2 = new ArrayList<Group>();
+			List<Group> nucs2    = new ArrayList<Group>();
+
+			Group g2 = ca2[0].getGroup();
+			Chain c2 = null;
+			if (g2 != null) {
+				c2 = g2.getChain();
+				if (c2 != null) {
+					hetatms2 = c2.getAtomGroups("hetatm");
+					nucs2 = c2.getAtomGroups("nucleotide");
+				}
 			}
 
-			// calculate RMSD and TM-score
-			double rmsd = SVDSuperimposer.getRMS(alignedAtoms1, aligned2Clone);
-			double tmScore = SVDSuperimposer.getTMScore(alignedAtoms1, aligned2Clone, ca1.length, ca2.length);
+			if (afpChain.getBlockNum() > 0){
 
-			for (AFP afp : afpChain.getAfpSet()) {
-				afp.setFragLen(1);
-				afp.setM(matrix);
-				afp.setRmsd(rmsd);
-				afp.setScore(tmScore);
+				if (hetatms2.size() > 0 || nucs2.size() >0) {
+
+					if (afpChain.getBlockRotationMatrix().length > 0) {
+
+						Matrix m1 = afpChain.getBlockRotationMatrix()[0];
+						Atom vector1 = afpChain.getBlockShiftVector()[0];
+
+						for (Group g : hetatms2) {                       
+							Calc.rotate(g, m1);
+							Calc.shift(g, vector1);
+						}
+						for (Group g: nucs2){
+							Calc.rotate(g, m1);
+							Calc.shift(g, vector1);
+						}
+					}
+				}
 			}
 
-//			afpChain.setAlnLength(afpChain.getAfpSet().size());
-			afpChain.setBlockShiftVector(new Atom[] { shift });
-			afpChain.setBlockRotationMatrix(new Matrix[] { matrix });
-			afpChain.setBlockRmsd(new double[] { rmsd });
-			afpChain.setBlockGap(new int[] { afpChain.getGapLen() });
-			afpChain.setBlockSize(new int[] { alignedAtoms1.length });
-			afpChain.setTotalRmsdOpt(rmsd);
+
+			double tmScore = AFPChainScorer.getTMScore(afpChain, ca1, ca2);
 			afpChain.setTMScore(tmScore);
 
 		} else {
@@ -360,16 +377,6 @@ public class FastaAFPChainConverter {
 
 		return afpChain;
 
-	}
-
-	private static Atom[] getAligned(Atom[] ca, List<ResidueNumber> residues) {
-		List<Atom> alignedList = new ArrayList<Atom>();
-		for (Atom atom : ca) {
-			if (residues.contains(atom.getGroup().getResidueNumber())) {
-				alignedList.add(atom);
-			}
-		}
-		return alignedList.toArray(new Atom[alignedList.size()]);
 	}
 
 	/**
