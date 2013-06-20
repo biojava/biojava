@@ -64,7 +64,7 @@ public class ChainImpl implements Chain, Serializable {
 	 */
 	public static String DEFAULT_CHAIN_ID = "A";
 
-	static final List<String> waternames = Arrays.asList(new String[]{"HOH", "DOD",  "WAT"});
+	public static final List<String> waternames = Arrays.asList(new String[]{"HOH", "DOD",  "WAT"});
 
 	String swissprot_id ;
 	String name ; // like in PDBfile
