@@ -104,13 +104,14 @@ public class FastaAFPChainConverterTest {
 		cache = new AtomCache();
 	}
 	
-	@Test
+//	@Test
 	public void testCpAsymmetric() throws IOException, StructureException {
 		Structure structure = cache.getStructure("1w0p");
 		String first = ("alfdynatgdtefdspakqgwmqdntnngsgvltnadgmpawlvqgiggraqwtyslstnqhaqassfgwrmttemkvlsggmitnyyangtqrvlpiisldssgnlvvefegqtgrtvlatgtaateyhkfelvflpgsnpsasfyfdgklirdniqptaskQNMIVWGNGSSntdgvaayrdikfei------------------------------------------------------------------------------------------------------------------QGDVIf------------RGPDRIPSIVASsvTPGVVTAFAEKRVGGgdpgalsntNDIITRTSRDGGITWDTELNLTEQinvsdeFDFSDPRPIYDPs---SNTVLVSYARWPtdaaqngdrikpwmpNGIFYSVYDVASgnWQAPIDVTdqvkersfqiagwggselyrrntslnsqqdwqsnakirivdgaanqiqvadgsrkyvvtlsidesgglvanlngvsapiilqsehakvhsfhdyelqysalnhtttlfvdgqqittwagevsqenniqfgnadaqidgrlhvqkivltqqghnlvefdafylaqqtpevekdleklgwtkiktgntmslygNASVNPGpgHGITLtrqqnisgsqNGRLIYPAIVLdrfFLNVMSIYSDDGgsnwq-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------TGSTLpipfrwksssileTLEPSEADMVELQN--GDLLLTARLDFNQivngvny--SPRQQFLSKDGGITWSLLEANNANvfsnistgTVDASITRFEqsdgSHFLLFTNPQGnpagTNgr------------QNLGLWFSFDEG--VTWKGPIQ--LVNGasaysdiyqldsenaivivetdnsnmrilrmpitllkqklt");
 		String second =   ("--------------------------------------------------------------------------------------------kirivdgaanqiqvadgsrkyvvtlsidesgglvanlngvsapiilqsehakvhsfhdyelqysalnhtttLFVDGQQITTWagevsqenniqfgnadaqidgrlhvqkivltqqghnlvefdafylaqqtpevekdleklgwtkiktgntmslygnasvnpgpghgitltrqqnisgsqngrliypaivldrfflnvmsiysddggsnwqTGSTLpipfrwksssileTLEPSEADMVEL--QNGDLLLTARLDFNQivngvny--SPRQQFLSKDGGITWSLLEANNANvfsnisTGTVDASITRFEqsdgSHFLLFTNPQGNpagtngr--------QNLGLWFSFDEG--VTWKGPIQlv---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------NGASAYS--DIYQLd---------SENAIVIVETD---NSNMRILRMPITllkqkltalfdynatgdtefdspakqgwmqdntnngsgvltnadgmpawlvqgiggraqwtyslstnqhaqassfgwrmttemkvlsggmitnyyangtqrvlpiisldssgnlvvefegqtgrtvlatgtaateyhkfelvflpgsnpsasfyfdgklirdniqptaskqnmivwgngssntdgvaayrdikfeiQGDVIf------------RGPDRIPSIVASSVtpGVVTAFAEKRVGGgdpgalsntNDIITRTSRDGGITWDTELNLTEQinvsdefdFSDPRPIYDPs---SNTVLVSYARW----PTdaaqngdrikpwmpNGIFYSVYDVASgnWQAPIDVTdqVKERsfqiagwggselyrrntslnsqqdwqsna------------");
 		AFPChain afpChain = FastaAFPChainConverter.cpFastaToAfpChain(first, second, structure, -393);
-		// TODO
+		assertEquals("Wrong TM-score", 0.2949, afpChain.getTMScore(), 0.001);
+		assertEquals("Wrong RMSD", 3.605, afpChain.getTotalRmsdOpt(), 0.001);
 	}
 
 	@Test
@@ -118,11 +119,13 @@ public class FastaAFPChainConverterTest {
 		String a = "--vRSLNCTLRDSQQ-KSLVMSG---PYELKALHLQgqdmeq-----QVVFSMSFVQGeesndkiPVALGLKEK-NLYLSSVLKdDKPTLQLESVdpknypkkkmekRFVFNKIEInn--KLEFESAQFpnWYISTSqAENmPVFLGGT----KGgqDITDFTMQFV---";
 		String b = "esnDKIPVALGLKEKnLYLSSVLkddKPTLQLESVDpknypkkkmekRFVFNKIEINN-------KLEFESAQFpNWYISTSQA-ENMPVFLGGTkggqd-------ITDFTMQFVvrslNCTLRDSQQ--KSLVMS-GPY-ELKALHLqgqdME--QQVVFSMSFVqge";
 		Structure structure = StructureTools.getStructure("31BI");
-//		int x = 0;
-//		for (char c : a.toCharArray()) if (c != '-') x++;
-//		System.out.println(x);
-		AFPChain afpChain = FastaAFPChainConverter.cpFastaToAfpChain(a, b, structure, 104);
+		int x = 0;
+//		--vRSLNCTLRDSQQ-KSLVMSG---PYELKALHLQgqdmeq-----QVVFSMSFVQG
+		for (char c : "--vRSLNCTLRDSQQ-KSLVMSG---PYELKALHLQgqdmeq-----QVVFSMSFVQG".toCharArray()) if (c != '-') x++;
+		System.out.println(x);
+		AFPChain afpChain = FastaAFPChainConverter.cpFastaToAfpChain(a, b, structure, 104); // TODO why does this need to be 104?
 		assertEquals("Wrong TM-score", 0.6284, afpChain.getTMScore(), 0.001);
+		assertEquals("Wrong RMSD", 2.50569, afpChain.getTotalRmsdOpt(), 0.001);
 		String xml = AFPChainXMLConverter.toXML(afpChain);
 //		System.out.println(xml);
 		// TODO
@@ -134,11 +137,18 @@ public class FastaAFPChainConverterTest {
 		String a = "-SSRPATAR-KSSGLSGTVRIPGDKSISHRSFMFGGLA-SGETRITGLLEG-EDvINTGKAMQAMGARIRKEGd---------TWIIDGVgngglLAPEAPLD---FGNAATGCRLTMGLVGvydFDSTFIGDASLtkrp---MGRVLNPLREMGVQVKSEDgdrLPVTLRGPK---TPT---PITYRVpMASAQVKSAVLLAGLNTPGITTVIEpi---MTRDHTEKMLQGFGANLTVEtdadGVRTIRLEgRGKLTGQVIDVPGDPSSTAFPLVAALLVpGSDVTILNVLMNpTR-TGLILTLQEMGADIEVINprlaggedvaDLRVRSS-----TLKGVTVPedrAPSMIDEYPILAVAAAFAEGATVMNGLEELrvkesdrLSAVANGLKLNGVDCDEGE---TSLVVRGRPdgkGLGNasgAAVAT-HLDHRIAMSFLVMGLVSENPVTVDDatmIATSFPEFMDLMAGLGAKIELS---";
 		String b = "dGVRTIRLEgRGKLTGQVIDVPGDPSSTAFPLVAALLVpGSDVTILNVLMNpTR-TGLILTLQEMGADIEVINprlaggedvaDLRVRSS-----TLKGVTVPedrAPSMIDEYPILAVAAAfaeGATVMNGLEELrvkesdrLSAVANGLKLNGVDCDEGE---TSLVVRGRPdgkGLGnasGAAVAT-HLDHRIAMSFLVMGLVSENPVTVDDatmiaTSFPEFMDLMAGLGAKIELS----SSRPATAR-KSSGLSGTVRIPGDKSISHRSFMFGGLA-SGETRITGLLEG-EDvINTGKAMQAMGARIRKEGd---------TWIIDGVgngglLAPEAPLD---FGNAATGCRLTMGLVGVYDFDSTFIGDASLtkrp---MGRVLNPLREMGVQVKSEDgdrLPVTLRGPK---TPTP---ITYRVpMASAQVKSAVLLAGLNTPGITTVIE---PIMTRDHTEKMLQGFGANLTVEtda";
 		Structure structure = StructureTools.getStructure("2GG6");
-		AFPChain afpChain = FastaAFPChainConverter.cpFastaToAfpChain(a, b, structure, 215);
+//		int x = 0;
+//		for (char c : a.toCharArray()) if (c != '-') x++;
+//		System.out.println(x);
+		AFPChain afpChain = FastaAFPChainConverter.cpFastaToAfpChain(a, b, structure, -230); // 215
+		assertEquals("Wrong TM-score", 0.7701, afpChain.getTMScore(), 0.001);
+		assertEquals("Wrong RMSD", 3.035, afpChain.getTotalRmsdOpt(), 0.001);
+		String xml = AFPChainXMLConverter.toXML(afpChain);
+		System.out.println(xml);
 		// TODO
 	}
 	
-	@Test
+//	@Test
 	public void testFromFasta() throws IOException, StructureException {
 		Structure s1 = cache.getStructure("1w0p");
 		Structure s2 = cache.getStructure("1qdm");
