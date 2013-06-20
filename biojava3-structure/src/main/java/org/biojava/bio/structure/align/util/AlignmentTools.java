@@ -777,66 +777,86 @@ public class AlignmentTools {
 	 */
 	public static void updateSuperposition(AFPChain afpChain, Atom[] ca1, Atom[] ca2) throws StructureException {
 
-		// Create arrays of aligned atoms
-		int optLength = afpChain.getOptLength();
-		int alnPos = 0;
-		Atom[] aln1 = new Atom[optLength];
-		Atom[] aln2 = new Atom[optLength];
+		// we need this to get the correct superposition
+		int[] focusRes1 = afpChain.getFocusRes1();
+		int[] focusRes2 = afpChain.getFocusRes2();
+		if (focusRes1 == null) {
+			focusRes1 = new int[afpChain.getCa1Length()];
+			afpChain.setFocusRes1(focusRes1);
+		}
+		if (focusRes2 == null) {
+			focusRes2 = new int[afpChain.getCa2Length()];
+			afpChain.setFocusRes2(focusRes2);
+		}
 
-		int[] optLen = afpChain.getOptLen();
+		if (afpChain.getNrEQR() == 0) return;
+
+		// create new arrays for the subset of atoms in the alignment.
+		Atom[] ca1aligned = new Atom[afpChain.getOptLength()];
+		Atom[] ca2aligned = new Atom[afpChain.getOptLength()];
+		int pos=0;
+		int[] blockLens = afpChain.getOptLen();
 		int[][][] optAln = afpChain.getOptAln();
-		int blockNum = afpChain.getBlockNum();
-		for(int blk=0;blk<blockNum;blk++) {
-			for(int pos=0;pos<optLen[blk];pos++) {
-				int res1 = optAln[blk][0][pos];
-				int res2 = optAln[blk][1][pos];
-				aln1[alnPos] = ca1[res1];
-				aln2[alnPos] = ca2[res2];
-				alnPos++;
+		assert(afpChain.getBlockNum() <= optAln.length);
+
+		for (int block=0; block < afpChain.getBlockNum(); block++) {
+			for(int i=0;i<blockLens[block];i++) {
+				int pos1 = optAln[block][0][i];
+				int pos2 = optAln[block][1][i];
+				Atom a1 = ca1[pos1];
+				Atom a2 = (Atom) ca2[pos2].clone();
+				ca1aligned[pos] = a1;
+				ca2aligned[pos] = a2;
+				pos++;
 			}
 		}
 
-		// Superimpose
-		SVDSuperimposer svd = new SVDSuperimposer(aln1, aln2);
+		// this can happen when we load an old XML serialization which did not support modern ChemComp representation of modified residues.		
+		if (pos != afpChain.getOptLength()){
+			System.err.println("AFPChainScorer getTMScore: Problems reconstructing alignment! nr of loaded atoms is " + pos + " but should be " + afpChain.getOptLength());
+			// we need to resize the array, because we allocated too many atoms earlier on.
+			ca1aligned = (Atom[]) resizeArray(ca1aligned, pos);
+			ca2aligned = (Atom[]) resizeArray(ca2aligned, pos);
+		}
 
+		// superimpose
+		SVDSuperimposer svd = new SVDSuperimposer(ca1aligned, ca2aligned);
 		Matrix matrix = svd.getRotation();
 		Atom shift = svd.getTranslation();
 
-		// Store into afpChain
-		Matrix[] blockMatrix = new Matrix[blockNum];
-		Arrays.fill(blockMatrix, matrix);
-		afpChain.setBlockRotationMatrix(blockMatrix);
-		Atom[] blockShift = new Atom[blockNum];
-		Arrays.fill(blockShift, shift);
-		afpChain.setBlockShiftVector(blockShift);
-
-		// Apply transformation to ca2
-		if(ca2.length>0 && ca2[0].getGroup() != null &&
-				ca2[0].getGroup().getChain() != null &&
-				ca2[0].getGroup().getChain().getParent() != null) {
-			// Assume that ca2 comes from a single structure for efficiency
-			Structure struct = ca2[0].getGroup().getChain().getParent();
-			Calc.rotate(struct, matrix);
-			Calc.shift(struct, shift);
-		} else {
-			// No underlying structure, so do groups individually
-			for(Atom a : ca2) {
-				Calc.rotate(a.getGroup(), matrix);
-				Calc.shift(a.getGroup(), shift);
-			}
+		for (Atom a : ca2aligned) {
+			Calc.rotate(a, matrix);
+			Calc.shift(a, shift);
 		}
 
-		double rms = SVDSuperimposer.getRMS(ca1, ca2);
-		double tm = SVDSuperimposer.getTMScore(aln1, aln2, ca1.length, ca2.length);
-
-		// Store new transformation back to AFPChain
-		//TODO convolve current superposition with previous transformation?
-		afpChain.setTotalRmsdOpt(Math.sqrt(rms));
-		afpChain.setTMScore(tm);
-		double[] dummy = new double[blockNum];
+		double rmsd = SVDSuperimposer.getRMS(ca1aligned, ca2aligned);
+		double tmScore = SVDSuperimposer.getTMScore(ca1aligned, ca2aligned, ca1.length, ca2.length);
+		afpChain.setTotalRmsdOpt(rmsd);
+		afpChain.setTMScore(tmScore);
+		
+		double[] dummy = new double[afpChain.getBlockNum()];
 		Arrays.fill(dummy, -1.);
 		afpChain.setOptRmsd(dummy);
 		afpChain.setBlockRmsd(dummy);
+	}
+
+	/**
+	 * Reallocates an array with a new size, and copies the contents
+	 * of the old array to the new array.
+	 * @param oldArray  the old array, to be reallocated.
+	 * @param newSize   the new array size.
+	 * @return          A new array with the same contents.
+	 */
+	public static Object resizeArray (Object oldArray, int newSize) {
+		int oldSize = java.lang.reflect.Array.getLength(oldArray);
+		@SuppressWarnings("rawtypes")
+		Class elementType = oldArray.getClass().getComponentType();
+		Object newArray = java.lang.reflect.Array.newInstance(
+				elementType,newSize);
+		int preserveLength = Math.min(oldSize,newSize);
+		if (preserveLength > 0)
+			System.arraycopy (oldArray,0,newArray,0,preserveLength);
+		return newArray;
 	}
 
 	/**
