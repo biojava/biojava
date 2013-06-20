@@ -569,14 +569,11 @@ public class AlignmentTools {
 
 		// convert pdbAln to optAln, and fill in some other basic parameters
 		AFPChainXMLParser.rebuildAFPChain(a, ca1, ca2);
-
-		// Currently a single block. Split into several blocks by sequence if needed
-		AlignmentTools.splitBlocksByTopology(a,ca1,ca2);
-
-	    // TODO run superimposer (not required for display)
-        // TODO more properties
-
+		
 		return a;
+		
+		// Currently a single block. Split into several blocks by sequence if needed
+//		return AlignmentTools.splitBlocksByTopology(a,ca1,ca2);
 	}
 
 	/**
@@ -641,7 +638,7 @@ public class AlignmentTools {
                 pos += blkLen;
                 blocks.add(newBlock);
 
-                if( pos == blkLen ) {
+                if( pos == optLen[oldBlk] ) {
                     // Finished this oldBlk, start the next
                     oldBlk++;
                     pos = 0;
@@ -650,7 +647,7 @@ public class AlignmentTools {
         }
 
         // Store new blocks
-        int[][][] newOptAln = blocks.toArray((int[][][]) null);
+        int[][][] newOptAln = blocks.toArray(new int[0][][]);
         int[] newBlockLens = new int[newBlkLen.size()];
         for(int i=0;i<newBlkLen.size();i++) {
             newBlockLens[i] = newBlkLen.get(i);
@@ -749,6 +746,7 @@ public class AlignmentTools {
         //set everything
         AFPChain refinedAFP = (AFPChain) afpChain.clone();
         refinedAFP.setOptLength(optLength);
+        refinedAFP.setBlockSize(optLens);
         refinedAFP.setOptLen(optLens);
         refinedAFP.setOptAln(optAln);
         refinedAFP.setBlockNum(blockNum);
