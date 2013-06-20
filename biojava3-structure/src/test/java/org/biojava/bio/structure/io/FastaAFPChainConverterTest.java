@@ -36,6 +36,8 @@ import java.io.PrintStream;
 
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureException;
+import org.biojava.bio.structure.StructureTools;
+import org.biojava.bio.structure.align.model.AFP;
 import org.biojava.bio.structure.align.model.AFPChain;
 import org.biojava.bio.structure.align.util.AtomCache;
 import org.biojava.bio.structure.align.xml.AFPChainXMLConverter;
@@ -103,32 +105,35 @@ public class FastaAFPChainConverterTest {
 	}
 	
 	@Test
-	public void testCp() throws IOException, StructureException {
-		
+	public void testCpAsymmetric() throws IOException, StructureException {
 		Structure structure = cache.getStructure("1w0p");
-		
-/*
-INPUT:
-alfdynatgdtefdspakqgwmqdntnngsgvltnadgmpawlvqgiggraqwtyslstnqhaqassfgwrmttemkvlsggmitnyyangtqrvlpiisldssgnlvvefegqtgrtvlatgtaateyhkfelvflpgsnpsasfyfdgklirdniqptaskQNMIVWGNGSSntdgvaayrdikfei------------------------------------------------------------------------------------------------------------------QGDVIf------------RGPDRIPSIVASsvTPGVVTAFAEKRVGGgdpgalsntNDIITRTSRDGGITWDTELNLTEQinvsdeFDFSDPRPIYDPs---SNTVLVSYARWPtdaaqngdrikpwmpNGIFYSVYDVASgnWQAPIDVTdqvkersfqiagwggselyrrntslnsqqdwqsnakirivdgaanqiqvadgsrkyvvtlsidesgglvanlngvsapiilqsehakvhsfhdyelqysalnhtttlfvdgqqittwagevsqenniqfgnadaqidgrlhvqkivltqqghnlvefdafylaqqtpevekdleklgwtkiktgntmslygNASVNPGpgHGITLtrqqnisgsqNGRLIYPAIVLdrfFLNVMSIYSDDGgsnwq-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------TGSTLpipfrwksssileTLEPSEADMVELQN--GDLLLTARLDFNQivngvny--SPRQQFLSKDGGITWSLLEANNANvfsnistgTVDASITRFEqsdgSHFLLFTNPQGnpagTNgr------------QNLGLWFSFDEG--VTWKGPIQ--LVNGasaysdiyqldsenaivivetdnsnmrilrmpitllkqklt
---------------------------------------------------------------------------------------------kirivdgaanqiqvadgsrkyvvtlsidesgglvanlngvsapiilqsehakvhsfhdyelqysalnhtttLFVDGQQITTWagevsqenniqfgnadaqidgrlhvqkivltqqghnlvefdafylaqqtpevekdleklgwtkiktgntmslygnasvnpgpghgitltrqqnisgsqngrliypaivldrfflnvmsiysddggsnwqTGSTLpipfrwksssileTLEPSEADMVEL--QNGDLLLTARLDFNQivngvny--SPRQQFLSKDGGITWSLLEANNANvfsnisTGTVDASITRFEqsdgSHFLLFTNPQGNpagtngr--------QNLGLWFSFDEG--VTWKGPIQlv---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------NGASAYS--DIYQLd---------SENAIVIVETD---NSNMRILRMPITllkqkltalfdynatgdtefdspakqgwmqdntnngsgvltnadgmpawlvqgiggraqwtyslstnqhaqassfgwrmttemkvlsggmitnyyangtqrvlpiisldssgnlvvefegqtgrtvlatgtaateyhkfelvflpgsnpsasfyfdgklirdniqptaskqnmivwgngssntdgvaayrdikfeiQGDVIf------------RGPDRIPSIVASSVtpGVVTAFAEKRVGGgdpgalsntNDIITRTSRDGGITWDTELNLTEQinvsdefdFSDPRPIYDPs---SNTVLVSYARW----PTdaaqngdrikpwmpNGIFYSVYDVASgnWQAPIDVTdqVKERsfqiagwggselyrrntslnsqqdwqsna------------
-OUTPUT:
-===================================================================================================================================================================QNMIVWGNGSS=================================================================================================================================QGDVI=============RGPDRIPSIVAS==TPGVVTAFAEKRVGG=========NDIITRTSRDGGITWDTELNLTEQ======FDFSDPRPIYDP====SNTVLVSYARWP===============NGIFYSVYDVAS==WQAPIDVT===============================================================================================================================================================================================NASVNPG==HGITL==========NGRLIYPAIVL===FLNVMSIYSDDG====================================================================================================================================================================================================TGSTL=============TLEPSEADMVELQN==GDLLLTARLDFNQ=========SPRQQFLSKDGGITWSLLEANNAN========TVDASITRFE====SHFLLFTNPQG====TN==============QNLGLWFSFDEG==VTWKGPIQ==LVNG=========================================
-===================================================================================================================================================================LFVDGQQITTW=================================================================================================================================TGSTL=============TLEPSEADMVEL==QNGDLLLTARLDFNQ=========SPRQQFLSKDGGITWSLLEANNAN======TGTV==================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================QGDVI=============RGPDRIPSIVASSV==GVVTAFAEKRVGG=========NDIITRTSRDGGITWDTELNLTEQ========FSDPRPIYDP====SNTVLVSYARW====PT==============NGIFYSVYDVAS==WQAPIDVT==VKER=========================================
---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------CP--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-*/
-		
 		String first = ("alfdynatgdtefdspakqgwmqdntnngsgvltnadgmpawlvqgiggraqwtyslstnqhaqassfgwrmttemkvlsggmitnyyangtqrvlpiisldssgnlvvefegqtgrtvlatgtaateyhkfelvflpgsnpsasfyfdgklirdniqptaskQNMIVWGNGSSntdgvaayrdikfei------------------------------------------------------------------------------------------------------------------QGDVIf------------RGPDRIPSIVASsvTPGVVTAFAEKRVGGgdpgalsntNDIITRTSRDGGITWDTELNLTEQinvsdeFDFSDPRPIYDPs---SNTVLVSYARWPtdaaqngdrikpwmpNGIFYSVYDVASgnWQAPIDVTdqvkersfqiagwggselyrrntslnsqqdwqsnakirivdgaanqiqvadgsrkyvvtlsidesgglvanlngvsapiilqsehakvhsfhdyelqysalnhtttlfvdgqqittwagevsqenniqfgnadaqidgrlhvqkivltqqghnlvefdafylaqqtpevekdleklgwtkiktgntmslygNASVNPGpgHGITLtrqqnisgsqNGRLIYPAIVLdrfFLNVMSIYSDDGgsnwq-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------TGSTLpipfrwksssileTLEPSEADMVELQN--GDLLLTARLDFNQivngvny--SPRQQFLSKDGGITWSLLEANNANvfsnistgTVDASITRFEqsdgSHFLLFTNPQGnpagTNgr------------QNLGLWFSFDEG--VTWKGPIQ--LVNGasaysdiyqldsenaivivetdnsnmrilrmpitllkqklt");
 		String second =   ("--------------------------------------------------------------------------------------------kirivdgaanqiqvadgsrkyvvtlsidesgglvanlngvsapiilqsehakvhsfhdyelqysalnhtttLFVDGQQITTWagevsqenniqfgnadaqidgrlhvqkivltqqghnlvefdafylaqqtpevekdleklgwtkiktgntmslygnasvnpgpghgitltrqqnisgsqngrliypaivldrfflnvmsiysddggsnwqTGSTLpipfrwksssileTLEPSEADMVEL--QNGDLLLTARLDFNQivngvny--SPRQQFLSKDGGITWSLLEANNANvfsnisTGTVDASITRFEqsdgSHFLLFTNPQGNpagtngr--------QNLGLWFSFDEG--VTWKGPIQlv---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------NGASAYS--DIYQLd---------SENAIVIVETD---NSNMRILRMPITllkqkltalfdynatgdtefdspakqgwmqdntnngsgvltnadgmpawlvqgiggraqwtyslstnqhaqassfgwrmttemkvlsggmitnyyangtqrvlpiisldssgnlvvefegqtgrtvlatgtaateyhkfelvflpgsnpsasfyfdgklirdniqptaskqnmivwgngssntdgvaayrdikfeiQGDVIf------------RGPDRIPSIVASSVtpGVVTAFAEKRVGGgdpgalsntNDIITRTSRDGGITWDTELNLTEQinvsdefdFSDPRPIYDPs---SNTVLVSYARW----PTdaaqngdrikpwmpNGIFYSVYDVASgnWQAPIDVTdqVKERsfqiagwggselyrrntslnsqqdwqsna------------");
-
-		int y = 0;
-		for (int i = 0; i < second.length(); i++) if (second.charAt(i) == '-' || Character.isLowerCase(second.charAt(i))) y++;
-		System.out.println("y=" + y);
-		
 		AFPChain afpChain = FastaAFPChainConverter.cpFastaToAfpChain(first, second, structure, -393);
-		String xml = AFPChainXMLConverter.toXML(afpChain);
-		System.out.println(xml);
+		// TODO
+	}
+
+	@Test
+	public void testCpSymmetric2() throws IOException,StructureException {
+		String a = "--vRSLNCTLRDSQQ-KSLVMSG---PYELKALHLQgqdmeq-----QVVFSMSFVQGeesndkiPVALGLKEK-NLYLSSVLKdDKPTLQLESVdpknypkkkmekRFVFNKIEInn--KLEFESAQFpnWYISTSqAENmPVFLGGT----KGgqDITDFTMQFV---";
+		String b = "esnDKIPVALGLKEKnLYLSSVLkddKPTLQLESVDpknypkkkmekRFVFNKIEINN-------KLEFESAQFpNWYISTSQA-ENMPVFLGGTkggqd-------ITDFTMQFVvrslNCTLRDSQQ--KSLVMS-GPY-ELKALHLqgqdME--QQVVFSMSFVqge";
+		Structure structure = StructureTools.getStructure("31BI");
+		AFPChain afpChain = FastaAFPChainConverter.cpFastaToAfpChain(a, b, structure, 104);
+		assertEquals("Wrong TM-score", 0.6284, afpChain.getTMScore(), 0.001);
+		// TODO
 	}
 	
+	@Test
+	public void testCpSymmetric1() throws IOException,StructureException {
+		//cat 2GG6-best.fasta |tr -d \\n|pbcopy
+		String a = "-SSRPATAR-KSSGLSGTVRIPGDKSISHRSFMFGGLA-SGETRITGLLEG-EDvINTGKAMQAMGARIRKEGd---------TWIIDGVgngglLAPEAPLD---FGNAATGCRLTMGLVGvydFDSTFIGDASLtkrp---MGRVLNPLREMGVQVKSEDgdrLPVTLRGPK---TPT---PITYRVpMASAQVKSAVLLAGLNTPGITTVIEpi---MTRDHTEKMLQGFGANLTVEtdadGVRTIRLEgRGKLTGQVIDVPGDPSSTAFPLVAALLVpGSDVTILNVLMNpTR-TGLILTLQEMGADIEVINprlaggedvaDLRVRSS-----TLKGVTVPedrAPSMIDEYPILAVAAAFAEGATVMNGLEELrvkesdrLSAVANGLKLNGVDCDEGE---TSLVVRGRPdgkGLGNasgAAVAT-HLDHRIAMSFLVMGLVSENPVTVDDatmIATSFPEFMDLMAGLGAKIELS---";
+		String b = "dGVRTIRLEgRGKLTGQVIDVPGDPSSTAFPLVAALLVpGSDVTILNVLMNpTR-TGLILTLQEMGADIEVINprlaggedvaDLRVRSS-----TLKGVTVPedrAPSMIDEYPILAVAAAfaeGATVMNGLEELrvkesdrLSAVANGLKLNGVDCDEGE---TSLVVRGRPdgkGLGnasGAAVAT-HLDHRIAMSFLVMGLVSENPVTVDDatmiaTSFPEFMDLMAGLGAKIELS----SSRPATAR-KSSGLSGTVRIPGDKSISHRSFMFGGLA-SGETRITGLLEG-EDvINTGKAMQAMGARIRKEGd---------TWIIDGVgngglLAPEAPLD---FGNAATGCRLTMGLVGVYDFDSTFIGDASLtkrp---MGRVLNPLREMGVQVKSEDgdrLPVTLRGPK---TPTP---ITYRVpMASAQVKSAVLLAGLNTPGITTVIE---PIMTRDHTEKMLQGFGANLTVEtda";
+		Structure structure = StructureTools.getStructure("2GG6");
+		AFPChain afpChain = FastaAFPChainConverter.cpFastaToAfpChain(a, b, structure, 215);
+		// TODO
+	}
+	
+	// TODO I probably broke this test
 //	@Test
 	public void testIncomplete() throws IOException, StructureException {
 		Structure s1 = cache.getStructure("1w0p");
