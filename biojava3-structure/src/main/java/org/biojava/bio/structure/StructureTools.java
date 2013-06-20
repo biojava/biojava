@@ -38,6 +38,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.biojava.bio.structure.align.util.AtomCache;
+import org.biojava.bio.structure.io.mmcif.chem.PolymerType;
+import org.biojava.bio.structure.io.mmcif.chem.ResidueType;
+import org.biojava.bio.structure.io.mmcif.model.ChemComp;
 
 
 /**
@@ -1072,4 +1075,37 @@ public class StructureTools {
 
 
 	}
+	
+	/** Removes all polymeric and solvent groups from a list of groups
+	 * 
+	 */
+	public static List<Group> filterLigands(List<Group> allGroups){
+		//String prop = System.getProperty(PDBFileReader.LOAD_CHEM_COMP_PROPERTY);
+
+		//    if ( prop == null || ( ! prop.equalsIgnoreCase("true"))){
+		//      System.err.println("You did not specify PDBFileReader.setLoadChemCompInfo, need to fetch Chemical Components anyways.");
+		//    }
+
+
+		List<Group> groups = new ArrayList<Group>();
+		for ( Group g: allGroups) {
+
+			ChemComp cc = g.getChemComp();
+
+			if ( ResidueType.lPeptideLinking.equals(cc.getResidueType()) ||
+					PolymerType.PROTEIN_ONLY.contains(cc.getPolymerType()) ||
+					PolymerType.POLYNUCLEOTIDE_ONLY.contains(cc.getPolymerType())
+					){
+				continue;
+			}
+			if ( ! ChainImpl.waternames.contains(g.getPDBName())) {
+				//System.out.println("not a prot, nuc or solvent : " + g.getChemComp());
+				groups.add(g);
+			}
+		}
+
+		return groups;
+	}
+
+	
 }
