@@ -98,9 +98,7 @@ public class SequenceDisplay extends JPanel implements ChangeListener {
 	public static void main(String[] args){
 
 		try {
-			PDBFileReader pdbr = new PDBFileReader();          
-			pdbr.setPath("/Users/andreas/WORK/PDB/");
-
+			PDBFileReader pdbr = new PDBFileReader();
 
 			//String pdb1 = "1crl";
 			//String pdb2 = "1ede";

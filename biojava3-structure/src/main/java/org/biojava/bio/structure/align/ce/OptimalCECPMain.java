@@ -29,6 +29,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Scanner;
 
 import org.biojava.bio.structure.Atom;
 import org.biojava.bio.structure.StructureException;
@@ -541,14 +542,14 @@ public class OptimalCECPMain extends CeMain {
 			int[] cps= new int[] {};
 			
 			//Concanavalin
-			name1 = "2pel.A";
-			name2 = "3cna";
-			cps = new int[] {122,0,3};
+			//name1 = "2pel.A";
+			//name2 = "3cna";
+			//cps = new int[] {122,0,3};
 
 			//small case
-			//name1 = "d1qdmA1";
+			name1 = "d1qdmA1";
 			//name1 = "1QDM.A";
-			//name2 = "d1nklA_";
+			name2 = "d1nklA_";
 			/*cps = new int[] {
 					//41, // CECP optimum
 					19,59, // unpermuted local minima in TM-score
@@ -561,8 +562,9 @@ public class OptimalCECPMain extends CeMain {
 			//name2 = "1ITB.A";
 			//cps = new int[] {92};
 			
+			name1=name2 = "2LSQ";
 
-			OptimalCECPMain ce = (OptimalCECPMain) StructureAlignmentFactory.getAlgorithm(OptimalCECPMain.algorithmName);
+			OptimalCECPMain ce = new OptimalCECPMain();
 			CeParameters params = (CeParameters) ce.getParameters();
 			ce.setParameters(params);
 			
@@ -591,7 +593,7 @@ public class OptimalCECPMain extends CeMain {
 						alignments[i].getTotalRmsdOpt(),
 						alignments[i].getBlockNum()
 				);
-			}	
+			}
 			
 			//displayAlignment(afpChain,ca1,ca2);
 			
@@ -602,13 +604,32 @@ public class OptimalCECPMain extends CeMain {
 				//afpChain = ce.alignPermuted(ca1, ca2clone, params, cp);
 				//displayAlignment(afpChain, ca1, ca2);
 				
-				displayAlignment(alignments[cp],ca1,ca2);
+				//displayAlignment(alignments[cp],ca1,ca2);
 			}
 			
 			// CECP alignment
 			CeCPMain cecp = new CeCPMain();
 			afpChain = cecp.align(ca1, ca2);
 			displayAlignment(afpChain,ca1,ca2);
+			
+			System.out.println("Inspect additional alignments?");
+			Scanner scanner = new Scanner(System.in);
+			System.out.print("CP location [0,"+ca2.length+"): ");
+			while(scanner.hasNext()) {
+				if(scanner.hasNextInt()) {
+					int cp = scanner.nextInt();
+					
+					if(0<=cp && cp<ca2.length) {
+						alignments[cp].setName1(name1);
+						alignments[cp].setName2(name2+"@"+cp);
+						displayAlignment(alignments[cp],ca1,ca2);
+						Thread.sleep(1000);
+					}
+				} else {
+					String next = scanner.nextLine();
+				}
+				System.out.print("CP location [0,"+ca2.length+"): ");
+			}
 			
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -28,6 +28,7 @@ import static org.junit.Assert.fail;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.NavigableMap;
 
@@ -77,6 +78,36 @@ public class ResidueRangeTest {
 					fail("Lengths should be undefined");
 				} catch (IllegalArgumentException e) {}
 			}
+		}
+	}
+	
+	@Test
+	public void testIterator() throws IOException, StructureException {
+		String pdbId = "2eke";
+		String[] expected = new String[] {"C_1023", "C_1024", "C_1025", "C_1026", "C_1027", "C_1028", "C_1029", "C_1030", "C_1031", "C_1032", "C_1033", "C_1034", "C_1035", "C_1036", "C_1037", "C_1038", "C_1039", "C_1040", "C_1041", "C_1042", "C_1043", "C_1044", "C_1045", "C_1046", "C_1047", "C_1048", "C_1049", "C_1050", "C_1051", "C_1052", "C_1053", "C_1054", "C_1055", "C_1056", "C_1057", "C_1058", "C_1059", "C_1060", "C_1061", "C_1062", "C_1063"};
+		ResidueRange rr = ResidueRange.parse("C_1023-1063");
+		AtomPositionMap map = new AtomPositionMap(cache.getAtoms(pdbId));
+		Iterator<ResidueNumber> iter = rr.iterator(map);
+		int i = 0;
+		while (iter.hasNext()) {
+			ResidueNumber rn = iter.next();
+			assertEquals(expected[i], rn.printFull());
+			i++;
+		}
+	}
+
+	@Test
+	public void testMultiIterator() throws IOException, StructureException {
+		String pdbId = "1qdm";
+		String[] expected = new String[] {"A_3S", "A_4S", "A_5S", "A_6S", "A_7S", "A_8S", "A_9S", "A_10S", "A_11S", "A_12S", "A_13S", "A_14S", "A_15S", "A_16S", "A_17S", "A_18S", "A_19S", "A_20S", "A_21S", "A_22S", "A_23S", "A_24S", "A_25S", "A_26S", "A_27S", "A_28S", "A_29S", "A_30S", "A_31S", "A_32S", "A_33S", "A_34S", "A_35S", "A_36S", "A_37S", "A_65S", "A_66S", "A_67S", "A_68S", "A_69S", "A_70S", "A_71S", "A_72S", "A_73S", "A_74S", "A_75S", "A_76S", "A_77S", "A_78S", "A_79S", "A_80S", "A_81S", "A_82S", "A_83S", "A_84S", "A_85S", "A_86S", "A_87S", "A_88S", "A_89S", "A_90S", "A_91S", "A_92S", "A_93S", "A_94S", "A_95S", "A_96S", "A_97S", "A_98S", "A_99S"};
+		List<ResidueRange> rrs = ResidueRange.parseMultiple("A_3S-37S,A_65S-99S");
+		AtomPositionMap map = new AtomPositionMap(cache.getAtoms(pdbId));
+		Iterator<ResidueNumber> iter = ResidueRange.multiIterator(map, rrs);
+		int i = 0;
+		while (iter.hasNext()) {
+			ResidueNumber rn = iter.next();
+			assertEquals(expected[i], rn.printFull());
+			i++;
 		}
 	}
 	

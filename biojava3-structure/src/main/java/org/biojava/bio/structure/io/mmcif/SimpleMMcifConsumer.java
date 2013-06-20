@@ -1264,6 +1264,8 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 
 	public void newPdbxEntityNonPoly(PdbxEntityNonPoly pen){
 		// TODO: do something with them...
+		
+		System.out.println(pen.getEntity_id() + " " + pen.getName() + " " + pen.getComp_id());
 	}
 
 	public void newChemComp(ChemComp c) {
