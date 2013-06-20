@@ -33,23 +33,13 @@ import java.util.List;
 import java.util.Map;
 
 import org.biojava.bio.structure.Atom;
-import org.biojava.bio.structure.AtomImpl;
-import org.biojava.bio.structure.Calc;
-import org.biojava.bio.structure.Chain;
-import org.biojava.bio.structure.Group;
 import org.biojava.bio.structure.ResidueNumber;
-import org.biojava.bio.structure.SVDSuperimposer;
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureException;
 import org.biojava.bio.structure.StructureTools;
-import org.biojava.bio.structure.align.AFPTwister;
-import org.biojava.bio.structure.align.fatcat.FatCatFlexible;
-import org.biojava.bio.structure.align.fatcat.FatCatRigid;
 import org.biojava.bio.structure.align.model.AFPChain;
-import org.biojava.bio.structure.align.util.AFPChainScorer;
 import org.biojava.bio.structure.align.util.AlignmentTools;
 import org.biojava.bio.structure.align.xml.AFPChainXMLConverter;
-import org.biojava.bio.structure.jama.Matrix;
 import org.biojava3.alignment.template.AlignedSequence;
 import org.biojava3.alignment.template.SequencePair;
 import org.biojava3.core.sequence.ProteinSequence;
@@ -326,11 +316,11 @@ public class FastaAFPChainConverter {
 		AFPChain afpChain = AlignmentTools.createAFPChain(ca1, ca2, alignedResidues1, alignedResidues2);
 		afpChain.setAlgorithmName("unknown");
 
-		if (alignedResidues1.length > 0 && alignedResidues2.length > 0) {
-			AlignmentTools.updateSuperposition(afpChain, ca1, ca2);
-		} else {
-			afpChain.setTMScore(0);
-		}
+		AlignmentTools.updateSuperposition(afpChain, ca1, ca2);
+
+		afpChain.setBlockSize(new int[] {afpChain.getNrEQR()});
+		afpChain.setBlockRmsd(new double[] {afpChain.getTotalRmsdOpt()});
+		afpChain.setBlockGap(new int[] {afpChain.getGapLen()});
 
 		return afpChain;
 
