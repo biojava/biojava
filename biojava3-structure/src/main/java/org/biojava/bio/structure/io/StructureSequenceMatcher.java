@@ -162,6 +162,7 @@ public class StructureSequenceMatcher {
 
 		ProteinSequence structSeq = getProteinSequenceForStructure(struct,atomIndexPosition);
 
+		// TODO This should really be semi-global alignment, though global for either sequence OR structure (we don't know which)
 		//2. Run Smith-Waterman to get the alignment
 		// Identity substitution matrix with +1 for match, -1 for mismatch
 		// TODO
@@ -176,7 +177,7 @@ public class StructureSequenceMatcher {
 		"blosum100");
 		SequencePair<ProteinSequence, AminoAcidCompound> pair = 
 			Alignments.getPairwiseAlignment(seq, structSeq,
-					PairwiseSequenceAlignerType.LOCAL, new SimpleGapPenalty(), matrix);
+					PairwiseSequenceAlignerType.GLOBAL, new SimpleGapPenalty(), matrix);
 
 		//System.out.print(pair.toString());
 
