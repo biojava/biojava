@@ -118,7 +118,7 @@ public class FastaAFPChainConverter {
 			}
 			gappedCpShift++;
 		}
-		
+
 		Atom[] ca1 = StructureTools.getAtomCAArray(structure);
 		Atom[] ca2 =  StructureTools.getAtomCAArray(structure); // can't use cloneCAArray because it doesn't set parent group.chain.structure
 
@@ -138,22 +138,22 @@ public class FastaAFPChainConverter {
 			CasePreservingProteinSequenceCreator.setLowercaseToNull(second, nonpermutedResidues);
 		}
 
-//		for (int i = 0; i < residues.length; i++) {
-//			if (residues[i] == null) {
-//				System.out.print("=");
-//			} else {
-//				System.out.print(sequence.getSequenceAsString().charAt(i));
-//			}
-//		}
-//		System.out.println();
-//		for (int i = 0; i < residues.length; i++) {
-//			if (nonpermutedResidues[i] == null) {
-//				System.out.print("=");
-//			} else {
-//				System.out.print(second.getSequenceAsString().charAt(i));
-//			}
-//		}
-//		System.out.println();
+		//		for (int i = 0; i < residues.length; i++) {
+		//			if (residues[i] == null) {
+		//				System.out.print("=");
+		//			} else {
+		//				System.out.print(sequence.getSequenceAsString().charAt(i));
+		//			}
+		//		}
+		//		System.out.println();
+		//		for (int i = 0; i < residues.length; i++) {
+		//			if (nonpermutedResidues[i] == null) {
+		//				System.out.print("=");
+		//			} else {
+		//				System.out.print(second.getSequenceAsString().charAt(i));
+		//			}
+		//		}
+		//		System.out.println();
 
 		return buildAlignment(ca1, ca2, residues, nonpermutedResidues);
 
@@ -324,49 +324,11 @@ public class FastaAFPChainConverter {
 		ResidueNumber[] alignedResidues2 = alignedResiduesList2.toArray(new ResidueNumber[alignedResiduesList2.size()]);
 
 		AFPChain afpChain = AlignmentTools.createAFPChain(ca1, ca2, alignedResidues1, alignedResidues2);
+		afpChain.setAlgorithmName("unknown");
 
 		if (alignedResidues1.length > 0 && alignedResidues2.length > 0) {
 
-			/*
-			 * I have NO idea why this works.
-			 */
-			
-			AFPTwister.twistOptimized(afpChain, ca1, ca2);
-
-			List<Group> hetatms2 = new ArrayList<Group>();
-			List<Group> nucs2    = new ArrayList<Group>();
-
-			Group g2 = ca2[0].getGroup();
-			Chain c2 = null;
-			if (g2 != null) {
-				c2 = g2.getChain();
-				if (c2 != null) {
-					hetatms2 = c2.getAtomGroups("hetatm");
-					nucs2 = c2.getAtomGroups("nucleotide");
-				}
-			}
-
-			if (afpChain.getBlockNum() > 0){
-
-				if (hetatms2.size() > 0 || nucs2.size() >0) {
-
-					if (afpChain.getBlockRotationMatrix().length > 0) {
-
-						Matrix m1 = afpChain.getBlockRotationMatrix()[0];
-						Atom vector1 = afpChain.getBlockShiftVector()[0];
-
-						for (Group g : hetatms2) {                       
-							Calc.rotate(g, m1);
-							Calc.shift(g, vector1);
-						}
-						for (Group g: nucs2){
-							Calc.rotate(g, m1);
-							Calc.shift(g, vector1);
-						}
-					}
-				}
-			}
-
+			AlignmentTools.updateSuperposition(afpChain, ca1, ca2);
 
 			double tmScore = AFPChainScorer.getTMScore(afpChain, ca1, ca2);
 			afpChain.setTMScore(tmScore);
