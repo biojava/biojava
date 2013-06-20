@@ -32,16 +32,14 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-
 import org.biojava.bio.structure.io.PDBFileReader;
 import org.biojava.bio.structure.io.SeqRes2AtomAligner;
 import org.biojava.bio.structure.io.mmcif.ChemCompGroupFactory;
 import org.biojava.bio.structure.io.mmcif.chem.PolymerType;
-import org.biojava.bio.structure.io.mmcif.chem.ResidueType;
 import org.biojava.bio.structure.io.mmcif.model.ChemComp;
+import org.biojava3.core.sequence.ProteinSequence;
 import org.biojava3.core.sequence.compound.AminoAcidCompound;
 import org.biojava3.core.sequence.template.Sequence;
-import org.biojava3.core.sequence.ProteinSequence;
 
 
 /**
@@ -745,38 +743,13 @@ public class ChainImpl implements Chain, Serializable {
 	 *
 	 */
 	public List<Group> getAtomLigands(){
-
-		return getLigands(getAtomGroups());
-
-	}
-
-	private List<Group> getLigands(List<Group> allGroups){
-		//String prop = System.getProperty(PDBFileReader.LOAD_CHEM_COMP_PROPERTY);
-
-		//		if ( prop == null || ( ! prop.equalsIgnoreCase("true"))){
-		//			System.err.println("You did not specify PDBFileReader.setLoadChemCompInfo, need to fetch Chemical Components anyways.");
-		//		}
-
-
-
-		List<Group> groups = new ArrayList<Group>();
-		for ( Group g: allGroups) {
-
-			ChemComp cc = g.getChemComp();
-
-			if ( ResidueType.lPeptideLinking.equals(cc.getResidueType()) ||
-					PolymerType.PROTEIN_ONLY.contains(cc.getPolymerType()) ||
-					PolymerType.POLYNUCLEOTIDE_ONLY.contains(cc.getPolymerType())
-					){
-				continue;
-			}
-			if ( ! waternames.contains(g.getPDBName())) {
-				//System.out.println("not a prot, nuc or solvent : " + g.getChemComp());
-				groups.add(g);
-			}
-		}
-
-		return groups;
+		List<Group> ligands = new ArrayList<Group>();
+		
+		for (Group g : groups)
+			if (!seqResGroups.contains(g) && !waternames.contains(g.getPDBName()))
+				ligands.add(g);
+		
+		return ligands;
 	}
 
 	@Override
