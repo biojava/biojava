@@ -81,8 +81,6 @@ public class FastaAFPChainConverter {
 	public static AFPChain cpFastaToAfpChain(ProteinSequence sequence, ProteinSequence second, Structure structure, int cpSite)
 			throws StructureException {
 
-		cpSite = -cpSite;
-		
 		if (structure == null) {
 			throw new IllegalArgumentException("The structure is null");
 		}
@@ -97,7 +95,7 @@ public class FastaAFPChainConverter {
 		while (ungappedCpShift < Math.abs(cpSite)) {
 			char c;
 			try {
-				if (cpSite >= 0) {
+				if (cpSite <= 0) {
 					c = second.getSequenceAsString().charAt(gappedCpShift);
 				} else {
 					c = second.getSequenceAsString().charAt(sequence.getLength()-1 - gappedCpShift);
@@ -115,7 +113,6 @@ public class FastaAFPChainConverter {
 		Atom[] ca2 =  StructureTools.getAtomCAArray(structure); // can't use cloneCAArray because it doesn't set parent group.chain.structure
 
 		ProteinSequence antipermuted = new ProteinSequence(SequenceTools.permuteCyclic(second.getSequenceAsString(), gappedCpShift));
-		System.out.println(antipermuted);
 
 		ResidueNumber[] residues = StructureSequenceMatcher.matchSequenceToStructure(sequence, structure);
 		ResidueNumber[] antipermutedResidues = StructureSequenceMatcher.matchSequenceToStructure(antipermuted, structure);
@@ -131,22 +128,22 @@ public class FastaAFPChainConverter {
 			CasePreservingProteinSequenceCreator.setLowercaseToNull(second, nonpermutedResidues);
 		}
 
-				for (int i = 0; i < residues.length; i++) {
-					if (residues[i] == null) {
-						System.out.print("=");
-					} else {
-						System.out.print(sequence.getSequenceAsString().charAt(i));
-					}
-				}
-				System.out.println();
-				for (int i = 0; i < residues.length; i++) {
-					if (nonpermutedResidues[i] == null) {
-						System.out.print("=");
-					} else {
-						System.out.print(second.getSequenceAsString().charAt(i));
-					}
-				}
-				System.out.println();
+//		for (int i = 0; i < residues.length; i++) {
+//			if (residues[i] == null) {
+//				System.out.print("=");
+//			} else {
+//				System.out.print(sequence.getSequenceAsString().charAt(i));
+//			}
+//		}
+//		System.out.println();
+//		for (int i = 0; i < residues.length; i++) {
+//			if (nonpermutedResidues[i] == null) {
+//				System.out.print("=");
+//			} else {
+//				System.out.print(second.getSequenceAsString().charAt(i));
+//			}
+//		}
+//		System.out.println();
 
 		return buildAlignment(ca1, ca2, residues, nonpermutedResidues);
 

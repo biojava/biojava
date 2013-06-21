@@ -118,18 +118,10 @@ public class FastaAFPChainConverterTest {
 	public void testCpSymmetric2() throws IOException,StructureException {
 		String a = "--vRSLNCTLRDSQQ-KSLVMSG---PYELKALHLQgqdmeq-----QVVFSMSFVQGeesndkiPVALGLKEK-NLYLSSVLKdDKPTLQLESVdpknypkkkmekRFVFNKIEInn--KLEFESAQFpnWYISTSqAENmPVFLGGT----KGgqDITDFTMQFV---";
 		String b = "esnDKIPVALGLKEKnLYLSSVLkddKPTLQLESVDpknypkkkmekRFVFNKIEINN-------KLEFESAQFpNWYISTSQA-ENMPVFLGGTkggqd-------ITDFTMQFVvrslNCTLRDSQQ--KSLVMS-GPY-ELKALHLqgqdME--QQVVFSMSFVqge";
-//esnDKIPVALGLKEKnLYLSSVLkddKPTLQLESVDpknypkkkmekRFV
 		Structure structure = StructureTools.getStructure("31BI");
-		int x = 0;
-//		--vRSLNCTLRDSQQ-KSLVMSG---PYELKALHLQgqdmeq-----QVVFSMSFVQG
-		for (char c : "--vRSLNCTLRDSQQ-KSLVMSG---PYELKALHLQgqdmeq-----QVVFSMSFVQG".toCharArray()) if (c != '-') x++;
-		System.out.println(x);
-		AFPChain afpChain = FastaAFPChainConverter.cpFastaToAfpChain(a, b, structure, -101); // TODO why does this need to be 104?
+		AFPChain afpChain = FastaAFPChainConverter.cpFastaToAfpChain(a, b, structure, -101);
 		assertEquals("Wrong TM-score", 0.6284, afpChain.getTMScore(), 0.001);
 		assertEquals("Wrong RMSD", 2.50569, afpChain.getTotalRmsdOpt(), 0.001);
-		String xml = AFPChainXMLConverter.toXML(afpChain);
-//		System.out.println(xml);
-		// TODO
 	}
 	
 	@Test
@@ -138,15 +130,9 @@ public class FastaAFPChainConverterTest {
 		String a = "-SSRPATAR-KSSGLSGTVRIPGDKSISHRSFMFGGLA-SGETRITGLLEG-EDvINTGKAMQAMGARIRKEGd---------TWIIDGVgngglLAPEAPLD---FGNAATGCRLTMGLVGvydFDSTFIGDASLtkrp---MGRVLNPLREMGVQVKSEDgdrLPVTLRGPK---TPT---PITYRVpMASAQVKSAVLLAGLNTPGITTVIEpi---MTRDHTEKMLQGFGANLTVEtdadGVRTIRLEgRGKLTGQVIDVPGDPSSTAFPLVAALLVpGSDVTILNVLMNpTR-TGLILTLQEMGADIEVINprlaggedvaDLRVRSS-----TLKGVTVPedrAPSMIDEYPILAVAAAFAEGATVMNGLEELrvkesdrLSAVANGLKLNGVDCDEGE---TSLVVRGRPdgkGLGNasgAAVAT-HLDHRIAMSFLVMGLVSENPVTVDDatmIATSFPEFMDLMAGLGAKIELS---";
 		String b = "dGVRTIRLEgRGKLTGQVIDVPGDPSSTAFPLVAALLVpGSDVTILNVLMNpTR-TGLILTLQEMGADIEVINprlaggedvaDLRVRSS-----TLKGVTVPedrAPSMIDEYPILAVAAAfaeGATVMNGLEELrvkesdrLSAVANGLKLNGVDCDEGE---TSLVVRGRPdgkGLGnasGAAVAT-HLDHRIAMSFLVMGLVSENPVTVDDatmiaTSFPEFMDLMAGLGAKIELS----SSRPATAR-KSSGLSGTVRIPGDKSISHRSFMFGGLA-SGETRITGLLEG-EDvINTGKAMQAMGARIRKEGd---------TWIIDGVgngglLAPEAPLD---FGNAATGCRLTMGLVGVYDFDSTFIGDASLtkrp---MGRVLNPLREMGVQVKSEDgdrLPVTLRGPK---TPTP---ITYRVpMASAQVKSAVLLAGLNTPGITTVIE---PIMTRDHTEKMLQGFGANLTVEtda";
 		Structure structure = StructureTools.getStructure("2GG6");
-//		int x = 0;
-//		for (char c : a.toCharArray()) if (c != '-') x++;
-//		System.out.println(x);
 		AFPChain afpChain = FastaAFPChainConverter.cpFastaToAfpChain(a, b, structure, -230); // 215
 		assertEquals("Wrong TM-score", 0.7701, afpChain.getTMScore(), 0.001);
 		assertEquals("Wrong RMSD", 3.035, afpChain.getTotalRmsdOpt(), 0.001);
-		String xml = AFPChainXMLConverter.toXML(afpChain);
-		System.out.println(xml);
-		// TODO
 	}
 	
 	@Test
