@@ -104,7 +104,7 @@ public class FastaAFPChainConverterTest {
 		cache = new AtomCache();
 	}
 	
-//	@Test
+	@Test
 	public void testCpAsymmetric() throws IOException, StructureException {
 		Structure structure = cache.getStructure("1w0p");
 		String first = ("alfdynatgdtefdspakqgwmqdntnngsgvltnadgmpawlvqgiggraqwtyslstnqhaqassfgwrmttemkvlsggmitnyyangtqrvlpiisldssgnlvvefegqtgrtvlatgtaateyhkfelvflpgsnpsasfyfdgklirdniqptaskQNMIVWGNGSSntdgvaayrdikfei------------------------------------------------------------------------------------------------------------------QGDVIf------------RGPDRIPSIVASsvTPGVVTAFAEKRVGGgdpgalsntNDIITRTSRDGGITWDTELNLTEQinvsdeFDFSDPRPIYDPs---SNTVLVSYARWPtdaaqngdrikpwmpNGIFYSVYDVASgnWQAPIDVTdqvkersfqiagwggselyrrntslnsqqdwqsnakirivdgaanqiqvadgsrkyvvtlsidesgglvanlngvsapiilqsehakvhsfhdyelqysalnhtttlfvdgqqittwagevsqenniqfgnadaqidgrlhvqkivltqqghnlvefdafylaqqtpevekdleklgwtkiktgntmslygNASVNPGpgHGITLtrqqnisgsqNGRLIYPAIVLdrfFLNVMSIYSDDGgsnwq-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------TGSTLpipfrwksssileTLEPSEADMVELQN--GDLLLTARLDFNQivngvny--SPRQQFLSKDGGITWSLLEANNANvfsnistgTVDASITRFEqsdgSHFLLFTNPQGnpagTNgr------------QNLGLWFSFDEG--VTWKGPIQ--LVNGasaysdiyqldsenaivivetdnsnmrilrmpitllkqklt");
@@ -118,12 +118,13 @@ public class FastaAFPChainConverterTest {
 	public void testCpSymmetric2() throws IOException,StructureException {
 		String a = "--vRSLNCTLRDSQQ-KSLVMSG---PYELKALHLQgqdmeq-----QVVFSMSFVQGeesndkiPVALGLKEK-NLYLSSVLKdDKPTLQLESVdpknypkkkmekRFVFNKIEInn--KLEFESAQFpnWYISTSqAENmPVFLGGT----KGgqDITDFTMQFV---";
 		String b = "esnDKIPVALGLKEKnLYLSSVLkddKPTLQLESVDpknypkkkmekRFVFNKIEINN-------KLEFESAQFpNWYISTSQA-ENMPVFLGGTkggqd-------ITDFTMQFVvrslNCTLRDSQQ--KSLVMS-GPY-ELKALHLqgqdME--QQVVFSMSFVqge";
+//esnDKIPVALGLKEKnLYLSSVLkddKPTLQLESVDpknypkkkmekRFV
 		Structure structure = StructureTools.getStructure("31BI");
 		int x = 0;
 //		--vRSLNCTLRDSQQ-KSLVMSG---PYELKALHLQgqdmeq-----QVVFSMSFVQG
 		for (char c : "--vRSLNCTLRDSQQ-KSLVMSG---PYELKALHLQgqdmeq-----QVVFSMSFVQG".toCharArray()) if (c != '-') x++;
 		System.out.println(x);
-		AFPChain afpChain = FastaAFPChainConverter.cpFastaToAfpChain(a, b, structure, 104); // TODO why does this need to be 104?
+		AFPChain afpChain = FastaAFPChainConverter.cpFastaToAfpChain(a, b, structure, -101); // TODO why does this need to be 104?
 		assertEquals("Wrong TM-score", 0.6284, afpChain.getTMScore(), 0.001);
 		assertEquals("Wrong RMSD", 2.50569, afpChain.getTotalRmsdOpt(), 0.001);
 		String xml = AFPChainXMLConverter.toXML(afpChain);
@@ -148,7 +149,7 @@ public class FastaAFPChainConverterTest {
 		// TODO
 	}
 	
-//	@Test
+	@Test
 	public void testFromFasta() throws IOException, StructureException {
 		Structure s1 = cache.getStructure("1w0p");
 		Structure s2 = cache.getStructure("1qdm");
