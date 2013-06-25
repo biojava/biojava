@@ -822,6 +822,12 @@ public class AlignmentTools {
 		SVDSuperimposer svd = new SVDSuperimposer(ca1aligned, ca2aligned);
 		Matrix matrix = svd.getRotation();
 		Atom shift = svd.getTranslation();
+		Matrix[] blockMxs = new Matrix[afpChain.getBlockNum()];
+		Arrays.fill(blockMxs, matrix);
+		afpChain.setBlockRotationMatrix(blockMxs);
+		Atom[] blockShifts = new Atom[afpChain.getBlockNum()];
+		Arrays.fill(blockShifts, shift);
+		afpChain.setBlockShiftVector(blockShifts);
 
 		for (Atom a : ca2aligned) {
 			Calc.rotate(a, matrix);
