@@ -36,6 +36,13 @@ public class ScopFactory {
 		return scop;
 	}
 
+	/**
+	 * @param s A version number, such as {@link #VERSION_1_75A}
+	 */
+	public static void setScopDatabase(String s) {
+		setScopDatabase(ScopFactory.getSCOP(s));
+	}
+	
 	public static void setScopDatabase(ScopDatabase s){
 		System.out.println("Setting ScopDatabase to type: " + s.getClass().getName());
 		scop = s;
