@@ -24,6 +24,7 @@
  */
 package org.biojava.bio.structure.io;
 
+import static org.junit.Assert.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -125,6 +126,25 @@ public class FastaAFPChainConverterTest {
 	}
 	
 	@Test
+	public void testBug1() throws IOException, StructureException {
+		/*
+		 * From CriteriaDifference:
+		 * [d3er9b_: TM-score=0.6984812617301941, Tmpr=0.14740000665187836]
+		 * This is a HUGE difference
+		 * 0.6984813 appears to be correct.
+		 * The TM-score is so high for such an asymmetric domains simply because the alignment partially follows the main diagonal (trivial alignment).
+		 */
+		String a = "nitlkiietylgrvpsvneyhmlksqarniqkitvfnkdifvslvkknkkrffsdvntsaseikdrilsyfsKQTQty-------NIGKLFTIIELQSVLVTTYTDilgvLTINV----TSMEELARDMLnsmnVAVVSSLVKNVNKLMEEYLRRHNKSCICYGSYSLYLINPNIRYGDIDILQTNSRTFLIDLAFLIKFITGNNIILSKIPYLRNYMVIKDENDNHIIDSFNIRQDTMNVVPKIFIDNIYIVDP---TFQLLNMIKMfsqIDRLEDLSkdpeKFNARMATMLEYVRYT------HGIVFdgKRNNMPMKCIIDENNRIVTVTTKDYFSFKKCLVYLDENVLSSDILDLNADTSCDFESVTNSVYLIHDNIMYTYFSNTILLSDKGKVheiSARGLCAHILLYQml-----TSG--EYKQCLSDLLNsmMNRDKIPIysHTERDKKPGRHGFINIEKDIIVF-------------------------------------------------------------------";
+		String b = "----------------------------------------------------------------------lsYFSKqtqtynigkLFTIIELQSVLVTTYTDILGV----LTINVtsmeELARDMLNSMN----VAVVSSLVKNVNKLMEEYLRRHNKSCICYGSYSLYLINPNIRYGDIDILQTNSRTFLIDLAFLIKFITGNNIILSKIPYLRNYMVIKDENDNHIIDSFNIRQDTMNVVPKIFIDNIYIVDPtfqLLNMIKMFSQ---IDRLEDLS----KDPEKFNARMATMLEYvrythgIVFDG--KRNNMPMKCIIDENNRIVTVTTKDYFSFKKCLVYLDENVLSSDILDLNADTSCDFESVTNSVYLIHDNIMYTYFSNTILLSDKGKV---HEISARGLCAHILlyqmltsGEYkqCLSDLLNSMMN--RDKIPIYS--HTERDKKPGRHGFINIEKDIIVFnitlkiietylgrvpsvneyhmlksqarniqkitvfnkdifvslvkknkkrffsdvntsaseikdri";
+//		            ========================================================================KQTQ=========NIGKLFTIIELQSVLVTTYTD====LTINV====TSMEELARDML====VAVVSSLVKNVNKLMEEYLRRHNKSCICYGSYSLYLINPNIRYGDIDILQTNSRTFLIDLAFLIKFITGNNIILSKIPYLRNYMVIKDENDNHIIDSFNIRQDTMNVVPKIFIDNIYIVDP===TFQLLNMIKM===IDRLEDLS====KFNARMATMLEYVRYT======HGIVF==KRNNMPMKCIIDENNRIVTVTTKDYFSFKKCLVYLDENVLSSDILDLNADTSCDFESVTNSVYLIHDNIMYTYFSNTILLSDKGKV===SARGLCAHILLYQ=======TSG==EYKQCLSDLLN==MNRDKIPI==HTERDKKPGRHGFINIEKDIIVF===================================================================
+//		            ========================================================================YFSK=========LFTIIELQSVLVTTYTDILGV====LTINV====ELARDMLNSMN====VAVVSSLVKNVNKLMEEYLRRHNKSCICYGSYSLYLINPNIRYGDIDILQTNSRTFLIDLAFLIKFITGNNIILSKIPYLRNYMVIKDENDNHIIDSFNIRQDTMNVVPKIFIDNIYIVDP===LLNMIKMFSQ===IDRLEDLS====KDPEKFNARMATMLEY======IVFDG==KRNNMPMKCIIDENNRIVTVTTKDYFSFKKCLVYLDENVLSSDILDLNADTSCDFESVTNSVYLIHDNIMYTYFSNTILLSDKGKV===HEISARGLCAHIL=======GEY==CLSDLLNSMMN==RDKIPIYS==HTERDKKPGRHGFINIEKDIIVF===================================================================
+		Structure structure = StructureTools.getStructure("d3er9b_");
+		AFPChain afpChain = FastaAFPChainConverter.cpFastaToAfpChain(a, b, structure, 67);
+		assertEquals("Wrong RMSD", 2.681, afpChain.getTotalRmsdOpt(), 0.001);
+		assertEquals("Wrong TM-score", 0.69848, afpChain.getTMScore(), 0.001);
+	}
+	
+	@Test
 	public void testCpSymmetric1() throws IOException,StructureException {
 		//cat 2GG6-best.fasta |tr -d \\n|pbcopy
 		String a = "-SSRPATAR-KSSGLSGTVRIPGDKSISHRSFMFGGLA-SGETRITGLLEG-EDvINTGKAMQAMGARIRKEGd---------TWIIDGVgngglLAPEAPLD---FGNAATGCRLTMGLVGvydFDSTFIGDASLtkrp---MGRVLNPLREMGVQVKSEDgdrLPVTLRGPK---TPT---PITYRVpMASAQVKSAVLLAGLNTPGITTVIEpi---MTRDHTEKMLQGFGANLTVEtdadGVRTIRLEgRGKLTGQVIDVPGDPSSTAFPLVAALLVpGSDVTILNVLMNpTR-TGLILTLQEMGADIEVINprlaggedvaDLRVRSS-----TLKGVTVPedrAPSMIDEYPILAVAAAFAEGATVMNGLEELrvkesdrLSAVANGLKLNGVDCDEGE---TSLVVRGRPdgkGLGNasgAAVAT-HLDHRIAMSFLVMGLVSENPVTVDDatmIATSFPEFMDLMAGLGAKIELS---";
@@ -150,7 +170,11 @@ public class FastaAFPChainConverterTest {
 		BufferedWriter bw = new BufferedWriter(new FileWriter(x));
 		bw.write(xml);
 		bw.close();
-		assertTrue("AFPChain is wrong", compareXml(expected, x));
+		boolean match = compareXml(expected, x);
+		if (!match) {
+			System.err.println(xml);
+			fail("AFPChain is wrong");
+		}
 	}
 
 }
