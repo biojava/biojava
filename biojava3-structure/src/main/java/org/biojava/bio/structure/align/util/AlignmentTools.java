@@ -17,8 +17,8 @@ import org.biojava.bio.structure.Atom;
 import org.biojava.bio.structure.Calc;
 import org.biojava.bio.structure.ResidueNumber;
 import org.biojava.bio.structure.SVDSuperimposer;
-import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureException;
+import org.biojava.bio.structure.StructureTools;
 import org.biojava.bio.structure.align.ce.CECalculator;
 import org.biojava.bio.structure.align.model.AFPChain;
 import org.biojava.bio.structure.align.xml.AFPChainXMLParser;
@@ -223,7 +223,7 @@ public class AlignmentTools {
 			S post = (intermediate==null?null: identity.get(intermediate));
 			imageMap.put(post, null);
 		}
-		*/
+		 */
 		// now populate with actual values
 		for(int i=0;i<preimage.size();i++) {
 			S pre = preimage.get(i);
@@ -258,15 +258,15 @@ public class AlignmentTools {
 	/**
 	 * Tries to detect symmetry in an alignment.
 	 *
-     * <p>Conceptually, an alignment is a function f:A->B between two sets of
-     * integers. The function may have simple topology (meaning that if two
-     * elements of A are close, then their images in B will also be close), or
-     * may have more complex topology (such as a circular permutation). This
-     * function checks <i>alignment</i> against a reference function
-     * <i>identity</i>, which should have simple topology. It then tries to
-     * determine the symmetry order of <i>alignment</i> relative to
-     * <i>identity</i>, up to a maximum order of <i>maxSymmetry</i>.
-     *
+	 * <p>Conceptually, an alignment is a function f:A->B between two sets of
+	 * integers. The function may have simple topology (meaning that if two
+	 * elements of A are close, then their images in B will also be close), or
+	 * may have more complex topology (such as a circular permutation). This
+	 * function checks <i>alignment</i> against a reference function
+	 * <i>identity</i>, which should have simple topology. It then tries to
+	 * determine the symmetry order of <i>alignment</i> relative to
+	 * <i>identity</i>, up to a maximum order of <i>maxSymmetry</i>.
+	 *
 	 *
 	 * <p><strong>Details</strong><br/>
 	 * Considers the offset (in number of residues) which a residue moves
@@ -512,9 +512,15 @@ public class AlignmentTools {
 	}
 
 	/**
-	 * Fundimentally, an alignment is just a list of aligned residues in each
+	 * Fundamentally, an alignment is just a list of aligned residues in each
 	 * protein. This method converts two lists of ResidueNumbers into an
 	 * AFPChain.
+	 *
+	 * <p>Parameters are filled with defaults (often null) or sometimes
+	 * calculated.
+	 *
+	 * <p>For a way to modify the alignment of an existing AFPChain, see
+	 * {@link AlignmentTools#replaceOptAln(AFPChain, Atom[], Atom[], Map)}
 	 * @param ca1 CA atoms of the first protein
 	 * @param ca2 CA atoms of the second protein
 	 * @param aligned1 A list of aligned residues from the first protein
@@ -522,11 +528,13 @@ public class AlignmentTools {
 	 *  Must be the same length as aligned1.
 	 * @return An AFPChain representing the alignment. Many properties may be
 	 *  null or another default.
+	 * @throws StructureException if an error occured during superposition
 	 * @throws IllegalArgumentException if aligned1 and aligned2 have different
 	 *  lengths
+	 * @see AlignmentTools#replaceOptAln(AFPChain, Atom[], Atom[], Map)
 	 */
 	public static AFPChain createAFPChain(Atom[] ca1, Atom[] ca2,
-			ResidueNumber[] aligned1, ResidueNumber[] aligned2 ) {
+			ResidueNumber[] aligned1, ResidueNumber[] aligned2 ) throws StructureException {
 		//input validation
 		int alnLen = aligned1.length;
 		if(alnLen != aligned2.length) {
@@ -549,9 +557,6 @@ public class AlignmentTools {
 		a.setBlockRotationMatrix(ms);
 		Atom[] blockShiftVector = new Atom[a.getBlockNum()];
 		a.setBlockShiftVector(blockShiftVector);
-		// TODO run superimposer (not required for display)
-		// TODO more properties
-
 
 		String[][][] pdbAln = new String[1][2][alnLen];
 		for(int i=0;i<alnLen;i++) {
@@ -565,7 +570,194 @@ public class AlignmentTools {
 		AFPChainXMLParser.rebuildAFPChain(a, ca1, ca2);
 
 		return a;
+
+		// Currently a single block. Split into several blocks by sequence if needed
+		//		return AlignmentTools.splitBlocksByTopology(a,ca1,ca2);
 	}
+
+	/**
+	 *
+	 * @param a
+	 * @param ca1
+	 * @param ca2
+	 * @return
+	 * @throws StructureException if an error occurred during superposition
+	 */
+	public static AFPChain splitBlocksByTopology(AFPChain a, Atom[] ca1, Atom[] ca2) throws StructureException {
+		int[][][] optAln = a.getOptAln();
+		int blockNum = a.getBlockNum();
+		int[] optLen = a.getOptLen();
+
+		// Determine block lengths
+		// Split blocks if residue indices don't increase monotonically
+		List<Integer> newBlkLen = new ArrayList<Integer>();
+		boolean blockChanged = false;
+		for(int blk=0;blk<blockNum;blk++) {
+			int currLen=1;
+			for(int pos=1;pos<optLen[blk];pos++) {
+				if( optAln[blk][0][pos] <= optAln[blk][0][pos-1]
+						|| optAln[blk][1][pos] <= optAln[blk][1][pos-1] )
+				{
+					//start a new block
+					newBlkLen.add(currLen);
+					currLen = 0;
+					blockChanged = true;
+				}
+				currLen++;
+			}
+			if(optLen[blk] < 2 ) {
+				newBlkLen.add(optLen[blk]);
+			} else {
+				newBlkLen.add(currLen);
+			}
+		}
+
+		// Check if anything needs to be split
+		if( !blockChanged ) {
+			return a;
+		}
+
+		// Split blocks
+		List<int[][]> blocks = new ArrayList<int[][]>( newBlkLen.size() );
+
+		int oldBlk = 0;
+		int pos = 0;
+		for(int blkLen : newBlkLen) {
+			if( blkLen == optLen[oldBlk] ) {
+				assert(pos == 0); //should be the whole block
+				// Use the old block
+				blocks.add(optAln[oldBlk]);
+			} else {
+				int[][] newBlock = new int[2][blkLen];
+				assert( pos+blkLen <= optLen[oldBlk] ); // don't overrun block
+				for(int i=0; i<blkLen;i++) {
+					newBlock[0][i] = optAln[oldBlk][0][pos + i];
+					newBlock[1][i] = optAln[oldBlk][1][pos + i];
+				}
+				pos += blkLen;
+				blocks.add(newBlock);
+
+				if( pos == optLen[oldBlk] ) {
+					// Finished this oldBlk, start the next
+					oldBlk++;
+					pos = 0;
+				}
+			}
+		}
+
+		// Store new blocks
+		int[][][] newOptAln = blocks.toArray(new int[0][][]);
+		int[] newBlockLens = new int[newBlkLen.size()];
+		for(int i=0;i<newBlkLen.size();i++) {
+			newBlockLens[i] = newBlkLen.get(i);
+		}
+
+		return replaceOptAln(a, ca1, ca2, blocks.size(), newBlockLens, newOptAln);
+	}
+
+	/**
+	 * Takes an AFPChain and replaces the optimal alignment based on an alignment map
+	 *
+	 * <p>Parameters are filled with defaults (often null) or sometimes
+	 * calculated.
+	 *
+	 * <p>For a way to create a new AFPChain, see
+	 * {@link AlignmentTools#createAFPChain(Atom[], Atom[], ResidueNumber[], ResidueNumber[])}
+	 *
+	 * @param afpChain The alignment to be modified
+	 * @param alignment The new alignment, as a Map
+	 * @throws StructureException if an error occured during superposition
+	 * @see AlignmentTools#createAFPChain(Atom[], Atom[], ResidueNumber[], ResidueNumber[])
+	 */
+	public static AFPChain replaceOptAln(AFPChain afpChain, Atom[] ca1, Atom[] ca2,
+			Map<Integer, Integer> alignment) throws StructureException {
+
+		// Determine block lengths
+		// Sort ca1 indices, then start a new block whenever ca2 indices aren't
+		// increasing monotonically.
+		Integer[] res1 = alignment.keySet().toArray(new Integer[0]);
+		Arrays.sort(res1);
+		List<Integer> blockLens = new ArrayList<Integer>(2);
+		int optLength = 0;
+		Integer lastRes = alignment.get(res1[0]);
+		int blkLen = lastRes==null?0:1;
+		for(int i=1;i<res1.length;i++) {
+			Integer currRes = alignment.get(res1[i]); //res2 index
+			assert(currRes != null);// could be converted to if statement if assertion doesn't hold; just modify below as well.
+			if(lastRes<currRes) {
+				blkLen++;
+			} else {
+				// CP!
+				blockLens.add(blkLen);
+				optLength+=blkLen;
+				blkLen = 1;
+			}
+			lastRes = currRes;
+		}
+		blockLens.add(blkLen);
+		optLength+=blkLen;
+
+		// Create array structure for alignment
+		int[][][] optAln = new int[blockLens.size()][][];
+		int pos1 = 0; //index into res1
+		for(int blk=0;blk<blockLens.size();blk++) {
+			optAln[blk] = new int[2][];
+			blkLen = blockLens.get(blk);
+			optAln[blk][0] = new int[blkLen];
+			optAln[blk][1] = new int[blkLen];
+			int pos = 0; //index into optAln
+			while(pos<blkLen) {
+				optAln[blk][0][pos]=res1[pos1];
+				Integer currRes = alignment.get(res1[pos1]);
+				optAln[blk][1][pos]=currRes;
+				pos++;
+				pos1++;
+			}
+		}
+		assert(pos1 == optLength);
+
+		// Create length array
+		int[] optLens = new int[blockLens.size()];
+		for(int i=0;i<blockLens.size();i++) {
+			optLens[i] = blockLens.get(i);
+		}
+
+		return replaceOptAln(afpChain, ca1, ca2, blockLens.size(), optLens, optAln);
+	}
+
+	/**
+	 * @param afpChain
+	 * @param ca1
+	 * @param ca2
+	 * @param optLength
+	 * @param optLens
+	 * @param optAln
+	 * @return
+	 * @throws StructureException if an error occured during superposition
+	 */
+	public static AFPChain replaceOptAln(AFPChain afpChain, Atom[] ca1, Atom[] ca2,
+			int blockNum, int[] optLens, int[][][] optAln) throws StructureException {
+		int optLength = 0;
+		for( int blk=0;blk<blockNum;blk++) {
+			optLength += optLens[blk];
+		}
+
+		//set everything
+		AFPChain refinedAFP = (AFPChain) afpChain.clone();
+		refinedAFP.setOptLength(optLength);
+		refinedAFP.setBlockSize(optLens);
+		refinedAFP.setOptLen(optLens);
+		refinedAFP.setOptAln(optAln);
+		refinedAFP.setBlockNum(blockNum);
+
+		//TODO recalculate properties: superposition, tm-score, etc
+		Atom[] ca2clone = StructureTools.cloneCAArray(ca2); // don't modify ca2 positions
+		AlignmentTools.updateSuperposition(refinedAFP, ca1, ca2clone);
+
+		AFPAlignmentDisplay.getAlign(refinedAFP, ca1, ca2clone);
+		return refinedAFP;
+	}
+
 
 	/**
 	 * After the alignment changes (optAln, optLen, blockNum, at a minimum),
@@ -584,66 +776,86 @@ public class AlignmentTools {
 	 */
 	public static void updateSuperposition(AFPChain afpChain, Atom[] ca1, Atom[] ca2) throws StructureException {
 
-		// Create arrays of aligned atoms
-		int optLength = afpChain.getOptLength();
-		int alnPos = 0;
-		Atom[] aln1 = new Atom[optLength];
-		Atom[] aln2 = new Atom[optLength];
+		// we need this to get the correct superposition
+		int[] focusRes1 = afpChain.getFocusRes1();
+		int[] focusRes2 = afpChain.getFocusRes2();
+		if (focusRes1 == null) {
+			focusRes1 = new int[afpChain.getCa1Length()];
+			afpChain.setFocusRes1(focusRes1);
+		}
+		if (focusRes2 == null) {
+			focusRes2 = new int[afpChain.getCa2Length()];
+			afpChain.setFocusRes2(focusRes2);
+		}
 
-		int[] optLen = afpChain.getOptLen();
+		if (afpChain.getNrEQR() == 0) return;
+
+		// create new arrays for the subset of atoms in the alignment.
+		Atom[] ca1aligned = new Atom[afpChain.getOptLength()];
+		Atom[] ca2aligned = new Atom[afpChain.getOptLength()];
+		int pos=0;
+		int[] blockLens = afpChain.getOptLen();
 		int[][][] optAln = afpChain.getOptAln();
-		int blockNum = afpChain.getBlockNum();
-		for(int blk=0;blk<blockNum;blk++) {
-			for(int pos=0;pos<optLen[blk];pos++) {
-				int res1 = optAln[blk][0][pos];
-				int res2 = optAln[blk][1][pos];
-				aln1[alnPos] = ca1[res1];
-				aln2[alnPos] = ca2[res2];
-				alnPos++;
+		assert(afpChain.getBlockNum() <= optAln.length);
+
+		for (int block=0; block < afpChain.getBlockNum(); block++) {
+			for(int i=0;i<blockLens[block];i++) {
+				int pos1 = optAln[block][0][i];
+				int pos2 = optAln[block][1][i];
+				Atom a1 = ca1[pos1];
+				Atom a2 = (Atom) ca2[pos2].clone();
+				ca1aligned[pos] = a1;
+				ca2aligned[pos] = a2;
+				pos++;
 			}
 		}
 
-		// Superimpose
-		SVDSuperimposer svd = new SVDSuperimposer(aln1, aln2);
+		// this can happen when we load an old XML serialization which did not support modern ChemComp representation of modified residues.		
+		if (pos != afpChain.getOptLength()){
+			System.err.println("AFPChainScorer getTMScore: Problems reconstructing alignment! nr of loaded atoms is " + pos + " but should be " + afpChain.getOptLength());
+			// we need to resize the array, because we allocated too many atoms earlier on.
+			ca1aligned = (Atom[]) resizeArray(ca1aligned, pos);
+			ca2aligned = (Atom[]) resizeArray(ca2aligned, pos);
+		}
 
+		// superimpose
+		SVDSuperimposer svd = new SVDSuperimposer(ca1aligned, ca2aligned);
 		Matrix matrix = svd.getRotation();
 		Atom shift = svd.getTranslation();
 
-		// Store into afpChain
-		Matrix[] blockMatrix = new Matrix[blockNum];
-		Arrays.fill(blockMatrix, matrix);
-		afpChain.setBlockRotationMatrix(blockMatrix);
-		Atom[] blockShift = new Atom[blockNum];
-		Arrays.fill(blockShift, shift);
-		afpChain.setBlockShiftVector(blockShift);
-
-		// Apply transformation to ca2
-		if(ca2.length>0 && ca2[0].getGroup() != null &&
-				ca2[0].getGroup().getChain() != null &&
-				ca2[0].getGroup().getChain().getParent() != null) {
-			// Assume that ca2 comes from a single structure for efficiency
-			Structure struct = ca2[0].getGroup().getChain().getParent();
-			Calc.rotate(struct, matrix);
-			Calc.shift(struct, shift);
-		} else {
-			// No underlying structure, so do groups individually
-			for(Atom a : ca2) {
-				Calc.rotate(a.getGroup(), matrix);
-				Calc.shift(a.getGroup(), shift);
-			}
+		for (Atom a : ca2aligned) {
+			Calc.rotate(a, matrix);
+			Calc.shift(a, shift);
 		}
 
-		double rms = SVDSuperimposer.getRMS(ca1, ca2);
-		double tm = SVDSuperimposer.getTMScore(aln1, aln2, ca1.length, ca2.length);
+		double rmsd = SVDSuperimposer.getRMS(ca1aligned, ca2aligned);
+		double tmScore = SVDSuperimposer.getTMScore(ca1aligned, ca2aligned, ca1.length, ca2.length);
+		afpChain.setTotalRmsdOpt(rmsd);
+		afpChain.setTMScore(tmScore);
 
-		// Store new transformation back to AFPChain
-		//TODO convolve current superposition with previous transformation?
-		afpChain.setTotalRmsdOpt(Math.sqrt(rms));
-		afpChain.setTMScore(tm);
-		double[] dummy = new double[blockNum];
+		double[] dummy = new double[afpChain.getBlockNum()];
 		Arrays.fill(dummy, -1.);
 		afpChain.setOptRmsd(dummy);
 		afpChain.setBlockRmsd(dummy);
+	}
+
+	/**
+	 * Reallocates an array with a new size, and copies the contents
+	 * of the old array to the new array.
+	 * @param oldArray  the old array, to be reallocated.
+	 * @param newSize   the new array size.
+	 * @return          A new array with the same contents.
+	 */
+	public static Object resizeArray (Object oldArray, int newSize) {
+		int oldSize = java.lang.reflect.Array.getLength(oldArray);
+		@SuppressWarnings("rawtypes")
+		Class elementType = oldArray.getClass().getComponentType();
+		Object newArray = java.lang.reflect.Array.newInstance(
+				elementType,newSize);
+		int preserveLength = Math.min(oldSize,newSize);
+		if (preserveLength > 0)
+			System.arraycopy (oldArray,0,newArray,0,preserveLength);
+		return newArray;
 	}
 
 	/**

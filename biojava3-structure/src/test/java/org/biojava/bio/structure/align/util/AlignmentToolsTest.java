@@ -22,6 +22,8 @@
  */
 package org.biojava.bio.structure.align.util;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.IOException;
 import java.util.AbstractMap;
 import java.util.Collections;
@@ -29,16 +31,18 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import junit.framework.TestCase;
+
 import org.biojava.bio.structure.Atom;
+import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureException;
+import org.biojava.bio.structure.StructureTools;
 import org.biojava.bio.structure.align.StructureAlignment;
 import org.biojava.bio.structure.align.StructureAlignmentFactory;
 import org.biojava.bio.structure.align.ce.CeCPMain;
 import org.biojava.bio.structure.align.ce.CeMain;
 import org.biojava.bio.structure.align.model.AFPChain;
-import org.biojava.bio.structure.align.util.AtomCache;
-
-import junit.framework.TestCase;
+import org.biojava.bio.structure.align.xml.AFPChainXMLParser;
 
 public class AlignmentToolsTest extends TestCase {
 	
@@ -387,6 +391,29 @@ public class AlignmentToolsTest extends TestCase {
 		assertEquals((i++)+". Inverse.",expected,result);
 
 		
+	}
+	
+	/**
+	 * Tests that {@link AlignmentTools#updateSuperposition(AFPChain, Atom[], Atom[])} calculates the correct RMSD and TM-score for an AFPChain of 1 block.
+	 * TODO: Write a test with 2 blocks
+	 */
+	public void testUpdateSuperposition() throws IOException, StructureException {
+		Structure s = StructureTools.getStructure("31BI");
+		Atom[] ca1 = StructureTools.getAtomCAArray(s);
+		Atom[] ca2 = StructureTools.getAtomCAArray(s);
+		StringBuilder sb = new StringBuilder();
+		BufferedReader br = new BufferedReader(new FileReader("src/test/resources/align/31BI_symm_align.xml"));
+		String line = "";
+		while ((line = br.readLine()) != null) {
+			sb.append(line);
+		}
+		br.close();
+		AFPChain afpChain = AFPChainXMLParser.fromXML(sb.toString(), ca1, ca2);
+		afpChain.setTMScore(-1);
+		afpChain.setTotalRmsdOpt(-1);
+		AlignmentTools.updateSuperposition(afpChain, ca1, ca2);
+		assertEquals("TM-score is wrong", 0.62779, afpChain.getTMScore(), 0.001);
+		assertEquals("RMSD is wrong", 2.50569, afpChain.getTotalRmsdOpt(), 0.001);
 	}
 	
 	/**

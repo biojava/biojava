@@ -33,7 +33,7 @@ import org.biojava3.core.sequence.io.template.SequenceCreatorInterface;
  */
 public class DemoAlignmentFromFasta {
 
-	public static void getAlignmentFromFasta() {
+	public static void getAlignmentFromFasta() throws StructureException {
 		
 		// Load a test sequence
 		// Normally this would come from a file, eg
@@ -113,7 +113,7 @@ public class DemoAlignmentFromFasta {
 	}
 
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws StructureException {
 		getAlignmentFromFasta();
 	}
 }
