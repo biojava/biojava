@@ -307,4 +307,4 @@ public final class StructureUtil {
 		//		return chain.getAtomGroups("amino");
 	}
 
-	
+}

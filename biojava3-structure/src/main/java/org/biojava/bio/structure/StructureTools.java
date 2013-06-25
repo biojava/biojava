@@ -793,7 +793,7 @@ public class StructureTools {
 
 		// parse the ranges, adding the specified residues to newS
 		for ( String r: rangS){
-			//System.out.println(">"+r+"<");
+			
 			// Match a single range, eg "A_4-27"
 
 			Matcher matcher = pdbNumRangeRegex.matcher(r);
@@ -829,6 +829,7 @@ public class StructureTools {
 				if(pdbresnumEnd.charAt(0) == '+')
 					pdbresnumEnd = pdbresnumEnd.substring(1);
 				groups = chain.getGroupsByPDB(pdbresnumStart, pdbresnumEnd);
+			
 
 				name.append( chainId + AtomCache.UNDERSCORE + pdbresnumStart+"-" + pdbresnumEnd);
 
@@ -859,7 +860,7 @@ public class StructureTools {
 					newS.addChain(c);
 				}
 			}
-
+			
 			// add the groups to the chain:
 			for ( Group g: groups) {
 				c.addGroup(g);
