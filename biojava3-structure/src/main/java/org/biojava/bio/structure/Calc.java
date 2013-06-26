@@ -72,7 +72,9 @@ public class Calc {
 	 * @return a double
 	 * @throws StructureException ...
 	 */
-	public static final double getDistance(Atom a, Atom b) {
+	public static final double getDistance(Atom a, Atom b) 
+			throws StructureException
+			{
 		double x = a.getX() - b.getX();
 		double y = a.getY() - b.getY();
 		double z = a.getZ() - b.getZ();
@@ -82,7 +84,7 @@ public class Calc {
 		double dist = Math.sqrt(s);
 
 		return dist ;
-	}
+			}
 
 
 	/**
@@ -96,7 +98,9 @@ public class Calc {
 	 * @return a double
 	 * @throws StructureException ...
 	 */
-	public static double getDistanceFast(Atom a, Atom b) {
+	public static double getDistanceFast(Atom a, Atom b)
+			throws StructureException
+			{
 		double x = a.getX() - b.getX();
 		double y = a.getY() - b.getY();
 		double z = a.getZ() - b.getZ();
@@ -104,9 +108,9 @@ public class Calc {
 		double distSquared  = x * x  + y * y + z * z;
 
 		return distSquared ;
-	}
+			}
 
-	public static final Atom invert(Atom a) {
+	public static final Atom invert(Atom a) throws StructureException{
 		double[] coords = new double[]{0.0,0.0,0.0} ;
 		Atom zero = new AtomImpl();
 		zero.setCoords(coords);
@@ -120,7 +124,8 @@ public class Calc {
 	 * @param b  an Atom object
 	 * @return an Atom object
 	 */
-	public static final Atom add(Atom a, Atom b) {
+	public static final Atom add(Atom a, Atom b){
+
 		Atom c = new AtomImpl();
 		c.setX( a.getX() + b.getX() );
 		c.setY( a.getY() + b.getY() );
@@ -138,9 +143,12 @@ public class Calc {
 	 * @deprecated use {@link subtract} instead.
 	 */
 
-	public static final Atom substract(Atom a, Atom b) {
+	public static final Atom substract(Atom a, Atom b) 
+			throws StructureException
+			{
 		return subtract(a,b);
-	}
+
+			}
 
 	/** subtract two atoms ( a - b).
 	 *
@@ -259,7 +267,9 @@ public class Calc {
 	 * @throws StructureException ...
 	 */
 
-	public static final double torsionAngle(Atom a, Atom b, Atom c, Atom d) {
+	public static final double torsionAngle(Atom a, Atom b, Atom c, Atom d)
+			throws StructureException
+			{
 
 		Atom ab = subtract(a,b);
 		Atom cb = subtract(c,b);
@@ -277,7 +287,7 @@ public class Calc {
 		if (val<0.0) angl = -angl ;
 
 		return angl;
-	}
+			}
 
 	/** phi angle.
 	 *
