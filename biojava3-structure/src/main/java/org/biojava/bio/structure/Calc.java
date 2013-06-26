@@ -70,6 +70,7 @@ public class Calc {
 	 * @param a  an Atom object
 	 * @param b  an Atom object
 	 * @return a double
+	 * @throws StructureException ...
 	 */
 	public static final double getDistance(Atom a, Atom b) {
 		double x = a.getX() - b.getX();
@@ -93,6 +94,7 @@ public class Calc {
 	 * @param a  an Atom object
 	 * @param b  an Atom object
 	 * @return a double
+	 * @throws StructureException ...
 	 */
 	public static double getDistanceFast(Atom a, Atom b) {
 		double x = a.getX() - b.getX();
@@ -132,6 +134,7 @@ public class Calc {
 	 * @param a  an Atom object
 	 * @param b  an Atom object
 	 * @return an Atom object
+	 * @throws StructureException ...
 	 * @deprecated use {@link subtract} instead.
 	 */
 
@@ -144,6 +147,8 @@ public class Calc {
 	 * @param a  an Atom object
 	 * @param b  an Atom object
 	 * @return n new Atom object representing the difference
+	 * @throws StructureException ...
+
 	 */
 	public static final Atom subtract(Atom a, Atom b) {
 		Atom c = new AtomImpl();
@@ -251,7 +256,9 @@ public class Calc {
 	 * @param c  an Atom object
 	 * @param d  an Atom object
 	 * @return a double
+	 * @throws StructureException ...
 	 */
+
 	public static final double torsionAngle(Atom a, Atom b, Atom c, Atom d) {
 
 		Atom ab = subtract(a,b);
