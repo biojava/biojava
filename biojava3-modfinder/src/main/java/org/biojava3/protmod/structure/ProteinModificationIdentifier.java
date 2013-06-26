@@ -42,6 +42,7 @@ import org.biojava.bio.structure.GroupType;
 import org.biojava.bio.structure.ResidueNumber;
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureException;
+import org.biojava.bio.structure.StructureTools;
 
 
 import org.biojava3.protmod.Component;
@@ -294,7 +295,10 @@ public class ProteinModificationIdentifier {
 			mapChainIdChain.put(chain.getChainID(), chain);
 					
 			List<Group> ress = StructureUtil.getAminoAcids(chain);
-			List<Group> ligs = chain.getAtomLigands();
+			
+			
+			//List<Group> ligs = chain.getAtomLigands();
+			List<Group> ligs = StructureTools.filterLigands(chain.getAtomGroups());
 			residues.addAll(ress);
                         residues.removeAll(ligs);
 			ligands.addAll(ligs);

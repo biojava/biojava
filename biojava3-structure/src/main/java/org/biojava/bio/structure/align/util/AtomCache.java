@@ -365,7 +365,7 @@ public class AtomCache {
 		if (! structureName.getChainId().equals(".")){
 			Chain newChain  = n.getChainByPDB(structureName.getChainId());
 			Chain origChain = s.getChainByPDB(structureName.getChainId());
-			List<Group> ligands = origChain.getAtomLigands();
+			List<Group> ligands = StructureTools.filterLigands(origChain.getAtomGroups());
 
 			for(Group g: ligands){
 				if ( ! newChain.getAtomGroups().contains(g)) {

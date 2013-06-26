@@ -42,6 +42,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.biojava.bio.structure.align.util.AtomCache;
+import org.biojava.bio.structure.io.mmcif.chem.PolymerType;
+import org.biojava.bio.structure.io.mmcif.chem.ResidueType;
+import org.biojava.bio.structure.io.mmcif.model.ChemComp;
 import org.biojava.bio.structure.io.PDBFileParser;
 
 
@@ -790,7 +793,7 @@ public class StructureTools {
 
 		// parse the ranges, adding the specified residues to newS
 		for ( String r: rangS){
-			//System.out.println(">"+r+"<");
+			
 			// Match a single range, eg "A_4-27"
 
 			Matcher matcher = pdbNumRangeRegex.matcher(r);
@@ -826,6 +829,7 @@ public class StructureTools {
 				if(pdbresnumEnd.charAt(0) == '+')
 					pdbresnumEnd = pdbresnumEnd.substring(1);
 				groups = chain.getGroupsByPDB(pdbresnumStart, pdbresnumEnd);
+			
 
 				name.append( chainId + AtomCache.UNDERSCORE + pdbresnumStart+"-" + pdbresnumEnd);
 
@@ -856,7 +860,7 @@ public class StructureTools {
 					newS.addChain(c);
 				}
 			}
-
+			
 			// add the groups to the chain:
 			for ( Group g: groups) {
 				c.addGroup(g);
@@ -1078,6 +1082,39 @@ public class StructureTools {
 
 	}
 	
+	/** Removes all polymeric and solvent groups from a list of groups
+	 * 
+	 */
+	public static List<Group> filterLigands(List<Group> allGroups){
+		//String prop = System.getProperty(PDBFileReader.LOAD_CHEM_COMP_PROPERTY);
+
+		//    if ( prop == null || ( ! prop.equalsIgnoreCase("true"))){
+		//      System.err.println("You did not specify PDBFileReader.setLoadChemCompInfo, need to fetch Chemical Components anyways.");
+		//    }
+
+
+		List<Group> groups = new ArrayList<Group>();
+		for ( Group g: allGroups) {
+
+			ChemComp cc = g.getChemComp();
+
+			if ( ResidueType.lPeptideLinking.equals(cc.getResidueType()) ||
+					PolymerType.PROTEIN_ONLY.contains(cc.getPolymerType()) ||
+					PolymerType.POLYNUCLEOTIDE_ONLY.contains(cc.getPolymerType())
+					){
+				continue;
+			}
+			if ( ! ChainImpl.waternames.contains(g.getPDBName())) {
+				//System.out.println("not a prot, nuc or solvent : " + g.getChemComp());
+				groups.add(g);
+			}
+		}
+
+		return groups;
+	}
+
+	
+
 	
 	/**
 	 * Short version of {@link #getStructure(String, PDBFileParser, AtomCache)}
@@ -1127,4 +1164,5 @@ public class StructureTools {
 			return cache.getStructure(name);
 		}
 	}
+
 }

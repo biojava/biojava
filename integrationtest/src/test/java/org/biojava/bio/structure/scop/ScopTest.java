@@ -1,7 +1,6 @@
 package org.biojava.bio.structure.scop;
 
 import java.util.List;
-
 import org.biojava.bio.structure.Chain;
 import org.biojava.bio.structure.Group;
 import org.biojava.bio.structure.GroupIterator;
@@ -63,7 +62,7 @@ public class ScopTest extends TestCase {
 
 	private void runSCOPTests(){
 
-		ScopDatabase scop = ScopFactory.getSCOP();
+		ScopDatabase scop = ScopFactory.getSCOP(ScopFactory.VERSION_1_75);
 
 		List<ScopDomain> domains = scop.getDomainsForPDB("4HHB");
 
@@ -112,12 +111,14 @@ public class ScopTest extends TestCase {
 
 
 		try {
+		
+			
 			Structure s = cache.getStructureForDomain(domains1xzp.get(0));
+			
 			Chain a = s.getChainByPDB("A");
 
 			// now with ligands...
-			assertEquals(a.getAtomGroups().size(),176);
-
+			assertEquals(176,a.getAtomGroups().size());
 
 		}catch (Exception e){
 			e.printStackTrace();
