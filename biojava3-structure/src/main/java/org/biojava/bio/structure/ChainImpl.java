@@ -743,7 +743,7 @@ public class ChainImpl implements Chain, Serializable {
 		List<Group> ligands = new ArrayList<Group>();
 		
 		for (Group g : groups)
-			if (!seqResGroups.contains(g) && !GroupType.WATERNAMES.contains(g.getPDBName()))
+			if (!seqResGroups.contains(g) && !g.isWater())
 				ligands.add(g);
 		
 		return ligands;

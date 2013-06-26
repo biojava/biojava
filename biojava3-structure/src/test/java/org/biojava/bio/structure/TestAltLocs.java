@@ -30,7 +30,7 @@ public class TestAltLocs extends TestCase {
 						PolymerType.PROTEIN_ONLY.contains(cc.getPolymerType()) ||
 						PolymerType.POLYNUCLEOTIDE_ONLY.contains(cc.getPolymerType())
 						){
-					if (! GroupType.WATERNAMES.contains(g.getPDBName())) {
+					if (! g.isWater()) {
 						//System.out.println(g);
 						groupCount ++;
 					}
@@ -43,7 +43,7 @@ public class TestAltLocs extends TestCase {
 					// if the download chem comp provider is used
 					// there will be CIT, which is not a peptide, but
 					// should still be counted as a valid HETATOM group...
-					if (! GroupType.WATERNAMES.contains(g.getPDBName())) {
+					if (! g.isWater()) {
 						//System.out.println(cc);
 						//System.out.println(g);
 						groupCount++;

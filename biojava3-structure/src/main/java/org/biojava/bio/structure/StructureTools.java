@@ -1103,7 +1103,7 @@ public class StructureTools {
 					){
 				continue;
 			}
-			if ( ! GroupType.WATERNAMES.contains(g.getPDBName())) {
+			if ( ! g.isWater()) {
 				//System.out.println("not a prot, nuc or solvent : " + g.getChemComp());
 				groups.add(g);
 			}

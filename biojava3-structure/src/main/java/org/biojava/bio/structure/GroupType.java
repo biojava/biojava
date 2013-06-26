@@ -1,7 +1,5 @@
 package org.biojava.bio.structure;
 
-import java.util.Arrays;
-import java.util.List;
 
 /** contains only the static declaration of which types of Groups are available
  *
@@ -25,8 +23,5 @@ public class GroupType {
 	 *
 	 */
 	public static final String NUCLEOTIDE   = "nucleotide";
-	
-	
-	public static final List<String> WATERNAMES = Arrays.asList(new String[]{"HOH", "DOD",  "WAT"});
 	   
 }
