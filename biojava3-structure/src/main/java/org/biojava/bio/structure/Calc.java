@@ -175,18 +175,28 @@ public class Calc {
 
 	}
 
-	/** skalar product (dot product).
-	 *
-	 * @param a  an Atom object
-	 * @param b  an Atom object
+	/**
+	 * Scalar product (dot product).
+	 * 
+	 * @param a an Atom object
+	 * @param b an Atom object
 	 * @return a double
+	 * @deprecated use {@link #scalarProduct(Atom, Atom)} instead.
 	 */
-	public static final  double skalarProduct(Atom a, Atom b){
-		double skalar ;
-		skalar = a.getX() * b.getX() + a.getY()* b.getY() + a.getZ() * b.getZ();
-		return skalar ;
+	public static final double skalarProduct(Atom a, Atom b) {
+		return scalarProduct(a, b);
 	}
 
+	/**
+	 * Scalar product (dot product).
+	 * 
+	 * @param a an Atom object
+	 * @param b an Atom object
+	 * @return a double
+	 */
+	public static final double scalarProduct(Atom a, Atom b) {
+		return a.getX() * b.getX() + a.getY() * b.getY() + a.getZ() * b.getZ(); 
+	}
 
 	/** Gets the length of the vector (2-norm)
 	 *
