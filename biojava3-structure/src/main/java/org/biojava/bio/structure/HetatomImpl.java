@@ -612,4 +612,8 @@ public class HetatomImpl implements Group,Serializable {
 		
 	}
 
+	@Override
+	public boolean isWater() {
+		return GroupType.WATERNAMES.contains(pdb_name);
+	}
 }
