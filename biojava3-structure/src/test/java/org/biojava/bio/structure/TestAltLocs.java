@@ -2,13 +2,12 @@ package org.biojava.bio.structure;
 
 import java.util.List;
 
+import junit.framework.TestCase;
+
 import org.biojava.bio.structure.align.util.AtomCache;
-import org.biojava.bio.structure.io.FileConvert;
 import org.biojava.bio.structure.io.mmcif.chem.PolymerType;
 import org.biojava.bio.structure.io.mmcif.chem.ResidueType;
 import org.biojava.bio.structure.io.mmcif.model.ChemComp;
-
-import junit.framework.TestCase;
 
 public class TestAltLocs extends TestCase {
 
@@ -31,7 +30,7 @@ public class TestAltLocs extends TestCase {
 						PolymerType.PROTEIN_ONLY.contains(cc.getPolymerType()) ||
 						PolymerType.POLYNUCLEOTIDE_ONLY.contains(cc.getPolymerType())
 						){
-					if (! ChainImpl.waternames.contains(g.getPDBName())) {
+					if (! g.isWater()) {
 						//System.out.println(g);
 						groupCount ++;
 					}
@@ -44,7 +43,7 @@ public class TestAltLocs extends TestCase {
 					// if the download chem comp provider is used
 					// there will be CIT, which is not a peptide, but
 					// should still be counted as a valid HETATOM group...
-					if (! ChainImpl.waternames.contains(g.getPDBName())) {
+					if (! g.isWater()) {
 						//System.out.println(cc);
 						//System.out.println(g);
 						groupCount++;

@@ -35,17 +35,16 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.biojava.bio.structure.align.util.AtomCache;
+import org.biojava.bio.structure.io.PDBFileParser;
 import org.biojava.bio.structure.io.mmcif.chem.PolymerType;
 import org.biojava.bio.structure.io.mmcif.chem.ResidueType;
 import org.biojava.bio.structure.io.mmcif.model.ChemComp;
-import org.biojava.bio.structure.io.PDBFileParser;
 
 
 /**
@@ -1104,7 +1103,7 @@ public class StructureTools {
 					){
 				continue;
 			}
-			if ( ! ChainImpl.waternames.contains(g.getPDBName())) {
+			if ( ! g.isWater()) {
 				//System.out.println("not a prot, nuc or solvent : " + g.getChemComp());
 				groups.add(g);
 			}
