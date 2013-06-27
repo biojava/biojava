@@ -1,5 +1,6 @@
 package org.biojava.bio.structure;
 
+
 /** contains only the static declaration of which types of Groups are available
  *
  * @author Andreas Prlic
@@ -22,4 +23,5 @@ public class GroupType {
 	 *
 	 */
 	public static final String NUCLEOTIDE   = "nucleotide";
+	   
 }

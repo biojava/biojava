@@ -365,4 +365,11 @@ public interface Group {
 	 */
 	public void addAltLoc(Group g);
 
+	/**
+	 * Determines if this group is water.
+	 * 
+	 * @see {@link GroupType#WATERNAMES}
+	 * @return true if it's water, false otherwise.
+	 */
+	public boolean isWater();
 }

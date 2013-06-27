@@ -26,7 +26,6 @@ package org.biojava.bio.structure;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -61,8 +60,6 @@ public class ChainImpl implements Chain, Serializable {
 	 *
 	 */
 	public static String DEFAULT_CHAIN_ID = "A";
-
-	public static final List<String> waternames = Arrays.asList(new String[]{"HOH", "DOD",  "WAT"});
 
 	String swissprot_id ;
 	String name ; // like in PDBfile
@@ -746,7 +743,7 @@ public class ChainImpl implements Chain, Serializable {
 		List<Group> ligands = new ArrayList<Group>();
 		
 		for (Group g : groups)
-			if (!seqResGroups.contains(g) && !waternames.contains(g.getPDBName()))
+			if (!seqResGroups.contains(g) && !g.isWater())
 				ligands.add(g);
 		
 		return ligands;
