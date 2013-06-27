@@ -99,7 +99,7 @@ public class FileDownloadUtils {
 		File tempFile  = File.createTempFile(getFilePrefix(destination), "."+ getFileExtension(destination));
 
 		try {
-			System.out.println("downloading " + url + " to " + tempFile.getAbsolutePath());
+//			System.out.println("downloading " + url + " to " + tempFile.getAbsolutePath());
 			FileOutputStream outPut = new FileOutputStream(tempFile);
 			GZIPOutputStream gzOutPut = new GZIPOutputStream(outPut);
 			PrintWriter pw = new PrintWriter(gzOutPut);
@@ -127,7 +127,7 @@ public class FileDownloadUtils {
 		}
 		// copy file name to **real** location (without the tmpFileName)
 		// prepare destination
-		System.out.println("copying to " + destination);
+//		System.out.println("copying to " + destination);
 
 		copy(tempFile, destination);
 
