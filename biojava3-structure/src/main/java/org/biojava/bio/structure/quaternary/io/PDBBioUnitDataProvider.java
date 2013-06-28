@@ -30,8 +30,10 @@ public class PDBBioUnitDataProvider implements BioUnitDataProvider{
 		
 		FileParsingParameters params = null;
 		
-		if ( cache != null)
-			params = cache.getFileParsingParams();
+		if ( cache == null)
+			cache = new AtomCache();
+		
+		params = cache.getFileParsingParams();
 				
 		if ( params == null)
 			params = new FileParsingParameters();
