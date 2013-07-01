@@ -26,8 +26,10 @@ package org.biojava.bio.structure.io;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -70,22 +72,49 @@ public class FastaAFPChainConverter {
 		s2.setUserCollection(getAlignedUserCollection(second));
 		return cpFastaToAfpChain(s1, s2, structure, cpSite);
 	}
+
 	/**
 	 * Takes a structure and sequence corresponding to an alignment between a structure or sequence and itself (or even a structure with a sequence), where the result has a circular permutation site
 	 * {@link cpSite} residues to the right.
 	 * 
+	 * @param fastaFile A FASTA file containing exactly 2 sequences, the first unpermuted and the second permuted
+	 * @param cpSite
+	 *            The number of residues from the beginning of the sequence at which the circular permutation site occurs; can be positive or negative; values greater than the length of the sequence
+	 *            are acceptable
+	 * @throws IOException 
+	 * @throws StructureException 
+	 */
+	public static AFPChain cpFastaToAfpChain(File fastaFile, Structure structure, int cpSite) throws IOException, StructureException {
+		InputStream inStream = new FileInputStream(fastaFile);
+		SequenceCreatorInterface<AminoAcidCompound> creator = new CasePreservingProteinSequenceCreator(AminoAcidCompoundSet.getAminoAcidCompoundSet());
+		FastaHeaderParserInterface<ProteinSequence, AminoAcidCompound> headerParser = new GenericFastaHeaderParser<ProteinSequence, AminoAcidCompound>();
+		FastaReader<ProteinSequence, AminoAcidCompound> fastaReader = new FastaReader<ProteinSequence, AminoAcidCompound>(inStream, headerParser, creator);
+		LinkedHashMap<String, ProteinSequence> sequences = fastaReader.process();
+		inStream.close();
+		Iterator<ProteinSequence> iter = sequences.values().iterator();
+		ProteinSequence first = iter.next();
+		ProteinSequence second = iter.next();
+		return cpFastaToAfpChain(first, second, structure, cpSite);
+	}
+
+	/**
+	 * Takes a structure and sequence corresponding to an alignment between a structure or sequence and itself (or even a structure with a sequence), where the result has a circular permutation site
+	 * {@link cpSite} residues to the right.
+	 * 
+	 * @param first The unpermuted sequence
+	 * @param second The sequence permuted by cpSite
 	 * @param cpSite
 	 *            The number of residues from the beginning of the sequence at which the circular permutation site occurs; can be positive or negative; values greater than the length of the sequence
 	 *            are acceptable
 	 */
-	public static AFPChain cpFastaToAfpChain(ProteinSequence sequence, ProteinSequence second, Structure structure, int cpSite)
+	public static AFPChain cpFastaToAfpChain(ProteinSequence first, ProteinSequence second, Structure structure, int cpSite)
 			throws StructureException {
 
 		if (structure == null) {
 			throw new IllegalArgumentException("The structure is null");
 		}
 
-		if (sequence == null) {
+		if (first == null) {
 			throw new IllegalArgumentException("The sequence is null");
 		}
 
@@ -98,7 +127,7 @@ public class FastaAFPChainConverter {
 				if (cpSite <= 0) {
 					c = second.getSequenceAsString().charAt(gappedCpShift);
 				} else {
-					c = second.getSequenceAsString().charAt(sequence.getLength()-1 - gappedCpShift);
+					c = second.getSequenceAsString().charAt(first.getLength()-1 - gappedCpShift);
 				}
 			} catch (StringIndexOutOfBoundsException e) {
 				throw new IllegalArgumentException("CP site of " + cpSite + " is wrong");
@@ -114,15 +143,15 @@ public class FastaAFPChainConverter {
 
 		ProteinSequence antipermuted = new ProteinSequence(SequenceTools.permuteCyclic(second.getSequenceAsString(), gappedCpShift));
 
-		ResidueNumber[] residues = StructureSequenceMatcher.matchSequenceToStructure(sequence, structure);
+		ResidueNumber[] residues = StructureSequenceMatcher.matchSequenceToStructure(first, structure);
 		ResidueNumber[] antipermutedResidues = StructureSequenceMatcher.matchSequenceToStructure(antipermuted, structure);
 
 		ResidueNumber[] nonpermutedResidues = new ResidueNumber[antipermutedResidues.length];
 		SequenceTools.permuteCyclic(antipermutedResidues, nonpermutedResidues, -gappedCpShift);
 
 		// nullify ResidueNumbers that have a lowercase sequence character
-		if (sequence.getUserCollection() != null) {
-			CasePreservingProteinSequenceCreator.setLowercaseToNull(sequence, residues);
+		if (first.getUserCollection() != null) {
+			CasePreservingProteinSequenceCreator.setLowercaseToNull(first, residues);
 		}
 		if (second.getUserCollection() != null) {
 			CasePreservingProteinSequenceCreator.setLowercaseToNull(second, nonpermutedResidues);
@@ -353,9 +382,11 @@ public class FastaAFPChainConverter {
 		File fasta = new File(args[0]);
 		Structure structure1 = StructureTools.getStructure(args[1]);
 		Structure structure2 = StructureTools.getStructure(args[2]);
+		if (structure1 == null) throw new IllegalArgumentException("No structure for " + args[1] + " was found");
+		if (structure2 == null) throw new IllegalArgumentException("No structure for " + args[2] + " was found");
 		AFPChain afpChain = fastaFileToAfpChain(fasta, structure1, structure2);
 		String xml = AFPChainXMLConverter.toXML(afpChain);
 		System.out.println(xml);
 	}
-
+	
 }
