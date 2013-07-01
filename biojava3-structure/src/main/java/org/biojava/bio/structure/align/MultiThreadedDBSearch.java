@@ -213,6 +213,8 @@ public class MultiThreadedDBSearch {
 
 		resultList = new File(outFileF,"results_" + name1 + ".out");
 
+		System.out.println("writing results to " + resultList.getAbsolutePath());
+		
 		try {
 
 			out = new SynchronizedOutFile(resultList);
@@ -248,6 +250,7 @@ public class MultiThreadedDBSearch {
 				}
 			}
 
+			out.flush();
 		} catch (Exception e){
 			System.err.println("Error while loading representative structure " + name1);
 			e.printStackTrace();
@@ -256,7 +259,7 @@ public class MultiThreadedDBSearch {
 			return;
 		}
 
-
+		
 
 		DomainProvider domainProvider = DomainProviderFactory.getDomainProvider();
 
@@ -330,8 +333,20 @@ public class MultiThreadedDBSearch {
 	
 
 	private void checkLocalFiles() {
-		System.out.println("checking local PDB installation in directory: " + cache.getPath());
+		System.out.println("Checking local PDB installation in directory: " + cache.getPath());
+		
+		File f = new File(cache.getPath());
+		if ( ! f.isDirectory()) {
+			System.err.println("The path " + f.getAbsolutePath() + " should point to a directory!");
+		}
+		
+		if ( ! f.canWrite()) {
+			System.err.println("You do not have permission to write to " + f.getAbsolutePath() + ". There could be a problem if the PDB installation is not up-to-date with fetching missing PDB files.");
+		}
+		
 		DomainProvider domainProvider = DomainProviderFactory.getDomainProvider();
+		
+		
 		
 		for (String repre : representatives){
 
@@ -357,6 +372,11 @@ public class MultiThreadedDBSearch {
 				checkFile(repre);
 			}			
 
+		}
+		
+		if ( domainProvider instanceof RemoteDomainProvider ) {
+			RemoteDomainProvider remoteP = (RemoteDomainProvider) domainProvider;
+			remoteP.flushCache();
 		}
 
 		System.out.println("done checking local files...");

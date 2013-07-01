@@ -236,7 +236,7 @@ public abstract class AbstractUserArgumentProcessor implements UserArgumentProce
 			return;
 		}
 
-		System.out.println("running DB search with parameters:" + params);
+		System.out.println("running DB search with parameters: " + params);
 
 		if ( alignPairs != null && ! alignPairs.equals("")) {
 			runAlignPairs(cache, alignPairs, outputFile);
@@ -285,7 +285,7 @@ public abstract class AbstractUserArgumentProcessor implements UserArgumentProce
 				outputFile, 
 				algorithm,
 				useNrCPUs,
-				true);
+				params.isDomainSplit());
 		
 		dbSearch.setCustomFile1(searchF.getAbsolutePath());
 		

@@ -215,7 +215,7 @@ public class DownloadChemCompProvider implements ChemCompProvider {
 
 			String filename = getLocalFileName(recordName);
 
-			System.out.println("reading " + filename);
+//			System.out.println("reading " + filename);
 			InputStreamProvider isp = new InputStreamProvider();
 
 			InputStream inStream = isp.getInputStream(filename);
@@ -314,7 +314,7 @@ public class DownloadChemCompProvider implements ChemCompProvider {
 
 		String u = serverLocation + recordName + ".cif";
 
-		System.out.println("downloading " + u);
+//		System.out.println("downloading " + u);
 
 		try {
 

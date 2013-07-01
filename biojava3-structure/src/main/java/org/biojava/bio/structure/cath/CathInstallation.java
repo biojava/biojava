@@ -633,7 +633,7 @@ public class CathInstallation implements CathDatabase{
     }
 
     protected void downloadFileFromRemote(URL remoteURL, File localFile) throws FileNotFoundException, IOException{
-        System.out.println("downloading " + remoteURL + " to: " + localFile);
+//        System.out.println("downloading " + remoteURL + " to: " + localFile);
         
         long timeS = System.currentTimeMillis();
     	File tempFile  = File.createTempFile(FileDownloadUtils.getFilePrefix(localFile), "."+ FileDownloadUtils.getFileExtension(localFile));
