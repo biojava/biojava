@@ -42,6 +42,7 @@ import org.biojava.bio.structure.align.model.AFP;
 import org.biojava.bio.structure.align.model.AFPChain;
 import org.biojava.bio.structure.align.util.AtomCache;
 import org.biojava.bio.structure.align.xml.AFPChainXMLConverter;
+import org.biojava.bio.structure.scop.ScopFactory;
 import org.biojava3.core.sequence.ProteinSequence;
 import org.custommonkey.xmlunit.DetailedDiff;
 import org.custommonkey.xmlunit.Diff;
@@ -103,6 +104,7 @@ public class FastaAFPChainConverterTest {
 	@Before
 	public void setUp() {
 		cache = new AtomCache();
+		ScopFactory.setScopDatabase(ScopFactory.VERSION_1_75B);
 	}
 	
 	@Test
