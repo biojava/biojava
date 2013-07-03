@@ -31,6 +31,8 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -42,42 +44,10 @@ import org.xml.sax.SAXException;
  */
 public class ReadUtils {
 
+	private static final Logger logger = LogManager.getLogger(ReadUtils.class.getPackage().getName());
+
 	// this IS needed
 	private static boolean documentBuilderFactorySet = false;
-
-	/**
-	 * Prints an error message for {@code e} that shows causes and suppressed messages recursively.
-	 * Just a little more useful than {@code e.printStackTrace()}.
-	 * 
-	 * @param e
-	 */
-	static void printError(Exception e) {
-		System.err.println(printError(e, ""));
-	}
-
-	/**
-	 * @see #printError(Exception)
-	 */
-	static String printError(Exception e, String tabs) {
-		StringBuilder sb = new StringBuilder();
-		Throwable prime = e;
-		while (prime != null) {
-			if (tabs.length() > 0) sb.append(tabs + "Cause:" + "\n");
-			sb.append(tabs + prime.getClass().getSimpleName());
-			if (prime.getMessage() != null) sb.append(": " + prime.getMessage());
-			sb.append("\n");
-			if (prime instanceof Exception) {
-				StackTraceElement[] trace = ((Exception) prime).getStackTrace();
-				for (StackTraceElement element : trace) {
-					sb.append(tabs + element.toString() + "\n");
-				}
-			}
-			prime = prime.getCause();
-			tabs += "\t";
-		}
-		sb.append("\n");
-		return sb.toString();
-	}
 
 	/**
 	 * @param s
@@ -106,7 +76,7 @@ public class ReadUtils {
 		try {
 			builder = builderFactory.newDocumentBuilder();
 		} catch (ParserConfigurationException e) {
-			printError(e);
+			logger.error("Couldn't configure parser", e);
 			stream.close();
 			throw new IOException(e);
 		}
@@ -114,7 +84,7 @@ public class ReadUtils {
 			document = builder.parse(stream);
 		} catch (SAXException e) {
 			System.out.println(e.getMessage());
-			printError(e);
+			logger.error("Couldn't parse stream", e);
 			stream.close();
 			throw new IOException(e);
 		}
@@ -127,7 +97,7 @@ public class ReadUtils {
 		try {
 			return Double.parseDouble(s);
 		} catch (NumberFormatException e) {
-			ReadUtils.printError(e);
+			logger.error(s + " is not a floating-point number", e);
 		}
 		return null;
 	}
@@ -137,7 +107,7 @@ public class ReadUtils {
 		try {
 			return Integer.parseInt(s);
 		} catch (NumberFormatException e) {
-			ReadUtils.printError(e);
+			logger.error(s + " is not an integer", e);
 		}
 		return null;
 	}

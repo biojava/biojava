@@ -28,6 +28,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
@@ -54,6 +56,8 @@ import org.w3c.dom.NodeList;
 
 public class RCSBLigandsFactory {
 
+	private static final Logger logger = LogManager.getLogger(RCSBLigandsFactory.class.getPackage().getName());
+
 	private static final String URL_STUB = "http://www.pdb.org/pdb/rest/ligandInfo?structureId=";
 
 	/**
@@ -67,7 +71,7 @@ public class RCSBLigandsFactory {
 		try {
 			data = ReadUtils.getNodes(stream);
 		} catch (IOException e) {
-			ReadUtils.printError(e);
+			logger.error("Couldn't parse XML", e);
 			return null;
 		}
 		
@@ -133,13 +137,12 @@ public class RCSBLigandsFactory {
 	 * @see RCSBDescriptionFactory#get(InputStream)
 	 */
 	public static RCSBLigands get(String pdbId) {
-
 		InputStream is;
 		try {
 			URL url = new URL(URL_STUB + pdbId);
 			is = url.openConnection().getInputStream();
 		} catch (IOException e) {
-			ReadUtils.printError(e);
+			logger.error("Couldn't open connection", e);
 			return null;
 		}
 		return get(is);

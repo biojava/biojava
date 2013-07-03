@@ -28,6 +28,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
@@ -54,6 +56,8 @@ import org.w3c.dom.NodeList;
  */
 public class RCSBDescriptionFactory {
 
+	private static final Logger logger = LogManager.getLogger(RCSBDescriptionFactory.class.getPackage().getName());
+
 	private static final String URL_STUB = "http://www.rcsb.org/pdb/rest/describeMol?structureId=";
 
 	/**
@@ -67,7 +71,7 @@ public class RCSBDescriptionFactory {
 		try {
 			data = ReadUtils.getNodes(stream);
 		} catch (IOException e) {
-			ReadUtils.printError(e);
+			logger.error("Couldn't parse XML", e);
 			return null;
 		}
 		
@@ -105,13 +109,12 @@ public class RCSBDescriptionFactory {
 	 * @see RCSBDescriptionFactory#get(InputStream)
 	 */
 	public static RCSBDescription get(String pdbId) {
-
 		InputStream is;
 		try {
 			URL url = new URL(URL_STUB + pdbId);
 			is = url.openConnection().getInputStream();
 		} catch (IOException e) {
-			ReadUtils.printError(e);
+			logger.error("Couldn't open connection", e);
 			return null;
 		}
 		return get(is);
@@ -172,7 +175,7 @@ public class RCSBDescriptionFactory {
 			if (part.length() == 1) {
 				polymer.addChain(part.charAt(0));
 			} else {
-				ReadUtils.printError(new Exception("Chain id contained more than one character."));
+				logger.error("Chain id contained more than one character");
 			}
 		}
 	}
