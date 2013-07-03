@@ -885,6 +885,7 @@ public class ScopInstallation implements ScopDatabase {
 	@Override
 	public List<String> getComments(int sunid) {
 		ensureComInstalled();
+		if (!commentsMap.containsKey(sunid)) return new ArrayList<String>(1);
 		return commentsMap.get(sunid);
 	}
 }
