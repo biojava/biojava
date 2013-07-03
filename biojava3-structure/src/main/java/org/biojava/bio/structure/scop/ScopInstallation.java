@@ -41,6 +41,7 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureTools;
 import org.biojava.bio.structure.align.util.UserConfiguration;
 import org.biojava3.core.util.InputStreamProvider;
@@ -72,6 +73,7 @@ public class ScopInstallation implements ScopDatabase {
 	public static final String claFileName = "dir.cla.scop.txt_";
 	public static final String desFileName = "dir.des.scop.txt_";
 	public static final String hieFileName = "dir.hie.scop.txt_";
+	public static final String comFileName = "dir.com.scop.txt_";
 
 	public static final String SCOP_DOWNLOAD = "http://scop.mrc-lmb.cam.ac.uk/scop/parse/";
 
@@ -91,7 +93,9 @@ public class ScopInstallation implements ScopDatabase {
 	AtomicBoolean installedCla;
 	AtomicBoolean installedDes;
 	AtomicBoolean installedHie;
+	AtomicBoolean installedCom;
 
+	Map<Integer, List<String>> commentsMap;
 	Map<String, List<ScopDomain>> domainMap;
 	Map<Integer, ScopDescription> sunidMap;
 	Map<Integer, ScopNode> scopTree;
@@ -110,6 +114,8 @@ public class ScopInstallation implements ScopDatabase {
 		installedDes.set(false);
 		installedHie = new AtomicBoolean();
 		installedHie.set(false);
+		installedCom = new AtomicBoolean();
+		installedCom.set(false);
 
 		scopVersion = DEFAULT_VERSION;
 		scopDownloadURL = SCOP_DOWNLOAD;
@@ -122,6 +128,13 @@ public class ScopInstallation implements ScopDatabase {
 
 	}
 
+	/**
+	 * Removes all of the comments (dir.com file) in order to free memory. The file will need to be reloaded if {@link #getComments(int)} is called subsequently.
+	 */
+	public void nullifyComments() {
+		commentsMap = null;
+	}
+	
 	/**
 	 * Create a new SCOP installation, downloading the file to "the right place".
 	 * This will first check for system properties or environmental variables
@@ -181,6 +194,33 @@ public class ScopInstallation implements ScopDatabase {
 		}
 		installedDes.set(true);
 
+
+	}
+	
+	public void ensureComInstalled() {
+
+		if ( installedCom.get()) {
+			return;
+		}
+
+		if ( ! comFileAvailable()){
+			try {
+				downloadComFile();
+			} catch (Exception e){
+				e.printStackTrace();
+				installedCom.set(false);
+				return;
+			}   
+		}
+
+		try {
+			parseComments();
+		} catch (Exception e){
+			e.printStackTrace();
+			installedCom.set(false);
+			return;
+		}
+		installedCom.set(true);
 
 	}
 
@@ -469,6 +509,46 @@ public class ScopInstallation implements ScopDatabase {
 		parseDescriptions(buffer);
 
 	}
+	
+	private void parseComments() throws IOException{
+
+		File file = new File(getComFilename());
+
+		InputStreamProvider ips = new InputStreamProvider();
+		BufferedReader buffer = new BufferedReader (new InputStreamReader(ips.getInputStream(file)));
+
+		parseComments(buffer);
+
+	}
+	
+	private void parseComments(BufferedReader buffer) throws IOException {
+
+		commentsMap = new HashMap<Integer,List<String>>();
+		
+		String line = null;
+		while ((line = buffer.readLine ()) != null) {
+			if (line.startsWith("#")) continue;
+			String[] parts = line.split(" ! ");
+			int sunId = -1;
+			try {
+				sunId = Integer.parseInt(parts[0]);
+			} catch (RuntimeException e) {
+				e.printStackTrace();
+				continue;
+			}
+			if (parts.length == 1) {
+				commentsMap.put(sunId, new ArrayList<String>(1));
+				continue;
+			}
+			List<String> comments = new ArrayList<String>(parts.length - 1);
+			for (int i = 1; i < parts.length; i++) {
+				comments.add(parts[i]);
+			}
+			commentsMap.put(sunId, comments);
+		}
+
+	}
+	
 	private void parseDescriptions(BufferedReader buffer) throws IOException {
 		String line = null;
 
@@ -573,8 +653,6 @@ public class ScopInstallation implements ScopDatabase {
 			}
 
 			domainList.add(d);
-			if ( sunid == 47763)
-				System.out.println("FOUND DOMAIN!!!! " + sunid + " " + d);
 		}
 		System.out.println("parsed "+ counter + " scop sunid domains.");
 
@@ -649,6 +727,16 @@ public class ScopInstallation implements ScopDatabase {
 
 	}
 
+	protected void downloadComFile() throws FileNotFoundException, IOException{
+		String remoteFilename = comFileName + scopVersion;
+		URL url = new URL(scopDownloadURL + remoteFilename);
+
+		String localFileName = getComFilename();
+		File localFile = new File(localFileName);
+
+		downloadFileFromRemote(url, localFile);
+	}
+
 	protected void downloadFileFromRemote(URL remoteURL, File localFile) throws FileNotFoundException, IOException{
 		System.out.println("downloading " + remoteURL + " to: " + localFile);
 		FileOutputStream out = new FileOutputStream(localFile);
@@ -689,6 +777,14 @@ public class ScopInstallation implements ScopDatabase {
 		return f.exists();
 	}
 
+	private boolean comFileAvailable(){
+		String fileName = getComFilename();
+
+		File f = new File(fileName);
+
+		return f.exists();
+	}
+
 	protected String getClaFilename(){
 		String f = cacheLocation + claFileName + scopVersion;
 		return f;
@@ -704,6 +800,11 @@ public class ScopInstallation implements ScopDatabase {
 		String f = cacheLocation + hieFileName + scopVersion;
 		return f;
 
+	}
+
+	protected String getComFilename(){
+		String f = cacheLocation + comFileName + scopVersion;
+		return f;
 	}
 
 	public String getCacheLocation() {
@@ -779,5 +880,11 @@ public class ScopInstallation implements ScopDatabase {
 		}
 		return domains;
 
+	}
+
+	@Override
+	public List<String> getComments(int sunid) {
+		ensureComInstalled();
+		return commentsMap.get(sunid);
 	}
 }

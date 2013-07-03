@@ -88,4 +88,5 @@ public interface ScopDatabase {
 	 */
 	public abstract List<ScopDomain> getScopDomainsBySunid(Integer sunid);
 
+	public abstract List<String> getComments(int sunid);
 }
