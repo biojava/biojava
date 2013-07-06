@@ -64,10 +64,10 @@ public class Astral {
 			this.url = url;
 			this.id = id;
 		}
-		String getId() {
+		public String getId() {
 			return id;
 		}
-		String getUrl() {
+		public String getUrl() {
 			return url;
 		}
 	}
