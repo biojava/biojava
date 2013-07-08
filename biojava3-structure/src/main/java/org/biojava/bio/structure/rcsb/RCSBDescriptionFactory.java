@@ -1,25 +1,20 @@
 /**
- *                    BioJava development code
- *
- * This code may be freely distributed and modified under the
- * terms of the GNU Lesser General Public Licence.  This should
- * be distributed with the code.  If you do not have a copy,
- * see:
- *
- *      http://www.gnu.org/copyleft/lesser.html
- *
- * Copyright for this code is held jointly by the individual
- * authors.  These should be listed in @author doc comments.
- *
- * For more information on the BioJava project and its aims,
- * or to join the biojava-l mailing list, visit the home page
+ * BioJava development code
+ * 
+ * This code may be freely distributed and modified under the terms of the GNU Lesser General Public Licence. This
+ * should be distributed with the code. If you do not have a copy, see:
+ * 
+ * http://www.gnu.org/copyleft/lesser.html
+ * 
+ * Copyright for this code is held jointly by the individual authors. These should be listed in @author doc comments.
+ * 
+ * For more information on the BioJava project and its aims, or to join the biojava-l mailing list, visit the home page
  * at:
- *
- *      http://www.biojava.org/
- *
- * Created on 2012-11-20
- * Created by Douglas Myers-Turnbull
- *
+ * 
+ * http://www.biojava.org/
+ * 
+ * Created on 2012-11-20 Created by Douglas Myers-Turnbull
+ * 
  * @since 3.0.6
  */
 package org.biojava.bio.structure.rcsb;
@@ -34,22 +29,25 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
 /**
- * Fetches information from <a href="http://www.pdb.org/pdb/software/rest.do#descPDB">RCSB's RESTful Web Service Interface</a>.
- * A factory for {@link RCSBDescription RCSBDescriptions} from {@code describeMol} XML files. The factory methods will
- * return null if the data was not found (rather than throwing an exception); client code should test for this. This is
- * for consistency: if the factory could not read some part (corresponding to a field in a class in
+ * Fetches information from <a href="http://www.pdb.org/pdb/software/rest.do#descPDB">RCSB's RESTful Web Service
+ * Interface</a>. A factory for {@link RCSBDescription RCSBDescriptions} from {@code describeMol} XML files. The factory
+ * methods will return null if the data was not found (rather than throwing an exception); client code should test for
+ * this. This is for consistency: if the factory could not read some part (corresponding to a field in a class in
  * {@code rcsb.descriptions}) of the XML file, either because it was blank or contained an error that could not be
  * safely ignored, that field will simply be null. This holds even for numerical values. On some parse errors, the error
  * will additionally be printed to standard error.
  * 
  * Example usage:
+ * 
  * <pre>
- * RCSBLigands ligands = RCSBLigandsFactory.get("1w0p");
+ * RCSBDescription description = RCSBDescriptionFactory.get(&quot;1w0p&quot;);
  * RCSBLigand firstLigand = ligands.getLigands().get(0);
- * System.out.println(ligand.getSmiles()); // prints "[Ca+2]"
+ * System.out.println(description.getPdbId()); // prints &quot;1w0p&quot;
  * </pre>
  * 
  * @see <a href="http://www.pdb.org/pdb/software/rest.do#descPDB">RCSB RESTful</a>
+ * 
+ *      TODO: Handle queries with more than 1 PDB Id.
  * 
  * @author dmyerstu
  * @since 3.0.6
@@ -61,8 +59,8 @@ public class RCSBDescriptionFactory {
 	private static final String URL_STUB = "http://www.rcsb.org/pdb/rest/describeMol?structureId=";
 
 	/**
-	 * @return An {@link RCSBDescription} from the XML file loaded as {@code stream}. Prefer calling {@link #get(String)} if
-	 *         you want data directly from RCSB's RESTful service.
+	 * @return An {@link RCSBDescription} from the XML file loaded as {@code stream}. Prefer calling
+	 *         {@link #get(String)} if you want data directly from RCSB's RESTful service.
 	 * @see RCSBDescriptionFactory#get(String)
 	 */
 	public static RCSBDescription get(InputStream stream) {
@@ -74,7 +72,7 @@ public class RCSBDescriptionFactory {
 			logger.error("Couldn't parse XML", e);
 			return null;
 		}
-		
+
 		// first get the main info
 		RCSBDescription description = new RCSBDescription();
 		Element structureIdE = null;

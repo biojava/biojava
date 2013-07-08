@@ -43,7 +43,7 @@ import org.w3c.dom.NodeList;
  * 
  * <pre>
  * RCSBLigands ligands = RCSBLigandsFactory.getFromPdbIds(&quot;1w0p&quot;);
- * List<RCSBLigand> list = ligands.getLigands();
+ * List&lt;RCSBLigand&gt; list = ligands.getLigands();
  * System.out.println(list.get(0).getFormula()); // prints &quot;CA 2&quot;
  * System.out.println(list.get(1).getFormula()); // prints &quot;C11 H19 N O9&quot;
  * </pre>
@@ -164,76 +164,6 @@ public class RCSBLigandsFactory {
 	 *         {@link #getFromPdbId(String)} if you want data directly from RCSB's RESTful service.
 	 * @see RCSBDescriptionFactory#get(String)
 	 */
-	public static List<RCSBLigands> getFromPdbIds(InputStream stream) {
-
-		NodeList dataaa;
-		try {
-			dataaa = ReadUtils.getNodes(stream);
-		} catch (IOException e) {
-			logger.error("Couldn't parse XML", e);
-			return null;
-		}
-
-		// first we have to handle the element "ligandsInEntry", which is not present if we have only 1 structure
-
-		List<RCSBLigands> ligandsList = new ArrayList<RCSBLigands>();
-
-		Element structureIdE = null;
-		
-		for (int k = 0; k < dataaa.getLength(); k++) {
-			
-			if (dataaa.item(k).getNodeType() != 1) continue;
-			structureIdE = (Element) dataaa.item(k);
-			if (structureIdE.getNodeName().equals("structureId")) {
-				
-
-				
-
-				// now get the ligandInfo
-				NodeList data = structureIdE.getChildNodes();
-				RCSBLigands ligands = new RCSBLigands();
-				Element ligandIdE = null;
-				for (int i = 0; i < data.getLength(); i++) {
-					if (data.item(i).getNodeType() != 1) continue;
-					ligandIdE = (Element) data.item(i);
-					if (ligandIdE.getNodeName().equals("ligandInfo")) {
-						break;
-					}
-				}
-
-				// now get individual ligands
-				data = ligandIdE.getChildNodes();
-				Element ligandE = null;
-				for (int i = 0; i < data.getLength(); i++) {
-					if (data.item(i).getNodeType() != 1) continue;
-					ligandE = (Element) data.item(i);
-					if (ligandE.getNodeName().equals("ligand")) {
-						if (ligands.getPdbId() == null) {
-							ligands.setPdbId(ligandE.getAttribute("structureId"));
-						}
-						RCSBLigand ligand = makeLigand(ligandE);
-						ligands.addLigand(ligand);
-					}
-				}
-				
-				ligandsList.add(ligands);
-				
-				
-				
-				
-				
-			}
-		}
-
-		return ligandsList;
-
-	}
-
-	/**
-	 * @return An {@link RCSBLigands} from the XML file loaded as {@code stream}. Prefer calling
-	 *         {@link #getFromPdbId(String)} if you want data directly from RCSB's RESTful service.
-	 * @see RCSBDescriptionFactory#get(String)
-	 */
 	public static RCSBLigands getFromPdbId(InputStream stream) {
 
 		NodeList data;
@@ -271,6 +201,87 @@ public class RCSBLigandsFactory {
 		}
 
 		return ligands;
+
+	}
+
+	/**
+	 * @return An {@link RCSBLigands} from the XML file at
+	 *         {@code "http://www.pdb.org/pdb/rest/describeMol?structureId=pdbId"}. This is the preferred factory
+	 *         method, unless a different URL or input source is required.
+	 * @see RCSBDescriptionFactory#get(InputStream)
+	 */
+	public static RCSBLigands getFromPdbId(String pdbId) {
+		InputStream is;
+		try {
+			URL url = new URL(PDB_URL_STUB + pdbId);
+			is = url.openConnection().getInputStream();
+		} catch (IOException e) {
+			logger.error("Couldn't open connection", e);
+			return null;
+		}
+		return getFromPdbId(is);
+	}
+
+	/**
+	 * @return An {@link RCSBLigands} from the XML file loaded as {@code stream}. Prefer calling
+	 *         {@link #getFromPdbId(String)} if you want data directly from RCSB's RESTful service.
+	 * @see RCSBDescriptionFactory#get(String)
+	 */
+	public static List<RCSBLigands> getFromPdbIds(InputStream stream) {
+
+		NodeList dataaa;
+		try {
+			dataaa = ReadUtils.getNodes(stream);
+		} catch (IOException e) {
+			logger.error("Couldn't parse XML", e);
+			return null;
+		}
+
+		// first we have to handle the element "ligandsInEntry", which is not present if we have only 1 structure
+
+		List<RCSBLigands> ligandsList = new ArrayList<RCSBLigands>();
+
+		Element structureIdE = null;
+
+		for (int k = 0; k < dataaa.getLength(); k++) {
+
+			if (dataaa.item(k).getNodeType() != 1) continue;
+			structureIdE = (Element) dataaa.item(k);
+			if (structureIdE.getNodeName().equals("structureId")) {
+
+				// now get the ligandInfo
+				NodeList data = structureIdE.getChildNodes();
+				RCSBLigands ligands = new RCSBLigands();
+				Element ligandIdE = null;
+				for (int i = 0; i < data.getLength(); i++) {
+					if (data.item(i).getNodeType() != 1) continue;
+					ligandIdE = (Element) data.item(i);
+					if (ligandIdE.getNodeName().equals("ligandInfo")) {
+						break;
+					}
+				}
+
+				// now get individual ligands
+				data = ligandIdE.getChildNodes();
+				Element ligandE = null;
+				for (int i = 0; i < data.getLength(); i++) {
+					if (data.item(i).getNodeType() != 1) continue;
+					ligandE = (Element) data.item(i);
+					if (ligandE.getNodeName().equals("ligand")) {
+						if (ligands.getPdbId() == null) {
+							ligands.setPdbId(ligandE.getAttribute("structureId"));
+						}
+						RCSBLigand ligand = makeLigand(ligandE);
+						ligands.addLigand(ligand);
+					}
+				}
+
+				ligandsList.add(ligands);
+
+			}
+		}
+
+		return ligandsList;
 
 	}
 
@@ -325,24 +336,6 @@ public class RCSBLigandsFactory {
 			return null;
 		}
 		return getFromPdbIds(is);
-	}
-
-	/**
-	 * @return An {@link RCSBLigands} from the XML file at
-	 *         {@code "http://www.pdb.org/pdb/rest/describeMol?structureId=pdbId"}. This is the preferred factory
-	 *         method, unless a different URL or input source is required.
-	 * @see RCSBDescriptionFactory#get(InputStream)
-	 */
-	public static RCSBLigands getFromPdbId(String pdbId) {
-		InputStream is;
-		try {
-			URL url = new URL(PDB_URL_STUB + pdbId);
-			is = url.openConnection().getInputStream();
-		} catch (IOException e) {
-			logger.error("Couldn't open connection", e);
-			return null;
-		}
-		return getFromPdbId(is);
 	}
 
 	private static RCSBLigand makeLigand(Element ligandE) {
