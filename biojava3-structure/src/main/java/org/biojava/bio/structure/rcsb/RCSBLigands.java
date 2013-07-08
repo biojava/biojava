@@ -39,14 +39,14 @@ public class RCSBLigands {
 
 	private String pdbId;
 
-	private List<RCSBLigand> polymers;
+	private List<RCSBLigand> ligands;
 
 	public RCSBLigands() {
-		polymers = new ArrayList<RCSBLigand>();
+		ligands = new ArrayList<RCSBLigand>();
 	}
 
 	public void addLigand(RCSBLigand ligand) {
-		polymers.add(ligand);
+		ligands.add(ligand);
 	}
 
 	public String getPdbId() {
@@ -54,7 +54,7 @@ public class RCSBLigands {
 	}
 
 	public List<RCSBLigand> getLigands() {
-		return polymers;
+		return ligands;
 	}
 
 	void setPdbId(String pdbId) {

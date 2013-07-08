@@ -34,7 +34,10 @@ import java.util.List;
 import org.junit.Test;
 
 
-
+/**
+ * Tests {@link RCSBLigandsFactory}.
+ * @author dmyerstu
+ */
 public class RCSBLigandsFactoryTest {
 
 
@@ -59,18 +62,30 @@ public class RCSBLigandsFactoryTest {
 	 * If this test fails, it may be because the database changed.
 	 */
 	@Test
-	public void testUrl() {
-		RCSBLigands ligands = RCSBLigandsFactory.get("1w0p");
+	public void testFromPdbIdUrl() {
+		RCSBLigands ligands = RCSBLigandsFactory.getFromPdbId("1w0p");
 		assertEquals(4, ligands.getLigands().size());
 		assertEquals("CA", ligands.getLigands().get(0).getId());
 	}
 
 	/**
-	 * Covers all the basic features, including EC numbers. Does not cover multiple polymers or multiple chains.
+	 * Tests on the live database. Just makes sure the resource can be found.
+	 * If this test fails, it may be because the database changed.
 	 */
 	@Test
-	public void test1() {
-		RCSBLigands description = RCSBLigandsFactory.get(openStream("describeMol/4hhb_ligands.xml"));
+	public void testFromPdbIdsUrl() {
+		List<RCSBLigands> ligands = RCSBLigandsFactory.getFromPdbIds("1w0p", "4hhb");
+		assertEquals(4, ligands.get(0).getLigands().size());
+		assertEquals("CA", ligands.get(0).getLigands().get(0).getId());
+		assertEquals(2, ligands.get(1).getLigands().size());
+		assertEquals("HEM", ligands.get(1).getLigands().get(0).getId());
+		assertEquals("C34 H32 FE N4 O4", ligands.get(1).getLigands().get(0).getFormula());
+		assertEquals("O4 P -3", ligands.get(1).getLigands().get(1).getFormula());
+	}
+
+	@Test
+	public void testFromPdbId() {
+		RCSBLigands description = RCSBLigandsFactory.getFromPdbId(openStream("describeMol/4hhb_ligands.xml"));
 		
 		assertEquals("4HHB", description.getPdbId());
 		List<RCSBLigand> ligands = description.getLigands();
@@ -99,4 +114,20 @@ public class RCSBLigandsFactoryTest {
 		assertEquals("[O-]P(=O)([O-])[O-]", ligand.getSmiles());
 	}
 
+	@Test
+	public void testFromHeteroAtomIdsUrl() {
+		List<RCSBLigand> ligands = RCSBLigandsFactory.getFromHeteroAtomIds("NAG", "EBW");
+		assertEquals("Wrong number of ligands", 2, ligands.size());
+		assertEquals("Wrong formula", "C8 H15 N O6", ligands.get(0).getFormula());
+		assertEquals("Wrong formula", "C27 H38 N2 O 2", ligands.get(1).getFormula());
+	}
+	
+	@Test
+	public void testFromHeteroAtomIdUrl() {
+		List<RCSBLigand> ligands = RCSBLigandsFactory.getFromHeteroAtomIds("NAG");
+		assertEquals("Wrong number of ligands", 1, ligands.size());
+		RCSBLigand ligand = ligands.get(0);
+		assertEquals("Wrong formula", "C8 H15 N O6", ligand.getFormula());
+	}
+	
 }
