@@ -23,6 +23,7 @@
 
 package org.biojava.bio.structure;
 
+import static org.junit.Assert.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
@@ -48,6 +49,29 @@ public class ResidueRangeTest {
 	@Before
 	public void setUp() throws Exception {
 		cache = new AtomCache();
+		cache.setFetchFileEvenIfObsolete(true);
+	}
+
+	@Test
+	public void testWholeChainBasic() {
+		String range = "B:";
+		ResidueRange rr = ResidueRange.parse(range);
+		assertEquals("Wrong chain Id", "B", rr.getChainId());
+		assertNull("Start residue should be null", rr.getStart());
+		assertNull("End residue should be null", rr.getEnd());
+	}
+
+	@Test
+	public void testWholeChainWithMap() throws IOException, StructureException {
+		String pdbId = "1cph";
+		AtomPositionMap map = new AtomPositionMap(cache.getAtoms(pdbId));
+		String range = "B:";
+		ResidueRange rr = ResidueRange.parse(range, map);
+		ResidueNumber start = new ResidueNumber("B", 1, null);
+		ResidueNumber end = new ResidueNumber("B", 30, null);
+		assertEquals("Wrong chain Id", "B", rr.getChainId());
+		assertEquals("Wrong start", start, rr.getStart());
+		assertEquals("Wrong end", end, rr.getEnd());
 	}
 	
 	/**
@@ -56,7 +80,7 @@ public class ResidueRangeTest {
 	@Test
 	public void testBasic() {
 		String[] ids = new String[] {"1w0p", "3qq3", "3chc", "2ei7"}; // more: , "2qbr"
-		char[] chains = new char[] {'A', 'B', 'A', 'L'};
+		String[] chains = new String[] {"A", "B", "A", "L"};
 		ResidueNumber[] starts = new ResidueNumber[] {new ResidueNumber("A", 5, ' '), new ResidueNumber("B", 10, 's'), new ResidueNumber("A", 15, 'm'), new ResidueNumber("L", 44, ' ')};
 		ResidueNumber[] ends = new ResidueNumber[] {new ResidueNumber("A", 117, ' '), new ResidueNumber("B", 200, 's'), new ResidueNumber("A", 464, 'q'), new ResidueNumber("L", 254, 't')};
 		Integer[] lengths = new Integer[] {117-5, 200-10, 111, null};
@@ -64,7 +88,7 @@ public class ResidueRangeTest {
 		List<ResidueRange> ranges = new ArrayList<ResidueRange>(ids.length);
 		for (int i = 0; i < ids.length; i++) {
 			ResidueRange rr = new ResidueRange(chains[i], starts[i], ends[i], lengths[i]);
-			assertEquals("The chain is incorrect", chains[i], rr.getChain());
+			assertEquals("The chain is incorrect", chains[i], rr.getChainId());
 			assertEquals("The start is incorrect", starts[i], rr.getStart());
 			assertEquals("The end is incorrect", ends[i], rr.getEnd());
 			assertEquals("The length is incorrect", lengths[i], rr.getLength());
@@ -143,7 +167,7 @@ public class ResidueRangeTest {
 		AtomPositionMap map;
 		
 		String pdbId1 = "2eke";
-		map = new AtomPositionMap(cache.getAtoms(pdbId1)); // TODO this could probably be mocked
+		map = new AtomPositionMap(cache.getAtoms(pdbId1));
 		String string1 = "C_1023-1063,C_1064-1084";
 		List<ResidueRange> list1 = ResidueRange.parseMultiple(string1, map);
 		assertEquals(new ResidueRange('C', new ResidueNumber("C", 1023, null), new ResidueNumber("C", 1063, null), null), list1.get(0));
@@ -155,6 +179,18 @@ public class ResidueRangeTest {
 		assertEquals(new ResidueRange('C', new ResidueNumber("C", 1023, null), new ResidueNumber("C", 1063, null), null), list1.get(0));
 		assertEquals(new ResidueRange('C', new ResidueNumber("C", 1064, null), new ResidueNumber("C", 1084, null), null), list1.get(1));
 		
+	}
+	
+	@Test
+	public void testLooksLikeRange() {
+		String[] yes = new String[] {"A_", "A:", "A.", "ABC:", "abc:", "A_5-100", "A_5-100S", "A_5S-100", "A_5S-100S", "A_-5-100", "A_-5--100", "A_-5S--100S", "ABC:-5--200S"};
+		for (String s : yes) {
+			assertTrue(s + " was not considered a valid range format", ResidueRange.looksLikeRange(s));
+		}
+		String[] no = new String[] {"A", "A1", "A_1", "A_1-", "A_1S-", "A_1-100-", "A_-10-1000_", "", "3A:1-100"};
+		for (String s : no) {
+			assertFalse(s + " was considered a valid range format", ResidueRange.looksLikeRange(s));
+		}
 	}
 	
 }
