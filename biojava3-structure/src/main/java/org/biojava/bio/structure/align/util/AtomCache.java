@@ -322,6 +322,32 @@ public class AtomCache {
 	public Structure getStructureForDomain(ScopDomain domain) throws IOException, StructureException{
 		return getStructureForDomain(domain, scopInstallation);
 	}
+
+	/** Returns the representation of a ScopDomain as a BioJava Structure object.
+	 * 
+	 * @param domain A SCOP Id
+	 * @return a Structure object.
+	 * @throws IOException
+	 * @throws StructureException
+	 */
+	public Structure getStructureForDomain(String scopId, ScopDatabase scopInstallation) throws IOException, StructureException{
+		if ( scopInstallation == null) {
+			scopInstallation = ScopFactory.getSCOP();
+		}
+		ScopDomain domain = scopInstallation.getDomainByScopID(scopId);
+		return getStructureForDomain(domain, scopInstallation);
+	}
+
+	/** Returns the representation of a ScopDomain as a BioJava Structure object.
+	 * 
+	 * @param domain A Scop Id
+	 * @return a Structure object.
+	 * @throws IOException
+	 * @throws StructureException
+	 */
+	public Structure getStructureForDomain(String scopId) throws IOException, StructureException{
+		return getStructureForDomain(scopId, ScopFactory.getSCOP());
+	}
 	
 	/** Returns the representation of a ScopDomain as a BioJava Structure object
 	 * 
