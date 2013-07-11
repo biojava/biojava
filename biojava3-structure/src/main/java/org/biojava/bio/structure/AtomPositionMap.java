@@ -117,6 +117,18 @@ public class AtomPositionMap {
 	 * @return
 	 */
 	public int calcLength(int positionA, int positionB, char startingChain) {
+		return calcLength(positionA, positionB, String.valueOf(startingChain));
+	}
+	
+	/**
+	 * This is <strong>not</em> the same as subtracting {@link #getPosition(ResidueNumber)} for {@code positionB} from {@link #getPosition(ResidueNumber)} for {@code positionA}.
+	 * The latter considers only positions of ATOM entries in the PDB file and ignores chains. This method only includes ATOMs from the same chain.
+	 * @param positionA
+	 * @param positionB
+	 * @param startingChain
+	 * @return
+	 */
+	public int calcLength(int positionA, int positionB, String startingChain) {
 		int positionStart, positionEnd;
 		if (positionA <= positionB) {
 			positionStart = positionA;
@@ -135,7 +147,7 @@ public class AtomPositionMap {
 	 * @return
 	 */
 	public int calcLengthDirectional(ResidueNumber start, ResidueNumber end) {
-		return calcLengthDirectional(getPosition(start), getPosition(end), start.getChainId().charAt(0));
+		return calcLengthDirectional(getPosition(start), getPosition(end), start.getChainId());
 	}
 
 	/**
@@ -146,11 +158,20 @@ public class AtomPositionMap {
 	 * @return
 	 */
 	public int calcLengthDirectional(int positionStart, int positionEnd, char startingChain) {
+		return calcLengthDirectional(positionStart, positionEnd, String.valueOf(startingChain));
+	}
+	
+	/**
+	 * Calculates the distance between {@code positionStart} and {@code positionEnd}. Will return a negative value if the start is past the end.
+	 * @param positionStart
+	 * @param positionEnd
+	 * @param startingChain
+	 * @return
+	 */
+	public int calcLengthDirectional(int positionStart, int positionEnd, String startingChain) {
 		int count = 0;
 		for (Map.Entry<ResidueNumber, Integer> entry : treeMap.entrySet()) {
-			// subtle bugs possible if chain has more than 1 char
-			// More importantly: do we need this check?
-			if (entry.getKey().getChainId().charAt(0) == startingChain) {
+			if (entry.getKey().getChainId().equals(startingChain)) {
 				if (entry.getValue() == positionStart) {
 					count = 0;
 				}
@@ -162,7 +183,7 @@ public class AtomPositionMap {
 	}
 
 	/**
-	 * Convenience method for {@link #calcLength(int, int, char)}.
+	 * Convenience method for {@link #calcLength(int, int, String)}.
 	 * @param positionA
 	 * @param positionB
 	 * @return
@@ -171,8 +192,8 @@ public class AtomPositionMap {
 	public int calcLength(ResidueNumber positionA, ResidueNumber positionB) {
 		int pA = hashMap.get(positionA);
 		int pB = hashMap.get(positionB);
-		char chain = positionA.getChainId().charAt(0); // subtle bugs possible if chain has more than 1 char
-		if (pA > pB) chain = positionB.getChainId().charAt(0);
+		String chain = positionA.getChainId();
+		if (pA > pB) chain = positionB.getChainId();
 		return calcLength(pA, pB, chain);
 	}
 
