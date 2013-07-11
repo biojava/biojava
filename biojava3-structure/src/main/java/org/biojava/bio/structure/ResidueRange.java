@@ -45,7 +45,7 @@ public class ResidueRange {
 	private final Integer length;
 	private final ResidueNumber start;
 
-	public static final String RANGE_REGEX = "^([a-zA-Z])+[\\._:](?:(-?\\d+[a-zA-Z]?)-(-?\\d+[a-zA-Z]?))?$";
+	public static final String RANGE_REGEX = "^([a-zA-Z])+[_:](?:(-?\\d+[a-zA-Z]?)-(-?\\d+[a-zA-Z]?))?$";
 
 	/**
 	 * Calculates the combined number of residues of the ResidueRanges in {@code rrs},

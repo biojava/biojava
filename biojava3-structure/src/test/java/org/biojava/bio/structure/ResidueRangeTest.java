@@ -183,7 +183,7 @@ public class ResidueRangeTest {
 	
 	@Test
 	public void testLooksLikeRange() {
-		String[] yes = new String[] {"A_", "A:", "A.", "ABC:", "abc:", "A_5-100", "A_5-100S", "A_5S-100", "A_5S-100S", "A_-5-100", "A_-5--100", "A_-5S--100S", "ABC:-5--200S"};
+		String[] yes = new String[] {"A_", "A:", "ABC:", "abc:", "A_5-100", "A_5-100S", "A_5S-100", "A_5S-100S", "A_-5-100", "A_-5--100", "A_-5S--100S", "ABC:-5--200S"};
 		for (String s : yes) {
 			assertTrue(s + " was not considered a valid range format", ResidueRange.looksLikeRange(s));
 		}
