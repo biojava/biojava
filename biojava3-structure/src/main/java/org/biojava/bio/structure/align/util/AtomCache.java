@@ -322,7 +322,8 @@ public class AtomCache {
 	 * @throws IOException
 	 * @throws StructureException
 	 */
-	public Structure getStructureForDomain(ScopDomain domain) throws IOException, StructureException{
+	public Structure getStructureForDomain(ScopDomain domain) throws IOException, StructureException {
+		if (scopInstallation == null) scopInstallation = ScopFactory.getSCOP();
 		return getStructureForDomain(domain, scopInstallation);
 	}
 
@@ -349,7 +350,8 @@ public class AtomCache {
 	 * @throws StructureException
 	 */
 	public Structure getStructureForDomain(String scopId) throws IOException, StructureException{
-		return getStructureForDomain(scopId, ScopFactory.getSCOP());
+		if (scopInstallation == null) scopInstallation = ScopFactory.getSCOP();
+		return getStructureForDomain(scopId, scopInstallation);
 	}
 
 	/**
@@ -362,6 +364,21 @@ public class AtomCache {
 	 * @throws StructureException
 	 */
 	public Structure getStructureForDomain(ScopDomain domain, ScopDatabase scopDatabase) throws IOException, StructureException {
+		return getStructureForDomain(domain, scopDatabase, false);
+	}
+	
+	/**
+	 * Returns the representation of a {@link ScopDomain} as a BioJava {@link Structure} object.
+	 * 
+	 * @param domain a SCOP domain
+	 * @param scopDatabase A {@link ScopDatabase} to use
+	 * @param strictLigandHandling If set to false, hetero-atoms are included if and only if they belong to a chain to which the SCOP domain belongs;
+	 * 			if set to true, hetero-atoms are included if and only if they are strictly within the definition (residue numbers) of the SCOP domain
+	 * @return a Structure object
+	 * @throws IOException
+	 * @throws StructureException
+	 */
+	public Structure getStructureForDomain(ScopDomain domain, ScopDatabase scopDatabase, boolean strictLigandHandling) throws IOException, StructureException {
 
 		String pdbId = domain.getPdbId();
 		Structure fullStructure = getStructure(pdbId);
@@ -379,16 +396,23 @@ public class AtomCache {
 
 		// because ligands sometimes occur after TER records in PDB files, we may need to add some ligands back in
 		// specifically, we add a ligand if and only if it occurs within the domain
-		AtomPositionMap map = new AtomPositionMap(StructureTools.getAllAtomArray(fullStructure), AtomPositionMap.ANYTHING_MATCHER);
-		List<ResidueRange> rrs = ResidueRange.parseMultiple(domain.getRanges(), map);
+		AtomPositionMap map = null;
+		List<ResidueRange> rrs = null;
+		if (strictLigandHandling) {
+			map = new AtomPositionMap(StructureTools.getAllAtomArray(fullStructure), AtomPositionMap.ANYTHING_MATCHER);
+			rrs = ResidueRange.parseMultiple(domain.getRanges(), map);
+		}
 		for (Chain chain : fullStructure.getChains()) {
 			if (!structure.hasChain(chain.getChainID())) continue; // we can't do anything with a chain our domain doesn't contain
 			Chain newChain = structure.getChainByPDB(chain.getChainID());
 			List<Group> ligands = StructureTools.filterLigands(chain.getAtomGroups());
 			for (Group group: ligands) {
-				boolean shouldContain = false; // whether the ligand occurs within the domain
-				for (ResidueRange rr : rrs) {
-					if (rr.contains(group.getResidueNumber(), map)) shouldContain = true;
+				boolean shouldContain = true;
+				if (strictLigandHandling) {
+					shouldContain = false; // whether the ligand occurs within the domain
+					for (ResidueRange rr : rrs) {
+						if (rr.contains(group.getResidueNumber(), map)) shouldContain = true;
+					}
 				}
 				boolean alreadyContains = newChain.getAtomGroups().contains(group); // we don't want to add duplicate ligands
 				if (shouldContain && !alreadyContains) {
