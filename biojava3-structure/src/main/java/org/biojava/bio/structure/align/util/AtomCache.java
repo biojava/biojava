@@ -28,16 +28,18 @@ import java.io.StringWriter;
 import java.net.URL;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.TreeSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.Iterator;
 
 import org.biojava.bio.structure.Atom;
+import org.biojava.bio.structure.AtomPositionMap;
 import org.biojava.bio.structure.Chain;
 import org.biojava.bio.structure.Group;
+import org.biojava.bio.structure.ResidueRange;
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureException;
 import org.biojava.bio.structure.StructureTools;
@@ -82,7 +84,7 @@ public class AtomCache {
 	String path;
 
 	String cachePath;
-	
+
 	// make sure IDs are loaded uniquely
 	Collection<String> currentlyLoading = Collections.synchronizedCollection(new TreeSet<String>());
 
@@ -93,7 +95,7 @@ public class AtomCache {
 	boolean autoFetch;
 	boolean isSplit;
 	boolean strictSCOP;
-	
+
 	protected FileParsingParameters params;
 
 	private boolean fetchFileEvenIfObsolete;
@@ -134,15 +136,15 @@ public class AtomCache {
 
 		path = pdbFilePath;		
 		System.setProperty(AbstractUserArgumentProcessor.PDB_DIR,path);
-		
-		
+
+
 		String tmpCache = System.getProperty(AbstractUserArgumentProcessor.CACHE_DIR);
 		if ( tmpCache == null || tmpCache.equals(""))
 			tmpCache = pdbFilePath;
-		
+
 		cachePath = tmpCache;
 		System.setProperty(AbstractUserArgumentProcessor.CACHE_DIR, cachePath);
-		
+
 		//this.cache = cache;
 		this.isSplit = isSplit;
 
@@ -192,8 +194,8 @@ public class AtomCache {
 		System.setProperty(AbstractUserArgumentProcessor.PDB_DIR,path);
 		this.path = path;
 	}
-	
-	
+
+
 	/** Returns the path that contains the caching file for utility data, such as domain definitons.
 	 *  
 	 * @return
@@ -211,9 +213,9 @@ public class AtomCache {
 	public void setCachePath(String cachePath){
 		this.cachePath = cachePath;
 		System.setProperty(AbstractUserArgumentProcessor.CACHE_DIR, cachePath);
-		
+
 	}
-	
+
 	/** Is the organization of files within the directory split, as on the PDB FTP servers,
 	 * or are all files contained in one directory.
 	 * @return flag 
@@ -312,10 +314,11 @@ public class AtomCache {
 		this.strictSCOP = strictSCOP;
 	}
 
-	/** Returns the representation of a ScopDomain as a BioJava Structure object
+	/**
+	 * Returns the representation of a {@link ScopDomain} as a BioJava {@link Structure} object.
 	 * 
-	 * @param domain a scop domain
-	 * @return a Structure object.
+	 * @param domain a SCOP domain
+	 * @return a Structure object
 	 * @throws IOException
 	 * @throws StructureException
 	 */
@@ -323,117 +326,93 @@ public class AtomCache {
 		return getStructureForDomain(domain, scopInstallation);
 	}
 
-	/** Returns the representation of a ScopDomain as a BioJava Structure object.
+	/**
+	 * Returns the representation of a {@link ScopDomain} as a BioJava {@link Structure} object.
 	 * 
-	 * @param domain A SCOP Id
-	 * @return a Structure object.
+	 * @param scopId a SCOP Id
+	 * @param scopDatabase A {@link ScopDatabase} to use
+	 * @return a Structure object
 	 * @throws IOException
 	 * @throws StructureException
 	 */
-	public Structure getStructureForDomain(String scopId, ScopDatabase scopInstallation) throws IOException, StructureException{
-		if ( scopInstallation == null) {
-			scopInstallation = ScopFactory.getSCOP();
-		}
-		ScopDomain domain = scopInstallation.getDomainByScopID(scopId);
-		return getStructureForDomain(domain, scopInstallation);
+	public Structure getStructureForDomain(String scopId, ScopDatabase scopDatabase) throws IOException, StructureException{
+		ScopDomain domain = scopDatabase.getDomainByScopID(scopId);
+		return getStructureForDomain(domain, scopDatabase);
 	}
 
-	/** Returns the representation of a ScopDomain as a BioJava Structure object.
+	/**
+	 * Returns the representation of a {@link ScopDomain} as a BioJava {@link Structure} object.
 	 * 
-	 * @param domain A Scop Id
-	 * @return a Structure object.
+	 * @param scopId a SCOP Id
+	 * @return a Structure object
 	 * @throws IOException
 	 * @throws StructureException
 	 */
 	public Structure getStructureForDomain(String scopId) throws IOException, StructureException{
 		return getStructureForDomain(scopId, ScopFactory.getSCOP());
 	}
-	
-	/** Returns the representation of a ScopDomain as a BioJava Structure object
+
+	/**
+	 * Returns the representation of a {@link ScopDomain} as a BioJava {@link Structure} object.
 	 * 
-	 * @param domain a scop domain
-	 * @return a Structure object.
+	 * @param domain a SCOP domain
+	 * @param scopDatabase A {@link ScopDatabase} to use
+	 * @return a Structure object
 	 * @throws IOException
 	 * @throws StructureException
 	 */
-	public Structure getStructureForDomain(ScopDomain domain, ScopDatabase scopInstallation) throws IOException, StructureException{
-		if ( scopInstallation == null) {
-			scopInstallation = ScopFactory.getSCOP();
-		}
-
-		Structure s = null;
+	public Structure getStructureForDomain(ScopDomain domain, ScopDatabase scopDatabase) throws IOException, StructureException {
 
 		String pdbId = domain.getPdbId();
+		Structure fullStructure = getStructure(pdbId);
 
-		try {
-			s = getStructure(pdbId);
-
-		} catch (StructureException ex){
-			System.err.println("error getting Structure for " + pdbId);
-
-			throw new StructureException(ex);
+		// build the substructure
+		StringBuilder rangeString = new StringBuilder();
+		Iterator<String> iter = domain.getRanges().iterator();
+		while (iter.hasNext()) {
+			rangeString.append(iter.next());
+			if (iter.hasNext()) rangeString.append(",");
 		}
+		Structure structure = StructureTools.getSubRanges(fullStructure, rangeString.toString());
+		structure.setName(domain.getScopId());
+		structure.setPDBCode(domain.getScopId());
 
-
-		StringWriter range = new StringWriter();
-		range.append("(");
-		int rangePos = 0;
-		for ( String r : domain.getRanges()) {
-			rangePos++;
-			range.append(r);
-			if ( ( domain.getRanges().size()> 1) && (rangePos < domain.getRanges().size())){
-				range.append(",");
-			}
-
-		}
-		range.append(")");
-		//System.out.println("getting range for "+ pdbId + " " + range);
-
-		Structure n = StructureTools.getSubRanges(s, range.toString());
-
-
-		// get ligands of chain
-		// add the ligands of the chain...
-		StructureName structureName = new StructureName(domain.getScopId());
-		
-		// this does not work for multi-chain domains as of yet...
-		// ignore multi-chain domains
-		if (! structureName.getChainId().equals(".")){
-			Chain newChain  = n.getChainByPDB(structureName.getChainId());
-			Chain origChain = s.getChainByPDB(structureName.getChainId());
-			List<Group> ligands = StructureTools.filterLigands(origChain.getAtomGroups());
-
-			for(Group g: ligands){
-				if ( ! newChain.getAtomGroups().contains(g)) {
-					newChain.addGroup(g);
+		// because ligands sometimes occur after TER records in PDB files, we may need to add some ligands back in
+		// specifically, we add a ligand if and only if it occurs within the domain
+		AtomPositionMap map = new AtomPositionMap(StructureTools.getAllAtomArray(fullStructure), AtomPositionMap.ANYTHING_MATCHER);
+		List<ResidueRange> rrs = ResidueRange.parseMultiple(domain.getRanges(), map);
+		for (Chain chain : fullStructure.getChains()) {
+			if (!structure.hasChain(chain.getChainID())) continue; // we can't do anything with a chain our domain doesn't contain
+			Chain newChain = structure.getChainByPDB(chain.getChainID());
+			List<Group> ligands = StructureTools.filterLigands(chain.getAtomGroups());
+			for (Group group: ligands) {
+				boolean shouldContain = false; // whether the ligand occurs within the domain
+				for (ResidueRange rr : rrs) {
+					if (rr.contains(group.getResidueNumber(), map)) shouldContain = true;
+				}
+				boolean alreadyContains = newChain.getAtomGroups().contains(group); // we don't want to add duplicate ligands
+				if (shouldContain && !alreadyContains) {
+					newChain.addGroup(group);
 				}
 			}
 		}
 
-		n.setName(domain.getScopId());
-		n.setPDBCode(domain.getScopId());
-
-
-		StringWriter d = new StringWriter();
-		d.append(domain.getClassificationId());
-
-
-
-		if ( scopInstallation != null) {
+		// build a more meaningful description for the new structure
+		StringBuilder header = new StringBuilder();
+		header.append(domain.getClassificationId());
+		if (scopDatabase != null) {
 			int sf = domain.getSuperfamilyId();
-
-			ScopDescription scopDesc = scopInstallation.getScopDescriptionBySunid(sf);
-
-			if( scopDesc != null){
-				d.append( " | " );
-				d.append(scopDesc.getDescription());
-
+			ScopDescription description = scopDatabase.getScopDescriptionBySunid(sf);
+			if (description != null){
+				header.append( " | " );
+				header.append(description.getDescription());
 			}
 		}
-		n.getPDBHeader().setDescription(d.toString());
-		return n;
-	}
+		structure.getPDBHeader().setDescription(header.toString());
 
+		return structure;
+
+	}
 
 	/** Returns the CA atoms for the provided name. See {@link #getStructure(String)} for supported naming conventions.
 	 * 
@@ -650,7 +629,7 @@ public class AtomCache {
 
 			//long end  = System.currentTimeMillis();
 			//System.out.println("time to load " + pdbId + " " + (end-start) + "\t  size :" + StructureTools.getNrAtoms(s) + "\t cached: " + cache.size());
-			
+
 			if ( chainId == null && chainNr < 0 && range == null) {								
 				// we only want the 1st model in this case
 				n = StructureTools.getReducedStructure(s,-1);
@@ -686,8 +665,8 @@ public class AtomCache {
 
 	protected Structure loadStructureFromByPdbId(String pdbId)
 			throws StructureException {
-		
-		
+
+
 		Structure s;
 		flagLoading(pdbId);
 		try {
@@ -707,7 +686,7 @@ public class AtomCache {
 			throw new StructureException(e.getMessage() + " while parsing " + pdbId,e);
 		}
 		flagLoadingFinished(pdbId);
-		
+
 		return s;
 	}
 
