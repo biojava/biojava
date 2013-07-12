@@ -32,10 +32,6 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
-import org.biojava.bio.structure.Atom;
-import org.biojava.bio.structure.Group;
-import org.biojava.bio.structure.ResidueNumber;
-import org.biojava.bio.structure.StructureTools;
 import org.biojava.bio.structure.io.mmcif.chem.ResidueType;
 
 /**
@@ -61,6 +57,25 @@ public class AtomPositionMap {
 		aminoAcidNames.addAll(Arrays.asList(new String[] {"ASX", "GLX", "XLE", "XAA"}));
 	}
 
+	public static interface GroupMatcher {
+		boolean matches(Group group);
+	}
+
+	public static final GroupMatcher AMINO_ACID_MATCHER = new GroupMatcher() {
+		@Override
+		public boolean matches(Group group) {
+			ResidueType type = group.getChemComp().getResidueType();
+			return group.hasAtom(StructureTools.caAtomName) || aminoAcidNames.contains(group.getPDBName()) || type == ResidueType.lPeptideLinking || type == ResidueType.glycine || type == ResidueType.lPeptideAminoTerminus || type == ResidueType.lPeptideCarboxyTerminus || type == ResidueType.dPeptideLinking || type == ResidueType.dPeptideAminoTerminus || type == ResidueType.dPeptideCarboxyTerminus;
+		}
+	};
+
+	public static final GroupMatcher ANYTHING_MATCHER = new GroupMatcher() {
+		@Override
+		public boolean matches(Group group) {
+			return true;
+		}
+	};
+	
 	/**
 	 * A map that is sorted by its values.
 	 * 
@@ -91,13 +106,19 @@ public class AtomPositionMap {
 	 * @param atoms
 	 */
 	public AtomPositionMap(Atom[] atoms) {
+		this(atoms, AMINO_ACID_MATCHER);
+	}
+	
+	/**
+	 * Creates a new AtomPositionMap containing only atoms matched by {@code matcher}.
+	 * @param atoms
+	 */
+	public AtomPositionMap(Atom[] atoms, GroupMatcher matcher) {
 		hashMap = new HashMap<ResidueNumber, Integer>();
 		for (int i = 0; i < atoms.length; i++) {
-			Group g = atoms[i].getGroup();
-			ResidueType type = g.getChemComp().getResidueType();
-			ResidueNumber rn = g.getResidueNumber();
-			// We might as well include D amino acids
-			if (g.hasAtom(StructureTools.caAtomName) || aminoAcidNames.contains(g.getPDBName()) || type == ResidueType.lPeptideLinking || type == ResidueType.glycine || type == ResidueType.lPeptideAminoTerminus || type == ResidueType.lPeptideCarboxyTerminus || type == ResidueType.dPeptideLinking || type == ResidueType.dPeptideAminoTerminus || type == ResidueType.dPeptideCarboxyTerminus) { 
+			Group group = atoms[i].getGroup();
+			ResidueNumber rn = group.getResidueNumber();
+			if (matcher.matches(group)) {
 				if (!hashMap.containsKey(rn)) {
 					hashMap.put(rn, i + 1);
 				}
