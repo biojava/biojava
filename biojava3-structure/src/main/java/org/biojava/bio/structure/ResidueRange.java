@@ -77,9 +77,7 @@ public class ResidueRange {
 	public static ResidueRange parse(String s) {
 		ResidueNumber start = null, end = null;
 		String chain = null;
-		Pattern pattern = Pattern.compile(RANGE_REGEX);
-		Matcher matcher = pattern.matcher(s);
-		matcher.find();
+		Matcher matcher = match(s);
 		if (matcher.matches()) {
 			try {
 				chain = matcher.group(1);
@@ -105,8 +103,10 @@ public class ResidueRange {
 		ResidueRange rr = parse(s);
 		if (rr.getStart() == null) { // whole chain
 			String chain = rr.getChainId();
+			if (map == null) return rr; // we can't get the first and last
 			rr = new ResidueRange(chain, map.getFirst(chain), map.getLast(chain), null);
 		}
+		if (map == null) return rr; // we can't calculate the length
 		int length = map.calcLength(rr.getStart(), rr.getEnd());
 		return new ResidueRange(rr.getChainId(), rr.getStart(), rr.getEnd(), length);
 	}
@@ -220,9 +220,15 @@ public class ResidueRange {
 	 * @return True if and only if {@code residueNumber} is within this ResidueRange
 	 */
 	public boolean contains(ResidueNumber residueNumber, AtomPositionMap map) {
-		int pos = map.getPosition(residueNumber);
-		int startPos = map.getPosition(start);
-		int endPos = map.getPosition(end);
+		if (residueNumber == null) throw new IllegalArgumentException("Can't find a null ResidueNumber");
+		if (map == null) throw new IllegalArgumentException("The AtomPositionMap must be non-null");
+		if (start == null || end == null) throw new IllegalArgumentException("The bounds of this ResidueNumber aren't known");
+		Integer pos = map.getPosition(residueNumber);
+		if (pos == null) throw new IllegalArgumentException("Couldn't find residue " + residueNumber.printFull());
+		Integer startPos = map.getPosition(start);
+		if (startPos == null) throw new IllegalArgumentException("Couldn't find the start position");
+		Integer endPos = map.getPosition(end);
+		if (endPos == null) throw new IllegalArgumentException("Couldn't find the end position");
 		return pos >= startPos && pos <= endPos;
 	}
 
@@ -231,6 +237,7 @@ public class ResidueRange {
 	 * @return The ResidueNumber, or false if it does not exist or is not within this ResidueRange
 	 */
 	public ResidueNumber getResidue(int positionInRange, AtomPositionMap map) {
+		if (map == null) throw new IllegalArgumentException("The AtomPositionMap must be non-null");
 		int i = 0;
 		for (Map.Entry<ResidueNumber, Integer> entry : map.getNavMap().entrySet()) {
 			if (i == positionInRange) return entry.getKey();
@@ -343,21 +350,35 @@ public class ResidueRange {
 	}
 
 	public static List<ResidueRange> parseMultiple(List<String> ranges) {
+		return parseMultiple(ranges, null);
+	}
+
+	public static List<ResidueRange> parseMultiple(List<String> ranges, AtomPositionMap map) {
 		List<ResidueRange> rrs = new ArrayList<ResidueRange>(ranges.size());
 		for (String range : ranges) {
-			rrs.add(ResidueRange.parse(range));
+			ResidueRange rr = ResidueRange.parse(range, map);
+			if (rr != null) rrs.add(rr);
 		}
 		return rrs;
 	}
 
 	/**
-	 * Determines whether a String is of a recognizable range format
+	 * Matches the string with a regex pattern that matches all recognizable range formats.
+	 * @param s A string to match against
+	 * @return A Matcher run against {@code s}; contains 1 or 3 groups: {@code matcher.group(1)} is the chain Id, and optionally {@code matcher.group(2)} and {@code matcher.group(3)} are the start and end residues, respectively.
 	 */
-	public static boolean looksLikeRange(String s) {
+	public static Matcher match(String s) {
 		Pattern pattern = Pattern.compile(RANGE_REGEX);
 		Matcher matcher = pattern.matcher(s);
 		matcher.find();
-		return matcher.matches();
+		return matcher;
+	}
+	
+	/**
+	 * Determines whether a String is of a recognizable range format
+	 */
+	public static boolean looksLikeRange(String s) {
+		return match(s).matches();
 	}
 
 }
