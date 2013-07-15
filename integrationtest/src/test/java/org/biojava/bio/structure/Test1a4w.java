@@ -58,6 +58,7 @@ public class Test1a4w extends TestCase{
 			FileParsingParameters params = new FileParsingParameters();
 			params.setLoadChemCompInfo(true);
 			params.setAlignSeqRes(true);
+			
 			pdbpars.setFileParsingParameters(params);
 
 			structure = pdbpars.parsePDBFile(inStream) ;
@@ -160,6 +161,8 @@ public class Test1a4w extends TestCase{
 	public void testChemComps(){
 		try {
 			AtomCache cache = new AtomCache();
+			FileParsingParameters params = cache.getFileParsingParams();
+			params.setAlignSeqRes(true);
 			Structure s = cache.getStructure("1a4w");
 
 			assertTrue(s.getChains().size() == 3);
@@ -186,13 +189,28 @@ public class Test1a4w extends TestCase{
 			assertTrue("Found water in ligands list!", noWater );
 
 			assertTrue("Did not find QWE in ligands list!", darPresent);
-			
-			//System.out.println("LIGANDS:" + ligands);
+						
 			assertEquals("Did not find the correct nr of ligands in chain! " , 3,ligands.size());
 		} catch (Exception e){
 			e.printStackTrace();
 			fail(e.getMessage());
 		}
+
+	}
+	
+	public void testLigandLoading(){
+		Chain c2 = structure.getChain(1);
+		assertTrue(c2.getChainID().equals("H"));
+
+		List<Group> ligands = c2.getAtomLigands();
+		
+		
+		System.out.println("LIGANDS:" + ligands);
+		assertEquals("Did not find the correct nr of ligands in chain! " , 6,ligands.size());
+		
+		List<Group> lignads2 = StructureTools.filterLigands(c2.getAtomGroups());
+		
+		assertEquals("Did not get the same nr of ligands from different access methods! ",ligands.size(), lignads2.size());
 
 	}
 

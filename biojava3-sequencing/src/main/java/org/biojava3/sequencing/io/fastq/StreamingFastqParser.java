@@ -62,25 +62,25 @@ final class StreamingFastqParser
         final FastqBuilder builder = new FastqBuilder().withVariant(variant);
         FastqParser.parse(supplier, new ParseListener()
             {
-                /** {@inheritDoc} */
+                @Override
                 public void description(final String description) throws IOException
                 {
                     builder.withDescription(description);
                 }
 
-                /** {@inheritDoc} */
+                @Override
                 public void sequence(final String sequence) throws IOException
                 {
                     builder.withSequence(sequence);
                 }
 
-                /** {@inheritDoc} */
+                @Override
                 public void appendSequence(final String sequence) throws IOException
                 {
                     builder.appendSequence(sequence);
                 }
 
-                /** {@inheritDoc} */
+                @Override
                 public void repeatDescription(final String repeatDescription) throws IOException
                 {
                     String description = builder.getDescription();
@@ -114,21 +114,21 @@ final class StreamingFastqParser
                     }
                 }
 
-                /** {@inheritDoc} */
+                @Override
                 public void quality(final String quality) throws IOException
                 {
                     validateQuality(quality);
                     builder.withQuality(quality);
                 }
 
-                /** {@inheritDoc} */
+                @Override
                 public void appendQuality(final String quality) throws IOException
                 {
                     validateQuality(quality);
                     builder.appendQuality(quality);
                 }
 
-                /** {@inheritDoc} */
+                @Override
                 public void complete() throws IOException
                 {
                     try
@@ -137,8 +137,7 @@ final class StreamingFastqParser
                     }
                     catch (IllegalStateException e)
                     {
-                        throw new IOException("caught an IllegalStateException " + e.getMessage());
-                        //throw new IOException("caught an IllegalStateException", e);  jdk 1.6+
+                        throw new IOException("caught an IllegalStateException", e);
                     }
                 }
             });

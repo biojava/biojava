@@ -12,6 +12,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 
 import org.biojava.bio.structure.align.ce.AbstractUserArgumentProcessor;
+import org.biojava.bio.structure.align.util.UserConfiguration;
 import org.biojava.bio.structure.io.mmcif.model.ChemComp;
 import org.biojava3.core.util.InputStreamProvider;
 
@@ -60,28 +61,9 @@ public class AllChemCompProvider implements ChemCompProvider, Runnable{
 	 */
 	public static void checkPath(){
 
-		if ((path == null) || (path.equals("")) || path.equals("null")) {
-
-			String syspath = System.getProperty(AbstractUserArgumentProcessor.PDB_DIR);
-
-			if ((syspath != null) && (! syspath.equals("")) && (! syspath.equals("null"))){
-
-				path = syspath;
-				return;
-			}
-
-			// accessing temp. OS directory:         
-			String property = "java.io.tmpdir";
-
-			String tempdir = System.getProperty(property);
-
-			if ( !(tempdir.endsWith(lineSplit) ) )
-				tempdir = tempdir + lineSplit;
-
-			System.err.println("you did not set the path in PDBFileReader, don't know where to write the downloaded file to");
-			System.err.println("assuming default location is temp directory: " + tempdir);
-			path = tempdir;
-		}
+		UserConfiguration config = new UserConfiguration();
+		path = config.getCacheFilePath();
+		
 	}
 
 	private void ensureFileExists() {
@@ -155,6 +137,7 @@ public class AllChemCompProvider implements ChemCompProvider, Runnable{
 	 */
 	private void loadAllChemComps() {
 		String fileName = getLocalFileName();
+		System.out.println("loading " + fileName);
 		InputStreamProvider isp = new InputStreamProvider();
 
 		try {

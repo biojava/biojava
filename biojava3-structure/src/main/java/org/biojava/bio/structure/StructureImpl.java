@@ -145,8 +145,9 @@ public class StructureImpl implements Structure, Serializable {
 		n.setPDBHeader(pdbHeader);
 		n.setDBRefs(this.getDBRefs());
 		n.setConnections(getConnections());
-                n.setSites(getSites());
-                
+		n.setSites(getSites());
+		n.setCrystallographicInfo(getCrystallographicInfo());
+
 		// go through each chain and clone chain
 		for (int i=0;i<nrModels();i++){
 			List<Chain> cloned_model = new ArrayList<Chain>();

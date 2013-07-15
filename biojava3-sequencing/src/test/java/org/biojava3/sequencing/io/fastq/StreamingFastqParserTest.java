@@ -38,7 +38,7 @@ public class StreamingFastqParserTest extends TestCase
         try
         {
             StreamingFastqParser.stream((InputSupplier<StringReader>) null, FastqVariant.FASTQ_SANGER, new StreamListener() {
-                /** {@inheritDoc} */
+                @Override
                 public void fastq(final Fastq fastq) {
                     // empty
                 }
@@ -57,13 +57,13 @@ public class StreamingFastqParserTest extends TestCase
         {
             final String input = "";
             InputSupplier<StringReader> supplier = new InputSupplier<StringReader>() {
-                /** {@inheritDoc} */
+                @Override
                 public StringReader getInput() throws IOException {
                     return new StringReader(input);
                 }
             };
             StreamingFastqParser.stream(supplier, null, new StreamListener() {
-                /** {@inheritDoc} */
+                @Override
                 public void fastq(final Fastq fastq) {
                     // empty
                 }
@@ -82,7 +82,7 @@ public class StreamingFastqParserTest extends TestCase
         {
             final String input = "";
             StreamingFastqParser.stream(new InputSupplier<StringReader>() {
-                /** {@inheritDoc} */
+                @Override
                 public StringReader getInput() throws IOException {
                     return new StringReader(input);
                 }

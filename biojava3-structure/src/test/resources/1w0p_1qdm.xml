@@ -1,0 +1,39 @@
+<AFPChain name1="" name2="" method="unknown" version="1.0" alnLength="53" blockNum="1" gapLen="20" optLength="33" totalLenIni="0" alignScore="0.00" chainRmsd="0.00" identity="0.0377" normAlignScore="0.00" probability="0.00e+00" similarity="0.1509" similarity1="4" similarity2="3" totalRmsdIni="0.00" totalRmsdOpt="12.88" ca1Length="753" ca2Length="1287" afpNum="0" alignScoreUpdate="0.00" time="0" tmScore="0.02">
+  <block blockNr="0" blockSize="33" blockScore="0.00" blockRmsd="12.88" blockGap="20">
+    <eqr eqrNr="0" pdbres1="361" chain1="A" pdbres2="78S" chain2="C" />
+    <eqr eqrNr="1" pdbres1="362" chain1="A" pdbres2="79S" chain2="C" />
+    <eqr eqrNr="2" pdbres1="363" chain1="A" pdbres2="80S" chain2="C" />
+    <eqr eqrNr="3" pdbres1="364" chain1="A" pdbres2="81S" chain2="C" />
+    <eqr eqrNr="4" pdbres1="365" chain1="A" pdbres2="86S" chain2="C" />
+    <eqr eqrNr="5" pdbres1="366" chain1="A" pdbres2="87S" chain2="C" />
+    <eqr eqrNr="6" pdbres1="367" chain1="A" pdbres2="88S" chain2="C" />
+    <eqr eqrNr="7" pdbres1="368" chain1="A" pdbres2="89S" chain2="C" />
+    <eqr eqrNr="8" pdbres1="369" chain1="A" pdbres2="90S" chain2="C" />
+    <eqr eqrNr="9" pdbres1="370" chain1="A" pdbres2="91S" chain2="C" />
+    <eqr eqrNr="10" pdbres1="371" chain1="A" pdbres2="92S" chain2="C" />
+    <eqr eqrNr="11" pdbres1="372" chain1="A" pdbres2="93S" chain2="C" />
+    <eqr eqrNr="12" pdbres1="373" chain1="A" pdbres2="94S" chain2="C" />
+    <eqr eqrNr="13" pdbres1="374" chain1="A" pdbres2="95S" chain2="C" />
+    <eqr eqrNr="14" pdbres1="375" chain1="A" pdbres2="96S" chain2="C" />
+    <eqr eqrNr="15" pdbres1="376" chain1="A" pdbres2="97S" chain2="C" />
+    <eqr eqrNr="16" pdbres1="377" chain1="A" pdbres2="100S" chain2="C" />
+    <eqr eqrNr="17" pdbres1="378" chain1="A" pdbres2="101S" chain2="C" />
+    <eqr eqrNr="18" pdbres1="379" chain1="A" pdbres2="102S" chain2="C" />
+    <eqr eqrNr="19" pdbres1="380" chain1="A" pdbres2="103S" chain2="C" />
+    <eqr eqrNr="20" pdbres1="381" chain1="A" pdbres2="252" chain2="C" />
+    <eqr eqrNr="21" pdbres1="382" chain1="A" pdbres2="253" chain2="C" />
+    <eqr eqrNr="22" pdbres1="383" chain1="A" pdbres2="254" chain2="C" />
+    <eqr eqrNr="23" pdbres1="384" chain1="A" pdbres2="255" chain2="C" />
+    <eqr eqrNr="24" pdbres1="389" chain1="A" pdbres2="256" chain2="C" />
+    <eqr eqrNr="25" pdbres1="390" chain1="A" pdbres2="257" chain2="C" />
+    <eqr eqrNr="26" pdbres1="391" chain1="A" pdbres2="258" chain2="C" />
+    <eqr eqrNr="27" pdbres1="392" chain1="A" pdbres2="259" chain2="C" />
+    <eqr eqrNr="28" pdbres1="393" chain1="A" pdbres2="260" chain2="C" />
+    <eqr eqrNr="29" pdbres1="394" chain1="A" pdbres2="266" chain2="C" />
+    <eqr eqrNr="30" pdbres1="395" chain1="A" pdbres2="267" chain2="C" />
+    <eqr eqrNr="31" pdbres1="396" chain1="A" pdbres2="268" chain2="C" />
+    <eqr eqrNr="32" pdbres1="397" chain1="A" pdbres2="269" chain2="C" />
+    <matrix mat11="-0.433626" mat12="0.882212" mat13="0.183496" mat21="-0.805273" mat22="-0.470775" mat23="0.360425" mat31="0.404356" mat32="0.008525" mat33="0.914562" />
+    <shift x="-14.232" y="12.410" z="66.149" />
+  </block>
+</AFPChain>

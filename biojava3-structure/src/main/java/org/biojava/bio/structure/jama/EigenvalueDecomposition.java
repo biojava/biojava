@@ -18,13 +18,17 @@ package org.biojava.bio.structure.jama;
 
 public class EigenvalueDecomposition implements java.io.Serializable {
 
-    static final long serialVersionUID = 93489734879234789l;
-    
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 3557806515310435894L;
+	
+	
 /* ------------------------
    Class variables
  * ------------------------ */
 
-   /** Row and column dimension (square matrix).
+/** Row and column dimension (square matrix).
    @serial matrix dimension.
    */
    private int n;
@@ -619,6 +623,7 @@ public class EigenvalueDecomposition implements java.io.Serializable {
    
             // Double QR step involving rows l:n and columns m:n
    
+
             for (int k = m; k <= n-1; k++) {
                boolean notlast = (k != n-1);
                if (k != m) {
@@ -626,15 +631,14 @@ public class EigenvalueDecomposition implements java.io.Serializable {
                   q = H[k+1][k-1];
                   r = (notlast ? H[k+2][k-1] : 0.0);
                   x = Math.abs(p) + Math.abs(q) + Math.abs(r);
-                  if (x != 0.0) {
-                     p = p / x;
-                     q = q / x;
-                     r = r / x;
+                  if (x == 0.0) {
+                      continue;
                   }
+                  p = p / x;
+                  q = q / x;
+                  r = r / x;
                }
-               if (x == 0.0) {
-                  break;
-               }
+
                s = Math.sqrt(p * p + q * q + r * r);
                if (p < 0) {
                   s = -s;
@@ -856,9 +860,8 @@ public class EigenvalueDecomposition implements java.io.Serializable {
  * ------------------------ */
 
    /** Check for symmetry, then construct the eigenvalue decomposition
-       provides a  way  to access D and V.
+       Structure to access D and V.
    @param Arg    Square matrix
-
    */
 
    public EigenvalueDecomposition (Matrix Arg) {
@@ -954,4 +957,5 @@ public class EigenvalueDecomposition implements java.io.Serializable {
       }
       return X;
    }
+ 
 }

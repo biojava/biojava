@@ -29,7 +29,7 @@ public final class SangerFastqReader
     extends AbstractFastqReader
 {
 
-    /** {@inheritDoc} */
+    @Override
     protected FastqVariant getVariant()
     {
         return FastqVariant.FASTQ_SANGER;

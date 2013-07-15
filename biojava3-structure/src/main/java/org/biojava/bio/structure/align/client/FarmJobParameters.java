@@ -30,7 +30,9 @@ public class FarmJobParameters {
 	String username;
 	boolean runBackground;
 	boolean verbose;
+	boolean updateRemediatedFiles;
 	int stepSize;
+	String cacheFilePath;
 
 		
 	public FarmJobParameters(){
@@ -41,7 +43,8 @@ public class FarmJobParameters {
 		pdbFilePath = DEFAULT_PDB_PATH;
 		pdbDirSplit = DEFAULT_DIR_SPLIT;
 		runBackground = false;
-		
+		cacheFilePath = DEFAULT_PDB_PATH;
+		updateRemediatedFiles = false;
 		String nrPairsProp = resourceManager.getString(DEFAULT_BATCH_SIZE_PROP);
 		
 		stepSize = 	DEFAULT_BATCH_SIZE;
@@ -64,12 +67,13 @@ public class FarmJobParameters {
 	public void setPdbFilePath(String pdbFilePath) {
 		this.pdbFilePath = pdbFilePath;
 	}
-
-	public String toString() {
-		return "FarmJobParameters [nrAlignments=" + nrAlignments + ", server="
-				+ server + ", threads=" + threads + ", time=" + time + ", username=" + username +"]";
+	public String getCacheFilePath() {
+		return cacheFilePath;
 	}
 
+	public void setCacheFilePath(String cacheFilePath) {
+		this.cacheFilePath = cacheFilePath;
+	}
 
 	public int getNrAlignments() {
 		return nrAlignments;
@@ -155,6 +159,26 @@ public class FarmJobParameters {
 
 	public void setVerbose(boolean verbose) {
 		this.verbose = verbose;
+	}
+
+	public boolean isUpdateRemediatedFiles() {
+		return updateRemediatedFiles;
+	}
+
+	public void setUpdateRemediatedFiles(boolean updateRemediatedFiles) {
+		this.updateRemediatedFiles = updateRemediatedFiles;
+	}
+
+	@Override
+	public String toString() {
+		return "FarmJobParameters [nrAlignments=" + nrAlignments + ", time="
+				+ time + ", threads=" + threads + ", server=" + server
+				+ ", pdbFilePath=" + pdbFilePath + ", pdbDirSplit="
+				+ pdbDirSplit + ", username=" + username + ", runBackground="
+				+ runBackground + ", verbose=" + verbose
+				+ ", updateRemediatedFiles=" + updateRemediatedFiles
+				+ ", stepSize=" + stepSize + ", cacheFilePath=" + cacheFilePath
+				+ "]";
 	}
 	
 	

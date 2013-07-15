@@ -31,6 +31,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
 
@@ -41,6 +42,7 @@ import java.util.List;
 import org.biojava.bio.structure.Atom;
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureTools;
+import org.biojava.bio.structure.align.MultiThreadedDBSearch;
 import org.biojava.bio.structure.align.StructureAlignment;
 import org.biojava.bio.structure.align.model.AFPChain;
 import org.biojava.bio.structure.align.util.AFPAlignmentDisplay;
@@ -67,6 +69,12 @@ public abstract class AbstractUserArgumentProcessor implements UserArgumentProce
 	 * default location for PDB files.
 	 */
 	public static final String PDB_DIR = "PDB_DIR";
+	
+	
+	/** The system property PDB_CACHE_DIR can be used to configure the default location for various data related to working with PDB files, such as domain definitions.
+	 * 
+	 */
+	public static final String CACHE_DIR = "PDB_CACHE_DIR";
 
 	protected AbstractUserArgumentProcessor(){ 
 		params = new StartupParameters();
@@ -121,6 +129,10 @@ public abstract class AbstractUserArgumentProcessor implements UserArgumentProce
 		if ( params.getPdbFilePath() != null){
 			System.setProperty(PDB_DIR,params.getPdbFilePath());
 		}
+		
+		if ( params.getCacheFilePath() != null){
+			System.setProperty(CACHE_DIR,params.getCacheFilePath());
+		}
 
 		if ( params.isShowMenu()){
 			System.err.println("showing menu...");
@@ -157,6 +169,11 @@ public abstract class AbstractUserArgumentProcessor implements UserArgumentProce
 		if ( params.getAlignPairs() != null){
 			runDBSearch();
 		}
+		
+		if ( params.getSearchFile() != null){
+			runDBSearch();
+		}
+		
 	}
 
 
@@ -191,16 +208,27 @@ public abstract class AbstractUserArgumentProcessor implements UserArgumentProce
 			pdbFilePath = c.getPdbFilePath();
 		}
 
+		String cacheFilePath = params.getCacheFilePath();
+
+		if ( cacheFilePath == null || cacheFilePath.equals("")){
+			cacheFilePath = pdbFilePath;
+			
+		}
+
 
 		AtomCache cache = new AtomCache(pdbFilePath, params.isPdbDirSplit());
 
-		String inputFile = params.getAlignPairs();
+		String alignPairs = params.getAlignPairs();
 
-		if ( inputFile == null || inputFile.equals("")){
-			System.err.println("Please specify the mandatory argument -inputFile!");
-			return;
+		String searchFile = params.getSearchFile();
+		
+		if ( alignPairs == null || alignPairs.equals("")) {
+			if ( searchFile == null || searchFile.equals("")){
+				System.err.println("Please specify -alignPairs or -searchFile !");
+				return;
+			}
 		}
-
+		
 		String outputFile = params.getOutFile();
 
 		if ( outputFile == null || outputFile.equals("")){
@@ -208,11 +236,69 @@ public abstract class AbstractUserArgumentProcessor implements UserArgumentProce
 			return;
 		}
 
-		System.out.println("running DB search with parameters:" + params);
+		System.out.println("running DB search with parameters: " + params);
+
+		if ( alignPairs != null && ! alignPairs.equals("")) {
+			runAlignPairs(cache, alignPairs, outputFile);
+		}  else {
+			// must be a searchFile request...
+						
+			int useNrCPUs = params.getNrCPU();
+			
+			runDbSearch(cache,searchFile, outputFile, useNrCPUs, params);
+		}
+	}
 
 
+	/** Do a DB search with the input file against representative PDB domains
+	 * 
+	 * @param cache
+	 * @param searchFile
+	 * @param outputFile
+	 */
+	private void runDbSearch(AtomCache cache, String searchFile,
+			String outputFile,int useNrCPUs, StartupParameters params) {
+		
+		
+		System.out.println("will use " + useNrCPUs + " CPUs.");
+		
+		PDBFileReader reader = new PDBFileReader();
+		Structure structure1 = null ;
 		try {
-			File f = new File(inputFile);
+			structure1 = reader.getStructure(searchFile);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			System.err.println("could not parse as PDB file: " + searchFile);
+			return;
+		}
+		
+		File searchF = new File(searchFile);
+		String name1 = "CUSTOM";
+		
+				
+			
+		StructureAlignment algorithm =  getAlgorithm();
+		
+		MultiThreadedDBSearch dbSearch = new MultiThreadedDBSearch(name1, 
+				structure1, 
+				outputFile, 
+				algorithm,
+				useNrCPUs,
+				params.isDomainSplit());
+		
+		dbSearch.setCustomFile1(searchF.getAbsolutePath());
+		
+		dbSearch.run();
+			
+	
+	}
+
+
+	private void runAlignPairs(AtomCache cache, String alignPairs,
+			String outputFile) {
+		try {
+			File f = new File(alignPairs);
 
 			BufferedReader is = new BufferedReader (new InputStreamReader(new FileInputStream(f)));
 
@@ -467,11 +553,22 @@ public abstract class AbstractUserArgumentProcessor implements UserArgumentProce
 
 		if ( dbsearch ){
 			if ( params.getSaveOutputDir() != null) {
+				
+				// we currently don't have a naming convention for how to store results for custom files
+				// they will be re-created on the fly
+				if ( afpChain.getName1().startsWith("file:") || afpChain.getName2().startsWith("file:"))
+					return;
 				fileName = params.getSaveOutputDir(); 
 				fileName += getAutoFileName(afpChain);
+				
 			} else {
-				fileName = getAutoFileName(afpChain);
+				return;
 			}
+			
+			// 
+			//else {
+			//	fileName = getAutoFileName(afpChain);
+			//}
 		} else 
 
 			if ( params.getOutFile() != null) {
@@ -482,7 +579,7 @@ public abstract class AbstractUserArgumentProcessor implements UserArgumentProce
 			System.err.println("Can't write outputfile. Either provide a filename using -outFile or set -autoOutputFile to true .");
 			return;
 		}
-		//System.out.println("writing results to " + fileName);
+		//System.out.println("writing results to " + fileName + " " + params.getSaveOutputDir());
 
 		FileOutputStream out; // declare a file output object
 		PrintStream p; // declare a print stream object
@@ -501,7 +598,8 @@ public abstract class AbstractUserArgumentProcessor implements UserArgumentProce
 		}
 		catch (Exception e)
 		{
-			System.err.println ("Error writing to file " + params.getOutFile());
+			e.printStackTrace();
+			System.err.println ("Error writing to file " + fileName);
 		}
 
 
@@ -510,7 +608,7 @@ public abstract class AbstractUserArgumentProcessor implements UserArgumentProce
 
 	private String getAutoFileName(AFPChain afpChain){
 		String fileName =afpChain.getName1()+"_" + afpChain.getName2()+"_"+afpChain.getAlgorithmName();
-
+		
 		if (params.isOutputPDB() )
 			fileName += ".pdb";
 		else

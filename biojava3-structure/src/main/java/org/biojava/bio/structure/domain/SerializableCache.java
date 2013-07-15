@@ -125,7 +125,7 @@ public class SerializableCache <K,V>{
 
 	private File getCacheFile() {
 		AtomCache cache =new AtomCache();
-		String path = cache.getPath();
+		String path = cache.getCachePath();
 		File f = new File(path + System.getProperty("file.separator") + cacheFileName);
 
 		if (debug)
@@ -139,7 +139,9 @@ public class SerializableCache <K,V>{
 		synchronized(serializedCache){
 
 			File f = getCacheFile();
+			
 			try {
+				
 				FileOutputStream fos = new FileOutputStream(f);
 				ObjectOutputStream oos = new ObjectOutputStream(fos);
 				oos.writeObject(serializedCache);

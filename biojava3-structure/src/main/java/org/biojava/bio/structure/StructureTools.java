@@ -22,6 +22,10 @@
  */
 package org.biojava.bio.structure;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -31,13 +35,16 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.biojava.bio.structure.align.util.AtomCache;
+import org.biojava.bio.structure.io.PDBFileParser;
+import org.biojava.bio.structure.io.mmcif.chem.PolymerType;
+import org.biojava.bio.structure.io.mmcif.chem.ResidueType;
+import org.biojava.bio.structure.io.mmcif.model.ChemComp;
 
 
 /**
@@ -694,6 +701,7 @@ public class StructureTools {
 		newS.setConnections(s.getConnections());
 		newS.setSSBonds(s.getSSBonds());
 		newS.setSites(s.getSites());
+		newS.setCrystallographicInfo(s.getCrystallographicInfo());
 		newS.getPDBHeader().setDescription("subset of " + s.getPDBCode() + " " + s.getPDBHeader().getDescription() );
 
 		if ( chainNr < 0 ) {
@@ -768,7 +776,7 @@ public class StructureTools {
 		newS.setNmr(s.isNmr());
 		newS.setBiologicalAssembly(s.isBiologicalAssembly());
 		newS.getPDBHeader().setDescription("sub-range " + ranges + " of "  + newS.getPDBCode() + " " + s.getPDBHeader().getDescription());
-
+		newS.setCrystallographicInfo(s.getCrystallographicInfo());
 		// TODO The following should be only copied for atoms which are present in the range.
 		//newS.setCompounds(s.getCompounds());
 		//newS.setConnections(s.getConnections());
@@ -784,7 +792,7 @@ public class StructureTools {
 
 		// parse the ranges, adding the specified residues to newS
 		for ( String r: rangS){
-			//System.out.println(">"+r+"<");
+			
 			// Match a single range, eg "A_4-27"
 
 			Matcher matcher = pdbNumRangeRegex.matcher(r);
@@ -820,6 +828,7 @@ public class StructureTools {
 				if(pdbresnumEnd.charAt(0) == '+')
 					pdbresnumEnd = pdbresnumEnd.substring(1);
 				groups = chain.getGroupsByPDB(pdbresnumStart, pdbresnumEnd);
+			
 
 				name.append( chainId + AtomCache.UNDERSCORE + pdbresnumStart+"-" + pdbresnumEnd);
 
@@ -850,7 +859,7 @@ public class StructureTools {
 					newS.addChain(c);
 				}
 			}
-
+			
 			// add the groups to the chain:
 			for ( Group g: groups) {
 				c.addGroup(g);
@@ -1042,6 +1051,7 @@ public class StructureTools {
 	 * @return a structure that contains only  the first model
 	 * @since 3.0.5
 	 */
+	@SuppressWarnings("deprecation")
 	public static Structure removeModels(Structure s){
 		if ( ! s.isNmr())
 			return s;
@@ -1054,12 +1064,15 @@ public class StructureTools {
 
 		n.setPDBCode(s.getPDBCode());
 		n.setName(s.getName());
+		
+		// we are calling this legacy menthod for backwards compatibility
 		n.setHeader(s.getHeader());
 		//TODO: do deep copying of data!
 		n.setPDBHeader(s.getPDBHeader());
 		n.setDBRefs(s.getDBRefs());
 		n.setConnections(s.getConnections());
 		n.setSites(s.getSites());
+		n.setCrystallographicInfo(s.getCrystallographicInfo());
 		
 		n.setChains(s.getModel(0));
 		
@@ -1067,4 +1080,88 @@ public class StructureTools {
 
 
 	}
+	
+	/** Removes all polymeric and solvent groups from a list of groups
+	 * 
+	 */
+	public static List<Group> filterLigands(List<Group> allGroups){
+		//String prop = System.getProperty(PDBFileReader.LOAD_CHEM_COMP_PROPERTY);
+
+		//    if ( prop == null || ( ! prop.equalsIgnoreCase("true"))){
+		//      System.err.println("You did not specify PDBFileReader.setLoadChemCompInfo, need to fetch Chemical Components anyways.");
+		//    }
+
+
+		List<Group> groups = new ArrayList<Group>();
+		for ( Group g: allGroups) {
+
+			ChemComp cc = g.getChemComp();
+
+			if ( ResidueType.lPeptideLinking.equals(cc.getResidueType()) ||
+					PolymerType.PROTEIN_ONLY.contains(cc.getPolymerType()) ||
+					PolymerType.POLYNUCLEOTIDE_ONLY.contains(cc.getPolymerType())
+					){
+				continue;
+			}
+			if ( ! g.isWater()) {
+				//System.out.println("not a prot, nuc or solvent : " + g.getChemComp());
+				groups.add(g);
+			}
+		}
+
+		return groups;
+	}
+
+	
+
+	
+	/**
+	 * Short version of {@link #getStructure(String, PDBFileParser, AtomCache)}
+	 * which creates new parsers when needed
+	 * @param name
+	 * @return
+	 * @throws IOException
+	 * @throws StructureException
+	 */
+	public static Structure getStructure(String name) throws IOException, StructureException {
+		return StructureTools.getStructure(name,null,null);
+	}
+	/**
+	 * Flexibly get a structure from an input String. The intent of this method
+	 * is to allow any reasonable string which could refer to a structure to be
+	 * correctly parsed. The following are currently supported:
+	 * <ol>
+	 * <li>Filename (if name refers to an existing file)
+	 * <li>PDB ID
+	 * <li>SCOP domains
+	 * <li>PDP domains
+	 * <li>Residue ranges
+	 * <li>Other formats supported by AtomCache
+	 * </ol>
+	 * @param name Some reference to the protein structure
+	 * @param parser A clean PDBFileParser to use if it is a file. If null,
+	 * 	a PDBFileParser will be instantiated if needed.
+	 * @param cache An AtomCache to use if the structure can be fetched from the
+	 *  PDB.  If null, a AtomCache will be instantiated if needed.
+	 * @return A Structure object
+	 * @throws IOException if name is an existing file, but doesn't parse correctly
+	 * @throws StructureException if the format is unknown, or if AtomCache throws
+	 *  an exception.
+	 */
+	public static Structure getStructure(String name,PDBFileParser parser, AtomCache cache) throws IOException, StructureException {
+		File f = new File(name);
+		if(f.exists()) {
+			if(parser == null) {
+				parser = new PDBFileParser();
+			}
+			InputStream inStream = new FileInputStream(f);
+			return parser.parsePDBFile(inStream);
+		} else {
+			if( cache == null) {
+				cache = new AtomCache();
+			}
+			return cache.getStructure(name);
+		}
+	}
+
 }

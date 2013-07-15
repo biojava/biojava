@@ -189,7 +189,7 @@ public class ChemCompTools {
 
                 }
 
-                System.err.println("what is this?" + cc);
+                //System.err.println("Non standard chem comp: " + cc);
                 return false;
             }
         }

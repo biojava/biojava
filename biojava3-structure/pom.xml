@@ -4,7 +4,7 @@
 	<parent>
 		<artifactId>biojava</artifactId>
 		<groupId>org.biojava</groupId>
-		<version>3.0.5</version>
+		<version>3.0.7-SNAPSHOT</version>
 	</parent>
 	<artifactId>biojava3-structure</artifactId>
 	<name>biojava3-structure</name>
@@ -18,18 +18,29 @@
 		<dependency>
 			<groupId>org.biojava</groupId>
 			<artifactId>biojava3-alignment</artifactId>
-			<version>3.0.5</version>
+			<version>3.0.7-SNAPSHOT</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.biojava</groupId>
 			<artifactId>biojava3-core</artifactId>
-			<version>3.0.5</version>
+			<version>3.0.7-SNAPSHOT</version>
 			<scope>compile</scope>
 		</dependency>
 
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-core</artifactId>
+			<version>2.0-beta7</version>
+		</dependency>
+		
 		<!-- <dependency> <groupId>org.biojava</groupId> <artifactId>biojava3-core</artifactId> 
 			<version>3.0.3-SNAPSHOT</version> <scope>test</scope> </dependency> -->
+		<dependency>
+			<groupId>xmlunit</groupId>
+			<artifactId>xmlunit</artifactId>
+			<version>1.4</version>
+		</dependency>
 	</dependencies>
 	<properties>
 		<jdk.version>1.6</jdk.version>

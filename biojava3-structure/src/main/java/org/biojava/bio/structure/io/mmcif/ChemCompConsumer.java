@@ -7,12 +7,16 @@ import org.biojava.bio.structure.io.mmcif.chem.ResidueType;
 import org.biojava.bio.structure.io.mmcif.model.AtomSite;
 import org.biojava.bio.structure.io.mmcif.model.AuditAuthor;
 import org.biojava.bio.structure.io.mmcif.model.ChemComp;
+import org.biojava.bio.structure.io.mmcif.model.ChemCompAtom;
+import org.biojava.bio.structure.io.mmcif.model.ChemCompBond;
 import org.biojava.bio.structure.io.mmcif.model.ChemCompDescriptor;
 import org.biojava.bio.structure.io.mmcif.model.DatabasePDBremark;
 import org.biojava.bio.structure.io.mmcif.model.DatabasePDBrev;
 import org.biojava.bio.structure.io.mmcif.model.Entity;
 import org.biojava.bio.structure.io.mmcif.model.EntityPolySeq;
 import org.biojava.bio.structure.io.mmcif.model.Exptl;
+import org.biojava.bio.structure.io.mmcif.model.PdbxChemCompDescriptor;
+import org.biojava.bio.structure.io.mmcif.model.PdbxChemCompIdentifier;
 import org.biojava.bio.structure.io.mmcif.model.PdbxEntityNonPoly;
 import org.biojava.bio.structure.io.mmcif.model.PdbxNonPolyScheme;
 import org.biojava.bio.structure.io.mmcif.model.PdbxPolySeqScheme;
@@ -185,6 +189,30 @@ public class ChemCompConsumer implements MMcifConsumer {
 
 	@Override
 	public void newPdbxStrucAssemblyGen(PdbxStructAssemblyGen strucAssembly) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void newChemCompAtom(ChemCompAtom atom) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void newPdbxChemCompIndentifier(PdbxChemCompIdentifier id) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void newChemCompBond(ChemCompBond bond) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void newPdbxChemCompDescriptor(PdbxChemCompDescriptor desc) {
 		// TODO Auto-generated method stub
 		
 	}

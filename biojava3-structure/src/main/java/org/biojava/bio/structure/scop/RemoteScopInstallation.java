@@ -27,6 +27,7 @@ package org.biojava.bio.structure.scop;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.biojava.bio.structure.align.client.JFatCatClient;
@@ -274,6 +275,12 @@ public class RemoteScopInstallation implements ScopDatabase {
 			e.printStackTrace();
 		}
 		return results;
+	}
+
+
+	@Override
+	public List<String> getComments(int sunid) {
+		return new ArrayList<String>(1);
 	}
 
 }

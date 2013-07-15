@@ -47,13 +47,13 @@ abstract class AbstractFastqWriter
      */
     protected abstract void validate(final Fastq fastq) throws IOException;
 
-    /** {@inheritDoc} */
+    @Override
     public final <T extends Appendable> T append(final T appendable, final Fastq... fastq) throws IOException
     {
         return append(appendable, Arrays.asList(fastq));
     }
 
-    /** {@inheritDoc} */
+    @Override
     public final <T extends Appendable> T append(final T appendable, final Iterable<Fastq> fastq) throws IOException
     {
         if (appendable == null)
@@ -82,13 +82,13 @@ abstract class AbstractFastqWriter
         return appendable;
     }
 
-    /** {@inheritDoc} */
+    @Override
     public final void write(final File file, final Fastq... fastq) throws IOException
     {
         write(file, Arrays.asList(fastq));
     }
 
-    /** {@inheritDoc} */
+    @Override
     public final void write(final File file, final Iterable<Fastq> fastq) throws IOException
     {
         if (file == null)
@@ -121,13 +121,13 @@ abstract class AbstractFastqWriter
         }
     }
 
-    /** {@inheritDoc} */
+    @Override
     public final void write(final OutputStream outputStream, final Fastq... fastq) throws IOException
     {
         write(outputStream, Arrays.asList(fastq));
     }
 
-    /** {@inheritDoc} */
+    @Override
     public final void write(final OutputStream outputStream, final Iterable<Fastq> fastq) throws IOException
     {
         if (outputStream == null)

@@ -445,8 +445,9 @@ public void paintComponent(Graphics g){
                   cmd.append(", ");
 
                cmd.append(select1);
-               cmd.append(", ");
+               cmd.append("/1, ");
                cmd.append(select2);
+               cmd.append("/2");
                nrSelected++;
             }
          }

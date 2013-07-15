@@ -1,6 +1,5 @@
 package org.biojava.bio.structure.align;
 
-import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
@@ -8,7 +7,6 @@ import java.util.ListIterator;
 import org.biojava.bio.structure.StructureException;
 import org.biojava.bio.structure.align.ce.CeCPMain;
 import org.biojava.bio.structure.align.ce.CeMain;
-import org.biojava.bio.structure.align.ce.OptimalCECPMain;
 import org.biojava.bio.structure.align.fatcat.FatCatFlexible;
 import org.biojava.bio.structure.align.fatcat.FatCatRigid;
 import org.biojava.bio.structure.align.seq.SmithWaterman3Daligner;
@@ -82,6 +80,7 @@ public class StructureAlignmentFactory {
 		algorithms.clear();
 	}
 
+	@SuppressWarnings("unchecked")
 	public static StructureAlignment getAlgorithm(String name) throws StructureException{
 		for ( StructureAlignment algo : algorithms){
 			if (algo.getAlgorithmName().equalsIgnoreCase(name)) {

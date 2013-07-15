@@ -164,17 +164,6 @@ public class AFPChain implements Serializable, Cloneable
 
 	public AFPChain(){
 		init();
-		similarity = -1;
-		identity   = -1;
-		myResultsEQR = -1;
-		myResultsSimilarity1 = -1;
-		myResultsSimilarity2 = -1;
-		algorithmName = DEFAULT_ALGORITHM_NAME ;
-		version = "1.0";
-		sequentialAlignment = true;
-		distanceMatrix = null;
-		tmScore = -1;
-		description2=null;
 	}
 
 	/**
@@ -483,8 +472,30 @@ public class AFPChain implements Serializable, Cloneable
 		conn = new Double(0);
 		dvar = new Double(0);
 		calculationTime = 0;
+		
+		similarity = -1;
+		identity   = -1;
+		myResultsEQR = -1;
+		myResultsSimilarity1 = -1;
+		myResultsSimilarity2 = -1;
+		algorithmName = DEFAULT_ALGORITHM_NAME ;
+		version = "1.0";
+		sequentialAlignment = true;
+		distanceMatrix = null;
+		tmScore = -1;
+		description2=null;
 	}
 
+	/**
+	 * Resets properties which can be calculated on the fly
+	 */
+	private void invalidate() {
+		myResultsEQR = -1;
+		myResultsSimilarity1 = -1;
+		myResultsSimilarity2 = -1;
+		identity = -1;
+		similarity = -1;
+	}
 
 	/** used temporarily during XML serialization to track the PDB positions of the alignmnet
 	 * 
@@ -957,6 +968,7 @@ public class AFPChain implements Serializable, Cloneable
 
 	public void setOptAln(int[][][] optAln)
 	{
+		invalidate();
 		this.optAln = optAln;
 	}
 
@@ -1212,11 +1224,11 @@ public class AFPChain implements Serializable, Cloneable
  * @return a value between 0 and 1
  */
 	public double getIdentity() {
-		if ( identity <= 0)
+		if ( identity <= 0) {			
 			calcSimilarity();
+		}
 		return identity;
 	}
-
 
 	public void setIdentity(double identity) {
 		
@@ -1234,7 +1246,6 @@ public class AFPChain implements Serializable, Cloneable
 			calcSimilarity();
 		return similarity;
 	}
-
 
 	public void setSimilarity(double similarity) {
 		this.similarity = similarity;

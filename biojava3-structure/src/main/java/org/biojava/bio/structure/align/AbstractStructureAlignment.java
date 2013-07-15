@@ -53,17 +53,21 @@ public abstract class AbstractStructureAlignment implements StructureAlignment {
         buf.append("   -maxGapSize (jCE specific): set the maximum gap size parameter G during AFP extension. default: 30. Set to 0 for unrestricted. ").append(newline);
         buf.append("   -showAFPRanges (jCE specific): show the raw Aligned Fragment Pair positions, prior to optimization.").append(newline);
 		buf.append(newline);
-		buf.append("--- database searches ---");
-		buf.append(newline);
-        buf.append("   -alignPairs (mandatory) path to a file that contains a set of pairs to compair").append(newline);
+		buf.append("--- custom searches ---");
+		buf.append("   -alignPairs (mandatory) path to a file that contains a set of pairs to compair").append(newline);
         buf.append("   -outFile (mandatory) a file that will contain the summary of all the pairwise alignments").append(newline);
 
+		buf.append("--- database searches ---");
+		buf.append(newline);
+		buf.append("   -searchFile (mandatory) path to a PDB file that should be used in the search").append(newline);
+		buf.append("   -outFile (mandatory) a directory that will contain the results of the DB search").append(newline);
+        buf.append("   -nrCPU (optional) Number of CPUs to use for the database search. By default will use the all, but one CPU in the system.").append(newline);
         buf.append("   -pdbFilePath (mandatory) Path to the directory in your file system that contains the PDB files.").append(newline);
 		buf.append("   -saveOutputDir (optional) a directory that will contain the detailed outputs of the alignments. By default will write XML files, if used together with -outputPDB, will write PDB files of the alignment.");
 		buf.append(newline);
         buf.append("  Once DB seaches are complete it is possible to view the results with:").append(newline);
 		buf.append(newline);
-        buf.append("   -viewDBresult (optional) path to a DB outFile to show. Also provide the -pdbFilePath parameter to enable visualisation of results.").append(newline);
+        buf.append("   -showDBresult (optional) path to a DB outFile to show. Also provide the -pdbFilePath parameter to enable visualisation of results.").append(newline);
 		buf.append(newline);
         buf.append(" For boolean arguments: if neither the text >true< or >false< is provided it is assumed to mean >true<. Instead of >-argument false< it is also possible to write -noArgument.").append(newline);
 		buf.append("--- How to specify what to align ---");

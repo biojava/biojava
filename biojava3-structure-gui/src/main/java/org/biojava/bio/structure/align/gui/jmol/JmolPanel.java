@@ -172,6 +172,14 @@ implements ActionListener
 	 * @param event an ActionEvent
 	 */
 	public void actionPerformed(ActionEvent event) {
+		
+		Object mysource = event.getSource();
+		
+		if ( ! (mysource instanceof JComboBox )) {
+			super.actionPerformed(event);
+			return;
+		}
+		
 		JComboBox source = (JComboBox) event.getSource();
 		String value = source.getSelectedItem().toString();
 

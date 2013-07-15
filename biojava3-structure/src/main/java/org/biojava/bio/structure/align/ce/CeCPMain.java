@@ -29,14 +29,12 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
 import org.biojava.bio.structure.Atom;
 import org.biojava.bio.structure.StructureException;
 import org.biojava.bio.structure.StructureTools;
-import org.biojava.bio.structure.align.StructureAlignmentFactory;
-import org.biojava.bio.structure.align.ce.CeMain;
 import org.biojava.bio.structure.align.model.AFPChain;
 import org.biojava.bio.structure.align.util.AFPAlignmentDisplay;
-import org.biojava.bio.structure.align.util.AtomCache;
 import org.biojava.bio.structure.jama.Matrix;
 
 /** 
@@ -151,7 +149,7 @@ public class CeCPMain extends CeMain {
 
 	/** Circular permutation specific code to be run after the standard CE alignment
 	 * 
-	 * @param afpChain The finished alignement
+	 * @param afpChain The finished alignment
 	 * @param ca1 CA atoms of the first protein
 	 * @param ca2m A duplicated copy of the second protein
 	 * @param calculator The CECalculator used to create afpChain
@@ -213,6 +211,7 @@ public class CeCPMain extends CeMain {
 		int[][][] optAln = afpChain.getOptAln();
 		int[] optLen = afpChain.getOptLen();
 		int alignLen = afpChain.getOptLength();
+		if (alignLen < 1) return newAFPChain;
 		
 		assert(afpChain.getBlockNum() == 1); // Assume that CE returns just one block
 		
@@ -357,7 +356,7 @@ public class CeCPMain extends CeMain {
 		assert(pos == alignLen);
 
 		// Sets the rotation matrix in ceCalc to the proper value
-		double rmsd;
+		double rmsd = -1;
 		double[] blockRMSDs = new double[blocks.size()];
 		Matrix[] blockRotationMatrices = new Matrix[blocks.size()];
 		Atom[] blockShifts = new Atom[blocks.size()];
@@ -369,7 +368,7 @@ public class CeCPMain extends CeMain {
 			blockShifts[0] = ceCalc.getShift();
 
 			for(int i=1;i<blocks.size();i++) {
-				blockRMSDs[i] = rmsd;
+				blockRMSDs[i] = rmsd; //TODO shouldn't this be recalculated?? --sbliven
 				
 				// Don't move blocks relative to the first block
 				/*Matrix identity = new Matrix(3,3);
@@ -389,7 +388,8 @@ public class CeCPMain extends CeMain {
 		newAFPChain.setBlockRmsd(blockRMSDs);
 		newAFPChain.setBlockRotationMatrix(blockRotationMatrices);
 		newAFPChain.setBlockShiftVector(blockShifts);
-
+		newAFPChain.setTotalRmsdOpt(rmsd);
+		
 		// Clean up remaining properties using the FatCat helper method
 		Atom[] ca2 = new Atom[ca2len];
 		for(int i=0;i<ca2len;i++) {

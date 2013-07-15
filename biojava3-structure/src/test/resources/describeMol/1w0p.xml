@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="no"?>
+<molDescription>
+  <structureId id="1W0P">
+    <polymer entityNr="1" length="781" type="protein" weight="85675.5">
+      <chain id="A"/>
+      <Taxonomy name="Vibrio cholerae" id="666"/>
+      <synonym name="NEURAMINIDASE, NANASE"/>
+      <macroMolecule name="Sialidase">
+        <accession id="A5F7A4"/>
+        <accession id="C3M1H8"/>
+        <accession id="P37060"/>
+        <accession id="Q9KR59"/>
+      </macroMolecule>
+      <polymerDescription description="SIALIDASE"/>
+      <enzClass ec="3.2.1.18"/>
+    </polymer>
+  </structureId>
+</molDescription>

@@ -212,6 +212,7 @@ public class XMLUtil {
 			
 
 		} catch (Exception e){
+			System.err.println("Could not serialize  ScopDomain to XML :" + domain);
 			e.printStackTrace();
 		}
 
