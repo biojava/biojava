@@ -89,10 +89,20 @@ public class ScopTest extends TestCase {
 		List<ScopDomain> domains1cdg = scop.getDomainsForPDB("1CDG");
 		assertTrue(domains1cdg.size() == 4);
 		ScopDomain d2 = domains1cdg.get(0);
+		assertEquals("Wrong SCOP Id", "d1cdga1", d2.getScopId());
 		AtomCache cache = new AtomCache();
 		try {
 			Structure s = cache.getStructureForDomain(d2);
-
+			/*
+			The actual SCOP description is A:496-581.
+			HET    MAL  A 688      23                                                       
+			HET    MAL  A 689      23                                                       
+			HET    MAL  A 690      23                                                       
+			HET     CA  A 691       1                                                       
+			HET     CA  A 692       1    
+			Thus, the two hetero-atoms are out of range.
+			*/
+			// t
 			//checkRange(s,"A:496-581");
 			// now with ligands!
 			checkRange(s,"A:496-692");
@@ -157,7 +167,7 @@ public class ScopTest extends TestCase {
 		String chainId = g1.getChain().getChainID();
 		String rangeTest = chainId + ":"+ g1.getResidueNumber().toString()+"-"+ g2.getResidueNumber().toString();
 
-		assertEquals("The expected range and the detected range don;t match!", rangeTest, range);
+		assertEquals("The expected range and the detected range don't match!", range, rangeTest);
 
 	}
 
