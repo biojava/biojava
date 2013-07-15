@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="windows-1252" standalone="no"?>
+<structureId id="4HHB">
+  <ligandInfo>
+    <ligand structureId="4HHB" chemicalID="HEM" type="non-polymer" molecularWeight="616.487">
+      <chemicalName>PROTOPORPHYRIN IX CONTAINING FE</chemicalName>
+      <formula>C34 H32 FE N4 O4</formula>
+      <InChIKey>FEDYMSUPMFCVOD-UJJXFSCMSA-N</InChIKey>
+      <InChI>InChI=1S/C34H34N4O4/c1-7-21-17(3)25-13-26-19(5)23(9-11-33(39)40)31(37-26)16-32-24(10-12-34(41)42)20(6)28(38-32)15-30-22(8-2)18(4)27(36-30)14-29(21)35-25/h7-8,13-16,36-37H,1-2,9-12H2,3-6H3,(H,39,40)(H,41,42)/b25-13-,26-13-,27-14-,28-15-,29-14-,30-15-,31-16-,32-16-</InChI>
+      <smiles>Cc1c2/cc/3\nc(/cc\4/c(c(/c(/[nH]4)c/c5n/c(c\c(c1CCC(=O)O)[nH]2)/C(=C5C)CCC(=O)O)C=C)C)C(=C3C)C=C</smiles>
+    </ligand>
+    <ligand structureId="4HHB" chemicalID="PO4" type="non-polymer" molecularWeight="94.971">
+      <chemicalName>PHOSPHATE ION</chemicalName>
+      <formula>O4 P -3</formula>
+      <InChIKey>NBIIXXVUZAFLBC-UHFFFAOYSA-K</InChIKey>
+      <InChI>InChI=1S/H3O4P/c1-5(2,3)4/h(H3,1,2,3,4)/p-3</InChI>
+      <smiles>[O-]P(=O)([O-])[O-]</smiles>
+    </ligand>
+  </ligandInfo>
+</structureId>

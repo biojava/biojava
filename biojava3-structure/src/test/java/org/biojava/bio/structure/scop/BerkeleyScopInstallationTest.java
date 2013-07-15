@@ -17,10 +17,6 @@
  *
  *      http://www.biojava.org/
  *
- * Created on Jul 1, 2013
- * Created by Douglas Myers-Turnbull
- *
- * @since 3.0.6
  */
 package org.biojava.bio.structure.scop;
 
@@ -30,8 +26,11 @@ import java.util.List;
 
 import org.junit.Test;
 
-
-
+/**
+ * Tests {@link BerkeleyScopInstallation}.
+ * @author dmyerstu
+ * @since 3.0.6
+ */
 public class BerkeleyScopInstallationTest {
 
 	@Test

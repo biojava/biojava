@@ -32,10 +32,6 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
-import org.biojava.bio.structure.Atom;
-import org.biojava.bio.structure.Group;
-import org.biojava.bio.structure.ResidueNumber;
-import org.biojava.bio.structure.StructureTools;
 import org.biojava.bio.structure.io.mmcif.chem.ResidueType;
 
 /**
@@ -61,6 +57,25 @@ public class AtomPositionMap {
 		aminoAcidNames.addAll(Arrays.asList(new String[] {"ASX", "GLX", "XLE", "XAA"}));
 	}
 
+	public static interface GroupMatcher {
+		boolean matches(Group group);
+	}
+
+	public static final GroupMatcher AMINO_ACID_MATCHER = new GroupMatcher() {
+		@Override
+		public boolean matches(Group group) {
+			ResidueType type = group.getChemComp().getResidueType();
+			return group.hasAtom(StructureTools.caAtomName) || aminoAcidNames.contains(group.getPDBName()) || type == ResidueType.lPeptideLinking || type == ResidueType.glycine || type == ResidueType.lPeptideAminoTerminus || type == ResidueType.lPeptideCarboxyTerminus || type == ResidueType.dPeptideLinking || type == ResidueType.dPeptideAminoTerminus || type == ResidueType.dPeptideCarboxyTerminus;
+		}
+	};
+
+	public static final GroupMatcher ANYTHING_MATCHER = new GroupMatcher() {
+		@Override
+		public boolean matches(Group group) {
+			return true;
+		}
+	};
+	
 	/**
 	 * A map that is sorted by its values.
 	 * 
@@ -91,13 +106,19 @@ public class AtomPositionMap {
 	 * @param atoms
 	 */
 	public AtomPositionMap(Atom[] atoms) {
+		this(atoms, AMINO_ACID_MATCHER);
+	}
+	
+	/**
+	 * Creates a new AtomPositionMap containing only atoms matched by {@code matcher}.
+	 * @param atoms
+	 */
+	public AtomPositionMap(Atom[] atoms, GroupMatcher matcher) {
 		hashMap = new HashMap<ResidueNumber, Integer>();
 		for (int i = 0; i < atoms.length; i++) {
-			Group g = atoms[i].getGroup();
-			ResidueType type = g.getChemComp().getResidueType();
-			ResidueNumber rn = g.getResidueNumber();
-			// We might as well include D amino acids
-			if (g.hasAtom(StructureTools.caAtomName) || aminoAcidNames.contains(g.getPDBName()) || type == ResidueType.lPeptideLinking || type == ResidueType.glycine || type == ResidueType.lPeptideAminoTerminus || type == ResidueType.lPeptideCarboxyTerminus || type == ResidueType.dPeptideLinking || type == ResidueType.dPeptideAminoTerminus || type == ResidueType.dPeptideCarboxyTerminus) { 
+			Group group = atoms[i].getGroup();
+			ResidueNumber rn = group.getResidueNumber();
+			if (matcher.matches(group)) {
 				if (!hashMap.containsKey(rn)) {
 					hashMap.put(rn, i + 1);
 				}
@@ -117,6 +138,18 @@ public class AtomPositionMap {
 	 * @return
 	 */
 	public int calcLength(int positionA, int positionB, char startingChain) {
+		return calcLength(positionA, positionB, String.valueOf(startingChain));
+	}
+	
+	/**
+	 * This is <strong>not</em> the same as subtracting {@link #getPosition(ResidueNumber)} for {@code positionB} from {@link #getPosition(ResidueNumber)} for {@code positionA}.
+	 * The latter considers only positions of ATOM entries in the PDB file and ignores chains. This method only includes ATOMs from the same chain.
+	 * @param positionA
+	 * @param positionB
+	 * @param startingChain
+	 * @return
+	 */
+	public int calcLength(int positionA, int positionB, String startingChain) {
 		int positionStart, positionEnd;
 		if (positionA <= positionB) {
 			positionStart = positionA;
@@ -135,7 +168,7 @@ public class AtomPositionMap {
 	 * @return
 	 */
 	public int calcLengthDirectional(ResidueNumber start, ResidueNumber end) {
-		return calcLengthDirectional(getPosition(start), getPosition(end), start.getChainId().charAt(0));
+		return calcLengthDirectional(getPosition(start), getPosition(end), start.getChainId());
 	}
 
 	/**
@@ -146,11 +179,20 @@ public class AtomPositionMap {
 	 * @return
 	 */
 	public int calcLengthDirectional(int positionStart, int positionEnd, char startingChain) {
+		return calcLengthDirectional(positionStart, positionEnd, String.valueOf(startingChain));
+	}
+	
+	/**
+	 * Calculates the distance between {@code positionStart} and {@code positionEnd}. Will return a negative value if the start is past the end.
+	 * @param positionStart
+	 * @param positionEnd
+	 * @param startingChain
+	 * @return
+	 */
+	public int calcLengthDirectional(int positionStart, int positionEnd, String startingChain) {
 		int count = 0;
 		for (Map.Entry<ResidueNumber, Integer> entry : treeMap.entrySet()) {
-			// subtle bugs possible if chain has more than 1 char
-			// More importantly: do we need this check?
-			if (entry.getKey().getChainId().charAt(0) == startingChain) {
+			if (entry.getKey().getChainId().equals(startingChain)) {
 				if (entry.getValue() == positionStart) {
 					count = 0;
 				}
@@ -162,7 +204,7 @@ public class AtomPositionMap {
 	}
 
 	/**
-	 * Convenience method for {@link #calcLength(int, int, char)}.
+	 * Convenience method for {@link #calcLength(int, int, String)}.
 	 * @param positionA
 	 * @param positionB
 	 * @return
@@ -171,8 +213,8 @@ public class AtomPositionMap {
 	public int calcLength(ResidueNumber positionA, ResidueNumber positionB) {
 		int pA = hashMap.get(positionA);
 		int pB = hashMap.get(positionB);
-		char chain = positionA.getChainId().charAt(0); // subtle bugs possible if chain has more than 1 char
-		if (pA > pB) chain = positionB.getChainId().charAt(0);
+		String chain = positionA.getChainId();
+		if (pA > pB) chain = positionB.getChainId();
 		return calcLength(pA, pB, chain);
 	}
 

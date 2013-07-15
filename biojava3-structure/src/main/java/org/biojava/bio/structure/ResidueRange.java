@@ -39,10 +39,13 @@ import java.util.regex.Pattern;
  * @see ResidueNumber
  */
 public class ResidueRange {
-	private final char chain;
+
+	private final String chain;
 	private final ResidueNumber end;
 	private final Integer length;
 	private final ResidueNumber start;
+
+	public static final String RANGE_REGEX = "^([a-zA-Z])+[_:](?:(-?\\d+[a-zA-Z]?)-(-?\\d+[a-zA-Z]?))?$";
 
 	/**
 	 * Calculates the combined number of residues of the ResidueRanges in {@code rrs},
@@ -68,27 +71,26 @@ public class ResidueRange {
 
 	/**
 	 * @param s
-	 *            A string of the form chain_start-end. For example: <code>A.5-100</code>.
-	 * @return The unique ResidueRange corresponding to {@code s}, or null if it is a whole chain
+	 *            A string of the form chain_start-end or chain.start-end. For example: <code>A.5-100</code> or <code>A_5-100</code>.
+	 * @return The unique ResidueRange corresponding to {@code s}
 	 */
 	public static ResidueRange parse(String s) {
-		char chain = s.charAt(0);
-		ResidueNumber start, end;
-		if (s.length() > 2) {
-			Pattern pattern = Pattern.compile("^([-]?[\\d]+[\\w]?)-([-]?[\\d]+[\\w]?)$");
-			Matcher matcher = pattern.matcher(s.substring(2));
-			matcher.find();
+		ResidueNumber start = null, end = null;
+		String chain = null;
+		Matcher matcher = match(s);
+		if (matcher.matches()) {
 			try {
-				start = ResidueNumber.fromString(matcher.group(1));
-				end = ResidueNumber.fromString(matcher.group(2));
+				chain = matcher.group(1);
+				if (matcher.group(2) != null) {
+					start = ResidueNumber.fromString(matcher.group(2));
+					end = ResidueNumber.fromString(matcher.group(3));
+					start.setChainId(chain);
+					end.setChainId(chain);
+				}
 			} catch (IllegalStateException e) {
 				throw new IllegalArgumentException("Range " + s + " was not valid", e);
 			}
-		} else {
-			return null; // this is ok
 		}
-		start.setChainId(String.valueOf(chain));
-		end.setChainId(String.valueOf(chain));
 		return new ResidueRange(chain, start, end, null);
 	}
 
@@ -99,12 +101,14 @@ public class ResidueRange {
 	 */
 	public static ResidueRange parse(String s, AtomPositionMap map) {
 		ResidueRange rr = parse(s);
-		if (rr == null) { // whole chain
-			String chain = s.substring(0, 1);
-			rr = new ResidueRange(chain.charAt(0), map.getFirst(chain), map.getLast(chain), null);
+		if (rr.getStart() == null) { // whole chain
+			String chain = rr.getChainId();
+			if (map == null) return rr; // we can't get the first and last
+			rr = new ResidueRange(chain, map.getFirst(chain), map.getLast(chain), null);
 		}
+		if (map == null) return rr; // we can't calculate the length
 		int length = map.calcLength(rr.getStart(), rr.getEnd());
-		return new ResidueRange(rr.getChain(), rr.getStart(), rr.getEnd(), length);
+		return new ResidueRange(rr.getChainId(), rr.getStart(), rr.getEnd(), length);
 	}
 
 	/**
@@ -138,6 +142,10 @@ public class ResidueRange {
 	}
 
 	public ResidueRange(char chain, ResidueNumber start, ResidueNumber end, Integer length) {
+		this(String.valueOf(chain), start, end, length);
+	}
+
+	public ResidueRange(String chain, ResidueNumber start, ResidueNumber end, Integer length) {
 		this.chain = chain;
 		this.start = start;
 		this.end = end;
@@ -150,7 +158,9 @@ public class ResidueRange {
 		if (obj == null) return false;
 		if (getClass() != obj.getClass()) return false;
 		ResidueRange other = (ResidueRange) obj;
-		if (chain != other.chain) return false;
+		if (chain == null) {
+			if (other.chain != null) return false;
+		} else if (!chain.equals(other.chain)) return false;
 		if (end == null) {
 			if (other.end != null) return false;
 		} else if (!end.equals(other.end)) return false;
@@ -160,7 +170,18 @@ public class ResidueRange {
 		return true;
 	}
 
+	/**
+	 * Returns the chain Id as a char.
+	 * @deprecated Use {@link #getChainId()} instead, which does not require that chain Ids have a length of 1
+	 * @throws IllegalArgumentException If the chain Id contains more than 1 character
+	 */
+	@Deprecated
 	public char getChain() {
+		if (chain.length() > 1) throw new IllegalArgumentException("Can't return full chain Id " + chain);
+		return chain.charAt(0);
+	}
+
+	public String getChainId() {
 		return chain;
 	}
 
@@ -184,7 +205,7 @@ public class ResidueRange {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + chain;
+		result = prime * result + (chain == null ? 0 : chain.hashCode());
 		result = prime * result + (end == null ? 0 : end.hashCode());
 		result = prime * result + (start == null ? 0 : start.hashCode());
 		return result;
@@ -199,9 +220,15 @@ public class ResidueRange {
 	 * @return True if and only if {@code residueNumber} is within this ResidueRange
 	 */
 	public boolean contains(ResidueNumber residueNumber, AtomPositionMap map) {
-		int pos = map.getPosition(residueNumber);
-		int startPos = map.getPosition(start);
-		int endPos = map.getPosition(end);
+		if (residueNumber == null) throw new IllegalArgumentException("Can't find a null ResidueNumber");
+		if (map == null) throw new IllegalArgumentException("The AtomPositionMap must be non-null");
+		if (start == null || end == null) throw new IllegalArgumentException("The bounds of this ResidueNumber aren't known");
+		Integer pos = map.getPosition(residueNumber);
+		if (pos == null) throw new IllegalArgumentException("Couldn't find residue " + residueNumber.printFull());
+		Integer startPos = map.getPosition(start);
+		if (startPos == null) throw new IllegalArgumentException("Couldn't find the start position");
+		Integer endPos = map.getPosition(end);
+		if (endPos == null) throw new IllegalArgumentException("Couldn't find the end position");
 		return pos >= startPos && pos <= endPos;
 	}
 
@@ -210,6 +237,7 @@ public class ResidueRange {
 	 * @return The ResidueNumber, or false if it does not exist or is not within this ResidueRange
 	 */
 	public ResidueNumber getResidue(int positionInRange, AtomPositionMap map) {
+		if (map == null) throw new IllegalArgumentException("The AtomPositionMap must be non-null");
 		int i = 0;
 		for (Map.Entry<ResidueNumber, Integer> entry : map.getNavMap().entrySet()) {
 			if (i == positionInRange) return entry.getKey();
@@ -319,6 +347,38 @@ public class ResidueRange {
 			ranges[i] = rrs.get(i);
 		}
 		return multiIterator(map, ranges);
+	}
+
+	public static List<ResidueRange> parseMultiple(List<String> ranges) {
+		return parseMultiple(ranges, null);
+	}
+
+	public static List<ResidueRange> parseMultiple(List<String> ranges, AtomPositionMap map) {
+		List<ResidueRange> rrs = new ArrayList<ResidueRange>(ranges.size());
+		for (String range : ranges) {
+			ResidueRange rr = ResidueRange.parse(range, map);
+			if (rr != null) rrs.add(rr);
+		}
+		return rrs;
+	}
+
+	/**
+	 * Matches the string with a regex pattern that matches all recognizable range formats.
+	 * @param s A string to match against
+	 * @return A Matcher run against {@code s}; contains 1 or 3 groups: {@code matcher.group(1)} is the chain Id, and optionally {@code matcher.group(2)} and {@code matcher.group(3)} are the start and end residues, respectively.
+	 */
+	public static Matcher match(String s) {
+		Pattern pattern = Pattern.compile(RANGE_REGEX);
+		Matcher matcher = pattern.matcher(s);
+		matcher.find();
+		return matcher;
+	}
+	
+	/**
+	 * Determines whether a String is of a recognizable range format
+	 */
+	public static boolean looksLikeRange(String s) {
+		return match(s).matches();
 	}
 
 }
