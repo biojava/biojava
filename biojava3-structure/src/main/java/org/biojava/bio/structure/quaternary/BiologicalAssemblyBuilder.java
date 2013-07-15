@@ -112,6 +112,7 @@ public class BiologicalAssemblyBuilder {
 		}
 
 		//s.setChains(transformedChains);
+		s.setBiologicalAssembly(true);
 		return s;
 
 
@@ -140,6 +141,7 @@ public class BiologicalAssemblyBuilder {
 		List<Chain> newModel = new ArrayList<Chain>();
 		newModel.add(newChain);
 		s.addModel(newModel);
+		
 		
 	}
 

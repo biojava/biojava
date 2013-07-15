@@ -281,11 +281,11 @@ public class JFatCatClient {
 
 	public static int getRandomSleepTime() {
 
-		// we wait between 15 sec and 2 min. 
+		// now wait between 7 and 13 min. 
 
-		int minTime = 15000;
+		int minTime = 560000;
 
-		int maxTime = 120000 - minTime;
+		int maxTime = 7800000 - minTime;
 
 		int nextId = generator.nextInt(maxTime);
 		return minTime + nextId;

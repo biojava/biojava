@@ -25,10 +25,12 @@
 package org.biojava.bio.structure.align.gui.jmol;
 
 import java.util.Hashtable;
+import java.util.Map;
 
 import javax.swing.JTextField;
 
 import org.jmol.api.JmolStatusListener;
+import org.jmol.constant.EnumCallback;
 
 public class MyJmolStatusListener implements JmolStatusListener {
 
@@ -103,6 +105,30 @@ public class MyJmolStatusListener implements JmolStatusListener {
 		
 		// TODO Auto-generated method stub
 		System.out.println("showConsole");
+		
+	}
+
+	
+	public void notifyCallback(EnumCallback arg0, Object[] arg1) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	
+	public boolean notifyEnabled(EnumCallback arg0) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	
+	public Map<String, Object> getProperty(String arg0) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	
+	public void resizeInnerPanel(String arg0) {
+		// TODO Auto-generated method stub
 		
 	}
 

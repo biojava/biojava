@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="no"?>
+<molDescription>
+  <structureId id="4HHB">
+    <polymer entityNr="1" length="141" type="protein" weight="15150.5">
+      <chain id="A"/>
+      <chain id="C"/>
+      <Taxonomy name="Homo sapiens" id="9606"/>
+      <macroMolecule name="Hemoglobin subunit alpha">
+        <accession id="P69905"/>
+        <accession id="P01922"/>
+        <accession id="Q1HDT5"/>
+        <accession id="Q3MIF5"/>
+        <accession id="Q53F97"/>
+        <accession id="Q96KF1"/>
+        <accession id="Q9NYR7"/>
+        <accession id="Q9UCM0"/>
+      </macroMolecule>
+      <polymerDescription description="HEMOGLOBIN (DEOXY) (ALPHA CHAIN)"/>
+    </polymer>
+    <polymer entityNr="2" length="146" type="protein" weight="15890.4">
+      <chain id="B"/>
+      <chain id="D"/>
+      <Taxonomy name="Homo sapiens" id="9606"/>
+      <macroMolecule name="Hemoglobin subunit beta">
+        <accession id="P68871"/>
+        <accession id="A4GX73"/>
+        <accession id="B2ZUE0"/>
+        <accession id="P02023"/>
+        <accession id="Q13852"/>
+        <accession id="Q14481"/>
+        <accession id="Q14510"/>
+        <accession id="Q45KT0"/>
+        <accession id="Q549N7"/>
+        <accession id="Q6FI08"/>
+        <accession id="Q6R7N2"/>
+        <accession id="Q8IZI1"/>
+        <accession id="Q9BX96"/>
+        <accession id="Q9UCD6"/>
+        <accession id="Q9UCP8"/>
+        <accession id="Q9UCP9"/>
+      </macroMolecule>
+      <polymerDescription description="HEMOGLOBIN (DEOXY) (BETA CHAIN)"/>
+    </polymer>
+  </structureId>
+</molDescription>

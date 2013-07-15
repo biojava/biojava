@@ -11,6 +11,7 @@ public class StartupParameters {
 	
 	
 	String pdbFilePath;
+	String cacheFilePath;
 	String outFile;
 	String pdb1;
 	String pdb2;
@@ -28,13 +29,18 @@ public class StartupParameters {
 	boolean showAFPRanges;
 	boolean printPDB;
 	Double maxOptRMSD;
+	boolean isDomainSplit;
 	
 	
 	// for DB searches
 	String alignPairs;
+	String searchFile;
 	String saveOutputDir;
+	int nrCPU;
 	
 	int maxGapSize;
+	
+	private static final String newline = System.getProperty("line.separator");
 	
 	public StartupParameters(){
 		show3d = false;
@@ -48,30 +54,29 @@ public class StartupParameters {
 		showAFPRanges = false;
 		showMenu = false;
 		maxOptRMSD = 99d;
-		
+		isDomainSplit = true;
+		nrCPU = Runtime.getRuntime().availableProcessors() -1;
+		if ( nrCPU < 1)
+			nrCPU = 1;
+	}
+	
+	/** An input file to be used for the DB search
+	 * 
+	 * @return
+	 */
+	public String getSearchFile() {
+		return searchFile;
+	}
+	public void setSearchFile(String searchFile) {
+		this.searchFile = searchFile;
 	}
 	
 	
-
-	
-	
-	@Override
-   public String toString()
-   {
-      return "StartupParameters [alignPairs=" + alignPairs + ", autoFetch=" + autoFetch + ", file1=" + file1 + ", file2=" + file2
-            + ", flexible=" + flexible + ", maxGapSize=" + maxGapSize + ", outFile=" + outFile + ", pdb1=" + pdb1 + ", pdb2=" + pdb2
-            + ", pdbDirSplit=" + pdbDirSplit + ", pdbFilePath=" + pdbFilePath + ", printCE=" + printCE + ", printFatCat=" + printFatCat
-            + ", printXML=" + printXML + ", saveOutputDir=" + saveOutputDir + ", show3d=" + show3d + ", showDBresult=" + showDBresult
-            + ", showMenu=" + showMenu + ", showAFPRanges=" + showAFPRanges
-            + ", printPDB=" + printPDB 
-            + "]";
-   }
-
-
-
-
-
-   public String getAlignPairs() {
+	/** The file that contains a list of PDB pairs to be aligned
+	 * 
+	 * @return
+	 */
+	public String getAlignPairs() {
 		return alignPairs;
 	}
 
@@ -172,6 +177,15 @@ public class StartupParameters {
 	public void setPdbFilePath(String pdbFilePath) {
 		this.pdbFilePath = pdbFilePath;
 	}
+	
+	public String getCacheFilePath() {
+		return cacheFilePath;
+	}
+
+	public void setCacheFilePath(String cacheFilePath) {
+		this.cacheFilePath = cacheFilePath;
+	}
+
 	public boolean isShow3d() {
 		return show3d;
 	}
@@ -195,6 +209,13 @@ public class StartupParameters {
 	}
 	public void setShowDBresult(String showDBresult) {
 		this.showDBresult = showDBresult;
+	}
+
+	public int getNrCPU() {
+		return nrCPU;
+	}
+	public void setNrCPU(int nrCPU) {
+		this.nrCPU = nrCPU;
 	}
 
 	/** CE specific parameter: set the Max gap size parameter G (during AFP extension). Default: 30
@@ -275,10 +296,37 @@ public class StartupParameters {
 	public void setMaxOptRMSD(Double maxOptRMSD) {
 		this.maxOptRMSD = maxOptRMSD;
 	}
+	
+	
 
+	public boolean isDomainSplit() {
+		return isDomainSplit;
+	}
 
+	public void setDomainSplit(boolean isDomainSplit) {
+		this.isDomainSplit = isDomainSplit;
+	}
 
+	@Override
+	public String toString() {
+		return "StartupParameters [pdbFilePath=" + pdbFilePath
+				+ ", " + newline + " cacheFilePath=" + cacheFilePath + ", " + newline + " outFile=" + outFile
+				+ ", " + newline + " pdb1=" + pdb1 + ", " + newline + " pdb2=" + pdb2 + ", " + newline + " file1=" + file1
+				+ ", " + newline + " file2=" + file2 + ", " + newline + " showDBresult=" + showDBresult
+				+ ", " + newline + " printXML=" + printXML + ", " + newline + " printFatCat=" + printFatCat
+				+ ", " + newline + " show3d=" + show3d + ", " + newline + " autoFetch=" + autoFetch
+				+ ", " + newline + " flexible=" + flexible + ", " + newline + " pdbDirSplit=" + pdbDirSplit
+				+ ", " + newline + " printCE=" + printCE + ", " + newline + " showMenu=" + showMenu
+				+ ", " + newline + " showAFPRanges=" + showAFPRanges + ", " + newline + " printPDB=" + printPDB
+				+ ", " + newline + " maxOptRMSD=" + maxOptRMSD + ", " + newline + " isDomainSplit="
+				+ isDomainSplit + ", " + newline + " alignPairs=" + alignPairs
+				+ ", " + newline + " searchFile=" + searchFile + ", " + newline + " saveOutputDir="
+				+ saveOutputDir + ", " + newline + " nrCPU=" + nrCPU + ", " + newline + " maxGapSize="
+				+ maxGapSize + "]";
+	}
 
+	
+	
 	
 	
 

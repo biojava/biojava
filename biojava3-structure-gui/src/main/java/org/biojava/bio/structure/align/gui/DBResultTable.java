@@ -92,7 +92,6 @@ public class DBResultTable implements ActionListener{
 
 		DBResultTable table = new DBResultTable();
 		UserConfiguration config = WebStartMain.getDefaultConfig();
-		config.setPdbFilePath("/Users/ap3/WORK/PDB/");
 		config.setAutoFetch(true);
 		config.setSplit(true);
 		table.show(new File(file),config);

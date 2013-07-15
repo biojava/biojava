@@ -140,6 +140,13 @@ public class FarmJob implements Runnable {
 		String path = params.getPdbFilePath();
 		System.setProperty(AbstractUserArgumentProcessor.PDB_DIR,path);
 				
+		String cachePath = params.getCacheFilePath();
+		if ( cachePath != null && ! cachePath.equals(""))
+			System.setProperty(AbstractUserArgumentProcessor.CACHE_DIR,cachePath);
+		else {
+			// if not provided, we use pdbFilePath as the default CACHE path
+			System.setProperty(AbstractUserArgumentProcessor.CACHE_DIR,path);
+		}
 		// declare SCOP to be locally cached, but fetching new stuff from remote
 		ScopDatabase scop = new CachedRemoteScopInstallation(true);
 		ScopFactory.setScopDatabase(scop);

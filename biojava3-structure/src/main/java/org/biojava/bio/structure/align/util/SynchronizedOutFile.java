@@ -20,8 +20,8 @@ public class SynchronizedOutFile {
 	Integer counter;
 
 	boolean useGzipCompression = false;
-	
-	
+
+
 	/** Create a thread safe wrapper for writing to this file, the file will be gzip compressed.
 	 * 
 	 * @param f file to write to
@@ -43,17 +43,17 @@ public class SynchronizedOutFile {
 		useGzipCompression = gzipCompress;
 
 	}
-	
+
 	/** create a thread safe wrapper for working with this file
 	 * 
 	 * @param f
 	 */
 	public SynchronizedOutFile(File f) throws FileNotFoundException, IOException{
-		
+
 		this(f,false);
-		
+
 	}
-		
+
 	public synchronized void write(String message) throws IOException{
 
 		synchronized (counter){
@@ -68,6 +68,13 @@ public class SynchronizedOutFile {
 
 	}
 
+	public synchronized void flush() throws IOException {
+		synchronized (counter){
+			writeArr();
+			counter = -1;
+		}
+	}
+
 	public void close() throws IOException{
 		writeArr();
 		tmp = new String[ARR_SIZE];
@@ -75,7 +82,7 @@ public class SynchronizedOutFile {
 
 	private void writeArr() throws IOException{
 
-		
+
 		OutputStream out = null;
 		FileOutputStream fileOutputStream=null;
 		try {
@@ -83,7 +90,7 @@ public class SynchronizedOutFile {
 			fileOutputStream = new FileOutputStream(file, true);
 			OutputStream outputstream = useGzipCompression? new GZIPOutputStream(fileOutputStream) : fileOutputStream;
 			out = new BufferedOutputStream(outputstream);
-			
+
 			for ( int i = 0 ; i <= counter ; i++){
 				if ( tmp[i] == null )
 					continue;

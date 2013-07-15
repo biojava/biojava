@@ -280,7 +280,7 @@ public class FileConvert {
 		return str.toString() ;
 	}
 
-	private void toPDB(Group g, StringBuffer str) {
+	private static void toPDB(Group g, StringBuffer str) {
 		// iterate over all atoms ...
 		// format output ...
 		int groupsize  = g.size();
@@ -324,6 +324,40 @@ public class FileConvert {
 
 		return w.toString();
 
+	}
+	
+	
+	/** Convert a CHain object to PDB representation
+	 * 
+	 * @param chain
+	 * @return
+	 */
+	public static String toPDB(Chain chain){
+		StringBuffer w = new StringBuffer();
+		int nrGroups = chain.getAtomLength();
+		
+		for ( int h=0; h<nrGroups;h++){
+
+			Group g= chain.getAtomGroup(h);
+
+			
+			toPDB(g,w);
+			
+			
+		}
+		
+		return w.toString();
+	}
+	
+	/** Convert a Group object to PDB representation
+	 * 
+	 * @param g
+	 * @return
+	 */
+	public static String toPDB(Group g){
+		StringBuffer w = new StringBuffer();
+		toPDB(g,w);
+		return w.toString();
 	}
 
 	/**

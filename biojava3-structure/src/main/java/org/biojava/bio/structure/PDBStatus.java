@@ -551,7 +551,7 @@ public class PDBStatus {
 		}
 
 		try {
-			//System.out.println("Fetching " + urlStr);
+			System.out.println("Fetching " + urlStr);
 
 			URL url = new URL(urlStr);
 
@@ -594,7 +594,7 @@ public class PDBStatus {
 			// return results
 			result.addAll(handler.getRecords());			
 		} catch (Exception e){
-			System.err.println("Problem getting status for " + pdbIDs.toString() + " from PDB server." );
+			System.err.println("Problem getting status for " +Arrays.toString(pdbIDs) + " from PDB server." );
 			e.printStackTrace();
 			return null;
 		}

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="no"?>
+<molDescription>
+  <structureId id="4HHB">
+    <polymer entityNr="1" length="2" type="protein" weight="2">
+      <enzClass ec="3.2.1.18"/>
+      <chain id="B"/>
+      <chain id="D"/>
+      <Taxonomy name="Homo sapiens" id="9606"/>
+    </polymer>
+    <polymer entityNr="2" length="4" type="protein" weight="4">
+      <enzClass ec="3.2.1.18"/>
+      <chain id="B"/>
+      <chain id="D"/>
+      <Taxonomy name="Homo sapiens" id="9606"/>
+    </polymer>
+  </structureId>
+</molDescription>

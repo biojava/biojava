@@ -101,7 +101,6 @@ public class SecStruc {
 
 			AtomCache cache = new AtomCache();
 			cache.setAutoFetch(false);
-			cache.setPath("/Users/andreas/WORK/PDB/");
 
 			// a small one
 			Structure s = cache.getStructure("5pti");

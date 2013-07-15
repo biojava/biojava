@@ -110,14 +110,6 @@ public class Calc {
 		return distSquared ;
 			}
 
-	private static final void nullCheck(Atom a) 
-			throws StructureException
-			{
-		if  (a == null) {
-			throw new StructureException("Atom is null!");
-		}
-			}
-
 	public static final Atom invert(Atom a) throws StructureException{
 		double[] coords = new double[]{0.0,0.0,0.0} ;
 		Atom zero = new AtomImpl();
@@ -162,26 +154,20 @@ public class Calc {
 	 *
 	 * @param a  an Atom object
 	 * @param b  an Atom object
-	 * @return an Atom object
+	 * @return n new Atom object representing the difference
 	 * @throws StructureException ...
 
 	 */
-	public static final Atom subtract(Atom a, Atom b) 
-			throws StructureException
-			{
-		nullCheck(a) ;
-		nullCheck(b) ;
-
+	public static final Atom subtract(Atom a, Atom b) {
 		Atom c = new AtomImpl();
 		c.setX( a.getX() - b.getX() );
 		c.setY( a.getY() - b.getY() );
 		c.setZ( a.getZ() - b.getZ() );
 
 		return c ;
+	}
 
-			}
-
-	/** Vector product .
+	/** Vector product (cross product).
 	 *
 	 * @param a  an Atom object
 	 * @param b  an Atom object
@@ -197,33 +183,43 @@ public class Calc {
 
 	}
 
-	/** skalar product.
-	 *
-	 * @param a  an Atom object
-	 * @param b  an Atom object
+	/**
+	 * Scalar product (dot product).
+	 * 
+	 * @param a an Atom object
+	 * @param b an Atom object
 	 * @return a double
+	 * @deprecated use {@link #scalarProduct(Atom, Atom)} instead.
 	 */
-	public static final  double skalarProduct(Atom a, Atom b){
-		double skalar ;
-		skalar = a.getX() * b.getX() + a.getY()* b.getY() + a.getZ() * b.getZ();
-		return skalar ;
+	public static final double skalarProduct(Atom a, Atom b) {
+		return scalarProduct(a, b);
 	}
 
+	/**
+	 * Scalar product (dot product).
+	 * 
+	 * @param a an Atom object
+	 * @param b an Atom object
+	 * @return a double
+	 */
+	public static final double scalarProduct(Atom a, Atom b) {
+		return a.getX() * b.getX() + a.getY() * b.getY() + a.getZ() * b.getZ(); 
+	}
 
-	/** amount.
+	/** Gets the length of the vector (2-norm)
 	 *
 	 * @param a  an Atom object
-	 * @return a double
+	 * @return Square root of the sum of the squared elements
 	 */
 	public static final double amount(Atom a){
 		return Math.sqrt(skalarProduct(a,a));
 	}
 
-	/** angle.
+	/** Get the angle between two vectors
 	 *
 	 * @param a  an Atom object
 	 * @param b  an Atom object
-	 * @return a double
+	 * @return Angle between a and b, in degrees
 	 */
 	public static final double angle(Atom a, Atom b){
 
@@ -641,11 +637,17 @@ public class Calc {
 			center = scaleAdd(mass, a, center);
 		}
 
-		center = scale(center, 1.0f/totalMass);
+		center = scaleEquals(center, 1.0f/totalMass);
 		return center;
 	}
 
-	private static Atom scale(Atom a, float s) {
+	/**
+	 * Multiply elements of a by s (in place)
+	 * @param a
+	 * @param s
+	 * @return the modified a
+	 */
+	public static Atom scaleEquals(Atom a, double s) {
 		double x = a.getX();
 		double y = a.getY();
 		double z = a.getZ();
@@ -662,20 +664,45 @@ public class Calc {
 		return a;
 	}
 
+	/**
+	 * Multiply elements of a by s
+	 * @param a
+	 * @param s
+	 * @return A new Atom with s*a
+	 */
+	public static Atom scale(Atom a, double s) {
+		double x = a.getX();
+		double y = a.getY();
+		double z = a.getZ();
 
-	public static Atom scaleAdd(float s, Atom t1, Atom t2){
+		Atom b = new AtomImpl();
+		b.setX(x*s);
+		b.setY(y*s);
+		b.setZ(z*s);
 
-		double x = s*t1.getX() + t2.getX();
-		double y = s*t1.getY() + t2.getY();
-		double z = s*t1.getZ() + t2.getZ();
+		return b;
+	}
+
+
+	/**
+	 * Perform linear transformation s*X+B, and store the result in b
+	 * @param s Amount to scale x
+	 * @param x Input coordinate
+	 * @param b Vector to translate (will be modified)
+	 * @return b, after modification
+	 */
+	public static Atom scaleAdd(double s, Atom x, Atom b){
+
+		double xc = s*x.getX() + b.getX();
+		double yc = s*x.getY() + b.getY();
+		double zc = s*x.getZ() + b.getZ();
 
 		//Atom a = new AtomImpl();
-		t2.setX(x);
-		t2.setY(y);
-		t2.setZ(z);
+		b.setX(xc);
+		b.setY(yc);
+		b.setZ(zc);
 
-		return t2;
-
+		return b;
 	}
 
 	/** Returns the Vector that needs to be applied to shift a set of atoms
@@ -879,6 +906,64 @@ public class Calc {
 	}
 
 
+	/**
+	 * Calculates the angle from centerPt to targetPt in degrees.
+	 * The return should range from [0,360), rotating CLOCKWISE, 
+	 * 0 and 360 degrees represents NORTH,
+	 * 90 degrees represents EAST, etc...
+	 *
+	 * Assumes all points are in the same coordinate space.  If they are not, 
+	 * you will need to call SwingUtilities.convertPointToScreen or equivalent 
+	 * on all arguments before passing them  to this function.
+	 *
+	 * @param centerPt   Point we are rotating around.
+	 * @param targetPt   Point we want to calculate the angle to.  
+	 * @return angle in degrees.  This is the angle from centerPt to targetPt.
+	 */
+	public static double calcRotationAngleInDegrees(Atom centerPt, Atom targetPt)
+	{
+	    // calculate the angle theta from the deltaY and deltaX values
+	    // (atan2 returns radians values from [-PI,PI])
+	    // 0 currently points EAST.  
+	    // NOTE: By preserving Y and X param order to atan2,  we are expecting 
+	    // a CLOCKWISE angle direction.  
+	    double theta = Math.atan2(targetPt.getY() - centerPt.getY(), targetPt.getX() - centerPt.getX());
+
+	    // rotate the theta angle clockwise by 90 degrees 
+	    // (this makes 0 point NORTH)
+	    // NOTE: adding to an angle rotates it clockwise.  
+	    // subtracting would rotate it counter-clockwise
+	    theta += Math.PI/2.0;
+
+	    // convert from radians to degrees
+	    // this will give you an angle from [0->270],[-180,0]
+	    double angle = Math.toDegrees(theta);
+
+	    // convert to positive range [0-360)
+	    // since we want to prevent negative angles, adjust them now.
+	    // we can assume that atan2 will not return a negative value
+	    // greater than one partial rotation
+	    if (angle < 0) {
+	        angle += 360;
+	    }
+
+	    return angle;
+	}
+	
+	
+	public static void main(String[] args){
+		Atom a =new AtomImpl();
+		a.setX(0);
+		a.setY(0);
+		a.setZ(0);
+		
+		Atom b = new AtomImpl();
+		b.setX(1);
+		b.setY(1);
+		b.setZ(0);
+		
+		System.out.println(calcRotationAngleInDegrees(a, b));
+	}
 }
 
 

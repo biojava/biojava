@@ -2,7 +2,6 @@ package org.biojava.bio.structure.quaternary.io;
 
 import java.util.List;
 
-import org.biojava.bio.structure.Chain;
 import org.biojava.bio.structure.PDBHeader;
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureTools;
@@ -27,8 +26,17 @@ public class PDBBioUnitDataProvider implements BioUnitDataProvider{
 	AtomCache cache = new AtomCache();
 	
 	public PDBHeader loadPDB(String pdbId){
+			
+		
+		FileParsingParameters params = null;
+		
+		if ( cache == null)
+			cache = new AtomCache();
+		
+		params = cache.getFileParsingParams();
 				
-		FileParsingParameters params = cache.getFileParsingParams();
+		if ( params == null)
+			params = new FileParsingParameters();
 
 		params.setParseBioAssembly(true);		
 		params.setAlignSeqRes(true);
@@ -53,8 +61,15 @@ public class PDBBioUnitDataProvider implements BioUnitDataProvider{
 			loadPDB(pdbId);
 		}
 		
-		if ( s.nrModels() > 1) 
+		if ( s.nrModels() > 1)  {
+			// temporarily overwrite the NMR setting
+			// so we can get rid of multiple modles
+			// eg for 2F03 which is an xray with multi-models...
+			boolean isNMR = s.isNmr();
+			s.setNmr(true);
 			s = StructureTools.removeModels(s);
+			s.setNmr(isNMR);
+		}
 		
 		
 		return s;

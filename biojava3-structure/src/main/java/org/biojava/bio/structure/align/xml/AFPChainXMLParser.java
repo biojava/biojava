@@ -257,7 +257,9 @@ public class AFPChainXMLParser
 				
 				a.setAlignScore(new Double(getAttribute(rootElement,"alignScore")).doubleValue());
 				a.setChainRmsd(new Double(getAttribute(rootElement,"chainRmsd")).doubleValue());
-				a.setIdentity(new Double(getAttribute(rootElement,"identity")).doubleValue());
+				Double identity = new Double(getAttribute(rootElement,"identity")).doubleValue();				
+				a.setIdentity(identity);
+				
 				a.setNormAlignScore(new Double(getAttribute(rootElement,"normAlignScore")).doubleValue());
 				a.setProbability(new Double(getAttribute(rootElement,"probability")).doubleValue());
 				a.setSimilarity(new Double(getAttribute(rootElement,"similarity")).doubleValue());

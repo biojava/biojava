@@ -30,7 +30,10 @@ import org.biojava.bio.structure.align.util.AtomCache;
 import org.biojava.bio.structure.align.util.ResourceManager;
 import org.biojava.bio.structure.align.xml.AFPChainXMLConverter;
 import org.biojava.bio.structure.align.xml.PdbPairsMessage;
+import org.biojava.bio.structure.domain.RemotePDPProvider;
 import org.biojava.bio.structure.io.FileParsingParameters;
+import org.biojava.bio.structure.scop.RemoteScopInstallation;
+import org.biojava.bio.structure.scop.ScopFactory;
 import org.biojava3.core.util.FlatFileCache;
 import org.biojava3.core.util.PrettyXMLWriter;
 
@@ -81,6 +84,7 @@ public class FarmJobRunnable implements Runnable {
 	boolean verbose = false;
 	String version = null;
 	
+	private static final String alignURL = "/align/";
 	public FarmJobRunnable(FarmJobParameters params){
 		terminated = false;
 		this.params = params;
@@ -89,9 +93,34 @@ public class FarmJobRunnable implements Runnable {
 		// multiple farm jobs share the same SoftHashMap for caching coordinates
 		cache = new AtomCache( params.getPdbFilePath(), params.isPdbDirSplit());
 		
+			
+		if ( params.getServer()!= null && (!params.getServer().equals("") ) ) {
+			
+			RemotePDPProvider pdpprovider = new RemotePDPProvider();
+		
+			String serverURL = params.getServer();
+			if ( ! serverURL.endsWith("/"))
+				serverURL += "/";
+			
+			if (  serverURL.endsWith(alignURL)) {
+				serverURL = serverURL.substring(0,serverURL.length()-alignURL.length());
+			}
+			
+			pdpprovider.setServer(serverURL+"/domains/");
+			
+			cache.setPdpprovider(pdpprovider);
+			
+			RemoteScopInstallation scop = new RemoteScopInstallation();
+			
+			scop.setServer(serverURL+"/domains/");
+			ScopFactory.setScopDatabase(scop);
+			
+		}
+		
+		
 		// enforce to replace remediated files with new versions...
 		FileParsingParameters fparams = cache.getFileParsingParams();
-		fparams.setUpdateRemediatedFiles(true);
+		fparams.setUpdateRemediatedFiles(params.isUpdateRemediatedFiles());
 		
 		maxNrAlignments = params.getNrAlignments();
 		progressListeners = null;

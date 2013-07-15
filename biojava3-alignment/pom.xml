@@ -4,11 +4,11 @@
 	<parent>
 		<artifactId>biojava</artifactId>
 		<groupId>org.biojava</groupId>
-		<version>3.0.5</version>
+		<version>3.0.7-SNAPSHOT</version>
 	</parent>
 	<artifactId>biojava3-alignment</artifactId>
 	<name>biojava3-alignment</name>
-	
+
 	<url>http://maven.apache.org</url>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -34,18 +34,18 @@
 		<dependency>
 			<groupId>org.biojava</groupId>
 			<artifactId>biojava3-core</artifactId>
-			<version>3.0.5</version>
+			<version>3.0.7-SNAPSHOT</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.biojava</groupId>
 			<artifactId>biojava3-phylo</artifactId>
-			<version>3.0.5</version>
+			<version>3.0.7-SNAPSHOT</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
-			<groupId>org</groupId>
-			<artifactId>forester</artifactId>
+			<groupId>org.forester</groupId>
+			<artifactId>forester-lgpl</artifactId>
 			<version>1.005</version>
 		</dependency>
 	</dependencies>

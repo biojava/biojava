@@ -53,7 +53,7 @@
 				<include>${groupId}:biojava3-alignment</include>
 				<include>${groupId}:biojava3-structure</include>
 				<include>${groupId}:biojava3-structure-gui</include>				
-				<include>jmolapplet:JmolApplet</include>
+				<include>net.sourceforge.jmol:jmol</include>
 				<include>javaws:javaws</include>
             </includes>
         </dependencySet>
