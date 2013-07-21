@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.biojava</groupId>
 	<artifactId>biojava</artifactId>
 	<packaging>pom</packaging>
-	<version>3.0.6-SNAPSHOT</version>
+	<version>3.0.7-SNAPSHOT</version>
 	<name>biojava</name>
 	<description>BioJava is an open-source project dedicated to providing a Java framework for processing biological data. It provides analytical and statistical routines, parsers for common file formats and allows the manipulation of sequences and 3D structures. The goal of the biojava project is to facilitate rapid application development for bioinformatics.</description>
 	<url>http://www.biojava.org</url>
@@ -24,7 +23,8 @@
 		<connection>scm:git:git://github.com/biojava/biojava.git</connection>
 		<developerConnection>scm:git:git@github.com:biojava/biojava.git</developerConnection>
 		<url>https://github.com/biojava/biojava</url>
-	</scm>
+	  <tag>HEAD</tag>
+  </scm>
 	<repositories>
 		<repository>
 			<id>maven2-repository.dev.java.net</id>

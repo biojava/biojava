@@ -81,13 +81,15 @@ public class DemoLoadStructure
 
          reader.setFileParsingParameters(params);
          
-         Structure structure = reader.getStructureById("193D");
+         Structure structure = reader.getStructureById("4hhb");
          
          System.out.println(structure);
          
          Chain c = structure.getChainByPDB("C");
        
          System.out.print(c);
+         
+         System.out.println(c.getHeader());
 
       } catch (Exception e){
          e.printStackTrace();
