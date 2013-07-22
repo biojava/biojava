@@ -46,12 +46,12 @@ public class Astral {
 	private static final Logger logger = LogManager.getLogger(Astral.class.getPackage().getName());
 
 	public static enum AstralSet {
+		FORTY_175("1.75_40", "http://scop.berkeley.edu/downloads/scopseq-1.75/astral-scopdom-seqres-gd-sel-gs-bib-40-1.75.fa"),
+		NINETY_FIVE_175("1.75_95", "http://scop.berkeley.edu/downloads/scopseq-1.75/astral-scopdom-seqres-gd-sel-gs-bib-95-1.75.fa"),
 		FORTY_175A("1.75A_40", "http://scop.berkeley.edu/downloads/scopseq-1.75A/astral-scopdom-seqres-gd-sel-gs-bib-40-1.75A.fa"),
-		NINETY_FIVE_175A("1.75A_95", "http://scop.berkeley.edu/downloads/scopseq-1.75A/astral-scopdom-seqres-gd-sel-gs-bib-90-1.75A.fa"),
-		FORTY_175B("1.75B_95", "http://scop.berkeley.edu/downloads/scopseq-1.75B/astral-scopdom-seqres-gd-sel-gs-bib-40-1.75B.fa"),
-		NINETY_FIVE_175B("1.75B_95", "http://scop.berkeley.edu/downloads/scopseq-1.75B/astral-scopdom-seqres-gd-sel-gs-bib-95-1.75B.fa"),
-		FORTY_175("1.75_95", "http://scop.berkeley.edu/downloads/scopseq-1.75/astral-scopdom-seqres-gd-sel-gs-bib-40-1.75.fa"),
-		NINETY_FIVE_175("1.75_95", "http://scop.berkeley.edu/downloads/scopseq-1.75/astral-scopdom-seqres-gd-sel-gs-bib-95-1.75.fa");
+		NINETY_FIVE_175A("1.75A_95","http://scop.berkeley.edu/downloads/scopseq-1.75A/astral-scopdom-seqres-gd-sel-gs-bib-95-1.75A.fa"),
+		FORTY_175B("1.75B_40", "http://scop.berkeley.edu/downloads/scopseq-1.75B/astral-scopdom-seqres-gd-sel-gs-bib-40-1.75B.fa"),
+		NINETY_FIVE_175B("1.75B_95", "http://scop.berkeley.edu/downloads/scopseq-1.75B/astral-scopdom-seqres-gd-sel-gs-bib-95-1.75B.fa");
 		private String url;
 		private String id;
 		public static AstralSet parse(String str) {
