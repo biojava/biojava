@@ -1,0 +1,183 @@
+LOCUS       NP_000257                133 aa            linear   PRI 27-MAR-2008
+DEFINITION  norrin [Homo sapiens].
+ACCESSION   NP_000257
+VERSION     NP_000257.1  GI:4557789
+DBSOURCE    REFSEQ: accession NM_000266.2
+KEYWORDS    .
+SOURCE      Homo sapiens (human)
+  ORGANISM  Homo sapiens
+            Eukaryota; Metazoa; Chordata; Craniata; Vertebrata; Euteleostomi;
+            Mammalia; Eutheria; Euarchontoglires; Primates; Haplorrhini;
+            Catarrhini; Hominidae; Homo.
+REFERENCE   1  (residues 1 to 133)
+  AUTHORS   Lev,D., Weigl,Y., Hasan,M., Gak,E., Davidovich,M., Vinkler,C.,
+            Leshinsky-Silver,E., Lerman-Sagie,T. and Watemberg,N.
+  TITLE     A novel missense mutation in the NDP gene in a child with Norrie
+            disease and severe neurological involvement including infantile
+            spasms
+  JOURNAL   Am. J. Med. Genet. A 143 (9), 921-924 (2007)
+   PUBMED   17334993
+  REMARK    GeneRIF: A novel missense mutation at position c.134T > A resulting
+            in amino acid change at codon V45E in Norrie disease with
+            neurological disorder and infantile spasms.
+REFERENCE   2  (residues 1 to 133)
+  AUTHORS   Kondo,H., Qin,M., Kusaka,S., Tahira,T., Hasebe,H., Hayashi,H.,
+            Uchio,E. and Hayashi,K.
+  TITLE     Novel mutations in Norrie disease gene in Japanese patients with
+            Norrie disease and familial exudative vitreoretinopathy
+  JOURNAL   Invest. Ophthalmol. Vis. Sci. 48 (3), 1276-1282 (2007)
+   PUBMED   17325173
+  REMARK    GeneRIF: These observations indicate that mutations of the NDP gene
+            can cause ND(Norrie disease) and 6% of FEVR(familial exudative
+            vitreoretinopathy) cases in the Japanese population.
+REFERENCE   3  (residues 1 to 133)
+  AUTHORS   Smallwood,P.M., Williams,J., Xu,Q., Leahy,D.J. and Nathans,J.
+  TITLE     Mutational analysis of Norrin-Frizzled4 recognition
+  JOURNAL   J. Biol. Chem. 282 (6), 4057-4068 (2007)
+   PUBMED   17158104
+  REMARK    GeneRIF: Norrin binds to the Frizzled4 cysteine-rich domain (CRD)
+            and does not detectably bind to 14 other mammalian Frizzled and
+            secreted Frizzled-related protein CRDs.
+REFERENCE   4  (residues 1 to 133)
+  AUTHORS   Wu,W.C., Drenser,K., Trese,M., Capone,A. Jr. and Dailey,W.
+  TITLE     Retinal phenotype-genotype correlation of pediatric patients
+            expressing mutations in the Norrie disease gene
+  JOURNAL   Arch. Ophthalmol. 125 (2), 225-230 (2007)
+   PUBMED   17296899
+  REMARK    GeneRIF: Patients exhibiting severe retinal dysgenesis should be
+            suspected of carrying a mutation that disrupts the cysteine-knot
+            motif in the NDP gene.
+REFERENCE   5  (residues 1 to 133)
+  AUTHORS   Drenser,K.A., Dailey,W., Capone,A. and Trese,M.T.
+  TITLE     Genetic evaluation to establish the diagnosis of X-linked familial
+            exudative vitreoretinopathy
+  JOURNAL   Ophthalmic Genet. 27 (3), 75-78 (2006)
+   PUBMED   17050281
+  REMARK    GeneRIF: We found genetic testing of NDP to be helpful in
+            confirming the diagnosis of X-linked FEVR (familial exudative
+            vitreoretinopathy) in male patients, especially when limited family
+            history was available.
+REFERENCE   6  (sites)
+  AUTHORS   Perez-Vilar,J. and Hill,R.L.
+  TITLE     Norrie disease protein (norrin) forms disulfide-linked oligomers
+            associated with the extracellular matrix
+  JOURNAL   J. Biol. Chem. 272 (52), 33410-33415 (1997)
+   PUBMED   9407136
+REFERENCE   7  (residues 1 to 133)
+  AUTHORS   Berger,W., van de Pol,D., Warburg,M., Gal,A.,
+            Bleeker-Wagemakers,L., de Silva,H., Meindl,A., Meitinger,T.,
+            Cremers,F. and Ropers,H.H.
+  TITLE     Mutations in the candidate gene for Norrie disease
+  JOURNAL   Hum. Mol. Genet. 1 (7), 461-465 (1992)
+   PUBMED   1307245
+  REMARK    Review article
+REFERENCE   8  (residues 1 to 133)
+  AUTHORS   Meindl,A., Berger,W., Meitinger,T., van de Pol,D., Achatz,H.,
+            Dorner,C., Haasemann,M., Hellebrand,H., Gal,A., Cremers,F. et al.
+  TITLE     Norrie disease is caused by mutations in an extracellular protein
+            resembling C-terminal globular domain of mucins
+  JOURNAL   Nat. Genet. 2 (2), 139-143 (1992)
+   PUBMED   1303264
+REFERENCE   9  (residues 1 to 133)
+  AUTHORS   Berger,W., Meindl,A., van de Pol,T.J., Cremers,F.P., Ropers,H.H.,
+            Doerner,C., Monaco,A., Bergen,A.A., Lebo,R., Warburgh,M. et al.
+  TITLE     Isolation of a candidate gene for Norrie disease by positional
+            cloning
+  JOURNAL   Nat. Genet. 2 (1), 84 (1992)
+   PUBMED   1303256
+  REMARK    Correction to:[Nat Genet. 1992 Jun;1(3):199-203. PMID: 1303235]
+REFERENCE   10 (residues 1 to 133)
+  AUTHORS   Chen,Z.Y., Hendriks,R.W., Jobling,M.A., Powell,J.F.,
+            Breakefield,X.O., Sims,K.B. and Craig,I.W.
+  TITLE     Isolation and characterization of a candidate gene for Norrie
+            disease
+  JOURNAL   Nat. Genet. 1 (3), 204-208 (1992)
+   PUBMED   1303236
+REFERENCE   11 (residues 1 to 133)
+  AUTHORS   Berger,W., Meindl,A., van de Pol,T.J., Cremers,F.P., Ropers,H.H.,
+            Doerner,C., Monaco,A., Bergen,A.A., Lebo,R., Warburg,M. et al.
+  TITLE     Isolation of a candidate gene for Norrie disease by positional
+            cloning
+  JOURNAL   Nat. Genet. 1 (3), 199-203 (1992)
+   PUBMED   1303235
+  REMARK    Erratum:[Nat Genet. 1992 Sep;2(1):84. PMID: 1303256]
+COMMENT     VALIDATED REFSEQ: This record has undergone validation or
+            preliminary review. The reference sequence was derived from
+            AL034370.1, X65882.1 and BE139596.1.
+            
+            Summary: NDP is the genetic locus identified as harboring mutations
+            that result in Norrie disease. Norrie disease is a rare genetic
+            disorder characterized by bilateral congenital blindness that is
+            caused by a vascularized mass behind each lens due to a
+            maldeveloped retina (pseudoglioma).
+            
+            Publication Note:  This RefSeq record includes a subset of the
+            publications that are available for this gene. Please see the
+            Entrez Gene record to access additional publications.
+FEATURES             Location/Qualifiers
+     source          1..133
+                     /organism="Homo sapiens"
+                     /db_xref="taxon:9606"
+                     /chromosome="X"
+                     /map="Xp11.4"
+     Protein         1..133
+                     /product="norrin"
+                     /note="exudative vitreoretinopathy 2 (X-linked)"
+                     /calculated_mol_wt=14912
+     variation       1
+                     /replace="v"
+                     /db_xref="dbSNP:28933685"
+     variation       23
+                     /replace="e"
+                     /db_xref="dbSNP:5952410"
+     Bond            bond(39,96)
+                     /bond_type="disulfide"
+                     /experiment="experimental evidence, no additional details
+                     recorded"
+                     /note="disulfide bridge bond"
+                     /citation=[6]
+     Region          43..129
+                     /region_name="CT"
+                     /note="C-terminal cystine knot-like domain (CTCK); The
+                     structures of transforming growth factor-beta (TGFbeta),
+                     nerve growth factor (NGF), platelet-derived growth factor
+                     (PDGF) and gonadotropin all form 2 highly twisted
+                     antiparallel pairs of beta-strands and con; smart00041"
+                     /db_xref="CDD:47390"
+     Bond            bond(55,110)
+                     /bond_type="disulfide"
+                     /experiment="experimental evidence, no additional details
+                     recorded"
+                     /note="disulfide bridge bond"
+                     /citation=[6]
+     variation       64
+                     /replace="m"
+                     /db_xref="dbSNP:3177012"
+     Bond            bond(65,126)
+                     /bond_type="disulfide"
+                     /experiment="experimental evidence, no additional details
+                     recorded"
+                     /note="disulfide bridge bond"
+                     /citation=[6]
+     Bond            bond(69,128)
+                     /bond_type="disulfide"
+                     /experiment="experimental evidence, no additional details
+                     recorded"
+                     /note="disulfide bridge bond"
+                     /citation=[6]
+     variation       124
+                     /replace="f"
+                     /db_xref="dbSNP:28933684"
+     CDS             1..133
+                     /gene="NDP"
+                     /coded_by="NM_000266.2:503..904"
+                     /db_xref="CCDS:CCDS14262.1"
+                     /db_xref="GeneID:4693"
+                     /db_xref="HGNC:7678"
+                     /db_xref="HPRD:HPRD_02404"
+                     /db_xref="MIM:300658"
+ORIGIN      
+        1 mrkhvlaasf smlsllvimg dtdsktdssf imdsdprrcm rhhyvdsish plykcsskmv
+       61 llarceghcs qasrseplvs fstvlkqpfr sschccrpqt sklkalrlrc sggmrltaty
+      121 ryilschcee cns
+//
