@@ -22,6 +22,7 @@
 
 package org.biojava3.core.sequence.io.template;
 
+import org.biojava3.core.exceptions.ParserException;
 import org.biojava3.core.sequence.template.Compound;
 import org.biojava3.core.sequence.template.Sequence;
 
@@ -36,4 +37,12 @@ public interface GenbankHeaderParserInterface<S extends Sequence<?>, C extends C
  * @param sequence
  */
     public void parseHeader(String header, S sequence);
+    public void setVersion(int version) throws ParserException;
+    public void setAccession(String accession) throws ParserException;
+    public void setDescription(String description) throws ParserException;
+    public void setIdentifier(String identifier) throws ParserException;
+    public void setName(String name) throws ParserException;
+    public void setComment(String comment) throws ParserException;
+    
 }
+

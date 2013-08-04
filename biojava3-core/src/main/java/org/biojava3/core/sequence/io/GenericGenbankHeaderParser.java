@@ -21,6 +21,10 @@
  */
 package org.biojava3.core.sequence.io;
 
+import java.util.ArrayList;
+
+import org.biojava3.core.exceptions.ParserException;
+import org.biojava3.core.sequence.AccessionID;
 import org.biojava3.core.sequence.io.template.GenbankHeaderParserInterface;
 import org.biojava3.core.sequence.template.AbstractSequence;
 import org.biojava3.core.sequence.template.Compound;
@@ -28,29 +32,95 @@ import org.biojava3.core.sequence.template.Compound;
 public class GenericGenbankHeaderParser<S extends AbstractSequence<C>, C extends Compound> implements GenbankHeaderParserInterface<S,C> {
 
     /**
-     * Parse out the components where some have a | and others do not
-     * @param header
-     * @return
-     */
-    private String[] getHeaderValues(String header) {
-        String[] data = new String[0];
-        return data;
-    }
-
-    /**
      * Parse the header and set the values in the sequence
      * @param header
      * @param sequence
      */
     public void parseHeader(String header, S sequence) {
-        sequence.setOriginalHeader(header);
+    	sequence.setOriginalHeader(header);
+    	sequence.setAccession(new AccessionID(accession));
+    	sequence.setDescription(description);
     }
 
+
+    
     /**
-     * 
-     * @param args
+     * Sets the sequence info back to default values, ie. in order to start
+     * constructing a new sequence from scratch.
      */
-    public static void main(String[] args) {
-
+    private void reset() {
+        this.version = 0;
+        this.versionSeen = false;
+        this.accession = null;
+        this.description = null;
+        this.identifier = null;
+        this.name = null;
+        this.comments.clear();
     }
+    
+    /**
+     * {@inheritDoc}
+     */
+    public void setVersion(int version) throws ParserException {
+        if (this.versionSeen) throw new ParserException("Current BioEntry already has a version");
+        else {
+            try {
+                this.version = version;
+                this.versionSeen = true;
+            } catch (NumberFormatException e) {
+                throw new ParserException("Could not parse version as an integer");
+            }
+        }
+    }
+    private int version;
+    private boolean versionSeen;
+    
+    
+    /**
+     * {@inheritDoc}
+     * The last accession passed to this routine will always be the one used.
+     */
+    public void setAccession(String accession) throws ParserException {
+        if (accession==null) throw new ParserException("Accession cannot be null");
+        this.accession = accession;
+    }
+    private String accession;
+    
+    /**
+     * {@inheritDoc}
+     */
+    public void setDescription(String description) throws ParserException {
+        if (this.description!=null) throw new ParserException("Current BioEntry already has a description");
+        this.description = description;
+    }
+    private String description;
+    
+    /**
+     * {@inheritDoc}
+     */
+    public void setIdentifier(String identifier) throws ParserException {
+        if (identifier==null) throw new ParserException("Identifier cannot be null");
+        if (this.identifier!=null) throw new ParserException("Current BioEntry already has a identifier");
+        this.identifier = identifier;
+    }
+    private String identifier;
+    
+    /**
+     * {@inheritDoc}
+     */
+    public void setName(String name) throws ParserException {
+        if (name==null) throw new ParserException("Name cannot be null");
+        if (this.name!=null) throw new ParserException("Current BioEntry already has a name");
+        this.name = name;
+    }
+    private String name;
+    
+    /**
+     * {@inheritDoc}
+     */
+    public void setComment(String comment) throws ParserException {
+        if (comment==null) throw new ParserException("Comment cannot be null");
+        this.comments.add(comment);
+    }
+    private ArrayList<String> comments = new ArrayList<String>();
 }

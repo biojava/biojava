@@ -21,7 +21,6 @@
  */
 package org.biojava3.core.sequence.io;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -32,21 +31,16 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.TreeSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.biojava3.core.sequence.AccessionID;
-import org.biojava3.core.sequence.DataSource;
 import org.biojava3.core.sequence.ProteinSequence;
 import org.biojava3.core.sequence.compound.AminoAcidCompound;
 import org.biojava3.core.sequence.compound.AminoAcidCompoundSet;
 import org.biojava3.core.sequence.io.template.GenbankHeaderParserInterface;
 import org.biojava3.core.sequence.io.template.SequenceCreatorInterface;
-import org.biojava3.core.sequence.template.AbstractSequence;
 import org.biojava3.core.sequence.template.Compound;
 import org.biojava3.core.sequence.template.Sequence;
-import org.biojava3.core.sequence.template.AbstractSequence.AnnotationType;
 import org.biojava3.core.exceptions.ParserException;
 
 /**
@@ -56,7 +50,7 @@ import org.biojava3.core.exceptions.ParserException;
  * @author Karl Nicholas 
 
  */
-public class GenbankReader<S extends AbstractSequence<C>, C extends Compound> {
+public class GenbankReader<S extends Sequence<?>, C extends Compound> {
 
     /**
      * The name of this format
@@ -106,7 +100,7 @@ public class GenbankReader<S extends AbstractSequence<C>, C extends Compound> {
     protected static final Pattern readableFiles = Pattern.compile(".*(g[bp]k*$|\\u002eg[bp].*)");
     protected static final Pattern headerLine = Pattern.compile("^LOCUS.*");
 
-    SequenceCreatorInterface<C> sequenceCreator;
+    SequenceCreatorInterface<?> sequenceCreator;
     GenbankHeaderParserInterface<S,C> headerParser;
     BufferedReaderBytesRead br;
     InputStreamReader isr;
@@ -125,7 +119,7 @@ public class GenbankReader<S extends AbstractSequence<C>, C extends Compound> {
      * @param sequenceCreator
      */
     public GenbankReader(InputStream is, GenbankHeaderParserInterface<S,C> headerParser,
-    		SequenceCreatorInterface<C> sequenceCreator) {
+    		SequenceCreatorInterface<?> sequenceCreator) {
         this.headerParser = headerParser;
         isr = new InputStreamReader(is);
         this.br = new BufferedReaderBytesRead(isr);
@@ -213,28 +207,53 @@ public class GenbankReader<S extends AbstractSequence<C>, C extends Compound> {
                 // process section-by-section
                 if (sectionKey.equals(LOCUS_TAG)) {
                     String loc = ((String[])section.get(0))[1];
-                    header = loc;
                     Matcher m = lp.matcher(loc);
                     if (m.matches()) {
-                    	seqName = m.group(1);
+                    	headerParser.setName(m.group(1));
+                        accession = m.group(1); // default if no accession found
+                        headerParser.setAccession(accession);
+                    } else {
+                        throw new ParserException("Bad locus line");
                     }
                 } else if (sectionKey.equals(DEFINITION_TAG)) {
+                	headerParser.setDescription(((String[])section.get(0))[1]);
                 } else if (sectionKey.equals(ACCESSION_TAG)) {
                     // if multiple accessions, store only first as accession,
                     // and store rest in annotation
                     String[] accs = ((String[])section.get(0))[1].split("\\s+");
                     accession = accs[0].trim();
+                    headerParser.setAccession(accession);
                 } else if (sectionKey.equals(VERSION_TAG)) {
+                    String ver = ((String[])section.get(0))[1];
+                    Matcher m = vp.matcher(ver);
+                    if (m.matches()) {
+                        String verAcc = m.group(1);
+                        if (!accession.equals(verAcc)) {
+                            // the version refers to a different accession!
+                            // believe the version line, and store the original
+                            // accession away in the additional accession set
+                            accession = verAcc;
+                            headerParser.setAccession(accession);
+                        }
+                        if (m.group(3)!=null) headerParser.setVersion(Integer.parseInt(m.group(3)));
+                        if (m.group(5)!=null) {
+                            identifier = m.group(5);
+                            headerParser.setIdentifier(identifier);
+                        }
+                    } else {
+                        throw new ParserException("Bad version line");
+                    }
                 } else if (sectionKey.equals(KEYWORDS_TAG)) {
                 } else if (sectionKey.equals(SOURCE_TAG)) {
                     // ignore - can get all this from the first feature
                 } else if (sectionKey.equals(REFERENCE_TAG) ) {
                 } else if (sectionKey.equals(COMMENT_TAG) ) {
+                    // Set up some comments
+                    headerParser.setComment(((String[])section.get(0))[1]);
                 } else if (sectionKey.equals(FEATURE_TAG) ) {
                 } else if (sectionKey.equals(BASE_COUNT_TAG)) {
                     // ignore - can calculate from sequence content later if needed
                 } else if (sectionKey.equals(START_SEQUENCE_TAG) ) {
-
                 	// our first line is ignorable as it is the ORIGIN tag
                     // the second line onwards conveniently have the number as
                     // the [0] tuple, and sequence string as [1] so all we have
@@ -246,69 +265,14 @@ public class GenbankReader<S extends AbstractSequence<C>, C extends Compound> {
 
                     S sequence = (S)sequenceCreator.getSequence(seqData, sequenceIndex);
                     headerParser.parseHeader(header, sequence);
-                    sequence.setOriginalHeader(seqName);
-                    sequence.setAccession(new AccessionID(accession));
-                    
                     sequences.put(sequence.getAccession().getID(),sequence);
                 }
             } while (!sectionKey.equals(END_SEQUENCE_TAG));
-        } catch(RuntimeException e) {
-            throw new ParserException("Bad sequence section");
+        }catch(RuntimeException e){
+            throw new ParserException("Bad sequence section", e);
         }
         return sequences;
         
-        /*
-        
-        StringBuilder sb = new StringBuilder();
-        int processedSequences=0;
-        boolean keepGoing = true;
-
-        do {
-            line = line.trim(); // nice to have but probably not needed
-            if (line.length() != 0) {
-                if (line.startsWith(">")) {
-                    if (sb.length() > 0) {//i.e. if there is already a sequence before
-                    //    System.out.println("Sequence index=" + sequenceIndex);
-                    	@SuppressWarnings("unchecked")
-                        S sequence = (S)sequenceCreator.getSequence(sb.toString(), sequenceIndex);
-                        headerParser.parseHeader(header, sequence);
-                        sequences.put(sequence.getAccession().getID(),sequence);
-                        processedSequences++;
-//                        if (maxSequenceLength < sb.length()) {
-//                            maxSequenceLength = sb.length();
-//                        }
-//                        sb = new StringBuilder(maxSequenceLength);
-                        sb.setLength(0); //this is faster, better memory utilization (same buffer)
-                    }
-                    header = line.substring(1);
-                } else if (line.startsWith(";")) {
-                } else {
-                    //mark the start of the sequence with the fileIndex before the line was read
-                    if(sb.length() == 0){
-                        sequenceIndex = fileIndex;
-                    }
-                    sb.append(line);
-                }
-            }
-            fileIndex = br.getBytesRead();
-            line = br.readLine();
-			if (line == null) {//i.e. EOF
-				@SuppressWarnings("unchecked")
-				//    System.out.println("Sequence index=" + sequenceIndex + " " + fileIndex );
-                S sequence = (S)sequenceCreator.getSequence(sb.toString(), sequenceIndex);
-                headerParser.parseHeader(header, sequence);
-                sequences.put(sequence.getAccession().getID(),sequence);
-                processedSequences++;
-                keepGoing = false;
-            }
-			if (max > -1 && processedSequences>=max) {
-				keepGoing=false;
-			}
-        } while (keepGoing);
-        this.line  = line;
-        this.header= header;
-        return sequences;
-*/        
     }
 
 	// reads an indented section, combining split lines and creating a list of
