@@ -51,6 +51,7 @@ import org.biojava.bio.structure.cath.CathSegment;
 import org.biojava.bio.structure.domain.PDPProvider;
 import org.biojava.bio.structure.domain.RemotePDPProvider;
 import org.biojava.bio.structure.io.FileParsingParameters;
+import org.biojava.bio.structure.io.MMCIFFileReader;
 import org.biojava.bio.structure.io.PDBFileReader;
 import org.biojava.bio.structure.scop.CachedRemoteScopInstallation;
 import org.biojava.bio.structure.scop.ScopDatabase;
@@ -95,6 +96,7 @@ public class AtomCache {
 	boolean autoFetch;
 	boolean isSplit;
 	boolean strictSCOP;
+	boolean useMmCif;
 
 	protected FileParsingParameters params;
 
@@ -165,6 +167,8 @@ public class AtomCache {
 		this.strictSCOP = true;
 
 		scopInstallation = null;
+		
+		useMmCif = false;
 	}
 
 
@@ -555,7 +559,11 @@ public class AtomCache {
 			if ( name.length() == 4){
 
 				pdbId = name; 
-				Structure s = loadStructureFromByPdbId(pdbId);
+				Structure s;
+				if ( useMmCif)
+					s = loadStructureFromCifByPdbId(pdbId);
+				else
+					s = loadStructureFromPdbByPdbId(pdbId);
 				return s;
 			} else if ( structureName.isScopName()){
 
@@ -648,8 +656,11 @@ public class AtomCache {
 
 
 			//long start  = System.currentTimeMillis();
-
-			Structure s = loadStructureFromByPdbId(pdbId);
+			Structure s;
+			if ( useMmCif)
+				s = loadStructureFromCifByPdbId(pdbId);
+			else
+				s = loadStructureFromPdbByPdbId(pdbId);
 
 			//long end  = System.currentTimeMillis();
 			//System.out.println("time to load " + pdbId + " " + (end-start) + "\t  size :" + StructureTools.getNrAtoms(s) + "\t cached: " + cache.size());
@@ -687,7 +698,7 @@ public class AtomCache {
 
 	}
 
-	protected Structure loadStructureFromByPdbId(String pdbId)
+	protected Structure loadStructureFromPdbByPdbId(String pdbId)
 			throws StructureException {
 
 
@@ -700,6 +711,35 @@ public class AtomCache {
 			reader.setAutoFetch(autoFetch);
 			reader.setFetchFileEvenIfObsolete(fetchFileEvenIfObsolete);
 			reader.setFetchCurrent(fetchCurrent);
+
+			reader.setFileParsingParameters(params);
+
+			s = reader.getStructureById(pdbId.toLowerCase());
+
+		} catch (Exception e){
+			flagLoadingFinished(pdbId);
+			throw new StructureException(e.getMessage() + " while parsing " + pdbId,e);
+		}
+		flagLoadingFinished(pdbId);
+
+		return s;
+	}
+	
+	protected Structure loadStructureFromCifByPdbId(String pdbId)
+			throws StructureException {
+
+
+		Structure s;
+		flagLoading(pdbId);
+		try {
+			MMCIFFileReader reader = new MMCIFFileReader();
+			reader.setPath(path);
+			reader.setPdbDirectorySplit(isSplit);
+			reader.setAutoFetch(autoFetch);
+
+			// not supported yet
+			//reader.setFetchFileEvenIfObsolete(fetchFileEvenIfObsolete);
+			//reader.setFetchCurrent(fetchCurrent);
 
 			reader.setFileParsingParameters(params);
 
@@ -1003,6 +1043,14 @@ public class AtomCache {
 		this.params = params;
 	}
 
+
+	public boolean isUseMmCif() {
+		return useMmCif;
+	}
+
+	public void setUseMmCif(boolean useMmCif) {
+		this.useMmCif = useMmCif;
+	}
 
 	/** 
 	 * Loads the default biological unit (*.pdb1.gz) file. If it is not available, the original
