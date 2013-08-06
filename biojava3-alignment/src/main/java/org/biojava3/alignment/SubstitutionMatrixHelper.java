@@ -69,7 +69,7 @@ public class SubstitutionMatrixHelper {
      * @return Blosum 100 matrix
      */
     public static SubstitutionMatrix<AminoAcidCompound> getBlosum100() {
-        return getAminoAcidCompoundSubstitutionMatrix("blosum100");
+        return getAminoAcidMatrix("blosum100");
     }
 
     /**
@@ -77,7 +77,7 @@ public class SubstitutionMatrixHelper {
      * @return Blosum 30 matrix
      */
     public static SubstitutionMatrix<AminoAcidCompound> getBlosum30() {
-        return getAminoAcidCompoundSubstitutionMatrix("blosum30");
+        return getAminoAcidMatrix("blosum30");
     }
 
     /**
@@ -85,7 +85,7 @@ public class SubstitutionMatrixHelper {
      * @return Blosum 35 matrix
      */
     public static SubstitutionMatrix<AminoAcidCompound> getBlosum35() {
-        return getAminoAcidCompoundSubstitutionMatrix("blosum35");
+        return getAminoAcidMatrix("blosum35");
     }
 
     /**
@@ -93,7 +93,7 @@ public class SubstitutionMatrixHelper {
      * @return Blosum 40 matrix
      */
     public static SubstitutionMatrix<AminoAcidCompound> getBlosum40() {
-        return getAminoAcidCompoundSubstitutionMatrix("blosum40");
+        return getAminoAcidMatrix("blosum40");
     }
 
     /**
@@ -101,7 +101,7 @@ public class SubstitutionMatrixHelper {
      * @return Blosum 45 matrix
      */
     public static SubstitutionMatrix<AminoAcidCompound> getBlosum45() {
-        return getAminoAcidCompoundSubstitutionMatrix("blosum45");
+        return getAminoAcidMatrix("blosum45");
     }
 
     /**
@@ -109,7 +109,7 @@ public class SubstitutionMatrixHelper {
      * @return Blosum 50 matrix
      */
     public static SubstitutionMatrix<AminoAcidCompound> getBlosum50() {
-        return getAminoAcidCompoundSubstitutionMatrix("blosum50");
+        return getAminoAcidMatrix("blosum50");
     }
 
     /**
@@ -117,7 +117,7 @@ public class SubstitutionMatrixHelper {
      * @return Blosum 55 matrix
      */
     public static SubstitutionMatrix<AminoAcidCompound> getBlosum55() {
-        return getAminoAcidCompoundSubstitutionMatrix("blosum55");
+        return getAminoAcidMatrix("blosum55");
     }
 
     /**
@@ -125,7 +125,7 @@ public class SubstitutionMatrixHelper {
      * @return Blosum 60 matrix
      */
     public static SubstitutionMatrix<AminoAcidCompound> getBlosum60() {
-        return getAminoAcidCompoundSubstitutionMatrix("blosum60");
+        return getAminoAcidMatrix("blosum60");
     }
 
     /**
@@ -133,7 +133,7 @@ public class SubstitutionMatrixHelper {
      * @return Blosum 62 matrix
      */
     public static SubstitutionMatrix<AminoAcidCompound> getBlosum62() {
-        return getAminoAcidCompoundSubstitutionMatrix("blosum62");
+        return getAminoAcidMatrix("blosum62");
     }
 
     /**
@@ -141,7 +141,7 @@ public class SubstitutionMatrixHelper {
      * @return Blosum 65 matrix
      */
     public static SubstitutionMatrix<AminoAcidCompound> getBlosum65() {
-        return getAminoAcidCompoundSubstitutionMatrix("blosum65");
+        return getAminoAcidMatrix("blosum65");
     }
 
     /**
@@ -149,7 +149,7 @@ public class SubstitutionMatrixHelper {
      * @return Blosum 70 matrix
      */
     public static SubstitutionMatrix<AminoAcidCompound> getBlosum70() {
-        return getAminoAcidCompoundSubstitutionMatrix("blosum70");
+        return getAminoAcidMatrix("blosum70");
     }
 
     /**
@@ -157,7 +157,7 @@ public class SubstitutionMatrixHelper {
      * @return Blosum 75 matrix
      */
     public static SubstitutionMatrix<AminoAcidCompound> getBlosum75() {
-        return getAminoAcidCompoundSubstitutionMatrix("blosum75");
+        return getAminoAcidMatrix("blosum75");
     }
 
     /**
@@ -165,7 +165,7 @@ public class SubstitutionMatrixHelper {
      * @return Blosum 80 matrix
      */
     public static SubstitutionMatrix<AminoAcidCompound> getBlosum80() {
-        return getAminoAcidCompoundSubstitutionMatrix("blosum80");
+        return getAminoAcidMatrix("blosum80");
     }
 
     /**
@@ -173,7 +173,7 @@ public class SubstitutionMatrixHelper {
      * @return Blosum 85 matrix
      */
     public static SubstitutionMatrix<AminoAcidCompound> getBlosum85() {
-        return getAminoAcidCompoundSubstitutionMatrix("blosum85");
+        return getAminoAcidMatrix("blosum85");
     }
 
     /**
@@ -181,7 +181,7 @@ public class SubstitutionMatrixHelper {
      * @return Blosum 90 matrix
      */
     public static SubstitutionMatrix<AminoAcidCompound> getBlosum90() {
-        return getAminoAcidCompoundSubstitutionMatrix("blosum90");
+        return getAminoAcidMatrix("blosum90");
     }
 
     /**
@@ -189,7 +189,7 @@ public class SubstitutionMatrixHelper {
      * @return Gonnet 250 matrix
      */
     public static SubstitutionMatrix<AminoAcidCompound> getGonnet250() {
-        return getAminoAcidCompoundSubstitutionMatrix("gonnet250");
+        return getAminoAcidMatrix("gonnet250");
     }
 
     /**
@@ -197,7 +197,7 @@ public class SubstitutionMatrixHelper {
      * @return Nuc 4.2 matrix
      */
     public static SubstitutionMatrix<NucleotideCompound> getNuc4_2() {
-        return getNucleotideCompoundSubstitutionMatrix("nuc-4_2");
+        return getNucleotideMatrix("nuc-4_2");
     }
 
     /**
@@ -205,7 +205,7 @@ public class SubstitutionMatrixHelper {
      * @return Nuc 4.4 matrix
      */
     public static SubstitutionMatrix<NucleotideCompound> getNuc4_4() {
-        return getNucleotideCompoundSubstitutionMatrix("nuc-4_4");
+        return getNucleotideMatrix("nuc-4_4");
     }
 
     /**
@@ -213,13 +213,32 @@ public class SubstitutionMatrixHelper {
      * @return PAM 250 matrix
      */
     public static SubstitutionMatrix<AminoAcidCompound> getPAM250() {
-        return getAminoAcidCompoundSubstitutionMatrix("pam250");
+        return getAminoAcidMatrix("pam250");
     }
 
     // helper methods
 
+    /**
+     * Returns a substitution matrix for {@link AminoAcidCompound amino acids} given by the name {@code name}.
+     * Searches first in the default AAINDEX file (see @link {@link #getMatrixFromAAINDEX(String)}), then in the classpath.
+     * If the required matrix does not exist, null is returned.
+     * Example names:
+     * <ul>
+     * <li>blosum62</li>
+     * <li>JOND920103</li>
+     * <li>pam250</li>
+     * <li>gonnet250</li>
+     * </ul>
+     * @param name Either a common name or an AAINDEX name
+     */
+    public static SubstitutionMatrix<AminoAcidCompound> getAminoAcidSubstitutionMatrix(String name) {
+    	SubstitutionMatrix<AminoAcidCompound> matrix = getMatrixFromAAINDEX(name);
+    	if (matrix != null) return matrix;
+        return getAminoAcidMatrix(name);
+    }
+    
     // reads in an amino acid substitution matrix, if necessary
-    private static SubstitutionMatrix<AminoAcidCompound> getAminoAcidCompoundSubstitutionMatrix(String file) {
+    private static SubstitutionMatrix<AminoAcidCompound> getAminoAcidMatrix(String file) {
         if (!aminoAcidMatrices.containsKey(file)) {
             aminoAcidMatrices.put(file, new SimpleSubstitutionMatrix<AminoAcidCompound>(
                     AminoAcidCompoundSet.getAminoAcidCompoundSet(), getReader(file), file));
@@ -228,7 +247,7 @@ public class SubstitutionMatrixHelper {
     }
 
     // reads in a nucleotide substitution matrix, if necessary
-    private static SubstitutionMatrix<NucleotideCompound> getNucleotideCompoundSubstitutionMatrix(String file) {
+    private static SubstitutionMatrix<NucleotideCompound> getNucleotideMatrix(String file) {
         if (!nucleotideMatrices.containsKey(file)) {
             nucleotideMatrices.put(file, new SimpleSubstitutionMatrix<NucleotideCompound>(
                     AmbiguityDNACompoundSet.getDNACompoundSet(), getReader(file), file));
