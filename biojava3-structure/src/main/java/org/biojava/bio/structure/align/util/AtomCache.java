@@ -1,16 +1,16 @@
 /*
  * BioJava development code
- * 
+ *
  * This code may be freely distributed and modified under the terms of the GNU Lesser General Public Licence. This
  * should be distributed with the code. If you do not have a copy, see:
- * 
+ *
  * http://www.gnu.org/copyleft/lesser.html
- * 
+ *
  * Copyright for this code is held jointly by the individual authors. These should be listed in @author doc comments.
- * 
+ *
  * For more information on the BioJava project and its aims, or to join the biojava-l mailing list, visit the home page
  * at:
- * 
+ *
  * http://www.biojava.org/
  */
 package org.biojava.bio.structure.align.util;
@@ -43,6 +43,7 @@ import org.biojava.bio.structure.cath.CathSegment;
 import org.biojava.bio.structure.domain.PDPProvider;
 import org.biojava.bio.structure.domain.RemotePDPProvider;
 import org.biojava.bio.structure.io.FileParsingParameters;
+import org.biojava.bio.structure.io.MMCIFFileReader;
 import org.biojava.bio.structure.io.PDBFileReader;
 import org.biojava.bio.structure.scop.CachedRemoteScopInstallation;
 import org.biojava.bio.structure.scop.ScopDatabase;
@@ -57,7 +58,7 @@ import org.biojava3.structure.StructureIO;
  * re-using the same PDB structures, the AtomCache keeps an in-memory cache of the files for quicker access. The cache
  * is a soft-cache, this means it won't cause out of memory exceptions, but garbage collects the data if the Java
  * virtual machine needs to free up space. The AtomCache is thread-safe.
- * 
+ *
  * @author Andreas Prlic
  * @author Spencer Bliven
  * @author Peter Rose
@@ -96,12 +97,13 @@ public class AtomCache {
 	String path;
 
 	boolean strictSCOP;
+	boolean useMmCif;
 
 	/**
 	 * Default AtomCache constructor.
-	 * 
+	 *
 	 * Usually stores files in a temp directory, but this can be overriden by setting the PDB_DIR variable at runtime.
-	 * 
+	 *
 	 * @see UserConfiguration#UserConfiguration()
 	 */
 	public AtomCache() {
@@ -110,7 +112,7 @@ public class AtomCache {
 
 	/**
 	 * Creates an instance of an AtomCache that is pointed to the a particular path in the file system.
-	 * 
+	 *
 	 * @param pdbFilePath
 	 *            a directory in the file system to use as a location to cache files.
 	 * @param isSplit
@@ -154,11 +156,14 @@ public class AtomCache {
 		strictSCOP = true;
 
 		scopInstallation = null;
+
+		useMmCif = false;
+
 	}
 
 	/**
 	 * Creates a new AtomCache object based on the provided UserConfiguration.
-	 * 
+	 *
 	 * @param config
 	 *            the UserConfiguration to use for this cache.
 	 */
@@ -169,7 +174,7 @@ public class AtomCache {
 
 	/**
 	 * Returns the CA atoms for the provided name. See {@link #getStructure(String)} for supported naming conventions.
-	 * 
+	 *
 	 * @param name
 	 * @return an array of Atoms.
 	 * @throws IOException
@@ -201,7 +206,7 @@ public class AtomCache {
 
 	/**
 	 * Returns the CA atoms for the provided name. See {@link #getStructure(String)} for supported naming conventions.
-	 * 
+	 *
 	 * @param name
 	 * @param clone
 	 *            flag to make sure that the atoms are getting coned
@@ -226,7 +231,7 @@ public class AtomCache {
 	 * biological assembly (bioAssemblyId=1), and a few structures have multiple biological assemblies. Set
 	 * bioAssemblyFallback to true, to download the original PDB file in cases that a biological assembly file is not
 	 * available.
-	 * 
+	 *
 	 * @param pdbId
 	 *            the PDB ID
 	 * @param bioAssemblyId
@@ -263,7 +268,7 @@ public class AtomCache {
 	/**
 	 * Loads the default biological unit (*.pdb1.gz) file. If it is not available, the original PDB file will be loaded,
 	 * i.e., for NMR structures, where the original files is also the biological assembly.
-	 * 
+	 *
 	 * @param pdbId
 	 *            the PDB ID
 	 * @return a structure object
@@ -279,7 +284,7 @@ public class AtomCache {
 
 	/**
 	 * Returns the path that contains the caching file for utility data, such as domain definitons.
-	 * 
+	 *
 	 * @return
 	 */
 	public String getCachePath() {
@@ -293,7 +298,7 @@ public class AtomCache {
 
 	/**
 	 * Get the path that is used to cache PDB files.
-	 * 
+	 *
 	 * @return path to a directory
 	 */
 	public String getPath() {
@@ -314,10 +319,10 @@ public class AtomCache {
 
 	/**
 	 * Request a Structure based on a <i>name</i>.
-	 * 
+	 *
 	 * <pre>
 	 * 		Formal specification for how to specify the <i>name</i>:
-	 * 
+	 *
 	 * 		name     := pdbID
 	 * 		               | pdbID '.' chainID
 	 * 		               | pdbID '.' range
@@ -329,8 +334,8 @@ public class AtomCache {
 	 * 		chainID       := [a-zA-Z0-9]
 	 * 		scopID        := 'd' pdbID [a-z_][0-9_]
 	 * 		resNum        := [-+]?[0-9]+[A-Za-z]?
-	 * 
-	 * 
+	 *
+	 *
 	 * 		Example structures:
 	 * 		1TIM     #whole structure
 	 * 		4HHB.C     #single chain
@@ -338,9 +343,9 @@ public class AtomCache {
 	 * 		3AA0.A,B     #two chains treated as one structure
 	 * 		d2bq6a1     #scop domain
 	 * </pre>
-	 * 
+	 *
 	 * With the additional set of rules:
-	 * 
+	 *
 	 * <ul>
 	 * <li>If only a PDB code is provided, the whole structure will be return including ligands, but the first model
 	 * only (for NMR).
@@ -349,7 +354,7 @@ public class AtomCache {
 	 * see {@link #setStrictSCOP(boolean)}</li>
 	 * <li>URLs are accepted as well</li>
 	 * </ul>
-	 * 
+	 *
 	 * @param name
 	 * @return a Structure object, or null if name appears improperly formated (eg too short, etc)
 	 * @throws IOException
@@ -380,7 +385,11 @@ public class AtomCache {
 			if (name.length() == 4) {
 
 				pdbId = name;
-				Structure s = loadStructureFromByPdbId(pdbId);
+				Structure s;
+				if ( useMmCif)
+					s = loadStructureFromCifByPdbId(pdbId);
+				else
+					s = loadStructureFromPdbByPdbId(pdbId);
 				return s;
 			} else if (structureName.isScopName()) {
 
@@ -470,7 +479,11 @@ public class AtomCache {
 
 			// long start = System.currentTimeMillis();
 
-			Structure s = loadStructureFromByPdbId(pdbId);
+			Structure s;
+			if ( useMmCif)
+				s = loadStructureFromCifByPdbId(pdbId);
+			else
+				s = loadStructureFromPdbByPdbId(pdbId);
 
 			// long end = System.currentTimeMillis();
 			// System.out.println("time to load " + pdbId + " " + (end-start) + "\t  size :" +
@@ -508,7 +521,7 @@ public class AtomCache {
 
 	/**
 	 * Returns the representation of a {@link ScopDomain} as a BioJava {@link Structure} object.
-	 * 
+	 *
 	 * @param domain
 	 *            a SCOP domain
 	 * @return a Structure object
@@ -522,7 +535,7 @@ public class AtomCache {
 
 	/**
 	 * Returns the representation of a {@link ScopDomain} as a BioJava {@link Structure} object.
-	 * 
+	 *
 	 * @param domain
 	 *            a SCOP domain
 	 * @param scopDatabase
@@ -538,7 +551,7 @@ public class AtomCache {
 
 	/**
 	 * Returns the representation of a {@link ScopDomain} as a BioJava {@link Structure} object.
-	 * 
+	 *
 	 * @param domain
 	 *            a SCOP domain
 	 * @param scopDatabase
@@ -616,7 +629,7 @@ public class AtomCache {
 
 	/**
 	 * Returns the representation of a {@link ScopDomain} as a BioJava {@link Structure} object.
-	 * 
+	 *
 	 * @param scopId
 	 *            a SCOP Id
 	 * @return a Structure object
@@ -630,7 +643,7 @@ public class AtomCache {
 
 	/**
 	 * Returns the representation of a {@link ScopDomain} as a BioJava {@link Structure} object.
-	 * 
+	 *
 	 * @param scopId
 	 *            a SCOP Id
 	 * @param scopDatabase
@@ -647,7 +660,7 @@ public class AtomCache {
 
 	/**
 	 * Does the cache automatically download files that are missing from the local installation from the PDB FTP site?
-	 * 
+	 *
 	 * @return flag
 	 */
 	public boolean isAutoFetch() {
@@ -656,7 +669,7 @@ public class AtomCache {
 
 	/**
 	 * <b>N.B.</b> This feature won't work unless the structure wasn't found & autoFetch is set to <code>true</code>.
-	 * 
+	 *
 	 * @return the fetchCurrent
 	 */
 	public boolean isFetchCurrent() {
@@ -667,7 +680,7 @@ public class AtomCache {
 	 * forces the cache to fetch the file if its status is OBSOLETE. This feature has a higher priority than
 	 * {@link #setFetchCurrent(boolean)}.<br>
 	 * <b>N.B.</b> This feature won't work unless the structure wasn't found & autoFetch is set to <code>true</code>.
-	 * 
+	 *
 	 * @return the fetchFileEvenIfObsolete
 	 * @author Amr AL-Hossary
 	 * @see #fetchCurrent
@@ -680,7 +693,7 @@ public class AtomCache {
 	/**
 	 * Is the organization of files within the directory split, as on the PDB FTP servers, or are all files contained in
 	 * one directory.
-	 * 
+	 *
 	 * @return flag
 	 */
 	public boolean isSplit() {
@@ -690,7 +703,7 @@ public class AtomCache {
 	/**
 	 * Reports whether strict scop naming will be enforced, or whether this AtomCache should try to guess some simple
 	 * variants on scop domains.
-	 * 
+	 *
 	 * @return true if scop names should be used strictly with no guessing
 	 */
 	public boolean isStrictSCOP() {
@@ -722,7 +735,7 @@ public class AtomCache {
 
 	/**
 	 * Does the cache automatically download files that are missing from the local installation from the PDB FTP site?
-	 * 
+	 *
 	 * @param autoFetch
 	 *            flag
 	 */
@@ -732,7 +745,7 @@ public class AtomCache {
 
 	/**
 	 * set the location at which utility data should be cached.
-	 * 
+	 *
 	 * @param cachePath
 	 */
 	public void setCachePath(String cachePath) {
@@ -745,7 +758,7 @@ public class AtomCache {
 	 * if enabled, the reader searches for the newest possible PDB ID, if not present in he local installation. The
 	 * {@link #setFetchFileEvenIfObsolete(boolean)} function has a higher priority than this function.<br>
 	 * <b>N.B.</b> This feature won't work unless the structure wasn't found & autoFetch is set to <code>true</code>.
-	 * 
+	 *
 	 * @param fetchCurrent
 	 *            the fetchCurrent to set
 	 * @author Amr AL-Hossary
@@ -758,7 +771,7 @@ public class AtomCache {
 
 	/**
 	 * <b>N.B.</b> This feature won't work unless the structure wasn't found & autoFetch is set to <code>true</code>.
-	 * 
+	 *
 	 * @param fetchFileEvenIfObsolete
 	 *            the fetchFileEvenIfObsolete to set
 	 */
@@ -772,7 +785,7 @@ public class AtomCache {
 
 	/**
 	 * Set the path that is used to cache PDB files.
-	 * 
+	 *
 	 * @param path
 	 *            to a directory
 	 */
@@ -788,7 +801,7 @@ public class AtomCache {
 	/**
 	 * Is the organization of files within the directory split, as on the PDB FTP servers, or are all files contained in
 	 * one directory.
-	 * 
+	 *
 	 * @param isSplit
 	 *            flag
 	 */
@@ -798,10 +811,10 @@ public class AtomCache {
 
 	/**
 	 * When strictSCOP is enabled, SCOP domain identifiers (eg 'd1gbga_') are matched literally to the SCOP database.
-	 * 
+	 *
 	 * When disabled, some simple mistakes are corrected automatically. For instance, the invalid identifier 'd1gbg__'
 	 * would be corrected to 'd1gbga_' automatically.
-	 * 
+	 *
 	 * @param strictSCOP
 	 *            Indicates whether strict scop names should be used.
 	 */
@@ -809,7 +822,21 @@ public class AtomCache {
 		this.strictSCOP = strictSCOP;
 	}
 
-	private boolean checkLoading(String name) {
+	/**
+     * @return the useMmCif
+     */
+    public boolean isUseMmCif() {
+        return useMmCif;
+    }
+
+    /**
+     * @param useMmCif the useMmCif to set
+     */
+    public void setUseMmCif(boolean useMmCif) {
+        this.useMmCif = useMmCif;
+    }
+
+    private boolean checkLoading(String name) {
 		return currentlyLoading.contains(name);
 
 	}
@@ -991,15 +1018,15 @@ public class AtomCache {
 	/**
 	 * <p>
 	 * Guess a scop domain. If an exact match is found, return that.
-	 * 
+	 *
 	 * <p>
 	 * Otherwise, return the first scop domain found for the specified protein such that
 	 * <ul>
 	 * <li>The chains match, or one of the chains is '_' or '.'.
 	 * <li>The domains match, or one of the domains is '_'.
 	 * </ul>
-	 * 
-	 * 
+	 *
+	 *
 	 * @param name
 	 * @return
 	 * @throws IOException
@@ -1066,7 +1093,36 @@ public class AtomCache {
 		currentlyLoading.remove(name);
 	}
 
-	protected Structure loadStructureFromByPdbId(String pdbId) throws StructureException {
+	protected Structure loadStructureFromCifByPdbId(String pdbId)
+			throws StructureException {
+
+		Structure s;
+		flagLoading(pdbId);
+		try {
+			MMCIFFileReader reader = new MMCIFFileReader();
+			reader.setPath(path);
+			reader.setPdbDirectorySplit(isSplit);
+			reader.setAutoFetch(autoFetch);
+
+			// not supported yet
+			//reader.setFetchFileEvenIfObsolete(fetchFileEvenIfObsolete);
+			//reader.setFetchCurrent(fetchCurrent);
+
+			reader.setFileParsingParameters(params);
+
+			s = reader.getStructureById(pdbId.toLowerCase());
+
+		} catch (Exception e){
+			flagLoadingFinished(pdbId);
+			throw new StructureException(e.getMessage() + " while parsing " + pdbId,e);
+		}
+		flagLoadingFinished(pdbId);
+
+		return s;
+	}
+
+
+	protected Structure loadStructureFromPdbByPdbId(String pdbId) throws StructureException {
 
 		Structure s;
 		flagLoading(pdbId);
