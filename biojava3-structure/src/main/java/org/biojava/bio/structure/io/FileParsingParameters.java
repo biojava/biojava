@@ -98,6 +98,11 @@ public class FileParsingParameters implements Serializable
 	 * 
 	 */
 	boolean parseBioAssembly;
+	
+	/**
+	 * Should we create bonds between atoms when parsing a file?
+	 */
+	private boolean createAtomBonds;
 
 	/**  the maximum number of atoms we will add to a structure
     this protects from memory overflows in the few really big protein structures.
@@ -135,6 +140,8 @@ public class FileParsingParameters implements Serializable
 		atomCaThreshold = ATOM_CA_THRESHOLD;
 
 		parseBioAssembly = false;
+		
+		createAtomBonds = false;
 	}
 
 	/** is secondary structure assignment being parsed from the file?
@@ -339,8 +346,23 @@ public class FileParsingParameters implements Serializable
 		this.parseBioAssembly = parseBioAssembly;
 	}
 
+	/**
+	 * Should we create bonds between atoms when parsing a file?
+	 * 
+	 * @return true if we should create the bonds, false if not
+	 */
+	public boolean shouldCreateAtomBonds() {
+		return createAtomBonds;
+	}
 
-
-
+	/**
+	 * Should we create bonds between atoms when parsing a file?
+	 * 
+	 * @param createAtomBonds
+	 *            true if we should create the bonds, false if not
+	 */
+	public void setCreateAtomBonds(boolean createAtomBonds) {
+		this.createAtomBonds = createAtomBonds;
+	}
 
 }

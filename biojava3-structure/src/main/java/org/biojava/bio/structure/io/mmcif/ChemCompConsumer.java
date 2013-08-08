@@ -207,8 +207,7 @@ public class ChemCompConsumer implements MMcifConsumer {
 
 	@Override
 	public void newChemCompBond(ChemCompBond bond) {
-		// TODO Auto-generated method stub
-		
+		dictionary.getChemComp(latestChemCompId).getBonds().add(bond);
 	}
 
 	@Override
