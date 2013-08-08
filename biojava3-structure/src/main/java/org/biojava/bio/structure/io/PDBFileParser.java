@@ -2731,7 +2731,9 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 			
 			triggerEndFileChecks();
 			
-			formBonds();
+			if (params.shouldCreateAtomBonds()) {
+				formBonds();
+			}
 
 		} catch (Exception e) {
 			System.err.println(line);
