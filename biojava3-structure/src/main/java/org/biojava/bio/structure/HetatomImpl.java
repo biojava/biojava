@@ -606,6 +606,28 @@ public class HetatomImpl implements Group,Serializable {
 			return new ArrayList<Group>();
 		return altLocs;
 	}
+	
+	public Group getAltLocGroup(Character altLoc) {
+		if (altLocs == null || altLocs.size() == 0)
+			return null;
+		
+		for (Group group : altLocs) {
+			if (group.getAtoms().isEmpty())
+				continue;
+			
+			// determine this group's alt-loc character code by looking
+			// at its first atom's alt-loc character
+			try {
+				if (group.getAtom(0).getAltLoc().equals(altLoc)) {
+					return group;
+				}
+			} catch (StructureException e) {
+				// this will never happen
+			}
+		}
+		
+		return null;
+	}
 
 	public void addAltLoc(Group group) {
 		if ( altLocs == null) {
