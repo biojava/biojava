@@ -20,6 +20,7 @@ public class TestBond extends TestCase {
 		params.setStoreEmptySeqRes(true);
 		params.setAlignSeqRes(true);
 		params.setLoadChemCompInfo(true);
+		params.setCreateAtomBonds(true);
 		
 		StructureIO.setAtomCache(cache);
 		s = StructureIO.getStructure("1KH9");
