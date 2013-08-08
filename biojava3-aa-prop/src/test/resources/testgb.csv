@@ -1,0 +1,2 @@
+SequenceName,MolecularWeight,Absorbance_True,Absorbance_False,ExtinctionCoefficient_True,ExtinctionCoefficient_False,InstabilityIndex,ApliphaticIndex,AverageHydropathyValue,IsoelectricPoint,NetCharge_pH_7,A,R,N,D,C,E,Q,G,H,I,L,K,M,F,P,S,T,W,Y,V
+NP_000257,15043.5262,0.3962,0.4377,5960.0,6585.0,66.3293,70.3759,-0.2263,9.1715,9.0085,0.0451,0.0902,0.0075,0.0451,0.0827,0.0301,0.0226,0.0301,0.0526,0.0301,0.1053,0.0526,0.0526,0.0301,0.0376,0.1654,0.0451,0.0,0.0301,0.0451
