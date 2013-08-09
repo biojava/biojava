@@ -21,11 +21,11 @@ public class Bond {
 	 * Constructs a new bond from a pair of atoms and the bond order of the bond
 	 * between them.
 	 * <p>
-	 * Note that when using this constructor, creating a Bond with some atoms A
-	 * and B is not equivalent to forming a bond between A and B; to do this,
-	 * one must either call {@link #addSelfToAtoms()} or use the constructor
-	 * {@link #Bond(Atom, Atom, int, boolean)}, with the last argument set to
-	 * 'true'.
+	 * Note that by forming a bond between atoms 'A' and 'B' with this
+	 * constructor, atoms 'A' and 'B' will be updated to have this bond in their
+	 * list of bonds. If you do not want this automatic updating, instead use
+	 * {@link #Bond(Atom, Atom, int, boolean)} with the
+	 * <code>addSelfToAtoms</code> flag set to <code>false</code>.
 	 * 
 	 * @param atomA
 	 *            one of the atoms in this bond
@@ -35,7 +35,7 @@ public class Bond {
 	 *            the bond order of this bond
 	 */
 	public Bond(Atom atomA, Atom atomB, int bondOrder) {
-		this(atomA, atomB, bondOrder, false);
+		this(atomA, atomB, bondOrder, true);
 	}
 
 	/**
@@ -50,7 +50,9 @@ public class Bond {
 	 *            the bond order of this bond
 	 * @param addSelfToAtoms
 	 *            if set to true, this bond, once created, will automatically
-	 *            add itself to atomA and atomB's bond lists.
+	 *            add itself to atomA and atomB's bond lists. (If this argument
+	 *            is set to false, the list returned from
+	 *            {@link Atom#getBonds()} will not contain this bond.)
 	 */
 	public Bond(Atom atomA, Atom atomB, int bondOrder, boolean addSelfToAtoms) {
 		this.atomA = atomA;
@@ -66,6 +68,10 @@ public class Bond {
 	 * Adds this Bond to its atoms bond lists. If this method is not called,
 	 * then the list returned from calling {@link Atom#getBonds()} will not
 	 * include this bond.
+	 * <p>
+	 * If you created your Bond with the constructor
+	 * {@link #Bond(Atom, Atom, int)}, this method has already been called for
+	 * you and should not be called again.
 	 */
 	// TODO first check if those bonds haven't been made already
 	public void addSelfToAtoms() {
