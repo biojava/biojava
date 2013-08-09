@@ -2900,11 +2900,12 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 	
 	private void formIntraResidueBonds() {
 		for (Chain chain : structure.getChains()) {
-			List<Group> groups = chain.getSeqResGroups();
+			List<Group> groups = chain.getAtomGroups();
 
 			for (Group group : groups) {
 				// atoms with no residue number don't have atom information
-				if (group.getResidueNumber() == null) {
+				// also ignore water
+				if (group.getResidueNumber() == null || group.isWater()) {
 					continue;
 				}
 
