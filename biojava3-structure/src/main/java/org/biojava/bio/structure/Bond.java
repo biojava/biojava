@@ -7,60 +7,52 @@ package org.biojava.bio.structure;
 
 /**
  * A simple bond -- it stores information about two atoms as well as information
- * about the type of bond it is and its bond order.
+ * about its bond order.
  * 
- * @see BondType
  * @author Jules Jacobsen <jacobsen@ebi.ac.uk>
  * @author Ulysse Carion
  */
 public class Bond {
-	private BondType type;
 	private Atom atomA;
 	private Atom atomB;
 	private int bondOrder;
 
 	/**
-	 * Constructs a new bond from a pair of atoms, the type of bond this is, and
-	 * the bond order of the bond between them.
+	 * Constructs a new bond from a pair of atoms and the bond order of the bond
+	 * between them.
 	 * <p>
 	 * Note that when using this constructor, creating a Bond with some atoms A
 	 * and B is not equivalent to forming a bond between A and B; to do this,
 	 * one must either call {@link #addSelfToAtoms()} or use the constructor
-	 * {@link #Bond(Atom, Atom, BondType, int, boolean)}, with the last argument
-	 * set to 'true'.
+	 * {@link #Bond(Atom, Atom, int, boolean)}, with the last argument set to
+	 * 'true'.
 	 * 
 	 * @param atomA
 	 *            one of the atoms in this bond
 	 * @param atomB
 	 *            the other atom in this bond
-	 * @param type
-	 *            this bond's type
 	 * @param bondOrder
 	 *            the bond order of this bond
 	 */
-	public Bond(Atom atomA, Atom atomB, BondType type, int bondOrder) {
-		this(atomA, atomB, type, bondOrder, false);
+	public Bond(Atom atomA, Atom atomB, int bondOrder) {
+		this(atomA, atomB, bondOrder, false);
 	}
 
 	/**
-	 * Constructs a new bond from a pair of atoms, the type of bond this is, and
-	 * the bond order of the bond between them.
+	 * Constructs a new bond from a pair of atoms and the bond order of the bond
+	 * between them.
 	 * 
 	 * @param atomA
 	 *            one of the atoms in this bond
 	 * @param atomB
 	 *            the other atom in this bond
-	 * @param type
-	 *            this bond's type
 	 * @param bondOrder
 	 *            the bond order of this bond
 	 * @param addSelfToAtoms
 	 *            if set to true, this bond, once created, will automatically
 	 *            add itself to atomA and atomB's bond lists.
 	 */
-	public Bond(Atom atomA, Atom atomB, BondType type, int bondOrder,
-			boolean addSelfToAtoms) {
-		this.type = type;
+	public Bond(Atom atomA, Atom atomB, int bondOrder, boolean addSelfToAtoms) {
 		this.atomA = atomA;
 		this.atomB = atomB;
 		this.bondOrder = bondOrder;
@@ -134,15 +126,6 @@ public class Bond {
 	}
 
 	/**
-	 * Gets the BondType of this Bond.
-	 * 
-	 * @return this bond's BondType
-	 */
-	public BondType getType() {
-		return type;
-	}
-
-	/**
 	 * Gets the bond order of this bond. A return value of '1' corresponds to a
 	 * single bond, '2' to a double bond, etc.
 	 * 
@@ -171,7 +154,7 @@ public class Bond {
 
 	@Override
 	public String toString() {
-		return "Bond [type=" + type + ", atomA=" + atomA + ", atomB=" + atomB
-				+ ", bondOrder=" + bondOrder + "]";
+		return "Bond [atomA=" + atomA + ", atomB=" + atomB + ", bondOrder="
+				+ bondOrder + "]";
 	}
 }
