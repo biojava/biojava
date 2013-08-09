@@ -23,6 +23,8 @@
  */
 package org.biojava.bio.structure;
 
+import java.util.List;
+
 /**
  * A simple interface for an Atom.
  * The coordinates can be accessed via the
@@ -220,5 +222,10 @@ public interface Atom extends Cloneable, PDBRecord {
      */
     public Group getGroup();
     
-    
+    /**
+     * Gets all {@link Bond}s this atom is part of.
+     * 
+     * @return a list of {@link Bond}s.
+     */
+    public List<Bond> getBonds();
 }

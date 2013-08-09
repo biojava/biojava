@@ -977,73 +977,75 @@ public class StructureTools {
 		return returnList;
 	}
 
-	/*
-	 * Very simple distance-based bond calculator. Will give approximations,
-	 * but do not rely on this to be chemically correct.
-	 */
-	public static List<Bond> findBonds(Group group, List<Group> groups) {
-		List<Bond> bondList = new ArrayList<Bond>();
-		for (Atom atomA : group.getAtoms()) {
-			for (Group groupB : groups) {
-				if (groupB.getType().equals(GroupType.HETATM)) {
-					continue;
-				}
-				for (Atom atomB : groupB.getAtoms()) {
-					try {
-						double dist = Calc.getDistance(atomA, atomB);
-						BondType bondType = BondType.UNDEFINED;
-						if (dist <= 2) {
-							bondType = BondType.COVALENT;
-							Bond bond = new Bond(dist, bondType, group, atomA, groupB, atomB);
-							bondList.add(bond);
-							//                                    System.out.println(String.format("%s within %s of %s", atomB, dist, atomA));
-						}
-						else if (dist <= 3.25) {
-
-							if (isHbondDonorAcceptor(atomA) && isHbondDonorAcceptor(atomB)) {
-								bondType = BondType.HBOND;
-							}
-							else if (atomA.getElement().isMetal() && isHbondDonorAcceptor(atomB)) {
-								bondType = BondType.METAL;
-							}
-							else if (atomA.getElement().equals(Element.C) && atomB.getElement().equals(Element.C)) {
-								bondType = BondType.HYDROPHOBIC;
-							}
-							//not really interested in 'undefined' types
-							if (bondType != BondType.UNDEFINED) {
-								Bond bond = new Bond(dist, bondType, group, atomA, groupB, atomB);
-								bondList.add(bond);
-							}
-							//                                    System.out.println(String.format("%s within %s of %s", atomB, dist, atomA));
-						} else if (dist <= 3.9) {
-							if (atomA.getElement().equals(Element.C) && atomB.getElement().equals(Element.C)) {
-								bondType = BondType.HYDROPHOBIC;
-							}
-							//not really interested in 'undefined' types
-							if (bondType != BondType.UNDEFINED) {
-								Bond bond = new Bond(dist, bondType, group, atomA, groupB, atomB);
-								bondList.add(bond);
-							}
-						}
-
-					} catch (StructureException ex) {
-						Logger.getLogger(StructureTools.class.getName()).log(Level.SEVERE, null, ex);
-					}
-
-				}
-			}
-		}
-
-
-		return bondList;
-	}
-
-	private static boolean isHbondDonorAcceptor(Atom atom) {
-		if (hBondDonorAcceptors.contains(atom.getElement())) {
-			return true;
-		}
-		return false;
-	}
+//	This code relies on an old version of the Bond class.
+//	
+//	/*
+//	 * Very simple distance-based bond calculator. Will give approximations,
+//	 * but do not rely on this to be chemically correct.
+//	 */
+//	public static List<Bond> findBonds(Group group, List<Group> groups) {
+//		List<Bond> bondList = new ArrayList<Bond>();
+//		for (Atom atomA : group.getAtoms()) {
+//			for (Group groupB : groups) {
+//				if (groupB.getType().equals(GroupType.HETATM)) {
+//					continue;
+//				}
+//				for (Atom atomB : groupB.getAtoms()) {
+//					try {
+//						double dist = Calc.getDistance(atomA, atomB);
+//						BondType bondType = BondType.UNDEFINED;
+//						if (dist <= 2) {
+//							bondType = BondType.COVALENT;
+//							Bond bond = new Bond(dist, bondType, group, atomA, groupB, atomB);
+//							bondList.add(bond);
+//							//                                    System.out.println(String.format("%s within %s of %s", atomB, dist, atomA));
+//						}
+//						else if (dist <= 3.25) {
+//
+//							if (isHbondDonorAcceptor(atomA) && isHbondDonorAcceptor(atomB)) {
+//								bondType = BondType.HBOND;
+//							}
+//							else if (atomA.getElement().isMetal() && isHbondDonorAcceptor(atomB)) {
+//								bondType = BondType.METAL;
+//							}
+//							else if (atomA.getElement().equals(Element.C) && atomB.getElement().equals(Element.C)) {
+//								bondType = BondType.HYDROPHOBIC;
+//							}
+//							//not really interested in 'undefined' types
+//							if (bondType != BondType.UNDEFINED) {
+//								Bond bond = new Bond(dist, bondType, group, atomA, groupB, atomB);
+//								bondList.add(bond);
+//							}
+//							//                                    System.out.println(String.format("%s within %s of %s", atomB, dist, atomA));
+//						} else if (dist <= 3.9) {
+//							if (atomA.getElement().equals(Element.C) && atomB.getElement().equals(Element.C)) {
+//								bondType = BondType.HYDROPHOBIC;
+//							}
+//							//not really interested in 'undefined' types
+//							if (bondType != BondType.UNDEFINED) {
+//								Bond bond = new Bond(dist, bondType, group, atomA, groupB, atomB);
+//								bondList.add(bond);
+//							}
+//						}
+//
+//					} catch (StructureException ex) {
+//						Logger.getLogger(StructureTools.class.getName()).log(Level.SEVERE, null, ex);
+//					}
+//
+//				}
+//			}
+//		}
+//
+//
+//		return bondList;
+//	}
+//
+//	private static boolean isHbondDonorAcceptor(Atom atom) {
+//		if (hBondDonorAcceptors.contains(atom.getElement())) {
+//			return true;
+//		}
+//		return false;
+//	}
 
 	/** Remove all models from a Structure and keep only the first
 	 * 

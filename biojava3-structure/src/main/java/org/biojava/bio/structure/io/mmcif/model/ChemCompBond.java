@@ -84,6 +84,40 @@ public class ChemCompBond {
 	public void setPdbx_ordinal(String pdbx_ordinal) {
 		this.pdbx_ordinal = pdbx_ordinal;
 	}
-	
-	
+
+	/**
+	 * Converts this ChemCompBond's value_order attribute into an int using the
+	 * conversion:
+	 * 
+	 * <pre>
+	 * 	SING -> 1
+	 * 	DOUB -> 2
+	 * 	TRIP -> 3
+	 * 	QUAD -> 4
+	 * </pre>
+	 * 
+	 * Any other values will return -1.
+	 * <p>
+	 * (Source:
+	 * http://mmcif.rcsb.org/dictionaries/mmcif_mdb.dic/Items/_chem_comp_bond.
+	 * value_order.html)
+	 * 
+	 * @return the numerical value of this ChemCompBond's bond order, or -1 if
+	 *         the value is non-numeric or unknown.
+	 */
+	public int getNumericalBondOrder() {
+		if (value_order.equals("SING")) {
+			return 1;
+		} else if (value_order.equals("DOUB")) {
+			return 2;
+		} else if (value_order.equals("TRIP")) {
+			return 3;
+		} else if (value_order.equals("QUAD")) {
+			return 4;
+		} else {
+			System.err.println("Unknown or non-numeric value for value_order: "
+					+ value_order);
+			return -1;
+		}
+	}
 }
