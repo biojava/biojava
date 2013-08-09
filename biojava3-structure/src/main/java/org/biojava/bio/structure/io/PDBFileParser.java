@@ -2806,6 +2806,8 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		
+		trimAtomBondLists();
 	}
 	
 	private void formLinkRecordBond(LinkRecord linkRecord) {
@@ -2923,6 +2925,16 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 						// Some of the atoms were missing. That's fine, there's
 						// nothing to do in this case.
 					}
+				}
+			}
+		}
+	}
+	
+	private void trimAtomBondLists() {
+		for (Chain chain : structure.getChains()) {
+			for (Group group : chain.getAtomGroups()) {
+				for (Atom atom : group.getAtoms()) {
+					((ArrayList<Bond>) atom.getBonds()).trimToSize();
 				}
 			}
 		}
