@@ -2809,6 +2809,11 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 	}
 	
 	private void formLinkRecordBond(LinkRecord linkRecord) {
+		// only work with atoms that aren't alternate locations
+		if (linkRecord.getAltLoc1().equals(" ")
+				|| linkRecord.getAltLoc2().equals(" "))
+			return;
+
 		try {
 			Atom a = getAtomFromRecord(linkRecord.getName1(),
 					linkRecord.getAltLoc1(), linkRecord.getResName1(),
