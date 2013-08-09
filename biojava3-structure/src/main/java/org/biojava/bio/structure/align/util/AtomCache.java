@@ -17,9 +17,6 @@
  *
  *      http://www.biojava.org/
  *
- * 
- * 
- *
  */
 package org.biojava.bio.structure.align.util;
 
@@ -51,6 +48,7 @@ import org.biojava.bio.structure.cath.CathSegment;
 import org.biojava.bio.structure.domain.PDPProvider;
 import org.biojava.bio.structure.domain.RemotePDPProvider;
 import org.biojava.bio.structure.io.FileParsingParameters;
+import org.biojava.bio.structure.io.MMCIFFileReader;
 import org.biojava.bio.structure.io.PDBFileReader;
 import org.biojava.bio.structure.scop.CachedRemoteScopInstallation;
 import org.biojava.bio.structure.scop.ScopDatabase;
@@ -73,35 +71,38 @@ import org.biojava3.structure.StructureIO;
  */
 public class AtomCache {
 
+	public static final String BIOL_ASSEMBLY_IDENTIFIER = "BIO:";
 	public static final String CHAIN_NR_SYMBOL = ":";
-	public static final String UNDERSCORE = "_";
 	public static final String CHAIN_SPLIT_SYMBOL = ".";
+
+	public static final String PDP_DOMAIN_IDENTIFIER = "PDP:";
+
+	public static final Pattern scopIDregex = Pattern.compile("d(....)(.)(.)");
+
+	public static final String UNDERSCORE = "_";
 
 	private static final String FILE_SEPARATOR = System.getProperty("file.separator");
 
-	String path;
+	private boolean fetchCurrent;
+
+	private boolean fetchFileEvenIfObsolete;
+
+	private ScopDatabase scopInstallation;
+	protected FileParsingParameters params;
+	protected PDPProvider pdpprovider;
+
+	boolean autoFetch;
 
 	String cachePath;
 
 	// make sure IDs are loaded uniquely
 	Collection<String> currentlyLoading = Collections.synchronizedCollection(new TreeSet<String>());
 
-	private ScopDatabase scopInstallation;
-
-	protected PDPProvider pdpprovider;
-
-	boolean autoFetch;
 	boolean isSplit;
+	String path;
+
 	boolean strictSCOP;
-
-	protected FileParsingParameters params;
-
-	private boolean fetchFileEvenIfObsolete;
-
-	private boolean fetchCurrent;
-
-	public static final String PDP_DOMAIN_IDENTIFIER = "PDP:";
-	public static final String BIOL_ASSEMBLY_IDENTIFIER = "BIO:";
+	boolean useMmCif;
 
 	/**
 	 * Default AtomCache constructor.
@@ -164,6 +165,9 @@ public class AtomCache {
 		strictSCOP = true;
 
 		scopInstallation = null;
+
+		useMmCif = false;
+
 	}
 
 	/**
@@ -175,308 +179,6 @@ public class AtomCache {
 	public AtomCache(UserConfiguration config) {
 		this(config.getPdbFilePath(), config.isSplit());
 		autoFetch = config.getAutoFetch();
-	}
-
-	/**
-	 * Get the path that is used to cache PDB files.
-	 * 
-	 * @return path to a directory
-	 */
-	public String getPath() {
-		return path;
-	}
-
-	/**
-	 * Set the path that is used to cache PDB files.
-	 * 
-	 * @param path
-	 *            to a directory
-	 */
-	public void setPath(String path) {
-		System.setProperty(AbstractUserArgumentProcessor.PDB_DIR, path);
-		this.path = path;
-	}
-
-	/**
-	 * Returns the path that contains the caching file for utility data, such as domain definitons.
-	 * 
-	 * @return
-	 */
-	public String getCachePath() {
-		if (cachePath == null || cachePath.equals("")) {
-			return getPath();
-		}
-		return cachePath;
-	}
-
-	/**
-	 * set the location at which utility data should be cached.
-	 * 
-	 * @param cachePath
-	 */
-	public void setCachePath(String cachePath) {
-		this.cachePath = cachePath;
-		System.setProperty(AbstractUserArgumentProcessor.CACHE_DIR, cachePath);
-
-	}
-
-	/**
-	 * Is the organization of files within the directory split, as on the PDB FTP servers, or are all files contained in
-	 * one directory.
-	 * 
-	 * @return flag
-	 */
-	public boolean isSplit() {
-		return isSplit;
-	}
-
-	/**
-	 * Is the organization of files within the directory split, as on the PDB FTP servers, or are all files contained in
-	 * one directory.
-	 * 
-	 * @param isSplit
-	 *            flag
-	 */
-	public void setSplit(boolean isSplit) {
-		this.isSplit = isSplit;
-	}
-
-	/**
-	 * Does the cache automatically download files that are missing from the local installation from the PDB FTP site?
-	 * 
-	 * @return flag
-	 */
-	public boolean isAutoFetch() {
-		return autoFetch;
-	}
-
-	/**
-	 * Does the cache automatically download files that are missing from the local installation from the PDB FTP site?
-	 * 
-	 * @param autoFetch
-	 *            flag
-	 */
-	public void setAutoFetch(boolean autoFetch) {
-		this.autoFetch = autoFetch;
-	}
-
-	/**
-	 * <b>N.B.</b> This feature won't work unless the structure wasn't found & autoFetch is set to <code>true</code>.
-	 * 
-	 * @param fetchFileEvenIfObsolete
-	 *            the fetchFileEvenIfObsolete to set
-	 */
-	public void setFetchFileEvenIfObsolete(boolean fetchFileEvenIfObsolete) {
-		this.fetchFileEvenIfObsolete = fetchFileEvenIfObsolete;
-	}
-
-	/**
-	 * forces the cache to fetch the file if its status is OBSOLETE. This feature has a higher priority than
-	 * {@link #setFetchCurrent(boolean)}.<br>
-	 * <b>N.B.</b> This feature won't work unless the structure wasn't found & autoFetch is set to <code>true</code>.
-	 * 
-	 * @return the fetchFileEvenIfObsolete
-	 * @author Amr AL-Hossary
-	 * @see #fetchCurrent
-	 * @since 3.0.2
-	 */
-	public boolean isFetchFileEvenIfObsolete() {
-		return fetchFileEvenIfObsolete;
-	}
-
-	/**
-	 * if enabled, the reader searches for the newest possible PDB ID, if not present in he local installation. The
-	 * {@link #setFetchFileEvenIfObsolete(boolean)} function has a higher priority than this function.<br>
-	 * <b>N.B.</b> This feature won't work unless the structure wasn't found & autoFetch is set to <code>true</code>.
-	 * 
-	 * @param fetchCurrent
-	 *            the fetchCurrent to set
-	 * @author Amr AL-Hossary
-	 * @see #setFetchFileEvenIfObsolete(boolean)
-	 * @since 3.0.2
-	 */
-	public void setFetchCurrent(boolean fetchNewestCurrent) {
-		fetchCurrent = fetchNewestCurrent;
-	}
-
-	/**
-	 * <b>N.B.</b> This feature won't work unless the structure wasn't found & autoFetch is set to <code>true</code>.
-	 * 
-	 * @return the fetchCurrent
-	 */
-	public boolean isFetchCurrent() {
-		return fetchCurrent;
-	}
-
-	/**
-	 * Reports whether strict scop naming will be enforced, or whether this AtomCache should try to guess some simple
-	 * variants on scop domains.
-	 * 
-	 * @return true if scop names should be used strictly with no guessing
-	 */
-	public boolean isStrictSCOP() {
-		return strictSCOP;
-	}
-
-	/**
-	 * When strictSCOP is enabled, SCOP domain identifiers (eg 'd1gbga_') are matched literally to the SCOP database.
-	 * 
-	 * When disabled, some simple mistakes are corrected automatically. For instance, the invalid identifier 'd1gbg__'
-	 * would be corrected to 'd1gbga_' automatically.
-	 * 
-	 * @param strictSCOP
-	 *            Indicates whether strict scop names should be used.
-	 */
-	public void setStrictSCOP(boolean strictSCOP) {
-		this.strictSCOP = strictSCOP;
-	}
-
-	/**
-	 * Returns the representation of a {@link ScopDomain} as a BioJava {@link Structure} object.
-	 * 
-	 * @param domain
-	 *            a SCOP domain
-	 * @return a Structure object
-	 * @throws IOException
-	 * @throws StructureException
-	 */
-	public Structure getStructureForDomain(ScopDomain domain) throws IOException, StructureException {
-		if (scopInstallation == null) {
-			scopInstallation = ScopFactory.getSCOP();
-		}
-		return getStructureForDomain(domain, scopInstallation);
-	}
-
-	/**
-	 * Returns the representation of a {@link ScopDomain} as a BioJava {@link Structure} object.
-	 * 
-	 * @param scopId
-	 *            a SCOP Id
-	 * @param scopDatabase
-	 *            A {@link ScopDatabase} to use
-	 * @return a Structure object
-	 * @throws IOException
-	 * @throws StructureException
-	 */
-	public Structure getStructureForDomain(String scopId, ScopDatabase scopDatabase) throws IOException,
-			StructureException {
-		ScopDomain domain = scopDatabase.getDomainByScopID(scopId);
-		return getStructureForDomain(domain, scopDatabase);
-	}
-
-	/**
-	 * Returns the representation of a {@link ScopDomain} as a BioJava {@link Structure} object.
-	 * 
-	 * @param scopId
-	 *            a SCOP Id
-	 * @return a Structure object
-	 * @throws IOException
-	 * @throws StructureException
-	 */
-	public Structure getStructureForDomain(String scopId) throws IOException, StructureException {
-		if (scopInstallation == null) {
-			scopInstallation = ScopFactory.getSCOP();
-		}
-		return getStructureForDomain(scopId, scopInstallation);
-	}
-
-	/**
-	 * Returns the representation of a {@link ScopDomain} as a BioJava {@link Structure} object.
-	 * 
-	 * @param domain
-	 *            a SCOP domain
-	 * @param scopDatabase
-	 *            A {@link ScopDatabase} to use
-	 * @return a Structure object
-	 * @throws IOException
-	 * @throws StructureException
-	 */
-	public Structure getStructureForDomain(ScopDomain domain, ScopDatabase scopDatabase) throws IOException,
-			StructureException {
-		return getStructureForDomain(domain, scopDatabase, false);
-	}
-
-	/**
-	 * Returns the representation of a {@link ScopDomain} as a BioJava {@link Structure} object.
-	 * 
-	 * @param domain
-	 *            a SCOP domain
-	 * @param scopDatabase
-	 *            A {@link ScopDatabase} to use
-	 * @param strictLigandHandling
-	 *            If set to false, hetero-atoms are included if and only if they belong to a chain to which the SCOP
-	 *            domain belongs; if set to true, hetero-atoms are included if and only if they are strictly within the
-	 *            definition (residue numbers) of the SCOP domain
-	 * @return a Structure object
-	 * @throws IOException
-	 * @throws StructureException
-	 */
-	public Structure getStructureForDomain(ScopDomain domain, ScopDatabase scopDatabase, boolean strictLigandHandling)
-			throws IOException, StructureException {
-
-		String pdbId = domain.getPdbId();
-		Structure fullStructure = getStructure(pdbId);
-
-		// build the substructure
-		StringBuilder rangeString = new StringBuilder();
-		Iterator<String> iter = domain.getRanges().iterator();
-		while (iter.hasNext()) {
-			rangeString.append(iter.next());
-			if (iter.hasNext()) {
-				rangeString.append(",");
-			}
-		}
-		Structure structure = StructureTools.getSubRanges(fullStructure, rangeString.toString());
-		structure.setName(domain.getScopId());
-		structure.setPDBCode(domain.getScopId());
-
-		// because ligands sometimes occur after TER records in PDB files, we may need to add some ligands back in
-		// specifically, we add a ligand if and only if it occurs within the domain
-		AtomPositionMap map = null;
-		List<ResidueRange> rrs = null;
-		if (strictLigandHandling) {
-			map = new AtomPositionMap(StructureTools.getAllAtomArray(fullStructure), AtomPositionMap.ANYTHING_MATCHER);
-			rrs = ResidueRange.parseMultiple(domain.getRanges(), map);
-		}
-		for (Chain chain : fullStructure.getChains()) {
-			if (!structure.hasChain(chain.getChainID())) {
-				continue; // we can't do anything with a chain our domain doesn't contain
-			}
-			Chain newChain = structure.getChainByPDB(chain.getChainID());
-			List<Group> ligands = StructureTools.filterLigands(chain.getAtomGroups());
-			for (Group group : ligands) {
-				boolean shouldContain = true;
-				if (strictLigandHandling) {
-					shouldContain = false; // whether the ligand occurs within the domain
-					for (ResidueRange rr : rrs) {
-						if (rr.contains(group.getResidueNumber(), map)) {
-							shouldContain = true;
-						}
-					}
-				}
-				boolean alreadyContains = newChain.getAtomGroups().contains(group); // we don't want to add duplicate
-																					// ligands
-				if (shouldContain && !alreadyContains) {
-					newChain.addGroup(group);
-				}
-			}
-		}
-
-		// build a more meaningful description for the new structure
-		StringBuilder header = new StringBuilder();
-		header.append(domain.getClassificationId());
-		if (scopDatabase != null) {
-			int sf = domain.getSuperfamilyId();
-			ScopDescription description = scopDatabase.getScopDescriptionBySunid(sf);
-			if (description != null) {
-				header.append(" | ");
-				header.append(description.getDescription());
-			}
-		}
-		structure.getPDBHeader().setDescription(header.toString());
-
-		return structure;
-
 	}
 
 	/**
@@ -531,6 +233,101 @@ public class AtomCache {
 		}
 		return atoms;
 
+	}
+
+	/**
+	 * Loads the biological assembly for a given PDB ID and bioAssemblyId. If a bioAssemblyId > 0 is specified, the
+	 * corresponding biological assembly file will be loaded. Note, the number of available biological unit files
+	 * varies. Many entries don't have a biological assembly specified (i.e. NMR structures), many entries have only one
+	 * biological assembly (bioAssemblyId=1), and a few structures have multiple biological assemblies. Set
+	 * bioAssemblyFallback to true, to download the original PDB file in cases that a biological assembly file is not
+	 * available.
+	 * 
+	 * @param pdbId
+	 *            the PDB ID
+	 * @param bioAssemblyId
+	 *            the ID of the biological assembly
+	 * @param bioAssemblyFallback
+	 *            if true, try reading original PDB file in case the biological assembly file is not available
+	 * @return a structure object
+	 * @throws IOException
+	 * @throws StructureException
+	 * @author Peter Rose
+	 * @since 3.2
+	 */
+	public Structure getBiologicalAssembly(String pdbId, int bioAssemblyId, boolean bioAssemblyFallback)
+			throws StructureException, IOException {
+		Structure s;
+		if (bioAssemblyId < 1) {
+			throw new StructureException("bioAssemblyID must be greater than zero: " + pdbId + " bioAssemblyId "
+					+ bioAssemblyId);
+		}
+		PDBFileReader reader = new PDBFileReader();
+		reader.setPath(path);
+		reader.setPdbDirectorySplit(isSplit);
+		reader.setAutoFetch(autoFetch);
+		reader.setFetchFileEvenIfObsolete(fetchFileEvenIfObsolete);
+		reader.setFetchCurrent(fetchCurrent);
+		reader.setFileParsingParameters(params);
+		reader.setBioAssemblyId(bioAssemblyId);
+		reader.setBioAssemblyFallback(bioAssemblyFallback);
+		s = reader.getStructureById(pdbId.toLowerCase());
+		s.setPDBCode(pdbId);
+		return s;
+	}
+
+	/**
+	 * Loads the default biological unit (*.pdb1.gz) file. If it is not available, the original PDB file will be loaded,
+	 * i.e., for NMR structures, where the original files is also the biological assembly.
+	 * 
+	 * @param pdbId
+	 *            the PDB ID
+	 * @return a structure object
+	 * @throws IOException
+	 * @throws StructureException
+	 * @since 3.2
+	 */
+	public Structure getBiologicalUnit(String pdbId) throws StructureException, IOException {
+		int bioAssemblyId = 1;
+		boolean bioAssemblyFallback = true;
+		return getBiologicalAssembly(pdbId, bioAssemblyId, bioAssemblyFallback);
+	}
+
+	/**
+	 * Returns the path that contains the caching file for utility data, such as domain definitons.
+	 * 
+	 * @return
+	 */
+	public String getCachePath() {
+		if (cachePath == null || cachePath.equals("")) {
+			return getPath();
+		}
+		return cachePath;
+	}
+
+	public FileParsingParameters getFileParsingParams() {
+		return params;
+	}
+
+	/**
+	 * Get the path that is used to cache PDB files.
+	 * 
+	 * @return path to a directory
+	 */
+	public String getPath() {
+		return path;
+	}
+
+	public PDPProvider getPdpprovider() {
+		return pdpprovider;
+	}
+
+	public ScopDatabase getScopInstallation() {
+		if (scopInstallation == null) {
+			scopInstallation = ScopFactory.getSCOP();
+		}
+
+		return scopInstallation;
 	}
 
 	/**
@@ -602,7 +399,12 @@ public class AtomCache {
 			if (name.length() == 4) {
 
 				pdbId = name;
-				Structure s = loadStructureFromByPdbId(pdbId);
+				Structure s;
+				if (useMmCif) {
+					s = loadStructureFromCifByPdbId(pdbId);
+				} else {
+					s = loadStructureFromPdbByPdbId(pdbId);
+				}
 				return s;
 			} else if (structureName.isScopName()) {
 
@@ -656,9 +458,9 @@ public class AtomCache {
 					e.printStackTrace();
 					return null;
 				}
-			} else if ((name.length() > 6) && (!name.startsWith(PDP_DOMAIN_IDENTIFIER))
+			} else if (name.length() > 6 && !name.startsWith(PDP_DOMAIN_IDENTIFIER)
 					&& (name.contains(CHAIN_NR_SYMBOL) || name.contains(UNDERSCORE))
-					&& (!(name.startsWith("file:/") || name.startsWith("http:/")))
+					&& !(name.startsWith("file:/") || name.startsWith("http:/"))
 
 			) {
 
@@ -692,7 +494,12 @@ public class AtomCache {
 
 			// long start = System.currentTimeMillis();
 
-			Structure s = loadStructureFromByPdbId(pdbId);
+			Structure s;
+			if (useMmCif) {
+				s = loadStructureFromCifByPdbId(pdbId);
+			} else {
+				s = loadStructureFromPdbByPdbId(pdbId);
+			}
 
 			// long end = System.currentTimeMillis();
 			// System.out.println("time to load " + pdbId + " " + (end-start) + "\t  size :" +
@@ -728,29 +535,337 @@ public class AtomCache {
 
 	}
 
-	protected Structure loadStructureFromByPdbId(String pdbId) throws StructureException {
-
-		Structure s;
-		flagLoading(pdbId);
-		try {
-			PDBFileReader reader = new PDBFileReader();
-			reader.setPath(path);
-			reader.setPdbDirectorySplit(isSplit);
-			reader.setAutoFetch(autoFetch);
-			reader.setFetchFileEvenIfObsolete(fetchFileEvenIfObsolete);
-			reader.setFetchCurrent(fetchCurrent);
-
-			reader.setFileParsingParameters(params);
-
-			s = reader.getStructureById(pdbId.toLowerCase());
-
-		} catch (Exception e) {
-			flagLoadingFinished(pdbId);
-			throw new StructureException(e.getMessage() + " while parsing " + pdbId, e);
+	/**
+	 * Returns the representation of a {@link ScopDomain} as a BioJava {@link Structure} object.
+	 * 
+	 * @param domain
+	 *            a SCOP domain
+	 * @return a Structure object
+	 * @throws IOException
+	 * @throws StructureException
+	 */
+	public Structure getStructureForDomain(ScopDomain domain) throws IOException, StructureException {
+		if (scopInstallation == null) {
+			scopInstallation = ScopFactory.getSCOP();
 		}
-		flagLoadingFinished(pdbId);
+		return getStructureForDomain(domain, scopInstallation);
+	}
 
-		return s;
+	/**
+	 * Returns the representation of a {@link ScopDomain} as a BioJava {@link Structure} object.
+	 * 
+	 * @param domain
+	 *            a SCOP domain
+	 * @param scopDatabase
+	 *            A {@link ScopDatabase} to use
+	 * @return a Structure object
+	 * @throws IOException
+	 * @throws StructureException
+	 */
+	public Structure getStructureForDomain(ScopDomain domain, ScopDatabase scopDatabase) throws IOException,
+			StructureException {
+		return getStructureForDomain(domain, scopDatabase, false);
+	}
+
+	/**
+	 * Returns the representation of a {@link ScopDomain} as a BioJava {@link Structure} object.
+	 * 
+	 * @param domain
+	 *            a SCOP domain
+	 * @param scopDatabase
+	 *            A {@link ScopDatabase} to use
+	 * @param strictLigandHandling
+	 *            If set to false, hetero-atoms are included if and only if they belong to a chain to which the SCOP
+	 *            domain belongs; if set to true, hetero-atoms are included if and only if they are strictly within the
+	 *            definition (residue numbers) of the SCOP domain
+	 * @return a Structure object
+	 * @throws IOException
+	 * @throws StructureException
+	 */
+	public Structure getStructureForDomain(ScopDomain domain, ScopDatabase scopDatabase, boolean strictLigandHandling)
+			throws IOException, StructureException {
+
+		String pdbId = domain.getPdbId();
+		Structure fullStructure = getStructure(pdbId);
+
+		// build the substructure
+		StringBuilder rangeString = new StringBuilder();
+		Iterator<String> iter = domain.getRanges().iterator();
+		while (iter.hasNext()) {
+			rangeString.append(iter.next());
+			if (iter.hasNext()) {
+				rangeString.append(",");
+			}
+		}
+		Structure structure = StructureTools.getSubRanges(fullStructure, rangeString.toString());
+		structure.setName(domain.getScopId());
+		structure.setPDBCode(domain.getScopId());
+
+		// because ligands sometimes occur after TER records in PDB files, we may need to add some ligands back in
+		// specifically, we add a ligand if and only if it occurs within the domain
+		AtomPositionMap map = null;
+		List<ResidueRange> rrs = null;
+		if (strictLigandHandling) {
+			map = new AtomPositionMap(StructureTools.getAllAtomArray(fullStructure), AtomPositionMap.ANYTHING_MATCHER);
+			rrs = ResidueRange.parseMultiple(domain.getRanges(), map);
+		}
+		for (Chain chain : fullStructure.getChains()) {
+			if (!structure.hasChain(chain.getChainID())) {
+				continue; // we can't do anything with a chain our domain
+			}
+			// doesn't contain
+			Chain newChain = structure.getChainByPDB(chain.getChainID());
+			List<Group> ligands = StructureTools.filterLigands(chain.getAtomGroups());
+			for (Group group : ligands) {
+				boolean shouldContain = true;
+				if (strictLigandHandling) {
+					shouldContain = false; // whether the ligand occurs within the domain
+					for (ResidueRange rr : rrs) {
+						if (rr.contains(group.getResidueNumber(), map)) {
+							shouldContain = true;
+						}
+					}
+				}
+				boolean alreadyContains = newChain.getAtomGroups().contains(group); // we don't want to add duplicate
+																					// ligands
+				if (shouldContain && !alreadyContains) {
+					newChain.addGroup(group);
+				}
+			}
+		}
+
+		// build a more meaningful description for the new structure
+		StringBuilder header = new StringBuilder();
+		header.append(domain.getClassificationId());
+		if (scopDatabase != null) {
+			int sf = domain.getSuperfamilyId();
+			ScopDescription description = scopDatabase.getScopDescriptionBySunid(sf);
+			if (description != null) {
+				header.append(" | ");
+				header.append(description.getDescription());
+			}
+		}
+		structure.getPDBHeader().setDescription(header.toString());
+
+		return structure;
+
+	}
+
+	/**
+	 * Returns the representation of a {@link ScopDomain} as a BioJava {@link Structure} object.
+	 * 
+	 * @param scopId
+	 *            a SCOP Id
+	 * @return a Structure object
+	 * @throws IOException
+	 * @throws StructureException
+	 */
+	public Structure getStructureForDomain(String scopId) throws IOException, StructureException {
+		if (scopInstallation == null) {
+			scopInstallation = ScopFactory.getSCOP();
+		}
+		return getStructureForDomain(scopId, scopInstallation);
+	}
+
+	/**
+	 * Returns the representation of a {@link ScopDomain} as a BioJava {@link Structure} object.
+	 * 
+	 * @param scopId
+	 *            a SCOP Id
+	 * @param scopDatabase
+	 *            A {@link ScopDatabase} to use
+	 * @return a Structure object
+	 * @throws IOException
+	 * @throws StructureException
+	 */
+	public Structure getStructureForDomain(String scopId, ScopDatabase scopDatabase) throws IOException,
+			StructureException {
+		ScopDomain domain = scopDatabase.getDomainByScopID(scopId);
+		return getStructureForDomain(domain, scopDatabase);
+	}
+
+	/**
+	 * Does the cache automatically download files that are missing from the local installation from the PDB FTP site?
+	 * 
+	 * @return flag
+	 */
+	public boolean isAutoFetch() {
+		return autoFetch;
+	}
+
+	/**
+	 * <b>N.B.</b> This feature won't work unless the structure wasn't found & autoFetch is set to <code>true</code>.
+	 * 
+	 * @return the fetchCurrent
+	 */
+	public boolean isFetchCurrent() {
+		return fetchCurrent;
+	}
+
+	/**
+	 * forces the cache to fetch the file if its status is OBSOLETE. This feature has a higher priority than
+	 * {@link #setFetchCurrent(boolean)}.<br>
+	 * <b>N.B.</b> This feature won't work unless the structure wasn't found & autoFetch is set to <code>true</code>.
+	 * 
+	 * @return the fetchFileEvenIfObsolete
+	 * @author Amr AL-Hossary
+	 * @see #fetchCurrent
+	 * @since 3.0.2
+	 */
+	public boolean isFetchFileEvenIfObsolete() {
+		return fetchFileEvenIfObsolete;
+	}
+
+	/**
+	 * Is the organization of files within the directory split, as on the PDB FTP servers, or are all files contained in
+	 * one directory.
+	 * 
+	 * @return flag
+	 */
+	public boolean isSplit() {
+		return isSplit;
+	}
+
+	/**
+	 * Reports whether strict scop naming will be enforced, or whether this AtomCache should try to guess some simple
+	 * variants on scop domains.
+	 * 
+	 * @return true if scop names should be used strictly with no guessing
+	 */
+	public boolean isStrictSCOP() {
+		return strictSCOP;
+	}
+
+	/**
+	 * Send a signal to the cache that the system is shutting down. Notifies underlying SerializableCache instances to
+	 * flush themselves...
+	 */
+	public void notifyShutdown() {
+		// System.out.println(" AtomCache got notify shutdown..");
+		if (pdpprovider != null) {
+			if (pdpprovider instanceof RemotePDPProvider) {
+				RemotePDPProvider remotePDP = (RemotePDPProvider) pdpprovider;
+				remotePDP.flushCache();
+			}
+		}
+
+		// todo: use a SCOP implementation that is backed by SerializableCache
+		if (scopInstallation != null) {
+			if (scopInstallation instanceof CachedRemoteScopInstallation) {
+				CachedRemoteScopInstallation cacheScop = (CachedRemoteScopInstallation) scopInstallation;
+				cacheScop.flushCache();
+			}
+		}
+
+	}
+
+	/**
+	 * Does the cache automatically download files that are missing from the local installation from the PDB FTP site?
+	 * 
+	 * @param autoFetch
+	 *            flag
+	 */
+	public void setAutoFetch(boolean autoFetch) {
+		this.autoFetch = autoFetch;
+	}
+
+	/**
+	 * set the location at which utility data should be cached.
+	 * 
+	 * @param cachePath
+	 */
+	public void setCachePath(String cachePath) {
+		this.cachePath = cachePath;
+		System.setProperty(AbstractUserArgumentProcessor.CACHE_DIR, cachePath);
+
+	}
+
+	/**
+	 * if enabled, the reader searches for the newest possible PDB ID, if not present in he local installation. The
+	 * {@link #setFetchFileEvenIfObsolete(boolean)} function has a higher priority than this function.<br>
+	 * <b>N.B.</b> This feature won't work unless the structure wasn't found & autoFetch is set to <code>true</code>.
+	 * 
+	 * @param fetchCurrent
+	 *            the fetchCurrent to set
+	 * @author Amr AL-Hossary
+	 * @see #setFetchFileEvenIfObsolete(boolean)
+	 * @since 3.0.2
+	 */
+	public void setFetchCurrent(boolean fetchNewestCurrent) {
+		fetchCurrent = fetchNewestCurrent;
+	}
+
+	/**
+	 * <b>N.B.</b> This feature won't work unless the structure wasn't found & autoFetch is set to <code>true</code>.
+	 * 
+	 * @param fetchFileEvenIfObsolete
+	 *            the fetchFileEvenIfObsolete to set
+	 */
+	public void setFetchFileEvenIfObsolete(boolean fetchFileEvenIfObsolete) {
+		this.fetchFileEvenIfObsolete = fetchFileEvenIfObsolete;
+	}
+
+	public void setFileParsingParams(FileParsingParameters params) {
+		this.params = params;
+	}
+
+	/**
+	 * Set the path that is used to cache PDB files.
+	 * 
+	 * @param path
+	 *            to a directory
+	 */
+	public void setPath(String path) {
+		System.setProperty(AbstractUserArgumentProcessor.PDB_DIR, path);
+		this.path = path;
+	}
+
+	public void setPdpprovider(PDPProvider pdpprovider) {
+		this.pdpprovider = pdpprovider;
+	}
+
+	/**
+	 * Is the organization of files within the directory split, as on the PDB FTP servers, or are all files contained in
+	 * one directory.
+	 * 
+	 * @param isSplit
+	 *            flag
+	 */
+	public void setSplit(boolean isSplit) {
+		this.isSplit = isSplit;
+	}
+
+	/**
+	 * When strictSCOP is enabled, SCOP domain identifiers (eg 'd1gbga_') are matched literally to the SCOP database.
+	 * 
+	 * When disabled, some simple mistakes are corrected automatically. For instance, the invalid identifier 'd1gbg__'
+	 * would be corrected to 'd1gbga_' automatically.
+	 * 
+	 * @param strictSCOP
+	 *            Indicates whether strict scop names should be used.
+	 */
+	public void setStrictSCOP(boolean strictSCOP) {
+		this.strictSCOP = strictSCOP;
+	}
+
+	/**
+	 * @return the useMmCif
+	 */
+	public boolean isUseMmCif() {
+		return useMmCif;
+	}
+
+	/**
+	 * @param useMmCif
+	 *            the useMmCif to set
+	 */
+	public void setUseMmCif(boolean useMmCif) {
+		this.useMmCif = useMmCif;
+	}
+
+	private boolean checkLoading(String name) {
+		return currentlyLoading.contains(name);
+
 	}
 
 	private Structure getBioAssembly(String name) throws IOException, StructureException {
@@ -782,44 +897,13 @@ public class AtomCache {
 
 	}
 
-	private Structure getStructureFromSCOPDomain(String name) throws IOException, StructureException {
-		// looks like a SCOP domain!
-		ScopDomain domain;
-		if (strictSCOP) {
-			domain = getScopDomain(name);
-		} else {
-			domain = guessScopDomain(name);
+	private ScopDomain getScopDomain(String scopId) {
+
+		if (scopInstallation == null) {
+			scopInstallation = ScopFactory.getSCOP();
 		}
 
-		System.out.println(domain);
-		if (domain != null) {
-			Structure s = getStructureForDomain(domain);
-			return s;
-		}
-
-		// Guessing didn't work, so just use the PDBID and Chain from name
-		if (!strictSCOP) {
-			Matcher scopMatch = scopIDregex.matcher(name);
-			if (scopMatch.matches()) {
-				String pdbID = scopMatch.group(1);
-				String chainID = scopMatch.group(2);
-
-				// None of the actual SCOP domains match. Guess that '_' means 'whole chain'
-				if (!chainID.equals("_")) {
-					// Add chain identifier
-					pdbID += "." + scopMatch.group(2);
-				}
-				// Fetch the structure by pdb id
-				Structure struct = getStructure(pdbID);
-				if (struct != null) {
-					System.err.println("Trying chain " + pdbID);
-				}
-
-				return struct;
-			}
-		}
-
-		throw new StructureException("Unable to get structure for SCOP domain: " + name);
+		return scopInstallation.getDomainByScopID(scopId);
 	}
 
 	private Structure getStructureFromCATHDomain(StructureName structureName) throws IOException, StructureException {
@@ -843,7 +927,7 @@ public class AtomCache {
 			range.append(segment.getStart());
 			range.append("-");
 			range.append(segment.getStop());
-			if ((segments.size() > 1) && (rangePos < segments.size())) {
+			if (segments.size() > 1 && rangePos < segments.size()) {
 				range.append(",");
 			}
 		}
@@ -886,6 +970,46 @@ public class AtomCache {
 		return n;
 	}
 
+	private Structure getStructureFromSCOPDomain(String name) throws IOException, StructureException {
+		// looks like a SCOP domain!
+		ScopDomain domain;
+		if (strictSCOP) {
+			domain = getScopDomain(name);
+		} else {
+			domain = guessScopDomain(name);
+		}
+
+		System.out.println(domain);
+		if (domain != null) {
+			Structure s = getStructureForDomain(domain);
+			return s;
+		}
+
+		// Guessing didn't work, so just use the PDBID and Chain from name
+		if (!strictSCOP) {
+			Matcher scopMatch = scopIDregex.matcher(name);
+			if (scopMatch.matches()) {
+				String pdbID = scopMatch.group(1);
+				String chainID = scopMatch.group(2);
+
+				// None of the actual SCOP domains match. Guess that '_' means 'whole chain'
+				if (!chainID.equals("_")) {
+					// Add chain identifier
+					pdbID += "." + scopMatch.group(2);
+				}
+				// Fetch the structure by pdb id
+				Structure struct = getStructure(pdbID);
+				if (struct != null) {
+					System.err.println("Trying chain " + pdbID);
+				}
+
+				return struct;
+			}
+		}
+
+		throw new StructureException("Unable to get structure for SCOP domain: " + name);
+	}
+
 	private Structure getStructureFromURL(URL url) throws IOException, StructureException {
 		// looks like a URL for a file was provided:
 		System.out.println("fetching structure from URL:" + url);
@@ -893,7 +1017,7 @@ public class AtomCache {
 		String queryS = url.getQuery();
 
 		String chainId = null;
-		if (queryS != null && (queryS.startsWith("chainId="))) {
+		if (queryS != null && queryS.startsWith("chainId=")) {
 			chainId = queryS.substring(8);
 
 			String fullu = url.toString();
@@ -902,7 +1026,7 @@ public class AtomCache {
 				// for windowze, drop the query part from the URL again
 				// otherwise there will be a "file not found error" ...
 
-				String newu = fullu.substring(0, (fullu.length() - (("?" + queryS).length())));
+				String newu = fullu.substring(0, fullu.length() - ("?" + queryS).length());
 				// System.out.println(newu);
 				url = new URL(newu);
 			}
@@ -924,8 +1048,6 @@ public class AtomCache {
 			return StructureTools.getReducedStructure(s, chainId);
 		}
 	}
-
-	public static final Pattern scopIDregex = Pattern.compile("d(....)(.)(.)");
 
 	/**
 	 * <p>
@@ -997,11 +1119,6 @@ public class AtomCache {
 		}
 	}
 
-	private boolean checkLoading(String name) {
-		return currentlyLoading.contains(name);
-
-	}
-
 	protected void flagLoading(String name) {
 		if (!currentlyLoading.contains(name)) {
 			currentlyLoading.add(name);
@@ -1012,118 +1129,56 @@ public class AtomCache {
 		currentlyLoading.remove(name);
 	}
 
-	private ScopDomain getScopDomain(String scopId) {
+	protected Structure loadStructureFromCifByPdbId(String pdbId) throws StructureException {
 
-		if (scopInstallation == null) {
-			scopInstallation = ScopFactory.getSCOP();
-		}
-
-		return scopInstallation.getDomainByScopID(scopId);
-	}
-
-	public ScopDatabase getScopInstallation() {
-		if (scopInstallation == null) {
-			scopInstallation = ScopFactory.getSCOP();
-		}
-
-		return scopInstallation;
-	}
-
-	public FileParsingParameters getFileParsingParams() {
-		return params;
-	}
-
-	public void setFileParsingParams(FileParsingParameters params) {
-		this.params = params;
-	}
-
-	/**
-	 * Loads the default biological unit (*.pdb1.gz) file. If it is not available, the original PDB file will be loaded,
-	 * i.e., for NMR structures, where the original files is also the biological assembly.
-	 * 
-	 * @param pdbId
-	 *            the PDB ID
-	 * @return a structure object
-	 * @throws IOException
-	 * @throws StructureException
-	 * @since 3.2
-	 */
-	public Structure getBiologicalUnit(String pdbId) throws StructureException, IOException {
-		int bioAssemblyId = 1;
-		boolean bioAssemblyFallback = true;
-		return getBiologicalAssembly(pdbId, bioAssemblyId, bioAssemblyFallback);
-	}
-
-	/**
-	 * Loads the biological assembly for a given PDB ID and bioAssemblyId. If a bioAssemblyId > 0 is specified, the
-	 * corresponding biological assembly file will be loaded. Note, the number of available biological unit files
-	 * varies. Many entries don't have a biological assembly specified (i.e. NMR structures), many entries have only one
-	 * biological assembly (bioAssemblyId=1), and a few structures have multiple biological assemblies. Set
-	 * bioAssemblyFallback to true, to download the original PDB file in cases that a biological assembly file is not
-	 * available.
-	 * 
-	 * @param pdbId
-	 *            the PDB ID
-	 * @param bioAssemblyId
-	 *            the ID of the biological assembly
-	 * @param bioAssemblyFallback
-	 *            if true, try reading original PDB file in case the biological assembly file is not available
-	 * @return a structure object
-	 * @throws IOException
-	 * @throws StructureException
-	 * @author Peter Rose
-	 * @since 3.2
-	 */
-	public Structure getBiologicalAssembly(String pdbId, int bioAssemblyId, boolean bioAssemblyFallback)
-			throws StructureException, IOException {
 		Structure s;
-		if (bioAssemblyId < 1) {
-			throw new StructureException("bioAssemblyID must be greater than zero: " + pdbId + " bioAssemblyId "
-					+ bioAssemblyId);
+		flagLoading(pdbId);
+		try {
+			MMCIFFileReader reader = new MMCIFFileReader();
+			reader.setPath(path);
+			reader.setPdbDirectorySplit(isSplit);
+			reader.setAutoFetch(autoFetch);
+
+			// not supported yet
+			// reader.setFetchFileEvenIfObsolete(fetchFileEvenIfObsolete);
+			// reader.setFetchCurrent(fetchCurrent);
+
+			reader.setFileParsingParameters(params);
+
+			s = reader.getStructureById(pdbId.toLowerCase());
+
+		} catch (Exception e) {
+			flagLoadingFinished(pdbId);
+			throw new StructureException(e.getMessage() + " while parsing " + pdbId, e);
 		}
-		PDBFileReader reader = new PDBFileReader();
-		reader.setPath(path);
-		reader.setPdbDirectorySplit(isSplit);
-		reader.setAutoFetch(autoFetch);
-		reader.setFetchFileEvenIfObsolete(fetchFileEvenIfObsolete);
-		reader.setFetchCurrent(fetchCurrent);
-		reader.setFileParsingParameters(params);
-		reader.setBioAssemblyId(bioAssemblyId);
-		reader.setBioAssemblyFallback(bioAssemblyFallback);
-		s = reader.getStructureById(pdbId.toLowerCase());
-		s.setPDBCode(pdbId);
+		flagLoadingFinished(pdbId);
+
 		return s;
 	}
 
-	/**
-	 * Send a signal to the cache that the system is shutting down. Notifies underlying SerializableCache instances to
-	 * flush themselves...
-	 */
-	public void notifyShutdown() {
-		// System.out.println(" AtomCache got notify shutdown..");
-		if (pdpprovider != null) {
-			if (pdpprovider instanceof RemotePDPProvider) {
-				RemotePDPProvider remotePDP = (RemotePDPProvider) pdpprovider;
-				remotePDP.flushCache();
-			}
+	protected Structure loadStructureFromPdbByPdbId(String pdbId) throws StructureException {
+
+		Structure s;
+		flagLoading(pdbId);
+		try {
+			PDBFileReader reader = new PDBFileReader();
+			reader.setPath(path);
+			reader.setPdbDirectorySplit(isSplit);
+			reader.setAutoFetch(autoFetch);
+			reader.setFetchFileEvenIfObsolete(fetchFileEvenIfObsolete);
+			reader.setFetchCurrent(fetchCurrent);
+
+			reader.setFileParsingParameters(params);
+
+			s = reader.getStructureById(pdbId.toLowerCase());
+
+		} catch (Exception e) {
+			flagLoadingFinished(pdbId);
+			throw new StructureException(e.getMessage() + " while parsing " + pdbId, e);
 		}
+		flagLoadingFinished(pdbId);
 
-		// todo: use a SCOP implementation that is backed by SerializableCache
-		if (scopInstallation != null) {
-			if (scopInstallation instanceof CachedRemoteScopInstallation) {
-				CachedRemoteScopInstallation cacheScop = (CachedRemoteScopInstallation) scopInstallation;
-				cacheScop.flushCache();
-			}
-		}
-
-	}
-
-	public PDPProvider getPdpprovider() {
-		return pdpprovider;
-	}
-
-	public void setPdpprovider(PDPProvider pdpprovider) {
-		this.pdpprovider = pdpprovider;
+		return s;
 	}
 
 }
