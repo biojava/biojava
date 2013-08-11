@@ -21,7 +21,8 @@
  */
 package org.biojava3.core.sequence.io;
 
-import java.io.DataInput;
+import java.io.BufferedReader;
+
 import org.biojava3.core.sequence.io.template.SequenceParserInterface;
 
 /**
@@ -30,7 +31,7 @@ import org.biojava3.core.sequence.io.template.SequenceParserInterface;
  */
 public class FastaSequenceParser implements SequenceParserInterface {
 
-    public String getSequence(DataInput dataInput, int sequenceLength) throws Exception {
+    public String getSequence(BufferedReader bufferedReader, int sequenceLength) throws Exception {
         StringBuilder sb;
         if (sequenceLength != -1) {
             sb = new StringBuilder(sequenceLength);
@@ -39,7 +40,7 @@ public class FastaSequenceParser implements SequenceParserInterface {
         }
         boolean keepGoing = true;
         while (keepGoing) {
-            String line = dataInput.readLine();
+            String line = bufferedReader.readLine();
             if (line == null || line.startsWith(">")) {
                 break;
             }

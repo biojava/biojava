@@ -16,7 +16,9 @@ import org.biojava3.core.sequence.ProteinSequence;
 import org.biojava3.core.sequence.compound.AminoAcidCompound;
 import org.biojava3.core.sequence.compound.AminoAcidCompoundSet;
 import org.biojava3.core.sequence.io.FastaReader;
+import org.biojava3.core.sequence.io.GenbankReader;
 import org.biojava3.core.sequence.io.GenericFastaHeaderParser;
+import org.biojava3.core.sequence.io.GenericGenbankHeaderParser;
 import org.biojava3.core.sequence.io.ProteinSequenceCreator;
 import org.biojava3.core.sequence.template.CompoundSet;
 
@@ -151,18 +153,28 @@ public class CommandPrompt {
 	
 	private static LinkedHashMap<String, ProteinSequence> readInputFile(String inputLocation, AminoAcidCompositionTable aaTable) throws Exception{
 		FileInputStream inStream = new FileInputStream(inputLocation);
-		FastaReader<ProteinSequence, AminoAcidCompound> fastaReader;
+		CompoundSet<AminoAcidCompound>	set;
 		if(aaTable == null){
-			CompoundSet<AminoAcidCompound>	set = CaseFreeAminoAcidCompoundSet.getAminoAcidCompoundSet();
-			fastaReader = new FastaReader<ProteinSequence, AminoAcidCompound>(
+			set = CaseFreeAminoAcidCompoundSet.getAminoAcidCompoundSet();
+		}else{
+			set = aaTable.getAminoAcidCompoundSet();
+		}
+		LinkedHashMap<String, ProteinSequence> ret;
+		if ( inputLocation.toLowerCase().contains(".gb")) {
+			GenbankReader<ProteinSequence, AminoAcidCompound> genbankReader = new GenbankReader<ProteinSequence, AminoAcidCompound>(
+					inStream, new GenericGenbankHeaderParser<ProteinSequence, AminoAcidCompound>(), 
+					new ProteinSequenceCreator(set));
+			ret = genbankReader.process();
+			
+			
+		} else {
+			FastaReader<ProteinSequence, AminoAcidCompound> fastaReader = new FastaReader<ProteinSequence, AminoAcidCompound>(
 					inStream, new GenericFastaHeaderParser<ProteinSequence, AminoAcidCompound>(), 
 					new ProteinSequenceCreator(set));
-		}else{
-			fastaReader = new FastaReader<ProteinSequence, AminoAcidCompound>(
-					inStream, new GenericFastaHeaderParser<ProteinSequence, AminoAcidCompound>(), 
-					new ProteinSequenceCreator(aaTable.getAminoAcidCompoundSet()));
+			ret = fastaReader.process();
+			
 		}
-		return fastaReader.process();
+		return ret;
 	}
 	
 	public enum PropertyName{MolecularWeight, Absorbance_True, Absorbance_False, ExtinctionCoefficient_True, ExtinctionCoefficient_False, 
