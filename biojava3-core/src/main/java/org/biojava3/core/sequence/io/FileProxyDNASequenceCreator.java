@@ -27,6 +27,7 @@ import java.util.List;
 import org.biojava3.core.sequence.DNASequence;
 import org.biojava3.core.sequence.compound.NucleotideCompound;
 import org.biojava3.core.sequence.io.template.SequenceCreatorInterface;
+import org.biojava3.core.sequence.io.template.SequenceParserInterface;
 import org.biojava3.core.sequence.loader.SequenceFileProxyLoader;
 import org.biojava3.core.sequence.template.AbstractSequence;
 import org.biojava3.core.sequence.template.CompoundSet;
@@ -48,17 +49,20 @@ public class FileProxyDNASequenceCreator implements
         SequenceCreatorInterface<NucleotideCompound> {
 
     CompoundSet<NucleotideCompound> compoundSet = null;
-    File fastaFile = null;
+    File file = null;
+    SequenceParserInterface sequenceParser;
 
     /**
      * Need File so that we can store full path name in SequenceFileProxyLoader for Random File access as a quick read
      * @param fastaFile
      * @param compoundSet
      */
-    public FileProxyDNASequenceCreator(File fastaFile,
-            CompoundSet<NucleotideCompound> compoundSet) {
+    public FileProxyDNASequenceCreator(File file,
+            CompoundSet<NucleotideCompound> compoundSet, 
+            SequenceParserInterface sequenceParser) {
         this.compoundSet = compoundSet;
-        this.fastaFile = fastaFile;
+        this.file = file;
+        this.sequenceParser = sequenceParser;
     }
 
     /**
@@ -69,10 +73,12 @@ public class FileProxyDNASequenceCreator implements
      * @return
      */
 
-    public AbstractSequence<NucleotideCompound> getSequence(String sequence,
-            long index) {
+    public AbstractSequence<NucleotideCompound> getSequence(String sequence, long index ) {
         SequenceFileProxyLoader<NucleotideCompound> sequenceFileProxyLoader = new SequenceFileProxyLoader<NucleotideCompound>(
-                fastaFile, new FastaSequenceParser(), index, sequence.length(),
+                file, 
+                sequenceParser, 
+                index, 
+                sequence.length(),
                 compoundSet);
         return new DNASequence(sequenceFileProxyLoader, compoundSet);
     }

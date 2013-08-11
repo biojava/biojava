@@ -11,6 +11,8 @@
  * Copyright for this code is held jointly by the individual
  * authors.  These should be listed in @author doc comments.
  *
+ * @author Karl Nicholas <github:karlnicholas>
+ * 
  * For more information on the BioJava project and its aims,
  * or to join the biojava-l mailing list, visit the home page
  * at:
@@ -25,11 +27,18 @@ import java.util.ArrayList;
 
 import org.biojava3.core.exceptions.ParserException;
 import org.biojava3.core.sequence.AccessionID;
-import org.biojava3.core.sequence.io.template.GenbankHeaderParserInterface;
+import org.biojava3.core.sequence.io.template.SequenceHeaderParserInterface;
 import org.biojava3.core.sequence.template.AbstractSequence;
 import org.biojava3.core.sequence.template.Compound;
 
-public class GenericGenbankHeaderParser<S extends AbstractSequence<C>, C extends Compound> implements GenbankHeaderParserInterface<S,C> {
+public class GenericGenbankHeaderParser<S extends AbstractSequence<C>, C extends Compound> implements SequenceHeaderParserInterface<S,C> {
+
+	private String accession = null;
+	private String identifier = null;
+	private String name = null;
+    private int version;
+    private boolean versionSeen;
+    private ArrayList<String> comments = new ArrayList<String>();
 
     /**
      * Parse the header and set the values in the sequence
@@ -41,8 +50,6 @@ public class GenericGenbankHeaderParser<S extends AbstractSequence<C>, C extends
     	sequence.setAccession(new AccessionID(accession));
     	sequence.setDescription(description);
     }
-
-
     
     /**
      * Sets the sequence info back to default values, ie. in order to start
@@ -72,8 +79,6 @@ public class GenericGenbankHeaderParser<S extends AbstractSequence<C>, C extends
             }
         }
     }
-    private int version;
-    private boolean versionSeen;
     
     
     /**
@@ -84,7 +89,6 @@ public class GenericGenbankHeaderParser<S extends AbstractSequence<C>, C extends
         if (accession==null) throw new ParserException("Accession cannot be null");
         this.accession = accession;
     }
-    private String accession;
     
     /**
      * {@inheritDoc}
@@ -103,7 +107,6 @@ public class GenericGenbankHeaderParser<S extends AbstractSequence<C>, C extends
         if (this.identifier!=null) throw new ParserException("Current BioEntry already has a identifier");
         this.identifier = identifier;
     }
-    private String identifier;
     
     /**
      * {@inheritDoc}
@@ -113,7 +116,6 @@ public class GenericGenbankHeaderParser<S extends AbstractSequence<C>, C extends
         if (this.name!=null) throw new ParserException("Current BioEntry already has a name");
         this.name = name;
     }
-    private String name;
     
     /**
      * {@inheritDoc}
@@ -122,5 +124,4 @@ public class GenericGenbankHeaderParser<S extends AbstractSequence<C>, C extends
         if (comment==null) throw new ParserException("Comment cannot be null");
         this.comments.add(comment);
     }
-    private ArrayList<String> comments = new ArrayList<String>();
 }

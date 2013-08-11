@@ -13,7 +13,7 @@ import org.biojava.bio.structure.align.util.AtomCache;
 import org.biojava3.core.sequence.ProteinSequence;
 import org.biojava3.core.sequence.compound.AminoAcidCompound;
 import org.biojava3.core.sequence.io.FastaReader;
-import org.biojava3.core.sequence.io.template.FastaHeaderParserInterface;
+import org.biojava3.core.sequence.io.template.SequenceHeaderParserInterface;
 import org.biojava3.core.sequence.io.template.SequenceCreatorInterface;
 
 
@@ -47,7 +47,7 @@ public class FastaStructureParser {
 	private ResidueNumber[][] residues;
 	
 	public FastaStructureParser(InputStream is,
-			FastaHeaderParserInterface<ProteinSequence, AminoAcidCompound> headerParser,
+			SequenceHeaderParserInterface<ProteinSequence, AminoAcidCompound> headerParser,
 			SequenceCreatorInterface<AminoAcidCompound> sequenceCreator,
 			AtomCache cache)
 	{
@@ -56,7 +56,7 @@ public class FastaStructureParser {
 	}
 	
 	public FastaStructureParser(File file,
-			FastaHeaderParserInterface<ProteinSequence, AminoAcidCompound> headerParser,
+			SequenceHeaderParserInterface<ProteinSequence, AminoAcidCompound> headerParser,
 			SequenceCreatorInterface<AminoAcidCompound> sequenceCreator,
 			AtomCache cache) throws FileNotFoundException
 	{

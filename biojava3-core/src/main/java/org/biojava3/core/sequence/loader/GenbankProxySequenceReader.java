@@ -10,6 +10,8 @@
  *
  * Copyright for this code is held jointly by the individual
  * authors.  These should be listed in @author doc comments.
+ * 
+ * @author Karl Nicholas <github:karlnicholas>
  *
  * For more information on the BioJava project and its aims,
  * or to join the biojava-l mailing list, visit the home page
@@ -19,17 +21,17 @@
  *
  * Created on 08-08-2013
  *
- * @author Karl Nicholas <github:karlnicholas>
- *
  */
 package org.biojava3.core.sequence.loader;
 
 import java.io.BufferedInputStream;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
@@ -47,7 +49,7 @@ import org.biojava3.core.sequence.compound.NucleotideCompound;
 import org.biojava3.core.sequence.features.DBReferenceInfo;
 import org.biojava3.core.sequence.features.DatabaseReferenceInterface;
 import org.biojava3.core.sequence.features.FeaturesKeyWordInterface;
-import org.biojava3.core.sequence.io.GenbankParser;
+import org.biojava3.core.sequence.io.GenbankSequenceParser;
 import org.biojava3.core.sequence.io.GenericGenbankHeaderParser;
 import org.biojava3.core.sequence.template.AbstractSequence;
 import org.biojava3.core.sequence.template.Compound;
@@ -61,35 +63,34 @@ public class GenbankProxySequenceReader<C extends Compound> extends StringProxyS
 	private static final Logger logger = Logger.getLogger(UniprotProxySequenceReader.class.getName());
 	private static final String eutilBaseURL = "http://eutils.ncbi.nlm.nih.gov/entrez/eutils/"; //
 	private String genbankDirectoryCache = null;
-	private GenbankParser<AbstractSequence<C>, C> genbankParser;
-	private GenericGenbankHeaderParser<AbstractSequence<C>, C> genericGenbankHeaderParser;
+	private GenbankSequenceParser<AbstractSequence<C>, C> genbankParser;
+	private GenericGenbankHeaderParser<AbstractSequence<C>, C> headerParser;
+	private String header;
 
 
 	/**
-	 * @throws InterruptedException 
-	 * @throws IOException 
+	 * @throws Exception 
 	 * 
 	 */
 	public GenbankProxySequenceReader(
 			String genbankDirectoryCache, 
 			String accessionID, 
 			CompoundSet<C> compoundSet
-		) throws IOException, InterruptedException {
+		) throws Exception {
 
 		setGenbankDirectoryCache(genbankDirectoryCache);
 		setCompoundSet(compoundSet);
-		genericGenbankHeaderParser = new GenericGenbankHeaderParser<AbstractSequence<C>, C>();
 
 		String db = compoundSet instanceof AminoAcidCompoundSet?"protein":"nuccore";
 		
 		InputStream inStream = getBufferedInputStream(accessionID, db);
-		genbankParser = new GenbankParser<AbstractSequence<C>, C> (
-			inStream, 
-			genericGenbankHeaderParser
-		);
+		genbankParser = new GenbankSequenceParser<AbstractSequence<C>, C> ();
 		
-		genbankParser.parse();
-		setContents(genbankParser.getSeqData());
+		setContents( genbankParser.getSequence(new BufferedReader(new InputStreamReader(inStream)), 0) );
+		headerParser = genbankParser.getSequenceHeaderParser();
+		header = genbankParser.getHeader();
+		
+		inStream.close();
 	}
 
 	private BufferedInputStream getBufferedInputStream(String accessionID, String db) throws IOException, InterruptedException {
@@ -155,15 +156,20 @@ public class GenbankProxySequenceReader<C extends Compound> extends StringProxyS
 		this.genbankDirectoryCache = genbankDirectoryCache;
 	}
 
-	public LinkedHashMap<String, ArrayList<DBReferenceInfo>> getDatabaseReferences()
-			throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+	public String getHeader() {
+		return header;
+	}
+
+	public GenericGenbankHeaderParser<AbstractSequence<C>, C> getHeaderParser() {
+		return headerParser;
+	}
+
+	public LinkedHashMap<String, ArrayList<DBReferenceInfo>> getDatabaseReferences() throws Exception {
+		return genbankParser.getDatabaseReferences();
 	}
 
 	public ArrayList<String> getKeyWords() throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+		return genbankParser.getKeyWords();
 	}
 
 	public static void main(String[] args) throws Exception {
