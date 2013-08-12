@@ -2806,9 +2806,16 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		
+		trimAtomBondLists();
 	}
 	
 	private void formLinkRecordBond(LinkRecord linkRecord) {
+		// only work with atoms that aren't alternate locations
+		if (linkRecord.getAltLoc1().equals(" ")
+				|| linkRecord.getAltLoc2().equals(" "))
+			return;
+
 		try {
 			Atom a = getAtomFromRecord(linkRecord.getName1(),
 					linkRecord.getAltLoc1(), linkRecord.getResName1(),
@@ -2819,11 +2826,10 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 					linkRecord.getAltLoc2(), linkRecord.getResName2(),
 					linkRecord.getChainID2(), linkRecord.getResSeq2(),
 					linkRecord.getiCode2());
-			
-			// TODO determine what the actual bond order of this bond is; for now,
-			// we're assuming they're single bonds
-			Bond bond = new Bond(a, b, BondType.COVALENT, 1);
-			bond.addSelfToAtoms();
+
+			// TODO determine what the actual bond order of this bond is; for
+			// now, we're assuming they're single bonds
+			new Bond(a, b, 1);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -2838,8 +2844,7 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 					disulfideBond.getChainID2(), disulfideBond.getResnum2(),
 					disulfideBond.getInsCode2());
 			
-			Bond bond = new Bond(a, b, BondType.COVALENT, 1);
-			bond.addSelfToAtoms();
+			new Bond(a, b, 1);
 		} catch (StructureException e) {
 			e.printStackTrace();
 		}
@@ -2889,9 +2894,7 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 			
 				if (Calc.getDistance(carboxylC, aminoN) < MAX_PEPTIDE_BOND_LENGTH) {
 					// we got ourselves a peptide bond
-					Bond peptideBond = new Bond(carboxylC, aminoN, BondType.COVALENT, 1);
-					
-					peptideBond.addSelfToAtoms();
+					new Bond(carboxylC, aminoN, 1);
 				}
 			}
 		}
@@ -2899,11 +2902,12 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 	
 	private void formIntraResidueBonds() {
 		for (Chain chain : structure.getChains()) {
-			List<Group> groups = chain.getSeqResGroups();
+			List<Group> groups = chain.getAtomGroups();
 
 			for (Group group : groups) {
 				// atoms with no residue number don't have atom information
-				if (group.getResidueNumber() == null) {
+				// also ignore water
+				if (group.getResidueNumber() == null || group.isWater()) {
 					continue;
 				}
 
@@ -2915,13 +2919,22 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 						Atom a = group.getAtom(chemCompBond.getAtom_id_1());
 						Atom b = group.getAtom(chemCompBond.getAtom_id_2());
 						int bondOrder = chemCompBond.getNumericalBondOrder();
-						
-						Bond intraResidueBond = new Bond(a, b, BondType.COVALENT, bondOrder);
-						intraResidueBond.addSelfToAtoms();
+
+						new Bond(a, b, bondOrder);
 					} catch (StructureException e) {
 						// Some of the atoms were missing. That's fine, there's
 						// nothing to do in this case.
 					}
+				}
+			}
+		}
+	}
+	
+	private void trimAtomBondLists() {
+		for (Chain chain : structure.getChains()) {
+			for (Group group : chain.getAtomGroups()) {
+				for (Atom atom : group.getAtoms()) {
+					((ArrayList<Bond>) atom.getBonds()).trimToSize();
 				}
 			}
 		}
