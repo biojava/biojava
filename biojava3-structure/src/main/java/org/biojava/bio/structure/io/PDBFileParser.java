@@ -2791,20 +2791,20 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 	 * Note: the current implementation only looks at the first model of each
 	 * structure. This may need to be fixed in the future.
 	 */
-	private void formBonds() {		
-		for (LinkRecord linkRecord : linkRecords) {
-			formLinkRecordBond(linkRecord);
-		}
-		
-		for (SSBond disulfideBond : structure.getSSBonds()) {
-			formDisulfideBond(disulfideBond);
-		}
-		
+	private void formBonds() {
 		try {
+			for (LinkRecord linkRecord : linkRecords) {
+				formLinkRecordBond(linkRecord);
+			}
+
+			for (SSBond disulfideBond : structure.getSSBonds()) {
+				formDisulfideBond(disulfideBond);
+			}
 			formPeptideBonds();
 			formIntraResidueBonds();
 		} catch (Exception e) {
 			e.printStackTrace();
+			throw new RuntimeException("Error while forming bonds for " + pdbId, e);
 		}
 		
 		trimAtomBondLists();
@@ -2831,6 +2831,8 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 			// now, we're assuming they're single bonds
 			new Bond(a, b, 1);
 		} catch (Exception e) {
+			System.out.println("Error with the following link record: ");
+			System.out.println(linkRecord);
 			e.printStackTrace();
 		}
 	}
@@ -2846,6 +2848,8 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 			
 			new Bond(a, b, 1);
 		} catch (StructureException e) {
+			System.out.println("Error with the following SSBond: ");
+			System.out.println(disulfideBond);
 			e.printStackTrace();
 		}
 	}
