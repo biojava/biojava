@@ -2880,6 +2880,10 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 			List<Group> groups = chain.getSeqResGroups();
 
 			for (int i = 0; i < groups.size() - 1; i++) {
+				if (!(groups.get(i) instanceof AminoAcidImpl)
+						|| !(groups.get(i + 1) instanceof AminoAcidImpl))
+					continue;
+				
 				AminoAcidImpl current = (AminoAcidImpl) groups.get(i);
 				AminoAcidImpl next = (AminoAcidImpl) groups.get(i + 1);
 
@@ -2888,10 +2892,19 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 						|| next.getResidueNumber() == null) {
 					continue;
 				}
-
-				Atom carboxylC = current.getC();
-				Atom aminoN = next.getN();
-			
+				
+				Atom carboxylC;
+				Atom aminoN;
+				
+				try {
+					carboxylC = current.getC();
+					aminoN = next.getN();
+				} catch (StructureException e) {
+					// some structures may be incomplete and not store info
+					// about all of their atoms
+					continue;
+				}
+				
 				if (Calc.getDistance(carboxylC, aminoN) < MAX_PEPTIDE_BOND_LENGTH) {
 					// we got ourselves a peptide bond
 					new Bond(carboxylC, aminoN, 1);
