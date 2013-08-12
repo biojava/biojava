@@ -32,6 +32,7 @@ import org.biojava3.core.sequence.compound.AminoAcidCompound;
 import org.biojava3.core.sequence.compound.AminoAcidCompoundSet;
 import org.biojava3.core.sequence.compound.DNACompoundSet;
 import org.biojava3.core.sequence.compound.NucleotideCompound;
+import org.biojava3.core.sequence.template.AbstractSequence;
 
 /**
  *
@@ -53,7 +54,16 @@ public class FastaReaderHelper {
             return readFastaDNASequence(file);
         }
 
-        FastaReader<DNASequence, NucleotideCompound> fastaProxyReader = new FastaReader<DNASequence, NucleotideCompound>(file, new GenericFastaHeaderParser<DNASequence, NucleotideCompound>(), new FileProxyDNASequenceCreator(file, DNACompoundSet.getDNACompoundSet()));
+        FastaReader<DNASequence, NucleotideCompound> fastaProxyReader = 
+        		new FastaReader<DNASequence, NucleotideCompound>(
+        				file, 
+        				new GenericFastaHeaderParser<DNASequence, NucleotideCompound>(), 
+        				new FileProxyDNASequenceCreator(
+        						file, 
+        						DNACompoundSet.getDNACompoundSet(), 
+        						new FastaSequenceParser()
+    						)
+    				);
         return fastaProxyReader.process();
 
     }

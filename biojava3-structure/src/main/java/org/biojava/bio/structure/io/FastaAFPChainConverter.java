@@ -50,7 +50,7 @@ import org.biojava3.core.sequence.compound.AminoAcidCompoundSet;
 import org.biojava3.core.sequence.io.CasePreservingProteinSequenceCreator;
 import org.biojava3.core.sequence.io.FastaReader;
 import org.biojava3.core.sequence.io.GenericFastaHeaderParser;
-import org.biojava3.core.sequence.io.template.FastaHeaderParserInterface;
+import org.biojava3.core.sequence.io.template.SequenceHeaderParserInterface;
 import org.biojava3.core.sequence.io.template.SequenceCreatorInterface;
 import org.biojava3.core.sequence.template.Sequence;
 import org.biojava3.core.util.SequenceTools;
@@ -87,7 +87,7 @@ public class FastaAFPChainConverter {
 	public static AFPChain cpFastaToAfpChain(File fastaFile, Structure structure, int cpSite) throws IOException, StructureException {
 		InputStream inStream = new FileInputStream(fastaFile);
 		SequenceCreatorInterface<AminoAcidCompound> creator = new CasePreservingProteinSequenceCreator(AminoAcidCompoundSet.getAminoAcidCompoundSet());
-		FastaHeaderParserInterface<ProteinSequence, AminoAcidCompound> headerParser = new GenericFastaHeaderParser<ProteinSequence, AminoAcidCompound>();
+		SequenceHeaderParserInterface<ProteinSequence, AminoAcidCompound> headerParser = new GenericFastaHeaderParser<ProteinSequence, AminoAcidCompound>();
 		FastaReader<ProteinSequence, AminoAcidCompound> fastaReader = new FastaReader<ProteinSequence, AminoAcidCompound>(inStream, headerParser, creator);
 		LinkedHashMap<String, ProteinSequence> sequences = fastaReader.process();
 		inStream.close();
@@ -189,7 +189,7 @@ public class FastaAFPChainConverter {
 		InputStream inStream = new FileInputStream(fastaFile);
 		SequenceCreatorInterface<AminoAcidCompound> creator = new CasePreservingProteinSequenceCreator(
 				AminoAcidCompoundSet.getAminoAcidCompoundSet());
-		FastaHeaderParserInterface<ProteinSequence, AminoAcidCompound> headerParser = new GenericFastaHeaderParser<ProteinSequence, AminoAcidCompound>();
+		SequenceHeaderParserInterface<ProteinSequence, AminoAcidCompound> headerParser = new GenericFastaHeaderParser<ProteinSequence, AminoAcidCompound>();
 		FastaReader<ProteinSequence, AminoAcidCompound> fastaReader = new FastaReader<ProteinSequence, AminoAcidCompound>(
 				inStream, headerParser, creator);
 		LinkedHashMap<String, ProteinSequence> sequences = fastaReader.process();

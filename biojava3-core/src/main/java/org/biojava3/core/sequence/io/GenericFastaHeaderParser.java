@@ -27,7 +27,7 @@ import org.biojava3.core.sequence.AccessionID;
 import org.biojava3.core.sequence.DataSource;
 import org.biojava3.core.sequence.ProteinSequence;
 import org.biojava3.core.sequence.compound.AminoAcidCompound;
-import org.biojava3.core.sequence.io.template.FastaHeaderParserInterface;
+import org.biojava3.core.sequence.io.template.SequenceHeaderParserInterface;
 import org.biojava3.core.sequence.template.AbstractSequence;
 import org.biojava3.core.sequence.template.Compound;
 import org.biojava3.core.sequence.template.AbstractSequence.AnnotationType;
@@ -57,7 +57,7 @@ import org.biojava3.core.sequence.template.AbstractSequence.AnnotationType;
  *</pre>
  * @author Scooter Willis <willishf at gmail dot com>
  */
-public class GenericFastaHeaderParser<S extends AbstractSequence<C>, C extends Compound> implements FastaHeaderParserInterface<S,C> {
+public class GenericFastaHeaderParser<S extends AbstractSequence<C>, C extends Compound> implements SequenceHeaderParserInterface<S,C> {
 
     /**
      * Parse out the components where some have a | and others do not
