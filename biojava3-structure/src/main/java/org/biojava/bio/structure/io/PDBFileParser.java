@@ -2236,7 +2236,7 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 	 */
 	private void pdb_SSBOND_Handler(String line){
 		String chain1      = line.substring(15,16);
-		String seqNum1     = line.substring(18,21).trim();
+		String seqNum1     = line.substring(17,21).trim();
 		String icode1      = line.substring(21,22);
 		String chain2      = line.substring(29,30);
 		String seqNum2     = line.substring(31,35).trim();
