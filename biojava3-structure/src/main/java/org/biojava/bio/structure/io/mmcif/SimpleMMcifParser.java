@@ -46,6 +46,7 @@ import org.biojava.bio.structure.io.mmcif.model.Entity;
 import org.biojava.bio.structure.io.mmcif.model.EntityPolySeq;
 import org.biojava.bio.structure.io.mmcif.model.EntitySrcGen;
 import org.biojava.bio.structure.io.mmcif.model.EntitySrcNat;
+import org.biojava.bio.structure.io.mmcif.model.EntitySrcSyn;
 import org.biojava.bio.structure.io.mmcif.model.Exptl;
 import org.biojava.bio.structure.io.mmcif.model.PdbxChemCompDescriptor;
 import org.biojava.bio.structure.io.mmcif.model.PdbxChemCompIdentifier;
@@ -556,7 +557,12 @@ public class SimpleMMcifParser implements MMcifParser {
 					"org.biojava.bio.structure.io.mmcif.model.EntitySrcNat",
 					loopFields,lineData);
 			triggerNewEntitySrcNat(entitySrcNat);
-		} else if ( category.equals("_struct_asym")){
+			else if ( category.equals("_entity_src_syn")){
+				EntitySrcSyn entitySrcSyn = (EntitySrcSyn) buildObject(
+						"org.biojava.bio.structure.io.mmcif.model.EntitySrcSyn",
+						loopFields,lineData);
+				triggerNewEntitySrcSyn(entitySrcSyn);
+			} else if ( category.equals("_struct_asym")){
 			StructAsym sasym  = (StructAsym) buildObject(
 					"org.biojava.bio.structure.io.mmcif.model.StructAsym",
 					loopFields,lineData);
@@ -844,6 +850,11 @@ public class SimpleMMcifParser implements MMcifParser {
 	public void triggerNewEntitySrcNat(EntitySrcNat entitySrcNat){
 		for(MMcifConsumer c : consumers){
 			c.newEntitySrcNat(entitySrcNat);
+		}
+	}
+	public void triggerNewEntitySrcSyn(EntitySrcSyn entitySrcSyn){
+		for(MMcifConsumer c : consumers){
+			c.newEntitySrcSyn(entitySrcSyn);
 		}
 	}
 	public void triggerNewChemComp(ChemComp cc){
