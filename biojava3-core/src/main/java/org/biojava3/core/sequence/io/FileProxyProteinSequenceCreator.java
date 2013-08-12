@@ -27,6 +27,7 @@ import java.util.List;
 import org.biojava3.core.sequence.ProteinSequence;
 import org.biojava3.core.sequence.compound.AminoAcidCompound;
 import org.biojava3.core.sequence.io.template.SequenceCreatorInterface;
+import org.biojava3.core.sequence.io.template.SequenceParserInterface;
 import org.biojava3.core.sequence.loader.SequenceFileProxyLoader;
 import org.biojava3.core.sequence.template.AbstractSequence;
 import org.biojava3.core.sequence.template.CompoundSet;
@@ -44,21 +45,21 @@ import org.biojava3.core.sequence.template.ProxySequenceReader;
  *
  * @author Scooter Willis &lt;willishf at gmail dot com&gt;
  */
-public class FileProxyProteinSequenceCreator implements
-        SequenceCreatorInterface<AminoAcidCompound> {
+public class FileProxyProteinSequenceCreator implements SequenceCreatorInterface<AminoAcidCompound> {
 
-    CompoundSet<AminoAcidCompound> compoundSet = null;
-    File fastaFile = null;
-
+    CompoundSet<AminoAcidCompound> compoundSet;
+    File file;
+    SequenceParserInterface sequenceParser;
+    
     /**
      * Need File so that we can store full path name in SequenceFileProxyLoader for Random File access as a quick read
      * @param fastaFile
      * @param compoundSet
      */
-    public FileProxyProteinSequenceCreator(File fastaFile,
-            CompoundSet<AminoAcidCompound> compoundSet) {
+    public FileProxyProteinSequenceCreator(File file, CompoundSet<AminoAcidCompound> compoundSet, SequenceParserInterface sequenceParser ) {
         this.compoundSet = compoundSet;
-        this.fastaFile = fastaFile;
+        this.file = file;
+        this.sequenceParser = sequenceParser;
     }
 
     /**
@@ -69,11 +70,15 @@ public class FileProxyProteinSequenceCreator implements
      * @return
      */
 
-    public AbstractSequence<AminoAcidCompound> getSequence(String sequence,
-            long index) {
-        SequenceFileProxyLoader<AminoAcidCompound> sequenceFileProxyLoader = new SequenceFileProxyLoader<AminoAcidCompound>(
-                fastaFile, new FastaSequenceParser(), index, sequence.length(),
-                compoundSet);
+    public AbstractSequence<AminoAcidCompound> getSequence(String sequence, long index) {
+        SequenceFileProxyLoader<AminoAcidCompound> sequenceFileProxyLoader = 
+        		new SequenceFileProxyLoader<AminoAcidCompound>(
+        				file, 
+        				sequenceParser, 
+        				index, 
+        				sequence.length(), 
+        				compoundSet
+        				);
         return new ProteinSequence(sequenceFileProxyLoader, compoundSet);
     }
 

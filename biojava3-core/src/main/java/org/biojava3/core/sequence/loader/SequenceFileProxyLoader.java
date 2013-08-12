@@ -25,8 +25,9 @@
  */
 package org.biojava3.core.sequence.loader;
 
+import java.io.BufferedReader;
 import java.io.File;
-import java.io.RandomAccessFile;
+import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -97,11 +98,11 @@ public class SequenceFileProxyLoader<C extends Compound> implements ProxySequenc
      */
     private boolean init() {
         try {
-            RandomAccessFile randomAccessFile = new RandomAccessFile(file, "r");
-            randomAccessFile.seek(sequenceStartIndex);
-            String sequence = sequenceParser.getSequence(randomAccessFile, sequenceLength);
+        	BufferedReader br = new BufferedReader(new FileReader(file));
+        	br.skip(sequenceStartIndex);
+            String sequence = sequenceParser.getSequence(br, sequenceLength);
             setContents(sequence);
-            randomAccessFile.close(); // close file to prevent too many being open
+            br.close(); // close file to prevent too many being open
         } catch (Exception e) {
             throw new FileAccessError("Error accessing " + file + " offset=" + sequenceStartIndex + " sequenceLength=" + sequenceLength + " " + e.toString());
         }
