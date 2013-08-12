@@ -2834,6 +2834,7 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 			System.out.println("Error with the following link record: ");
 			System.out.println(linkRecord);
 			e.printStackTrace();
+			throw new RuntimeException(e);
 		}
 	}
 	
@@ -2851,6 +2852,7 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 			System.out.println("Error with the following SSBond: ");
 			System.out.println(disulfideBond);
 			e.printStackTrace();
+			throw new RuntimeException(e);
 		}
 	}
 
