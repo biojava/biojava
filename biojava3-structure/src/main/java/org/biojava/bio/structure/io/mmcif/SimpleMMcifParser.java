@@ -484,9 +484,6 @@ public class SimpleMMcifParser implements MMcifParser {
 					lineData );
 		}
 
-
-		System.out.println(category);
-
 		if ( category.equals("_entity")){
 
 			Entity e =  (Entity) buildObject(

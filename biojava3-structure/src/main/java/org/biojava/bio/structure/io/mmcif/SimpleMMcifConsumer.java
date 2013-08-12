@@ -94,7 +94,7 @@ import org.biojava.bio.structure.quaternary.ModelTransformationMatrix;
 
 public class SimpleMMcifConsumer implements MMcifConsumer {
 
-	boolean DEBUG = true;
+	boolean DEBUG = false;
 
 	Structure structure;
 	Chain current_chain;
@@ -1428,8 +1428,8 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 
 	public void newPdbxEntityNonPoly(PdbxEntityNonPoly pen){
 		// TODO: do something with them...
-
-		System.out.println(pen.getEntity_id() + " " + pen.getName() + " " + pen.getComp_id());
+		// not implemented yet...
+		//System.out.println(pen.getEntity_id() + " " + pen.getName() + " " + pen.getComp_id());
 	}
 
 	public void newChemComp(ChemComp c) {
