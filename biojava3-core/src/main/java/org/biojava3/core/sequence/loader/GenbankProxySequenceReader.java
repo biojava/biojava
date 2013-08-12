@@ -177,50 +177,67 @@ public class GenbankProxySequenceReader<C extends Compound> extends StringProxyS
         GenbankProxySequenceReader<AminoAcidCompound> genbankProteinReader 
         	= new GenbankProxySequenceReader<AminoAcidCompound>("/tmp", "NP_000257", AminoAcidCompoundSet.getAminoAcidCompoundSet());
         ProteinSequence proteinSequence = new ProteinSequence(genbankProteinReader);
-		proteinSequence.setAccession(new AccessionID("NP_000257") );
+        genbankProteinReader.getHeaderParser().parseHeader(genbankProteinReader.getHeader(), proteinSequence);
 		System.out.println("Sequence" + "(" + proteinSequence.getAccession() + "," + proteinSequence.getLength() + ")=" + proteinSequence.getSequenceAsString().substring(0, 10) + "...");
+		System.out.println("Keywords" + genbankProteinReader.getKeyWords());
+		System.out.println("DatabaseReferences" + genbankProteinReader.getDatabaseReferences());        
 
         GenbankProxySequenceReader<NucleotideCompound> genbankDNAReader 
     	= new GenbankProxySequenceReader<NucleotideCompound>("/tmp", "NM_001126", DNACompoundSet.getDNACompoundSet());
         DNASequence dnaSequence = new DNASequence(genbankDNAReader);
+        genbankDNAReader.getHeaderParser().parseHeader(genbankDNAReader.getHeader(), dnaSequence);
         dnaSequence.setAccession(new AccessionID("NM_001126") );
 		System.out.println("Sequence" + "(" + dnaSequence.getAccession() + "," + dnaSequence.getLength() + ")=" + dnaSequence.getSequenceAsString().substring(0, 10) + "...");
+		System.out.println("Keywords" + genbankDNAReader.getKeyWords());
+		System.out.println("DatabaseReferences" + genbankDNAReader.getDatabaseReferences());        
 
         genbankDNAReader 
     	= new GenbankProxySequenceReader<NucleotideCompound>("/tmp", "NM_000266", DNACompoundSet.getDNACompoundSet());
         dnaSequence = new DNASequence(genbankDNAReader);
-        dnaSequence.setAccession(new AccessionID("NM_000266") );
+        genbankDNAReader.getHeaderParser().parseHeader(genbankDNAReader.getHeader(), dnaSequence);
 		System.out.println("Sequence" + "(" + dnaSequence.getAccession() + "," + dnaSequence.getLength() + ")=" + dnaSequence.getSequenceAsString().substring(0, 10) + "...");
+		System.out.println("Keywords" + genbankDNAReader.getKeyWords());
+		System.out.println("DatabaseReferences" + genbankDNAReader.getDatabaseReferences());        
         
         genbankDNAReader 
     	= new GenbankProxySequenceReader<NucleotideCompound>("/tmp", "AV254721", DNACompoundSet.getDNACompoundSet());
         dnaSequence = new DNASequence(genbankDNAReader);
-        dnaSequence.setAccession(new AccessionID("AV254721") );
+        genbankDNAReader.getHeaderParser().parseHeader(genbankDNAReader.getHeader(), dnaSequence);
 		System.out.println("Sequence" + "(" + dnaSequence.getAccession() + "," + dnaSequence.getLength() + ")=" + dnaSequence.getSequenceAsString().substring(0, 10) + "...");
+		System.out.println("Keywords" + genbankDNAReader.getKeyWords());
+		System.out.println("DatabaseReferences" + genbankDNAReader.getDatabaseReferences());        
 
         genbankDNAReader 
     	= new GenbankProxySequenceReader<NucleotideCompound>("/tmp", "AV254721.2", DNACompoundSet.getDNACompoundSet());
         dnaSequence = new DNASequence(genbankDNAReader);
-        dnaSequence.setAccession(new AccessionID("AV254721.2") );
+        genbankDNAReader.getHeaderParser().parseHeader(genbankDNAReader.getHeader(), dnaSequence);
 		System.out.println("Sequence" + "(" + dnaSequence.getAccession() + "," + dnaSequence.getLength() + ")=" + dnaSequence.getSequenceAsString().substring(0, 10) + "...");
+		System.out.println("Keywords" + genbankDNAReader.getKeyWords());
+		System.out.println("DatabaseReferences" + genbankDNAReader.getDatabaseReferences());        
 
         genbankDNAReader 
     	= new GenbankProxySequenceReader<NucleotideCompound>("/tmp", "U49845", DNACompoundSet.getDNACompoundSet());
         dnaSequence = new DNASequence(genbankDNAReader);
-        dnaSequence.setAccession(new AccessionID("U49845") );
+        genbankDNAReader.getHeaderParser().parseHeader(genbankDNAReader.getHeader(), dnaSequence);
 		System.out.println("Sequence" + "(" + dnaSequence.getAccession() + "," + dnaSequence.getLength() + ")=" + dnaSequence.getSequenceAsString().substring(0, 10) + "...");
+		System.out.println("Keywords" + genbankDNAReader.getKeyWords());
+		System.out.println("DatabaseReferences" + genbankDNAReader.getDatabaseReferences());        
 
         genbankDNAReader 
     	= new GenbankProxySequenceReader<NucleotideCompound>("/tmp", "GI:1293613", DNACompoundSet.getDNACompoundSet());
         dnaSequence = new DNASequence(genbankDNAReader);
-        dnaSequence.setAccession(new AccessionID("GI:1293613") );
+        genbankDNAReader.getHeaderParser().parseHeader(genbankDNAReader.getHeader(), dnaSequence);
 		System.out.println("Sequence" + "(" + dnaSequence.getAccession() + "," + dnaSequence.getLength() + ")=" + dnaSequence.getSequenceAsString().substring(0, 10) + "...");
+		System.out.println("Keywords" + genbankDNAReader.getKeyWords());
+		System.out.println("DatabaseReferences" + genbankDNAReader.getDatabaseReferences());        
 
         genbankDNAReader 
     	= new GenbankProxySequenceReader<NucleotideCompound>("/tmp", "14109166", DNACompoundSet.getDNACompoundSet());
         dnaSequence = new DNASequence(genbankDNAReader);
-        dnaSequence.setAccession(new AccessionID("14109166") );
+        genbankDNAReader.getHeaderParser().parseHeader(genbankDNAReader.getHeader(), dnaSequence);
 		System.out.println("Sequence" + "(" + dnaSequence.getAccession() + "," + dnaSequence.getLength() + ")=" + dnaSequence.getSequenceAsString().substring(0, 10) + "...");
+		System.out.println("Keywords" + genbankDNAReader.getKeyWords());
+		System.out.println("DatabaseReferences" + genbankDNAReader.getDatabaseReferences());        
 
 		/*
 		GenbankProxySequenceReader genbankProxyReader = new GenbankProxySequenceReader("/tmp");
