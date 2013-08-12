@@ -608,22 +608,28 @@ public class HetatomImpl implements Group,Serializable {
 	}
 	
 	public Group getAltLocGroup(Character altLoc) {
-		if (altLocs == null || altLocs.size() == 0)
-			return null;
-		
-		for (Group group : altLocs) {
-			if (group.getAtoms().isEmpty())
-				continue;
+		try {
+			// maybe the alt loc group in question is myself
+			if (getAtom(0).getAltLoc().equals(altLoc)) {
+				return this;
+			}
 			
-			// determine this group's alt-loc character code by looking
-			// at its first atom's alt-loc character
-			try {
+			if (altLocs == null || altLocs.size() == 0)
+				return null;
+
+			for (Group group : altLocs) {
+				if (group.getAtoms().isEmpty())
+					continue;
+
+				// determine this group's alt-loc character code by looking
+				// at its first atom's alt-loc character
+
 				if (group.getAtom(0).getAltLoc().equals(altLoc)) {
 					return group;
 				}
-			} catch (StructureException e) {
-				// this will never happen
 			}
+		} catch (StructureException e) {
+			// this will never happen
 		}
 		
 		return null;
