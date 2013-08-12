@@ -34,6 +34,8 @@ import org.biojava.bio.structure.io.mmcif.model.DatabasePDBremark;
 import org.biojava.bio.structure.io.mmcif.model.DatabasePDBrev;
 import org.biojava.bio.structure.io.mmcif.model.Entity;
 import org.biojava.bio.structure.io.mmcif.model.EntityPolySeq;
+import org.biojava.bio.structure.io.mmcif.model.EntitySrcGen;
+import org.biojava.bio.structure.io.mmcif.model.EntitySrcNat;
 import org.biojava.bio.structure.io.mmcif.model.Exptl;
 import org.biojava.bio.structure.io.mmcif.model.PdbxChemCompDescriptor;
 import org.biojava.bio.structure.io.mmcif.model.PdbxChemCompIdentifier;
@@ -97,6 +99,8 @@ public interface MMcifConsumer {
 	public void newPdbxChemCompIndentifier(PdbxChemCompIdentifier id);
 	public void newChemCompBond(ChemCompBond bond);
 	public void newPdbxChemCompDescriptor(PdbxChemCompDescriptor desc);
+	public void newEntitySrcGen(EntitySrcGen entitySrcGen);
+	public void newEntitySrcNat(EntitySrcNat entitySrcNat);
 	
 	/** AuditAuthor contains the info from the PDB-AUTHOR records.
 	 *
@@ -114,6 +118,10 @@ public interface MMcifConsumer {
 
 	public void setFileParsingParameters(FileParsingParameters params);
 	public FileParsingParameters getFileParsingParameters();
+
+	
+
+	
 
 	
 }

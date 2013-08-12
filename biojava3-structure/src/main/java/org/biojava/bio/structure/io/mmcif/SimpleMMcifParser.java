@@ -44,6 +44,8 @@ import org.biojava.bio.structure.io.mmcif.model.DatabasePDBremark;
 import org.biojava.bio.structure.io.mmcif.model.DatabasePDBrev;
 import org.biojava.bio.structure.io.mmcif.model.Entity;
 import org.biojava.bio.structure.io.mmcif.model.EntityPolySeq;
+import org.biojava.bio.structure.io.mmcif.model.EntitySrcGen;
+import org.biojava.bio.structure.io.mmcif.model.EntitySrcNat;
 import org.biojava.bio.structure.io.mmcif.model.Exptl;
 import org.biojava.bio.structure.io.mmcif.model.PdbxChemCompDescriptor;
 import org.biojava.bio.structure.io.mmcif.model.PdbxChemCompIdentifier;
@@ -481,6 +483,9 @@ public class SimpleMMcifParser implements MMcifParser {
 					lineData );
 		}
 
+		
+		System.out.println(category);
+		
 		if ( category.equals("_entity")){
 
 			Entity e =  (Entity) buildObject(
@@ -541,7 +546,16 @@ public class SimpleMMcifParser implements MMcifParser {
 					loopFields,lineData);
 
 			triggerNewEntityPolySeq(exptl);
-
+		} else if ( category.equals("_entity_src_gen")){
+			EntitySrcGen entitySrcGen = (EntitySrcGen) buildObject(
+					"org.biojava.bio.structure.io.mmcif.model.EntitySrcGen",
+					loopFields,lineData);
+			triggerNewEntitySrcGen(entitySrcGen);
+		} else if ( category.equals("_entity_src_nat")){
+			EntitySrcNat entitySrcNat = (EntitySrcNat) buildObject(
+					"org.biojava.bio.structure.io.mmcif.model.EntitySrcNat",
+					loopFields,lineData);
+			triggerNewEntitySrcNat(entitySrcNat);
 		} else if ( category.equals("_struct_asym")){
 			StructAsym sasym  = (StructAsym) buildObject(
 					"org.biojava.bio.structure.io.mmcif.model.StructAsym",
@@ -820,6 +834,16 @@ public class SimpleMMcifParser implements MMcifParser {
 	public void triggerNewEntityPolySeq(EntityPolySeq epolseq){
 		for(MMcifConsumer c : consumers){
 			c.newEntityPolySeq(epolseq);
+		}
+	}
+	public void triggerNewEntitySrcGen(EntitySrcGen entitySrcGen){
+		for(MMcifConsumer c : consumers){
+			c.newEntitySrcGen(entitySrcGen);
+		}
+	}
+	public void triggerNewEntitySrcNat(EntitySrcNat entitySrcNat){
+		for(MMcifConsumer c : consumers){
+			c.newEntitySrcNat(entitySrcNat);
 		}
 	}
 	public void triggerNewChemComp(ChemComp cc){
