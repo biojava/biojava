@@ -70,6 +70,13 @@ public class TestBond extends TestCase {
 		assertTrue(areBonded(atom1, atom2));
 	}
 	
+	public void testLigandBonds() throws StructureException {
+		Atom phosphateP = s.getChainByPDB("A").getAtomGroup(447).getAtom("P");
+		Atom phosphateO = s.getChainByPDB("A").getAtomGroup(447).getAtom("O1");
+		
+		assertTrue(areBonded(phosphateP, phosphateO));
+	}
+	
 	private boolean areBonded(Atom a, Atom b) {
 		for (Bond bond : a.getBonds()) {
 			if (bond.getOther(a) == b) {
@@ -78,5 +85,21 @@ public class TestBond extends TestCase {
 		}
 		
 		return false;
+	}
+	
+	/*
+	 * Each of the following PDB IDs used to make formBonds() crash.
+	 */
+	
+	public void test145D() throws IOException, StructureException {
+		StructureIO.getStructure("145D");
+	}
+	
+	public void test1APJ() throws IOException, StructureException {
+		StructureIO.getStructure("1APJ");
+	}
+	
+	public void test1BDX() throws IOException, StructureException {
+		StructureIO.getStructure("1BDX");
 	}
 }

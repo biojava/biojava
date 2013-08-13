@@ -2236,7 +2236,7 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 	 */
 	private void pdb_SSBOND_Handler(String line){
 		String chain1      = line.substring(15,16);
-		String seqNum1     = line.substring(18,21).trim();
+		String seqNum1     = line.substring(17,21).trim();
 		String icode1      = line.substring(21,22);
 		String chain2      = line.substring(29,30);
 		String seqNum2     = line.substring(31,35).trim();
@@ -2791,24 +2791,31 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 	 * Note: the current implementation only looks at the first model of each
 	 * structure. This may need to be fixed in the future.
 	 */
-	private void formBonds() {		
-		for (LinkRecord linkRecord : linkRecords) {
-			formLinkRecordBond(linkRecord);
-		}
-		
-		for (SSBond disulfideBond : structure.getSSBonds()) {
-			formDisulfideBond(disulfideBond);
-		}
-		
+	private void formBonds() {
 		try {
+			for (LinkRecord linkRecord : linkRecords) {
+				formLinkRecordBond(linkRecord);
+			}
+
+			for (SSBond disulfideBond : structure.getSSBonds()) {
+				formDisulfideBond(disulfideBond);
+			}
 			formPeptideBonds();
 			formIntraResidueBonds();
 		} catch (Exception e) {
 			e.printStackTrace();
+			throw new RuntimeException("Error while forming bonds for " + pdbId, e);
 		}
+		
+		trimAtomBondLists();
 	}
 	
 	private void formLinkRecordBond(LinkRecord linkRecord) {
+		// only work with atoms that aren't alternate locations
+		if (linkRecord.getAltLoc1().equals(" ")
+				|| linkRecord.getAltLoc2().equals(" "))
+			return;
+
 		try {
 			Atom a = getAtomFromRecord(linkRecord.getName1(),
 					linkRecord.getAltLoc1(), linkRecord.getResName1(),
@@ -2819,13 +2826,15 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 					linkRecord.getAltLoc2(), linkRecord.getResName2(),
 					linkRecord.getChainID2(), linkRecord.getResSeq2(),
 					linkRecord.getiCode2());
-			
-			// TODO determine what the actual bond order of this bond is; for now,
-			// we're assuming they're single bonds
-			Bond bond = new Bond(a, b, BondType.COVALENT, 1);
-			bond.addSelfToAtoms();
+
+			// TODO determine what the actual bond order of this bond is; for
+			// now, we're assuming they're single bonds
+			new Bond(a, b, 1);
 		} catch (Exception e) {
+			System.out.println("Error with the following link record: ");
+			System.out.println(linkRecord);
 			e.printStackTrace();
+			throw new RuntimeException(e);
 		}
 	}
 	
@@ -2838,10 +2847,12 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 					disulfideBond.getChainID2(), disulfideBond.getResnum2(),
 					disulfideBond.getInsCode2());
 			
-			Bond bond = new Bond(a, b, BondType.COVALENT, 1);
-			bond.addSelfToAtoms();
+			new Bond(a, b, 1);
 		} catch (StructureException e) {
+			System.out.println("Error with the following SSBond: ");
+			System.out.println(disulfideBond);
 			e.printStackTrace();
+			throw new RuntimeException(e);
 		}
 	}
 
@@ -2875,6 +2886,10 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 			List<Group> groups = chain.getSeqResGroups();
 
 			for (int i = 0; i < groups.size() - 1; i++) {
+				if (!(groups.get(i) instanceof AminoAcidImpl)
+						|| !(groups.get(i + 1) instanceof AminoAcidImpl))
+					continue;
+				
 				AminoAcidImpl current = (AminoAcidImpl) groups.get(i);
 				AminoAcidImpl next = (AminoAcidImpl) groups.get(i + 1);
 
@@ -2883,15 +2898,22 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 						|| next.getResidueNumber() == null) {
 					continue;
 				}
-
-				Atom carboxylC = current.getC();
-				Atom aminoN = next.getN();
-			
+				
+				Atom carboxylC;
+				Atom aminoN;
+				
+				try {
+					carboxylC = current.getC();
+					aminoN = next.getN();
+				} catch (StructureException e) {
+					// some structures may be incomplete and not store info
+					// about all of their atoms
+					continue;
+				}
+				
 				if (Calc.getDistance(carboxylC, aminoN) < MAX_PEPTIDE_BOND_LENGTH) {
 					// we got ourselves a peptide bond
-					Bond peptideBond = new Bond(carboxylC, aminoN, BondType.COVALENT, 1);
-					
-					peptideBond.addSelfToAtoms();
+					new Bond(carboxylC, aminoN, 1);
 				}
 			}
 		}
@@ -2899,11 +2921,12 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 	
 	private void formIntraResidueBonds() {
 		for (Chain chain : structure.getChains()) {
-			List<Group> groups = chain.getSeqResGroups();
+			List<Group> groups = chain.getAtomGroups();
 
 			for (Group group : groups) {
 				// atoms with no residue number don't have atom information
-				if (group.getResidueNumber() == null) {
+				// also ignore water
+				if (group.getResidueNumber() == null || group.isWater()) {
 					continue;
 				}
 
@@ -2915,13 +2938,22 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 						Atom a = group.getAtom(chemCompBond.getAtom_id_1());
 						Atom b = group.getAtom(chemCompBond.getAtom_id_2());
 						int bondOrder = chemCompBond.getNumericalBondOrder();
-						
-						Bond intraResidueBond = new Bond(a, b, BondType.COVALENT, bondOrder);
-						intraResidueBond.addSelfToAtoms();
+
+						new Bond(a, b, bondOrder);
 					} catch (StructureException e) {
 						// Some of the atoms were missing. That's fine, there's
 						// nothing to do in this case.
 					}
+				}
+			}
+		}
+	}
+	
+	private void trimAtomBondLists() {
+		for (Chain chain : structure.getChains()) {
+			for (Group group : chain.getAtomGroups()) {
+				for (Atom atom : group.getAtoms()) {
+					((ArrayList<Bond>) atom.getBonds()).trimToSize();
 				}
 			}
 		}
