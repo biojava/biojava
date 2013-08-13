@@ -195,8 +195,7 @@ public class ChemCompConsumer implements MMcifConsumer {
 
 	@Override
 	public void newChemCompAtom(ChemCompAtom atom) {
-		// TODO Auto-generated method stub
-		
+		dictionary.getChemComp(latestChemCompId).getAtoms().add(atom);
 	}
 
 	@Override
