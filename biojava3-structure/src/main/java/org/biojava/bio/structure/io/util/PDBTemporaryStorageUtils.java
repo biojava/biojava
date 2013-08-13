@@ -112,5 +112,30 @@ public class PDBTemporaryStorageUtils {
 		public String getSym2() {
 			return sym2;
 		}
+		
+		@Override
+		public String toString() {
+			String s = "[LINK Record:\n";
+			
+			s += "Atom 1:\n";
+			s += "\tName: " + name1 + "\n";
+			s += "\tAlt Loc: " + altLoc1 + "\n";
+			s += "\tRes name: " + resName1 + "\n";
+			s += "\tChain ID: " + chainID1 + "\n";
+			s += "\tRes Seq: " + resSeq1 + "\n";
+			s += "\tIns Code: " + iCode1 + "\n";
+			
+			s += "Atom 2:\n";
+			s += "\tName: " + name2 + "\n";
+			s += "\tAlt Loc: " + altLoc2 + "\n";
+			s += "\tRes name: " + resName2 + "\n";
+			s += "\tChain ID: " + chainID2 + "\n";
+			s += "\tRes Seq: " + resSeq2 + "\n";
+			s += "\tIns Code: " + iCode2 + "\n";
+			
+			s += "]";
+			
+			return s;
+		}
 	}
 }
