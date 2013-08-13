@@ -69,7 +69,7 @@ public class AtomImpl implements Atom,Serializable, PDBRecord {
         tempfactor = 0.0       ;
         altLoc = new Character(' ');
         parent = null;
-        bonds = new ArrayList<Bond>();
+        bonds = new ArrayList<Bond>(0);
     }
     /** Get the Hibernate database ID.
      *
