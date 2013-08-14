@@ -70,6 +70,7 @@ public class DemoMMCIFReader
 			System.out.println(h.getAtomSequence());
 			System.out.println(h.getAtomGroups(GroupType.HETATM));
 			
+			System.out.println("Compounds: " + s.getCompounds());
 			
 		} catch (Exception e) {
 			e.printStackTrace();

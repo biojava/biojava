@@ -2236,7 +2236,7 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 	 */
 	private void pdb_SSBOND_Handler(String line){
 		String chain1      = line.substring(15,16);
-		String seqNum1     = line.substring(18,21).trim();
+		String seqNum1     = line.substring(17,21).trim();
 		String icode1      = line.substring(21,22);
 		String chain2      = line.substring(29,30);
 		String seqNum2     = line.substring(31,35).trim();
@@ -2791,20 +2791,20 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 	 * Note: the current implementation only looks at the first model of each
 	 * structure. This may need to be fixed in the future.
 	 */
-	private void formBonds() {		
-		for (LinkRecord linkRecord : linkRecords) {
-			formLinkRecordBond(linkRecord);
-		}
-		
-		for (SSBond disulfideBond : structure.getSSBonds()) {
-			formDisulfideBond(disulfideBond);
-		}
-		
+	private void formBonds() {
 		try {
+			for (LinkRecord linkRecord : linkRecords) {
+				formLinkRecordBond(linkRecord);
+			}
+
+			for (SSBond disulfideBond : structure.getSSBonds()) {
+				formDisulfideBond(disulfideBond);
+			}
 			formPeptideBonds();
 			formIntraResidueBonds();
 		} catch (Exception e) {
 			e.printStackTrace();
+			throw new RuntimeException("Error while forming bonds for " + pdbId, e);
 		}
 		
 		trimAtomBondLists();
@@ -2831,7 +2831,10 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 			// now, we're assuming they're single bonds
 			new Bond(a, b, 1);
 		} catch (Exception e) {
+			System.out.println("Error with the following link record: ");
+			System.out.println(linkRecord);
 			e.printStackTrace();
+			throw new RuntimeException(e);
 		}
 	}
 	
@@ -2846,7 +2849,10 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 			
 			new Bond(a, b, 1);
 		} catch (StructureException e) {
+			System.out.println("Error with the following SSBond: ");
+			System.out.println(disulfideBond);
 			e.printStackTrace();
+			throw new RuntimeException(e);
 		}
 	}
 
@@ -2880,6 +2886,10 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 			List<Group> groups = chain.getSeqResGroups();
 
 			for (int i = 0; i < groups.size() - 1; i++) {
+				if (!(groups.get(i) instanceof AminoAcidImpl)
+						|| !(groups.get(i + 1) instanceof AminoAcidImpl))
+					continue;
+				
 				AminoAcidImpl current = (AminoAcidImpl) groups.get(i);
 				AminoAcidImpl next = (AminoAcidImpl) groups.get(i + 1);
 
@@ -2888,10 +2898,19 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 						|| next.getResidueNumber() == null) {
 					continue;
 				}
-
-				Atom carboxylC = current.getC();
-				Atom aminoN = next.getN();
-			
+				
+				Atom carboxylC;
+				Atom aminoN;
+				
+				try {
+					carboxylC = current.getC();
+					aminoN = next.getN();
+				} catch (StructureException e) {
+					// some structures may be incomplete and not store info
+					// about all of their atoms
+					continue;
+				}
+				
 				if (Calc.getDistance(carboxylC, aminoN) < MAX_PEPTIDE_BOND_LENGTH) {
 					// we got ourselves a peptide bond
 					new Bond(carboxylC, aminoN, 1);
