@@ -15,6 +15,9 @@ public class TestBond extends TestCase {
 	@Before
 	public void setUp() throws IOException, StructureException {		
 		AtomCache cache = new AtomCache();
+		
+		cache.setUseMmCif(false);
+		
 		FileParsingParameters params = cache.getFileParsingParams();
 		
 		params.setStoreEmptySeqRes(true);
@@ -23,7 +26,8 @@ public class TestBond extends TestCase {
 		params.setCreateAtomBonds(true);
 		
 		StructureIO.setAtomCache(cache);
-		s = StructureIO.getStructure("1KH9");
+		
+		s = StructureIO.getStructure("1kh9");
 	}
 	
 	public void testIntraResidueBonds() throws StructureException {
@@ -59,7 +63,8 @@ public class TestBond extends TestCase {
 	public void testLINKBonds() throws StructureException {
 		Atom atom1 = s.getChainByPDB("A").getSeqResGroup(50).getAtom("OD1");
 		Atom atom2 = s.getChainByPDB("A").getAtomGroup(446).getAtom("MG");
-		
+		assertNotNull(atom1);
+		assertNotNull(atom2);
 		assertTrue(areBonded(atom1, atom2));
 	}
 	
