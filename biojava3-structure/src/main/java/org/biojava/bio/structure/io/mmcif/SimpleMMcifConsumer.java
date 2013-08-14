@@ -853,7 +853,8 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		c.setOrganismCommon(esg.getGene_src_common_name());
 		c.setOrganismScientific(esg.getPdbx_gene_src_scientific_name());
 		c.setOrganismTaxId(esg.getPdbx_gene_src_ncbi_taxonomy_id());
-
+		c.setExpressionSystemTaxId(esg.getPdbx_host_org_ncbi_taxonomy_id());
+		c.setExpressionSystem(esg.getPdbx_host_org_scientific_name());
 		return c;
 
 	}
@@ -871,7 +872,6 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		c.setOrganismScientific(esn.getPdbx_organism_scientific());
 		c.setOrganismTaxId(esn.getPdbx_ncbi_taxonomy_id());
 		
-
 		return c;
 
 	}
