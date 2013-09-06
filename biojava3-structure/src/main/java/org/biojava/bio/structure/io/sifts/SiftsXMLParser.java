@@ -228,7 +228,7 @@ public class SiftsXMLParser {
 						res.setPdbResName(dbResName);
 						res.setChainId(dbChainId);
 						res.setPdbId(dbAccessionId);
-					} else if ( dbCoordSys.equals("UniProt")){
+					} else if ( dbSource.equals("UniProt")){
 						res.setUniProtPos(Integer.parseInt(dbResNum));
 						res.setUniProtResName(dbResName);
 						res.setUniProtAccessionId(dbAccessionId);
