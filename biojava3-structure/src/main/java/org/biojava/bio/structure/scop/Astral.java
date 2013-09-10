@@ -157,6 +157,24 @@ public class Astral {
 	 * @throws RuntimeException
 	 *             If the Astral set could not be parsed or accessed for any reason
 	 */
+	public Astral(String id, URL url) {
+		Reader reader;
+		try {
+			reader = new InputStreamReader(url.openStream());
+		} catch (IOException e) {
+			throw new RuntimeException("Couldn't open stream to URL " + url, e);
+		}
+		init(reader);
+	}
+
+	/**
+	 * Constructs a new Astral object. Generally, client code should prefer calling
+	 * {@link #getRepresentatives(AstralSet)} instead. This constructor should only be used when an ASTRAL set not
+	 * included in {@link #Astral(AstralSet)} is required.
+	 * 
+	 * @throws RuntimeException
+	 *             If the Astral set could not be parsed or accessed for any reason
+	 */
 	public Astral(String id, Reader reader) {
 		init(reader);
 	}
