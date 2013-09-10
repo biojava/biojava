@@ -2,11 +2,15 @@ package org.biojava.bio.structure.scop;
 
 import java.io.Serializable;
 import java.io.StringWriter;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
+
+import org.biojava.bio.structure.ResidueRange;
 
 
 /** Container for the information for a domain. Contains a line in the file
@@ -179,6 +183,16 @@ public class ScopDomain implements Serializable, Cloneable{
 		return n;
 		
 		
+	}
+
+	/**
+	 * Returns the chains this domain is defined over; contains more than 1 element only if this domains is a multi-chain domain.
+	 */
+	public Set<String> getChains() {
+		Set<String> chains = new HashSet<String>();
+		List<ResidueRange> rrs = ResidueRange.parseMultiple(getRanges());
+		for (ResidueRange rr : rrs) chains.add(rr.getChainId());
+		return chains;
 	}
 
 	
