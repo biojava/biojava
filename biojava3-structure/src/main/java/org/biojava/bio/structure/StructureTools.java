@@ -933,6 +933,88 @@ public class StructureTools {
 		return chain.getGroupByPDB(pdbResNum);
 	}
 
+
+	/**
+	 * Finds Groups in {@code structure} that contain at least one Atom that is within {@code radius} Angstroms of {@code centroid}.
+	 * @param structure The structure from which to find Groups
+	 * @param centroid The centroid of the shell
+	 * @param excludeResidues A list of ResidueNumbers to exclude
+	 * @param radius The radius from {@code centroid}, in Angstroms
+	 * @param includeWater Whether to include Groups whose <em>only</em> atoms are water
+	 * @param useAverageDistance When set to true, distances are the arithmetic mean (1-norm) of the distances of atoms that belong to the group and that are within the shell; otherwise, distances are the minimum of these values
+	 * @return A map of Groups within (or partially within) the shell, to their distances in Angstroms
+	 */
+	public static Map<Group,Double> getGroupDistancesWithinShell(Structure structure, Atom centroid, Set<ResidueNumber> excludeResidues, double radius, boolean includeWater, boolean useAverageDistance) {
+
+		// for speed, we avoid calculating square roots
+		radius = radius * radius;
+
+		Map<Group,Double> distances = new HashMap<Group,Double>();
+		
+		// we only need this if we're averaging distances
+		// note that we can't use group.getAtoms().size() because some the group's atoms be outside the shell
+		Map<Group,Integer> atomCounts = new HashMap<Group,Integer>();
+
+		for (Chain chain : structure.getChains()) {
+			groupLoop: for (Group chainGroup : chain.getAtomGroups()) {
+
+				// exclude water
+				if (!includeWater && chainGroup.getPDBName().equals("HOH")) continue;
+				
+				// check blacklist of residue numbers
+				for (ResidueNumber rn : excludeResidues) {
+					if (rn.equals(chainGroup.getResidueNumber())) continue groupLoop;
+				}
+				
+				for (Atom testAtom : chainGroup.getAtoms()) {
+					
+					try {
+						
+						// use getDistanceFast as we are doing a lot of comparisons
+						double dist = Calc.getDistanceFast(centroid, testAtom);
+						
+						// if we're the shell
+						if (dist <= radius) {
+							if (!distances.containsKey(chainGroup)) distances.put(chainGroup, Double.POSITIVE_INFINITY);
+							if (useAverageDistance) {
+								// sum the distance; we'll divide by the total number later
+								// here, we CANNOT use fastDistance (distance squared) because we want the arithmetic mean
+								distances.put(chainGroup, distances.get(chainGroup) + Math.sqrt(dist));
+								if (!atomCounts.containsKey(chainGroup)) atomCounts.put(chainGroup, 0);
+								atomCounts.put(chainGroup, atomCounts.get(chainGroup) + 1);
+							} else {
+								// take the minimum distance among all atoms of chainGroup
+								// note that we can't break here because we might find a smaller distance
+								if (dist < distances.get(chainGroup)) {
+									distances.put(chainGroup, dist);
+								}
+							}
+						}
+						
+					} catch (StructureException ex) {
+						Logger.getLogger(StructureTools.class.getName()).log(Level.SEVERE, null, ex);
+					}
+
+				}
+			}
+		}
+		
+		if (useAverageDistance) {
+			for (Map.Entry<Group,Double> entry : distances.entrySet()) {
+				int count = atomCounts.get(entry.getKey());
+				distances.put(entry.getKey(), entry.getValue() / count);
+			}
+		} else {
+			// in this case we used getDistanceFast
+			for (Map.Entry<Group,Double> entry : distances.entrySet()) {
+				distances.put(entry.getKey(), Math.sqrt(entry.getValue()));
+			}
+		}
+		
+		return distances;
+		
+	}
+
 	public static Set<Group> getGroupsWithinShell(Structure structure, Atom atom, Set<ResidueNumber> excludeResidues, double distance, boolean includeWater) {
 
 		//square the distance to use as a comparison against getDistanceFast which returns the square of a distance.
@@ -941,11 +1023,10 @@ public class StructureTools {
 		Set<Group> returnSet = new LinkedHashSet<Group>();
 		for (Chain chain : structure.getChains()) {
 			groupLoop: for (Group chainGroup : chain.getAtomGroups()) {
+				if (!includeWater && chainGroup.getPDBName().equals("HOH")) continue;
 				for (ResidueNumber rn : excludeResidues) {
 					if (rn.equals(chainGroup.getResidueNumber())) continue groupLoop;
 				}
-//				if (excludeResidues.contains(chainGroup.getResidueNumber())) continue;
-				if (!includeWater && chainGroup.getPDBName().equals("HOH")) continue;
 				for (Atom atomB : chainGroup.getAtoms()) {
 					try {
 						//use getDistanceFast as we are doing a lot of comparisons
@@ -970,14 +1051,14 @@ public class StructureTools {
 	public static List<Group> getGroupsWithinShell(Structure structure, Group group, double distance, boolean includeWater) {
 
 		List<Group> returnList = new ArrayList<Group>();
-		
+
 		Set<ResidueNumber> excludeGroups = new HashSet<ResidueNumber>();
 		excludeGroups.add(group.getResidueNumber());
 		for (Atom atom : group.getAtoms()) {
 			Set<Group> set = getGroupsWithinShell(structure, atom, excludeGroups, distance, includeWater);
 			returnList.addAll(set);
 		}
-		
+
 		return returnList;
 	}
 
