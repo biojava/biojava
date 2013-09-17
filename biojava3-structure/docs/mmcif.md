@@ -1,5 +1,7 @@
 # How to parse mmCIF files using BioJava
 
+A quick tutorial how to work with mmCIF files.
+
 ## What is mmCIF?
 
 The Protein Data Bank (PDB) has been distributing its archival files as PDB files for a long time. The PDB file format is based on "punchcard"-style rules how to store data in a flat file. With the increasing complexity of macromolecules that have are being resolved experimentally, this file format can not be used any more to represent some or the more complex structures. As such, the wwPDB recently announced the transition from PDB to mmCIF/PDBx as  the principal deposition and dissemination file format (see 
@@ -10,7 +12,7 @@ The mmCIF file format has been around for some time (see [Westbrook 2000][] and 
 
 ## The basics
 
-BioJava provides you with both a mmCIF parser and a data model that reads PDB and mmCIF files into a biological and chemically meaningful data model. If you don't want to use that data model, you can still use BioJava's file parsers, and more on that later, let's start first with the most basic way of loading a protein structure.
+BioJava provides you with both a mmCIF parser and a data model that reads PDB and mmCIF files into a biological and chemically  meaningful data model (BioJava supports the [Chemical Components Dictionary](http://www.wwpdb.org/ccd.html)). If you don't want to use that data model, you can still use BioJava's file parsers, and more on that later, let's start first with the most basic way of loading a protein structure.
 
 ## Quick Installation
 
@@ -130,6 +132,7 @@ To re-use the parser for your own datamodel, just implement the [MMcifConsumer](
 BioJava provides a number of algorithms and visualisation tools that you can use to further analyse the structure, or look at it. Here a couple of suggestions for further reads:
 
 + [The BioJava Cookbook for protein structures](http://biojava.org/wiki/BioJava:CookBook#Protein_Structure)
++ How does BioJava [represent the content](structure-data-model.md) of a PDB/mmCIF file?
 + [How to calculate a protein structure alignment using BioJava](http://biojava.org/wiki/BioJava:CookBook:PDB:align)
 + [How to work with Groups (AminoAcid, Nucleotide, Hetatom)](http://biojava.org/wiki/BioJava:CookBook:PDB:groups)
 
