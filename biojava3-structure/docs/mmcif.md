@@ -6,7 +6,7 @@ The Protein Data Bank (PDB) has been distributing its archival files as PDB file
 [here](http://www.wwpdb.org/news/news_2013.html#22-May-2013) and 
 [here](http://wwpdb.org/workshop/wgroup.html)). 
 
-The mmCIF file format has been around for some time (see [Westbrook2000][] and [Westbrook2003][] ) [BioJava](http://www.biojava.org) has been supporting mmCIF already for several years. This tutorial is meant to provide a quick introduction into how to parse mmCIF files using [BioJava](http://www.biojava.org)
+The mmCIF file format has been around for some time (see [Westbrook 2000][] and [Westbrook 2003][] ) [BioJava](http://www.biojava.org) has been supporting mmCIF already for several years. This tutorial is meant to provide a quick introduction into how to parse mmCIF files using [BioJava](http://www.biojava.org)
 
 ## The basics
 
@@ -23,7 +23,7 @@ BioJava uses [Maven](http://maven.apache.org/) as a build and distribution syste
 We are providing a BioJava specific Maven repository at (http://biojava.org/download/maven/) .
 
 You can add the BioJava repository by adding the following XML to your project pom.xml file:
-<pre>
+<myxml>
         <repositories>
             ...
             <repository>
@@ -44,7 +44,7 @@ You can add the BioJava repository by adding the following XML to your project p
                 <!-- other biojava jars as needed -->
         </dependencies>
     
-</pre>
+</myxml>
 
 If you run 'mvn package' on your project, the BioJava dependencies will be automatically downloaded and installed for you.
 
@@ -68,9 +68,10 @@ You can configure where BioJava should read the files from by setting the PDB_DI
 </pre>
 
 
-## References
+<!-- References -->
 
-[Westbrook2000]: http://www.ncbi.nlm.nih.gov/pubmed/10842738 "Westbrook JD and Bourne PE. STAR/mmCIF: an ontology for macromolecular structure. Bioinformatics 2000 Feb; 16(2) 159-68. pmid:10842738." 
 
-[Westbrook2003]: http://www.ncbi.nlm.nih.gov/pubmed/12647386 "Westbrook JD and Fitzgerald PM. The PDB format, mmCIF, and other data formats. Methods Biochem Anal 2003; 44 161-79. pmid:12647386."
+[Westbrook 2000]: http://www.ncbi.nlm.nih.gov/pubmed/10842738 "Westbrook JD and Bourne PE. STAR/mmCIF: an ontology for macromolecular structure. Bioinformatics 2000 Feb; 16(2) 159-68. pmid:10842738." 
+
+[Westbrook 2003]: http://www.ncbi.nlm.nih.gov/pubmed/12647386 "Westbrook JD and Fitzgerald PM. The PDB format, mmCIF, and other data formats. Methods Biochem Anal 2003; 44 161-79. pmid:12647386."
 
