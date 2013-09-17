@@ -20,7 +20,7 @@ Structure
         |
         Chain(s)
             |
-             Group(s)
+             Group(s) -> Chemical Component Definition
                  |
                  Atom(s)
 </pre>
@@ -127,7 +127,7 @@ As you can see, although MSE is flaged as HETATM in the PDB file, BioJava still 
 Bye default BioJava ships with a minimal representation of standard amino acids, however if you want to parse the whole PDB archive, it is good to tell the library to either
 
 1. fetch missing Chemical Component definitions on the fly (small download and parsing delays every time a new chemical compound is found), or
-2. Load all definitions at startup (slow startup, but then no further delays later on)
+2. Load all definitions at startup (slow startup, but then no further delays later on, requires more memory)
 
 You can enable the first behaviour by doing using the [FileParsingParameters](http://www.biojava.org/docs/api/org/biojava/bio/structure/io/FileParsingParameters.html) class:
 
@@ -151,7 +151,7 @@ You can enable the first behaviour by doing using the [FileParsingParameters](ht
 
 If you want to enable the second behaviour (slow loading of all chem comps at startup, but no further small delays later on) you can use the same code but change the behaviour by switching the [ChemCompProvider](http://www.biojava.org/docs/api/org/biojava/bio/structure/io/mmcif/ChemCompProvider.html) implementation in the [ChemCompGroupFactory](http://www.biojava.org/docs/api/org/biojava/bio/structure/io/mmcif/ChemCompGroupFactory.html)
 
-<pre>
+<pre>    
      ChemCompGroupFactory.setChemCompProvider(new AllChemCompProvider());
 </pre>
 
