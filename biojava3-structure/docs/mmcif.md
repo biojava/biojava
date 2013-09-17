@@ -23,7 +23,7 @@ BioJava uses [Maven](http://maven.apache.org/) as a build and distribution syste
 We are providing a BioJava specific Maven repository at (http://biojava.org/download/maven/) .
 
 You can add the BioJava repository by adding the following XML to your project pom.xml file:
-<myxml>
+```xml
         <repositories>
             ...
             <repository>
@@ -44,7 +44,8 @@ You can add the BioJava repository by adding the following XML to your project p
                 <!-- other biojava jars as needed -->
         </dependencies>
     
-</myxml>
+```
+
 
 If you run 'mvn package' on your project, the BioJava dependencies will be automatically downloaded and installed for you.
 
