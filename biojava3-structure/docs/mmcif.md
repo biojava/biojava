@@ -127,7 +127,12 @@ To re-use the parser for your own datamodel, just implement the [MMcifConsumer](
 
 ## I loaded a Structure object, what now?
 
-BioJava provides a number of algorithms and visualisation tools that you can use to further analyse the structure, or look at it.
+BioJava provides a number of algorithms and visualisation tools that you can use to further analyse the structure, or look at it. Here a couple of suggestions for further reads:
+
++ [The BioJava Cookbook for protein structures](http://biojava.org/wiki/BioJava:CookBook#Protein_Structure)
++ [How to calculate a protein structure alignment using BioJava](http://biojava.org/wiki/BioJava:CookBook:PDB:align)
++ [How to work with Groups (AminoAcid, Nucleotide, Hetatom)](http://biojava.org/wiki/BioJava:CookBook:PDB:groups)
+
 
 
 <!-- References -->
