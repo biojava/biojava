@@ -42,10 +42,8 @@ You can add the BioJava repository by adding the following XML to your project p
                         <version>3.0.7-SNAPSHOT</version>
                 </dependency>
                 <!-- other biojava jars as needed -->
-        </dependencies>
-    
+        </dependencies> 
 ```
-
 
 If you run 'mvn package' on your project, the BioJava dependencies will be automatically downloaded and installed for you.
 
@@ -53,21 +51,24 @@ If you run 'mvn package' on your project, the BioJava dependencies will be autom
 
 The simplest way to load a PDB file is by using the [StructureIO](http://www.biojava.org/docs/api/org/biojava3/structure/StructureIO.html) class.
 
-<pre>
+'''java
     Structure structure = StructureIO.getStructure("4HHB");
-</pre>
+'''
 
 BioJava  automatically downloaded the PDB file for [4HHB](http://www.rcsb.org/pdb/explore.do?structureId=4HHB) and copied it into a temporary location. This demonstrates two things:
 
 + BioJava can automatically download and install files locally
 + BioJava by default writes those files into a temporary location (The system temp directory "java.io.tempdir"). 
 
-You can configure where BioJava should read the files from by setting the PDB_DIR system property
+If you already have a local PDB installation, you can configure where BioJava should read the files from by setting the PDB_DIR system property
 
 <pre>
     -DPDB_DIR=/wherever/you/want/
 </pre>
 
+## From PDB to mmCIF
+
+By default BioJava is using the PDB file format for parsing data. In order to tell it to use
 
 <!-- References -->
 
