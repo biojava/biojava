@@ -51,11 +51,15 @@ If you run 'mvn package' on your project, the BioJava dependencies will be autom
 
 The simplest way to load a PDB file is by using the [StructureIO](http://www.biojava.org/docs/api/org/biojava3/structure/StructureIO.html) class.
 
-'''java
+<pre>
     Structure structure = StructureIO.getStructure("4HHB");
-'''
+    // and let's print out how many atoms are in this structure
+    System.out.println(StructureTools.getNrAtoms(structure));
+</pre>
 
-BioJava  automatically downloaded the PDB file for [4HHB](http://www.rcsb.org/pdb/explore.do?structureId=4HHB) and copied it into a temporary location. This demonstrates two things:
+
+
+BioJava  automatically downloaded the PDB file for hemoglobin [4HHB](http://www.rcsb.org/pdb/explore.do?structureId=4HHB) and copied it into a temporary location. This demonstrates two things:
 
 + BioJava can automatically download and install files locally
 + BioJava by default writes those files into a temporary location (The system temp directory "java.io.tempdir"). 
@@ -68,7 +72,63 @@ If you already have a local PDB installation, you can configure where BioJava sh
 
 ## From PDB to mmCIF
 
-By default BioJava is using the PDB file format for parsing data. In order to tell it to use
+By default BioJava is using the PDB file format for parsing data. In order to switch it to use mmCIF, we can take control over the underlying [AtomCache](http://www.biojava.org/docs/api/org/biojava/bio/structure/align/util/AtomCache.html) which manages your PDB (and btw. also SCOP, CATH) installations.
+
+<pre>
+        AtomCache cache = new AtomCache();
+            
+        cache.setUseMmCif(true);
+            
+        // if you struggled to set the PDB_DIR property correctly in the previous step, 
+        // you could set it manually like this:
+        cache.setPath("/tmp/");
+            
+        StructureIO.setAtomCache(cache);
+            
+        Structure structure = StructureIO.getStructure("4HHB");
+                    
+        // and let's count how many chains are in this structure.
+        System.out.println(structure.getChains().size());
+</pre>
+
+As you can see, the AtomCache will again download the missing mmCIF file for 4HHB in the background. 
+
+## Low level access
+
+If you want to learn how to use the BioJava mmCIF parser to populate your own data structure, let's first take a look this lower-level code:
+
+<pre>
+        InputStream inStream =  new FileInputStream(fileName);
+ 
+        MMcifParser parser = new SimpleMMcifParser();
+ 
+        SimpleMMcifConsumer consumer = new SimpleMMcifConsumer();
+ 
+        // The Consumer builds up the BioJava - structure object.
+        // you could also hook in your own and build up you own data model.          
+        parser.addMMcifConsumer(consumer);
+ 
+        try {
+            parser.parse(new BufferedReader(new InputStreamReader(inStream)));
+        } catch (IOException e){
+            e.printStackTrace();
+        }
+ 
+        // now get the protein structure.
+        Structure cifStructure = consumer.getStructure();
+</pre>
+
+The parser operates similar to a XML parser by triggering "events". The [SimpleMMcifConsumer](http://www.biojava.org/docs/api/org/biojava/bio/structure/io/mmcif/SimpleMMcifConsumer.html) listens to new categories being read from the file and then builds up the BioJava data model.
+
+To re-use the parser for your own datamodel, just implement the [MMcifConsumer](http://www.biojava.org/docs/api/org/biojava/bio/structure/io/mmcif/MMcifConsumer.html) interface and add it to the [SimpleMMcifParser](http://www.biojava.org/docs/api/org/biojava/bio/structure/io/mmcif/SimpleMMcifParser.html).
+<pre>
+        parser.addMMcifConsumer(myOwnConsumerImplementation);
+</pre>
+
+## I loaded a Structure object, what now?
+
+BioJava provides a number of algorithms and visualisation tools that you can use to further analyse the structure, or look at it.
+
 
 <!-- References -->
 
