@@ -177,7 +177,7 @@ public class XMLUtil {
 
 		try {
 
-			Unmarshaller un = jaxbContextScopDescription.createUnmarshaller();
+			Unmarshaller un = jaxbContextScopNode.createUnmarshaller();
 
 			ByteArrayInputStream bais = new ByteArrayInputStream(xml.getBytes());
 

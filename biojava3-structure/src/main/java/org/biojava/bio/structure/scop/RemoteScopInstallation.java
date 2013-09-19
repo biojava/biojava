@@ -39,7 +39,7 @@ import org.biojava.bio.structure.scop.server.XMLUtil;
 
 
 /** A class that fetches information about SCOP from a remote data-source. It requires port 80 to open for HTTP connection.
- * 
+ *
  * @author Andreas Prlic
  *
  */
@@ -231,6 +231,10 @@ public class RemoteScopInstallation implements ScopDatabase {
 	@Override
 	public ScopNode getScopNode(int sunid) {
 		ScopNode desc = null;
+		if( sunid == 0) {
+		    // root node
+		    return null;
+		}
 		try {
 			URL u = new URL(server + "getScopNode?sunid="+sunid);
 			System.out.println(u);
