@@ -74,7 +74,7 @@ public class RemoteScopInstallation implements ScopDatabase {
 		List<ScopDescription> results = null;
 		try {
 			URL u = new URL(server + "getByCategory?category="+category.toString());
-			System.out.println(u);
+			//System.out.println(u);
 			InputStream response = HTTPConnectionTools.getInputStream(u);
 			String xml = JFatCatClient.convertStreamToString(response);
 			//System.out.println(xml);
@@ -91,7 +91,7 @@ public class RemoteScopInstallation implements ScopDatabase {
 		List<ScopDescription> results = null;
 		try {
 			URL u = new URL(server + "filterByClassificationId?query="+query);
-			System.out.println(u);
+			//System.out.println(u);
 			InputStream response = HTTPConnectionTools.getInputStream(u);
 			String xml = JFatCatClient.convertStreamToString(response);
 
@@ -108,7 +108,7 @@ public class RemoteScopInstallation implements ScopDatabase {
 		List<ScopNode> results = null;
 		try {
 			URL u = new URL(server + "getTree?scopId="+domain.getScopId());
-			System.out.println(u);
+			//System.out.println(u);
 			InputStream response = HTTPConnectionTools.getInputStream(u);
 			String xml = JFatCatClient.convertStreamToString(response);
 
@@ -125,7 +125,7 @@ public class RemoteScopInstallation implements ScopDatabase {
 		List<ScopDomain> results = null;
 		try {
 			URL u = new URL(server + "filterByDomainName?query="+query);
-			System.out.println(u);
+			//System.out.println(u);
 			InputStream response = HTTPConnectionTools.getInputStream(u);
 			String xml = JFatCatClient.convertStreamToString(response);
 
@@ -142,7 +142,7 @@ public class RemoteScopInstallation implements ScopDatabase {
 		List<ScopDescription> results = null;
 		try {
 			URL u = new URL(server + "filterByDescription?query="+query);
-			System.out.println(u);
+			//System.out.println(u);
 			InputStream response = HTTPConnectionTools.getInputStream(u);
 			String xml = JFatCatClient.convertStreamToString(response);
 
@@ -163,7 +163,7 @@ public class RemoteScopInstallation implements ScopDatabase {
 		try {
 
 			URL u = new URL(server + "getScopDescriptionBySunid?sunid="+sunid);
-			System.out.println(u);
+			//System.out.println(u);
 			InputStream response = HTTPConnectionTools.getInputStream(u);
 			String xml = JFatCatClient.convertStreamToString(response);
 
@@ -181,7 +181,7 @@ public class RemoteScopInstallation implements ScopDatabase {
 		List<ScopDomain> results = null;
 		try {
 			URL u = new URL(server + "getDomainsForPDB?pdbId="+pdbId);
-			System.out.println(u);
+			//System.out.println(u);
 			InputStream response = HTTPConnectionTools.getInputStream(u);
 			String xml = JFatCatClient.convertStreamToString(response);
 
@@ -193,10 +193,10 @@ public class RemoteScopInstallation implements ScopDatabase {
 		return results;
 	}
 
-	private ScopDomain requestRemoteDomainByScopID(String scopId) 
+	private ScopDomain requestRemoteDomainByScopID(String scopId)
 	throws IOException{
 		URL u = new URL(server + "getDomainByScopID?scopId="+scopId);
-		System.out.println(u);
+		//System.out.println(u);
 		InputStream response = HTTPConnectionTools.getInputStream(u);
 		String xml = JFatCatClient.convertStreamToString(response);
 
@@ -223,7 +223,7 @@ public class RemoteScopInstallation implements ScopDatabase {
 					e1.printStackTrace();
 				}
 			}
-		
+
 		}
 		return desc;
 	}
@@ -237,7 +237,7 @@ public class RemoteScopInstallation implements ScopDatabase {
 		}
 		try {
 			URL u = new URL(server + "getScopNode?sunid="+sunid);
-			System.out.println(u);
+			//System.out.println(u);
 			InputStream response = HTTPConnectionTools.getInputStream(u);
 			String xml = JFatCatClient.convertStreamToString(response);
 
@@ -254,7 +254,7 @@ public class RemoteScopInstallation implements ScopDatabase {
 		String version = null;
 		try {
 			URL u = new URL(server + "getScopVersion");
-			System.out.println(u);
+			//System.out.println(u);
 			InputStream response = HTTPConnectionTools.getInputStream(u);
 			version = JFatCatClient.convertStreamToString(response);
 
@@ -269,7 +269,7 @@ public class RemoteScopInstallation implements ScopDatabase {
 		List<ScopDomain> results = null;
 		try {
 			URL u = new URL(server + "getScopDomainsBySunid?sunid="+sunid);
-			System.out.println(u);
+			//System.out.println(u);
 			InputStream response = HTTPConnectionTools.getInputStream(u);
 			String xml = JFatCatClient.convertStreamToString(response);
 
