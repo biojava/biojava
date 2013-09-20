@@ -86,11 +86,7 @@ public class ScopFactory {
         if ( useLocalData) {
             // Use a local installation
             // Assume version strings sort lexicographically
-            if ( version.compareToIgnoreCase(VERSION_1_75) > 0 ) {
-                return getBerkeley(version);
-            } else {
-                return getScopInstallation(version);
-            }
+            return getBerkeley(version);
         } else {
             // Use a remote installation
             return scop;
@@ -114,23 +110,6 @@ public class ScopFactory {
     public static void setScopDatabase(ScopDatabase scop){
         System.out.println("Setting ScopDatabase to type: " + scop.getClass().getName());
         ScopFactory.scop = scop;
-    }
-
-    /**
-     * Gets a local instance with the specified version.
-     *
-     * Uses the singleton if applicable, or creates a new instance
-     * @param version a version applicable to a ScopInstallation
-     * @return
-     */
-    private static ScopInstallation getScopInstallation(String version) {
-        if( scop instanceof ScopInstallation && scop.getScopVersion() == version) {
-            return (ScopInstallation)scop;
-        } else {
-            ScopInstallation scopInst = new ScopInstallation();
-            scopInst.setScopVersion(version);
-            return scopInst;
-        }
     }
 
     /**
