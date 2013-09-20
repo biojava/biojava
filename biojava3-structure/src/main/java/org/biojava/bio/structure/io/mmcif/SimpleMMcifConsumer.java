@@ -1423,8 +1423,8 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 				continue;
 			}
 
-			if (! target.getPDBName().equals(ppss.getMon_id())){
-				logger.info("could not match PdbxPolySeqScheme to chain:" + ppss);
+			if (! target.getPDBName().trim().equals(ppss.getMon_id())){
+				logger.info("could not match PdbxPolySeqScheme to chain:" + target.getPDBName() + " " + ppss);
 				continue;
 			}
 
