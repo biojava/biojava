@@ -1106,7 +1106,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 
 
 		//TODO: make DBRef chain IDs a string for chainIDs that are longer than one char...
-		r.setChainId(new Character(sref.getPdbx_strand_id().charAt(0)));
+		r.setChainId(sref.getPdbx_strand_id());
 		StructRef structRef = getStructRef(sref.getRef_id());
 		if (structRef == null){
 			logger.warning("could not find StructRef " + sref.getRef_id() + " for StructRefSeq " + sref);
