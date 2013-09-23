@@ -23,7 +23,6 @@ import org.biojava3.core.sequence.template.Sequence;
 import org.biojava3.core.sequence.transcription.Frame;
 import org.biojava3.core.sequence.transcription.TranscriptionEngine;
 import org.biojava3.core.sequence.transcription.TranscriptionEngine.Builder;
-import org.hamcrest.core.IsNot;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -194,10 +193,10 @@ public class TranslationTest {
 		builder.translateNCodons(true);
 		builder.trimStop(false);
 		TranscriptionEngine engine = builder.build();
-		Sequence seq=engine.translate(new
+		Sequence<AminoAcidCompound> seq=engine.translate(new
 				DNASequence("GTNTGTTAGTGT"));
 		assertThat("XC*C", is(seq.toString()));
-		Sequence seq2=engine.translate(new
+		Sequence<AminoAcidCompound> seq2=engine.translate(new
 				DNASequence("ANAANG"));
 		assertEquals("XX",seq2.toString());
 		assertNotSame("HR",seq2.toString());
