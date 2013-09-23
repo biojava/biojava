@@ -44,6 +44,7 @@ public class SiftsXMLParser {
 	Document dom;
 	List<SiftsEntity> entities;
 
+	static boolean debug = false;
 	public SiftsXMLParser(){
 		entities = new ArrayList<SiftsEntity>();
 	}
@@ -145,6 +146,9 @@ public class SiftsXMLParser {
 			String end = el.getAttribute("end");
 			SiftsSegment seg = new SiftsSegment(segId,start,end);
 
+			if ( debug )
+				System.out.println("parsed " + seg);
+			
 			// get nodelist of segments...
 			NodeList nl = el.getElementsByTagName("listResidue");
 			if(nl != null && nl.getLength() > 0) {
@@ -207,7 +211,7 @@ public class SiftsXMLParser {
 			//else if ( detail != null && detail.trim().equalsIgnoreCase("Conflict")){
 				//
 			//}
-			
+						
 			NodeList nl = residue.getElementsByTagName("crossRefDb");
 			if(nl != null && nl.getLength() > 0) {
 				for(int i = 0 ; i < nl.getLength();i++) {

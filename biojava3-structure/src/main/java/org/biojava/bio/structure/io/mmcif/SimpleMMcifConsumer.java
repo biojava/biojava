@@ -42,11 +42,13 @@ import org.biojava.bio.structure.Compound;
 import org.biojava.bio.structure.DBRef;
 import org.biojava.bio.structure.Element;
 import org.biojava.bio.structure.Group;
+import org.biojava.bio.structure.GroupType;
 import org.biojava.bio.structure.HetatomImpl;
 import org.biojava.bio.structure.NucleotideImpl;
 import org.biojava.bio.structure.PDBHeader;
 import org.biojava.bio.structure.ResidueNumber;
 import org.biojava.bio.structure.Structure;
+import org.biojava.bio.structure.StructureException;
 import org.biojava.bio.structure.StructureImpl;
 import org.biojava.bio.structure.StructureTools;
 import org.biojava.bio.structure.UnknownPdbAminoAcidException;
@@ -126,6 +128,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 	public  SimpleMMcifConsumer(){
 		params = new FileParsingParameters();
 		documentStart();
+
 	}
 
 	public void newEntity(Entity entity) {
@@ -312,6 +315,8 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		String recordName    = atom.getGroup_PDB();
 		String residueNumberS = atom.getAuth_seq_id();
 		Integer residueNrInt = Integer.parseInt(residueNumberS);
+
+		//String residueNumberSeqres = atom.getLabel_seq_id();
 		// the 3-letter name of the group:
 		String groupCode3    = atom.getLabel_comp_id();
 		if ( groupCode3.length() == 1){
@@ -464,6 +469,8 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 				e.printStackTrace();
 			}
 			current_group.setResidueNumber(residueNumber);
+
+
 			//                        System.out.println("Made new group:  " + groupCode3 + " " + resNum + " " + iCode);
 
 		} else {
@@ -722,7 +729,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 				c.addChain(s);
 
 			}
-			
+
 			for (EntitySrcSyn ess : entitySrcSyns) {
 				String eId = ess.getEntity_id();
 				//System.out.println("Checking entity src gens: " + eId + " " + asym.getEntity_id());
@@ -746,11 +753,52 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 			}
 		}
 
-
 		if ( params.isAlignSeqRes() ){
-
+		
 			SeqRes2AtomAligner aligner = new SeqRes2AtomAligner();			
-			aligner.align(structure,seqResChains);
+			//aligner.align(structure,seqResChains);
+
+			// fix SEQRES residue numbering
+			List<Chain> atomList   = structure.getModel(0);
+			for (Chain seqResChain: seqResChains){
+				try {
+					Chain atomChain = aligner.getMatchingAtomRes(seqResChain, atomList);
+
+					//map the atoms to the seqres...
+
+					List<Group> seqResGroups = seqResChain.getAtomGroups(); 
+
+					for ( int seqResPos = 0 ; seqResPos < seqResGroups.size(); seqResPos++) {
+						Group seqresG = seqResGroups.get(seqResPos);
+						boolean found = false;
+						for ( Group atomG: atomChain.getAtomGroups()) {
+
+							int internalNr = getInternalNr (atomG);
+
+							if (seqresG.getResidueNumber().getSeqNum() == internalNr ) {															
+								seqResGroups.set(seqResPos, atomG);
+								found = true;
+								break;
+							}
+
+
+						}
+						if ( ! found)
+							// so far the residue number has tracked internal numbering.
+							// however there are no atom records, as such this can't be a PDB residue number...
+							seqresG.setResidueNumber(null);
+					}
+					atomChain.setSeqResGroups(seqResGroups);
+
+				} catch (StructureException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+
+			}
+
+
 		}
 
 
@@ -841,6 +889,19 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 
 
 
+	private int getInternalNr(Group atomG) {
+		if ( atomG.getType().equals(GroupType.AMINOACID)) {
+			AminoAcidImpl aa = (AminoAcidImpl) atomG;
+			return new Long(aa.getId()).intValue();
+		} else if ( atomG.getType().equals(GroupType.NUCLEOTIDE)) {
+			NucleotideImpl nu = (NucleotideImpl) atomG;
+			return new Long(nu.getId()).intValue();
+		} else {
+			HetatomImpl he = (HetatomImpl) atomG;
+			return new Long(he.getId()).intValue();
+		}
+	}
+
 	private Compound createNewCompoundFromESG(EntitySrcGen esg, String eId) {
 
 		Entity e = getEntity(eId);
@@ -871,11 +932,11 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		c.setOrganismCommon(esn.getCommon_name());
 		c.setOrganismScientific(esn.getPdbx_organism_scientific());
 		c.setOrganismTaxId(esn.getPdbx_ncbi_taxonomy_id());
-		
+
 		return c;
 
 	}
-	
+
 	private Compound createNewCompoundFromESS(EntitySrcSyn ess, String eId) {
 
 		Entity e = getEntity(eId);
@@ -883,12 +944,12 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		c.setMolId(eId);
 		if ( e != null)
 			c.setMolName(e.getPdbx_description());
-		
+
 
 		c.setOrganismCommon(ess.getOrganism_common_name());
 		c.setOrganismScientific(ess.getOrganism_scientific());
 		c.setOrganismTaxId(ess.getNcbi_taxonomy_id());
-		
+
 
 		return c;
 
@@ -1104,9 +1165,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		r.setDbAccession(sref.getPdbx_db_accession());
 		r.setDbIdCode(sref.getPdbx_db_accession());
 
-
-		//TODO: make DBRef chain IDs a string for chainIDs that are longer than one char...
-		r.setChainId(new Character(sref.getPdbx_strand_id().charAt(0)));
+		r.setChainId(sref.getPdbx_strand_id());
 		StructRef structRef = getStructRef(sref.getRef_id());
 		if (structRef == null){
 			logger.warning("could not find StructRef " + sref.getRef_id() + " for StructRefSeq " + sref);
@@ -1211,7 +1270,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		// add to internal list. Map to Compound object later on...
 		entitySrcNats.add(entitySrcNat);
 	}
-	
+
 	@Override
 	public void newEntitySrcSyn(EntitySrcSyn entitySrcSyn){
 
@@ -1250,6 +1309,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 
 			Character code1 = StructureTools.convert_3code_1code(epolseq.getMon_id());
 			g.setAminoType(code1);
+
 			g.setResidueNumber(ResidueNumber.fromString(epolseq.getNum()));
 			// ARGH at this stage we don;t know about insertion codes
 			// this has to be obtained from _pdbx_poly_seq_scheme
@@ -1325,6 +1385,8 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 
 		if (ppss.getAuth_seq_num().equals("?"))
 			return;
+
+		//logger.info("replacegroupSeqPos " + ppss);
 		// at this stage we are still using the internal asym ids...
 		List<Chain> matchinChains = getChainsFromAllModels(ppss.getAsym_id());
 
@@ -1361,8 +1423,8 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 				continue;
 			}
 
-			if (! target.getPDBName().equals(ppss.getMon_id())){
-				logger.info("could not match PdbxPolySeqScheme to chain:" + ppss);
+			if (! target.getPDBName().trim().equals(ppss.getMon_id())){
+				logger.info("could not match PdbxPolySeqScheme to chain:" + target.getPDBName() + " " + ppss);
 				continue;
 			}
 
@@ -1377,6 +1439,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 			}
 
 			ResidueNumber residueNumber = new ResidueNumber(null, pdbResNum,insCode);
+			//logger.info("setting residue number for " + target +" to: " + residueNumber);
 			target.setResidueNumber(residueNumber);
 		}
 	}

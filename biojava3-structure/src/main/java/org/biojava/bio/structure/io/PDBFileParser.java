@@ -2156,7 +2156,7 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 		String dbinsEnd    = line.substring(67,68);
 
 		dbref.setIdCode(idCode);
-		dbref.setChainId(chainId.charAt(0));
+		dbref.setChainId(chainId);
 		dbref.setSeqBegin(intFromString(seqBegin));
 		dbref.setInsertBegin(insertBegin.charAt(0));
 		dbref.setSeqEnd(intFromString(seqEnd));
