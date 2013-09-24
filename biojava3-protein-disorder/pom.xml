@@ -3,7 +3,7 @@
 	<parent>
 		<artifactId>biojava</artifactId>
 		<groupId>org.biojava</groupId>
-		<version>3.0.7</version>
+		<version>3.0.7-SNAPSHOT</version>
 	</parent>
 	<artifactId>biojava3-protein-disorder</artifactId>
 	<packaging>jar</packaging>
@@ -51,7 +51,7 @@
 		<dependency>
 			<groupId>org.biojava</groupId>
 			<artifactId>biojava3-core</artifactId>
-			<version>3.0.7</version>
+			<version>3.0.7-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
 
