@@ -4,7 +4,7 @@
   <parent>
     <artifactId>biojava</artifactId>
     <groupId>org.biojava</groupId>
-    <version>3.0.7-SNAPSHOT</version>
+    <version>3.0.8-SNAPSHOT</version>
   </parent>
   <artifactId>biojava3-modfinder</artifactId>  
   <name>biojava3-modfinder</name>
@@ -23,7 +23,7 @@
     <dependency>
     	<groupId>org.biojava</groupId>
     	<artifactId>biojava3-structure</artifactId>
-    	<version>3.0.7-SNAPSHOT</version>
+    	<version>3.0.8-SNAPSHOT</version>
     	<type>jar</type>
     	<scope>compile</scope>
     </dependency>
