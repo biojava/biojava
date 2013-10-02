@@ -261,7 +261,7 @@ public class RemoteScopInstallation implements ScopDatabase {
 		} catch (Exception e){
 			e.printStackTrace();
 		}
-		return version;
+		return version.trim();
 	}
 
 	@Override
