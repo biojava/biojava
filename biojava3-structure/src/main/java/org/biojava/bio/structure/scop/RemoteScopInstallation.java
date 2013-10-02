@@ -77,9 +77,11 @@ public class RemoteScopInstallation implements ScopDatabase {
 			//System.out.println(u);
 			InputStream response = HTTPConnectionTools.getInputStream(u);
 			String xml = JFatCatClient.convertStreamToString(response);
-			//System.out.println(xml);
-			ScopDescriptions container = ScopDescriptions.fromXML(xml);
-			results = container.getScopDescription();
+
+			if(! xml.trim().isEmpty()) {
+				ScopDescriptions container = ScopDescriptions.fromXML(xml);
+				results = container.getScopDescription();
+			}
 		} catch (Exception e){
 			e.printStackTrace();
 		}
@@ -95,8 +97,10 @@ public class RemoteScopInstallation implements ScopDatabase {
 			InputStream response = HTTPConnectionTools.getInputStream(u);
 			String xml = JFatCatClient.convertStreamToString(response);
 
-			ScopDescriptions container = ScopDescriptions.fromXML(xml);
-			results = container.getScopDescription();
+			if(! xml.trim().isEmpty()) {
+				ScopDescriptions container = ScopDescriptions.fromXML(xml);
+				results = container.getScopDescription();
+			}
 		} catch (Exception e){
 			e.printStackTrace();
 		}
@@ -112,8 +116,10 @@ public class RemoteScopInstallation implements ScopDatabase {
 			InputStream response = HTTPConnectionTools.getInputStream(u);
 			String xml = JFatCatClient.convertStreamToString(response);
 
-			ScopNodes container = ScopNodes.fromXML(xml);
-			results = container.getScopNode();
+			if(! xml.trim().isEmpty()) {
+				ScopNodes container = ScopNodes.fromXML(xml);
+				results = container.getScopNode();
+			}
 		} catch (Exception e){
 			e.printStackTrace();
 		}
@@ -129,8 +135,10 @@ public class RemoteScopInstallation implements ScopDatabase {
 			InputStream response = HTTPConnectionTools.getInputStream(u);
 			String xml = JFatCatClient.convertStreamToString(response);
 
-			ScopDomains container = ScopDomains.fromXML(xml);
-			results = container.getScopDomain();
+			if(! xml.trim().isEmpty()) {
+				ScopDomains container = ScopDomains.fromXML(xml);
+				results = container.getScopDomain();
+			}
 		} catch (Exception e){
 			e.printStackTrace();
 		}
@@ -146,8 +154,10 @@ public class RemoteScopInstallation implements ScopDatabase {
 			InputStream response = HTTPConnectionTools.getInputStream(u);
 			String xml = JFatCatClient.convertStreamToString(response);
 
-			ScopDescriptions container = ScopDescriptions.fromXML(xml);
-			results = container.getScopDescription();
+			if(! xml.trim().isEmpty()) {
+				ScopDescriptions container = ScopDescriptions.fromXML(xml);
+				results = container.getScopDescription();
+			}
 		} catch (Exception e){
 			e.printStackTrace();
 		}
@@ -167,8 +177,9 @@ public class RemoteScopInstallation implements ScopDatabase {
 			InputStream response = HTTPConnectionTools.getInputStream(u);
 			String xml = JFatCatClient.convertStreamToString(response);
 
-			desc = XMLUtil.getScopDescriptionFromXML(xml);
-
+			if(! xml.trim().isEmpty()) {
+				desc = XMLUtil.getScopDescriptionFromXML(xml);
+			}
 
 		} catch (Exception e){
 			e.printStackTrace();
@@ -185,8 +196,10 @@ public class RemoteScopInstallation implements ScopDatabase {
 			InputStream response = HTTPConnectionTools.getInputStream(u);
 			String xml = JFatCatClient.convertStreamToString(response);
 
-			ScopDomains container = ScopDomains.fromXML(xml);
-			results = container.getScopDomain();
+			if( !xml.trim().isEmpty()) {
+				ScopDomains container = ScopDomains.fromXML(xml);
+				results = container.getScopDomain();
+			}
 		} catch (Exception e){
 			e.printStackTrace();
 		}
@@ -200,8 +213,10 @@ public class RemoteScopInstallation implements ScopDatabase {
 		InputStream response = HTTPConnectionTools.getInputStream(u);
 		String xml = JFatCatClient.convertStreamToString(response);
 
-		return XMLUtil.getScopDomainFromXML(xml);
-
+        if( !xml.trim().isEmpty()) {
+        	return XMLUtil.getScopDomainFromXML(xml);
+        }
+        return null;
 	}
 
 	@Override
@@ -231,18 +246,15 @@ public class RemoteScopInstallation implements ScopDatabase {
 	@Override
 	public ScopNode getScopNode(int sunid) {
 		ScopNode desc = null;
-		if( sunid == 0) {
-		    // root node
-		    return null;
-		}
 		try {
 			URL u = new URL(server + "getScopNode?sunid="+sunid);
 			//System.out.println(u);
 			InputStream response = HTTPConnectionTools.getInputStream(u);
 			String xml = JFatCatClient.convertStreamToString(response);
 
-			desc = XMLUtil.getScopNodeFromXML(xml);
-
+			if( !xml.trim().isEmpty()) {
+				desc = XMLUtil.getScopNodeFromXML(xml);
+			}
 		} catch (Exception e){
 			e.printStackTrace();
 		}
@@ -273,8 +285,10 @@ public class RemoteScopInstallation implements ScopDatabase {
 			InputStream response = HTTPConnectionTools.getInputStream(u);
 			String xml = JFatCatClient.convertStreamToString(response);
 
-			ScopDomains container = ScopDomains.fromXML(xml);
-			results = container.getScopDomain();
+			if( !xml.trim().isEmpty()) {
+				ScopDomains container = ScopDomains.fromXML(xml);
+				results = container.getScopDomain();
+			}
 		} catch (Exception e){
 			e.printStackTrace();
 		}
