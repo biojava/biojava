@@ -280,8 +280,8 @@ public abstract class ScopDatabaseTest {
 
             comments = scop.getComments(127355);
             assertEquals(tag+"Wrong number of comments", 2, comments.size());
-            assertEquals(tag+"Wrong comment", "automatically matched to d2hbia_", comments.get(0).trim());
-            assertEquals(tag+"Wrong comment", "complexed with hem; mutant", comments.get(1).trim());
+            assertEquals(tag+"Wrong comment", "automated match to d2hbia_", comments.get(0).trim());
+            assertEquals(tag+"Wrong comment", "complexed with hem", comments.get(1).trim());
 
             comments = scop.getComments(160555);
             assertEquals(tag+"Wrong number of comments", 1, comments.size());
