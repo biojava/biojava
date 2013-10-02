@@ -32,17 +32,6 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 
-import org.biojava.bio.structure.Atom;
-import org.biojava.bio.structure.Structure;
-import org.biojava.bio.structure.StructureTools;
-import org.biojava.bio.structure.align.StructureAlignment;
-import org.biojava.bio.structure.align.StructureAlignmentFactory;
-import org.biojava.bio.structure.align.ce.CeMain;
-import org.biojava.bio.structure.align.model.AFPChain;
-import org.biojava.bio.structure.align.model.AfpChainWriter;
-import org.biojava.bio.structure.align.util.AFPChainScorer;
-import org.biojava.bio.structure.align.util.AtomCache;
-import org.biojava.bio.structure.io.FileParsingParameters;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -153,10 +142,35 @@ public abstract class ScopDatabaseTest {
         assertNull(tag+"Root should not have a description", desc);
     }
 
+    @Test
+    public void testNodes() {
+
+        ScopNode node = scop.getScopNode(15251); //4hhb
+        assertEquals(tag,15251,node.getSunid());
+        assertEquals(tag,46487,node.getParentSunid());
+
+        node = scop.getScopNode(46456); // all-alpha
+        assertEquals(tag,46456,node.getSunid());
+        assertEquals(tag,0,node.getParentSunid());
+
+        node = scop.getScopNode(0); // root
+        assertEquals(tag,0,node.getSunid());
+        assertEquals(tag,-1,node.getParentSunid());
+        assertEquals(tag+"Wrong number of children",11,node.getChildren().size());
+
+        node = scop.getScopNode(-1); // illegal
+        assertNull(tag,node);
+
+        node = scop.getScopNode(Integer.MAX_VALUE); // unused
+        assertNull(tag,node);
+
+    }
+
     /** Get various categories
      *
      */
-    public void getCategories(){
+    @Test
+    public void testCategories(){
         List<ScopDescription> superfams = scop.getByCategory(ScopCategory.Superfamily);
 
         assertNotNull(tag,superfams);
@@ -174,81 +188,7 @@ public abstract class ScopDatabaseTest {
         if(scop.getScopVersion().compareToIgnoreCase( ScopFactory.VERSION_1_75) == 0 ) {
             assertEquals(tag,1393,folds.size());
         }
-
     }
-
-    public void alignSuperfamily(){
-        // download SCOP if required and load into memory
-        ScopDatabase scop = ScopFactory.getSCOP();
-        List<ScopDescription> superfams = scop.getByCategory(ScopCategory.Superfamily);
-
-        System.out.println("Total nr. of superfamilies:" + superfams.size());
-
-
-        // configure where to load PDB files from and
-        // what information to load
-        AtomCache cache = new AtomCache();
-        FileParsingParameters fileparams = new FileParsingParameters() ;
-        fileparams.setAlignSeqRes(false);
-        fileparams.setLoadChemCompInfo(true);
-        fileparams.setParseSecStruc(false);
-        cache.setFileParsingParams(fileparams);
-
-        // get tge first superfamily
-        ScopDescription superfam1 = superfams.get(0);
-        System.out.println("First superfamily: " + superfam1);
-
-        ScopNode node = scop.getScopNode(superfam1.getSunID());
-        System.out.println("scopNode for first superfamily:" + node);
-
-        List<ScopDomain> doms4superfam1 = scop.getScopDomainsBySunid(superfam1.getSunID());
-        ScopDomain dom1 = doms4superfam1.get(0);
-
-        // align the first domain against all others members of this superfamily
-        for ( int i = 1 ; i < doms4superfam1.size() ; i ++){
-
-            ScopDomain dom2 = doms4superfam1.get(i);
-
-            try {
-                Structure s1 = cache.getStructureForDomain(dom1);
-                Structure s2 = cache.getStructureForDomain(dom2);
-
-                Atom[] ca1 = StructureTools.getAtomCAArray(s1);
-                Atom[] ca2 = StructureTools.getAtomCAArray(s2);
-                StructureAlignment ce = StructureAlignmentFactory.getAlgorithm(CeMain.algorithmName);
-                AFPChain afpChain = ce.align(ca1, ca2);
-
-                //System.out.println(afpChain.toCE(ca1, ca2));
-
-                //StructureAlignmentDisplay.display(afpChain, ca1, ca2);
-
-                System.out.println(dom1.getScopId() + " vs. " + dom2.getScopId()+ " :" + afpChain.getProbability());
-                double tmScore = AFPChainScorer.getTMScore(afpChain, ca1, ca2);
-                afpChain.setTMScore(tmScore);
-                System.out.println(AfpChainWriter.toScoresList(afpChain));
-
-            } catch (Exception e){
-                e.printStackTrace();
-            }
-        }
-
-    }
-
-    public void printDomainsForPDB(){
-        String pdbId = "4HHB";
-
-        // download SCOP if required and load into memory
-        ScopDatabase scop = ScopFactory.getSCOP();
-
-        List<ScopDomain> domains = scop.getDomainsForPDB(pdbId);
-
-        System.out.println(domains);
-
-    }
-
-
-
-
 
     @Test
     public void testComments() {
