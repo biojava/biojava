@@ -42,7 +42,7 @@ import org.biojava.bio.structure.scop.ScopNode;
 
 
 /** Utility classes for the XML serialization and de-serialization of SCOP.
- * 
+ *
  * @author Andreas Prlic
  * @since 3.0.2
  *
@@ -57,7 +57,7 @@ public class XMLUtil {
 			e.printStackTrace();
 		}
 	}
-	
+
 	static JAXBContext jaxbContextScopDomain;
 	static {
 		try {
@@ -66,7 +66,7 @@ public class XMLUtil {
 			e.printStackTrace();
 		}
 	}
-	
+
 	static JAXBContext jaxbContextScopNode;
 	static {
 		try {
@@ -75,7 +75,7 @@ public class XMLUtil {
 			e.printStackTrace();
 		}
 	}
-	
+
 	static JAXBContext jaxbContextDomains;
 	static {
 		try {
@@ -84,7 +84,7 @@ public class XMLUtil {
 			e.printStackTrace();
 		}
 	}
-	
+
 	static JAXBContext jaxbContextStringSortedSet;
 	static {
 		try {
@@ -93,14 +93,14 @@ public class XMLUtil {
 			e.printStackTrace();
 		}
 	}
-	
-	
+
+
 	public static String getScopDescriptionXML(ScopDescription desc){
-		
+
 		return converScopDescription(desc);
-		
+
 	}
-	
+
 	public static ScopDescription getScopDescriptionFromXML(String xml){
 
 		ScopDescription job = null;
@@ -119,7 +119,7 @@ public class XMLUtil {
 
 		return job;
 	}
-	
+
 	private static String converScopDescription(ScopDescription desc) {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
@@ -132,7 +132,7 @@ public class XMLUtil {
 			m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
 
 			m.marshal( desc, ps);
-			
+
 
 		} catch (Exception e){
 			e.printStackTrace();
@@ -142,15 +142,15 @@ public class XMLUtil {
 	}
 
 	public static String getScopDescriptionsXML(List<ScopDescription> descriptions){
-		
+
 		ScopDescriptions container = new ScopDescriptions();
 		container.setScopDescription(descriptions);
-		
+
 		return container.toXML();
-		
+
 	}
-	
-	
+
+
 	public static String getScopNodeXML(ScopNode scopNode){
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
@@ -163,7 +163,7 @@ public class XMLUtil {
 			m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
 
 			m.marshal( scopNode, ps);
-			
+
 
 		} catch (Exception e){
 			e.printStackTrace();
@@ -171,13 +171,13 @@ public class XMLUtil {
 
 		return baos.toString();
 	}
-	
+
 	public static ScopNode getScopNodeFromXML(String xml){
 		ScopNode job = null;
 
 		try {
 
-			Unmarshaller un = jaxbContextScopDescription.createUnmarshaller();
+			Unmarshaller un = jaxbContextScopNode.createUnmarshaller();
 
 			ByteArrayInputStream bais = new ByteArrayInputStream(xml.getBytes());
 
@@ -193,10 +193,10 @@ public class XMLUtil {
 	public static String getScopNodesXML(List<ScopNode> nodes) {
 		ScopNodes container = new ScopNodes();
 		container.setScopNode(nodes);
-		
+
 		return container.toXML();
 	}
-	
+
 	public static String getScopDomainXML(ScopDomain domain){
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
@@ -209,7 +209,7 @@ public class XMLUtil {
 			m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
 
 			m.marshal( domain, ps);
-			
+
 
 		} catch (Exception e){
 			System.err.println("Could not serialize  ScopDomain to XML :" + domain);
@@ -218,7 +218,7 @@ public class XMLUtil {
 
 		return baos.toString();
 	}
-	
+
 	public static ScopDomain getScopDomainFromXML(String xml){
 		ScopDomain job = null;
 
@@ -240,11 +240,11 @@ public class XMLUtil {
 	public static String getScopDomainsXML(List<ScopDomain> domains) {
 		ScopDomains container = new ScopDomains();
 		container.setScopDomain(domains);
-		
+
 		return container.toXML();
 	}
 
-	
+
 	public static String getDomainsXML(SortedSet<Domain> domains){
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
@@ -257,7 +257,7 @@ public class XMLUtil {
 			m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
 
 			m.marshal( domains, ps);
-			
+
 
 		} catch (Exception e){
 			e.printStackTrace();
@@ -266,7 +266,7 @@ public class XMLUtil {
 		return baos.toString();
 	}
 	public static SortedSet<Domain> getDomainsFromXML(String xml) {
-		
+
 		SortedSet<Domain> domains = null;
 		try {
 
@@ -282,7 +282,7 @@ public class XMLUtil {
 
 		return domains;
 	}
-	
+
 	public static String getDomainRangesXML(SortedSet<String> domainRanges){
 		if ( ! (domainRanges instanceof TreeSet)) {
 			throw new IllegalArgumentException("SortedSet needs to be a TreeSet!");
@@ -300,7 +300,7 @@ public class XMLUtil {
 			TreeSetStringWrapper wrapper = new TreeSetStringWrapper();
 			wrapper.setData(data);
 			m.marshal( wrapper, ps);
-			
+
 
 		} catch (Exception e){
 			e.printStackTrace();
@@ -308,7 +308,7 @@ public class XMLUtil {
 
 		return baos.toString();
 	}
-	
+
 	public static SortedSet<String> getDomainRangesFromXML(String xml){
 		SortedSet<String> domains = null;
 		try {

@@ -20,34 +20,39 @@
  */
 package org.biojava.bio.structure.scop;
 
-import static org.junit.Assert.*;
+import java.util.ArrayList;
+import java.util.Collection;
 
-import java.util.List;
-
-import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
+import org.junit.runners.Parameterized.Parameters;
 
 /**
  * Tests {@link BerkeleyScopInstallation}.
  * @author dmyerstu
  * @since 3.0.6
  */
-public class BerkeleyScopInstallationTest {
+@RunWith(Parameterized.class)
+public class BerkeleyScopInstallationTest extends ScopDatabaseTest {
 
-	@Test
-	public void testComments() {
-		ScopDatabase scop = ScopFactory.getSCOP(ScopFactory.VERSION_1_75B);
-		List<String> comments;
-		
-		// d3ueea_ was added in 1.75B update
-		// domain
-		comments = scop.getComments(190700);
-		assertEquals("Wrong number of comments", 1, comments.size());
-		assertEquals("Wrong comment", "not a true protein", comments.get(0));
+    public BerkeleyScopInstallationTest(String tag,ScopDatabase scop) {
+        super(tag,scop);
+    }
+    @Parameters(name="{0}")
+    public static Collection<Object[]> availableDatabases() {
+        ArrayList<Object[]> databases = new ArrayList<Object[]>();
+        ScopInstallation scop;
 
-		// fold
-		comments = scop.getComments(57923);
-		assertEquals("Wrong number of comments", 1, comments.size());
-		assertEquals("Wrong comment", "metal(zinc)-bound alpha+beta fold", comments.get(0));
-	}
-	
+        for(String version : new String[] {
+                ScopFactory.VERSION_1_75A,
+                ScopFactory.VERSION_1_75B,
+                ScopFactory.VERSION_1_75,
+                ScopFactory.VERSION_1_73,
+        }) {
+            scop = new BerkeleyScopInstallation();
+            scop.setScopVersion(version);
+            databases.add(new Object[] {version, scop});
+        }
+        return databases;
+    }
 }
