@@ -208,7 +208,7 @@ public final class RotationAxis {
 		rotationAxis.setCoords(rotAx);
 
 		// Calculate screw = (rotationAxis dot translation)*u
-		double dotProduct = Calc.skalarProduct(rotationAxis, translation);
+		double dotProduct = Calc.scalarProduct(rotationAxis, translation);
 
 		screwTranslation = Calc.scale(rotationAxis, dotProduct);
 		otherTranslation = Calc.subtract(translation, screwTranslation);
@@ -258,13 +258,13 @@ public final class RotationAxis {
 		
 		// Project each Atom onto the rotation axis to determine limits
 		double min, max;
-		min = max = Calc.skalarProduct(rotationAxis,atoms[0]);
+		min = max = Calc.scalarProduct(rotationAxis,atoms[0]);
 		for(int i=1;i<atoms.length;i++) {
-			double prod = Calc.skalarProduct(rotationAxis,atoms[i]);
+			double prod = Calc.scalarProduct(rotationAxis,atoms[i]);
 			if(prod<min) min = prod;
 			if(prod>max) max = prod;
 		}
-		double uLen = Calc.skalarProduct(rotationAxis,rotationAxis);// Should be 1, but double check
+		double uLen = Calc.scalarProduct(rotationAxis,rotationAxis);// Should be 1, but double check
 		min/=uLen;
 		max/=uLen;
 
@@ -274,7 +274,7 @@ public final class RotationAxis {
 			Atom center = Calc.centerOfMass(atoms);
 
 			// Project center onto the axis
-			Atom centerOnAxis = Calc.scale(rotationAxis, Calc.skalarProduct(center, rotationAxis));
+			Atom centerOnAxis = Calc.scale(rotationAxis, Calc.scalarProduct(center, rotationAxis));
 
 			// Remainder is projection of origin onto axis
 			axialPt = Calc.subtract(center, centerOnAxis);
