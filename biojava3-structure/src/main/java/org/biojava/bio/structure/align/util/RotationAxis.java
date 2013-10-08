@@ -24,7 +24,7 @@ import org.biojava.bio.structure.jama.Matrix;
  * </ul>
  * 
  * <p>The axis of rotation is poorly defined and numerically unstable for small
- * angles. Therefor it's direction is left as null for angles less than 
+ * angles. Therefore it's direction is left as null for angles less than 
  * {@link #MIN_ANGLE}.
  * 
  * @author Spencer Bliven
@@ -98,6 +98,22 @@ public final class RotationAxis {
 			throw new StructureException("No aligned residues");
 		}
 		init(afpChain.getBlockRotationMatrix()[0],afpChain.getBlockShiftVector()[0]);
+	}
+	
+	/**
+	 * Create a rotation axis from a vector, a point, and an angle.
+	 * 
+	 * The result will be a pure rotation, with no screw component.
+	 * @param axis A vector parallel to the axis of rotation
+	 * @param pos A point on the axis of rotation
+	 * @param theta The angle to rotate (radians)
+	 */
+	public RotationAxis(Atom axis, Atom pos, double theta) {
+		this.rotationAxis = Calc.unitVector(axis);
+		this.rotationPos = (Atom) pos.clone();
+		this.theta = theta;
+		this.screwTranslation = new AtomImpl(); //zero
+		this.otherTranslation = null; //deprecated
 	}
 
 	/**
@@ -353,6 +369,45 @@ public final class RotationAxis {
 		return result.toString();
 	}
 
+	/**
+	 * Projects a given point onto the axis of rotation
+	 * @param point
+	 * @return An atom which lies on the axis, or null if the RotationAxis is purely translational
+	 */
+	public Atom getProjectedPoint(Atom point) {
+		if(rotationPos == null) {
+			// translation only
+			return null;
+		}
+		
+		Atom localPoint = Calc.subtract(point, rotationPos);
+		double dot = Calc.scalarProduct(localPoint, rotationAxis);
+		
+		Atom localProjected = Calc.scale(rotationAxis, dot);
+		Atom projected = Calc.add(localProjected, rotationPos);
+		return projected;
+	}
+
+	/**
+	 * Get the distance from a point to the axis of rotation
+	 * @param point
+	 * @return The distance to the axis, or NaN if the RotationAxis is purely translational
+	 */
+	public double getProjectedDistance(Atom point) {
+		Atom projected = getProjectedPoint(point);
+		if( projected == null) {
+			// translation only
+			return Double.NaN;
+		}
+		
+		try {
+			return Calc.getDistance(point, projected);
+		} catch(StructureException e) {
+			// Should be unreachable
+			return Double.NaN;
+		}
+	}
+	
 	/**
 	 * Calculate the rotation angle for a structure
 	 * @param afpChain
