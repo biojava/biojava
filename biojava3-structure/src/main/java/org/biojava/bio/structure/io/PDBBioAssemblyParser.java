@@ -25,7 +25,6 @@ public class PDBBioAssemblyParser {
 	int currentIndex;
 	
 	List<ModelTransformationMatrix> transformations;
-	int correct ;
 	
 	private boolean DEBUG = false;
 	private boolean justCommitted = false;
@@ -41,8 +40,6 @@ public class PDBBioAssemblyParser {
 		currentMatrix = Matrix.identity(3,3);
 		currentBioMolecule = null;
 		shift = new double[3];
-		correct = 0;
-		
 	}
 	
 	/** See here for the current spec:
@@ -84,7 +81,11 @@ public class PDBBioAssemblyParser {
 			}
 			addToCurrentChainList(line);
 		
-		} else if ( line.startsWith("REMARK 350                    AND CHAINS:")) {
+		// There is some inconsistency in the format of this line (# of spaces), therefore
+	    // accept a variable number of spaces between REMARK 350 ... AND CHAINS:"
+		// Example 1GR5:                REMARK 350                       AND CHAINS:
+        // } else if ( line.startsWith("REMARK 350                    AND CHAINS:")) {
+		} else if ( line.startsWith("REMARK 350") && line.contains("AND CHAINS:")) {
 		
 			addToCurrentChainList(line);
 		
@@ -95,17 +96,23 @@ public class PDBBioAssemblyParser {
 		}
 		
 	}
-
+	
+	/*
+	 * Parses a row of a BIOMT matrix in a REMARK 350 record.
+	 * Example: REMARK 350   BIOMT1   2  1.000000  0.000000  0.000000        0.00000 
+	 * Note, this remark card contains a variable number of spaces (i.e., PDB 1M4X). 
+	 * Therefore, the split method is used to separate data items.
+	 */
 	private void readMatrix(String line) {
-		
-		//System.out.println(line);
-		String pos = line.substring(18,19);
+		// split by one or more spaces
+		String[] items = line.split("[ ]+");
+			
+		// parse BIOMTx, where x is the position in the matrix
+		String pos = items[2].substring(5);
 		int i = Integer.parseInt(pos);
 		
+		int id = Integer.parseInt(items[3]);
 		
-		String index = line.substring(21,24+correct).trim();
-		
-		int id = Integer.parseInt(index);
 		
 		if ( id != currentIndex && (! justCommitted)) {
 			if ( id > currentIndex + 1) {
@@ -115,38 +122,75 @@ public class PDBBioAssemblyParser {
 			} else {
 				addNewMatrix();
 			}
-			currentIndex = id;
-			
-			currentMatrix = Matrix.identity(3,3);
-			
+			currentIndex = id;			
+			currentMatrix = Matrix.identity(3,3);		
 			shift = new double[3];
-			
+		
 		}
 		
+		if (DEBUG) {
+			System.out.println(id + " |" + i + "| |" + items[4] + "| |" + items[5] + "| |" + items[6] + "| >" + items[7] +"<");
+		}
 		
-		String x = line.substring(24+correct,33+correct);
-		
-		
-		String y = line.substring(34+correct,43+correct);
-		
-		
-		String z = line.substring(44+correct,53+correct);
-		
-		
-		String vec = line.substring(58+correct,line.length()).trim();
-	
-		if (DEBUG)
-			System.out.println(id + " |" + i + "| |" + x + "| |" + y + "| |" + z + "| >" + vec+"<");
-		currentMatrix.set(0,(i-1),Float.parseFloat(x));
-		currentMatrix.set(1,(i-1),Float.parseFloat(y));
-		currentMatrix.set(2,(i-1),Float.parseFloat(z));
-		
-		shift[i-1] = Float.parseFloat(vec);
-		//System.out.println(shift[i-1]);
-		//System.out.println(currentMatrix);
-		justCommitted = false;
-		
+		currentMatrix.set(0,(i-1),Float.parseFloat(items[4]));
+		currentMatrix.set(1,(i-1),Float.parseFloat(items[5]));
+		currentMatrix.set(2,(i-1),Float.parseFloat(items[6]));	
+		shift[i-1] = Float.parseFloat(items[7]);
+
+		justCommitted = false;		
 	}
+
+//	private void readMatrix(String line) {
+//		
+//		System.out.println(line);
+//		String pos = line.substring(18,19);
+//		int i = Integer.parseInt(pos);
+//		
+//		
+//		String index = line.substring(21,24+correct).trim();
+//		
+//		int id = Integer.parseInt(index);
+//		
+//		if ( id != currentIndex && (! justCommitted)) {
+//			if ( id > currentIndex + 1) {
+//				//  2JBP
+//				// todo: still need to fix:  2J4Z bioassembly 2  somehow...
+//				System.err.println("WARNING ID " + id + " > " + currentIndex + " " + currentChainIDs);
+//			} else {
+//				addNewMatrix();
+//			}
+//			currentIndex = id;
+//			
+//			currentMatrix = Matrix.identity(3,3);
+//			
+//			shift = new double[3];
+//			
+//		}
+//		
+//		
+//		String x = line.substring(24+correct,33+correct);
+//		
+//		
+//		String y = line.substring(34+correct,43+correct);
+//		
+//		
+//		String z = line.substring(44+correct,53+correct);
+//		
+//		
+//		String vec = line.substring(58+correct,line.length()).trim();
+//	
+//		if (DEBUG)
+//			System.out.println(id + " |" + i + "| |" + x + "| |" + y + "| |" + z + "| >" + vec+"<");
+//		currentMatrix.set(0,(i-1),Float.parseFloat(x));
+//		currentMatrix.set(1,(i-1),Float.parseFloat(y));
+//		currentMatrix.set(2,(i-1),Float.parseFloat(z));
+//		
+//		shift[i-1] = Float.parseFloat(vec);
+//		//System.out.println(shift[i-1]);
+//		//System.out.println(currentMatrix);
+//		justCommitted = false;
+//		
+//	}
 
 	private void addNewMatrix() {
 		//System.out.println("adding new matrix " + currentIndex + " for " + currentChainIDs);
@@ -179,15 +223,7 @@ public class PDBBioAssemblyParser {
 		currentMatrix = Matrix.identity(3,3);
 		shift = new double[3];
 		
-		if ( currentIndex == 999){
-			//System.err.println("CORRECTION!");
-			correct +=1;
-		}
-		
-		justCommitted  = true;
-		
-		
-		
+		justCommitted  = true;	
 	}
 
 	private void addToCurrentChainList(String line) {
