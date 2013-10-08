@@ -109,6 +109,27 @@ public final class RotationAxis {
 		init(rotation, translation);
 	}
 	
+	public Matrix getRotationMatrix() {
+		return getRotationMatrix(theta);
+	}
+	
+	public Matrix getRotationMatrix(double theta) {
+		double x = rotationAxis.getX();
+		double y = rotationAxis.getY();
+		double z = rotationAxis.getZ();
+		double cos = Math.cos(theta);
+		double sin = Math.sin(theta);
+		double com = 1 - cos;
+		return new Matrix(new double[][] {{com*x*x + cos, com*x*y-sin*z, com*x*z+sin*y}, {com*x*y+sin*z, com*y*y+cos, com*y*z-sin*x, 0}, {com*x*z-sin*y, com*y*z+sin*x, com*z*z+cos, 0}, {0, 0, 0, 1}});
+	}
+	
+	/**
+	 * Returns a matrix that describes both rotation and translation.
+	 */
+	public Matrix getFullMatrix() {
+		return null; // TODO, easy
+	}
+	
 	/**
 	 * Initialize variables
 	 * 
