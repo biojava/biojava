@@ -964,6 +964,11 @@ public class Calc {
 		
 		System.out.println(calcRotationAngleInDegrees(a, b));
 	}
+
+
+	public static void rotate(Atom[] ca, Matrix matrix) {
+		for (Atom atom : ca) Calc.rotate(atom, matrix);
+	}
 }
 
 
