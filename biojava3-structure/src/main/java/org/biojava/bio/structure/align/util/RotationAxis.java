@@ -125,18 +125,35 @@ public final class RotationAxis {
 		init(rotation, translation);
 	}
 	
+	/**
+	 * Get the rotation matrix corresponding to this axis
+	 * @return A 3x3 rotation matrix
+	 */
 	public Matrix getRotationMatrix() {
 		return getRotationMatrix(theta);
 	}
 	
+	/**
+	 * Get the rotation matrix corresponding to a rotation about this axis
+	 * @param theta The amount to rotate
+	 * @return A 3x3 rotation matrix
+	 */
 	public Matrix getRotationMatrix(double theta) {
+		if( rotationAxis == null) {
+			// special case for pure translational axes
+			return Matrix.identity(3, 3);
+		}
 		double x = rotationAxis.getX();
 		double y = rotationAxis.getY();
 		double z = rotationAxis.getZ();
 		double cos = Math.cos(theta);
 		double sin = Math.sin(theta);
 		double com = 1 - cos;
-		return new Matrix(new double[][] {{com*x*x + cos, com*x*y-sin*z, com*x*z+sin*y}, {com*x*y+sin*z, com*y*y+cos, com*y*z-sin*x, 0}, {com*x*z-sin*y, com*y*z+sin*x, com*z*z+cos, 0}, {0, 0, 0, 1}});
+		return new Matrix(new double[][] {
+				{com*x*x + cos, com*x*y+sin*z, com*x*z+-sin*y},
+				{com*x*y-sin*z, com*y*y+cos, com*y*z+sin*x},
+				{com*x*z+sin*y, com*y*z-sin*x, com*z*z+cos},
+				});
 	}
 	
 	/**
@@ -405,6 +422,24 @@ public final class RotationAxis {
 		} catch(StructureException e) {
 			// Should be unreachable
 			return Double.NaN;
+		}
+	}
+	
+	public void rotate(Atom[] atoms, double theta) {
+		Matrix rot = getRotationMatrix(theta);
+		Atom negPos;
+		try {
+			negPos = Calc.invert(rotationPos);
+		} catch (StructureException e) {
+			// Should be unreachable
+			return;
+		}
+		for(Atom a: atoms) {
+			Calc.shift(a, negPos);
+		}
+		Calc.rotate(atoms, rot);
+		for(Atom a: atoms) {
+			Calc.shift(a, rotationPos);
 		}
 	}
 	
