@@ -761,7 +761,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 			// fix SEQRES residue numbering
 			List<Chain> atomList   = structure.getModel(0);
 			for (Chain seqResChain: seqResChains){
-				try {
+		
 					Chain atomChain = aligner.getMatchingAtomRes(seqResChain, atomList);
 
 					//map the atoms to the seqres...
@@ -790,10 +790,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 					}
 					atomChain.setSeqResGroups(seqResGroups);
 
-				} catch (StructureException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+			
 
 
 			}
