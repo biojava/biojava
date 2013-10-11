@@ -7,10 +7,10 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.util.Collection;
 
-import org.apache.commons.lang3.StringUtils;
 import org.biojava3.core.sequence.io.template.GenbankHeaderFormatInterface;
 import org.biojava3.core.sequence.template.Compound;
 import org.biojava3.core.sequence.template.Sequence;
+import org.biojava3.core.util.StringManipulationHelper;
 
 
 /**
@@ -90,7 +90,7 @@ public class GenbankWriter<S extends Sequence<?>, C extends Compound> {
 			// os.write(lineSep);
 
 			for (int line_number = 0; line_number < seq_len; line_number += lineLength) {
-				writer.print(StringUtils.leftPad(
+				writer.print(StringManipulationHelper.padLeft(
 						Integer.toString(line_number + 1), SEQUENCE_INDENT));
 				for (int words = line_number; words < Math.min(line_number
 						+ lineLength, seq_len); words += 10) {
@@ -158,4 +158,5 @@ public class GenbankWriter<S extends Sequence<?>, C extends Compound> {
 	public void setLineLength(int lineLength) {
 		this.lineLength = lineLength;
 	}
+	
 }

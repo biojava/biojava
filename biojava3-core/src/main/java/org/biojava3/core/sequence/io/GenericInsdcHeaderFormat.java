@@ -8,7 +8,6 @@ import java.util.Collections;
 import java.util.Formatter;
 import java.util.Locale;
 
-import org.apache.commons.lang3.StringUtils;
 import org.biojava3.core.sequence.Strand;
 import org.biojava3.core.sequence.features.FeatureInterface;
 import org.biojava3.core.sequence.features.Qualifier;
@@ -16,6 +15,7 @@ import org.biojava3.core.sequence.location.SequenceLocation;
 import org.biojava3.core.sequence.location.template.Point;
 import org.biojava3.core.sequence.template.AbstractSequence;
 import org.biojava3.core.sequence.template.Compound;
+import org.biojava3.core.util.StringManipulationHelper;
 
 /**
  * @author mckeee1
@@ -176,7 +176,7 @@ public class GenericInsdcHeaderFormat<S extends AbstractSequence<C>, C extends C
 			for(FeatureInterface<AbstractSequence<C>, C> f  : feature.getChildrenFeatures()) {
 				locations.add(_insdc_location_string_ignoring_strand_and_subfeatures(f.getLocations(), record_length));
 			}
-			String location = StringUtils.join(locations, ",");
+			String location = StringManipulationHelper.join(locations, ",");
 			formatter.format("complement(%s(%s))", /*feature.location_operator*/ "join", location);
 			String output = formatter.toString();
 			formatter.close();
@@ -189,7 +189,7 @@ public class GenericInsdcHeaderFormat<S extends AbstractSequence<C>, C extends C
 		for(FeatureInterface<AbstractSequence<C>, C> f  : feature.getChildrenFeatures()) {
 			locations.add(_insdc_location_string_ignoring_strand_and_subfeatures(f.getLocations(), record_length));
 		}
-		String location = StringUtils.join(locations, ",");
+		String location =  StringManipulationHelper.join(locations, ",");
 		formatter.format("%s(%s)", /*feature.location_operator*/ "join", location);
 		String output = formatter.toString();
 		formatter.close();
@@ -317,7 +317,7 @@ public class GenericInsdcHeaderFormat<S extends AbstractSequence<C>, C extends C
 	protected ArrayList<String> _split_multi_line(String text, int max_len) {
 		// TODO Auto-generated method stub
 		ArrayList<String> output = new ArrayList<String>();
-		text = StringUtils.strip(text);
+		text = text.trim();
 		if(text.length() <= max_len) {
 			output.add(text);
 			return output;
@@ -329,7 +329,7 @@ public class GenericInsdcHeaderFormat<S extends AbstractSequence<C>, C extends C
 			text = words.remove(0);
 			while(!words.isEmpty() && (text.length() + 1 + words.get(0).length()) <= max_len) {
 				text += " " + words.remove(0);
-				text = StringUtils.strip(text);
+				text = text.trim();
 			}
 			output.add(text);
 		}

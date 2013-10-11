@@ -7,7 +7,6 @@ import java.util.Date;
 import java.util.Formatter;
 import java.util.Locale;
 
-import org.apache.commons.lang3.StringUtils;
 import org.biojava3.core.sequence.compound.AminoAcidCompoundSet;
 import org.biojava3.core.sequence.compound.DNACompoundSet;
 import org.biojava3.core.sequence.features.FeatureInterface;
@@ -15,6 +14,7 @@ import org.biojava3.core.sequence.io.template.GenbankHeaderFormatInterface;
 import org.biojava3.core.sequence.template.AbstractSequence;
 import org.biojava3.core.sequence.template.Compound;
 import org.biojava3.core.sequence.io.GenericInsdcHeaderFormat;
+import org.biojava3.core.util.StringManipulationHelper;
 
 public class GenericGenbankHeaderFormat<S extends AbstractSequence<C>, C extends Compound>
 		extends GenericInsdcHeaderFormat<S, C> implements
@@ -39,7 +39,7 @@ public class GenericGenbankHeaderFormat<S extends AbstractSequence<C>, C extends
 	 */
 	private String _write_single_line(String tag, String text) {
 		assert tag.length() < HEADER_WIDTH;
-		return StringUtils.rightPad(tag, HEADER_WIDTH)
+		return StringManipulationHelper.padRight(tag, HEADER_WIDTH)
 				+ text.replace('\n', ' ') + lineSep;
 	}
 
@@ -180,10 +180,10 @@ public class GenericGenbankHeaderFormat<S extends AbstractSequence<C>, C extends
 		Formatter formatter = new Formatter(sb, Locale.US);
 		formatter
 				.format("LOCUS       %s %s %s    %s           %s %s" + lineSep,
-						StringUtils.rightPad(locus, 16),
-						StringUtils.leftPad(
+						StringManipulationHelper.padRight(locus, 16),
+						StringManipulationHelper.padLeft(
 								Integer.toString(sequence.getLength()), 11),
-						units, StringUtils.rightPad(mol_type, 6), division,
+						units, StringManipulationHelper.padRight(mol_type, 6), division,
 						_get_date(sequence));
 		String output = formatter.toString();
 		formatter.close();
