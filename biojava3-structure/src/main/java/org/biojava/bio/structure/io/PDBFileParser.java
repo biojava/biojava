@@ -48,7 +48,6 @@ import org.biojava.bio.structure.Atom;
 import org.biojava.bio.structure.AtomImpl;
 import org.biojava.bio.structure.Author;
 import org.biojava.bio.structure.Bond;
-import org.biojava.bio.structure.BondType;
 import org.biojava.bio.structure.Calc;
 import org.biojava.bio.structure.Chain;
 import org.biojava.bio.structure.ChainImpl;
@@ -3044,17 +3043,10 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 
 			for (Chain seqRes: seqResChains){
 				Chain atomRes;
-				try {
-					atomRes = aligner.getMatchingAtomRes(seqRes,atomList);
-					atomRes.setSeqResGroups(seqRes.getAtomGroups());
-				} catch (StructureException e) {
-					// this is used for matching of biological units
-					// where chains can be missing
-					// ignore if chain can't be found.
-
-					// e.printStackTrace();
-					continue;
-				}
+			
+				atomRes = aligner.getMatchingAtomRes(seqRes,atomList);
+				atomRes.setSeqResGroups(seqRes.getAtomGroups());
+				
 			}
 		}
 	}
