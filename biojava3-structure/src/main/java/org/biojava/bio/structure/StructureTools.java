@@ -792,7 +792,7 @@ public class StructureTools {
 
 		// parse the ranges, adding the specified residues to newS
 		for ( String r: rangS){
-			
+
 			// Match a single range, eg "A_4-27"
 
 			Matcher matcher = pdbNumRangeRegex.matcher(r);
@@ -828,7 +828,7 @@ public class StructureTools {
 				if(pdbresnumEnd.charAt(0) == '+')
 					pdbresnumEnd = pdbresnumEnd.substring(1);
 				groups = chain.getGroupsByPDB(pdbresnumStart, pdbresnumEnd);
-			
+
 
 				name.append( chainId + AtomCache.UNDERSCORE + pdbresnumStart+"-" + pdbresnumEnd);
 
@@ -859,7 +859,7 @@ public class StructureTools {
 					newS.addChain(c);
 				}
 			}
-			
+
 			// add the groups to the chain:
 			for ( Group g: groups) {
 				c.addGroup(g);
@@ -933,119 +933,204 @@ public class StructureTools {
 		return chain.getGroupByPDB(pdbResNum);
 	}
 
-	/*
-	 * Returns a List of Groups in a structure within the distance specified of a given group.
+
+	/**
+	 * Finds Groups in {@code structure} that contain at least one Atom that is within {@code radius} Angstroms of {@code centroid}.
+	 * @param structure The structure from which to find Groups
+	 * @param centroid The centroid of the shell
+	 * @param excludeResidues A list of ResidueNumbers to exclude
+	 * @param radius The radius from {@code centroid}, in Angstroms
+	 * @param includeWater Whether to include Groups whose <em>only</em> atoms are water
+	 * @param useAverageDistance When set to true, distances are the arithmetic mean (1-norm) of the distances of atoms that belong to the group and that are within the shell; otherwise, distances are the minimum of these values
+	 * @return A map of Groups within (or partially within) the shell, to their distances in Angstroms
 	 */
-	public static List<Group> getGroupsWithinShell(Structure structure, Group group, double distance, boolean includeWater) {
-		Set<Group> returnSet = new LinkedHashSet<Group>();
+	public static Map<Group,Double> getGroupDistancesWithinShell(Structure structure, Atom centroid, Set<ResidueNumber> excludeResidues, double radius, boolean includeWater, boolean useAverageDistance) {
+
+		// for speed, we avoid calculating square roots
+		radius = radius * radius;
+
+		Map<Group,Double> distances = new HashMap<Group,Double>();
+		
+		// we only need this if we're averaging distances
+		// note that we can't use group.getAtoms().size() because some the group's atoms be outside the shell
+		Map<Group,Integer> atomCounts = new HashMap<Group,Integer>();
+
+		for (Chain chain : structure.getChains()) {
+			groupLoop: for (Group chainGroup : chain.getAtomGroups()) {
+
+				// exclude water
+				if (!includeWater && chainGroup.getPDBName().equals("HOH")) continue;
+				
+				// check blacklist of residue numbers
+				for (ResidueNumber rn : excludeResidues) {
+					if (rn.equals(chainGroup.getResidueNumber())) continue groupLoop;
+				}
+				
+				for (Atom testAtom : chainGroup.getAtoms()) {
+					
+					try {
+						
+						// use getDistanceFast as we are doing a lot of comparisons
+						double dist = Calc.getDistanceFast(centroid, testAtom);
+						
+						// if we're the shell
+						if (dist <= radius) {
+							if (!distances.containsKey(chainGroup)) distances.put(chainGroup, Double.POSITIVE_INFINITY);
+							if (useAverageDistance) {
+								// sum the distance; we'll divide by the total number later
+								// here, we CANNOT use fastDistance (distance squared) because we want the arithmetic mean
+								distances.put(chainGroup, distances.get(chainGroup) + Math.sqrt(dist));
+								if (!atomCounts.containsKey(chainGroup)) atomCounts.put(chainGroup, 0);
+								atomCounts.put(chainGroup, atomCounts.get(chainGroup) + 1);
+							} else {
+								// take the minimum distance among all atoms of chainGroup
+								// note that we can't break here because we might find a smaller distance
+								if (dist < distances.get(chainGroup)) {
+									distances.put(chainGroup, dist);
+								}
+							}
+						}
+						
+					} catch (StructureException ex) {
+						Logger.getLogger(StructureTools.class.getName()).log(Level.SEVERE, null, ex);
+					}
+
+				}
+			}
+		}
+		
+		if (useAverageDistance) {
+			for (Map.Entry<Group,Double> entry : distances.entrySet()) {
+				int count = atomCounts.get(entry.getKey());
+				distances.put(entry.getKey(), entry.getValue() / count);
+			}
+		} else {
+			// in this case we used getDistanceFast
+			for (Map.Entry<Group,Double> entry : distances.entrySet()) {
+				distances.put(entry.getKey(), Math.sqrt(entry.getValue()));
+			}
+		}
+		
+		return distances;
+		
+	}
+
+	public static Set<Group> getGroupsWithinShell(Structure structure, Atom atom, Set<ResidueNumber> excludeResidues, double distance, boolean includeWater) {
 
 		//square the distance to use as a comparison against getDistanceFast which returns the square of a distance.
 		distance = distance * distance;
 
-		for (Atom atomA : group.getAtoms()) {
-			for (Chain chain : structure.getChains()) {
-				for (Group chainGroup : chain.getAtomGroups()) {
-					//                        System.out.println("Checking group: " + chainGroup);
-					if (chainGroup.getResidueNumber().equals(group.getResidueNumber())) {
-						continue;
-					}
-					else if (!includeWater && chainGroup.getPDBName().equals("HOH")) {
-						continue;
-					}
-					else {
-						for (Atom atomB : chainGroup.getAtoms()) {
-							try {
-								//use getDistanceFast as we are doing a lot of comparisons
-								double dist = Calc.getDistanceFast(atomA, atomB);
-								if (dist <= distance) {
-									returnSet.add(chainGroup);
-									//                                    System.out.println(String.format("%s within %s of %s", atomB, dist, atomA));
-									break;
-								}
-
-							} catch (StructureException ex) {
-								Logger.getLogger(StructureTools.class.getName()).log(Level.SEVERE, null, ex);
-							}
-
+		Set<Group> returnSet = new LinkedHashSet<Group>();
+		for (Chain chain : structure.getChains()) {
+			groupLoop: for (Group chainGroup : chain.getAtomGroups()) {
+				if (!includeWater && chainGroup.getPDBName().equals("HOH")) continue;
+				for (ResidueNumber rn : excludeResidues) {
+					if (rn.equals(chainGroup.getResidueNumber())) continue groupLoop;
+				}
+				for (Atom atomB : chainGroup.getAtoms()) {
+					try {
+						//use getDistanceFast as we are doing a lot of comparisons
+						double dist = Calc.getDistanceFast(atom, atomB);
+						if (dist <= distance) {
+							returnSet.add(chainGroup);
+							break;
 						}
+					} catch (StructureException ex) {
+						Logger.getLogger(StructureTools.class.getName()).log(Level.SEVERE, null, ex);
 					}
+
 				}
 			}
 		}
+		return returnSet;
+	}
+
+	/*
+	 * Returns a List of Groups in a structure within the distance specified of a given group.
+	 */
+	public static List<Group> getGroupsWithinShell(Structure structure, Group group, double distance, boolean includeWater) {
+
 		List<Group> returnList = new ArrayList<Group>();
-		returnList.addAll(returnSet);
+
+		Set<ResidueNumber> excludeGroups = new HashSet<ResidueNumber>();
+		excludeGroups.add(group.getResidueNumber());
+		for (Atom atom : group.getAtoms()) {
+			Set<Group> set = getGroupsWithinShell(structure, atom, excludeGroups, distance, includeWater);
+			returnList.addAll(set);
+		}
+
 		return returnList;
 	}
 
-//	This code relies on an old version of the Bond class.
-//	
-//	/*
-//	 * Very simple distance-based bond calculator. Will give approximations,
-//	 * but do not rely on this to be chemically correct.
-//	 */
-//	public static List<Bond> findBonds(Group group, List<Group> groups) {
-//		List<Bond> bondList = new ArrayList<Bond>();
-//		for (Atom atomA : group.getAtoms()) {
-//			for (Group groupB : groups) {
-//				if (groupB.getType().equals(GroupType.HETATM)) {
-//					continue;
-//				}
-//				for (Atom atomB : groupB.getAtoms()) {
-//					try {
-//						double dist = Calc.getDistance(atomA, atomB);
-//						BondType bondType = BondType.UNDEFINED;
-//						if (dist <= 2) {
-//							bondType = BondType.COVALENT;
-//							Bond bond = new Bond(dist, bondType, group, atomA, groupB, atomB);
-//							bondList.add(bond);
-//							//                                    System.out.println(String.format("%s within %s of %s", atomB, dist, atomA));
-//						}
-//						else if (dist <= 3.25) {
-//
-//							if (isHbondDonorAcceptor(atomA) && isHbondDonorAcceptor(atomB)) {
-//								bondType = BondType.HBOND;
-//							}
-//							else if (atomA.getElement().isMetal() && isHbondDonorAcceptor(atomB)) {
-//								bondType = BondType.METAL;
-//							}
-//							else if (atomA.getElement().equals(Element.C) && atomB.getElement().equals(Element.C)) {
-//								bondType = BondType.HYDROPHOBIC;
-//							}
-//							//not really interested in 'undefined' types
-//							if (bondType != BondType.UNDEFINED) {
-//								Bond bond = new Bond(dist, bondType, group, atomA, groupB, atomB);
-//								bondList.add(bond);
-//							}
-//							//                                    System.out.println(String.format("%s within %s of %s", atomB, dist, atomA));
-//						} else if (dist <= 3.9) {
-//							if (atomA.getElement().equals(Element.C) && atomB.getElement().equals(Element.C)) {
-//								bondType = BondType.HYDROPHOBIC;
-//							}
-//							//not really interested in 'undefined' types
-//							if (bondType != BondType.UNDEFINED) {
-//								Bond bond = new Bond(dist, bondType, group, atomA, groupB, atomB);
-//								bondList.add(bond);
-//							}
-//						}
-//
-//					} catch (StructureException ex) {
-//						Logger.getLogger(StructureTools.class.getName()).log(Level.SEVERE, null, ex);
-//					}
-//
-//				}
-//			}
-//		}
-//
-//
-//		return bondList;
-//	}
-//
-//	private static boolean isHbondDonorAcceptor(Atom atom) {
-//		if (hBondDonorAcceptors.contains(atom.getElement())) {
-//			return true;
-//		}
-//		return false;
-//	}
+	//	This code relies on an old version of the Bond class.
+	//	
+	//	/*
+	//	 * Very simple distance-based bond calculator. Will give approximations,
+	//	 * but do not rely on this to be chemically correct.
+	//	 */
+	//	public static List<Bond> findBonds(Group group, List<Group> groups) {
+	//		List<Bond> bondList = new ArrayList<Bond>();
+	//		for (Atom atomA : group.getAtoms()) {
+	//			for (Group groupB : groups) {
+	//				if (groupB.getType().equals(GroupType.HETATM)) {
+	//					continue;
+	//				}
+	//				for (Atom atomB : groupB.getAtoms()) {
+	//					try {
+	//						double dist = Calc.getDistance(atomA, atomB);
+	//						BondType bondType = BondType.UNDEFINED;
+	//						if (dist <= 2) {
+	//							bondType = BondType.COVALENT;
+	//							Bond bond = new Bond(dist, bondType, group, atomA, groupB, atomB);
+	//							bondList.add(bond);
+	//							//                                    System.out.println(String.format("%s within %s of %s", atomB, dist, atomA));
+	//						}
+	//						else if (dist <= 3.25) {
+	//
+	//							if (isHbondDonorAcceptor(atomA) && isHbondDonorAcceptor(atomB)) {
+	//								bondType = BondType.HBOND;
+	//							}
+	//							else if (atomA.getElement().isMetal() && isHbondDonorAcceptor(atomB)) {
+	//								bondType = BondType.METAL;
+	//							}
+	//							else if (atomA.getElement().equals(Element.C) && atomB.getElement().equals(Element.C)) {
+	//								bondType = BondType.HYDROPHOBIC;
+	//							}
+	//							//not really interested in 'undefined' types
+	//							if (bondType != BondType.UNDEFINED) {
+	//								Bond bond = new Bond(dist, bondType, group, atomA, groupB, atomB);
+	//								bondList.add(bond);
+	//							}
+	//							//                                    System.out.println(String.format("%s within %s of %s", atomB, dist, atomA));
+	//						} else if (dist <= 3.9) {
+	//							if (atomA.getElement().equals(Element.C) && atomB.getElement().equals(Element.C)) {
+	//								bondType = BondType.HYDROPHOBIC;
+	//							}
+	//							//not really interested in 'undefined' types
+	//							if (bondType != BondType.UNDEFINED) {
+	//								Bond bond = new Bond(dist, bondType, group, atomA, groupB, atomB);
+	//								bondList.add(bond);
+	//							}
+	//						}
+	//
+	//					} catch (StructureException ex) {
+	//						Logger.getLogger(StructureTools.class.getName()).log(Level.SEVERE, null, ex);
+	//					}
+	//
+	//				}
+	//			}
+	//		}
+	//
+	//
+	//		return bondList;
+	//	}
+	//
+	//	private static boolean isHbondDonorAcceptor(Atom atom) {
+	//		if (hBondDonorAcceptors.contains(atom.getElement())) {
+	//			return true;
+	//		}
+	//		return false;
+	//	}
 
 	/** Remove all models from a Structure and keep only the first
 	 * 
@@ -1066,7 +1151,7 @@ public class StructureTools {
 
 		n.setPDBCode(s.getPDBCode());
 		n.setName(s.getName());
-		
+
 		// we are calling this legacy menthod for backwards compatibility
 		n.setHeader(s.getHeader());
 		//TODO: do deep copying of data!
@@ -1075,14 +1160,14 @@ public class StructureTools {
 		n.setConnections(s.getConnections());
 		n.setSites(s.getSites());
 		n.setCrystallographicInfo(s.getCrystallographicInfo());
-		
+
 		n.setChains(s.getModel(0));
-		
+
 		return n;
 
 
 	}
-	
+
 	/** Removes all polymeric and solvent groups from a list of groups
 	 * 
 	 */
@@ -1114,9 +1199,9 @@ public class StructureTools {
 		return groups;
 	}
 
-	
 
-	
+
+
 	/**
 	 * Short version of {@link #getStructure(String, PDBFileParser, AtomCache)}
 	 * which creates new parsers when needed

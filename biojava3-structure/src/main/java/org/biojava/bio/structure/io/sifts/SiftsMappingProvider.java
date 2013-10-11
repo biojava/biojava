@@ -74,7 +74,9 @@ public class SiftsMappingProvider {
 		AtomCache cache = new AtomCache();
 		
 		String path = cache.getPath();
-
+		
+		pdbId = pdbId.toLowerCase();
+		
 		String dirHash = pdbId.substring(1,3);
 		String SIFTS_DIR = path + "/SIFTS/";
 		
@@ -95,7 +97,6 @@ public class SiftsMappingProvider {
 			URL url = new URL(u);
 			FileDownloadUtils.downloadGzipCompressedFile(url, dest);
 		}
-		
 		
 		InputStreamProvider prov = new InputStreamProvider();
 		InputStream is = prov.getInputStream(dest);

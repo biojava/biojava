@@ -119,6 +119,9 @@ public class DownloadChemCompProvider implements ChemCompProvider {
 
 		System.out.println("Installing individual chem comp files ...");
 		
+		if ( path == null)
+			path = System.getProperty("java.io.tmpdir");
+		
 		String filename = path + 
 		DownloadChemCompProvider.CHEM_COMP_CACHE_DIRECTORY + FILE_SEPARATOR +
 		"components.cif.gz";

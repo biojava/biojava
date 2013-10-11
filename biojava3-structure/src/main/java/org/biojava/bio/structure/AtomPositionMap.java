@@ -51,10 +51,10 @@ public class AtomPositionMap {
 	private HashMap<ResidueNumber, Integer> hashMap;
 	private TreeMap<ResidueNumber, Integer> treeMap;
 
-	private static Set<String> aminoAcidNames = new TreeSet<String>();
+	public static final Set<String> AMINO_ACID_NAMES = new TreeSet<String>();
 	static {
-		aminoAcidNames.addAll(Arrays.asList(new String[] {"ALA", "ARG", "ASN", "ASP", "CYS", "GLU", "GLN", "GLY", "HIS", "ILE", "LEU", "LYS", "MET", "PHE", "PRO", "SER", "THR", "TRP", "TYR", "VAL"}));
-		aminoAcidNames.addAll(Arrays.asList(new String[] {"ASX", "GLX", "XLE", "XAA"}));
+		AMINO_ACID_NAMES.addAll(Arrays.asList(new String[] {"ALA", "ARG", "ASN", "ASP", "CYS", "GLU", "GLN", "GLY", "HIS", "ILE", "LEU", "LYS", "MET", "PHE", "PRO", "SER", "THR", "TRP", "TYR", "VAL"}));
+		AMINO_ACID_NAMES.addAll(Arrays.asList(new String[] {"ASX", "GLX", "XLE", "XAA"}));
 	}
 
 	public static interface GroupMatcher {
@@ -65,7 +65,7 @@ public class AtomPositionMap {
 		@Override
 		public boolean matches(Group group) {
 			ResidueType type = group.getChemComp().getResidueType();
-			return group.hasAtom(StructureTools.caAtomName) || aminoAcidNames.contains(group.getPDBName()) || type == ResidueType.lPeptideLinking || type == ResidueType.glycine || type == ResidueType.lPeptideAminoTerminus || type == ResidueType.lPeptideCarboxyTerminus || type == ResidueType.dPeptideLinking || type == ResidueType.dPeptideAminoTerminus || type == ResidueType.dPeptideCarboxyTerminus;
+			return group.hasAtom(StructureTools.caAtomName) || AMINO_ACID_NAMES.contains(group.getPDBName()) || type == ResidueType.lPeptideLinking || type == ResidueType.glycine || type == ResidueType.lPeptideAminoTerminus || type == ResidueType.lPeptideCarboxyTerminus || type == ResidueType.dPeptideLinking || type == ResidueType.dPeptideAminoTerminus || type == ResidueType.dPeptideCarboxyTerminus;
 		}
 	};
 

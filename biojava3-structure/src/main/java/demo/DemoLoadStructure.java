@@ -27,10 +27,12 @@ package demo;
 import org.biojava.bio.structure.Atom;
 import org.biojava.bio.structure.Chain;
 import org.biojava.bio.structure.Structure;
+import org.biojava.bio.structure.StructureTools;
 import org.biojava.bio.structure.align.util.AtomCache;
 import org.biojava.bio.structure.io.FileParsingParameters;
 import org.biojava.bio.structure.io.PDBFileReader;
 import org.biojava3.core.util.InputStreamProvider;
+import org.biojava3.structure.StructureIO;
 
 
 /** Example for how to load protein structures (from PDB files).
@@ -41,90 +43,113 @@ import org.biojava3.core.util.InputStreamProvider;
 public class DemoLoadStructure
 {
 
-   public static void main(String[] args){
+	public static void main(String[] args){
 
 
 
 
-      DemoLoadStructure demo  = new DemoLoadStructure();
+		DemoLoadStructure demo  = new DemoLoadStructure();
 
-      demo.basicLoad();
+		demo.loadStructureIO();
 
-      //demo.loadStructureFromCache();
-   }
+		//demo.basicLoad();
 
-   public void basicLoad(){
-      try {
+		//demo.loadStructureFromCache();
+	}
 
-         PDBFileReader reader = new PDBFileReader();
+	public void loadStructureIO(){
+		try {
+			Structure s1 = StructureIO.getStructure("1gav");			
+			System.out.println(s1.getPDBCode() + " asym unit has nr atoms:");
+			System.out.println(StructureTools.getNrAtoms(s1));
+			
+			
+			
+			Structure s2 = StructureIO.getBiologicalAssembly("1gav");			
+			System.out.println(s2.getPDBCode() + " biological assembly has nr atoms:");
+			System.out.println(StructureTools.getNrAtoms(s2));
+			
+		} catch (Exception e){
+			e.printStackTrace();
+		}
 
-         // the path to the local PDB installation
-         reader.setPath("/tmp");
+	}
 
-         // are all files in one directory, or are the files split,
-         // as on the PDB ftp servers?
-         reader.setPdbDirectorySplit(true);
 
-         // should a missing PDB id be fetched automatically from the FTP servers?
-         reader.setAutoFetch(true);
+	public void basicLoad(){
+		try {
 
-         
-         // configure the parameters of file parsing
-         
-         FileParsingParameters params = new FileParsingParameters();
-         
-         // should the ATOM and SEQRES residues be aligned when creating the internal data model?
-         params.setAlignSeqRes(true);
+			PDBFileReader reader = new PDBFileReader();
 
-         // should secondary structure get parsed from the file
-         params.setParseSecStruc(false);
+			// the path to the local PDB installation
+			reader.setPath("/tmp");
 
-         reader.setFileParsingParameters(params);
-         
-         Structure structure = reader.getStructureById("4hhb");
-         
-         System.out.println(structure);
-         
-         Chain c = structure.getChainByPDB("C");
-       
-         System.out.print(c);
-         
-         System.out.println(c.getHeader());
+			// are all files in one directory, or are the files split,
+			// as on the PDB ftp servers?
+			reader.setPdbDirectorySplit(true);
 
-      } catch (Exception e){
-         e.printStackTrace();
-      }
+			// should a missing PDB id be fetched automatically from the FTP servers?
+			reader.setAutoFetch(true);
 
-   }
 
-   public void loadStructureFromCache(){
-      String pdbId = "4hhb";
-      String chainName = "4hhb.A";
-      String entityName = "4hhb:0";
+			// configure the parameters of file parsing
 
-      // we can set a flag if the file should be cached in memory
-      // this will enhance IO massively if the same files have to be accessed over and over again.
-      // since this is a soft cache, no danger of memory leak
-      // this is actually not necessary to provide, since the default is "true" if the AtomCache is being used.
-      System.setProperty(InputStreamProvider.CACHE_PROPERTY, "true");
+			FileParsingParameters params = new FileParsingParameters();
 
-      AtomCache cache = new AtomCache();
+			// should the ATOM and SEQRES residues be aligned when creating the internal data model?
+			params.setAlignSeqRes(true);
 
-      try {
-         System.out.println("======================");
-         Structure s = cache.getStructure(pdbId);
+			// should secondary structure get parsed from the file
+			params.setParseSecStruc(false);
 
-         System.out.println("Full Structure:" + s);
+			reader.setFileParsingParameters(params);
 
-         Atom[] ca = cache.getAtoms(chainName);
-         System.out.println("got " + ca.length + " CA atoms");
+			Structure structure = reader.getStructureById("4hhb");
 
-         Structure firstEntity = cache.getStructure(entityName);
-         System.out.println("First entity: " + firstEntity);
+			System.out.println(structure);
 
-      } catch (Exception e){
-         e.printStackTrace();
-      }
+			Chain c = structure.getChainByPDB("C");
 
-   }
+			System.out.print(c);
+
+			System.out.println(c.getHeader());
+
+		} catch (Exception e){
+			e.printStackTrace();
+		}
+
+	}
+
+	public void loadStructureFromCache(){
+		String pdbId = "4hhb";
+		String chainName = "4hhb.A";
+		String entityName = "4hhb:0";
+
+		// we can set a flag if the file should be cached in memory
+		// this will enhance IO massively if the same files have to be accessed over and over again.
+		// since this is a soft cache, no danger of memory leak
+		// this is actually not necessary to provide, since the default is "true" if the AtomCache is being used.
+		System.setProperty(InputStreamProvider.CACHE_PROPERTY, "true");
+
+		AtomCache cache = new AtomCache();
+
+		try {
+			System.out.println("======================");
+			Structure s = cache.getStructure(pdbId);
+
+			System.out.println("Full Structure:" + s);
+
+			Atom[] ca = cache.getAtoms(chainName);
+			System.out.println("got " + ca.length + " CA atoms");
+
+			Structure firstEntity = cache.getStructure(entityName);
+			System.out.println("First entity: " + firstEntity);
+
+		} catch (Exception e){
+			e.printStackTrace();
+		}
+
+	}
+
+
 }

@@ -364,6 +364,9 @@ public class Calc {
 
 	/** rotate a single atom aroud a rotation matrix.
 	 * matrix must be a 3x3 matrix.
+	 * 
+	 * If the matrix is indexed m[row][col], then the matrix will be
+	 * pre-multiplied (y=atom*M)
 	 * @param atom atom to be rotated
 	 * @param m a rotation matrix represented as a double[3][3] array
 	 */
@@ -450,7 +453,7 @@ public class Calc {
 	/** Rotate a group object.
 	 * 
 	 * @param group  a group to be rotated
-	 * @param m a Matrix object representing the translation matrix
+	 * @param m a Matrix object representing the rotation matrix
 	 */
 	public static final void rotate(Group group, Matrix m){
 
@@ -963,6 +966,11 @@ public class Calc {
 		b.setZ(0);
 		
 		System.out.println(calcRotationAngleInDegrees(a, b));
+	}
+
+
+	public static void rotate(Atom[] ca, Matrix matrix) {
+		for (Atom atom : ca) Calc.rotate(atom, matrix);
 	}
 }
 
