@@ -3,6 +3,8 @@
  */
 package org.biojava3.core.sequence.io;
 
+import static org.junit.Assert.assertEquals;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -51,6 +53,6 @@ public class GenbankWriterTest {
 		ByteArrayInputStream fragreader = new ByteArrayInputStream(fragwriter.toByteArray());
 		dnaSequences = GenbankReaderHelper.readGenbankDNASequence( fragreader );
 		fragwriter.close();
-		assert(seqs.get(0).getSequenceAsString() == dnaSequences.values().iterator().next().getSequenceAsString());
+		assertEquals(seqs.get(0).getSequenceAsString(),dnaSequences.values().iterator().next().getSequenceAsString());
 	}
 }
