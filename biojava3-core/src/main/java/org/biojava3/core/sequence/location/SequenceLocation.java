@@ -22,6 +22,7 @@
 
 package org.biojava3.core.sequence.location;
 
+import org.biojava3.core.sequence.Strand;
 import org.biojava3.core.sequence.template.AbstractSequence;
 import org.biojava3.core.sequence.template.Compound;
 
@@ -34,6 +35,13 @@ private S sequence;
     public SequenceLocation(int start, int end,S sequence){
         super(start,end);
         this.sequence = sequence;
+
+    }
+
+    public SequenceLocation(int start, int end,S sequence, Strand strand){
+        super(start,end);
+        this.sequence = sequence;
+        setStrand(strand);
 
     }
 
