@@ -52,7 +52,7 @@ public class ScopFactory {
 	// berkeley
 	public static final String VERSION_1_75A = "1.75A";	
 	public static final String VERSION_1_75B = "1.75B";	
-
+	public static final String VERSION_1_75C = "1.75C";	
 
 	// original SCOP
 	// latest SCOP release from SCOP website = 1.75;
@@ -65,10 +65,10 @@ public class ScopFactory {
 		if ( useLocalData) {
 			if ( version.equalsIgnoreCase(VERSION_1_75A)) {
 				return getBerkeley_1_75A();
-
-			}
-			else if ( version.equalsIgnoreCase(VERSION_1_75B)) {
+			} else if ( version.equalsIgnoreCase(VERSION_1_75B)) {
 				return getBerkeley_1_75B();
+			} else if ( version.equalsIgnoreCase(VERSION_1_75C)) {
+				return getBerkeley_1_75C();
 			} else if  ( version.equalsIgnoreCase(VERSION_1_75)){
 				getScop_1_75();
 			} else {
@@ -102,11 +102,11 @@ public class ScopFactory {
 	public static ScopDatabase getSCOP(String version){
 		if ( version.equalsIgnoreCase(VERSION_1_75A)) {
 			return getBerkeley_1_75A();
-
-		}
-		else if ( version.equalsIgnoreCase(VERSION_1_75B)) {
+		} else if ( version.equalsIgnoreCase(VERSION_1_75B)) {
 			return getBerkeley_1_75B();
-		} else if ( version.equalsIgnoreCase(VERSION_1_75)) {
+		} else if ( version.equalsIgnoreCase(VERSION_1_75C)) {
+			return getBerkeley_1_75C();
+		} else if ( version.equalsIgnoreCase(VERSION_1_75)) {		
 			return getScop_1_75();
 		} else {
 			System.err.println("Unknown SCOP version " + version + " . Returning default");
@@ -135,5 +135,16 @@ public class ScopFactory {
 			versionedScopDBs.put(VERSION_1_75B, berkeley_1_75B);
 		}
 		return berkeley_1_75B;
+	}
+	
+	private static ScopDatabase getBerkeley_1_75C() {
+		BerkeleyScopInstallation berkeley_1_75C = (BerkeleyScopInstallation) versionedScopDBs.get(VERSION_1_75C);
+		
+		if ( berkeley_1_75C == null) {
+			berkeley_1_75C  = new BerkeleyScopInstallation();
+			berkeley_1_75C.setScopVersion(VERSION_1_75C);				
+			versionedScopDBs.put(VERSION_1_75C, berkeley_1_75C);
+		}
+		return berkeley_1_75C;
 	}
 }
