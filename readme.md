@@ -9,6 +9,7 @@ Please visit our [homepage](http://www.biojava.org/).
 ### Documentation
 
 The [BioJava Cookbook](http://biojava.org/wiki/BioJava:CookBook) is a collection of simple examples that teach the basics for how to work with BioJava.
+We are also working on a [tutorial](https://github.com/biojava/biojava3-tutorial) for biojava (currently only for protein structure modules). 
 
 ### Maven Repository
 
