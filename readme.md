@@ -31,7 +31,7 @@ If you are using Maven you can add the BioJava repository by adding the followin
       <dependency>
         <groupId>org.biojava</groupId>
         <artifactId>biojava3-core</artifactId>
-        <version>3.0.6</version>
+        <version>3.0.7</version>
       </dependency>
       <!-- other biojava jars as needed -->
     </dependencies>
