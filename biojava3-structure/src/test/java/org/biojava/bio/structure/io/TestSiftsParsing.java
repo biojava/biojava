@@ -73,4 +73,53 @@ public class TestSiftsParsing extends TestCase {
 
 	}
 
+	public void test4DOU(){
+		try {
+			List<SiftsEntity> entities = SiftsMappingProvider.getSiftsMapping("4dou");
+
+			assertNotNull(entities);
+
+			assertTrue(entities.size() == 1);
+
+			for (SiftsEntity e : entities){
+				//System.out.println(e.getEntityId() + " " +e.getType());
+
+				//	4DOU has 3 segments
+				assertTrue(e.getSegments().size() == 3);
+				
+				// test segment 1:
+				
+				SiftsSegment seg1 = e.getSegments().get(0);
+				//System.out.println(" Segment: " + seg1.getSegId() + " " + seg1.getStart() + " " + seg1.getEnd() + " res. size: " + seg1.getResidues().size());
+				//assertTrue(seg1.getResidues().size() == 17);
+				
+				for ( SiftsSegment seg: e.getSegments()) {
+					assertTrue(seg.getResidues().size() > 0);
+					
+					//System.out.println(" Segment: " + seg.getSegId() + " " + seg.getStart() + " " + seg.getEnd() + " res. size: " + seg.getResidues().size()) ;
+										
+					for ( SiftsResidue res: seg.getResidues() ) {
+						
+						
+						if ( res.getUniProtResName() != null ) {
+							//System.out.println("  " + res);
+							assertNotNull(res.getUniProtAccessionId() );
+							assertNotNull(res.getUniProtResName());
+							
+						}
+					}
+					//break;
+				}
+
+			}
+
+		} catch (Exception e){
+			e.printStackTrace();
+			fail(e.getMessage());
+		}
+
+
+	}
+	
+	
 }

@@ -43,7 +43,7 @@ public class DBRef implements PDBRecord, Serializable{
    private static final long serialVersionUID = -1050178577542224379L;
    Structure parent;
 	String idCode;
-    Character chainId;
+    String chainId;
     int seqbegin;
     char insertBegin;
     int seqEnd;
@@ -196,7 +196,7 @@ public class DBRef implements PDBRecord, Serializable{
      * @return chainId the ID of the corresponding chain.
      * @see #setChainId(Character)
      */
-    public Character getChainId() {
+    public String getChainId() {
         return chainId;
     }
 
@@ -206,7 +206,7 @@ public class DBRef implements PDBRecord, Serializable{
      * @param chainId the ID of the corresponding chain
      * @see #getChainId()
      */
-    public void setChainId(Character chainId) {
+    public void setChainId(String chainId) {
         this.chainId = chainId;
     }
 
