@@ -109,7 +109,7 @@ public class SeqRes2AtomAligner {
 	}
 
 	public Chain getMatchingAtomRes(Chain seqRes, List<Chain> atomList)
-			throws StructureException {
+			 {
 		Iterator<Chain> iter = atomList.iterator();
 		while(iter.hasNext()){
 			Chain atomChain = iter.next();
@@ -117,7 +117,9 @@ public class SeqRes2AtomAligner {
 				return atomChain;
 			}
 		}
-		throw new StructureException("could not match seqres chainID >" + seqRes.getChainID() + "< to ATOM chains!");
+	
+		//System.err.println("could not match seqres chainID >" + seqRes.getChainID() + "< to ATOM chains!  " + atomList.size());
+		return null;
 	}
 
 
@@ -128,11 +130,12 @@ public class SeqRes2AtomAligner {
 		//List<Chain> seqResList = s.getSeqRes();
 		List<Chain> atomList   = s.getModel(0);
 
+		
 		for (Chain seqRes: seqResList){
 			try {
-
 				Chain atomRes = getMatchingAtomRes(seqRes,atomList);
-
+				if ( atomRes == null)
+					continue;
 				mapSeqresRecords(atomRes,seqRes);
 				
 				//chains.add(mapped);
@@ -141,8 +144,6 @@ public class SeqRes2AtomAligner {
 			}
 		}
 		//s.setChains(0,chains);
-
-
 
 	}
 

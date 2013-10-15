@@ -171,11 +171,17 @@ public class GenericGenbankHeaderFormat<S extends AbstractSequence<C>, C extends
 		}
 
 		String division = _get_data_division(sequence);
+		
+		System.out.println("DIVISION:"+division + " " + seqType);
 		if (seqType != null) {
 			division = seqType;
 		}
 		assert units.length() == 2;
-		assert division.length() == 3;
+		
+		// the next line does not seem right.. seqType == linear
+		// uncommenting for now
+		//assert division.length() == 3;
+		
 		StringBuilder sb = new StringBuilder();
 		Formatter formatter = new Formatter(sb, Locale.US);
 		formatter
