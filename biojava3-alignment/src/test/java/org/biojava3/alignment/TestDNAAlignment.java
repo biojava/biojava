@@ -27,7 +27,9 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
+
 import junit.framework.TestCase;
+
 import org.biojava3.alignment.Alignments.PairwiseSequenceAlignerType;
 import org.biojava3.alignment.template.Profile;
 import org.biojava3.alignment.template.SequencePair;
@@ -91,7 +93,8 @@ public class TestDNAAlignment extends TestCase {
         lst.add(query);
 
         try {
-        	Profile<DNASequence, NucleotideCompound> profile = Alignments.getMultipleSequenceAlignment(lst);
+        	@SuppressWarnings("unused")
+			Profile<DNASequence, NucleotideCompound> profile = Alignments.getMultipleSequenceAlignment(lst);
         	fail("Alignments.getMultipleSequenceAlignment(lst) expected exception with differing compound sets");
         } catch (IllegalArgumentException ex) {
         	// expected exception
@@ -110,7 +113,8 @@ public class TestDNAAlignment extends TestCase {
         gapP.setExtensionPenalty((short) 2);
         
         try {
-        	SequencePair<DNASequence, NucleotideCompound> psa = Alignments.getPairwiseAlignment(query, target, PairwiseSequenceAlignerType.LOCAL, gapP, matrix);
+        	@SuppressWarnings("unused")
+			SequencePair<DNASequence, NucleotideCompound> psa = Alignments.getPairwiseAlignment(query, target, PairwiseSequenceAlignerType.LOCAL, gapP, matrix);
         	fail("Alignments.getPairwiseAlignment() expected exception with differing compound sets");
         } catch (IllegalArgumentException ex) {
         	// expected exception

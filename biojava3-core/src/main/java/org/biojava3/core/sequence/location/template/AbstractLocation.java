@@ -222,7 +222,6 @@ public abstract class AbstractLocation implements Location {
     }
 
     
-    @SuppressWarnings("EqualsWhichDoesntCheckParameterClass")
     public boolean equals(Object obj) {
         boolean equals = false;
         if (classEqual(this, obj)) {

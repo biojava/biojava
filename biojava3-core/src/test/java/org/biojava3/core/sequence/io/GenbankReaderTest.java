@@ -62,6 +62,7 @@ public class GenbankReaderTest {
 						new GenericGenbankHeaderParser<ProteinSequence,AminoAcidCompound>(), 
 						new ProteinSequenceCreator(AminoAcidCompoundSet.getAminoAcidCompoundSet())
 						);
+		@SuppressWarnings("unused")
 		LinkedHashMap<String,ProteinSequence> proteinSequences = GenbankProtein.process();
 		inStream.close();
 
@@ -75,6 +76,7 @@ public class GenbankReaderTest {
 						new GenericGenbankHeaderParser<DNASequence,NucleotideCompound>(), 
 						new DNASequenceCreator(DNACompoundSet.getDNACompoundSet())
 						);
+		@SuppressWarnings("unused")
 		LinkedHashMap<String,DNASequence> dnaSequences = GenbankDNA.process();
 		inStream.close();
 	}

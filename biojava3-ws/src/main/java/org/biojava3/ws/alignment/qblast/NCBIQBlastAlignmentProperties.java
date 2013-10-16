@@ -325,6 +325,10 @@ public class NCBIQBlastAlignmentProperties implements RemotePairwiseAlignmentPro
 			case BLOSUM90:
 				setBlastGapCosts(10, 1);
 				break;
+			case BLOSUM62:
+				break;
+			default:
+				break;
 			}
 		}
 	}

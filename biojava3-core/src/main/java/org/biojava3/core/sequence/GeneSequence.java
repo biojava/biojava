@@ -101,7 +101,7 @@ public class GeneSequence extends DNASequence {
         if (getStrand() == Strand.NEGATIVE) {
             shift = 1;
         }
-        ExonSequence firstExonSequence = exonSequenceList.get(0);
+        //ExonSequence firstExonSequence = exonSequenceList.get(0);
         int intronIndex = 1;
  //       if (firstExonSequence.getBioBegin().intValue() != getBioBegin().intValue()) {
  //           this.addIntron(new AccessionID(this.getAccession().getID() + "-" + "intron" + intronIndex), getBioBegin(), firstExonSequence.getBioBegin() + shift);

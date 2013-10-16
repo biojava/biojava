@@ -84,6 +84,7 @@ public class FlatFileCache {
 
 			// Ensure all the bytes have been read in
 			if (offset < bytes.length) {
+				is.close();
 				throw new IOException("Could not completely read file "+fileToCache.getName());
 			}
 

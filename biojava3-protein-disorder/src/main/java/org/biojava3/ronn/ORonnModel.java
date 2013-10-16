@@ -50,7 +50,7 @@ public final class ORonnModel {
 
     private final static int AA_ALPHABET = 19;
     private final static int maxR = 110;
-    private final static float coef = 1.0f;
+    //private final static float coef = 1.0f;
     /**
      * Holds encoded query sequence
      */
