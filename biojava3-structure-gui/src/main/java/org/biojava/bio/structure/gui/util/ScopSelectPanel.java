@@ -42,8 +42,6 @@ import org.biojava.bio.structure.align.gui.autosuggest.SCOPAutoSuggestProvider;
 import org.biojava.bio.structure.align.util.AtomCache;
 import org.biojava.bio.structure.align.util.UserConfiguration;
 import org.biojava.bio.structure.align.webstart.WebStartMain;
-import org.biojava.bio.structure.scop.ScopDatabase;
-import org.biojava.bio.structure.scop.ScopDomain;
 
 public class ScopSelectPanel 
 extends JPanel

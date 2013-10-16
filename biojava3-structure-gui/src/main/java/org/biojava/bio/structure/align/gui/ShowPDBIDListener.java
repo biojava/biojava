@@ -32,9 +32,6 @@ import javax.swing.JCheckBox;
 
 import javax.swing.JOptionPane;
 
-import javax.swing.SwingUtilities;
-
-
 import org.biojava.bio.structure.align.util.UserConfiguration;
 import org.biojava.bio.structure.align.webstart.WebStartMain;
 

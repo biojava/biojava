@@ -1,8 +1,6 @@
 package org.biojava.bio.structure.quaternary.io;
 
 import java.util.List;
-import java.util.Map;
-
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.align.util.AtomCache;
 import org.biojava.bio.structure.quaternary.ModelTransformationMatrix;

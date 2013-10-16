@@ -34,9 +34,6 @@ import org.biojava.bio.structure.align.model.AFPChain;
 import org.biojava.bio.structure.align.util.AtomCache;
 import org.biojava.bio.structure.align.xml.AFPChainXMLConverter;
 import org.biojava.bio.structure.align.xml.AFPChainXMLParser;
-import org.biojava.bio.structure.io.mmcif.ChemCompGroupFactory;
-import org.biojava.bio.structure.io.mmcif.ChemCompProvider;
-import org.biojava.bio.structure.io.mmcif.DownloadChemCompProvider;
 import org.biojava.bio.structure.util.StringManipulationTestsHelper;
 import org.biojava3.core.util.StringManipulationHelper;
 
