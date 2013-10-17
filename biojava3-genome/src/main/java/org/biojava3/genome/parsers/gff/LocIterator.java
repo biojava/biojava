@@ -1,7 +1,7 @@
 package org.biojava3.genome.parsers.gff;
 
 
-import java.util.*;
+import java.util.Iterator;
 import java.util.logging.Logger;
 
 
@@ -21,6 +21,7 @@ public class LocIterator implements Iterator<Location>
 	int mWindowSize;			
 	int mIncrement;		
 	
+	@SuppressWarnings("unused")
 	private LocIterator() {};
 	
 	/**

@@ -94,7 +94,6 @@ public class SimplePoint implements Point {
     }
 
     @Override
-    @SuppressWarnings("EqualsWhichDoesntCheckParameterClass")
     public boolean equals(Object obj) {
         boolean equals = false;
         if (Equals.classEqual(this, obj)) {

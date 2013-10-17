@@ -1,8 +1,6 @@
 package org.biojava3.genome.parsers.gff;
 
 import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 
 /**
@@ -108,7 +106,8 @@ public class Feature implements FeatureI {
 
     ;
 
-    private Feature() {
+    @SuppressWarnings("unused")
+	private Feature() {
     }
 
     ;        //unavailable

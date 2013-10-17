@@ -52,6 +52,7 @@ public class NonstandardProteinCompoundTest  {
 		
 		
 		
+		@SuppressWarnings("unused")
 		float[] values = Jronn.getDisorderScores(seq);
 		
 		

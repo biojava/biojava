@@ -35,7 +35,6 @@ import java.util.TreeSet;
 import org.biojava.bio.structure.Structure;
 
 import org.biojava.bio.structure.StructureTools;
-import org.biojava.bio.structure.align.ce.AbstractUserArgumentProcessor;
 import org.biojava.bio.structure.align.client.JFatCatClient;
 import org.biojava.bio.structure.align.client.StructureName;
 import org.biojava.bio.structure.align.util.AtomCache;

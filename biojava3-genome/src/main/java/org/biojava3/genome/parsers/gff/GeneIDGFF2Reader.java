@@ -149,7 +149,7 @@ public class GeneIDGFF2Reader {
 
         BufferedWriter bw = new BufferedWriter(new FileWriter(filename));
 
-        ListIterator iter = features.listIterator();
+        ListIterator<FeatureI> iter = features.listIterator();
         while (iter.hasNext()) {
             Feature feature = (Feature) iter.next();
             writeLine(feature, bw);

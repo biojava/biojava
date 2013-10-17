@@ -86,8 +86,6 @@ public class GFF3Reader {
         //FIXME update to use regex split on tabs
         //FIXME better errors on parse failures
     	String[] line = p.split(s);
-        int start = 0;
-        int end = 0;
         String seqname =line[0].trim();
 
         String source =line[1].trim();
@@ -149,7 +147,8 @@ public class GFF3Reader {
 
     public static void main(String args[]) throws Exception {
     	long start = System.currentTimeMillis();
-        FeatureList listGenes = GFF3Reader.read("/home/melo/workspace/release/stdout.combined.checked2.gtf");
+        @SuppressWarnings("unused")
+		FeatureList listGenes = GFF3Reader.read("/home/melo/workspace/release/stdout.combined.checked2.gtf");
         long stop = System.currentTimeMillis();
         System.out.println("Loading = "+ (stop-start));
 //        System.out.println(listGenes);
