@@ -27,7 +27,6 @@ import java.util.List;
 
 import org.biojava.bio.structure.Atom;
 import org.biojava.bio.structure.Chain;
-import org.biojava.bio.structure.ResidueNumber;
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureException;
 import org.biojava.bio.structure.StructureTools;

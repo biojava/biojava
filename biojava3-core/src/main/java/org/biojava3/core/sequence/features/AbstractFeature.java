@@ -24,7 +24,9 @@ package org.biojava3.core.sequence.features;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+
 import org.biojava3.core.sequence.location.SequenceLocation;
 import org.biojava3.core.sequence.template.AbstractSequence;
 import org.biojava3.core.sequence.template.Compound;
@@ -45,6 +47,7 @@ public abstract class AbstractFeature<S extends AbstractSequence<C>, C extends C
     private String description = "";
     private String shortDescription = "";
     private Object userObject = null;
+	private HashMap<String,Qualifier> Qualifiers = new HashMap<String,Qualifier>();
 
     /**
      * A feature has a type and a source
@@ -247,5 +250,24 @@ public abstract class AbstractFeature<S extends AbstractSequence<C>, C extends C
     public void setUserObject(Object userObject) {
         this.userObject = userObject;
     }
+    
+	@Override
+	public HashMap<String, Qualifier> getQualifiers() {
+		// TODO Auto-generated method stub
+		return Qualifiers;
+	}
 
+	@Override
+	public void setQualifiers(HashMap<String, Qualifier> qualifiers) {
+		// TODO Auto-generated method stub
+		Qualifiers = qualifiers;
+		
+	}
+
+	@Override
+	public void addQualifier(String key, Qualifier qualifier) {
+		// TODO Auto-generated method stub
+		Qualifiers.put(key, qualifier);
+		
+	}
 }

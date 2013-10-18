@@ -27,20 +27,21 @@ package org.biojava3.phylo;
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
  */
-import java.util.*;
-
-import java.awt.*;
+import java.awt.Color;
+import java.util.Enumeration;
+import java.util.Hashtable;
+import java.util.Vector;
 
 public class ResidueProperties {
 
-    public static Hashtable scoreMatrices = new Hashtable();
+    public static Hashtable<String, ScoreMatrix> scoreMatrices = new Hashtable<String, ScoreMatrix>();
 
     // Stores residue codes/names and colours and other things
     public static final int[] aaIndex; // aaHash version 2.1.1 and below
     public static final int[] nucleotideIndex;
-    public static final Hashtable aa3Hash = new Hashtable();
-    public static final Hashtable aa2Triplet = new Hashtable();
-    public static final Hashtable nucleotideName = new Hashtable();
+    public static final Hashtable<String, Integer> aa3Hash = new Hashtable<String, Integer>();
+    public static final Hashtable<String, String> aa2Triplet = new Hashtable<String, String>();
+    public static final Hashtable<String, String> nucleotideName = new Hashtable<String, String>();
 
 
     static {
@@ -229,7 +230,7 @@ public class ResidueProperties {
     public static final String[] aa = {"A", "R", "N", "D", "C", "Q", "E", "G", "H", "I", "L", "K", "M", "F",
         "P", "S", "T", "W", "Y", "V", "B", "Z", "X", "_", "*", ".", " "};
     public static final Color midBlue = new Color(100, 100, 255);
-    public static final Vector scaleColours = new Vector();
+    public static final Vector<Color> scaleColours = new Vector<Color>();
 
 
     static {
@@ -459,7 +460,7 @@ public class ResidueProperties {
             -2, -1, -1, -1, -1, -8},
         {-8, -8, -8, -8, -8, -8, -8, -8, -8, -8, -8, -8, -8, -8, -8, -8, -8,
             -8, -8, -8, -8, -8, -8, 1},};
-    public static final Hashtable ssHash = new Hashtable(); // stores the number
+    public static final Hashtable<String, Color> ssHash = new Hashtable<String, Color>(); // stores the number
     // value of the aa
 
 
@@ -495,28 +496,28 @@ public class ResidueProperties {
         // Color.lightGray,
         new Color(204, 204, 255),};
     public static final float[] pidThresholds = {80, 60, 40,};
-    public static Hashtable codonHash = new Hashtable();
-    public static Vector Lys = new Vector();
-    public static Vector Asn = new Vector();
-    public static Vector Gln = new Vector();
-    public static Vector His = new Vector();
-    public static Vector Glu = new Vector();
-    public static Vector Asp = new Vector();
-    public static Vector Tyr = new Vector();
-    public static Vector Thr = new Vector();
-    public static Vector Pro = new Vector();
-    public static Vector Ala = new Vector();
-    public static Vector Ser = new Vector();
-    public static Vector Arg = new Vector();
-    public static Vector Gly = new Vector();
-    public static Vector Trp = new Vector();
-    public static Vector Cys = new Vector();
-    public static Vector Ile = new Vector();
-    public static Vector Met = new Vector();
-    public static Vector Leu = new Vector();
-    public static Vector Val = new Vector();
-    public static Vector Phe = new Vector();
-    public static Vector STOP = new Vector();
+    public static Hashtable<String, Vector<String>> codonHash = new Hashtable<String, Vector<String>>();
+    public static Vector<String> Lys = new Vector<String>();
+    public static Vector<String> Asn = new Vector<String>();
+    public static Vector<String> Gln = new Vector<String>();
+    public static Vector<String> His = new Vector<String>();
+    public static Vector<String> Glu = new Vector<String>();
+    public static Vector<String> Asp = new Vector<String>();
+    public static Vector<String> Tyr = new Vector<String>();
+    public static Vector<String> Thr = new Vector<String>();
+    public static Vector<String> Pro = new Vector<String>();
+    public static Vector<String> Ala = new Vector<String>();
+    public static Vector<String> Ser = new Vector<String>();
+    public static Vector<String> Arg = new Vector<String>();
+    public static Vector<String> Gly = new Vector<String>();
+    public static Vector<String> Trp = new Vector<String>();
+    public static Vector<String> Cys = new Vector<String>();
+    public static Vector<String> Ile = new Vector<String>();
+    public static Vector<String> Met = new Vector<String>();
+    public static Vector<String> Leu = new Vector<String>();
+    public static Vector<String> Val = new Vector<String>();
+    public static Vector<String> Phe = new Vector<String>();
+    public static Vector<String> STOP = new Vector<String>();
 
 
     static {
@@ -542,7 +543,7 @@ public class ResidueProperties {
         codonHash.put("F", Phe);
         codonHash.put("STOP", STOP);
     }
-    public static Hashtable codonHash2 = new Hashtable();
+    public static Hashtable<String, String> codonHash2 = new Hashtable<String, String>();
 
 
     static {
@@ -715,17 +716,17 @@ public class ResidueProperties {
     }
 
     // Stores residue codes/names and colours and other things
-    public static Hashtable propHash = new Hashtable();
-    public static Hashtable hydrophobic = new Hashtable();
-    public static Hashtable polar = new Hashtable();
-    public static Hashtable small = new Hashtable();
-    public static Hashtable positive = new Hashtable();
-    public static Hashtable negative = new Hashtable();
-    public static Hashtable charged = new Hashtable();
-    public static Hashtable aromatic = new Hashtable();
-    public static Hashtable aliphatic = new Hashtable();
-    public static Hashtable tiny = new Hashtable();
-    public static Hashtable proline = new Hashtable();
+    public static Hashtable<String, Hashtable<String, Integer>> propHash = new Hashtable<String, Hashtable<String, Integer>>();
+    public static Hashtable<String, Integer> hydrophobic = new Hashtable<String, Integer>();
+    public static Hashtable<String, Integer> polar = new Hashtable<String, Integer>();
+    public static Hashtable<String, Integer> small = new Hashtable<String, Integer>();
+    public static Hashtable<String, Integer> positive = new Hashtable<String, Integer>();
+    public static Hashtable<String, Integer> negative = new Hashtable<String, Integer>();
+    public static Hashtable<String, Integer> charged = new Hashtable<String, Integer>();
+    public static Hashtable<String, Integer> aromatic = new Hashtable<String, Integer>();
+    public static Hashtable<String, Integer> aliphatic = new Hashtable<String, Integer>();
+    public static Hashtable<String, Integer> tiny = new Hashtable<String, Integer>();
+    public static Hashtable<String, Integer> proline = new Hashtable<String, Integer>();
 
 
     static {
@@ -1018,7 +1019,7 @@ public class ResidueProperties {
         return hyd;
     }
 
-    public static Hashtable getAA3Hash() {
+    public static Hashtable<String, Integer> getAA3Hash() {
         return aa3Hash;
     }
 
@@ -1049,20 +1050,20 @@ public class ResidueProperties {
         return pog;
     }
 
-    public static Vector getCodons(String res) {
+    public static Vector<?> getCodons(String res) {
         if (codonHash.containsKey(res)) {
-            return (Vector) codonHash.get(res);
+            return codonHash.get(res);
         }
 
         return null;
     }
 
     public static String codonTranslate(String codon) {
-        Enumeration e = codonHash.keys();
+        Enumeration<String> e = codonHash.keys();
 
         while (e.hasMoreElements()) {
-            String key = (String) e.nextElement();
-            Vector tmp = (Vector) codonHash.get(key);
+            String key = e.nextElement();
+            Vector<String> tmp = codonHash.get(key);
 
             if (tmp.contains(codon.toUpperCase())) {
                 return key;
@@ -1102,11 +1103,11 @@ public class ResidueProperties {
 
         return pog;
     }
-    public static Hashtable toDssp3State;
+    public static Hashtable<String, String> toDssp3State;
 
 
     static {
-        toDssp3State = new Hashtable();
+        toDssp3State = new Hashtable<String, String>();
         toDssp3State.put("H", "H");
         toDssp3State.put("E", "E");
         toDssp3State.put("C", " ");
@@ -1132,7 +1133,7 @@ public class ResidueProperties {
         for (int i = 0; i < ssstring.length(); i++) {
             String ssc = ssstring.substring(i, i + 1);
             if (toDssp3State.containsKey(ssc)) {
-                ss.append((String) toDssp3State.get(ssc));
+                ss.append(toDssp3State.get(ssc));
             } else {
                 ss.append(" ");
             }
@@ -1143,19 +1144,19 @@ public class ResidueProperties {
     // main method generates perl representation of residue property hash
     // / cut here
     public static void main(String[] args) {
-        Hashtable aa = new Hashtable();
+        Hashtable<String, Vector<String>> aa = new Hashtable<String, Vector<String>>();
         System.out.println("my %aa = {");
         // invert property hashes
-        Enumeration prop = propHash.keys();
+        Enumeration<String> prop = propHash.keys();
         while (prop.hasMoreElements()) {
-            String pname = (String) prop.nextElement();
-            Hashtable phash = (Hashtable) propHash.get(pname);
-            Enumeration res = phash.keys();
+            String pname = prop.nextElement();
+            Hashtable<String, Integer> phash = propHash.get(pname);
+            Enumeration<String> res = phash.keys();
             while (res.hasMoreElements()) {
                 String rname = (String) res.nextElement();
-                Vector aprops = (Vector) aa.get(rname);
+                Vector<String> aprops = aa.get(rname);
                 if (aprops == null) {
-                    aprops = new Vector();
+                    aprops = new Vector<String>();
                     aa.put(rname, aprops);
                 }
                 Integer hasprop = (Integer) phash.get(rname);
@@ -1164,12 +1165,12 @@ public class ResidueProperties {
                 }
             }
         }
-        Enumeration res = aa.keys();
+        Enumeration<String> res = aa.keys();
         while (res.hasMoreElements()) {
-            String rname = (String) res.nextElement();
+            String rname = res.nextElement();
 
             System.out.print("'" + rname + "' => [");
-            Enumeration props = ((Vector) aa.get(rname)).elements();
+            Enumeration<String> props = aa.get(rname).elements();
             while (props.hasMoreElements()) {
                 System.out.print("'" + (String) props.nextElement() + "'");
                 if (props.hasMoreElements()) {

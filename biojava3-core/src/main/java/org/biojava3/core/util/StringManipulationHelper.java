@@ -28,6 +28,8 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.AbstractCollection;
+import java.util.Iterator;
 import java.util.Scanner;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -116,13 +118,20 @@ public class StringManipulationHelper  {
 		while (scanner1.hasNextLine()) {
 			line1 = scanner1.nextLine();
 			line2 = scanner2.nextLine();
-			if (! line1.equals(line2))
+			if (! line1.equals(line2)) {
+				scanner1.close();
+				scanner2.close();
 				return false;
+			}
 		}
 		if (scanner2.hasNextLine()) {
+			scanner1.close();
+			scanner2.close();
 			return false;
 		}
 
+		scanner1.close();
+		scanner2.close();
 		return true;
 	}
 	
@@ -164,6 +173,25 @@ public class StringManipulationHelper  {
 		}
 		
 		throw new UnsupportedOperationException("not yet implemented");
+	}
+	
+	public static String padLeft(String s, int n) {
+	    return String.format("%1$" + n + "s", s);  
+	}
+	
+	public static String padRight(String s, int n) {
+	     return String.format("%1$-" + n + "s", s);  
+	}
+	
+	public static String join(AbstractCollection<String> s, String delimiter) {
+	    if (s == null || s.isEmpty()) return "";
+	    Iterator<String> iter = s.iterator();
+	    StringBuilder builder = new StringBuilder(iter.next());
+	    while( iter.hasNext() )
+	    {
+	        builder.append(delimiter).append(iter.next());
+	    }
+	    return builder.toString();
 	}
 	
 }

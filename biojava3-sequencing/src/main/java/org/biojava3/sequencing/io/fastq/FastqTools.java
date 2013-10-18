@@ -123,13 +123,13 @@ public final class FastqTools
      * @return a new {@link QualityFeature} from the quality scores of the specified FASTQ
      *    formatted sequence
      */
-    public static QualityFeature createQualityScores(final Fastq fastq)
+    public static QualityFeature<AbstractSequence<NucleotideCompound>, NucleotideCompound> createQualityScores(final Fastq fastq)
     {
         if (fastq == null)
         {
             throw new IllegalArgumentException("fastq must not be null");
         }
-        QualityFeature qualityScores = new QualityFeature<AbstractSequence<NucleotideCompound>, NucleotideCompound>("qualityScores", "sequencing");
+        QualityFeature<AbstractSequence<NucleotideCompound>, NucleotideCompound> qualityScores = new QualityFeature<AbstractSequence<NucleotideCompound>, NucleotideCompound>("qualityScores", "sequencing");
         qualityScores.setQualities(toList(qualityScores(fastq)));
         return qualityScores;
     }
@@ -143,13 +143,13 @@ public final class FastqTools
      * @return a new {@link QualityFeature} from the error probabilities of the specified FASTQ
      *    formatted sequence
      */
-    public static QuantityFeature createErrorProbabilities(final Fastq fastq)
+    public static QuantityFeature<AbstractSequence<NucleotideCompound>, NucleotideCompound> createErrorProbabilities(final Fastq fastq)
     {
         if (fastq == null)
         {
             throw new IllegalArgumentException("fastq must not be null");
         }
-        QuantityFeature errorProbabilities = new QuantityFeature<AbstractSequence<NucleotideCompound>, NucleotideCompound>("errorProbabilities", "sequencing");
+        QuantityFeature<AbstractSequence<NucleotideCompound>, NucleotideCompound> errorProbabilities = new QuantityFeature<AbstractSequence<NucleotideCompound>, NucleotideCompound>("errorProbabilities", "sequencing");
         errorProbabilities.setQuantities(toList(errorProbabilities(fastq)));
         return errorProbabilities;
     }
@@ -160,14 +160,14 @@ public final class FastqTools
      * @param fastq FASTQ formatted sequence, must not be null
      * @return the quality scores from the specified FASTQ formatted sequence
      */
-    public static Iterable<Integer> qualityScores(final Fastq fastq)
+    public static Iterable<Number> qualityScores(final Fastq fastq)
     {
         if (fastq == null)
         {
             throw new IllegalArgumentException("fastq must not be null");
         }
         int size = fastq.getQuality().length();
-        List<Integer> qualityScores = Lists.newArrayListWithExpectedSize(size);
+        List<Number> qualityScores = Lists.newArrayListWithExpectedSize(size);
         FastqVariant variant = fastq.getVariant();
         for (int i = 0; i < size; i++)
         {
@@ -215,14 +215,14 @@ public final class FastqTools
      * @param fastq FASTQ formatted sequence, must not be null
      * @return the error probabilities from the specified FASTQ formatted sequence
      */
-    public static Iterable<Double> errorProbabilities(final Fastq fastq)
+    public static Iterable<Number> errorProbabilities(final Fastq fastq)
     {
         if (fastq == null)
         {
             throw new IllegalArgumentException("fastq must not be null");
         }
         int size = fastq.getQuality().length();
-        List<Double> errorProbabilities = Lists.newArrayListWithExpectedSize(size);
+        List<Number> errorProbabilities = Lists.newArrayListWithExpectedSize(size);
         FastqVariant variant = fastq.getVariant();
         for (int i = 0; i < size; i++)
         {
@@ -270,7 +270,8 @@ public final class FastqTools
      * @param iterable iterable
      * @return the specified iterable as a list
      */
-    static <T> List<T> toList(final Iterable<? extends T> iterable)
+    @SuppressWarnings("unchecked")
+	static <T> List<T> toList(final Iterable<? extends T> iterable)
     {
         if (iterable instanceof List)
         {

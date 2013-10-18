@@ -11,6 +11,7 @@ import org.biojava.bio.structure.scop.ScopFactory;
  *
  */
 public class DemoBerkeleyScop {
+	@SuppressWarnings("unused")
 	public static void main(String[]args){
 
 

@@ -25,7 +25,6 @@ package org.biojava3.core.sequence;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
-import java.util.logging.Logger;
 
 import org.biojava3.core.sequence.transcription.TranscriptionEngine;
 
@@ -36,7 +35,6 @@ import org.biojava3.core.sequence.transcription.TranscriptionEngine;
  */
 public class TranscriptSequence extends DNASequence {
 
-    private static final Logger log = Logger.getLogger(TranscriptSequence.class.getName());
     private final ArrayList<CDSSequence> cdsSequenceList = new ArrayList<CDSSequence>();
     private final LinkedHashMap<String, CDSSequence> cdsSequenceHashMap = new LinkedHashMap<String, CDSSequence>();
     private StartCodonSequence startCodonSequence = null;

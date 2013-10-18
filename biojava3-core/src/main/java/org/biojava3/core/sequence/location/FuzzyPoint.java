@@ -120,7 +120,6 @@ public class FuzzyPoint extends SimplePoint {
 
 
     @Override
-    @SuppressWarnings("EqualsWhichDoesntCheckParameterClass")
     public boolean equals(Object obj) {
         boolean equals = false;
         if (Equals.classEqual(this, obj)) {
