@@ -126,6 +126,7 @@ public class PDBBioAssemblyParser {
 	 * Saves transformation matrix for the list of current chains
 	 */
 	private void saveMatrix() {
+
 		for (String chainId : currentChainIDs) {
 			ModelTransformationMatrix transformation = new ModelTransformationMatrix();
 			transformation.setMatrix(currentMatrix);
@@ -147,7 +148,6 @@ public class PDBBioAssemblyParser {
         // split by spaces or commas
 		String[] chainIds = chainList.split("[ ,]+");
 		currentChainIDs.addAll(Arrays.asList(chainIds));
-		System.out.println("chainids" + currentChainIDs);
 	}
 	
 	private void initialize() {
