@@ -45,13 +45,13 @@ public class TestHardBioUnits {
 			
 			
 			
-			assertTrue(bioAssembly.getChains().size() > 1);
+			assertTrue(bioAssembly.getChains().size() > 0);
 			
-			Chain g = bioAssembly.getChainByPDB("G");
+			Chain g = bioAssembly.getChainByPDB("G", 0);
 			
 			assertNotNull(g);
 			
-			Chain b = bioAssembly.getChainByPDB("B");
+			Chain b = bioAssembly.getChainByPDB("B", 1);
 			
 			assertNotNull(b);
 			
@@ -61,7 +61,8 @@ public class TestHardBioUnits {
 			
 			
 			
-			assertEquals(2,bioAssembly.getChains().size());
+			assertEquals(1,bioAssembly.getChains(0).size());
+			assertEquals(1,bioAssembly.getChains(1).size());
 		} catch (Exception e){
 			e.printStackTrace();
 			fail(e.getMessage());
