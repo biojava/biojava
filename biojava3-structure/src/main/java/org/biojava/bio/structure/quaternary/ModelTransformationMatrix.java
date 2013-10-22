@@ -49,15 +49,11 @@ import org.xml.sax.SAXException;
  *
  */
 public class ModelTransformationMatrix implements Cloneable {
-	public String id = null;
-
-	public String ndbChainId = null;
-
-	public String symmetryShorthand = null;
-
-	public String code = null;
-
-	public float values[];
+	private String id = null;
+	private String ndbChainId = null;
+	private String symmetryShorthand = null;
+	private String code = null;
+	private float values[];
 	
 	/**
 	 * Default Constructor
@@ -174,7 +170,14 @@ public class ModelTransformationMatrix implements Cloneable {
 		this.values[14] = (0);
 		this.values[15] = (1);
 	}
-
+	
+	public String getChainId() {
+		return this.ndbChainId;
+	}
+	
+	public void setChainId(String chainId) {
+		this.ndbChainId = chainId;
+	}
 
 
 	/**
@@ -964,16 +967,7 @@ public class ModelTransformationMatrix implements Cloneable {
 	public void setId(String id) {
 		this.id = id;
 	}
-
-	public String getNdbChainId() {
-		return ndbChainId;
-	}
-
-	public void setNdbChainId(String ndbChainId) {
-		this.ndbChainId = ndbChainId;
-	}
 	
-
 	public String getSymmetryShorthand() {
 		return symmetryShorthand;
 	}
@@ -982,8 +976,6 @@ public class ModelTransformationMatrix implements Cloneable {
 		this.symmetryShorthand = symmetryShorthand;
 	}
 	
-	
-
 	public String getCode() {
 		return code;
 	}
@@ -998,15 +990,10 @@ public class ModelTransformationMatrix implements Cloneable {
 		m.setMatrix(getMatrix());
 		m.setVector(getVector());
 		m.setId(getId());
-		m.setNdbChainId(getNdbChainId());
+		m.setChainId(getChainId());
 		m.setSymmetryShorthand(getSymmetryShorthand());
 		m.setCode(getCode());
-		return m;
-		
+		return m;	
 	}
-
-	
-		
-	
 	
 }

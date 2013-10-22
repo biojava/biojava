@@ -138,7 +138,7 @@ public class BioAssemblyTools {
 				intChainID = c.getChainID();
 
 			for (ModelTransformationMatrix m: transformations) {
-				if ( ! m.ndbChainId.equals(intChainID))
+				if ( ! m.getChainId().equals(intChainID))
 					continue;
 				Atom na = (Atom)a.clone();
 				//m.transformPoint(atom.coordinate, transformedCoordinate);
@@ -293,7 +293,7 @@ public class BioAssemblyTools {
 
 
 			for (ModelTransformationMatrix m: transformations) {
-				if (!  m.ndbChainId.equals(intChainID))
+				if (!  m.getChainId().equals(intChainID))
 					continue;
 
 				m.transformPoint(atom.getCoords(), transformedCoordinate);
