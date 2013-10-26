@@ -33,7 +33,7 @@ import java.util.LinkedHashMap;
 import org.biojava3.core.sequence.ProteinSequence;
 import org.biojava3.core.sequence.compound.AminoAcidCompound;
 import org.biojava3.core.sequence.compound.AminoAcidCompoundSet;
-import org.biojava3.core.sequence.io.template.FastaHeaderParserInterface;
+import org.biojava3.core.sequence.io.template.SequenceHeaderParserInterface;
 import org.biojava3.core.sequence.io.template.SequenceCreatorInterface;
 import org.biojava3.core.sequence.template.Compound;
 import org.biojava3.core.sequence.template.Sequence;
@@ -46,7 +46,7 @@ import org.biojava3.core.sequence.template.Sequence;
 public class FastaReader<S extends Sequence<?>, C extends Compound> {
 
     SequenceCreatorInterface<C> sequenceCreator;
-    FastaHeaderParserInterface<S,C> headerParser;
+    SequenceHeaderParserInterface<S,C> headerParser;
     BufferedReaderBytesRead br;
     InputStreamReader isr;
     FileInputStream fi = null;
@@ -63,7 +63,7 @@ public class FastaReader<S extends Sequence<?>, C extends Compound> {
      * @param headerParser
      * @param sequenceCreator
      */
-    public FastaReader(InputStream is, FastaHeaderParserInterface<S,C> headerParser,
+    public FastaReader(InputStream is, SequenceHeaderParserInterface<S,C> headerParser,
     		SequenceCreatorInterface<C> sequenceCreator) {
         this.headerParser = headerParser;
         isr = new InputStreamReader(is);
@@ -84,7 +84,7 @@ public class FastaReader<S extends Sequence<?>, C extends Compound> {
      * @throws SecurityException if a security manager exists and its checkRead
      * 	method denies read access to the file.
      */
-    public FastaReader(File file, FastaHeaderParserInterface<S,C> headerParser,
+    public FastaReader(File file, SequenceHeaderParserInterface<S,C> headerParser,
     		SequenceCreatorInterface<C> sequenceCreator) throws FileNotFoundException {
         this.headerParser = headerParser;
         fi = new FileInputStream(file);
@@ -216,7 +216,16 @@ public class FastaReader<S extends Sequence<?>, C extends Compound> {
             System.out.println(proteinSequences);
 
             File file = new File(inputFile);
-            FastaReader<ProteinSequence,AminoAcidCompound> fastaProxyReader = new FastaReader<ProteinSequence,AminoAcidCompound>(file, new GenericFastaHeaderParser<ProteinSequence,AminoAcidCompound>(), new FileProxyProteinSequenceCreator(file, AminoAcidCompoundSet.getAminoAcidCompoundSet()));
+            FastaReader<ProteinSequence,AminoAcidCompound> fastaProxyReader = 
+            		new FastaReader<ProteinSequence,AminoAcidCompound>(
+            				file, 
+            				new GenericFastaHeaderParser<ProteinSequence,AminoAcidCompound>(),
+            				new FileProxyProteinSequenceCreator(
+            						file, 
+            						AminoAcidCompoundSet.getAminoAcidCompoundSet(), 
+            						new FastaSequenceParser()
+        						) 
+        				);
             LinkedHashMap<String,ProteinSequence> proteinProxySequences = fastaProxyReader.process();
 
             for(String key : proteinProxySequences.keySet()){

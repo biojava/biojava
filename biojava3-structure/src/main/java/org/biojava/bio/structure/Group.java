@@ -365,4 +365,19 @@ public interface Group {
 	 */
 	public void addAltLoc(Group g);
 
+	/**
+	 * Determines if this group is water.
+	 * 
+	 * @see {@link GroupType#WATERNAMES}
+	 * @return true if it's water, false otherwise.
+	 */
+	public boolean isWater();
+	
+	/**
+	 * Gets the alternate location group to this group that has the alt-loc character code passed.
+	 * 
+	 * @param altLoc the alternate location code of the group desired
+	 * @return the alternate location group if found, or null otherwise
+	 */
+	public Group getAltLocGroup(Character altLoc);
 }

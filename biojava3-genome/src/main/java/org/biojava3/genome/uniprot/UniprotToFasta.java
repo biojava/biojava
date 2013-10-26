@@ -6,8 +6,8 @@ import java.io.File;
 import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.HashMap;
+
 import org.biojava3.core.sequence.AccessionID;
-import org.biojava3.core.sequence.io.FastaWriterHelper;
 import org.biojava3.core.sequence.ProteinSequence;
 import org.biojava3.core.sequence.io.FastaWriterHelper;
 

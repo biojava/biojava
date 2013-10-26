@@ -49,145 +49,134 @@ import org.biojava3.core.sequence.views.WindowedSequence;
  */
 public class RNAToAminoAcidTranslator extends AbstractCompoundTranslator<NucleotideCompound, AminoAcidCompound> {
 
-    private final boolean trimStops;
-    private final boolean initMetOnly;
-    private final Map<Table.CaseInsensitiveTriplet, Codon> quickLookup;
-    private final Map<AminoAcidCompound, List<Codon>> aminoAcidToCodon;
-    //Cheeky lookup which uses a hashing value; key is to switch to using this all the time
-    private final Codon[] codonArray = new Codon[64000];
-    private final AminoAcidCompound unknownAminoAcidCompound;
-    private final AminoAcidCompound methionineAminoAcidCompound;
-    private final boolean translateNCodons;
+	private final boolean trimStops;
+	private final boolean initMetOnly;
+	private final Map<Table.CaseInsensitiveTriplet, Codon> quickLookup;
+	private final Map<AminoAcidCompound, List<Codon>> aminoAcidToCodon;
+	//Cheeky lookup which uses a hashing value; key is to switch to using this all the time
+	private final Codon[] codonArray = new Codon[64000];
+	private final AminoAcidCompound unknownAminoAcidCompound;
+	private final AminoAcidCompound methionineAminoAcidCompound;
+	private final boolean translateNCodons;
 
-    public RNAToAminoAcidTranslator(
-            SequenceCreatorInterface<AminoAcidCompound> creator,
-            CompoundSet<NucleotideCompound> nucleotides, CompoundSet<Codon> codons,
-            CompoundSet<AminoAcidCompound> aminoAcids, Table table,
-            boolean trimStops, boolean initMetOnly, boolean translateNCodons) {
+	public RNAToAminoAcidTranslator(
+			SequenceCreatorInterface<AminoAcidCompound> creator,
+			CompoundSet<NucleotideCompound> nucleotides, CompoundSet<Codon> codons,
+			CompoundSet<AminoAcidCompound> aminoAcids, Table table,
+			boolean trimStops, boolean initMetOnly, boolean translateNCodons) {
 
-        super(creator, nucleotides, aminoAcids);
-        this.trimStops = trimStops;
-        this.initMetOnly = initMetOnly;
-        this.translateNCodons = translateNCodons;
+		super(creator, nucleotides, aminoAcids);
+		this.trimStops = trimStops;
+		this.initMetOnly = initMetOnly;
+		this.translateNCodons = translateNCodons;
 
-        quickLookup = new HashMap<Table.CaseInsensitiveTriplet, Codon>(codons.getAllCompounds().size());
-        aminoAcidToCodon = new HashMap<AminoAcidCompound, List<Codon>>();
+		quickLookup = new HashMap<Table.CaseInsensitiveTriplet, Codon>(codons.getAllCompounds().size());
+		aminoAcidToCodon = new HashMap<AminoAcidCompound, List<Codon>>();
 
-        List<Codon> codonList = table.getCodons(nucleotides, aminoAcids);
-        for (Codon codon : codonList) {
-            quickLookup.put(codon.getTriplet(), codon);
-            codonArray[codon.getTriplet().intValue()] = codon;
-            
-            List<Codon> codonL = aminoAcidToCodon.get(codon.getAminoAcid());
-            if ( codonL == null){
-            	codonL = new ArrayList<Codon>();
-            	aminoAcidToCodon.put(codon.getAminoAcid(), codonL);
-            }
-            codonL.add(codon);
-            
-        }
-        unknownAminoAcidCompound = aminoAcids.getCompoundForString("X");
-        methionineAminoAcidCompound = aminoAcids.getCompoundForString("M");
-    }
+		List<Codon> codonList = table.getCodons(nucleotides, aminoAcids);
+		for (Codon codon : codonList) {
+			quickLookup.put(codon.getTriplet(), codon);
+			codonArray[codon.getTriplet().intValue()] = codon;
 
-    /**
-     * Performs the core conversion of RNA to Peptide. It does this by walking
-     * a windowed version of the given sequence. Any trailing DNA base pairs
-     * are ignored according to the specification of {@link WindowedSequence}.
-     */
+			List<Codon> codonL = aminoAcidToCodon.get(codon.getAminoAcid());
+			if ( codonL == null){
+				codonL = new ArrayList<Codon>();
+				aminoAcidToCodon.put(codon.getAminoAcid(), codonL);
+			}
+			codonL.add(codon);
 
-    @Override
-    public List<Sequence<AminoAcidCompound>> createSequences(
-            Sequence<NucleotideCompound> originalSequence) {
+		}
+		unknownAminoAcidCompound = aminoAcids.getCompoundForString("X");
+		methionineAminoAcidCompound = aminoAcids.getCompoundForString("M");
+	}
 
-        List<List<AminoAcidCompound>> workingList = new ArrayList<List<AminoAcidCompound>>();
-        
-        Iterable<SequenceView<NucleotideCompound>> iter =
-            new WindowedSequence<NucleotideCompound>(originalSequence, 3);
+	/**
+	 * Performs the core conversion of RNA to Peptide. It does this by walking
+	 * a windowed version of the given sequence. Any trailing DNA base pairs
+	 * are ignored according to the specification of {@link WindowedSequence}.
+	 */
 
-        boolean first = true;
-                
-        for (SequenceView<NucleotideCompound> element : iter) {
-            AminoAcidCompound aminoAcid = null;
+	@Override
+	public List<Sequence<AminoAcidCompound>> createSequences(
+			Sequence<NucleotideCompound> originalSequence) {
 
-            int i =1;
-            Table.CaseInsensitiveTriplet triplet = new Table.CaseInsensitiveTriplet(
-              element.getCompoundAt(i++), element.getCompoundAt(i++), element.getCompoundAt(i++));
+		List<List<AminoAcidCompound>> workingList = new ArrayList<List<AminoAcidCompound>>();
 
-            Codon target = null;
+		Iterable<SequenceView<NucleotideCompound>> iter =
+				new WindowedSequence<NucleotideCompound>(originalSequence, 3);
 
-            int arrayIndex = triplet.intValue();
-            //So long as we're within range then access
-            if(arrayIndex > -1 && arrayIndex < codonArray.length) {
-                target = codonArray[arrayIndex];
-                if (target != null) {
-                    aminoAcid = target.getAminoAcid();
-                }
-            }
-            //Otherwise we have to use the Map
-            else {
-                target = quickLookup.get(triplet);
-                aminoAcid = target.getAminoAcid();
-            }
-            if(aminoAcid == null && translateNCodons()) {
-                aminoAcid = unknownAminoAcidCompound;
-            }
+		boolean first = true;
 
-            else {
-                if(first && initMetOnly && target.isStart()) {
-                    aminoAcid = methionineAminoAcidCompound;
-                }
-            }
+		for (SequenceView<NucleotideCompound> element : iter) {
+			AminoAcidCompound aminoAcid = null;
 
-            addCompoundsToList(Arrays.asList(aminoAcid), workingList);
-            first = false;
-        }
-        postProcessCompoundLists(workingList);
+			int i =1;
+			Table.CaseInsensitiveTriplet triplet = new Table.CaseInsensitiveTriplet(
+					element.getCompoundAt(i++), element.getCompoundAt(i++), element.getCompoundAt(i++));
 
-        return workingListToSequences(workingList);
-    }
+			Codon target = null;
 
-    /**
-     * Performs the trimming of stop codons and the conversion of a valid start
-     * amino acid to M
-     */
-    @Override
-    protected void postProcessCompoundLists(
-            List<List<AminoAcidCompound>> compoundLists) {
-        for (List<AminoAcidCompound> compounds : compoundLists) {
-            if (trimStops) {
-                trimStop(compounds);
-            }
-        }
-    }
+			target = quickLookup.get(triplet);
+			if ( target != null)
+				aminoAcid = target.getAminoAcid();
+			if(aminoAcid == null && translateNCodons()) {
+				aminoAcid = unknownAminoAcidCompound;
+			}
+			else {
+				if(first && initMetOnly && target.isStart()) {
+					aminoAcid = methionineAminoAcidCompound;
+				}
+			}
 
-    /**
-     * Imperfect code. Checks the last amino acid to see if a codon could
-     * have translated a stop for it. Left in for the moment
-     */
-    protected void trimStop(List<AminoAcidCompound> sequence) {
-        AminoAcidCompound stop = sequence.get(sequence.size() - 1);
-        boolean isStop = false;
-        if (aminoAcidToCodon.containsKey(stop)) {
-          for (Codon c : aminoAcidToCodon.get(stop)) {
-              if (c.isStop()) {
-                  isStop = true;
-                  break;
-              }
-          }
-        }
+			addCompoundsToList(Arrays.asList(aminoAcid), workingList);
+			first = false;
+		}
+		postProcessCompoundLists(workingList);
 
-        if (isStop) {
-            sequence.remove(sequence.size() - 1);
-        }
-    }
+		return workingListToSequences(workingList);
+	}
 
-    /**
-     * Indicates if we want to force exact translation of compounds or not i.e.
-     * those with internal N RNA bases. This will cause a translation to an
-     * X amino acid
-     */
-    public boolean translateNCodons() {
-        return translateNCodons;
-    }
+	/**
+	 * Performs the trimming of stop codons and the conversion of a valid start
+	 * amino acid to M
+	 */
+	@Override
+	protected void postProcessCompoundLists(
+			List<List<AminoAcidCompound>> compoundLists) {
+		for (List<AminoAcidCompound> compounds : compoundLists) {
+			if (trimStops) {
+				trimStop(compounds);
+			}
+		}
+	}
+
+	/**
+	 * Imperfect code. Checks the last amino acid to see if a codon could
+	 * have translated a stop for it. Left in for the moment
+	 */
+	protected void trimStop(List<AminoAcidCompound> sequence) {
+		AminoAcidCompound stop = sequence.get(sequence.size() - 1);
+		boolean isStop = false;
+		if (aminoAcidToCodon.containsKey(stop)) {
+			for (Codon c : aminoAcidToCodon.get(stop)) {
+				if (c.isStop()) {
+					isStop = true;
+					break;
+				}
+			}
+		}
+
+		if (isStop) {
+			sequence.remove(sequence.size() - 1);
+		}
+	}
+
+	/**
+	 * Indicates if we want to force exact translation of compounds or not i.e.
+	 * those with internal N RNA bases. This will cause a translation to an
+	 * X amino acid
+	 */
+	public boolean translateNCodons() {
+		return translateNCodons;
+	}
 }

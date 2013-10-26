@@ -24,12 +24,18 @@
 
 package demo;
 
+import java.util.List;
+
 import org.biojava.bio.structure.Chain;
 import org.biojava.bio.structure.Group;
 import org.biojava.bio.structure.GroupType;
+import org.biojava.bio.structure.ResidueNumber;
 import org.biojava.bio.structure.Structure;
+import org.biojava.bio.structure.StructureTools;
+import org.biojava.bio.structure.align.util.AtomCache;
 import org.biojava.bio.structure.io.MMCIFFileReader;
 import org.biojava.bio.structure.io.StructureIOFile;
+import org.biojava3.structure.StructureIO;
 
 /** An example of how to read MMcif files
  * 
@@ -39,33 +45,76 @@ import org.biojava.bio.structure.io.StructureIOFile;
 public class DemoMMCIFReader
 {
 
-   public static void main(String[] args){
-      String pdbId = "193D";
-      
-      StructureIOFile pdbreader = new MMCIFFileReader();
-      
-      try {
-         pdbreader.setAutoFetch(true);
-          Structure s = pdbreader.getStructureById(pdbId);
-          System.out.println(s);
-       
-          Chain c = s.getChainByPDB("A");
+	public static void main(String[] args){
 
-          System.out.println(c.getSeqResSequence());
-          System.out.println(c.getAtomSequence());
-          System.out.println(c.getAtomGroups(GroupType.HETATM));
-          Chain d = s.getChainByPDB("B");
-          System.out.println(d.getSeqResSequence());
-          System.out.println(d.getAtomSequence());
-        
-          
-          for (Group g : d.getAtomGroups(GroupType.HETATM)){
-             System.out.println(g.getResidueNumber() +  " " +  g.getPDBName() + " " + g);
-          }
-      } catch (Exception e) {
-          e.printStackTrace();
-      }
+		DemoMMCIFReader demo = new DemoMMCIFReader();
+
+		demo.loadSimple();
+
+		//demo.loadFromDirectAccess();
+
+	}
+
+	/** A basic example how to load an mmCif file and get a Structure object
+	 *  
+	 */
+	public void loadSimple(){
+		String pdbId = "4hhb";
+
+		AtomCache cache = new AtomCache();
+		cache.setUseMmCif(true);
+
+		StructureIO.setAtomCache(cache);
+
+		try {
+			Structure s = StructureIO.getStructure(pdbId);
+
+			System.out.println(pdbId + " has nr atoms: " + StructureTools.getNrAtoms(s));
+
+		} catch (Exception e){
+			e.printStackTrace();
+		}
+	}
 
 
-   }
+	/** An example demonstrating how to directly use the mmCif file parsing classes. This could potentially be used
+	 * to use the parser to populate a data-structure that is different from the biojava-structure data model.
+	 * 
+	 */
+	public void loadFromDirectAccess(){
+		String pdbId = "1A4W";
+
+		StructureIOFile pdbreader = new MMCIFFileReader();
+
+		try {
+			pdbreader.setAutoFetch(true);
+			Structure s = pdbreader.getStructureById(pdbId);
+
+			Chain h = s.getChainByPDB("H");
+
+			List<Group> ligands = h.getAtomLigands();
+
+			System.out.println("These ligands have been found in chain " + h.getChainID());
+
+			for (Group l:ligands){
+				System.out.println(l);
+			}
+
+			System.out.println("Accessing QWE directly: ");
+			Group qwe = h.getGroupByPDB(new ResidueNumber("H",373,null));
+
+			System.out.println(qwe.getChemComp());
+
+			System.out.println(h.getSeqResSequence());
+			System.out.println(h.getAtomSequence());
+			System.out.println(h.getAtomGroups(GroupType.HETATM));
+
+			System.out.println("Compounds: " + s.getCompounds());
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+
+	}
 }

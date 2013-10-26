@@ -1,6 +1,5 @@
 package org.biojava.bio.structure.align.ce;
 
-import java.lang.reflect.Constructor;
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;

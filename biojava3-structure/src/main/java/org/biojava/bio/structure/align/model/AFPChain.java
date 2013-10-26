@@ -1224,8 +1224,7 @@ public class AFPChain implements Serializable, Cloneable
  * @return a value between 0 and 1
  */
 	public double getIdentity() {
-		if ( identity <= 0) {
-			System.out.println("recaclulating ID and SIM (" + identity +")");
+		if ( identity <= 0) {			
 			calcSimilarity();
 		}
 		return identity;

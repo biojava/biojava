@@ -25,16 +25,7 @@ package org.biojava.bio.structure.cath;
 
 import junit.framework.TestCase;
 
-import org.biojava.bio.structure.align.client.StructureName;
-import org.biojava.bio.structure.align.util.UserConfiguration;
-import org.junit.BeforeClass;
 import org.junit.Test;
-
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author Daniel Asarnow

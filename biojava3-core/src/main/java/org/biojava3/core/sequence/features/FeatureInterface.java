@@ -5,7 +5,9 @@
 
 package org.biojava3.core.sequence.features;
 
+import java.util.HashMap;
 import java.util.List;
+
 import org.biojava3.core.sequence.location.SequenceLocation;
 import org.biojava3.core.sequence.template.AbstractSequence;
 import org.biojava3.core.sequence.template.Compound;
@@ -145,5 +147,26 @@ public interface FeatureInterface<S extends AbstractSequence<C>, C extends Compo
      * @param userObject the userObject to set
      */
     public void setUserObject(Object userObject);
+
+    
+	/**
+     * Get the qualifiers for this feature
+     * @return
+     */
+
+    public HashMap<String, Qualifier> getQualifiers();
+
+    /**
+     * Set the qualifiers
+     * @param qualifiers
+     */
+
+    public void setQualifiers(HashMap<String, Qualifier> qualifiers);
+    /**
+     * Add a qualifier
+     * @param qualifier
+     */
+
+    public void addQualifier(String key, Qualifier qualifier);
 
 }

@@ -35,7 +35,6 @@ import java.util.TreeSet;
 import org.biojava.bio.structure.Structure;
 
 import org.biojava.bio.structure.StructureTools;
-import org.biojava.bio.structure.align.ce.AbstractUserArgumentProcessor;
 import org.biojava.bio.structure.align.client.JFatCatClient;
 import org.biojava.bio.structure.align.client.StructureName;
 import org.biojava.bio.structure.align.util.AtomCache;
@@ -58,9 +57,6 @@ public class RemotePDPProvider extends SerializableCache<String,SortedSet<String
 
 
 	public static void main(String[] args){
-
-		System.setProperty(AbstractUserArgumentProcessor.CACHE_DIR,"/Users/ap3/WORK/PDB");	
-
 		RemotePDPProvider me = new RemotePDPProvider(true);
 
 		//System.out.println(scop.getByCategory(ScopCategory.Superfamily));

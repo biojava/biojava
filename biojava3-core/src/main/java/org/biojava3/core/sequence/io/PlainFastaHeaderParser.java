@@ -22,7 +22,7 @@
 package org.biojava3.core.sequence.io;
 
 import org.biojava3.core.sequence.AccessionID;
-import org.biojava3.core.sequence.io.template.FastaHeaderParserInterface;
+import org.biojava3.core.sequence.io.template.SequenceHeaderParserInterface;
 import org.biojava3.core.sequence.template.AbstractSequence;
 import org.biojava3.core.sequence.template.Compound;
 
@@ -37,7 +37,7 @@ import org.biojava3.core.sequence.template.Compound;
  * @since 3.0.6
  */
 public class PlainFastaHeaderParser<S extends AbstractSequence<C>, C extends Compound>
-		implements FastaHeaderParserInterface<S, C> {
+		implements SequenceHeaderParserInterface<S, C> {
 
 	/**
 	 * Parse out the all header as one entity

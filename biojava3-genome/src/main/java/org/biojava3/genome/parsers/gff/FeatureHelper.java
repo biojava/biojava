@@ -5,7 +5,6 @@
 
 package org.biojava3.genome.parsers.gff;
 
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
 
 /**

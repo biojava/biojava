@@ -28,8 +28,11 @@ import java.util.List;
 import junit.framework.TestCase;
 
 import org.biojava3.core.sequence.DNASequence;
+import org.biojava3.core.sequence.compound.NucleotideCompound;
+import org.biojava3.core.sequence.features.FeatureInterface;
 import org.biojava3.core.sequence.features.QualityFeature;
 import org.biojava3.core.sequence.features.QuantityFeature;
+import org.biojava3.core.sequence.template.AbstractSequence;
 
 /**
  * Unit test for FastqTools.
@@ -62,10 +65,10 @@ public final class FastqToolsTest extends TestCase
         DNASequence sequence = FastqTools.createDNASequenceWithQualityScores(builder.build());
         assertNotNull(sequence);
 
-        List features = sequence.getFeaturesByType("qualityScores");
+        List<FeatureInterface<AbstractSequence<NucleotideCompound>, NucleotideCompound>> features = sequence.getFeaturesByType("qualityScores");
         assertNotNull(features);
         assertEquals(1, features.size());
-        QualityFeature qualityScores = (QualityFeature) features.get(0);
+        QualityFeature<AbstractSequence<NucleotideCompound>, NucleotideCompound> qualityScores = (QualityFeature<AbstractSequence<NucleotideCompound>, NucleotideCompound>) features.get(0);
         assertEquals(sequence.getLength(), qualityScores.getQualities().size());
         assertEquals(sequence.getLength(), qualityScores.getLocations().getLength());
     }
@@ -88,10 +91,10 @@ public final class FastqToolsTest extends TestCase
         DNASequence sequence = FastqTools.createDNASequenceWithErrorProbabilities(builder.build());
         assertNotNull(sequence);
 
-        List features = sequence.getFeaturesByType("errorProbabilities");
+        List<FeatureInterface<AbstractSequence<NucleotideCompound>, NucleotideCompound>> features = sequence.getFeaturesByType("errorProbabilities");
         assertNotNull(features);
         assertEquals(1, features.size());
-        QuantityFeature errorProbabilities = (QuantityFeature) features.get(0);
+        QuantityFeature<AbstractSequence<NucleotideCompound>, NucleotideCompound> errorProbabilities = (QuantityFeature<AbstractSequence<NucleotideCompound>, NucleotideCompound>) features.get(0);
         assertEquals(sequence.getLength(), errorProbabilities.getQuantities().size());
         assertEquals(sequence.getLength(), errorProbabilities.getLocations().getLength());
     }
@@ -114,17 +117,17 @@ public final class FastqToolsTest extends TestCase
         DNASequence sequence = FastqTools.createDNASequenceWithQualityScoresAndErrorProbabilities(builder.build());
         assertNotNull(sequence);
 
-        List qualityScoresFeatures = sequence.getFeaturesByType("qualityScores");
+        List<FeatureInterface<AbstractSequence<NucleotideCompound>, NucleotideCompound>> qualityScoresFeatures = sequence.getFeaturesByType("qualityScores");
         assertNotNull(qualityScoresFeatures);
         assertEquals(1, qualityScoresFeatures.size());
-        QualityFeature qualityScores = (QualityFeature) qualityScoresFeatures.get(0);
+        QualityFeature<AbstractSequence<NucleotideCompound>, NucleotideCompound> qualityScores = (QualityFeature<AbstractSequence<NucleotideCompound>, NucleotideCompound>) qualityScoresFeatures.get(0);
         assertEquals(sequence.getLength(), qualityScores.getQualities().size());
         assertEquals(sequence.getLength(), qualityScores.getLocations().getLength());
 
-        List errorProbabilitiesFeatures = sequence.getFeaturesByType("errorProbabilities");
+        List<FeatureInterface<AbstractSequence<NucleotideCompound>, NucleotideCompound>> errorProbabilitiesFeatures = sequence.getFeaturesByType("errorProbabilities");
         assertNotNull(errorProbabilitiesFeatures);
         assertEquals(1, errorProbabilitiesFeatures.size());
-        QuantityFeature errorProbabilities = (QuantityFeature) errorProbabilitiesFeatures.get(0);
+        QuantityFeature<AbstractSequence<NucleotideCompound>, NucleotideCompound> errorProbabilities = (QuantityFeature<AbstractSequence<NucleotideCompound>, NucleotideCompound>) errorProbabilitiesFeatures.get(0);
         assertEquals(sequence.getLength(), errorProbabilities.getQuantities().size());
         assertEquals(sequence.getLength(), errorProbabilities.getLocations().getLength());
     }
@@ -145,7 +148,7 @@ public final class FastqToolsTest extends TestCase
     public void testCreateQualityScores()
     {
         Fastq fastq = builder.build();
-        QualityFeature qualityScores = FastqTools.createQualityScores(fastq);
+        QualityFeature<AbstractSequence<NucleotideCompound>, NucleotideCompound> qualityScores = FastqTools.createQualityScores(fastq);
         assertNotNull(qualityScores);
         assertEquals(fastq.getSequence().length(), qualityScores.getQualities().size());
     }
@@ -166,7 +169,7 @@ public final class FastqToolsTest extends TestCase
     public void testCreateErrorProbabilities()
     {
         Fastq fastq = builder.build();
-        QuantityFeature errorProbabilities = FastqTools.createErrorProbabilities(fastq);
+        QuantityFeature<AbstractSequence<NucleotideCompound>, NucleotideCompound> errorProbabilities = FastqTools.createErrorProbabilities(fastq);
         assertNotNull(errorProbabilities);
         assertEquals(fastq.getSequence().length(), errorProbabilities.getQuantities().size());
     }
@@ -186,10 +189,10 @@ public final class FastqToolsTest extends TestCase
 
     public void testQualityScores()
     {
-        Iterable<Integer> qualityScores = FastqTools.qualityScores(builder.build());
+        Iterable<Number> qualityScores = FastqTools.qualityScores(builder.build());
         assertNotNull(qualityScores);
         int count = 0;
-        for (Integer qualityScore : qualityScores)
+        for (Number qualityScore : qualityScores)
         {
             assertNotNull(qualityScore);
             count++;
@@ -274,10 +277,10 @@ public final class FastqToolsTest extends TestCase
 
     public void testErrorProbabilities()
     {
-        Iterable<Double> errorProbabilities = FastqTools.errorProbabilities(builder.build());
+        Iterable<Number> errorProbabilities = FastqTools.errorProbabilities(builder.build());
         assertNotNull(errorProbabilities);
         int count = 0;
-        for (Double errorProbability : errorProbabilities)
+        for (Number errorProbability : errorProbabilities)
         {
             assertNotNull(errorProbability);
             count++;

@@ -29,14 +29,12 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
 import org.biojava.bio.structure.Atom;
 import org.biojava.bio.structure.StructureException;
 import org.biojava.bio.structure.StructureTools;
-import org.biojava.bio.structure.align.StructureAlignmentFactory;
-import org.biojava.bio.structure.align.ce.CeMain;
 import org.biojava.bio.structure.align.model.AFPChain;
 import org.biojava.bio.structure.align.util.AFPAlignmentDisplay;
-import org.biojava.bio.structure.align.util.AtomCache;
 import org.biojava.bio.structure.jama.Matrix;
 
 /** 
@@ -151,7 +149,7 @@ public class CeCPMain extends CeMain {
 
 	/** Circular permutation specific code to be run after the standard CE alignment
 	 * 
-	 * @param afpChain The finished alignement
+	 * @param afpChain The finished alignment
 	 * @param ca1 CA atoms of the first protein
 	 * @param ca2m A duplicated copy of the second protein
 	 * @param calculator The CECalculator used to create afpChain

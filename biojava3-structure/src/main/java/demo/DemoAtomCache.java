@@ -19,6 +19,7 @@ public class DemoAtomCache {
 
 	}
 
+	@SuppressWarnings("unused")
 	private static void demoStructureIO()  {
 
 

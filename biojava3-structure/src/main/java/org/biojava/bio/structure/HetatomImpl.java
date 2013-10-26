@@ -24,6 +24,7 @@
 package org.biojava.bio.structure;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -56,6 +57,8 @@ public class HetatomImpl implements Group,Serializable {
 	 */
 	public static final String type = GroupType.HETATM ;
 
+	private static final List<String> WATERNAMES = Arrays.asList(new String[]{"HOH", "DOD",  "WAT"});
+	
 	Map<String, Object> properties ;
 
 	long id;
@@ -603,6 +606,34 @@ public class HetatomImpl implements Group,Serializable {
 			return new ArrayList<Group>();
 		return altLocs;
 	}
+	
+	public Group getAltLocGroup(Character altLoc) {
+		try {
+			// maybe the alt loc group in question is myself
+			if (getAtom(0).getAltLoc().equals(altLoc)) {
+				return this;
+			}
+			
+			if (altLocs == null || altLocs.size() == 0)
+				return null;
+
+			for (Group group : altLocs) {
+				if (group.getAtoms().isEmpty())
+					continue;
+
+				// determine this group's alt-loc character code by looking
+				// at its first atom's alt-loc character
+
+				if (group.getAtom(0).getAltLoc().equals(altLoc)) {
+					return group;
+				}
+			}
+		} catch (StructureException e) {
+			// this will never happen
+		}
+		
+		return null;
+	}
 
 	public void addAltLoc(Group group) {
 		if ( altLocs == null) {
@@ -612,4 +643,8 @@ public class HetatomImpl implements Group,Serializable {
 		
 	}
 
+	@Override
+	public boolean isWater() {
+		return WATERNAMES.contains(pdb_name);
+	}
 }

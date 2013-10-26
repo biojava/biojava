@@ -22,20 +22,27 @@
  */
 package org.biojava.bio.structure.align.util;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.IOException;
+import java.util.AbstractMap;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
+
+import junit.framework.TestCase;
 
 import org.biojava.bio.structure.Atom;
+import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureException;
+import org.biojava.bio.structure.StructureTools;
 import org.biojava.bio.structure.align.StructureAlignment;
 import org.biojava.bio.structure.align.StructureAlignmentFactory;
 import org.biojava.bio.structure.align.ce.CeCPMain;
 import org.biojava.bio.structure.align.ce.CeMain;
 import org.biojava.bio.structure.align.model.AFPChain;
-import org.biojava.bio.structure.align.util.AtomCache;
-
-import junit.framework.TestCase;
+import org.biojava.bio.structure.align.xml.AFPChainXMLParser;
 
 public class AlignmentToolsTest extends TestCase {
 	
@@ -301,5 +308,142 @@ public class AlignmentToolsTest extends TestCase {
 		}
 		Map<Integer,Integer> result1 = AlignmentTools.applyAlignment(alignment1,identity1,2);
 		assertEquals("Alignment1 incorrectly applied with identity x->x-10",image1,result1);
+	}
+	
+	public void testToConciseAlignmentString() {
+		Map<Integer,Integer> test;
+		String result,expected;
+		int i=0;
+		
+		test = new HashMap<Integer, Integer>();
+		test.put(1, 2);
+		test.put(2, 3);
+		test.put(3, 4);
+		test.put(7, 8);
+		expected = "1>2>3>4 7>8";
+		
+		result = AlignmentTools.toConciseAlignmentString(test);
+		assertEquals((i++)+". Linear strings.",expected,result);
+		
+		
+		test = new HashMap<Integer, Integer>();
+		test.put(1, 2);
+		test.put(2, 3);
+		test.put(3, 1);
+		test.put(7, 7);
+		expected = "1>2>3>1 7>7";
+		
+		result = AlignmentTools.toConciseAlignmentString(test);
+		assertEquals((i++)+". Cycles.",expected,result);
+		
+		test = new HashMap<Integer, Integer>();
+		test.put(1, 2);
+		test.put(2, 3);
+		test.put(3, 1);
+		test.put(7, 7);
+		expected = "1>2>3>1 7>7";
+		
+		result = AlignmentTools.toConciseAlignmentString(test);
+		assertEquals((i++)+". Complex.",expected,result);
+		
+		test = new HashMap<Integer, Integer>();
+		test.put(1, 2);
+		test.put(2, 3);
+		test.put(3, 4);
+		test.put(4, 5);
+		test.put(5, 6);
+		test.put(6, 7);
+		test.put(7, 3);
+		test.put(8, 4);
+		test.put(9, 11);
+		test.put(11, 10);
+		test.put(10, 9);
+		expected = "1>2>3>4>5>6>7>3 8>4 9>11>10>9";
+		
+		result = AlignmentTools.toConciseAlignmentString(test);
+		assertEquals((i++)+". Complex.",expected,result);
+		
+		//This test highlights a suboptimal case, where more paths are used than necessary.
+		test.remove(2);
+		//expected = "1>2 8>4>5>6>7>3 9>11>10>9"; //more optimal, but would require depth first search
+		expected = "1>2 3>4>5>6>7>3 8>4 9>11>10>9";
+		
+		result = AlignmentTools.toConciseAlignmentString(test);
+		assertEquals((i++)+". Sub-optimal arrangement",expected,result);
+		
+		Map <Integer,Double> test2 = new HashMap<Integer, Double>();
+		test2.put(1, 12.);
+		test2.put(2, 13.);
+		test2.put(3, 14.);
+		test2.put(4, 15.);
+		test2.put(5, 16.);
+		test2.put(6, 17.);
+		test2.put(7, 13.);
+		test2.put(8, 14.);
+		test2.put(9, 21.);
+		test2.put(11, 20.);
+		test2.put(10, 19.);
+		expected = "1>2>3>4>5>6>7>3 8>4 9>11>10>9";
+
+		Map <Double, Integer> inverse = new OffsetMap(-10);
+
+		result = AlignmentTools.toConciseAlignmentString(test2,inverse);
+		assertEquals((i++)+". Inverse.",expected,result);
+
+		
+	}
+	
+	/**
+	 * Tests that {@link AlignmentTools#updateSuperposition(AFPChain, Atom[], Atom[])} calculates the correct RMSD and TM-score for an AFPChain of 1 block.
+	 * TODO: Write a test with 2 blocks
+	 */
+	public void testUpdateSuperposition() throws IOException, StructureException {
+		Structure s = StructureTools.getStructure("31BI");
+		Atom[] ca1 = StructureTools.getAtomCAArray(s);
+		Atom[] ca2 = StructureTools.getAtomCAArray(s);
+		StringBuilder sb = new StringBuilder();
+		BufferedReader br = new BufferedReader(new FileReader("src/test/resources/align/31BI_symm_align.xml"));
+		String line = "";
+		while ((line = br.readLine()) != null) {
+			sb.append(line);
+		}
+		br.close();
+		AFPChain afpChain = AFPChainXMLParser.fromXML(sb.toString(), ca1, ca2);
+		afpChain.setTMScore(-1);
+		afpChain.setTotalRmsdOpt(-1);
+		AlignmentTools.updateSuperposition(afpChain, ca1, ca2);
+		assertEquals("TM-score is wrong", 0.62779, afpChain.getTMScore(), 0.001);
+		assertEquals("RMSD is wrong", 2.50569, afpChain.getTotalRmsdOpt(), 0.001);
+	}
+	
+	/**
+	 * Maps (Double d)->((int)(d+offset))
+	 * @author blivens
+	 *
+	 */
+	public static class OffsetMap extends AbstractMap<Double,Integer>
+	{
+		private int offset;
+		public OffsetMap(int offset) {
+			this.offset = offset;
+		}
+		@Override
+		public Integer get(Object key) {
+			if(key==null) return null;
+			return (int)((Double)key+offset);
+		}
+		
+		/**
+		 * Always returns the empty set
+		 */
+		@Override
+		public Set<java.util.Map.Entry<Double,Integer>> entrySet() {
+			return Collections.emptySet();
+		}
+		
+		@Override
+		public boolean containsKey(Object key) {
+			return true;
+		}
 	}
 }

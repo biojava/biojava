@@ -14,6 +14,9 @@ import org.biojava.bio.structure.io.mmcif.model.DatabasePDBremark;
 import org.biojava.bio.structure.io.mmcif.model.DatabasePDBrev;
 import org.biojava.bio.structure.io.mmcif.model.Entity;
 import org.biojava.bio.structure.io.mmcif.model.EntityPolySeq;
+import org.biojava.bio.structure.io.mmcif.model.EntitySrcGen;
+import org.biojava.bio.structure.io.mmcif.model.EntitySrcNat;
+import org.biojava.bio.structure.io.mmcif.model.EntitySrcSyn;
 import org.biojava.bio.structure.io.mmcif.model.Exptl;
 import org.biojava.bio.structure.io.mmcif.model.PdbxChemCompDescriptor;
 import org.biojava.bio.structure.io.mmcif.model.PdbxChemCompIdentifier;
@@ -195,8 +198,7 @@ public class ChemCompConsumer implements MMcifConsumer {
 
 	@Override
 	public void newChemCompAtom(ChemCompAtom atom) {
-		// TODO Auto-generated method stub
-		
+		dictionary.getChemComp(latestChemCompId).getAtoms().add(atom);
 	}
 
 	@Override
@@ -207,12 +209,28 @@ public class ChemCompConsumer implements MMcifConsumer {
 
 	@Override
 	public void newChemCompBond(ChemCompBond bond) {
+		dictionary.getChemComp(latestChemCompId).getBonds().add(bond);
+	}
+
+	@Override
+	public void newPdbxChemCompDescriptor(PdbxChemCompDescriptor desc) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void newPdbxChemCompDescriptor(PdbxChemCompDescriptor desc) {
+	public void newEntitySrcGen(EntitySrcGen entitySrcGen) {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public void newEntitySrcNat(EntitySrcNat entitySrcNat) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void newEntitySrcSyn(EntitySrcSyn entitySrcSyn) {
 		// TODO Auto-generated method stub
 		
 	}

@@ -44,6 +44,9 @@ import org.biojava.bio.structure.io.mmcif.model.DatabasePDBremark;
 import org.biojava.bio.structure.io.mmcif.model.DatabasePDBrev;
 import org.biojava.bio.structure.io.mmcif.model.Entity;
 import org.biojava.bio.structure.io.mmcif.model.EntityPolySeq;
+import org.biojava.bio.structure.io.mmcif.model.EntitySrcGen;
+import org.biojava.bio.structure.io.mmcif.model.EntitySrcNat;
+import org.biojava.bio.structure.io.mmcif.model.EntitySrcSyn;
 import org.biojava.bio.structure.io.mmcif.model.Exptl;
 import org.biojava.bio.structure.io.mmcif.model.PdbxChemCompDescriptor;
 import org.biojava.bio.structure.io.mmcif.model.PdbxChemCompIdentifier;
@@ -142,7 +145,7 @@ public class SimpleMMcifParser implements MMcifParser {
 	}
 
 	public void parse(BufferedReader buf)
-	throws IOException {
+			throws IOException {
 
 		triggerDocumentStart();
 
@@ -284,7 +287,7 @@ public class SimpleMMcifParser implements MMcifParser {
 		if ( line.trim().length() == 0){
 			return data;
 		}
-		
+
 		if ( line.trim().length() == 1){
 			if ( line.startsWith(STRING_LIMIT))
 				return data;
@@ -384,7 +387,7 @@ public class SimpleMMcifParser implements MMcifParser {
 		if ( ! word.trim().equals(""))
 			data.add(word);
 
-		
+
 		return data;
 
 	}
@@ -398,7 +401,7 @@ public class SimpleMMcifParser implements MMcifParser {
 	private List<String> processLine(String line,
 			BufferedReader buf,
 			int fieldLength)
-			throws IOException{
+					throws IOException{
 
 		//System.out.println("XX processLine " + fieldLength + " " + line);
 		// go through the line and process each character
@@ -541,7 +544,21 @@ public class SimpleMMcifParser implements MMcifParser {
 					loopFields,lineData);
 
 			triggerNewEntityPolySeq(exptl);
-
+		} else if ( category.equals("_entity_src_gen")){
+			EntitySrcGen entitySrcGen = (EntitySrcGen) buildObject(
+					"org.biojava.bio.structure.io.mmcif.model.EntitySrcGen",
+					loopFields,lineData);
+			triggerNewEntitySrcGen(entitySrcGen);
+		} else if ( category.equals("_entity_src_nat")){
+			EntitySrcNat entitySrcNat = (EntitySrcNat) buildObject(
+					"org.biojava.bio.structure.io.mmcif.model.EntitySrcNat",
+					loopFields,lineData);
+			triggerNewEntitySrcNat(entitySrcNat);
+		} else if ( category.equals("_entity_src_syn")){
+			EntitySrcSyn entitySrcSyn = (EntitySrcSyn) buildObject(
+					"org.biojava.bio.structure.io.mmcif.model.EntitySrcSyn",
+					loopFields,lineData);
+			triggerNewEntitySrcSyn(entitySrcSyn);
 		} else if ( category.equals("_struct_asym")){
 			StructAsym sasym  = (StructAsym) buildObject(
 					"org.biojava.bio.structure.io.mmcif.model.StructAsym",
@@ -567,64 +584,64 @@ public class SimpleMMcifParser implements MMcifParser {
 			PdbxEntityNonPoly pen = (PdbxEntityNonPoly) buildObject(
 					"org.biojava.bio.structure.io.mmcif.model.PdbxEntityNonPoly",
 					loopFields,lineData
-			);
+					);
 			triggerNewPdbxEntityNonPoly(pen);
 		} else if ( category.equals("_struct_keywords")){
 			StructKeywords kw = (StructKeywords)buildObject(
 					"org.biojava.bio.structure.io.mmcif.model.StructKeywords",
 					loopFields,lineData
-			);
+					);
 			triggerNewStructKeywords(kw);
 		} else if (category.equals("_refine")){
 			Refine r = (Refine)buildObject(
 					"org.biojava.bio.structure.io.mmcif.model.Refine",
 					loopFields,lineData
-			);
+					);
 			triggerNewRefine(r);
 		} else if (category.equals("_chem_comp")){
 			ChemComp c = (ChemComp)buildObject(
 					"org.biojava.bio.structure.io.mmcif.model.ChemComp",
 					loopFields, lineData
 					);
-			
+
 			triggerNewChemComp(c);
 		} else if (category.equals("_audit_author")) {
-		   AuditAuthor aa = (AuditAuthor)buildObject(
-		         "org.biojava.bio.structure.io.mmcif.model.AuditAuthor",
-		         loopFields, lineData);
-		      triggerNewAuditAuthor(aa);
+			AuditAuthor aa = (AuditAuthor)buildObject(
+					"org.biojava.bio.structure.io.mmcif.model.AuditAuthor",
+					loopFields, lineData);
+			triggerNewAuditAuthor(aa);
 		} else if (category.equals("_pdbx_chem_comp_descriptor")) {
 			ChemCompDescriptor ccd = (ChemCompDescriptor) buildObject(
-			         "org.biojava.bio.structure.io.mmcif.model.ChemCompDescriptor",
-			         loopFields, lineData);
+					"org.biojava.bio.structure.io.mmcif.model.ChemCompDescriptor",
+					loopFields, lineData);
 			triggerNewChemCompDescriptor(ccd);
 		} else if (category.equals("_pdbx_struct_oper_list")) {
 			/* PdbxStructOperList structOper = (PdbxStructOperList) buildObject(
 					"org.biojava.bio.structure.io.mmcif.model.PdbxStructOperList",
 			         loopFields, lineData); */
-			
+
 			// this guy is special since we convert to Matrices and shift vectors...
 			PdbxStructOperList structOper = getPdbxStructOperList(loopFields,lineData);
 			triggerNewPdbxStructOper(structOper);
-			
-			
+
+
 		} else if (category.equals("_pdbx_struct_assembly")) {
 			PdbxStructAssembly sa = (PdbxStructAssembly) buildObject(
-			         "org.biojava.bio.structure.io.mmcif.model.PdbxStructAssembly",
-			         loopFields, lineData);			
+					"org.biojava.bio.structure.io.mmcif.model.PdbxStructAssembly",
+					loopFields, lineData);			
 			triggerNewPdbxStructAssembly(sa);
-			
+
 		} else if (category.equals("_pdbx_struct_assembly_gen")) {
 			PdbxStructAssemblyGen sa = (PdbxStructAssemblyGen) buildObject(
-			         "org.biojava.bio.structure.io.mmcif.model.PdbxStructAssemblyGen",
-			         loopFields, lineData);			
+					"org.biojava.bio.structure.io.mmcif.model.PdbxStructAssemblyGen",
+					loopFields, lineData);			
 			triggerNewPdbxStructAssemblyGen(sa);
 		} else if ( category.equals("_chem_comp_atom")){
 			ChemCompAtom atom = (ChemCompAtom)buildObject(
 					"org.biojava.bio.structure.io.mmcif.model.ChemCompAtom",
 					loopFields,lineData);
 			triggerNewChemCompAtom(atom);
-			
+
 		}else if ( category.equals("_chem_comp_bond")){
 			ChemCompBond bond = (ChemCompBond)buildObject(
 					"org.biojava.bio.structure.io.mmcif.model.ChemCompBond",
@@ -636,14 +653,14 @@ public class SimpleMMcifParser implements MMcifParser {
 					loopFields,lineData);
 			triggerNewPdbxChemCompIdentifier(id);
 		} else if ( category.equals("_pdbx_chem_comp_descriptor")){
-				PdbxChemCompDescriptor id = (PdbxChemCompDescriptor)buildObject(
-						"org.biojava.bio.structure.io.mmcif.model.PdbxChemCompDescriptor",
-						loopFields,lineData);
-				triggerNewPdbxChemCompDescriptor(id);
-						
+			PdbxChemCompDescriptor id = (PdbxChemCompDescriptor)buildObject(
+					"org.biojava.bio.structure.io.mmcif.model.PdbxChemCompDescriptor",
+					loopFields,lineData);
+			triggerNewPdbxChemCompDescriptor(id);
+
 		} else {
-		
-		
+
+
 
 			// trigger a generic bean that can deal with all missing data types...
 			triggerGeneric(category,loopFields,lineData);
@@ -652,56 +669,56 @@ public class SimpleMMcifParser implements MMcifParser {
 
 	}
 
-	
 
-//	@SuppressWarnings({ "rawtypes", "unchecked"})
-//	private void setPair(Object o, List<String> lineData){
-//		Class c = o.getClass();
-//
-//		if (lineData.size() == 2){
-//			String key = lineData.get(0);
-//			String val = lineData.get(1);
-//
-//			int dotPos = key.indexOf('.');
-//
-//			if ( dotPos > -1){
-//				key = key.substring(dotPos+1,key.length());
-//			}
-//
-//			String u = key.substring(0,1).toUpperCase();
-//			try {
-//				Method m = c.getMethod("set" + u + key.substring(1,key.length()) , String.class);
-//				m.invoke(o,val);
-//			}
-//			catch (InvocationTargetException iex){
-//				iex.printStackTrace();
-//			}
-//			catch (IllegalAccessException aex){
-//				aex.printStackTrace();
-//			}
-//			catch( NoSuchMethodException nex){
-//				if ( val.equals("?") || val.equals(".")) {
-//					logger.info("trying to set field >" + key + "< in >"+ c.getName() + "<, but not found. Since value is >"+val+"<  most probably just ignore this.");
-//				} else {
-//					logger.warning("trying to set field >" + key + "< in >"+ c.getName() + "<, but not found! (value:" + val + ")");
-//				}
-//			}
-//		} else {
-//			System.err.println("trying to set key/value pair on object " +o.getClass().getName() + " but did not find in " + lineData);
-//		}
-//	}
 
-	
+	//	@SuppressWarnings({ "rawtypes", "unchecked"})
+	//	private void setPair(Object o, List<String> lineData){
+	//		Class c = o.getClass();
+	//
+	//		if (lineData.size() == 2){
+	//			String key = lineData.get(0);
+	//			String val = lineData.get(1);
+	//
+	//			int dotPos = key.indexOf('.');
+	//
+	//			if ( dotPos > -1){
+	//				key = key.substring(dotPos+1,key.length());
+	//			}
+	//
+	//			String u = key.substring(0,1).toUpperCase();
+	//			try {
+	//				Method m = c.getMethod("set" + u + key.substring(1,key.length()) , String.class);
+	//				m.invoke(o,val);
+	//			}
+	//			catch (InvocationTargetException iex){
+	//				iex.printStackTrace();
+	//			}
+	//			catch (IllegalAccessException aex){
+	//				aex.printStackTrace();
+	//			}
+	//			catch( NoSuchMethodException nex){
+	//				if ( val.equals("?") || val.equals(".")) {
+	//					logger.info("trying to set field >" + key + "< in >"+ c.getName() + "<, but not found. Since value is >"+val+"<  most probably just ignore this.");
+	//				} else {
+	//					logger.warning("trying to set field >" + key + "< in >"+ c.getName() + "<, but not found! (value:" + val + ")");
+	//				}
+	//			}
+	//		} else {
+	//			System.err.println("trying to set key/value pair on object " +o.getClass().getName() + " but did not find in " + lineData);
+	//		}
+	//	}
 
-	
+
+
+
 
 	private PdbxStructOperList getPdbxStructOperList(List<String> loopFields,
 			List<String> lineData) {
 		PdbxStructOperList so = new PdbxStructOperList();
-		
+
 		//System.out.println(loopFields);
 		//System.out.println(lineData);
-		
+
 		String id = lineData.get(loopFields.indexOf("id"));
 		so.setId(id);
 		so.setType(lineData.get(loopFields.indexOf("type")));
@@ -709,27 +726,27 @@ public class SimpleMMcifParser implements MMcifParser {
 		for (int i = 1 ; i <=3 ; i++){
 			for (int j =1 ; j <= 3 ; j++){
 				String max = String.format("matrix[%d][%d]",j,i);
-		
+
 				String val = lineData.get(loopFields.indexOf(max));
 				Double d = Double.parseDouble(val);
-				 matrix.set(i-1,j-1,d);
+				matrix.set(i-1,j-1,d);
 			}
 		}
-		
+
 		double[] coords =new double[3];
-		
+
 		for ( int i = 1; i <=3 ; i++){
 			String v = String.format("vector[%d]",i);
 			String val = lineData.get(loopFields.indexOf(v));
 			Double d = Double.parseDouble(val);
 			coords[i-1] = d;
 		}
-		
+
 		so.setMatrix(matrix);
 		so.setVector(coords);
-		
-		
-		
+
+
+
 		return so;
 	}
 
@@ -737,7 +754,7 @@ public class SimpleMMcifParser implements MMcifParser {
 		for(MMcifConsumer c : consumers){
 			c.newPdbxStructOperList(structOper);
 		}
-		
+
 	}
 
 	@SuppressWarnings("rawtypes")
@@ -745,7 +762,7 @@ public class SimpleMMcifParser implements MMcifParser {
 
 
 		// TODO: not implemented yet!
-			//logger.info("Setting of array not implemented at the present for " + key + " " + val);
+		//logger.info("Setting of array not implemented at the present for " + key + " " + val);
 		/*
 		int pos = key.indexOf("[");
 		String varName = key.substring(0,pos);
@@ -822,6 +839,21 @@ public class SimpleMMcifParser implements MMcifParser {
 			c.newEntityPolySeq(epolseq);
 		}
 	}
+	public void triggerNewEntitySrcGen(EntitySrcGen entitySrcGen){
+		for(MMcifConsumer c : consumers){
+			c.newEntitySrcGen(entitySrcGen);
+		}
+	}
+	public void triggerNewEntitySrcNat(EntitySrcNat entitySrcNat){
+		for(MMcifConsumer c : consumers){
+			c.newEntitySrcNat(entitySrcNat);
+		}
+	}
+	public void triggerNewEntitySrcSyn(EntitySrcSyn entitySrcSyn){
+		for(MMcifConsumer c : consumers){
+			c.newEntitySrcSyn(entitySrcSyn);
+		}
+	}
 	public void triggerNewChemComp(ChemComp cc){
 		for(MMcifConsumer c : consumers){
 			c.newChemComp(cc);
@@ -846,10 +878,10 @@ public class SimpleMMcifParser implements MMcifParser {
 	}
 
 	private void triggerNewAuditAuthor(AuditAuthor aa){
-       for(MMcifConsumer c : consumers){
-           c.newAuditAuthor(aa);
-       }
-   }
+		for(MMcifConsumer c : consumers){
+			c.newAuditAuthor(aa);
+		}
+	}
 	private void triggerNewDatabasePDBrev(DatabasePDBrev dbrev){
 		for(MMcifConsumer c : consumers){
 			c.newDatabasePDBrev(dbrev);
@@ -936,13 +968,13 @@ public class SimpleMMcifParser implements MMcifParser {
 			c.newChemCompAtom(atom);
 		}
 	}
-	
+
 	private void triggerNewChemCompBond(ChemCompBond bond) {
 		for(MMcifConsumer c : consumers){
 			c.newChemCompBond(bond);
 		}
 	}
-	
+
 	private void triggerNewPdbxChemCompIdentifier(PdbxChemCompIdentifier id) {
 		for(MMcifConsumer c : consumers){
 			c.newPdbxChemCompIndentifier(id);

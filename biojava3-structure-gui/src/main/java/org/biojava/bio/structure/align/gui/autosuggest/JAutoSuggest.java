@@ -38,7 +38,6 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
-import java.util.Iterator;
 import java.util.Vector;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -46,7 +45,6 @@ import javax.swing.JDialog;
 import javax.swing.JList;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
-import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
 
 

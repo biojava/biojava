@@ -22,7 +22,7 @@
  */
 package org.biojava3.core.sequence;
 
-import java.util.logging.Logger;
+//import java.util.logging.Logger;
 
 /**
  * A gene contains a collection of Exon sequences
@@ -30,7 +30,7 @@ import java.util.logging.Logger;
  */
 public class ExonSequence extends DNASequence {
 
-    private static final Logger log = Logger.getLogger(ExonSequence.class.getName());
+    //private static final Logger log = Logger.getLogger(ExonSequence.class.getName());
 
     /**
      * Need a parent gene sequence and the bioBegin and bioEnd. An Exon sequence doesn't actually imply what the

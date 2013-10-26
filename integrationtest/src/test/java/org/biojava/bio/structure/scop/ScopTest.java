@@ -1,7 +1,6 @@
 package org.biojava.bio.structure.scop;
 
 import java.util.List;
-
 import org.biojava.bio.structure.Chain;
 import org.biojava.bio.structure.Group;
 import org.biojava.bio.structure.GroupIterator;
@@ -63,7 +62,7 @@ public class ScopTest extends TestCase {
 
 	private void runSCOPTests(){
 
-		ScopDatabase scop = ScopFactory.getSCOP();
+		ScopDatabase scop = ScopFactory.getSCOP(ScopFactory.VERSION_1_75);
 
 		List<ScopDomain> domains = scop.getDomainsForPDB("4HHB");
 
@@ -90,10 +89,20 @@ public class ScopTest extends TestCase {
 		List<ScopDomain> domains1cdg = scop.getDomainsForPDB("1CDG");
 		assertTrue(domains1cdg.size() == 4);
 		ScopDomain d2 = domains1cdg.get(0);
+		assertEquals("Wrong SCOP Id", "d1cdga1", d2.getScopId());
 		AtomCache cache = new AtomCache();
 		try {
 			Structure s = cache.getStructureForDomain(d2);
-
+			/*
+			The actual SCOP description is A:496-581.
+			HET    MAL  A 688      23                                                       
+			HET    MAL  A 689      23                                                       
+			HET    MAL  A 690      23                                                       
+			HET     CA  A 691       1                                                       
+			HET     CA  A 692       1    
+			Thus, the two hetero-atoms are out of range.
+			*/
+			// t
 			//checkRange(s,"A:496-581");
 			// now with ligands!
 			checkRange(s,"A:496-692");
@@ -112,12 +121,14 @@ public class ScopTest extends TestCase {
 
 
 		try {
+		
+			
 			Structure s = cache.getStructureForDomain(domains1xzp.get(0));
+			
 			Chain a = s.getChainByPDB("A");
 
 			// now with ligands...
-			assertEquals(a.getAtomGroups().size(),176);
-
+			assertEquals(176,a.getAtomGroups().size());
 
 		}catch (Exception e){
 			e.printStackTrace();
@@ -156,7 +167,7 @@ public class ScopTest extends TestCase {
 		String chainId = g1.getChain().getChainID();
 		String rangeTest = chainId + ":"+ g1.getResidueNumber().toString()+"-"+ g2.getResidueNumber().toString();
 
-		assertEquals("The expected range and the detected range don;t match!", rangeTest, range);
+		assertEquals("The expected range and the detected range don't match!", range, rangeTest);
 
 	}
 

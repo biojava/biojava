@@ -8,7 +8,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import org.biojava3.core.sequence.CDSSequence;
@@ -82,7 +81,7 @@ public class GFF3Writer {
                     outputStream.write(gff3line.getBytes());
 
                     String transcriptParentName = geneSequence.getAccession().getID() + "." + transcriptIndex;
-                    ArrayList<CDSSequence> cdsSequenceList = new ArrayList(transcriptSequence.getCDSSequences().values());
+                    ArrayList<CDSSequence> cdsSequenceList = new ArrayList<CDSSequence>(transcriptSequence.getCDSSequences().values());
                     Collections.sort(cdsSequenceList, new SequenceComparator());
                     for (CDSSequence cdsSequence : cdsSequenceList) {
                         gff3line = key + "\t" + cdsSequence.getSource() + "\t" + "CDS" + "\t" + cdsSequence.getBioBegin() + "\t" + cdsSequence.getBioEnd() + "\t";
@@ -143,7 +142,7 @@ public class GFF3Writer {
      //       }
             fo.close();
         }
-
+/*
         if (false) {
             FileOutputStream fo = new FileOutputStream("/Users/Scooter/scripps/dyadic/analysis/454Scaffolds/genemark_hmm.gff3");//-16
             LinkedHashMap<String, ChromosomeSequence> dnaSequenceList = GeneFeatureHelper.loadFastaAddGeneFeaturesFromGeneMarkGTF(new File("/Users/Scooter/scripps/dyadic/analysis/454Scaffolds/454Scaffolds.fna"), new File("/Users/Scooter/scripps/dyadic/analysis/454Scaffolds/genemark_hmm.gtf"));
@@ -157,6 +156,7 @@ public class GFF3Writer {
             GFF3Writer gff3Writer = new GFF3Writer();
             gff3Writer.write(System.out, dnaSequenceList);
         }
+        */
 //        System.out.println(listGenes);
         //	GeneMarkGTF.write( list, args[1] );
     }

@@ -8,7 +8,6 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 
-import org.biojava.bio.structure.align.ce.AbstractUserArgumentProcessor;
 import org.biojava.bio.structure.align.client.JFatCatClient;
 import org.biojava.bio.structure.align.client.StructureName;
 import org.biojava.bio.structure.align.util.HTTPConnectionTools;
@@ -159,8 +158,6 @@ public class RemoteDomainProvider extends SerializableCache<String,SortedSet<Str
 	}
 
 	public static void main(String[] args){
-		System.setProperty(AbstractUserArgumentProcessor.PDB_DIR,"/Users/ap3/WORK/PDB");
-
 		String name ="3KIH.A";
 		try {
 			RemoteDomainProvider me = new RemoteDomainProvider(true);

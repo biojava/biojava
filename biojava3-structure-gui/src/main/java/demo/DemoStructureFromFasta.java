@@ -15,7 +15,7 @@ import org.biojava3.core.sequence.compound.AminoAcidCompound;
 import org.biojava3.core.sequence.compound.AminoAcidCompoundSet;
 import org.biojava3.core.sequence.io.GenericFastaHeaderParser;
 import org.biojava3.core.sequence.io.ProteinSequenceCreator;
-import org.biojava3.core.sequence.io.template.FastaHeaderParserInterface;
+import org.biojava3.core.sequence.io.template.SequenceHeaderParserInterface;
 import org.biojava3.core.sequence.io.template.SequenceCreatorInterface;
 
 /**
@@ -51,7 +51,7 @@ public class DemoStructureFromFasta {
 		// Possible Examples: "4HHB" (whole structure), "d4hhba_" (SCOP domain),
 		//   "4HHB.A:1-15" (residue range)
 		// For this example, the built-in fasta parser will extract the correct accession.
-		FastaHeaderParserInterface<ProteinSequence, AminoAcidCompound> headerParser;
+		SequenceHeaderParserInterface<ProteinSequence, AminoAcidCompound> headerParser;
 		headerParser = new GenericFastaHeaderParser<ProteinSequence, AminoAcidCompound>();
 		
 		// Create AtomCache to fetch structures from the PDB

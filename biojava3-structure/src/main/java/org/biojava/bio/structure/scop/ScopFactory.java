@@ -36,6 +36,13 @@ public class ScopFactory {
 		return scop;
 	}
 
+	/**
+	 * @param s A version number, such as {@link #VERSION_1_75A}
+	 */
+	public static void setScopDatabase(String s) {
+		setScopDatabase(ScopFactory.getSCOP(s));
+	}
+	
 	public static void setScopDatabase(ScopDatabase s){
 		System.out.println("Setting ScopDatabase to type: " + s.getClass().getName());
 		scop = s;
@@ -44,7 +51,8 @@ public class ScopFactory {
 
 	// berkeley
 	public static final String VERSION_1_75A = "1.75A";	
-	public static final String VERSION_1_75B = "1.75B";	
+	public static final String VERSION_1_75B = "1.75B";
+	public static final String VERSION_1_75C = "1.75C";	
 
 
 	// original SCOP
@@ -58,10 +66,10 @@ public class ScopFactory {
 		if ( useLocalData) {
 			if ( version.equalsIgnoreCase(VERSION_1_75A)) {
 				return getBerkeley_1_75A();
-
-			}
-			else if ( version.equalsIgnoreCase(VERSION_1_75B)) {
+			} else if ( version.equalsIgnoreCase(VERSION_1_75B)) {
 				return getBerkeley_1_75B();
+			} else if ( version.equalsIgnoreCase(VERSION_1_75C)) {
+				return getBerkeley_1_75C();
 			} else if  ( version.equalsIgnoreCase(VERSION_1_75)){
 				getScop_1_75();
 			} else {
@@ -74,7 +82,29 @@ public class ScopFactory {
 		return scop;
 	}
 	
-	
+
+	/** requests a particular version of SCOP
+	 * 
+	 * @param version
+	 * @return
+	 */
+	public static ScopDatabase getSCOP(String version){
+		if ( version.equalsIgnoreCase(VERSION_1_75A)) {
+			return getBerkeley_1_75A();
+		} else if ( version.equalsIgnoreCase(VERSION_1_75B)) {
+			return getBerkeley_1_75B();
+		} else if ( version.equalsIgnoreCase(VERSION_1_75C)) {
+			return getBerkeley_1_75C();
+		} else if ( version.equalsIgnoreCase(VERSION_1_75)) {
+			return getScop_1_75();
+		} else {
+			System.err.println("Unknown SCOP version " + version + " . Returning default");
+			
+			return scop;
+		}
+	}
+
+
 	private static ScopDatabase getScop_1_75() {
 		ScopInstallation scop = (ScopInstallation)versionedScopDBs.get(VERSION_1_75);
 		if ( scop == null) {
@@ -86,28 +116,7 @@ public class ScopFactory {
 		return scop;
 		
 	}
-
-	/** requests a particular version of SCOP
-	 * 
-	 * @param version
-	 * @return
-	 */
-	public static ScopDatabase getSCOP(String version){
-		if ( version.equalsIgnoreCase(VERSION_1_75A)) {
-			return getBerkeley_1_75A();
-
-		}
-		else if ( version.equalsIgnoreCase(VERSION_1_75B)) {
-			return getBerkeley_1_75B();
-		} else if ( version.equalsIgnoreCase(VERSION_1_75)) {
-			return getScop_1_75();
-		} else {
-			System.err.println("Unknown SCOP version " + version + " . Returning default");
-			
-			return scop;
-		}
-	}
-
+	
 	private static ScopDatabase getBerkeley_1_75A() {
 		BerkeleyScopInstallation berkeley_1_75A = (BerkeleyScopInstallation) versionedScopDBs.get(VERSION_1_75A);
 		
@@ -128,5 +137,16 @@ public class ScopFactory {
 			versionedScopDBs.put(VERSION_1_75B, berkeley_1_75B);
 		}
 		return berkeley_1_75B;
+	}
+	
+	private static ScopDatabase getBerkeley_1_75C() {
+		BerkeleyScopInstallation berkeley_1_75C = (BerkeleyScopInstallation) versionedScopDBs.get(VERSION_1_75C);
+		
+		if ( berkeley_1_75C == null) {
+			berkeley_1_75C  = new BerkeleyScopInstallation();
+			berkeley_1_75C.setScopVersion(VERSION_1_75C);				
+			versionedScopDBs.put(VERSION_1_75C, berkeley_1_75C);
+		}
+		return berkeley_1_75C;
 	}
 }

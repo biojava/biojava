@@ -1,25 +1,20 @@
 /**
- *                    BioJava development code
- *
- * This code may be freely distributed and modified under the
- * terms of the GNU Lesser General Public Licence.  This should
- * be distributed with the code.  If you do not have a copy,
- * see:
- *
- *      http://www.gnu.org/copyleft/lesser.html
- *
- * Copyright for this code is held jointly by the individual
- * authors.  These should be listed in @author doc comments.
- *
- * For more information on the BioJava project and its aims,
- * or to join the biojava-l mailing list, visit the home page
+ * BioJava development code
+ * 
+ * This code may be freely distributed and modified under the terms of the GNU Lesser General Public Licence. This
+ * should be distributed with the code. If you do not have a copy, see:
+ * 
+ * http://www.gnu.org/copyleft/lesser.html
+ * 
+ * Copyright for this code is held jointly by the individual authors. These should be listed in @author doc comments.
+ * 
+ * For more information on the BioJava project and its aims, or to join the biojava-l mailing list, visit the home page
  * at:
- *
- *      http://www.biojava.org/
- *
- * Created on 2012-11-20
- * Created by Douglas Myers-Turnbull
- *
+ * 
+ * http://www.biojava.org/
+ * 
+ * Created on 2012-11-20 Created by Douglas Myers-Turnbull
+ * 
  * @since 3.0.6
  */
 package org.biojava.bio.structure.rcsb;
@@ -28,58 +23,56 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-
-import org.w3c.dom.Document;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
 
 /**
- * Fetches information from <a href="http://www.pdb.org/pdb/software/rest.do#descPDB">RCSB's RESTful Web Service Interface</a>.
- * A factory for {@link RCSBDescription RCSBDescriptions} from {@code describeMol} XML files. The factory methods will
- * return null if the data was not found (rather than throwing an exception); client code should test for this. This is
- * for consistency: if the factory could not read some part (corresponding to a field in a class in
+ * Fetches information from <a href="http://www.pdb.org/pdb/software/rest.do#descPDB">RCSB's RESTful Web Service
+ * Interface</a>. A factory for {@link RCSBDescription RCSBDescriptions} from {@code describeMol} XML files. The factory
+ * methods will return null if the data was not found (rather than throwing an exception); client code should test for
+ * this. This is for consistency: if the factory could not read some part (corresponding to a field in a class in
  * {@code rcsb.descriptions}) of the XML file, either because it was blank or contained an error that could not be
  * safely ignored, that field will simply be null. This holds even for numerical values. On some parse errors, the error
  * will additionally be printed to standard error.
  * 
  * Example usage:
+ * 
  * <pre>
- * RCSBDescription description = RCSBDescriptionFactory.get("1w0p");
- * System.out.println(description.getPdbId()); // prints "1w0p"
+ * RCSBDescription description = RCSBDescriptionFactory.get(&quot;1w0p&quot;);
+ * RCSBLigand firstLigand = ligands.getLigands().get(0);
+ * System.out.println(description.getPdbId()); // prints &quot;1w0p&quot;
  * </pre>
  * 
  * @see <a href="http://www.pdb.org/pdb/software/rest.do#descPDB">RCSB RESTful</a>
+ * 
+ *      TODO: Handle queries with more than 1 PDB Id.
  * 
  * @author dmyerstu
  * @since 3.0.6
  */
 public class RCSBDescriptionFactory {
 
-	// this IS needed
-	private static boolean documentBuilderFactorySet = false;
+	private static final Logger logger = LogManager.getLogger(RCSBDescriptionFactory.class.getPackage().getName());
 
 	private static final String URL_STUB = "http://www.rcsb.org/pdb/rest/describeMol?structureId=";
 
 	/**
-	 * @return An {@link RCSBDescription} from the XML file loaded as {@code stream}. Prefer calling {@link #get(String)} if
-	 *         you want data directly from RCSB's RESTful service.
+	 * @return An {@link RCSBDescription} from the XML file loaded as {@code stream}. Prefer calling
+	 *         {@link #get(String)} if you want data directly from RCSB's RESTful service.
 	 * @see RCSBDescriptionFactory#get(String)
 	 */
 	public static RCSBDescription get(InputStream stream) {
 
 		NodeList data;
 		try {
-			data = getNodes(stream);
+			data = ReadUtils.getNodes(stream);
 		} catch (IOException e) {
-			printError(e);
+			logger.error("Couldn't parse XML", e);
 			return null;
 		}
-		
+
 		// first get the main info
 		RCSBDescription description = new RCSBDescription();
 		Element structureIdE = null;
@@ -114,50 +107,15 @@ public class RCSBDescriptionFactory {
 	 * @see RCSBDescriptionFactory#get(InputStream)
 	 */
 	public static RCSBDescription get(String pdbId) {
-
 		InputStream is;
 		try {
 			URL url = new URL(URL_STUB + pdbId);
 			is = url.openConnection().getInputStream();
 		} catch (IOException e) {
-			printError(e);
+			logger.error("Couldn't open connection", e);
 			return null;
 		}
 		return get(is);
-	}
-
-	/**
-	 * @param stream
-	 * @return A {@link NodeList} of top-level {@link Node Nodes} in {@code stream}.
-	 * @throws IOException
-	 */
-	private static NodeList getNodes(InputStream stream) throws IOException {
-
-		if (!documentBuilderFactorySet) { // it's really stupid, but we have to do this
-			System.setProperty("javax.xml.parsers.DocumentBuilderFactory",
-					"com.sun.org.apache.xerces.internal.jaxp.DocumentBuilderFactoryImpl");
-			documentBuilderFactorySet = true;
-		}
-		DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
-		DocumentBuilder builder = null;
-		Document document = null;
-		try {
-			builder = builderFactory.newDocumentBuilder();
-		} catch (ParserConfigurationException e) {
-			printError(e);
-			stream.close();
-			throw new IOException(e);
-		}
-		try {
-			document = builder.parse(stream);
-		} catch (SAXException e) {
-			System.out.println(e.getMessage());
-			printError(e);
-			stream.close();
-			throw new IOException(e);
-		}
-		Node root = document.getDocumentElement();
-		return root.getChildNodes();
 	}
 
 	private static RCSBMacromolecule makeMolecule(Element moleculeE) {
@@ -178,10 +136,10 @@ public class RCSBDescriptionFactory {
 	private static RCSBPolymer makePolymer(Element polymerE) {
 
 		RCSBPolymer polymer = new RCSBPolymer();
-		polymer.setIndex(toInt(polymerE.getAttribute("entityNr")));
-		polymer.setLength(toInt(polymerE.getAttribute("length")));
-		polymer.setWeight(toDouble(polymerE.getAttribute("weight")));
-		polymer.setType(toStr(polymerE.getAttribute("type")));
+		polymer.setIndex(ReadUtils.toInt(polymerE.getAttribute("entityNr")));
+		polymer.setLength(ReadUtils.toInt(polymerE.getAttribute("length")));
+		polymer.setWeight(ReadUtils.toDouble(polymerE.getAttribute("weight")));
+		polymer.setType(ReadUtils.toStr(polymerE.getAttribute("type")));
 
 		Element element = null;
 		NodeList data = polymerE.getChildNodes();
@@ -192,7 +150,7 @@ public class RCSBDescriptionFactory {
 				parseChains(polymer, element.getAttribute("id"));
 			} else if (element.getNodeName().equals("Taxonomy")) {
 				String name = element.getAttribute("name");
-				int id = toInt(element.getAttribute("id"));
+				int id = ReadUtils.toInt(element.getAttribute("id"));
 				RCSBTaxonomy taxonomy = new RCSBTaxonomy(name, id);
 				polymer.setTaxonomy(taxonomy);
 			} else if (element.getNodeName().equals("macroMolecule")) {
@@ -215,43 +173,9 @@ public class RCSBDescriptionFactory {
 			if (part.length() == 1) {
 				polymer.addChain(part.charAt(0));
 			} else {
-				printError(new Exception("Chain id contained more than one character."));
+				logger.error("Chain id contained more than one character");
 			}
 		}
-	}
-
-	/**
-	 * Prints an error message for {@code e} that shows causes and suppressed messages recursively.
-	 * Just a little more useful than {@code e.printStackTrace()}.
-	 * 
-	 * @param e
-	 */
-	public static void printError(Exception e) {
-		System.err.println(printError(e, ""));
-	}
-
-	/**
-	 * @see #printError(Exception)
-	 */
-	private static String printError(Exception e, String tabs) {
-		StringBuilder sb = new StringBuilder();
-		Throwable prime = e;
-		while (prime != null) {
-			if (tabs.length() > 0) sb.append(tabs + "Cause:" + "\n");
-			sb.append(tabs + prime.getClass().getSimpleName());
-			if (prime.getMessage() != null) sb.append(": " + prime.getMessage());
-			sb.append("\n");
-			if (prime instanceof Exception) {
-				StackTraceElement[] trace = ((Exception) prime).getStackTrace();
-				for (StackTraceElement element : trace) {
-					sb.append(tabs + element.toString() + "\n");
-				}
-			}
-			prime = prime.getCause();
-			tabs += "\t";
-		}
-		sb.append("\n");
-		return sb.toString();
 	}
 
 	private static void parseSynonyms(RCSBPolymer polymer, String string) {
@@ -259,35 +183,6 @@ public class RCSBDescriptionFactory {
 		for (String part : parts) {
 			polymer.addSynonym(part);
 		}
-	}
-
-	private static Double toDouble(String s) {
-		if (s == "") return null;
-		try {
-			return Double.parseDouble(s);
-		} catch (NumberFormatException e) {
-			printError(e);
-		}
-		return null;
-	}
-
-	private static Integer toInt(String s) {
-		if (s == "") return null;
-		try {
-			return Integer.parseInt(s);
-		} catch (NumberFormatException e) {
-			printError(e);
-		}
-		return null;
-	}
-
-	/**
-	 * @param s
-	 * @return {@code s}, or null if {@code s} is the empty string
-	 */
-	private static String toStr(String s) {
-		if (s == "") return null;
-		return s;
 	}
 
 }

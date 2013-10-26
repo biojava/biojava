@@ -24,7 +24,6 @@
  */
 package org.biojava.bio.structure.align.webstart;
 
-import java.io.File;
 import java.net.URL;
 
 import javax.swing.JOptionPane;

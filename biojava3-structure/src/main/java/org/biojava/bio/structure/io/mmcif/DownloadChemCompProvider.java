@@ -119,6 +119,9 @@ public class DownloadChemCompProvider implements ChemCompProvider {
 
 		System.out.println("Installing individual chem comp files ...");
 		
+		if ( path == null)
+			path = System.getProperty("java.io.tmpdir");
+		
 		String filename = path + 
 		DownloadChemCompProvider.CHEM_COMP_CACHE_DIRECTORY + FILE_SEPARATOR +
 		"components.cif.gz";
@@ -215,7 +218,7 @@ public class DownloadChemCompProvider implements ChemCompProvider {
 
 			String filename = getLocalFileName(recordName);
 
-			System.out.println("reading " + filename);
+//			System.out.println("reading " + filename);
 			InputStreamProvider isp = new InputStreamProvider();
 
 			InputStream inStream = isp.getInputStream(filename);
@@ -314,7 +317,7 @@ public class DownloadChemCompProvider implements ChemCompProvider {
 
 		String u = serverLocation + recordName + ".cif";
 
-		System.out.println("downloading " + u);
+//		System.out.println("downloading " + u);
 
 		try {
 

@@ -115,7 +115,7 @@ public class TreeConstructor<C extends AbstractSequence<D>, D extends Compound> 
             // Pairwise substitution score (with no gap penalties)
             ScoreMatrix pwmatrix = ResidueProperties.getScoreMatrix(treeConstructionAlgorithm.name());
             if (pwmatrix == null) {
-                pwmatrix = ResidueProperties.getScoreMatrix(treeConstructionAlgorithm.BLOSUM62.name());
+                pwmatrix = ResidueProperties.getScoreMatrix(TreeConstructionAlgorithm.BLOSUM62.name());
             }
             int maxscore = 0;
             int end = sequenceString[0].length();
@@ -255,7 +255,7 @@ public class TreeConstructor<C extends AbstractSequence<D>, D extends Compound> 
 
 
 
-            FastaReader<ProteinSequence,AminoAcidCompound> fastaReader = new FastaReader<ProteinSequence,AminoAcidCompound>(inStream, new GenericFastaHeaderParser(), new ProteinSequenceCreator(AminoAcidCompoundSet.getAminoAcidCompoundSet()));
+            FastaReader<ProteinSequence,AminoAcidCompound> fastaReader = new FastaReader<ProteinSequence,AminoAcidCompound>(inStream, new GenericFastaHeaderParser<ProteinSequence, AminoAcidCompound>(), new ProteinSequenceCreator(AminoAcidCompoundSet.getAminoAcidCompoundSet()));
             LinkedHashMap<String,ProteinSequence> proteinSequences = fastaReader.process();
             inStream.close();
 

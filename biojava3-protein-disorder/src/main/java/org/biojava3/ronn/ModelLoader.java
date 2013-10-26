@@ -184,6 +184,7 @@ public final class ModelLoader {
 	    }
 	    ModelLoader.models.put(model.modelNum, model);
 	    bfr.close();
+	    scan.close();
 	}
     }
 
@@ -193,6 +194,6 @@ public final class ModelLoader {
 	loader.loadModels();
 	System.out.println(ModelLoader.models.get(0));
 	System.out.println(ModelLoader.models.get(9));
-	System.out.println(loader.models.size());
+	System.out.println(ModelLoader.models.size());
     }
 }

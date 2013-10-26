@@ -47,6 +47,8 @@ public class ChemComp implements Serializable, Comparable<ChemComp>{
 	String mon_nstd_flag;
 
 	List<ChemCompDescriptor> descriptors = new ArrayList<ChemCompDescriptor>();
+	List<ChemCompBond> bonds = new ArrayList<ChemCompBond>();
+	List<ChemCompAtom> atoms = new ArrayList<ChemCompAtom>();
 
 	// and some derived data for easier processing...
 	ResidueType residueType;
@@ -296,7 +298,22 @@ public class ChemComp implements Serializable, Comparable<ChemComp>{
 	public void setDescriptors(List<ChemCompDescriptor> descriptors) {
 		this.descriptors = descriptors;
 	}
+	
+	public List<ChemCompBond> getBonds() {
+		return bonds;
+	}
+	
+	public void setBonds(List<ChemCompBond> bonds) {
+		this.bonds = bonds;
+	}
 
+	public List<ChemCompAtom> getAtoms() {
+		return atoms;
+	}
+	
+	public void setAtoms(List<ChemCompAtom> atoms) {
+		this.atoms = atoms;
+	}
 	
 	public int compareTo(ChemComp arg0) {
 		if ( this.equals(arg0))

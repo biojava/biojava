@@ -26,6 +26,7 @@ package org.biojava.bio.structure.scop;
 
 import java.io.InputStream;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.biojava.bio.structure.align.client.JFatCatClient;
@@ -197,6 +198,11 @@ public class CachedRemoteScopInstallation extends SerializableCache<String,ScopD
 		System.out.println("flushing CachedRemoteScopInstallation");
 		super.flushCache();
 		scopDescriptionCache.flushCache();
+	}
+
+	@Override
+	public List<String> getComments(int sunid) {
+		return new ArrayList<String>(1);
 	}
 
 	

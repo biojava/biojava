@@ -24,6 +24,8 @@
 package org.biojava.bio.structure;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.biojava.bio.structure.io.FileConvert;
 
@@ -54,6 +56,8 @@ public class AtomImpl implements Atom,Serializable, PDBRecord {
     Character altLoc ;
     Group parent;
     long id;
+    
+    private List<Bond> bonds;
 
     public AtomImpl () {
         name     = null        ;
@@ -65,6 +69,7 @@ public class AtomImpl implements Atom,Serializable, PDBRecord {
         tempfactor = 0.0       ;
         altLoc = new Character(' ');
         parent = null;
+        bonds = new ArrayList<Bond>(0);
     }
     /** Get the Hibernate database ID.
      *
@@ -247,6 +252,9 @@ public class AtomImpl implements Atom,Serializable, PDBRecord {
 		FileConvert.toPDB(this,buf);
 		
 	}
-
-
+	
+	@Override
+	public List<Bond> getBonds() {
+		return bonds;
+	}
 }

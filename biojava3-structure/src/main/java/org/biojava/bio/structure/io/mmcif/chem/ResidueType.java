@@ -39,6 +39,7 @@ public enum ResidueType implements Serializable {
    dPeptideLinking(PolymerType.dpeptide, "D-peptide linking"),
    lPeptideLinking(PolymerType.peptide, "L-peptide linking"),
    glycine(PolymerType.peptide,"PEPTIDE LINKING"),
+   peptideLike(PolymerType.otherPolymer, "peptide-like"),
    dPeptideAminoTerminus(PolymerType.dpeptide, "D-peptide NH3 amino terminus"),
    lPeptideAminoTerminus(PolymerType.peptide, "L-peptide NH3 amino terminus"),
    dPeptideCarboxyTerminus(PolymerType.dpeptide, "D-peptide COOH carboxy terminus"),
