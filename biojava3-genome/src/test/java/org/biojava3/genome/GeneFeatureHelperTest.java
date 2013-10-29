@@ -41,7 +41,8 @@ public class GeneFeatureHelperTest extends TestCase {
 
     public void testZeroLocation() throws Exception {
 
-        FeatureList listGenes = GFF3Reader.read("src/test/resources/amphimedon.gff3");
+        @SuppressWarnings("unused")
+		FeatureList listGenes = GFF3Reader.read("src/test/resources/amphimedon.gff3");
     }
 
     /**

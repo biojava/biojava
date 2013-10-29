@@ -12,7 +12,6 @@ import org.biojava3.core.sequence.AccessionID;
 import org.biojava3.core.sequence.DNASequence;
 import org.biojava3.core.sequence.io.FastaWriterHelper;
 import org.biojava3.core.sequence.ProteinSequence;
-import org.biojava3.core.sequence.io.FastaWriterHelper;
 import org.biojava3.core.util.XMLHelper;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;

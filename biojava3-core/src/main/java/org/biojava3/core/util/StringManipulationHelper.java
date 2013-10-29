@@ -118,13 +118,20 @@ public class StringManipulationHelper  {
 		while (scanner1.hasNextLine()) {
 			line1 = scanner1.nextLine();
 			line2 = scanner2.nextLine();
-			if (! line1.equals(line2))
+			if (! line1.equals(line2)) {
+				scanner1.close();
+				scanner2.close();
 				return false;
+			}
 		}
 		if (scanner2.hasNextLine()) {
+			scanner1.close();
+			scanner2.close();
 			return false;
 		}
 
+		scanner1.close();
+		scanner2.close();
 		return true;
 	}
 	

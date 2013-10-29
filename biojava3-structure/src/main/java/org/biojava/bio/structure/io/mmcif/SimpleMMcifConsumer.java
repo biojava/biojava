@@ -48,7 +48,6 @@ import org.biojava.bio.structure.NucleotideImpl;
 import org.biojava.bio.structure.PDBHeader;
 import org.biojava.bio.structure.ResidueNumber;
 import org.biojava.bio.structure.Structure;
-import org.biojava.bio.structure.StructureException;
 import org.biojava.bio.structure.StructureImpl;
 import org.biojava.bio.structure.StructureTools;
 import org.biojava.bio.structure.UnknownPdbAminoAcidException;

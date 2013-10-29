@@ -216,14 +216,14 @@ public class GenericInsdcHeaderFormat<S extends AbstractSequence<C>, C extends C
 	            //N:N so return N^1
 				StringBuilder sb = new StringBuilder();
 				Formatter formatter = new Formatter(sb,Locale.US);
-				formatter.format("%s%i^1", ref, record_length);
+				formatter.format("%s%d^1", ref, record_length);
 				String output = formatter.toString();
 				formatter.close();
 				return output;
 			} else {
 				StringBuilder sb = new StringBuilder();
 				Formatter formatter = new Formatter(sb,Locale.US);
-				formatter.format("%s%i^%i", ref, sequenceLocation.getStart().getPosition(), sequenceLocation.getEnd().getPosition());
+				formatter.format("%s%d^%d", ref, sequenceLocation.getStart().getPosition(), sequenceLocation.getEnd().getPosition());
 				String output = formatter.toString();
 				formatter.close();
 				return output;				
@@ -234,7 +234,7 @@ public class GenericInsdcHeaderFormat<S extends AbstractSequence<C>, C extends C
 	        //(a length one slice, meaning a single letter)
 			StringBuilder sb = new StringBuilder();
 			Formatter formatter = new Formatter(sb,Locale.US);
-			formatter.format("%s%i", ref, sequenceLocation.getEnd().getPosition());
+			formatter.format("%s%d", ref, sequenceLocation.getEnd().getPosition());
 			String output = formatter.toString();
 			formatter.close();
 			return output;							
@@ -246,7 +246,7 @@ public class GenericInsdcHeaderFormat<S extends AbstractSequence<C>, C extends C
 				//Treat the unknown start position as a BeforePosition
 				StringBuilder sb = new StringBuilder();
 				Formatter formatter = new Formatter(sb,Locale.US);
-				formatter.format("%s<%i..%s", ref, sequenceLocation.getEnd().getPosition(), _insdc_feature_position_string(sequenceLocation.getEnd()));
+				formatter.format("%s<%d..%s", ref, sequenceLocation.getEnd().getPosition(), _insdc_feature_position_string(sequenceLocation.getEnd()));
 				String output = formatter.toString();
 				formatter.close();
 				return output;				
@@ -254,7 +254,7 @@ public class GenericInsdcHeaderFormat<S extends AbstractSequence<C>, C extends C
 				//Treat the unknown start position as an AfterPosition
 				StringBuilder sb = new StringBuilder();
 				Formatter formatter = new Formatter(sb,Locale.US);
-				formatter.format("%s%s..>%i", ref, _insdc_feature_position_string(sequenceLocation.getStart()), sequenceLocation.getStart().getPosition());
+				formatter.format("%s%s..>%d", ref, _insdc_feature_position_string(sequenceLocation.getStart()), sequenceLocation.getStart().getPosition());
 				String output = formatter.toString();
 				formatter.close();
 				return output;								

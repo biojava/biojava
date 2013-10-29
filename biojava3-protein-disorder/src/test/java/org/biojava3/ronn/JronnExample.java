@@ -1,20 +1,16 @@
 package org.biojava3.ronn;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.fail;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 import org.biojava3.data.sequence.FastaSequence;
 import org.biojava3.data.sequence.SequenceUtil;
 import org.biojava3.ronn.Jronn.Range;
-import org.biojava3.ronn.ORonn.ResultLayout;
 import org.junit.Test;
 
 
@@ -40,6 +36,7 @@ public class JronnExample {
 	public void rawScoresForMultipleSequences() {
 		try {
 		final List<FastaSequence> sequences = SequenceUtil.readFasta(new FileInputStream("src/test/resources/fasta.in"));
+		@SuppressWarnings("unused")
 		Map<FastaSequence, float[]>	rawProbabilityScores = Jronn.getDisorderScores(sequences); 
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
@@ -52,6 +49,7 @@ public class JronnExample {
 	
 	@Test
 	public void rawScoresForSingleSequence() {
+		@SuppressWarnings("unused")
 		float[]	rawProbabilityScores = Jronn.getDisorderScores(new FastaSequence("name", "LLRGRHLMNGTMIMRPWNFLNDHHFPKFFPHLIEQQAIWLADWWRKKHC" +
 				"RPLPTRAPTMDQWDHFALIQKHWTANLWFLTFPFNDKWGWIWFLKDWTPGSADQAQRACTWFFCHGHDTN" +
 				"CQIIFEGRNAPERADPMWTGGLNKHIIARGHFFQSNKFHFLERKFCEMAEIERPNFTCRTLDCQKFPWDDP" ));
@@ -62,7 +60,8 @@ public class JronnExample {
 	public void disorderForMultipleSequences() {
 		try {
 			final List<FastaSequence> sequences = SequenceUtil.readFasta(new FileInputStream("src/test/resources/fasta.in"));
-		 	Map<FastaSequence, Range[]> ranges = Jronn.getDisorder(sequences);
+		 	@SuppressWarnings("unused")
+			Map<FastaSequence, Range[]> ranges = Jronn.getDisorder(sequences);
 
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
@@ -76,6 +75,7 @@ public class JronnExample {
 	
 	@Test
 	public void disorderForSingleSequence() {
+		@SuppressWarnings("unused")
 		Range[]	ranges = Jronn.getDisorder(new FastaSequence("name", "LLRGRHLMNGTMIMRPWNFLNDHHFPKFFPHLIEQQAIWLADWWRKKHC" +
 				"RPLPTRAPTMDQWDHFALIQKHWTANLWFLTFPFNDKWGWIWFLKDWTPGSADQAQRACTWFFCHGHDTN" +
 				"CQIIFEGRNAPERADPMWTGGLNKHIIARGHFFQSNKFHFLERKFCEMAEIERPNFTCRTLDCQKFPWDDP" ));

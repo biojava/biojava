@@ -16,6 +16,7 @@ import org.biojava3.core.sequence.DNASequence;
  *
  * @author Hanno Hinsch, Carmelo Foti
  */
+@SuppressWarnings("serial")
 public class FeatureList extends ArrayList<FeatureI> {
 
 	 Map<String, Map<String,List<FeatureI>>> featindex = new HashMap<String,Map<String,List<FeatureI>>>();

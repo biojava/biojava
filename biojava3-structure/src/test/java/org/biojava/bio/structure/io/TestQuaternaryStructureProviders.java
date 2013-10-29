@@ -37,15 +37,9 @@ public class TestQuaternaryStructureProviders {
 
 	}
 	
-	@Test
-	public void test2TBV(){
-		testID("2TBV",1);
-
-	}
 //	@Test
 //	public void test1EI7(){
 //		testID("1ei7",1);
-//
 //	}
 	
 		
@@ -104,7 +98,7 @@ public class TestQuaternaryStructureProviders {
 					boolean found = false;
 					for ( ModelTransformationMatrix m2 : mL){
 						
-						if  (! m1.getNdbChainId().equals(m2.getNdbChainId()))
+						if  (! m1.getChainId().equals(m2.getChainId()))
 								continue;
 						if ( ! m1.getMatrix().toString().equals(m2.getMatrix().toString()))
 								continue;
