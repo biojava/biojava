@@ -54,7 +54,6 @@ public class ScopFactory {
 	public static final String VERSION_1_75B = "1.75B";
 	public static final String VERSION_1_75C = "1.75C";	
 
-
 	// original SCOP
 	// latest SCOP release from SCOP website = 1.75;
 	public static final String VERSION_1_75 = "1.75";
@@ -95,7 +94,7 @@ public class ScopFactory {
 			return getBerkeley_1_75B();
 		} else if ( version.equalsIgnoreCase(VERSION_1_75C)) {
 			return getBerkeley_1_75C();
-		} else if ( version.equalsIgnoreCase(VERSION_1_75)) {
+		} else if ( version.equalsIgnoreCase(VERSION_1_75)) {		
 			return getScop_1_75();
 		} else {
 			System.err.println("Unknown SCOP version " + version + " . Returning default");
