@@ -729,7 +729,8 @@ public class SimpleMMcifParser implements MMcifParser {
 
 				String val = lineData.get(loopFields.indexOf(max));
 				Double d = Double.parseDouble(val);
-				matrix.set(i-1,j-1,d);
+				matrix.set(j-1,i-1,d);
+//				matrix.set(i-1,j-1,d);
 			}
 		}
 

@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import org.biojava.bio.structure.quaternary.ModelTransformationMatrix;
+import org.biojava.bio.structure.quaternary.BiologicalAssemblyTransformation;
 
 
 /** A class that contains PDB Header information.
@@ -44,7 +44,7 @@ public class PDBHeader implements PDBRecord, Serializable{
 
 	DateFormat dateFormat;
 
-	Map<Integer,List<ModelTransformationMatrix>> tranformationMap ;
+	Map<Integer,List<BiologicalAssemblyTransformation>> tranformationMap ;
 
 	public PDBHeader(){
 
@@ -52,7 +52,7 @@ public class PDBHeader implements PDBRecord, Serializable{
 		modDate = new Date(0);
 		dateFormat = new SimpleDateFormat("dd-MMM-yy",Locale.US);
 		resolution = DEFAULT_RESOLUTION;
-		tranformationMap = new HashMap<Integer, List<ModelTransformationMatrix>>();
+		tranformationMap = new HashMap<Integer, List<BiologicalAssemblyTransformation>>();
 		nrBioAssemblies = -1;
 	}
 
@@ -487,11 +487,11 @@ public class PDBHeader implements PDBRecord, Serializable{
 		this.authors = authors;
 	}
 
-	public Map<Integer,List<ModelTransformationMatrix>> getBioUnitTranformationMap() {
+	public Map<Integer,List<BiologicalAssemblyTransformation>> getBioUnitTranformationMap() {
 		return tranformationMap ;
 	}
 
-	public void setBioUnitTranformationMap(Map<Integer,List<ModelTransformationMatrix>> tranformationMap) {
+	public void setBioUnitTranformationMap(Map<Integer,List<BiologicalAssemblyTransformation>> tranformationMap) {
 		this.tranformationMap = tranformationMap;
 	}
 
