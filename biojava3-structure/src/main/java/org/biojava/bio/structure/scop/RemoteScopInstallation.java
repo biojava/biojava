@@ -82,8 +82,8 @@ public class RemoteScopInstallation implements ScopDatabase {
 				ScopDescriptions container = ScopDescriptions.fromXML(xml);
 				results = container.getScopDescription();
 			}
-		} catch (Exception e){
-			e.printStackTrace();
+		} catch (Exception e) {
+			System.err.println("Unable to reach "+ server + "getByCategory?category="+category.toString());
 		}
 		return results;
 	}
@@ -102,7 +102,7 @@ public class RemoteScopInstallation implements ScopDatabase {
 				results = container.getScopDescription();
 			}
 		} catch (Exception e){
-			e.printStackTrace();
+			System.err.println("Unable to reach "+ server + "filterByClassificationId?query="+query);
 		}
 		return results;
 	}
@@ -121,7 +121,7 @@ public class RemoteScopInstallation implements ScopDatabase {
 				results = container.getScopNode();
 			}
 		} catch (Exception e){
-			e.printStackTrace();
+			System.err.println("Unable to reach "+ server + "getTree?scopId="+domain.getScopId());
 		}
 		return results;
 	}
@@ -140,7 +140,7 @@ public class RemoteScopInstallation implements ScopDatabase {
 				results = container.getScopDomain();
 			}
 		} catch (Exception e){
-			e.printStackTrace();
+			System.err.println("Unable to reach "+ server + "filterByDomainName?query="+query);
 		}
 		return results;
 	}
@@ -159,7 +159,7 @@ public class RemoteScopInstallation implements ScopDatabase {
 				results = container.getScopDescription();
 			}
 		} catch (Exception e){
-			e.printStackTrace();
+			System.err.println("Unable to reach "+ server + "filterByDescription?query="+query);
 		}
 		return results;
 	}
@@ -182,7 +182,7 @@ public class RemoteScopInstallation implements ScopDatabase {
 			}
 
 		} catch (Exception e){
-			e.printStackTrace();
+			System.err.println("Unable to reach "+ server + "getScopDescriptionBySunid?sunid="+sunid);
 		}
 		return desc;
 	}
@@ -201,7 +201,7 @@ public class RemoteScopInstallation implements ScopDatabase {
 				results = container.getScopDomain();
 			}
 		} catch (Exception e){
-			e.printStackTrace();
+			System.err.println("Unable to reach "+ server + "getDomainsForPDB?pdbId="+pdbId);
 		}
 		return results;
 	}
@@ -230,7 +230,7 @@ public class RemoteScopInstallation implements ScopDatabase {
 				i = 100;
 				break;
 			} catch (Exception e){
-				e.printStackTrace();
+				System.err.println("Unable to reach "+ server + "getDomainByScopID?scopId="+scopId);
 				// sleep 3 seconds and try again
 				try {
 					Thread.sleep(3000);
@@ -256,7 +256,7 @@ public class RemoteScopInstallation implements ScopDatabase {
 				desc = XMLUtil.getScopNodeFromXML(xml);
 			}
 		} catch (Exception e){
-			e.printStackTrace();
+			System.err.println("Unable to reach "+ server + "getScopNode?sunid="+sunid);
 		}
 		return desc;
 	}
@@ -271,7 +271,7 @@ public class RemoteScopInstallation implements ScopDatabase {
 			version = JFatCatClient.convertStreamToString(response);
 
 		} catch (Exception e){
-			e.printStackTrace();
+			System.err.println("Unable to reach "+ server + "getScopVersion");
 		}
 		return version.trim();
 	}
@@ -290,7 +290,7 @@ public class RemoteScopInstallation implements ScopDatabase {
 				results = container.getScopDomain();
 			}
 		} catch (Exception e){
-			e.printStackTrace();
+			System.err.println("Unable to reach "+ server + "getScopDomainsBySunid?sunid="+sunid);
 		}
 		return results;
 	}
@@ -298,7 +298,20 @@ public class RemoteScopInstallation implements ScopDatabase {
 
 	@Override
 	public List<String> getComments(int sunid) {
-		return new ArrayList<String>(1);
+		List<String> results = null;
+		try {
+			URL u = new URL(server + "getComments?sunid="+sunid);
+			//System.out.println(u);
+			InputStream response = HTTPConnectionTools.getInputStream(u);
+			String xml = JFatCatClient.convertStreamToString(response);
+
+			if( !xml.trim().isEmpty()) {
+				results = XMLUtil.getCommentsFromXML(xml);
+			}
+		} catch (Exception e){
+			System.err.println("Unable to reach "+ server + "getComments?sunid="+sunid);
+		}
+		return results;
 	}
 
 }

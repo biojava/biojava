@@ -27,40 +27,32 @@ import java.util.Map;
  */
 public class ScopFactory {
 
-    // berkeley
+	// berkeley
 	public static final String VERSION_1_75C = "1.75C";	
-    public static final String VERSION_1_75B = "1.75B";
-    public static final String VERSION_1_75A = "1.75A";
-    // original SCOP
-    // latest SCOP release from SCOP website = 1.75;
-    public static final String VERSION_1_75 = "1.75";
-    // outdated stable versions
-    public static final String VERSION_1_73 = "1.73";
-    public static final String VERSION_1_71 = "1.71";
-    public static final String VERSION_1_69 = "1.69";
-    public static final String VERSION_1_67 = "1.67";
-    public static final String VERSION_1_65 = "1.65";
-    public static final String VERSION_1_63 = "1.63";
-    public static final String VERSION_1_61 = "1.61";
-    public static final String VERSION_1_59 = "1.59";
-    public static final String VERSION_1_57 = "1.57";
-    public static final String VERSION_1_55 = "1.55";
+	public static final String VERSION_1_75B = "1.75B";
+	public static final String VERSION_1_75A = "1.75A";
+	// original SCOP
+	// latest SCOP release from SCOP website = 1.75;
+	public static final String VERSION_1_75 = "1.75";
+	// outdated stable versions
+	public static final String VERSION_1_73 = "1.73";
+	public static final String VERSION_1_71 = "1.71";
+	public static final String VERSION_1_69 = "1.69";
+	public static final String VERSION_1_67 = "1.67";
+	public static final String VERSION_1_65 = "1.65";
+	public static final String VERSION_1_63 = "1.63";
+	public static final String VERSION_1_61 = "1.61";
+	public static final String VERSION_1_59 = "1.59";
+	public static final String VERSION_1_57 = "1.57";
+	public static final String VERSION_1_55 = "1.55";
 
-    // The most recent version as of compilation time
-    public static final String LATEST_VERSION = VERSION_1_75C;
+	// The most recent version as of compilation time
+	public static final String LATEST_VERSION = VERSION_1_75C;
 
-    // Hold one instance for each version
+	// Hold one instance for each version
 	static Map<String,ScopDatabase> versionedScopDBs = new HashMap<String, ScopDatabase>(); 
 	private static String defaultVersion = LATEST_VERSION;
-	
-	// TODO remove after fixing getSCOP(String)
-	static {
-		// by default we now request SCOP via web services -> much less memory consumption
-		final ScopDatabase scop = new RemoteScopInstallation();
-		defaultVersion = scop.getScopVersion();
-		versionedScopDBs.put(defaultVersion, scop);
-	}
-	
+
 	/**
 	 * Get the current default instance for the default version
 	 * @return
@@ -68,7 +60,17 @@ public class ScopFactory {
 	public static ScopDatabase getSCOP(){
 		return getSCOP(defaultVersion);
 	}
-	
+
+	/**
+	 * 
+	 * @param forceLocalData Whether to use a local installation or a remote installation
+	 * @return
+	 * @see #getSCOP(String, boolean)
+	 */
+	public static ScopDatabase getSCOP(boolean forceLocalData) {
+		return getSCOP(defaultVersion, forceLocalData);
+	}
+
 	/**
 	 * requests a particular version of SCOP.
 	 *
@@ -77,49 +79,51 @@ public class ScopFactory {
 	 * @param version
 	 * @return
 	 */
-    public static ScopDatabase getSCOP(String version){
-        // Default to a local installation
-    	//TODO change to false after testing that RemoteScopInstallations work for all versions
-        return getSCOP(version,true);
-    }
-    
-    /**
-     * Gets an instance of the specified scop version.
-     * 
-     * <p>
-     * The particular implementation returned is influenced by the <tt>forceLocalData</tt>
-     * parameter. When false, the instance returned will generally be a
-     * {@link RemoteScopInstallation}, although this may be influenced by
-     * previous calls to this class. When true, the result is guaranteed to
-     * implement {@link LocalScopDatabase} (generally a {@link BerkeleyScopInstallation}).
-     * 
-     * <p>
-     * Note that  
-     * @param version A version number, such as {@link #VERSION_1_75A}
-     * @param forceLocalData Whether to use a local installation or a remote installation
-     * @return an
-     */
-    public static ScopDatabase getSCOP(String version, boolean forceLocalData){
-    	ScopDatabase scop = versionedScopDBs.get(version);
-        if ( forceLocalData) {
-            // Use a local installation
-        	if( scop == null || !(scop instanceof LocalScopDatabase) ) {
-                BerkeleyScopInstallation berkeley = new BerkeleyScopInstallation();
-                berkeley.setScopVersion(version);
-                versionedScopDBs.put(version,berkeley);
-                return berkeley;
-        	}
-        	return scop;
-        } else {
-            // Use a remote installation
-            if( scop == null ) {
-            	scop = new RemoteScopInstallation();
-            	versionedScopDBs.put(version,scop);
-            }
-            return scop;
-        }
-    }
-    
+	public static ScopDatabase getSCOP(String version){
+		// Default to a local installation
+		return getSCOP(version,false);
+	}
+
+	/**
+	 * Gets an instance of the specified scop version.
+	 * 
+	 * <p>
+	 * The particular implementation returned is influenced by the <tt>forceLocalData</tt>
+	 * parameter. When false, the instance returned will generally be a
+	 * {@link RemoteScopInstallation}, although this may be influenced by
+	 * previous calls to this class. When true, the result is guaranteed to
+	 * implement {@link LocalScopDatabase} (generally a {@link BerkeleyScopInstallation}).
+	 * 
+	 * <p>
+	 * Note that  
+	 * @param version A version number, such as {@link #VERSION_1_75A}
+	 * @param forceLocalData Whether to use a local installation or a remote installation
+	 * @return an
+	 */
+	public static ScopDatabase getSCOP(String version, boolean forceLocalData){
+		if( version == null ) {
+			version = defaultVersion;
+		}
+		ScopDatabase scop = versionedScopDBs.get(version);
+		if ( forceLocalData) {
+			// Use a local installation
+			if( scop == null || !(scop instanceof LocalScopDatabase) ) {
+				BerkeleyScopInstallation berkeley = new BerkeleyScopInstallation();
+				berkeley.setScopVersion(version);
+				versionedScopDBs.put(version,berkeley);
+				return berkeley;
+			}
+			return scop;
+		} else {
+			// Use a remote installation
+			if( scop == null ) {
+				scop = new RemoteScopInstallation();
+				versionedScopDBs.put(version,scop);
+			}
+			return scop;
+		}
+	}
+
 
 	/**
 	 * Set the default scop version
@@ -128,7 +132,7 @@ public class ScopFactory {
 	public static void setScopDatabase(String version) {
 		defaultVersion = version;
 	}
-	
+
 	/**
 	 * Set the default scop version and instance
 	 * @param scop

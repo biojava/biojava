@@ -93,6 +93,15 @@ public class XMLUtil {
 			e.printStackTrace();
 		}
 	}
+	
+	static JAXBContext jaxbContextComments;
+	static {
+		try {
+			jaxbContextComments = JAXBContext.newInstance(ListStringWrapper.class);
+		} catch( Exception e){
+			e.printStackTrace();
+		}
+	}
 
 
 	public static String getScopDescriptionXML(ScopDescription desc){
@@ -149,7 +158,52 @@ public class XMLUtil {
 		return container.toXML();
 
 	}
+	
+	
+	
+	public static String getCommentsXML(List<String> comments ){
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
+		PrintStream ps = new PrintStream(baos);
+
+		try {
+
+			Marshaller m = jaxbContextComments.createMarshaller();
+
+			m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+
+			ListStringWrapper wrapper = new ListStringWrapper();
+			wrapper.setData(comments);
+			
+			m.marshal( wrapper, ps);
+
+
+		} catch (Exception e){
+			e.printStackTrace();
+		}
+
+		return baos.toString();
+	}
+	public static List<String> getCommentsFromXML(String xml){
+
+		List<String> comments = null;
+
+		try {
+
+			Unmarshaller un = jaxbContextComments.createUnmarshaller();
+
+			ByteArrayInputStream bais = new ByteArrayInputStream(xml.getBytes());
+
+			ListStringWrapper wrapper = (ListStringWrapper) un.unmarshal(bais);
+			comments = wrapper.getData();
+
+		} catch (Exception e){
+			e.printStackTrace();
+		}
+
+		return comments;
+	}
+	
 
 	public static String getScopNodeXML(ScopNode scopNode){
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();

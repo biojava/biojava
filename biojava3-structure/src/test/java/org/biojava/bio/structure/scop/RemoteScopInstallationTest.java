@@ -35,17 +35,17 @@ import org.junit.runners.Parameterized.Parameters;
 @RunWith(Parameterized.class)
 public class RemoteScopInstallationTest extends ScopDatabaseTest {
 
-    public RemoteScopInstallationTest(String tag,ScopDatabase scop) {
-        super(tag,scop);
-    }
+	public RemoteScopInstallationTest(String tag,ScopDatabase scop) {
+		super(tag,scop);
+	}
 
-    //@Parameters
-    @Parameters(name="{0}")
-    public static Collection<Object[]> availableDatabases() {
-        ArrayList<Object[]> databases = new ArrayList<Object[]>();
-        RemoteScopInstallation scop;
-        scop = new RemoteScopInstallation();
-        databases.add(new Object[] {scop.getScopVersion().trim(), scop});
-        return databases;
-    }
+	//@Parameters
+	@Parameters(name="{0}")
+	public static Collection<Object[]> availableDatabases() {
+		ArrayList<Object[]> databases = new ArrayList<Object[]>();
+		RemoteScopInstallation scop;
+		scop = new RemoteScopInstallation();
+		databases.add(new Object[] {scop.getScopVersion().trim(), scop});
+		return databases;
+	}
 }

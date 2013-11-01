@@ -35,24 +35,25 @@ import org.junit.runners.Parameterized.Parameters;
 @RunWith(Parameterized.class)
 public class BerkeleyScopInstallationTest extends ScopDatabaseTest {
 
-    public BerkeleyScopInstallationTest(String tag,ScopDatabase scop) {
-        super(tag,scop);
-    }
-    @Parameters(name="{0}")
-    public static Collection<Object[]> availableDatabases() {
-        ArrayList<Object[]> databases = new ArrayList<Object[]>();
-        ScopInstallation scop;
+	public BerkeleyScopInstallationTest(String tag,ScopDatabase scop) {
+		super(tag,scop);
+	}
+	@Parameters(name="{0}")
+	public static Collection<Object[]> availableDatabases() {
+		ArrayList<Object[]> databases = new ArrayList<Object[]>();
+		ScopInstallation scop;
 
-        for(String version : new String[] {
-                ScopFactory.VERSION_1_75A,
-                ScopFactory.VERSION_1_75B,
-                ScopFactory.VERSION_1_75,
-                ScopFactory.VERSION_1_73,
-        }) {
-            scop = new BerkeleyScopInstallation();
-            scop.setScopVersion(version);
-            databases.add(new Object[] {version, scop});
-        }
-        return databases;
-    }
+		for(String version : new String[] {
+				ScopFactory.LATEST_VERSION,
+				ScopFactory.VERSION_1_75A,
+				ScopFactory.VERSION_1_75B,
+				ScopFactory.VERSION_1_75,
+				ScopFactory.VERSION_1_73,
+		}) {
+			scop = new BerkeleyScopInstallation();
+			scop.setScopVersion(version);
+			databases.add(new Object[] {version, scop});
+		}
+		return databases;
+	}
 }
