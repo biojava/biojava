@@ -82,6 +82,13 @@ public interface ScopDatabase {
 
 	public abstract String getScopVersion();
 
+	/**
+	 * Sets the scop version used.
+	 * @param version
+	 * @throws UnsupportedOperationException If the version cannot be changed
+	 */
+	public abstract void setScopVersion(String version);
+	
 	/** Get a SCOP domain by its sunid
 	 * 
 	 * @param sunid the scop unique id

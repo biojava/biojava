@@ -188,6 +188,10 @@ public class CachedRemoteScopInstallation extends SerializableCache<String,ScopD
 		return proxy.getScopVersion();
 	}
 
+	public void setScopVersion(String version) {
+		proxy.setScopVersion(version);
+	}
+
 
 	public List<ScopDomain> getScopDomainsBySunid(Integer sunid) {
 		return proxy.getScopDomainsBySunid(sunid);
