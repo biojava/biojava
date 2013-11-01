@@ -20,32 +20,40 @@
  */
 package org.biojava.bio.structure.scop;
 
-import static org.junit.Assert.*;
+import java.util.ArrayList;
+import java.util.Collection;
 
-import java.util.List;
-
-import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
+import org.junit.runners.Parameterized.Parameters;
 
 /**
  * Tests {@link ScopInstallation}.
  * @author dmyerstu
  * @since 3.0.6
  */
-public class ScopInstallationTest {
+@RunWith(Parameterized.class)
+public class ScopInstallationTest extends ScopDatabaseTest {
 
-	@Test
-	public void testComments() {
-		ScopDatabase scop = ScopFactory.getSCOP(ScopFactory.VERSION_1_75);
-		List<String> comments;
-		
-		comments = scop.getComments(127355);
-		assertEquals("Wrong number of comments", 2, comments.size());
-		assertEquals("Wrong comment", "automatically matched to d2hbia_", comments.get(0));
-		assertEquals("Wrong comment", "complexed with hem; mutant", comments.get(1));
-		
-		comments = scop.getComments(160555);
-		assertEquals("Wrong number of comments", 1, comments.size());
-		assertEquals("Wrong comment", "<a href=\"http://pfam.sanger.ac.uk/family?acc=PF06262\">PF06262</a>; DUF1025; minimal zincin fold that retains 3-stranded mixed beta-sheet and contains HExxH motif in the C-terminal helix; no metal ion bound to this motif is observed in the first determined structures", comments.get(0));
-	}
-	
+    public ScopInstallationTest(String tag,ScopDatabase scop) {
+        super(tag,scop);
+    }
+
+    //@Parameters
+    @Parameters(name="{0}")
+    public static Collection<Object[]> availableDatabases() {
+        ArrayList<Object[]> databases = new ArrayList<Object[]>();
+        ScopInstallation scop;
+
+        for(String version : new String[] {
+                ScopFactory.VERSION_1_75,
+                ScopFactory.VERSION_1_73,
+        }) {
+            scop = new ScopInstallation();
+            scop.setScopVersion(version);
+            databases.add(new Object[] {version, scop});
+        }
+        return databases;
+    }
+
 }

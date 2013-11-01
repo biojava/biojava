@@ -6,6 +6,7 @@ import java.util.List;
  * 
  * @author Andreas Prlic
  * @since 3.0.2
+ * @see LocalScopDatabase
  */
 public interface ScopDatabase {
 
@@ -16,7 +17,7 @@ public interface ScopDatabase {
 	 */
 	public abstract List<ScopDescription> getByCategory(ScopCategory category);
 
-	/** Get all scop descriptions that start with a classifcation ID, e.g. b.1.18
+	/** Get all scop descriptions that start with a classification ID, e.g. b.1.18
 	 * 
 	 * @param query
 	 * @return list of scop descriptions
@@ -88,5 +89,10 @@ public interface ScopDatabase {
 	 */
 	public abstract List<ScopDomain> getScopDomainsBySunid(Integer sunid);
 
+	/**
+	 * Get comments about a SCOP domain by its sunid
+	 * @param sunid
+	 * @return
+	 */
 	public abstract List<String> getComments(int sunid);
 }

@@ -28,21 +28,22 @@ import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
 /**
- * Tests {@link BerkeleyScopInstallation}.
- * @author dmyerstu
+ * Tests {@link ScopInstallation}.
+ * @author Spencer Bliven
  * @since 3.0.6
  */
 @RunWith(Parameterized.class)
-public class BerkeleyScopInstallationTest extends ScopDatabaseTest {
+public class RemoteScopInstallationTest extends ScopDatabaseTest {
 
-	public BerkeleyScopInstallationTest(String tag,ScopDatabase scop) {
+	public RemoteScopInstallationTest(String tag,ScopDatabase scop) {
 		super(tag,scop);
 	}
+
+	//@Parameters
 	@Parameters(name="{0}")
 	public static Collection<Object[]> availableDatabases() {
 		ArrayList<Object[]> databases = new ArrayList<Object[]>();
-		ScopInstallation scop;
-
+		RemoteScopInstallation scop;
 		for(String version : new String[] {
 				ScopFactory.LATEST_VERSION,
 				ScopFactory.VERSION_1_75A,
@@ -50,9 +51,9 @@ public class BerkeleyScopInstallationTest extends ScopDatabaseTest {
 				ScopFactory.VERSION_1_75,
 				ScopFactory.VERSION_1_73,
 		}) {
-			scop = new BerkeleyScopInstallation();
+			scop = new RemoteScopInstallation();
 			scop.setScopVersion(version);
-			databases.add(new Object[] {version, scop});
+			databases.add(new Object[] {scop.getScopVersion().trim(), scop});
 		}
 		return databases;
 	}
