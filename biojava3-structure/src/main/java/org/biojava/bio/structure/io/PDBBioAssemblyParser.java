@@ -27,7 +27,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.biojava.bio.structure.jama.Matrix;
-import org.biojava.bio.structure.quaternary.ModelTransformationMatrix;
+import org.biojava.bio.structure.quaternary.BiologicalAssemblyTransformation;
 
 /** 
  * Parses REMARK 350 records in a PDB file and creates transformations to 
@@ -42,10 +42,10 @@ public class PDBBioAssemblyParser {
 	private List<String> currentChainIDs = new ArrayList<String>();
 	private Matrix currentMatrix = null;
 	private double[] shift = null;
-	private Map<Integer,List<ModelTransformationMatrix>> transformationMap = new HashMap<Integer, List<ModelTransformationMatrix>>();
+	private Map<Integer,List<BiologicalAssemblyTransformation>> transformationMap = new HashMap<Integer, List<BiologicalAssemblyTransformation>>();
 	private int modelNumber = 1;
 	
-	private List<ModelTransformationMatrix> transformations;
+	private List<BiologicalAssemblyTransformation> transformations;
 	
 	/**
 	 * Parses REMARK 350 line. See format description:
@@ -82,7 +82,7 @@ public class PDBBioAssemblyParser {
 	 * Returns a map of bioassembly transformations
 	 * @return
 	 */
-	public Map<Integer, List<ModelTransformationMatrix>> getTransformationMap() {
+	public Map<Integer, List<BiologicalAssemblyTransformation>> getTransformationMap() {
 		return transformationMap;
 	}
 	
@@ -112,10 +112,9 @@ public class PDBBioAssemblyParser {
 			shift = new double[3];
 		}
 		
-		// note, BioJava uses a transposed form of the rotation matrix
-		currentMatrix.set(0,(row-1),Float.parseFloat(items[4]));
-		currentMatrix.set(1,(row-1),Float.parseFloat(items[5]));
-		currentMatrix.set(2,(row-1),Float.parseFloat(items[6]));	
+		currentMatrix.set((row-1), 0,Float.parseFloat(items[4]));
+		currentMatrix.set((row-1), 1,Float.parseFloat(items[5]));
+		currentMatrix.set((row-1), 2,Float.parseFloat(items[6]));
 		shift[row-1] = Float.parseFloat(items[7]);
 
 		// return true if 3rd row of matrix has been processed
@@ -128,9 +127,9 @@ public class PDBBioAssemblyParser {
 	private void saveMatrix() {
 
 		for (String chainId : currentChainIDs) {
-			ModelTransformationMatrix transformation = new ModelTransformationMatrix();
-			transformation.setMatrix(currentMatrix);
-			transformation.setVector(shift);
+			BiologicalAssemblyTransformation transformation = new BiologicalAssemblyTransformation();
+			transformation.setRotationMatrix(currentMatrix);
+			transformation.setTranslation(shift);
 			transformation.setId(String.valueOf(modelNumber));
 			transformation.setChainId(chainId);
 			transformations.add(transformation);
@@ -151,7 +150,7 @@ public class PDBBioAssemblyParser {
 	}
 	
 	private void initialize() {
-		transformations = new ArrayList<ModelTransformationMatrix>();	
+		transformations = new ArrayList<BiologicalAssemblyTransformation>();	
 		currentMatrix = Matrix.identity(3,3);
 		currentBioMolecule = null;
 		shift = new double[3];

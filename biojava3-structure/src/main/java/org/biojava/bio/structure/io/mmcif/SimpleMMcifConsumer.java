@@ -85,7 +85,7 @@ import org.biojava.bio.structure.io.mmcif.model.StructKeywords;
 import org.biojava.bio.structure.io.mmcif.model.StructRef;
 import org.biojava.bio.structure.io.mmcif.model.StructRefSeq;
 import org.biojava.bio.structure.quaternary.BiologicalAssemblyBuilder;
-import org.biojava.bio.structure.quaternary.ModelTransformationMatrix;
+import org.biojava.bio.structure.quaternary.BiologicalAssemblyTransformation;
 
 /** A MMcifConsumer implementation that build a in-memory representation of the
  * content of a mmcif file as a BioJava Structure object.
@@ -849,7 +849,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		// the more detailed mapping of chains to rotation operations happens in StructureIO...
 		// TODO clean this up and move it here...
 		//header.setBioUnitTranformationMap(tranformationMap);
-		Map<Integer,List<ModelTransformationMatrix>> transformationMap = new HashMap<Integer, List<ModelTransformationMatrix>>();
+		Map<Integer,List<BiologicalAssemblyTransformation>> transformationMap = new HashMap<Integer, List<BiologicalAssemblyTransformation>>();
 		int total = strucAssemblies.size();
 
 		for ( int defaultBioAssembly = 1 ; defaultBioAssembly <= total; defaultBioAssembly++){
@@ -868,7 +868,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 			BiologicalAssemblyBuilder builder = new BiologicalAssemblyBuilder();
 
 			// these are the transformations that need to be applied to our model
-			List<ModelTransformationMatrix> transformations = builder.getBioUnitTransformationList(psa, psags, structOpers);
+			List<BiologicalAssemblyTransformation> transformations = builder.getBioUnitTransformationList(psa, psags, structOpers);
 
 			transformationMap.put(defaultBioAssembly,transformations);
 			//System.out.println("mmcif header: " + (defaultBioAssembly+1) + " " + transformations.size() +" " +  transformations);
