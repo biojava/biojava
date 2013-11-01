@@ -44,8 +44,17 @@ public class RemoteScopInstallationTest extends ScopDatabaseTest {
 	public static Collection<Object[]> availableDatabases() {
 		ArrayList<Object[]> databases = new ArrayList<Object[]>();
 		RemoteScopInstallation scop;
-		scop = new RemoteScopInstallation();
-		databases.add(new Object[] {scop.getScopVersion().trim(), scop});
+		for(String version : new String[] {
+				ScopFactory.LATEST_VERSION,
+				ScopFactory.VERSION_1_75A,
+				ScopFactory.VERSION_1_75B,
+				ScopFactory.VERSION_1_75,
+				ScopFactory.VERSION_1_73,
+		}) {
+			scop = new RemoteScopInstallation();
+			scop.setScopVersion(version);
+			databases.add(new Object[] {scop.getScopVersion().trim(), scop});
+		}
 		return databases;
 	}
 }
