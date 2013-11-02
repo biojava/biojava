@@ -264,13 +264,19 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 	 * @param name
 	 * @return
 	 */
-	private String fixFullAtomName(String name){
+	private String fixFullAtomName(String name, Group currentGroup){
 
 		if (name.equals("N")){
 			return " N  ";
 		}
-		if (name.equals("CA")){
+		
+		// for amino acids this will be a C alpha
+		if (currentGroup.getType().equals(GroupType.AMINOACID) && name.equals("CA")){
 			return " CA ";
+		}
+		// for ligands this will be calcium
+		if (currentGroup.getType().equals(GroupType.HETATM) && name.equals("CA")){
+			return "CA  ";
 		}
 		if (name.equals("C")){
 			return " C  ";
@@ -310,7 +316,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 
 		//String chain_id      = atom.getAuth_asym_id();
 		String chain_id      = atom.getLabel_asym_id();		
-		String fullname      = fixFullAtomName(atom.getLabel_atom_id());		
+				
 		String recordName    = atom.getGroup_PDB();
 		String residueNumberS = atom.getAuth_seq_id();
 		Integer residueNrInt = Integer.parseInt(residueNumberS);
@@ -488,6 +494,9 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		atomCount++;
 		//System.out.println("fixing atom name for  >" + atom.getLabel_atom_id() + "< >" + fullname + "<");
 
+		
+		String fullname      = fixFullAtomName(atom.getLabel_atom_id(),current_group);
+		
 		if ( params.isParseCAOnly() ){
 			// yes , user wants to get CA only
 			// only parse CA atoms...
@@ -533,7 +542,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		a.setPDBserial(Integer.parseInt(atom.getId()));
 		a.setName(atom.getLabel_atom_id());
 
-		a.setFullName(fixFullAtomName(atom.getLabel_atom_id()));
+		a.setFullName(fixFullAtomName(atom.getLabel_atom_id(), current_group));
 
 
 		double x = Double.parseDouble (atom.getCartn_x());
