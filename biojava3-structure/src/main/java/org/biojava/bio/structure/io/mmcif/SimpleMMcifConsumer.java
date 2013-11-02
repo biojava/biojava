@@ -290,14 +290,29 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		if (name.equals("CG"))
 			return " CG ";
 
-		if (name.length() == 2)
-			return " " + name + " ";
+		if (name.length() == 2) {
+			StringBuilder b = new StringBuilder();
+			b.append(" ");
+			b.append(name);
+			b.append(" ");
+			return b.toString();
+		}
 
-		if (name.length() == 1)
-			return " " + name + "  ";
+		if (name.length() == 1) {
+			StringBuilder b = new StringBuilder();
+			b.append(" ");
+			b.append(name);
+			b.append("  ");
+			return b.toString();
+		}
 
-		if (name.length() == 3)
-			return " " + name ;
+		if (name.length() == 3) {
+			
+			StringBuilder b = new StringBuilder();
+			b.append(" ");
+			b.append(name);
+			return b.toString();
+		}
 
 		return name;
 	}
