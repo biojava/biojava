@@ -946,9 +946,9 @@ public class AtomCache {
 		}
 
 		String rangeS = range.toString();
-		System.out.println(rangeS);
+		
 		Structure n = StructureTools.getSubRanges(s, rangeS);
-
+		
 		// add the ligands of the chain...
 
 		Chain newChain = n.getChainByPDB(structureName.getChainId());

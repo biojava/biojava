@@ -11,7 +11,7 @@ import org.biojava.bio.structure.io.mmcif.model.PdbxStructAssembly;
 import org.biojava.bio.structure.io.mmcif.model.PdbxStructAssemblyGen;
 import org.biojava.bio.structure.io.mmcif.model.PdbxStructOperList;
 import org.biojava.bio.structure.quaternary.BiologicalAssemblyBuilder;
-import org.biojava.bio.structure.quaternary.ModelTransformationMatrix;
+import org.biojava.bio.structure.quaternary.BiologicalAssemblyTransformation;
 import org.biojava3.structure.StructureIO;
 
 public class MmCifBiolAssemblyProvider implements BioUnitDataProvider {
@@ -37,7 +37,7 @@ public class MmCifBiolAssemblyProvider implements BioUnitDataProvider {
 	}
 	
 	@Override
-	public List<ModelTransformationMatrix> getBioUnitTransformationList(
+	public List<BiologicalAssemblyTransformation> getBioUnitTransformationList(
 			String pdbId, int biolAssemblyNr) {
 		
 
@@ -66,7 +66,7 @@ public class MmCifBiolAssemblyProvider implements BioUnitDataProvider {
 		BiologicalAssemblyBuilder builder = new BiologicalAssemblyBuilder();
 		
 		// these are the transformations that need to be applied to our model
-		List<ModelTransformationMatrix> transformations = builder.getBioUnitTransformationList(psa, psags, operators);
+		List<BiologicalAssemblyTransformation> transformations = builder.getBioUnitTransformationList(psa, psags, operators);
 		//System.out.println(transformations);
 		return transformations;
 	}
@@ -121,7 +121,7 @@ public class MmCifBiolAssemblyProvider implements BioUnitDataProvider {
 		BiologicalAssemblyBuilder builder = new BiologicalAssemblyBuilder();
 		
 		// these are the transformations that need to be applied to our model
-		ArrayList<ModelTransformationMatrix> transformations = builder.getBioUnitTransformationList(psa, psags, operators);
+		ArrayList<BiologicalAssemblyTransformation> transformations = builder.getBioUnitTransformationList(psa, psags, operators);
 		
 		
 		

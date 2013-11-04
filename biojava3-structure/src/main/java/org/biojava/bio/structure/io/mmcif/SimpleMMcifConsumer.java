@@ -85,7 +85,7 @@ import org.biojava.bio.structure.io.mmcif.model.StructKeywords;
 import org.biojava.bio.structure.io.mmcif.model.StructRef;
 import org.biojava.bio.structure.io.mmcif.model.StructRefSeq;
 import org.biojava.bio.structure.quaternary.BiologicalAssemblyBuilder;
-import org.biojava.bio.structure.quaternary.ModelTransformationMatrix;
+import org.biojava.bio.structure.quaternary.BiologicalAssemblyTransformation;
 
 /** A MMcifConsumer implementation that build a in-memory representation of the
  * content of a mmcif file as a BioJava Structure object.
@@ -264,13 +264,19 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 	 * @param name
 	 * @return
 	 */
-	private String fixFullAtomName(String name){
+	private String fixFullAtomName(String name, Group currentGroup){
 
 		if (name.equals("N")){
 			return " N  ";
 		}
-		if (name.equals("CA")){
+		
+		// for amino acids this will be a C alpha
+		if (currentGroup.getType().equals(GroupType.AMINOACID) && name.equals("CA")){
 			return " CA ";
+		}
+		// for ligands this will be calcium
+		if (currentGroup.getType().equals(GroupType.HETATM) && name.equals("CA")){
+			return "CA  ";
 		}
 		if (name.equals("C")){
 			return " C  ";
@@ -284,14 +290,29 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		if (name.equals("CG"))
 			return " CG ";
 
-		if (name.length() == 2)
-			return " " + name + " ";
+		if (name.length() == 2) {
+			StringBuilder b = new StringBuilder();
+			b.append(" ");
+			b.append(name);
+			b.append(" ");
+			return b.toString();
+		}
 
-		if (name.length() == 1)
-			return " " + name + "  ";
+		if (name.length() == 1) {
+			StringBuilder b = new StringBuilder();
+			b.append(" ");
+			b.append(name);
+			b.append("  ");
+			return b.toString();
+		}
 
-		if (name.length() == 3)
-			return " " + name ;
+		if (name.length() == 3) {
+			
+			StringBuilder b = new StringBuilder();
+			b.append(" ");
+			b.append(name);
+			return b.toString();
+		}
 
 		return name;
 	}
@@ -310,7 +331,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 
 		//String chain_id      = atom.getAuth_asym_id();
 		String chain_id      = atom.getLabel_asym_id();		
-		String fullname      = fixFullAtomName(atom.getLabel_atom_id());		
+				
 		String recordName    = atom.getGroup_PDB();
 		String residueNumberS = atom.getAuth_seq_id();
 		Integer residueNrInt = Integer.parseInt(residueNumberS);
@@ -488,6 +509,9 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		atomCount++;
 		//System.out.println("fixing atom name for  >" + atom.getLabel_atom_id() + "< >" + fullname + "<");
 
+		
+		String fullname      = fixFullAtomName(atom.getLabel_atom_id(),current_group);
+		
 		if ( params.isParseCAOnly() ){
 			// yes , user wants to get CA only
 			// only parse CA atoms...
@@ -533,7 +557,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		a.setPDBserial(Integer.parseInt(atom.getId()));
 		a.setName(atom.getLabel_atom_id());
 
-		a.setFullName(fixFullAtomName(atom.getLabel_atom_id()));
+		a.setFullName(fixFullAtomName(atom.getLabel_atom_id(), current_group));
 
 
 		double x = Double.parseDouble (atom.getCartn_x());
@@ -849,7 +873,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		// the more detailed mapping of chains to rotation operations happens in StructureIO...
 		// TODO clean this up and move it here...
 		//header.setBioUnitTranformationMap(tranformationMap);
-		Map<Integer,List<ModelTransformationMatrix>> transformationMap = new HashMap<Integer, List<ModelTransformationMatrix>>();
+		Map<Integer,List<BiologicalAssemblyTransformation>> transformationMap = new HashMap<Integer, List<BiologicalAssemblyTransformation>>();
 		int total = strucAssemblies.size();
 
 		for ( int defaultBioAssembly = 1 ; defaultBioAssembly <= total; defaultBioAssembly++){
@@ -868,7 +892,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 			BiologicalAssemblyBuilder builder = new BiologicalAssemblyBuilder();
 
 			// these are the transformations that need to be applied to our model
-			List<ModelTransformationMatrix> transformations = builder.getBioUnitTransformationList(psa, psags, structOpers);
+			List<BiologicalAssemblyTransformation> transformations = builder.getBioUnitTransformationList(psa, psags, structOpers);
 
 			transformationMap.put(defaultBioAssembly,transformations);
 			//System.out.println("mmcif header: " + (defaultBioAssembly+1) + " " + transformations.size() +" " +  transformations);

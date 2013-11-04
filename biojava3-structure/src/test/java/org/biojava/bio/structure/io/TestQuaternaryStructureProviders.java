@@ -1,3 +1,4 @@
+
 package org.biojava.bio.structure.io;
 
 import static org.junit.Assert.*;
@@ -10,7 +11,7 @@ import org.biojava.bio.structure.PDBHeader;
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureTools;
 import org.biojava.bio.structure.align.util.AtomCache;
-import org.biojava.bio.structure.quaternary.ModelTransformationMatrix;
+import org.biojava.bio.structure.quaternary.BiologicalAssemblyTransformation;
 import org.biojava.bio.structure.quaternary.io.BioUnitDataProviderFactory;
 import org.biojava.bio.structure.quaternary.io.MmCifBiolAssemblyProvider;
 import org.biojava.bio.structure.quaternary.io.PDBBioUnitDataProvider;
@@ -34,6 +35,18 @@ public class TestQuaternaryStructureProviders {
 	@Test
 	public void test5LDH(){
 		testID("5LDH",1);
+
+	}
+	
+	@Test
+	public void test3NTU(){
+		testID("3NTU",1);
+
+	}
+	
+	@Test
+	public void test1A29(){
+		testID("1A29",1);
 
 	}
 	
@@ -73,8 +86,8 @@ public class TestQuaternaryStructureProviders {
 			assertTrue(pHeader.getNrBioAssemblies() <= mHeader.getNrBioAssemblies());
 			
 			
-			Map<Integer, List<ModelTransformationMatrix>> pMap = pHeader.getBioUnitTranformationMap();
-			Map<Integer, List<ModelTransformationMatrix>> mMap = mHeader.getBioUnitTranformationMap();
+			Map<Integer, List<BiologicalAssemblyTransformation>> pMap = pHeader.getBioUnitTranformationMap();
+			Map<Integer, List<BiologicalAssemblyTransformation>> mMap = mHeader.getBioUnitTranformationMap();
 			
 			//System.out.println("PDB: " + pMap);
 			
@@ -85,24 +98,24 @@ public class TestQuaternaryStructureProviders {
 			for ( Integer k : pMap.keySet()) {
 				assertTrue(mMap.containsKey(k));
 				
-				List<ModelTransformationMatrix> pL = pMap.get(k);
+				List<BiologicalAssemblyTransformation> pL = pMap.get(k);
 				
 				// mmcif list can be longer due to the use of internal chain IDs
-				List<ModelTransformationMatrix> mL = mMap.get(k);
+				List<BiologicalAssemblyTransformation> mL = mMap.get(k);
 				
 				//assertEquals(pL.size(), mL.size());
 				
 				
-				for (ModelTransformationMatrix m1 : pL){
+				for (BiologicalAssemblyTransformation m1 : pL){
 					
 					boolean found = false;
-					for ( ModelTransformationMatrix m2 : mL){
+					for ( BiologicalAssemblyTransformation m2 : mL){
 						
 						if  (! m1.getChainId().equals(m2.getChainId()))
 								continue;
-						if ( ! m1.getMatrix().toString().equals(m2.getMatrix().toString()))
+						if ( ! m1.getRotationMatrix().toString().equals(m2.getRotationMatrix().toString()))
 								continue;
-						if ( ! equalVectors(m1.getVector(),m2.getVector()))
+						if ( ! equalVectors(m1.getTranslation(), m2.getTranslation()))
 							continue;
 						
 						found = true;

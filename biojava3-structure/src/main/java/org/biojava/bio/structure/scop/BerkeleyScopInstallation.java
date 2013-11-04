@@ -29,8 +29,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
 
-public class BerkeleyScopInstallation extends ScopInstallation implements
-ScopDatabase {
+public class BerkeleyScopInstallation extends ScopInstallation {
 
 
 	String defaultBerkeleyDownloadURL = "http://scop.berkeley.edu/downloads/parse/";

@@ -33,7 +33,7 @@ import org.biojava.bio.structure.StructureTools;
 import org.biojava.bio.structure.align.util.AtomCache;
 import org.biojava.bio.structure.io.FileParsingParameters;
 import org.biojava.bio.structure.io.PDBFileReader;
-import org.biojava.bio.structure.quaternary.ModelTransformationMatrix;
+import org.biojava.bio.structure.quaternary.BiologicalAssemblyTransformation;
 import org.biojava3.core.util.SoftHashMap;
 
 
@@ -117,7 +117,7 @@ public class FileBasedPDBBioUnitDataProvider implements BioUnitDataProvider{
 	}
 
 	@Override
-	public List<ModelTransformationMatrix> getBioUnitTransformationList(
+	public List<BiologicalAssemblyTransformation> getBioUnitTransformationList(
 			String pdbId, int biolAssemblyNr) {
 
 

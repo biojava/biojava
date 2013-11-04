@@ -5,7 +5,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.biojava.bio.structure.Atom;
-import org.biojava.bio.structure.AtomImpl;
 import org.biojava.bio.structure.Calc;
 import org.biojava.bio.structure.Chain;
 import org.biojava.bio.structure.ChainImpl;
@@ -13,7 +12,6 @@ import org.biojava.bio.structure.Group;
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureImpl;
 import org.biojava.bio.structure.StructureTools;
-import org.biojava.bio.structure.jama.Matrix;
 
 
 
@@ -118,7 +116,7 @@ public class BioAssemblyTools {
 		return product.getOrderedPairs();
 	}
 
-	public static double[][]  getBiologicalMoleculeBounds(Structure asymStructure,List<ModelTransformationMatrix> transformations) {
+	public static double[][]  getBiologicalMoleculeBounds(Structure asymStructure,List<BiologicalAssemblyTransformation> transformations) {
 		final double coordinateBounds[][] = new double[2][3];
 		coordinateBounds[0][0] = Double.MAX_VALUE;  // min x
 		coordinateBounds[0][1] = Double.MAX_VALUE;  // min y
@@ -127,7 +125,8 @@ public class BioAssemblyTools {
 		coordinateBounds[1][1] = Double.MIN_VALUE;  // max y
 		coordinateBounds[1][2] = Double.MIN_VALUE;  // max z
 
-
+		double[] transformedCoords = new double[3];
+		
 		Atom[] atoms = StructureTools.getAllAtomArray(asymStructure);
 
 		for ( Atom a : atoms) {
@@ -137,41 +136,36 @@ public class BioAssemblyTools {
 			if ( intChainID == null)
 				intChainID = c.getChainID();
 
-			for (ModelTransformationMatrix m: transformations) {
+			for (BiologicalAssemblyTransformation m: transformations) {
 				if ( ! m.getChainId().equals(intChainID))
 					continue;
-				Atom na = (Atom)a.clone();
-				//m.transformPoint(atom.coordinate, transformedCoordinate);
-				Matrix max = m.getMatrix();
-				Atom vector = new AtomImpl();
-				vector.setCoords(m.getVector());
-				Calc.rotate(na, max);
-				Calc.shift(na, vector);
-
-				double[] transformedCoordinate = new double[3];
-				transformedCoordinate = na.getCoords();
-				if (transformedCoordinate[0] < coordinateBounds[0][0] ) {
-					coordinateBounds[0][0] = transformedCoordinate[0];  // min x
+				double[] coords = a.getCoords();	
+				transformedCoords[0] = coords[0];
+				transformedCoords[1] = coords[1];
+				transformedCoords[2] = coords[2];
+				
+				if (transformedCoords[0] < coordinateBounds[0][0] ) {
+					coordinateBounds[0][0] = transformedCoords[0];  // min x
 				}
 
-				if (transformedCoordinate[1] < coordinateBounds[0][1] ) {
-					coordinateBounds[0][1] = transformedCoordinate[1];  // min y
+				if (transformedCoords[1] < coordinateBounds[0][1] ) {
+					coordinateBounds[0][1] = transformedCoords[1];  // min y
 				}
 
-				if (transformedCoordinate[2] < coordinateBounds[0][2] ) {
-					coordinateBounds[0][2] = transformedCoordinate[2];  // min z
+				if (transformedCoords[2] < coordinateBounds[0][2] ) {
+					coordinateBounds[0][2] = transformedCoords[2];  // min z
 				}
 
-				if (transformedCoordinate[0] > coordinateBounds[1][0] ) {
-					coordinateBounds[1][0] = transformedCoordinate[0];  // max x
+				if (transformedCoords[0] > coordinateBounds[1][0] ) {
+					coordinateBounds[1][0] = transformedCoords[0];  // max x
 				}
 
-				if (transformedCoordinate[1] > coordinateBounds[1][1] ) {
-					coordinateBounds[1][1] = transformedCoordinate[1];  // max y
+				if (transformedCoords[1] > coordinateBounds[1][1] ) {
+					coordinateBounds[1][1] = transformedCoords[1];  // max y
 				}
 
-				if (transformedCoordinate[2] > coordinateBounds[1][2] ) {
-					coordinateBounds[1][2] = transformedCoordinate[2];  // max z
+				if (transformedCoords[2] > coordinateBounds[1][2] ) {
+					coordinateBounds[1][2] = transformedCoords[2];  // max z
 				}
 			}
 		}
@@ -245,7 +239,7 @@ public class BioAssemblyTools {
 	 * @param structure
 	 * @return maximum extend
 	 */
-	public static double getBiologicalMoleculeMaximumExtend( final Structure structure,List<ModelTransformationMatrix> transformations ) {
+	public static double getBiologicalMoleculeMaximumExtend( final Structure structure,List<BiologicalAssemblyTransformation> transformations ) {
 		double[][] bounds = getBiologicalMoleculeBounds(structure, transformations);
 		double xMax = Math.abs(bounds[0][0] - bounds[1][0]);
 		double yMax = Math.abs(bounds[0][1] - bounds[1][1]);
@@ -260,7 +254,7 @@ public class BioAssemblyTools {
 	 * @throws IllegalArgumentException if structure is null
 	 */
 
-	public static double[] getBiologicalMoleculeCentroid( final Structure asymUnit,List<ModelTransformationMatrix> transformations ) throws IllegalArgumentException {
+	public static double[] getBiologicalMoleculeCentroid( final Structure asymUnit,List<BiologicalAssemblyTransformation> transformations ) throws IllegalArgumentException {
 		if ( asymUnit == null ) {
 			throw new IllegalArgumentException( "null structure" );
 		}
@@ -292,11 +286,15 @@ public class BioAssemblyTools {
 				intChainID = chain.getChainID();
 
 
-			for (ModelTransformationMatrix m: transformations) {
+			for (BiologicalAssemblyTransformation m: transformations) {
 				if (!  m.getChainId().equals(intChainID))
 					continue;
 
-				m.transformPoint(atom.getCoords(), transformedCoordinate);
+				double[] coords = atom.getCoords();
+				transformedCoordinate[0] = coords[0];
+				transformedCoordinate[1] = coords[1];
+				transformedCoordinate[2] = coords[2];
+				m.transformPoint(transformedCoordinate);
 				centroid[0] += transformedCoordinate[0];
 				centroid[1] += transformedCoordinate[1];
 				centroid[2] += transformedCoordinate[2];

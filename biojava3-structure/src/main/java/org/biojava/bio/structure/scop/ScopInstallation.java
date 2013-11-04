@@ -64,7 +64,7 @@ import org.biojava3.core.util.InputStreamProvider;
  * @author Andreas Prlic
  *
  */
-public class ScopInstallation implements ScopDatabase {
+public class ScopInstallation implements LocalScopDatabase {
 
 	public static final String DEFAULT_VERSION = "1.75";
 
