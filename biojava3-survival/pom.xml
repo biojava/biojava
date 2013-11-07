@@ -10,7 +10,7 @@
   <groupId>org.biojava3</groupId>
   <artifactId>survival</artifactId>
   
-  <name>survival</name>
+  <name>biojava3-survival</name>
   <url>http://maven.apache.org</url>
 
   <dependencies>
