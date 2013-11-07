@@ -333,7 +333,7 @@
 		<module>biojava3-aa-prop</module>
 		<module>integrationtest</module>
 		<module>protein-comparison-tool</module>
-
-	</modules>
+		<module>survival</module>
+  </modules>
 	<inceptionYear>2000</inceptionYear>
 </project>
