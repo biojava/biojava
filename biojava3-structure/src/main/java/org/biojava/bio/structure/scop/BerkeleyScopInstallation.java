@@ -37,7 +37,7 @@ public class BerkeleyScopInstallation extends ScopInstallation {
 
 
 	String defaultBerkeleyDownloadURL = "http://scop.berkeley.edu/downloads/parse/";
-	String defaultBerkeleyScopVersion="2.0.3";
+	String defaultBerkeleyScopVersion="2.03";
 
 	/**
 	 * A map from SCOP version names which the Berkeley server offers as a download to an array of equivalent deprecated SCOP version names.
@@ -45,9 +45,9 @@ public class BerkeleyScopInstallation extends ScopInstallation {
 	public static final Map<String,String[]> EQUIVALENT_VERSIONS = new HashMap<String,String[]>();
 
 	static {
-		EQUIVALENT_VERSIONS.put("2.0.1", new String[] {"1.75A"});
-		EQUIVALENT_VERSIONS.put("2.0.2", new String[] {"1.75B"});
-		EQUIVALENT_VERSIONS.put("2.0.3", new String[] {"1.75C"});
+		EQUIVALENT_VERSIONS.put("2.01", new String[] {"1.75A"});
+		EQUIVALENT_VERSIONS.put("2.02", new String[] {"1.75B"});
+		EQUIVALENT_VERSIONS.put("2.03", new String[] {"1.75C"});
 	}
 
 
@@ -68,6 +68,7 @@ public class BerkeleyScopInstallation extends ScopInstallation {
 			}
 		}
 		String[] parts = version.split("\\.");
+		// they changed the filename schemes!
 		if (Integer.parseInt(parts[0]) == 1) {
 			return "dir." + fileType + ".scop." + version + ".txt";
 		} else {

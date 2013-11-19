@@ -28,13 +28,13 @@ import java.util.Map;
 public class ScopFactory {
 
 	// berkeley 2
-	public static final String VERSION_2_0_3 = "2.0.3";
-	public static final String VERSION_2_0_2 = "2.0.2";
-	public static final String VERSION_2_0_1 = "2.0.1";
+	public static final String VERSION_2_0_3 = "2.03";
+	public static final String VERSION_2_0_2 = "2.02";
+	public static final String VERSION_2_0_1 = "2.01";
 	// berkeley 1 (aliases of above)
-	public static final String VERSION_1_75C = "1.75C";	
-	public static final String VERSION_1_75B = "1.75B";
-	public static final String VERSION_1_75A = "1.75A";
+	public static final String VERSION_1_75C = VERSION_2_0_3;
+	public static final String VERSION_1_75B = VERSION_2_0_2;
+	public static final String VERSION_1_75A = VERSION_2_0_1;
 	// original SCOP
 	// latest SCOP release from SCOP website = 1.75;
 	public static final String VERSION_1_75 = "1.75";
