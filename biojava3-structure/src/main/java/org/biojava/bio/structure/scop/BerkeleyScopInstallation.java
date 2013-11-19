@@ -25,71 +25,79 @@
 package org.biojava.bio.structure.scop;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 
+/**
+ * The Structural Classification of Proteins at Berkeley Lab and UC Berkeley (<a href="http://scop.berkeley.edu/">http://scop.berkeley.edu/</a>).
+ */
 public class BerkeleyScopInstallation extends ScopInstallation {
 
 
 	String defaultBerkeleyDownloadURL = "http://scop.berkeley.edu/downloads/parse/";
-	String defaultBerkeleyScopVersion="1.75A";
-	public static final String claFileName = "dir.cla.scop.";
-	public static final String desFileName = "dir.des.scop.";
-	public static final String hieFileName = "dir.hie.scop.";
-	public static final String comFileName = "dir.com.scop.";
-	
-	
-	public BerkeleyScopInstallation(){
-		super();
+	String defaultBerkeleyScopVersion="2.0.3";
 
+	/**
+	 * A map from SCOP version names which the Berkeley server offers as a download to an array of equivalent deprecated SCOP version names.
+	 */
+	public static final Map<String,String[]> EQUIVALENT_VERSIONS = new HashMap<String,String[]>();
+
+	static {
+		EQUIVALENT_VERSIONS.put("2.0.1", new String[] {"1.75A"});
+		EQUIVALENT_VERSIONS.put("2.0.2", new String[] {"1.75B"});
+		EQUIVALENT_VERSIONS.put("2.0.3", new String[] {"1.75C"});
+	}
+
+
+	public BerkeleyScopInstallation() {
+		super();
 		setScopVersion(defaultBerkeleyScopVersion);
 		setScopDownloadURL(defaultBerkeleyDownloadURL);
 	}
 
+	private String getFilename(String fileType) {
+		String version = scopVersion;
+		for (Map.Entry<String, String[]> entry : EQUIVALENT_VERSIONS.entrySet()) {
+			for (String vr : entry.getValue()) {
+				if (scopVersion.equals(vr)) {
+					version = entry.getKey();
+					break;
+				}
+			}
+		}
+		String[] parts = version.split("\\.");
+		if (Integer.parseInt(parts[0]) == 1) {
+			return "dir." + fileType + ".scop." + version + ".txt";
+		} else {
+			return "dir." + fileType + ".scope." + version + "-stable.txt";
+		}
+	}
+
+
+	protected void downloadClaFile() throws IOException {
+		String filename = getFilename("cla");
+		URL url = new URL(scopDownloadURL + filename);
+		downloadFileFromRemote(url, new File(filename));
+	}
+
+	protected void downloadDesFile() throws IOException {
+		String filename = getFilename("des");
+		URL url = new URL(scopDownloadURL + filename);
+		downloadFileFromRemote(url, new File(filename));
+	}
+
+	protected void downloadHieFile() throws IOException {
+		String filename = getFilename("hie");
+		URL url = new URL(scopDownloadURL + filename);
+		downloadFileFromRemote(url, new File(filename));
+	}
 	
-	protected void downloadClaFile() throws FileNotFoundException, IOException{
-		String remoteFilename = claFileName + scopVersion + ".txt";
-		URL url = new URL(scopDownloadURL + remoteFilename);
-
-		String localFileName = getClaFilename();
-		File localFile = new File(localFileName);
-
-		downloadFileFromRemote(url, localFile);
-
-	}
-
-
-	protected void downloadDesFile() throws FileNotFoundException, IOException{
-		String remoteFilename = desFileName + scopVersion + ".txt";
-		URL url = new URL(scopDownloadURL + remoteFilename);
-
-		String localFileName = getDesFilename();
-		File localFile = new File(localFileName);
-
-		downloadFileFromRemote(url, localFile);
-
-	}
-
-	protected void downloadHieFile() throws FileNotFoundException, IOException{
-		String remoteFilename = hieFileName + scopVersion + ".txt";
-		URL url = new URL(scopDownloadURL + remoteFilename);
-
-		String localFileName = getHieFilename();
-		File localFile = new File(localFileName);
-
-		downloadFileFromRemote(url, localFile);
-
-	}
-	
-	protected void downloadComFile() throws FileNotFoundException, IOException{
-		String remoteFilename = comFileName + scopVersion + ".txt";
-		URL url = new URL(scopDownloadURL + remoteFilename);
-
-		String localFileName = getComFilename();
-		File localFile = new File(localFileName);
-
-		downloadFileFromRemote(url, localFile);
+	protected void downloadComFile() throws IOException {
+		String filename = getFilename("com");
+		URL url = new URL(scopDownloadURL + filename);
+		downloadFileFromRemote(url, new File(filename));
 	}
 
 }
