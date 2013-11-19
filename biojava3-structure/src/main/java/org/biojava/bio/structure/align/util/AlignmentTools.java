@@ -542,9 +542,12 @@ public class AlignmentTools {
 		}
 
 		AFPChain a = new AFPChain();
-		a.setName1(ca1[0].getGroup().getChain().getParent().getName());
-		a.setName2(ca2[0].getGroup().getChain().getParent().getName());
-
+		try {
+			a.setName1(ca1[0].getGroup().getChain().getParent().getName());
+			a.setName2(ca2[0].getGroup().getChain().getParent().getName());
+		} catch(Exception e) {
+			// One of the structures wasn't fully created. Ignore
+		}
 		a.setBlockNum(1);
 		a.setCa1Length(ca1.length);
 		a.setCa2Length(ca2.length);
@@ -726,13 +729,13 @@ public class AlignmentTools {
 	}
 
 	/**
-	 * @param afpChain
+	 * @param afpChain Input afpchain. UNMODIFIED
 	 * @param ca1
 	 * @param ca2
 	 * @param optLength
 	 * @param optLens
 	 * @param optAln
-	 * @return
+	 * @return A NEW AfpChain based off the input but with the optAln modified
 	 * @throws StructureException if an error occured during superposition
 	 */
 	public static AFPChain replaceOptAln(AFPChain afpChain, Atom[] ca1, Atom[] ca2,
