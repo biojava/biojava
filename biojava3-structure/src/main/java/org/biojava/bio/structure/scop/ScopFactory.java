@@ -122,6 +122,7 @@ public class ScopFactory {
 			// Use a remote installation
 			if( scop == null ) {
 				scop = new RemoteScopInstallation();
+				scop.setScopVersion(version);
 				versionedScopDBs.put(version,scop);
 			}
 			return scop;
