@@ -2952,7 +2952,9 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 		for (Chain chain : structure.getChains()) {
 			for (Group group : chain.getAtomGroups()) {
 				for (Atom atom : group.getAtoms()) {
-					((ArrayList<Bond>) atom.getBonds()).trimToSize();
+					if (atom.getBonds().size() > 0) {
+						((ArrayList<Bond>) atom.getBonds()).trimToSize();
+					}
 				}
 			}
 		}
