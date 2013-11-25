@@ -544,7 +544,10 @@ public class AlignmentTools {
 		AFPChain a = new AFPChain();
 		try {
 			a.setName1(ca1[0].getGroup().getChain().getParent().getName());
-			a.setName2(ca2[0].getGroup().getChain().getParent().getName());
+			if(ca2[0].getGroup().getChain().getParent() != null) {
+				// common case for cloned ca2
+				a.setName2(ca2[0].getGroup().getChain().getParent().getName());
+			}
 		} catch(Exception e) {
 			// One of the structures wasn't fully created. Ignore
 		}
