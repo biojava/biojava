@@ -222,6 +222,12 @@ public interface Atom extends Cloneable, PDBRecord {
      */
     public Group getGroup();
     
+    /** Adds a bond
+     * @param bond to be added
+     * @see #getBonds()
+     */
+    public void addBond(Bond bond);
+    
     /**
      * Gets all {@link Bond}s this atom is part of.
      * 
