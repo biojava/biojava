@@ -269,10 +269,12 @@ public class FeatureList extends ArrayList<FeatureI> {
 		FeatureList list = new FeatureList();
 		if (featindex.containsKey(key)){
 			Map<String, List<FeatureI>> featsmap =featindex.get(key);
-			for (List<FeatureI> feats: featsmap.values()){
-				list.addAll(Collections.unmodifiableCollection(feats));
+			if(null != featsmap) {
+				for (List<FeatureI> feats: featsmap.values()){
+					list.addAll(Collections.unmodifiableCollection(feats));
+				}
+				return list;
 			}
-			return list;
 		}
 		
 		for (FeatureI f : this) {
