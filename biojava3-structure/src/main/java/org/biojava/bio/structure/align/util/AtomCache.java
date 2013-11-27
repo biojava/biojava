@@ -87,7 +87,6 @@ public class AtomCache {
 
 	private boolean fetchFileEvenIfObsolete;
 
-	private ScopDatabase scopInstallation;
 	protected FileParsingParameters params;
 	protected PDPProvider pdpprovider;
 
@@ -163,8 +162,6 @@ public class AtomCache {
 		//
 
 		strictSCOP = true;
-
-		scopInstallation = null;
 
 		useMmCif = false;
 
@@ -320,14 +317,6 @@ public class AtomCache {
 
 	public PDPProvider getPdpprovider() {
 		return pdpprovider;
-	}
-
-	public ScopDatabase getScopInstallation() {
-		if (scopInstallation == null) {
-			scopInstallation = ScopFactory.getSCOP();
-		}
-
-		return scopInstallation;
 	}
 
 	/**
@@ -545,10 +534,7 @@ public class AtomCache {
 	 * @throws StructureException
 	 */
 	public Structure getStructureForDomain(ScopDomain domain) throws IOException, StructureException {
-		if (scopInstallation == null) {
-			scopInstallation = ScopFactory.getSCOP();
-		}
-		return getStructureForDomain(domain, scopInstallation);
+		return getStructureForDomain(domain, ScopFactory.getSCOP());
 	}
 
 	/**
@@ -661,10 +647,7 @@ public class AtomCache {
 	 * @throws StructureException
 	 */
 	public Structure getStructureForDomain(String scopId) throws IOException, StructureException {
-		if (scopInstallation == null) {
-			scopInstallation = ScopFactory.getSCOP();
-		}
-		return getStructureForDomain(scopId, scopInstallation);
+		return getStructureForDomain(scopId, ScopFactory.getSCOP());
 	}
 
 	/**
@@ -750,6 +733,7 @@ public class AtomCache {
 		}
 
 		// todo: use a SCOP implementation that is backed by SerializableCache
+		ScopDatabase scopInstallation = ScopFactory.getSCOP();
 		if (scopInstallation != null) {
 			if (scopInstallation instanceof CachedRemoteScopInstallation) {
 				CachedRemoteScopInstallation cacheScop = (CachedRemoteScopInstallation) scopInstallation;
@@ -898,12 +882,7 @@ public class AtomCache {
 	}
 
 	private ScopDomain getScopDomain(String scopId) {
-
-		if (scopInstallation == null) {
-			scopInstallation = ScopFactory.getSCOP();
-		}
-
-		return scopInstallation.getDomainByScopID(scopId);
+		return ScopFactory.getSCOP().getDomainByScopID(scopId);
 	}
 
 	private Structure getStructureFromCATHDomain(StructureName structureName) throws IOException, StructureException {
@@ -979,7 +958,7 @@ public class AtomCache {
 			domain = guessScopDomain(name);
 		}
 
-		System.out.println(domain);
+		//System.out.println(domain);
 		if (domain != null) {
 			Structure s = getStructureForDomain(domain);
 			return s;
@@ -1084,11 +1063,7 @@ public class AtomCache {
 			String chainID = scopMatch.group(2);
 			String domainID = scopMatch.group(3);
 
-			if (scopInstallation == null) {
-				scopInstallation = ScopFactory.getSCOP();
-			}
-
-			for (ScopDomain potentialSCOP : scopInstallation.getDomainsForPDB(pdbID)) {
+			for (ScopDomain potentialSCOP : ScopFactory.getSCOP().getDomainsForPDB(pdbID)) {
 				Matcher potMatch = scopIDregex.matcher(potentialSCOP.getScopId());
 				if (potMatch.matches()) {
 					if (chainID.equals(potMatch.group(2)) || chainID.equals("_") || chainID.equals(".")

@@ -427,6 +427,10 @@ public final class RotationAxis {
 	
 	public void rotate(Atom[] atoms, double theta) {
 		Matrix rot = getRotationMatrix(theta);
+		if(rotationPos == null) {
+			// Undefined rotation axis; do nothing
+			return;
+		}
 		Atom negPos;
 		try {
 			negPos = Calc.invert(rotationPos);
@@ -469,5 +473,13 @@ public final class RotationAxis {
 	public static double getAngle(Matrix rotation) {
 		double c = (rotation.trace()-1)/2.0; //=cos(theta)
 		return Math.acos(c);
+	}
+
+	/**
+	 * 
+	 * @return If the rotation axis is well defined, rather than purely translational
+	 */
+	public boolean isDefined() {
+		return rotationPos != null;
 	}
 }

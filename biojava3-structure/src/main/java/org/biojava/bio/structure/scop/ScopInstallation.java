@@ -181,9 +181,8 @@ public class ScopInstallation implements LocalScopDatabase {
 				e.printStackTrace();
 				installedDes.set(false);
 				return;
-			}   
+			}
 		}
-
 		try {
 
 			parseDescriptions();
@@ -758,15 +757,14 @@ public class ScopInstallation implements LocalScopDatabase {
 
 		File f = new File(fileName);
 
-		return f.exists();
+		return f.exists() && f.length()>0;
 	}
 
 	private boolean desFileAvailable(){
 		String fileName = getDesFilename();
 
 		File f = new File(fileName);
-
-		return f.exists();
+		return f.exists() && f.length()>0;
 	}
 
 	private boolean hieFileAvailable(){
@@ -774,7 +772,7 @@ public class ScopInstallation implements LocalScopDatabase {
 
 		File f = new File(fileName);
 
-		return f.exists();
+		return f.exists() && f.length()>0;
 	}
 
 	private boolean comFileAvailable(){
@@ -782,7 +780,7 @@ public class ScopInstallation implements LocalScopDatabase {
 
 		File f = new File(fileName);
 
-		return f.exists();
+		return f.exists() && f.length()>0;
 	}
 
 	protected String getClaFilename(){
