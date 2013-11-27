@@ -25,6 +25,7 @@ package org.biojava.bio.structure;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.biojava.bio.structure.io.FileConvert;
@@ -68,8 +69,9 @@ public class AtomImpl implements Atom,Serializable, PDBRecord {
         occupancy  = 0.0       ;
         tempfactor = 0.0       ;
         altLoc = new Character(' ');
+        altLoc = null;
         parent = null;
-        bonds = new ArrayList<Bond>(0);
+        bonds = Collections.emptyList();
     }
     /** Get the Hibernate database ID.
      *
@@ -256,5 +258,14 @@ public class AtomImpl implements Atom,Serializable, PDBRecord {
 	@Override
 	public List<Bond> getBonds() {
 		return bonds;
+	}
+	
+	@Override
+	public void addBond(Bond bond) {
+		if (bonds.size() == 0) {
+			// most atoms have a maximum of 3 heavy atom neighbors, so use this as the default size
+			bonds = new ArrayList<Bond>(3);
+		}
+		bonds.add(bond);
 	}
 }
