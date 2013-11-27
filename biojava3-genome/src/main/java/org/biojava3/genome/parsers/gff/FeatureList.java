@@ -236,6 +236,8 @@ public class FeatureList extends ArrayList<FeatureI> {
 
 	/**
 	 * Create a list of all features that include the specified attribute key/value pair.
+	 * This method now properly supports adding the index before or after adding the features.
+	 * Adding features, then then index, then more features is still not supported.
 	 *
 	 * @param key The key to consider.
 	 * @param value The value to consider.
