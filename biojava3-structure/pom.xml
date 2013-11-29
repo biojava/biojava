@@ -11,11 +11,7 @@
 	<name>biojava3-structure</name>
 	<description>The protein structure modules of BioJava.</description>
 	<dependencies>
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<scope>test</scope>
-		</dependency>
+		
 		<dependency>
 			<groupId>org.biojava</groupId>
 			<artifactId>biojava3-alignment</artifactId>
@@ -27,6 +23,13 @@
 			<artifactId>biojava3-core</artifactId>
 			<version>3.0.8-SNAPSHOT</version>
 			<scope>compile</scope>
+		</dependency>
+		
+		<!--  Testing related dependencies -->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>xmlunit</groupId>
