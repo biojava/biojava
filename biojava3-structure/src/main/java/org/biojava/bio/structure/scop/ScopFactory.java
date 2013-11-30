@@ -55,14 +55,14 @@ public class ScopFactory {
 
 	// Hold one instance for each version
 	static Map<String,ScopDatabase> versionedScopDBs = new HashMap<String, ScopDatabase>(); 
-	private static String defaultVersion = LATEST_VERSION;
+	public static String DEFAULT_VERSION = LATEST_VERSION;
 
 	/**
 	 * Get the current default instance for the default version
 	 * @return
 	 */
 	public static ScopDatabase getSCOP(){
-		return getSCOP(defaultVersion);
+		return getSCOP(DEFAULT_VERSION);
 	}
 
 	/**
@@ -72,7 +72,7 @@ public class ScopFactory {
 	 * @see #getSCOP(String, boolean)
 	 */
 	public static ScopDatabase getSCOP(boolean forceLocalData) {
-		return getSCOP(defaultVersion, forceLocalData);
+		return getSCOP(DEFAULT_VERSION, forceLocalData);
 	}
 
 	/**
@@ -85,7 +85,7 @@ public class ScopFactory {
 	 */
 	public static ScopDatabase getSCOP(String version){
 		// Default to a local installation
-		return getSCOP(version,false);
+		return getSCOP(version,true);
 	}
 
 	/**
@@ -106,7 +106,7 @@ public class ScopFactory {
 	 */
 	public static ScopDatabase getSCOP(String version, boolean forceLocalData){
 		if( version == null ) {
-			version = defaultVersion;
+			version = DEFAULT_VERSION;
 		}
 		ScopDatabase scop = versionedScopDBs.get(version);
 		if ( forceLocalData) {
@@ -135,7 +135,7 @@ public class ScopFactory {
 	 * @param version A version number, such as {@link #VERSION_1_75A}
 	 */
 	public static void setScopDatabase(String version) {
-		defaultVersion = version;
+		DEFAULT_VERSION = version;
 	}
 	
 	/**
@@ -145,7 +145,7 @@ public class ScopFactory {
 	 */
 	public static void setScopDatabase(String version, boolean forceLocalData) {
 		getSCOP(version,forceLocalData);
-		defaultVersion = version;
+		DEFAULT_VERSION = version;
 	}
 
 	/**
@@ -154,7 +154,7 @@ public class ScopFactory {
 	 */
 	public static void setScopDatabase(ScopDatabase scop){
 		//System.out.println("Setting ScopDatabase to type: " + scop.getClass().getName());
-		defaultVersion = scop.getScopVersion();
-		versionedScopDBs.put(defaultVersion,scop);
+		DEFAULT_VERSION = scop.getScopVersion();
+		versionedScopDBs.put(DEFAULT_VERSION,scop);
 	}
 }
