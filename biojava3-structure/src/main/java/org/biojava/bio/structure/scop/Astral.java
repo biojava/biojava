@@ -24,6 +24,7 @@ import java.lang.ref.SoftReference;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
@@ -102,6 +103,7 @@ public class Astral {
 	private static final Logger logger = LogManager.getLogger(Astral.class.getName());
 
 	private Set<String> names;
+	private LinkedHashMap<Integer,String> failedLines;
 
 	/**
 	 * Get a list of representatives' names for the specified ASTRAL cutoff.
@@ -187,10 +189,19 @@ public class Astral {
 	}
 
 	/**
+	 * Gets a map describing lines read in the file that weren't understood.
+	 * @return A LinkedHashMap mapping line numbers of failures to the lines themselves
+	 */
+	public LinkedHashMap<Integer, String> getFailedLines() {
+		return failedLines;
+	}
+
+	/**
 	 * Parses the FASTA file opened by reader.
 	 */
 	private void init(Reader reader) {
 		names = new TreeSet<String>();
+		failedLines = new LinkedHashMap<Integer,String>();
 
 		BufferedReader br = null;
 
@@ -212,6 +223,7 @@ public class Astral {
 						}
 						i++;
 					} catch (RuntimeException e) {
+						failedLines.put(i, line);
 						logger.error("Couldn't read line " + line, e);
 					}
 				}
