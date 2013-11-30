@@ -5,8 +5,8 @@ import java.util.Map;
 
 /**
  * Controls global {@link CathDatabase CathDatabases} being used.
- * Implements a multiton pattern through {@link #getCath(String)},
- * and a singleton pattern through {@link #getCath()}.
+ * Implements a multiton pattern through {@link #getCathDatabase(String)},
+ * and a singleton pattern through {@link #getCathDatabase()}.
  * @author dmyersturnbull
  * @see ScopFactory
  * @see CathInstallation
@@ -33,7 +33,7 @@ public class CathFactory {
 	 * Returns the default (singleton) CathDatabase.
 	 * If the database is null, this will recreate it (lazy initialization).
 	 */
-	public static CathDatabase getCath() {
+	public static CathDatabase getCathDatabase() {
 		if (cath == null) {
 			cath = new CathInstallation();
 		}
@@ -48,7 +48,7 @@ public class CathFactory {
 	 * Returns a CATH database of the specified version.
 	 * @param version For example, "3.5.0"
 	 */
-	public static CathDatabase getCath(String version) {
+	public static CathDatabase getCathDatabase(String version) {
 		if (version == null) version = DEFAULT_VERSION;
 		CathDatabase cath = versions.get(version);
 		if (cath == null) {

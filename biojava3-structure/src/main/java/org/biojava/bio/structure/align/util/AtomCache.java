@@ -401,7 +401,7 @@ public class AtomCache {
 				// return based on SCOP domain ID
 				return getStructureFromSCOPDomain(name);
 			} else if (structureName.isCathID()) {
-				return getStructureForCathDomain(structureName, CathFactory.getCath());
+				return getStructureForCathDomain(structureName, CathFactory.getCathDatabase());
 			} else if (name.length() == 6) {
 				// name is PDB.CHAINID style (e.g. 4hhb.A)
 
@@ -888,10 +888,10 @@ public class AtomCache {
 
 	/**
 	 * Returns a {@link Structure} corresponding to the CATH identifier supplied in {@code structureName}, using the the {@link CathDatabase}
-	 * at {@link CathFactory#getCath()}.
+	 * at {@link CathFactory#getCathDatabase()}.
 	 */
 	public Structure getStructureForCathDomain(StructureName structureName) throws IOException, StructureException {
-		return getStructureForCathDomain(structureName, CathFactory.getCath());
+		return getStructureForCathDomain(structureName, CathFactory.getCathDatabase());
 	}
 
 	/**
