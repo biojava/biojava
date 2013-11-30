@@ -8,6 +8,7 @@ import org.biojava.bio.structure.align.util.AtomCache;
 import org.biojava.bio.structure.io.mmcif.chem.PolymerType;
 import org.biojava.bio.structure.io.mmcif.chem.ResidueType;
 import org.biojava.bio.structure.io.mmcif.model.ChemComp;
+import org.biojava3.structure.StructureIO;
 
 public class TestAltLocs extends TestCase {
 
@@ -144,7 +145,7 @@ public class TestAltLocs extends TestCase {
 			for ( Group altGroup : g.getAltLocs() ) {
 				ensureAllAtomsSameInsCode(altGroup);	
 			}
-			
+
 		} catch(Exception e){
 			e.printStackTrace();
 			fail(e.getMessage());
@@ -156,7 +157,7 @@ public class TestAltLocs extends TestCase {
 
 	private void ensureAllAtomsSameInsCode(Group g) {
 
-	//	System.out.println(String.format("Group size: %d", g.getAtoms().size()));
+		//	System.out.println(String.format("Group size: %d", g.getAtoms().size()));
 
 		Character defaultAltLoc = null;
 		for (Atom atom : g.getAtoms()) {
@@ -164,11 +165,42 @@ public class TestAltLocs extends TestCase {
 				defaultAltLoc = atom.getAltLoc();
 				continue;
 			}
-		//	System.out.print(atom.toPDB());
+			//	System.out.print(atom.toPDB());
 			Character altLoc = atom.getAltLoc();
 
 			assertEquals(defaultAltLoc,altLoc);
 		}
+	}
+
+	public void test1AAC(){
+		try {
+			Structure s = StructureIO.getStructure("1AAC");
+
+			Chain a = s.getChainByPDB("A");
+
+			Group g = a.getGroupByPDB( ResidueNumber.fromString("27"));
+
+			System.out.println(g);
+			for (Atom atom : g.getAtoms()) {
+				System.out.print(atom.toPDB());
+			}
+			
+			
+			int pos = 0;
+			for (Group alt: g.getAltLocs()) {
+				pos++;
+				System.out.println("altLoc: " + pos + " " + alt);
+				for (Atom atom : alt.getAtoms()) {
+					System.out.print(atom.toPDB());
+				}
+			}
+			
+		} catch (Exception e){
+			e.printStackTrace();
+			fail(e.getMessage());
+		}
+
+
 	}
 
 }

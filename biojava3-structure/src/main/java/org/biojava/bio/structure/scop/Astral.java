@@ -28,9 +28,9 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 /**
  * Provides programmatic access to ASTRAL representative sets. See the paper by <a
@@ -100,7 +100,7 @@ public class Astral {
 
 	private static Map<String, SoftReference<Astral>> instances = new HashMap<String, SoftReference<Astral>>();
 
-	private static final Logger logger = LogManager.getLogger(Astral.class.getName());
+	private static final Logger logger = Logger.getLogger(Astral.class.getName());
 
 	private Set<String> names;
 	private LinkedHashMap<Integer,String> failedLines;
@@ -219,12 +219,12 @@ public class Astral {
 						String scopId = line.split("\\s")[0].substring(1);
 						names.add(scopId);
 						if (i % 1000 == 0) {
-							logger.debug("Reading ASTRAL line for " + scopId);
+							logger.log(Level.FINE,"Reading ASTRAL line for " + scopId);
 						}
 						i++;
 					} catch (RuntimeException e) {
 						failedLines.put(i, line);
-						logger.error("Couldn't read line " + line, e);
+						logger.log(Level.WARNING,"Couldn't read line " + line, e);
 					}
 				}
 			}
@@ -238,7 +238,7 @@ public class Astral {
 				try {
 					br.close();
 				} catch (IOException e) {
-					logger.warn("Could not close stream", e);
+					logger.log(Level.WARNING,"Could not close stream", e);
 				}
 			}
 		}
