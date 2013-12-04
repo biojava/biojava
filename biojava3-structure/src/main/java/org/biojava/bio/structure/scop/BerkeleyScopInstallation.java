@@ -77,28 +77,52 @@ public class BerkeleyScopInstallation extends ScopInstallation {
 	}
 
 
+	@Override
 	protected void downloadClaFile() throws IOException {
-		String filename = getFilename("cla");
+		String filename = getFilename("cla"); // does not contain cacheLocation
 		URL url = new URL(scopDownloadURL + filename);
-		downloadFileFromRemote(url, new File(filename));
+		downloadFileFromRemote(url, new File(getClaFilename())); // does contain cacheLocation
 	}
 
+	@Override
 	protected void downloadDesFile() throws IOException {
-		String filename = getFilename("des");
+		String filename = getFilename("des"); // does not contain cacheLocation
 		URL url = new URL(scopDownloadURL + filename);
-		downloadFileFromRemote(url, new File(filename));
+		downloadFileFromRemote(url, new File(getDesFilename())); // does contain cacheLocation
 	}
 
+	@Override
 	protected void downloadHieFile() throws IOException {
-		String filename = getFilename("hie");
+		String filename = getFilename("hie"); // does not contain cacheLocation
 		URL url = new URL(scopDownloadURL + filename);
-		downloadFileFromRemote(url, new File(filename));
+		downloadFileFromRemote(url, new File(getHieFilename())); // does contain cacheLocation
 	}
-	
+
+	@Override
 	protected void downloadComFile() throws IOException {
-		String filename = getFilename("com");
+		String filename = getFilename("com"); // does not contain cacheLocation
 		URL url = new URL(scopDownloadURL + filename);
-		downloadFileFromRemote(url, new File(filename));
+		downloadFileFromRemote(url, new File(getComFilename())); // does contain cacheLocation
+	}
+
+	@Override
+	protected String getClaFilename() {
+		return cacheLocation + getFilename("cla");
+	}
+
+	@Override
+	protected String getDesFilename() {
+		return cacheLocation + getFilename("des");
+	}
+
+	@Override
+	protected String getHieFilename() {
+		return cacheLocation + getFilename("hie");
+	}
+
+	@Override
+	protected String getComFilename() {
+		return cacheLocation + getFilename("com");
 	}
 
 }
