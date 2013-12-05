@@ -180,20 +180,22 @@ public class TestAltLocs extends TestCase {
 
 			Group g = a.getGroupByPDB( ResidueNumber.fromString("27"));
 
-			System.out.println(g);
-			for (Atom atom : g.getAtoms()) {
-				System.out.print(atom.toPDB());
-			}
 			
-			
-			int pos = 0;
-			for (Group alt: g.getAltLocs()) {
-				pos++;
-				System.out.println("altLoc: " + pos + " " + alt);
-				for (Atom atom : alt.getAtoms()) {
-					System.out.print(atom.toPDB());
-				}
-			}
+			//TODO: complete this test 
+//			System.out.println(g);
+//			for (Atom atom : g.getAtoms()) {
+//				System.out.print(atom.toPDB());
+//			}
+//			
+//			
+//			int pos = 0;
+//			for (Group alt: g.getAltLocs()) {
+//				pos++;
+////				System.out.println("altLoc: " + pos + " " + alt);
+////				for (Atom atom : alt.getAtoms()) {
+////					System.out.print(atom.toPDB());
+////				}
+//			}
 			
 		} catch (Exception e){
 			e.printStackTrace();
