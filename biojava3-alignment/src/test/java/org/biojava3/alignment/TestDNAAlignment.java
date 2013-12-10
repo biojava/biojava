@@ -120,4 +120,15 @@ public class TestDNAAlignment extends TestCase {
         	// expected exception
         }
     }
+    /**
+     * @author Daniel Cameron
+     */
+    public void testMixedCaseInputStringsMatchUnderlyingBases() {
+        DNASequence target = new DNASequence("AAAAAAAAGTC", DNACompoundSet.getDNACompoundSet());
+        DNASequence query = new DNASequence("aaaaaaaagtc", DNACompoundSet.getDNACompoundSet());
+        SubstitutionMatrix<NucleotideCompound> matrix = SubstitutionMatrixHelper.getNuc4_4();
+        SimpleGapPenalty gapP = new SimpleGapPenalty((short)5, (short)2);
+        // should be a full match
+        assertEquals(10 * 5, Alignments.getPairwiseAligner(query, target, PairwiseSequenceAlignerType.LOCAL, gapP, matrix).getScore());
+    }
 }

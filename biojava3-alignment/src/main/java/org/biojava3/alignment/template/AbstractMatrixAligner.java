@@ -56,6 +56,10 @@ public abstract class AbstractMatrixAligner<S extends Sequence<C>, C extends Com
     protected int[] xyMax, xyStart;
     protected short max, min, score;
     protected short[][][] scores;
+    /**
+     * Friendly name of each copy of the scoring matrix.
+     * The number of elements must match the number of elements in third dimension of @see scores 
+     */
     private String[] types;
     protected long time = -1;
 
