@@ -27,10 +27,14 @@ import static org.junit.Assert.*;
 
 import org.biojava3.alignment.SimpleGapPenalty;
 import org.biojava3.alignment.SubstitutionMatrixHelper;
+import org.biojava3.alignment.template.AlignedSequence;
 import org.biojava3.alignment.template.GapPenalty;
 import org.biojava3.alignment.template.SubstitutionMatrix;
+import org.biojava3.core.sequence.DNASequence;
 import org.biojava3.core.sequence.ProteinSequence;
+import org.biojava3.core.sequence.compound.AmbiguityDNACompoundSet;
 import org.biojava3.core.sequence.compound.AminoAcidCompound;
+import org.biojava3.core.sequence.compound.NucleotideCompound;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -97,5 +101,16 @@ public class GuanUberbacherTest {
         assertEquals(alignment.getPair().toString(), String.format("ARND%n-RDG%n"));
         assertEquals(self.getPair().toString(), String.format("ARND%nARND%n"));
     }
-
+	@Test
+	public void testAnchoredDNAAlignment() {
+		DNASequence query = new DNASequence(  "ACGTAACCGGTT", AmbiguityDNACompoundSet.getDNACompoundSet());
+		DNASequence target = new DNASequence("AACGTAACCGGTTACGTACGT", AmbiguityDNACompoundSet.getDNACompoundSet());
+		AnchoredPairwiseSequenceAligner<DNASequence, NucleotideCompound> aligner = new GuanUberbacher<DNASequence, NucleotideCompound>(query, target, new SimpleGapPenalty((short)5, (short)2), SubstitutionMatrixHelper.getNuc4_4());
+		int[] anchors = new int[query.getLength()];
+		for (int i = 0; i < anchors.length; i++) anchors[i] = -1;
+		anchors[0] = 1;
+		AlignedSequence<DNASequence, NucleotideCompound> aligned = aligner.getPair().getQuery();
+		assertEquals(1, (int)aligned.getStart().getPosition());
+		assertEquals(13, (int)aligned.getEnd().getPosition());
+	}
 }
