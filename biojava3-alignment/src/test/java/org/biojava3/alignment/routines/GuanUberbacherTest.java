@@ -101,6 +101,40 @@ public class GuanUberbacherTest {
         assertEquals(alignment.getPair().toString(), String.format("ARND%n-RDG%n"));
         assertEquals(self.getPair().toString(), String.format("ARND%nARND%n"));
     }
+    /**
+     * @author Daniel Cameron
+     */
+    @Test
+	public void should_align_shorter_query() {
+    	DNASequence query = new DNASequence("A", AmbiguityDNACompoundSet.getDNACompoundSet());
+		DNASequence target = new DNASequence("AT", AmbiguityDNACompoundSet.getDNACompoundSet());
+		GuanUberbacher<DNASequence, NucleotideCompound> aligner = new GuanUberbacher<DNASequence, NucleotideCompound>(query, target, new SimpleGapPenalty((short)5, (short)2), SubstitutionMatrixHelper.getNuc4_4());
+		assertEquals(String.format("A-%nAT%n"), aligner.getPair().toString());
+    }
+    /**
+     * @author Daniel Cameron
+     */
+    @Test
+	public void should_align_shorter_target() {
+    	DNASequence query = new DNASequence("AT", AmbiguityDNACompoundSet.getDNACompoundSet());
+		DNASequence target = new DNASequence("A", AmbiguityDNACompoundSet.getDNACompoundSet());
+		GuanUberbacher<DNASequence, NucleotideCompound> aligner = new GuanUberbacher<DNASequence, NucleotideCompound>(query, target, new SimpleGapPenalty((short)5, (short)2), SubstitutionMatrixHelper.getNuc4_4());
+		assertEquals(String.format("AT%nA-%n"), aligner.getPair().toString());
+    }
+    /**
+     * @author Daniel Cameron
+     */
+    @Test
+	public void should_align_multiple_cuts() {
+    	DNASequence query = new DNASequence("AA", AmbiguityDNACompoundSet.getDNACompoundSet());
+		DNASequence target = new DNASequence("AATT", AmbiguityDNACompoundSet.getDNACompoundSet());
+		GuanUberbacher<DNASequence, NucleotideCompound> aligner = new GuanUberbacher<DNASequence, NucleotideCompound>(query, target, new SimpleGapPenalty((short)5, (short)2), SubstitutionMatrixHelper.getNuc4_4());
+		aligner.setCutsPerSection(2);
+		assertEquals(String.format("AA--%nAATT%n"), aligner.getPair().toString());
+    }
+    /**
+     * @author Daniel Cameron
+     */
 	@Test
 	public void testAnchoredDNAAlignment() {
 		DNASequence query = new DNASequence(  "ACGTAACCGGTT", AmbiguityDNACompoundSet.getDNACompoundSet());
@@ -109,6 +143,7 @@ public class GuanUberbacherTest {
 		int[] anchors = new int[query.getLength()];
 		for (int i = 0; i < anchors.length; i++) anchors[i] = -1;
 		anchors[0] = 1;
+		aligner.setCutsPerSection(1000);
 		AlignedSequence<DNASequence, NucleotideCompound> aligned = aligner.getPair().getQuery();
 		assertEquals(1, (int)aligned.getStart().getPosition());
 		assertEquals(13, (int)aligned.getEnd().getPosition());
