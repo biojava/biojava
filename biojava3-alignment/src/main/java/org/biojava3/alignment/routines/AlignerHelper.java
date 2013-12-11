@@ -173,8 +173,11 @@ public class AlignerHelper {
         int m = subproblem.getQueryEndIndex() - subproblem.getQueryStartIndex() - (anchor0 ? 1 : 0);
         if (k < m) {
             cuts = new Cut[k];
-            for (int i = 0; i < k; i++) {
-                cuts[i] = new Cut(subproblem.getQueryStartIndex() + ((i + 1) * (m + 1) * k / (k + 1)), dim);
+            int firstCutIndex = subproblem.getQueryStartIndex() + (anchor0 ? 1 : 0);
+            int finalCutIndex = firstCutIndex + m - 1;
+            for (int i = 0; i < k; i++) {            	
+            	cuts[i] = new Cut(firstCutIndex + i * m / (k - 1), dim);
+            	//cuts[i] = new Cut(subproblem.getQueryStartIndex() + ((i + 1) * (m + 1) * k / (k + 1)), dim);
             }
         } else {
             cuts = new Cut[m];
