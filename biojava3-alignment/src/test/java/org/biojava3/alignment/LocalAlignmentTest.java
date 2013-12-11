@@ -45,6 +45,6 @@ public class LocalAlignmentTest {
         SimpleGapPenalty gapP = new SimpleGapPenalty((short)5, (short)2);
         PairwiseSequenceAligner<DNASequence, NucleotideCompound> result = Alignments.getPairwiseAligner(query, target, PairwiseSequenceAlignerType.LOCAL, gapP, matrix);
         assertEquals(0, result.getScore());
-        assertEquals(0, result.getProfile().getSize());
+        assertEquals(0, result.getProfile().getLength());
 	}
 }
