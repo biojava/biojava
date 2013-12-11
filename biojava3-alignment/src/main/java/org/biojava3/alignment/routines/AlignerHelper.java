@@ -70,8 +70,8 @@ public class AlignerHelper {
             return targetIndices[targetIndices.length - 1][z];
         }
 
-        public void update(int x, int[] subproblem, Last[][] pointers) {
-            if (pointers[subproblem[1]].length == 1) {
+        public void update(int x, Subproblem subproblem, Last[][] pointers) {
+            if (pointers[subproblem.getTargetStartIndex()].length == 1) {
                 if (queryIndex == x - 1) {
                     updateLinearInitial(subproblem, pointers);
                 } else if (queryIndex < x) {
@@ -86,10 +86,10 @@ public class AlignerHelper {
             }
         }
 
-        private void updateAdvance(int[] subproblem, Last[][] pointers) {
+        private void updateAdvance(Subproblem subproblem, Last[][] pointers) {
             tiLast = targetIndices;
             targetIndices = (targetIndices == ti2) ? ti1 : ti2;
-            for (int y = subproblem[1]; y <= subproblem[3]; y++) {
+            for (int y = subproblem.getTargetStartIndex(); y <= subproblem.getTargetEndIndex(); y++) {
                 if (pointers[y][0] != null) {
                     targetIndices[y][0] = tiLast[y - 1][pointers[y][0].ordinal()];
                 }
@@ -102,8 +102,8 @@ public class AlignerHelper {
             }
         }
 
-        private void updateInitial(int[] subproblem, Last[][] pointers) {
-            for (int y = subproblem[1]; y <= subproblem[3]; y++) {
+        private void updateInitial(Subproblem subproblem, Last[][] pointers) {
+            for (int y = subproblem.getTargetStartIndex(); y <= subproblem.getTargetEndIndex(); y++) {
                 if (pointers[y][0] != null) {
                     targetIndices[y][0] = y - 1;
                 }
@@ -116,10 +116,10 @@ public class AlignerHelper {
             }
         }
 
-        private void updateLinearAdvance(int[] subproblem, Last[][] pointers) {
+        private void updateLinearAdvance(Subproblem subproblem, Last[][] pointers) {
             tiLast = targetIndices;
             targetIndices = (targetIndices == ti2) ? ti1 : ti2;
-            for (int y = subproblem[1]; y <= subproblem[3]; y++) {
+            for (int y = subproblem.getTargetStartIndex(); y <= subproblem.getTargetEndIndex(); y++) {
                 switch (pointers[y][0]) {
                 case DELETION:
                     targetIndices[y][0] = tiLast[y][0];
@@ -133,8 +133,8 @@ public class AlignerHelper {
             }
         }
 
-        private void updateLinearInitial(int[] subproblem, Last[][] pointers) {
-            for (int y = subproblem[1]; y <= subproblem[3]; y++) {
+        private void updateLinearInitial(Subproblem subproblem, Last[][] pointers) {
+            for (int y = subproblem.getTargetStartIndex(); y <= subproblem.getTargetEndIndex(); y++) {
                 if (pointers[y][0] != null) {
                     switch (pointers[y][0]) {
                     case DELETION:
@@ -168,72 +168,102 @@ public class AlignerHelper {
         return addScore ? (short) subscore : 0;
     }
 
-    public static Cut[] getCuts(int k, int[] subproblem, int[] dim, boolean anchor0) {
+    public static Cut[] getCuts(int k, Subproblem subproblem, int[] dim, boolean anchor0) {
         Cut[] cuts;
-        int m = subproblem[2] - subproblem[0] - (anchor0 ? 1 : 0);
+        int m = subproblem.getQueryEndIndex() - subproblem.getQueryStartIndex() - (anchor0 ? 1 : 0);
         if (k < m) {
             cuts = new Cut[k];
             for (int i = 0; i < k; i++) {
-                cuts[i] = new Cut(subproblem[0] + ((i + 1) * (m + 1) * k / (k + 1)), dim);
+                cuts[i] = new Cut(subproblem.getQueryStartIndex() + ((i + 1) * (m + 1) * k / (k + 1)), dim);
             }
         } else {
             cuts = new Cut[m];
-            for (int i = 0, x = subproblem[0] + (anchor0 ? 1 : 0); i < m; i++, x++) {
+            for (int i = 0, x = subproblem.getQueryStartIndex() + (anchor0 ? 1 : 0); i < m; i++, x++) {
                 cuts[i] = new Cut(x, dim);
             }
         }
         return cuts;
     }
+    public static class Subproblem {
+    	public int getTargetStartIndex() {
+			return targetStartIndex;
+		}
+		public int getQueryEndIndex() {
+			return queryEndIndex;
+		}
+		public int getTargetEndIndex() {
+			return targetEndIndex;
+		}
+		public int getQueryStartIndex() {
+			return queryStartIndex;
+		}
+		private int queryStartIndex; // [0]
+    	private int targetStartIndex; // [1]
+    	private int queryEndIndex; // [2]
+    	private int targetEndIndex; // [3]
+    	public Subproblem(int queryStartIndex, int targetStartIndex, int queryEndIndex, int targetEndIndex) {
+    		this.queryStartIndex = queryStartIndex;
+    		this.targetStartIndex = targetStartIndex;
+    		this.queryEndIndex = queryEndIndex;
+    		this.targetEndIndex = targetEndIndex;
+    	}
+    	private Subproblem() {}
+    	/**
+         * Returns the coordinates for the next subproblem. When the alignment is finished, there is no
+         * next subproblem and this method returns {@code null}.
+         *
+         * @param anchors current list of anchors
+         * @return the coordinates for the next subproblem
+         */
+        public static Subproblem getNextSubproblem(int[] anchors) {
+        	Subproblem subproblem = new Subproblem();
+            int x = 0;
 
-    /**
-     * Returns the coordinates for the next subproblem.  The first element is the starting index in the query sequence.
-     * The second element is the starting index in the target sequence.  Similarly, the third and fourth elements are
-     * the ending indices of the query and target sequences, respectively.  When the alignment is finished, there is no
-     * next subproblem and this method returns {@code null}.
-     *
-     * @param anchors current list of anchors
-     * @return the coordinates for the next subproblem
-     */
-    public static int[] getNextSubproblem(int[] anchors) {
-        int[] subproblem = new int[4];
-        int x = 0;
+            // find first unanchored x (query sequence index)
+            while (x < anchors.length && anchors[x] >= 0) {
+                x++;
+            }
+            if (x == anchors.length) {
+                return null; // no unanchored x, therefore alignment is complete
+            }
 
-        // find first unanchored x (query sequence index)
-        while (x < anchors.length && anchors[x] >= 0) {
-            x++;
+            // save first point or last anchor as starting point
+            if (x == 0) {
+            	subproblem.queryStartIndex = 0;
+            	subproblem.targetStartIndex = 0;
+                x++;
+            } else {
+            	subproblem.queryStartIndex = x - 1;
+            	subproblem.targetStartIndex = anchors[x - 1];
+            }
+
+            // find next anchored x
+            while (x < anchors.length && anchors[x] < 0) {
+                x++;
+            }
+            subproblem.queryEndIndex = x;
+            subproblem.targetEndIndex = anchors[x];
+
+            return subproblem;
         }
-        if (x == anchors.length) {
-            return null; // no unanchored x, therefore alignment is complete
-        }
-
-        // save first point or last anchor as starting point
-        if (x == 0) {
-            subproblem[0] = 0;
-            subproblem[1] = 0;
-            x++;
-        } else {
-            subproblem[0] = x - 1;
-            subproblem[1] = anchors[x - 1];
-        }
-
-        // find next anchored x
-        while (x < anchors.length && anchors[x] < 0) {
-            x++;
-        }
-        subproblem[2] = x;
-        subproblem[3] = anchors[x];
-
-        return subproblem;
     }
 
     // updates cut rows given the latest row of traceback pointers
-    public static void setCuts(int x, int[] subproblem, Last[][] pointers, Cut[]cuts) {
+    public static void setCuts(int x, Subproblem subproblem, Last[][] pointers, Cut[]cuts) {
         for (Cut c : cuts) {
             c.update(x, subproblem, pointers);
         }
     }
-
-    // scores alignment for a given position in both sequences
+    /**
+     * Calculates the optimal alignment score for the given sequence positions with an affine or constant gap penalty
+     * @param x position in query
+     * @param y position in target
+     * @param gop gap opening penalty
+     * @param gep gap extension penalty
+     * @param sub compound match score
+     * @param scores dynamic programming score matrix to fill at the given position
+     * @return traceback direction for substitution, deletion and insertion
+     */
     public static Last[] setScorePoint(int x, int y, short gop, short gep, short sub, short[][][] scores) {
         Last[] pointers = new Last[3];
 
@@ -269,10 +299,19 @@ public class AlignerHelper {
 
         return pointers;
     }
-
-    // scores alignment for a given position in both sequences for linear gap penalty
+    /**
+     * Calculates the optimal alignment score for the given sequence positions and a linear gap penalty
+     * @param x position in query
+     * @param y position in target
+     * @param gep gap extension penalty
+     * @param sub compound match score
+     * @param scores dynamic programming score matrix to fill at the given position
+     * @return traceback directions for substitution, deletion and insertion respectively
+     */
     public static Last setScorePoint(int x, int y, short gep, short sub, short[][][] scores) {
-        int d = scores[x - 1][y][0] + gep, i = scores[x][y - 1][0] + gep, s = scores[x - 1][y - 1][0] + sub;
+        int d = scores[x - 1][y][0] + gep;
+        int i = scores[x][y - 1][0] + gep;
+        int s = scores[x - 1][y - 1][0] + sub;
         if (d >= s && d >= i) {
             scores[x][y][0] = (short) d;
             return Last.DELETION;
@@ -292,9 +331,9 @@ public class AlignerHelper {
     }
 
     // scores global alignment for a given position in the query sequence
-    public static Last[][] setScoreVector(int x, int[] subproblem, short gop, short gep, short[] subs, boolean storing,
+    public static Last[][] setScoreVector(int x, Subproblem subproblem, short gop, short gep, short[] subs, boolean storing,
             short[][][] scores) {
-        return setScoreVector(x, subproblem[0], subproblem[1], subproblem[3], gop, gep, subs, storing, scores);
+        return setScoreVector(x, subproblem.getQueryStartIndex(), subproblem.getTargetStartIndex(), subproblem.getTargetEndIndex(), gop, gep, subs, storing, scores);
     }
 
     // scores global alignment for a given position in the query sequence
@@ -331,9 +370,9 @@ public class AlignerHelper {
     }
 
     // scores global alignment for a given position in the query sequence for a linear gap penalty
-    public static Last[][] setScoreVector(int x, int[] subproblem, short gep, short[] subs, boolean storing,
+    public static Last[][] setScoreVector(int x, Subproblem subproblem, short gep, short[] subs, boolean storing,
             short[][][] scores) {
-        return setScoreVector(x, subproblem[0], subproblem[1], subproblem[3], gep, subs, storing, scores);
+        return setScoreVector(x, subproblem.getQueryStartIndex(), subproblem.getTargetStartIndex(), subproblem.getTargetEndIndex(), gep, subs, storing, scores);
     }
 
     // scores global alignment for a given position in the query sequence for a linear gap penalty

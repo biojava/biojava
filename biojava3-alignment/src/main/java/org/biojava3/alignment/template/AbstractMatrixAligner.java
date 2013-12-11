@@ -55,6 +55,13 @@ public abstract class AbstractMatrixAligner<S extends Sequence<C>, C extends Com
     protected Profile<S, C> profile;
     protected int[] xyMax, xyStart;
     protected short max, min, score;
+    /**
+     * Dynamic programming score matrix
+     * The first dimension has the length of the first (query) sequence + 1
+     * The second has the length of the second (target) sequence + 1
+     * The third has length 1 for linear gap penalty and 3 for affine/constant gap
+     * (one each for match/substitution, deletion, insertion) 
+     */
     protected short[][][] scores;
     /**
      * Friendly name of each copy of the scoring matrix.
@@ -301,16 +308,16 @@ public abstract class AbstractMatrixAligner<S extends Sequence<C>, C extends Com
             addScore[xyMax[0]] = true;
             anchors[xyMax[0]] = xyMax[1];
 
-            for (int[] subproblem; (subproblem = getNextSubproblem(anchors)) != null; ) {
+            for (Subproblem subproblem; (subproblem = Subproblem.getNextSubproblem(anchors)) != null; ) {
                 Cut[] cuts = getCuts(cutsPerSection, subproblem, dim, anchors[0] >= 0);
-                for (int x = subproblem[0]; x <= subproblem[2]; x++) {
+                for (int x = subproblem.getQueryStartIndex(); x <= subproblem.getQueryEndIndex(); x++) {
                     Last[][] pointers = linear ? setScoreVector(x, subproblem, gapPenalty.getExtensionPenalty(),
                             getSubstitutionScoreVector(x, subproblem), false, scores) : setScoreVector(x, subproblem,
                             gapPenalty.getOpenPenalty(), gapPenalty.getExtensionPenalty(),
                             getSubstitutionScoreVector(x, subproblem), false, scores);
                     setCuts(x, subproblem, pointers, cuts);
                 }
-                score += addAnchors(cuts, scores[subproblem[2]][subproblem[3]], addScore[subproblem[2]], anchors);
+                score += addAnchors(cuts, scores[subproblem.getQueryEndIndex()][subproblem.getTargetEndIndex()], addScore[subproblem.getQueryEndIndex()], anchors);
             }
             xyStart = setSteps(anchors, sx, sy);
 
@@ -326,10 +333,9 @@ public abstract class AbstractMatrixAligner<S extends Sequence<C>, C extends Com
                         score = scores[x][xyMax[1]][0];
                     }
                 } else {
-                    traceback[x] = linear ? setScoreVector(x, gapPenalty.getExtensionPenalty(),
-                            getSubstitutionScoreVector(x), storingScoreMatrix, scores) : setScoreVector(x,
-                            gapPenalty.getOpenPenalty(), gapPenalty.getExtensionPenalty(),
-                            getSubstitutionScoreVector(x), storingScoreMatrix, scores);
+                    traceback[x] = linear ?
+                		setScoreVector(x, gapPenalty.getExtensionPenalty(), getSubstitutionScoreVector(x), storingScoreMatrix, scores) :
+                    	setScoreVector(x, gapPenalty.getOpenPenalty(), gapPenalty.getExtensionPenalty(), getSubstitutionScoreVector(x), storingScoreMatrix, scores);
                 }
             }
             if (!local) {
@@ -354,14 +360,14 @@ public abstract class AbstractMatrixAligner<S extends Sequence<C>, C extends Com
 
     // returns score for the alignment of the query column to all target columns
     protected short[] getSubstitutionScoreVector(int queryColumn) {
-        return getSubstitutionScoreVector(queryColumn, new int[] {0, 0, scores.length - 1, scores[0].length - 1});
+        return getSubstitutionScoreVector(queryColumn, new Subproblem(0, 0, scores.length - 1, scores[0].length - 1));
     }
 
     // returns score for the alignment of the query column to all target columns
-    protected short[] getSubstitutionScoreVector(int queryColumn, int[] subproblem) {
-        short[] subs = new short[subproblem[3] + 1];
+    protected short[] getSubstitutionScoreVector(int queryColumn, Subproblem subproblem) {
+        short[] subs = new short[subproblem.getTargetEndIndex() + 1];
         if (queryColumn > 0) {
-            for (int y = Math.max(1, subproblem[1]); y <= subproblem[3]; y++) {
+            for (int y = Math.max(1, subproblem.getTargetStartIndex()); y <= subproblem.getTargetEndIndex(); y++) {
                 subs[y] = getSubstitutionScore(queryColumn, y);
             }
         }
