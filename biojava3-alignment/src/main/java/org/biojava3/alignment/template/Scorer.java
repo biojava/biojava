@@ -52,14 +52,14 @@ public interface Scorer {
      *
      * @return maximum possible score
      */
-    int getMaxScore();
+    double getMaxScore();
 
     /**
      * Returns minimum possible score.
      *
      * @return minimum possible score
      */
-    int getMinScore();
+    double getMinScore();
 
     /**
      * Returns score resulting from algorithm.  This should normalize between 0 and 1 by calculating
@@ -67,7 +67,7 @@ public interface Scorer {
      *
      * @return score resulting from algorithm
      */
-    int getScore();
+    double getScore();
 
     /**
      * Returns score as a similarity between 0.0 and 1.0.  This equals ({@link #getScore()} - {@link #getMinScore()}) /

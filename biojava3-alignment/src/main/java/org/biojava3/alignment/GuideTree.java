@@ -95,8 +95,8 @@ public class GuideTree<S extends Sequence<C>, C extends Compound> implements Ite
      *
      * @return list of sequence pair scores
      */
-    public int[] getAllPairsScores() {
-        int[] scores = new int[scorers.size()];
+    public double[] getAllPairsScores() {
+    	double[] scores = new double[scorers.size()];
         int n = 0;
         for (PairwiseSequenceScorer<S, C> scorer : scorers) {
             scores[n++] = scorer.getScore();
@@ -133,8 +133,8 @@ public class GuideTree<S extends Sequence<C>, C extends Compound> implements Ite
      *
      * @return the similarity matrix used to construct this guide tree
      */
-    public int[][] getScoreMatrix() {
-        int[][] matrix = new int[sequences.size()][sequences.size()];
+    public double[][] getScoreMatrix() {
+    	double[][] matrix = new double[sequences.size()][sequences.size()];
         for (int i = 0, n = 0; i < matrix.length; i++) {
             matrix[i][i] = scorers.get(i).getMaxScore();
             for (int j = i+1; j < matrix.length; j++) {

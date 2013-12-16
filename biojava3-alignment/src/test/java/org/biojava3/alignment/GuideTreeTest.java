@@ -63,7 +63,7 @@ public class GuideTreeTest {
 
     @Test
     public void testGetAllPairsScores() {
-        assertArrayEquals(tree.getAllPairsScores(), new int[] {4, 0, 3, 0, 3, 0});
+        assertArrayEquals(tree.getAllPairsScores(), new double[] {4, 0, 3, 0, 3, 0}, 0.00001);
     }
 
     @Test
