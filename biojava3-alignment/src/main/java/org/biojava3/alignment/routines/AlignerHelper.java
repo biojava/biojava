@@ -23,15 +23,19 @@
 
 package org.biojava3.alignment.routines;
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import org.biojava3.alignment.template.AlignedSequence.Step;
+import org.biojava3.core.sequence.template.CompoundSet;
 
 /**
  * Static utility to construct alignment routines from a common library of methods.
  *
  * @author Mark Chapman
+ * @author Daniel Cameron
  */
 public class AlignerHelper {
 
@@ -151,9 +155,6 @@ public class AlignerHelper {
         }
 
     }
-
-    // methods
-
     public static short addAnchors(Cut[] cuts, short[] scores, boolean addScore, int[] anchors) {
         int zMax = 0, subscore = scores[0];
         for (int z = 1; z < scores.length; z++) {
@@ -174,10 +175,8 @@ public class AlignerHelper {
         if (k < m) {
             cuts = new Cut[k];
             int firstCutIndex = subproblem.getQueryStartIndex() + (anchor0 ? 1 : 0);
-            int finalCutIndex = firstCutIndex + m - 1;
             for (int i = 0; i < k; i++) {            	
-            	cuts[i] = new Cut(firstCutIndex + i * m / (k - 1), dim);
-            	//cuts[i] = new Cut(subproblem.getQueryStartIndex() + ((i + 1) * (m + 1) * k / (k + 1)), dim);
+            	cuts[i] = new Cut(firstCutIndex + i * (m - 1) / (k - 1), dim);
             }
         } else {
             cuts = new Cut[m];
@@ -187,6 +186,36 @@ public class AlignerHelper {
         }
         return cuts;
     }
+    /**
+     * Compounds in query and target sequences that must align
+     * @author Daniel Cameron
+     */
+    public static class Anchor {
+    	public int getQueryIndex() {
+			return queryIndex;
+		}
+		public int getTargetIndex() {
+			return targetIndex;
+		}
+		private final int queryIndex;
+    	private final int targetIndex;
+    	public Anchor(int queryIndex, int targetIndex) {
+    		this.queryIndex = queryIndex;
+    		this.targetIndex = targetIndex;
+    	}
+    	public static class QueryIndexComparator implements Comparator<Anchor> {
+			@Override
+			public int compare(Anchor o1, Anchor o2) {
+				return o1.getQueryIndex() - o2.getQueryIndex();
+			}
+    	}
+    }
+    /**
+     * Alignment subproblem. The bounds of the subproblem are the
+     * indicies representing the inclusive bounds of the dynamic programming
+     * alignment problem.
+     * @author Daniel Cameron
+     */
     public static class Subproblem {
     	public int getTargetStartIndex() {
 			return targetStartIndex;
@@ -200,57 +229,64 @@ public class AlignerHelper {
 		public int getQueryStartIndex() {
 			return queryStartIndex;
 		}
+		/**
+		 * Indicates whether the start query and start target index compounds
+		 * are anchored to each other
+		 * @return true if the compounds are anchored in the alignment, false otherwise
+		 */
+		public boolean isStartAnchored() {
+			return isAnchored;
+		}
 		private int queryStartIndex; // [0]
     	private int targetStartIndex; // [1]
     	private int queryEndIndex; // [2]
     	private int targetEndIndex; // [3]
+    	private boolean isAnchored;
     	public Subproblem(int queryStartIndex, int targetStartIndex, int queryEndIndex, int targetEndIndex) {
+    		this(queryStartIndex, targetStartIndex, queryEndIndex, targetEndIndex, false);
+    	}
+    	public Subproblem(int queryStartIndex, int targetStartIndex, int queryEndIndex, int targetEndIndex, boolean isAnchored) {
     		this.queryStartIndex = queryStartIndex;
     		this.targetStartIndex = targetStartIndex;
     		this.queryEndIndex = queryEndIndex;
     		this.targetEndIndex = targetEndIndex;
+    		this.isAnchored = isAnchored;
     	}
-    	private Subproblem() {}
     	/**
-         * Returns the coordinates for the next subproblem. When the alignment is finished, there is no
-         * next subproblem and this method returns {@code null}.
-         *
-         * @param anchors current list of anchors
-         * @return the coordinates for the next subproblem
-         */
-        public static Subproblem getNextSubproblem(int[] anchors) {
-        	Subproblem subproblem = new Subproblem();
-            int x = 0;
-
-            // find first unanchored x (query sequence index)
-            while (x < anchors.length && anchors[x] >= 0) {
-                x++;
-            }
-            if (x == anchors.length) {
-                return null; // no unanchored x, therefore alignment is complete
-            }
-
-            // save first point or last anchor as starting point
-            if (x == 0) {
-            	subproblem.queryStartIndex = 0;
-            	subproblem.targetStartIndex = 0;
-                x++;
-            } else {
-            	subproblem.queryStartIndex = x - 1;
-            	subproblem.targetStartIndex = anchors[x - 1];
-            }
-
-            // find next anchored x
-            while (x < anchors.length && anchors[x] < 0) {
-                x++;
-            }
-            subproblem.queryEndIndex = x;
-            subproblem.targetEndIndex = anchors[x];
-
-            return subproblem;
-        }
+    	 * Converts a list of anchors into a subproblem list.
+    	 * @param anchors anchored read pairs
+    	 * @param querySequenceLength length of query sequence
+    	 * @param targetSequenceLength length of target sequence
+    	 * @return list alignment subproblems
+    	 */
+    	public static List<Subproblem> getSubproblems(List<Anchor> anchors, int querySequenceLength, int targetSequenceLength) {
+    		Collections.sort(anchors, new Anchor.QueryIndexComparator());
+    		List<Subproblem> list = new ArrayList<Subproblem>();
+    		Anchor last = new Anchor(-1, -1); // sentinal anchor
+    		boolean isAnchored = false;
+    		for (int i = 0; i < anchors.size(); i++) {
+    			if (anchors.get(i).targetIndex <= last.targetIndex ||
+					anchors.get(i).queryIndex <= last.queryIndex) {
+    				throw new IllegalArgumentException("Anchor set must allow at least one possible alignment.");
+    			}
+    			list.add(new Subproblem(
+    					last.queryIndex + 1,
+						last.targetIndex + 1,
+						anchors.get(i).queryIndex,
+						anchors.get(i).targetIndex,
+						isAnchored));
+    			last = anchors.get(i);
+    			isAnchored = true;
+    		}
+    		list.add(new Subproblem(
+    				last.queryIndex + 1,
+					last.targetIndex + 1,
+					querySequenceLength,
+					targetSequenceLength,
+					isAnchored));
+    		return list;
+    	}
     }
-
     // updates cut rows given the latest row of traceback pointers
     public static void setCuts(int x, Subproblem subproblem, Last[][] pointers, Cut[]cuts) {
         for (Cut c : cuts) {
@@ -328,25 +364,28 @@ public class AlignerHelper {
     }
 
     // scores global alignment for a given position in the query sequence
-    public static Last[][] setScoreVector(int x, short gop, short gep, short[] subs, boolean storing,
-            short[][][] scores) {
-        return setScoreVector(x, 0, 0, scores[0].length - 1, gop, gep, subs, storing, scores);
-    }
-
-    // scores global alignment for a given position in the query sequence
     public static Last[][] setScoreVector(int x, Subproblem subproblem, short gop, short gep, short[] subs, boolean storing,
             short[][][] scores) {
-        return setScoreVector(x, subproblem.getQueryStartIndex(), subproblem.getTargetStartIndex(), subproblem.getTargetEndIndex(), gop, gep, subs, storing, scores);
+        return setScoreVector(x, subproblem.getQueryStartIndex(), subproblem.getTargetStartIndex(), subproblem.getTargetEndIndex(), gop, gep, subs, storing, scores, subproblem.isStartAnchored());
     }
 
     // scores global alignment for a given position in the query sequence
     public static Last[][] setScoreVector(int x, int xb, int yb, int ye, short gop, short gep, short[] subs,
-            boolean storing, short[][][] scores) {
+            boolean storing, short[][][] scores, boolean startAnchored) {
         Last[][] pointers = new Last[ye + 1][];
         short min = (short) (Short.MIN_VALUE - gop - gep);
+        ensureScoringMatrixColumn(x, storing, scores);
         if (x == xb) {
             scores[xb][yb][1] = scores[xb][yb][2] = gop;
             pointers[yb] = new Last[] {null, null, null};
+            if (startAnchored) {
+        		assert (xb > 0 && yb > 0);
+        		short subproblemStartingScore = (short) (scores[xb - 1][yb - 1][0] + subs[yb]);
+        		scores[xb][yb][0] = (short) (subproblemStartingScore);
+        		scores[xb][yb][1] = (short) (subproblemStartingScore + gop);
+        		scores[xb][yb][2] = (short) (subproblemStartingScore + gop);
+        		pointers[yb] = new Last[] {Last.SUBSTITUTION, Last.SUBSTITUTION, Last.SUBSTITUTION};
+        	}
             Last[] insertion = new Last[] { null, null, Last.INSERTION };
             for (int y = yb + 1; y <= ye; y++) {
                 scores[xb][y][0] = scores[xb][y][1] = min;
@@ -354,9 +393,6 @@ public class AlignerHelper {
                 pointers[y] = insertion;
             }
         } else {
-            if (!storing && x > xb + 1) {
-                scores[x] = scores[x - 2];
-            }
             scores[x][yb][0] = scores[x][yb][2] = min;
             scores[x][yb][1] = (short) (scores[x - 1][yb][1] + gep);
             pointers[yb] = new Last[] { null, Last.DELETION, null };
@@ -368,29 +404,27 @@ public class AlignerHelper {
     }
 
     // scores global alignment for a given position in the query sequence for a linear gap penalty
-    public static Last[][] setScoreVector(int x, short gep, short[] subs, boolean storing, short[][][] scores) {
-        return setScoreVector(x, 0, 0, scores[0].length - 1, gep, subs, storing, scores);
-    }
-
-    // scores global alignment for a given position in the query sequence for a linear gap penalty
     public static Last[][] setScoreVector(int x, Subproblem subproblem, short gep, short[] subs, boolean storing,
             short[][][] scores) {
-        return setScoreVector(x, subproblem.getQueryStartIndex(), subproblem.getTargetStartIndex(), subproblem.getTargetEndIndex(), gep, subs, storing, scores);
+        return setScoreVector(x, subproblem.getQueryStartIndex(), subproblem.getTargetStartIndex(), subproblem.getTargetEndIndex(), gep, subs, storing, scores, subproblem.isStartAnchored());
     }
 
     // scores global alignment for a given position in the query sequence for a linear gap penalty
     public static Last[][] setScoreVector(int x, int xb, int yb, int ye, short gep, short[] subs, boolean storing,
-            short[][][] scores) {
+            short[][][] scores, boolean startAnchored) {
         Last[][] pointers = new Last[ye + 1][1];
+        ensureScoringMatrixColumn(x, storing, scores);
         if (x == xb) {
+        	if (startAnchored) {
+        		assert (xb > 0 && yb > 0);
+        		scores[xb][yb][0] = (short) (scores[xb - 1][yb - 1][0] + subs[yb]);
+        		pointers[yb][0] = Last.SUBSTITUTION;
+        	}
             for (int y = yb + 1; y <= ye; y++) {
                 scores[xb][y][0] = (short) (scores[xb][y - 1][0] + gep);
                 pointers[y][0] = Last.INSERTION;
             }
         } else {
-            if (!storing && x > 1) {
-                scores[x] = scores[x - 2];
-            }
             scores[x][yb][0] = (short) (scores[x - 1][yb][0] + gep);
             pointers[yb][0] = Last.DELETION;
             for (int y = yb + 1; y <= ye; y++) {
@@ -410,14 +444,12 @@ public class AlignerHelper {
     public static Last[][] setScoreVector(int x, int xb, int yb, int ye, short gop, short gep, short[] subs,
             boolean storing, short[][][] scores, int[] xyMax, int score) {
         Last[][] pointers;
+        ensureScoringMatrixColumn(x, storing, scores);
         if (x == xb) {
             pointers = new Last[ye + 1][scores[0][0].length];
         } else {
             pointers = new Last[ye + 1][];
-            pointers[0] = new Last[scores[0][0].length];
-            if (!storing && x > 1) {
-                scores[x] = scores[x - 2];
-            }
+            pointers[0] = new Last[scores[0][0].length];   
             for (int y = 1; y < scores[0].length; y++) {
                 pointers[y] = setScorePoint(x, y, gop, gep, subs[y], scores);
                 for (int z = 0; z < scores[0][0].length; z++) {
@@ -435,7 +467,7 @@ public class AlignerHelper {
         }
         return pointers;
     }
-
+    
     // scores local alignment for a given position in the query sequence for a linear gap penalty
     public static Last[][] setScoreVector(int x, short gep, short[] subs, boolean storing, short[][][] scores,
             int[] xyMax, int score) {
@@ -446,14 +478,12 @@ public class AlignerHelper {
     public static Last[][] setScoreVector(int x, int xb, int yb, int ye, short gep, short[] subs, boolean storing,
             short[][][] scores, int[] xyMax, int score) {
         Last[][] pointers;
+        ensureScoringMatrixColumn(x, storing, scores);
         if (x == xb) {
             pointers = new Last[ye + 1][1];
         } else {
             pointers = new Last[ye + 1][];
             pointers[0] = new Last[1];
-            if (!storing && x > 1) {
-                scores[x] = scores[x - 2];
-            }
             for (int y = 1; y < scores[x].length; y++) {
                 pointers[y][0] = setScorePoint(x, y, gep, subs[y], scores);
                 if (scores[x][y][0] <= 0) {
@@ -468,36 +498,11 @@ public class AlignerHelper {
         }
         return pointers;
     }
-
-    /**
-     * Sets the alignment path following the list of anchors.
-     *
-     * @param anchors a complete list of anchors (input)
-     * @param sx steps for the query sequence (output)
-     * @param sy steps for the target sequence (output)
-     */
-    public static int[] setSteps(int[] anchors, List<Step> sx, List<Step> sy) {
-        for (int gap = anchors[0]; gap > 0; gap--) {
-            sx.add(Step.GAP);
-            sy.add(Step.COMPOUND);
+    private static void ensureScoringMatrixColumn(int x, boolean storingFullMatrix, short[][][] scores) {
+    	if (!storingFullMatrix && x > 1) {
+            scores[x] = scores[x - 2];
         }
-        for (int x = 1; x < anchors.length; x++) {
-            int change = anchors[x] - anchors[x - 1];
-            if (change == 0) {
-                sx.add(Step.COMPOUND);
-                sy.add(Step.GAP);
-            } else {
-                sx.add(Step.COMPOUND);
-                sy.add(Step.COMPOUND);
-                for (change--; change > 0; change--) {
-                    sx.add(Step.GAP);
-                    sy.add(Step.COMPOUND);
-                }
-            }
-        }
-        return new int[] {0, 0};
     }
-
     // finds alignment path through traceback matrix
     public static int[] setSteps(Last[][][] traceback, boolean local, int[] xyMax, Last last, List<Step> sx,
             List<Step> sy) {
@@ -540,5 +545,33 @@ public class AlignerHelper {
     public static int[] setSteps(Last[][][] traceback, int[] xyMax, List<Step> sx, List<Step> sy) {
         return setSteps(traceback, true, xyMax, Last.SUBSTITUTION, sx, sy);
     }
-
+    public static String tracebackToString(Last[][][] traceback) {
+    	StringBuilder sb = new StringBuilder();
+    	for (int z = 0; z < 3; z++) {
+    		for (int i = 0; i < traceback.length; i++) {
+    			if (traceback[i] != null) {
+	    			for (int j = 0; j < traceback[i].length; j++) {
+	    				if (traceback[i][j] == null || z >= traceback[i][j].length || traceback[i][j][z] == null) {
+	    					sb.append('.');
+	    				} else {
+		    				switch (traceback[i][j][z]) {
+		    	            case DELETION:
+		    	            	sb.append('^');
+		    	            	break;
+		    	            case SUBSTITUTION:
+		    	            	sb.append('\\');
+		    	                break;
+		    	            case INSERTION:
+		    	            	sb.append('<');
+		    	            	break;
+		    	            }
+	    				}
+	    			}
+    			}
+    			sb.append('\n');
+    		}
+    		sb.append("\n\n");
+    	}
+    	return sb.toString();
+    }
 }

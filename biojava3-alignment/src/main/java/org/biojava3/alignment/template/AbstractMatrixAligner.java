@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.biojava3.alignment.routines.AlignerHelper.Last;
 import org.biojava3.alignment.template.AlignedSequence.Step;
 import org.biojava3.core.sequence.template.Compound;
 import org.biojava3.core.sequence.template.CompoundSet;
@@ -38,6 +39,7 @@ import org.biojava3.core.sequence.template.Sequence;
  * Implements common code for an {@link Aligner} which builds a score matrix during computation.
  *
  * @author Mark Chapman
+ * @author Daniel Cameron
  * @param <S> each element of the alignment {@link Profile} is of type S
  * @param <C> each element of an {@link AlignedSequence} is a {@link Compound} of type C
  */
@@ -48,12 +50,19 @@ public abstract class AbstractMatrixAligner<S extends Sequence<C>, C extends Com
     protected GapPenalty gapPenalty;
     private SubstitutionMatrix<C> subMatrix;
     private boolean local, storingScoreMatrix;
-    protected int[] anchors;
+    protected List<Anchor> anchors = new ArrayList<Anchor>();
     protected int cutsPerSection;
 
     // output fields
     protected Profile<S, C> profile;
-    protected int[] xyMax, xyStart;
+    /**
+     * Start position of the aligned sequence in the query and target respectively
+     */
+    protected int[] xyStart;
+    /**
+     * End position of the aligned sequence in the query and target respectively
+     */
+    protected int[] xyMax;
     protected short max, min, score;
     /**
      * Dynamic programming score matrix
@@ -197,7 +206,10 @@ public abstract class AbstractMatrixAligner<S extends Sequence<C>, C extends Com
     @Override
     public String getScoreMatrixAsString() {
         short[][][] scores = getScoreMatrix();
-        StringBuilder s = new StringBuilder();
+        return scoreMatrixToString(scores);
+    }
+	private String scoreMatrixToString(short[][][] scores) {
+		StringBuilder s = new StringBuilder();
         CompoundSet<C> compoundSet = getCompoundSet();
         int lengthCompound = compoundSet.getMaxSingleCompoundStringLength(), lengthRest =
                 Math.max(Math.max(Short.toString(min).length(), Short.toString(max).length()), lengthCompound) + 1;
@@ -228,10 +240,9 @@ public abstract class AbstractMatrixAligner<S extends Sequence<C>, C extends Com
             }
         }
         return s.toString();
-    }
+	}
 
     // methods for Aligner
-
     @Override
     public long getComputationTime() {
         if (profile == null) {
@@ -296,57 +307,38 @@ public abstract class AbstractMatrixAligner<S extends Sequence<C>, C extends Com
         Last[][][] traceback = new Last[dim[0]][][];
         List<Step> sx = new ArrayList<Step>(), sy = new ArrayList<Step>();
 
-        if (anchors != null) {
-
-            xyMax[0] = dim[0] - 1;
-            xyMax[1] = dim[1] - 1;
+        if (!local) {
+        	xyMax = new int[] { dim[0] - 1, dim[1] - 1 };
+        	xyStart = new int[] { 0, 0 };
             score = 0;
-            boolean[] addScore = new boolean[anchors.length];
-            for (int i = 0; i < anchors.length; i++) {
-                addScore[i] = (anchors[i] >= 0);
-            }
-            addScore[xyMax[0]] = true;
-            anchors[xyMax[0]] = xyMax[1];
-
-            for (Subproblem subproblem; (subproblem = Subproblem.getNextSubproblem(anchors)) != null; ) {
-                Cut[] cuts = getCuts(cutsPerSection, subproblem, dim, anchors[0] >= 0);
-                for (int x = subproblem.getQueryStartIndex(); x <= subproblem.getQueryEndIndex(); x++) {
-                    Last[][] pointers = linear ? setScoreVector(x, subproblem, gapPenalty.getExtensionPenalty(),
-                            getSubstitutionScoreVector(x, subproblem), false, scores) : setScoreVector(x, subproblem,
+            List<Subproblem> problems = Subproblem.getSubproblems(anchors, xyMax[0], xyMax[1]);
+            assert problems.size() == anchors.size() + 1;
+            for (int i = 0; i < problems.size(); i++) {
+            	Subproblem subproblem = problems.get(i);
+            	for (int x = subproblem.getQueryStartIndex(); x <= subproblem.getQueryEndIndex(); x++) {
+                	traceback[x] = linear ? setScoreVector(x, subproblem, gapPenalty.getExtensionPenalty(),
+                            getSubstitutionScoreVector(x, subproblem), storingScoreMatrix, scores) : setScoreVector(x, subproblem,
                             gapPenalty.getOpenPenalty(), gapPenalty.getExtensionPenalty(),
-                            getSubstitutionScoreVector(x, subproblem), false, scores);
-                    setCuts(x, subproblem, pointers, cuts);
+                            getSubstitutionScoreVector(x, subproblem), storingScoreMatrix, scores);
                 }
-                score += addAnchors(cuts, scores[subproblem.getQueryEndIndex()][subproblem.getTargetEndIndex()], addScore[subproblem.getQueryEndIndex()], anchors);
             }
-            xyStart = setSteps(anchors, sx, sy);
-
+            setSteps(traceback, scores, sx, sy);
+            score = Short.MIN_VALUE;
+            short[] finalScore = scores[xyMax[0]][xyMax[1]];
+            for (int z = 0; z < finalScore.length; z++) {
+            	score = (short) Math.max(score, finalScore[z]);
+            }
         } else {
-
             for (int x = 0; x < dim[0]; x++) {
-                if (local) {
-                    traceback[x] = linear ? setScoreVector(x, gapPenalty.getExtensionPenalty(),
-                            getSubstitutionScoreVector(x), storingScoreMatrix, scores, xyMax, score) :
-                            setScoreVector(x, gapPenalty.getOpenPenalty(), gapPenalty.getExtensionPenalty(),
-                            getSubstitutionScoreVector(x), storingScoreMatrix, scores, xyMax, score);
-                    if (xyMax[0] == x) {
-                        score = scores[x][xyMax[1]][0];
-                    }
-                } else {
-                    traceback[x] = linear ?
-                		setScoreVector(x, gapPenalty.getExtensionPenalty(), getSubstitutionScoreVector(x), storingScoreMatrix, scores) :
-                    	setScoreVector(x, gapPenalty.getOpenPenalty(), gapPenalty.getExtensionPenalty(), getSubstitutionScoreVector(x), storingScoreMatrix, scores);
-                }
-            }
-            if (!local) {
-                xyMax[0] = dim[0] - 1;
-                xyMax[1] = dim[1] - 1;
-                for (int z = 0; z < scores[xyMax[0]][xyMax[1]].length; z++) {
-                    score = (short) Math.max(score, scores[xyMax[0]][xyMax[1]][z]);
+            	traceback[x] = linear ? setScoreVector(x, gapPenalty.getExtensionPenalty(),
+                        getSubstitutionScoreVector(x), storingScoreMatrix, scores, xyMax, score) :
+                        setScoreVector(x, gapPenalty.getOpenPenalty(), gapPenalty.getExtensionPenalty(),
+                        getSubstitutionScoreVector(x), storingScoreMatrix, scores, xyMax, score);
+                if (xyMax[0] == x) {
+                    score = scores[x][xyMax[1]][0];
                 }
             }
             xyStart = local ? setSteps(traceback, xyMax, sx, sy) : setSteps(traceback, scores, sx, sy);
-
         }
 
         setProfile(sx, sy);
@@ -384,24 +376,6 @@ public abstract class AbstractMatrixAligner<S extends Sequence<C>, C extends Com
         time = -1;
         profile = null;
     }
-
-    // resets anchor fields to proper size
-    protected void resetAnchors() {
-        int x = getScoreMatrixDimensions()[0];
-        if (anchors == null) {
-            anchors = new int[x];
-            for (int i = 0; i < x; i++) {
-                anchors[i] = -1;
-            }
-        } else if (anchors.length != x) {
-            int[] old = anchors;
-            anchors = new int[x];
-            for (int i = 0; i < x; i++) {
-                anchors[i] = (i < old.length) ? old[i] : -1;
-            }
-        }
-    }
-
     // abstract methods
 
     // returns compound set of sequences

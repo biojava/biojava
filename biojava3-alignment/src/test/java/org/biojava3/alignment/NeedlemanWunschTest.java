@@ -25,10 +25,15 @@ package org.biojava3.alignment;
 
 import static org.junit.Assert.*;
 
+import org.biojava3.alignment.routines.GuanUberbacher;
 import org.biojava3.alignment.template.GapPenalty;
 import org.biojava3.alignment.template.SubstitutionMatrix;
+import org.biojava3.core.sequence.DNASequence;
 import org.biojava3.core.sequence.ProteinSequence;
+import org.biojava3.core.sequence.compound.AmbiguityDNACompoundSet;
 import org.biojava3.core.sequence.compound.AminoAcidCompound;
+import org.biojava3.core.sequence.compound.DNACompoundSet;
+import org.biojava3.core.sequence.compound.NucleotideCompound;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -181,5 +186,87 @@ public class NeedlemanWunschTest {
         assertEquals(alignment.getPair().toString(), String.format("ARND%n-RDG%n"));
         assertEquals(self.getPair().toString(), String.format("ARND%nARND%n"));
     }
-
+    /**
+     * @author Daniel Cameron
+     */
+    @Test
+	public void should_align_all_anchored() {
+    	DNASequence query = new DNASequence("ACG", AmbiguityDNACompoundSet.getDNACompoundSet());
+		DNASequence target = new DNASequence("CGT", AmbiguityDNACompoundSet.getDNACompoundSet());
+		NeedlemanWunsch<DNASequence, NucleotideCompound> aligner = new NeedlemanWunsch<DNASequence, NucleotideCompound>(query, target, new SimpleGapPenalty((short)0, (short)10), SubstitutionMatrixHelper.getNuc4_4());
+		aligner.setAnchors(new int[] { 0, 1, 2} );
+		assertEquals(String.format("ACG%nCGT%n"), aligner.getPair().toString());
+    }
+    /**
+     * @author Daniel Cameron
+     */
+    @Test
+	public void should_align_starting_anchor() {
+    	DNASequence query = new DNASequence("AAT", AmbiguityDNACompoundSet.getDNACompoundSet());
+		DNASequence target = new DNASequence("AATT", AmbiguityDNACompoundSet.getDNACompoundSet());
+		NeedlemanWunsch<DNASequence, NucleotideCompound> aligner = new NeedlemanWunsch<DNASequence, NucleotideCompound>(query, target, new SimpleGapPenalty((short)0, (short)10), SubstitutionMatrixHelper.getNuc4_4());
+		aligner.setAnchors(new int[] { 1, -1, -1} );
+		assertEquals(String.format("-AAT%nAATT%n"), aligner.getPair().toString());
+    }
+    /**
+     * @author Daniel Cameron
+     */
+    @Test
+	public void should_align_ending_anchor() {
+    	DNASequence query = new DNASequence("AAG", AmbiguityDNACompoundSet.getDNACompoundSet());
+		DNASequence target = new DNASequence("AATT", AmbiguityDNACompoundSet.getDNACompoundSet());
+		NeedlemanWunsch<DNASequence, NucleotideCompound> aligner = new NeedlemanWunsch<DNASequence, NucleotideCompound>(query, target, new SimpleGapPenalty((short)0, (short)10), SubstitutionMatrixHelper.getNuc4_4());
+		aligner.addAnchor(2, 3);
+		assertEquals(String.format("AA-G%nAATT%n"), aligner.getPair().toString());
+    }
+    /**
+     * @author Daniel Cameron
+     */
+    @Test
+	public void should_align_middle_anchor() {
+    	DNASequence query = new DNASequence("ACTTT", AmbiguityDNACompoundSet.getDNACompoundSet());
+		DNASequence target = new DNASequence("ACGTTT", AmbiguityDNACompoundSet.getDNACompoundSet());
+		NeedlemanWunsch<DNASequence, NucleotideCompound> aligner = new NeedlemanWunsch<DNASequence, NucleotideCompound>(query, target, new SimpleGapPenalty((short)0, (short)10), SubstitutionMatrixHelper.getNuc4_4());
+		aligner.setAnchors(new int[] { -1, 2, -1} );
+		assertEquals(String.format("A-CTTT%nACGTTT%n"), aligner.getPair().toString());
+    }
+    /**
+     * @author Daniel Cameron
+     */
+    @Test
+	public void should_align_multiple_anchors() {
+    	DNASequence query = new DNASequence("ACGT", AmbiguityDNACompoundSet.getDNACompoundSet());
+		DNASequence target = new DNASequence("ATACGT", AmbiguityDNACompoundSet.getDNACompoundSet());
+		NeedlemanWunsch<DNASequence, NucleotideCompound> aligner = new NeedlemanWunsch<DNASequence, NucleotideCompound>(query, target, new SimpleGapPenalty((short)0, (short)10), SubstitutionMatrixHelper.getNuc4_4());
+		aligner.addAnchor(0, 0);
+		aligner.addAnchor(1, 1);
+		aligner.addAnchor(2, 2);
+		aligner.addAnchor(3, 5);
+		assertEquals(String.format("ACG--T%nATACGT%n"), aligner.getPair().toString());
+    }
+    /**
+     * @author Daniel Cameron
+     */
+    @Test
+	public void anchors_should_not_change_score() {
+    	DNASequence query = new DNASequence("ACGT", AmbiguityDNACompoundSet.getDNACompoundSet());
+		DNASequence target = new DNASequence("ACGT", AmbiguityDNACompoundSet.getDNACompoundSet());
+		NeedlemanWunsch<DNASequence, NucleotideCompound> aligner = new NeedlemanWunsch<DNASequence, NucleotideCompound>(query, target, new SimpleGapPenalty((short)5, (short)10), SubstitutionMatrixHelper.getNuc4_4());
+		NeedlemanWunsch<DNASequence, NucleotideCompound> anchored = new NeedlemanWunsch<DNASequence, NucleotideCompound>(query, target, new SimpleGapPenalty((short)5, (short)10), SubstitutionMatrixHelper.getNuc4_4());
+		anchored.addAnchor(0, 0);
+		anchored.addAnchor(1, 1);
+		anchored.addAnchor(2, 2);
+		anchored.addAnchor(3, 3);
+		assertEquals(aligner.getScore(), anchored.getScore());
+    }
+    /**
+     * @author Daniel Cameron
+     */
+	@Test
+	public void testAnchoredDNAAlignment() {
+		DNASequence query = new DNASequence(  "ACGTACCGGTTTT", DNACompoundSet.getDNACompoundSet());
+		DNASequence target = new DNASequence("TACGTCCGGTTACGTACGTT", DNACompoundSet.getDNACompoundSet());
+		NeedlemanWunsch<DNASequence, NucleotideCompound> aligner = new NeedlemanWunsch<DNASequence, NucleotideCompound>(query, target, new SimpleGapPenalty((short)5, (short)2), SubstitutionMatrixHelper.getNuc4_4());
+		assertEquals(String.format("-ACGTACCGGTT-------TT%nTACGT-CCGGTTACGTACGTT%n"), aligner.getPair().toString());
+	}
 }

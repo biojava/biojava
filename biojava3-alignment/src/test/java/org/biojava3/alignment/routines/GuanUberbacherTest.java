@@ -34,6 +34,7 @@ import org.biojava3.core.sequence.DNASequence;
 import org.biojava3.core.sequence.ProteinSequence;
 import org.biojava3.core.sequence.compound.AmbiguityDNACompoundSet;
 import org.biojava3.core.sequence.compound.AminoAcidCompound;
+import org.biojava3.core.sequence.compound.DNACompoundSet;
 import org.biojava3.core.sequence.compound.NucleotideCompound;
 import org.junit.Before;
 import org.junit.Test;
@@ -126,26 +127,10 @@ public class GuanUberbacherTest {
      */
     @Test
 	public void should_align_multiple_cuts() {
-    	DNASequence query = new DNASequence("AA", AmbiguityDNACompoundSet.getDNACompoundSet());
-		DNASequence target = new DNASequence("AATT", AmbiguityDNACompoundSet.getDNACompoundSet());
-		GuanUberbacher<DNASequence, NucleotideCompound> aligner = new GuanUberbacher<DNASequence, NucleotideCompound>(query, target, new SimpleGapPenalty((short)5, (short)2), SubstitutionMatrixHelper.getNuc4_4());
-		aligner.setCutsPerSection(2);
-		assertEquals(String.format("AA--%nAATT%n"), aligner.getPair().toString());
+    	DNASequence query = new DNASequence("AAT", AmbiguityDNACompoundSet.getDNACompoundSet());
+		DNASequence target = new DNASequence("AATG", AmbiguityDNACompoundSet.getDNACompoundSet());
+		GuanUberbacher<DNASequence, NucleotideCompound> aligner = new GuanUberbacher<DNASequence, NucleotideCompound>(query, target, new SimpleGapPenalty((short)0, (short)2), SubstitutionMatrixHelper.getNuc4_4());
+		aligner.setCutsPerSection(2); // 3 bases with 2 cuts
+		assertEquals(String.format("AAT-%nAATG%n"), aligner.getPair().toString());
     }
-    /**
-     * @author Daniel Cameron
-     */
-	@Test
-	public void testAnchoredDNAAlignment() {
-		DNASequence query = new DNASequence(  "ACGTAACCGGTT", AmbiguityDNACompoundSet.getDNACompoundSet());
-		DNASequence target = new DNASequence("AACGTAACCGGTTACGTACGT", AmbiguityDNACompoundSet.getDNACompoundSet());
-		AnchoredPairwiseSequenceAligner<DNASequence, NucleotideCompound> aligner = new GuanUberbacher<DNASequence, NucleotideCompound>(query, target, new SimpleGapPenalty((short)5, (short)2), SubstitutionMatrixHelper.getNuc4_4());
-		int[] anchors = new int[query.getLength()];
-		for (int i = 0; i < anchors.length; i++) anchors[i] = -1;
-		anchors[0] = 1;
-		aligner.setCutsPerSection(1000);
-		AlignedSequence<DNASequence, NucleotideCompound> aligned = aligner.getPair().getQuery();
-		assertEquals(1, (int)aligned.getStart().getPosition());
-		assertEquals(13, (int)aligned.getEnd().getPosition());
-	}
 }

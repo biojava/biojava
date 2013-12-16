@@ -3,6 +3,10 @@ package org.biojava3.alignment.routines;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.biojava3.alignment.routines.AlignerHelper.Anchor;
 import org.biojava3.alignment.routines.AlignerHelper.Cut;
 import org.biojava3.alignment.routines.AlignerHelper.Subproblem;
 import org.junit.Test;
@@ -35,5 +39,89 @@ public class AlignerHelperTest {
 		assertEquals(5, cuts[0].getQueryIndex());
 		assertEquals(7, cuts[1].getQueryIndex());
 		assertEquals(9, cuts[2].getQueryIndex());
+	}
+	@Test
+	public void getSubproblems_should_return_score_indicies_of_alignment_subproblems() {
+		List<Anchor> anchors = new ArrayList<Anchor>();
+		anchors.add(new Anchor(1, 2));
+		anchors.add(new Anchor(5, 5));
+		List<Subproblem> problems = AlignerHelper.Subproblem.getSubproblems(anchors, 10, 15);
+		assertEquals(3, problems.size());
+		assertEquals(0, problems.get(0).getQueryStartIndex());
+		assertEquals(0, problems.get(0).getTargetStartIndex());
+		assertEquals(1, problems.get(0).getQueryEndIndex());
+		assertEquals(2, problems.get(0).getTargetEndIndex());
+		assertEquals(2, problems.get(1).getQueryStartIndex());
+		assertEquals(3, problems.get(1).getTargetStartIndex());
+		assertEquals(5, problems.get(1).getQueryEndIndex());
+		assertEquals(5, problems.get(1).getTargetEndIndex());
+		assertEquals(6, problems.get(2).getQueryStartIndex());
+		assertEquals(6, problems.get(2).getTargetStartIndex());
+		assertEquals(10, problems.get(2).getQueryEndIndex());
+		assertEquals(15, problems.get(2).getTargetEndIndex());
+	}
+	@Test
+	public void getSubproblems_should_allow_zero_anchors() {
+		List<Anchor> anchors = new ArrayList<Anchor>();
+		List<Subproblem> problems = AlignerHelper.Subproblem.getSubproblems(anchors, 10, 15);
+		assertEquals(1, problems.size());
+		assertEquals(0, problems.get(0).getQueryStartIndex());
+		assertEquals(0, problems.get(0).getTargetStartIndex());
+		assertEquals(10, problems.get(0).getQueryEndIndex());
+		assertEquals(15, problems.get(0).getTargetEndIndex());
+		assertEquals(false, problems.get(0).isStartAnchored());
+	}
+	@Test
+	public void getSubproblems_should_allow_start_and_end_anchors() {
+		List<Anchor> anchors = new ArrayList<Anchor>();
+		anchors.add(new Anchor(0, 0));
+		anchors.add(new Anchor(9, 14));
+		List<Subproblem> problems = AlignerHelper.Subproblem.getSubproblems(anchors, 10, 15);
+		assertEquals(3, problems.size());
+		assertEquals(0, problems.get(0).getQueryStartIndex());
+		assertEquals(0, problems.get(0).getTargetStartIndex());
+		assertEquals(0, problems.get(0).getQueryEndIndex());
+		assertEquals(0, problems.get(0).getTargetEndIndex());
+		assertEquals(false, problems.get(0).isStartAnchored());
+		assertEquals(1, problems.get(1).getQueryStartIndex());
+		assertEquals(1, problems.get(1).getTargetStartIndex());
+		assertEquals(9, problems.get(1).getQueryEndIndex());
+		assertEquals(14, problems.get(1).getTargetEndIndex());
+		assertEquals(true, problems.get(1).isStartAnchored());
+		assertEquals(10, problems.get(2).getQueryStartIndex());
+		assertEquals(15, problems.get(2).getTargetStartIndex());
+		assertEquals(10, problems.get(2).getQueryEndIndex());
+		assertEquals(15, problems.get(2).getTargetEndIndex());
+		assertEquals(true, problems.get(2).isStartAnchored());
+	}
+	@Test
+	public void getSubproblems_should_allow_adjacent_anchors() {
+		List<Anchor> anchors = new ArrayList<Anchor>();
+		anchors.add(new Anchor(1, 1));
+		anchors.add(new Anchor(2, 3));
+		List<Subproblem> problems = AlignerHelper.Subproblem.getSubproblems(anchors, 10, 15);
+		assertEquals(3, problems.size());
+		assertEquals(2, problems.get(1).getQueryStartIndex());
+		assertEquals(2, problems.get(1).getTargetStartIndex());
+		assertEquals(2, problems.get(1).getQueryEndIndex());
+		assertEquals(3, problems.get(1).getTargetEndIndex());
+		assertEquals(3, problems.get(2).getQueryStartIndex());
+		assertEquals(4, problems.get(2).getTargetStartIndex());
+		assertEquals(10, problems.get(2).getQueryEndIndex());
+		assertEquals(15, problems.get(2).getTargetEndIndex());
+	}
+	@Test(expected=IllegalArgumentException.class)
+	public void getSubproblems_should_not_allow_repeated_anchors() {
+		List<Anchor> anchors = new ArrayList<Anchor>();
+		anchors.add(new Anchor(1, 1));
+		anchors.add(new Anchor(1, 2));
+		AlignerHelper.Subproblem.getSubproblems(anchors, 10, 15);
+	}
+	@Test(expected=IllegalArgumentException.class)
+	public void getSubproblems_should_not_allow_unalignable_anchors() {
+		List<Anchor> anchors = new ArrayList<Anchor>();
+		anchors.add(new Anchor(1, 2));
+		anchors.add(new Anchor(2, 1));
+		AlignerHelper.Subproblem.getSubproblems(anchors, 10, 15);
 	}
 }

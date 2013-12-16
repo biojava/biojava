@@ -31,6 +31,7 @@ import java.util.List;
 import junit.framework.TestCase;
 
 import org.biojava3.alignment.Alignments.PairwiseSequenceAlignerType;
+import org.biojava3.alignment.template.PairwiseSequenceAligner;
 import org.biojava3.alignment.template.Profile;
 import org.biojava3.alignment.template.SequencePair;
 import org.biojava3.alignment.template.SubstitutionMatrix;
@@ -131,4 +132,26 @@ public class TestDNAAlignment extends TestCase {
         // should be a full match with +5 per match
         assertEquals(5 * query.getLength(), Alignments.getPairwiseAligner(query, target, PairwiseSequenceAlignerType.LOCAL, gapP, matrix).getScore());
     }
+    /**
+     * @author Daniel Cameron
+     */
+    public void testNoAlignedBases() {
+        DNASequence target = new DNASequence("A", DNACompoundSet.getDNACompoundSet());
+        DNASequence query = new DNASequence("T", DNACompoundSet.getDNACompoundSet());
+        SubstitutionMatrix<NucleotideCompound> matrix = SubstitutionMatrixHelper.getNuc4_4();
+        SimpleGapPenalty gapP = new SimpleGapPenalty((short)0, (short)1);
+        PairwiseSequenceAligner<DNASequence, NucleotideCompound> aligner = Alignments.getPairwiseAligner(query, target, PairwiseSequenceAlignerType.GLOBAL, gapP, matrix);
+        assertEquals(2, aligner.getPair().getLength());
+    }
+    /**
+    * @author Daniel Cameron
+    */
+	public void testLinearAlignment() {
+		DNASequence query = new DNASequence("GTAAAAG", DNACompoundSet.getDNACompoundSet());
+		DNASequence target = new DNASequence("GAAAACGTTTTTTTTTT", DNACompoundSet.getDNACompoundSet());
+		SubstitutionMatrix<NucleotideCompound> matrix = SubstitutionMatrixHelper.getNuc4_4();
+		SimpleGapPenalty gapP = new SimpleGapPenalty((short)0, (short)3);
+		PairwiseSequenceAligner<DNASequence, NucleotideCompound> aligner = Alignments.getPairwiseAligner(query, target, PairwiseSequenceAlignerType.GLOBAL, gapP, matrix);
+		assertEquals(String.format("GTAAAA-G----------%nG-AAAACGTTTTTTTTTT%n"), aligner.getPair().toString());;
+	}
 }
