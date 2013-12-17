@@ -31,7 +31,9 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 import java.util.StringTokenizer;
 
@@ -272,5 +274,23 @@ public class SimpleSubstitutionMatrix<C extends Compound> implements Substitutio
         s.append(getMatrixAsString());
         return s.toString();
     }
+
+	public Map<C, Short> getRow(C row) {
+		int rowIndex = rows.indexOf(row);
+		Map<C, Short> map = new HashMap<C, Short>();
+		for (int colIndex = 0; colIndex < matrix[rowIndex].length; colIndex++) {
+			map.put(cols.get(colIndex), matrix[rowIndex][colIndex]);
+		}
+		return map;
+	}
+
+	public Map<C, Short> getColumn(C column) {
+		int colIndex = cols.indexOf(column);
+		Map<C, Short> map = new HashMap<C, Short>();
+		for (int i = 0; i < matrix.length; i++) {
+			map.put(rows.get(i), matrix[i][colIndex]);
+		}
+		return map;
+	}
 
 }
