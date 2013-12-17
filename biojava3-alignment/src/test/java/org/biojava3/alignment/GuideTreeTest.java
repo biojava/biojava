@@ -87,7 +87,7 @@ public class GuideTreeTest {
 
     @Test
     public void testGetScoreMatrix() {
-        assertArrayEquals(tree.getScoreMatrix(), new int[][] {
+        assertArrayEquals(tree.getScoreMatrix(), new double[][] {
                 {4, 4, 0, 3},
                 {4, 6, 0, 3},
                 {0, 0, 5, 0},

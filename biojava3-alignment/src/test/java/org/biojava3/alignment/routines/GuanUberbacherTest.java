@@ -41,6 +41,8 @@ import org.junit.Test;
 
 public class GuanUberbacherTest {
 
+	private static final double PRECISION = 0.00000001;
+	
     private ProteinSequence query, target;
     private GapPenalty gaps;
     private SubstitutionMatrix<AminoAcidCompound> blosum62;
@@ -64,7 +66,7 @@ public class GuanUberbacherTest {
         gu.setTarget(target);
         gu.setGapPenalty(gaps);
         gu.setSubstitutionMatrix(blosum62);
-        assertEquals(gu.getScore(), alignment.getScore());
+        assertEquals(gu.getScore(), alignment.getScore(), PRECISION);
     }
 
     @Test
@@ -81,20 +83,20 @@ public class GuanUberbacherTest {
 
     @Test
     public void testGetMaxScore() {
-        assertEquals(alignment.getMaxScore(), 21);
-        assertEquals(self.getMaxScore(), 21);
+        assertEquals(alignment.getMaxScore(), 21, PRECISION);
+        assertEquals(self.getMaxScore(), 21, PRECISION);
     }
 
     @Test
     public void testGetMinScore() {
-        assertEquals(alignment.getMinScore(), -27);
-        assertEquals(self.getMinScore(), -28);
+        assertEquals(alignment.getMinScore(), -27, PRECISION);
+        assertEquals(self.getMinScore(), -28, PRECISION);
     }
 
     @Test
     public void testGetScore() {
-        assertEquals(alignment.getScore(), -6);
-        assertEquals(self.getScore(), 21);
+        assertEquals(alignment.getScore(), -6, PRECISION);
+        assertEquals(self.getScore(), 21, PRECISION);
     }
 
     @Test

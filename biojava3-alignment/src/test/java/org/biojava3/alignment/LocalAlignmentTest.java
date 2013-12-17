@@ -37,6 +37,9 @@ import org.junit.Test;
  *
  */
 public class LocalAlignmentTest {
+
+	private static final double PRECISION = 0.00000001;
+	
 	@Test
 	public void shouldAllowZeroLengthMatches() {
         DNASequence query = new DNASequence("C", DNACompoundSet.getDNACompoundSet());
@@ -44,7 +47,7 @@ public class LocalAlignmentTest {
         SubstitutionMatrix<NucleotideCompound> matrix = SubstitutionMatrixHelper.getNuc4_4();
         SimpleGapPenalty gapP = new SimpleGapPenalty((short)5, (short)2);
         PairwiseSequenceAligner<DNASequence, NucleotideCompound> result = Alignments.getPairwiseAligner(query, target, PairwiseSequenceAlignerType.LOCAL, gapP, matrix);
-        assertEquals(0, result.getScore());
+        assertEquals(0, result.getScore(), PRECISION);
         assertEquals(0, result.getProfile().getLength());
 	}
 }
