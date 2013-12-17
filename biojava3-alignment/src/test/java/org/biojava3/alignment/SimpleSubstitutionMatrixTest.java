@@ -105,5 +105,19 @@ public class SimpleSubstitutionMatrixTest {
         assertEquals(matrix.toString(),
                 String.format("# Test%n  A C G T%nA 5 0 0 0%nC 0 5 0 0%nG 0 0 5 0%nT 0 0 0 1%n"));
     }
+    /**
+     * @author Daniel Cameron
+     */
+    @Test
+    public void testCaseEquivalence() {
+    	DNACompoundSet dnacs = DNACompoundSet.getDNACompoundSet();
+        SubstitutionMatrix<NucleotideCompound> dnaTest = new SimpleSubstitutionMatrix<NucleotideCompound>(dnacs,
+                "# Test\nA C G T\nA 5 0 0 0\nC 0 5 0 0\nG 0 0 5 0\nT 0 0 0 1\n", "DNA Test");
+        short[][] matrix = dnaTest.getMatrix();
+        assertEquals(dnaTest.getValue(dnacs.getCompoundForString("G"), dnacs.getCompoundForString("g")), 5);
+        assertEquals(dnaTest.getValue(dnacs.getCompoundForString("A"), dnacs.getCompoundForString("g")), 0);
+        assertEquals(dnaTest.getValue(dnacs.getCompoundForString("g"), dnacs.getCompoundForString("G")), 5);
+        assertEquals(dnaTest.getValue(dnacs.getCompoundForString("g"), dnacs.getCompoundForString("A")), 0);
+    }
 
 }
