@@ -44,6 +44,9 @@ import org.biojava3.core.util.ConcurrencyTools;
 
 public class TestDNAAlignment extends TestCase {
 
+	private static final double PRECISION = 0.00000001;
+	
+
     public void testDNAAlignment() {
 
         try {
@@ -130,7 +133,7 @@ public class TestDNAAlignment extends TestCase {
         SubstitutionMatrix<NucleotideCompound> matrix = SubstitutionMatrixHelper.getNuc4_4();
         SimpleGapPenalty gapP = new SimpleGapPenalty((short)5, (short)2);
         // should be a full match with +5 per match
-        assertEquals(5 * query.getLength(), Alignments.getPairwiseAligner(query, target, PairwiseSequenceAlignerType.LOCAL, gapP, matrix).getScore());
+        assertEquals(5.0 * query.getLength(), Alignments.getPairwiseAligner(query, target, PairwiseSequenceAlignerType.LOCAL, gapP, matrix).getScore(), PRECISION);
     }
     /**
      * @author Daniel Cameron

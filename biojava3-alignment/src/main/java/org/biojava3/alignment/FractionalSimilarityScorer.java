@@ -69,7 +69,7 @@ public class FractionalSimilarityScorer<S extends Sequence<C>, C extends Compoun
         query = pair.getQuery().getOriginalSequence();
         target = pair.getTarget().getOriginalSequence();
         max = pair.getLength();
-        score = pair.getNumIdenticals();
+        score = pair.getNumSimilars();
     }
 
     // methods for PairwiseSequenceScorer
@@ -87,7 +87,7 @@ public class FractionalSimilarityScorer<S extends Sequence<C>, C extends Compoun
     // methods for Scorer
 
     @Override
-    public int getMaxScore() {
+    public double getMaxScore() {
         if (aligner != null) {
             align();
         }
@@ -95,12 +95,12 @@ public class FractionalSimilarityScorer<S extends Sequence<C>, C extends Compoun
     }
 
     @Override
-    public int getMinScore() {
+    public double getMinScore() {
         return 0;
     }
 
     @Override
-    public int getScore() {
+    public double getScore() {
         if (aligner != null) {
             align();
         }

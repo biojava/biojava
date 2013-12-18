@@ -42,8 +42,9 @@ import org.biojava.bio.structure.StructureException;
 import org.biojava.bio.structure.StructureTools;
 import org.biojava.bio.structure.align.ce.AbstractUserArgumentProcessor;
 import org.biojava.bio.structure.align.client.StructureName;
+import org.biojava.bio.structure.cath.CathDatabase;
 import org.biojava.bio.structure.cath.CathDomain;
-import org.biojava.bio.structure.cath.CathInstallation;
+import org.biojava.bio.structure.cath.CathFactory;
 import org.biojava.bio.structure.cath.CathSegment;
 import org.biojava.bio.structure.domain.PDPProvider;
 import org.biojava.bio.structure.domain.RemotePDPProvider;
@@ -400,7 +401,7 @@ public class AtomCache {
 				// return based on SCOP domain ID
 				return getStructureFromSCOPDomain(name);
 			} else if (structureName.isCathID()) {
-				return getStructureFromCATHDomain(structureName);
+				return getStructureForCathDomain(structureName, CathFactory.getCathDatabase());
 			} else if (name.length() == 6) {
 				// name is PDB.CHAINID style (e.g. 4hhb.A)
 
@@ -885,9 +886,18 @@ public class AtomCache {
 		return ScopFactory.getSCOP().getDomainByScopID(scopId);
 	}
 
-	private Structure getStructureFromCATHDomain(StructureName structureName) throws IOException, StructureException {
+	/**
+	 * Returns a {@link Structure} corresponding to the CATH identifier supplied in {@code structureName}, using the the {@link CathDatabase}
+	 * at {@link CathFactory#getCathDatabase()}.
+	 */
+	public Structure getStructureForCathDomain(StructureName structureName) throws IOException, StructureException {
+		return getStructureForCathDomain(structureName, CathFactory.getCathDatabase());
+	}
 
-		CathInstallation cathInstall = new CathInstallation(path);
+	/**
+	 * Returns a {@link Structure} corresponding to the CATH identifier supplied in {@code structureName}, using the specified {@link CathDatabase}.
+	 */
+	public Structure getStructureForCathDomain(StructureName structureName, CathDatabase cathInstall) throws IOException, StructureException {
 
 		CathDomain cathDomain = cathInstall.getDomainByCathId(structureName.getName());
 

@@ -71,19 +71,19 @@ public class StandardRescoreRefiner<S extends Sequence<C>, C extends Compound> e
     // methods for Scorer
 
     @Override
-    public int getMaxScore() {
+    public double getMaxScore() {
         // TODO Auto-generated method stub
         return 0;
     }
 
     @Override
-    public int getMinScore() {
+    public double getMinScore() {
         // TODO Auto-generated method stub
         return 0;
     }
 
     @Override
-    public int getScore() {
+    public double getScore() {
         // TODO Auto-generated method stub
         return 0;
     }

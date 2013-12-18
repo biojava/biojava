@@ -262,7 +262,7 @@ public abstract class AbstractMatrixAligner<S extends Sequence<C>, C extends Com
     // methods for Scorer
 
     @Override
-    public int getMaxScore() {
+    public double getMaxScore() {
         if (profile == null) {
             align();
         }
@@ -270,7 +270,7 @@ public abstract class AbstractMatrixAligner<S extends Sequence<C>, C extends Com
     }
 
     @Override
-    public int getMinScore() {
+    public double getMinScore() {
         if (profile == null) {
             align();
         }
@@ -278,7 +278,7 @@ public abstract class AbstractMatrixAligner<S extends Sequence<C>, C extends Com
     }
 
     @Override
-    public int getScore() {
+    public double getScore() {
         if (profile == null) {
             align();
         }

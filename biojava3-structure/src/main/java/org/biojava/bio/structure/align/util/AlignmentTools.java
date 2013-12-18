@@ -875,11 +875,11 @@ public class AlignmentTools {
 	 * as two numbers separated by '>'. They are chained together where possible,
 	 * or separated by spaces where disjoint or branched.
 	 *
-	 * <p>Note that more concise representations may be possible.
+	 * <p>Note that more concise representations may be possible.</p>
 	 *
-	 * <p>Examples:
-	 * <li>1>2>3>1
-	 * <li>1>2>3>2 4>3
+	 * Examples:
+	 * <li>1>2>3>1</li>
+	 * <li>1>2>3>2 4>3</li>
 	 *
 	 * @param alignment The input function, as a map (see {@link AlignmentTools#alignmentAsMap(AFPChain)})
 	 * @param identity An identity-like function providing the isomorphism between
@@ -945,7 +945,25 @@ public class AlignmentTools {
 
 		return str.toString();
 	}
+
+	/**
+	 * @see #toConciseAlignmentString(Map, Map)
+	 */
 	public static <T> String toConciseAlignmentString(Map<T, T> alignment) {
 		return toConciseAlignmentString(alignment, new IdentityMap<T>());
+	}
+
+	/**
+	 * @see #toConciseAlignmentString(Map, Map)
+	 */
+	public static Map<Integer, Integer> fromConciseAlignmentString(String string) {
+		char[] chars = string.toCharArray();
+		Map<Integer, Integer> map = new HashMap<Integer, Integer>();
+		for (int i = 1; i < chars.length - 1; i++) {
+			if (chars[i] == '>') {
+				map.put(Integer.parseInt(String.valueOf(chars[i-1])), Integer.parseInt(String.valueOf(chars[i+1])));
+			}
+		}
+		return map;
 	}
 }

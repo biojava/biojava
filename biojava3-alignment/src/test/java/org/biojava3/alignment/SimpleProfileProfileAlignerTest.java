@@ -37,6 +37,8 @@ import org.junit.Test;
 
 public class SimpleProfileProfileAlignerTest {
 
+	private static final double PRECISION = 0.00000001;
+	
     private ProteinSequence protein1, protein2, protein3, protein4;
     private GapPenalty gaps;
     private SubstitutionMatrix<AminoAcidCompound> blosum62;
@@ -72,7 +74,7 @@ public class SimpleProfileProfileAlignerTest {
         alig.setTarget(prof2);
         alig.setGapPenalty(gaps);
         alig.setSubstitutionMatrix(blosum62);
-        assertEquals(alig.getScore(), sppa1.getScore());
+        assertEquals(alig.getScore(), sppa1.getScore(), PRECISION);
     }
 
     @Test
@@ -213,23 +215,23 @@ public class SimpleProfileProfileAlignerTest {
 
     @Test
     public void testGetMaxScore() {
-        assertEquals(sppa1.getMaxScore(), 21);
-        assertEquals(sppa2.getMaxScore(), 21);
-        assertEquals(sppa3.getMaxScore(), 21);
+        assertEquals(sppa1.getMaxScore(), 21, PRECISION);
+        assertEquals(sppa2.getMaxScore(), 21, PRECISION);
+        assertEquals(sppa3.getMaxScore(), 21, PRECISION);
     }
 
     @Test
     public void testGetMinScore() {
-        assertEquals(sppa1.getMinScore(), -12);
-        assertEquals(sppa2.getMinScore(), -12);
-        assertEquals(sppa3.getMinScore(), -13);
+        assertEquals(sppa1.getMinScore(), -12, PRECISION);
+        assertEquals(sppa2.getMinScore(), -12, PRECISION);
+        assertEquals(sppa3.getMinScore(), -13, PRECISION);
     }
 
     @Test
     public void testGetScore() {
-        assertEquals(sppa1.getScore(), 21);
-        assertEquals(sppa2.getScore(), -6);
-        assertEquals(sppa3.getScore(), 3);
+        assertEquals(sppa1.getScore(), 21, PRECISION);
+        assertEquals(sppa2.getScore(), -6, PRECISION);
+        assertEquals(sppa3.getScore(), 3, PRECISION);
     }
 
     @Test

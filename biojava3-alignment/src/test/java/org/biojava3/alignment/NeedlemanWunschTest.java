@@ -23,9 +23,10 @@
 
 package org.biojava3.alignment;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
-import org.biojava3.alignment.routines.GuanUberbacher;
 import org.biojava3.alignment.template.GapPenalty;
 import org.biojava3.alignment.template.SubstitutionMatrix;
 import org.biojava3.core.sequence.DNASequence;
@@ -39,6 +40,8 @@ import org.junit.Test;
 
 public class NeedlemanWunschTest {
 
+	private static final double PRECISION = 0.00000001;
+	
     private ProteinSequence query, target;
     private GapPenalty gaps;
     private SubstitutionMatrix<AminoAcidCompound> blosum62;
@@ -62,7 +65,7 @@ public class NeedlemanWunschTest {
         nw.setTarget(target);
         nw.setGapPenalty(gaps);
         nw.setSubstitutionMatrix(blosum62);
-        assertEquals(nw.getScore(), alignment.getScore());
+        assertEquals(nw.getScore(), alignment.getScore(), PRECISION);
     }
 
     @Test
@@ -165,20 +168,20 @@ public class NeedlemanWunschTest {
 
     @Test
     public void testGetMaxScore() {
-        assertEquals(alignment.getMaxScore(), 21);
-        assertEquals(self.getMaxScore(), 21);
+        assertEquals(alignment.getMaxScore(), 21, PRECISION);
+        assertEquals(self.getMaxScore(), 21, PRECISION);
     }
 
     @Test
     public void testGetMinScore() {
-        assertEquals(alignment.getMinScore(), -27);
-        assertEquals(self.getMinScore(), -28);
+        assertEquals(alignment.getMinScore(), -27, PRECISION);
+        assertEquals(self.getMinScore(), -28, PRECISION);
     }
 
     @Test
     public void testGetScore() {
-        assertEquals(alignment.getScore(), -6);
-        assertEquals(self.getScore(), 21);
+        assertEquals(alignment.getScore(), -6, PRECISION);
+        assertEquals(self.getScore(), 21, PRECISION);
     }
 
     @Test
@@ -257,7 +260,7 @@ public class NeedlemanWunschTest {
 		anchored.addAnchor(1, 1);
 		anchored.addAnchor(2, 2);
 		anchored.addAnchor(3, 3);
-		assertEquals(aligner.getScore(), anchored.getScore());
+		assertEquals(aligner.getScore(), anchored.getScore(), PRECISION);
     }
     /**
      * @author Daniel Cameron
