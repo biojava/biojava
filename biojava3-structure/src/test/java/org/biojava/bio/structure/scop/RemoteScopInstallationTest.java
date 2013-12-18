@@ -45,9 +45,9 @@ public class RemoteScopInstallationTest extends ScopDatabaseTest {
 		ArrayList<Object[]> databases = new ArrayList<Object[]>();
 		RemoteScopInstallation scop;
 		for(String version : new String[] {
-				ScopFactory.LATEST_VERSION,
-				ScopFactory.VERSION_1_75A,
-				ScopFactory.VERSION_1_75B,
+				//ScopFactory.LATEST_VERSION,
+				//ScopFactory.VERSION_1_75A,
+				//ScopFactory.VERSION_1_75B,
 				ScopFactory.VERSION_1_75,
 				ScopFactory.VERSION_1_73,
 		}) {
