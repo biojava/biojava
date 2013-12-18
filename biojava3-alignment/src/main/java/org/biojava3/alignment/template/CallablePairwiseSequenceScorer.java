@@ -35,7 +35,7 @@ import org.biojava3.core.sequence.template.Sequence;
  * @param <S> each {@link Sequence} of the pair is of type S
  * @param <C> each element of a {@link Sequence} is a {@link Compound} of type C
  */
-public class CallablePairwiseSequenceScorer<S extends Sequence<C>, C extends Compound> implements Callable<Integer> {
+public class CallablePairwiseSequenceScorer<S extends Sequence<C>, C extends Compound> implements Callable<Double> {
 
     private PairwiseSequenceScorer<S, C> pss;
 
@@ -49,7 +49,7 @@ public class CallablePairwiseSequenceScorer<S extends Sequence<C>, C extends Com
     }
 
     @Override
-    public Integer call() {
+    public Double call() {
         return pss.getScore();
     }
 

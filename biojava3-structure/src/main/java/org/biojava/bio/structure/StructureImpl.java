@@ -705,11 +705,12 @@ public class StructureImpl implements Structure, Serializable {
             this.sites = sites;
     }
 
-    /**
+    /** Caution: we should probably remove this to avoid confusion. Currently this is always an empty list!
      *
      * @return a list of Groups listed in the HET records - this will not
      * include any waters.
      */
+    
     public List<Group> getHetGroups() {
         return hetAtoms;
     }
