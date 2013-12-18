@@ -30,9 +30,10 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;attribute name="atom" use="required" type="{http://www.w3.org/2001/XMLSchema}NCName" />
- *       &lt;attribute name="cid" use="required" type="{http://www.w3.org/2001/XMLSchema}integer" />
  *       &lt;attribute name="clashmag" use="required" type="{http://www.w3.org/2001/XMLSchema}decimal" />
  *       &lt;attribute name="dist" use="required" type="{http://www.w3.org/2001/XMLSchema}decimal" />
+ *       &lt;attribute name="scid" use="required" type="{http://www.w3.org/2001/XMLSchema}integer" />
+ *       &lt;attribute name="symop" use="required" type="{http://www.w3.org/2001/XMLSchema}NMTOKEN" />
  *     &lt;/restriction>
  *   &lt;/complexContent>
  * &lt;/complexType>
@@ -42,19 +43,23 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "")
-@XmlRootElement(name = "clash")
-public class Clash {
+@XmlRootElement(name = "symm-clash")
+public class SymmClash {
 
     @XmlAttribute(name = "atom", required = true)
     @XmlJavaTypeAdapter(CollapsedStringAdapter.class)
     @XmlSchemaType(name = "NCName")
     protected String atom;
-    @XmlAttribute(name = "cid", required = true)
-    protected BigInteger cid;
     @XmlAttribute(name = "clashmag", required = true)
     protected BigDecimal clashmag;
     @XmlAttribute(name = "dist", required = true)
     protected BigDecimal dist;
+    @XmlAttribute(name = "scid", required = true)
+    protected BigInteger scid;
+    @XmlAttribute(name = "symop", required = true)
+    @XmlJavaTypeAdapter(CollapsedStringAdapter.class)
+    @XmlSchemaType(name = "NMTOKEN")
+    protected String symop;
 
     /**
      * Gets the value of the atom property.
@@ -78,30 +83,6 @@ public class Clash {
      */
     public void setAtom(String value) {
         this.atom = value;
-    }
-
-    /**
-     * Gets the value of the cid property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link BigInteger }
-     *     
-     */
-    public BigInteger getCid() {
-        return cid;
-    }
-
-    /**
-     * Sets the value of the cid property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link BigInteger }
-     *     
-     */
-    public void setCid(BigInteger value) {
-        this.cid = value;
     }
 
     /**
@@ -150,6 +131,54 @@ public class Clash {
      */
     public void setDist(BigDecimal value) {
         this.dist = value;
+    }
+
+    /**
+     * Gets the value of the scid property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link BigInteger }
+     *     
+     */
+    public BigInteger getScid() {
+        return scid;
+    }
+
+    /**
+     * Sets the value of the scid property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link BigInteger }
+     *     
+     */
+    public void setScid(BigInteger value) {
+        this.scid = value;
+    }
+
+    /**
+     * Gets the value of the symop property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getSymop() {
+        return symop;
+    }
+
+    /**
+     * Sets the value of the symop property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setSymop(String value) {
+        this.symop = value;
     }
 
 }
