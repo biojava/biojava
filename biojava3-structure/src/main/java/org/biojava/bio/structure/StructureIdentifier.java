@@ -61,7 +61,7 @@ public interface StructureIdentifier {
 	 * </pre>
 	 * More options may be added to the specification at a future time.
 	 */
-	String getString();
+	String getIdentifier();
 	
 	/**
 	 * Returns the PDB identifier associated with this StructureIdentifier.
@@ -75,7 +75,7 @@ public interface StructureIdentifier {
 	List<ResidueRange> getResidueRanges();
 	
 	/**
-	 * Returns a list of ranges of the form described in {@link #getString()}. For example:
+	 * Returns a list of ranges of the form described in {@link #getIdentifier()}. For example:
 	 * <pre>
 	 * getRanges().get(0): 'A'
 	 * getRanges().get(1): 'B_5-100'

@@ -11,6 +11,7 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.biojava.bio.structure.ResidueRange;
+import org.biojava.bio.structure.StructureIdentifier;
 
 
 /** Container for the information for a domain. Contains a line in the file
@@ -22,7 +23,7 @@ import org.biojava.bio.structure.ResidueRange;
  */
 @XmlRootElement(name = "ScopDomain", namespace ="http://source.rcsb.org")
 @XmlAccessorType(XmlAccessType.PUBLIC_MEMBER)
-public class ScopDomain implements Serializable, Cloneable{
+public class ScopDomain implements Serializable, Cloneable, StructureIdentifier {
 
 	/**
 	 * 
@@ -193,6 +194,16 @@ public class ScopDomain implements Serializable, Cloneable{
 		List<ResidueRange> rrs = ResidueRange.parseMultiple(getRanges());
 		for (ResidueRange rr : rrs) chains.add(rr.getChainId());
 		return chains;
+	}
+
+	@Override
+	public String getIdentifier() {
+		return pdbId + ResidueRange.toString(getResidueRanges());
+	}
+
+	@Override
+	public List<ResidueRange> getResidueRanges() {
+		return ResidueRange.parseMultiple(ranges);
 	}
 
 	
