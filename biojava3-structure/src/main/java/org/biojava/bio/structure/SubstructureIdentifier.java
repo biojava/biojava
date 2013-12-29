@@ -29,17 +29,17 @@ import java.util.List;
  * An arbitrary collection of residues in a {@link Structure}.
  * @author dmyersturnbull
  */
-public class Substructure implements StructureIdentifier {
+public class SubstructureIdentifier implements StructureIdentifier {
 
 	private String pdbId;
 	private List<ResidueRange> ranges;
 	
-	public Substructure(String pdbId, List<ResidueRange> ranges) {
+	public SubstructureIdentifier(String pdbId, List<ResidueRange> ranges) {
 		this.pdbId = pdbId;
 		this.ranges = ranges;
 	}
 
-	public Substructure(String id) {
+	public SubstructureIdentifier(String id) {
 		// TODO Auto-generated constructor stub
 	}
 

@@ -35,7 +35,7 @@ public class Identifier {
 		try {
 			return new UriIdentifier(id);
 		} catch (URISyntaxException e) {
-			return new Substructure(id);
+			return new SubstructureIdentifier(id);
 		}
 	}
 	
