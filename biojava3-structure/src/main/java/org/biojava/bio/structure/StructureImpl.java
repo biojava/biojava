@@ -752,4 +752,28 @@ public class StructureImpl implements Structure, Serializable {
     	return crystallographicInfo;
     }
 
+	@Override
+	public String getIdentifier() {
+		return pdb_id;
+	}
+
+	@Override
+	public String getPdbId() {
+		return pdb_id;
+	}
+
+	@Override
+	public List<ResidueRange> getResidueRanges() {
+		List<ResidueRange> range = new ArrayList<ResidueRange>();
+		for (Chain chain : getChains()) {
+			range.add(ResidueRange.parse(pdb_id + "." + chain.getChainID()));
+		}
+		return range;
+	}
+
+	@Override
+	public List<String> getRanges() {
+		return ResidueRange.toStrings(getResidueRanges());
+	}
+
 }

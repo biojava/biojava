@@ -12,6 +12,8 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.biojava.bio.structure.Atom;
 import org.biojava.bio.structure.Calc;
@@ -957,11 +959,17 @@ public class AlignmentTools {
 	 * @see #toConciseAlignmentString(Map, Map)
 	 */
 	public static Map<Integer, Integer> fromConciseAlignmentString(String string) {
-		char[] chars = string.toCharArray();
 		Map<Integer, Integer> map = new HashMap<Integer, Integer>();
-		for (int i = 1; i < chars.length - 1; i++) {
-			if (chars[i] == '>') {
-				map.put(Integer.parseInt(String.valueOf(chars[i-1])), Integer.parseInt(String.valueOf(chars[i+1])));
+		boolean matches = true;
+		while (matches) {
+			Pattern pattern = Pattern.compile("(\\d+)>(\\d+)");
+			Matcher matcher = pattern.matcher(string);
+			matches = matcher.find();
+			if (matches) {
+				Integer from = Integer.parseInt(matcher.group(1));
+				Integer to = Integer.parseInt(matcher.group(2));
+				map.put(from, to);
+				string = string.substring(matcher.end(1) + 1);
 			}
 		}
 		return map;
