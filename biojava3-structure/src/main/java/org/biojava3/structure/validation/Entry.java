@@ -147,6 +147,13 @@ public class Entry {
     protected BigDecimal absolutePercentilePercentRamaOutliers;
     @XmlAttribute(name = "absolute-percentile-percent-rota-outliers", required = true)
     protected BigDecimal absolutePercentilePercentRotaOutliers;
+    
+    @XmlAttribute(name = "absolute-percentile-DCC_Rfree", required = false)
+    protected BigDecimal absolutePercentileDCCRfree;
+    @XmlAttribute(name = "relative-percentile-DCC_Rfree", required = false)
+    protected BigDecimal relativePercentileDCCRfree;
+    
+    
     @XmlAttribute(name = "acentric_outliers", required = true)
     protected BigInteger acentricOutliers;
     @XmlAttribute(name = "attemptedValidationSteps", required = true)
@@ -786,7 +793,25 @@ public class Entry {
         this.absolutePercentilePercentRotaOutliers = value;
     }
 
-    /**
+    public BigDecimal getAbsolutePercentileDCCRfree() {
+		return absolutePercentileDCCRfree;
+	}
+
+	public void setAbsolutePercentileDCCRfree(
+			BigDecimal absolutePercentileDCCRfree) {
+		this.absolutePercentileDCCRfree = absolutePercentileDCCRfree;
+	}
+
+	public BigDecimal getRelativePercentileDCCRfree() {
+		return relativePercentileDCCRfree;
+	}
+
+	public void setRelativePercentileDCCRfree(
+			BigDecimal relativePercentileDCCRfree) {
+		this.relativePercentileDCCRfree = absolutePercentileDCCRfree;
+	}
+
+	/**
      * Gets the value of the acentricOutliers property.
      * 
      * @return
