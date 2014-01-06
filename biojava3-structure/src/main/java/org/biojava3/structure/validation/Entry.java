@@ -154,6 +154,16 @@ public class Entry {
     protected BigDecimal relativePercentileDCCRfree;
     
     
+    @XmlAttribute(name = "RNAsuiteness", required = false)
+    protected BigDecimal rnaSuiteness;
+    
+    @XmlAttribute(name = "absolute-percentile-RNAsuiteness", required = false)
+    protected BigDecimal absolutePercentialRNAsuiteness;
+    
+    @XmlAttribute(name = "relative-percentile-RNAsuiteness", required = false)
+    protected BigDecimal relativePercentileRNAsuiteness;
+    
+    
     @XmlAttribute(name = "acentric_outliers", required = true)
     protected BigInteger acentricOutliers;
     @XmlAttribute(name = "attemptedValidationSteps", required = true)
@@ -1243,4 +1253,32 @@ public class Entry {
         this.xtriageInputColumns = value;
     }
 
+	public BigDecimal getRnaSuiteness() {
+		return rnaSuiteness;
+	}
+
+	public void setRnaSuiteness(BigDecimal rnaSuiteness) {
+		this.rnaSuiteness = rnaSuiteness;
+	}
+
+	public BigDecimal getAbsolutePercentialRNAsuiteness() {
+		return absolutePercentialRNAsuiteness;
+	}
+
+	public void setAbsolutePercentialRNAsuiteness(
+			BigDecimal absolutePercentialRNAsuiteness) {
+		this.absolutePercentialRNAsuiteness = absolutePercentialRNAsuiteness;
+	}
+
+	public BigDecimal getRelativePercentileRNAsuiteness() {
+		return relativePercentileRNAsuiteness;
+	}
+
+	public void setRelativePercentileRNAsuiteness(
+			BigDecimal relativePercentileRNAsuiteness) {
+		this.relativePercentileRNAsuiteness = relativePercentileRNAsuiteness;
+	}
+
+    
+    
 }
