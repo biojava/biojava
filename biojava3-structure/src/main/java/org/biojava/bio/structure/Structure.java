@@ -164,7 +164,7 @@ public void calcPhiPsi({@link Structure} structure){
  * @since 1.4
  * @version %I% %G%
  */
-public interface Structure extends Cloneable{
+public interface Structure extends Cloneable, StructureIdentifier {
 
 
 	/** returns an identical copy of this Structure object
