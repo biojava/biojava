@@ -197,6 +197,29 @@
 
 
 		<plugins>
+		
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				
+				<configuration>
+					<archive>
+						<addMavenDescriptor>false</addMavenDescriptor>
+						<manifest>
+							<addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
+							<addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+							
+						</manifest>
+						<manifestEntries>
+							<Trusted-Library>true</Trusted-Library>
+							<Permissions>all-permissions</Permissions>
+							<Codebase>*</Codebase>
+							<Application-Name>BioJava</Application-Name>
+						</manifestEntries>
+					</archive>
+				</configuration>
+
+			</plugin>
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>findbugs-maven-plugin</artifactId>
