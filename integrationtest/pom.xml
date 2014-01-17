@@ -47,4 +47,5 @@ mvn verify</description>
       </plugin>
     </plugins>
   </build>
+ <packaging>pom</packaging>
 </project>
