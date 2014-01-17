@@ -413,4 +413,12 @@
 		<module>biojava3-survival</module>
 	</modules>
 	<inceptionYear>2000</inceptionYear>
+	<issueManagement>
+		<system>Github</system>
+		<url>https://github.com/biojava/biojava/issues</url>
+	</issueManagement>
+	<ciManagement>
+		<system>CruiseControl</system>
+		<url>http://ccpublic.rcsb.org/</url>
+	</ciManagement>
 </project>
