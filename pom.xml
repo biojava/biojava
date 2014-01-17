@@ -401,6 +401,7 @@
 		<module>biojava3-phylo</module>
 		<module>biojava3-alignment</module>
 		<module>biojava3-structure</module>
+		<module>integrationtest</module>
 		<module>biojava3-structure-gui</module>		
 		<module>biojava3-sequencing</module>		
 		<module>biojava3-genome</module>
@@ -408,7 +409,7 @@
 		<module>biojava3-ws</module>
 		<module>biojava3-protein-disorder</module>
 		<module>biojava3-aa-prop</module>
-		<module>integrationtest</module>
+		
 		<module>protein-comparison-tool</module>
 		<module>biojava3-survival</module>
 	</modules>
