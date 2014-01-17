@@ -87,5 +87,55 @@
 		</resources>
 
 	</build>
+	
+	<profiles>
+	
+		<!--  Note: before you can use this build profile you need to set up an environment that contains
+			  correctly signed keys. Configure the keystore properties and the profile in ~/.m2/settings.xml
+		 -->
+		<profile>
+			<id>codesigning</id>
+			<activation>
+				<activeByDefault>false</activeByDefault>
+			</activation>
+			<build>
+				<plugins>
+					<plugin>
+
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-jarsigner-plugin</artifactId>
+						<version>1.2</version>
+						<executions>
+							<execution>
+								<id>sign</id>
+								<goals>
+									<goal>sign</goal>
+								</goals>
+							</execution>
+						</executions>
+
+						<configuration>
+
+							<verbose>true</verbose>
+							<certs>true</certs>
+							<storetype>${keystore.type}</storetype>
+							<keystore>${keystore.path}</keystore>
+							<alias>${keystore.alias}</alias>
+							<storepass>${keystore.store.password}</storepass>
+							<keypass>${keystore.key.password}</keypass>
+							<signedjar>${project.build.directory}/${project.build.finalName}.jar</signedjar>
+							<verify>true</verify>
+							<verbose>true</verbose>
+							<goal>sign</goal>
+							<arguments>
+								<argument>-tsa</argument>
+								<argument>https://timestamp.geotrust.com/tsa</argument>
+							</arguments>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
 </project>
 
