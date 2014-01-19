@@ -31,7 +31,12 @@ import java.net.URISyntaxException;
  */
 public class Identifier {
 
-	public StructureIdentifier loadIdentifier(String id) {
+	/**
+	 * Loads a {@link StructureIdentifier} from the specified string.
+	 * The type returned for any particular string can be considered relatively stable
+	 * but should not be relied on.
+	 */
+	public static StructureIdentifier loadIdentifier(String id) {
 		try {
 			return new UriIdentifier(id);
 		} catch (URISyntaxException e) {

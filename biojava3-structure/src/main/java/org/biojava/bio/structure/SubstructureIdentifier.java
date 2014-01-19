@@ -23,6 +23,7 @@
 
 package org.biojava.bio.structure;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -31,8 +32,8 @@ import java.util.List;
  */
 public class SubstructureIdentifier implements StructureIdentifier {
 
-	private String pdbId;
-	private List<ResidueRange> ranges;
+	private final String pdbId;
+	private final List<ResidueRange> ranges;
 	
 	public SubstructureIdentifier(String pdbId, List<ResidueRange> ranges) {
 		this.pdbId = pdbId;
@@ -40,7 +41,14 @@ public class SubstructureIdentifier implements StructureIdentifier {
 	}
 
 	public SubstructureIdentifier(String id) {
-		// TODO Auto-generated constructor stub
+		if (id.contains(".")) {
+			this.pdbId = id;
+			this.ranges = new ArrayList<ResidueRange>();
+		} else {
+			String[] s = id.split("\\.");
+			this.pdbId = s[0];
+			this.ranges = ResidueRange.parseMultiple(s[1]);
+		}
 	}
 
 	@Override
