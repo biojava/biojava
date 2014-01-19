@@ -227,7 +227,7 @@ public class StructureImpl implements Structure, Serializable {
 				return c;
 			}
 		}
-		throw new StructureException("could not find chain " + chainId);
+		throw new StructureException("could not find chain \"" + chainId + "\" for PDB id " + pdb_id);
 	}
 
 
@@ -551,7 +551,7 @@ public class StructureImpl implements Structure, Serializable {
 			if ( c.getChainID().equals(chainId))
 				return c;
 		}
-		throw new StructureException("did not find chain with chainId >" + chainId+"<");
+		throw new StructureException("did not find chain with chainId \"" + chainId + "\"" + " for PDB id " + pdb_id);
 
 	}
 
