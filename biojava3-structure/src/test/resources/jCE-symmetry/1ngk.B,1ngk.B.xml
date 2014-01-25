@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<AFPChain name1="1ngk.B" name2="1ngk.B" method="jCE-symmetry" version="1.0" alnLength="126" blockNum="2" gapLen="32" optLength="94" totalLenIni="127" alignScore="164.61" chainRmsd="3.73" identity="0.0873" normAlignScore="0.00" probability="4.74e+00" similarity="0.1905" similarity1="74" similarity2="74" totalRmsdIni="4.43" totalRmsdOpt="3.73" ca1Length="127" ca2Length="127" afpNum="8" alignScoreUpdate="0.00" time="355" tmScore="0.49" cp="true">
+  <block blockNr="0" blockSize="0" blockScore="0.00" blockRmsd="3.73" blockGap="0">
+    <eqr eqrNr="0" pdbres1="10" chain1="B" pdbres2="83" chain2="B" />
+    <eqr eqrNr="1" pdbres1="11" chain1="B" pdbres2="84" chain2="B" />
+    <eqr eqrNr="2" pdbres1="12" chain1="B" pdbres2="85" chain2="B" />
+    <eqr eqrNr="3" pdbres1="13" chain1="B" pdbres2="86" chain2="B" />
+    <eqr eqrNr="4" pdbres1="14" chain1="B" pdbres2="87" chain2="B" />
+    <eqr eqrNr="5" pdbres1="15" chain1="B" pdbres2="88" chain2="B" />
+    <eqr eqrNr="6" pdbres1="16" chain1="B" pdbres2="89" chain2="B" />
+    <eqr eqrNr="7" pdbres1="17" chain1="B" pdbres2="90" chain2="B" />
+    <eqr eqrNr="8" pdbres1="18" chain1="B" pdbres2="91" chain2="B" />
+    <eqr eqrNr="9" pdbres1="19" chain1="B" pdbres2="92" chain2="B" />
+    <eqr eqrNr="10" pdbres1="20" chain1="B" pdbres2="93" chain2="B" />
+    <eqr eqrNr="11" pdbres1="21" chain1="B" pdbres2="94" chain2="B" />
+    <eqr eqrNr="12" pdbres1="22" chain1="B" pdbres2="95" chain2="B" />
+    <eqr eqrNr="13" pdbres1="23" chain1="B" pdbres2="96" chain2="B" />
+    <eqr eqrNr="14" pdbres1="24" chain1="B" pdbres2="97" chain2="B" />
+    <eqr eqrNr="15" pdbres1="25" chain1="B" pdbres2="98" chain2="B" />
+    <eqr eqrNr="16" pdbres1="26" chain1="B" pdbres2="99" chain2="B" />
+    <eqr eqrNr="17" pdbres1="28" chain1="B" pdbres2="100" chain2="B" />
+    <eqr eqrNr="18" pdbres1="29" chain1="B" pdbres2="101" chain2="B" />
+    <eqr eqrNr="19" pdbres1="30" chain1="B" pdbres2="102" chain2="B" />
+    <eqr eqrNr="20" pdbres1="31" chain1="B" pdbres2="103" chain2="B" />
+    <eqr eqrNr="21" pdbres1="32" chain1="B" pdbres2="104" chain2="B" />
+    <eqr eqrNr="22" pdbres1="33" chain1="B" pdbres2="105" chain2="B" />
+    <eqr eqrNr="23" pdbres1="38" chain1="B" pdbres2="106" chain2="B" />
+    <eqr eqrNr="24" pdbres1="39" chain1="B" pdbres2="107" chain2="B" />
+    <eqr eqrNr="25" pdbres1="40" chain1="B" pdbres2="108" chain2="B" />
+    <eqr eqrNr="26" pdbres1="41" chain1="B" pdbres2="109" chain2="B" />
+    <eqr eqrNr="27" pdbres1="42" chain1="B" pdbres2="110" chain2="B" />
+    <eqr eqrNr="28" pdbres1="43" chain1="B" pdbres2="111" chain2="B" />
+    <eqr eqrNr="29" pdbres1="44" chain1="B" pdbres2="112" chain2="B" />
+    <eqr eqrNr="30" pdbres1="45" chain1="B" pdbres2="113" chain2="B" />
+    <eqr eqrNr="31" pdbres1="46" chain1="B" pdbres2="114" chain2="B" />
+    <eqr eqrNr="32" pdbres1="47" chain1="B" pdbres2="115" chain2="B" />
+    <eqr eqrNr="33" pdbres1="48" chain1="B" pdbres2="116" chain2="B" />
+    <eqr eqrNr="34" pdbres1="49" chain1="B" pdbres2="117" chain2="B" />
+    <eqr eqrNr="35" pdbres1="50" chain1="B" pdbres2="118" chain2="B" />
+    <eqr eqrNr="36" pdbres1="51" chain1="B" pdbres2="119" chain2="B" />
+    <eqr eqrNr="37" pdbres1="52" chain1="B" pdbres2="120" chain2="B" />
+    <eqr eqrNr="38" pdbres1="53" chain1="B" pdbres2="121" chain2="B" />
+    <eqr eqrNr="39" pdbres1="54" chain1="B" pdbres2="122" chain2="B" />
+    <eqr eqrNr="40" pdbres1="55" chain1="B" pdbres2="123" chain2="B" />
+    <eqr eqrNr="41" pdbres1="56" chain1="B" pdbres2="124" chain2="B" />
+    <eqr eqrNr="42" pdbres1="57" chain1="B" pdbres2="125" chain2="B" />
+    <eqr eqrNr="43" pdbres1="58" chain1="B" pdbres2="128" chain2="B" />
+    <matrix mat11="-0.991127" mat12="-0.128445" mat13="-0.034193" mat21="-0.109272" mat22="0.640918" mat23="0.759792" mat31="-0.075677" mat32="0.756787" mat33="-0.649267" />
+    <shift x="124.415" y="-15.494" z="53.063" />
+  </block>
+  <block blockNr="1" blockSize="0" blockScore="0.00" blockRmsd="3.73" blockGap="0">
+    <eqr eqrNr="0" pdbres1="77" chain1="B" pdbres2="2" chain2="B" />
+    <eqr eqrNr="1" pdbres1="78" chain1="B" pdbres2="3" chain2="B" />
+    <eqr eqrNr="2" pdbres1="79" chain1="B" pdbres2="4" chain2="B" />
+    <eqr eqrNr="3" pdbres1="80" chain1="B" pdbres2="5" chain2="B" />
+    <eqr eqrNr="4" pdbres1="81" chain1="B" pdbres2="6" chain2="B" />
+    <eqr eqrNr="5" pdbres1="82" chain1="B" pdbres2="7" chain2="B" />
+    <eqr eqrNr="6" pdbres1="83" chain1="B" pdbres2="10" chain2="B" />
+    <eqr eqrNr="7" pdbres1="84" chain1="B" pdbres2="11" chain2="B" />
+    <eqr eqrNr="8" pdbres1="85" chain1="B" pdbres2="12" chain2="B" />
+    <eqr eqrNr="9" pdbres1="86" chain1="B" pdbres2="13" chain2="B" />
+    <eqr eqrNr="10" pdbres1="87" chain1="B" pdbres2="14" chain2="B" />
+    <eqr eqrNr="11" pdbres1="88" chain1="B" pdbres2="15" chain2="B" />
+    <eqr eqrNr="12" pdbres1="89" chain1="B" pdbres2="16" chain2="B" />
+    <eqr eqrNr="13" pdbres1="90" chain1="B" pdbres2="17" chain2="B" />
+    <eqr eqrNr="14" pdbres1="91" chain1="B" pdbres2="18" chain2="B" />
+    <eqr eqrNr="15" pdbres1="92" chain1="B" pdbres2="19" chain2="B" />
+    <eqr eqrNr="16" pdbres1="93" chain1="B" pdbres2="20" chain2="B" />
+    <eqr eqrNr="17" pdbres1="94" chain1="B" pdbres2="21" chain2="B" />
+    <eqr eqrNr="18" pdbres1="95" chain1="B" pdbres2="22" chain2="B" />
+    <eqr eqrNr="19" pdbres1="96" chain1="B" pdbres2="23" chain2="B" />
+    <eqr eqrNr="20" pdbres1="97" chain1="B" pdbres2="24" chain2="B" />
+    <eqr eqrNr="21" pdbres1="98" chain1="B" pdbres2="25" chain2="B" />
+    <eqr eqrNr="22" pdbres1="99" chain1="B" pdbres2="26" chain2="B" />
+    <eqr eqrNr="23" pdbres1="100" chain1="B" pdbres2="28" chain2="B" />
+    <eqr eqrNr="24" pdbres1="101" chain1="B" pdbres2="29" chain2="B" />
+    <eqr eqrNr="25" pdbres1="102" chain1="B" pdbres2="30" chain2="B" />
+    <eqr eqrNr="26" pdbres1="103" chain1="B" pdbres2="31" chain2="B" />
+    <eqr eqrNr="27" pdbres1="104" chain1="B" pdbres2="32" chain2="B" />
+    <eqr eqrNr="28" pdbres1="105" chain1="B" pdbres2="33" chain2="B" />
+    <eqr eqrNr="29" pdbres1="106" chain1="B" pdbres2="34" chain2="B" />
+    <eqr eqrNr="30" pdbres1="107" chain1="B" pdbres2="35" chain2="B" />
+    <eqr eqrNr="31" pdbres1="108" chain1="B" pdbres2="36" chain2="B" />
+    <eqr eqrNr="32" pdbres1="109" chain1="B" pdbres2="41" chain2="B" />
+    <eqr eqrNr="33" pdbres1="110" chain1="B" pdbres2="42" chain2="B" />
+    <eqr eqrNr="34" pdbres1="111" chain1="B" pdbres2="43" chain2="B" />
+    <eqr eqrNr="35" pdbres1="112" chain1="B" pdbres2="44" chain2="B" />
+    <eqr eqrNr="36" pdbres1="113" chain1="B" pdbres2="45" chain2="B" />
+    <eqr eqrNr="37" pdbres1="114" chain1="B" pdbres2="46" chain2="B" />
+    <eqr eqrNr="38" pdbres1="115" chain1="B" pdbres2="47" chain2="B" />
+    <eqr eqrNr="39" pdbres1="116" chain1="B" pdbres2="48" chain2="B" />
+    <eqr eqrNr="40" pdbres1="117" chain1="B" pdbres2="49" chain2="B" />
+    <eqr eqrNr="41" pdbres1="118" chain1="B" pdbres2="50" chain2="B" />
+    <eqr eqrNr="42" pdbres1="119" chain1="B" pdbres2="51" chain2="B" />
+    <eqr eqrNr="43" pdbres1="120" chain1="B" pdbres2="52" chain2="B" />
+    <eqr eqrNr="44" pdbres1="121" chain1="B" pdbres2="53" chain2="B" />
+    <eqr eqrNr="45" pdbres1="122" chain1="B" pdbres2="54" chain2="B" />
+    <eqr eqrNr="46" pdbres1="123" chain1="B" pdbres2="55" chain2="B" />
+    <eqr eqrNr="47" pdbres1="124" chain1="B" pdbres2="56" chain2="B" />
+    <eqr eqrNr="48" pdbres1="125" chain1="B" pdbres2="57" chain2="B" />
+    <eqr eqrNr="49" pdbres1="126" chain1="B" pdbres2="58" chain2="B" />
+    <matrix mat11="-0.991127" mat12="-0.128445" mat13="-0.034193" mat21="-0.109272" mat22="0.640918" mat23="0.759792" mat31="-0.075677" mat32="0.756787" mat33="-0.649267" />
+    <shift x="124.415" y="-15.494" z="53.063" />
+  </block>
+</AFPChain>
