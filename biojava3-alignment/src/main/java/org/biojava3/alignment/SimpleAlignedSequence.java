@@ -359,9 +359,15 @@ public class SimpleAlignedSequence<S extends Sequence<C>, C extends Compound> im
         }
 
         // combine sublocations into 1 Location
-        location = (sublocations.size() == 1) ? sublocations.get(0) : new SimpleLocation(
-                sublocations.get(0).getStart(), sublocations.get(sublocations.size() - 1).getEnd(), Strand.UNDEFINED,
-                false, sublocations);
+        if (sublocations.size() == 0) {
+        	location = null;
+        } else if (sublocations.size() == 1) {
+        	location = sublocations.get(0);
+        } else {
+        	location = new SimpleLocation(sublocations.get(0).getStart(), sublocations.get(sublocations.size() - 1).getEnd(),
+        			Strand.UNDEFINED,
+                    false, sublocations);
+        }
         // TODO handle circular alignments
 
         // check that alignment has correct number of compounds in it to fit original sequence

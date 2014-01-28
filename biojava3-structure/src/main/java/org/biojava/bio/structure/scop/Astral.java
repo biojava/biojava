@@ -24,12 +24,13 @@ import java.lang.ref.SoftReference;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 /**
  * Provides programmatic access to ASTRAL representative sets. See the paper by <a
@@ -64,10 +65,16 @@ public class Astral {
 	public static enum AstralSet {
 		FORTY_175("1.75_40", "http://scop.berkeley.edu/downloads/scopseq-1.75/astral-scopdom-seqres-gd-sel-gs-bib-40-1.75.fa"),
 		NINETY_FIVE_175("1.75_95", "http://scop.berkeley.edu/downloads/scopseq-1.75/astral-scopdom-seqres-gd-sel-gs-bib-95-1.75.fa"),
-		FORTY_175A("1.75A_40", "http://scop.berkeley.edu/downloads/scopseq-1.75A/astral-scopdom-seqres-gd-sel-gs-bib-40-1.75A.fa"),
-		NINETY_FIVE_175A("1.75A_95","http://scop.berkeley.edu/downloads/scopseq-1.75A/astral-scopdom-seqres-gd-sel-gs-bib-95-1.75A.fa"),
-		FORTY_175B("1.75B_40", "http://scop.berkeley.edu/downloads/scopseq-1.75B/astral-scopdom-seqres-gd-sel-gs-bib-40-1.75B.fa"),
-		NINETY_FIVE_175B("1.75B_95", "http://scop.berkeley.edu/downloads/scopseq-1.75B/astral-scopdom-seqres-gd-sel-gs-bib-95-1.75B.fa");
+		FORTY_175A("1.75A_40", "http://scop.berkeley.edu/downloads/scopeseq-2.01/astral-scopedom-seqres-gd-sel-gs-bib-40-2.01.fa"),
+		NINETY_FIVE_175A("1.75A_95","http://scop.berkeley.edu/downloads/scopeseq-2.01/astral-scopedom-seqres-gd-sel-gs-bib-95-2.01.fa"),
+		FORTY_175B("1.75B_40", "http://scop.berkeley.edu/downloads/scopeseq-2.02/astral-scopedom-seqres-gd-sel-gs-bib-40-2.02.fa"),
+		NINETY_FIVE_175B("1.75B_95", "http://scop.berkeley.edu/downloads/scopeseq-2.02/astral-scopedom-seqres-gd-sel-gs-bib-95-2.02.fa"),
+		FORTY_201("2.01_40", "http://scop.berkeley.edu/downloads/scopeseq-2.01/astral-scopedom-seqres-gd-sel-gs-bib-40-2.01.fa"),
+		NINETY_FIVE_201("2.01_95", "http://scop.berkeley.edu/downloads/scopeseq-2.01/astral-scopedom-seqres-gd-sel-gs-bib-95-2.01.fa"),
+		FORTY_202("2.02_40", "http://scop.berkeley.edu/downloads/scopeseq-2.02/astral-scopedom-seqres-gd-sel-gs-bib-40-2.02.fa"),
+		NINETY_FIVE_202("2.02_95", "http://scop.berkeley.edu/downloads/scopeseq-2.02/astral-scopedom-seqres-gd-sel-gs-bib-95-2.02.fa"),
+		FORTY_203("2.03_40", "http://scop.berkeley.edu/downloads/scopeseq-2.03/astral-scopedom-seqres-gd-sel-gs-bib-40-2.03.fa"),
+		NINETY_FIVE_203("2.03_95", "http://scop.berkeley.edu/downloads/scopeseq-2.03/astral-scopedom-seqres-gd-sel-gs-bib-95-2.03.fa");
 		private String id;
 		private String url;
 
@@ -99,9 +106,10 @@ public class Astral {
 
 	private static Map<String, SoftReference<Astral>> instances = new HashMap<String, SoftReference<Astral>>();
 
-	private static final Logger logger = LogManager.getLogger(Astral.class.getName());
+	private static final Logger logger = Logger.getLogger(Astral.class.getName());
 
 	private Set<String> names;
+	private LinkedHashMap<Integer,String> failedLines;
 
 	/**
 	 * Get a list of representatives' names for the specified ASTRAL cutoff.
@@ -187,10 +195,19 @@ public class Astral {
 	}
 
 	/**
+	 * Gets a map describing lines read in the file that weren't understood.
+	 * @return A LinkedHashMap mapping line numbers of failures to the lines themselves
+	 */
+	public LinkedHashMap<Integer, String> getFailedLines() {
+		return failedLines;
+	}
+
+	/**
 	 * Parses the FASTA file opened by reader.
 	 */
 	private void init(Reader reader) {
 		names = new TreeSet<String>();
+		failedLines = new LinkedHashMap<Integer,String>();
 
 		BufferedReader br = null;
 
@@ -208,11 +225,12 @@ public class Astral {
 						String scopId = line.split("\\s")[0].substring(1);
 						names.add(scopId);
 						if (i % 1000 == 0) {
-							logger.debug("Reading ASTRAL line for " + scopId);
+							logger.log(Level.FINE,"Reading ASTRAL line for " + scopId);
 						}
 						i++;
 					} catch (RuntimeException e) {
-						logger.error("Couldn't read line " + line, e);
+						failedLines.put(i, line);
+						logger.log(Level.WARNING,"Couldn't read line " + line, e);
 					}
 				}
 			}
@@ -226,7 +244,7 @@ public class Astral {
 				try {
 					br.close();
 				} catch (IOException e) {
-					logger.warn("Could not close stream", e);
+					logger.log(Level.WARNING,"Could not close stream", e);
 				}
 			}
 		}

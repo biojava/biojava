@@ -282,7 +282,7 @@ public class SecStruc {
 
 					l1.connectedTo = j;
 					l2.connectedFrom = i;
-					System.out.println("BUlge from " + i + " to " + j);
+//					System.out.println("BUlge from " + i + " to " + j);
 				}
 			}
 		}

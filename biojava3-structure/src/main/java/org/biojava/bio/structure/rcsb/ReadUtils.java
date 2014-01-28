@@ -26,13 +26,13 @@ package org.biojava.bio.structure.rcsb;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -44,7 +44,7 @@ import org.xml.sax.SAXException;
  */
 public class ReadUtils {
 
-	private static final Logger logger = LogManager.getLogger(ReadUtils.class.getPackage().getName());
+	private static final Logger logger = Logger.getLogger(ReadUtils.class.getPackage().getName());
 
 	// this IS needed
 	private static boolean documentBuilderFactorySet = false;
@@ -76,7 +76,7 @@ public class ReadUtils {
 		try {
 			builder = builderFactory.newDocumentBuilder();
 		} catch (ParserConfigurationException e) {
-			logger.error("Couldn't configure parser", e);
+			logger.log(Level.WARNING,"Couldn't configure parser", e);
 			stream.close();
 			throw new IOException(e);
 		}
@@ -84,7 +84,7 @@ public class ReadUtils {
 			document = builder.parse(stream);
 		} catch (SAXException e) {
 			System.out.println(e.getMessage());
-			logger.error("Couldn't parse stream", e);
+			logger.log(Level.WARNING,"Couldn't parse stream", e);
 			stream.close();
 			throw new IOException(e);
 		}
@@ -97,7 +97,7 @@ public class ReadUtils {
 		try {
 			return Double.parseDouble(s);
 		} catch (NumberFormatException e) {
-			logger.error(s + " is not a floating-point number", e);
+			logger.log(Level.WARNING,s + " is not a floating-point number", e);
 		}
 		return null;
 	}
@@ -107,7 +107,7 @@ public class ReadUtils {
 		try {
 			return Integer.parseInt(s);
 		} catch (NumberFormatException e) {
-			logger.error(s + " is not an integer", e);
+			logger.log(Level.WARNING,s + " is not an integer", e);
 		}
 		return null;
 	}

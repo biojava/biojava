@@ -27,6 +27,7 @@ package org.biojava.bio.structure.align.gui.jmol;
 import java.util.Hashtable;
 import java.util.Map;
 
+
 import javax.swing.JTextField;
 
 import org.jmol.api.JmolStatusListener;
@@ -127,9 +128,19 @@ public class MyJmolStatusListener implements JmolStatusListener {
 	}
 
 	
-	public void resizeInnerPanel(String arg0) {
+		
+	public Map<String, Object> getJSpecViewProperty(String arg0) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	public void resizeInnerPanel(String data) {
 		// TODO Auto-generated method stub
 		
 	}
+
+	
+	
 
 }

@@ -269,7 +269,7 @@ public class Alignments {
      * @param subMatrix the set of substitution scores used during alignment
      * @return list of sequence pair scores
      */
-    public static <S extends Sequence<C>, C extends Compound> int[] getAllPairsScores( List<S> sequences,
+    public static <S extends Sequence<C>, C extends Compound> double[] getAllPairsScores( List<S> sequences,
             PairwiseSequenceScorerType type, GapPenalty gapPenalty, SubstitutionMatrix<C> subMatrix) {
         return runPairwiseScorers(getAllPairsScorers(sequences, type, gapPenalty, subMatrix));
     }
@@ -339,7 +339,7 @@ public class Alignments {
      * @param subMatrix the set of substitution scores used during alignment
      * @return sequence pair score
      */
-    static <S extends Sequence<C>, C extends Compound> int getPairwiseScore(S query, S target,
+    static <S extends Sequence<C>, C extends Compound> double getPairwiseScore(S query, S target,
             PairwiseSequenceScorerType type, GapPenalty gapPenalty, SubstitutionMatrix<C> subMatrix) {
         return getPairwiseScorer(query, target, type, gapPenalty, subMatrix).getScore();
     }
@@ -601,16 +601,16 @@ public class Alignments {
      * @param scorers list of scorers to run
      * @return list of score results from running scorers
      */
-    public static <S extends Sequence<C>, C extends Compound> int[] runPairwiseScorers(
+    public static <S extends Sequence<C>, C extends Compound> double[] runPairwiseScorers(
             List<PairwiseSequenceScorer<S, C>> scorers) {
         int n = 1, all = scorers.size();
-        List<Future<Integer>> futures = new ArrayList<Future<Integer>>();
+        List<Future<Double>> futures = new ArrayList<Future<Double>>();
         for (PairwiseSequenceScorer<S, C> scorer : scorers) {
             futures.add(ConcurrencyTools.submit(new CallablePairwiseSequenceScorer<S, C>(scorer),
                     String.format("Scoring pair %d of %d", n++, all)));
         }
-        List<Integer> results = getListFromFutures(futures);
-        int[] scores = new int[results.size()];
+        List<Double> results = getListFromFutures(futures);
+        double[] scores = new double[results.size()];
         for (int i = 0; i < scores.length; i++) {
             scores[i] = results.get(i);
         }

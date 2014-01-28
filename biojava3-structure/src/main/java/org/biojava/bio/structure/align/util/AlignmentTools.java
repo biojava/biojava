@@ -12,6 +12,8 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.biojava.bio.structure.Atom;
 import org.biojava.bio.structure.Calc;
@@ -542,9 +544,15 @@ public class AlignmentTools {
 		}
 
 		AFPChain a = new AFPChain();
-		a.setName1(ca1[0].getGroup().getChain().getParent().getName());
-		a.setName2(ca2[0].getGroup().getChain().getParent().getName());
-
+		try {
+			a.setName1(ca1[0].getGroup().getChain().getParent().getName());
+			if(ca2[0].getGroup().getChain().getParent() != null) {
+				// common case for cloned ca2
+				a.setName2(ca2[0].getGroup().getChain().getParent().getName());
+			}
+		} catch(Exception e) {
+			// One of the structures wasn't fully created. Ignore
+		}
 		a.setBlockNum(1);
 		a.setCa1Length(ca1.length);
 		a.setCa2Length(ca2.length);
@@ -726,13 +734,13 @@ public class AlignmentTools {
 	}
 
 	/**
-	 * @param afpChain
+	 * @param afpChain Input afpchain. UNMODIFIED
 	 * @param ca1
 	 * @param ca2
 	 * @param optLength
 	 * @param optLens
 	 * @param optAln
-	 * @return
+	 * @return A NEW AfpChain based off the input but with the optAln modified
 	 * @throws StructureException if an error occured during superposition
 	 */
 	public static AFPChain replaceOptAln(AFPChain afpChain, Atom[] ca1, Atom[] ca2,
@@ -869,11 +877,11 @@ public class AlignmentTools {
 	 * as two numbers separated by '>'. They are chained together where possible,
 	 * or separated by spaces where disjoint or branched.
 	 *
-	 * <p>Note that more concise representations may be possible.
+	 * <p>Note that more concise representations may be possible.</p>
 	 *
-	 * <p>Examples:
-	 * <li>1>2>3>1
-	 * <li>1>2>3>2 4>3
+	 * Examples:
+	 * <li>1>2>3>1</li>
+	 * <li>1>2>3>2 4>3</li>
 	 *
 	 * @param alignment The input function, as a map (see {@link AlignmentTools#alignmentAsMap(AFPChain)})
 	 * @param identity An identity-like function providing the isomorphism between
@@ -939,7 +947,31 @@ public class AlignmentTools {
 
 		return str.toString();
 	}
+
+	/**
+	 * @see #toConciseAlignmentString(Map, Map)
+	 */
 	public static <T> String toConciseAlignmentString(Map<T, T> alignment) {
 		return toConciseAlignmentString(alignment, new IdentityMap<T>());
+	}
+
+	/**
+	 * @see #toConciseAlignmentString(Map, Map)
+	 */
+	public static Map<Integer, Integer> fromConciseAlignmentString(String string) {
+		Map<Integer, Integer> map = new HashMap<Integer, Integer>();
+		boolean matches = true;
+		while (matches) {
+			Pattern pattern = Pattern.compile("(\\d+)>(\\d+)");
+			Matcher matcher = pattern.matcher(string);
+			matches = matcher.find();
+			if (matches) {
+				Integer from = Integer.parseInt(matcher.group(1));
+				Integer to = Integer.parseInt(matcher.group(2));
+				map.put(from, to);
+				string = string.substring(matcher.end(1) + 1);
+			}
+		}
+		return map;
 	}
 }

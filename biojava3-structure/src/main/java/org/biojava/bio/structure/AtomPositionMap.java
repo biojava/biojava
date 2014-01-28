@@ -23,9 +23,11 @@
 
 package org.biojava.bio.structure;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.NavigableMap;
 import java.util.Set;
@@ -75,7 +77,7 @@ public class AtomPositionMap {
 			return true;
 		}
 	};
-	
+
 	/**
 	 * A map that is sorted by its values.
 	 * 
@@ -108,7 +110,7 @@ public class AtomPositionMap {
 	public AtomPositionMap(Atom[] atoms) {
 		this(atoms, AMINO_ACID_MATCHER);
 	}
-	
+
 	/**
 	 * Creates a new AtomPositionMap containing only atoms matched by {@code matcher}.
 	 * @param atoms
@@ -140,7 +142,7 @@ public class AtomPositionMap {
 	public int calcLength(int positionA, int positionB, char startingChain) {
 		return calcLength(positionA, positionB, String.valueOf(startingChain));
 	}
-	
+
 	/**
 	 * This is <strong>not</em> the same as subtracting {@link #getPosition(ResidueNumber)} for {@code positionB} from {@link #getPosition(ResidueNumber)} for {@code positionA}.
 	 * The latter considers only positions of ATOM entries in the PDB file and ignores chains. This method only includes ATOMs from the same chain.
@@ -181,7 +183,7 @@ public class AtomPositionMap {
 	public int calcLengthDirectional(int positionStart, int positionEnd, char startingChain) {
 		return calcLengthDirectional(positionStart, positionEnd, String.valueOf(startingChain));
 	}
-	
+
 	/**
 	 * Calculates the distance between {@code positionStart} and {@code positionEnd}. Will return a negative value if the start is past the end.
 	 * @param positionStart
@@ -270,6 +272,30 @@ public class AtomPositionMap {
 	 */
 	public ResidueNumber getLast() {
 		return treeMap.lastKey();
+	}
+
+	/**
+	 * Returns a list of {@link ResidueRange ResidueRanges} corresponding to this entire AtomPositionMap.
+	 */
+	public List<ResidueRange> getRanges() {
+		String currentChain = "";
+		ResidueNumber first = null;
+		ResidueNumber prev = null;
+		List<ResidueRange> ranges = new ArrayList<ResidueRange>();
+		for (ResidueNumber rn : treeMap.keySet()) {
+			if (!rn.getChainId().equals(currentChain)) {
+				if (first != null) {
+					ResidueRange newRange = new ResidueRange(currentChain, first, prev, this.calcLength(first, prev));
+					ranges.add(newRange);
+				}
+				first = rn;
+			}
+			prev = rn;
+			currentChain = rn.getChainId();
+		}
+		ResidueRange newRange = new ResidueRange(currentChain, first, prev, this.calcLength(first, prev));
+		ranges.add(newRange);
+		return ranges;
 	}
 
 }

@@ -157,6 +157,24 @@ public final class RotationAxis {
 	}
 	
 	/**
+	 * Returns the rotation order o that gives the lowest value of {@code |2PI / o - theta},
+	 * given that the value is strictly lower than {@code threshold}, for orders {@code o=1,...,maxOrder}.
+	 */
+	public int guessOrderFromAngle(double threshold, int maxOrder) {
+		double bestDelta = threshold;
+		int bestOrder = 1;
+		for (int order = 2; order < maxOrder; order++) {
+			double delta = Math.abs(2 * Math.PI / order - theta);
+			if (delta < bestDelta) {
+				bestOrder = order;
+				bestDelta = delta;
+			}
+		}
+		return bestOrder;
+	}
+
+	
+	/**
 	 * Returns a matrix that describes both rotation and translation.
 	 */
 	public Matrix getFullMatrix() {
@@ -427,6 +445,10 @@ public final class RotationAxis {
 	
 	public void rotate(Atom[] atoms, double theta) {
 		Matrix rot = getRotationMatrix(theta);
+		if(rotationPos == null) {
+			// Undefined rotation axis; do nothing
+			return;
+		}
 		Atom negPos;
 		try {
 			negPos = Calc.invert(rotationPos);
@@ -469,5 +491,13 @@ public final class RotationAxis {
 	public static double getAngle(Matrix rotation) {
 		double c = (rotation.trace()-1)/2.0; //=cos(theta)
 		return Math.acos(c);
+	}
+
+	/**
+	 * 
+	 * @return If the rotation axis is well defined, rather than purely translational
+	 */
+	public boolean isDefined() {
+		return rotationPos != null;
 	}
 }

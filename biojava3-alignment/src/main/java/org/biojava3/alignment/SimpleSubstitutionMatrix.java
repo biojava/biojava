@@ -31,7 +31,9 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 import java.util.StringTokenizer;
 
@@ -46,6 +48,7 @@ import org.biojava3.core.sequence.template.CompoundSet;
  * {@link Compound} in a sequence for another.
  *
  * @author Mark Chapman
+ * @author Daniel Cameron
  * @param <C> each element of the matrix corresponds to a pair of {@link Compound}s of type C
  */
 public class SimpleSubstitutionMatrix<C extends Compound> implements SubstitutionMatrix<C> {
@@ -225,13 +228,33 @@ public class SimpleSubstitutionMatrix<C extends Compound> implements Substitutio
     public String getName() {
         return name;
     }
-
+    /**
+     * Returns the index of the first occurrence of the specified element in the list.
+     * If the list does not contain the given compound, the index of the first occurrence
+     * of the element according to case-insensitive equality.
+     * If no such elements exist, -1 is returned.
+     * @param list list of compounds to search
+     * @param compound compound to search for
+     * @return Returns the index of the first match to the specified element in this list, or -1 if there is no such index.
+     */
+    private static <C extends Compound> int getIndexOfCompound(List<C> list, C compound) {
+    	int index = list.indexOf(compound);
+    	if (index == -1) {
+	    	for (int i = 0; i < list.size(); i++) {
+				if (compound.equalsIgnoreCase(list.get(i))) {
+					index = i;
+					break;
+				}
+			}
+    	}
+    	return index;
+	}
     @Override
     public short getValue(C from, C to) {
-        int row = rows.indexOf(from), col = cols.indexOf(to);
+        int row = getIndexOfCompound(rows, from), col = getIndexOfCompound(cols, to);
         if (row == -1 || col == -1) {
-            row = cols.indexOf(from);
-            col = rows.indexOf(to);
+            row = getIndexOfCompound(cols, from);
+            col = getIndexOfCompound(rows, to);
             if (row == -1 || col == -1) {
                 return min;
             }
@@ -272,5 +295,23 @@ public class SimpleSubstitutionMatrix<C extends Compound> implements Substitutio
         s.append(getMatrixAsString());
         return s.toString();
     }
+
+	public Map<C, Short> getRow(C row) {
+		int rowIndex = rows.indexOf(row);
+		Map<C, Short> map = new HashMap<C, Short>();
+		for (int colIndex = 0; colIndex < matrix[rowIndex].length; colIndex++) {
+			map.put(cols.get(colIndex), matrix[rowIndex][colIndex]);
+		}
+		return map;
+	}
+
+	public Map<C, Short> getColumn(C column) {
+		int colIndex = cols.indexOf(column);
+		Map<C, Short> map = new HashMap<C, Short>();
+		for (int i = 0; i < matrix.length; i++) {
+			map.put(rows.get(i), matrix[i][colIndex]);
+		}
+		return map;
+	}
 
 }
