@@ -147,7 +147,7 @@ public class MMCIFFileReader implements StructureIOFile {
 
 
 
-	private Structure parseFromInputStream(InputStream inStream) throws IOException{
+	public Structure parseFromInputStream(InputStream inStream) throws IOException{
 
 		MMcifParser parser = new SimpleMMcifParser();
 
