@@ -42,12 +42,23 @@ import org.biojava3.core.sequence.template.Sequence;
  */
 public class GuanUberbacher<S extends Sequence<C>, C extends Compound> extends AnchoredPairwiseSequenceAligner<S, C> {
 
+    private static int defaultCutsPerSection = 10;
+
+    /**
+     * Sets the default number of cuts added to each section during each pass.
+     * @param defaultCutsPerSection the default number of cuts added to each section during each pass
+     */
+    public static void setDefaultCutsPerSection(int defaultCutsPerSection) {
+        defaultCutsPerSection = Math.max(1, defaultCutsPerSection);
+    }
+
     /**
      * Before running a pairwise global sequence alignment, data must be sent in via calls to
      * {@link #setQuery(Sequence)}, {@link #setTarget(Sequence)}, {@link #setGapPenalty(GapPenalty)}, and
      * {@link #setSubstitutionMatrix(SubstitutionMatrix)}.
      */
     public GuanUberbacher() {
+    	setDefaultCutsPerSection(defaultCutsPerSection);
     }
 
     /**
@@ -60,6 +71,7 @@ public class GuanUberbacher<S extends Sequence<C>, C extends Compound> extends A
      */
     public GuanUberbacher(S query, S target, GapPenalty gapPenalty, SubstitutionMatrix<C> subMatrix) {
         super(query, target, gapPenalty, subMatrix);
+        setDefaultCutsPerSection(defaultCutsPerSection);
     }
 
     /**
@@ -73,7 +85,25 @@ public class GuanUberbacher<S extends Sequence<C>, C extends Compound> extends A
      */
     public GuanUberbacher(S query, S target, GapPenalty gapPenalty, SubstitutionMatrix<C> subMatrix,
             int cutsPerSection) {
-        super(query, target, gapPenalty, subMatrix, cutsPerSection);
+        super(query, target, gapPenalty, subMatrix);
+        setCutsPerSection(cutsPerSection);
     }
 
+    /**
+     * Returns the number of cuts added to each section during each pass.
+     *
+     * @return the number of cuts added to each section during each pass
+     */
+    public int getCutsPerSection() {
+        return cutsPerSection;
+    }
+
+    /**
+     * Sets the number of cuts added to each section during each pass.
+     *
+     * @param cutsPerSection the number of cuts added to each section during each pass
+     */
+    public void setCutsPerSection(int cutsPerSection) {
+        this.cutsPerSection = Math.max(1, cutsPerSection);
+    }
 }

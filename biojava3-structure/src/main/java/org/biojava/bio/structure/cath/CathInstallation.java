@@ -821,4 +821,8 @@ public class CathInstallation implements CathDatabase{
         installedDomall.set(true);
     }
 
+	public void setCathVersion(String cathVersion) {
+		this.cathVersion = cathVersion;
+	}
+
 }

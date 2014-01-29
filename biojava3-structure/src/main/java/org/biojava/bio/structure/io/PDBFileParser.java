@@ -2830,10 +2830,13 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 			// now, we're assuming they're single bonds
 			new Bond(a, b, 1);
 		} catch (Exception e) {
-			System.out.println("Error with the following link record: ");
-			System.out.println(linkRecord);
-			e.printStackTrace();
-			throw new RuntimeException(e);
+			// Note, in Calpha only mode the link atoms may not be present.
+			if (! parseCAonly) {
+				System.out.println("Error with the following link record: ");
+				System.out.println(linkRecord);
+				e.printStackTrace();
+				throw new RuntimeException(e);
+			}
 		}
 	}
 	
@@ -2848,10 +2851,13 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 			
 			new Bond(a, b, 1);
 		} catch (StructureException e) {
-			System.out.println("Error with the following SSBond: ");
-			System.out.println(disulfideBond);
-			e.printStackTrace();
-			throw new RuntimeException(e);
+			// Note, in Calpha only mode the CYS SG's are not present.
+			if (! parseCAonly) {
+				System.out.println("Error with the following SSBond: ");
+				System.out.println(disulfideBond);
+				e.printStackTrace();
+				throw new RuntimeException(e);
+			}
 		}
 	}
 
@@ -2952,7 +2958,9 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 		for (Chain chain : structure.getChains()) {
 			for (Group group : chain.getAtomGroups()) {
 				for (Atom atom : group.getAtoms()) {
-					((ArrayList<Bond>) atom.getBonds()).trimToSize();
+					if (atom.getBonds().size() > 0) {
+						((ArrayList<Bond>) atom.getBonds()).trimToSize();
+					}
 				}
 			}
 		}

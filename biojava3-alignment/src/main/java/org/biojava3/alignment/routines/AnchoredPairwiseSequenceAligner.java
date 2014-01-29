@@ -23,6 +23,7 @@
 
 package org.biojava3.alignment.routines;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -32,6 +33,7 @@ import org.biojava3.alignment.template.AlignedSequence;
 import org.biojava3.alignment.template.AlignedSequence.Step;
 import org.biojava3.alignment.template.GapPenalty;
 import org.biojava3.alignment.template.SubstitutionMatrix;
+import org.biojava3.alignment.routines.AlignerHelper.*;
 import org.biojava3.core.sequence.template.Compound;
 import org.biojava3.core.sequence.template.Sequence;
 
@@ -44,21 +46,12 @@ import org.biojava3.core.sequence.template.Sequence;
  * counterpoint to this reduction in space complexity is a modest (a multiple < 2) increase in time.
  *
  * @author Mark Chapman
+ * @author Daniel Cameron
  * @param <S> each {@link Sequence} of the alignment pair is of type S
  * @param <C> each element of an {@link AlignedSequence} is a {@link Compound} of type C
  */
 public class AnchoredPairwiseSequenceAligner<S extends Sequence<C>, C extends Compound> extends
         AbstractPairwiseSequenceAligner<S, C> {
-
-    private static int defaultCutsPerSection = 10;
-
-    /**
-     * Sets the default number of cuts added to each section during each pass.
-     * @param defaultCutsPerSection the default number of cuts added to each section during each pass
-     */
-    public static void setDefaultCutsPerSection(int defaultCutsPerSection) {
-        AnchoredPairwiseSequenceAligner.defaultCutsPerSection = Math.max(1, defaultCutsPerSection);
-    }
 
     /**
      * Before running a pairwise global sequence alignment, data must be sent in via calls to
@@ -66,19 +59,6 @@ public class AnchoredPairwiseSequenceAligner<S extends Sequence<C>, C extends Co
      * {@link #setSubstitutionMatrix(SubstitutionMatrix)}.
      */
     public AnchoredPairwiseSequenceAligner() {
-        setCutsPerSection(defaultCutsPerSection);
-    }
-
-    /**
-     * Prepares for a pairwise global sequence alignment.
-     *
-     * @param query the first {@link Sequence} of the pair to align
-     * @param target the second {@link Sequence} of the pair to align
-     * @param gapPenalty the gap penalties used during alignment
-     * @param subMatrix the set of substitution scores used during alignment
-     */
-    public AnchoredPairwiseSequenceAligner(S query, S target, GapPenalty gapPenalty, SubstitutionMatrix<C> subMatrix) {
-        this(query, target, gapPenalty, subMatrix, defaultCutsPerSection, null);
     }
 
     /**
@@ -90,9 +70,8 @@ public class AnchoredPairwiseSequenceAligner<S extends Sequence<C>, C extends Co
      * @param subMatrix the set of substitution scores used during alignment
      * @param cutsPerSection the number of cuts added to each section during each pass
      */
-    public AnchoredPairwiseSequenceAligner(S query, S target, GapPenalty gapPenalty, SubstitutionMatrix<C> subMatrix,
-            int cutsPerSection) {
-        this(query, target, gapPenalty, subMatrix, cutsPerSection, null);
+    public AnchoredPairwiseSequenceAligner(S query, S target, GapPenalty gapPenalty, SubstitutionMatrix<C> subMatrix) {
+        this(query, target, gapPenalty, subMatrix, null);
     }
 
     /**
@@ -105,10 +84,8 @@ public class AnchoredPairwiseSequenceAligner<S extends Sequence<C>, C extends Co
      * @param cutsPerSection the number of cuts added to each section during each pass
      * @param anchors the initial list of anchors
      */
-    public AnchoredPairwiseSequenceAligner(S query, S target, GapPenalty gapPenalty, SubstitutionMatrix<C> subMatrix,
-            int cutsPerSection, int[] anchors) {
+    public AnchoredPairwiseSequenceAligner(S query, S target, GapPenalty gapPenalty, SubstitutionMatrix<C> subMatrix, int[] anchors) {
         super(query, target, gapPenalty, subMatrix);
-        setCutsPerSection(cutsPerSection);
         setAnchors(anchors);
     }
 
@@ -119,16 +96,14 @@ public class AnchoredPairwiseSequenceAligner<S extends Sequence<C>, C extends Co
      * @return the list of anchors
      */
     public int[] getAnchors() {
-        return Arrays.copyOf(anchors, anchors.length);
-    }
-
-    /**
-     * Returns the number of cuts added to each section during each pass.
-     *
-     * @return the number of cuts added to each section during each pass
-     */
-    public int getCutsPerSection() {
-        return cutsPerSection;
+    	int[] anchor = new int[getScoreMatrixDimensions()[0] - 1];
+    	for (int i = 0; i < anchor.length; i++) {
+    		anchor[i] = -1;
+    	}
+    	for (int i = 0; i < anchors.size(); i++) {
+    		anchor[anchors.get(i).getQueryIndex()] = anchors.get(i).getTargetIndex();
+    	}
+    	return anchor;
     }
 
     /**
@@ -137,28 +112,25 @@ public class AnchoredPairwiseSequenceAligner<S extends Sequence<C>, C extends Co
      * @param anchors list of points that are tied to the given indices in the target
      */
     public void setAnchors(int[] anchors) {
-        this.anchors = (anchors == null) ? null : Arrays.copyOf(anchors, anchors.length);
-        reset();
+    	super.anchors = new ArrayList<Anchor>();
+    	if (anchors != null) {
+	    	for (int i = 0; i < anchors.length; i++) {
+	    		if (anchors[i] >= 0) {
+	    			addAnchor(i, anchors[i]);
+	    		}
+	    	}
+    	}
     }
-
     /**
-     * Sets the number of cuts added to each section during each pass.
-     *
-     * @param cutsPerSection the number of cuts added to each section during each pass
+     * Adds an additional anchor to the set of anchored compounds
+     * @param queryIndex 0-based index of query sequence compound
+     * @param targetIndex 0-base index of target sequence compound to anchor to
      */
-    public void setCutsPerSection(int cutsPerSection) {
-        this.cutsPerSection = Math.max(1, cutsPerSection);
+    public void addAnchor(int queryIndex, int targetIndex) {
+    	anchors.add(new Anchor(queryIndex, targetIndex));
     }
 
     // method for AbstractMatrixAligner
-
-    @Override
-    protected void reset() {
-        super.reset();
-        if (getQuery() != null && getTarget() != null) {
-            resetAnchors();
-        }
-    }
 
     @Override
     protected void setProfile(List<Step> sx, List<Step> sy) {

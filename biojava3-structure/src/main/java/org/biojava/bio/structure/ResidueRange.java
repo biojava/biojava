@@ -145,6 +145,19 @@ public class ResidueRange {
 		this(String.valueOf(chain), start, end, length);
 	}
 
+	public ResidueRange(String chain, String start, String end) {
+		this(chain, start, end, null);
+	}
+	
+	public ResidueRange(String chain, String start, String end, Integer length) {
+		this.chain = chain;
+		this.start = ResidueNumber.fromString(start);
+		this.start.setChainId(chain);
+		this.end = ResidueNumber.fromString(end);
+		this.end.setChainId(chain);
+		this.length = length;
+	}
+
 	public ResidueRange(String chain, ResidueNumber start, ResidueNumber end, Integer length) {
 		this.chain = chain;
 		this.start = start;
@@ -362,6 +375,23 @@ public class ResidueRange {
 		return rrs;
 	}
 
+	public static List<String> toStrings(List<ResidueRange> ranges) {
+		List<String> list = new ArrayList<String>(ranges.size());
+		for (ResidueRange range : ranges) {
+			list.add(range.toString());
+		}
+		return list;
+	}
+	
+	public static String toString(List<ResidueRange> ranges) {
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < ranges.size(); i++) {
+			sb.append(ranges.get(i));
+			if (i < ranges.size() - 1) sb.append(",");
+		}
+		return sb.toString();
+	}
+	
 	/**
 	 * Matches the string with a regex pattern that matches all recognizable range formats.
 	 * @param s A string to match against

@@ -157,6 +157,24 @@ public final class RotationAxis {
 	}
 	
 	/**
+	 * Returns the rotation order o that gives the lowest value of {@code |2PI / o - theta},
+	 * given that the value is strictly lower than {@code threshold}, for orders {@code o=1,...,maxOrder}.
+	 */
+	public int guessOrderFromAngle(double threshold, int maxOrder) {
+		double bestDelta = threshold;
+		int bestOrder = 1;
+		for (int order = 2; order < maxOrder; order++) {
+			double delta = Math.abs(2 * Math.PI / order - theta);
+			if (delta < bestDelta) {
+				bestOrder = order;
+				bestDelta = delta;
+			}
+		}
+		return bestOrder;
+	}
+
+	
+	/**
 	 * Returns a matrix that describes both rotation and translation.
 	 */
 	public Matrix getFullMatrix() {

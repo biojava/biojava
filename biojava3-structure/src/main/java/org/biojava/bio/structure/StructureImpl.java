@@ -227,7 +227,7 @@ public class StructureImpl implements Structure, Serializable {
 				return c;
 			}
 		}
-		throw new StructureException("could not find chain " + chainId);
+		throw new StructureException("could not find chain \"" + chainId + "\" for PDB id " + pdb_id);
 	}
 
 
@@ -551,7 +551,7 @@ public class StructureImpl implements Structure, Serializable {
 			if ( c.getChainID().equals(chainId))
 				return c;
 		}
-		throw new StructureException("did not find chain with chainId >" + chainId+"<");
+		throw new StructureException("did not find chain with chainId \"" + chainId + "\"" + " for PDB id " + pdb_id);
 
 	}
 
@@ -705,11 +705,12 @@ public class StructureImpl implements Structure, Serializable {
             this.sites = sites;
     }
 
-    /**
+    /** Caution: we should probably remove this to avoid confusion. Currently this is always an empty list!
      *
      * @return a list of Groups listed in the HET records - this will not
      * include any waters.
      */
+    
     public List<Group> getHetGroups() {
         return hetAtoms;
     }
@@ -750,5 +751,29 @@ public class StructureImpl implements Structure, Serializable {
     public PDBCrystallographicInfo getCrystallographicInfo() {
     	return crystallographicInfo;
     }
+
+	@Override
+	public String getIdentifier() {
+		return pdb_id;
+	}
+
+	@Override
+	public String getPdbId() {
+		return pdb_id;
+	}
+
+	@Override
+	public List<ResidueRange> getResidueRanges() {
+		List<ResidueRange> range = new ArrayList<ResidueRange>();
+		for (Chain chain : getChains()) {
+			range.add(ResidueRange.parse(pdb_id + "." + chain.getChainID()));
+		}
+		return range;
+	}
+
+	@Override
+	public List<String> getRanges() {
+		return ResidueRange.toStrings(getResidueRanges());
+	}
 
 }

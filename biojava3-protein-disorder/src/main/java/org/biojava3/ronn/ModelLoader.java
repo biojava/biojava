@@ -166,7 +166,7 @@ public final class ModelLoader {
 			    "ISO-8859-1"));
 	    String line = null;
 	    final Scanner scan = new Scanner(bfr);
-	    scan.useDelimiter("\n");
+	    scan.useDelimiter(System.getProperty("line.separator"));
 	    final int numberOfSeqs = scan.nextInt();
 	    final Model model = new Model(i, numberOfSeqs);
 	    // ignore this one, its always 19 defined in RonnConstrain

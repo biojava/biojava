@@ -8,10 +8,12 @@
   </parent>
   <groupId>org.biojava3</groupId>
   <artifactId>integrationtest</artifactId>
+  <packaging>jar</packaging>
   <name>integrationtest</name>
   <url>http://www.biojava.org</url>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.build.targetEncoding>UTF-8</project.build.targetEncoding>
   </properties>
   <dependencies>
     <dependency>
@@ -47,4 +49,5 @@ mvn verify</description>
       </plugin>
     </plugins>
   </build>
+ 
 </project>
