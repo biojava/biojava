@@ -50,6 +50,7 @@ public class GeneName implements Serializable, Comparable<GeneName>{
 	String refseqIds;
 	String uniprot;
 	String omimId;
+	String ensemblGeneId;
 	
 	public String getHgncId() {
 		return hgncId;
@@ -118,16 +119,11 @@ public class GeneName implements Serializable, Comparable<GeneName>{
 		this.uniprot = uniprot;
 	}
 	
-	
-	@Override
-	public String toString() {
-		return "GeneName [hgncId=" + hgncId + ", approvedSymbol="
-				+ approvedSymbol + ", approvedName=" + approvedName
-				+ ", status=" + status + ", previousSymbols=" + previousSymbols
-				+ ", previousNames=" + previousNames + ", synonyms=" + synonyms
-				+ ", chromosome=" + chromosome + ", accessionNr=" + accessionNr
-				+ ", refseqIds=" + refseqIds + ", uniprot=" + uniprot
-				+ ", omimId=" + omimId + "]";
+	public String getEnsemblGeneId() {
+		return ensemblGeneId;
+	}
+	public void setEnsemblGeneId(String ensemblGeneId) {
+		this.ensemblGeneId = ensemblGeneId;
 	}
 	public String getOmimId() {
 		return omimId;
@@ -140,5 +136,19 @@ public class GeneName implements Serializable, Comparable<GeneName>{
 		return hgncId.compareTo(o.getHgncId());
 	}
 	
+	public boolean equals(GeneName o){
+		return hgncId.equals(o.getHgncId());
+	}
+	@Override
+	public String toString() {
+		return "GeneName [hgncId=" + hgncId + ", approvedSymbol="
+				+ approvedSymbol + ", approvedName=" + approvedName
+				+ ", status=" + status + ", previousSymbols=" + previousSymbols
+				+ ", previousNames=" + previousNames + ", synonyms=" + synonyms
+				+ ", chromosome=" + chromosome + ", accessionNr=" + accessionNr
+				+ ", refseqIds=" + refseqIds + ", uniprot=" + uniprot
+				+ ", omimId=" + omimId + ", ensemblGeneId=" + ensemblGeneId
+				+ "]";
+	}
 	
 }

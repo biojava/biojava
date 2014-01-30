@@ -40,7 +40,8 @@ import org.biojava3.core.util.InputStreamProvider;
  *
  */
 public class GeneNamesParser {
-	public static final String DEFAULT_GENENAMES_URL = "http://www.genenames.org/cgi-bin/download?title=HGNC+output+data&hgnc_dbtag=on&col=gd_hgnc_id&col=gd_app_sym&col=gd_app_name&col=gd_status&col=gd_prev_sym&col=gd_prev_name&col=gd_aliases&col=gd_pub_chrom_map&col=gd_pub_acc_ids&col=md_mim_id&col=gd_pub_refseq_ids&col=md_prot_id&status=Approved&status_opt=2&where=((gd_pub_chrom_map%20not%20like%20%27%patch%%27%20and%20gd_pub_chrom_map%20not%20like%20%27%ALT_REF%%27)%20or%20gd_pub_chrom_map%20IS%20NULL)%20and%20gd_locus_group%20%3d%20%27protein-coding%20gene%27&order_by=gd_app_sym_sort&format=text&limit=&submit=submit&.cgifields=&.cgifields=chr&.cgifields=status&.cgifields=hgnc_dbtag";
+	public static final String DEFAULT_GENENAMES_URL = "http://www.genenames.org/cgi-bin/download?title=HGNC+output+data&hgnc_dbtag=on&col=gd_hgnc_id&col=gd_app_sym&col=gd_app_name&col=gd_status&col=gd_prev_sym&col=gd_prev_name&col=gd_aliases&col=gd_pub_chrom_map&col=gd_pub_acc_ids&col=md_mim_id&col=gd_pub_refseq_ids&col=md_ensembl_id&col=md_prot_id" +
+			 "&status=Approved&status_opt=2&where=((gd_pub_chrom_map%20not%20like%20%27%patch%%27%20and%20gd_pub_chrom_map%20not%20like%20%27%ALT_REF%%27)%20or%20gd_pub_chrom_map%20IS%20NULL)%20and%20gd_locus_group%20%3d%20%27protein-coding%20gene%27&order_by=gd_app_sym_sort&format=text&limit=&submit=submit&.cgifields=&.cgifields=chr&.cgifields=status&.cgifields=hgnc_dbtag";
 
 	/** parses a file from the genenames website 
 	 *    
@@ -90,7 +91,9 @@ public class GeneNamesParser {
 		ArrayList<GeneName> geneNames = new ArrayList<GeneName>();
 		BufferedReader reader = new BufferedReader(new InputStreamReader(inStream));
 		
-		String line = null;
+		// skip reading first line (it is the legend)
+		String line = reader.readLine();
+		
 		while ((line = reader.readLine()) != null) {
 			// process line...
 			//System.out.println(Arrays.toString(line.split("\t")));
@@ -117,8 +120,8 @@ public class GeneNamesParser {
 		
 		String[] s = line.split("\t");
 		
-		if ( s.length != 12) {
-			System.err.println("WARNING line does not contain 12 data items but " + s.length+"."  );
+		if ( s.length != 13) {
+			System.err.println("WARNING line does not contain 13 data items but " + s.length+"."  );
 			System.err.println(line.replaceAll("\t", "|---|"));
 			return null;
 		}
@@ -135,7 +138,8 @@ public class GeneNamesParser {
 		gn.setAccessionNr(s[8]);
 		gn.setOmimId(s[9]);
 		gn.setRefseqIds(s[10]);
-		gn.setUniprot(s[11]);
+		gn.setEnsemblGeneId(s[11]);
+		gn.setUniprot(s[12]);
 		
 		
 		return gn;
