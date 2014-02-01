@@ -54,13 +54,13 @@ public class FileConvert {
 	// Locale should be english, e.g. in DE separator is "," -> PDB files have "." !
 	static DecimalFormat d3 = (DecimalFormat)NumberFormat.getInstance(java.util.Locale.UK);
 	static {
-		d3.setMaximumIntegerDigits(3);
+		d3.setMaximumIntegerDigits(4);
 		d3.setMinimumFractionDigits(3);
 		d3.setMaximumFractionDigits(3);
 	}
 	static DecimalFormat d2 = (DecimalFormat)NumberFormat.getInstance(java.util.Locale.UK);
 	static {
-		d2.setMaximumIntegerDigits(2);
+		d2.setMaximumIntegerDigits(3);
 		d2.setMinimumFractionDigits(2);
 		d2.setMaximumFractionDigits(2);
 	}
