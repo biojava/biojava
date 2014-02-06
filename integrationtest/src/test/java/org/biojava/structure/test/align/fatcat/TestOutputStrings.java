@@ -17,7 +17,7 @@
  *
  */
 
-package org.biojava.bio.structure.align.fatcat;
+package org.biojava.structure.test.align.fatcat;
 
 
 import junit.framework.TestCase;

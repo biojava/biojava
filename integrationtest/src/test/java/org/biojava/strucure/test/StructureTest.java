@@ -1,4 +1,4 @@
-package org.biojava.bio.structure;
+package org.biojava.strucure.test;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -7,6 +7,19 @@ import java.util.Map;
 
 import junit.framework.TestCase;
 
+import org.biojava.bio.structure.AminoAcid;
+import org.biojava.bio.structure.Atom;
+import org.biojava.bio.structure.Calc;
+import org.biojava.bio.structure.Chain;
+import org.biojava.bio.structure.Compound;
+import org.biojava.bio.structure.Element;
+import org.biojava.bio.structure.Group;
+import org.biojava.bio.structure.PDBHeader;
+import org.biojava.bio.structure.SSBond;
+import org.biojava.bio.structure.SVDSuperimposer;
+import org.biojava.bio.structure.StandardAminoAcid;
+import org.biojava.bio.structure.Structure;
+import org.biojava.bio.structure.StructureException;
 import org.biojava.bio.structure.io.FileParsingParameters;
 import org.biojava.bio.structure.io.PDBFileParser;
 import org.biojava.bio.structure.jama.Matrix;

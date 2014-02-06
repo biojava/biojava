@@ -17,7 +17,7 @@
  *
  */
 
-package org.biojava.bio.structure.align.fatcat;
+package org.biojava.structure.test.align.fatcat;
 
 import org.biojava.bio.structure.Atom;
 import org.biojava.bio.structure.Chain;
@@ -27,6 +27,8 @@ import org.biojava.bio.structure.StructureException;
 import org.biojava.bio.structure.StructureImpl;
 import org.biojava.bio.structure.StructureTools;
 import org.biojava.bio.structure.align.StructureAlignment;
+import org.biojava.bio.structure.align.fatcat.FatCatFlexible;
+import org.biojava.bio.structure.align.fatcat.FatCatRigid;
 import org.biojava.bio.structure.align.fatcat.calc.FatCatParameters;
 import org.biojava.bio.structure.align.model.AFPChain;
 import org.biojava.bio.structure.align.xml.AFPChainXMLConverter;

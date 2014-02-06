@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.biojava.bio.structure.align.ce;
+package org.biojava.structure.test.align.ce;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -12,6 +12,10 @@ import org.biojava.bio.structure.Atom;
 import org.biojava.bio.structure.StructureException;
 import org.biojava.bio.structure.StructureTools;
 import org.biojava.bio.structure.align.StructureAlignmentFactory;
+import org.biojava.bio.structure.align.ce.CeCPMain;
+import org.biojava.bio.structure.align.ce.CeMain;
+import org.biojava.bio.structure.align.ce.OptimalCECPMain;
+import org.biojava.bio.structure.align.ce.OptimalCECPParameters;
 import org.biojava.bio.structure.align.model.AFPChain;
 import org.biojava.bio.structure.align.util.AtomCache;
 

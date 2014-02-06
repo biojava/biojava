@@ -1,4 +1,4 @@
-package org.biojava.bio.structure.util;
+package org.biojava.structure.test.util;
 
 import junit.framework.TestCase;
 

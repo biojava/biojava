@@ -22,34 +22,31 @@
  *
  */
 
-package org.biojava.bio.structure.align.fatcat;
+package org.biojava.structure.test.align.fatcat;
 
 import java.io.IOException;
 
-
 import org.biojava.bio.structure.Atom;
-
 import org.biojava.bio.structure.Calc;
 import org.biojava.bio.structure.SVDSuperimposer;
 import org.biojava.bio.structure.StructureTools;
-
 import org.biojava.bio.structure.StructureException;
-
 import org.biojava.bio.structure.align.StructureAlignment;
 import org.biojava.bio.structure.align.StructureAlignmentFactory;
-
 import org.biojava.bio.structure.align.ce.CeMain;
+import org.biojava.bio.structure.align.fatcat.FatCatFlexible;
+import org.biojava.bio.structure.align.fatcat.FatCatRigid;
 import org.biojava.bio.structure.align.model.AFPChain;
 import org.biojava.bio.structure.align.model.AfpChainWriter;
 import org.biojava.bio.structure.align.seq.SmithWaterman3Daligner;
 import org.biojava.bio.structure.align.util.AFPAlignmentDisplay;
 import org.biojava.bio.structure.align.util.AFPChainScorer;
 import org.biojava.bio.structure.align.util.AtomCache;
-
 import org.biojava.bio.structure.align.xml.AFPChainFlipper;
 import org.biojava.bio.structure.align.xml.AFPChainXMLConverter;
 import org.biojava.bio.structure.align.xml.AFPChainXMLParser;
 import org.biojava.bio.structure.jama.Matrix;
+
 
 
 

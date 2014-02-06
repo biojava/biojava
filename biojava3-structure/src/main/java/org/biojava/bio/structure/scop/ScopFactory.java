@@ -144,6 +144,7 @@ public class ScopFactory {
 	 * @param forceLocalData Whether to use a local installation or a remote installation
 	 */
 	public static void setScopDatabase(String version, boolean forceLocalData) {
+		//System.out.println("ScopFactory: Setting ScopDatabase to version: " + version + " forced local: " + forceLocalData);
 		getSCOP(version,forceLocalData);
 		DEFAULT_VERSION = version;
 	}
@@ -153,7 +154,7 @@ public class ScopFactory {
 	 * @param scop
 	 */
 	public static void setScopDatabase(ScopDatabase scop){
-		//System.out.println("Setting ScopDatabase to type: " + scop.getClass().getName());
+		//System.out.println("ScopFactory: Setting ScopDatabase to type: " + scop.getClass().getName());
 		DEFAULT_VERSION = scop.getScopVersion();
 		versionedScopDBs.put(DEFAULT_VERSION,scop);
 	}

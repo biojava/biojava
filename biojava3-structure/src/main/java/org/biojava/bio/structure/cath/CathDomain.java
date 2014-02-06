@@ -28,13 +28,17 @@ package org.biojava.bio.structure.cath;
  */
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import org.biojava.bio.structure.ResidueRange;
+import org.biojava.bio.structure.StructureIdentifier;
 
 /**
  * A class which represents a single CATH domain.
  */
-public class CathDomain implements Serializable {
+public class CathDomain implements Serializable, StructureIdentifier {
 
     public static final long serialVersionUID = 1L;
 
@@ -152,9 +156,30 @@ public class CathDomain implements Serializable {
         this.domainName = domainName;
     }
 
+    /**
+     * Returns a string of the form {@code PDBID.CHAIN}.
+     * For example: {@code 1hiv.A}.
+     * @deprecated This method is poorly named; use {@link #getThePdbId()} or {@link #getPdbIdAndChain()} instead
+     */
+    @Deprecated
     public String getPdbId() {
-        return domainName.substring(0, 4) +
-                (!domainName.substring(4, 5).equals("0") ? "." + domainName.substring(4, 5) : ""); //TODO ask about
+         return getPdbIdAndChain();
+    }
+    
+    /**
+     * Returns the PDB ID.
+     */
+    public String getThePdbId() {
+    	return domainName.substring(0, 4);
+    }
+    
+    /**
+     * Returns a string of the form {@code PDBID.CHAIN}.
+     * For example: {@code 1hiv.A}.
+     */
+    public String getPdbIdAndChain() {
+    	return domainName.substring(0, 4) +
+                (!domainName.substring(4, 5).equals("0") ? "." + domainName.substring(4, 5) : "");
     }
 
     public Integer getDomainId() {
@@ -396,10 +421,24 @@ public class CathDomain implements Serializable {
 				+ "]";
 	}
 
-//    @Override
-//    public String toString() {
-//    	StringBuffer buf = new StringBuffer();
-//    	buf.append("CathDomain " + domainName + " ");
-//    }
+	@Override
+	public String getIdentifier() {
+		return getThePdbId() + "." + ResidueRange.toString(getResidueRanges());
+	}
+
+	@Override
+	public List<ResidueRange> getResidueRanges() {
+		List<ResidueRange> ranges = new ArrayList<ResidueRange>();
+		String chain = String.valueOf(getDomainName().charAt(getDomainName().length() - 3));
+		for (CathSegment segment : this.getSegments()) {
+			ranges.add(new ResidueRange(chain, segment.getStart(), segment.getStop()));
+		}
+		return ranges;
+	}
+
+	@Override
+	public List<String> getRanges() {
+		return ResidueRange.toStrings(getResidueRanges());
+	}
 
 }

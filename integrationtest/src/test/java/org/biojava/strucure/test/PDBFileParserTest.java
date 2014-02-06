@@ -22,7 +22,7 @@
  * Author: Jules Jacobsen
  * 
  */
-package org.biojava.bio.structure;
+package org.biojava.strucure.test;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -32,11 +32,18 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.biojava.bio.structure.Atom;
+import org.biojava.bio.structure.Chain;
+import org.biojava.bio.structure.ChainImpl;
+import org.biojava.bio.structure.Group;
+import org.biojava.bio.structure.JournalArticle;
+import org.biojava.bio.structure.Site;
+import org.biojava.bio.structure.Structure;
+import org.biojava.bio.structure.StructureTools;
 import org.biojava.bio.structure.align.util.AtomCache;
 import org.biojava.bio.structure.io.FileParsingParameters;
 import org.biojava.bio.structure.io.PDBFileParser;
-import org.biojava.bio.structure.util.StringManipulationTestsHelper;
-
+import org.biojava.structure.test.util.StringManipulationTestsHelper;
 
 import junit.framework.TestCase;
 

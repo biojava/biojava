@@ -23,7 +23,10 @@
 
 package org.biojava.bio.structure;
 
+import java.io.IOException;
 import java.util.List;
+
+import org.biojava.bio.structure.align.util.AtomCache;
 
 /**
  * An arbitrary collection of residues in a {@link Structure}.
@@ -31,21 +34,34 @@ import java.util.List;
  */
 public class SubstructureIdentifier implements StructureIdentifier {
 
-	private String pdbId;
-	private List<ResidueRange> ranges;
+	private final String pdbId;
+	private final List<ResidueRange> ranges;
 	
 	public SubstructureIdentifier(String pdbId, List<ResidueRange> ranges) {
 		this.pdbId = pdbId;
 		this.ranges = ranges;
 	}
 
-	public SubstructureIdentifier(String id) {
-		// TODO Auto-generated constructor stub
+	public SubstructureIdentifier(String id, AtomCache cache) throws IOException, StructureException {
+		if (id.contains(".")) {
+			this.pdbId = id.split("\\.")[0];
+		} else {
+			this.pdbId = id;
+		}
+		AtomPositionMap map = new AtomPositionMap(cache.getAtoms(pdbId));
+		if (id.contains("_")) {
+			String[] s = id.split("\\.");
+			this.ranges = ResidueRange.parseMultiple(s[1], map);
+		} else {
+//			this.ranges = new ArrayList<ResidueRange>();
+			this.ranges = map.getRanges();
+		}
 	}
 
 	@Override
 	public String getIdentifier() {
-		return ResidueRange.toString(ranges);
+		if (ranges.isEmpty()) return pdbId;
+		return pdbId + "." + ResidueRange.toString(ranges);
 	}
 
 	@Override
@@ -63,4 +79,9 @@ public class SubstructureIdentifier implements StructureIdentifier {
 		return ResidueRange.toStrings(ranges);
 	}
 
+	@Override
+	public String toString() {
+		return getIdentifier();
+	}
+	
 }

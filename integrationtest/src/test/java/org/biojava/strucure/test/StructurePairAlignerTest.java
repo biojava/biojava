@@ -20,11 +20,12 @@
  * Created on Jun 8, 2007
  *
  */
-package org.biojava.bio.structure;
+package org.biojava.strucure.test;
 
 import java.io.IOException;
 import java.io.InputStream;
 
+import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.align.StructurePairAligner;
 import org.biojava.bio.structure.align.pairwise.AlternativeAlignment;
 import org.biojava.bio.structure.io.PDBFileParser;

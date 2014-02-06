@@ -20,21 +20,22 @@
  * Created on Jan 25, 2010
  *
  */
-package org.biojava.bio.structure;
+package org.biojava.strucure.test;
 
 import java.io.InputStream;
 
 import junit.framework.TestCase;
 
+import org.biojava.bio.structure.Atom;
 import org.biojava.bio.structure.align.StructureAlignment;
 import org.biojava.bio.structure.align.StructureAlignmentFactory;
 import org.biojava.bio.structure.align.ce.CeMain;
-import org.biojava.bio.structure.align.fatcat.FlipAFPChainTest;
 import org.biojava.bio.structure.align.model.AFPChain;
 import org.biojava.bio.structure.align.util.AtomCache;
 import org.biojava.bio.structure.align.xml.AFPChainXMLConverter;
 import org.biojava.bio.structure.align.xml.AFPChainXMLParser;
-import org.biojava.bio.structure.util.StringManipulationTestsHelper;
+import org.biojava.structure.test.align.fatcat.FlipAFPChainTest;
+import org.biojava.structure.test.util.StringManipulationTestsHelper;
 import org.biojava3.core.util.StringManipulationHelper;
 
 /** This test makes sure that the new representation of selenocysteins as SEC amino acids does not

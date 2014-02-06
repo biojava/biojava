@@ -64,7 +64,7 @@ public class JFatCatClient {
 	static final boolean debug = false;
 
 	public static void main(String[] args){
-		//System.out.println(hasPrecalculatedResult("http://emmy.rcsb.org/jfatcatserver/align/", "jCE Circular Permutation", "1CDG.A", "1TIM.A"));
+		//System.out.println(hasPrecalculatedResult("http://source.rcsb.org/jfatcatserver/align/", "jCE Circular Permutation", "1CDG.A", "1TIM.A"));
 		AtomCache cache = new AtomCache();
 		String name1= "2W72.A";
 		String name2= "1D2Z.D";
@@ -76,7 +76,7 @@ public class JFatCatClient {
 			
 			int timeout = 10000;
 
-			String testServer = "http://emmy.rcsb.org/jfatcatserver/align/";
+			String testServer = "http://source.rcsb.org/jfatcatserver/align/";
 			
 			System.out.println(getAFPChainFromServer(testServer, FatCatRigid.algorithmName, name1, name2, ca1, ca2, timeout));
 
@@ -84,6 +84,7 @@ public class JFatCatClient {
 			
 			System.out.println(msg);
 
+			System.out.println(getRepresentatives(FarmJobParameters.DEFAULT_SERVER_URL, 40));
 		} catch (Exception e){
 			e.printStackTrace();
 		}
@@ -390,6 +391,8 @@ public class JFatCatClient {
 			cutoff = 40;
 		int timeout = getTimeout();
 		String u = String.format(representURL,cutoff);
+		
+		System.out.println(u);
 		try {
 			URL url = new URL(u);
 

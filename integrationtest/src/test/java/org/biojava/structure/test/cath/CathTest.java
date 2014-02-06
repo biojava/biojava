@@ -21,7 +21,7 @@
  * Date:   2012-6-25
  */
 
-package org.biojava.bio.structure.cath;
+package org.biojava.structure.test.cath;
 
 import junit.framework.TestCase;
 

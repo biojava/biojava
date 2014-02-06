@@ -198,7 +198,7 @@ public class ScopDomain implements Serializable, Cloneable, StructureIdentifier 
 
 	@Override
 	public String getIdentifier() {
-		return pdbId + ResidueRange.toString(getResidueRanges());
+		return pdbId + "." + ResidueRange.toString(getResidueRanges());
 	}
 
 	@Override

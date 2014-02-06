@@ -22,15 +22,20 @@
  *
  */
 
-package org.biojava.bio.structure;
+package org.biojava.strucure.test;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
-
 import junit.framework.TestCase;
 
+import org.biojava.bio.structure.Chain;
+import org.biojava.bio.structure.Group;
+import org.biojava.bio.structure.GroupType;
+import org.biojava.bio.structure.Site;
+import org.biojava.bio.structure.Structure;
+import org.biojava.bio.structure.StructureTools;
 import org.biojava.bio.structure.align.util.AtomCache;
 import org.biojava.bio.structure.io.FileParsingParameters;
 import org.biojava.bio.structure.io.PDBFileParser;
