@@ -188,7 +188,8 @@ public class InputStreamProvider {
 
       else if ( fileName.endsWith(".zip")){
 
-         ZipFile zipfile = new ZipFile(f);
+         @SuppressWarnings("resource")
+		ZipFile zipfile = new ZipFile(f);
 
          // stream to first entry is returned ...
          ZipEntry entry;
@@ -204,7 +205,8 @@ public class InputStreamProvider {
 
       else if ( fileName.endsWith(".jar")) {
 
-         JarFile jarFile = new JarFile(f);
+         @SuppressWarnings("resource")
+		JarFile jarFile = new JarFile(f);
 
          // stream to first entry is returned
          JarEntry entry;

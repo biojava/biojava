@@ -1,6 +1,7 @@
 package org.biojava3.core.sequence;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
@@ -8,8 +9,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-
-import junit.framework.Assert;
 
 import org.biojava3.core.exceptions.CompoundNotFoundError;
 import org.biojava3.core.sequence.compound.AmbiguityDNACompoundSet;
@@ -250,10 +249,10 @@ public class DNATest {
     public void sequenceEquality() {
         DNASequence d = getSeq("ATGC");
         assertTrue("Asserting sequences are identical", SequenceMixin.sequenceEquality(d, d));
-        Assert.assertFalse("Sequence identical but case different", SequenceMixin.sequenceEquality(d, getSeq("ATGc")));
+        assertFalse("Sequence identical but case different", SequenceMixin.sequenceEquality(d, getSeq("ATGc")));
         assertTrue("Asserting sequences are identical ignoring case", SequenceMixin.sequenceEqualityIgnoreCase(d, d));
         assertTrue("Asserting sequences are identical ignoring case & case different", SequenceMixin.sequenceEqualityIgnoreCase(d, getSeq("aTgC")));
-        Assert.assertFalse("Sequence lengths differ", SequenceMixin.sequenceEquality(d, getSeq("ATG")));
+        assertFalse("Sequence lengths differ", SequenceMixin.sequenceEquality(d, getSeq("ATG")));
 
         DNASequence bsr = new DNASequence(new TwoBitSequenceReader<NucleotideCompound>("ATGC", DNACompoundSet.getDNACompoundSet()));
         DNASequence bsrCI = new DNASequence(new TwoBitSequenceReader<NucleotideCompound>("ATGc", DNACompoundSet.getDNACompoundSet()));
