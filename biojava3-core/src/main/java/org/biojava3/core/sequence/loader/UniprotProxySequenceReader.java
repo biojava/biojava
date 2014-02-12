@@ -292,8 +292,7 @@ public class UniprotProxySequenceReader<C extends Compound> implements ProxySequ
 
         }
 
-        if ( System.getProperty("http.agent") == null) 
-        	System.getProperty("http.agent", "BioJava");
+
         
         // http://www.uniprot.org/uniprot/?query=SORBIDRAFT_03g027040&format=xml
         if (sb.length() == 0) {
@@ -302,7 +301,7 @@ public class UniprotProxySequenceReader<C extends Compound> implements ProxySequ
             logger.info("Loading " + uniprotURL);
             URL uniprot = new URL(uniprotURL);
             URLConnection uniprotConnection = uniprot.openConnection();
-            
+            uniprotConnection.setRequestProperty("User-Agent", "BioJava");
             BufferedReader in = new BufferedReader(
                     new InputStreamReader(
                     uniprotConnection.getInputStream()));
