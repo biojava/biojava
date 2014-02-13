@@ -4,7 +4,7 @@
 <table>
     <tr>
         <td>
-            <img src="https://raw.github.com/biojava/biojava3-tutorial/tree/master/structure/img/4hhb_jmol.png"/>
+            <img src="https://raw.github.com/biojava/biojava3-tutorial/master/structure/img/4hhb_jmol.png"/>
         </td>
         <td>
             The <i>protein structure modules</i> of BioJava provide an API that allows to 
