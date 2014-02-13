@@ -12,7 +12,7 @@
                 <li>Maintain local installations of PDB</li>
                 <li>Load structures and manipulate them</li>
                 <li>Perform standard analysis such as sequence and structure alignments</li>
-                <li>[Visualize structures](https://github.com/biojava/biojava/tree/master/biojava3-structure-gui)</li>
+                <li><a href="https://github.com/biojava/biojava/tree/master/biojava3-structure-gui">Visualize structures</a></li>
             </ul>
         </td>
     </tr>
