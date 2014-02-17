@@ -44,11 +44,12 @@ public class BerkeleyScopInstallationTest extends ScopDatabaseTest {
 		ScopInstallation scop;
 
 		for(String version : new String[] {
-				//ScopFactory.LATEST_VERSION,
-				//ScopFactory.VERSION_1_75A,
-				//ScopFactory.VERSION_1_75B,
+				// All versions should pass, but comment most out for test performance.
+				ScopFactory.LATEST_VERSION,
+				//"1.75A",
+				//ScopFactory.VERSION_2_0_2,
 				ScopFactory.VERSION_1_75,
-				ScopFactory.VERSION_1_73,
+				//ScopFactory.VERSION_1_73,
 		}) {
 			scop = new BerkeleyScopInstallation();
 			scop.setScopVersion(version);
