@@ -70,14 +70,18 @@ public class ScopInstallation implements LocalScopDatabase {
 
 	protected String scopVersion;
 	
+	// Stores URLs for cla, des, hie, and com files
+	private final List<ScopURLs> mirrors;
+
+	// Cache filenames (with version appended)
 	public static final String claFileName = "dir.cla.scop.txt_";
 	public static final String desFileName = "dir.des.scop.txt_";
 	public static final String hieFileName = "dir.hie.scop.txt_";
 	public static final String comFileName = "dir.com.scop.txt_";
 
+	// Download locations
 	public static final String SCOP_DOWNLOAD = "http://scop.mrc-lmb.cam.ac.uk/scop/parse/";
-
-	protected String scopDownloadURL ;
+	public static final String SCOP_DOWNLOAD_ALTERNATE = "http://scop.berkeley.edu/downloads/parse/";
 	
 	public static final String NEWLINE;
 	public static final String FILESPLIT ;
@@ -100,6 +104,7 @@ public class ScopInstallation implements LocalScopDatabase {
 	Map<Integer, ScopDescription> sunidMap;
 	Map<Integer, ScopNode> scopTree;
 
+
 	/** Create a new SCOP installation. 
 	 * 
 	 * @param cacheLocation where the SCOP files are stored. If they can't be found at that location they will get automatically downloaded and installed there. 
@@ -118,9 +123,8 @@ public class ScopInstallation implements LocalScopDatabase {
 		installedCom.set(false);
 
 		scopVersion = DEFAULT_VERSION;
-		scopDownloadURL = SCOP_DOWNLOAD;
-		
-		
+		mirrors = new ArrayList<ScopURLs>(1);
+
 		domainMap = new HashMap<String, List<ScopDomain>>();
 
 		sunidMap  = new HashMap<Integer, ScopDescription>();
@@ -154,7 +158,7 @@ public class ScopInstallation implements LocalScopDatabase {
 				e.printStackTrace();
 				installedCla.set(false);
 				return;
-			}			
+			}
 		} 
 
 		try {
@@ -195,7 +199,7 @@ public class ScopInstallation implements LocalScopDatabase {
 
 
 	}
-	
+
 	public void ensureComInstalled() {
 
 		if ( installedCom.get()) {
@@ -694,46 +698,86 @@ public class ScopInstallation implements LocalScopDatabase {
 	}
 
 	protected void downloadClaFile() throws FileNotFoundException, IOException{
-		String remoteFilename = claFileName + scopVersion;
-		URL url = new URL(scopDownloadURL + remoteFilename);
+		if(mirrors.size()<1) {
+			initScopURLs();
+		}
+		for(ScopURLs mirror:mirrors) {
+			try {
+				URL url = new URL(mirror.getClaURL(scopVersion));
 
-		String localFileName = getClaFilename();
-		File localFile = new File(localFileName);
+				String localFileName = getClaFilename();
+				File localFile = new File(localFileName);
 
-		downloadFileFromRemote(url, localFile);
-
+				downloadFileFromRemote(url, localFile);
+				break;
+			} catch(IOException e ) {
+				continue;
+			}
+		}
+		throw new IOException("Unable to download SCOP .cla file");
 	}
 
 	protected void downloadDesFile() throws FileNotFoundException, IOException{
-		String remoteFilename = desFileName + scopVersion;
-		URL url = new URL(scopDownloadURL + remoteFilename);
+		if(mirrors.size()<1) {
+			initScopURLs();
+		}
+		for(ScopURLs mirror:mirrors) {
+			try {
+				URL url = new URL(mirror.getDesURL( scopVersion));
 
-		String localFileName = getDesFilename();
-		File localFile = new File(localFileName);
+				String localFileName = getDesFilename();
+				File localFile = new File(localFileName);
 
-		downloadFileFromRemote(url, localFile);
-
+				downloadFileFromRemote(url, localFile);
+				break;
+			} catch(IOException e ) {
+				continue;
+			}
+		}
+		throw new IOException("Unable to download SCOP .des file");
 	}
 
 	protected void downloadHieFile() throws FileNotFoundException, IOException{
-		String remoteFilename = hieFileName + scopVersion;
-		URL url = new URL(scopDownloadURL + remoteFilename);
+		if(mirrors.size()<1) {
+			initScopURLs();
+		}
+		for(ScopURLs mirror:mirrors) {
+			try {
+				URL url = new URL(mirror.getHieURL( scopVersion));
 
-		String localFileName = getHieFilename();
-		File localFile = new File(localFileName);
+				String localFileName = getHieFilename();
+				File localFile = new File(localFileName);
 
-		downloadFileFromRemote(url, localFile);
+				downloadFileFromRemote(url, localFile);
+				break;
+			} catch(IOException e ) {
+				continue;
+			}
+		}
+		throw new IOException("Unable to download SCOP .hie file");
 
 	}
 
 	protected void downloadComFile() throws FileNotFoundException, IOException{
-		String remoteFilename = comFileName + scopVersion;
-		URL url = new URL(scopDownloadURL + remoteFilename);
+		if(mirrors.size()<1) {
+			initScopURLs();
+		}
+		for(ScopURLs mirror:mirrors) {
+			try {
+				URL url = new URL(mirror.getComURL(scopVersion));
 
-		String localFileName = getComFilename();
-		File localFile = new File(localFileName);
+				String localFileName = getComFilename();
+				File localFile = new File(localFileName);
 
-		downloadFileFromRemote(url, localFile);
+				downloadFileFromRemote(url, localFile);
+				break;
+			} catch(IOException e ) {
+				continue;
+			}
+		}
+		throw new IOException("Unable to download SCOP .com file");
+
+
 	}
 
 	protected void downloadFileFromRemote(URL remoteURL, File localFile) throws FileNotFoundException, IOException{
@@ -828,12 +872,31 @@ public class ScopInstallation implements LocalScopDatabase {
 	}
 	
 
+	/**
+	 * Get the URL of the first scop mirror being used
+	 * @return
+	 */
+	@Deprecated
 	public String getScopDownloadURL() {
-		return scopDownloadURL;
+		if(mirrors.size()<1) initScopURLs();
+		return mirrors.get(0).getRootURL();
 	}
 
+	/**
+	 * @param scopDownloadURL URL to load
+	 * @deprecated Use {@link #addMirror} instead
+	 */
+	@Deprecated
 	public void setScopDownloadURL(String scopDownloadURL) {
-		this.scopDownloadURL = scopDownloadURL;
+		mirrors.clear();
+		mirrors.add(new ScopURLs(scopDownloadURL));
+	}
+	
+	public void addMirror(String scopDownloadURL) {
+		mirrors.add(new ScopURLs(scopDownloadURL));
+	}
+	void addMirror(ScopURLs scopURLs) {
+		mirrors.add(scopURLs);
 	}
 
 	/* (non-Javadoc)
@@ -885,5 +948,22 @@ public class ScopInstallation implements LocalScopDatabase {
 		ensureComInstalled();
 		if (!commentsMap.containsKey(sunid)) return new ArrayList<String>(1);
 		return commentsMap.get(sunid);
+	}
+	
+
+	private void initScopURLs() {
+		if(this.mirrors.size() > 0) {
+			return;
+		}
+
+		// first, try default scop
+		ScopURLs primary = new ScopURLs();
+		// If unreachable, try alternate Berkeley location
+		ScopURLs alt = new ScopURLs(
+				SCOP_DOWNLOAD_ALTERNATE,
+				"dir.cla.scop.%s.txt","dir.des.scop.%s.txt",
+				"dir.hie.scop.%s.txt","dir.com.scop.%s.txt");
+		mirrors.add(primary);
+		mirrors.add(alt);
 	}
 }
