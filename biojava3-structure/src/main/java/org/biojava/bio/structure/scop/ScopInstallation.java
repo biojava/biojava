@@ -701,6 +701,7 @@ public class ScopInstallation implements LocalScopDatabase {
 		if(mirrors.size()<1) {
 			initScopURLs();
 		}
+		IOException exception = null;
 		for(ScopURLs mirror:mirrors) {
 			try {
 				URL url = new URL(mirror.getClaURL(scopVersion));
@@ -709,18 +710,20 @@ public class ScopInstallation implements LocalScopDatabase {
 				File localFile = new File(localFileName);
 
 				downloadFileFromRemote(url, localFile);
-				break;
+				return;
 			} catch(IOException e ) {
+				exception = e;
 				continue;
 			}
 		}
-		throw new IOException("Unable to download SCOP .cla file");
+		throw new IOException("Unable to download SCOP .cla file",exception);
 	}
 
 	protected void downloadDesFile() throws FileNotFoundException, IOException{
 		if(mirrors.size()<1) {
 			initScopURLs();
 		}
+		IOException exception = null;
 		for(ScopURLs mirror:mirrors) {
 			try {
 				URL url = new URL(mirror.getDesURL( scopVersion));
@@ -729,18 +732,20 @@ public class ScopInstallation implements LocalScopDatabase {
 				File localFile = new File(localFileName);
 
 				downloadFileFromRemote(url, localFile);
-				break;
+				return;
 			} catch(IOException e ) {
+				exception = e;
 				continue;
 			}
 		}
-		throw new IOException("Unable to download SCOP .des file");
+		throw new IOException("Unable to download SCOP .des file",exception);
 	}
 
 	protected void downloadHieFile() throws FileNotFoundException, IOException{
 		if(mirrors.size()<1) {
 			initScopURLs();
 		}
+		IOException exception = null;
 		for(ScopURLs mirror:mirrors) {
 			try {
 				URL url = new URL(mirror.getHieURL( scopVersion));
@@ -749,12 +754,13 @@ public class ScopInstallation implements LocalScopDatabase {
 				File localFile = new File(localFileName);
 
 				downloadFileFromRemote(url, localFile);
-				break;
+				return;
 			} catch(IOException e ) {
+				exception = e;
 				continue;
 			}
 		}
-		throw new IOException("Unable to download SCOP .hie file");
+		throw new IOException("Unable to download SCOP .hie file",exception);
 
 	}
 
@@ -762,6 +768,7 @@ public class ScopInstallation implements LocalScopDatabase {
 		if(mirrors.size()<1) {
 			initScopURLs();
 		}
+		IOException exception = null;
 		for(ScopURLs mirror:mirrors) {
 			try {
 				URL url = new URL(mirror.getComURL(scopVersion));
@@ -770,14 +777,13 @@ public class ScopInstallation implements LocalScopDatabase {
 				File localFile = new File(localFileName);
 
 				downloadFileFromRemote(url, localFile);
-				break;
+				return;
 			} catch(IOException e ) {
+				exception = e;
 				continue;
 			}
 		}
-		throw new IOException("Unable to download SCOP .com file");
-
-
+		throw new IOException("Unable to download SCOP .com file",exception);
 	}
 
 	protected void downloadFileFromRemote(URL remoteURL, File localFile) throws FileNotFoundException, IOException{
