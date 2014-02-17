@@ -1,5 +1,8 @@
 package org.biojava.bio.structure.scop;
 
+import java.net.URI;
+import java.net.URISyntaxException;
+
 import org.biojava.bio.structure.io.util.FileDownloadUtils;
 
 /**
@@ -63,9 +66,15 @@ class ScopURLs {
 	public boolean isReachable() {
 		final int timeout = 200;
 		if(rootURL != null) {
-			return FileDownloadUtils.ping(rootURL,timeout);
+			return FileDownloadUtils.ping(getRootURL(),timeout);
 		} else {
-			return FileDownloadUtils.ping(claURL,timeout);
+			try {
+				URI cla = new URI(getClaURL("VERSION"));
+				String host = cla.getHost();
+				return FileDownloadUtils.ping(host,timeout);
+			} catch (URISyntaxException e) {
+				return false;
+			}
 		}			
 	}
 }
