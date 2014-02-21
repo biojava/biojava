@@ -904,6 +904,12 @@ public class ScopInstallation implements LocalScopDatabase {
 	void addMirror(ScopMirror scopURLs) {
 		mirrors.add(scopURLs);
 	}
+	List<ScopMirror> getMirrors() {
+		if(mirrors.isEmpty()) {
+			this.initScopURLs();
+		}
+		return mirrors;
+	}
 
 	/* (non-Javadoc)
 	 * @see org.biojava.bio.structure.scop.ScopDatabase#getScopDomainsBySunid(java.lang.Integer)

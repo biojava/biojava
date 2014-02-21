@@ -23,6 +23,7 @@ package org.biojava.bio.structure.scop;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import org.junit.Assume;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
@@ -53,6 +54,16 @@ public class BerkeleyScopInstallationTest extends ScopDatabaseTest {
 		}) {
 			scop = new BerkeleyScopInstallation();
 			scop.setScopVersion(version);
+			// Don't fail if the server is down
+			boolean reachable = false;
+			for(ScopMirror mirror: scop.getMirrors()) {
+				if(mirror.isReachable()) {
+					reachable = true;
+					break;
+				}
+			}
+			Assume.assumeTrue("SCOP server is currently unreachable.",reachable);
+
 			databases.add(new Object[] {version, scop});
 		}
 		return databases;
