@@ -71,7 +71,7 @@ public class ScopInstallation implements LocalScopDatabase {
 	protected String scopVersion;
 	
 	// Stores URLs for cla, des, hie, and com files
-	private final List<ScopURLs> mirrors;
+	private final List<ScopMirror> mirrors;
 
 	// Cache filenames (with version appended)
 	public static final String claFileName = "dir.cla.scop.txt_";
@@ -123,7 +123,7 @@ public class ScopInstallation implements LocalScopDatabase {
 		installedCom.set(false);
 
 		scopVersion = DEFAULT_VERSION;
-		mirrors = new ArrayList<ScopURLs>(1);
+		mirrors = new ArrayList<ScopMirror>(1);
 
 		domainMap = new HashMap<String, List<ScopDomain>>();
 
@@ -702,7 +702,7 @@ public class ScopInstallation implements LocalScopDatabase {
 			initScopURLs();
 		}
 		IOException exception = null;
-		for(ScopURLs mirror:mirrors) {
+		for(ScopMirror mirror:mirrors) {
 			try {
 				URL url = new URL(mirror.getClaURL(scopVersion));
 
@@ -724,7 +724,7 @@ public class ScopInstallation implements LocalScopDatabase {
 			initScopURLs();
 		}
 		IOException exception = null;
-		for(ScopURLs mirror:mirrors) {
+		for(ScopMirror mirror:mirrors) {
 			try {
 				URL url = new URL(mirror.getDesURL( scopVersion));
 
@@ -746,7 +746,7 @@ public class ScopInstallation implements LocalScopDatabase {
 			initScopURLs();
 		}
 		IOException exception = null;
-		for(ScopURLs mirror:mirrors) {
+		for(ScopMirror mirror:mirrors) {
 			try {
 				URL url = new URL(mirror.getHieURL( scopVersion));
 
@@ -769,7 +769,7 @@ public class ScopInstallation implements LocalScopDatabase {
 			initScopURLs();
 		}
 		IOException exception = null;
-		for(ScopURLs mirror:mirrors) {
+		for(ScopMirror mirror:mirrors) {
 			try {
 				URL url = new URL(mirror.getComURL(scopVersion));
 
@@ -895,13 +895,13 @@ public class ScopInstallation implements LocalScopDatabase {
 	@Deprecated
 	public void setScopDownloadURL(String scopDownloadURL) {
 		mirrors.clear();
-		mirrors.add(new ScopURLs(scopDownloadURL));
+		mirrors.add(new ScopMirror(scopDownloadURL));
 	}
 	
 	public void addMirror(String scopDownloadURL) {
-		mirrors.add(new ScopURLs(scopDownloadURL));
+		mirrors.add(new ScopMirror(scopDownloadURL));
 	}
-	void addMirror(ScopURLs scopURLs) {
+	void addMirror(ScopMirror scopURLs) {
 		mirrors.add(scopURLs);
 	}
 
@@ -963,9 +963,9 @@ public class ScopInstallation implements LocalScopDatabase {
 		}
 
 		// first, try default scop
-		ScopURLs primary = new ScopURLs();
+		ScopMirror primary = new ScopMirror();
 		// If unreachable, try alternate Berkeley location
-		ScopURLs alt = new ScopURLs(
+		ScopMirror alt = new ScopMirror(
 				SCOP_DOWNLOAD_ALTERNATE,
 				"dir.cla.scop.%s.txt","dir.des.scop.%s.txt",
 				"dir.hie.scop.%s.txt","dir.com.scop.%s.txt");
