@@ -51,13 +51,13 @@ public class BerkeleyScopInstallation extends ScopInstallation {
 	public BerkeleyScopInstallation() {
 		super();
 		setScopVersion(defaultBerkeleyScopVersion);
-		addMirror(new BerkeleyScopURLs(defaultBerkeleyDownloadURL));
-		addMirror(new ScopURLs());
+		addMirror(new BerkeleyScopMirror(defaultBerkeleyDownloadURL));
+		addMirror(new ScopMirror());
 	}
 
-	private static class BerkeleyScopURLs extends ScopURLs {
+	private static class BerkeleyScopMirror extends ScopMirror {
 		private String rootURL;
-		public BerkeleyScopURLs(String url) {
+		public BerkeleyScopMirror(String url) {
 			super(url);
 			rootURL = url;
 		}

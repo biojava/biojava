@@ -12,7 +12,7 @@ import org.biojava.bio.structure.io.util.FileDownloadUtils;
  * @author Spencer Bliven
  *
  */
-class ScopURLs {
+class ScopMirror {
 	private String rootURL;
 	private final String claURL;
 	private final String desURL;
@@ -20,7 +20,7 @@ class ScopURLs {
 	private final String comURL;
 		
 	/** Specify all keys individually */
-	public ScopURLs(String claURL, String desURL,
+	public ScopMirror(String claURL, String desURL,
 			String hieURL, String comURL) {
 		this.rootURL = null;
 		this.claURL = claURL;
@@ -29,18 +29,18 @@ class ScopURLs {
 		this.comURL = comURL;
 	}
 	/** Specify a common root URL which is concatenated with individual filenames */
-	public ScopURLs(String url, String claURL, String desURL,
+	public ScopMirror(String url, String claURL, String desURL,
 			String hieURL, String comURL) {
 		this(url+claURL, url+desURL, url+hieURL, url+comURL);
 		this.rootURL = url;
 	}
-	public ScopURLs(String url) {
+	public ScopMirror(String url) {
 		this(url,
 				"dir.cla.scop.txt_%s","dir.des.scop.txt_%s",
 				"dir.hie.scop.txt_%s","dir.com.scop.txt_%s");
 	}
 	/** Use default MRC location */
-	public ScopURLs() {
+	public ScopMirror() {
 		this(ScopInstallation.SCOP_DOWNLOAD);
 	}
 	
