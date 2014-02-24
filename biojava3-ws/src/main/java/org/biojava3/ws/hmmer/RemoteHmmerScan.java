@@ -57,6 +57,7 @@ public class RemoteHmmerScan implements HmmerScan {
 		HttpURLConnection connection = (HttpURLConnection) serviceLocation.openConnection();
 		connection.setDoOutput(true);
 		connection.setDoInput(true);
+		connection.setConnectTimeout(15000); // 15 sec
 		connection.setInstanceFollowRedirects(false);
 		connection.setRequestMethod("POST");
 		connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
