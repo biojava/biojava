@@ -92,7 +92,7 @@ public class OptimalCECPParameters extends CeParameters {
 		return params;
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("rawtypes")
 	public List<Class> getUserConfigTypes() {
 		List<Class> params = super.getUserConfigTypes();
 		params.add(Boolean.class);

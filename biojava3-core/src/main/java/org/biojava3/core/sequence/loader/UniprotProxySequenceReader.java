@@ -292,12 +292,16 @@ public class UniprotProxySequenceReader<C extends Compound> implements ProxySequ
 
         }
 
+
+        
         // http://www.uniprot.org/uniprot/?query=SORBIDRAFT_03g027040&format=xml
         if (sb.length() == 0) {
-            String uniprotURL = getUniprotbaseURL() + "/uniprot/?query=" + key + "&format=xml";
+        	String uniprotURL = getUniprotbaseURL() + "/uniprot/?query=" + key + "&format=xml";
+        	//String uniprotURL = getUniprotbaseURL() + "/uniprot/" + key + ".xml";
             logger.info("Loading " + uniprotURL);
             URL uniprot = new URL(uniprotURL);
             URLConnection uniprotConnection = uniprot.openConnection();
+            uniprotConnection.setRequestProperty("User-Agent", "BioJava");
             BufferedReader in = new BufferedReader(
                     new InputStreamReader(
                     uniprotConnection.getInputStream()));
@@ -382,7 +386,7 @@ public class UniprotProxySequenceReader<C extends Compound> implements ProxySequ
     }
 
     public static void main(String[] args) {
-
+    	
         try {
             UniprotProxySequenceReader<AminoAcidCompound> uniprotSequence = new UniprotProxySequenceReader<AminoAcidCompound>("YA745_GIBZE", AminoAcidCompoundSet.getAminoAcidCompoundSet());
             ProteinSequence proteinSequence = new ProteinSequence(uniprotSequence);
