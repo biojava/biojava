@@ -270,25 +270,6 @@ public class HetatomImpl implements Group,Serializable {
 
 		}
 		
-		// if here, we could not find the atom in this group.
-		// however in some alternate locations, the CA atoms are displayed.
-		// check the alternate locations...
-		
-		if ( hasAltLoc()) {
-			for ( Group alt : altLocs){
-				try {
-					a = alt.getAtom(name);
-					// dirty hack
-					// we are adding this group to the main one...
-					addAtom(a);
-					if ( a != null)
-						return a;
-				} catch (StructureException e){
-					// does not have that atom, ignore.
-				}
-			}
-		}
-
 		throw new StructureException(" No atom "+name + " in group " + pdb_name + " " + residueNumber  + " !");
 
 	}
@@ -338,15 +319,6 @@ public class HetatomImpl implements Group,Serializable {
 		a = atomSingleCharLookup.get(fullName.trim());
 		if ( a != null)
 			return true;
-
-		// check altLocs:
-		
-		if ( hasAltLoc()){
-			for (Group alt: altLocs){
-				if ( alt.hasAtom(fullName))
-					return true;
-			}
-		}
 		
 		return false;
 
@@ -647,4 +619,32 @@ public class HetatomImpl implements Group,Serializable {
 	public boolean isWater() {
 		return WATERNAMES.contains(pdb_name);
 	}
+	
+	/** attempts to reduce the memory imprint of this group by trimming 
+	 * all internal Collection objects to the required size.
+	 * 
+	 */
+	@SuppressWarnings("rawtypes")
+	public void trimToSize(){
+		
+		if ( atoms instanceof ArrayList) {
+			ArrayList myatoms = (ArrayList) atoms;
+			myatoms.trimToSize();
+		}
+		if ( altLocs instanceof ArrayList){
+			ArrayList myAltLocs = (ArrayList) altLocs;
+			myAltLocs.trimToSize();
+		}
+		atomLookup = new  HashMap<String,Atom>(atomLookup);
+		atomSingleCharLookup = new HashMap<String,Atom>(atomLookup);
+		
+		if ( hasAltLoc()) {
+			for (Group alt : getAltLocs()){
+				alt.trimToSize();
+			}
+		}
+			
+		
+	}
+	
 }

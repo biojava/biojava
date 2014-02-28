@@ -180,28 +180,57 @@ public class TestAltLocs extends TestCase {
 
 			Group g = a.getGroupByPDB( ResidueNumber.fromString("27"));
 
+			System.out.println(g);
+			for (Atom as: g.getAtoms()) {
+				System.out.println(as);
+			}
 			
-			//TODO: complete this test 
-//			System.out.println(g);
-//			for (Atom atom : g.getAtoms()) {
-//				System.out.print(atom.toPDB());
-//			}
-//			
-//			
-//			int pos = 0;
-//			for (Group alt: g.getAltLocs()) {
-//				pos++;
-////				System.out.println("altLoc: " + pos + " " + alt);
-////				for (Atom atom : alt.getAtoms()) {
-////					System.out.print(atom.toPDB());
-////				}
-//			}
+			testCBAtomInMainGroup(g);
+
+			AtomCache cache = new AtomCache();
+			cache.setUseMmCif(true);
 			
+			Structure s1 = cache.getStructure("1AAC");
+			Chain a1 = s1.getChainByPDB("A");
+
+			Group g1 = a1.getGroupByPDB( ResidueNumber.fromString("27"));
+
+			testCBAtomInMainGroup(g1);
+
+
+
+			//			int pos = 0;
+			//			for (Group alt: g.getAltLocs()) {
+			//				pos++;
+			//				System.out.println("altLoc: " + pos + " " + alt);
+			//				for (Atom atom : alt.getAtoms()) {
+			//					System.out.print(atom.toPDB());
+			//				}
+			//			}
+
 		} catch (Exception e){
 			e.printStackTrace();
 			fail(e.getMessage());
 		}
 
+
+	}
+
+	private void testCBAtomInMainGroup(Group g) {
+		// test position of C-beta
+
+		boolean cbInMain = false;
+
+		for (Atom atom : g.getAtoms()) {
+			System.out.print(atom.toPDB());
+			if ( atom.getFullName().equals(StructureTools.caAtomName)){
+
+				cbInMain = true;
+				break;
+			}
+		}
+
+		assertTrue("Did not find C beta atom in main group",cbInMain);
 
 	}
 
