@@ -1,5 +1,6 @@
 package org.biojava.bio.structure;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import junit.framework.TestCase;
@@ -179,12 +180,6 @@ public class TestAltLocs extends TestCase {
 			Chain a = s.getChainByPDB("A");
 
 			Group g = a.getGroupByPDB( ResidueNumber.fromString("27"));
-
-			System.out.println(g);
-			for (Atom as: g.getAtoms()) {
-				System.out.println(as);
-			}
-			
 			testCBAtomInMainGroup(g);
 
 			AtomCache cache = new AtomCache();
@@ -222,7 +217,7 @@ public class TestAltLocs extends TestCase {
 		boolean cbInMain = false;
 
 		for (Atom atom : g.getAtoms()) {
-			System.out.print(atom.toPDB());
+			//System.out.print(atom.toPDB());
 			if ( atom.getFullName().equals(StructureTools.caAtomName)){
 
 				cbInMain = true;
@@ -234,4 +229,51 @@ public class TestAltLocs extends TestCase {
 
 	}
 
+
+	public void test3PIU(){
+
+
+		try {
+			
+			Structure structure = StructureIO.getStructure("3PIU");
+			
+			assertNotNull(structure);
+			
+			Atom[] ca = StructureTools.getAtomCAArray(structure);
+			
+			//System.out.println(structure.getPdbId() + " has # CA atoms: " + ca.length);
+			
+			List<Atom> caList = new ArrayList<Atom>();
+			for ( Chain c: structure.getChains()){
+				for (Group g: c.getAtomGroups()){
+					List<Atom> atoms = g.getAtoms();
+					boolean caInMain = false;
+					for (Atom a: atoms){
+						
+						if ( a.getFullName().equals(StructureTools.caAtomName)) {
+							caList.add(a);
+							caInMain = true;
+							break;
+							
+						}
+						
+						
+					}
+					if (! caInMain && g.hasAtom(StructureTools.caAtomName)){
+						// g.hasAtom checks altLocs
+						fail("CA is not in main group, but in altLoc");
+					}
+					
+				}
+			}
+			
+			assertTrue(ca.length == caList.size());
+
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			fail(e.getMessage());
+		}
+
+	}
 }
