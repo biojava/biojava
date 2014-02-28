@@ -65,7 +65,7 @@ public class StructureTools {
 
 	public static final String oAtomName = "O";
 
-	public static final String cbAtomName = "CB";
+	public static final String cbAtomName = " CB ";
 
 
 	/** The names of the Atoms that form the backbone.

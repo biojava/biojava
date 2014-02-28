@@ -382,6 +382,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 			// add previous data
 			if ( current_chain != null ) {
 				current_chain.addGroup(current_group);
+				current_group.trimToSize();
 			}
 
 			// we came to the beginning of a new NMR model
@@ -480,7 +481,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		if ( ! residueNumber.equals(current_group.getResidueNumber())) {
 			//System.out.println("end of residue: "+current_group.getPDBCode()+" "+residueNrInt);
 			current_chain.addGroup(current_group);
-
+			current_group.trimToSize();
 			current_group = getNewGroup(recordName,aminoCode1,seq_id,groupCode3);
 			//current_group.setPDBCode(pdbCode);
 			try {
@@ -538,6 +539,14 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 			current_group.addAtom(a);
 		}
 
+
+		// make sure that main group has all atoms
+		// GitHub issue: #76
+		if ( ! current_group.hasAtom(a.getFullName())) {
+			current_group.addAtom(a);
+		}
+		
+		
 		//System.out.println(">" + atom.getLabel_atom_id()+"< " + a.getGroup().getPDBName() + " " + a.getGroup().getChemComp()  );
 
 		//System.out.println(current_group);
