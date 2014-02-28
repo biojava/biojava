@@ -252,8 +252,8 @@ public class HetatomImpl implements Group,Serializable {
 		if ( a != null)
 			return a;
 
-		for (int i=0;i<atoms.size();i++){
-			Atom atom = atoms.get(i);
+		for (Atom atom : atoms){
+			
 
 			if ( name.length() > 2) {
 
@@ -261,16 +261,23 @@ public class HetatomImpl implements Group,Serializable {
 					return atom;
 				}
 			}
+			//System.out.println(atom.getName() + " " + name + " " + atom.getName().equals(name));
 			if (atom.getName().equals(name)){
 				if ( name.equals("CA")) {
 					if (atom.getElement().equals(Element.C))
 						return atom;
-				}   
+				} else {
+					return atom;
+				}
+				
 			}
 
 		}
 		
-		throw new StructureException(" No atom "+name + " in group " + pdb_name + " " + residueNumber  + " !");
+		
+		
+		
+		throw new StructureException(" No atom >"+name + "< in group " + pdb_name + " " + residueNumber  + " !");
 
 	}
 
@@ -322,13 +329,6 @@ public class HetatomImpl implements Group,Serializable {
 		
 		return false;
 
-		//       for (int i=0;i<atoms.size();i++){
-		//            Atom atom = atoms.get(i);
-		//            if (atom.getName().equals(name)){
-		//                return true;
-		//            }
-		//        }
-		//        return false ;
 	}
 
 	/**
