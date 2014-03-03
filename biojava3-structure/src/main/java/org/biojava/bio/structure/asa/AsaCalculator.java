@@ -1,10 +1,23 @@
-package org.biojava.bio.structure;
+package org.biojava.bio.structure.asa;
 
 import java.util.ArrayList;
+import java.util.TreeMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import javax.vecmath.Point3d;
+
+import org.biojava.bio.structure.AminoAcid;
+import org.biojava.bio.structure.Atom;
+import org.biojava.bio.structure.Calc;
+import org.biojava.bio.structure.Element;
+import org.biojava.bio.structure.Group;
+import org.biojava.bio.structure.GroupType;
+import org.biojava.bio.structure.NucleotideImpl;
+import org.biojava.bio.structure.ResidueNumber;
+import org.biojava.bio.structure.Structure;
+import org.biojava.bio.structure.StructureException;
+import org.biojava.bio.structure.StructureTools;
 
 
 
@@ -76,14 +89,16 @@ public class AsaCalculator {
 	private double cons;
 	
 	/**
-	 * Constructs a new AsaCalculator. Subsequently call {@link #calculateAsa()}
-	 * to calculate the ASAs.
+	 * Constructs a new AsaCalculator. Subsequently call {@link #calculateAsas()}
+	 * or {@link #getGroupAsas()} to calculate the ASAs 
+	 * Only non-Hydrogen atoms are considered in the calculation.  
 	 * @param structure
 	 * @param probe
 	 * @param nSpherePoints
 	 * @param nThreads
 	 * @param hetAtoms if true HET residues are considered, if false they aren't, equivalent to 
 	 * NACCESS' -h option 
+	 * @see StructureTools.getAllNonHAtomArray
 	 */
 	public AsaCalculator(Structure structure, double probe, int nSpherePoints, int nThreads, boolean hetAtoms) {
 		this.atoms = StructureTools.getAllNonHAtomArray(structure, hetAtoms);
@@ -103,8 +118,8 @@ public class AsaCalculator {
 	}
 	
 	/**
-	 * Constructs a new AsaCalculator. Subsequently call {@link #calculateAsa()}
-	 * to calculate the ASAs.
+	 * Constructs a new AsaCalculator. Subsequently call {@link #calculateAsas()}
+	 * or {@link #getGroupAsas()} to calculate the ASAs.
 	 * @param atoms an array of atoms not containing Hydrogen atoms
 	 * @param probe the probe size
 	 * @param nSpherePoints the number of points to be used in generating the spherical 
@@ -135,12 +150,40 @@ public class AsaCalculator {
 	}
 	
 	/**
+	 * Calculates ASA for all atoms and return them as a GroupAsa 
+	 * array (one element per residue in structure) containing ASAs per residue
+	 * and per atom. 
+	 * The sorting of Groups in returned array is as specified by {@link org.biojava.bio.structure.ResidueNumber}
+	 * @return
+	 */
+	public GroupAsa[] getGroupAsas() {
+		
+		TreeMap<ResidueNumber, GroupAsa> asas = new TreeMap<ResidueNumber, GroupAsa>();
+		
+		double[] asasPerAtom = calculateAsas();
+
+		for (int i=0;i<atoms.length;i++) {
+			Group g = atoms[i].getGroup();
+			if (!asas.containsKey(g.getResidueNumber())) {
+				GroupAsa groupAsa = new GroupAsa(g);				
+				groupAsa.addAtomAsaU(asasPerAtom[i]);
+				asas.put(g.getResidueNumber(), groupAsa);
+			} else {
+				GroupAsa groupAsa = asas.get(g.getResidueNumber());
+				groupAsa.addAtomAsaU(asasPerAtom[i]);
+			}
+		}
+		
+		return (GroupAsa[]) asas.values().toArray(new GroupAsa[asas.size()]);			
+	}
+	
+	/**
 	 * Calculates the Accessible Surface Areas for the atoms given in constructor and with parameters given.
 	 * Beware that the parallel implementation is quite memory hungry. It scales well as long as there is
 	 * enough memory available. 
 	 * @return an array with asa values corresponding to each atom of the input array
 	 */
-	public double[] calculateAsa() {
+	public double[] calculateAsas() {
 		
 		double[] asas = new double[atoms.length];
 
@@ -333,7 +376,7 @@ public class AsaCalculator {
 					atomCode.equals("CG1") || atomCode.equals("CG2")) {
 				return TETRAHEDRAL_CARBON_VDW;							// tetrahedral Carbon
 			}
-			// left cases depend on amino acid: CD, CD1, CD2, CG
+			// the rest of the cases (CD, CD1, CD2, CG) depend on amino acid
 			else {				
 				switch (aa) {
 					case 'F':						

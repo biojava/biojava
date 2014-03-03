@@ -297,23 +297,6 @@ public class StructureTools {
 		List<Atom> atoms = new ArrayList<Atom>();
 
 		
-//		for (Chain chain:s.getChains()) {
-//			for (Group alt:chain.getAtomGroups()) {
-//				if (!hetAtoms && alt.getType().equals(GroupType.HETATM)) continue;
-//				List<Group> alllocs = alt.getAltLocs();
-//				alllocs.add(alt);
-//				for(Group res: alllocs) {
-//					
-//					for (Atom atom:res.getAtoms()) {
-//						if (atom.getAltLoc()==' ' || atom.getAltLoc()=='A'){
-//							atoms.add(atom);
-//						}
-//					}
-//				}
-//			}
-//		}
-		
-		
 		AtomIterator iter = new AtomIterator(s);
 		while (iter.hasNext()){
 			Atom a = iter.next();
