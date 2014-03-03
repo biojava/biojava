@@ -27,10 +27,14 @@ public class TestBond extends TestCase {
 		
 		StructureIO.setAtomCache(cache);
 		
-		s = StructureIO.getStructure("1kh9");
+		
 	}
 	
-	public void testIntraResidueBonds() throws StructureException {
+	public void testIntraResidueBonds() throws StructureException, IOException {
+		
+		if ( s == null)
+			s = StructureIO.getStructure("1kh9");
+		
 		Group g = s.getChainByPDB("A").getSeqResGroup(274);
 		Atom cg = g.getAtom("CG");
 
@@ -50,7 +54,9 @@ public class TestBond extends TestCase {
 		}
 	}
 	
-	public void testPeptideBonds() throws StructureException {
+	public void testPeptideBonds() throws StructureException, IOException {
+		if ( s == null)
+			s = StructureIO.getStructure("1kh9");
 		AminoAcidImpl residue1 = (AminoAcidImpl) s.getChainByPDB("A").getSeqResGroup(273);
 		AminoAcidImpl residue2 = (AminoAcidImpl) s.getChainByPDB("A").getSeqResGroup(274);
 		
@@ -60,7 +66,9 @@ public class TestBond extends TestCase {
 		assertTrue(areBonded(carboxylC, aminoN));
 	}
 	
-	public void testLINKBonds() throws StructureException {
+	public void testLINKBonds() throws StructureException, IOException {
+		if ( s == null)
+			s = StructureIO.getStructure("1kh9");
 		Atom atom1 = s.getChainByPDB("A").getSeqResGroup(50).getAtom("OD1");
 		Atom atom2 = s.getChainByPDB("A").getAtomGroup(446).getAtom("MG");
 		assertNotNull(atom1);
@@ -68,14 +76,18 @@ public class TestBond extends TestCase {
 		assertTrue(areBonded(atom1, atom2));
 	}
 	
-	public void testDisulfideBonds() throws StructureException {
+	public void testDisulfideBonds() throws StructureException, IOException {
+		if ( s == null)
+			s = StructureIO.getStructure("1kh9");
 		Atom atom1 = s.getChainByPDB("A").getSeqResGroup(177).getAtom("SG");
 		Atom atom2 = s.getChainByPDB("A").getSeqResGroup(167).getAtom("SG");
 		
 		assertTrue(areBonded(atom1, atom2));
 	}
 	
-	public void testLigandBonds() throws StructureException {
+	public void testLigandBonds() throws StructureException, IOException {
+		if ( s == null)
+			s = StructureIO.getStructure("1kh9");
 		Atom phosphateP = s.getChainByPDB("A").getAtomGroup(447).getAtom("P");
 		Atom phosphateO = s.getChainByPDB("A").getAtomGroup(447).getAtom("O1");
 		
