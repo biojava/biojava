@@ -52,13 +52,11 @@ import org.biojava.bio.structure.StructureImpl;
 import org.biojava.bio.structure.StructureTools;
 import org.biojava.bio.structure.UnknownPdbAminoAcidException;
 import org.biojava.bio.structure.io.FileParsingParameters;
-
 import org.biojava.bio.structure.io.PDBParseException;
 import org.biojava.bio.structure.io.SeqRes2AtomAligner;
 import org.biojava.bio.structure.io.mmcif.model.AtomSite;
 import org.biojava.bio.structure.io.mmcif.model.AuditAuthor;
 import org.biojava.bio.structure.io.mmcif.model.ChemComp;
-
 import org.biojava.bio.structure.io.mmcif.model.ChemCompAtom;
 import org.biojava.bio.structure.io.mmcif.model.ChemCompBond;
 import org.biojava.bio.structure.io.mmcif.model.ChemCompDescriptor;
@@ -81,6 +79,7 @@ import org.biojava.bio.structure.io.mmcif.model.PdbxStructOperList;
 import org.biojava.bio.structure.io.mmcif.model.Refine;
 import org.biojava.bio.structure.io.mmcif.model.Struct;
 import org.biojava.bio.structure.io.mmcif.model.StructAsym;
+import org.biojava.bio.structure.io.mmcif.model.StructConn;
 import org.biojava.bio.structure.io.mmcif.model.StructKeywords;
 import org.biojava.bio.structure.io.mmcif.model.StructRef;
 import org.biojava.bio.structure.io.mmcif.model.StructRefSeq;
@@ -115,6 +114,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 	List<EntitySrcGen> entitySrcGens;
 	List<EntitySrcNat> entitySrcNats;
 	List<EntitySrcSyn> entitySrcSyns;
+	List<StructConn> structConn;
 
 	Map<String,String> asymStrandId;
 
@@ -677,6 +677,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		entitySrcGens = new ArrayList<EntitySrcGen>();
 		entitySrcNats = new ArrayList<EntitySrcNat>();
 		entitySrcSyns = new ArrayList<EntitySrcSyn>();
+		structConn = new ArrayList<StructConn>();
 	}
 
 
