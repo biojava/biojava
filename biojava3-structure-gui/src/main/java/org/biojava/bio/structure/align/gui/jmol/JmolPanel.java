@@ -58,6 +58,7 @@ import org.jmol.api.JmolAdapter;
 
 import org.jmol.api.JmolStatusListener;
 import org.jmol.api.JmolViewer;
+import org.jmol.util.Logger;
 
 
 public class JmolPanel 
@@ -74,10 +75,13 @@ implements ActionListener
 
 	Structure structure;
 
+	private boolean verbose = false;
+	
 	public JmolPanel() {
 		super();
 		statusListener = new MyJmolStatusListener();
 		adapter = new SmarterJmolAdapter();
+		Logger.setLogLevel( verbose?Logger.LEVEL_INFO:Logger.LEVEL_ERROR);
 		viewer = JmolViewer.allocateViewer(this,
 				adapter,
 				null,null,null,null,
@@ -180,9 +184,8 @@ implements ActionListener
 			return;
 		}
 		
-		JComboBox source = (JComboBox) event.getSource();
+		JComboBox<?> source = (JComboBox<?>) event.getSource();
 		String value = source.getSelectedItem().toString();
-
 
 
 		String selectLigand = "select ligand;wireframe 0.16;spacefill 0.5; color cpk ;";
@@ -275,7 +278,7 @@ implements ActionListener
 			List<String>ranges = domain.getRanges();
 
 			for (String range : ranges){
-				System.out.println(range);
+				if(verbose) System.out.println(range);
 				String[] spl = range.split(":");
 				String script = " select  ";
 				if ( spl.length > 1 )
@@ -284,7 +287,7 @@ implements ActionListener
 					script += "*" + spl[0]+"/1;";
 				script += " color [" + c1.getRed() + ","+c1.getGreen() + "," +c1.getBlue()+"];";
 				script += " color cartoon [" + c1.getRed() + ","+c1.getGreen() + "," +c1.getBlue()+"] ;";
-				System.out.println(script);
+				if(verbose) System.out.println(script);
 				evalString(script);
 
 			}
@@ -294,7 +297,7 @@ implements ActionListener
 	}
 
 	private void colorByPDP() {
-		System.out.println("colorByPDP");
+		if(verbose) System.out.println("colorByPDP");
 		if ( structure == null)
 			return;
 
@@ -318,13 +321,13 @@ implements ActionListener
 					int end = s.getTo();
 					Group startG = ca[start].getGroup();
 					Group endG = ca[end].getGroup();
-					System.out.println("   Segment: " +startG.getResidueNumber() +":" + startG.getChainId() + " - " + endG.getResidueNumber()+":"+endG.getChainId() + " " + s);
+					if(verbose) System.out.println("   Segment: " +startG.getResidueNumber() +":" + startG.getChainId() + " - " + endG.getResidueNumber()+":"+endG.getChainId() + " " + s);
 					String j1 = startG.getResidueNumber()+"";
 					String j2 = endG.getResidueNumber()+":"+endG.getChainId();
 					String script = " select  " +j1 +"-" +j2 +"/1;";
 					script += " color [" + c1.getRed() + ","+c1.getGreen() + "," +c1.getBlue()+"];";
 					script += " color cartoon [" + c1.getRed() + ","+c1.getGreen() + "," +c1.getBlue()+"] ;";
-					//System.out.println(script);
+					if(verbose) System.out.println(script);
 					evalString(script);
 				}
 
@@ -362,6 +365,17 @@ implements ActionListener
 		
 		viewer = null;
 		adapter = null;
+	}
+
+	public boolean isVerbose() {
+		return verbose;
+	}
+
+	public void setVerbose(boolean verbose) {
+		this.verbose = verbose;
+		if(statusListener instanceof MyJmolStatusListener) {
+			((MyJmolStatusListener)statusListener).setVerbose(verbose);
+		}
 	}
 
 }
