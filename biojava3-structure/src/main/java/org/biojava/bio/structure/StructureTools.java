@@ -286,6 +286,30 @@ public class StructureTools {
 		return (Atom[]) atoms.toArray(new Atom[atoms.size()]);	
 	}
 
+	/**
+	 * Returns and array of all non-Hydrogen atoms in the given Structure, 
+	 * optionally including HET atoms or not
+	 * @param s
+	 * @param hetAtoms if true HET atoms are included in array, if false they are not
+	 * @return
+	 */
+	public static final Atom[] getAllNonHAtomArray(Structure s, boolean hetAtoms) {
+		List<Atom> atoms = new ArrayList<Atom>();
+
+		
+		AtomIterator iter = new AtomIterator(s);
+		while (iter.hasNext()){
+			Atom a = iter.next();
+			if (a.getElement()==Element.H) continue;
+			
+			Group g = a.getGroup();
+			
+			if (!hetAtoms && g.getType().equals(GroupType.HETATM)) continue;
+			
+			atoms.add(a);
+		}
+		return (Atom[]) atoms.toArray(new Atom[atoms.size()]);			
+	}
 
 	private static void extractCAatoms(String[] atomNames, List<Chain> chains,
 			List<Atom> atoms) {
