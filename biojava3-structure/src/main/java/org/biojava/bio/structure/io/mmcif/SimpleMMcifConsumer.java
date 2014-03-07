@@ -1598,12 +1598,10 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 
 	}
 
-
-
-
-
-
-
+	@Override
+	public void newStructConn(StructConn structConn) {
+		this.structConn.add(structConn);
+	}
 
 }
 
