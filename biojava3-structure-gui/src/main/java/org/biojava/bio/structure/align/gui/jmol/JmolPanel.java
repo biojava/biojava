@@ -184,7 +184,7 @@ implements ActionListener
 			return;
 		}
 		
-		JComboBox<?> source = (JComboBox<?>) event.getSource();
+		JComboBox source = (JComboBox) event.getSource();
 		String value = source.getSelectedItem().toString();
 
 
