@@ -166,6 +166,19 @@ public class StructureAlignmentDisplay {
          
          Calc.rotate(g,m);
          Calc.shift(g, shift);
+         
+         if (g.hasAltLoc()){
+        	 for (Group alt: g.getAltLocs()){
+        		 for (Atom alta : alt.getAtoms()){
+        			 if ( g.getAtoms().contains(alta))
+        				 continue;
+        			 Calc.rotate(alta,m);
+        			 Calc.shift(alta,shift);
+        		 }
+        	 }
+         }
+         
+         
          twistedGroups[i]=g;
       }
 
