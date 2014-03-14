@@ -490,40 +490,40 @@ public class SimpleMMcifParser implements MMcifParser {
 		if ( category.equals("_entity")){
 
 			Entity e =  (Entity) buildObject(
-					"org.biojava.bio.structure.io.mmcif.model.Entity",
+					Entity.class.getName(),
 					loopFields,lineData);
 			triggerNewEntity(e);
 
 		} else if ( category.equals("_struct")){
 
 			struct =  (Struct) buildObject(
-					"org.biojava.bio.structure.io.mmcif.model.Struct",
+					Struct.class.getName(),
 					loopFields, lineData);
 
 		} else if ( category.equals("_atom_site")){
 
 			AtomSite a = (AtomSite) buildObject(
-					"org.biojava.bio.structure.io.mmcif.model.AtomSite",
+					AtomSite.class.getName(),
 					loopFields, lineData);
 			triggerNewAtomSite(a);
 
 		} else if ( category.equals("_database_PDB_rev")){
 			DatabasePDBrev dbrev = (DatabasePDBrev) buildObject(
-					"org.biojava.bio.structure.io.mmcif.model.DatabasePDBrev",
+					DatabasePDBrev.class.getName(),
 					loopFields, lineData);
 
 			triggerNewDatabasePDBrev(dbrev);
 
 		} else if (  category.equals("_database_PDB_remark")){
 			DatabasePDBremark remark = (DatabasePDBremark) buildObject(
-					"org.biojava.bio.structure.io.mmcif.model.DatabasePDBremark",
+					DatabasePDBremark.class.getName(),
 					loopFields, lineData);
 
 			triggerNewDatabasePDBremark(remark);
 
 		} else if ( category.equals("_exptl")){
 			Exptl exptl  = (Exptl) buildObject(
-					"org.biojava.bio.structure.io.mmcif.model.Exptl",
+					Exptl.class.getName(),
 					loopFields,lineData);
 
 			triggerExptl(exptl);
@@ -544,92 +544,92 @@ public class SimpleMMcifParser implements MMcifParser {
 
 		} else if ( category.equals("_struct_ref")){
 			StructRef sref  = (StructRef) buildObject(
-					"org.biojava.bio.structure.io.mmcif.model.StructRef",
+					StructRef.class.getName(),
 					loopFields,lineData);
 
 			triggerNewStrucRef(sref);
 
 		} else if ( category.equals("_struct_ref_seq")){
 			StructRefSeq sref  = (StructRefSeq) buildObject(
-					"org.biojava.bio.structure.io.mmcif.model.StructRefSeq",
+					StructRefSeq.class.getName(),
 					loopFields,lineData);
 
 			triggerNewStrucRefSeq(sref);
 		} else if ( category.equals("_entity_poly_seq")){
 			EntityPolySeq exptl  = (EntityPolySeq) buildObject(
-					"org.biojava.bio.structure.io.mmcif.model.EntityPolySeq",
+					EntityPolySeq.class.getName(),
 					loopFields,lineData);
 
 			triggerNewEntityPolySeq(exptl);
 		} else if ( category.equals("_entity_src_gen")){
 			EntitySrcGen entitySrcGen = (EntitySrcGen) buildObject(
-					"org.biojava.bio.structure.io.mmcif.model.EntitySrcGen",
+					EntitySrcGen.class.getName(),
 					loopFields,lineData);
 			triggerNewEntitySrcGen(entitySrcGen);
 		} else if ( category.equals("_entity_src_nat")){
 			EntitySrcNat entitySrcNat = (EntitySrcNat) buildObject(
-					"org.biojava.bio.structure.io.mmcif.model.EntitySrcNat",
+					EntitySrcNat.class.getName(),
 					loopFields,lineData);
 			triggerNewEntitySrcNat(entitySrcNat);
 		} else if ( category.equals("_entity_src_syn")){
 			EntitySrcSyn entitySrcSyn = (EntitySrcSyn) buildObject(
-					"org.biojava.bio.structure.io.mmcif.model.EntitySrcSyn",
+					EntitySrcSyn.class.getName(),
 					loopFields,lineData);
 			triggerNewEntitySrcSyn(entitySrcSyn);
 		} else if ( category.equals("_struct_asym")){
 			StructAsym sasym  = (StructAsym) buildObject(
-					"org.biojava.bio.structure.io.mmcif.model.StructAsym",
+					StructAsym.class.getName(),					
 					loopFields,lineData);
 
 			triggerNewStructAsym(sasym);
 
 		} else if ( category.equals("_pdbx_poly_seq_scheme")){
 			PdbxPolySeqScheme ppss  = (PdbxPolySeqScheme) buildObject(
-					"org.biojava.bio.structure.io.mmcif.model.PdbxPolySeqScheme",
+					PdbxPolySeqScheme.class.getName(),
 					loopFields,lineData);
 
 			triggerNewPdbxPolySeqScheme(ppss);
 
 		} else if ( category.equals("_pdbx_nonpoly_scheme")){
 			PdbxNonPolyScheme ppss  = (PdbxNonPolyScheme) buildObject(
-					"org.biojava.bio.structure.io.mmcif.model.PdbxNonPolyScheme",
+					PdbxNonPolyScheme.class.getName(),
 					loopFields,lineData);
 
 			triggerNewPdbxNonPolyScheme(ppss);
 
 		} else if ( category.equals("_pdbx_entity_nonpoly")){
 			PdbxEntityNonPoly pen = (PdbxEntityNonPoly) buildObject(
-					"org.biojava.bio.structure.io.mmcif.model.PdbxEntityNonPoly",
+					PdbxEntityNonPoly.class.getName(),
 					loopFields,lineData
 					);
 			triggerNewPdbxEntityNonPoly(pen);
 		} else if ( category.equals("_struct_keywords")){
 			StructKeywords kw = (StructKeywords)buildObject(
-					"org.biojava.bio.structure.io.mmcif.model.StructKeywords",
+					StructKeywords.class.getName(),
 					loopFields,lineData
 					);
 			triggerNewStructKeywords(kw);
 		} else if (category.equals("_refine")){
 			Refine r = (Refine)buildObject(
-					"org.biojava.bio.structure.io.mmcif.model.Refine",
+					Refine.class.getName(),
 					loopFields,lineData
 					);
 			triggerNewRefine(r);
 		} else if (category.equals("_chem_comp")){
 			ChemComp c = (ChemComp)buildObject(
-					"org.biojava.bio.structure.io.mmcif.model.ChemComp",
+					ChemComp.class.getName(),
 					loopFields, lineData
 					);
 
 			triggerNewChemComp(c);
 		} else if (category.equals("_audit_author")) {
 			AuditAuthor aa = (AuditAuthor)buildObject(
-					"org.biojava.bio.structure.io.mmcif.model.AuditAuthor",
+					AuditAuthor.class.getName(),
 					loopFields, lineData);
 			triggerNewAuditAuthor(aa);
 		} else if (category.equals("_pdbx_chem_comp_descriptor")) {
 			ChemCompDescriptor ccd = (ChemCompDescriptor) buildObject(
-					"org.biojava.bio.structure.io.mmcif.model.ChemCompDescriptor",
+					ChemCompDescriptor.class.getName(),
 					loopFields, lineData);
 			triggerNewChemCompDescriptor(ccd);
 		} else if (category.equals("_pdbx_struct_oper_list")) {
@@ -644,34 +644,34 @@ public class SimpleMMcifParser implements MMcifParser {
 
 		} else if (category.equals("_pdbx_struct_assembly")) {
 			PdbxStructAssembly sa = (PdbxStructAssembly) buildObject(
-					"org.biojava.bio.structure.io.mmcif.model.PdbxStructAssembly",
+					PdbxStructAssembly.class.getName(),
 					loopFields, lineData);			
 			triggerNewPdbxStructAssembly(sa);
 
 		} else if (category.equals("_pdbx_struct_assembly_gen")) {
 			PdbxStructAssemblyGen sa = (PdbxStructAssemblyGen) buildObject(
-					"org.biojava.bio.structure.io.mmcif.model.PdbxStructAssemblyGen",
+					PdbxStructAssemblyGen.class.getName(),
 					loopFields, lineData);			
 			triggerNewPdbxStructAssemblyGen(sa);
 		} else if ( category.equals("_chem_comp_atom")){
 			ChemCompAtom atom = (ChemCompAtom)buildObject(
-					"org.biojava.bio.structure.io.mmcif.model.ChemCompAtom",
+					ChemCompAtom.class.getName(),
 					loopFields,lineData);
 			triggerNewChemCompAtom(atom);
 
 		}else if ( category.equals("_chem_comp_bond")){
 			ChemCompBond bond = (ChemCompBond)buildObject(
-					"org.biojava.bio.structure.io.mmcif.model.ChemCompBond",
+					ChemCompBond.class.getName(),
 					loopFields,lineData);
 			triggerNewChemCompBond(bond);
 		} else if ( category.equals("_pdbx_chem_comp_identifier")){
 			PdbxChemCompIdentifier id = (PdbxChemCompIdentifier)buildObject(
-					"org.biojava.bio.structure.io.mmcif.model.PdbxChemCompIdentifier",
+					PdbxChemCompIdentifier.class.getName(),
 					loopFields,lineData);
 			triggerNewPdbxChemCompIdentifier(id);
 		} else if ( category.equals("_pdbx_chem_comp_descriptor")){
 			PdbxChemCompDescriptor id = (PdbxChemCompDescriptor)buildObject(
-					"org.biojava.bio.structure.io.mmcif.model.PdbxChemCompDescriptor",
+					PdbxChemCompDescriptor.class.getName(),
 					loopFields,lineData);
 			triggerNewPdbxChemCompDescriptor(id);
 		} else if ( category.equals("_struct_conn")){
