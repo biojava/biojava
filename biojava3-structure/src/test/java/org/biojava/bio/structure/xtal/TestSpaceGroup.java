@@ -18,6 +18,9 @@ public class TestSpaceGroup {
 	// use true for printing operators of all space groups (including non-enantiomorphics), or false to print only enantiomorphics
 	private static boolean PRINT_OPERATORS_FROM_ALL_SGS = false;
 	
+	// print information per operator
+	private static boolean VERBOSE = false; 
+	
 	@Test
 	public void testTransfConversion() {
 		Collection<SpaceGroup> allSGs = SymoplibParser.getAllSpaceGroups().values();
@@ -221,7 +224,8 @@ public class TestSpaceGroup {
 				// we only print the enantiomorphic ones, otherwise there's too much output
 				
 				if (spaceGroup.isEnantiomorphic() || PRINT_OPERATORS_FROM_ALL_SGS)
-					System.out.print(
+					if (VERBOSE)
+						System.out.print(
 							String.format("%2d %2d",i,1+i-spaceGroup.getPrimitiveMultiplicity()*(i/spaceGroup.getPrimitiveMultiplicity()))+" "+
 							String.format("%20s",spaceGroup.getTransfAlgebraic(i))+" "+
 							String.format("(%5.2f,%5.2f,%5.2f)",axis.x,axis.y,axis.z)+" "+
@@ -232,8 +236,12 @@ public class TestSpaceGroup {
 				if (ct.getTransformType().isScrew()) { // tests for both screw or glide planes (i.e. a non-zero scre transl component)
 					
 					if (spaceGroup.isEnantiomorphic()  || PRINT_OPERATORS_FROM_ALL_SGS) { 
-						System.out.print(" -- SCREW AXIS");
-						if (foldType==-2) System.out.print(" (GLIDE)");
+						if (VERBOSE)
+							System.out.print(" -- SCREW AXIS");
+						if (foldType==-2) {
+							if (VERBOSE)
+								System.out.print(" (GLIDE)");
+						}
 					}
 					
 						
@@ -250,8 +258,10 @@ public class TestSpaceGroup {
 				if (ct.isPureTranslation()) {
 					Assert.assertEquals(1,foldType);
 
-					if (spaceGroup.isEnantiomorphic()  || PRINT_OPERATORS_FROM_ALL_SGS) 
-						System.out.print(" -- FRACTIONAL TRANSLATION");
+					if (spaceGroup.isEnantiomorphic()  || PRINT_OPERATORS_FROM_ALL_SGS) {
+						if (VERBOSE)
+							System.out.print(" -- FRACTIONAL TRANSLATION");
+					}
 					
 					Assert.assertTrue(ct.isFractionalTranslation());
 					Assert.assertTrue(ct.getTransformType()==TransformType.CELLTRANSL);
@@ -265,9 +275,11 @@ public class TestSpaceGroup {
 				}
 
 				if (spaceGroup.isEnantiomorphic() || PRINT_OPERATORS_FROM_ALL_SGS) {
-					System.out.print(" -- "+ct.getTransformType().getShortName());
+					if (VERBOSE) {
+						System.out.print(" -- "+ct.getTransformType().getShortName());
 
-					System.out.println();
+						System.out.println();
+					}
 					
 				}
 
