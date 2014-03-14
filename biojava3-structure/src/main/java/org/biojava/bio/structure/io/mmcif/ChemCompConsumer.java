@@ -6,6 +6,7 @@ import org.biojava.bio.structure.io.FileParsingParameters;
 import org.biojava.bio.structure.io.mmcif.chem.ResidueType;
 import org.biojava.bio.structure.io.mmcif.model.AtomSite;
 import org.biojava.bio.structure.io.mmcif.model.AuditAuthor;
+import org.biojava.bio.structure.io.mmcif.model.Cell;
 import org.biojava.bio.structure.io.mmcif.model.ChemComp;
 import org.biojava.bio.structure.io.mmcif.model.ChemCompAtom;
 import org.biojava.bio.structure.io.mmcif.model.ChemCompBond;
@@ -33,6 +34,7 @@ import org.biojava.bio.structure.io.mmcif.model.StructConn;
 import org.biojava.bio.structure.io.mmcif.model.StructKeywords;
 import org.biojava.bio.structure.io.mmcif.model.StructRef;
 import org.biojava.bio.structure.io.mmcif.model.StructRefSeq;
+import org.biojava.bio.structure.io.mmcif.model.Symmetry;
 
 public class ChemCompConsumer implements MMcifConsumer {
 
@@ -101,6 +103,14 @@ public class ChemCompConsumer implements MMcifConsumer {
 	public void newExptl(Exptl exptl) {
 		// TODO Auto-generated method stub
 
+	}
+	
+	public void newCell(Cell cell) {
+		// TODO Auto-generated method stub
+	}
+	
+	public void newSymmetry(Symmetry symmetry) {
+		// TODO Auto-generated method stub 
 	}
 
 	public void newPdbxEntityNonPoly(PdbxEntityNonPoly pen) {

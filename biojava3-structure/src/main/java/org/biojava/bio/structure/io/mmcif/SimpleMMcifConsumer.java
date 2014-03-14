@@ -57,6 +57,7 @@ import org.biojava.bio.structure.io.PDBParseException;
 import org.biojava.bio.structure.io.SeqRes2AtomAligner;
 import org.biojava.bio.structure.io.mmcif.model.AtomSite;
 import org.biojava.bio.structure.io.mmcif.model.AuditAuthor;
+import org.biojava.bio.structure.io.mmcif.model.Cell;
 import org.biojava.bio.structure.io.mmcif.model.ChemComp;
 import org.biojava.bio.structure.io.mmcif.model.ChemCompAtom;
 import org.biojava.bio.structure.io.mmcif.model.ChemCompBond;
@@ -84,8 +85,12 @@ import org.biojava.bio.structure.io.mmcif.model.StructConn;
 import org.biojava.bio.structure.io.mmcif.model.StructKeywords;
 import org.biojava.bio.structure.io.mmcif.model.StructRef;
 import org.biojava.bio.structure.io.mmcif.model.StructRefSeq;
+import org.biojava.bio.structure.io.mmcif.model.Symmetry;
 import org.biojava.bio.structure.quaternary.BiologicalAssemblyBuilder;
 import org.biojava.bio.structure.quaternary.BiologicalAssemblyTransformation;
+import org.biojava.bio.structure.xtal.CrystalCell;
+import org.biojava.bio.structure.xtal.SpaceGroup;
+import org.biojava.bio.structure.xtal.SymoplibParser;
 
 /** A MMcifConsumer implementation that build a in-memory representation of the
  * content of a mmcif file as a BioJava Structure object.
@@ -156,18 +161,14 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		return null;
 	}
 
-	@SuppressWarnings("deprecation")
 	public void newStructKeywords(StructKeywords kw){
 		PDBHeader header = structure.getPDBHeader();
 		if ( header == null)
 			header = new PDBHeader();
 		header.setDescription(kw.getPdbx_keywords());
 		header.setClassification(kw.getPdbx_keywords());
-		Map<String, Object> h = structure.getHeader();
-		h.put("classification", kw.getPdbx_keywords());      
 	}
 
-	@SuppressWarnings("deprecation")
 	public void setStruct(Struct struct) {
 		//System.out.println(struct);
 
@@ -182,9 +183,6 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		//header.setDescription(struct.getPdbx_descriptor());
 		//System.out.println(struct.getPdbx_model_details());
 
-		Map<String, Object> h = structure.getHeader();
-		h.put("title", struct.getTitle());
-		//h.put("classification", struct.getPdbx_descriptor());
 
 
 		structure.setPDBHeader(header);
@@ -387,7 +385,6 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 			}
 
 			// we came to the beginning of a new NMR model
-			structure.setNmr(true);
 			structure.addModel(current_model);
 			current_model = new ArrayList<Chain>();
 			current_chain = null;
@@ -1003,12 +1000,10 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		return structure;
 	}
 
-	@SuppressWarnings("deprecation")
 	public void newDatabasePDBrev(DatabasePDBrev dbrev) {
 		//System.out.println("got a database revision:" + dbrev);
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd",Locale.US);
 		PDBHeader header = structure.getPDBHeader();
-		Map<String, Object> h = structure.getHeader();
 
 		if ( header == null) {
 			header = new PDBHeader();
@@ -1024,11 +1019,9 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 				Date dep = dateFormat.parse(date);
 				//System.out.println(dep);
 				header.setDepDate(dep);
-				h.put("depDate", date);
 				Date mod = dateFormat.parse(dbrev.getDate());
 
 				header.setModDate(mod);
-				h.put("revDate",dbrev.getDate());
 
 			} catch (ParseException e){
 				e.printStackTrace();
@@ -1038,7 +1031,6 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 
 				Date mod = dateFormat.parse(dbrev.getDate());
 				header.setModDate(mod);
-				h.put("revDate",dbrev.getDate());
 
 			} catch (ParseException e){
 				e.printStackTrace();
@@ -1048,7 +1040,6 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		structure.setPDBHeader(header);
 	}
 
-	@SuppressWarnings("deprecation")
 	public void newDatabasePDBremark(DatabasePDBremark remark) {
 		//System.out.println(remark);
 		String id = remark.getId();
@@ -1075,10 +1066,6 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 				}
 				// support for old style header
 
-				Map<String,Object> header = structure.getHeader();
-				header.put("resolution",new Float(res));
-				structure.setHeader(header);
-
 				PDBHeader pdbHeader = structure.getPDBHeader();
 				pdbHeader.setResolution(res);
 
@@ -1087,7 +1074,6 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		}
 	}
 
-	@SuppressWarnings("deprecation")
 	public void newRefine(Refine r){
 		// copy the resolution to header
 		PDBHeader pdbHeader = structure.getPDBHeader();
@@ -1096,8 +1082,6 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		} catch (NumberFormatException e){
 			logger.warning("could not parse resolution from " + r.getLs_d_res_high() + " " + e.getMessage());
 		}
-		Map<String,Object> header = structure.getHeader();
-		header.put("resolution",pdbHeader.getResolution());
 	}
 
 
@@ -1137,19 +1121,45 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		}
 	}
 
-	@SuppressWarnings("deprecation")
 	public void newExptl(Exptl exptl) {
 
 		PDBHeader pdbHeader = structure.getPDBHeader();
 		String method = exptl.getMethod();
-		String old = pdbHeader.getTechnique();
-		if ( (old != null) && (! old.equals(""))){
-			method = old+"; " + method;
-		}
-		pdbHeader.setTechnique(method);
-		Map<String,Object> header = structure.getHeader();
-		header.put("technique",method);
+		pdbHeader.setExperimentalTechnique(method);
 
+	}
+	
+	public void newCell(Cell cell) {
+		CrystalCell xtalCell = structure.getPDBHeader().getCrystallographicInfo().getCrystalCell();
+		try {
+			
+			xtalCell.setA(Float.parseFloat(cell.getLength_a()));
+			xtalCell.setB(Float.parseFloat(cell.getLength_b()));
+			xtalCell.setC(Float.parseFloat(cell.getLength_c()));
+			xtalCell.setAlpha(Float.parseFloat(cell.getAngle_alpha()));
+			xtalCell.setBeta(Float.parseFloat(cell.getAngle_beta()));
+			xtalCell.setGamma(Float.parseFloat(cell.getAngle_gamma()));
+			
+			
+			
+		} catch (NumberFormatException e){
+			structure.getPDBHeader().getCrystallographicInfo().setCrystalCell(null);
+			logger.warning("could not parse some cell parameters, ignoring _cell ");
+		}
+		try {
+			// if Z parsing fails it is not so important
+			structure.getPDBHeader().getCrystallographicInfo().setZ(Integer.parseInt(cell.getZ_PDB()));
+		} catch (NumberFormatException e) {
+			logger.warning("could not parse some the Z parameter from _cell ");
+		}
+	}
+	
+	public void newSymmetry(Symmetry symmetry) {
+        String spaceGroup = symmetry.getSpace_group_name_H_M();
+		SpaceGroup sg = SymoplibParser.getSpaceGroup(spaceGroup);
+        if (sg==null) logger.warning("Space group '"+spaceGroup+"' not recognised as a standard space group"); 
+
+		structure.getPDBHeader().getCrystallographicInfo().setSpaceGroup(sg); 
 	}
 
 	public void newStructRef(StructRef sref) {

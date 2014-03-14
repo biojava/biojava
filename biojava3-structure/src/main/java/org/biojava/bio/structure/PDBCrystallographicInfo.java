@@ -2,6 +2,10 @@ package org.biojava.bio.structure;
 
 import java.io.Serializable;
 
+import org.biojava.bio.structure.xtal.CrystalCell;
+import org.biojava.bio.structure.xtal.SpaceGroup;
+import org.biojava.bio.structure.xtal.SymoplibParser;
+
 /**
  * A class to hold crystallographic information about a PDB structure. The information
  * is only meaningful if the space group is defined. Use the method isCrystallographic()
@@ -12,122 +16,174 @@ import java.io.Serializable;
  *
  */
 public class PDBCrystallographicInfo implements Serializable {
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = -7949886749566087669L;
-	private float a = 1.0f;
-	private float b = 1.0f;
-	private float c = 1.0f;
-	private float alpha = 90.0f;
-	private float beta = 90.0f;
-	private float gamma = 90.0f;
-	private String spaceGroup = "";
+	
+	private CrystalCell cell;
+	private SpaceGroup sg;
+	
 	private int z;
+	
+	public PDBCrystallographicInfo() {
+		this.cell = new CrystalCell();
+	}
 	
 	/**
 	 * @return the unit cell parameter a
 	 */
 	public float getA() {
-		return a;
+		return (float)cell.getA();
 	}
+	
+	@Deprecated
 	/**
 	 * @param a the unit cell parameter a to set
 	 */
 	public void setA(float a) {
-		this.a = a;
+		this.cell.setA(a);
 	}
+	
 	/**
 	 * @return the unit cell parameter b
 	 */
 	public float getB() {
-		return b;
+		return (float)cell.getB();
 	}
+	
+	@Deprecated
 	/**
 	 * @param b the unit cell parameter b to set
 	 */
-	public void setB(float b) {
-		this.b = b;
+	public void setB(double b) {
+		cell.setB(b);
 	}
+	
 	/**
 	 * @return the unit cell parameter c
 	 */
 	public float getC() {
-		return c;
+		return (float)cell.getC();
 	}
+	
+	@Deprecated
 	/**
 	 * @param c the unit cell parameter c to set
 	 */
 	public void setC(float c) {
-		this.c = c;
+		cell.setC(c);
 	}
+	
 	/**
 	 * @return the unit cell parameter alpha (degrees)
 	 */
 	public float getAlpha() {
-		return alpha;
+		return (float)cell.getAlpha();
 	}
+	
+	@Deprecated
 	/**
 	 * @param alpha the unit cell parameter alpha to set
 	 */
 	public void setAlpha(float alpha) {
-		this.alpha = alpha;
+		cell.setAlpha(alpha);
 	}
+	
 	/**
 	 * @return the unit cell parameter beta (degrees)
 	 */
 	public float getBeta() {
-		return beta;
+		return (float)cell.getBeta();
 	}
+	
+	@Deprecated
 	/**
 	 * @param beta the unit cell parameter beta to set
 	 */
 	public void setBeta(float beta) {
-		this.beta = beta;
+		cell.setBeta(beta);
 	}
+	
 	/**
 	 * @return the unit cell parameter gamma (degrees)
 	 */
 	public float getGamma() {
-		return gamma;
+		return (float)cell.getGamma();
 	}
+	
+	@Deprecated
 	/**
 	 * @param gamma the unit cell parameter gamma to set
 	 */
 	public void setGamma(float gamma) {
-		this.gamma = gamma;
+		cell.setGamma(gamma); 
 	}
+	
+	/**
+	 * Return the crystal cell
+	 * @return
+	 */
+	public CrystalCell getCrystalCell() {
+		return cell;
+	}
+	
+	/**
+	 * Set the crystal cell
+	 * @param cell
+	 */
+	public void setCrystalCell(CrystalCell cell) {
+		this.cell = cell;
+	}
+	
 	/**
 	 * @return the spaceGroup
 	 */
 	public String getSpaceGroup() {
-		return spaceGroup;
+		if (sg==null) return null;
+		return sg.getShortSymbol();
 	}
+	
+	@Deprecated
 	/**
+	 * Use #setSpaceGroup(SpaceGroup) instead
 	 * @param spaceGroup the spaceGroup to set
 	 */
 	public void setSpaceGroup(String spaceGroup) {
-		this.spaceGroup = spaceGroup;
+		this.sg = SymoplibParser.getSpaceGroup(spaceGroup);
 	}
+	
 	/**
+	 * Set the space group
+	 * @param spaceGroup
+	 */
+	public void setSpaceGroup(SpaceGroup spaceGroup) {
+		this.sg = spaceGroup;
+	}
+	
+	/**
+	 * Return the z, i.e. the multiplicity of the space group times the number of chains in asymmetric unit
 	 * @return the z
 	 */
-	public int getZ() {
+	public int getZ() {		
 		return z;
 	}
+	
 	/**
-	 * @param z the z to set
+	 * Set the z 
+	 * @param z
 	 */
 	public void setZ(int z) {
 		this.z = z;
 	}
+	
+	@Deprecated
 	/**
 	 * Returns true if structure was solved by a crystallographic method, i.e.,
 	 * the values returned by this class are meaningful.
-	 * @return the crystallographic
+	 * Use {@link Structure.isCrystallographic} instead
+	 * @return 
 	 */
 	public boolean isCrystallographic() {
-		return spaceGroup.length() > 0;
+		return sg!=null;
 	}
 
 	

@@ -25,7 +25,6 @@ package org.biojava.bio.structure;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -44,26 +43,22 @@ import org.biojava.bio.structure.io.FileConvert;
  */
 public class StructureImpl implements Structure, Serializable {
 
-	/**
-    *
-    */
-   private static final long serialVersionUID = -8344837138032851347L;
-   String pdb_id ;
+	private static final long serialVersionUID = -8344837138032851347L;
+
+	private String pdb_id ;
 	/* models is an ArrayList of ArrayLists */
-	List<List<Chain>> models;
+	private List<List<Chain>> models;
 	//List<Chain> seqResList;
-	Map<String,Object> header ;
-	List<Map <String,Integer>> connections ;
-	List<Compound> compounds;
-        List<DBRef> dbrefs;
-        List<SSBond> ssbonds;
-        List<Site> sites;
-        List<Group> hetAtoms;
-	String name ;
-    private JournalArticle journalArticle;
+	private List<Map <String,Integer>> connections ;
+	private List<Compound> compounds;
+	private List<DBRef> dbrefs;
+	private List<SSBond> ssbonds;
+	private List<Site> sites;
+	private List<Group> hetAtoms;
+	private String name ;
+	
 	private PDBHeader pdbHeader;
-	private PDBCrystallographicInfo crystallographicInfo;
-	boolean nmrflag ;
+
 	private Long id;
 	private boolean biologicalAssembly;
 
@@ -76,8 +71,6 @@ public class StructureImpl implements Structure, Serializable {
 
 		models         = new ArrayList<List<Chain>>();
 		name           = "";
-		nmrflag        = false;
-		header         = new HashMap<String,Object>();
 		connections    = new ArrayList<Map<String,Integer>>();
 		compounds      = new ArrayList<Compound>();
         dbrefs         = new ArrayList<DBRef>();
@@ -129,18 +122,15 @@ public class StructureImpl implements Structure, Serializable {
 	/** returns an identical copy of this structure .
 	 * @return an identical Structure object
 	 */
-	@SuppressWarnings("deprecation")
 	public Structure clone() {
 
 		Structure n = new StructureImpl();
 		// go through whole substructure and clone ...
 
 		// copy structure data
-		if (isNmr()) n.setNmr(true);
 
 		n.setPDBCode(getPDBCode());
 		n.setName(getName());
-		n.setHeader(getHeader());
 		//TODO: do deep copying of data!
 		n.setPDBHeader(pdbHeader);
 		n.setDBRefs(this.getDBRefs());
@@ -273,21 +263,6 @@ public class StructureImpl implements Structure, Serializable {
 	 */
 	public String getName()           { return name;  }
 
-	/** set the Header data.
-	 *
-	 *
-	 * @see #getHeader
-	 */
-	public void    setHeader(Map<String,Object> h){ header = h;    }
-	/** get Header data.
-	 *
-	 * @return a Map object representing the header of the Structure
-	 *
-	 * @see #setHeader
-	 */
-	public Map<String,Object> getHeader()         { return header ;}
-
-
 
 
 	/** @see Structure interface.
@@ -410,7 +385,7 @@ public class StructureImpl implements Structure, Serializable {
 		str.append(pdb_id);
 		str.append(" ");
 
-		if ( isNmr() ){
+		if ( nrModels()>1 ){
 			str.append( " models: ");
 			str.append(nrModels());
 			str.append(newline) ;
@@ -420,7 +395,7 @@ public class StructureImpl implements Structure, Serializable {
         str.append(newline) ;
 
         for (int i=0;i<nrModels();i++){
-			if (isNmr() ) {
+			if ( nrModels()>1 ) {
 				str.append(" model[");
 				str.append(i);
 				str.append("]:");
@@ -497,12 +472,63 @@ public class StructureImpl implements Structure, Serializable {
 		return models.size() ;
 	}
 
-	/** is this structure an nmr structure ?
+	/**
+	 * Whether this Structure is a crystallographic structure or not.
+	 * It will first check the experimental technique and if not present it will try
+	 * to guess from the presence of a space group and sensible cell parameters  
+	 * 
+	 * @return true if crystallographic, false otherwise
 	 */
-	public boolean isNmr() {return nmrflag ;  }
-
-	/* set the nmr flag */
-	public void setNmr(boolean nmr) {	nmrflag = nmr ; }
+	public boolean isCrystallographic() {
+		if (pdbHeader.getExperimentalTechniques()!=null) {
+			return ExperimentalTechnique.isCrystallographic(pdbHeader.getExperimentalTechniques());
+		} else {
+			// no experimental technique known, we try to guess...
+			if (pdbHeader.getCrystallographicInfo().getSpaceGroup()!=null) {
+				return pdbHeader.getCrystallographicInfo().getCrystalCell().isCellReasonable();
+			}
+		}
+		return false;
+	}
+	
+	/**
+	 * Whether this Structure is a NMR structure or not.
+	 * It will first check the experimental technique and if not present it will try
+	 * to guess from the presence of more than 1 model and from b-factors being 0 in first chain of first model
+	 * @return true if NMR, false otherwise
+	 */
+	public boolean isNmr() {
+		
+		// old implementation was:
+		//return nmrflag;
+		
+		if (pdbHeader.getExperimentalTechniques()!=null) {
+			return ExperimentalTechnique.isNmr(pdbHeader.getExperimentalTechniques());
+		} else {
+			// no experimental technique known, we try to guess...
+			if (nrModels()>1) {
+				if (getChains().size()==0) return false; // no chains at all, something wrong
+				Chain chain = getChain(0);
+				for (Group group:chain.getAtomGroups()) {
+					for (Atom atom: group.getAtoms()) {
+						if (atom.getTempFactor()!=0.0){
+							// some temp factors are not 0, most likely not NMR
+							return false;
+						}
+					}
+				}
+				// multi-model and all atoms of first chain have 0 temp factors: this is NMR
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	@Deprecated
+	public void setNmr(boolean nmr) {	
+		// old implementation was:
+		// this.nmrflag = nmr;
+	}
 
 
 	/** retrieve all chains of a model.
@@ -665,10 +691,7 @@ public class StructureImpl implements Structure, Serializable {
      * @return flag if a JournalArticle could be found.
      */
     public boolean hasJournalArticle() {
-        if (this.journalArticle != null) {
-            return true;
-        }
-        return false;
+    	return this.pdbHeader.hasJournalArticle();
     }
 
     /**
@@ -677,7 +700,7 @@ public class StructureImpl implements Structure, Serializable {
      * @return a JournalArticle
      */
     public JournalArticle getJournalArticle() {
-        return this.journalArticle;
+        return this.pdbHeader.getJournalArticle();
     }
 
     /**
@@ -686,7 +709,7 @@ public class StructureImpl implements Structure, Serializable {
      * @param journalArticle the article
      */
     public void setJournalArticle(JournalArticle journalArticle) {
-        this.journalArticle = journalArticle;
+        this.pdbHeader.setJournalArticle(journalArticle);
     }
 
     /**
@@ -740,7 +763,7 @@ public class StructureImpl implements Structure, Serializable {
      */
     
     public void setCrystallographicInfo(PDBCrystallographicInfo crystallographicInfo) {
-    	this.crystallographicInfo = crystallographicInfo;
+    	this.pdbHeader.setCrystallographicInfo(crystallographicInfo);
     }
     
     /**
@@ -749,7 +772,7 @@ public class StructureImpl implements Structure, Serializable {
      * @since 3.2
      */
     public PDBCrystallographicInfo getCrystallographicInfo() {
-    	return crystallographicInfo;
+    	return pdbHeader.getCrystallographicInfo();
     }
 
 	@Override

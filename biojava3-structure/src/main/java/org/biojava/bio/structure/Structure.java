@@ -211,23 +211,6 @@ public interface Structure extends Cloneable, StructureIdentifier {
      */
     public String getName();
 
-    /** set the Header data .
-     *
-     * @param h  a Map object specifying the header
-     * @see #getHeader
-     * @deprecated
-     */
-    public void setHeader(Map<String,Object> h) ;
-
-    /** get Header data .
-     *
-     * @return a Map object representing the header value
-     * @see #setHeader
-     * @deprecated use getPDBHeader instead
-     * @see #getPDBHeader
-     */
-    public Map<String,Object> getHeader() ;
-
     /**
        sets/gets an List of  Maps which corresponds to the CONECT lines in the PDB file:
 
@@ -286,22 +269,35 @@ public interface Structure extends Cloneable, StructureIdentifier {
     */
     public int size(int modelnr);
 
-    /** return number of models .
-     * in this implementation also XRAY structures have "1 model", since
+    /** 
+     * Return the number of models .
+     * In this implementation also XRAY structures have "1 model", since
      * model is the container for the chains.
-     * to test if a Structure is an NMR structure use @see isNMR ,
-     * since this is based on the info in the PDB file header.
+     * to test if a Structure is an NMR structure use {@link #isNmr()}.
      *
      * @return an int representing the number of models in this Structure
+     * @see #isNmr()
      */
     public int nrModels() ;
 
-    /** test if this structure is an nmr structure.
+    /** 
+     * Test if this structure is an NMR structure.
      *
-     * @return true if this Structure has been resolved by NMR
+     * @return true if this Structure has been solved by NMR
+     * @see #nrModels()
      */
     public boolean isNmr() ;
 
+    /**
+	 * Test if this structure is a crystallographic structure, i.e. it is an asymmetric unit
+	 * only from which it is possible to reconstruct the crystal lattice given cell parameters and 
+	 * space group.
+	 * 
+	 * @return true if crystallographic, false otherwise
+	 */
+	public boolean isCrystallographic();
+	
+    @Deprecated
     /** set NMR flag.
      *
      * @param nmr  true to declare that this Structure has been solved by NMR.

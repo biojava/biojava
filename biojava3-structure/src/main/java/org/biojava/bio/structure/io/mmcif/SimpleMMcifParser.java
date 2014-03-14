@@ -36,6 +36,7 @@ import org.biojava.bio.structure.io.MMCIFFileReader;
 import org.biojava.bio.structure.io.StructureIOFile;
 import org.biojava.bio.structure.io.mmcif.model.AtomSite;
 import org.biojava.bio.structure.io.mmcif.model.AuditAuthor;
+import org.biojava.bio.structure.io.mmcif.model.Cell;
 import org.biojava.bio.structure.io.mmcif.model.ChemComp;
 import org.biojava.bio.structure.io.mmcif.model.ChemCompAtom;
 import org.biojava.bio.structure.io.mmcif.model.ChemCompBond;
@@ -63,6 +64,7 @@ import org.biojava.bio.structure.io.mmcif.model.StructConn;
 import org.biojava.bio.structure.io.mmcif.model.StructKeywords;
 import org.biojava.bio.structure.io.mmcif.model.StructRef;
 import org.biojava.bio.structure.io.mmcif.model.StructRefSeq;
+import org.biojava.bio.structure.io.mmcif.model.Symmetry;
 import org.biojava.bio.structure.jama.Matrix;
 
 
@@ -526,6 +528,20 @@ public class SimpleMMcifParser implements MMcifParser {
 
 			triggerExptl(exptl);
 
+		} else if ( category.equals("_cell")){
+			Cell cell  = (Cell) buildObject(
+					Cell.class.getName(),
+					loopFields,lineData);
+
+			triggerCell(cell);
+
+		} else if ( category.equals("_symmetry")){
+			Symmetry symmetry  = (Symmetry) buildObject(
+					Symmetry.class.getName(),
+					loopFields,lineData);
+
+			triggerSymmetry(symmetry);
+
 		} else if ( category.equals("_struct_ref")){
 			StructRef sref  = (StructRef) buildObject(
 					"org.biojava.bio.structure.io.mmcif.model.StructRef",
@@ -801,6 +817,11 @@ public class SimpleMMcifParser implements MMcifParser {
 				String val = lineData.get(pos);
 				//System.out.println(key + " " + val);
 				String u = key.substring(0,1).toUpperCase();
+				
+				// a necessary fix in order to be able to handle keys that contain hyphens (e.g. _symmetry.space_group_name_H-M)
+				// java can't use hyphens in variable names thus the corresponding bean can't use the hyphen and we replace it by underscore
+				if (key.contains("-")) 
+					key = key.replace('-', '_');
 
 				try {
 					Method m = c.getMethod("set" + u + key.substring(1,key.length()) , String.class);
@@ -905,6 +926,18 @@ public class SimpleMMcifParser implements MMcifParser {
 		for(MMcifConsumer c : consumers){
 			c.newExptl(exptl);
 		}
+	}
+	
+	private void triggerCell(Cell cell) {
+		for(MMcifConsumer c : consumers){
+			c.newCell(cell);
+		}		
+	}
+	
+	private void triggerSymmetry(Symmetry symmetry) {
+		for(MMcifConsumer c : consumers){
+			c.newSymmetry(symmetry);
+		}				
 	}
 
 	private void triggerNewStrucRef(StructRef sref){
