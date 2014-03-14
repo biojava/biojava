@@ -835,7 +835,7 @@ public class AfpChainWriter
 			// make sure we don't have a problem with the left boundary...
 			if ( header1.getBuffer().length()-1 > linePos) {
 				ignoreH1 = true;
-				System.out.println("Ignore h1: " + len + " " + header1.getBuffer().length() + " linePos: " + linePos +"  >" + header1.toString() +"<");
+				System.err.println("Ignore h1: " + len + " " + header1.getBuffer().length() + " linePos: " + linePos +"  >" + header1.toString() +"<");
 			}
 			//System.out.println(len + " p1:" + tmp + " = " + pos1 + " " + " " + display + " " + ignoreH1);
 			if ( ! ignoreH1) {
