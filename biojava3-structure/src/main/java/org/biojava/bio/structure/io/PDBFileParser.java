@@ -74,6 +74,7 @@ import org.biojava.bio.structure.io.mmcif.ReducedChemCompProvider;
 //import org.biojava.bio.structure.io.mmcif.model.ChemComp;
 //import org.biojava.bio.structure.io.mmcif.model.ChemCompBond;
 import org.biojava.bio.structure.io.util.PDBTemporaryStorageUtils.LinkRecord;
+import org.biojava.bio.structure.xtal.CrystalCell;
 import org.biojava.bio.structure.xtal.SpaceGroup;
 import org.biojava.bio.structure.xtal.SymoplibParser;
 
@@ -1519,14 +1520,20 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 		
 		// If the entry describes a structure determined by a technique other than X-ray crystallography,
 	    // CRYST1 contains a = b = c = 1.0, alpha = beta = gamma = 90 degrees, space group = P 1, and Z =1.
-		// we set it here like that and can handle it later with CrystallCell.isReasonableCell()
-		
-		crystallographicInfo.getCrystalCell().setA(a);
-        crystallographicInfo.getCrystalCell().setB(b);
-        crystallographicInfo.getCrystalCell().setC(c);
-        crystallographicInfo.getCrystalCell().setAlpha(alpha);
-        crystallographicInfo.getCrystalCell().setBeta(beta);
-        crystallographicInfo.getCrystalCell().setGamma(gamma);
+		// if so we don't add and CrystalCell and SpaceGroup remain both null
+		if (a == 1.0f && b == 1.0f && c == 1.0f && 
+        		alpha == 90.0f && beta == 90.0f && gamma == 90.0f && 
+        		spaceGroup.equals("P 1") && z == 1) {
+        	return;
+        } 
+		CrystalCell xtalCell = new CrystalCell();
+		crystallographicInfo.setCrystalCell(xtalCell);
+		xtalCell.setA(a);
+		xtalCell.setB(b);
+		xtalCell.setC(c);
+		xtalCell.setAlpha(alpha);
+		xtalCell.setBeta(beta);
+		xtalCell.setGamma(gamma);
         SpaceGroup sg = SymoplibParser.getSpaceGroup(spaceGroup);
         if (sg==null) logger.warning("Space group '"+spaceGroup+"' not recognised as a standard space group"); 
         crystallographicInfo.setSpaceGroup(sg);

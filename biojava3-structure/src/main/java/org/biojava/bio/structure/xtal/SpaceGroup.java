@@ -518,6 +518,10 @@ public final class SpaceGroup implements Serializable {
 			}
 		}
 		return axisType;
-	} 
+	}
+	
+	public String toString() {
+		return getShortSymbol();
+	}
 }
 

@@ -25,7 +25,7 @@ public class PDBCrystallographicInfo implements Serializable {
 	private int z;
 	
 	public PDBCrystallographicInfo() {
-		this.cell = new CrystalCell();
+		
 	}
 	
 	/**
