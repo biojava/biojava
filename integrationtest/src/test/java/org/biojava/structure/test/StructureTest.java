@@ -3,7 +3,7 @@ package org.biojava.structure.test;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
-import java.util.Map;
+import java.util.Set;
 
 import junit.framework.TestCase;
 
@@ -13,6 +13,7 @@ import org.biojava.bio.structure.Calc;
 import org.biojava.bio.structure.Chain;
 import org.biojava.bio.structure.Compound;
 import org.biojava.bio.structure.Element;
+import org.biojava.bio.structure.ExperimentalTechnique;
 import org.biojava.bio.structure.Group;
 import org.biojava.bio.structure.PDBHeader;
 import org.biojava.bio.structure.SSBond;
@@ -147,24 +148,27 @@ public class StructureTest extends TestCase {
 	}
 
 
-	@SuppressWarnings("deprecation")
-	public void testHeader() {
-		Map<String, Object> m = structure.getHeader();
-
-		assertNotNull(m);
-
-		String classification = (String)m.get("classification");
+	public void testPDBHeader(){
+		
+		PDBHeader header = structure.getPDBHeader();
+		String classification = header.getClassification();
 		assertTrue(classification.equals("PROTEINASE INHIBITOR (TRYPSIN)"));
 
-		String idCode = (String)m.get("idCode");
+		String idCode = header.getIdCode();
 		assertEquals("the idCode in the Header is " + idCode + " and not 5PTI, as expected","5PTI",idCode);
 
-		Float resolution = (Float) m.get("resolution");
-		assertEquals("the resolution in the Header is " + resolution + " and not 1.0, as expected",new Float(1.0),resolution);
+		float resolution = header.getResolution();
+		assertEquals("the resolution in the Header is " + resolution + " and not 1.0, as expected",1.0,resolution,0.0001);
 
-		String technique = (String) m.get("technique");
-		String techShould = "X-RAY DIFFRACTION ";
-		assertEquals("the technique in the Header is " + technique, techShould,technique);
+		// commenting out test for deprecated method 
+		//String technique = header.getTechnique();
+		String techShould = "X-RAY DIFFRACTION";
+		//assertEquals("the technique in the Header is " + technique, techShould,technique);
+
+		Set<ExperimentalTechnique> techniques = header.getExperimentalTechniques();
+		String technique = techniques.iterator().next().getName();
+		assertEquals("the technique in the Header is " + technique, techShould, technique);
+
 
 		List <Compound> compounds = structure.getCompounds();
 		assertEquals("did not find the right number of compounds! ", 1, compounds.size());
@@ -176,28 +180,7 @@ public class StructureTest extends TestCase {
 		List<Chain> chains    = comp.getChains();
 
 		assertEquals("the number of chain ids and chains did not match!",chainIds.size(),chains.size());
-		assertEquals("the chain ID did not match", chainIds.get(0),chains.get(0).getName());
-
-
-	}
-
-
-	@SuppressWarnings("deprecation")
-	public void testPDBHeader(){
-		Map<String, Object> m = structure.getHeader();
-		PDBHeader header = structure.getPDBHeader();
-		String classification = (String)m.get("classification");
-		assertTrue(classification.equals(header.getClassification()));
-
-		String idCode = (String)m.get("idCode");
-		assertTrue(idCode.equals(header.getIdCode()));
-
-		Float resolution = (Float) m.get("resolution");
-		assertTrue(resolution.floatValue() == header.getResolution());
-
-		String technique = (String) m.get("technique");
-		assertTrue(technique.equals(header.getTechnique()));
-
+		assertEquals("the chain ID did not match", chainIds.get(0),chains.get(0).getChainID());
 	}
 
 	public void testCreateVirtualCBAtom(){

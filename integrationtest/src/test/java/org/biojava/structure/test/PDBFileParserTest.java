@@ -28,7 +28,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
-import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -37,6 +36,7 @@ import org.biojava.bio.structure.Chain;
 import org.biojava.bio.structure.ChainImpl;
 import org.biojava.bio.structure.Group;
 import org.biojava.bio.structure.JournalArticle;
+import org.biojava.bio.structure.PDBHeader;
 import org.biojava.bio.structure.Site;
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureTools;
@@ -64,19 +64,15 @@ public class PDBFileParserTest extends TestCase {
 	 *
 	 * @param fakeFile
 	 * @return the resolution as a Float or null if no resolution found
-	 * @throws Exception
+	 * @throws IOException 
 	 */
-	@SuppressWarnings("deprecation")
-	private Object testREMARK2Parsing(String fakeFile) throws Exception{
+	private float testREMARK2Parsing(String fakeFile) throws IOException {
 		BufferedReader br = new BufferedReader(new StringReader(fakeFile));
 
-		Object resolution = null;
-
 		Structure s = parser.parsePDBFile(br);
-		Map<String, Object> m = s.getHeader();
-		resolution =  m.get("resolution");
+		
+		return s.getPDBHeader().getResolution();
 
-		return resolution;
 	}
 
 	public void test2LetterResidueName() {
@@ -173,8 +169,8 @@ public class PDBFileParserTest extends TestCase {
 		String errorMsg   = "";
 
 		try {
-			Object resolution = testREMARK2Parsing(w1);
-			assertEquals(resolution,null);
+			float resolution = testREMARK2Parsing(w1);
+			assertEquals(resolution,PDBHeader.DEFAULT_RESOLUTION);
 		} catch (Exception e){
 			parsingOK = false;
 			//e.printStackTrace();
@@ -194,8 +190,8 @@ public class PDBFileParserTest extends TestCase {
 		boolean parsingOK = true;
 		String errorMsg   = "";
 		try {
-			Object resolution = testREMARK2Parsing(w2);
-			assertEquals(resolution,new Float(1.2));
+			float resolution = testREMARK2Parsing(w2);
+			assertEquals(resolution,1.2, 0.00001);
 		} catch (Exception e){
 			parsingOK = false;
 			//e.printStackTrace();
