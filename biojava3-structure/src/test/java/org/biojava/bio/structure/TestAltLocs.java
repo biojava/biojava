@@ -145,16 +145,16 @@ public class TestAltLocs {
 	}
 
 	private void ensureAllAtomsSameAltCode(Group g) {
-
-		//	System.out.println(String.format("Group size: %d", g.getAtoms().size()));
-
+		
 		Character defaultAltLoc = null;
 		for (Atom atom : g.getAtoms()) {
+		
 			if ( defaultAltLoc == null) {
 				defaultAltLoc = atom.getAltLoc();
+		
 				continue;
 			}
-			//	System.out.print(atom.toPDB());
+
 			Character altLoc = atom.getAltLoc();
 
 			assertEquals(defaultAltLoc,altLoc);
