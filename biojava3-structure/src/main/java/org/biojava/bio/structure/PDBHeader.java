@@ -453,9 +453,19 @@ public class PDBHeader implements PDBRecord, Serializable{
 		this.modDate = modDate;
 	}
 
+	@Deprecated 
+	/**
+	 * use getTecnhnique instead
+	 * @return
+	 */
 	public String getMethod() {
 		return method;
 	}
+	@Deprecated
+	/** use setTechnique instead
+	 * 
+	 * @param method
+	 */
 	public void setMethod(String method) {
 		this.method = method;
 	}

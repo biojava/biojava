@@ -52,13 +52,11 @@ import org.biojava.bio.structure.StructureImpl;
 import org.biojava.bio.structure.StructureTools;
 import org.biojava.bio.structure.UnknownPdbAminoAcidException;
 import org.biojava.bio.structure.io.FileParsingParameters;
-
 import org.biojava.bio.structure.io.PDBParseException;
 import org.biojava.bio.structure.io.SeqRes2AtomAligner;
 import org.biojava.bio.structure.io.mmcif.model.AtomSite;
 import org.biojava.bio.structure.io.mmcif.model.AuditAuthor;
 import org.biojava.bio.structure.io.mmcif.model.ChemComp;
-
 import org.biojava.bio.structure.io.mmcif.model.ChemCompAtom;
 import org.biojava.bio.structure.io.mmcif.model.ChemCompBond;
 import org.biojava.bio.structure.io.mmcif.model.ChemCompDescriptor;
@@ -81,6 +79,7 @@ import org.biojava.bio.structure.io.mmcif.model.PdbxStructOperList;
 import org.biojava.bio.structure.io.mmcif.model.Refine;
 import org.biojava.bio.structure.io.mmcif.model.Struct;
 import org.biojava.bio.structure.io.mmcif.model.StructAsym;
+import org.biojava.bio.structure.io.mmcif.model.StructConn;
 import org.biojava.bio.structure.io.mmcif.model.StructKeywords;
 import org.biojava.bio.structure.io.mmcif.model.StructRef;
 import org.biojava.bio.structure.io.mmcif.model.StructRefSeq;
@@ -115,6 +114,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 	List<EntitySrcGen> entitySrcGens;
 	List<EntitySrcNat> entitySrcNats;
 	List<EntitySrcSyn> entitySrcSyns;
+	List<StructConn> structConn;
 
 	Map<String,String> asymStrandId;
 
@@ -382,6 +382,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 			// add previous data
 			if ( current_chain != null ) {
 				current_chain.addGroup(current_group);
+				current_group.trimToSize();
 			}
 
 			// we came to the beginning of a new NMR model
@@ -480,7 +481,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		if ( ! residueNumber.equals(current_group.getResidueNumber())) {
 			//System.out.println("end of residue: "+current_group.getPDBCode()+" "+residueNrInt);
 			current_chain.addGroup(current_group);
-
+			current_group.trimToSize();
 			current_group = getNewGroup(recordName,aminoCode1,seq_id,groupCode3);
 			//current_group.setPDBCode(pdbCode);
 			try {
@@ -538,6 +539,14 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 			current_group.addAtom(a);
 		}
 
+
+		// make sure that main group has all atoms
+		// GitHub issue: #76
+		if ( ! current_group.hasAtom(a.getFullName())) {
+			current_group.addAtom(a);
+		}
+		
+		
 		//System.out.println(">" + atom.getLabel_atom_id()+"< " + a.getGroup().getPDBName() + " " + a.getGroup().getChemComp()  );
 
 		//System.out.println(current_group);
@@ -668,6 +677,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		entitySrcGens = new ArrayList<EntitySrcGen>();
 		entitySrcNats = new ArrayList<EntitySrcNat>();
 		entitySrcSyns = new ArrayList<EntitySrcSyn>();
+		structConn = new ArrayList<StructConn>();
 	}
 
 
@@ -1597,12 +1607,10 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 
 	}
 
-
-
-
-
-
-
+	@Override
+	public void newStructConn(StructConn structConn) {
+		this.structConn.add(structConn);
+	}
 
 }
 

@@ -34,10 +34,11 @@ import org.jmol.api.JmolStatusListener;
 import org.jmol.constant.EnumCallback;
 
 public class MyJmolStatusListener implements JmolStatusListener {
+	
+	private boolean verbose = false;
 
 	JTextField status;
 	public MyJmolStatusListener(){
-		
 	}
 	
 	public void setTextField (JTextField statusField) {
@@ -50,12 +51,12 @@ public class MyJmolStatusListener implements JmolStatusListener {
 	}
 
 	public String eval(String arg0) {
-		System.out.println("eval " + arg0);
+		if(verbose) System.out.println("eval " + arg0);
 		return null;
 	}
 
 	public float[][] functionXY(String arg0, int arg1, int arg2) {
-		System.out.println("XY " + arg0 + " " + arg1 + " " + arg2);
+		if(verbose) System.out.println("XY " + arg0 + " " + arg1 + " " + arg2);
 		return null;
 	}
 
@@ -86,26 +87,26 @@ public class MyJmolStatusListener implements JmolStatusListener {
 	}
 
 	public void setCallbackFunction(String arg0, String arg1) {
-		System.out.println("callback:" + arg0 + " " + arg1);
+		if(verbose) System.out.println("callback:" + arg0 + " " + arg1);
 		status.setText(arg0 + " " + arg1);
 
 	}
 
 	public String dialogAsk(String arg0, String arg1) {
 		// TODO Auto-generated method stub
-		System.out.println("dialogAsk");
+		if(verbose) System.out.println("dialogAsk");
 		return null;
 	}
 
 	public void handlePopupMenu(int arg0, int arg1) {
 		// TODO Auto-generated method stub
-		System.out.println("handlePopupMenu");
+		if(verbose) System.out.println("handlePopupMenu");
 	}
 
 	public void showConsole(boolean arg0) {
 		
 		// TODO Auto-generated method stub
-		System.out.println("showConsole");
+		if(verbose) System.out.println("showConsole");
 		
 	}
 
@@ -138,6 +139,14 @@ public class MyJmolStatusListener implements JmolStatusListener {
 	public void resizeInnerPanel(String data) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	public boolean isVerbose() {
+		return verbose;
+	}
+
+	public void setVerbose(boolean verbose) {
+		this.verbose = verbose;
 	}
 
 	

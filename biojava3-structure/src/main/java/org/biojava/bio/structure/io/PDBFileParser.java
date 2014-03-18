@@ -860,6 +860,9 @@ public class PDBFileParser  {
 		if ( test == null)
 			seqResChains.add(current_chain);
 
+		if (current_group != null)
+			current_group.trimToSize();
+		
 		current_group = null;
 		current_chain = null;
 
@@ -1742,7 +1745,8 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 		if ( ! residueNumber.equals(current_group.getResidueNumber())) {
 
 			current_chain.addGroup(current_group);
-
+			current_group.trimToSize();
+			
 			current_group = getNewGroup(recordName,aminoCode1,groupCode3);
 
 			//current_group.setPDBCode(pdbCode);
@@ -1755,13 +1759,16 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 			// same residueNumber, but altLocs...
 
 			// test altLoc
-			if ( ! altLoc.equals(' ')) {												
+			if ( ! altLoc.equals(' ')) {
+				
 				altGroup = getCorrectAltLocGroup( altLoc,recordName,aminoCode1,groupCode3);
 				if ( altGroup.getChain() == null) {
 					// need to set current chain
 					altGroup.setChain(current_chain);
 				}
 				//System.out.println("found altLoc! " + current_group + " " + altGroup);
+				
+			
 			}
 		}
 
@@ -1912,6 +1919,14 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 			current_group.addAtom(atom);
 		}
 
+		
+		// make sure that main group has all atoms
+		// GitHub issue: #76
+		if ( ! current_group.hasAtom(atom.getFullName())) {
+			current_group.addAtom(atom);
+		}
+		
+		
 
 		//System.out.println("current group: " + current_group);
 			}
@@ -2090,6 +2105,7 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 		if (current_chain != null) {
 			if (current_group != null) {
 				current_chain.addGroup(current_group);
+				current_group.trimToSize();
 			}
 			//System.out.println("starting new model "+(structure.nrModels()+1));
 
@@ -2799,14 +2815,13 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 			for (SSBond disulfideBond : structure.getSSBonds()) {
 				formDisulfideBond(disulfideBond);
 			}
-			formPeptideBonds();
-			formIntraResidueBonds();
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new RuntimeException("Error while forming bonds for " + pdbId, e);
 		}
-		
-		trimAtomBondLists();
+		BondMaker maker = new BondMaker(structure);
+		maker.makeBonds();
 	}
 	
 	private void formLinkRecordBond(LinkRecord linkRecord) {
@@ -2878,92 +2893,6 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 		}
 		
 		return group.getAtom(name);
-	}
-	
-	/**
-	 * The furthest one residue's C and another's N can be and still be assumed
-	 * to be in a peptide bond.
-	 */
-	private static final double MAX_PEPTIDE_BOND_LENGTH = 1.8;
-
-	private void formPeptideBonds() throws StructureException {
-		for (Chain chain : structure.getChains()) {
-			List<Group> groups = chain.getSeqResGroups();
-
-			for (int i = 0; i < groups.size() - 1; i++) {
-				if (!(groups.get(i) instanceof AminoAcidImpl)
-						|| !(groups.get(i + 1) instanceof AminoAcidImpl))
-					continue;
-				
-				AminoAcidImpl current = (AminoAcidImpl) groups.get(i);
-				AminoAcidImpl next = (AminoAcidImpl) groups.get(i + 1);
-
-				// atoms with no residue number don't have atom information
-				if (current.getResidueNumber() == null
-						|| next.getResidueNumber() == null) {
-					continue;
-				}
-				
-				Atom carboxylC;
-				Atom aminoN;
-				
-				try {
-					carboxylC = current.getC();
-					aminoN = next.getN();
-				} catch (StructureException e) {
-					// some structures may be incomplete and not store info
-					// about all of their atoms
-					continue;
-				}
-				
-				if (Calc.getDistance(carboxylC, aminoN) < MAX_PEPTIDE_BOND_LENGTH) {
-					// we got ourselves a peptide bond
-					new Bond(carboxylC, aminoN, 1);
-				}
-			}
-		}
-	}
-	
-	private void formIntraResidueBonds() {
-		for (Chain chain : structure.getChains()) {
-			List<Group> groups = chain.getAtomGroups();
-
-			for (Group group : groups) {
-				// atoms with no residue number don't have atom information
-				// also ignore water
-				if (group.getResidueNumber() == null || group.isWater()) {
-					continue;
-				}
-
-				ChemComp aminoChemComp = ChemCompGroupFactory.getChemComp(group
-						.getPDBName());
-
-				for (ChemCompBond chemCompBond : aminoChemComp.getBonds()) {
-					try {
-						Atom a = group.getAtom(chemCompBond.getAtom_id_1());
-						Atom b = group.getAtom(chemCompBond.getAtom_id_2());
-						int bondOrder = chemCompBond.getNumericalBondOrder();
-
-						new Bond(a, b, bondOrder);
-					} catch (StructureException e) {
-						// Some of the atoms were missing. That's fine, there's
-						// nothing to do in this case.
-					}
-				}
-			}
-		}
-	}
-	
-	private void trimAtomBondLists() {
-		for (Chain chain : structure.getChains()) {
-			for (Group group : chain.getAtomGroups()) {
-				for (Atom atom : group.getAtoms()) {
-					if (atom.getBonds().size() > 0) {
-						((ArrayList<Bond>) atom.getBonds()).trimToSize();
-					}
-				}
-			}
-		}
 	}
 
 	private void triggerEndFileChecks(){

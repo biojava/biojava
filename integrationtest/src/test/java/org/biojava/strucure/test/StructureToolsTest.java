@@ -99,7 +99,7 @@ public class StructureToolsTest extends TestCase {
 
 	public void testGetNrAtoms(){
 		int length = StructureTools.getNrAtoms(structure);
-		assertEquals("did not find the expected number of Atoms (1070), but got " + length,1070,length);
+		assertEquals("did not find the expected number of Atoms (1087), but got " + length,1087,length);
 
 
 	}
