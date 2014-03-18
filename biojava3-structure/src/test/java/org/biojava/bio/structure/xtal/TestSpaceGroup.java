@@ -40,8 +40,8 @@ public class TestSpaceGroup {
 				countSpecial++;
 			}
 			
-			 
-			System.out.println(spaceGroup.getId()+"  "+spaceGroup.getShortSymbol()+" -- "+spaceGroup.getMultiplicity()+" "+spaceGroup.getPrimitiveMultiplicity());
+			if (VERBOSE)
+				System.out.println(spaceGroup.getId()+"  "+spaceGroup.getShortSymbol()+" -- "+spaceGroup.getMultiplicity()+" "+spaceGroup.getPrimitiveMultiplicity());
 			
 				
 			// cell translations must be the same in each subgroup of operators (applies to I, C, F and H SGs)
