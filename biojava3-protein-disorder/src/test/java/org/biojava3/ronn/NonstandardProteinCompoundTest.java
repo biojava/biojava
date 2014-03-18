@@ -25,11 +25,14 @@ public class NonstandardProteinCompoundTest  {
 	public void test() {
 		
 		
-		String[] uniprotIDs = new String[]{"O30642","P59797","Q9N2D9","Q9N2D9","Q6UFZ3"};
+		String[] uniprotIDs = new String[]{"O30642","P59797","Q9N2D9","Q9N2D9","Q6UFZ3","O30642"};
 		
 		for ( String id: uniprotIDs){
 			try {
 				testUniprot(id);
+				// throttle load on uniprot server
+				Thread.sleep(1000);
+				
 			} catch (Exception e){
 				e.printStackTrace();
 				fail(e.getMessage());
