@@ -243,6 +243,23 @@ public class FileDownloadUtils {
 		}
 		return uPath;
 	}
+	
+	/**
+	 * Expands ~ in paths to the user's home directory.
+	 * 
+	 * <p>This does not work for some special cases for paths:
+	 * Other users' homes (~user/...), and
+	 * Tilde expansion within the path (/.../~/...)
+	 * @param file
+	 * @return
+	 */
+	public static String expandUserHome(String file) {
+		if(file.startsWith("~"+File.separator)) {
+			file = System.getProperty("user.home") + file.substring(1);
+		}
+		return file;
+	}
+
 
 
 	/**

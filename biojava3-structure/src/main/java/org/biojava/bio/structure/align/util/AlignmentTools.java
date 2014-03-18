@@ -135,6 +135,9 @@ public class AlignmentTools {
 	public static Map<Integer, Integer> alignmentAsMap(AFPChain afpChain) throws StructureException {
 		Map<Integer,Integer> map = new HashMap<Integer,Integer>();
 
+		if( afpChain.getAlnLength() < 1 ) {
+			return map;
+		}
 		int[][][] optAln = afpChain.getOptAln();
 		int[] optLen = afpChain.getOptLen();
 		for(int block = 0; block < afpChain.getBlockNum(); block++) {

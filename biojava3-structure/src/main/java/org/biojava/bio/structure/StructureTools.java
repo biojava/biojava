@@ -45,6 +45,7 @@ import org.biojava.bio.structure.io.PDBFileParser;
 import org.biojava.bio.structure.io.mmcif.chem.PolymerType;
 import org.biojava.bio.structure.io.mmcif.chem.ResidueType;
 import org.biojava.bio.structure.io.mmcif.model.ChemComp;
+import org.biojava.bio.structure.io.util.FileDownloadUtils;
 
 
 /**
@@ -1265,7 +1266,7 @@ public class StructureTools {
 	 *  an exception.
 	 */
 	public static Structure getStructure(String name,PDBFileParser parser, AtomCache cache) throws IOException, StructureException {
-		File f = new File(name);
+		File f = new File(FileDownloadUtils.expandUserHome(name));
 		if(f.exists()) {
 			if(parser == null) {
 				parser = new PDBFileParser();
@@ -1279,5 +1280,4 @@ public class StructureTools {
 			return cache.getStructure(name);
 		}
 	}
-
 }
