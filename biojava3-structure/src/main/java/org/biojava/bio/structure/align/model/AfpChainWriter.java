@@ -835,11 +835,11 @@ public class AfpChainWriter
 			// make sure we don't have a problem with the left boundary...
 			if ( header1.getBuffer().length()-1 > linePos) {
 				ignoreH1 = true;
-				System.err.println("Ignore h1: " + len + " " + header1.getBuffer().length() + " linePos: " + linePos +"  >" + header1.toString() +"<");
+				//System.out.println("Ignore h1: " + len + " " + header1.getBuffer().length() + " linePos: " + linePos +"  >" + header1.toString() +"<");
 			}
 			//System.out.println(len + " p1:" + tmp + " = " + pos1 + " " + " " + display + " " + ignoreH1);
 			if ( ! ignoreH1) {
-				header1.append(String.format("%-10s",display ));
+				header1.append(String.format("%-13s",display ));
 				header2.append("|");
 			} else {
 				header2.append("|");
@@ -940,9 +940,9 @@ public class AfpChainWriter
 			StringWriter footer2, Atom[] ca1, Atom[] ca2)
 	{
 
-		header1.append(String.format("%-10s", getPDBPos(ca1[p1])));
+		header1.append(String.format("%-13s", getPDBPos(ca1[p1])));
 		header2.append("|");
-		footer1.append(String.format("%-10s", getPDBPos(ca2[p2])));
+		footer1.append(String.format("%-13s", getPDBPos(ca2[p2])));
 		footer2.append("|");
 
 
