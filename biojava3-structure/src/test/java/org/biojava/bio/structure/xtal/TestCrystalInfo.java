@@ -2,6 +2,7 @@ package org.biojava.bio.structure.xtal;
 
 import java.io.IOException;
 
+import org.biojava.bio.structure.ExperimentalTechnique;
 import org.biojava.bio.structure.PDBCrystallographicInfo;
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureException;
@@ -26,12 +27,13 @@ public class TestCrystalInfo {
 		Structure s1 = StructureIO.getStructure("1NMR");
 		assertFalse(s1.isCrystallographic());
 		assertTrue(s1.isNmr());
-
+		assertEquals(s1.getPDBHeader().getExperimentalTechniques().iterator().next(),ExperimentalTechnique.SOLUTION_NMR);
 		
 		cache.setUseMmCif(true);
 		Structure s2 = StructureIO.getStructure("1NMR");
 		assertFalse(s2.isCrystallographic());
 		assertTrue(s2.isNmr());
+		assertEquals(s2.getPDBHeader().getExperimentalTechniques().iterator().next(),ExperimentalTechnique.SOLUTION_NMR);
 
 
 		testCrystallographicInfo(s1, s2);
@@ -49,12 +51,14 @@ public class TestCrystalInfo {
 		Structure s1 = StructureIO.getStructure("1B8G");
 		assertTrue(s1.isCrystallographic());
 		assertFalse(s1.isNmr());
+		assertEquals(s1.getPDBHeader().getExperimentalTechniques().iterator().next(),ExperimentalTechnique.XRAY_DIFFRACTION);
 
 		
 		cache.setUseMmCif(true);
 		Structure s2 = StructureIO.getStructure("1B8G");
 		assertTrue(s2.isCrystallographic());
 		assertFalse(s2.isNmr());
+		assertEquals(s2.getPDBHeader().getExperimentalTechniques().iterator().next(),ExperimentalTechnique.XRAY_DIFFRACTION);
 
 		testCrystallographicInfo(s1, s2);
 
@@ -74,6 +78,7 @@ public class TestCrystalInfo {
 		assertTrue(s1.isCrystallographic());
 		assertFalse(s1.isNmr());
 		assertTrue(s1.nrModels()>1);
+		assertEquals(s1.getPDBHeader().getExperimentalTechniques().iterator().next(),ExperimentalTechnique.XRAY_DIFFRACTION);
 
 		
 		cache.setUseMmCif(true);
@@ -81,6 +86,7 @@ public class TestCrystalInfo {
 		assertTrue(s2.isCrystallographic());
 		assertFalse(s2.isNmr());
 		assertTrue(s2.nrModels()>1);
+		assertEquals(s2.getPDBHeader().getExperimentalTechniques().iterator().next(),ExperimentalTechnique.XRAY_DIFFRACTION);
 
 		testCrystallographicInfo(s1, s2);
 
@@ -100,6 +106,7 @@ public class TestCrystalInfo {
 		assertFalse(s1.isCrystallographic());
 		assertTrue(s1.isNmr());
 		assertFalse(s1.nrModels()>1);
+		assertEquals(s1.getPDBHeader().getExperimentalTechniques().iterator().next(),ExperimentalTechnique.SOLUTION_NMR);
 
 		
 		cache.setUseMmCif(true);
@@ -107,6 +114,8 @@ public class TestCrystalInfo {
 		assertFalse(s2.isCrystallographic());
 		assertTrue(s2.isNmr());
 		assertFalse(s2.nrModels()>1);
+		assertEquals(s2.getPDBHeader().getExperimentalTechniques().iterator().next(),ExperimentalTechnique.SOLUTION_NMR);
+
 
 		testCrystallographicInfo(s1, s2);
 
@@ -116,10 +125,14 @@ public class TestCrystalInfo {
 		PDBCrystallographicInfo xtalInfo = s1.getPDBHeader().getCrystallographicInfo();
 		PDBCrystallographicInfo xtalInfo2 = s2.getPDBHeader().getCrystallographicInfo();
 		
-		if (xtalInfo==null && xtalInfo2==null) return; // both null: NMR or something similar, nothing to test
 		
+		if (xtalInfo==null && xtalInfo2==null) return; // both null: NMR or something similar, nothing to test
+
 		CrystalCell cell1 = xtalInfo.getCrystalCell();
 		CrystalCell cell2 = xtalInfo2.getCrystalCell();
+
+		if (s1.isNmr()) assertTrue(cell1==null); 
+		if (s2.isNmr()) assertTrue(cell2==null);
 		
 		if (cell1==null && cell2==null) return;
 		

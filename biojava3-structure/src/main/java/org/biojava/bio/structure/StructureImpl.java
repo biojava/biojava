@@ -507,18 +507,14 @@ public class StructureImpl implements Structure, Serializable {
 		} else {
 			// no experimental technique known, we try to guess...
 			if (nrModels()>1) {
-				if (getChains().size()==0) return false; // no chains at all, something wrong
-				Chain chain = getChain(0);
-				for (Group group:chain.getAtomGroups()) {
-					for (Atom atom: group.getAtoms()) {
-						if (atom.getTempFactor()!=0.0){
-							// some temp factors are not 0, most likely not NMR
-							return false;
-						}
-					}
+				if (pdbHeader.getCrystallographicInfo().getSpaceGroup()!=null) {
+					// multi-model and cell unreasonable: must be NMR
+					if (!pdbHeader.getCrystallographicInfo().getCrystalCell().isCellReasonable())
+						return true;
+				} else { 
+					// multi-model and missing space group: must be NMR
+					return true; 
 				}
-				// multi-model and all atoms of first chain have 0 temp factors: this is NMR
-				return true;
 			}
 		}
 		return false;

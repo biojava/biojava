@@ -142,6 +142,10 @@ public class PDBCrystallographicInfo implements Serializable {
 		return sg.getShortSymbol();
 	}
 	
+	//public SpaceGroup getSpaceGroup() {
+	//	return sg;
+	//}
+	
 	@Deprecated
 	/**
 	 * Use #setSpaceGroup(SpaceGroup) instead
