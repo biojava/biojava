@@ -1058,8 +1058,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 					res = Float.parseFloat(resolution);
 
 				} catch (NumberFormatException e) {
-					System.err.println(e.getMessage());
-					System.err.println("could not parse resolution from line and ignoring it " + line);
+					logger.warning("could not parse resolution from line and ignoring it " + line);
 					return ;
 
 

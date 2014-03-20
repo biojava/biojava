@@ -480,7 +480,9 @@ public class PDBHeader implements PDBRecord, Serializable{
 	}
 	
 	/**
-	 * Sets the experimental technique
+	 * Adds the experimental technique to the set of experimental techniques of this header.
+	 * Note that if input is not a recognised technique string then no errors will be produced but
+	 * false will be returned
 	 * @param techniqueStr
 	 * @return true if the input corresponds to a recognised technique string (see {@link ExperimentalTechnique}) 
 	 * and it was not already present in the current set of ExperimentalTechniques

@@ -233,16 +233,16 @@ public class AlignmentToolsTest extends TestCase {
 		Atom[] ca2 = cache.getAtoms(name2);
 		
 		StructureAlignment cecp = StructureAlignmentFactory.getAlgorithm(CeCPMain.algorithmName);
-		long startAlignmentTime = System.currentTimeMillis();
+		//long startAlignmentTime = System.currentTimeMillis();
 		AFPChain afpChain = cecp.align(ca1, ca2);
-		long alignmentTime = System.currentTimeMillis() - startAlignmentTime;
+		//long alignmentTime = System.currentTimeMillis() - startAlignmentTime;
 		
 		final int maxSymmetry = 8;
 		final float minimumMetricChange = .4f;
 		
-		long startSymmetryOrderTime = System.currentTimeMillis();
+		//long startSymmetryOrderTime = System.currentTimeMillis();
 		int order = AlignmentTools.getSymmetryOrder(afpChain, maxSymmetry, minimumMetricChange);
-		long symmetryOrderTime = System.currentTimeMillis() - startSymmetryOrderTime;
+		//long symmetryOrderTime = System.currentTimeMillis() - startSymmetryOrderTime;
 		
 		//System.out.println("Len1\tLen2\tAlignT\tOrderT\tOrder");
 		//System.out.format("%d\t%d\t%f\t%f\t%d", ca1.length,ca2.length,

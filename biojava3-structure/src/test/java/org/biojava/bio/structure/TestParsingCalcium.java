@@ -25,8 +25,6 @@
 package org.biojava.bio.structure;
 
 import org.biojava.bio.structure.align.util.AtomCache;
-import org.biojava.bio.structure.io.FileParsingParameters;
-import org.biojava3.structure.StructureIO;
 
 import junit.framework.TestCase;
 
