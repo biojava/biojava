@@ -58,15 +58,8 @@ import java.util.Set;
  *
  * @since 1.0
  */
-public interface Annotation extends Changeable {
-  /**
-   * This type symbolizes that one or more properties have changed.
-   */
-  public static final ChangeType PROPERTY = new ChangeType(
-    "Properties have altered",
-    "org.biojava.bio.Annotation",
-    "PROPERTY"
-  );
+public interface Annotation  {
+  
   
   /**
    * <p>
@@ -107,7 +100,7 @@ public interface Annotation extends Changeable {
    *         if the change was vetoed. 
    */
   void setProperty(Object key, Object value)
-      throws IllegalArgumentException, ChangeVetoException;
+      throws IllegalArgumentException;
       
   /**
    * Delete a property. Normal raw access to the property. For cleverer access, use
@@ -121,7 +114,7 @@ public interface Annotation extends Changeable {
    */
    
   public void removeProperty(Object key)
-      throws NoSuchElementException, ChangeVetoException;
+      throws NoSuchElementException;
   
   /**
    * Returns whether there the property is defined. Normal raw access to the property. For cleverer access, use

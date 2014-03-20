@@ -42,7 +42,7 @@ import java.util.Set;
  * @see org.biojavax.EmptyRichAnnotation
  */
 class EmptyAnnotation
-extends Unchangeable
+
 implements Annotation, Serializable {
   public Object getProperty(Object key) throws NoSuchElementException {
     throw new NoSuchElementException(
@@ -51,20 +51,13 @@ implements Annotation, Serializable {
     );
   }
   
-  public void setProperty(Object key, Object value)
-  throws ChangeVetoException {
-    throw new ChangeVetoException(
-      "You can not add properties to the Empty Annotation object: " +
-      key + " -> " + value
-    );
-  }
+  public void setProperty(Object key, Object value){
+    }
   
   public void removeProperty(Object key)
-  throws ChangeVetoException 
+    
   {
-    throw new ChangeVetoException(
-      "You cannot remove properties from the empty annotation (!)"
-    );
+   
   }
   
   public boolean containsProperty(Object key) {

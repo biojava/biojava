@@ -27,7 +27,6 @@ import java.util.TreeSet;
 
 import org.biojava3.ontology.utils.Annotatable;
 import org.biojava3.ontology.utils.Annotation;
-import org.biojava3.ontology.utils.ChangeType;
 import org.biojava3.ontology.utils.SmallAnnotation;
 
 
@@ -61,11 +60,6 @@ public interface Term extends Annotatable {
      * altered
      */
 
-    public static final ChangeType ONTOLOGY = new ChangeType(
-      "This term's ontology has been changed",
-      "org.biojava.ontology.Term",
-      "ONTOLOGY"
-    );
 
     /**
      * Return the name of this term.

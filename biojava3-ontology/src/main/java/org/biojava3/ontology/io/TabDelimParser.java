@@ -10,7 +10,6 @@ import org.biojava3.ontology.OntologyException;
 import org.biojava3.ontology.OntologyFactory;
 import org.biojava3.ontology.Term;
 import org.biojava3.ontology.Triple;
-import org.biojava3.ontology.utils.ChangeVetoException;
 
 
 
@@ -162,9 +161,7 @@ public class TabDelimParser {
         }
       } catch (AlreadyExistsException aee) {
         throw new RuntimeException("Assertion Failure: Could not create term", aee);
-      } catch (ChangeVetoException cve) {
-        throw new RuntimeException("Assertion Failure: Could not create term", cve);
-      }
+      } 
     }
   }
 
@@ -176,9 +173,7 @@ public class TabDelimParser {
         return onto.createTriple(sub, obj, rel, null, null);
       } catch (AlreadyExistsException aee) {
         throw new RuntimeException("Assertion Failure: Could not create triple",aee);
-      } catch (ChangeVetoException cve) {
-        throw new RuntimeException("Assertion Failure: Could not create triple", cve);
-      }
+      } 
     }
   }
 }

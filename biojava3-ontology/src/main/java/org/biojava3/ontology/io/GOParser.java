@@ -34,7 +34,6 @@ import org.biojava3.ontology.Ontology;
 import org.biojava3.ontology.OntologyException;
 import org.biojava3.ontology.OntologyFactory;
 import org.biojava3.ontology.Term;
-import org.biojava3.ontology.utils.ChangeVetoException;
 
 /**
  * Simple parser for the Gene Ontology (GO) flatfile format.
@@ -95,13 +94,11 @@ public class GOParser {
             throw new RuntimeException( "Duplication in ontology");
         } catch (OntologyException ex) {
             throw new RuntimeException(ex);
-        } catch (ChangeVetoException ex) {
-            throw new RuntimeException("Error accessing newly created ontology",ex);
-        }
+        } 
     }
 
     private void safeAddTriple(Ontology onto, Term s, Term o, Term p)
-        throws AlreadyExistsException, ChangeVetoException
+        throws AlreadyExistsException
     {
         if (!onto.containsTriple(s, o, p)) {
             onto.createTriple(s, o, p, null, null);
@@ -109,7 +106,7 @@ public class GOParser {
     }
 
     private Term parseTerm(Ontology onto, String s)
-        throws ParseException, AlreadyExistsException, ChangeVetoException
+        throws ParseException, AlreadyExistsException
     {
         int semi = s.indexOf(';');
         int semi2 = s.indexOf(';', semi + 1);

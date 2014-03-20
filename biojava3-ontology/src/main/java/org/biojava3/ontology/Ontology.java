@@ -29,13 +29,9 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Set;
 
-import org.biojava3.ontology.utils.AbstractChangeable;
+
 import org.biojava3.ontology.utils.AssertionFailure;
-import org.biojava3.ontology.utils.ChangeEvent;
-import org.biojava3.ontology.utils.ChangeSupport;
-import org.biojava3.ontology.utils.ChangeType;
-import org.biojava3.ontology.utils.ChangeVetoException;
-import org.biojava3.ontology.utils.Changeable;
+
 
 
 
@@ -54,18 +50,8 @@ import org.biojava3.ontology.utils.Changeable;
  * @see org.biojavax.ontology.ComparableOntology
  */
 
-public interface Ontology extends Changeable {
-	public static final ChangeType TERM = new ChangeType(
-			"A term has been added or removed",
-			"org.biojava.ontology.Ontology",
-			"TERM"
-	);
+public interface Ontology  {
 
-	public static final ChangeType TRIPLE = new ChangeType(
-			"A triple has been added or removed",
-			"org.biojava.ontology.Ontology",
-			"TRIPLE"
-	);
 
 	/**
 	 * Return the name of this ontology
@@ -80,7 +66,7 @@ public interface Ontology extends Changeable {
 	 * 
 	 */
 	public void setName(String name);
-	
+
 	/**
 	 * Return a human-readable description of this ontology, or the empty
 	 * string if none is available
@@ -94,9 +80,9 @@ public interface Ontology extends Changeable {
 	 * @param description
 	 */
 	public void setDescription(String description);
-		
-	
-	
+
+
+
 	/**
 	 * Return all the terms in this ontology
 	 * @return a Set of all Terms of the ontology.
@@ -154,10 +140,10 @@ public interface Ontology extends Changeable {
 	 */
 
 	public Term createTerm(String name)
-	throws
-	AlreadyExistsException,
-	ChangeVetoException,
-	IllegalArgumentException;
+			throws
+			AlreadyExistsException,
+
+			IllegalArgumentException;
 
 	/**
 	 * Create a new term in this ontology.
@@ -173,10 +159,10 @@ public interface Ontology extends Changeable {
 	 */
 
 	public Term createTerm(String name, String description)
-	throws
-	AlreadyExistsException,
-	ChangeVetoException,
-	IllegalArgumentException;
+			throws
+			AlreadyExistsException,
+
+			IllegalArgumentException;
 
 	/**
 	 * Create a new term in this ontology.
@@ -193,10 +179,10 @@ public interface Ontology extends Changeable {
 	 */
 
 	public Term createTerm(String name, String description, Object[] synonyms)
-	throws
-	AlreadyExistsException,
-	ChangeVetoException,
-	IllegalArgumentException;
+			throws
+			AlreadyExistsException,
+
+			IllegalArgumentException;
 
 	/**
 	 * Create a new term in this ontology that is used as a variable.
@@ -212,10 +198,10 @@ public interface Ontology extends Changeable {
 	 */
 
 	public Variable createVariable(String name, String description)
-	throws
-	AlreadyExistsException,
-	ChangeVetoException,
-	IllegalArgumentException;
+			throws
+			AlreadyExistsException,
+
+			IllegalArgumentException;
 
 	/**
 	 * Create a view of a term from another ontology.  If the requested term
@@ -234,9 +220,9 @@ public interface Ontology extends Changeable {
 	 */
 
 	public Term importTerm(Term t, String localName)
-	throws
-	ChangeVetoException,
-	IllegalArgumentException;
+			throws
+
+			IllegalArgumentException;
 
 	/**
 	 * Creates a new Triple.
@@ -255,9 +241,9 @@ public interface Ontology extends Changeable {
 	 *      from the same ontology
 	 */
 	public Triple createTriple(Term subject, Term object, Term predicate, String name, String description)
-	throws
-	AlreadyExistsException,
-	ChangeVetoException;
+			throws
+			AlreadyExistsException
+			;
 
 	/**
 	 * See if a triple exists in this ontology
@@ -275,7 +261,7 @@ public interface Ontology extends Changeable {
 	 * @throws ChangeVetoException 
 	 */
 
-	public void deleteTerm(Term t) throws ChangeVetoException;
+	public void deleteTerm(Term t) ;
 
 	/**
 	 * Determines if this ontology currently contains a term named <code>name</code>
@@ -296,7 +282,7 @@ public interface Ontology extends Changeable {
 	// AP: I am setting name and description to public changeable fields
 	// e.g during parsing of an .obo file we don't know them when the ontology is instanciated
 	public final class Impl
-	extends AbstractChangeable
+
 	implements Ontology, java.io.Serializable {
 		/**
 		 * 
@@ -346,8 +332,8 @@ public interface Ontology extends Changeable {
 		public String getDescription() {
 			return description;
 		}
-		
-				
+
+
 		public void setDescription(String description){
 			this.description = description;
 		}
@@ -357,15 +343,15 @@ public interface Ontology extends Changeable {
 		}
 
 		public Term getTerm(String name)
-		throws NoSuchElementException
-		{
+				throws NoSuchElementException
+				{
 			Term t = terms.get(name);
 			if (t == null) {
 				throw new NoSuchElementException("No term named '" + name + "'");
 			} else {
 				return terms.get(name);
 			}
-		}
+				}
 
 		public Set<Triple> getTriples(Term subject, Term object, Term predicate) {
 			if(subject != null && subject.getOntology() != this) {
@@ -416,76 +402,63 @@ public interface Ontology extends Changeable {
 		}
 
 		private void addTerm(Term t)
-		throws AlreadyExistsException, IllegalArgumentException, ChangeVetoException
-		{
+				throws AlreadyExistsException, IllegalArgumentException
+				{
 			if (terms.containsKey(t.getName())) {
 				throw new AlreadyExistsException("Ontology " + getName() + " already contains " + t.toString());
 			}
 
-			if(!hasListeners()) {
-				terms.put(t.getName(), t);
-			} else {
-				ChangeEvent ce = new ChangeEvent(
-						this,
-						Ontology.TERM,
-						t,
-						null
-				);
-				ChangeSupport cs = getChangeSupport(Ontology.TERM);
-				synchronized(cs) {
-					cs.firePreChangeEvent(ce);
-					terms.put(t.getName(), t);
-					cs.firePostChangeEvent(ce);
+
+			terms.put(t.getName(), t);
+
 				}
-			}
-		}
 
 		public Term createTerm(String name)
-		throws AlreadyExistsException, IllegalArgumentException, ChangeVetoException
-		{
+				throws AlreadyExistsException, IllegalArgumentException
+				{
 			Term t = new Term.Impl(this, name);
 			addTerm(t);
 			return t;
-		}
+				}
 
 		public Term createTerm(String name, String description)
-		throws AlreadyExistsException, IllegalArgumentException, ChangeVetoException
-		{
+				throws AlreadyExistsException, IllegalArgumentException
+				{
 			Term t = new Term.Impl(this, name, description);
 			addTerm(t);
 			return t;
-		}
+				}
 
 		public Term createTerm(String name, String description, Object[] synonyms)
-		throws AlreadyExistsException, IllegalArgumentException, ChangeVetoException
-		{
+				throws AlreadyExistsException, IllegalArgumentException
+				{
 			Term t = new Term.Impl(this, name, description, synonyms);
 			addTerm(t);
 			return t;
-		}
+				}
 
 		public Variable createVariable(String name, String description)
-		throws
-		AlreadyExistsException,
-		ChangeVetoException,
-		IllegalArgumentException {
+				throws
+				AlreadyExistsException,
+
+				IllegalArgumentException {
 			Variable var = new Variable.Impl(this, name, description);
 			addTerm(var);
 			return var;
 		}
 
 		public OntologyTerm createOntologyTerm(Ontology o)
-		throws AlreadyExistsException, ChangeVetoException
-		{
+				throws AlreadyExistsException
+				{
 			OntologyTerm ot = new OntologyTerm.Impl(this, o);
 			addTerm(ot);
 			return ot;
-		}
+				}
 
 
 		public Term importTerm(Term t, String name)
-		throws IllegalArgumentException, ChangeVetoException
-		{
+				throws IllegalArgumentException
+				{
 			// unpack any potential indirection - belt & braces
 			while(t instanceof RemoteTerm) {
 				t = ((RemoteTerm) t).getRemoteTerm();
@@ -509,37 +482,21 @@ public interface Ontology extends Changeable {
 				localRemoteTerms.add(rt);
 			}
 			return rt;
-		}
+				}
 
 		public void deleteTerm(Term t)
-		throws ChangeVetoException
+
 		{
 			String name = t.getName();
 			if (terms.get(name) != t) {
 				return; // Should this be an exception?
 			}
-			if(!hasListeners()) {
-				terms.remove(name);
-				if(t instanceof Triple) {
-					removeTriple((Triple) t);
-				}
-			} else {
-				ChangeEvent ce = new ChangeEvent(
-						this,
-						Ontology.TERM,
-						null,
-						t
-				);
-				ChangeSupport cs = getChangeSupport(Ontology.TERM);
-				synchronized(cs) {
-					cs.firePreChangeEvent(ce);
-					terms.remove(name);
-					if (t instanceof Triple) {
-						removeTriple((Triple) t);
-					}
-					cs.firePostChangeEvent(ce);
-				}
+
+			terms.remove(name);
+			if(t instanceof Triple) {
+				removeTriple((Triple) t);
 			}
+
 		}
 
 		public boolean containsTerm(String name) {
@@ -563,13 +520,12 @@ public interface Ontology extends Changeable {
 				Term predicate,
 				String name,
 				String description)
-		throws
-		AlreadyExistsException,
-		IllegalArgumentException,
-		ChangeVetoException,
-		NullPointerException,
-		IllegalArgumentException
-		{
+						throws
+						AlreadyExistsException,
+						IllegalArgumentException,						
+						NullPointerException,
+						IllegalArgumentException
+						{
 			Triple t = new Triple.Impl(subject, object, predicate, name, description);
 			if (!containsTerm(subject)) {
 				throw new IllegalArgumentException("Ontology " + getName() + " doesn't contain " + subject);
@@ -584,26 +540,12 @@ public interface Ontology extends Changeable {
 				throw new AlreadyExistsException("Ontology " + getName() + " already contains " + t.toString());
 			}
 
-			if(!hasListeners()) {
-				addTerm(t);
-				addTriple(t);
-			} else {
-				ChangeEvent ce = new ChangeEvent(
-						this,
-						Ontology.TRIPLE,
-						t,
-						null
-				);
-				ChangeSupport cs = getChangeSupport(Ontology.TRIPLE);
-				synchronized(cs) {
-					cs.firePreChangeEvent(ce);
-					addTerm(t);
-					addTriple(t);
-					cs.firePostChangeEvent(ce);
-				}
-			}
+
+			addTerm(t);
+			addTriple(t);
+
 			return t;
-		}
+						}
 
 		private void addTriple(Triple t) {
 			triples.add(t);
@@ -645,7 +587,7 @@ public interface Ontology extends Changeable {
 
 		public void setName(String name) {
 			this.name=name;
-			
+
 		}
 	}
 }

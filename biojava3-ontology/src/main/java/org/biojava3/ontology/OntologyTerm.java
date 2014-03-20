@@ -25,12 +25,8 @@ import java.util.Arrays;
 import java.util.Set;
 import java.util.TreeSet;
 
-import org.biojava3.ontology.utils.AbstractChangeable;
+
 import org.biojava3.ontology.utils.Annotation;
-import org.biojava3.ontology.utils.ChangeEvent;
-import org.biojava3.ontology.utils.ChangeForwarder;
-import org.biojava3.ontology.utils.ChangeSupport;
-import org.biojava3.ontology.utils.ChangeType;
 
 
 /**
@@ -65,11 +61,11 @@ public interface OntologyTerm extends Term {
      */
     
     public final static class Impl
-    extends AbstractChangeable
+     
     implements OntologyTerm, java.io.Serializable {
         private final Ontology ontology;
         private final Ontology target;
-        private transient ChangeForwarder forwarder;
+        
         private Set synonyms;
         
         public Impl(Ontology ontology, Ontology target) {
@@ -129,21 +125,6 @@ public interface OntologyTerm extends Term {
             return Annotation.EMPTY_ANNOTATION;
         }
         
-        public ChangeSupport getChangeSupport(ChangeType ct) {
-            ChangeSupport cs = super.getChangeSupport(ct);
-            forwarder = new ChangeForwarder(this, cs) {
-                protected ChangeEvent generateEvent(ChangeEvent cev) {
-                    return new ChangeEvent(
-                        getSource(),
-                        ChangeType.UNKNOWN,
-                        target,
-                        null,
-                        cev
-                    );
-                }
-            } ;
-            target.addChangeListener(forwarder, ChangeType.UNKNOWN);
-            return cs;
-        }
+        
     }
 }

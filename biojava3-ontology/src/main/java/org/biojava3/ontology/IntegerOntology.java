@@ -10,8 +10,7 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import org.biojava3.ontology.utils.Annotation;
-import org.biojava3.ontology.utils.ChangeVetoException;
-import org.biojava3.ontology.utils.Unchangeable;
+
 import org.biojava3.ontology.utils.WeakValueHashMap;
 
 
@@ -22,7 +21,7 @@ import org.biojava3.ontology.utils.WeakValueHashMap;
  * @author Matthew Pocock
  */
 public class IntegerOntology
-extends Unchangeable
+
 implements Ontology {
 	private final Map termCache;
 
@@ -37,7 +36,7 @@ implements Ontology {
 	public String getDescription() {
 		return "Ontology containing all integers";
 	}
-	
+
 	public void setDescription(String description){		
 	}
 
@@ -88,57 +87,57 @@ implements Ontology {
 		};
 	}
 
-	public Term createTerm(String name) throws AlreadyExistsException, ChangeVetoException, IllegalArgumentException {
-		throw new ChangeVetoException(getName() + " is immutable");
+	public Term createTerm(String name) throws AlreadyExistsException,  IllegalArgumentException {
+		throw new IllegalArgumentException(getName() + " is immutable");
 	}
 
 	public Term createTerm(String name, String description)
-	throws
-	AlreadyExistsException,
-	ChangeVetoException,
-	IllegalArgumentException
-	{
-		throw new ChangeVetoException(getName() + " is immutable");
-	}
+			throws
+			AlreadyExistsException,
+
+			IllegalArgumentException
+			{
+		throw new IllegalArgumentException(getName() + " is immutable");
+			}
 
 	public Term createTerm(String name, String description, Object[] synonyms)
-	throws
-	AlreadyExistsException,
-	ChangeVetoException,
-	IllegalArgumentException
-	{
-		throw new ChangeVetoException(getName() + " is immutable");
-	}
+			throws
+			AlreadyExistsException,
+
+			IllegalArgumentException
+			{
+		throw new IllegalArgumentException(getName() + " is immutable");
+			}
 
 	public Variable createVariable(String name, String description)
-	throws
-	AlreadyExistsException,
-	ChangeVetoException,
-	IllegalArgumentException
-	{
-		throw new ChangeVetoException(getName() + " is immutable");
-	}
+			throws
+			AlreadyExistsException,
+
+			IllegalArgumentException
+			{
+		throw new IllegalArgumentException(getName() + " is immutable");
+			}
 
 	public Term importTerm(Term t, String name)
-	throws
-	ChangeVetoException
+
+
 	{
-		throw new ChangeVetoException(getName() + " is immutable");
+		throw new IllegalArgumentException(getName() + " is immutable");
 	}
 
 	public Triple createTriple(Term subject, Term object, Term predicate, String name, String description)
-	throws
-	AlreadyExistsException,
-	ChangeVetoException {
-		throw new ChangeVetoException(getName() + " is immutable");
-	}
+			throws
+			AlreadyExistsException
+			{
+		throw new IllegalArgumentException(getName() + " is immutable");
+			}
 
 	public boolean containsTriple(Term subject, Term object, Term predicate) {
 		return false;
 	}
 
-	public void deleteTerm(Term t) throws ChangeVetoException {
-		throw new ChangeVetoException(getName() + " is immutable");
+	public void deleteTerm(Term t)  {
+		throw new RuntimeException(getName() + " is immutable");
 	}
 
 	public boolean containsTerm(String name) {
@@ -165,7 +164,7 @@ implements Ontology {
 	}
 
 	public final class IntTerm
-	extends Unchangeable
+
 	implements Term {
 		private final int val;
 		private Set synonyms;
@@ -220,7 +219,7 @@ implements Ontology {
 
 	public void setName(String name) {
 		//ignore
-		
+
 	}
 
 

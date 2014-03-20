@@ -26,8 +26,6 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import org.biojava3.ontology.utils.Annotation;
-import org.biojava3.ontology.utils.Unchangeable;
-
 
 
 /**
@@ -115,7 +113,7 @@ extends Term {
 	 */
 
 	public static final class Impl
-	extends Unchangeable
+
 	implements Triple, java.io.Serializable {
 		/**
 		 * 

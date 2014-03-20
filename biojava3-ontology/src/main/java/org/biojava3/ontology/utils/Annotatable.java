@@ -78,17 +78,8 @@ package org.biojava3.ontology.utils;
  * @see org.biojavax.RichAnnotatable
  * @since 1.0
  */
-public interface Annotatable extends Changeable {
-  /**
-   * Signals that the associated Annotation has altered in some way. The
-   * chainedEvent property should refer back to the event fired by the
-   * Annotation object.
-   */
-  public static final ChangeType ANNOTATION = new ChangeType(
-    "the associated annotation has changed",
-    "org.biojava.bio.Annotatable",
-    "ANNOTATION"
-  );
+public interface Annotatable  {
+ 
 
   /**
    * Should return the associated annotation object.
@@ -97,46 +88,5 @@ public interface Annotatable extends Changeable {
    */
   Annotation getAnnotation();
 
-  /**
-   * <p>A helper class so that you don't have to worry about
-   * forwarding events from the Annotation object to the Annotatable
-   * one.</p>
-   *
-   * <p>Once a listener is added to your Annotatable that is
-   * interested in ANNOTATION events, then instantiate one of these
-   * and add it as a listener to the annotation object. It will
-   * forward the events to your listeners and translate them
-   * accordingly.</p> This will ease the pain of letting your Annotatable tell its
-   * listeners about changes in the Annotation.
-   *
-   * @author Matthew Pocock 
-   *
-   * @deprecated use
-   *   <code>new ChangeForwarder.Retyper(source, cs, Annotation.PROPERTY)</code>
-   *   instead
-   */
-  static class AnnotationForwarder extends ChangeForwarder {
-    /**
-     * Create a new AnnotationForwarder that will forward events for a source
-     * using a change support.
-     *
-     * @param source  the Object to forward events on behalf of
-     * @param cs      the change support that manages listeners
-     */
-    public AnnotationForwarder(Object source, ChangeSupport cs) {
-      super(source, cs);
-    }
 
-    protected ChangeEvent generateEvent(ChangeEvent ce) {
-      ChangeType ct = ce.getType();
-      if(ct == Annotation.PROPERTY) {
-        return new ChangeEvent(
-          getSource(),
-          ANNOTATION,
-          ct
-        );
-      }
-      return null;
-    }
-  }
 }

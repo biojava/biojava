@@ -35,7 +35,6 @@ import org.biojava3.ontology.OntologyFactory;
 import org.biojava3.ontology.obo.OboFileEventListener;
 import org.biojava3.ontology.obo.OboFileHandler;
 import org.biojava3.ontology.obo.OboFileParser;
-import org.biojava3.ontology.utils.ChangeVetoException;
 
 
 
@@ -103,9 +102,7 @@ public class OboParser {
 	            throw new RuntimeException( "Duplication in ontology");
 	        } catch (OntologyException ex) {
 	            throw new RuntimeException(ex);
-	        } catch (ChangeVetoException ex) {
-	            throw new RuntimeException("Error accessing newly created ontology",ex);
-	        }
+	        } 
 	        
 	}
 }

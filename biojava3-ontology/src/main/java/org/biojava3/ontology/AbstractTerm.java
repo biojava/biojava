@@ -21,13 +21,6 @@
 
 package org.biojava3.ontology; 
 
-import org.biojava3.ontology.utils.AbstractChangeable;
-import org.biojava3.ontology.utils.Annotatable;
-import org.biojava3.ontology.utils.Annotation;
-import org.biojava3.ontology.utils.ChangeEvent;
-import org.biojava3.ontology.utils.ChangeForwarder;
-import org.biojava3.ontology.utils.ChangeSupport;
-import org.biojava3.ontology.utils.ChangeType;
  
 
 
@@ -41,39 +34,9 @@ import org.biojava3.ontology.utils.ChangeType;
  * @since 1.4
  */
  
-public abstract class AbstractTerm extends AbstractChangeable implements Term {
-    private transient ChangeForwarder forwarder;
-    protected String description;
+public abstract class AbstractTerm  implements Term {
     
-    public ChangeSupport getChangeSupport(ChangeType ct) {
-            ChangeSupport cs = super.getChangeSupport(ct);
-            forwarder = new ChangeForwarder(this, cs) {
-                protected ChangeEvent generateEvent(ChangeEvent cev) {
-                    if (cev.getSource() instanceof Ontology) {
-                        return new ChangeEvent(
-                            getSource(),
-                            Term.ONTOLOGY,
-                            getOntology(),
-                            null,
-                            cev
-                        );
-                    } else if (cev.getSource() instanceof Annotation) {
-                        return new ChangeEvent(
-                            getSource(),
-                            Annotatable.ANNOTATION,
-                            getAnnotation(),
-                            null,
-                            cev
-                       );
-                    } else {
-                        throw new RuntimeException("Unknown event");
-                    }
-                }
-            } ;
-            getAnnotation().addChangeListener(forwarder, ChangeType.UNKNOWN);
-            getOntology().addChangeListener(forwarder, ChangeType.UNKNOWN);
-            return cs;
-    }
+    protected String description;
     
     public  void setDescription(String description){
     	this.description = description;

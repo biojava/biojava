@@ -51,13 +51,17 @@ import java.util.Set;
  * @since 1.0
  */
 public abstract class AbstractAnnotation
-  extends
-    AbstractChangeable
+  
   implements
     Annotation,
     Serializable
 {
   /**
+	 * 
+	 */
+	private static final long serialVersionUID = 2753449055959952873L;
+
+/**
    * Implement this to return the Map delegate. Modifying this return value will
    * modify the properties associated with this annotation.
    *
@@ -94,50 +98,22 @@ public abstract class AbstractAnnotation
   }
 
   public void setProperty(Object key, Object value)
-  throws ChangeVetoException {
-    if(!hasListeners()) {
+   {
+    
       getProperties().put(key, value);
-    } else {
-      Map properties = getProperties();
-      ChangeEvent ce = new ChangeEvent(
-        this,
-        Annotation.PROPERTY,
-        new Object[] { key, value },
-        new Object[] { key, properties.get(key)}
-      );
-      ChangeSupport cs = getChangeSupport(Annotation.PROPERTY);
-      synchronized(cs) {
-        cs.firePreChangeEvent(ce);
-        properties.put(key, value);
-        cs.firePostChangeEvent(ce);
-      }
-    }
+   
   }
 
   public void removeProperty(Object key)
-    throws ChangeVetoException, NoSuchElementException
+    throws  NoSuchElementException
   {
     if (!getProperties().containsKey(key)) {
         throw new NoSuchElementException("Can't remove key " + key.toString());
     }
 
-    if(!hasListeners()) {
+    
       getProperties().remove(key);
-    } else {
-      Map properties = getProperties();
-      ChangeEvent ce = new ChangeEvent(
-        this,
-        Annotation.PROPERTY,
-        new Object[] { key, null },
-        new Object[] { key, properties.get(key)}
-      );
-      ChangeSupport cs = getChangeSupport(Annotation.PROPERTY);
-      synchronized(cs) {
-        cs.firePreChangeEvent(ce);
-        properties.remove(key);
-        cs.firePostChangeEvent(ce);
-      }
-    }
+    
   }
 
   public boolean containsProperty(Object key) {
