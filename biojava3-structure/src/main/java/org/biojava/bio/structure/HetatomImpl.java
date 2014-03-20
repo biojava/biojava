@@ -274,10 +274,8 @@ public class HetatomImpl implements Group,Serializable {
 
 		}
 		
-		
-		
-		
 		throw new StructureException(" No atom >"+name + "< in group " + pdb_name + " " + residueNumber  + " !");
+
 
 	}
 

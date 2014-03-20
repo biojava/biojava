@@ -104,6 +104,10 @@ public class BondMaker {
 					continue;
 				}
 				
+				if (carboxylC == null || aminoN == null) {
+					continue;
+				}
+				
 				try {
 					if (Calc.getDistance(carboxylC, aminoN) < MAX_PEPTIDE_BOND_LENGTH) {
 						new Bond(carboxylC, aminoN, 1);
@@ -133,11 +137,12 @@ public class BondMaker {
 					continue;
 				}
 				
-				Atom phosphorous;
-				Atom oThreePrime;
-				
-				phosphorous = tail.getP();
-				oThreePrime = head.getO3Prime();
+				Atom phosphorous = tail.getP();
+				Atom oThreePrime = head.getO3Prime();
+
+				if (phosphorous == null || oThreePrime == null) {
+					continue;
+				}
 				
 				if ( phosphorous == null || oThreePrime == null) {
 					continue;
@@ -195,4 +200,5 @@ public class BondMaker {
 			}
 		}
 	}
+	
 }
