@@ -30,7 +30,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-
 import org.biojava.bio.structure.AminoAcid;
 import org.biojava.bio.structure.Atom;
 import org.biojava.bio.structure.Chain;
@@ -244,6 +243,10 @@ public class SeqRes2AtomAligner {
 	public boolean trySimpleMatch(List<Group> seqResGroups,List<Group> atmResGroups) {
 		// by default first ATOM position is 1
 		//
+		
+		@SuppressWarnings("unchecked")
+		List<Group> newSeqResGroups = (ArrayList<Group>)((ArrayList<Group>)seqResGroups).clone();
+		
 		boolean startAt1 = true;
 
 		for ( int atomResPos = 0 ; atomResPos < atmResGroups.size() ; atomResPos++){
@@ -340,10 +343,13 @@ public class SeqRes2AtomAligner {
 			// replace the SEQRES group with the ATOM group...
 			if (DEBUG)
 				System.err.println("merging " + seqResPos + " " + atomResGroup);
-			seqResGroups.set(seqResPos, atomResGroup);
+			newSeqResGroups.set(seqResPos, atomResGroup);
 
 		}
 
+		// all went ok. copy over the updated list to the original one.
+		// note: if something went wrong, we did not modifiy the original list.
+		seqResGroups = newSeqResGroups;
 		// all atom records could get matched correctly!
 		return true;
 
