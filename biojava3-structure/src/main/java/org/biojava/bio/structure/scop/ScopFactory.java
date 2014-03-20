@@ -54,15 +54,15 @@ public class ScopFactory {
 	public static final String LATEST_VERSION = VERSION_2_0_3;
 
 	// Hold one instance for each version
-	static Map<String,ScopDatabase> versionedScopDBs = new HashMap<String, ScopDatabase>(); 
-	public static String DEFAULT_VERSION = LATEST_VERSION;
+	private static Map<String,ScopDatabase> versionedScopDBs = new HashMap<String, ScopDatabase>(); 
+	private static String defaultVersion = LATEST_VERSION;
 
 	/**
 	 * Get the current default instance for the default version
 	 * @return
 	 */
 	public static ScopDatabase getSCOP(){
-		return getSCOP(DEFAULT_VERSION);
+		return getSCOP(defaultVersion);
 	}
 
 	/**
@@ -72,7 +72,7 @@ public class ScopFactory {
 	 * @see #getSCOP(String, boolean)
 	 */
 	public static ScopDatabase getSCOP(boolean forceLocalData) {
-		return getSCOP(DEFAULT_VERSION, forceLocalData);
+		return getSCOP(defaultVersion, forceLocalData);
 	}
 
 	/**
@@ -84,8 +84,8 @@ public class ScopFactory {
 	 * @return
 	 */
 	public static ScopDatabase getSCOP(String version){
-		// Default to a local installation
-		return getSCOP(version,true);
+		// Default to a remote installation
+		return getSCOP(version,false);
 	}
 
 	/**
@@ -106,7 +106,7 @@ public class ScopFactory {
 	 */
 	public static ScopDatabase getSCOP(String version, boolean forceLocalData){
 		if( version == null ) {
-			version = DEFAULT_VERSION;
+			version = defaultVersion;
 		}
 		ScopDatabase scop = versionedScopDBs.get(version);
 		if ( forceLocalData) {
@@ -135,7 +135,8 @@ public class ScopFactory {
 	 * @param version A version number, such as {@link #VERSION_1_75A}
 	 */
 	public static void setScopDatabase(String version) {
-		DEFAULT_VERSION = version;
+		getSCOP(version);
+		defaultVersion = version;
 	}
 	
 	/**
@@ -146,7 +147,7 @@ public class ScopFactory {
 	public static void setScopDatabase(String version, boolean forceLocalData) {
 		//System.out.println("ScopFactory: Setting ScopDatabase to version: " + version + " forced local: " + forceLocalData);
 		getSCOP(version,forceLocalData);
-		DEFAULT_VERSION = version;
+		defaultVersion = version;
 	}
 
 	/**
@@ -155,7 +156,7 @@ public class ScopFactory {
 	 */
 	public static void setScopDatabase(ScopDatabase scop){
 		//System.out.println("ScopFactory: Setting ScopDatabase to type: " + scop.getClass().getName());
-		DEFAULT_VERSION = scop.getScopVersion();
-		versionedScopDBs.put(DEFAULT_VERSION,scop);
+		defaultVersion = scop.getScopVersion();
+		versionedScopDBs.put(defaultVersion,scop);
 	}
 }

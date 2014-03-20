@@ -107,10 +107,10 @@ public class GeneChromosomePositionParser {
 		g.setGenebankId(spl[1]);
 		g.setChromosome(spl[2]);
 		g.setOrientation(spl[3].charAt(0));
-		g.setCdsStart(Integer.parseInt(spl[4]));
-		g.setCdsEnd(Integer.parseInt(spl[5]));
-		g.setTranscriptionStart(Integer.parseInt(spl[6]));
-		g.setTranscriptionEnd(Integer.parseInt(spl[7]));
+		g.setTranscriptionStart(Integer.parseInt(spl[4]));
+		g.setTranscriptionEnd(Integer.parseInt(spl[5]));
+		g.setCdsStart(Integer.parseInt(spl[6]));
+		g.setCdsEnd(Integer.parseInt(spl[7]));
 		g.setExonCount(Integer.parseInt(spl[8]));
 		String exonStarts = spl[9];
 		String exonEnds = spl[10];

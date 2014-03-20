@@ -860,6 +860,9 @@ public class PDBFileParser  {
 		if ( test == null)
 			seqResChains.add(current_chain);
 
+		if (current_group != null)
+			current_group.trimToSize();
+		
 		current_group = null;
 		current_chain = null;
 
@@ -1742,7 +1745,8 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 		if ( ! residueNumber.equals(current_group.getResidueNumber())) {
 
 			current_chain.addGroup(current_group);
-
+			current_group.trimToSize();
+			
 			current_group = getNewGroup(recordName,aminoCode1,groupCode3);
 
 			//current_group.setPDBCode(pdbCode);
@@ -1755,13 +1759,16 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 			// same residueNumber, but altLocs...
 
 			// test altLoc
-			if ( ! altLoc.equals(' ')) {												
+			if ( ! altLoc.equals(' ')) {
+				
 				altGroup = getCorrectAltLocGroup( altLoc,recordName,aminoCode1,groupCode3);
 				if ( altGroup.getChain() == null) {
 					// need to set current chain
 					altGroup.setChain(current_chain);
 				}
 				//System.out.println("found altLoc! " + current_group + " " + altGroup);
+				
+			
 			}
 		}
 
@@ -1912,6 +1919,14 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 			current_group.addAtom(atom);
 		}
 
+		
+		// make sure that main group has all atoms
+		// GitHub issue: #76
+		if ( ! current_group.hasAtom(atom.getFullName())) {
+			current_group.addAtom(atom);
+		}
+		
+		
 
 		//System.out.println("current group: " + current_group);
 			}
@@ -2090,6 +2105,7 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 		if (current_chain != null) {
 			if (current_group != null) {
 				current_chain.addGroup(current_group);
+				current_group.trimToSize();
 			}
 			//System.out.println("starting new model "+(structure.nrModels()+1));
 

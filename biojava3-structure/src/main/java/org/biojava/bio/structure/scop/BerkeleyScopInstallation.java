@@ -24,9 +24,6 @@
  */
 package org.biojava.bio.structure.scop;
 
-import java.io.File;
-import java.io.IOException;
-import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -54,75 +51,55 @@ public class BerkeleyScopInstallation extends ScopInstallation {
 	public BerkeleyScopInstallation() {
 		super();
 		setScopVersion(defaultBerkeleyScopVersion);
-		setScopDownloadURL(defaultBerkeleyDownloadURL);
+		addMirror(new BerkeleyScopMirror(defaultBerkeleyDownloadURL));
+		addMirror(new ScopMirror());
 	}
 
-	private String getFilename(String fileType) {
-		String version = scopVersion;
-		for (Map.Entry<String, String[]> entry : EQUIVALENT_VERSIONS.entrySet()) {
-			for (String vr : entry.getValue()) {
-				if (scopVersion.equals(vr)) {
-					version = entry.getKey();
-					break;
+	private static class BerkeleyScopMirror extends ScopMirror {
+		private String rootURL;
+		public BerkeleyScopMirror(String url) {
+			super(url);
+			rootURL = url;
+		}
+
+		@Override
+		public String getClaURL(String scopVersion) {
+			return rootURL+getFilename("cla",scopVersion);
+		}
+
+		@Override
+		public String getDesURL(String scopVersion) {
+			return rootURL+getFilename("des",scopVersion);
+		}
+
+		@Override
+		public String getHieURL(String scopVersion) {
+			return rootURL+getFilename("hie",scopVersion);
+		}
+
+		@Override
+		public String getComURL(String scopVersion) {
+			return rootURL+getFilename("com",scopVersion);
+		}
+
+		private String getFilename(String fileType, String version) {
+			// Convert to canonical version number
+			for (Map.Entry<String, String[]> entry : EQUIVALENT_VERSIONS.entrySet()) {
+				for (String vr : entry.getValue()) {
+					if (version.equals(vr)) {
+						version = entry.getKey();
+						break;
+					}
 				}
 			}
+			String[] parts = version.split("\\.");
+			// they changed the filename schemes!
+			if (Integer.parseInt(parts[0]) == 1) {
+				return "dir." + fileType + ".scop." + version + ".txt";
+			} else {
+				return "dir." + fileType + ".scope." + version + "-stable.txt";
+			}
 		}
-		String[] parts = version.split("\\.");
-		// they changed the filename schemes!
-		if (Integer.parseInt(parts[0]) == 1) {
-			return "dir." + fileType + ".scop." + version + ".txt";
-		} else {
-			return "dir." + fileType + ".scope." + version + "-stable.txt";
-		}
-	}
-
-
-	@Override
-	protected void downloadClaFile() throws IOException {
-		String filename = getFilename("cla"); // does not contain cacheLocation
-		URL url = new URL(scopDownloadURL + filename);
-		downloadFileFromRemote(url, new File(getClaFilename())); // does contain cacheLocation
-	}
-
-	@Override
-	protected void downloadDesFile() throws IOException {
-		String filename = getFilename("des"); // does not contain cacheLocation
-		URL url = new URL(scopDownloadURL + filename);
-		downloadFileFromRemote(url, new File(getDesFilename())); // does contain cacheLocation
-	}
-
-	@Override
-	protected void downloadHieFile() throws IOException {
-		String filename = getFilename("hie"); // does not contain cacheLocation
-		URL url = new URL(scopDownloadURL + filename);
-		downloadFileFromRemote(url, new File(getHieFilename())); // does contain cacheLocation
-	}
-
-	@Override
-	protected void downloadComFile() throws IOException {
-		String filename = getFilename("com"); // does not contain cacheLocation
-		URL url = new URL(scopDownloadURL + filename);
-		downloadFileFromRemote(url, new File(getComFilename())); // does contain cacheLocation
-	}
-
-	@Override
-	protected String getClaFilename() {
-		return cacheLocation + getFilename("cla");
-	}
-
-	@Override
-	protected String getDesFilename() {
-		return cacheLocation + getFilename("des");
-	}
-
-	@Override
-	protected String getHieFilename() {
-		return cacheLocation + getFilename("hie");
-	}
-
-	@Override
-	protected String getComFilename() {
-		return cacheLocation + getFilename("com");
 	}
 
 }

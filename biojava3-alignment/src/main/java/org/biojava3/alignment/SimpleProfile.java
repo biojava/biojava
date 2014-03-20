@@ -388,7 +388,7 @@ public class SimpleProfile<S extends Sequence<C>, C extends Compound> implements
             return toString(50, IOUtils.getGCGHeader(list), IOUtils.getIDFormat(list), false, false, true, false,
                     false, false);
         case PDBWEB:
-            return toString(60, null, "%s", true, true, true, false, true, true);
+            return toString(60, null, "%10s", true, true, true, false, true, true);
         }
 	}
 

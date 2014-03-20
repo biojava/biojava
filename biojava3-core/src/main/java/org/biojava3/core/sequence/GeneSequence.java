@@ -26,6 +26,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.logging.Logger;
+
+import org.biojava3.core.sequence.compound.DNACompoundSet;
 import org.biojava3.core.sequence.compound.NucleotideCompound;
 import org.biojava3.core.sequence.template.CompoundSet;
 
@@ -66,6 +68,7 @@ public class GeneSequence extends DNASequence {
         setBioBegin(begin);
         setBioEnd(end);
         setStrand(strand);
+        this.setCompoundSet(DNACompoundSet.getDNACompoundSet());
     }
 
     /**

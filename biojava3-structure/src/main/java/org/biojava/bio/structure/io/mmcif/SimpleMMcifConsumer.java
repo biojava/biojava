@@ -383,6 +383,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 			// add previous data
 			if ( current_chain != null ) {
 				current_chain.addGroup(current_group);
+				current_group.trimToSize();
 			}
 
 			// we came to the beginning of a new NMR model
@@ -481,7 +482,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		if ( ! residueNumber.equals(current_group.getResidueNumber())) {
 			//System.out.println("end of residue: "+current_group.getPDBCode()+" "+residueNrInt);
 			current_chain.addGroup(current_group);
-
+			current_group.trimToSize();
 			current_group = getNewGroup(recordName,aminoCode1,seq_id,groupCode3);
 			//current_group.setPDBCode(pdbCode);
 			try {
@@ -539,6 +540,14 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 			current_group.addAtom(a);
 		}
 
+
+		// make sure that main group has all atoms
+		// GitHub issue: #76
+		if ( ! current_group.hasAtom(a.getFullName())) {
+			current_group.addAtom(a);
+		}
+		
+		
 		//System.out.println(">" + atom.getLabel_atom_id()+"< " + a.getGroup().getPDBName() + " " + a.getGroup().getChemComp()  );
 
 		//System.out.println(current_group);
@@ -624,15 +633,21 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		// build it up.
 
 		if ( groupCode3.equals(current_group.getPDBName())) {
-			if ( current_group.getAtoms().size() == 0)
+			if ( current_group.getAtoms().size() == 0) {
+				//System.out.println("current group is empty " + current_group + " " + altLoc);
 				return current_group;
-			//System.out.println("cloning current group");
+			}
+			//System.out.println("cloning current group " + current_group + " " + current_group.getAtoms().get(0).getAltLoc() + " altLoc " + altLoc);
 			Group altLocG = (Group) current_group.clone();
+			// drop atoms from cloned group...
+			// https://redmine.open-bio.org/issues/3307
+			altLocG.setAtoms(new ArrayList<Atom>());
 			current_group.addAltLoc(altLocG);
 			return altLocG;	
 		}
 
-
+		//	System.out.println("new  group " + recordName + " " + aminoCode1 + " " +groupCode3);
+		//String recordName,Character aminoCode1, long seq_id,String groupCode3) {
 		Group altLocG = getNewGroup(recordName,aminoCode1,seq_id,groupCode3);
 
 		try {

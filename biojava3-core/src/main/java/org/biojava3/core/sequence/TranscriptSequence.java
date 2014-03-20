@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 
+import org.biojava3.core.sequence.compound.DNACompoundSet;
 import org.biojava3.core.sequence.transcription.TranscriptionEngine;
 
 /**
@@ -52,6 +53,7 @@ public class TranscriptSequence extends DNASequence {
         this.parentGeneSequence = parentDNASequence;
         setBioBegin(begin);
         setBioEnd(end);
+        this.setCompoundSet(DNACompoundSet.getDNACompoundSet());
 
     }
 
@@ -188,8 +190,9 @@ public class TranscriptSequence extends DNASequence {
     public DNASequence getDNACodingSequence() {
         StringBuilder sb = new StringBuilder();
         for (CDSSequence cdsSequence : cdsSequenceList) {
-            sb.append(cdsSequence.getCodingSequence());
+        	sb.append(cdsSequence.getCodingSequence());
         }
+        
         DNASequence dnaSequence = new DNASequence(sb.toString().toUpperCase());
         dnaSequence.setAccession(new AccessionID(this.getAccession().getID()));
         return dnaSequence;
@@ -213,6 +216,7 @@ public class TranscriptSequence extends DNASequence {
         RNASequence rnaCodingSequence = dnaCodingSequence.getRNASequence(engine);
         ProteinSequence proteinSequence = rnaCodingSequence.getProteinSequence(engine);
         proteinSequence.setAccession(new AccessionID(this.getAccession().getID()));
+        
         return proteinSequence;
     }
 
