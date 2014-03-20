@@ -12,6 +12,12 @@ import org.junit.Test;
 
 import static org.junit.Assert.*;
 
+/**
+ * Testing of crystallographic info parsing in both pdb and mmCIF files
+ * 
+ * @author duarte_j
+ *
+ */
 public class TestCrystalInfo {
 
 	private static final float DELTA = 0.000001f;

@@ -11,7 +11,12 @@ import org.biojava.bio.structure.jama.Matrix;
 import org.junit.Assert;
 import org.junit.Test;
 
-
+/**
+ * Testing of space group symop.lib parsing and for crystal operator calculation correctness
+ * 
+ * @author duarte_j
+ *
+ */
 public class TestSpaceGroup {
 
 	private static final double DELTA = 0.000001;
