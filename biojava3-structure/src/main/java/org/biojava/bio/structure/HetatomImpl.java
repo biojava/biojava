@@ -274,20 +274,22 @@ public class HetatomImpl implements Group,Serializable {
 		// however in some alternate locations, the CA atoms are displayed.
 		// check the alternate locations...
 		
-		if ( hasAltLoc()) {
-			for ( Group alt : altLocs){
-				try {
-					a = alt.getAtom(name);
-					// dirty hack
-					// we are adding this group to the main one...
-					addAtom(a);
-					if ( a != null)
-						return a;
-				} catch (StructureException e){
-					// does not have that atom, ignore.
-				}
-			}
-		}
+		// this entire method and hashmaps should be revisited - a lot of overhead
+		
+//		if ( hasAltLoc()) {
+//			for ( Group alt : altLocs){
+//				try {
+//					a = alt.getAtom(name);
+//					// dirty hack
+//					// we are adding this group to the main one...
+//					addAtom(a);
+//					if ( a != null)
+//						return a;
+//				} catch (StructureException e){
+//					// does not have that atom, ignore.
+//				}
+//			}
+//		}
 
 		throw new StructureException(" No atom "+name + " in group " + pdb_name + " " + residueNumber  + " !");
 

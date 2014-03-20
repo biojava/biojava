@@ -51,6 +51,7 @@ import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureImpl;
 import org.biojava.bio.structure.StructureTools;
 import org.biojava.bio.structure.UnknownPdbAminoAcidException;
+import org.biojava.bio.structure.io.BondMaker;
 import org.biojava.bio.structure.io.FileParsingParameters;
 import org.biojava.bio.structure.io.PDBParseException;
 import org.biojava.bio.structure.io.SeqRes2AtomAligner;
@@ -822,7 +823,8 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 
 		}
 
-
+		
+       addBonds();
 		//TODO: add support for these:
 
 		//structure.setConnections(connects);
@@ -905,9 +907,10 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 
 	}
 
-
-
-
+   private void addBonds() {
+	   BondMaker maker = new BondMaker(structure);
+	   maker.makeBonds();	
+   }
 
 
 	private int getInternalNr(Group atomG) {
