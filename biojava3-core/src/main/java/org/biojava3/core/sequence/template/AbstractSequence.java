@@ -499,11 +499,19 @@ public abstract class AbstractSequence<C extends Compound> implements Sequence<C
         if (sequenceStorage != null) {
             return sequenceStorage;
         }
-        /*
         if (parentSequence != null) {
-            return parentSequence.getSequenceStorage();
+        
+        	//return parentSequence.getSequenceStorage();
+        	        	
+            if ( this.compoundSet.equals(parentSequence.getCompoundSet())){
+            	sequenceStorage = new ArrayListSequenceReader<C>();
+                sequenceStorage.setCompoundSet(this.getCompoundSet());
+                sequenceStorage.setContents(parentSequence.getSequenceAsString());
+                return sequenceStorage;
+            }
+            
         }
-        */
+        
         return null;
     }
 
@@ -515,6 +523,7 @@ public abstract class AbstractSequence<C extends Compound> implements Sequence<C
      * @return
      */
     public String getSequenceAsString(Integer bioStart, Integer bioEnd, Strand strand) {
+    	    	
         Location loc = new SimpleLocation(bioStart, bioEnd, strand);
         return loc.getSubSequence(this).getSequenceAsString();
     }
@@ -542,6 +551,7 @@ public abstract class AbstractSequence<C extends Compound> implements Sequence<C
      * @return
      */
     public C getCompoundAt(int position) {
+    	
         return getSequenceStorage().getCompoundAt(position);
     }
 
