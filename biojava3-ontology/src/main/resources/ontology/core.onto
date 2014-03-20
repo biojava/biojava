@@ -1,0 +1,55 @@
+#name: Core Ontology
+#description: Things everyone should know
+
+
+# we need these things just to get started. They all prety much need each other
+# to be defined, so they are in no particular order
+#
+any	is-a	any
+none	disjoint	any
+relation	is-a	any
+is-a	is-a	relation
+has-a	is-a	relation
+disjoint	is-a	relation
+relation	has-a	size
+size	is-a	positive-integer
+identity	is-a	equivalence
+
+# We need to be able to talk about the core object model so that we can plumb
+# magic in without making it totaly obvious
+#
+triple	is-a	any
+triple	has-a	source
+triple	has-a	object
+triple	has-a	relation
+(triple,has-a,any)	size	3
+
+remote-term	is-a	any
+remoteTerm	is-a	has-a
+(remote-term,remoteTerm,any)	size	1
+
+triple-term	is-a	any
+aTriple	is-a	has-a
+(triple-term,aTriple,triple)	size	1
+
+# and for optimizers or just plain searching, we need to know a little about
+# what types of relationships could exist. Again, we've decdlared these things,
+# but they probably need implementing in a hard-coded way somewhere
+#
+reflexive	is-a	relation
+symmetric	is-a	relation
+transitive	is-a	relation
+injective	is-a	relation
+
+equivalence	is-a	reflexive
+equivalence	is-a	symmetric
+equivalence	is-a	transitive
+(equivalence,is-a,any)	size	3
+
+partial-order	is-a	reflexive
+partial-order	is-a	anti-symmetric
+partial-order	is-a	transitive
+(partial-order,is-a,any)	size	3
+
+is-a	is-a	partial-order
+part-of	inverse	has-a
