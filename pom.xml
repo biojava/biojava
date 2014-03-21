@@ -348,10 +348,10 @@
 	</reporting>
 
 	<profiles>
-	
-		<!--  Note: before you can use this build profile you need to set up an environment that contains
-			  correctly signed keys. Configure the keystore properties and the profile in ~/.m2/settings.xml
-		 -->
+
+		<!-- Note: before you can use this build profile you need to set up an 
+			environment that contains correctly signed keys. Configure the keystore properties 
+			and the profile in ~/.m2/settings.xml -->
 		<profile>
 			<id>codesigning</id>
 			<activation>
@@ -404,16 +404,16 @@
 		<module>biojava3-alignment</module>
 		<module>biojava3-structure</module>
 		<module>integrationtest</module>
-		<module>biojava3-structure-gui</module>		
-		<module>biojava3-sequencing</module>		
+		<module>biojava3-structure-gui</module>
+		<module>biojava3-sequencing</module>
 		<module>biojava3-genome</module>
-		<module>biojava3-modfinder</module>		
+		<module>biojava3-modfinder</module>
 		<module>biojava3-ws</module>
 		<module>biojava3-protein-disorder</module>
 		<module>biojava3-aa-prop</module>
-		
 		<module>protein-comparison-tool</module>
 		<module>biojava3-survival</module>
+		<module>biojava3-ontology</module>
 	</modules>
 	<inceptionYear>2000</inceptionYear>
 	<issueManagement>
