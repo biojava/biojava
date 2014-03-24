@@ -18,53 +18,46 @@
  *      http://www.biojava.org/
  *
  */
-package org.biojava.bio.structure.scop;
+package org.biojava.structure.test.scop;
 
 import java.util.ArrayList;
 import java.util.Collection;
 
-import org.junit.Assume;
+import org.biojava.bio.structure.scop.RemoteScopInstallation;
+import org.biojava.bio.structure.scop.ScopDatabase;
+import org.biojava.bio.structure.scop.ScopFactory;
+import org.biojava.bio.structure.scop.ScopInstallation;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
 /**
- * Tests {@link BerkeleyScopInstallation}.
- * @author dmyerstu
+ * Tests {@link ScopInstallation}.
+ * @author Spencer Bliven
  * @since 3.0.6
  */
 @RunWith(Parameterized.class)
-public class BerkeleyScopInstallationTest extends ScopDatabaseTest {
+public class RemoteScopInstallationTest extends ScopDatabaseTest {
 
-	public BerkeleyScopInstallationTest(String tag,ScopDatabase scop) {
+	public RemoteScopInstallationTest(String tag,ScopDatabase scop) {
 		super(tag,scop);
 	}
+
+	//@Parameters
 	@Parameters(name="{0}")
 	public static Collection<Object[]> availableDatabases() {
 		ArrayList<Object[]> databases = new ArrayList<Object[]>();
-		ScopInstallation scop;
-
+		RemoteScopInstallation scop;
 		for(String version : new String[] {
-				// All versions should pass, but comment most out for test performance.
 				ScopFactory.LATEST_VERSION,
-				//"1.75A",
-				//ScopFactory.VERSION_2_0_2,
+				ScopFactory.VERSION_1_75A,
+				ScopFactory.VERSION_1_75B,
 				ScopFactory.VERSION_1_75,
-				//ScopFactory.VERSION_1_73,
+				ScopFactory.VERSION_1_73,
 		}) {
-			scop = new BerkeleyScopInstallation();
+			scop = new RemoteScopInstallation();
 			scop.setScopVersion(version);
-			// Don't fail if the server is down
-			boolean reachable = false;
-			for(ScopMirror mirror: scop.getMirrors()) {
-				if(mirror.isReachable()) {
-					reachable = true;
-					break;
-				}
-			}
-			Assume.assumeTrue("SCOP server is currently unreachable.",reachable);
-
-			databases.add(new Object[] {version, scop});
+			databases.add(new Object[] {scop.getScopVersion().trim(), scop});
 		}
 		return databases;
 	}

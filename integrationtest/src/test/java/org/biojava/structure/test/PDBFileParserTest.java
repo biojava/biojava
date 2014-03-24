@@ -22,7 +22,7 @@
  * Author: Jules Jacobsen
  * 
  */
-package org.biojava.strucure.test;
+package org.biojava.structure.test;
 
 import java.io.BufferedReader;
 import java.io.IOException;

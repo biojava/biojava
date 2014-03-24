@@ -22,7 +22,7 @@
  *
  */
 
-package org.biojava.bio.structure.scop;
+package org.biojava.structure.test.scop;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -32,6 +32,12 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 
+import org.biojava.bio.structure.scop.ScopCategory;
+import org.biojava.bio.structure.scop.ScopDatabase;
+import org.biojava.bio.structure.scop.ScopDescription;
+import org.biojava.bio.structure.scop.ScopDomain;
+import org.biojava.bio.structure.scop.ScopFactory;
+import org.biojava.bio.structure.scop.ScopNode;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;

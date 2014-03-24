@@ -1,4 +1,4 @@
-package org.biojava.strucure.test;
+package org.biojava.structure.test;
 
 public class HeaderOnlyTest extends MMcifTest {
 

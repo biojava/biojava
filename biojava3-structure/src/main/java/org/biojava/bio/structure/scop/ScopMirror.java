@@ -12,7 +12,7 @@ import org.biojava.bio.structure.io.util.FileDownloadUtils;
  * @author Spencer Bliven
  *
  */
-class ScopMirror {
+public class ScopMirror {
 	private String rootURL;
 	private final String claURL;
 	private final String desURL;

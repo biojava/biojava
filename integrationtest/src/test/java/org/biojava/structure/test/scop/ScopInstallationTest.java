@@ -18,11 +18,15 @@
  *      http://www.biojava.org/
  *
  */
-package org.biojava.bio.structure.scop;
+package org.biojava.structure.test.scop;
 
 import java.util.ArrayList;
 import java.util.Collection;
 
+import org.biojava.bio.structure.scop.ScopDatabase;
+import org.biojava.bio.structure.scop.ScopFactory;
+import org.biojava.bio.structure.scop.ScopInstallation;
+import org.biojava.bio.structure.scop.ScopMirror;
 import org.junit.Assume;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;

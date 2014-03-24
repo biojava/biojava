@@ -1,7 +1,10 @@
 /**
  * 
  */
-package org.biojava.bio.structure.scop;
+package org.biojava.structure.test.scop;
+
+import org.biojava.bio.structure.scop.ScopCategory;
+import org.biojava.bio.structure.scop.ScopDescription;
 
 import junit.framework.TestCase;
 

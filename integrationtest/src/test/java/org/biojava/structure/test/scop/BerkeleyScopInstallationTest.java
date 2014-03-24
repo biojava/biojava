@@ -18,42 +18,58 @@
  *      http://www.biojava.org/
  *
  */
-package org.biojava.bio.structure.scop;
+package org.biojava.structure.test.scop;
 
 import java.util.ArrayList;
 import java.util.Collection;
 
+import org.biojava.bio.structure.scop.BerkeleyScopInstallation;
+import org.biojava.bio.structure.scop.ScopDatabase;
+import org.biojava.bio.structure.scop.ScopFactory;
+import org.biojava.bio.structure.scop.ScopInstallation;
+import org.biojava.bio.structure.scop.ScopMirror;
+import org.junit.Assume;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
 /**
- * Tests {@link ScopInstallation}.
- * @author Spencer Bliven
+ * Tests {@link BerkeleyScopInstallation}.
+ * @author dmyerstu
  * @since 3.0.6
  */
 @RunWith(Parameterized.class)
-public class RemoteScopInstallationTest extends ScopDatabaseTest {
+public class BerkeleyScopInstallationTest extends ScopDatabaseTest {
 
-	public RemoteScopInstallationTest(String tag,ScopDatabase scop) {
+	public BerkeleyScopInstallationTest(String tag,ScopDatabase scop) {
 		super(tag,scop);
 	}
-
-	//@Parameters
 	@Parameters(name="{0}")
 	public static Collection<Object[]> availableDatabases() {
 		ArrayList<Object[]> databases = new ArrayList<Object[]>();
-		RemoteScopInstallation scop;
+		ScopInstallation scop;
+
 		for(String version : new String[] {
+				// All versions should pass, but comment most out for test performance.
 				ScopFactory.LATEST_VERSION,
-				ScopFactory.VERSION_1_75A,
-				ScopFactory.VERSION_1_75B,
+				//"1.75A",
+				//ScopFactory.VERSION_2_0_2,
 				ScopFactory.VERSION_1_75,
-				ScopFactory.VERSION_1_73,
+				//ScopFactory.VERSION_1_73,
 		}) {
-			scop = new RemoteScopInstallation();
+			scop = new BerkeleyScopInstallation();
 			scop.setScopVersion(version);
-			databases.add(new Object[] {scop.getScopVersion().trim(), scop});
+			// Don't fail if the server is down
+			boolean reachable = false;
+			for(ScopMirror mirror: scop.getMirrors()) {
+				if(mirror.isReachable()) {
+					reachable = true;
+					break;
+				}
+			}
+			Assume.assumeTrue("SCOP server is currently unreachable.",reachable);
+
+			databases.add(new Object[] {version, scop});
 		}
 		return databases;
 	}

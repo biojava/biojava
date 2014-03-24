@@ -20,7 +20,7 @@
  * Created on Jan 25, 2010
  *
  */
-package org.biojava.strucure.test;
+package org.biojava.structure.test;
 
 import java.io.InputStream;
 
