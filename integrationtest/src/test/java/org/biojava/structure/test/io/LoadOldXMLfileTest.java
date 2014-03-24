@@ -22,7 +22,7 @@
  *
  */
 
-package org.biojava.bio.structure.align;
+package org.biojava.structure.test.io;
 
 import java.io.BufferedReader;
 import java.io.IOException;
