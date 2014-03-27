@@ -7,10 +7,12 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 
 import org.biojava.bio.structure.quaternary.BiologicalAssemblyTransformation;
 
@@ -22,29 +24,36 @@ import org.biojava.bio.structure.quaternary.BiologicalAssemblyTransformation;
  *
  */
 public class PDBHeader implements PDBRecord, Serializable{
-	/**
-	 *
-	 */
+
 	private static final long serialVersionUID = -5834326174085429508L;
-	String method;
-	String title;
-	String description;
-	String idCode;
-	String classification;
-	Date depDate;
-	Date modDate;
-	String technique;
-	float resolution;
-	String authors;
-	int nrBioAssemblies ;
+	
+	private String method;
+	private String title;
+	private String description;
+	private String idCode;
+	private String classification;
+	
+	private Date depDate;
+	private Date modDate;
+	
+	private Set<ExperimentalTechnique> techniques;
+	private PDBCrystallographicInfo crystallographicInfo;
+	
+	private float resolution;
+	
+	private JournalArticle journalArticle;
+	private String authors;
+	
+	private int nrBioAssemblies ;
+	
 	public static final float DEFAULT_RESOLUTION = 99;
 
 	private Long id;
 	public static final String newline = System.getProperty("line.separator");
 
-	DateFormat dateFormat;
+	private DateFormat dateFormat;
 
-	Map<Integer,List<BiologicalAssemblyTransformation>> tranformationMap ;
+	private Map<Integer,List<BiologicalAssemblyTransformation>> tranformationMap ;
 
 	public PDBHeader(){
 
@@ -54,6 +63,7 @@ public class PDBHeader implements PDBRecord, Serializable{
 		resolution = DEFAULT_RESOLUTION;
 		tranformationMap = new HashMap<Integer, List<BiologicalAssemblyTransformation>>();
 		nrBioAssemblies = -1;
+		crystallographicInfo = new PDBCrystallographicInfo();
 	}
 
 	/** String representation
@@ -145,15 +155,27 @@ public class PDBHeader implements PDBRecord, Serializable{
 	}
 
 	private void printExpdata(StringBuffer buf){
-		String exp = getTechnique();
-		if ( exp == null || exp.length() == 0)
+		Set<ExperimentalTechnique> exp = getExperimentalTechniques();
+		if ( exp == null )
 			return;
-
+		
+		
 		buf.append("EXPDTA    ");
-		buf.append(exp);
 
-		// fill up the white space to the right column
-		int l =  exp.length()+ 10;
+		int length = 0;
+		int i = 0;
+		for (ExperimentalTechnique et:exp) {
+			if (i>0) {
+				buf.append("; ");
+				length+=2;
+			}
+			buf.append(et.getName());			
+			length+=et.getName().length();
+			i++;
+		}
+		
+		// fill up the white space to the right column		
+		int l =  length + 10;
 		fillLine(buf,l);
 
 		buf.append(newline);
@@ -429,14 +451,65 @@ public class PDBHeader implements PDBRecord, Serializable{
 		this.depDate = depDate;
 	}
 
+	@Deprecated
+	/**
+	 * Use #getExperimentalTechniques() instead
+	 * @return
+	 */
 	public String getTechnique() {
-		return technique;
+		if (techniques==null) return null;
+		return techniques.iterator().next().getName();
 	}
 
+	@Deprecated
+	/**
+	 * Use #setExperimentalTechnique() instead
+	 * @param technique
+	 */
 	public void setTechnique(String technique) {
-		this.technique = technique;
+		setExperimentalTechnique(technique);
 	}
+	
+	/**
+	 * Return the Set of ExperimentalTechniques, usually the set is of size 1 except for hybrid
+	 * experimental techniques when the Set will contain 2 or more values
+	 * @return the Set of ExperimentalTechniques or null if not set
+	 */
+	public Set<ExperimentalTechnique> getExperimentalTechniques() {
+		return techniques;
+	}
+	
+	/**
+	 * Adds the experimental technique to the set of experimental techniques of this header.
+	 * Note that if input is not a recognised technique string then no errors will be produced but
+	 * false will be returned
+	 * @param techniqueStr
+	 * @return true if the input corresponds to a recognised technique string (see {@link ExperimentalTechnique}) 
+	 * and it was not already present in the current set of ExperimentalTechniques
+	 */
+	public boolean setExperimentalTechnique(String techniqueStr) {
+		
+		ExperimentalTechnique et = ExperimentalTechnique.getByName(techniqueStr);
 
+		if (et==null) return false;
+		
+		if (techniques==null) {
+			techniques = EnumSet.of(et);
+			return true;
+		} else {
+			return techniques.add(et);
+		}
+		
+	}
+	
+	public PDBCrystallographicInfo getCrystallographicInfo() {
+		return crystallographicInfo;
+	}
+	
+	public void setCrystallographicInfo(PDBCrystallographicInfo crystallographicInfo) {
+		this.crystallographicInfo = crystallographicInfo;
+	}
+	
 	public float getResolution() {
 		return resolution;
 	}
@@ -497,6 +570,38 @@ public class PDBHeader implements PDBRecord, Serializable{
 		this.authors = authors;
 	}
 
+	/**
+	 * Return whether or not the entry has an associated journal article
+	 * or publication. The JRNL section is not mandatory and thus may not be
+	 * present.
+	 * @return flag if a JournalArticle could be found.
+	 */
+	public boolean hasJournalArticle() {
+        if (this.journalArticle != null) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Get the associated publication as defined by the JRNL records in a PDB
+     * file.
+     * @return a JournalArticle
+     */
+    public JournalArticle getJournalArticle() {
+        return this.journalArticle;
+    }
+
+    /**
+     * Set the associated publication as defined by the JRNL records in a PDB
+     * file.
+     * @param journalArticle the article
+     */
+    public void setJournalArticle(JournalArticle journalArticle) {
+        this.journalArticle = journalArticle;
+    }
+	
+	
 	public Map<Integer,List<BiologicalAssemblyTransformation>> getBioUnitTranformationMap() {
 		return tranformationMap ;
 	}

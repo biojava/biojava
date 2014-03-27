@@ -2,6 +2,10 @@ package org.biojava.bio.structure.align.util;
 
 import java.io.StringWriter;
 
+import javax.vecmath.AxisAngle4d;
+import javax.vecmath.Matrix4d;
+import javax.vecmath.Vector3d;
+
 import org.biojava.bio.structure.Atom;
 import org.biojava.bio.structure.AtomImpl;
 import org.biojava.bio.structure.Calc;
@@ -59,6 +63,14 @@ public final class RotationAxis {
 	}
 
 	/**
+	 * Returns the rotation axis and angle in a single javax.vecmath.AxisAngle4d object 
+	 * @return
+	 */
+	public AxisAngle4d getAxisAngle4d() {
+		return new AxisAngle4d(rotationAxis.getX(),rotationAxis.getY(),rotationAxis.getZ(),theta);
+	}
+	
+	/**
 	 * Get a position on the rotation axis.
 	 * 
 	 * Specifically, project the origin onto the rotation axis
@@ -76,6 +88,10 @@ public final class RotationAxis {
 		return screwTranslation;
 	}
 
+	public Vector3d getVector3dScrewTranslation() {
+		return new Vector3d(screwTranslation.getX(),screwTranslation.getY(),screwTranslation.getZ());
+	}
+	
 	/**
 	 * Get the component of translation perpendicular to the axis of rotation.
 	 * This isn't particularly meaningful, but is calculated internally and
@@ -123,6 +139,23 @@ public final class RotationAxis {
 	 */
 	public RotationAxis(Matrix rotation, Atom translation) {
 		init(rotation, translation);
+	}
+	
+	/**
+	 * Create a rotation axis from a Matrix4d containing a rotational component and a translational component
+	 * @param transform
+	 */
+	public RotationAxis(Matrix4d transform) {
+		Atom transl = new AtomImpl();
+		double[] coords = {transform.m03, transform.m13, transform.m23};
+		transl.setCoords(coords);
+		Matrix rot = new Matrix(3,3);
+		for (int i=0;i<3;i++) {
+			for (int j=0;j<3;j++) {
+				rot.set(i, j, transform.getElement(i, j));
+			}
+		}
+		init(rot,transl);
 	}
 	
 	/**

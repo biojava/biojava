@@ -39,12 +39,6 @@ import java.util.List;
  * @author Jules Jacobsen
  * @since 1.5
  */
-/**
- * Created by IntelliJ IDEA.
- * User: jacobsen
- * Date: 22-Jan-2007
- * Time: 18:14:25
- */
 public class Compound implements Cloneable, Serializable {
 
 	/**

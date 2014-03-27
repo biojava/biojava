@@ -123,6 +123,10 @@
 						<argLine>-Xms256m -Xmx2000M</argLine>
 						<reuseForks>false</reuseForks>
 						<forkCount>1</forkCount>
+						<excludes>
+							<!-- we exclude by default the long parsing tests, they will only be executed if explicitly called -->
+							<exclude>**/TestLongPdbVsMmCifParsing.java</exclude>
+						</excludes>						
 					</configuration>
 				</plugin>
 				<plugin>

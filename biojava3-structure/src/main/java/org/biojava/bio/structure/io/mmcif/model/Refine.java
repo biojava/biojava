@@ -62,6 +62,9 @@ public class Refine {
 	String pdbx_overall_SU_R_free_Cruickshank_DPI;
 	String pdbx_overall_SU_R_Blow_DPI;
 	String pdbx_overall_SU_R_free_Blow_DPI;
+	// these 2 fields are present only in some files (e.g. 4lnc, a hybrid X-RAY/NEUTRON DIFFRACTION)
+	String ls_matrix_type;
+	String ls_number_reflns_R_work;
 
 	public Refine(){
 		aniso_B = new String[3][3];
@@ -562,6 +565,22 @@ public class Refine {
 	public void setPdbx_overall_SU_R_free_Blow_DPI(
 			String pdbx_overall_SU_R_free_Blow_DPI) {
 		this.pdbx_overall_SU_R_free_Blow_DPI = pdbx_overall_SU_R_free_Blow_DPI;
+	}
+
+	public String getLs_matrix_type() {
+		return ls_matrix_type;
+	}
+
+	public void setLs_matrix_type(String ls_matrix_type) {
+		this.ls_matrix_type = ls_matrix_type;
+	}
+
+	public String getLs_number_reflns_R_work() {
+		return ls_number_reflns_R_work;
+	}
+
+	public void setLs_number_reflns_R_work(String ls_number_reflns_R_work) {
+		this.ls_number_reflns_R_work = ls_number_reflns_R_work;
 	}
 	
 

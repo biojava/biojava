@@ -178,6 +178,8 @@ implements PDBInstallation
 
                 line = indexReader.readLine();
             }
+            
+            
         }
         catch (Exception e) {
             e.printStackTrace();
@@ -205,7 +207,7 @@ implements PDBInstallation
 //      pdbId\tnrCAAtoms\ttechnique\tresolution\tdepDate\tmodDate\ttitle\tclassification\ttime");
         header.setIdCode(spl[0]);
         
-        header.setTechnique(nullCheck(spl[2]));
+        header.setExperimentalTechnique(nullCheck(spl[2]));
         try {
             float resolution = Float.parseFloat(spl[3]);
             header.setResolution(resolution);

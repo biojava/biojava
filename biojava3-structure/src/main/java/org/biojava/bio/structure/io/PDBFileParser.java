@@ -48,7 +48,7 @@ import org.biojava.bio.structure.Atom;
 import org.biojava.bio.structure.AtomImpl;
 import org.biojava.bio.structure.Author;
 import org.biojava.bio.structure.Bond;
-import org.biojava.bio.structure.Calc;
+//import org.biojava.bio.structure.Calc;
 import org.biojava.bio.structure.Chain;
 import org.biojava.bio.structure.ChainImpl;
 import org.biojava.bio.structure.Compound;
@@ -71,9 +71,12 @@ import org.biojava.bio.structure.StructureImpl;
 import org.biojava.bio.structure.StructureTools;
 import org.biojava.bio.structure.io.mmcif.ChemCompGroupFactory;
 import org.biojava.bio.structure.io.mmcif.ReducedChemCompProvider;
-import org.biojava.bio.structure.io.mmcif.model.ChemComp;
-import org.biojava.bio.structure.io.mmcif.model.ChemCompBond;
+//import org.biojava.bio.structure.io.mmcif.model.ChemComp;
+//import org.biojava.bio.structure.io.mmcif.model.ChemCompBond;
 import org.biojava.bio.structure.io.util.PDBTemporaryStorageUtils.LinkRecord;
+import org.biojava.bio.structure.xtal.CrystalCell;
+import org.biojava.bio.structure.xtal.SpaceGroup;
+import org.biojava.bio.structure.xtal.SymoplibParser;
 
 
 /**
@@ -161,8 +164,6 @@ public class PDBFileParser  {
 	
 	private PDBBioAssemblyParser bioAssemblyParser = null;
 	
-	@Deprecated
-	private Map <String,Object>  header ;
 	private PDBHeader pdbHeader;
 	private PDBCrystallographicInfo crystallographicInfo;
 	private JournalArticle journalArticle;
@@ -280,7 +281,6 @@ public class PDBFileParser  {
 		current_model = new ArrayList<Chain>();
 		current_chain = null           ;
 		current_group = null           ;
-		header        = init_header() ;
 		pdbHeader 	  = new PDBHeader();
 		crystallographicInfo = new PDBCrystallographicInfo();
 		connects      = new ArrayList<Map<String,Integer>>() ;
@@ -306,25 +306,6 @@ public class PDBFileParser  {
 		linkRecords = new ArrayList<LinkRecord>();
 	}
 
-
-
-	/** initialize the header. */
-	private Map<String,Object> init_header(){
-
-
-		HashMap<String,Object> header = new HashMap<String,Object> ();
-		header.put ("idCode","");
-		header.put ("classification","")         ;
-		header.put ("depDate","0000-00-00");
-		header.put ("title","");
-		header.put ("technique","");
-		header.put ("resolution",null);
-		header.put ("modDate","0000-00-00");
-		//header.put ("journalRef","");
-		//header.put ("author","");
-		//header.put ("compound","");
-		return header ;
-	}
 
 
 	/**
@@ -421,10 +402,7 @@ public class PDBFileParser  {
 				System.out.println(pdbId + " is a LEGACY entry - this will most likely not parse correctly.");
 			}
 		}
-		header.put("idCode",pdbCode);
 		structure.setPDBCode(pdbCode);
-		header.put("classification",classification);
-		header.put("depDate",deposition_date);
 
 		pdbHeader.setIdCode(pdbCode);
 		pdbHeader.setClassification(classification);
@@ -433,7 +411,6 @@ public class PDBFileParser  {
 		try {
 			Date dep = dateFormat.parse(deposition_date);
 			pdbHeader.setDepDate(dep);
-			header.put("depDate",deposition_date);
 
 		} catch (ParseException e){
 			e.printStackTrace();
@@ -703,12 +680,11 @@ public class PDBFileParser  {
 	private void pdb_REVDAT_Handler(String line) {
 
 		// only keep the first...
-		String modDate = (String) header.get("modDate");
+		Date modDate = pdbHeader.getModDate();
 
-		if ( modDate.equals("0000-00-00") ) {
+		if ( modDate.equals(new Date(0)) ) {
 			// modDate is still initialized
 			String modificationDate = line.substring (13, 22).trim() ;
-			header.put("modDate",modificationDate);
 
 			try {
 				Date dep = dateFormat.parse(modificationDate);
@@ -897,11 +873,17 @@ public class PDBFileParser  {
 		else
 			title = line.substring(10,line.length()).trim();
 
-		String t= (String)header.get("title") ;
-		if ( (t != null) && (! t.equals("")))
-			t += " ";
+		String t = pdbHeader.getTitle();
+		if ( (t != null) && (! t.equals("")) ){
+			if (t.endsWith("-")) 
+				t += ""; // if last line ends with a hyphen then we don't add space 
+			else 
+				t += " ";
+		}
+		else t = "";
+		
 		t += title;
-		header.put("title",t);
+		
 		pdbHeader.setTitle(t);
 	}
 
@@ -1417,7 +1399,6 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 				return ;
 			}
 			//System.out.println("got resolution:" +res);
-			header.put("resolution",new Float(res));
 			pdbHeader.setResolution(res);
 		}
 
@@ -1486,13 +1467,10 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 		else
 			technique = line.substring(10).trim();
 
-		String t =(String) header.get("technique");
-		t += technique +" ";
-		header.put("technique",t);
-		pdbHeader.setTechnique(t);
+		for (String singleTechnique: technique.split(";\\s+")) { 
+			pdbHeader.setExperimentalTechnique(singleTechnique);
+		}
 
-		int nmr = technique.indexOf("NMR");
-		if ( nmr != -1 ) structure.setNmr(true);  ;
 
 	}
 	
@@ -1548,20 +1526,23 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 		
 		// If the entry describes a structure determined by a technique other than X-ray crystallography,
 	    // CRYST1 contains a = b = c = 1.0, alpha = beta = gamma = 90 degrees, space group = P 1, and Z =1.
-		// In this case, ignore the record
-        if (a == 1.0f && b == 1.0f && c == 1.0f && 
+		// if so we don't add and CrystalCell and SpaceGroup remain both null
+		if (a == 1.0f && b == 1.0f && c == 1.0f && 
         		alpha == 90.0f && beta == 90.0f && gamma == 90.0f && 
         		spaceGroup.equals("P 1") && z == 1) {
         	return;
         } 
-      
-        crystallographicInfo.setA(a);
-        crystallographicInfo.setB(b);
-        crystallographicInfo.setC(c);
-        crystallographicInfo.setAlpha(alpha);
-        crystallographicInfo.setBeta(beta);
-        crystallographicInfo.setGamma(gamma);
-        crystallographicInfo.setSpaceGroup(spaceGroup);
+		CrystalCell xtalCell = new CrystalCell();
+		crystallographicInfo.setCrystalCell(xtalCell);
+		xtalCell.setA(a);
+		xtalCell.setB(b);
+		xtalCell.setC(c);
+		xtalCell.setAlpha(alpha);
+		xtalCell.setBeta(beta);
+		xtalCell.setGamma(gamma);
+        SpaceGroup sg = SymoplibParser.getSpaceGroup(spaceGroup);
+        if (sg==null) logger.fine("Space group '"+spaceGroup+"' not recognised as a standard space group"); 
+        crystallographicInfo.setSpaceGroup(sg);
         crystallographicInfo.setZ(z);
 	}
 
@@ -2610,7 +2591,7 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 		siteMap = new LinkedHashMap<String, Site>();
 		current_chain = null           ;
 		current_group = null           ;
-		header        = init_header();
+		//header        = init_header();
 		pdbHeader     = new PDBHeader();
 		connects      = new ArrayList<Map<String,Integer>>();
 		continuationField = "";
@@ -2898,21 +2879,14 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 	private void triggerEndFileChecks(){
 		// finish and add ...
 
-		String modDate = (String) header.get("modDate");
-		if ( modDate.equals("0000-00-00") ) {
+		Date modDate = pdbHeader.getModDate();
+		if ( modDate.equals(new Date(0)) ) {
 			// modification date = deposition date
-			String depositionDate = (String) header.get("depDate");
-			header.put("modDate",depositionDate) ;
+			Date depositionDate = pdbHeader.getDepDate();
 
 			if (! depositionDate.equals(modDate)){
 				// depDate is 0000-00-00
-
-				try {
-					Date dep = dateFormat.parse(depositionDate);
-					pdbHeader.setDepDate(dep);
-				} catch (ParseException e){
-					e.printStackTrace();
-				}
+				pdbHeader.setDepDate(depositionDate);
 			}
 
 		}
@@ -2930,11 +2904,10 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 		//set the JournalArticle, if there is one
 		if (!journalLines.isEmpty()) {
 			buildjournalArticle();
-			structure.setJournalArticle(journalArticle);
+			pdbHeader.setJournalArticle(journalArticle);
 		}
 
 		structure.addModel(current_model);
-		structure.setHeader(header);
 		structure.setPDBHeader(pdbHeader);
 		structure.setCrystallographicInfo(crystallographicInfo);
 		structure.setConnections(connects);

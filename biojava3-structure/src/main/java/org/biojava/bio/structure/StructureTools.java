@@ -641,20 +641,17 @@ public class StructureTools {
 	 * @return Structure
 	 * @since 3.0
 	 */
-	@SuppressWarnings("deprecation")
 	public static final Structure getReducedStructure(Structure s, String chainId) throws StructureException{
 		// since we deal here with structure alignments,
 		// only use Model 1...
 
 		Structure newS = new StructureImpl();
-		newS.setHeader(s.getHeader());
 		newS.setPDBCode(s.getPDBCode());
 		newS.setPDBHeader(s.getPDBHeader());
 		newS.setName(s.getName());
 		newS.setSSBonds(s.getSSBonds());
 		newS.setDBRefs(s.getDBRefs());
 		newS.setSites(s.getSites());
-		newS.setNmr(s.isNmr());
 		newS.setBiologicalAssembly(s.isBiologicalAssembly());
 		newS.setCompounds(s.getCompounds());
 		newS.setConnections(s.getConnections());
@@ -707,20 +704,17 @@ public class StructureTools {
 	 * @return Structure object
 	 * @since 3.0
 	 */
-	@SuppressWarnings("deprecation")
 	public static final Structure getReducedStructure(Structure s, int chainNr) throws StructureException{
 		// since we deal here with structure alignments,
 		// only use Model 1...
 
 		Structure newS = new StructureImpl();
-		newS.setHeader(s.getHeader());
 		newS.setPDBCode(s.getPDBCode());
 		newS.setPDBHeader(s.getPDBHeader());
 		newS.setName(s.getName());
 		newS.setSSBonds(s.getSSBonds());
 		newS.setDBRefs(s.getDBRefs());
 		newS.setSites(s.getSites());
-		newS.setNmr(s.isNmr());
 		newS.setBiologicalAssembly(s.isBiologicalAssembly());
 		newS.setCompounds(s.getCompounds());
 		newS.setConnections(s.getConnections());
@@ -768,8 +762,6 @@ public class StructureTools {
 	 * @param ranges A comma-seperated list of ranges, optionally surrounded by parentheses
 	 * @return Substructure of s specified by ranges
 	 */
-
-	@SuppressWarnings("deprecation")
 	public static final Structure getSubRanges(Structure s, String ranges ) 
 			throws StructureException
 			{
@@ -793,12 +785,10 @@ public class StructureTools {
 
 		Structure newS = new StructureImpl();
 
-		newS.setHeader(s.getHeader());
 		newS.setPDBCode(s.getPDBCode());
 		newS.setPDBHeader(s.getPDBHeader());
 		newS.setName(s.getName());
 		newS.setDBRefs(s.getDBRefs());
-		newS.setNmr(s.isNmr());
 		newS.setBiologicalAssembly(s.isBiologicalAssembly());
 		newS.getPDBHeader().setDescription("sub-range " + ranges + " of "  + newS.getPDBCode() + " " + s.getPDBHeader().getDescription());
 		newS.setCrystallographicInfo(s.getCrystallographicInfo());
@@ -1168,22 +1158,18 @@ public class StructureTools {
 	 * @return a structure that contains only  the first model
 	 * @since 3.0.5
 	 */
-	@SuppressWarnings("deprecation")
 	public static Structure removeModels(Structure s){
-		if ( ! s.isNmr())
+		if ( s.nrModels()==1)
 			return s;
 
 		Structure n = new StructureImpl();
 		// go through whole substructure and clone ...
 
 		// copy structure data
-		n.setNmr(true);
 
 		n.setPDBCode(s.getPDBCode());
 		n.setName(s.getName());
 
-		// we are calling this legacy menthod for backwards compatibility
-		n.setHeader(s.getHeader());
 		//TODO: do deep copying of data!
 		n.setPDBHeader(s.getPDBHeader());
 		n.setDBRefs(s.getDBRefs());

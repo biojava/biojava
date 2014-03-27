@@ -23,6 +23,7 @@ public class AuditAuthor
 {
    String name;
    String pdbx_ordinal;
+   String address;
    public String getName()
    {
       return name;
@@ -38,6 +39,12 @@ public class AuditAuthor
    public void setPdbx_ordinal(String pdbx_ordinal)
    {
       this.pdbx_ordinal = pdbx_ordinal;
+   }
+   public String getAddress() {
+	   return address;
+   }
+   public void setAddress(String address) {
+	   this.address = address;
    }
 
 

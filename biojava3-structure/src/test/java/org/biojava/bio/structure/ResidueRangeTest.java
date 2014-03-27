@@ -138,7 +138,7 @@ public class ResidueRangeTest {
 	@Test
 	public void testParseAndEqual() {
 
-		String pdbId1 = "2eke";
+		//String pdbId1 = "2eke";
 		String string1 = "C_1023-1063,C_1064-1084";
 		List<ResidueRange> list1 = ResidueRange.parseMultiple(string1);
 		assertEquals(new ResidueRange('C', new ResidueNumber("C", 1023, null), new ResidueNumber("C", 1063, null), null), list1.get(0));
@@ -146,7 +146,7 @@ public class ResidueRangeTest {
 		assertEquals(null, list1.get(0).getLength());
 		assertEquals(null, list1.get(1).getLength());
 
-		String pdbId = "1qdm";
+		//String pdbId = "1qdm";
 		String string2 = "A_3S-37S,A_65S-99S";
 		List<ResidueRange> list2 = ResidueRange.parseMultiple(string2);
 		assertEquals(new ResidueRange('A', new ResidueNumber("A", 3, 'S'), new ResidueNumber("A", 37, 'S'), null), list2.get(0));

@@ -28,15 +28,12 @@ import java.util.Comparator;
 import java.util.List;
 
 import org.biojava.bio.structure.Atom;
-import org.biojava.bio.structure.AtomImpl;
-import org.biojava.bio.structure.Calc;
 import org.biojava.bio.structure.Chain;
 import org.biojava.bio.structure.Group;
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.io.mmcif.model.PdbxStructAssembly;
 import org.biojava.bio.structure.io.mmcif.model.PdbxStructAssemblyGen;
 import org.biojava.bio.structure.io.mmcif.model.PdbxStructOperList;
-import org.biojava.bio.structure.jama.Matrix;
 
 /** 
  * Reconstructs the quaternary structure of a protein from an asymmetric unit

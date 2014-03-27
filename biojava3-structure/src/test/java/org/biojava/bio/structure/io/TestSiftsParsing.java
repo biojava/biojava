@@ -89,7 +89,7 @@ public class TestSiftsParsing extends TestCase {
 				
 				// test segment 1:
 				
-				SiftsSegment seg1 = e.getSegments().get(0);
+				//SiftsSegment seg1 = e.getSegments().get(0);
 				//System.out.println(" Segment: " + seg1.getSegId() + " " + seg1.getStart() + " " + seg1.getEnd() + " res. size: " + seg1.getResidues().size());
 				//assertTrue(seg1.getResidues().size() == 17);
 				

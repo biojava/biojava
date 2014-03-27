@@ -229,18 +229,16 @@ public class PrepareIndexFile {
 
 	}
 
-	@SuppressWarnings("deprecation")
 	private  void logPDBInfo(PrintWriter pdbWriter, Structure s, long startTime,long stopTime, File path ){
 		// only used first model in nmrs ...
+		// TODO what if xray and multi-model?? should s.nrModels()>1 be used instead here?
 		if ( s.isNmr()){
 			List<Chain> chains = s.getModel(0);
 			Structure newsubject = new StructureImpl();
 			newsubject.setPDBCode(s.getPDBCode());
-			newsubject.setHeader(s.getHeader());
 			newsubject.setPDBHeader(s.getPDBHeader());
 			newsubject.setDBRefs(s.getDBRefs());
 			newsubject.addModel(chains);
-			newsubject.setNmr(true);
 			s = newsubject;
 		}
 
@@ -251,7 +249,7 @@ public class PrepareIndexFile {
 		String infoline = String.format("%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t\t%s",
 				s.getPDBCode(),
 				ca.length,
-				header.getTechnique(),
+				header.getExperimentalTechniques().iterator().next().getName(),
 				header.getResolution(),
 				dateFormat.format(header.getDepDate()),
 				dateFormat.format(header.getModDate()),

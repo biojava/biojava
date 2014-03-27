@@ -62,13 +62,7 @@ public class PDBBioUnitDataProvider implements BioUnitDataProvider{
 		}
 		
 		if ( s.nrModels() > 1)  {
-			// temporarily overwrite the NMR setting
-			// so we can get rid of multiple modles
-			// eg for 2F03 which is an xray with multi-models...
-			boolean isNMR = s.isNmr();
-			s.setNmr(true);
 			s = StructureTools.removeModels(s);
-			s.setNmr(isNMR);
 		}
 		
 		
