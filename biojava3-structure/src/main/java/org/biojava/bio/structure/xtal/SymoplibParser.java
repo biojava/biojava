@@ -9,6 +9,8 @@ import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.biojava.bio.structure.xtal.io.SpaceGroupMapRoot;
+
 
 /**
  * A class containing static methods to parse the symop.lib file from the 
@@ -21,14 +23,13 @@ import java.util.regex.Pattern;
  *
  */
 public class SymoplibParser {
+	private static final String newline = System.getProperty("line.separator");
 	
-	// the symop library from the CCP4 package
-	private static final String SYMOPFILE = "/org/biojava/bio/structure/xtal/symop.lib";
+	private static final String SPACE_GROUPS_FILE = "org/biojava/bio/structure/xtal/spacegroups.xml";
 	
 	private static final Pattern namePat = Pattern.compile(".*\\s([A-Z]+)(\\s'.+')?\\s+'(.+)'.*");
 	
-	private static final InputStream symoplibIS = SymoplibParser.class.getResourceAsStream(SYMOPFILE);
-	private static final TreeMap<Integer, SpaceGroup> sgs = parseSymopLib();
+	private static final TreeMap<Integer, SpaceGroup> sgs = parseSpaceGroupsXML();
 	
 	private static HashMap<String, SpaceGroup> name2sgs; // map for lookups based on short names
 	
@@ -42,6 +43,77 @@ public class SymoplibParser {
 		return sgs.get(id);
 	}
 	
+	
+	/** Load all SpaceGroup information from the file spacegroups.xml
+	 * 
+	 * @return a map providing information for all spacegroups
+	 */
+	private static TreeMap<Integer, SpaceGroup> parseSpaceGroupsXML() {
+		
+		InputStream spaceGroupIS = SymoplibParser.class.getClassLoader().getResourceAsStream(SPACE_GROUPS_FILE);
+		
+		if ( spaceGroupIS == null) {
+			System.err.println("Could not find resource: " + SPACE_GROUPS_FILE + ". This probably means that your biojava.jar file is corrupt or incorrectly built.");
+			return null;
+		}
+		
+		TreeMap<Integer, SpaceGroup> map = new TreeMap<Integer, SpaceGroup>();
+		
+		map = parseSpaceGroupsXML(spaceGroupIS);
+		
+		name2sgs = new HashMap<String, SpaceGroup>();
+		
+		for (SpaceGroup sg:map.values()) {
+			sg.initializeCellTranslations();
+			name2sgs.put(sg.getShortSymbol(), sg);
+			if (sg.getAltShortSymbol()!=null) {
+				// we add also alternative name to map so we can look it up
+				name2sgs.put(sg.getAltShortSymbol(), sg);
+			}
+		}
+		
+		return map;
+		
+	}
+
+	
+	/** Load all SpaceGroup information from the file spacegroups.xml
+	 * 
+	 * @return a map providing information for all spacegroups
+	 */
+	public static TreeMap<Integer, SpaceGroup> parseSpaceGroupsXML(
+			InputStream spaceGroupIS) {
+		
+		String xml = convertStreamToString(spaceGroupIS);
+		
+		SpaceGroupMapRoot spaceGroups = SpaceGroupMapRoot.fromXML(xml);
+		return spaceGroups.getMapProperty();
+		
+	}
+
+
+	private static String convertStreamToString(InputStream stream){
+		BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
+		StringBuilder sb = new StringBuilder();
+
+		String line = null;
+		try {
+			while ((line = reader.readLine()) != null) {
+                sb.append(line).append(newline);
+			}
+		} catch (IOException e) {
+			//e.printStackTrace();
+		} finally {
+			try {
+				stream.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+
+		return sb.toString();
+	}
+
 	/**
 	 * Gets the space group for the given international short name, using
 	 * the PDB format, e.g. 'P 21 21 21' or 'C 1 c 1'
@@ -66,7 +138,18 @@ public class SymoplibParser {
 		return sgs;
 	}
 	
-	private static TreeMap<Integer,SpaceGroup> parseSymopLib() {
+	
+	/** A parser for the symop.lib file provided by CCP4. Note: this file is not getting re-distributed by BioJava. 
+	 * It can be downloaded from:
+	 * 
+	 *  http://www.ccp4.ac.uk/cvs/viewvc.cgi/libccp4/data/symop.lib?revision=1.10&view=markup
+	 * 
+	 * Note: this file is not needed by BioJava. BioJava loads equivalent information from the file spacegroups.xml
+	 * 
+	 * @param symoplibIS
+	 * @return
+	 */
+	public static TreeMap<Integer,SpaceGroup> parseSymopLib(InputStream symoplibIS) {
 		TreeMap<Integer, SpaceGroup> map = new TreeMap<Integer, SpaceGroup>();
 		name2sgs = new HashMap<String, SpaceGroup>();
 		try {
@@ -115,8 +198,9 @@ public class SymoplibParser {
 			}
 			
 		} catch (IOException e) {
-			System.err.println("Fatal error! Can't read resource file "+SYMOPFILE+". Error: "+e.getMessage()+". Exiting.");
-			System.exit(1);
+			e.printStackTrace();
+			System.err.println("Fatal error! Can't read symop.lib file. Error: "+e.getMessage()+". ");
+			return null;
 		}
 
 		for (SpaceGroup sg:map.values()) {

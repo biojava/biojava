@@ -103,7 +103,7 @@
 					<include>**/*.cif.gz</include>
 					<include>**/*.pdb</include>
 					<include>**/*.mat</include>
-					<include>**/*.lib</include>
+					<include>**/*.xml</include>
 				</includes>
 			</resource>
 		</resources>

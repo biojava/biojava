@@ -59,7 +59,9 @@ import org.biojava.bio.structure.io.PDBFileReader;
  * see <a href="http://biojava.org/wiki/BioJava:CookBook#Protein_Structure" target="_top">
  * http://biojava.org/wiki/BioJava:CookBook#Protein_Structure</a>
  *
- *
+ * <p>
+ *  The tutorial for the BioJava structure modules can be found at <a href="https://github.com/biojava/biojava3-tutorial/tree/master/structure">github</a>.
+ * </p>
  *
  *
 <hr/>

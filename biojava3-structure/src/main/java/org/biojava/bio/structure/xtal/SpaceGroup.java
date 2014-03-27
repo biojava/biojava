@@ -1,5 +1,7 @@
 package org.biojava.bio.structure.xtal;
 
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -10,6 +12,11 @@ import javax.vecmath.AxisAngle4d;
 import javax.vecmath.Matrix3d;
 import javax.vecmath.Matrix4d;
 import javax.vecmath.Vector3d;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.Marshaller;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlRootElement;
 
 import org.biojava.bio.structure.jama.EigenvalueDecomposition;
 import org.biojava.bio.structure.jama.Matrix;
@@ -20,41 +27,48 @@ import org.biojava.bio.structure.jama.Matrix;
  * the international short symbol and the transformations corresponding to
  * each space group (as Matrix4ds and in algebraic notation).
  * The information for all (protein crystallography) space groups can be 
- * parsed from CCP4 package's symop.lib file.
+ * parsed from the XML file in the resource directory.
  * 
  * See: http://en.wikipedia.org/wiki/Space_group
  * 
  * @author duarte_j
  * @see SymoplibParser
  */
-public final class SpaceGroup implements Serializable {
+@XmlRootElement(name = "SpaceGroup", namespace ="http://www.biojava.org")
+@XmlAccessorType(XmlAccessType.PUBLIC_MEMBER)
+public class SpaceGroup implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	
+
 	private static final Pattern splitPat1 = Pattern.compile("((?:[+-]?[XYZ])+)([+-][0-9/.]+)");
 	private static final Pattern splitPat2 = Pattern.compile("([+-]?[0-9/.]+)((?:[+-][XYZ])+)");
 	private static final Pattern coordPat = Pattern.compile("(?:([+-])?([XYZ]))+?"); // the last +? is for ungreedy matching
 	private static final Pattern transCoefPat = Pattern.compile("([-+]?[0-9.]+)(?:/([0-9.]+))?");
-	
+
 	private static final Pattern nonEnantPat = Pattern.compile("[-abcmnd]");
-	
+
 	protected static final double DELTA=0.0000001;
-	
-	private final int id;
-	private final int multiplicity;
-	private final int primitiveMultiplicity;
-	private final String shortSymbol;
-	private final String altShortSymbol;
-	private final List<Matrix4d> transformations;
-	private final List<String> transfAlgebraic;
-	private final Vector3d[] cellTranslations; // in space groups I, C, F or H there are pure cell translations corresponding to recenterings
-	
-	private AxisAngle4d[] axesAngles;
-	
+
+	private  int id;
+	private  int multiplicity;
+	private  int primitiveMultiplicity;
+	private  String shortSymbol;
+	private  String altShortSymbol;
+	private  List<Matrix4d> transformations;
+	private  List<String> transfAlgebraic;
+	private  Vector3d[] cellTranslations; // in space groups I, C, F or H there are pure cell translations corresponding to recenterings
+
+	private AxisAngle4d[] axisAngles;
+
 	private int[] axisTypes; // indices of array are transformIds
-	
+
 	private BravaisLattice bravLattice;
+
+	private SpaceGroup(){
+		// required by JAXB
+		
+	}
 	
 	public SpaceGroup(int id, int multiplicity, int primitiveMultiplicity, String shortSymbol, String altShortSymbol, BravaisLattice bravLattice) {
 		this.id = id;
@@ -67,46 +81,57 @@ public final class SpaceGroup implements Serializable {
 		cellTranslations = new Vector3d[multiplicity/primitiveMultiplicity];
 		this.bravLattice = bravLattice;
 	}
-	
+
 	public void addTransformation(String transfAlgebraic) {
 		this.transfAlgebraic.add(transfAlgebraic);
 		this.transformations.add(getMatrixFromAlgebraic(transfAlgebraic));
 	}
-	
+
 	protected void initializeCellTranslations() {
+		cellTranslations = new Vector3d[multiplicity/primitiveMultiplicity];
 		cellTranslations[0] = new Vector3d(0,0,0);
+		
+		if ( transformations == null){
+			System.err.println("transformations == null" + this.toXML());
+		}
+		
 		if (multiplicity==primitiveMultiplicity) {
 			return;
 		}
 		int fold = multiplicity/primitiveMultiplicity;
+		
+		
+		
 		for (int n=1;n<fold;n++) {
+			if ( transformations.size() < (n* primitiveMultiplicity))
+				System.out.println(this.toXML());
 			Matrix4d t = transformations.get(n*primitiveMultiplicity);
 			cellTranslations[n] = new Vector3d(t.m03,t.m13,t.m23);
 		}
 	}
-	
+
 	public int getMultiplicity() {
 		return multiplicity;
 	}
-	
+
 	public int getPrimitiveMultiplicity() {
 		return primitiveMultiplicity;
 	}
-	
+
 	public Vector3d[] getCellTranslations() {
 		return cellTranslations;
 	}
-	
+
 	public Vector3d getCellTranslation(int i) {
 		return cellTranslations[i];
 	}
-	
+
 	public static Matrix4d getMatrixFromAlgebraic(String transfAlgebraic) {
 		String[] parts = transfAlgebraic.toUpperCase().split(",");
 		double[] xCoef = convertAlgebraicStrToCoefficients(parts[0].trim());
 		double[] yCoef = convertAlgebraicStrToCoefficients(parts[1].trim());
 		double[] zCoef = convertAlgebraicStrToCoefficients(parts[2].trim());
-		
+
 		Matrix4d mat = new Matrix4d();
 		mat.setIdentity();
 		mat.setRotation(new Matrix3d(xCoef[0],xCoef[1],xCoef[2],yCoef[0],yCoef[1],yCoef[2],zCoef[0],zCoef[1],zCoef[2]));
@@ -117,7 +142,7 @@ public final class SpaceGroup implements Serializable {
 		//					zCoef[0],zCoef[1],zCoef[2],zCoef[3],
 		//					0,0,0,1);
 	}
-	
+
 	private static double[] convertAlgebraicStrToCoefficients(String algString) {
 		String letters = null;
 		String noLetters = null;
@@ -169,7 +194,7 @@ public final class SpaceGroup implements Serializable {
 		}
 		return coefficients;
 	}
-	
+
 	/**
 	 * Gets the standard numeric identifier for the space group.
 	 * See for example http://en.wikipedia.org/wiki/Space_group
@@ -179,7 +204,7 @@ public final class SpaceGroup implements Serializable {
 	public int getId() {
 		return id;
 	}
-	
+
 	/**
 	 * Gets the international short name (as used in PDB), 
 	 * e.g. "P 21 21 21" or "C 1 c 1"
@@ -188,7 +213,7 @@ public final class SpaceGroup implements Serializable {
 	public String getShortSymbol() {
 		return shortSymbol;
 	}
-	
+
 	/**
 	 * Gets the alternative international short name (as sometimes used in PDB),
 	 * e.g. "I 1 2 1" instead of "I 2"
@@ -197,7 +222,7 @@ public final class SpaceGroup implements Serializable {
 	public String getAltShortSymbol() {
 		return altShortSymbol;
 	}
-	
+
 	/**
 	 * Gets all transformations except for the identity in crystal axes basis.
 	 * @return
@@ -209,24 +234,24 @@ public final class SpaceGroup implements Serializable {
 		}
 		return transfs;
 	}
-	
+
 	private void calcRotAxesAndAngles() {
 
-		axesAngles = new AxisAngle4d[multiplicity];
-		
+		axisAngles = new AxisAngle4d[multiplicity];
+
 		// identity operator (transformId==0)
-		axesAngles[0] = new AxisAngle4d(new Vector3d(0,0,0), 0.0);
-		
+		axisAngles[0] = new AxisAngle4d(new Vector3d(0,0,0), 0.0);
+
 		for (int i=1;i<this.transformations.size();i++){
 			Matrix3d r = new Matrix3d(transformations.get(i).m00,transformations.get(i).m01,transformations.get(i).m02,
 					transformations.get(i).m10,transformations.get(i).m11,transformations.get(i).m12,
 					transformations.get(i).m20,transformations.get(i).m21,transformations.get(i).m22);
-			
-			axesAngles[i] = getRotAxisAndAngle(r);
-			
+
+			axisAngles[i] = getRotAxisAndAngle(r);
+
 		}	
 	}
-	
+
 	/**
 	 * Calculates the axis fold type (1, 2, 3, 4, 5, 6 for rotations or -1, -2, -3, -4, -6 improper rotations)
 	 * from the trace of the rotation matrix, see for instance 
@@ -234,19 +259,19 @@ public final class SpaceGroup implements Serializable {
 	 */
 	private void calcAxisFoldTypes() {
 		axisTypes = new int[multiplicity];
-		
+
 		for (int i=0;i<this.transformations.size();i++){
-			
+
 			axisTypes[i] = getRotAxisType(transformations.get(i)); 
 
 		}
 	}
-	
+
 	public AxisAngle4d getRotAxisAngle(int transformId) {
-		if (this.axesAngles == null) calcRotAxesAndAngles();
-		return this.axesAngles[transformId];
+		if (this.axisAngles == null) calcRotAxesAndAngles();
+		return this.axisAngles[transformId];
 	}
-	
+
 	/**
 	 * Returns true if both given transform ids belong to the same crystallographic axis (a, b or c)
 	 * For two non-rotation transformations (i.e. identity operators) it returns true
@@ -256,24 +281,24 @@ public final class SpaceGroup implements Serializable {
 	 */
 	public boolean areInSameAxis(int tId1, int tId2) {
 		if (tId1==tId2) return true;
-		
-		if (axesAngles== null) calcRotAxesAndAngles();
-		
+
+		if (axisAngles== null) calcRotAxesAndAngles();
+
 		if (getAxisFoldType(tId1)==1 && getAxisFoldType(tId2)==1) return true;
-		
+
 		// we can't deal yet with improper rotations: we return false whenever either of them is improper
 		if (getAxisFoldType(tId1)<0 || getAxisFoldType(tId2)<0) return false;
-		
-		Vector3d axis1 = new Vector3d(axesAngles[tId1].x, axesAngles[tId1].y, axesAngles[tId1].z);
-		Vector3d axis2 = new Vector3d(axesAngles[tId2].x, axesAngles[tId2].y, axesAngles[tId2].z);
-		
+
+		Vector3d axis1 = new Vector3d(axisAngles[tId1].x, axisAngles[tId1].y, axisAngles[tId1].z);
+		Vector3d axis2 = new Vector3d(axisAngles[tId2].x, axisAngles[tId2].y, axisAngles[tId2].z);
+
 		// TODO revise: we might need to consider that the 2 are in same direction but opposite senses
 		// the method is not used at the moment anyway
 		if (deltaComp(axis1.angle(axis2), 0.0, DELTA)) return true;
-		
+
 		return false;
 	}
-	
+
 	/**
 	 * Given a transformId returns the type of axis of rotation: 1 (no rotation), 2, 3, 4 or 6 -fold
 	 * and for improper rotations: -1, -2, -3, -4 and -6
@@ -285,7 +310,7 @@ public final class SpaceGroup implements Serializable {
 		if (axisTypes== null) calcAxisFoldTypes();
 		return axisTypes[transformId];
 	}
-	
+
 	/**
 	 * Gets a transformation by index expressed in crystal axes basis.
 	 * Index 0 corresponds always to the identity transformation.
@@ -297,7 +322,7 @@ public final class SpaceGroup implements Serializable {
 	public Matrix4d getTransformation(int i) {
 		return transformations.get(i);
 	}
-	
+
 	/**
 	 * Gets a transformation algebraic string given its index.
 	 * Index 0 corresponds always to the identity transformation. 
@@ -307,7 +332,7 @@ public final class SpaceGroup implements Serializable {
 	public String getTransfAlgebraic(int i) {
 		return transfAlgebraic.get(i);
 	}
-	
+
 	public boolean equals(Object o) {
 		if (! (o instanceof SpaceGroup)) {
 			return false;
@@ -318,7 +343,7 @@ public final class SpaceGroup implements Serializable {
 		}
 		return false;
 	}
-	
+
 	/**
 	 * Gets the number of symmetry operators corresponding to this SpaceGroup (counting 
 	 * the identity operator)
@@ -327,7 +352,7 @@ public final class SpaceGroup implements Serializable {
 	public int getNumOperators() {
 		return this.transformations.size();
 	}
-	
+
 	public static String getAlgebraicFromMatrix(Matrix4d m) {
 		String x = formatAlg(m.m00,m.m01,m.m02,m.m03);
 		String y = formatAlg(m.m10,m.m11,m.m12,m.m13);
@@ -335,7 +360,7 @@ public final class SpaceGroup implements Serializable {
 		String alg = x+","+y+","+z;
 		return alg;
 	}
-	
+
 	private static String formatAlg(double xcoef, double ycoef, double zcoef, double trans) {
 		boolean[] leading = {false,false,false};
 		if (xcoef!=0) {
@@ -350,9 +375,9 @@ public final class SpaceGroup implements Serializable {
 		String z = deltaComp(zcoef,0,DELTA)?"":formatCoef(zcoef, leading[2])+"Z";
 		String t = deltaComp(trans,0,DELTA)?"":formatTransCoef(trans);
 		return x+y+z+t;
-				
+
 	}
-	
+
 	private static String formatCoef(double c, boolean leading) {
 		if (leading) {
 			return (deltaComp(Math.abs(c),1,DELTA)?(c>0?"":"-"):String.format("%4.2f",c));
@@ -360,7 +385,7 @@ public final class SpaceGroup implements Serializable {
 			return (deltaComp(Math.abs(c),1,DELTA)?(c>0?"+":"-"):String.format("%+4.2f",c));
 		}
 	}
-	
+
 	private static String formatTransCoef(double c) {
 		if (Math.abs((Math.rint(c)-c))<DELTA) { // this is an integer
 			return String.format("%+d",(int)Math.rint(c));
@@ -390,15 +415,15 @@ public final class SpaceGroup implements Serializable {
 			//return String.format("%+4.2f",c);
 		}
 	}
-	
+
 	protected static boolean deltaComp(double d1, double d2, double delta) {
 		return Math.abs(d1-d2)<delta;
 	}
-	
+
 	public BravaisLattice getBravLattice() {
 		return bravLattice;
 	}
-	
+
 	public boolean isEnantiomorphic() {
 		Matcher m = nonEnantPat.matcher(shortSymbol);
 		if (m.find()) {
@@ -406,7 +431,7 @@ public final class SpaceGroup implements Serializable {
 		}
 		return true;
 	}
-	
+
 	/**
 	 * Given a rotation matrix calculates the rotation axis and angle for it.
 	 * The angle is calculated from the trace, the axis from the eigenvalue
@@ -419,24 +444,24 @@ public final class SpaceGroup implements Serializable {
 	 */
 	public static AxisAngle4d getRotAxisAndAngle(Matrix3d m) {	
 		double determinant = m.determinant();
-		
+
 		if (!(Math.abs(determinant)-1.0<DELTA)) throw new IllegalArgumentException("Given matrix is not a rotation matrix"); 
-		
+
 		AxisAngle4d axisAndAngle = new AxisAngle4d(new Vector3d(0,0,0),0);
-		
+
 		double[] d = {m.m00,m.m10,m.m20,
 				m.m01,m.m11,m.m21,
 				m.m02,m.m12,m.m22};
 
 		Matrix r = new Matrix(d,3);
-		
+
 		if (!deltaComp(r.det(), 1.0, DELTA)) {
 			// improper rotation: we return axis 0,0,0 and angle 0
 			return axisAndAngle;
 		}
-		
+
 		EigenvalueDecomposition evd = new EigenvalueDecomposition(r);
-		
+
 		Matrix eval = evd.getD();
 		if (deltaComp(eval.get(0, 0),1.0,DELTA) && deltaComp(eval.get(1, 1),1.0,DELTA) && deltaComp(eval.get(2, 2),1.0,DELTA)) {
 			// the rotation is an identity: we return axis 0,0,0 and angle 0
@@ -448,8 +473,8 @@ public final class SpaceGroup implements Serializable {
 		}
 		Matrix evec = evd.getV(); 
 		axisAndAngle.set(new Vector3d(evec.get(0,indexOfEv1), evec.get(1, indexOfEv1), evec.get(2, indexOfEv1)), 
-						Math.acos((eval.trace()-1.0)/2.0));
-		
+				Math.acos((eval.trace()-1.0)/2.0));
+
 		return axisAndAngle;
 	}
 
@@ -464,17 +489,17 @@ public final class SpaceGroup implements Serializable {
 	 */
 	public static int getRotAxisType(Matrix4d m) {
 		int axisType = 0;
-		
+
 		Matrix3d rot = new Matrix3d(m.m00,m.m01,m.m02,
 				m.m10,m.m11,m.m12,
 				m.m20,m.m21,m.m22);
-		
+
 		double determinant = rot.determinant();
-		
+
 		if (!deltaComp(determinant,1.0,DELTA) && !deltaComp(determinant, -1.0, DELTA)) {
 			throw new IllegalArgumentException("Given matrix does not seem to be a rotation matrix.");
 		}
-		
+
 		int trace = (int)(rot.m00+rot.m11+rot.m22);
 		if (determinant>0) {
 			switch (trace) {
@@ -519,9 +544,121 @@ public final class SpaceGroup implements Serializable {
 		}
 		return axisType;
 	}
-	
+
 	public String toString() {
 		return getShortSymbol();
 	}
+
+	public String toXML(){
+		
+	
+		JAXBContext jaxbContextStringSortedSet = null;
+
+		try {
+			jaxbContextStringSortedSet= JAXBContext.newInstance(SpaceGroup.class);
+		} catch (Exception e){
+			e.printStackTrace();
+			return null;
+		}
+
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		PrintStream ps = new PrintStream(baos);
+
+
+		try {
+
+			Marshaller m = jaxbContextStringSortedSet.createMarshaller();
+
+			m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+			
+			m.marshal( this, ps);
+
+
+		} catch (Exception e){
+			e.printStackTrace();
+		}
+
+		return baos.toString();
+	}
+
+	public List<String> getTransfAlgebraic() {
+		return transfAlgebraic;
+	}
+
+	public void setTransfAlgebraic(List<String> transfAlgebraic) {
+		
+		if ( transformations == null)		
+			transformations = new ArrayList<Matrix4d>(transfAlgebraic.size());
+		
+		if ( this.transfAlgebraic == null)
+			this.transfAlgebraic = new ArrayList<String>(transfAlgebraic.size());
+		
+		for ( String transf : transfAlgebraic){
+			addTransformation(transf);
+		}
+	}
+
+	
+	public int[] getAxisTypes() {
+		return axisTypes;
+	}
+
+	public void setAxisTypes(int[] axisTypes) {
+		this.axisTypes = axisTypes;
+	}
+
+	public static long getSerialversionuid() {
+		return serialVersionUID;
+	}
+
+	public static Pattern getSplitpat1() {
+		return splitPat1;
+	}
+
+	public static Pattern getSplitpat2() {
+		return splitPat2;
+	}
+
+	public static Pattern getCoordpat() {
+		return coordPat;
+	}
+
+	public static Pattern getTranscoefpat() {
+		return transCoefPat;
+	}
+
+	public static Pattern getNonenantpat() {
+		return nonEnantPat;
+	}
+
+	public static double getDelta() {
+		return DELTA;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public void setMultiplicity(int multiplicity) {
+		this.multiplicity = multiplicity;
+	}
+
+	public void setPrimitiveMultiplicity(int primitiveMultiplicity) {
+		this.primitiveMultiplicity = primitiveMultiplicity;
+	}
+
+	public void setShortSymbol(String shortSymbol) {
+		this.shortSymbol = shortSymbol;
+	}
+
+	public void setAltShortSymbol(String altShortSymbol) {
+		this.altShortSymbol = altShortSymbol;
+	}
+
+
+	public void setBravLattice(BravaisLattice bravLattice) {
+		this.bravLattice = bravLattice;
+	}
+
 }
 

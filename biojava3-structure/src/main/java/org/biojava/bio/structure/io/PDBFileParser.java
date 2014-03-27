@@ -71,8 +71,6 @@ import org.biojava.bio.structure.StructureImpl;
 import org.biojava.bio.structure.StructureTools;
 import org.biojava.bio.structure.io.mmcif.ChemCompGroupFactory;
 import org.biojava.bio.structure.io.mmcif.ReducedChemCompProvider;
-//import org.biojava.bio.structure.io.mmcif.model.ChemComp;
-//import org.biojava.bio.structure.io.mmcif.model.ChemCompBond;
 import org.biojava.bio.structure.io.util.PDBTemporaryStorageUtils.LinkRecord;
 import org.biojava.bio.structure.xtal.CrystalCell;
 import org.biojava.bio.structure.xtal.SpaceGroup;
