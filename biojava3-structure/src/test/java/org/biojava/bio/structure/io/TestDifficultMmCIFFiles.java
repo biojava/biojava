@@ -33,7 +33,7 @@ public class TestDifficultMmCIFFiles {
 		// keep this here if in the future it is  
 
 		
-		AtomCache cache = new AtomCache("/tmp",false);
+		AtomCache cache = new AtomCache();
 		
 		StructureIO.setAtomCache(cache); 
 
@@ -46,8 +46,7 @@ public class TestDifficultMmCIFFiles {
 		assertFalse(sCif.isCrystallographic());
 
 		assertTrue(sCif.isNmr());
-
-		
+	
 	}
 	
 	@Test
@@ -55,7 +54,7 @@ public class TestDifficultMmCIFFiles {
 		
 		// In this entry _pdbx_struct_assembly_gen contains multiline quoting (quoting with "\n;" ) in loop field
 		
-		AtomCache cache = new AtomCache("/tmp",false);
+		AtomCache cache = new AtomCache();
 		
 		StructureIO.setAtomCache(cache); 
 				
