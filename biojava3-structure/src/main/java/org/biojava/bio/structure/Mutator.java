@@ -42,7 +42,7 @@ import org.biojava.bio.structure.io.PDBParseException;
      System.out.println(struc);
  
  
-     String chainId = " ";
+     String chainId = "A";
      String pdbResnum = "3";
      String newType = "ARG";
  
