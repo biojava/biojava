@@ -23,7 +23,7 @@ public class DemoAsa {
 	
 	private static void demoAsa(String pdbCode, int numThreads) throws IOException, StructureException {
 		
-		AtomCache cache = new AtomCache("/tmp",false);
+		AtomCache cache = new AtomCache();
 		cache.setUseMmCif(true);
 		
 		StructureIO.setAtomCache(cache); 

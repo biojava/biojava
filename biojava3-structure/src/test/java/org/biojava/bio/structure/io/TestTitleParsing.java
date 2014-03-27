@@ -24,7 +24,7 @@ public class TestTitleParsing {
 		
 		// an entry with a title in multiple lines in PDB file
 		
-		AtomCache cache = new AtomCache("/tmp",false);
+		AtomCache cache = new AtomCache();
 		
 		StructureIO.setAtomCache(cache); 
 

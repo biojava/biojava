@@ -25,7 +25,7 @@ public class TestCrystalInfo {
 	@Test
 	public void test1NMR() throws IOException, StructureException { 
 
-		AtomCache cache = new AtomCache("/tmp",false);
+		AtomCache cache = new AtomCache();
 		
 		StructureIO.setAtomCache(cache); 
 
@@ -49,7 +49,7 @@ public class TestCrystalInfo {
 	@Test
 	public void test1B8G() throws IOException, StructureException { 
 
-		AtomCache cache = new AtomCache("/tmp",false);
+		AtomCache cache = new AtomCache();
 		
 		StructureIO.setAtomCache(cache); 
 
@@ -75,7 +75,7 @@ public class TestCrystalInfo {
 
 		// multimodel x-ray structure
 		
-		AtomCache cache = new AtomCache("/tmp",false);
+		AtomCache cache = new AtomCache();
 		
 		StructureIO.setAtomCache(cache); 
 
@@ -103,7 +103,7 @@ public class TestCrystalInfo {
 
 		// single model NMR structure
 		
-		AtomCache cache = new AtomCache("/tmp",false);
+		AtomCache cache = new AtomCache();
 		
 		StructureIO.setAtomCache(cache); 
 

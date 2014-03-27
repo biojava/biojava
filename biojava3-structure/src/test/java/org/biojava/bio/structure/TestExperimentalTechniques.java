@@ -16,7 +16,7 @@ public class TestExperimentalTechniques {
 		
 		// a multiple experimental techniques PDB entry (X-RAY + NEUTRON DIFFRACTION)
 		
-		AtomCache cache = new AtomCache("/tmp",false);
+		AtomCache cache = new AtomCache();
 		
 		StructureIO.setAtomCache(cache); 
 
@@ -46,7 +46,7 @@ public class TestExperimentalTechniques {
 		
 		// a multiple experimental techniques PDB entry (EM + SOLUTION NMR)
 		
-		AtomCache cache = new AtomCache("/tmp",false);
+		AtomCache cache = new AtomCache();
 		
 		StructureIO.setAtomCache(cache); 
 
@@ -76,7 +76,7 @@ public class TestExperimentalTechniques {
 		
 		// a single experimental technique ELECTRON CRYSTALLOGRAPHY entry
 		
-		AtomCache cache = new AtomCache("/tmp",false);
+		AtomCache cache = new AtomCache();
 		
 		StructureIO.setAtomCache(cache); 
 
@@ -106,7 +106,7 @@ public class TestExperimentalTechniques {
 		
 		// a single experimental technique (X-RAY) entry
 		
-		AtomCache cache = new AtomCache("/tmp",false);
+		AtomCache cache = new AtomCache();
 		
 		StructureIO.setAtomCache(cache); 
 

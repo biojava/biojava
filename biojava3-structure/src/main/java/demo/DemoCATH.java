@@ -2,9 +2,7 @@ package demo;
 
 
 import org.biojava.bio.structure.Structure;
-
 import org.biojava.bio.structure.align.util.AtomCache;
-import org.biojava.bio.structure.align.util.UserConfiguration;
 import org.biojava.bio.structure.cath.CathDatabase;
 import org.biojava.bio.structure.cath.CathDomain;
 import org.biojava.bio.structure.cath.CathInstallation;
@@ -18,15 +16,10 @@ import org.biojava.bio.structure.cath.CathInstallation;
  */
 public class DemoCATH {
 	public static void main(String[] args){
-		
-		
-		
-		UserConfiguration config = new UserConfiguration();
-		config.setPdbFilePath("/tmp/");
-		
-		AtomCache cache  = new AtomCache(config);
 				
-		CathDatabase database = new CathInstallation(config.getPdbFilePath());
+		AtomCache cache  = new AtomCache();
+				
+		CathDatabase database = new CathInstallation(cache.getPath());
 		
 		String domainID = "1cdgA01";
 		

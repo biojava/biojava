@@ -75,7 +75,7 @@ public class TestNonDepositedFiles {
 	//@Test
 	public void test1B8G() throws IOException, StructureException { 
 
-		AtomCache cache = new AtomCache("/tmp",false);
+		AtomCache cache = new AtomCache();
 		
 		StructureIO.setAtomCache(cache); 
 

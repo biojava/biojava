@@ -4,7 +4,7 @@ package demo;
 import java.util.List;
 
 import org.biojava.bio.structure.Structure;
-
+import org.biojava.bio.structure.align.util.AtomCache;
 import org.biojava.bio.structure.domain.LocalProteinDomainParser;
 import org.biojava.bio.structure.domain.pdp.Domain;
 import org.biojava.bio.structure.domain.pdp.Segment;
@@ -28,19 +28,11 @@ public class DemoDomainsplit {
 
 		try {
 
-			PDBFileReader reader = new PDBFileReader();
-
-			// the path to the local PDB installation
-			reader.setPath("/tmp/");
-
-			// are all files in one directory, or are the files split,
-			// as on the PDB ftp servers?
-			reader.setPdbDirectorySplit(true);
-
-			// should a missing PDB id be fetched automatically from the FTP servers?
-			reader.setAutoFetch(true);
-
-			// configure the parameters of file parsing
+			// This utility class can automatically download missing PDB files.
+			AtomCache cache = new AtomCache();
+			
+			//
+			// configure the parameters of file parsing (optional)
 
 			FileParsingParameters params = new FileParsingParameters();
 
@@ -50,9 +42,12 @@ public class DemoDomainsplit {
 			// should secondary structure get parsed from the file
 			params.setParseSecStruc(false);
 
-			reader.setFileParsingParameters(params);
+			// and set the params in the cache.			
+			cache.setFileParsingParams(params);
 
-			Structure struc = reader.getStructureById(pdbId);
+			// end of optional part
+			
+			Structure struc = cache.getStructure(pdbId);
 			
 			System.out.println("structure loaded: " + struc);
 			

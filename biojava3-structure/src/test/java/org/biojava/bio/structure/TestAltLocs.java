@@ -218,7 +218,7 @@ public class TestAltLocs {
 	@Test
 	public void test3PIUpdb() throws IOException, StructureException{ 
 
-		AtomCache cache = new AtomCache("/tmp",false);
+		AtomCache cache = new AtomCache();
 		
 		StructureIO.setAtomCache(cache); 
 
@@ -269,7 +269,7 @@ public class TestAltLocs {
 	@Test
 	public void test3PIUmmcif() throws IOException, StructureException{ 
 
-		AtomCache cache = new AtomCache("/tmp",false);
+		AtomCache cache = new AtomCache();
 		
 		StructureIO.setAtomCache(cache); 
 
