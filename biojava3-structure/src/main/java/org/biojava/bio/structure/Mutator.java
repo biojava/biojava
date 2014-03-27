@@ -32,15 +32,13 @@ import org.biojava.bio.structure.io.PDBParseException;
  *
  * example usage:
  * <pre>
- String filename   =  "/Users/ap3/WORK/PDB/5pti.pdb" ;
+ 
  String outputfile =  "/Users/ap3/WORK/PDB/mutated.pdb" ;
  
- PDBFileReader pdbreader = new PDBFileReader();
- 
+
  try{
-     Structure struc = pdbreader.getStructure(filename);
+     Structure struc = StructureIO.getStructure("5pti");
      System.out.println(struc);
- 
  
      String chainId = "A";
      String pdbResnum = "3";
