@@ -1076,10 +1076,18 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 	public void newRefine(Refine r){
 		// copy the resolution to header
 		PDBHeader pdbHeader = structure.getPDBHeader();
+		// in very rare cases (for instance hybrid methods x-ray + neutron diffraction, e.g. 3ins)
+		// there are 2 resolution values, one for each method
+		// we take the first one found so that behaviour is like in PDB file parsing
+		if (pdbHeader.getResolution()!=PDBHeader.DEFAULT_RESOLUTION) {
+			logger.fine("more than 1 resolution value present (last encountered is "+r.getLs_d_res_high()+
+					"), will use only the first one ("+String.format("%4.2f",pdbHeader.getResolution())+")");
+			return;
+		}
 		try {
 			pdbHeader.setResolution(Float.parseFloat(r.getLs_d_res_high()));
 		} catch (NumberFormatException e){
-			logger.warning("could not parse resolution from " + r.getLs_d_res_high() + " " + e.getMessage());
+			logger.fine("could not parse resolution from " + r.getLs_d_res_high() + " " + e.getMessage());
 		}
 	}
 
@@ -1158,20 +1166,20 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 			
 		} catch (NumberFormatException e){
 			structure.getPDBHeader().getCrystallographicInfo().setCrystalCell(null);
-			logger.warning("could not parse some cell parameters, ignoring _cell ");
+			logger.fine("could not parse some cell parameters ("+e.getMessage()+"), ignoring _cell ");
 		}
 		try {
 			// if Z parsing fails it is not so important
 			structure.getPDBHeader().getCrystallographicInfo().setZ(Integer.parseInt(cell.getZ_PDB()));
 		} catch (NumberFormatException e) {
-			logger.warning("could not parse some the Z parameter from _cell ");
+			logger.fine("could not parse some the Z parameter from _cell ");
 		}
 	}
 	
 	public void newSymmetry(Symmetry symmetry) {
         String spaceGroup = symmetry.getSpace_group_name_H_M();
 		SpaceGroup sg = SymoplibParser.getSpaceGroup(spaceGroup);
-        if (sg==null) logger.warning("Space group '"+spaceGroup+"' not recognised as a standard space group"); 
+        if (sg==null) logger.fine("Space group '"+spaceGroup+"' not recognised as a standard space group"); 
 
 		structure.getPDBHeader().getCrystallographicInfo().setSpaceGroup(sg); 
 	}

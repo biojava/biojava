@@ -874,10 +874,16 @@ public class PDBFileParser  {
 			title = line.substring(10,line.length()).trim();
 
 		String t = pdbHeader.getTitle();
-		if ( (t != null) && (! t.equals("")))
-			t += " ";
-		else t="";
+		if ( (t != null) && (! t.equals("")) ){
+			if (t.endsWith("-")) 
+				t += ""; // if last line ends with a hyphen then we don't add space 
+			else 
+				t += " ";
+		}
+		else t = "";
+		
 		t += title;
+		
 		pdbHeader.setTitle(t);
 	}
 
@@ -1535,7 +1541,7 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 		xtalCell.setBeta(beta);
 		xtalCell.setGamma(gamma);
         SpaceGroup sg = SymoplibParser.getSpaceGroup(spaceGroup);
-        if (sg==null) logger.warning("Space group '"+spaceGroup+"' not recognised as a standard space group"); 
+        if (sg==null) logger.fine("Space group '"+spaceGroup+"' not recognised as a standard space group"); 
         crystallographicInfo.setSpaceGroup(sg);
         crystallographicInfo.setZ(z);
 	}
