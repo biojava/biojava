@@ -33,7 +33,7 @@ import org.biojava.bio.structure.Structure;
  * and adds a few File specific methods.
  * @author Andreas Prlic
  */
-public interface StructureIOFile extends StructureIO {
+public interface StructureIOFile  {
 
     /** Set path to file / connection string to db.
      * This is for installations of PDB/mmCif where all files are located in one directory.

@@ -16,10 +16,14 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import org.biojava.bio.structure.jama.EigenvalueDecomposition;
 import org.biojava.bio.structure.jama.Matrix;
+import org.biojava.bio.structure.xtal.io.TransfAlgebraicAdapter;
 
 
 /**
@@ -67,9 +71,9 @@ public class SpaceGroup implements Serializable {
 
 	private SpaceGroup(){
 		// required by JAXB
-		
+
 	}
-	
+
 	public SpaceGroup(int id, int multiplicity, int primitiveMultiplicity, String shortSymbol, String altShortSymbol, BravaisLattice bravLattice) {
 		this.id = id;
 		this.multiplicity = multiplicity;
@@ -88,23 +92,29 @@ public class SpaceGroup implements Serializable {
 	}
 
 	protected void initializeCellTranslations() {
+		if ( cellTranslations != null && cellTranslations.length >0) {
+			// we already initialized this
+			return;
+		}
 		cellTranslations = new Vector3d[multiplicity/primitiveMultiplicity];
 		cellTranslations[0] = new Vector3d(0,0,0);
-		
+
 		if ( transformations == null){
 			System.err.println("transformations == null" + this.toXML());
 		}
-		
+
 		if (multiplicity==primitiveMultiplicity) {
 			return;
 		}
 		int fold = multiplicity/primitiveMultiplicity;
-		
-		
-		
+
+
+
 		for (int n=1;n<fold;n++) {
-			if ( transformations.size() < (n* primitiveMultiplicity))
-				System.out.println(this.toXML());
+			if ( transformations.size() < (n* primitiveMultiplicity)){
+				System.err.println("WARNING number of transformations < " +(n*primitiveMultiplicity));
+				System.err.println(this.toXML());
+			}
 			Matrix4d t = transformations.get(n*primitiveMultiplicity);
 			cellTranslations[n] = new Vector3d(t.m03,t.m13,t.m23);
 		}
@@ -550,8 +560,8 @@ public class SpaceGroup implements Serializable {
 	}
 
 	public String toXML(){
-		
-	
+
+
 		JAXBContext jaxbContextStringSortedSet = null;
 
 		try {
@@ -570,7 +580,7 @@ public class SpaceGroup implements Serializable {
 			Marshaller m = jaxbContextStringSortedSet.createMarshaller();
 
 			m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
-			
+
 			m.marshal( this, ps);
 
 
@@ -581,24 +591,27 @@ public class SpaceGroup implements Serializable {
 		return baos.toString();
 	}
 
+	//@XmlElementWrapper(name="transfAlgebraicList", namespace="http://www.biojava.org")
+	//@XmlElement 
+	@XmlJavaTypeAdapter(TransfAlgebraicAdapter.class)
 	public List<String> getTransfAlgebraic() {
 		return transfAlgebraic;
 	}
 
 	public void setTransfAlgebraic(List<String> transfAlgebraic) {
-		
-		if ( transformations == null)		
+		//System.out.println("setting transfAlgebraic " + transfAlgebraic);
+		if ( transformations == null || transformations.size() == 0)		
 			transformations = new ArrayList<Matrix4d>(transfAlgebraic.size());
-		
-		if ( this.transfAlgebraic == null)
+
+		if ( this.transfAlgebraic == null || this.transfAlgebraic.size() == 0)
 			this.transfAlgebraic = new ArrayList<String>(transfAlgebraic.size());
-		
+
 		for ( String transf : transfAlgebraic){
 			addTransformation(transf);
 		}
 	}
 
-	
+
 	public int[] getAxisTypes() {
 		return axisTypes;
 	}
@@ -640,6 +653,7 @@ public class SpaceGroup implements Serializable {
 	}
 
 	public void setMultiplicity(int multiplicity) {
+
 		this.multiplicity = multiplicity;
 	}
 

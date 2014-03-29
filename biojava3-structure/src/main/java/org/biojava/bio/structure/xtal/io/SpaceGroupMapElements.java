@@ -29,8 +29,11 @@ import org.biojava.bio.structure.xtal.SpaceGroup;
 
 public class SpaceGroupMapElements {
 
-	@XmlElement public Integer key;
-	@XmlElement public SpaceGroup value;
+	@XmlElement 
+	public Integer key;
+	
+	@XmlElement(name="SpaceGroup", namespace="http://www.biojava.org")
+	public SpaceGroup value;
 	
 	private SpaceGroupMapElements(){
 		

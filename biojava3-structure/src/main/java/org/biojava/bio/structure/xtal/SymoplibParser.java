@@ -1,9 +1,14 @@
 package org.biojava.bio.structure.xtal;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.PrintStream;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.TreeMap;
 import java.util.regex.Matcher;
@@ -24,15 +29,24 @@ import org.biojava.bio.structure.xtal.io.SpaceGroupMapRoot;
  */
 public class SymoplibParser {
 	private static final String newline = System.getProperty("line.separator");
-	
+
 	private static final String SPACE_GROUPS_FILE = "org/biojava/bio/structure/xtal/spacegroups.xml";
-	
+
 	private static final Pattern namePat = Pattern.compile(".*\\s([A-Z]+)(\\s'.+')?\\s+'(.+)'.*");
-	
-	private static final TreeMap<Integer, SpaceGroup> sgs = parseSpaceGroupsXML();
-	
+
+	private static  TreeMap<Integer, SpaceGroup> sgs = null ;
+
+
+	static {
+		try {
+			sgs = parseSpaceGroupsXML();
+		} catch (Exception e){
+			e.printStackTrace();
+		}
+	}
+
 	private static HashMap<String, SpaceGroup> name2sgs; // map for lookups based on short names
-	
+
 	/**
 	 * Gets the space group for the given standard identifier.
 	 * See for example http://en.wikipedia.org/wiki/Space_group
@@ -42,28 +56,29 @@ public class SymoplibParser {
 	public static SpaceGroup getSpaceGroup(int id) {
 		return sgs.get(id);
 	}
-	
-	
+
+
 	/** Load all SpaceGroup information from the file spacegroups.xml
 	 * 
 	 * @return a map providing information for all spacegroups
 	 */
 	private static TreeMap<Integer, SpaceGroup> parseSpaceGroupsXML() {
-		
+
 		InputStream spaceGroupIS = SymoplibParser.class.getClassLoader().getResourceAsStream(SPACE_GROUPS_FILE);
-		
+
 		if ( spaceGroupIS == null) {
 			System.err.println("Could not find resource: " + SPACE_GROUPS_FILE + ". This probably means that your biojava.jar file is corrupt or incorrectly built.");
 			return null;
 		}
-		
+
 		TreeMap<Integer, SpaceGroup> map = new TreeMap<Integer, SpaceGroup>();
-		
+
 		map = parseSpaceGroupsXML(spaceGroupIS);
-		
+
 		name2sgs = new HashMap<String, SpaceGroup>();
-		
+
 		for (SpaceGroup sg:map.values()) {
+
 			sg.initializeCellTranslations();
 			name2sgs.put(sg.getShortSymbol(), sg);
 			if (sg.getAltShortSymbol()!=null) {
@@ -71,24 +86,24 @@ public class SymoplibParser {
 				name2sgs.put(sg.getAltShortSymbol(), sg);
 			}
 		}
-		
+
 		return map;
-		
+
 	}
 
-	
+
 	/** Load all SpaceGroup information from the file spacegroups.xml
 	 * 
 	 * @return a map providing information for all spacegroups
 	 */
 	public static TreeMap<Integer, SpaceGroup> parseSpaceGroupsXML(
 			InputStream spaceGroupIS) {
-		
+
 		String xml = convertStreamToString(spaceGroupIS);
-		
+
 		SpaceGroupMapRoot spaceGroups = SpaceGroupMapRoot.fromXML(xml);
 		return spaceGroups.getMapProperty();
-		
+
 	}
 
 
@@ -99,7 +114,7 @@ public class SymoplibParser {
 		String line = null;
 		try {
 			while ((line = reader.readLine()) != null) {
-                sb.append(line).append(newline);
+				sb.append(line).append(newline);
 			}
 		} catch (IOException e) {
 			//e.printStackTrace();
@@ -122,23 +137,23 @@ public class SymoplibParser {
 	 */
 	public static SpaceGroup getSpaceGroup(String shortName) {
 		if (shortName==null) return null;
-		
+
 		// PDB uses group "P 1-" for 13 racemic mixture entries (as of Sep2011), e.g. 3e7r
 		// they call the space group "P 1-" unusually (symop.lib and everyone else call it "P -1")   
 		if (shortName.equals("P 1-")) shortName="P -1";
-		
+
 		// enantiomorphic space groups contain sometime letters indicating glide planes which should always be lower case
 		// in some PDB entries like 4gwv they are in upper case, we fix that here: convert any non-first letter to lower case
 		shortName = shortName.substring(0, 1)+shortName.substring(1).toLowerCase();
-		
+
 		return name2sgs.get(shortName);
 	}
-	
+
 	public static TreeMap<Integer,SpaceGroup> getAllSpaceGroups() {
 		return sgs;
 	}
-	
-	
+
+
 	/** A parser for the symop.lib file provided by CCP4. Note: this file is not getting re-distributed by BioJava. 
 	 * It can be downloaded from:
 	 * 
@@ -166,7 +181,7 @@ public class SymoplibParser {
 							name2sgs.put(currentSG.getAltShortSymbol(), currentSG);
 						}
 					}
-					
+
 					int idxFirstSpace = line.indexOf(' ');
 					int idxSecondSpace = line.indexOf(' ',idxFirstSpace+1);
 					int idxThirdSpace = line.indexOf(' ',idxSecondSpace+1);
@@ -196,7 +211,7 @@ public class SymoplibParser {
 				// we add also alternative name to map so we can look it up
 				name2sgs.put(currentSG.getAltShortSymbol(), currentSG);
 			}
-			
+
 		} catch (IOException e) {
 			e.printStackTrace();
 			System.err.println("Fatal error! Can't read symop.lib file. Error: "+e.getMessage()+". ");
@@ -208,7 +223,6 @@ public class SymoplibParser {
 		}
 		return map;
 	}
-	
-	
+
 
 }

@@ -36,7 +36,8 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import org.biojava.bio.structure.xtal.SpaceGroup;
 
-@XmlRootElement
+@XmlRootElement(name="SpaceGroupMapRoot", namespace ="http://www.biojava.org")
+
 public class SpaceGroupMapRoot {
 
 	private TreeMap<Integer, SpaceGroup> mapProperty;
@@ -89,7 +90,7 @@ public class SpaceGroupMapRoot {
 			Unmarshaller un = jaxbContext.createUnmarshaller();
 
 			ByteArrayInputStream bais = new ByteArrayInputStream(xml.getBytes());
-
+			
 			job = (SpaceGroupMapRoot) un.unmarshal(bais);
 
 		} catch (Exception e){
