@@ -44,7 +44,7 @@ public class TestParsingScopDomainPDB extends TestCase{
 			
 			Structure s = p.parsePDBFile(u.openStream());
 			
-			System.out.println(s);
+			//System.out.println(s);
 			assertTrue(StructureTools.getAllAtomArray(s).length > 100);
 		} catch (Exception e){
 			
