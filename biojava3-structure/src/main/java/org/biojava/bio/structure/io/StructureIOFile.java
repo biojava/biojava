@@ -29,8 +29,7 @@ import java.io.IOException;
 import org.biojava.bio.structure.Structure;
 
 /**
- * interface StructureIOFile extends the StructureIO interface
- * and adds a few File specific methods.
+ *  StructureIOFile defines a few methods that are useful when parsing PDB files from file system.
  * @author Andreas Prlic
  */
 public interface StructureIOFile extends StructureIO {
