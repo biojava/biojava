@@ -394,7 +394,7 @@ public static Object resizeArray (Object oldArray, int newSize) {
    public boolean angleCheckOk(FragmentPair a, FragmentPair b, float distcutoff){
 
       double dist = -999;
-      try {
+      
          //Atom v1 = tmpfidx[i].getCenter1();
          //Atom v2 = tmpfidx[j].getCenter2();
          Atom v1 = a.getUnitv();
@@ -403,10 +403,7 @@ public static Object resizeArray (Object oldArray, int newSize) {
          //System.out.println("v2: "+v2);
          dist = Calc.getDistance(v1,v2);
 
-      } catch (StructureException e){
-         e.printStackTrace();
-         return false;
-      }
+      
       if ( dist > distcutoff)
          return false;
       return true;
@@ -415,7 +412,7 @@ public static Object resizeArray (Object oldArray, int newSize) {
    private boolean distanceCheckOk(FragmentPair a, FragmentPair b, float fragCompatDist){
 
       double dd ;
-      try {
+      
          Atom c1i = a.getCenter1();
          Atom c1j = b.getCenter1();
          Atom c2i = a.getCenter2();
@@ -424,10 +421,7 @@ public static Object resizeArray (Object oldArray, int newSize) {
          dd = Calc.getDistance(c1i,c1j) - Calc.getDistance(c2i,c2j);
          //dd = Calc.getDistance(c1i,c2i) - Calc.getDistance(c1j,c2j);
          //System.out.println(dd);
-      } catch (StructureException e){
-         e.printStackTrace();
-         return false;
-      }
+      
 
       if ( dd < 0)
          dd = -dd;
@@ -501,7 +495,7 @@ public static Object resizeArray (Object oldArray, int newSize) {
             int p2j = tmpfidx[j].getPos2();
             int l2  = tmpfidx[j].getLength();
             if ( p2i > maxi) {
-               try {
+               
                   double dist = Calc.getDistance(tmpfidx[i].getUnitv(), tmpfidx[j].getUnitv());
                   if ( dist  < ddiff) {
 
@@ -517,10 +511,7 @@ public static Object resizeArray (Object oldArray, int newSize) {
                         f.add(p2i,p2j,0,tmpfidx[j].getLength());
                      }
                   }
-               } catch (StructureException e) {
-                  e.printStackTrace();
-
-               }
+              
 
             }
             j+=1;

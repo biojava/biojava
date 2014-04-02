@@ -69,12 +69,11 @@ public class Calc {
 	 *
 	 * @param a  an Atom object
 	 * @param b  an Atom object
-	 * @return a double
-	 * @throws StructureException ...
+	 * @return a double	
 	 */
 	public static final double getDistance(Atom a, Atom b) 
-			throws StructureException
-			{
+
+	{
 		double x = a.getX() - b.getX();
 		double y = a.getY() - b.getY();
 		double z = a.getZ() - b.getZ();
@@ -84,7 +83,7 @@ public class Calc {
 		double dist = Math.sqrt(s);
 
 		return dist ;
-			}
+	}
 
 
 	/**
@@ -96,11 +95,10 @@ public class Calc {
 	 * @param a  an Atom object
 	 * @param b  an Atom object
 	 * @return a double
-	 * @throws StructureException ...
 	 */
 	public static double getDistanceFast(Atom a, Atom b)
-			throws StructureException
-			{
+
+	{
 		double x = a.getX() - b.getX();
 		double y = a.getY() - b.getY();
 		double z = a.getZ() - b.getZ();
@@ -108,9 +106,9 @@ public class Calc {
 		double distSquared  = x * x  + y * y + z * z;
 
 		return distSquared ;
-			}
+	}
 
-	public static final Atom invert(Atom a) throws StructureException{
+	public static final Atom invert(Atom a) {
 		double[] coords = new double[]{0.0,0.0,0.0} ;
 		Atom zero = new AtomImpl();
 		zero.setCoords(coords);
@@ -134,28 +132,14 @@ public class Calc {
 		return c ;
 	}
 
-	/** subtract two atoms ( a - b).
-	 *
-	 * @param a  an Atom object
-	 * @param b  an Atom object
-	 * @return an Atom object
-	 * @throws StructureException ...
-	 * @deprecated use {@link subtract} instead.
-	 */
 
-	public static final Atom substract(Atom a, Atom b) 
-			throws StructureException
-			{
-		return subtract(a,b);
-
-			}
 
 	/** subtract two atoms ( a - b).
 	 *
 	 * @param a  an Atom object
 	 * @param b  an Atom object
 	 * @return n new Atom object representing the difference
-	 * @throws StructureException ...
+
 
 	 */
 	public static final Atom subtract(Atom a, Atom b) {
@@ -264,12 +248,12 @@ public class Calc {
 	 * @param c  an Atom object
 	 * @param d  an Atom object
 	 * @return a double
-	 * @throws StructureException ...
+
 	 */
 
 	public static final double torsionAngle(Atom a, Atom b, Atom c, Atom d)
-			throws StructureException
-			{
+
+	{
 
 		Atom ab = subtract(a,b);
 		Atom cb = subtract(c,b);
@@ -287,7 +271,7 @@ public class Calc {
 		if (val<0.0) angl = -angl ;
 
 		return angl;
-			}
+	}
 
 	/** phi angle.
 	 *
@@ -339,18 +323,26 @@ public class Calc {
 
 	/** test if two amino acids are connected, i.e.
 	 * if the distance from C to N < 2,5 Angstrom.
+	 * 
+	 * If one of the AminoAcids has an atom missing, returns false.
 	 *
 	 * @param a  an AminoAcid object
 	 * @param b  an AminoAcid object
 	 * @return true if ...
-	 * @throws StructureException ...
+
 	 */    
 	public static final boolean isConnected(AminoAcid a, AminoAcid b)
-			throws StructureException
-			{
-		Atom C = a.getC();
-		Atom N = b.getN();
 
+	{
+		Atom C = null ;
+		Atom N = null;
+
+		try {
+			C = a.getC();
+			N = b.getN();
+		} catch (StructureException ex){
+			return false;
+		}
 		// one could also check if the CA atoms are < 4 A...
 		double distance = getDistance(C,N);
 		if ( distance < 2.5) { 
@@ -358,7 +350,7 @@ public class Calc {
 		} else {
 			return false ;
 		}
-			}
+	}
 
 
 
@@ -925,46 +917,46 @@ public class Calc {
 	 */
 	public static double calcRotationAngleInDegrees(Atom centerPt, Atom targetPt)
 	{
-	    // calculate the angle theta from the deltaY and deltaX values
-	    // (atan2 returns radians values from [-PI,PI])
-	    // 0 currently points EAST.  
-	    // NOTE: By preserving Y and X param order to atan2,  we are expecting 
-	    // a CLOCKWISE angle direction.  
-	    double theta = Math.atan2(targetPt.getY() - centerPt.getY(), targetPt.getX() - centerPt.getX());
+		// calculate the angle theta from the deltaY and deltaX values
+		// (atan2 returns radians values from [-PI,PI])
+		// 0 currently points EAST.  
+		// NOTE: By preserving Y and X param order to atan2,  we are expecting 
+		// a CLOCKWISE angle direction.  
+		double theta = Math.atan2(targetPt.getY() - centerPt.getY(), targetPt.getX() - centerPt.getX());
 
-	    // rotate the theta angle clockwise by 90 degrees 
-	    // (this makes 0 point NORTH)
-	    // NOTE: adding to an angle rotates it clockwise.  
-	    // subtracting would rotate it counter-clockwise
-	    theta += Math.PI/2.0;
+		// rotate the theta angle clockwise by 90 degrees 
+		// (this makes 0 point NORTH)
+		// NOTE: adding to an angle rotates it clockwise.  
+		// subtracting would rotate it counter-clockwise
+		theta += Math.PI/2.0;
 
-	    // convert from radians to degrees
-	    // this will give you an angle from [0->270],[-180,0]
-	    double angle = Math.toDegrees(theta);
+		// convert from radians to degrees
+		// this will give you an angle from [0->270],[-180,0]
+		double angle = Math.toDegrees(theta);
 
-	    // convert to positive range [0-360)
-	    // since we want to prevent negative angles, adjust them now.
-	    // we can assume that atan2 will not return a negative value
-	    // greater than one partial rotation
-	    if (angle < 0) {
-	        angle += 360;
-	    }
+		// convert to positive range [0-360)
+		// since we want to prevent negative angles, adjust them now.
+		// we can assume that atan2 will not return a negative value
+		// greater than one partial rotation
+		if (angle < 0) {
+			angle += 360;
+		}
 
-	    return angle;
+		return angle;
 	}
-	
-	
+
+
 	public static void main(String[] args){
 		Atom a =new AtomImpl();
 		a.setX(0);
 		a.setY(0);
 		a.setZ(0);
-		
+
 		Atom b = new AtomImpl();
 		b.setX(1);
 		b.setY(1);
 		b.setZ(0);
-		
+
 		System.out.println(calcRotationAngleInDegrees(a, b));
 	}
 

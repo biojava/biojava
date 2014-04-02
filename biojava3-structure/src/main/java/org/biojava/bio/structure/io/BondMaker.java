@@ -62,18 +62,18 @@ public class BondMaker {
 	private static final double MAX_NUCLEOTIDE_BOND_LENGTH = 2.1;
 
 	private Structure structure = null;
-	
+
 	public BondMaker(Structure structure) {
 		this.structure = structure;
 	}
-	
+
 	public void makeBonds() {
 		formPeptideBonds();
 		formNucleotideBonds();
 		formIntraResidueBonds();
 		trimBondLists();
 	}
-	
+
 	private void formPeptideBonds() {
 		for (Chain chain : structure.getChains()) {
 			List<Group> groups = chain.getSeqResGroups();
@@ -82,7 +82,7 @@ public class BondMaker {
 				if (!(groups.get(i) instanceof AminoAcidImpl)
 						|| !(groups.get(i + 1) instanceof AminoAcidImpl))
 					continue;
-				
+
 				AminoAcidImpl tail = (AminoAcidImpl) groups.get(i);
 				AminoAcidImpl head = (AminoAcidImpl) groups.get(i + 1);
 
@@ -91,10 +91,10 @@ public class BondMaker {
 						|| head.getResidueNumber() == null) {
 					continue;
 				}
-				
+
 				Atom carboxylC;
 				Atom aminoN;
-				
+
 				try {
 					carboxylC = tail.getC();
 					aminoN = head.getN();
@@ -103,22 +103,20 @@ public class BondMaker {
 					// about all of their atoms
 					continue;
 				}
-				
+
 				if (carboxylC == null || aminoN == null) {
 					continue;
 				}
-				
-				try {
-					if (Calc.getDistance(carboxylC, aminoN) < MAX_PEPTIDE_BOND_LENGTH) {
-						new Bond(carboxylC, aminoN, 1);
-					}
-				} catch (StructureException e) {
-                     // this can't happen, not sure why getDistance throws an exception
+
+
+				if (Calc.getDistance(carboxylC, aminoN) < MAX_PEPTIDE_BOND_LENGTH) {
+					new Bond(carboxylC, aminoN, 1);
 				}
+
 			}
 		}
 	}
-	
+
 	private void formNucleotideBonds() {
 		for (Chain chain : structure.getChains()) {
 			List<Group> groups = chain.getSeqResGroups();
@@ -127,7 +125,7 @@ public class BondMaker {
 				if (!(groups.get(i) instanceof NucleotideImpl)
 						|| !(groups.get(i + 1) instanceof NucleotideImpl))
 					continue;
-				
+
 				NucleotideImpl tail = (NucleotideImpl) groups.get(i);
 				NucleotideImpl head = (NucleotideImpl) groups.get(i + 1);
 
@@ -136,30 +134,28 @@ public class BondMaker {
 						|| head.getResidueNumber() == null) {
 					continue;
 				}
-				
+
 				Atom phosphorous = tail.getP();
 				Atom oThreePrime = head.getO3Prime();
 
 				if (phosphorous == null || oThreePrime == null) {
 					continue;
 				}
-				
+
 				if ( phosphorous == null || oThreePrime == null) {
 					continue;
 				}
-				
-				try {
-									
-					if (Calc.getDistance(phosphorous, oThreePrime) < MAX_NUCLEOTIDE_BOND_LENGTH) {
-						new Bond(phosphorous, oThreePrime, 1);
-					}
-				} catch (StructureException e) {
-                     // this can't happen, not sure why getDistance throws an exception
+
+
+
+				if (Calc.getDistance(phosphorous, oThreePrime) < MAX_NUCLEOTIDE_BOND_LENGTH) {
+					new Bond(phosphorous, oThreePrime, 1);
 				}
+
 			}
 		}
 	}
-	
+
 	private void formIntraResidueBonds() {
 		for (Chain chain : structure.getChains()) {
 			List<Group> groups = chain.getAtomGroups();
@@ -188,7 +184,7 @@ public class BondMaker {
 			}
 		}
 	}
-	
+
 	private void trimBondLists() {
 		for (Chain chain : structure.getChains()) {
 			for (Group group : chain.getAtomGroups()) {
@@ -200,5 +196,5 @@ public class BondMaker {
 			}
 		}
 	}
-	
+
 }

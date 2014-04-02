@@ -297,16 +297,16 @@ public class StructureTools {
 	public static final Atom[] getAllNonHAtomArray(Structure s, boolean hetAtoms) {
 		List<Atom> atoms = new ArrayList<Atom>();
 
-		
+
 		AtomIterator iter = new AtomIterator(s);
 		while (iter.hasNext()){
 			Atom a = iter.next();
 			if (a.getElement()==Element.H) continue;
-			
+
 			Group g = a.getGroup();
-			
+
 			if (!hetAtoms && g.getType().equals(GroupType.HETATM)) continue;
-			
+
 			atoms.add(a);
 		}
 		return (Atom[]) atoms.toArray(new Atom[atoms.size()]);			
@@ -830,7 +830,7 @@ public class StructureTools {
 			String pdbresnumStart = matcher.group(2);
 			String pdbresnumEnd   = matcher.group(3);
 
-				
+
 			if ( ! firstRange){
 				name.append( ",");
 			} else {
@@ -843,10 +843,10 @@ public class StructureTools {
 					pdbresnumStart = pdbresnumStart.substring(1);
 				if(pdbresnumEnd.charAt(0) == '+')
 					pdbresnumEnd = pdbresnumEnd.substring(1);
-				
+
 				ResidueNumber pdbresnum1 = ResidueNumber.fromString(pdbresnumStart);
 				ResidueNumber pdbresnum2 = ResidueNumber.fromString(pdbresnumEnd);
-				
+
 				groups = chain.getGroupsByPDB(pdbresnum1, pdbresnum2);
 
 				name.append( chainId + AtomCache.UNDERSCORE + pdbresnumStart+"-" + pdbresnumEnd);
@@ -856,7 +856,7 @@ public class StructureTools {
 				groups = chain.getAtomGroups().toArray(new Group[chain.getAtomGroups().size()]);
 				name.append(chainId);
 			}
-						
+
 			firstRange = true;
 
 			// Create new chain, if needed
@@ -970,7 +970,7 @@ public class StructureTools {
 		radius = radius * radius;
 
 		Map<Group,Double> distances = new HashMap<Group,Double>();
-		
+
 		// we only need this if we're averaging distances
 		// note that we can't use group.getAtoms().size() because some the group's atoms be outside the shell
 		Map<Group,Integer> atomCounts = new HashMap<Group,Integer>();
@@ -980,45 +980,43 @@ public class StructureTools {
 
 				// exclude water
 				if (!includeWater && chainGroup.getPDBName().equals("HOH")) continue;
-				
+
 				// check blacklist of residue numbers
 				for (ResidueNumber rn : excludeResidues) {
 					if (rn.equals(chainGroup.getResidueNumber())) continue groupLoop;
 				}
-				
+
 				for (Atom testAtom : chainGroup.getAtoms()) {
-					
-					try {
-						
-						// use getDistanceFast as we are doing a lot of comparisons
-						double dist = Calc.getDistanceFast(centroid, testAtom);
-						
-						// if we're the shell
-						if (dist <= radius) {
-							if (!distances.containsKey(chainGroup)) distances.put(chainGroup, Double.POSITIVE_INFINITY);
-							if (useAverageDistance) {
-								// sum the distance; we'll divide by the total number later
-								// here, we CANNOT use fastDistance (distance squared) because we want the arithmetic mean
-								distances.put(chainGroup, distances.get(chainGroup) + Math.sqrt(dist));
-								if (!atomCounts.containsKey(chainGroup)) atomCounts.put(chainGroup, 0);
-								atomCounts.put(chainGroup, atomCounts.get(chainGroup) + 1);
-							} else {
-								// take the minimum distance among all atoms of chainGroup
-								// note that we can't break here because we might find a smaller distance
-								if (dist < distances.get(chainGroup)) {
-									distances.put(chainGroup, dist);
-								}
+
+
+
+					// use getDistanceFast as we are doing a lot of comparisons
+					double dist = Calc.getDistanceFast(centroid, testAtom);
+
+					// if we're the shell
+					if (dist <= radius) {
+						if (!distances.containsKey(chainGroup)) distances.put(chainGroup, Double.POSITIVE_INFINITY);
+						if (useAverageDistance) {
+							// sum the distance; we'll divide by the total number later
+							// here, we CANNOT use fastDistance (distance squared) because we want the arithmetic mean
+							distances.put(chainGroup, distances.get(chainGroup) + Math.sqrt(dist));
+							if (!atomCounts.containsKey(chainGroup)) atomCounts.put(chainGroup, 0);
+							atomCounts.put(chainGroup, atomCounts.get(chainGroup) + 1);
+						} else {
+							// take the minimum distance among all atoms of chainGroup
+							// note that we can't break here because we might find a smaller distance
+							if (dist < distances.get(chainGroup)) {
+								distances.put(chainGroup, dist);
 							}
 						}
-						
-					} catch (StructureException ex) {
-						Logger.getLogger(StructureTools.class.getName()).log(Level.SEVERE, null, ex);
 					}
+
+
 
 				}
 			}
 		}
-		
+
 		if (useAverageDistance) {
 			for (Map.Entry<Group,Double> entry : distances.entrySet()) {
 				int count = atomCounts.get(entry.getKey());
@@ -1030,9 +1028,9 @@ public class StructureTools {
 				distances.put(entry.getKey(), Math.sqrt(entry.getValue()));
 			}
 		}
-		
+
 		return distances;
-		
+
 	}
 
 	public static Set<Group> getGroupsWithinShell(Structure structure, Atom atom, Set<ResidueNumber> excludeResidues, double distance, boolean includeWater) {
@@ -1048,16 +1046,14 @@ public class StructureTools {
 					if (rn.equals(chainGroup.getResidueNumber())) continue groupLoop;
 				}
 				for (Atom atomB : chainGroup.getAtoms()) {
-					try {
-						//use getDistanceFast as we are doing a lot of comparisons
-						double dist = Calc.getDistanceFast(atom, atomB);
-						if (dist <= distance) {
-							returnSet.add(chainGroup);
-							break;
-						}
-					} catch (StructureException ex) {
-						Logger.getLogger(StructureTools.class.getName()).log(Level.SEVERE, null, ex);
+
+					//use getDistanceFast as we are doing a lot of comparisons
+					double dist = Calc.getDistanceFast(atom, atomB);
+					if (dist <= distance) {
+						returnSet.add(chainGroup);
+						break;
 					}
+
 
 				}
 			}

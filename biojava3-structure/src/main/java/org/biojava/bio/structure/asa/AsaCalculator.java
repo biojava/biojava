@@ -44,7 +44,7 @@ public class AsaCalculator {
 	public static final int DEFAULT_N_SPHERE_POINTS = 960;
 	public static final double DEFAULT_PROBE_SIZE = 1.4;
 	public static final int DEFAULT_NTHREADS = 1;
-	
+
 
 
 	// Chothia's amino acid atoms vdw radii
@@ -59,16 +59,16 @@ public class AsaCalculator {
 	public static final double NUC_CARBON_VDW = 1.80;
 	public static final double NUC_NITROGEN_VDW = 1.60;
 	public static final double PHOSPHOROUS_VDW = 1.90;
-		
-	
-	
-	
-	
+
+
+
+
+
 	private class AsaCalcWorker implements Runnable {
 
 		private int i;
 		private double[] asas;
-		
+
 		public AsaCalcWorker(int i, double[] asas) {
 			this.i = i;
 			this.asas = asas;
@@ -79,15 +79,15 @@ public class AsaCalculator {
 			asas[i] = calcSingleAsa(i);
 		}
 	}
-	
-	
+
+
 	private Atom[] atoms;
 	private double[] radii;
 	private double probe;
 	private int nThreads;
 	private Point3d[] spherePoints;
 	private double cons;
-	
+
 	/**
 	 * Constructs a new AsaCalculator. Subsequently call {@link #calculateAsas()}
 	 * or {@link #getGroupAsas()} to calculate the ASAs 
@@ -104,7 +104,7 @@ public class AsaCalculator {
 		this.atoms = StructureTools.getAllNonHAtomArray(structure, hetAtoms);
 		this.probe = probe;
 		this.nThreads = nThreads;
-		
+
 		// initialising the radii by looking them up through AtomRadii
 		radii = new double[atoms.length];
 		for (int i=0;i<atoms.length;i++) {
@@ -116,7 +116,7 @@ public class AsaCalculator {
 
 		cons = 4.0 * Math.PI / (double)nSpherePoints;
 	}
-	
+
 	/**
 	 * Constructs a new AsaCalculator. Subsequently call {@link #calculateAsas()}
 	 * or {@link #getGroupAsas()} to calculate the ASAs.
@@ -131,24 +131,24 @@ public class AsaCalculator {
 		this.atoms = atoms;
 		this.probe = probe;
 		this.nThreads = nThreads;
-		
+
 		for (Atom atom:atoms) {
 			if (atom.getElement()==Element.H) 
 				throw new IllegalArgumentException("Can't calculate ASA for an array that contains Hydrogen atoms ");
 		}
-		
+
 		// initialising the radii by looking them up through AtomRadii
 		radii = new double[atoms.length];
 		for (int i=0;i<atoms.length;i++) {
 			radii[i] = getRadius(atoms[i]);
 		}
-		
+
 		// initialising the sphere points to sample
 		spherePoints = generateSpherePoints(nSpherePoints);
-		
+
 		cons = 4.0 * Math.PI / (double)nSpherePoints;
 	}
-	
+
 	/**
 	 * Calculates ASA for all atoms and return them as a GroupAsa 
 	 * array (one element per residue in structure) containing ASAs per residue
@@ -157,9 +157,9 @@ public class AsaCalculator {
 	 * @return
 	 */
 	public GroupAsa[] getGroupAsas() {
-		
+
 		TreeMap<ResidueNumber, GroupAsa> asas = new TreeMap<ResidueNumber, GroupAsa>();
-		
+
 		double[] asasPerAtom = calculateAsas();
 
 		for (int i=0;i<atoms.length;i++) {
@@ -173,10 +173,10 @@ public class AsaCalculator {
 				groupAsa.addAtomAsaU(asasPerAtom[i]);
 			}
 		}
-		
+
 		return (GroupAsa[]) asas.values().toArray(new GroupAsa[asas.size()]);			
 	}
-	
+
 	/**
 	 * Calculates the Accessible Surface Areas for the atoms given in constructor and with parameters given.
 	 * Beware that the parallel implementation is quite memory hungry. It scales well as long as there is
@@ -184,68 +184,68 @@ public class AsaCalculator {
 	 * @return an array with asa values corresponding to each atom of the input array
 	 */
 	public double[] calculateAsas() {
-		
+
 		double[] asas = new double[atoms.length];
 
-	    if (nThreads<=1) { // (i.e. it will also be 1 thread if 0 or negative number specified)
-		    for (int i=0;i<atoms.length;i++) {	    	
-		        asas[i] = calcSingleAsa(i); 
-		    }
-		    
-	    } else {
-	    	// NOTE the multithreaded calculation does not scale up well in some systems, 
-	    	// why? I guess some memory/garbage collect problem? I tried increasing Xmx in pc8201 but didn't help 
-	    	
-	    	// Following scaling tests are for 3hbx, calculating ASA of full asym unit (6 chains):
-	    	
-	    	// SCALING test done in merlinl01 (12 cores, Xeon X5670  @ 2.93GHz, 24GB RAM)   	 
-	    	//1 threads, time:  8.8s -- x1.0
-	    	//2 threads, time:  4.4s -- x2.0
-	    	//3 threads, time:  2.9s -- x3.0
-	    	//4 threads, time:  2.2s -- x3.9
-	    	//5 threads, time:  1.8s -- x4.9
-	    	//6 threads, time:  1.6s -- x5.5
-	    	//7 threads, time:  1.4s -- x6.5
-	    	//8 threads, time:  1.3s -- x6.9
+		if (nThreads<=1) { // (i.e. it will also be 1 thread if 0 or negative number specified)
+			for (int i=0;i<atoms.length;i++) {	    	
+				asas[i] = calcSingleAsa(i); 
+			}
 
-	    	// SCALING test done in pc8201 (4 cores, Core2 Quad Q9550  @ 2.83GHz, 8GB RAM)
-	    	//1 threads, time: 17.2s -- x1.0
-	    	//2 threads, time:  9.7s -- x1.8
-	    	//3 threads, time:  7.7s -- x2.2
-	    	//4 threads, time:  7.9s -- x2.2
+		} else {
+			// NOTE the multithreaded calculation does not scale up well in some systems, 
+			// why? I guess some memory/garbage collect problem? I tried increasing Xmx in pc8201 but didn't help 
 
-	    	// SCALING test done in eppic01 (16 cores, Xeon E5-2650 0  @ 2.00GHz, 128GB RAM)
-	    	//1 threads, time: 10.7s -- x1.0
-	    	//2 threads, time:  5.6s -- x1.9
-	    	//3 threads, time:  3.6s -- x3.0
-	    	//4 threads, time:  2.8s -- x3.9
-	    	//5 threads, time:  2.3s -- x4.8
-	    	//6 threads, time:  1.8s -- x6.0
-	    	//7 threads, time:  1.6s -- x6.8
-	    	//8 threads, time:  1.3s -- x8.0
-	    	//9 threads, time:  1.3s -- x8.5
-	    	//10 threads, time:  1.1s -- x10.0
-	    	//11 threads, time:  1.0s -- x10.9
-	    	//12 threads, time:  0.9s -- x11.4
+			// Following scaling tests are for 3hbx, calculating ASA of full asym unit (6 chains):
+
+			// SCALING test done in merlinl01 (12 cores, Xeon X5670  @ 2.93GHz, 24GB RAM)   	 
+			//1 threads, time:  8.8s -- x1.0
+			//2 threads, time:  4.4s -- x2.0
+			//3 threads, time:  2.9s -- x3.0
+			//4 threads, time:  2.2s -- x3.9
+			//5 threads, time:  1.8s -- x4.9
+			//6 threads, time:  1.6s -- x5.5
+			//7 threads, time:  1.4s -- x6.5
+			//8 threads, time:  1.3s -- x6.9
+
+			// SCALING test done in pc8201 (4 cores, Core2 Quad Q9550  @ 2.83GHz, 8GB RAM)
+			//1 threads, time: 17.2s -- x1.0
+			//2 threads, time:  9.7s -- x1.8
+			//3 threads, time:  7.7s -- x2.2
+			//4 threads, time:  7.9s -- x2.2
+
+			// SCALING test done in eppic01 (16 cores, Xeon E5-2650 0  @ 2.00GHz, 128GB RAM)
+			//1 threads, time: 10.7s -- x1.0
+			//2 threads, time:  5.6s -- x1.9
+			//3 threads, time:  3.6s -- x3.0
+			//4 threads, time:  2.8s -- x3.9
+			//5 threads, time:  2.3s -- x4.8
+			//6 threads, time:  1.8s -- x6.0
+			//7 threads, time:  1.6s -- x6.8
+			//8 threads, time:  1.3s -- x8.0
+			//9 threads, time:  1.3s -- x8.5
+			//10 threads, time:  1.1s -- x10.0
+			//11 threads, time:  1.0s -- x10.9
+			//12 threads, time:  0.9s -- x11.4
 
 
-	    	
-	    	ExecutorService threadPool = Executors.newFixedThreadPool(nThreads);
 
-	    	
-	    	for (int i=0;i<atoms.length;i++) {
-	    		threadPool.submit(new AsaCalcWorker(i,asas));    			
-	    	}
+			ExecutorService threadPool = Executors.newFixedThreadPool(nThreads);
 
-	    	threadPool.shutdown();
-	    	
-	    	while (!threadPool.isTerminated());
-	    	
-	    }
-	    
-	    return asas;
+
+			for (int i=0;i<atoms.length;i++) {
+				threadPool.submit(new AsaCalcWorker(i,asas));    			
+			}
+
+			threadPool.shutdown();
+
+			while (!threadPool.isTerminated());
+
+		}
+
+		return asas;
 	}
-	
+
 	/**
 	 * Returns list of 3d coordinates of points on a sphere using the
 	 * Golden Section Spiral algorithm.
@@ -253,16 +253,16 @@ public class AsaCalculator {
 	 * @return
 	 */
 	private Point3d[] generateSpherePoints(int nSpherePoints) {
-	    Point3d[] points = new Point3d[nSpherePoints];
-	    double inc = Math.PI * (3.0 - Math.sqrt(5.0));
-	    double offset = 2.0 / (double)nSpherePoints; 
-	    for (int k=0;k<nSpherePoints;k++) {
-	        double y = k * offset - 1.0 + (offset / 2.0);
-	        double r = Math.sqrt(1.0 - y*y);
-	        double phi = k * inc;
-	        points[k] = new Point3d(Math.cos(phi)*r, y, Math.sin(phi)*r);
-	    }
-	    return points;
+		Point3d[] points = new Point3d[nSpherePoints];
+		double inc = Math.PI * (3.0 - Math.sqrt(5.0));
+		double offset = 2.0 / (double)nSpherePoints; 
+		for (int k=0;k<nSpherePoints;k++) {
+			double y = k * offset - 1.0 + (offset / 2.0);
+			double r = Math.sqrt(1.0 - y*y);
+			double phi = k * inc;
+			points[k] = new Point3d(Math.cos(phi)*r, y, Math.sin(phi)*r);
+		}
+		return points;
 	}
 
 	/**
@@ -272,72 +272,69 @@ public class AsaCalculator {
 	private ArrayList<Integer> findNeighborIndices(int k) {
 		// looking at a typical protein case, number of neighbours are from ~10 to ~50, with an average of ~30
 		// Thus 40 seems to be a good compromise for the starting capacity
-	    ArrayList<Integer> neighbor_indices = new ArrayList<Integer>(40);
-	    
-	    double radius = radii[k] + probe + probe;
-	    
-	    for (int i=0;i<atoms.length;i++) {
-	    	if (i==k) continue;
-	    	
-	    	double dist = 0;
-	    	try {
-	    		dist = Calc.getDistance(atoms[i], atoms[k]);
-	    	} catch (StructureException e) {
-	    		// there's no actual exception thrown by getDistance... could we remove the throws declaration?
-	    	}
-	    	
-	        if (dist < radius + radii[i]) {
-	            neighbor_indices.add(i);
-	        }
-	        
-	    }
-	    
-	    return neighbor_indices;
+		ArrayList<Integer> neighbor_indices = new ArrayList<Integer>(40);
+
+		double radius = radii[k] + probe + probe;
+
+		for (int i=0;i<atoms.length;i++) {
+			if (i==k) continue;
+
+			double dist = 0;
+
+			dist = Calc.getDistance(atoms[i], atoms[k]);
+
+			if (dist < radius + radii[i]) {
+				neighbor_indices.add(i);
+			}
+
+		}
+
+		return neighbor_indices;
 	}
-	
+
 	private double calcSingleAsa(int i) {
-    	Atom atom_i = atoms[i];
-    	ArrayList<Integer> neighbor_indices = findNeighborIndices(i);
-        int n_neighbor = neighbor_indices.size();
-        int j_closest_neighbor = 0;
-        double radius = probe + radii[i];
+		Atom atom_i = atoms[i];
+		ArrayList<Integer> neighbor_indices = findNeighborIndices(i);
+		int n_neighbor = neighbor_indices.size();
+		int j_closest_neighbor = 0;
+		double radius = probe + radii[i];
 
-        int n_accessible_point = 0;
-        
-        for (Point3d point: spherePoints){
-            boolean is_accessible = true;
-            Point3d test_point = new Point3d(point.x*radius + atom_i.getX(),
-            								point.y*radius + atom_i.getY(),
-            								point.z*radius + atom_i.getZ());
+		int n_accessible_point = 0;
 
-            int[] cycled_indices = new int[n_neighbor];
-            int arind = 0;
-            for (int ind=j_closest_neighbor;ind<n_neighbor;ind++) {
-            	cycled_indices[arind] = ind;
-            	arind++;
-            }
-            for (int ind=0;ind<j_closest_neighbor;ind++){
-            	cycled_indices[arind] = ind;
-            	arind++;
-            }
+		for (Point3d point: spherePoints){
+			boolean is_accessible = true;
+			Point3d test_point = new Point3d(point.x*radius + atom_i.getX(),
+					point.y*radius + atom_i.getY(),
+					point.z*radius + atom_i.getZ());
 
-            for (int j: cycled_indices) {
-                Atom atom_j = atoms[neighbor_indices.get(j)];
-                double r = radii[neighbor_indices.get(j)] + probe;
-                double diff_sq = test_point.distanceSquared(new Point3d(atom_j.getCoords()));
-                if (diff_sq < r*r) {
-                    j_closest_neighbor = j;
-                    is_accessible = false;
-                    break;
-                }
-            }
-            if (is_accessible) {
-                n_accessible_point++;
-            }
-        }
-        return cons*n_accessible_point*radius*radius;
+			int[] cycled_indices = new int[n_neighbor];
+			int arind = 0;
+			for (int ind=j_closest_neighbor;ind<n_neighbor;ind++) {
+				cycled_indices[arind] = ind;
+				arind++;
+			}
+			for (int ind=0;ind<j_closest_neighbor;ind++){
+				cycled_indices[arind] = ind;
+				arind++;
+			}
+
+			for (int j: cycled_indices) {
+				Atom atom_j = atoms[neighbor_indices.get(j)];
+				double r = radii[neighbor_indices.get(j)] + probe;
+				double diff_sq = test_point.distanceSquared(new Point3d(atom_j.getCoords()));
+				if (diff_sq < r*r) {
+					j_closest_neighbor = j;
+					is_accessible = false;
+					break;
+				}
+			}
+			if (is_accessible) {
+				n_accessible_point++;
+			}
+		}
+		return cons*n_accessible_point*radius*radius;
 	}
-	
+
 	/**
 	 * Gets the radius for given amino acid and atom 
 	 * @param aa
@@ -345,14 +342,14 @@ public class AsaCalculator {
 	 * @return
 	 */	
 	private static double getRadiusForAmino(AminoAcid amino, Atom atom) {
-		
+
 		if (atom.getElement().equals(Element.H)) return Element.H.getVDWRadius();
 		// some unusual entries (e.g. 1tes) contain Deuterium atoms in standard aminoacids
 		if (atom.getElement().equals(Element.D)) return Element.D.getVDWRadius();
 
 		String atomCode = atom.getName();
 		char aa = amino.getAminoType();
-		
+
 		// here we use the values that Chothia gives in his paper (as NACCESS does)
 		if (atom.getElement()==Element.O) {
 			return OXIGEN_VDW;
@@ -379,64 +376,64 @@ public class AsaCalculator {
 			// the rest of the cases (CD, CD1, CD2, CG) depend on amino acid
 			else {				
 				switch (aa) {
-					case 'F':						
-					case 'W':
-					case 'Y':
-					case 'H':
-					case 'D':
-					case 'N':
-						return TRIGONAL_CARBON_VDW;
-						
-					case 'P':
-					case 'K':
-					case 'R':
-					case 'M':
-					case 'I':
-					case 'L':
-						return TETRAHEDRAL_CARBON_VDW;
-						
-					case 'Q':
-					case 'E':
-						if (atomCode.equals("CD")) return TRIGONAL_CARBON_VDW;
-						else if (atomCode.equals("CG")) return TETRAHEDRAL_CARBON_VDW;
-						
-					default:
-						System.err.println("Warning: unexpected carbon atom "+atomCode+" for aminoacid "+aa+", assigning its standard vdw radius");
-						return Element.C.getVDWRadius();
+				case 'F':						
+				case 'W':
+				case 'Y':
+				case 'H':
+				case 'D':
+				case 'N':
+					return TRIGONAL_CARBON_VDW;
+
+				case 'P':
+				case 'K':
+				case 'R':
+				case 'M':
+				case 'I':
+				case 'L':
+					return TETRAHEDRAL_CARBON_VDW;
+
+				case 'Q':
+				case 'E':
+					if (atomCode.equals("CD")) return TRIGONAL_CARBON_VDW;
+					else if (atomCode.equals("CG")) return TETRAHEDRAL_CARBON_VDW;
+
+				default:
+					System.err.println("Warning: unexpected carbon atom "+atomCode+" for aminoacid "+aa+", assigning its standard vdw radius");
+					return Element.C.getVDWRadius();
 				}
 			}
-			
-		// not any of the expected atoms
+
+			// not any of the expected atoms
 		} else {
 			System.err.println("Warning: unexpected atom "+atomCode+" for aminoacid "+aa+", assigning its standard vdw radius");
 			return atom.getElement().getVDWRadius();
 		}
 	}
 
-	
+
 	/**
 	 * Gets the radius for given nucleotide atom 
 	 * @param atom
 	 * @return
 	 */
 	private static double getRadiusForNucl(NucleotideImpl nuc, Atom atom) {
-		
+
 		if (atom.getElement().equals(Element.H)) return Element.H.getVDWRadius();
 		if (atom.getElement().equals(Element.D)) return Element.D.getVDWRadius();
-		
+
 		if (atom.getElement()==Element.C) return NUC_CARBON_VDW;
-		
+
 		if (atom.getElement()==Element.N) return NUC_NITROGEN_VDW;
-		
+
 		if (atom.getElement()==Element.P) return PHOSPHOROUS_VDW;
-		
+
 		if (atom.getElement()==Element.O) return OXIGEN_VDW;
-		
+
 		System.err.println("Warning: unexpected atom "+atom.getName()+" for nucleotide "+nuc.getPDBName()+", assigning its standard vdw radius");
 		return atom.getElement().getVDWRadius();
 	}
-	
-	
+
+
 	/**
 	 * Gets the van der Waals radius of the given atom following the values defined by 
 	 * Chothia (1976) J.Mol.Biol.105,1-14
@@ -452,29 +449,29 @@ public class AsaCalculator {
 	 * @return
 	 */
 	public static double getRadius(Atom atom) {
-		
+
 		if (atom.getElement()==null) {
 			System.err.println("Warning: unrecognised atom "+atom.getName()+" with serial "+atom.getPDBserial()+
 					", assigning the default vdw radius (Nitrogen vdw radius).");
 			return Element.N.getVDWRadius();
 		}
-		
+
 		Group res = atom.getGroup();
-		
+
 		if (res==null) {
 			System.err.println("Warning: unknown parent residue for atom "+atom.getName()+" with serial "+
 					atom.getPDBserial()+", assigning its default vdw radius");
 			return atom.getElement().getVDWRadius();
 		}
-		
+
 		String type = res.getType();
-		
+
 		if (type.equals(GroupType.AMINOACID)) return getRadiusForAmino(((AminoAcid)res), atom);
-		
+
 		if (type.equals(GroupType.NUCLEOTIDE)) return getRadiusForNucl((NucleotideImpl)res,atom);
-		
-		
+
+
 		return atom.getElement().getVDWRadius();
 	}
-	
+
 }
