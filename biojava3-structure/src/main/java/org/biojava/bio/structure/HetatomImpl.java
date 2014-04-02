@@ -241,7 +241,7 @@ public class HetatomImpl implements Group,Serializable {
 	 * @throws StructureException ...
 	 */
 	public Atom getAtom(String name)
-	throws StructureException
+	
 	{
 		// todo: add speedup by internal hashmap...
 
@@ -274,8 +274,8 @@ public class HetatomImpl implements Group,Serializable {
 
 		}
 		
-		throw new StructureException(" No atom >"+name + "< in group " + pdb_name + " " + residueNumber  + " !");
-
+		//throw new StructureException(" No atom >"+name + "< in group " + pdb_name + " " + residueNumber  + " !");
+		return null;
 
 	}
 

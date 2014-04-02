@@ -37,91 +37,85 @@ import org.biojava.bio.structure.io.PDBParseException;
  * @version %I% %G%
  */
 public class NucleotideImpl
-    extends HetatomImpl
-    implements Group, Serializable
+extends HetatomImpl
+implements Group, Serializable
 {
 
-    /**
-    *
-    */
-   private static final long serialVersionUID = -7467726932980288712L;
-   /** this is a "nucleotide", a special occurance of a Hetatom. */
-    public static final String type = GroupType.NUCLEOTIDE;
+	/**
+	 *
+	 */
+	private static final long serialVersionUID = -7467726932980288712L;
+	/** this is a "nucleotide", a special occurance of a Hetatom. */
+	public static final String type = GroupType.NUCLEOTIDE;
 
-    /*
-     * inherits most from Hetero and has just a few extensions.
-     */
-    public NucleotideImpl() {
-	super();
+	/*
+	 * inherits most from Hetero and has just a few extensions.
+	 */
+	public NucleotideImpl() {
+		super();
 
-    }
-
-    public String getType(){ return type;}
-
-
-    public String toString(){
-
-	String str = "PDB: "+ pdb_name + " " + residueNumber +  " "+ pdb_flag;
-	if (pdb_flag) {
-	    str = str + "atoms: "+atoms.size();
-	}
-	return str ;
-
-    }
-    
-    /** 
-     * Returns the O3' atom if present, otherwise null
-     * @return O3' atom or null
-     */
-    public Atom getO3Prime() {
-    	try {
-    		return getAtom("O3'");
-    	} catch (StructureException e) {
-    		return null;
-    	} 
-    }
-
-    /** 
-     * Returns the O5' atom if present, otherwise null
-     * @return O5' atom or null
-     */
-    public Atom getO5Prime() {
-    	try {
-    		return getAtom("O5'");
-    	} catch (StructureException e) {
-    		return null;
-    	} 
-    }
-    
-    /** 
-     * Returns the P atom if present, otherwise null
-     * @return P atom or null
-     */
-    public Atom getP() {
-    	try {
-    		return getAtom("P");
-    	} catch (StructureException e) {
-    		return null;
-    	} 
-    }
-
-    public Object clone(){
-	NucleotideImpl n = new NucleotideImpl();
-
-	n.setPDBFlag(has3D());
-	n.setResidueNumber(getResidueNumber());
-	try {
-	    n.setPDBName(getPDBName());
-	} catch (PDBParseException e) {
-	    e.printStackTrace();
 	}
 
+	public String getType(){ return type;}
 
-	// copy the atoms
-	for (int i=0;i<atoms.size();i++){
-	    Atom atom = (Atom)atoms.get(i);
-	    n.addAtom((Atom)atom.clone());
+
+	public String toString(){
+
+		String str = "PDB: "+ pdb_name + " " + residueNumber +  " "+ pdb_flag;
+		if (pdb_flag) {
+			str = str + "atoms: "+atoms.size();
+		}
+		return str ;
+
 	}
-	return n;
-    }
+
+	/** 
+	 * Returns the O3' atom if present, otherwise null
+	 * @return O3' atom or null
+	 */
+	public Atom getO3Prime() {
+
+		return getAtom("O3'");
+
+	}
+
+	/** 
+	 * Returns the O5' atom if present, otherwise null
+	 * @return O5' atom or null
+	 */
+	public Atom getO5Prime() {
+
+		return getAtom("O5'");
+
+	}
+
+	/** 
+	 * Returns the P atom if present, otherwise null
+	 * @return P atom or null
+	 */
+	public Atom getP() {
+
+		return getAtom("P");
+
+	}
+
+	public Object clone(){
+		NucleotideImpl n = new NucleotideImpl();
+
+		n.setPDBFlag(has3D());
+		n.setResidueNumber(getResidueNumber());
+		try {
+			n.setPDBName(getPDBName());
+		} catch (PDBParseException e) {
+			e.printStackTrace();
+		}
+
+
+		// copy the atoms
+		for (int i=0;i<atoms.size();i++){
+			Atom atom = (Atom)atoms.get(i);
+			n.addAtom((Atom)atom.clone());
+		}
+		return n;
+	}
 }

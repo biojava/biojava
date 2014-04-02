@@ -94,35 +94,33 @@ implements AminoAcid, Serializable
 	/** get N atom.
 	 *
 	 * @return an Atom object
-	 * @throws StructureException ...
+	 * @  ...
 	 */
-	public Atom getN()  throws StructureException {return getAtom("N");  }
+	public Atom getN()    {return getAtom("N");  }
 
 	/** get CA atom.
 	 * @return an Atom object
-	 * @throws StructureException ...
+	 * @  ...
 	 */
-	public Atom getCA() throws StructureException {return getAtom(" CA "); }
+	public Atom getCA()   {return getAtom(" CA "); }
 
 	/** get C atom.
 	 * @return an Atom object
-	 * @throws StructureException ...
+	 * @  ...
 	 */
-	public Atom getC()  throws StructureException {return getAtom("C");  }
+	public Atom getC()    {return getAtom("C");  }
 
 	/** get O atom.
 	 * @return an Atom object
-	 * @throws StructureException ...
+	 * @  ...
 	 */
-	public Atom getO()  throws StructureException {return getAtom("O");  }
+	public Atom getO()    {return getAtom("O");  }
 
 	/** get CB atom.
 	 * @return an Atom object
-	 * @throws StructureException ...
+	 * @  ...
 	 */
-	public Atom getCB() throws StructureException {return getAtom("CB"); }
-
-
+	public Atom getCB()   {return getAtom("CB"); }
 
 
 	/** returns the name of the AA, in single letter code.

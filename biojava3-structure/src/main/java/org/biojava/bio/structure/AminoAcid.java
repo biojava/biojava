@@ -80,33 +80,33 @@ public interface AminoAcid extends Group {
     /** get N atom.
      *
      * @return an Atom object
-     * @throws StructureException ...
+     * @  ...
     */
-    public Atom getN()  throws StructureException ;
+    public Atom getN()    ;
 
     /** get CA atom.
      * @return an Atom object
-     * @throws StructureException ...
+     * @  ...
      */
-    public Atom getCA() throws StructureException ;
+    public Atom getCA()   ;
 
     /** get C atom.
      * @return an Atom object
-     * @throws StructureException ...
+     * @  ...
      */
-    public Atom getC()  throws StructureException ;
+    public Atom getC()    ;
 
     /** get O atom.
      * @return an Atom object
-     * @throws StructureException ...
+     * @  ...
      */
-    public Atom getO()  throws StructureException ;
+    public Atom getO()    ;
 
     /** get CB atom.
      * @return an Atom object
-     * @throws StructureException ...
+     * @  ...
      */
-    public Atom getCB() throws StructureException ;
+    public Atom getCB()   ;
 
     
 
