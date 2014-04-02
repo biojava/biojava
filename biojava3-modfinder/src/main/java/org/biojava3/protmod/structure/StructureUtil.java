@@ -87,11 +87,8 @@ public final class StructureUtil {
 	 */
 	public static double getAtomDistance(Atom atom1, Atom atom2) {
 		double distance;
-		try {
-			distance = Calc.getDistance(atom1, atom2);
-		} catch (StructureException e) {
-			throw new AssertionError();
-		}
+
+		distance = Calc.getDistance(atom1, atom2);
 
 		return distance;
 	}
@@ -122,11 +119,9 @@ public final class StructureUtil {
 
 		for (Atom[] linkage : linkages) {
 			double distance;
-			try {
-				distance = Calc.getDistance(linkage[0], linkage[1]);
-			} catch (StructureException e) {
-				throw new AssertionError();
-			}
+
+			distance = Calc.getDistance(linkage[0], linkage[1]);
+
 
 			if (distance < minDistance) {
 				minDistance = distance;
