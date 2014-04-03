@@ -289,12 +289,10 @@ public class FileConvert {
 
 		for ( int atompos = 0 ; atompos < groupsize; atompos++) {
 			Atom a = null ;
-			try {
-				a = g.getAtom(atompos);
-			} catch ( StructureException e) {
-				System.err.println(e);
+			
+			a = g.getAtom(atompos);
+			if ( a == null)
 				continue ;
-			}
 
 			toPDB(a, str);
 

@@ -33,6 +33,7 @@ import java.util.Map;
 
 import org.biojava.bio.structure.Atom;
 import org.biojava.bio.structure.Calc;
+
 import org.biojava.bio.structure.Chain;
 import org.biojava.bio.structure.Group;
 import org.biojava.bio.structure.Structure;
@@ -576,7 +577,7 @@ public class SecStruc {
 		List<SecStrucGroup> groupList = new ArrayList<SecStrucGroup>();
 		//GroupIterator iter = new GroupIterator(s);
 		for ( Chain c : s.getChains()){
-
+			
 			for (Group g : c.getAtomGroups()){
 				//System.out.println(g);
 				//			 we can also calc secstruc if hetatom is a modified amino acid.
@@ -592,12 +593,16 @@ public class SecStruc {
 					}
 					sg.setParent(g.getChain());
 
-					try {
-
-						sg.setN((Atom)   g.getAtomByPDBname(" N  ").clone());
-						sg.setCA((Atom)  g.getAtomByPDBname(" CA ").clone());
-						sg.setC((Atom)   g.getAtomByPDBname(" C  ").clone());
-						sg.setO((Atom)   g.getAtomByPDBname(" O  ").clone());
+						
+					Atom N = g.getAtomByPDBname(" N  ");
+					Atom CA =  g.getAtomByPDBname(" CA ");
+					Atom C = g.getAtomByPDBname(" C  ");
+					Atom O =  g.getAtomByPDBname(" O  ");
+					
+						sg.setN((Atom)   N.clone());
+						sg.setCA((Atom) CA.clone());
+						sg.setC((Atom)   C.clone());
+						sg.setO((Atom)  O.clone());
 						sg.setOriginal(g);
 						// create H in calc_H
 

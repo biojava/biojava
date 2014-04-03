@@ -164,7 +164,7 @@ public class SeqRes2AtomAligner {
 		}
 
 		List<Group> matchedGroups = trySimpleMatch(seqResGroups, atmResGroups);
-		
+
 		if ( matchedGroups != null) {
 			// update the new SEQRES list			
 			atomRes.setSeqResGroups(matchedGroups);
@@ -390,16 +390,13 @@ public class SeqRes2AtomAligner {
 
 				// exclude metals
 				if ( g.size() == 1 ) {
-					try {
-						Atom a = g.getAtom(0);
-						if (a.getElement().isMetal())
-							continue;
 
+					Atom a = g.getAtom(0);
+					if ( a == null)
 						continue;
-					} catch (StructureException e){
-						e.printStackTrace();
+					if (a.getElement().isMetal())
 						continue;
-					}
+
 				}
 
 				ChemComp cc = g.getChemComp();

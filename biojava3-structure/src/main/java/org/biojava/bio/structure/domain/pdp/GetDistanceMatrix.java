@@ -144,9 +144,10 @@ public class GetDistanceMatrix {
 	private Atom getCBeta(Group g1) {
 		Atom cb = null;
 
-		try {
-			cb = g1.getAtom("CB");
-		} catch (StructureException e){
+		
+		cb = g1.getAtom("CB");
+		if ( cb == null)
+			{
 			if ( g1 instanceof AminoAcid) {
 				AminoAcid aa = (AminoAcid) g1;
 

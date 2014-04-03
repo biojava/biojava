@@ -146,11 +146,11 @@ public class AtomIterator implements Iterator<Atom> {
 
 		Atom a ;
 
-		try {
-			a = group.getAtom(current_atom_pos);
-		} catch (StructureException e) {
+		
+		a = group.getAtom(current_atom_pos);
+		if ( a == null) {
 			System.err.println("current_atom_pos " + current_atom_pos + " group " + group + "size:" + group.size());
-			e.printStackTrace();
+			
 			throw new NoSuchElementException("error wile trying to retrieve atom");
 		}
 

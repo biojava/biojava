@@ -142,29 +142,29 @@ public interface Group {
 	 */
 	public void clearAtoms();
 
-	/** Get an atom.  Throws StructureException if atom not found.
+	/** Get an atom.  Returns null if atom not found.
 	 *
 	 * @param name  a String
 	 * @return an Atom object
-	 * @throws StructureException if atom not found.
+
 	 */
-	public Atom getAtom(String name) throws StructureException;
+	public Atom getAtom(String name) ;
 
 
-	/**  Get an atom by the full PDB name e.g. " N  " for N. Throws StructureException if atom not found.
+	/**  Get an atom by the full PDB name e.g. " N  " for N. Return null if atom not found.
 	 * @param pdbName  a String
 	 * @return an Atom object
-	 * @throws StructureException ...
+
 	 */
-	public  Atom getAtomByPDBname(String pdbName) throws StructureException;
+	public  Atom getAtomByPDBname(String pdbName) ;
 
 	/** Get at atom by position.
 	 *
 	 * @param position  an int
 	 * @return an Atom object
-	 * @throws StructureException if not atom at this position
+
 	 */
-	public Atom getAtom(int position) throws StructureException;
+	public Atom getAtom(int position) ;
 
 	/** Teturns flag whether a particular atom is existing within this group .
 	 *

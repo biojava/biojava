@@ -35,7 +35,6 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -324,14 +323,15 @@ public class StructureTools {
 				boolean thisGroupAllAtoms = true;
 				for ( int i = 0 ; i < atomNames.length; i++){
 					String atomName = atomNames[i];
-					try {
-						Atom a = g.getAtom(atomName);
-						thisGroupAtoms.add(a);
-					} catch (StructureException e){
+
+					Atom a = g.getAtom(atomName);
+
+					if ( a == null) {
 						// this group does not have a required atom, skip it...
 						thisGroupAllAtoms = false;
 						break;
 					}
+					thisGroupAtoms.add(a);
 				}
 				if ( thisGroupAllAtoms){
 					// add the atoms of this group to the array.
@@ -369,15 +369,17 @@ public class StructureTools {
 			boolean thisGroupAllAtoms = true;
 			for ( int i = 0 ; i < atomNames.length; i++){
 				String atomName = atomNames[i];
-				try {
-					Atom a = g.getAtom(atomName);
-					thisGroupAtoms.add(a);
-				} catch (StructureException e){
+
+				Atom a = g.getAtom(atomName);
+				if ( a == null) {
+
 					// this group does not have a required atom, skip it...
 					thisGroupAllAtoms = false;
 					break;
 				}
+				thisGroupAtoms.add(a);
 			}
+
 			if ( thisGroupAllAtoms){
 				// add the atoms of this group to the array.
 				Iterator<Atom> aIter = thisGroupAtoms.iterator();

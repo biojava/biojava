@@ -179,17 +179,9 @@ public class AlignTools {
 			for (int j=0;j<c;j++){
 				Atom b1 = ca2[j];
 
-				//              double d = Math.sqrt(
-						//                      (a1.getX()-b1.getX()) * (a1.getX()-b1.getX()) + 
-				//                      (a1.getY()-b1.getY()) * (a1.getY()-b1.getY()) +
-				//                      (a1.getZ()-b1.getZ()) * (a1.getZ()-b1.getZ()));    
-				try {
-					double d = Calc.getDistance(a1,b1);
-					out.set(i,j,d);
-				} catch (StructureException e) {
-					e.printStackTrace();
-					out.set(i,j,999);
-				}
+				double d = Calc.getDistance(a1,b1);
+				out.set(i,j,d);
+
 			}
 		}
 		return out;  

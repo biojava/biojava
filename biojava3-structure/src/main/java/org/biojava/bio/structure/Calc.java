@@ -336,13 +336,13 @@ public class Calc {
 	{
 		Atom C = null ;
 		Atom N = null;
-
-		try {
-			C = a.getC();
-			N = b.getN();
-		} catch (StructureException ex){
+		
+		C = a.getC();
+		N = b.getN();
+		
+		if ( C == null || N == null)
 			return false;
-		}
+		
 		// one could also check if the CA atoms are < 4 A...
 		double distance = getDistance(C,N);
 		if ( distance < 2.5) { 

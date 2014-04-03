@@ -58,7 +58,7 @@ public class HetatomImpl implements Group,Serializable {
 	public static final String type = GroupType.HETATM ;
 
 	private static final List<String> WATERNAMES = Arrays.asList(new String[]{"HOH", "DOD",  "WAT"});
-	
+
 	Map<String, Object> properties ;
 
 	long id;
@@ -81,14 +81,14 @@ public class HetatomImpl implements Group,Serializable {
 	ChemComp chemComp ;
 
 	List<Group> altLocs;
-	
+
 	/* Construct a Hetatom instance. */
 	public HetatomImpl() {
 		super();
 
 		pdb_flag = false;
 		pdb_name = null ;
-		
+
 		residueNumber = null;
 		atoms    = new ArrayList<Atom>();
 		properties = new HashMap<String,Object>();
@@ -149,8 +149,8 @@ public class HetatomImpl implements Group,Serializable {
 			chainId = parent.getName();
 		}
 		residueNumber.setChainId(chainId);
-	
-	
+
+
 	}
 
 	/** set three character name of Group .
@@ -160,15 +160,15 @@ public class HetatomImpl implements Group,Serializable {
 	 * @throws PDBParseException ...
 	 */
 	public void setPDBName(String s)
-	throws PDBParseException
-	{
+			throws PDBParseException
+			{
 		// hetatoms can have pdb_name length < 3. e.g. CU (see 1a4a position 1200 )
 		//if (s.length() != 3) {
 		//throw new PDBParseException("amino acid name is not of length 3!");
 		//}
 		if (s != null && s.equals("?")) System.err.println("HetatomImpl: invalid pdbname: ?");
 		pdb_name =s ;
-	}
+			}
 
 	/**
 	 * Returns the PDBName.
@@ -241,7 +241,7 @@ public class HetatomImpl implements Group,Serializable {
 	 * @throws StructureException ...
 	 */
 	public Atom getAtom(String name)
-	
+
 	{
 		// todo: add speedup by internal hashmap...
 
@@ -253,7 +253,7 @@ public class HetatomImpl implements Group,Serializable {
 			return a;
 
 		for (Atom atom : atoms){
-			
+
 
 			if ( name.length() > 2) {
 
@@ -269,23 +269,23 @@ public class HetatomImpl implements Group,Serializable {
 				} else {
 					return atom;
 				}
-				
+
 			}
 
 		}
-		
+
 		//throw new StructureException(" No atom >"+name + "< in group " + pdb_name + " " + residueNumber  + " !");
 		return null;
 
 	}
 
-	/**  Get an atom by the full PDB name e.g. " N  " for N. Throws StructureException if atom not found.
+	/**  Get an atom by the full PDB name e.g. " N  " for N. Returns null if atom not found.
 	 * @param name  a String
 	 * @return an Atom object
 	 * @throws StructureException ...
 	 */
 	public Atom getAtomByPDBname(String name)
-	throws StructureException
+
 	{
 
 		for (int i=0;i<atoms.size();i++){
@@ -295,25 +295,26 @@ public class HetatomImpl implements Group,Serializable {
 			}
 		}
 
-		throw new StructureException(" No atom "+name + " in group " + pdb_name + " " + residueNumber + " !");
-
+		//throw new StructureException(" No atom "+name + " in group " + pdb_name + " " + residueNumber + " !");
+		return null;
 	}
 
 	/** return an atom by its position in the internal List.
 	 *
 	 * @param position  an int
 	 * @return an Atom object
-	 * @throws StructureException ...
+
 	 */
 	public Atom getAtom(int position)
-	throws StructureException
-	{
+			
+			{
 		if ((position < 0)|| ( position >= atoms.size())) {
-			throw new StructureException("No atom found at position "+position);
+			//throw new StructureException("No atom found at position "+position);
+			return null;
 		}
 		Atom a = atoms.get(position);
 		return a ;
-	}
+			}
 
 	/** test is an Atom with name is existing. */
 	public boolean hasAtom(String fullName){
@@ -324,7 +325,7 @@ public class HetatomImpl implements Group,Serializable {
 		a = atomSingleCharLookup.get(fullName.trim());
 		if ( a != null)
 			return true;
-		
+
 		return false;
 
 	}
@@ -550,7 +551,7 @@ public class HetatomImpl implements Group,Serializable {
 	 * {@inheritDoc}
 	 */
 	public ResidueNumber getResidueNumber() {
-		
+
 		return residueNumber;
 	}
 
@@ -565,7 +566,7 @@ public class HetatomImpl implements Group,Serializable {
 
 	public boolean hasAltLoc() {
 		if ( altLocs == null)
-		return false;
+			return false;
 		if ( altLocs.size() > 0)
 			return true;
 		return false;
@@ -576,14 +577,19 @@ public class HetatomImpl implements Group,Serializable {
 			return new ArrayList<Group>();
 		return altLocs;
 	}
-	
+
 	public Group getAltLocGroup(Character altLoc) {
-		try {
+		
+			Atom a = getAtom(0);
+			if ( a == null) {
+				return null;
+			}
+		
 			// maybe the alt loc group in question is myself
-			if (getAtom(0).getAltLoc().equals(altLoc)) {
+			if (a.getAltLoc().equals(altLoc)) {
 				return this;
 			}
-			
+
 			if (altLocs == null || altLocs.size() == 0)
 				return null;
 
@@ -593,15 +599,15 @@ public class HetatomImpl implements Group,Serializable {
 
 				// determine this group's alt-loc character code by looking
 				// at its first atom's alt-loc character
-
-				if (group.getAtom(0).getAltLoc().equals(altLoc)) {
+				Atom b = group.getAtom(0);
+				if ( b == null)
+					continue;
+				
+				if (b.getAltLoc().equals(altLoc)) {
 					return group;
 				}
 			}
-		} catch (StructureException e) {
-			// this will never happen
-		}
-		
+
 		return null;
 	}
 
@@ -610,21 +616,21 @@ public class HetatomImpl implements Group,Serializable {
 			altLocs = new ArrayList<Group>();
 		}
 		altLocs.add(group);
-		
+
 	}
 
 	@Override
 	public boolean isWater() {
 		return WATERNAMES.contains(pdb_name);
 	}
-	
+
 	/** attempts to reduce the memory imprint of this group by trimming 
 	 * all internal Collection objects to the required size.
 	 * 
 	 */
 	@SuppressWarnings("rawtypes")
 	public void trimToSize(){
-		
+
 		if ( atoms instanceof ArrayList) {
 			ArrayList myatoms = (ArrayList) atoms;
 			myatoms.trimToSize();
@@ -635,14 +641,14 @@ public class HetatomImpl implements Group,Serializable {
 		}
 		atomLookup = new  HashMap<String,Atom>(atomLookup);
 		atomSingleCharLookup = new HashMap<String,Atom>(atomLookup);
-		
+
 		if ( hasAltLoc()) {
 			for (Group alt : getAltLocs()){
 				alt.trimToSize();
 			}
 		}
-			
-		
+
+
 	}
-	
+
 }

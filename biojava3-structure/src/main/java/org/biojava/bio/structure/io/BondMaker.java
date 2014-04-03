@@ -95,16 +95,14 @@ public class BondMaker {
 				Atom carboxylC;
 				Atom aminoN;
 
-				try {
-					carboxylC = tail.getC();
-					aminoN = head.getN();
-				} catch (StructureException e) {
-					// some structures may be incomplete and not store info
-					// about all of their atoms
-					continue;
-				}
+				carboxylC = tail.getC();
+				aminoN = head.getN();
+
 
 				if (carboxylC == null || aminoN == null) {
+					// some structures may be incomplete and not store info
+					// about all of their atoms
+
 					continue;
 				}
 
@@ -170,13 +168,16 @@ public class BondMaker {
 						.getPDBName());
 
 				for (ChemCompBond chemCompBond : aminoChemComp.getBonds()) {
-					try {
-						Atom a = group.getAtom(chemCompBond.getAtom_id_1());
-						Atom b = group.getAtom(chemCompBond.getAtom_id_2());
+
+					Atom a = group.getAtom(chemCompBond.getAtom_id_1());
+					Atom b = group.getAtom(chemCompBond.getAtom_id_2());
+					if ( a != null && b != null){
+
 						int bondOrder = chemCompBond.getNumericalBondOrder();
 
 						new Bond(a, b, bondOrder);
-					} catch (StructureException e) {
+					} else  {
+
 						// Some of the atoms were missing. That's fine, there's
 						// nothing to do in this case.
 					}
