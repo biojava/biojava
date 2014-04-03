@@ -173,18 +173,6 @@ public class Calc {
 	 * @param a an Atom object
 	 * @param b an Atom object
 	 * @return a double
-	 * @deprecated use {@link #scalarProduct(Atom, Atom)} instead.
-	 */
-	public static final double skalarProduct(Atom a, Atom b) {
-		return scalarProduct(a, b);
-	}
-
-	/**
-	 * Scalar product (dot product).
-	 * 
-	 * @param a an Atom object
-	 * @param b an Atom object
-	 * @return a double
 	 */
 	public static final double scalarProduct(Atom a, Atom b) {
 		return a.getX() * b.getX() + a.getY() * b.getY() + a.getZ() * b.getZ(); 
@@ -196,7 +184,7 @@ public class Calc {
 	 * @return Square root of the sum of the squared elements
 	 */
 	public static final double amount(Atom a){
-		return Math.sqrt(skalarProduct(a,a));
+		return Math.sqrt(scalarProduct(a,a));
 	}
 
 	/** Get the angle between two vectors
@@ -210,7 +198,7 @@ public class Calc {
 		double skalar;
 		double angle;
 
-		skalar = skalarProduct(a,b);
+		skalar = scalarProduct(a,b);
 
 		angle = skalar/( amount(a) * amount (b) );
 		angle = Math.acos(angle);
@@ -265,7 +253,7 @@ public class Calc {
 
 		/* calc the sign: */
 		Atom vecprod = vectorProduct(abc,bcd);	
-		double val = skalarProduct(cb,vecprod);
+		double val = scalarProduct(cb,vecprod);
 		if (val<0.0) angl = -angl ;
 
 		return angl;
