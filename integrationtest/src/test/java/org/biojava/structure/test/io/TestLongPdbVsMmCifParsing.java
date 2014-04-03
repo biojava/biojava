@@ -24,7 +24,6 @@ import org.biojava.bio.structure.align.util.AtomCache;
 import org.biojava.bio.structure.io.FileParsingParameters;
 import org.biojava.bio.structure.xtal.CrystalCell;
 import org.junit.After;
-import org.junit.Assume;
 import org.junit.BeforeClass;
 import org.junit.ComparisonFailure;
 import org.junit.Test;
@@ -71,9 +70,11 @@ public class TestLongPdbVsMmCifParsing {
 		System.out.println("##### Each dot is a PDB entry being tested. "+DOTS_PER_LINE+" dots per line");		
 		
 		// disallow the use of the default /tmp dir, to make sure PDB_DIR is set
-		Assume.assumeFalse("PDB_DIR has not been set or it is set to the default temp directory. Please set PDB_DIR",
-							(cache.getPath().equals(System.getProperty("java.io.tmpdir"))) ||
-							(cache.getPath().equals(System.getProperty("java.io.tmpdir")+File.separator))    );
+		if (cache.getPath().equals(System.getProperty("java.io.tmpdir")) ||
+			(cache.getPath().equals(System.getProperty("java.io.tmpdir")+File.separator))    ) {
+			
+			throw new IllegalArgumentException("PDB_DIR has not been set or it is set to the default temp directory. Please set PDB_DIR to run this test");
+		};
 		
 		params = new FileParsingParameters();
 		cache.setFileParsingParams(params);
