@@ -4,16 +4,12 @@ import java.io.Serializable;
 
 import org.biojava.bio.structure.xtal.CrystalCell;
 import org.biojava.bio.structure.xtal.SpaceGroup;
-import org.biojava.bio.structure.xtal.SymoplibParser;
 
 /**
- * A class to hold crystallographic information about a PDB structure. The information
- * is only meaningful if the space group is defined. Use the method isCrystallographic()
- * to check if the associated PDB structure is of crystallographic origin. For example, these
- * values are meaningless for NMR structures.
+ * A class to hold crystallographic information about a PDB structure.
  * 
  * @author Peter Rose
- *
+ * @author duarte_j
  */
 public class PDBCrystallographicInfo implements Serializable {
 
@@ -35,27 +31,11 @@ public class PDBCrystallographicInfo implements Serializable {
 		return (float)cell.getA();
 	}
 	
-	@Deprecated
-	/**
-	 * @param a the unit cell parameter a to set
-	 */
-	public void setA(float a) {
-		this.cell.setA(a);
-	}
-	
 	/**
 	 * @return the unit cell parameter b
 	 */
 	public float getB() {
 		return (float)cell.getB();
-	}
-	
-	@Deprecated
-	/**
-	 * @param b the unit cell parameter b to set
-	 */
-	public void setB(double b) {
-		cell.setB(b);
 	}
 	
 	/**
@@ -65,27 +45,11 @@ public class PDBCrystallographicInfo implements Serializable {
 		return (float)cell.getC();
 	}
 	
-	@Deprecated
-	/**
-	 * @param c the unit cell parameter c to set
-	 */
-	public void setC(float c) {
-		cell.setC(c);
-	}
-	
 	/**
 	 * @return the unit cell parameter alpha (degrees)
 	 */
 	public float getAlpha() {
 		return (float)cell.getAlpha();
-	}
-	
-	@Deprecated
-	/**
-	 * @param alpha the unit cell parameter alpha to set
-	 */
-	public void setAlpha(float alpha) {
-		cell.setAlpha(alpha);
 	}
 	
 	/**
@@ -95,27 +59,11 @@ public class PDBCrystallographicInfo implements Serializable {
 		return (float)cell.getBeta();
 	}
 	
-	@Deprecated
-	/**
-	 * @param beta the unit cell parameter beta to set
-	 */
-	public void setBeta(float beta) {
-		cell.setBeta(beta);
-	}
-	
 	/**
 	 * @return the unit cell parameter gamma (degrees)
 	 */
 	public float getGamma() {
 		return (float)cell.getGamma();
-	}
-	
-	@Deprecated
-	/**
-	 * @param gamma the unit cell parameter gamma to set
-	 */
-	public void setGamma(float gamma) {
-		cell.setGamma(gamma); 
 	}
 	
 	/**
@@ -135,28 +83,15 @@ public class PDBCrystallographicInfo implements Serializable {
 	}
 	
 	/**
+	 * Get the SpaceGroup
 	 * @return the spaceGroup
 	 */
-	public String getSpaceGroup() {
-		if (sg==null) return null;
-		return sg.getShortSymbol();
-	}
-	
-	//public SpaceGroup getSpaceGroup() {
-	//	return sg;
-	//}
-	
-	@Deprecated
-	/**
-	 * Use #setSpaceGroup(SpaceGroup) instead
-	 * @param spaceGroup the spaceGroup to set
-	 */
-	public void setSpaceGroup(String spaceGroup) {
-		this.sg = SymoplibParser.getSpaceGroup(spaceGroup);
+	public SpaceGroup getSpaceGroup() {
+		return sg;
 	}
 	
 	/**
-	 * Set the space group
+	 * Set the SpaceGroup
 	 * @param spaceGroup
 	 */
 	public void setSpaceGroup(SpaceGroup spaceGroup) {
@@ -179,16 +114,5 @@ public class PDBCrystallographicInfo implements Serializable {
 		this.z = z;
 	}
 	
-	@Deprecated
-	/**
-	 * Returns true if structure was solved by a crystallographic method, i.e.,
-	 * the values returned by this class are meaningful.
-	 * Use {@link Structure.isCrystallographic} instead
-	 * @return 
-	 */
-	public boolean isCrystallographic() {
-		return sg!=null;
-	}
-
 	
 }
