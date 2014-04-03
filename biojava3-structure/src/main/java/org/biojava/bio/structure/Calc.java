@@ -239,8 +239,8 @@ public class Calc {
 
 	}
 
-	/** torsion angle 
-	 * = angle between the normal vectors of the 
+	/** 
+	 * Calculate the torsion angle, i.e. the angle between the normal vectors of the 
 	 * two plains a-b-c and b-c-d.
 	 *
 	 * @param a  an Atom object
@@ -248,9 +248,7 @@ public class Calc {
 	 * @param c  an Atom object
 	 * @param d  an Atom object
 	 * @return a double
-
 	 */
-
 	public static final double torsionAngle(Atom a, Atom b, Atom c, Atom d)
 
 	{
@@ -273,12 +271,13 @@ public class Calc {
 		return angl;
 	}
 
-	/** phi angle.
+	/** 
+	 * Calculate the phi angle.
 	 *
 	 * @param a  an AminoAcid object
 	 * @param b  an AminoAcid object
 	 * @return a double
-	 * @throws StructureException ...
+	 * @throws StructureException if aminoacids not connected or if any of the 4 needed atoms missing
 	 */
 	public static final double getPhi(AminoAcid a, AminoAcid b)
 			throws StructureException
@@ -293,16 +292,20 @@ public class Calc {
 		Atom b_CA = b.getCA();
 		Atom b_C  = b.getC();
 
+		// C and N were checked in isConnected already
+		if (b_CA==null) throw new StructureException("Can not calculate Phi, CA atom is missing");
+		
 		double phi = torsionAngle(a_C,b_N,b_CA,b_C);
 		return phi ;
 			}
 
-	/** psi angle.
+	/** 
+	 * Calculate the psi angle.
 	 *
 	 * @param a  an AminoAcid object
 	 * @param b  an AminoAcid object
 	 * @return a double
-	 * @throws StructureException ...
+	 * @throws StructureException if aminoacids not connected or if any of the 4 needed atoms missing
 	 */
 	public static final double getPsi(AminoAcid a, AminoAcid b)
 			throws StructureException
@@ -316,20 +319,23 @@ public class Calc {
 		Atom a_C   = a.getC();
 		Atom b_N   = b.getN();
 
+		// C and N were checked in isConnected already
+		if (a_CA==null) throw new StructureException("Can not calculate Psi, CA atom is missing");
+		
 		double psi = torsionAngle(a_N,a_CA,a_C,b_N);
 		return psi ;
 
 			}
 
-	/** test if two amino acids are connected, i.e.
-	 * if the distance from C to N < 2,5 Angstrom.
+	/** 
+	 * Test if two amino acids are connected, i.e.
+	 * if the distance from C to N < 2.5 Angstrom.
 	 * 
 	 * If one of the AminoAcids has an atom missing, returns false.
 	 *
 	 * @param a  an AminoAcid object
 	 * @param b  an AminoAcid object
 	 * @return true if ...
-
 	 */    
 	public static final boolean isConnected(AminoAcid a, AminoAcid b)
 

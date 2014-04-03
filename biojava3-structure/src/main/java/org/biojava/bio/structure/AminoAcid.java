@@ -51,25 +51,28 @@ import java.util.Map;
  */
 public interface AminoAcid extends Group {
 	
-	/** Field to distribguish AminoAcids that have been created from SEQRES records and ATOM records.
+	/** 
+	 * Field to distinguish AminoAcids that have been created from SEQRES records and ATOM records.
 	 * 
 	 */
 	public static final String ATOMRECORD = "ATOM";
 	
-	/** Field to distribguish AminoAcids that have been created from SEQRES records and ATOM records.
+	/** 
+	 * Field to distinguish AminoAcids that have been created from SEQRES records and ATOM records.
 	 * 
 	 */
 	public static final String SEQRESRECORD = "SEQRES";
 	
     /**
-     * Specifies the secondary structure as a Map.
+     * Set the secondary structure as a Map.
      *
      * @param secstr  a Map object specifying the sec struc 
      * @see #getSecStruc
      */
     public void setSecStruc(Map<String,String> secstr) ;
     
-    /** get secondary structure data .
+    /** 
+     * Get secondary structure data .
      *
      * @return a Map object representing the sec struc value
      *
@@ -77,66 +80,70 @@ public interface AminoAcid extends Group {
      */
     public Map<String,String> getSecStruc() ;
 
-    /** get N atom.
+    /** 
+     * Get N atom.
      *
-     * @return an Atom object
-     * @  ...
-    */
+     * @return an Atom object or null if N atom does not exist
+     */
     public Atom getN()    ;
 
-    /** get CA atom.
-     * @return an Atom object
-     * @  ...
+    /** 
+     * Get CA atom.
+     * @return an Atom object or null if CA atom does not exist
      */
     public Atom getCA()   ;
 
-    /** get C atom.
-     * @return an Atom object
-     * @  ...
+    /** 
+     * Get C atom.
+     * @return an Atom object or null if C atom does not exist
      */
     public Atom getC()    ;
 
-    /** get O atom.
-     * @return an Atom object
-     * @  ...
+    /** 
+     * Get O atom.
+     * @return an Atom object or null if O atom does not exist
      */
     public Atom getO()    ;
 
-    /** get CB atom.
-     * @return an Atom object
-     * @  ...
+    /** 
+     * Get CB atom.
+     * @return an Atom object or null if CB atom does not exist
      */
     public Atom getCB()   ;
 
     
 
 
-    /** returns the name of the AA, in single letter code.
+    /** 
+     * Returns the name of the AA, in single letter code.
      *
      * @return a Character object representing the amino type value
      * @see #setAminoType
      */
     public  Character getAminoType() ;
 
-    /** set the name of the AA, in single letter code .
+    /** 
+     * Set the name of the AA, in single letter code .
      *
      * @param aa  a Character object specifying the amino type value
      * @see #getAminoType
      */
     public void setAminoType(Character aa) ;
 
-	/** Allows to distinguish between amino acids that are provided
-		as ATOM records and a SEQRES records.
+	/** 
+	 * Allows to distinguish between amino acids that are provided
+	 * as ATOM records and a SEQRES records.
 	 * @param recordName either ATOMRECORD or SEQRESRECORD
 	 * @see #getRecordType()
-	*/
+	 */
 	public void setRecordType(String recordName);
 
-	/** Allows to distinguish between amino acids that are provided
-		as ATOM records and a SEQRES records.
+	/** 
+	 * Allows to distinguish between amino acids that are provided
+	 * as ATOM records and a SEQRES records.
 	 * @return the origin of this amino acid (ATOM or SEQRES records)
 	 * @see #setRecordType(String)
-	*/
+	 */
     public String getRecordType();
 
     /** string representation. */

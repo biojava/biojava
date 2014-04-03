@@ -264,25 +264,6 @@ public interface Group {
 	 */
 	public Object clone();
 
-
-	/** Set the back-reference (to its parent Chain).
-	 *
-	 * @param parent the parent Chain
-	 * @see #setChain(Chain)
-	 * @see #getChain()
-	 */
-	@Deprecated
-	public void setParent(Chain parent) ;
-
-	/** Returns the parent Chain of the Group.
-	 *
-	 * @return Chain the Chain object that contains the Group
-	 * @see #setChain(Chain)
-	 * @deprecated replaced by {@link #getChain()}
-	 */
-	@Deprecated
-	public Chain getParent() ;
-
 	/**
 	 * Sets the back-reference to its parent Chain.
 	 * @param chain the parent Chain

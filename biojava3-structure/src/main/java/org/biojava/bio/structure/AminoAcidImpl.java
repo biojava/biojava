@@ -42,23 +42,21 @@ public class   AminoAcidImpl
 extends    HetatomImpl
 implements AminoAcid, Serializable
 {
-	/**
-    *
-    */
+	
    private static final long serialVersionUID = -6018854413829044230L;
 
    /** this is an Amino acid. type is "amino". */
 	public static final String type = GroupType.AMINOACID;
 
-	/* IUPAC amino acid residue names
+	/** IUPAC amino acid residue names
 	 */
-	Character amino_char ;
+	private Character amino_char ;
 
-	Map<String,String>   secstruc;
+	private Map<String,String>   secstruc;
 
-	String recordType; // allows to distinguish between AAs that have been created from SEQRES records and ATOM records
+	private String recordType; // allows to distinguish between AAs that have been created from SEQRES records and ATOM records
 
-	/*
+	/**
 	 * inherits most from Hetero and has just a few extensions.
 	 */
 	public AminoAcidImpl() {
@@ -71,80 +69,70 @@ implements AminoAcid, Serializable
 
 	public String getType(){ return type;}
 
-	/** set the secondary structure data for this amino acid. the data
-	 * is a Map with the following indeces (@see Secstruc)
-	 *
-	 * @param secstr  a Map object specifying the sec struc value
-	 * @see #getSecStruc
+	/**
+	 * {@inheritDoc} 
 	 */
 	public void setSecStruc(Map<String,String> secstr) {
 		this.secstruc = secstr ;
 	}
 
-	/** get secondary structure data .
-	 *
-	 * @return a Map object representing the sec struc value
-	 *
-	 * @see #setSecStruc
+	/**
+	 * {@inheritDoc} 
 	 */
 	public Map<String,String> getSecStruc(){
 		return secstruc ;
 	}
 
-	/** get N atom.
-	 *
-	 * @return an Atom object
-	 * @  ...
+	/**
+	 * {@inheritDoc} 
 	 */
 	public Atom getN()    {return getAtom("N");  }
 
-	/** get CA atom.
-	 * @return an Atom object
-	 * @  ...
+	/** 
+	 * {@inheritDoc}
 	 */
 	public Atom getCA()   {return getAtom(" CA "); }
 
-	/** get C atom.
-	 * @return an Atom object
-	 * @  ...
+	/** 
+	 * {@inheritDoc}
 	 */
 	public Atom getC()    {return getAtom("C");  }
 
-	/** get O atom.
-	 * @return an Atom object
-	 * @  ...
+	/** 
+	 * {@inheritDoc}
 	 */
 	public Atom getO()    {return getAtom("O");  }
 
-	/** get CB atom.
-	 * @return an Atom object
-	 * @  ...
+	/** 
+	 * {@inheritDoc}
 	 */
 	public Atom getCB()   {return getAtom("CB"); }
 
 
-	/** returns the name of the AA, in single letter code.
-	 *
-	 * @return a Character object representing the amino type value
-	 * @see #setAminoType
+	/** 
+	 * {@inheritDoc}
 	 */
 	public  Character getAminoType() {
 		return amino_char;
 	}
 
-	/** set the name of the AA, in single letter code .
-	 *
-	 * @param aa  a Character object specifying the amino type value
-	 * @see #getAminoType
+	/** 
+	 * {@inheritDoc}
 	 */
 	public void setAminoType(Character aa){
 		amino_char  = aa ;
 	}
 
+	/** 
+	 * {@inheritDoc}
+	 */
     public void setRecordType(String recordName) {
         recordType = recordName;
     }
 
+	/** 
+	 * {@inheritDoc}
+	 */
     public String getRecordType() {
         return recordType;
 	}
@@ -157,8 +145,8 @@ implements AminoAcid, Serializable
 		if (pdb_flag) {
 			str = str + " atoms: "+atoms.size();
 		}
-		if ( altLocs != null)
-			str += " has altLocs :" + altLocs.size(); 
+		if ( getAltLocs().size()>0 )
+			str += " has altLocs :" + getAltLocs().size(); 
 
 		return str ;
 

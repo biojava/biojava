@@ -59,9 +59,9 @@ public class HetatomImpl implements Group,Serializable {
 
 	private static final List<String> WATERNAMES = Arrays.asList(new String[]{"HOH", "DOD",  "WAT"});
 
-	Map<String, Object> properties ;
+	private Map<String, Object> properties ;
 
-	long id;
+	private long id;
 
 	/* stores if 3d coordinates are available. */
 	protected boolean pdb_flag ;
@@ -73,14 +73,14 @@ public class HetatomImpl implements Group,Serializable {
 
 	protected List<Atom> atoms ;
 
-	Chain parent;
+	private Chain parent;
 
-	Map<String,Atom> atomLookup = new HashMap<String,Atom>();
-	Map<String,Atom> atomSingleCharLookup = new HashMap<String,Atom>();
+	private Map<String,Atom> atomLookup = new HashMap<String,Atom>();
+	private Map<String,Atom> atomSingleCharLookup = new HashMap<String,Atom>();
 
-	ChemComp chemComp ;
+	private ChemComp chemComp ;
 
-	List<Group> altLocs;
+	private List<Group> altLocs;
 
 	/* Construct a Hetatom instance. */
 	public HetatomImpl() {
@@ -235,10 +235,10 @@ public class HetatomImpl implements Group,Serializable {
 	}
 
 
-	/**  get an atom throws StructureException if atom not found.
+	/**  
+	 * Get an atom with given name
 	 * @param name  a String
-	 * @return an Atom object
-	 * @throws StructureException ...
+	 * @return an Atom object or null if no Atom with such name exists
 	 */
 	public Atom getAtom(String name)
 
@@ -279,10 +279,10 @@ public class HetatomImpl implements Group,Serializable {
 
 	}
 
-	/**  Get an atom by the full PDB name e.g. " N  " for N. Returns null if atom not found.
+	/**  
+	 * Get an atom by the full PDB name e.g. " N  " for N. Returns null if atom not found.
 	 * @param name  a String
-	 * @return an Atom object
-	 * @throws StructureException ...
+	 * @return an Atom object or null if no Atom with such name exists
 	 */
 	public Atom getAtomByPDBname(String name)
 
@@ -299,11 +299,11 @@ public class HetatomImpl implements Group,Serializable {
 		return null;
 	}
 
-	/** return an atom by its position in the internal List.
+	/** 
+	 * Return an atom by its position in the internal List.
 	 *
 	 * @param position  an int
 	 * @return an Atom object
-
 	 */
 	public Atom getAtom(int position)
 			
@@ -353,7 +353,7 @@ public class HetatomImpl implements Group,Serializable {
 
 
 
-	/** calculate if a groups has all atoms required for an amino acid
+	/** Calculate if a groups has all atoms required for an amino acid
      this allows to include chemically modified amino acids that
      are labeled hetatoms into some computations ... the usual way
      to identify if a group is an amino acid is getType() !
@@ -467,25 +467,6 @@ public class HetatomImpl implements Group,Serializable {
 			n.addAtom((Atom)atom.clone());
 		}
 		return n;
-	}
-
-	/** Set the back-reference (to its parent Chain)
-	 * @param parent the parent Chain
-	 */
-
-	public void setParent(Chain parent) {
-		this.parent = parent ;
-	}
-
-	/** Returns the parent Chain of the Group
-	 *
-	 * @return Chain the Chain object that contains the Group
-	 *
-	 *
-	 */
-
-	public Chain getParent() {
-		return parent;
 	}
 
 	/** the Hibernate database ID

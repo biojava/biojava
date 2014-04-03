@@ -428,26 +428,22 @@ public class SecStruc {
 			Atom cag   = g.getCA();
 			Atom caip2 = ip2.getCA();
 
-			try {
-				Atom caminus2 = Calc.subtract(caim2,cag);
+			Atom caminus2 = Calc.subtract(caim2,cag);
 
-				Atom caplus2  = Calc.subtract(cag,caip2);
+			Atom caplus2  = Calc.subtract(cag,caip2);
 
-				double angle    = Calc.angle(caminus2,caplus2);
+			double angle    = Calc.angle(caminus2,caplus2);
 
-				SecStrucState state = getSecStrucState(i); 
+			SecStrucState state = getSecStrucState(i); 
 
-				state.setKappa((float)angle);
+			state.setKappa((float)angle);
 
-				if (angle > 70.0) {
-					if ( state.getSecStruc().equals(SecStrucType.coil)) 
-						state.setSecStruc(SecStrucType.bend);
+			if (angle > 70.0) {
+				if ( state.getSecStruc().equals(SecStrucType.coil)) 
+					state.setSecStruc(SecStrucType.bend);
 
-					state.setBend(true);
-					//d[i].bend = 'S';
-				}
-			} catch (Exception e){
-				e.printStackTrace();
+				state.setBend(true);
+				//d[i].bend = 'S';
 			}
 
 		}
@@ -590,7 +586,7 @@ public class SecStruc {
 					} catch (PDBParseException e){
 						e.printStackTrace();
 					}
-					sg.setParent(g.getChain());
+					sg.setChain(g.getChain());
 
 
 					Atom N = g.getAtomByPDBname(" N  ");
