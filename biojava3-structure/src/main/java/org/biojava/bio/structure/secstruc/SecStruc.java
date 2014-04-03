@@ -33,7 +33,6 @@ import java.util.Map;
 
 import org.biojava.bio.structure.Atom;
 import org.biojava.bio.structure.Calc;
-
 import org.biojava.bio.structure.Chain;
 import org.biojava.bio.structure.Group;
 import org.biojava.bio.structure.Structure;
@@ -283,7 +282,7 @@ public class SecStruc {
 
 					l1.connectedTo = j;
 					l2.connectedFrom = i;
-//					System.out.println("BUlge from " + i + " to " + j);
+					//					System.out.println("BUlge from " + i + " to " + j);
 				}
 			}
 		}
@@ -577,7 +576,7 @@ public class SecStruc {
 		List<SecStrucGroup> groupList = new ArrayList<SecStrucGroup>();
 		//GroupIterator iter = new GroupIterator(s);
 		for ( Chain c : s.getChains()){
-			
+
 			for (Group g : c.getAtomGroups()){
 				//System.out.println(g);
 				//			 we can also calc secstruc if hetatom is a modified amino acid.
@@ -593,25 +592,23 @@ public class SecStruc {
 					}
 					sg.setParent(g.getChain());
 
-						
+
 					Atom N = g.getAtomByPDBname(" N  ");
 					Atom CA =  g.getAtomByPDBname(" CA ");
 					Atom C = g.getAtomByPDBname(" C  ");
 					Atom O =  g.getAtomByPDBname(" O  ");
-					
-						sg.setN((Atom)   N.clone());
-						sg.setCA((Atom) CA.clone());
-						sg.setC((Atom)   C.clone());
-						sg.setO((Atom)  O.clone());
-						sg.setOriginal(g);
-						// create H in calc_H
-
-
-					} catch (StructureException e){
-						e.printStackTrace();
-						// one of these atoms is not found!
+					if ( N == null || CA == null || C == null || O == null)
 						continue;
-					}
+
+					sg.setN((Atom)   N.clone());
+					sg.setCA((Atom) CA.clone());
+					sg.setC((Atom)   C.clone());
+					sg.setO((Atom)  O.clone());
+					sg.setOriginal(g);
+					// create H in calc_H
+
+
+
 
 					SecStrucState state = new SecStrucState();
 					Map<String,Object> m = sg.getProperties();

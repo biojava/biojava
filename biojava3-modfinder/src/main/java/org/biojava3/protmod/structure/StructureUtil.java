@@ -225,17 +225,16 @@ public final class StructureUtil {
 		Atom[] ret = new Atom[2];
 		double distance;
 
-		try {
-			ret[0] = group1.getAtom(nameOfAtomOnGroup1);
-			ret[1] = group2.getAtom(nameOfAtomOnGroup2);
-			distance = Calc.getDistance(ret[0], ret[1]);
-		} catch (StructureException e) {
-			return null;
-		}
 
+		ret[0] = group1.getAtom(nameOfAtomOnGroup1);
+		ret[1] = group2.getAtom(nameOfAtomOnGroup2);
 		if (ret[0]==null || ret[1]==null) {
 			return null;
 		}
+
+		distance = Calc.getDistance(ret[0], ret[1]);
+
+
 
 		float radiusOfAtom1 = ret[0].getElement().getCovalentRadius();
 		float radiusOfAtom2 = ret[1].getElement().getCovalentRadius();

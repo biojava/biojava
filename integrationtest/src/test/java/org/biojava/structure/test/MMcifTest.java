@@ -65,10 +65,10 @@ public class MMcifTest extends TestCase {
 	}
 
 	public void testLoad(){
-		
+
 		// a structure with microheterogeneity
 		//comparePDB2cif("2CI1","A");
-		
+
 		// test a simple protein
 		comparePDB2cif("5pti","A");
 
@@ -76,8 +76,8 @@ public class MMcifTest extends TestCase {
 		comparePDB2cif("1a4w","L");
 		comparePDB2cif("1a4w","H");
 		comparePDB2cif("1a4w","I");
-                //non-standard encoded amino acid
-                comparePDB2cif("1fdo","A");
+		//non-standard encoded amino acid
+		comparePDB2cif("1fdo","A");
 
 		// test a DNA binding protein
 		comparePDB2cif("1j59","A");
@@ -90,7 +90,7 @@ public class MMcifTest extends TestCase {
 		// test a NMR protein
 		comparePDB2cif("2kc9","A");
 
-		
+
 	}
 
 
@@ -105,8 +105,8 @@ public class MMcifTest extends TestCase {
 		FileParsingParameters params = new FileParsingParameters();
 		params.setHeaderOnly(headerOnly);
 		consumer.setFileParsingParameters(params);
-		
-		
+
+
 		parser.addMMcifConsumer(consumer);
 		try {
 			parser.parse(new BufferedReader(new InputStreamReader(inStream)));
@@ -126,7 +126,7 @@ public class MMcifTest extends TestCase {
 
 		PDBFileParser pdbpars = new PDBFileParser();
 		pdbpars.setFileParsingParameters(params);
-		
+
 		try {
 			pdbStructure = pdbpars.parsePDBFile(pinStream) ;
 		} catch (IOException e) {
@@ -154,30 +154,30 @@ public class MMcifTest extends TestCase {
 			Chain a_pdb = pdbStructure.getChainByPDB(chainId);
 			Chain a_cif = cifStructure.getChainByPDB(chainId);
 			//System.out.println(a_pdb.getAtomGroups());
-			
-				//System.out.println(id + "_" + chainId + " pdb atom groups: " + a_pdb.getAtomGroups(GroupType.AMINOACID).size());
-				//System.out.println(id + "_" + chainId + " cif atom groups: " + a_cif.getAtomGroups(GroupType.AMINOACID).size());
-			
+
+			//System.out.println(id + "_" + chainId + " pdb atom groups: " + a_pdb.getAtomGroups(GroupType.AMINOACID).size());
+			//System.out.println(id + "_" + chainId + " cif atom groups: " + a_cif.getAtomGroups(GroupType.AMINOACID).size());
+
 			//for (Group g: a_cif.getAtomGroups()){
 			//	System.out.println(g);
 			//}
 			//System.out.println("--");
 			String pdb_SEQseq = a_pdb.getSeqResSequence();
-			
+
 			String cif_SEQseq = a_cif.getSeqResSequence();
 
-//                        System.out.println(id + "_" + chainId + " pdbSEQ: " + pdb_SEQseq);
-//                        System.out.println(id + "_" + chainId + " cifSEQ: " + cif_SEQseq);
-			
+			//                        System.out.println(id + "_" + chainId + " pdbSEQ: " + pdb_SEQseq);
+			//                        System.out.println(id + "_" + chainId + " cifSEQ: " + cif_SEQseq);
+
 			assertEquals(id + ": the SEQRES sequences don't match!", pdb_SEQseq,cif_SEQseq);
-			
+
 			assertEquals(id + ":  The nr of ATOM groups does not match!",a_pdb.getAtomGroups(GroupType.AMINOACID).size(),a_cif.getAtomGroups(GroupType.AMINOACID).size()  );
-			
+
 			// actually this check not necessarily works, since there can be waters in PDB that we don;t deal with yet in cif...
 			//assertEquals("the nr of ATOM record groups is not the same!" , a_pdb.getAtomLength(),a_cif.getAtomLength());
 			for (int i = 0 ; i < a_pdb.getAtomGroups(GroupType.AMINOACID).size(); i++){				
 				Group gp = a_pdb.getAtomGroups(GroupType.AMINOACID).get(i);
-				
+
 				List<Group> cifGroups = a_cif.getAtomGroups(GroupType.AMINOACID);					
 				Group gc = cifGroups.get(i);
 				checkGroups(gp, gc);
@@ -237,29 +237,31 @@ public class MMcifTest extends TestCase {
 		String pdbId1 = g1.getChain().getParent().getPDBCode();
 		String pdbId2 = g1.getChain().getParent().getPDBCode();
 		assertEquals(pdbId1, pdbId2);
-		
+
 		assertEquals(g1.getType(),g2.getType());
 		assertEquals(g1.getResidueNumber().getSeqNum(),g2.getResidueNumber().getSeqNum());
 		assertEquals(g1.getResidueNumber().getInsCode(),g2.getResidueNumber().getInsCode());
 		assertEquals(g1.getPDBName(),g2.getPDBName());
 		assertEquals(g1.has3D(),g2.has3D());
-		
+
 		assertEquals(g1.hasAltLoc(), g2.hasAltLoc());
-		
+
 		assertEquals(pdbId1 + ":" + g1 + " - " + pdbId2+":"+ g2,g1.getAltLocs().size(), g2.getAltLocs().size());
-		
+
 		assertEquals(pdbId1 + ":" + g1 + " - " + pdbId2+":"+ g2 , g1.getAtoms().size(), g2.getAtoms().size());
 		if ( g1.has3D()){
-			try {
-				Atom a1 = g1.getAtom(0);
-				Atom a2 = g2.getAtom(0);
-				assertEquals(a1.getX(),a2.getX());
-				assertEquals(a1.getOccupancy(),a2.getOccupancy());
-				assertEquals(a1.getTempFactor(),a2.getTempFactor());
-				assertEquals(a1.getFullName(),a2.getFullName());
-			} catch (StructureException e){
-				fail(e.getMessage());
-			}
+
+			Atom a1 = g1.getAtom(0);
+			Atom a2 = g2.getAtom(0);
+			if ( a1 == null)
+				fail("could not get atom for group " + g1);
+			if (a2 == null)
+				fail("could not get atom for group " + g2);
+			assertEquals(a1.getX(),a2.getX());
+			assertEquals(a1.getOccupancy(),a2.getOccupancy());
+			assertEquals(a1.getTempFactor(),a2.getTempFactor());
+			assertEquals(a1.getFullName(),a2.getFullName());
+
 
 		}
 		//System.out.println(" ... done");
