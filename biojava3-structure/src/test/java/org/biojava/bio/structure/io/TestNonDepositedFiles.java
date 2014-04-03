@@ -49,7 +49,7 @@ public class TestNonDepositedFiles {
 		assertNotNull(s.getCrystallographicInfo().getCrystalCell());
 		assertNotNull(s.getCrystallographicInfo().getSpaceGroup());
 		
-		assertEquals(s.getCrystallographicInfo().getSpaceGroup(),"P 1 21 1");
+		assertEquals(s.getCrystallographicInfo().getSpaceGroup().getShortSymbol(),"P 1 21 1");
 		
 		CrystalCell cell = s.getCrystallographicInfo().getCrystalCell();
 		assertTrue(cell.isCellReasonable());		
