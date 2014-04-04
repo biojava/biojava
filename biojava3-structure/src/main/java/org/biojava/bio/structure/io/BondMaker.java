@@ -33,7 +33,6 @@ import org.biojava.bio.structure.Chain;
 import org.biojava.bio.structure.Group;
 import org.biojava.bio.structure.NucleotideImpl;
 import org.biojava.bio.structure.Structure;
-import org.biojava.bio.structure.StructureException;
 import org.biojava.bio.structure.io.mmcif.ChemCompGroupFactory;
 import org.biojava.bio.structure.io.mmcif.model.ChemComp;
 import org.biojava.bio.structure.io.mmcif.model.ChemCompBond;

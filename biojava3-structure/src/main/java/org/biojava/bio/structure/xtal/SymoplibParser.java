@@ -1,18 +1,15 @@
 package org.biojava.bio.structure.xtal;
 
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.PrintStream;
-import java.net.URL;
 import java.util.HashMap;
 import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import javax.xml.bind.JAXBException;
 
 import org.biojava.bio.structure.xtal.io.SpaceGroupMapRoot;
 
@@ -34,16 +31,8 @@ public class SymoplibParser {
 
 	private static final Pattern namePat = Pattern.compile(".*\\s([A-Z]+)(\\s'.+')?\\s+'(.+)'.*");
 
-	private static  TreeMap<Integer, SpaceGroup> sgs = null ;
+	private static  TreeMap<Integer, SpaceGroup> sgs = parseSpaceGroupsXML();
 
-
-	static {
-		try {
-			sgs = parseSpaceGroupsXML();
-		} catch (Exception e){
-			e.printStackTrace();
-		}
-	}
 
 	private static HashMap<String, SpaceGroup> name2sgs; // map for lookups based on short names
 
@@ -58,22 +47,44 @@ public class SymoplibParser {
 	}
 
 
-	/** Load all SpaceGroup information from the file spacegroups.xml
+	/** 
+	 * Load all SpaceGroup information from the file spacegroups.xml
 	 * 
 	 * @return a map providing information for all spacegroups
 	 */
 	private static TreeMap<Integer, SpaceGroup> parseSpaceGroupsXML() {
 
+		// NOTE: if the space group file is requested by some part of the code (i.e. this method is called) and
+		//       there is a problem in reading it, then that's truly a FATAL problem, since this is not a user file
+		//       but a file that's part of the distribution: it MUST be there and MUST have the right format. A failure 
+		//       to read it is more of a "compilation" error than a runtime error. That's the reason that System.exit 
+		//       is called (which otherwise usually is not a good idea).
+		//
+		//       The rest of the application will simply not work: there are 3 options to handle it 
+		//	     a) returning null and then a NullPointer will happen down the line and thus a not very clear 
+		//          error message will be printed
+		//       b) throw the exception forward and catch it in the final main but that would also be bad because
+		//          this is a file that the user didn't input but that should be part of the distribution
+		//		 c) call System.exit(1) and "crash" the application with a human-understandable error message 
+		
 		InputStream spaceGroupIS = SymoplibParser.class.getClassLoader().getResourceAsStream(SPACE_GROUPS_FILE);
 
 		if ( spaceGroupIS == null) {
-			System.err.println("Could not find resource: " + SPACE_GROUPS_FILE + ". This probably means that your biojava.jar file is corrupt or incorrectly built.");
-			return null;
+			System.err.println("Fatal error! Could not find resource: " + SPACE_GROUPS_FILE + ". This probably means that your biojava.jar file is corrupt or incorrectly built.");
+			System.exit(1);
 		}
 
 		TreeMap<Integer, SpaceGroup> map = new TreeMap<Integer, SpaceGroup>();
 
-		map = parseSpaceGroupsXML(spaceGroupIS);
+		try {
+			map = parseSpaceGroupsXML(spaceGroupIS);
+		} catch (IOException e) {
+			System.err.println("Fatal error! Could not parse resource: "+SPACE_GROUPS_FILE+". Error: "+e.getMessage());
+			System.exit(1);
+		} catch (JAXBException e) {
+			System.err.println("Fatal error! Could not parse resource: "+SPACE_GROUPS_FILE+". Problem in xml formatting: "+e.getMessage());
+			System.exit(1);			
+		}
 
 		name2sgs = new HashMap<String, SpaceGroup>();
 
@@ -92,12 +103,13 @@ public class SymoplibParser {
 	}
 
 
-	/** Load all SpaceGroup information from the file spacegroups.xml
+	/** 
+	 * Load all SpaceGroup information from the file spacegroups.xml
 	 * 
 	 * @return a map providing information for all spacegroups
 	 */
 	public static TreeMap<Integer, SpaceGroup> parseSpaceGroupsXML(
-			InputStream spaceGroupIS) {
+			InputStream spaceGroupIS) throws IOException, JAXBException {
 
 		String xml = convertStreamToString(spaceGroupIS);
 
@@ -107,30 +119,21 @@ public class SymoplibParser {
 	}
 
 
-	private static String convertStreamToString(InputStream stream){
+	private static String convertStreamToString(InputStream stream) throws IOException {
 		BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
 		StringBuilder sb = new StringBuilder();
 
 		String line = null;
-		try {
-			while ((line = reader.readLine()) != null) {
-				sb.append(line).append(newline);
-			}
-		} catch (IOException e) {
-			//e.printStackTrace();
-		} finally {
-			try {
-				stream.close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+		
+		while ((line = reader.readLine()) != null) {
+			sb.append(line).append(newline);
 		}
 
 		return sb.toString();
 	}
 
 	/**
-	 * Gets the space group for the given international short name, using
+	 * Get the space group for the given international short name, using
 	 * the PDB format, e.g. 'P 21 21 21' or 'C 1 c 1'
 	 * @param shortName
 	 * @return the SpaceGroup or null if the shortName is not valid
@@ -154,7 +157,8 @@ public class SymoplibParser {
 	}
 
 
-	/** A parser for the symop.lib file provided by CCP4. Note: this file is not getting re-distributed by BioJava. 
+	/** 
+	 * A parser for the symop.lib file provided by CCP4. Note: this file is not getting re-distributed by BioJava. 
 	 * It can be downloaded from:
 	 * 
 	 *  http://www.ccp4.ac.uk/cvs/viewvc.cgi/libccp4/data/symop.lib?revision=1.10&view=markup
@@ -215,7 +219,7 @@ public class SymoplibParser {
 		} catch (IOException e) {
 			e.printStackTrace();
 			System.err.println("Fatal error! Can't read symop.lib file. Error: "+e.getMessage()+". ");
-			return null;
+			System.exit(1);
 		}
 
 		for (SpaceGroup sg:map.values()) {

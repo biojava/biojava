@@ -31,6 +31,7 @@ import java.io.Serializable;
 import java.util.TreeMap;
 
 import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.annotation.XmlAccessType;
@@ -46,20 +47,10 @@ import org.biojava.bio.structure.xtal.SpaceGroup;
 public class TreeMapSpaceGroupWrapper implements Serializable{
 
 	
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 4193799052494327416L;
-	TreeMap<Integer,SpaceGroup> data;
+
+	private TreeMap<Integer,SpaceGroup> data;
 	
-	static JAXBContext jaxbContext;
-	static {
-		try {
-			jaxbContext= JAXBContext.newInstance(TreeMapSpaceGroupWrapper.class);
-		} catch (Exception e){
-			e.printStackTrace();
-		}
-	}
 	
 	public TreeMapSpaceGroupWrapper(){
 		data = new TreeMap<Integer,SpaceGroup>();
@@ -72,44 +63,38 @@ public class TreeMapSpaceGroupWrapper implements Serializable{
 	public void setData(TreeMap<Integer,SpaceGroup> data) {
 		this.data = data;
 	}
-	public  String toXML(){
+	
+	public  String toXML() throws JAXBException{
 
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
 		PrintStream ps = new PrintStream(baos);
 
-		try {
+		JAXBContext jaxbContext = JAXBContext.newInstance(TreeMapSpaceGroupWrapper.class);
+		
+		Marshaller m = jaxbContext.createMarshaller();
 
-			Marshaller m = jaxbContext.createMarshaller();
+		m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
 
-			m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
-
-			m.marshal( this, ps);
+		m.marshal( this, ps);
 			
-
-		} catch (Exception e){
-			e.printStackTrace();
-		}
+		JAXBContext.newInstance(TreeMapSpaceGroupWrapper.class);
 
 		return baos.toString();
 
 	}
 
-	public static TreeMapSpaceGroupWrapper fromXML(String xml){
+	public static TreeMapSpaceGroupWrapper fromXML(String xml) throws JAXBException{ 
 
 		TreeMapSpaceGroupWrapper job = null;
 
-		try {
+		JAXBContext jaxbContext = JAXBContext.newInstance(TreeMapSpaceGroupWrapper.class);
+		
+		Unmarshaller un = jaxbContext.createUnmarshaller();
 
-			Unmarshaller un = jaxbContext.createUnmarshaller();
+		ByteArrayInputStream bais = new ByteArrayInputStream(xml.getBytes());
 
-			ByteArrayInputStream bais = new ByteArrayInputStream(xml.getBytes());
-
-			job = (TreeMapSpaceGroupWrapper) un.unmarshal(bais);
-
-		} catch (Exception e){
-			e.printStackTrace();
-		}
+		job = (TreeMapSpaceGroupWrapper) un.unmarshal(bais);
 
 		return job;
 	}

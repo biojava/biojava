@@ -40,7 +40,6 @@ import org.biojava.bio.structure.PDBHeader;
 import org.biojava.bio.structure.SSBond;
 import org.biojava.bio.structure.Site;
 import org.biojava.bio.structure.Structure;
-import org.biojava.bio.structure.StructureException;
 import org.biojava3.core.util.XMLWriter;
 
 

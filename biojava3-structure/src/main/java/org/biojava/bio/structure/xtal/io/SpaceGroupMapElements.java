@@ -35,6 +35,7 @@ public class SpaceGroupMapElements {
 	@XmlElement(name="SpaceGroup", namespace="http://www.biojava.org")
 	public SpaceGroup value;
 	
+	@SuppressWarnings("unused")
 	private SpaceGroupMapElements(){
 		
 	}

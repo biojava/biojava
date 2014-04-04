@@ -25,10 +25,10 @@ package org.biojava.bio.structure.xtal.io;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
-import java.util.Map;
 import java.util.TreeMap;
 
 import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -41,16 +41,6 @@ import org.biojava.bio.structure.xtal.SpaceGroup;
 public class SpaceGroupMapRoot {
 
 	private TreeMap<Integer, SpaceGroup> mapProperty;
-
-	static JAXBContext jaxbContext = null;
-	static {
-		try {
-
-			jaxbContext = JAXBContext.newInstance(SpaceGroupMapRoot.class);
-		} catch (Exception e){
-			e.printStackTrace();
-		}
-	}
 
 	public SpaceGroupMapRoot() {
 		mapProperty = new TreeMap<Integer, SpaceGroup>();
@@ -66,36 +56,32 @@ public class SpaceGroupMapRoot {
 	}
 
 
-	public  String toXML(){
+	public  String toXML() throws JAXBException { 
 
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
 		PrintStream ps = new PrintStream(baos);		
-		try {
+
+		JAXBContext jaxbContext = JAXBContext.newInstance(SpaceGroupMapRoot.class);
 		
-			Marshaller xmlConverter = jaxbContext.createMarshaller();
-			xmlConverter.setProperty("jaxb.formatted.output",true);
-			xmlConverter.marshal(this,ps);
-		} catch (Exception e){
-			e.printStackTrace();
-		}
+		Marshaller xmlConverter = jaxbContext.createMarshaller();
+		xmlConverter.setProperty("jaxb.formatted.output",true);
+		xmlConverter.marshal(this,ps);
 
 		return baos.toString();
 	}
 
-	public static SpaceGroupMapRoot fromXML(String xml){
+	public static SpaceGroupMapRoot fromXML(String xml) throws JAXBException{
 		SpaceGroupMapRoot job = null;
-		try {
+		
+		JAXBContext jaxbContext = JAXBContext.newInstance(SpaceGroupMapRoot.class);
 
-			Unmarshaller un = jaxbContext.createUnmarshaller();
+		Unmarshaller un = jaxbContext.createUnmarshaller();
 
-			ByteArrayInputStream bais = new ByteArrayInputStream(xml.getBytes());
-			
-			job = (SpaceGroupMapRoot) un.unmarshal(bais);
+		ByteArrayInputStream bais = new ByteArrayInputStream(xml.getBytes());
 
-		} catch (Exception e){
-			e.printStackTrace();
-		}
+		job = (SpaceGroupMapRoot) un.unmarshal(bais);
+
 
 		return job;
 	}
