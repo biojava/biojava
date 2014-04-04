@@ -30,7 +30,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.biojava.bio.structure.io.PDBParseException;
 import org.biojava.bio.structure.io.mmcif.ChemCompGroupFactory;
 import org.biojava.bio.structure.io.mmcif.model.ChemComp;
 
@@ -153,22 +152,20 @@ public class HetatomImpl implements Group,Serializable {
 
 	}
 
-	/** set three character name of Group .
+	/** Set three character name of Group .
 	 *
 	 * @param s  a String specifying the PDBName value
 	 * @see #getPDBName
-	 * @throws PDBParseException ...
 	 */
-	public void setPDBName(String s)
-			throws PDBParseException
-			{
+	public void setPDBName(String s) {
 		// hetatoms can have pdb_name length < 3. e.g. CU (see 1a4a position 1200 )
 		//if (s.length() != 3) {
 		//throw new PDBParseException("amino acid name is not of length 3!");
 		//}
 		if (s != null && s.equals("?")) System.err.println("HetatomImpl: invalid pdbname: ?");
 		pdb_name =s ;
-			}
+		
+	}
 
 	/**
 	 * Returns the PDBName.
@@ -456,11 +453,9 @@ public class HetatomImpl implements Group,Serializable {
 		n.setPDBFlag(has3D());
 		n.setPDBCode(getPDBCode());
 		n.setResidueNumber(residueNumber);
-		try {
-			n.setPDBName(getPDBName());
-		} catch (PDBParseException e) {
-			e.printStackTrace();
-		}
+		
+		n.setPDBName(getPDBName());
+		
 		// copy the atoms
 		for (int i=0;i<atoms.size();i++){
 			Atom atom = atoms.get(i);

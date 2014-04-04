@@ -38,7 +38,6 @@ import org.biojava.bio.structure.Group;
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureException;
 import org.biojava.bio.structure.align.util.AtomCache;
-import org.biojava.bio.structure.io.PDBParseException;
 
 
 
@@ -581,11 +580,7 @@ public class SecStruc {
 					SecStrucGroup sg = new SecStrucGroup();
 					sg.setResidueNumber(g.getResidueNumber());
 					sg.setPDBFlag(true);
-					try {
-						sg.setPDBName(g.getPDBName());
-					} catch (PDBParseException e){
-						e.printStackTrace();
-					}
+					sg.setPDBName(g.getPDBName());
 					sg.setChain(g.getChain());
 
 

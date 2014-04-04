@@ -26,7 +26,6 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.biojava.bio.structure.io.PDBParseException;
 
 /**
  *
@@ -155,14 +154,9 @@ implements AminoAcid, Serializable
 	 *
 	 * @param s  a String specifying the PDBName value
 	 * @see #getPDBName()
-	 * @throws PDBParseException ...
 	 */
-	public void setPDBName(String s)
-	throws PDBParseException
-	{
-		if (s != null && s.length() != 3) {
-			throw new PDBParseException("amino acid name is not of length 3! (" + s +")");
-		}
+	public void setPDBName(String s) {
+		
 		pdb_name =s ;
 
 	}
@@ -175,11 +169,9 @@ implements AminoAcid, Serializable
 		AminoAcidImpl n = new AminoAcidImpl();
 		n.setPDBFlag(has3D());		
 		n.setResidueNumber(getResidueNumber());
-		try {
-			n.setPDBName(getPDBName());
-		} catch (PDBParseException e) {
-			e.printStackTrace();
-		}
+		
+		n.setPDBName(getPDBName());
+		
 		n.setAminoType(getAminoType());
 		n.setRecordType(recordType);
 

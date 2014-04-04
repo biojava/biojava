@@ -26,7 +26,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.biojava.bio.structure.io.PDBParseException;
 import org.biojava.bio.structure.io.mmcif.model.ChemComp;
 
 
@@ -166,27 +165,27 @@ public interface Group {
 	 */
 	public Atom getAtom(int position) ;
 
-	/** Teturns flag whether a particular atom is existing within this group .
+	/** 
+	 * Tell whether a particular atom exists within this group .
 	 *
 	 * @param name  a String ...
 	 * @return true if Atom with name is existing within this group
 	 */
 	public boolean hasAtom(String name);
 
-	/** Get the PDB 3 character name for this group. (e.g. ALA)
+	/** Get the PDB 3-letter name for this group. (e.g. ALA)
 	 *
 	 * @return a String representing the PDBName value
 	 * @see #setPDBName
 	 */
 	public String getPDBName();
 
-	/** Set the PDB 3 letter name for this group. (e.g. ALA)
+	/** Set the PDB 3-letter name for this group. (e.g. ALA)
 	 *
 	 * @param s  a String specifying the PDBName value
-	 * @throws PDBParseException ...
 	 * @see #getPDBName
 	 */
-	public void setPDBName(String s) throws PDBParseException;
+	public void setPDBName(String s) ;
 
 
 	/** calculate if a groups has all atoms required for an amino acid.

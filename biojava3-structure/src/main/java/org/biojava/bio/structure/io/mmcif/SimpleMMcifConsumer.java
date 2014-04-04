@@ -53,7 +53,6 @@ import org.biojava.bio.structure.StructureTools;
 import org.biojava.bio.structure.UnknownPdbAminoAcidException;
 import org.biojava.bio.structure.io.BondMaker;
 import org.biojava.bio.structure.io.FileParsingParameters;
-import org.biojava.bio.structure.io.PDBParseException;
 import org.biojava.bio.structure.io.SeqRes2AtomAligner;
 import org.biojava.bio.structure.io.mmcif.model.AtomSite;
 import org.biojava.bio.structure.io.mmcif.model.AuditAuthor;
@@ -442,26 +441,15 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 
 			current_group = getNewGroup(recordName,aminoCode1,seq_id, groupCode3);
 
-			//current_group.setPDBCode(residueNumber);
-
 			current_group.setResidueNumber(residueNumber);
-			try { 
-				current_group.setPDBName(groupCode3);
-			} catch (PDBParseException e){
-				System.err.println(e.getMessage());
-			}
+			current_group.setPDBName(groupCode3);
 		}
 
 		if ( startOfNewChain){
 			current_group = getNewGroup(recordName,aminoCode1,seq_id, groupCode3);
 
-			// current_group.setPDBCode(residueNumber);
 			current_group.setResidueNumber(residueNumber);
-			try {
-				current_group.setPDBName(groupCode3);
-			} catch (PDBParseException e){
-				e.printStackTrace();
-			}
+			current_group.setPDBName(groupCode3);
 		}
 
 		Group altGroup = null;
@@ -481,12 +469,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 			current_chain.addGroup(current_group);
 			current_group.trimToSize();
 			current_group = getNewGroup(recordName,aminoCode1,seq_id,groupCode3);
-			//current_group.setPDBCode(pdbCode);
-			try {
-				current_group.setPDBName(groupCode3);
-			} catch (PDBParseException e){
-				e.printStackTrace();
-			}
+			current_group.setPDBName(groupCode3);
 			current_group.setResidueNumber(residueNumber);
 
 
@@ -647,11 +630,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		//String recordName,Character aminoCode1, long seq_id,String groupCode3) {
 		Group altLocG = getNewGroup(recordName,aminoCode1,seq_id,groupCode3);
 
-		try {
-			altLocG.setPDBName(groupCode3);
-		} catch (PDBParseException e) {
-			e.printStackTrace();
-		}
+		altLocG.setPDBName(groupCode3);
 		altLocG.setResidueNumber(current_group.getResidueNumber());
 		current_group.addAltLoc(altLocG);
 		return altLocG;
@@ -1376,55 +1355,40 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		g.setRecordType(AminoAcid.SEQRESRECORD);
 
 		try {
-			g.setPDBName(epolseq.getMon_id());
+			
+			if (epolseq.getMon_id().length()==3){
+				g.setPDBName(epolseq.getMon_id());
 
-			Character code1 = StructureTools.convert_3code_1code(epolseq.getMon_id());
-			g.setAminoType(code1);
+				Character code1 = StructureTools.convert_3code_1code(epolseq.getMon_id());
+				g.setAminoType(code1);
 
-			g.setResidueNumber(ResidueNumber.fromString(epolseq.getNum()));
-			// ARGH at this stage we don;t know about insertion codes
-			// this has to be obtained from _pdbx_poly_seq_scheme
-			entityChain.addGroup(g);
+				g.setResidueNumber(ResidueNumber.fromString(epolseq.getNum()));
+				// ARGH at this stage we don;t know about insertion codes
+				// this has to be obtained from _pdbx_poly_seq_scheme
+				entityChain.addGroup(g);
 
-		}  catch (PDBParseException ex) {
-			if ( StructureTools.isNucleotide(epolseq.getMon_id())) {
+			} else if ( StructureTools.isNucleotide(epolseq.getMon_id())) {
 				// the group is actually a nucleotide group...
 				NucleotideImpl n = new NucleotideImpl();
 				n.setResidueNumber(ResidueNumber.fromString(epolseq.getNum()));
-				try {
-					n.setPDBName(epolseq.getMon_id());
-				} catch (PDBParseException pex){
-					pex.printStackTrace();
-				}
+				n.setPDBName(epolseq.getMon_id());
 				entityChain.addGroup(n);
-			}
-			else {
-				logger.warning(ex.getMessage() + " creating a hetatom called XXX ");
+			} else {				
 				HetatomImpl h = new HetatomImpl();
-				try {
-					h.setPDBName(epolseq.getMon_id());
-					//h.setAminoType('X');
-					h.setResidueNumber(ResidueNumber.fromString(epolseq.getNum()));
-					entityChain.addGroup(h);
-
-				} catch (PDBParseException exc) {
-					System.err.println("this is a helpless case and I am dropping group " + epolseq.getMon_id());
-				}
-				//ex.printStackTrace();
-			}
-		} catch (UnknownPdbAminoAcidException ex){
-			//logger.warning("no sure what to do with:" + epolseq.getMon_id()+ " " + ex.getMessage());
-			HetatomImpl h = new HetatomImpl();
-			try {
 				h.setPDBName(epolseq.getMon_id());
 				//h.setAminoType('X');
 				h.setResidueNumber(ResidueNumber.fromString(epolseq.getNum()));
 				entityChain.addGroup(h);
 
-			} catch (PDBParseException exc) {
-				System.err.println("this is a helpless case and I am dropping group " + epolseq.getMon_id() + " " + ex.getMessage());
 			}
-			//System.err.println(ex.getMessage());
+		} catch (UnknownPdbAminoAcidException ex){
+			//logger.warning("no sure what to do with:" + epolseq.getMon_id()+ " " + ex.getMessage());
+			HetatomImpl h = new HetatomImpl();
+			h.setPDBName(epolseq.getMon_id());
+			//h.setAminoType('X');
+			h.setResidueNumber(ResidueNumber.fromString(epolseq.getNum()));
+			entityChain.addGroup(h);
+
 		}
 	}
 

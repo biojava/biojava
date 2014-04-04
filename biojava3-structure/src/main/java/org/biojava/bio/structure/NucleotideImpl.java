@@ -24,7 +24,6 @@
 package org.biojava.bio.structure;
 import java.io.Serializable;
 
-import org.biojava.bio.structure.io.PDBParseException;
 
 
 /**
@@ -104,12 +103,8 @@ implements Group, Serializable
 
 		n.setPDBFlag(has3D());
 		n.setResidueNumber(getResidueNumber());
-		try {
-			n.setPDBName(getPDBName());
-		} catch (PDBParseException e) {
-			e.printStackTrace();
-		}
-
+		
+		n.setPDBName(getPDBName());
 
 		// copy the atoms
 		for (int i=0;i<atoms.size();i++){
