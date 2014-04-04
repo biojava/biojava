@@ -121,37 +121,6 @@ public class HetatomImpl implements Group,Serializable {
 		pdb_flag = flag ;
 	}
 
-	/**
-	 * Returns the PDBCode.
-	 * @see #setPDBCode
-	 * @return a String representing the PDBCode value
-	 * @deprecated replaced by #getSeqNum
-	 */
-	@Deprecated
-	public String getPDBCode() {
-		if ( residueNumber != null)
-			return residueNumber.toString();
-		return null;
-	}
-
-	/** set the PDB code.
-	 * @see #getPDBCode
-	 * @deprecated replaced by {@link #setResidueNumber(ResidueNumber)}
-	 */
-	@Deprecated
-	public void setPDBCode(String pdb_code) {
-
-		//set the residueNumber here if there isn't one already
-		residueNumber = ResidueNumber.fromString(pdb_code);
-		String chainId = null;
-		if (parent != null) {
-			chainId = parent.getName();
-		}
-		residueNumber.setChainId(chainId);
-
-
-	}
-
 	/** Set three character name of Group .
 	 *
 	 * @param s  a String specifying the PDBName value
@@ -451,7 +420,6 @@ public class HetatomImpl implements Group,Serializable {
 
 		HetatomImpl n = new HetatomImpl();
 		n.setPDBFlag(has3D());
-		n.setPDBCode(getPDBCode());
 		n.setResidueNumber(residueNumber);
 		
 		n.setPDBName(getPDBName());

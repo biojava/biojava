@@ -149,21 +149,6 @@ public interface Atom extends Cloneable, PDBRecord {
      */
     public Character getAltLoc();
     
-    /** store the whole line.  
-     * @param s  a String specifying the PDBline value
-     * @see #getPDBline
-     * @deprecated replaced by {@link #toPDB()}
-     */
-    public void   setPDBline(String s) ;
-    
-    /** store the whole line.  
-     * @return a String representing the PDBline value
-     * @see #setPDBline
-     * @deprecated @deprecated replaced by {@link #toPDB()}
-     */
-    
-    public String getPDBline() ;
-    
     /** set occupancy. 
      * @param occupancy  a double specifying the occupancy value
      * @see #getOccupancy
