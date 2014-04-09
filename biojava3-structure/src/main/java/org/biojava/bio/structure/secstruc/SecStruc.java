@@ -38,7 +38,6 @@ import org.biojava.bio.structure.Group;
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureException;
 import org.biojava.bio.structure.align.util.AtomCache;
-import org.biojava.bio.structure.io.PDBParseException;
 
 
 
@@ -282,7 +281,7 @@ public class SecStruc {
 
 					l1.connectedTo = j;
 					l2.connectedFrom = i;
-//					System.out.println("BUlge from " + i + " to " + j);
+					//					System.out.println("BUlge from " + i + " to " + j);
 				}
 			}
 		}
@@ -428,26 +427,22 @@ public class SecStruc {
 			Atom cag   = g.getCA();
 			Atom caip2 = ip2.getCA();
 
-			try {
-				Atom caminus2 = Calc.subtract(caim2,cag);
+			Atom caminus2 = Calc.subtract(caim2,cag);
 
-				Atom caplus2  = Calc.subtract(cag,caip2);
+			Atom caplus2  = Calc.subtract(cag,caip2);
 
-				double angle    = Calc.angle(caminus2,caplus2);
+			double angle    = Calc.angle(caminus2,caplus2);
 
-				SecStrucState state = getSecStrucState(i); 
+			SecStrucState state = getSecStrucState(i); 
 
-				state.setKappa((float)angle);
+			state.setKappa((float)angle);
 
-				if (angle > 70.0) {
-					if ( state.getSecStruc().equals(SecStrucType.coil)) 
-						state.setSecStruc(SecStrucType.bend);
+			if (angle > 70.0) {
+				if ( state.getSecStruc().equals(SecStrucType.coil)) 
+					state.setSecStruc(SecStrucType.bend);
 
-					state.setBend(true);
-					//d[i].bend = 'S';
-				}
-			} catch (Exception e){
-				e.printStackTrace();
+				state.setBend(true);
+				//d[i].bend = 'S';
 			}
 
 		}
@@ -585,28 +580,26 @@ public class SecStruc {
 					SecStrucGroup sg = new SecStrucGroup();
 					sg.setResidueNumber(g.getResidueNumber());
 					sg.setPDBFlag(true);
-					try {
-						sg.setPDBName(g.getPDBName());
-					} catch (PDBParseException e){
-						e.printStackTrace();
-					}
-					sg.setParent(g.getChain());
-
-					try {
-
-						sg.setN((Atom)   g.getAtomByPDBname(" N  ").clone());
-						sg.setCA((Atom)  g.getAtomByPDBname(" CA ").clone());
-						sg.setC((Atom)   g.getAtomByPDBname(" C  ").clone());
-						sg.setO((Atom)   g.getAtomByPDBname(" O  ").clone());
-						sg.setOriginal(g);
-						// create H in calc_H
+					sg.setPDBName(g.getPDBName());
+					sg.setChain(g.getChain());
 
 
-					} catch (StructureException e){
-						e.printStackTrace();
-						// one of these atoms is not found!
+					Atom N = g.getAtomByPDBname(" N  ");
+					Atom CA =  g.getAtomByPDBname(" CA ");
+					Atom C = g.getAtomByPDBname(" C  ");
+					Atom O =  g.getAtomByPDBname(" O  ");
+					if ( N == null || CA == null || C == null || O == null)
 						continue;
-					}
+
+					sg.setN((Atom)   N.clone());
+					sg.setCA((Atom) CA.clone());
+					sg.setC((Atom)   C.clone());
+					sg.setO((Atom)  O.clone());
+					sg.setOriginal(g);
+					// create H in calc_H
+
+
+
 
 					SecStrucState state = new SecStrucState();
 					Map<String,Object> m = sg.getProperties();

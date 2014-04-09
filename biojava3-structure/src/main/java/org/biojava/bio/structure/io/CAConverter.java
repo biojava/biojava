@@ -86,11 +86,7 @@ public class CAConverter {
                 if ( a.getFullName().equals(" CA ")){
                     // we got a CA atom in this group!
                     AminoAcid n = new AminoAcidImpl();
-                    try {
                     n.setPDBName(g.getPDBName());
-                    } catch (PDBParseException e){
-                        e.printStackTrace();
-                    }
                     n.setResidueNumber(g.getResidueNumber());
                     n.addAtom(a);
                     newChain.addGroup(n);

@@ -904,7 +904,7 @@ public class ScopInstallation implements LocalScopDatabase {
 	void addMirror(ScopMirror scopURLs) {
 		mirrors.add(scopURLs);
 	}
-	List<ScopMirror> getMirrors() {
+	public List<ScopMirror> getMirrors() {
 		if(mirrors.isEmpty()) {
 			this.initScopURLs();
 		}

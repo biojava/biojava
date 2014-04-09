@@ -8,6 +8,13 @@ import org.biojava3.structure.StructureIO;
 
 import junit.framework.TestCase;
 
+/**
+ * Testing of Accessible Surface Area calculations
+ * 
+ * 
+ * @author duarte_j
+ *
+ */
 public class TestAsaCalc extends TestCase {
 
 	

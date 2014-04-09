@@ -4,7 +4,7 @@
 	<parent>
 		<artifactId>biojava</artifactId>
 		<groupId>org.biojava</groupId>
-		<version>3.0.8-SNAPSHOT</version>
+		<version>3.1.0-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>protein-comparison-tool</artifactId>
@@ -28,23 +28,23 @@
 		<dependency>
 			<groupId>org.biojava</groupId>
 			<artifactId>biojava3-alignment</artifactId>
-			<version>3.0.8-SNAPSHOT</version>
+			<version>3.1.0-SNAPSHOT</version>
 	
 		</dependency>
 		<dependency>
 			<groupId>org.biojava</groupId>
 			<artifactId>biojava3-core</artifactId>
-			<version>3.0.8-SNAPSHOT</version>
+			<version>3.1.0-SNAPSHOT</version>
 		</dependency>		
 		<dependency>
 			<groupId>org.biojava</groupId>
 			<artifactId>biojava3-structure</artifactId>
-			<version>3.0.8-SNAPSHOT</version>
+			<version>3.1.0-SNAPSHOT</version>
 		</dependency>			
 		<dependency>
 			<groupId>org.biojava</groupId>
 			<artifactId>biojava3-structure-gui</artifactId>
-			<version>3.0.8-SNAPSHOT</version>
+			<version>3.1.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>net.sourceforge.jmol</groupId>

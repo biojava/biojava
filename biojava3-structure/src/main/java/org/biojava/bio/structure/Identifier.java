@@ -33,7 +33,7 @@ import org.biojava.bio.structure.scop.ScopFactory;
  */
 public class Identifier {
 
-	private static final String URI_PATTERN = "";
+//	private static final String URI_PATTERN = "";
 	private static final String CATH_PATTERN = "[0-9][a-z0-9]{3}.[0-9]{2}";
 	private static final String SCOP_PATTERN = "d[0-9][a-zA-Z0-9]{3,4}([a-zA-Z][0-9_]|\\.[0-9]+)";
 

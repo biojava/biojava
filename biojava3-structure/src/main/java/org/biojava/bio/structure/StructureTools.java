@@ -35,7 +35,6 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -297,16 +296,16 @@ public class StructureTools {
 	public static final Atom[] getAllNonHAtomArray(Structure s, boolean hetAtoms) {
 		List<Atom> atoms = new ArrayList<Atom>();
 
-		
+
 		AtomIterator iter = new AtomIterator(s);
 		while (iter.hasNext()){
 			Atom a = iter.next();
 			if (a.getElement()==Element.H) continue;
-			
+
 			Group g = a.getGroup();
-			
+
 			if (!hetAtoms && g.getType().equals(GroupType.HETATM)) continue;
-			
+
 			atoms.add(a);
 		}
 		return (Atom[]) atoms.toArray(new Atom[atoms.size()]);			
@@ -324,14 +323,15 @@ public class StructureTools {
 				boolean thisGroupAllAtoms = true;
 				for ( int i = 0 ; i < atomNames.length; i++){
 					String atomName = atomNames[i];
-					try {
-						Atom a = g.getAtom(atomName);
-						thisGroupAtoms.add(a);
-					} catch (StructureException e){
+
+					Atom a = g.getAtom(atomName);
+
+					if ( a == null) {
 						// this group does not have a required atom, skip it...
 						thisGroupAllAtoms = false;
 						break;
 					}
+					thisGroupAtoms.add(a);
 				}
 				if ( thisGroupAllAtoms){
 					// add the atoms of this group to the array.
@@ -369,15 +369,17 @@ public class StructureTools {
 			boolean thisGroupAllAtoms = true;
 			for ( int i = 0 ; i < atomNames.length; i++){
 				String atomName = atomNames[i];
-				try {
-					Atom a = g.getAtom(atomName);
-					thisGroupAtoms.add(a);
-				} catch (StructureException e){
+
+				Atom a = g.getAtom(atomName);
+				if ( a == null) {
+
 					// this group does not have a required atom, skip it...
 					thisGroupAllAtoms = false;
 					break;
 				}
+				thisGroupAtoms.add(a);
 			}
+
 			if ( thisGroupAllAtoms){
 				// add the atoms of this group to the array.
 				Iterator<Atom> aIter = thisGroupAtoms.iterator();
@@ -641,20 +643,17 @@ public class StructureTools {
 	 * @return Structure
 	 * @since 3.0
 	 */
-	@SuppressWarnings("deprecation")
 	public static final Structure getReducedStructure(Structure s, String chainId) throws StructureException{
 		// since we deal here with structure alignments,
 		// only use Model 1...
 
 		Structure newS = new StructureImpl();
-		newS.setHeader(s.getHeader());
 		newS.setPDBCode(s.getPDBCode());
 		newS.setPDBHeader(s.getPDBHeader());
 		newS.setName(s.getName());
 		newS.setSSBonds(s.getSSBonds());
 		newS.setDBRefs(s.getDBRefs());
 		newS.setSites(s.getSites());
-		newS.setNmr(s.isNmr());
 		newS.setBiologicalAssembly(s.isBiologicalAssembly());
 		newS.setCompounds(s.getCompounds());
 		newS.setConnections(s.getConnections());
@@ -707,20 +706,17 @@ public class StructureTools {
 	 * @return Structure object
 	 * @since 3.0
 	 */
-	@SuppressWarnings("deprecation")
 	public static final Structure getReducedStructure(Structure s, int chainNr) throws StructureException{
 		// since we deal here with structure alignments,
 		// only use Model 1...
 
 		Structure newS = new StructureImpl();
-		newS.setHeader(s.getHeader());
 		newS.setPDBCode(s.getPDBCode());
 		newS.setPDBHeader(s.getPDBHeader());
 		newS.setName(s.getName());
 		newS.setSSBonds(s.getSSBonds());
 		newS.setDBRefs(s.getDBRefs());
 		newS.setSites(s.getSites());
-		newS.setNmr(s.isNmr());
 		newS.setBiologicalAssembly(s.isBiologicalAssembly());
 		newS.setCompounds(s.getCompounds());
 		newS.setConnections(s.getConnections());
@@ -768,8 +764,6 @@ public class StructureTools {
 	 * @param ranges A comma-seperated list of ranges, optionally surrounded by parentheses
 	 * @return Substructure of s specified by ranges
 	 */
-
-	@SuppressWarnings("deprecation")
 	public static final Structure getSubRanges(Structure s, String ranges ) 
 			throws StructureException
 			{
@@ -793,12 +787,10 @@ public class StructureTools {
 
 		Structure newS = new StructureImpl();
 
-		newS.setHeader(s.getHeader());
 		newS.setPDBCode(s.getPDBCode());
 		newS.setPDBHeader(s.getPDBHeader());
 		newS.setName(s.getName());
 		newS.setDBRefs(s.getDBRefs());
-		newS.setNmr(s.isNmr());
 		newS.setBiologicalAssembly(s.isBiologicalAssembly());
 		newS.getPDBHeader().setDescription("sub-range " + ranges + " of "  + newS.getPDBCode() + " " + s.getPDBHeader().getDescription());
 		newS.setCrystallographicInfo(s.getCrystallographicInfo());
@@ -840,7 +832,7 @@ public class StructureTools {
 			String pdbresnumStart = matcher.group(2);
 			String pdbresnumEnd   = matcher.group(3);
 
-				
+
 			if ( ! firstRange){
 				name.append( ",");
 			} else {
@@ -853,10 +845,10 @@ public class StructureTools {
 					pdbresnumStart = pdbresnumStart.substring(1);
 				if(pdbresnumEnd.charAt(0) == '+')
 					pdbresnumEnd = pdbresnumEnd.substring(1);
-				
+
 				ResidueNumber pdbresnum1 = ResidueNumber.fromString(pdbresnumStart);
 				ResidueNumber pdbresnum2 = ResidueNumber.fromString(pdbresnumEnd);
-				
+
 				groups = chain.getGroupsByPDB(pdbresnum1, pdbresnum2);
 
 				name.append( chainId + AtomCache.UNDERSCORE + pdbresnumStart+"-" + pdbresnumEnd);
@@ -866,7 +858,7 @@ public class StructureTools {
 				groups = chain.getAtomGroups().toArray(new Group[chain.getAtomGroups().size()]);
 				name.append(chainId);
 			}
-						
+
 			firstRange = true;
 
 			// Create new chain, if needed
@@ -980,7 +972,7 @@ public class StructureTools {
 		radius = radius * radius;
 
 		Map<Group,Double> distances = new HashMap<Group,Double>();
-		
+
 		// we only need this if we're averaging distances
 		// note that we can't use group.getAtoms().size() because some the group's atoms be outside the shell
 		Map<Group,Integer> atomCounts = new HashMap<Group,Integer>();
@@ -990,45 +982,43 @@ public class StructureTools {
 
 				// exclude water
 				if (!includeWater && chainGroup.getPDBName().equals("HOH")) continue;
-				
+
 				// check blacklist of residue numbers
 				for (ResidueNumber rn : excludeResidues) {
 					if (rn.equals(chainGroup.getResidueNumber())) continue groupLoop;
 				}
-				
+
 				for (Atom testAtom : chainGroup.getAtoms()) {
-					
-					try {
-						
-						// use getDistanceFast as we are doing a lot of comparisons
-						double dist = Calc.getDistanceFast(centroid, testAtom);
-						
-						// if we're the shell
-						if (dist <= radius) {
-							if (!distances.containsKey(chainGroup)) distances.put(chainGroup, Double.POSITIVE_INFINITY);
-							if (useAverageDistance) {
-								// sum the distance; we'll divide by the total number later
-								// here, we CANNOT use fastDistance (distance squared) because we want the arithmetic mean
-								distances.put(chainGroup, distances.get(chainGroup) + Math.sqrt(dist));
-								if (!atomCounts.containsKey(chainGroup)) atomCounts.put(chainGroup, 0);
-								atomCounts.put(chainGroup, atomCounts.get(chainGroup) + 1);
-							} else {
-								// take the minimum distance among all atoms of chainGroup
-								// note that we can't break here because we might find a smaller distance
-								if (dist < distances.get(chainGroup)) {
-									distances.put(chainGroup, dist);
-								}
+
+
+
+					// use getDistanceFast as we are doing a lot of comparisons
+					double dist = Calc.getDistanceFast(centroid, testAtom);
+
+					// if we're the shell
+					if (dist <= radius) {
+						if (!distances.containsKey(chainGroup)) distances.put(chainGroup, Double.POSITIVE_INFINITY);
+						if (useAverageDistance) {
+							// sum the distance; we'll divide by the total number later
+							// here, we CANNOT use fastDistance (distance squared) because we want the arithmetic mean
+							distances.put(chainGroup, distances.get(chainGroup) + Math.sqrt(dist));
+							if (!atomCounts.containsKey(chainGroup)) atomCounts.put(chainGroup, 0);
+							atomCounts.put(chainGroup, atomCounts.get(chainGroup) + 1);
+						} else {
+							// take the minimum distance among all atoms of chainGroup
+							// note that we can't break here because we might find a smaller distance
+							if (dist < distances.get(chainGroup)) {
+								distances.put(chainGroup, dist);
 							}
 						}
-						
-					} catch (StructureException ex) {
-						Logger.getLogger(StructureTools.class.getName()).log(Level.SEVERE, null, ex);
 					}
+
+
 
 				}
 			}
 		}
-		
+
 		if (useAverageDistance) {
 			for (Map.Entry<Group,Double> entry : distances.entrySet()) {
 				int count = atomCounts.get(entry.getKey());
@@ -1040,9 +1030,9 @@ public class StructureTools {
 				distances.put(entry.getKey(), Math.sqrt(entry.getValue()));
 			}
 		}
-		
+
 		return distances;
-		
+
 	}
 
 	public static Set<Group> getGroupsWithinShell(Structure structure, Atom atom, Set<ResidueNumber> excludeResidues, double distance, boolean includeWater) {
@@ -1058,16 +1048,14 @@ public class StructureTools {
 					if (rn.equals(chainGroup.getResidueNumber())) continue groupLoop;
 				}
 				for (Atom atomB : chainGroup.getAtoms()) {
-					try {
-						//use getDistanceFast as we are doing a lot of comparisons
-						double dist = Calc.getDistanceFast(atom, atomB);
-						if (dist <= distance) {
-							returnSet.add(chainGroup);
-							break;
-						}
-					} catch (StructureException ex) {
-						Logger.getLogger(StructureTools.class.getName()).log(Level.SEVERE, null, ex);
+
+					//use getDistanceFast as we are doing a lot of comparisons
+					double dist = Calc.getDistanceFast(atom, atomB);
+					if (dist <= distance) {
+						returnSet.add(chainGroup);
+						break;
 					}
+
 
 				}
 			}
@@ -1168,22 +1156,18 @@ public class StructureTools {
 	 * @return a structure that contains only  the first model
 	 * @since 3.0.5
 	 */
-	@SuppressWarnings("deprecation")
 	public static Structure removeModels(Structure s){
-		if ( ! s.isNmr())
+		if ( s.nrModels()==1)
 			return s;
 
 		Structure n = new StructureImpl();
 		// go through whole substructure and clone ...
 
 		// copy structure data
-		n.setNmr(true);
 
 		n.setPDBCode(s.getPDBCode());
 		n.setName(s.getName());
 
-		// we are calling this legacy menthod for backwards compatibility
-		n.setHeader(s.getHeader());
 		//TODO: do deep copying of data!
 		n.setPDBHeader(s.getPDBHeader());
 		n.setDBRefs(s.getDBRefs());

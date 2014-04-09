@@ -31,12 +31,12 @@ implements Group {
     *
     */
    private static final long serialVersionUID = 313490286720467714L;
-    Atom N;
-    Atom CA;
-    Atom C;
-    Atom O;
-    Atom H;
-    Group original;
+   private Atom N;
+   private Atom CA;
+   private Atom C;
+   private Atom O;
+   private Atom H;
+   private Group original;
 
     public SecStrucGroup(){
         super();

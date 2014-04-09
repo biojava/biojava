@@ -22,12 +22,14 @@
 package org.biojava.bio.structure.io;
 
 import java.io.IOException;
+import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
-
 
 import org.biojava.bio.structure.Atom;
 import org.biojava.bio.structure.Chain;
@@ -38,7 +40,6 @@ import org.biojava.bio.structure.PDBHeader;
 import org.biojava.bio.structure.SSBond;
 import org.biojava.bio.structure.Site;
 import org.biojava.bio.structure.Structure;
-import org.biojava.bio.structure.StructureException;
 import org.biojava3.core.util.XMLWriter;
 
 
@@ -244,7 +245,7 @@ public class FileConvert {
 		for (int m = 0 ; m < nrModels ; m++) {
 			List<Chain> model = structure.getModel(m);
 			// todo support NMR structures ...
-			if ( structure.isNmr()) {
+			if ( nrModels>1 ) {
 				str.append("MODEL      " + (m+1)+ newline);
 			}
 			// do for all chains
@@ -266,7 +267,7 @@ public class FileConvert {
 				}
 			}
 
-			if ( structure.isNmr()) {
+			if ( nrModels>1) {
                 str.append("ENDMDL").append(newline);
 			}
 
@@ -287,12 +288,10 @@ public class FileConvert {
 
 		for ( int atompos = 0 ; atompos < groupsize; atompos++) {
 			Atom a = null ;
-			try {
-				a = g.getAtom(atompos);
-			} catch ( StructureException e) {
-				System.err.println(e);
+			
+			a = g.getAtom(atompos);
+			if ( a == null)
 				continue ;
-			}
 
 			toPDB(a, str);
 
@@ -478,7 +477,6 @@ Angstroms.
 	 * @throws IOException ...
 	 *
 	 */
-	@SuppressWarnings("deprecation")
 	public void toDASStructure(XMLWriter xw)
 	throws IOException
 	{
@@ -490,13 +488,14 @@ Angstroms.
 			return;
 		}
 
-		Map<String,Object> header = structure.getHeader();
+		PDBHeader header = structure.getPDBHeader();
 
 		xw.openTag("object");
 		xw.attribute("dbAccessionId",structure.getPDBCode());
 		xw.attribute("intObjectId"  ,structure.getPDBCode());
 		// missing modification date
-		String modificationDate = (String)header.get("modDate") ;
+		DateFormat dateFormat = new SimpleDateFormat("dd-MMM-yy",Locale.US);
+		String modificationDate = dateFormat.format(header.getModDate());
 		xw.attribute("objectVersion",modificationDate);
 		xw.attribute("type","protein structure");
 		xw.attribute("dbSource","PDB");
@@ -516,7 +515,7 @@ Angstroms.
 				xw.openTag("chain");
 				xw.attribute("id",chain.getChainID());
 				xw.attribute("SwissprotId",chain.getSwissprotId() );
-				if (structure.isNmr()){
+				if (structure.nrModels()>1){
 					xw.attribute("model",Integer.toString(modelnr+1));
 				}
 

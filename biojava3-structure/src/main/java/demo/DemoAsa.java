@@ -23,7 +23,7 @@ public class DemoAsa {
 	
 	private static void demoAsa(String pdbCode, int numThreads) throws IOException, StructureException {
 		
-		AtomCache cache = new AtomCache("/tmp",false);
+		AtomCache cache = new AtomCache();
 		cache.setUseMmCif(true);
 		
 		StructureIO.setAtomCache(cache); 
@@ -79,25 +79,6 @@ public class DemoAsa {
 			System.out.printf(nThreads+" threads, time: %4.1fs -- x%2.1f\n",runTimes[nThreads-1],runTimes[0]/runTimes[nThreads-1]);
 		}
 		
-		
-		
-//		for (Chain chain:structure.getChains()) {
-//			for (Group alt:chain.getAtomGroups()) {
-//				List<Group> alllocs = alt.getAltLocs();
-//				//alllocs.add(alt);
-//				for(Group res: alllocs) {
-//					if (!hetAtoms && res.getType().equals(GroupType.HETATM)) continue;
-//
-//					System.out.printf("%1s\t%3s\t%s\n",chain.getChainID(),res.getResidueNumber().toString(),res.getPDBName());
-//					for (Atom atom:res.getAtoms()) {
-//						if (atom.getElement()!=Element.H) {
-//							System.out.println("    "+atom.getName()+"\t"+atom.getAltLoc()+ "\t"+atom.getPDBserial());
-//						}
-//
-//					}
-//				}
-//			}
-//		}
 		
 	}
 

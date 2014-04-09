@@ -26,6 +26,7 @@ import java.util.List;
 import org.biojava.bio.structure.io.FileParsingParameters;
 import org.biojava.bio.structure.io.mmcif.model.AtomSite;
 import org.biojava.bio.structure.io.mmcif.model.AuditAuthor;
+import org.biojava.bio.structure.io.mmcif.model.Cell;
 import org.biojava.bio.structure.io.mmcif.model.ChemComp;
 import org.biojava.bio.structure.io.mmcif.model.ChemCompAtom;
 import org.biojava.bio.structure.io.mmcif.model.ChemCompBond;
@@ -53,6 +54,7 @@ import org.biojava.bio.structure.io.mmcif.model.StructKeywords;
 import org.biojava.bio.structure.io.mmcif.model.StructRefSeq;
 import org.biojava.bio.structure.io.mmcif.model.Struct;
 import org.biojava.bio.structure.io.mmcif.model.StructRef;
+import org.biojava.bio.structure.io.mmcif.model.Symmetry;
 
 /** An interface for the events triggered by a MMcifParser.
  * The Consumer listens to the events and builds up the protein structure.
@@ -85,6 +87,8 @@ public interface MMcifConsumer {
 	public void newDatabasePDBrev(DatabasePDBrev dbrev);
 	public void newDatabasePDBremark(DatabasePDBremark remark);
 	public void newExptl(Exptl exptl);
+	public void newCell(Cell cell);
+	public void newSymmetry(Symmetry symmetry);
 	public void newStructRef(StructRef sref);
 	public void newStructRefSeq(StructRefSeq sref);
 	public void newPdbxPolySeqScheme(PdbxPolySeqScheme ppss);

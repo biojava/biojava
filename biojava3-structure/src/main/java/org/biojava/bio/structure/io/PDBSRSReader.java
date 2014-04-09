@@ -40,10 +40,10 @@ import org.biojava.bio.structure.Structure;
  * if no matching PDB code found, returns null
  *
  * @author Andreas Prlic
- *
+ * @deprecated
 */
-
-public class PDBSRSReader implements StructureIO {  
+@Deprecated 
+public class PDBSRSReader  {  
     
 
     private  BufferedReader getBufferedReader(String pdbId) 

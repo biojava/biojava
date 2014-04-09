@@ -2,6 +2,10 @@ package org.biojava.bio.structure.align.util;
 
 import java.io.StringWriter;
 
+import javax.vecmath.AxisAngle4d;
+import javax.vecmath.Matrix4d;
+import javax.vecmath.Vector3d;
+
 import org.biojava.bio.structure.Atom;
 import org.biojava.bio.structure.AtomImpl;
 import org.biojava.bio.structure.Calc;
@@ -59,6 +63,14 @@ public final class RotationAxis {
 	}
 
 	/**
+	 * Returns the rotation axis and angle in a single javax.vecmath.AxisAngle4d object 
+	 * @return
+	 */
+	public AxisAngle4d getAxisAngle4d() {
+		return new AxisAngle4d(rotationAxis.getX(),rotationAxis.getY(),rotationAxis.getZ(),theta);
+	}
+
+	/**
 	 * Get a position on the rotation axis.
 	 * 
 	 * Specifically, project the origin onto the rotation axis
@@ -74,6 +86,10 @@ public final class RotationAxis {
 	 */
 	public Atom getScrewTranslation() {
 		return screwTranslation;
+	}
+
+	public Vector3d getVector3dScrewTranslation() {
+		return new Vector3d(screwTranslation.getX(),screwTranslation.getY(),screwTranslation.getZ());
 	}
 
 	/**
@@ -99,7 +115,7 @@ public final class RotationAxis {
 		}
 		init(afpChain.getBlockRotationMatrix()[0],afpChain.getBlockShiftVector()[0]);
 	}
-	
+
 	/**
 	 * Create a rotation axis from a vector, a point, and an angle.
 	 * 
@@ -124,7 +140,24 @@ public final class RotationAxis {
 	public RotationAxis(Matrix rotation, Atom translation) {
 		init(rotation, translation);
 	}
-	
+
+	/**
+	 * Create a rotation axis from a Matrix4d containing a rotational component and a translational component
+	 * @param transform
+	 */
+	public RotationAxis(Matrix4d transform) {
+		Atom transl = new AtomImpl();
+		double[] coords = {transform.m03, transform.m13, transform.m23};
+		transl.setCoords(coords);
+		Matrix rot = new Matrix(3,3);
+		for (int i=0;i<3;i++) {
+			for (int j=0;j<3;j++) {
+				rot.set(i, j, transform.getElement(i, j));
+			}
+		}
+		init(rot,transl);
+	}
+
 	/**
 	 * Get the rotation matrix corresponding to this axis
 	 * @return A 3x3 rotation matrix
@@ -132,7 +165,7 @@ public final class RotationAxis {
 	public Matrix getRotationMatrix() {
 		return getRotationMatrix(theta);
 	}
-	
+
 	/**
 	 * Get the rotation matrix corresponding to a rotation about this axis
 	 * @param theta The amount to rotate
@@ -153,9 +186,9 @@ public final class RotationAxis {
 				{com*x*x + cos, com*x*y+sin*z, com*x*z+-sin*y},
 				{com*x*y-sin*z, com*y*y+cos, com*y*z+sin*x},
 				{com*x*z+sin*y, com*y*z-sin*x, com*z*z+cos},
-				});
+		});
 	}
-	
+
 	/**
 	 * Returns the rotation order o that gives the lowest value of {@code |2PI / o - theta},
 	 * given that the value is strictly lower than {@code threshold}, for orders {@code o=1,...,maxOrder}.
@@ -173,14 +206,14 @@ public final class RotationAxis {
 		return bestOrder;
 	}
 
-	
+
 	/**
 	 * Returns a matrix that describes both rotation and translation.
 	 */
 	public Matrix getFullMatrix() {
 		return null; // TODO, easy
 	}
-	
+
 	/**
 	 * Initialize variables
 	 * 
@@ -327,7 +360,7 @@ public final class RotationAxis {
 		final double width=.5;// width of JMol object
 		final String axisColor = "yellow"; //axis color
 		final String screwColor = "orange"; //screw translation color
-		
+
 		// Project each Atom onto the rotation axis to determine limits
 		double min, max;
 		min = max = Calc.scalarProduct(rotationAxis,atoms[0]);
@@ -362,10 +395,10 @@ public final class RotationAxis {
 		Calc.scaleAdd(max, rotationAxis, axisMax);
 
 		StringWriter result = new StringWriter();
-		
+
 		// set arrow heads to a reasonable length
 		result.append("set defaultDrawArrowScale 2.0;");
-		
+
 		// draw axis of rotation
 		result.append(	
 				String.format("draw ID rot CYLINDER {%f,%f,%f} {%f,%f,%f} WIDTH %f COLOR %s ;",
@@ -389,7 +422,7 @@ public final class RotationAxis {
 					screwTranslation.getX(),screwTranslation.getY(),screwTranslation.getZ(),
 					width, screwColor ));
 		}
-				
+
 		// draw angle of rotation
 		if(rotationPos != null) {
 			result.append(System.getProperty("line.separator"));
@@ -398,7 +431,7 @@ public final class RotationAxis {
 					axisMax.getX(),axisMax.getY(),axisMax.getZ(),
 					Math.toDegrees(theta),
 					positiveScrew ? 0 : 1 , // draw at the opposite end from the screw arrow
-					width, axisColor ));
+							width, axisColor ));
 		}
 
 		return result.toString();
@@ -414,10 +447,10 @@ public final class RotationAxis {
 			// translation only
 			return null;
 		}
-		
+
 		Atom localPoint = Calc.subtract(point, rotationPos);
 		double dot = Calc.scalarProduct(localPoint, rotationAxis);
-		
+
 		Atom localProjected = Calc.scale(rotationAxis, dot);
 		Atom projected = Calc.add(localProjected, rotationPos);
 		return projected;
@@ -434,15 +467,12 @@ public final class RotationAxis {
 			// translation only
 			return Double.NaN;
 		}
-		
-		try {
-			return Calc.getDistance(point, projected);
-		} catch(StructureException e) {
-			// Should be unreachable
-			return Double.NaN;
-		}
+
+
+		return Calc.getDistance(point, projected);
+
 	}
-	
+
 	public void rotate(Atom[] atoms, double theta) {
 		Matrix rot = getRotationMatrix(theta);
 		if(rotationPos == null) {
@@ -450,12 +480,9 @@ public final class RotationAxis {
 			return;
 		}
 		Atom negPos;
-		try {
+		
 			negPos = Calc.invert(rotationPos);
-		} catch (StructureException e) {
-			// Should be unreachable
-			return;
-		}
+		
 		for(Atom a: atoms) {
 			Calc.shift(a, negPos);
 		}
@@ -464,7 +491,7 @@ public final class RotationAxis {
 			Calc.shift(a, rotationPos);
 		}
 	}
-	
+
 	/**
 	 * Calculate the rotation angle for a structure
 	 * @param afpChain
@@ -477,7 +504,7 @@ public final class RotationAxis {
 			throw new StructureException("No aligned residues");
 		}
 		Matrix rotation = afpChain.getBlockRotationMatrix()[0];
-		
+
 		if(rotation == null) {
 			throw new NullPointerException("AFPChain does not contain a rotation matrix");
 		}

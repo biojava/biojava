@@ -48,7 +48,7 @@ import org.biojava.bio.structure.Atom;
 import org.biojava.bio.structure.AtomImpl;
 import org.biojava.bio.structure.Author;
 import org.biojava.bio.structure.Bond;
-import org.biojava.bio.structure.Calc;
+//import org.biojava.bio.structure.Calc;
 import org.biojava.bio.structure.Chain;
 import org.biojava.bio.structure.ChainImpl;
 import org.biojava.bio.structure.Compound;
@@ -71,9 +71,10 @@ import org.biojava.bio.structure.StructureImpl;
 import org.biojava.bio.structure.StructureTools;
 import org.biojava.bio.structure.io.mmcif.ChemCompGroupFactory;
 import org.biojava.bio.structure.io.mmcif.ReducedChemCompProvider;
-import org.biojava.bio.structure.io.mmcif.model.ChemComp;
-import org.biojava.bio.structure.io.mmcif.model.ChemCompBond;
 import org.biojava.bio.structure.io.util.PDBTemporaryStorageUtils.LinkRecord;
+import org.biojava.bio.structure.xtal.CrystalCell;
+import org.biojava.bio.structure.xtal.SpaceGroup;
+import org.biojava.bio.structure.xtal.SymoplibParser;
 
 
 /**
@@ -161,8 +162,6 @@ public class PDBFileParser  {
 	
 	private PDBBioAssemblyParser bioAssemblyParser = null;
 	
-	@Deprecated
-	private Map <String,Object>  header ;
 	private PDBHeader pdbHeader;
 	private PDBCrystallographicInfo crystallographicInfo;
 	private JournalArticle journalArticle;
@@ -280,7 +279,6 @@ public class PDBFileParser  {
 		current_model = new ArrayList<Chain>();
 		current_chain = null           ;
 		current_group = null           ;
-		header        = init_header() ;
 		pdbHeader 	  = new PDBHeader();
 		crystallographicInfo = new PDBCrystallographicInfo();
 		connects      = new ArrayList<Map<String,Integer>>() ;
@@ -306,25 +304,6 @@ public class PDBFileParser  {
 		linkRecords = new ArrayList<LinkRecord>();
 	}
 
-
-
-	/** initialize the header. */
-	private Map<String,Object> init_header(){
-
-
-		HashMap<String,Object> header = new HashMap<String,Object> ();
-		header.put ("idCode","");
-		header.put ("classification","")         ;
-		header.put ("depDate","0000-00-00");
-		header.put ("title","");
-		header.put ("technique","");
-		header.put ("resolution",null);
-		header.put ("modDate","0000-00-00");
-		//header.put ("journalRef","");
-		//header.put ("author","");
-		//header.put ("compound","");
-		return header ;
-	}
 
 
 	/**
@@ -421,10 +400,7 @@ public class PDBFileParser  {
 				System.out.println(pdbId + " is a LEGACY entry - this will most likely not parse correctly.");
 			}
 		}
-		header.put("idCode",pdbCode);
 		structure.setPDBCode(pdbCode);
-		header.put("classification",classification);
-		header.put("depDate",deposition_date);
 
 		pdbHeader.setIdCode(pdbCode);
 		pdbHeader.setClassification(classification);
@@ -433,10 +409,9 @@ public class PDBFileParser  {
 		try {
 			Date dep = dateFormat.parse(deposition_date);
 			pdbHeader.setDepDate(dep);
-			header.put("depDate",deposition_date);
 
 		} catch (ParseException e){
-			e.printStackTrace();
+			logger.fine("Could not parse deposition date string '"+deposition_date+"'. Will continue without deposition date"); 
 		}
 
 	}
@@ -505,6 +480,12 @@ public class PDBFileParser  {
 	 */
 
 	private void pdb_HELIX_Handler(String line){
+		
+		if (line.length()<38) {
+			logger.fine("HELIX line has length under 38. Ignoring it.");
+			return;
+		}
+		
 		String initResName = line.substring(15,18).trim();
 		String initChainId = line.substring(19,20);
 		String initSeqNum  = line.substring(21,25).trim();
@@ -587,6 +568,10 @@ public class PDBFileParser  {
 	 */
 	private void pdb_SHEET_Handler( String line){
 
+		if (line.length()<38) {
+			logger.fine("SHEET line has length under 38. Ignoring it.");
+			return;
+		}
 
 		String initResName = line.substring(17,20).trim();
 		String initChainId = line.substring(21,22);
@@ -646,6 +631,12 @@ public class PDBFileParser  {
 	 * @param line
 	 */
 	private void pdb_TURN_Handler( String line){
+				
+		if (line.length()<36) {
+			logger.fine("TURN line has length under 36. Ignoring it.");
+			return;
+		}
+		
 		String initResName = line.substring(15,18).trim();
 		String initChainId = line.substring(19,20);
 		String initSeqNum  = line.substring(20,24).trim();
@@ -703,18 +694,17 @@ public class PDBFileParser  {
 	private void pdb_REVDAT_Handler(String line) {
 
 		// only keep the first...
-		String modDate = (String) header.get("modDate");
+		Date modDate = pdbHeader.getModDate();
 
-		if ( modDate.equals("0000-00-00") ) {
-			// modDate is still initialized
+		if ( modDate==null || modDate.equals(new Date(0)) ) {
+			// modDate is still uninitialized
 			String modificationDate = line.substring (13, 22).trim() ;
-			header.put("modDate",modificationDate);
 
 			try {
 				Date dep = dateFormat.parse(modificationDate);
 				pdbHeader.setModDate(dep);
 			} catch (ParseException e){
-				e.printStackTrace();
+				logger.fine("Could not parse modification date string '"+modificationDate+"'. Will continue without modification date");
 			}
 
 		}
@@ -771,8 +761,8 @@ public class PDBFileParser  {
 	 * <p/>
 	 * 68 - 70        Residue name    resName       Residue name.
 	 */
-	private void pdb_SEQRES_Handler(String line)
-			throws PDBParseException {
+	private void pdb_SEQRES_Handler(String line) {
+			
 		//		System.out.println("PDBFileParser.pdb_SEQRES_Handler: BEGIN");
 		//		System.out.println(line);
 
@@ -842,11 +832,8 @@ public class PDBFileParser  {
 			//}
 			current_group = getNewGroup("ATOM", aminoCode1, threeLetter);
 
-			try {
-				current_group.setPDBName(threeLetter);
-			} catch (PDBParseException p){
-				logger.fine(p.getMessage() );
-			}
+			current_group.setPDBName(threeLetter);
+			
 			if ( current_group instanceof AminoAcid){
 				AminoAcid aa = (AminoAcid)current_group;
 				aa.setRecordType(AminoAcid.SEQRESRECORD);
@@ -897,11 +884,17 @@ public class PDBFileParser  {
 		else
 			title = line.substring(10,line.length()).trim();
 
-		String t= (String)header.get("title") ;
-		if ( (t != null) && (! t.equals("")))
-			t += " ";
+		String t = pdbHeader.getTitle();
+		if ( (t != null) && (! t.equals("")) ){
+			if (t.endsWith("-")) 
+				t += ""; // if last line ends with a hyphen then we don't add space 
+			else 
+				t += " ";
+		}
+		else t = "";
+		
 		t += title;
-		header.put("title",t);
+		
 		pdbHeader.setTitle(t);
 	}
 
@@ -1417,7 +1410,6 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 				return ;
 			}
 			//System.out.println("got resolution:" +res);
-			header.put("resolution",new Float(res));
 			pdbHeader.setResolution(res);
 		}
 
@@ -1430,7 +1422,9 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 		// finish off the compound handler!
 
 
-
+		if ( line == null || line.length() < 11)
+			return;
+		
 		String l = line.substring(0,11).trim();
 		if (l.equals("REMARK   2"))pdb_REMARK_2_Handler(line);
 
@@ -1486,13 +1480,10 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 		else
 			technique = line.substring(10).trim();
 
-		String t =(String) header.get("technique");
-		t += technique +" ";
-		header.put("technique",t);
-		pdbHeader.setTechnique(t);
+		for (String singleTechnique: technique.split(";\\s+")) { 
+			pdbHeader.setExperimentalTechnique(singleTechnique);
+		}
 
-		int nmr = technique.indexOf("NMR");
-		if ( nmr != -1 ) structure.setNmr(true);  ;
 
 	}
 	
@@ -1548,20 +1539,23 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 		
 		// If the entry describes a structure determined by a technique other than X-ray crystallography,
 	    // CRYST1 contains a = b = c = 1.0, alpha = beta = gamma = 90 degrees, space group = P 1, and Z =1.
-		// In this case, ignore the record
-        if (a == 1.0f && b == 1.0f && c == 1.0f && 
+		// if so we don't add and CrystalCell and SpaceGroup remain both null
+		if (a == 1.0f && b == 1.0f && c == 1.0f && 
         		alpha == 90.0f && beta == 90.0f && gamma == 90.0f && 
         		spaceGroup.equals("P 1") && z == 1) {
         	return;
         } 
-      
-        crystallographicInfo.setA(a);
-        crystallographicInfo.setB(b);
-        crystallographicInfo.setC(c);
-        crystallographicInfo.setAlpha(alpha);
-        crystallographicInfo.setBeta(beta);
-        crystallographicInfo.setGamma(gamma);
-        crystallographicInfo.setSpaceGroup(spaceGroup);
+		CrystalCell xtalCell = new CrystalCell();
+		crystallographicInfo.setCrystalCell(xtalCell);
+		xtalCell.setA(a);
+		xtalCell.setB(b);
+		xtalCell.setC(c);
+		xtalCell.setAlpha(alpha);
+		xtalCell.setBeta(beta);
+		xtalCell.setGamma(gamma);
+        SpaceGroup sg = SymoplibParser.getSpaceGroup(spaceGroup);
+        if (sg==null) logger.fine("Space group '"+spaceGroup+"' not recognised as a standard space group"); 
+        crystallographicInfo.setSpaceGroup(sg);
         crystallographicInfo.setZ(z);
 	}
 
@@ -1624,9 +1618,7 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 	 79 - 80        LString(2)      charge        Charge on the atom.
 	 </pre>
 	 */
-	private void  pdb_ATOM_Handler(String line)
-			throws PDBParseException
-			{
+	private void  pdb_ATOM_Handler(String line)	{
 		// build up chains first.
 		// headerOnly just goes down to chain resolution.
 
@@ -1715,7 +1707,10 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 		if (current_group == null) {
 
 			current_group = getNewGroup(recordName,aminoCode1,groupCode3);
-			//               current_group.setPDBCode(pdbCode);
+			
+			//if ((current_group instanceof AminoAcidImpl) && groupCode3.length()!=3) {				
+			//	throw new PDBParseException("amino acid name is not of length 3! (" + groupCode3 +")");
+			//}
 			current_group.setPDBName(groupCode3);
 			current_group.setResidueNumber(residueNumber);
 			//			                        System.out.println("Made new group: " + groupCode3 + " " + resNum + " " + iCode);
@@ -1727,7 +1722,10 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 			//System.out.println("end of chain: "+current_chain.getName()+" >"+chain_id+"<");
 
 			current_group = getNewGroup(recordName,aminoCode1,groupCode3);
-			//current_group.setPDBCode(pdbCode);
+			
+			//if ((current_group instanceof AminoAcidImpl) && groupCode3.length()!=3) {				
+			//	throw new PDBParseException("amino acid name is not of length 3! (" + groupCode3 +")");
+			//}
 			current_group.setPDBName(groupCode3);
 			current_group.setResidueNumber(residueNumber);
 			addTohetGroupsDecider(current_group);
@@ -1749,7 +1747,9 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 			
 			current_group = getNewGroup(recordName,aminoCode1,groupCode3);
 
-			//current_group.setPDBCode(pdbCode);
+			//if ((current_group instanceof AminoAcidImpl) && groupCode3.length()!=3) {
+			//	throw new PDBParseException("amino acid name is not of length 3! (" + groupCode3 +")");
+			//}
 			current_group.setPDBName(groupCode3);
 			current_group.setResidueNumber(residueNumber);
 			addTohetGroupsDecider(current_group);
@@ -1980,11 +1980,9 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 		//	System.out.println("new  group " + recordName + " " + aminoCode1 + " " +groupCode3);
 		Group altLocG = getNewGroup(recordName,aminoCode1,groupCode3);
 
-		try {
-			altLocG.setPDBName(groupCode3);
-		} catch (PDBParseException e) {
-			e.printStackTrace();
-		}
+		
+		altLocG.setPDBName(groupCode3);
+		
 		altLocG.setResidueNumber(current_group.getResidueNumber());
 		current_group.addAltLoc(altLocG);
 		return altLocG;
@@ -2250,6 +2248,12 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 	67 - 72        SymOP           sym2         Symmetry oper for 2nd resid
 	 */
 	private void pdb_SSBOND_Handler(String line){
+		
+		if (line.length()<36) {
+			logger.fine("SSBOND line has length under 36. Ignoring it.");
+			return;
+		}
+		
 		String chain1      = line.substring(15,16);
 		String seqNum1     = line.substring(17,21).trim();
 		String icode1      = line.substring(21,22);
@@ -2560,7 +2564,8 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 
 
 
-	/** parse a PDB file and return a datastructure implementing
+	/** 
+	 * Parse a PDB file and return a datastructure implementing
 	 * PDBStructure interface.
 	 *
 	 * @param inStream  an InputStream object
@@ -2572,21 +2577,16 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 			{
 
 		//System.out.println("preparing buffer");
-		BufferedReader buf ;
-		try {
-			buf = getBufferedReader(inStream);
+		BufferedReader buf = getBufferedReader(inStream);
 
-		} catch (IOException e) {
-			e.printStackTrace();
-			throw new IOException ("error initializing BufferedReader");
-		}
 		//System.out.println("done");
 
 		return parsePDBFile(buf);
 
 			}
 
-	/** parse a PDB file and return a datastructure implementing
+	/** 
+	 * Parse a PDB file and return a datastructure implementing
 	 * PDBStructure interface.
 	 *
 	 * @param buf  a BufferedReader object
@@ -2610,7 +2610,6 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 		siteMap = new LinkedHashMap<String, Site>();
 		current_chain = null           ;
 		current_group = null           ;
-		header        = init_header();
 		pdbHeader     = new PDBHeader();
 		connects      = new ArrayList<Map<String,Integer>>();
 		continuationField = "";
@@ -2633,128 +2632,89 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 		parseCAonly = params.isParseCAOnly();
 
 		String line = null;
-		try {
 
-			line = buf.readLine ();
-			String recordName = "";
+		while ((line = buf.readLine()) != null) {
 
-			// if line is null already for the first time, the buffered Reader had a problem
-			if ( line == null ) {
-				throw new IOException ("could not parse PDB File, BufferedReader returns null!");
+			// ignore empty lines
+			if ( line.equals("") ||
+					(line.equals(NEWLINE))){
+				continue;
 			}
 
 
-
-			while (line != null) {
-
-				// System.out.println (">"+line+"<");
-
-				// ignore empty lines
-				if ( line.equals("") ||
-						(line.equals(NEWLINE))){
-
-					line = buf.readLine ();
-					continue;
-				}
-
-
-				// ignore short TER and END lines
-				if ( (line.startsWith("TER")) ||
-						(line.startsWith("END"))) {
-
-					line = buf.readLine ();
-					continue;
-				}
-
-				if ( line.length() < 6) {
-					System.err.println("found line length < 6. ignoring it. >" + line +"<" );
-					line = buf.readLine ();
-					continue;
-				}
-
-				try {
-					recordName = line.substring (0, 6).trim ();
-
-				} catch (StringIndexOutOfBoundsException e){
-
-					System.err.println("StringIndexOutOfBoundsException at line >" + line + "<" + NEWLINE +
-							"this does not look like an expected PDB file") ;
-					e.printStackTrace();
-					throw new StringIndexOutOfBoundsException(e.getMessage());
-
-				}
-
-				//System.out.println(recordName);
-
-				try {
-					if (recordName.equals("ATOM"))
-						pdb_ATOM_Handler(line);
-					else if (recordName.equals("SEQRES"))
-						pdb_SEQRES_Handler(line);
-					else if (recordName.equals("HETATM"))
-						pdb_ATOM_Handler(line);
-					else if (recordName.equals("MODEL"))
-						pdb_MODEL_Handler(line);
-					else if (recordName.equals("HEADER"))
-						pdb_HEADER_Handler(line);
-					else if (recordName.equals("AUTHOR"))
-						pdb_AUTHOR_Handler(line);
-					else if (recordName.equals("TITLE"))
-						pdb_TITLE_Handler(line);
-					else if (recordName.equals("SOURCE"))
-						sourceLines.add(line); //pdb_SOURCE_Handler
-					else if (recordName.equals("COMPND"))
-						compndLines.add(line); //pdb_COMPND_Handler
-					else if (recordName.equals("JRNL"))
-						pdb_JRNL_Handler(line);
-					else if (recordName.equals("EXPDTA"))
-						pdb_EXPDTA_Handler(line);
-					else if (recordName.equals("CRYST1"))
-						pdb_CRYST1_Handler(line);
-					else if (recordName.equals("REMARK"))
-						pdb_REMARK_Handler(line);
-					else if (recordName.equals("CONECT"))
-						pdb_CONECT_Handler(line);
-					else if (recordName.equals("REVDAT"))
-						pdb_REVDAT_Handler(line);
-					else if (recordName.equals("DBREF"))
-						pdb_DBREF_Handler(line);
-					else if (recordName.equals("SITE"))
-						pdb_SITE_Handler(line);
-					else if (recordName.equals("SSBOND"))
-						pdb_SSBOND_Handler(line);
-					else if (recordName.equals("LINK"))
-						pdb_LINK_Handler(line);
-					else if ( params.isParseSecStruc()) {
-						if ( recordName.equals("HELIX") ) pdb_HELIX_Handler (  line ) ;
-						else if (recordName.equals("SHEET")) pdb_SHEET_Handler(line ) ;
-						else if (recordName.equals("TURN")) pdb_TURN_Handler(   line ) ;
-					}
-					else {
-						// this line type is not supported, yet.
-						// we ignore it
-					}
-				} catch (Exception e){
-					// the line is badly formatted, ignore it!
-					e.printStackTrace();
-					System.err.println("badly formatted line ... " +pdbId +": " + line);
-				}
-				line = buf.readLine ();
+			// ignore short TER and END lines
+			if ( (line.startsWith("TER")) ||
+					(line.startsWith("END"))) {
+				continue;
 			}
 
-			makeCompounds(compndLines, sourceLines);
-			
-			triggerEndFileChecks();
-			
-			if (params.shouldCreateAtomBonds()) {
-				formBonds();
+			if ( line.length() < 6) {
+				logger.fine("Found line length below 6. Ignoring it, line: >" + line +"<" );
+				continue;
 			}
 
-		} catch (Exception e) {
-			System.err.println(line);
-			e.printStackTrace();
-			throw new IOException ("Error parsing PDB file " + structure.getPDBCode() + " at line: " + line);
+			String recordName = line.substring (0, 6).trim ();
+
+			if (recordName.equals("ATOM"))
+				pdb_ATOM_Handler(line);
+			else if (recordName.equals("SEQRES"))
+				pdb_SEQRES_Handler(line);
+			else if (recordName.equals("HETATM"))
+				pdb_ATOM_Handler(line);
+			else if (recordName.equals("MODEL"))
+				pdb_MODEL_Handler(line);
+			else if (recordName.equals("HEADER"))
+				pdb_HEADER_Handler(line);
+			else if (recordName.equals("AUTHOR"))
+				pdb_AUTHOR_Handler(line);
+			else if (recordName.equals("TITLE"))
+				pdb_TITLE_Handler(line);
+			else if (recordName.equals("SOURCE"))
+				sourceLines.add(line); //pdb_SOURCE_Handler
+			else if (recordName.equals("COMPND"))
+				compndLines.add(line); //pdb_COMPND_Handler
+			else if (recordName.equals("JRNL"))
+				pdb_JRNL_Handler(line);
+			else if (recordName.equals("EXPDTA"))
+				pdb_EXPDTA_Handler(line);
+			else if (recordName.equals("CRYST1"))
+				pdb_CRYST1_Handler(line);
+			else if (recordName.equals("REMARK"))
+				pdb_REMARK_Handler(line);
+			else if (recordName.equals("CONECT"))
+				pdb_CONECT_Handler(line);
+			else if (recordName.equals("REVDAT"))
+				pdb_REVDAT_Handler(line);
+			else if (recordName.equals("DBREF"))
+				pdb_DBREF_Handler(line);
+			else if (recordName.equals("SITE"))
+				pdb_SITE_Handler(line);
+			else if (recordName.equals("SSBOND"))
+				pdb_SSBOND_Handler(line);
+			else if (recordName.equals("LINK"))
+				pdb_LINK_Handler(line);
+			else if ( params.isParseSecStruc()) {
+				if ( recordName.equals("HELIX") ) pdb_HELIX_Handler (  line ) ;
+				else if (recordName.equals("SHEET")) pdb_SHEET_Handler(line ) ;
+				else if (recordName.equals("TURN")) pdb_TURN_Handler(   line ) ;
+			}
+			else {
+				// this line type is not supported, yet.
+				// we ignore it
+			}
+
+
 		}
+
+		makeCompounds(compndLines, sourceLines);
+
+		triggerEndFileChecks();
+
+		if (params.shouldCreateAtomBonds()) {
+			formBonds();
+		}
+
+
 
 		if ( params.isParseSecStruc())
 			setSecStruc();
@@ -2807,19 +2767,14 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 	 * structure. This may need to be fixed in the future.
 	 */
 	private void formBonds() {
-		try {
-			for (LinkRecord linkRecord : linkRecords) {
-				formLinkRecordBond(linkRecord);
-			}
-
-			for (SSBond disulfideBond : structure.getSSBonds()) {
-				formDisulfideBond(disulfideBond);
-			}
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new RuntimeException("Error while forming bonds for " + pdbId, e);
+		for (LinkRecord linkRecord : linkRecords) {
+			formLinkRecordBond(linkRecord);
 		}
+
+		for (SSBond disulfideBond : structure.getSSBonds()) {
+			formDisulfideBond(disulfideBond);
+		}
+
 		BondMaker maker = new BondMaker(structure);
 		maker.makeBonds();
 	}
@@ -2898,21 +2853,14 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 	private void triggerEndFileChecks(){
 		// finish and add ...
 
-		String modDate = (String) header.get("modDate");
-		if ( modDate.equals("0000-00-00") ) {
+		Date modDate = pdbHeader.getModDate();
+		if ( modDate.equals(new Date(0)) ) {
 			// modification date = deposition date
-			String depositionDate = (String) header.get("depDate");
-			header.put("modDate",depositionDate) ;
+			Date depositionDate = pdbHeader.getDepDate();
 
 			if (! depositionDate.equals(modDate)){
 				// depDate is 0000-00-00
-
-				try {
-					Date dep = dateFormat.parse(depositionDate);
-					pdbHeader.setDepDate(dep);
-				} catch (ParseException e){
-					e.printStackTrace();
-				}
+				pdbHeader.setDepDate(depositionDate);
 			}
 
 		}
@@ -2930,11 +2878,10 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 		//set the JournalArticle, if there is one
 		if (!journalLines.isEmpty()) {
 			buildjournalArticle();
-			structure.setJournalArticle(journalArticle);
+			pdbHeader.setJournalArticle(journalArticle);
 		}
 
 		structure.addModel(current_model);
-		structure.setHeader(header);
 		structure.setPDBHeader(pdbHeader);
 		structure.setCrystallographicInfo(crystallographicInfo);
 		structure.setConnections(connects);

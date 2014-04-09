@@ -175,20 +175,6 @@ public class AtomImpl implements Atom,Serializable, PDBRecord {
         return altLoc ;
     }
 
-
-    /** store the whole line.
-     * @see #getPDBline
-     * @deprecated
-     */
-    public void   setPDBline(String s) { pdbline = s;}
-
-    /** get the whole line .
-     * @return a String representing the PDBline value
-     * @see #setPDBline
-     * @deprecated
-     */
-    public String getPDBline() { return pdbline ;}
-
     /** string representation. */
     public String toString() {
         String str = fullName +" (" + name +") " + element + " " + pdbserial + " " + coords[0] + " " + coords[1] + " " + coords[2];

@@ -1246,13 +1246,14 @@ nBestTrace=nTrace;
 		String atomName = StructureTools.caAtomName;
 
 		Atom a = null;
-		try {
+		
 			a= parent.getAtom(atomName);
-			strBuf[i]=a;
-		} catch (StructureException e){
-			// probably a GLY and no CB was found...
-			//e.printStackTrace();
-		}
+			if ( a != null){
+				strBuf[i]=a;
+			} else {
+				// 	probably a GLY and no CB was found...
+				//e.printStackTrace();
+			}
 		strBuf[i+pos] = a;
 		pos++;
 

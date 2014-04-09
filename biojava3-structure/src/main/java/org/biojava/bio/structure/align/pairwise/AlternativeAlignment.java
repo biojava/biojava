@@ -341,13 +341,10 @@ public class AlternativeAlignment implements Serializable{
 			for (int j=0;j<c;j++){
 				Atom b1 = ca2[j];
 
-				try {
-					double d = Calc.getDistance(a1,b1);
-					out.set(i,j,d);
-				} catch (StructureException e) {
-					e.printStackTrace();
-					out.set(i,j,999);
-				}
+
+				double d = Calc.getDistance(a1,b1);
+				out.set(i,j,d);
+
 			}
 		}
 		return out;
@@ -357,7 +354,7 @@ public class AlternativeAlignment implements Serializable{
 			Atom[] ca1,
 			Atom[]ca2,
 			StrucAligParameters params
-	){
+			){
 
 		int rows = ca1.length;
 		int cols = ca2.length;
@@ -392,11 +389,9 @@ public class AlternativeAlignment implements Serializable{
 
 				Atom b1 = ca2[j];
 				double d = 999;
-				try {
-					d = Calc.getDistance(a1,b1);
-				} catch (StructureException e) {
-					e.printStackTrace();
-				}
+
+				d = Calc.getDistance(a1,b1);
+
 
 				AligMatEl e = new AligMatEl();
 				if (d > co) {
@@ -866,7 +861,6 @@ public class AlternativeAlignment implements Serializable{
 		Structure newpdb = new StructureImpl();
 		newpdb.setPDBCode("Java");
 		newpdb.setName("Aligned with BioJava");
-		newpdb.setNmr(true);
 
 
 		newpdb.addModel(s1.getChains(0));

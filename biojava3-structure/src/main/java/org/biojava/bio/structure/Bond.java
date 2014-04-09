@@ -151,11 +151,9 @@ public class Bond {
 	 * @return the distance between the two atoms of this bond.
 	 */
 	public double getLength() {
-		try {
-			return Calc.getDistance(atomA, atomB);
-		} catch (StructureException e) {
-			return -1; // this will never happen.
-		}
+
+		return Calc.getDistance(atomA, atomB);
+
 	}
 
 	@Override

@@ -116,8 +116,8 @@ public class AFPChainFlipper {
 		n.setTotalRmsdIni(o.getTotalRmsdIni());
 		n.setTotalRmsdOpt(o.getTotalRmsdOpt());
 		n.setTMScore(o.getTMScore());
-		
-		
+
+
 		// change direction of the Matrix and shift!
 		// 
 		Matrix[] maxO  = o.getBlockRotationMatrix();
@@ -134,19 +134,17 @@ public class AFPChainFlipper {
 				// alignment too short probably
 				continue;
 			}
-			try {
-				Matrix mnew = m ;
-				Atom a = shiftO[i];
-				
-				maxN[i] = mnew.transpose();
 
-				shiftN[i] =  Calc.invert(a);
-				
-				 Calc.rotate(shiftN[i],maxN[i]);
+			Matrix mnew = m ;
+			Atom a = shiftO[i];
 
-			} catch (StructureException e){
-				e.printStackTrace();
-			}
+			maxN[i] = mnew.transpose();
+
+			shiftN[i] =  Calc.invert(a);
+
+			Calc.rotate(shiftN[i],maxN[i]);
+
+
 		}
 
 		n.setBlockRotationMatrix(maxN);

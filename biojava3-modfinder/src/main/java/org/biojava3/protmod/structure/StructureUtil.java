@@ -87,11 +87,8 @@ public final class StructureUtil {
 	 */
 	public static double getAtomDistance(Atom atom1, Atom atom2) {
 		double distance;
-		try {
-			distance = Calc.getDistance(atom1, atom2);
-		} catch (StructureException e) {
-			throw new AssertionError();
-		}
+
+		distance = Calc.getDistance(atom1, atom2);
 
 		return distance;
 	}
@@ -122,11 +119,9 @@ public final class StructureUtil {
 
 		for (Atom[] linkage : linkages) {
 			double distance;
-			try {
-				distance = Calc.getDistance(linkage[0], linkage[1]);
-			} catch (StructureException e) {
-				throw new AssertionError();
-			}
+
+			distance = Calc.getDistance(linkage[0], linkage[1]);
+
 
 			if (distance < minDistance) {
 				minDistance = distance;
@@ -230,17 +225,16 @@ public final class StructureUtil {
 		Atom[] ret = new Atom[2];
 		double distance;
 
-		try {
-			ret[0] = group1.getAtom(nameOfAtomOnGroup1);
-			ret[1] = group2.getAtom(nameOfAtomOnGroup2);
-			distance = Calc.getDistance(ret[0], ret[1]);
-		} catch (StructureException e) {
-			return null;
-		}
 
+		ret[0] = group1.getAtom(nameOfAtomOnGroup1);
+		ret[1] = group2.getAtom(nameOfAtomOnGroup2);
 		if (ret[0]==null || ret[1]==null) {
 			return null;
 		}
+
+		distance = Calc.getDistance(ret[0], ret[1]);
+
+
 
 		float radiusOfAtom1 = ret[0].getElement().getCovalentRadius();
 		float radiusOfAtom2 = ret[1].getElement().getCovalentRadius();

@@ -2,133 +2,117 @@ package org.biojava.bio.structure;
 
 import java.io.Serializable;
 
+import org.biojava.bio.structure.xtal.CrystalCell;
+import org.biojava.bio.structure.xtal.SpaceGroup;
+
 /**
- * A class to hold crystallographic information about a PDB structure. The information
- * is only meaningful if the space group is defined. Use the method isCrystallographic()
- * to check if the associated PDB structure is of crystallographic origin. For example, these
- * values are meaningless for NMR structures.
+ * A class to hold crystallographic information about a PDB structure.
  * 
  * @author Peter Rose
- *
+ * @author duarte_j
  */
 public class PDBCrystallographicInfo implements Serializable {
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = -7949886749566087669L;
-	private float a = 1.0f;
-	private float b = 1.0f;
-	private float c = 1.0f;
-	private float alpha = 90.0f;
-	private float beta = 90.0f;
-	private float gamma = 90.0f;
-	private String spaceGroup = "";
+	
+	private CrystalCell cell;
+	private SpaceGroup sg;
+	
 	private int z;
+	
+	public PDBCrystallographicInfo() {
+		
+	}
 	
 	/**
 	 * @return the unit cell parameter a
 	 */
 	public float getA() {
-		return a;
+		return (float)cell.getA();
 	}
-	/**
-	 * @param a the unit cell parameter a to set
-	 */
-	public void setA(float a) {
-		this.a = a;
-	}
+	
 	/**
 	 * @return the unit cell parameter b
 	 */
 	public float getB() {
-		return b;
+		return (float)cell.getB();
 	}
-	/**
-	 * @param b the unit cell parameter b to set
-	 */
-	public void setB(float b) {
-		this.b = b;
-	}
+	
 	/**
 	 * @return the unit cell parameter c
 	 */
 	public float getC() {
-		return c;
+		return (float)cell.getC();
 	}
-	/**
-	 * @param c the unit cell parameter c to set
-	 */
-	public void setC(float c) {
-		this.c = c;
-	}
+	
 	/**
 	 * @return the unit cell parameter alpha (degrees)
 	 */
 	public float getAlpha() {
-		return alpha;
+		return (float)cell.getAlpha();
 	}
-	/**
-	 * @param alpha the unit cell parameter alpha to set
-	 */
-	public void setAlpha(float alpha) {
-		this.alpha = alpha;
-	}
+	
 	/**
 	 * @return the unit cell parameter beta (degrees)
 	 */
 	public float getBeta() {
-		return beta;
+		return (float)cell.getBeta();
 	}
-	/**
-	 * @param beta the unit cell parameter beta to set
-	 */
-	public void setBeta(float beta) {
-		this.beta = beta;
-	}
+	
 	/**
 	 * @return the unit cell parameter gamma (degrees)
 	 */
 	public float getGamma() {
-		return gamma;
+		return (float)cell.getGamma();
 	}
+	
 	/**
-	 * @param gamma the unit cell parameter gamma to set
+	 * Return the crystal cell
+	 * @return
 	 */
-	public void setGamma(float gamma) {
-		this.gamma = gamma;
+	public CrystalCell getCrystalCell() {
+		return cell;
 	}
+	
 	/**
+	 * Set the crystal cell
+	 * @param cell
+	 */
+	public void setCrystalCell(CrystalCell cell) {
+		this.cell = cell;
+	}
+	
+	/**
+	 * Get the SpaceGroup
 	 * @return the spaceGroup
 	 */
-	public String getSpaceGroup() {
-		return spaceGroup;
+	public SpaceGroup getSpaceGroup() {
+		return sg;
 	}
+	
 	/**
-	 * @param spaceGroup the spaceGroup to set
+	 * Set the SpaceGroup
+	 * @param spaceGroup
 	 */
-	public void setSpaceGroup(String spaceGroup) {
-		this.spaceGroup = spaceGroup;
+	public void setSpaceGroup(SpaceGroup spaceGroup) {
+		this.sg = spaceGroup;
 	}
+	
 	/**
+	 * Return the z, i.e. the multiplicity of the space group times the number of chains in asymmetric unit
 	 * @return the z
 	 */
-	public int getZ() {
+	public int getZ() {		
 		return z;
 	}
+	
 	/**
-	 * @param z the z to set
+	 * Set the z 
+	 * @param z
 	 */
 	public void setZ(int z) {
 		this.z = z;
 	}
-	/**
-	 * Returns true if structure was solved by a crystallographic method, i.e.,
-	 * the values returned by this class are meaningful.
-	 * @return the crystallographic
-	 */
-	public boolean isCrystallographic() {
-		return spaceGroup.length() > 0;
-	}
-
+	
 	
 }

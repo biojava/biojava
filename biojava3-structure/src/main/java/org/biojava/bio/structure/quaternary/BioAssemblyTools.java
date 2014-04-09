@@ -318,7 +318,6 @@ public class BioAssemblyTools {
 	 */
 	public static Structure getReducedCAStructure(Structure orig){
 		Structure s = new StructureImpl();
-		s.setHeader(orig.getHeader());
 		s.setPDBHeader(orig.getPDBHeader());
 		for ( Chain c : orig.getChains()){
 			

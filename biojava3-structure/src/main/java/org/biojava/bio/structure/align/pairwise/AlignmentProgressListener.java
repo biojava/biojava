@@ -40,127 +40,125 @@ import org.biojava.bio.structure.jama.Matrix;
 public class AlignmentProgressListener
 {
 
-   String n1;
-   String n2;
-   int l1;
-   int l2;
+	String n1;
+	String n2;
+	int l1;
+	int l2;
 
-   Atom[] ca1 ;
-   Atom[] ca2;
+	Atom[] ca1 ;
+	Atom[] ca2;
 
-   public AlignmentProgressListener(){
+	public AlignmentProgressListener(){
 
-   }
+	}
 
-   public void startingAlignment(String name1, Atom[] ca1, String name2, Atom[] ca2){
-      n1 = name1;
-      n2 = name2;
-      l1 = ca1.length;
-      l2 = ca2.length;
-      this.ca1 = ca1;
-      this.ca2 = ca2;
-   }
+	public void startingAlignment(String name1, Atom[] ca1, String name2, Atom[] ca2){
+		n1 = name1;
+		n2 = name2;
+		l1 = ca1.length;
+		l2 = ca2.length;
+		this.ca1 = ca1;
+		this.ca2 = ca2;
+	}
 
-   public void calculatedFragmentPairs(List<FragmentPair> fragments){
-      System.out.println("got: " + fragments.size() + " fragments");
+	public void calculatedFragmentPairs(List<FragmentPair> fragments){
+		System.out.println("got: " + fragments.size() + " fragments");
 
-      String title = "Initial FragmentPairs for:" +  n1 + "("+l1+")"+ " vs. " + n2 + " ("+l2+")";
-     // ScaleableMatrixPanel panel = new ScaleableMatrixPanel();
-
-
-      Matrix m = new Matrix(l1,l2,99);
-
-      for (FragmentPair p : fragments){
-         for (FragmentPair pair2: fragments){
+		String title = "Initial FragmentPairs for:" +  n1 + "("+l1+")"+ " vs. " + n2 + " ("+l2+")";
+		// ScaleableMatrixPanel panel = new ScaleableMatrixPanel();
 
 
-            //Atom v2 = tmpfidx[j].getCenter2();
-            Atom v1 = p.getUnitv();
-            Atom v2 = pair2.getUnitv();
-            //System.out.println("v1: "+v1);
-            //System.out.println("v2: "+v2);
-            try{
-               double dist = Calc.getDistance(v1,v2);
-               for (int i =0 ; i < p.getLength(); i++){
-                  int p1 = p.getPos1();
-                  int p2 = p.getPos2();
-                  m.set(p1+i,p2+i,dist);
-               }
-               for (int i =0 ; i < pair2.getLength(); i++){
-                  int p1 = pair2.getPos1();
-                  int p2 = pair2.getPos2();
-                  m.set(p1+i,p2+i,dist);
-               }
+		Matrix m = new Matrix(l1,l2,99);
 
-            } catch (StructureException e){
-               e.printStackTrace();
-            }
-         }
+		for (FragmentPair p : fragments){
+			for (FragmentPair pair2: fragments){
 
-      }
-    //  panel.setMatrix(m);
-      JFrame frame = new JFrame();
 
-      frame.setTitle(title);
+				//Atom v2 = tmpfidx[j].getCenter2();
+				Atom v1 = p.getUnitv();
+				Atom v2 = pair2.getUnitv();
+				//System.out.println("v1: "+v1);
+				//System.out.println("v2: "+v2);
 
-      frame.addWindowListener(new WindowAdapter(){
-         public void windowClosing(WindowEvent e){
-            JFrame f = (JFrame) e.getSource();
-            f.setVisible(false);
-            f.dispose();
-         }
+				double dist = Calc.getDistance(v1,v2);
+				for (int i =0 ; i < p.getLength(); i++){
+					int p1 = p.getPos1();
+					int p2 = p.getPos2();
+					m.set(p1+i,p2+i,dist);
+				}
+				for (int i =0 ; i < pair2.getLength(); i++){
+					int p1 = pair2.getPos1();
+					int p2 = pair2.getPos2();
+					m.set(p1+i,p2+i,dist);
+				}
+
+
+			}
+
+		}
+		//  panel.setMatrix(m);
+		JFrame frame = new JFrame();
+
+		frame.setTitle(title);
+
+		frame.addWindowListener(new WindowAdapter(){
+			public void windowClosing(WindowEvent e){
+				JFrame f = (JFrame) e.getSource();
+				f.setVisible(false);
+				f.dispose();
+			}
 
 
 
-      });
-      //frame.getContentPane().add(panel);
-      frame.pack();
-      frame.setVisible(true);
+		});
+		//frame.getContentPane().add(panel);
+		frame.pack();
+		frame.setVisible(true);
 
 
 
-   }
+	}
 
 
-   public void jointFragments(JointFragments[] fragments){
-      System.out.println("numberof Joint fragments: " + fragments.length);
+	public void jointFragments(JointFragments[] fragments){
+		System.out.println("numberof Joint fragments: " + fragments.length);
 
-      String title = "JointFragment for:" +  n1 + "("+l1+")"+ " vs. " + n2 + " ("+l2+")";
-     // ScaleableMatrixPanel panel = new ScaleableMatrixPanel();
+		String title = "JointFragment for:" +  n1 + "("+l1+")"+ " vs. " + n2 + " ("+l2+")";
+		// ScaleableMatrixPanel panel = new ScaleableMatrixPanel();
 
-      Matrix m = new Matrix(l1,l2,99);
+		Matrix m = new Matrix(l1,l2,99);
 
-      for (JointFragments p : fragments){
-         for (int[] idx : p.getIdxlist() ){
-            m.set(idx[0],idx[1],p.getRms());
-         }
-      }
-     // panel.setMatrix(m);
-      JFrame frame = new JFrame();
+		for (JointFragments p : fragments){
+			for (int[] idx : p.getIdxlist() ){
+				m.set(idx[0],idx[1],p.getRms());
+			}
+		}
+		// panel.setMatrix(m);
+		JFrame frame = new JFrame();
 
-      frame.setTitle(title);
+		frame.setTitle(title);
 
-      frame.addWindowListener(new WindowAdapter(){
-         public void windowClosing(WindowEvent e){
-            JFrame f = (JFrame) e.getSource();
-            f.setVisible(false);
-            f.dispose();
-         }
+		frame.addWindowListener(new WindowAdapter(){
+			public void windowClosing(WindowEvent e){
+				JFrame f = (JFrame) e.getSource();
+				f.setVisible(false);
+				f.dispose();
+			}
 
 
 
-      });
-     // frame.getContentPane().add(panel);
-      frame.pack();
-      frame.setVisible(true);
+		});
+		// frame.getContentPane().add(panel);
+		frame.pack();
+		frame.setVisible(true);
 
 
 
 
-      for (JointFragments f : fragments){
-         System.out.println(f);
-      }
-   }
+		for (JointFragments f : fragments){
+			System.out.println(f);
+		}
+	}
 }
 
 

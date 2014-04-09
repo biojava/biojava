@@ -7,12 +7,9 @@ package org.biojava.bio.structure;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import junit.framework.TestCase;
 
-import org.biojava.bio.structure.io.PDBParseException;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -34,81 +31,79 @@ public class SiteTest extends TestCase {
     private static List<Group> bindingSiteGroups;
 
     public SiteTest() {
-        try {
-            // sites CAT and AC1 from PDB entry 1a4w
-            //SITE     1 CAT  3 HIS H  57  ASP H 102  SER H 195
-            //SITE     1 AC1  6 ARG H 221A LYS H 224  HOH H 403  HOH H 460
-            //SITE     2 AC1  6 HOH H 464  HOH H 497
-            //groups for site CAT
-            Chain chain = new ChainImpl();
-            chain.setChainID("H");
-            Group his57 = new AminoAcidImpl();
-//            his57.setPDBCode("57");
-            his57.setResidueNumber("H", 57, ' ');
-            his57.setPDBName("HIS");
-            his57.setChain(chain);
-            Group asp102 = new AminoAcidImpl();
-            asp102.setResidueNumber("H", 102, ' ');
-            asp102.setPDBName("ASP");
-            asp102.setChain(chain);
-            Group ser195 = new AminoAcidImpl();
-            ser195.setResidueNumber("H", 195, ' ');
-            ser195.setPDBName("SER");
-            ser195.setChain(chain);
-            List<Group> catSiteGroups = new ArrayList<Group>();
-            catSiteGroups.add(his57);
-            catSiteGroups.add(asp102);
-            catSiteGroups.add(ser195);
-            //make the catalytic site CAT
-            catSite = new Site();
-            catSite.setSiteID("CAT");
-            catSite.setGroups(catSiteGroups);
-            catSite.setEvCode("UNKNOWN");
-            catSite.setDescription("ACTIVE SITE");
-            //groups for site AC1
-            Group arg221a = new AminoAcidImpl();
-            arg221a.setResidueNumber("H", 221, 'A');
-            arg221a.setPDBName("ARG");
-            arg221a.setChain(chain);
-            Group lys224 = new AminoAcidImpl();
-            lys224.setResidueNumber("H", 224, ' ');
-            lys224.setPDBName("LYS");
-            lys224.setChain(chain);
-            Group hoh403 = new HetatomImpl();
-            hoh403.setResidueNumber("H", 403, ' ');
-            hoh403.setPDBName("HOH");
-            hoh403.setChain(chain);
-            Group hoh460 = new HetatomImpl();
-            hoh460.setResidueNumber("H", 460, ' ');
-            hoh460.setPDBName("HOH");
-            hoh460.setChain(chain);
-            Group hoh464 = new HetatomImpl();
-            hoh464.setResidueNumber("H", 464, ' ');
-            hoh464.setPDBName("HOH");
-            hoh464.setChain(chain);
-            Group hoh497 = new HetatomImpl();
-            hoh497.setResidueNumber("H", 497, ' ');
-            hoh497.setPDBName("HOH");
-            hoh497.setChain(chain);
-            
-            bindingSiteGroups = new ArrayList<Group>();
-            
-            bindingSiteGroups.add(arg221a);
-            bindingSiteGroups.add(lys224);
-            bindingSiteGroups.add(hoh403);
-            bindingSiteGroups.add(hoh460);
-            bindingSiteGroups.add(hoh464);
-            bindingSiteGroups.add(hoh497);
-            //make the binding site AC1
-            bindingSite = new Site();
-            bindingSite.setSiteID("AC1");
-            bindingSite.setGroups(bindingSiteGroups);
-            bindingSite.setEvCode("SOFTWARE");
-            bindingSite.setDescription("BINDING SITE FOR RESIDUE NA H 541");
 
-        } catch (PDBParseException ex) {
-            Logger.getLogger(SiteTest.class.getName()).log(Level.SEVERE, null, ex);
-        }
+    	// sites CAT and AC1 from PDB entry 1a4w
+    	//SITE     1 CAT  3 HIS H  57  ASP H 102  SER H 195
+    	//SITE     1 AC1  6 ARG H 221A LYS H 224  HOH H 403  HOH H 460
+    	//SITE     2 AC1  6 HOH H 464  HOH H 497
+    	//groups for site CAT
+    	Chain chain = new ChainImpl();
+    	chain.setChainID("H");
+    	Group his57 = new AminoAcidImpl();
+    	//            his57.setPDBCode("57");
+    	his57.setResidueNumber("H", 57, ' ');
+    	his57.setPDBName("HIS");
+    	his57.setChain(chain);
+    	Group asp102 = new AminoAcidImpl();
+    	asp102.setResidueNumber("H", 102, ' ');
+    	asp102.setPDBName("ASP");
+    	asp102.setChain(chain);
+    	Group ser195 = new AminoAcidImpl();
+    	ser195.setResidueNumber("H", 195, ' ');
+    	ser195.setPDBName("SER");
+    	ser195.setChain(chain);
+    	List<Group> catSiteGroups = new ArrayList<Group>();
+    	catSiteGroups.add(his57);
+    	catSiteGroups.add(asp102);
+    	catSiteGroups.add(ser195);
+    	//make the catalytic site CAT
+    	catSite = new Site();
+    	catSite.setSiteID("CAT");
+    	catSite.setGroups(catSiteGroups);
+    	catSite.setEvCode("UNKNOWN");
+    	catSite.setDescription("ACTIVE SITE");
+    	//groups for site AC1
+    	Group arg221a = new AminoAcidImpl();
+    	arg221a.setResidueNumber("H", 221, 'A');
+    	arg221a.setPDBName("ARG");
+    	arg221a.setChain(chain);
+    	Group lys224 = new AminoAcidImpl();
+    	lys224.setResidueNumber("H", 224, ' ');
+    	lys224.setPDBName("LYS");
+    	lys224.setChain(chain);
+    	Group hoh403 = new HetatomImpl();
+    	hoh403.setResidueNumber("H", 403, ' ');
+    	hoh403.setPDBName("HOH");
+    	hoh403.setChain(chain);
+    	Group hoh460 = new HetatomImpl();
+    	hoh460.setResidueNumber("H", 460, ' ');
+    	hoh460.setPDBName("HOH");
+    	hoh460.setChain(chain);
+    	Group hoh464 = new HetatomImpl();
+    	hoh464.setResidueNumber("H", 464, ' ');
+    	hoh464.setPDBName("HOH");
+    	hoh464.setChain(chain);
+    	Group hoh497 = new HetatomImpl();
+    	hoh497.setResidueNumber("H", 497, ' ');
+    	hoh497.setPDBName("HOH");
+    	hoh497.setChain(chain);
+
+    	bindingSiteGroups = new ArrayList<Group>();
+
+    	bindingSiteGroups.add(arg221a);
+    	bindingSiteGroups.add(lys224);
+    	bindingSiteGroups.add(hoh403);
+    	bindingSiteGroups.add(hoh460);
+    	bindingSiteGroups.add(hoh464);
+    	bindingSiteGroups.add(hoh497);
+    	//make the binding site AC1
+    	bindingSite = new Site();
+    	bindingSite.setSiteID("AC1");
+    	bindingSite.setGroups(bindingSiteGroups);
+    	bindingSite.setEvCode("SOFTWARE");
+    	bindingSite.setDescription("BINDING SITE FOR RESIDUE NA H 541");
+
+
     }
 
     @BeforeClass

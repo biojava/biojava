@@ -1247,10 +1247,12 @@ nBestTrace=nTrace;
 		String atomName = StructureTools.caAtomName;
 
 		Atom a = null;
-		try {
-			a= parent.getAtom(atomName);
+
+		a= parent.getAtom(atomName);
+		if ( a != null){
 			strBuf[i]=a;
-		} catch (StructureException e){
+		}
+		else {
 			// probably a GLY and no CB was found...
 			//e.printStackTrace();
 		}
@@ -1713,7 +1715,7 @@ nBestTrace=nTrace;
 						tracebackMatrix2[i][j] = -1;
 
 					}
-									
+
 					// do only for rows/columns which are not the last:
 					if(j+1<nSeq2)
 						for(k=i+2; k<nSeq1; k++) {
@@ -1733,9 +1735,9 @@ nBestTrace=nTrace;
 
 							}
 						}
-				
+
 					maxSum+= mat[i][j];
-				
+
 
 					sum_brk=(isGlobal1?(-gapI-gapE*(nSeq1-1-i)):0.0)+(isGlobal2?(-gapI-gapE*(nSeq2-1-j)):0.0);
 					if(maxSum<sum_brk) 
@@ -1756,7 +1758,7 @@ nBestTrace=nTrace;
 
 		// look for the highest score in mat[i][j]
 		// TODO: move this up ??
-		
+
 		for(i=0; i<nSeq1; i++)
 			for(j=0; j<nSeq2; j++)
 			{
@@ -1839,19 +1841,19 @@ nBestTrace=nTrace;
 					System.out.println( "  !! FOUND DOUBLE GAP AT: "+  alignmentPositionOrLength + " | "+ i+ " " + iMax + " " + j + " " + jMax + " " + String.format("%f", mat[i][j]) + " " +   getTraceBack(tracebackMatrix1,tracebackMatrix2,i,j));
 					doubleGap = true;
 
-//										if ( i != iMax){
-//											int pos = align_se1[ alignmentPositionOrLength -1];
-//											align_se1[ alignmentPositionOrLength -1] = -1;
-//											align_se1[ alignmentPositionOrLength ] = pos;
-//											align_se2[ alignmentPositionOrLength ] = -1;
-//										} else {
-//											int pos = align_se2[ alignmentPositionOrLength -1];
-//											align_se2[ alignmentPositionOrLength -1] = -1;
-//											align_se2[ alignmentPositionOrLength ] = pos;
-//											align_se1[ alignmentPositionOrLength ] = -1;
-//										}
-//										
-//										alignmentPositionOrLength++;
+					//										if ( i != iMax){
+					//											int pos = align_se1[ alignmentPositionOrLength -1];
+					//											align_se1[ alignmentPositionOrLength -1] = -1;
+					//											align_se1[ alignmentPositionOrLength ] = pos;
+					//											align_se2[ alignmentPositionOrLength ] = -1;
+					//										} else {
+					//											int pos = align_se2[ alignmentPositionOrLength -1];
+					//											align_se2[ alignmentPositionOrLength -1] = -1;
+					//											align_se2[ alignmentPositionOrLength ] = pos;
+					//											align_se1[ alignmentPositionOrLength ] = -1;
+					//										}
+					//										
+					//										alignmentPositionOrLength++;
 				}
 			}
 
@@ -1905,22 +1907,22 @@ nBestTrace=nTrace;
 
 	private String getTraceBack(int[][] tracebackMatrix1,
 			int[][] tracebackMatrix2, int i, int j) {
-		
-		
+
+
 		if ( tracebackMatrix1[i][j] == -1 )
 			return "";
 		if ( tracebackMatrix2[i][j] == -1 )
 			return "";
-		
+
 		int t1 = tracebackMatrix1[i][j];
 		int t2 = tracebackMatrix2[i][j];
-		
-		
+
+
 		String s = "[ "+t1+","+t2+"] ";
-		
+
 		return s + getTraceBack(tracebackMatrix1, tracebackMatrix2, t1, t2);
-		
-		
+
+
 	}
 
 	private void rot_mol(Atom[] caA, Atom[] caB, int nse2, Matrix m , Atom shift) throws StructureException{

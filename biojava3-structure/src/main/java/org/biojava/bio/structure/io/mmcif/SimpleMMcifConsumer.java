@@ -51,11 +51,12 @@ import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureImpl;
 import org.biojava.bio.structure.StructureTools;
 import org.biojava.bio.structure.UnknownPdbAminoAcidException;
+import org.biojava.bio.structure.io.BondMaker;
 import org.biojava.bio.structure.io.FileParsingParameters;
-import org.biojava.bio.structure.io.PDBParseException;
 import org.biojava.bio.structure.io.SeqRes2AtomAligner;
 import org.biojava.bio.structure.io.mmcif.model.AtomSite;
 import org.biojava.bio.structure.io.mmcif.model.AuditAuthor;
+import org.biojava.bio.structure.io.mmcif.model.Cell;
 import org.biojava.bio.structure.io.mmcif.model.ChemComp;
 import org.biojava.bio.structure.io.mmcif.model.ChemCompAtom;
 import org.biojava.bio.structure.io.mmcif.model.ChemCompBond;
@@ -83,8 +84,12 @@ import org.biojava.bio.structure.io.mmcif.model.StructConn;
 import org.biojava.bio.structure.io.mmcif.model.StructKeywords;
 import org.biojava.bio.structure.io.mmcif.model.StructRef;
 import org.biojava.bio.structure.io.mmcif.model.StructRefSeq;
+import org.biojava.bio.structure.io.mmcif.model.Symmetry;
 import org.biojava.bio.structure.quaternary.BiologicalAssemblyBuilder;
 import org.biojava.bio.structure.quaternary.BiologicalAssemblyTransformation;
+import org.biojava.bio.structure.xtal.CrystalCell;
+import org.biojava.bio.structure.xtal.SpaceGroup;
+import org.biojava.bio.structure.xtal.SymoplibParser;
 
 /** A MMcifConsumer implementation that build a in-memory representation of the
  * content of a mmcif file as a BioJava Structure object.
@@ -155,18 +160,14 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		return null;
 	}
 
-	@SuppressWarnings("deprecation")
 	public void newStructKeywords(StructKeywords kw){
 		PDBHeader header = structure.getPDBHeader();
 		if ( header == null)
 			header = new PDBHeader();
 		header.setDescription(kw.getPdbx_keywords());
 		header.setClassification(kw.getPdbx_keywords());
-		Map<String, Object> h = structure.getHeader();
-		h.put("classification", kw.getPdbx_keywords());      
 	}
 
-	@SuppressWarnings("deprecation")
 	public void setStruct(Struct struct) {
 		//System.out.println(struct);
 
@@ -181,9 +182,6 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		//header.setDescription(struct.getPdbx_descriptor());
 		//System.out.println(struct.getPdbx_model_details());
 
-		Map<String, Object> h = structure.getHeader();
-		h.put("title", struct.getTitle());
-		//h.put("classification", struct.getPdbx_descriptor());
 
 
 		structure.setPDBHeader(header);
@@ -386,7 +384,6 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 			}
 
 			// we came to the beginning of a new NMR model
-			structure.setNmr(true);
 			structure.addModel(current_model);
 			current_model = new ArrayList<Chain>();
 			current_chain = null;
@@ -444,26 +441,15 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 
 			current_group = getNewGroup(recordName,aminoCode1,seq_id, groupCode3);
 
-			//current_group.setPDBCode(residueNumber);
-
 			current_group.setResidueNumber(residueNumber);
-			try { 
-				current_group.setPDBName(groupCode3);
-			} catch (PDBParseException e){
-				System.err.println(e.getMessage());
-			}
+			current_group.setPDBName(groupCode3);
 		}
 
 		if ( startOfNewChain){
 			current_group = getNewGroup(recordName,aminoCode1,seq_id, groupCode3);
 
-			// current_group.setPDBCode(residueNumber);
 			current_group.setResidueNumber(residueNumber);
-			try {
-				current_group.setPDBName(groupCode3);
-			} catch (PDBParseException e){
-				e.printStackTrace();
-			}
+			current_group.setPDBName(groupCode3);
 		}
 
 		Group altGroup = null;
@@ -483,12 +469,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 			current_chain.addGroup(current_group);
 			current_group.trimToSize();
 			current_group = getNewGroup(recordName,aminoCode1,seq_id,groupCode3);
-			//current_group.setPDBCode(pdbCode);
-			try {
-				current_group.setPDBName(groupCode3);
-			} catch (PDBParseException e){
-				e.printStackTrace();
-			}
+			current_group.setPDBName(groupCode3);
 			current_group.setResidueNumber(residueNumber);
 
 
@@ -632,22 +613,24 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		// build it up.
 
 		if ( groupCode3.equals(current_group.getPDBName())) {
-			if ( current_group.getAtoms().size() == 0)
+			if ( current_group.getAtoms().size() == 0) {
+				//System.out.println("current group is empty " + current_group + " " + altLoc);
 				return current_group;
-			//System.out.println("cloning current group");
+			}
+			//System.out.println("cloning current group " + current_group + " " + current_group.getAtoms().get(0).getAltLoc() + " altLoc " + altLoc);
 			Group altLocG = (Group) current_group.clone();
+			// drop atoms from cloned group...
+			// https://redmine.open-bio.org/issues/3307
+			altLocG.setAtoms(new ArrayList<Atom>());
 			current_group.addAltLoc(altLocG);
 			return altLocG;	
 		}
 
-
+		//	System.out.println("new  group " + recordName + " " + aminoCode1 + " " +groupCode3);
+		//String recordName,Character aminoCode1, long seq_id,String groupCode3) {
 		Group altLocG = getNewGroup(recordName,aminoCode1,seq_id,groupCode3);
 
-		try {
-			altLocG.setPDBName(groupCode3);
-		} catch (PDBParseException e) {
-			e.printStackTrace();
-		}
+		altLocG.setPDBName(groupCode3);
 		altLocG.setResidueNumber(current_group.getResidueNumber());
 		current_group.addAltLoc(altLocG);
 		return altLocG;
@@ -831,7 +814,8 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 
 		}
 
-
+		
+       addBonds();
 		//TODO: add support for these:
 
 		//structure.setConnections(connects);
@@ -914,9 +898,10 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 
 	}
 
-
-
-
+   private void addBonds() {
+	   BondMaker maker = new BondMaker(structure);
+	   maker.makeBonds();	
+   }
 
 
 	private int getInternalNr(Group atomG) {
@@ -994,12 +979,10 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		return structure;
 	}
 
-	@SuppressWarnings("deprecation")
 	public void newDatabasePDBrev(DatabasePDBrev dbrev) {
 		//System.out.println("got a database revision:" + dbrev);
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd",Locale.US);
 		PDBHeader header = structure.getPDBHeader();
-		Map<String, Object> h = structure.getHeader();
 
 		if ( header == null) {
 			header = new PDBHeader();
@@ -1015,11 +998,9 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 				Date dep = dateFormat.parse(date);
 				//System.out.println(dep);
 				header.setDepDate(dep);
-				h.put("depDate", date);
 				Date mod = dateFormat.parse(dbrev.getDate());
 
 				header.setModDate(mod);
-				h.put("revDate",dbrev.getDate());
 
 			} catch (ParseException e){
 				e.printStackTrace();
@@ -1029,7 +1010,6 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 
 				Date mod = dateFormat.parse(dbrev.getDate());
 				header.setModDate(mod);
-				h.put("revDate",dbrev.getDate());
 
 			} catch (ParseException e){
 				e.printStackTrace();
@@ -1039,7 +1019,6 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		structure.setPDBHeader(header);
 	}
 
-	@SuppressWarnings("deprecation")
 	public void newDatabasePDBremark(DatabasePDBremark remark) {
 		//System.out.println(remark);
 		String id = remark.getId();
@@ -1058,17 +1037,12 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 					res = Float.parseFloat(resolution);
 
 				} catch (NumberFormatException e) {
-					System.err.println(e.getMessage());
-					System.err.println("could not parse resolution from line and ignoring it " + line);
+					logger.warning("could not parse resolution from line and ignoring it " + line);
 					return ;
 
 
 				}
 				// support for old style header
-
-				Map<String,Object> header = structure.getHeader();
-				header.put("resolution",new Float(res));
-				structure.setHeader(header);
 
 				PDBHeader pdbHeader = structure.getPDBHeader();
 				pdbHeader.setResolution(res);
@@ -1078,17 +1052,22 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		}
 	}
 
-	@SuppressWarnings("deprecation")
 	public void newRefine(Refine r){
 		// copy the resolution to header
 		PDBHeader pdbHeader = structure.getPDBHeader();
+		// in very rare cases (for instance hybrid methods x-ray + neutron diffraction, e.g. 3ins)
+		// there are 2 resolution values, one for each method
+		// we take the first one found so that behaviour is like in PDB file parsing
+		if (pdbHeader.getResolution()!=PDBHeader.DEFAULT_RESOLUTION) {
+			logger.fine("more than 1 resolution value present (last encountered is "+r.getLs_d_res_high()+
+					"), will use only the first one ("+String.format("%4.2f",pdbHeader.getResolution())+")");
+			return;
+		}
 		try {
 			pdbHeader.setResolution(Float.parseFloat(r.getLs_d_res_high()));
 		} catch (NumberFormatException e){
-			logger.warning("could not parse resolution from " + r.getLs_d_res_high() + " " + e.getMessage());
+			logger.fine("could not parse resolution from " + r.getLs_d_res_high() + " " + e.getMessage());
 		}
-		Map<String,Object> header = structure.getHeader();
-		header.put("resolution",pdbHeader.getResolution());
 	}
 
 
@@ -1128,19 +1107,60 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		}
 	}
 
-	@SuppressWarnings("deprecation")
 	public void newExptl(Exptl exptl) {
 
 		PDBHeader pdbHeader = structure.getPDBHeader();
 		String method = exptl.getMethod();
-		String old = pdbHeader.getTechnique();
-		if ( (old != null) && (! old.equals(""))){
-			method = old+"; " + method;
-		}
-		pdbHeader.setTechnique(method);
-		Map<String,Object> header = structure.getHeader();
-		header.put("technique",method);
+		pdbHeader.setExperimentalTechnique(method);
 
+	}
+	
+	public void newCell(Cell cell) {
+		
+		try {
+			float a = Float.parseFloat(cell.getLength_a());
+			float b = Float.parseFloat(cell.getLength_b());
+			float c = Float.parseFloat(cell.getLength_c());
+			float alpha = Float.parseFloat(cell.getAngle_alpha());
+			float beta = Float.parseFloat(cell.getAngle_beta());
+			float gamma = Float.parseFloat(cell.getAngle_gamma());
+			// If the entry describes a structure determined by a technique other than X-ray crystallography,
+		    // cell is (sometimes!) a = b = c = 1.0, alpha = beta = gamma = 90 degrees
+			// if so we don't add and CrystalCell will be null
+			if (a == 1.0f && b == 1.0f && c == 1.0f && 
+	        		alpha == 90.0f && beta == 90.0f && gamma == 90.0f ) {
+	        	return;
+	        } 
+		
+			CrystalCell xtalCell = new CrystalCell(); 
+			structure.getPDBHeader().getCrystallographicInfo().setCrystalCell(xtalCell);
+			xtalCell.setA(a);
+			xtalCell.setB(b);
+			xtalCell.setC(c);
+			xtalCell.setAlpha(alpha);
+			xtalCell.setBeta(beta);
+			xtalCell.setGamma(gamma);
+			
+			
+			
+		} catch (NumberFormatException e){
+			structure.getPDBHeader().getCrystallographicInfo().setCrystalCell(null);
+			logger.fine("could not parse some cell parameters ("+e.getMessage()+"), ignoring _cell ");
+		}
+		try {
+			// if Z parsing fails it is not so important
+			structure.getPDBHeader().getCrystallographicInfo().setZ(Integer.parseInt(cell.getZ_PDB()));
+		} catch (NumberFormatException e) {
+			logger.fine("could not parse some the Z parameter from _cell ");
+		}
+	}
+	
+	public void newSymmetry(Symmetry symmetry) {
+        String spaceGroup = symmetry.getSpace_group_name_H_M();
+		SpaceGroup sg = SymoplibParser.getSpaceGroup(spaceGroup);
+        if (sg==null) logger.fine("Space group '"+spaceGroup+"' not recognised as a standard space group"); 
+
+		structure.getPDBHeader().getCrystallographicInfo().setSpaceGroup(sg); 
 	}
 
 	public void newStructRef(StructRef sref) {
@@ -1335,55 +1355,40 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		g.setRecordType(AminoAcid.SEQRESRECORD);
 
 		try {
-			g.setPDBName(epolseq.getMon_id());
+			
+			if (epolseq.getMon_id().length()==3){
+				g.setPDBName(epolseq.getMon_id());
 
-			Character code1 = StructureTools.convert_3code_1code(epolseq.getMon_id());
-			g.setAminoType(code1);
+				Character code1 = StructureTools.convert_3code_1code(epolseq.getMon_id());
+				g.setAminoType(code1);
 
-			g.setResidueNumber(ResidueNumber.fromString(epolseq.getNum()));
-			// ARGH at this stage we don;t know about insertion codes
-			// this has to be obtained from _pdbx_poly_seq_scheme
-			entityChain.addGroup(g);
+				g.setResidueNumber(ResidueNumber.fromString(epolseq.getNum()));
+				// ARGH at this stage we don;t know about insertion codes
+				// this has to be obtained from _pdbx_poly_seq_scheme
+				entityChain.addGroup(g);
 
-		}  catch (PDBParseException ex) {
-			if ( StructureTools.isNucleotide(epolseq.getMon_id())) {
+			} else if ( StructureTools.isNucleotide(epolseq.getMon_id())) {
 				// the group is actually a nucleotide group...
 				NucleotideImpl n = new NucleotideImpl();
 				n.setResidueNumber(ResidueNumber.fromString(epolseq.getNum()));
-				try {
-					n.setPDBName(epolseq.getMon_id());
-				} catch (PDBParseException pex){
-					pex.printStackTrace();
-				}
+				n.setPDBName(epolseq.getMon_id());
 				entityChain.addGroup(n);
-			}
-			else {
-				logger.warning(ex.getMessage() + " creating a hetatom called XXX ");
+			} else {				
 				HetatomImpl h = new HetatomImpl();
-				try {
-					h.setPDBName(epolseq.getMon_id());
-					//h.setAminoType('X');
-					h.setResidueNumber(ResidueNumber.fromString(epolseq.getNum()));
-					entityChain.addGroup(h);
-
-				} catch (PDBParseException exc) {
-					System.err.println("this is a helpless case and I am dropping group " + epolseq.getMon_id());
-				}
-				//ex.printStackTrace();
-			}
-		} catch (UnknownPdbAminoAcidException ex){
-			//logger.warning("no sure what to do with:" + epolseq.getMon_id()+ " " + ex.getMessage());
-			HetatomImpl h = new HetatomImpl();
-			try {
 				h.setPDBName(epolseq.getMon_id());
 				//h.setAminoType('X');
 				h.setResidueNumber(ResidueNumber.fromString(epolseq.getNum()));
 				entityChain.addGroup(h);
 
-			} catch (PDBParseException exc) {
-				System.err.println("this is a helpless case and I am dropping group " + epolseq.getMon_id() + " " + ex.getMessage());
 			}
-			//System.err.println(ex.getMessage());
+		} catch (UnknownPdbAminoAcidException ex){
+			//logger.warning("no sure what to do with:" + epolseq.getMon_id()+ " " + ex.getMessage());
+			HetatomImpl h = new HetatomImpl();
+			h.setPDBName(epolseq.getMon_id());
+			//h.setAminoType('X');
+			h.setResidueNumber(ResidueNumber.fromString(epolseq.getNum()));
+			entityChain.addGroup(h);
+
 		}
 	}
 

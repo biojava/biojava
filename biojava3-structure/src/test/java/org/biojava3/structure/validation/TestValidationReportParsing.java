@@ -94,11 +94,11 @@ public class TestValidationReportParsing {
 
 			Entry entry = validationReport.getEntry();
 			
-			System.out.println(pdbId + " " + entry.getPDBRevisionNumber() +  
-					"\t Rfree: " + entry.getDCCRfree() +
-					"\t Clashscore " + entry.getClashscore() + 
-					"\t % Ramachandran outliers: "  + entry.getPercentRamaOutliers() + 
-					"\t % RSRC outliers: " + entry.getPercentRSRZOutliers() );
+//			System.out.println(pdbId + " " + entry.getPDBRevisionNumber() +  
+//					"\t Rfree: " + entry.getDCCRfree() +
+//					"\t Clashscore " + entry.getClashscore() + 
+//					"\t % Ramachandran outliers: "  + entry.getPercentRamaOutliers() + 
+//					"\t % RSRC outliers: " + entry.getPercentRSRZOutliers() );
 			
  			
 		} catch (Exception e){

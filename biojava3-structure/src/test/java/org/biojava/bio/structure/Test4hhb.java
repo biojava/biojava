@@ -104,6 +104,10 @@ public class Test4hhb  extends TestCase {
 			Chain c2 = structure.getChain(i);
 			testEqualChains(c1, c2);
 		}
+		
+		// test crystallographic info parses correctly
+		testCrystallographicInfo(structure, structure2);
+		
 	}
 
 
@@ -168,6 +172,20 @@ public class Test4hhb  extends TestCase {
 		assertEquals("length of atom "   + a.getChainID() + " and "+b.getChainID()+" should be same. " , a.getAtomGroups(GroupType.AMINOACID).size(), b.getAtomGroups(GroupType.AMINOACID).size());
 		assertEquals("sequences should be identical. " , a.getAtomSequence(),   b.getAtomSequence());
 		assertEquals("sequences should be identical. " , a.getSeqResSequence(), b.getSeqResSequence());
+	}
+	
+	private void testCrystallographicInfo(Structure s1, Structure s2) {
+		PDBCrystallographicInfo xtalInfo = s1.getPDBHeader().getCrystallographicInfo();
+		PDBCrystallographicInfo xtalInfo2 = s2.getPDBHeader().getCrystallographicInfo();
+		assertEquals(xtalInfo.getA(), xtalInfo2.getA());
+		assertEquals(xtalInfo.getB(), xtalInfo2.getB());
+		assertEquals(xtalInfo.getC(), xtalInfo2.getC());
+		assertEquals(xtalInfo.getAlpha(), xtalInfo2.getAlpha());
+		assertEquals(xtalInfo.getBeta(), xtalInfo2.getBeta());
+		assertEquals(xtalInfo.getGamma(), xtalInfo2.getGamma());
+		assertEquals(xtalInfo.getZ(), xtalInfo2.getZ());
+
+		assertEquals(xtalInfo.getSpaceGroup(),xtalInfo2.getSpaceGroup());
 	}
 
 }

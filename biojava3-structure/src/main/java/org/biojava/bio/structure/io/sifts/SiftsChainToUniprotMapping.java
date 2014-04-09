@@ -100,7 +100,7 @@ public class SiftsChainToUniprotMapping {
 		} else {
 			DEFAULT_FILE = File.createTempFile(DEFAULT_FILENAME, "xml");
 		}
-		if (!DEFAULT_FILE.exists()) {
+		if (!DEFAULT_FILE.exists() || DEFAULT_FILE.length() == 0) {
 			if (useOnlyLocal) throw new IOException(DEFAULT_FILE + " does not exist, and did not download");
 			download();
 		}
