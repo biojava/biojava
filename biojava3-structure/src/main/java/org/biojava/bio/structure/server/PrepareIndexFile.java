@@ -246,13 +246,19 @@ public class PrepareIndexFile {
 		Atom[] ca = StructureTools.getAtomCAArray(s);
 
 		PDBHeader header = s.getPDBHeader();
+		String depDate;
+		String modDate;
+		synchronized (dateFormat) {
+			depDate = dateFormat.format(header.getDepDate());
+			modDate = dateFormat.format(header.getModDate());
+		}
 		String infoline = String.format("%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t\t%s",
 				s.getPDBCode(),
 				ca.length,
 				header.getExperimentalTechniques().iterator().next().getName(),
 				header.getResolution(),
-				dateFormat.format(header.getDepDate()),
-				dateFormat.format(header.getModDate()),
+				depDate,
+				modDate,
 				header.getTitle(),
 				header.getClassification(),
 				((stopTime-startTime) / (float) 1000),
