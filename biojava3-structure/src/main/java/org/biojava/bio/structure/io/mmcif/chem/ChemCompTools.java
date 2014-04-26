@@ -164,7 +164,7 @@ public class ChemCompTools {
     public static final boolean isStandardChemComp(ChemComp cc){
 
         String pid = cc.getMon_nstd_parent_comp_id();
-        String one = cc.getOne_letter_code();
+        Character one = cc.getOne_letter_code();
 
         PolymerType polymerType = cc.getPolymerType();
 
@@ -172,7 +172,7 @@ public class ChemCompTools {
         if ((pid == null) || (pid.equals("?"))){
           
         	// and they have a one letter code
-            if ( ( one != null) && ( ! one.equals("?") )){
+            if ( ( one != null) && ( ! one.equals('?') )){
 
                 // peptides and dpeptides must not have X
                 if ( (polymerType == PolymerType.peptide) ||
@@ -206,7 +206,7 @@ public class ChemCompTools {
 
 
     private static boolean performDNACheck(ChemComp cc) {
-        if ( cc.getId().equals(UNKNOWN_NUCLEOTIDE))
+        if ( cc.getId().equals(UNKNOWN_NUCLEOTIDE.toString()))
             return false;
 
         Character c = getDNAOneLetter(cc.getId());
@@ -218,7 +218,7 @@ public class ChemCompTools {
     }
 
 
-    private static boolean performPeptideCheck(ChemComp cc, String one) {
+    private static boolean performPeptideCheck(ChemComp cc, Character one) {
         if (one.equals(UNKNOWN_ONE_LETTER_CODE)) {
             return false;
         }
@@ -239,12 +239,12 @@ public class ChemCompTools {
         	return null;
 
         if ( cc.isStandard())
-            return cc.getOne_letter_code().charAt(0);
+            return cc.getOne_letter_code();
 
         ChemComp parent = dictionary.getParent(cc);
         if ( parent == null){
             //System.err.println("parent is null " + cc);
-            return cc.getOne_letter_code().charAt(0);
+            return cc.getOne_letter_code();
         }
         PolymerType poly = cc.getPolymerType();
         if (( poly == PolymerType.peptide) || ( poly == PolymerType.dpeptide)){

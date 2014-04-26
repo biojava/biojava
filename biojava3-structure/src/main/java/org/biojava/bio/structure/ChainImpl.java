@@ -625,9 +625,9 @@ public class ChainImpl implements Chain, Serializable {
 				if ( PolymerType.PROTEIN_ONLY.contains(cc.getPolymerType()) ||
 						PolymerType.POLYNUCLEOTIDE_ONLY.contains(cc.getPolymerType())){
 					// an amino acid residue.. use for alignment
-					String oneLetter= ChemCompGroupFactory.getOneLetterCode(cc);
+					Character oneLetter= ChemCompGroupFactory.getOneLetterCode(cc);
 					if ( oneLetter == null)
-						oneLetter = "X";
+						oneLetter = 'X';
 					sequence.append(oneLetter);
 				}
 
@@ -666,9 +666,9 @@ public class ChainImpl implements Chain, Serializable {
 				} else if ( PolymerType.PROTEIN_ONLY.contains(cc.getPolymerType()) ||
 						PolymerType.POLYNUCLEOTIDE_ONLY.contains(cc.getPolymerType())){
 					// an amino acid residue.. use for alignment
-					String oneLetter= ChemCompGroupFactory.getOneLetterCode(cc);
-					if ( oneLetter == null ||  oneLetter.length()==0  || oneLetter.equals("?"))
-						oneLetter = "X";
+					Character oneLetter= ChemCompGroupFactory.getOneLetterCode(cc);
+					if ( oneLetter == null || oneLetter.equals('?'))
+						oneLetter = 'X';
 					str.append(oneLetter);
 				} else {
 					str.append("X");

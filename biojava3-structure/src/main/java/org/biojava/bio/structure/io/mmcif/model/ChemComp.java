@@ -35,7 +35,7 @@ public class ChemComp implements Serializable, Comparable<ChemComp>{
 	String pdbx_replaced_by;
 	String pdbx_replaces;
 	String formula_weight;
-	String one_letter_code;
+	Character one_letter_code;
 	String three_letter_code;
 	String pdbx_model_coordinates_details;
 	String pdbx_model_coordinates_missing_flag;
@@ -216,10 +216,10 @@ public class ChemComp implements Serializable, Comparable<ChemComp>{
 	public void setFormula_weight(String formula_weight) {
 		this.formula_weight = formula_weight;
 	}
-	public String getOne_letter_code() {
+	public Character getOne_letter_code() {
 		return one_letter_code;
 	}
-	public void setOne_letter_code(String one_letter_code) {
+	public void setOne_letter_code(Character one_letter_code) {
 		this.one_letter_code = one_letter_code;
 		setStandardFlag();
 	}

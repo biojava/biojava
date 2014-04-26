@@ -26,7 +26,7 @@ public class ReducedChemCompProvider implements ChemCompProvider {
 	public ChemComp getEmptyChemComp(){
 		ChemComp comp = new ChemComp();
 		
-		comp.setOne_letter_code("?");
+		comp.setOne_letter_code('?');
 		comp.setPolymerType(PolymerType.unknown);
 		comp.setResidueType(ResidueType.atomn);
 		return comp;
