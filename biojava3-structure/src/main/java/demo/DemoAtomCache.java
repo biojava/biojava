@@ -19,6 +19,7 @@ public class DemoAtomCache {
 
 	}
 
+	@SuppressWarnings("unused")
 	private static void demoStructureIO()  {
 
 
@@ -61,7 +62,7 @@ public class DemoAtomCache {
 			} catch (Exception e){
 				// something crazy happened...
 				System.err.println("Can't load structure " + pdbID + " reason: " + e.getMessage());
-				e.printStackTrace();
+				//e.printStackTrace();
 			}
 		}
 

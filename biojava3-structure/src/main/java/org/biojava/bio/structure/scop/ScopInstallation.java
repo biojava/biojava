@@ -64,20 +64,24 @@ import org.biojava3.core.util.InputStreamProvider;
  * @author Andreas Prlic
  *
  */
-public class ScopInstallation implements ScopDatabase {
+public class ScopInstallation implements LocalScopDatabase {
 
 	public static final String DEFAULT_VERSION = "1.75";
 
 	protected String scopVersion;
 	
+	// Stores URLs for cla, des, hie, and com files
+	private final List<ScopMirror> mirrors;
+
+	// Cache filenames (with version appended)
 	public static final String claFileName = "dir.cla.scop.txt_";
 	public static final String desFileName = "dir.des.scop.txt_";
 	public static final String hieFileName = "dir.hie.scop.txt_";
 	public static final String comFileName = "dir.com.scop.txt_";
 
+	// Download locations
 	public static final String SCOP_DOWNLOAD = "http://scop.mrc-lmb.cam.ac.uk/scop/parse/";
-
-	protected String scopDownloadURL ;
+	public static final String SCOP_DOWNLOAD_ALTERNATE = "http://scop.berkeley.edu/downloads/parse/";
 	
 	public static final String NEWLINE;
 	public static final String FILESPLIT ;
@@ -100,6 +104,7 @@ public class ScopInstallation implements ScopDatabase {
 	Map<Integer, ScopDescription> sunidMap;
 	Map<Integer, ScopNode> scopTree;
 
+
 	/** Create a new SCOP installation. 
 	 * 
 	 * @param cacheLocation where the SCOP files are stored. If they can't be found at that location they will get automatically downloaded and installed there. 
@@ -118,9 +123,8 @@ public class ScopInstallation implements ScopDatabase {
 		installedCom.set(false);
 
 		scopVersion = DEFAULT_VERSION;
-		scopDownloadURL = SCOP_DOWNLOAD;
-		
-		
+		mirrors = new ArrayList<ScopMirror>(1);
+
 		domainMap = new HashMap<String, List<ScopDomain>>();
 
 		sunidMap  = new HashMap<Integer, ScopDescription>();
@@ -154,7 +158,7 @@ public class ScopInstallation implements ScopDatabase {
 				e.printStackTrace();
 				installedCla.set(false);
 				return;
-			}			
+			}
 		} 
 
 		try {
@@ -181,9 +185,8 @@ public class ScopInstallation implements ScopDatabase {
 				e.printStackTrace();
 				installedDes.set(false);
 				return;
-			}   
+			}
 		}
-
 		try {
 
 			parseDescriptions();
@@ -196,7 +199,7 @@ public class ScopInstallation implements ScopDatabase {
 
 
 	}
-	
+
 	public void ensureComInstalled() {
 
 		if ( installedCom.get()) {
@@ -695,46 +698,92 @@ public class ScopInstallation implements ScopDatabase {
 	}
 
 	protected void downloadClaFile() throws FileNotFoundException, IOException{
-		String remoteFilename = claFileName + scopVersion;
-		URL url = new URL(scopDownloadURL + remoteFilename);
+		if(mirrors.size()<1) {
+			initScopURLs();
+		}
+		IOException exception = null;
+		for(ScopMirror mirror:mirrors) {
+			try {
+				URL url = new URL(mirror.getClaURL(scopVersion));
 
-		String localFileName = getClaFilename();
-		File localFile = new File(localFileName);
+				String localFileName = getClaFilename();
+				File localFile = new File(localFileName);
 
-		downloadFileFromRemote(url, localFile);
-
+				downloadFileFromRemote(url, localFile);
+				return;
+			} catch(IOException e ) {
+				exception = e;
+				continue;
+			}
+		}
+		throw new IOException("Unable to download SCOP .cla file",exception);
 	}
 
 	protected void downloadDesFile() throws FileNotFoundException, IOException{
-		String remoteFilename = desFileName + scopVersion;
-		URL url = new URL(scopDownloadURL + remoteFilename);
+		if(mirrors.size()<1) {
+			initScopURLs();
+		}
+		IOException exception = null;
+		for(ScopMirror mirror:mirrors) {
+			try {
+				URL url = new URL(mirror.getDesURL( scopVersion));
 
-		String localFileName = getDesFilename();
-		File localFile = new File(localFileName);
+				String localFileName = getDesFilename();
+				File localFile = new File(localFileName);
 
-		downloadFileFromRemote(url, localFile);
-
+				downloadFileFromRemote(url, localFile);
+				return;
+			} catch(IOException e ) {
+				exception = e;
+				continue;
+			}
+		}
+		throw new IOException("Unable to download SCOP .des file",exception);
 	}
 
 	protected void downloadHieFile() throws FileNotFoundException, IOException{
-		String remoteFilename = hieFileName + scopVersion;
-		URL url = new URL(scopDownloadURL + remoteFilename);
+		if(mirrors.size()<1) {
+			initScopURLs();
+		}
+		IOException exception = null;
+		for(ScopMirror mirror:mirrors) {
+			try {
+				URL url = new URL(mirror.getHieURL( scopVersion));
 
-		String localFileName = getHieFilename();
-		File localFile = new File(localFileName);
+				String localFileName = getHieFilename();
+				File localFile = new File(localFileName);
 
-		downloadFileFromRemote(url, localFile);
+				downloadFileFromRemote(url, localFile);
+				return;
+			} catch(IOException e ) {
+				exception = e;
+				continue;
+			}
+		}
+		throw new IOException("Unable to download SCOP .hie file",exception);
 
 	}
 
 	protected void downloadComFile() throws FileNotFoundException, IOException{
-		String remoteFilename = comFileName + scopVersion;
-		URL url = new URL(scopDownloadURL + remoteFilename);
+		if(mirrors.size()<1) {
+			initScopURLs();
+		}
+		IOException exception = null;
+		for(ScopMirror mirror:mirrors) {
+			try {
+				URL url = new URL(mirror.getComURL(scopVersion));
 
-		String localFileName = getComFilename();
-		File localFile = new File(localFileName);
+				String localFileName = getComFilename();
+				File localFile = new File(localFileName);
 
-		downloadFileFromRemote(url, localFile);
+				downloadFileFromRemote(url, localFile);
+				return;
+			} catch(IOException e ) {
+				exception = e;
+				continue;
+			}
+		}
+		throw new IOException("Unable to download SCOP .com file",exception);
 	}
 
 	protected void downloadFileFromRemote(URL remoteURL, File localFile) throws FileNotFoundException, IOException{
@@ -758,15 +807,14 @@ public class ScopInstallation implements ScopDatabase {
 
 		File f = new File(fileName);
 
-		return f.exists();
+		return f.exists() && f.length()>0;
 	}
 
 	private boolean desFileAvailable(){
 		String fileName = getDesFilename();
 
 		File f = new File(fileName);
-
-		return f.exists();
+		return f.exists() && f.length()>0;
 	}
 
 	private boolean hieFileAvailable(){
@@ -774,7 +822,7 @@ public class ScopInstallation implements ScopDatabase {
 
 		File f = new File(fileName);
 
-		return f.exists();
+		return f.exists() && f.length()>0;
 	}
 
 	private boolean comFileAvailable(){
@@ -782,7 +830,7 @@ public class ScopInstallation implements ScopDatabase {
 
 		File f = new File(fileName);
 
-		return f.exists();
+		return f.exists() && f.length()>0;
 	}
 
 	protected String getClaFilename(){
@@ -830,12 +878,37 @@ public class ScopInstallation implements ScopDatabase {
 	}
 	
 
+	/**
+	 * Get the URL of the first scop mirror being used
+	 * @return
+	 */
+	@Deprecated
 	public String getScopDownloadURL() {
-		return scopDownloadURL;
+		if(mirrors.size()<1) initScopURLs();
+		return mirrors.get(0).getRootURL();
 	}
 
+	/**
+	 * @param scopDownloadURL URL to load
+	 * @deprecated Use {@link #addMirror} instead
+	 */
+	@Deprecated
 	public void setScopDownloadURL(String scopDownloadURL) {
-		this.scopDownloadURL = scopDownloadURL;
+		mirrors.clear();
+		mirrors.add(new ScopMirror(scopDownloadURL));
+	}
+	
+	public void addMirror(String scopDownloadURL) {
+		mirrors.add(new ScopMirror(scopDownloadURL));
+	}
+	void addMirror(ScopMirror scopURLs) {
+		mirrors.add(scopURLs);
+	}
+	public List<ScopMirror> getMirrors() {
+		if(mirrors.isEmpty()) {
+			this.initScopURLs();
+		}
+		return mirrors;
 	}
 
 	/* (non-Javadoc)
@@ -887,5 +960,22 @@ public class ScopInstallation implements ScopDatabase {
 		ensureComInstalled();
 		if (!commentsMap.containsKey(sunid)) return new ArrayList<String>(1);
 		return commentsMap.get(sunid);
+	}
+	
+
+	private void initScopURLs() {
+		if(this.mirrors.size() > 0) {
+			return;
+		}
+
+		// first, try default scop
+		ScopMirror primary = new ScopMirror();
+		// If unreachable, try alternate Berkeley location
+		ScopMirror alt = new ScopMirror(
+				SCOP_DOWNLOAD_ALTERNATE,
+				"dir.cla.scop.%s.txt","dir.des.scop.%s.txt",
+				"dir.hie.scop.%s.txt","dir.com.scop.%s.txt");
+		mirrors.add(primary);
+		mirrors.add(alt);
 	}
 }

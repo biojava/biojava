@@ -48,18 +48,16 @@ import org.biojava.bio.structure.NucleotideImpl;
 import org.biojava.bio.structure.PDBHeader;
 import org.biojava.bio.structure.ResidueNumber;
 import org.biojava.bio.structure.Structure;
-import org.biojava.bio.structure.StructureException;
 import org.biojava.bio.structure.StructureImpl;
 import org.biojava.bio.structure.StructureTools;
 import org.biojava.bio.structure.UnknownPdbAminoAcidException;
+import org.biojava.bio.structure.io.BondMaker;
 import org.biojava.bio.structure.io.FileParsingParameters;
-
 import org.biojava.bio.structure.io.PDBParseException;
 import org.biojava.bio.structure.io.SeqRes2AtomAligner;
 import org.biojava.bio.structure.io.mmcif.model.AtomSite;
 import org.biojava.bio.structure.io.mmcif.model.AuditAuthor;
 import org.biojava.bio.structure.io.mmcif.model.ChemComp;
-
 import org.biojava.bio.structure.io.mmcif.model.ChemCompAtom;
 import org.biojava.bio.structure.io.mmcif.model.ChemCompBond;
 import org.biojava.bio.structure.io.mmcif.model.ChemCompDescriptor;
@@ -82,11 +80,12 @@ import org.biojava.bio.structure.io.mmcif.model.PdbxStructOperList;
 import org.biojava.bio.structure.io.mmcif.model.Refine;
 import org.biojava.bio.structure.io.mmcif.model.Struct;
 import org.biojava.bio.structure.io.mmcif.model.StructAsym;
+import org.biojava.bio.structure.io.mmcif.model.StructConn;
 import org.biojava.bio.structure.io.mmcif.model.StructKeywords;
 import org.biojava.bio.structure.io.mmcif.model.StructRef;
 import org.biojava.bio.structure.io.mmcif.model.StructRefSeq;
 import org.biojava.bio.structure.quaternary.BiologicalAssemblyBuilder;
-import org.biojava.bio.structure.quaternary.ModelTransformationMatrix;
+import org.biojava.bio.structure.quaternary.BiologicalAssemblyTransformation;
 
 /** A MMcifConsumer implementation that build a in-memory representation of the
  * content of a mmcif file as a BioJava Structure object.
@@ -116,6 +115,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 	List<EntitySrcGen> entitySrcGens;
 	List<EntitySrcNat> entitySrcNats;
 	List<EntitySrcSyn> entitySrcSyns;
+	List<StructConn> structConn;
 
 	Map<String,String> asymStrandId;
 
@@ -265,13 +265,19 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 	 * @param name
 	 * @return
 	 */
-	private String fixFullAtomName(String name){
+	private String fixFullAtomName(String name, Group currentGroup){
 
 		if (name.equals("N")){
 			return " N  ";
 		}
-		if (name.equals("CA")){
+		
+		// for amino acids this will be a C alpha
+		if (currentGroup.getType().equals(GroupType.AMINOACID) && name.equals("CA")){
 			return " CA ";
+		}
+		// for ligands this will be calcium
+		if (currentGroup.getType().equals(GroupType.HETATM) && name.equals("CA")){
+			return "CA  ";
 		}
 		if (name.equals("C")){
 			return " C  ";
@@ -285,14 +291,29 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		if (name.equals("CG"))
 			return " CG ";
 
-		if (name.length() == 2)
-			return " " + name + " ";
+		if (name.length() == 2) {
+			StringBuilder b = new StringBuilder();
+			b.append(" ");
+			b.append(name);
+			b.append(" ");
+			return b.toString();
+		}
 
-		if (name.length() == 1)
-			return " " + name + "  ";
+		if (name.length() == 1) {
+			StringBuilder b = new StringBuilder();
+			b.append(" ");
+			b.append(name);
+			b.append("  ");
+			return b.toString();
+		}
 
-		if (name.length() == 3)
-			return " " + name ;
+		if (name.length() == 3) {
+			
+			StringBuilder b = new StringBuilder();
+			b.append(" ");
+			b.append(name);
+			return b.toString();
+		}
 
 		return name;
 	}
@@ -311,7 +332,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 
 		//String chain_id      = atom.getAuth_asym_id();
 		String chain_id      = atom.getLabel_asym_id();		
-		String fullname      = fixFullAtomName(atom.getLabel_atom_id());		
+				
 		String recordName    = atom.getGroup_PDB();
 		String residueNumberS = atom.getAuth_seq_id();
 		Integer residueNrInt = Integer.parseInt(residueNumberS);
@@ -362,6 +383,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 			// add previous data
 			if ( current_chain != null ) {
 				current_chain.addGroup(current_group);
+				current_group.trimToSize();
 			}
 
 			// we came to the beginning of a new NMR model
@@ -460,7 +482,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		if ( ! residueNumber.equals(current_group.getResidueNumber())) {
 			//System.out.println("end of residue: "+current_group.getPDBCode()+" "+residueNrInt);
 			current_chain.addGroup(current_group);
-
+			current_group.trimToSize();
 			current_group = getNewGroup(recordName,aminoCode1,seq_id,groupCode3);
 			//current_group.setPDBCode(pdbCode);
 			try {
@@ -489,6 +511,9 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		atomCount++;
 		//System.out.println("fixing atom name for  >" + atom.getLabel_atom_id() + "< >" + fullname + "<");
 
+		
+		String fullname      = fixFullAtomName(atom.getLabel_atom_id(),current_group);
+		
 		if ( params.isParseCAOnly() ){
 			// yes , user wants to get CA only
 			// only parse CA atoms...
@@ -515,6 +540,14 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 			current_group.addAtom(a);
 		}
 
+
+		// make sure that main group has all atoms
+		// GitHub issue: #76
+		if ( ! current_group.hasAtom(a.getFullName())) {
+			current_group.addAtom(a);
+		}
+		
+		
 		//System.out.println(">" + atom.getLabel_atom_id()+"< " + a.getGroup().getPDBName() + " " + a.getGroup().getChemComp()  );
 
 		//System.out.println(current_group);
@@ -534,7 +567,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		a.setPDBserial(Integer.parseInt(atom.getId()));
 		a.setName(atom.getLabel_atom_id());
 
-		a.setFullName(fixFullAtomName(atom.getLabel_atom_id()));
+		a.setFullName(fixFullAtomName(atom.getLabel_atom_id(), current_group));
 
 
 		double x = Double.parseDouble (atom.getCartn_x());
@@ -600,15 +633,21 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		// build it up.
 
 		if ( groupCode3.equals(current_group.getPDBName())) {
-			if ( current_group.getAtoms().size() == 0)
+			if ( current_group.getAtoms().size() == 0) {
+				//System.out.println("current group is empty " + current_group + " " + altLoc);
 				return current_group;
-			//System.out.println("cloning current group");
+			}
+			//System.out.println("cloning current group " + current_group + " " + current_group.getAtoms().get(0).getAltLoc() + " altLoc " + altLoc);
 			Group altLocG = (Group) current_group.clone();
+			// drop atoms from cloned group...
+			// https://redmine.open-bio.org/issues/3307
+			altLocG.setAtoms(new ArrayList<Atom>());
 			current_group.addAltLoc(altLocG);
 			return altLocG;	
 		}
 
-
+		//	System.out.println("new  group " + recordName + " " + aminoCode1 + " " +groupCode3);
+		//String recordName,Character aminoCode1, long seq_id,String groupCode3) {
 		Group altLocG = getNewGroup(recordName,aminoCode1,seq_id,groupCode3);
 
 		try {
@@ -645,6 +684,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		entitySrcGens = new ArrayList<EntitySrcGen>();
 		entitySrcNats = new ArrayList<EntitySrcNat>();
 		entitySrcSyns = new ArrayList<EntitySrcSyn>();
+		structConn = new ArrayList<StructConn>();
 	}
 
 
@@ -761,7 +801,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 			// fix SEQRES residue numbering
 			List<Chain> atomList   = structure.getModel(0);
 			for (Chain seqResChain: seqResChains){
-				try {
+		
 					Chain atomChain = aligner.getMatchingAtomRes(seqResChain, atomList);
 
 					//map the atoms to the seqres...
@@ -790,10 +830,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 					}
 					atomChain.setSeqResGroups(seqResGroups);
 
-				} catch (StructureException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+			
 
 
 			}
@@ -801,7 +838,8 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 
 		}
 
-
+		
+       addBonds();
 		//TODO: add support for these:
 
 		//structure.setConnections(connects);
@@ -853,7 +891,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		// the more detailed mapping of chains to rotation operations happens in StructureIO...
 		// TODO clean this up and move it here...
 		//header.setBioUnitTranformationMap(tranformationMap);
-		Map<Integer,List<ModelTransformationMatrix>> transformationMap = new HashMap<Integer, List<ModelTransformationMatrix>>();
+		Map<Integer,List<BiologicalAssemblyTransformation>> transformationMap = new HashMap<Integer, List<BiologicalAssemblyTransformation>>();
 		int total = strucAssemblies.size();
 
 		for ( int defaultBioAssembly = 1 ; defaultBioAssembly <= total; defaultBioAssembly++){
@@ -872,7 +910,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 			BiologicalAssemblyBuilder builder = new BiologicalAssemblyBuilder();
 
 			// these are the transformations that need to be applied to our model
-			List<ModelTransformationMatrix> transformations = builder.getBioUnitTransformationList(psa, psags, structOpers);
+			List<BiologicalAssemblyTransformation> transformations = builder.getBioUnitTransformationList(psa, psags, structOpers);
 
 			transformationMap.put(defaultBioAssembly,transformations);
 			//System.out.println("mmcif header: " + (defaultBioAssembly+1) + " " + transformations.size() +" " +  transformations);
@@ -884,9 +922,10 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 
 	}
 
-
-
-
+   private void addBonds() {
+	   BondMaker maker = new BondMaker(structure);
+	   maker.makeBonds();	
+   }
 
 
 	private int getInternalNr(Group atomG) {
@@ -1577,12 +1616,10 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 
 	}
 
-
-
-
-
-
-
+	@Override
+	public void newStructConn(StructConn structConn) {
+		this.structConn.add(structConn);
+	}
 
 }
 

@@ -29,6 +29,7 @@ import org.biojava.bio.structure.io.mmcif.model.PdbxStructOperList;
 import org.biojava.bio.structure.io.mmcif.model.Refine;
 import org.biojava.bio.structure.io.mmcif.model.Struct;
 import org.biojava.bio.structure.io.mmcif.model.StructAsym;
+import org.biojava.bio.structure.io.mmcif.model.StructConn;
 import org.biojava.bio.structure.io.mmcif.model.StructKeywords;
 import org.biojava.bio.structure.io.mmcif.model.StructRef;
 import org.biojava.bio.structure.io.mmcif.model.StructRefSeq;
@@ -231,6 +232,12 @@ public class ChemCompConsumer implements MMcifConsumer {
 
 	@Override
 	public void newEntitySrcSyn(EntitySrcSyn entitySrcSyn) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void newStructConn(StructConn structConn) {
 		// TODO Auto-generated method stub
 		
 	}

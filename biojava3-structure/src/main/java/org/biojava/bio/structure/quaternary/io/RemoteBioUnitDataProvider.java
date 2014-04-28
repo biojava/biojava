@@ -13,7 +13,7 @@ import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.align.client.JFatCatClient;
 import org.biojava.bio.structure.align.util.AtomCache;
 import org.biojava.bio.structure.align.util.HTTPConnectionTools;
-import org.biojava.bio.structure.quaternary.ModelTransformationMatrix;
+import org.biojava.bio.structure.quaternary.BiologicalAssemblyTransformation;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
@@ -39,13 +39,13 @@ public class RemoteBioUnitDataProvider implements BioUnitDataProvider {
 	}
 
 	@Override
-	public List<ModelTransformationMatrix> getBioUnitTransformationList(
+	public List<BiologicalAssemblyTransformation> getBioUnitTransformationList(
 			String pdbId, int biolAssemblyNr) {
 
 		String serverURL = serverName + BIO_ASSEMBLY;
 
 		String u = String.format(serverURL,pdbId, biolAssemblyNr) ;
-		List<ModelTransformationMatrix> transformations = new ArrayList<ModelTransformationMatrix>();
+		List<BiologicalAssemblyTransformation> transformations = new ArrayList<BiologicalAssemblyTransformation>();
 
 		try {
 			URL url = new URL(u);
@@ -62,7 +62,7 @@ public class RemoteBioUnitDataProvider implements BioUnitDataProvider {
 			if ( stream != null) {
 				
 				System.out.println(xml);
-				transformations = ModelTransformationMatrix.fromMultiXML(xml);
+				transformations = BiologicalAssemblyTransformation.fromMultiXML(xml);
 			}
 		} catch (Exception e){
 			e.printStackTrace();

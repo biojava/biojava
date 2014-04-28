@@ -380,4 +380,12 @@ public interface Group {
 	 * @return the alternate location group if found, or null otherwise
 	 */
 	public Group getAltLocGroup(Character altLoc);
+	
+	
+	/** attempts to reduce the memory imprint of this group by trimming 
+	 * all internal Collection objects to the required size.
+	 * 
+	 */
+	public void trimToSize();
+	
 }

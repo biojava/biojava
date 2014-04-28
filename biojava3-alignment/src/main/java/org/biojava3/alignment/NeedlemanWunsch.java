@@ -25,6 +25,7 @@ package org.biojava3.alignment;
 
 import java.util.List;
 
+import org.biojava3.alignment.routines.AnchoredPairwiseSequenceAligner;
 import org.biojava3.alignment.template.AbstractPairwiseSequenceAligner;
 import org.biojava3.alignment.template.AlignedSequence;
 import org.biojava3.alignment.template.AlignedSequence.Step;
@@ -42,7 +43,7 @@ import org.biojava3.core.sequence.template.Sequence;
  * @param <S> each {@link Sequence} of the alignment pair is of type S
  * @param <C> each element of an {@link AlignedSequence} is a {@link Compound} of type C
  */
-public class NeedlemanWunsch<S extends Sequence<C>, C extends Compound> extends AbstractPairwiseSequenceAligner<S, C> {
+public class NeedlemanWunsch<S extends Sequence<C>, C extends Compound> extends AnchoredPairwiseSequenceAligner<S, C> {
 
     /**
      * Before running a pairwise global sequence alignment, data must be sent in via calls to
@@ -63,12 +64,4 @@ public class NeedlemanWunsch<S extends Sequence<C>, C extends Compound> extends 
     public NeedlemanWunsch(S query, S target, GapPenalty gapPenalty, SubstitutionMatrix<C> subMatrix) {
         super(query, target, gapPenalty, subMatrix);
     }
-
-    // method for AbstractMatrixAligner
-
-    @Override
-    protected void setProfile(List<Step> sx, List<Step> sy) {
-        profile = pair = new SimpleSequencePair<S, C>(getQuery(), getTarget(), sx, sy);
-    }
-
 }

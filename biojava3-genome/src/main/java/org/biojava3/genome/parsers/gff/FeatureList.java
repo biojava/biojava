@@ -16,6 +16,7 @@ import org.biojava3.core.sequence.DNASequence;
  *
  * @author Hanno Hinsch, Carmelo Foti
  */
+@SuppressWarnings("serial")
 public class FeatureList extends ArrayList<FeatureI> {
 
 	 Map<String, Map<String,List<FeatureI>>> featindex = new HashMap<String,Map<String,List<FeatureI>>>();
@@ -235,6 +236,8 @@ public class FeatureList extends ArrayList<FeatureI> {
 
 	/**
 	 * Create a list of all features that include the specified attribute key/value pair.
+	 * This method now properly supports adding the index before or after adding the features.
+	 * Adding features, then then index, then more features is still not supported.
 	 *
 	 * @param key The key to consider.
 	 * @param value The value to consider.
@@ -268,10 +271,12 @@ public class FeatureList extends ArrayList<FeatureI> {
 		FeatureList list = new FeatureList();
 		if (featindex.containsKey(key)){
 			Map<String, List<FeatureI>> featsmap =featindex.get(key);
-			for (List<FeatureI> feats: featsmap.values()){
-				list.addAll(Collections.unmodifiableCollection(feats));
+			if(null != featsmap) {
+				for (List<FeatureI> feats: featsmap.values()){
+					list.addAll(Collections.unmodifiableCollection(feats));
+				}
+				return list;
 			}
-			return list;
 		}
 		
 		for (FeatureI f : this) {

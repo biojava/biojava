@@ -9,8 +9,8 @@ import java.util.Map;
  * Controls the global ScopDatabase being used.
  * 
  * <p>Defaults to a {@link RemoteScopInstallation}, which is fast for small numbers
- * of queries. For many queries, a {@link ScopInstallation} instance may be faster,
- * since it makes only one network request.
+ * of queries. For many queries, using {@link #getSCOP(String, boolean) getSCOP(version,true)}
+ * may be faster, since it makes only one network request.
  * 
  * <p>Example: Fetch the structure corresponding to an old version of scop
  * 
@@ -27,113 +27,136 @@ import java.util.Map;
  */
 public class ScopFactory {
 
-	//private static ScopDatabase scop = new ScopInstallation();
-
-	// by default we now request SCOP via web services -> much less memory consumption
-	private static ScopDatabase scop = new RemoteScopInstallation();
-
-	public static ScopDatabase getSCOP(){
-		return scop;
-	}
-
-	/**
-	 * @param s A version number, such as {@link #VERSION_1_75A}
-	 */
-	public static void setScopDatabase(String s) {
-		setScopDatabase(ScopFactory.getSCOP(s));
-	}
-	
-	public static void setScopDatabase(ScopDatabase s){
-		System.out.println("Setting ScopDatabase to type: " + s.getClass().getName());
-		scop = s;
-	}
-
-
-	// berkeley
-	public static final String VERSION_1_75A = "1.75A";	
-	public static final String VERSION_1_75B = "1.75B";	
-
-
+	// berkeley 2
+	public static final String VERSION_2_0_3 = "2.03";
+	public static final String VERSION_2_0_2 = "2.02";
+	public static final String VERSION_2_0_1 = "2.01";
+	// berkeley 1 (aliases of above)
+	public static final String VERSION_1_75C = VERSION_2_0_3;
+	public static final String VERSION_1_75B = VERSION_2_0_2;
+	public static final String VERSION_1_75A = VERSION_2_0_1;
 	// original SCOP
 	// latest SCOP release from SCOP website = 1.75;
 	public static final String VERSION_1_75 = "1.75";
-	
-	static Map<String,ScopDatabase> versionedScopDBs = new HashMap<String, ScopDatabase>(); 
-	
-	
-	public static ScopDatabase getSCOP(String version, boolean useLocalData){
-		if ( useLocalData) {
-			if ( version.equalsIgnoreCase(VERSION_1_75A)) {
-				return getBerkeley_1_75A();
+	// outdated stable versions
+	public static final String VERSION_1_73 = "1.73";
+	public static final String VERSION_1_71 = "1.71";
+	public static final String VERSION_1_69 = "1.69";
+	public static final String VERSION_1_67 = "1.67";
+	public static final String VERSION_1_65 = "1.65";
+	public static final String VERSION_1_63 = "1.63";
+	public static final String VERSION_1_61 = "1.61";
+	public static final String VERSION_1_59 = "1.59";
+	public static final String VERSION_1_57 = "1.57";
+	public static final String VERSION_1_55 = "1.55";
 
-			}
-			else if ( version.equalsIgnoreCase(VERSION_1_75B)) {
-				return getBerkeley_1_75B();
-			} else if  ( version.equalsIgnoreCase(VERSION_1_75)){
-				getScop_1_75();
-			} else {
-				getScop_1_75();
-			}
-		} else {
-			// should to get proxied via Domain service servlet
-			return scop;
-		}
-		return scop;
-	}
-	
-	
-	private static ScopDatabase getScop_1_75() {
-		ScopInstallation scop = (ScopInstallation)versionedScopDBs.get(VERSION_1_75);
-		if ( scop == null) {
-			scop = new ScopInstallation();
-			scop.setScopVersion(VERSION_1_75);
-			versionedScopDBs.put(VERSION_1_75, scop);
-		}
-		
-		return scop;
-		
+	// The most recent version as of compilation time
+	public static final String LATEST_VERSION = VERSION_2_0_3;
+
+	// Hold one instance for each version
+	private static Map<String,ScopDatabase> versionedScopDBs = new HashMap<String, ScopDatabase>(); 
+	private static String defaultVersion = LATEST_VERSION;
+
+	/**
+	 * Get the current default instance for the default version
+	 * @return
+	 */
+	public static ScopDatabase getSCOP(){
+		return getSCOP(defaultVersion);
 	}
 
-	/** requests a particular version of SCOP
+	/**
 	 * 
+	 * @param forceLocalData Whether to use a local installation or a remote installation
+	 * @return
+	 * @see #getSCOP(String, boolean)
+	 */
+	public static ScopDatabase getSCOP(boolean forceLocalData) {
+		return getSCOP(defaultVersion, forceLocalData);
+	}
+
+	/**
+	 * requests a particular version of SCOP.
+	 *
+	 * Where possible, this will be the current default instance.
+	 * Otherwise a new instance will be created.
 	 * @param version
 	 * @return
 	 */
 	public static ScopDatabase getSCOP(String version){
-		if ( version.equalsIgnoreCase(VERSION_1_75A)) {
-			return getBerkeley_1_75A();
+		// Default to a remote installation
+		return getSCOP(version,false);
+	}
 
+	/**
+	 * Gets an instance of the specified scop version.
+	 * 
+	 * <p>
+	 * The particular implementation returned is influenced by the <tt>forceLocalData</tt>
+	 * parameter. When false, the instance returned will generally be a
+	 * {@link RemoteScopInstallation}, although this may be influenced by
+	 * previous calls to this class. When true, the result is guaranteed to
+	 * implement {@link LocalScopDatabase} (generally a {@link BerkeleyScopInstallation}).
+	 * 
+	 * <p>
+	 * Note that  
+	 * @param version A version number, such as {@link #VERSION_1_75A}
+	 * @param forceLocalData Whether to use a local installation or a remote installation
+	 * @return an
+	 */
+	public static ScopDatabase getSCOP(String version, boolean forceLocalData){
+		if( version == null ) {
+			version = defaultVersion;
 		}
-		else if ( version.equalsIgnoreCase(VERSION_1_75B)) {
-			return getBerkeley_1_75B();
-		} else if ( version.equalsIgnoreCase(VERSION_1_75)) {
-			return getScop_1_75();
+		ScopDatabase scop = versionedScopDBs.get(version);
+		if ( forceLocalData) {
+			// Use a local installation
+			if( scop == null || !(scop instanceof LocalScopDatabase) ) {
+				BerkeleyScopInstallation berkeley = new BerkeleyScopInstallation();
+				berkeley.setScopVersion(version);
+				versionedScopDBs.put(version,berkeley);
+				return berkeley;
+			}
+			return scop;
 		} else {
-			System.err.println("Unknown SCOP version " + version + " . Returning default");
-			
+			// Use a remote installation
+			if( scop == null ) {
+				scop = new RemoteScopInstallation();
+				scop.setScopVersion(version);
+				versionedScopDBs.put(version,scop);
+			}
 			return scop;
 		}
 	}
 
-	private static ScopDatabase getBerkeley_1_75A() {
-		BerkeleyScopInstallation berkeley_1_75A = (BerkeleyScopInstallation) versionedScopDBs.get(VERSION_1_75A);
-		
-		if ( berkeley_1_75A == null) {
-			berkeley_1_75A  = new BerkeleyScopInstallation();
-			berkeley_1_75A.setScopVersion(VERSION_1_75A);				
-			versionedScopDBs.put(VERSION_1_75A, berkeley_1_75A);
-		}
-		return berkeley_1_75A;
+
+	/**
+	 * Set the default scop version
+	 * @param version A version number, such as {@link #VERSION_1_75A}
+	 */
+	public static void setScopDatabase(String version) {
+		getSCOP(version);
+		defaultVersion = version;
+	}
+	
+	/**
+	 * Set the default scop version
+	 * @param version A version number, such as {@link #VERSION_1_75A}
+	 * @param forceLocalData Whether to use a local installation or a remote installation
+	 */
+	public static void setScopDatabase(String version, boolean forceLocalData) {
+		//System.out.println("ScopFactory: Setting ScopDatabase to version: " + version + " forced local: " + forceLocalData);
+		getSCOP(version,forceLocalData);
+		defaultVersion = version;
 	}
 
-	private static ScopDatabase getBerkeley_1_75B() {
-		BerkeleyScopInstallation berkeley_1_75B = (BerkeleyScopInstallation) versionedScopDBs.get(VERSION_1_75B);
-		
-		if ( berkeley_1_75B == null) {
-			berkeley_1_75B  = new BerkeleyScopInstallation();
-			berkeley_1_75B.setScopVersion(VERSION_1_75B);				
-			versionedScopDBs.put(VERSION_1_75B, berkeley_1_75B);
-		}
-		return berkeley_1_75B;
+	/**
+	 * Set the default scop version and instance
+	 * @param scop
+	 */
+	public static void setScopDatabase(ScopDatabase scop){
+		//System.out.println("ScopFactory: Setting ScopDatabase to type: " + scop.getClass().getName());
+		defaultVersion = scop.getScopVersion();
+		versionedScopDBs.put(defaultVersion,scop);
 	}
 }

@@ -45,9 +45,6 @@ public class DemoLoadStructure
 
 	public static void main(String[] args){
 
-
-
-
 		DemoLoadStructure demo  = new DemoLoadStructure();
 
 		demo.loadStructureIO();
@@ -62,9 +59,7 @@ public class DemoLoadStructure
 			Structure s1 = StructureIO.getStructure("1gav");			
 			System.out.println(s1.getPDBCode() + " asym unit has nr atoms:");
 			System.out.println(StructureTools.getNrAtoms(s1));
-			
-			
-			
+						
 			Structure s2 = StructureIO.getBiologicalAssembly("1gav");			
 			System.out.println(s2.getPDBCode() + " biological assembly has nr atoms:");
 			System.out.println(StructureTools.getNrAtoms(s2));

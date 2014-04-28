@@ -166,7 +166,7 @@ public final class ModelLoader {
 			    "ISO-8859-1"));
 	    String line = null;
 	    final Scanner scan = new Scanner(bfr);
-	    scan.useDelimiter("\n");
+	    scan.useDelimiter(System.getProperty("line.separator"));
 	    final int numberOfSeqs = scan.nextInt();
 	    final Model model = new Model(i, numberOfSeqs);
 	    // ignore this one, its always 19 defined in RonnConstrain
@@ -184,6 +184,7 @@ public final class ModelLoader {
 	    }
 	    ModelLoader.models.put(model.modelNum, model);
 	    bfr.close();
+	    scan.close();
 	}
     }
 
@@ -193,6 +194,6 @@ public final class ModelLoader {
 	loader.loadModels();
 	System.out.println(ModelLoader.models.get(0));
 	System.out.println(ModelLoader.models.get(9));
-	System.out.println(loader.models.size());
+	System.out.println(ModelLoader.models.size());
     }
 }

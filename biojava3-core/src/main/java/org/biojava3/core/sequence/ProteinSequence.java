@@ -24,6 +24,7 @@ package org.biojava3.core.sequence;
 
 import org.biojava3.core.sequence.compound.AminoAcidCompound;
 import org.biojava3.core.sequence.compound.AminoAcidCompoundSet;
+import org.biojava3.core.sequence.compound.NucleotideCompound;
 import org.biojava3.core.sequence.loader.StringProxySequenceReader;
 import org.biojava3.core.sequence.template.AbstractSequence;
 import org.biojava3.core.sequence.template.CompoundSet;
@@ -83,7 +84,9 @@ public class ProteinSequence extends AbstractSequence<AminoAcidCompound> {
      * @param begin
      * @param end
      */
-    public void setParentDNASequence(AbstractSequence parentDNASequence, Integer begin, Integer end) {
+    //TODO - Someone needs to check if this is a bug.  Shouldn't a parentDNASequence be something other then AminoAcid?
+    //However, due to the derivation of this class, this is the only possible type argument for this parameter...
+    public void setParentDNASequence(AbstractSequence<NucleotideCompound> parentDNASequence, Integer begin, Integer end) {
         this.setParentSequence(parentDNASequence);
         setBioBegin(begin);
         setBioEnd(end);

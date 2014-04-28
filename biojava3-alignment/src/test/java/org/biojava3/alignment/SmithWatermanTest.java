@@ -34,6 +34,8 @@ import org.junit.Test;
 
 public class SmithWatermanTest {
 
+	private static final double PRECISION = 0.00000001;
+	
     private ProteinSequence query, target;
     private GapPenalty gaps;
     private SubstitutionMatrix<AminoAcidCompound> blosum62;
@@ -187,20 +189,20 @@ public class SmithWatermanTest {
 
     @Test
     public void testGetMaxScore() {
-        assertEquals(alignment.getMaxScore(), 50);
-        assertEquals(self.getMaxScore(), 36);
+        assertEquals(alignment.getMaxScore(), 50, PRECISION);
+        assertEquals(self.getMaxScore(), 36, PRECISION);
     }
 
     @Test
     public void testGetMinScore() {
-        assertEquals(alignment.getMinScore(), 0);
-        assertEquals(self.getMinScore(), 0);
+        assertEquals(alignment.getMinScore(), 0, PRECISION);
+        assertEquals(self.getMinScore(), 0, PRECISION);
     }
 
     @Test
     public void testGetScore() {
-        assertEquals(alignment.getScore(), 18);
-        assertEquals(self.getScore(), 36);
+        assertEquals(alignment.getScore(), 18, PRECISION);
+        assertEquals(self.getScore(), 36, PRECISION);
     }
 
     @Test

@@ -55,7 +55,8 @@ public final class FastaSequence implements Comparable<FastaSequence>{
      */
     private String sequence;
 
-    private FastaSequence() {
+    @SuppressWarnings("unused")
+	private FastaSequence() {
 	// Default constructor for JaxB
     }
 

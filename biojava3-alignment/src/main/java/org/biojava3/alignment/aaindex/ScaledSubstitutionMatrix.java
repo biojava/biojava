@@ -1,6 +1,8 @@
 package org.biojava3.alignment.aaindex;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.StringTokenizer;
 
 import org.biojava3.alignment.template.SubstitutionMatrix;
@@ -185,6 +187,24 @@ public class ScaledSubstitutionMatrix implements
 		return null;
 	}
     
-    
+
+	public Map<AminoAcidCompound, Short> getRow(AminoAcidCompound row) {
+		int rowIndex = rows.indexOf(row);
+		Map<AminoAcidCompound, Short> map = new HashMap<AminoAcidCompound, Short>();
+		for (int colIndex = 0; colIndex < matrix[rowIndex].length; colIndex++) {
+			map.put(cols.get(colIndex), matrix[rowIndex][colIndex]);
+		}
+		return map;
+	}
+
+	public Map<AminoAcidCompound, Short> getColumn(AminoAcidCompound column) {
+		int colIndex = cols.indexOf(column);
+		Map<AminoAcidCompound, Short> map = new HashMap<AminoAcidCompound, Short>();
+		for (int i = 0; i < matrix.length; i++) {
+			map.put(rows.get(i), matrix[i][colIndex]);
+		}
+		return map;
+	}
+
 
 }

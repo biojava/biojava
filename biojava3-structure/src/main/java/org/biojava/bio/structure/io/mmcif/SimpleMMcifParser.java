@@ -59,6 +59,7 @@ import org.biojava.bio.structure.io.mmcif.model.PdbxStructOperList;
 import org.biojava.bio.structure.io.mmcif.model.Refine;
 import org.biojava.bio.structure.io.mmcif.model.Struct;
 import org.biojava.bio.structure.io.mmcif.model.StructAsym;
+import org.biojava.bio.structure.io.mmcif.model.StructConn;
 import org.biojava.bio.structure.io.mmcif.model.StructKeywords;
 import org.biojava.bio.structure.io.mmcif.model.StructRef;
 import org.biojava.bio.structure.io.mmcif.model.StructRefSeq;
@@ -657,6 +658,11 @@ public class SimpleMMcifParser implements MMcifParser {
 					"org.biojava.bio.structure.io.mmcif.model.PdbxChemCompDescriptor",
 					loopFields,lineData);
 			triggerNewPdbxChemCompDescriptor(id);
+		} else if ( category.equals("_struct_conn")){
+			StructConn id = (StructConn)buildObject(
+					"org.biojava.bio.structure.io.mmcif.model.StructConn",
+					loopFields,lineData);
+			triggerNewStructConn(id);
 
 		} else {
 
@@ -729,7 +735,8 @@ public class SimpleMMcifParser implements MMcifParser {
 
 				String val = lineData.get(loopFields.indexOf(max));
 				Double d = Double.parseDouble(val);
-				matrix.set(i-1,j-1,d);
+				matrix.set(j-1,i-1,d);
+//				matrix.set(i-1,j-1,d);
 			}
 		}
 
@@ -983,6 +990,11 @@ public class SimpleMMcifParser implements MMcifParser {
 	private void triggerNewPdbxChemCompDescriptor(PdbxChemCompDescriptor id) {
 		for(MMcifConsumer c : consumers){
 			c.newPdbxChemCompDescriptor(id);
+		}
+	}
+	private void triggerNewStructConn(StructConn id) {
+		for(MMcifConsumer c : consumers){
+			c.newStructConn(id);
 		}
 	}
 }

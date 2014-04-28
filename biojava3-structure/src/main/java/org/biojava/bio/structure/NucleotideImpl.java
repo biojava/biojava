@@ -68,7 +68,42 @@ public class NucleotideImpl
 	return str ;
 
     }
+    
+    /** 
+     * Returns the O3' atom if present, otherwise null
+     * @return O3' atom or null
+     */
+    public Atom getO3Prime() {
+    	try {
+    		return getAtom("O3'");
+    	} catch (StructureException e) {
+    		return null;
+    	} 
+    }
 
+    /** 
+     * Returns the O5' atom if present, otherwise null
+     * @return O5' atom or null
+     */
+    public Atom getO5Prime() {
+    	try {
+    		return getAtom("O5'");
+    	} catch (StructureException e) {
+    		return null;
+    	} 
+    }
+    
+    /** 
+     * Returns the P atom if present, otherwise null
+     * @return P atom or null
+     */
+    public Atom getP() {
+    	try {
+    		return getAtom("P");
+    	} catch (StructureException e) {
+    		return null;
+    	} 
+    }
 
     public Object clone(){
 	NucleotideImpl n = new NucleotideImpl();

@@ -3,7 +3,7 @@
 	<parent>
 		<artifactId>biojava</artifactId>
 		<groupId>org.biojava</groupId>
-		<version>3.0.7</version>
+		<version>3.0.8</version>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>biojava3-structure-gui</artifactId>
@@ -35,21 +35,24 @@
 			<version>1.0</version>
 		</dependency>
 		<dependency>
-			<groupId>net.sourceforge.jmol</groupId>
-			<artifactId>jmol</artifactId>
-			<version>13.0.12</version>
-		</dependency>
-		<dependency>
 			<groupId>org.biojava</groupId>
 			<artifactId>biojava3-structure</artifactId>
-			<version>3.0.7</version>
+			<version>3.0.8</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.biojava</groupId>
 			<artifactId>biojava3-core</artifactId>
-			<version>3.0.7</version>
+			<version>3.0.8</version>
 			<scope>compile</scope>
+		</dependency>
+
+		<!-- Include jMol LAST, as it shades in several unwanted dependencies,
+		notably commons-cli:1.1 -->
+		<dependency>
+			<groupId>net.sourceforge.jmol</groupId>
+			<artifactId>jmol</artifactId>
+			<version>13.0.12</version>
 		</dependency>
 	</dependencies>
 	<properties>

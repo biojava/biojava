@@ -45,6 +45,7 @@ import org.biojava.bio.structure.io.PDBFileParser;
 import org.biojava.bio.structure.io.mmcif.chem.PolymerType;
 import org.biojava.bio.structure.io.mmcif.chem.ResidueType;
 import org.biojava.bio.structure.io.mmcif.model.ChemComp;
+import org.biojava.bio.structure.io.util.FileDownloadUtils;
 
 
 /**
@@ -65,7 +66,7 @@ public class StructureTools {
 
 	public static final String oAtomName = "O";
 
-	public static final String cbAtomName = "CB";
+	public static final String cbAtomName = " CB ";
 
 
 	/** The names of the Atoms that form the backbone.
@@ -286,6 +287,30 @@ public class StructureTools {
 		return (Atom[]) atoms.toArray(new Atom[atoms.size()]);	
 	}
 
+	/**
+	 * Returns and array of all non-Hydrogen atoms in the given Structure, 
+	 * optionally including HET atoms or not
+	 * @param s
+	 * @param hetAtoms if true HET atoms are included in array, if false they are not
+	 * @return
+	 */
+	public static final Atom[] getAllNonHAtomArray(Structure s, boolean hetAtoms) {
+		List<Atom> atoms = new ArrayList<Atom>();
+
+		
+		AtomIterator iter = new AtomIterator(s);
+		while (iter.hasNext()){
+			Atom a = iter.next();
+			if (a.getElement()==Element.H) continue;
+			
+			Group g = a.getGroup();
+			
+			if (!hetAtoms && g.getType().equals(GroupType.HETATM)) continue;
+			
+			atoms.add(a);
+		}
+		return (Atom[]) atoms.toArray(new Atom[atoms.size()]);			
+	}
 
 	private static void extractCAatoms(String[] atomNames, List<Chain> chains,
 			List<Atom> atoms) {
@@ -815,6 +840,7 @@ public class StructureTools {
 			String pdbresnumStart = matcher.group(2);
 			String pdbresnumEnd   = matcher.group(3);
 
+				
 			if ( ! firstRange){
 				name.append( ",");
 			} else {
@@ -827,8 +853,11 @@ public class StructureTools {
 					pdbresnumStart = pdbresnumStart.substring(1);
 				if(pdbresnumEnd.charAt(0) == '+')
 					pdbresnumEnd = pdbresnumEnd.substring(1);
-				groups = chain.getGroupsByPDB(pdbresnumStart, pdbresnumEnd);
-
+				
+				ResidueNumber pdbresnum1 = ResidueNumber.fromString(pdbresnumStart);
+				ResidueNumber pdbresnum2 = ResidueNumber.fromString(pdbresnumEnd);
+				
+				groups = chain.getGroupsByPDB(pdbresnum1, pdbresnum2);
 
 				name.append( chainId + AtomCache.UNDERSCORE + pdbresnumStart+"-" + pdbresnumEnd);
 
@@ -837,6 +866,7 @@ public class StructureTools {
 				groups = chain.getAtomGroups().toArray(new Group[chain.getAtomGroups().size()]);
 				name.append(chainId);
 			}
+						
 			firstRange = true;
 
 			// Create new chain, if needed
@@ -1236,7 +1266,7 @@ public class StructureTools {
 	 *  an exception.
 	 */
 	public static Structure getStructure(String name,PDBFileParser parser, AtomCache cache) throws IOException, StructureException {
-		File f = new File(name);
+		File f = new File(FileDownloadUtils.expandUserHome(name));
 		if(f.exists()) {
 			if(parser == null) {
 				parser = new PDBFileParser();
@@ -1250,5 +1280,4 @@ public class StructureTools {
 			return cache.getStructure(name);
 		}
 	}
-
 }

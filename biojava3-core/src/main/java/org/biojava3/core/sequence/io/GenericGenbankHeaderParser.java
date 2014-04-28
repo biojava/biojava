@@ -36,7 +36,8 @@ public class GenericGenbankHeaderParser<S extends AbstractSequence<C>, C extends
 	private String accession = null;
 	private String identifier = null;
 	private String name = null;
-    private int version;
+    @SuppressWarnings("unused")
+	private int version;
     private boolean versionSeen;
     private ArrayList<String> comments = new ArrayList<String>();
 
@@ -55,7 +56,8 @@ public class GenericGenbankHeaderParser<S extends AbstractSequence<C>, C extends
      * Sets the sequence info back to default values, ie. in order to start
      * constructing a new sequence from scratch.
      */
-    private void reset() {
+    @SuppressWarnings("unused")
+	private void reset() {
         this.version = 0;
         this.versionSeen = false;
         this.accession = null;

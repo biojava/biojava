@@ -24,7 +24,7 @@ import org.biojava.bio.structure.jama.Matrix;
  * </ul>
  * 
  * <p>The axis of rotation is poorly defined and numerically unstable for small
- * angles. Therefor it's direction is left as null for angles less than 
+ * angles. Therefore it's direction is left as null for angles less than 
  * {@link #MIN_ANGLE}.
  * 
  * @author Spencer Bliven
@@ -99,6 +99,22 @@ public final class RotationAxis {
 		}
 		init(afpChain.getBlockRotationMatrix()[0],afpChain.getBlockShiftVector()[0]);
 	}
+	
+	/**
+	 * Create a rotation axis from a vector, a point, and an angle.
+	 * 
+	 * The result will be a pure rotation, with no screw component.
+	 * @param axis A vector parallel to the axis of rotation
+	 * @param pos A point on the axis of rotation
+	 * @param theta The angle to rotate (radians)
+	 */
+	public RotationAxis(Atom axis, Atom pos, double theta) {
+		this.rotationAxis = Calc.unitVector(axis);
+		this.rotationPos = (Atom) pos.clone();
+		this.theta = theta;
+		this.screwTranslation = new AtomImpl(); //zero
+		this.otherTranslation = null; //deprecated
+	}
 
 	/**
 	 * Determine the location of the rotation axis based on a rotation matrix and a translation vector
@@ -107,6 +123,62 @@ public final class RotationAxis {
 	 */
 	public RotationAxis(Matrix rotation, Atom translation) {
 		init(rotation, translation);
+	}
+	
+	/**
+	 * Get the rotation matrix corresponding to this axis
+	 * @return A 3x3 rotation matrix
+	 */
+	public Matrix getRotationMatrix() {
+		return getRotationMatrix(theta);
+	}
+	
+	/**
+	 * Get the rotation matrix corresponding to a rotation about this axis
+	 * @param theta The amount to rotate
+	 * @return A 3x3 rotation matrix
+	 */
+	public Matrix getRotationMatrix(double theta) {
+		if( rotationAxis == null) {
+			// special case for pure translational axes
+			return Matrix.identity(3, 3);
+		}
+		double x = rotationAxis.getX();
+		double y = rotationAxis.getY();
+		double z = rotationAxis.getZ();
+		double cos = Math.cos(theta);
+		double sin = Math.sin(theta);
+		double com = 1 - cos;
+		return new Matrix(new double[][] {
+				{com*x*x + cos, com*x*y+sin*z, com*x*z+-sin*y},
+				{com*x*y-sin*z, com*y*y+cos, com*y*z+sin*x},
+				{com*x*z+sin*y, com*y*z-sin*x, com*z*z+cos},
+				});
+	}
+	
+	/**
+	 * Returns the rotation order o that gives the lowest value of {@code |2PI / o - theta},
+	 * given that the value is strictly lower than {@code threshold}, for orders {@code o=1,...,maxOrder}.
+	 */
+	public int guessOrderFromAngle(double threshold, int maxOrder) {
+		double bestDelta = threshold;
+		int bestOrder = 1;
+		for (int order = 2; order < maxOrder; order++) {
+			double delta = Math.abs(2 * Math.PI / order - theta);
+			if (delta < bestDelta) {
+				bestOrder = order;
+				bestDelta = delta;
+			}
+		}
+		return bestOrder;
+	}
+
+	
+	/**
+	 * Returns a matrix that describes both rotation and translation.
+	 */
+	public Matrix getFullMatrix() {
+		return null; // TODO, easy
 	}
 	
 	/**
@@ -208,7 +280,7 @@ public final class RotationAxis {
 		rotationAxis.setCoords(rotAx);
 
 		// Calculate screw = (rotationAxis dot translation)*u
-		double dotProduct = Calc.skalarProduct(rotationAxis, translation);
+		double dotProduct = Calc.scalarProduct(rotationAxis, translation);
 
 		screwTranslation = Calc.scale(rotationAxis, dotProduct);
 		otherTranslation = Calc.subtract(translation, screwTranslation);
@@ -258,13 +330,13 @@ public final class RotationAxis {
 		
 		// Project each Atom onto the rotation axis to determine limits
 		double min, max;
-		min = max = Calc.skalarProduct(rotationAxis,atoms[0]);
+		min = max = Calc.scalarProduct(rotationAxis,atoms[0]);
 		for(int i=1;i<atoms.length;i++) {
-			double prod = Calc.skalarProduct(rotationAxis,atoms[i]);
+			double prod = Calc.scalarProduct(rotationAxis,atoms[i]);
 			if(prod<min) min = prod;
 			if(prod>max) max = prod;
 		}
-		double uLen = Calc.skalarProduct(rotationAxis,rotationAxis);// Should be 1, but double check
+		double uLen = Calc.scalarProduct(rotationAxis,rotationAxis);// Should be 1, but double check
 		min/=uLen;
 		max/=uLen;
 
@@ -274,7 +346,7 @@ public final class RotationAxis {
 			Atom center = Calc.centerOfMass(atoms);
 
 			// Project center onto the axis
-			Atom centerOnAxis = Calc.scale(rotationAxis, Calc.skalarProduct(center, rotationAxis));
+			Atom centerOnAxis = Calc.scale(rotationAxis, Calc.scalarProduct(center, rotationAxis));
 
 			// Remainder is projection of origin onto axis
 			axialPt = Calc.subtract(center, centerOnAxis);
@@ -333,6 +405,67 @@ public final class RotationAxis {
 	}
 
 	/**
+	 * Projects a given point onto the axis of rotation
+	 * @param point
+	 * @return An atom which lies on the axis, or null if the RotationAxis is purely translational
+	 */
+	public Atom getProjectedPoint(Atom point) {
+		if(rotationPos == null) {
+			// translation only
+			return null;
+		}
+		
+		Atom localPoint = Calc.subtract(point, rotationPos);
+		double dot = Calc.scalarProduct(localPoint, rotationAxis);
+		
+		Atom localProjected = Calc.scale(rotationAxis, dot);
+		Atom projected = Calc.add(localProjected, rotationPos);
+		return projected;
+	}
+
+	/**
+	 * Get the distance from a point to the axis of rotation
+	 * @param point
+	 * @return The distance to the axis, or NaN if the RotationAxis is purely translational
+	 */
+	public double getProjectedDistance(Atom point) {
+		Atom projected = getProjectedPoint(point);
+		if( projected == null) {
+			// translation only
+			return Double.NaN;
+		}
+		
+		try {
+			return Calc.getDistance(point, projected);
+		} catch(StructureException e) {
+			// Should be unreachable
+			return Double.NaN;
+		}
+	}
+	
+	public void rotate(Atom[] atoms, double theta) {
+		Matrix rot = getRotationMatrix(theta);
+		if(rotationPos == null) {
+			// Undefined rotation axis; do nothing
+			return;
+		}
+		Atom negPos;
+		try {
+			negPos = Calc.invert(rotationPos);
+		} catch (StructureException e) {
+			// Should be unreachable
+			return;
+		}
+		for(Atom a: atoms) {
+			Calc.shift(a, negPos);
+		}
+		Calc.rotate(atoms, rot);
+		for(Atom a: atoms) {
+			Calc.shift(a, rotationPos);
+		}
+	}
+	
+	/**
 	 * Calculate the rotation angle for a structure
 	 * @param afpChain
 	 * @return The rotation angle, in radians
@@ -358,5 +491,13 @@ public final class RotationAxis {
 	public static double getAngle(Matrix rotation) {
 		double c = (rotation.trace()-1)/2.0; //=cos(theta)
 		return Math.acos(c);
+	}
+
+	/**
+	 * 
+	 * @return If the rotation axis is well defined, rather than purely translational
+	 */
+	public boolean isDefined() {
+		return rotationPos != null;
 	}
 }

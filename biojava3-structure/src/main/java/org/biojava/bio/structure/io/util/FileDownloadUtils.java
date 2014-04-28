@@ -33,7 +33,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.PrintWriter;
-
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
@@ -243,7 +243,62 @@ public class FileDownloadUtils {
 		}
 		return uPath;
 	}
+	
+	/**
+	 * Expands ~ in paths to the user's home directory.
+	 * 
+	 * <p>This does not work for some special cases for paths:
+	 * Other users' homes (~user/...), and
+	 * Tilde expansion within the path (/.../~/...)
+	 * @param file
+	 * @return
+	 */
+	public static String expandUserHome(String file) {
+		if(file.startsWith("~"+File.separator)) {
+			file = System.getProperty("user.home") + file.substring(1);
+		}
+		return file;
+	}
 
 
+
+	/**
+	 * Pings a HTTP URL. This effectively sends a HEAD request and returns <code>true</code> if the response code is in 
+	 * the 200-399 range.
+	 * @param url The HTTP URL to be pinged.
+	 * @param timeout The timeout in millis for both the connection timeout and the response read timeout. Note that
+	 * the total timeout is effectively two times the given timeout.
+	 * @return <code>true</code> if the given HTTP URL has returned response code 200-399 on a HEAD request within the
+	 * given timeout, otherwise <code>false</code>.
+	 * @author BalusC, http://stackoverflow.com/questions/3584210/preferred-java-way-to-ping-a-http-url-for-availability
+	 */
+	public static boolean ping(String url, int timeout) {
+	    //url = url.replaceFirst("https", "http"); // Otherwise an exception may be thrown on invalid SSL certificates.
+
+	    try {
+	        HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
+	        connection.setConnectTimeout(timeout);
+	        connection.setReadTimeout(timeout);
+	        connection.setRequestMethod("HEAD");
+	        int responseCode = connection.getResponseCode();
+	        return (200 <= responseCode && responseCode <= 399);
+	    } catch (IOException exception) {
+	        return false;
+	    }
+	}
+	
+	public static void main(String[] args) {
+		String url;
+		url = "http://scop.mrc-lmb.cam.ac.uk/scop/parse/";
+		System.out.format("%s\t%s%n",ping(url,200),url);
+		url = "http://scop.mrc-lmb.cam.ac.uk/scop/parse/foo";
+		System.out.format("%s\t%s%n",ping(url,200),url);
+		url = "http://scopzzz.mrc-lmb.cam.ac.uk/scop/parse/";
+		System.out.format("%s\t%s%n",ping(url,200),url);
+		url = "scop.mrc-lmb.cam.ac.uk";
+		System.out.format("%s\t%s%n",ping(url,200),url);
+		url = "http://scop.mrc-lmb.cam.ac.uk";
+		System.out.format("%s\t%s%n",ping(url,200),url);
+	}
 
 }

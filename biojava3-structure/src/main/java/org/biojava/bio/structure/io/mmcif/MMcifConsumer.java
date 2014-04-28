@@ -48,6 +48,7 @@ import org.biojava.bio.structure.io.mmcif.model.PdbxStructAssemblyGen;
 import org.biojava.bio.structure.io.mmcif.model.PdbxStructOperList;
 import org.biojava.bio.structure.io.mmcif.model.Refine;
 import org.biojava.bio.structure.io.mmcif.model.StructAsym;
+import org.biojava.bio.structure.io.mmcif.model.StructConn;
 import org.biojava.bio.structure.io.mmcif.model.StructKeywords;
 import org.biojava.bio.structure.io.mmcif.model.StructRefSeq;
 import org.biojava.bio.structure.io.mmcif.model.Struct;
@@ -103,6 +104,7 @@ public interface MMcifConsumer {
 	public void newEntitySrcGen(EntitySrcGen entitySrcGen);
 	public void newEntitySrcNat(EntitySrcNat entitySrcNat);
 	public void newEntitySrcSyn(EntitySrcSyn entitySrcSyn);
+	public void newStructConn(StructConn structConn);
 	
 	/** AuditAuthor contains the info from the PDB-AUTHOR records.
 	 *

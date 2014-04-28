@@ -42,8 +42,9 @@ import org.biojava.bio.structure.StructureException;
 import org.biojava.bio.structure.StructureTools;
 import org.biojava.bio.structure.align.ce.AbstractUserArgumentProcessor;
 import org.biojava.bio.structure.align.client.StructureName;
+import org.biojava.bio.structure.cath.CathDatabase;
 import org.biojava.bio.structure.cath.CathDomain;
-import org.biojava.bio.structure.cath.CathInstallation;
+import org.biojava.bio.structure.cath.CathFactory;
 import org.biojava.bio.structure.cath.CathSegment;
 import org.biojava.bio.structure.domain.PDPProvider;
 import org.biojava.bio.structure.domain.RemotePDPProvider;
@@ -87,7 +88,6 @@ public class AtomCache {
 
 	private boolean fetchFileEvenIfObsolete;
 
-	private ScopDatabase scopInstallation;
 	protected FileParsingParameters params;
 	protected PDPProvider pdpprovider;
 
@@ -163,8 +163,6 @@ public class AtomCache {
 		//
 
 		strictSCOP = true;
-
-		scopInstallation = null;
 
 		useMmCif = false;
 
@@ -322,14 +320,6 @@ public class AtomCache {
 		return pdpprovider;
 	}
 
-	public ScopDatabase getScopInstallation() {
-		if (scopInstallation == null) {
-			scopInstallation = ScopFactory.getSCOP();
-		}
-
-		return scopInstallation;
-	}
-
 	/**
 	 * Request a Structure based on a <i>name</i>.
 	 * 
@@ -411,7 +401,7 @@ public class AtomCache {
 				// return based on SCOP domain ID
 				return getStructureFromSCOPDomain(name);
 			} else if (structureName.isCathID()) {
-				return getStructureFromCATHDomain(structureName);
+				return getStructureForCathDomain(structureName, CathFactory.getCathDatabase());
 			} else if (name.length() == 6) {
 				// name is PDB.CHAINID style (e.g. 4hhb.A)
 
@@ -545,10 +535,7 @@ public class AtomCache {
 	 * @throws StructureException
 	 */
 	public Structure getStructureForDomain(ScopDomain domain) throws IOException, StructureException {
-		if (scopInstallation == null) {
-			scopInstallation = ScopFactory.getSCOP();
-		}
-		return getStructureForDomain(domain, scopInstallation);
+		return getStructureForDomain(domain, ScopFactory.getSCOP());
 	}
 
 	/**
@@ -661,10 +648,7 @@ public class AtomCache {
 	 * @throws StructureException
 	 */
 	public Structure getStructureForDomain(String scopId) throws IOException, StructureException {
-		if (scopInstallation == null) {
-			scopInstallation = ScopFactory.getSCOP();
-		}
-		return getStructureForDomain(scopId, scopInstallation);
+		return getStructureForDomain(scopId, ScopFactory.getSCOP());
 	}
 
 	/**
@@ -750,6 +734,7 @@ public class AtomCache {
 		}
 
 		// todo: use a SCOP implementation that is backed by SerializableCache
+		ScopDatabase scopInstallation = ScopFactory.getSCOP();
 		if (scopInstallation != null) {
 			if (scopInstallation instanceof CachedRemoteScopInstallation) {
 				CachedRemoteScopInstallation cacheScop = (CachedRemoteScopInstallation) scopInstallation;
@@ -898,17 +883,21 @@ public class AtomCache {
 	}
 
 	private ScopDomain getScopDomain(String scopId) {
-
-		if (scopInstallation == null) {
-			scopInstallation = ScopFactory.getSCOP();
-		}
-
-		return scopInstallation.getDomainByScopID(scopId);
+		return ScopFactory.getSCOP().getDomainByScopID(scopId);
 	}
 
-	private Structure getStructureFromCATHDomain(StructureName structureName) throws IOException, StructureException {
+	/**
+	 * Returns a {@link Structure} corresponding to the CATH identifier supplied in {@code structureName}, using the the {@link CathDatabase}
+	 * at {@link CathFactory#getCathDatabase()}.
+	 */
+	public Structure getStructureForCathDomain(StructureName structureName) throws IOException, StructureException {
+		return getStructureForCathDomain(structureName, CathFactory.getCathDatabase());
+	}
 
-		CathInstallation cathInstall = new CathInstallation(path);
+	/**
+	 * Returns a {@link Structure} corresponding to the CATH identifier supplied in {@code structureName}, using the specified {@link CathDatabase}.
+	 */
+	public Structure getStructureForCathDomain(StructureName structureName, CathDatabase cathInstall) throws IOException, StructureException {
 
 		CathDomain cathDomain = cathInstall.getDomainByCathId(structureName.getName());
 
@@ -946,9 +935,9 @@ public class AtomCache {
 		}
 
 		String rangeS = range.toString();
-		System.out.println(rangeS);
+		
 		Structure n = StructureTools.getSubRanges(s, rangeS);
-
+		
 		// add the ligands of the chain...
 
 		Chain newChain = n.getChainByPDB(structureName.getChainId());
@@ -979,7 +968,7 @@ public class AtomCache {
 			domain = guessScopDomain(name);
 		}
 
-		System.out.println(domain);
+		//System.out.println(domain);
 		if (domain != null) {
 			Structure s = getStructureForDomain(domain);
 			return s;
@@ -1084,11 +1073,7 @@ public class AtomCache {
 			String chainID = scopMatch.group(2);
 			String domainID = scopMatch.group(3);
 
-			if (scopInstallation == null) {
-				scopInstallation = ScopFactory.getSCOP();
-			}
-
-			for (ScopDomain potentialSCOP : scopInstallation.getDomainsForPDB(pdbID)) {
+			for (ScopDomain potentialSCOP : ScopFactory.getSCOP().getDomainsForPDB(pdbID)) {
 				Matcher potMatch = scopIDregex.matcher(potentialSCOP.getScopId());
 				if (potMatch.matches()) {
 					if (chainID.equals(potMatch.group(2)) || chainID.equals("_") || chainID.equals(".")

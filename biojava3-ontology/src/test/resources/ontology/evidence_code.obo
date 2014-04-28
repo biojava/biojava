@@ -1,0 +1,868 @@
+format-version: 1.2
+date: 20:12:2007 23:32
+saved-by: rhee
+auto-generated-by: OBO-Edit 1.101
+default-namespace: evidence_code2.obo
+namespace-id-rule: * ECO:$sequence(7,0,9999999)$
+
+[Term]
+id: ECO:0000000
+name: evidence_code
+
+[Term]
+id: ECO:0000001
+name: inferred by curator
+def: "To be used for those cases where an annotation is not supported by any evidence, but can be reasonably inferred by a curator from other GO annotations, for which evidence is available." [ECO:go]
+synonym: "IC" RELATED []
+is_a: ECO:0000000 ! evidence_code
+
+[Term]
+id: ECO:0000002
+name: inferred from direct assay
+def: "Used to indicate a direct assay was carried out to determine the function, process, or component indicated by the GO term. Curators therefore need to be careful, because an experiment considered as a direct assay for a term from one ontology may be a different kind of evidence for a term from another of the ontologies. In particular, there are more kinds of direct assays for cellular component than for function or process. For example, a fractionation experiment might provide \"direct assay\" evidence that a gene product is in the nucleus, but \"protein interaction\" (IPI) evidence for its function or process." [GO:IDA]
+synonym: "IDA" RELATED []
+is_a: ECO:0000006 ! inferred from experiment
+
+[Term]
+id: ECO:0000003
+name: inferred from reconstitution assay
+is_a: ECO:0000002 ! inferred from direct assay
+
+[Term]
+id: ECO:0000004
+name: inferred from cell fractionation
+def: "Used when an annotation is made based on separation of subcellular components based on their physical properties, such as density in sucrose density gradients. This evidence is used mostly for annotations to the cellular component ontology." [TAIR:TED]
+synonym: "IDA: cell fractionation" RELATED []
+is_a: ECO:0000100 ! inferred from fractionation
+
+[Term]
+id: ECO:0000005
+name: inferred from enzyme assay
+def: "Used when an annotation is made based on assays that determine the catalytic activity of enzymes." [TAIR:TED]
+synonym: "IDA: enzyme assays" RELATED []
+is_a: ECO:0000039 ! inferred from protein assay
+
+[Term]
+id: ECO:00000057
+name: inferred from sequence alignment
+synonym: "<new synonym>" RELATED []
+synonym: "ISA" RELATED []
+is_a: ECO:0000044 ! inferred from sequence similarity
+
+[Term]
+id: ECO:0000006
+name: inferred from experiment
+is_a: ECO:0000000 ! evidence_code
+
+[Term]
+id: ECO:00000060
+name: inferred from sequence orthology
+synonym: "<new synonym>" RELATED []
+synonym: "ISO" RELATED []
+is_a: ECO:00000057 ! inferred from sequence alignment
+
+[Term]
+id: ECO:00000063
+name: inferred from sequence model
+synonym: "<new synonym>" RELATED []
+synonym: "ISM" RELATED []
+is_a: ECO:0000041 ! inferred from similarity
+
+[Term]
+id: ECO:00000067
+name: inferred from electronic annotation
+def: "Used for annotations that depend directly on computation or automated transfer of annotations from a database, particularly when the analysis is performed internally and not published. A key feature that distinguishes this evidence code from others is that it is not made by a curator; use IEA when no curator has checked the specific annotation to verify its accuracy. The actual method used (BLAST search, Swiss-Prot keyword mapping, etc.) doesn't matter." [GO:IEA]
+synonym: "<new synonym>" RELATED []
+synonym: "IEA" RELATED []
+is_a: ECO:0000043 ! inferred from in-silico analysis
+
+[Term]
+id: ECO:0000007
+name: inferred from immunofluorescence
+def: "Used when an annotation is made based on methods that detect the presence of macromolecules, proteins, and compounds by the use of a fluorescent-labeled antibody." [TAIR:TED]
+synonym: "IDA: immunofluorescence" RELATED []
+is_a: ECO:0000040 ! inferred from immunological assay
+
+[Term]
+id: ECO:0000008
+name: inferred from expression pattern
+def: "The IEP evidence code covers cases where the annotation is inferred from the timing or location of expression of a gene, particularly when comparing a gene that is not yet characterized with the timing or location of expression of genes known to be involved in a particular process. Use this code with caution! It may be difficult to determine whether the expression pattern really indicates that a gene plays a role in a given process, so the IEP evidence code is usually used in conjunction with high level GO terms in the biological process ontology." [GO:IEP]
+synonym: "IEP" RELATED []
+is_a: ECO:0000006 ! inferred from experiment
+
+[Term]
+id: ECO:0000009
+name: inferred from transcript expression
+is_a: ECO:0000008 ! inferred from expression pattern
+
+[Term]
+id: ECO:0000010
+name: inferred from protein expression
+is_a: ECO:0000008 ! inferred from expression pattern
+is_a: ECO:0000039 ! inferred from protein assay
+
+[Term]
+id: ECO:0000011
+name: inferred from genetic interaction
+synonym: "IGI" RELATED []
+xref: TAIR:TED\:0000006
+is_a: ECO:0000059 ! inferred from phenotype
+
+[Term]
+id: ECO:0000012
+name: inferred from functional complementation
+def: "Used when an annotation is made based on a functional complementation assay in which a wild-type copy of the gene in question is inserted into a mutant background in the organism of the gene's origin or a heterologous organism with a mutation in the homologous gene." [TAIR:TED]
+synonym: "IGI: functional complementation" RELATED []
+is_a: ECO:0000011 ! inferred from genetic interaction
+
+[Term]
+id: ECO:0000013
+name: inferred from transgenic rescue
+is_a: ECO:0000012 ! inferred from functional complementation
+
+[Term]
+id: ECO:0000015
+name: inferred from mutant phenotype
+def: "The IMP evidence code covers those cases when the function, process or cellular localization of a gene product is inferred based on differences in the function, process, or cellular localization between two different alleles of the corresponding gene. The IMP code is used for cases where one allele may be designated 'wild-type' and another as 'mutant'. It is also used in cases where allelic variation occurs naturally and no specific allele is designated as wild-type or mutant. Caution should be used when making annotations from gain-of-function mutations as it may be difficult to infer a gene's normal function from a gain of function mutation, although it is sometimes possible." [GO:IMP]
+is_a: ECO:0000059 ! inferred from phenotype
+
+[Term]
+id: ECO:0000016
+name: inferred from loss-of-function mutant phenotype
+is_a: ECO:0000015 ! inferred from mutant phenotype
+
+[Term]
+id: ECO:0000017
+name: inferred from ectopic expression
+def: "Used when an annotation is made based on the analysis of the phenotype of a wild-type or mutant transgenic organism that has been engineered to overexpress or ectopically express the gene product in question." [TAIR:TED]
+synonym: "IMP: analysis of overexpression/ectopic expression phenotype" RELATED []
+is_a: ECO:0000059 ! inferred from phenotype
+
+[Term]
+id: ECO:0000018
+name: inferred from anti-sense experiment
+def: "Used when an annotation is based on a phenotype observed when expressing an anti-sense version of a gene product in a wild-type (for that gene product) background." [TAIR:TED]
+synonym: "IMP: anti-sense experiments" RELATED []
+is_a: ECO:0000059 ! inferred from phenotype
+
+[Term]
+id: ECO:0000019
+name: inferred from RNAi experiment
+def: "Inference based on a phenotype observed when expressing an RNAi construct that includes a fragment of the gene product in a wild-type (for that gene product) background. A double-stranded RNA specifically suppresses the expression of the gene bearing its complementary sequence." [TAIR:TED]
+synonym: "IMP: RNAi experiments" RELATED []
+is_a: ECO:0000059 ! inferred from phenotype
+
+[Term]
+id: ECO:0000020
+name: inferred from specific protein inhibition
+is_a: ECO:0000039 ! inferred from protein assay
+
+[Term]
+id: ECO:0000021
+name: inferred from physical interaction
+def: "Covers physical interactions between the gene product of interest and another molecule (such as a protein, ion or complex). IPI can be thought of as a type of IDA, where the actual binding partner or target can be specified, using \"with\" in the with/from field." [GO:IPI]
+synonym: "IPI" RELATED []
+is_a: ECO:0000006 ! inferred from experiment
+
+[Term]
+id: ECO:0000022
+name: inferred from co-purification
+def: "Used in component annotations when a subunit is isolated as part of purification of its larger complex." [TAIR:TED]
+synonym: "IPI: co-purification" RELATED []
+is_a: ECO:0000021 ! inferred from physical interaction
+
+[Term]
+id: ECO:0000023
+name: inferred from ligand binding
+is_a: ECO:0000021 ! inferred from physical interaction
+
+[Term]
+id: ECO:0000024
+name: inferred from protein binding
+is_a: ECO:0000023 ! inferred from ligand binding
+is_a: ECO:0000039 ! inferred from protein assay
+
+[Term]
+id: ECO:0000025
+name: inferred from hybrid interaction
+is_a: ECO:0000023 ! inferred from ligand binding
+
+[Term]
+id: ECO:0000026
+name: inferred from nucleic acid hybridization
+is_a: ECO:0000073 ! inferred from genomic analysis
+
+[Term]
+id: ECO:0000027
+name: inferred from structural similarity
+def: "Used when an annotation is made based on the structural similarity of the annotated gene/gene product to a single other gene or group of genes. In the case of a single gene, an accession for the related gene's sequence is entered in the evidence_with field." [TAIR:TED]
+synonym: "ISS: structural similarity" RELATED []
+is_a: ECO:0000041 ! inferred from similarity
+
+[Term]
+id: ECO:0000028
+name: inferred from motif similarity
+def: "Used when an annotation is made based on the presence of a recognized domain or motif in a gene product's (usually protein) primary sequence." [TAIR:TED]
+synonym: "ISS: recognized domains" RELATED []
+is_a: ECO:0000044 ! inferred from sequence similarity
+
+[Term]
+id: ECO:0000029
+name: inferred from InterPro motif similarity
+is_a: ECO:0000028 ! inferred from motif similarity
+
+[Term]
+id: ECO:0000030
+name: inferred from curated BLAST match
+is_a: ECO:00000057 ! inferred from sequence alignment
+
+[Term]
+id: ECO:0000031
+name: inferred from curated BLAST match to protein
+is_a: ECO:0000030 ! inferred from curated BLAST match
+
+[Term]
+id: ECO:0000032
+name: inferred from curated BLAST match to nucleic acid
+is_a: ECO:0000030 ! inferred from curated BLAST match
+
+[Term]
+id: ECO:0000033
+name: traceable author statement
+def: "The TAS evidence code covers author statements that are attributed to a cited source. Typically this type of information comes from review articles. Material from the introductions and discussion sections of non-review papers may also be suitable if another reference is cited as the source of experimental work or analysis. When annotating with this code the curator should use caution and be aware that authors often cite papers dealing with experiments that were performed in organisms different from the one being discussed in the paper at hand. Thus a problem with the TAS code is that it may turn out from following up the references in the paper that no experiments were performed on the gene in the organism actually being characterized in the primary paper. For this reason we recommend (when time and resources allow) that curators track down the cited paper and annotate directly from the experimental paper using the appropriate experimental evidence code. When this is not possible and it is necessary to annotate from reviews, the TAS code is the appropriate code to use for statements that are associated with a cited reference. Once an annotation has been made to a given term using an experimental evidence code, we recommend removing any annotations made to the same term using the TAS evidence code." [GO:TAS]
+synonym: "TAS" RELATED []
+is_a: ECO:0000000 ! evidence_code
+is_a: ECO:0000043 ! inferred from in-silico analysis
+
+[Term]
+id: ECO:0000034
+name: non-traceable author statement
+def: "The NAS evidence code should be used in all\ncases where the author makes a statement that a curator wants to capture but\nfor which there are neither results presented nor a specific reference cited\nin the source used to make the annotation. The source of the information may\nbe peer reviewed papers, textbooks, database records or vouchered specimens." [GO:NAS]
+synonym: "NAS" RELATED []
+is_a: ECO:0000000 ! evidence_code
+
+[Term]
+id: ECO:0000035
+name: no biological data
+def: "Used for annotations when information about the molecular function, biological process, or cellular component of the gene or gene product being annotated is not available. Use of the ND evidence code indicates that the annotator at the contributing database found no information that allowed making an annotation to any term indicating specific knowledge from the ontology in question (molecular function, biological process, or cellular component) as of the date indicated. This code should be used only for annotations to the root terms, molecular function ; GO:0003674, biological process ; GO:0008150, or cellular component ; GO:0005575, which, when used in annotations, indicate that no knowledge is available about a gene product in that aspect of GO." [GO:ND]
+synonym: "ND" RELATED []
+is_a: ECO:0000000 ! evidence_code
+
+[Term]
+id: ECO:0000037
+name: not_recorded
+def: "Used for annotations done before curators began tracking evidence types (appears in some legacy annotations). It may not be used for new annotations." [GO:NR]
+synonym: "NR" RELATED []
+is_a: ECO:0000000 ! evidence_code
+
+[Term]
+id: ECO:0000038
+name: inferred from transient rescue
+is_a: ECO:0000012 ! inferred from functional complementation
+
+[Term]
+id: ECO:0000039
+name: inferred from protein assay
+is_a: ECO:0000002 ! inferred from direct assay
+
+[Term]
+id: ECO:0000040
+name: inferred from immunological assay
+is_a: ECO:0000023 ! inferred from ligand binding
+is_a: ECO:0000039 ! inferred from protein assay
+
+[Term]
+id: ECO:0000041
+name: inferred from similarity
+synonym: "<new synonym>" RELATED []
+synonym: "ISS" RELATED []
+is_a: ECO:0000000 ! evidence_code
+
+[Term]
+id: ECO:0000042
+name: inferred from gain-of-function mutant phenotype
+is_a: ECO:0000015 ! inferred from mutant phenotype
+
+[Term]
+id: ECO:0000043
+name: inferred from in-silico analysis
+alt_id: ECO:0000036
+xref: TAIR:TED\:0000004
+is_a: ECO:0000000 ! evidence_code
+
+[Term]
+id: ECO:0000044
+name: inferred from sequence similarity
+def: "Used when an annotation is made based on the sequence similarity of the annotated gene/gene product to a single other gene or group of genes and this evidence has been examined by a curator." [TAIR:TED]
+is_a: ECO:0000041 ! inferred from similarity
+
+[Term]
+id: ECO:0000045
+name: inferred from spatial pattern of protein expression
+is_a: ECO:0000010 ! inferred from protein expression
+
+[Term]
+id: ECO:0000046
+name: inferred from level of protein expression
+is_a: ECO:0000010 ! inferred from protein expression
+
+[Term]
+id: ECO:0000047
+name: inferred from spatial pattern of transcript expression
+is_a: ECO:0000009 ! inferred from transcript expression
+
+[Term]
+id: ECO:0000048
+name: inferred from level of transcript expression
+is_a: ECO:0000009 ! inferred from transcript expression
+
+[Term]
+id: ECO:0000049
+name: inferred from reporter gene assay
+def: "Used when an annotation is made on the basis of the expression pattern of a reporter gene. The reporter gene may consist of the native promoter of the gene in question that drives the expression of a readily assayable gene product such as GUS or GFP. The reporter gene may also be a marker of a particular type of physiological response." [TAIR:TED]
+synonym: "IEP: expression of a reporter gene" RELATED []
+is_a: ECO:0000059 ! inferred from phenotype
+
+[Term]
+id: ECO:0000050
+name: inferred from voucher specimen
+def: "Used when an annotation is made on the basis of for a phenotype description\nfor a species or higher level group that given by an author who explicitly\nreferences an observation of a voucher specimen(s). Voucher specimens are\ndefined as those specimens with permanent museum catalog numbers. Thus it would be possible for a person to examine this particular specimen and observe the annotated phenotype." [Phenoscape:DOA]
+is_a: ECO:0000059 ! inferred from phenotype
+
+[Term]
+id: ECO:0000052
+name: inferred from supressor/enhancer interaction
+synonym: "IGI: 'traditional' genetic interactions (e.g. suppressors, synthetic lethals)" RELATED []
+xref: TAIR:TED\:0000063
+is_a: ECO:0000011 ! inferred from genetic interaction
+
+[Term]
+id: ECO:0000053
+name: inferred from reviewed computational analysis
+def: "Used for: Predictions based on large-scale experiments (e.g. genome-wide two-hybrid, genome-wide synthetic interactions); Predictions based on integration of large-scale datasets of several types; Text-based computation (e.g. text mining). This code is used for annotations based on a non-sequence-based computational method, where the results have been reviewed by an author or a curator. IEA should be used for any computational annotations that are not checked for accuracy by a curator (or by the authors of a paper describing such analysis), and sequence comparisons that have been reviewed use ISS. For microarray results alone, IEP is preferred, but RCA is used when microarray results are combined with results of other types of large-scale experiments." [ECO:go]
+synonym: "RCA" RELATED []
+is_a: ECO:0000043 ! inferred from in-silico analysis
+
+[Term]
+id: ECO:0000054
+name: inferred from double mutant analysis
+def: "Used when an annotation is made based on the phenotype of double mutant organism that contains a mutation in the gene product of interest in addition to a second mutation at an unrelated locus." [TAIT:TED]
+synonym: "IGI: double mutant analysis" RELATED []
+is_a: ECO:0000011 ! inferred from genetic interaction
+
+[Term]
+id: ECO:0000055
+name: inferred from array experiment
+is_a: ECO:0000008 ! inferred from expression pattern
+
+[Term]
+id: ECO:0000056
+name: inferred from epistatic interaction
+def: "Used when an annotation is based on results of epistatis analysis of an allele of the gene in question and a mutant allele at another locus." [TAIR:TED]
+synonym: "IGI: epistatic interactions" RELATED []
+is_a: ECO:0000011 ! inferred from genetic interaction
+
+[Term]
+id: ECO:0000058
+name: inferred from expression microarray experiment
+is_a: ECO:0000055 ! inferred from array experiment
+
+[Term]
+id: ECO:0000059
+name: inferred from phenotype
+alt_id: ECO:0000014
+synonym: "IMP" RELATED []
+synonym: "inferred from phenotype" EXACT []
+is_a: ECO:0000006 ! inferred from experiment
+
+[Term]
+id: ECO:0000061
+name: inferred from quantitative trait analysis
+def: "Used when an annotation is made for a gene product that has not been cloned but is associated with a quantitative trait locus." [TAIR:tn]
+synonym: "IGI: quantitative trait analysis" RELATED []
+is_a: ECO:0000059 ! inferred from phenotype
+
+[Term]
+id: ECO:0000062
+name: inferred from genomic microarray experiment
+is_a: ECO:0000055 ! inferred from array experiment
+
+[Term]
+id: ECO:0000064
+name: inferred from functional complemtation in heterologous system
+def: "Used when an annotation is made based on a functional complementation assay in which a wild-type copy of the gene in question is inserted into a heterologous organism with a mutation in the homologous gene." [TAIR:TED]
+synonym: "IGI: functional complementation in heterologous system" RELATED []
+is_a: ECO:0000012 ! inferred from functional complementation
+
+[Term]
+id: ECO:0000065
+name: inferred from CpG island microarray experiment
+is_a: ECO:0000055 ! inferred from array experiment
+
+[Term]
+id: ECO:0000066
+name: inferred from yeast one-hybrid assay
+def: "Used when an annotation is based on the interaction of a protein with a DNA fragment in a yeast one-hybrid assay. The assay involves screening a library of candidate proteins for the ability bind to a target, cis-regulatory element or any other short, DNA binding sequence placed 5' to a yeast reporter gene." [TAIR:TED]
+synonym: "IPI: yeast one-hybrid assay" RELATED []
+is_a: ECO:0000025 ! inferred from hybrid interaction
+
+[Term]
+id: ECO:0000068
+name: inferred from yeast 2-hybrid assay
+def: "Used when an annotation is based on the interaction between two proteins in a yeast two-hybrid assay. The assay involves screening a trap-tagged library with a bait-tagged vector. The library is tagged with a DNA-binding domain (trap) and the bait is tagged with a transcriptional activation domain. Interaction between a library-trap protein and the bait results in activation of a yeast reporter gene whose transcription can be experimentally assayed." [TAIR:TED]
+synonym: "IPI: yeast two-hybrid assay" RELATED []
+is_a: ECO:0000025 ! inferred from hybrid interaction
+
+[Term]
+id: ECO:0000069
+name: inferred from differential methylation hybridization
+is_a: ECO:0000026 ! inferred from nucleic acid hybridization
+
+[Term]
+id: ECO:0000070
+name: inferred from co-immunoprecipitation
+def: "Used when an annotation is based on the interaction of one gene product with another in a co-immunoprecipitation assay (two or more proteins are precipitated when treated with an antibody specific to a single protein). The interacting protein is referenced in the evidence_with column." [TAIR:TED]
+synonym: "IPI: co-immunoprecipitation" RELATED []
+is_a: ECO:0000085 ! inferred from immunoprecipitation
+
+[Term]
+id: ECO:0000072
+name: inferred from Sos-recruitment assay
+def: "Used when an annotation is based on the interaction of two proteins in a Sos-recruitment assay. The assay is a genetic screening system that detects protein-protein interactions and is not based on a transcriptional readout." [TAIR:TED]
+synonym: "IPI: Sos-recruitment assay" RELATED []
+is_a: ECO:0000021 ! inferred from physical interaction
+
+[Term]
+id: ECO:0000073
+name: inferred from genomic analysis
+is_a: ECO:0000006 ! inferred from experiment
+
+[Term]
+id: ECO:0000074
+name: inferred from split-ubiquitin assay
+def: "Used when an annotation is based on the interaction of two proteins in a split-ubiquitin assay. The bait protein is fused to the C-terminal ubiquitin (Cub) domain followed by a reporter protein, and the prey protein is fused to a mutated N terminal ubiquiting (NubG) domain. If bait and prey interact, their interaction brings the NubG and Cub domains close enough together to reconstitute split-ubiquitin, resulting in the release of the reporter protein by the action of the UBPs." [TAIR:TED]
+synonym: "IPI: split-ubiquitin assay" RELATED []
+is_a: ECO:0000021 ! inferred from physical interaction
+
+[Term]
+id: ECO:0000076
+name: inferred from far-Western assay
+def: "Used when an annotation is based on the interaction of protein with another in a far-Western assay. The assay involves separating target proteins on an SDS-PAGE gel, blotting to a membrane, hybridization with a protein probe and visualization using a probe-directed antibody. The interacting protein is referenced in the evidence_with column." [TAIR:TED]
+synonym: "IPI: far-Western analysis" RELATED []
+is_a: ECO:0000021 ! inferred from physical interaction
+
+[Term]
+id: ECO:0000077
+name: inferred from methylation-specific PCR
+is_a: ECO:0000082 ! inferred from PCR experiment
+
+[Term]
+id: ECO:0000078
+name: inferred from Southern blot hybridization
+def: "Used when an annotation is based on the hybridization of a probe derived from the gene in question with a gene of known function/process/component. Can also be used when a probe derived from a gene of known function/process/component hybridizes with the gene in question." [TAIR:TED]
+synonym: "ISS: Southern blotting" RELATED []
+is_a: ECO:0000026 ! inferred from nucleic acid hybridization
+
+[Term]
+id: ECO:0000079
+name: inferred from affinity chromatography
+def: "Used when an annotation is made based on affinity chromatography, which is a selective separation technique by which a compound (e.g., an antibody) is immobilized on a polymeric matrix and used to bind selectively other compounds. Following removal of the unattached components, the bound compound is displaced by changing the concentration of protons, salts, or cofactors in the eluent." [TAIR:TED]
+synonym: "IDA: affinity chromatography" RELATED []
+is_a: ECO:0000023 ! inferred from ligand binding
+
+[Term]
+id: ECO:0000081
+name: inferred from targeting sequence prediction
+def: "Used when a component annotation is made based on the presence of a targeting sequence in a protein's primary sequence. The presence of the targeting sequence may be detected by computational prediction and/or the author's manual examination of the sequence." [TAIR:TED]
+synonym: "ISS: targeting sequence prediction" RELATED []
+is_a: ECO:0000028 ! inferred from motif similarity
+
+[Term]
+id: ECO:0000082
+name: inferred from PCR experiment
+is_a: ECO:0000073 ! inferred from genomic analysis
+
+[Term]
+id: ECO:0000083
+name: inferred from transmembrane domain prediction
+def: "Used when a component annotation is made based on the presence of one or more transmembrane domains in a protein's primary sequence. The presence of the transmembrane domains may be detected by computational prediction and/or the author's manual examination of the sequence." [TAIR:TED]
+synonym: "ISS: transmembrane domain prediction" RELATED []
+is_a: ECO:0000028 ! inferred from motif similarity
+
+[Term]
+id: ECO:0000085
+name: inferred from immunoprecipitation
+def: "Used when an annotation is made based on a method that precipitates a multivalent antigen by a bivalent antibody." [TAIR:TED]
+synonym: "IDA: immunoprecipitation" RELATED []
+is_a: ECO:0000040 ! inferred from immunological assay
+
+[Term]
+id: ECO:0000086
+name: inferred from amplification of intermethylated sites
+is_a: ECO:0000073 ! inferred from genomic analysis
+
+[Term]
+id: ECO:0000087
+name: inferred from immunolocalization
+def: "Used when an annotation is made based on methods that detect the presence of macromolecules, proteins, and compounds by the use of antibodies." [TAIR:TED]
+synonym: "IDA: immunolocalization" RELATED []
+is_a: ECO:0000040 ! inferred from immunological assay
+is_a: ECO:0000122 ! inferred from protein localization
+
+[Term]
+id: ECO:0000089
+name: inferred from restriction landmark genomic scanning
+is_a: ECO:0000073 ! inferred from genomic analysis
+
+[Term]
+id: ECO:0000090
+name: inferred from immunogold labelling
+def: "Used when an annotation is made based on immunolocalization method that detects an antigen in cytological preparations by using a gold-labeled secondary antibody." [TAIR:TED]
+synonym: "IDA: immunogold labelling" RELATED []
+is_a: ECO:0000040 ! inferred from immunological assay
+
+[Term]
+id: ECO:0000092
+name: inferred from immunolocalization of epitope-tagged protein
+def: "Used when an annotation is made based on immunolocalization of recombinant proteins fused with epitopes that are recognized by antibodies." [TAIR:TED]
+synonym: "IDA: immunolocalization of epitope-tagged protein" RELATED []
+is_a: ECO:0000087 ! inferred from immunolocalization
+
+[Term]
+id: ECO:0000093
+name: inferred from oligonucleotide microarray
+is_a: ECO:0000055 ! inferred from array experiment
+
+[Term]
+id: ECO:0000094
+name: inferred from bioassay
+def: "Used when an annotation is made based on assays using living organisms to measure the effect of a substance, factor, or condition." [TAIR:TED]
+synonym: "IDA: bioassay" RELATED []
+is_a: ECO:0000002 ! inferred from direct assay
+
+[Term]
+id: ECO:0000096
+name: inferred from electrophoretic mobility shift assay
+def: "Used when an annotation is made based on electrophoretic mobility shift of macromolecules, compounds, and proteins. Most commonly used for detecting the binding of protein to DNA." [TAIR:TED]
+synonym: "IDA: electrophoretic mobility shift assay" RELATED []
+is_a: ECO:0000002 ! inferred from direct assay
+
+[Term]
+id: ECO:0000097
+name: inferred from cDNA microarray
+is_a: ECO:0000055 ! inferred from array experiment
+
+[Term]
+id: ECO:0000098
+name: inferred from in situ hybridization
+def: "Used when an annotation is made based on a method that hybridizes a labeled nucleic acid probe to a tissue or cell specimen in which the cellular structures are still intact. Depending on the label and protocol used, the probe may detect complementary DNA or RNA by hybridizing specifically to that gene or sequence." [TAIR:TED]
+synonym: "IDA: in situ hybridization" RELATED []
+is_a: ECO:0000026 ! inferred from nucleic acid hybridization
+
+[Term]
+id: ECO:0000100
+name: inferred from fractionation
+is_a: ECO:0000002 ! inferred from direct assay
+
+[Term]
+id: ECO:0000101
+name: inferred from Affymetrix array
+is_a: ECO:0000055 ! inferred from array experiment
+
+[Term]
+id: ECO:0000102
+name: inferred from co-fractionation
+def: "Used when an annotation is made based on fractionation of a protein with other compounds, factors, or macromolecules." [TAIR:TED]
+synonym: "IDA: co-fractionation" RELATED []
+is_a: ECO:0000100 ! inferred from fractionation
+
+[Term]
+id: ECO:0000104
+name: inferred from level of transcript expression determined by microarray analysis
+def: "Used when an annotation is made based on levels of RNA expression determined by microarray experiment." [TAIR:TED]
+synonym: "IEP: transcript levels (e.g. microarray data)" RELATED []
+is_a: ECO:0000048 ! inferred from level of transcript expression
+is_a: ECO:0000058 ! inferred from expression microarray experiment
+
+[Term]
+id: ECO:0000105
+name: inferred from Nimblegen array
+is_a: ECO:0000055 ! inferred from array experiment
+
+[Term]
+id: ECO:0000106
+name: inferred from level of transcript expression determined by Northern assay
+def: "Used when an annotation is made based on levels of RNA expression determined by a Northern blot experiment." [TAIR:TED]
+synonym: "IEP: transcript levels (e.g. Northerns)" RELATED []
+is_a: ECO:0000048 ! inferred from level of transcript expression
+
+[Term]
+id: ECO:0000108
+name: inferred from level of transcript expression determined by RT-PCR
+def: "Used when an annotation is made based on levels of RNA expression determined by an RT-PCR experiment (quantitative or otherwise)." [TAIR:TED]
+synonym: "IEP: transcript levels (e.g. RT-PCR)" RELATED []
+is_a: ECO:0000048 ! inferred from level of transcript expression
+is_a: ECO:0000109 ! inferred from RT-PCR experiment
+
+[Term]
+id: ECO:0000109
+name: inferred from RT-PCR experiment
+is_a: ECO:0000082 ! inferred from PCR experiment
+
+[Term]
+id: ECO:0000110
+name: inferred from RNA protection assay
+def: "Used when an annotation is made based on levels of RNA expression determined by an RNA protection assay." [TAIR:TED]
+synonym: "IEP: RNA protection assay" RELATED []
+is_a: ECO:0000009 ! inferred from transcript expression
+
+[Term]
+id: ECO:0000112
+name: inferred from Western blot assay
+def: "Used when an annotation is made based on levels of protein expression determined by a Western blot assay." [TAIR:TED]
+synonym: "IEP: protein levels (e.g. Western blots)" RELATED []
+is_a: ECO:0000046 ! inferred from level of protein expression
+
+[Term]
+id: ECO:0000114
+name: inferred from expression library screening
+def: "Used when an annotation is made on the basis of a protein expression library screen where a protein of interest is isolated on the basis of its hybridization to an antibody raised to a homologous protein." [TAIR:TED]
+synonym: "IEP: expression library screening" RELATED []
+is_a: ECO:0000010 ! inferred from protein expression
+is_a: ECO:0000040 ! inferred from immunological assay
+
+[Term]
+id: ECO:0000116
+name: inferred from differential hybridization
+def: "Used when an annotation is made based on results of a differential hybridization experiment that demonstrates expression of an RNA under one condition and not another." [TAIR:TED]
+synonym: "IEP: differential hybridization" RELATED []
+is_a: ECO:0000009 ! inferred from transcript expression
+is_a: ECO:0000026 ! inferred from nucleic acid hybridization
+
+[Term]
+id: ECO:0000118
+name: inferred from subtractive hybridization
+def: "Used when an annotation is made based on results of a subtractive hybridization experiment that demonstrates expression of an RNA under one condition and not another." [TAIR:TED]
+synonym: "IEP: subtractive hybridization" RELATED []
+is_a: ECO:0000009 ! inferred from transcript expression
+is_a: ECO:0000026 ! inferred from nucleic acid hybridization
+
+[Term]
+id: ECO:0000120
+name: inferred from over expression
+def: "Used when an annotation is made based on the analysis of the phenotype of a wild-type or mutant transgenic organism that has been engineered to overexpress the gene product in question." [TAIR:TED]
+synonym: "IMP: analysis of overexpression/ectopic expression phenotype" RELATED []
+is_a: ECO:0000059 ! inferred from phenotype
+
+[Term]
+id: ECO:0000122
+name: inferred from protein localization
+is_a: ECO:0000039 ! inferred from protein assay
+
+[Term]
+id: ECO:0000124
+name: inferred from localization of fusion protein
+is_a: ECO:0000122 ! inferred from protein localization
+
+[Term]
+id: ECO:0000126
+name: inferred from localization of GFP fusion protein
+synonym: "IDA: localization of GFP/YFP fusion protein" RELATED []
+is_a: ECO:0000124 ! inferred from localization of fusion protein
+
+[Term]
+id: ECO:0000128
+name: inferred from localization of YFP fusion protein
+synonym: "IDA: localization of GFP/YFP fusion protein" RELATED []
+is_a: ECO:0000124 ! inferred from localization of fusion protein
+
+[Term]
+id: ECO:0000130
+name: inferred from localiztion of GUS fusion protein
+synonym: "IDA: localization of GUS fusion protein" RELATED []
+is_a: ECO:0000124 ! inferred from localization of fusion protein
+
+[Term]
+id: ECO:0000132
+name: inferred from localization of lacZ fusion protein
+is_a: ECO:0000124 ! inferred from localization of fusion protein
+
+[Term]
+id: ECO:0000134
+name: inferred from transport assay
+synonym: "IDA: transport assay" RELATED []
+is_a: ECO:0000002 ! inferred from direct assay
+
+[Term]
+id: ECO:0000136
+name: inferred from nucleic acid binding assay
+is_a: ECO:0000023 ! inferred from ligand binding
+
+[Term]
+id: ECO:0000138
+name: inferred from ribohomopolymer binding assay
+synonym: "IDA: ribohomopolymer binding assay" RELATED []
+is_a: ECO:0000136 ! inferred from nucleic acid binding assay
+
+[Term]
+id: ECO:0000140
+name: inferred from thin layer chromatographic assay
+synonym: "IDA: thin layer chromatography" RELATED []
+is_a: ECO:0000002 ! inferred from direct assay
+
+[Term]
+id: ECO:0000142
+name: inferred from protein:ion binding assay
+is_a: ECO:0000024 ! inferred from protein binding
+
+[Term]
+id: ECO:0000144
+name: inferred from Southwestern analysis
+def: "Used when an annotation is made based on a Southwestern blot analysis, which detects DNA binding of proteins using labeled DNA as probe hybridizing to electrophoretically separated proteins." [TAIR:TED]
+synonym: "IDA: Southwestern analysis" RELATED []
+is_a: ECO:0000136 ! inferred from nucleic acid binding assay
+
+[Term]
+id: ECO:0000146
+name: inferred from Northwestern analysis
+def: "Used when an annotation is made based on a Northwestern blot analysis, which detects RNA binding of proteins using labeled RNA as probe hybridizing to electrophoretically separated proteins." [TAIR:TED]
+synonym: "IDA: Northwestern analysis" RELATED []
+is_a: ECO:0000136 ! inferred from nucleic acid binding assay
+
+[Term]
+id: ECO:0000148
+name: inferred from in vitro binding assay
+synonym: "IDA: in vitro binding assay" RELATED []
+is_a: ECO:0000021 ! inferred from physical interaction
+
+[Term]
+id: ECO:0000150
+name: inferred from in vitro transcription reconstitution assay
+synonym: "IDA: in vitro reconstitution assay with recombinant protein" RELATED []
+is_a: ECO:0000003 ! inferred from reconstitution assay
+
+[Term]
+id: ECO:0000152
+name: inferred from in vitro transcription reconstitution assay with recombinant protein
+synonym: "IDA: in vitro reconstitution assay with recombinant protein" RELATED []
+is_a: ECO:0000150 ! inferred from in vitro transcription reconstitution assay
+
+[Term]
+id: ECO:0000154
+name: inferred from protein expression in heterologous system
+synonym: "IDA: protein expression in heterologous system" RELATED []
+is_a: ECO:0000010 ! inferred from protein expression
+
+[Term]
+id: ECO:0000156
+name: inferred from protein separation
+is_a: ECO:0000100 ! inferred from fractionation
+
+[Term]
+id: ECO:0000158
+name: inferred from protein separation followed by direct sequencing
+synonym: "IDA: protein separation and direct sequencing" RELATED []
+is_a: ECO:0000156 ! inferred from protein separation
+
+[Term]
+id: ECO:0000160
+name: inferred from protein separation followed by fragment identification
+synonym: "IDA: protein separation and fragment identification" RELATED []
+is_a: ECO:0000156 ! inferred from protein separation
+
+[Term]
+id: ECO:0000162
+name: inferred from uptake assay in a heterologous system
+def: "Used when an annotation is made based on small molecule update assays carried out in a heterologous system that contains a recombinant protein." [TAIR:TED]
+synonym: "IDA: uptake assay in heterologous system" RELATED []
+is_a: ECO:0000134 ! inferred from transport assay
+
+[Term]
+id: ECO:0000164
+name: inferred from electrophysiological experiment
+is_a: ECO:0000002 ! inferred from direct assay
+
+[Term]
+id: ECO:0000166
+name: inferred from two-electrode voltage clamp technique
+synonym: "IDA: two-electrode voltage clamp technique" RELATED []
+is_a: ECO:0000164 ! inferred from electrophysiological experiment
+
+[Term]
+id: ECO:0000168
+name: inferred from transcription assay
+is_a: ECO:0000002 ! inferred from direct assay
+
+[Term]
+id: ECO:0000170
+name: inferred from transcriptional activation assay
+def: "Used when an annotation is made based on assays that show transcriptional activation of a specific target reporter gene." [TAIR:TED]
+synonym: "IDA: transcriptional activation assay" RELATED []
+is_a: ECO:0000168 ! inferred from transcription assay
+
+[Term]
+id: ECO:0000172
+name: inferred from biochemical trait
+def: "Used when an annotation is made based on the analysis of a biochemical aspect of a mutant phenotype; for example, the accumulation of a biosynthetic intermediate." [TAIR:TED]
+synonym: "IMP: analysis of biochemical trait" RELATED []
+is_a: ECO:0000059 ! inferred from phenotype
+
+[Term]
+id: ECO:0000174
+name: inferred from physiological response
+def: "Used when an annotation is made based on the physiological response of a mutant to an external stimulus; for example, abnormal growth of the root in response to gravity, delay in flowering in response to varying light conditions." [TAIR:TED]
+synonym: "IMP: analysis of physiological response" RELATED []
+is_a: ECO:0000059 ! inferred from phenotype
+
+[Term]
+id: ECO:0000176
+name: inferred from visible phenotype
+def: "Used when an annotation is made based on the visual examination of a mutant phenotype; for example, abnormalities in organism morphology." [TAIR:TED]
+synonym: "IMP: analysis of visible trait" RELATED []
+is_a: ECO:0000059 ! inferred from phenotype
+
+[Term]
+id: ECO:0000177
+name: inferred from genomic context
+def: "Used whenever information about the genomic context of a gene product forms part of the evidence for a particular annotation. Genomic context includes, but is not limited to, such things as identity of the genes neighboring the gene product in question (i.e. synteny), operon structure, and phylogenetic or other whole genome analysis." [ECO:go]
+synonym: "IGC" RELATED []
+is_a: ECO:0000000 ! evidence_code
+
+[Term]
+id: ECO:0000178
+name: Inferred from in vivo assay
+is_a: ECO:0000094 ! inferred from bioassay
+
+[Term]
+id: ECO:0000179
+name: inferred from animal model system
+is_a: ECO:0000178 ! Inferred from in vivo assay
+
+[Term]
+id: ECO:0000180
+name: inferred from clinical study
+is_a: ECO:0000178 ! Inferred from in vivo assay
+
+[Term]
+id: ECO:0000181
+name: inferred from in vitro assay
+is_a: ECO:0000094 ! inferred from bioassay
+
+[Term]
+id: ECO:0000182
+name: inferred from in vitro culture assay
+synonym: "ex vivo assay" RELATED []
+is_a: ECO:0000181 ! inferred from in vitro assay
+
+[Term]
+id: ECO:0000183
+name: inferred from cell-free assay
+synonym: "in vitro assay" RELATED []
+is_a: ECO:0000181 ! inferred from in vitro assay
+
+[Term]
+id: ECO:0000184
+name: inferred from enzyme inhibition
+is_a: ECO:0000005 ! inferred from enzyme assay
+is_a: ECO:0000020 ! inferred from specific protein inhibition
+

@@ -75,8 +75,8 @@ public class Bond {
 	 */
 	// TODO first check if those bonds haven't been made already
 	public void addSelfToAtoms() {
-		atomA.getBonds().add(this);
-		atomB.getBonds().add(this);
+		atomA.addBond(this);
+		atomB.addBond(this);
 	}
 
 	/**

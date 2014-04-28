@@ -27,7 +27,6 @@ package org.biojava.bio.structure.scop;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.biojava.bio.structure.align.client.JFatCatClient;
@@ -39,7 +38,7 @@ import org.biojava.bio.structure.scop.server.XMLUtil;
 
 
 /** A class that fetches information about SCOP from a remote data-source. It requires port 80 to open for HTTP connection.
- * 
+ *
  * @author Andreas Prlic
  *
  */
@@ -49,6 +48,7 @@ public class RemoteScopInstallation implements ScopDatabase {
 
 	String server = DEFAULT_SERVER;
 
+	private String version = null;
 
 	public static void main(String[] args){
 
@@ -73,15 +73,17 @@ public class RemoteScopInstallation implements ScopDatabase {
 	public List<ScopDescription> getByCategory(ScopCategory category) {
 		List<ScopDescription> results = null;
 		try {
-			URL u = new URL(server + "getByCategory?category="+category.toString());
-			System.out.println(u);
+			URL u = new URL(server + "getByCategory?category="+category.toString()+"&version="+getScopVersion());
+			//System.out.println(u);
 			InputStream response = HTTPConnectionTools.getInputStream(u);
 			String xml = JFatCatClient.convertStreamToString(response);
-			//System.out.println(xml);
-			ScopDescriptions container = ScopDescriptions.fromXML(xml);
-			results = container.getScopDescription();
-		} catch (Exception e){
-			e.printStackTrace();
+
+			if(! xml.trim().isEmpty()) {
+				ScopDescriptions container = ScopDescriptions.fromXML(xml);
+				results = container.getScopDescription();
+			}
+		} catch (Exception e) {
+			System.err.println("Unable to reach "+ server + "getByCategory?category="+category.toString()+"&version="+getScopVersion());
 		}
 		return results;
 	}
@@ -90,15 +92,17 @@ public class RemoteScopInstallation implements ScopDatabase {
 	public List<ScopDescription> filterByClassificationId(String query) {
 		List<ScopDescription> results = null;
 		try {
-			URL u = new URL(server + "filterByClassificationId?query="+query);
-			System.out.println(u);
+			URL u = new URL(server + "filterByClassificationId?query="+query+"&version="+getScopVersion());
+			//System.out.println(u);
 			InputStream response = HTTPConnectionTools.getInputStream(u);
 			String xml = JFatCatClient.convertStreamToString(response);
 
-			ScopDescriptions container = ScopDescriptions.fromXML(xml);
-			results = container.getScopDescription();
+			if(! xml.trim().isEmpty()) {
+				ScopDescriptions container = ScopDescriptions.fromXML(xml);
+				results = container.getScopDescription();
+			}
 		} catch (Exception e){
-			e.printStackTrace();
+			System.err.println("Unable to reach "+ server + "filterByClassificationId?query="+query+"&version="+getScopVersion());
 		}
 		return results;
 	}
@@ -107,15 +111,17 @@ public class RemoteScopInstallation implements ScopDatabase {
 	public List<ScopNode> getTree(ScopDomain domain) {
 		List<ScopNode> results = null;
 		try {
-			URL u = new URL(server + "getTree?scopId="+domain.getScopId());
-			System.out.println(u);
+			URL u = new URL(server + "getTree?scopId="+domain.getScopId()+"&version="+getScopVersion());
+			//System.out.println(u);
 			InputStream response = HTTPConnectionTools.getInputStream(u);
 			String xml = JFatCatClient.convertStreamToString(response);
 
-			ScopNodes container = ScopNodes.fromXML(xml);
-			results = container.getScopNode();
+			if(! xml.trim().isEmpty()) {
+				ScopNodes container = ScopNodes.fromXML(xml);
+				results = container.getScopNode();
+			}
 		} catch (Exception e){
-			e.printStackTrace();
+			System.err.println("Unable to reach "+ server + "getTree?scopId="+domain.getScopId()+"&version="+getScopVersion());
 		}
 		return results;
 	}
@@ -124,15 +130,17 @@ public class RemoteScopInstallation implements ScopDatabase {
 	public List<ScopDomain> filterByDomainName(String query) {
 		List<ScopDomain> results = null;
 		try {
-			URL u = new URL(server + "filterByDomainName?query="+query);
-			System.out.println(u);
+			URL u = new URL(server + "filterByDomainName?query="+query+"&version="+getScopVersion());
+			//System.out.println(u);
 			InputStream response = HTTPConnectionTools.getInputStream(u);
 			String xml = JFatCatClient.convertStreamToString(response);
 
-			ScopDomains container = ScopDomains.fromXML(xml);
-			results = container.getScopDomain();
+			if(! xml.trim().isEmpty()) {
+				ScopDomains container = ScopDomains.fromXML(xml);
+				results = container.getScopDomain();
+			}
 		} catch (Exception e){
-			e.printStackTrace();
+			System.err.println("Unable to reach "+ server + "filterByDomainName?query="+query+"&version="+getScopVersion());
 		}
 		return results;
 	}
@@ -141,15 +149,17 @@ public class RemoteScopInstallation implements ScopDatabase {
 	public List<ScopDescription> filterByDescription(String query) {
 		List<ScopDescription> results = null;
 		try {
-			URL u = new URL(server + "filterByDescription?query="+query);
-			System.out.println(u);
+			URL u = new URL(server + "filterByDescription?query="+query+"&version="+getScopVersion());
+			//System.out.println(u);
 			InputStream response = HTTPConnectionTools.getInputStream(u);
 			String xml = JFatCatClient.convertStreamToString(response);
 
-			ScopDescriptions container = ScopDescriptions.fromXML(xml);
-			results = container.getScopDescription();
+			if(! xml.trim().isEmpty()) {
+				ScopDescriptions container = ScopDescriptions.fromXML(xml);
+				results = container.getScopDescription();
+			}
 		} catch (Exception e){
-			e.printStackTrace();
+			System.err.println("Unable to reach "+ server + "filterByDescription?query="+query+"&version="+getScopVersion());
 		}
 		return results;
 	}
@@ -162,16 +172,17 @@ public class RemoteScopInstallation implements ScopDatabase {
 
 		try {
 
-			URL u = new URL(server + "getScopDescriptionBySunid?sunid="+sunid);
-			System.out.println(u);
+			URL u = new URL(server + "getScopDescriptionBySunid?sunid="+sunid+"&version="+getScopVersion());
+			//System.out.println(u);
 			InputStream response = HTTPConnectionTools.getInputStream(u);
 			String xml = JFatCatClient.convertStreamToString(response);
 
-			desc = XMLUtil.getScopDescriptionFromXML(xml);
-
+			if(! xml.trim().isEmpty()) {
+				desc = XMLUtil.getScopDescriptionFromXML(xml);
+			}
 
 		} catch (Exception e){
-			e.printStackTrace();
+			System.err.println("Unable to reach "+ server + "getScopDescriptionBySunid?sunid="+sunid+"&version="+getScopVersion());
 		}
 		return desc;
 	}
@@ -180,28 +191,32 @@ public class RemoteScopInstallation implements ScopDatabase {
 	public List<ScopDomain> getDomainsForPDB(String pdbId) {
 		List<ScopDomain> results = null;
 		try {
-			URL u = new URL(server + "getDomainsForPDB?pdbId="+pdbId);
-			System.out.println(u);
+			URL u = new URL(server + "getDomainsForPDB?pdbId="+pdbId+"&version="+getScopVersion());
+			//System.out.println(u);
 			InputStream response = HTTPConnectionTools.getInputStream(u);
 			String xml = JFatCatClient.convertStreamToString(response);
 
-			ScopDomains container = ScopDomains.fromXML(xml);
-			results = container.getScopDomain();
+			if( !xml.trim().isEmpty()) {
+				ScopDomains container = ScopDomains.fromXML(xml);
+				results = container.getScopDomain();
+			}
 		} catch (Exception e){
-			e.printStackTrace();
+			System.err.println("Unable to reach "+ server + "getDomainsForPDB?pdbId="+pdbId+"&version="+getScopVersion());
 		}
 		return results;
 	}
 
-	private ScopDomain requestRemoteDomainByScopID(String scopId) 
+	private ScopDomain requestRemoteDomainByScopID(String scopId)
 	throws IOException{
-		URL u = new URL(server + "getDomainByScopID?scopId="+scopId);
-		System.out.println(u);
+		URL u = new URL(server + "getDomainByScopID?scopId="+scopId+"&version="+getScopVersion());
+		//System.out.println(u);
 		InputStream response = HTTPConnectionTools.getInputStream(u);
 		String xml = JFatCatClient.convertStreamToString(response);
 
-		return XMLUtil.getScopDomainFromXML(xml);
-
+        if( !xml.trim().isEmpty()) {
+        	return XMLUtil.getScopDomainFromXML(xml);
+        }
+        return null;
 	}
 
 	@Override
@@ -215,7 +230,7 @@ public class RemoteScopInstallation implements ScopDatabase {
 				i = 100;
 				break;
 			} catch (Exception e){
-				e.printStackTrace();
+				System.err.println("Unable to reach "+ server + "getDomainByScopID?scopId="+scopId+"&version="+getScopVersion());
 				// sleep 3 seconds and try again
 				try {
 					Thread.sleep(3000);
@@ -223,7 +238,7 @@ public class RemoteScopInstallation implements ScopDatabase {
 					e1.printStackTrace();
 				}
 			}
-		
+
 		}
 		return desc;
 	}
@@ -232,47 +247,58 @@ public class RemoteScopInstallation implements ScopDatabase {
 	public ScopNode getScopNode(int sunid) {
 		ScopNode desc = null;
 		try {
-			URL u = new URL(server + "getScopNode?sunid="+sunid);
-			System.out.println(u);
+			URL u = new URL(server + "getScopNode?sunid="+sunid+"&version="+getScopVersion());
+			//System.out.println(u);
 			InputStream response = HTTPConnectionTools.getInputStream(u);
 			String xml = JFatCatClient.convertStreamToString(response);
 
-			desc = XMLUtil.getScopNodeFromXML(xml);
-
+			if( !xml.trim().isEmpty()) {
+				desc = XMLUtil.getScopNodeFromXML(xml);
+			}
 		} catch (Exception e){
-			e.printStackTrace();
+			System.err.println("Unable to reach "+ server + "getScopNode?sunid="+sunid+"&version="+getScopVersion());
 		}
 		return desc;
 	}
 
 	@Override
 	public String getScopVersion() {
-		String version = null;
-		try {
-			URL u = new URL(server + "getScopVersion");
-			System.out.println(u);
-			InputStream response = HTTPConnectionTools.getInputStream(u);
-			version = JFatCatClient.convertStreamToString(response);
+		// If no version is set, request the default version from the website
+		if( version == null) {
+			try {
+				URL u = new URL(server + "getScopVersion");
+				//System.out.println(u);
+				InputStream response = HTTPConnectionTools.getInputStream(u);
+				version = JFatCatClient.convertStreamToString(response);
+				if( version != null)
+					version = version.trim();
 
-		} catch (Exception e){
-			e.printStackTrace();
+			} catch (Exception e){
+				System.err.println("Unable to reach "+ server + "getScopVersion");
+			}
 		}
 		return version;
+	}
+
+	public void setScopVersion(String version) {
+		this.version = version;
 	}
 
 	@Override
 	public List<ScopDomain> getScopDomainsBySunid(Integer sunid) {
 		List<ScopDomain> results = null;
 		try {
-			URL u = new URL(server + "getScopDomainsBySunid?sunid="+sunid);
-			System.out.println(u);
+			URL u = new URL(server + "getScopDomainsBySunid?sunid="+sunid+"&version="+getScopVersion());
+			//System.out.println(u);
 			InputStream response = HTTPConnectionTools.getInputStream(u);
 			String xml = JFatCatClient.convertStreamToString(response);
 
-			ScopDomains container = ScopDomains.fromXML(xml);
-			results = container.getScopDomain();
+			if( !xml.trim().isEmpty()) {
+				ScopDomains container = ScopDomains.fromXML(xml);
+				results = container.getScopDomain();
+			}
 		} catch (Exception e){
-			e.printStackTrace();
+			System.err.println("Unable to reach "+ server + "getScopDomainsBySunid?sunid="+sunid+"&version="+getScopVersion());
 		}
 		return results;
 	}
@@ -280,7 +306,20 @@ public class RemoteScopInstallation implements ScopDatabase {
 
 	@Override
 	public List<String> getComments(int sunid) {
-		return new ArrayList<String>(1);
+		List<String> results = null;
+		try {
+			URL u = new URL(server + "getComments?sunid="+sunid+"&version="+getScopVersion());
+			//System.out.println(u);
+			InputStream response = HTTPConnectionTools.getInputStream(u);
+			String xml = JFatCatClient.convertStreamToString(response);
+
+			if( !xml.trim().isEmpty()) {
+				results = XMLUtil.getCommentsFromXML(xml);
+			}
+		} catch (Exception e){
+			System.err.println("Unable to reach "+ server + "getComments?sunid="+sunid+"&version="+getScopVersion());
+		}
+		return results;
 	}
 
 }

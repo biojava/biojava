@@ -25,8 +25,8 @@ package org.biojava3.core.sequence;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
-import java.util.logging.Logger;
 
+import org.biojava3.core.sequence.compound.DNACompoundSet;
 import org.biojava3.core.sequence.transcription.TranscriptionEngine;
 
 /**
@@ -36,7 +36,6 @@ import org.biojava3.core.sequence.transcription.TranscriptionEngine;
  */
 public class TranscriptSequence extends DNASequence {
 
-    private static final Logger log = Logger.getLogger(TranscriptSequence.class.getName());
     private final ArrayList<CDSSequence> cdsSequenceList = new ArrayList<CDSSequence>();
     private final LinkedHashMap<String, CDSSequence> cdsSequenceHashMap = new LinkedHashMap<String, CDSSequence>();
     private StartCodonSequence startCodonSequence = null;
@@ -54,6 +53,7 @@ public class TranscriptSequence extends DNASequence {
         this.parentGeneSequence = parentDNASequence;
         setBioBegin(begin);
         setBioEnd(end);
+        this.setCompoundSet(DNACompoundSet.getDNACompoundSet());
 
     }
 
@@ -190,8 +190,9 @@ public class TranscriptSequence extends DNASequence {
     public DNASequence getDNACodingSequence() {
         StringBuilder sb = new StringBuilder();
         for (CDSSequence cdsSequence : cdsSequenceList) {
-            sb.append(cdsSequence.getCodingSequence());
+        	sb.append(cdsSequence.getCodingSequence());
         }
+        
         DNASequence dnaSequence = new DNASequence(sb.toString().toUpperCase());
         dnaSequence.setAccession(new AccessionID(this.getAccession().getID()));
         return dnaSequence;
@@ -215,6 +216,7 @@ public class TranscriptSequence extends DNASequence {
         RNASequence rnaCodingSequence = dnaCodingSequence.getRNASequence(engine);
         ProteinSequence proteinSequence = rnaCodingSequence.getProteinSequence(engine);
         proteinSequence.setAccession(new AccessionID(this.getAccession().getID()));
+        
         return proteinSequence;
     }
 

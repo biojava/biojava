@@ -1,7 +1,30 @@
+/*
+ *                    BioJava development code
+ *
+ * This code may be freely distributed and modified under the
+ * terms of the GNU Lesser General Public Licence.  This should
+ * be distributed with the code.  If you do not have a copy,
+ * see:
+ *
+ *      http://www.gnu.org/copyleft/lesser.html
+ *
+ * Copyright for this code is held jointly by the individual
+ * authors.  These should be listed in @author doc comments.
+ *
+ * For more information on the BioJava project and its aims,
+ * or to join the biojava-l mailing list, visit the home page
+ * at:
+ *
+ *      http://www.biojava.org/
+ *
+ */
+
 package org.biojava.bio.structure.quaternary;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import org.biojava.bio.structure.Atom;
@@ -15,134 +38,113 @@ import org.biojava.bio.structure.io.mmcif.model.PdbxStructAssemblyGen;
 import org.biojava.bio.structure.io.mmcif.model.PdbxStructOperList;
 import org.biojava.bio.structure.jama.Matrix;
 
-
-
-/** Reconstructs the quaternary structure of a protein from an asymmetric unit
+/** 
+ * Reconstructs the quaternary structure of a protein from an asymmetric unit
  * 
  * @author Peter Rose
  * @author Andreas Prlic
  *
  */
 public class BiologicalAssemblyBuilder {
+	private OperatorResolver operatorResolver;
+	private List<PdbxStructAssemblyGen> psags;
 
-	OperatorResolver operatorResolver;
+	private List<BiologicalAssemblyTransformation> modelTransformations;
 
-	String asymId ;
-
-	PdbxStructAssembly psa;
-	List<PdbxStructAssemblyGen> psags;
-	//List<PdbxStructOperList> operators;
-
-	List<ModelTransformationMatrix> modelTransformations;
-
-	//List<String> asymIds;
 	public BiologicalAssemblyBuilder(){
 		init();
 	}
 
-	private void init(){
-		operatorResolver= new OperatorResolver();
-		modelTransformations = new ArrayList<ModelTransformationMatrix>(1);
-		
-	}
-
-
-
-
-	public Structure rebuildQuaternaryStructure(Structure asymUnit, List<ModelTransformationMatrix> transformations){
-
+	public Structure rebuildQuaternaryStructure(Structure asymUnit, List<BiologicalAssemblyTransformation> transformations){
+		// ensure that new chains are build in the same order as they appear in the asymmetric unit
+        orderTransformationsByChainId(asymUnit, transformations);
+        
 		Structure s = asymUnit.clone();
-		List<Chain> transformedChains = new ArrayList<Chain>();
-		s.setChains(transformedChains);
-		//System.out.print("rebuilding " + s.getPDBCode() + " ");
-		//for (Chain c : s.getChains()) {
-			//System.out.print(c.getChainID());
-			//if ( c.getInternalChainID() != null) {
-				//System.out.print("("+c.getInternalChainID()+")");
-			//}
+		s.setChains(new ArrayList<Chain>());
 
-		//}
-
-		//asymUnit.getPDBHeader().setBioUnitTranformations(transformations);
-
-
-		//double[] tmpcoords = new double[3]; 
-		for (ModelTransformationMatrix max : transformations){
-			boolean foundChain = false;
-			for ( Chain c : asymUnit.getChains()){
-
+		for (BiologicalAssemblyTransformation transformation : transformations){
+			for (Chain c : asymUnit.getChains()){
+                
 				String intChainID = c.getInternalChainID();
-				if ( intChainID == null) {
+				if (intChainID == null) {
 					//System.err.println("no internal chain ID found, using " + c.getChainID() + " ( while looking for " + max.ndbChainId+")");
 					intChainID = c.getChainID();
 				}
 
-				if ( max.ndbChainId.equals(intChainID)){
-
-					/*System.out.println("transforming " + max.ndbChainId + " " + c.getChainID());
-					System.out.println(max );
-					System.out.println();
-					 */
-					foundChain = true;
-					Chain newChain = (Chain)c.clone();
-					Matrix m = max.getMatrix();
-					//m = m.transpose();
-					double[] vector = max.getVector();
-					Atom v = new AtomImpl();
-					v.setCoords(vector);
-					for ( Group g :newChain.getAtomGroups()) {
-						for ( Atom a : g.getAtoms()) {
-							//max.transformPoint(a.getCoords(), tmpcoords);
-							//a.setX(tmpcoords[0]);
-							//a.setY(tmpcoords[1]);
-							//a.setZ(tmpcoords[2]);
-							Calc.rotate(a, m);
-							Calc.shift(a, v);
+				if (transformation.getChainId().equals(intChainID)){
+					Chain chain = (Chain)c.clone();
+		//			System.out.println("Applying transformation to: " + intChainID);
+		//			System.out.println(m);
+		//			System.out.println(Arrays.toString(v.getCoords()));
+					for (Group g : chain.getAtomGroups()) {
+	//					System.out.println("before");
+						for (Atom a: g.getAtoms()) {
+		//					System.out.println(a);
+							transformation.transformPoint(a.getCoords());
+//						System.out.println("after");
+//						for (Atom a: g.getAtoms()) {
+//							System.out.println(a);
 						}
 					}
 
-					
-					addCheckChainModel(s,newChain);
-
+					int modelNumber = Integer.parseInt(transformation.getId());	
+	//				System.out.println("model: " + modelNumber);
+					addChainAndModel(s, chain, modelNumber);
 				}								
 			}
-			if (! foundChain){
-				//System.err.println("could not transform chain: " + max.ndbChainId);
-			}
 		}
 
-		//s.setChains(transformedChains);
 		s.setBiologicalAssembly(true);
 		return s;
-
-
 	}
-
-
-	private void addCheckChainModel(Structure s, Chain newChain) {
-		for ( int i = 0 ; i < s.nrModels() ; i ++){
-			List<Chain> model = s.getModel(i);
-			boolean found = false;
-			for ( Chain c : model){
-				if ( c.getChainID().equals(newChain.getChainID())) {
-					found = true;
-					break;
+	
+	/**
+	 * Orders model transformations by chain ids in the same order as in the asymmetric unit
+	 * @param asymUnit
+	 * @param transformations
+	 */
+	private void orderTransformationsByChainId(Structure asymUnit, List<BiologicalAssemblyTransformation> transformations) {
+		final List<String> chainIds = getChainIds(asymUnit);
+		Collections.sort(transformations, new Comparator<BiologicalAssemblyTransformation>() {
+			public int compare(BiologicalAssemblyTransformation t1, BiologicalAssemblyTransformation t2) {
+				// set sort order only if the two ids are identical
+				if (t1.getId().equals(t2.getId())) {
+					 return chainIds.indexOf(t1.getChainId()) - chainIds.indexOf(t2.getChainId());
 				}
+			    return 0;
+		    }
+		});
+	}
+	
+	/**
+	 * Returns a list of chain ids in the order they are specified in the ATOM
+	 * records in the asymmetric unit
+	 * @param asymUnit
+	 * @return
+	 */
+	private List<String> getChainIds(Structure asymUnit) {
+		List<String> chainIds = new ArrayList<String>();
+		for ( Chain c : asymUnit.getChains()){      
+			String intChainID = c.getInternalChainID();
+			if ( intChainID == null) {
+				//System.err.println("no internal chain ID found, using " + c.getChainID() + " ( while looking for " + max.ndbChainId+")");
+				intChainID = c.getChainID();
 			}
-			if ( ! found){
-			
-				model.add(newChain);
-				return;
-			}
-			
+			chainIds.add(intChainID);
 		}
-		
-		// all existing models contain already a chain with the same ID. add a new model
-		List<Chain> newModel = new ArrayList<Chain>();
-		newModel.add(newChain);
-		s.addModel(newModel);
-		
-		
+		return chainIds;
+	}
+	
+	private void addChainAndModel(Structure s, Chain newChain, int modelCount) {
+		if (modelCount == 0) {
+			s.addChain(newChain);
+		} else if (modelCount > s.nrModels()) {
+			List<Chain> newModel = new ArrayList<Chain>();
+			newModel.add(newChain);
+			s.addModel(newModel);
+		} else {
+			s.addChain(newChain, modelCount-1);
+		}
 	}
 
 	/**
@@ -152,39 +154,36 @@ public class BiologicalAssemblyBuilder {
 	 * @param assemblyId Id of the macromolecular assembly to be generated
 	 * @return list of transformation matrices to generate macromolecular assembly
 	 */
-	public ArrayList<ModelTransformationMatrix> getBioUnitTransformationList(PdbxStructAssembly psa, List<PdbxStructAssemblyGen> psags, List<PdbxStructOperList> operators) {
-
+	public ArrayList<BiologicalAssemblyTransformation> getBioUnitTransformationList(PdbxStructAssembly psa, List<PdbxStructAssemblyGen> psags, List<PdbxStructOperList> operators) {
 		//System.out.println("Rebuilding " + psa.getDetails() + " | " + psa.getOligomeric_details() + " | " + psa.getOligomeric_count());
 		//System.out.println(psag);
 		init();
-		this.psa=psa;
 		this.psags = psags;
 
-		//this.operators = operators;
-
-		asymId = psa.getId();
+		psa.getId();
 		
 		for (PdbxStructOperList oper: operators){
-			ModelTransformationMatrix transform = new ModelTransformationMatrix();
-			transform.id = oper.getId();
-			transform.setTransformationMatrix(oper.getMatrix(), oper.getVector());
+			BiologicalAssemblyTransformation transform = new BiologicalAssemblyTransformation();
+			transform.setId(oper.getId());
+			transform.setRotationMatrix(oper.getMatrix());
+			transform.setTranslation(oper.getVector());
+//			transform.setTransformationMatrix(oper.getMatrix(), oper.getVector());
 			modelTransformations.add(transform);
 		}
 
-		///
-
-		ArrayList<ModelTransformationMatrix> transformations = getBioUnitTransformationsListUnaryOperators(psa.getId());
+		ArrayList<BiologicalAssemblyTransformation> transformations = getBioUnitTransformationsListUnaryOperators(psa.getId());
 		transformations.addAll(getBioUnitTransformationsListBinaryOperators(psa.getId()));
 		transformations.trimToSize();
 		return transformations;
 	}
 
 
-	private ArrayList<ModelTransformationMatrix> getBioUnitTransformationsListBinaryOperators(String assemblyId) {
+	private ArrayList<BiologicalAssemblyTransformation> getBioUnitTransformationsListBinaryOperators(String assemblyId) {
 
-		ArrayList<ModelTransformationMatrix> transformations = new ArrayList<ModelTransformationMatrix>();
+		ArrayList<BiologicalAssemblyTransformation> transformations = new ArrayList<BiologicalAssemblyTransformation>();
 
 		List<OrderedPair<String>> operators = operatorResolver.getBinaryOperators();
+	
 
 		for ( PdbxStructAssemblyGen psag : psags){
 			if ( psag.getAssembly_id().equals(assemblyId)) {
@@ -193,46 +192,42 @@ public class BiologicalAssemblyBuilder {
 
 				operatorResolver.parseOperatorExpressionString(psag.getOper_expression());
 
-
 				// apply binary operators to the specified chains
 				// Example 1M4X: generates all products of transformation matrices (1-60)(61-88)
 				for (String chainId : asymIds) {
 
+					int modelNumber = 1;
 					for (OrderedPair<String> operator : operators) {
-						ModelTransformationMatrix original1 = getModelTransformationMatrix(operator.getElement1());
-						ModelTransformationMatrix original2 = getModelTransformationMatrix(operator.getElement2());
-						ModelTransformationMatrix transform = ModelTransformationMatrix.multiply4square_x_4square2(original1, original2);
-						transform.ndbChainId = chainId;
-						transform.id = original1.id + "x" + original2.id;
+						BiologicalAssemblyTransformation original1 = getModelTransformationMatrix(operator.getElement1());
+						BiologicalAssemblyTransformation original2 = getModelTransformationMatrix(operator.getElement2());
+			//			ModelTransformationMatrix transform = ModelTransformationMatrix.multiply4square_x_4square2(original1, original2);
+						BiologicalAssemblyTransformation transform = BiologicalAssemblyTransformation.combine(original1, original2);
+						transform.setChainId(chainId);
+				//		transform.setId(original1.getId() + "x" + original2.getId());
+						transform.setId(String.valueOf(modelNumber));
 						transformations.add(transform);
+						modelNumber++;
 					}
 				}
-
 			}
 
 		}
 
-		// apply binary operators to the specified chains
-		// Example 1M4X: generates all products of transformation matrices (1-60)(61-88)
-
-		//System.out.println("BioUnitTrasnformListBinaryOperators " + assemblyId + " " + transformations.size());
 		return transformations;
 	}
 
-	private ModelTransformationMatrix getModelTransformationMatrix(String operator) {
-		for (ModelTransformationMatrix transform: modelTransformations) {
-			if (transform.id.equals(operator)) {
+	private BiologicalAssemblyTransformation getModelTransformationMatrix(String operator) {
+		for (BiologicalAssemblyTransformation transform: modelTransformations) {
+			if (transform.getId().equals(operator)) {
 				return transform;
 			}
 		}
 		System.err.println("Could not find modelTransformationmatrix for " + operator);
-		return new ModelTransformationMatrix();
+		return new BiologicalAssemblyTransformation();
 	}
 
-	private ArrayList<ModelTransformationMatrix> getBioUnitTransformationsListUnaryOperators(String assemblyId) {
-		
-		
-		ArrayList<ModelTransformationMatrix> transformations = new ArrayList<ModelTransformationMatrix>();
+	private ArrayList<BiologicalAssemblyTransformation> getBioUnitTransformationsListUnaryOperators(String assemblyId) {	
+		ArrayList<BiologicalAssemblyTransformation> transformations = new ArrayList<BiologicalAssemblyTransformation>();
 
 		
 		for ( PdbxStructAssemblyGen psag : psags){
@@ -247,16 +242,21 @@ public class BiologicalAssemblyBuilder {
 				for (String chainId : asymIds) {
 					for (String operator : operators) {
 						//System.out.println("transforming " + chainId + " " + operator);
-						ModelTransformationMatrix original = getModelTransformationMatrix(operator);
-						ModelTransformationMatrix transform = new ModelTransformationMatrix(original);
-						transform.ndbChainId = chainId;
-						transform.id = operator;
+						BiologicalAssemblyTransformation original = getModelTransformationMatrix(operator);
+						BiologicalAssemblyTransformation transform = new BiologicalAssemblyTransformation(original);
+						transform.setChainId(chainId);
+						transform.setId(operator);
 						transformations.add(transform);
 					}
 				}
 			}
 		}
-		//System.out.println("BioUnitTrasnformListUnary " + assemblyId + " " + transformations.size());
+
 		return transformations;
+	}
+	
+	private void init(){
+		operatorResolver= new OperatorResolver();
+		modelTransformations = new ArrayList<BiologicalAssemblyTransformation>(1);
 	}
 }

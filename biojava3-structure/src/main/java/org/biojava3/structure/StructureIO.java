@@ -8,7 +8,7 @@ import org.biojava.bio.structure.StructureException;
 import org.biojava.bio.structure.align.ce.AbstractUserArgumentProcessor;
 import org.biojava.bio.structure.align.util.AtomCache;
 import org.biojava.bio.structure.quaternary.BiologicalAssemblyBuilder;
-import org.biojava.bio.structure.quaternary.ModelTransformationMatrix;
+import org.biojava.bio.structure.quaternary.BiologicalAssemblyTransformation;
 import org.biojava.bio.structure.quaternary.io.BioUnitDataProvider;
 import org.biojava.bio.structure.quaternary.io.BioUnitDataProviderFactory;
 
@@ -141,7 +141,7 @@ public class StructureIO {
 		}
 		
 		//List<ModelTransformationMatrix> transformations = provider.getBioUnitTransformationList(pdbId, biolAssemblyNr -1);
-		List<ModelTransformationMatrix> transformations = asymUnit.getPDBHeader().getBioUnitTranformationMap().get(biolAssemblyNr  );
+		List<BiologicalAssemblyTransformation> transformations = asymUnit.getPDBHeader().getBioUnitTranformationMap().get(biolAssemblyNr  );
 		if ( transformations == null || transformations.size() == 0){
 			
 			throw new StructureException("Could not load transformations to recreate biological assembly nr " + biolAssemblyNr + " of " + pdbId);

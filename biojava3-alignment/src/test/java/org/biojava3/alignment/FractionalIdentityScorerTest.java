@@ -35,6 +35,8 @@ import org.junit.Test;
 
 public class FractionalIdentityScorerTest {
 
+	private static final double PRECISION = 0.00000001;
+	
     private ProteinSequence query, target;
     private GapPenalty gaps;
     private SubstitutionMatrix<AminoAcidCompound> blosum62;
@@ -77,20 +79,20 @@ public class FractionalIdentityScorerTest {
 
     @Test
     public void testGetMaxScore() {
-        assertEquals(scorer1.getMaxScore(), 4);
-        assertEquals(scorer2.getMaxScore(), 4);
+        assertEquals(scorer1.getMaxScore(), 4, PRECISION);
+        assertEquals(scorer2.getMaxScore(), 4, PRECISION);
     }
 
     @Test
     public void testGetMinScore() {
-        assertEquals(scorer1.getMinScore(), 0);
-        assertEquals(scorer2.getMinScore(), 0);
+        assertEquals(scorer1.getMinScore(), 0, PRECISION);
+        assertEquals(scorer2.getMinScore(), 0, PRECISION);
     }
 
     @Test
     public void testGetScore() {
-        assertEquals(scorer1.getScore(), 1);
-        assertEquals(scorer2.getScore(), 4);
+        assertEquals(scorer1.getScore(), 1, PRECISION);
+        assertEquals(scorer2.getScore(), 4, PRECISION);
     }
 
 }

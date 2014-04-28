@@ -48,7 +48,6 @@ import org.biojava.bio.structure.Atom;
 import org.biojava.bio.structure.AtomImpl;
 import org.biojava.bio.structure.Author;
 import org.biojava.bio.structure.Bond;
-import org.biojava.bio.structure.BondType;
 import org.biojava.bio.structure.Calc;
 import org.biojava.bio.structure.Chain;
 import org.biojava.bio.structure.ChainImpl;
@@ -861,6 +860,9 @@ public class PDBFileParser  {
 		if ( test == null)
 			seqResChains.add(current_chain);
 
+		if (current_group != null)
+			current_group.trimToSize();
+		
 		current_group = null;
 		current_chain = null;
 
@@ -1743,7 +1745,8 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 		if ( ! residueNumber.equals(current_group.getResidueNumber())) {
 
 			current_chain.addGroup(current_group);
-
+			current_group.trimToSize();
+			
 			current_group = getNewGroup(recordName,aminoCode1,groupCode3);
 
 			//current_group.setPDBCode(pdbCode);
@@ -1756,13 +1759,16 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 			// same residueNumber, but altLocs...
 
 			// test altLoc
-			if ( ! altLoc.equals(' ')) {												
+			if ( ! altLoc.equals(' ')) {
+				
 				altGroup = getCorrectAltLocGroup( altLoc,recordName,aminoCode1,groupCode3);
 				if ( altGroup.getChain() == null) {
 					// need to set current chain
 					altGroup.setChain(current_chain);
 				}
 				//System.out.println("found altLoc! " + current_group + " " + altGroup);
+				
+			
 			}
 		}
 
@@ -1913,6 +1919,14 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 			current_group.addAtom(atom);
 		}
 
+		
+		// make sure that main group has all atoms
+		// GitHub issue: #76
+		if ( ! current_group.hasAtom(atom.getFullName())) {
+			current_group.addAtom(atom);
+		}
+		
+		
 
 		//System.out.println("current group: " + current_group);
 			}
@@ -2091,6 +2105,7 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 		if (current_chain != null) {
 			if (current_group != null) {
 				current_chain.addGroup(current_group);
+				current_group.trimToSize();
 			}
 			//System.out.println("starting new model "+(structure.nrModels()+1));
 
@@ -2800,14 +2815,13 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 			for (SSBond disulfideBond : structure.getSSBonds()) {
 				formDisulfideBond(disulfideBond);
 			}
-			formPeptideBonds();
-			formIntraResidueBonds();
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new RuntimeException("Error while forming bonds for " + pdbId, e);
 		}
-		
-		trimAtomBondLists();
+		BondMaker maker = new BondMaker(structure);
+		maker.makeBonds();
 	}
 	
 	private void formLinkRecordBond(LinkRecord linkRecord) {
@@ -2831,10 +2845,13 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 			// now, we're assuming they're single bonds
 			new Bond(a, b, 1);
 		} catch (Exception e) {
-			System.out.println("Error with the following link record: ");
-			System.out.println(linkRecord);
-			e.printStackTrace();
-			throw new RuntimeException(e);
+			// Note, in Calpha only mode the link atoms may not be present.
+			if (! parseCAonly) {
+				System.out.println("Error with the following link record: ");
+				System.out.println(linkRecord);
+				e.printStackTrace();
+				throw new RuntimeException(e);
+			}
 		}
 	}
 	
@@ -2849,10 +2866,13 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 			
 			new Bond(a, b, 1);
 		} catch (StructureException e) {
-			System.out.println("Error with the following SSBond: ");
-			System.out.println(disulfideBond);
-			e.printStackTrace();
-			throw new RuntimeException(e);
+			// Note, in Calpha only mode the CYS SG's are not present.
+			if (! parseCAonly) {
+				System.out.println("Error with the following SSBond: ");
+				System.out.println(disulfideBond);
+				e.printStackTrace();
+				throw new RuntimeException(e);
+			}
 		}
 	}
 
@@ -2873,90 +2893,6 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 		}
 		
 		return group.getAtom(name);
-	}
-	
-	/**
-	 * The furthest one residue's C and another's N can be and still be assumed
-	 * to be in a peptide bond.
-	 */
-	private static final double MAX_PEPTIDE_BOND_LENGTH = 1.8;
-
-	private void formPeptideBonds() throws StructureException {
-		for (Chain chain : structure.getChains()) {
-			List<Group> groups = chain.getSeqResGroups();
-
-			for (int i = 0; i < groups.size() - 1; i++) {
-				if (!(groups.get(i) instanceof AminoAcidImpl)
-						|| !(groups.get(i + 1) instanceof AminoAcidImpl))
-					continue;
-				
-				AminoAcidImpl current = (AminoAcidImpl) groups.get(i);
-				AminoAcidImpl next = (AminoAcidImpl) groups.get(i + 1);
-
-				// atoms with no residue number don't have atom information
-				if (current.getResidueNumber() == null
-						|| next.getResidueNumber() == null) {
-					continue;
-				}
-				
-				Atom carboxylC;
-				Atom aminoN;
-				
-				try {
-					carboxylC = current.getC();
-					aminoN = next.getN();
-				} catch (StructureException e) {
-					// some structures may be incomplete and not store info
-					// about all of their atoms
-					continue;
-				}
-				
-				if (Calc.getDistance(carboxylC, aminoN) < MAX_PEPTIDE_BOND_LENGTH) {
-					// we got ourselves a peptide bond
-					new Bond(carboxylC, aminoN, 1);
-				}
-			}
-		}
-	}
-	
-	private void formIntraResidueBonds() {
-		for (Chain chain : structure.getChains()) {
-			List<Group> groups = chain.getAtomGroups();
-
-			for (Group group : groups) {
-				// atoms with no residue number don't have atom information
-				// also ignore water
-				if (group.getResidueNumber() == null || group.isWater()) {
-					continue;
-				}
-
-				ChemComp aminoChemComp = ChemCompGroupFactory.getChemComp(group
-						.getPDBName());
-
-				for (ChemCompBond chemCompBond : aminoChemComp.getBonds()) {
-					try {
-						Atom a = group.getAtom(chemCompBond.getAtom_id_1());
-						Atom b = group.getAtom(chemCompBond.getAtom_id_2());
-						int bondOrder = chemCompBond.getNumericalBondOrder();
-
-						new Bond(a, b, bondOrder);
-					} catch (StructureException e) {
-						// Some of the atoms were missing. That's fine, there's
-						// nothing to do in this case.
-					}
-				}
-			}
-		}
-	}
-	
-	private void trimAtomBondLists() {
-		for (Chain chain : structure.getChains()) {
-			for (Group group : chain.getAtomGroups()) {
-				for (Atom atom : group.getAtoms()) {
-					((ArrayList<Bond>) atom.getBonds()).trimToSize();
-				}
-			}
-		}
 	}
 
 	private void triggerEndFileChecks(){
@@ -3027,7 +2963,6 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 		}
 		
 		if ( bioAssemblyParser != null){
-			bioAssemblyParser.finalizeCurrentBioMolecule();
 			pdbHeader.setBioUnitTranformationMap(bioAssemblyParser.getTransformationMap());
 			pdbHeader.setNrBioAssemblies(bioAssemblyParser.getNrBioAssemblies());
 			//System.out.println("setting nr bioAssemblies: " + pdbHeader.getNrBioAssemblies());
@@ -3044,17 +2979,10 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 
 			for (Chain seqRes: seqResChains){
 				Chain atomRes;
-				try {
-					atomRes = aligner.getMatchingAtomRes(seqRes,atomList);
-					atomRes.setSeqResGroups(seqRes.getAtomGroups());
-				} catch (StructureException e) {
-					// this is used for matching of biological units
-					// where chains can be missing
-					// ignore if chain can't be found.
-
-					// e.printStackTrace();
-					continue;
-				}
+			
+				atomRes = aligner.getMatchingAtomRes(seqRes,atomList);
+				atomRes.setSeqResGroups(seqRes.getAtomGroups());
+				
 			}
 		}
 	}

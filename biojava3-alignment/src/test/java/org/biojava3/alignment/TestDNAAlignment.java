@@ -27,8 +27,11 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
+
 import junit.framework.TestCase;
+
 import org.biojava3.alignment.Alignments.PairwiseSequenceAlignerType;
+import org.biojava3.alignment.template.PairwiseSequenceAligner;
 import org.biojava3.alignment.template.Profile;
 import org.biojava3.alignment.template.SequencePair;
 import org.biojava3.alignment.template.SubstitutionMatrix;
@@ -40,6 +43,9 @@ import org.biojava3.core.sequence.io.FastaReaderHelper;
 import org.biojava3.core.util.ConcurrencyTools;
 
 public class TestDNAAlignment extends TestCase {
+
+	private static final double PRECISION = 0.00000001;
+	
 
     public void testDNAAlignment() {
 
@@ -91,7 +97,8 @@ public class TestDNAAlignment extends TestCase {
         lst.add(query);
 
         try {
-        	Profile<DNASequence, NucleotideCompound> profile = Alignments.getMultipleSequenceAlignment(lst);
+        	@SuppressWarnings("unused")
+			Profile<DNASequence, NucleotideCompound> profile = Alignments.getMultipleSequenceAlignment(lst);
         	fail("Alignments.getMultipleSequenceAlignment(lst) expected exception with differing compound sets");
         } catch (IllegalArgumentException ex) {
         	// expected exception
@@ -110,10 +117,44 @@ public class TestDNAAlignment extends TestCase {
         gapP.setExtensionPenalty((short) 2);
         
         try {
-        	SequencePair<DNASequence, NucleotideCompound> psa = Alignments.getPairwiseAlignment(query, target, PairwiseSequenceAlignerType.LOCAL, gapP, matrix);
+        	@SuppressWarnings("unused")
+			SequencePair<DNASequence, NucleotideCompound> psa = Alignments.getPairwiseAlignment(query, target, PairwiseSequenceAlignerType.LOCAL, gapP, matrix);
         	fail("Alignments.getPairwiseAlignment() expected exception with differing compound sets");
         } catch (IllegalArgumentException ex) {
         	// expected exception
         }
     }
+    /**
+     * @author Daniel Cameron
+     */
+    public void testMixedCaseInputStringsMatchUnderlyingBases() {
+        DNASequence target = new DNASequence("AAAAAAAAGTC", DNACompoundSet.getDNACompoundSet());
+        DNASequence query = new DNASequence("aaaaaaaagtc", DNACompoundSet.getDNACompoundSet());
+        SubstitutionMatrix<NucleotideCompound> matrix = SubstitutionMatrixHelper.getNuc4_4();
+        SimpleGapPenalty gapP = new SimpleGapPenalty((short)5, (short)2);
+        // should be a full match with +5 per match
+        assertEquals(5.0 * query.getLength(), Alignments.getPairwiseAligner(query, target, PairwiseSequenceAlignerType.LOCAL, gapP, matrix).getScore(), PRECISION);
+    }
+    /**
+     * @author Daniel Cameron
+     */
+    public void testNoAlignedBases() {
+        DNASequence target = new DNASequence("A", DNACompoundSet.getDNACompoundSet());
+        DNASequence query = new DNASequence("T", DNACompoundSet.getDNACompoundSet());
+        SubstitutionMatrix<NucleotideCompound> matrix = SubstitutionMatrixHelper.getNuc4_4();
+        SimpleGapPenalty gapP = new SimpleGapPenalty((short)0, (short)1);
+        PairwiseSequenceAligner<DNASequence, NucleotideCompound> aligner = Alignments.getPairwiseAligner(query, target, PairwiseSequenceAlignerType.GLOBAL, gapP, matrix);
+        assertEquals(2, aligner.getPair().getLength());
+    }
+    /**
+    * @author Daniel Cameron
+    */
+	public void testLinearAlignment() {
+		DNASequence query = new DNASequence("GTAAAAG", DNACompoundSet.getDNACompoundSet());
+		DNASequence target = new DNASequence("GAAAACGTTTTTTTTTT", DNACompoundSet.getDNACompoundSet());
+		SubstitutionMatrix<NucleotideCompound> matrix = SubstitutionMatrixHelper.getNuc4_4();
+		SimpleGapPenalty gapP = new SimpleGapPenalty((short)0, (short)3);
+		PairwiseSequenceAligner<DNASequence, NucleotideCompound> aligner = Alignments.getPairwiseAligner(query, target, PairwiseSequenceAlignerType.GLOBAL, gapP, matrix);
+		assertEquals(String.format("GTAAAA-G----------%nG-AAAACGTTTTTTTTTT%n"), aligner.getPair().toString());;
+	}
 }

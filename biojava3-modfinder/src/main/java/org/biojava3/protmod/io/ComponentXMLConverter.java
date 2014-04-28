@@ -47,7 +47,7 @@ public class ComponentXMLConverter {
 		if ( ! name.equals("component"))
 			throw new RuntimeException("did not get component element, but " + name);
 		
-		String type = getAttribute(componentN, "type");
+		//String type = getAttribute(componentN, "type");
 		String nTerminalS = getAttribute(componentN, "nTerminal");
 		String cTerminalS = getAttribute(componentN, "cTerminal");
 		

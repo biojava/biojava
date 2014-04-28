@@ -1,11 +1,9 @@
 package org.biojava.bio.structure.quaternary.io;
 
 import java.util.List;
-import java.util.Map;
-
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.align.util.AtomCache;
-import org.biojava.bio.structure.quaternary.ModelTransformationMatrix;
+import org.biojava.bio.structure.quaternary.BiologicalAssemblyTransformation;
 
 /** Provides access to the data that is needed in order to rebuild the correct biological assembly of a protein.
  * 
@@ -23,7 +21,7 @@ public interface BioUnitDataProvider {
 	 * @param biolAssemblyNr the number of the assembly, the first one is nr 1. 0 refers to the asym unit
 	 * @return list of transformations.
 	 */
-	public List<ModelTransformationMatrix>  getBioUnitTransformationList(String pdbId, int biolAssemblyNr);
+	public List<BiologicalAssemblyTransformation>  getBioUnitTransformationList(String pdbId, int biolAssemblyNr);
 	
 	/** Returns the number of available biological assemblies.
 	 *  @param pdbId the PDB ID. E.g. 1STP

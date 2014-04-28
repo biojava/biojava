@@ -11,7 +11,6 @@ import java.net.URL;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 
-import org.biojava.bio.structure.align.ce.AbstractUserArgumentProcessor;
 import org.biojava.bio.structure.align.util.UserConfiguration;
 import org.biojava.bio.structure.io.mmcif.model.ChemComp;
 import org.biojava3.core.util.InputStreamProvider;

@@ -87,7 +87,7 @@ public class FractionalIdentityScorer<S extends Sequence<C>, C extends Compound>
     // methods for Scorer
 
     @Override
-    public int getMaxScore() {
+    public double getMaxScore() {
         if (aligner != null) {
             align();
         }
@@ -95,12 +95,12 @@ public class FractionalIdentityScorer<S extends Sequence<C>, C extends Compound>
     }
 
     @Override
-    public int getMinScore() {
+    public double getMinScore() {
         return 0;
     }
 
     @Override
-    public int getScore() {
+    public double getScore() {
         if (aligner != null) {
             align();
         }

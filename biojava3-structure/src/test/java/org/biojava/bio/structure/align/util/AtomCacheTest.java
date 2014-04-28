@@ -51,7 +51,8 @@ public class AtomCacheTest {
 		cache = new AtomCache();
 		cache.setFetchFileEvenIfObsolete(true);
 		cache.setStrictSCOP(false);
-		ScopFactory.setScopDatabase("1.75B");
+		// Use a fixed SCOP version for stability
+		ScopFactory.setScopDatabase(ScopFactory.VERSION_1_75B);
 	}
 	
 	/**

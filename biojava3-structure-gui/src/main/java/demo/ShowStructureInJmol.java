@@ -2,7 +2,7 @@ package demo;
 
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.align.gui.jmol.StructureAlignmentJmol;
-import org.biojava.bio.structure.align.util.AtomCache;
+import org.biojava3.structure.StructureIO;
 
 
 /** Demo how to load and display a structure in Jmol
@@ -14,9 +14,7 @@ public class ShowStructureInJmol {
 	public static void main(String[] args){
 		try {
 			
-			AtomCache cache = new AtomCache();
-
-			Structure struc = cache.getStructure("1aoi");
+			Structure struc = StructureIO.getStructure("1aoi");
 
 			StructureAlignmentJmol jmolPanel = new StructureAlignmentJmol();
 

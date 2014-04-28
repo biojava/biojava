@@ -122,6 +122,7 @@ implements ProteinModification , Comparable<ProteinModification> {
 				+ ", keywords=" + keywords + "]";
 	}
 	
+	/*
 	private String printModification(ProteinModificationImpl mod) {
 		StringBuilder sb = new StringBuilder();
 						
@@ -146,6 +147,7 @@ implements ProteinModification , Comparable<ProteinModification> {
 			sb.append(")");
 		return sb.toString();
 	}
+	
 	
 	private String getBestPossibleName(ProteinModificationImpl mod) {
 		
@@ -189,6 +191,7 @@ implements ProteinModification , Comparable<ProteinModification> {
 		return "";
 		
 	}
+	*/
 
 	public int hashCode() {
 		int ret = id.hashCode();

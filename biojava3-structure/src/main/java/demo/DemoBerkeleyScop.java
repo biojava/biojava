@@ -1,5 +1,6 @@
 package demo;
 
+import org.biojava.bio.structure.align.util.AtomCache;
 import org.biojava.bio.structure.scop.BerkeleyScopInstallation;
 import org.biojava.bio.structure.scop.ScopDatabase;
 import org.biojava.bio.structure.scop.ScopFactory;
@@ -11,15 +12,22 @@ import org.biojava.bio.structure.scop.ScopFactory;
  *
  */
 public class DemoBerkeleyScop {
+	@SuppressWarnings("unused")
 	public static void main(String[]args){
 
 
-		ScopDatabase berkeley = new BerkeleyScopInstallation();
+		//ScopDatabase berkeley = new BerkeleyScopInstallation();
 
-		ScopFactory.setScopDatabase(berkeley);
+		//ScopFactory.setScopDatabase(berkeley);
 
+		AtomCache cache = new AtomCache();
 		// whenever you want to get access to SCOP now request it like this:
-		ScopDatabase scop = ScopFactory.getSCOP();
+		ScopDatabase scop = ScopFactory.getSCOP("1.75");
+		ScopFactory.setScopDatabase(scop);
+		
+		
+		System.out.println(cache.getPath());
+		System.out.println(cache.getCachePath());
 		// ... and do something with it
 
 

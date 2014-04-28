@@ -23,6 +23,7 @@
 package org.biojava3.core.sequence;
 
 
+import org.biojava3.core.sequence.compound.DNACompoundSet;
 import org.biojava3.core.sequence.compound.NucleotideCompound;
 import org.biojava3.core.sequence.template.CompoundSet;
 
@@ -52,6 +53,7 @@ public class CDSSequence extends DNASequence {
         setBioBegin(bioBegin);
         setBioEnd(bioEnd);
         this.phase = phase;
+        this.setCompoundSet(DNACompoundSet.getDNACompoundSet());
 
     }
 
@@ -86,6 +88,7 @@ public class CDSSequence extends DNASequence {
      */
     public String getCodingSequence() {
         String sequence = this.getSequenceAsString(getBioBegin(), getBioEnd(), getStrand());
+        
         if (getStrand() == Strand.NEGATIVE) {
             //need to take complement of sequence because it is negative and we are returning a coding sequence
             StringBuilder b = new StringBuilder(getLength());
