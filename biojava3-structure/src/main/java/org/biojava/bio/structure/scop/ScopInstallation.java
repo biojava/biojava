@@ -531,10 +531,10 @@ public class ScopInstallation implements LocalScopDatabase {
 		String line = null;
 		while ((line = buffer.readLine ()) != null) {
 			if (line.startsWith("#")) continue;
-			String[] parts = line.split(" ! ");
+			String[] parts = line.split("!");
 			int sunId = -1;
 			try {
-				sunId = Integer.parseInt(parts[0]);
+				sunId = Integer.parseInt(parts[0].trim());
 			} catch (RuntimeException e) {
 				e.printStackTrace();
 				continue;
@@ -545,7 +545,10 @@ public class ScopInstallation implements LocalScopDatabase {
 			}
 			List<String> comments = new ArrayList<String>(parts.length - 1);
 			for (int i = 1; i < parts.length; i++) {
-				comments.add(parts[i]);
+				String trimmed = parts[i].trim();
+				if( !trimmed.isEmpty() ) {
+					comments.add(trimmed);
+				}
 			}
 			commentsMap.put(sunId, comments);
 		}
