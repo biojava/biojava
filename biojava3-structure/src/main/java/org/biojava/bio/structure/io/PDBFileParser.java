@@ -40,22 +40,25 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.StringTokenizer;
 import java.util.logging.Level;
-
 import java.util.logging.Logger;
+
 import org.biojava.bio.structure.AminoAcid;
 import org.biojava.bio.structure.AminoAcidImpl;
 import org.biojava.bio.structure.Atom;
 import org.biojava.bio.structure.AtomImpl;
 import org.biojava.bio.structure.Author;
+import org.biojava.bio.structure.Bond;
+import org.biojava.bio.structure.BondType;
+import org.biojava.bio.structure.Calc;
 import org.biojava.bio.structure.Chain;
 import org.biojava.bio.structure.ChainImpl;
+import org.biojava.bio.structure.Compound;
 import org.biojava.bio.structure.DBRef;
 import org.biojava.bio.structure.Element;
 import org.biojava.bio.structure.Group;
 import org.biojava.bio.structure.GroupIterator;
-import org.biojava.bio.structure.HetatomImpl;
-import org.biojava.bio.structure.Compound;
 import org.biojava.bio.structure.GroupType;
+import org.biojava.bio.structure.HetatomImpl;
 import org.biojava.bio.structure.JournalArticle;
 import org.biojava.bio.structure.NucleotideImpl;
 import org.biojava.bio.structure.PDBCrystallographicInfo;
@@ -69,6 +72,9 @@ import org.biojava.bio.structure.StructureImpl;
 import org.biojava.bio.structure.StructureTools;
 import org.biojava.bio.structure.io.mmcif.ChemCompGroupFactory;
 import org.biojava.bio.structure.io.mmcif.ReducedChemCompProvider;
+import org.biojava.bio.structure.io.mmcif.model.ChemComp;
+import org.biojava.bio.structure.io.mmcif.model.ChemCompBond;
+import org.biojava.bio.structure.io.util.PDBTemporaryStorageUtils.LinkRecord;
 
 
 /**
@@ -179,7 +185,9 @@ public class PDBFileParser  {
 	private Map<String, Site> siteMap = new LinkedHashMap<String, Site>();
 	private Map<String, List<ResidueNumber>> siteToResidueMap = new LinkedHashMap<String, List<ResidueNumber>>();
 
-
+	// for storing LINK until we have all the atoms parsed
+	private List<LinkRecord> linkRecords;
+	
 	// for parsing COMPOUND and SOURCE Header lines
 	private int molTypeCounter = 1;
 	//private int continuationNo;
@@ -296,7 +304,7 @@ public class PDBFileParser  {
 		load_max_atoms = params.getMaxAtoms();
 		my_ATOM_CA_THRESHOLD = params.getAtomCaThreshold();
 
-
+		linkRecords = new ArrayList<LinkRecord>();
 	}
 
 
@@ -2148,7 +2156,7 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 		String dbinsEnd    = line.substring(67,68);
 
 		dbref.setIdCode(idCode);
-		dbref.setChainId(chainId.charAt(0));
+		dbref.setChainId(chainId);
 		dbref.setSeqBegin(intFromString(seqBegin));
 		dbref.setInsertBegin(insertBegin.charAt(0));
 		dbref.setSeqEnd(intFromString(seqEnd));
@@ -2228,7 +2236,7 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 	 */
 	private void pdb_SSBOND_Handler(String line){
 		String chain1      = line.substring(15,16);
-		String seqNum1     = line.substring(18,21).trim();
+		String seqNum1     = line.substring(17,21).trim();
 		String icode1      = line.substring(21,22);
 		String chain2      = line.substring(29,30);
 		String seqNum2     = line.substring(31,35).trim();
@@ -2248,8 +2256,70 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 		ssbond.setInsCode1(icode1);
 		ssbond.setInsCode2(icode2);
 		structure.addSSBond(ssbond);
+	}
+	
 
-
+	/**
+	 * Takes care of LINK records. These take the format of:
+	 * 
+	 * <pre>
+	 * COLUMNS        DATA TYPE       FIELD       DEFINITION
+	 * --------------------------------------------------------------------------------
+	 *  1 -  6        Record name     "LINK  "
+	 * 13 - 16        Atom            name1       Atom name.
+	 * 17             Character       altLoc1     Alternate location indicator.
+	 * 18 - 20        Residue name    resName1    Residue name.
+	 * 22             Character       chainID1    Chain identifier.
+	 * 23 - 26        Integer         resSeq1     Residue sequence number.
+	 * 27             AChar           iCode1      Insertion code.
+	 * 43 - 46        Atom            name2       Atom name.
+	 * 47             Character       altLoc2     Alternate location indicator.
+	 * 48 - 50        Residue name    resName2    Residue name.
+	 * 52             Character       chainID2    Chain identifier.
+	 * 53 - 56        Integer         resSeq2     Residue sequence number.
+	 * 57             AChar           iCode2      Insertion code.
+	 * 60 - 65        SymOP           sym1        Symmetry operator for 1st atom.
+	 * 67 - 72        SymOP           sym2        Symmetry operator for 2nd atom.
+	 * </pre>
+	 * 
+	 * (From http://www.wwpdb.org/documentation/format32/sect6.html#LINK)
+	 * 
+	 * @param line the LINK record line to parse.
+	 */
+	private void pdb_LINK_Handler(String line) {
+		String name1 = line.substring(12, 16).trim();
+		String altLoc1 = line.substring(16, 17).trim();
+		String resName1 = line.substring(17, 20).trim();
+		String chainID1 = line.substring(21, 22).trim();
+		String resSeq1 = line.substring(22, 26).trim();
+		String iCode1 = line.substring(26, 27).trim();
+		
+		String name2 = line.substring(42, 46).trim();
+		String altLoc2 = line.substring(46, 47).trim();
+		String resName2 = line.substring(47, 50).trim();
+		String chainID2 = line.substring(51, 52).trim();
+		String resSeq2 = line.substring(52, 56).trim();
+		String iCode2 = line.substring(56, 57).trim();
+		
+		String sym1 = line.substring(59, 65).trim();
+		String sym2 = line.substring(66, 72).trim();
+		
+//		System.err.println("LINK");
+//		System.err.println("\tName: " + name1);
+//		System.err.println("\tAlt Loc: " + altLoc1);
+//		System.err.println("\tRes name: " + resName1);
+//		System.err.println("\tChain ID: " + chainID1);
+//		System.err.println("\tRes Seq: " + resSeq1);
+//		System.err.println("\tIns Code: " + iCode1);
+//		System.err.println(name1 + "." + altLoc1 + "." + resName1 + "." + chainID1 + "." + resSeq1 + "." + iCode1);
+//		System.err.println(name2 + "." + altLoc2 + "." + resName2 + "." + chainID2 + "." + resSeq2 + "." + iCode2);
+//		System.err.println(sym1 + "." + sym2);
+//		System.err.println();
+		
+		linkRecords.add(new LinkRecord(
+				name1, altLoc1, resName1, chainID1, resSeq1, iCode1, 
+				name2, altLoc2, resName2, chainID2, resSeq2, iCode2, 
+				sym1, sym2));
 	}
 
 	/**
@@ -2543,6 +2613,7 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 		lengthCheck = -1;
 		atomCount = 0;
 		atomOverflow = false;
+		linkRecords = new ArrayList<LinkRecord>();
 
 		parseCAonly = params.isParseCAOnly();
 
@@ -2637,6 +2708,8 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 						pdb_SITE_Handler(line);
 					else if (recordName.equals("SSBOND"))
 						pdb_SSBOND_Handler(line);
+					else if (recordName.equals("LINK"))
+						pdb_LINK_Handler(line);
 					else if ( params.isParseSecStruc()) {
 						if ( recordName.equals("HELIX") ) pdb_HELIX_Handler (  line ) ;
 						else if (recordName.equals("SHEET")) pdb_SHEET_Handler(line ) ;
@@ -2655,8 +2728,12 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 			}
 
 			makeCompounds(compndLines, sourceLines);
-
+			
 			triggerEndFileChecks();
+			
+			if (params.shouldCreateAtomBonds()) {
+				formBonds();
+			}
 
 		} catch (Exception e) {
 			System.err.println(line);
@@ -2706,7 +2783,181 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 		}
 
 	}
+	
+	/**
+	 * Handles creation of all bonds. Looks at LINK records, SSBOND (Disulfide
+	 * bonds), peptide bonds, and intra-residue bonds.
+	 * <p>
+	 * Note: the current implementation only looks at the first model of each
+	 * structure. This may need to be fixed in the future.
+	 */
+	private void formBonds() {
+		try {
+			for (LinkRecord linkRecord : linkRecords) {
+				formLinkRecordBond(linkRecord);
+			}
 
+			for (SSBond disulfideBond : structure.getSSBonds()) {
+				formDisulfideBond(disulfideBond);
+			}
+			formPeptideBonds();
+			formIntraResidueBonds();
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new RuntimeException("Error while forming bonds for " + pdbId, e);
+		}
+		
+		trimAtomBondLists();
+	}
+	
+	private void formLinkRecordBond(LinkRecord linkRecord) {
+		// only work with atoms that aren't alternate locations
+		if (linkRecord.getAltLoc1().equals(" ")
+				|| linkRecord.getAltLoc2().equals(" "))
+			return;
+
+		try {
+			Atom a = getAtomFromRecord(linkRecord.getName1(),
+					linkRecord.getAltLoc1(), linkRecord.getResName1(),
+					linkRecord.getChainID1(), linkRecord.getResSeq1(),
+					linkRecord.getiCode1());
+
+			Atom b = getAtomFromRecord(linkRecord.getName2(),
+					linkRecord.getAltLoc2(), linkRecord.getResName2(),
+					linkRecord.getChainID2(), linkRecord.getResSeq2(),
+					linkRecord.getiCode2());
+
+			// TODO determine what the actual bond order of this bond is; for
+			// now, we're assuming they're single bonds
+			new Bond(a, b, 1);
+		} catch (Exception e) {
+			System.out.println("Error with the following link record: ");
+			System.out.println(linkRecord);
+			e.printStackTrace();
+			throw new RuntimeException(e);
+		}
+	}
+	
+	private void formDisulfideBond(SSBond disulfideBond) {
+		try {
+			Atom a = getAtomFromRecord("SG", "", "CYS",
+					disulfideBond.getChainID1(), disulfideBond.getResnum1(),
+					disulfideBond.getInsCode1());
+			Atom b = getAtomFromRecord("SG", "", "CYS",
+					disulfideBond.getChainID2(), disulfideBond.getResnum2(),
+					disulfideBond.getInsCode2());
+			
+			new Bond(a, b, 1);
+		} catch (StructureException e) {
+			System.out.println("Error with the following SSBond: ");
+			System.out.println(disulfideBond);
+			e.printStackTrace();
+			throw new RuntimeException(e);
+		}
+	}
+
+	private Atom getAtomFromRecord(String name, String altLoc,
+			String resName, String chainID, String resSeq, String iCode)
+			throws StructureException {
+		if (iCode.isEmpty()) {
+			iCode = " "; // an insertion code of ' ' is ignored
+		}
+		
+		Chain chain = structure.getChainByPDB(chainID);
+		ResidueNumber resNum = new ResidueNumber(chainID, Integer.parseInt(resSeq), iCode.charAt(0));
+		Group group = chain.getGroupByPDB(resNum);
+		
+		// there is an alternate location
+		if (!altLoc.isEmpty()) {
+			group = group.getAltLocGroup(altLoc.charAt(0));
+		}
+		
+		return group.getAtom(name);
+	}
+	
+	/**
+	 * The furthest one residue's C and another's N can be and still be assumed
+	 * to be in a peptide bond.
+	 */
+	private static final double MAX_PEPTIDE_BOND_LENGTH = 1.8;
+
+	private void formPeptideBonds() throws StructureException {
+		for (Chain chain : structure.getChains()) {
+			List<Group> groups = chain.getSeqResGroups();
+
+			for (int i = 0; i < groups.size() - 1; i++) {
+				if (!(groups.get(i) instanceof AminoAcidImpl)
+						|| !(groups.get(i + 1) instanceof AminoAcidImpl))
+					continue;
+				
+				AminoAcidImpl current = (AminoAcidImpl) groups.get(i);
+				AminoAcidImpl next = (AminoAcidImpl) groups.get(i + 1);
+
+				// atoms with no residue number don't have atom information
+				if (current.getResidueNumber() == null
+						|| next.getResidueNumber() == null) {
+					continue;
+				}
+				
+				Atom carboxylC;
+				Atom aminoN;
+				
+				try {
+					carboxylC = current.getC();
+					aminoN = next.getN();
+				} catch (StructureException e) {
+					// some structures may be incomplete and not store info
+					// about all of their atoms
+					continue;
+				}
+				
+				if (Calc.getDistance(carboxylC, aminoN) < MAX_PEPTIDE_BOND_LENGTH) {
+					// we got ourselves a peptide bond
+					new Bond(carboxylC, aminoN, 1);
+				}
+			}
+		}
+	}
+	
+	private void formIntraResidueBonds() {
+		for (Chain chain : structure.getChains()) {
+			List<Group> groups = chain.getAtomGroups();
+
+			for (Group group : groups) {
+				// atoms with no residue number don't have atom information
+				// also ignore water
+				if (group.getResidueNumber() == null || group.isWater()) {
+					continue;
+				}
+
+				ChemComp aminoChemComp = ChemCompGroupFactory.getChemComp(group
+						.getPDBName());
+
+				for (ChemCompBond chemCompBond : aminoChemComp.getBonds()) {
+					try {
+						Atom a = group.getAtom(chemCompBond.getAtom_id_1());
+						Atom b = group.getAtom(chemCompBond.getAtom_id_2());
+						int bondOrder = chemCompBond.getNumericalBondOrder();
+
+						new Bond(a, b, bondOrder);
+					} catch (StructureException e) {
+						// Some of the atoms were missing. That's fine, there's
+						// nothing to do in this case.
+					}
+				}
+			}
+		}
+	}
+	
+	private void trimAtomBondLists() {
+		for (Chain chain : structure.getChains()) {
+			for (Group group : chain.getAtomGroups()) {
+				for (Atom atom : group.getAtoms()) {
+					((ArrayList<Bond>) atom.getBonds()).trimToSize();
+				}
+			}
+		}
+	}
 
 	private void triggerEndFileChecks(){
 		// finish and add ...

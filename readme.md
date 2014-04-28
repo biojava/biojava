@@ -53,4 +53,4 @@ This list is intended for general discussion, advice, questions, offers of help,
  
 * [biojava-dev@biojava.org](http://lists.open-bio.org/mailman/listinfo/biojava-dev)
 
-This list is intended for more technical discussions about API design, bugs in CVS development code, performance issues and things that might not be of interest to the more casual user.
+This list is intended for more technical discussions about API design, bugs in git development code, performance issues and things that might not be of interest to the more casual user.

@@ -52,7 +52,8 @@ public class StringProxySequenceReader<C extends Compound> implements ProxySeque
     private String sequence;
     private CompoundSet<C> compoundSet;
     private List<C> parsedCompounds = new ArrayList<C>();
-    
+
+    public StringProxySequenceReader() {}
 
     public StringProxySequenceReader(String sequence, CompoundSet<C> compoundSet) {
         this.sequence = sequence;
@@ -67,6 +68,7 @@ public class StringProxySequenceReader<C extends Compound> implements ProxySeque
     public void setContents(String sequence) {
         // Horrendously inefficient - pretty much the way the old BJ did things.
         // TODO Should be optimised.
+    	this.sequence = sequence;
         this.parsedCompounds.clear();
         for (int i = 0; i < sequence.length();) {
             String compoundStr = null;

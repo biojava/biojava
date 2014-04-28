@@ -38,14 +38,17 @@ import org.biojava.bio.structure.Atom;
 import org.biojava.bio.structure.AtomImpl;
 import org.biojava.bio.structure.Chain;
 import org.biojava.bio.structure.ChainImpl;
+import org.biojava.bio.structure.Compound;
 import org.biojava.bio.structure.DBRef;
 import org.biojava.bio.structure.Element;
 import org.biojava.bio.structure.Group;
+import org.biojava.bio.structure.GroupType;
 import org.biojava.bio.structure.HetatomImpl;
 import org.biojava.bio.structure.NucleotideImpl;
 import org.biojava.bio.structure.PDBHeader;
 import org.biojava.bio.structure.ResidueNumber;
 import org.biojava.bio.structure.Structure;
+import org.biojava.bio.structure.StructureException;
 import org.biojava.bio.structure.StructureImpl;
 import org.biojava.bio.structure.StructureTools;
 import org.biojava.bio.structure.UnknownPdbAminoAcidException;
@@ -64,6 +67,9 @@ import org.biojava.bio.structure.io.mmcif.model.DatabasePDBremark;
 import org.biojava.bio.structure.io.mmcif.model.DatabasePDBrev;
 import org.biojava.bio.structure.io.mmcif.model.Entity;
 import org.biojava.bio.structure.io.mmcif.model.EntityPolySeq;
+import org.biojava.bio.structure.io.mmcif.model.EntitySrcGen;
+import org.biojava.bio.structure.io.mmcif.model.EntitySrcNat;
+import org.biojava.bio.structure.io.mmcif.model.EntitySrcSyn;
 import org.biojava.bio.structure.io.mmcif.model.Exptl;
 import org.biojava.bio.structure.io.mmcif.model.PdbxChemCompDescriptor;
 import org.biojava.bio.structure.io.mmcif.model.PdbxChemCompIdentifier;
@@ -107,7 +113,9 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 	List<PdbxStructOperList> structOpers ; //
 	List<PdbxStructAssembly> strucAssemblies;
 	List<PdbxStructAssemblyGen> strucAssemblyGens;
-
+	List<EntitySrcGen> entitySrcGens;
+	List<EntitySrcNat> entitySrcNats;
+	List<EntitySrcSyn> entitySrcSyns;
 
 	Map<String,String> asymStrandId;
 
@@ -120,6 +128,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 	public  SimpleMMcifConsumer(){
 		params = new FileParsingParameters();
 		documentStart();
+
 	}
 
 	public void newEntity(Entity entity) {
@@ -306,6 +315,8 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		String recordName    = atom.getGroup_PDB();
 		String residueNumberS = atom.getAuth_seq_id();
 		Integer residueNrInt = Integer.parseInt(residueNumberS);
+
+		//String residueNumberSeqres = atom.getLabel_seq_id();
 		// the 3-letter name of the group:
 		String groupCode3    = atom.getLabel_comp_id();
 		if ( groupCode3.length() == 1){
@@ -458,6 +469,8 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 				e.printStackTrace();
 			}
 			current_group.setResidueNumber(residueNumber);
+
+
 			//                        System.out.println("Made new group:  " + groupCode3 + " " + resNum + " " + iCode);
 
 		} else {
@@ -629,6 +642,9 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		structOpers   = new ArrayList<PdbxStructOperList>();
 		strucAssemblies = new ArrayList<PdbxStructAssembly>();
 		strucAssemblyGens = new ArrayList<PdbxStructAssemblyGen>();
+		entitySrcGens = new ArrayList<EntitySrcGen>();
+		entitySrcNats = new ArrayList<EntitySrcNat>();
+		entitySrcSyns = new ArrayList<EntitySrcSyn>();
 	}
 
 
@@ -669,13 +685,120 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 			if ( DEBUG )
 				System.out.println(" seqres: " + asym.getId() + " " + seqres + "<") ;
 
+
+			for (EntitySrcGen esg : entitySrcGens) {
+				String eId = esg.getEntity_id();
+				//System.out.println("Checking entity src gens: " + eId + " " + asym.getEntity_id());
+				if (! eId.equals(asym.getEntity_id()))
+					continue;
+
+				// found the matching EntitySrcGen
+				// get the corresponding Entity
+				Compound c = structure.getCompoundById(eId);
+				if ( c == null){
+					c = createNewCompoundFromESG(esg, eId);
+					// add to chain
+					List<Compound> compounds  = structure.getCompounds();
+					compounds.add(c);
+					structure.setCompounds(compounds);
+
+				}
+
+				c.addChain(s);
+
+			}
+
+			for (EntitySrcNat esn : entitySrcNats) {
+				String eId = esn.getEntity_id();
+				//System.out.println("Checking entity src gens: " + eId + " " + asym.getEntity_id());
+				if (! eId.equals(asym.getEntity_id()))
+					continue;
+
+				// found the matching EntitySrcGen
+				// get the corresponding Entity
+				Compound c = structure.getCompoundById(eId);
+				if ( c == null){
+					c = createNewCompoundFromESN(esn, eId);
+					// add to chain
+					List<Compound> compounds  = structure.getCompounds();
+					compounds.add(c);
+					structure.setCompounds(compounds);
+
+				}
+
+				c.addChain(s);
+
+			}
+
+			for (EntitySrcSyn ess : entitySrcSyns) {
+				String eId = ess.getEntity_id();
+				//System.out.println("Checking entity src gens: " + eId + " " + asym.getEntity_id());
+				if (! eId.equals(asym.getEntity_id()))
+					continue;
+
+				// found the matching EntitySrcGen
+				// get the corresponding Entity
+				Compound c = structure.getCompoundById(eId);
+				if ( c == null){
+					c = createNewCompoundFromESS(ess, eId);
+					// add to chain
+					List<Compound> compounds  = structure.getCompounds();
+					compounds.add(c);
+					structure.setCompounds(compounds);
+
+				}
+
+				c.addChain(s);
+
+			}
 		}
 
-
 		if ( params.isAlignSeqRes() ){
-
+		
 			SeqRes2AtomAligner aligner = new SeqRes2AtomAligner();			
-			aligner.align(structure,seqResChains);
+			//aligner.align(structure,seqResChains);
+
+			// fix SEQRES residue numbering
+			List<Chain> atomList   = structure.getModel(0);
+			for (Chain seqResChain: seqResChains){
+				try {
+					Chain atomChain = aligner.getMatchingAtomRes(seqResChain, atomList);
+
+					//map the atoms to the seqres...
+
+					List<Group> seqResGroups = seqResChain.getAtomGroups(); 
+
+					for ( int seqResPos = 0 ; seqResPos < seqResGroups.size(); seqResPos++) {
+						Group seqresG = seqResGroups.get(seqResPos);
+						boolean found = false;
+						for ( Group atomG: atomChain.getAtomGroups()) {
+
+							int internalNr = getInternalNr (atomG);
+
+							if (seqresG.getResidueNumber().getSeqNum() == internalNr ) {															
+								seqResGroups.set(seqResPos, atomG);
+								found = true;
+								break;
+							}
+
+
+						}
+						if ( ! found)
+							// so far the residue number has tracked internal numbering.
+							// however there are no atom records, as such this can't be a PDB residue number...
+							seqresG.setResidueNumber(null);
+					}
+					atomChain.setSeqResGroups(seqResGroups);
+
+				} catch (StructureException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+
+			}
+
+
 		}
 
 
@@ -758,8 +881,79 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		structure.getPDBHeader().setBioUnitTranformationMap(transformationMap);
 
 
+
 	}
 
+
+
+
+
+
+	private int getInternalNr(Group atomG) {
+		if ( atomG.getType().equals(GroupType.AMINOACID)) {
+			AminoAcidImpl aa = (AminoAcidImpl) atomG;
+			return new Long(aa.getId()).intValue();
+		} else if ( atomG.getType().equals(GroupType.NUCLEOTIDE)) {
+			NucleotideImpl nu = (NucleotideImpl) atomG;
+			return new Long(nu.getId()).intValue();
+		} else {
+			HetatomImpl he = (HetatomImpl) atomG;
+			return new Long(he.getId()).intValue();
+		}
+	}
+
+	private Compound createNewCompoundFromESG(EntitySrcGen esg, String eId) {
+
+		Entity e = getEntity(eId);
+		Compound c = new Compound();
+		c.setMolId(eId);
+		if ( e != null)
+			c.setMolName(e.getPdbx_description());
+		c.setAtcc(esg.getPdbx_gene_src_atcc());
+		c.setCell(esg.getPdbx_gene_src_cell());
+		c.setOrganismCommon(esg.getGene_src_common_name());
+		c.setOrganismScientific(esg.getPdbx_gene_src_scientific_name());
+		c.setOrganismTaxId(esg.getPdbx_gene_src_ncbi_taxonomy_id());
+		c.setExpressionSystemTaxId(esg.getPdbx_host_org_ncbi_taxonomy_id());
+		c.setExpressionSystem(esg.getPdbx_host_org_scientific_name());
+		return c;
+
+	}
+
+	private Compound createNewCompoundFromESN(EntitySrcNat esn, String eId) {
+
+		Entity e = getEntity(eId);
+		Compound c = new Compound();
+		c.setMolId(eId);
+		if ( e != null)
+			c.setMolName(e.getPdbx_description());
+		c.setAtcc(esn.getPdbx_atcc());
+		c.setCell(esn.getPdbx_cell());
+		c.setOrganismCommon(esn.getCommon_name());
+		c.setOrganismScientific(esn.getPdbx_organism_scientific());
+		c.setOrganismTaxId(esn.getPdbx_ncbi_taxonomy_id());
+
+		return c;
+
+	}
+
+	private Compound createNewCompoundFromESS(EntitySrcSyn ess, String eId) {
+
+		Entity e = getEntity(eId);
+		Compound c = new Compound();
+		c.setMolId(eId);
+		if ( e != null)
+			c.setMolName(e.getPdbx_description());
+
+
+		c.setOrganismCommon(ess.getOrganism_common_name());
+		c.setOrganismScientific(ess.getOrganism_scientific());
+		c.setOrganismTaxId(ess.getNcbi_taxonomy_id());
+
+
+		return c;
+
+	}
 
 	/** This method will return the parsed protein structure, once the parsing has been finished
 	 *
@@ -971,9 +1165,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		r.setDbAccession(sref.getPdbx_db_accession());
 		r.setDbIdCode(sref.getPdbx_db_accession());
 
-
-		//TODO: make DBRef chain IDs a string for chainIDs that are longer than one char...
-		r.setChainId(new Character(sref.getPdbx_strand_id().charAt(0)));
+		r.setChainId(sref.getPdbx_strand_id());
 		StructRef structRef = getStructRef(sref.getRef_id());
 		if (structRef == null){
 			logger.warning("could not find StructRef " + sref.getRef_id() + " for StructRefSeq " + sref);
@@ -1055,6 +1247,37 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 	//	return getChainFromList(seqResChains, chainID);
 	//}
 
+
+	/** Data items in the ENTITY_SRC_GEN category record details of
+               the source from which the entity was obtained in cases
+               where the source was genetically manipulated.  The
+               following are treated separately:  items pertaining to the tissue
+               from which the gene was obtained, items pertaining to the host
+               organism for gene expression and items pertaining to the actual
+               producing organism (plasmid).
+	 */
+
+	@Override
+	public void newEntitySrcGen(EntitySrcGen entitySrcGen){
+
+		// add to internal list. Map to Compound object later on...
+		entitySrcGens.add(entitySrcGen);
+	}
+
+	@Override
+	public void newEntitySrcNat(EntitySrcNat entitySrcNat){
+
+		// add to internal list. Map to Compound object later on...
+		entitySrcNats.add(entitySrcNat);
+	}
+
+	@Override
+	public void newEntitySrcSyn(EntitySrcSyn entitySrcSyn){
+
+		// add to internal list. Map to Compound object later on...
+		entitySrcSyns.add(entitySrcSyn);
+	}
+
 	/** The EntityPolySeq object provide the amino acid sequence objects for the Entities.
 	 * Later on the entities are mapped to the BioJava Chain and Compound objects.
 	 * @param epolseq the EntityPolySeq record for one amino acid
@@ -1086,6 +1309,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 
 			Character code1 = StructureTools.convert_3code_1code(epolseq.getMon_id());
 			g.setAminoType(code1);
+
 			g.setResidueNumber(ResidueNumber.fromString(epolseq.getNum()));
 			// ARGH at this stage we don;t know about insertion codes
 			// this has to be obtained from _pdbx_poly_seq_scheme
@@ -1161,6 +1385,8 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 
 		if (ppss.getAuth_seq_num().equals("?"))
 			return;
+
+		//logger.info("replacegroupSeqPos " + ppss);
 		// at this stage we are still using the internal asym ids...
 		List<Chain> matchinChains = getChainsFromAllModels(ppss.getAsym_id());
 
@@ -1197,8 +1423,8 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 				continue;
 			}
 
-			if (! target.getPDBName().equals(ppss.getMon_id())){
-				logger.info("could not match PdbxPolySeqScheme to chain:" + ppss);
+			if (! target.getPDBName().trim().equals(ppss.getMon_id())){
+				logger.info("could not match PdbxPolySeqScheme to chain:" + target.getPDBName() + " " + ppss);
 				continue;
 			}
 
@@ -1213,6 +1439,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 			}
 
 			ResidueNumber residueNumber = new ResidueNumber(null, pdbResNum,insCode);
+			//logger.info("setting residue number for " + target +" to: " + residueNumber);
 			target.setResidueNumber(residueNumber);
 		}
 	}
@@ -1264,8 +1491,8 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 
 	public void newPdbxEntityNonPoly(PdbxEntityNonPoly pen){
 		// TODO: do something with them...
-		
-		System.out.println(pen.getEntity_id() + " " + pen.getName() + " " + pen.getComp_id());
+		// not implemented yet...
+		//System.out.println(pen.getEntity_id() + " " + pen.getName() + " " + pen.getComp_id());
 	}
 
 	public void newChemComp(ChemComp c) {
@@ -1329,26 +1556,29 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 	@Override
 	public void newChemCompAtom(ChemCompAtom atom) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void newPdbxChemCompIndentifier(PdbxChemCompIdentifier id) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void newChemCompBond(ChemCompBond bond) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void newPdbxChemCompDescriptor(PdbxChemCompDescriptor desc) {
 		// TODO Auto-generated method stub
-		
+
 	}
+
+
+
 
 
 

@@ -169,7 +169,23 @@ public class SSBond implements PDBRecord, Serializable{
 	public void setResnum2(String resnum2) {
 		this.resnum2 = resnum2;
 	}
-
-
-
+	
+	@Override
+	public String toString() {
+		String s = "[SSBOND:\n";
+		
+		s += "Atom 1:\n";
+		s += "\tChain: " + chainID1 + "\n";
+		s += "\tResidue #: " + resnum1 + "\n";
+		s += "\tIns. Code: " + insCode1 + "\n";
+		
+		s += "Atom 2:\n";
+		s += "\tChain: " + chainID2 + "\n";
+		s += "\tResidue #: " + resnum2 + "\n";
+		s += "\tIns. Code: " + insCode2 + "\n";
+		
+		s += "]";
+		
+		return s;
+	}
 }

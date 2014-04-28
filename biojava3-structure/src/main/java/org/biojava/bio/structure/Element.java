@@ -48,7 +48,7 @@ public enum Element implements Serializable {
     N(7, 2, 57, 1.40f, 0.75f, 5, 2, 5, 3, 4, 14.007f, 2, -3, 3.04f, ElementType.OTHER_NONMETAL),
     O(8, 2, 65, 1.35f, 0.73f, 6, 1, 2, 2, 2, 16.000f, 2, -2, 3.44f, ElementType.OTHER_NONMETAL),
     /**
-     * Deuterim
+     * Deuterium
      */
     D(1, 1, 27, 1.10f, 0.32f, 1, 1, 1, 1, 1, 1.008f, 0, 1, 2.20f, ElementType.OTHER_NONMETAL), // need to edit properties!
     /**
@@ -381,22 +381,29 @@ public enum Element implements Serializable {
         throw new IllegalArgumentException("Invalid element symbol: " + elementSymbol);
     }
 
-    /**
-     * Returns true if this Element is Hydrogen. <B>Note:</B> currently Deuterium (D)
-     * and Tritium (T) are not considered Hydrogen.
-     * @return <CODE>true</CODE> if the Element is Hydrogen.
-     */
-    public boolean isHydrogen() {
-        return (this == H);
-    }
+	/**
+	 * Returns <code>true</code> if this Element is Hydrogen.
+	 * <p>
+	 * <b>Note:</b> Deuterium ({@link #D}) and Tritium ({@link T}) will return
+	 * <code>true</code> to this method.
+	 * 
+	 * @return <CODE>true</CODE> if the Element is Hydrogen.
+	 */
+	public boolean isHydrogen() {
+		return this == H || this == D || this == T;
+	}
 
-    /**
-     * Returns <CODE>true</CODE> is the Element is an not Hydrogen.
-     * @return <CODE>true</CODE> is Element is not Hydrogen.
-     */
-    public boolean isHeavyAtom() {
-        return (this != H);
-    }
+	/**
+	 * Returns <CODE>true</CODE> is the Element is an not Hydrogen (or an
+	 * isotope of Hydrogen).
+	 * <p>
+	 * This method is the exact opposite of {@link #isHydrogen()}.
+	 * 
+	 * @return <CODE>true</CODE> is Element is not Hydrogen.
+	 */
+	public boolean isHeavyAtom() {
+		return !isHydrogen();
+	}
 
     /**
      * Returns <CODE>true</CODE> if Element is not Hydrogen and not Carbon.
