@@ -410,9 +410,9 @@ public class SeqRes2AtomAligner {
 						PolymerType.POLYNUCLEOTIDE_ONLY.contains(cc.getPolymerType())
 						) {
 					//System.out.println(cc.getOne_letter_code());
-					Character c = cc.getOne_letter_code();
-					if ( c.equals('?'))
-						c = 'X';
+					String c = cc.getOne_letter_code();
+					if ( c.equals("?"))
+						c = "X";
 
 					positionIndex.put(seqIndex,i);
 					sequence.append(c);
