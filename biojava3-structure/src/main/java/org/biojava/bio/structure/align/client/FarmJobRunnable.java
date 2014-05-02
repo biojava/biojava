@@ -173,7 +173,11 @@ public class FarmJobRunnable implements Runnable {
 
 		buf.append("[");
 		Date date = new Date();
-		buf.append(dateFormat.format(date));
+		String formattedDate;
+		synchronized (dateFormat) {
+			formattedDate = dateFormat.format(date);
+		}
+		buf.append(formattedDate);
 		buf.append("] ");
 		buf.append(message);
 		System.out.println(buf.toString());
