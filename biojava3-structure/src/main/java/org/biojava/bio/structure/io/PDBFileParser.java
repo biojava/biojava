@@ -21,7 +21,7 @@
  */
 package org.biojava.bio.structure.io;
 
-import static java.lang.Math.max;
+import static java.lang.Math.min;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -387,11 +387,11 @@ public class PDBFileParser  {
 
 		int len = line.trim().length();
 		if(len > 10) {
-			classification  = line.substring (10, max(len,50)).trim() ;
+			classification  = line.substring (10, min(len,50)).trim() ;
 			pdbHeader.setClassification(classification);
 		}
 		if(len > 50) {
-			deposition_date = line.substring (50, max(len,59)).trim() ;
+			deposition_date = line.substring (50, min(len,59)).trim() ;
 			try {
 				Date dep = dateFormat.parse(deposition_date);
 				pdbHeader.setDepDate(dep);
@@ -401,7 +401,7 @@ public class PDBFileParser  {
 			}
 		}
 		if(len > 62) {
-			pdbCode         = line.substring (62, max(len,66)).trim() ;
+			pdbCode         = line.substring (62, min(len,66)).trim() ;
 			pdbId = pdbCode;
 			if (DEBUG) {
 				System.out.println("Parsing entry " + pdbId);
