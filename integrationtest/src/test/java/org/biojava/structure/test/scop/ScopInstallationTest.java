@@ -40,36 +40,37 @@ import org.junit.runners.Parameterized.Parameters;
 @RunWith(Parameterized.class)
 public class ScopInstallationTest extends ScopDatabaseTest {
 
-    public ScopInstallationTest(String tag,ScopDatabase scop) {
-        super(tag,scop);
-    }
+	public ScopInstallationTest(String tag,ScopDatabase scop) {
+		super(tag,scop);
+	}
 
-    //@Parameters
-    @Parameters(name="{0}")
-    public static Collection<Object[]> availableDatabases() {
-        ArrayList<Object[]> databases = new ArrayList<Object[]>();
-        ScopInstallation scop;
+	//@Parameters
+	@Parameters(name="{0}")
+	public static Collection<Object[]> availableDatabases() {
+		ArrayList<Object[]> databases = new ArrayList<Object[]>();
+		ScopInstallation scop;
 
-        for(String version : new String[] {
-                ScopFactory.VERSION_1_75,
-                ScopFactory.VERSION_1_73,
-        }) {
-            scop = new ScopInstallation();
-            scop.setScopVersion(version);
-            
-            // Don't fail if the server is down
-            boolean reachable = false;
-            for(ScopMirror mirror: scop.getMirrors()) {
-                if(mirror.isReachable()) {
-                    reachable = true;
-                    break;
-                }
-            }
-            Assume.assumeTrue("SCOP server is currently unreachable.",reachable);
-            
-            databases.add(new Object[] {version, scop});
-        }
-        return databases;
-    }
+		for(String version : new String[] {
+				ScopFactory.VERSION_1_75,
+				ScopFactory.VERSION_1_73,
+				ScopFactory.VERSION_1_71,
+		}) {
+			scop = new ScopInstallation();
+			scop.setScopVersion(version);
+
+			// Don't fail if the server is down
+			boolean reachable = false;
+			for(ScopMirror mirror: scop.getMirrors()) {
+				if(mirror.isReachable()) {
+					reachable = true;
+					break;
+				}
+			}
+			Assume.assumeTrue("SCOP server is currently unreachable.",reachable);
+
+			databases.add(new Object[] {version, scop});
+		}
+		return databases;
+	}
 
 }
