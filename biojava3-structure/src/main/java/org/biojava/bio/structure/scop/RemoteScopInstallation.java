@@ -128,6 +128,7 @@ public class RemoteScopInstallation implements ScopDatabase {
 
 	@Override
 	public List<ScopDomain> filterByDomainName(String query) {
+		query = query.trim();
 		List<ScopDomain> results = null;
 		try {
 			URL u = new URL(server + "filterByDomainName?query="+query+"&version="+getScopVersion());
@@ -208,6 +209,7 @@ public class RemoteScopInstallation implements ScopDatabase {
 
 	private ScopDomain requestRemoteDomainByScopID(String scopId)
 	throws IOException{
+		scopId = scopId.trim();
 		URL u = new URL(server + "getDomainByScopID?scopId="+scopId+"&version="+getScopVersion());
 		//System.out.println(u);
 		InputStream response = HTTPConnectionTools.getInputStream(u);
