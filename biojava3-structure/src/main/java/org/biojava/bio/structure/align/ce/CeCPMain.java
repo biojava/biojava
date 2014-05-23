@@ -31,6 +31,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.biojava.bio.structure.Atom;
+import org.biojava.bio.structure.Calc;
 import org.biojava.bio.structure.StructureException;
 import org.biojava.bio.structure.StructureTools;
 import org.biojava.bio.structure.align.model.AFPChain;
@@ -116,36 +117,47 @@ public class CeCPMain extends CeMain {
 	 */
 	@Override
 	public AFPChain align(Atom[] ca1, Atom[] ca2, Object param) throws StructureException{
-		long startTime = System.currentTimeMillis();
-
-		Atom[] ca2m = StructureTools.duplicateCA2(ca2);
-
-		if(debug) {
-			System.out.format("Duplicating ca2 took %s ms\n",System.currentTimeMillis()-startTime);
-			startTime = System.currentTimeMillis();
+		// Duplicate the shorter of the two
+		if( ca1.length >= ca2.length) {
+			long startTime = System.currentTimeMillis();
+	
+			Atom[] ca2m = StructureTools.duplicateCA2(ca2);
+	
+			if(debug) {
+				System.out.format("Duplicating ca2 took %s ms\n",System.currentTimeMillis()-startTime);
+				startTime = System.currentTimeMillis();
+			}
+	
+			// Do alignment
+			AFPChain afpChain = super.align(ca1, ca2m,params);
+	
+			// since the process of creating ca2m strips the name info away, set it explicitely
+			try {
+				afpChain.setName2(ca2[0].getGroup().getChain().getParent().getName());
+			} catch( Exception e) {}
+	
+			if(debug) {
+				System.out.format("Running %dx2*%d alignment took %s ms\n",ca1.length,ca2.length,System.currentTimeMillis()-startTime);
+				startTime = System.currentTimeMillis();
+			}
+			afpChain = postProcessAlignment(afpChain, ca1, ca2m, calculator);
+	
+			if(debug) {
+				System.out.format("Finding CP point took %s ms\n",System.currentTimeMillis()-startTime);
+				startTime = System.currentTimeMillis();
+			}
+	
+			return afpChain;
+		} else {
+			if(debug) {
+				System.out.println("Swapping alignment order.");
+			}
+			AFPChain afpChain = this.align(ca2, ca1);
+			return invertAlignment(afpChain);
 		}
-
-		// Do alignment
-		AFPChain afpChain = super.align(ca1, ca2m,params);
-
-		// since the process of creating ca2m strips the name info away, set it explicitely
-		try {
-			afpChain.setName2(ca2[0].getGroup().getChain().getParent().getName());
-		} catch( Exception e) {}
-
-		if(debug) {
-			System.out.format("Running %dx2*%d alignment took %s ms\n",ca1.length,ca2.length,System.currentTimeMillis()-startTime);
-			startTime = System.currentTimeMillis();
-		}
-		afpChain = postProcessAlignment(afpChain, ca1, ca2m, calculator);
-
-		if(debug) {
-			System.out.format("Finding CP point took %s ms\n",System.currentTimeMillis()-startTime);
-			startTime = System.currentTimeMillis();
-		}
-
-		return afpChain;
 	}
+
+
 
 	/** Circular permutation specific code to be run after the standard CE alignment
 	 * 
@@ -177,6 +189,81 @@ public class CeCPMain extends CeMain {
 			afpChain = filterDuplicateAFPs(afpChain,calculator,ca1,ca2m);
 		}
 		return afpChain;
+	}
+
+	/**
+	 * Swaps the order of structures in an AFPChain
+	 * @param a
+	 * @return
+	 */
+	public AFPChain invertAlignment(AFPChain a) {
+		String name1 = a.getName1();
+		String name2 = a.getName2();
+		a.setName1(name2);
+		a.setName2(name1);
+		
+		int len1 = a.getCa1Length();
+		a.setCa1Length( a.getCa2Length() );
+		a.setCa2Length( len1 );
+		
+		int beg1 = a.getAlnbeg1();
+		a.setAlnbeg1(a.getAlnbeg2());
+		a.setAlnbeg2(beg1);
+		
+		char[] alnseq1 = a.getAlnseq1();
+		a.setAlnseq1(a.getAlnseq2());
+		a.setAlnseq2(alnseq1);
+		
+		Matrix distab1 = a.getDisTable1();
+		a.setDisTable1(a.getDisTable2());
+		a.setDisTable2(distab1);
+		
+		int[] focusRes1 = a.getFocusRes1();
+		a.setFocusRes1(a.getFocusRes2());
+		a.setFocusRes2(focusRes1);
+		
+		//What are aftIndex and befIndex used for? How are they indexed?
+		//a.getAfpAftIndex()
+		
+
+		String[][][] pdbAln = a.getPdbAln();
+		if( pdbAln != null) {
+			for(int block = 0; block < a.getBlockNum(); block++) {
+				String[] paln1 = pdbAln[block][0];
+				pdbAln[block][0] = pdbAln[block][1];
+				pdbAln[block][1] = paln1;
+			}
+		}
+		
+		int[][][] optAln = a.getOptAln();
+		int[] optLen = a.getOptLen();
+		if( optAln != null ) {
+			for(int block = 0; block < a.getBlockNum(); block++) {
+				int[] aln1 = optAln[block][0];
+				optAln[block][0] = optAln[block][1];
+				optAln[block][1] = aln1;
+			}
+		}
+		a.setOptAln(optAln); // triggers invalidate()
+		
+		Matrix distmat = a.getDistanceMatrix();
+		if(distmat != null)
+			a.setDistanceMatrix(distmat.transpose());
+		
+		
+		// invert the rotation matrices
+		Matrix[] blockRotMat = a.getBlockRotationMatrix();
+		Atom[] shiftVec = a.getBlockShiftVector();
+		if( blockRotMat != null) {
+			for(int block = 0; block < a.getBlockNum(); block++) {
+				if(blockRotMat[block] != null) {
+					blockRotMat[block] = blockRotMat[block].inverse();
+					shiftVec[block] = Calc.invert(shiftVec[block]);
+				}
+			}
+		}
+
+		return a;
 	}
 
 	/**
