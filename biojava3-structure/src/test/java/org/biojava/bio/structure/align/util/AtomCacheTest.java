@@ -22,6 +22,7 @@ package org.biojava.bio.structure.align.util;
 
 import static org.junit.Assert.assertEquals;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
@@ -32,8 +33,10 @@ import org.biojava.bio.structure.ResidueRange;
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureException;
 import org.biojava.bio.structure.StructureTools;
+import org.biojava.bio.structure.align.ce.AbstractUserArgumentProcessor;
 import org.biojava.bio.structure.scop.ScopDatabase;
 import org.biojava.bio.structure.scop.ScopFactory;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -46,14 +49,22 @@ import org.junit.Test;
 public class AtomCacheTest {
 
 	private AtomCache cache;
+	private String previousPDB_DIR;
 	
 	@Before
 	public void setUp() {
+		previousPDB_DIR = System.getProperty(AbstractUserArgumentProcessor.PDB_DIR, null);
 		cache = new AtomCache();
 		cache.setFetchFileEvenIfObsolete(true);
 		cache.setStrictSCOP(false);
 		// Use a fixed SCOP version for stability
 		ScopFactory.setScopDatabase(ScopFactory.VERSION_1_75B);
+	}
+	
+	@After
+	public void tearDown() {
+		if (previousPDB_DIR != null)
+			System.setProperty(AbstractUserArgumentProcessor.PDB_DIR, previousPDB_DIR);
 	}
 	
 	/**
@@ -136,5 +147,20 @@ public class AtomCacheTest {
 		assertEquals(4, ligandsE.size());
 
 	}
+	
+	@Test
+	public void testSetPath_withTilde() throws Exception {
+		cache.setPath("~" + File.separator);
+		
+		assertEquals(System.getProperty("user.home") + File.separator, cache.getPath());
+	}
+
+	@Test
+	public void testNewInstanceWithTilder() throws Exception {
+		AtomCache cache1 = new AtomCache("~" + File.separator, false);
+		
+		assertEquals(System.getProperty("user.home") + File.separator, cache1.getPath());
+	}
+
 	
 }

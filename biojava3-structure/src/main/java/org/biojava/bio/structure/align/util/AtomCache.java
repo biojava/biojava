@@ -32,6 +32,8 @@ import java.util.TreeSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.swing.filechooser.FileSystemView;
+
 import org.biojava.bio.structure.Atom;
 import org.biojava.bio.structure.AtomPositionMap;
 import org.biojava.bio.structure.Chain;
@@ -51,6 +53,7 @@ import org.biojava.bio.structure.domain.RemotePDPProvider;
 import org.biojava.bio.structure.io.FileParsingParameters;
 import org.biojava.bio.structure.io.MMCIFFileReader;
 import org.biojava.bio.structure.io.PDBFileReader;
+import org.biojava.bio.structure.io.util.FileDownloadUtils;
 import org.biojava.bio.structure.scop.CachedRemoteScopInstallation;
 import org.biojava.bio.structure.scop.ScopDatabase;
 import org.biojava.bio.structure.scop.ScopDescription;
@@ -135,8 +138,7 @@ public class AtomCache {
 		// set the input stream provider to caching mode
 		System.setProperty(InputStreamProvider.CACHE_PROPERTY, "true");
 
-		path = pdbFilePath;
-		System.setProperty(AbstractUserArgumentProcessor.PDB_DIR, path);
+		setPath(pdbFilePath);
 
 		String tmpCache = System.getProperty(AbstractUserArgumentProcessor.CACHE_DIR);
 		if (tmpCache == null || tmpCache.equals("")) {
@@ -801,8 +803,8 @@ public class AtomCache {
 	 *            to a directory
 	 */
 	public void setPath(String path) {
-		System.setProperty(AbstractUserArgumentProcessor.PDB_DIR, path);
-		this.path = path;
+		this.path = FileDownloadUtils.expandUserHome(path);
+		System.setProperty(AbstractUserArgumentProcessor.PDB_DIR, this.path);
 	}
 
 	public void setPdpprovider(PDPProvider pdpprovider) {
