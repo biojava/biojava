@@ -56,8 +56,6 @@ public class CeCPMain extends CeMain {
 
 	public static final String algorithmName = "jCE Circular Permutation";
 
-	public static final int DEFAULT_MIN_CP_LENGTH = 5; //The minimum block length for CPs. Blocks shorter than this will be ignored.
-
 	/**
 	 *  version history:
 	 *  1.3 - Short CPs are now discarded
@@ -67,10 +65,9 @@ public class CeCPMain extends CeMain {
 	 */
 	public static final String version = "1.3";
 
-
 	public CeCPMain(){
 		super();
-		this.params.setMaxGapSize(0);
+		params = new CECPParameters();
 	}
 
 	@Override
@@ -85,14 +82,14 @@ public class CeCPMain extends CeMain {
 
 	public static void main(String[] args){
 		CeCPMain ce = new CeCPMain(); //Used only for printing help
-		if (args.length  == 0 ) {			
+		if (args.length  == 0 ) {
 			System.out.println(ce.printHelp());
-			return;			
+			return;
 		}
 
 		if ( args.length == 1){
 			if (args[0].equalsIgnoreCase("-h") || args[0].equalsIgnoreCase("-help")|| args[0].equalsIgnoreCase("--help")){
-				System.out.println(ce.printHelp());								
+				System.out.println(ce.printHelp());
 				return;
 			}
 
@@ -117,10 +114,32 @@ public class CeCPMain extends CeMain {
 	 */
 	@Override
 	public AFPChain align(Atom[] ca1, Atom[] ca2, Object param) throws StructureException{
-		// Duplicate the shorter of the two
-		if( ca1.length >= ca2.length) {
+		if ( ! (param instanceof CECPParameters))
+			throw new IllegalArgumentException("CE algorithm needs an object of call CeParameters as argument.");
+
+		CECPParameters cpparams = (CECPParameters) param;
+		this.params = cpparams;
+
+		boolean duplicateRight;
+
+		switch( cpparams.getDuplicationHint() ) {
+		case DUPLICATE_LEFT:
+			duplicateRight = false;
+			break;
+		case DUPLICATE_RIGHT:
+			duplicateRight = true;
+			break;
+		case DUPLICATE_SHORTER:
+			duplicateRight = ca1.length >= ca2.length;
+			break;
+		default:
+			duplicateRight = true;
+		}
+
+
+		if( duplicateRight ) {
 			long startTime = System.currentTimeMillis();
-	
+
 			Atom[] ca2m = StructureTools.duplicateCA2(ca2);
 	
 			if(debug) {
@@ -140,7 +159,7 @@ public class CeCPMain extends CeMain {
 				System.out.format("Running %dx2*%d alignment took %s ms\n",ca1.length,ca2.length,System.currentTimeMillis()-startTime);
 				startTime = System.currentTimeMillis();
 			}
-			afpChain = postProcessAlignment(afpChain, ca1, ca2m, calculator);
+			afpChain = postProcessAlignment(afpChain, ca1, ca2m, calculator, cpparams);
 	
 			if(debug) {
 				System.out.format("Finding CP point took %s ms\n",System.currentTimeMillis()-startTime);
@@ -168,6 +187,19 @@ public class CeCPMain extends CeMain {
 	 * @throws StructureException
 	 */
 	public static AFPChain postProcessAlignment(AFPChain afpChain, Atom[] ca1, Atom[] ca2m,CECalculator calculator ) throws StructureException{
+		return postProcessAlignment(afpChain, ca1, ca2m, calculator, null);
+	}
+
+	/** Circular permutation specific code to be run after the standard CE alignment
+	 * 
+	 * @param afpChain The finished alignment
+	 * @param ca1 CA atoms of the first protein
+	 * @param ca2m A duplicated copy of the second protein
+	 * @param calculator The CECalculator used to create afpChain
+	 * @param param Parameters
+	 * @throws StructureException
+	 */
+	public static AFPChain postProcessAlignment(AFPChain afpChain, Atom[] ca1, Atom[] ca2m,CECalculator calculator, CECPParameters param ) throws StructureException{
 
 		// remove bottom half of the matrix
 		Matrix doubledMatrix = afpChain.getDistanceMatrix();
@@ -186,7 +218,7 @@ public class CeCPMain extends CeMain {
 		// Check for circular permutations
 		int alignLen = afpChain.getOptLength();
 		if ( alignLen > 0) {
-			afpChain = filterDuplicateAFPs(afpChain,calculator,ca1,ca2m);
+			afpChain = filterDuplicateAFPs(afpChain,calculator,ca1,ca2m,param);
 		}
 		return afpChain;
 	}
@@ -236,7 +268,6 @@ public class CeCPMain extends CeMain {
 		}
 		
 		int[][][] optAln = a.getOptAln();
-		int[] optLen = a.getOptLen();
 		if( optAln != null ) {
 			for(int block = 0; block < a.getBlockNum(); block++) {
 				int[] aln1 = optAln[block][0];
@@ -292,12 +323,18 @@ public class CeCPMain extends CeMain {
 	 * @throws StructureException 
 	 */
 	public static AFPChain filterDuplicateAFPs(AFPChain afpChain, CECalculator ceCalc, Atom[] ca1, Atom[] ca2duplicated) throws StructureException {
-		return filterDuplicateAFPs(afpChain, ceCalc, ca1, ca2duplicated, DEFAULT_MIN_CP_LENGTH);
+		return filterDuplicateAFPs(afpChain, ceCalc, ca1, ca2duplicated, null);
 	}
 	public static AFPChain filterDuplicateAFPs(AFPChain afpChain, CECalculator ceCalc,
-			Atom[] ca1, Atom[] ca2duplicated, int minCPlength) throws StructureException {		
+			Atom[] ca1, Atom[] ca2duplicated, CECPParameters params) throws StructureException {		
 		AFPChain newAFPChain = new AFPChain(afpChain);
 
+		if(params == null)
+			params = new CECPParameters();
+		
+		final int minCPlength = params.getMinCPLength();
+		
+		
 		int ca2len = afpChain.getCa2Length()/2;
 		newAFPChain.setCa2Length(ca2len);
 

@@ -43,8 +43,6 @@ public class OptimalCECPParameters extends CeParameters {
 	 */
 	protected Integer cpPoint;
 
-	protected OptimalCECPParameters params;
-
 	@Override
 	public String toString() {
 		return "OptimalCECPParameters [scoringStrategy=" + scoringStrategy 
