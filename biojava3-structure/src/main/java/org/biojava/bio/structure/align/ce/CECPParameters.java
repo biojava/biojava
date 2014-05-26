@@ -13,7 +13,7 @@ public class CECPParameters extends CeParameters {
 	}
 	
 	protected DuplicationHint duplicationHint;
-	protected int minCPLength;
+	protected Integer minCPLength;
 	
 	public CECPParameters() {
 		super();
@@ -89,12 +89,12 @@ public class CECPParameters extends CeParameters {
 	}
 
 
-	public int getMinCPLength() {
+	public Integer getMinCPLength() {
 		return minCPLength;
 	}
 
 
-	public void setMinCPLength(int minCPLength) {
+	public void setMinCPLength(Integer minCPLength) {
 		this.minCPLength = minCPLength;
 	}
 }

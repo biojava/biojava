@@ -79,6 +79,12 @@ public ParameterGUI(StructureAlignment alignment){
             Integer val = (Integer)value;
             jcbox.setSelectedIndex(val);
             field = jcbox;
+         } else if ( type.isEnum() ) {
+        	 Object[] values = type.getEnumConstants();
+             JComboBox jcbox = new JComboBox(values);
+             jcbox.setSelectedItem(value);
+             field = jcbox;
+
          } else if ( type == Boolean.class){
 
             String[] values = new String[]{"true","false"};
@@ -176,6 +182,10 @@ public ParameterGUI(StructureAlignment alignment){
             JComboBox field = (JComboBox)  textFields.get(i);
             field.setSelectedIndex((Integer)data);
             field.updateUI();
+         } else if( type.isEnum()) {
+             JComboBox field = (JComboBox)  textFields.get(i);
+             field.setSelectedItem(data);
+             field.updateUI();
          }  else if ( type == Boolean.class){
             JComboBox field = (JComboBox)  textFields.get(i);
             if ( data.toString().equalsIgnoreCase("false"))
@@ -228,8 +238,11 @@ public ParameterGUI(StructureAlignment alignment){
             JComboBox field = (JComboBox)  textFields.get(i);
             Integer sel = field.getSelectedIndex();
             value = sel.toString();
-         }
-         else if ( type == Boolean.class){
+         } else if( type.isEnum() ) {
+             JComboBox field = (JComboBox)  textFields.get(i);
+             Object sel = field.getSelectedItem();
+             value = sel.toString();
+         } else if ( type == Boolean.class){
             JComboBox field = (JComboBox)  textFields.get(i);
             int sel = field.getSelectedIndex();
             Boolean flag = true;
@@ -272,6 +285,8 @@ public ParameterGUI(StructureAlignment alignment){
             data = Short.parseShort(value);
          } else if ( type == String[].class) {         
             data = value.split(" ");
+         } else if ( type.isEnum() ) {
+        	 data = Enum.valueOf(type, value);
          }
 
          if (data == null){
