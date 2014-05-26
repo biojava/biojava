@@ -7,9 +7,18 @@ public class CECPParameters extends CeParameters {
 	public static final int DEFAULT_MIN_CP_LENGTH = 5; //The minimum block length for CPs. Blocks shorter than this will be ignored.
 
 	public static enum DuplicationHint {
-		DUPLICATE_SHORTER,
-		DUPLICATE_LEFT,
-		DUPLICATE_RIGHT,
+		DUPLICATE_SHORTER("Shorter of the two"),
+		DUPLICATE_LEFT("Left"),
+		DUPLICATE_RIGHT("Right");
+		
+		
+		private String name;
+		private DuplicationHint(String name) {
+			this.name = name;
+		}
+		public String toString() {
+			return name;
+		}
 	}
 	
 	protected DuplicationHint duplicationHint;

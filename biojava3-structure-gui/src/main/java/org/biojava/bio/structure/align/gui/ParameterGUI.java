@@ -240,8 +240,8 @@ public ParameterGUI(StructureAlignment alignment){
             value = sel.toString();
          } else if( type.isEnum() ) {
              JComboBox field = (JComboBox)  textFields.get(i);
-             Object sel = field.getSelectedItem();
-             value = sel.toString();
+             Enum sel = (Enum)field.getSelectedItem();
+             value = sel.name();
          } else if ( type == Boolean.class){
             JComboBox field = (JComboBox)  textFields.get(i);
             int sel = field.getSelectedIndex();
