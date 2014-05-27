@@ -2,6 +2,12 @@ package org.biojava.bio.structure.align.ce;
 
 import java.util.List;
 
+/**
+ * Provides parameters to {@link CeCPMain}
+ * 
+ * @author Spencer Bliven
+ *
+ */
 public class CECPParameters extends CeParameters {
 
 	public static final int DEFAULT_MIN_CP_LENGTH = 5; //The minimum block length for CPs. Blocks shorter than this will be ignored.

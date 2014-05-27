@@ -138,42 +138,56 @@ public class CeCPMain extends CeMain {
 
 
 		if( duplicateRight ) {
-			long startTime = System.currentTimeMillis();
-
-			Atom[] ca2m = StructureTools.duplicateCA2(ca2);
-	
-			if(debug) {
-				System.out.format("Duplicating ca2 took %s ms\n",System.currentTimeMillis()-startTime);
-				startTime = System.currentTimeMillis();
-			}
-	
-			// Do alignment
-			AFPChain afpChain = super.align(ca1, ca2m,params);
-	
-			// since the process of creating ca2m strips the name info away, set it explicitely
-			try {
-				afpChain.setName2(ca2[0].getGroup().getChain().getParent().getName());
-			} catch( Exception e) {}
-	
-			if(debug) {
-				System.out.format("Running %dx2*%d alignment took %s ms\n",ca1.length,ca2.length,System.currentTimeMillis()-startTime);
-				startTime = System.currentTimeMillis();
-			}
-			afpChain = postProcessAlignment(afpChain, ca1, ca2m, calculator, cpparams);
-	
-			if(debug) {
-				System.out.format("Finding CP point took %s ms\n",System.currentTimeMillis()-startTime);
-				startTime = System.currentTimeMillis();
-			}
-	
-			return afpChain;
+			return alignRight(ca1, ca2, cpparams);
 		} else {
 			if(debug) {
 				System.out.println("Swapping alignment order.");
 			}
-			AFPChain afpChain = this.align(ca2, ca1);
+			AFPChain afpChain = this.alignRight(ca2, ca1, cpparams);
 			return invertAlignment(afpChain);
 		}
+	}
+
+	/**
+	 * Aligns the structures, duplicating ca2 regardless of
+	 * {@link CECPParameters.getDuplicationHint() param.getDuplicationHint}.
+	 * @param ca1
+	 * @param ca2
+	 * @param cpparams
+	 * @return
+	 * @throws StructureException
+	 */
+	private AFPChain alignRight(Atom[] ca1, Atom[] ca2, CECPParameters cpparams)
+			throws StructureException {
+		long startTime = System.currentTimeMillis();
+
+		Atom[] ca2m = StructureTools.duplicateCA2(ca2);
+
+		if(debug) {
+			System.out.format("Duplicating ca2 took %s ms\n",System.currentTimeMillis()-startTime);
+			startTime = System.currentTimeMillis();
+		}
+
+		// Do alignment
+		AFPChain afpChain = super.align(ca1, ca2m,params);
+
+		// since the process of creating ca2m strips the name info away, set it explicitely
+		try {
+			afpChain.setName2(ca2[0].getGroup().getChain().getParent().getName());
+		} catch( Exception e) {}
+
+		if(debug) {
+			System.out.format("Running %dx2*%d alignment took %s ms\n",ca1.length,ca2.length,System.currentTimeMillis()-startTime);
+			startTime = System.currentTimeMillis();
+		}
+		afpChain = postProcessAlignment(afpChain, ca1, ca2m, calculator, cpparams);
+
+		if(debug) {
+			System.out.format("Finding CP point took %s ms\n",System.currentTimeMillis()-startTime);
+			startTime = System.currentTimeMillis();
+		}
+
+		return afpChain;
 	}
 
 
