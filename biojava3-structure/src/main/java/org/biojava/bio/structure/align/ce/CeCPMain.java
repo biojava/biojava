@@ -258,7 +258,11 @@ public class CeCPMain extends CeMain {
 			for(int block = 0; block < a.getBlockNum(); block++) {
 				if(blockRotMat[block] != null) {
 					blockRotMat[block] = blockRotMat[block].inverse();
-					shiftVec[block] = Calc.invert(shiftVec[block]);
+					try {
+						shiftVec[block] = Calc.invert(shiftVec[block]);
+					} catch (StructureException e) {
+						// Never thrown
+					}
 				}
 			}
 		}
