@@ -507,8 +507,8 @@ public class CeCPMain extends CeMain {
 		Atom[] blockShifts = new Atom[blocks.size()];
 
 		if(alignLen>0) {
-			rmsd = ceCalc.calc_rmsd(atoms1, atoms2, alignLen, true, false);
 			blockRMSDs[0] = rmsd;
+			rmsd = ceCalc.calc_rmsd(atoms1, atoms2, alignLen, true);
 			blockRotationMatrices[0] = ceCalc.getRotationMatrix();
 			blockShifts[0] = ceCalc.getShift();
 
