@@ -32,6 +32,8 @@ import java.util.List;
 
 import org.biojava.bio.structure.Atom;
 import org.biojava.bio.structure.Calc;
+import org.biojava.bio.structure.Group;
+import org.biojava.bio.structure.SVDSuperimposer;
 import org.biojava.bio.structure.StructureException;
 import org.biojava.bio.structure.StructureTools;
 import org.biojava.bio.structure.align.model.AFPChain;
@@ -494,46 +496,58 @@ public class CeCPMain extends CeMain {
 		for(List<ResiduePair> block:blocks ) {
 			for(ResiduePair pair:block) {
 				atoms1[pos] = ca1[pair.a];
-				atoms2[pos] = ca2duplicated[pair.b];
+				// Clone residue to allow modification
+				Atom atom2 = ca2duplicated[pair.b];
+				Group g = (Group) atom2.getGroup().clone();
+				atoms2[pos] = g.getAtom( atom2.getFullName() );
 				pos++;
 			}
 		}
 		assert(pos == alignLen);
-
+		
 		// Sets the rotation matrix in ceCalc to the proper value
 		double rmsd = -1;
+		double tmScore = 0.;
 		double[] blockRMSDs = new double[blocks.size()];
 		Matrix[] blockRotationMatrices = new Matrix[blocks.size()];
 		Atom[] blockShifts = new Atom[blocks.size()];
 
 		if(alignLen>0) {
-			blockRMSDs[0] = rmsd;
-			rmsd = ceCalc.calc_rmsd(atoms1, atoms2, alignLen, true);
-			blockRotationMatrices[0] = ceCalc.getRotationMatrix();
-			blockShifts[0] = ceCalc.getShift();
+			// superimpose
+			SVDSuperimposer svd = new SVDSuperimposer(atoms1, atoms2);
+
+			Matrix matrix = svd.getRotation();
+			Atom shift = svd.getTranslation();
+
+			for( Atom a : atoms2 ) {
+				Calc.rotate(a.getGroup(), matrix);
+				Calc.shift(a, shift);
+			}
+			
+			//and get overall rmsd
+			rmsd = SVDSuperimposer.getRMS(atoms1, atoms2);
+			tmScore = SVDSuperimposer.getTMScore(atoms1, atoms2, ca1.length, ca2len);
+
+			// set all block rotations to the overall rotation
+			// It's not well documented if this is the expected behavior, but
+			// it seems to work.
+			blockRotationMatrices[0] = matrix;
+			blockShifts[0] = shift;
+			blockRMSDs[0] = -1;
 
 			for(int i=1;i<blocks.size();i++) {
-				blockRMSDs[i] = rmsd; //TODO shouldn't this be recalculated?? --sbliven
-				
-				// Don't move blocks relative to the first block
-				/*Matrix identity = new Matrix(3,3);
-			for(int j=0;j<3;j++)
-				identity.set(j, j, 1.);
-			blockRotationMatrices[i] = identity;
-
-			Atom zero = new AtomImpl();
-			zero.setX(0.); zero.setY(0.); zero.setZ(0.);
-			blockShifts[i] = zero;
-				 */
+				blockRMSDs[i] = -1; //TODO Recalculate for the FATCAT text format
 				blockRotationMatrices[i] = (Matrix) blockRotationMatrices[0].clone();
 				blockShifts[i] = (Atom) blockShifts[0].clone();
 			}
+			
 		}
 		newAFPChain.setOptRmsd(blockRMSDs);
 		newAFPChain.setBlockRmsd(blockRMSDs);
 		newAFPChain.setBlockRotationMatrix(blockRotationMatrices);
 		newAFPChain.setBlockShiftVector(blockShifts);
 		newAFPChain.setTotalRmsdOpt(rmsd);
+		newAFPChain.setTMScore( tmScore );
 		
 		// Clean up remaining properties using the FatCat helper method
 		Atom[] ca2 = new Atom[ca2len];
