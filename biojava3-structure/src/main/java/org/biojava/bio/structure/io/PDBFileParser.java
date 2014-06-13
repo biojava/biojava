@@ -21,6 +21,7 @@
  */
 package org.biojava.bio.structure.io;
 
+import static java.lang.Math.min;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -380,38 +381,47 @@ public class PDBFileParser  {
 	private void pdb_HEADER_Handler(String line) {
 		//System.out.println(line);
 
-		String classification  = line.substring (10, 50).trim() ;
-		String deposition_date = line.substring (50, 59).trim() ;
-		String pdbCode         = line.substring (62, 66).trim() ;
+		String classification  = null;
+		String deposition_date = null;
+		String pdbCode         = null;
 
-		pdbId = pdbCode;
-		if (DEBUG) {
-			System.out.println("Parsing entry " + pdbId);
+		int len = line.trim().length();
+		if(len > 10) {
+			classification  = line.substring (10, min(len,50)).trim() ;
+			pdbHeader.setClassification(classification);
 		}
+		if(len > 50) {
+			deposition_date = line.substring (50, min(len,59)).trim() ;
+			try {
+				Date dep = dateFormat.parse(deposition_date);
+				pdbHeader.setDepDate(dep);
+
+			} catch (ParseException e){
+				logger.fine("Could not parse deposition date string '"+deposition_date+"'. Will continue without deposition date"); 
+			}
+		}
+		if(len > 62) {
+			pdbCode         = line.substring (62, min(len,66)).trim() ;
+			pdbId = pdbCode;
+			if (DEBUG) {
+				System.out.println("Parsing entry " + pdbId);
+			}
+
+			structure.setPDBCode(pdbCode);
+			pdbHeader.setIdCode(pdbCode);
+		}
+
 		//*really* old files (you'll need to hunt to find these as they
 		//should have been remediated) have headers like below. Plus the
 		//pdbId at positions 72-76 is present in every line
 
 		//HEADER    PROTEINASE INHIBITOR (TRYPSIN)          05-OCT-84   5PTI      5PTI   3
 		//HEADER    TRANSFERASE (ACYLTRANSFERASE)           02-SEP-92   1LAC      1LAC   2
-		if (line.trim().length() > 66) {
+		if (len > 66) {
 			if (pdbId.equals(line.substring (72, 76))){
 				isLegacyFormat = true;
 				System.out.println(pdbId + " is a LEGACY entry - this will most likely not parse correctly.");
 			}
-		}
-		structure.setPDBCode(pdbCode);
-
-		pdbHeader.setIdCode(pdbCode);
-		pdbHeader.setClassification(classification);
-
-
-		try {
-			Date dep = dateFormat.parse(deposition_date);
-			pdbHeader.setDepDate(dep);
-
-		} catch (ParseException e){
-			logger.fine("Could not parse deposition date string '"+deposition_date+"'. Will continue without deposition date"); 
 		}
 
 	}
