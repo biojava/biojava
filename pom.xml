@@ -19,71 +19,60 @@
             <distribution>repo</distribution>
         </license>
     </licenses>
-    <scm>
-        <connection>scm:git:git://github.com/biojava/biojava.git</connection>
-        <developerConnection>scm:git:git@github.com:biojava/biojava.git</developerConnection>
-        <url>https://github.com/biojava/biojava</url>
-        <tag>HEAD</tag>
-    </scm>
-    <repositories>
-        <repository>
-            <id>maven2-repository.dev.java.net</id>
-            <name>Java.net Maven 2 Repository</name>
-            <url>http://download.java.net/maven/2</url>
-        </repository>
-        <repository>
-            <id>maven-repository.dev.java.net</id>
-            <name>Java.net Maven 1 Repository (legacy)</name>
-            <url>http://download.java.net/maven/1</url>
-            <layout>default</layout>
-        </repository>
-        <repository>
-            <id>biojava-maven-repo</id>
-            <name>BioJava repository</name>
-            <url>http://www.biojava.org/download/maven/</url>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-        </repository>
-    </repositories>
-    <pluginRepositories>
-        <pluginRepository>
-            <id>maven2-repository.dev.java.net</id>
-            <name>Java.net Maven 2 Repository</name>
-            <url>http://download.java.net/maven/2</url>
-        </pluginRepository>
-        <pluginRepository>
-            <id>maven-repository.dev.java.net</id>
-            <name>Java.net Maven 1 Repository (legacy)</name>
-            <url>http://download.java.net/maven/1</url>
-            <layout>default</layout>
-        </pluginRepository>
-    </pluginRepositories>
-    <distributionManagement>
-        <downloadUrl>http://www.biojava.org/download/maven/</downloadUrl>
-        <repository>
-            <uniqueVersion>false</uniqueVersion>
-            <id>biojava-maven-repo</id>
-            <name>BioJava Maven Repository</name>
-            <url>scp://cloudportal.open-bio.org/home/websites/biojava.org/html/static/download/maven/</url>
-            <layout>default</layout>
-        </repository>
-
-        <snapshotRepository>
-            <id>ossrh</id>
-            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-        </snapshotRepository>
-
-    </distributionManagement>
     <properties>
         <jdk.version>1.6</jdk.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.build.targetEncoding>UTF-8</project.build.targetEncoding>
         <maxmem>512M</maxmem>
     </properties>
+    <scm>
+        <connection>scm:git:git://github.com/biojava/biojava.git</connection>
+        <developerConnection>scm:git:git@github.com:biojava/biojava.git</developerConnection>
+        <url>https://github.com/biojava/biojava</url>
+        <tag>HEAD</tag>
+    </scm>
+
+    <!-- This section required for release at Maven Central.
+         For a full list of Developers, please see
+         https://github.com/orgs/biojava/members
+
+         For a list of contributors, please see
+         https://github.com/biojava/biojava/graphs/contributors
+    -->
+    <developers>
+        <developer>
+            <id>andreas</id>
+            <name>Andreas Prlic</name>
+            <email>andreas.prlic@gmail.com</email>
+            <url>http://www.spice-3d.org</url>
+            <organization>University of California, San Diego</organization>
+            <organizationUrl>http://www.rcsb.org</organizationUrl>
+            <roles>
+                <role>project lead</role>
+                <role>architect</role>
+                <role>developer</role>
+            </roles>
+            <timezone>-9</timezone>
+            <properties>
+                <picUrl>http://tinyurl.com/mymsfga</picUrl>
+            </properties>
+        </developer>
+    </developers>
+   
+    <distributionManagement>
+        <downloadUrl>http://www.biojava.org/download/maven/</downloadUrl>
+
+        <repository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+        </repository>
+        <snapshotRepository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+        </snapshotRepository>
+
+    </distributionManagement>
+
     <build>
         <pluginManagement>
             <plugins>
@@ -115,19 +104,7 @@
                     <artifactId>maven-source-plugin</artifactId>
                     <version>2.2.1</version>
                 </plugin>
-                <plugin>
-                    <artifactId>maven-surefire-plugin</artifactId>
-                    <version>2.17</version>
-                    <configuration>
-                        <argLine>-Xms256m -Xmx2000M</argLine>
-                        <reuseForks>false</reuseForks>
-                        <forkCount>1</forkCount>
-                        <excludes>
-                            <!-- we exclude by default the long parsing tests, they will only be executed if explicitly called -->
-                            <exclude>**/TestLongPdbVsMmCifParsing.java</exclude>
-                        </excludes>
-                    </configuration>
-                </plugin>
+
                 <plugin>
                     <groupId>net.sf</groupId>
                     <artifactId>stat-scm</artifactId>
@@ -147,6 +124,8 @@
                         <remoteTagging>true</remoteTagging>
                         <preparationGoals>clean install</preparationGoals>
                         <autoVersionSubmodules>true</autoVersionSubmodules>
+                        <!-- work around for GPG hanging issue http://jira.codehaus.org/browse/MGPG-9 -->
+                        <mavenExecutorId>forked-path</mavenExecutorId>
                     </configuration>
 
                 </plugin>
@@ -197,6 +176,19 @@
                     <version>2.12</version>
                 </plugin>
 
+                <!-- required for OSSRH release, see http://central.sonatype.org/pages/how-to-generate-pgp-signatures-with-maven.html -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-release-plugin</artifactId>
+                    <version>2.1</version>
+                    <configuration>
+                        <mavenExecutorId>forked-path</mavenExecutorId>
+                        <useReleaseProfile>false</useReleaseProfile>
+                        <arguments>${arguments} -Psonatype-oss-release</arguments>
+                    </configuration>
+                </plugin>
+
+
             </plugins>
         </pluginManagement>
 
@@ -230,6 +222,24 @@
                     </execution>
                 </executions>
             </plugin>
+
+            <!-- give more memory for junit tests -->
+            <plugin>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.17</version>
+                <configuration>
+                    <argLine>-Xmx2000M</argLine>
+                    <reuseForks>false</reuseForks>
+                    <forkCount>1</forkCount>
+
+                    <excludes>
+                        <!-- we exclude by default the long parsing tests, they will only be executed if explicitly called -->
+                        <exclude>**/TestLongPdbVsMmCifParsing.java</exclude>
+
+                    </excludes>
+                </configuration>
+            </plugin>
+
 
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -426,33 +436,33 @@
             </build>
         </profile>
 
-            <profile>
-                <id>release-sign-artifacts</id>
-                <activation>
-                    <property>
-                        <name>performRelease</name>
-                        <value>true</value>
-                    </property>
-                </activation>
-                <build>
-                    <plugins>
-                        <plugin>
-                            <groupId>org.apache.maven.plugins</groupId>
-                            <artifactId>maven-gpg-plugin</artifactId>
-                            <version>1.1</version>
-                            <executions>
-                                <execution>
-                                    <id>sign-artifacts</id>
-                                    <phase>verify</phase>
-                                    <goals>
-                                        <goal>sign</goal>
-                                    </goals>
-                                </execution>
-                            </executions>
-                        </plugin>
-                    </plugins>
-                </build>
-            </profile>
+        <profile>
+            <id>release-sign-artifacts</id>
+            <activation>
+                <property>
+                    <name>performRelease</name>
+                    <value>true</value>
+                </property>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <version>1.1</version>
+                        <executions>
+                            <execution>
+                                <id>sign-artifacts</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
 
     </profiles>
 
