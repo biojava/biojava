@@ -6,9 +6,8 @@
         <artifactId>biojava</artifactId>
         <version>4.0.0-SNAPSHOT</version>
     </parent>
-    <groupId>org.biojava3</groupId>
+
     <artifactId>survival</artifactId>
-  
     <name>biojava3-survival</name>
     <url>http://maven.apache.org</url>
 

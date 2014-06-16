@@ -1,12 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+    <!-- for releasing to Maven Central / OSS Sonatype -->
+    <parent>
+        <groupId>org.sonatype.oss</groupId>
+        <artifactId>oss-parent</artifactId>
+        <version>9</version>
+    </parent>
+
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.biojava</groupId>
     <artifactId>biojava</artifactId>
     <packaging>pom</packaging>
     <version>4.0.0-SNAPSHOT</version>
     <name>biojava</name>
-    <description>BioJava is an open-source project dedicated to providing a Java framework for processing biological data. It provides analytical and statistical routines, parsers for common file formats and allows the manipulation of sequences and 3D structures. The goal of the biojava project is to facilitate rapid application development for bioinformatics.</description>
+    <description>BioJava is an open-source project dedicated to providing a Java framework for processing biological
+        data. It provides analytical and statistical routines, parsers for common file formats and allows the
+        manipulation of sequences and 3D structures. The goal of the biojava project is to facilitate rapid application
+        development for bioinformatics.
+    </description>
     <url>http://www.biojava.org</url>
     <organization>
         <name>BioJava</name>
@@ -57,21 +70,80 @@
                 <picUrl>http://tinyurl.com/mymsfga</picUrl>
             </properties>
         </developer>
+        <developer>
+            <name>Amr AL-HOSSARY</name>
+        </developer>
+        <developer>
+            <name>Andreas Dräger</name>
+        </developer>
+        <developer>
+            <name>Andy Yates</name>
+        </developer>
+        <developer>
+            <name>Carmelo Foti</name>
+        </developer>
+        <developer>
+            <name>Chuan Hock Koh</name>
+        </developer>
+        <developer>
+            <name>Douglas Myers-Turnbull</name>
+        </developer>
+        <developer>
+            <name>Gediminas Rimsa</name>
+        </developer>
+        <developer>
+            <name>George Waldon</name>
+        </developer>
+        <developer>
+            <name>Hannes Brandstätter-Müller</name>
+        </developer>
+        <developer>
+            <name>Elinow</name>
+        </developer>
+        <developer>
+            <name>Jianjiong Gao</name>
+        </developer>
+        <developer>
+            <name>Jonathan Warren</name>
+        </developer>
+        <developer>
+            <name>Jose Manuel Duarte</name>
+        </developer>
+        <developer>
+            <name>Jules Jacobsen</name>
+        </developer>
+        <developer>
+            <name>Karl Nicholas</name>
+        </developer>
+        <developer>
+            <name>Mark Chapman</name>
+        </developer>
+        <developer>
+            <name>Michael Heuer</name>
+        </developer>
+        <developer>
+            <name>Peter Rose</name>
+        </developer>
+        <developer>
+            <name>Peter Troshin</name>
+        </developer>
+        <developer>
+            <name>Richard Holland</name>
+        </developer>
+        <developer>
+            <name>Robert Thornton</name>
+        </developer>
+        <developer>
+            <name>Scooter Willis</name>
+        </developer>
+        <developer>
+            <name>Spencer Bliven</name>
+        </developer>
+        <developer>
+            <name>Sylvain Foisy</name>
+        </developer>
     </developers>
-   
-    <distributionManagement>
-        <downloadUrl>http://www.biojava.org/download/maven/</downloadUrl>
 
-        <repository>
-            <id>ossrh</id>
-            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
-        </repository>
-        <snapshotRepository>
-            <id>ossrh</id>
-            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-        </snapshotRepository>
-
-    </distributionManagement>
 
     <build>
         <pluginManagement>
@@ -265,8 +337,6 @@
             </plugin>
 
 
-
-
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>findbugs-maven-plugin</artifactId>
@@ -319,54 +389,36 @@
     <reporting>
         <plugins>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-project-info-reports-plugin</artifactId>
-                <version>2.7</version>
-            </plugin>
-            <plugin>
                 <artifactId>maven-javadoc-plugin</artifactId>
                 <version>2.9.1</version>
                 <configuration>
                     <aggregate>true</aggregate>
-                    <minmemory>140m</minmemory>
-                    <maxmemory>140m</maxmemory>
                     <breakiterator>true</breakiterator>
                     <quiet>true</quiet>
-                    <source>1.6</source>
+                    <source>1.5</source>
                     <verbose>false</verbose>
                     <linksource>true</linksource>
-                    <!-- <detectLinks>true</detectLinks> -->
-                    <links>
-                        <!-- JSE -->
-                        <link>http://docs.oracle.com/javase/6/docs/api/</link>
-
-                        <!-- Libraries -->
-                        <!-- <link>http://jakarta.apache.org/commons/collections/apidocs</link>
-                            <link>http://jakarta.apache.org/commons/logging/apidocs/</link> <link>http://www.junit.org/junit/javadoc/</link> -->
-                        <link>http://logging.apache.org/log4j/docs/api/</link>
-                        <link>http://jakarta.apache.org/regexp/apidocs/</link>
-                        <link>http://jakarta.apache.org/velocity/api/</link>
-                    </links>
+                    <detectlinks>true</detectlinks>
                 </configuration>
             </plugin>
             <plugin>
-                <groupId>net.sf</groupId>
-                <artifactId>stat-scm</artifactId>
-                <version>1.2.0</version>
-                <configuration>
-                    <includes>
-                        <include>**/*.java</include>
-                    </includes>
-                    <excludes>
-                        <exclude>**/test/**/*.java</exclude>
-                    </excludes>
-                    <tags>3.0</tags>
-                    <tagsDir>/releases/</tagsDir>
-                    <cacheDir>/statsvn/</cacheDir>
-                    <title>BioJava SVN statistics</title>
-                </configuration>
+                <artifactId>maven-project-info-reports-plugin</artifactId>
+                <version>2.7</version>
+                <reportSets>
+                    <reportSet>
+                        <reports>
+                            <report>index</report>
+                            <report>summary</report>
+                            <report>modules</report>
+                            <report>scm</report>
+                            <report>dependency-management</report>
+                            <report>dependencies</report>
+                            <report>dependency-convergence</report>
+                            <report>distribution-management</report>
+                        </reports>
+                    </reportSet>
+                </reportSets>
             </plugin>
-
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>findbugs-maven-plugin</artifactId>
@@ -384,8 +436,8 @@
                 <version>2.4</version>
             </plugin>
         </plugins>
-
     </reporting>
+
 
     <profiles>
 

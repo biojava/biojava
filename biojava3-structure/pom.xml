@@ -71,7 +71,9 @@
 
 	</properties>
 	<build>
+
 		<plugins>
+
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
 
