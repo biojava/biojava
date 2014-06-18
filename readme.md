@@ -37,6 +37,9 @@ If you are using Maven you can add the BioJava repository by adding the followin
       <!-- other biojava jars as needed -->
     </dependencies>
 ```
+
+Note: for the upcoming BioJava 4.0.0 release we are planning to migrate the hosting to Maven Central and this step should not be required.
+
 ### Build Status
 [![Build Status](https://travis-ci.org/biojava/biojava.png)](https://travis-ci.org/biojava/biojava)
 
