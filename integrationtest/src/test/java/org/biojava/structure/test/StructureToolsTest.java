@@ -172,17 +172,27 @@ public class StructureToolsTest extends TestCase {
 		range = "-";
 		substr = StructureTools.getSubRanges(structure2, range);
 		assertEquals("Should have gotten whole structure",structure2, substr);
-		
+
 		// Test single-chain syntax
 		range = "_:";
 		substr = StructureTools.getSubRanges(structure, range);
 		assertEquals("Wrong number of chains in "+range, 1, substr.size());
-		
+
 		chain = substr.getChain(0);
 		assertEquals("Did not find the expected number of residues in first chain of "+range, 123, chain.getAtomLength() );
+
+		// Test single-chain syntax in a multi-chain structure. Should give chain A.
+		range = "_:";
+		substr = StructureTools.getSubRanges(structure2, range);
+		assertEquals("Wrong number of chains in "+range, 1, substr.size());
+		
+		chain = substr.getChain(0);
+		assertEquals("Chain _ not converted to chain A.","A",chain.getChainID());
+		assertEquals("Did not find the expected number of residues in first chain of "+range, 411, chain.getAtomLength() );
 		
 		try {
-			range = "_:";
+			// Illegal chain name
+			range = "X:";
 			substr = StructureTools.getSubRanges(structure2, range);
 			fail("Illegal chain name in '"+range+"'. Should throw StructureException");
 		} catch(StructureException ex) {} //expected 

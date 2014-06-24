@@ -208,7 +208,8 @@ public abstract class ScopDatabaseTest {
             assertEquals(tag+"Wrong number of comments", 1, comments.size());
             assertEquals(tag+"Wrong comment", "complexed with cmo, hem", comments.get(0).trim());
         }
-        if(scop.getScopVersion().compareToIgnoreCase( ScopFactory.VERSION_1_75) >= 0 ) {
+        if(scop.getScopVersion().compareToIgnoreCase( ScopFactory.VERSION_1_73) >= 0 &&
+        		scop.getScopVersion().compareToIgnoreCase( ScopFactory.VERSION_1_75) <= 0) {
             // Note: only tested so far with 1.75, so may need some modification for earlier versions
 
             comments = scop.getComments(127355);
