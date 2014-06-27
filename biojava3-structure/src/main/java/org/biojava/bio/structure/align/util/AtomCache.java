@@ -415,14 +415,11 @@ public class AtomCache {
 				}
 
 			} else if (name.startsWith("file:/") || name.startsWith("http:/")) {
-
 				// this is a URL
 				try {
 
 					URL url = new URL(name);
-
 					return getStructureFromURL(url);
-
 				} catch (Exception e) {
 					e.printStackTrace();
 					return null;
@@ -1004,22 +1001,20 @@ public class AtomCache {
 		System.out.println("fetching structure from URL:" + url);
 
 		String queryS = url.getQuery();
-
 		String chainId = null;
+		
+		String fullu = url.toString();
+		if (fullu.startsWith("file:") && fullu.endsWith("?" + queryS)) {
+			String newu = fullu.substring(0, fullu.length() - ("?" + queryS).length());
+			url = new URL(newu);
+		}
+		
 		if (queryS != null && queryS.startsWith("chainId=")) {
 			chainId = queryS.substring(8);
-
-			String fullu = url.toString();
-
-			if (fullu.startsWith("file:") && fullu.endsWith("?" + queryS)) {
-				// for windowze, drop the query part from the URL again
-				// otherwise there will be a "file not found error" ...
-
-				String newu = fullu.substring(0, fullu.length() - ("?" + queryS).length());
-				// System.out.println(newu);
-				url = new URL(newu);
-			}
 		}
+		
+		
+		
 
 		PDBFileReader reader = new PDBFileReader();
 		reader.setPath(path);
@@ -1029,7 +1024,6 @@ public class AtomCache {
 		reader.setFetchCurrent(fetchCurrent);
 
 		reader.setFileParsingParameters(params);
-
 		Structure s = reader.getStructure(url);
 		if (chainId == null) {
 			return StructureTools.getReducedStructure(s, -1);

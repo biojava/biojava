@@ -21,11 +21,12 @@
  */
 package org.biojava3.core.sequence.location;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import org.biojava3.core.sequence.AccessionID;
 
+import org.biojava3.core.sequence.AccessionID;
 import org.biojava3.core.sequence.Strand;
 import org.biojava3.core.sequence.location.template.AbstractLocation;
 import org.biojava3.core.sequence.location.template.Location;
@@ -54,7 +55,8 @@ public class SimpleLocation extends AbstractLocation {
     }
 
     public SimpleLocation(Point start, Point end, Strand strand) {
-        super(start, end, strand, false, false, EMPTY_LOCS);
+    	
+        super(start, end, strand, false, false, new ArrayList<Location>());
     }
 
     public SimpleLocation(Point start, Point end, Strand strand, AccessionID accession) {

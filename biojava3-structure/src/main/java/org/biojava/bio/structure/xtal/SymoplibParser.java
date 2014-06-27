@@ -139,7 +139,7 @@ public class SymoplibParser {
 	 * @return the SpaceGroup or null if the shortName is not valid
 	 */
 	public static SpaceGroup getSpaceGroup(String shortName) {
-		if (shortName==null) return null;
+		if (shortName==null || shortName.length()<=2) return null;
 
 		// PDB uses group "P 1-" for 13 racemic mixture entries (as of Sep2011), e.g. 3e7r
 		// they call the space group "P 1-" unusually (symop.lib and everyone else call it "P -1")   

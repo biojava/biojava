@@ -149,20 +149,22 @@ public class JAutoSuggest extends JTextField{
 		addFocusListener(new FocusListener() {
 			@Override
 			public void focusLost(FocusEvent e) {
+				System.out.println("Lost Focus");
 				dialog.setVisible(false);
 				
-				if (getText().equals("") && e.getOppositeComponent() != null && e.getOppositeComponent().getName() != null) {
+				if (getText().trim().equals("") && e.getOppositeComponent() != null && e.getOppositeComponent().getName() != null) {
 					if (!e.getOppositeComponent().getName().equals("suggestFieldDropdownButton")) {
 						setText(defaultText);
 					}
-				} else if (getText().equals("")) {
+				} else if (getText().trim().equals("")) {
 					setText(defaultText);
 				}
 			}
 
 			@Override
 			public void focusGained(FocusEvent e) {
-				if (getText().equals(defaultText)) {
+				System.out.println("Lost Gained");
+				if (getText().trim().equals(defaultText)) {
 					setText("");
 				}
 				
@@ -296,10 +298,8 @@ public class JAutoSuggest extends JTextField{
 	 */
 	public void showSuggest() {
 		
-		lastWord = getText();
-		if ( lastWord != null) {
-		
-		}
+		assert(getText() != null);
+		lastWord = getText().trim();
 			//autoSuggestProvider.getSuggestion(lastWord);
 		
 		
@@ -315,7 +315,7 @@ public class JAutoSuggest extends JTextField{
 
 		//SwingUtilities.invokeLater(matcher);
 		matcher.execute();
-		lastWord = getText();
+		lastWord = getText().trim();
 		updateLocation();
 	}
 
@@ -368,7 +368,7 @@ public class JAutoSuggest extends JTextField{
 		public String doInBackground() {
 			try {
 				setFont(busy);
-				String userInput = getText();
+				String userInput = getText().trim();
 				if ( userInput == null || userInput.equals(""))
 					return "";
 				

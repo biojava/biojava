@@ -34,7 +34,9 @@ import java.util.TreeSet;
 import java.util.zip.GZIPInputStream;
 
 
-
+/** Parses the cytoband (karyotype) file from UCSC.
+ *
+ */
 public class CytobandParser {
 
 	public static final String DEFAULT_LOCATION = "http://hgdownload.cse.ucsc.edu/goldenPath/hg19/database/cytoBand.txt.gz";
