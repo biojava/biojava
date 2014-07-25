@@ -234,6 +234,17 @@ public abstract class AbstractFeature<S extends AbstractSequence<C>, C extends C
 
         }
     };
+    
+    /**
+     * Sort features by type
+     */
+    public static final Comparator<FeatureInterface<?, ?>> TYPE = new Comparator<FeatureInterface<?, ?>>() {
+
+        @Override
+        public int compare(FeatureInterface<?, ?> o1, FeatureInterface<?, ?> o2) {
+            return o1.getType().compareTo(o2.getType());
+        }
+    };
 
     /**
      * @return the userObject
