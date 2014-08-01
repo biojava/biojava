@@ -174,6 +174,16 @@ public class TranslationTest {
 		Sequence<AminoAcidCompound> pep = e.translate(volvoxDna);
 		assertThat("Ensure internal stops stay", pep.toString(), is(volvoxPep.toString()));
 	}
+	
+	@Test
+	public void translateStopAtInternalStops(){
+		//This should stop translation at the first stop codon encountered
+		TranscriptionEngine e = new TranscriptionEngine.Builder().stopAtStopCodons(true).build();
+		RNASequence rna = ((DNASequence)volvoxDna).getRNASequence();
+		String pep = rna.getProteinSequence(e).getSequenceAsString();
+		String testpep = volvoxPep.getSequenceAsString().split("\\*")[0];
+		assertThat("Translation stops at Stop", pep, is(testpep));
+	}
 
 	@Test
 	public void translateInitMet() {
