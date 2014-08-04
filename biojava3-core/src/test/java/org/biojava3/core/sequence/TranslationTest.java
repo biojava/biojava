@@ -184,6 +184,20 @@ public class TranslationTest {
 		String testpep = volvoxPep.getSequenceAsString().split("\\*")[0];
 		assertThat("Translation stops at Stop", pep, is(testpep));
 	}
+	
+	@Test
+	public void waitForStartCodon(){
+		//Should not start translation until a start codon is encountered
+		TranscriptionEngine e = new TranscriptionEngine.Builder().waitForStartCodon(true).build();
+		RNASequence rna = new RNASequence("UCCAUGAGC");
+		String pep = rna.getProteinSequence(e).getSequenceAsString();
+		assertThat("Translation starts at Start Codon",pep, is("MS"));
+		
+		//And should start at start of sequence (NB this is implied by success of all other tests)
+		e = new TranscriptionEngine.Builder().waitForStartCodon(false).build();
+		pep = rna.getProteinSequence(e).getSequenceAsString();
+		assertThat("Translation starts at start of sequence", pep, is("SMS"));
+	}
 
 	@Test
 	public void translateInitMet() {
