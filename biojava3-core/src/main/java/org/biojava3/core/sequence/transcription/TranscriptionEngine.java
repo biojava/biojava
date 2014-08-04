@@ -190,8 +190,9 @@ public class TranscriptionEngine {
 		private boolean trimStop = true;
 		private boolean translateNCodons = true;
 		private boolean decorateRna = false;
-		//Set at false for backwards compatibility
+		// Set at false for backwards compatibility
 		private boolean stopAtStopCodons = false;
+		private boolean waitForStartCodon = false;
 
 		/**
 		 * The method to finish any calls to the builder with which returns a
@@ -284,9 +285,21 @@ public class TranscriptionEngine {
 			return this;
 		}
 
-		/**	If set, then the last codon translated in the resulting peptide sequence will be the stop codon */
+		/**
+		 * If set, then the last codon translated in the resulting peptide
+		 * sequence will be the stop codon
+		 */
 		public Builder stopAtStopCodons(boolean stopAtStopCodons) {
 			this.stopAtStopCodons = stopAtStopCodons;
+			return this;
+		}
+
+		/**
+		 * If set, then translation will not start until a start codon is
+		 * encountered
+		 */
+		public Builder waitForStartCodon(boolean waitForStartCodon) {
+			this.waitForStartCodon = waitForStartCodon;
 			return this;
 		}
 
@@ -337,7 +350,8 @@ public class TranscriptionEngine {
 			return new RNAToAminoAcidTranslator(getProteinCreator(),
 					getRnaCompounds(), getCodons(), getAminoAcidCompounds(),
 					getTable(), isTrimStop(), isInitMet(),
-					isTranslateNCodons(), isStopAtStopCodons());
+					isTranslateNCodons(), isStopAtStopCodons(),
+					isWaitForStartCodon());
 		}
 
 		private CompoundSet<Codon> getCodons() {
@@ -385,6 +399,10 @@ public class TranscriptionEngine {
 
 		private boolean isStopAtStopCodons() {
 			return stopAtStopCodons;
+		}
+
+		private boolean isWaitForStartCodon() {
+			return waitForStartCodon;
 		}
 	}
 }

@@ -60,10 +60,16 @@ public class RNAToAminoAcidTranslator extends
 	private final AminoAcidCompound unknownAminoAcidCompound;
 	private final AminoAcidCompound methionineAminoAcidCompound;
 	private final boolean translateNCodons;
+
 	// If true, then translation will stop at the first stop codon encountered
 	// in the reading frame (the stop codon will be included as the last residue
 	// in the resulting ProteinSequence, unless removed by #trimStops)
 	private final boolean stopAtStopCodons;
+
+	// If true, then translation will not start until the first start codon
+	// encountered in the reading frame. The start codon will be included as the
+	// first residue in the resulting ProteinSequence
+	private final boolean waitForStartCodon;
 
 	/**
 	 * @deprecated Retained for backwards compatability, setting
@@ -103,8 +109,10 @@ public class RNAToAminoAcidTranslator extends
 		methionineAminoAcidCompound = aminoAcids.getCompoundForString("M");
 		// Set to false for backwards compatability
 		stopAtStopCodons = false;
+		waitForStartCodon = false;
 	}
 
+	@Deprecated
 	public RNAToAminoAcidTranslator(
 			SequenceCreatorInterface<AminoAcidCompound> creator,
 			CompoundSet<NucleotideCompound> nucleotides,
@@ -138,6 +146,44 @@ public class RNAToAminoAcidTranslator extends
 		unknownAminoAcidCompound = aminoAcids.getCompoundForString("X");
 		methionineAminoAcidCompound = aminoAcids.getCompoundForString("M");
 		this.stopAtStopCodons = stopAtStopCodons;
+		// Set for backwards compatibility
+		waitForStartCodon = false;
+	}
+
+	public RNAToAminoAcidTranslator(
+			SequenceCreatorInterface<AminoAcidCompound> creator,
+			CompoundSet<NucleotideCompound> nucleotides,
+			CompoundSet<Codon> codons,
+			CompoundSet<AminoAcidCompound> aminoAcids, Table table,
+			boolean trimStops, boolean initMetOnly, boolean translateNCodons,
+			boolean stopAtStopCodons, boolean waitForStartCodon) {
+
+		super(creator, nucleotides, aminoAcids);
+		this.trimStops = trimStops;
+		this.initMetOnly = initMetOnly;
+		this.translateNCodons = translateNCodons;
+
+		quickLookup = new HashMap<Table.CaseInsensitiveTriplet, Codon>(codons
+				.getAllCompounds().size());
+		aminoAcidToCodon = new HashMap<AminoAcidCompound, List<Codon>>();
+
+		List<Codon> codonList = table.getCodons(nucleotides, aminoAcids);
+		for (Codon codon : codonList) {
+			quickLookup.put(codon.getTriplet(), codon);
+			codonArray[codon.getTriplet().intValue()] = codon;
+
+			List<Codon> codonL = aminoAcidToCodon.get(codon.getAminoAcid());
+			if (codonL == null) {
+				codonL = new ArrayList<Codon>();
+				aminoAcidToCodon.put(codon.getAminoAcid(), codonL);
+			}
+			codonL.add(codon);
+
+		}
+		unknownAminoAcidCompound = aminoAcids.getCompoundForString("X");
+		methionineAminoAcidCompound = aminoAcids.getCompoundForString("M");
+		this.stopAtStopCodons = stopAtStopCodons;
+		this.waitForStartCodon = waitForStartCodon;
 	}
 
 	/**
@@ -157,6 +203,9 @@ public class RNAToAminoAcidTranslator extends
 
 		boolean first = true;
 
+		// If not waiting for a start codon, start translating immediately
+		boolean doTranslate = !waitForStartCodon;
+
 		for (SequenceView<NucleotideCompound> element : iter) {
 			AminoAcidCompound aminoAcid = null;
 
@@ -168,19 +217,28 @@ public class RNAToAminoAcidTranslator extends
 			Codon target = null;
 
 			target = quickLookup.get(triplet);
-			if (target != null)
-				aminoAcid = target.getAminoAcid();
-			if (aminoAcid == null && translateNCodons()) {
-				aminoAcid = unknownAminoAcidCompound;
-			} else {
-				if (first && initMetOnly && target.isStart()) {
-					aminoAcid = methionineAminoAcidCompound;
+
+			// Check for a start
+			if (doTranslate == false && target.isStart()) {
+				doTranslate = true;
+			}
+			
+			if (doTranslate) {
+				if (target != null)
+					aminoAcid = target.getAminoAcid();
+				if (aminoAcid == null && translateNCodons()) {
+					aminoAcid = unknownAminoAcidCompound;
+				} else {
+					if (first && initMetOnly && target.isStart()) {
+						aminoAcid = methionineAminoAcidCompound;
+					}
 				}
+
+				addCompoundsToList(Arrays.asList(aminoAcid), workingList);
 			}
 
-			addCompoundsToList(Arrays.asList(aminoAcid), workingList);
-
-			if (stopAtStopCodons && target.isStop()) {
+			if (doTranslate && stopAtStopCodons && target.isStop()) {
+				// Check if we need to stop, but dont stop until started!
 				break;
 			}
 
