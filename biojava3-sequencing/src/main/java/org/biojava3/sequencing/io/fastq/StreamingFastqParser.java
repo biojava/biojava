@@ -20,10 +20,7 @@
  */
 package org.biojava3.sequencing.io.fastq;
 
-import java.io.Closeable;
 import java.io.IOException;
-
-import com.google.common.io.InputSupplier;
 
 /**
  * Event based parser for FASTQ formatted sequences.
@@ -34,21 +31,19 @@ final class StreamingFastqParser
 {
 
     /**
-     * Stream the specified input supplier.
+     * Stream the specified readable.
      *
-     * @param supplier input supplier, must not be null
+     * @param readable readable, must not be null
      * @param variant FASTQ variant, must not be null
      * @param listener event based reader callback, must not be null
      * @throws IOException if an I/O error occurs
      */
-    static <R extends Readable & Closeable> void stream(final InputSupplier<R> supplier,
-                                                        final FastqVariant variant,
-                                                        final StreamListener listener)
+    static void stream(final Readable readable, final FastqVariant variant, final StreamListener listener)
         throws IOException
     {
-        if (supplier == null)
+        if (readable == null)
         {
-            throw new IllegalArgumentException("supplier must not be null");
+            throw new IllegalArgumentException("readable must not be null");
         }
         if (variant == null)
         {
@@ -60,7 +55,7 @@ final class StreamingFastqParser
         }
 
         final FastqBuilder builder = new FastqBuilder().withVariant(variant);
-        FastqParser.parse(supplier, new ParseListener()
+        FastqParser.parse(readable, new ParseListener()
             {
                 @Override
                 public void description(final String description) throws IOException
