@@ -20,11 +20,9 @@
  */
 package org.biojava3.sequencing.io.fastq;
 
-import java.io.Closeable;
 import java.io.IOException;
 
 import com.google.common.io.CharStreams;
-import com.google.common.io.InputSupplier;
 import com.google.common.io.LineProcessor;
 
 /**
@@ -36,21 +34,21 @@ final class FastqParser
 {
 
     /**
-     * Parse the specified input supplier.
+     * Parse the specified readable.
      *
-     * @param supplier input supplier, must not be null
+     * @param readable readable, must not be null
      * @param listener low-level event based parser callback, must not be null
      * @throws IOException if an I/O error occurs
      */
-    static <R extends Readable & Closeable> void parse(final InputSupplier<R> supplier, final ParseListener listener)
+    static void parse(final Readable readable, final ParseListener listener)
         throws IOException
     {
-        if (supplier == null)
+        if (readable == null)
         {
-            throw new IllegalArgumentException("supplier must not be null");
+            throw new IllegalArgumentException("readable must not be null");
         }
         FastqParserLineProcessor lineProcessor = new FastqParserLineProcessor(listener);
-        CharStreams.readLines(supplier, lineProcessor);
+        CharStreams.readLines(readable, lineProcessor);
         if (lineProcessor.getState() == State.COMPLETE)
         {
             listener.complete();
@@ -65,7 +63,7 @@ final class FastqParser
     /**
      * FASTQ formatted sequence parser line processor.
      */
-    private static class FastqParserLineProcessor implements LineProcessor<Object>
+    private static final class FastqParserLineProcessor implements LineProcessor<Object>
     {
         /** Parser state. */
         private State state = State.DESCRIPTION;
