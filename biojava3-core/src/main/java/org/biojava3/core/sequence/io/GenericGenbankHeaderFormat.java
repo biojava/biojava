@@ -172,7 +172,6 @@ public class GenericGenbankHeaderFormat<S extends AbstractSequence<C>, C extends
 
 		String division = _get_data_division(sequence);
 		
-		System.out.println("DIVISION:"+division + " " + seqType);
 		if (seqType != null) {
 			division = seqType;
 		}
