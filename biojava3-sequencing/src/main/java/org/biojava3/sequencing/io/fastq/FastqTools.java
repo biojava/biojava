@@ -267,11 +267,12 @@ public final class FastqTools
     /**
      * Return the specified iterable as a list.
      *
+     * @paam <T> element type
      * @param iterable iterable
      * @return the specified iterable as a list
      */
     @SuppressWarnings("unchecked")
-	static <T> List<T> toList(final Iterable<? extends T> iterable)
+    static <T> List<T> toList(final Iterable<? extends T> iterable)
     {
         if (iterable instanceof List)
         {
