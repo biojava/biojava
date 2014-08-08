@@ -16,7 +16,6 @@ import org.biojava.bio.structure.GroupType;
 import org.biojava.bio.structure.NucleotideImpl;
 import org.biojava.bio.structure.ResidueNumber;
 import org.biojava.bio.structure.Structure;
-import org.biojava.bio.structure.StructureException;
 import org.biojava.bio.structure.StructureTools;
 
 
