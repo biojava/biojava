@@ -41,12 +41,12 @@ public class GenericInsdcHeaderFormat<S extends AbstractSequence<C>, C extends C
 			return line;
 		}
 		if(quote) {  // quote should be true for numerics
-			line = QUALIFIER_INDENT_STR + "/" + key + "=\"" + value + "\"" + lineSep;
+			line = QUALIFIER_INDENT_STR + "/" + key + "=\"" + value + "\"";
 		} else {
-			line = QUALIFIER_INDENT_STR + "/" + key + "=" + value + lineSep;			
+			line = QUALIFIER_INDENT_STR + "/" + key + "=" + value;			
 		}
 		if(line.length() <= MAX_WIDTH) {
-			return line;
+			return line + lineSep;
 		}
 		String goodlines = "";
 		while(!"".equals(line.replaceAll("^\\s+", ""))) {

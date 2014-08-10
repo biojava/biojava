@@ -160,10 +160,10 @@ public class GeneFeatureHelper {
         LinkedHashMap<String, DNASequence> dnaSequenceList = FastaReaderHelper.readFastaDNASequence(fastaSequenceFile);
         String fileName = fastaSequenceFile.getName();
         FileWriter fw = new FileWriter(gffFile);
-        fw.write("##gff-version 3\n");
+        String newLine = System.getProperty("line.separator");
+        fw.write("##gff-version 3" + newLine);
         for (DNASequence dnaSequence : dnaSequenceList.values()) {
-
-            String gff3line = dnaSequence.getAccession().getID() + "\t" + fileName + "\t" + "contig" + "\t" + "1" + "\t" + dnaSequence.getBioEnd() + "\t.\t.\t.\tName=" + dnaSequence.getAccession().getID() + "\n";
+            String gff3line = dnaSequence.getAccession().getID() + "\t" + fileName + "\t" + "contig" + "\t" + "1" + "\t" + dnaSequence.getBioEnd() + "\t.\t.\t.\tName=" + dnaSequence.getAccession().getID() + newLine;
             fw.write(gff3line);
         }
         fw.close();
