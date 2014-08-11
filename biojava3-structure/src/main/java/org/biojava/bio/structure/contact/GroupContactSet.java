@@ -7,7 +7,12 @@ import org.biojava.bio.structure.Atom;
 import org.biojava.bio.structure.Group;
 import org.biojava.bio.structure.ResidueNumber;
 
-
+/**
+ * A set of residue-residue contacts 
+ * 
+ * @author duarte_j
+ *
+ */
 public class GroupContactSet implements Iterable<GroupContact>{ 
 
 	private HashMap<Pair<ResidueNumber>, GroupContact> contacts;
@@ -16,6 +21,11 @@ public class GroupContactSet implements Iterable<GroupContact>{
 		contacts = new HashMap<Pair<ResidueNumber>, GroupContact>();
 	}
 	
+	/**
+	 * Constructs a <code>GroupContactSet</code> by collapsing the given <code>AtomContactSet</code> into
+	 * residue-residue (group-group) contacts. 
+	 * @param atomContacts
+	 */
 	public GroupContactSet(AtomContactSet atomContacts) {
 		contacts = new HashMap<Pair<ResidueNumber>, GroupContact>();
 		atoms2groups(atomContacts);

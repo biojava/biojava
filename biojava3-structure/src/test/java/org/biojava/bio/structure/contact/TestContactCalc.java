@@ -35,7 +35,7 @@ public class TestContactCalc {
 	@Test
 	public void testIntraChainContacts() throws StructureException, IOException { 
 				
-		String[][] cts = 		{null, {"CA"} , {"CB"}};
+		String[][] cts = 		{null, {" CA "} , {"CB"}};
 		double[] cutoffs = 	    { 5.0,   8.0 ,  8.0};
 		
 		int[] allCMsizes = new int[INTRACHAIN_TESTSET.length];
@@ -77,7 +77,7 @@ public class TestContactCalc {
 							contacts.size()<allCMsizes[idx]);
 				
 				// since the CB contact map will have no contacts for GLYs then the maps should be smaller than the CA
-				if (cts[i]!=null && cts[i][0].equals("CA")) 
+				if (cts[i]!=null && cts[i][0].equals(" CA ")) 
 					assertTrue("size for CA contact map ("+contacts.size()+") should be larger than for CB contact map ("+cbCMsizes[idx]+")",
 							contacts.size()>cbCMsizes[idx]);
 			}
@@ -121,37 +121,59 @@ public class TestContactCalc {
 	
 	@Test
 	public void testIntraChainContactsVsDistMatrix1SMT() throws IOException, StructureException {
-		
-		double cutoff = 8;
+						
+		double cutoff = 5;
 		
 		Structure structure = StructureIO.getStructure("1smt");
 		
 		Chain chain = structure.getChainByPDB("A");
-		String[] atomNames = {"CA"};
 		
-		checkContactsVsDistMatrix(chain, atomNames, cutoff);
+		System.out.println("Intra-chain contacts calculation vs distance matrix for 1smtA");
+		
+		checkContactsVsDistMatrix(chain, cutoff);
 	}
 
 	@Test
 	public void testIntraChainContactsVsDistMatrix2TRX() throws IOException, StructureException {
 		
-		double cutoff = 8;
+		double cutoff = 5;
 		
 		Structure structure = StructureIO.getStructure("2trx");
 		
 		Chain chain = structure.getChainByPDB("A");
-		String[] atomNames = {"CA"};
 		
-		checkContactsVsDistMatrix(chain, atomNames, cutoff);
+		System.out.println("Intra-chain contacts calculation vs distance matrix for 2trxA");
+		
+		checkContactsVsDistMatrix(chain, cutoff);
 	}
 	
+	@Test
+	public void testIntraChainContactsVsDistMatrix1SU4() throws IOException, StructureException {
+		
+		double cutoff = 5;
+		
+		Structure structure = StructureIO.getStructure("1su4");
+		
+		Chain chain = structure.getChainByPDB("A");
+		
+		System.out.println("Intra-chain contacts calculation vs distance matrix for 1su4A");
+		
+		checkContactsVsDistMatrix(chain, cutoff);
+	}
 	
-	private void checkContactsVsDistMatrix(Chain chain, String[] atomNames, double cutoff) {
-		AtomContactSet atomContacts = StructureTools.getAtomsInContact(chain, atomNames, cutoff);
+	private void checkContactsVsDistMatrix(Chain chain, double cutoff) {
+		long start = System.currentTimeMillis();
+		AtomContactSet atomContacts = StructureTools.getAtomsInContact(chain, cutoff);
+		long end = System.currentTimeMillis();
+		System.out.printf("Calculated contacts in %.3f s\n",((end-start)/1000.0));
 		
-		Atom[] atoms = StructureTools.getAtomArray(chain, atomNames);
+		start = System.currentTimeMillis();
+		Atom[] atoms = StructureTools.getAllNonHAtomArray(chain,false);		
+		double[][] distMatrix = calcDistanceMatrix(atoms);
+		end = System.currentTimeMillis();
+		System.out.printf("Calculated distance matrix in %.3f s\n",((end-start)/1000.0));
 		
-		double[][] distMatrix = calcDistanceMatrix(atoms); 
+		System.out.println("(number of atoms: "+atoms.length+")");
 		
 		for (int i=0;i<atoms.length;i++) {
 			for (int j=i+1;j<atoms.length;j++) {
@@ -172,20 +194,28 @@ public class TestContactCalc {
 	@Test
 	public void testInterChainContactsVsDistMatrix2TRX() throws IOException, StructureException {
 		
-		double cutoff = 8;
+		double cutoff = 5;
 		
 		Structure structure = StructureIO.getStructure("2trx");
 		
+		System.out.println("Inter-chain contacts calculation vs distance matrix for 2trx A-B");
+		
 		Chain chain1 = structure.getChainByPDB("A");
 		Chain chain2 = structure.getChainByPDB("B");
-		String[] atomNames = {"CA"};
 		
-		AtomContactSet atomContacts = StructureTools.getAtomsInContact(chain1, chain2, atomNames, cutoff);
+		long start = System.currentTimeMillis();
+		AtomContactSet atomContacts = StructureTools.getAtomsInContact(chain1, chain2, cutoff);
+		long end = System.currentTimeMillis();
+		System.out.printf("Calculated contacts in %.3f s\n",((end-start)/1000.0));
 		
-		Atom[] atoms1 = StructureTools.getAtomArray(chain1, atomNames);
-		Atom[] atoms2 = StructureTools.getAtomArray(chain2, atomNames);
-		
+		start = System.currentTimeMillis();
+		Atom[] atoms1 = StructureTools.getAllNonHAtomArray(chain1,false);
+		Atom[] atoms2 = StructureTools.getAllNonHAtomArray(chain2,false);		
 		double[][] distMatrix = calcDistanceMatrix(atoms1, atoms2);
+		end = System.currentTimeMillis();
+		System.out.printf("Calculated distance matrix in %.3f s\n",((end-start)/1000.0));
+		
+		System.out.println("(number of atoms: "+atoms1.length+", "+atoms2.length+")");
 		
 		for (int i=0;i<atoms1.length;i++) {
 			for (int j=0;j<atoms2.length;j++) {

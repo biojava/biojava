@@ -20,7 +20,7 @@ public class DemoContacts {
 	
 	public static void main(String[] args) throws IOException, StructureException {
 
-		String pdbCode = "1oew";
+		String pdbCode = "1smt";
 		
 		demoContacts(pdbCode);
 	}
@@ -37,7 +37,7 @@ public class DemoContacts {
 		Chain chain = structure.getChainByPDB("A");
 		
 			
-		String[] atoms = {"CA"};
+		String[] atoms = {" CA "};
 		AtomContactSet contacts = StructureTools.getAtomsInContact(chain, atoms, 8.0);
 
 		System.out.println("Contacting residues (on CA atoms)");
@@ -71,12 +71,9 @@ public class DemoContacts {
 		System.out.println("Total number of residue contacts: "+groupContacts.size());
 
 		
-		System.exit(0);
-		
-		//String[] atoms = {"CA"};
 		contacts = StructureTools.getAtomsInContact(structure.getChain(0),structure.getChain(1),5.5);
 		
-		System.out.println("Contacting residues between 2 first chains (on CA atoms)");
+		System.out.println("Contacting residues between 2 first chains (all non-H non-hetatoms)");
 		
 		for (AtomContact contact:contacts) {
 			Atom atom1 = contact.getPair().getFirst();

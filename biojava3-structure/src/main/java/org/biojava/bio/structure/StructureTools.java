@@ -992,7 +992,8 @@ public class StructureTools {
 	 * Returns the set of intra-chain contacts for the given chain for given atom names, i.e. the contact map.
 	 * Uses a geometric hashing algorithm that speeds up the calculation without need of full distance matrix. 
 	 * @param chain
-	 * @param atomNames the array with atom names to be used, if null all non-H atoms will be used
+	 * @param atomNames the array with atom names to be used. For Calphas use {" CA "}, 
+	 * if null all non-H atoms of non-hetatoms will be used
 	 * @param cutoff
 	 * @return
 	 */
@@ -1012,7 +1013,7 @@ public class StructureTools {
 	}
 	
 	/**
-	 * Returns the set of intra-chain contacts for the given chain for all non-H atoms, i.e. the contact map.
+	 * Returns the set of intra-chain contacts for the given chain for all non-H atoms of non-hetatoms, i.e. the contact map.
 	 * Uses a geometric hashing algorithm that speeds up the calculation without need of full distance matrix. 
 	 * @param chain
 	 * @param cutoff
@@ -1027,7 +1028,8 @@ public class StructureTools {
 	 * Uses a geometric hashing algorithm that speeds up the calculation without need of full distance matrix. 
 	 * @param chain1
 	 * @param chain2
-	 * @param atomNames the array with atom names to be used, if null all non-H atoms will be used
+	 * @param atomNames the array with atom names to be used. For Calphas use {" CA "}, 
+	 * if null all non-H atoms of non-hetatoms will be used
 	 * @param cutoff
 	 * @return
 	 */
@@ -1048,7 +1050,7 @@ public class StructureTools {
 	}
 	
 	/**
-	 * Returns the set of inter-chain contacts between the two given chains for all non-H atoms.
+	 * Returns the set of inter-chain contacts between the two given chains for all non-H atoms of non-hetatoms.
 	 * Uses a geometric hashing algorithm that speeds up the calculation without need of full distance matrix. 
 	 * @param chain1
 	 * @param chain2

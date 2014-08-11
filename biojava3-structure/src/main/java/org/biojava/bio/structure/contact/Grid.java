@@ -139,7 +139,7 @@ public class Grid {
 	 * Checks also if the i and j grid overlap, i.e. the enclosing bounds of 
 	 * the 2 grids (i and j) are no more than one cell size apart. If they don't
 	 * overlap then they are too far apart so there's nothing to calculate, we set
-	 * the noOverlap flag and then getDistMatrix will do no calculation at all.
+	 * the noOverlap flag and then {@link #getContacts()} will do no calculation at all.
 	 * @param iAtoms
 	 * @param jAtoms
 	 */

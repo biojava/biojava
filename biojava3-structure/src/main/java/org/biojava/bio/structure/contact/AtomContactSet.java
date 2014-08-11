@@ -6,7 +6,12 @@ import java.util.Iterator;
 
 import org.biojava.bio.structure.Atom;
 
-
+/**
+ * A set of atom-atom contacts to hold the results of intra and inter-chain contact calculations
+ * 
+ * @author duarte_j
+ *
+ */
 public class AtomContactSet implements Iterable<AtomContact> {
 
 	private HashMap<Pair<AtomIdentifier>, AtomContact> contacts;
