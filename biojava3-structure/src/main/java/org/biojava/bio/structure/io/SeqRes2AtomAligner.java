@@ -148,7 +148,7 @@ public class SeqRes2AtomAligner {
 
 	/** map the seqres groups to the atomRes chain.
 	 *  updates the atomRes chain object with the mapped data
-	 *  seqRes chain shuold not be needed after this and atomRes should be continued to be used.
+	 *  seqRes chain should not be needed after this and atomRes should be continued to be used.
 	 *  
 	 * @param atomRes
 	 * @param seqRes
@@ -484,30 +484,24 @@ public class SeqRes2AtomAligner {
 		penalty.setOpenPenalty(gop);
 		penalty.setExtensionPenalty(extend);
 
-		try {
-			PairwiseSequenceAligner smithWaterman =
-					Alignments.getPairwiseAligner(s1, s2, PairwiseSequenceAlignerType.LOCAL, penalty, matrix);
+		PairwiseSequenceAligner smithWaterman =
+				Alignments.getPairwiseAligner(s1, s2, PairwiseSequenceAlignerType.LOCAL, penalty, matrix);
 
-			SequencePair pair = smithWaterman.getPair();
-
+		SequencePair pair = smithWaterman.getPair();
 
 
-			if ( pair == null)
-				throw new StructureException("could not align objects!");
+
+		if ( pair == null)
+			throw new StructureException("could not align objects!");
 
 
-			if ( DEBUG ) {
-				System.out.println(pair.toString(60));
-			}
-
-			boolean noMatchFound = mapDNAChains(seqRes,atomRes,pair,seqresIndexPosition, atomIndexPosition );
-
-			return noMatchFound;
-		} catch (Exception e){
-			System.err.println("Problem while aligning ATOM and SEQRES records for " + atomRes.get(0).getChain().getParent().getPDBCode() + " chain: "  +atomRes.get(0).getChain().getChainID());
-			//e.printStackTrace();
-			return true;
+		if ( DEBUG ) {
+			System.out.println(pair.toString(60));
 		}
+
+		boolean noMatchFound = mapDNAChains(seqRes,atomRes,pair,seqresIndexPosition, atomIndexPosition );
+
+		return noMatchFound;
 
 	}
 
@@ -516,11 +510,11 @@ public class SeqRes2AtomAligner {
 	 * list of amino acids as obtained from the SEQRES records, and the second parent
 	 * represents the groups obtained from the ATOM records (and containing the actual ATOM information).
 	 * This does the actual alignment and if a group can be mapped to a position in the SEQRES then the corresponding
-	 * position is repplaced with the group that contains the atoms.
+	 * position is replaced with the group that contains the atoms.
 	 *
 	 * @param seqRes
 	 * @param atomRes
-	 * @return true if no match has bee found
+	 * @return true if no match has been found
 	 * @throws StructureException
 	 */
 	public boolean align(List<Group> seqRes, List<Group> atomRes) throws StructureException{
@@ -549,30 +543,26 @@ public class SeqRes2AtomAligner {
 		penalty.setOpenPenalty(gop);
 		penalty.setExtensionPenalty(extend);
 
-		try {
-			PairwiseSequenceAligner<ProteinSequence, AminoAcidCompound> smithWaterman =
-					Alignments.getPairwiseAligner(s1, s2, PairwiseSequenceAlignerType.LOCAL, penalty, matrix);
 
-			SequencePair<ProteinSequence, AminoAcidCompound> pair = smithWaterman.getPair();
+		PairwiseSequenceAligner<ProteinSequence, AminoAcidCompound> smithWaterman =
+				Alignments.getPairwiseAligner(s1, s2, PairwiseSequenceAlignerType.LOCAL, penalty, matrix);
 
-
-
-			if ( pair == null)
-				throw new StructureException("could not align objects!");
+		SequencePair<ProteinSequence, AminoAcidCompound> pair = smithWaterman.getPair();
 
 
-			if ( DEBUG ) {
-				System.out.println(pair.toString(60));
-			}
 
-			boolean noMatchFound = mapChains(seqRes,atomRes,pair,seqresIndexPosition, atomIndexPosition );
+		if ( pair == null)
+			throw new StructureException("could not align objects!");
 
-			return noMatchFound;
-		} catch (Exception e){
-			System.err.println("Problem while aligning ATOM and SEQRES records for " + atomRes.get(0).getChain().getParent().getPDBCode() + " chain: "  +atomRes.get(0).getChain().getChainID());
-			//e.printStackTrace();
-			return true;
+
+		if ( DEBUG ) {
+			System.out.println(pair.toString(60));
 		}
+
+		boolean noMatchFound = mapChains(seqRes,atomRes,pair,seqresIndexPosition, atomIndexPosition );
+
+		return noMatchFound;
+
 
 	}
 
