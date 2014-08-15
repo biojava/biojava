@@ -9,7 +9,6 @@ import org.biojava.bio.structure.domain.LocalProteinDomainParser;
 import org.biojava.bio.structure.domain.pdp.Domain;
 import org.biojava.bio.structure.domain.pdp.Segment;
 import org.biojava.bio.structure.io.FileParsingParameters;
-import org.biojava.bio.structure.io.PDBFileReader;
 
 public class DemoDomainsplit {
 
