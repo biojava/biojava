@@ -262,7 +262,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 	 * @param name
 	 * @return
 	 */
-	private String fixFullAtomName(String name, Group currentGroup){
+	private String fixFullAtomName(String name, String element, Group currentGroup){
 
 		if (name.equals("N")){
 			return " N  ";
@@ -274,7 +274,12 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		}
 		// for ligands this will be calcium
 		if (currentGroup.getType().equals(GroupType.HETATM) && name.equals("CA")){
-			return "CA  ";
+			if( element.equals("C") )
+				// C-alpha (eg for modified AAs)
+				return " CA ";
+			else
+				// Default to left-justified, like calcium
+				return "CA  ";
 		}
 		if (name.equals("C")){
 			return " C  ";
@@ -492,7 +497,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		//System.out.println("fixing atom name for  >" + atom.getLabel_atom_id() + "< >" + fullname + "<");
 
 		
-		String fullname      = fixFullAtomName(atom.getLabel_atom_id(),current_group);
+		String fullname      = fixFullAtomName(atom.getLabel_atom_id(),atom.getType_symbol(), current_group);
 		
 		if ( params.isParseCAOnly() ){
 			// yes , user wants to get CA only
@@ -547,7 +552,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		a.setPDBserial(Integer.parseInt(atom.getId()));
 		a.setName(atom.getLabel_atom_id());
 
-		a.setFullName(fixFullAtomName(atom.getLabel_atom_id(), current_group));
+		a.setFullName(fixFullAtomName(atom.getLabel_atom_id(),atom.getType_symbol(), current_group));
 
 
 		double x = Double.parseDouble (atom.getCartn_x());
