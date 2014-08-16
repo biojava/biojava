@@ -118,7 +118,7 @@ public class GenericFastaHeaderParser<S extends AbstractSequence<C>, C extends C
             }
 
             sequence.setAccession(new AccessionID(data[1], DataSource.UNIPROT));
-            if (data.length > 1) {
+            if (data.length > 2) {
                 sequence.setDescription(data[2]);
             }
 

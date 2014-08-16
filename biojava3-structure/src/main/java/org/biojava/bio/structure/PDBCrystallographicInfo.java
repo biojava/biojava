@@ -114,5 +114,15 @@ public class PDBCrystallographicInfo implements Serializable {
 		this.z = z;
 	}
 	
+	@Override
+	public String toString() {
+		return "["+ 
+				(sg==null?"no SG":sg.getShortSymbol())+" - "+
+				
+				(cell==null?"no Cell":
+				String.format("%.2f %.2f %.2f, %.2f %.2f %.2f",
+						cell.getA(),cell.getB(),cell.getC(),cell.getAlpha(),cell.getBeta(),cell.getGamma()) )+
+				"]";
+	}
 	
 }

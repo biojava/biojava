@@ -40,6 +40,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.biojava.bio.structure.align.util.AtomCache;
+import org.biojava.bio.structure.contact.AtomContactSet;
+import org.biojava.bio.structure.contact.Grid;
 import org.biojava.bio.structure.io.PDBFileParser;
 import org.biojava.bio.structure.io.mmcif.chem.PolymerType;
 import org.biojava.bio.structure.io.mmcif.chem.ResidueType;
@@ -307,6 +309,31 @@ public class StructureTools {
 			if (!hetAtoms && g.getType().equals(GroupType.HETATM)) continue;
 
 			atoms.add(a);
+		}
+		return (Atom[]) atoms.toArray(new Atom[atoms.size()]);			
+	}
+	
+	/**
+	 * Returns and array of all non-Hydrogen atoms in the given Chain, 
+	 * optionally including HET atoms or not
+	 * @param c
+	 * @param hetAtoms if true HET atoms are included in array, if false they are not
+	 * @return
+	 */
+	public static final Atom[] getAllNonHAtomArray(Chain c, boolean hetAtoms) {
+		List<Atom> atoms = new ArrayList<Atom>();
+
+
+		
+		for (Group g:c.getAtomGroups()){
+			for (Atom a:g.getAtoms()) {
+
+				if (a.getElement()==Element.H) continue;
+
+				if (!hetAtoms && g.getType().equals(GroupType.HETATM)) continue;
+
+				atoms.add(a);
+			}
 		}
 		return (Atom[]) atoms.toArray(new Atom[atoms.size()]);			
 	}
@@ -961,7 +988,79 @@ public class StructureTools {
 		return chain.getGroupByPDB(pdbResNum);
 	}
 
-
+	/**
+	 * Returns the set of intra-chain contacts for the given chain for given atom names, i.e. the contact map.
+	 * Uses a geometric hashing algorithm that speeds up the calculation without need of full distance matrix. 
+	 * @param chain
+	 * @param atomNames the array with atom names to be used. For Calphas use {" CA "}, 
+	 * if null all non-H atoms of non-hetatoms will be used
+	 * @param cutoff
+	 * @return
+	 */
+	public static AtomContactSet getAtomsInContact(Chain chain, String[] atomNames, double cutoff) {
+		Grid grid = new Grid(cutoff);
+		
+		Atom[] atoms = null;
+		if (atomNames==null) {
+			atoms = getAllNonHAtomArray(chain, false);
+		} else {
+			atoms = getAtomArray(chain, atomNames);
+		}
+				
+		grid.addAtoms(atoms);
+		
+		return grid.getContacts();
+	}
+	
+	/**
+	 * Returns the set of intra-chain contacts for the given chain for all non-H atoms of non-hetatoms, i.e. the contact map.
+	 * Uses a geometric hashing algorithm that speeds up the calculation without need of full distance matrix. 
+	 * @param chain
+	 * @param cutoff
+	 * @return
+	 */
+	public static AtomContactSet getAtomsInContact(Chain chain, double cutoff) {
+		return getAtomsInContact(chain, (String[]) null, cutoff);
+	}
+	
+	/**
+	 * Returns the set of inter-chain contacts between the two given chains for the given atom names.
+	 * Uses a geometric hashing algorithm that speeds up the calculation without need of full distance matrix. 
+	 * @param chain1
+	 * @param chain2
+	 * @param atomNames the array with atom names to be used. For Calphas use {" CA "}, 
+	 * if null all non-H atoms of non-hetatoms will be used
+	 * @param cutoff
+	 * @return
+	 */
+	public static AtomContactSet getAtomsInContact(Chain chain1, Chain chain2, String[] atomNames, double cutoff) {
+		Grid grid = new Grid(cutoff);
+		Atom[] atoms1 = null;
+		Atom[] atoms2 = null;
+		if (atomNames == null) {
+			atoms1 = getAllNonHAtomArray(chain1, false);
+			atoms2 = getAllNonHAtomArray(chain2, false);
+		} else {
+			atoms1 = getAtomArray(chain1, atomNames);
+			atoms2 = getAtomArray(chain2, atomNames);
+		}
+		grid.addAtoms(atoms1, atoms2);
+		
+		return grid.getContacts();		
+	}
+	
+	/**
+	 * Returns the set of inter-chain contacts between the two given chains for all non-H atoms of non-hetatoms.
+	 * Uses a geometric hashing algorithm that speeds up the calculation without need of full distance matrix. 
+	 * @param chain1
+	 * @param chain2
+	 * @param cutoff
+	 * @return
+	 */
+	public static AtomContactSet getAtomsInContact(Chain chain1, Chain chain2, double cutoff) {
+		return getAtomsInContact(chain1, chain2, null, cutoff);
+	}
+	
 	/**
 	 * Finds Groups in {@code structure} that contain at least one Atom that is within {@code radius} Angstroms of {@code centroid}.
 	 * @param structure The structure from which to find Groups
