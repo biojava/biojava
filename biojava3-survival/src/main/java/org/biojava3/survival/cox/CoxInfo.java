@@ -12,7 +12,7 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 
-/**
+/** 
  * Holds the results of a cox analysis where calling dump(), toString() will give an output similar to R 
  * @author Scooter Willis <willishf at gmail dot com>
  */
@@ -33,11 +33,11 @@ public class CoxInfo {
     double logTestpval = 0;
     double loglikInit = 0; //loglik at beta=initial values, at beta=final
     double loglikFinal = 0;
-    double scoreLogrankTest;
+    Double scoreLogrankTest;
     private Double rscore = null; //robust score
     private Double rscoreLogrankTestpvalue = null;
     private double degreeFreedom;
-    private double scoreLogrankTestpvalue;
+    private Double scoreLogrankTestpvalue;
     int numSamples = 0;
     int numEvents = 0;
     private LinkedHashMap<String, String> metaDataFilter = null;
@@ -267,6 +267,10 @@ public class CoxInfo {
      * @return
      */
     public static String fmt(Double d, int precision, int pad) {
+        if(d == null)
+            return "";
+        if(d == Double.NaN)
+            return "";
         String value = "";
         DecimalFormat dfe = new DecimalFormat("0.00E0");
         String dpad = "0.";
@@ -496,13 +500,13 @@ public class CoxInfo {
         o = o + beginLine + "Iterations=" + iterations + endLine;
 
 
-        o = o + beginLine + "Likelihood ratio test = " + fmt(this.logTest, 2, 0) + " df=" + this.degreeFreedom + " p=" + fmt(this.logTestpval, 7, 0) + endLine;
+        o = o + beginLine + "Likelihood ratio test = " + fmt(this.logTest, 2, 0) + " df=" + this.degreeFreedom + " p-value=" + fmt(this.logTestpval, 7, 0) + endLine;
 
-        o = o + beginLine + "Wald test             = " + fmt(waldTestInfo.getTest(), 2, 0) + " df=" + waldTestInfo.getDf() + " p=" + fmt(waldTestInfo.getPvalue(), 7, 0) + endLine;
-        o = o + beginLine + "Score (logrank) test  = " + fmt(scoreLogrankTest, 2, 0) + " df=" + ((int) (this.degreeFreedom)) + " p=" + fmt(this.scoreLogrankTestpvalue, 7, 0);
+        o = o + beginLine + "Wald test             = " + fmt(waldTestInfo.getTest(), 2, 0) + " df=" + waldTestInfo.getDf() + " p-value=" + fmt(waldTestInfo.getPvalue(), 7, 0) + endLine;
+        o = o + beginLine + "Score (logrank) test  = " + fmt(scoreLogrankTest, 2, 0) + " df=" + ((int) (this.degreeFreedom)) + " p-value=" + fmt(this.scoreLogrankTestpvalue, 7, 0);
 
         if (this.rscore != null) {
-            o = o + ",  Robust = " + fmt(rscore, 2, 0) + " p=" + fmt(rscoreLogrankTestpvalue, 7, 0);
+            o = o + ",  Robust = " + fmt(rscore, 2, 0) + " p-value=" + fmt(rscoreLogrankTestpvalue, 7, 0);
 
         }
 
@@ -574,28 +578,28 @@ public class CoxInfo {
     /**
      * @return the scoreLogrankTest
      */
-    public double getScoreLogrankTest() {
+    public Double getScoreLogrankTest() {
         return scoreLogrankTest;
     }
 
     /**
      * @param scoreLogrankTest the scoreLogrankTest to set
      */
-    public void setScoreLogrankTest(double scoreLogrankTest) {
+    public void setScoreLogrankTest(Double scoreLogrankTest) {
         this.scoreLogrankTest = scoreLogrankTest;
     }
 
     /**
      * @return the scoreLogrankTestpvalue
      */
-    public double getScoreLogrankTestpvalue() {
+    public Double getScoreLogrankTestpvalue() {
         return scoreLogrankTestpvalue;
     }
 
     /**
      * @param scoreLogrankTestpvalue the scoreLogrankTestpvalue to set
      */
-    public void setScoreLogrankTestpvalue(double scoreLogrankTestpvalue) {
+    public void setScoreLogrankTestpvalue(Double scoreLogrankTestpvalue) {
         this.scoreLogrankTestpvalue = scoreLogrankTestpvalue;
     }
 

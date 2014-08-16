@@ -10,7 +10,7 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import org.apache.commons.math.stat.correlation.Covariance;
 import org.apache.commons.math.stat.descriptive.DescriptiveStatistics;
-
+ 
 /**
  *
  * @author Scooter Willis <willishf at gmail dot com>
@@ -164,6 +164,12 @@ public class CoxCC {
         //  System.out.println("New var");
         //  StdArrayIO.print(imat1);
         ci.setVariance(imat1);
+        
+        //need to update walsh stats for overall model
+        CoxR.calculateWaldTestInfo(ci);
+        //per Bob/Kathryn email on 4/23/2014 in a weighted model LogRank p-value is no longer valid so should erase it
+        ci.setScoreLogrankTest(Double.NaN);
+        ci.setScoreLogrankTestpvalue(Double.NaN);
     }
 
     /**
