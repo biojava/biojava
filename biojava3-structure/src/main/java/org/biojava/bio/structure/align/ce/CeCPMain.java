@@ -60,12 +60,13 @@ public class CeCPMain extends CeMain {
 
 	/**
 	 *  version history:
+	 *  1.4 - Added DuplicationHint parameter
 	 *  1.3 - Short CPs are now discarded
 	 *  1.2 - now supports check AlignmentTools.isSequentialAlignment. XML protocol
 	 *  1.1 - skipped, (trying to avoid confusion with jfatcat in all vs. all comparisons) 
 	 *  1.0 - initial release
 	 */
-	public static final String version = "1.3";
+	public static final String version = "1.4";
 
 	public CeCPMain(){
 		super();
