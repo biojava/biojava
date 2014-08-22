@@ -117,6 +117,11 @@ public final class FastqTest
         assertEquals(FastqVariant.FASTQ_SANGER, fastq.getVariant());
     }
 
+    public void testBuilder()
+    {
+        assertNotNull(Fastq.builder());
+    }
+
     public void testEquals()
     {
         Fastq fastq0 = new Fastq("description", "sequence", "quality_", FastqVariant.FASTQ_SANGER);

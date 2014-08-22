@@ -120,4 +120,15 @@ public final class Fastq
     {
         return variant;
     }
+
+    /**
+     * Create and return a new FastqBuilder.
+     * The FastqBuilder will not be null.
+     *
+     * @return a new FastqBuilder
+     */
+    public static final FastqBuilder builder()
+    {
+        return new FastqBuilder();
+    }
 }
