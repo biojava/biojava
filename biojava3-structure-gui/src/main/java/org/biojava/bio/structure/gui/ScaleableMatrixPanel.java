@@ -306,8 +306,11 @@ implements ChangeListener, ActionListener {
 		gradient.setInterpolator(interp);
 		
 		ContinuousColorMapper sqrtGradient = new SqrtColorMapper(gradient);
-		gradients.put((++i)+". Square Root", sqrtGradient);	
+		gradients.put((++i)+". Square Root", sqrtGradient);
 		
+		GradientMapper black = new GradientMapper(Color.BLACK, Color.BLACK);
+		gradients.put((++i)+". Black", black);
+
 		return gradients;
 	}
 
