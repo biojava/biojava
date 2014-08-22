@@ -4,10 +4,11 @@
  */
 package org.biojava3.survival.kaplanmeier.figure;
 
-
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.io.FileInputStream;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Properties;
 
 /**
@@ -16,7 +17,7 @@ import java.util.Properties;
  */
 public class KMFigureInfo {
 
-    /**
+    /** 
      *
      */
     public int titleHeight = 40;
@@ -43,7 +44,7 @@ public class KMFigureInfo {
     /**
      *
      */
-    public double xaxisPercentIncrement = .1;
+    public double xaxisPercentIncrement = .25;
     /**
      *
      */
@@ -72,6 +73,12 @@ public class KMFigureInfo {
      *
      */
     public Color[] legendColor = {Color.RED, Color.BLUE, Color.GREEN, Color.CYAN, Color.ORANGE, Color.YELLOW, Color.MAGENTA, Color.PINK};
+    public ArrayList<Double> xAxisLabels = new ArrayList<Double>();//new ArrayList<Double>(Arrays.asList(0.0, 5.0, 10.0, 15.0, 20.0));
+    public String xAxisLegend = "";
+    public String yAxisLegend = "";
+    public Color getColor(int index) {
+        return legendColor[index];
+    }
 
     /**
      *
@@ -90,5 +97,31 @@ public class KMFigureInfo {
             legendUpperPercentY = Double.parseDouble(properties.getProperty("legendUpperPercentY"));
         }
 
+        if (properties.containsKey("xAxisLabels")) {
+            String values = properties.getProperty("xAxisLabels").trim();
+            if (values.startsWith("[") || values.startsWith("(") || values.startsWith("{")) {
+                values = values.substring(1, values.length()).trim();
+            }
+            if (values.endsWith("]") || values.endsWith(")") || values.endsWith("}")) {
+                values = values.substring(0, values.length() - 1).trim();
+            }
+            xAxisLabels.clear();
+            String[] data = values.split(",");
+            for (String d : data) {
+                try {
+                    Double v = Double.parseDouble(d.trim());
+                    xAxisLabels.add(v);
+                } catch (Exception e) {
+                }
+            }
+        }
+
+        if (properties.containsKey("xAxisLegend")) {
+            xAxisLegend = properties.getProperty("xAxisLegend");
+        }
+        
+                if (properties.containsKey("yAxisLegend")) {
+            yAxisLegend = properties.getProperty("yAxisLegend");
+        }
     }
 }

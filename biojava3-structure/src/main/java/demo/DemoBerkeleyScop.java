@@ -1,7 +1,6 @@
 package demo;
 
 import org.biojava.bio.structure.align.util.AtomCache;
-import org.biojava.bio.structure.scop.BerkeleyScopInstallation;
 import org.biojava.bio.structure.scop.ScopDatabase;
 import org.biojava.bio.structure.scop.ScopFactory;
 
@@ -12,7 +11,7 @@ import org.biojava.bio.structure.scop.ScopFactory;
  *
  */
 public class DemoBerkeleyScop {
-	@SuppressWarnings("unused")
+	
 	public static void main(String[]args){
 
 

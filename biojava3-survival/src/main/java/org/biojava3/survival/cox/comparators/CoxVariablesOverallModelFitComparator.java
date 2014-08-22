@@ -13,11 +13,12 @@ import java.util.Comparator;
  * @author Scooter Willis <willishf at gmail dot com>
  */
 public class CoxVariablesOverallModelFitComparator implements Comparator<CoxVariables> {
-
+ 
     String variables = "";
 
     /**
-     *
+     * Variables are stored as a string representation of an ArrayList
+     * [META_GENE] or [trtg, META_GENE] add variables used in cox regression to an array and then do toString.
      * @param variables
      */
     public CoxVariablesOverallModelFitComparator(String variables) {
@@ -28,9 +29,9 @@ public class CoxVariablesOverallModelFitComparator implements Comparator<CoxVari
         CoxInfo ci1 = coxVariables1.getCoxInfo(variables);
         CoxInfo ci2 = coxVariables2.getCoxInfo(variables);
 
-        if (ci1.getScoreLogrankTestpvalue() < ci2.getScoreLogrankTestpvalue()) {
+        if (ci1.getWaldTestInfo().getPvalue() < ci2.getWaldTestInfo().getPvalue()) {
             return -1;
-        } else if (ci1.getScoreLogrankTestpvalue() > ci2.getScoreLogrankTestpvalue()) {
+        } else if (ci1.getWaldTestInfo().getPvalue() > ci2.getWaldTestInfo().getPvalue()) {
             return 1;
         } else {
             return 0;

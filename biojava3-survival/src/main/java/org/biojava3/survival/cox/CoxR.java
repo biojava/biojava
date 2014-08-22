@@ -11,7 +11,7 @@ import org.biojava3.survival.cox.stats.ChiSq;
 import org.biojava3.survival.data.WorkSheet;
 import java.util.ArrayList;
 import java.util.Collections;
-
+   
 /*
  *   This is a port of the R survival code used for doing Cox Regression. The algorithm was a fairly easy port from C code to Java where the challenge was
  *   making the code a little more object friendly. In the R code everything is passed around as an array and a large portion of the code is spent extracting
@@ -22,6 +22,7 @@ import java.util.Collections;
  *   In R you can pass in different paramaters to override defaults which requires parsing of the paramaters. In the Java code tried to be a little more exact
  *   in the code related to paramaters where using strata, weighting, robust and cluster are advance options. Additionaly code is implemented from Bob Gray
  *   to do variance correction when using weighted paramaters in a data set. 
+ *   /Users/Scooter/NetBeansProjects/biojava3-survival/docs/wtexamples.docx
  * 
  *   The CoxHelper class is meant to hide some of the implementation details.
  * 
@@ -898,7 +899,14 @@ public class CoxR {
             //not giving the correct value
             ci.setRscore(wti.getTest());
         }
+        calculateWaldTestInfo(ci);
+        
 
+
+
+    }
+
+    static public void calculateWaldTestInfo(CoxInfo ci){
         if(ci.getNumberCoefficients() > 0){
             double toler_chol = 1.818989e-12;
           //  toler_chol = ci.toler;
@@ -910,11 +918,8 @@ public class CoxR {
             }
             ci.setWaldTestInfo(WaldTest.process(ci.getVariance(), b, toler_chol));
         }
-
-
-
     }
-
+    
     /**
      * @param args the command line arguments
      */
