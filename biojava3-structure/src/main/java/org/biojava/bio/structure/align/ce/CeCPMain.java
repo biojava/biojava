@@ -126,13 +126,13 @@ public class CeCPMain extends CeMain {
 		boolean duplicateRight;
 
 		switch( cpparams.getDuplicationHint() ) {
-		case DUPLICATE_LEFT:
+		case LEFT:
 			duplicateRight = false;
 			break;
-		case DUPLICATE_RIGHT:
+		case RIGHT:
 			duplicateRight = true;
 			break;
-		case DUPLICATE_SHORTER:
+		case SHORTER:
 			duplicateRight = ca1.length >= ca2.length;
 			break;
 		default:

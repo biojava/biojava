@@ -13,9 +13,9 @@ public class CECPParameters extends CeParameters {
 	public static final int DEFAULT_MIN_CP_LENGTH = 5; //The minimum block length for CPs. Blocks shorter than this will be ignored.
 
 	public static enum DuplicationHint {
-		DUPLICATE_SHORTER("Shorter of the two"),
-		DUPLICATE_LEFT("Left"),
-		DUPLICATE_RIGHT("Right");
+		SHORTER("Shorter of the two"),
+		LEFT("Left"),
+		RIGHT("Right");
 		
 		
 		private String name;
@@ -32,7 +32,7 @@ public class CECPParameters extends CeParameters {
 	
 	public CECPParameters() {
 		super();
-		duplicationHint = DuplicationHint.DUPLICATE_SHORTER;
+		duplicationHint = DuplicationHint.SHORTER;
 		minCPLength = DEFAULT_MIN_CP_LENGTH;
 		setMaxGapSize(0);
 	}
@@ -56,7 +56,7 @@ public class CECPParameters extends CeParameters {
 	@Override
 	public void reset(){
 		super.reset();
-		duplicationHint = DuplicationHint.DUPLICATE_SHORTER;
+		duplicationHint = DuplicationHint.SHORTER;
 		minCPLength = DEFAULT_MIN_CP_LENGTH;
 		setMaxGapSize(0);
 	}

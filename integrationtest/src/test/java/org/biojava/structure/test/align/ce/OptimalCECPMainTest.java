@@ -90,7 +90,7 @@ public class OptimalCECPMainTest extends TestCase {
 		
 		CeCPMain ce = (CeCPMain) StructureAlignmentFactory.getAlgorithm(CeCPMain.algorithmName);
 		CECPParameters param = (CECPParameters)ce.getParameters();
-		param.setDuplicationHint(DuplicationHint.DUPLICATE_RIGHT);
+		param.setDuplicationHint(DuplicationHint.RIGHT);
 		
 		Atom[] ca1 = cache.getAtoms(name1);
 		Atom[] ca2 = cache.getAtoms(name2);
@@ -225,7 +225,7 @@ public class OptimalCECPMainTest extends TestCase {
 		
 		CeCPMain ce = (CeCPMain) StructureAlignmentFactory.getAlgorithm(CeCPMain.algorithmName);
 		CECPParameters param = (CECPParameters)ce.getParameters();
-		param.setDuplicationHint(DuplicationHint.DUPLICATE_RIGHT);
+		param.setDuplicationHint(DuplicationHint.RIGHT);
 		
 		Atom[] ca1 = cache.getAtoms(name1);
 		Atom[] ca2 = cache.getAtoms(name2);
