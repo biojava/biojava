@@ -27,11 +27,23 @@ package org.biojava.bio.structure.align.fatcat;
 
 import org.biojava.bio.structure.align.StructureAlignment;
 import org.biojava.bio.structure.align.ce.AbstractUserArgumentProcessor;
+import org.biojava.bio.structure.align.ce.StartupParameters;
 import org.biojava.bio.structure.align.fatcat.calc.FatCatParameters;
 
 
 public class FatCatUserArgumentProcessor extends AbstractUserArgumentProcessor {
 
+	protected class FatCatStartupParams extends StartupParameters {
+		int fragLen;
+		Double rmsdCut;
+		double disCut;
+		int maxTra;
+	}
+	
+	@Override
+	protected StartupParameters getStartupParametersInstance() {
+		return new FatCatStartupParams();
+	}
 
 	public StructureAlignment getAlgorithm() {
 		StructureAlignment algorithm = null;

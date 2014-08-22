@@ -18,7 +18,7 @@
  *      http://www.biojava.org/
  *
  * Created on Nov 2, 2009
- * Author: Andreas Prlic 
+ * Author: Andreas Prlic
  *
  */
 
@@ -56,7 +56,36 @@ import org.biojava.bio.structure.align.xml.AFPChainXMLConverter;
 import org.biojava.bio.structure.io.PDBFileReader;
 
 
-
+/**
+ * Base class for a new structure alignment CLI.
+ *
+ * <p>To add a new StructureAlignment with a CLI similar to CE or FATCAT,
+ * <ol>
+ * <li>Implement StructureAlignment with the main algorithm
+ * <li>Implement ConfigStrucAligParams. This provides the parameters for the GUI.
+ * <li>Subclass StartupParameters (can be an inner class) with the same parameters
+ *     described in the ConfigStrucAligParams.
+ * <li>Subclass AbstractUserArgumentProcessor, with the getStartupParams() method
+ *     returning a fresh instance of the custom StartupParameters
+ * <li>Implement the getParameters() method to copy values from the StartupParameters
+ *     to the ConfigStrucAligParams.
+ * </ol>
+ *
+ * <p>Note that reflection is used in a number of places, so the CLI argument names
+ * must match the get/set functions in both parameter beans.
+ * <ul>
+ * <li>AlignmentGUI automatically takes parameter names and types from the
+ *     ConfigStrucAligParams
+ * <li>AbstractUserArgumentProcessor also takes parameter names and help descriptions
+ *     from ConfigStrucAligParams, but it saves arguments to the StartupParameter
+ *     bean.
+ * </ul>
+ * This means that both beans should be kept in sync.
+ *
+ * @author Andreas
+ * @author Spencer
+ *
+ */
 public abstract class AbstractUserArgumentProcessor implements UserArgumentProcessor {
 
 	public static String newline = System.getProperty("line.separator");
@@ -65,10 +94,21 @@ public abstract class AbstractUserArgumentProcessor implements UserArgumentProce
 
 	public static final List<String> mandatoryArgs= new ArrayList<String>();
 
-	protected AbstractUserArgumentProcessor(){ 
-		params = new StartupParameters();
+	protected AbstractUserArgumentProcessor(){
+		params = getStartupParametersInstance();
 	}
 
+	/**
+	 * StartupParameters is a bean to store all the possible
+	 * command line parameters.
+	 *
+	 * The `StartupParameter` class contains the basic set of CLI parameters
+	 * common to all `StructureAligmnent`s. This method should return a subclass
+	 * of StartupParameters which has been extended to store values for all
+	 * additional parameters.
+	 * @return A new instance of the correct StartupParameters subclass
+	 */
+	protected abstract StartupParameters getStartupParametersInstance();
 
 	public abstract StructureAlignment getAlgorithm();
 	public abstract Object getParameters();
@@ -90,7 +130,7 @@ public abstract class AbstractUserArgumentProcessor implements UserArgumentProce
 			// if value starts with - then the arg does not have a value.
 			if (value != null && value.startsWith("-"))
 				value = null;
-			else 
+			else
 				i++;
 
 
@@ -100,7 +140,7 @@ public abstract class AbstractUserArgumentProcessor implements UserArgumentProce
 
 			try {
 
-				CliTools.configureBean(params, tmp);  
+				CliTools.configureBean(params, tmp);
 
 			} catch (ConfigurationException e){
 
@@ -112,13 +152,13 @@ public abstract class AbstractUserArgumentProcessor implements UserArgumentProce
 				} else {
 					// but there can be with optional ...
 				}
-			}           
+			}
 		}
 
 		if ( params.getPdbFilePath() != null){
 			System.setProperty(UserConfiguration.PDB_DIR,params.getPdbFilePath());
 		}
-		
+
 		if ( params.getCacheFilePath() != null){
 			System.setProperty(UserConfiguration.PDB_CACHE_DIR,params.getCacheFilePath());
 		}
@@ -158,11 +198,11 @@ public abstract class AbstractUserArgumentProcessor implements UserArgumentProce
 		if ( params.getAlignPairs() != null){
 			runDBSearch();
 		}
-		
+
 		if ( params.getSearchFile() != null){
 			runDBSearch();
 		}
-		
+
 	}
 
 
@@ -201,7 +241,7 @@ public abstract class AbstractUserArgumentProcessor implements UserArgumentProce
 
 		if ( cacheFilePath == null || cacheFilePath.equals("")){
 			cacheFilePath = pdbFilePath;
-			
+
 		}
 
 
@@ -210,14 +250,14 @@ public abstract class AbstractUserArgumentProcessor implements UserArgumentProce
 		String alignPairs = params.getAlignPairs();
 
 		String searchFile = params.getSearchFile();
-		
+
 		if ( alignPairs == null || alignPairs.equals("")) {
 			if ( searchFile == null || searchFile.equals("")){
 				System.err.println("Please specify -alignPairs or -searchFile !");
 				return;
 			}
 		}
-		
+
 		String outputFile = params.getOutFile();
 
 		if ( outputFile == null || outputFile.equals("")){
@@ -231,26 +271,26 @@ public abstract class AbstractUserArgumentProcessor implements UserArgumentProce
 			runAlignPairs(cache, alignPairs, outputFile);
 		}  else {
 			// must be a searchFile request...
-						
+
 			int useNrCPUs = params.getNrCPU();
-			
+
 			runDbSearch(cache,searchFile, outputFile, useNrCPUs, params);
 		}
 	}
 
 
 	/** Do a DB search with the input file against representative PDB domains
-	 * 
+	 *
 	 * @param cache
 	 * @param searchFile
 	 * @param outputFile
 	 */
 	private void runDbSearch(AtomCache cache, String searchFile,
 			String outputFile,int useNrCPUs, StartupParameters params) {
-		
-		
+
+
 		System.out.println("will use " + useNrCPUs + " CPUs.");
-		
+
 		PDBFileReader reader = new PDBFileReader();
 		Structure structure1 = null ;
 		try {
@@ -261,26 +301,26 @@ public abstract class AbstractUserArgumentProcessor implements UserArgumentProce
 			System.err.println("could not parse as PDB file: " + searchFile);
 			return;
 		}
-		
+
 		File searchF = new File(searchFile);
 		String name1 = "CUSTOM";
-		
-				
-			
+
+
+
 		StructureAlignment algorithm =  getAlgorithm();
-		
-		MultiThreadedDBSearch dbSearch = new MultiThreadedDBSearch(name1, 
-				structure1, 
-				outputFile, 
+
+		MultiThreadedDBSearch dbSearch = new MultiThreadedDBSearch(name1,
+				structure1,
+				outputFile,
 				algorithm,
 				useNrCPUs,
 				params.isDomainSplit());
-		
+
 		dbSearch.setCustomFile1(searchF.getAbsolutePath());
-		
+
 		dbSearch.run();
-			
-	
+
+
 	}
 
 
@@ -295,7 +335,7 @@ public abstract class AbstractUserArgumentProcessor implements UserArgumentProce
 
 			StructureAlignment algorithm =  getAlgorithm();
 
-			String header = "# algorithm:" + algorithm.getAlgorithmName(); 
+			String header = "# algorithm:" + algorithm.getAlgorithmName();
 			out.write(header);
 			out.write(newline);
 
@@ -313,7 +353,7 @@ public abstract class AbstractUserArgumentProcessor implements UserArgumentProce
 				if ( spl.length != 2) {
 					System.err.println("wrongly formattted line. Expected format: 4hhb.A 4hhb.B but found " + line);
 					continue;
-				} 
+				}
 
 				String pdb1 = spl[0];
 				String pdb2 = spl[1];
@@ -396,14 +436,14 @@ public abstract class AbstractUserArgumentProcessor implements UserArgumentProce
 			}
 
 			AtomCache cache = new AtomCache(path, path, params.isPdbDirSplit());
-			cache.setAutoFetch(params.isAutoFetch());   
+			cache.setAutoFetch(params.isAutoFetch());
 			structure1 = getStructure(cache, name1, file1);
 			structure2 = getStructure(cache, name2, file2);
 		} else {
 
 			structure1 = getStructure(null, name1, file1);
-			structure2 = getStructure(null, name2, file2);			
-		}      
+			structure2 = getStructure(null, name2, file2);
+		}
 
 
 
@@ -474,7 +514,7 @@ public abstract class AbstractUserArgumentProcessor implements UserArgumentProce
 
 					//DisplayAFP.showAlignmentImage(afpChain, ca1,ca2,jmol);
 				}
-			} 
+			}
 
 
 			checkWriteFile(afpChain,ca1, ca2, false);
@@ -503,7 +543,7 @@ public abstract class AbstractUserArgumentProcessor implements UserArgumentProce
 	}
 
 	/** check if the result should be written to the local file system
-	 * 
+	 *
 	 * @param params2
 	 * @param afpChain
 	 * @param ca1
@@ -542,23 +582,23 @@ public abstract class AbstractUserArgumentProcessor implements UserArgumentProce
 
 		if ( dbsearch ){
 			if ( params.getSaveOutputDir() != null) {
-				
+
 				// we currently don't have a naming convention for how to store results for custom files
 				// they will be re-created on the fly
 				if ( afpChain.getName1().startsWith("file:") || afpChain.getName2().startsWith("file:"))
 					return;
-				fileName = params.getSaveOutputDir(); 
+				fileName = params.getSaveOutputDir();
 				fileName += getAutoFileName(afpChain);
-				
+
 			} else {
 				return;
 			}
-			
-			// 
+
+			//
 			//else {
 			//	fileName = getAutoFileName(afpChain);
 			//}
-		} else 
+		} else
 
 			if ( params.getOutFile() != null) {
 				fileName = params.getOutFile();
@@ -597,7 +637,7 @@ public abstract class AbstractUserArgumentProcessor implements UserArgumentProce
 
 	private String getAutoFileName(AFPChain afpChain){
 		String fileName =afpChain.getName1()+"_" + afpChain.getName2()+"_"+afpChain.getAlgorithmName();
-		
+
 		if (params.isOutputPDB() )
 			fileName += ".pdb";
 		else
@@ -606,7 +646,7 @@ public abstract class AbstractUserArgumentProcessor implements UserArgumentProce
 	}
 
 
-	private Structure getStructure(AtomCache cache, String name1, String file) 
+	private Structure getStructure(AtomCache cache, String name1, String file)
 	{
 
 		PDBFileReader reader = new PDBFileReader();
@@ -646,7 +686,7 @@ public abstract class AbstractUserArgumentProcessor implements UserArgumentProce
 	}
 
 	/** apply a number of rules to fix the name of the structure if it did not get set during loading.
-	 * 
+	 *
 	 * @param s
 	 * @param file
 	 * @return

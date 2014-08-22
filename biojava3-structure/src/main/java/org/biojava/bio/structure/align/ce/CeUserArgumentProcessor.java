@@ -33,7 +33,99 @@ import org.biojava.bio.structure.align.StructureAlignment;
  *
  */
 public class CeUserArgumentProcessor extends AbstractUserArgumentProcessor {
+	
+	protected class CeStartupParams extends StartupParameters {
+		//protected int maxGapSize; //TODO move from superclass
+		protected int winSize;
+		protected int scoringStrategy;
+		//protected double maxOptRMSD; //TODO
+		protected double gapOpen;
+		protected double gapExtension;
+		//protected boolean showAFPRanges; //TODO
 
+		public CeStartupParams() {
+			super();
+			//maxGapSize = 30;
+			winSize = 8;
+			scoringStrategy = CeParameters.DEFAULT_SCORING_STRATEGY;
+			//showAFPRanges = false;
+			//maxOptRMSD = 99d;
+			gapOpen = CeParameters.DEFAULT_GAP_OPEN;
+			gapExtension = CeParameters.DEFAULT_GAP_EXTENSION;
+		}
+
+		public int getWinSize() {
+			return winSize;
+		}
+
+		public void setWinSize(int winSize) {
+			this.winSize = winSize;
+		}
+
+		public int getScoringStrategy() {
+			return scoringStrategy;
+		}
+
+		public void setScoringStrategy(int scoringStrategy) {
+			this.scoringStrategy = scoringStrategy;
+		}
+
+		public double getGapOpen() {
+			return gapOpen;
+		}
+
+		public void setGapOpen(double gapOpen) {
+			this.gapOpen = gapOpen;
+		}
+
+		public double getGapExtension() {
+			return gapExtension;
+		}
+
+		public void setGapExtension(double gapExtension) {
+			this.gapExtension = gapExtension;
+		}
+
+		@Override
+		public String toString() {
+			StringBuilder builder = new StringBuilder();
+			builder.append("CeStartupParams [winSize=").append(winSize)
+					.append(", scoringStrategy=").append(scoringStrategy)
+					.append(", gapOpen=").append(gapOpen)
+					.append(", gapExtension=").append(gapExtension)
+					.append(", pdbFilePath=").append(pdbFilePath)
+					.append(", cacheFilePath=").append(cacheFilePath)
+					.append(", outFile=").append(outFile).append(", pdb1=")
+					.append(pdb1).append(", pdb2=").append(pdb2)
+					.append(", file1=").append(file1).append(", file2=")
+					.append(file2).append(", showDBresult=")
+					.append(showDBresult).append(", printXML=")
+					.append(printXML).append(", printFatCat=")
+					.append(printFatCat).append(", show3d=").append(show3d)
+					.append(", autoFetch=").append(autoFetch)
+					.append(", flexible=").append(flexible)
+					.append(", pdbDirSplit=").append(pdbDirSplit)
+					.append(", printCE=").append(printCE).append(", showMenu=")
+					.append(showMenu).append(", showAFPRanges=")
+					.append(showAFPRanges).append(", printPDB=")
+					.append(printPDB).append(", maxOptRMSD=")
+					.append(maxOptRMSD).append(", isDomainSplit=")
+					.append(isDomainSplit).append(", alignPairs=")
+					.append(alignPairs).append(", searchFile=")
+					.append(searchFile).append(", saveOutputDir=")
+					.append(saveOutputDir).append(", nrCPU=").append(nrCPU)
+					.append(", maxGapSize=").append(maxGapSize).append("]");
+			return builder.toString();
+		}
+
+	}
+	
+	@Override
+	protected StartupParameters getStartupParametersInstance() {
+		return new CeStartupParams();
+	}
+
+	@Override
 	public StructureAlignment getAlgorithm() {
 		return new CeMain();
 	}
@@ -44,15 +136,21 @@ public class CeUserArgumentProcessor extends AbstractUserArgumentProcessor {
 		
 		StructureAlignment alignment = getAlgorithm();
 		
-		CeParameters p = (CeParameters) alignment.getParameters();
+		CeParameters aligParams = (CeParameters) alignment.getParameters();
+		CeStartupParams startParams = (CeStartupParams) params;
 		
-		if ( p == null)
-			p = new CeParameters();
+		if ( aligParams == null)
+			aligParams = new CECPParameters();
 		
-		p.setMaxOptRMSD(params.getMaxOptRMSD());
-		p.setMaxGapSize(params.getMaxGapSize());
-		p.setShowAFPRanges(params.isShowAFPRanges());
-		return p;
+		// Copy relevant parameters from the startup parameters
+		aligParams.setMaxGapSize(startParams.getMaxGapSize());
+		aligParams.setWinSize(startParams.getWinSize());
+		aligParams.setScoringStrategy(startParams.getScoringStrategy());
+		aligParams.setMaxOptRMSD(startParams.getMaxOptRMSD());
+		aligParams.setGapOpen(startParams.getGapOpen());
+		aligParams.setGapExtension(startParams.getGapExtension());
+		aligParams.setShowAFPRanges(startParams.isShowAFPRanges());
+		return aligParams;
 	}
 
 
