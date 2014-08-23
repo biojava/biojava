@@ -1,8 +1,9 @@
 # Welcome to BioJava v.3
 
-BioJava is an open-source project dedicated to providing a Java framework for **processing biological data**. It provides analytical and statistical routines, parsers for common file formats and allows the manipulation of sequences and 3D structures. The goal of the biojava project is to facilitate rapid application development for bioinformatics.
+[![Build Status](https://travis-ci.org/biojava/biojava.png)](https://travis-ci.org/biojava/biojava) [![Dependency Status](https://www.versioneye.com/user/projects/53f8b2b6e09da300d4000488/badge.svg?style=flat)](https://www.versioneye.com/user/projects/53f8b2b6e09da300d4000488) [![Version](http://img.shields.io/badge/version-3.0.8-blue.svg?style=flat)](http://biojava.org/wiki/BioJava:Download) [![License](http://img.shields.io/badge/license-LGPLv2-blue.svg?style=flat)](https://github.com/biojava/biojava/blob/master/LICENSE)
 
-BioJava is licensed under LGPL 2.1.
+
+BioJava is an open-source project dedicated to providing a Java framework for **processing biological data**. It provides analytical and statistical routines, parsers for common file formats and allows the manipulation of sequences and 3D structures. The goal of the biojava project is to facilitate rapid application development for bioinformatics.
 
 Please visit our [homepage](http://www.biojava.org/).
 
@@ -40,8 +41,6 @@ If you are using Maven you can add the BioJava repository by adding the followin
 
 Note: for the upcoming BioJava 4.0.0 release we are planning to migrate the hosting to Maven Central and this step should not be required.
 
-### Build Status
-[![Build Status](https://travis-ci.org/biojava/biojava.png)](https://travis-ci.org/biojava/biojava)
 
 ### Mailing Lists
 
