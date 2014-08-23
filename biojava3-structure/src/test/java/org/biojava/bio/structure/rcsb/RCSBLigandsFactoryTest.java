@@ -29,6 +29,7 @@ import static org.junit.Assert.assertEquals;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.List;
 
 import org.junit.Test;
@@ -40,21 +41,13 @@ import org.junit.Test;
  */
 public class RCSBLigandsFactoryTest {
 
-
-	private static final String TEST_DIR = "src/test/resources/";
-	
 	/**
-	 * Opens the file as a {@link FileInputStream}. Copied from ResourceList, which is not in biojava.
+	 * Opens the file as a {@link InputStream}.
 	 */
-	private FileInputStream openStream(String filename) {
-		File file = new File(TEST_DIR + filename);
-		FileInputStream fis;
-		try {
-			fis = new FileInputStream(file);
-		} catch (FileNotFoundException e) {
-			throw new RuntimeException(e);
-		}
-		return fis;
+	private InputStream openStream(String filename) {
+        InputStream is = this.getClass().getClassLoader().getResourceAsStream(filename);
+
+		return is;
 	}
 
 	/**
