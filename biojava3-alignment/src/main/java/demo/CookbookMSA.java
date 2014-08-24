@@ -38,7 +38,7 @@ import org.biojava3.core.util.ConcurrencyTools;
 public class CookbookMSA {
  
     public static void main(String[] args) {
-        String[] ids = new String[] {"Q21691", "Q21495", "O48771"};
+        String[] ids = new String[] {"Q21691", "A8WS47", "O48771"};
         try {
             multipleSequenceAlignment(ids);
         } catch (Exception e){
@@ -60,6 +60,7 @@ public class CookbookMSA {
  
     private static ProteinSequence getSequenceForId(String uniProtId) throws Exception {
         URL uniprotFasta = new URL(String.format("http://www.uniprot.org/uniprot/%s.fasta", uniProtId));
+        System.out.println(uniprotFasta);
         ProteinSequence seq = FastaReaderHelper.readFastaProteinSequence(uniprotFasta.openStream()).get(uniProtId);
         System.out.printf("id : %s %s%n%s%n", uniProtId, seq, seq.getOriginalHeader());
         return seq;
