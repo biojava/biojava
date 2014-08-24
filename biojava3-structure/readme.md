@@ -1,6 +1,6 @@
 # The BioJava structure module
 
-[![Build Status](https://travis-ci.org/biojava/biojava.png)](https://travis-ci.org/biojava/biojava) [![Dependency Status](http://www.versioneye.com/user/projects/53f8b8a48d7ae160e3000f3d/badge.svg?style=flat)](http://www.versioneye.com/user/projects/53f8b8a48d7ae160e3000f3d) [![License](http://img.shields.io/badge/license-LGPLv2-blue.svg?style=flat)](https://github.com/biojava/biojava/blob/master/LICENSE)
+[![Build Status](https://travis-ci.org/biojava/biojava.svg?branch=master)](https://travis-ci.org/biojava/biojava) [![Dependency Status](http://www.versioneye.com/user/projects/53f8beb4e09da3cc0f000398/badge.svg?style=flat)](http://www.versioneye.com/user/projects/53f8beb4e09da3cc0f000398) [![License](http://img.shields.io/badge/license-LGPLv2-blue.svg?style=flat)](https://github.com/biojava/biojava/blob/master/LICENSE)
 
 ## About
 <table>
