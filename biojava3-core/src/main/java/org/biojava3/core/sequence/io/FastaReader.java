@@ -177,8 +177,13 @@ public class FastaReader<S extends Sequence<?>, C extends Compound> {
             line = br.readLine();
 			if (line == null) {//i.e. EOF
 				@SuppressWarnings("unchecked")
-				//    System.out.println("Sequence index=" + sequenceIndex + " " + fileIndex );
-                S sequence = (S)sequenceCreator.getSequence(sb.toString(), sequenceIndex);
+                String seq = sb.toString();
+                if ( seq.length() == 0) {
+                    System.err.println("Can't parse sequence " + sequenceIndex + ". Got sequence of length 0!");
+                    System.err.println("header: " + header);
+                } 
+                //    System.out.println("Sequence index=" + sequenceIndex + " " + fileIndex );
+                S sequence = (S)sequenceCreator.getSequence(seq, sequenceIndex);
                 headerParser.parseHeader(header, sequence);
                 sequences.put(sequence.getAccession().getID(),sequence);
                 processedSequences++;
