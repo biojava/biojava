@@ -5,7 +5,7 @@
 # show help:
 #  bash runCE.sh -h 
 
-# show alignent GUI (and download the PDB files automatically if they don't exist)
+# show alignment GUI (and download the PDB files automatically if they don't exist)
 #  bash runCE.sh -pdb1 4hhb.A -pdb2 4hhb.B -pdbFilePath /tmp/ -autoFetch -show3d 
 
 # print output as XML
@@ -17,7 +17,7 @@
 # print output in FatCat style
 #  bash runCE.sh -pdb1 4hhb.A -pdb2 4hhb.B -pdbFilePath /tmp/ -printFatCat
 
-# load files from a URL. Note: alignes the whole file, i.e. all chains. 
+# load files from a URL. Note: aligns the whole file, i.e. all chains. 
 # bash runCE.sh -file1 ftp://ftp.wwpdb.org/pub/pdb/data/structures/divided/pdb/cd/pdb1cdg.ent.gz -file2 ftp://ftp.wwpdb.org/pub/pdb/data/structures/divided/pdb/ti/pdb1tim.ent.gz -printCE
 
 # load files from local file system. Note: aligned the whole file, i.e. all chains. If you want to break this up into regions, you need to manipulate the files first manually.
@@ -38,8 +38,3 @@
 args="$*"
 
 java -Xmx500M -cp "$PWD/jars/*" org.biojava.bio.structure.align.ce.CeMain $args
-
-# To run CE-CP (detection of circular permutations:
-#java -Xmx500M -cp "$PWD/jars/*" org.biojava.bio.structure.align.ce.CeCPMain $args
-# test with something like this:
-# bash runCE.sh -pdb1 d1qdma1 -pdb2 d1nkla_ -pdbFilePath /tmp/ -autoFetch -show3d

@@ -64,7 +64,7 @@ public class ScopMirror {
 		return String.format(comURL,scopVersion);
 	}
 	public boolean isReachable() {
-		final int timeout = 200;
+		final int timeout = 800;
 		if(rootURL != null) {
 			return FileDownloadUtils.ping(getRootURL(),timeout);
 		} else {
@@ -75,6 +75,6 @@ public class ScopMirror {
 			} catch (URISyntaxException e) {
 				return false;
 			}
-		}			
+		}
 	}
 }
