@@ -414,6 +414,9 @@ public class SeqRes2AtomAligner {
 					if ( c.equals("?"))
 						c = "X";
 
+					// TODO for some unusual cases the het residue can map to 2 standard aas and thus give an 
+					//      insertion of length of 2. How can we handle that? (JD - 20/08/2014)
+					//      e.g. SUI maps to DG (in 1oew,A)
 					positionIndex.put(seqIndex,i);
 					sequence.append(c);
 					seqIndex++;

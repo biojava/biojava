@@ -35,7 +35,6 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -94,7 +93,6 @@ public class StructureTools {
 	//	private static  SymbolTokenization threeLetter ;
 	//	private static  SymbolTokenization oneLetter ;
 
-	public static Logger logger =  Logger.getLogger("org.biojava.bio.structure");
 
 	/**
 	 * Pattern to describe subranges. Matches "A", "A:", "A:7-53","A_7-53", etc.
@@ -1029,17 +1027,18 @@ public class StructureTools {
 	 * @param chain1
 	 * @param chain2
 	 * @param atomNames the array with atom names to be used. For Calphas use {" CA "}, 
-	 * if null all non-H atoms of non-hetatoms will be used
+	 * if null all non-H atoms will be used. Note HET atoms are ignored unless this parameter is null.
 	 * @param cutoff
+	 * @param hetAtoms if true HET atoms are included, if false they are not 
 	 * @return
 	 */
-	public static AtomContactSet getAtomsInContact(Chain chain1, Chain chain2, String[] atomNames, double cutoff) {
+	public static AtomContactSet getAtomsInContact(Chain chain1, Chain chain2, String[] atomNames, double cutoff, boolean hetAtoms) {
 		Grid grid = new Grid(cutoff);
 		Atom[] atoms1 = null;
 		Atom[] atoms2 = null;
 		if (atomNames == null) {
-			atoms1 = getAllNonHAtomArray(chain1, false);
-			atoms2 = getAllNonHAtomArray(chain2, false);
+			atoms1 = getAllNonHAtomArray(chain1, hetAtoms);
+			atoms2 = getAllNonHAtomArray(chain2, hetAtoms);
 		} else {
 			atoms1 = getAtomArray(chain1, atomNames);
 			atoms2 = getAtomArray(chain2, atomNames);
@@ -1050,15 +1049,16 @@ public class StructureTools {
 	}
 	
 	/**
-	 * Returns the set of inter-chain contacts between the two given chains for all non-H atoms of non-hetatoms.
+	 * Returns the set of inter-chain contacts between the two given chains for all non-H atoms.
 	 * Uses a geometric hashing algorithm that speeds up the calculation without need of full distance matrix. 
 	 * @param chain1
 	 * @param chain2
 	 * @param cutoff
+	 * @param hetAtoms if true HET atoms are included, if false they are not
 	 * @return
 	 */
-	public static AtomContactSet getAtomsInContact(Chain chain1, Chain chain2, double cutoff) {
-		return getAtomsInContact(chain1, chain2, null, cutoff);
+	public static AtomContactSet getAtomsInContact(Chain chain1, Chain chain2, double cutoff, boolean hetAtoms) {
+		return getAtomsInContact(chain1, chain2, null, cutoff, hetAtoms);
 	}
 	
 	/**
