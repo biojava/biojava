@@ -25,11 +25,11 @@ package org.biojava.bio.structure.align.gui;
 
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
+import java.io.File;
 import java.util.logging.Logger;
+
 import javax.swing.AbstractAction;
 import javax.swing.Action;
-
-
 import javax.swing.Box;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -37,7 +37,6 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenuBar;
 import javax.swing.JOptionPane;
-
 import javax.swing.JProgressBar;
 import javax.swing.JTabbedPane;
 
@@ -51,7 +50,6 @@ import org.biojava.bio.structure.align.gui.ProgressThreadDrawer;
 import org.biojava.bio.structure.align.util.ResourceManager;
 import org.biojava.bio.structure.align.util.UserConfiguration;
 import org.biojava.bio.structure.align.webstart.AligUIManager;
-
 import org.biojava.bio.structure.align.webstart.WebStartMain;
 import org.biojava.bio.structure.gui.util.PDBUploadPanel;
 import org.biojava.bio.structure.gui.util.ScopSelectPanel;
@@ -442,7 +440,7 @@ public class AlignmentGui extends JFrame{
 			s = tab.getStructure1();
 
 			if ( s == null) {
-				System.err.println("please select structure 1");
+				JOptionPane.showMessageDialog(null,"please select structure 1");
 				return ;
 			}
 
@@ -458,8 +456,16 @@ public class AlignmentGui extends JFrame{
 		
 		System.out.println("name1 in alig gui:" + name1);
 		String file = dbsearch.getOutFileLocation();
-		if ( file == null || file.equals("")){
+		if ( file == null || file.equals("") ){
 			JOptionPane.showMessageDialog(null,"Please select a directory to contain the DB search results.");
+			return;
+		}
+		File outFile = new File(file);
+		if( !outFile.exists() ) {
+			outFile.mkdirs();
+		}
+		if( !outFile.isDirectory() || !outFile.canWrite()) {
+			JOptionPane.showMessageDialog(null,"Unable to write to "+outFile.getAbsolutePath());
 			return;
 		}
 

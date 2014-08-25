@@ -31,6 +31,9 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.biojava.bio.structure.Atom;
+import org.biojava.bio.structure.Calc;
+import org.biojava.bio.structure.Group;
+import org.biojava.bio.structure.SVDSuperimposer;
 import org.biojava.bio.structure.StructureException;
 import org.biojava.bio.structure.StructureTools;
 import org.biojava.bio.structure.align.model.AFPChain;
@@ -55,21 +58,19 @@ public class CeCPMain extends CeMain {
 
 	public static final String algorithmName = "jCE Circular Permutation";
 
-	public static final int DEFAULT_MIN_CP_LENGTH = 5; //The minimum block length for CPs. Blocks shorter than this will be ignored.
-
 	/**
 	 *  version history:
+	 *  1.4 - Added DuplicationHint parameter
 	 *  1.3 - Short CPs are now discarded
 	 *  1.2 - now supports check AlignmentTools.isSequentialAlignment. XML protocol
 	 *  1.1 - skipped, (trying to avoid confusion with jfatcat in all vs. all comparisons) 
 	 *  1.0 - initial release
 	 */
-	public static final String version = "1.3";
-
+	public static final String version = "1.4";
 
 	public CeCPMain(){
 		super();
-		this.params.setMaxGapSize(0);
+		params = new CECPParameters();
 	}
 
 	@Override
@@ -84,14 +85,14 @@ public class CeCPMain extends CeMain {
 
 	public static void main(String[] args){
 		CeCPMain ce = new CeCPMain(); //Used only for printing help
-		if (args.length  == 0 ) {			
+		if (args.length  == 0 ) {
 			System.out.println(ce.printHelp());
-			return;			
+			return;
 		}
 
 		if ( args.length == 1){
 			if (args[0].equalsIgnoreCase("-h") || args[0].equalsIgnoreCase("-help")|| args[0].equalsIgnoreCase("--help")){
-				System.out.println(ce.printHelp());								
+				System.out.println(ce.printHelp());
 				return;
 			}
 
@@ -116,6 +117,51 @@ public class CeCPMain extends CeMain {
 	 */
 	@Override
 	public AFPChain align(Atom[] ca1, Atom[] ca2, Object param) throws StructureException{
+		if ( ! (param instanceof CECPParameters))
+			throw new IllegalArgumentException("CE algorithm needs an object of call CeParameters as argument.");
+
+		CECPParameters cpparams = (CECPParameters) param;
+		this.params = cpparams;
+
+		boolean duplicateRight;
+
+		switch( cpparams.getDuplicationHint() ) {
+		case LEFT:
+			duplicateRight = false;
+			break;
+		case RIGHT:
+			duplicateRight = true;
+			break;
+		case SHORTER:
+			duplicateRight = ca1.length >= ca2.length;
+			break;
+		default:
+			duplicateRight = true;
+		}
+
+
+		if( duplicateRight ) {
+			return alignRight(ca1, ca2, cpparams);
+		} else {
+			if(debug) {
+				System.out.println("Swapping alignment order.");
+			}
+			AFPChain afpChain = this.alignRight(ca2, ca1, cpparams);
+			return invertAlignment(afpChain);
+		}
+	}
+
+	/**
+	 * Aligns the structures, duplicating ca2 regardless of
+	 * {@link CECPParameters.getDuplicationHint() param.getDuplicationHint}.
+	 * @param ca1
+	 * @param ca2
+	 * @param cpparams
+	 * @return
+	 * @throws StructureException
+	 */
+	private AFPChain alignRight(Atom[] ca1, Atom[] ca2, CECPParameters cpparams)
+			throws StructureException {
 		long startTime = System.currentTimeMillis();
 
 		Atom[] ca2m = StructureTools.duplicateCA2(ca2);
@@ -137,7 +183,7 @@ public class CeCPMain extends CeMain {
 			System.out.format("Running %dx2*%d alignment took %s ms\n",ca1.length,ca2.length,System.currentTimeMillis()-startTime);
 			startTime = System.currentTimeMillis();
 		}
-		afpChain = postProcessAlignment(afpChain, ca1, ca2m, calculator);
+		afpChain = postProcessAlignment(afpChain, ca1, ca2m, calculator, cpparams);
 
 		if(debug) {
 			System.out.format("Finding CP point took %s ms\n",System.currentTimeMillis()-startTime);
@@ -146,6 +192,8 @@ public class CeCPMain extends CeMain {
 
 		return afpChain;
 	}
+
+
 
 	/** Circular permutation specific code to be run after the standard CE alignment
 	 * 
@@ -156,6 +204,19 @@ public class CeCPMain extends CeMain {
 	 * @throws StructureException
 	 */
 	public static AFPChain postProcessAlignment(AFPChain afpChain, Atom[] ca1, Atom[] ca2m,CECalculator calculator ) throws StructureException{
+		return postProcessAlignment(afpChain, ca1, ca2m, calculator, null);
+	}
+
+	/** Circular permutation specific code to be run after the standard CE alignment
+	 * 
+	 * @param afpChain The finished alignment
+	 * @param ca1 CA atoms of the first protein
+	 * @param ca2m A duplicated copy of the second protein
+	 * @param calculator The CECalculator used to create afpChain
+	 * @param param Parameters
+	 * @throws StructureException
+	 */
+	public static AFPChain postProcessAlignment(AFPChain afpChain, Atom[] ca1, Atom[] ca2m,CECalculator calculator, CECPParameters param ) throws StructureException{
 
 		// remove bottom half of the matrix
 		Matrix doubledMatrix = afpChain.getDistanceMatrix();
@@ -174,9 +235,90 @@ public class CeCPMain extends CeMain {
 		// Check for circular permutations
 		int alignLen = afpChain.getOptLength();
 		if ( alignLen > 0) {
-			afpChain = filterDuplicateAFPs(afpChain,calculator,ca1,ca2m);
+			afpChain = filterDuplicateAFPs(afpChain,calculator,ca1,ca2m,param);
 		}
 		return afpChain;
+	}
+
+	/**
+	 * Swaps the order of structures in an AFPChain
+	 * @param a
+	 * @return
+	 */
+	public AFPChain invertAlignment(AFPChain a) {
+		String name1 = a.getName1();
+		String name2 = a.getName2();
+		a.setName1(name2);
+		a.setName2(name1);
+		
+		int len1 = a.getCa1Length();
+		a.setCa1Length( a.getCa2Length() );
+		a.setCa2Length( len1 );
+		
+		int beg1 = a.getAlnbeg1();
+		a.setAlnbeg1(a.getAlnbeg2());
+		a.setAlnbeg2(beg1);
+		
+		char[] alnseq1 = a.getAlnseq1();
+		a.setAlnseq1(a.getAlnseq2());
+		a.setAlnseq2(alnseq1);
+		
+		Matrix distab1 = a.getDisTable1();
+		a.setDisTable1(a.getDisTable2());
+		a.setDisTable2(distab1);
+		
+		int[] focusRes1 = a.getFocusRes1();
+		a.setFocusRes1(a.getFocusRes2());
+		a.setFocusRes2(focusRes1);
+		
+		//What are aftIndex and befIndex used for? How are they indexed?
+		//a.getAfpAftIndex()
+		
+
+		String[][][] pdbAln = a.getPdbAln();
+		if( pdbAln != null) {
+			for(int block = 0; block < a.getBlockNum(); block++) {
+				String[] paln1 = pdbAln[block][0];
+				pdbAln[block][0] = pdbAln[block][1];
+				pdbAln[block][1] = paln1;
+			}
+		}
+		
+		int[][][] optAln = a.getOptAln();
+		if( optAln != null ) {
+			for(int block = 0; block < a.getBlockNum(); block++) {
+				int[] aln1 = optAln[block][0];
+				optAln[block][0] = optAln[block][1];
+				optAln[block][1] = aln1;
+			}
+		}
+		a.setOptAln(optAln); // triggers invalidate()
+		
+		Matrix distmat = a.getDistanceMatrix();
+		if(distmat != null)
+			a.setDistanceMatrix(distmat.transpose());
+		
+		
+		// invert the rotation matrices
+		Matrix[] blockRotMat = a.getBlockRotationMatrix();
+		Atom[] shiftVec = a.getBlockShiftVector();
+		if( blockRotMat != null) {
+			for(int block = 0; block < a.getBlockNum(); block++) {
+				if(blockRotMat[block] != null) {
+					// if y=x*A+b, then x=y*inv(A)-b*inv(A)
+					blockRotMat[block] = blockRotMat[block].inverse();
+
+					Calc.rotate(shiftVec[block],blockRotMat[block]);
+					try {
+						shiftVec[block] = Calc.invert(shiftVec[block]);
+					} catch (StructureException e) {
+						// Never thrown
+					}
+				}
+			}
+		}
+
+		return a;
 	}
 
 	/**
@@ -198,12 +340,18 @@ public class CeCPMain extends CeMain {
 	 * @throws StructureException 
 	 */
 	public static AFPChain filterDuplicateAFPs(AFPChain afpChain, CECalculator ceCalc, Atom[] ca1, Atom[] ca2duplicated) throws StructureException {
-		return filterDuplicateAFPs(afpChain, ceCalc, ca1, ca2duplicated, DEFAULT_MIN_CP_LENGTH);
+		return filterDuplicateAFPs(afpChain, ceCalc, ca1, ca2duplicated, null);
 	}
 	public static AFPChain filterDuplicateAFPs(AFPChain afpChain, CECalculator ceCalc,
-			Atom[] ca1, Atom[] ca2duplicated, int minCPlength) throws StructureException {		
+			Atom[] ca1, Atom[] ca2duplicated, CECPParameters params) throws StructureException {		
 		AFPChain newAFPChain = new AFPChain(afpChain);
 
+		if(params == null)
+			params = new CECPParameters();
+		
+		final int minCPlength = params.getMinCPLength();
+		
+		
 		int ca2len = afpChain.getCa2Length()/2;
 		newAFPChain.setCa2Length(ca2len);
 
@@ -349,46 +497,58 @@ public class CeCPMain extends CeMain {
 		for(List<ResiduePair> block:blocks ) {
 			for(ResiduePair pair:block) {
 				atoms1[pos] = ca1[pair.a];
-				atoms2[pos] = ca2duplicated[pair.b];
+				// Clone residue to allow modification
+				Atom atom2 = ca2duplicated[pair.b];
+				Group g = (Group) atom2.getGroup().clone();
+				atoms2[pos] = g.getAtom( atom2.getFullName() );
 				pos++;
 			}
 		}
 		assert(pos == alignLen);
-
+		
 		// Sets the rotation matrix in ceCalc to the proper value
 		double rmsd = -1;
+		double tmScore = 0.;
 		double[] blockRMSDs = new double[blocks.size()];
 		Matrix[] blockRotationMatrices = new Matrix[blocks.size()];
 		Atom[] blockShifts = new Atom[blocks.size()];
 
 		if(alignLen>0) {
-			rmsd = ceCalc.calc_rmsd(atoms1, atoms2, alignLen, true, false);
-			blockRMSDs[0] = rmsd;
-			blockRotationMatrices[0] = ceCalc.getRotationMatrix();
-			blockShifts[0] = ceCalc.getShift();
+			// superimpose
+			SVDSuperimposer svd = new SVDSuperimposer(atoms1, atoms2);
+
+			Matrix matrix = svd.getRotation();
+			Atom shift = svd.getTranslation();
+
+			for( Atom a : atoms2 ) {
+				Calc.rotate(a.getGroup(), matrix);
+				Calc.shift(a, shift);
+			}
+			
+			//and get overall rmsd
+			rmsd = SVDSuperimposer.getRMS(atoms1, atoms2);
+			tmScore = SVDSuperimposer.getTMScore(atoms1, atoms2, ca1.length, ca2len);
+
+			// set all block rotations to the overall rotation
+			// It's not well documented if this is the expected behavior, but
+			// it seems to work.
+			blockRotationMatrices[0] = matrix;
+			blockShifts[0] = shift;
+			blockRMSDs[0] = -1;
 
 			for(int i=1;i<blocks.size();i++) {
-				blockRMSDs[i] = rmsd; //TODO shouldn't this be recalculated?? --sbliven
-				
-				// Don't move blocks relative to the first block
-				/*Matrix identity = new Matrix(3,3);
-			for(int j=0;j<3;j++)
-				identity.set(j, j, 1.);
-			blockRotationMatrices[i] = identity;
-
-			Atom zero = new AtomImpl();
-			zero.setX(0.); zero.setY(0.); zero.setZ(0.);
-			blockShifts[i] = zero;
-				 */
+				blockRMSDs[i] = -1; //TODO Recalculate for the FATCAT text format
 				blockRotationMatrices[i] = (Matrix) blockRotationMatrices[0].clone();
 				blockShifts[i] = (Atom) blockShifts[0].clone();
 			}
+			
 		}
 		newAFPChain.setOptRmsd(blockRMSDs);
 		newAFPChain.setBlockRmsd(blockRMSDs);
 		newAFPChain.setBlockRotationMatrix(blockRotationMatrices);
 		newAFPChain.setBlockShiftVector(blockShifts);
 		newAFPChain.setTotalRmsdOpt(rmsd);
+		newAFPChain.setTMScore( tmScore );
 		
 		// Clean up remaining properties using the FatCat helper method
 		Atom[] ca2 = new Atom[ca2len];

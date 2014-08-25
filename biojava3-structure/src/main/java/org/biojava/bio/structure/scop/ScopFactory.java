@@ -28,6 +28,7 @@ import java.util.Map;
 public class ScopFactory {
 
 	// berkeley 2
+	public static final String VERSION_2_0_4 = "2.04";
 	public static final String VERSION_2_0_3 = "2.03";
 	public static final String VERSION_2_0_2 = "2.02";
 	public static final String VERSION_2_0_1 = "2.01";
@@ -51,7 +52,7 @@ public class ScopFactory {
 	public static final String VERSION_1_55 = "1.55";
 
 	// The most recent version as of compilation time
-	public static final String LATEST_VERSION = VERSION_2_0_3;
+	public static final String LATEST_VERSION = VERSION_2_0_4;
 
 	// Hold one instance for each version
 	private static Map<String,ScopDatabase> versionedScopDBs = new HashMap<String, ScopDatabase>(); 

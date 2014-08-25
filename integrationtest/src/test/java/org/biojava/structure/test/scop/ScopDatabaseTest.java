@@ -24,13 +24,10 @@
 
 package org.biojava.structure.test.scop;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 import java.util.List;
+import java.util.regex.Pattern;
 
 import org.biojava.bio.structure.scop.ScopCategory;
 import org.biojava.bio.structure.scop.ScopDatabase;
@@ -102,7 +99,7 @@ public abstract class ScopDatabaseTest {
         desc = scop.getScopDescriptionBySunid(node.getSunid());
         assertEquals(tag,46487,node.getSunid());
         assertEquals(tag,"-",desc.getName());
-        assertEquals(tag,"Human (Homo sapiens) [TaxId: 9606]",desc.getDescription());
+        assertTrue(tag,Pattern.matches("Human \\(Homo sapiens\\)( \\[TaxId: 9606\\])?",desc.getDescription()));
         assertEquals(tag,"a.1.1.2",desc.getClassificationId());
 
         node = scop.getScopNode(node.getParentSunid());
@@ -198,6 +195,8 @@ public abstract class ScopDatabaseTest {
 
     @Test
     public void testComments() {
+    	// Note that comments change often between SCOP versions.
+    	// This test is likely to need updating after each SCOPe release.
         List<String> comments;
 
         // root node
@@ -206,13 +205,22 @@ public abstract class ScopDatabaseTest {
 
         //TODO add additional version checks, since comments change a lot
 
-        if(scop.getScopVersion().compareToIgnoreCase( ScopFactory.VERSION_1_75) <= 0 ) {
+        if(scop.getScopVersion().compareToIgnoreCase( ScopFactory.VERSION_1_71) >= 0 ) {
+            comments = scop.getComments(15016);
+            assertEquals(tag+"Wrong number of comments", 1, comments.size());
+            assertEquals(tag+"Wrong comment", "complexed with cmo, hem", comments.get(0).trim());
+            comments = scop.getComments(82738);
+            assertEquals(tag+"Wrong number of comments", 1, comments.size());
+            assertEquals(tag+"Wrong comment", "inverting reaction mechanism", comments.get(0).trim());
+        }
+        if(scop.getScopVersion().compareToIgnoreCase( ScopFactory.VERSION_1_73) >= 0 &&
+        		scop.getScopVersion().compareToIgnoreCase( ScopFactory.VERSION_1_75) <= 0) {
             // Note: only tested so far with 1.75, so may need some modification for earlier versions
 
             comments = scop.getComments(127355);
             assertEquals(tag+"Wrong number of comments", 2, comments.size());
             assertEquals(tag+"Wrong comment", "automatically matched to d2hbia_", comments.get(0).trim());
-            assertEquals(tag+"Wrong comment", "complexed with hem; mutant", comments.get(1).trim());
+            assertTrue(tag+"Wrong comment", Pattern.matches("complexed with hem(; mutant)?", comments.get(1).trim()));
         }
         if(scop.getScopVersion().compareToIgnoreCase( ScopFactory.VERSION_1_75) == 0 ) {
             comments = scop.getComments(160555);
@@ -228,11 +236,6 @@ public abstract class ScopDatabaseTest {
             assertEquals(tag+"Wrong number of comments", 2, comments.size());
             assertEquals(tag+"Wrong comment", "automated match to d2hbia_", comments.get(0).trim());
             assertEquals(tag+"Wrong comment", "complexed with hem", comments.get(1).trim());
-
-            comments = scop.getComments(160555);
-            assertEquals(tag+"Wrong number of comments", 1, comments.size());
-            assertEquals(tag+"Wrong comment", "PF06262; DUF1025; minimal zincin fold that retains 3-stranded mixed beta-sheet and contains HExxH motif in the C-terminal helix; no metal ion bound to this motif is observed in the first determined structures", comments.get(0).trim());
-
             // d3ueea_ was added in 1.75B update
             // domain
             comments = scop.getComments(190700);

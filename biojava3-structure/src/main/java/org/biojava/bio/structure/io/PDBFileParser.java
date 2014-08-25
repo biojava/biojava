@@ -1430,7 +1430,9 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 		// finish off the compound handler!
 
 
-
+		if ( line == null || line.length() < 11)
+			return;
+		
 		String l = line.substring(0,11).trim();
 		if (l.equals("REMARK   2"))pdb_REMARK_2_Handler(line);
 

@@ -212,13 +212,15 @@ implements PDBInstallation
         } catch (NumberFormatException ex){}
 
         try {
-            
-            Date dep = dateFormat.parse(spl[4]);
+            Date dep;
+            Date mod;
+            synchronized (dateFormat) {
+                dep = dateFormat.parse(spl[4]);
+                mod = dateFormat.parse(spl[5]);
+            }
             header.setDepDate(dep);
-            Date mod = dateFormat.parse(spl[5]);
             header.setModDate(mod);
-            
-        } catch (ParseException e){
+        } catch (ParseException e) {
             e.printStackTrace();
         }
         

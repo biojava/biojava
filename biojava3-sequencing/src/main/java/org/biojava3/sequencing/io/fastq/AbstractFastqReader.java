@@ -22,8 +22,9 @@ package org.biojava3.sequencing.io.fastq;
 
 import java.net.URL;
 
-import java.io.Closeable;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.IOException;
@@ -35,8 +36,6 @@ import java.util.List;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 
-import com.google.common.io.InputSupplier;
-import com.google.common.io.Files;
 import com.google.common.io.Resources;
 
 /**
@@ -56,19 +55,17 @@ abstract class AbstractFastqReader
     protected abstract FastqVariant getVariant();
 
     @Override
-    public final <R extends Readable & Closeable> void parse(final InputSupplier<R> supplier,
-                                                             final ParseListener listener)
+    public final void parse(final Readable readable, final ParseListener listener)
         throws IOException
     {
-        FastqParser.parse(supplier, listener);
+        FastqParser.parse(readable, listener);
     }
 
     @Override
-    public final <R extends Readable & Closeable> void stream(final InputSupplier<R> supplier,
-                                                              final StreamListener listener)
+    public final void stream(final Readable readable, final StreamListener listener)
         throws IOException
     {
-        StreamingFastqParser.stream(supplier, getVariant(), listener);
+        StreamingFastqParser.stream(readable, getVariant(), listener);
     }
 
     @Override
@@ -78,8 +75,25 @@ abstract class AbstractFastqReader
         {
             throw new IllegalArgumentException("file must not be null");
         }
+
+        BufferedReader reader = null;
         Collect collect = new Collect();
-        stream(Files.newReaderSupplier(file, Charset.forName("US-ASCII")), collect);
+        try
+        {
+            reader = new BufferedReader(new FileReader(file));
+            stream(reader, collect);
+        }
+        finally
+        {
+            try
+            {
+                reader.close();
+            }
+            catch (Exception e)
+            {
+                // ignore
+            }
+        }
         return collect.getResult();
     }
 
@@ -90,8 +104,25 @@ abstract class AbstractFastqReader
         {
             throw new IllegalArgumentException("url must not be null");
         }
+
+        BufferedReader reader = null;
         Collect collect = new Collect();
-        stream(Resources.newReaderSupplier(url, Charset.forName("US-ASCII")), collect);
+        try
+        {
+            reader = Resources.asCharSource(url, Charset.forName("UTF-8")).openBufferedStream();
+            stream(reader, collect);
+        }
+        finally
+        {
+            try
+            {
+                reader.close();
+            }
+            catch (Exception e)
+            {
+                // ignore
+            }
+        }
         return collect.getResult();
     }
 
@@ -102,15 +133,25 @@ abstract class AbstractFastqReader
         {
             throw new IllegalArgumentException("inputStream must not be null");
         }
+
+        BufferedReader reader = null;
         Collect collect = new Collect();
-        stream(new InputSupplier<InputStreamReader>()
-               {
-                   @Override
-                   public InputStreamReader getInput() throws IOException
-                   {
-                       return new InputStreamReader(inputStream);
-                   }
-               }, collect);
+        try
+        {
+            reader = new BufferedReader(new InputStreamReader(inputStream));
+            stream(reader, collect);
+        }
+        finally
+        {
+            try
+            {
+                reader.close();
+            }
+            catch (Exception e)
+            {
+                // ignore
+            }
+        }
         return collect.getResult();
     }
 

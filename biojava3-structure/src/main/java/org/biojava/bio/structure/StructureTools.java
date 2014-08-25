@@ -827,9 +827,15 @@ public class StructureTools {
 			String chainId = matcher.group(1);
 			Chain chain;
 
-			if(chainId.equals("_") && struc.size() == 1) {
+			if(chainId.equals("_") ) {
 				// Handle special case of "_" chain for single-chain proteins
 				chain = struc.getChain(0);
+
+				if(struc.size() != 1) {
+					// SCOP 1.71 uses this for some proteins with multiple chains
+					// Print a warning in this ambiguous case
+					System.err.format("WARNING multiple possible chains match '_'. Using chain %s.%n",chain.getChainID());
+				}
 			} else {
 				// Explicit chain
 				chain = struc.getChainByPDB(chainId);

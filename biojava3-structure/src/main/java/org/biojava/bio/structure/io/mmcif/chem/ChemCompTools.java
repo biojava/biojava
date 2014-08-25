@@ -206,7 +206,7 @@ public class ChemCompTools {
 
 
     private static boolean performDNACheck(ChemComp cc) {
-        if ( cc.getId().equals(UNKNOWN_NUCLEOTIDE))
+        if ( cc.getId().equals(UNKNOWN_NUCLEOTIDE.toString()))
             return false;
 
         Character c = getDNAOneLetter(cc.getId());
@@ -219,7 +219,7 @@ public class ChemCompTools {
 
 
     private static boolean performPeptideCheck(ChemComp cc, String one) {
-        if (one.equals(UNKNOWN_ONE_LETTER_CODE)) {
+        if (one.equals(UNKNOWN_ONE_LETTER_CODE.toString())) {
             return false;
         }
         Character c =  getAminoOneLetter(cc.getId());

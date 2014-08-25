@@ -32,6 +32,7 @@ import org.biojava.bio.structure.ResidueRange;
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureException;
 import org.biojava.bio.structure.StructureTools;
+import org.biojava.bio.structure.scop.ScopDatabase;
 import org.biojava.bio.structure.scop.ScopFactory;
 import org.junit.Before;
 import org.junit.Test;
@@ -116,6 +117,24 @@ public class AtomCacheTest {
 		assertEquals(expectedLengthE, e.getAtomGroups().size()-1);
 		List<Group> ligandsE = StructureTools.filterLigands(e.getAtomGroups());
 		assertEquals(1, ligandsE.size());
+	}
+	
+	/**
+	 * Test parsing of chain-less ranges (present in SCOP < 1.73)
+	 * @throws IOException
+	 * @throws StructureException
+	 */
+	@Test
+	public void testGetStructureForChainlessDomains() throws IOException, StructureException {
+		ScopDatabase scop = ScopFactory.getSCOP(ScopFactory.VERSION_1_71); // Uses the range '1-135' without a chain
+		Structure structure = cache.getStructureForDomain("d1hcy_1",scop);
+		assertEquals(1, structure.getChains().size());
+		Chain a = structure.getChainByPDB("A");
+		int expectedLengthA = 135+4;
+		assertEquals(expectedLengthA, a.getAtomGroups().size());
+		List<Group> ligandsE = StructureTools.filterLigands(a.getAtomGroups());
+		assertEquals(4, ligandsE.size());
+
 	}
 	
 }

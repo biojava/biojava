@@ -23,9 +23,10 @@
 package org.biojava3.core.sequence.location;
 
 import org.biojava3.core.sequence.Strand;
+import org.biojava3.core.sequence.location.template.Location;
 import org.biojava3.core.sequence.template.AbstractSequence;
 import org.biojava3.core.sequence.template.Compound;
-
+import java.util.List;
 /**
  * A location in a sequence that keeps a reference to its parent sequence
  * @author Scooter Willis <willishf at gmail dot com>
@@ -36,6 +37,13 @@ private S sequence;
         super(start,end);
         this.sequence = sequence;
 
+    }
+
+
+    public SequenceLocation(int start, int end, S sequence, Strand strand, boolean circular, List<Location> subLocations) {
+        super(new SimplePoint(start), new SimplePoint(end), strand, circular, subLocations);
+
+        this.sequence = sequence;
     }
 
     public SequenceLocation(int start, int end,S sequence, Strand strand){
