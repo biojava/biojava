@@ -8,7 +8,7 @@
 	</parent>
 
 	<artifactId>protein-comparison-tool</artifactId>
-	<packaging>pom</packaging>
+	<packaging>jar</packaging>
 	<name>protein-comparison-tool</name>
 	<url>http://source.rcsb.org</url>
 	<properties>	

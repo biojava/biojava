@@ -7,7 +7,7 @@
     <version>4.0.0-SNAPSHOT</version>
   </parent>
   <artifactId>integrationtest</artifactId>
-  <packaging>pom</packaging>
+  <packaging>jar</packaging>
   <name>integrationtest</name>
   <url>http://www.biojava.org</url>
   <properties>

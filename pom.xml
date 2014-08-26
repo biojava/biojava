@@ -254,20 +254,6 @@
 					<version>2.12</version>
 				</plugin>
 
-				<!-- required for OSSRH release, see http://central.sonatype.org/pages/how-to-generate-pgp-signatures-with-maven.html -->
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-release-plugin</artifactId>
-					<version>2.5</version>
-					<configuration>
-						<autoVersionSumodules>true</autoVersionSumodules>
-						<!--<mavenExecutorId>forked-path</mavenExecutorId> -->
-						<!--<useReleaseProfile>false</useReleaseProfile> -->
-						<!--<arguments>${arguments} -Psonatype-oss-release</arguments> -->
-					</configuration>
-				</plugin>
-
-
 			</plugins>
 		</pluginManagement>
 
