@@ -309,11 +309,7 @@ public class CeCPMain extends CeMain {
 					blockRotMat[block] = blockRotMat[block].inverse();
 
 					Calc.rotate(shiftVec[block],blockRotMat[block]);
-					try {
-						shiftVec[block] = Calc.invert(shiftVec[block]);
-					} catch (StructureException e) {
-						// Never thrown
-					}
+					shiftVec[block] = Calc.invert(shiftVec[block]);
 				}
 			}
 		}
