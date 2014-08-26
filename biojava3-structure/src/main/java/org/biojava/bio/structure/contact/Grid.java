@@ -234,7 +234,7 @@ public class Grid {
 	 */
 	public AtomContactSet getContacts() {
 		
-		AtomContactSet contacts = new AtomContactSet();
+		AtomContactSet contacts = new AtomContactSet(cutoff);
 
 		// if the 2 sets of atoms are not overlapping they are too far away and no need to calculate anything
 		// this won't apply if there's only one set of atoms (iAtoms), where we would want all-to-all contacts

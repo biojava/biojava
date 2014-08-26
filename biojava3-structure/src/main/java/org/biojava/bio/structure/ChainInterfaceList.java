@@ -11,7 +11,12 @@ import java.util.TreeMap;
 import org.biojava.bio.structure.asa.AsaCalculator;
 
 
-
+/**
+ * A list of interfaces between 2 polymer (protein/nucleotide) chains 
+ * 
+ * @author duarte_j
+ *
+ */
 public class ChainInterfaceList implements Serializable, Iterable<ChainInterface> {
 
 	private static final long serialVersionUID = 1L;
@@ -55,10 +60,9 @@ public class ChainInterfaceList implements Serializable, Iterable<ChainInterface
 	 * Also sorts the interfaces based on calculated BSA areas (descending) 
 	 * @param nSpherePoints
 	 * @param nThreads
-	 * @param hetAtoms whether to use any HET atoms that are part of the chain
 	 * @param cofactorSizeToUse the minimum size of cofactor molecule (non-chain HET atoms) that will be used
 	 */
-	public void calcAsas(int nSpherePoints, int nThreads, boolean hetAtoms, int cofactorSizeToUse) {
+	public void calcAsas(int nSpherePoints, int nThreads, int cofactorSizeToUse) {
 				
 		// asa/bsa calculation 
 		// NOTE in principle it is more efficient to calculate asas only once per unique chain
@@ -77,8 +81,8 @@ public class ChainInterfaceList implements Serializable, Iterable<ChainInterface
 			String molecId1 = interf.getChains().getFirst().getChainID()+interf.getTransforms().getFirst().getTransformId();
 			String molecId2 = interf.getChains().getSecond().getChainID()+interf.getTransforms().getSecond().getTransformId();
 			
-			uniqAsaChains.put(molecId1, interf.getFirstAtoms(hetAtoms, cofactorSizeToUse)); 
-			uniqAsaChains.put(molecId2, interf.getSecondAtoms(hetAtoms, cofactorSizeToUse));
+			uniqAsaChains.put(molecId1, interf.getFirstAtoms(cofactorSizeToUse)); 
+			uniqAsaChains.put(molecId2, interf.getSecondAtoms(cofactorSizeToUse));
 		}
 		
 		long start = System.currentTimeMillis();
@@ -108,7 +112,7 @@ public class ChainInterfaceList implements Serializable, Iterable<ChainInterface
 			String molecId1 = interf.getChains().getFirst().getChainID()+interf.getTransforms().getFirst().getTransformId();
 			String molecId2 = interf.getChains().getSecond().getChainID()+interf.getTransforms().getSecond().getTransformId();
 			
-			interf.setAsas(chainAsas.get(molecId1), chainAsas.get(molecId2), nSpherePoints, nThreads, hetAtoms, cofactorSizeToUse);
+			interf.setAsas(chainAsas.get(molecId1), chainAsas.get(molecId2), nSpherePoints, nThreads, cofactorSizeToUse);
 			
 		}
 		end = System.currentTimeMillis();

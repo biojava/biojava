@@ -320,8 +320,6 @@ public class StructureTools {
 	 */
 	public static final Atom[] getAllNonHAtomArray(Chain c, boolean hetAtoms) {
 		List<Atom> atoms = new ArrayList<Atom>();
-
-
 		
 		for (Group g:c.getAtomGroups()){
 			for (Atom a:g.getAtoms()) {
@@ -335,7 +333,85 @@ public class StructureTools {
 		}
 		return (Atom[]) atoms.toArray(new Atom[atoms.size()]);			
 	}
+	
+	/**
+	 * Returns and array of all non-Hydrogen atoms in the given Structure, including all
+	 * peptide-linked HETATOM groups, but not HETATOMS with fewer than minSizeHetAtomToInclude 
+	 * non-Hydrogen atoms.
+	 * @param s
+	 * @param minSizeHetAtomToInclude HETATOMs (non-peptide linked) with fewer number of 
+	 * non-Hydrogen atoms are not included
+	 * @return
+	 */
+	public static final Atom[] getAllNonHAtomArray(Structure s, int minSizeHetAtomToInclude) {
+		List<Atom> atoms = new ArrayList<Atom>();
 
+
+		AtomIterator iter = new AtomIterator(s);
+		while (iter.hasNext()){
+			Atom a = iter.next();
+			if (a.getElement()==Element.H) continue;
+
+			Group g = a.getGroup();
+
+			if (g.getType().equals(GroupType.HETATM) && 
+					g.getChemComp().getPolymerType() != PolymerType.peptide &&
+					getSizeNoH(g)<minSizeHetAtomToInclude) {
+					
+				continue;	
+			}
+
+
+			atoms.add(a);
+		}
+		return (Atom[]) atoms.toArray(new Atom[atoms.size()]);			
+	}
+
+	/**
+	 * Returns and array of all non-Hydrogen atoms in the given Chain, including all
+	 * peptide-linked HETATOM groups, but not HETATOMS with fewer than minSizeHetAtomToInclude
+	 * non-Hydrogen atoms.
+	 * @param c
+	 * @param minSizeHetAtomToInclude HETATOMs (non-peptide linked) with fewer number of 
+	 * non-Hydrogen atoms are not included
+	 * @return
+	 */
+	public static final Atom[] getAllNonHAtomArray(Chain c, int minSizeHetAtomToInclude) {
+		List<Atom> atoms = new ArrayList<Atom>();
+		
+		for (Group g:c.getAtomGroups()){
+			
+			if (g.getType().equals(GroupType.HETATM) && 
+				g.getChemComp().getPolymerType() != PolymerType.peptide &&
+				getSizeNoH(g)<minSizeHetAtomToInclude) {
+				
+				continue;	
+			}
+			
+			for (Atom a:g.getAtoms()) {
+
+				if (a.getElement()==Element.H) continue;
+
+				atoms.add(a);
+			}
+		}
+		return (Atom[]) atoms.toArray(new Atom[atoms.size()]);			
+	}
+	
+	/**
+	 * Calculates the number of non-Hydrogen atoms in the given group 
+	 * @param g
+	 * @return
+	 */
+	private static int getSizeNoH(Group g) {
+		int size = 0;
+		for (Atom a:g.getAtoms()) {
+			if (a.getElement()!=Element.H) 
+				size++;
+		}
+		return size;
+	}
+	
 	private static void extractCAatoms(String[] atomNames, List<Chain> chains,
 			List<Atom> atoms) {
 		for ( Chain c : chains) {

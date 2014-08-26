@@ -50,7 +50,7 @@ public class UnitCellBoundingBox {
 		
 		int i = 0;
 		for (Chain chain:s.getChains()) {
-			chainBbs[0][i] = new BoundingBox(StructureTools.getAllNonHAtomArray(chain, includeHetAtoms));;
+			chainBbs[0][i] = new BoundingBox(StructureTools.getAllNonHAtomArray(chain, includeHetAtoms));
 			i++;
 		}
 		

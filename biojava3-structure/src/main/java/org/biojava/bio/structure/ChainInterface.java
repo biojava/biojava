@@ -14,7 +14,7 @@ import org.biojava.bio.structure.xtal.CrystalTransform;
 
 
 /**
- * An interface between 2 protein chains.
+ * An interface between 2 polymer (protein/nucleotide) chains.
  * 
  * @author duarte_j
  *
@@ -85,9 +85,9 @@ public class ChainInterface implements Serializable, Comparable<ChainInterface> 
 		return transforms;
 	}
 
-	protected void setAsas(double[] asas1, double[] asas2, int nSpherePoints, int nThreads, boolean hetAtoms, int cofactorSizeToUse) {
+	protected void setAsas(double[] asas1, double[] asas2, int nSpherePoints, int nThreads, int cofactorSizeToUse) {
 		
-		Atom[] atoms = getAtoms(hetAtoms, cofactorSizeToUse);
+		Atom[] atoms = getAtoms(cofactorSizeToUse);
 		AsaCalculator asaCalc = new AsaCalculator(atoms, 
 				AsaCalculator.DEFAULT_PROBE_SIZE, nSpherePoints, nThreads);
 		
@@ -140,29 +140,23 @@ public class ChainInterface implements Serializable, Comparable<ChainInterface> 
 		 
 	}
 	
-	protected Atom[] getFirstAtoms(boolean hetAtoms, int cofactorSizeToUse) {
-		// TODO we need to take hetAtoms into account (those within peptide chain or nucleotide chain)
-		// TODO we should do this based on the cofactor size cutoff given
-		boolean  USE_HETATOMS_FOR_ASA = false;
-				
-		Atom[] atoms1 = StructureTools.getAllNonHAtomArray(chains.getFirst(), USE_HETATOMS_FOR_ASA);		
+	protected Atom[] getFirstAtoms(int cofactorSizeToUse) {
+		
+		Atom[] atoms1 = StructureTools.getAllNonHAtomArray(chains.getFirst(), cofactorSizeToUse);		
 		
 		return atoms1;		
 	}
 	
-	protected Atom[] getSecondAtoms(boolean hetAtoms, int cofactorSizeToUse) {
-		// TODO we need to take hetAtoms into account (those within peptide chain or nucleotide chain)
-		// TODO we should do this based on the cofactor size cutoff given
-		boolean  USE_HETATOMS_FOR_ASA = false;
-						
-		Atom[] atoms2 = StructureTools.getAllNonHAtomArray(chains.getSecond(), USE_HETATOMS_FOR_ASA);
+	protected Atom[] getSecondAtoms(int cofactorSizeToUse) {
+		
+		Atom[] atoms2 = StructureTools.getAllNonHAtomArray(chains.getSecond(), cofactorSizeToUse);
 		
 		return atoms2;
 	}
 	
-	protected Atom[] getAtoms(boolean hetAtoms, int cofactorSizeToUse) {
-		Atom[] atoms1 = getFirstAtoms(hetAtoms, cofactorSizeToUse);
-		Atom[] atoms2 = getSecondAtoms(hetAtoms, cofactorSizeToUse);
+	protected Atom[] getAtoms(int cofactorSizeToUse) {
+		Atom[] atoms1 = getFirstAtoms(cofactorSizeToUse);
+		Atom[] atoms2 = getSecondAtoms(cofactorSizeToUse);
 		
 		Atom[] atoms = new Atom[atoms1.length+atoms2.length];
 		for (int i=0;i<atoms1.length;i++) {
@@ -195,18 +189,36 @@ public class ChainInterface implements Serializable, Comparable<ChainInterface> 
 		return ((isSymRelated() && transforms.getSecond().getTransformType().isInfinite()));
 	}
 
+	/**
+	 * Gets a map of ResidueNumbers to GroupAsas for all groups of first chain.
+	 * @return
+	 */
 	public Map<ResidueNumber, GroupAsa> getFirstGroupAsas() {
 		return groupAsas1;
 	}
 	
+	/**
+	 * Gets the GroupAsa for the corresponding residue number of first chain
+	 * @param resNum
+	 * @return
+	 */
 	public GroupAsa getFirstGroupAsa(ResidueNumber resNum) {
 		return groupAsas1.get(resNum);
 	}
 	
+	/**
+	 * Gets a map of ResidueNumbers to GroupAsas for all groups of second chain.
+	 * @return
+	 */
 	public Map<ResidueNumber, GroupAsa> getSecondGroupAsas() {
 		return groupAsas2;
 	}
 
+	/**
+	 * Gets the GroupAsa for the corresponding residue number of second chain
+	 * @param resNum
+	 * @return
+	 */
 	public GroupAsa getSecondGroupAsa(ResidueNumber resNum) {
 		return groupAsas2.get(resNum);
 	}
