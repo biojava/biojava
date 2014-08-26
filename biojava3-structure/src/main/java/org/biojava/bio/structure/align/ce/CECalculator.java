@@ -59,7 +59,6 @@ import org.biojava3.core.sequence.compound.AminoAcidCompoundSet;
 public class CECalculator {
 
 	protected static final boolean isPrint = false;
-	private static final boolean showAlignmentSteps = false;
 	private static final boolean debug = false;  
 
 	int[] f1;
@@ -1038,7 +1037,7 @@ nBestTrace=nTrace;
 		}
 		//sup_str(strBuf1, strBuf2, strLen, d_);
 
-		rmsd=calc_rmsd(strBuf1, strBuf2, strLen,true,showAlignmentSteps);
+		rmsd=calc_rmsd(strBuf1, strBuf2, strLen,true);
 
 		if ( isPrint)
 			System.out.println("got first rmsd: " + rmsd);
@@ -1086,7 +1085,7 @@ nBestTrace=nTrace;
 									is+=traceLen[jt];
 								}
 								//sup_str(strBuf1, strBuf2, strLen, d_);
-								rmsdNew=calc_rmsd(strBuf1, strBuf2, strLen, true, false);
+								rmsdNew=calc_rmsd(strBuf1, strBuf2, strLen, true);
 								//System.out.println(String.format("step %d %d %d %.2f old: %.2f", it, idir, idep, rmsdNew, rmsd));
 								if(rmsdNew<rmsd) {
 
@@ -1106,8 +1105,7 @@ nBestTrace=nTrace;
 							}
 					}
 			}
-		//if ( showAlignmentSteps)
-		rmsdNew=calc_rmsd(strBuf1, strBuf2, strLen,true, showAlignmentSteps);
+		rmsdNew=calc_rmsd(strBuf1, strBuf2, strLen,true);
 		if ( isPrint)
 			System.out.println("rmsdNew: " + rmsdNew + " rmsd " + rmsd);
 		afpChain.setTotalRmsdIni(rmsdNew);
@@ -1275,7 +1273,7 @@ nBestTrace=nTrace;
 			is+=winSize;
 		}
 		//sup_str(strBuf1, strBuf2, bestTracesN[ir]*winSize, d_);
-		double rmsdNew=calc_rmsd(strBuf1, strBuf2, bestTracesN[ir]*winSize, true, false);
+		double rmsdNew=calc_rmsd(strBuf1, strBuf2, bestTracesN[ir]*winSize, true);
 		return rmsdNew;
 
 	}
@@ -1303,7 +1301,7 @@ nBestTrace=nTrace;
 		}
 
 		//sup_str(strBuf1, strBuf2, nBestTrace*winSize, d_);
-		double rmsdNew=calc_rmsd(strBuf1, strBuf2, nBestTrace*winSize, true, false);
+		double rmsdNew=calc_rmsd(strBuf1, strBuf2, nBestTrace*winSize, true);
 		//afpChain.setTotalRmsdIni(rmsdNew);
 
 
@@ -1439,7 +1437,7 @@ nBestTrace=nTrace;
 
 			//sup_str(strBuf1, strBuf2, nAtom, _d);
 			// here we don't store the rotation matrix for the user!
-			rmsd= calc_rmsd(strBuf1, strBuf2, nAtom,false, false);
+			rmsd= calc_rmsd(strBuf1, strBuf2, nAtom,false);
 			if ( isPrint )
 				System.out.println("iter: " + counter + " nAtom " + nAtom + " rmsd: " + rmsd);
 			//afpChain.setTotalRmsdOpt(rmsd);
@@ -1887,11 +1885,25 @@ nBestTrace=nTrace;
 	 * @param pro2
 	 * @param strLen
 	 * @param storeTransform
-	 * @param show
+	 * @param show Ignored. Formerly displayed the superposition with jmol.
+	 * @return RMSD
+	 * @throws StructureException
+	 * @deprecated Use {@link #calc_rmsd(Atom[],Atom[],int,boolean)} instead
+	 */
+	public double calc_rmsd(Atom[] pro1, Atom[] pro2, int strLen, boolean storeTransform, boolean show) throws StructureException {
+		return calc_rmsd(pro1, pro2, strLen, storeTransform);
+	}
+
+	/** superimpose and get rmsd
+	 * 
+	 * @param pro1
+	 * @param pro2
+	 * @param strLen Number of atoms from pro1 and pro2 to use
+	 * @param storeTransform Store rotation and shift matrices locally
 	 * @return RMSD
 	 * @throws StructureException
 	 */
-	public double calc_rmsd(Atom[] pro1, Atom[] pro2, int strLen, boolean storeTransform, boolean show) throws StructureException {
+	public double calc_rmsd(Atom[] pro1, Atom[] pro2, int strLen, boolean storeTransform) throws StructureException {
 
 		Atom[] cod1 = getAtoms(pro1,  strLen,false);
 		Atom[] cod2 = getAtoms(pro2,  strLen,true);
@@ -1907,24 +1919,9 @@ nBestTrace=nTrace;
 			t = shift;
 		}
 		for (Atom a : cod2){
-
 			Calc.rotate(a.getGroup(), matrix);
 			Calc.shift(a.getGroup(),  shift);
-			//Calc.rotate(a,r);
-			//Calc.shift(a,t);
 		}
-		//		if ( show){
-		//			StructureAlignmentJmol jmol = new StructureAlignmentJmol();
-		//
-		//			jmol.setAtoms(cod1);
-		//			jmol.evalString("select * ; wireframe off; spacefill off;  backbone on; color chain; select ligand;color cpk; wireframe 40;spacefill 120;  ");
-		//			jmol.setTitle("calCaRmsd - pdb1");
-		//
-		//			StructureAlignmentJmol jmol2 = new StructureAlignmentJmol();
-		//			jmol2.setAtoms(cod2);
-		//			jmol2.evalString("select * ; wireframe off; spacefill off;  backbone on; color chain; select ligand;color cpk; wireframe 40;spacefill 120;  ");
-		//			jmol2.setTitle("calCaRmsd - pdb2");
-		//		}
 		return SVDSuperimposer.getRMS(cod1, cod2);
 
 	}
@@ -2305,7 +2302,7 @@ nBestTrace=nTrace;
 
 	 /**
 	  * Gets the rotation matrix from the last call to 
-	  * {@link #calc_rmsd(Atom[], Atom[], int, boolean, boolean) calc_rmsd}.
+	  * {@link #calc_rmsd(Atom[], Atom[], int, boolean) calc_rmsd}.
 	  * @return The rotatiokn matrix
 	  */
 	 public Matrix getRotationMatrix() {
@@ -2314,7 +2311,7 @@ nBestTrace=nTrace;
 
 	 /**
 	  * Gets the shift from the last call to 
-	  * {@link #calc_rmsd(Atom[], Atom[], int, boolean, boolean) calc_rmsd}.
+	  * {@link #calc_rmsd(Atom[], Atom[], int, boolean) calc_rmsd}.
 	  * @return The shift
 	  */
 	 public Atom getShift() {

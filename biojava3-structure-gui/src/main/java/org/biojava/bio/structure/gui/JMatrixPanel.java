@@ -221,7 +221,7 @@ public class JMatrixPanel extends JPanel{
 				if ( ! start){
 					//g.drawLine(xold+1,yold,x1+1,y1);
 					
-					g2D.draw(new Line2D.Double(xold,yold,x1,y1));
+					//g2D.draw(new Line2D.Double(xold,yold,x1,y1));
 					g.fillRect(xold,yold,2,2);
 				} else {
 					g.fillRect(x1,y1, w2, w2);

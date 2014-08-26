@@ -781,7 +781,7 @@ public class AlignmentTools {
 	 * @param ca1
 	 * @param ca2 Second set of ca atoms. Will be modified based on the superposition
 	 * @throws StructureException
-	 * @see {@link CECalculator#calc_rmsd(Atom[], Atom[], int, boolean, boolean)}
+	 * @see {@link CECalculator#calc_rmsd(Atom[], Atom[], int, boolean)}
 	 *  contains much of the same code, but stores results in a CECalculator
 	 *  instance rather than an AFPChain
 	 */
