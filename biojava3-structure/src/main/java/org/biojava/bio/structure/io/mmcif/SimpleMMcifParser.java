@@ -28,7 +28,9 @@ import java.io.InputStreamReader;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.logging.Logger;
 
 import org.biojava.bio.structure.Structure;
@@ -161,6 +163,7 @@ public class SimpleMMcifParser implements MMcifParser {
 
 		List<String> loopFields = new ArrayList<String>();
 		List<String> lineData   = new ArrayList<String>();
+		Set<String> loopWarnings = new HashSet<String>(); // used only to reduce logging statements
 
 		String category = null;
 
@@ -185,6 +188,7 @@ public class SimpleMMcifParser implements MMcifParser {
 					lineData.clear();
 					category=null;
 					loopFields.clear();
+					loopWarnings.clear();
 					continue;
 
 
@@ -218,7 +222,7 @@ public class SimpleMMcifParser implements MMcifParser {
 
 					}
 
-					endLineChecks(category, loopFields,lineData);
+					endLineChecks(category, loopFields,lineData, loopWarnings);
 
 					lineData.clear();
 
@@ -229,6 +233,7 @@ public class SimpleMMcifParser implements MMcifParser {
 
 				if ( line.startsWith(LOOP_START)){
 					loopFields.clear();
+					loopWarnings.clear();
 					inLoop = true;
 					category=null;
 					lineData.clear();
@@ -236,9 +241,10 @@ public class SimpleMMcifParser implements MMcifParser {
 				} else if (line.startsWith(LOOP_END)){
 					inLoop = false;
 					if ( category != null)
-						endLineChecks(category, loopFields, lineData);
+						endLineChecks(category, loopFields, lineData, loopWarnings);
 					category = null;
 					loopFields.clear();
+					loopWarnings.clear();
 					lineData.clear();
 				} else {
 					// a boring normal line
@@ -469,7 +475,8 @@ public class SimpleMMcifParser implements MMcifParser {
 	}
 
 
-	private void endLineChecks(String category,List<String> loopFields, List<String> lineData ) throws IOException{
+
+	private void endLineChecks(String category,List<String> loopFields, List<String> lineData, Set<String> loopWarnings ) throws IOException{
 
 
 		/*System.out.println("parsed the following data: " +category + " fields: "+
@@ -491,146 +498,146 @@ public class SimpleMMcifParser implements MMcifParser {
 
 			Entity e =  (Entity) buildObject(
 					Entity.class.getName(),
-					loopFields,lineData);
+					loopFields,lineData, loopWarnings);
 			triggerNewEntity(e);
 
 		} else if ( category.equals("_struct")){
 
 			struct =  (Struct) buildObject(
 					Struct.class.getName(),
-					loopFields, lineData);
+					loopFields, lineData, loopWarnings);
 
 		} else if ( category.equals("_atom_site")){
 
 			AtomSite a = (AtomSite) buildObject(
 					AtomSite.class.getName(),
-					loopFields, lineData);
+					loopFields, lineData, loopWarnings);
 			triggerNewAtomSite(a);
 
 		} else if ( category.equals("_database_PDB_rev")){
 			DatabasePDBrev dbrev = (DatabasePDBrev) buildObject(
 					DatabasePDBrev.class.getName(),
-					loopFields, lineData);
+					loopFields, lineData, loopWarnings);
 
 			triggerNewDatabasePDBrev(dbrev);
 
 		} else if (  category.equals("_database_PDB_remark")){
 			DatabasePDBremark remark = (DatabasePDBremark) buildObject(
 					DatabasePDBremark.class.getName(),
-					loopFields, lineData);
+					loopFields, lineData, loopWarnings);
 
 			triggerNewDatabasePDBremark(remark);
 
 		} else if ( category.equals("_exptl")){
 			Exptl exptl  = (Exptl) buildObject(
 					Exptl.class.getName(),
-					loopFields,lineData);
+					loopFields,lineData, loopWarnings);
 
 			triggerExptl(exptl);
 
 		} else if ( category.equals("_cell")){
 			Cell cell  = (Cell) buildObject(
 					Cell.class.getName(),
-					loopFields,lineData);
+					loopFields,lineData, loopWarnings);
 
 			triggerCell(cell);
 
 		} else if ( category.equals("_symmetry")){
 			Symmetry symmetry  = (Symmetry) buildObject(
 					Symmetry.class.getName(),
-					loopFields,lineData);
+					loopFields,lineData, loopWarnings);
 
 			triggerSymmetry(symmetry);
 
 		} else if ( category.equals("_struct_ref")){
 			StructRef sref  = (StructRef) buildObject(
 					StructRef.class.getName(),
-					loopFields,lineData);
+					loopFields,lineData, loopWarnings);
 
 			triggerNewStrucRef(sref);
 
 		} else if ( category.equals("_struct_ref_seq")){
 			StructRefSeq sref  = (StructRefSeq) buildObject(
 					StructRefSeq.class.getName(),
-					loopFields,lineData);
+					loopFields,lineData, loopWarnings);
 
 			triggerNewStrucRefSeq(sref);
 		} else if ( category.equals("_entity_poly_seq")){
 			EntityPolySeq exptl  = (EntityPolySeq) buildObject(
 					EntityPolySeq.class.getName(),
-					loopFields,lineData);
+					loopFields,lineData, loopWarnings);
 
 			triggerNewEntityPolySeq(exptl);
 		} else if ( category.equals("_entity_src_gen")){
 			EntitySrcGen entitySrcGen = (EntitySrcGen) buildObject(
 					EntitySrcGen.class.getName(),
-					loopFields,lineData);
+					loopFields,lineData, loopWarnings);
 			triggerNewEntitySrcGen(entitySrcGen);
 		} else if ( category.equals("_entity_src_nat")){
 			EntitySrcNat entitySrcNat = (EntitySrcNat) buildObject(
 					EntitySrcNat.class.getName(),
-					loopFields,lineData);
+					loopFields,lineData, loopWarnings);
 			triggerNewEntitySrcNat(entitySrcNat);
 		} else if ( category.equals("_entity_src_syn")){
 			EntitySrcSyn entitySrcSyn = (EntitySrcSyn) buildObject(
 					EntitySrcSyn.class.getName(),
-					loopFields,lineData);
+					loopFields,lineData, loopWarnings);
 			triggerNewEntitySrcSyn(entitySrcSyn);
 		} else if ( category.equals("_struct_asym")){
 			StructAsym sasym  = (StructAsym) buildObject(
-					StructAsym.class.getName(),					
-					loopFields,lineData);
+					StructAsym.class.getName(),
+					loopFields,lineData, loopWarnings);
 
 			triggerNewStructAsym(sasym);
 
 		} else if ( category.equals("_pdbx_poly_seq_scheme")){
 			PdbxPolySeqScheme ppss  = (PdbxPolySeqScheme) buildObject(
 					PdbxPolySeqScheme.class.getName(),
-					loopFields,lineData);
+					loopFields,lineData, loopWarnings);
 
 			triggerNewPdbxPolySeqScheme(ppss);
 
 		} else if ( category.equals("_pdbx_nonpoly_scheme")){
 			PdbxNonPolyScheme ppss  = (PdbxNonPolyScheme) buildObject(
 					PdbxNonPolyScheme.class.getName(),
-					loopFields,lineData);
+					loopFields,lineData, loopWarnings);
 
 			triggerNewPdbxNonPolyScheme(ppss);
 
 		} else if ( category.equals("_pdbx_entity_nonpoly")){
 			PdbxEntityNonPoly pen = (PdbxEntityNonPoly) buildObject(
 					PdbxEntityNonPoly.class.getName(),
-					loopFields,lineData
+					loopFields,lineData, loopWarnings
 					);
 			triggerNewPdbxEntityNonPoly(pen);
 		} else if ( category.equals("_struct_keywords")){
 			StructKeywords kw = (StructKeywords)buildObject(
 					StructKeywords.class.getName(),
-					loopFields,lineData
+					loopFields,lineData, loopWarnings
 					);
 			triggerNewStructKeywords(kw);
 		} else if (category.equals("_refine")){
 			Refine r = (Refine)buildObject(
 					Refine.class.getName(),
-					loopFields,lineData
+					loopFields,lineData, loopWarnings
 					);
 			triggerNewRefine(r);
 		} else if (category.equals("_chem_comp")){
 			ChemComp c = (ChemComp)buildObject(
 					ChemComp.class.getName(),
-					loopFields, lineData
+					loopFields, lineData, loopWarnings
 					);
 
 			triggerNewChemComp(c);
 		} else if (category.equals("_audit_author")) {
 			AuditAuthor aa = (AuditAuthor)buildObject(
 					AuditAuthor.class.getName(),
-					loopFields, lineData);
+					loopFields, lineData, loopWarnings);
 			triggerNewAuditAuthor(aa);
 		} else if (category.equals("_pdbx_chem_comp_descriptor")) {
 			ChemCompDescriptor ccd = (ChemCompDescriptor) buildObject(
 					ChemCompDescriptor.class.getName(),
-					loopFields, lineData);
+					loopFields, lineData, loopWarnings);
 			triggerNewChemCompDescriptor(ccd);
 		} else if (category.equals("_pdbx_struct_oper_list")) {
 			/* PdbxStructOperList structOper = (PdbxStructOperList) buildObject(
@@ -645,39 +652,39 @@ public class SimpleMMcifParser implements MMcifParser {
 		} else if (category.equals("_pdbx_struct_assembly")) {
 			PdbxStructAssembly sa = (PdbxStructAssembly) buildObject(
 					PdbxStructAssembly.class.getName(),
-					loopFields, lineData);			
+					loopFields, lineData, loopWarnings);
 			triggerNewPdbxStructAssembly(sa);
 
 		} else if (category.equals("_pdbx_struct_assembly_gen")) {
 			PdbxStructAssemblyGen sa = (PdbxStructAssemblyGen) buildObject(
 					PdbxStructAssemblyGen.class.getName(),
-					loopFields, lineData);			
+					loopFields, lineData, loopWarnings);
 			triggerNewPdbxStructAssemblyGen(sa);
 		} else if ( category.equals("_chem_comp_atom")){
 			ChemCompAtom atom = (ChemCompAtom)buildObject(
 					ChemCompAtom.class.getName(),
-					loopFields,lineData);
+					loopFields,lineData, loopWarnings);
 			triggerNewChemCompAtom(atom);
 
 		}else if ( category.equals("_chem_comp_bond")){
 			ChemCompBond bond = (ChemCompBond)buildObject(
 					ChemCompBond.class.getName(),
-					loopFields,lineData);
+					loopFields,lineData, loopWarnings);
 			triggerNewChemCompBond(bond);
 		} else if ( category.equals("_pdbx_chem_comp_identifier")){
 			PdbxChemCompIdentifier id = (PdbxChemCompIdentifier)buildObject(
 					PdbxChemCompIdentifier.class.getName(),
-					loopFields,lineData);
+					loopFields,lineData, loopWarnings);
 			triggerNewPdbxChemCompIdentifier(id);
 		} else if ( category.equals("_pdbx_chem_comp_descriptor")){
 			PdbxChemCompDescriptor id = (PdbxChemCompDescriptor)buildObject(
 					PdbxChemCompDescriptor.class.getName(),
-					loopFields,lineData);
+					loopFields,lineData, loopWarnings);
 			triggerNewPdbxChemCompDescriptor(id);
 		} else if ( category.equals("_struct_conn")){
 			StructConn id = (StructConn)buildObject(
 					"org.biojava.bio.structure.io.mmcif.model.StructConn",
-					loopFields,lineData);
+					loopFields,lineData, loopWarnings);
 			triggerNewStructConn(id);
 
 		} else {
@@ -801,7 +808,7 @@ public class SimpleMMcifParser implements MMcifParser {
 	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	private Object buildObject(String className, List<String> loopFields, List<String> lineData) {
+	private Object buildObject(String className, List<String> loopFields, List<String> lineData, Set<String> warnings) {
 		Object o = null;
 		try {
 			// build up the Entity object from the line data...
@@ -817,7 +824,7 @@ public class SimpleMMcifParser implements MMcifParser {
 				String val = lineData.get(pos);
 				//System.out.println(key + " " + val);
 				String u = key.substring(0,1).toUpperCase();
-				
+
 				// a necessary fix in order to be able to handle keys that contain hyphens (e.g. _symmetry.space_group_name_H-M)
 				// java can't use hyphens in variable names thus the corresponding bean can't use the hyphen and we replace it by underscore
 				if (key.contains("-")) 
@@ -833,7 +840,15 @@ public class SimpleMMcifParser implements MMcifParser {
 						setArray(c,o,key,val);
 
 					} else {
-						System.err.println("Trying to set field " + key + " in "+ c.getName() +", but not found! (value:" + val + ")");
+						String warning = "Trying to set field " + key + " in "+ c.getName() +", but not found! (value:" + val + ")";
+
+						if( !(warnings != null && warnings.contains(warning)) && !val.equals("?") ) {
+							System.err.println(warning);
+						}
+
+						if(warnings != null) {
+							warnings.add(warning);
+						}
 						//System.err.println(lineData);
 					}
 				}
@@ -927,17 +942,17 @@ public class SimpleMMcifParser implements MMcifParser {
 			c.newExptl(exptl);
 		}
 	}
-	
+
 	private void triggerCell(Cell cell) {
 		for(MMcifConsumer c : consumers){
 			c.newCell(cell);
-		}		
+		}
 	}
-	
+
 	private void triggerSymmetry(Symmetry symmetry) {
 		for(MMcifConsumer c : consumers){
 			c.newSymmetry(symmetry);
-		}				
+		}
 	}
 
 	private void triggerNewStrucRef(StructRef sref){
