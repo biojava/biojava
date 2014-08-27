@@ -23,7 +23,7 @@ public class GroupAsa {
 	// ASA in extended tripeptide conformation (GLY-X-GLY) 
 	private static final HashMap<Character,Double> tripeptAsa = initTriPeptAsas();
 	
-	private static HashMap<Character,Double>  initTriPeptAsas() {
+	private static final HashMap<Character,Double>  initTriPeptAsas() {
 		// ASA in extended tripeptide conformation (GLY-X-GLY) from Miller et al JMB 1987 (for calculation of relative ASAs)
 		HashMap<Character,Double> map = new HashMap<Character,Double>();
 		map.put('A', 113.0);
@@ -128,6 +128,31 @@ public class GroupAsa {
 		this.atomAsaCs.add(asa);
 	}
 	
+	public List<Double> getAtomAsaUs() {
+		return atomAsaUs;
+	}
+	
+	public void setAtomAsaUs(List<Double> atomAsaUs) {
+		this.atomAsaUs = atomAsaUs;
+		this.asaU = 0;
+		for (int i=0;i<atomAsaUs.size();i++) {
+			this.asaU+=atomAsaUs.get(i);
+		}
+	}
+	
+	public List<Double> getAtomAsaCs() {
+		return atomAsaCs;
+	}
+	
+	public void setAtomAsaCs(List<Double> atomAsaCs) {
+		this.atomAsaCs = atomAsaCs;
+		this.asaC = 0;
+		for (int i=0;i<atomAsaCs.size();i++) {
+			this.asaC+=atomAsaCs.get(i);
+		}
+	}
+
+	
 	/**
 	 * Returns the BSA value for this group, i.e. the difference between ASA uncomplexed and ASA complexed
 	 * @return
@@ -174,4 +199,19 @@ public class GroupAsa {
 
 	}
 	
+	public Object clone() {
+		GroupAsa n = new GroupAsa(this.g);
+		n.setAsaC(this.getAsaC());
+		n.setAsaU(this.getAsaU());
+		n.atomAsaUs = new ArrayList<Double>(this.atomAsaUs.size());
+		n.atomAsaCs = new ArrayList<Double>(this.atomAsaCs.size());
+		for (int i=0;i<this.atomAsaUs.size();i++) {
+			n.atomAsaUs.add(this.atomAsaUs.get(i));
+		}
+		for (int i=0;i<this.atomAsaCs.size();i++) {
+			n.atomAsaCs.add(this.atomAsaCs.get(i));
+		}
+		
+		return n;
+	}
 }

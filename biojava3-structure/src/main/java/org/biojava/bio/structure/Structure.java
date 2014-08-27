@@ -292,7 +292,7 @@ public interface Structure extends Cloneable, StructureIdentifier {
 
     /**
 	 * Test if this structure is a crystallographic structure, i.e. it is an asymmetric unit
-	 * only from which it is possible to reconstruct the crystal lattice given cell parameters and 
+	 * from which it is possible to reconstruct the crystal lattice given cell parameters and 
 	 * space group.
 	 * 
 	 * @return true if crystallographic, false otherwise
