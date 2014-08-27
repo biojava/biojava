@@ -1,4 +1,4 @@
-package org.biojava.bio.structure;
+package org.biojava.bio.structure.contact;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -8,30 +8,31 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
+import org.biojava.bio.structure.Atom;
 import org.biojava.bio.structure.asa.AsaCalculator;
 
 
 /**
- * A list of interfaces between 2 polymer (protein/nucleotide) chains 
+ * A list of interfaces between 2 molecules (2 sets of atoms) 
  * 
  * @author duarte_j
  *
  */
-public class ChainInterfaceList implements Serializable, Iterable<ChainInterface> {
+public class StructureInterfaceList implements Serializable, Iterable<StructureInterface> {
 
 	private static final long serialVersionUID = 1L;
 	
-	private List<ChainInterface> list;
+	private List<StructureInterface> list;
 	
 	private boolean debug;
 	
 
-	public ChainInterfaceList() {
-		this.list = new ArrayList<ChainInterface>();
+	public StructureInterfaceList() {
+		this.list = new ArrayList<StructureInterface>();
 		this.debug = false;
 	}
 	
-	public void add(ChainInterface interf) {
+	public void add(StructureInterface interf) {
 		this.list.add(interf);
 	}
 	
@@ -51,7 +52,7 @@ public class ChainInterfaceList implements Serializable, Iterable<ChainInterface
 	 * @param id
 	 * @return
 	 */
-	public ChainInterface get(int id) {
+	public StructureInterface get(int id) {
 		return list.get(id-1);
 	}
 	
@@ -78,12 +79,12 @@ public class ChainInterfaceList implements Serializable, Iterable<ChainInterface
 		Map<String, double[]> chainAsas = new TreeMap<String, double[]>();
 		
 		// first we gather rotation-unique chains (in terms of AU id and transform id)
-		for (ChainInterface interf:list) {
-			String molecId1 = interf.getChains().getFirst().getChainID()+interf.getTransforms().getFirst().getTransformId();
-			String molecId2 = interf.getChains().getSecond().getChainID()+interf.getTransforms().getSecond().getTransformId();
+		for (StructureInterface interf:list) {
+			String molecId1 = interf.getMoleculeIds().getFirst()+interf.getTransforms().getFirst().getTransformId();
+			String molecId2 = interf.getMoleculeIds().getSecond()+interf.getTransforms().getSecond().getTransformId();
 			
-			uniqAsaChains.put(molecId1, interf.getFirstAtoms(cofactorSizeToUse)); 
-			uniqAsaChains.put(molecId2, interf.getSecondAtoms(cofactorSizeToUse));
+			uniqAsaChains.put(molecId1, interf.getFirstAtomsForAsa(cofactorSizeToUse)); 
+			uniqAsaChains.put(molecId2, interf.getSecondAtomsForAsa(cofactorSizeToUse));
 		}
 		
 		long start = System.currentTimeMillis();
@@ -108,10 +109,10 @@ public class ChainInterfaceList implements Serializable, Iterable<ChainInterface
 		start = System.currentTimeMillis();
 		
 		// now we calculate the ASAs for each of the complexes 
-		for (ChainInterface interf:list) {
+		for (StructureInterface interf:list) {
 			
-			String molecId1 = interf.getChains().getFirst().getChainID()+interf.getTransforms().getFirst().getTransformId();
-			String molecId2 = interf.getChains().getSecond().getChainID()+interf.getTransforms().getSecond().getTransformId();
+			String molecId1 = interf.getMoleculeIds().getFirst()+interf.getTransforms().getFirst().getTransformId();
+			String molecId2 = interf.getMoleculeIds().getSecond()+interf.getTransforms().getSecond().getTransformId();
 			
 			interf.setAsas(chainAsas.get(molecId1), chainAsas.get(molecId2), nSpherePoints, nThreads, cofactorSizeToUse);
 			
@@ -133,7 +134,7 @@ public class ChainInterfaceList implements Serializable, Iterable<ChainInterface
 	public void sort() {
 		Collections.sort(list);
 		int i=1;
-		for (ChainInterface interf:list) {
+		for (StructureInterface interf:list) {
 			interf.setId(i);
 			i++;
 		}
@@ -145,9 +146,9 @@ public class ChainInterfaceList implements Serializable, Iterable<ChainInterface
 	 * @param area
 	 */
 	public void removeInterfacesBelowArea(double area) {
-		Iterator<ChainInterface> it = iterator();
+		Iterator<StructureInterface> it = iterator();
 		while (it.hasNext()) {
-			ChainInterface interf = it.next();
+			StructureInterface interf = it.next();
 			if (interf.getTotalArea()<area) {
 				it.remove();
 			}
@@ -155,7 +156,7 @@ public class ChainInterfaceList implements Serializable, Iterable<ChainInterface
 	}
 
 	@Override
-	public Iterator<ChainInterface> iterator() {
+	public Iterator<StructureInterface> iterator() {
 		return list.iterator();
 	}
 }

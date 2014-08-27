@@ -10,11 +10,11 @@ import javax.vecmath.Vector3d;
 
 import org.biojava.bio.structure.Calc;
 import org.biojava.bio.structure.Chain;
-import org.biojava.bio.structure.ChainInterface;
-import org.biojava.bio.structure.ChainInterfaceList;
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureTools;
 import org.biojava.bio.structure.contact.AtomContactSet;
+import org.biojava.bio.structure.contact.StructureInterface;
+import org.biojava.bio.structure.contact.StructureInterfaceList;
 
 
 
@@ -118,13 +118,13 @@ public class CrystalBuilder {
 	 * @param cutoff the distance cutoff for 2 chains to be considered in contact
 	 * @return
 	 */
-	public ChainInterfaceList getUniqueInterfaces(double cutoff) {	
+	public StructureInterfaceList getUniqueInterfaces(double cutoff) {	
 
 		// TODO at the moment this can't reconstruct the full crystal of many virus entries in the PDB
 		// since it doesn't take into account the MATRXn records 
 		// (see http://www.wwpdb.org/documentation/format33/sect8.html#MTRIXn)
 		
-		ChainInterfaceList set = new ChainInterfaceList();
+		StructureInterfaceList set = new StructureInterfaceList();
 		
 		// initialising the visited ArrayList for keeping track of symmetry redundancy
 		initialiseVisited();
@@ -180,7 +180,7 @@ public class CrystalBuilder {
 	 * @param set
 	 * @param cutoff
 	 */
-	private void calcInterfacesWithinAu(ChainInterfaceList set, double cutoff) {
+	private void calcInterfacesWithinAu(StructureInterfaceList set, double cutoff) {
 		
 		
 		if (debug) {
@@ -211,13 +211,18 @@ public class CrystalBuilder {
 				
 				if (debug) trialCount++;
 				
+				// note that we don't consider hydrogens when calculating contacts
 				AtomContactSet graph = StructureTools.getAtomsInContact(chaini, chainj, cutoff, INCLUDE_HETATOMS); 
 				if (graph.size()>0) {
 					contactsFound++;
 					if (debug) System.out.print("x");					
 					
 					CrystalTransform transf = new CrystalTransform(sg);
-					ChainInterface interf = new ChainInterface(chaini,chainj,graph,transf,transf);
+					StructureInterface interf = new StructureInterface(
+							StructureTools.getAllAtomArray(chaini), StructureTools.getAllAtomArray(chainj),
+							chaini.getChainID(), chainj.getChainID(),
+							graph,
+							transf, transf);
 					
 					set.add(interf);
 					
@@ -242,7 +247,7 @@ public class CrystalBuilder {
 	 * @param set
 	 * @param cutoff
 	 */
-	private void calcInterfacesCrystal(ChainInterfaceList set, double cutoff) {
+	private void calcInterfacesCrystal(StructureInterfaceList set, double cutoff) {
 
 		// both arrays below are of size numOperatorsSg (multiplicity of space group)
 		// generate complete unit cell, by applying all SG operators
@@ -331,13 +336,18 @@ public class CrystalBuilder {
 								}
 								if (debug) trialCount++;
 
+								// note that we don't consider hydrogens when calculating contacts
 								AtomContactSet graph = StructureTools.getAtomsInContact(chaini, chainj, cutoff, INCLUDE_HETATOMS);
 								if (graph.size()>0) {
 									contactsFound++;										
 									if (debug) System.out.print("x");
 									
 									CrystalTransform transf = new CrystalTransform(sg);
-									ChainInterface interf = new ChainInterface(chaini,chainj,graph,transf,tt);
+									StructureInterface interf = new StructureInterface(
+											StructureTools.getAllAtomArray(chaini), StructureTools.getAllAtomArray(chainj),
+											chaini.getChainID(), chainj.getChainID(),
+											graph,
+											transf, tt);
 
 									set.add(interf);
 									

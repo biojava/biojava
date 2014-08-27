@@ -285,6 +285,24 @@ public class StructureTools {
 		}
 		return (Atom[]) atoms.toArray(new Atom[atoms.size()]);	
 	}
+	
+	/** 
+	 * Returns and array of all atoms of the chain (first model), including 
+	 * Hydrogens (if present) and all HETATOMs
+	 * 
+	 * @param c input chain
+	 * @return all atom array
+	 */
+	public static final Atom[] getAllAtomArray(Chain c) {
+		List<Atom> atoms = new ArrayList<Atom>();
+
+		for (Group g:c.getAtomGroups()){
+			for (Atom a:g.getAtoms()) {
+				atoms.add(a);
+			}
+		}
+		return (Atom[]) atoms.toArray(new Atom[atoms.size()]);	
+	}
 
 	/**
 	 * Returns and array of all non-Hydrogen atoms in the given Structure, 

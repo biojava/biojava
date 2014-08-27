@@ -1,4 +1,4 @@
-package org.biojava.bio.structure;
+package org.biojava.bio.structure.contact;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -6,22 +6,25 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
+import org.biojava.bio.structure.Atom;
+import org.biojava.bio.structure.Element;
+import org.biojava.bio.structure.Group;
+import org.biojava.bio.structure.GroupType;
+import org.biojava.bio.structure.ResidueNumber;
 import org.biojava.bio.structure.asa.AsaCalculator;
 import org.biojava.bio.structure.asa.GroupAsa;
-import org.biojava.bio.structure.contact.AtomContactSet;
-import org.biojava.bio.structure.contact.Pair;
 import org.biojava.bio.structure.io.mmcif.chem.PolymerType;
 import org.biojava.bio.structure.io.mmcif.model.ChemComp;
 import org.biojava.bio.structure.xtal.CrystalTransform;
 
 
 /**
- * An interface between 2 polymer (protein/nucleotide) chains.
+ * An interface between 2 molecules (2 sets of atoms).
  * 
  * @author duarte_j
  *
  */
-public class ChainInterface implements Serializable, Comparable<ChainInterface> { 
+public class StructureInterface implements Serializable, Comparable<StructureInterface> { 
 
 	private static final long serialVersionUID = 1L;
 	
@@ -29,20 +32,44 @@ public class ChainInterface implements Serializable, Comparable<ChainInterface> 
 	private double totalArea;
 	private AtomContactSet contacts;
 	
-	private Pair<Chain> chains;
+	private Pair<Atom[]> molecules;
+
+	/**
+	 * The identifier for each of the atom arrays (usually a chain identifier, i.e. a single capital letter)
+	 * Servers to identify the molecules within the Asymmetric Unit of the crystal
+	 */
+	private Pair<String> moleculeIds; 
 	
-	private Pair<CrystalTransform> transforms;  // the transformations (crystal operators) applied to each molecule
+	/**
+	 * The transformations (crystal operators) applied to each molecule (if applicable)
+	 */
+	private Pair<CrystalTransform> transforms;  
 		
 	private Map<ResidueNumber, GroupAsa> groupAsas1;
 	private Map<ResidueNumber, GroupAsa> groupAsas2;
 	
-	
-	public ChainInterface(Chain firstMolecule, Chain secondMolecule, AtomContactSet contacts, CrystalTransform firstTransf, CrystalTransform secondTransf) {
-		this.chains = new Pair<Chain>(firstMolecule, secondMolecule);
+	/**
+	 * Constructs a StructureInterface
+	 * @param firstMolecule the atoms of the first molecule
+	 * @param secondMolecule the atoms of the second molecule
+	 * @param firstMoleculeId an identifier that identifies the first molecule within the Asymmetric Unit 
+	 * @param secondMoleculeId an identifier that identifies the second molecule within the Asymmetric Unit
+	 * @param contacts the contacts between the 2 molecules
+	 * @param firstTransf the transformation (crystal operator) applied to first molecule
+	 * @param secondTransf the transformation (crystal operator) applied to second molecule
+	 */
+	public StructureInterface(
+			Atom[] firstMolecule, Atom[] secondMolecule, 
+			String firstMoleculeId, String secondMoleculeId, 
+			AtomContactSet contacts, 
+			CrystalTransform firstTransf, CrystalTransform secondTransf) {
+		
+		this.molecules = new Pair<Atom[]>(firstMolecule, secondMolecule);
+		this.moleculeIds = new Pair<String>(firstMoleculeId,secondMoleculeId);
 		this.contacts = contacts;
 		this.transforms = new Pair<CrystalTransform>(firstTransf, secondTransf);
 	}
-
+	
 	public int getId() {
 		return id;
 	}
@@ -52,15 +79,15 @@ public class ChainInterface implements Serializable, Comparable<ChainInterface> 
 	}
 	
 	/**
-	 * Returns a pair of identifiers for each of the 2 member chains that
+	 * Returns a pair of identifiers for each of the 2 member molecules that
 	 * identify them uniquely in the crystal:
-	 *   &lt;chain id&gt;+&lt;operator id&gt;+&lt;crystal translation&gt;
+	 *   &lt;molecule id (asym unit id)&gt;+&lt;operator id&gt;+&lt;crystal translation&gt;
 	 * @return
 	 */
 	public Pair<String> getCrystalIds() {
 		return new Pair<String>(
-			chains.getFirst().getChainID()+transforms.getFirst().getTransformId()+transforms.getFirst().getCrystalTranslation(),
-			chains.getSecond().getChainID()+transforms.getSecond().getTransformId()+transforms.getSecond().getCrystalTranslation());
+			moleculeIds.getFirst()+transforms.getFirst().getTransformId()+transforms.getFirst().getCrystalTranslation(),
+			moleculeIds.getSecond()+transforms.getSecond().getTransformId()+transforms.getSecond().getCrystalTranslation());
 	}
 
 	/**
@@ -88,10 +115,14 @@ public class ChainInterface implements Serializable, Comparable<ChainInterface> 
 		this.contacts = contacts;
 	}
 
-	public Pair<Chain> getChains() {
-		return chains;
+	public Pair<Atom[]> getMolecules() {
+		return molecules;
 	}
 
+	public Pair<String> getMoleculeIds() {
+		return moleculeIds;
+	}
+	
 	/**
 	 * Return the 2 crystal transform operations performed on each of the 
 	 * chains of this interface.
@@ -103,7 +134,7 @@ public class ChainInterface implements Serializable, Comparable<ChainInterface> 
 
 	protected void setAsas(double[] asas1, double[] asas2, int nSpherePoints, int nThreads, int cofactorSizeToUse) {
 		
-		Atom[] atoms = getAtoms(cofactorSizeToUse);
+		Atom[] atoms = getAtomsForAsa(cofactorSizeToUse);
 		AsaCalculator asaCalc = new AsaCalculator(atoms, 
 				AsaCalculator.DEFAULT_PROBE_SIZE, nSpherePoints, nThreads);
 		
@@ -165,23 +196,19 @@ public class ChainInterface implements Serializable, Comparable<ChainInterface> 
 		 
 	}
 	
-	protected Atom[] getFirstAtoms(int cofactorSizeToUse) {
+	protected Atom[] getFirstAtomsForAsa(int cofactorSizeToUse) {
 		
-		Atom[] atoms1 = getAllNonHAtomArray(chains.getFirst(), cofactorSizeToUse);		
-		
-		return atoms1;		
+		return getAllNonHAtomArray(molecules.getFirst(), cofactorSizeToUse);		
 	}
 	
-	protected Atom[] getSecondAtoms(int cofactorSizeToUse) {
-		
-		Atom[] atoms2 = getAllNonHAtomArray(chains.getSecond(), cofactorSizeToUse);
-		
-		return atoms2;
+	protected Atom[] getSecondAtomsForAsa(int cofactorSizeToUse) {
+				
+		return getAllNonHAtomArray(molecules.getSecond(), cofactorSizeToUse);
 	}
 	
-	protected Atom[] getAtoms(int cofactorSizeToUse) {
-		Atom[] atoms1 = getFirstAtoms(cofactorSizeToUse);
-		Atom[] atoms2 = getSecondAtoms(cofactorSizeToUse);
+	protected Atom[] getAtomsForAsa(int cofactorSizeToUse) {
+		Atom[] atoms1 = getFirstAtomsForAsa(cofactorSizeToUse);
+		Atom[] atoms2 = getSecondAtomsForAsa(cofactorSizeToUse);
 		
 		Atom[] atoms = new Atom[atoms1.length+atoms2.length];
 		for (int i=0;i<atoms1.length;i++) {
@@ -195,31 +222,30 @@ public class ChainInterface implements Serializable, Comparable<ChainInterface> 
 	}
 	
 	/**
-	 * Returns and array of all non-Hydrogen atoms in the given Chain, including all
+	 * Returns and array of all non-Hydrogen atoms in the given molecule, including all
 	 * main chain HETATOM groups. Non main-chain HETATOM groups with fewer than minSizeHetAtomToInclude
 	 * non-Hydrogen atoms are not included.
-	 * @param c
-	 * @param minSizeHetAtomToInclude HETATOMs (non main-chain) with fewer number of 
+	 * @param m
+	 * @param minSizeHetAtomToInclude HETATOM groups (non main-chain) with fewer number of 
 	 * non-Hydrogen atoms are not included
 	 * @return
 	 */
-	private static final Atom[] getAllNonHAtomArray(Chain c, int minSizeHetAtomToInclude) {
+	private static final Atom[] getAllNonHAtomArray(Atom[] m, int minSizeHetAtomToInclude) {
 		List<Atom> atoms = new ArrayList<Atom>();
 		
-		for (Group g:c.getAtomGroups()){
+		for (Atom a:m){
 			
+			if (a.getElement()==Element.H) continue;
+			
+			Group g = a.getGroup();
 			if (g.getType().equals(GroupType.HETATM) && 
 				!isInChain(g) &&
 				getSizeNoH(g)<minSizeHetAtomToInclude) {
 				continue;	
 			}
+
+			atoms.add(a);
 			
-			for (Atom a:g.getAtoms()) {
-
-				if (a.getElement()==Element.H) continue;
-
-				atoms.add(a);
-			}
 		}
 		return (Atom[]) atoms.toArray(new Atom[atoms.size()]);			
 	}
@@ -266,15 +292,15 @@ public class ChainInterface implements Serializable, Comparable<ChainInterface> 
 	
 	/**
 	 * Tells whether the interface corresponds to one mediated by crystallographic symmetry,
-	 * i.e. it is between symmetry-related chains (with same chain identifier)
+	 * i.e. it is between symmetry-related molecules (with same chain identifier)
 	 * @return
 	 */
 	public boolean isSymRelated() {
-		return chains.getFirst().getChainID().equals(chains.getSecond().getChainID());
+		return moleculeIds.getFirst().equals(moleculeIds.getSecond());
 	}
 
 	/**
-	 * Returns true if the transformation applied to the second chain of this interface
+	 * Returns true if the transformation applied to the second molecule of this interface
 	 * has an infinite character (pure translation or screw rotation)
 	 * and both chains of the interface have the same PDB chain code: in such cases the 
 	 * interface would lead to infinite fiber-like (linear or helical) assemblies
@@ -391,7 +417,7 @@ public class ChainInterface implements Serializable, Comparable<ChainInterface> 
 	}
 	
 	@Override
-	public int compareTo(ChainInterface o) {
+	public int compareTo(StructureInterface o) {
 		// this will sort descending on interface areas
 		return (Double.compare(o.totalArea,this.totalArea));
 	}

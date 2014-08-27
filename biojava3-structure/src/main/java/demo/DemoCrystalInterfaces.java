@@ -7,13 +7,13 @@ import java.util.List;
 import javax.vecmath.AxisAngle4d;
 import javax.vecmath.Vector3d;
 
-import org.biojava.bio.structure.ChainInterface;
-import org.biojava.bio.structure.ChainInterfaceList;
 import org.biojava.bio.structure.Group;
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.align.util.AtomCache;
 import org.biojava.bio.structure.contact.AtomContact;
 import org.biojava.bio.structure.contact.Pair;
+import org.biojava.bio.structure.contact.StructureInterface;
+import org.biojava.bio.structure.contact.StructureInterfaceList;
 import org.biojava.bio.structure.xtal.CrystalBuilder;
 import org.biojava.bio.structure.xtal.CrystalTransform;
 import org.biojava.bio.structure.xtal.SpaceGroup;
@@ -73,7 +73,7 @@ public class DemoCrystalInterfaces {
 		cb.setDebug(DEBUG); 
 		
 		
-		ChainInterfaceList interfaces = cb.getUniqueInterfaces(CUTOFF);
+		StructureInterfaceList interfaces = cb.getUniqueInterfaces(CUTOFF);
 		interfaces.setDebug(DEBUG);
 		interfaces.calcAsas(N_SPHERE_POINTS, NTHREADS, CONSIDER_COFACTORS);
 		interfaces.removeInterfacesBelowArea(MIN_AREA_TO_KEEP);
@@ -88,7 +88,7 @@ public class DemoCrystalInterfaces {
 		System.out.println("Total number of interfaces found: "+interfaces.size());
 
 		for (int i=0;i<interfaces.size();i++) {
-			ChainInterface interf = interfaces.get(i+1);			
+			StructureInterface interf = interfaces.get(i+1);			
 			
 			String infiniteStr = "";
 			if (interf.isInfinite()) infiniteStr = " -- INFINITE interface";
