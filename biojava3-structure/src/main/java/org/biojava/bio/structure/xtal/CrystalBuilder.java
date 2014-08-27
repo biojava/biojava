@@ -43,6 +43,9 @@ public class CrystalBuilder {
 	// We set the default value to 12 based on that (having not seen any difference in runtime)
 	private static final int DEF_NUM_CELLS = 12;
 	
+	/**
+	 * Whether to consider HETATOMs in contact calculations
+	 */
 	private static final boolean INCLUDE_HETATOMS = true;
 	
 	private Structure pdb;
@@ -84,10 +87,19 @@ public class CrystalBuilder {
 		this.numCells = DEF_NUM_CELLS;		
 	}
 	
+	/**
+	 * Set the debug flag for verbose output to stdout
+	 * @param debug
+	 */
 	public void setDebug(boolean debug) {
+		//TODO use logger for debug output once we have slf4j in BJ
 		this.debug = debug;
 	}
 	
+	/**
+	 * Set the number of neighboring crystal cells that will be used in the search for contacts 
+	 * @param numCells
+	 */
 	public void setNumCells(int numCells) {
 		this.numCells = numCells;
 	}

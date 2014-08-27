@@ -40,6 +40,7 @@ public class ChainInterfaceList implements Serializable, Iterable<ChainInterface
 	}
 	
 	public void setDebug(boolean debug) {
+		// TODO do the debugging output through logging once we have slf4j in BJ
 		this.debug = debug;
 	}
 	
@@ -55,7 +56,7 @@ public class ChainInterfaceList implements Serializable, Iterable<ChainInterface
 	}
 	
 	/**
-	 * Calculates ASAs for all interfaces in list, both for the uncomplexed 
+	 * Calculates ASAs for all interfaces in list, both for the unbound 
 	 * chains and for the complex of the two chains together. 
 	 * Also sorts the interfaces based on calculated BSA areas (descending) 
 	 * @param nSpherePoints
@@ -66,7 +67,7 @@ public class ChainInterfaceList implements Serializable, Iterable<ChainInterface
 				
 		// asa/bsa calculation 
 		// NOTE in principle it is more efficient to calculate asas only once per unique chain
-		// BUT! surprisingly the rolling ball algorithm gives slightly different values for same molecule in different 
+		// BUT! the rolling ball algorithm gives slightly different values for same molecule in different 
 		// rotations (due to sampling depending on orientation of axes grid). 
 		// Both NACCESS and our own implementation behave like that.
 		// That's why we calculate ASAs for each rotation-unique molecule, otherwise 
@@ -147,7 +148,7 @@ public class ChainInterfaceList implements Serializable, Iterable<ChainInterface
 		Iterator<ChainInterface> it = iterator();
 		while (it.hasNext()) {
 			ChainInterface interf = it.next();
-			if (interf.getInterfaceArea()<area) {
+			if (interf.getTotalArea()<area) {
 				it.remove();
 			}
 		}

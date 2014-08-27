@@ -26,7 +26,7 @@ public class ChainInterface implements Serializable, Comparable<ChainInterface> 
 	private static final long serialVersionUID = 1L;
 	
 	private int id;
-	private double interfaceArea;
+	private double totalArea;
 	private AtomContactSet contacts;
 	
 	private Pair<Chain> chains;
@@ -54,7 +54,7 @@ public class ChainInterface implements Serializable, Comparable<ChainInterface> 
 	/**
 	 * Returns a pair of identifiers for each of the 2 member chains that
 	 * identify them uniquely in the crystal:
-	 *   <chain id>+<operator id>+<crystal translation>
+	 *   &lt;chain id&gt;+&lt;operator id&gt;+&lt;crystal translation&gt;
 	 * @return
 	 */
 	public Pair<String> getCrystalIds() {
@@ -63,12 +63,21 @@ public class ChainInterface implements Serializable, Comparable<ChainInterface> 
 			chains.getSecond().getChainID()+transforms.getSecond().getTransformId()+transforms.getSecond().getCrystalTranslation());
 	}
 
-	public double getInterfaceArea() {
-		return interfaceArea;
+	/**
+	 * Returns the total area buried upon formation of this interface, 
+	 * defined as: 1/2[ (ASA1u-ASA1c) + (ASA2u-ASA2u) ] , with: 
+	 *  <p>ASAxu = ASA of first/second unbound chain</p>
+	 *  <p>ASAxc = ASA of first/second complexed chain</p>
+	 * In the area calculation HETATOM groups not part of the main protein/nucleotide chain
+	 * are not included. 
+	 * @return
+	 */
+	public double getTotalArea() {
+		return totalArea;
 	}
 
-	public void setInterfaceArea(double interfaceArea) {
-		this.interfaceArea = interfaceArea;
+	public void setTotalArea(double totalArea) {
+		this.totalArea = totalArea;
 	}
 
 	public AtomContactSet getContacts() {
@@ -83,6 +92,11 @@ public class ChainInterface implements Serializable, Comparable<ChainInterface> 
 		return chains;
 	}
 
+	/**
+	 * Return the 2 crystal transform operations performed on each of the 
+	 * chains of this interface.
+	 * @return
+	 */
 	public Pair<CrystalTransform> getTransforms() {
 		return transforms;
 	}
@@ -102,7 +116,7 @@ public class ChainInterface implements Serializable, Comparable<ChainInterface> 
 		groupAsas1 = new TreeMap<ResidueNumber, GroupAsa>();
 		groupAsas2 = new TreeMap<ResidueNumber, GroupAsa>();
 		
-		this.interfaceArea = 0;
+		this.totalArea = 0;
 		
 		for (int i=0;i<asas1.length;i++) {
 			Group g = atoms[i].getGroup();
@@ -110,7 +124,7 @@ public class ChainInterface implements Serializable, Comparable<ChainInterface> 
 			if (!g.getType().equals(GroupType.HETATM) ||					
 				isInChain(g)) { 
 				// interface area should be only for protein/nucleotide but not hetatoms that are not part of the chain 
-				this.interfaceArea += (asas1[i] - complexAsas[i]);
+				this.totalArea += (asas1[i] - complexAsas[i]);
 			}
 			
 			if (!groupAsas1.containsKey(g.getResidueNumber())) {
@@ -131,7 +145,7 @@ public class ChainInterface implements Serializable, Comparable<ChainInterface> 
 			if (!g.getType().equals(GroupType.HETATM) ||					
 				isInChain(g)) {
 				// interface area should be only for protein/nucleotide but not hetatoms that are not part of the chain
-				this.interfaceArea += (asas2[i] - complexAsas[i+asas1.length]);
+				this.totalArea += (asas2[i] - complexAsas[i+asas1.length]);
 			}
 			
 			if (!groupAsas2.containsKey(g.getResidueNumber())) {
@@ -147,7 +161,7 @@ public class ChainInterface implements Serializable, Comparable<ChainInterface> 
 		}
 		
 		// our interface area definition: average of bsa of both molecules
-		this.interfaceArea = this.interfaceArea/2.0;
+		this.totalArea = this.totalArea/2.0;
 		 
 	}
 	
@@ -379,7 +393,7 @@ public class ChainInterface implements Serializable, Comparable<ChainInterface> 
 	@Override
 	public int compareTo(ChainInterface o) {
 		// this will sort descending on interface areas
-		return (Double.compare(o.interfaceArea,this.interfaceArea));
+		return (Double.compare(o.totalArea,this.totalArea));
 	}
 	
 }

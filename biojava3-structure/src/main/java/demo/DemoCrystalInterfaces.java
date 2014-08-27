@@ -128,7 +128,7 @@ public class DemoCrystalInterfaces {
 					" bsa to asa cutoff: "+
 					cores.getFirst().size()+" "+
 					cores.getSecond().size());
-			System.out.printf("Interface area: %8.2f\n",interf.getInterfaceArea());
+			System.out.printf("Interface area: %8.2f\n",interf.getTotalArea());
 			
 		}
 		
