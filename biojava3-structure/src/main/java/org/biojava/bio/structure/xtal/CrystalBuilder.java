@@ -109,15 +109,20 @@ public class CrystalBuilder {
 	}
 	
 	/**
-	 * Returns a list of all unique interfaces that the given Structure has upon 
+	 * Returns the list of unique interfaces that the given Structure has upon 
 	 * generation of all crystal symmetry mates. An interface is defined as any pair of chains 
 	 * that contact, i.e. for which there is at least a pair of atoms (one from each chain) within 
 	 * the given cutoff distance.
+	 * NOTE: currently for entries that contain MTRXn records (e.g. large viral structures)
+	 * the full crystal is not reconstructed (see http://www.wwpdb.org/documentation/format33/sect8.html#MTRIXn)
 	 * @param cutoff the distance cutoff for 2 chains to be considered in contact
 	 * @return
 	 */
 	public ChainInterfaceList getUniqueInterfaces(double cutoff) {	
 
+		// TODO at the moment this can't reconstruct the full crystal of many virus entries in the PDB
+		// since it doesn't take into account the MATRXn records 
+		// (see http://www.wwpdb.org/documentation/format33/sect8.html#MTRIXn)
 		
 		ChainInterfaceList set = new ChainInterfaceList();
 		
