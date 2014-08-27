@@ -10,6 +10,8 @@ import org.biojava.bio.structure.asa.AsaCalculator;
 import org.biojava.bio.structure.asa.GroupAsa;
 import org.biojava.bio.structure.contact.AtomContactSet;
 import org.biojava.bio.structure.contact.Pair;
+import org.biojava.bio.structure.io.mmcif.chem.PolymerType;
+import org.biojava.bio.structure.io.mmcif.model.ChemComp;
 import org.biojava.bio.structure.xtal.CrystalTransform;
 
 
@@ -100,13 +102,17 @@ public class ChainInterface implements Serializable, Comparable<ChainInterface> 
 		groupAsas1 = new TreeMap<ResidueNumber, GroupAsa>();
 		groupAsas2 = new TreeMap<ResidueNumber, GroupAsa>();
 		
-		
 		this.interfaceArea = 0;
 		
-		for (int i=0;i<asas1.length;i++) {			
-			this.interfaceArea += (asas1[i] - complexAsas[i]);
-			
+		for (int i=0;i<asas1.length;i++) {
 			Group g = atoms[i].getGroup();
+			
+			if (!g.getType().equals(GroupType.HETATM) ||					
+				isInChain(g)) { 
+				// interface area should be only for protein/nucleotide but not hetatoms that are not part of the chain 
+				this.interfaceArea += (asas1[i] - complexAsas[i]);
+			}
+			
 			if (!groupAsas1.containsKey(g.getResidueNumber())) {
 				GroupAsa groupAsa = new GroupAsa(g);				
 				groupAsa.addAtomAsaU(asas1[i]);
@@ -120,9 +126,14 @@ public class ChainInterface implements Serializable, Comparable<ChainInterface> 
 		}
 		
 		for (int i=0;i<asas2.length;i++) {
-			this.interfaceArea += (asas2[i] - complexAsas[i+asas1.length]);
-			
 			Group g = atoms[i+asas1.length].getGroup();
+			
+			if (!g.getType().equals(GroupType.HETATM) ||					
+				isInChain(g)) {
+				// interface area should be only for protein/nucleotide but not hetatoms that are not part of the chain
+				this.interfaceArea += (asas2[i] - complexAsas[i+asas1.length]);
+			}
+			
 			if (!groupAsas2.containsKey(g.getResidueNumber())) {
 				GroupAsa groupAsa = new GroupAsa(g);				
 				groupAsa.addAtomAsaU(asas2[i]);
@@ -142,14 +153,14 @@ public class ChainInterface implements Serializable, Comparable<ChainInterface> 
 	
 	protected Atom[] getFirstAtoms(int cofactorSizeToUse) {
 		
-		Atom[] atoms1 = StructureTools.getAllNonHAtomArray(chains.getFirst(), cofactorSizeToUse);		
+		Atom[] atoms1 = getAllNonHAtomArray(chains.getFirst(), cofactorSizeToUse);		
 		
 		return atoms1;		
 	}
 	
 	protected Atom[] getSecondAtoms(int cofactorSizeToUse) {
 		
-		Atom[] atoms2 = StructureTools.getAllNonHAtomArray(chains.getSecond(), cofactorSizeToUse);
+		Atom[] atoms2 = getAllNonHAtomArray(chains.getSecond(), cofactorSizeToUse);
 		
 		return atoms2;
 	}
@@ -167,6 +178,76 @@ public class ChainInterface implements Serializable, Comparable<ChainInterface> 
 		}
 		
 		return atoms;
+	}
+	
+	/**
+	 * Returns and array of all non-Hydrogen atoms in the given Chain, including all
+	 * main chain HETATOM groups. Non main-chain HETATOM groups with fewer than minSizeHetAtomToInclude
+	 * non-Hydrogen atoms are not included.
+	 * @param c
+	 * @param minSizeHetAtomToInclude HETATOMs (non main-chain) with fewer number of 
+	 * non-Hydrogen atoms are not included
+	 * @return
+	 */
+	private static final Atom[] getAllNonHAtomArray(Chain c, int minSizeHetAtomToInclude) {
+		List<Atom> atoms = new ArrayList<Atom>();
+		
+		for (Group g:c.getAtomGroups()){
+			
+			if (g.getType().equals(GroupType.HETATM) && 
+				!isInChain(g) &&
+				getSizeNoH(g)<minSizeHetAtomToInclude) {
+				continue;	
+			}
+			
+			for (Atom a:g.getAtoms()) {
+
+				if (a.getElement()==Element.H) continue;
+
+				atoms.add(a);
+			}
+		}
+		return (Atom[]) atoms.toArray(new Atom[atoms.size()]);			
+	}
+	
+	/**
+	 * Calculates the number of non-Hydrogen atoms in the given group 
+	 * @param g
+	 * @return
+	 */
+	private static int getSizeNoH(Group g) {
+		int size = 0;
+		for (Atom a:g.getAtoms()) {
+			if (a.getElement()!=Element.H) 
+				size++;
+		}
+		return size;
+	}
+	
+	/**
+	 * Returns true if the given group is part of the main chain, i.e. if it is 
+	 * a peptide-linked group or a nucleotide
+	 * @param g
+	 * @return
+	 */
+	private static boolean isInChain(Group g) {
+		ChemComp chemComp = g.getChemComp();
+		
+		if (chemComp==null) {
+			// TODO is there a better solution? we should at least do this through a logger once we have slf4j in BJ
+			System.err.println("Warning: can't determine PolymerType for group "+g.getResidueNumber()+" ("+g.getPDBName()+"). Will consider it as non-nucleotide/non-protein type.");
+			return false;
+		}
+		
+		PolymerType polyType = chemComp.getPolymerType(); 
+		for (PolymerType protOnlyType: PolymerType.PROTEIN_ONLY) {
+			if (polyType==protOnlyType) return true;
+		}
+		for (PolymerType protOnlyType: PolymerType.POLYNUCLEOTIDE_ONLY) {
+			if (polyType==protOnlyType) return true;
+		}
+		
+		return false;
 	}
 	
 	/**
