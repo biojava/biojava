@@ -70,7 +70,7 @@ public class DemoCrystalInterfaces {
 		long start = System.currentTimeMillis();
 		
 		CrystalBuilder cb = new CrystalBuilder(structure);
-		cb.setDebug(DEBUG); 
+		cb.setVerbose(DEBUG); 
 		
 		
 		StructureInterfaceList interfaces = cb.getUniqueInterfaces(CUTOFF);
