@@ -53,7 +53,7 @@ public class CrystalBuilder {
 	private int numChainsAu;
 	private int numOperatorsSg;
 	
-	private boolean debug;
+	private boolean verbose;
 	
 	private int numCells;
 	
@@ -83,17 +83,16 @@ public class CrystalBuilder {
 		if (sg!=null) {
 			this.numOperatorsSg = sg.getMultiplicity();
 		}
-		this.debug = false;
+		this.verbose = false;
 		this.numCells = DEF_NUM_CELLS;		
 	}
 	
 	/**
-	 * Set the debug flag for verbose output to stdout
-	 * @param debug
+	 * Set the verbose flag for verbose output of search algorithm to stdout
+	 * @param verbose
 	 */
-	public void setDebug(boolean debug) {
-		//TODO use logger for debug output once we have slf4j in BJ
-		this.debug = debug;
+	public void setVerbose(boolean verbose) {
+		this.verbose = verbose;
 	}
 	
 	/**
@@ -160,7 +159,7 @@ public class CrystalBuilder {
 			calcInterfacesCrystal(set, cutoff);
 			
 			
-			if (debug) {
+			if (verbose) {
 				end = System.currentTimeMillis();
 				System.out.println("\n"+trialCount+" chain-chain clash trials done. Time "+(end-start)/1000+"s");
 				System.out.println("  skipped (not overlapping AUs)       : "+skippedAUsNoOverlap);
@@ -183,7 +182,7 @@ public class CrystalBuilder {
 	private void calcInterfacesWithinAu(StructureInterfaceList set, double cutoff) {
 		
 		
-		if (debug) {
+		if (verbose) {
 			trialCount = 0;
 			start= System.currentTimeMillis();			
 			System.out.println("\nInterfaces within asymmetric unit (total possible trials "+(numChainsAu*(numChainsAu-1))/2+")");
@@ -202,20 +201,20 @@ public class CrystalBuilder {
 				
 				// before calculating the AtomContactSet we check for overlap, then we save putting atoms into the grid
 				if (!bbGrid.getChainBoundingBox(0,i).overlaps(bbGrid.getChainBoundingBox(0,j), cutoff)) { 
-					if (debug) {
+					if (verbose) {
 						skippedChainsNoOverlap++;
 						System.out.print(".");
 					}
 					continue;
 				}
 				
-				if (debug) trialCount++;
+				if (verbose) trialCount++;
 				
 				// note that we don't consider hydrogens when calculating contacts
 				AtomContactSet graph = StructureTools.getAtomsInContact(chaini, chainj, cutoff, INCLUDE_HETATOMS); 
 				if (graph.size()>0) {
 					contactsFound++;
-					if (debug) System.out.print("x");					
+					if (verbose) System.out.print("x");					
 					
 					CrystalTransform transf = new CrystalTransform(sg);
 					StructureInterface interf = new StructureInterface(
@@ -227,11 +226,11 @@ public class CrystalBuilder {
 					set.add(interf);
 					
 				} else {
-					if (debug) System.out.print("o");
+					if (verbose) System.out.print("o");
 				}
 			}
 		}
-		if (debug) {
+		if (verbose) {
 			end = System.currentTimeMillis();
 			System.out.println(" "+contactsFound+"("+(numChainsAu*(numChainsAu-1))/2+")");
 			System.out.println("\n"+trialCount+" chain-chain clash trials done. Time "+(end-start)/1000+"s");
@@ -255,7 +254,7 @@ public class CrystalBuilder {
 		// we calculate all the bounds of each of the asym units, those will then be reused and translated
 		bbGrid.setAllNonAuBbs(cell, INCLUDE_HETATOMS);
 		
-		if (debug) {
+		if (verbose) {
 			trialCount = 0;
 			start= System.currentTimeMillis();
 			int neighbors = (2*numCells+1)*(2*numCells+1)*(2*numCells+1)-1;
@@ -280,7 +279,7 @@ public class CrystalBuilder {
 						// short-cut strategies
 						// 1) we skip first of all if the bounding boxes of the AUs don't overlap
 						if (!bbGrid.getAuBoundingBox(0).overlaps(bbGridTrans.getAuBoundingBox(au), cutoff)) {
-							if (debug) skippedAUsNoOverlap++;
+							if (verbose) skippedAUsNoOverlap++;
 							continue;
 						}
 
@@ -288,7 +287,7 @@ public class CrystalBuilder {
 						CrystalTransform tt = new CrystalTransform(sg,au);
 						tt.translate(trans);
 						if (isRedundant(tt)) { 								
-							if (debug) skippedRedundant++;								
+							if (verbose) skippedRedundant++;								
 							continue;
 						}
 						addVisited(tt);
@@ -303,14 +302,14 @@ public class CrystalBuilder {
 
 						// 3) an operator can be "self redundant" if it is the inverse of itself (involutory, e.g. all pure 2-folds with no translation)						
 						if (tt.isEquivalent(tt)) { 
-							if (debug) 
+							if (verbose) 
 								System.out.println("Transform "+tt+" is equivalent to itself, will skip half of i-chains to j-chains comparisons");
 							// in this case we can't skip the operator, but we can skip half of the matrix comparisons e.g. j>i
 							// we set a flag and do that within the loop below
 							selfEquivalent = true;
 						}
 						
-						if (debug) System.out.print(tt+" ");
+						if (verbose) System.out.print(tt+" ");
 						
 						// Now that we know that boxes overlap and operator is not redundant, we have to go to the details 
 						int contactsFound = 0;
@@ -328,19 +327,19 @@ public class CrystalBuilder {
 								}
 								// before calculating the AtomContactSet we check for overlap, then we save putting atoms into the grid
 								if (!bbGrid.getChainBoundingBox(0,iIdx).overlaps(bbGridTrans.getChainBoundingBox(au,jIdx),cutoff)) {
-									if (debug) {
+									if (verbose) {
 										skippedChainsNoOverlap++;
 										System.out.print(".");
 									}
 									continue;
 								}
-								if (debug) trialCount++;
+								if (verbose) trialCount++;
 
 								// note that we don't consider hydrogens when calculating contacts
 								AtomContactSet graph = StructureTools.getAtomsInContact(chaini, chainj, cutoff, INCLUDE_HETATOMS);
 								if (graph.size()>0) {
 									contactsFound++;										
-									if (debug) System.out.print("x");
+									if (verbose) System.out.print("x");
 									
 									CrystalTransform transf = new CrystalTransform(sg);
 									StructureInterface interf = new StructureInterface(
@@ -352,11 +351,11 @@ public class CrystalBuilder {
 									set.add(interf);
 									
 								} else {
-									if (debug) System.out.print("o");
+									if (verbose) System.out.print("o");
 								}
 							}
 						}
-						if (debug) {
+						if (verbose) {
 							if (selfEquivalent) 								
 								System.out.println(" "+contactsFound+"("+(numChainsAu*(numChainsAu+1))/2+")");							
 							else
@@ -389,7 +388,7 @@ public class CrystalBuilder {
 			
 			if (tt.isEquivalent(v)) {
 
-				if (debug) System.out.println("Skipping redundant transformation: "+tt+", equivalent to "+v);
+				if (verbose) System.out.println("Skipping redundant transformation: "+tt+", equivalent to "+v);
 				
 				// there's only 1 possible equivalent partner for each visited matrix 
 				// (since the equivalent is its inverse matrix and the inverse matrix is unique)

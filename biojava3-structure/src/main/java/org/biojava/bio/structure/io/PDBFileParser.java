@@ -22,6 +22,7 @@
 package org.biojava.bio.structure.io;
 
 import static java.lang.Math.min;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -40,8 +41,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.StringTokenizer;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.biojava.bio.structure.AminoAcid;
 import org.biojava.bio.structure.AminoAcidImpl;
@@ -70,12 +69,15 @@ import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureException;
 import org.biojava.bio.structure.StructureImpl;
 import org.biojava.bio.structure.StructureTools;
+import org.biojava.bio.structure.contact.StructureInterface;
 import org.biojava.bio.structure.io.mmcif.ChemCompGroupFactory;
 import org.biojava.bio.structure.io.mmcif.ReducedChemCompProvider;
 import org.biojava.bio.structure.io.util.PDBTemporaryStorageUtils.LinkRecord;
 import org.biojava.bio.structure.xtal.CrystalCell;
 import org.biojava.bio.structure.xtal.SpaceGroup;
 import org.biojava.bio.structure.xtal.SymoplibParser;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -134,14 +136,12 @@ import org.biojava.bio.structure.xtal.SymoplibParser;
  */
 public class PDBFileParser  {
 
-	private final boolean DEBUG = false;
-
+	
 
 	// parsing options:
 
-
-	private Logger logger = Logger.getLogger(PDBFileParser.class.getName());
-
+	private static final Logger logger = LoggerFactory.getLogger(PDBFileParser.class);
+	
 	// required for parsing:
 	private String pdbId; //the actual id of the entry
 	private Structure     structure;
@@ -397,15 +397,15 @@ public class PDBFileParser  {
 				pdbHeader.setDepDate(dep);
 
 			} catch (ParseException e){
-				logger.fine("Could not parse deposition date string '"+deposition_date+"'. Will continue without deposition date"); 
+				logger.info("Could not parse deposition date string '"+deposition_date+"'. Will continue without deposition date"); 
 			}
 		}
 		if(len > 62) {
 			pdbCode         = line.substring (62, min(len,66)).trim() ;
 			pdbId = pdbCode;
-			if (DEBUG) {
-				System.out.println("Parsing entry " + pdbId);
-			}
+			
+			logger.debug("Parsing entry " + pdbId);
+			
 
 			structure.setPDBCode(pdbCode);
 			pdbHeader.setIdCode(pdbCode);
@@ -492,7 +492,7 @@ public class PDBFileParser  {
 	private void pdb_HELIX_Handler(String line){
 		
 		if (line.length()<38) {
-			logger.fine("HELIX line has length under 38. Ignoring it.");
+			logger.info("HELIX line has length under 38. Ignoring it.");
 			return;
 		}
 		
@@ -579,7 +579,7 @@ public class PDBFileParser  {
 	private void pdb_SHEET_Handler( String line){
 
 		if (line.length()<38) {
-			logger.fine("SHEET line has length under 38. Ignoring it.");
+			logger.info("SHEET line has length under 38. Ignoring it.");
 			return;
 		}
 
@@ -643,7 +643,7 @@ public class PDBFileParser  {
 	private void pdb_TURN_Handler( String line){
 				
 		if (line.length()<36) {
-			logger.fine("TURN line has length under 36. Ignoring it.");
+			logger.info("TURN line has length under 36. Ignoring it.");
 			return;
 		}
 		
@@ -714,7 +714,7 @@ public class PDBFileParser  {
 				Date dep = dateFormat.parse(modificationDate);
 				pdbHeader.setModDate(dep);
 			} catch (ParseException e){
-				logger.fine("Could not parse modification date string '"+modificationDate+"'. Will continue without modification date");
+				logger.info("Could not parse modification date string '"+modificationDate+"'. Will continue without modification date");
 			}
 
 		}
@@ -931,9 +931,9 @@ public class PDBFileParser  {
 		if (line.substring(line.length() - 8, line.length() - 4).equals(pdbId)) {
 			//trim off the trailing PDB id from legacy files.
 			//are we really trying to still cater for these museum pieces?
-			if (DEBUG) {
-				System.out.println("trimming legacy PDB id from end of JRNL section line");
-			}
+			
+			logger.debug("trimming legacy PDB id from end of JRNL section line");
+			
 			line = line.substring(0, line.length() - 8);
 			journalLines.add(line);
 		} else {
@@ -951,18 +951,18 @@ public class PDBFileParser  {
 	private void pdb_COMPND_Handler(String line) {
 
 		String continuationNr = line.substring(9, 10).trim();
-		if (DEBUG) {
-			System.out.println("current continuationNo     is "
+		
+		logger.debug("current continuationNo     is "
 					+ continuationNr);
-			System.out.println("previousContinuationField  is "
+		logger.debug("previousContinuationField  is "
 					+ previousContinuationField);
-			System.out.println("current continuationField  is "
+		logger.debug("current continuationField  is "
 					+ continuationField);
-			System.out.println("current continuationString is "
+		logger.debug("current continuationString is "
 					+ continuationString);
-			System.out.println("current compound           is "
+		logger.debug("current compound           is "
 					+ current_compound);
-		}
+		
 
 		// In legacy PDB files the line ends with the PDB code and a serial number, chop those off!
 		//format version 3.0 onwards will have 80 characters in a line
@@ -979,9 +979,9 @@ public class PDBFileParser  {
 		//line = line.replace(beginningOfLine, "");
 		line = line.substring(10, line.length());
 
-		if (DEBUG) {
-			System.out.println("LINE: >" + line + "<");
-		}
+		
+		logger.debug("LINE: >" + line + "<");
+		
 		String[] fieldList = line.split("\\s+");
 		int fl = fieldList.length;
 		if ((fl >0 ) && (!fieldList[0].equals(""))
@@ -1001,9 +1001,9 @@ public class PDBFileParser  {
 
 		} else {
 			if (continuationNr.equals("")) {
-				if (DEBUG) {
-					System.out.println("looks like an old PDB file");
-				}
+				
+				logger.debug("looks like an old PDB file");
+				
 				continuationField = "MOLECULE:";
 				if (previousContinuationField.equals("")) {
 					previousContinuationField = continuationField;
@@ -1027,15 +1027,15 @@ public class PDBFileParser  {
 
 			if (previousContinuationField.equals(continuationField)
 					&& compndFieldValues.contains(continuationField)) {
-				if (DEBUG) {
-					System.out.println("Still in field " + continuationField);
-					System.out.println("token = " + token);
-				}
+				
+				logger.debug("Still in field " + continuationField);
+				logger.debug("token = " + token);
+				
 				continuationString = continuationString.concat(token + " ");
-				if (DEBUG) {
-					System.out.println("continuationString = "
+				
+				logger.debug("continuationString = "
 							+ continuationString);
-				}
+				
 			}
 			if (!continuationField.equals(previousContinuationField)) {
 
@@ -1073,15 +1073,15 @@ public class PDBFileParser  {
 		value = value.trim().replace(";", "");
 		if (field.equals("MOL_ID:")) {
 
-			//todo: find out why an extra mol or chain gets added  and why 1H1J, 1J1H ATOM records are missing, but not 1H1H....
-			if (DEBUG)
-				System.out.println("molTypeCounter " + molTypeCounter + " "
+			//TODO: find out why an extra mol or chain gets added  and why 1H1J, 1J1H ATOM records are missing, but not 1H1H....
+			
+			logger.debug("molTypeCounter " + molTypeCounter + " "
 						+ value);
 			int i = -1;
 			try {
 				i = Integer.valueOf(value);
 			} catch (NumberFormatException e){
-				logger.fine(e.getMessage() + " while trying to parse COMPND line.");
+				logger.warn(e.getMessage() + " while trying to parse COMPND line.");
 			}
 			if (molTypeCounter != i) {
 				molTypeCounter++;
@@ -1306,8 +1306,8 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 
 			try {
 				current_compound = compounds.get(Integer.valueOf(value) - 1);
-			} catch (Exception e){
-				logger.fine("could not process SOURCE MOL_ID record correctly:" + e.getMessage());
+			} catch (NumberFormatException e){
+				logger.info("could not process SOURCE MOL_ID record correctly:" + e.getMessage());
 				return;
 			}
 
@@ -1415,8 +1415,7 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 			try {
 				res = Float.parseFloat(resolution);
 			} catch (NumberFormatException e) {
-				logger.fine(e.getMessage());
-				logger.fine("could not parse resolution from line and ignoring it " + line);
+				logger.info("could not parse resolution ("+e.getMessage()+") from line and ignoring it " + line);
 				return ;
 			}
 			//System.out.println("got resolution:" +res);
@@ -1541,8 +1540,7 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 			gamma = Float.parseFloat(line.substring(47,54).trim());
 			z = Integer.parseInt(line.substring(66,70).trim());
 		} catch (NumberFormatException e) {
-			logger.fine(e.getMessage());
-			logger.fine("could not parse CRYST1 record from line and ignoring it " + line);
+			logger.info("could not parse CRYST1 record ("+e.getMessage()+") from line and ignoring it " + line);
 			return ;
 		}
 		spaceGroup = line.substring(55,66).trim();
@@ -1564,7 +1562,7 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 		xtalCell.setBeta(beta);
 		xtalCell.setGamma(gamma);
         SpaceGroup sg = SymoplibParser.getSpaceGroup(spaceGroup);
-        if (sg==null) logger.fine("Space group '"+spaceGroup+"' not recognised as a standard space group"); 
+        if (sg==null) logger.warn("Space group '"+spaceGroup+"' not recognised as a standard space group"); 
         crystallographicInfo.setSpaceGroup(sg);
         crystallographicInfo.setZ(z);
 	}
@@ -2091,9 +2089,8 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 			if ( salt2 != null) cons.put("salt2",salt2);
 
 			connects.add(cons);
-		} catch (Exception e){
-			logger.fine("could not parse CONECT line correctly.");
-			logger.fine(e.getMessage() + " at line " + line);
+		} catch (NumberFormatException e){
+			logger.info("could not parse CONECT line correctly ("+e.getMessage()+"), at line : " + line);
 			return;
 		}
 	}
@@ -2160,9 +2157,9 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
                                                     the reference.
 	 */
 	private void pdb_DBREF_Handler(String line){
-		if (DEBUG) {
-			logger.info("Parsing DBREF " + line);
-		}
+		
+		logger.debug("Parsing DBREF " + line);
+		
 		DBRef dbref = new DBRef();
 		String idCode      = line.substring(7,11);
 		String chainId     = line.substring(12,13);
@@ -2260,7 +2257,7 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 	private void pdb_SSBOND_Handler(String line){
 		
 		if (line.length()<36) {
-			logger.fine("SSBOND line has length under 36. Ignoring it.");
+			logger.info("SSBOND line has length under 36. Ignoring it.");
 			return;
 		}
 		
@@ -2385,13 +2382,12 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 	 * @author Amr AL-Hossary
 	 * @author Jules Jacobsen
 	 */
-	private void pdb_SITE_Handler(String line){
-		boolean siteDebug = false;
+	private void pdb_SITE_Handler(String line){		
 
 		//  make a map of: SiteId to List<ResidueNumber>
-		if (DEBUG || siteDebug) {
-			System.out.println("Site Line:"+line);
-		}
+		
+		logger.debug("Site Line:"+line);
+		
 
 		String siteID = line.substring(11, 14);
 		//fetch the siteResidues from the map
@@ -2401,15 +2397,14 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 		if (siteResidues == null |! siteToResidueMap.containsKey(siteID.trim())){
 			siteResidues = new ArrayList<ResidueNumber>();
 			siteToResidueMap.put(siteID.trim(), siteResidues);
-			if (DEBUG || siteDebug) {
-				System.out.println(String.format("New Site made: %s %s", siteID,  siteResidues));
-				System.out.println("Now made " + siteMap.size() + " sites");
-			}
+			
+			logger.debug(String.format("New Site made: %s %s", siteID,  siteResidues));
+			logger.debug("Now made " + siteMap.size() + " sites");
+			
 		}
 
-		if (DEBUG || siteDebug) {
-			System.out.println(String.format("SiteId: %s", siteID));
-		}
+		logger.debug(String.format("SiteId: %s", siteID));
+		
 
 		//line = 'SITE     1 AC1  6 ARG H 221A LYS H 224  HOH H 403  HOH H 460'
 		//line.substring(18) = 'ARG H 221A LYS H 224  HOH H 403  HOH H 460'
@@ -2419,9 +2414,9 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 		//keep iterating through chunks of 10 characters - these are the groups in the siteResidues
 		while (!(groupString = line.substring(0, 10)).equals("          ")) {
 			//groupstring: 'ARG H 221A'
-			if (DEBUG || siteDebug) {
-				System.out.println("groupString: '" + groupString + "'");
-			}
+			
+			logger.debug("groupString: '" + groupString + "'");
+			
 			//set the residue name
 			//residueName = 'ARG'
 			String residueName = groupString.substring(0, 3);
@@ -2443,40 +2438,37 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 			//                    if (insCode.equals(" ")) {
 			//                        insCode = null;
 			//                    }
-			if (DEBUG || siteDebug) {
-				System.out.println(String.format("Site: %s: 'resName:%s resNum:%s insCode:%s'", siteID, residueName, resNum, insCode));
-			}
+			
+			logger.debug(String.format("Site: %s: 'resName:%s resNum:%s insCode:%s'", siteID, residueName, resNum, insCode));
+			
 			//make a new resNum with the data - this will be linked up with a site later
 			ResidueNumber residueNumber = new ResidueNumber();
 
-			if (DEBUG || siteDebug) {
-				System.out.println("pdbCode: '" + resNum + insCode + "'");
-			}
+			
+			logger.debug("pdbCode: '" + resNum + insCode + "'");
+			
 			residueNumber.setChainId(chainId);
 			residueNumber.setSeqNum(resNum);
 			residueNumber.setInsCode(insCode);
 			//add the resNum to the groups
 			siteResidues.add(residueNumber);
-			if (DEBUG || siteDebug) {
-				System.out.println("Adding residueNumber " + residueNumber + " to site " + siteID);
-			}
+			
+			logger.debug("Adding residueNumber " + residueNumber + " to site " + siteID);
+			
 			line = line.substring(11);
 		}
-		if (DEBUG || siteDebug) {
-			System.out.println("Current SiteMap (contains "+ siteToResidueMap.keySet().size() + " sites):");
-			for (String key : siteToResidueMap.keySet()) {
-				System.out.println(key + " : " + siteToResidueMap.get(key));
-			}
+		
+		logger.debug("Current SiteMap (contains "+ siteToResidueMap.keySet().size() + " sites):");
+		for (String key : siteToResidueMap.keySet()) {
+			logger.debug(key + " : " + siteToResidueMap.get(key));
 		}
+		
 	}
 
 	//Site variable related to parsing the REMARK 800 records.
 	Site site;
 	private void pdb_REMARK_800_Handler(String line){
-		boolean remark800debug = false;
-		if (DEBUG || remark800debug) {
-			//                System.out.println("Handling line: " + line);
-		}
+		
 		// 'REMARK 800 SITE_IDENTIFIER: CAT                                                 '
 		line = line.substring(11);
 		String[] fields = line.split(": ");
@@ -2485,9 +2477,9 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 			if (fields[0].equals("SITE_IDENTIFIER")) {
 				//                    remark800Counter++;
 				String siteID = fields[1].trim();
-				if (DEBUG || remark800debug) {
-					System.out.println("siteID: '" + siteID +"'");
-				}
+				
+				logger.debug("siteID: '" + siteID +"'");
+				
 				//fetch the siteResidues from the map
 				site = siteMap.get(siteID);
 
@@ -2495,33 +2487,33 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 				if (site == null || !siteID.equals(site.getSiteID())) {
 					site = new Site(siteID, new ArrayList<Group>());
 					siteMap.put(site.getSiteID(), site);
-					if (DEBUG || remark800debug) {
-						System.out.print("New Site made: " + site);
-						System.out.println("Now made " + siteMap.size() + " sites");
-					}
+					
+					logger.debug("New Site made: " + site);
+					logger.debug("Now made " + siteMap.size() + " sites");
+					
 				}
 			}
 			if (fields[0].equals("EVIDENCE_CODE")) {
 				//                    remark800Counter++;
 				String evCode = fields[1].trim();
-				if (DEBUG || remark800debug) {
-					System.out.println("evCode: '" + evCode +"'");
-				}
+				
+				logger.debug("evCode: '" + evCode +"'");
+				
 				//fetch the siteResidues from the map
 				site.setEvCode(evCode);
 			}
 			if (fields[0].equals("SITE_DESCRIPTION")) {
 				//                    remark800Counter++;
 				String desc = fields[1].trim();
-				if (DEBUG || remark800debug) {
-					System.out.println("desc: '" + desc +"'");
-				}
+				
+				logger.debug("desc: '" + desc +"'");
+				
 				//fetch the siteResidues from the map
 				site.setDescription(desc);
-				if (DEBUG || remark800debug) {
-					System.out.println("Finished making REMARK 800 for site " + site.getSiteID());
-					System.out.print(site.remark800toPDB());
-				}
+				
+				logger.debug("Finished making REMARK 800 for site " + site.getSiteID());
+				logger.debug(site.remark800toPDB());
+				
 			}
 		}
 	}
@@ -2531,8 +2523,7 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 		try {
 			val = Integer.parseInt(intString.trim());
 		} catch (NumberFormatException ex){
-			//ex.printStackTrace();
-			logger.fine("NumberformatException: " + ex.getMessage());
+			logger.info("Could not parse a number: " + ex.getMessage());
 		}
 		return val;
 	}
@@ -2659,7 +2650,7 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 			}
 
 			if ( line.length() < 6) {
-				logger.fine("Found line length below 6. Ignoring it, line: >" + line +"<" );
+				logger.info("Found line length below 6. Ignoring it, line: >" + line +"<" );
 				continue;
 			}
 
@@ -2912,12 +2903,8 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 
 		linkChains2Compound(structure);
 		//associate the temporary Groups in the siteMap to the ones
-		try { 
-			linkSitesToGroups(); // will work now that setSites is called
-		} catch (Exception e){
-			logger.fine("Error while linking SITE records to groups. ..");
-			logger.fine(e.getMessage());
-		}
+		 
+		linkSitesToGroups(); // will work now that setSites is called
 		
 		if ( bioAssemblyParser != null){
 			pdbHeader.setBioUnitTranformationMap(bioAssemblyParser.getTransformationMap());
@@ -3093,7 +3080,7 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 		//the return list
 
 		if ( siteMap == null || siteToResidueMap == null){
-			logger.fine("Sites can not be linked to residues!");
+			logger.info("Sites can not be linked to residues!");
 
 			return;
 		}
@@ -3102,14 +3089,14 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 		//check that there are chains with which to associate the groups
 		if (structure.getChains().isEmpty()) {
 			sites = new ArrayList<Site>(siteMap.values());
-			logger.fine("No chains to link Site Groups with - Sites will not be present in the Structure");
+			logger.info("No chains to link Site Groups with - Sites will not be present in the Structure");
 			return;
 		}
 
 		//check that the keys in the siteMap and SiteToResidueMap are equal 
 		if (! siteMap.keySet().equals(siteToResidueMap.keySet())) {
-			logger.fine("Not all sites have been properly described in the PDB " + pdbId + " header - some Sites will not be present in the Structure");
-			logger.fine(siteMap.keySet() + " | " + siteToResidueMap.keySet());
+			logger.info("Not all sites have been properly described in the PDB " + pdbId + " header - some Sites will not be present in the Structure");
+			logger.info(siteMap.keySet() + " | " + siteToResidueMap.keySet());
 			//return;
 		}
 
@@ -3133,8 +3120,7 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 					//TODO: implement findGroup(ResidueNumber resNum)
 					linkedGroup = structure.findGroup(chain, pdbCode);
 				} catch (StructureException ex) {
-					Logger.getLogger(PDBFileParser.class.getName()).log(Level.FINE, "Can't find group " + pdbCode + " in chain " + chain + " in order to link up SITE records (PDB ID " + pdbId +")");
-					//Logger.getLogger(PDBFileParser.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
+					logger.info("Can't find group " + pdbCode + " in chain " + chain + " in order to link up SITE records (PDB ID " + pdbId +")");
 					continue;
 				}
 
@@ -3156,12 +3142,12 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 	}
 
 	private void buildjournalArticle() {
-		if (DEBUG) {
-			System.out.println("building new JournalArticle");
-			//            for (String line : journalLines) {
-			//                System.out.println(line);
-			//            }
-		}
+		
+		logger.debug("building new JournalArticle");
+		//            for (String line : journalLines) {
+		//                System.out.println(line);
+		//            }
+		
 		this.journalArticle = new JournalArticle();
 		//        JRNL        AUTH   M.HAMMEL,G.SFYROERA,D.RICKLIN,P.MAGOTTI,
 		//        JRNL        AUTH 2 J.D.LAMBRIS,B.V.GEISBRECHT
@@ -3182,7 +3168,7 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 
 		for (String line : journalLines) {
 			if ( line.length() < 19 ) {
-				logger.fine("can not process Journal line: " + line);
+				logger.info("can not process Journal line: " + line);
 				continue;
 			}
 			//            System.out.println("'" + line + "'");
@@ -3190,61 +3176,61 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 			//            System.out.println("'" + subField + "'");
 			if (subField.equals("AUTH")) {
 				auth.append(line.substring(19, line.length()).trim());
-				if (DEBUG) {
-					System.out.println("AUTH '" + auth.toString() + "'");
-				}
+				
+				logger.debug("AUTH '" + auth.toString() + "'");
+				
 			}
 			if (subField.equals("TITL")) {
 				//add a space to the end of a line so that when wrapped the
 				//words on the join won't be concatenated
 				titl.append(line.substring(19, line.length()).trim()).append(" ");
-				if (DEBUG) {
-					System.out.println("TITL '" + titl.toString() + "'");
-				}
+				
+				logger.debug("TITL '" + titl.toString() + "'");
+				
 			}
 			if (subField.equals("EDIT")) {
 				edit.append(line.substring(19, line.length()).trim());
-				if (DEBUG) {
-					System.out.println("EDIT '" + edit.toString() + "'");
-				}
+				
+				logger.debug("EDIT '" + edit.toString() + "'");
+				
 			}
 			//        JRNL        REF    NAT.IMMUNOL.                  V.   8   430 2007
 			if (subField.equals("REF ")) {
 				ref.append(line.substring(19, line.length()).trim()).append(" ");
-				if (DEBUG) {
-					System.out.println("REF '" + ref.toString() + "'");
-				}
+				
+				logger.debug("REF '" + ref.toString() + "'");
+				
 			}
 			if (subField.equals("PUBL")) {
 				publ.append(line.substring(19, line.length()).trim()).append(" ");
-				if (DEBUG) {
-					System.out.println("PUBL '" + publ.toString() + "'");
-				}
+				
+				logger.debug("PUBL '" + publ.toString() + "'");
+				
 			}
 			//        JRNL        REFN                   ISSN 1529-2908
 			if (subField.equals("REFN")) {
 				if ( line.length() < 35 ) {
-					logger.fine("can not process Journal REFN line: " + line);
+					logger.info("can not process Journal REFN line: " + line);
 					continue;
 				}
 				refn.append(line.substring(35, line.length()).trim());
-				if (DEBUG) {
-					System.out.println("REFN '" + refn.toString() + "'");
-				}
+				
+				logger.debug("REFN '" + refn.toString() + "'");
+				
 			}
 			//        JRNL        PMID   17351618
 			if (subField.equals("PMID")) {
 				pmid.append(line.substring(19, line.length()).trim());
-				if (DEBUG) {
-					System.out.println("PMID '" + pmid.toString() + "'");
-				}
+				
+				logger.debug("PMID '" + pmid.toString() + "'");
+				
 			}
 			//        JRNL        DOI    10.1038/NI1450
 			if (subField.equals("DOI ")) {
 				doi.append(line.substring(19, line.length()).trim());
-				if (DEBUG) {
-					System.out.println("DOI '" + doi.toString() + "'");
-				}
+				
+				logger.debug("DOI '" + doi.toString() + "'");
+				
 			}
 		}
 
@@ -3266,10 +3252,10 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 		journalArticle.setPmid(pmid.toString().trim());
 		journalArticle.setDoi(doi.toString().trim());
 
-		if (DEBUG) {
-			System.out.println("Made JournalArticle:");
-			System.out.println(journalArticle);
-		}
+		
+		logger.debug("Made JournalArticle:");
+		logger.debug(journalArticle.toString());
+		
 	}
 
 	//inner class to deal with all the journal info
@@ -3282,20 +3268,20 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 
 
 		public JournalParser(String ref) {
-			if (DEBUG) {
-				System.out.println("JournalParser init '" + ref + "'");
-			}
+			
+			logger.debug("JournalParser init '" + ref + "'");
+			
 
 			if (ref.equals("TO BE PUBLISHED ")) {
 				journalName = ref.trim();
-				if (DEBUG) {
-					System.out.println(String.format("JournalParser found journalString '%s'", journalName));
-				}
+				
+				logger.debug(String.format("JournalParser found journalString '%s'", journalName));
+				
 				return;
 			}
 
 			if (ref.length() < 48) {
-				logger.fine("REF line too short - must be at least 48 characters to be valid for parsing.");
+				logger.info("REF line too short - must be at least 48 characters to be valid for parsing.");
 				journalName = "";
 				volume = "";
 				startPage = "";
@@ -3323,9 +3309,9 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 			//'J.AM.CHEM.SOC.                V. 130 16011 2008 '
 			//'NAT.STRUCT.MOL.BIOL.          V.  16   238 2009'
 			String volumeInformation = ref.substring(30, 48);
-			if (DEBUG) {
-				System.out.println(String.format("Parsing volumeInformation: '%s'", volumeInformation));
-			}
+			
+			logger.debug(String.format("Parsing volumeInformation: '%s'", volumeInformation));
+			
 			//volumeInformation: 'V. 293    53 1981 '
 			//                      String dateString = ref.substring(ref.length() - 5 , ref.length() - 1).trim();
 			//			String startPageString = ref.substring(ref.length() - 11 , ref.length() - 6).trim();
@@ -3338,18 +3324,18 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 			String journalString = ref.substring(0 , 29).trim() + " " + ref.substring(30, ref.length() - 1).replace(volumeInformation.trim(), "").trim();
 			journalString = journalString.trim();
 			//                        System.out.println("journalString: " + journalString);
-			if (DEBUG) {
-				System.out.println(String.format("JournalParser found volumeString '%s'", volumeString));
-				System.out.println(String.format("JournalParser found startPageString '%s'", startPageString));
-				System.out.println(String.format("JournalParser found dateString '%s'", dateString));
-				System.out.println(String.format("JournalParser found journalString '%s'", journalString));
-			}
+			
+			logger.debug(String.format("JournalParser found volumeString '%s'", volumeString));
+			logger.debug(String.format("JournalParser found startPageString '%s'", startPageString));
+			logger.debug(String.format("JournalParser found dateString '%s'", dateString));
+			logger.debug(String.format("JournalParser found journalString '%s'", journalString));
+			
 
 			if (!dateString.equals("    ")) {
 				try {
 					publicationDate = Integer.valueOf(dateString);
 				} catch (NumberFormatException nfe) {
-					logger.fine(dateString + " is not a valid integer for a date in JRNL sub-section REF line 1");
+					logger.info(dateString + " is not a valid integer for a date in JRNL sub-section REF line 1");
 				}
 				//				if (DEBUG) {
 				//					System.out.println("JournalParser set date " + publicationDate);
@@ -3372,9 +3358,9 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 
 			if (!journalString.equals("    ")) {
 				journalName = journalString;
-				if (DEBUG) {
-					System.out.println("JournalParser set journalName " + journalName);
-				}
+				
+				logger.debug("JournalParser set journalName " + journalName);
+				
 			}
 		}
 
@@ -3422,16 +3408,16 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 			//only one element means it's a consortium only
 			Author author = new Author();
 			author.setSurname(authors[0]);
-			if (DEBUG) {
-				System.out.println("Set consortium author name " + author.getSurname());
-			}
+			
+			logger.debug("Set consortium author name " + author.getSurname());
+			
 			authorList.add(author);
 		} else {
 			for (int i = 0; i < authors.length; i++) {
 				String authorFullName = authors[i];
-				if (DEBUG) {
-					System.out.println("Building author " + authorFullName);
-				}
+				
+				logger.debug("Building author " + authorFullName);
+				
 				Author author = new Author();
 				String regex = "\\.";
 				String[] authorNames = authorFullName.split(regex);
@@ -3445,17 +3431,17 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 				//                }
 				if (authorNames.length == 0) {
 					author.setSurname(authorFullName);
-					if (DEBUG) {
-						System.out.println("Unable to split using '" + regex + "' Setting whole name " + author.getSurname());
-					}
+					
+					logger.debug("Unable to split using '" + regex + "' Setting whole name " + author.getSurname());
+					
 				}
 				//again there might be a consortium name so there may be no elements
 				else if (authorNames.length == 1) {
 					author.setSurname(authorNames[0]);
-					if (DEBUG) {
-						System.out.println("Set consortium author name in multiple author block " + author.getSurname
+					
+					logger.debug("Set consortium author name in multiple author block " + author.getSurname
 								());
-					}
+					
 				} else {
 					String initials = "";
 					for (int j = 0; j < authorNames.length - 1; j++) {
@@ -3466,16 +3452,16 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 						//build the initials back up again
 						initials += initial + ".";
 					}
-					if (DEBUG) {
-						System.out.println("built initials '" + initials + "'");
-					}
+					
+					logger.debug("built initials '" + initials + "'");
+					
 					author.setInitials(initials);
 					//surname is always last
 					int lastName = authorNames.length - 1;
 					String surname = authorNames[lastName];
-					if (DEBUG) {
-						System.out.println("built author surname " + surname);
-					}
+					
+					logger.debug("built author surname " + surname);
+					
 					author.setSurname(surname);
 
 				}
