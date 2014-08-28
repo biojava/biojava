@@ -140,7 +140,7 @@ public class PDBFileParser  {
 
 	// parsing options:
 
-	private static final Logger logger = LoggerFactory.getLogger(StructureInterface.class);
+	private static final Logger logger = LoggerFactory.getLogger(PDBFileParser.class);
 	
 	// required for parsing:
 	private String pdbId; //the actual id of the entry
