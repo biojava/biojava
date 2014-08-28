@@ -31,7 +31,6 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.logging.Logger;
 
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.io.MMCIFFileReader;
@@ -68,6 +67,8 @@ import org.biojava.bio.structure.io.mmcif.model.StructRef;
 import org.biojava.bio.structure.io.mmcif.model.StructRefSeq;
 import org.biojava.bio.structure.io.mmcif.model.Symmetry;
 import org.biojava.bio.structure.jama.Matrix;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /** A simple mmCif file parser
@@ -104,7 +105,7 @@ public class SimpleMMcifParser implements MMcifParser {
 
 	Struct struct ;
 
-	public static Logger logger =  Logger.getLogger("org.biojava.bio.structure");
+	static final Logger logger = LoggerFactory.getLogger(SimpleMMcifParser.class);
 
 	public SimpleMMcifParser(){
 		consumers = new ArrayList<MMcifConsumer>();
