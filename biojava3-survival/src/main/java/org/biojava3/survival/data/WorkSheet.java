@@ -19,7 +19,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
-
+ 
 /**
  * Need to handle very large spreadsheets of expression data so keep memory
  * footprint low
@@ -28,15 +28,12 @@ import java.util.LinkedHashMap;
  */
 public class WorkSheet {
 
-
     private LinkedHashMap<String, HeaderInfo> columnLookup = new LinkedHashMap<String, HeaderInfo>();
     private LinkedHashMap<String, HeaderInfo> rowLookup = new LinkedHashMap<String, HeaderInfo>();
     private CompactCharSequence[][] data = new CompactCharSequence[1][1];
-
     HashMap<String, String> dataGrid = new HashMap<String, String>();
-
     private String indexColumnName = "";
-    
+
     /**
      *
      */
@@ -111,13 +108,23 @@ public class WorkSheet {
 
     }
 
-    
+    /**
+     * See if we can free up memory
+     */
+    public void clear() {
+        columnLookup.clear();
+        rowLookup.clear();
+        data = null;
+        dataGrid.clear();
+        doubleValues.clear();
+        System.gc();
+    }
 
     @Override
     public String toString() {
         return super.toString(); //To change body of generated methods, choose Tools | Templates.
     }
-    
+
     /**
      * Split a worksheet randomly. Used for creating a discovery/validation data
      * set The first file name will matched the percentage and the second file
@@ -155,8 +162,8 @@ public class WorkSheet {
      *
      * @param copyWorkSheet
      * @param rows
-     * @return 
-     * @throws Exception  
+     * @return
+     * @throws Exception
      */
     static public WorkSheet getCopyWorkSheetSelectedRows(WorkSheet copyWorkSheet, ArrayList<String> rows) throws Exception {
 
@@ -181,7 +188,7 @@ public class WorkSheet {
      *
      * @param copyWorkSheet
      * @return
-     * @throws Exception  
+     * @throws Exception
      */
     static public WorkSheet getCopyWorkSheet(WorkSheet copyWorkSheet) throws Exception {
         ArrayList<String> rows = copyWorkSheet.getRows();
@@ -253,7 +260,7 @@ public class WorkSheet {
             }
         }
         return metaRows;
-    } 
+    }
 
     /**
      *
@@ -358,7 +365,7 @@ public class WorkSheet {
      * Need to shuffle rows values to allow for randomized testing. The rows in
      * the list will be shuffled together
      *
-     * @param rows 
+     * @param rows
      * @throws Exception
      */
     public void shuffleRowValues(ArrayList<String> rows) throws Exception {
@@ -739,7 +746,7 @@ public class WorkSheet {
      * @param row
      * @param col
      * @param value
-     * @throws Exception  
+     * @throws Exception
      */
     public void addCell(String row, String col, String value) throws Exception {
         HeaderInfo rowIndex = rowLookup.get(row);
@@ -850,10 +857,10 @@ public class WorkSheet {
      * @param row
      * @param col
      * @return
-     * @throws Exception  
+     * @throws Exception
      */
     public String getCell(String row, String col) throws Exception {
-        if(col.equals(this.getIndexColumnName())){
+        if (col.equals(this.getIndexColumnName())) {
             return row;
         }
         HeaderInfo rowIndex = rowLookup.get(row);
@@ -1036,7 +1043,20 @@ public class WorkSheet {
     }
 
     /**
-     * Get the list of column names
+     * Get the list of column names including those that may be hidden
+     *
+     * @return
+     */
+    public ArrayList<String> getAllColumns() {
+        ArrayList<String> columns = new ArrayList<String>();
+        for (String col : columnLookup.keySet()) {
+            columns.add(col);
+        }
+        return columns;
+    }
+
+    /**
+     * Get the list of column names. Does not include hidden columns
      *
      * @return
      */
@@ -1075,7 +1095,7 @@ public class WorkSheet {
     /**
      * Get back a list of unique values in the row
      *
-     * @param row 
+     * @param row
      * @return
      * @throws Exception
      */
@@ -1093,7 +1113,21 @@ public class WorkSheet {
     }
 
     /**
-     * Get the list of row names
+     * Get all rows including those that may be hidden
+     *
+     * @return
+     */
+    public ArrayList<String> getAllRows() {
+        ArrayList<String> rows = new ArrayList<String>();
+        for (String row : rowLookup.keySet()) {
+            rows.add(row);
+        }
+        return rows;
+
+    }
+
+    /**
+     * Get the list of row names. Will exclude hidden values
      *
      * @return
      */
@@ -1128,15 +1162,29 @@ public class WorkSheet {
     }
 
     /**
-     * Swap the row and columns returning a new worksheet
+     * Get the log scale of this worksheet where a zero value will be set to .1
+     * as Log(0) is undefined
      *
-     * @param base 
+     * @param base
      * @return
-     * @throws Exception  
+     * @throws Exception
      */
     public WorkSheet getLogScale(double base) throws Exception {
+        return getLogScale(base, .1);
+
+    }
+
+    /**
+     * Get the log scale of this worksheet
+     *
+     * @param base
+     * @return
+     * @throws Exception
+     */
+    public WorkSheet getLogScale(double base, double zeroValue) throws Exception {
 
         WorkSheet workSheet = new WorkSheet(getRows(), getColumns());
+        workSheet.setIndexColumnName(this.getIndexColumnName());
         ArrayList<String> rows = getRows();
         ArrayList<String> columns = getColumns();
         for (String row : rows) {
@@ -1148,7 +1196,11 @@ public class WorkSheet {
                     String value = getCell(row, col);
                     try {
                         Double d = Double.parseDouble(value);
-                        d = Math.log(d) / Math.log(base);
+                        if (d == 0.0) {
+                            d = zeroValue;
+                        } else {
+                            d = Math.log(d) / Math.log(base);
+                        }
                         workSheet.addCell(row, col, d + "");
                     } catch (Exception e) {
                         workSheet.addCell(row, col, value);
@@ -1169,7 +1221,7 @@ public class WorkSheet {
      * Swap the row and columns returning a new worksheet
      *
      * @return
-     * @throws Exception  
+     * @throws Exception
      */
     public WorkSheet swapRowAndColumns() throws Exception {
 
@@ -1187,25 +1239,26 @@ public class WorkSheet {
         swappedWorkSheet.setMetaDataRows(metadataColumns);
         return swappedWorkSheet;
     }
-    
+
     static CompactCharSequence[][] getAllValuesCompactCharSequence(File fileName, char delimiter) throws Exception {
         FileInputStream fi = new FileInputStream(fileName);
-        return getAllValuesCompactCharSequence(fi,delimiter);
+        return getAllValuesCompactCharSequence(fi, delimiter);
     }
 
     /**
      * All support for loading from a jar file
+     *
      * @param is
      * @param delimiter
      * @return
-     * @throws Exception 
+     * @throws Exception
      */
     static CompactCharSequence[][] getAllValuesCompactCharSequence(InputStream is, char delimiter) throws Exception {
-       // FileReader reader = new FileReader(fileName);
-        
+        // FileReader reader = new FileReader(fileName);
+
         BufferedReader br = new BufferedReader(new InputStreamReader(is));
-        
-        
+
+
         ArrayList<CompactCharSequence[]> rows = new ArrayList<CompactCharSequence[]>();
 
         String line = br.readLine();
@@ -1224,12 +1277,12 @@ public class WorkSheet {
             line = br.readLine();
         }
         br.close();
-       // reader.close();
+        // reader.close();
 
         CompactCharSequence[][] data = new CompactCharSequence[rows.size()][numcolumns];
         for (int i = 0; i < rows.size(); i++) {
             CompactCharSequence[] row = rows.get(i);
-            for (int j = 0; j < row.length; j++) {
+            for (int j = 0; j < row.length; j++) { // 
                 if (row[j].length() > 1 && row[j].charAt(0) == '"') {
                     // System.out.println(row[j]);
                     if (row[j].length() > 2) {
@@ -1238,7 +1291,9 @@ public class WorkSheet {
                         row[j] = new CompactCharSequence("");
                     }
                 }
-                data[i][j] = row[j];
+                if (j < row.length && j < data[0].length) {
+                    data[i][j] = row[j];
+                }
             }
 
 
@@ -1402,7 +1457,7 @@ public class WorkSheet {
 
         return readCSV(new FileInputStream(f), delimiter);
     }
-    
+
     /**
      * Read a CSV/Tab delimited file where you pass in the delimiter
      *
@@ -1431,7 +1486,7 @@ public class WorkSheet {
     public void saveCSV(String fileName) throws Exception {
         File f = new File(fileName);
         File parentFile = f.getParentFile();
-        if(parentFile.isDirectory() == false){
+        if (parentFile.isDirectory() == false) {
             parentFile.mkdirs();
         }
         FileOutputStream file = new FileOutputStream(fileName);
@@ -1449,7 +1504,7 @@ public class WorkSheet {
     public void saveTXT(String fileName) throws Exception {
         File f = new File(fileName);
         File parentFile = f.getParentFile();
-        if(parentFile.isDirectory() == false){
+        if (parentFile.isDirectory() == false) {
             parentFile.mkdirs();
         }
         FileOutputStream file = new FileOutputStream(fileName);
@@ -1627,6 +1682,4 @@ public class WorkSheet {
     public String getRowHeader() {
         return rowHeader;
     }
-
-   
 }

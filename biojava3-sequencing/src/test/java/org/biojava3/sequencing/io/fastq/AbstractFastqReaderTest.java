@@ -336,14 +336,7 @@ public abstract class AbstractFastqReaderTest
     {
         FastqReader reader = createFastqReader();
         final String input = "";
-        reader.parse(new InputSupplier<StringReader>()
-                     {
-                         @Override
-                         public StringReader getInput() throws IOException {
-                             return new StringReader(input);
-                         }
-                     },
-                     new ParseListener() {
+        reader.parse(new StringReader(input), new ParseListener() {
                          @Override
                          public void description(final String description) throws IOException {
                              // empty
@@ -381,13 +374,12 @@ public abstract class AbstractFastqReaderTest
                      });
     }
  
-    public void testParseNullInputSupplier() throws Exception
+    public void testParseNullReadable() throws Exception
     {
         FastqReader reader = createFastqReader();
         try
         {
-            reader.parse((InputSupplier<StringReader>) null,
-                         new ParseListener() {
+            reader.parse((Readable) null, new ParseListener() {
                              @Override
                              public void description(final String description) throws IOException {
                                  // empty
@@ -437,13 +429,7 @@ public abstract class AbstractFastqReaderTest
         final String input = "";
         try
         {
-            reader.parse(new InputSupplier<StringReader>()
-                         {
-                             @Override
-                             public StringReader getInput() throws IOException {
-                                 return new StringReader(input);
-                             }
-                         }, null);
+            reader.parse(new StringReader(input), null);
             fail("parse(, null) expected IllegalArgumentException");
         }
         catch (IllegalArgumentException e)

@@ -4,7 +4,6 @@
  */
 package org.biojava3.survival.kaplanmeier.figure;
 
-
 import org.biojava3.survival.data.WorkSheet;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -13,7 +12,7 @@ import javax.swing.JFrame;
 import org.biojava3.survival.cox.StrataInfo;
 import org.biojava3.survival.cox.SurvFitInfo;
 import org.biojava3.survival.cox.SurvivalInfo;
-
+ 
 /**
  * Ported from survfitKM.S When combining multiple entries with same time not
  * sure how the weighting adds up
@@ -194,24 +193,9 @@ public class SurvFitKM {
         return this.process(variable, dataT, Method.kaplanMeier, Error.greenwood, true, .95, ConfType.log, ConfLower.usual, null, null, useWeighted);
     }
 
-    /**
-     *
-     * @param variable
-     * @param dataT
-     * @param method
-     * @param error
-     * @param seFit
-     * @param confInt
-     * @param confType
-     * @param confLower
-     * @param startTime
-     * @param newTime
-     * @param useWeighted
-     * @return
-     * @throws Exception
-     */
-    public SurvFitInfo process(String variable, ArrayList<SurvivalInfo> dataT, SurvFitKM.Method method, SurvFitKM.Error error, boolean seFit, double confInt, ConfType confType, ConfLower confLower, Double startTime, Double newTime, boolean useWeighted) throws Exception {
-        Collections.sort(dataT);
+   
+    public LinkedHashMap<String, StrataInfo>  processStrataInfo(String variable, ArrayList<SurvivalInfo> dataT, SurvFitKM.Method method, SurvFitKM.Error error, boolean seFit, double confInt, ConfType confType, ConfLower confLower, Double startTime, Double newTime, boolean useWeighted) throws Exception{
+                Collections.sort(dataT);
         if (startTime == null && newTime != null) {
             startTime = newTime;
         }
@@ -244,9 +228,6 @@ public class SurvFitKM {
         }
 
         int nstrat = levels.size();
-
-
-
 
         LinkedHashMap<String, StrataInfo> strataInfoHashMap = new LinkedHashMap<String, StrataInfo>();
 
@@ -284,7 +265,7 @@ public class SurvFitKM {
                     if (si.getStatus() == 0) {
                         double nw = strataInfo.getNcens().get(index) + w;
                         strataInfo.getNcens().remove(index);
-                        strataInfo.getNcens().add(nw); 
+                        strataInfo.getNcens().add(nw);
                         // strataInfo.nevent.add(0.0);
                     } else {
                         // strataInfo.ncens.add(0.0);
@@ -483,9 +464,34 @@ public class SurvFitKM {
             }
             System.out.println();
         }
-
+        
+        return strataInfoHashMap;
+    }
+    
+    /**
+     *
+     * @param variable
+     * @param dataT
+     * @param method
+     * @param error
+     * @param seFit
+     * @param confInt
+     * @param confType
+     * @param confLower
+     * @param startTime
+     * @param newTime
+     * @param useWeighted
+     * @return
+     * @throws Exception
+     */
+    public SurvFitInfo process(String variable, ArrayList<SurvivalInfo> dataT, SurvFitKM.Method method, SurvFitKM.Error error, boolean seFit, double confInt, ConfType confType, ConfLower confLower, Double startTime, Double newTime, boolean useWeighted) throws Exception {
         SurvFitInfo si = new SurvFitInfo();
+        
+        LinkedHashMap<String, StrataInfo> strataInfoHashMap = this.processStrataInfo(variable, dataT, method, error, seFit, confInt, confType, confLower, startTime, newTime, useWeighted);
         si.setStrataInfoHashMap(strataInfoHashMap);
+        LinkedHashMap<String, StrataInfo> unweightedStrataInfoHashMap = this.processStrataInfo(variable, dataT, method, error, seFit, confInt, confType, confLower, startTime, newTime, false);
+        si.setUnweightedStrataInfoHashMap(unweightedStrataInfoHashMap);
+        si.setWeighted(useWeighted);
         return si;
     }
 

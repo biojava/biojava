@@ -584,7 +584,7 @@ public class HetatomImpl implements Group,Serializable {
 			myAltLocs.trimToSize();
 		}
 		atomLookup = new  HashMap<String,Atom>(atomLookup);
-		atomSingleCharLookup = new HashMap<String,Atom>(atomLookup);
+		atomSingleCharLookup = new HashMap<String,Atom>(atomSingleCharLookup);
 
 		if ( hasAltLoc()) {
 			for (Group alt : getAltLocs()){

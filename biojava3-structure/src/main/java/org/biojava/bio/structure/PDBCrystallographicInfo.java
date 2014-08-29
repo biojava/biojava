@@ -1,6 +1,10 @@
 package org.biojava.bio.structure;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.vecmath.Matrix4d;
 
 import org.biojava.bio.structure.xtal.CrystalCell;
 import org.biojava.bio.structure.xtal.SpaceGroup;
@@ -114,5 +118,29 @@ public class PDBCrystallographicInfo implements Serializable {
 		this.z = z;
 	}
 	
+	/**
+	 * Gets all symmetry transformation operators corresponding to this structure's space group 
+	 * (except for the identity) expressed in the orthonormal basis. Using PDB axes 
+	 * convention (NCODE=1).
+	 * @return
+	 */	
+	public List<Matrix4d> getTransformationsOrthonormal() {
+		List<Matrix4d> transfs = new ArrayList<Matrix4d>();
+		for (int i=1;i<this.getSpaceGroup().getNumOperators();i++) {
+			transfs.add(this.cell.transfToOrthonormal(this.getSpaceGroup().getTransformation(i)));
+		}
+		return transfs;
+	}
+	
+	@Override
+	public String toString() {
+		return "["+ 
+				(sg==null?"no SG":sg.getShortSymbol())+" - "+
+				
+				(cell==null?"no Cell":
+				String.format("%.2f %.2f %.2f, %.2f %.2f %.2f",
+						cell.getA(),cell.getB(),cell.getC(),cell.getAlpha(),cell.getBeta(),cell.getGamma()) )+
+				"]";
+	}
 	
 }

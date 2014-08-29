@@ -35,10 +35,13 @@ import org.biojava.bio.structure.StructureTools;
 import org.biojava.bio.structure.align.ce.GuiWrapper;
 import org.biojava.bio.structure.align.model.AFPChain;
 import org.biojava.bio.structure.jama.Matrix;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 public class AFPAlignmentDisplay
 {
+	private static final Logger logger = LoggerFactory.getLogger(AFPAlignmentDisplay.class);
 
 	private static final int[][] aaMatrix = new int[][] {{6,0,-2,-3,-2,0,-1,0,-2,-2,-2,-2,-2,-3,-4,-4,-3,-3,-3,-2,-4},
 		{0,4,-1,0,0,1,-2,-2,-1,-1,-1,-2,-1,0,-1,-1,-1,-2,-2,-3,-4},
@@ -236,7 +239,7 @@ public class AFPAlignmentDisplay
 
 				// weird, could not find a residue in the Atom array. Did something change in the underlying data?
 				if (( p1 == -1 ) || ( p2 == -1)) {
-					System.err.println("Could not get atom on position " + j );
+					logger.warn("Could not get atom on position " + j );
 					continue;
 				}
 				if(len > 0)     {
@@ -305,12 +308,8 @@ public class AFPAlignmentDisplay
 
 	private static char getOneLetter(Group g){
 
-		try {
-			Character c = StructureTools.get1LetterCode(g.getPDBName());
-			return c;
-		} catch (Exception e){
-			return 'X';
-		}
+		Character c = StructureTools.get1LetterCode(g.getPDBName());
+		return c;
 	}
 
 	public static int aaScore(char a, char b){
@@ -330,11 +329,11 @@ public class AFPAlignmentDisplay
 		// SEC an PYL amino acids are not supported as of yet...
 
 		if ( pos1 < 0) {
-			System.err.println("unknown char " + a);
+			logger.warn("unknown char " + a);
 			return 0;
 		}
 		if ( pos2 < 0) {
-			System.err.println("unknown char " + b);
+			logger.warn("unknown char " + b);
 			return 0;
 		}
 
@@ -346,7 +345,7 @@ public class AFPAlignmentDisplay
 		double similarity = 0.0;
 		
 		if ( seq1 == null || seq2 == null){
-			System.err.println("AFPAlignmentDisplay can't calc ID if alignment strings are null! ");
+			logger.warn("Can't calc ID if alignment strings are null! ");
 			Map<String, Double> m = new HashMap<String, Double>();
 			m.put("similarity", similarity);
 			m.put("identity", identity);

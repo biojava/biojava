@@ -8,6 +8,7 @@
 	</parent>
 
 	<artifactId>protein-comparison-tool</artifactId>
+	<packaging>jar</packaging>
 	<name>protein-comparison-tool</name>
 	<url>http://source.rcsb.org</url>
 	<properties>	
@@ -50,7 +51,25 @@
 			<groupId>net.sourceforge.jmol</groupId>
 			<artifactId>jmol</artifactId>
 			<version>13.0.12</version>
-		</dependency>		
+		</dependency>
+		<!-- logging dependencies (managed by parent pom, don't set versions or scopes here) -->
+		<dependency>
+        	<groupId>org.slf4j</groupId>
+        	<artifactId>slf4j-api</artifactId>
+    	</dependency>
+    	<!-- binding for log4j2, scope=runTime set in parent pom -->
+ 		<dependency>
+    		<groupId>org.apache.logging.log4j</groupId>
+    		<artifactId>log4j-slf4j-impl</artifactId>
+  		</dependency>
+  		<dependency>
+    		<groupId>org.apache.logging.log4j</groupId>
+    		<artifactId>log4j-api</artifactId>
+  		</dependency>
+  		<dependency>
+    		<groupId>org.apache.logging.log4j</groupId>
+    		<artifactId>log4j-core</artifactId>
+  		</dependency>			
 	</dependencies>
 
 	<build>
@@ -81,4 +100,5 @@
 			</plugin>
 	</plugins>
 	</build>
+	
 </project>

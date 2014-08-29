@@ -34,7 +34,7 @@ public class BerkeleyScopInstallation extends ScopInstallation {
 
 
 	String defaultBerkeleyDownloadURL = "http://scop.berkeley.edu/downloads/parse/";
-	String defaultBerkeleyScopVersion="2.03";
+	String defaultBerkeleyScopVersion=ScopFactory.LATEST_VERSION;
 
 	/**
 	 * A map from SCOP version names which the Berkeley server offers as a download to an array of equivalent deprecated SCOP version names.
@@ -99,6 +99,10 @@ public class BerkeleyScopInstallation extends ScopInstallation {
 			} else {
 				return "dir." + fileType + ".scope." + version + "-stable.txt";
 			}
+		}
+		
+		public String toString() {
+			return "BerkeleyScopMirror[ \"" + rootURL + " ]";
 		}
 	}
 

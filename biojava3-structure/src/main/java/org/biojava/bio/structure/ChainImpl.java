@@ -160,7 +160,7 @@ public class ChainImpl implements Chain, Serializable {
 
 			try {
 				seqresaligner.mapSeqresRecords(n, tmp);
-			} catch (Exception e){
+			} catch (StructureException e){
 				e.printStackTrace();
 			}
 

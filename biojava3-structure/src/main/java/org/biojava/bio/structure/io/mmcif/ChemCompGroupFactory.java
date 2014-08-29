@@ -27,13 +27,16 @@ import org.biojava.bio.structure.AminoAcidImpl;
 import org.biojava.bio.structure.Group;
 import org.biojava.bio.structure.HetatomImpl;
 import org.biojava.bio.structure.NucleotideImpl;
-
 import org.biojava.bio.structure.io.mmcif.chem.PolymerType;
 import org.biojava.bio.structure.io.mmcif.model.ChemComp;
 import org.biojava3.core.util.SoftHashMap;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 public class ChemCompGroupFactory {
+	
+	private static final Logger logger = LoggerFactory.getLogger(ChemCompGroupFactory.class);
 
 	static ChemCompProvider chemCompProvider = new DownloadChemCompProvider();
 
@@ -70,53 +73,50 @@ public class ChemCompGroupFactory {
 
 		Group g = null;
 
-		try {
 
-			ChemComp cc =  getChemComp(recordName);
+		ChemComp cc =  getChemComp(recordName);
 
-			if ( cc == null)
-				return null;
+		if ( cc == null)
+			return null;
 
-			if ( PolymerType.PROTEIN_ONLY.contains( cc.getPolymerType() ) ){
-				AminoAcid aa = new AminoAcidImpl();
+		if ( PolymerType.PROTEIN_ONLY.contains( cc.getPolymerType() ) ){
+			AminoAcid aa = new AminoAcidImpl();
 
-				String one_letter = cc.getOne_letter_code();
-				if ( one_letter == null || one_letter.equals("X") || one_letter.equals("?") || one_letter.length()==0){
-					String parent = cc.getMon_nstd_parent_comp_id();
-					if ( parent != null && parent.length() == 3){
-						String parentid = cc.getMon_nstd_parent_comp_id() ;
-						ChemComp parentCC = getChemComp(parentid);
-						one_letter = parentCC.getOne_letter_code();
-					}
+			String one_letter = cc.getOne_letter_code();
+			if ( one_letter == null || one_letter.equals("X") || one_letter.equals("?") || one_letter.length()==0){
+				String parent = cc.getMon_nstd_parent_comp_id();
+				if ( parent != null && parent.length() == 3){
+					String parentid = cc.getMon_nstd_parent_comp_id() ;
+					ChemComp parentCC = getChemComp(parentid);
+					one_letter = parentCC.getOne_letter_code();
 				}
-				
-				if ( one_letter == null || one_letter.length()==0 || one_letter.equals("?")) {
-					// e.g. problem with PRR, which probably should have a parent of ALA, but as of 20110127 does not.
-					System.err.println(" Problem with chemical component: " + recordName + "  Did not find one letter code!");
-					aa.setAminoType('X');
-
-				} else  {
-					aa.setAminoType(one_letter.charAt(0));
-				}
-
-
-				g = aa;
-			} else if ( PolymerType.POLYNUCLEOTIDE_ONLY.contains(cc.getPolymerType())) {
-				NucleotideImpl nuc = new NucleotideImpl();
-
-				g = nuc;
-
-
-			} else {
-
-				g = new HetatomImpl();
 			}
 
-			g.setChemComp(cc);
+			if ( one_letter == null || one_letter.length()==0 || one_letter.equals("?")) {
+				// e.g. problem with PRR, which probably should have a parent of ALA, but as of 20110127 does not.
+				logger.warn("Problem with chemical component: " + recordName + "  Did not find one letter code!");
+				aa.setAminoType('X');
 
-		} catch (Exception e){
-			e.printStackTrace();
+			} else  {
+				aa.setAminoType(one_letter.charAt(0));
+			}
+
+
+			g = aa;
+		} else if ( PolymerType.POLYNUCLEOTIDE_ONLY.contains(cc.getPolymerType())) {
+			NucleotideImpl nuc = new NucleotideImpl();
+
+			g = nuc;
+
+
+		} else {
+
+			g = new HetatomImpl();
 		}
+
+		g.setChemComp(cc);
+
+
 		return g;
 	}
 

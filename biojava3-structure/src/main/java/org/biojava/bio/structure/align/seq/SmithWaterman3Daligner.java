@@ -274,7 +274,7 @@ public class SmithWaterman3Daligner extends AbstractStructureAlignment implement
 		//sup_str(strBuf1, strBuf2, nAtom, _d);
 		// here we don't store the rotation matrix for the user!
 		//System.out.println(strBuf1.length + " " + aligLength);
-		double rmsd= cecalc.calc_rmsd(strBuf1, strBuf2, nAtom,true, false);
+		double rmsd= cecalc.calc_rmsd(strBuf1, strBuf2, nAtom,true);
 
 		afpChain.setBlockRmsd(new double[]{rmsd});
 		afpChain.setOptRmsd(new double[]{rmsd});

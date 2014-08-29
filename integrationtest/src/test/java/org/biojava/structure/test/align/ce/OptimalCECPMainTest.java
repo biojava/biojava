@@ -8,18 +8,20 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 
+import junit.framework.TestCase;
+
 import org.biojava.bio.structure.Atom;
 import org.biojava.bio.structure.StructureException;
 import org.biojava.bio.structure.StructureTools;
 import org.biojava.bio.structure.align.StructureAlignmentFactory;
+import org.biojava.bio.structure.align.ce.CECPParameters;
+import org.biojava.bio.structure.align.ce.CECPParameters.DuplicationHint;
 import org.biojava.bio.structure.align.ce.CeCPMain;
 import org.biojava.bio.structure.align.ce.CeMain;
 import org.biojava.bio.structure.align.ce.OptimalCECPMain;
 import org.biojava.bio.structure.align.ce.OptimalCECPParameters;
 import org.biojava.bio.structure.align.model.AFPChain;
 import org.biojava.bio.structure.align.util.AtomCache;
-
-import junit.framework.TestCase;
 
 /**
  * @author Spencer Bliven
@@ -86,8 +88,10 @@ public class OptimalCECPMainTest extends TestCase {
 		name1 = "d1qdmA1";
 		name2 = "d1nklA_";
 		
-		CeMain ce = (CeCPMain) StructureAlignmentFactory.getAlgorithm(CeCPMain.algorithmName);
-
+		CeCPMain ce = (CeCPMain) StructureAlignmentFactory.getAlgorithm(CeCPMain.algorithmName);
+		CECPParameters param = (CECPParameters)ce.getParameters();
+		param.setDuplicationHint(DuplicationHint.RIGHT);
+		
 		Atom[] ca1 = cache.getAtoms(name1);
 		Atom[] ca2 = cache.getAtoms(name2);
 		
@@ -220,7 +224,9 @@ public class OptimalCECPMainTest extends TestCase {
 		name2 = "1HV1";
 		
 		CeCPMain ce = (CeCPMain) StructureAlignmentFactory.getAlgorithm(CeCPMain.algorithmName);
-
+		CECPParameters param = (CECPParameters)ce.getParameters();
+		param.setDuplicationHint(DuplicationHint.RIGHT);
+		
 		Atom[] ca1 = cache.getAtoms(name1);
 		Atom[] ca2 = cache.getAtoms(name2);
 		

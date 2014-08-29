@@ -46,6 +46,8 @@ import org.biojava3.core.sequence.ProteinSequence;
 import org.biojava3.core.sequence.compound.AminoAcidCompound;
 import org.biojava3.core.sequence.compound.AminoAcidCompoundSet;
 import org.biojava3.core.sequence.template.CompoundSet;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -55,6 +57,8 @@ import org.biojava3.core.sequence.template.CompoundSet;
  *
  */
 public class StructureSequenceMatcher {
+	
+	private static final Logger logger = LoggerFactory.getLogger(StructureSequenceMatcher.class);
 
 	/**
 	 * Get a substructure of {@code wholeStructure} containing only the {@link Group Groups} that are included in
@@ -203,10 +207,10 @@ public class StructureSequenceMatcher {
 
 				Group g = atomIndexPosition.get(structIndex);
 
-				System.err.format("Warning: chain %s residue %s in the Structure %s has no corresponding amino acid in the sequence.\n",
+				logger.warn(String.format("Chain %s residue %s in the Structure %s has no corresponding amino acid in the sequence.",
 						g.getChainId(),
 						g.getResidueNumber().toString(),
-						g.getChain().getParent().getPDBCode());
+						g.getChain().getParent().getPDBCode()) );
 				continue;
 			}
 

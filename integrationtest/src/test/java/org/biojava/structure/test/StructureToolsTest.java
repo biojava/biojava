@@ -35,6 +35,7 @@ import org.biojava.bio.structure.StructureTools;
 import org.biojava.bio.structure.align.util.AtomCache;
 import org.biojava.bio.structure.io.FileParsingParameters;
 import org.biojava.bio.structure.io.PDBFileParser;
+import static org.junit.Assume.*;
 
 import junit.framework.TestCase;
 
@@ -402,6 +403,30 @@ public class StructureToolsTest extends TestCase {
 
 	public void testGroupsWithinShell() {
 		//TODO
+	}
+	
+	public void testCAmmCIF() throws StructureException {
+		//mmCIF files left justify their atom names (eg "CA  "), so can have different behavior
+		AtomCache pdbCache = new AtomCache();
+		pdbCache.setUseMmCif(false);
+		AtomCache mmcifCache = new AtomCache();
+		mmcifCache.setUseMmCif(true);
+		
+		Structure pdb=null, mmcif=null;
+		
+		String name = "3PIU";
+		try {
+			pdb = pdbCache.getStructure(name);
+			mmcif = mmcifCache.getStructure(name);
+		} catch (IOException e) {
+			assumeNoException(e);
+		}
+		
+		Atom[] pdbCA = StructureTools.getAtomCAArray(pdb);
+		Atom[] mmcifCA = StructureTools.getAtomCAArray(mmcif);
+		
+		assertEquals("PDB has wrong length",409,pdbCA.length);
+		assertEquals("PDB has wrong length",409,mmcifCA.length);
 	}
 
 }

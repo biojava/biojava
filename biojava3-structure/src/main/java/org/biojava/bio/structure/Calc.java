@@ -24,6 +24,10 @@
 
 package org.biojava.bio.structure ;
 
+import javax.vecmath.Matrix4d;
+import javax.vecmath.Point3d;
+import javax.vecmath.Vector3d;
+
 import org.biojava.bio.structure.jama.Matrix;
 
 
@@ -469,7 +473,100 @@ public class Calc {
 		}
 
 	}
+	
+	/**
+	 * Transforms an atom object, given a Matrix4d (i.e. the vecmath library 
+	 * double-precision 4x4 rotation+translation matrix)
+	 * @param atom
+	 * @param m
+	 */
+	public static final void transform (Atom atom, Matrix4d m) {
+		
+		Point3d p = new Point3d(atom.getX(),atom.getY(),atom.getZ());
+		m.transform(p);
+		
+		atom.setX(p.x);
+		atom.setY(p.y);
+		atom.setZ(p.z);
+	}
+	
+	/**
+	 * Transforms a group object, given a Matrix4d (i.e. the vecmath library 
+	 * double-precision 4x4 rotation+translation matrix)
+	 * @param group
+	 * @param m
+	 */
+	public static final void transform (Group group, Matrix4d m) {
+		AtomIterator iter = new AtomIterator(group) ;
 
+		while (iter.hasNext()) {
+			Atom atom = (Atom) iter.next() ;
+			transform(atom,m);
+
+		}
+	}
+	
+	/**
+	 * Transforms a structure object, given a Matrix4d (i.e. the vecmath library 
+	 * double-precision 4x4 rotation+translation matrix)
+	 * @param structure
+	 * @param m
+	 */
+	public static final void transform (Structure structure, Matrix4d m) {
+		AtomIterator iter = new AtomIterator(structure) ;
+
+		while (iter.hasNext()) {
+			Atom atom = (Atom) iter.next() ;
+			transform(atom,m);
+
+		}
+	}
+
+	/**
+	 * Translates an atom object, given a Vector3d (i.e. the vecmath library 
+	 * double-precision 3-d vector)
+	 * @param atom
+	 * @param v
+	 */
+	public static final void translate (Atom atom, Vector3d v) {
+		
+		atom.setX(atom.getX()+v.x);
+		atom.setY(atom.getY()+v.y);
+		atom.setZ(atom.getZ()+v.z);
+	}
+	
+	/**
+	 * Translates a group object, given a Vector3d (i.e. the vecmath library 
+	 * double-precision 3-d vector)
+	 * @param group
+	 * @param v
+	 */
+	public static final void translate (Group group, Vector3d v) {
+		AtomIterator iter = new AtomIterator(group) ;
+
+		while (iter.hasNext()) {
+			Atom atom = (Atom) iter.next() ;
+			translate(atom,v);
+
+		}
+	}
+	
+	/**
+	 * Translates a Structure object, given a Vector3d (i.e. the vecmath library 
+	 * double-precision 3-d vector)
+	 * @param structure
+	 * @param v
+	 */
+	public static final void translate (Structure structure, Vector3d v) {
+		AtomIterator iter = new AtomIterator(structure) ;
+
+		while (iter.hasNext()) {
+			Atom atom = (Atom) iter.next() ;
+			translate(atom,v);
+
+		}
+	}
+	
 	/** calculate structure + Matrix coodinates ... 
 	 * 
 	 * @param s the structure to operate on
@@ -803,7 +900,7 @@ public class Calc {
 	}    
 
 
-	/**Gget euler angles for a matrix given in ZYZ convention.
+	/**Get euler angles for a matrix given in ZYZ convention.
 	 * (as e.g. used by Jmol)
 	 * 
 	 * @param m the rotation matrix

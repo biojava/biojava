@@ -30,7 +30,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
-import java.util.logging.Logger;
 
 import org.biojava.bio.structure.AminoAcid;
 import org.biojava.bio.structure.AminoAcidImpl;
@@ -90,6 +89,8 @@ import org.biojava.bio.structure.quaternary.BiologicalAssemblyTransformation;
 import org.biojava.bio.structure.xtal.CrystalCell;
 import org.biojava.bio.structure.xtal.SpaceGroup;
 import org.biojava.bio.structure.xtal.SymoplibParser;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /** A MMcifConsumer implementation that build a in-memory representation of the
  * content of a mmcif file as a BioJava Structure object.
@@ -127,7 +128,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 
 	FileParsingParameters params;
 
-	public static Logger logger =  Logger.getLogger("org.biojava.bio.structure");
+	private static final Logger logger = LoggerFactory.getLogger(SimpleMMcifConsumer.class);
 
 	public  SimpleMMcifConsumer(){
 		params = new FileParsingParameters();
@@ -262,7 +263,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 	 * @param name
 	 * @return
 	 */
-	private String fixFullAtomName(String name, Group currentGroup){
+	private String fixFullAtomName(String name, String element, Group currentGroup){
 
 		if (name.equals("N")){
 			return " N  ";
@@ -274,7 +275,12 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		}
 		// for ligands this will be calcium
 		if (currentGroup.getType().equals(GroupType.HETATM) && name.equals("CA")){
-			return "CA  ";
+			if( element.equals("C") )
+				// C-alpha (eg for modified AAs)
+				return " CA ";
+			else
+				// Default to left-justified, like calcium
+				return "CA  ";
 		}
 		if (name.equals("C")){
 			return " C  ";
@@ -492,7 +498,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		//System.out.println("fixing atom name for  >" + atom.getLabel_atom_id() + "< >" + fullname + "<");
 
 		
-		String fullname      = fixFullAtomName(atom.getLabel_atom_id(),current_group);
+		String fullname      = fixFullAtomName(atom.getLabel_atom_id(),atom.getType_symbol(), current_group);
 		
 		if ( params.isParseCAOnly() ){
 			// yes , user wants to get CA only
@@ -547,7 +553,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		a.setPDBserial(Integer.parseInt(atom.getId()));
 		a.setName(atom.getLabel_atom_id());
 
-		a.setFullName(fixFullAtomName(atom.getLabel_atom_id(), current_group));
+		a.setFullName(fixFullAtomName(atom.getLabel_atom_id(),atom.getType_symbol(), current_group));
 
 
 		double x = Double.parseDouble (atom.getCartn_x());
@@ -1037,7 +1043,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 					res = Float.parseFloat(resolution);
 
 				} catch (NumberFormatException e) {
-					logger.warning("could not parse resolution from line and ignoring it " + line);
+					logger.info("could not parse resolution from line and ignoring it " + line);
 					return ;
 
 
@@ -1059,14 +1065,14 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		// there are 2 resolution values, one for each method
 		// we take the first one found so that behaviour is like in PDB file parsing
 		if (pdbHeader.getResolution()!=PDBHeader.DEFAULT_RESOLUTION) {
-			logger.fine("more than 1 resolution value present (last encountered is "+r.getLs_d_res_high()+
+			logger.warn("more than 1 resolution value present (last encountered is "+r.getLs_d_res_high()+
 					"), will use only the first one ("+String.format("%4.2f",pdbHeader.getResolution())+")");
 			return;
 		}
 		try {
 			pdbHeader.setResolution(Float.parseFloat(r.getLs_d_res_high()));
 		} catch (NumberFormatException e){
-			logger.fine("could not parse resolution from " + r.getLs_d_res_high() + " " + e.getMessage());
+			logger.info("could not parse resolution from " + r.getLs_d_res_high() + " " + e.getMessage());
 		}
 	}
 
@@ -1145,20 +1151,20 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 			
 		} catch (NumberFormatException e){
 			structure.getPDBHeader().getCrystallographicInfo().setCrystalCell(null);
-			logger.fine("could not parse some cell parameters ("+e.getMessage()+"), ignoring _cell ");
+			logger.info("could not parse some cell parameters ("+e.getMessage()+"), ignoring _cell ");
 		}
 		try {
 			// if Z parsing fails it is not so important
 			structure.getPDBHeader().getCrystallographicInfo().setZ(Integer.parseInt(cell.getZ_PDB()));
 		} catch (NumberFormatException e) {
-			logger.fine("could not parse some the Z parameter from _cell ");
+			logger.info("could not parse some the Z parameter from _cell ");
 		}
 	}
 	
 	public void newSymmetry(Symmetry symmetry) {
         String spaceGroup = symmetry.getSpace_group_name_H_M();
 		SpaceGroup sg = SymoplibParser.getSpaceGroup(spaceGroup);
-        if (sg==null) logger.fine("Space group '"+spaceGroup+"' not recognised as a standard space group"); 
+        if (sg==null) logger.warn("Space group '"+spaceGroup+"' not recognised as a standard space group"); 
 
 		structure.getPDBHeader().getCrystallographicInfo().setSpaceGroup(sg); 
 	}
@@ -1218,7 +1224,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		r.setChainId(sref.getPdbx_strand_id());
 		StructRef structRef = getStructRef(sref.getRef_id());
 		if (structRef == null){
-			logger.warning("could not find StructRef " + sref.getRef_id() + " for StructRefSeq " + sref);
+			logger.warn("could not find StructRef " + sref.getRef_id() + " for StructRefSeq " + sref);
 		} else {
 			r.setDatabase(structRef.getDb_name());
 			r.setDbIdCode(structRef.getDb_code());
