@@ -16,11 +16,12 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.zip.GZIPOutputStream;
 
-
 import org.biojava.bio.structure.align.ce.AbstractUserArgumentProcessor;
 import org.biojava.bio.structure.align.util.HTTPConnectionTools;
 import org.biojava.bio.structure.io.mmcif.model.ChemComp;
 import org.biojava3.core.util.InputStreamProvider;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 
@@ -39,9 +40,11 @@ import org.biojava3.core.util.InputStreamProvider;
  */
 public class DownloadChemCompProvider implements ChemCompProvider {
 
-	static String path; 
+	private static final Logger logger = LoggerFactory.getLogger(DownloadChemCompProvider.class);
+	
+	private static String path; 
 	private static final String FILE_SEPARATOR = System.getProperty("file.separator");
-	static final String NEWLINE = System.getProperty("line.separator");
+	private static final String NEWLINE = System.getProperty("line.separator");
 
 	public static String CHEM_COMP_CACHE_DIRECTORY = "chemcomp";
 
@@ -268,8 +271,8 @@ public class DownloadChemCompProvider implements ChemCompProvider {
 			if ( !(tempdir.endsWith(FILE_SEPARATOR) ) )
 				tempdir = tempdir + FILE_SEPARATOR;
 
-			System.err.println("you did not set the path in PDBFileReader, don't know where to write the downloaded file to");
-			System.err.println("assuming default location is temp directory: " + tempdir);
+			logger.warn("You did not set the path in PDBFileReader, don't know where to write the downloaded file to. "
+					+ "Assuming default location is temp directory: " + tempdir);
 			path = tempdir;
 		}
 	}

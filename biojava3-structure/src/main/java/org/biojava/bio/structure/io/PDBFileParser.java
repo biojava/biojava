@@ -1518,6 +1518,7 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 	private void pdb_CRYST1_Handler(String line) {    
         // don't process incomplete CRYST1 records
 		if (line.length() < 69) {
+			logger.info("CRYST1 record has fewer than 69 columns: will ignore it");
 			return;
 		}
 		
