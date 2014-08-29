@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
+import org.biojava3.core.sequence.compound.AmbiguityDNACompoundSet;
 import org.biojava3.core.sequence.compound.AminoAcidCompound;
 import org.biojava3.core.sequence.compound.AminoAcidCompoundSet;
 import org.biojava3.core.sequence.compound.DNACompoundSet;
@@ -169,7 +170,7 @@ public class ProteinSequence extends AbstractSequence<AminoAcidCompound> {
         FastaReader<DNASequence, NucleotideCompound> parentReader
                 = new FastaReader<DNASequence, NucleotideCompound>(is,
                         new PlainFastaHeaderParser<DNASequence, NucleotideCompound>(),
-                        new DNASequenceCreator(DNACompoundSet.getDNACompoundSet()));
+                        new DNASequenceCreator(AmbiguityDNACompoundSet.getDNACompoundSet()));
         LinkedHashMap<String, DNASequence> seq = parentReader.process();
 
         DNASequence parentSeq = null;
