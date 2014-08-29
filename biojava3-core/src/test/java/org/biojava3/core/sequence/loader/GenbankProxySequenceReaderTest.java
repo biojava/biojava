@@ -12,6 +12,8 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Testing example for issue #834
@@ -23,6 +25,7 @@ import org.junit.runners.Parameterized;
 public class GenbankProxySequenceReaderTest {
 
     private String gi;
+    private Logger log = LoggerFactory.getLogger(getClass());
 
     public GenbankProxySequenceReaderTest(String gi) {
         this.gi = gi;
@@ -47,8 +50,8 @@ public class GenbankProxySequenceReaderTest {
     }
 
     @Test
-    public void biojava3Approach1() throws Throwable {
-
+    public void biojava3() throws Throwable {
+        log.info("run test for protein: {}", gi);
         GenbankProxySequenceReader<AminoAcidCompound> genbankReader
                 = new GenbankProxySequenceReader<AminoAcidCompound>("/tmp", this.gi, AminoAcidCompoundSet.getAminoAcidCompoundSet());
 
@@ -63,7 +66,7 @@ public class GenbankProxySequenceReaderTest {
         Assert.assertFalse(seq.getFeaturesKeyWord().getKeyWords().isEmpty());
         Assert.assertFalse(seq.getFeaturesByType("organism").get(0).getSource().isEmpty());
         
-        System.err.println(String.format("taxonomy id: %s", seq.getTaxonomy()));
+        log.info("taxonomy id: {}", seq.getTaxonomy().getID());
         Assert.assertNotNull(seq.getTaxonomy().getID());
         Assert.assertNotNull(seq.getSequenceAsString());
         
