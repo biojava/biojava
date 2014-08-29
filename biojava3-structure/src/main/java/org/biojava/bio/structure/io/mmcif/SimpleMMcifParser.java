@@ -70,7 +70,6 @@ import org.biojava.bio.structure.jama.Matrix;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
 /** A simple mmCif file parser
  *
  * @author Andreas Prlic
@@ -172,7 +171,7 @@ public class SimpleMMcifParser implements MMcifParser {
 		// the first line is a data_PDBCODE line, test if this looks like a mmcif file
 		line = buf.readLine();
 		if (!line.startsWith("data_")){
-			System.err.println("this does not look like a valid MMcif file! The first line should be data_1XYZ, but is " + line);
+			logger.error("this does not look like a valid MMcif file! The first line should be data_1XYZ, but is " + line);
 			triggerDocumentEnd();
 			return;
 		}
@@ -207,7 +206,7 @@ public class SimpleMMcifParser implements MMcifParser {
 						String attribute = spl[1];
 						loopFields.add(attribute);
 						if ( spl.length > 2){
-							System.err.println("found nested attribute, not supported, yet!");
+							logger.warn("found nested attribute, not supported, yet!");
 						}
 					} else {
 						category = txt;
@@ -219,7 +218,7 @@ public class SimpleMMcifParser implements MMcifParser {
 					// in loop and we found a data line
 					lineData = processLine(line, buf, loopFields.size());
 					if ( lineData.size() != loopFields.size()){
-						System.err.println("did not find enough data fields...");
+						logger.warn("did not find enough data fields...");
 
 					}
 
@@ -263,7 +262,7 @@ public class SimpleMMcifParser implements MMcifParser {
 						// looks like a chem_comp file
 						// line should start with data, otherwise something is wrong!
 						if (! line.startsWith("data_")){
-							System.err.println("this does not look like a valid MMcif file! The first line should be data_1XYZ, but is " + line);
+							logger.warn("this does not look like a valid MMcif file! The first line should be data_1XYZ, but is " + line);
 							triggerDocumentEnd();
 							return;
 						}
@@ -458,7 +457,7 @@ public class SimpleMMcifParser implements MMcifParser {
 
 			if ( lineData.size() > fieldLength){
 
-				System.err.println("wrong data length ("+lineData.size()+
+				logger.warn("wrong data length ("+lineData.size()+
 						") should be ("+fieldLength+") at line " + line + " got lineData: " + lineData);
 				return lineData;
 			}
@@ -487,7 +486,7 @@ public class SimpleMMcifParser implements MMcifParser {
 			System.exit(0);
 		}*/
 		if ( loopFields.size() != lineData.size()){
-			System.err.println("looks like we got a problem with nested string quote characters:");
+			logger.warn("looks like we got a problem with nested string quote characters:");
 			throw new IOException("data length ("+ lineData.size() +
 					") != fields length ("+loopFields.size()+
 					") category: " +category + " fields: "+
@@ -730,7 +729,7 @@ public class SimpleMMcifParser implements MMcifParser {
 	//				if ( val.equals("?") || val.equals(".")) {
 	//					logger.info("trying to set field >" + key + "< in >"+ c.getName() + "<, but not found. Since value is >"+val+"<  most probably just ignore this.");
 	//				} else {
-	//					logger.warning("trying to set field >" + key + "< in >"+ c.getName() + "<, but not found! (value:" + val + ")");
+	//					logger.warn("trying to set field >" + key + "< in >"+ c.getName() + "<, but not found! (value:" + val + ")");
 	//				}
 	//			}
 	//		} else {
@@ -842,26 +841,29 @@ public class SimpleMMcifParser implements MMcifParser {
 
 					} else {
 						String warning = "Trying to set field " + key + " in "+ c.getName() +", but not found! (value:" + val + ")";
-
-						if( !(warnings != null && warnings.contains(warning)) && !val.equals("?") ) {
-							System.err.println(warning);
+						String warnkey = key+"-"+c.getName();
+						// Suppress duplicate warnings or attempts to store empty data
+						if( val.equals("?") || ( warnings != null && warnings.contains(warnkey)) ) {
+							logger.debug(warning);
+						} else {
+							logger.warn(warning);
 						}
 
 						if(warnings != null) {
-							warnings.add(warning);
+							warnings.add(warnkey);
 						}
 						//System.err.println(lineData);
 					}
 				}
 			}
 		} catch (InstantiationException eix){
-			eix.printStackTrace();
+			logger.warn( "Error while constructing "+className, eix);
 		} catch (InvocationTargetException etx){
-			etx.printStackTrace();
+			logger.warn( "Error while constructing "+className, etx);
 		} catch (IllegalAccessException eax){
-			eax.printStackTrace();
+			logger.warn( "Error while constructing "+className, eax);
 		} catch (ClassNotFoundException ex){
-			ex.printStackTrace();
+			logger.warn( "Error while constructing "+className, ex);
 		}
 		return o;
 	}
