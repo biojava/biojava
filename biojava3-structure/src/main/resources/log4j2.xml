@@ -6,11 +6,8 @@
 		</Console>
 	</appenders>
 	<loggers>
-		<root level="trace">
+		<root level="warn">
 			<appender-ref ref="Console"/>
 		</root>
-		<logger name="org.biojava.bio.structure" level="warn">
-			<appender-ref ref="Console"/>
-		</logger>
 	</loggers>
 </configuration>
