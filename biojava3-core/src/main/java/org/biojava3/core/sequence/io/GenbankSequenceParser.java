@@ -222,7 +222,10 @@ public class GenbankSequenceParser<S extends AbstractSequence<C>, C extends Comp
                                 if (m.matches()) {
                                     String dbname = m.group(1);
                                     String raccession = m.group(2);
-                                    ArrayList<DBReferenceInfo> listDBEntry = new ArrayList<DBReferenceInfo>();
+                                    ArrayList<DBReferenceInfo> listDBEntry = mapDB.get(key);
+                                    if (listDBEntry == null) {
+                                        listDBEntry = new ArrayList<DBReferenceInfo>();
+                                    }
                                     FeatureDbReferenceInfo<S, C> dbReference = new FeatureDbReferenceInfo<S, C>(dbname, raccession);
                                     listDBEntry.add(dbReference);
                                     mapDB.put(key, listDBEntry); 
@@ -394,8 +397,21 @@ public class GenbankSequenceParser<S extends AbstractSequence<C>, C extends Comp
             sequence.addFeature(f.getValue());
         }
         
-        String taxonId = mapDB.get("taxon").get(0).getId();
-        sequence.setTaxonomy(new TaxonomyID(taxonId, DataSource.NCBI));
+        
+        // list of referece databases
+        ArrayList<DBReferenceInfo> dbs = mapDB.get("db_xref");
+        
+        //System.err.println("db ref size: " + dbs.size());
+        for (DBReferenceInfo db: dbs) {
+            //System.err.println(String.format("db name: %s", db.getDatabase()));
+            if (db.getDatabase().equals("taxon")) {
+                //System.err.println("found taxon");
+                String taxonId = db.getId();
+                sequence.setTaxonomy(new TaxonomyID(taxonId, DataSource.NCBI));
+                break;
+            }
+        }
+        
     }
 
     public CompoundSet<?> getCompoundType() {
