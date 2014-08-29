@@ -8,6 +8,7 @@ import java.util.List;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 
 import org.biojava.bio.structure.Atom;
 import org.biojava.bio.structure.AtomImpl;
@@ -20,21 +21,21 @@ import org.biojava.bio.structure.align.model.AFP;
 import org.biojava.bio.structure.align.model.AFPChain;
 import org.biojava.bio.structure.align.util.AFPAlignmentDisplay;
 import org.biojava.bio.structure.jama.Matrix;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
-
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
-import org.xml.sax.SAXParseException;
 
 //http://www.developerfusion.com/code/2064/a-simple-way-to-read-an-xml-file-in-java/
 
 public class AFPChainXMLParser
 {
 
+	private static final Logger logger = LoggerFactory.getLogger(AFPChainXMLParser.class);
 	
 	/** new utility method that checks that the order of the pair in the XML alignment is correct and flips the direction if needed
 	 * 
@@ -45,7 +46,7 @@ public class AFPChainXMLParser
 	 * @param ca2
 	 * @return
 	 */
-	 public static AFPChain fromXML(String xml, String name1, String name2, Atom[] ca1, Atom[] ca2) throws StructureException{
+	 public static AFPChain fromXML(String xml, String name1, String name2, Atom[] ca1, Atom[] ca2) throws IOException, StructureException{
 			AFPChain[] afps = parseMultiXML( xml);
 			if ( afps.length > 0 ) {
 
@@ -73,7 +74,7 @@ public class AFPChainXMLParser
 		 
 	 }
 	
-   public static AFPChain fromXML(String xml, Atom[] ca1, Atom[] ca2)
+   public static AFPChain fromXML(String xml, Atom[] ca1, Atom[] ca2) throws IOException
 	{
 		AFPChain[] afps = parseMultiXML( xml);
 		if ( afps.length > 0 ) {
@@ -182,7 +183,7 @@ public class AFPChainXMLParser
 				
 				if ( pos1 == -1 || pos2 == -1 ){
 				   // this can happen when parsing old files that contained Calcium atoms...
-				   System.err.println("AFPChainXMLParser: warning: pos1: " +pos1 + " " + pdbResnum1 + " pos2: " + pos2 + " " + pdbResnum2 +  " should never be -1. Probably parsing an.");
+				   logger.warn("pos1: " +pos1 + " " + pdbResnum1 + " pos2: " + pos2 + " " + pdbResnum2 +  " should never be -1. Probably parsing an.");
 				   verifiedOptLen[blockNr]-- ;
 				   continue;
 				}
@@ -205,7 +206,7 @@ public class AFPChainXMLParser
 
 	}
 
-	public static AFPChain[] parseMultiXML(String xml) {
+	public static AFPChain[] parseMultiXML(String xml) throws IOException {
 		List<AFPChain> afpChains = new ArrayList<AFPChain>();
 
 		try
@@ -333,21 +334,16 @@ public class AFPChainXMLParser
 
 				afpChains.add(a);
 			}
-		}
-		catch (SAXParseException err) 
-		{
-			System.out.println ("** Parsing error" + ", line " 
-					+ err.getLineNumber () + ", uri " + err.getSystemId ());
-			System.out.println(" " + err.getMessage ());
-		}
+		}	
+		
+		// TODO these 2 exceptions should be thrown forward, it's not a good idea to catch them so early
 		catch (SAXException e)
 		{
 			Exception x = e.getException ();
 			((x == null) ? e : x).printStackTrace ();
 		}
-		catch (Throwable t)
-		{
-			t.printStackTrace ();
+		catch (ParserConfigurationException e) {
+			e.printStackTrace();
 		}
 
 		return afpChains.toArray(new AFPChain[afpChains.size()]);

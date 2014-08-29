@@ -46,6 +46,8 @@ import org.biojava.bio.structure.io.mmcif.chem.PolymerType;
 import org.biojava.bio.structure.io.mmcif.chem.ResidueType;
 import org.biojava.bio.structure.io.mmcif.model.ChemComp;
 import org.biojava.bio.structure.io.util.FileDownloadUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -56,6 +58,8 @@ import org.biojava.bio.structure.io.util.FileDownloadUtils;
  * @version %I% %G%
  */
 public class StructureTools {
+	
+	private static final Logger logger = LoggerFactory.getLogger(StructureTools.class);
 
 	/** The Atom name of C-alpha atoms.
 	 *
@@ -413,7 +417,7 @@ public class StructureTools {
 
 				Atom a = g.getAtom(atomName);
 				if ( a == null) {
-
+					logger.debug("Group "+g.getResidueNumber()+" ("+g.getPDBName()+") does not have the required atom '"+atomName+"'");
 					// this group does not have a required atom, skip it...
 					thisGroupAllAtoms = false;
 					break;
@@ -718,7 +722,7 @@ public class StructureTools {
 		try {
 			c = s.getChainByPDB(chainId);
 		} catch (StructureException e){
-			System.err.println(e.getMessage() + " trying upper case Chain id...");
+			logger.warn(e.getMessage() + ". Chain id "+chainId+" did not match, trying upper case Chain id.");
 			c = s.getChainByPDB(chainId.toUpperCase());
 
 
@@ -867,7 +871,7 @@ public class StructureTools {
 				if(struc.size() != 1) {
 					// SCOP 1.71 uses this for some proteins with multiple chains
 					// Print a warning in this ambiguous case
-					System.err.format("WARNING multiple possible chains match '_'. Using chain %s.%n",chain.getChainID());
+					logger.warn("Multiple possible chains match '_'. Using chain %s.%n",chain.getChainID());
 				}
 			} else {
 				// Explicit chain
