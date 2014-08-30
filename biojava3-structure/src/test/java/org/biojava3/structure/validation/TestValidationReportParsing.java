@@ -92,8 +92,9 @@ public class TestValidationReportParsing {
 
 			WwPDBValidationInformation validationReport = (WwPDBValidationInformation) um.unmarshal(inStream);
 
-			Entry entry = validationReport.getEntry();
+			validationReport.getEntry();
 			
+//			Entry entry = validationReport.getEntry();
 //			System.out.println(pdbId + " " + entry.getPDBRevisionNumber() +  
 //					"\t Rfree: " + entry.getDCCRfree() +
 //					"\t Clashscore " + entry.getClashscore() + 
