@@ -38,9 +38,9 @@ public class ChemCompGroupFactory {
 	
 	private static final Logger logger = LoggerFactory.getLogger(ChemCompGroupFactory.class);
 
-	static ChemCompProvider chemCompProvider = new DownloadChemCompProvider();
+	private static ChemCompProvider chemCompProvider = new DownloadChemCompProvider();
 
-	static SoftHashMap<String, ChemComp> cache = new SoftHashMap<String, ChemComp>(0);
+	private static SoftHashMap<String, ChemComp> cache = new SoftHashMap<String, ChemComp>(0);
 
 	public static ChemComp getChemComp(String recordName){
 
@@ -48,8 +48,10 @@ public class ChemCompGroupFactory {
 
 		// we are using the cache, to avoid hitting the file system too often.
 		ChemComp cc = cache.get(recordName);
-		if ( cc != null)
+		if ( cc != null) {
+			logger.debug("Chem comp "+cc.getThree_letter_code()+" read from cache");
 			return cc;
+		}
 
 		// not cached, get the chem comp from the provider 
 		cc = chemCompProvider.getChemComp(recordName);
@@ -58,7 +60,7 @@ public class ChemCompGroupFactory {
 		return cc;
 	}
 
-	public static void setChemCompProvider(ChemCompProvider provider){
+	public static void setChemCompProvider(ChemCompProvider provider) {
 		chemCompProvider = provider;
 	}
 
@@ -94,7 +96,7 @@ public class ChemCompGroupFactory {
 
 			if ( one_letter == null || one_letter.length()==0 || one_letter.equals("?")) {
 				// e.g. problem with PRR, which probably should have a parent of ALA, but as of 20110127 does not.
-				logger.warn("Problem with chemical component: " + recordName + "  Did not find one letter code!");
+				logger.warn("Problem with chemical component: " + recordName + "  Did not find one letter code! Setting it to 'X'");
 				aa.setAminoType('X');
 
 			} else  {

@@ -1,6 +1,7 @@
 package org.biojava.bio.structure.io.mmcif;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.zip.GZIPInputStream;
@@ -8,6 +9,8 @@ import java.util.zip.GZIPInputStream;
 import org.biojava.bio.structure.io.mmcif.chem.PolymerType;
 import org.biojava.bio.structure.io.mmcif.chem.ResidueType;
 import org.biojava.bio.structure.io.mmcif.model.ChemComp;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /** Unlike the {@link DownloadChemCompProvider}, this  {@link ChemCompProvider} does not download any chem comp definitions. 
@@ -17,8 +20,11 @@ import org.biojava.bio.structure.io.mmcif.model.ChemComp;
  * @since 3.0
  */
 public class ReducedChemCompProvider implements ChemCompProvider {
+	
+	private static final Logger logger = LoggerFactory.getLogger(ReducedChemCompProvider.class);
 
 	public ReducedChemCompProvider(){
+		logger.info("Using reduced chem comp provider");
 		//System.out.println("USING REDUCED CHEM COMP PROVIDER");
 	}
 	
@@ -61,11 +67,11 @@ public class ReducedChemCompProvider implements ChemCompProvider {
 			ChemComp chemComp = dict.getChemComp(name);
 			
 			return chemComp;
-		} catch (Exception e){
+		} catch (IOException e){
 			e.printStackTrace();
 
 		}
-		System.err.println("problem when loading chem comp " + name);
+		logger.warn("Problem when loading chem comp " + name);
 		ChemComp cc = getEmptyChemComp();
 		cc.setId(name);
 		return cc;
