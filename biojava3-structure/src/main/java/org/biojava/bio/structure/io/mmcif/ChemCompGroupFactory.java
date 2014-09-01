@@ -53,7 +53,8 @@ public class ChemCompGroupFactory {
 			return cc;
 		}
 
-		// not cached, get the chem comp from the provider 
+		// not cached, get the chem comp from the provider
+		logger.debug("Chem comp "+recordName+" read from provider "+chemCompProvider.getClass().getCanonicalName());
 		cc = chemCompProvider.getChemComp(recordName);
 		
 		cache.put(recordName, cc);
@@ -61,6 +62,7 @@ public class ChemCompGroupFactory {
 	}
 
 	public static void setChemCompProvider(ChemCompProvider provider) {
+		logger.info("Setting new chem comp provider to "+provider.getClass().getCanonicalName());
 		chemCompProvider = provider;
 	}
 

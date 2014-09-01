@@ -67,7 +67,6 @@ public class DownloadChemCompProvider implements ChemCompProvider {
 	boolean downloadAll = false;
 
 	public DownloadChemCompProvider(){
-		logger.info("Using download chem comp provider");
 		//System.out.println("USING DOWNLOAD CHEM COMP PROVIDER");		
 	}
 

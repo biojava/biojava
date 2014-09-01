@@ -24,7 +24,6 @@ public class ReducedChemCompProvider implements ChemCompProvider {
 	private static final Logger logger = LoggerFactory.getLogger(ReducedChemCompProvider.class);
 
 	public ReducedChemCompProvider(){
-		logger.info("Using reduced chem comp provider");
 		//System.out.println("USING REDUCED CHEM COMP PROVIDER");
 	}
 	
@@ -45,7 +44,7 @@ public class ReducedChemCompProvider implements ChemCompProvider {
 		if ( inStream == null){
 			//System.out.println("Could not find chem comp: " + name + " ... using generic Chem Comp");
 			// could not find the chem comp definition for this in the jar file
-			
+			logger.debug("Getting empty chem comp for "+recordName);
 			ChemComp cc = getEmptyChemComp();
 			cc.setId(name);
 			return cc;
