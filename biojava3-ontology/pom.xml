@@ -38,7 +38,6 @@
   </dependencies>
   
       <properties>
-        <jdk.version>1.6</jdk.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.build.targetEncoding>UTF-8</project.build.targetEncoding>
 
