@@ -164,7 +164,7 @@ public class DownloadChemCompProvider implements ChemCompProvider {
 			// write the last record...
 			writeID(writer,currentID);
 			counter++;
-		} catch (Exception e){
+		} catch (IOException e){
 			e.printStackTrace();
 		}
 		System.out.println("created " + counter + " chemical component files.");
@@ -242,7 +242,7 @@ public class DownloadChemCompProvider implements ChemCompProvider {
 
 			return chemComp;
 
-		} catch (Exception e) {
+		} catch (IOException e) {
 
 			e.printStackTrace();
 
@@ -292,7 +292,7 @@ public class DownloadChemCompProvider implements ChemCompProvider {
 
 		File f = new File(dir);
 		if (! f.exists()){
-			System.out.println("creating directory " + f);
+			logger.info("creating directory " + f);
 			f.mkdir();
 		}
 
@@ -351,7 +351,7 @@ public class DownloadChemCompProvider implements ChemCompProvider {
 			conn.close();
 
 
-		} catch (Exception e){
+		} catch (IOException e){
 			e.printStackTrace();
 		}
 
