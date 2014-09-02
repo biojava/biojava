@@ -28,6 +28,8 @@ import org.biojava.bio.structure.align.ce.StartupParameters;
 import org.biojava.bio.structure.io.PDBFileReader;
 import org.biojava3.core.util.PrettyXMLWriter;
 import org.biojava3.core.util.XMLWriter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /** A container to persist config to the file system
@@ -38,6 +40,8 @@ import org.biojava3.core.util.XMLWriter;
 public class UserConfiguration
 {
 
+	private static final Logger logger = LoggerFactory.getLogger(UserConfiguration.class);
+	
 	String pdbFilePath;
 	String cacheFilePath;
 	boolean isSplit;
@@ -80,6 +84,8 @@ public class UserConfiguration
 
 			if( env.containsKey(PDB_DIR)) {
 				pdbFilePath = env.get(PDB_DIR);
+				logger.debug("Read pdb dir from environment variable "+PDB_DIR+": "+userProvidedDir);
+
 			} else {
 				pdbFilePath = System.getProperty(TMP_DIR);
 			}   

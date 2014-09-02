@@ -62,7 +62,7 @@ public class ChemCompGroupFactory {
 	}
 
 	public static void setChemCompProvider(ChemCompProvider provider) {
-		logger.info("Setting new chem comp provider to "+provider.getClass().getCanonicalName());
+		logger.debug("Setting new chem comp provider to "+provider.getClass().getCanonicalName());
 		chemCompProvider = provider;
 	}
 
