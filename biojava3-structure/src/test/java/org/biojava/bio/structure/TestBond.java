@@ -1,7 +1,6 @@
 package org.biojava.bio.structure;
 
 import java.io.IOException;
-import java.util.List;
 
 import junit.framework.TestCase;
 

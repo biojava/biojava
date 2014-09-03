@@ -32,6 +32,8 @@ import java.util.Map;
 
 import org.biojava.bio.structure.io.mmcif.ChemCompGroupFactory;
 import org.biojava.bio.structure.io.mmcif.model.ChemComp;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -45,6 +47,8 @@ import org.biojava.bio.structure.io.mmcif.model.ChemComp;
  * @since 1.4
  */
 public class HetatomImpl implements Group,Serializable {
+	
+	private static final Logger logger = LoggerFactory.getLogger(HetatomImpl.class);
 
 	/**
 	 *
@@ -131,7 +135,7 @@ public class HetatomImpl implements Group,Serializable {
 		//if (s.length() != 3) {
 		//throw new PDBParseException("amino acid name is not of length 3!");
 		//}
-		if (s != null && s.equals("?")) System.err.println("HetatomImpl: invalid pdbname: ?");
+		if (s != null && s.equals("?")) logger.info("invalid pdbname: ?");
 		pdb_name =s ;
 		
 	}
@@ -451,7 +455,7 @@ public class HetatomImpl implements Group,Serializable {
 	public ChemComp getChemComp() {
 		if  ( chemComp == null ) {
 			chemComp = ChemCompGroupFactory.getChemComp(pdb_name);
-			if (chemComp == null) System.out.println("HetatomImpl: getChemComp: " + pdb_name);
+			if (chemComp == null) logger.info("getChemComp: " + pdb_name);
 		}
 		return chemComp;
 	}

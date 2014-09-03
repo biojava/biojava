@@ -7,6 +7,7 @@ package org.biojava3.core.sequence.io;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 
@@ -25,8 +26,10 @@ public class GenbankWriterTest extends TestCase{
 
 	@Test
 	public void testProcess() throws Exception {
-		File dnaFile = new File("src/test/resources/NM_000266.gb");
-		LinkedHashMap<String, DNASequence> dnaSequences = GenbankReaderHelper.readGenbankDNASequence( dnaFile );
+
+        InputStream inStream = GenbankWriterTest.class.getResourceAsStream("/NM_000266.gb");
+		//File dnaFile = new File("src/test/resources/NM_000266.gb");
+		LinkedHashMap<String, DNASequence> dnaSequences = GenbankReaderHelper.readGenbankDNASequence( inStream );
 		ByteArrayOutputStream fragwriter = new ByteArrayOutputStream();
 		ArrayList<DNASequence> seqs = new ArrayList<DNASequence>();
 		for(DNASequence seq : dnaSequences.values()) {

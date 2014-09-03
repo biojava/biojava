@@ -41,21 +41,19 @@ import org.biojava.bio.structure.io.mmcif.MMcifParser;
 import org.biojava.bio.structure.io.mmcif.SimpleMMcifConsumer;
 import org.biojava.bio.structure.io.mmcif.SimpleMMcifParser;
 import org.biojava3.core.util.InputStreamProvider;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /** How to parse an mmCif file:
  * <pre>
-  public static void main(String[] args){
+  public static void main(String[] args) throws Exception {
         String filename =  "/path/to/something.cif.gz" ;
 
         StructureIOFile reader = new MMCIFFileReader();
-
-        try{
-            Structure struc = reader.getStructure(filename);
-            System.out.println(struc);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        
+        Structure struc = reader.getStructure(filename);
+        System.out.println(struc);
     }
     </pre>
  *
@@ -65,31 +63,30 @@ import org.biojava3.core.util.InputStreamProvider;
  */
 public class MMCIFFileReader implements StructureIOFile {
 
-	String path;
-	List<String> extensions;
-	boolean autoFetch;
-	boolean pdbDirectorySplit;
+	private static final Logger logger = LoggerFactory.getLogger(MMCIFFileReader.class);
+	
+	private String path;
+	private List<String> extensions;
+	private boolean autoFetch;
+	private boolean pdbDirectorySplit;
 	
 	public static final String lineSplit = System.getProperty("file.separator");
 	
 	FileParsingParameters params;
 	SimpleMMcifConsumer consumer;
 	
-	public static void main(String[] args){
+	public static void main(String[] args) throws Exception {
 	
 		MMCIFFileReader reader = new MMCIFFileReader();
 		FileParsingParameters params = new FileParsingParameters();
 		reader.setFileParsingParameters(params);
 		
-		try{
-			Structure struc = reader.getStructureById("1m4x");
-			System.out.println(struc);
-			System.out.println(struc.toPDB());
-			
 		
-		} catch (Exception e) {
-			e.printStackTrace();
-		}		
+		Structure struc = reader.getStructureById("1m4x");
+		System.out.println(struc);
+		System.out.println(struc.toPDB());
+		
+			
 	}
 
 	public MMCIFFileReader(){
@@ -232,7 +229,7 @@ public class MMCIFFileReader implements StructureIOFile {
 
 						if (lastModified < PDBFileReader.lastRemediationDate) {
 							// the file is too old, replace with newer version
-							System.out.println("replacing file " + pdbFile +" with latest remediated file from PDB.");
+							logger.warn("Replacing file " + pdbFile +" with latest remediated file from PDB.");
 							pdbFile = null;
 
 							return null;
@@ -273,7 +270,7 @@ public class MMCIFFileReader implements StructureIOFile {
 
 
 		} else {
-			throw new IOException("could not find PDB " + pdbId + " in file system and also could not download");
+			throw new IOException("Could not find PDB " + pdbId + " in file system and also could not download");
 		}
 
 	}
@@ -281,8 +278,8 @@ public class MMCIFFileReader implements StructureIOFile {
 	public File downloadPDB(String pdbId){
 
 		if ((path == null) || (path.equals(""))){
-			System.err.println("you did not set the path in PDBFileReader, don;t know where to write the downloaded file to");
-			System.err.println("assuming default location is local directory.");
+			logger.warn("You did not set the path in PDBFileReader, don't know where to write the downloaded file to."
+					+ " Assuming default location is current directory.");
 			path = ".";
 		}
 				
@@ -306,13 +303,13 @@ public class MMCIFFileReader implements StructureIOFile {
 		
 		String ftp = String.format("ftp://ftp.wwpdb.org/pub/pdb/data/structures/all/mmCIF/%s.cif.gz", pdbId.toLowerCase());
 
-		System.out.println("Fetching " + ftp);
+		logger.info("Fetching " + ftp);
 		try {
 			URL url = new URL(ftp);
 			InputStream conn = url.openStream();
 
 			// prepare destination
-			System.out.println("writing to " + tempFile);
+			logger.info("Writing to " + tempFile);
 
 			FileOutputStream outPut = new FileOutputStream(tempFile);
 			GZIPOutputStream gzOutPut = new GZIPOutputStream(outPut);
@@ -327,8 +324,9 @@ public class MMCIFFileReader implements StructureIOFile {
 			pw.close();
 			outPut.close();
 			conn.close();
-		} catch (Exception e){
-			e.printStackTrace();
+		} catch (IOException e){
+			//e.printStackTrace();
+			logger.warn("Could not fetch from ftp "+ftp+" or write file locally. Error: "+e.getMessage());
 			return null;
 		}
 		return tempFile;

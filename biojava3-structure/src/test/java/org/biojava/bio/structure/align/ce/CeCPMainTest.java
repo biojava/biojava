@@ -48,8 +48,10 @@ public class CeCPMainTest extends TestCase {
 		ca2 = StructureTools.duplicateCA2(ca2);
 		AFPChain afp = makeDummyAFPChain(dupAlign, ca1, ca2);
 
+		CECPParameters params = new CECPParameters();
+		params.setMinCPLength(0);
 //		AFPChain newAFP = (AFPChain) filterDuplicateAFPs.invoke(null, afp, new CECalculator(null), ca1, ca2);
-		AFPChain newAFP = CeCPMain.filterDuplicateAFPs(afp, new CECalculator(null), ca1, ca2, 0);
+		AFPChain newAFP = CeCPMain.filterDuplicateAFPs(afp, new CECalculator(null), ca1, ca2, params);
 
 		int[][][] align = newAFP.getOptAln();
 		int[] blkLen = newAFP.getOptLen();
@@ -110,18 +112,19 @@ public class CeCPMainTest extends TestCase {
 		};
 		filteredLen = new int[] { filteredAln[0][0].length, filteredAln[1][0].length };
 		
+		CECPParameters params = new CECPParameters();
 		
 		
-		int minCPlength;
-		for(minCPlength=0;minCPlength<4;minCPlength++) {
-			result = CeCPMain.filterDuplicateAFPs(afpChain, new CECalculator(null), ca1, ca2,minCPlength);
+		for(int minCPlength=0;minCPlength<4;minCPlength++) {
+			params.setMinCPLength(minCPlength);
+			result = CeCPMain.filterDuplicateAFPs(afpChain, new CECalculator(null), ca1, ca2,params);
 		
 			assertTrue("Wrong optAln for minCPlength="+minCPlength,Arrays.deepEquals(filteredAln, result.getOptAln()));
 			assertTrue("Wrong optLen for minCPlength="+minCPlength,Arrays.equals(filteredLen, result.getOptLen()));
 	}
 
 		// For minCPlength=4, filtering changes
-		minCPlength=4;
+		params.setMinCPLength(4);
 		filteredAln = new int[][][] {
 				new int[][] {
 						new int[] {  2, 3, 4, 5, 6,},
@@ -134,13 +137,13 @@ public class CeCPMainTest extends TestCase {
 		};
 		filteredLen = new int[] { filteredAln[0][0].length, filteredAln[1][0].length };
 
-		result = CeCPMain.filterDuplicateAFPs(afpChain, new CECalculator(null), ca1, ca2,minCPlength);
+		result = CeCPMain.filterDuplicateAFPs(afpChain, new CECalculator(null), ca1, ca2,params);
 
-		assertTrue("Wrong optAln for minCPlength="+minCPlength,Arrays.deepEquals(filteredAln, result.getOptAln()));
-		assertTrue("Wrong optLen for minCPlength="+minCPlength,Arrays.equals(filteredLen, result.getOptLen()));
+		assertTrue("Wrong optAln for minCPlength="+params.getMinCPLength(),Arrays.deepEquals(filteredAln, result.getOptAln()));
+		assertTrue("Wrong optLen for minCPlength="+params.getMinCPLength(),Arrays.equals(filteredLen, result.getOptLen()));
 
 		// For minCPlength=5, filtering changes
-		minCPlength=5;
+		params.setMinCPLength(5);
 		filteredAln = new int[][][] {
 				new int[][] {
 						new int[] {  0, 1, 2, 3, 4, 5, 6,},
@@ -149,27 +152,27 @@ public class CeCPMainTest extends TestCase {
 		};
 		filteredLen = new int[] { filteredAln[0][0].length };
 
-		result = CeCPMain.filterDuplicateAFPs(afpChain, new CECalculator(null), ca1, ca2,minCPlength);
+		result = CeCPMain.filterDuplicateAFPs(afpChain, new CECalculator(null), ca1, ca2,params);
 
-		assertTrue("Wrong optAln for minCPlength="+minCPlength,Arrays.deepEquals(filteredAln, result.getOptAln()));
-		assertTrue("Wrong optLen for minCPlength="+minCPlength,Arrays.equals(filteredLen, result.getOptLen()));
+		assertTrue("Wrong optAln for minCPlength="+params.getMinCPLength(),Arrays.deepEquals(filteredAln, result.getOptAln()));
+		assertTrue("Wrong optLen for minCPlength="+params.getMinCPLength(),Arrays.equals(filteredLen, result.getOptLen()));
 
-		minCPlength=7;
-		result = CeCPMain.filterDuplicateAFPs(afpChain, new CECalculator(null), ca1, ca2,minCPlength);
+		params.setMinCPLength(7);
+		result = CeCPMain.filterDuplicateAFPs(afpChain, new CECalculator(null), ca1, ca2,params);
 
-		assertTrue("Wrong optAln for minCPlength="+minCPlength,Arrays.deepEquals(filteredAln, result.getOptAln()));
-		assertTrue("Wrong optLen for minCPlength="+minCPlength,Arrays.equals(filteredLen, result.getOptLen()));
+		assertTrue("Wrong optAln for minCPlength="+params.getMinCPLength(),Arrays.deepEquals(filteredAln, result.getOptAln()));
+		assertTrue("Wrong optLen for minCPlength="+params.getMinCPLength(),Arrays.equals(filteredLen, result.getOptLen()));
 
 		// Eventually, no alignment!
-		minCPlength=8;
+		params.setMinCPLength(8);
 		filteredAln = new int[0][][];
 		filteredLen = new int[0];
 
 
-		result = CeCPMain.filterDuplicateAFPs(afpChain, new CECalculator(null), ca1, ca2,minCPlength);
+		result = CeCPMain.filterDuplicateAFPs(afpChain, new CECalculator(null), ca1, ca2,params);
 
-		assertTrue("Wrong optAln for minCPlength="+minCPlength,Arrays.deepEquals(filteredAln, result.getOptAln()));
-		assertTrue("Wrong optLen for minCPlength="+minCPlength,Arrays.equals(filteredLen, result.getOptLen()));
+		assertTrue("Wrong optAln for minCPlength="+params.getMinCPLength(),Arrays.deepEquals(filteredAln, result.getOptAln()));
+		assertTrue("Wrong optLen for minCPlength="+params.getMinCPLength(),Arrays.equals(filteredLen, result.getOptLen()));
 
 	}
 
@@ -209,16 +212,18 @@ public class CeCPMainTest extends TestCase {
 		ca2 = StructureTools.duplicateCA2(ca2);
 		afpChain = makeDummyAFPChain(startAln, ca1, ca2);
 
-		int minCPlength;
-		for(minCPlength=0;minCPlength<3;minCPlength++) {
-			result = CeCPMain.filterDuplicateAFPs(afpChain, new CECalculator(null), ca1, ca2,minCPlength);
+		CECPParameters params = new CECPParameters();
 
-			assertTrue("Wrong optAln for minCPlength="+minCPlength,Arrays.deepEquals(filteredAln, result.getOptAln()));
-			assertTrue("Wrong optLen for minCPlength="+minCPlength,Arrays.equals(filteredLen, result.getOptLen()));
+		for(int minCPlength=0;minCPlength<3;minCPlength++) {
+			params.setMinCPLength(minCPlength);
+			result = CeCPMain.filterDuplicateAFPs(afpChain, new CECalculator(null), ca1, ca2,params);
+
+			assertTrue("Wrong optAln for minCPlength="+params.getMinCPLength(),Arrays.deepEquals(filteredAln, result.getOptAln()));
+			assertTrue("Wrong optLen for minCPlength="+params.getMinCPLength(),Arrays.equals(filteredLen, result.getOptLen()));
 		}
 
 		// For minCPlength=3, filtering changes
-		minCPlength=3;
+		params.setMinCPLength(3);
 		filteredAln = new int[][][] {
 				new int[][] {
 						new int[] {  0, 1, 2,},
@@ -231,13 +236,13 @@ public class CeCPMainTest extends TestCase {
 		};
 		filteredLen = new int[] { filteredAln[0][0].length, filteredAln[1][0].length };
 
-		result = CeCPMain.filterDuplicateAFPs(afpChain, new CECalculator(null), ca1, ca2,minCPlength);
+		result = CeCPMain.filterDuplicateAFPs(afpChain, new CECalculator(null), ca1, ca2,params);
 
-		assertTrue("Wrong optAln for minCPlength="+minCPlength,Arrays.deepEquals(filteredAln, result.getOptAln()));
-		assertTrue("Wrong optLen for minCPlength="+minCPlength,Arrays.equals(filteredLen, result.getOptLen()));
+		assertTrue("Wrong optAln for minCPlength="+params.getMinCPLength(),Arrays.deepEquals(filteredAln, result.getOptAln()));
+		assertTrue("Wrong optLen for minCPlength="+params.getMinCPLength(),Arrays.equals(filteredLen, result.getOptLen()));
 
 		// For minCPlength=4, filtering changes
-		minCPlength=5;
+		params.setMinCPLength(5);
 		filteredAln = new int[][][] {
 				new int[][] {
 						new int[] {  3, 4, 5, 6, 7, 8, 9,10,},
@@ -246,27 +251,27 @@ public class CeCPMainTest extends TestCase {
 		};
 		filteredLen = new int[] { filteredAln[0][0].length };
 
-		result = CeCPMain.filterDuplicateAFPs(afpChain, new CECalculator(null), ca1, ca2,minCPlength);
+		result = CeCPMain.filterDuplicateAFPs(afpChain, new CECalculator(null), ca1, ca2,params);
 
-		assertTrue("Wrong optAln for minCPlength="+minCPlength,Arrays.deepEquals(filteredAln, result.getOptAln()));
-		assertTrue("Wrong optLen for minCPlength="+minCPlength,Arrays.equals(filteredLen, result.getOptLen()));
+		assertTrue("Wrong optAln for minCPlength="+params.getMinCPLength(),Arrays.deepEquals(filteredAln, result.getOptAln()));
+		assertTrue("Wrong optLen for minCPlength="+params.getMinCPLength(),Arrays.equals(filteredLen, result.getOptLen()));
 
-		minCPlength=8;
-		result = CeCPMain.filterDuplicateAFPs(afpChain, new CECalculator(null), ca1, ca2,minCPlength);
+		params.setMinCPLength(8);
+		result = CeCPMain.filterDuplicateAFPs(afpChain, new CECalculator(null), ca1, ca2,params);
 
-		assertTrue("Wrong optAln for minCPlength="+minCPlength,Arrays.deepEquals(filteredAln, result.getOptAln()));
-		assertTrue("Wrong optLen for minCPlength="+minCPlength,Arrays.equals(filteredLen, result.getOptLen()));
+		assertTrue("Wrong optAln for minCPlength="+params.getMinCPLength(),Arrays.deepEquals(filteredAln, result.getOptAln()));
+		assertTrue("Wrong optLen for minCPlength="+params.getMinCPLength(),Arrays.equals(filteredLen, result.getOptLen()));
 
 		// Eventually, no alignment!
-		minCPlength=9;
+		params.setMinCPLength(9);
 		filteredAln = new int[0][][];
 		filteredLen = new int[0];
 
 
-		result = CeCPMain.filterDuplicateAFPs(afpChain, new CECalculator(null), ca1, ca2,minCPlength);
+		result = CeCPMain.filterDuplicateAFPs(afpChain, new CECalculator(null), ca1, ca2,params);
 
-		assertTrue("Wrong optAln for minCPlength="+minCPlength,Arrays.deepEquals(filteredAln, result.getOptAln()));
-		assertTrue("Wrong optLen for minCPlength="+minCPlength,Arrays.equals(filteredLen, result.getOptLen()));
+		assertTrue("Wrong optAln for minCPlength="+params.getMinCPLength(),Arrays.deepEquals(filteredAln, result.getOptAln()));
+		assertTrue("Wrong optLen for minCPlength="+params.getMinCPLength(),Arrays.equals(filteredLen, result.getOptLen()));
 
 	}
 

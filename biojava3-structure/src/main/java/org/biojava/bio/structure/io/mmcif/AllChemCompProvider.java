@@ -10,10 +10,11 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-
 import org.biojava.bio.structure.align.util.UserConfiguration;
 import org.biojava.bio.structure.io.mmcif.model.ChemComp;
 import org.biojava3.core.util.InputStreamProvider;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /** A ChemComp provider that downloads and caches the components.cif file from the wwPDB site. It then loads
  * all chemical components at startup and keeps them in memory. This provider is not used as a default
@@ -23,8 +24,10 @@ import org.biojava3.core.util.InputStreamProvider;
  *
  */
 public class AllChemCompProvider implements ChemCompProvider, Runnable{
+	
+	private static final Logger logger = LoggerFactory.getLogger(AllChemCompProvider.class);
 
-	static String path; 
+	private static String path; 
 
 	private static final String lineSplit = System.getProperty("file.separator");
 
@@ -41,7 +44,7 @@ public class AllChemCompProvider implements ChemCompProvider, Runnable{
 	public AllChemCompProvider(){
 
 		if ( loading.get()) {
-			System.err.println("other thread is already loading all chemcomps, no need to init twice");
+			logger.warn("other thread is already loading all chemcomps, no need to init twice");
 			return;
 		}
 		if ( isInitialized.get())
@@ -74,7 +77,7 @@ public class AllChemCompProvider implements ChemCompProvider, Runnable{
 		if ( ! f.exists()) {
 			try {
 			downloadFile();
-			} catch (Exception e) {
+			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		}
@@ -100,7 +103,7 @@ public class AllChemCompProvider implements ChemCompProvider, Runnable{
 
 
 	private static  void downloadFileFromRemote(URL remoteURL, File localFile) throws FileNotFoundException, IOException{
-		System.out.println("downloading " + remoteURL + " to: " + localFile);
+		logger.info("Downloading " + remoteURL + " to: " + localFile);
 		FileOutputStream out = new FileOutputStream(localFile);
 
 		InputStream in = remoteURL.openStream();
@@ -122,7 +125,7 @@ public class AllChemCompProvider implements ChemCompProvider, Runnable{
 
 		File f = new File(dir);
 		if (! f.exists()){
-			System.out.println("creating directory " + f);
+			logger.info("Creating directory " + f);
 			f.mkdir();
 		}
 
@@ -136,7 +139,7 @@ public class AllChemCompProvider implements ChemCompProvider, Runnable{
 	 */
 	private void loadAllChemComps() {
 		String fileName = getLocalFileName();
-		System.out.println("loading " + fileName);
+		logger.debug("Loading " + fileName);
 		InputStreamProvider isp = new InputStreamProvider();
 
 		try {
@@ -155,7 +158,7 @@ public class AllChemCompProvider implements ChemCompProvider, Runnable{
 			dict = consumer.getDictionary();
 
 
-		} catch (Exception e){
+		} catch (IOException e){
 			e.printStackTrace();
 		}
 	}
@@ -191,17 +194,14 @@ public class AllChemCompProvider implements ChemCompProvider, Runnable{
 	public void run() {
 		long timeS = System.currentTimeMillis();
 
-		try {
-			checkPath();
+		checkPath();
 
-			ensureFileExists();
+		ensureFileExists();
 
-			loadAllChemComps();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		loadAllChemComps();
+		
 		long timeE = System.currentTimeMillis();
-		System.out.println("time to init chem comp dictionary: " + (timeE - timeS) / 1000 + " sec.");
+		logger.debug("Time to init chem comp dictionary: " + (timeE - timeS) / 1000 + " sec.");
 
 		loading.set(false);
 		isInitialized.set(true);		

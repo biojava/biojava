@@ -58,6 +58,8 @@ import org.biojava.bio.structure.scop.ScopDomain;
 import org.biojava.bio.structure.scop.ScopFactory;
 import org.biojava3.core.util.InputStreamProvider;
 import org.biojava3.structure.StructureIO;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A utility class that provides easy access to Structure objects. If you are running a script that is frequently
@@ -71,6 +73,8 @@ import org.biojava3.structure.StructureIO;
  * @since 3.0
  */
 public class AtomCache {
+	
+	private static final Logger logger = LoggerFactory.getLogger(AtomCache.class);
 
 	public static final String BIOL_ASSEMBLY_IDENTIFIER = "BIO:";
 	public static final String CHAIN_NR_SYMBOL = ":";
@@ -192,15 +196,7 @@ public class AtomCache {
 		Atom[] atoms = null;
 
 		// System.out.println("loading " + name);
-		Structure s = null;
-		try {
-
-			s = getStructure(name);
-
-		} catch (StructureException ex) {
-			System.err.println("error getting Structure for " + name);
-			throw new StructureException(ex.getMessage(), ex);
-		}
+		Structure s = getStructure(name);
 
 		atoms = StructureTools.getAtomCAArray(s);
 
@@ -459,7 +455,7 @@ public class AtomCache {
 			try {
 				Thread.sleep(100);
 			} catch (InterruptedException e) {
-				System.err.println(e.getMessage());
+				logger.error(e.getMessage());
 			}
 
 		}
@@ -899,16 +895,7 @@ public class AtomCache {
 
 		String pdbId = structureName.getPdbId();
 
-		Structure s = null;
-
-		try {
-			s = getStructure(pdbId);
-
-		} catch (StructureException ex) {
-			System.err.println("error getting Structure for " + pdbId);
-
-			throw new StructureException(ex);
-		}
+		Structure s = getStructure(pdbId);
 
 		String rangeS = range.toString();
 		
@@ -1038,7 +1025,7 @@ public class AtomCache {
 		}
 
 		// Didn't work. Guess it!
-		System.err.println("Warning, could not find SCOP domain: " + name);
+		logger.warn("Warning, could not find SCOP domain: " + name);
 
 		Matcher scopMatch = scopIDregex.matcher(name);
 		if (scopMatch.matches()) {
@@ -1063,14 +1050,16 @@ public class AtomCache {
 		Iterator<ScopDomain> match = matches.iterator();
 		if (match.hasNext()) {
 			ScopDomain bestMatch = match.next();
-			System.err.print("Trying domain " + bestMatch.getScopId() + ".");
+			StringBuilder warnMsg = new StringBuilder();
+			warnMsg.append("Trying domain " + bestMatch.getScopId() + ".");
 			if (match.hasNext()) {
-				System.err.print(" Other possibilities: ");
+				warnMsg.append(" Other possibilities: ");
 				while (match.hasNext()) {
-					System.err.print(match.next().getScopId() + " ");
+					warnMsg.append(match.next().getScopId() + " ");
 				}
 			}
-			System.err.println();
+			warnMsg.append(System.getProperty("line.separator"));
+			logger.warn(warnMsg.toString());
 			return bestMatch;
 		} else {
 			return null;
@@ -1087,7 +1076,7 @@ public class AtomCache {
 		currentlyLoading.remove(name);
 	}
 
-	protected Structure loadStructureFromCifByPdbId(String pdbId) throws StructureException {
+	protected Structure loadStructureFromCifByPdbId(String pdbId) throws IOException, StructureException {
 
 		Structure s;
 		flagLoading(pdbId);
@@ -1107,14 +1096,14 @@ public class AtomCache {
 
 		} catch (IOException e) {
 			flagLoadingFinished(pdbId);
-			throw new StructureException(e.getMessage() + " while parsing " + pdbId, e);
+			throw e;//new StructureException(e.getMessage() + " while parsing " + pdbId, e);
 		}
 		flagLoadingFinished(pdbId);
 
 		return s;
 	}
 
-	protected Structure loadStructureFromPdbByPdbId(String pdbId) throws StructureException {
+	protected Structure loadStructureFromPdbByPdbId(String pdbId) throws IOException, StructureException {
 
 		Structure s;
 		flagLoading(pdbId);
@@ -1132,7 +1121,7 @@ public class AtomCache {
 
 		} catch (IOException e) {
 			flagLoadingFinished(pdbId);
-			throw new StructureException(e.getMessage() + " while parsing " + pdbId, e);
+			throw e;//new StructureException(e.getMessage() + " while parsing " + pdbId, e);
 		}
 		flagLoadingFinished(pdbId);
 

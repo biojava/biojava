@@ -35,7 +35,6 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -47,6 +46,8 @@ import org.biojava.bio.structure.io.mmcif.chem.PolymerType;
 import org.biojava.bio.structure.io.mmcif.chem.ResidueType;
 import org.biojava.bio.structure.io.mmcif.model.ChemComp;
 import org.biojava.bio.structure.io.util.FileDownloadUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -57,6 +58,8 @@ import org.biojava.bio.structure.io.util.FileDownloadUtils;
  * @version %I% %G%
  */
 public class StructureTools {
+	
+	private static final Logger logger = LoggerFactory.getLogger(StructureTools.class);
 
 	/** The Atom name of C-alpha atoms.
 	 *
@@ -94,7 +97,6 @@ public class StructureTools {
 	//	private static  SymbolTokenization threeLetter ;
 	//	private static  SymbolTokenization oneLetter ;
 
-	public static Logger logger =  Logger.getLogger("org.biojava.bio.structure");
 
 	/**
 	 * Pattern to describe subranges. Matches "A", "A:", "A:7-53","A_7-53", etc.
@@ -287,6 +289,24 @@ public class StructureTools {
 		}
 		return (Atom[]) atoms.toArray(new Atom[atoms.size()]);	
 	}
+	
+	/** 
+	 * Returns and array of all atoms of the chain (first model), including 
+	 * Hydrogens (if present) and all HETATOMs
+	 * 
+	 * @param c input chain
+	 * @return all atom array
+	 */
+	public static final Atom[] getAllAtomArray(Chain c) {
+		List<Atom> atoms = new ArrayList<Atom>();
+
+		for (Group g:c.getAtomGroups()){
+			for (Atom a:g.getAtoms()) {
+				atoms.add(a);
+			}
+		}
+		return (Atom[]) atoms.toArray(new Atom[atoms.size()]);	
+	}
 
 	/**
 	 * Returns and array of all non-Hydrogen atoms in the given Structure, 
@@ -322,8 +342,6 @@ public class StructureTools {
 	 */
 	public static final Atom[] getAllNonHAtomArray(Chain c, boolean hetAtoms) {
 		List<Atom> atoms = new ArrayList<Atom>();
-
-
 		
 		for (Group g:c.getAtomGroups()){
 			for (Atom a:g.getAtoms()) {
@@ -337,7 +355,7 @@ public class StructureTools {
 		}
 		return (Atom[]) atoms.toArray(new Atom[atoms.size()]);			
 	}
-
+	
 	private static void extractCAatoms(String[] atomNames, List<Chain> chains,
 			List<Atom> atoms) {
 		for ( Chain c : chains) {
@@ -399,7 +417,7 @@ public class StructureTools {
 
 				Atom a = g.getAtom(atomName);
 				if ( a == null) {
-
+					logger.debug("Group "+g.getResidueNumber()+" ("+g.getPDBName()+") does not have the required atom '"+atomName+"'");
 					// this group does not have a required atom, skip it...
 					thisGroupAllAtoms = false;
 					break;
@@ -704,7 +722,7 @@ public class StructureTools {
 		try {
 			c = s.getChainByPDB(chainId);
 		} catch (StructureException e){
-			System.err.println(e.getMessage() + " trying upper case Chain id...");
+			logger.warn(e.getMessage() + ". Chain id "+chainId+" did not match, trying upper case Chain id.");
 			c = s.getChainByPDB(chainId.toUpperCase());
 
 
@@ -853,7 +871,7 @@ public class StructureTools {
 				if(struc.size() != 1) {
 					// SCOP 1.71 uses this for some proteins with multiple chains
 					// Print a warning in this ambiguous case
-					System.err.format("WARNING multiple possible chains match '_'. Using chain %s.%n",chain.getChainID());
+					logger.warn("Multiple possible chains match '_'. Using chain %s.%n",chain.getChainID());
 				}
 			} else {
 				// Explicit chain
@@ -1029,17 +1047,18 @@ public class StructureTools {
 	 * @param chain1
 	 * @param chain2
 	 * @param atomNames the array with atom names to be used. For Calphas use {" CA "}, 
-	 * if null all non-H atoms of non-hetatoms will be used
+	 * if null all non-H atoms will be used. Note HET atoms are ignored unless this parameter is null.
 	 * @param cutoff
+	 * @param hetAtoms if true HET atoms are included, if false they are not 
 	 * @return
 	 */
-	public static AtomContactSet getAtomsInContact(Chain chain1, Chain chain2, String[] atomNames, double cutoff) {
+	public static AtomContactSet getAtomsInContact(Chain chain1, Chain chain2, String[] atomNames, double cutoff, boolean hetAtoms) {
 		Grid grid = new Grid(cutoff);
 		Atom[] atoms1 = null;
 		Atom[] atoms2 = null;
 		if (atomNames == null) {
-			atoms1 = getAllNonHAtomArray(chain1, false);
-			atoms2 = getAllNonHAtomArray(chain2, false);
+			atoms1 = getAllNonHAtomArray(chain1, hetAtoms);
+			atoms2 = getAllNonHAtomArray(chain2, hetAtoms);
 		} else {
 			atoms1 = getAtomArray(chain1, atomNames);
 			atoms2 = getAtomArray(chain2, atomNames);
@@ -1050,15 +1069,16 @@ public class StructureTools {
 	}
 	
 	/**
-	 * Returns the set of inter-chain contacts between the two given chains for all non-H atoms of non-hetatoms.
+	 * Returns the set of inter-chain contacts between the two given chains for all non-H atoms.
 	 * Uses a geometric hashing algorithm that speeds up the calculation without need of full distance matrix. 
 	 * @param chain1
 	 * @param chain2
 	 * @param cutoff
+	 * @param hetAtoms if true HET atoms are included, if false they are not
 	 * @return
 	 */
-	public static AtomContactSet getAtomsInContact(Chain chain1, Chain chain2, double cutoff) {
-		return getAtomsInContact(chain1, chain2, null, cutoff);
+	public static AtomContactSet getAtomsInContact(Chain chain1, Chain chain2, double cutoff, boolean hetAtoms) {
+		return getAtomsInContact(chain1, chain2, null, cutoff, hetAtoms);
 	}
 	
 	/**

@@ -156,7 +156,7 @@ public class TestAtomCache extends TestCase
 	}
 	
 	
-	public void testFetchCurrent() {
+	public void testFetchCurrent() throws IOException, StructureException {
 		
 		
 		cache.setAutoFetch(true);
@@ -168,21 +168,21 @@ public class TestAtomCache extends TestCase
 			// OBSOLETE PDB; should throw an exception
 			s = cache.getStructure("1CMW");
 			fail("1CMW has no current structure. Should have thrown an error");
-		} catch(Exception e) {
+		} catch(IOException e) {
+			//expected
+			System.err.println("Please ignore previous exceptions. They are expected.");
+		} catch(StructureException e) {
 			//expected
 			System.err.println("Please ignore previous exceptions. They are expected.");
 		}
 		
-		try {
-			s = cache.getStructure("1HHB");
-			assertEquals("Failed to get the current ID for 1HHB.","4HHB",s.getPDBCode());
-		} catch(Exception e) {
-			e.printStackTrace();
-			fail(e.getMessage());
-		}
+
+		s = cache.getStructure("1HHB");
+		assertEquals("Failed to get the current ID for 1HHB.","4HHB",s.getPDBCode());
+		
 	}
 
-	public void testFetchObsolete() {
+	public void testFetchObsolete() throws IOException, StructureException {
 		
 		
 		cache.setAutoFetch(true);
@@ -190,18 +190,15 @@ public class TestAtomCache extends TestCase
 		cache.setFetchFileEvenIfObsolete(true);
 		
 		Structure s;
-		try {
-			// OBSOLETE PDB; should throw an exception
-			s = cache.getStructure("1CMW");
-			assertEquals("Failed to get OBSOLETE file 1CMW.","1CMW", s.getPDBCode());
 
-			s = cache.getStructure("1HHB");
-			assertEquals("Failed to get OBSOLETE file 1HHB.","1HHB",s.getPDBCode());
-			System.err.println("Please ignore the previous four errors. They are expected for this ancient PDB.");
-		} catch(Exception e) {
-			e.printStackTrace();
-			fail(e.getMessage());
-		}
+		// OBSOLETE PDB; should throw an exception
+		s = cache.getStructure("1CMW");
+		assertEquals("Failed to get OBSOLETE file 1CMW.","1CMW", s.getPDBCode());
+
+		s = cache.getStructure("1HHB");
+		assertEquals("Failed to get OBSOLETE file 1HHB.","1HHB",s.getPDBCode());
+		System.err.println("Please ignore the previous four errors. They are expected for this ancient PDB.");
+		
 	}
 
 }

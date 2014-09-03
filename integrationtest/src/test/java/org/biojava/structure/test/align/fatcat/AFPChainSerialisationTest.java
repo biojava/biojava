@@ -243,7 +243,7 @@ extends TestCase
    }
 
 
-   public void testMulti() {
+   public void testMulti() throws IOException {
       Atom[] ca1 = null;
       Atom[] ca2 = null;
       Atom[] ca3 = null;
