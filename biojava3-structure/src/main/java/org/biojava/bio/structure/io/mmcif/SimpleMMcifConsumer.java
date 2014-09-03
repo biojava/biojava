@@ -31,6 +31,8 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
+import javax.vecmath.Matrix4d;
+
 import org.biojava.bio.structure.AminoAcid;
 import org.biojava.bio.structure.AminoAcidImpl;
 import org.biojava.bio.structure.Atom;
@@ -81,6 +83,7 @@ import org.biojava.bio.structure.io.mmcif.model.Struct;
 import org.biojava.bio.structure.io.mmcif.model.StructAsym;
 import org.biojava.bio.structure.io.mmcif.model.StructConn;
 import org.biojava.bio.structure.io.mmcif.model.StructKeywords;
+import org.biojava.bio.structure.io.mmcif.model.StructNcsOper;
 import org.biojava.bio.structure.io.mmcif.model.StructRef;
 import org.biojava.bio.structure.io.mmcif.model.StructRefSeq;
 import org.biojava.bio.structure.io.mmcif.model.Symmetry;
@@ -121,6 +124,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 	List<EntitySrcNat> entitySrcNats;
 	List<EntitySrcSyn> entitySrcSyns;
 	List<StructConn> structConn;
+	List<StructNcsOper> structNcsOper;
 
 	Map<String,String> asymStrandId;
 
@@ -667,6 +671,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		entitySrcNats = new ArrayList<EntitySrcNat>();
 		entitySrcSyns = new ArrayList<EntitySrcSyn>();
 		structConn = new ArrayList<StructConn>();
+		structNcsOper = new ArrayList<StructNcsOper>();
 	}
 
 
@@ -900,8 +905,17 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		}
 		structure.getPDBHeader().setBioUnitTranformationMap(transformationMap);
 
-
-
+		ArrayList<Matrix4d> ncsOperators = new ArrayList<Matrix4d>();
+		for (StructNcsOper sNcsOper:structNcsOper) {
+			if (sNcsOper.getCode().equals("generate")) {
+				ncsOperators.add(sNcsOper.getOperator());
+			}
+		}
+		// we only set it if not empty, otherwise remains null
+		if (ncsOperators.size()>0) {
+			structure.getCrystallographicInfo().setNcsOperators(
+					(Matrix4d[]) ncsOperators.toArray(new Matrix4d[ncsOperators.size()]));
+		}
 	}
 
    private void addBonds() {
@@ -1169,6 +1183,10 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		structure.getPDBHeader().getCrystallographicInfo().setSpaceGroup(sg); 
 	}
 
+	public void newStructNcsOper(StructNcsOper sNcsOper) {
+		structNcsOper.add(sNcsOper);
+	}
+	
 	public void newStructRef(StructRef sref) {
 		if (DEBUG)
 			System.out.println(sref);

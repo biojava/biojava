@@ -51,6 +51,7 @@ import org.biojava.bio.structure.io.mmcif.model.Refine;
 import org.biojava.bio.structure.io.mmcif.model.StructAsym;
 import org.biojava.bio.structure.io.mmcif.model.StructConn;
 import org.biojava.bio.structure.io.mmcif.model.StructKeywords;
+import org.biojava.bio.structure.io.mmcif.model.StructNcsOper;
 import org.biojava.bio.structure.io.mmcif.model.StructRefSeq;
 import org.biojava.bio.structure.io.mmcif.model.Struct;
 import org.biojava.bio.structure.io.mmcif.model.StructRef;
@@ -89,6 +90,7 @@ public interface MMcifConsumer {
 	public void newExptl(Exptl exptl);
 	public void newCell(Cell cell);
 	public void newSymmetry(Symmetry symmetry);
+	public void newStructNcsOper(StructNcsOper sNcsOper);
 	public void newStructRef(StructRef sref);
 	public void newStructRefSeq(StructRefSeq sref);
 	public void newPdbxPolySeqScheme(PdbxPolySeqScheme ppss);

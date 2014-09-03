@@ -10,6 +10,8 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.vecmath.Matrix4d;
+
 import org.biojava.bio.structure.AminoAcid;
 import org.biojava.bio.structure.Chain;
 import org.biojava.bio.structure.ExperimentalTechnique;
@@ -257,6 +259,20 @@ public class TestLongPdbVsMmCifParsing {
 			assertEquals("failed for cell Beta:",ccPdb.getBeta(),ccCif.getBeta(),DELTA);
 			assertEquals("failed for cell Gamma:",ccPdb.getGamma(),ccCif.getGamma(),DELTA);
 			
+			
+			if (ciPdb.getNcsOperators()==null) {
+				assertTrue(ciCif.getNcsOperators()==null);
+			} else {
+				
+				Matrix4d[] ncsOpersPdb = ciPdb.getNcsOperators();
+				Matrix4d[] ncsOpersCif = ciCif.getNcsOperators();
+								
+				assertEquals("Number of NCS operators don't coincide", ncsOpersPdb.length, ncsOpersCif.length);
+				
+				for (int i=0;i<ncsOpersPdb.length;i++) {
+					assertTrue("NCS operator "+i+" don't coincide",ncsOpersPdb[i].epsilonEquals(ncsOpersCif[i], 0.0001)); 
+				}
+			}
 		}
 		
 	}

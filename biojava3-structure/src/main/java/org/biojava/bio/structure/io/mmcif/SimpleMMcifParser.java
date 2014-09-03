@@ -32,6 +32,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.vecmath.Matrix4d;
+
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.io.MMCIFFileReader;
 import org.biojava.bio.structure.io.StructureIOFile;
@@ -63,6 +65,7 @@ import org.biojava.bio.structure.io.mmcif.model.Struct;
 import org.biojava.bio.structure.io.mmcif.model.StructAsym;
 import org.biojava.bio.structure.io.mmcif.model.StructConn;
 import org.biojava.bio.structure.io.mmcif.model.StructKeywords;
+import org.biojava.bio.structure.io.mmcif.model.StructNcsOper;
 import org.biojava.bio.structure.io.mmcif.model.StructRef;
 import org.biojava.bio.structure.io.mmcif.model.StructRefSeq;
 import org.biojava.bio.structure.io.mmcif.model.Symmetry;
@@ -540,15 +543,19 @@ public class SimpleMMcifParser implements MMcifParser {
 					Cell.class.getName(),
 					loopFields,lineData, loopWarnings);
 
-			triggerCell(cell);
+			triggerNewCell(cell);
 
 		} else if ( category.equals("_symmetry")){
 			Symmetry symmetry  = (Symmetry) buildObject(
 					Symmetry.class.getName(),
 					loopFields,lineData, loopWarnings);
 
-			triggerSymmetry(symmetry);
-
+			triggerNewSymmetry(symmetry);
+		} else if ( category.equals("_struct_ncs_oper")) {
+			// this guy is special because of the [] in the field names
+			StructNcsOper sNcsOper = getStructNcsOper(loopFields,lineData);
+			triggerNewStructNcsOper(sNcsOper);
+			
 		} else if ( category.equals("_struct_ref")){
 			StructRef sref  = (StructRef) buildObject(
 					StructRef.class.getName(),
@@ -786,7 +793,51 @@ public class SimpleMMcifParser implements MMcifParser {
 		}
 
 	}
+	
+	private StructNcsOper getStructNcsOper(List<String> loopFields, List<String> lineData) {
+		StructNcsOper sNcsOper = new StructNcsOper();
+		
+		int id = Integer.parseInt(lineData.get(loopFields.indexOf("id")));
+		sNcsOper.setId(id);
+		sNcsOper.setCode(lineData.get(loopFields.indexOf("code")));
+		sNcsOper.setDetails(lineData.get(loopFields.indexOf("details")));
+		Matrix4d op = new Matrix4d();
+		op.setElement(3, 0, 0.0); 
+		op.setElement(3, 1, 0.0);
+		op.setElement(3, 2, 0.0);
+		op.setElement(3, 3, 1.0);
+		
+		for (int i = 1 ; i <=3 ; i++){
+			for (int j =1 ; j <= 3 ; j++){
+				String max = String.format("matrix[%d][%d]",i,j);
 
+				String val = lineData.get(loopFields.indexOf(max));
+				Double d = Double.parseDouble(val);
+				op.setElement(i-1,j-1,d);
+
+			}
+		}
+
+		
+		for ( int i = 1; i <=3 ; i++){
+			String v = String.format("vector[%d]",i);
+			String val = lineData.get(loopFields.indexOf(v));
+			Double d = Double.parseDouble(val);
+			op.setElement(i-1, 3, d);
+		}
+
+		sNcsOper.setOperator(op);
+		
+		return sNcsOper;
+	}
+
+	public void triggerNewStructNcsOper(StructNcsOper sNcsOper) {
+		for(MMcifConsumer c : consumers){
+			c.newStructNcsOper(sNcsOper);
+		}
+
+	}
+	
 	@SuppressWarnings("rawtypes")
 	private void setArray(Class c, Object o, String key, String val){
 
@@ -857,13 +908,13 @@ public class SimpleMMcifParser implements MMcifParser {
 				}
 			}
 		} catch (InstantiationException eix){
-			logger.warn( "Error while constructing "+className, eix);
+			logger.warn( "Error while constructing "+className, eix.getMessage());
 		} catch (InvocationTargetException etx){
-			logger.warn( "Error while constructing "+className, etx);
+			logger.warn( "Error while constructing "+className, etx.getMessage());
 		} catch (IllegalAccessException eax){
-			logger.warn( "Error while constructing "+className, eax);
+			logger.warn( "Error while constructing "+className, eax.getMessage());
 		} catch (ClassNotFoundException ex){
-			logger.warn( "Error while constructing "+className, ex);
+			logger.warn( "Error while constructing "+className, ex.getMessage());
 		}
 		return o;
 	}
@@ -946,18 +997,18 @@ public class SimpleMMcifParser implements MMcifParser {
 		}
 	}
 
-	private void triggerCell(Cell cell) {
+	private void triggerNewCell(Cell cell) {
 		for(MMcifConsumer c : consumers){
 			c.newCell(cell);
 		}
 	}
 
-	private void triggerSymmetry(Symmetry symmetry) {
+	private void triggerNewSymmetry(Symmetry symmetry) {
 		for(MMcifConsumer c : consumers){
 			c.newSymmetry(symmetry);
 		}
 	}
-
+	
 	private void triggerNewStrucRef(StructRef sref){
 		for(MMcifConsumer c : consumers){
 			c.newStructRef(sref);
