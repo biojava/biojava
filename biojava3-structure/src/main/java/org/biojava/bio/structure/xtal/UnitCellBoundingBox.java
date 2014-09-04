@@ -38,6 +38,12 @@ public class UnitCellBoundingBox {
 		this.auBbs = new BoundingBox[numOperatorsSg];
 	}
 	
+	public void setAllBbs(Structure[] cell, boolean includeHetAtoms) {
+		setOriginalAuBbs(cell[0], includeHetAtoms);
+		if (cell.length==1) return;
+		setAllNonAuBbs(cell, includeHetAtoms);
+	}
+	
 	/**
 	 * Calculate the bounding boxes of all chains in original asymmetric unit.
 	 * Considers all non-Hydrogen atoms of all residues
