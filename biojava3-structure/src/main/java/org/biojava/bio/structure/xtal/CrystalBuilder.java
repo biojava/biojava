@@ -44,6 +44,9 @@ public class CrystalBuilder {
 	// We set the default value to 12 based on that (having not seen any difference in runtime)
 	private static final int DEF_NUM_CELLS = 12;
 	
+	public static final Matrix4d IDENTITY = new Matrix4d(1,0,0,0, 0,1,0,0, 0,0,1,0, 0,0,0,1);
+
+	
 	/**
 	 * Whether to consider HETATOMs in contact calculations
 	 */
@@ -147,14 +150,19 @@ public class CrystalBuilder {
 		int skippedSelfEquivalent = 0;
 
 		
-
-		// generate complete unit cell, by applying all SG operators (array is of size numOperatorsSg)
-		Structure[] cell = getUnitCell();
-
+		Matrix4d[] ops = null;
+		if (isCrystallographic) {
+			ops = structure.getCrystallographicInfo().getTransformationsOrthonormal();
+		} else {
+			ops = new Matrix4d[1];
+			ops[0] = IDENTITY;
+		}
+			
 		// The bounding boxes of all AUs of the unit cell		
 		UnitCellBoundingBox bbGrid = new UnitCellBoundingBox(numOperatorsSg, numChainsAu);;
 		// we calculate all the bounds of each of the asym units, those will then be reused and translated
-		bbGrid.setAllBbs(cell, INCLUDE_HETATOMS);
+		bbGrid.setBbs(structure, ops, INCLUDE_HETATOMS);
+		
 		
 		// if not crystallographic there's no search to do in other cells, only chains within "AU" will be checked
 		if (!isCrystallographic) numCells = 0;
@@ -205,17 +213,6 @@ public class CrystalBuilder {
 						
 						
 						boolean selfEquivalent = false;
-						
-						// now we copy and actually translate the AU if we saw it does overlap and the sym op was not redundant
-						Structure jAsym = null;
-						if (n==0 && a==0 && b==0 && c==0) {
-							// special case: for original AU there's no need to clone and no need to translate 
-							jAsym = cell[0];
-						} else { 
-							jAsym = cell[n].clone();
-							Calc.translate(jAsym, transOrth);
-						}
-						
 
 						// 3) an operator can be "self redundant" if it is the inverse of itself (involutory, e.g. all pure 2-folds with no translation)						
 						if (tt.isEquivalent(tt)) { 
@@ -231,12 +228,9 @@ public class CrystalBuilder {
 						// Now that we know that boxes overlap and operator is not redundant, we have to go to the details 
 						int contactsFound = 0;
 												
-						int j = -1;
-						for (Chain chainj:jAsym.getChains()) {
-							j++;
-							int i = -1;
-							for (Chain chaini:structure.getChains()) { // we only have to compare the original asymmetric unit to every full cell around
-								i++;
+						for (int j=0;j<numChainsAu;j++) {
+							for (int i=0;i<numChainsAu;i++) { // we only have to compare the original asymmetric unit to every full cell around
+								
 								if(selfEquivalent && (j>i)) {
 									// in case of self equivalency of the operator we can safely skip half of the matrix
 									skippedSelfEquivalent++;
@@ -257,6 +251,18 @@ public class CrystalBuilder {
 
 								// finally we've gone through all short-cuts and the 2 chains seem to be close enough:
 								// we do the calculation of contacts
+								Chain chainj = null;
+								Chain chaini = structure.getChain(i);
+								
+								if (n==0 && a==0 && b==0 && c==0) {
+									chainj = structure.getChain(j);
+								} else {
+									chainj = (Chain)structure.getChain(j).clone();
+									Matrix4d m = new Matrix4d(ops[n]);
+									translate(m, transOrth);
+									Calc.transform(chainj,m);
+								}
+								
 								StructureInterface interf = calcContacts(chaini, chainj, cutoff, tt);
 								
 								if (interf!=null) {
@@ -346,32 +352,57 @@ public class CrystalBuilder {
 		return false;
 	}
 	
-	/**
-	 * Generates all symmetry-related objects from this asym unit and returns the whole
-	 * unit cell (this asymmetric unit plus the symmetry-related objects). 
-	 * @return
-	 */
-	private Structure[] getUnitCell() {
-
-		Structure[] aus = new Structure[numOperatorsSg];
-		aus[0] = structure;
-
-		if (numOperatorsSg==1) return aus;
+	public void translate(Matrix4d m, Vector3d translation) {
+		m.m03 = m.m03+(double)translation.x;
+		m.m13 = m.m13+(double)translation.y;
+		m.m23 = m.m23+(double)translation.z;
 		
-		int i = 1;
-		for (Matrix4d m:this.crystallographicInfo.getTransformationsOrthonormal()) {
-			
-			Structure sym = structure.clone();
-			
-			Calc.transform(sym, m); 
-
-			aus[i] = sym;
-			
-			i++;
-			
-		}
-		
-		return aus;
 	}
 	
+//	/**
+//	 * If NCS operators are given in MTRIX records, a bigger AU has to be constructed based on those.
+//	 * Later they have to be removed with {@link #removeExtraChains()}
+//	 */
+//	private void constructFullStructure() {
+//		
+//		if (this.crystallographicInfo.getNcsOperators()==null ||
+//			this.crystallographicInfo.getNcsOperators().length==0) {
+//			// normal case: nothing to do			
+//			return;
+//		}
+//				
+//		// first we store the original chains in a new list to be able to restore the structure to its original state afterwards
+//		origChains = new ArrayList<Chain>();
+//		for (Chain chain:structure.getChains()) {
+//			origChains.add(chain);
+//		}
+//		
+//		// if we are here, it means that the NCS operators exist and we have to complete the given AU by applying them
+//		Matrix4d[] ncsOps = this.crystallographicInfo.getNcsOperators();
+//
+//		if (verbose) 
+//			System.out.println(ncsOps.length+" NCS operators found, generating new AU...");
+//
+//		
+//		for (int i=0;i<ncsOps.length;i++) {
+//			Structure transformedStruct = (Structure)structure.clone();			   
+//			Calc.transform(transformedStruct, ncsOps[i]);
+//			
+//			for (Chain chain: transformedStruct.getChains()) {
+//				// we assign a new AU id (chain ID) consisting in original chain ID + an operator index from 1 to n
+//				chain.setChainID(chain.getChainID()+(i+1));
+//				structure.addChain(chain);
+//			}
+//		}
+//		
+//		// now we have more chains in AU, we have to update the value 
+//		this.numChainsAu = structure.getChains().size();
+//	}
+//	
+//	/**
+//	 * Removes the extra chains that were added to the original structure in {@link #constructFullStructure()}
+//	 */
+//	private void removeExtraChains() {
+//		structure.setChains(origChains);
+//	}
 }

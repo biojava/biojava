@@ -1,8 +1,9 @@
 package org.biojava.bio.structure.xtal;
 
+import javax.vecmath.Matrix4d;
 import javax.vecmath.Vector3d;
 
-import org.biojava.bio.structure.Chain;
+import org.biojava.bio.structure.Calc;
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureTools;
 import org.biojava.bio.structure.contact.BoundingBox;
@@ -38,46 +39,23 @@ public class UnitCellBoundingBox {
 		this.auBbs = new BoundingBox[numOperatorsSg];
 	}
 	
-	public void setAllBbs(Structure[] cell, boolean includeHetAtoms) {
-		setOriginalAuBbs(cell[0], includeHetAtoms);
-		if (cell.length==1) return;
-		setAllNonAuBbs(cell, includeHetAtoms);
-	}
-	
-	/**
-	 * Calculate the bounding boxes of all chains in original asymmetric unit.
-	 * Considers all non-Hydrogen atoms of all residues
-	 * @param s
-	 * @param includeHetAtoms
-	 */
-	public void setOriginalAuBbs (Structure s, boolean includeHetAtoms) {
-		
-		chainBbs[0] = new BoundingBox[numChainsAu];
-		
-		int i = 0;
-		for (Chain chain:s.getChains()) {
-			chainBbs[0][i] = new BoundingBox(StructureTools.getAllNonHAtomArray(chain, includeHetAtoms));
-			i++;
+	public void setBbs(Structure structure, Matrix4d[] ops, boolean includeHetAtoms) {
+
+		setBb(structure, includeHetAtoms, 0);
+		for (int i=1;i<ops.length;i++) {			
+			Structure sym = structure.clone();			
+			Calc.transform(sym, ops[i]); 
+			setBb(sym, includeHetAtoms, i);
 		}
-		
-		auBbs[0] = new BoundingBox(chainBbs[0]);
+
 	}
 	
-	/**
-	 * Calculate the bounding boxes of all chains in the unit cell except for the original
-	 * asymmetric unit (done with {@link #setOriginalAuBbs(Structure, boolean)}
-	 * @param cell
-	 * @param includeHetAtoms
-	 */
-	public void setAllNonAuBbs(Structure[] cell, boolean includeHetAtoms) {
-		
-		// the original AU (i=0) was already set by setOriginalAuBbs
-		for (int i=1; i<numOperatorsSg; i++) {
-			for (int j = 0;j<numChainsAu; j++) {
-				chainBbs[i][j] = new BoundingBox(StructureTools.getAllNonHAtomArray(cell[i].getChain(j), includeHetAtoms));
-			}
-			auBbs[i] = new BoundingBox(chainBbs[i]);
-		}	
+	private void setBb(Structure s, boolean includeHetAtoms, int i) {
+		chainBbs[i] = new BoundingBox[numChainsAu];
+		for (int j = 0;j<numChainsAu; j++) {
+			chainBbs[i][j] = new BoundingBox(StructureTools.getAllNonHAtomArray(s.getChain(j), includeHetAtoms));
+		}
+		auBbs[i] = new BoundingBox(chainBbs[i]);		
 	}
 		
 	/**
@@ -120,4 +98,5 @@ public class UnitCellBoundingBox {
 		
 		return translatedBbs;
 	}
+	
 }
