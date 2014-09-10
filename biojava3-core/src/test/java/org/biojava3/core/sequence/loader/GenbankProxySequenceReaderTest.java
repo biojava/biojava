@@ -53,7 +53,7 @@ public class GenbankProxySequenceReaderTest {
     public void biojava3() throws Throwable {
         log.info("run test for protein: {}", gi);
         GenbankProxySequenceReader<AminoAcidCompound> genbankReader
-                = new GenbankProxySequenceReader<AminoAcidCompound>(System.getProperty("java.io.tempdir"), 
+                = new GenbankProxySequenceReader<AminoAcidCompound>(System.getProperty("java.io.tmpdir"), 
                                                                     this.gi, 
                                                                     AminoAcidCompoundSet.getAminoAcidCompoundSet());
 
