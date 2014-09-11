@@ -158,11 +158,25 @@ public abstract class AbstractCompoundSet<C extends Compound> implements Compoun
     return compoundOne.equalsIgnoreCase(compoundTwo);
   }
 
+  @Deprecated
+  @Override
   public void verifySequence(Sequence<C> sequence) throws CompoundNotFoundError {
     for(C compound: sequence) {
       assertCompound(compound);
     }
   }
+
+    @Override
+    public boolean isValidSequence(Sequence<C> sequence) {
+        for (C compound: sequence) {
+            if (!hasCompound(compound)) {
+                return false;
+            }
+        }
+        return true;
+    }
+  
+  
 
   public List<C> getAllCompounds() {
     return new ArrayList<C>(charSeqToCompound.values());
