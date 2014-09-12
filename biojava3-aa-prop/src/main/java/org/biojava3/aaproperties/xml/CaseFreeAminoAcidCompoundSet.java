@@ -185,6 +185,7 @@ public class CaseFreeAminoAcidCompoundSet implements CompoundSet<AminoAcidCompou
     }
 
     // TODO throwing an error seems unnecessary, should this return a boolean instead? maybe rename to isValidSequence?
+    @Deprecated
     public void verifySequence(Sequence<AminoAcidCompound> sequence) throws CompoundNotFoundError {
         for (AminoAcidCompound compound : sequence) {
             if (!hasCompound(compound)) {
@@ -200,5 +201,15 @@ public class CaseFreeAminoAcidCompoundSet implements CompoundSet<AminoAcidCompou
 
     public boolean isComplementable() {
         return false;
+    }
+
+    @Override
+    public boolean isValidSequence(Sequence<AminoAcidCompound> sequence) {
+        for (AminoAcidCompound c: sequence) {
+            if (!hasCompound(c)) {
+                return false;
+            }
+        }
+        return true;
     }
 }
