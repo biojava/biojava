@@ -29,12 +29,15 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
+
 import org.biojava3.core.sequence.compound.AmbiguityDNACompoundSet;
 import org.biojava3.core.sequence.compound.AminoAcidCompound;
 import org.biojava3.core.sequence.compound.AminoAcidCompoundSet;
 import org.biojava3.core.sequence.compound.DNACompoundSet;
 import org.biojava3.core.sequence.compound.NucleotideCompound;
+
 import static org.biojava3.core.sequence.features.AbstractFeature.TYPE;
+
 import org.biojava3.core.sequence.features.FeatureInterface;
 import org.biojava3.core.sequence.io.DNASequenceCreator;
 import org.biojava3.core.sequence.io.FastaReader;
@@ -45,6 +48,8 @@ import org.biojava3.core.sequence.location.template.Location;
 import org.biojava3.core.sequence.template.AbstractSequence;
 import org.biojava3.core.sequence.template.CompoundSet;
 import org.biojava3.core.sequence.template.ProxySequenceReader;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The representation of a ProteinSequence
@@ -52,6 +57,8 @@ import org.biojava3.core.sequence.template.ProxySequenceReader;
  * @author Scooter Willis
  */
 public class ProteinSequence extends AbstractSequence<AminoAcidCompound> {
+
+	private final static Logger logger = LoggerFactory.getLogger(ProteinSequence.class);
 
     private ArrayList<FeatureInterface<AbstractSequence<AminoAcidCompound>, AminoAcidCompound>> features
             = new ArrayList<FeatureInterface<AbstractSequence<AminoAcidCompound>, AminoAcidCompound>>();
@@ -163,7 +170,7 @@ public class ProteinSequence extends AbstractSequence<AminoAcidCompound> {
         String seqUrlTemplate = "http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=nuccore&id=%s&rettype=fasta&retmode=text";
         URL url = new URL(String.format(seqUrlTemplate, accessId));
         
-        System.err.println("get parent DNA sequence: " + url.toString());
+        logger.info("get parent DNA sequence: {}", url.toString());
         
         InputStream is = url.openConnection().getInputStream();
 
@@ -207,11 +214,11 @@ public class ProteinSequence extends AbstractSequence<AminoAcidCompound> {
 
     public static void main(String[] args) {
         ProteinSequence proteinSequence = new ProteinSequence("ARNDCEQGHILKMFPSTWYVBZJX");
-        System.out.println(proteinSequence.toString());
+        logger.info("Protein Sequence: {}", proteinSequence.toString());
 
         StringProxySequenceReader<AminoAcidCompound> sequenceStringProxyLoader = new StringProxySequenceReader<AminoAcidCompound>("XRNDCEQGHILKMFPSTWYVBZJA", AminoAcidCompoundSet.getAminoAcidCompoundSet());
         ProteinSequence proteinSequenceFromProxy = new ProteinSequence(sequenceStringProxyLoader);
-        System.out.println(proteinSequenceFromProxy.toString());
+        logger.info("Protein Sequence from Proxy: {}", proteinSequenceFromProxy.toString());
 
     }
 }
