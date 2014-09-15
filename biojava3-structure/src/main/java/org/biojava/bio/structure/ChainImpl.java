@@ -694,7 +694,15 @@ public class ChainImpl implements Chain, Serializable {
 	 *
 	 */
 	public List<Group> getSeqResGroups(String type) {
-		return seqResGroups;
+		List<Group> tmp = new ArrayList<Group>() ;
+		for (int i=0;i<seqResGroups.size();i++){
+			Group g = (Group)seqResGroups.get(i);
+			if (g.getType().equals(type)){
+				tmp.add(g);
+			}
+		}
+
+		return tmp ;
 	}
 
 	/** {@inheritDoc}
@@ -742,7 +750,6 @@ public class ChainImpl implements Chain, Serializable {
 
 	@Override
 	public String getInternalChainID() {
-		// TODO Auto-generated method stub
 		return internalChainID;
 	}
 
