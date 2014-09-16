@@ -162,7 +162,7 @@ public class FileParsingParameters implements Serializable
 
 
 
-	/** Should the chemical component information be automatically be downloade from the web?
+	/** Should the chemical component information be automatically downloaded from the web?
 	 * If set to false, a limited set of ChemComps is being used.
 	 * @return flag if the data should be loaded
 	 */

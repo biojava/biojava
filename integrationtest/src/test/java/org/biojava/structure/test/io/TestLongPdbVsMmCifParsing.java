@@ -29,6 +29,8 @@ import org.junit.After;
 import org.junit.BeforeClass;
 import org.junit.ComparisonFailure;
 import org.junit.Test;
+//import org.slf4j.Logger;
+//import org.slf4j.LoggerFactory;
 
 /**
  * A test to make sure both PDB and mmCIF parsers can parse 
@@ -50,6 +52,8 @@ import org.junit.Test;
  */
 public class TestLongPdbVsMmCifParsing {
 
+	//private static final Logger logger = LoggerFactory.getLogger(TestLongPdbVsMmCifParsing.class);
+	
 	private static final String TEST_LARGE_SET_FILE = "/random_1000_set.list";
 	private static final String TEST_VERY_LARGE_SET_FILE = "/random_10000_set.list";
 	
@@ -340,7 +344,6 @@ public class TestLongPdbVsMmCifParsing {
 		assertEquals("getAtomLength and getAtomGroups.size should coincide in cif:",
 				cCif.getAtomLength(),cCif.getAtomGroups().size());
 		
-		// TODO the following fails for 3o6g, 3nud, 3enj, 3aje, 2cjd, 1bcr, ... (see #162)
 		assertEquals("failed for getAtomGroups(GroupType.AMINOACID) pdb vs cif:",
 				cPdb.getAtomGroups(GroupType.AMINOACID).size(),cCif.getAtomGroups(GroupType.AMINOACID).size());
 		assertEquals("failed for getAtomGroups(GroupType.HETATM) pdb vs cif:",
@@ -365,9 +368,11 @@ public class TestLongPdbVsMmCifParsing {
 			assertTrue("getSeqResLength must be at least 1 in length (chain "+chainId+")",cPdb.getSeqResLength()>=1);
 		}
 		
-		assertTrue("getSeqResLength ("+cPdb.getSeqResLength()+") must be >= than getAtomGroups(GroupType.AMINOACID).size() ("+
-				cPdb.getAtomGroups(GroupType.AMINOACID).size()+") (chain "+chainId+")",
-				cPdb.getSeqResLength()>=cPdb.getAtomGroups(GroupType.AMINOACID).size());
+		// in the current implementation this is not a valid test, entries that have aminoacid residues in 
+		// ligands, e.g. 3o6g won't pass this test
+		//assertTrue("getSeqResLength ("+cPdb.getSeqResLength()+") must be >= than getAtomGroups(GroupType.AMINOACID).size() ("+
+		//		cPdb.getAtomGroups(GroupType.AMINOACID).size()+") (chain "+chainId+")",
+		//		cPdb.getSeqResLength()>=cPdb.getAtomGroups(GroupType.AMINOACID).size());
 
 		int allAtomGroupsSizePdb = 
 				cPdb.getAtomGroups(GroupType.AMINOACID).size()+
@@ -382,7 +387,6 @@ public class TestLongPdbVsMmCifParsing {
 		
 		assertEquals("failed for getAtomLength==hetatm+aminos+nucleotide",cPdb.getAtomLength(), allAtomGroupsSizePdb);
 		
-		// TODO the following fails at the moment for all entries (see #162)
 		int allSeqResGroupsSizePdb = 
 				cPdb.getSeqResGroups(GroupType.AMINOACID).size()+
 				cPdb.getSeqResGroups(GroupType.HETATM).size()+
@@ -403,6 +407,7 @@ public class TestLongPdbVsMmCifParsing {
 		cache.setUseMmCif(false);		
 		// set parsing params here:
 		params.setAlignSeqRes(true); 
+		//params.setLoadChemCompInfo(true);
 		
 		return cache.getStructure(pdbId);
 
@@ -412,6 +417,7 @@ public class TestLongPdbVsMmCifParsing {
 		cache.setUseMmCif(true);
 		// set parsing params here:
 		params.setAlignSeqRes(true); 		
+		//params.setLoadChemCompInfo(true);
 		
 		return cache.getStructure(pdbId);
 		

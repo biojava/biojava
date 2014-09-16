@@ -63,6 +63,8 @@ import org.biojava3.core.sequence.compound.DNACompoundSet;
 import org.biojava3.core.sequence.compound.NucleotideCompound;
 import org.biojava3.core.sequence.template.Compound;
 import org.biojava3.core.sequence.template.Sequence;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /** Aligns the SEQRES residues to the ATOM residues.
@@ -75,6 +77,8 @@ import org.biojava3.core.sequence.template.Sequence;
  */
 public class SeqRes2AtomAligner {
 
+	private static final Logger logger = LoggerFactory.getLogger(SeqRes2AtomAligner.class);
+	
 	boolean DEBUG = false;
 
 	static final List<String> excludeTypes;
@@ -462,7 +466,7 @@ public class SeqRes2AtomAligner {
 			try {
 				s1 = new RNASequence(seq1,AmbiguityRNACompoundSet.getRNACompoundSet());
 			} catch (CompoundNotFoundError ex) {
-				System.err.println("Could not determine compound set for sequence 1 " + seq1);
+				logger.warn("Could not determine compound set for sequence 1 " + seq1);
 				return false;
 			}
 		}
@@ -473,7 +477,7 @@ public class SeqRes2AtomAligner {
 			try {
 				s2 = new RNASequence(seq2,AmbiguityRNACompoundSet.getRNACompoundSet());
 			} catch (CompoundNotFoundError ex) {
-				System.err.println("Could not determine compound set for sequence 2 " + seq2);
+				logger.warn("Could not determine compound set for sequence 2 " + seq2);
 				return false;
 			}
 		}

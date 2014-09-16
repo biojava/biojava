@@ -236,13 +236,20 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 			}
 		}
 		else {
-			HetatomImpl h = new HetatomImpl();
-			h.setId(seq_id);
-			group = h;
+			if (aminoCode1 != null ) {
+				AminoAcidImpl aa = new AminoAcidImpl() ;
+				aa.setAminoType(aminoCode1);
+				aa.setId(seq_id);
+				group = aa ;
+			} else {
+				HetatomImpl h = new HetatomImpl();
+				h.setId(seq_id);
+				group = h;
+			}
 		}		
-		//System.out.println("new group type: "+ group.getType() );
 		return  group ;
 	}
+	
 	/** test if the chain is already known (is in current_model
 	 * ArrayList) and if yes, returns the chain
 	 * if no -> returns null
@@ -375,7 +382,9 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		try {
 			seq_id = Long.parseLong(atom.getLabel_seq_id());
 		} catch (NumberFormatException e){
-
+			// non polymer chains (ligands and small molecules) will have a label_seq_id set to '.', thus it is ok to
+			// silently ignore this
+			//logger.debug("Could not parse number for _atom_site.label_seq_id: "+e.getMessage()); 
 		}
 
 		String nmrModel = atom.getPdbx_PDB_model_num();
