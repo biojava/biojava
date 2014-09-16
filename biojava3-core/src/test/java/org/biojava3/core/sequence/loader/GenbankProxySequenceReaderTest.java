@@ -25,7 +25,7 @@ import org.slf4j.LoggerFactory;
 public class GenbankProxySequenceReaderTest {
 
     private String gi;
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private final static Logger logger = LoggerFactory.getLogger(GenbankProxySequenceReaderTest.class);
 
     public GenbankProxySequenceReaderTest(String gi) {
         this.gi = gi;
@@ -51,7 +51,7 @@ public class GenbankProxySequenceReaderTest {
 
     @Test
     public void biojava3() throws Throwable {
-        log.info("run test for protein: {}", gi);
+        logger.info("run test for protein: {}", gi);
         GenbankProxySequenceReader<AminoAcidCompound> genbankReader
                 = new GenbankProxySequenceReader<AminoAcidCompound>(System.getProperty("java.io.tmpdir"), 
                                                                     this.gi, 
@@ -68,7 +68,7 @@ public class GenbankProxySequenceReaderTest {
         Assert.assertFalse(seq.getFeaturesKeyWord().getKeyWords().isEmpty());
         Assert.assertFalse(seq.getFeaturesByType("organism").get(0).getSource().isEmpty());
         
-        log.info("taxonomy id: {}", seq.getTaxonomy().getID());
+        logger.info("taxonomy id: {}", seq.getTaxonomy().getID());
         Assert.assertNotNull(seq.getTaxonomy().getID());
         Assert.assertNotNull(seq.getSequenceAsString());
         

@@ -18,12 +18,16 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author Scooter Willis <willishf at gmail dot com>
  */
 public class FastaReaderTest {
+
+	private final static Logger logger = LoggerFactory.getLogger(FastaReaderTest.class);
 
 	public FastaReaderTest() {
 	}
@@ -49,7 +53,7 @@ public class FastaReaderTest {
 	 */
 	@Test
 	public void testProcess() throws Exception {
-		System.out.println("process");
+		logger.info("process");
 		InputStream inStream = this.getClass().getResourceAsStream("/PF00104_small.fasta");
 		assertNotNull(inStream);
 
@@ -59,7 +63,7 @@ public class FastaReaderTest {
 		inStream.close();
 
 		//Should have 282 sequences
-		//System.out.println("Expecting 283 got " + proteinSequences.size());
+		//logger.debug("Expecting 283 got " + proteinSequences.size());
 		assertEquals(proteinSequences.size() ,  283 );
 
 		int seqNum = 0;
@@ -71,8 +75,8 @@ public class FastaReaderTest {
 				assertEquals(proteinSequence.getSequenceAsString(),"-----------------FK-N----LP-LED----------------Q----ITL--IQY-----------SWM----------------------CL-SSFA------LSWRSYK---HTNSQFLYFAPDLVF-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
 				break;
 			case 281:
-				//System.out.println(proteinSequence.getAccession());
-				//System.out.println(proteinSequence.getSequenceAsString());
+				//logger.debug("Get Accession: {}", proteinSequence.getAccession());
+				//logger.debug("Get Protein Sequence: {}", proteinSequence.getSequenceAsString());
 				assertEquals(proteinSequence.getAccession().getID(),"Q9PU76_CRONI/141-323");
 				assertEquals(proteinSequence.getSequenceAsString(),"VETVTELTEFAKSI-PGFS-N----LD-LND----------------Q----VTL--LKY-----------GVY----------------------EA-IFAM------LASVMNK---DGMPVAYGNGFITRE------------------------------------------------------------------------------------------------------------------------------------------------------------FLKSLRKPFCDIMEPKFDFA-MKF-NSL-E-LDDSDI--------------------SLFVA-AIIC-CGDRPG-------------------------------------------LVNV--GHIEKMQESIVHVLKL-H-----LQN---------NH---PD----------------------------DI------F--------LFP-KLLQKMAD-LRQLV-----------------TEH-AQLV--QIIKK---TESDAHLHPLL-------QEI---");
 				break;
@@ -88,14 +92,14 @@ public class FastaReaderTest {
 	
 	@Test
 	public void processIntTest() throws Exception {
-		System.out.println("process(int)");
+		logger.info("process(int)");
 		InputStream inStream = this.getClass().getResourceAsStream("/PF00104_small.fasta");
 		assertNotNull(inStream);
 		FastaReader<ProteinSequence,AminoAcidCompound> fastaReader = new FastaReader<ProteinSequence,AminoAcidCompound>(inStream, new GenericFastaHeaderParser<ProteinSequence,AminoAcidCompound>(), new ProteinSequenceCreator(AminoAcidCompoundSet.getAminoAcidCompoundSet()));
 		LinkedHashMap<String,ProteinSequence> proteinSequences = fastaReader.process(200);
 
 		//Should have 200 sequences
-		//System.out.println("Expecting 200 got " + proteinSequences.size());
+		//logger.debug("Expecting 200 got " + proteinSequences.size());
 		assertEquals(proteinSequences.size() ,  200 );
 		
 		int seqNum = 0;
@@ -127,8 +131,8 @@ public class FastaReaderTest {
 				assertEquals(proteinSequence.getSequenceAsString(), "TKCIIKTVEFAKQL-PGFT-T----LT-IAD----------------Q----ITL--LKA-----------ACL----------------------DI-LILR------ICTRYTP---EQDTMTFSEGLTLN-------------------------------------------------------------------------------------------------------------------------------------------------------------RTQMHKAGFGPLTDLVFAFA-NQL-LPL-E-MDDAET--------------------GLLSA-ICLI-CGDRQD-------------------------------------------LEQP--DRVDMLQEPLLEALKV-Y-----VRK---------RR---PS----------------------------RP------H--------MFP-KMLMKITD-LRSIS-----------------AKG-AERV--ITLKMEIPG--SMP--PLI-------QEM---");
 				break;
 			case 81:
-				//System.out.println(proteinSequence.getAccession());
-				//System.out.println(proteinSequence.getSequenceAsString());
+				//logger.debug(proteinSequence.getAccession());
+				//logger.debug(proteinSequence.getSequenceAsString());
 				assertEquals(proteinSequence.getAccession().getID(),"Q9PU76_CRONI/141-323");
 				assertEquals(proteinSequence.getSequenceAsString(),"VETVTELTEFAKSI-PGFS-N----LD-LND----------------Q----VTL--LKY-----------GVY----------------------EA-IFAM------LASVMNK---DGMPVAYGNGFITRE------------------------------------------------------------------------------------------------------------------------------------------------------------FLKSLRKPFCDIMEPKFDFA-MKF-NSL-E-LDDSDI--------------------SLFVA-AIIC-CGDRPG-------------------------------------------LVNV--GHIEKMQESIVHVLKL-H-----LQN---------NH---PD----------------------------DI------F--------LFP-KLLQKMAD-LRQLV-----------------TEH-AQLV--QIIKK---TESDAHLHPLL-------QEI---");
 				break;
