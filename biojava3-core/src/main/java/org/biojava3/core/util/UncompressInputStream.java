@@ -38,6 +38,9 @@ import java.io.FilterInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 /**
  * This class decompresses an input stream containing data compressed with
@@ -59,7 +62,10 @@ import java.io.InputStream;
  * @author  Richard Holland - making LZW_MAGIC package-visible.
  */
 public class UncompressInputStream extends FilterInputStream {
-  /**
+
+	private final static Logger logger = LoggerFactory.getLogger(UncompressInputStream.class);
+
+	/**
    * @param is the input stream to decompress
    * @throws IOException if the header is malformed
    */
@@ -183,8 +189,7 @@ public class UncompressInputStream extends FilterInputStream {
           l_maxcode = (l_n_bits == maxbits) ? l_maxmaxcode :
               (1 << l_n_bits) - 1;
 
-          if (debug)
-            System.err.println("Code-width expanded to " + l_n_bits);
+          logger.debug("Code-width expanded to ", l_n_bits);
 
           l_bitmask = (1 << l_n_bits) - 1;
           l_bit_pos = resetbuf(l_bit_pos);
@@ -227,7 +232,7 @@ public class UncompressInputStream extends FilterInputStream {
           l_maxcode = (1 << l_n_bits) - 1;
           l_bitmask = l_maxcode;
 
-          if (debug) System.err.println("Code tables reset");
+          logger.debug("Code tables reset");
 
           l_bit_pos = resetbuf(l_bit_pos);
           continue main_loop;
@@ -398,10 +403,8 @@ public class UncompressInputStream extends FilterInputStream {
     if ((header & HDR_FREE) > 0)
       throw new IOException("Header bit 6 set");
 
-    if (debug) {
-      System.err.println("block mode: " + block_mode);
-      System.err.println("max bits:   " + maxbits);
-    }
+    logger.debug("block mode: {}", block_mode);
+    logger.debug("max bits:   {}", maxbits);
 
 
 // initialize stuff
@@ -450,17 +453,17 @@ public class UncompressInputStream extends FilterInputStream {
 
     if (debugTiming) {
       long end = System.currentTimeMillis();
-    //  System.err.println("Decompressed " + total + " bytes");
-      System.err.println("Time: " + (end - start) / 1000. + " seconds");
+    //  logger.debug("Decompressed " + total + " bytes");
+      logger.warn("Time: {} seconds", (end - start) / 1000);
     }
   }
 
 
-  private static final boolean debug = false, debugTiming = false;
+  private static final boolean debugTiming = false;
 
   public static void main(String args[]) throws Exception {
     if (args.length != 1) {
-      System.err.println("Usage: UncompressInputStream <file>");
+      logger.info("Usage: UncompressInputStream <file>");
       System.exit(1);
     }
 
@@ -479,8 +482,8 @@ public class UncompressInputStream extends FilterInputStream {
     }
 
     long end = System.currentTimeMillis();
-    System.err.println("Decompressed " + tot + " bytes");
-    System.err.println("Time: " + (end - beg) / 1000. + " seconds");
+    logger.info("Decompressed {} bytes", tot);
+    logger.info("Time: {} seconds", (end - beg) / 1000);
     in.close();
   }
 }
