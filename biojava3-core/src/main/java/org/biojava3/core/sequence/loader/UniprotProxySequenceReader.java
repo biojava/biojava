@@ -36,9 +36,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.logging.Logger;
-import org.biojava3.core.sequence.AccessionID;
 
+import org.biojava3.core.sequence.AccessionID;
 import org.biojava3.core.sequence.template.SequenceProxyView;
 import org.biojava3.core.sequence.template.Compound;
 import org.biojava3.core.exceptions.CompoundNotFoundError;
@@ -50,13 +49,16 @@ import org.biojava3.core.sequence.compound.AminoAcidCompoundSet;
 import org.biojava3.core.sequence.features.DBReferenceInfo;
 import org.biojava3.core.sequence.features.DatabaseReferenceInterface;
 import org.biojava3.core.sequence.features.FeaturesKeyWordInterface;
-
 import org.biojava3.core.sequence.storage.SequenceAsStringHelper;
 import org.biojava3.core.sequence.template.CompoundSet;
 import org.biojava3.core.sequence.template.ProxySequenceReader;
 import org.biojava3.core.sequence.template.SequenceMixin;
 import org.biojava3.core.sequence.template.SequenceView;
 import org.biojava3.core.util.XMLHelper;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -71,7 +73,8 @@ import org.w3c.dom.Element;
  */
 public class UniprotProxySequenceReader<C extends Compound> implements ProxySequenceReader<C>, FeaturesKeyWordInterface, DatabaseReferenceInterface {
 
-    private static final Logger logger = Logger.getLogger(UniprotProxySequenceReader.class.getName());
+	private final static Logger logger = LoggerFactory.getLogger(UniprotProxySequenceReader.class);
+
     private static String uniprotbaseURL = "http://www.uniprot.org"; //"http://pir.uniprot.org";
     private static String uniprotDirectoryCache = null;
     private String sequence;
@@ -246,7 +249,7 @@ public class UniprotProxySequenceReader<C extends Compound> implements ProxySequ
             Element nameElement = XMLHelper.selectSingleElement(entryElement, "name");
             accessionID = new AccessionID(nameElement.getTextContent(), DataSource.UNIPROT);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Exeception: ", e);
         }
         return accessionID;
     }
@@ -298,7 +301,7 @@ public class UniprotProxySequenceReader<C extends Compound> implements ProxySequ
         if (sb.length() == 0) {
         	String uniprotURL = getUniprotbaseURL() + "/uniprot/?query=" + key + "&format=xml";
         	//String uniprotURL = getUniprotbaseURL() + "/uniprot/" + key + ".xml";
-            logger.info("Loading " + uniprotURL);
+            logger.info("Loading: ", uniprotURL);
             URL uniprot = new URL(uniprotURL);
             URLConnection uniprotConnection = uniprot.openConnection();
             uniprotConnection.setRequestProperty("User-Agent", "BioJava");
@@ -325,11 +328,11 @@ public class UniprotProxySequenceReader<C extends Compound> implements ProxySequ
 
         logger.info("Load complete");
         try {
-            //       System.out.println(sb.toString());
+            //       logger.debug(sb.toString());
             Document document = XMLHelper.inputStreamToDocument(new ByteArrayInputStream(sb.toString().getBytes()));
             return document;
         } catch (Exception e) {
-            System.out.println("Exception on xml parse of:" + sb.toString());
+            logger.error("Exception on xml parse of: {}", sb.toString());
         }
         return null;
     }
@@ -390,10 +393,10 @@ public class UniprotProxySequenceReader<C extends Compound> implements ProxySequ
         try {
             UniprotProxySequenceReader<AminoAcidCompound> uniprotSequence = new UniprotProxySequenceReader<AminoAcidCompound>("YA745_GIBZE", AminoAcidCompoundSet.getAminoAcidCompoundSet());
             ProteinSequence proteinSequence = new ProteinSequence(uniprotSequence);
-            System.out.println(proteinSequence.getAccession().getID());
-            System.out.println("Sequence=" + proteinSequence.getSequenceAsString());
+            logger.info("Accession: {}", proteinSequence.getAccession().getID());
+            logger.info("Sequence: {}", proteinSequence.getSequenceAsString());
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Exception: ", e);
         }
 
     }
