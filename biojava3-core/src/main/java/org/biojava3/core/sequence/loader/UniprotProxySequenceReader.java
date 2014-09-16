@@ -301,7 +301,7 @@ public class UniprotProxySequenceReader<C extends Compound> implements ProxySequ
         if (sb.length() == 0) {
         	String uniprotURL = getUniprotbaseURL() + "/uniprot/?query=" + key + "&format=xml";
         	//String uniprotURL = getUniprotbaseURL() + "/uniprot/" + key + ".xml";
-            logger.info("Loading: ", uniprotURL);
+            logger.info("Loading: {}", uniprotURL);
             URL uniprot = new URL(uniprotURL);
             URLConnection uniprotConnection = uniprot.openConnection();
             uniprotConnection.setRequestProperty("User-Agent", "BioJava");
