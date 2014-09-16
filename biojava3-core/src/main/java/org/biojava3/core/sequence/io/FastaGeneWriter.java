@@ -34,6 +34,9 @@ import org.biojava3.core.sequence.Strand;
 import org.biojava3.core.sequence.compound.NucleotideCompound;
 import org.biojava3.core.sequence.io.template.FastaHeaderFormatInterface;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * A Gene sequence has a Positive or Negative Strand where we want to write out to a stream the 5 to 3 prime version.
  * It is also an option to write out the gene sequence where the exon regions are upper case
@@ -41,6 +44,8 @@ import org.biojava3.core.sequence.io.template.FastaHeaderFormatInterface;
  * @author Scooter Willis <willishf at gmail dot com>
  */
 public class FastaGeneWriter {
+
+	private final static Logger logger = LoggerFactory.getLogger(FastaGeneWriter.class);
 
     boolean showExonUppercase = false;
     OutputStream os;
@@ -105,7 +110,7 @@ public class FastaGeneWriter {
                         featureBioEnd = geneBioEnd - exonSequence.getBioBegin();
                     }
                     if (featureBioBegin < 0 || featureBioEnd < 0 || featureBioEnd > sb.length() || featureBioBegin > sb.length()) {
-                        System.out.println("Bad Feature " + sequence.getAccession().toString() + " " + sequence.getStrand() + " " + geneBioBegin + " " + geneBioEnd + " " + exonSequence.getBioBegin() + " " + exonSequence.getBioEnd());
+                        logger.warn("Bad Feature, Accession: {}, Sequence Strand: {}, Gene Begin: {}, Gene End: {}, Exon Begin: {}, Exon End: {}", sequence.getAccession().toString(), sequence.getStrand(), geneBioBegin, geneBioEnd, exonSequence.getBioBegin(), exonSequence.getBioEnd());
                     } else {
                         for (int i = featureBioBegin; i <= featureBioEnd; i++) {
                             char ch = sb.charAt(i);
@@ -175,7 +180,7 @@ public class FastaGeneWriter {
 
 
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.warn("Exception: ", e);
         }
     }
 }

@@ -25,20 +25,24 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.LinkedHashMap;
+
 import org.biojava3.core.sequence.DNASequence;
 import org.biojava3.core.sequence.ProteinSequence;
-
 import org.biojava3.core.sequence.compound.AminoAcidCompound;
 import org.biojava3.core.sequence.compound.AminoAcidCompoundSet;
 import org.biojava3.core.sequence.compound.DNACompoundSet;
 import org.biojava3.core.sequence.compound.NucleotideCompound;
 import org.biojava3.core.sequence.template.AbstractSequence;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author Scooter Willis <willishf at gmail dot com>
  */
 public class GenbankReaderHelper {
+
+	private final static Logger logger = LoggerFactory.getLogger(GenbankReaderHelper.class);
 
     /**
      * Selecting lazySequenceLoad=true will parse the Genbank file and figure out the accessionid and offsets and return sequence objects
@@ -161,12 +165,12 @@ public class GenbankReaderHelper {
 
         LinkedHashMap<String, DNASequence> dnaSequences = GenbankReaderHelper.readGenbankDNASequence(new File("src/test/resources/NM_000266.gb"), true);
         for (DNASequence sequence : dnaSequences.values()) {
-            System.out.println( sequence.getRNASequence().getProteinSequence().getSequenceAsString() );
+            logger.info("DNA Sequence: {}", sequence.getRNASequence().getProteinSequence().getSequenceAsString());
         }
 
         LinkedHashMap<String, ProteinSequence> proteinSequences = GenbankReaderHelper.readGenbankProteinSequence(new File("src/test/resources/BondFeature.gb"), true);
         for (ProteinSequence sequence : proteinSequences.values()) {
-        	System.out.println( sequence.getSequenceAsString() );
+        	logger.info("Protein Sequence: {}", sequence.getSequenceAsString());
         }
     }
 }
