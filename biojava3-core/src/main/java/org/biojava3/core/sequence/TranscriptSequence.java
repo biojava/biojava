@@ -36,6 +36,9 @@ import org.biojava3.core.sequence.transcription.TranscriptionEngine;
  */
 public class TranscriptSequence extends DNASequence {
 
+	// If needed...
+	//private final static Logger logger = LoggerFactory.getLogger(TranscriptSequence.class);
+
     private final ArrayList<CDSSequence> cdsSequenceList = new ArrayList<CDSSequence>();
     private final LinkedHashMap<String, CDSSequence> cdsSequenceHashMap = new LinkedHashMap<String, CDSSequence>();
     private StartCodonSequence startCodonSequence = null;
@@ -136,7 +139,7 @@ public class TranscriptSequence extends DNASequence {
         for (int i = 0; i < cdsSequenceList.size(); i++) {
             CDSSequence cdsSequence = cdsSequenceList.get(i);
             String codingSequence = cdsSequence.getCodingSequence();
-            //          System.out.println("CDS " + getStrand() + " "  + cdsSequence.getPhase() + "=" + codingSequence);
+            //          logger.debug("CDS {} {} = {}", getStrand(), cdsSequence.getPhase(), codingSequence);
             if (this.getStrand() == Strand.NEGATIVE) {
                 if (cdsSequence.phase == 1) {
                     codingSequence = codingSequence.substring(1, codingSequence.length());
@@ -172,7 +175,7 @@ public class TranscriptSequence extends DNASequence {
             }
 
 
-            //    System.out.println(codingSequence);
+            //    logger.debug("Coding Sequence: {}", codingSequence);
             DNASequence dnaCodingSequence = new DNASequence(codingSequence.toString().toUpperCase());
             RNASequence rnaCodingSequence = dnaCodingSequence.getRNASequence(TranscriptionEngine.getDefault());
             ProteinSequence proteinSequence = rnaCodingSequence.getProteinSequence(TranscriptionEngine.getDefault());

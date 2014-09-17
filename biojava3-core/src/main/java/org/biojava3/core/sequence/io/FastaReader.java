@@ -37,6 +37,8 @@ import org.biojava3.core.sequence.io.template.SequenceHeaderParserInterface;
 import org.biojava3.core.sequence.io.template.SequenceCreatorInterface;
 import org.biojava3.core.sequence.template.Compound;
 import org.biojava3.core.sequence.template.Sequence;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Use FastaReaderHelper as an example of how to use this class where FastaReaderHelper should be the
@@ -44,6 +46,8 @@ import org.biojava3.core.sequence.template.Sequence;
  * @author Scooter Willis ;lt;willishf at gmail dot com&gt;
  */
 public class FastaReader<S extends Sequence<?>, C extends Compound> {
+
+	private final static Logger logger = LoggerFactory.getLogger(FastaReader.class);
 
     SequenceCreatorInterface<C> sequenceCreator;
     SequenceHeaderParserInterface<S,C> headerParser;
@@ -151,7 +155,7 @@ public class FastaReader<S extends Sequence<?>, C extends Compound> {
             if (line.length() != 0) {
                 if (line.startsWith(">")) {//start of new fasta record
                     if (sb.length() > 0) {//i.e. if there is already a sequence before
-                    //    System.out.println("Sequence index=" + sequenceIndex);
+                    //    logger.debug("Sequence index=" + sequenceIndex);
                     	@SuppressWarnings("unchecked")
                         S sequence = (S)sequenceCreator.getSequence(sb.toString(), sequenceIndex);
                         headerParser.parseHeader(header, sequence);
@@ -176,14 +180,14 @@ public class FastaReader<S extends Sequence<?>, C extends Compound> {
             fileIndex = br.getBytesRead();
             line = br.readLine();
 			if (line == null) {//i.e. EOF
-				@SuppressWarnings("unchecked")
                 String seq = sb.toString();
                 if ( seq.length() == 0) {
-                    System.err.println("Can't parse sequence " + sequenceIndex + ". Got sequence of length 0!");
-                    System.err.println("header: " + header);
+                    logger.warn("Can't parse sequence {}. Got sequence of length 0!", sequenceIndex);
+                    logger.warn("header: {}", header);
                 }
-                //    System.out.println("Sequence index=" + sequenceIndex + " " + fileIndex );
-                S sequence = (S)sequenceCreator.getSequence(seq, sequenceIndex);
+                //    logger.debug("Sequence index=" + sequenceIndex + " " + fileIndex );
+                @SuppressWarnings("unchecked")
+				S sequence = (S)sequenceCreator.getSequence(seq, sequenceIndex);
                 headerParser.parseHeader(header, sequence);
                 sequences.put(sequence.getAccession().getID(),sequence);
                 processedSequences++;
@@ -218,7 +222,7 @@ public class FastaReader<S extends Sequence<?>, C extends Compound> {
             is.close();
 
 
-            System.out.println(proteinSequences);
+            logger.info("Protein Sequences: {}", proteinSequences);
 
             File file = new File(inputFile);
             FastaReader<ProteinSequence,AminoAcidCompound> fastaProxyReader = 
@@ -235,16 +239,16 @@ public class FastaReader<S extends Sequence<?>, C extends Compound> {
 
             for(String key : proteinProxySequences.keySet()){
                 ProteinSequence proteinSequence = proteinProxySequences.get(key);
-                System.out.println(key);
+                logger.info("Protein Proxy Sequence Key: {}", key);
 //                if(key.equals("Q98SJ1_CHICK/15-61")){
 //                    int dummy = 1;
 //                }
-                System.out.println(proteinSequence.toString());
+                logger.info("Protein Sequence: {}", proteinSequence.toString());
 
             }
 
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.warn("Exception: ", e);
         }
     }
 }
