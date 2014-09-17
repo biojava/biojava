@@ -969,7 +969,9 @@
 2stb
 2v8n
 2iui
-3zd5
+#3zd5 excluded because of inconsistency: PDB file uses HETATM for residue B-DC-20, whilst cif uses ATOM 
+# 3zd5 replaced by 3l1o (randomly chosen)
+3l1o
 1mwv
 1pjh
 1mbg
