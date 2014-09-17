@@ -326,7 +326,6 @@ public class TestLongPdbVsMmCifParsing {
 
 		// note for getSeqResLength to work one needs the setAlignSeqRes option in the parsers
 		
-		// TODO the following fails for 3u7t (see #160)
 		assertEquals("failed for getSeqResLength pdb vs cif:",cPdb.getSeqResLength(),cCif.getSeqResLength());
 		assertEquals("failed for getSeqResGroups().size pdb vs cif",
 				cPdb.getSeqResGroups().size(), cCif.getSeqResGroups().size());

@@ -709,8 +709,9 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 
 			Chain s = getEntityChain(asym.getEntity_id());
 			Chain seqres = (Chain)s.clone();
+			// to solve issue #160 (e.g. 3u7t)
+			seqres = removeSeqResHeterogeneity(seqres);
 			seqres.setChainID(asym.getId());
-
 
 			seqResChains.add(seqres);
 			logger.debug(" seqres: " + asym.getId() + " " + seqres + "<") ;
@@ -920,6 +921,39 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		}
 	}
 
+	/**
+	 * The method will return a new reference to a Chain with any consecutive groups 
+	 * having same residue numbers removed.
+	 * This is necessary to solve the microheterogeneity issue in entries like 3u7t (see github issue #160)
+	 * @param c
+	 * @return
+	 */
+	private Chain removeSeqResHeterogeneity(Chain c) {
+		
+		Chain trimmedChain = new ChainImpl();
+		
+		ResidueNumber lastResNum = null;
+
+		for (Group g:c.getAtomGroups()) {
+			
+			// note we have to deep copy this, otherwise they stay linked and would get altered in addGroup(g) 
+			ResidueNumber currentResNum = new ResidueNumber(
+					g.getResidueNumber().getChainId(),
+					g.getResidueNumber().getSeqNum(),
+					g.getResidueNumber().getInsCode());
+
+			if (lastResNum == null || !lastResNum.equals(currentResNum) ) {				
+				trimmedChain.addGroup(g);
+			} else {
+				logger.debug("Removing seqres group because it seems to be repeated in entity_poly_seq, most likely has hetero='y': "+g);
+			}
+			
+			lastResNum = currentResNum;
+
+		}
+		return trimmedChain;
+	}
+	
    private void addBonds() {
 	   BondMaker maker = new BondMaker(structure);
 	   maker.makeBonds();	
@@ -1363,7 +1397,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		Entity e = getEntity(epolseq.getEntity_id());
 
 		if (e == null){
-			System.err.println("could not find entity "+ epolseq.getEntity_id()+". Can not match sequence to it.");
+			logger.info("Could not find entity "+ epolseq.getEntity_id()+". Can not match sequence to it.");
 			return;
 		}
 
@@ -1381,7 +1415,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 			
 			if (epolseq.getMon_id().length()==3){
 				g.setPDBName(epolseq.getMon_id());
-
+				
 				Character code1 = StructureTools.convert_3code_1code(epolseq.getMon_id());
 				g.setAminoType(code1);
 
@@ -1393,11 +1427,13 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 			} else if ( StructureTools.isNucleotide(epolseq.getMon_id())) {
 				// the group is actually a nucleotide group...
 				NucleotideImpl n = new NucleotideImpl();
+
 				n.setResidueNumber(ResidueNumber.fromString(epolseq.getNum()));
 				n.setPDBName(epolseq.getMon_id());
-				entityChain.addGroup(n);
+				entityChain.addGroup(n);				
 			} else {				
 				HetatomImpl h = new HetatomImpl();
+				
 				h.setPDBName(epolseq.getMon_id());
 				//h.setAminoType('X');
 				h.setResidueNumber(ResidueNumber.fromString(epolseq.getNum()));

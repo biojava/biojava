@@ -5,11 +5,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.biojava.bio.structure.align.util.AtomCache;
+import org.biojava.bio.structure.io.FileParsingParameters;
 import org.biojava.bio.structure.io.mmcif.chem.PolymerType;
 import org.biojava.bio.structure.io.mmcif.chem.ResidueType;
 import org.biojava.bio.structure.io.mmcif.model.ChemComp;
 import org.biojava3.structure.StructureIO;
 import org.junit.Test;
+
 import static org.junit.Assert.*;
 
 public class TestAltLocs {
@@ -312,7 +314,65 @@ public class TestAltLocs {
 			}
 		}
 
-		assertTrue(ca.length == caList.size());
+		assertEquals(ca.length, caList.size());
+
+
+	}
+
+	@Test
+	public void test3U7Tmmcif() throws IOException, StructureException{ 
+
+		// this test intends to check that the mmCIF parser doesn't read twice residues 22 and 25 
+		// which are annotated as "microheterogeneity" in the SEQRES (entity_poly_seq), see #160
+		
+		AtomCache cache = new AtomCache();
+		
+		StructureIO.setAtomCache(cache); 
+
+		cache.setUseMmCif(true);
+		FileParsingParameters params = new FileParsingParameters();
+		params.setAlignSeqRes(true);
+		cache.setFileParsingParams(params);
+
+		Structure structure = StructureIO.getStructure("3U7T");
+
+		assertNotNull(structure);
+
+		Atom[] ca = StructureTools.getAtomCAArray(structure);
+
+		//System.out.println(structure.getPdbId() + " has # CA atoms: " + ca.length);
+
+		List<Atom> caList = new ArrayList<Atom>();
+		for ( Chain c: structure.getChains()){
+			// notice here we test the seqresgroups, because we want to check if microheterogeinity is treated correctly
+			for (Group g: c.getSeqResGroups()){
+
+				for (Group altLocGroup:g.getAltLocs()) {
+					ensureAllAtomsSameAltCode(altLocGroup);						
+				}
+
+				List<Atom> atoms = g.getAtoms();
+				boolean caInMain = false;
+				for (Atom a: atoms){
+
+					if ( a.getFullName().equals(StructureTools.caAtomName)) {
+						caList.add(a);
+						caInMain = true;
+						break;
+
+					}
+
+
+				}
+				if (! caInMain && g.hasAtom(StructureTools.caAtomName)){
+					// g.hasAtom checks altLocs
+					fail("CA is not in main group, but in altLoc");
+				}
+
+			}
+		}
+
+		assertEquals(ca.length, caList.size());
 
 
 	}
