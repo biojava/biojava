@@ -29,6 +29,9 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Static utility to easily share a thread pool for concurrent/parallel/lazy execution.  To exit cleanly,
  * {@link #shutdown()} or {@link #shutdownAndAwaitTermination()} must be called after all tasks have been submitted.
@@ -36,6 +39,8 @@ import java.util.concurrent.TimeUnit;
  * @author Mark Chapman
  */
 public class ConcurrencyTools {
+
+	private final static Logger logger = LoggerFactory.getLogger(ConcurrencyTools.class);
 
     private static ThreadPoolExecutor pool;
     // private static int tasks;
@@ -135,7 +140,7 @@ public class ConcurrencyTools {
                     pool.shutdownNow(); // cancel currently executing tasks
                     // wait a while for tasks to respond to being canceled
                     if (!pool.awaitTermination(60L, TimeUnit.SECONDS)) {
-                        System.err.println("BioJava ConcurrencyTools thread pool did not terminate");
+                        logger.warn("BioJava ConcurrencyTools thread pool did not terminate");
                     }
                 }
             } catch (InterruptedException ie) {

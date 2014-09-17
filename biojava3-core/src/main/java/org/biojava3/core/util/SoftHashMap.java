@@ -27,6 +27,9 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 /** A in memory cache using soft references. (can be garbage collected)
  * 
@@ -36,8 +39,7 @@ import java.util.Set;
 
 public class SoftHashMap<K, V> extends AbstractMap<K, V> {
 
-   public static final boolean DEBUG = false;
-
+	private final static Logger logger = LoggerFactory.getLogger(SoftHashMap.class);
 
    public static final int DEFAULT_LIMIT = 1;
 
@@ -123,7 +125,7 @@ public class SoftHashMap<K, V> extends AbstractMap<K, V> {
 
             }
          } catch (Exception e){
-            e.printStackTrace();
+        	 logger.error("Exception: ", e);
          }
 
       }
@@ -213,8 +215,7 @@ public class SoftHashMap<K, V> extends AbstractMap<K, V> {
 
       clearGCCollected();
 
-      if ( DEBUG)
-         System.out.println("putting " + key + " on cache. size: " + size());
+      logger.debug("Putting {} on cache. size: {}", key, size());
       
       map.put(key, new SoftValue<K, V>(value, key, queue));
       
@@ -224,14 +225,11 @@ public class SoftHashMap<K, V> extends AbstractMap<K, V> {
 
 
 
-   public V remove(Object key) {
-
-      clearGCCollected();
-      if ( DEBUG)
-          System.out.println("removing " + key + " from cache. size: " + size());
-      return map.remove(key).get();
-
-   }
+	public V remove(Object key) {
+		clearGCCollected();
+		logger.debug("Removing {} from cache. size: {}", key, size());
+		return map.remove(key).get();
+	}
 
 
 
@@ -242,8 +240,7 @@ public class SoftHashMap<K, V> extends AbstractMap<K, V> {
       }
 
       clearGCCollected();
-      if ( DEBUG)
-          System.out.println("clearing cache");
+      logger.debug("clearing cache");
       map.clear();
 
    }

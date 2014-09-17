@@ -34,6 +34,8 @@ import org.biojava3.core.sequence.compound.AminoAcidCompoundSet;
 import org.biojava3.core.sequence.io.template.FastaHeaderFormatInterface;
 import org.biojava3.core.sequence.template.Compound;
 import org.biojava3.core.sequence.template.Sequence;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The FastaWriter writes a collection of sequences to an outputStream. FastaWriterHelper should be
@@ -44,6 +46,8 @@ import org.biojava3.core.sequence.template.Sequence;
  * @author Scooter Willis <willishf at gmail dot com>
  */
 public class FastaWriter<S extends Sequence<?>, C extends Compound> {
+
+	private final static Logger logger = LoggerFactory.getLogger(FastaWriter.class);
 
     OutputStream os;
     Collection<S> sequences;
@@ -133,7 +137,7 @@ public class FastaWriter<S extends Sequence<?>, C extends Compound> {
             is.close();
 
 
-          //  System.out.println(proteinSequences);
+          //  logger.debug(proteinSequences);
 
             FileOutputStream fileOutputStream = new FileOutputStream("/Users/Scooter/scripps/dyadic/c1-454Scaffolds_temp.faa");
            
@@ -143,13 +147,13 @@ public class FastaWriter<S extends Sequence<?>, C extends Compound> {
             fastaWriter.process();
             bo.close();
             long end = System.currentTimeMillis();
-            System.out.println("Took " + (end - start) + " seconds");
+            logger.info("Took {} seconds", (end - start));
          
             fileOutputStream.close();
 
 
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.warn("Exception: ", e);
         }
     }
 

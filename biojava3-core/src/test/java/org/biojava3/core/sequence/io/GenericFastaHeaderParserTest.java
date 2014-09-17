@@ -12,6 +12,9 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import static org.junit.Assert.*;
 
 /**
@@ -19,6 +22,8 @@ import static org.junit.Assert.*;
  * @author Scooter Willis <willishf at gmail dot com>
  */
 public class GenericFastaHeaderParserTest {
+
+	private final static Logger logger = LoggerFactory.getLogger(GenericFastaHeaderParserTest.class);
 
     public GenericFastaHeaderParserTest() {
     }
@@ -59,7 +64,7 @@ public class GenericFastaHeaderParserTest {
      */
     @Test
     public void testParseHeader() {
-        System.out.println("parseHeader");
+        logger.info("parseHeader");
         String header = "";
         ProteinSequence sequence = new ProteinSequence("");
         GenericFastaHeaderParser<ProteinSequence,AminoAcidCompound> instance = new GenericFastaHeaderParser<ProteinSequence,AminoAcidCompound>();

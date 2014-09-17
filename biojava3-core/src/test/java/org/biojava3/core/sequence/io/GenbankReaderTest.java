@@ -20,12 +20,16 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author Scooter Willis <willishf at gmail dot com>
  */
 public class GenbankReaderTest {
+
+	private final static Logger logger = LoggerFactory.getLogger(GenbankReaderTest.class);
 
 	public GenbankReaderTest() {
 	}
@@ -52,7 +56,7 @@ public class GenbankReaderTest {
 	@Test
 	public void testProcess() throws Exception {
 
-		System.out.println("process protein");
+		logger.info("process protein");
 		InputStream inStream = this.getClass().getResourceAsStream("/BondFeature.gb");
 		assertNotNull(inStream);
 		
@@ -66,7 +70,7 @@ public class GenbankReaderTest {
 		LinkedHashMap<String,ProteinSequence> proteinSequences = GenbankProtein.process();
 		inStream.close();
 
-		System.out.println("process DNA");
+		logger.info("process DNA");
 		inStream = this.getClass().getResourceAsStream("/NM_000266.gb");
 		assertNotNull(inStream);
 
