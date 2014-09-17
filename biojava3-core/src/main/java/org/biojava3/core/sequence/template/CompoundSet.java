@@ -53,7 +53,10 @@ public interface CompoundSet<C extends Compound> {
 
 	public boolean compoundsEquivalent(C compoundOne, C compoundTwo);
 
+        @Deprecated
 	public void verifySequence(Sequence<C> sequence) throws CompoundNotFoundError;
+        
+        public boolean isValidSequence(Sequence<C> sequence);
 
 	public Set<C> getEquivalentCompounds(C compound);
 

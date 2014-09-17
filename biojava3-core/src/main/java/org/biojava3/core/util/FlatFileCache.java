@@ -30,12 +30,17 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /** Provides a cache for storing multiple small files in memory. Can be used to e.g cache gzip compressed PDB files for avoiding disk IO bottlenecks.
  * 
  * @author Andreas Prlic.
  *
  */
 public class FlatFileCache {
+
+	private final static Logger logger = LoggerFactory.getLogger(FlatFileCache.class);
 
 	private static FlatFileCache me ;
 
@@ -57,7 +62,7 @@ public class FlatFileCache {
 
 
 	public  static void addToCache(String key, File fileToCache){
-		//System.out.println("storing " + key + " on file cache (cache size: " + cache.size() + ")");
+		//logger.debug("storing " + key + " on file cache (cache size: " + cache.size() + ")");
 		try {
 			InputStream is = new FileInputStream(fileToCache);
 			// Get the size of the file
@@ -94,13 +99,12 @@ public class FlatFileCache {
 			cache.put(key,bytes);
 			
 		} catch (Exception e){
-		   System.err.println("error adding to cache! " + e.getMessage());
-			e.printStackTrace();
+			logger.error("Error adding to cache! {}" + e.getMessage(), e);
 		}
 	}
 
 	public  static InputStream getInputStream(String key){
-		//System.out.println("returning " + key + " from file cache (cache size: " + cache.size() + ")");
+		//logger.debug("returning " + key + " from file cache (cache size: " + cache.size() + ")");
 		byte[] bytes = cache.get(key);
 		if ( bytes == null)
 			return null;

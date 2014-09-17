@@ -189,6 +189,7 @@ public class AminoAcidCompoundSet implements CompoundSet<AminoAcidCompound> {
         return aminoAcidCompoundCache.containsValue(compound);
     }
 
+    @Deprecated
     // TODO throwing an error seems unnecessary, should this return a boolean instead? maybe rename to isValidSequence?
     public void verifySequence(Sequence<AminoAcidCompound> sequence) throws CompoundNotFoundError {
         for (AminoAcidCompound compound : sequence) {
@@ -196,6 +197,16 @@ public class AminoAcidCompoundSet implements CompoundSet<AminoAcidCompound> {
                 throw new CompoundNotFoundError("Compound (" + compound + ") not found in AminoAcidCompoundSet.");
             }
         }
+    }
+    
+    @Override
+    public boolean isValidSequence(Sequence<AminoAcidCompound> sequence) {
+        for (AminoAcidCompound compound: sequence) {
+            if (!hasCompound(compound)) {
+                return false;
+            }
+        }
+        return true;
     }
 
     public List<AminoAcidCompound> getAllCompounds() {

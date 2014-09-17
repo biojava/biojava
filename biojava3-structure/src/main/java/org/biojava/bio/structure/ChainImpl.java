@@ -257,11 +257,8 @@ public class ChainImpl implements Chain, Serializable {
 
 
 
-	/** return the group at position .
-	 *
-	 *
-	 * @param position  an int
-	 * @return a Group object
+	/** 
+	 * {@inheritDoc}
 	 */
 	public Group getAtomGroup(int position) {
 
@@ -279,10 +276,8 @@ public class ChainImpl implements Chain, Serializable {
 		return getAtomGroups(type);
 	}
 
-	/**  Get the Groups of a certain type, that are listed int the ATOM records of the PDB file.
-	 *
-	 *  @param type the type of the groups to return. Can be one of the 3 types defined in the {@link GroupType} constants
-	 *  @return a list of group objects
+	/**  
+	 * {@inheritDoc}
 	 */
 	public List<Group> getAtomGroups(String type){
 		List<Group> tmp = new ArrayList<Group>() ;
@@ -513,6 +508,9 @@ public class ChainImpl implements Chain, Serializable {
 		return g.size() ;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public int getSeqResLength() {
 		//new method returns the length of the sequence defined in the SEQRES records
 		return seqResGroups.size();
@@ -525,19 +523,14 @@ public class ChainImpl implements Chain, Serializable {
 
 	public String getName()           {	return getChainID();  }
 
-	/** get and set the name of this chain (Chain id in PDB file ).
-	 * @param nam a String specifying the name value
-	 * @see #getChainID()
-	 *
+	/**
+	 * {@inheritDoc}
 	 */
-
 	public void   setChainID(String nam) { name = nam;   }
 
 
-
-	/** get and set the name of this chain (Chain id in PDB file ).
-	 * @return a String representing the name value
-	 * @see #setName
+	/**
+	 * {@inheritDoc}
 	 */
 	public String getChainID()           {	return name;  }
 
@@ -549,7 +542,7 @@ public class ChainImpl implements Chain, Serializable {
 	public String toString(){
 		String newline = System.getProperty("line.separator");
 		StringBuffer str = new StringBuffer();
-		str.append("Chain >"+getName()+"<"+newline) ;
+		str.append("Chain >"+getChainID()+"<"+newline) ;
 		if ( mol != null ){
 			if ( mol.getMolName() != null){
 				str.append(mol.getMolName()).append(newline);
@@ -648,9 +641,7 @@ public class ChainImpl implements Chain, Serializable {
 	}
 
 	/**
-	 * Returns the PDB SEQRES sequence as a one-letter sequence string.
-	 * Non-standard residues are represented by an "X".
-	 * @return one-letter PDB SEQRES sequence as string
+	 * {@inheritDoc}	 
 	 */
 	public String getSeqResSequence(){
 
@@ -703,7 +694,15 @@ public class ChainImpl implements Chain, Serializable {
 	 *
 	 */
 	public List<Group> getSeqResGroups(String type) {
-		return seqResGroups;
+		List<Group> tmp = new ArrayList<Group>() ;
+		for (int i=0;i<seqResGroups.size();i++){
+			Group g = (Group)seqResGroups.get(i);
+			if (g.getType().equals(type)){
+				tmp.add(g);
+			}
+		}
+
+		return tmp ;
 	}
 
 	/** {@inheritDoc}
@@ -751,7 +750,6 @@ public class ChainImpl implements Chain, Serializable {
 
 	@Override
 	public String getInternalChainID() {
-		// TODO Auto-generated method stub
 		return internalChainID;
 	}
 

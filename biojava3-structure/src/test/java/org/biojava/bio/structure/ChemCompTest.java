@@ -3,14 +3,17 @@ package org.biojava.bio.structure;
 import org.biojava.bio.structure.io.mmcif.ChemCompGroupFactory;
 import org.biojava.bio.structure.io.mmcif.ChemCompProvider;
 import org.biojava.bio.structure.io.mmcif.DownloadChemCompProvider;
+import org.biojava.bio.structure.io.mmcif.ReducedChemCompProvider;
 import org.biojava.bio.structure.io.mmcif.chem.PolymerType;
 import org.biojava.bio.structure.io.mmcif.chem.ResidueType;
 import org.biojava.bio.structure.io.mmcif.model.ChemComp;
+import org.junit.Test;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.*;
 
-public class ChemCompTest extends TestCase {
+public class ChemCompTest {
 
+	@Test
 	public void testALA(){
 		String chemID = "ALA";
 
@@ -25,6 +28,7 @@ public class ChemCompTest extends TestCase {
 		assertTrue (" is not amino ", cc.getResidueType().equals(ResidueType.lPeptideLinking));
 	}
 
+	@Test
 	public void testMEA(){
 		
 		
@@ -64,6 +68,7 @@ public class ChemCompTest extends TestCase {
 		ChemCompGroupFactory.setChemCompProvider(oldProvider);
 	}
 	
+	@Test
 	public void testPRR(){
 		
 		ChemCompProvider oldProvider = ChemCompGroupFactory.getChemCompProvider();
@@ -87,5 +92,69 @@ public class ChemCompTest extends TestCase {
 		ChemCompGroupFactory.setChemCompProvider(oldProvider);
 		
 	}
+	
+	@Test
+    public void testChangingProviders(){
+
+		// test for issue #145
+
+        String chemID = "MEA";
+
+        // first we test with reduced chem comp provider 
+        ChemCompGroupFactory.setChemCompProvider(new ReducedChemCompProvider());
+
+        ChemComp cc = ChemCompGroupFactory.getChemComp(chemID);
+
+        assertNotNull(cc);
+
+        assertTrue(" is not mea" , cc.getId().equals(chemID));
+
+        // an empty description is returned as expected
+        assertNull(cc.getThree_letter_code());
+
+
+        // now we change to download chem comp provider
+
+        ChemCompGroupFactory.setChemCompProvider(new DownloadChemCompProvider());
+
+        cc = ChemCompGroupFactory.getChemComp(chemID);
+
+        assertNotNull(cc);
+
+        assertTrue(" is not mea" , cc.getId().equals(chemID));
+
+        assertEquals("MEA",cc.getThree_letter_code());
+
+        
+        
+        // now testing in opposite order
+        
+
+        // first we test with download chem comp provider
+
+        ChemCompGroupFactory.setChemCompProvider(new DownloadChemCompProvider());
+
+        cc = ChemCompGroupFactory.getChemComp(chemID);
+
+        assertNotNull(cc);
+
+        assertTrue(" is not mea" , cc.getId().equals(chemID));
+
+        assertEquals("MEA",cc.getThree_letter_code());
+        
+        // now we change to reduced chem comp provider 
+        ChemCompGroupFactory.setChemCompProvider(new ReducedChemCompProvider());
+
+        cc = ChemCompGroupFactory.getChemComp(chemID);
+
+        assertNotNull(cc);
+
+        assertTrue(" is not mea" , cc.getId().equals(chemID));
+
+        // an empty description is returned as expected
+        assertNull(cc.getThree_letter_code());
+
+        
+    }
 
 }

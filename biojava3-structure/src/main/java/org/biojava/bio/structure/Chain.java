@@ -84,17 +84,27 @@ public interface Chain {
      */
     public Group getGroup (int position);
 	
-    /** return the Group at position X.
+    /** 
+     * Return the Group at given position, 
+     * from within Groups with observed density in the chain, i.e.
+     * those with coordinates in ATOM and HETATMS (including waters) records.
      * @param position  an int
      * @return a Group object
-     * 
+     * @see #getAtomLength()
+     * @see #getAtomGroups()
+     * @see #getSeqResGroup(int)
      */
     public Group getAtomGroup (int position);
     
-    /** return the Group at position X.
+    /** 
+     * Return the Group at given position, 
+     * from within groups in the SEQRES records of the chain, i.e.
+     * the aminoacids/nucleotides in the construct. 
      * @param position  an int
      * @return a Group object
-     * 
+     * @see #getSeqResLength()
+     * @see #getSeqResGroups()
+     * @see #getAtomGroup(int)
      */
     public Group getSeqResGroup (int position);
     
@@ -113,24 +123,34 @@ public interface Chain {
      */
     public List<Group> getGroups ();
     
-    /** Return all groups that have been specified in the ATOM section of this chain .
+    /** 
+     * Return all Groups with observed density in the chain, i.e.
+     * those with coordinates in ATOM and HETATMS (including waters) records.
+     * 
      * @return a List object representing the Groups of this Chain.
      * @see #setAtomGroups(List)
+     * @see #getAtomLength()
+     * @see #getSeqResGroups()
      */
     public List<Group> getAtomGroups();
     
-    /** Set all groups that have been specified in the ATOM section of this chain .
+    /** 
+     * Set all Groups with observed density in the chain, i.e. 
+     * those with coordinates in ATOM and HETATMs (including waters) records.
      * @param groups a List object representing the Groups of this Chain.
      * @see #getAtomGroups()
      */
     public void setAtomGroups(List<Group> groups);
     
-    /** Return a List of all groups of a special type (e.g. amino,
-     * hetatm, nucleotide).
+    /** 
+     * Return a List of all (observed) Groups of a special type, one of: {@link GroupType#AMINOACID},
+     * {@link GroupType#HETATM} or {@link GroupType#NUCLEOTIDE}.
+     * Note that if a standard aminoacid appears as a HETATM (because it is part of a ligand) then
+     * it is still considered as {@link GroupType#AMINOACID} and not as {@link GroupType#HETATM}.
      * @param type  a String
      * @return a List object
      * @see #setAtomGroups(List)
-     * 
+     * @see #getSeqResGroups(String)
      */
     public List<Group> getAtomGroups (String type);
 
@@ -146,13 +166,13 @@ public interface Chain {
     public Group getGroupByPDB(String pdbresnum) throws StructureException;
     
 
-    /** Get a group by its PDB residue numbering. if the PDB residue number is not know,
+    /** 
+     * Get a group by its PDB residue numbering. If the PDB residue number is not known,
      * throws a StructureException.
      * 
      * @param resNum the PDB residue number of the group
      * @return the matching group
      * @throws StructureException
- 
      */
     public Group getGroupByPDB(ResidueNumber resNum) throws StructureException;
     
@@ -173,7 +193,6 @@ public interface Chain {
      * @param pdbresnumEnd PDB residue number of end
      * @return Groups in between. or throws a StructureException if either start or end can not be found,
      * @throws StructureException
-
      */
     public Group[] getGroupsByPDB(ResidueNumber pdbresnumStart, ResidueNumber pdbresnumEnd) throws StructureException;
 
@@ -219,15 +238,25 @@ public interface Chain {
     public int getLength();
     
     
-    /** Return the number of Groups in the ATOM records of the chain.
+    /** 
+     * Return the number of Groups with observed density in the chain, i.e. 
+     * those with coordinates in ATOM and HETATMs (including waters) records
      * 
      * @return the length
+     * @see #getAtomGroup(int)
+     * @see #getAtomGroups()
+     * @see #getSeqResLength()) 
      */
     public int getAtomLength();
     
-    /** Returns the number of groups in the SEQRES records of the chain.
+    /** 
+     * Return the number of groups in the SEQRES records of the chain, i.e.
+     * the number of aminoacids/nucleotides in the construct 
      * 
      * @return the length
+     * @see #getSeqResGroup(int)
+     * @see #getSeqResGroups()
+     * @see #getAtomLength()
      */
     public int getSeqResLength();
     
@@ -269,19 +298,19 @@ public interface Chain {
 
     public String getName();
     
-    /** get and set the name of this chain (Chain id in PDB file ).
+    /** 
+     * Set the name of this chain (Chain id in PDB file ).
      * @param name  a String specifying the name value
      * @see #getChainID()
-
      */
     public void setChainID(String name);	
 
     
     
-    /** get and set the name of this chain (Chain id in PDB file ).
+    /** 
+     * Get the name of this chain (Chain id in PDB file ).
      * @return a String representing the name value
-     * @see #setChainID(String)
-     * 
+     * @see #setChainID(String) 
      */
     public String getChainID();
     
@@ -293,7 +322,8 @@ public interface Chain {
      */
     public String getInternalChainID();
     
-    /** Sets the internal chain ID that is used in mmCif files
+    /** 
+     * Set the internal chain ID that is used in mmCif files
      * 
      * @param internalChainID
      * @since 3.0.5
@@ -320,17 +350,19 @@ public interface Chain {
      */
     public String getSequence() ;
 
-    /** Return the sequence of amino acids as it has been provided in the ATOM records.
+    /** 
+     * Return the sequence of amino acids as it has been provided in the ATOM records.
      * 
      * @return amino acid sequence as string
      * @see #getSeqResSequence()
      */
     public String getAtomSequence();
     
-    /** Get the sequence for all amino acids as it is specified in the SEQRES residues.
-     * 
-     * @return the amino acid sequence of the SEQRES sequence as a string
-     * @see #getAtomSequence()
+    /**
+     * Return the PDB SEQRES sequence as a one-letter sequence string.
+	 * Non-standard residues are represented by an "X".
+	 * @return one-letter PDB SEQRES sequence as string 
+     * @see #getAtomSequence() 
      */
     public String getSeqResSequence();
     
@@ -347,25 +379,31 @@ public interface Chain {
     public String getSwissprotId() ;
     
     
-    /** Return a List of all groups of a special type (e.g. amino,
-     * hetatm, nucleotide).
+    /** 
+     * Return a List of all SEQRES groups of a special type, one of: {@link GroupType#AMINOACID},
+     * {@link GroupType#HETATM} or {@link GroupType#NUCLEOTIDE}.
      * @param type  a String
      * @return an List object
      * @see #setSeqResGroups(List)
+     * @see #getAtomGroups(String)
      */
     public List<Group> getSeqResGroups (String type);
 
-    /** Return all groups of this chain.
+    /** 
+     * Return a list of all groups in SEQRES records of the chain, i.e.
+     * the aminoacids/nucleotides in the construct. 
      * @return a List of all Group objects of this chain
      * @see #setSeqResGroups(List)
+     * @see #getSeqResLength()
+     * @see #getAtomGroups()
      */
     public List<Group> getSeqResGroups ();
  
-    /** Set the list of SeqResGroups for this chain.
+    /** 
+     * Set the list of SeqResGroups for this chain.
      * 
      * @param seqResGroups a List of Group objects that from the SEQRES groups of this chain.
      * @see #getSeqResGroups()
-     * 
      */
     public void setSeqResGroups(List<Group> seqResGroups);
 

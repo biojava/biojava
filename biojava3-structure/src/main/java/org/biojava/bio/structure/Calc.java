@@ -521,6 +521,21 @@ public class Calc {
 
 		}
 	}
+	
+	/**
+	 * Transforms a chain object, given a Matrix4d (i.e. the vecmath library 
+	 * double-precision 4x4 rotation+translation matrix)
+	 * @param chain
+	 * @param m
+	 */
+	public static final void transform (Chain chain, Matrix4d m) {
+		
+		for (Group g:chain.getAtomGroups()) {
+			for (Atom atom: g.getAtoms()) {
+				transform(atom,m);
+			}
+		}
+	}
 
 	/**
 	 * Translates an atom object, given a Vector3d (i.e. the vecmath library 

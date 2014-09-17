@@ -42,6 +42,8 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.StringTokenizer;
 
+import javax.vecmath.Matrix4d;
+
 import org.biojava.bio.structure.AminoAcid;
 import org.biojava.bio.structure.AminoAcidImpl;
 import org.biojava.bio.structure.Atom;
@@ -182,6 +184,9 @@ public class PDBFileParser  {
 	private List<DBRef> dbrefs;
 	private Map<String, Site> siteMap = new LinkedHashMap<String, Site>();
 	private Map<String, List<ResidueNumber>> siteToResidueMap = new LinkedHashMap<String, List<ResidueNumber>>();
+	
+	private Matrix4d currentNcsOp = null;
+	private List<Matrix4d> ncsOperators;
 
 	// for storing LINK until we have all the atoms parsed
 	private List<LinkRecord> linkRecords;
@@ -1414,7 +1419,7 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 			try {
 				res = Float.parseFloat(resolution);
 			} catch (NumberFormatException e) {
-				logger.info("could not parse resolution ("+e.getMessage()+") from line and ignoring it " + line);
+				logger.info("Could not parse resolution ("+e.getMessage()+"), ignoring it. Line: >" + line+"<");
 				return ;
 			}
 			//System.out.println("got resolution:" +res);
@@ -1567,6 +1572,75 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
         crystallographicInfo.setZ(z);
 	}
 
+	/**
+	 * Handler for MTRIXn records. They specify extra NCS operators (usually in virus entries)
+	 * 
+	 * See http://www.wwpdb.org/documentation/format33/sect8.html#MTRIXn
+	 * 
+	 * COLUMNS        DATA TYPE     FIELD         DEFINITION
+	 * -------------------------------------------------------------  
+	 *  
+	 *  1 -  6        Record name   "MTRIXn"      n=1, 2, or 3
+	 *  8 - 10        Integer       serial        Serial number.
+	 * 11 - 20        Real(10.6)    m[n][1]       Mn1
+	 * 21 - 30        Real(10.6)    m[n][2]       Mn2
+	 * 31 - 40        Real(10.6)    m[n][3]       Mn3
+	 * 46 - 55        Real(10.5)    v[n]          Vn
+	 * 60             Integer       iGiven        1
+	 * 
+	 * Note that we ignore operators with iGiven==1
+	 * 
+	 * @param line
+	 */
+	private void pdb_MTRIXn_Handler(String line) {    
+
+		// don't process incomplete records
+		if (line.length() < 60) {
+			logger.info("MTRIXn record has fewer than 60 columns: will ignore it");
+			return;
+		}
+				
+
+		try {
+			
+			int rowIndex = Integer.parseInt(line.substring(5,6));
+			double col1Value = Double.parseDouble(line.substring(10,20));
+			double col2Value = Double.parseDouble(line.substring(20,30));
+			double col3Value = Double.parseDouble(line.substring(30,40));
+			double translValue = Double.parseDouble(line.substring(45,55));
+			int iGiven = 0;
+			if (!line.substring(59,60).trim().equals("")) {
+				iGiven = Integer.parseInt(line.substring(59,60));
+			}						
+
+			if (iGiven == 1) return;
+
+			if (ncsOperators==null) {
+				// we initialise on first pass
+				ncsOperators = new ArrayList<Matrix4d>();
+			}
+
+			if (currentNcsOp==null) {
+				currentNcsOp = new Matrix4d(1,0,0,0,  0,1,0,0,  0,0,1,0,  0,0,0,1); // initialised to identity
+			}
+
+			currentNcsOp.setElement(rowIndex-1, 0, col1Value);
+			currentNcsOp.setElement(rowIndex-1, 1, col2Value);
+			currentNcsOp.setElement(rowIndex-1, 2, col3Value);
+			currentNcsOp.setElement(rowIndex-1, 3, translValue);
+
+
+			if (rowIndex==3) {
+				ncsOperators.add(currentNcsOp);
+				// we initialise for next matrix to come
+				currentNcsOp = new Matrix4d(1,0,0,0,  0,1,0,0,  0,0,1,0,  0,0,0,1); // initialised to identity
+			}
+			
+		} catch (NumberFormatException e) {
+			logger.info("Could not parse a number in MTRIXn record ("+e.getMessage()+") from line: >" + line+"<");
+		}
+	}
+	
 	/**
 	 * Decides whether or not a Group is qualified to be added to the
 	 * Structure.hetGroups list. If it likes it, it adds it.
@@ -2680,6 +2754,8 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 				pdb_EXPDTA_Handler(line);
 			else if (recordName.equals("CRYST1"))
 				pdb_CRYST1_Handler(line);
+			else if (recordName.startsWith("MTRIX"))
+				pdb_MTRIXn_Handler(line); 
 			else if (recordName.equals("REMARK"))
 				pdb_REMARK_Handler(line);
 			else if (recordName.equals("CONECT"))
@@ -2912,6 +2988,12 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 			//System.out.println("setting nr bioAssemblies: " + pdbHeader.getNrBioAssemblies());
 			//System.out.println(pdbHeader.getBioUnitTranformationMap().keySet());
 		}
+		
+		if (ncsOperators !=null && ncsOperators.size()>0) {
+			crystallographicInfo.setNcsOperators(
+				(Matrix4d[]) ncsOperators.toArray(new Matrix4d[ncsOperators.size()]));
+		}
+		
 	}
 
 

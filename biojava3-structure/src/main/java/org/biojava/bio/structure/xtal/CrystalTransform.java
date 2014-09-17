@@ -69,9 +69,14 @@ public class CrystalTransform implements Serializable {
 	public CrystalTransform(SpaceGroup sg, int transformId) {
 		this.sg = sg;
 		this.transformId = transformId;
-		this.matTransform = (Matrix4d)sg.getTransformation(transformId).clone();
+		if (sg==null && transformId==0) {
+			this.matTransform = (Matrix4d)IDENTITY.clone();
+		} else if (sg==null) {
+			throw new IllegalArgumentException("Space Group cannot be null if transformId!=0");
+		} else {
+			this.matTransform = (Matrix4d)sg.getTransformation(transformId).clone();			
+		}
 		this.crystalTranslation = new Point3i(0,0,0);
-
 	}
 	
 	public CrystalTransform(CrystalTransform transform) {

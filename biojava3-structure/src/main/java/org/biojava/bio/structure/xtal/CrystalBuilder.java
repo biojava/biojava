@@ -10,6 +10,7 @@ import javax.vecmath.Vector3d;
 
 import org.biojava.bio.structure.Calc;
 import org.biojava.bio.structure.Chain;
+import org.biojava.bio.structure.PDBCrystallographicInfo;
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureTools;
 import org.biojava.bio.structure.contact.AtomContactSet;
@@ -43,13 +44,16 @@ public class CrystalBuilder {
 	// We set the default value to 12 based on that (having not seen any difference in runtime)
 	private static final int DEF_NUM_CELLS = 12;
 	
+	public static final Matrix4d IDENTITY = new Matrix4d(1,0,0,0, 0,1,0,0, 0,0,1,0, 0,0,0,1);
+
+	
 	/**
 	 * Whether to consider HETATOMs in contact calculations
 	 */
 	private static final boolean INCLUDE_HETATOMS = true;
 	
-	private Structure pdb;
-	private SpaceGroup sg;
+	private Structure structure;
+	private PDBCrystallographicInfo crystallographicInfo;
 	private int numChainsAu;
 	private int numOperatorsSg;
 	
@@ -58,33 +62,22 @@ public class CrystalBuilder {
 	private int numCells;
 	
 	private ArrayList<CrystalTransform> visited;
-
-	/**
-	 * The bounding boxes of all AUs of the unit cell
-	 */
-	private UnitCellBoundingBox bbGrid;
-	
-	// debugging vars
-	private long start; 
-	private long end;
-	private int trialCount;	
-	private int skippedRedundant;
-	private int skippedAUsNoOverlap;
-	private int skippedChainsNoOverlap;
-	private int skippedSelfEquivalent;
 	
 
 	
-	public CrystalBuilder(Structure pdb) {
-		this.pdb = pdb;
-		this.numChainsAu = pdb.getChains().size();
-		this.sg = (pdb.getCrystallographicInfo()==null)?null:pdb.getCrystallographicInfo().getSpaceGroup();
+	public CrystalBuilder(Structure structure) {
+		this.structure = structure;
+		this.crystallographicInfo = structure.getCrystallographicInfo();
+		
+		this.numChainsAu = structure.getChains().size();		
 		this.numOperatorsSg = 1;
-		if (sg!=null) {
-			this.numOperatorsSg = sg.getMultiplicity();
+		if (structure.isCrystallographic()) {
+			this.numOperatorsSg = this.crystallographicInfo.getSpaceGroup().getMultiplicity();
 		}
+		
 		this.verbose = false;
-		this.numCells = DEF_NUM_CELLS;		
+		this.numCells = DEF_NUM_CELLS;				
+		
 	}
 	
 	/**
@@ -112,16 +105,11 @@ public class CrystalBuilder {
 	 * generation of all crystal symmetry mates. An interface is defined as any pair of chains 
 	 * that contact, i.e. for which there is at least a pair of atoms (one from each chain) within 
 	 * the given cutoff distance.
-	 * NOTE: currently for entries that contain MTRXn records (e.g. large viral structures)
-	 * the full crystal is not reconstructed (see http://www.wwpdb.org/documentation/format33/sect8.html#MTRIXn)
 	 * @param cutoff the distance cutoff for 2 chains to be considered in contact
 	 * @return
 	 */
 	public StructureInterfaceList getUniqueInterfaces(double cutoff) {	
 
-		// TODO at the moment this can't reconstruct the full crystal of many virus entries in the PDB
-		// since it doesn't take into account the MATRXn records 
-		// (see http://www.wwpdb.org/documentation/format33/sect8.html#MTRIXn)
 		
 		StructureInterfaceList set = new StructureInterfaceList();
 		
@@ -130,114 +118,17 @@ public class CrystalBuilder {
 		
 		
 		
-		// initialising debugging vars
-		start = -1; 
-		end = -1;
-		trialCount = 0;
-		skippedRedundant = 0;
-		skippedAUsNoOverlap = 0;
-		skippedChainsNoOverlap = 0;
-		skippedSelfEquivalent = 0;
-		
-		bbGrid = new UnitCellBoundingBox(numOperatorsSg, numChainsAu);
-		
-		bbGrid.setOriginalAuBbs(pdb, INCLUDE_HETATOMS);		
-		
-		// we can always calculate contacts within AU (be it crystallographic or not)
-		calcInterfacesWithinAu(set, cutoff);
-		
-		// this condition covers 3 cases:
+		// the isCrystallographic() condition covers 3 cases:
 		// a) entries with expMethod X-RAY/other diffraction and defined crystalCell (most usual case)
 		// b) entries with expMethod null but defined crystalCell (e.g. PDB file with CRYST1 record but no expMethod annotation) 
 		// c) entries with expMethod not X-RAY (e.g. NMR) and defined crystalCell (NMR entries do have a dummy CRYST1 record "1 1 1 90 90 90 P1")
-		if (    pdb.getCrystallographicInfo()!=null && 
-				pdb.getCrystallographicInfo().getCrystalCell()!=null && 
-				pdb.isCrystallographic()) {
-						
 
-			// we can only do this for crystallographic structures
-			calcInterfacesCrystal(set, cutoff);
-			
-			
-			if (verbose) {
-				end = System.currentTimeMillis();
-				System.out.println("\n"+trialCount+" chain-chain clash trials done. Time "+(end-start)/1000+"s");
-				System.out.println("  skipped (not overlapping AUs)       : "+skippedAUsNoOverlap);
-				System.out.println("  skipped (not overlapping chains)    : "+skippedChainsNoOverlap);
-				System.out.println("  skipped (sym redundant op pairs)    : "+skippedRedundant);
-				System.out.println("  skipped (sym redundant self op)     : "+skippedSelfEquivalent);
 
-				System.out.println("Found "+set.size()+" interfaces.");
-			}
-		}
+
+		calcInterfacesCrystal(set, cutoff, structure.isCrystallographic());
+
 		
 		return set;
-	}
-	
-	/**
-	 * Calculate interfaces within asymmetric unit
-	 * @param set
-	 * @param cutoff
-	 */
-	private void calcInterfacesWithinAu(StructureInterfaceList set, double cutoff) {
-		
-		
-		if (verbose) {
-			trialCount = 0;
-			start= System.currentTimeMillis();			
-			System.out.println("\nInterfaces within asymmetric unit (total possible trials "+(numChainsAu*(numChainsAu-1))/2+")");
-			System.out.print("[ 0-( 0, 0, 0)] "); // printing header for dots line to have same format as in calcInterfacesCrystal
-		}
-		
-		int contactsFound = 0;
-		
-		int i = -1;
-		for (Chain chaini:pdb.getChains()) {
-			i++;
-			int j = -1;
-			for (Chain chainj:pdb.getChains()) {
-				j++;
-				if (j<=i) continue;
-				
-				// before calculating the AtomContactSet we check for overlap, then we save putting atoms into the grid
-				if (!bbGrid.getChainBoundingBox(0,i).overlaps(bbGrid.getChainBoundingBox(0,j), cutoff)) { 
-					if (verbose) {
-						skippedChainsNoOverlap++;
-						System.out.print(".");
-					}
-					continue;
-				}
-				
-				if (verbose) trialCount++;
-				
-				// note that we don't consider hydrogens when calculating contacts
-				AtomContactSet graph = StructureTools.getAtomsInContact(chaini, chainj, cutoff, INCLUDE_HETATOMS); 
-				if (graph.size()>0) {
-					contactsFound++;
-					if (verbose) System.out.print("x");					
-					
-					CrystalTransform transf = new CrystalTransform(sg);
-					StructureInterface interf = new StructureInterface(
-							StructureTools.getAllAtomArray(chaini), StructureTools.getAllAtomArray(chainj),
-							chaini.getChainID(), chainj.getChainID(),
-							graph,
-							transf, transf);
-					
-					set.add(interf);
-					
-				} else {
-					if (verbose) System.out.print("o");
-				}
-			}
-		}
-		if (verbose) {
-			end = System.currentTimeMillis();
-			System.out.println(" "+contactsFound+"("+(numChainsAu*(numChainsAu-1))/2+")");
-			System.out.println("\n"+trialCount+" chain-chain clash trials done. Time "+(end-start)/1000+"s");
-		}
-
-		
-		
 	}
 	
 	/**
@@ -246,45 +137,73 @@ public class CrystalBuilder {
 	 * @param set
 	 * @param cutoff
 	 */
-	private void calcInterfacesCrystal(StructureInterfaceList set, double cutoff) {
+	private void calcInterfacesCrystal(StructureInterfaceList set, double cutoff, boolean isCrystallographic) {
 
-		// both arrays below are of size numOperatorsSg (multiplicity of space group)
-		// generate complete unit cell, by applying all SG operators
-		Structure[] cell = getUnitCell();
+		
+		// initialising debugging vars
+		long start = -1; 
+		long end = -1;
+		int trialCount = 0;
+		int skippedRedundant = 0;
+		int skippedAUsNoOverlap = 0;
+		int skippedChainsNoOverlap = 0;
+		int skippedSelfEquivalent = 0;
+
+		
+		Matrix4d[] ops = null;
+		if (isCrystallographic) {
+			ops = structure.getCrystallographicInfo().getTransformationsOrthonormal();
+		} else {
+			ops = new Matrix4d[1];
+			ops[0] = IDENTITY;
+		}
+			
+		// The bounding boxes of all AUs of the unit cell		
+		UnitCellBoundingBox bbGrid = new UnitCellBoundingBox(numOperatorsSg, numChainsAu);;
 		// we calculate all the bounds of each of the asym units, those will then be reused and translated
-		bbGrid.setAllNonAuBbs(cell, INCLUDE_HETATOMS);
+		bbGrid.setBbs(structure, ops, INCLUDE_HETATOMS);
+		
+		
+		// if not crystallographic there's no search to do in other cells, only chains within "AU" will be checked
+		if (!isCrystallographic) numCells = 0;
 		
 		if (verbose) {
 			trialCount = 0;
 			start= System.currentTimeMillis();
 			int neighbors = (2*numCells+1)*(2*numCells+1)*(2*numCells+1)-1;
+			int auTrials = (numChainsAu*(numChainsAu-1))/2;
 			int trials = numChainsAu*numOperatorsSg*numChainsAu*neighbors;
-			System.out.println("\nInterfaces between the original asym unit and the neighbouring "+neighbors+" whole unit cells ("+numCells+" neighbours)" +
-					"(2x"+numChainsAu+"chains x "+numOperatorsSg+"AUs x "+neighbors+"cells = "+trials+" total possible trials)");
+			System.out.println("Chain clash trials within original AU: "+auTrials);
+			System.out.println(
+					"Chain clash trials between the original AU and the neighbouring "+neighbors+
+					" whole unit cells ("+numCells+" neighbours)" +
+					"(2x"+numChainsAu+"chains x "+numOperatorsSg+"AUs x "+neighbors+"cells) : "+trials);
+			System.out.println("Total trials: "+(auTrials+trials));
 		}
 
 
-		for (int i=-numCells;i<=numCells;i++) {
-			for (int j=-numCells;j<=numCells;j++) {
-				for (int k=-numCells;k<=numCells;k++) {
+		for (int a=-numCells;a<=numCells;a++) {
+			for (int b=-numCells;b<=numCells;b++) {
+				for (int c=-numCells;c<=numCells;c++) {
 					
-					Point3i trans = new Point3i(i,j,k);
-					Vector3d transOrth = new Vector3d(i,j,k);
-					pdb.getCrystallographicInfo().getCrystalCell().transfToOrthonormal(transOrth);
+					Point3i trans = new Point3i(a,b,c);
+					Vector3d transOrth = new Vector3d(a,b,c);
+					if (a!=0 || b!=0 || c!=0)
+						// we avoid doing the transformation for 0,0,0 (in case it's not crystallographic) 
+						this.crystallographicInfo.getCrystalCell().transfToOrthonormal(transOrth);
 					UnitCellBoundingBox bbGridTrans = bbGrid.getTranslatedBbs(transOrth);
 
-					for (int au=0;au<numOperatorsSg;au++) { 
-						if (au==0 && i==0 && j==0 && k==0) continue; // that would be the original au 
+					for (int n=0;n<numOperatorsSg;n++) { 
 
 						// short-cut strategies
 						// 1) we skip first of all if the bounding boxes of the AUs don't overlap
-						if (!bbGrid.getAuBoundingBox(0).overlaps(bbGridTrans.getAuBoundingBox(au), cutoff)) {
+						if (!bbGrid.getAuBoundingBox(0).overlaps(bbGridTrans.getAuBoundingBox(n), cutoff)) {
 							if (verbose) skippedAUsNoOverlap++;
 							continue;
 						}
 
 						// 2) we check if we didn't already see its equivalent symmetry operator partner 													
-						CrystalTransform tt = new CrystalTransform(sg,au);
+						CrystalTransform tt = new CrystalTransform(this.crystallographicInfo.getSpaceGroup(), n);
 						tt.translate(trans);
 						if (isRedundant(tt)) { 								
 							if (verbose) skippedRedundant++;								
@@ -294,11 +213,6 @@ public class CrystalBuilder {
 						
 						
 						boolean selfEquivalent = false;
-						
-						// now we copy and actually translate the AU if we saw it does overlap and the sym op was not redundant
-						Structure jAsym = cell[au].clone();
-						Calc.translate(jAsym, transOrth);
-						
 
 						// 3) an operator can be "self redundant" if it is the inverse of itself (involutory, e.g. all pure 2-folds with no translation)						
 						if (tt.isEquivalent(tt)) { 
@@ -314,19 +228,19 @@ public class CrystalBuilder {
 						// Now that we know that boxes overlap and operator is not redundant, we have to go to the details 
 						int contactsFound = 0;
 												
-						int jIdx = -1;
-						for (Chain chainj:jAsym.getChains()) {
-							jIdx++;
-							int iIdx = -1;
-							for (Chain chaini:pdb.getChains()) { // we only have to compare the original asymmetric unit to every full cell around
-								iIdx++;
-								if(selfEquivalent && (jIdx>iIdx)) {
+						for (int j=0;j<numChainsAu;j++) {
+							for (int i=0;i<numChainsAu;i++) { // we only have to compare the original asymmetric unit to every full cell around
+								
+								if(selfEquivalent && (j>i)) {
 									// in case of self equivalency of the operator we can safely skip half of the matrix
 									skippedSelfEquivalent++;
 									continue;
 								}
+								// special case of original AU, we don't compare a chain to itself
+								if (n==0 && a==0 && b==0 && c==0 && i==j) continue;
+								
 								// before calculating the AtomContactSet we check for overlap, then we save putting atoms into the grid
-								if (!bbGrid.getChainBoundingBox(0,iIdx).overlaps(bbGridTrans.getChainBoundingBox(au,jIdx),cutoff)) {
+								if (!bbGrid.getChainBoundingBox(0,i).overlaps(bbGridTrans.getChainBoundingBox(n,j),cutoff)) {
 									if (verbose) {
 										skippedChainsNoOverlap++;
 										System.out.print(".");
@@ -335,29 +249,33 @@ public class CrystalBuilder {
 								}
 								if (verbose) trialCount++;
 
-								// note that we don't consider hydrogens when calculating contacts
-								AtomContactSet graph = StructureTools.getAtomsInContact(chaini, chainj, cutoff, INCLUDE_HETATOMS);
-								if (graph.size()>0) {
-									contactsFound++;										
-									if (verbose) System.out.print("x");
-									
-									CrystalTransform transf = new CrystalTransform(sg);
-									StructureInterface interf = new StructureInterface(
-											StructureTools.getAllAtomArray(chaini), StructureTools.getAllAtomArray(chainj),
-											chaini.getChainID(), chainj.getChainID(),
-											graph,
-											transf, tt);
-
-									set.add(interf);
-									
+								// finally we've gone through all short-cuts and the 2 chains seem to be close enough:
+								// we do the calculation of contacts
+								Chain chainj = null;
+								Chain chaini = structure.getChain(i);
+								
+								if (n==0 && a==0 && b==0 && c==0) {
+									chainj = structure.getChain(j);
 								} else {
-									if (verbose) System.out.print("o");
+									chainj = (Chain)structure.getChain(j).clone();
+									Matrix4d m = new Matrix4d(ops[n]);
+									translate(m, transOrth);
+									Calc.transform(chainj,m);
+								}
+								
+								StructureInterface interf = calcContacts(chaini, chainj, cutoff, tt);
+								
+								if (interf!=null) {
+									contactsFound++;
+									set.add(interf);
 								}
 							}
 						}
 						if (verbose) {
-							if (selfEquivalent) 								
-								System.out.println(" "+contactsFound+"("+(numChainsAu*(numChainsAu+1))/2+")");							
+							if (a==0 && b==0 && c==0 && n==0) 
+								System.out.println(" "+contactsFound+"("+(numChainsAu*(numChainsAu-1))/2+")");
+							else if (selfEquivalent) 								
+								System.out.println(" "+contactsFound+"("+(numChainsAu*(numChainsAu+1))/2+")");								
 							else
 								System.out.println(" "+contactsFound+"("+numChainsAu*numChainsAu+")");
 						}
@@ -365,9 +283,41 @@ public class CrystalBuilder {
 				}
 			}
 		}
+		
+		if (verbose) {
+			end = System.currentTimeMillis();
+			System.out.println("\n"+trialCount+" chain-chain clash trials done. Time "+(end-start)/1000+"s");
+			System.out.println("  skipped (not overlapping AUs)       : "+skippedAUsNoOverlap);
+			System.out.println("  skipped (not overlapping chains)    : "+skippedChainsNoOverlap);
+			System.out.println("  skipped (sym redundant op pairs)    : "+skippedRedundant);
+			System.out.println("  skipped (sym redundant self op)     : "+skippedSelfEquivalent);
+
+			System.out.println("Found "+set.size()+" interfaces.");
+		}
 	}
 
-	
+	private StructureInterface calcContacts(Chain chaini, Chain chainj, double cutoff, CrystalTransform tt) {
+		
+		// note that we don't consider hydrogens when calculating contacts
+		AtomContactSet graph = StructureTools.getAtomsInContact(chaini, chainj, cutoff, INCLUDE_HETATOMS);
+		
+		if (graph.size()>0) {
+			if (verbose) System.out.print("x");
+			
+			CrystalTransform transf = new CrystalTransform(this.crystallographicInfo.getSpaceGroup());
+			StructureInterface interf = new StructureInterface(
+					StructureTools.getAllAtomArray(chaini), StructureTools.getAllAtomArray(chainj),
+					chaini.getChainID(), chainj.getChainID(),
+					graph,
+					transf, tt);
+
+			return interf;
+			
+		} else {
+			if (verbose) System.out.print("o");
+			return null;
+		}		
+	}
 	
 	private void addVisited(CrystalTransform tt) {
 		visited.add(tt);
@@ -402,31 +352,57 @@ public class CrystalBuilder {
 		return false;
 	}
 	
-	/**
-	 * Generates all symmetry-related objects from this asym unit and returns the whole
-	 * unit cell (this asymmetric unit plus the symmetry-related objects). 
-	 * @return
-	 */
-	private Structure[] getUnitCell() {
-
-		Structure[] aus = new Structure[numOperatorsSg];
-		aus[0] = pdb;
-
-		int i = 1;
-		for (Matrix4d m:pdb.getCrystallographicInfo().getTransformationsOrthonormal()) {
-			
-			Structure sym = pdb.clone();
-			
-			Calc.transform(sym, m); 
-
-			aus[i] = sym;
-			
-			i++;
-			
-		}
+	public void translate(Matrix4d m, Vector3d translation) {
+		m.m03 = m.m03+(double)translation.x;
+		m.m13 = m.m13+(double)translation.y;
+		m.m23 = m.m23+(double)translation.z;
 		
-		return aus;
 	}
 	
-	
+//	/**
+//	 * If NCS operators are given in MTRIX records, a bigger AU has to be constructed based on those.
+//	 * Later they have to be removed with {@link #removeExtraChains()}
+//	 */
+//	private void constructFullStructure() {
+//		
+//		if (this.crystallographicInfo.getNcsOperators()==null ||
+//			this.crystallographicInfo.getNcsOperators().length==0) {
+//			// normal case: nothing to do			
+//			return;
+//		}
+//				
+//		// first we store the original chains in a new list to be able to restore the structure to its original state afterwards
+//		origChains = new ArrayList<Chain>();
+//		for (Chain chain:structure.getChains()) {
+//			origChains.add(chain);
+//		}
+//		
+//		// if we are here, it means that the NCS operators exist and we have to complete the given AU by applying them
+//		Matrix4d[] ncsOps = this.crystallographicInfo.getNcsOperators();
+//
+//		if (verbose) 
+//			System.out.println(ncsOps.length+" NCS operators found, generating new AU...");
+//
+//		
+//		for (int i=0;i<ncsOps.length;i++) {
+//			Structure transformedStruct = (Structure)structure.clone();			   
+//			Calc.transform(transformedStruct, ncsOps[i]);
+//			
+//			for (Chain chain: transformedStruct.getChains()) {
+//				// we assign a new AU id (chain ID) consisting in original chain ID + an operator index from 1 to n
+//				chain.setChainID(chain.getChainID()+(i+1));
+//				structure.addChain(chain);
+//			}
+//		}
+//		
+//		// now we have more chains in AU, we have to update the value 
+//		this.numChainsAu = structure.getChains().size();
+//	}
+//	
+//	/**
+//	 * Removes the extra chains that were added to the original structure in {@link #constructFullStructure()}
+//	 */
+//	private void removeExtraChains() {
+//		structure.setChains(origChains);
+//	}
 }

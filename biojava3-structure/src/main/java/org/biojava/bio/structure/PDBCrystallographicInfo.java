@@ -1,8 +1,6 @@
 package org.biojava.bio.structure;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.vecmath.Matrix4d;
 
@@ -21,6 +19,16 @@ public class PDBCrystallographicInfo implements Serializable {
 	
 	private CrystalCell cell;
 	private SpaceGroup sg;
+	
+	/**
+	 * Some PDB files contain NCS operators necessary to create the full AU.
+	 * Usually this happens for viral proteins.
+	 * See http://www.wwpdb.org/documentation/format33/sect8.html#MTRIXn .
+	 * Note that the "given" operators 
+	 * (iGiven field =1 in PDB format, "given" string in _struct_ncs_oper.code in mmCIF format) 
+	 * are not stored.
+	 */
+	private Matrix4d[] ncsOperators;
 	
 	private int z;
 	
@@ -120,17 +128,47 @@ public class PDBCrystallographicInfo implements Serializable {
 	
 	/**
 	 * Gets all symmetry transformation operators corresponding to this structure's space group 
-	 * (except for the identity) expressed in the orthonormal basis. Using PDB axes 
+	 * (including the identity, at index 0) expressed in the orthonormal basis. Using PDB axes 
 	 * convention (NCODE=1).
-	 * @return
+	 * @return an array of size {@link SpaceGroup#getNumOperators()}
 	 */	
-	public List<Matrix4d> getTransformationsOrthonormal() {
-		List<Matrix4d> transfs = new ArrayList<Matrix4d>();
+	public Matrix4d[] getTransformationsOrthonormal() {
+		Matrix4d[] transfs = new Matrix4d[this.getSpaceGroup().getNumOperators()];
+		transfs[0] = new Matrix4d(this.getSpaceGroup().getTransformation(0)); // no need to transform the identity
 		for (int i=1;i<this.getSpaceGroup().getNumOperators();i++) {
-			transfs.add(this.cell.transfToOrthonormal(this.getSpaceGroup().getTransformation(i)));
+			transfs[i] = this.cell.transfToOrthonormal(this.getSpaceGroup().getTransformation(i));
 		}
 		return transfs;
 	}
+	
+	/**
+	 * Get the NCS operators.
+	 * Some PDB files contain NCS operators necessary to create the full AU.
+	 * Usually this happens for viral proteins.
+	 * See http://www.wwpdb.org/documentation/format33/sect8.html#MTRIXn .
+	 * Note that the "given" operators 
+	 * (iGiven field =1 in PDB format, "given" string in _struct_ncs_oper.code in mmCIF format) 
+	 * are not stored. 
+	 * @return the operators or null if no operators present
+	 */
+	public Matrix4d[] getNcsOperators() {
+		return ncsOperators;
+	}
+
+	/**
+	 * Set the NCS operators.
+	 * Some PDB files contain NCS operators necessary to create the full AU.
+	 * Usually this happens for viral proteins.
+	 * See http://www.wwpdb.org/documentation/format33/sect8.html#MTRIXn .
+	 * Note that the "given" operators 
+	 * (iGiven field =1 in PDB format, "given" string in _struct_ncs_oper.code in mmCIF format) 
+	 * are not stored.
+	 * @param ncsOperators 
+	 */
+	public void setNcsOperators(Matrix4d[] ncsOperators) {
+		this.ncsOperators = ncsOperators;
+	}
+	
 	
 	@Override
 	public String toString() {
@@ -140,7 +178,9 @@ public class PDBCrystallographicInfo implements Serializable {
 				(cell==null?"no Cell":
 				String.format("%.2f %.2f %.2f, %.2f %.2f %.2f",
 						cell.getA(),cell.getB(),cell.getC(),cell.getAlpha(),cell.getBeta(),cell.getGamma()) )+
+				(ncsOperators==null? "" : String.format(" - %d NCS operators",ncsOperators.length) )+
 				"]";
 	}
+
 	
 }
