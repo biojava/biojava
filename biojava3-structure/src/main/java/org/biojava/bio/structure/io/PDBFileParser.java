@@ -3178,7 +3178,7 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 		//check that the keys in the siteMap and SiteToResidueMap are equal 
 		if (! siteMap.keySet().equals(siteToResidueMap.keySet())) {
 			logger.info("Not all sites have been properly described in the PDB " + pdbId + " header - some Sites will not be present in the Structure");
-			logger.info(siteMap.keySet() + " | " + siteToResidueMap.keySet());
+			logger.debug(siteMap.keySet() + " | " + siteToResidueMap.keySet());
 			//return;
 		}
 

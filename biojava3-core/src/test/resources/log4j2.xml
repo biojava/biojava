@@ -1,14 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration status="WARN">
     <Appenders>
-        <Console name="Console" target="SYSTEM_OUT">
-            <PatternLayout pattern="%-4r [%t] %-5p %c{1} %x - %m%n"/>
+        <Console name="Console" target="SYSTEM_ERR">
+            <PatternLayout pattern="%d{HH:mm:ss} [%t] %-5level %logger{36} - %msg%n"/>
         </Console>
     </Appenders>
     <Loggers>
+        <!-- 
         <Logger name="org.biojava3.core.sequence.loader.GenbankProxySequenceReader" level="debug">
             <AppenderRef ref="Console"/>
         </Logger>
+        -->
         <Root level="info">
             <AppenderRef ref="Console"/>
         </Root>
