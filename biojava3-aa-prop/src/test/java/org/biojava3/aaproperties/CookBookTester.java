@@ -9,19 +9,24 @@ import javax.xml.bind.JAXBException;
 import org.biojava3.aaproperties.PeptideProperties;
 import org.biojava3.aaproperties.xml.AminoAcidCompositionTable;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class CookBookTester {
+	
+	private final static Logger logger = LoggerFactory.getLogger(CookBookTester.class);
+
 	@Test
 	public void shortExample1(){
 		String sequence = "QIKDLLVSSSTDLDTTLVLVNAIYFKGMWKTAFNAEDTREMPFHVTKQESKPVQMMCMNNSFNVATLPAE";
-		System.out.println("Molecular Weight: " + PeptideProperties.getMolecularWeight(sequence));
+		logger.info("Molecular Weight: {}", PeptideProperties.getMolecularWeight(sequence));
 	}
 	
 	@Test
 	public void shortExample2() throws FileNotFoundException, JAXBException{
 		String sequence = "QIKDLLVSSSTDLDTTLVLVNAIYFKGMWKTAFNAEDTREMPFHVTKQESKPVQMMCMNNSFNVATLPAE";
 		File aminoAcidCompositionFile = new File("./src/main/resources/AminoAcidComposition.xml");
-		System.out.println("Molecular Weight: " + PeptideProperties.getMolecularWeight(sequence, aminoAcidCompositionFile));
+		logger.info("Molecular Weight: {}", PeptideProperties.getMolecularWeight(sequence, aminoAcidCompositionFile));
 	}
 	
 	@Test
@@ -35,7 +40,7 @@ public class CookBookTester {
 		AminoAcidCompositionTable table = PeptideProperties.obtainAminoAcidCompositionTable(aminoAcidCompositionFile);
 		 
 		for(String sequence:sequences){
-		    System.out.println("Molecular Weight: " + PeptideProperties.getMolecularWeightBasedOnXML(sequence, table));
+		    logger.info("Molecular Weight: {}", PeptideProperties.getMolecularWeightBasedOnXML(sequence, table));
 		}
 	}
 	
@@ -44,12 +49,12 @@ public class CookBookTester {
 		String sequence = "QIKDLLVSSSTDLDTTLVLVNAIYFKGMWKTAFNAEDTREMPFHVTKQESKPVQMMCMNNSFNVATLPAE";
 		
 		//Enrichment of a specific amino acid type
-		System.out.println("Composition of A: " + PeptideProperties.getEnrichment(sequence, "A"));
+		logger.info("Composition of A: {}", PeptideProperties.getEnrichment(sequence, "A"));
 		
 		//Enrichment of a list of amino acid types
 		Map<String, Double> composition = PeptideProperties.getAACompositionString(sequence);
 		for(String aa:composition.keySet()){
-			System.out.println("Composition of " + aa + ": " + composition.get(aa));
+			logger.info("Composition of {}: {}", aa, composition.get(aa));
 		}
 	}
 	
@@ -59,26 +64,26 @@ public class CookBookTester {
 		String sequence = "QIKDLLVSSSTDLDTTLVLVNAIYFKGMWKTAFNAEDTRECMPFHVTKQESKPVQMMCMNNSFNVATLPAE";
 		
 		//Absorbance
-		System.out.println("Absorbance (Cys Reduced): " + PeptideProperties.getAbsorbance(sequence, true));
-		System.out.println("Absorbance (Cys Not Reduced): " + PeptideProperties.getAbsorbance(sequence, false));
+		logger.info("Absorbance (Cys Reduced): {}", PeptideProperties.getAbsorbance(sequence, true));
+		logger.info("Absorbance (Cys Not Reduced): {}", PeptideProperties.getAbsorbance(sequence, false));
 		
 		//Extinction Coefficient
-		System.out.println("Extinction Coefficient (Cys Reduced): " + PeptideProperties.getExtinctionCoefficient(sequence, true));
-		System.out.println("Extinction Coefficient (Cys Not Reduced): " + PeptideProperties.getExtinctionCoefficient(sequence, false));
+		logger.info("Extinction Coefficient (Cys Reduced): {}", PeptideProperties.getExtinctionCoefficient(sequence, true));
+		logger.info("Extinction Coefficient (Cys Not Reduced): {}", PeptideProperties.getExtinctionCoefficient(sequence, false));
 		
 		//Instability Index
-		System.out.println("Instability Index: " + PeptideProperties.getInstabilityIndex(sequence));
+		logger.info("Instability Index: {}", PeptideProperties.getInstabilityIndex(sequence));
 		
 		//Apliphatic Index
-		System.out.println("Apliphatic Index: " + PeptideProperties.getApliphaticIndex(sequence));
+		logger.info("Apliphatic Index: {}", PeptideProperties.getApliphaticIndex(sequence));
 		
 		//Average Hydropathy Value
-		System.out.println("Average Hydropathy Value: " + PeptideProperties.getAvgHydropathy(sequence));
+		logger.info("Average Hydropathy Value: {}", PeptideProperties.getAvgHydropathy(sequence));
 		
 		//Isoelectric Point
-		System.out.println("Isoelectric Point: " + PeptideProperties.getIsoelectricPoint(sequence));
+		logger.info("Isoelectric Point: {}", PeptideProperties.getIsoelectricPoint(sequence));
 		
 		//Net Charge
-		System.out.println("Net Charge at pH 7: " + PeptideProperties.getNetCharge(sequence));
+		logger.info("Net Charge at pH 7: {}", PeptideProperties.getNetCharge(sequence));
 	}
 }

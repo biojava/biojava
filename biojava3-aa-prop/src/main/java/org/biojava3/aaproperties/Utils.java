@@ -3,6 +3,9 @@ package org.biojava3.aaproperties;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * This is a utility class that contains utility methods which will facilitates the coding of other methods
  * 
@@ -11,6 +14,8 @@ import java.util.Set;
  * @since 3.0.2
  */
 public class Utils {
+
+	private final static Logger logger = LoggerFactory.getLogger(Utils.class);
 
 	/**
 	 * Returns a value with the desired number of decimal places.
@@ -96,13 +101,16 @@ public class Utils {
 				cleanSeq += c;
 			}
 		}
-		int count = 0;
-		for(char c:invalidCharSet){
-			if(count != 0) System.err.print(",");
-			System.err.print("\'" + c + "\'");
-			count++;
+		
+		// TODO: Should be StringJoiner once JDK8 used
+		StringBuilder stringBuilder = new StringBuilder();
+		for(char c: invalidCharSet){
+			stringBuilder.append("\'" + c + "\'");
 		}
-		System.err.println(" are being replaced with '-'");
+		stringBuilder.deleteCharAt(stringBuilder.length());
+		stringBuilder.append(" are being replaced with '-'");
+		logger.warn(stringBuilder.toString());
+		
 		return cleanSeq;
 	}
 	
@@ -143,8 +151,9 @@ public class Utils {
 		}
 		if(containInvalid){
 			String cSeq = cleanSequence(sequence, cSet);
-			System.err.println("Warning: There exists invalid characters in the sequence. Computed results might not be precise.");
-			System.err.println("To remove this warning: Please use org.biojava3.aaproperties.Utils.cleanSequence to clean sequence.");
+			logger.warn("There exists invalid characters in the sequence. Computed results might not be precise.");
+			logger.warn("To remove this warning: Please use org.biojava3.aaproperties.Utils.cleanSequence to clean sequence.");
+			
 			return cSeq;
 		}
 		else{
