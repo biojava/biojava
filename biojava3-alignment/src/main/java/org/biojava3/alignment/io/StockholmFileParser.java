@@ -28,6 +28,8 @@ import java.util.Scanner;
 import org.biojava3.alignment.io.StockholmFileAnnotation.StockholmFileAnnotationReference;
 import org.biojava3.core.exceptions.ParserException;
 import org.biojava3.core.util.InputStreamProvider;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Stockholm file parser.<br>
@@ -91,6 +93,8 @@ import org.biojava3.core.util.InputStreamProvider;
  * 
  */
 public class StockholmFileParser {
+
+	private final static Logger logger = LoggerFactory.getLogger(StockholmFileParser.class);
 
     /** indicates reading as much as possible, without limits */
     public static final int INFINITY = -1;
@@ -494,7 +498,8 @@ public class StockholmFileParser {
                 linesCount++;
             }
         } catch (IOException e) {
-            e.printStackTrace();
+        	// TODO: Best practice is to catch or throw Exception, never both
+            logger.error("IOException: ", e);
             throw new IOException("Error parsing Stockholm file");
         }
         StockholmStructure structure = this.stockholmStructure;
@@ -611,8 +616,7 @@ public class StockholmFileParser {
             stockholmStructure.getFileAnnotation().addGFFalseDiscoveryRate(value);
         } else {
             // unknown feature
-            System.err
-                    .println("Warning: Unknown File Feature [" + featureName + "].\nPlease contact the Biojava team.");
+            logger.warn("Unknown File Feature [{}].\nPlease contact the Biojava team.", featureName);
         }
     }
 
@@ -651,9 +655,8 @@ public class StockholmFileParser {
         } else if (featureName.equals(GC_MODEL_MASK)) {
             stockholmStructure.getConsAnnotation().setModelMask(value);
         } else {
-            // unknown feature
-            System.err.println("Warning: Unknown Consensus Feature [" + featureName
-                    + "].\nPlease contact the Biojava team.");
+        	// unknown feature
+        	logger.warn("Unknown Consensus Feature [{}].\nPlease contact the Biojava team.", featureName);
         }
     }
 
@@ -677,9 +680,8 @@ public class StockholmFileParser {
         } else if (featureName.equals(GS_LOOK)) {
             stockholmStructure.addGSLook(seqName, value);
         } else {
-            // unknown feature
-            System.err.println("Warning: Unknown Sequence Feature [" + featureName
-                    + "].\nPlease contact the Biojava team.");
+        	// unknown feature
+        	logger.warn("Unknown Sequence Feature [{}].\nPlease contact the Biojava team.", featureName);
         }
     }
 
@@ -710,9 +712,8 @@ public class StockholmFileParser {
         } else if (featureName.equals(GR_SECONDARY_STRUCTURE)) {
             stockholmStructure.addSecondaryStructure(seqName, value);
         } else {
-            // unknown feature
-            System.err.println("Warning: Unknown Residue Feature [" + featureName
-                    + "].\nPlease contact the Biojava team.");
+        	// unknown feature
+        	logger.warn("Unknown Residue Feature [{}].\nPlease contact the Biojava team.", featureName);
         }
     }
 }

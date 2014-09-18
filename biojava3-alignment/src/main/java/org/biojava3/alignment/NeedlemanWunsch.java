@@ -23,12 +23,8 @@
 
 package org.biojava3.alignment;
 
-import java.util.List;
-
 import org.biojava3.alignment.routines.AnchoredPairwiseSequenceAligner;
-import org.biojava3.alignment.template.AbstractPairwiseSequenceAligner;
 import org.biojava3.alignment.template.AlignedSequence;
-import org.biojava3.alignment.template.AlignedSequence.Step;
 import org.biojava3.alignment.template.GapPenalty;
 import org.biojava3.alignment.template.SubstitutionMatrix;
 import org.biojava3.core.sequence.template.Compound;
