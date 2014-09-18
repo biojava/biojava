@@ -32,6 +32,8 @@ import org.biojava3.alignment.template.GapPenalty.Type;
 import org.biojava3.core.sequence.template.Compound;
 import org.biojava3.core.sequence.template.CompoundSet;
 import org.biojava3.core.sequence.template.Sequence;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Implements common code for an {@link Aligner} for a pair of {@link Profile}s.
@@ -42,6 +44,8 @@ import org.biojava3.core.sequence.template.Sequence;
  */
 public abstract class AbstractProfileProfileAligner<S extends Sequence<C>, C extends Compound>
         extends AbstractMatrixAligner<S, C> implements ProfileProfileAligner<S, C> {
+
+	private final static Logger logger = LoggerFactory.getLogger(AbstractProfileProfileAligner.class);
 
     // additional input fields
     private Profile<S, C> query, target;
@@ -214,9 +218,9 @@ public abstract class AbstractProfileProfileAligner<S extends Sequence<C>, C ext
             }
             reset();
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            logger.error("Interrupted Exception: ", e);
         } catch (ExecutionException e) {
-            e.printStackTrace();
+            logger.error("Execution Exception: ", e);
         }
         return query != null && target != null && getGapPenalty() != null && getSubstitutionMatrix() != null &&
                 query.getCompoundSet().equals(target.getCompoundSet());

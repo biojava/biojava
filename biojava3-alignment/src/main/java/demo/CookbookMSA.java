@@ -23,26 +23,30 @@
  * @since 3.0.2
  */
 package demo;
- 
+
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
- 
+
 import org.biojava3.alignment.Alignments;
 import org.biojava3.alignment.template.Profile;
 import org.biojava3.core.sequence.ProteinSequence;
 import org.biojava3.core.sequence.compound.AminoAcidCompound;
 import org.biojava3.core.sequence.io.FastaReaderHelper;
 import org.biojava3.core.util.ConcurrencyTools;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
  
 public class CookbookMSA {
- 
+
+	private final static Logger logger = LoggerFactory.getLogger(CookbookMSA.class);
+
     public static void main(String[] args) {
         String[] ids = new String[] {"Q21691", "A8WS47", "O48771"};
         try {
             multipleSequenceAlignment(ids);
         } catch (Exception e){
-            e.printStackTrace();
+            logger.error("Exception: ", e);
         }
     }
  
@@ -52,18 +56,19 @@ public class CookbookMSA {
             lst.add(getSequenceForId(id));
         }
         Profile<ProteinSequence, AminoAcidCompound> profile = Alignments.getMultipleSequenceAlignment(lst);
-        System.out.printf("Clustalw:%n%s%n", profile);
-        
+        logger.info("Clustalw:{}{}", System.getProperty("line.separator"), profile);
         
         ConcurrencyTools.shutdown();
     }
  
     private static ProteinSequence getSequenceForId(String uniProtId) throws Exception {
-        URL uniprotFasta = new URL(String.format("http://www.uniprot.org/uniprot/%s.fasta", uniProtId));
-        System.out.println(uniprotFasta);
-        ProteinSequence seq = FastaReaderHelper.readFastaProteinSequence(uniprotFasta.openStream()).get(uniProtId);
-        System.out.printf("id : %s %s%n%s%n", uniProtId, seq, seq.getOriginalHeader());
-        return seq;
+    	URL uniprotFasta = new URL(String.format("http://www.uniprot.org/uniprot/%s.fasta", uniProtId));
+    	logger.info("Getting Sequence from URL: {}", uniprotFasta);
+        
+    	ProteinSequence seq = FastaReaderHelper.readFastaProteinSequence(uniprotFasta.openStream()).get(uniProtId);
+    	logger.info("id : {} {}{}{}", uniProtId, seq, System.getProperty("line.separator"), seq.getOriginalHeader());
+    	
+    	return seq;
     }
  
 }

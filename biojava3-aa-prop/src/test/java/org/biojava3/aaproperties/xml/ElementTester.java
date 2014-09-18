@@ -14,8 +14,13 @@ import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ElementTester {
+
+	private final static Logger logger = LoggerFactory.getLogger(ElementTester.class);
+
 	@Test
 	public void generateSchema() throws JAXBException, IOException{
 		JAXBContext context = JAXBContext.newInstance(ElementTable.class);
@@ -30,7 +35,7 @@ public class ElementTester {
 		Unmarshaller u = jc.createUnmarshaller();
 		iTable = (ElementTable)u.unmarshal(new FileInputStream("./src/main/resources/ElementMass.xml" ) );
 		for(Element e:iTable.getElement()){
-			System.out.println(e);
+			logger.info("Element: {}", e);
 		}
 	}
 	
@@ -748,7 +753,7 @@ public class ElementTester {
 		// marshall the object to XML
 		marshaller.marshal(iTable, sw);
 		// print it out for this example
-		System.out.println(sw.toString());
+		logger.info("Marshal to file: {}", sw.toString());
 		BufferedWriter output = new BufferedWriter(new FileWriter("./src/main/resources/ElementMass.xml"));
 		output.write(sw.toString());
 		output.close();

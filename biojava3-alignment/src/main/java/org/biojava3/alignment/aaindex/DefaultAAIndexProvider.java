@@ -1,12 +1,13 @@
 package org.biojava3.alignment.aaindex;
 
 import java.io.InputStream;
-
 import java.util.Map;
 
 import org.biojava3.alignment.SubstitutionMatrixHelper;
 import org.biojava3.alignment.template.SubstitutionMatrix;
 import org.biojava3.core.sequence.compound.AminoAcidCompound;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /** The default provider for AAINDEX loads substituion matrices from the AAINDEX file in the resources directory
@@ -15,6 +16,8 @@ import org.biojava3.core.sequence.compound.AminoAcidCompound;
  *
  */
 public class DefaultAAIndexProvider implements AAIndexProvider {
+
+	private final static Logger logger = LoggerFactory.getLogger(DefaultAAIndexProvider.class);
 
 	Map<String,SubstitutionMatrix<AminoAcidCompound>> matrices;
 	
@@ -27,8 +30,8 @@ public class DefaultAAIndexProvider implements AAIndexProvider {
 		
 		try {
 			parser.parse(inStream);
-		} catch ( Exception e){
-			e.printStackTrace();
+		} catch (Exception e){
+			logger.error("Exception: ", e);
 		}
 		
 		matrices = parser.getMatrices();
