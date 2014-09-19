@@ -41,180 +41,177 @@ import java.util.List;
  */
 public interface Atom extends Cloneable, PDBRecord {
     
-    /** set trimmed version of atom name, e.g. "CA". 
-     * @param s  a String specifying the name value
+    /** 
+     * Set atom name, e.g. "CA". 
+     * @param s  a trimmed String specifying the name value
      * @see #getName
      */
     public void   setName(String s);
     
-    /** get trimmed version of atom name, e.g. "CA".
-     * @return a String representing the name value 
+    /** 
+     * Get atom name, e.g. "CA".
+     * @return a trimmed String representing the name value 
      * @see #setName
      */
     public String getName();
     
-    /** set full name of atom e.g. " CA ". 
-     * @param s  a String specifying the full name value
-     * @see #getFullName
-     */
-    public void   setFullName(String s) ;
-    
-    /** get full name of atom e.g. " CA ".
-     * @return a String representing the full name value 
-     * @see #setFullName
-     */
-    public String getFullName();
-    
-    /** set element of the atom name, e.g. Element.Fe
+    /** 
+     * Set element of the atom name, e.g. {@link Element#Fe}
      * @param e  an Element enumeration
      * @see #getElement
      */
     public void   setElement(Element e);
     
-    /** get element of the atom, e.g. Element.Ca
+    /** 
+     * Get element of the atom, e.g. {@link Element#Ca}
      * @return an Element enumeration 
      * @see #setElement
      */
     public Element getElement();
     
-    /** set PDB atom number. 
+    /** 
+     * Set PDB atom number. 
      * @param i  an int specifying the PDBserial value 
      * @see #getPDBserial
      */
     public void setPDBserial(int i) ;
     
-    /** get PDB atom number.
+    /** 
+     * Get PDB atom number.
      * @return an int representing the PDBserial value 
      * @see #setPDBserial
      */
     public int  getPDBserial() ;
     
-    /** set the coordinates.  
+    /** 
+     * Set the coordinates.  
      * @param c  an array of doubles specifying the coords value
      * @see #getCoords
      */    
     public void    setCoords(double[] c);
     
-    /** get the coordinates. 
+    /** 
+     * Get the coordinates. 
      * @return an array of doubles representing the coords value
      * @see #setCoords
      */    
     public double[] getCoords() ;
     
-    /** Set the X coordinate.
+    /** 
+     * Set the X coordinate.
      * @param x  a double
      * @see #getX()
      */
     public void setX(double x);
     
-    /** Set the Y coordinate.
+    /** 
+     * Set the Y coordinate.
      * @param y  a double
      * @see #getY()
      */
     public void setY(double y);
     
-    /** Set the Z coordinate.
+    /** 
+     * Set the Z coordinate.
      * @param z  a double
      * @see #getZ()     
      */
     public void setZ(double z);
     
-    /** Get coordinate X. 
+    /** 
+     * Get coordinate X. 
      * @return a double
      * @see #setX(double)
      */    
     public double getX() ;
     
-    /** Get coordinate Y. 
+    /** 
+     * Get coordinate Y. 
      * @return a double
      * @see #setY(double)
      */    
     public double getY() ;
     
-    /** Get coordinate Z. 
+    /** 
+     * Get coordinate Z. 
      * @return a double
      * @see #setZ(double)
      */    
     public double getZ() ;
     
-    /** get set alternate Location.
+    /** 
+     * Set alternate Location.
      * @param c  a Character object specifying the alt loc value 
      * @see #getAltLoc
      */
     public void setAltLoc(Character c);
     
-    /** get set alternate Location. 
+    /** 
+     * Get alternate Location. 
      * @return a Character object representing the alt loc value
      * @see #setAltLoc
      */
     public Character getAltLoc();
     
-    /** set occupancy. 
+    /** 
+     * Set occupancy. 
      * @param occupancy  a double specifying the occupancy value
      * @see #getOccupancy
      */
     public void setOccupancy(double occupancy) ;
     
-    /** get occupancy. 
+    /** 
+     * Get occupancy. 
      * @return a double representing the occupancy value
      * @see #setOccupancy
      */
     public double getOccupancy();
     
-    /** get set temp factor .
+    /** 
+     * Set temp factor .
      * @param temp  a double specifying the temp factor value
      * @see #getTempFactor
      */
     public void   setTempFactor(double temp) ;
     
-    /** get set temp factor. 
+    /** 
+     * Get temp factor. 
      * @return a double representing the temp factor value
      * @see #setTempFactor
      */
     public double getTempFactor() ;
     
-    /** returns and identical copy of this  object .
-     * @return  and identical copy of this  object 
+    /** 
+     * Return an identical copy of this  object .
+     * @return  an identical copy of this  object 
      */
     public Object clone();
     
-    /** Sets the back-reference to its parent Group.
-     * @param parent the parent Group
-     * @see #getParent()
-     * @deprecated replaced by {@link #setGroup(Group)}
-     */
-    public void setParent(Group parent) ; 
-    
-    /** Sets the back-reference to its parent Group.
+    /** 
+     * Set the back-reference to its parent Group.
      * @param parent the parent Group
      * @see #getGroup()
      */
     
     public void setGroup(Group parent);
     
-     /** Returns the parent Group of the Atom.
+    /** 
+     * Return the parent Group of the Atom.
      * returns null if the referenced object is not Group 
      * @return Group the parent Group of the Atom, or null
-     * @see #setParent(Group)   
-     * @deprecated replaced by {@link #getGroup()}  
-     */
-    public Group getParent();
-    
-    /** Returns the parent Group of the Atom.
-     * returns null if the referenced object is not Group 
-     * @return Group the parent Group of the Atom, or null
-     * @see #setParent(Group)     
+     * @see #setGroup(Group)     
      */
     public Group getGroup();
     
-    /** Adds a bond
+    /** 
+     * Add a bond
      * @param bond to be added
      * @see #getBonds()
      */
     public void addBond(Bond bond);
     
     /**
-     * Gets all {@link Bond}s this atom is part of.
+     * Get all {@link Bond}s this atom is part of.
      * 
      * @return a list of {@link Bond}s.
      */

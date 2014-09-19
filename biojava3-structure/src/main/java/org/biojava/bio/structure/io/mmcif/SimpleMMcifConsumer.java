@@ -266,70 +266,6 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		return null;
 	}
 
-
-	/** during mmcif parsing the full atom name string gets truncated, fix this...
-	 *
-	 * @param name
-	 * @return
-	 */
-	private String fixFullAtomName(String name, String element, Group currentGroup){
-
-		if (name.equals("N")){
-			return " N  ";
-		}
-		
-		// for amino acids this will be a C alpha
-		if (currentGroup.getType().equals(GroupType.AMINOACID) && name.equals("CA")){
-			return " CA ";
-		}
-		// for ligands this will be calcium
-		if (currentGroup.getType().equals(GroupType.HETATM) && name.equals("CA")){
-			if( element.equals("C") )
-				// C-alpha (eg for modified AAs)
-				return " CA ";
-			else
-				// Default to left-justified, like calcium
-				return "CA  ";
-		}
-		if (name.equals("C")){
-			return " C  ";
-		}
-		if (name.equals("O")){
-			return " O  ";
-		}
-		if (name.equals("CB")){
-			return " CB ";
-		}
-		if (name.equals("CG"))
-			return " CG ";
-
-		if (name.length() == 2) {
-			StringBuilder b = new StringBuilder();
-			b.append(" ");
-			b.append(name);
-			b.append(" ");
-			return b.toString();
-		}
-
-		if (name.length() == 1) {
-			StringBuilder b = new StringBuilder();
-			b.append(" ");
-			b.append(name);
-			b.append("  ");
-			return b.toString();
-		}
-
-		if (name.length() == 3) {
-			
-			StringBuilder b = new StringBuilder();
-			b.append(" ");
-			b.append(name);
-			return b.toString();
-		}
-
-		return name;
-	}
-
 	public void newAtomSite(AtomSite atom) {
 
 		// Warning: getLabel_asym_id is not the "chain id" in the PDB file
@@ -509,12 +445,10 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		//System.out.println("fixing atom name for  >" + atom.getLabel_atom_id() + "< >" + fullname + "<");
 
 		
-		String fullname      = fixFullAtomName(atom.getLabel_atom_id(),atom.getType_symbol(), current_group);
-		
 		if ( params.isParseCAOnly() ){
 			// yes , user wants to get CA only
 			// only parse CA atoms...
-			if (! fullname.equals(" CA ")){
+			if (! (atom.getLabel_atom_id().equals("CA") && atom.getType_symbol().equals("C"))) {
 				//System.out.println("ignoring " + line);
 				//atomCount--;
 				return;
@@ -540,7 +474,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 
 		// make sure that main group has all atoms
 		// GitHub issue: #76
-		if ( ! current_group.hasAtom(a.getFullName())) {
+		if ( ! current_group.hasAtom(a.getName())) {
 			current_group.addAtom(a);
 		}
 		
@@ -563,9 +497,6 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 
 		a.setPDBserial(Integer.parseInt(atom.getId()));
 		a.setName(atom.getLabel_atom_id());
-
-		a.setFullName(fixFullAtomName(atom.getLabel_atom_id(),atom.getType_symbol(), current_group));
-
 
 		double x = Double.parseDouble (atom.getCartn_x());
 		double y = Double.parseDouble (atom.getCartn_y());

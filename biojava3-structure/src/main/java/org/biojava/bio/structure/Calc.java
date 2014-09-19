@@ -909,7 +909,6 @@ public class Calc {
 
 		Atom virtualCB = Calc.add(aCB,tranMatrix);
 		virtualCB.setName("CB");
-		virtualCB.setFullName(" CB ");
 
 		return virtualCB;
 	}    

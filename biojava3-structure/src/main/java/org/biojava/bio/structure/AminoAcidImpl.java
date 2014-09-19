@@ -90,7 +90,10 @@ implements AminoAcid, Serializable
 	/** 
 	 * {@inheritDoc}
 	 */
-	public Atom getCA()   {return getAtom(" CA "); }
+	public Atom getCA()   {
+		// note CA can also be Calcium, but that can't happen in a standard aminoacid, so this should be safe
+		return getAtom("CA"); 
+	}
 
 	/** 
 	 * {@inheritDoc}

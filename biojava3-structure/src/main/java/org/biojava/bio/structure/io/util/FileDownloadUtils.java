@@ -151,10 +151,7 @@ public class FileDownloadUtils {
 					uStream.close();
 				}	
 
-				if (conn != null) {
-					conn.close();
-				}
-
+				
 			} catch (IOException e) {
 				e.printStackTrace();
 			}

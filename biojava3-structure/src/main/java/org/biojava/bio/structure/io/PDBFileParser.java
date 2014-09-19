@@ -1911,7 +1911,7 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 			for (String ok : params.getAcceptedAtomNames()){
 				//System.out.println(ok + "< >" + fullname +"<");
 
-				if ( ok.equals(fullname)) {
+				if ( ok.equals(fullname.trim())) {
 					found = true;
 					break;
 				}
@@ -1928,7 +1928,6 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 		atom.setPDBserial(pdbnumber) ;
 
 		atom.setAltLoc(altLoc);
-		atom.setFullName(fullname) ;
 		atom.setName(fullname.trim());
 
 		double x = Double.parseDouble (line.substring (30, 38).trim());
@@ -2004,7 +2003,7 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 		
 		// make sure that main group has all atoms
 		// GitHub issue: #76
-		if ( ! current_group.hasAtom(atom.getFullName())) {
+		if ( ! current_group.hasAtom(atom.getName())) {
 			current_group.addAtom(atom);
 		}
 		

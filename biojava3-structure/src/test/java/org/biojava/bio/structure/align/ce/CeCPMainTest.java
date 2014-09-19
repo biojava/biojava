@@ -5,6 +5,7 @@ package org.biojava.bio.structure.align.ce;
 
 //import static org.junit.Assert.*;
 
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 
@@ -19,7 +20,6 @@ import org.biojava.bio.structure.Group;
 import org.biojava.bio.structure.ResidueNumber;
 import org.biojava.bio.structure.StructureException;
 import org.biojava.bio.structure.StructureTools;
-
 import org.biojava.bio.structure.align.ce.CECalculator;
 import org.biojava.bio.structure.align.ce.CeCPMain;
 import org.biojava.bio.structure.align.model.AFPChain;
@@ -380,7 +380,6 @@ public class CeCPMainTest extends TestCase {
 		ca1 = new Atom[len];
 		for(int i=0;i<len;i++) {
 			ca1[i] = new AtomImpl();
-			ca1[i].setFullName(" CA ");
 			ca1[i].setName("CA");
 			ca1[i].setCoords(new double[] { i, 0, 0 });
 			Group aa = new AminoAcidImpl();
@@ -392,37 +391,31 @@ public class CeCPMainTest extends TestCase {
 		return ca1;
 	}
 	
-	public void testCECP1(){
+	public void testCECP1() throws IOException, StructureException{ 
 
 		String name1 = "PDP:3A2KAc";
 		String name2 = "d1wy5a2";
 
-		try {
-			CeCPMain algorithm = new CeCPMain();
 
-			AtomCache cache = new AtomCache();
+		CeCPMain algorithm = new CeCPMain();
 
-			Atom[] ca1 = cache.getAtoms(name1);
-			Atom[] ca2 = cache.getAtoms(name2);
+		AtomCache cache = new AtomCache();
 
-			AFPChain afpChain = algorithm.align(ca1, ca2);
-			CECalculator calculator = algorithm.getCECalculator();
+		Atom[] ca1 = cache.getAtoms(name1);
+		Atom[] ca2 = cache.getAtoms(name2);
 
-			//               System.out.println(calculator.get);
-			//StructureAlignmentJmol jmol =
-			//StructureAlignmentDisplay.display(afpChain, ca1, ca2);
-			if ( ! (afpChain.getBlockNum() == 1)){
-				System.out.println(calculator.getLcmp());
-				System.out.println(afpChain.toFatcat(ca1, ca2));
-			}
-			assertEquals(1,afpChain.getBlockNum());
+		AFPChain afpChain = algorithm.align(ca1, ca2);
+		CECalculator calculator = algorithm.getCECalculator();
 
-
-
-
-		} catch (Exception e){
-			e.printStackTrace();
+		//               System.out.println(calculator.get);
+		//StructureAlignmentJmol jmol =
+		//StructureAlignmentDisplay.display(afpChain, ca1, ca2);
+		if ( ! (afpChain.getBlockNum() == 1)){
+			System.out.println(calculator.getLcmp());
+			System.out.println(afpChain.toFatcat(ca1, ca2));
 		}
+		assertEquals(1,afpChain.getBlockNum());
+
 
 	}
 

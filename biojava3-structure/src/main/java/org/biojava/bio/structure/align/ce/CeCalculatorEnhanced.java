@@ -1447,7 +1447,7 @@ nBestTrace=nTrace;
 			for ( int i =0 ; i < strBuf1.length; i++){
 				if ( strBuf1[i] == null)
 					break;
-				System.out.print(strBuf1[i].getParent().getChemComp().getOne_letter_code());
+				System.out.print(strBuf1[i].getGroup().getChemComp().getOne_letter_code());
 			}
 			System.out.println();
 
@@ -1822,7 +1822,7 @@ nBestTrace=nTrace;
 				}
 			}
 
-			boolean doubleGap = false;
+			//boolean doubleGap = false;
 			boolean gapPosition = false;
 			if ( i != iMax || j != jMax ) {
 				int l1 = iMax - i;
@@ -1839,7 +1839,7 @@ nBestTrace=nTrace;
 				if ( prevGapEnd == alignmentPositionOrLength -1){
 					// double gap!
 					System.out.println( "  !! FOUND DOUBLE GAP AT: "+  alignmentPositionOrLength + " | "+ i+ " " + iMax + " " + j + " " + jMax + " " + String.format("%f", mat[i][j]) + " " +   getTraceBack(tracebackMatrix1,tracebackMatrix2,i,j));
-					doubleGap = true;
+					//doubleGap = true;
 
 					//										if ( i != iMax){
 					//											int pos = align_se1[ alignmentPositionOrLength -1];

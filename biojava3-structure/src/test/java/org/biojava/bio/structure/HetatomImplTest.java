@@ -540,5 +540,68 @@ public class HetatomImplTest extends TestCase{
         assertEquals(bigTestNumber, groupsSize);
     }
     
-  
+    @Test
+    public void testHasAminoAtoms() {
+    	
+    	Atom CA = new AtomImpl();
+    	CA.setName("CA");
+    	CA.setElement(Element.C);
+    	CA.setPDBserial(1);
+    	Atom C = new AtomImpl();
+    	C.setName("C");
+    	C.setElement(Element.C);
+    	C.setPDBserial(2);
+    	Atom N = new AtomImpl();
+    	N.setName("N");
+    	N.setElement(Element.N);
+    	N.setPDBserial(3);
+    	Atom O = new AtomImpl();
+    	O.setName("O");
+    	O.setElement(Element.O);
+    	O.setPDBserial(4);
+    	Atom OXT = new AtomImpl();
+    	OXT.setName("OXT");
+    	OXT.setElement(Element.O);
+    	OXT.setPDBserial(5);
+
+    	Group g = new HetatomImpl();
+    	g.addAtom(CA); 
+    	g.addAtom(C);
+    	g.addAtom(N);
+    	g.addAtom(O);
+    	
+    	assertTrue(g.hasAminoAtoms());
+    	
+    	g = new HetatomImpl();
+    	g.addAtom(CA); 
+    	g.addAtom(C);
+    	g.addAtom(N);
+    	g.addAtom(O);
+    	g.addAtom(OXT);
+    	
+    	assertTrue(g.hasAminoAtoms());
+    	
+    	g = new AminoAcidImpl();
+    	g.addAtom(CA); 
+    	g.addAtom(C);
+    	g.addAtom(N);
+    	g.addAtom(O);
+    	
+    	assertTrue(g.hasAminoAtoms());
+    	
+    	g = new HetatomImpl();
+    	g.addAtom(CA); 
+    	g.addAtom(C);
+    	g.addAtom(N);
+    	assertFalse(g.hasAminoAtoms());
+    	
+    	g = new HetatomImpl();
+    	g.addAtom(CA); 
+    	g.addAtom(C);
+    	g.addAtom(N);
+    	g.addAtom(OXT);
+    	
+    	assertFalse(g.hasAminoAtoms());
+    	
+    }
 }

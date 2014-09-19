@@ -24,16 +24,14 @@
  */
 package org.biojava.bio.structure.domain;
 
+import java.io.IOException;
 import java.io.InputStream;
-
 import java.net.URL;
 import java.util.Map;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-
 import org.biojava.bio.structure.Structure;
-
 import org.biojava.bio.structure.StructureTools;
 import org.biojava.bio.structure.align.client.JFatCatClient;
 import org.biojava.bio.structure.align.client.StructureName;
@@ -125,7 +123,7 @@ public class RemotePDPProvider extends SerializableCache<String,SortedSet<String
 				serializedCache.put(key, value);
 			}
 
-		} catch (Exception e){
+		} catch (IOException e){
 			e.printStackTrace();
 		}
 		return ;

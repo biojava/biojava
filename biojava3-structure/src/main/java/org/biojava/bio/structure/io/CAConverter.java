@@ -30,7 +30,9 @@ import org.biojava.bio.structure.AminoAcidImpl;
 import org.biojava.bio.structure.Atom;
 import org.biojava.bio.structure.Chain;
 import org.biojava.bio.structure.ChainImpl;
+import org.biojava.bio.structure.Element;
 import org.biojava.bio.structure.Group;
+import org.biojava.bio.structure.StructureTools;
 
 /** Converts full atom representations to Calpha only ones.
  * 
@@ -83,7 +85,7 @@ public class CAConverter {
             
             for (Atom a : atoms){
                 
-                if ( a.getFullName().equals(" CA ")){
+                if ( a.getName().equals(StructureTools.caAtomName) && a.getElement()==Element.C){
                     // we got a CA atom in this group!
                     AminoAcid n = new AminoAcidImpl();
                     n.setPDBName(g.getPDBName());
