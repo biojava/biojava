@@ -1,5 +1,9 @@
 package org.biojava3.genome.parsers.gff;
 
+import org.biojava3.genome.App;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 /**
  * A location on a sequence.
@@ -48,7 +52,8 @@ package org.biojava3.genome.parsers.gff;
  */
 public class Location implements Iterable<Location>
 {
-	
+	private static final Logger logger = LoggerFactory.getLogger(App.class);
+
 	private int mStart;
 	private int mEnd;
 
@@ -941,8 +946,7 @@ public class Location implements Iterable<Location>
 		
 		//fromBio, etc.
 		
-		System.out.println( "JavaGene.Location Passed." );
-		
+		logger.info("JavaGene.Location Passed.");
 	}
 	
 }		
