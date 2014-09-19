@@ -850,11 +850,23 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 			for (Chain chain : model) {
 				for (String asym : asymIds) {
 					if ( chain.getChainID().equals(asym)){
+						String newChainId = asymStrandId.get(asym);
+						
+						logger.debug("renaming " + asym  + " to : " + newChainId);
 
-						logger.debug("renaming " + asym  + " to : " + asymStrandId.get(asym));
-
-						chain.setChainID(asymStrandId.get(asym));
+						chain.setChainID(newChainId);
 						chain.setInternalChainID(asym);
+						// set chain of all groups
+						for(Group g : chain.getAtomGroups()) {
+							ResidueNumber resNum = g.getResidueNumber();
+							if(resNum != null)
+								resNum.setChainId(newChainId);
+						}
+						for(Group g : chain.getSeqResGroups()) {
+							ResidueNumber resNum = g.getResidueNumber();
+							if(resNum != null)
+								resNum.setChainId(newChainId);
+						}
 						Chain known =  isKnownChain(chain.getChainID(), pdbChains);
 						if ( known == null ){
 							pdbChains.add(chain);
