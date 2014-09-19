@@ -1,10 +1,14 @@
 package org.biojava3.genome.parsers.gff;
 
-
-import java.io.*;
-import java.util.*;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Pattern;
-import java.util.logging.Logger;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -29,9 +33,10 @@ import java.util.logging.Logger;
  * @author Hanno Hinsch
  */
 public class GFF3Reader {
-	private static final  Pattern p = Pattern.compile("\t");
+	
+	private static final Logger logger = LoggerFactory.getLogger(GFF3Reader.class);
 
-    private static final Logger log = Logger.getLogger(GFF3Reader.class.getName());
+	private static final  Pattern p = Pattern.compile("\t");
 
     /**
      * Read a file into a FeatureList. Each line of the file becomes one Feature object.
@@ -42,7 +47,7 @@ public class GFF3Reader {
      */
     
     public static FeatureList read(String filename, List<String> indexes) throws IOException {
-    	log.info("Gff.read(): Reading " + filename);
+    	logger.info("Reading: {}", filename);
 
         FeatureList features = new FeatureList();
         features.addIndexes(indexes);
@@ -150,8 +155,8 @@ public class GFF3Reader {
         @SuppressWarnings("unused")
 		FeatureList listGenes = GFF3Reader.read("/home/melo/workspace/release/stdout.combined.checked2.gtf");
         long stop = System.currentTimeMillis();
-        System.out.println("Loading = "+ (stop-start));
-//        System.out.println(listGenes);
+        logger.info("Loading = {}", stop-start);
+//        logger.info(listGenes);
         //	GeneMarkGTF.write( list, args[1] );
     }
 }

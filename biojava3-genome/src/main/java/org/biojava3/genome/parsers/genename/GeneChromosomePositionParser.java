@@ -27,13 +27,14 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import org.biojava3.core.util.InputStreamProvider;
+import org.biojava3.genome.App;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /** A parser that parses a file from the UCSC genome browser that contains mapping of gene name to chromosome positions
  * 
@@ -42,23 +43,25 @@ import org.biojava3.core.util.InputStreamProvider;
  */
 public class GeneChromosomePositionParser {
 
+	private static final Logger logger = LoggerFactory.getLogger(App.class);
+
 	public static final String DEFAULT_MAPPING_URL="http://hgdownload.cse.ucsc.edu/goldenPath/hg19/database/refFlat.txt.gz";
 
 	public static void main(String[] args){
 		try {
 
 			List<GeneChromosomePosition> genePositions=	getChromosomeMappings();
-			System.out.println("got " + genePositions.size() + " gene positions") ;
+			logger.info("got {} gene positions", genePositions.size());
 			
 			for (GeneChromosomePosition pos : genePositions){
 				if ( pos.getGeneName().equals("FOLH1")) {
-					System.out.println(pos);
+					logger.info("Gene Position: {}", pos);
 					break;
 				}
 			}
 			
 		} catch(Exception e){
-			e.printStackTrace();
+			logger.error("Exception: ", e);
 		}
 	}
 
@@ -96,8 +99,7 @@ public class GeneChromosomePositionParser {
 		String[] spl = line.split("\t");
 
 		if ( spl.length != 11) {
-			System.err.println("Line does not have 11 data items, but " + spl.length);
-			System.err.println(line);
+			logger.warn("Line does not have 11 data items, but {}: {}", spl.length, line);
 			return null;
 		}
 
