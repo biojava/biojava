@@ -26,6 +26,8 @@ public class TestLoadStructureFromURL extends TestCase{
 				f.mkdir();
 			}
 			AtomCache c = new AtomCache(path, true);
+			c.setUseMmCif(false);
+
 			// fetch a random small structure
 
 			c.getStructure("1znf");
