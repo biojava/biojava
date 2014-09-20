@@ -2875,14 +2875,16 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 			// TODO determine what the actual bond order of this bond is; for
 			// now, we're assuming they're single bonds
 			new Bond(a, b, 1);
-		} catch (Exception e) {
+		} catch (StructureException e) {
 			// Note, in Calpha only mode the link atoms may not be present.
 			if (! parseCAonly) {
-				System.out.println("Error with the following link record: ");
-				System.out.println(linkRecord);
-				e.printStackTrace();
+				logger.error("Error with the following link record: {}",linkRecord.toString());
+				//e.printStackTrace();
 				throw new RuntimeException(e);
+			} else {
+				logger.debug("StructureException caught while forming link record bonds in parseCAonly mode. Error: "+e.getMessage());
 			}
+			
 		}
 	}
 	
@@ -2899,10 +2901,11 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 		} catch (StructureException e) {
 			// Note, in Calpha only mode the CYS SG's are not present.
 			if (! parseCAonly) {
-				System.out.println("Error with the following SSBond: ");
-				System.out.println(disulfideBond);
-				e.printStackTrace();
+				logger.error("Error with the following SSBond: {}",disulfideBond.toString());
+				//e.printStackTrace();
 				throw new RuntimeException(e);
+			} else {
+				logger.debug("StructureException caught while forming disulfide bonds in parseCAonly mode. Error: "+e.getMessage());
 			}
 		}
 	}
