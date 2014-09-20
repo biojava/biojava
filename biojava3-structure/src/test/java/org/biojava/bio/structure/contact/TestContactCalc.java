@@ -35,7 +35,7 @@ public class TestContactCalc {
 	@Test
 	public void testIntraChainContacts() throws StructureException, IOException { 
 				
-		String[][] cts = 		{null, {StructureTools.caAtomName} , {StructureTools.cbAtomName}};
+		String[][] cts = 		{null, {StructureTools.CA_ATOM_NAME} , {StructureTools.CB_ATOM_NAME}};
 		double[] cutoffs = 	    { 5.0,   8.0 ,  8.0};
 		
 		int[] allCMsizes = new int[INTRACHAIN_TESTSET.length];

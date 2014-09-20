@@ -85,7 +85,7 @@ public class CAConverter {
             
             for (Atom a : atoms){
                 
-                if ( a.getName().equals(StructureTools.caAtomName) && a.getElement()==Element.C){
+                if ( a.getName().equals(StructureTools.CA_ATOM_NAME) && a.getElement()==Element.C){
                     // we got a CA atom in this group!
                     AminoAcid n = new AminoAcidImpl();
                     n.setPDBName(g.getPDBName());

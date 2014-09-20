@@ -273,14 +273,14 @@ public class CeCalculatorEnhanced {
 		double dist;
 		Group g1 = ca1.getGroup();
 		Atom cb1 = null;
-		if ( g1.hasAtom(StructureTools.cbAtomName)) {
-			cb1 = g1.getAtom(StructureTools.cbAtomName);
+		if ( g1.hasAtom(StructureTools.CB_ATOM_NAME)) {
+			cb1 = g1.getAtom(StructureTools.CB_ATOM_NAME);
 		}
 		//
 		Group g2 = ca2.getGroup();
 		Atom cb2 = null;
-		if ( g2.hasAtom(StructureTools.cbAtomName)) {
-			cb2 = g2.getAtom(StructureTools.cbAtomName);
+		if ( g2.hasAtom(StructureTools.CB_ATOM_NAME)) {
+			cb2 = g2.getAtom(StructureTools.CB_ATOM_NAME);
 		}
 
 
@@ -1244,7 +1244,7 @@ nBestTrace=nTrace;
 		//TODO
 		Group parent = ca[j].getGroup();
 		int pos = 0;
-		String atomName = StructureTools.caAtomName;
+		String atomName = StructureTools.CA_ATOM_NAME;
 
 		Atom a = null;
 
@@ -1936,7 +1936,7 @@ nBestTrace=nTrace;
 
 			Calc.rotate( g, m);
 			Calc.shift(  g, shift);
-			caB[l] = g.getAtom(" CA ");
+			caB[l] = g.getAtom(StructureTools.CA_ATOM_NAME);
 		}
 	}
 
@@ -2028,7 +2028,7 @@ nBestTrace=nTrace;
 			Atom a;
 			if ( clone ){
 				Group g = (Group)ca[i].getGroup().clone();
-				a = g.getAtom(" CA ");
+				a = g.getAtom(StructureTools.CA_ATOM_NAME);
 			}
 			else {
 				a = ca[i];

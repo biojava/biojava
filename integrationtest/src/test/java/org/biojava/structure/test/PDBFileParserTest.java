@@ -503,7 +503,7 @@ public class PDBFileParserTest extends TestCase {
 
 		FileParsingParameters params = new FileParsingParameters();
 
-		String[] acceptedAtoms = {StructureTools.caAtomName, StructureTools.cbAtomName};
+		String[] acceptedAtoms = {StructureTools.CA_ATOM_NAME, StructureTools.CB_ATOM_NAME};
 		params.setAcceptedAtomNames(acceptedAtoms);
 		AtomCache cache = new AtomCache();
 
@@ -513,7 +513,7 @@ public class PDBFileParserTest extends TestCase {
 
 			//System.out.println(s.toPDB());
 			Atom[] ca = StructureTools.getAtomCAArray(s);
-			Atom[] cb = StructureTools.getAtomArray(s, new String[]{StructureTools.cbAtomName,});
+			Atom[] cb = StructureTools.getAtomArray(s, new String[]{StructureTools.CB_ATOM_NAME,});
 
 			// gly does not have cb...
 			assertTrue(ca.length > cb.length);

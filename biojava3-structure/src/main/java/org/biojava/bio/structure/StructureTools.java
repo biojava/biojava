@@ -62,29 +62,31 @@ public class StructureTools {
 	private static final Logger logger = LoggerFactory.getLogger(StructureTools.class);
 
 	/** 
-	 * The atom name of the C-alpha atom
+	 * The atom name of the backbone C-alpha atom.
+	 * Note that this can be ambiguous depending on the context since Calcium atoms
+	 * use the same name in PDB.
 	 */
-	public static final String caAtomName = "CA";
+	public static final String CA_ATOM_NAME = "CA";
 
 	/**
-	 * The atom name for the amide nitrogen
+	 * The atom name for the backbone amide nitrogen
 	 */
-	public static final String nAtomName = "N";
+	public static final String N_ATOM_NAME = "N";
 
 	/**
-	 * The atom name for the carbonyl carbon
+	 * The atom name for the backbone carbonyl
 	 */
-	public static final String cAtomName = "C";
+	public static final String C_ATOM_NAME = "C";
 	
 	/**
-	 * The atom name for the carbonyl oxygen
+	 * The atom name for the backbone carbonyl oxygen
 	 */
-	public static final String oAtomName = "O";
+	public static final String O_ATOM_NAME = "O";
 	
 	/**
-	 * The atom name of the C-beta atom
+	 * The atom name of the side-chain C-beta atom
 	 */
-	public static final String cbAtomName = "CB";
+	public static final String CB_ATOM_NAME = "CB";
 
 
 	public static final Character UNKNOWN_GROUP_LABEL = new Character('x');
@@ -470,8 +472,8 @@ public class StructureTools {
 		List<Atom> atoms = new ArrayList<Atom>();
 		
 		for (Group g: c.getAtomGroups()) {
-			if (g.hasAtom(caAtomName) && g.getAtom(caAtomName).getElement()==Element.C) {
-				atoms.add(g.getAtom(caAtomName));
+			if (g.hasAtom(CA_ATOM_NAME) && g.getAtom(CA_ATOM_NAME).getElement()==Element.C) {
+				atoms.add(g.getAtom(CA_ATOM_NAME));
 			}
 		}
 		
@@ -509,7 +511,7 @@ public class StructureTools {
 
 			Group parentN = (Group)parentG.clone();
 
-			newCA[apos] = parentN.getAtom(caAtomName);
+			newCA[apos] = parentN.getAtom(CA_ATOM_NAME);
 			newChain.addGroup(parentN);
 		}
 		return newCA;
@@ -582,7 +584,7 @@ public class StructureTools {
 			}
 
 			c.addGroup(g);
-			ca2clone[pos] = g.getAtom(caAtomName);
+			ca2clone[pos] = g.getAtom(CA_ATOM_NAME);
 
 			pos++;
 		}
@@ -606,7 +608,7 @@ public class StructureTools {
 			}
 
 			c.addGroup(g);
-			ca2clone[pos] = g.getAtom(caAtomName);
+			ca2clone[pos] = g.getAtom(CA_ATOM_NAME);
 
 			pos++;
 		}
@@ -628,8 +630,8 @@ public class StructureTools {
 		
 		for (Chain c: s.getChains()) {
 			for (Group g: c.getAtomGroups()) {
-				if (g.hasAtom(caAtomName) && g.getAtom(caAtomName).getElement()==Element.C) {
-					atoms.add(g.getAtom(caAtomName));
+				if (g.hasAtom(CA_ATOM_NAME) && g.getAtom(CA_ATOM_NAME).getElement()==Element.C) {
+					atoms.add(g.getAtom(CA_ATOM_NAME));
 				}
 			}
 		}
@@ -653,10 +655,10 @@ public class StructureTools {
 					// this means we will only take atoms grom groups that have complete backbones
 					for (Atom a:g.getAtoms()) {
 						// we do it this way instead of with g.getAtom() to be sure we always use the same order as original
-						if (a.getName().equals(caAtomName)) atoms.add(a);
-						if (a.getName().equals(cAtomName)) atoms.add(a);
-						if (a.getName().equals(nAtomName)) atoms.add(a);
-						if (a.getName().equals(oAtomName)) atoms.add(a);
+						if (a.getName().equals(CA_ATOM_NAME)) atoms.add(a);
+						if (a.getName().equals(C_ATOM_NAME)) atoms.add(a);
+						if (a.getName().equals(N_ATOM_NAME)) atoms.add(a);
+						if (a.getName().equals(O_ATOM_NAME)) atoms.add(a);
 					}
 				}
 			}
@@ -853,21 +855,25 @@ public class StructureTools {
 
 
 
-	/** In addition to the functionality provided by getReducedStructure also provides a way to specify sub-regions of a structure with the following 
+	/** 
+	 * In addition to the functionality provided by {@link #getReducedStructure(Structure, int)} 
+	 * and {@link #getReducedStructure(Structure, String)}, also provides 
+	 * a way to specify sub-regions of a structure with the following 
 	 * specification:
 	 * 
-	 * 
-	 * ranges can be surrounded by ( and ). (but will be removed).
-	 * ranges are specified as
-	 * PDBresnum1 : PDBresnum2
-	 * 
-	 *  a list of ranges is separated by ,
+	 * <p>
+	 * <li>ranges can be surrounded by ( and ). (but will be removed).</li>
+	 * <li>ranges are specified as
+	 * PDBresnum1 : PDBresnum2</li>
 	 *  
-	 *  Example
+	 * <li>a list of ranges is separated by ,</li>
+	 * </p>
+	 * Example
+	 * <pre>
 	 *  4GCR (A:1-83)
 	 *  1CDG (A:407-495,A:582-686)
 	 *  1CDG (A_407-495,A_582-686)
-	 * 
+	 * </pre>
 	 * @param s The full structure
 	 * @param ranges A comma-seperated list of ranges, optionally surrounded by parentheses
 	 * @return Substructure of s specified by ranges
@@ -934,7 +940,7 @@ public class StructureTools {
 				if(struc.size() != 1) {
 					// SCOP 1.71 uses this for some proteins with multiple chains
 					// Print a warning in this ambiguous case
-					logger.warn("Multiple possible chains match '_'. Using chain %s.%n",chain.getChainID());
+					logger.warn("Multiple possible chains match '_'. Using chain {}",chain.getChainID());
 				}
 			} else {
 				// Explicit chain

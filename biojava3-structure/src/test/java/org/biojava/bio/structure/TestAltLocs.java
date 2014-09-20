@@ -206,7 +206,7 @@ public class TestAltLocs {
 
 		for (Atom atom : g.getAtoms()) {
 			//System.out.print(atom.toPDB());
-			if ( atom.getName().equals(StructureTools.caAtomName)){
+			if ( atom.getName().equals(StructureTools.CA_ATOM_NAME)){
 
 				cbInMain = true;
 				break;
@@ -246,7 +246,7 @@ public class TestAltLocs {
 				boolean caInMain = false;
 				for (Atom a: atoms){
 
-					if ( a.getName().equals(StructureTools.caAtomName)) {
+					if ( a.getName().equals(StructureTools.CA_ATOM_NAME)) {
 						caList.add(a);
 						caInMain = true;
 						break;
@@ -255,7 +255,7 @@ public class TestAltLocs {
 
 
 				}
-				if (! caInMain && g.hasAtom(StructureTools.caAtomName)){
+				if (! caInMain && g.hasAtom(StructureTools.CA_ATOM_NAME)){
 					// g.hasAtom checks altLocs
 					fail("CA is not in main group, but in altLoc");
 				}
@@ -297,7 +297,7 @@ public class TestAltLocs {
 				boolean caInMain = false;
 				for (Atom a: atoms){
 
-					if ( a.getName().equals(StructureTools.caAtomName)) {
+					if ( a.getName().equals(StructureTools.CA_ATOM_NAME)) {
 						caList.add(a);
 						caInMain = true;
 						break;
@@ -306,7 +306,7 @@ public class TestAltLocs {
 
 
 				}
-				if (! caInMain && g.hasAtom(StructureTools.caAtomName)){
+				if (! caInMain && g.hasAtom(StructureTools.CA_ATOM_NAME)){
 					// g.hasAtom checks altLocs
 					fail("CA is not in main group, but in altLoc");
 				}
@@ -355,7 +355,7 @@ public class TestAltLocs {
 				boolean caInMain = false;
 				for (Atom a: atoms){
 
-					if ( a.getName().equals(StructureTools.caAtomName)) {
+					if ( a.getName().equals(StructureTools.CA_ATOM_NAME)) {
 						caList.add(a);
 						caInMain = true;
 						break;
@@ -364,7 +364,7 @@ public class TestAltLocs {
 
 
 				}
-				if (! caInMain && g.hasAtom(StructureTools.caAtomName)){
+				if (! caInMain && g.hasAtom(StructureTools.CA_ATOM_NAME)){
 					// g.hasAtom checks altLocs
 					fail("CA is not in main group, but in altLoc");
 				}

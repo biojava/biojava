@@ -262,10 +262,10 @@ public class HetatomImpl implements Group,Serializable {
 		// if this method call is performed too often, it should become a
 		// private method and provide a flag for Group object ...
 
-		if (	hasAtom(StructureTools.caAtomName) && 
-				hasAtom(StructureTools.cAtomName) && 
-				hasAtom(StructureTools.nAtomName) && 
-				hasAtom(StructureTools.oAtomName)) {
+		if (	hasAtom(StructureTools.CA_ATOM_NAME) && 
+				hasAtom(StructureTools.C_ATOM_NAME) && 
+				hasAtom(StructureTools.N_ATOM_NAME) && 
+				hasAtom(StructureTools.O_ATOM_NAME)) {
 			
 			// this is the minimun requirement for something to be considered an aminoacid with a backbone
 			// note that if the backbone is incomplete it won't be considered an aminoacid

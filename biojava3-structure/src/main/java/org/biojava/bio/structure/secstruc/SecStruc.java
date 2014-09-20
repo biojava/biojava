@@ -585,10 +585,10 @@ public class SecStruc {
 					sg.setChain(g.getChain());
 
 
-					Atom N = g.getAtom(StructureTools.nAtomName);
-					Atom CA =  g.getAtom(StructureTools.caAtomName);
-					Atom C = g.getAtom(StructureTools.cAtomName);
-					Atom O =  g.getAtom(StructureTools.oAtomName);
+					Atom N = g.getAtom(StructureTools.N_ATOM_NAME);
+					Atom CA =  g.getAtom(StructureTools.CA_ATOM_NAME);
+					Atom C = g.getAtom(StructureTools.C_ATOM_NAME);
+					Atom O =  g.getAtom(StructureTools.O_ATOM_NAME);
 					if ( N == null || CA == null || C == null || O == null)
 						continue;
 
