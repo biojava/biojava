@@ -45,15 +45,19 @@ import org.biojava.bio.structure.io.FileParsingParameters;
 import org.biojava.bio.structure.io.PDBFileParser;
 import org.biojava.structure.test.util.StringManipulationTestsHelper;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.*;
 
-public class PDBFileParserTest extends TestCase {
+import org.junit.Before;
+import org.junit.Test;
 
-	PDBFileParser parser;
+public class PDBFileParserTest {
+
+	private static PDBFileParser parser;
 
 	public static final String newline = System.getProperty("line.separator");
 
-	protected void setUp(){
+	@Before
+	public void setUp(){
 		parser = new PDBFileParser();
 	}
 
@@ -75,6 +79,7 @@ public class PDBFileParserTest extends TestCase {
 
 	}
 
+	@Test
 	public void test2LetterResidueName() {
 		try {
 
@@ -95,6 +100,7 @@ public class PDBFileParserTest extends TestCase {
 
 	}
 
+	@Test
 	public void testCorrectFloatingPointDisplay() {
 
 		// from 1a4w:
@@ -128,6 +134,7 @@ public class PDBFileParserTest extends TestCase {
 
 	}
 
+	@Test
 	public void testPDBHeader(){
 
 		String t =
@@ -159,6 +166,7 @@ public class PDBFileParserTest extends TestCase {
 
 	}
 
+	@Test
 	public void testREMARK200() {
 
 		// test that the resolution is only read from REMARK 2 lines
@@ -170,7 +178,7 @@ public class PDBFileParserTest extends TestCase {
 
 		try {
 			float resolution = testREMARK2Parsing(w1);
-			assertEquals(resolution,PDBHeader.DEFAULT_RESOLUTION);
+			assertEquals(resolution,PDBHeader.DEFAULT_RESOLUTION,0.01);
 		} catch (Exception e){
 			parsingOK = false;
 			//e.printStackTrace();
@@ -181,6 +189,7 @@ public class PDBFileParserTest extends TestCase {
 		assertEquals("parsing failed with error " + errorMsg, parsingOK, true);
 	}
 
+	@Test
 	public void testREMARK2(){
 
 		String w2 =
@@ -241,6 +250,7 @@ public class PDBFileParserTest extends TestCase {
 	//		}
 	//        }
 
+	@Test
 	public void testSITE() {
 		// from 1a4w:
 		String remark800Test =
@@ -331,6 +341,7 @@ public class PDBFileParserTest extends TestCase {
 		}
 	}
 
+	@Test
 	public void testMultiLineJRNL(){
 		//            System.out.println("Testing JRNL record parsing from 3pfk");
 		String jrnlString =
@@ -358,6 +369,7 @@ public class PDBFileParserTest extends TestCase {
 		assertEquals("PHILOS.TRANS.R.SOC.LONDON, SER.B", journalArticle.getJournalName());
 	}
 
+	@Test
 	public void testIncorrectDateFormatMultiLineJRNL(){
 		//            System.out.println("Testing JRNL record parsing from 3pfk");
 		String jrnlString =
@@ -385,6 +397,7 @@ public class PDBFileParserTest extends TestCase {
 		assertEquals("PHILOS.TRANS.R.SOC.LONDON, SER.B", journalArticle.getJournalName());
 	}
 
+	@Test
 	public void testInvalidFormatREFsectionJRNL(){
 		//            System.out.println("Testing JRNL record parsing from 3pfk");
 		String jrnlString =
@@ -411,7 +424,7 @@ public class PDBFileParserTest extends TestCase {
 		assertEquals("", journalArticle.getJournalName());
 	}
 
-
+	@Test
 	public void testSecondMultiLineJRNL(){
 		//            System.out.println("Testing JRNL record parsing from 1gpb");
 		String jrnlString =
@@ -441,6 +454,7 @@ public class PDBFileParserTest extends TestCase {
 		assertEquals("GLYCOGEN PHOSPHORYLASE B: DESCRIPTION OF THE PROTEIN STRUCTURE", journalArticle.getJournalName());
 	}
 
+	@Test
 	public void testSingleLineJRNL(){
 		//            System.out.println("Testing JRNL record parsing from 2bln");
 		String jrnlString =
@@ -472,6 +486,7 @@ public class PDBFileParserTest extends TestCase {
 		assertEquals("J.BIOL.CHEM.", journalArticle.getJournalName());
 	}
 
+	@Test
 	public void testToBePublishedJRNL(){
 		//            System.out.println("Testing JRNL record parsing from 1i2c");
 		String jrnlString =
@@ -499,6 +514,7 @@ public class PDBFileParserTest extends TestCase {
 		assertEquals("TO BE PUBLISHED", journalArticle.getJournalName());
 	}
 
+	@Test
 	public void test4hhbAcceptedAtomNames(){
 
 		FileParsingParameters params = new FileParsingParameters();
@@ -527,5 +543,66 @@ public class PDBFileParserTest extends TestCase {
 			e.printStackTrace();
 			fail(e.getMessage());
 		}
+	}
+	
+	@Test
+	public void testCorrectAtomNamePadding() throws IOException {
+		
+		// from 1a4w:
+		String atomLines = 
+				
+				"HETATM 2242 NA    NA H 541       5.845 -14.122  30.560  0.88 23.48          NA"+newline+
+				"HETATM 2243 NA    NA H 542      18.411 -16.475  38.464  0.88 24.77          NA"+newline+
+				"HETATM 2244  C1  QWE H 373      17.735 -17.178  22.612  1.00 26.29           C"+newline+
+				"HETATM 2245  C2  QWE H 373      18.543 -17.350  21.462  1.00 26.22           C"+newline+
+				"HETATM 2246  C3  QWE H 373      19.877 -17.046  21.558  1.00 26.06           C"+newline+
+				"HETATM 2247  C4  QWE H 373      20.401 -16.566  22.766  1.00 26.60           C"+newline+
+				"HETATM 2248  C4A QWE H 373      19.613 -16.358  23.893  1.00 27.46           C"+newline+
+				"HETATM 2249  C5  QWE H 373      20.084 -15.791  25.046  1.00 28.32           C"+newline+
+				"HETATM 2250  C6  QWE H 373      19.241 -15.568  26.114  1.00 27.47           C"+newline+
+				"HETATM 2251  C7  QWE H 373      17.893 -15.971  26.028  1.00 27.79           C"+newline+
+				"HETATM 2252  C8  QWE H 373      17.370 -16.510  24.879  1.00 26.51           C"+newline+
+				"HETATM 2253  C8A QWE H 373      18.205 -16.689  23.809  1.00 26.70           C"+newline+
+				"HETATM 2254  N   QWE H 373      21.383 -15.285  25.104  1.00 29.72           N"+newline+
+				"HETATM 2255  CM1 QWE H 373      21.898 -14.217  24.214  1.00 30.75           C"+newline+
+				"HETATM 2256  CM2 QWE H 373      22.635 -16.213  25.496  1.00 31.28           C"+newline+
+				"HETATM 2257  S   QWE H 373      15.909 -17.581  22.417  1.00 26.82           S"+newline+
+				"HETATM 2258  O1S QWE H 373      15.988 -18.013  21.010  1.00 27.08           O"+newline+
+				"HETATM 2259  O2S QWE H 373      14.998 -18.191  23.402  1.00 25.52           O"+newline+
+				"HETATM 2260  N1  QWE H 373      14.893 -15.970  22.485  1.00 26.45           N"+newline+
+				"HETATM 2261  CA  QWE H 373      15.193 -15.114  21.296  1.00 26.19           C"+newline+
+				"HETATM 2262  C   QWE H 373      16.307 -14.167  21.752  1.00 26.27           C"+newline+
+				"HETATM 2263  O   QWE H 373      16.212 -13.781  22.914  1.00 24.70           O"+newline+
+				"HETATM 2264  CB  QWE H 373      13.942 -14.354  20.879  1.00 23.76           C"+newline+
+				"HETATM 2265  CG  QWE H 373      13.232 -13.686  22.058  1.00 25.01           C"+newline+
+				"HETATM 2266  CD  QWE H 373      11.892 -13.133  21.595  1.00 23.01           C"+newline+
+				"HETATM 2267  NE  QWE H 373      11.218 -12.647  22.780  1.00 21.45           N"+newline+
+				"HETATM 2268  CZ  QWE H 373      11.457 -11.554  23.483  1.00 20.16           C"+newline+
+				"HETATM 2269  NH1 QWE H 373      12.359 -10.674  23.045  1.00 20.04           N"+newline+
+				"HETATM 2270  NH2 QWE H 373      10.723 -11.336  24.566  1.00 20.85           N"+newline+
+				"HETATM 2271  N11 QWE H 373      17.280 -13.692  20.830  1.00 27.91           N"+newline+
+				"HETATM 2272  C21 QWE H 373      17.043 -14.033  19.327  1.00 30.31           C"+newline+
+				"HETATM 2273  C31 QWE H 373      18.421 -14.472  18.809  1.00 29.73           C"+newline+
+				"HETATM 2274  C41 QWE H 373      19.610 -13.417  19.194  1.00 29.33           C"+newline+
+				"HETATM 2275  C51 QWE H 373      19.696 -13.083  20.765  1.00 28.57           C"+newline+
+				"HETATM 2276  C61 QWE H 373      18.351 -12.680  21.310  1.00 28.50           C"+newline+
+				"HETATM 2277  C1' QWE H 373      16.593 -13.014  18.550  1.00 33.08           C"+newline+
+				"HETATM 2278  C2' QWE H 373      15.941 -13.425  17.179  1.00 37.01           C"+newline+
+				"HETATM 2279  S1  QWE H 373      15.783 -14.904  14.458  1.00 43.62           S"+newline+
+				"HETATM 2280  O2  QWE H 373      17.488 -11.922  16.287  1.00 41.38           O"+newline+
+				"HETATM 2281  C52 QWE H 373      17.059 -15.583  13.508  1.00 43.74           C"+newline+
+				"HETATM 2282  C22 QWE H 373      16.864 -13.556  14.739  1.00 42.63           C"+newline+
+				"HETATM 2283 C2'1 QWE H 373      16.825 -12.903  16.107  1.00 40.59           C"+newline+
+				"HETATM 2284  C42 QWE H 373      18.146 -14.734  13.451  1.00 43.96           C"+newline+
+				"HETATM 2285  N3  QWE H 373      18.049 -13.554  14.106  1.00 43.46           N"+newline;
+		
+		BufferedReader br = new BufferedReader(new StringReader(atomLines));
+		
+		Structure s = parser.parsePDBFile(br);
+		String pdb = s.toPDB();
+		
+		
+		assertTrue("the created PDB file does not match the input file", pdb.equals(atomLines));
+		
 	}
 }
