@@ -89,36 +89,33 @@ public class AtomImpl implements Atom,Serializable, PDBRecord {
 		this.id = id;
 	}
 
-    /** trimmed version of atom name, e.g. "CA"
-     * @see #getName
+    /** 
+     * {@inheritDoc}
      */
     public void   setName(String s) { name = s ;}
 
     /**
-     * Gets this object's name.
-     * @return a String representing the name value
-     * @see #setName
+     * {@inheritDoc}
      */
     public String getName()         { return name ;}
 
-    /** set PDB atom number.
-     * @see #getPDBserial
+    /** 
+     * {@inheritDoc}
      */
     public void setPDBserial(int i) { pdbserial = i    ; }
 
-    /** get PDB atom number.
-     * @see #setPDBserial
+    /** 
+     * {@inheritDoc}
      */
     public int  getPDBserial()      { return pdbserial ; }
 
-    /** the coordinates.
-     * @see #getCoords
+    /** 
+     * {@inheritDoc}
      */
     public void     setCoords( double[] c ) { coords = c   ; }
 
-    /** get the coordinates as a double[3] array .
-     * @return an array of doubles representing the coords value
-     * @see #setCoords
+    /** 
+     * {@inheritDoc}
      */
     public double[] getCoords()            { return coords ; }
 
@@ -132,20 +129,19 @@ public class AtomImpl implements Atom,Serializable, PDBRecord {
         coords[2] = z ;
     }
 
-    /** Get the X coordinate.
-     * @see #setX(double)
-     * */
+    /** 
+     * {@inheritDoc} 
+     */
     public double getX() { return coords[0]; }
 
-    /** Get the Y coordinate.
-     * @see #setY(double)
-     * */
+    /** 
+     * {@inheritDoc}
+     */
     public double getY() { return coords[1]; }
 
-    /** Get the Z coordinate.
-     * @see #setZ(double)
-     *
-     * */
+    /** 
+     * {@inheritDoc}
+     */
     public double getZ() { return coords[2]; }
 
     /** set alternate Location.

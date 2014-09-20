@@ -50,6 +50,8 @@ public interface Atom extends Cloneable, PDBRecord {
     
     /** 
      * Get atom name, e.g. "CA".
+     * Beware that some PDB atom names are ambiguous (e.g. CA, which means C-alpha or Calcium),
+     * the ambiguity can simply be resolved by also checking the element with {@link #getElement()}
      * @return a trimmed String representing the name value 
      * @see #setName
      */
