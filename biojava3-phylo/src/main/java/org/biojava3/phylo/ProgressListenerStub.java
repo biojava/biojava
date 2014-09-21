@@ -5,20 +5,25 @@
 
 package org.biojava3.phylo;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 /**
  *
  * @author willishf
  */
-public class ProgessListenerStub implements NJTreeProgressListener {
-String priorState = "";
+public class ProgressListenerStub implements NJTreeProgressListener {
+	
+	private static final Logger logger = LoggerFactory.getLogger(ProgressListenerStub.class);
+
+	String priorState = "";
     public void progress(Object njtree,String state, int percentageComplete) {
         if(!priorState.equals(state)){
             priorState = state;
-            System.out.println();
         }
 
-        System.out.println("\n" + state + ":" + percentageComplete);
+        logger.info("{}:{}", state, percentageComplete);
     }
 
 
@@ -26,10 +31,9 @@ String priorState = "";
     public void progress(Object njtree,String state, int currentCount, int totalCount) {
         if (!priorState.equals(state)){
             priorState = state;
-            System.out.println();
         }
 
-        System.out.println("\n" + state + ":" + currentCount + "/" + totalCount);
+        logger.info("{}:{}/", state, currentCount, totalCount);
     }
 
     public void complete(Object njtree) {
