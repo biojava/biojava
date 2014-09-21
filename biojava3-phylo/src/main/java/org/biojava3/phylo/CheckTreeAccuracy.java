@@ -8,16 +8,21 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
 import org.forester.phylogeny.Phylogeny;
 import org.forester.phylogeny.PhylogenyNode;
 import org.forester.evoinference.matrix.distance.BasicSymmetricalDistanceMatrix;
 import org.forester.evoinference.matrix.distance.DistanceMatrix;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author Scooter
  */
 public class CheckTreeAccuracy {
+
+	private static final Logger logger = LoggerFactory.getLogger(CheckTreeAccuracy.class);
 
     public static DistanceMatrix copyMatrix(DistanceMatrix matrix) {
 
@@ -65,18 +70,17 @@ public class CheckTreeAccuracy {
 
                     averageTreeDistance = averageTreeDistance + treeDistance;
                     averageTreeErrorDistance = averageTreeErrorDistance + Math.abs(distance - treeDistance);
-                    System.out.println(nodeName1 + " " + nodeName2 + " Distance: " + distance + " Tree:" + treeDistance + " difference:" + Math.abs(distance - treeDistance));
+                    logger.info("{} {} Distance: {}Tree: {} difference: {}", nodeName1, nodeName2, distance, treeDistance, Math.abs(distance - treeDistance));
                 } else {
-                    System.out.println("Unable to find common parent with " + node1 + " " + node2);
+                    logger.warn("Unable to find common parent with {} {}", node1, node2);
                 }
             }
             path.clear();
         }
 
-        System.out.println("Average matrix distance:" + averageMatrixDistance / count);
-        System.out.println("Average tree distance:" + averageTreeDistance / count);
-        System.out.println("Average error:" + averageTreeErrorDistance / count);
-
+        logger.info("Average matrix distance: {}", averageMatrixDistance / count);
+        logger.info("Average tree distance: {}", averageTreeDistance / count);
+        logger.info("Average error: {}", averageTreeErrorDistance / count);
     }
 
     public double getNodeDistance(PhylogenyNode parentNode, PhylogenyNode childNode) {

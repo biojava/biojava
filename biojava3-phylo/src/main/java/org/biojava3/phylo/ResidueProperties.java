@@ -32,7 +32,12 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Vector;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class ResidueProperties {
+
+	private static final Logger logger = LoggerFactory.getLogger(ResidueProperties.class);
 
     public static Hashtable<String, ScoreMatrix> scoreMatrices = new Hashtable<String, ScoreMatrix>();
 
@@ -1044,7 +1049,7 @@ public class ResidueProperties {
 
             pog = ResidueProperties.BLOSUM62[a][b];
         } catch (Exception e) {
-            // System.out.println("Unknown residue in " + A1 + " " + A2);
+            logger.error("Exception: ", e);
         }
 
         return pog;
@@ -1145,7 +1150,7 @@ public class ResidueProperties {
     // / cut here
     public static void main(String[] args) {
         Hashtable<String, Vector<String>> aa = new Hashtable<String, Vector<String>>();
-        System.out.println("my %aa = {");
+        logger.info("my %aa = {");
         // invert property hashes
         Enumeration<String> prop = propHash.keys();
         while (prop.hasMoreElements()) {
@@ -1169,17 +1174,14 @@ public class ResidueProperties {
         while (res.hasMoreElements()) {
             String rname = res.nextElement();
 
-            System.out.print("'" + rname + "' => [");
+            logger.info("'{}' => [", rname);
             Enumeration<String> props = aa.get(rname).elements();
             while (props.hasMoreElements()) {
-                System.out.print("'" + (String) props.nextElement() + "'");
-                if (props.hasMoreElements()) {
-                    System.out.println(", ");
-                }
+                logger.info("'{}'", props.nextElement().toString());
             }
-            System.out.println("]" + (res.hasMoreElements() ? "," : ""));
+            logger.info("]{}", (res.hasMoreElements() ? "," : ""));
         }
-        System.out.println("};");
+        logger.info("};");
     }
     // to here
 }
