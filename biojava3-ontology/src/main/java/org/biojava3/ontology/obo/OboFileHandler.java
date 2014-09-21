@@ -31,9 +31,8 @@ import org.biojava3.ontology.Ontology;
 import org.biojava3.ontology.Synonym;
 import org.biojava3.ontology.Term;
 import org.biojava3.ontology.utils.Annotation;
-
-
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /** A  file handler for .obo files
  * 
@@ -41,6 +40,8 @@ import org.biojava3.ontology.utils.Annotation;
  *
  */
 public class OboFileHandler implements OboFileEventListener {
+
+	private static final Logger logger = LoggerFactory.getLogger(OboFileEventListener.class);
 
 	Ontology ontology;
 	List<Term> termStack ;
@@ -94,7 +95,7 @@ public class OboFileHandler implements OboFileEventListener {
 	}
 
 	public void newStanza(String stanza) {
-		//System.out.println("got a new stanza: " + stanza);
+		//logger.info("got a new stanza: {}", stanza);
 		if ( stanza.equals(TERM)){
 			isTerm = true;
 			currentTerm = null;
@@ -118,14 +119,14 @@ public class OboFileHandler implements OboFileEventListener {
 							currentTerm = ontology.createTerm(value);
 						}
 					} catch (AlreadyExistsException ex) {
-						ex.printStackTrace();
+						logger.error("Exception: ", ex);
 					}
 					
 				}
 				return;
 			} 
 			if (currentTerm == null) {
-				System.err.println("did not find ID for Term! ");
+				logger.warn("did not find ID for Term! ");
 				return;
 			}
 			else if (key.equals(NAME)){
@@ -141,7 +142,7 @@ public class OboFileHandler implements OboFileEventListener {
 				anno.setProperty(XREF_ANALOG, value);
 			} else if (key.equals(IS_OBSOLETE)) {
 				// ignore obsolete Terms...
-				//System.out.println("obsolete: " + currentTerm);
+				//logger.info("obsolete: {}", currentTerm);
 				Annotation anno = currentTerm.getAnnotation();				
 				anno.setProperty(IS_OBSOLETE, new Boolean(true));
 				
@@ -167,12 +168,12 @@ public class OboFileHandler implements OboFileEventListener {
 			} 
 			
 			else {
-				//System.out.println("unknown key " + key);
+				//logger.info("unknown key {}", key);
 			}
 			
 											
 		} else {
-			//System.out.println("not a term and ignoring: " + key + " " + value);
+			//logger.info("not a term and ignoring: {}->{}", key, value);
 		}
 
 	}

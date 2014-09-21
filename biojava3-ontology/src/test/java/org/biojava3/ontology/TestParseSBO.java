@@ -31,8 +31,12 @@ import java.util.Set;
 import junit.framework.TestCase;
 
 import org.biojava3.ontology.io.OboParser;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class TestParseSBO extends TestCase {
+
+	private static final Logger logger = LoggerFactory.getLogger(TestParseSBO.class);
 
 	public void testSBO(){
 		OboParser parser = new OboParser();
@@ -54,7 +58,7 @@ public class TestParseSBO extends TestCase {
 			assertTrue(keys.size() >1200);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error("Exception: ", e);
 			fail(e.getMessage());
 		}
 	}
