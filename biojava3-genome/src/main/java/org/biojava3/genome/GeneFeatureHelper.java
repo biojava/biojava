@@ -21,7 +21,6 @@ import org.biojava3.core.sequence.ProteinSequence;
 import org.biojava3.core.sequence.Strand;
 import org.biojava3.core.sequence.TranscriptSequence;
 import org.biojava3.core.sequence.io.FastaReaderHelper;
-//import org.biojava3.core.sequence.io.FastaWriterHelper;
 import org.biojava3.genome.parsers.gff.Feature;
 import org.biojava3.genome.parsers.gff.FeatureHelper;
 import org.biojava3.genome.parsers.gff.FeatureI;
@@ -39,7 +38,7 @@ import org.slf4j.LoggerFactory;
  */
 public class GeneFeatureHelper {
 
-	private static final Logger logger = LoggerFactory.getLogger(App.class);
+	private static final Logger logger = LoggerFactory.getLogger(GeneFeatureHelper.class);
 
     static public LinkedHashMap<String, ChromosomeSequence> loadFastaAddGeneFeaturesFromUpperCaseExonFastaFile(File fastaSequenceFile, File uppercaseFastaFile, boolean throwExceptionGeneNotFound) throws Exception {
         LinkedHashMap<String, ChromosomeSequence> chromosomeSequenceList = new LinkedHashMap<String, ChromosomeSequence>();
