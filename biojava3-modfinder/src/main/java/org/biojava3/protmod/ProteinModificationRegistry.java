@@ -34,6 +34,8 @@ import java.util.Map;
 import java.util.Set;
 
 import org.biojava3.protmod.io.ProteinModificationXmlReader;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This class serves as a instance registry by maintaining 
@@ -46,6 +48,9 @@ import org.biojava3.protmod.io.ProteinModificationXmlReader;
  * @since 3.0
  */
 public class ProteinModificationRegistry {
+	
+	private static final Logger logger = LoggerFactory.getLogger(ProteinModificationRegistry.class);
+
 	private static Set<ProteinModification> registry = null;
 	private static Map<String, ProteinModification> byId = null;
 	private static Map<String, Set<ProteinModification>> byResidId = null;
@@ -68,7 +73,7 @@ public class ProteinModificationRegistry {
 			
 			ProteinModificationXmlReader.registerProteinModificationFromXml(inStream);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Exception: ", e);
 		}
 	}
 	

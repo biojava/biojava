@@ -33,8 +33,6 @@ import org.biojava.bio.structure.Calc;
 import org.biojava.bio.structure.Chain;
 import org.biojava.bio.structure.Group;
 import org.biojava.bio.structure.ResidueNumber;
-import org.biojava.bio.structure.StructureException;
-
 
 public final class StructureUtil {
 	private StructureUtil() {

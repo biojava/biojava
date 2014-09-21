@@ -44,13 +44,14 @@ import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureException;
 import org.biojava.bio.structure.StructureTools;
 
-
 import org.biojava3.protmod.Component;
 import org.biojava3.protmod.ModificationCategory;
 import org.biojava3.protmod.ModificationCondition;
 import org.biojava3.protmod.ModificationLinkage;
 import org.biojava3.protmod.ProteinModification;
 import org.biojava3.protmod.ProteinModificationRegistry;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Identify attachment modification in a 3-D structure.
@@ -60,6 +61,7 @@ import org.biojava3.protmod.ProteinModificationRegistry;
  */
 public class ProteinModificationIdentifier {
 	
+	private static final Logger logger = LoggerFactory.getLogger(ProteinModificationIdentifier.class);
 
 	private double bondLengthTolerance ;
 	private boolean recordUnidentifiableModifiedCompounds ;
@@ -312,7 +314,7 @@ public class ProteinModificationIdentifier {
 				if ( struc != null)
 					pdbId = struc.getPDBCode(); 
 			}
-			System.err.println("WARNING: no amino acids found for "+ pdbId + ". Either you did not parse the PDB file with alignSEQRES records, or this record does not contain any amino acids.");
+			logger.warn("No amino acids found for {}. Either you did not parse the PDB file with alignSEQRES records, or this record does not contain any amino acids.", pdbId);
 		}
 		List<ModifiedCompound> modComps = new ArrayList<ModifiedCompound>();
 		
@@ -428,7 +430,7 @@ public class ProteinModificationIdentifier {
 				//group = chain.getGroupByPDB(numIns);
 				group = mapChainIdChain.get(num.getChainId()).getGroupByPDB(resNum);
 			} catch (StructureException e) {
-				e.printStackTrace();
+				logger.error("Exception: ", e);
 				// should not happen
 				continue;
 			}
