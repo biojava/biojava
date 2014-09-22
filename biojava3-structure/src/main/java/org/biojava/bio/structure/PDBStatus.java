@@ -4,6 +4,7 @@
 package org.biojava.bio.structure;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
@@ -19,10 +20,13 @@ import java.util.Map;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
 import org.biojava.bio.structure.align.util.HTTPConnectionTools;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -67,6 +71,9 @@ import org.xml.sax.helpers.DefaultHandler;
  * @since 3.0.2
  */
 public class PDBStatus {
+	
+	private static final Logger logger = LoggerFactory.getLogger(PDBStatus.class);
+	
 	public static final String DEFAULT_PDB_SERVER = "www.rcsb.org";
 	public static final String PDB_SERVER_PROPERTY = "PDB.SERVER";
 
@@ -170,7 +177,7 @@ public class PDBStatus {
 		List<Map<String,String>> attrList = getStatusIdRecords(pdbIds);
 		//Expect a single record
 		if(attrList == null || attrList.size() != pdbIds.length) {
-			System.err.println("Error getting Status for "+pdbIds+" from the PDB website.");
+			logger.error("Error getting Status for "+pdbIds+" from the PDB website.");
 			return null;
 		}
 
@@ -190,13 +197,13 @@ public class PDBStatus {
 				//Check that the status is given
 				String statusStr = attrs.get("status");
 				if(statusStr == null ) {
-					System.err.println("Error: No status returned for "+pdbIds[pdbNum]);
+					logger.error("No status returned for "+pdbIds[pdbNum]);
 					statuses[pdbNum] = null;
 				}
 
 				Status status = Status.fromString(statusStr);
 				if(status == null) {
-					System.err.println("Error: Unknown status '"+statusStr+"'");
+					logger.error("Unknown status '"+statusStr+"'");
 					statuses[pdbNum] = null;
 				}
 
@@ -204,7 +211,7 @@ public class PDBStatus {
 				foundAttr = true;
 			}
 			if(!foundAttr) {
-				System.err.println("Error: No result found for "+pdbIds[pdbNum]);
+				logger.error("No result found for "+pdbIds[pdbNum]);
 				statuses[pdbNum] = null;
 			}
 		}
@@ -250,7 +257,7 @@ public class PDBStatus {
 		List<Map<String,String>> attrList = getStatusIdRecords(new String[] {oldPdbId});
 		//Expect a single record
 		if(attrList == null || attrList.size() != 1) {
-			System.err.println("Error getting Status for "+oldPdbId+" from the PDB website.");
+			logger.error("Error getting Status for "+oldPdbId+" from the PDB website.");
 			return null;
 		}
 
@@ -259,20 +266,20 @@ public class PDBStatus {
 		//Check that the record matches pdbId
 		String id = attrs.get("structureId");
 		if(id == null || !id.equalsIgnoreCase(oldPdbId)) {
-			System.err.println("Error: Results returned from the query don't match "+oldPdbId);
+			logger.error("Results returned from the query don't match "+oldPdbId);
 			return null;
 		}
 
 		//Check that the status is given
 		String statusStr = attrs.get("status");
 		if(statusStr == null ) {
-			System.err.println("Error: No status returned for "+oldPdbId);
+			logger.error("No status returned for "+oldPdbId);
 			return null;
 		}
 
 		Status status = Status.fromString(statusStr);
 		if(status == null ) {
-			System.err.println("Error: Unknown status '"+statusStr+"'");
+			logger.error("Unknown status '"+statusStr+"'");
 			return null;
 		}
 
@@ -285,7 +292,7 @@ public class PDBStatus {
 		case OBSOLETE: {
 			String replacementStr = attrs.get("replacedBy");
 			if(replacementStr == null) {
-				System.err.format("Error: %s is OBSOLETE but lacks a replacedBy attribute.\n",oldPdbId);
+				logger.error(String.format("%s is OBSOLETE but lacks a replacedBy attribute.",oldPdbId));
 				return null;
 			}
 			replacementStr = replacementStr.toUpperCase();
@@ -449,7 +456,7 @@ public class PDBStatus {
 		if(attrList == null || attrList.size() != 1) {
 			//TODO Is it possible to have multiple record per ID?
 			// They seem to be combined into one record with space-delimited 'replaces'
-			System.err.println("Error getting Status for "+newPdbId+" from the PDB website.");
+			logger.error("Error getting Status for "+newPdbId+" from the PDB website.");
 			return null;
 		}
 
@@ -458,7 +465,7 @@ public class PDBStatus {
 		//Check that the record matches pdbId
 		String id = attrs.get("structureId");
 		if(id == null || !id.equals(newPdbId)) {
-			System.err.println("Error: Results returned from the query don't match "+newPdbId);
+			logger.error("Results returned from the query don't match "+newPdbId);
 			return null;
 		}
 
@@ -527,7 +534,7 @@ public class PDBStatus {
 		if ( serverName == null)
 			serverName = DEFAULT_PDB_SERVER;
 		else 
-			System.out.format("Got System property %s=%s\n",PDB_SERVER_PROPERTY,serverName);
+			logger.info(String.format("Got System property %s=%s",PDB_SERVER_PROPERTY,serverName));
 
 		// Build REST query URL
 		if(pdbIDs.length < 1) {
@@ -551,7 +558,7 @@ public class PDBStatus {
 		}
 
 		try {
-			System.out.println("Fetching " + urlStr);
+			logger.info("Fetching " + urlStr);
 
 			URL url = new URL(urlStr);
 
@@ -592,11 +599,18 @@ public class PDBStatus {
 			}
 
 			// return results
-			result.addAll(handler.getRecords());			
-		} catch (Exception e){
-			System.err.println("Problem getting status for " +Arrays.toString(pdbIDs) + " from PDB server." );
-			e.printStackTrace();
+			result.addAll(handler.getRecords());
+			
+		// TODO should throw these forward and let the caller log 
+		} catch (IOException e){
+			logger.error("Problem getting status for " +Arrays.toString(pdbIDs) + " from PDB server. Error: " +e.getMessage() );
 			return null;
+		} catch (SAXException e) {
+			logger.error("Problem getting status for " +Arrays.toString(pdbIDs) + " from PDB server. Error: " +e.getMessage() );
+			return null;			
+		} catch (ParserConfigurationException e) {
+			logger.error("Problem getting status for " +Arrays.toString(pdbIDs) + " from PDB server. Error: " +e.getMessage() );
+			return null;						
 		}
 
 		return result;
@@ -646,7 +660,7 @@ public class PDBStatus {
 		 */
 		@Override
 		public void error(SAXParseException e) throws SAXException {
-			System.err.println(e.getMessage());
+			logger.error(e.getMessage());
 			super.error(e);
 		}
 
@@ -669,7 +683,7 @@ public class PDBStatus {
 		if ( serverName == null)
 			serverName = DEFAULT_PDB_SERVER;
 		else 
-			System.out.format("Got System property %s=%s\n",PDB_SERVER_PROPERTY,serverName);
+			logger.info(String.format("Got System property %s=%s",PDB_SERVER_PROPERTY,serverName));
 
 		// Build REST query URL
 
@@ -692,7 +706,8 @@ public class PDBStatus {
 					}
 				}
 			}
-		} catch (Exception e){
+		// TODO should throw forward
+		} catch (IOException e){
 			e.printStackTrace();
 			return null;
 		}

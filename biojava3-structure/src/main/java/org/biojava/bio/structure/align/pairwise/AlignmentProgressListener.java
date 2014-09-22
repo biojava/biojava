@@ -27,12 +27,11 @@ import javax.swing.JFrame;
 
 import org.biojava.bio.structure.Atom;
 import org.biojava.bio.structure.Calc;
-import org.biojava.bio.structure.StructureException;
 import org.biojava.bio.structure.align.helper.JointFragments;
 import org.biojava.bio.structure.jama.Matrix;
 
 
-/** A class to listen to progress of the structure alignmnent calcualtions
+/** A class to listen to progress of the structure alignment calculations
  *
  * @author andreas
  *

@@ -45,7 +45,6 @@ public class AtomImpl implements Atom,Serializable, PDBRecord {
     */
    private static final long serialVersionUID = -2258364127420562883L;
    String name     ;
-    String fullName ;
     Element element;
     double[] coords ;
     String pdbline  ;
@@ -63,7 +62,6 @@ public class AtomImpl implements Atom,Serializable, PDBRecord {
     public AtomImpl () {
         name     = null        ;
         element = Element.R;
-        fullName = null        ;
         coords   = new double[3];
         pdbline  = ""          ;
         occupancy  = 0.0       ;
@@ -91,47 +89,33 @@ public class AtomImpl implements Atom,Serializable, PDBRecord {
 		this.id = id;
 	}
 
-    /** trimmed version of atom name, e.g. "CA"
-     * @see #getName
+    /** 
+     * {@inheritDoc}
      */
     public void   setName(String s) { name = s ;}
 
     /**
-     * Gets this object's name.
-     * @return a String representing the name value
-     * @see #setName
+     * {@inheritDoc}
      */
     public String getName()         { return name ;}
 
-    /** set full name of atom e.g. " CA " .
-     * @see #getFullName
-     */
-    public void   setFullName( String s ) { fullName =s ; }
-
-    /** get full name of atom e.g. " CA ".
-     * @return a String representing the full name value
-     * @see #setFullName
-     */
-    public String getFullName()           { return fullName; }
-
-    /** set PDB atom number.
-     * @see #getPDBserial
+    /** 
+     * {@inheritDoc}
      */
     public void setPDBserial(int i) { pdbserial = i    ; }
 
-    /** get PDB atom number.
-     * @see #setPDBserial
+    /** 
+     * {@inheritDoc}
      */
     public int  getPDBserial()      { return pdbserial ; }
 
-    /** the coordinates.
-     * @see #getCoords
+    /** 
+     * {@inheritDoc}
      */
     public void     setCoords( double[] c ) { coords = c   ; }
 
-    /** get the coordinates as a double[3] array .
-     * @return an array of doubles representing the coords value
-     * @see #setCoords
+    /** 
+     * {@inheritDoc}
      */
     public double[] getCoords()            { return coords ; }
 
@@ -145,20 +129,19 @@ public class AtomImpl implements Atom,Serializable, PDBRecord {
         coords[2] = z ;
     }
 
-    /** Get the X coordinate.
-     * @see #setX(double)
-     * */
+    /** 
+     * {@inheritDoc} 
+     */
     public double getX() { return coords[0]; }
 
-    /** Get the Y coordinate.
-     * @see #setY(double)
-     * */
+    /** 
+     * {@inheritDoc}
+     */
     public double getY() { return coords[1]; }
 
-    /** Get the Z coordinate.
-     * @see #setZ(double)
-     *
-     * */
+    /** 
+     * {@inheritDoc}
+     */
     public double getZ() { return coords[2]; }
 
     /** set alternate Location.
@@ -177,7 +160,7 @@ public class AtomImpl implements Atom,Serializable, PDBRecord {
 
     /** string representation. */
     public String toString() {
-        String str = fullName +" (" + name +") " + element + " " + pdbserial + " " + coords[0] + " " + coords[1] + " " + coords[2];
+        String str = name + " " + element + " " + pdbserial + " " + coords[0] + " " + coords[1] + " " + coords[2];
         return str ;
     }
 
@@ -200,33 +183,35 @@ public class AtomImpl implements Atom,Serializable, PDBRecord {
         n.setY(coords[1]);
         n.setZ(coords[2]);
         n.setPDBserial(getPDBserial());
-        n.setFullName(getFullName());
         n.setName(getName());
         n.setElement(getElement());
         return n ;
     }
 
-    public void setParent(Group parent) {
-
-       setGroup(parent);
-    }
-
-    public Group getParent() {
-        return getGroup();
-    }
-    
-    
+    /**
+     * {@inheritDoc}
+     */
     public void setGroup(Group parent){
     	this.parent = parent;
     }
     
+    /**
+     * {@inheritDoc}
+     */
     public Group getGroup(){
     	return parent;
     }
+    
+    /**
+     * {@inheritDoc}
+     */
 	public Element getElement() {
 		return element;
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	public void setElement(Element e) {
 		this.element = e;
 	
@@ -236,6 +221,7 @@ public class AtomImpl implements Atom,Serializable, PDBRecord {
 		
 		return FileConvert.toPDB(this);
 	}
+	
 	public void toPDB(StringBuffer buf) {
 		FileConvert.toPDB(this,buf);
 		

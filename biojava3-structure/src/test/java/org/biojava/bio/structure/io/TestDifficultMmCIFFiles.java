@@ -1,11 +1,17 @@
 package org.biojava.bio.structure.io;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
+import org.biojava.bio.structure.Chain;
+import org.biojava.bio.structure.Group;
+import org.biojava.bio.structure.ResidueNumber;
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureException;
 import org.biojava.bio.structure.align.util.AtomCache;
@@ -94,4 +100,19 @@ public class TestDifficultMmCIFFiles {
 		
 	}
 
+	@Test
+	public void testResidueNumbers() throws IOException, StructureException {
+		AtomCache cache = new AtomCache();
+		cache.setUseMmCif(true);
+
+		Structure s = cache.getStructure("2PTC");
+		Chain c = s.getChain(0);
+
+		assertEquals("Wrong first chain",c.getChainID(),"E");
+
+		Group res = c.getAtomGroup(0);
+		ResidueNumber resNum = res.getResidueNumber();
+
+		assertEquals("Groups have wrong chain in resnum",resNum.getChainId(),"E");
+	}
 }

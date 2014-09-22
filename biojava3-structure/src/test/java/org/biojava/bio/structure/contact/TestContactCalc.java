@@ -35,7 +35,7 @@ public class TestContactCalc {
 	@Test
 	public void testIntraChainContacts() throws StructureException, IOException { 
 				
-		String[][] cts = 		{null, {" CA "} , {"CB"}};
+		String[][] cts = 		{null, {StructureTools.CA_ATOM_NAME} , {StructureTools.CB_ATOM_NAME}};
 		double[] cutoffs = 	    { 5.0,   8.0 ,  8.0};
 		
 		int[] allCMsizes = new int[INTRACHAIN_TESTSET.length];
@@ -56,7 +56,12 @@ public class TestContactCalc {
 			for (int i=0;i<cts.length;i++) {
 				System.out.print((cts[i]==null?"ALL":cts[i][0])+"\t"+cutoffs[i]+"\t");
 				
-				AtomContactSet atomContacts = StructureTools.getAtomsInContact(chain, cts[i], cutoffs[i]);
+				AtomContactSet atomContacts = null;
+				if (cts[i]!=null && cts[i][0].equals("CA")) {
+					atomContacts = StructureTools.getAtomsCAInContact(chain, cutoffs[i]);
+				} else {
+					atomContacts = StructureTools.getAtomsInContact(chain, cts[i], cutoffs[i]);
+				}
 				GroupContactSet contacts = new GroupContactSet(atomContacts);				
 				
 				if (cts[i]==null) 
@@ -77,7 +82,7 @@ public class TestContactCalc {
 							contacts.size()<allCMsizes[idx]);
 				
 				// since the CB contact map will have no contacts for GLYs then the maps should be smaller than the CA
-				if (cts[i]!=null && cts[i][0].equals(" CA ")) 
+				if (cts[i]!=null && cts[i][0].equals("CA")) 
 					assertTrue("size for CA contact map ("+contacts.size()+") should be larger than for CB contact map ("+cbCMsizes[idx]+")",
 							contacts.size()>cbCMsizes[idx]);
 			}

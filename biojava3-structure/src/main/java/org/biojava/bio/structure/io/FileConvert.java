@@ -36,11 +36,14 @@ import org.biojava.bio.structure.Chain;
 import org.biojava.bio.structure.DBRef;
 import org.biojava.bio.structure.Element;
 import org.biojava.bio.structure.Group;
+import org.biojava.bio.structure.GroupType;
 import org.biojava.bio.structure.PDBHeader;
 import org.biojava.bio.structure.SSBond;
 import org.biojava.bio.structure.Site;
 import org.biojava.bio.structure.Structure;
 import org.biojava3.core.util.XMLWriter;
+//import org.slf4j.Logger;
+//import org.slf4j.LoggerFactory;
 
 
 /** Methods to convert a structure object into different file formats.
@@ -48,18 +51,21 @@ import org.biojava3.core.util.XMLWriter;
  * @since 1.4
  */
 public class FileConvert {
-	Structure structure ;
+	
+	//private static final Logger logger = LoggerFactory.getLogger(FileConvert.class);
+	
+	private Structure structure ;
 
-	boolean printConnections;
+	private boolean printConnections;
 
 	// Locale should be english, e.g. in DE separator is "," -> PDB files have "." !
-	static DecimalFormat d3 = (DecimalFormat)NumberFormat.getInstance(java.util.Locale.UK);
+	static DecimalFormat d3 = (DecimalFormat)NumberFormat.getInstance(Locale.US);
 	static {
 		d3.setMaximumIntegerDigits(4);
 		d3.setMinimumFractionDigits(3);
 		d3.setMaximumFractionDigits(3);
 	}
-	static DecimalFormat d2 = (DecimalFormat)NumberFormat.getInstance(java.util.Locale.UK);
+	static DecimalFormat d2 = (DecimalFormat)NumberFormat.getInstance(Locale.US);
 	static {
 		d2.setMaximumIntegerDigits(3);
 		d2.setMinimumFractionDigits(2);
@@ -84,7 +90,8 @@ public class FileConvert {
 	 */
 	private static String alignRight(String input, int length){
 
-
+		// TODO this can be done with String.format() using printf like strings, see http://en.wikipedia.org/wiki/Printf_format_string 
+		
 		int n = input.length();
 		if ( n >= length)
 			return input;
@@ -100,6 +107,9 @@ public class FileConvert {
 	}
 
 	private static String alignLeft(String input, int length){
+		
+		// TODO this can be done with String.format() using printf like strings, see http://en.wikipedia.org/wiki/Printf_format_string
+		
 		if (input.length() >= length) {
 			return input;
 		}
@@ -396,7 +406,7 @@ Angstroms.
 		String type = g.getType() ;
 
 		String record = "" ;
-		if ( type.equals("hetatm") ) {
+		if ( type.equals(GroupType.HETATM) ) {
 			record = "HETATM";
 		} else {
 			record = "ATOM  ";
@@ -411,9 +421,10 @@ Angstroms.
 
 
 		int    seri       = a.getPDBserial()        ;
-		String serial     = alignRight(""+seri,5)   ;
-		String fullname   = a.getFullName()         ;
+		String serial     = alignRight(""+seri,5)   ;		
+		String fullName   = formatAtomName(a);
 
+		
 		// System.out.println(" fullname: " + fullname + " : " + a.getAltLoc() + " : " + pdbcode);
 
 		Character  altLoc = a.getAltLoc()           ;
@@ -428,7 +439,7 @@ Angstroms.
 		String occupancy  = alignRight(""+d2.format(a.getOccupancy()),6) ;
 		String tempfactor = alignRight(""+d2.format(a.getTempFactor()),6);
 
-		//System.out.println("fullname,zise:" + fullname + " " + fullname.length());
+		//System.out.println("fullname,size:" + fullname + " " + fullname.length());
 
 		String leftResName = alignLeft(resName,3);
 
@@ -436,7 +447,7 @@ Angstroms.
 		s.append(record);
 		s.append(serial);
 		s.append(" ");
-		s.append(fullname);
+		s.append(fullName);
 		s.append(altLoc);
 		s.append(leftResName);
 		s.append(" ");
@@ -537,7 +548,7 @@ Angstroms.
 						Atom atom = (Atom)atoms.get(atomnr);
 						xw.openTag("atom");
 						xw.attribute("atomID",Integer.toString(atom.getPDBserial()));
-						xw.attribute("atomName",atom.getFullName());
+						xw.attribute("atomName",formatAtomName(atom));
 						xw.attribute("x",Double.toString(atom.getX()));
 						xw.attribute("y",Double.toString(atom.getY()));
 						xw.attribute("z",Double.toString(atom.getZ()));
@@ -624,5 +635,39 @@ Angstroms.
 		}
 	}
 
+	private static String formatAtomName(Atom a) {
+		
+		String fullName = null;
+		String name = a.getName();
+		Element element = a.getElement();
+		
+		// RULES FOR ATOM NAME PADDING: 4 columns in total: 13, 14, 15, 16
+		
+		// if length 4: nothing to do
+		if (name.length()==4) 
+			fullName = name;
+		
+		// if length 3: they stay at 14
+		else if (name.length()==3) 
+			fullName = " "+name;
+		
+		// for length 2 it depends: 
+		//    carbon, oxygens, nitrogens, phosphorous stay at column 14
+		//    elements with 2 letters (e.g. NA, FE) will go to column 13		 
+		else if (name.length()==2) {
+			if (element == Element.C || element == Element.N || element == Element.O || element == Element.P || element == Element.S) 
+				fullName = " "+name+" "; 
+			else 
+				fullName = name+"  ";
+		}
+		
+		// for length 1 (e.g. K but also C, O) they stay in column 14
+		else if (name.length()==1) 
+			fullName = " "+name+"  ";
 
+		//if (fullName.length()!=4) 
+		//	logger.warn("Atom name "+fullName+"to be written in PDB format does not have length 4. Formatting will be incorrect");
+
+		return fullName;
+	}
 }

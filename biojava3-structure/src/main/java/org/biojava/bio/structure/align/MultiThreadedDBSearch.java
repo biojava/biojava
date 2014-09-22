@@ -25,6 +25,7 @@ package org.biojava.bio.structure.align;
  */
 
 import java.io.File;
+import java.io.IOException;
 import java.util.SortedSet;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -189,33 +190,36 @@ public class MultiThreadedDBSearch {
 
 	public void run(){
 
-		checkLocalFiles();
-		
-		if ( interrupted.get())
-			return;
-		
-		String header = "# algorithm:" + algorithm.getAlgorithmName();
-		String legend = getLegend(algorithm.getAlgorithmName());
-		
-
-
-		File outFileF = new File(outFile);
-		if ( ! outFileF.isDirectory()){
-			System.err.println( outFileF.getAbsolutePath() + " is not a directory, can't create result files in there... ");
-			interrupt();
-			cleanup();
-		}
-
-		if ( name1 == null) 
-			name1 = "CUSTOM";
-
+		File outFileF = null;
 		SynchronizedOutFile out ;
 
-		resultList = new File(outFileF,"results_" + name1 + ".out");
-
-		System.out.println("writing results to " + resultList.getAbsolutePath());
-		
 		try {
+			checkLocalFiles();
+
+			if ( interrupted.get())
+				return;
+
+			String header = "# algorithm:" + algorithm.getAlgorithmName();
+			String legend = getLegend(algorithm.getAlgorithmName());
+
+
+
+			outFileF = new File(outFile);
+			if ( ! outFileF.isDirectory()){
+				System.err.println( outFileF.getAbsolutePath() + " is not a directory, can't create result files in there... ");
+				interrupt();
+				cleanup();
+			}
+
+			if ( name1 == null) 
+				name1 = "CUSTOM";
+
+
+			resultList = new File(outFileF,"results_" + name1 + ".out");
+
+			System.out.println("writing results to " + resultList.getAbsolutePath());
+
+
 
 			out = new SynchronizedOutFile(resultList);
 
@@ -251,7 +255,7 @@ public class MultiThreadedDBSearch {
 			}
 
 			out.flush();
-		} catch (Exception e){
+		} catch (IOException e){
 			System.err.println("Error while loading representative structure " + name1);
 			e.printStackTrace();
 			interrupt();
@@ -332,7 +336,8 @@ public class MultiThreadedDBSearch {
 	
 	
 
-	private void checkLocalFiles() {
+	private void checkLocalFiles() throws IOException {
+		
 		System.out.println("Checking local PDB installation in directory: " + cache.getPath());
 		
 		File f = new File(cache.getPath());
@@ -384,7 +389,7 @@ public class MultiThreadedDBSearch {
 	}
 
 
-	private void checkFile(String repre) {
+	private void checkFile(String repre) throws IOException {
 		
 		StructureName name = new StructureName(repre);
 		

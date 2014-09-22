@@ -4,7 +4,6 @@
  */
 package org.biojava3.core.sequence.io;
 
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.util.LinkedHashMap;
@@ -21,6 +20,8 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -28,86 +29,87 @@ import org.junit.Test;
  */
 public class GenbankCookbookTest {
 
-	public GenbankCookbookTest() {
-	}
+	private final static Logger logger = LoggerFactory.getLogger(GenbankCookbookTest.class);
 
-	@BeforeClass
-	public static void setUpClass() throws Exception {
-	}
+    public GenbankCookbookTest() {
+    }
 
-	@AfterClass
-	public static void tearDownClass() throws Exception {
-	}
+    @BeforeClass
+    public static void setUpClass() throws Exception {
+    }
 
-	@Before
-	public void setUp() {
-	}
+    @AfterClass
+    public static void tearDownClass() throws Exception {
+    }
 
-	@After
-	public void tearDown() {
-	}
+    @Before
+    public void setUp() {
+    }
 
-	/**
-	 * Test of process method, of class GenbankReader.
-	 */
-	@Test
-	public void testProcess() throws Exception {
-	/*
-	 * Method 1: With the GenbankProxySequenceReader
-	 */
-	//Try with the GenbankProxySequenceReader
-	GenbankProxySequenceReader<AminoAcidCompound> genbankProteinReader 
-	= new GenbankProxySequenceReader<AminoAcidCompound>("/tmp", "NP_000257", AminoAcidCompoundSet.getAminoAcidCompoundSet());
-	ProteinSequence proteinSequence = new ProteinSequence(genbankProteinReader);
-	genbankProteinReader.getHeaderParser().parseHeader(genbankProteinReader.getHeader(), proteinSequence);
-	System.out.println("Sequence" + "(" + proteinSequence.getAccession() + "," + proteinSequence.getLength() + ")=" + proteinSequence.getSequenceAsString().substring(0, 10) + "...");
+    @After
+    public void tearDown() {
+    }
+
+    /**
+     * Test of process method, of class GenbankReader.
+     */
+    @Test
+    public void testProcess() throws Throwable {
+        /*
+         * Method 1: With the GenbankProxySequenceReader
+         */
+        //Try with the GenbankProxySequenceReader
+        GenbankProxySequenceReader<AminoAcidCompound> genbankProteinReader
+                = new GenbankProxySequenceReader<AminoAcidCompound>(System.getProperty("java.io.tmpdir"), "NP_000257", AminoAcidCompoundSet.getAminoAcidCompoundSet());
+        ProteinSequence proteinSequence = new ProteinSequence(genbankProteinReader);
+        genbankProteinReader.getHeaderParser().parseHeader(genbankProteinReader.getHeader(), proteinSequence);
+        logger.info("Sequence({},{}) = {}...", proteinSequence.getAccession(), proteinSequence.getLength(), proteinSequence.getSequenceAsString().substring(0, 10));
 
 	GenbankProxySequenceReader<NucleotideCompound> genbankDNAReader 
-	= new GenbankProxySequenceReader<NucleotideCompound>("/tmp", "NM_001126", DNACompoundSet.getDNACompoundSet());
+	= new GenbankProxySequenceReader<NucleotideCompound>(System.getProperty("java.io.tmpdir"), "NM_001126", DNACompoundSet.getDNACompoundSet());
 	DNASequence dnaSequence = new DNASequence(genbankDNAReader);
 	genbankDNAReader.getHeaderParser().parseHeader(genbankDNAReader.getHeader(), dnaSequence);
-	System.out.println("Sequence" + "(" + dnaSequence.getAccession() + "," + dnaSequence.getLength() + ")=" + dnaSequence.getSequenceAsString().substring(0, 10) + "...");
-	/*
-	 * Method 2: With the GenbankReaderHelper
-	 */
-	//Try with the GenbankReaderHelper
-	File dnaFile = new File("src/test/resources/NM_000266.gb");		
-	File protFile = new File("src/test/resources/BondFeature.gb");
+	logger.info("Sequence({},{}) = {}...", dnaSequence.getAccession(), dnaSequence.getLength(), dnaSequence.getSequenceAsString().substring(0, 10));
+        /*
+         * Method 2: With the GenbankReaderHelper
+         */
+        //Try with the GenbankReaderHelper
+        File dnaFile = new File("src/test/resources/NM_000266.gb");
+        File protFile = new File("src/test/resources/BondFeature.gb");
 
-	LinkedHashMap<String, DNASequence> dnaSequences = GenbankReaderHelper.readGenbankDNASequence( dnaFile );
-	for (DNASequence sequence : dnaSequences.values()) {
-	    	System.out.println( sequence.getSequenceAsString() );
-	}
-	
-	LinkedHashMap<String, ProteinSequence> protSequences = GenbankReaderHelper.readGenbankProteinSequence(protFile);
-	for (ProteinSequence sequence : protSequences.values()) {
-			System.out.println( sequence.getSequenceAsString() );
-	}
-	/*
-	 * Method 3: With the GenbankReader Object 
-	 */		
-	//Try reading with the GanbankReader
-	FileInputStream is = new FileInputStream(dnaFile);
-	GenbankReader<DNASequence, NucleotideCompound> dnaReader = new GenbankReader<DNASequence, NucleotideCompound>(
-	        is, 
-	        new GenericGenbankHeaderParser<DNASequence,NucleotideCompound>(),
-	        new DNASequenceCreator(DNACompoundSet.getDNACompoundSet())
-	);
-	dnaSequences = dnaReader.process();
-	is.close();
-	System.out.println(dnaSequences);
+        LinkedHashMap<String, DNASequence> dnaSequences = GenbankReaderHelper.readGenbankDNASequence(dnaFile);
+        for (DNASequence sequence : dnaSequences.values()) {
+            logger.info("DNA Sequence: {}", sequence.getSequenceAsString());
+        }
 
-	is = new FileInputStream(protFile);
-	GenbankReader<ProteinSequence, AminoAcidCompound> protReader = new GenbankReader<ProteinSequence, AminoAcidCompound>(
-	        is,
-	        new GenericGenbankHeaderParser<ProteinSequence,AminoAcidCompound>(),
-	        new ProteinSequenceCreator(AminoAcidCompoundSet.getAminoAcidCompoundSet())
-	);
-	protSequences = protReader.process();
-	is.close();
-	System.out.println(protSequences);
-		
-		
-	}
-	
+        LinkedHashMap<String, ProteinSequence> protSequences = GenbankReaderHelper.readGenbankProteinSequence(protFile);
+        for (ProteinSequence sequence : protSequences.values()) {
+            logger.info("Protein Sequence: {}", sequence.getSequenceAsString());
+        }
+        /*
+         * Method 3: With the GenbankReader Object 
+         */
+        //Try reading with the GanbankReader
+        FileInputStream is = new FileInputStream(dnaFile);
+        GenbankReader<DNASequence, NucleotideCompound> dnaReader = new GenbankReader<DNASequence, NucleotideCompound>(
+                is,
+                new GenericGenbankHeaderParser<DNASequence, NucleotideCompound>(),
+                new DNASequenceCreator(DNACompoundSet.getDNACompoundSet())
+        );
+        dnaSequences = dnaReader.process();
+        is.close();
+        logger.info("DNA Sequence: {}", dnaSequences);
+
+        is = new FileInputStream(protFile);
+        GenbankReader<ProteinSequence, AminoAcidCompound> protReader = new GenbankReader<ProteinSequence, AminoAcidCompound>(
+                is,
+                new GenericGenbankHeaderParser<ProteinSequence, AminoAcidCompound>(),
+                new ProteinSequenceCreator(AminoAcidCompoundSet.getAminoAcidCompoundSet())
+        );
+        protSequences = protReader.process();
+        is.close();
+        logger.info("Protein Sequence: {}", protSequences);
+
+    }
+
 }

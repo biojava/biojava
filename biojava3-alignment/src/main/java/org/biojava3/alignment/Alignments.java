@@ -36,6 +36,8 @@ import org.biojava3.core.sequence.template.Compound;
 import org.biojava3.core.sequence.template.CompoundSet;
 import org.biojava3.core.sequence.template.Sequence;
 import org.biojava3.core.util.ConcurrencyTools;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Static utility to easily run alignment routines.  To exit cleanly after running any parallel method that mentions
@@ -45,6 +47,8 @@ import org.biojava3.core.util.ConcurrencyTools;
  * @author Mark Chapman
  */
 public class Alignments {
+
+	private final static Logger logger = LoggerFactory.getLogger(Alignments.class);
 
     /**
      * List of implemented sequence pair in a profile scoring routines.
@@ -288,9 +292,9 @@ public class Alignments {
             try {
                 list.add(f.get());
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                logger.error("Interrupted Exception: ", e);
             } catch (ExecutionException e) {
-                e.printStackTrace();
+                logger.error("Execution Exception: ", e);
             }
         }
         return list;
@@ -562,9 +566,9 @@ public class Alignments {
             try {
                 n.setProfile(n.getProfileFuture().get());
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                logger.error("Interrupted Exception: ", e);
             } catch (ExecutionException e) {
-                e.printStackTrace();
+                logger.error("Execution Exception: ", e);
             }
         }
 

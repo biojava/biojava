@@ -38,7 +38,7 @@ public class DemoContacts {
 		Chain chain = structure.getChainByPDB("A");
 		
 			
-		String[] atoms = {" CA "};
+		String[] atoms = {"CA"};
 		AtomContactSet contacts = StructureTools.getAtomsInContact(chain, atoms, 8.0);
 
 		System.out.println("Contacting residues (on CA atoms)");

@@ -1,9 +1,10 @@
 package org.biojava3.genome.parsers.gff;
 
-
 import java.util.Iterator;
-import java.util.logging.Logger;
 
+import org.biojava3.genome.App;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
 * Move a sliding window over a Location.
@@ -13,9 +14,9 @@ import java.util.logging.Logger;
 *
 * @author Hanno Hinsch
 */
-public class LocIterator implements Iterator<Location>
-{
-        private static final Logger log = Logger.getLogger(LocIterator.class.getName());
+public class LocIterator implements Iterator<Location> {
+	private static final Logger logger = LoggerFactory.getLogger(App.class);
+
 	Location mBounds;
 	int mPosition;			
 	int mWindowSize;			
@@ -231,111 +232,107 @@ public class LocIterator implements Iterator<Location>
         
        Location r= new Location( 10, 21 );
        
-       log.info( "10 to 21, 1 by 1" );
-       for( Location t: r.window( 1, 1 )) { log.info( t.toString() ); }
+       logger.info( "10 to 21, 1 by 1" );
+       for( Location t: r.window( 1, 1 )) { logger.info( t.toString() ); }
        
-       log.info( "10 to 21, 3 by 3" );
-       for( Location t: r.window( 3, 3 )) { log.info( t.toString() ); }
+       logger.info( "10 to 21, 3 by 3" );
+       for( Location t: r.window( 3, 3 )) { logger.info( t.toString() ); }
        
-       log.info( "10 to 21, 3 by 1" );
-       for( Location t: r.window( 3, 1 )) { log.info( t.toString() ); }
+       logger.info( "10 to 21, 3 by 1" );
+       for( Location t: r.window( 3, 1 )) { logger.info( t.toString() ); }
      
-       log.info( "10 to 21, 11 by 1" );
-       for( Location t: r.window( 11, 1 )) { log.info( t.toString() ); }
+       logger.info( "10 to 21, 11 by 1" );
+       for( Location t: r.window( 11, 1 )) { logger.info( t.toString() ); }
        
-       log.info( "10 to 21, 12 by 1" );
-       for( Location t: r.window( 12, 1 )) { log.info( t.toString() ); }
+       logger.info( "10 to 21, 12 by 1" );
+       for( Location t: r.window( 12, 1 )) { logger.info( t.toString() ); }
        
-       log.info( "10 to 21, 1 by -1" );
-       for( Location t: r.window( 1, -1 )) { log.info( t.toString() ); }
+       logger.info( "10 to 21, 1 by -1" );
+       for( Location t: r.window( 1, -1 )) { logger.info( t.toString() ); }
        
-       log.info( "10 to 21, 3 by -3" );
-       for( Location t: r.window( 3, -3 )) { log.info( t.toString() ); }
+       logger.info( "10 to 21, 3 by -3" );
+       for( Location t: r.window( 3, -3 )) { logger.info( t.toString() ); }
        
-       log.info( "10 to 21, 3 by -1" );
-       for( Location t: r.window( 3, -1 )) { log.info( t.toString() ); }
+       logger.info( "10 to 21, 3 by -1" );
+       for( Location t: r.window( 3, -1 )) { logger.info( t.toString() ); }
        
-       log.info( "10 to 21, 1 by 1" );
-       for( Location t: r.window( 1, 1 )) { log.info( t.toString() ); }
+       logger.info( "10 to 21, 1 by 1" );
+       for( Location t: r.window( 1, 1 )) { logger.info( t.toString() ); }
        
-       log.info( "10 to 21, 3 by 3" );
-       for( Location t: r.window( 3, 3 )) { log.info( t.toString() ); }
+       logger.info( "10 to 21, 3 by 3" );
+       for( Location t: r.window( 3, 3 )) { logger.info( t.toString() ); }
        
-       log.info( "10 to 21, 3 by 1" );
-       for( Location t: r.window( 3, 1 )) { log.info( t.toString() ); }
+       logger.info( "10 to 21, 3 by 1" );
+       for( Location t: r.window( 3, 1 )) { logger.info( t.toString() ); }
      
-       log.info( "10 to 21, 11 by 1" );
-       for( Location t: r.window( 11, 1 )) { log.info( t.toString() ); }
+       logger.info( "10 to 21, 11 by 1" );
+       for( Location t: r.window( 11, 1 )) { logger.info( t.toString() ); }
        
-       log.info( "10 to 21, 12 by 1" );
-       for( Location t: r.window( 12, 1 )) { log.info( t.toString() ); }
+       logger.info( "10 to 21, 12 by 1" );
+       for( Location t: r.window( 12, 1 )) { logger.info( t.toString() ); }
        
-       log.info( "10 to 21, 1 by -1" );
-       for( Location t: r.window( 1, -1 )) { log.info( t.toString() ); }
+       logger.info( "10 to 21, 1 by -1" );
+       for( Location t: r.window( 1, -1 )) { logger.info( t.toString() ); }
        
        //reverse strand
        r= r.opposite();
-       log.info( "reverse strand" );
+       logger.info( "reverse strand" );
        
-       log.info( "10 to 21, 1 by 1" );
-       for( Location t: r.window( 1, 1 )) { log.info( t.toString() ); }
+       logger.info( "10 to 21, 1 by 1" );
+       for( Location t: r.window( 1, 1 )) { logger.info( t.toString() ); }
        
-       log.info( "10 to 21, 3 by 3" );
-       for( Location t: r.window( 3, 3 )) { log.info( t.toString() ); }
+       logger.info( "10 to 21, 3 by 3" );
+       for( Location t: r.window( 3, 3 )) { logger.info( t.toString() ); }
        
-       log.info( "10 to 21, 3 by 1" );
-       for( Location t: r.window( 3, 1 )) { log.info( t.toString() ); }
+       logger.info( "10 to 21, 3 by 1" );
+       for( Location t: r.window( 3, 1 )) { logger.info( t.toString() ); }
      
-       log.info( "10 to 21, 11 by 1" );
-       for( Location t: r.window( 11, 1 )) { log.info( t.toString() ); }
+       logger.info( "10 to 21, 11 by 1" );
+       for( Location t: r.window( 11, 1 )) { logger.info( t.toString() ); }
        
-       log.info( "10 to 21, 12 by 1" );
-       for( Location t: r.window( 12, 1 )) { log.info( t.toString() ); }
+       logger.info( "10 to 21, 12 by 1" );
+       for( Location t: r.window( 12, 1 )) { logger.info( t.toString() ); }
        
-       log.info( "10 to 21, 1 by -1" );
-       for( Location t: r.window( 1, -1 )) { log.info( t.toString() ); }
+       logger.info( "10 to 21, 1 by -1" );
+       for( Location t: r.window( 1, -1 )) { logger.info( t.toString() ); }
        
-       log.info( "10 to 21, 3 by -3" );
-       for( Location t: r.window( 3, -3 )) { log.info( t.toString() ); }
+       logger.info( "10 to 21, 3 by -3" );
+       for( Location t: r.window( 3, -3 )) { logger.info( t.toString() ); }
        
-       log.info( "10 to 21, 3 by -1" );
-       for( Location t: r.window( 3, -1 )) { log.info( t.toString() ); }
+       logger.info( "10 to 21, 3 by -1" );
+       for( Location t: r.window( 3, -1 )) { logger.info( t.toString() ); }
        
-       log.info( "10 to 21, 1 by 1" );
-       for( Location t: r.window( 1, 1 )) { log.info( t.toString() ); }
+       logger.info( "10 to 21, 1 by 1" );
+       for( Location t: r.window( 1, 1 )) { logger.info( t.toString() ); }
        
-       log.info( "10 to 21, 3 by 3" );
-       for( Location t: r.window( 3, 3 )) { log.info( t.toString() ); }
+       logger.info( "10 to 21, 3 by 3" );
+       for( Location t: r.window( 3, 3 )) { logger.info( t.toString() ); }
        
-       log.info( "10 to 21, 3 by 1" );
-       for( Location t: r.window( 3, 1 )) { log.info( t.toString() ); }
+       logger.info( "10 to 21, 3 by 1" );
+       for( Location t: r.window( 3, 1 )) { logger.info( t.toString() ); }
      
-       log.info( "10 to 21, 11 by 1" );
-       for( Location t: r.window( 11, 1 )) { log.info( t.toString() ); }
+       logger.info( "10 to 21, 11 by 1" );
+       for( Location t: r.window( 11, 1 )) { logger.info( t.toString() ); }
        
-       log.info( "10 to 21, 12 by 1" );
-       for( Location t: r.window( 12, 1 )) { log.info( t.toString() ); }
+       logger.info( "10 to 21, 12 by 1" );
+       for( Location t: r.window( 12, 1 )) { logger.info( t.toString() ); }
        
-       log.info( "10 to 21, 1 by -1" );
-       for( Location t: r.window( 1, -1 )) { log.info( t.toString() ); }
+       logger.info( "10 to 21, 1 by -1" );
+       for( Location t: r.window( 1, -1 )) { logger.info( t.toString() ); }
        
-       
-       log.info("");
-       log.info( "10 to 21, 1 by 1 (+2)" );
+       logger.info( "10 to 21, 1 by 1 (+2)" );
        LocIterator i= r.iterator();
        int chunk= 1;
        while( i.hasNext( 1, chunk ) )
        {
         Location t= i.next( 1, chunk );
-        log.info( t.toString() );
+        logger.info( t.toString() );
         chunk+= 2;
        }
        
        //FIXME test remainder()
        
-       log.info( "JavaGene.LocIterator Passed." );
- 
+       logger.info("JavaGene.LocIterator Passed.");
     }
 
-	
 }

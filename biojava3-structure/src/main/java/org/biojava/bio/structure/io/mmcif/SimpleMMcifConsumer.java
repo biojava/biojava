@@ -30,7 +30,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
-import java.util.logging.Logger;
+
+import javax.vecmath.Matrix4d;
 
 import org.biojava.bio.structure.AminoAcid;
 import org.biojava.bio.structure.AminoAcidImpl;
@@ -82,6 +83,7 @@ import org.biojava.bio.structure.io.mmcif.model.Struct;
 import org.biojava.bio.structure.io.mmcif.model.StructAsym;
 import org.biojava.bio.structure.io.mmcif.model.StructConn;
 import org.biojava.bio.structure.io.mmcif.model.StructKeywords;
+import org.biojava.bio.structure.io.mmcif.model.StructNcsOper;
 import org.biojava.bio.structure.io.mmcif.model.StructRef;
 import org.biojava.bio.structure.io.mmcif.model.StructRefSeq;
 import org.biojava.bio.structure.io.mmcif.model.Symmetry;
@@ -90,6 +92,8 @@ import org.biojava.bio.structure.quaternary.BiologicalAssemblyTransformation;
 import org.biojava.bio.structure.xtal.CrystalCell;
 import org.biojava.bio.structure.xtal.SpaceGroup;
 import org.biojava.bio.structure.xtal.SymoplibParser;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /** A MMcifConsumer implementation that build a in-memory representation of the
  * content of a mmcif file as a BioJava Structure object.
@@ -99,35 +103,35 @@ import org.biojava.bio.structure.xtal.SymoplibParser;
 
 public class SimpleMMcifConsumer implements MMcifConsumer {
 
-	boolean DEBUG = false;
+	private static final Logger logger = LoggerFactory.getLogger(SimpleMMcifConsumer.class);
 
-	Structure structure;
-	Chain current_chain;
-	Group current_group;
-	int atomCount;
+	
+	private Structure structure;
+	private Chain current_chain;
+	private Group current_group;
+	//private int atomCount; //not used, commenting out
 
 
-	List<Chain>      current_model;
-	List<Entity>     entities;
-	List<StructRef>  strucRefs;
-	List<Chain>      seqResChains;
-	List<Chain>      entityChains; // needed to link entities, chains and compounds...
-	List<StructAsym> structAsyms;  // needed to link entities, chains and compounds...
-	List<PdbxStructOperList> structOpers ; //
-	List<PdbxStructAssembly> strucAssemblies;
-	List<PdbxStructAssemblyGen> strucAssemblyGens;
-	List<EntitySrcGen> entitySrcGens;
-	List<EntitySrcNat> entitySrcNats;
-	List<EntitySrcSyn> entitySrcSyns;
-	List<StructConn> structConn;
+	private List<Chain>      current_model;
+	private List<Entity>     entities;
+	private List<StructRef>  strucRefs;
+	private List<Chain>      seqResChains;
+	private List<Chain>      entityChains; // needed to link entities, chains and compounds...
+	private List<StructAsym> structAsyms;  // needed to link entities, chains and compounds...
+	private List<PdbxStructOperList> structOpers ; //
+	private List<PdbxStructAssembly> strucAssemblies;
+	private List<PdbxStructAssemblyGen> strucAssemblyGens;
+	private List<EntitySrcGen> entitySrcGens;
+	private List<EntitySrcNat> entitySrcNats;
+	private List<EntitySrcSyn> entitySrcSyns;
+	private List<StructConn> structConn;
+	private List<StructNcsOper> structNcsOper;
 
-	Map<String,String> asymStrandId;
+	private Map<String,String> asymStrandId;
 
-	String current_nmr_model ;
+	private String current_nmr_model ;
 
-	FileParsingParameters params;
-
-	public static Logger logger =  Logger.getLogger("org.biojava.bio.structure");
+	private FileParsingParameters params;
 
 	public  SimpleMMcifConsumer(){
 		params = new FileParsingParameters();
@@ -136,8 +140,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 	}
 
 	public void newEntity(Entity entity) {
-		if (DEBUG)
-			System.out.println(entity);
+		logger.debug(entity.toString());
 		entities.add(entity);
 	}
 
@@ -231,13 +234,20 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 			}
 		}
 		else {
-			HetatomImpl h = new HetatomImpl();
-			h.setId(seq_id);
-			group = h;
+			if (aminoCode1 != null ) {
+				AminoAcidImpl aa = new AminoAcidImpl() ;
+				aa.setAminoType(aminoCode1);
+				aa.setId(seq_id);
+				group = aa ;
+			} else {
+				HetatomImpl h = new HetatomImpl();
+				h.setId(seq_id);
+				group = h;
+			}
 		}		
-		//System.out.println("new group type: "+ group.getType() );
 		return  group ;
 	}
+	
 	/** test if the chain is already known (is in current_model
 	 * ArrayList) and if yes, returns the chain
 	 * if no -> returns null
@@ -254,70 +264,6 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		}
 
 		return null;
-	}
-
-
-	/** during mmcif parsing the full atom name string gets truncated, fix this...
-	 *
-	 * @param name
-	 * @return
-	 */
-	private String fixFullAtomName(String name, String element, Group currentGroup){
-
-		if (name.equals("N")){
-			return " N  ";
-		}
-		
-		// for amino acids this will be a C alpha
-		if (currentGroup.getType().equals(GroupType.AMINOACID) && name.equals("CA")){
-			return " CA ";
-		}
-		// for ligands this will be calcium
-		if (currentGroup.getType().equals(GroupType.HETATM) && name.equals("CA")){
-			if( element.equals("C") )
-				// C-alpha (eg for modified AAs)
-				return " CA ";
-			else
-				// Default to left-justified, like calcium
-				return "CA  ";
-		}
-		if (name.equals("C")){
-			return " C  ";
-		}
-		if (name.equals("O")){
-			return " O  ";
-		}
-		if (name.equals("CB")){
-			return " CB ";
-		}
-		if (name.equals("CG"))
-			return " CG ";
-
-		if (name.length() == 2) {
-			StringBuilder b = new StringBuilder();
-			b.append(" ");
-			b.append(name);
-			b.append(" ");
-			return b.toString();
-		}
-
-		if (name.length() == 1) {
-			StringBuilder b = new StringBuilder();
-			b.append(" ");
-			b.append(name);
-			b.append("  ");
-			return b.toString();
-		}
-
-		if (name.length() == 3) {
-			
-			StringBuilder b = new StringBuilder();
-			b.append(" ");
-			b.append(name);
-			return b.toString();
-		}
-
-		return name;
 	}
 
 	public void newAtomSite(AtomSite atom) {
@@ -370,7 +316,9 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		try {
 			seq_id = Long.parseLong(atom.getLabel_seq_id());
 		} catch (NumberFormatException e){
-
+			// non polymer chains (ligands and small molecules) will have a label_seq_id set to '.', thus it is ok to
+			// silently ignore this
+			//logger.debug("Could not parse number for _atom_site.label_seq_id: "+e.getMessage()); 
 		}
 
 		String nmrModel = atom.getPdbx_PDB_model_num();
@@ -493,18 +441,16 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		if ( params.isHeaderOnly())
 			return;
 
-		atomCount++;
+		//atomCount++;
 		//System.out.println("fixing atom name for  >" + atom.getLabel_atom_id() + "< >" + fullname + "<");
 
-		
-		String fullname      = fixFullAtomName(atom.getLabel_atom_id(),atom.getType_symbol(), current_group);
 		
 		if ( params.isParseCAOnly() ){
 			// yes , user wants to get CA only
 			// only parse CA atoms...
-			if (! fullname.equals(" CA ")){
+			if (! (atom.getLabel_atom_id().equals("CA") && atom.getType_symbol().equals("C"))) {
 				//System.out.println("ignoring " + line);
-				atomCount--;
+				//atomCount--;
 				return;
 			}
 		}
@@ -528,7 +474,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 
 		// make sure that main group has all atoms
 		// GitHub issue: #76
-		if ( ! current_group.hasAtom(a.getFullName())) {
+		if ( ! current_group.hasAtom(a.getName())) {
 			current_group.addAtom(a);
 		}
 		
@@ -551,9 +497,6 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 
 		a.setPDBserial(Integer.parseInt(atom.getId()));
 		a.setName(atom.getLabel_atom_id());
-
-		a.setFullName(fixFullAtomName(atom.getLabel_atom_id(),atom.getType_symbol(), current_group));
-
 
 		double x = Double.parseDouble (atom.getCartn_x());
 		double y = Double.parseDouble (atom.getCartn_y());
@@ -650,7 +593,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		current_chain 		= null;
 		current_group 		= null;
 		current_nmr_model 	= null;
-		atomCount     		= 0;
+		//atomCount     		= 0;
 
 		current_model = new ArrayList<Chain>();
 		entities      = new ArrayList<Entity>();
@@ -666,6 +609,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		entitySrcNats = new ArrayList<EntitySrcNat>();
 		entitySrcSyns = new ArrayList<EntitySrcSyn>();
 		structConn = new ArrayList<StructConn>();
+		structNcsOper = new ArrayList<StructNcsOper>();
 	}
 
 
@@ -680,9 +624,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 				current_model.add(current_chain);
 			}
 		} else {
-			if ( DEBUG){
-				System.err.println("current chain is null at end of document.");
-			}
+			logger.debug("current chain is null at end of document.");			
 		}
 
 		structure.addModel(current_model);
@@ -694,17 +636,16 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 
 
 		for (StructAsym asym : structAsyms) {
-			if ( DEBUG )
-				System.out.println("entity " + asym.getEntity_id() + " matches asym id:" + asym.getId() );
+			logger.debug("entity " + asym.getEntity_id() + " matches asym id:" + asym.getId() );
 
 			Chain s = getEntityChain(asym.getEntity_id());
 			Chain seqres = (Chain)s.clone();
+			// to solve issue #160 (e.g. 3u7t)
+			seqres = removeSeqResHeterogeneity(seqres);
 			seqres.setChainID(asym.getId());
 
-
 			seqResChains.add(seqres);
-			if ( DEBUG )
-				System.out.println(" seqres: " + asym.getId() + " " + seqres + "<") ;
+			logger.debug(" seqres: " + asym.getId() + " " + seqres + "<") ;
 
 
 			for (EntitySrcGen esg : entitySrcGens) {
@@ -840,12 +781,23 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 			for (Chain chain : model) {
 				for (String asym : asymIds) {
 					if ( chain.getChainID().equals(asym)){
+						String newChainId = asymStrandId.get(asym);
+						
+						logger.debug("renaming " + asym  + " to : " + newChainId);
 
-						if (DEBUG)
-							System.out.println("renaming " + asym  + " to : " + asymStrandId.get(asym));
-
-						chain.setChainID(asymStrandId.get(asym));
+						chain.setChainID(newChainId);
 						chain.setInternalChainID(asym);
+						// set chain of all groups
+						for(Group g : chain.getAtomGroups()) {
+							ResidueNumber resNum = g.getResidueNumber();
+							if(resNum != null)
+								resNum.setChainId(newChainId);
+						}
+						for(Group g : chain.getSeqResGroups()) {
+							ResidueNumber resNum = g.getResidueNumber();
+							if(resNum != null)
+								resNum.setChainId(newChainId);
+						}
 						Chain known =  isKnownChain(chain.getChainID(), pdbChains);
 						if ( known == null ){
 							pdbChains.add(chain);
@@ -899,10 +851,52 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		}
 		structure.getPDBHeader().setBioUnitTranformationMap(transformationMap);
 
-
-
+		ArrayList<Matrix4d> ncsOperators = new ArrayList<Matrix4d>();
+		for (StructNcsOper sNcsOper:structNcsOper) {
+			if (sNcsOper.getCode().equals("generate")) {
+				ncsOperators.add(sNcsOper.getOperator());
+			}
+		}
+		// we only set it if not empty, otherwise remains null
+		if (ncsOperators.size()>0) {
+			structure.getCrystallographicInfo().setNcsOperators(
+					(Matrix4d[]) ncsOperators.toArray(new Matrix4d[ncsOperators.size()]));
+		}
 	}
 
+	/**
+	 * The method will return a new reference to a Chain with any consecutive groups 
+	 * having same residue numbers removed.
+	 * This is necessary to solve the microheterogeneity issue in entries like 3u7t (see github issue #160)
+	 * @param c
+	 * @return
+	 */
+	private Chain removeSeqResHeterogeneity(Chain c) {
+		
+		Chain trimmedChain = new ChainImpl();
+		
+		ResidueNumber lastResNum = null;
+
+		for (Group g:c.getAtomGroups()) {
+			
+			// note we have to deep copy this, otherwise they stay linked and would get altered in addGroup(g) 
+			ResidueNumber currentResNum = new ResidueNumber(
+					g.getResidueNumber().getChainId(),
+					g.getResidueNumber().getSeqNum(),
+					g.getResidueNumber().getInsCode());
+
+			if (lastResNum == null || !lastResNum.equals(currentResNum) ) {				
+				trimmedChain.addGroup(g);
+			} else {
+				logger.debug("Removing seqres group because it seems to be repeated in entity_poly_seq, most likely has hetero='y': "+g);
+			}
+			
+			lastResNum = currentResNum;
+
+		}
+		return trimmedChain;
+	}
+	
    private void addBonds() {
 	   BondMaker maker = new BondMaker(structure);
 	   maker.makeBonds();	
@@ -1042,7 +1036,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 					res = Float.parseFloat(resolution);
 
 				} catch (NumberFormatException e) {
-					logger.warning("could not parse resolution from line and ignoring it " + line);
+					logger.info("could not parse resolution from line and ignoring it " + line);
 					return ;
 
 
@@ -1064,14 +1058,14 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		// there are 2 resolution values, one for each method
 		// we take the first one found so that behaviour is like in PDB file parsing
 		if (pdbHeader.getResolution()!=PDBHeader.DEFAULT_RESOLUTION) {
-			logger.fine("more than 1 resolution value present (last encountered is "+r.getLs_d_res_high()+
+			logger.warn("more than 1 resolution value present (last encountered is "+r.getLs_d_res_high()+
 					"), will use only the first one ("+String.format("%4.2f",pdbHeader.getResolution())+")");
 			return;
 		}
 		try {
 			pdbHeader.setResolution(Float.parseFloat(r.getLs_d_res_high()));
 		} catch (NumberFormatException e){
-			logger.fine("could not parse resolution from " + r.getLs_d_res_high() + " " + e.getMessage());
+			logger.info("could not parse resolution from " + r.getLs_d_res_high() + " " + e.getMessage());
 		}
 	}
 
@@ -1150,27 +1144,30 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 			
 		} catch (NumberFormatException e){
 			structure.getPDBHeader().getCrystallographicInfo().setCrystalCell(null);
-			logger.fine("could not parse some cell parameters ("+e.getMessage()+"), ignoring _cell ");
+			logger.info("could not parse some cell parameters ("+e.getMessage()+"), ignoring _cell ");
 		}
 		try {
 			// if Z parsing fails it is not so important
 			structure.getPDBHeader().getCrystallographicInfo().setZ(Integer.parseInt(cell.getZ_PDB()));
 		} catch (NumberFormatException e) {
-			logger.fine("could not parse some the Z parameter from _cell ");
+			logger.info("could not parse some the Z parameter from _cell ");
 		}
 	}
 	
 	public void newSymmetry(Symmetry symmetry) {
         String spaceGroup = symmetry.getSpace_group_name_H_M();
 		SpaceGroup sg = SymoplibParser.getSpaceGroup(spaceGroup);
-        if (sg==null) logger.fine("Space group '"+spaceGroup+"' not recognised as a standard space group"); 
+        if (sg==null) logger.warn("Space group '"+spaceGroup+"' not recognised as a standard space group"); 
 
 		structure.getPDBHeader().getCrystallographicInfo().setSpaceGroup(sg); 
 	}
 
+	public void newStructNcsOper(StructNcsOper sNcsOper) {
+		structNcsOper.add(sNcsOper);
+	}
+	
 	public void newStructRef(StructRef sref) {
-		if (DEBUG)
-			System.out.println(sref);
+		logger.debug(sref.toString());
 		strucRefs.add(sref);
 	}
 
@@ -1223,7 +1220,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		r.setChainId(sref.getPdbx_strand_id());
 		StructRef structRef = getStructRef(sref.getRef_id());
 		if (structRef == null){
-			logger.warning("could not find StructRef " + sref.getRef_id() + " for StructRefSeq " + sref);
+			logger.warn("could not find StructRef " + sref.getRef_id() + " for StructRefSeq " + sref);
 		} else {
 			r.setDatabase(structRef.getDb_name());
 			r.setDbIdCode(structRef.getDb_code());
@@ -1270,8 +1267,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 			dbrefs = new ArrayList<DBRef>();
 		dbrefs.add(r);
 
-		if ( DEBUG)
-			System.out.println(r.toPDB());
+		logger.debug(r.toPDB());
 
 		structure.setDBRefs(dbrefs);
 
@@ -1339,13 +1335,12 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 	 */
 	public void newEntityPolySeq(EntityPolySeq epolseq) {
 
-		if (DEBUG)
-			System.out.println("NEW entity poly seq " + epolseq);
+		logger.debug("NEW entity poly seq " + epolseq);
 
 		Entity e = getEntity(epolseq.getEntity_id());
 
 		if (e == null){
-			System.err.println("could not find entity "+ epolseq.getEntity_id()+". Can not match sequence to it.");
+			logger.info("Could not find entity "+ epolseq.getEntity_id()+". Can not match sequence to it.");
 			return;
 		}
 
@@ -1363,7 +1358,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 			
 			if (epolseq.getMon_id().length()==3){
 				g.setPDBName(epolseq.getMon_id());
-
+				
 				Character code1 = StructureTools.convert_3code_1code(epolseq.getMon_id());
 				g.setAminoType(code1);
 
@@ -1375,11 +1370,13 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 			} else if ( StructureTools.isNucleotide(epolseq.getMon_id())) {
 				// the group is actually a nucleotide group...
 				NucleotideImpl n = new NucleotideImpl();
+
 				n.setResidueNumber(ResidueNumber.fromString(epolseq.getNum()));
 				n.setPDBName(epolseq.getMon_id());
-				entityChain.addGroup(n);
+				entityChain.addGroup(n);				
 			} else {				
 				HetatomImpl h = new HetatomImpl();
+				
 				h.setPDBName(epolseq.getMon_id());
 				//h.setAminoType('X');
 				h.setResidueNumber(ResidueNumber.fromString(epolseq.getNum()));
@@ -1543,9 +1540,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 	public void newGenericData(String category, List<String> loopFields,
 			List<String> lineData) {
 
-		if (DEBUG) {
-			System.err.println("unhandled category so far: " + category);
-		}
+		//logger.debug("unhandled category so far: " + category);		
 	}
 
 	public FileParsingParameters getFileParsingParameters()

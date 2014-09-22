@@ -63,14 +63,15 @@ public class DemoCrystalInterfaces {
 		
 		SpaceGroup sg = structure.getCrystallographicInfo().getSpaceGroup();
 		
-		System.out.println(sg.getShortSymbol()+" ("+sg.getId()+")");
-		System.out.println("Symmetry operators: "+sg.getNumOperators());
-		
+		if (sg!=null) {
+			System.out.println(sg.getShortSymbol()+" ("+sg.getId()+")");
+			System.out.println("Symmetry operators: "+sg.getNumOperators());
+		}
 		System.out.println("Calculating possible interfaces... (using "+NTHREADS+" CPUs for ASA calculation)");
 		long start = System.currentTimeMillis();
 		
 		CrystalBuilder cb = new CrystalBuilder(structure);
-		cb.setDebug(DEBUG); 
+		cb.setVerbose(DEBUG); 
 		
 		
 		StructureInterfaceList interfaces = cb.getUniqueInterfaces(CUTOFF);

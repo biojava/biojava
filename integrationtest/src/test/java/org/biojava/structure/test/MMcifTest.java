@@ -260,7 +260,7 @@ public class MMcifTest extends TestCase {
 			assertEquals(a1.getX(),a2.getX());
 			assertEquals(a1.getOccupancy(),a2.getOccupancy());
 			assertEquals(a1.getTempFactor(),a2.getTempFactor());
-			assertEquals(a1.getFullName(),a2.getFullName());
+			assertEquals(a1.getName(),a2.getName());
 
 
 		}

@@ -46,6 +46,8 @@ import org.biojava.bio.structure.io.mmcif.chem.PolymerType;
 import org.biojava.bio.structure.io.mmcif.chem.ResidueType;
 import org.biojava.bio.structure.io.mmcif.model.ChemComp;
 import org.biojava.bio.structure.io.util.FileDownloadUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -56,25 +58,38 @@ import org.biojava.bio.structure.io.util.FileDownloadUtils;
  * @version %I% %G%
  */
 public class StructureTools {
+	
+	private static final Logger logger = LoggerFactory.getLogger(StructureTools.class);
 
-	/** The Atom name of C-alpha atoms.
-	 *
+	/** 
+	 * The atom name of the backbone C-alpha atom.
+	 * Note that this can be ambiguous depending on the context since Calcium atoms
+	 * use the same name in PDB.
 	 */
-	public static final String caAtomName = " CA ";
+	public static final String CA_ATOM_NAME = "CA";
 
-	public static final String nAtomName = "N";
-
-	public static final String oAtomName = "O";
-
-	public static final String cbAtomName = " CB ";
-
-
-	/** The names of the Atoms that form the backbone.
-	 *
+	/**
+	 * The atom name for the backbone amide nitrogen
 	 */
-	public static final String[] backboneAtomNames = {nAtomName,caAtomName,"C",oAtomName, cbAtomName};
+	public static final String N_ATOM_NAME = "N";
 
-	public static final Character UNKNOWN_GROUP_LABEL = new Character('x');;
+	/**
+	 * The atom name for the backbone carbonyl
+	 */
+	public static final String C_ATOM_NAME = "C";
+	
+	/**
+	 * The atom name for the backbone carbonyl oxygen
+	 */
+	public static final String O_ATOM_NAME = "O";
+	
+	/**
+	 * The atom name of the side-chain C-beta atom
+	 */
+	public static final String CB_ATOM_NAME = "CB";
+
+
+	public static final Character UNKNOWN_GROUP_LABEL = new Character('x');
 
 
 	//private static final String insertionCodeRegExp = "([0-9]+)([a-zA-Z]*)";
@@ -227,8 +242,11 @@ public class StructureTools {
 	}
 
 
-	/** Returns an array of the requested Atoms from the Structure object. Iterates over all groups
-	 * and checks if the requested atoms are in this group, no matter if this is a  {@link AminoAcid} or {@link HetatomImpl} group.
+	/** 
+	 * Returns an array of the requested Atoms from the Structure object. Iterates over all groups
+	 * and checks if the requested atoms are in this group, no matter if this is a  
+	 * {@link AminoAcid} or {@link HetatomImpl} group. If the group does not contain all requested atoms
+	 * then no atoms are added for that group.
 	 * For structures with more than one model, only model 0 will be used.
 	 *
 	 * @param s the structure to get the atoms from
@@ -241,15 +259,18 @@ public class StructureTools {
 
 		List<Atom> atoms = new ArrayList<Atom>();
 
-		extractCAatoms(atomNames, chains, atoms);
+		extractAtoms(atomNames, chains, atoms);
 		return (Atom[]) atoms.toArray(new Atom[atoms.size()]);
 
 	}
 
-	/** Returns an array of the requested Atoms from the Structure object. 
+	/** 
+	 * Returns an array of the requested Atoms from the Structure object. 
 	 * In contrast to {@link #getAtomArray(Structure, String[])} this method iterates over all chains.
 	 * Iterates over all chains and groups
-	 * and checks if the requested atoms are in this group, no matter if this is a {@link AminoAcid} or {@link HetatomImpl} group.
+	 * and checks if the requested atoms are in this group, no matter if this is a 
+	 * {@link AminoAcid} or {@link HetatomImpl} group. If the group does not contain all requested atoms
+	 * then no atoms are added for that group.
 	 * For structures with more than one model, only model 0 will be used.
 	 *
 	 * @param s the structure to get the atoms from
@@ -263,7 +284,7 @@ public class StructureTools {
 
 		for (int i =0 ; i < s.nrModels(); i++ ) {
 			List<Chain> chains = s.getModel(i);
-			extractCAatoms(atomNames, chains, atoms);
+			extractAtoms(atomNames, chains, atoms);
 		}
 		return (Atom[]) atoms.toArray(new Atom[atoms.size()]);
 
@@ -352,8 +373,15 @@ public class StructureTools {
 		return (Atom[]) atoms.toArray(new Atom[atoms.size()]);			
 	}
 	
-	private static void extractCAatoms(String[] atomNames, List<Chain> chains,
-			List<Atom> atoms) {
+	/**
+	 * Adds to the given atoms list, all atoms of groups that contained all requested atomNames,
+	 * i.e. if a group does not contain all of the requested atom names, its atoms won't be added. 
+	 * @param atomNames
+	 * @param chains
+	 * @param atoms
+	 */
+	private static void extractAtoms(String[] atomNames, List<Chain> chains, List<Atom> atoms) {
+		
 		for ( Chain c : chains) {
 
 			for ( Group g : c.getAtomGroups()) {
@@ -387,9 +415,11 @@ public class StructureTools {
 		}
 	}
 
-	/** Returns an array of the requested Atoms from the Structure object. Iterates over all groups
+	/** 
+	 * Returns an array of the requested Atoms from the Chain object. Iterates over all groups
 	 * and checks if the requested atoms are in this group, no matter if this is a AminoAcid or Hetatom group.
-	 *
+	 * If the group does not contain all requested atoms
+	 * then no atoms are added for that group.
 	 *
 	 * @param c the Chain to get the atoms from
 	 *
@@ -398,11 +428,9 @@ public class StructureTools {
 	 */
 	public static final Atom[] getAtomArray(Chain c, String[] atomNames){
 
-		List<Group> groups = c.getAtomGroups();
-
 		List<Atom> atoms = new ArrayList<Atom>();
 
-		for (Group g : groups){
+		for (Group g : c.getAtomGroups()){
 
 			// a temp container for the atoms of this group
 			List<Atom> thisGroupAtoms = new ArrayList<Atom>();
@@ -413,7 +441,7 @@ public class StructureTools {
 
 				Atom a = g.getAtom(atomName);
 				if ( a == null) {
-
+					logger.debug("Group "+g.getResidueNumber()+" ("+g.getPDBName()+") does not have the required atom '"+atomName+"'");
 					// this group does not have a required atom, skip it...
 					thisGroupAllAtoms = false;
 					break;
@@ -435,13 +463,21 @@ public class StructureTools {
 
 	}
 
-	/** Returns an Atom array of the CA atoms.
+	/** 
+	 * Returns an Atom array of the C-alpha atoms. Any atom that is a carbon and has CA name will be returned.
 	 * @param c the structure object
 	 * @return an Atom[] array
 	 */
 	public static final Atom[] getAtomCAArray(Chain c){
-		String[] atomNames = {" CA " };
-		return getAtomArray(c,atomNames);
+		List<Atom> atoms = new ArrayList<Atom>();
+		
+		for (Group g: c.getAtomGroups()) {
+			if (g.hasAtom(CA_ATOM_NAME) && g.getAtom(CA_ATOM_NAME).getElement()==Element.C) {
+				atoms.add(g.getAtom(CA_ATOM_NAME));
+			}
+		}
+		
+		return (Atom[]) atoms.toArray(new Atom[atoms.size()]);
 	}
 
 	/** Provides an equivalent copy of Atoms in a new array. Clones everything, starting with parent 
@@ -475,7 +511,7 @@ public class StructureTools {
 
 			Group parentN = (Group)parentG.clone();
 
-			newCA[apos] = parentN.getAtom(" CA ");
+			newCA[apos] = parentN.getAtom(CA_ATOM_NAME);
 			newChain.addGroup(parentN);
 		}
 		return newCA;
@@ -516,7 +552,9 @@ public class StructureTools {
 		return newGroup;
 	}
 
-	/** Utility method for working with circular permutations. Creates a duplicated and cloned set of Calpha atoms from the input array.
+	/** 
+	 * Utility method for working with circular permutations. 
+	 * Creates a duplicated and cloned set of Calpha atoms from the input array.
 	 * 
 	 * @param ca2 atom array
 	 * @return cloned and duplicated set of input array
@@ -546,7 +584,7 @@ public class StructureTools {
 			}
 
 			c.addGroup(g);
-			ca2clone[pos] = g.getAtom(StructureTools.caAtomName);
+			ca2clone[pos] = g.getAtom(CA_ATOM_NAME);
 
 			pos++;
 		}
@@ -570,7 +608,7 @@ public class StructureTools {
 			}
 
 			c.addGroup(g);
-			ca2clone[pos] = g.getAtom(StructureTools.caAtomName);
+			ca2clone[pos] = g.getAtom(CA_ATOM_NAME);
 
 			pos++;
 		}
@@ -581,33 +619,63 @@ public class StructureTools {
 
 
 
-	/** Returns an Atom array of the CA atoms.
+	/** 
+	 * Return an Atom array of the C-alpha atoms. Any atom that is a carbon and has CA name will be returned.
 	 * @param s the structure object
 	 * @return an Atom[] array
 	 */
 	public static Atom[] getAtomCAArray(Structure s){
-		String[] atomNames = {" CA "};
-		return getAtomArray(s,atomNames);
+		
+		List<Atom> atoms = new ArrayList<Atom>();
+		
+		for (Chain c: s.getChains()) {
+			for (Group g: c.getAtomGroups()) {
+				if (g.hasAtom(CA_ATOM_NAME) && g.getAtom(CA_ATOM_NAME).getElement()==Element.C) {
+					atoms.add(g.getAtom(CA_ATOM_NAME));
+				}
+			}
+		}
+
+		return (Atom[]) atoms.toArray(new Atom[atoms.size()]);
 	}
 
-	/** Returns an Atom array of the MainChain atoms.
-
+	/** 
+	 * Return an Atom array of the main chain atoms: CA, C, N, O 
+	 * Any group that contains those atoms will be included, be it a standard aminoacid or not
 	 * @param s the structure object
 	 * @return an Atom[] array
 	 */
 	public static Atom[] getBackboneAtomArray(Structure s){
-		String[] atomNames = backboneAtomNames;
-		return getAtomArray(s,atomNames);
+		
+		List<Atom> atoms = new ArrayList<Atom>();
+		
+		for (Chain c: s.getChains()) {
+			for (Group g: c.getAtomGroups()) {
+				if (g.hasAminoAtoms()) {
+					// this means we will only take atoms grom groups that have complete backbones
+					for (Atom a:g.getAtoms()) {
+						// we do it this way instead of with g.getAtom() to be sure we always use the same order as original
+						if (a.getName().equals(CA_ATOM_NAME)) atoms.add(a);
+						if (a.getName().equals(C_ATOM_NAME)) atoms.add(a);
+						if (a.getName().equals(N_ATOM_NAME)) atoms.add(a);
+						if (a.getName().equals(O_ATOM_NAME)) atoms.add(a);
+					}
+				}
+			}
+			
+		}
+		
+		return (Atom[]) atoms.toArray(new Atom[atoms.size()]);
 	}
 
 
-	/** convert three character amino acid codes into single character
-	 *  e.g. convert CYS to C
-	 *  @return a character
-	 *  @param code3 a three character amino acid representation String
-	 *  @throws IllegalSymbolException
+	/** 
+	 * Convert three character amino acid codes into single character
+	 * e.g. convert CYS to C
+	 * @return a character
+	 * @param code3 a three character amino acid representation String
+	 * @throws IllegalSymbolException
 	 */
-
 	public static final Character convert_3code_1code(String code3)
 			throws UnknownPdbAminoAcidException {
 		//	{
@@ -626,7 +694,8 @@ public class StructureTools {
 
 	}
 
-	/** convert a three letter code into single character.
+	/** 
+	 * Convert a three letter code into single character.
 	 * catches for unusual characters
 	 *
 	 * @param groupCode3 three letter representation
@@ -718,7 +787,7 @@ public class StructureTools {
 		try {
 			c = s.getChainByPDB(chainId);
 		} catch (StructureException e){
-			System.err.println(e.getMessage() + " trying upper case Chain id...");
+			logger.warn(e.getMessage() + ". Chain id "+chainId+" did not match, trying upper case Chain id.");
 			c = s.getChainByPDB(chainId.toUpperCase());
 
 
@@ -786,21 +855,25 @@ public class StructureTools {
 
 
 
-	/** In addition to the functionality provided by getReducedStructure also provides a way to specify sub-regions of a structure with the following 
+	/** 
+	 * In addition to the functionality provided by {@link #getReducedStructure(Structure, int)} 
+	 * and {@link #getReducedStructure(Structure, String)}, also provides 
+	 * a way to specify sub-regions of a structure with the following 
 	 * specification:
 	 * 
-	 * 
-	 * ranges can be surrounded by ( and ). (but will be removed).
-	 * ranges are specified as
-	 * PDBresnum1 : PDBresnum2
-	 * 
-	 *  a list of ranges is separated by ,
+	 * <p>
+	 * <li>ranges can be surrounded by ( and ). (but will be removed).</li>
+	 * <li>ranges are specified as
+	 * PDBresnum1 : PDBresnum2</li>
 	 *  
-	 *  Example
+	 * <li>a list of ranges is separated by ,</li>
+	 * </p>
+	 * Example
+	 * <pre>
 	 *  4GCR (A:1-83)
 	 *  1CDG (A:407-495,A:582-686)
 	 *  1CDG (A_407-495,A_582-686)
-	 * 
+	 * </pre>
 	 * @param s The full structure
 	 * @param ranges A comma-seperated list of ranges, optionally surrounded by parentheses
 	 * @return Substructure of s specified by ranges
@@ -867,7 +940,7 @@ public class StructureTools {
 				if(struc.size() != 1) {
 					// SCOP 1.71 uses this for some proteins with multiple chains
 					// Print a warning in this ambiguous case
-					System.err.format("WARNING multiple possible chains match '_'. Using chain %s.%n",chain.getChainID());
+					logger.warn("Multiple possible chains match '_'. Using chain {}",chain.getChainID());
 				}
 			} else {
 				// Explicit chain
@@ -1006,7 +1079,7 @@ public class StructureTools {
 	 * Returns the set of intra-chain contacts for the given chain for given atom names, i.e. the contact map.
 	 * Uses a geometric hashing algorithm that speeds up the calculation without need of full distance matrix. 
 	 * @param chain
-	 * @param atomNames the array with atom names to be used. For Calphas use {" CA "}, 
+	 * @param atomNames the array with atom names to be used. Beware: CA will do both C-alphas an Calciums
 	 * if null all non-H atoms of non-hetatoms will be used
 	 * @param cutoff
 	 * @return
@@ -1036,13 +1109,31 @@ public class StructureTools {
 	public static AtomContactSet getAtomsInContact(Chain chain, double cutoff) {
 		return getAtomsInContact(chain, (String[]) null, cutoff);
 	}
+
+	/**
+	 * Returns the set of intra-chain contacts for the given chain for C-alpha atoms (including non-standard 
+	 * aminoacids appearing as HETATM groups), i.e. the contact map.
+	 * Uses a geometric hashing algorithm that speeds up the calculation without need of full distance matrix.  
+	 * @param chain
+	 * @param cutoff
+	 * @return
+	 */
+	public static AtomContactSet getAtomsCAInContact(Chain chain, double cutoff) {
+		Grid grid = new Grid(cutoff);
+		
+		Atom[] atoms = getAtomCAArray(chain);
+				
+		grid.addAtoms(atoms);
+		
+		return grid.getContacts();
+	}
 	
 	/**
 	 * Returns the set of inter-chain contacts between the two given chains for the given atom names.
 	 * Uses a geometric hashing algorithm that speeds up the calculation without need of full distance matrix. 
 	 * @param chain1
 	 * @param chain2
-	 * @param atomNames the array with atom names to be used. For Calphas use {" CA "}, 
+	 * @param atomNames the array with atom names to be used. For Calphas use {"CA"}, 
 	 * if null all non-H atoms will be used. Note HET atoms are ignored unless this parameter is null.
 	 * @param cutoff
 	 * @param hetAtoms if true HET atoms are included, if false they are not 

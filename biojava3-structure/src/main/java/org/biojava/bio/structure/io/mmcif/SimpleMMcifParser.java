@@ -31,7 +31,8 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.logging.Logger;
+
+import javax.vecmath.Matrix4d;
 
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.io.MMCIFFileReader;
@@ -64,11 +65,13 @@ import org.biojava.bio.structure.io.mmcif.model.Struct;
 import org.biojava.bio.structure.io.mmcif.model.StructAsym;
 import org.biojava.bio.structure.io.mmcif.model.StructConn;
 import org.biojava.bio.structure.io.mmcif.model.StructKeywords;
+import org.biojava.bio.structure.io.mmcif.model.StructNcsOper;
 import org.biojava.bio.structure.io.mmcif.model.StructRef;
 import org.biojava.bio.structure.io.mmcif.model.StructRefSeq;
 import org.biojava.bio.structure.io.mmcif.model.Symmetry;
 import org.biojava.bio.structure.jama.Matrix;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /** A simple mmCif file parser
  *
@@ -104,7 +107,7 @@ public class SimpleMMcifParser implements MMcifParser {
 
 	Struct struct ;
 
-	public static Logger logger =  Logger.getLogger("org.biojava.bio.structure");
+	static final Logger logger = LoggerFactory.getLogger(SimpleMMcifParser.class);
 
 	public SimpleMMcifParser(){
 		consumers = new ArrayList<MMcifConsumer>();
@@ -171,7 +174,7 @@ public class SimpleMMcifParser implements MMcifParser {
 		// the first line is a data_PDBCODE line, test if this looks like a mmcif file
 		line = buf.readLine();
 		if (!line.startsWith("data_")){
-			System.err.println("this does not look like a valid MMcif file! The first line should be data_1XYZ, but is " + line);
+			logger.error("this does not look like a valid MMcif file! The first line should be data_1XYZ, but is " + line);
 			triggerDocumentEnd();
 			return;
 		}
@@ -206,7 +209,7 @@ public class SimpleMMcifParser implements MMcifParser {
 						String attribute = spl[1];
 						loopFields.add(attribute);
 						if ( spl.length > 2){
-							System.err.println("found nested attribute, not supported, yet!");
+							logger.warn("found nested attribute, not supported, yet!");
 						}
 					} else {
 						category = txt;
@@ -218,7 +221,7 @@ public class SimpleMMcifParser implements MMcifParser {
 					// in loop and we found a data line
 					lineData = processLine(line, buf, loopFields.size());
 					if ( lineData.size() != loopFields.size()){
-						System.err.println("did not find enough data fields...");
+						logger.warn("did not find enough data fields...");
 
 					}
 
@@ -262,7 +265,7 @@ public class SimpleMMcifParser implements MMcifParser {
 						// looks like a chem_comp file
 						// line should start with data, otherwise something is wrong!
 						if (! line.startsWith("data_")){
-							System.err.println("this does not look like a valid MMcif file! The first line should be data_1XYZ, but is " + line);
+							logger.warn("this does not look like a valid MMcif file! The first line should be data_1XYZ, but is " + line);
 							triggerDocumentEnd();
 							return;
 						}
@@ -457,7 +460,7 @@ public class SimpleMMcifParser implements MMcifParser {
 
 			if ( lineData.size() > fieldLength){
 
-				System.err.println("wrong data length ("+lineData.size()+
+				logger.warn("wrong data length ("+lineData.size()+
 						") should be ("+fieldLength+") at line " + line + " got lineData: " + lineData);
 				return lineData;
 			}
@@ -486,7 +489,7 @@ public class SimpleMMcifParser implements MMcifParser {
 			System.exit(0);
 		}*/
 		if ( loopFields.size() != lineData.size()){
-			System.err.println("looks like we got a problem with nested string quote characters:");
+			logger.warn("looks like we got a problem with nested string quote characters:");
 			throw new IOException("data length ("+ lineData.size() +
 					") != fields length ("+loopFields.size()+
 					") category: " +category + " fields: "+
@@ -540,15 +543,19 @@ public class SimpleMMcifParser implements MMcifParser {
 					Cell.class.getName(),
 					loopFields,lineData, loopWarnings);
 
-			triggerCell(cell);
+			triggerNewCell(cell);
 
 		} else if ( category.equals("_symmetry")){
 			Symmetry symmetry  = (Symmetry) buildObject(
 					Symmetry.class.getName(),
 					loopFields,lineData, loopWarnings);
 
-			triggerSymmetry(symmetry);
-
+			triggerNewSymmetry(symmetry);
+		} else if ( category.equals("_struct_ncs_oper")) {
+			// this guy is special because of the [] in the field names
+			StructNcsOper sNcsOper = getStructNcsOper(loopFields,lineData);
+			triggerNewStructNcsOper(sNcsOper);
+			
 		} else if ( category.equals("_struct_ref")){
 			StructRef sref  = (StructRef) buildObject(
 					StructRef.class.getName(),
@@ -729,7 +736,7 @@ public class SimpleMMcifParser implements MMcifParser {
 	//				if ( val.equals("?") || val.equals(".")) {
 	//					logger.info("trying to set field >" + key + "< in >"+ c.getName() + "<, but not found. Since value is >"+val+"<  most probably just ignore this.");
 	//				} else {
-	//					logger.warning("trying to set field >" + key + "< in >"+ c.getName() + "<, but not found! (value:" + val + ")");
+	//					logger.warn("trying to set field >" + key + "< in >"+ c.getName() + "<, but not found! (value:" + val + ")");
 	//				}
 	//			}
 	//		} else {
@@ -786,7 +793,51 @@ public class SimpleMMcifParser implements MMcifParser {
 		}
 
 	}
+	
+	private StructNcsOper getStructNcsOper(List<String> loopFields, List<String> lineData) {
+		StructNcsOper sNcsOper = new StructNcsOper();
+		
+		int id = Integer.parseInt(lineData.get(loopFields.indexOf("id")));
+		sNcsOper.setId(id);
+		sNcsOper.setCode(lineData.get(loopFields.indexOf("code")));
+		sNcsOper.setDetails(lineData.get(loopFields.indexOf("details")));
+		Matrix4d op = new Matrix4d();
+		op.setElement(3, 0, 0.0); 
+		op.setElement(3, 1, 0.0);
+		op.setElement(3, 2, 0.0);
+		op.setElement(3, 3, 1.0);
+		
+		for (int i = 1 ; i <=3 ; i++){
+			for (int j =1 ; j <= 3 ; j++){
+				String max = String.format("matrix[%d][%d]",i,j);
 
+				String val = lineData.get(loopFields.indexOf(max));
+				Double d = Double.parseDouble(val);
+				op.setElement(i-1,j-1,d);
+
+			}
+		}
+
+		
+		for ( int i = 1; i <=3 ; i++){
+			String v = String.format("vector[%d]",i);
+			String val = lineData.get(loopFields.indexOf(v));
+			Double d = Double.parseDouble(val);
+			op.setElement(i-1, 3, d);
+		}
+
+		sNcsOper.setOperator(op);
+		
+		return sNcsOper;
+	}
+
+	public void triggerNewStructNcsOper(StructNcsOper sNcsOper) {
+		for(MMcifConsumer c : consumers){
+			c.newStructNcsOper(sNcsOper);
+		}
+
+	}
+	
 	@SuppressWarnings("rawtypes")
 	private void setArray(Class c, Object o, String key, String val){
 
@@ -841,26 +892,29 @@ public class SimpleMMcifParser implements MMcifParser {
 
 					} else {
 						String warning = "Trying to set field " + key + " in "+ c.getName() +", but not found! (value:" + val + ")";
-
-						if( !(warnings != null && warnings.contains(warning)) && !val.equals("?") ) {
-							System.err.println(warning);
+						String warnkey = key+"-"+c.getName();
+						// Suppress duplicate warnings or attempts to store empty data
+						if( val.equals("?") || ( warnings != null && warnings.contains(warnkey)) ) {
+							logger.debug(warning);
+						} else {
+							logger.warn(warning);
 						}
 
 						if(warnings != null) {
-							warnings.add(warning);
+							warnings.add(warnkey);
 						}
 						//System.err.println(lineData);
 					}
 				}
 			}
 		} catch (InstantiationException eix){
-			eix.printStackTrace();
+			logger.warn( "Error while constructing "+className, eix.getMessage());
 		} catch (InvocationTargetException etx){
-			etx.printStackTrace();
+			logger.warn( "Error while constructing "+className, etx.getMessage());
 		} catch (IllegalAccessException eax){
-			eax.printStackTrace();
+			logger.warn( "Error while constructing "+className, eax.getMessage());
 		} catch (ClassNotFoundException ex){
-			ex.printStackTrace();
+			logger.warn( "Error while constructing "+className, ex.getMessage());
 		}
 		return o;
 	}
@@ -943,18 +997,18 @@ public class SimpleMMcifParser implements MMcifParser {
 		}
 	}
 
-	private void triggerCell(Cell cell) {
+	private void triggerNewCell(Cell cell) {
 		for(MMcifConsumer c : consumers){
 			c.newCell(cell);
 		}
 	}
 
-	private void triggerSymmetry(Symmetry symmetry) {
+	private void triggerNewSymmetry(Symmetry symmetry) {
 		for(MMcifConsumer c : consumers){
 			c.newSymmetry(symmetry);
 		}
 	}
-
+	
 	private void triggerNewStrucRef(StructRef sref){
 		for(MMcifConsumer c : consumers){
 			c.newStructRef(sref);

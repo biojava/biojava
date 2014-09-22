@@ -44,6 +44,8 @@ import org.biojava3.core.sequence.io.template.SequenceCreatorInterface;
 import org.biojava3.core.sequence.io.template.SequenceHeaderParserInterface;
 import org.biojava3.core.sequence.template.AbstractSequence;
 import org.biojava3.core.sequence.template.Compound;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Use GenbankReaderHelper as an example of how to use this class where GenbankReaderHelper should be the
@@ -51,6 +53,8 @@ import org.biojava3.core.sequence.template.Compound;
  *
  */
 public class GenbankReader<S extends AbstractSequence<C>, C extends Compound> {
+
+	private final static Logger logger = LoggerFactory.getLogger(GenbankReader.class);
 
     private SequenceCreatorInterface<C> sequenceCreator;
     private GenbankSequenceParser<S,C> genbankParser;
@@ -150,14 +154,14 @@ public class GenbankReader<S extends AbstractSequence<C>, C extends Compound> {
 
         GenbankReader<ProteinSequence, AminoAcidCompound> proteinReader = new GenbankReader<ProteinSequence, AminoAcidCompound>(is, new GenericGenbankHeaderParser<ProteinSequence,AminoAcidCompound>(), new ProteinSequenceCreator(AminoAcidCompoundSet.getAminoAcidCompoundSet()));
         LinkedHashMap<String,ProteinSequence> proteinSequences = proteinReader.process();
-        System.out.println(proteinSequences);
+        logger.info("Protein Sequences: {}", proteinSequences);
 
         String inputFile = "src/test/resources/NM_000266.gb";
         is = new FileInputStream(inputFile);
         GenbankReader<DNASequence, NucleotideCompound> dnaReader = new GenbankReader<DNASequence, NucleotideCompound>(is, new GenericGenbankHeaderParser<DNASequence,NucleotideCompound>(), new DNASequenceCreator(DNACompoundSet.getDNACompoundSet()));
         LinkedHashMap<String,DNASequence> dnaSequences = dnaReader.process();
         is.close();
-        System.out.println(dnaSequences);
+        logger.info("DNA Sequences: {}", dnaSequences);
     }
 
 }

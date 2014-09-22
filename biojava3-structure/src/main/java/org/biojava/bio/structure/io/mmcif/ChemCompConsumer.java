@@ -32,6 +32,7 @@ import org.biojava.bio.structure.io.mmcif.model.Struct;
 import org.biojava.bio.structure.io.mmcif.model.StructAsym;
 import org.biojava.bio.structure.io.mmcif.model.StructConn;
 import org.biojava.bio.structure.io.mmcif.model.StructKeywords;
+import org.biojava.bio.structure.io.mmcif.model.StructNcsOper;
 import org.biojava.bio.structure.io.mmcif.model.StructRef;
 import org.biojava.bio.structure.io.mmcif.model.StructRefSeq;
 import org.biojava.bio.structure.io.mmcif.model.Symmetry;
@@ -111,6 +112,10 @@ public class ChemCompConsumer implements MMcifConsumer {
 	
 	public void newSymmetry(Symmetry symmetry) {
 		// TODO Auto-generated method stub 
+	}
+	
+	public void newStructNcsOper(StructNcsOper sNcsOper) {
+		// TODO Auto-generated method stub
 	}
 
 	public void newPdbxEntityNonPoly(PdbxEntityNonPoly pen) {

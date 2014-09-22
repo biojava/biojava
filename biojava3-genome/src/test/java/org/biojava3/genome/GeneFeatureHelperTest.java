@@ -18,12 +18,16 @@ import org.biojava3.core.sequence.io.FastaWriterHelper;
 import org.biojava3.genome.parsers.gff.FeatureList;
 import org.biojava3.genome.parsers.gff.GFF3Reader;
 import org.biojava3.genome.parsers.gff.GFF3Writer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * 
  * @author Scooter Willis <willishf at gmail dot com>
  */
 public class GeneFeatureHelperTest extends TestCase {
+
+	private static final Logger logger = LoggerFactory.getLogger(GeneFeatureHelperTest.class);
 
     public GeneFeatureHelperTest(String testName) {
         super(testName);
@@ -52,7 +56,7 @@ public class GeneFeatureHelperTest extends TestCase {
      */
 
     public void testLoadFastaAddGeneFeaturesFromUpperCaseExonFastaFile() throws Exception {
-        // System.out.println("loadFastaAddGeneFeaturesFromUpperCaseExonFastaFile");
+        // logger.info("loadFastaAddGeneFeaturesFromUpperCaseExonFastaFile");
         File fastaSequenceFile = new File("src/test/resources/volvox_all.fna");
         File uppercaseFastaFile = new File("src/test/resources/volvox_all_genes_exon_uppercase.fna");
         boolean throwExceptionGeneNotFound = false;
@@ -73,7 +77,7 @@ public class GeneFeatureHelperTest extends TestCase {
      * Test of outputFastaSequenceLengthGFF3 method, of class GeneFeatureHelper.
      */
     public void testOutputFastaSequenceLengthGFF3() throws Exception {
-        // System.out.println("outputFastaSequenceLengthGFF3");
+        // logger.info("outputFastaSequenceLengthGFF3");
 
         File fastaSequenceFile = new File("src/test/resources/volvox_all.fna");
         File gffFile = File.createTempFile("volvox_length", "gff3");
@@ -96,8 +100,7 @@ public class GeneFeatureHelperTest extends TestCase {
                         "src/test/resources/volvox.gff3"), false);
         ChromosomeSequence ctgASequence = chromosomeSequenceList.get("ctgA");
         GeneSequence edenGeneSequence = ctgASequence.getGene("EDEN");
-        System.out.println("Note " + edenGeneSequence.getNotesList());
-
+        logger.info("Note {}", edenGeneSequence.getNotesList());
     }
 
     /**
@@ -113,7 +116,7 @@ public class GeneFeatureHelperTest extends TestCase {
         LinkedHashMap<String, ProteinSequence> proteinSequenceList = GeneFeatureHelper
                 .getProteinSequences(chromosomeSequenceList.values());
         // for(ProteinSequence proteinSequence : proteinSequenceList.values()){
-        // System.out.println("Output=" + proteinSequence.getSequenceAsString());
+        // logger.info("Output={}", proteinSequence.getSequenceAsString());
         // }
         File tmp = File.createTempFile("volvox_all", "faa");
         tmp.deleteOnExit();
@@ -126,7 +129,7 @@ public class GeneFeatureHelperTest extends TestCase {
      * Test of getGeneSequences method, of class GeneFeatureHelper.
      */
     public void testGetGeneSequences() throws Exception {
-        // System.out.println("getGeneSequences");
+        // logger.info("getGeneSequences");
         LinkedHashMap<String, ChromosomeSequence> chromosomeSequenceList = GeneFeatureHelper
                 .loadFastaAddGeneFeaturesFromGmodGFF3(new File("src/test/resources/volvox_all.fna"), new File(
                         "src/test/resources/volvox.gff3"), true);

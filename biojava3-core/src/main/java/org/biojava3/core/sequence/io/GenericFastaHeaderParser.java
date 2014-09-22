@@ -31,6 +31,8 @@ import org.biojava3.core.sequence.io.template.SequenceHeaderParserInterface;
 import org.biojava3.core.sequence.template.AbstractSequence;
 import org.biojava3.core.sequence.template.Compound;
 import org.biojava3.core.sequence.template.AbstractSequence.AnnotationType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The default fasta header parser where some headers are well defined based on the source
@@ -59,6 +61,8 @@ import org.biojava3.core.sequence.template.AbstractSequence.AnnotationType;
  */
 public class GenericFastaHeaderParser<S extends AbstractSequence<C>, C extends Compound> implements SequenceHeaderParserInterface<S,C> {
 
+	private final static Logger logger = LoggerFactory.getLogger(GenericFastaHeaderParser.class);
+
     /**
      * Parse out the components where some have a | and others do not
      * @param header
@@ -73,7 +77,7 @@ public class GenericFastaHeaderParser<S extends AbstractSequence<C>, C extends C
         //    data = new String[1];
         //    int index = header.indexOf("length=");
         //    data[0] = header.substring(0, index).trim();
-    //        System.out.println("accession=" + data[0]);
+    //        logger.debug("accession=" + data[0]);
         //    return data;
         //} else
          if (!header.startsWith("PDB:")) {
@@ -171,7 +175,7 @@ public class GenericFastaHeaderParser<S extends AbstractSequence<C>, C extends C
      */
     public static void main(String[] args) {
 
-        System.out.println("parseHeader");
+        logger.info("parseHeader");
         String header = "";
         ProteinSequence sequence = new ProteinSequence("");
         GenericFastaHeaderParser<ProteinSequence,AminoAcidCompound> instance =
@@ -179,72 +183,72 @@ public class GenericFastaHeaderParser<S extends AbstractSequence<C>, C extends C
 
         header = "gi|gi-number|gb|accession|locus";
         instance.parseHeader(header, sequence);
-        System.out.println("accession" + "=" + sequence.getAccession());
-        System.out.println(sequence.getAccession().getDataSource() + "=" + DataSource.GENBANK);
+        logger.info("accession = {}", sequence.getAccession());
+        logger.info("Data source: {} = {}", sequence.getAccession().getDataSource(), DataSource.GENBANK);
 
         header = "gi|gi-number|emb|accession|locus";
         instance.parseHeader(header, sequence);
-        System.out.println("accession" + "=" + sequence.getAccession());
-        System.out.println(sequence.getAccession().getDataSource() + "=" + DataSource.ENA);
+        logger.info("accession = {}", sequence.getAccession());
+        logger.info("Data source: {} = {}", sequence.getAccession().getDataSource(), DataSource.ENA);
 
         header = "gi|gi-number|dbj|accession|locus";
         instance.parseHeader(header, sequence);
-        System.out.println("accession" + "=" + sequence.getAccession());
-        System.out.println(sequence.getAccession().getDataSource() + "=" + DataSource.DDBJ);
+        logger.info("accession = {}", sequence.getAccession());
+        logger.info("Data source: {} = {}", sequence.getAccession().getDataSource(), DataSource.DDBJ);
 
         header = "pir||entry";
         instance.parseHeader(header, sequence);
-        System.out.println("entry" + "=" + sequence.getAccession());
-        System.out.println(sequence.getAccession().getDataSource() + "=" + DataSource.NBRF);
+        logger.info("entry = {}", sequence.getAccession());
+        logger.info("Data source: {} = {}", sequence.getAccession().getDataSource(), DataSource.NBRF);
 
         header = "prf||name";
         instance.parseHeader(header, sequence);
-        System.out.println("name" + "=" + sequence.getAccession());
-        System.out.println(sequence.getAccession().getDataSource() + "=" + DataSource.PRF);
+        logger.info("name = {}", sequence.getAccession());
+        logger.info("Data source: {}", sequence.getAccession().getDataSource(), DataSource.PRF);
 
         header = "sp|accession|name";
         instance.parseHeader(header, sequence);
-        System.out.println("accession" + "=" + sequence.getAccession());
-        System.out.println(sequence.getAccession().getDataSource() + "=" + DataSource.UNIPROT);
+        logger.info("accession = ", sequence.getAccession());
+        logger.info("Data source: {} = {}", sequence.getAccession().getDataSource(), DataSource.UNIPROT);
 
         header = "pdb|entry|chain";
         instance.parseHeader(header, sequence);
-        System.out.println("entry:chain" + "=" + sequence.getAccession());
-        System.out.println(sequence.getAccession().getDataSource() + "=" + DataSource.PDB1);
+        logger.info("entry:chain = ", sequence.getAccession());
+        logger.info("Data source: {} = {}", sequence.getAccession().getDataSource(), DataSource.PDB1);
 
         header = "entry:chain|PDBID|CHAIN|SEQUENCE";
         instance.parseHeader(header, sequence);
-        System.out.println("entry:chain" + "=" + sequence.getAccession());
-        System.out.println(sequence.getAccession().getDataSource() + "=" + DataSource.PDB2);
+        logger.info("entry:chain = {}", sequence.getAccession());
+        logger.info("Data source: {} = {}", sequence.getAccession().getDataSource(), DataSource.PDB2);
+        
         header = "PDB:1ECY_A mol:protein length:142  ECOTIN";
         instance.parseHeader(header, sequence);
-        System.out.println("1ECY_A" + "=" + sequence.getAccession());
-        System.out.println(sequence.getAccession().getDataSource() + "=" + DataSource.PDBe);
+        logger.info("1ECY_A = {}", sequence.getAccession());
+        logger.info("Data source: {} = {}", sequence.getAccession().getDataSource(), DataSource.PDBe);
 
         header = "pat|country|number";
         instance.parseHeader(header, sequence);
-        System.out.println("number" + "=" + sequence.getAccession());
-        System.out.println(sequence.getAccession().getDataSource() + "=" + DataSource.PATENTS);
+        logger.info("number = {}", sequence.getAccession());
+        logger.info("Data source: {}", sequence.getAccession().getDataSource(), DataSource.PATENTS);
 
         header = "bbs|number";
         instance.parseHeader(header, sequence);
-        System.out.println("number" + "=" + sequence.getAccession());
-        System.out.println(sequence.getAccession().getDataSource() + "=" + DataSource.GENINFO);
+        logger.info("number = {}", sequence.getAccession());
+        logger.info("Data source: {} = {}", sequence.getAccession().getDataSource(), DataSource.GENINFO);
 
         header = "gnl|database|identifier";
         instance.parseHeader(header, sequence);
-        System.out.println("identifier" + "=" + sequence.getAccession());
-        System.out.println(sequence.getAccession().getDataSource() + "=" + DataSource.GENERAL);
+        logger.info("identifier = {}", sequence.getAccession());
+        logger.info("Data source: {} = {}", sequence.getAccession().getDataSource(), DataSource.GENERAL);
 
         header = "ref|accession|locus";
-
         instance.parseHeader(header, sequence);
-        System.out.println("accession" + "=" + sequence.getAccession());
-        System.out.println(sequence.getAccession().getDataSource() + "=" + DataSource.NCBI);
+        logger.info("accession = {}", sequence.getAccession());
+        logger.info("Data source: {} = {}", sequence.getAccession().getDataSource(), DataSource.NCBI);
 
         header = "lcl|identifier";
         instance.parseHeader(header, sequence);
-        System.out.println("identifier" + "=" + sequence.getAccession());
-        System.out.println(sequence.getAccession().getDataSource() + "=" + DataSource.LOCAL);
+        logger.info("identifier = {}", sequence.getAccession());
+        logger.info("Data source: {} = {}", sequence.getAccession().getDataSource(), DataSource.LOCAL);
     }
 }

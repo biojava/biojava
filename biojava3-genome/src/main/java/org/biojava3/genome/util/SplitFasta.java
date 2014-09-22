@@ -8,9 +8,12 @@ package org.biojava3.genome.util;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+
 import org.biojava3.core.sequence.DNASequence;
 import org.biojava3.core.sequence.io.FastaReaderHelper;
 import org.biojava3.core.sequence.io.FastaWriterHelper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -18,6 +21,8 @@ import org.biojava3.core.sequence.io.FastaWriterHelper;
  * @author Scooter Willis <willishf at gmail dot com>
  */
 public class SplitFasta {
+
+	private static final Logger logger = LoggerFactory.getLogger(SplitFasta.class);
 
     public void processNucleotides(File fastaFileName,String uniqueid, File outputDirectory ) throws Exception{
         if(!outputDirectory.exists())
@@ -43,7 +48,7 @@ public class SplitFasta {
             SplitFasta splitFasta = new SplitFasta();
             splitFasta.processNucleotides(new File("/Users/Scooter/scripps/dyadic/analysis/454Scaffolds/454Scaffolds.fna"), "", new File("/Users/Scooter/scripps/dyadic/analysis/454Scaffolds/individual"));
         }catch(Exception e){
-            e.printStackTrace();
+            logger.error("Exception: ", e);
         }
     }
 

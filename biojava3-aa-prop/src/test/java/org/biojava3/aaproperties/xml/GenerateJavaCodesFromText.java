@@ -9,8 +9,13 @@ import java.util.List;
 import java.util.Map;
 
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class GenerateJavaCodesFromText {
+	
+	private final static Logger logger = LoggerFactory.getLogger(GenerateJavaCodesFromText.class);
+
 	/*
 	 * Generate java codes from two text files; Symbol2Name.txt and Symbol2Weight.txt
 	 */
@@ -34,7 +39,7 @@ public class GenerateJavaCodesFromText {
 			String[] sA = line.split("\t");
 			if(sA[0].length() > 0){
 				//Elements
-				System.out.println(elementNameLower + ".setIsotopes(iList);");
+				logger.info("{}.setIsotopes(iList);", elementNameLower);
 				//int decimalPlace = getDecimalPlace(elementMass + "");
 				//System.out.println("assertEquals(" + elementMass + ", Utils.roundToDecimals(" + elementNameLower + 
 					//	".getMass(), " + decimalPlace + "));");
@@ -46,23 +51,21 @@ public class GenerateJavaCodesFromText {
 				elementMass = cleanNumber(sA[5]); 
 				if(protonNumber > 82) break;
 				elementNameList.add(elementNameLower);
-				
-				System.out.println();
-				System.out.println("iList = new ArrayList<Isotope>();");
-				System.out.println("Element " + elementNameLower + " = new Element(\"" + elementName + "\", \"" + 
-						symbol + "\", " + protonNumber + ", null, " + elementMass + ");");
+
+				logger.info("iList = new ArrayList<Isotope>();");
+				logger.info("Element {} = new Element(\"{}\", \"{}\", {}, null, {});",
+						elementNameLower, elementName, symbol, protonNumber, elementMass);
 			}
 			int neutronNumber = Integer.parseInt(sA[2]);
 			double weight = cleanNumber(sA[3]);
 			//if(sA.length > 4 && sA[4].length() > 0) abundance = cleanNumber(sA[4]);
-			System.out.println("iList.add(new Isotope(\"" + elementName + "-" + neutronNumber + "\", " + 
-					neutronNumber + ", " + weight + "));");
+			logger.info("iList.add(new Isotope(\"{}-{}\", {}, {}));",
+					elementName, neutronNumber, neutronNumber, weight);
 		}
 		input.close();
 		
-		System.out.println();
-		System.out.println("List<Element> eList = new ArrayList<Element>();");
-		for(String e:elementNameList) System.out.println("eList.add(" + e + ");");
+		logger.info("List<Element> eList = new ArrayList<Element>();");
+		for(String e:elementNameList) logger.info("eList.add({});", e);
 	}
 	
 	private double cleanNumber(String s){

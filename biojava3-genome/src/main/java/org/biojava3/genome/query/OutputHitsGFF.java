@@ -7,16 +7,21 @@ package org.biojava3.genome.query;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+
 import org.biojava3.genome.parsers.gff.Feature;
 import org.biojava3.genome.parsers.gff.FeatureI;
 import org.biojava3.genome.parsers.gff.FeatureList;
 import org.biojava3.genome.parsers.gff.GeneMarkGTFReader;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author Scooter Willis <willishf at gmail dot com>
  */
 public class OutputHitsGFF {
+
+	private static final Logger logger = LoggerFactory.getLogger(OutputHitsGFF.class);
 
     public void process(File blastXMLFile, File gffFile, File gffOutputFile, double maxEScore, double percentageAligned, boolean includeFrameShift, boolean includeNegativeStrand) throws Exception {
         BlastXMLQuery blastXMLQuery = new BlastXMLQuery(blastXMLFile.getAbsolutePath());
@@ -62,7 +67,7 @@ public class OutputHitsGFF {
 
 
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Execution: ", e);
         }
     }
 }

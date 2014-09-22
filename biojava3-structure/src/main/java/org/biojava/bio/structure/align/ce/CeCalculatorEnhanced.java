@@ -273,14 +273,14 @@ public class CeCalculatorEnhanced {
 		double dist;
 		Group g1 = ca1.getGroup();
 		Atom cb1 = null;
-		if ( g1.hasAtom(StructureTools.cbAtomName)) {
-			cb1 = g1.getAtom(StructureTools.cbAtomName);
+		if ( g1.hasAtom(StructureTools.CB_ATOM_NAME)) {
+			cb1 = g1.getAtom(StructureTools.CB_ATOM_NAME);
 		}
 		//
 		Group g2 = ca2.getGroup();
 		Atom cb2 = null;
-		if ( g2.hasAtom(StructureTools.cbAtomName)) {
-			cb2 = g2.getAtom(StructureTools.cbAtomName);
+		if ( g2.hasAtom(StructureTools.CB_ATOM_NAME)) {
+			cb2 = g2.getAtom(StructureTools.CB_ATOM_NAME);
 		}
 
 
@@ -1244,7 +1244,7 @@ nBestTrace=nTrace;
 		//TODO
 		Group parent = ca[j].getGroup();
 		int pos = 0;
-		String atomName = StructureTools.caAtomName;
+		String atomName = StructureTools.CA_ATOM_NAME;
 
 		Atom a = null;
 
@@ -1447,7 +1447,7 @@ nBestTrace=nTrace;
 			for ( int i =0 ; i < strBuf1.length; i++){
 				if ( strBuf1[i] == null)
 					break;
-				System.out.print(strBuf1[i].getParent().getChemComp().getOne_letter_code());
+				System.out.print(strBuf1[i].getGroup().getChemComp().getOne_letter_code());
 			}
 			System.out.println();
 
@@ -1822,7 +1822,7 @@ nBestTrace=nTrace;
 				}
 			}
 
-			boolean doubleGap = false;
+			//boolean doubleGap = false;
 			boolean gapPosition = false;
 			if ( i != iMax || j != jMax ) {
 				int l1 = iMax - i;
@@ -1839,7 +1839,7 @@ nBestTrace=nTrace;
 				if ( prevGapEnd == alignmentPositionOrLength -1){
 					// double gap!
 					System.out.println( "  !! FOUND DOUBLE GAP AT: "+  alignmentPositionOrLength + " | "+ i+ " " + iMax + " " + j + " " + jMax + " " + String.format("%f", mat[i][j]) + " " +   getTraceBack(tracebackMatrix1,tracebackMatrix2,i,j));
-					doubleGap = true;
+					//doubleGap = true;
 
 					//										if ( i != iMax){
 					//											int pos = align_se1[ alignmentPositionOrLength -1];
@@ -1936,7 +1936,7 @@ nBestTrace=nTrace;
 
 			Calc.rotate( g, m);
 			Calc.shift(  g, shift);
-			caB[l] = g.getAtom(" CA ");
+			caB[l] = g.getAtom(StructureTools.CA_ATOM_NAME);
 		}
 	}
 
@@ -2028,7 +2028,7 @@ nBestTrace=nTrace;
 			Atom a;
 			if ( clone ){
 				Group g = (Group)ca[i].getGroup().clone();
-				a = g.getAtom(" CA ");
+				a = g.getAtom(StructureTools.CA_ATOM_NAME);
 			}
 			else {
 				a = ca[i];

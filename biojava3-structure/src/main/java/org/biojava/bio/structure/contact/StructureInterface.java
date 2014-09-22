@@ -17,6 +17,8 @@ import org.biojava.bio.structure.io.mmcif.chem.PolymerType;
 import org.biojava.bio.structure.io.mmcif.model.ChemComp;
 import org.biojava.bio.structure.xtal.CrystalTransform;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * An interface between 2 molecules (2 sets of atoms).
@@ -27,6 +29,8 @@ import org.biojava.bio.structure.xtal.CrystalTransform;
 public class StructureInterface implements Serializable, Comparable<StructureInterface> { 
 
 	private static final long serialVersionUID = 1L;
+	
+	private static final Logger logger = LoggerFactory.getLogger(StructureInterface.class);
 	
 	private int id;
 	private double totalArea;
@@ -274,8 +278,7 @@ public class StructureInterface implements Serializable, Comparable<StructureInt
 		ChemComp chemComp = g.getChemComp();
 		
 		if (chemComp==null) {
-			// TODO is there a better solution? we should at least do this through a logger once we have slf4j in BJ
-			System.err.println("Warning: can't determine PolymerType for group "+g.getResidueNumber()+" ("+g.getPDBName()+"). Will consider it as non-nucleotide/non-protein type.");
+			logger.warn("Warning: can't determine PolymerType for group "+g.getResidueNumber()+" ("+g.getPDBName()+"). Will consider it as non-nucleotide/non-protein type.");
 			return false;
 		}
 		

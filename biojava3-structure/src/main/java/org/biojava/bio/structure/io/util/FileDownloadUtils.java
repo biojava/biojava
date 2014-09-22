@@ -38,10 +38,15 @@ import java.net.URL;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class FileDownloadUtils {
+	
+	private static final Logger logger = LoggerFactory.getLogger(FileDownloadUtils.class);
 
 	/** Copy the content of file A to B
-	 * 
+	 * TODO since java 1.7 this is provided in java.nio.file.Files
 	 * @param src
 	 * @param dst
 	 * @throws IOException
@@ -98,33 +103,24 @@ public class FileDownloadUtils {
 
 		File tempFile  = File.createTempFile(getFilePrefix(destination), "."+ getFileExtension(destination));
 
-		try {
-//			System.out.println("downloading " + url + " to " + tempFile.getAbsolutePath());
-			FileOutputStream outPut = new FileOutputStream(tempFile);
-			GZIPOutputStream gzOutPut = new GZIPOutputStream(outPut);
-			PrintWriter pw = new PrintWriter(gzOutPut);
+		//			System.out.println("downloading " + url + " to " + tempFile.getAbsolutePath());
+		FileOutputStream outPut = new FileOutputStream(tempFile);
+		GZIPOutputStream gzOutPut = new GZIPOutputStream(outPut);
+		PrintWriter pw = new PrintWriter(gzOutPut);
 
-			BufferedReader fileBuffer = new BufferedReader(new InputStreamReader(conn));
-			String line;
-			while ((line = fileBuffer.readLine()) != null) {
-				pw.println(line);
-			}
-			pw.flush();
-			pw.close();
-
-			outPut.flush();
-			outPut.close();
-			conn.close();
-			uStream.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-			if ( conn != null)
-				conn.close();
-			if (uStream != null) 
-				uStream.close();
-			throw new IOException(e.getMessage());
-			
+		BufferedReader fileBuffer = new BufferedReader(new InputStreamReader(conn));
+		String line;
+		while ((line = fileBuffer.readLine()) != null) {
+			pw.println(line);
 		}
+		pw.flush();
+		pw.close();
+
+		outPut.flush();
+		outPut.close();
+		conn.close();
+		uStream.close();
+
 		// copy file name to **real** location (without the tmpFileName)
 		// prepare destination
 //		System.out.println("copying to " + destination);
@@ -138,84 +134,32 @@ public class FileDownloadUtils {
 
 	public static File downloadFileIfAvailable(URL url, File destination) throws IOException {
 
-		InputStream uStream = null;
-		InputStream conn = null;
-		try {
-			uStream = url.openStream();
-			conn = new GZIPInputStream(uStream);
-		} catch (IOException e1) {
-			System.err.println("Problem while downloading file " + url  );
-			//e1.printStackTrace();
-			try {
-				if (uStream != null) {
-					uStream.close();
-				}	
-
-				if (conn != null) {
-					conn.close();
-				}
-
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			return null;
-		} 
-
-
+		InputStream uStream = url.openStream();
+		InputStream conn = new GZIPInputStream(uStream);
+	
 		FileOutputStream outPut = null;
 		GZIPOutputStream gzOutPut = null;
 		File tempFile  = File.createTempFile(getFilePrefix(destination), "."+ getFileExtension(destination));
-		try {
+		
+		outPut = new FileOutputStream(tempFile);
+		gzOutPut = new GZIPOutputStream(outPut);
+		PrintWriter pw = new PrintWriter(gzOutPut);
 
-
-			outPut = new FileOutputStream(tempFile);
-			gzOutPut = new GZIPOutputStream(outPut);
-			PrintWriter pw = new PrintWriter(gzOutPut);
-
-			BufferedReader fileBuffer = new BufferedReader(new InputStreamReader(conn));
-			String line;
-			while ((line = fileBuffer.readLine()) != null) {
-				pw.println(line);
-			}
-			pw.flush();
-			pw.close();
-
-			outPut.flush();
-			outPut.close();
-			conn.close();
-			uStream.close();
-
-		} catch (Exception e){
-			System.err.println("Problem while downloading " + url );
-			e.printStackTrace();
-			return null;
-		} finally {	
-			if ( conn != null){
-				try {
-
-					conn.close();
-				} catch (IOException e){
-					e.printStackTrace();
-				}
-			}
-			if ( uStream != null){
-				try { 
-					uStream.close();					
-				}catch (IOException e){
-					e.printStackTrace();
-				}
-			}
-			try {
-				if (outPut != null) {
-					outPut.close();
-				}
-				if (gzOutPut != null) {
-					gzOutPut.close();
-				}
-			} catch (IOException e) {
-			}
+		BufferedReader fileBuffer = new BufferedReader(new InputStreamReader(conn));
+		String line;
+		while ((line = fileBuffer.readLine()) != null) {
+			pw.println(line);
 		}
-		System.out.println("Writing to " + destination);
+		pw.flush();
+		pw.close();
+
+		outPut.flush();
+		outPut.close();
+		conn.close();
+		uStream.close();
+
+		
+		logger.info("Writing to " + destination);
 
 		copy(tempFile, destination);
 

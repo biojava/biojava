@@ -162,7 +162,7 @@ public class FileParsingParameters implements Serializable
 
 
 
-	/** Should the chemical component information be automatically be downloade from the web?
+	/** Should the chemical component information be automatically downloaded from the web?
 	 * If set to false, a limited set of ChemComps is being used.
 	 * @return flag if the data should be loaded
 	 */
@@ -272,7 +272,7 @@ public class FileParsingParameters implements Serializable
 	}
 
 	/** by default the parser will read in all atoms (unless using the CAonly switch). This allows to specify a set of atoms to be read. e.g.
-	 * {" CA ", " CB " }. Returns null if all atoms are accepted.
+	 * {"CA", "CB" }. Returns null if all atoms are accepted.
 	 * @return accepted atom names, or null if all atoms are accepted. default null
 	 */
 	public String[] getAcceptedAtomNames() {
@@ -281,7 +281,7 @@ public class FileParsingParameters implements Serializable
 
 
 	/** by default the parser will read in all atoms (unless using the CAonly switch). This allows to specify a set of atoms to be read. e.g.
-	 * {" CA ", " CB " }. Returns null if all atoms are accepted.
+	 * {"CA", "CB" }. Returns null if all atoms are accepted.
 	 * @param accepted atom names, or null if all atoms are accepted. default null
 	 */
 

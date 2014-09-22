@@ -27,68 +27,76 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-
 import java.net.URL;
 import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.zip.GZIPInputStream;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-/** Parses the cytoband (karyotype) file from UCSC.
+/**
+ * Parses the cytoband (karyotype) file from UCSC.
  *
  */
 public class CytobandParser {
 
+	private static final Logger logger = LoggerFactory
+			.getLogger(CytobandParser.class);
+
 	public static final String DEFAULT_LOCATION = "http://hgdownload.cse.ucsc.edu/goldenPath/hg19/database/cytoBand.txt.gz";
 
-	public static void main(String[] args){
+	public static void main(String[] args) {
 
 		CytobandParser me = new CytobandParser();
 		try {
-			SortedSet<Cytoband> cytobands = me.getAllCytobands(new URL(DEFAULT_LOCATION));
+			SortedSet<Cytoband> cytobands = me.getAllCytobands(new URL(
+					DEFAULT_LOCATION));
 			SortedSet<StainType> types = new TreeSet<StainType>();
-			for (Cytoband c : cytobands){
-				System.out.println(c);
-				if ( ! types.contains(c.getType()))
+			for (Cytoband c : cytobands) {
+				logger.info("Cytoband: {}", c);
+				if (!types.contains(c.getType()))
 					types.add(c.getType());
 			}
-			System.out.println(types);
+			logger.info("Strain Type: {}", types);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error("Exception: ", e);
 		}
-
 
 	}
 
 	public SortedSet<Cytoband> getAllCytobands(URL u) throws IOException {
-		InputStream stream =new GZIPInputStream(u.openStream());
+		InputStream stream = new GZIPInputStream(u.openStream());
 		return getAllCytobands(stream);
 
 	}
 
-	public SortedSet<Cytoband> getAllCytobands(InputStream instream) throws IOException {
-		BufferedReader reader = new BufferedReader(new InputStreamReader(instream));
+	public SortedSet<Cytoband> getAllCytobands(InputStream instream)
+			throws IOException {
+		BufferedReader reader = new BufferedReader(new InputStreamReader(
+				instream));
 		String line = null;
-		SortedSet<Cytoband> cytobands= new TreeSet<Cytoband>();
+		SortedSet<Cytoband> cytobands = new TreeSet<Cytoband>();
 		while ((line = reader.readLine()) != null) {
 			String[] spl = line.split("\t");
-			if ( spl.length != 5){
-				System.err.println("WRONG LINE LENGHT, expected 5, but got " + spl.length + " for: " + line);
+			if (spl.length != 5) {
+				logger.warn(
+						"WRONG LINE LENGHT, expected 5, but got {} for: {}",
+						spl.length, line);
 			}
-
 
 			Cytoband b = new Cytoband();
 			b.setChromosome(spl[0]);
 			b.setStart(Integer.parseInt(spl[1]));
 			b.setEnd(Integer.parseInt(spl[2]));
 			b.setLocus(spl[3]);
-			StainType type = StainType.getStainTypeFromString( spl[4]);
-			if ( type == null)
-				System.err.println("unknown type: " +spl[4]);
+			StainType type = StainType.getStainTypeFromString(spl[4]);
+			if (type == null)
+				logger.warn("unknown type: {}", spl[4]);
 			b.setType(type);
 			cytobands.add(b);
-		} 
+		}
 
 		return cytobands;
 	}

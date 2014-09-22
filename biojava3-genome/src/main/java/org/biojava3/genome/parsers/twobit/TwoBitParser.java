@@ -5,8 +5,10 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.RandomAccessFile;
-import java.util.Arrays;
 import java.util.HashMap;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * downloaded from http://storage.bioinf.fbb.msu.ru/~roman/TwoBitParser.java
@@ -21,8 +23,10 @@ import java.util.HashMap;
  * @author Roman Sutormin
  */
 public class TwoBitParser extends InputStream {
-    public static boolean DEBUG = false;
-    public int DEFAULT_BUFFER_SIZE = 10000;
+
+	private static final Logger logger = LoggerFactory.getLogger(TwoBitParser.class);
+
+	public int DEFAULT_BUFFER_SIZE = 10000;
     //
     private RandomAccessFile raf;
     private File f;
@@ -52,11 +56,11 @@ public class TwoBitParser extends InputStream {
         raf = new RandomAccessFile(f,"r");
         long sign = readFourBytes();
         if(sign==0x1A412743) {
-            if(DEBUG) System.err.println("2bit: Normal number architecture");
+            logger.debug("2bit: Normal number architecture");
         }
         else if(sign==0x4327411A) {
             reverse = true;
-            if(DEBUG) System.err.println("2bit: Reverse number architecture");
+            logger.debug("2bit: Reverse number architecture");
         }
         else throw new Exception("Wrong start signature in 2BIT format");
         readFourBytes();
@@ -70,8 +74,7 @@ public class TwoBitParser extends InputStream {
             seq_names[i] = new String(chars);
             long pos = readFourBytes();
             seq2pos.put(seq_names[i],pos);
-            if(DEBUG) System.err.println("2bit: Sequence name=["+seq_names[i]+"], " +
-                    "pos="+pos);
+            logger.debug("2bit: Sequence name=[{}], pos={}", seq_names[i], pos);
         }
     }
     private long readFourBytes() throws Exception {
@@ -111,7 +114,7 @@ public class TwoBitParser extends InputStream {
         long pos = seq2pos.get(seq_name);
         raf.seek(pos);
         long dna_size = readFourBytes();
-        if(DEBUG) System.err.println("2bit: Sequence name=["+cur_seq_name+"], dna_size="+dna_size);
+        logger.debug("2bit: Sequence name=[{}], dna_size={}", cur_seq_name, dna_size);
         cur_dna_size = dna_size;
         int nn_block_qnt = (int)readFourBytes();
         cur_nn_blocks = new long[nn_block_qnt][2];
@@ -121,13 +124,11 @@ public class TwoBitParser extends InputStream {
         for(int i=0;i<nn_block_qnt;i++) {
             cur_nn_blocks[i][1] = readFourBytes();
         }
-        if(DEBUG) {
-            System.err.print("NN-blocks: ");
-            for(int i=0;i<nn_block_qnt;i++) {
-                System.err.print("["+cur_nn_blocks[i][0]+","+cur_nn_blocks[i][1]+"] ");
-            }
-            System.err.println();
+
+        for(int i=0;i<nn_block_qnt;i++) {
+        	logger.debug("NN-block: [{},{}] ", cur_nn_blocks[i][0], cur_nn_blocks[i][1]);
         }
+
         int mask_block_qnt = (int)readFourBytes();
         cur_mask_blocks = new long[mask_block_qnt][2];
         for(int i=0;i<mask_block_qnt;i++) {
@@ -136,13 +137,11 @@ public class TwoBitParser extends InputStream {
         for(int i=0;i<mask_block_qnt;i++) {
             cur_mask_blocks[i][1] = readFourBytes();
         }
-        if(DEBUG) {
-            System.err.print("Mask-blocks: ");
-            for(int i=0;i<mask_block_qnt;i++) {
-                System.err.print("["+cur_mask_blocks[i][0]+","+cur_mask_blocks[i][1]+"] ");
-            }
-            System.err.println();
+
+        for(int i=0;i<mask_block_qnt;i++) {
+        	logger.debug("[{},{}] ", cur_mask_blocks[i][0], cur_mask_blocks[i][1]);
         }
+
         readFourBytes();
         start_file_pos = raf.getFilePointer();
         reset();
@@ -197,7 +196,7 @@ public class TwoBitParser extends InputStream {
     public int read() throws IOException {
         if(cur_seq_name==null) throw new IOException("Sequence is not set");
         if(cur_seq_pos==cur_dna_size) {
-            if(DEBUG) System.err.println("End of sequence (file position:"+raf.getFilePointer()+" )");
+            logger.debug("End of sequence (file position:{})", raf.getFilePointer());
             return -1;
         }
         int bit_num = (int)cur_seq_pos%4;
@@ -321,7 +320,7 @@ public class TwoBitParser extends InputStream {
     }
     public void printFastaSequence(long len) throws IOException {
         if(cur_seq_name==null) throw new RuntimeException("Sequence is not set");
-        System.out.println(">"+cur_seq_name+" pos="+cur_seq_pos+", len="+len);
+        logger.info(">{} pos={}, len={}", cur_seq_name, cur_seq_pos, len);
         char[] line = new char[60];
         boolean end = false;
         long qnt_all = 0;
@@ -336,15 +335,15 @@ public class TwoBitParser extends InputStream {
                 line[qnt] = (char)ch;
             }
             if(qnt>0) {
-                System.out.println(new String(line,0,qnt));
+                logger.info(new String(line,0,qnt));
             }
             if(qnt_all>=len) end = true;
         }
     }
     public static void main(String[] args) throws Exception {
         if(args.length==0) {
-            System.out.println("Usage: <program> <input.2bit> [<seq_name> [<start> [<length>]]]");
-            System.out.println("Resulting fasta data will be written in stdout.");
+            logger.info("Usage: <program> <input.2bit> [<seq_name> [<start> [<length>]]]");
+            logger.info("Resulting fasta data will be written in stdout.");
             return;
         }
         TwoBitParser p = new TwoBitParser(new File(args[0]));

@@ -26,8 +26,12 @@ import org.biojava3.core.sequence.transcription.TranscriptionEngine.Builder;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class TranslationTest {
+
+	private final static Logger logger = LoggerFactory.getLogger(TranslationTest.class);
 
 	private static DNACompoundSet dnaCs = DNACompoundSet.getDNACompoundSet();
 	private static AminoAcidCompoundSet aaCs = AminoAcidCompoundSet.getAminoAcidCompoundSet();
@@ -65,7 +69,7 @@ public class TranslationTest {
 			volvoxPep = volvoxPepReader.process().values().iterator().next();
 		}
 		catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Exception: ", e);
 			Assert.fail("Encountered exception");
 		}
 		finally {

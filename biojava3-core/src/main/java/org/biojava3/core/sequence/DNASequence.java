@@ -35,12 +35,17 @@ import org.biojava3.core.sequence.transcription.TranscriptionEngine;
 import org.biojava3.core.sequence.views.ComplementSequenceView;
 import org.biojava3.core.sequence.views.ReversedSequenceView;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * This is class should model the attributes associated with a DNA sequence
  *
  * @author Scooter Willis
  */
 public class DNASequence extends AbstractSequence<NucleotideCompound> {
+	
+	private final static Logger logger = LoggerFactory.getLogger(DNASequence.class);
 /**
  * The type of DNA sequence
  */
@@ -166,12 +171,11 @@ public class DNASequence extends AbstractSequence<NucleotideCompound> {
 
     public static void main(String[] args) {
         DNASequence dnaSequence = new DNASequence("ATCG");
-        System.out.println(dnaSequence.toString());
+        logger.info("DNA Sequence: {}", dnaSequence.toString());
 
         StringProxySequenceReader<NucleotideCompound> sequenceStringProxyLoader =
                 new StringProxySequenceReader<NucleotideCompound>("GCTA", DNACompoundSet.getDNACompoundSet());
         DNASequence dnaSequenceFromProxy = new DNASequence(sequenceStringProxyLoader);
-        System.out.println(dnaSequenceFromProxy.toString());
-
+        logger.info("DNA Sequence from Proxy: {}", dnaSequenceFromProxy.toString());
     }
 }
