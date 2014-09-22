@@ -24,7 +24,6 @@
 
 package org.biojava3.protmod.structure;
 
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -32,22 +31,25 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.StringWriter;
 import java.io.Writer;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
 import org.biojava.bio.structure.Chain;
 import org.biojava.bio.structure.Structure;
-
 import org.biojava3.protmod.ModificationCategory;
 import org.biojava3.protmod.ProteinModificationRegistry;
 import org.biojava3.protmod.io.ModifiedCompoundXMLConverter;
 import org.biojava3.protmod.structure.ProteinModificationIdentifier;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import junit.framework.TestCase;
 
 public class ModifiedCompoundSerializationTest extends TestCase {
+	
+	private static final Logger logger = LoggerFactory.getLogger(ModifiedCompoundSerializationTest.class);
+
 	boolean allOK = false;
 
 	private String[][] strucs;
@@ -68,8 +70,7 @@ public class ModifiedCompoundSerializationTest extends TestCase {
 				testXMLSerialization(name[0]);
 				count++;
 			} catch (Exception e){
-				System.err.println("failed after running " + count + " serializations at PDB ID " + name[0]);
-				e.printStackTrace();
+				logger.error("Failed after running {} serializations at PDB ID: {}", count, name[0], e);
 				fail(e.getMessage());
 			}
 		}
@@ -98,28 +99,28 @@ public class ModifiedCompoundSerializationTest extends TestCase {
 			// all modifications on chain H should be crosslink 2
 			
 //			if (  groups.size() != 2  ) {
-//				System.out.println(ModifiedCompoundXMLConverter.toXML(mc));
-//				System.out.println(cat);
-//				System.out.println(mc);
+//				logger.info(ModifiedCompoundXMLConverter.toXML(mc));
+//				logger.info(cat);
+//				logger.info(mc);
 //			
-//				System.out.println(mc.getAtomLinkages());
+//				logger.info(mc.getAtomLinkages());
 //				
 //				for (StructureGroup structureGroup : groups) {
-//					System.out.println(structureGroup);
+//					logger.info(structureGroup);
 //				}
 //			}
 //			assertEquals("Not the right number of groups! should be 2, but got " + groups.size() + " in: " + ModifiedCompoundXMLConverter.toXML(mc),2,groups.size());
 //			
-			if ( ! cat.equals(ModificationCategory.CROSS_LINK_2)) {
-				System.out.println(ModifiedCompoundXMLConverter.toXML(mc));
-				System.out.println(cat);
-				System.out.println(mc);
+			if (!cat.equals(ModificationCategory.CROSS_LINK_2)) {
+				logger.info(ModifiedCompoundXMLConverter.toXML(mc));
+				logger.info(cat.toString());
+				logger.info(mc.toString());
 			}
 			
 			assertEquals(ModificationCategory.CROSS_LINK_2, cat);
 		}
 		} catch (Exception e){
-			e.printStackTrace();
+			logger.error("Exception: ", e);
 			fail(e.getMessage());
 		}
 
@@ -158,22 +159,21 @@ public class ModifiedCompoundSerializationTest extends TestCase {
 				for (ModifiedCompound mc : mcs){
 					currentMC = mc;
 					xml =  doXMLSerialization(mc) ;
-					//System.out.println( pdbId + " got XML: " + String.format("%n") + xml);
+					//logger.info( pdbId + " got XML: " + String.format("%n") + xml);
 					ModifiedCompound newMC = getModifiedCompoundFromXML(xml);
 					String xml2 = doXMLSerialization(newMC);
 					assertEquals(xml,xml2);
-					//System.out.println(xml2);
+					//logger.info(xml2);
 					//assertEquals("The two objects are not equal before and after XML serialization" , mc, newMC);
-					//System.out.println(mc.getDescription());
-					//System.out.println(newMC.getDescription());
+					//logger.info(mc.getDescription());
+					//logger.info(newMC.getDescription());
 					all.add(mc);
 				}
 			}
 		} catch (Exception e){
-			System.out.println("error when serializing " + pdbId);
-			System.out.println(currentMC.getDescription());
-			System.out.println(xml);
-			e.printStackTrace();
+			logger.error("Error when serializing {}", pdbId);
+			logger.error(currentMC.getDescription());
+			logger.error(xml, e);
 			fail(e.getMessage());
 		}
 		xml = null;
@@ -195,7 +195,7 @@ public class ModifiedCompoundSerializationTest extends TestCase {
 		assertNotNull(inStream);
 		try {
 			String xml = convertStreamToString(inStream);
-			//System.out.println(xml);
+			//logger.info(xml);
 			ModifiedCompound newMC = getModifiedCompoundFromXML(xml);
 
 			assertNotNull(newMC);

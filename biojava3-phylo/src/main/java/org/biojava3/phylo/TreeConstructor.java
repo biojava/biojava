@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Vector;
+
 import org.biojava3.core.sequence.MultipleSequenceAlignment;
 import org.biojava3.core.sequence.ProteinSequence;
 import org.biojava3.core.sequence.compound.AminoAcidCompound;
@@ -22,13 +23,13 @@ import org.biojava3.core.sequence.io.GenericFastaHeaderParser;
 import org.biojava3.core.sequence.io.ProteinSequenceCreator;
 import org.biojava3.core.sequence.template.AbstractSequence;
 import org.biojava3.core.sequence.template.Compound;
-
-
 import org.forester.io.writers.PhylogenyWriter;
 import org.forester.phylogeny.Phylogeny;
 import org.forester.evoinference.matrix.distance.BasicSymmetricalDistanceMatrix;
 import org.forester.evoinference.matrix.distance.DistanceMatrix;
 import org.forester.evoinference.distance.NeighborJoining;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Tree constructor uses the forrester tree library to build phylogenetic trees using neighbor joining algorithm. The distance matrix
@@ -37,6 +38,8 @@ import org.forester.evoinference.distance.NeighborJoining;
  * @author Scooter Willis
  */
 public class TreeConstructor<C extends AbstractSequence<D>, D extends Compound> extends Thread {
+
+	private static final Logger logger = LoggerFactory.getLogger(TreeConstructor.class);
 
     TreeType treeType;
     TreeConstructionAlgorithm treeConstructionAlgorithm;
@@ -129,8 +132,7 @@ public class TreeConstructor<C extends AbstractSequence<D>, D extends Compound> 
                         try {
                             score += pwmatrix.getPairwiseScore(sequenceString[i].charAt(k), sequenceString[j].charAt(k));
                         } catch (Exception ex) {
-                            System.err.println("err creating BLOSUM62 tree");
-                            ex.printStackTrace();
+                            logger.error("err creating BLOSUM62 tree", ex);
                         }
                     }
 
@@ -204,8 +206,7 @@ public class TreeConstructor<C extends AbstractSequence<D>, D extends Compound> 
         try {
             process();
         } catch (Exception e) {
-            e.printStackTrace();
-
+            logger.error("Exception: ", e);
         }
     }
 
@@ -267,7 +268,7 @@ public class TreeConstructor<C extends AbstractSequence<D>, D extends Compound> 
             }
 
             long readTime = System.currentTimeMillis();
-            TreeConstructor<ProteinSequence, AminoAcidCompound> treeConstructor = new TreeConstructor<ProteinSequence, AminoAcidCompound>(multipleSequenceAlignment, TreeType.NJ, TreeConstructionAlgorithm.PID, new ProgessListenerStub());
+            TreeConstructor<ProteinSequence, AminoAcidCompound> treeConstructor = new TreeConstructor<ProteinSequence, AminoAcidCompound>(multipleSequenceAlignment, TreeType.NJ, TreeConstructionAlgorithm.PID, new ProgressListenerStub());
             treeConstructor.process();
             long treeTime = System.currentTimeMillis();
             String newick = treeConstructor.getNewickString(true, true);
@@ -275,17 +276,15 @@ public class TreeConstructor<C extends AbstractSequence<D>, D extends Compound> 
 
 
 
-            System.out.println("Tree time " + (treeTime - readTime));
-            System.out.println(newick);
+            logger.info("Tree time {}", (treeTime - readTime));
+            logger.info(newick);
 
             // treeConstructor.outputPhylipDistances("/Users/Scooter/mutualinformation/project/nuclear_receptor/PF00104_small.fasta.phylip");
 
         } catch (FileNotFoundException ex) {
-            //can't find file specified by args[0]
-            ex.printStackTrace();
+            logger.error("Can't find file specified by args[0]", ex);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Exception: ", e);
         }
-
     }
 }

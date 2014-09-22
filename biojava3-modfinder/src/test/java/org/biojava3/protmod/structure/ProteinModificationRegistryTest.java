@@ -48,6 +48,8 @@ import junit.framework.TestCase;
  */
 public class ProteinModificationRegistryTest extends TestCase {
 	
+	//private static final Logger logger = LoggerFactory.getLogger(ProteinModificationRegistryTest.class);
+
 	/**
 	 * Note: if you change this unit test, also change the cook book:
 	 * http://www.biojava.org/wiki/BioJava:CookBook3:AddProtMod
@@ -95,7 +97,7 @@ public class ProteinModificationRegistryTest extends TestCase {
 		Set<ProteinModification> mods = ProteinModificationRegistry.allModifications();
 		assertTrue(mods!=null && !mods.isEmpty());
 		
-//		System.out.println("There are totally "+mods.size()
+//		logger.info("There are totally "+mods.size()
 //				+" protein modifications registered.");
 //		
 //		printModifications(mods);
@@ -147,7 +149,7 @@ public class ProteinModificationRegistryTest extends TestCase {
 //	 */
 //	private void printModifications(Set<ProteinModification> mods) {
 //		for (ProteinModification mod:mods) {
-//			System.out.println(mod);	
+//			logger.info(mod);	
 //		}
 //	}
 	

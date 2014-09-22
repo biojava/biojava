@@ -36,6 +36,8 @@ import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureException;
 import org.biojava3.protmod.ProteinModification;
 import org.biojava3.protmod.ProteinModificationRegistry;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * 
@@ -44,6 +46,8 @@ import org.biojava3.protmod.ProteinModificationRegistry;
  */
 public class ProteinModificationParserTest extends TestCase {
 	
+	private static final Logger logger = LoggerFactory.getLogger(ProteinModificationParserTest.class);
+
 	private String[][] strucs;
 	
 	public void setUp() {
@@ -293,7 +297,7 @@ public class ProteinModificationParserTest extends TestCase {
 //				parserTest(name[0], (String)null); 
 				parserTest(name[0], name[1]);
 			} catch (Exception e){
-				e.printStackTrace();
+				logger.error("Exception: ", e);
 				fail(e.getMessage());
 			}
 		}
@@ -323,7 +327,7 @@ public class ProteinModificationParserTest extends TestCase {
 		parser.identify(struc, mods);
 
 		if (! parser.getIdentifiedModifiedCompound().isEmpty() ){
-			System.err.println("Did not identify any modified compounds for " + pdbId);
+			logger.warn("Did not identify any modified compounds for {}", pdbId);
 		}
 		
 		assertFalse("Did not identify any modified compounds for " + pdbId , 
@@ -374,7 +378,7 @@ public class ProteinModificationParserTest extends TestCase {
 			}
 		}
 		
-		System.out.println(sb.toString());
+		logger.info(sb.toString());
 	}
 	
 	

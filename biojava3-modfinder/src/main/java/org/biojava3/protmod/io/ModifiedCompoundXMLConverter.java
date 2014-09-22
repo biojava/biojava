@@ -7,7 +7,6 @@ import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-
 import java.util.List;
 import java.util.Set;
 
@@ -15,7 +14,6 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.biojava3.core.util.PrettyXMLWriter;
-
 import org.biojava3.protmod.ProteinModification;
 import org.biojava3.protmod.ProteinModificationRegistry;
 import org.biojava3.protmod.structure.ModifiedCompound;
@@ -23,7 +21,8 @@ import org.biojava3.protmod.structure.ModifiedCompoundImpl;
 import org.biojava3.protmod.structure.StructureAtom;
 import org.biojava3.protmod.structure.StructureAtomLinkage;
 import org.biojava3.protmod.structure.StructureGroup;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
@@ -34,11 +33,12 @@ import org.xml.sax.SAXParseException;
 
 public class ModifiedCompoundXMLConverter {
 
+	private static final Logger logger = LoggerFactory.getLogger(ModifiedCompoundXMLConverter.class);
 
 	public static String toXML(ModifiedCompound mc) throws IOException{
 		
 		if ( mc == null) { 
-			System.err.println("ModifiedCompound == null! ");
+			logger.warn("ModifiedCompound == null! ");
 			return "<modifiedCompound/>";
 		}
 		StringWriter out = new StringWriter();
@@ -136,7 +136,7 @@ public class ModifiedCompoundXMLConverter {
 						String modId = getAttribute(listOfConditions, "id");
 						modification = ProteinModificationRegistry.getById(modId);
 						if (modification==null) {
-							System.err.println("Error: no modification information.");
+							logger.warn("Error: no modification information.");
 						}
 					} else if ( listOfConditions.getNodeName().equals("linkage")) {
 						double dist = Double.parseDouble(getAttribute(listOfConditions, "distance"));
@@ -153,26 +153,18 @@ public class ModifiedCompoundXMLConverter {
 					} else if (listOfConditions.getNodeName().equals("structureGroup")) {
 						StructureGroup group = StructureGroupXMLConverter.fromXML(listOfConditions);
 						structureGroups.add(group);
-//						System.out.println("structureGroups size:" + structureGroups.size());
+//						logger.info("structureGroups size:" + structureGroups.size());
 					}
 				}
 			}
-
-
-		} catch (SAXParseException err) 
-		{
-			System.out.println ("** Parsing error" + ", line " 
-					+ err.getLineNumber () + ", uri " + err.getSystemId ());
-			System.out.println(" " + err.getMessage ());
+		} catch (SAXParseException err)	{
+			logger.error("** Parsing error, line: {}, uri: {}", err.getLineNumber (), err.getSystemId (), err);
 		}
-		catch (SAXException e)
-		{
-			Exception x = e.getException ();
-			((x == null) ? e : x).printStackTrace ();
+		catch (SAXException e) {
+			logger.error("Exception: ", e);
 		}
-		catch (Throwable t)
-		{
-			t.printStackTrace ();
+		catch (Throwable t) {
+			logger.error("Exception: ", t);
 		}
 		
 		 
@@ -201,7 +193,7 @@ public class ModifiedCompoundXMLConverter {
 			if ( atoms.getNodeName().equals(elementName)) {
 				NodeList child2 = atoms.getChildNodes();
 				int numAtoms = child2.getLength();
-				//System.out.println("got " + numAtoms + " atoms");
+				//logger.info("got " + numAtoms + " atoms");
 				for ( int a=0;a< numAtoms; a++){
 					Node atomNode = child2.item(a);
 					if(!atomNode.hasAttributes()) continue;

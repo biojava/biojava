@@ -25,18 +25,19 @@
 package org.biojava3.ontology;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.text.ParseException;
 import java.util.Set;
 
 import junit.framework.TestCase;
 
 import org.biojava3.ontology.io.OboParser;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class TestOboFileParsing extends TestCase{
 
+	private static final Logger logger = LoggerFactory.getLogger(TestOboFileParsing.class);
 
 	public void testParsingBioSapiensOBO(){
 		OboParser parser = new OboParser();
@@ -54,7 +55,7 @@ public class TestOboFileParsing extends TestCase{
 			assertTrue(keys.size() >4000);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error("Exception: ", e);
 			fail(e.getMessage());
 		}
 
