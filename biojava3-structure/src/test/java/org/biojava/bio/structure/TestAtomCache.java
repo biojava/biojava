@@ -34,10 +34,11 @@ import junit.framework.TestCase;
 public class TestAtomCache extends TestCase
 {
 	public static final String lineSplit = System.getProperty("file.separator");
-	AtomCache cache = new AtomCache();
+	AtomCache cache;
 	public void setUp() {
+		cache = new AtomCache();
+
 		// Delete files which were cached in previous tests
-		
 		String cacheDir = cache.getPath();
 		String[] uncacheIDs = new String[] {
 				"1cmw", "1hhb","4hhb"
@@ -158,7 +159,7 @@ public class TestAtomCache extends TestCase
 	
 	public void testFetchCurrent() throws IOException, StructureException {
 		
-		
+		cache.setUseMmCif(false); //TODO Remove after implementing obsolete mmcif fetching
 		cache.setAutoFetch(true);
 		cache.setFetchCurrent(true);
 		cache.setFetchFileEvenIfObsolete(false);
@@ -185,6 +186,7 @@ public class TestAtomCache extends TestCase
 	public void testFetchObsolete() throws IOException, StructureException {
 		
 		
+		cache.setUseMmCif(false); //TODO Remove after implementing obsolete mmcif fetching
 		cache.setAutoFetch(true);
 		cache.setFetchCurrent(false);
 		cache.setFetchFileEvenIfObsolete(true);

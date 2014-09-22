@@ -795,7 +795,7 @@ public class StructureTools {
 		if ( c != null) {
 			newS.addChain(c);
 			for ( Compound comp : s.getCompounds()){
-				if ( comp.getChainId().contains(c.getChainID())){
+				if ( comp.getChainId() != null && comp.getChainId().contains(c.getChainID())){
 					// found matching compound. set description...
 					newS.getPDBHeader().setDescription("Chain " + c.getChainID() + " of " + s.getPDBCode() + " " + comp.getMolName());
 				}

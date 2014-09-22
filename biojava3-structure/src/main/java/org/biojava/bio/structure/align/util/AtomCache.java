@@ -168,7 +168,7 @@ public class AtomCache {
 
 		strictSCOP = true;
 
-		useMmCif = false;
+		useMmCif = true;
 
 	}
 

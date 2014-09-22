@@ -35,7 +35,6 @@ import org.biojava.bio.structure.Group;
 import org.biojava.bio.structure.GroupType;
 import org.biojava.bio.structure.ResidueNumber;
 
-
 public final class StructureUtil {
 	private StructureUtil() {
 		throw new AssertionError();

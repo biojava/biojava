@@ -34,15 +34,19 @@ import java.util.Set;
 import org.biojava3.ontology.Ontology;
 import org.biojava3.ontology.Term;
 import org.biojava3.ontology.io.OboParser;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ParseGO {
+	
+	private static final Logger logger = LoggerFactory.getLogger(ParseGO.class);
+
 	public static void main(String[] args){
 
 		String u = "http://sourceforge.net/p/song/svn/HEAD/tree/trunk/subsets/biosapiens.obo?format=raw";
 
 		try {
 			URL url = new URL(u);
-
 
 			OboParser parser = new OboParser();
 			InputStream inStream = url.openStream();
@@ -55,14 +59,10 @@ public class ParseGO {
 			Iterator<Term> iter = keys.iterator();
 			while (iter.hasNext()){
 				Term t = iter.next();
-				System.out.println(t.getName() + " [" + t.getDescription() + "]");
+				logger.info("{} [{}]", t.getName(), t.getDescription());
 			}
-
-
 		} catch (Exception e){
-			e.printStackTrace();
+			logger.error("Exception: ", e);
 		}
-
 	}
 }
-
