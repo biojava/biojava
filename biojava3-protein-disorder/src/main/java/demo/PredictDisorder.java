@@ -7,24 +7,29 @@ import org.biojava3.core.sequence.compound.AminoAcidCompound;
 import org.biojava3.core.sequence.compound.AminoAcidCompoundSet;
 import org.biojava3.core.sequence.loader.UniprotProxySequenceReader;
 import org.biojava3.ronn.Jronn;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class PredictDisorder {
+  
+	private static final Logger logger = LoggerFactory.getLogger(PredictDisorder.class);
+
 	public static void main(String[] args){
 
 		String uniprotID = "O30642";
 		try {
 			ProteinSequence seq = getUniprot(uniprotID);
-			System.out.println(seq.toString());
+			logger.info("Protein Sequence: {}", seq.toString());
 			AminoAcidCompoundSet compoundSet = AminoAcidCompoundSet.getAminoAcidCompoundSet();
 			
 			compoundSet.verifySequence(seq);
 			
 			float[] values = Jronn.getDisorderScores(seq);
 			
-			System.out.println(Arrays.toString(values));
+			logger.info("Disorder Scores: {}", Arrays.toString(values));
 			
 		} catch (Exception e){
-			e.printStackTrace();
+			logger.error("Exception: ", e);
 		}
 	}
 
