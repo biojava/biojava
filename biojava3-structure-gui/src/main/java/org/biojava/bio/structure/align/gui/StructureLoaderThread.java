@@ -39,7 +39,7 @@ public class StructureLoaderThread extends SwingWorker<String, Object> {
 
 		System.out.println("loading " + name );
 
-		AtomCache cache = new AtomCache(config.getPdbFilePath(),config.isSplit());
+		AtomCache cache = new AtomCache(config.getPdbFilePath(),config.getCacheFilePath(),config.isSplit());
 		Structure s = null;
 		try {
 			if ( showBiolAssembly) {

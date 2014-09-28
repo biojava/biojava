@@ -25,7 +25,7 @@ public class TestLoadStructureFromURL extends TestCase{
 				System.out.println("making dir with space:" + f);
 				f.mkdir();
 			}
-			AtomCache c = new AtomCache(path, true);
+			AtomCache c = new AtomCache(path, path, true);
 			c.setUseMmCif(false);
 
 			// fetch a random small structure

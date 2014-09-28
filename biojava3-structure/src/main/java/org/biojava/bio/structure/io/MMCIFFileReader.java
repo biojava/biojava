@@ -65,15 +65,15 @@ public class MMCIFFileReader implements StructureIOFile {
 
 	private static final Logger logger = LoggerFactory.getLogger(MMCIFFileReader.class);
 	
-	private String path;
+	private File path;
 	private List<String> extensions;
 	private boolean autoFetch;
 	private boolean pdbDirectorySplit;
 	
 	public static final String lineSplit = System.getProperty("file.separator");
 	
-	FileParsingParameters params;
-	SimpleMMcifConsumer consumer;
+	private FileParsingParameters params;
+	private SimpleMMcifConsumer consumer;
 	
 	public static void main(String[] args) throws Exception {
 	
@@ -97,11 +97,11 @@ public class MMCIFFileReader implements StructureIOFile {
 		extensions.add(".mmcif.gz");
 
 		UserConfiguration config = new UserConfiguration();
-		path = config.getPdbFilePath() ;
+		path = new File(config.getPdbFilePath());
 		autoFetch     = config.getAutoFetch();
 		pdbDirectorySplit = config.isSplit();
 		params = new FileParsingParameters();
-
+		
 	}
 
 	public void addExtension(String ext) {
@@ -167,13 +167,13 @@ public class MMCIFFileReader implements StructureIOFile {
 	}
 
 	public void setPath(String path) {
-		this.path = path;
+		this.path = new File(path);
 
 	}
 
 
 	public String getPath() {
-		return path;
+		return path.toString();
 	}
 
 	/** Get a structure by PDB code. This works if a PATH has been set via setPath, or if setAutoFetch has been set to true.
@@ -189,7 +189,7 @@ public class MMCIFFileReader implements StructureIOFile {
 	private InputStream getInputStream(String pdbId) throws IOException{
 		
 		if ( pdbId.length() < 4)
-			throw new IOException("the provided ID does not look like a PDB ID : " + pdbId);
+			throw new IOException("The provided ID does not look like a PDB ID : " + pdbId);
 		
 		InputStream inputStream =null;
 
@@ -203,11 +203,11 @@ public class MMCIFFileReader implements StructureIOFile {
 		if ( pdbDirectorySplit){
 			// pdb files are split into subdirectories based on their middle position...
 			String middle = pdbId.substring(1,3).toLowerCase();
-			fpath = path+lineSplit + middle + lineSplit + pdbId;
-			ppath = path +lineSplit +  middle + lineSplit + "pdb"+pdbId;
+			fpath = path + lineSplit + middle + lineSplit + pdbId;
+			ppath = path + lineSplit + middle + lineSplit + "pdb"+pdbId;
 		} else {
-			fpath = path+lineSplit + pdbId;
-			ppath = path +lineSplit + "pdb"+pdbId;
+			fpath = path + lineSplit + pdbId;
+			ppath = path + lineSplit + "pdb"+pdbId;
 		}
 
 		String[] paths = new String[]{fpath,ppath};
@@ -216,7 +216,7 @@ public class MMCIFFileReader implements StructureIOFile {
 			String testpath = paths[p];
 			//System.out.println(testpath);
 			for (int i=0 ; i<extensions.size();i++){
-				String ex = (String)extensions.get(i) ;
+				String ex = extensions.get(i) ;
 				//System.out.println("PDBFileReader testing: "+testpath+ex);
 				f = new File(testpath+ex) ;
 
@@ -276,12 +276,6 @@ public class MMCIFFileReader implements StructureIOFile {
 	}
 
 	public File downloadPDB(String pdbId){
-
-		if ((path == null) || (path.equals(""))){
-			logger.warn("You did not set the path in PDBFileReader, don't know where to write the downloaded file to."
-					+ " Assuming default location is current directory.");
-			path = ".";
-		}
 				
 		File tempFile ;
 

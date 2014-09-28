@@ -19,15 +19,16 @@
 
 package org.biojava.bio.structure.align.util;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Map;
 
 import org.biojava.bio.structure.align.ce.AbstractUserArgumentProcessor;
 import org.biojava.bio.structure.align.ce.StartupParameters;
-import org.biojava.bio.structure.io.PDBFileReader;
 import org.biojava3.core.util.PrettyXMLWriter;
 import org.biojava3.core.util.XMLWriter;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -42,19 +43,25 @@ public class UserConfiguration
 
 	private static final Logger logger = LoggerFactory.getLogger(UserConfiguration.class);
 	
-	String pdbFilePath;
-	String cacheFilePath;
-	boolean isSplit;
-
-	private boolean autoFetch;
-
-	String fileFormat;
-
 	public static final String PDB_FORMAT   = "PDB";
 	public static final String MMCIF_FORMAT = "mmCif";
 
 	public static final String TMP_DIR = "java.io.tmpdir";
 	public static final String PDB_DIR = "PDB_DIR";
+	
+	public static final String lineSplit = System.getProperty("file.separator");
+
+	
+	
+	private String pdbFilePath;
+	private String cacheFilePath;
+	private boolean isSplit;
+
+	private boolean autoFetch;
+
+	private String fileFormat;
+
+
 
 	/**
 	 * Default UserConfiguration:
@@ -66,43 +73,145 @@ public class UserConfiguration
 	 *   <li>PDB_DIR environment variable</li>
 	 *   <li>System temp directory (java.io.tmpdir property)</li>
 	 *   </ol>
+	 *   if the provided path is not a directory or is not writable then 
+	 *   the system's temp directory is used.
 	 * </li>
 	 * </ul>
 	 */
 	public UserConfiguration(){
 		isSplit = true;
 		autoFetch = true;
-		// accessing temp. OS directory:         
-		String userProvidedDir = System.getProperty(PDB_DIR);
+		       
+		pdbFilePath = initPdbFilePath();
+		// note that in initCacheFilePath, we set to the provided one (if readable) or to the same as pdbFilePath
+		cacheFilePath = initCacheFilePath();
+		
+		fileFormat = PDB_FORMAT;
+	}
+	
+	private String initPdbFilePath() {
+		
+		String path = null;
+		
+		String propertyName = PDB_DIR;
+		
+		String userProvidedDir = System.getProperty(propertyName);
 
 		if ( userProvidedDir != null ) {
 
-			pdbFilePath = userProvidedDir;
+			path = userProvidedDir;
+			logger.debug("Read dir from system property {}: {}", propertyName, path);
+			File f = new File(path);
+			if (!f.isDirectory()) {
+				logger.warn(
+						"Provided path {} (with system property {}) is not a directory. Using system's temp directory instead {}", 
+						path, propertyName, System.getProperty(TMP_DIR));
+				path = System.getProperty(TMP_DIR);
+			} else if (!f.canWrite()) {
+				logger.warn(
+						"Provided path {} (with system property {}) is not a directory. Using system's temp directory instead {}", 
+						path, propertyName, System.getProperty(TMP_DIR));
+				path = System.getProperty(TMP_DIR);
+			}
+			
 
 		} else {
 			Map<String,String> env = System.getenv();
 
-			if( env.containsKey(PDB_DIR)) {
-				pdbFilePath = env.get(PDB_DIR);
-				logger.debug("Read pdb dir from environment variable "+PDB_DIR+": "+userProvidedDir);
+			if( env.containsKey(propertyName)) {
+				path = env.get(propertyName);
+				logger.debug("Read dir from environment variable {}: {}", propertyName, path);
+				
+				File f = new File(path);
+				if (!f.isDirectory()) {
+					logger.warn(
+							"Provided path {} (with environment variable {}) is not a directory. Using system's temp directory instead {}", 
+							path, propertyName, System.getProperty(TMP_DIR));
+					path = System.getProperty(TMP_DIR);
+				} else if (!f.canWrite()) {
+					logger.warn(
+							"Provided path {} (with environment variable {}) is not a directory. Using system's temp directory instead {}", 
+							path, propertyName, System.getProperty(TMP_DIR));
+					path = System.getProperty(TMP_DIR);
+				}
 
 			} else {
-				pdbFilePath = System.getProperty(TMP_DIR);
+				path = System.getProperty(TMP_DIR);
+				logger.warn("Could not read dir from system property {} or environment variable {}, "
+						+ "using system's temp directory {}",
+						propertyName, propertyName, path);
 			}   
 		}
-		if ( ! pdbFilePath.endsWith(PDBFileReader.lineSplit) )
-			pdbFilePath = pdbFilePath + PDBFileReader.lineSplit;
+		
+		if ( ! path.endsWith(lineSplit) )
+			path = path + lineSplit;
+		
+		return path;
 
-		String tmpCache = System.getProperty(AbstractUserArgumentProcessor.CACHE_DIR);
-		if ( tmpCache == null || tmpCache.equals("")){
-			tmpCache = pdbFilePath;
-		}
-		cacheFilePath = tmpCache;
-
-
-		fileFormat = PDB_FORMAT;
 	}
 
+	private String initCacheFilePath() {
+		
+		String path = null;
+		
+		String propertyName = AbstractUserArgumentProcessor.CACHE_DIR;
+		
+		String userProvidedDir = System.getProperty(propertyName);
+
+		if ( userProvidedDir != null ) {
+
+			path = userProvidedDir;
+			logger.debug("Read dir from system property {}: {}", propertyName, path);
+			File f = new File(path);
+			if (!f.isDirectory()) {
+				logger.warn(
+						"Provided path {} (with system property {}) is not a directory. Using system's temp directory instead {}", 
+						path, propertyName, System.getProperty(TMP_DIR));
+				path = System.getProperty(TMP_DIR);
+			} else if (!f.canWrite()) {
+				logger.warn(
+						"Provided path {} (with system property {}) is not a directory. Using system's temp directory instead {}", 
+						path, propertyName, System.getProperty(TMP_DIR));
+				path = System.getProperty(TMP_DIR);
+			}
+			
+
+		} else {
+			Map<String,String> env = System.getenv();
+
+			if( env.containsKey(propertyName)) {
+				path = env.get(propertyName);
+				logger.debug("Read dir from environment variable {}: {}", propertyName, path);
+				
+				File f = new File(path);
+				if (!f.isDirectory()) {
+					logger.warn(
+							"Provided path {} (with environment variable {}) is not a directory. Using system's temp directory instead {}", 
+							path, propertyName, System.getProperty(TMP_DIR));
+					path = System.getProperty(TMP_DIR);
+				} else if (!f.canWrite()) {
+					logger.warn(
+							"Provided path {} (with environment variable {}) is not a directory. Using system's temp directory instead {}", 
+							path, propertyName, System.getProperty(TMP_DIR));
+					path = System.getProperty(TMP_DIR);
+				}
+
+			} else {
+				// NOTE in case of not provided, then it is set to same as pdbFilePath
+				path = pdbFilePath;
+				logger.info("Could not read cache dir from system property {} or environment variable {}, "
+						+ "using PDB directory instead {}",
+						propertyName, propertyName, path);
+			}   
+		}
+		
+		if ( ! path.endsWith(lineSplit) )
+			path = path + lineSplit;
+		
+		return path;
+
+	}
+	
 	public String getPdbFilePath()
 	{
 		return pdbFilePath;

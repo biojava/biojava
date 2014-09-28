@@ -216,7 +216,7 @@ public abstract class AbstractUserArgumentProcessor implements UserArgumentProce
 		}
 
 
-		AtomCache cache = new AtomCache(pdbFilePath, params.isPdbDirSplit());
+		AtomCache cache = new AtomCache(pdbFilePath, pdbFilePath, params.isPdbDirSplit());
 
 		String alignPairs = params.getAlignPairs();
 
@@ -406,7 +406,7 @@ public abstract class AbstractUserArgumentProcessor implements UserArgumentProce
 				path = c.getPdbFilePath();
 			}
 
-			AtomCache cache = new AtomCache(path, params.isPdbDirSplit());
+			AtomCache cache = new AtomCache(path, path, params.isPdbDirSplit());
 			cache.setAutoFetch(params.isAutoFetch());   
 			structure1 = getStructure(cache, name1, file1);
 			structure2 = getStructure(cache, name2, file2);

@@ -95,18 +95,18 @@ public class AtomCache {
 	protected FileParsingParameters params;
 	protected PDPProvider pdpprovider;
 
-	boolean autoFetch;
+	private boolean autoFetch;
 
-	String cachePath;
+	private String cachePath;
 
 	// make sure IDs are loaded uniquely
-	Collection<String> currentlyLoading = Collections.synchronizedCollection(new TreeSet<String>());
+	private Collection<String> currentlyLoading = Collections.synchronizedCollection(new TreeSet<String>());
 
-	boolean isSplit;
-	String path;
+	private boolean isSplit;
+	private String path;
 
-	boolean strictSCOP;
-	boolean useMmCif;
+	private boolean strictSCOP;
+	private boolean useMmCif;
 
 	/**
 	 * Default AtomCache constructor.
@@ -124,11 +124,14 @@ public class AtomCache {
 	 * 
 	 * @param pdbFilePath
 	 *            a directory in the file system to use as a location to cache files.
+	 * @param cachePath
 	 * @param isSplit
 	 *            a flag to indicate if the directory organisation is "split" as on the PDB ftp servers, or if all files
 	 *            are contained in one directory.
 	 */
-	public AtomCache(String pdbFilePath, boolean isSplit) {
+	public AtomCache(String pdbFilePath, String cachePath, boolean isSplit) {
+		
+		logger.debug("Initialising AtomCache with pdbFilePath={}, cachePath={} and isSplit={}",pdbFilePath, cachePath, isSplit);
 
 		if (!pdbFilePath.endsWith(FILE_SEPARATOR)) {
 			pdbFilePath += FILE_SEPARATOR;
@@ -139,17 +142,10 @@ public class AtomCache {
 		// set the input stream provider to caching mode
 		System.setProperty(InputStreamProvider.CACHE_PROPERTY, "true");
 
-		path = pdbFilePath;
-		System.setProperty(AbstractUserArgumentProcessor.PDB_DIR, path);
-
-		String tmpCache = System.getProperty(AbstractUserArgumentProcessor.CACHE_DIR);
-		if (tmpCache == null || tmpCache.equals("")) {
-			tmpCache = pdbFilePath;
-		}
-
-		cachePath = tmpCache;
-		System.setProperty(AbstractUserArgumentProcessor.CACHE_DIR, cachePath);
-
+		this.path = pdbFilePath;
+		
+		this.cachePath = cachePath;
+		
 		// this.cache = cache;
 		this.isSplit = isSplit;
 
@@ -179,7 +175,7 @@ public class AtomCache {
 	 *            the UserConfiguration to use for this cache.
 	 */
 	public AtomCache(UserConfiguration config) {
-		this(config.getPdbFilePath(), config.isSplit());
+		this(config.getPdbFilePath(), config.getCacheFilePath(), config.isSplit());
 		autoFetch = config.getAutoFetch();
 	}
 
@@ -205,28 +201,6 @@ public class AtomCache {
 		 */
 
 		return atoms;
-	}
-
-	/**
-	 * Returns the CA atoms for the provided name. See {@link #getStructure(String)} for supported naming conventions.
-	 * 
-	 * @param name
-	 * @param clone
-	 *            flag to make sure that the atoms are getting coned
-	 * @return an array of Atoms.
-	 * @throws IOException
-	 * @throws StructureException
-	 * @deprecated does the same as {@link #getAtoms(String)} ;
-	 */
-	@Deprecated
-	public Atom[] getAtoms(String name, boolean clone) throws IOException, StructureException {
-		Atom[] atoms = getAtoms(name);
-
-		if (clone) {
-			return StructureTools.cloneCAArray(atoms);
-		}
-		return atoms;
-
 	}
 
 	/**
@@ -288,14 +262,11 @@ public class AtomCache {
 	}
 
 	/**
-	 * Returns the path that contains the caching file for utility data, such as domain definitons.
+	 * Returns the path that contains the caching file for utility data, such as domain definitions.
 	 * 
 	 * @return
 	 */
 	public String getCachePath() {
-		if (cachePath == null || cachePath.equals("")) {
-			return getPath();
-		}
 		return cachePath;
 	}
 
