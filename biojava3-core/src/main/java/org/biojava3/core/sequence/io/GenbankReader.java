@@ -13,6 +13,7 @@
  * 
  * @author Scooter Willis ;lt;willishf at gmail dot com&gt;
  * @author Karl Nicholas <github:karlnicholas>
+ * @author Paolo Pavan
  * 
  * For more information on the BioJava project and its aims,
  * or to join the biojava-l mailing list, visit the home page
@@ -40,12 +41,11 @@ import org.biojava3.core.sequence.compound.AminoAcidCompound;
 import org.biojava3.core.sequence.compound.AminoAcidCompoundSet;
 import org.biojava3.core.sequence.compound.DNACompoundSet;
 import org.biojava3.core.sequence.compound.NucleotideCompound;
+import org.biojava3.core.sequence.features.AbstractFeature;
 import org.biojava3.core.sequence.io.template.SequenceCreatorInterface;
 import org.biojava3.core.sequence.io.template.SequenceHeaderParserInterface;
 import org.biojava3.core.sequence.template.AbstractSequence;
 import org.biojava3.core.sequence.template.Compound;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Use GenbankReaderHelper as an example of how to use this class where GenbankReaderHelper should be the
@@ -53,8 +53,6 @@ import org.slf4j.LoggerFactory;
  *
  */
 public class GenbankReader<S extends AbstractSequence<C>, C extends Compound> {
-
-	private final static Logger logger = LoggerFactory.getLogger(GenbankReader.class);
 
     private SequenceCreatorInterface<C> sequenceCreator;
     private GenbankSequenceParser<S,C> genbankParser;
@@ -136,9 +134,13 @@ public class GenbankReader<S extends AbstractSequence<C>, C extends Compound> {
      */
     public LinkedHashMap<String,S> process(int max) throws Exception {
         LinkedHashMap<String,S> sequences = new LinkedHashMap<String,S>();
-		@SuppressWarnings("unchecked")
-		S sequence = (S) sequenceCreator.getSequence(genbankParser.getSequence(new BufferedReader(new InputStreamReader(inputStream)), 0), 0);
-		genbankParser.getSequenceHeaderParser().parseHeader(genbankParser.getHeader(), sequence);
+        @SuppressWarnings("unchecked")
+        S sequence = (S) sequenceCreator.getSequence(genbankParser.getSequence(new BufferedReader(new InputStreamReader(inputStream)), 0), 0);
+        genbankParser.getSequenceHeaderParser().parseHeader(genbankParser.getHeader(), sequence);
+        for (String k: genbankParser.getFeatureCollection().keySet())
+            for (AbstractFeature f: genbankParser.getFeatureCollection().get(k))
+                sequence.addFeature(f);
+        
     	sequences.put(sequence.getAccession().getID(), sequence);
     	close();
         return sequences;
@@ -154,14 +156,21 @@ public class GenbankReader<S extends AbstractSequence<C>, C extends Compound> {
 
         GenbankReader<ProteinSequence, AminoAcidCompound> proteinReader = new GenbankReader<ProteinSequence, AminoAcidCompound>(is, new GenericGenbankHeaderParser<ProteinSequence,AminoAcidCompound>(), new ProteinSequenceCreator(AminoAcidCompoundSet.getAminoAcidCompoundSet()));
         LinkedHashMap<String,ProteinSequence> proteinSequences = proteinReader.process();
-        logger.info("Protein Sequences: {}", proteinSequences);
+        System.out.println(proteinSequences);
 
         String inputFile = "src/test/resources/NM_000266.gb";
         is = new FileInputStream(inputFile);
         GenbankReader<DNASequence, NucleotideCompound> dnaReader = new GenbankReader<DNASequence, NucleotideCompound>(is, new GenericGenbankHeaderParser<DNASequence,NucleotideCompound>(), new DNASequenceCreator(DNACompoundSet.getDNACompoundSet()));
         LinkedHashMap<String,DNASequence> dnaSequences = dnaReader.process();
+        System.out.println(dnaSequences);
+        
+        String crazyFile = "src/test/resources/CraftedFeature.gb";
+        is = new FileInputStream(crazyFile);
+        GenbankReader<DNASequence, NucleotideCompound> crazyReader = new GenbankReader<DNASequence, NucleotideCompound>(is, new GenericGenbankHeaderParser<DNASequence,NucleotideCompound>(), new DNASequenceCreator(DNACompoundSet.getDNACompoundSet()));
+        LinkedHashMap<String,DNASequence> crazyAnnotatedSequences = crazyReader.process();
+        
         is.close();
-        logger.info("DNA Sequences: {}", dnaSequences);
+        System.out.println(crazyAnnotatedSequences);
     }
 
 }
