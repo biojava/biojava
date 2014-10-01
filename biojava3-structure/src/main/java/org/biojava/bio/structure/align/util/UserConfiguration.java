@@ -24,11 +24,9 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Map;
 
-import org.biojava.bio.structure.align.ce.AbstractUserArgumentProcessor;
 import org.biojava.bio.structure.align.ce.StartupParameters;
 import org.biojava3.core.util.PrettyXMLWriter;
 import org.biojava3.core.util.XMLWriter;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -47,7 +45,9 @@ public class UserConfiguration
 	public static final String MMCIF_FORMAT = "mmCif";
 
 	public static final String TMP_DIR = "java.io.tmpdir";
-	public static final String PDB_DIR = "PDB_DIR";
+	
+	public static final String PDB_DIR   = "PDB_DIR";
+	public static final String CACHE_DIR = "PDB_CACHE_DIR";
 	
 	public static final String lineSplit = System.getProperty("file.separator");
 
@@ -69,13 +69,21 @@ public class UserConfiguration
 	 * <li>split directory</li>
 	 * <li>autofetch files</li>
 	 * <li>default download location. This is the first specified of:
-	 * 	<ol><li>PDB_DIR system property (for instance, -DPDB_DIR=/tmp)</li>
-	 *   <li>PDB_DIR environment variable</li>
+	 * 	<ol><li>{@value #PDB_DIR} system property (for instance, -D{@value #PDB_DIR}=/tmp)</li>
+	 *   <li>{@value #PDB_DIR} environment variable</li>
 	 *   <li>System temp directory (java.io.tmpdir property)</li>
 	 *   </ol>
 	 *   if the provided path is not a directory or is not writable then 
 	 *   the system's temp directory is used.
 	 * </li>
+	 * <li>default cache location. This is the first specified of:
+	 * 	<ol><li>{@value #CACHE_DIR} system property (for instance, -D{@value #CACHE_DIR}=/tmp)</li>
+	 *   <li>{@value #CACHE_DIR} environment variable</li>
+	 *   <li>the value set for {@value #PDB_DIR}</li>
+	 *   </ol>
+	 *   if the provided path is not a directory or is not writable then 
+	 *   the system's temp directory is used.
+	 * </li> 
 	 * </ul>
 	 */
 	public UserConfiguration(){
@@ -97,7 +105,7 @@ public class UserConfiguration
 		
 		String userProvidedDir = System.getProperty(propertyName);
 
-		if ( userProvidedDir != null ) {
+		if ( userProvidedDir != null && !userProvidedDir.trim().isEmpty()) {
 
 			path = userProvidedDir;
 			logger.debug("Read dir from system property {}: {}", propertyName, path);
@@ -109,7 +117,7 @@ public class UserConfiguration
 				path = System.getProperty(TMP_DIR);
 			} else if (!f.canWrite()) {
 				logger.warn(
-						"Provided path {} (with system property {}) is not a directory. Using system's temp directory instead {}", 
+						"Provided path {} (with system property {}) is not writable. Using system's temp directory instead {}", 
 						path, propertyName, System.getProperty(TMP_DIR));
 				path = System.getProperty(TMP_DIR);
 			}
@@ -118,7 +126,7 @@ public class UserConfiguration
 		} else {
 			Map<String,String> env = System.getenv();
 
-			if( env.containsKey(propertyName)) {
+			if( env.containsKey(propertyName) && !env.get(propertyName).trim().isEmpty()) {
 				path = env.get(propertyName);
 				logger.debug("Read dir from environment variable {}: {}", propertyName, path);
 				
@@ -130,7 +138,7 @@ public class UserConfiguration
 					path = System.getProperty(TMP_DIR);
 				} else if (!f.canWrite()) {
 					logger.warn(
-							"Provided path {} (with environment variable {}) is not a directory. Using system's temp directory instead {}", 
+							"Provided path {} (with environment variable {}) is not writable. Using system's temp directory instead {}", 
 							path, propertyName, System.getProperty(TMP_DIR));
 					path = System.getProperty(TMP_DIR);
 				}
@@ -154,7 +162,7 @@ public class UserConfiguration
 		
 		String path = null;
 		
-		String propertyName = AbstractUserArgumentProcessor.CACHE_DIR;
+		String propertyName = CACHE_DIR;
 		
 		String userProvidedDir = System.getProperty(propertyName);
 
@@ -170,7 +178,7 @@ public class UserConfiguration
 				path = System.getProperty(TMP_DIR);
 			} else if (!f.canWrite()) {
 				logger.warn(
-						"Provided path {} (with system property {}) is not a directory. Using system's temp directory instead {}", 
+						"Provided path {} (with system property {}) is not writable. Using system's temp directory instead {}", 
 						path, propertyName, System.getProperty(TMP_DIR));
 				path = System.getProperty(TMP_DIR);
 			}
@@ -191,7 +199,7 @@ public class UserConfiguration
 					path = System.getProperty(TMP_DIR);
 				} else if (!f.canWrite()) {
 					logger.warn(
-							"Provided path {} (with environment variable {}) is not a directory. Using system's temp directory instead {}", 
+							"Provided path {} (with environment variable {}) is not writable. Using system's temp directory instead {}", 
 							path, propertyName, System.getProperty(TMP_DIR));
 					path = System.getProperty(TMP_DIR);
 				}

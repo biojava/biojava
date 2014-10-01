@@ -40,7 +40,6 @@ import org.biojava.bio.structure.ResidueRange;
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureException;
 import org.biojava.bio.structure.StructureTools;
-import org.biojava.bio.structure.align.ce.AbstractUserArgumentProcessor;
 import org.biojava.bio.structure.align.client.StructureName;
 import org.biojava.bio.structure.cath.CathDatabase;
 import org.biojava.bio.structure.cath.CathDomain;
@@ -230,8 +229,7 @@ public class AtomCache {
 			throw new StructureException("bioAssemblyID must be greater than zero: " + pdbId + " bioAssemblyId "
 					+ bioAssemblyId);
 		}
-		PDBFileReader reader = new PDBFileReader();
-		reader.setPath(path);
+		PDBFileReader reader = new PDBFileReader(path);
 		reader.setPdbDirectorySplit(isSplit);
 		reader.setAutoFetch(autoFetch);
 		reader.setFetchFileEvenIfObsolete(fetchFileEvenIfObsolete);
@@ -704,8 +702,6 @@ public class AtomCache {
 	 */
 	public void setCachePath(String cachePath) {
 		this.cachePath = cachePath;
-		System.setProperty(AbstractUserArgumentProcessor.CACHE_DIR, cachePath);
-
 	}
 
 	/**
@@ -744,7 +740,6 @@ public class AtomCache {
 	 *            to a directory
 	 */
 	public void setPath(String path) {
-		System.setProperty(AbstractUserArgumentProcessor.PDB_DIR, path);
 		this.path = path;
 	}
 
@@ -953,8 +948,7 @@ public class AtomCache {
 		
 		
 
-		PDBFileReader reader = new PDBFileReader();
-		reader.setPath(path);
+		PDBFileReader reader = new PDBFileReader(path);
 		reader.setPdbDirectorySplit(isSplit);
 		reader.setAutoFetch(autoFetch);
 		reader.setFetchFileEvenIfObsolete(fetchFileEvenIfObsolete);
@@ -1052,8 +1046,7 @@ public class AtomCache {
 		Structure s;
 		flagLoading(pdbId);
 		try {
-			MMCIFFileReader reader = new MMCIFFileReader();
-			reader.setPath(path);
+			MMCIFFileReader reader = new MMCIFFileReader(path);
 			reader.setPdbDirectorySplit(isSplit);
 			reader.setAutoFetch(autoFetch);
 
@@ -1079,8 +1072,7 @@ public class AtomCache {
 		Structure s;
 		flagLoading(pdbId);
 		try {
-			PDBFileReader reader = new PDBFileReader();
-			reader.setPath(path);
+			PDBFileReader reader = new PDBFileReader(path);
 			reader.setPdbDirectorySplit(isSplit);
 			reader.setAutoFetch(autoFetch);
 			reader.setFetchFileEvenIfObsolete(fetchFileEvenIfObsolete);

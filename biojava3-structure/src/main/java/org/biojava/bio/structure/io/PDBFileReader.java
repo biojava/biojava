@@ -260,6 +260,12 @@ public class PDBFileReader implements StructureIOFile {
 
 
 
+	/**
+	 * Constructs a new PDBFileReader, initialising the extensions member variable.
+	 * The path is initialised in the same way as {@link UserConfiguration}, 
+	 * i.e. to system property/environment variable {@link UserConfiguration#PDB_DIR}.
+	 * Both autoFetch and splitDir are initialised to false
+	 */
 	public PDBFileReader() {
 		extensions    = new ArrayList<String>();
 
@@ -275,14 +281,40 @@ public class PDBFileReader implements StructureIOFile {
 
 		params = new FileParsingParameters();
 
-		// this initialises the path member variable
+		// initialising path from PDB_DIR property/environment variable
 		UserConfiguration config = new UserConfiguration();
 		path = new File(config.getPdbFilePath());
-		
+		logger.debug("Initialising from system property/environment variable to path: {}", path.toString());
+	}
+	
+	/**
+	 * Constructs a new PDBFileReader, initialising the extensions member variable.
+	 * The path is initialised to the given path, both autoFetch and splitDir are initialised to false.
+	 */
+	public PDBFileReader(String path) {
+		extensions    = new ArrayList<String>();
+
+		extensions.add(".ent");
+		extensions.add(".pdb");
+		extensions.add(".ent.gz");
+		extensions.add(".pdb.gz");
+		extensions.add(".ent.Z");
+		extensions.add(".pdb.Z");
+
+		autoFetch     = false;		
+		pdbDirectorySplit = false;
+
+		params = new FileParsingParameters();
+
+		this.path = new File(path);
+		logger.debug("Initialising with path {}", path.toString());
+
 	}
 
 
-	/** directory where to find PDB files */
+	/** 
+	 * Sets the path for the directory where PDB files are read/written 
+	 */
 	public void setPath(String p){
 		path = new File(p) ;
 	}
@@ -300,7 +332,6 @@ public class PDBFileReader implements StructureIOFile {
 	/** define supported file extensions
 	 * compressed extensions .Z,.gz do not need to be specified
 	 * they are dealt with automatically.
-
 	 */
 	public void addExtension(String s){
 		//System.out.println("add Extension "+s);

@@ -51,8 +51,6 @@ public class LocalCacheStructureProvider implements StructureProvider{
 	
 	/** directory where to find PDB files */
 	public void setPath(String p){
-		System.setProperty(AbstractUserArgumentProcessor.PDB_DIR,p);
-		
 		path = p ;
 		
 		if ( !(path.endsWith(lineSplit) ) )

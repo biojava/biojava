@@ -29,12 +29,17 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import org.biojava.bio.structure.align.util.AtomCache;
-import junit.framework.TestCase;
+import org.junit.Before;
+import org.junit.Test;
 
-public class TestAtomCache extends TestCase
-{
+import static org.junit.Assert.*;
+
+public class TestAtomCache {
+	
 	public static final String lineSplit = System.getProperty("file.separator");
-	AtomCache cache;
+	private AtomCache cache;
+	
+	@Before
 	public void setUp() {
 		cache = new AtomCache();
 
@@ -80,11 +85,9 @@ public class TestAtomCache extends TestCase
 		}
 	}
 
+	@Test
 	public void testAtomCacheNameParsing() throws IOException, StructureException {
 
-
-
-		
 
 		String name1= "4hhb";
 		Structure s = cache.getStructure(name1);
@@ -156,7 +159,7 @@ public class TestAtomCache extends TestCase
 
 	}
 	
-	
+	@Test
 	public void testFetchCurrent() throws IOException, StructureException {
 		
 		cache.setUseMmCif(false); //TODO Remove after implementing obsolete mmcif fetching
@@ -183,6 +186,7 @@ public class TestAtomCache extends TestCase
 		
 	}
 
+	@Test
 	public void testFetchObsolete() throws IOException, StructureException {
 		
 		

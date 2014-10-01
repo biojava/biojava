@@ -20,6 +20,8 @@
 package org.biojava.bio.structure.align.webstart;
 
 import java.io.File;
+
+import javax.jnlp.UnavailableServiceException;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -134,7 +136,7 @@ public class WebStartMain
 
 			UserConfiguration config = getWebStartConfig();
 
-			System.setProperty("PDB_DIR",config.getPdbFilePath());
+			System.setProperty(PDBDirPanel.PDB_DIR,config.getPdbFilePath());
 			System.out.println("using PDB file path: " + config.getPdbFilePath());
 
 			AtomCache cache = new AtomCache(config);
@@ -251,7 +253,7 @@ public class WebStartMain
 
 				webstartConfig.save(userConfig);
 
-			} catch (Exception e){
+			} catch (UnavailableServiceException e){
 				System.err.println(e.getMessage());
 			}
 		}
@@ -279,7 +281,7 @@ public class WebStartMain
 
 			webstartConfig.save(config);
 
-		} catch (Exception e){
+		} catch (UnavailableServiceException e){
 			e.printStackTrace();
 		}
 

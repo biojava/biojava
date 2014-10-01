@@ -16,9 +16,10 @@ import org.biojava3.structure.StructureIO;
 
 public class MmCifBiolAssemblyProvider implements BioUnitDataProvider {
 
-	MmCifPDBBiolAssemblyProvider provider; 
+	private MmCifPDBBiolAssemblyProvider provider; 
 	
-	AtomCache cache = null;
+	// no initialisation here, this gives an opportunity to setAtomCache to initialise it
+	private AtomCache cache;
 	
 	public MmCifBiolAssemblyProvider(){
 		provider  = new MmCifPDBBiolAssemblyProvider();

@@ -64,13 +64,14 @@ import org.slf4j.LoggerFactory;
 public class MMCIFFileReader implements StructureIOFile {
 
 	private static final Logger logger = LoggerFactory.getLogger(MMCIFFileReader.class);
+
+	public static final String lineSplit = System.getProperty("file.separator");
 	
+
 	private File path;
 	private List<String> extensions;
 	private boolean autoFetch;
 	private boolean pdbDirectorySplit;
-	
-	public static final String lineSplit = System.getProperty("file.separator");
 	
 	private FileParsingParameters params;
 	private SimpleMMcifConsumer consumer;
@@ -89,6 +90,12 @@ public class MMCIFFileReader implements StructureIOFile {
 			
 	}
 
+	/**
+	 * Constructs a new MMCIFFileReader, initialising the extensions member variable.
+	 * The path is initialised in the same way as {@link UserConfiguration}, 
+	 * i.e. to system property/environment variable {@link UserConfiguration#PDB_DIR}.
+	 * Both autoFetch and splitDir are initialised to false
+	 */
 	public MMCIFFileReader(){
 		extensions    = new ArrayList<String>();
 		extensions.add(".cif");
@@ -96,14 +103,40 @@ public class MMCIFFileReader implements StructureIOFile {
 		extensions.add(".cif.gz");
 		extensions.add(".mmcif.gz");
 
+		autoFetch     = false;		
+		pdbDirectorySplit = false;
+		
+		params = new FileParsingParameters();
+
+		
+		// initialising path from PDB_DIR property/environment variable
 		UserConfiguration config = new UserConfiguration();
 		path = new File(config.getPdbFilePath());
-		autoFetch     = config.getAutoFetch();
-		pdbDirectorySplit = config.isSplit();
-		params = new FileParsingParameters();
+		logger.debug("Initialising from system property/environment variable to path: {}", path.toString());
 		
 	}
 
+	/**
+	 * Constructs a new PDBFileReader, initialising the extensions member variable.
+	 * The path is initialised to the given path, both autoFetch and splitDir are initialised to false.
+	 */
+	public MMCIFFileReader(String path){
+		extensions    = new ArrayList<String>();
+		extensions.add(".cif");
+		extensions.add(".mmcif");
+		extensions.add(".cif.gz");
+		extensions.add(".mmcif.gz");
+
+		autoFetch     = false;		
+		pdbDirectorySplit = false;
+		
+		params = new FileParsingParameters();
+
+		
+		this.path = new File(path);
+		logger.debug("Initialising with path {}", path.toString());
+	}
+	
 	public void addExtension(String ext) {
 		extensions.add(ext);
 

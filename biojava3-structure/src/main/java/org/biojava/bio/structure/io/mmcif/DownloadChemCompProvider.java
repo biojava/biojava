@@ -67,12 +67,18 @@ public class DownloadChemCompProvider implements ChemCompProvider {
 	boolean downloadAll = false;
 
 	public DownloadChemCompProvider(){
-		logger.debug("Initialising DownloadChemCompProvider");	
+		logger.debug("Initialising DownloadChemCompProvider");
 		
-		UserConfiguration config = new UserConfiguration();
-		// TODO should this be getPdbFilePath() or getCacheFilePath()?, in AllChemCompProvider it's getCacheFilePath()
-		path = new File(config.getPdbFilePath());
+		// note that path is static, so this is just to make sure that all non-static methods will have path initialised
+		initPath();
+	}
+	
+	private static void initPath(){
 		
+		if (path==null) {
+			UserConfiguration config = new UserConfiguration();
+			path = new File(config.getCacheFilePath());
+		}
 	}
 
 	/** checks if the chemical components already have been installed into the PDB directory.
@@ -251,6 +257,7 @@ public class DownloadChemCompProvider implements ChemCompProvider {
 			recordName = "_" + recordName;
 		}
 		
+		initPath();
 		
 		File f = new File(path, CHEM_COMP_CACHE_DIRECTORY);
 		if (! f.exists()){
@@ -353,7 +360,7 @@ public class DownloadChemCompProvider implements ChemCompProvider {
 		logger.info("Performing first installation of chemical components.");
 		logger.info("Downloading components.cif.gz ...");
 
-		AllChemCompProvider.checkPath();
+		
 		try {
 			AllChemCompProvider.downloadFile();
 		} catch (IOException e){
