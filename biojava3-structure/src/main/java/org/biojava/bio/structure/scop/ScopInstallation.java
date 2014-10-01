@@ -43,9 +43,10 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureTools;
-import org.biojava.bio.structure.align.ce.AbstractUserArgumentProcessor;
 import org.biojava.bio.structure.align.util.UserConfiguration;
 import org.biojava3.core.util.InputStreamProvider;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /** This class provides access to the SCOP protein structure classification.
@@ -68,6 +69,8 @@ import org.biojava3.core.util.InputStreamProvider;
 public class ScopInstallation implements LocalScopDatabase {
 
 	public static final String DEFAULT_VERSION = "1.75";
+	
+	private static final Logger logger = LoggerFactory.getLogger(ScopInstallation.class);
 
 	protected String scopVersion;
 	
@@ -790,7 +793,7 @@ public class ScopInstallation implements LocalScopDatabase {
 	}
 
 	protected void downloadFileFromRemote(URL remoteURL, File localFile) throws FileNotFoundException, IOException{
-		System.out.println("downloading " + remoteURL + " to: " + localFile);
+		logger.info("Downloading " + remoteURL + " to: " + localFile);
 		FileOutputStream out = new FileOutputStream(localFile);
 
 		InputStream in = remoteURL.openStream();
