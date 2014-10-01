@@ -128,7 +128,8 @@ public class GenbankSequenceParser<S extends AbstractSequence<C>, C extends Comp
     protected static final Pattern headerLine = Pattern.compile("^LOCUS.*");
 
 //  private NCBITaxon tax = null;
-    private String parse(BufferedReader bufferedReader) {
+    @SuppressWarnings("unchecked")
+	private String parse(BufferedReader bufferedReader) {
         String sectionKey = null;
         List<String[]> section;
         // Get an ordered list of key->value pairs in array-tuples

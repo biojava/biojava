@@ -28,6 +28,7 @@ package org.biojava3.core.sequence.features;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
 import org.biojava3.core.sequence.location.SequenceLocation;
 import org.biojava3.core.sequence.template.AbstractSequence;
 import org.biojava3.core.sequence.template.Compound;
@@ -74,13 +75,13 @@ public class FeatureDbReferenceInfo<S extends AbstractSequence<C>, C extends Com
         this.description = description;
     }
 
-    @Override
-    public SequenceLocation getLocations() {
+	@Override
+    public SequenceLocation<S, C> getLocations() {
         return location;
     }
 
     @Override
-    public void setLocation(SequenceLocation loc) {
+    public void setLocation(SequenceLocation<S, C> loc) {
         location = loc;
     }
 
@@ -135,12 +136,12 @@ public class FeatureDbReferenceInfo<S extends AbstractSequence<C>, C extends Com
     }
 
     @Override
-    public HashMap getQualifiers() {
+    public HashMap<String, Qualifier> getQualifiers() {
         return qualifiers;
     }
 
     @Override
-    public void setQualifiers(HashMap qualifiers) {
+    public void setQualifiers(HashMap<String, Qualifier> qualifiers) {
         this.qualifiers = qualifiers;
     }
 
