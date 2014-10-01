@@ -62,8 +62,8 @@ public class TestAtomCache {
 		for(String pdbId : uncacheIDs) {
 			String middle = pdbId.substring(1,3).toLowerCase();
 			
-			String fpath = cacheDir+lineSplit + middle + lineSplit + pdbId;
-			String ppath = cacheDir +lineSplit +  middle + lineSplit + "pdb"+pdbId;
+			String fpath = cacheDir + lineSplit + middle + lineSplit + pdbId;
+			String ppath = cacheDir + lineSplit + middle + lineSplit + "pdb"+pdbId;
 			
 			String[] paths = new String[]{fpath,ppath};
 
@@ -159,29 +159,29 @@ public class TestAtomCache {
 
 	}
 	
-	@Test
-	public void testFetchCurrent() throws IOException, StructureException {
+	// note: we expect an IOException because 1CMW is obsolete and hasn't got a replacement
+	@Test(expected=IOException.class)
+	public void testFetchCurrent1CMW() throws IOException, StructureException {
 		
 		cache.setUseMmCif(false); //TODO Remove after implementing obsolete mmcif fetching
 		cache.setAutoFetch(true);
 		cache.setFetchCurrent(true);
 		cache.setFetchFileEvenIfObsolete(false);
 		
-		Structure s;
-		try {
-			// OBSOLETE PDB; should throw an exception
-			s = cache.getStructure("1CMW");
-			fail("1CMW has no current structure. Should have thrown an error");
-		} catch(IOException e) {
-			//expected
-			System.err.println("Please ignore previous exceptions. They are expected.");
-		} catch(StructureException e) {
-			//expected
-			System.err.println("Please ignore previous exceptions. They are expected.");
-		}
-		
+		// OBSOLETE PDB; should throw an exception
+		cache.getStructure("1CMW");
+	}
 
-		s = cache.getStructure("1HHB");
+	// 1HHB is obsolete with a replacement
+	@Test
+	public void testFetchCurrent1HHB() throws IOException, StructureException {
+		
+		cache.setUseMmCif(false); //TODO Remove after implementing obsolete mmcif fetching
+		cache.setAutoFetch(true);
+		cache.setFetchCurrent(true);
+		cache.setFetchFileEvenIfObsolete(false);
+ 
+		Structure s = cache.getStructure("1HHB");
 		assertEquals("Failed to get the current ID for 1HHB.","4HHB",s.getPDBCode());
 		
 	}
@@ -202,8 +202,7 @@ public class TestAtomCache {
 		assertEquals("Failed to get OBSOLETE file 1CMW.","1CMW", s.getPDBCode());
 
 		s = cache.getStructure("1HHB");
-		assertEquals("Failed to get OBSOLETE file 1HHB.","1HHB",s.getPDBCode());
-		System.err.println("Please ignore the previous four errors. They are expected for this ancient PDB.");
+		assertEquals("Failed to get OBSOLETE file 1HHB.","1HHB", s.getPDBCode());		
 		
 	}
 
