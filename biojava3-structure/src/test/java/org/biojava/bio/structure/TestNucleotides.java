@@ -78,6 +78,7 @@ public class TestNucleotides {
 		params.setParseCAOnly(false);
 		params.setLoadChemCompInfo(true);
 		reader.setFileParsingParameters(params);
+		reader.setPdbDirectorySplit(true); 
 		
 		ChemCompProvider chemProv = ChemCompGroupFactory.getChemCompProvider();
 
@@ -148,6 +149,7 @@ public class TestNucleotides {
 		params.setParseCAOnly(false);
 		params.setLoadChemCompInfo(true);
 		reader.setFileParsingParameters(params);
+		reader.setPdbDirectorySplit(true);
 
 
 
