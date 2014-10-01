@@ -55,10 +55,8 @@ import org.biojava3.core.sequence.template.ProxySequenceReader;
 import org.biojava3.core.sequence.template.SequenceMixin;
 import org.biojava3.core.sequence.template.SequenceView;
 import org.biojava3.core.util.XMLHelper;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -96,6 +94,37 @@ public class UniprotProxySequenceReader<C extends Compound> implements ProxySequ
         uniprotDoc = this.getUniprotXML(accession);
         String seq = this.getSequence(uniprotDoc);
         setContents(seq);
+    }
+
+    /**
+     * The xml is passed in as a DOM object so we know everything about the protein.
+     *  If an error occurs throw an exception. We could have a bad uniprot id
+     * @param document
+     * @param compoundSet
+     * @throws Exception
+     */
+    public UniprotProxySequenceReader(Document document, CompoundSet<C> compoundSet) throws Exception {
+        setCompoundSet(compoundSet);
+            uniprotDoc = document;
+            String seq = this.getSequence(uniprotDoc);
+            setContents(seq);
+    }
+    /**
+     * The passed in xml is parsed as a DOM object so we know everything about the protein.
+     *  If an error occurs throw an exception. We could have a bad uniprot id
+     * @param xml
+     * @param compoundSet
+     * @return UniprotProxySequenceReader
+     * @throws Exception
+     */    
+    public static <C extends Compound> UniprotProxySequenceReader<C> parseUniprotXMLString(String xml, CompoundSet<C> compoundSet) {
+        try {
+            Document document = XMLHelper.inputStreamToDocument(new ByteArrayInputStream(xml.getBytes()));
+            return new UniprotProxySequenceReader<C>(document, compoundSet);
+        } catch (Exception e) {
+            logger.error("Exception on xml parse of: {}", xml);
+        }
+        return null;
     }
 
     public void setCompoundSet(CompoundSet<C> compoundSet) {
@@ -252,6 +281,27 @@ public class UniprotProxySequenceReader<C extends Compound> implements ProxySequ
             logger.error("Exeception: ", e);
         }
         return accessionID;
+    }
+
+    /**
+     * Pull uniprot accessions associated with this sequence
+     * @return
+     * @throws Exception
+     */
+    public ArrayList<AccessionID> getAccessions() throws Exception {
+        ArrayList<AccessionID> accessionList = new ArrayList<AccessionID>();
+        if (uniprotDoc == null) {
+            return accessionList;
+        }
+        Element uniprotElement = uniprotDoc.getDocumentElement();
+        Element entryElement = XMLHelper.selectSingleElement(uniprotElement, "entry");
+        ArrayList<Element> keyWordElementList = XMLHelper.selectElements(entryElement, "accession");
+        for (Element element : keyWordElementList) {
+            AccessionID accessionID = new AccessionID(element.getTextContent(), DataSource.UNIPROT);
+            accessionList.add(accessionID);
+        }
+
+        return accessionList;
     }
 
     /**
