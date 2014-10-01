@@ -75,7 +75,7 @@ public class SiftsChainToUniprotMapping {
 
 	/**
 	 * Loads the SIFTS mapping.
-	 * Attempts to load the mapping file file in the PDB cache directory.
+	 * Attempts to load the mapping file in the PDB cache directory.
 	 * If the file does not exist or could not be parsed, downloads and stores a GZ-compressed file.
 	 * @return
 	 * @throws IOException If the local file could not be read and could not be downloaded
@@ -86,7 +86,7 @@ public class SiftsChainToUniprotMapping {
 
 	/**
 	 * Loads the SIFTS mapping.
-	 * Attempts to load the mapping file file in the PDB cache directory.
+	 * Attempts to load the mapping file in the PDB cache directory.
 	 * If the file does not exist or could not be parsed, downloads and stores a GZ-compressed file.
 	 * @param useOnlyLocal If true, will throw an IOException if the file needs to be downloaded
 	 * @return

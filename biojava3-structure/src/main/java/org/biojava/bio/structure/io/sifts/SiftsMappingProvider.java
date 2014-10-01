@@ -73,24 +73,23 @@ public class SiftsMappingProvider {
 
 		AtomCache cache = new AtomCache();
 		
-		String path = cache.getPath();
+		String path = cache.getCachePath();
 		
 		pdbId = pdbId.toLowerCase();
 		
 		String dirHash = pdbId.substring(1,3);
-		String SIFTS_DIR = path + "/SIFTS/";
+		File siftsDir = new File(path , "SIFTS");
 		
-		File siftsDir = new File(SIFTS_DIR);
 		
 		if ( ! siftsDir.exists()) 
 			siftsDir.mkdir();
 		
-		File hashDir = new File(SIFTS_DIR + dirHash);
+		File hashDir = new File(siftsDir, dirHash);
 		
 		if ( ! hashDir.exists()){
 			hashDir.mkdir();
 		}
-		File dest = new File( hashDir.getAbsolutePath() +"/"+ pdbId + ".sifts.xml.gz");
+		File dest = new File( hashDir, pdbId + ".sifts.xml.gz");
 		
 		if ( ! dest.exists()){
 			String u = String.format(fileLoc,pdbId);

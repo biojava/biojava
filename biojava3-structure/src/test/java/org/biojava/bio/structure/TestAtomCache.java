@@ -197,7 +197,6 @@ public class TestAtomCache {
 		
 		Structure s;
 
-		// OBSOLETE PDB; should throw an exception
 		s = cache.getStructure("1CMW");
 		assertEquals("Failed to get OBSOLETE file 1CMW.","1CMW", s.getPDBCode());
 
