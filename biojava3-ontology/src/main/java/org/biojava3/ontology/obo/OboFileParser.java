@@ -38,8 +38,8 @@ import java.util.StringTokenizer;
 import java.util.Vector;
 
 import org.biojava3.ontology.Synonym;
-
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /** A class to parse the content of an OBO file. It delegates handling of the 
@@ -56,6 +56,8 @@ import org.biojava3.ontology.Synonym;
  * @since 1.6
  */
 public class OboFileParser {
+
+	private static final Logger logger = LoggerFactory.getLogger(OboFileParser.class);
 
 	List<OboFileEventListener> listeners;
 
@@ -157,7 +159,7 @@ public class OboFileParser {
 					throw new IOException("Empty stanza: \"" +line+"\"");
 				currentStanza = stanzaname;				
 
-				//System.out.println("stanza: " + currentStanza);
+				//logger.info("stanza: {}", currentStanza);
 				triggerNewStanza(currentStanza);
 
 			} else {
@@ -166,7 +168,7 @@ public class OboFileParser {
 
 				pair = unescape(line, ':', 0, true);
 
-				//sSystem.out.println(pair);
+				//logger.info(pair);
 				String name = pair.str;
 				int lineEnd = findUnescaped(line, '!', 0, line.length(), true);
 				if (lineEnd == -1)
@@ -215,7 +217,7 @@ public class OboFileParser {
 
 				String value = line.substring(pair.index + 1, valueStopIndex).trim();
 				/*
-				 * if (nv != null) System.err.println("nv = "+nv+", value =
+				 * if (nv != null) logger.warn("nv = "+nv+", value =
 				 * |"+value+"|");
 				 */
 				if (value.length() == 0)
@@ -225,10 +227,10 @@ public class OboFileParser {
 					Synonym synonym = parseSynonym(name,value);
 					triggerNewSynonym(synonym);
 				} else {
-					//System.out.println("new key:" + name + " " + value);
+					//logger.info("new key:" + name + " " + value);
 					triggerNewKey(name,value);
 				}
-				//System.out.println("parsed key: " + name +" value: " + value + " nv: " + nv);
+				//logger.info("parsed key: " + name +" value: " + value + " nv: " + nv);
 
 
 
@@ -250,7 +252,7 @@ public class OboFileParser {
 	 */
 	private Synonym parseSynonym(String key, String value) throws IOException{
 
-		//System.out.println("PARSE SYNONYM " + key +  " " + value);
+		//logger.info("PARSE SYNONYM " + key +  " " + value);
 		int startIndex = findUnescaped(value, '"', 0, value.length());
 		if (startIndex == -1)
 			throw new IOException("Expected \"" +  line + " " + linenum);
@@ -276,7 +278,7 @@ public class OboFileParser {
 		String catID = null;
 		for (int i = 0; tokenizer.hasMoreTokens(); i++) {
 			String token = tokenizer.nextToken();
-			//System.out.println("TOKEN:" +token);
+			//logger.info("TOKEN:" +token);
 			if (i == 0) {
 				if (token.equals("RELATED"))
 					scope = Synonym.RELATED_SYNONYM;
@@ -302,7 +304,7 @@ public class OboFileParser {
 		synonym.setScope(scope);
 		synonym.setCategory(catID);
 		synonym.setName(p.str);
-		//System.out.println("SYNONYM: " + p.str +" " + synonym.getCategory() + " " + synonym.getScope());
+		//logger.info("SYNONYM: " + p.str +" " + synonym.getCategory() + " " + synonym.getScope());
 
 		Map<String,Object>[] refs = getDbxrefList(value,defIndex + 1, value.length());
 		
@@ -310,7 +312,7 @@ public class OboFileParser {
 		for (Map<String, Object> ref : refs){
 			String xref = (String) ref.get("xref");
 			String desc = (String) ref.get("desc");
-			//System.out.println(xref + " " + desc);
+			//logger.info(xref + " " + desc);
 			NestedValue nv = (NestedValue) ref.get("nv");
 			//TODO: add implementation for this...
 		}
@@ -595,8 +597,7 @@ public class OboFileParser {
 					startIndex++;
 					break;
 				} else {
-					System.err.println("found character |"
-							+ str.charAt(startIndex) + "|");
+					logger.error("found character |{}|", str.charAt(startIndex));
 					throw new IOException("Expected comma in trailing modifier. " + 
 							line + " linenr: " + linenum);
 				}

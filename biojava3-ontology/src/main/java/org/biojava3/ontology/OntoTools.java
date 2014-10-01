@@ -4,8 +4,8 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
 import org.biojava3.ontology.io.TabDelimParser;
-
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Tools for manipulating ontologies.
@@ -13,6 +13,9 @@ import org.biojava3.ontology.io.TabDelimParser;
  * @author Matthew Pocock
  */
 public final class OntoTools {
+	
+	private static final Logger logger = LoggerFactory.getLogger(OntoTools.class);
+
   private static final Ontology CORE_ONTOLOGY;
   private static final OntologyFactory DEFAULT_FACTORY;
   private static final IntegerOntology CORE_INTEGER;
@@ -105,7 +108,7 @@ public final class OntoTools {
       PARTIAL_ORDER = CORE_ONTOLOGY.getTerm("partial-order");
 
     } catch (Exception e) {
-    	e.printStackTrace();
+    	logger.error("Exception: ", e);
       throw new RuntimeException("Could not initialize OntoTools", e);
     }
   }

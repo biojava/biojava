@@ -32,9 +32,8 @@ import org.biojava.bio.structure.Atom;
 import org.biojava.bio.structure.Calc;
 import org.biojava.bio.structure.Chain;
 import org.biojava.bio.structure.Group;
+import org.biojava.bio.structure.GroupType;
 import org.biojava.bio.structure.ResidueNumber;
-import org.biojava.bio.structure.StructureException;
-
 
 public final class StructureUtil {
 	private StructureUtil() {
@@ -267,38 +266,13 @@ public final class StructureUtil {
 		return ret;
 	}
 
-	// TODO: this should be replaced when Andreas fix the getAtomGroups("amino");
 	/**
 	 * Get all amino acids in a chain.
 	 * @param chain
 	 * @return
 	 */
 	public static List<Group> getAminoAcids(Chain chain) {
-		//List<Group> residues = new ArrayList<Group>();
-		//return chain.getSeqResGroups();
-		//		for (Group group : chain.getAtomGroups()) {
-		//			ChemComp cc = group.getChemComp();
-		//			if (ResidueType.lPeptideLinking.equals(cc.getResidueType()) ||
-		//					PolymerType.PROTEIN_ONLY.contains(cc.getPolymerType())) {
-		//				residues.add(group);
-		//			}
-		//		}
-
-		List<Group> residues = new ArrayList<Group>(chain.getAtomGroups());
-		residues.retainAll(chain.getSeqResGroups()); // not work because chain.getAtomGroups() may return different object from chain.getSeqResGroups()
-
-		// add amino acids that do not alinged with the sequence residues
-		List<Group> otherGroups = new ArrayList<Group>(chain.getAtomGroups());
-		otherGroups.removeAll(chain.getSeqResGroups());
-		for (Group g : otherGroups) {
-			if (g.hasAminoAtoms()) {
-				residues.add(g);
-			}
-		}
-
-		return residues;
-
-		//		return chain.getAtomGroups("amino");
+		return chain.getAtomGroups(GroupType.AMINOACID);
 	}
 
 }

@@ -9,9 +9,6 @@ import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
-import java.util.logging.Level;
-import java.util.logging.LogManager;
-import java.util.logging.Logger;
 
 import org.biojava3.alignment.Alignments;
 import org.biojava3.alignment.Alignments.PairwiseSequenceAlignerType;
@@ -32,6 +29,8 @@ import org.biojava3.core.sequence.features.DatabaseReferenceInterface;
 import org.biojava3.core.sequence.features.FeaturesKeyWordInterface;
 import org.biojava3.core.sequence.loader.UniprotProxySequenceReader;
 import org.biojava3.genome.GeneFeatureHelper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -40,7 +39,7 @@ import org.biojava3.genome.GeneFeatureHelper;
  */
 public class GFF3FromUniprotBlastHits {
 
-    private static final Logger logger = Logger.getLogger(GFF3FromUniprotBlastHits.class.getName());
+	private static final Logger logger = LoggerFactory.getLogger(GFF3FromUniprotBlastHits.class);
 
     public void process(File xmlBlastHits, double ecutoff, LinkedHashMap<String, GeneSequence> geneSequenceHashMap, OutputStream gff3Output) throws Exception {
         LinkedHashMap<String, ArrayList<String>> hits = BlastHomologyHits.getMatches(xmlBlastHits, ecutoff);
@@ -56,14 +55,14 @@ public class GFF3FromUniprotBlastHits {
             if (index == 12) {
                 index = 12;
             }
-            logger.severe(accessionid + " " + index + "/" + size);
+            logger.error(accessionid + " " + index + "/" + size);
             try {
 
                 String[] data = accessionid.split(" ");
                 String id = data[0];
                 GeneSequence geneSequence = geneSequenceHashMap.get(id);
                 if (geneSequence == null) {
-                    logger.severe("Not found " + id);
+                    logger.error("Not found " + id);
                     continue;
                 }
                 ArrayList<String> uniprotProteinHits = hits.get(accessionid);
@@ -85,11 +84,11 @@ public class GFF3FromUniprotBlastHits {
                     }
                     if (!testSequence.equals(predictedProteinSequence) && (!predictedProteinSequence.equals(testSequence.substring(0, testSequence.length() - 1)))) {
                         DNASequence codingSequence = transcriptSequence.getDNACodingSequence();
-                        System.out.println(codingSequence.getSequenceAsString());
-                        System.out.println("Sequence agreement error");
-                        System.out.println("CDS seq=" + testSequence);
-                        System.out.println("PRE seq=" + predictedProteinSequence);
-                        System.out.println("UNI seq=" + hitSequence);
+                        logger.info("Coding Sequence: {}", codingSequence.getSequenceAsString());
+                        logger.info("Sequence agreement error");
+                        logger.info("CDS seq={}", testSequence);
+                        logger.info("PRE seq={}", predictedProteinSequence);
+                        logger.info("UNI seq={}", hitSequence);
                         //  throw new Exception("Protein Sequence compare error " + id);
                     }
 
@@ -249,7 +248,7 @@ public class GFF3FromUniprotBlastHits {
                     }
                 }
             } catch (Exception e) {
-                logger.log(Level.INFO, accessionid, e);
+                logger.info("Accession Id: {}", accessionid, e);
             }
         }
 
@@ -263,7 +262,6 @@ public class GFF3FromUniprotBlastHits {
     public static void main(String[] args) {
         /*
             try {
-                LogManager.getLogManager().getLogger("").setLevel(Level.SEVERE);
                 LinkedHashMap<String, ChromosomeSequence> dnaSequenceList = GeneFeatureHelper.loadFastaAddGeneFeaturesFromGeneMarkGTF(new File("/Users/Scooter/scripps/dyadic/analysis/454Scaffolds/454Scaffolds.fna"), new File("/Users/Scooter/scripps/dyadic/analysis/454Scaffolds/genemark_hmm.gtf"));
                 LinkedHashMap<String, GeneSequence> geneSequenceList = GeneFeatureHelper.getGeneSequences(dnaSequenceList.values());
                 FileOutputStream fo = new FileOutputStream("/Users/Scooter/scripps/dyadic/analysis/454Scaffolds/genemark_uniprot_match.gff3");
@@ -274,31 +272,24 @@ public class GFF3FromUniprotBlastHits {
 
 
             } catch (Exception e) {
-                e.printStackTrace();
+                logger.error("Exception: ", e);
 
 
             }
         */
 
             try {
-                LogManager.getLogManager().getLogger("").setLevel(Level.SEVERE);
                 LinkedHashMap<String, ChromosomeSequence> dnaSequenceHashMap = GeneFeatureHelper.loadFastaAddGeneFeaturesFromGlimmerGFF3(new File("/Users/Scooter/scripps/dyadic/analysis/454Scaffolds/454Scaffolds-16.fna"), new File("/Users/Scooter/scripps/dyadic/GlimmerHMM/c1_glimmerhmm-16.gff"));
                 LinkedHashMap<String, GeneSequence> geneSequenceList = GeneFeatureHelper.getGeneSequences(dnaSequenceHashMap.values());
                 FileOutputStream fo = new FileOutputStream("/Users/Scooter/scripps/dyadic/outputGlimmer/genemark_uniprot_match-16.gff3");
                 LinkedHashMap<String, ArrayList<String>> blasthits = BlastHomologyHits.getMatches(new File("/Users/Scooter/scripps/dyadic/blastresults/c1_glimmer_in_uniprot.xml"), 1E-10);
-                logger.severe("Number of uniprot hits " + blasthits.size());
+                logger.error("Number of uniprot hits " + blasthits.size());
 
                 GFF3FromUniprotBlastHits gff3FromUniprotBlastHits = new GFF3FromUniprotBlastHits();
                 gff3FromUniprotBlastHits.process(blasthits, geneSequenceList, fo);
                 fo.close();
-
-
             } catch (Exception e) {
-                e.printStackTrace();
-
-
+            	logger.error("Exception: ", e);
             }
-
-
     }
 }

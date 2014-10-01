@@ -35,6 +35,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Class that loads data from the model files into {@link Model} objects
  * 
@@ -44,6 +47,8 @@ import java.util.Scanner;
 
  */
 public final class ModelLoader {
+
+	private static final Logger logger = LoggerFactory.getLogger(ModelLoader.class);
 
     /**
      * Represents a Threshold
@@ -192,8 +197,8 @@ public final class ModelLoader {
 	    IOException {
 	final ModelLoader loader = new ModelLoader();
 	loader.loadModels();
-	System.out.println(ModelLoader.models.get(0));
-	System.out.println(ModelLoader.models.get(9));
-	System.out.println(ModelLoader.models.size());
+	logger.info("{}", ModelLoader.models.get(0));
+	logger.info("{}", ModelLoader.models.get(9));
+	logger.info("{}", ModelLoader.models.size());
     }
 }

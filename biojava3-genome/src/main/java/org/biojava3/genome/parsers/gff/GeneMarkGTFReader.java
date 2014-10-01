@@ -1,10 +1,11 @@
 package org.biojava3.genome.parsers.gff;
 
-
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.logging.Logger;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * http://www.bioperl.org/wiki/GTF
@@ -29,7 +30,7 @@ import java.util.logging.Logger;
  */
 public class GeneMarkGTFReader {
 
-    private static final Logger log = Logger.getLogger(GeneMarkGTFReader.class.getName());
+	private static final Logger logger = LoggerFactory.getLogger(GeneMarkGTFReader.class);
 
     /**
      * Read a file into a FeatureList. Each line of the file becomes one Feature object.
@@ -39,7 +40,7 @@ public class GeneMarkGTFReader {
      * @throws IOException Something went wrong -- check exception detail message.
      */
     public static FeatureList read(String filename) throws IOException {
-        log.info("Gff.read(): Reading " + filename);
+        logger.info("Reading: {}", filename);
 
         FeatureList features = new FeatureList();
         BufferedReader br = new BufferedReader(new FileReader(filename));
@@ -137,7 +138,7 @@ public class GeneMarkGTFReader {
 /*
 
     public static void write(FeatureList features, String filename) throws IOException {
-        log.info("Writing " + filename);
+        logger.info("Writing: {}", filename);
 
         BufferedWriter bw = new BufferedWriter(new FileWriter(filename));
 
@@ -176,11 +177,11 @@ public class GeneMarkGTFReader {
     public static void main(String args[]) throws Exception {
 
         FeatureList listGenes = GeneMarkGTFReader.read("/Users/Scooter/scripps/dyadic/analysis/454Scaffolds/genemark_hmm.gtf");
-        System.out.println("Features");
+
         for(FeatureI feature : listGenes){
-            System.out.println(feature);
+            logger.info("Gene Feature: {}", feature);
         }
-//        System.out.println(listGenes);
+//        logger.info(listGenes);
         //	GeneMarkGTFReader.write( list, args[1] );
     }
 }

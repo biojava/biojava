@@ -37,6 +37,7 @@ import org.biojava.bio.structure.Chain;
 import org.biojava.bio.structure.Group;
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureException;
+import org.biojava.bio.structure.StructureTools;
 import org.biojava.bio.structure.align.util.AtomCache;
 
 
@@ -584,10 +585,10 @@ public class SecStruc {
 					sg.setChain(g.getChain());
 
 
-					Atom N = g.getAtomByPDBname(" N  ");
-					Atom CA =  g.getAtomByPDBname(" CA ");
-					Atom C = g.getAtomByPDBname(" C  ");
-					Atom O =  g.getAtomByPDBname(" O  ");
+					Atom N = g.getAtom(StructureTools.N_ATOM_NAME);
+					Atom CA =  g.getAtom(StructureTools.CA_ATOM_NAME);
+					Atom C = g.getAtom(StructureTools.C_ATOM_NAME);
+					Atom O =  g.getAtom(StructureTools.O_ATOM_NAME);
 					if ( N == null || CA == null || C == null || O == null)
 						continue;
 
@@ -1004,7 +1005,6 @@ public class SecStruc {
 		Atom H = Calc.add(N,U);
 
 		H.setName("H");
-		H.setFullName(" H  ");
 		// this atom does not have a pdbserial number ...
 		return H;
 
@@ -1026,7 +1026,6 @@ public class SecStruc {
 		h.setZ(z);
 
 		h.setName("H");
-		h.setFullName(" H  ");
 		return h;
 
 

@@ -50,9 +50,6 @@ public class HetatomImpl implements Group,Serializable {
 	
 	private static final Logger logger = LoggerFactory.getLogger(HetatomImpl.class);
 
-	/**
-	 *
-	 */
 	private static final long serialVersionUID = 4491470432023820382L;
 
 	/** this is a "hetatm".
@@ -66,10 +63,10 @@ public class HetatomImpl implements Group,Serializable {
 
 	private long id;
 
-	/* stores if 3d coordinates are available. */
+	/** stores if 3d coordinates are available. */
 	protected boolean pdb_flag ;
 
-	/* 3 letter name of amino acid in pdb file. */
+	/** 3 letter name of amino acid in pdb file. */
 	protected String pdb_name ;
 
 	protected ResidueNumber residueNumber;
@@ -78,14 +75,15 @@ public class HetatomImpl implements Group,Serializable {
 
 	private Chain parent;
 
-	private Map<String,Atom> atomLookup = new HashMap<String,Atom>();
-	private Map<String,Atom> atomSingleCharLookup = new HashMap<String,Atom>();
+	private Map<String,Atom> atomNameLookup;
 
 	private ChemComp chemComp ;
 
 	private List<Group> altLocs;
 
-	/* Construct a Hetatom instance. */
+	/**
+	 *  Construct a Hetatom instance. 
+	 */
 	public HetatomImpl() {
 		super();
 
@@ -98,15 +96,9 @@ public class HetatomImpl implements Group,Serializable {
 		parent = null;
 		chemComp = null;
 		altLocs = null;
+		
+		atomNameLookup = new HashMap<String,Atom>();
 	}
-
-	/* returns an identical copy of this structure
-     public Object clone() {
-     Hetatom n = new Hetatom();
-     }
-	 */
-
-
 
 
 	/**
@@ -148,7 +140,9 @@ public class HetatomImpl implements Group,Serializable {
 	 */
 	public String getPDBName() { return pdb_name;}
 
-	/** add an atom to this group. */
+	/**
+	 * {@inheritDoc} 
+	 */
 	public void addAtom(Atom atom){
 		atom.setGroup(this);
 		atoms.add(atom);
@@ -156,8 +150,16 @@ public class HetatomImpl implements Group,Serializable {
 			// we have got coordinates!
 			setPDBFlag(true);
 		}
-		atomLookup.put(atom.getFullName(),atom);
-		atomSingleCharLookup.put(atom.getName(),atom);
+		Atom existingAtom = atomNameLookup.put(atom.getName(),atom);
+		
+		// if an atom with same name is added to the group that has to be some kind of problem, 
+		// we need to warn properly
+		if (existingAtom!=null) {
+			String altLocStr = "";
+			char altLoc = atom.getAltLoc();
+			if (altLoc!=' ') altLocStr = "(alt loc '"+altLoc+"')";
+			logger.warn("An atom with name "+atom.getName()+" "+altLocStr+" is already present in group: "+this.toString()+". The atom with serial "+atom.getPDBserial()+" will be ignored in look-ups."); 
+		}
 	};
 
 
@@ -167,35 +169,32 @@ public class HetatomImpl implements Group,Serializable {
 	public void clearAtoms() {
 		atoms.clear();
 		setPDBFlag(false);
-		atomLookup.clear();
-		atomSingleCharLookup.clear();
+		atomNameLookup.clear();
 	}
 
-	/** getnumber of atoms.
-	 *  @return number of atoms
+	/** 
+	 * {@inheritDoc}
 	 */
 	public int size(){ return atoms.size();   }
 
-	/** get all atoms of this group .
-	 * returns a List of all atoms in this Group
-	 * @return an List object representing the atoms value
+	/** 
+	 * {@inheritDoc}
 	 */
 	public List<Atom> getAtoms(){
-		//Atom[] atms = (Atom[])atoms.toArray(new Atom[atoms.size()]);
-
 		return atoms ;
 	}
 
-
-	/** set the atoms of this group
-	 * @see org.biojava.bio.structure.Atom
-	 * @param atoms a list of atoms
+	/** 
+	 * {@inheritDoc}
 	 */
-	public void setAtoms(List<Atom> atoms){
+	public void setAtoms(List<Atom> atoms) {
+		
+		// important we are resetting atoms to a new list, we need to reset the lookup too!
+		atomNameLookup.clear();
+		
 		for (Atom a: atoms){
 			a.setGroup(this);
-			atomLookup.put(a.getFullName(), a);
-			atomSingleCharLookup.put(a.getName(),a);
+			atomNameLookup.put(a.getName(),a);
 		}
 		this.atoms = atoms;
 		if ( atoms.size() > 0) {
@@ -204,95 +203,32 @@ public class HetatomImpl implements Group,Serializable {
 
 	}
 
-
 	/**  
-	 * Get an atom with given name
-	 * @param name  a String
-	 * @return an Atom object or null if no Atom with such name exists
+	 * {@inheritDoc}
 	 */
-	public Atom getAtom(String name)
-
-	{
-		// todo: add speedup by internal hashmap...
-
-		Atom a = atomLookup.get(name);
-		if ( a != null)
-			return a;
-		a =  atomSingleCharLookup.get(name);
-		if ( a != null)
-			return a;
-
-		for (Atom atom : atoms){
-
-
-			if ( name.length() > 2) {
-
-				if ( atom.getFullName().equals(name)){
-					return atom;
-				}
-			}
-			//System.out.println(atom.getName() + " " + name + " " + atom.getName().equals(name));
-			if (atom.getName().equals(name)){
-				if ( name.equals("CA")) {
-					if (atom.getElement().equals(Element.C))
-						return atom;
-				} else {
-					return atom;
-				}
-
-			}
-
-		}
-
-		//throw new StructureException(" No atom >"+name + "< in group " + pdb_name + " " + residueNumber  + " !");
-		return null;
-
-	}
-
-	/**  
-	 * Get an atom by the full PDB name e.g. " N  " for N. Returns null if atom not found.
-	 * @param name  a String
-	 * @return an Atom object or null if no Atom with such name exists
-	 */
-	public Atom getAtomByPDBname(String name)
-
-	{
-
-		for (int i=0;i<atoms.size();i++){
-			Atom atom = atoms.get(i);
-			if (atom.getFullName().equals(name)){
-				return atom;
-			}
-		}
-
-		//throw new StructureException(" No atom "+name + " in group " + pdb_name + " " + residueNumber + " !");
-		return null;
+	public Atom getAtom(String name) {		
+		return atomNameLookup.get(name);
 	}
 
 	/** 
-	 * Return an atom by its position in the internal List.
-	 *
-	 * @param position  an int
-	 * @return an Atom object
+	 * {@inheritDoc}	
 	 */
-	public Atom getAtom(int position)
+	public Atom getAtom(int position) {			
 			
-			{
 		if ((position < 0)|| ( position >= atoms.size())) {
 			//throw new StructureException("No atom found at position "+position);
 			return null;
 		}
 		Atom a = atoms.get(position);
 		return a ;
-			}
+	}
 
-	/** test is an Atom with name is existing. */
-	public boolean hasAtom(String fullName){
+	/**
+	 * {@inheritDoc} 
+	 */
+	public boolean hasAtom(String fullName) {
 
-		Atom a = atomLookup.get(fullName);
-		if ( a != null)
-			return true;
-		a = atomSingleCharLookup.get(fullName.trim());
+		Atom a = atomNameLookup.get(fullName.trim());
 		if ( a != null)
 			return true;
 
@@ -301,9 +237,7 @@ public class HetatomImpl implements Group,Serializable {
 	}
 
 	/**
-	 * Returns the type value.
-	 *
-	 * @return a String representing the type value
+	 * {@inheritDoc}	 
 	 */
 	public String getType(){ return type;}
 
@@ -321,59 +255,32 @@ public class HetatomImpl implements Group,Serializable {
 
 	}
 
-
-
-	/** Calculate if a groups has all atoms required for an amino acid
-     this allows to include chemically modified amino acids that
-     are labeled hetatoms into some computations ... the usual way
-     to identify if a group is an amino acid is getType() !
-     <p>
-     amino atoms are : N, CA, C, O, CB
-     GLY does not have CB (unless we would calculate some artificially
-     </p>
-
-     Example: 1DW9 parent A first group is a Selenomethionine, provided as HETATM, but here returns true.
-     <pre>
-     HETATM    1  N   MSE A   1      11.720  20.973   1.584  0.00  0.00           N
-     HETATM    2  CA  MSE A   1      10.381  20.548   1.139  0.00  0.00           C
-     HETATM    3  C   MSE A   1       9.637  20.037   2.398  0.00  0.00           C
-     HETATM    4  O   MSE A   1      10.198  19.156   2.985  0.00  0.00           O
-     HETATM    5  CB  MSE A   1      10.407  19.441   0.088  0.00  0.00           C
-     </pre>
-     @see #getType
-
+	/**
+	 * {@inheritDoc}
 	 */
-
-
 	public boolean hasAminoAtoms(){
 		// if this method call is performed too often, it should become a
 		// private method and provide a flag for Group object ...
 
-		String[] atoms ;
-		if ( getType().equals("amino") & getPDBName().equals("GLY")){
-			atoms = new String[] { "N"," CA ","C","O"};
-		} else {
-			atoms = new String[] { "N"," CA ","C","O","CB" };
+		if (	hasAtom(StructureTools.CA_ATOM_NAME) && 
+				hasAtom(StructureTools.C_ATOM_NAME) && 
+				hasAtom(StructureTools.N_ATOM_NAME) && 
+				hasAtom(StructureTools.O_ATOM_NAME)) {
+			
+			// this is the minimun requirement for something to be considered an aminoacid with a backbone
+			// note that if the backbone is incomplete it won't be considered an aminoacid
+			// if it's a HETATOM that has all these atoms, this is a very good guess that this is 
+			// some kind of non-standard aminoacid
+			
+			return true;
 		}
-
-
-		for (int i = 0 ; i < atoms.length; i++) {
-			if ( ! hasAtom(atoms[i])) {
-				//System.out.println("not amino atoms");
-				return false ;
-			}
-		}
-
-		return true ;
+		
+		return false;
 	}
 
 
-	/** properties of this amino acid. currerntly available properties.
-	 * are:
-	 * phi
-	 * psi
-	 *
-	 * @see #getProperties
+	/** 
+	 * {@inheritDoc}
 	 */
 	public void setProperties(Map<String,Object> props) {
 		properties =  props ;
@@ -587,8 +494,7 @@ public class HetatomImpl implements Group,Serializable {
 			ArrayList myAltLocs = (ArrayList) altLocs;
 			myAltLocs.trimToSize();
 		}
-		atomLookup = new  HashMap<String,Atom>(atomLookup);
-		atomSingleCharLookup = new HashMap<String,Atom>(atomSingleCharLookup);
+		atomNameLookup = new HashMap<String,Atom>(atomNameLookup);
 
 		if ( hasAltLoc()) {
 			for (Group alt : getAltLocs()){

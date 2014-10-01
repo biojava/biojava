@@ -1911,7 +1911,7 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 			for (String ok : params.getAcceptedAtomNames()){
 				//System.out.println(ok + "< >" + fullname +"<");
 
-				if ( ok.equals(fullname)) {
+				if ( ok.equals(fullname.trim())) {
 					found = true;
 					break;
 				}
@@ -1928,7 +1928,6 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 		atom.setPDBserial(pdbnumber) ;
 
 		atom.setAltLoc(altLoc);
-		atom.setFullName(fullname) ;
 		atom.setName(fullname.trim());
 
 		double x = Double.parseDouble (line.substring (30, 38).trim());
@@ -2004,7 +2003,7 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 		
 		// make sure that main group has all atoms
 		// GitHub issue: #76
-		if ( ! current_group.hasAtom(atom.getFullName())) {
+		if ( ! current_group.hasAtom(atom.getName())) {
 			current_group.addAtom(atom);
 		}
 		
@@ -2876,14 +2875,16 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 			// TODO determine what the actual bond order of this bond is; for
 			// now, we're assuming they're single bonds
 			new Bond(a, b, 1);
-		} catch (Exception e) {
+		} catch (StructureException e) {
 			// Note, in Calpha only mode the link atoms may not be present.
 			if (! parseCAonly) {
-				System.out.println("Error with the following link record: ");
-				System.out.println(linkRecord);
-				e.printStackTrace();
+				logger.error("Error with the following link record: {}",linkRecord.toString());
+				//e.printStackTrace();
 				throw new RuntimeException(e);
+			} else {
+				logger.debug("StructureException caught while forming link record bonds in parseCAonly mode. Error: "+e.getMessage());
 			}
+			
 		}
 	}
 	
@@ -2900,10 +2901,11 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 		} catch (StructureException e) {
 			// Note, in Calpha only mode the CYS SG's are not present.
 			if (! parseCAonly) {
-				System.out.println("Error with the following SSBond: ");
-				System.out.println(disulfideBond);
-				e.printStackTrace();
+				logger.error("Error with the following SSBond: {}",disulfideBond.toString());
+				//e.printStackTrace();
 				throw new RuntimeException(e);
+			} else {
+				logger.debug("StructureException caught while forming disulfide bonds in parseCAonly mode. Error: "+e.getMessage());
 			}
 		}
 	}
@@ -3178,7 +3180,7 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 		//check that the keys in the siteMap and SiteToResidueMap are equal 
 		if (! siteMap.keySet().equals(siteToResidueMap.keySet())) {
 			logger.info("Not all sites have been properly described in the PDB " + pdbId + " header - some Sites will not be present in the Structure");
-			logger.info(siteMap.keySet() + " | " + siteToResidueMap.keySet());
+			logger.debug(siteMap.keySet() + " | " + siteToResidueMap.keySet());
 			//return;
 		}
 

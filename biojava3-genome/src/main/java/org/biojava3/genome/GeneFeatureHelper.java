@@ -21,7 +21,6 @@ import org.biojava3.core.sequence.ProteinSequence;
 import org.biojava3.core.sequence.Strand;
 import org.biojava3.core.sequence.TranscriptSequence;
 import org.biojava3.core.sequence.io.FastaReaderHelper;
-//import org.biojava3.core.sequence.io.FastaWriterHelper;
 import org.biojava3.genome.parsers.gff.Feature;
 import org.biojava3.genome.parsers.gff.FeatureHelper;
 import org.biojava3.genome.parsers.gff.FeatureI;
@@ -30,12 +29,16 @@ import org.biojava3.genome.parsers.gff.GFF3Reader;
 import org.biojava3.genome.parsers.gff.GeneIDGFF2Reader;
 import org.biojava3.genome.parsers.gff.GeneMarkGTFReader;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  *
  * @author Scooter Willis <willishf at gmail dot com>
  */
 public class GeneFeatureHelper {
 
+	private static final Logger logger = LoggerFactory.getLogger(GeneFeatureHelper.class);
 
     static public LinkedHashMap<String, ChromosomeSequence> loadFastaAddGeneFeaturesFromUpperCaseExonFastaFile(File fastaSequenceFile, File uppercaseFastaFile, boolean throwExceptionGeneNotFound) throws Exception {
         LinkedHashMap<String, ChromosomeSequence> chromosomeSequenceList = new LinkedHashMap<String, ChromosomeSequence>();
@@ -83,7 +86,8 @@ public class GeneFeatureHelper {
             }
 
             if (geneFound) {
-                System.out.println("Gene " + dnaSequence.getAccession().toString() + " found at " + contigDNASequence.getAccession().toString() + " " + bioStart + " " + bioEnd + " " + strand);
+                logger.info("Gene {} found at {} {} {} {}",
+                		dnaSequence.getAccession().toString(), contigDNASequence.getAccession().toString(), bioStart, bioEnd, strand);
                 ChromosomeSequence chromosomeSequence = chromosomeSequenceList.get(accession);
 
                 ArrayList<Integer> exonBoundries = new ArrayList<Integer>();
@@ -142,7 +146,7 @@ public class GeneFeatureHelper {
                 if (throwExceptionGeneNotFound) {
                     throw new Exception(dnaSequence.getAccession().toString() + " not found");
                 }
-                System.out.println("Gene not found " + dnaSequence.getAccession().toString());
+                logger.info("Gene not found {}", dnaSequence.getAccession().toString());
             }
 
         }
@@ -837,19 +841,19 @@ public class GeneFeatureHelper {
                 for (TranscriptSequence transcriptSequence : geneSequence.getTranscripts().values()) {
                     //TODO remove?
 //                    DNASequence dnaCodingSequence = transcriptSequence.getDNACodingSequence();
-//                    System.out.println("CDS=" + dnaCodingSequence.getSequenceAsString());
+//                    logger.info("CDS={}", dnaCodingSequence.getSequenceAsString());
 
                     try {
                         ProteinSequence proteinSequence = transcriptSequence.getProteinSequence();
                        
-//                        System.out.println(proteinSequence.getAccession().getID() + " " + proteinSequence);
+//                        logger.info("{} {}", proteinSequence.getAccession().getID(), proteinSequence);
                         if (proteinSequenceHashMap.containsKey(proteinSequence.getAccession().getID())) {
                             throw new Exception("Duplicate protein sequence id=" + proteinSequence.getAccession().getID() + " found at Gene id=" + geneSequence.getAccession().getID());
                         } else {
                             proteinSequenceHashMap.put(proteinSequence.getAccession().getID(), proteinSequence);
                         }
                     } catch (Exception e) {
-                        e.printStackTrace();
+                        logger.error("Exception: ", e);
                     }
 
                 }
@@ -880,7 +884,7 @@ public class GeneFeatureHelper {
             LinkedHashMap<String, ChromosomeSequence> chromosomeSequenceList = GeneFeatureHelper.loadFastaAddGeneFeaturesFromGlimmerGFF3(new File("Scaffolds.fna"), new File("glimmerhmm.gff"));
             LinkedHashMap<String, ProteinSequence> proteinSequenceList = GeneFeatureHelper.getProteinSequences(chromosomeSequenceList.values());
             //  for (ProteinSequence proteinSequence : proteinSequenceList.values()) {
-            //      System.out.println(proteinSequence.getAccession().getID() + " " + proteinSequence);
+            //      logger.info(proteinSequence.getAccession().getID() + " " + proteinSequence);
             //  }
             FastaWriterHelper.writeProteinSequence(new File("predicted_glimmer.faa"), proteinSequenceList.values());
 
@@ -900,7 +904,7 @@ public class GeneFeatureHelper {
             }
 
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Exception: ", e);
         }
 
     }

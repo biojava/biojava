@@ -249,7 +249,7 @@ public class PDBFileReader implements StructureIOFile {
 
 			}
 			 */
-		} catch (Exception e) {
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
@@ -572,7 +572,7 @@ public class PDBFileReader implements StructureIOFile {
 
 				InputStreamProvider isp = new InputStreamProvider();
 				inputStream = isp.getInputStream(fileName);
-				System.out.println("Loaded original PDB file as a fallback." + fileName);
+				logger.warn("Loaded original PDB file as a fallback." + fileName);
 				loadedBioAssembly = false;
 				return inputStream;
 
@@ -608,7 +608,7 @@ public class PDBFileReader implements StructureIOFile {
 		if (bioAssemblyFallback) {	
 			inputStream = getInputStream(pdbId);		
 			if (inputStream != null) {
-				System.out.println("Biological assembly file for PDB ID: " + pdbId+  " is not available. " +
+				logger.warn("Biological assembly file for PDB ID: " + pdbId+  " is not available. " +
 						"Loaded original PDB file as a fallback from local cache.");
 				return getInputStream(pdbId);
 			}
@@ -660,7 +660,8 @@ public class PDBFileReader implements StructureIOFile {
 
 		String ftp = String.format("ftp://%s%s%s/pdb%s.ent.gz", serverName,pathOnServer,middle, pdbId);
 
-		//System.out.println("Fetching " + ftp);
+		logger.info("Fetching {}", ftp);
+		logger.info("Writing to {}",realFile.toString());
 
 
 		URL url = new URL(ftp);
@@ -699,7 +700,7 @@ public class PDBFileReader implements StructureIOFile {
 
 		String ftp = String.format("ftp://%s%s%s/%s", serverName,pathOnServer,middle,fileName);
 
-		System.out.println("Fetching " + ftp);
+		logger.info("Fetching " + ftp);
 
 		URL url = null;
 		try {
@@ -724,7 +725,7 @@ public class PDBFileReader implements StructureIOFile {
 
 			if (bioAssemblyFallback) {
 
-				System.out.println("Biological unit file for PDB ID: " + pdbId+  " is not available. " +
+				logger.warn("Biological unit file for PDB ID: " + pdbId+  " is not available. " +
 						"Downloading original PDB file as a fallback.");
 
 				loadedBioAssembly = false;

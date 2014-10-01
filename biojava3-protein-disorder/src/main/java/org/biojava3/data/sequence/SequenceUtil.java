@@ -37,6 +37,9 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Utility class for operations on sequences
  * 
@@ -45,6 +48,8 @@ import java.util.regex.Pattern;
  * @since 3.0.2
  */
 public final class SequenceUtil {
+
+	private static final Logger logger = LoggerFactory.getLogger(SequenceUtil.class);
 
     /**
      * A whitespace character: [\t\n\x0B\f\r]
@@ -184,7 +189,7 @@ public final class SequenceUtil {
 	    return false;
 	}
 	if (SequenceUtil.NON_AA.matcher(sequence).find()) {
-		System.out.println("found non aa!");
+		logger.info("Found non aa: {}", sequence);
 	    return false;
 	}
 	final Matcher protmatcher = SequenceUtil.AA.matcher(sequence);

@@ -496,7 +496,7 @@ public class CeCPMain extends CeMain {
 				// Clone residue to allow modification
 				Atom atom2 = ca2duplicated[pair.b];
 				Group g = (Group) atom2.getGroup().clone();
-				atoms2[pos] = g.getAtom( atom2.getFullName() );
+				atoms2[pos] = g.getAtom( atom2.getName() );
 				pos++;
 			}
 		}
@@ -773,6 +773,7 @@ public class CeCPMain extends CeMain {
 
 	// try showing a GUI
 	// requires additional dependencies biojava3-structure-gui and JmolApplet
+	@SuppressWarnings("unused")
 	private static void displayAlignment(AFPChain afpChain, Atom[] ca1, Atom[] ca2) throws ClassNotFoundException, NoSuchMethodException, InvocationTargetException, IllegalAccessException, StructureException {
 		Atom[] ca1clone = StructureTools.cloneCAArray(ca1);
 		Atom[] ca2clone = StructureTools.cloneCAArray(ca2);

@@ -25,7 +25,6 @@ package org.biojava.bio.structure.align.helper;
 import org.biojava.bio.structure.Atom;
 import org.biojava.bio.structure.AtomImpl;
 import org.biojava.bio.structure.Calc;
-import org.biojava.bio.structure.StructureException;
 import org.biojava.bio.structure.jama.Matrix;
 
 public class AlignTools {

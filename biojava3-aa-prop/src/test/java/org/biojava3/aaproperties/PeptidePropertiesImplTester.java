@@ -8,9 +8,14 @@ import javax.xml.bind.JAXBException;
 
 import org.biojava3.aaproperties.xml.AminoAcidCompositionTable;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import static junit.framework.Assert.*;
 
 public class PeptidePropertiesImplTester {
+
+	private final static Logger logger = LoggerFactory.getLogger(PeptidePropertiesImplTester.class);
 
 	/**
 	 * Test input 
@@ -310,13 +315,13 @@ public class PeptidePropertiesImplTester {
 				/*"U",*/"V","W",/*"X",*/"Y"/*,"Z"*/};
 		for (String aa : alpha) {
 			String p = String.format("AA%sAA", aa);
-			System.out.println(p);
-			System.out.println("pH\tInnovagen\tExpasy\tdiff");
+			logger.info(p);
+			logger.info("pH\tInnovagen\tExpasy\tdiff");
 			for ( int i = 1; i < 15; i++) {
 				double phPoint = (new Double(i)).doubleValue();
 				double chrgInnovagen = PeptideProperties.getNetCharge(p,false,phPoint);
 				double chrgExpasy = PeptideProperties.getNetCharge(p,true,phPoint);
-				System.out.println(String.format("%2.1f\t%2.2f\t%2.2f\t%2.2f", phPoint, chrgInnovagen, 
+				logger.info(String.format("%2.1f\t%2.2f\t%2.2f\t%2.2f", phPoint, chrgInnovagen, 
 						chrgExpasy, chrgInnovagen - chrgExpasy));
 			}
 		}

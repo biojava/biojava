@@ -41,6 +41,8 @@ import java.util.concurrent.TimeUnit;
 import org.biojava3.data.sequence.FastaSequence;
 import org.biojava3.data.sequence.SequenceUtil;
 import org.biojava3.ronn.ModelLoader.Model;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -55,6 +57,8 @@ import org.biojava3.ronn.ModelLoader.Model;
  * TODO refactor 
  */
 public final class ORonn implements Callable<ORonn> {
+
+	private static final Logger logger = LoggerFactory.getLogger(ORonn.class);
 
 	private static final DateFormat DATE_FORMAT = DateFormat
 			.getDateTimeInstance(DateFormat.LONG, DateFormat.LONG, Locale.US);
@@ -195,7 +199,7 @@ public final class ORonn implements Callable<ORonn> {
 	}
 
 	static void printUsage() {
-		System.out.println(RonnConstraint.HELP_MESSAGE);
+		logger.error(RonnConstraint.HELP_MESSAGE);
 	}
 
 	static boolean isValidSequenceForRonn(final FastaSequence fsequence,
@@ -208,7 +212,7 @@ public final class ORonn implements Callable<ORonn> {
 					+ " as its too short. Minimum sequence length for disorder prediction is "
 					+ (RonnConstraint.MIN_SEQUENCE_LENGTH + 1) + " characters!";
 			stat.println(message);
-			System.err.println(message);
+			logger.warn(message);
 			valid = false;
 		}
 		final String sequence = fsequence.getSequence();
@@ -217,7 +221,7 @@ public final class ORonn implements Callable<ORonn> {
 			message = "IGNORING sequence " + fsequence.getId()
 					+ " as it is not a protein sequence!";
 			stat.println(message);
-			System.err.println(message);
+			logger.warn(message);
 			valid = false;
 		}
 		return valid;
@@ -236,11 +240,11 @@ public final class ORonn implements Callable<ORonn> {
 		final String sequence = fsequence.getSequence();
 				
 		if ( SequenceUtil.isAmbiguosProtein(sequence)){
-			System.err.println("WARNING sequence is ambiguous!");
+			logger.warn("Sequence is ambiguous!");
 		}
 		
 		if (!(SequenceUtil.isProteinSequence(sequence) )){
-			System.err.println("WARNING does not look like a protein sequence!");
+			logger.warn("Does not look like a protein sequence!");
 		}
 		
 		if (!(SequenceUtil.isProteinSequence(sequence) || SequenceUtil
@@ -292,7 +296,7 @@ public final class ORonn implements Callable<ORonn> {
 		stat.println("Using parameters: \n[" + prms + "]");
 
 		if (prms.getInput() == null) {
-			System.err.println("Input is not defined! ");
+			logger.error("Input is not defined! ");
 			ORonn.printUsage();
 			System.exit(1);
 		}
@@ -375,13 +379,11 @@ public final class ORonn implements Callable<ORonn> {
 					+ "maximum of " + timeOut + " minutes");
 			executor.awaitTermination(timeOut, TimeUnit.MINUTES);
 		} catch (final InterruptedException e) {
-			System.err
-			.println("Execution is terminated! "
+			logger.error("Execution is terminated! "
 					+ "Terminated by either by the system or the timeout. "
 					+ "Maximum of 1 minute is allowed for one sequence analisys! "
 					+ "If it took longer to complite this analysis "
-					+ "the program is terminated.");
-			e.printStackTrace();
+					+ "the program is terminated.", e);
 		} finally {
 			executor.shutdownNow();
 		}

@@ -95,7 +95,7 @@ public class MyTestHelper
          for (int i = 0 ; i < ca2.length; i++){
             Group g = (Group)ca2[i].getGroup().clone();
             g.setChain(ca2[i].getGroup().getChain());
-            ca3[i] = g.getAtom(StructureTools.caAtomName);
+            ca3[i] = g.getAtom(StructureTools.CA_ATOM_NAME);
          }
 
          StructureAlignment fatCat;

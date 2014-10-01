@@ -34,7 +34,7 @@ public class StrucAligParameters {
 
 
     int initialK;
-    String[] usedAtomNames = { StructureTools.caAtomName, } ;
+    String[] usedAtomNames = { StructureTools.CA_ATOM_NAME, } ;
 
     // step 1
 

@@ -30,6 +30,8 @@ import java.io.PrintWriter;
 
 import org.biojava3.ronn.ModelLoader.Model;
 import org.biojava3.ronn.ModelLoader.Threshold;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 
@@ -42,6 +44,8 @@ import org.biojava3.ronn.ModelLoader.Threshold;
  * @since 3.0.2
  */
 public final class ORonnModel {
+
+	private static final Logger logger = LoggerFactory.getLogger(ORonnModel.class);
 
     /**
      * Order probability, corresponds to disorder as 1-order
@@ -174,11 +178,9 @@ public final class ORonnModel {
 	for (int sResidue = 0; sResidue < sequence.length(); sResidue++) {
 	    seqAA[sResidue] = RonnConstraint.INDEX[query[sResidue] - 'A'];
 	    if ((seqAA[sResidue] < 0) || (seqAA[sResidue] > 19)) {
-		System.err.printf("seqAA[sResidue]=%d(%c)\n", seqAA[sResidue],
-			query[sResidue]);
-		System.exit(1);
+	    	logger.error("seqAA[sResidue]={}({})", seqAA[sResidue], query[sResidue]);
+	    	System.exit(1);
 	    }
 	}
     }
-
 }

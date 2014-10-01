@@ -132,7 +132,7 @@ public class PDBStatusTest extends TestCase {
 
 		} catch(Exception e) {
 			e.printStackTrace();
-			fail();
+			fail(e.getMessage());
 		}
 	}
 	
@@ -189,7 +189,7 @@ public class PDBStatusTest extends TestCase {
 			
 		} catch(Exception e) {
 			e.printStackTrace();
-			fail();
+			fail(e.getMessage());
 		}
 	}
 	

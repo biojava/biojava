@@ -12,11 +12,14 @@ import org.biojava3.data.sequence.FastaSequence;
 import org.biojava3.data.sequence.SequenceUtil;
 import org.biojava3.ronn.Jronn.Range;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 public class JronnExample {
 
-	
+	private static final Logger logger = LoggerFactory.getLogger(JronnExample.class);
+
 	/*
 	@Test
 	public void highPerformanceDisorderCalculation() {
@@ -39,10 +42,10 @@ public class JronnExample {
 		@SuppressWarnings("unused")
 		Map<FastaSequence, float[]>	rawProbabilityScores = Jronn.getDisorderScores(sequences); 
 		} catch (FileNotFoundException e) {
-			e.printStackTrace();
+			logger.error("FileNotFoundException: ", e);
 			fail(e.getMessage());
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error("IOException: ", e);
 			fail(e.getMessage());
 		}
 	}
@@ -64,10 +67,10 @@ public class JronnExample {
 			Map<FastaSequence, Range[]> ranges = Jronn.getDisorder(sequences);
 
 		} catch (FileNotFoundException e) {
-			e.printStackTrace();
+			logger.error("FileNotFoundException: ", e);
 			fail(e.getMessage());
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error("IOException: ", e);
 			fail(e.getMessage());
 		}
 	}

@@ -10,6 +10,8 @@ import java.util.HashMap;
 import org.biojava3.core.sequence.AccessionID;
 import org.biojava3.core.sequence.ProteinSequence;
 import org.biojava3.core.sequence.io.FastaWriterHelper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /*
  * To change this template, choose Tools | Templates
@@ -22,6 +24,8 @@ import org.biojava3.core.sequence.io.FastaWriterHelper;
  */
 public class UniprotToFasta {
 
+	private static final Logger logger = LoggerFactory.getLogger(UniprotToFasta.class);
+
     public static void main( String[] args ){
         try{
             String uniprotDatFileName = "uniprot_trembl_fungi.dat";
@@ -29,7 +33,7 @@ public class UniprotToFasta {
             UniprotToFasta uniprotToFasta = new UniprotToFasta();
             uniprotToFasta.process(uniprotDatFileName, fastaFileName);
         }catch(Exception e){
-            e.printStackTrace();
+            logger.error("Exception: ", e);
         }
     }
 
@@ -79,7 +83,7 @@ public class UniprotToFasta {
                     sequence = new StringBuffer();
                     count++;
                     if(count % 100 == 0)
-                        System.out.println(count);
+                        logger.info("Count: ", count);
                     String[] parts = id.split("_");
                     uniqueGenes.put(parts[0], "");
                     uniqueSpecies.put(parts[1],"");

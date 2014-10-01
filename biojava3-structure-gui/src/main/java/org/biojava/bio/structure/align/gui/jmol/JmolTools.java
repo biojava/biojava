@@ -39,7 +39,7 @@ public class JmolTools {
 			g.setPDBName("ALA");
 		} catch (Exception e){}
 		Atom a = new AtomImpl();
-		a.setFullName(" CA ");
+		a.setName("CA");
 		g.addAtom(a);
 		c.addGroup(g);
 
