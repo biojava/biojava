@@ -5,6 +5,8 @@ import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.align.util.AtomCache;
 import org.biojava.bio.structure.io.FileParsingParameters;
 import org.biojava3.structure.StructureIO;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /** Example of how to load PDB files using the AtomCache class.
@@ -13,6 +15,9 @@ import org.biojava3.structure.StructureIO;
  *
  */
 public class DemoAtomCache {
+	
+	private static final Logger logger = LoggerFactory.getLogger(DemoAtomCache.class);
+
 	public static void main(String[] args){
 		demoAtomCache();
 		demoStructureIO();
@@ -30,7 +35,7 @@ public class DemoAtomCache {
 			
 			// do something with them...
 		} catch (Exception e){
-			e.printStackTrace();
+			logger.error("Exception: ", e);
 		}
 
 	}
@@ -53,18 +58,17 @@ public class DemoAtomCache {
 			try {
 				Structure s = cache.getStructure(pdbID);
 				if ( s == null) {
-					System.out.println("could not find structure " + pdbID);
+					logger.warn("could not find structure {}", pdbID);
 					continue;
 				}
 				// do something with the structure
-				System.out.println(s);
+				logger.info("do something with: {}", s);
 
 			} catch (Exception e){
 				// something crazy happened...
-				System.err.println("Can't load structure " + pdbID + " reason: " + e.getMessage());
+				logger.error("Can't load structure {} reason: ", pdbID, e);
 				//e.printStackTrace();
 			}
 		}
-
 	}
 }

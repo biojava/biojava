@@ -441,7 +441,7 @@ public class StructureTools {
 
 				Atom a = g.getAtom(atomName);
 				if ( a == null) {
-					logger.debug("Group "+g.getResidueNumber()+" ("+g.getPDBName()+") does not have the required atom '"+atomName+"'");
+					logger.debug("Group {} ({}) does not have the required atom '{}'", g.getResidueNumber(), g.getPDBName(), atomName);
 					// this group does not have a required atom, skip it...
 					thisGroupAllAtoms = false;
 					break;
@@ -711,12 +711,12 @@ public class StructureTools {
 			// hm groupCode3 is not standard
 			// perhaps it is an nucleotide?
 			if ( isNucleotide(groupCode3) ) {
-				//System.out.println("nucleotide, aminoCode1:"+aminoCode1);
+				//logger.debug("nucleotide, aminoCode1:"+aminoCode1);
 				aminoCode1= null;
 			} else {
 				// does not seem to be so let's assume it is
 				//  nonstandard aminoacid and label it "X"
-				//logger.warning("unknown group name "+groupCode3 );
+				//logger.warn("unknown group name "+groupCode3 );
 				aminoCode1 = UNKNOWN_GROUP_LABEL;
 			}
 		}
@@ -787,7 +787,7 @@ public class StructureTools {
 		try {
 			c = s.getChainByPDB(chainId);
 		} catch (StructureException e){
-			logger.warn(e.getMessage() + ". Chain id "+chainId+" did not match, trying upper case Chain id.");
+			logger.warn("{}. Chain id {} did not match, trying upper case Chain id.", e.getMessage(), chainId, e);
 			c = s.getChainByPDB(chainId.toUpperCase());
 
 
@@ -940,7 +940,7 @@ public class StructureTools {
 				if(struc.size() != 1) {
 					// SCOP 1.71 uses this for some proteins with multiple chains
 					// Print a warning in this ambiguous case
-					logger.warn("Multiple possible chains match '_'. Using chain {}",chain.getChainID());
+					logger.warn("Multiple possible chains match '_'. Using chain {}", chain.getChainID());
 				}
 			} else {
 				// Explicit chain
@@ -1313,7 +1313,7 @@ public class StructureTools {
 	//							bondType = BondType.COVALENT;
 	//							Bond bond = new Bond(dist, bondType, group, atomA, groupB, atomB);
 	//							bondList.add(bond);
-	//							//                                    System.out.println(String.format("%s within %s of %s", atomB, dist, atomA));
+	//							//                                    logger.debug(String.format("%s within %s of %s", atomB, dist, atomA));
 	//						}
 	//						else if (dist <= 3.25) {
 	//
@@ -1331,7 +1331,7 @@ public class StructureTools {
 	//								Bond bond = new Bond(dist, bondType, group, atomA, groupB, atomB);
 	//								bondList.add(bond);
 	//							}
-	//							//                                    System.out.println(String.format("%s within %s of %s", atomB, dist, atomA));
+	//							//                                    logger.debug(String.format("%s within %s of %s", atomB, dist, atomA));
 	//						} else if (dist <= 3.9) {
 	//							if (atomA.getElement().equals(Element.C) && atomB.getElement().equals(Element.C)) {
 	//								bondType = BondType.HYDROPHOBIC;
@@ -1401,7 +1401,7 @@ public class StructureTools {
 		//String prop = System.getProperty(PDBFileReader.LOAD_CHEM_COMP_PROPERTY);
 
 		//    if ( prop == null || ( ! prop.equalsIgnoreCase("true"))){
-		//      System.err.println("You did not specify PDBFileReader.setLoadChemCompInfo, need to fetch Chemical Components anyways.");
+		//      logger.error("You did not specify PDBFileReader.setLoadChemCompInfo, need to fetch Chemical Components anyways.");
 		//    }
 
 
@@ -1417,7 +1417,7 @@ public class StructureTools {
 				continue;
 			}
 			if ( ! g.isWater()) {
-				//System.out.println("not a prot, nuc or solvent : " + g.getChemComp());
+				//logger.debug("not a prot, nuc or solvent : " + g.getChemComp());
 				groups.add(g);
 			}
 		}

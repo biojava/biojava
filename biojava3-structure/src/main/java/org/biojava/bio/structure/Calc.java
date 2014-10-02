@@ -21,7 +21,6 @@
  *
  */
 
-
 package org.biojava.bio.structure ;
 
 import javax.vecmath.Matrix4d;
@@ -29,8 +28,8 @@ import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 
 import org.biojava.bio.structure.jama.Matrix;
-
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /** utility operations on Atoms, AminoAcids, etc. 
  * <p>
@@ -47,10 +46,7 @@ import org.biojava.bio.structure.jama.Matrix;
 
 public class Calc {
 
-
-
-	// 180 / pi
-	static final double RADIAN = 57.29577951 ;
+	private static final Logger logger = LoggerFactory.getLogger(Calc.class);
 
 	/** Radians per degree.
 	 * 
@@ -206,9 +202,8 @@ public class Calc {
 
 		angle = skalar/( amount(a) * amount (b) );
 		angle = Math.acos(angle);
-		angle = angle * RADIAN ; 
 
-		return angle;
+		return Math.toDegrees(angle);
 	}
 
 	/** return the unit vector of vector a .
@@ -597,10 +592,10 @@ public class Calc {
 			atom = (Atom) iter.next() ;
 			try {
 				if ( oldAtom != null){
-					//System.out.println("before " +getDistance(oldAtom,atom));
+					logger.debug("before {}", getDistance(oldAtom,atom));
 				}
 			} catch (Exception e){
-				e.printStackTrace();
+				logger.error("Exception: ", e);
 			}
 			oldAtom = (Atom)atom.clone();
 
@@ -619,10 +614,10 @@ public class Calc {
 			atom.setCoords(coords);
 			try {
 				if ( rotOldAtom != null){
-					//System.out.println("after " + getDistance(rotOldAtom,atom));
+					logger.debug("after {}", getDistance(rotOldAtom,atom));
 				}
 			} catch (Exception e){
-				e.printStackTrace();
+				logger.error("Exception: ", e);
 			}
 			rotOldAtom  = (Atom) atom.clone();
 		}
@@ -1062,7 +1057,7 @@ public class Calc {
 		b.setY(1);
 		b.setZ(0);
 
-		System.out.println(calcRotationAngleInDegrees(a, b));
+		logger.info("{}", calcRotationAngleInDegrees(a, b));
 	}
 
 

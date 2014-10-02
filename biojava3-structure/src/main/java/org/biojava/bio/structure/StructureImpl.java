@@ -183,7 +183,7 @@ public class StructureImpl implements Structure, Serializable {
 		while (giter.hasNext()){
 			Group g =  giter.next();
 			String rnum = g.getResidueNumber().toString();
-			//System.out.println(g + " >" + rnum + "< >" + pdbResnum + "<");
+			//logger.debug(g + " >" + rnum + "< >" + pdbResnum + "<");
 			// we only mutate amino acids
 			// and ignore hetatoms and nucleotides in this case
 			if (rnum.equals(pdbResnum))
@@ -364,7 +364,7 @@ public class StructureImpl implements Structure, Serializable {
     	for (Chain c: model)
     		c.setParent(this);
 
-    	//System.out.println("model size:" + models.size());
+    	//logger.debug("model size:" + models.size());
 
     	if (models.size() ==0){
     		models.add(model);

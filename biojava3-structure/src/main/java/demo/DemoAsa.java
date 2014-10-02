@@ -8,8 +8,12 @@ import org.biojava.bio.structure.align.util.AtomCache;
 import org.biojava.bio.structure.asa.AsaCalculator;
 import org.biojava.bio.structure.asa.GroupAsa;
 import org.biojava3.structure.StructureIO;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class DemoAsa {
+
+	private static final Logger logger = LoggerFactory.getLogger(DemoAsa.class);
 
 	private static final boolean hetAtoms = false;
 	
@@ -46,7 +50,7 @@ public class DemoAsa {
 		
 		
 		for (GroupAsa groupAsa: groupAsas) {
-			System.out.printf("%1s\t%5s\t%3s\t%6.2f\n", 
+			logger.info("{}\t{}\t{}\t{}", 
 					groupAsa.getGroup().getChainId(),
 					groupAsa.getGroup().getResidueNumber(),
 					groupAsa.getGroup().getPDBName(), 
@@ -55,11 +59,11 @@ public class DemoAsa {
 		}
 		
 		
-		System.out.printf("Total area: %9.2f\n",tot);
-		System.out.printf("Time: %4.1fs\n",((end-start)/1000.0));
+		logger.info("Total area: {}", tot);
+		logger.info("Time: {}", ((end-start)/1000.0));
 		
 		
-		System.out.println("Testing scaling: ");
+		logger.info("Testing scaling: ");
 		double[] runTimes = new double[numThreads];
 		for (int nThreads=1;nThreads<=numThreads;nThreads++) {
 			start = System.currentTimeMillis();
@@ -76,11 +80,7 @@ public class DemoAsa {
 			
 		}
 		for (int nThreads=1;nThreads<=numThreads;nThreads++) {
-			System.out.printf(nThreads+" threads, time: %4.1fs -- x%2.1f\n",runTimes[nThreads-1],runTimes[0]/runTimes[nThreads-1]);
-		}
-		
-		
-	}
-
-	
+			logger.info("{} threads, time: {} -- {}",nThreads, runTimes[nThreads-1], runTimes[0]/runTimes[nThreads-1]);
+		}		
+	}	
 }

@@ -79,7 +79,7 @@ public {@link Structure} loadStructure(String pathToPDBFile){
 		{@link Structure} structure = null;
 		try{
 			structure = pdbreader.getStructure(pathToPDBFile);
-			System.out.println(structure);
+			logger.debug(structure);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -152,7 +152,7 @@ public void calcPhiPsi({@link Structure} structure){
 
 			System.out.print(b.getPDBCode() + " " + b.getPDBName() + ":"  );
 
-			System.out.println(String.format("\tphi: %+7.2f psi: %+7.2f", phi, psi));
+			logger.debug(String.format("\tphi: %+7.2f psi: %+7.2f", phi, psi));
 
 		}
 </pre>

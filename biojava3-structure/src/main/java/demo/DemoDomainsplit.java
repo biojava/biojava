@@ -1,6 +1,5 @@
 package demo;
 
-
 import java.util.List;
 
 import org.biojava.bio.structure.Structure;
@@ -9,8 +8,12 @@ import org.biojava.bio.structure.domain.LocalProteinDomainParser;
 import org.biojava.bio.structure.domain.pdp.Domain;
 import org.biojava.bio.structure.domain.pdp.Segment;
 import org.biojava.bio.structure.io.FileParsingParameters;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class DemoDomainsplit {
+
+	private static final Logger logger = LoggerFactory.getLogger(DemoDomainsplit.class);
 
 	public static void main(String[] args){
 
@@ -48,21 +51,20 @@ public class DemoDomainsplit {
 			
 			Structure struc = cache.getStructure(pdbId);
 			
-			System.out.println("structure loaded: " + struc);
+			logger.info("structure loaded: {}", struc);
 			
 			List<Domain> domains = LocalProteinDomainParser.suggestDomains(struc);
 
-			System.out.println("RESULTS: =====");
+			logger.info("RESULTS: =====");
 			for ( Domain dom : domains){
-				System.out.println("DOMAIN:" + dom.getSize() + " " +  dom.getScore());
+				logger.info("DOMAIN:" + dom.getSize() + " " +  dom.getScore());
 				List<Segment> segments = dom.getSegments();
 				for ( Segment s : segments){
-					System.out.println("   Segment: " + s);
+					logger.info("Segment: {}", s);
 				}
 			}
 		} catch (Exception e){
-			e.printStackTrace();
+			logger.error("Exception: ", e);
 		}
-
 	}
 }

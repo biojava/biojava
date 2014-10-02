@@ -33,15 +33,16 @@ import org.biojava.bio.structure.io.FileParsingParameters;
 import org.biojava.bio.structure.io.PDBFileReader;
 import org.biojava3.core.util.InputStreamProvider;
 import org.biojava3.structure.StructureIO;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /** Example for how to load protein structures (from PDB files).
  * 
  * @author Andreas Prlic
  *
  */
-public class DemoLoadStructure
-{
+public class DemoLoadStructure {
+	private static final Logger logger = LoggerFactory.getLogger(DemoLoadStructure.class);
 
 	public static void main(String[] args){
 
@@ -57,20 +58,17 @@ public class DemoLoadStructure
 	public void loadStructureIO(){
 		try {
 			Structure s1 = StructureIO.getStructure("1gav");			
-			System.out.println(s1.getPDBCode() + " asym unit has nr atoms:");
-			System.out.println(StructureTools.getNrAtoms(s1));
+			logger.info(s1.getPDBCode() + " asym unit has nr atoms:");
+			logger.info("{}", StructureTools.getNrAtoms(s1));
 						
 			Structure s2 = StructureIO.getBiologicalAssembly("1gav");			
-			System.out.println(s2.getPDBCode() + " biological assembly has nr atoms:");
-			System.out.println(StructureTools.getNrAtoms(s2));
-			
-		} catch (Exception e){
-			e.printStackTrace();
+			logger.info(s2.getPDBCode() + " biological assembly has nr atoms:");
+			logger.info("{}", StructureTools.getNrAtoms(s2));			
+		} catch (Exception e) {
+			logger.error("Exception: ", e);
 		}
-
 	}
-
-
+	
 	public void basicLoad(){
 		try {
 
@@ -101,18 +99,17 @@ public class DemoLoadStructure
 
 			Structure structure = reader.getStructureById("4hhb");
 
-			System.out.println(structure);
+			logger.info("{}", structure);
 
 			Chain c = structure.getChainByPDB("C");
 
-			System.out.print(c);
+			logger.info("{}", c);
 
-			System.out.println(c.getHeader());
+			logger.info("{}", c.getHeader());
 
 		} catch (Exception e){
-			e.printStackTrace();
+			logger.error("Exception: ", e);
 		}
-
 	}
 
 	public void loadStructureFromCache(){
@@ -129,22 +126,17 @@ public class DemoLoadStructure
 		AtomCache cache = new AtomCache();
 
 		try {
-			System.out.println("======================");
 			Structure s = cache.getStructure(pdbId);
-
-			System.out.println("Full Structure:" + s);
+			logger.info("Full Structure: {}", s);
 
 			Atom[] ca = cache.getAtoms(chainName);
-			System.out.println("got " + ca.length + " CA atoms");
+			logger.info("got {} CA atoms", ca.length);
 
 			Structure firstEntity = cache.getStructure(entityName);
-			System.out.println("First entity: " + firstEntity);
+			logger.info("First entity: {}", firstEntity);
 
-		} catch (Exception e){
-			e.printStackTrace();
+		} catch (Exception e) {
+			logger.error("Exception: ", e);
 		}
-
 	}
-
-
 }

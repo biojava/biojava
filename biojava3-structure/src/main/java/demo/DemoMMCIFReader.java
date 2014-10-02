@@ -36,14 +36,17 @@ import org.biojava.bio.structure.align.util.AtomCache;
 import org.biojava.bio.structure.io.MMCIFFileReader;
 import org.biojava.bio.structure.io.StructureIOFile;
 import org.biojava3.structure.StructureIO;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /** An example of how to read MMcif files
  * 
  * @author Andreas Prlic
  * 
  */
-public class DemoMMCIFReader
-{
+public class DemoMMCIFReader {
+
+	private static final Logger logger = LoggerFactory.getLogger(DemoMMCIFReader.class);
 
 	public static void main(String[] args){
 
@@ -69,10 +72,10 @@ public class DemoMMCIFReader
 		try {
 			Structure s = StructureIO.getStructure(pdbId);
 
-			System.out.println(pdbId + " has nr atoms: " + StructureTools.getNrAtoms(s));
+			logger.info(pdbId + " has nr atoms: " + StructureTools.getNrAtoms(s));
 
 		} catch (Exception e){
-			e.printStackTrace();
+			logger.error("Exception: ", e);
 		}
 	}
 
@@ -94,27 +97,24 @@ public class DemoMMCIFReader
 
 			List<Group> ligands = h.getAtomLigands();
 
-			System.out.println("These ligands have been found in chain " + h.getChainID());
+			logger.info("These ligands have been found in chain {}", h.getChainID());
 
 			for (Group l:ligands){
-				System.out.println(l);
+				logger.info("{}", l);
 			}
 
-			System.out.println("Accessing QWE directly: ");
+			logger.info("Accessing QWE directly: ");
 			Group qwe = h.getGroupByPDB(new ResidueNumber("H",373,null));
 
-			System.out.println(qwe.getChemComp());
+			logger.info("{}", qwe.getChemComp());
 
-			System.out.println(h.getSeqResSequence());
-			System.out.println(h.getAtomSequence());
-			System.out.println(h.getAtomGroups(GroupType.HETATM));
+			logger.info("{}", h.getSeqResSequence());
+			logger.info("{}", h.getAtomSequence());
+			logger.info("{}", h.getAtomGroups(GroupType.HETATM));
 
-			System.out.println("Compounds: " + s.getCompounds());
-
+			logger.info("Compounds: {}", s.getCompounds());
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Exception: ", e);
 		}
-
-
 	}
 }

@@ -1,7 +1,5 @@
 package demo;
 
-
-
 import java.util.List;
 
 import javax.vecmath.AxisAngle4d;
@@ -18,11 +16,12 @@ import org.biojava.bio.structure.xtal.CrystalBuilder;
 import org.biojava.bio.structure.xtal.CrystalTransform;
 import org.biojava.bio.structure.xtal.SpaceGroup;
 import org.biojava3.structure.StructureIO;
-
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class DemoCrystalInterfaces {
 
+	private static final Logger logger = LoggerFactory.getLogger(DemoCrystalInterfaces.class);
 	
 	private static final double BSATOASA_CUTOFF = 0.95;
 	private static final double MIN_ASA_FOR_SURFACE = 5;
@@ -57,17 +56,15 @@ public class DemoCrystalInterfaces {
 		
 		Structure structure = StructureIO.getStructure(pdbCode);
 			
-
-		System.out.println(structure.getPDBCode());
-		
+		logger.info("{}", structure.getPDBCode());
 		
 		SpaceGroup sg = structure.getCrystallographicInfo().getSpaceGroup();
 		
 		if (sg!=null) {
-			System.out.println(sg.getShortSymbol()+" ("+sg.getId()+")");
-			System.out.println("Symmetry operators: "+sg.getNumOperators());
+			logger.info(sg.getShortSymbol()+" ("+sg.getId()+")");
+			logger.info("Symmetry operators: {}", sg.getNumOperators());
 		}
-		System.out.println("Calculating possible interfaces... (using "+NTHREADS+" CPUs for ASA calculation)");
+		logger.info("Calculating possible interfaces... (using "+NTHREADS+" CPUs for ASA calculation)");
 		long start = System.currentTimeMillis();
 		
 		CrystalBuilder cb = new CrystalBuilder(structure);
@@ -84,27 +81,27 @@ public class DemoCrystalInterfaces {
 		
 		long end = System.currentTimeMillis();
 		long total = (end-start)/1000;
-		System.out.println("Total time for interface calculation: "+total+"s");
+		logger.info("Total time for interface calculation: {} sec", total);
 		
-		System.out.println("Total number of interfaces found: "+interfaces.size());
+		logger.info("Total number of interfaces found: {}", interfaces.size());
 
 		for (int i=0;i<interfaces.size();i++) {
 			StructureInterface interf = interfaces.get(i+1);			
 			
 			String infiniteStr = "";
 			if (interf.isInfinite()) infiniteStr = " -- INFINITE interface";
-			System.out.println("\n##Interface "+(i+1)+" "+
+			logger.info("\n##Interface "+(i+1)+" "+
 					interf.getCrystalIds().getFirst()+"-"+
 					interf.getCrystalIds().getSecond()+infiniteStr);
 			// warning if more than 10 clashes found at interface
 			List<AtomContact> clashing = interf.getContacts().getContactsWithinDistance(CLASH_DISTANCE);
 			if (clashing.size()>10) 
-				System.out.println(clashing.size()+" CLASHES!!!");
+				logger.info(clashing.size()+" CLASHES!!!");
 			
 			CrystalTransform transf1 = interf.getTransforms().getFirst();
 			CrystalTransform transf2 = interf.getTransforms().getSecond();
 			
-			System.out.println("Transf1: "+SpaceGroup.getAlgebraicFromMatrix(transf1.getMatTransform())+
+			logger.info("Transf1: "+SpaceGroup.getAlgebraicFromMatrix(transf1.getMatTransform())+
 					". Transf2: "+SpaceGroup.getAlgebraicFromMatrix(transf2.getMatTransform()));
 	 		
 			int foldType = sg.getAxisFoldType(transf2.getTransformId());
@@ -117,24 +114,18 @@ public class DemoCrystalInterfaces {
 				screwStr = " -- "+transf2.getTransformType().getShortName()+" with translation "+
 				String.format("(%5.2f,%5.2f,%5.2f)",screwTransl.x,screwTransl.y,screwTransl.z);
 
-			}
+			}		
 			
+			logger.info(" "+foldType+"-fold on axis "+String.format("(%5.2f,%5.2f,%5.2f)",axisAngle.x,axisAngle.y,axisAngle.z)+screwStr);
 			
-			System.out.println(" "+foldType+"-fold on axis "+String.format("(%5.2f,%5.2f,%5.2f)",axisAngle.x,axisAngle.y,axisAngle.z)+screwStr);
-			
-			System.out.println("Number of contacts: "+interf.getContacts().size());
+			logger.info("Number of contacts: {}", interf.getContacts().size());
 			//System.out.println("Number of contacting atoms (from both molecules): "+interf.getNumAtomsInContact());
 			Pair<List<Group>> cores = interf.getCoreResidues(BSATOASA_CUTOFF, MIN_ASA_FOR_SURFACE);
-			System.out.println("Number of core residues at "+String.format("%4.2f", BSATOASA_CUTOFF)+
+			logger.info("Number of core residues at "+String.format("%4.2f", BSATOASA_CUTOFF)+
 					" bsa to asa cutoff: "+
 					cores.getFirst().size()+" "+
 					cores.getSecond().size());
-			System.out.printf("Interface area: %8.2f\n",interf.getTotalArea());
-			
+			logger.info("Interface area: %8.2f\n",interf.getTotalArea());
 		}
-		
-
-
 	}
-
 }

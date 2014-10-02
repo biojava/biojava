@@ -30,6 +30,9 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * An object to contain the info from the PDB header for a Molecule.
  *
@@ -40,6 +43,8 @@ import java.util.List;
  * @since 1.5
  */
 public class Compound implements Cloneable, Serializable {
+
+	private static final Logger logger = LoggerFactory.getLogger(Compound.class);
 
 	/**
     *
@@ -151,7 +156,7 @@ public class Compound implements Cloneable, Serializable {
 			}
 
 		} catch (Exception e){
-			e.printStackTrace();
+			logger.error("Exception: ", e);
 		}
 
 
@@ -189,150 +194,148 @@ public class Compound implements Cloneable, Serializable {
 	}
 
 	public void showCompound() {
-		System.out.println("COMPOUND INFO:");
+		logger.info("COMPOUND INFO:");
 		if (this.molId != null) {
-			System.out.println("Mol ID: " + this.molId);
+			logger.info("Mol ID: " + this.molId);
 		}
 		if (this.chainId != null) {
-			System.out.println("Chain: " + this.chainId);
+			logger.info("Chain: " + this.chainId);
 			//this.refChainId = chainId
 		}
 		if (this.molName != null) {
-			System.out.println("Mol Name: " + this.molName);
+			logger.info("Mol Name: " + this.molName);
 		}
 		if (this.title != null) {
-			System.out.println("Title: " + this.title);
+			logger.info("Title: " + this.title);
 		}
 		if (this.synonyms != null) {
 			for (String x : this.synonyms) {
-				System.out.println("Synomym: " + x);
+				logger.info("Synomym: " + x);
 			}
 		}
 		if (this.ecNums != null) {
 			for (String x : this.ecNums) {
-				System.out.println("EC: " + x);
+				logger.info("EC: " + x);
 			}
 		}
 		if (this.fragment != null) {
-			System.out.println("Fragment? " + this.fragment);
+			logger.info("Fragment? " + this.fragment);
 		}
 		if (this.engineered != null) {
-			System.out.println("Engineered? " + this.engineered);
+			logger.info("Engineered? " + this.engineered);
 		}
 		if (this.mutation != null) {
-			System.out.println("Mutation? " + this.mutation);
+			logger.info("Mutation? " + this.mutation);
 		}
 		if (this.biologicalUnit != null) {
-			System.out.println("Biological Unit: " + this.biologicalUnit);
+			logger.info("Biological Unit: " + this.biologicalUnit);
 		}
 		if (this.details != null) {
-			System.out.println("Details: " + this.details);
+			logger.info("Details: " + this.details);
 		}
 		if (this.numRes != null) {
-			System.out.println("No. Residues: " + this.numRes);
+			logger.info("No. Residues: " + this.numRes);
 		}
-		//System.out.println( "\n"
-
 	}
 
 
 	public void showSource() {
-		System.out.println("SOURCE INFO:");
+		logger.info("SOURCE INFO:");
 		if (this.synthetic != null) {
-			System.out.println("Synthetic? " + this.synthetic);
+			logger.info("Synthetic? " + this.synthetic);
 		}
 		if (this.fragment != null) {
-			System.out.println("Fragment? " + this.fragment);
+			logger.info("Fragment? " + this.fragment);
 		}
 		if (this.organismScientific != null) {
-			System.out.println("Organism Scientific: " + this.organismScientific);
+			logger.info("Organism Scientific: " + this.organismScientific);
 		}
         if (this.organismTaxId != null) {
-			System.out.println("Organism Tax Id: " + this.organismTaxId);
+			logger.info("Organism Tax Id: " + this.organismTaxId);
 		}
 		if (this.organismCommon != null) {
-			System.out.println("Organism Common: " + this.organismCommon);
+			logger.info("Organism Common: " + this.organismCommon);
 		}
 		if (this.strain != null) {
-			System.out.println("Strain: " + this.strain);
+			logger.info("Strain: " + this.strain);
 		}
 		if (this.variant != null) {
-			System.out.println("Variant: " + this.variant);
+			logger.info("Variant: " + this.variant);
 		}
 		if (this.cellLine != null) {
-			System.out.println("Cell Line: " + this.cellLine);
+			logger.info("Cell Line: " + this.cellLine);
 		}
 		if (this.atcc != null) {
-			System.out.println("ATCC: " + this.atcc);
+			logger.info("ATCC: " + this.atcc);
 		}
 		if (this.organ != null) {
-			System.out.println("Organ: " + this.organ);
+			logger.info("Organ: " + this.organ);
 		}
 		if (this.tissue != null) {
-			System.out.println("Tissue: " + this.tissue);
+			logger.info("Tissue: " + this.tissue);
 		}
 		if (this.cell != null) {
-			System.out.println("Cell: " + this.cell);
+			logger.info("Cell: " + this.cell);
 		}
 		if (this.organelle != null) {
-			System.out.println("Organelle: " + this.organelle);
+			logger.info("Organelle: " + this.organelle);
 		}
 		if (this.secretion != null) {
-			System.out.println("Secretion: " + this.secretion);
+			logger.info("Secretion: " + this.secretion);
 		}
 		if (this.gene != null) {
-			System.out.println("Gene: " + this.gene);
+			logger.info("Gene: " + this.gene);
 		}
 		if (this.cellularLocation != null) {
-			System.out.println("Cellular Location: " + this.cellularLocation);
+			logger.info("Cellular Location: " + this.cellularLocation);
 		}
 		if (this.expressionSystem != null) {
-			System.out.println("Expression System: " + this.expressionSystem);
+			logger.info("Expression System: " + this.expressionSystem);
 		}
         if (this.expressionSystemTaxId != null) {
-			System.out.println("Expression System Tax Id: " + this.expressionSystemTaxId);
+			logger.info("Expression System Tax Id: " + this.expressionSystemTaxId);
 		}
 		if (this.expressionSystemStrain != null) {
-			System.out.println("Expression System Strain: " + this.expressionSystemStrain);
+			logger.info("Expression System Strain: " + this.expressionSystemStrain);
 		}
 		if (this.expressionSystemVariant != null) {
-			System.out.println("Expression System Variant: " + this.expressionSystemVariant);
+			logger.info("Expression System Variant: " + this.expressionSystemVariant);
 		}
 		if (this.expressionSystemCellLine != null) {
-			System.out.println("Expression System Cell Line: " + this.expressionSystemCellLine);
+			logger.info("Expression System Cell Line: " + this.expressionSystemCellLine);
 		}
 		if (this.expressionSystemAtccNumber != null) {
-			System.out.println("Expression System ATCC Number: " + this.expressionSystemAtccNumber);
+			logger.info("Expression System ATCC Number: " + this.expressionSystemAtccNumber);
 		}
 		if (this.expressionSystemOrgan != null) {
-			System.out.println("Expression System Organ: " + this.expressionSystemOrgan);
+			logger.info("Expression System Organ: " + this.expressionSystemOrgan);
 		}
 		if (this.expressionSystemTissue != null) {
-			System.out.println("Expression System Tissue: " + this.expressionSystemTissue);
+			logger.info("Expression System Tissue: " + this.expressionSystemTissue);
 		}
 		if (this.expressionSystemCell != null) {
-			System.out.println("Expression System Cell: " + this.expressionSystemCell);
+			logger.info("Expression System Cell: " + this.expressionSystemCell);
 		}
 		if (this.expressionSystemOrganelle != null) {
-			System.out.println("Expression System Organelle: " + this.expressionSystemOrganelle);
+			logger.info("Expression System Organelle: " + this.expressionSystemOrganelle);
 		}
 		if (this.expressionSystemCellularLocation != null) {
-			System.out.println("Expression System Cellular Location: " + this.expressionSystemCellularLocation);
+			logger.info("Expression System Cellular Location: " + this.expressionSystemCellularLocation);
 		}
 		if (this.expressionSystemVectorType != null) {
-			System.out.println("Expression System Vector Type: " + this.expressionSystemVectorType);
+			logger.info("Expression System Vector Type: " + this.expressionSystemVectorType);
 		}
 		if (this.expressionSystemVector != null) {
-			System.out.println("Expression System Vector: " + this.expressionSystemVector);
+			logger.info("Expression System Vector: " + this.expressionSystemVector);
 		}
 		if (this.expressionSystemPlasmid != null) {
-			System.out.println("Expression System Plasmid: " + this.expressionSystemPlasmid);
+			logger.info("Expression System Plasmid: " + this.expressionSystemPlasmid);
 		}
 		if (this.expressionSystemGene != null) {
-			System.out.println("Expression System Gene: " + this.expressionSystemGene);
+			logger.info("Expression System Gene: " + this.expressionSystemGene);
 		}
 		if (this.expressionSystemOtherDetails != null) {
-			System.out.println("Expression System Other Details: " + this.expressionSystemOtherDetails);
+			logger.info("Expression System Other Details: " + this.expressionSystemOtherDetails);
 		}
 	}
 
