@@ -24,7 +24,6 @@
 
 package demo;
 
-
 import java.util.List;
 
 import org.biojava.bio.structure.Atom;
@@ -45,14 +44,18 @@ import org.biojava.bio.structure.scop.ScopDomain;
 import org.biojava.bio.structure.scop.ScopFactory;
 import org.biojava.bio.structure.scop.ScopInstallation;
 import org.biojava.bio.structure.scop.ScopNode;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /** A class demonstrating the use of the SCOP parsing tools
  * 
  * @author Andreas Prlic
  *
  */
-public class DemoSCOP
-{
+public class DemoSCOP {
+
+   private static final Logger logger = LoggerFactory.getLogger(DemoSCOP.class);
+
    public static void main(String[] args){
 
      DemoSCOP demo = new DemoSCOP();
@@ -89,8 +92,8 @@ public class DemoSCOP
       
       while (node != null){
          
-         System.out.println("This node: sunid:" + node.getSunid() );
-         System.out.println(scop.getScopDescriptionBySunid(node.getSunid()));
+         logger.info("This node: sunid: {}", node.getSunid());
+         logger.info("{}", scop.getScopDescriptionBySunid(node.getSunid()));
          node = scop.getScopNode(node.getParentSunid());
       }
       
@@ -104,11 +107,10 @@ public class DemoSCOP
 	   ScopDatabase scop = ScopFactory.getSCOP();
       List<ScopDescription> superfams = scop.getByCategory(ScopCategory.Superfamily);
 
-      System.out.println("Total nr. of superfamilies:" + superfams.size());
+      logger.info("Total nr. of superfamilies: {}", superfams.size());
       
       List<ScopDescription> folds = scop.getByCategory(ScopCategory.Fold);
-      System.out.println("Total nr. of folds:" + folds.size());
-            
+      logger.info("Total nr. of folds: {}", folds.size());
    }
 
    public void alignSuperfamily(){     
@@ -116,7 +118,7 @@ public class DemoSCOP
 	   ScopDatabase scop = ScopFactory.getSCOP();
       List<ScopDescription> superfams = scop.getByCategory(ScopCategory.Superfamily);
 
-      System.out.println("Total nr. of superfamilies:" + superfams.size());
+      logger.info("Total nr. of superfamilies: {}", superfams.size());
 
       
       // configure where to load PDB files from and 
@@ -130,10 +132,10 @@ public class DemoSCOP
       
       // get tge first superfamily
       ScopDescription superfam1 = superfams.get(0);
-      System.out.println("First superfamily: " + superfam1);
+      logger.info("First superfamily: {}", superfam1);
       
       ScopNode node = scop.getScopNode(superfam1.getSunID());
-      System.out.println("scopNode for first superfamily:" + node);
+      logger.info("scopNode for first superfamily: {}", node);
       
       List<ScopDomain> doms4superfam1 = scop.getScopDomainsBySunid(superfam1.getSunID());
       ScopDomain dom1 = doms4superfam1.get(0);
@@ -156,16 +158,14 @@ public class DemoSCOP
             
             //StructureAlignmentDisplay.display(afpChain, ca1, ca2);
             
-            System.out.println(dom1.getScopId() + " vs. " + dom2.getScopId()+ " :" + afpChain.getProbability());
+            logger.info(dom1.getScopId() + " vs. " + dom2.getScopId()+ " :" + afpChain.getProbability());
             double tmScore = AFPChainScorer.getTMScore(afpChain, ca1, ca2);
             afpChain.setTMScore(tmScore);
-            System.out.println(AfpChainWriter.toScoresList(afpChain));
-            
+            logger.info(AfpChainWriter.toScoresList(afpChain));
          } catch (Exception e){
-            e.printStackTrace();
+            logger.error("Exception: ", e);
          }
       }
-
    }
    
    public void printDomainsForPDB(){
@@ -176,9 +176,6 @@ public class DemoSCOP
 
       List<ScopDomain> domains = scop.getDomainsForPDB(pdbId);
 
-      System.out.println(domains);
-
+      logger.info("{}", domains);
    }
-   
-  
 }

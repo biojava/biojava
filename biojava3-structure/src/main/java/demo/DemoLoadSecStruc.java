@@ -1,14 +1,20 @@
 package demo;
 
 import java.util.Map;
+
 import org.biojava.bio.structure.AminoAcid;
 import org.biojava.bio.structure.Chain;
 import org.biojava.bio.structure.Group;
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.align.util.AtomCache;
 import org.biojava.bio.structure.io.FileParsingParameters;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class DemoLoadSecStruc {
+	
+	private static final Logger logger = LoggerFactory.getLogger(DemoLoadSecStruc.class);
+
     public static void main(String[] args){
 
         try {
@@ -29,14 +35,13 @@ public class DemoLoadSecStruc {
 
                         Map<String,String> sec = aa.getSecStruc();
 
-                        System.out.println(c.getChainID() + " " + g.getResidueNumber() + " " + g.getPDBName() + " " + " " +sec);
+                        logger.info(c.getChainID() + " " + g.getResidueNumber() + " " + g.getPDBName() + " " + " " +sec);
                     }
                 }
             }
 
         } catch (Exception e) {
-
-            e.printStackTrace();
-        }        
+            logger.error("Exception: ", e);
+        }
     }
 }

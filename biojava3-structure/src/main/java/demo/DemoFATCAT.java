@@ -29,14 +29,16 @@ import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureTools;
 import org.biojava.bio.structure.align.StructureAlignment;
 import org.biojava.bio.structure.align.StructureAlignmentFactory;
-
 import org.biojava.bio.structure.align.fatcat.FatCatRigid;
 import org.biojava.bio.structure.align.fatcat.calc.FatCatParameters;
 import org.biojava.bio.structure.align.model.AFPChain;
 import org.biojava.bio.structure.align.util.AtomCache;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-public class DemoFATCAT
-{
+public class DemoFATCAT {
+
+   private static final Logger logger = LoggerFactory.getLogger(DemoFATCAT.class);
 
    public static void main(String[] args){
 
@@ -72,15 +74,15 @@ public class DemoFATCAT
          afpChain.setName2(name2);
 
          // flexible original results:
-         System.out.println(afpChain.toFatcat(ca1,ca2));
+         logger.info("{}", afpChain.toFatcat(ca1,ca2));
 
-         System.out.println(afpChain.toRotMat());
+         logger.info("{}", afpChain.toRotMat());
          //System.out.println(afpChain.toCE(ca1, ca2));
 
          //System.out.println(AFPChainXMLConverter.toXML(afpChain,ca1,ca2));
 
       } catch (Exception e) {
-         e.printStackTrace();
+         logger.error("Exception: ", e);
          return;
       }
    }

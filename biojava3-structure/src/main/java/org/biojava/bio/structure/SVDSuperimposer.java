@@ -24,6 +24,8 @@ package org.biojava.bio.structure;
 
 import org.biojava.bio.structure.jama.Matrix;
 import org.biojava.bio.structure.jama.SingularValueDecomposition;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /** A class that calculates the superimposition between two sets of atoms
@@ -133,6 +135,8 @@ import org.biojava.bio.structure.jama.SingularValueDecomposition;
 
  */
 public class SVDSuperimposer {
+
+	private static final Logger logger = LoggerFactory.getLogger(SVDSuperimposer.class);
 
     Matrix rot;
     Matrix tran;
@@ -387,9 +391,8 @@ public class SVDSuperimposer {
     public void printMatrix(Matrix m){
         for (int i = 0 ; i < m.getRowDimension(); i++){
             for (int j = 0 ; j< m.getColumnDimension(); j++){
-                System.out.print("\t" + m.get(i,j) + " ");
+                logger.info("\t" + m.get(i,j) + " ");
             }
-            System.out.println("");
         }
     }
 

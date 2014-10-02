@@ -6,6 +6,8 @@ import org.biojava.bio.structure.align.util.AtomCache;
 import org.biojava.bio.structure.cath.CathDatabase;
 import org.biojava.bio.structure.cath.CathDomain;
 import org.biojava.bio.structure.cath.CathInstallation;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /** An example for how to access CATH data.
  * 
@@ -15,6 +17,9 @@ import org.biojava.bio.structure.cath.CathInstallation;
  *
  */
 public class DemoCATH {
+	
+	private static final Logger logger = LoggerFactory.getLogger(DemoCATH.class);
+
 	public static void main(String[] args){
 				
 		AtomCache cache  = new AtomCache();
@@ -25,20 +30,15 @@ public class DemoCATH {
 		
 		CathDomain cathDomain = database.getDescriptionByCathId(domainID);
 			
-		System.out.println(cathDomain);
-		
+		logger.info("{}", cathDomain);
 		
 		Structure cathDomainStructure;
 		try {
 			cathDomainStructure = cache.getStructure(domainID);
-			System.out.println(cathDomainStructure);
+			logger.info("{}", cathDomainStructure);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} 
-		
-		
-		
-		
+			logger.error("Exception: ", e);
+		}		
 	}
 }

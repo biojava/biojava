@@ -11,7 +11,8 @@ import org.biojava.bio.structure.io.mmcif.AllChemCompProvider;
 import org.biojava.bio.structure.io.mmcif.ChemCompGroupFactory;
 import org.biojava.bio.structure.io.mmcif.ChemCompProvider;
 import org.biojava.bio.structure.io.mmcif.DownloadChemCompProvider;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /** 
  *  This demo shows how to use an alternative ChemCompProvider. The default mechanism in BioJava is to access chemical components
@@ -28,6 +29,8 @@ import org.biojava.bio.structure.io.mmcif.DownloadChemCompProvider;
  *
  */
 public class DemoChangeChemCompProvider {
+
+	private static final Logger logger = LoggerFactory.getLogger(DemoChangeChemCompProvider.class);
 
 	public static void main(String[] args){
 		String pdbId = "1O1G";
@@ -98,14 +101,14 @@ public class DemoChangeChemCompProvider {
 			
 			
 		} catch (Exception e){
-			e.printStackTrace();
+			logger.error("Exception: ", e);
 		}
 
 	}
 
 	private void printStructure(Structure struc) {
 
-		System.out.println(struc);
+		logger.info("{}", struc);
 
 		//Chain c = struc.getChainByPDB("C");
 		String pdbid = struc.getPDBCode();
@@ -115,16 +118,16 @@ public class DemoChangeChemCompProvider {
 			for (Chain ch : struc.getModel(i)) {
 				if (! ch.getChainID().equals("A") )
 					continue;
-				System.out.println(pdbid + ">>>" + ch.getChainID() + ">>>"
+				logger.info(pdbid + ">>>" + ch.getChainID() + ">>>"
 						+ ch.getAtomSequence());
-				System.out.println(pdbid + ">>>" + ch.getChainID() + ">>>"
+				logger.info(pdbid + ">>>" + ch.getChainID() + ">>>"
 						+ ch.getSeqResSequence());
 				// Test the getAtomGroups() and getSeqResGroups() method
 
 				List<Group> group = ch.getSeqResGroups();
 				int seqPos = 0;
 				for (Group gp : group) {
-					System.out.println(ch.getChainID() + ":"+seqPos + ":" + gp.getResidueNumber() + ":"
+					logger.info(ch.getChainID() + ":"+seqPos + ":" + gp.getResidueNumber() + ":"
 							+ gp.getPDBName() + " " + gp.getType());
 					seqPos++;
 				}

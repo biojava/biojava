@@ -3,6 +3,8 @@ package demo;
 import org.biojava.bio.structure.align.util.AtomCache;
 import org.biojava.bio.structure.scop.ScopDatabase;
 import org.biojava.bio.structure.scop.ScopFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /** A demo for how to use the Berkeley version of SCOP instead of the default UK-SCOP
  * 
@@ -12,6 +14,8 @@ import org.biojava.bio.structure.scop.ScopFactory;
  */
 public class DemoBerkeleyScop {
 	
+	private static final Logger logger = LoggerFactory.getLogger(DemoBerkeleyScop.class);
+
 	public static void main(String[]args){
 
 
@@ -25,8 +29,8 @@ public class DemoBerkeleyScop {
 		ScopFactory.setScopDatabase(scop);
 		
 		
-		System.out.println(cache.getPath());
-		System.out.println(cache.getCachePath());
+		logger.info("Atom Cache Path: {}", cache.getPath());
+		logger.info("{}", cache.getCachePath());
 		// ... and do something with it
 
 
@@ -38,7 +42,5 @@ public class DemoBerkeleyScop {
 		scopDemo.printDomainsForPDB();
 		scopDemo.traverseHierarchy();
 		scopDemo.alignSuperfamily();
-
-
 	}
 }
