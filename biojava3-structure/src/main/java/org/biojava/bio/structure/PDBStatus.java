@@ -177,7 +177,7 @@ public class PDBStatus {
 		List<Map<String,String>> attrList = getStatusIdRecords(pdbIds);
 		//Expect a single record
 		if(attrList == null || attrList.size() != pdbIds.length) {
-			logger.error("Error getting Status for "+pdbIds+" from the PDB website.");
+			logger.error("Error getting Status for {} from the PDB website.", Arrays.toString(pdbIds));
 			return null;
 		}
 
@@ -196,14 +196,16 @@ public class PDBStatus {
 
 				//Check that the status is given
 				String statusStr = attrs.get("status");
+				Status status = null;
 				if(statusStr == null ) {
 					logger.error("No status returned for "+pdbIds[pdbNum]);
 					statuses[pdbNum] = null;
+				} else {
+					status = Status.fromString(statusStr);
 				}
 
-				Status status = Status.fromString(statusStr);
 				if(status == null) {
-					logger.error("Unknown status '"+statusStr+"'");
+					logger.error("Unknown status '{}'", statusStr);
 					statuses[pdbNum] = null;
 				}
 
@@ -545,7 +547,7 @@ public class PDBStatus {
 			pdbId = pdbId.toUpperCase();
 			//check the cache
 			if (recordsCache.containsKey(pdbId)) {
-				//System.out.println("Fetching "+pdbId+" from Cache");
+				//logger.debug("Fetching "+pdbId+" from Cache");
 				result.add( recordsCache.get(pdbId) );
 			} else {
 				urlStr += pdbId + ",";
@@ -568,7 +570,7 @@ public class PDBStatus {
 			BufferedReader r = new BufferedReader(new InputStreamReader(uStream));
 			String line = r.readLine();
 			while(line != null) {
-				System.out.println(line);
+				logger.info(line);
 				line = r.readLine();
 			}
 			r.close();
@@ -708,7 +710,7 @@ public class PDBStatus {
 			}
 		// TODO should throw forward
 		} catch (IOException e){
-			e.printStackTrace();
+			logger.error("Exception: ", e);
 			return null;
 		}
 		return allPDBs;
