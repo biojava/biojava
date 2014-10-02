@@ -47,7 +47,7 @@ public class UserConfiguration
 	public static final String TMP_DIR = "java.io.tmpdir";
 	
 	public static final String PDB_DIR   = "PDB_DIR";
-	public static final String CACHE_DIR = "PDB_CACHE_DIR";
+	public static final String PDB_CACHE_DIR = "PDB_CACHE_DIR";
 	
 	public static final String lineSplit = System.getProperty("file.separator");
 
@@ -77,8 +77,8 @@ public class UserConfiguration
 	 *   the system's temp directory is used.
 	 * </li>
 	 * <li>default cache location. This is the first specified of:
-	 * 	<ol><li>{@value #CACHE_DIR} system property (for instance, -D{@value #CACHE_DIR}=/tmp)</li>
-	 *   <li>{@value #CACHE_DIR} environment variable</li>
+	 * 	<ol><li>{@value #PDB_CACHE_DIR} system property (for instance, -D{@value #PDB_CACHE_DIR}=/tmp)</li>
+	 *   <li>{@value #PDB_CACHE_DIR} environment variable</li>
 	 *   <li>the value set for {@value #PDB_DIR}</li>
 	 *   </ol>
 	 *   if the provided path is not a directory or is not writable then 
@@ -162,7 +162,7 @@ public class UserConfiguration
 		
 		String path = null;
 		
-		String propertyName = CACHE_DIR;
+		String propertyName = PDB_CACHE_DIR;
 		
 		String userProvidedDir = System.getProperty(propertyName);
 

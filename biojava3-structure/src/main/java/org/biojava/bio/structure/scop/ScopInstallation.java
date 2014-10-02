@@ -146,7 +146,7 @@ public class ScopInstallation implements LocalScopDatabase {
 	/**
 	 * Create a new SCOP installation, downloading the file to "the right place".
 	 * This will first check for system properties or environmental variables
-	 * called {@link UserConfiguration#CACHE_DIR}, or else will use a temporary directory
+	 * called {@link UserConfiguration#PDB_CACHE_DIR}, or else will use a temporary directory
 	 */
 	public ScopInstallation() {
 		this((new UserConfiguration()).getCacheFilePath());
