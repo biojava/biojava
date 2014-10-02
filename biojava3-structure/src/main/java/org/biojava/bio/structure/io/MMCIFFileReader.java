@@ -91,34 +91,18 @@ public class MMCIFFileReader implements StructureIOFile {
 	}
 
 	/**
-	 * Constructs a new MMCIFFileReader, initialising the extensions member variable.
-	 * The path is initialised in the same way as {@link UserConfiguration}, 
+	 * Constructs a new MMCIFFileReader, initializing the extensions member variable.
+	 * The path is initialized in the same way as {@link UserConfiguration}, 
 	 * i.e. to system property/environment variable {@link UserConfiguration#PDB_DIR}.
-	 * Both autoFetch and splitDir are initialised to false
+	 * Both autoFetch and splitDir are initialized to false
 	 */
 	public MMCIFFileReader(){
-		extensions    = new ArrayList<String>();
-		extensions.add(".cif");
-		extensions.add(".mmcif");
-		extensions.add(".cif.gz");
-		extensions.add(".mmcif.gz");
-
-		autoFetch     = false;		
-		pdbDirectorySplit = false;
-		
-		params = new FileParsingParameters();
-
-		
-		// initialising path from PDB_DIR property/environment variable
-		UserConfiguration config = new UserConfiguration();
-		path = new File(config.getPdbFilePath());
-		logger.debug("Initialising from system property/environment variable to path: {}", path.toString());
-		
+		this(null);
 	}
 
 	/**
-	 * Constructs a new PDBFileReader, initialising the extensions member variable.
-	 * The path is initialised to the given path, both autoFetch and splitDir are initialised to false.
+	 * Constructs a new PDBFileReader, initializing the extensions member variable.
+	 * The path is initialized to the given path, both autoFetch and splitDir are initialized to false.
 	 */
 	public MMCIFFileReader(String path){
 		extensions    = new ArrayList<String>();
@@ -129,12 +113,17 @@ public class MMCIFFileReader implements StructureIOFile {
 
 		autoFetch     = false;		
 		pdbDirectorySplit = false;
-		
+
 		params = new FileParsingParameters();
 
-		
+		if( path == null) {
+			UserConfiguration config = new UserConfiguration();
+			path = config.getPdbFilePath();
+			logger.debug("Initialising from system property/environment variable to path: {}", path.toString());
+		} else {
+			logger.debug("Initialising with path {}", path.toString());
+		}
 		this.path = new File(path);
-		logger.debug("Initialising with path {}", path.toString());
 	}
 	
 	public void addExtension(String ext) {

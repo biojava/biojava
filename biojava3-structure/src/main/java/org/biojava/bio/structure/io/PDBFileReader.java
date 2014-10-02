@@ -261,35 +261,22 @@ public class PDBFileReader implements StructureIOFile {
 
 
 	/**
-	 * Constructs a new PDBFileReader, initialising the extensions member variable.
-	 * The path is initialised in the same way as {@link UserConfiguration}, 
+	 * Constructs a new PDBFileReader, initializing the extensions member variable.
+	 * The path is initialized in the same way as {@link UserConfiguration}, 
 	 * i.e. to system property/environment variable {@link UserConfiguration#PDB_DIR}.
-	 * Both autoFetch and splitDir are initialised to false
+	 * Both autoFetch and splitDir are initialized to false
 	 */
 	public PDBFileReader() {
-		extensions    = new ArrayList<String>();
-
-		extensions.add(".ent");
-		extensions.add(".pdb");
-		extensions.add(".ent.gz");
-		extensions.add(".pdb.gz");
-		extensions.add(".ent.Z");
-		extensions.add(".pdb.Z");
-
-		autoFetch     = false;		
-		pdbDirectorySplit = false;
-
-		params = new FileParsingParameters();
-
-		// initialising path from PDB_DIR property/environment variable
-		UserConfiguration config = new UserConfiguration();
-		path = new File(config.getPdbFilePath());
-		logger.debug("Initialising from system property/environment variable to path: {}", path.toString());
+		this(null);
 	}
 	
 	/**
-	 * Constructs a new PDBFileReader, initialising the extensions member variable.
-	 * The path is initialised to the given path, both autoFetch and splitDir are initialised to false.
+	 * Constructs a new PDBFileReader, initializing the extensions member variable.
+	 * The path is initialized to the given path, both autoFetch and splitDir are initialized to false.
+	 * 
+	 * <p>If path is null, initialize using the system property/environment variable
+	 * {@link UserConfiguration#PDB_DIR}.
+	 * @param path Path to the PDB file directory
 	 */
 	public PDBFileReader(String path) {
 		extensions    = new ArrayList<String>();
@@ -301,14 +288,18 @@ public class PDBFileReader implements StructureIOFile {
 		extensions.add(".ent.Z");
 		extensions.add(".pdb.Z");
 
-		autoFetch     = false;		
+		autoFetch     = false;
 		pdbDirectorySplit = false;
 
 		params = new FileParsingParameters();
 
+		if(path == null ) {
+			path = new UserConfiguration().getPdbFilePath();
+			logger.debug("Initializing from system property/environment variable to path: {}", path.toString());
+		} else {
+			logger.debug("Initialising with path {}", path.toString());
+		}
 		this.path = new File(path);
-		logger.debug("Initialising with path {}", path.toString());
-
 	}
 
 
