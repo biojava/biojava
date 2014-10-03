@@ -35,14 +35,8 @@ import java.io.Serializable;
  * @since 1.4
  * @version %I% %G%
  */
-public class NucleotideImpl
-extends HetatomImpl
-implements Group, Serializable
-{
+public class NucleotideImpl extends HetatomImpl implements Group, Serializable, Cloneable {
 
-	/**
-	 *
-	 */
 	private static final long serialVersionUID = -7467726932980288712L;
 	/** this is a "nucleotide", a special occurance of a Hetatom. */
 	public static final String type = GroupType.NUCLEOTIDE;
