@@ -65,17 +65,6 @@ public abstract class AbstractUserArgumentProcessor implements UserArgumentProce
 
 	public static final List<String> mandatoryArgs= new ArrayList<String>();
 
-	/** the system property PDB_DIR can be used to configure the 
-	 * default location for PDB files.
-	 */
-	public static final String PDB_DIR = "PDB_DIR";
-	
-	
-	/** The system property PDB_CACHE_DIR can be used to configure the default location for various data related to working with PDB files, such as domain definitions.
-	 * 
-	 */
-	public static final String CACHE_DIR = "PDB_CACHE_DIR";
-
 	protected AbstractUserArgumentProcessor(){ 
 		params = new StartupParameters();
 	}
@@ -127,11 +116,11 @@ public abstract class AbstractUserArgumentProcessor implements UserArgumentProce
 		}
 
 		if ( params.getPdbFilePath() != null){
-			System.setProperty(PDB_DIR,params.getPdbFilePath());
+			System.setProperty(UserConfiguration.PDB_DIR,params.getPdbFilePath());
 		}
 		
 		if ( params.getCacheFilePath() != null){
-			System.setProperty(CACHE_DIR,params.getCacheFilePath());
+			System.setProperty(UserConfiguration.PDB_CACHE_DIR,params.getCacheFilePath());
 		}
 
 		if ( params.isShowMenu()){

@@ -48,7 +48,6 @@ import org.biojava.bio.structure.align.model.AFPChain;
 import org.biojava.bio.structure.align.seq.SmithWaterman3Daligner;
 import org.biojava.bio.structure.align.util.AtomCache;
 import org.biojava.bio.structure.align.util.UserConfiguration;
-import org.biojava.bio.structure.gui.util.PDBDirPanel;
 import org.biojava.bio.structure.io.PDBFileReader;
 
 public class WebStartMain
@@ -136,7 +135,7 @@ public class WebStartMain
 
 			UserConfiguration config = getWebStartConfig();
 
-			System.setProperty(PDBDirPanel.PDB_DIR,config.getPdbFilePath());
+			System.setProperty(UserConfiguration.PDB_DIR,config.getPdbFilePath());
 			System.out.println("using PDB file path: " + config.getPdbFilePath());
 
 			AtomCache cache = new AtomCache(config);
@@ -265,7 +264,7 @@ public class WebStartMain
 	public static UserConfiguration getDefaultConfig(){
 		userConfig = new UserConfiguration();
 
-		String pdbDir = System.getProperty(PDBDirPanel.PDB_DIR);
+		String pdbDir = System.getProperty(UserConfiguration.PDB_DIR);
 		if ( pdbDir != null) {
 			userConfig.setPdbFilePath(pdbDir);
 
@@ -294,7 +293,7 @@ public class WebStartMain
 			//UserConfiguration config = new UserConfiguration();
 			userConfig = new UserConfiguration();
 
-			String pdbDir = System.getProperty(PDBDirPanel.PDB_DIR);
+			String pdbDir = System.getProperty(UserConfiguration.PDB_DIR);
 			if ( pdbDir != null) {
 				userConfig.setPdbFilePath(pdbDir);
 				return userConfig;
@@ -324,7 +323,7 @@ public class WebStartMain
 			System.err.println("did not provide directory, going on level higher! " + file.getAbsolutePath());
 			file = file.getParentFile();
 		}
-		System.setProperty(PDBDirPanel.PDB_DIR, file.getAbsolutePath());
+		System.setProperty(UserConfiguration.PDB_DIR, file.getAbsolutePath());
 		userConfig.setPdbFilePath(file.getAbsolutePath());
 
 		return userConfig;

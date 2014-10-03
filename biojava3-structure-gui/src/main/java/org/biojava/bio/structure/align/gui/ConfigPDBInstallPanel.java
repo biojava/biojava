@@ -58,11 +58,6 @@ public class ConfigPDBInstallPanel extends JPanel
     */
    private static final long serialVersionUID = -1055193854675583808L;
 
-   /** the system property PDB_DIR can be used to configure the 
-    * default location for PDB files.
-    */
-   public static final String PDB_DIR = "PDB_DIR";
-   
    JCheckBox pdbSplit;
    JCheckBox fromFtp;
    JComboBox fileType;
@@ -84,7 +79,7 @@ public class ConfigPDBInstallPanel extends JPanel
 
       pdbDir = new JTextField(20);
       
-      String conf = System.getProperty(PDB_DIR);
+      String conf = System.getProperty(UserConfiguration.PDB_DIR);
       if ( conf != null){
          pdbDir.setText(conf);
       }
