@@ -34,7 +34,7 @@ import java.io.Serializable;
  * @author Andreas Prlic
  *
  */
-public class SSBond implements PDBRecord, Serializable{
+public class SSBond implements PDBRecord, Serializable, Cloneable {
 
 	/**
     *
