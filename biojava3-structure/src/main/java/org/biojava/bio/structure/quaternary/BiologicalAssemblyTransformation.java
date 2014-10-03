@@ -2,6 +2,7 @@ package org.biojava.bio.structure.quaternary;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.Serializable;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.ArrayList;
@@ -26,7 +27,9 @@ import org.xml.sax.SAXException;
  * @author rickb
  *
  */
-public class BiologicalAssemblyTransformation implements Cloneable {
+public class BiologicalAssemblyTransformation implements Cloneable, Serializable {
+
+	private static final long serialVersionUID = -6388503076022480391L;
 	private String id = null;
 	private String chainId = null;
 	private Matrix rotation = null;
