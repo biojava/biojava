@@ -73,8 +73,9 @@ public class UserConfiguration
 	 *   <li>{@value #PDB_DIR} environment variable</li>
 	 *   <li>System temp directory (java.io.tmpdir property)</li>
 	 *   </ol>
-	 *   if the provided path is not a directory or is not writable then 
-	 *   the system's temp directory is used.
+	 *   if the provided path is not a directory then 
+	 *   the system's temp directory is used. A non-writable path is allowed,
+	 *   only a warning will be logged.
 	 * </li>
 	 * <li>default cache location. This is the first specified of:
 	 * 	<ol><li>{@value #PDB_CACHE_DIR} system property (for instance, -D{@value #PDB_CACHE_DIR}=/tmp)</li>
@@ -108,7 +109,7 @@ public class UserConfiguration
 		if ( userProvidedDir != null && !userProvidedDir.trim().isEmpty()) {
 
 			path = userProvidedDir;
-			logger.debug("Read dir from system property {}: {}", propertyName, path);
+			logger.debug("Read PDB dir from system property {}: {}", propertyName, path);
 			File f = new File(path);
 			if (!f.isDirectory()) {
 				logger.warn(
@@ -117,9 +118,9 @@ public class UserConfiguration
 				path = System.getProperty(TMP_DIR);
 			} else if (!f.canWrite()) {
 				logger.warn(
-						"Provided path {} (with system property {}) is not writable. Using system's temp directory instead {}", 
-						path, propertyName, System.getProperty(TMP_DIR));
-				path = System.getProperty(TMP_DIR);
+						"Provided path {} (with system property {}) is not writable. Will not be able to write cached files.", 
+						path, propertyName);
+				//path = System.getProperty(TMP_DIR);
 			}
 			
 
@@ -138,9 +139,9 @@ public class UserConfiguration
 					path = System.getProperty(TMP_DIR);
 				} else if (!f.canWrite()) {
 					logger.warn(
-							"Provided path {} (with environment variable {}) is not writable. Using system's temp directory instead {}", 
-							path, propertyName, System.getProperty(TMP_DIR));
-					path = System.getProperty(TMP_DIR);
+							"Provided path {} (with environment variable {}) is not writable. Will not be able to write cached files", 
+							path, propertyName);
+					//path = System.getProperty(TMP_DIR);
 				}
 
 			} else {
@@ -169,7 +170,7 @@ public class UserConfiguration
 		if ( userProvidedDir != null ) {
 
 			path = userProvidedDir;
-			logger.debug("Read dir from system property {}: {}", propertyName, path);
+			logger.debug("Read cache dir from system property {}: {}", propertyName, path);
 			File f = new File(path);
 			if (!f.isDirectory()) {
 				logger.warn(
@@ -206,10 +207,18 @@ public class UserConfiguration
 
 			} else {
 				// NOTE in case of not provided, then it is set to same as pdbFilePath
-				path = pdbFilePath;
-				logger.info("Could not read cache dir from system property {} or environment variable {}, "
-						+ "using PDB directory instead {}",
-						propertyName, propertyName, path);
+				// as PDB_DIR is not checked for being writable, we have to do that check here in case
+				if (new File(pdbFilePath).canWrite()){
+					path = pdbFilePath;
+					logger.info("Could not read cache dir from system property {} or environment variable {}, "
+							+ "using PDB directory instead {}",
+							propertyName, propertyName, path);					
+				} else {
+					path = System.getProperty(TMP_DIR);
+					logger.warn("Could not read cache dir from system property {} or environment variable {}, "
+							+ "and PDB directory {} is not writable. Using system's temp directory instead {}",
+							propertyName, propertyName, pdbFilePath, path);	
+				}
 			}   
 		}
 		

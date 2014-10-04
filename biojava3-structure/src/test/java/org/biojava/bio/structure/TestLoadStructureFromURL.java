@@ -5,30 +5,27 @@ import java.io.IOException;
 import java.net.URL;
 
 import org.biojava.bio.structure.align.util.AtomCache;
-
-
+import org.biojava.bio.structure.align.util.UserConfiguration;
 import org.junit.Test;
+
 import static org.junit.Assert.*;
 
 
 public class TestLoadStructureFromURL {
 
-	private static final String FILE_SEPARATOR = System.getProperty("file.separator");
-	
 	@Test
 	public void testLoadStructureFromURL() throws IOException, StructureException{
 
-		AtomCache cache = new AtomCache();
-		String path = cache.getPath();
+		// we use the cache path because there's no guarantee that the PDB dir is writable
+		String path = new UserConfiguration().getCacheFilePath();
 
-		path += "SUB DIR" + FILE_SEPARATOR;
-
-		File f = new File(path);
+		File f = new File(path, "SUB DIR"); 
+		f.deleteOnExit();
 		if ( ! f.exists()) {
 			System.out.println("making dir with space:" + f);
 			f.mkdir();
 		}
-		AtomCache c = new AtomCache(path, path, true);
+		AtomCache c = new AtomCache(f.toString(), f.toString(), true);
 		c.setUseMmCif(false);
 
 		// fetch a random small structure
@@ -36,9 +33,12 @@ public class TestLoadStructureFromURL {
 		c.getStructure("1znf");
 
 		//and now create a URL for this file
+		File subdir = new File(f, "zn");
+		File newFile = new File(subdir, "pdb1znf.ent.gz");
 
-		File newFile = new File(path+FILE_SEPARATOR+"zn"+ FILE_SEPARATOR + "pdb1znf.ent.gz");
-
+		subdir.deleteOnExit();
+		newFile.deleteOnExit();
+		
 		URL u = newFile.toURI().toURL();
 
 		System.out.println(u);
@@ -48,6 +48,7 @@ public class TestLoadStructureFromURL {
 		System.out.println(s);
 
 		assertNotNull(s);
+		
 
 	}
 }
