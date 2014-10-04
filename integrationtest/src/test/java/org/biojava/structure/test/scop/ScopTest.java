@@ -7,19 +7,22 @@ import org.biojava.bio.structure.Group;
 import org.biojava.bio.structure.GroupIterator;
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.align.util.AtomCache;
-import org.biojava.bio.structure.scop.RemoteScopInstallation;
+//import org.biojava.bio.structure.scop.RemoteScopInstallation;
 import org.biojava.bio.structure.scop.ScopDatabase;
 import org.biojava.bio.structure.scop.ScopDomain;
 import org.biojava.bio.structure.scop.ScopFactory;
 import org.biojava.bio.structure.scop.ScopInstallation;
 
-import junit.framework.TestCase;
+import org.junit.Test;
+import static org.junit.Assert.*;
 
 
-public class ScopTest extends TestCase {
+
+public class ScopTest {
 
 	boolean debug = false;
 
+	@Test
 	public void testLocalScop(){
 
 		if ( debug ){
@@ -49,15 +52,15 @@ public class ScopTest extends TestCase {
 		}
 		long timeS = System.currentTimeMillis();
 
-		if (false){
-			ScopDatabase scop = new RemoteScopInstallation();
-			ScopDatabase defaultScop = ScopFactory.getSCOP();
-			ScopFactory.setScopDatabase(scop);
-
-			runSCOPTests();
-
-			ScopFactory.setScopDatabase(defaultScop);
-		}
+//		if (false){
+//			ScopDatabase scop = new RemoteScopInstallation();
+//			ScopDatabase defaultScop = ScopFactory.getSCOP();
+//			ScopFactory.setScopDatabase(scop);
+//
+//			runSCOPTests();
+//
+//			ScopFactory.setScopDatabase(defaultScop);
+//		}
 		long timeE = System.currentTimeMillis();
 
 		if ( debug ){

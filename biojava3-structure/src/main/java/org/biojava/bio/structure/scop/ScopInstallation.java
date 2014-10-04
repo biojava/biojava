@@ -45,6 +45,8 @@ import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureTools;
 import org.biojava.bio.structure.align.util.UserConfiguration;
 import org.biojava3.core.util.InputStreamProvider;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /** This class provides access to the SCOP protein structure classification.
@@ -67,6 +69,8 @@ import org.biojava3.core.util.InputStreamProvider;
 public class ScopInstallation implements LocalScopDatabase {
 
 	public static final String DEFAULT_VERSION = "1.75";
+	
+	private static final Logger logger = LoggerFactory.getLogger(ScopInstallation.class);
 
 	protected String scopVersion;
 	
@@ -142,11 +146,12 @@ public class ScopInstallation implements LocalScopDatabase {
 	/**
 	 * Create a new SCOP installation, downloading the file to "the right place".
 	 * This will first check for system properties or environmental variables
-	 * called 'CACHE_PDB_DIR', or else will use a temporary directory
+	 * called {@link UserConfiguration#PDB_CACHE_DIR}, or else will use a temporary directory
 	 */
 	public ScopInstallation() {
 		this((new UserConfiguration()).getCacheFilePath());
 	}
+	
 	public void ensureClaInstalled(){
 		if ( installedCla.get())
 			return;
@@ -154,7 +159,7 @@ public class ScopInstallation implements LocalScopDatabase {
 		if ( ! claFileAvailable()){
 			try {
 				downloadClaFile();
-			} catch (Exception e){
+			} catch (IOException e){
 				e.printStackTrace();
 				installedCla.set(false);
 				return;
@@ -164,7 +169,7 @@ public class ScopInstallation implements LocalScopDatabase {
 		try {
 			parseClassification();
 
-		} catch (Exception e){
+		} catch (IOException e){
 			e.printStackTrace();
 			installedCla.set(false);
 			return;
@@ -181,7 +186,7 @@ public class ScopInstallation implements LocalScopDatabase {
 		if ( ! desFileAvailable()){
 			try {
 				downloadDesFile();
-			} catch (Exception e){
+			} catch (IOException e){
 				e.printStackTrace();
 				installedDes.set(false);
 				return;
@@ -190,7 +195,7 @@ public class ScopInstallation implements LocalScopDatabase {
 		try {
 
 			parseDescriptions();
-		} catch (Exception e){
+		} catch (IOException e){
 			e.printStackTrace();
 			installedDes.set(false);
 			return;
@@ -209,7 +214,7 @@ public class ScopInstallation implements LocalScopDatabase {
 		if ( ! comFileAvailable()){
 			try {
 				downloadComFile();
-			} catch (Exception e){
+			} catch (IOException e){
 				e.printStackTrace();
 				installedCom.set(false);
 				return;
@@ -218,7 +223,7 @@ public class ScopInstallation implements LocalScopDatabase {
 
 		try {
 			parseComments();
-		} catch (Exception e){
+		} catch (IOException e){
 			e.printStackTrace();
 			installedCom.set(false);
 			return;
@@ -235,7 +240,7 @@ public class ScopInstallation implements LocalScopDatabase {
 		if ( ! hieFileAvailable()){
 			try {
 				downloadHieFile();
-			} catch (Exception e){
+			} catch (IOException e){
 				e.printStackTrace();
 				installedHie.set(false);
 				return;
@@ -245,7 +250,7 @@ public class ScopInstallation implements LocalScopDatabase {
 		try {
 
 			parseHierarchy();
-		} catch (Exception e){
+		} catch (IOException e){
 			e.printStackTrace();
 			installedHie.set(false);
 			return;
@@ -266,11 +271,9 @@ public class ScopInstallation implements LocalScopDatabase {
 		for (Integer i : sunidMap.keySet()){
 			ScopDescription sc = sunidMap.get(i);
 			if ( sc.getCategory().equals(category))
-				try {
-					matches.add((ScopDescription)sc.clone());
-				} catch (CloneNotSupportedException e){
-					e.printStackTrace();
-				}
+				
+				matches.add((ScopDescription)sc.clone());
+				
 		}
 		return matches;
 	}
@@ -790,7 +793,7 @@ public class ScopInstallation implements LocalScopDatabase {
 	}
 
 	protected void downloadFileFromRemote(URL remoteURL, File localFile) throws FileNotFoundException, IOException{
-		System.out.println("downloading " + remoteURL + " to: " + localFile);
+		logger.info("Downloading " + remoteURL + " to: " + localFile);
 		FileOutputStream out = new FileOutputStream(localFile);
 
 		InputStream in = remoteURL.openStream();

@@ -27,8 +27,6 @@ package org.biojava.bio.structure;
 import java.io.IOException;
 import java.util.List;
 
-import junit.framework.TestCase;
-
 import org.biojava.bio.structure.align.util.AtomCache;
 import org.biojava.bio.structure.io.FileParsingParameters;
 import org.biojava.bio.structure.io.PDBFileReader;
@@ -36,6 +34,10 @@ import org.biojava.bio.structure.io.mmcif.ChemCompGroupFactory;
 import org.biojava.bio.structure.io.mmcif.ChemCompProvider;
 import org.biojava.bio.structure.io.mmcif.DownloadChemCompProvider;
 import org.biojava.bio.structure.io.mmcif.chem.PolymerType;
+import org.junit.BeforeClass;
+import org.junit.Test;
+
+import static org.junit.Assert.*;
 
 
 /** This class tests the correct loading of Nucleotides
@@ -43,23 +45,21 @@ import org.biojava.bio.structure.io.mmcif.chem.PolymerType;
  * @author Andreas Prlic
  * @since 3.0.3
  */
-public class TestNucleotides extends TestCase{
+public class TestNucleotides {
 
-	AtomCache cache = new AtomCache();
-
+	private static AtomCache cache;
 	
-	public void test3T5N(){
+	@BeforeClass
+	public static void beforeClass() {
+		cache = new AtomCache();
+	}
+
+	@Test
+	public void test3T5N() throws IOException, StructureException{
 		
 		String pdbId = "3T5N";
-		Structure s = null;
-		try {
-			s = getStructure(pdbId);
+		Structure s = getStructure(pdbId);
 
-		} catch (Exception e) {
-			e.printStackTrace();
-			fail(e.getMessage());
-
-		}
 
 		assertEquals(2,s.getChains().size());
 
@@ -78,57 +78,45 @@ public class TestNucleotides extends TestCase{
 		params.setParseCAOnly(false);
 		params.setLoadChemCompInfo(true);
 		reader.setFileParsingParameters(params);
+		reader.setPdbDirectorySplit(true); 
 		
 		ChemCompProvider chemProv = ChemCompGroupFactory.getChemCompProvider();
-		try {
-			 
-			
-			DownloadChemCompProvider download = new DownloadChemCompProvider();
-			
-			ChemCompGroupFactory.setChemCompProvider(download);
-			
-			Structure s1 = reader.getStructureById(pdbId);
-						
-			assertNotNull(s1);
-			
-			assertEquals(2,s1.getChains().size());
 
-			Chain c1 = s1.getChains().get(1);
-			
-			assertEquals("C", c1.getChainID());
-			
-			Group g = c1.getAtomGroup(0);
-			assertNotNull(g);
-			assertNotNull(g.getChemComp());
-			assertNotNull(g.getChemComp().getPolymerType());
-			assertNotNull(g.getChemComp().getPolymerType().name());
-			
-			assertTrue("Found an unknown polymertype!", (! g.getChemComp().getPolymerType().equals(PolymerType.unknown)));
-			//System.out.println(g.getChemComp().getPolymerType());
-			
-			List<Group> ngr1 = c1.getAtomGroups("nucleotide");
-			assertEquals(6,ngr1.size());
-		
-		} catch (Exception e){
-			e.printStackTrace();
-			fail(e.getMessage());
-		}
+		DownloadChemCompProvider download = new DownloadChemCompProvider();
+
+		ChemCompGroupFactory.setChemCompProvider(download);
+
+		Structure s1 = reader.getStructureById(pdbId);
+
+		assertNotNull(s1);
+
+		assertEquals(2,s1.getChains().size());
+
+		Chain c1 = s1.getChains().get(1);
+
+		assertEquals("C", c1.getChainID());
+
+		Group g = c1.getAtomGroup(0);
+		assertNotNull(g);
+		assertNotNull(g.getChemComp());
+		assertNotNull(g.getChemComp().getPolymerType());
+		assertNotNull(g.getChemComp().getPolymerType().name());
+
+		assertTrue("Found an unknown polymertype!", (! g.getChemComp().getPolymerType().equals(PolymerType.unknown)));
+		//System.out.println(g.getChemComp().getPolymerType());
+
+		List<Group> ngr1 = c1.getAtomGroups("nucleotide");
+		assertEquals(6,ngr1.size());
+
+
 		ChemCompGroupFactory.setChemCompProvider(chemProv);
 		
 		
 	}
 
-
-	public void test1OFX(){
-		Structure s = null;
-		try {
-			s = getStructure("1OFX");
-
-		} catch (Exception e) {
-			e.printStackTrace();
-			fail(e.getMessage());
-
-		}
+	@Test
+	public void test1OFX() throws StructureException, IOException {
+		Structure s = getStructure("1OFX");
 
 		assertEquals(2,s.getChains().size());
 
@@ -150,7 +138,8 @@ public class TestNucleotides extends TestCase{
 		return cache.getStructure(pdbId);
 	}
 
-	public void test1REP(){
+	@Test
+	public void test1REP() throws StructureException, IOException{
 		
 		PDBFileReader reader = new PDBFileReader();
 		reader.setAutoFetch(true);
@@ -160,38 +149,37 @@ public class TestNucleotides extends TestCase{
 		params.setParseCAOnly(false);
 		params.setLoadChemCompInfo(true);
 		reader.setFileParsingParameters(params);
-		
-		
-		try {
-			Structure s = reader.getStructureById("1REP");
-			//System.out.println(s);
-			//System.out.println(s.toPDB());
-			Chain b = s.getChainByPDB("B");
-			
-			assertEquals(22,b.getSeqResGroups().size());
-			assertEquals(23,b.getAtomGroups().size());
-			
-			Group n1 = b.getSeqResGroup(0);
-			Group n2 = b.getAtomGroup(0);
-			//System.out.println(n1);
-			//System.out.println(n2);
-			//System.out.println(n1.getChemComp());
-			
+		reader.setPdbDirectorySplit(true);
 
-			assertNotNull("Could not acces Chem Comp file!" , n1.getChemComp());
-			assertTrue("ChemComp is not DC",n1.getChemComp().getId().equals("DC"));
-			assertNotNull("Could not determine polymer type " , n1.getChemComp().getPolymerType());
-			//System.out.println(n1.getChemComp().getPolymerType());
-			assertTrue(n1.getChemComp().getPolymerType().equals(PolymerType.dna));
-			
-			assertNotNull(n1.getPDBName());
-			assertNotNull(n1.getResidueNumber());
-			assertNotNull(n2.getResidueNumber());
-			assertEquals("23", n2.getResidueNumber().toString());
-			assertTrue(n1.getResidueNumber().equals(n2.getResidueNumber()));
-			
-		} catch (Exception e){
-			e.printStackTrace();
-		}
+
+
+		Structure s = reader.getStructureById("1REP");
+		//System.out.println(s);
+		//System.out.println(s.toPDB());
+		Chain b = s.getChainByPDB("B");
+
+		assertEquals(22,b.getSeqResGroups().size());
+		assertEquals(23,b.getAtomGroups().size());
+
+		Group n1 = b.getSeqResGroup(0);
+		Group n2 = b.getAtomGroup(0);
+		//System.out.println(n1);
+		//System.out.println(n2);
+		//System.out.println(n1.getChemComp());
+
+
+		assertNotNull("Could not acces Chem Comp file!" , n1.getChemComp());
+		assertTrue("ChemComp is not DC",n1.getChemComp().getId().equals("DC"));
+		assertNotNull("Could not determine polymer type " , n1.getChemComp().getPolymerType());
+		//System.out.println(n1.getChemComp().getPolymerType());
+		assertTrue(n1.getChemComp().getPolymerType().equals(PolymerType.dna));
+
+		assertNotNull(n1.getPDBName());
+		assertNotNull(n1.getResidueNumber());
+		assertNotNull(n2.getResidueNumber());
+		assertEquals("23", n2.getResidueNumber().toString());
+		assertTrue(n1.getResidueNumber().equals(n2.getResidueNumber()));
+
+		
 	}
 }

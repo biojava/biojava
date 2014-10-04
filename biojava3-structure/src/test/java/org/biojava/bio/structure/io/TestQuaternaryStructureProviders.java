@@ -3,12 +3,14 @@ package org.biojava.bio.structure.io;
 
 import static org.junit.Assert.*;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
 import org.biojava.bio.structure.Atom;
 import org.biojava.bio.structure.PDBHeader;
 import org.biojava.bio.structure.Structure;
+import org.biojava.bio.structure.StructureException;
 import org.biojava.bio.structure.StructureTools;
 import org.biojava.bio.structure.align.util.AtomCache;
 import org.biojava.bio.structure.quaternary.BiologicalAssemblyTransformation;
@@ -21,33 +23,29 @@ import org.junit.Test;
 public class TestQuaternaryStructureProviders {
 
 	@Test
-	public void test1STP() {
-		
-		
+	public void test1STP() throws IOException, StructureException{
 		testID("1stp",1);
 	}
+	
 	@Test
-	public void test3FAD(){
+	public void test3FAD() throws IOException, StructureException{
 		testID("3fad",1);
 		testID("3fad",2);
 	}
 	
 	@Test
-	public void test5LDH(){
+	public void test5LDH() throws IOException, StructureException{
 		testID("5LDH",1);
-
 	}
 	
 	@Test
-	public void test3NTU(){
+	public void test3NTU() throws IOException, StructureException{
 		testID("3NTU",1);
-
 	}
 	
 	@Test
-	public void test1A29(){
+	public void test1A29() throws IOException, StructureException{
 		testID("1A29",1);
-
 	}
 	
 //	@Test
@@ -56,117 +54,107 @@ public class TestQuaternaryStructureProviders {
 //	}
 	
 		
-	private void testID(String pdbId, int bioMolecule){
+	private void testID(String pdbId, int bioMolecule) throws IOException, StructureException{
 		
-		
-		try {
-			// get bio assembly from PDB file
-			PDBBioUnitDataProvider pdbProvider = new PDBBioUnitDataProvider();
-			BioUnitDataProviderFactory.setBioUnitDataProvider(pdbProvider.getClass().getCanonicalName());
-			Structure pdbS = StructureIO.getBiologicalAssembly(pdbId, bioMolecule);
+		// get bio assembly from PDB file
+		PDBBioUnitDataProvider pdbProvider = new PDBBioUnitDataProvider();
+		BioUnitDataProviderFactory.setBioUnitDataProvider(pdbProvider.getClass().getCanonicalName());
+		Structure pdbS = StructureIO.getBiologicalAssembly(pdbId, bioMolecule);
 
-			// get bio assembly from mmcif file
-			MmCifBiolAssemblyProvider mmcifProvider = new MmCifBiolAssemblyProvider();
-			BioUnitDataProviderFactory.setBioUnitDataProvider(mmcifProvider.getClass().getCanonicalName());			
-			Structure mmcifS = StructureIO.getBiologicalAssembly(pdbId, bioMolecule);
-		
-			BioUnitDataProviderFactory.setBioUnitDataProvider(BioUnitDataProviderFactory.DEFAULT_PROVIDER_CLASSNAME);
-			
-			
-			
-			PDBHeader pHeader = pdbS.getPDBHeader();
-			PDBHeader mHeader = mmcifS.getPDBHeader();
-			//PDBHeader fHeader = flatFileS.getPDBHeader();
-			
-			assertTrue("not correct nr of bioassemblies " + pHeader.getNrBioAssemblies() + " " , pHeader.getNrBioAssemblies() >= bioMolecule);
-			assertTrue("not correct nr of bioassemblies " + mHeader.getNrBioAssemblies() + " " , mHeader.getNrBioAssemblies() >= bioMolecule);
-			//assertTrue("not correct nr of bioassemblies " + fHeader.getNrBioAssemblies() + " " , fHeader.getNrBioAssemblies() >= bioMolecule);
-			
-			// mmcif files contain sometimes partial virus assemblies, so they can contain more info than pdb
-			assertTrue(pHeader.getNrBioAssemblies() <= mHeader.getNrBioAssemblies());
-			
-			
-			Map<Integer, List<BiologicalAssemblyTransformation>> pMap = pHeader.getBioUnitTranformationMap();
-			Map<Integer, List<BiologicalAssemblyTransformation>> mMap = mHeader.getBioUnitTranformationMap();
-			
-			//System.out.println("PDB: " + pMap);
-			
-			//System.out.println("Mmcif: " + mMap);
-			
-			assertTrue(pMap.keySet().size()<= mMap.keySet().size());
-			
-			for ( Integer k : pMap.keySet()) {
-				assertTrue(mMap.containsKey(k));
-				
-				List<BiologicalAssemblyTransformation> pL = pMap.get(k);
-				
-				// mmcif list can be longer due to the use of internal chain IDs
-				List<BiologicalAssemblyTransformation> mL = mMap.get(k);
-				
-				//assertEquals(pL.size(), mL.size());
-				
-				
-				for (BiologicalAssemblyTransformation m1 : pL){
-					
-					boolean found = false;
-					for ( BiologicalAssemblyTransformation m2 : mL){
-						
-						if  (! m1.getChainId().equals(m2.getChainId()))
-								continue;
-						if ( ! m1.getRotationMatrix().toString().equals(m2.getRotationMatrix().toString()))
-								continue;
-						if ( ! equalVectors(m1.getTranslation(), m2.getTranslation()))
-							continue;
-						
-						found = true;
-						
-					}
-					
-					if ( ! found ){
-						System.err.println("did not find matching matrix " + m1);
-						System.err.println(mL);
-					}
-					assertTrue(found);
-					
+		// get bio assembly from mmcif file
+		MmCifBiolAssemblyProvider mmcifProvider = new MmCifBiolAssemblyProvider();
+		BioUnitDataProviderFactory.setBioUnitDataProvider(mmcifProvider.getClass().getCanonicalName());			
+		Structure mmcifS = StructureIO.getBiologicalAssembly(pdbId, bioMolecule);
+
+		BioUnitDataProviderFactory.setBioUnitDataProvider(BioUnitDataProviderFactory.DEFAULT_PROVIDER_CLASSNAME);
+
+
+
+		PDBHeader pHeader = pdbS.getPDBHeader();
+		PDBHeader mHeader = mmcifS.getPDBHeader();
+		//PDBHeader fHeader = flatFileS.getPDBHeader();
+
+		assertTrue("not correct nr of bioassemblies " + pHeader.getNrBioAssemblies() + " " , pHeader.getNrBioAssemblies() >= bioMolecule);
+		assertTrue("not correct nr of bioassemblies " + mHeader.getNrBioAssemblies() + " " , mHeader.getNrBioAssemblies() >= bioMolecule);
+		//assertTrue("not correct nr of bioassemblies " + fHeader.getNrBioAssemblies() + " " , fHeader.getNrBioAssemblies() >= bioMolecule);
+
+		// mmcif files contain sometimes partial virus assemblies, so they can contain more info than pdb
+		assertTrue(pHeader.getNrBioAssemblies() <= mHeader.getNrBioAssemblies());
+
+
+		Map<Integer, List<BiologicalAssemblyTransformation>> pMap = pHeader.getBioUnitTranformationMap();
+		Map<Integer, List<BiologicalAssemblyTransformation>> mMap = mHeader.getBioUnitTranformationMap();
+
+		//System.out.println("PDB: " + pMap);
+
+		//System.out.println("Mmcif: " + mMap);
+
+		assertTrue(pMap.keySet().size()<= mMap.keySet().size());
+
+		for ( Integer k : pMap.keySet()) {
+			assertTrue(mMap.containsKey(k));
+
+			List<BiologicalAssemblyTransformation> pL = pMap.get(k);
+
+			// mmcif list can be longer due to the use of internal chain IDs
+			List<BiologicalAssemblyTransformation> mL = mMap.get(k);
+
+			//assertEquals(pL.size(), mL.size());
+
+
+			for (BiologicalAssemblyTransformation m1 : pL){
+
+				boolean found = false;
+				for ( BiologicalAssemblyTransformation m2 : mL){
+
+					if  (! m1.getChainId().equals(m2.getChainId()))
+						continue;
+					if ( ! m1.getRotationMatrix().toString().equals(m2.getRotationMatrix().toString()))
+						continue;
+					if ( ! equalVectors(m1.getTranslation(), m2.getTranslation()))
+						continue;
+
+					found = true;
+
 				}
-			}
-			
-			
-			assertEquals("Not the same number of chains!" , pdbS.size(),mmcifS.size());
-			
-			Atom[] pdbA = StructureTools.getAllAtomArray(pdbS);
-			
-			Atom[] mmcifA = StructureTools.getAllAtomArray(mmcifS);
-			
-			assertEquals(pdbA.length, mmcifA.length);
-			
-			assertEquals(pdbA[0].toPDB(), mmcifA[0].toPDB());
-			
-			
-			// compare with flat file version:
-			AtomCache cache = new AtomCache();
-			FileParsingParameters params = cache.getFileParsingParams();
-			params.setAlignSeqRes(true);
-			params.setParseCAOnly(false);
 
-			Structure flatFileS = cache.getBiologicalAssembly(pdbId, bioMolecule, false);
-			
-			Atom[] fileA = StructureTools.getAllAtomArray(flatFileS);
-			
-			assertEquals(pdbA.length, fileA.length);
-			
-			assertEquals(pdbS.nrModels(),flatFileS.nrModels());
-						
-		} catch (Exception e){
-			e.printStackTrace();
-			fail(e.getMessage());
+				if ( ! found ){
+					System.err.println("did not find matching matrix " + m1);
+					System.err.println(mL);
+				}
+				assertTrue(found);
+
+			}
 		}
-		
-		
-	
-		
-		
+
+
+		assertEquals("Not the same number of chains!" , pdbS.size(),mmcifS.size());
+
+		Atom[] pdbA = StructureTools.getAllAtomArray(pdbS);
+
+		Atom[] mmcifA = StructureTools.getAllAtomArray(mmcifS);
+
+		assertEquals(pdbA.length, mmcifA.length);
+
+		assertEquals(pdbA[0].toPDB(), mmcifA[0].toPDB());
+
+
+		// compare with flat file version:
+		AtomCache cache = new AtomCache();
+		FileParsingParameters params = cache.getFileParsingParams();
+		params.setAlignSeqRes(true);
+		params.setParseCAOnly(false);
+
+		Structure flatFileS = cache.getBiologicalAssembly(pdbId, bioMolecule, false);
+
+		Atom[] fileA = StructureTools.getAllAtomArray(flatFileS);
+
+		assertEquals(pdbA.length, fileA.length);
+
+		assertEquals(pdbS.nrModels(),flatFileS.nrModels());
+
 	}
+	
 	private boolean equalVectors(double[] vector, double[] vector2) {
 		
 		String s1 = String.format("%.5f %.5f %.5f", vector[0], vector[1], vector[2]);

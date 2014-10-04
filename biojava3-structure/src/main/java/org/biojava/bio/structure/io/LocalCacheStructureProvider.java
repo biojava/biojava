@@ -13,7 +13,9 @@ import java.util.zip.GZIPOutputStream;
 
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureException;
-import org.biojava.bio.structure.align.ce.AbstractUserArgumentProcessor;
+import org.biojava.bio.structure.align.util.UserConfiguration;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 
@@ -25,6 +27,8 @@ import org.biojava.bio.structure.align.ce.AbstractUserArgumentProcessor;
  */
 public class LocalCacheStructureProvider implements StructureProvider{
 
+	private static final Logger logger = LoggerFactory.getLogger(LocalCacheStructureProvider.class);
+	
 	FileParsingParameters params ;
 	
 	String path;
@@ -38,21 +42,14 @@ public class LocalCacheStructureProvider implements StructureProvider{
 		
 		// set the path to cache files
 
+		UserConfiguration config = new UserConfiguration();
 		
-		String defaultPath = System.getProperty(AbstractUserArgumentProcessor.PDB_DIR);
-		if ( defaultPath == null) {
-			String property = "java.io.tmpdir";
-			defaultPath = System.getProperty(property);
-		}
-		
-		setPath(defaultPath);
+		setPath(config.getPdbFilePath());
 		
 	}
 	
 	/** directory where to find PDB files */
 	public void setPath(String p){
-		System.setProperty(AbstractUserArgumentProcessor.PDB_DIR,p);
-		
 		path = p ;
 		
 		if ( !(path.endsWith(lineSplit) ) )
@@ -77,8 +74,7 @@ public class LocalCacheStructureProvider implements StructureProvider{
 	}
 	
 	private PDBFileReader getPdbFilereader(){
-		PDBFileReader reader = new PDBFileReader();
-		reader.setPath(path);
+		PDBFileReader reader = new PDBFileReader(path);
 		reader.setAutoFetch(true);
 		reader.setFileParsingParameters(params);
 		reader.setPdbDirectorySplit(isSplit);
@@ -136,42 +132,36 @@ public class LocalCacheStructureProvider implements StructureProvider{
 		
 		String ur = String.format(u,pdbId);
 		
-		System.out.println("Fetching " + ur);
+		logger.info("Fetching " + ur);
 
 		// prepare destination
-		System.out.println("writing to " + localFile);
-
-		try {
-			URL url = new URL(ur);
-
-			InputStream uStream = url.openStream();
-			InputStream conn = new GZIPInputStream(uStream);
+		logger.info("writing to " + localFile);
 
 
-			FileOutputStream outPut = new FileOutputStream(localFile);
-			GZIPOutputStream gzOutPut = new GZIPOutputStream(outPut);
-			PrintWriter pw = new PrintWriter(gzOutPut);
+		URL url = new URL(ur);
 
-			BufferedReader fileBuffer = new BufferedReader(new InputStreamReader(conn));
-			String line;
-			while ((line = fileBuffer.readLine()) != null) {
-				pw.println(line);
-			}
-			pw.flush();
-			pw.close();
+		InputStream uStream = url.openStream();
+		InputStream conn = new GZIPInputStream(uStream);
 
-			outPut.flush();
-			outPut.close();
-			conn.close();
-			uStream.close();
 
-		} catch (Exception e){
-			System.err.println("Problem while downloading PDB ID " + pdbId + " from " + ur );
-			
-			//e.printStackTrace();
-			throw new IOException("Could not download biol. unit for PDB ID " + pdbId);
-			
+		FileOutputStream outPut = new FileOutputStream(localFile);
+		GZIPOutputStream gzOutPut = new GZIPOutputStream(outPut);
+		PrintWriter pw = new PrintWriter(gzOutPut);
+
+		BufferedReader fileBuffer = new BufferedReader(new InputStreamReader(conn));
+		String line;
+		while ((line = fileBuffer.readLine()) != null) {
+			pw.println(line);
 		}
+		pw.flush();
+		pw.close();
+
+		outPut.flush();
+		outPut.close();
+		conn.close();
+		uStream.close();
+
+
 	}
 	
 	public void setFileParsingParameters(FileParsingParameters params) {

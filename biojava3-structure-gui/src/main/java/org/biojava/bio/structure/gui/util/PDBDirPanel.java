@@ -29,6 +29,7 @@ import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.IOException;
 import java.util.logging.Logger;
+
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.BorderFactory;
@@ -39,11 +40,11 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-
 import org.biojava.bio.structure.Chain;
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureException;
 import org.biojava.bio.structure.StructureImpl;
+import org.biojava.bio.structure.align.util.UserConfiguration;
 import org.biojava.bio.structure.io.PDBFileReader;
 
 /** A class to define where a structure for the alignment is coming from
@@ -68,12 +69,6 @@ implements StructurePairSelector{
 	JTextField c1;
 	JTextField c2;
 
-	/** the system property PDB_DIR can be used to configure the 
-	 * default location for PDB files.
-	 */
-	public static final String PDB_DIR = "PDB_DIR";
-
-
 	public static Logger logger =  Logger.getLogger("org.biojava");
 
 	/** load the PDB files from a local directory
@@ -85,7 +80,7 @@ implements StructurePairSelector{
 
 		pdbDir = new JTextField(20);
 
-		String conf = System.getProperty(PDB_DIR);
+		String conf = System.getProperty(UserConfiguration.PDB_DIR);
 		if ( conf != null){
 			pdbDir.setText(conf);
 		}
@@ -97,12 +92,12 @@ implements StructurePairSelector{
 
 		f1 = new JTextField(pdbfSize);
 		c1 = new JTextField(1);
-		JPanel p1 = getPDBFilePanel(1,f1,c1);       
+		JPanel p1 = getPDBFilePanel(1,f1,c1);
 		vBox.add(p1);
 
 		f2 = new JTextField(pdbfSize);
 		c2 = new JTextField(1);
-		JPanel p2 = getPDBFilePanel(2, f2,c2);       
+		JPanel p2 = getPDBFilePanel(2, f2,c2);
 		vBox.add(p2);
 
 
@@ -127,14 +122,10 @@ implements StructurePairSelector{
 
 		// load them from the file system
 
-		PDBFileReader reader = new PDBFileReader();
 
 
 		String dir = pdbDir.getText();
-		if ( dir != null){
-			System.setProperty(PDB_DIR, dir);
-		}
-		reader.setPath(dir);
+		PDBFileReader reader = new PDBFileReader(dir);
 
 		if ( debug )
 			System.out.println("dir: " + dir);

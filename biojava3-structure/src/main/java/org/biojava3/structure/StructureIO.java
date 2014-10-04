@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureException;
-import org.biojava.bio.structure.align.ce.AbstractUserArgumentProcessor;
 import org.biojava.bio.structure.align.util.AtomCache;
 import org.biojava.bio.structure.quaternary.BiologicalAssemblyBuilder;
 import org.biojava.bio.structure.quaternary.BiologicalAssemblyTransformation;
@@ -124,8 +123,8 @@ public class StructureIO {
 		
 		BioUnitDataProvider provider = BioUnitDataProviderFactory.getBioUnitDataProvider();
 
-		if ( cache != null)
-			provider.setAtomCache(cache);
+		checkInitAtomCache();
+		provider.setAtomCache(cache);
 		
 		Structure asymUnit = null;
 
@@ -164,6 +163,7 @@ public class StructureIO {
 		pdbId = pdbId.toLowerCase();
 		
 		BioUnitDataProvider provider = BioUnitDataProviderFactory.getBioUnitDataProvider();
+		checkInitAtomCache();
 		provider.setAtomCache(cache);
 		return provider.hasBiolAssembly(pdbId);
 
@@ -174,6 +174,7 @@ public class StructureIO {
 		pdbId = pdbId.toLowerCase();
 		
 		BioUnitDataProvider provider = BioUnitDataProviderFactory.getBioUnitDataProvider();
+		checkInitAtomCache(); 
 		provider.setAtomCache(cache);
 		return provider.getNrBiolAssemblies(pdbId);
 	}
@@ -188,6 +189,5 @@ public class StructureIO {
 
 		if ( ! pathToPDBFiles.endsWith(FILE_SEPARATOR))
 			pathToPDBFiles += FILE_SEPARATOR;
-		System.setProperty(AbstractUserArgumentProcessor.PDB_DIR,pathToPDBFiles);
 	}
 }

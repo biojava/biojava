@@ -24,7 +24,7 @@ public class ReducedChemCompProvider implements ChemCompProvider {
 	private static final Logger logger = LoggerFactory.getLogger(ReducedChemCompProvider.class);
 
 	public ReducedChemCompProvider(){
-		//System.out.println("USING REDUCED CHEM COMP PROVIDER");
+		logger.debug("Initialising ReducedChemCompProvider");
 	}
 	
 	
@@ -44,7 +44,7 @@ public class ReducedChemCompProvider implements ChemCompProvider {
 		if ( inStream == null){
 			//System.out.println("Could not find chem comp: " + name + " ... using generic Chem Comp");
 			// could not find the chem comp definition for this in the jar file
-			logger.debug("Getting empty chem comp for "+recordName);
+			logger.debug("Getting empty chem comp for {}",name);
 			ChemComp cc = getEmptyChemComp();
 			cc.setId(name);
 			return cc;
@@ -67,10 +67,11 @@ public class ReducedChemCompProvider implements ChemCompProvider {
 			
 			return chemComp;
 		} catch (IOException e){
-			e.printStackTrace();
+			logger.error("IOException caught while reading chem comp {}. Error: {}",name,e.getMessage());
+			//e.printStackTrace();
 
 		}
-		logger.warn("Problem when loading chem comp " + name);
+		logger.warn("Problem when loading chem comp {}, will use an empty chem comp for it", name);
 		ChemComp cc = getEmptyChemComp();
 		cc.setId(name);
 		return cc;

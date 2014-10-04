@@ -5,6 +5,7 @@ import java.util.List;
 import org.biojava.bio.structure.Chain;
 import org.biojava.bio.structure.Group;
 import org.biojava.bio.structure.Structure;
+import org.biojava.bio.structure.align.util.UserConfiguration;
 import org.biojava.bio.structure.io.FileParsingParameters;
 import org.biojava.bio.structure.io.PDBFileReader;
 import org.biojava.bio.structure.io.mmcif.AllChemCompProvider;
@@ -44,7 +45,8 @@ public class DemoChangeChemCompProvider {
 		// you can set the path to the local PDB installation either like this
 //		reader.setPath(PDB_PATH);
 		// or via
-		//System.setProperty(AbstractUserArgumentProcessor.PDB_DIR,PDB_PATH);		
+		// by setting the PDB_PATH environmental variable or system property
+		// when running the demo (e.g. -DPDB_DIR=/path/to/pdb)
 		
 		if ( loadChemComp) {
 			

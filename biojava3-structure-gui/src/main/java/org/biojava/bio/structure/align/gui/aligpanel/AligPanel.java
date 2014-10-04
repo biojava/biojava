@@ -89,7 +89,7 @@ public class AligPanel  extends JPrintPanel implements AlignmentPositionListener
          AFPChain afpChain = afps[0];
 
          UserConfiguration config = WebStartMain.getWebStartConfig();
-         AtomCache cache = new AtomCache(config.getPdbFilePath(),config.isSplit());
+         AtomCache cache = new AtomCache(config.getPdbFilePath(),config.getCacheFilePath(),config.isSplit());
 
          Atom[] ca1 = cache.getAtoms(afpChain.getName1());
          Atom[] ca2 = cache.getAtoms(afpChain.getName2());

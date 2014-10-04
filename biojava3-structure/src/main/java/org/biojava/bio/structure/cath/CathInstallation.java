@@ -72,7 +72,7 @@ public class CathInstallation implements CathDatabase{
 		FILESPLIT   = System.getProperty("file.separator");
 	}
 
-	String cacheLocation ;
+	private String cacheLocation ;
 
     AtomicBoolean installedDomainList;
     AtomicBoolean installedDomainDescription;
@@ -116,7 +116,7 @@ public class CathInstallation implements CathDatabase{
     }
 
 	public CathInstallation() {
-		this((new UserConfiguration()).getPdbFilePath());
+		this((new UserConfiguration()).getCacheFilePath());
 	}
 
     public String getDomainListFileName() {
@@ -356,7 +356,7 @@ public class CathInstallation implements CathDatabase{
             CathDomain cathDomain = parseCathListFileLine(line);
            // counter++;
                         
-            String pdbId = cathDomain.getPdbId().substring(0,4); // includes chain letter
+            String pdbId = cathDomain.getPdbIdAndChain().substring(0,4); // includes chain letter
 			            
             List<CathDomain> domainList;
 			if ( pdbMap.containsKey(pdbId)){
@@ -381,7 +381,7 @@ public class CathInstallation implements CathDatabase{
 
     private void parseCathNames(BufferedReader bufferedReader) throws IOException{
         String line;
-        int counter = 0;
+        //int counter = 0;
         while ( (line = bufferedReader.readLine()) != null ) {
             if ( line.startsWith("#") ) continue;
             CathNode cathNode = parseCathNamesFileLine(line);
@@ -399,7 +399,7 @@ public class CathInstallation implements CathDatabase{
     private void parseCathDomainDescriptionFile(BufferedReader bufferedReader) throws IOException{
         String line;
         DateFormat dateFormat = new SimpleDateFormat("dd-MMM-yyyy");
-        int counter = 0;
+        //int counter = 0;
         CathDomain cathDescription = null; //TODO initialize these or catch NPE
         StringBuilder name = null;
         StringBuilder source = null;
@@ -473,9 +473,9 @@ public class CathInstallation implements CathDatabase{
                 cathDescription.setSequenceHeader( seqh.toString() );
                 cathDescription.setSequence( seqs.toString() );
                 cathDescription.setSegments(segments);
-                counter++;
+                //counter++;
 
-                String pdbId = cathDescription.getPdbId().substring(0,4); // includes chain letter
+                String pdbId = cathDescription.getPdbIdAndChain().substring(0,4); // includes chain letter
 			    List<CathDomain> domainList;
 			    if ( pdbMap.containsKey(pdbId)){
 				    domainList = pdbMap.get(pdbId);

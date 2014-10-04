@@ -1,9 +1,11 @@
 package org.biojava.bio.structure.quaternary.io;
 
+import java.io.IOException;
 import java.util.List;
 
 import org.biojava.bio.structure.PDBHeader;
 import org.biojava.bio.structure.Structure;
+import org.biojava.bio.structure.StructureException;
 import org.biojava.bio.structure.StructureTools;
 import org.biojava.bio.structure.align.util.AtomCache;
 import org.biojava.bio.structure.io.FileParsingParameters;
@@ -19,11 +21,12 @@ import org.biojava3.core.util.SoftHashMap;
 public class PDBBioUnitDataProvider implements BioUnitDataProvider{
 
 	
-	SoftHashMap<String, PDBHeader> headerCache = new SoftHashMap<String, PDBHeader>(0);
+	private SoftHashMap<String, PDBHeader> headerCache = new SoftHashMap<String, PDBHeader>(0);
 	
-	Structure s = null;
+	private Structure s;
 	
-	AtomCache cache = new AtomCache();
+	// no initialisation here, this gives an opportunity to setAtomCache to initialise it
+	private AtomCache cache;
 	
 	public PDBHeader loadPDB(String pdbId){
 			
@@ -47,9 +50,11 @@ public class PDBBioUnitDataProvider implements BioUnitDataProvider{
 			
 			header = s.getPDBHeader();
 			headerCache.put(s.getPDBCode(),header);
-		} catch (Exception e){
+		} catch (IOException e) {
 			e.printStackTrace();
-		}	
+		} catch (StructureException e) {
+			e.printStackTrace();
+		}
 		
 		
 		return header ;
