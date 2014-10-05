@@ -29,6 +29,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import org.biojava.bio.structure.align.util.AtomCache;
+import org.biojava.bio.structure.io.PDBFileReader;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -62,8 +63,8 @@ public class TestAtomCache {
 		for(String pdbId : uncacheIDs) {
 			String middle = pdbId.substring(1,3).toLowerCase();
 			
-			String fpath = cacheDir + lineSplit + middle + lineSplit + pdbId;
-			String ppath = cacheDir + lineSplit + middle + lineSplit + "pdb"+pdbId;
+			String fpath = cacheDir + PDBFileReader.LOCAL_PDB_SPLIT_DIR + lineSplit + middle + lineSplit + pdbId;
+			String ppath = cacheDir + PDBFileReader.LOCAL_PDB_SPLIT_DIR + lineSplit + middle + lineSplit + "pdb"+pdbId;
 			
 			String[] paths = new String[]{fpath,ppath};
 

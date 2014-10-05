@@ -67,11 +67,19 @@ public class MMCIFFileReader implements StructureIOFile {
 
 	public static final String lineSplit = System.getProperty("file.separator");
 	
+	public static final String LOCAL_MMCIF_SPLIT_DIR = "data"+lineSplit+"structures"+lineSplit+"divided"+lineSplit+"mmCIF";
+	public static final String LOCAL_MMCIF_ALL_DIR   = "data"+lineSplit+"structures"+lineSplit+"all"    +lineSplit+"mmCIF";
 
+	private static final String CURRENT_FILES_PATH  = "/pub/pdb/data/structures/divided/mmCIF/";
+	//private static final String OBSOLETE_FILES_PATH = "/pub/pdb/data/structures/obsolete/mmCIF/";
+	
+	
 	private File path;
 	private List<String> extensions;
 	private boolean autoFetch;
 	private boolean pdbDirectorySplit;
+	
+	private String serverName;
 	
 	private FileParsingParameters params;
 	private SimpleMMcifConsumer consumer;
@@ -124,6 +132,17 @@ public class MMCIFFileReader implements StructureIOFile {
 			logger.debug("Initialising with path {}", path.toString());
 		}
 		this.path = new File(path);
+		
+		this.serverName = System.getProperty(PDBFileReader.PDB_FILE_SERVER_PROPERTY);
+
+		if ( serverName == null || serverName.trim().isEmpty()) {
+			serverName = PDBFileReader.DEFAULT_PDB_FILE_SERVER;
+			logger.debug("Using default PDB file server {}",serverName);
+		} else {
+			logger.info("Using PDB file server {} read from system property {}",serverName,PDBFileReader.PDB_FILE_SERVER_PROPERTY);
+		}
+
+
 	}
 	
 	public void addExtension(String ext) {
@@ -218,19 +237,12 @@ public class MMCIFFileReader implements StructureIOFile {
 		String pdbFile = null ;
 		File f = null ;
 
-		// this are the possible PDB file names...
-		String fpath ;
-		String ppath ;
+		
+		File dir = getDir(pdbId);
 
-		if ( pdbDirectorySplit){
-			// pdb files are split into subdirectories based on their middle position...
-			String middle = pdbId.substring(1,3).toLowerCase();
-			fpath = path + lineSplit + middle + lineSplit + pdbId;
-			ppath = path + lineSplit + middle + lineSplit + "pdb"+pdbId;
-		} else {
-			fpath = path + lineSplit + pdbId;
-			ppath = path + lineSplit + "pdb"+pdbId;
-		}
+		// this are the possible PDB file names...
+		String fpath = new File(dir,pdbId).toString();
+		String ppath = new File(dir,"pdb"+pdbId).toString();
 
 		String[] paths = new String[]{fpath,ppath};
 
@@ -299,25 +311,14 @@ public class MMCIFFileReader implements StructureIOFile {
 
 	public File downloadPDB(String pdbId){
 				
-		File tempFile ;
 
-		if ( pdbDirectorySplit) {
-			String middle = pdbId.substring(1,3).toLowerCase();
-			String dir = path+lineSplit+middle;
-			File directoryCheck = new File (dir);
-			if ( ! directoryCheck.exists()){
-				directoryCheck.mkdir();
-			}
-
-			tempFile = new File(dir+lineSplit+ pdbId.toLowerCase()+".cif.gz");
-
-		} else {
-
-			tempFile = new File(path+lineSplit+pdbId.toLowerCase()+".cif.gz");
-		}
+		File dir = getDir(pdbId);
+		
+		File tempFile = new File(dir, pdbId.toLowerCase()+".cif.gz");
 		
 		
-		String ftp = String.format("ftp://ftp.wwpdb.org/pub/pdb/data/structures/all/mmCIF/%s.cif.gz", pdbId.toLowerCase());
+		String ftp = String.format("ftp://%s%s%s/%s.cif.gz", 
+				serverName, CURRENT_FILES_PATH, pdbId.substring(1,3).toLowerCase(), pdbId.toLowerCase());
 
 		logger.info("Fetching " + ftp);
 		try {
@@ -396,4 +397,28 @@ public class MMCIFFileReader implements StructureIOFile {
 	   this.consumer = consumer;
    }
 
+   public File getDir(String pdbId) {
+	   
+	   File dir = null;
+	   
+	   if (pdbDirectorySplit) {
+   
+		   String middle = pdbId.substring(1,3).toLowerCase();
+		   dir = new File(path, LOCAL_MMCIF_SPLIT_DIR + lineSplit + middle);
+		
+	   } else {
+		   
+		   dir = new File(path, LOCAL_MMCIF_ALL_DIR);
+		   
+	   }
+	   
+	   
+	   if (!dir.exists()) {
+		   boolean success = dir.mkdirs();
+		   if (!success) logger.error("Could not create mmCIF dir {}",dir.toString());
+	   }
+	   
+	   return dir;
+   }
+   
 }
