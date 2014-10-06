@@ -6,6 +6,7 @@ import java.io.Serializable;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -314,5 +315,17 @@ public class BiologicalAssemblyTransformation implements Cloneable, Serializable
 		return value;
 
 	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "BiologicalAssemblyTransformation [id=" + id + ", chainId="
+				+ chainId + ", rotation=" + rotation + ", translation="
+				+ Arrays.toString(translation) + "]";
+	}
+	
+	
 
 }
