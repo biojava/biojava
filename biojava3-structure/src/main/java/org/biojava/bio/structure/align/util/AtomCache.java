@@ -119,6 +119,21 @@ public class AtomCache {
 	}
 
 	/**
+	 * Creates an instance of an AtomCache that is pointed to the a particular path in the file system. It will use the same value for pdbFilePath and cachePath.
+	 * 
+	 * @param pdbFilePath
+	 *            a directory in the file system to use as a location to cache files.
+
+	 * @param isSplit
+	 *            a flag to indicate if the directory organisation is "split" as on the PDB ftp servers, or if all files
+	 *            are contained in one directory.
+	 */
+	public AtomCache(String pdbFilePath,  boolean isSplit) {
+		this(pdbFilePath,pdbFilePath,isSplit);
+		
+	}
+	
+	/**
 	 * Creates an instance of an AtomCache that is pointed to the a particular path in the file system.
 	 * 
 	 * @param pdbFilePath
