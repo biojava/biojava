@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.biojava.bio.structure.align.ce.AbstractUserArgumentProcessor;
 import org.biojava.bio.structure.align.client.FarmJobParameters;
 import org.biojava.bio.structure.align.client.FarmJobRunnable;
 import org.biojava.bio.structure.align.events.AlignmentProgressListener;
