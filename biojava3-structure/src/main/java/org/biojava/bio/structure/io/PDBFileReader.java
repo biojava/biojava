@@ -48,7 +48,6 @@ import org.biojava.bio.structure.io.mmcif.ChemCompGroupFactory;
 import org.biojava.bio.structure.io.mmcif.ReducedChemCompProvider;
 import org.biojava.bio.structure.io.util.FileDownloadUtils;
 import org.biojava3.core.util.InputStreamProvider;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -141,7 +140,22 @@ public class PDBFileReader implements StructureIOFile {
 	//  "1n8r",
 
 	public static final String LOAD_CHEM_COMP_PROPERTY = "loadChemCompInfo";
+	
+	public static final String lineSplit = System.getProperty("file.separator");
 
+	public static final String LOCAL_PDB_SPLIT_DIR    = "data"+lineSplit+"structures"+lineSplit+"divided" +lineSplit+"pdb";
+	public static final String LOCAL_PDB_ALL_DIR      = "data"+lineSplit+"structures"+lineSplit+"all"     +lineSplit+"pdb";
+	public static final String LOCAL_PDB_OBSOLETE_DIR = "data"+lineSplit+"structures"+lineSplit+"obsolete"+lineSplit+"pdb";
+	public static final String LOCAL_BIO_ASSEMBLY_SPLIT_DIR = "data"+lineSplit+"biounit"+lineSplit+"coordinates"+lineSplit+"divided";
+	public static final String LOCAL_BIO_ASSEMBLY_ALL_DIR   = "data"+lineSplit+"biounit"+lineSplit+"coordinates"+lineSplit+"all";
+	
+	public static final String DEFAULT_PDB_FILE_SERVER = "ftp.wwpdb.org";
+	public static final String PDB_FILE_SERVER_PROPERTY = "PDB.FILE.SERVER";
+
+	private static final String CURRENT_FILES_PATH  = "/pub/pdb/data/structures/divided/pdb/";
+	private static final String OBSOLETE_FILES_PATH = "/pub/pdb/data/structures/obsolete/pdb/";
+	private static final String BIO_ASSEMBLY_FILES_PATH  = "/pub/pdb/data/biounit/coordinates/divided/";
+	
 
 	private File path;
 	private List<String> extensions;
@@ -153,21 +167,14 @@ public class PDBFileReader implements StructureIOFile {
 	private boolean fetchFileEvenIfObsolete;
 
 	private boolean pdbDirectorySplit;
+	
+	private String serverName;
 
 	private int bioAssemblyId = 0; // number > 0 indicates the id of the biological assembly
 	private boolean bioAssemblyFallback = true; // use regular PDB file as the biological assembly (i.e. for NMR structures)
 	// in case no biological assembly file is available.
 	private boolean loadedBioAssembly = false;
 
-	public static final String lineSplit = System.getProperty("file.separator");
-
-	public static final String DEFAULT_PDB_FILE_SERVER = "ftp.wwpdb.org";
-	public static final String PDB_FILE_SERVER_PROPERTY = "PDB.FILE.SERVER";
-
-	private static final String CURRENT_FILES_PATH  = "/pub/pdb/data/structures/divided/pdb/";
-	private static final String OBSOLETE_FILES_PATH = "/pub/pdb/data/structures/obsolete/pdb/";
-	private static final String BIO_ASSEMBLY_FILES_PATH  = "/pub/pdb/data/biounit/coordinates/divided/";
-	private static final String LOCAL_BIO_ASSEMBLY_DIRECTORY = "bio_assembly";
 	
 	private FileParsingParameters params ;
 
@@ -300,6 +307,16 @@ public class PDBFileReader implements StructureIOFile {
 			logger.debug("Initialising with path {}", path.toString());
 		}
 		this.path = new File(path);
+		
+		this.serverName = System.getProperty(PDB_FILE_SERVER_PROPERTY);
+
+		if ( serverName == null || serverName.trim().isEmpty()) {
+			serverName = DEFAULT_PDB_FILE_SERVER;
+			logger.debug("Using default PDB file server {}",serverName);
+		} else {
+			logger.info("Using PDB file server {} read from system property {}",serverName,PDB_FILE_SERVER_PROPERTY);
+		}
+
 	}
 
 
@@ -409,11 +426,11 @@ public class PDBFileReader implements StructureIOFile {
 						// either an error or there is not current entry
 						current = pdbId;
 					}
-					return downloadAndGetInputStream(current, CURRENT_FILES_PATH);
+					return downloadAndGetInputStream(current, CURRENT_FILES_PATH, false);
 				} else if(fetchFileEvenIfObsolete && PDBStatus.getStatus(pdbId) == Status.OBSOLETE) {
-					return downloadAndGetInputStream(pdbId, OBSOLETE_FILES_PATH);
+					return downloadAndGetInputStream(pdbId, OBSOLETE_FILES_PATH, true);
 				} else {
-					return downloadAndGetInputStream(pdbId, CURRENT_FILES_PATH);
+					return downloadAndGetInputStream(pdbId, CURRENT_FILES_PATH, false);
 				}
 			}else {
 				String message = "No structure with PDB code " + pdbId + " found!" ;
@@ -431,20 +448,12 @@ public class PDBFileReader implements StructureIOFile {
 
 		String pdbFile = null ;
 		File f = null ;
+		
+		File dir = getDir(pdbId, false);
 
 		// this are the possible PDB file names...
-		String fpath ;
-		String ppath ;
-
-		if ( pdbDirectorySplit){
-			// pdb files are split into subdirectories based on their middle position...
-			String middle = pdbId.substring(1,3).toLowerCase();
-			fpath = path + lineSplit + middle + lineSplit + pdbId;
-			ppath = path + lineSplit + middle + lineSplit + "pdb"+pdbId;
-		} else {
-			fpath = path + lineSplit + pdbId;
-			ppath = path + lineSplit + "pdb"+pdbId;
-		}
+		String fpath = new File(dir,pdbId).toString();
+		String ppath = new File(dir,"pdb"+pdbId).toString();
 
 		String[] paths = new String[]{fpath,ppath};
 
@@ -453,7 +462,7 @@ public class PDBFileReader implements StructureIOFile {
 			String testpath = paths[p];
 			//System.out.println(testpath);
 			for (int i=0 ; i<extensions.size();i++){
-				String ex = (String)extensions.get(i) ;
+				String ex = extensions.get(i) ;
 				//System.out.println("PDBFileReader testing: "+testpath+ex);
 				f = new File(testpath+ex) ;
 
@@ -468,7 +477,7 @@ public class PDBFileReader implements StructureIOFile {
 
 						if (lastModified < lastRemediationDate) {
 							// the file is too old, replace with newer version
-							logger.warn("Replacing file " + pdbFile +" with latest remediated file from PDB.");
+							logger.warn("Replacing file {} with latest remediated file from PDB.",pdbFile);
 							pdbFile = null;
 
 							return null;
@@ -506,29 +515,9 @@ public class PDBFileReader implements StructureIOFile {
 		if ( pdbId.length() < 4)
 			throw new IOException("The provided ID does not look like a PDB ID : " + pdbId);
 
-		// create local subdirectory for biological assembly files if it doesn't exist
-		
-		// note: using File constructor guarantees system-independent dir separation ('/' or '\')
-		File dir = new File(path, LOCAL_BIO_ASSEMBLY_DIRECTORY);
+		File dir = getBioAssemblyDir(pdbId);
 
-		if ( ! dir.exists()){
-			// we've checked at initialisation that path was writable so this shouldn't fail
-			// we'll log it in the unlikely case that it does, some IOException will happen down the line
-			boolean success = dir.mkdir();
-			if (!success) logger.error("Failed to create directory {} to write biological assembly files to",dir.toString());
-		}
-
-		File fpath ;
-
-		if (pdbDirectorySplit){
-			// pdb files are split into subdirectories based on their middle position...
-			String middle = pdbId.substring(1,3).toLowerCase();
-			fpath = new File(dir, middle);
-		} else {
-			fpath = dir;
-		}  
-
-		File f = new File(fpath, getBiologicalAsssemblyFileName(pdbId.toLowerCase(), bioAssemblyId)) ;
+		File f = new File(dir, getBiologicalAsssemblyFileName(pdbId.toLowerCase(), bioAssemblyId)) ;
 
 		// check if bio assembly file exists in local cache
 		if ( f.exists()) {
@@ -538,15 +527,9 @@ public class PDBFileReader implements StructureIOFile {
 			return inputStream;
 			
 		} else if (bioAssemblyFallback) {
-			if (pdbDirectorySplit){
-				// pdb files are split into subdirectories based on their middle position...
-				String middle = pdbId.substring(1,3).toLowerCase();
-				fpath = new File(path, middle);
-			} else {
-				fpath = path;
-			}  
 			
-			f = new File(fpath, "pdb" + pdbId + ".ent.gz");
+			dir = getDir(pdbId, false);
+			f = new File(dir, getPdbFileName(pdbId));
 
 			if (f.exists()) {
 
@@ -597,37 +580,13 @@ public class PDBFileReader implements StructureIOFile {
 		return null;
 	}
 
-	private  File downloadPDB(String pdbId, String pathOnServer) throws IOException {
+	private  File downloadPDB(String pdbId, String pathOnServer, boolean obsolete) throws IOException {
 		
+		File dir = getDir(pdbId, obsolete);
+		File realFile = new File(dir,getPdbFileName(pdbId)); 
 
-		File realFile = null;
-
-		pdbId = pdbId.toLowerCase();
-		String middle = pdbId.substring(1,3);
-
-		if ( pdbDirectorySplit) {
-			File splitDirectory = new File (path, middle);
-			if ( ! splitDirectory.exists()){
-				// we've checked at initialisation that path was writable so this shouldn't fail
-				// we'll log it in the unlikely case that it does, some IOException will happen down the line
-				boolean success = splitDirectory.mkdir();
-				if (!success) logger.error("Failed to create split directory {} to write PFB files to",
-						splitDirectory.toString());
-			}
-
-			realFile =new File(splitDirectory,"pdb"+ pdbId+".ent.gz");
-		} else {
-
-			realFile = new File(path,"pdb"+pdbId+".ent.gz");
-		}
-
-
-		String serverName = System.getProperty(PDB_FILE_SERVER_PROPERTY);
-
-		if ( serverName == null)
-			serverName = DEFAULT_PDB_FILE_SERVER;
-
-		String ftp = String.format("ftp://%s%s%s/pdb%s.ent.gz", serverName,pathOnServer,middle, pdbId);
+		String ftp = String.format("ftp://%s%s%s/pdb%s.ent.gz", 
+				serverName, pathOnServer, pdbId.substring(1,3).toLowerCase(), pdbId.toLowerCase());
 
 		logger.info("Fetching {}", ftp);
 		logger.info("Writing to {}",realFile.toString());
@@ -660,12 +619,7 @@ public class PDBFileReader implements StructureIOFile {
 		pdbId = pdbId.toLowerCase();
 		String middle = pdbId.substring(1,3);
 
-		String serverName = System.getProperty(PDB_FILE_SERVER_PROPERTY);
-
-		if ( serverName == null)
-			serverName = DEFAULT_PDB_FILE_SERVER;
-
-		String ftp = String.format("ftp://%s%s%s/%s", serverName,pathOnServer,middle,fileName);
+		String ftp = String.format("ftp://%s%s%s/%s", serverName, pathOnServer, middle, fileName);
 
 		logger.info("Fetching {}", ftp);
 
@@ -673,7 +627,7 @@ public class PDBFileReader implements StructureIOFile {
 		try {
 			url = new URL(ftp);
 		} catch (MalformedURLException e1) {
-			logger.warn("Problem while downloading Biological Assembly " + pdbId + " from FTP URL: "+ftp+". Error: "+e1.getMessage() );
+			logger.warn("Problem while downloading Biological Assembly {} from FTP URL: {}. Error: {}", pdbId, ftp, e1.getMessage() );
 			return null;
 		}
 
@@ -704,7 +658,7 @@ public class PDBFileReader implements StructureIOFile {
 				if ( fallBackPDBF != null)
 					return new File(fallBackPDBF);
 
-				return downloadPDB(pdbId, CURRENT_FILES_PATH);
+				return downloadPDB(pdbId, CURRENT_FILES_PATH, false);
 			} 
 			return null;
 		}
@@ -720,21 +674,8 @@ public class PDBFileReader implements StructureIOFile {
 
 	private File downloadFileIfAvailable(URL url, String pdbId, String fileName) throws IOException {
 
-		String middle = pdbId.substring(1,3);
-		
-		File tempFile = null;
-		if (pdbDirectorySplit) {
-			File dir = new File(path, LOCAL_BIO_ASSEMBLY_DIRECTORY);
-			dir = new File(dir, middle);
-			if ( ! dir.exists()){
-				boolean success = dir.mkdir();
-				if (!success) logger.error("Failed to create split directory {} ",dir.toString());
-			}
-			tempFile =new File(dir, fileName);
-		} else {
-			tempFile = new File(path, LOCAL_BIO_ASSEMBLY_DIRECTORY);
-			tempFile = new File(tempFile, fileName);
-		}
+		File dir = getBioAssemblyDir(pdbId);
+		File tempFile = new File(dir, fileName);
 
 		return FileDownloadUtils.downloadFileIfAvailable(url, tempFile);
 	}
@@ -743,10 +684,10 @@ public class PDBFileReader implements StructureIOFile {
 
 
 
-	private  InputStream downloadAndGetInputStream(String pdbId, String pathOnServer)
+	private  InputStream downloadAndGetInputStream(String pdbId, String pathOnServer, boolean obsolete)
 			throws IOException{
 
-		File tmp = downloadPDB(pdbId, pathOnServer);
+		File tmp = downloadPDB(pdbId, pathOnServer, obsolete);
 
 		if (tmp != null) {
 			InputStreamProvider prov = new InputStreamProvider();
@@ -805,11 +746,11 @@ public class PDBFileReader implements StructureIOFile {
 					// either an error or there is not current entry
 					current = pdbId;
 				}
-				downloadPDB(current, CURRENT_FILES_PATH);
+				downloadPDB(current, CURRENT_FILES_PATH, false);
 			} else if(fetchFileEvenIfObsolete && PDBStatus.getStatus(pdbId) == Status.OBSOLETE) {
-				downloadPDB(pdbId, OBSOLETE_FILES_PATH);
+				downloadPDB(pdbId, OBSOLETE_FILES_PATH, true);
 			} else {
-				downloadPDB(pdbId, CURRENT_FILES_PATH);
+				downloadPDB(pdbId, CURRENT_FILES_PATH, false);
 			}
 		}
 
@@ -959,10 +900,67 @@ public class PDBFileReader implements StructureIOFile {
 	 * @since 3.2
 	 */
 	private String getBiologicalAsssemblyFileName(String pdbId, int biologicalAssemblyId) {
-		return pdbId + ".pdb" + biologicalAssemblyId + ".gz";
+		return pdbId.toLowerCase() + ".pdb" + biologicalAssemblyId + ".gz";
+	}
+	
+	private String getPdbFileName(String pdbId) {
+		return "pdb"+pdbId.toLowerCase()+".ent.gz";
 	}
 
+	public File getDir(String pdbId, boolean obsolete) {
 
+		File dir = null;
+		
+		if (obsolete) {
+			
+			// note the obsolete directory uses only the split layout in the ftp: no need to check for pdbDirectorySplit flag here
+			String middle = pdbId.substring(1,3).toLowerCase();
+			dir = new File(path, LOCAL_PDB_OBSOLETE_DIR + lineSplit + middle);
+			
+		} else if (pdbDirectorySplit) {
+
+			String middle = pdbId.substring(1,3).toLowerCase();
+			dir = new File(path, LOCAL_PDB_SPLIT_DIR + lineSplit + middle);
+
+		} else {
+
+			dir = new File(path, LOCAL_PDB_ALL_DIR);
+
+		}
+
+
+		if (!dir.exists()) {
+			boolean success = dir.mkdirs();
+			if (!success) logger.error("Could not create pdb dir {}",dir.toString());
+		}
+
+		return dir;
+	}
+	
+	public File getBioAssemblyDir(String pdbId) {
+
+		File dir = null;
+
+		if (pdbDirectorySplit) {
+
+			String middle = pdbId.substring(1,3).toLowerCase();
+			dir = new File(path, LOCAL_BIO_ASSEMBLY_SPLIT_DIR + lineSplit + middle);
+
+		} else {
+
+			dir = new File(path, LOCAL_BIO_ASSEMBLY_ALL_DIR);
+
+		}
+
+
+		if (!dir.exists()) {
+			boolean success = dir.mkdirs();
+			if (!success) logger.error("Could not create pdb dir {}",dir.toString());
+		}
+
+		return dir;
+	}
+	
 
 
 }

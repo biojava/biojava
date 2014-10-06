@@ -6,12 +6,16 @@ import java.net.URL;
 
 import org.biojava.bio.structure.align.util.AtomCache;
 import org.biojava.bio.structure.align.util.UserConfiguration;
+import org.biojava.bio.structure.io.PDBFileReader;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
 
 
 public class TestLoadStructureFromURL {
+	
+	public static final String lineSplit = System.getProperty("file.separator");
+
 
 	@Test
 	public void testLoadStructureFromURL() throws IOException, StructureException{
@@ -33,7 +37,7 @@ public class TestLoadStructureFromURL {
 		c.getStructure("1znf");
 
 		//and now create a URL for this file
-		File subdir = new File(f, "zn");
+		File subdir = new File(f, PDBFileReader.LOCAL_PDB_SPLIT_DIR+lineSplit+"zn");
 		File newFile = new File(subdir, "pdb1znf.ent.gz");
 
 		subdir.deleteOnExit();
