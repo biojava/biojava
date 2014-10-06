@@ -67,8 +67,9 @@ public class MMCIFFileReader implements StructureIOFile {
 
 	public static final String lineSplit = System.getProperty("file.separator");
 	
-	public static final String LOCAL_MMCIF_SPLIT_DIR = "data"+lineSplit+"structures"+lineSplit+"divided"+lineSplit+"mmCIF";
-	public static final String LOCAL_MMCIF_ALL_DIR   = "data"+lineSplit+"structures"+lineSplit+"all"    +lineSplit+"mmCIF";
+	public static final String LOCAL_MMCIF_SPLIT_DIR    = "data"+lineSplit+"structures"+lineSplit+"divided" +lineSplit+"mmCIF";
+	public static final String LOCAL_MMCIF_ALL_DIR      = "data"+lineSplit+"structures"+lineSplit+"all"     +lineSplit+"mmCIF";
+	public static final String LOCAL_MMCIF_OBSOLETE_DIR = "data"+lineSplit+"structures"+lineSplit+"obsolete"+lineSplit+"mmCIF";
 
 	private static final String CURRENT_FILES_PATH  = "/pub/pdb/data/structures/divided/mmCIF/";
 	//private static final String OBSOLETE_FILES_PATH = "/pub/pdb/data/structures/obsolete/mmCIF/";
@@ -314,7 +315,7 @@ public class MMCIFFileReader implements StructureIOFile {
 
 		File dir = getDir(pdbId);
 		
-		File tempFile = new File(dir, pdbId.toLowerCase()+".cif.gz");
+		File tempFile = new File(dir, getMmCifFileName(pdbId));
 		
 		
 		String ftp = String.format("ftp://%s%s%s/%s.cif.gz", 
@@ -395,6 +396,10 @@ public class MMCIFFileReader implements StructureIOFile {
    
    public void setMMCifConsumer(SimpleMMcifConsumer consumer){
 	   this.consumer = consumer;
+   }
+   
+   public String getMmCifFileName(String pdbId) {
+	   return pdbId.toLowerCase()+".cif.gz";
    }
 
    public File getDir(String pdbId) {
