@@ -316,6 +316,7 @@ public class Alignments {
             S query, S target, PairwiseSequenceAlignerType type, GapPenalty gapPenalty,
             SubstitutionMatrix<C> subMatrix) {
     	if (!query.getCompoundSet().equals(target.getCompoundSet())) {
+    		System.err.println(query.getCompoundSet().getClass().getName() + " != " + target.getCompoundSet().getClass().getName());
     		throw new IllegalArgumentException("Sequence compound sets must be the same");
     	}
         switch (type) {

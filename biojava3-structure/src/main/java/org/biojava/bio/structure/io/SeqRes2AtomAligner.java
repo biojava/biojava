@@ -463,6 +463,30 @@ public class SeqRes2AtomAligner {
 			}
 		}
 
+		if ( ! s1.getCompoundSet().equals(s2.getCompoundSet()) ) {
+			// e.g. trying to align a DNA and an RNA sequence...
+			// test PDB ID: 1A34
+			// try to make both RNA sequence...
+			if ( ! s1.getCompoundSet().equals(AmbiguityRNACompoundSet.getRNACompoundSet())) {
+				try {
+					s1 = new RNASequence(seq1,AmbiguityRNACompoundSet.getRNACompoundSet());
+				} catch (CompoundNotFoundError ex) {
+					logger.warn("Could not align DNA and RNA compound sets: " + seq1);
+					return false;
+				}
+			}
+			
+			if( ! s2.getCompoundSet().equals(AmbiguityRNACompoundSet.getRNACompoundSet())) {
+					try {
+						s2 = new RNASequence(seq2,AmbiguityRNACompoundSet.getRNACompoundSet());
+					} catch (CompoundNotFoundError ex) {
+						logger.warn("Could not align DNA and RNA compound sets: " + seq2);
+						return false;
+					}
+				}
+		}
+		
+		
 		SubstitutionMatrix<NucleotideCompound> matrix = SubstitutionMatrixHelper.getNuc4_2();
 
 		GapPenalty penalty = new SimpleGapPenalty();
