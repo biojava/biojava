@@ -83,6 +83,7 @@ public class MmCifPDBBiolAssemblyProvider implements RawBioUnitDataProvider{
 			// reset the consumer data to avoid memory leaks
 			consumer.documentStart();
 		} catch (IOException e){
+			// TODO shouldn't this be thrown?
 			e.printStackTrace();
 			
 		}

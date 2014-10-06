@@ -104,7 +104,7 @@ public class FileBasedPDBBioUnitDataProvider implements BioUnitDataProvider{
 			header = s.getPDBHeader();
 			//System.out.println("got header: " + bioUnit + " " + header + " from parsing");
 			headerCache.put(s.getPDBCode(),header);
-		} catch (Exception e){
+		} catch (IOException e){
 			e.printStackTrace();
 		}	
 		return header ;

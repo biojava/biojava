@@ -156,7 +156,7 @@ public class AFPChainXMLParser
 		if ( optLen != null)
 		  verifiedOptLen = afpChain.getOptLen().clone();
 		else {
-			System.err.println("did not find optimal alignment, building up empty alignment.");
+			logger.warn("did not find optimal alignment, building up empty alignment.");
 			optLen = new int[1];
 			optLen[0] = 0;
 		}
@@ -183,7 +183,8 @@ public class AFPChainXMLParser
 				
 				if ( pos1 == -1 || pos2 == -1 ){
 				   // this can happen when parsing old files that contained Calcium atoms...
-				   logger.warn("pos1: " +pos1 + " " + pdbResnum1 + " pos2: " + pos2 + " " + pdbResnum2 +  " should never be -1. Probably parsing an.");
+				   logger.warn("pos1: {} (residue {}), pos2: {} (residue {}), should never be -1. Probably parsing an old file.",  
+						   pos1, pdbResnum1, pos2, pdbResnum2);
 				   verifiedOptLen[blockNr]-- ;
 				   continue;
 				}
