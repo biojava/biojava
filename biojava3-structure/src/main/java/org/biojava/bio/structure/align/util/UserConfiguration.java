@@ -51,7 +51,9 @@ public class UserConfiguration
 	
 	public static final String lineSplit = System.getProperty("file.separator");
 
-	
+	private static boolean warningPrinted = false;
+	private static boolean cacheWarningPrinted = false;
+	private static boolean propWarningPrinted = false;
 	
 	private String pdbFilePath;
 	private String cacheFilePath;
@@ -146,9 +148,12 @@ public class UserConfiguration
 
 			} else {
 				path = System.getProperty(TMP_DIR);
-				logger.warn("Could not read dir from system property {} or environment variable {}, "
-						+ "using system's temp directory {}",
-						propertyName, propertyName, path);
+				if ( ! warningPrinted) {
+						logger.warn("Could not read dir from system property {} or environment variable {}, "
+								+ "using system's temp directory {}",
+								propertyName, propertyName, path);
+						warningPrinted = true;
+				}
 			}   
 		}
 		
@@ -210,14 +215,20 @@ public class UserConfiguration
 				// as PDB_DIR is not checked for being writable, we have to do that check here in case
 				if (new File(pdbFilePath).canWrite()){
 					path = pdbFilePath;
+					if ( ! cacheWarningPrinted) {
 					logger.info("Could not read cache dir from system property {} or environment variable {}, "
 							+ "using PDB directory instead {}",
-							propertyName, propertyName, path);					
+							propertyName, propertyName, path);
+					cacheWarningPrinted = true;
+					}
 				} else {
 					path = System.getProperty(TMP_DIR);
+					if (! propWarningPrinted ) {
 					logger.warn("Could not read cache dir from system property {} or environment variable {}, "
 							+ "and PDB directory {} is not writable. Using system's temp directory instead {}",
 							propertyName, propertyName, pdbFilePath, path);	
+					propWarningPrinted = true;
+					}
 				}
 			}   
 		}

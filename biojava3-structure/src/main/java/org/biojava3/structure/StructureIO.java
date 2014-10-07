@@ -6,6 +6,7 @@ import java.util.List;
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureException;
 import org.biojava.bio.structure.align.util.AtomCache;
+import org.biojava.bio.structure.io.mmcif.model.PdbxStructAssembly;
 import org.biojava.bio.structure.quaternary.BiologicalAssemblyBuilder;
 import org.biojava.bio.structure.quaternary.BiologicalAssemblyTransformation;
 import org.biojava.bio.structure.quaternary.io.BioUnitDataProvider;
@@ -122,7 +123,7 @@ public class StructureIO {
 		pdbId = pdbId.toLowerCase();
 		
 		BioUnitDataProvider provider = BioUnitDataProviderFactory.getBioUnitDataProvider();
-
+		
 		checkInitAtomCache();
 		provider.setAtomCache(cache);
 		
@@ -130,17 +131,34 @@ public class StructureIO {
 
 		asymUnit = provider.getAsymUnit(pdbId);
 		
-		//cleanup to avoid memory leaks
-		provider.setAsymUnit(null);
-		provider.setAtomCache(null);
-		
 		// 0 ... asym unit
 		if ( biolAssemblyNr == 0) {
 			return asymUnit;
 		}
 		
+		List<BiologicalAssemblyTransformation> transformations = null;
+		
 		//List<ModelTransformationMatrix> transformations = provider.getBioUnitTransformationList(pdbId, biolAssemblyNr -1);
-		List<BiologicalAssemblyTransformation> transformations = asymUnit.getPDBHeader().getBioUnitTranformationMap().get(biolAssemblyNr  );
+		List<PdbxStructAssembly> psas = provider.getPdbxStructAssemblies();
+
+		
+		if ( psas.size() == 0) {
+			
+			// probably a PDB file based provider. That one does not contain that info... problem!
+			// workaround will only work if the ID is not PAU or XAU
+			transformations = asymUnit.getPDBHeader().getBioUnitTranformationMap().get(""+(biolAssemblyNr));
+			
+		} else {
+			
+			PdbxStructAssembly psa = psas.get(biolAssemblyNr-1);
+			
+			transformations = asymUnit.getPDBHeader().getBioUnitTranformationMap().get(psa.getId());
+		}
+		
+		//cleanup to avoid memory leaks
+		provider.setAsymUnit(null);
+		provider.setAtomCache(null);
+		
 		if ( transformations == null || transformations.size() == 0){
 			
 			throw new StructureException("Could not load transformations to recreate biological assembly nr " + biolAssemblyNr + " of " + pdbId);

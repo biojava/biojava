@@ -157,7 +157,7 @@ public class BiologicalAssemblyBuilder {
 		init();
 		this.psags = psags;
 
-		psa.getId();
+		//psa.getId();
 		
 		for (PdbxStructOperList oper: operators){
 			BiologicalAssemblyTransformation transform = new BiologicalAssemblyTransformation();
@@ -229,7 +229,7 @@ public class BiologicalAssemblyBuilder {
 		
 		for ( PdbxStructAssemblyGen psag : psags){
 			if ( psag.getAssembly_id().equals(assemblyId)) {
-
+		
 				operatorResolver.parseOperatorExpressionString(psag.getOper_expression());
 				List<String> operators = operatorResolver.getUnaryOperators();
 				
@@ -238,7 +238,7 @@ public class BiologicalAssemblyBuilder {
 				// apply unary operators to the specified chains
 				for (String chainId : asymIds) {
 					for (String operator : operators) {
-						//System.out.println("transforming " + chainId + " " + operator);
+				
 						BiologicalAssemblyTransformation original = getModelTransformationMatrix(operator);
 						BiologicalAssemblyTransformation transform = new BiologicalAssemblyTransformation(original);
 						transform.setChainId(chainId);

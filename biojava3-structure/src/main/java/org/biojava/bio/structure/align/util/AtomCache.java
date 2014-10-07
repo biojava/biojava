@@ -50,6 +50,7 @@ import org.biojava.bio.structure.domain.RemotePDPProvider;
 import org.biojava.bio.structure.io.FileParsingParameters;
 import org.biojava.bio.structure.io.MMCIFFileReader;
 import org.biojava.bio.structure.io.PDBFileReader;
+import org.biojava.bio.structure.quaternary.io.BioUnitDataProviderFactory;
 import org.biojava.bio.structure.scop.CachedRemoteScopInstallation;
 import org.biojava.bio.structure.scop.ScopDatabase;
 import org.biojava.bio.structure.scop.ScopDescription;
@@ -178,7 +179,7 @@ public class AtomCache {
 
 		strictSCOP = true;
 
-		useMmCif = true;
+		setUseMmCif(true);
 
 	}
 
@@ -239,21 +240,16 @@ public class AtomCache {
 	 */
 	public Structure getBiologicalAssembly(String pdbId, int bioAssemblyId, boolean bioAssemblyFallback)
 			throws StructureException, IOException {
-		Structure s;
+
 		if (bioAssemblyId < 1) {
 			throw new StructureException("bioAssemblyID must be greater than zero: " + pdbId + " bioAssemblyId "
 					+ bioAssemblyId);
-		}
-		PDBFileReader reader = new PDBFileReader(path);
-		reader.setPdbDirectorySplit(isSplit);
-		reader.setAutoFetch(autoFetch);
-		reader.setFetchFileEvenIfObsolete(fetchFileEvenIfObsolete);
-		reader.setFetchCurrent(fetchCurrent);
-		reader.setFileParsingParameters(params);
-		reader.setBioAssemblyId(bioAssemblyId);
-		reader.setBioAssemblyFallback(bioAssemblyFallback);
-		s = reader.getStructureById(pdbId.toLowerCase());
-		s.setPDBCode(pdbId);
+		}	
+		Structure s = StructureIO.getBiologicalAssembly(pdbId, bioAssemblyId);
+		
+		if ( s == null && bioAssemblyFallback)
+			return StructureIO.getBiologicalAssembly(pdbId, 0);
+		
 		return s;
 	}
 
@@ -799,6 +795,17 @@ public class AtomCache {
 	 */
 	public void setUseMmCif(boolean useMmCif) {
 		this.useMmCif = useMmCif;
+		
+		if ( useMmCif) {
+			// get bio assembly from mmcif file
+
+			BioUnitDataProviderFactory.setBioUnitDataProvider(BioUnitDataProviderFactory.mmcifProviderClassName);
+
+		} else {
+		
+			BioUnitDataProviderFactory.setBioUnitDataProvider(BioUnitDataProviderFactory.pdbProviderClassName);
+			
+		}
 	}
 
 	private boolean checkLoading(String name) {
@@ -808,6 +815,7 @@ public class AtomCache {
 
 	private Structure getBioAssembly(String name) throws IOException, StructureException {
 
+	
 		// can be specified as:
 		// BIO:1fah - first one
 		// BIO:1fah:0 - asym unit
@@ -820,8 +828,9 @@ public class AtomCache {
 			biolNr = Integer.parseInt(name.substring(9, name.length()));
 		}
 
-		return StructureIO.getBiologicalAssembly(pdbId, biolNr);
+		Structure s= StructureIO.getBiologicalAssembly(pdbId, biolNr);
 
+		return s;
 	}
 
 	private Structure getPDPStructure(String pdpDomainName) {

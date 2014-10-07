@@ -82,8 +82,8 @@ public class TestQuaternaryStructureProviders {
 		assertTrue(pHeader.getNrBioAssemblies() <= mHeader.getNrBioAssemblies());
 
 
-		Map<Integer, List<BiologicalAssemblyTransformation>> pMap = pHeader.getBioUnitTranformationMap();
-		Map<Integer, List<BiologicalAssemblyTransformation>> mMap = mHeader.getBioUnitTranformationMap();
+		Map<String, List<BiologicalAssemblyTransformation>> pMap = pHeader.getBioUnitTranformationMap();
+		Map<String, List<BiologicalAssemblyTransformation>> mMap = mHeader.getBioUnitTranformationMap();
 
 		//System.out.println("PDB: " + pMap);
 
@@ -91,7 +91,7 @@ public class TestQuaternaryStructureProviders {
 
 		assertTrue(pMap.keySet().size()<= mMap.keySet().size());
 
-		for ( Integer k : pMap.keySet()) {
+		for ( String k : pMap.keySet()) {
 			assertTrue(mMap.containsKey(k));
 
 			List<BiologicalAssemblyTransformation> pL = pMap.get(k);
