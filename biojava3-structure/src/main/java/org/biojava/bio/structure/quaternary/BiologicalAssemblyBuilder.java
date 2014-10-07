@@ -132,12 +132,15 @@ public class BiologicalAssemblyBuilder {
 	List<String> modelIndex = new ArrayList<String>();
 	private void addChainAndModel(Structure s, Chain newChain, String modelId) {
 		
+		if ( modelIndex.size() == 0)
+			modelIndex.add("PLACEHOLDER FOR ASYM UNIT");
+		
 		int modelCount = modelIndex.indexOf(modelId);
 		if ( modelCount == -1)  {
 			modelIndex.add(modelId);
 			modelCount = modelIndex.indexOf(modelId);
 		}
-		
+	
 		if (modelCount == 0) {
 			s.addChain(newChain);
 		} else if (modelCount > s.nrModels()) {

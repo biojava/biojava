@@ -2,9 +2,9 @@ package org.biojava.bio.structure.io;
 
 import org.biojava.bio.structure.Chain;
 import org.biojava.bio.structure.Structure;
-import org.biojava.bio.structure.quaternary.io.BioUnitDataProviderFactory;
 import org.biojava3.structure.StructureIO;
 import org.junit.Test;
+
 import static org.junit.Assert.*;
 
 public class TestHardBioUnits {
@@ -15,11 +15,9 @@ public class TestHardBioUnits {
 		String pdbId = "4A1I";
 		int biolAssemblyNr = 2;
 		
-		BioUnitDataProviderFactory.setBioUnitDataProvider(BioUnitDataProviderFactory.pdbProviderClassName);
-		
 		Structure bioAssembly;
 		try {
-			
+		
 			bioAssembly = StructureIO.getBiologicalAssembly(pdbId,biolAssemblyNr);
 
 			if ( bioAssembly == null){
@@ -42,8 +40,8 @@ public class TestHardBioUnits {
 			 */
 			
 			//System.out.println(bioAssembly.toPDB());
-			
-			
+
+			assertTrue(bioAssembly.nrModels() == 2);
 			
 			assertTrue(bioAssembly.getChains().size() > 0);
 			
@@ -59,8 +57,7 @@ public class TestHardBioUnits {
 			
 			assertFalse(bioAssembly.hasChain("H"));
 			
-			
-			
+		
 			assertEquals(1,bioAssembly.getChains(0).size());
 			assertEquals(1,bioAssembly.getChains(1).size());
 		} catch (Exception e){
