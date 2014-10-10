@@ -39,6 +39,8 @@ import org.biojava.bio.structure.io.mmcif.model.ChemComp;
 import org.biojava3.core.sequence.ProteinSequence;
 import org.biojava3.core.sequence.compound.AminoAcidCompound;
 import org.biojava3.core.sequence.template.Sequence;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -50,6 +52,8 @@ import org.biojava3.core.sequence.template.Sequence;
  * @since 1.4
  */
 public class ChainImpl implements Chain, Serializable {
+
+	private final static Logger logger = LoggerFactory.getLogger(ChainImpl.class);
 
 	/**
 	 *
@@ -161,7 +165,7 @@ public class ChainImpl implements Chain, Serializable {
 			try {
 				seqresaligner.mapSeqresRecords(n, tmp);
 			} catch (StructureException e){
-				e.printStackTrace();
+				logger.error("Exception: ", e);
 			}
 
 		} 
@@ -652,7 +656,7 @@ public class ChainImpl implements Chain, Serializable {
 			for (Group g : seqResGroups) {
 				ChemComp cc = g.getChemComp();
 				if ( cc == null) {
-					System.err.println("Could not load ChemComp for group " + g);
+					logger.warn("Could not load ChemComp for group: ", g);
 					str.append("X");
 				} else if ( PolymerType.PROTEIN_ONLY.contains(cc.getPolymerType()) ||
 						PolymerType.POLYNUCLEOTIDE_ONLY.contains(cc.getPolymerType())){

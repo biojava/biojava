@@ -30,6 +30,9 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * An object to contain the info from the PDB header for a Molecule.
  *
@@ -40,6 +43,8 @@ import java.util.List;
  * @since 1.5
  */
 public class Compound implements Cloneable, Serializable {
+
+   private final static Logger logger = LoggerFactory.getLogger(Compound.class);
 
 	/**
     *
@@ -151,7 +156,7 @@ public class Compound implements Cloneable, Serializable {
 			}
 
 		} catch (Exception e){
-			e.printStackTrace();
+			logger.error("Exception: ", e);
 		}
 
 

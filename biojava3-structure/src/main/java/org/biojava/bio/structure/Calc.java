@@ -29,6 +29,8 @@ import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 
 import org.biojava.bio.structure.jama.Matrix;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 
@@ -47,7 +49,7 @@ import org.biojava.bio.structure.jama.Matrix;
 
 public class Calc {
 
-
+	private final static Logger logger = LoggerFactory.getLogger(Calc.class);
 
 	// 180 / pi
 	static final double RADIAN = 57.29577951 ;
@@ -597,10 +599,10 @@ public class Calc {
 			atom = (Atom) iter.next() ;
 			try {
 				if ( oldAtom != null){
-					//System.out.println("before " +getDistance(oldAtom,atom));
+					logger.debug("before {}", getDistance(oldAtom,atom));
 				}
 			} catch (Exception e){
-				e.printStackTrace();
+				logger.error("Exception: ", e);
 			}
 			oldAtom = (Atom)atom.clone();
 
@@ -619,10 +621,10 @@ public class Calc {
 			atom.setCoords(coords);
 			try {
 				if ( rotOldAtom != null){
-					//System.out.println("after " + getDistance(rotOldAtom,atom));
+					logger.debug("after {}", getDistance(rotOldAtom,atom));
 				}
 			} catch (Exception e){
-				e.printStackTrace();
+				logger.error("Exception: ", e);
 			}
 			rotOldAtom  = (Atom) atom.clone();
 		}
@@ -1062,7 +1064,7 @@ public class Calc {
 		b.setY(1);
 		b.setZ(0);
 
-		System.out.println(calcRotationAngleInDegrees(a, b));
+		logger.info("Angle between atoms: ", calcRotationAngleInDegrees(a, b));
 	}
 
 
