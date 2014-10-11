@@ -27,6 +27,9 @@ import java.lang.reflect.Method;
 import java.util.Formatter;
 import java.util.Locale;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 /** A class to represent database cross references. This is just a simple bean that contains the infor from one
  * DBREF line
@@ -36,6 +39,8 @@ import java.util.Locale;
  * @version %I% %G%
  */
 public class DBRef implements PDBRecord, Serializable{
+
+	private final static Logger logger = LoggerFactory.getLogger(DBRef.class);
 
 	/**
     *
@@ -166,7 +171,7 @@ public class DBRef implements PDBRecord, Serializable{
                 }
             }
         } catch (Exception e){
-            e.printStackTrace();
+            logger.error("Exception: ", e);
         }
 
         return buf.toString();
