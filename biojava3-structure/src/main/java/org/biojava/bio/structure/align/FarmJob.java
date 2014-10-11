@@ -14,6 +14,8 @@ import org.biojava.bio.structure.scop.CachedRemoteScopInstallation;
 import org.biojava.bio.structure.scop.ScopDatabase;
 import org.biojava.bio.structure.scop.ScopFactory;
 import org.biojava3.core.util.InputStreamProvider;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /** A job as it can be run on the farm.
@@ -26,6 +28,8 @@ import org.biojava3.core.util.InputStreamProvider;
  *
  */
 public class FarmJob implements Runnable {
+
+	private final static Logger logger = LoggerFactory.getLogger(FarmJob.class);
 
 	private static final String[] mandParams = new String[] {"pdbFilePath"};
 
@@ -105,7 +109,7 @@ public class FarmJob implements Runnable {
 
 			} catch (ConfigurationException e){
 
-				e.printStackTrace();
+				logger.error("Exception: ", e);
 
 				if ( mandatoryArgs.contains(arg) ) {
 					// there must not be a ConfigurationException with mandatory arguments.
@@ -118,7 +122,7 @@ public class FarmJob implements Runnable {
 				
 		
 		if (( params.getNrAlignments() == -1) && (params.getTime() == -1)){
-			System.err.println("Please provide either the -time or the -nrAlignments argument!");
+			logger.error("Please provide either the -time or the -nrAlignments argument!");
 			return;
 		}
 		

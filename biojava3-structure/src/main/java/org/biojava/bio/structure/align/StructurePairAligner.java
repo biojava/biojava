@@ -51,6 +51,8 @@ import org.biojava.bio.structure.align.pairwise.FragmentPair;
 import org.biojava.bio.structure.io.PDBFileParser;
 import org.biojava.bio.structure.io.PDBFileReader;
 import org.biojava.bio.structure.jama.Matrix;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -151,14 +153,14 @@ import org.biojava.bio.structure.jama.Matrix;
  */
 public class StructurePairAligner {
 
+	private final static Logger logger = LoggerFactory.getLogger(StructurePairAligner.class);
+
 	AlternativeAlignment[] alts;
 	Matrix distanceMatrix;
 	StrucAligParameters params;
 	FragmentPair[]  fragPairs;
 
 	List<AlignmentProgressListener> listeners = new ArrayList<AlignmentProgressListener>();
-
-	boolean debug = false;
 
 	public StructurePairAligner() {
 		super();
@@ -205,7 +207,7 @@ public class StructurePairAligner {
 
 			// step1 : read molecules
 
-			System.out.println("aligning " + pdb1 + " vs. " + pdb2);
+			logger.info("aligning {} vs. {}", pdb1, pdb2);
 
 			Structure s1 = pdbr.getStructureById(pdb1);
 			Structure s2 = pdbr.getStructureById(pdb2);
@@ -224,7 +226,7 @@ public class StructurePairAligner {
 			// the AlternativeAlignment object gives also access to rotation matrices / shift vectors.
 			for (int i=0 ; i< aligs.length; i ++){
 				AlternativeAlignment aa = aligs[i];
-				System.out.println(aa);
+				logger.info("Alternative Alignment: ", aa);
 			}
 
 
@@ -235,7 +237,7 @@ public class StructurePairAligner {
 				AlternativeAlignment aa1 =aligs[0];
 				String pdbstr = aa1.toPDB(s1,s2);
 
-				System.out.println("writing alignment to " + outputfile);
+				logger.info("writing alignment to {}", outputfile);
 				FileOutputStream out= new FileOutputStream(outputfile);
 				PrintStream p =  new PrintStream( out );
 
@@ -252,7 +254,7 @@ public class StructurePairAligner {
 			if ( aligs.length > 0) {
 
 				if (! GuiWrapper.isGuiModuleInstalled()){
-					System.err.println("Could not find structure-gui modules in classpath, please install first!");
+					logger.error("Could not find structure-gui modules in classpath, please install first!");
 					return;
 				}
 
@@ -269,7 +271,7 @@ public class StructurePairAligner {
 
 
 		} catch (Exception e){
-			e.printStackTrace();
+			logger.error("Exception: ", e);
 		}
 
 	}
@@ -336,16 +338,17 @@ public class StructurePairAligner {
 	 *
 	 * @return debug flag
 	 */
+	@Deprecated
 	public boolean isDebug() {
-		return debug;
+		return false;
 	}
 
 	/** set the debug flag
 	 *
 	 * @param debug flag
 	 */
+	@Deprecated
 	public void setDebug(boolean debug) {
-		this.debug = debug;
 	}
 
 
@@ -458,12 +461,11 @@ public class StructurePairAligner {
 		long timeStart = System.currentTimeMillis();
 
 //		step 1 get all Diagonals of length X that are similar between both structures
-		if ( debug ) {
-			System.out.println(" length atoms1:" + ca1.length);
-			System.out.println(" length atoms2:" + ca2.length);
+		logger.debug(" length atoms1:" + ca1.length);
+		logger.debug(" length atoms2:" + ca2.length);
 
-			System.out.println("step 1 - get fragments with similar intramolecular distances ");
-		}
+		logger.debug("step 1 - get fragments with similar intramolecular distances ");
+
 		int k  = params.getDiagonalDistance();
 		int k2 = params.getDiagonalDistance2();
 		int fragmentLength = params.getFragmentLength();
@@ -476,7 +478,7 @@ public class StructurePairAligner {
 		}
 		int rows = ca1.length - fragmentLength + 1;
 		int cols = ca2.length - fragmentLength + 1;
-		//System.out.println("rows "  + rows + " " + cols +
+		//logger.debug("rows "  + rows + " " + cols +
 		//      " ca1 l " + ca1.length + " ca2 l " + ca2.length);
 		distanceMatrix = new Matrix(rows,cols,0.0);
 
@@ -514,13 +516,13 @@ public class StructurePairAligner {
 
 				if ( rdd < params.getFragmentMiniDistance()) {
 					FragmentPair f = new FragmentPair(fragmentLength,i,j);
-					//System.out.println("i " + i + " " + j );
+					//logger.debug("i " + i + " " + j );
 					try {
 
 						Atom[] catmp2 = AlignTools.getFragment(ca2, j, fragmentLength);
 						Atom  center2 = AlignTools.getCenter(ca2,j,fragmentLength);
 
-						//System.out.println("c1 : " + center1 + " c2: " + center2);
+						//logger.debug("c1 : " + center1 + " c2: " + center2);
 						f.setCenter1(center1);
 						f.setCenter2(center2);
 
@@ -544,7 +546,7 @@ public class StructurePairAligner {
 						fragments.add(f);
 
 					} catch (StructureException e){
-						e.printStackTrace();
+						logger.error("Exception: ", e);
 						break;
 					}
 				}
@@ -556,11 +558,9 @@ public class StructurePairAligner {
 		FragmentPair[] fp = (FragmentPair[]) fragments.toArray(new FragmentPair[fragments.size()]);
 		setFragmentPairs(fp);
 
-		if (  debug )
-			System.out.println( " got # fragment pairs: " + fp.length);
+		logger.debug(" got # fragment pairs: {}", fp.length);
 
-		if ( debug )
-			System.out.println("step 2 - join fragments");
+		logger.debug("step 2 - join fragments");
 
 		// step 2 combine them to possible models
 		FragmentJoiner joiner = new FragmentJoiner();
@@ -591,17 +591,15 @@ public class StructurePairAligner {
 
 		notifyJointFragments(frags);
 
-		if ( debug )
-			System.out.println(" number joint fragments:"+frags.length);
+		logger.debug(" number joint fragments: ", frags.length);
 		
-		if ( debug )
-			System.out.println("step 3 - refine alignments");
+		logger.debug("step 3 - refine alignments");
 
 		List<AlternativeAlignment> aas = new ArrayList<AlternativeAlignment>();
 		for ( int i = 0 ; i < frags.length;i++){
 			JointFragments f = frags[i];
 			AlternativeAlignment a = new AlternativeAlignment();
-			//System.out.println(f.getRms());
+			//logger.debug(f.getRms());
 			//a.setRms(f.getRms());
 			a.apairs_from_idxlst(f);
 			a.setAltAligNumber(i+1);
@@ -619,7 +617,7 @@ public class StructurePairAligner {
 
 				}
 			} catch (StructureException e){
-				e.printStackTrace();
+				logger.error("Exception: ", e);
 			}
 			a.calcScores(ca1,ca2);
 			// a.getRotationMatrix().print(3,3);
@@ -639,15 +637,12 @@ public class StructurePairAligner {
 			AlternativeAlignment a = alts[i];
 			aanbr++;
 			a.setAltAligNumber(aanbr);
-			//System.out.println(aanbr);
+			//logger.debug(aanbr);
 			//a.getRotationMatrix().print(3,3);
 		}
-		//System.out.println("calc done");
+		//logger.debug("calc done");
 
-		if (debug){
-		   long timeEnd = System.currentTimeMillis();
-		   System.out.println("total calculation time: "+ (timeEnd-timeStart) + " ms.");
-		}
+		logger.debug("total calculation time: {} ms.", (System.currentTimeMillis()-timeStart));
 	}
 
 	private void notifyStartingAlignment(String name1, Atom[] ca1, String name2, Atom[] ca2){
