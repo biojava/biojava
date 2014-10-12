@@ -28,7 +28,6 @@ package org.biojava3.core.sequence.template;
 import java.util.List;
 import java.util.Set;
 
-import org.biojava3.core.exceptions.CompoundNotFoundError;
 
 public interface CompoundSet<C extends Compound> {
 
@@ -52,11 +51,8 @@ public interface CompoundSet<C extends Compound> {
 	public String getStringForCompound(C compound);
 
 	public boolean compoundsEquivalent(C compoundOne, C compoundTwo);
-
-        @Deprecated
-	public void verifySequence(Sequence<C> sequence) throws CompoundNotFoundError;
-        
-        public boolean isValidSequence(Sequence<C> sequence);
+   
+    public boolean isValidSequence(Sequence<C> sequence);
 
 	public Set<C> getEquivalentCompounds(C compound);
 

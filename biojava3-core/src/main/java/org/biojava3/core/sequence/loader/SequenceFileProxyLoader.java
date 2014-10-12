@@ -28,6 +28,7 @@ package org.biojava3.core.sequence.loader;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -38,7 +39,6 @@ import org.biojava3.core.exceptions.CompoundNotFoundError;
 import org.biojava3.core.exceptions.FileAccessError;
 import org.biojava3.core.sequence.AccessionID;
 import org.biojava3.core.sequence.Strand;
-
 import org.biojava3.core.sequence.io.template.SequenceParserInterface;
 import org.biojava3.core.sequence.storage.SequenceAsStringHelper;
 import org.biojava3.core.sequence.template.CompoundSet;
@@ -103,7 +103,7 @@ public class SequenceFileProxyLoader<C extends Compound> implements ProxySequenc
             String sequence = sequenceParser.getSequence(br, sequenceLength);
             setContents(sequence);
             br.close(); // close file to prevent too many being open
-        } catch (Exception e) {
+        } catch (IOException e) {
             throw new FileAccessError("Error accessing " + file + " offset=" + sequenceStartIndex + " sequenceLength=" + sequenceLength + " " + e.toString());
         }
         return true;

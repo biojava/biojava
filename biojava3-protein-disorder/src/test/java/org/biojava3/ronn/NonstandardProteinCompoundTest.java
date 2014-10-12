@@ -41,7 +41,7 @@ public class NonstandardProteinCompoundTest  {
 		}
 	}
 	
-	public void testUniprot(String uniprotID) throws Exception{
+	private void testUniprot(String uniprotID) throws Exception{
 		
 		ProteinSequence seq = getUniprot(uniprotID);
 		
@@ -51,7 +51,7 @@ public class NonstandardProteinCompoundTest  {
 			System.out.println(compound.getShortName() + " " + compound.getLongName() + " " + compound.getDescription() + " | " + compoundSet.getEquivalentCompounds(compound) + " " + compound.getMolecularWeight() + " " + compound.getBase());
 		} 
 		*/
-		compoundSet.verifySequence(seq);
+		assertTrue(compoundSet.isValidSequence(seq));
 		
 		
 		

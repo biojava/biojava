@@ -30,7 +30,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.biojava3.core.exceptions.CompoundNotFoundError;
 import org.biojava3.core.sequence.template.CompoundSet;
 import org.biojava3.core.sequence.template.Sequence;
 
@@ -189,16 +188,6 @@ public class AminoAcidCompoundSet implements CompoundSet<AminoAcidCompound> {
         return aminoAcidCompoundCache.containsValue(compound);
     }
 
-    @Deprecated
-    // TODO throwing an error seems unnecessary, should this return a boolean instead? maybe rename to isValidSequence?
-    public void verifySequence(Sequence<AminoAcidCompound> sequence) throws CompoundNotFoundError {
-        for (AminoAcidCompound compound : sequence) {
-            if (!hasCompound(compound)) {
-                throw new CompoundNotFoundError("Compound (" + compound + ") not found in AminoAcidCompoundSet.");
-            }
-        }
-    }
-    
     @Override
     public boolean isValidSequence(Sequence<AminoAcidCompound> sequence) {
         for (AminoAcidCompound compound: sequence) {
