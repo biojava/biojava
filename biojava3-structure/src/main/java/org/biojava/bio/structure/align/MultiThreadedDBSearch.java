@@ -51,6 +51,8 @@ import org.biojava.bio.structure.domain.DomainProviderFactory;
 import org.biojava.bio.structure.domain.RemoteDomainProvider;
 import org.biojava.bio.structure.io.PDBFileReader;
 import org.biojava3.core.util.ConcurrencyTools;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /** Performs a multi threaded database search for an input protein structure
@@ -60,6 +62,8 @@ import org.biojava3.core.util.ConcurrencyTools;
  */
 
 public class MultiThreadedDBSearch {
+
+	private final static Logger logger = LoggerFactory.getLogger(MultiThreadedDBSearch.class);
 
 	AtomicBoolean interrupted  ;
 
@@ -99,7 +103,7 @@ public class MultiThreadedDBSearch {
 		String serverLocation = FarmJobParameters.DEFAULT_SERVER_URL;
 		if ( representatives == null){
 			SortedSet<String> repre = JFatCatClient.getRepresentatives(serverLocation,40);
-			System.out.println("got  " + repre.size() + " representatives for comparison");
+			logger.info("got {} representatives for comparison", repre.size());
 			representatives = repre;
 		}
 	}
@@ -206,7 +210,7 @@ public class MultiThreadedDBSearch {
 
 			outFileF = new File(outFile);
 			if ( ! outFileF.isDirectory()){
-				System.err.println( outFileF.getAbsolutePath() + " is not a directory, can't create result files in there... ");
+				logger.error("{} is not a directory, can't create result files in there...", outFileF.getAbsolutePath());
 				interrupt();
 				cleanup();
 			}
@@ -217,7 +221,7 @@ public class MultiThreadedDBSearch {
 
 			resultList = new File(outFileF,"results_" + name1 + ".out");
 
-			System.out.println("writing results to " + resultList.getAbsolutePath());
+			logger.info("writing results to {}", resultList.getAbsolutePath());
 
 
 
@@ -256,8 +260,7 @@ public class MultiThreadedDBSearch {
 
 			out.flush();
 		} catch (IOException e){
-			System.err.println("Error while loading representative structure " + name1);
-			e.printStackTrace();
+			logger.error("Error while loading representative structure {}", name1, e);
 			interrupt();
 			cleanup();
 			return;
@@ -276,14 +279,14 @@ public class MultiThreadedDBSearch {
 
 			if( domainSplit ) {
 				SortedSet<String> domainNames = domainProvider.getDomainNames(repre);
-				//System.out.println(repre +" got domains: " +domainNames);
+				//logger.debug(repre +" got domains: " +domainNames);
 				if( domainNames == null || domainNames.size()==0){
 					// no domains found, use whole chain.
 					submit(name1, repre, ca1, algorithm, outFileF, out, cache);
 					nrJobs++;
 					continue;
 				}
-				//System.out.println("got " + domainNames.size() + " for " + repre);
+				//logger.debug("got " + domainNames.size() + " for " + repre);
 				for( String domain : domainNames){
 					submit(name1, domain, ca1, algorithm, outFileF, out, cache);
 					nrJobs++;
@@ -297,18 +300,18 @@ public class MultiThreadedDBSearch {
 
 
 		ThreadPoolExecutor  pool = ConcurrencyTools.getThreadPool();
-		System.out.println(pool.getPoolSize());
+		logger.info("{}", pool.getPoolSize());
 
 		long startTime = System.currentTimeMillis();
 
 		try {
 			while ( pool.getCompletedTaskCount() < nrJobs-1  ) {
 				//long now = System.currentTimeMillis();
-				//System.out.println( pool.getCompletedTaskCount() + " " + (now-startTime)/1000 + " " + pool.getPoolSize() + " " + pool.getActiveCount()  + " " + pool.getTaskCount()  );
+				//logger.debug( pool.getCompletedTaskCount() + " " + (now-startTime)/1000 + " " + pool.getPoolSize() + " " + pool.getActiveCount()  + " " + pool.getTaskCount()  );
 				//				if ((now-startTime)/1000 > 60) {
 				//					
 				//					interrupt();
-				//					System.out.println("completed: " + pool.getCompletedTaskCount());
+				//					logger.debug("completed: " + pool.getCompletedTaskCount());
 				//				}
 
 				if ( interrupted.get())
@@ -320,7 +323,7 @@ public class MultiThreadedDBSearch {
 			out.close();
 		}
 		catch (Exception e){
-			e.printStackTrace();
+			logger.error("Exception: ", e);
 			interrupt();
 			cleanup();
 		}
@@ -330,23 +333,23 @@ public class MultiThreadedDBSearch {
 			remote.flushCache();
 		}
 		long now = System.currentTimeMillis();
-		System.out.println("Calculation took : " + (now-startTime)/1000 + " sec.");
-		System.out.println( pool.getCompletedTaskCount() + " "  + pool.getPoolSize() + " " + pool.getActiveCount()  + " " + pool.getTaskCount()  );
+		logger.info("Calculation took : {} sec.", (now-startTime)/1000);
+		logger.info("{} {} {} {}", pool.getCompletedTaskCount(), pool.getPoolSize(), pool.getActiveCount(), pool.getTaskCount());
 	}
 	
 	
 
 	private void checkLocalFiles() throws IOException {
 		
-		System.out.println("Checking local PDB installation in directory: " + cache.getPath());
+		logger.info("Checking local PDB installation in directory: {}", cache.getPath());
 		
 		File f = new File(cache.getPath());
 		if ( ! f.isDirectory()) {
-			System.err.println("The path " + f.getAbsolutePath() + " should point to a directory!");
+			logger.error("The path {} should point to a directory!", f.getAbsolutePath());
 		}
 		
 		if ( ! f.canWrite()) {
-			System.err.println("You do not have permission to write to " + f.getAbsolutePath() + ". There could be a problem if the PDB installation is not up-to-date with fetching missing PDB files.");
+			logger.error("You do not have permission to write to {}. There could be a problem if the PDB installation is not up-to-date with fetching missing PDB files.", f.getAbsolutePath());
 		}
 		
 		DomainProvider domainProvider = DomainProviderFactory.getDomainProvider();
@@ -360,14 +363,14 @@ public class MultiThreadedDBSearch {
 			
 			if( domainSplit ) {
 				SortedSet<String> domainNames = domainProvider.getDomainNames(repre);
-				//System.out.println(repre +" got domains: " +domainNames);
+				//logger.debug(repre +" got domains: " +domainNames);
 				if( domainNames == null || domainNames.size()==0){
 					// no domains found, use whole chain.
 					//submit(name1, repre, ca1, algorithm, outFileF, out, cache);
 					checkFile(repre);
 					continue;
 				}
-				//System.out.println("got " + domainNames.size() + " for " + repre);
+				//logger.debug("got " + domainNames.size() + " for " + repre);
 				for( String domain : domainNames){
 					//submit(name1, domain, ca1, algorithm, outFileF, out, cache);
 					checkFile(domain);
@@ -384,7 +387,7 @@ public class MultiThreadedDBSearch {
 			remoteP.flushCache();
 		}
 
-		System.out.println("done checking local files...");
+		logger.info("done checking local files...");
 		
 	}
 
@@ -411,7 +414,7 @@ public class MultiThreadedDBSearch {
 		try {
 			ali.setCa1(ca1);
 		} catch (Exception e){
-			e.printStackTrace();
+			logger.error("Exception: ", e);
 			ConcurrencyTools.shutdown();
 			return;
 		}
