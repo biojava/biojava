@@ -176,6 +176,9 @@ public class GenbankProxySequenceReader<C extends Compound> extends StringProxyS
     public GenericGenbankHeaderParser<AbstractSequence<C>, C> getHeaderParser() {
         return headerParser;
     }
+    public FeatureParser getFeatureParser() {
+        return genbankParser;
+    }
 
     @Override
     public LinkedHashMap<String, ArrayList<DBReferenceInfo>> getDatabaseReferences() throws Exception {
@@ -185,10 +188,6 @@ public class GenbankProxySequenceReader<C extends Compound> extends StringProxyS
     @Override
     public ArrayList<String> getKeyWords() throws Exception {
         return genbankParser.getKeyWords();
-    }
-
-    public FeatureParser<C> getFeatureParser() {
-        return genbankParser;
     }
 
     public static void main(String[] args) throws Throwable {
