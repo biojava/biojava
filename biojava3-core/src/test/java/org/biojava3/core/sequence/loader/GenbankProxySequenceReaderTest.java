@@ -61,12 +61,12 @@ public class GenbankProxySequenceReaderTest {
 
         Assert.assertNotNull("protein sequence is null", seq);
         genbankReader.getHeaderParser().parseHeader(genbankReader.getHeader(), seq);
-        genbankReader.getFeatureParser().parseFeatures(seq);
+        //genbankReader.getFeatureParser().parseFeatures(seq);
         
         Assert.assertTrue(seq.getDescription() != null);
 
         Assert.assertFalse(seq.getFeaturesKeyWord().getKeyWords().isEmpty());
-        Assert.assertFalse(seq.getFeaturesByType("source").get(0).getSource().isEmpty());
+        //Assert.assertFalse(seq.getFeaturesByType("source").get(0).getSource().isEmpty());
         
         //logger.info("taxonomy id: {}", seq.getTaxonomy().getID());
         //Assert.assertNotNull(seq.getTaxonomy().getID());
