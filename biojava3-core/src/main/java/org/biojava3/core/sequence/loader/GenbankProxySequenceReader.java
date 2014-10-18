@@ -35,6 +35,7 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 
 import org.biojava3.core.exceptions.CompoundNotFoundException;
@@ -45,6 +46,7 @@ import org.biojava3.core.sequence.compound.AminoAcidCompound;
 import org.biojava3.core.sequence.compound.AminoAcidCompoundSet;
 import org.biojava3.core.sequence.compound.DNACompoundSet;
 import org.biojava3.core.sequence.compound.NucleotideCompound;
+import org.biojava3.core.sequence.features.AbstractFeature;
 import org.biojava3.core.sequence.features.DBReferenceInfo;
 import org.biojava3.core.sequence.features.DatabaseReferenceInterface;
 import org.biojava3.core.sequence.features.FeatureParser;
@@ -70,6 +72,8 @@ public class GenbankProxySequenceReader<C extends Compound> extends StringProxyS
     private GenbankSequenceParser<AbstractSequence<C>, C> genbankParser;
     private GenericGenbankHeaderParser<AbstractSequence<C>, C> headerParser;
     private String header;
+    private HashMap<String, ArrayList<AbstractFeature>> features;
+    
 
     /**
      * 
@@ -93,6 +97,7 @@ public class GenbankProxySequenceReader<C extends Compound> extends StringProxyS
         setContents(genbankParser.getSequence(new BufferedReader(new InputStreamReader(inStream)), 0));
         headerParser = genbankParser.getSequenceHeaderParser();
         header = genbankParser.getHeader();
+        features = genbankParser.getFeatures();
 
         if (compoundSet.equals(AminoAcidCompoundSet.class)) {
             if (!genbankParser.getCompoundType().equals(compoundSet)) {
@@ -176,8 +181,8 @@ public class GenbankProxySequenceReader<C extends Compound> extends StringProxyS
     public GenericGenbankHeaderParser<AbstractSequence<C>, C> getHeaderParser() {
         return headerParser;
     }
-    public FeatureParser getFeatureParser() {
-        return genbankParser;
+    public HashMap<String, ArrayList<AbstractFeature>> getFeatures() {
+        return features;
     }
 
     @Override

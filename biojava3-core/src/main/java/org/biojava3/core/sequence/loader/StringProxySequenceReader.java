@@ -87,6 +87,11 @@ public class StringProxySequenceReader<C extends Compound> implements ProxySeque
             this.parsedCompounds.add(compound);
         }
     }
+    
+    public void setContents(String sequence, ArrayList features){
+        setContents(sequence);
+        
+    }
 
     @Override
 	public int getLength() {

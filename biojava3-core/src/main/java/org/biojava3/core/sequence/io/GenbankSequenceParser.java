@@ -53,13 +53,14 @@ import org.biojava3.core.sequence.features.Qualifier;
 import org.biojava3.core.sequence.features.TextFeature;
 import org.biojava3.core.sequence.io.template.SequenceParserInterface;
 import org.biojava3.core.sequence.location.SequenceLocation;
+import org.biojava3.core.sequence.location.template.AbstractLocation;
 import org.biojava3.core.sequence.template.AbstractSequence;
 import org.biojava3.core.sequence.template.Compound;
 import org.biojava3.core.sequence.template.CompoundSet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class GenbankSequenceParser<S extends AbstractSequence<C>, C extends Compound> implements SequenceParserInterface, FeatureParser<C> {
+public class GenbankSequenceParser<S extends AbstractSequence<C>, C extends Compound> implements SequenceParserInterface{
 
     private String seqData = null;
     private GenericGenbankHeaderParser<S, C> headerParser;
@@ -122,23 +123,23 @@ public class GenbankSequenceParser<S extends AbstractSequence<C>, C extends Comp
     protected static final Pattern singleLocationPattern = Pattern.compile("^\\s?(<?)(\\d+)(?:\\.\\.(>?)(\\d+)(>?))?");
     /**
      * Decodes a split pattern. Split patterns are a composition of multiple
-     * locationsString qualified by actions: join(location,location, ...
-     * location): The indicated elements should be joined (placed end-to-end) to
-     * form one contiguous sequence. order(location,location, ... location): The
-     * elements can be found in the specified order (5' to 3' direction),
-     * nothing is implied about their reasonableness
-     * bond(location,location...location): Found in protein files. These
-     * generally are used to describe disulfide bonds.
-     * complement(location,location...location): consider locations in their
-     * complement versus
-     *
-     * takes in input a comma splitted location string. The split must be done
-     * for outer level commas group(1) is the qualifier group(2) is the location
-     * string to getFeatures. In case of complex splits it will contain the
-     * nested expression
-     *
-     * Not really sure that they are not declared obsolete but they are still in
-     * several files.
+ locationsString qualified by actions: join(location,location, ...
+ location): The indicated elements should be joined (placed end-to-end) to
+ form one contiguous sequence. order(location,location, ... location): The
+ elements can be found in the specified order (5' to 3' direction),
+ nothing is implied about their reasonableness
+ bond(location,location...location): Found in protein files. These
+ generally are used to describe disulfide bonds.
+ complement(location,location...location): consider locations in their
+ complement versus
+
+ takes in input a comma splitted location string. The split must be done
+ for outer level commas group(1) is the qualifier group(2) is the location
+ string to parseLocationString. In case of complex splits it will contain the
+ nested expression
+
+ Not really sure that they are not declared obsolete but they are still in
+ several files.
      */
     //protected static final Pattern genbankSplitPattern = Pattern.compile("^\\s?(join|order|bond|complement|)\\(?([^\\)]+)\\)?");
     protected static final Pattern genbankSplitPattern = Pattern.compile("^\\s?(join|order|bond|complement|)\\(?(.+)\\)?");
@@ -311,7 +312,7 @@ public class GenbankSequenceParser<S extends AbstractSequence<C>, C extends Comp
                         // new feature!
                         featureGlobalStart = Integer.MAX_VALUE;
                         featureGlobalEnd = 1;
-                        ArrayList<AbstractFeature> ff = getFeatures(val, 1);
+                        ArrayList<AbstractFeature> ff = parseLocationString(val, 1);
 
                         if (ff.size() == 1) {
                             gbFeature = ff.get(0);
@@ -349,9 +350,9 @@ public class GenbankSequenceParser<S extends AbstractSequence<C>, C extends Comp
         return seqData;
     }
 
-    private ArrayList<AbstractFeature> getFeatures(String string, int versus) {
+    private ArrayList<AbstractLocation> parseLocationString(String string, int versus) {
         Matcher m;
-        ArrayList<AbstractFeature> boundedFeaturesCollection = new ArrayList();
+        ArrayList<AbstractLocation> boundedLocationsCollection = new ArrayList();
 
         //String[] tokens = string.split(locationSplitPattern);
         List<String> tokens = splitString(string);
@@ -367,17 +368,17 @@ public class GenbankSequenceParser<S extends AbstractSequence<C>, C extends Comp
             if (!splitQualifier.isEmpty()) {
                 //recursive case
                 int localVersus = splitQualifier.equalsIgnoreCase("complement") ? -1 : 1;
-                ArrayList subFeatures = getFeatures(splitString, versus * localVersus);
+                ArrayList subLocations = parseLocationString(splitString, versus * localVersus);
 
                 if (complexFeaturesAppendMode == complexFeaturesAppendEnum.FLATTEN) {
-                    boundedFeaturesCollection.addAll(subFeatures);
+                    boundedLocationsCollection.addAll(subLocations);
                 } else {
-                    if (subFeatures.size() == 1) {
-                        boundedFeaturesCollection.addAll(subFeatures);
+                    if (subLocations.size() == 1) {
+                        boundedLocationsCollection.addAll(subLocations);
                     } else {
-                        TextFeature motherFeature = new TextFeature(splitQualifier, "", "", "");
-                        motherFeature.setChildrenFeatures(subFeatures);
-                        boundedFeaturesCollection.add(motherFeature);
+                        TextFeature motherLocation = new TextFeature(splitQualifier, "", "", "");
+                        motherLocation.setChildrenFeatures(subLocations);
+                        boundedLocationsCollection.add(motherLocation);
                     }
                 }
             } else {
@@ -415,12 +416,12 @@ public class GenbankSequenceParser<S extends AbstractSequence<C>, C extends Comp
                     subFeature.addQualifier("partial_end", partialOn3end);
                 }
 
-                boundedFeaturesCollection.add(subFeature);
+                boundedLocationsCollection.add(subFeature);
 
             }
         }
 
-        return boundedFeaturesCollection;
+        return boundedLocationsCollection;
     }
     
     private List<String> splitString(String input) {
@@ -536,9 +537,6 @@ public class GenbankSequenceParser<S extends AbstractSequence<C>, C extends Comp
     public GenericGenbankHeaderParser<S, C> getSequenceHeaderParser() {
         return headerParser;
     }
-    public FeatureParser getSequenceFeatureParser() {
-        return this;
-    }
 
     public LinkedHashMap<String, ArrayList<DBReferenceInfo>> getDatabaseReferences() {
         return mapDB;
@@ -547,15 +545,14 @@ public class GenbankSequenceParser<S extends AbstractSequence<C>, C extends Comp
     public ArrayList<String> getKeyWords() {
         return new ArrayList<String>(featureCollection.keySet());
     }
-
-    @Override
-    public FeatureInterface<AbstractSequence<C>, C> getFeature(String keyword) {
-    // @Jacek, it should actually return this:
-    //return featureCollection.get(keyword);
-        throw new UnsupportedOperationException("Not supported yet."); 
+    
+    public ArrayList<AbstractFeature> getFeatures(String keyword) {
+        return featureCollection.get(keyword);
     }
-
-    @Override
+    public HashMap<String, ArrayList<AbstractFeature>> getFeatures() {
+        return featureCollection;
+    }
+    
     public void parseFeatures(AbstractSequence<C> sequence) {
         for (String k: featureCollection.keySet())
             for (AbstractFeature f: featureCollection.get(k))
