@@ -52,8 +52,12 @@ import org.biojava3.core.sequence.features.FeatureParser;
 import org.biojava3.core.sequence.features.Qualifier;
 import org.biojava3.core.sequence.features.TextFeature;
 import org.biojava3.core.sequence.io.template.SequenceParserInterface;
+import org.biojava3.core.sequence.location.InsdcLocations;
 import org.biojava3.core.sequence.location.SequenceLocation;
+import org.biojava3.core.sequence.location.SimpleLocation;
 import org.biojava3.core.sequence.location.template.AbstractLocation;
+import org.biojava3.core.sequence.location.template.Location;
+import org.biojava3.core.sequence.location.template.Point;
 import org.biojava3.core.sequence.template.AbstractSequence;
 import org.biojava3.core.sequence.template.Compound;
 import org.biojava3.core.sequence.template.CompoundSet;
@@ -166,8 +170,6 @@ public class GenbankSequenceParser<S extends AbstractSequence<C>, C extends Comp
     public void setComplexFeaturesAppendMode(complexFeaturesAppendEnum complexFeaturesAppendMode) {
         this.complexFeaturesAppendMode = complexFeaturesAppendMode;
     }
-    private final Qualifier partialOn5end = new Qualifier("partial on 5' end", "true");
-    private final Qualifier partialOn3end = new Qualifier("partial on 3' end", "true");
     //sections start at a line and continue till the first line afterwards with a
     //non-whitespace first character
     //we want to match any of the following as a new section within a section
@@ -311,19 +313,30 @@ public class GenbankSequenceParser<S extends AbstractSequence<C>, C extends Comp
                         // new feature!
                         featureGlobalStart = Integer.MAX_VALUE;
                         featureGlobalEnd = 1;
-                        ArrayList<AbstractFeature> ff = parseLocationString(val, 1);
-
-                        if (ff.size() == 1) {
-                            gbFeature = ff.get(0);
+                        gbFeature = new TextFeature(key, val, key, key);
+                        List<AbstractLocation> ll = parseLocationString(val, 1);
+                        SequenceLocation l;
+                        
+                        //this is the problem
+                        AbstractSequence referencedSequence = 
+                                new org.biojava3.core.sequence.DNASequence();
+                        if (ll.size() == 1) {
+                            l = (SequenceLocation)ll.get(0);
                         } else {
-                            gbFeature = new TextFeature(key, val, key, key);
-                            gbFeature.setChildrenFeatures(ff);
+                            l = new SequenceLocation(
+                                    featureGlobalStart, 
+                                    featureGlobalEnd,
+                                    referencedSequence,
+                                    Strand.UNDEFINED, 
+                                    false,
+                                    ll);
                         }
                         gbFeature.setType(key);
                         gbFeature.setSource(val);
                         gbFeature.setShortDescription(key);
                         gbFeature.setDescription(key);
-                        gbFeature.setLocation(new SequenceLocation(featureGlobalStart, featureGlobalEnd, null));
+                        
+                        gbFeature.setLocation(l);
 
                         if (!featureCollection.containsKey(key)) {
                             featureCollection.put(key, new ArrayList());
@@ -349,9 +362,9 @@ public class GenbankSequenceParser<S extends AbstractSequence<C>, C extends Comp
         return seqData;
     }
 
-    private ArrayList<AbstractLocation> parseLocationString(String string, int versus) {
+    private List<AbstractLocation> parseLocationString(String string, int versus) {
         Matcher m;
-        ArrayList<AbstractLocation> boundedLocationsCollection = new ArrayList();
+        List<AbstractLocation> boundedLocationsCollection = new ArrayList();
 
         //String[] tokens = string.split(locationSplitPattern);
         List<String> tokens = splitString(string);
@@ -367,18 +380,34 @@ public class GenbankSequenceParser<S extends AbstractSequence<C>, C extends Comp
             if (!splitQualifier.isEmpty()) {
                 //recursive case
                 int localVersus = splitQualifier.equalsIgnoreCase("complement") ? -1 : 1;
-                ArrayList subLocations = parseLocationString(splitString, versus * localVersus);
+                List subLocations = parseLocationString(splitString, versus * localVersus);
 
-                if (complexFeaturesAppendMode == complexFeaturesAppendEnum.FLATTEN) {
-                    boundedLocationsCollection.addAll(subLocations);
-                } else {
-                    if (subLocations.size() == 1) {
+                switch (complexFeaturesAppendMode) {
+                    case FLATTEN:
                         boundedLocationsCollection.addAll(subLocations);
-                    } else {
-                        TextFeature motherLocation = new TextFeature(splitQualifier, "", "", "");
-                        motherLocation.setChildrenFeatures(subLocations);
-                        boundedLocationsCollection.add(motherLocation);
-                    }
+                        break;
+                    case HIERARCHICAL:
+                        if (subLocations.size() == 1) {
+                            boundedLocationsCollection.addAll(subLocations);
+                        } else {
+                            Point min = Location.Tools.getMin(subLocations).getStart();
+                            Point max = Location.Tools.getMax(subLocations).getEnd();
+                            AbstractLocation motherLocation
+                                    = new SimpleLocation(min, max, Strand.UNDEFINED);
+
+                            if (splitQualifier.equalsIgnoreCase("join")) {
+                                motherLocation = new InsdcLocations.GroupLocation(subLocations);
+                            }
+                            if (splitQualifier.equalsIgnoreCase("order")) {
+                                motherLocation = new InsdcLocations.OrderLocation(subLocations);
+                            }
+                            if (splitQualifier.equalsIgnoreCase("bond")) {
+                                motherLocation = new InsdcLocations.BondLocation(subLocations);
+                            }
+
+                            boundedLocationsCollection.add(motherLocation);
+                        }
+                    break;
                 }
             } else {
                 //base case
@@ -406,16 +435,14 @@ public class GenbankSequenceParser<S extends AbstractSequence<C>, C extends Comp
                         s
                 );
 
-                TextFeature subFeature = new TextFeature("", "", "", "");
-                subFeature.setLocation(l);
                 if (m.group(1).equals("<")) {
-                    subFeature.addQualifier("partial_end", partialOn5end);
+                    l.setPartialOn5prime(true);
                 }
                 if (m.group(3) != null && (m.group(3).equals(">") || m.group(5).equals(">"))) {
-                    subFeature.addQualifier("partial_end", partialOn3end);
+                    l.setPartialOn3prime(true);
                 }
 
-                boundedLocationsCollection.add(subFeature);
+                boundedLocationsCollection.add(l);
 
             }
         }

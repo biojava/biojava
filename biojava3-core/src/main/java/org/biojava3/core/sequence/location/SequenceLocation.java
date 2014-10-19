@@ -30,9 +30,14 @@ import java.util.List;
 /**
  * A location in a sequence that keeps a reference to its parent sequence
  * @author Scooter Willis <willishf at gmail dot com>
+ * @author Paolo Pavan
  */
 public class SequenceLocation<S extends AbstractSequence<C>, C extends Compound> extends SimpleLocation {
-private S sequence;
+    private S sequence;
+
+    private boolean partialOn5prime = false;
+    private boolean partialOn3prime = false;
+    
     public SequenceLocation(int start, int end,S sequence){
         super(start,end);
         this.sequence = sequence;
@@ -58,6 +63,27 @@ private S sequence;
      */
     public S getSequence() {
         return sequence;
+    }
+    
+    
+    public boolean isPartialOn5prime() {
+        return partialOn5prime;
+    }
+
+    public void setPartialOn5prime(boolean partialOn5prime) {
+        this.partialOn5prime = partialOn5prime;
+    }
+
+    public boolean isPartialOn3prime() {
+        return partialOn3prime;
+    }
+
+    public void setPartialOn3prime(boolean partialOn3prime) {
+        this.partialOn3prime = partialOn3prime;
+    }
+    
+    public boolean isPartial() {
+        return partialOn5prime || partialOn3prime;
     }
 
 
