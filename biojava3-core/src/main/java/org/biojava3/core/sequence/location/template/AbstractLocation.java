@@ -59,7 +59,7 @@ public abstract class AbstractLocation implements Location {
     private boolean circular;
     private boolean betweenCompounds;
     private AccessionID accession;
-
+   
 
 
     protected AbstractLocation() {
