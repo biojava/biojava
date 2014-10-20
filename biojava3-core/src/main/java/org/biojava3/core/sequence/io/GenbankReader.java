@@ -139,8 +139,10 @@ public class GenbankReader<S extends AbstractSequence<C>, C extends Compound> {
         genbankParser.getSequenceHeaderParser().parseHeader(genbankParser.getHeader(), sequence);
         //genbankParser.getSequenceFeatureParser().parseFeatures(sequence);
         for (String k: genbankParser.getFeatures().keySet()){
-            for (AbstractFeature f: genbankParser.getFeatures(k))
+            for (AbstractFeature f: genbankParser.getFeatures(k)){
+                f.getLocations().setSequence(sequence);
                 sequence.addFeature(f);
+            }
         }
         
     	sequences.put(sequence.getAccession().getID(), sequence);
