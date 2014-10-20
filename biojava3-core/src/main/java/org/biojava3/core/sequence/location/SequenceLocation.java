@@ -65,6 +65,10 @@ public class SequenceLocation<S extends AbstractSequence<C>, C extends Compound>
         return sequence;
     }
     
+    public void setSequence(S sequence) {
+        this.sequence = sequence;
+    }
+    
     
     public boolean isPartialOn5prime() {
         return partialOn5prime;
