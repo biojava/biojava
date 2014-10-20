@@ -32,8 +32,10 @@ import org.biojava3.core.exceptions.ParserException;
 import org.biojava3.core.sequence.AccessionID;
 import org.biojava3.core.sequence.DataSource;
 import org.biojava3.core.sequence.Strand;
+import org.biojava3.core.sequence.location.template.AbstractLocation;
 import org.biojava3.core.sequence.location.template.Location;
 import org.biojava3.core.sequence.location.template.Point;
+import org.biojava3.core.sequence.template.AbstractSequence;
 
 /**
  * Parser for working with INSDC style locations. This class supports the
@@ -41,10 +43,67 @@ import org.biojava3.core.sequence.location.template.Point;
  *
  * @author ayates
  * @author jgrzebyta
+ * @author Paolo Pavan
  */
 public class InsdcParser {
 
     private final DataSource dataSource;
+    
+        /**
+     * parse a location. if group(1) is null than the feature is on the positive
+     * strand, group(2) start position, group(3) end position.
+     */
+    protected static final Pattern singleLocationPattern = Pattern.compile("^\\s?(<?)(\\d+)(?:\\.\\.(>?)(\\d+)(>?))?");
+    /**
+     * Decodes a split pattern. Split patterns are a composition of multiple
+     * locationsString qualified by actions: join(location,location, ...
+     * location): The indicated elements should be joined (placed end-to-end) to
+     * form one contiguous sequence. order(location,location, ... location): The
+     * elements can be found in the specified order (5' to 3' direction),
+     * nothing is implied about their reasonableness
+     * bond(location,location...location): Found in protein files. These
+     * generally are used to describe disulfide bonds.
+     * complement(location,location...location): consider locations in their
+     * complement versus
+     *
+     * takes in input a comma splitted location string. The split must be done
+     * for outer level commas group(1) is the qualifier group(2) is the location
+     * string to getFeatures. In case of complex splits it will contain the
+     * nested expression
+     *
+     * Not really sure that they are not declared obsolete but they are still in
+     * several files.
+     */
+    //protected static final Pattern genbankSplitPattern = Pattern.compile("^\\s?(join|order|bond|complement|)\\(?([^\\)]+)\\)?");
+    protected static final Pattern genbankSplitPattern = Pattern.compile("^\\s?(join|order|bond|complement|)\\(?(.+)\\)?");
+    /**
+     * designed to recursively split a location string in tokens. Valid tokens
+     * are those divided by coma that are not inside a bracket. I. e. split on
+     * the comma only if that comma has zero, or an even number of quotes ahead
+     * of it.
+     */
+    protected static final String locationSplitPattern = ",(?=([^\\(|\\)]+\\([^\\(|\\)]+\\))[^\\(|\\)]+)";
+    /**
+     * these variables are used to compute the global start and end of complex
+     * features
+     */
+    protected Integer featureGlobalStart, featureGlobalEnd;
+    
+    enum complexFeaturesAppendEnum {
+
+        FLATTEN, HIERARCHICAL;
+    }
+    /**
+     * define the mode in which complex features should be appended in FLATTEN
+     * mode their will be appended to a single feature in HIERARCHICAL mode, the
+     * single mother feature will have a tree of features that will reflect the
+     * construction in genbank file
+     */
+    private complexFeaturesAppendEnum complexFeaturesAppendMode = complexFeaturesAppendEnum.FLATTEN;
+
+    public void setComplexFeaturesAppendMode(complexFeaturesAppendEnum complexFeaturesAppendMode) {
+        this.complexFeaturesAppendMode = complexFeaturesAppendMode;
+    }
 
     public InsdcParser() {
         this(DataSource.ENA);
@@ -58,18 +117,7 @@ public class InsdcParser {
         return dataSource;
     }
 
-    /**
-     * Parses a location of the form Accession:1
-     */
-    private static final Pattern SINGLE_LOCATION = Pattern.compile(
-            "\\A ([A-Za-z.0-9_]*?) :? ([<>]?) (\\d+) \\Z", Pattern.COMMENTS);
-
-    /**
-     * Parses a location of the form Accession:1..4 (also supports the ^
-     * format and undefined locations)
-     */
-    private static final Pattern RANGE_LOCATION = Pattern.compile(
-            "\\A ([A-Za-z.0-9_]*?) :? ([<>]?) (\\d+) ([.^]+) ([<>]?) (\\d+) \\Z", Pattern.COMMENTS);
+    
 
     /**
      * Main method for parsing a location from a String instance
@@ -79,13 +127,26 @@ public class InsdcParser {
      * @throws ParserException thrown in the event of any error during parsing
      */
     public Location parse(String locationString) throws ParserException {
-        try {
-            return parse(new StringReader(locationString));
-        }
-        catch(IOException e) {
-            throw new ParserException("Cannot parse the given location '"+
-                    locationString+"'", e);
-        }
+        featureGlobalStart = Integer.MAX_VALUE;
+        featureGlobalEnd = 1;
+        
+        SequenceLocation l;
+        List<AbstractLocation> ll = parseLocationString(locationString, 1);
+        //this is the problem
+        AbstractSequence referencedSequence = 
+                new org.biojava3.core.sequence.DNASequence();
+        if (ll.size() == 1) {
+            l = (SequenceLocation)ll.get(0);
+        } else {
+            l = new SequenceLocation(
+                    featureGlobalStart, 
+                    featureGlobalEnd,
+                    referencedSequence,
+                    Strand.UNDEFINED, 
+                    false,
+                    ll);
+        }  
+        return l;
     }
 
     /**
@@ -97,125 +158,139 @@ public class InsdcParser {
      * @throws IOException Thrown with any reader error
      * @throws ParserException Thrown with any error with parsing locations
      */
-    public Location parse(Reader reader) throws IOException, ParserException {
-        List<Location> out = parse(reader, Strand.POSITIVE);
-        if(out.size() > 1) {
-            throw new ParserException("Too many locations parsed "+out);
-        }
-        else if(out.isEmpty()) {
-            throw new ParserException("No locations parsed");
-        }
-        return out.get(0);
+    public List<AbstractLocation> parse(Reader reader) throws IOException, ParserException {
+        // use parse(String s) instead!
+        return null;
     }
+    
+    private List<AbstractLocation> parseLocationString(String string, int versus) throws ParserException {
+        Matcher m;
+        List<AbstractLocation> boundedLocationsCollection = new ArrayList();
 
-    protected List<Location> parse(Reader reader, Strand strand) throws IOException, ParserException {
-        StringBuilder sb = new StringBuilder();
-        String typeOfJoin = null;
-        List<Location> locationList = new ArrayList<Location>();
+        //String[] tokens = string.split(locationSplitPattern);
+        List<String> tokens = splitString(string);
+        for (String t : tokens) {
+            m = genbankSplitPattern.matcher(t);
+            if (!m.find()) {
+                throw new ParserException("Cannot interpret split pattern " + t
+                        + "\nin location string:" + string);
+            }
+            String splitQualifier = m.group(1);
+            String splitString = m.group(2);
 
-        int i = -1;
-        while( (i = reader.read()) != -1 ) {
-            char c = (char)i;
-            switch(c) {
-                case '(':
-                    if(isComplement(sb)) {
-                        locationList.addAll(parse(reader, strand.getReverse()));
-                    }
-                    else {
-                        typeOfJoin = sb.toString();
-                        List<Location> subs = parse(reader, strand);
-                        locationList.add(LocationHelper.location(subs, typeOfJoin));
-                    }
-                    clearStringBuilder(sb);
+            if (!splitQualifier.isEmpty()) {
+                //recursive case
+                int localVersus = splitQualifier.equalsIgnoreCase("complement") ? -1 : 1;
+                List subLocations = parseLocationString(splitString, versus * localVersus);
+
+                switch (complexFeaturesAppendMode) {
+                    case FLATTEN:
+                        boundedLocationsCollection.addAll(subLocations);
+                        break;
+                    case HIERARCHICAL:
+                        if (subLocations.size() == 1) {
+                            boundedLocationsCollection.addAll(subLocations);
+                        } else {
+                            Point min = Location.Tools.getMin(subLocations).getStart();
+                            Point max = Location.Tools.getMax(subLocations).getEnd();
+                            AbstractLocation motherLocation
+                                    = new SimpleLocation(min, max, Strand.UNDEFINED);
+
+                            if (splitQualifier.equalsIgnoreCase("join")) {
+                                motherLocation = new InsdcLocations.GroupLocation(subLocations);
+                            }
+                            if (splitQualifier.equalsIgnoreCase("order")) {
+                                motherLocation = new InsdcLocations.OrderLocation(subLocations);
+                            }
+                            if (splitQualifier.equalsIgnoreCase("bond")) {
+                                motherLocation = new InsdcLocations.BondLocation(subLocations);
+                            }
+
+                            boundedLocationsCollection.add(motherLocation);
+                        }
                     break;
-                case ',':
-                case ')':
-                    if(sb.length() > 0) {
-                        locationList.add(parseLocation(sb.toString(), strand));
-                    }
-                    if( c == ')') {
-                        return locationList;
-                    }
-                    clearStringBuilder(sb);
-                    break;
-                default:
-                    if(!Character.isWhitespace(c)) {
-                        sb.append(c);
-                    }
-                    break;
+                }
+            } else {
+                //base case
+                m = singleLocationPattern.matcher(splitString);
+                if (!m.find()) {
+                    throw new ParserException("Cannot interpret location pattern " + splitString
+                            + "\nin location string:" + string);
+                }
+
+                Strand s = versus == 1 ? Strand.POSITIVE : Strand.NEGATIVE;
+                int start = new Integer(m.group(2));
+                int end = m.group(4) == null ? start : new Integer(m.group(4));
+
+                if (featureGlobalStart > start) {
+                    featureGlobalStart = start;
+                }
+                if (featureGlobalEnd < end) {
+                    featureGlobalEnd = end;
+                }
+
+                SequenceLocation l = new SequenceLocation(
+                        start,
+                        end,
+                        new org.biojava3.core.sequence.DNASequence(),
+                        s
+                );
+
+                if (m.group(1).equals("<")) {
+                    l.setPartialOn5prime(true);
+                }
+                if (m.group(3) != null && (m.group(3).equals(">") || m.group(5).equals(">"))) {
+                    l.setPartialOn3prime(true);
+                }
+
+                boundedLocationsCollection.add(l);
+
             }
         }
 
-        if(sb.length() != 0) {
-             locationList.add(parseLocation(sb.toString(), strand));
-             clearStringBuilder(sb);
-        }
-
-        return locationList;
+        return boundedLocationsCollection;
     }
-
-    private boolean isComplement(StringBuilder sb) {
-        return sb.toString().equals("complement");
-    }
-
-    private void clearStringBuilder(StringBuilder sb) {
-        sb.delete(0, sb.length());
-    }
-
-    protected Location parseLocation(String location, Strand strand) {
-        Matcher singleLoc = SINGLE_LOCATION.matcher(location);
-        Matcher rangeLoc = RANGE_LOCATION.matcher(location);
-        if(rangeLoc.matches()) {
-            return parseRange(rangeLoc, strand);
+    
+    
+    private List<String> splitString(String input) {
+        List<String> result = new ArrayList<String>();
+        int start = 0;
+        int openedParenthesis = 0;
+        for (int current = 0; current < input.length(); current++) {
+            if (input.charAt(current) == '(') {
+                openedParenthesis++;
+            }
+            if (input.charAt(current) == ')') {
+                openedParenthesis--;
+            }
+            boolean atLastChar = (current == input.length() - 1);
+            if (atLastChar) {
+                result.add(input.substring(start));
+            } else if (input.charAt(current) == ',' && openedParenthesis == 0) {
+                result.add(input.substring(start, current));
+                start = current + 1;
+            }
         }
-        else if(singleLoc.matches()) {
-            return parseSingle(singleLoc, strand);
-        }
-        else {
-            throw new ParserException("Location string does not match "
-                    + "a single or range location");
-        }
+        return result;
     }
-
-    protected Location parseSingle(Matcher matcher, Strand strand) {
-        String accession = matcher.group(1);
-        String uncertain = matcher.group(2);
-        String location = matcher.group(3);
-        Point p = generatePoint(location, uncertain);
-        if (accession == null || "".equals(accession)) {
-            return new SimpleLocation(p, p, strand);
+    public static void main(String args[]){
+        String[] testStrings = {
+            "43..129",
+            "bond(55,110)",
+            "bond(34,35),join(56..80),complement(45,73)",
+            "bond(complement(30,40),70..80),bond(34,35),join(56,80),complement(45..56)",
+            "join(join(complement(30,40),complement(70..80)),bond(34,35),join(56,80),complement(45..56))",
+            "complement(join(complement(2000..4000),complement(70..80)),bond(34,35),join(56,80),complement(45..56))",
+            
+        };
+        InsdcParser p = new InsdcParser();
+        p.setComplexFeaturesAppendMode(complexFeaturesAppendEnum.HIERARCHICAL);
+        
+        for (String s: testStrings){
+            Location l = p.parse(s);
+            System.out.println(l.toString());
         }
-        else {
-            return new SimpleLocation(p, p, strand, getAccession(accession));
-        }
+        
     }
-
-    protected Location parseRange(Matcher matcher, Strand strand) {
-        String accession = matcher.group(1);
-        String type = matcher.group(4);
-        Point start = generatePoint(
-                matcher.group(3),
-                matcher.group(2));
-        Point end = generatePoint(
-                matcher.group(6),
-                matcher.group(5));
-        boolean betweenBases = "^".equals(type);
-        if (accession == null || "".equals(accession)) {
-            return new SimpleLocation(start, end, strand, false, betweenBases);
-        }
-        else {
-            return new SimpleLocation(start, end, strand, betweenBases, getAccession(accession));
-        }
-    }
-
-    protected Point generatePoint(String locationString, String uncertainString) {
-        int location = Integer.valueOf(locationString);
-        boolean unknown = false;
-        boolean uncertain = (!"".equals(uncertainString));
-        return new SimplePoint(location, unknown, uncertain);
-    }
-
-    protected AccessionID getAccession(String accession) {
-        return new AccessionID(accession, getDataSource());
-    }
+    
 }
