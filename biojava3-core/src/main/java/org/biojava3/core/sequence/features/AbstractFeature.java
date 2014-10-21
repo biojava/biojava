@@ -28,6 +28,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.biojava3.core.sequence.location.SequenceLocation;
+import org.biojava3.core.sequence.location.template.AbstractLocation;
 import org.biojava3.core.sequence.template.AbstractSequence;
 import org.biojava3.core.sequence.template.Compound;
 
@@ -41,7 +42,7 @@ public abstract class AbstractFeature<S extends AbstractSequence<C>, C extends C
         implements FeatureInterface<S, C> {
     List<FeatureInterface<S, C>> childrenFeatures = new ArrayList<FeatureInterface<S, C>>();
     FeatureInterface<S, C> parentFeature;
-    SequenceLocation<S, C> sequenceLocation;
+    AbstractLocation sequenceLocation;
     String type = "";
     String source = "";
     private String description = "";
@@ -62,23 +63,23 @@ public abstract class AbstractFeature<S extends AbstractSequence<C>, C extends C
     /**
      * A feature could be a single sequence position like a mutation or a post translational modification of an amino acid.
      * It could also be the docking interface of N number of amino acids on the surface. The location wold then be a collection
-     * of sequence positions instead of a single sequence position or the begin and end of a sequence seqment.
+     * of sequence positions instead of a single sequence position or the begin and end of a sequence segment.
      * @return
      */
 
     @Override
-    public SequenceLocation<S, C> getLocations() {
+    public AbstractLocation getLocations() {
         return sequenceLocation;
     }
 
     /**
      *  A feature could be a single sequence position like a mutation or a post translational modification of an amino acid.
      * It could also be the docking interface of N number of amino acids on the surface. The location wold then be a collection
-     * of sequence positions instead of a single sequence position or the begin and end of a sequence seqment.
+     * of sequence positions instead of a single sequence position or the begin and end of a sequence segment.
      * @param loc
      */
     @Override
-    public void setLocation(SequenceLocation<S, C> loc) {
+    public void setLocation(AbstractLocation loc) {
         sequenceLocation = loc;
     }
 

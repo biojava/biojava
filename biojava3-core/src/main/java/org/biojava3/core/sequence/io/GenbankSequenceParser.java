@@ -263,9 +263,9 @@ public class GenbankSequenceParser<S extends AbstractSequence<C>, C extends Comp
                     } else {
                         // new feature!
                         gbFeature = new TextFeature(key, val, key, key);
-                        SequenceLocation l = 
-                                (SequenceLocation)locationParser.parse(val);
-                        gbFeature.setLocation(l);
+                        Location l = 
+                                locationParser.parse(val);
+                        gbFeature.setLocation((AbstractLocation)l);
 
                         if (!featureCollection.containsKey(key)) {
                             featureCollection.put(key, new ArrayList());
@@ -334,12 +334,12 @@ public class GenbankSequenceParser<S extends AbstractSequence<C>, C extends Comp
                             section.add(new String[]{currKey,
                                 currVal.toString()});
                         }
-						// key = group(2) or group(4) or group(6) - whichever is
+                        // key = group(2) or group(4) or group(6) - whichever is
                         // not null
                         currKey = m.group(2) == null ? (m.group(4) == null ? m
                                 .group(6) : m.group(4)) : m.group(2);
                         currVal = new StringBuffer();
-						// val = group(3) if group(2) not null, group(5) if
+			// val = group(3) if group(2) not null, group(5) if
                         // group(4) not null, "" otherwise, trimmed
                         currVal.append((m.group(2) == null ? (m.group(4) == null ? ""
                                 : m.group(5))

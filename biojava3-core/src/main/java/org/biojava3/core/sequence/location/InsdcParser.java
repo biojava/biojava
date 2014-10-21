@@ -36,6 +36,7 @@ import org.biojava3.core.sequence.location.template.AbstractLocation;
 import org.biojava3.core.sequence.location.template.Location;
 import org.biojava3.core.sequence.location.template.Point;
 import org.biojava3.core.sequence.template.AbstractSequence;
+import org.biojava3.core.sequence.template.Compound;
 
 /**
  * Parser for working with INSDC style locations. This class supports the
@@ -45,7 +46,7 @@ import org.biojava3.core.sequence.template.AbstractSequence;
  * @author jgrzebyta
  * @author Paolo Pavan
  */
-public class InsdcParser {
+public class InsdcParser <S extends AbstractSequence<C>, C extends Compound>{
 
     private final DataSource dataSource;
     
@@ -89,6 +90,9 @@ public class InsdcParser {
      */
     protected Integer featureGlobalStart, featureGlobalEnd;
     
+    //private S referenceSequence = new org.biojava3.core.sequence.DNASequence();
+    private AbstractSequence referenceSequence = new org.biojava3.core.sequence.DNASequence();
+    
     enum complexFeaturesAppendEnum {
 
         FLATTEN, HIERARCHICAL;
@@ -130,20 +134,16 @@ public class InsdcParser {
         featureGlobalStart = Integer.MAX_VALUE;
         featureGlobalEnd = 1;
         
-        SequenceLocation l;
-        List<AbstractLocation> ll = parseLocationString(locationString, 1);
-        //this is the problem
-        AbstractSequence referencedSequence = 
-                new org.biojava3.core.sequence.DNASequence();
+        Location l;
+        List<Location> ll = parseLocationString(locationString, 1);
+        
         if (ll.size() == 1) {
-            l = (SequenceLocation)ll.get(0);
+            l = ll.get(0);
         } else {
-            l = new SequenceLocation(
+            l = new SimpleLocation(
                     featureGlobalStart, 
                     featureGlobalEnd,
-                    referencedSequence,
-                    Strand.UNDEFINED, 
-                    false,
+                    Strand.UNDEFINED,
                     ll);
         }  
         return l;
@@ -163,9 +163,9 @@ public class InsdcParser {
         return null;
     }
     
-    private List<AbstractLocation> parseLocationString(String string, int versus) throws ParserException {
+    private List<Location> parseLocationString(String string, int versus) throws ParserException {
         Matcher m;
-        List<AbstractLocation> boundedLocationsCollection = new ArrayList();
+        List<Location> boundedLocationsCollection = new ArrayList();
 
         //String[] tokens = string.split(locationSplitPattern);
         List<String> tokens = splitString(string);
@@ -194,7 +194,12 @@ public class InsdcParser {
                             Point min = Location.Tools.getMin(subLocations).getStart();
                             Point max = Location.Tools.getMax(subLocations).getEnd();
                             AbstractLocation motherLocation
-                                    = new SimpleLocation(min, max, Strand.UNDEFINED);
+                                    = new SequenceLocation(
+                                            min, 
+                                            max, 
+                                            referenceSequence, 
+                                            Strand.UNDEFINED
+                                    );
 
                             if (splitQualifier.equalsIgnoreCase("join")) {
                                 motherLocation = new InsdcLocations.GroupLocation(subLocations);
@@ -232,7 +237,7 @@ public class InsdcParser {
                 SequenceLocation l = new SequenceLocation(
                         start,
                         end,
-                        new org.biojava3.core.sequence.DNASequence(),
+                        referenceSequence,
                         s
                 );
 
@@ -278,7 +283,7 @@ public class InsdcParser {
             "43..129",
             "bond(55,110)",
             "bond(34,35),join(56..80),complement(45,73)",
-            "bond(complement(30,40),70..80),bond(34,35),join(56,80),complement(45..56)",
+            "order(complement(30,40),70..80),bond(34,35),join(56,80),complement(45..56)",
             "join(join(complement(30,40),complement(70..80)),bond(34,35),join(56,80),complement(45..56))",
             "complement(join(complement(2000..4000),complement(70..80)),bond(34,35),join(56,80),complement(45..56))",
             
