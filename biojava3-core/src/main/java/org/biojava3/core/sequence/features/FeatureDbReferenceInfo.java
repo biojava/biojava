@@ -30,6 +30,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.biojava3.core.sequence.location.SequenceLocation;
+import org.biojava3.core.sequence.location.template.AbstractLocation;
 import org.biojava3.core.sequence.template.AbstractSequence;
 import org.biojava3.core.sequence.template.Compound;
 
@@ -37,12 +38,13 @@ import org.biojava3.core.sequence.template.Compound;
  * It is {@link DBReferenceInfo} which implements {@link FeatureInterface}. It allows to keep a dbReferenceInfo as a feature.
  * 
  * @author Jacek Grzebyta
+ * @author Paolo Pavan
  * @param <S>
  * @param <C>
  */
 public class FeatureDbReferenceInfo<S extends AbstractSequence<C>, C extends Compound> extends DBReferenceInfo implements FeatureInterface<S,C> {
     
-    private SequenceLocation<S,C> location;
+    private AbstractLocation location;
     private FeatureInterface<S,C> parentFeature;
     private List<FeatureInterface<S, C>> childrenFeatures = new ArrayList<FeatureInterface<S, C>>();
     private String description = "";
@@ -75,13 +77,13 @@ public class FeatureDbReferenceInfo<S extends AbstractSequence<C>, C extends Com
         this.description = description;
     }
 
-	@Override
-    public SequenceLocation<S, C> getLocations() {
+    @Override
+    public AbstractLocation getLocations() {
         return location;
     }
 
     @Override
-    public void setLocation(SequenceLocation<S, C> loc) {
+    public void setLocation(AbstractLocation loc) {
         location = loc;
     }
 
