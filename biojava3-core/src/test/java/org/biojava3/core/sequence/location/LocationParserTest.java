@@ -74,6 +74,9 @@ public class LocationParserTest {
 
     public void assertInsdcLoc(String stringLoc, Location expected) {
         Location actual = PARSER.parse(stringLoc);
+        //should tests be designed for both modes?
+        //we should find an agreement on the final location tree. Now leaves are SequenceLocations and nodes are InsdcLocations
+        //PARSER.setComplexFeaturesAppendMode(InsdcParser.complexFeaturesAppendEnum.HIERARCHICAL);
         Assert.assertEquals("Asserting locations are the same", expected, actual);
     }
 }

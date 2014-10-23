@@ -54,7 +54,7 @@ public class InsdcParser <S extends AbstractSequence<C>, C extends Compound>{
      * parse a location. if group(1) is null than the feature is on the positive
      * strand, group(2) start position, group(3) end position.
      */
-    protected static final Pattern singleLocationPattern = Pattern.compile("^\\s?(<?)(\\d+)(?:\\.\\.(>?)(\\d+)(>?))?");
+    protected static final Pattern singleLocationPattern = Pattern.compile("(?:[A-Z]([A-Za-z\\.0-9_]*?):)?(<?)(\\d+)(?:\\.\\.(>?)(\\d+)(>?))?");
     /**
      * Decodes a split pattern. Split patterns are a composition of multiple
      * locationsString qualified by actions: join(location,location, ...
@@ -223,9 +223,10 @@ public class InsdcParser <S extends AbstractSequence<C>, C extends Compound>{
                             + "\nin location string:" + string);
                 }
 
+                String accession = m.group(1);
                 Strand s = versus == 1 ? Strand.POSITIVE : Strand.NEGATIVE;
-                int start = new Integer(m.group(2));
-                int end = m.group(4) == null ? start : new Integer(m.group(4));
+                int start = new Integer(m.group(3));
+                int end = m.group(5) == null ? start : new Integer(m.group(5));
 
                 if (featureGlobalStart > start) {
                     featureGlobalStart = start;
@@ -241,12 +242,14 @@ public class InsdcParser <S extends AbstractSequence<C>, C extends Compound>{
                         s
                 );
 
-                if (m.group(1).equals("<")) {
+                if (m.group(2).equals("<")) {
                     l.setPartialOn5prime(true);
                 }
-                if (m.group(3) != null && (m.group(3).equals(">") || m.group(5).equals(">"))) {
+                if (m.group(4) != null && (m.group(4).equals(">") || m.group(6).equals(">"))) {
                     l.setPartialOn3prime(true);
                 }
+                
+                if (!(accession == null || "".equals(accession))) l.setAccession(new AccessionID(accession));
 
                 boundedLocationsCollection.add(l);
 
@@ -280,6 +283,8 @@ public class InsdcParser <S extends AbstractSequence<C>, C extends Compound>{
     }
     public static void main(String args[]){
         String[] testStrings = {
+            "J00194.1:100..202",
+            "A00001.5:34..45",
             "43..129",
             "bond(55,110)",
             "bond(34,35),join(56..80),complement(45,73)",

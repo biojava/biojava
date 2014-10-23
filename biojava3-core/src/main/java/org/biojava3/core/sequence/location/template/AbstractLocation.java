@@ -46,6 +46,7 @@ import org.biojava3.core.util.Hashcoder;
  * features about a location such as the start, end and strand
  *
  * @author ayates
+ * @author Paolo Pavan
  */
 public abstract class AbstractLocation implements Location {
 
@@ -352,11 +353,11 @@ public abstract class AbstractLocation implements Location {
         this.betweenCompounds = betweenCompounds;
     }
 
-    protected void setSubLocations(List<Location> subLocations) {
+    public void setSubLocations(List<Location> subLocations) {
         this.subLocations = subLocations;
     }
 
-    protected void setAccession(AccessionID accession) {
+    public void setAccession(AccessionID accession) {
         this.accession = accession;
     }
 }
