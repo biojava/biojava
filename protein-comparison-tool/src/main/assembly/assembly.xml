@@ -7,56 +7,45 @@
 		<format>tar.gz</format>
 	</formats>
 
-<!-- 	<moduleSets>
-	
-		<moduleSet>
-		<useAllReactorProjects>true</useAllReactorProjects>	 
-			<includes>
-				<include>${groupId}:biojava3-core</include>
-				<include>${groupId}:biojava3-alignment</include>
-				<include>${groupId}:biojava3-structure</include>
-				<include>${groupId}:biojava3-structure-gui</include>				
-			</includes>
-			<binaries>
-				<outputDirectory>modules/${artifactId}</outputDirectory>
-				<outputDirectory>./modules/</outputDirectory>
-				<unpack>false</unpack>
-				<includeDependencies>true</includeDependencies>
-				   <dependencySets>
-                    <dependencySet>
-                        <unpack>false</unpack>
-                        <scope>compile</scope>
-                        
-                    </dependencySet>
-                </dependencySets>
-			</binaries>
-			  
-		</moduleSet>
-	</moduleSets> -->
 	<fileSets>
 		<fileSet>
 			<directory>${project.basedir}/src/main/assembly/</directory>
 			<outputDirectory>.</outputDirectory>
 			<includes>
-				<include>*.sh</include>
 				<include>db.out</include>
 				<include>example.lst</include>
 				<include>LICENSE</include>
 			</includes>
 		</fileSet>
+		<fileSet>
+			<directory>${project.build.directory}</directory>
+			<outputDirectory>.</outputDirectory>
+			<includes>
+				<include>${project.build.finalName}.jar</include>
+			</includes>
+		</fileSet>
+		
 	</fileSets>
-	<dependencySets>
-		  <dependencySet>
-            <outputDirectory>jars</outputDirectory>
-            <includes>                               
-				<include>${groupId}:biojava3-core</include>
-				<include>${groupId}:biojava3-alignment</include>
-				<include>${groupId}:biojava3-structure</include>
-				<include>${groupId}:biojava3-structure-gui</include>				
-				<include>net.sourceforge.jmol:jmol</include>
-				<include>javaws:javaws</include>
-            </includes>
-        </dependencySet>
-	</dependencySets>
-
+	<!-- Shell scripts must be filtered for the correct jar name -->
+	<files>
+		<file>
+			<source>src/main/assembly/runCE.sh</source>
+			<outputDirectory>/</outputDirectory>
+			<filtered>true</filtered>
+			<fileMode>0755</fileMode>
+		</file>
+		<file>
+			<source>src/main/assembly/runFATCAT.sh</source>
+			<outputDirectory>/</outputDirectory>
+			<filtered>true</filtered>
+			<fileMode>0755</fileMode>
+		</file>
+		<file>
+			<source>src/main/assembly/startFarmJob.sh</source>
+			<outputDirectory>/</outputDirectory>
+			<filtered>true</filtered>
+			<fileMode>0755</fileMode>
+		</file>
+	</files>
+	
 </assembly>
