@@ -33,9 +33,9 @@ import org.biojava3.alignment.Alignments.ProfileProfileAlignerType;
 import org.biojava3.alignment.template.GapPenalty;
 import org.biojava3.alignment.template.GuideTreeNode;
 import org.biojava3.alignment.template.SubstitutionMatrix;
+import org.biojava3.core.exceptions.CompoundNotFoundException;
 import org.biojava3.core.sequence.ProteinSequence;
 import org.biojava3.core.sequence.compound.AminoAcidCompound;
-
 import org.junit.Before;
 import org.junit.Test;
 
@@ -47,7 +47,7 @@ public class GuideTreeTest {
     private GuideTree<ProteinSequence, AminoAcidCompound> tree;
 
     @Before
-    public void setup() {
+    public void setup() throws CompoundNotFoundException { 
         proteins = Arrays.asList(new ProteinSequence[] {new ProteinSequence("ARND"), new ProteinSequence("ARND"),
                 new ProteinSequence("HILK"), new ProteinSequence("ANDR")});
         gaps = new SimpleGapPenalty((short) 2, (short) 1);

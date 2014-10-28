@@ -26,8 +26,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 
+import org.biojava3.core.exceptions.CompoundNotFoundException;
 import org.biojava3.core.sequence.compound.DNACompoundSet;
 import org.biojava3.core.sequence.transcription.TranscriptionEngine;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This is the sequence if you want to go from a gene sequence to a protein sequence. Need to start with a
@@ -36,8 +39,7 @@ import org.biojava3.core.sequence.transcription.TranscriptionEngine;
  */
 public class TranscriptSequence extends DNASequence {
 
-	// If needed...
-	//private final static Logger logger = LoggerFactory.getLogger(TranscriptSequence.class);
+	private final static Logger logger = LoggerFactory.getLogger(TranscriptSequence.class);
 
     private final ArrayList<CDSSequence> cdsSequenceList = new ArrayList<CDSSequence>();
     private final LinkedHashMap<String, CDSSequence> cdsSequenceHashMap = new LinkedHashMap<String, CDSSequence>();
@@ -176,7 +178,14 @@ public class TranscriptSequence extends DNASequence {
 
 
             //    logger.debug("Coding Sequence: {}", codingSequence);
-            DNASequence dnaCodingSequence = new DNASequence(codingSequence.toString().toUpperCase());
+            
+            DNASequence dnaCodingSequence = null;
+            try {
+            	dnaCodingSequence = new DNASequence(codingSequence.toString().toUpperCase());
+            } catch (CompoundNotFoundException e) {
+            	// if I understand this should not happen, please correct if I'm wrong - JD 2014-10-24
+            	logger.error("Could not create DNA coding sequence, {}. This is most likely a bug.", e.getMessage());
+            }
             RNASequence rnaCodingSequence = dnaCodingSequence.getRNASequence(TranscriptionEngine.getDefault());
             ProteinSequence proteinSequence = rnaCodingSequence.getProteinSequence(TranscriptionEngine.getDefault());
             proteinSequence.setAccession(new AccessionID(cdsSequence.getAccession().getID()));
@@ -196,7 +205,13 @@ public class TranscriptSequence extends DNASequence {
         	sb.append(cdsSequence.getCodingSequence());
         }
         
-        DNASequence dnaSequence = new DNASequence(sb.toString().toUpperCase());
+        DNASequence dnaSequence = null;
+        try {
+        	dnaSequence = new DNASequence(sb.toString().toUpperCase());
+        } catch (CompoundNotFoundException e) {
+        	// if I understand this should not happen, please correct if I'm wrong - JD 2014-10-24
+        	logger.error("Could not create DNA coding sequence, {}. This is most likely a bug.", e.getMessage());
+        }
         dnaSequence.setAccession(new AccessionID(this.getAccession().getID()));
         return dnaSequence;
     }

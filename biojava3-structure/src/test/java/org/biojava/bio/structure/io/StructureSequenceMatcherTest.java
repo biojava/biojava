@@ -37,6 +37,7 @@ import org.biojava.bio.structure.StructureException;
 import org.biojava.bio.structure.StructureTools;
 import org.biojava.bio.structure.UnknownPdbAminoAcidException;
 import org.biojava.bio.structure.align.util.AtomCache;
+import org.biojava3.core.exceptions.CompoundNotFoundException;
 import org.biojava3.core.sequence.ProteinSequence;
 import org.junit.Test;
 
@@ -119,7 +120,7 @@ public class StructureSequenceMatcherTest extends TestCase {
 	}
 
 	@Test
-	public void testSubstructureMatchingProteinSequence() throws UnknownPdbAminoAcidException {
+	public void testSubstructureMatchingProteinSequence() throws UnknownPdbAminoAcidException, CompoundNotFoundException {
 		ProteinSequence seq = new ProteinSequence(seq1.substring(30, 40));
 		Structure result = StructureSequenceMatcher.getSubstructureMatchingProteinSequence(seq, struct1);
 		assertEquals("Wrong number of groups", 10, StructureTools.getNrGroups(result));
@@ -161,7 +162,7 @@ public class StructureSequenceMatcherTest extends TestCase {
 	}
 
 	@Test
-	public void testMatchSequenceToStructure() throws UnknownPdbAminoAcidException, StructureException {
+	public void testMatchSequenceToStructure() throws UnknownPdbAminoAcidException, StructureException, CompoundNotFoundException {
 		// create modified sequence by removing 10 residues and adding 3
 		String sequenceStr = //>2PTC:E|PDBID|CHAIN|SEQUENCE
 			"IVGGYTCGAN" +
@@ -227,7 +228,7 @@ public class StructureSequenceMatcherTest extends TestCase {
 	}
 
 	@Test
-	public void testRemoveGaps1() {
+	public void testRemoveGaps1() throws CompoundNotFoundException { 
 		String ungapped = "ACDEFGHIKLMNPQRSTVWY";
 		String gapped = "--ACDE-F-GHI..KLM-NPQRSTVWY--";
 		

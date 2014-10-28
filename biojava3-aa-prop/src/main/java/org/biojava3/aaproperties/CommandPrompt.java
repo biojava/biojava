@@ -12,6 +12,7 @@ import java.util.Map.Entry;
 
 import org.biojava3.aaproperties.xml.AminoAcidCompositionTable;
 import org.biojava3.aaproperties.xml.CaseFreeAminoAcidCompoundSet;
+import org.biojava3.core.exceptions.CompoundNotFoundException;
 import org.biojava3.core.sequence.ProteinSequence;
 import org.biojava3.core.sequence.compound.AminoAcidCompound;
 import org.biojava3.core.sequence.compound.AminoAcidCompoundSet;
@@ -232,7 +233,7 @@ public class CommandPrompt {
 	}
 
 	private static void compute(PrintStream output, String header, String sequence, String delimiter, 
-			AminoAcidCompositionTable aaTable, List<Character> propertyList, List<Character> specificList, int decimalPlace){
+			AminoAcidCompositionTable aaTable, List<Character> propertyList, List<Character> specificList, int decimalPlace) throws CompoundNotFoundException{
 		/* 
 		 * 1 Molecular weight
 		 * 2 Absorbance (assumed Cys reduced and assume Cys to form cystines)

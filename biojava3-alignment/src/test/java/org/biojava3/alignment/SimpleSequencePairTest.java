@@ -29,6 +29,7 @@ import java.util.Arrays;
 
 import org.biojava3.alignment.template.AlignedSequence.Step;
 import org.biojava3.alignment.template.SequencePair;
+import org.biojava3.core.exceptions.CompoundNotFoundException;
 import org.biojava3.core.sequence.ProteinSequence;
 import org.biojava3.core.sequence.compound.AminoAcidCompound;
 import org.junit.Before;
@@ -40,7 +41,7 @@ public class SimpleSequencePairTest {
     private SequencePair<ProteinSequence, AminoAcidCompound> global, local;
 
     @Before
-    public void setup() {
+    public void setup() throws CompoundNotFoundException { 
         query = new ProteinSequence("ARND");
         target = new ProteinSequence("RDG");
         global = new SimpleSequencePair<ProteinSequence, AminoAcidCompound>(query, target, Arrays.asList(new Step[] {

@@ -2,6 +2,7 @@ package org.biojava3.core.sequence;
 
 import static org.junit.Assert.assertEquals;
 
+import org.biojava3.core.exceptions.CompoundNotFoundException;
 import org.biojava3.core.sequence.compound.NucleotideCompound;
 import org.biojava3.core.sequence.storage.JoiningSequenceReader;
 import org.biojava3.core.sequence.template.SequenceMixin;
@@ -11,7 +12,7 @@ public class JoiningSequenceReaderTest {
 
   @SuppressWarnings("unchecked")
   @Test
-  public void canScan() {
+  public void canScan() throws CompoundNotFoundException {
     JoiningSequenceReader<NucleotideCompound> seq =
       new JoiningSequenceReader<NucleotideCompound>(
           new DNASequence("AAAA"),
@@ -36,7 +37,7 @@ public class JoiningSequenceReaderTest {
 
   @SuppressWarnings("unchecked")
   @Test
-  public void empty() {
+  public void empty() throws CompoundNotFoundException { 
     JoiningSequenceReader<NucleotideCompound> seq =
       new JoiningSequenceReader<NucleotideCompound>(
           new DNASequence(""),

@@ -10,9 +10,12 @@ import java.util.Set;
 import javax.xml.bind.JAXBException;
 
 import org.biojava3.aaproperties.xml.AminoAcidCompositionTable;
+import org.biojava3.core.exceptions.CompoundNotFoundException;
 import org.biojava3.core.sequence.ProteinSequence;
 import org.biojava3.core.sequence.compound.AminoAcidCompound;
 import org.biojava3.core.sequence.compound.AminoAcidCompoundSet;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This is an adaptor class which enable the ease of generating protein properties.
@@ -25,6 +28,9 @@ import org.biojava3.core.sequence.compound.AminoAcidCompoundSet;
  * @see PeptidePropertiesImpl
  */
 public class PeptideProperties {
+	
+	private final static Logger logger = LoggerFactory.getLogger(PeptideProperties.class);
+	
 	/**
 	 * Enumeration of 20 standard amino acid code
 	 */
@@ -55,7 +61,13 @@ public class PeptideProperties {
 	 */
 	public static final double getMolecularWeight(String sequence){
 		sequence = Utils.checkSequence(sequence);
-		ProteinSequence pSequence = new ProteinSequence(sequence);
+		ProteinSequence pSequence = null;
+		try {
+			pSequence = new ProteinSequence(sequence);
+		} catch (CompoundNotFoundException e) {
+			// the sequence was checked with Utils.checkSequence, this shouldn't happen
+			logger.error("The protein sequence contains invalid characters ({}), this should not happen. This is most likely a bug in Utils.checkSequence()", e.getMessage());
+		}
 		IPeptideProperties pp = new PeptidePropertiesImpl();
 		return pp.getMolecularWeight(pSequence);
 	}
@@ -81,7 +93,13 @@ public class PeptideProperties {
 	public static final double getMolecularWeight(String sequence, File elementMassFile, File aminoAcidCompositionFile) 
 	throws FileNotFoundException, JAXBException{
 		sequence = Utils.checkSequence(sequence);
-		ProteinSequence pSequence = new ProteinSequence(sequence);
+		ProteinSequence pSequence = null;
+		try {
+			pSequence = new ProteinSequence(sequence);
+		} catch (CompoundNotFoundException e) {
+			// the sequence was checked with Utils.checkSequence, this shouldn't happen
+			logger.error("The protein sequence contains invalid characters ({}), this should not happen. This is most likely a bug in Utils.checkSequence()", e.getMessage());
+		}
 		IPeptideProperties pp = new PeptidePropertiesImpl();
 		return pp.getMolecularWeight(pSequence, elementMassFile, aminoAcidCompositionFile);
 	}
@@ -105,7 +123,13 @@ public class PeptideProperties {
 	 */
 	public static final double getMolecularWeight(String sequence, File aminoAcidCompositionFile) throws FileNotFoundException, JAXBException{
 		sequence = Utils.checkSequence(sequence);
-		ProteinSequence pSequence = new ProteinSequence(sequence);
+		ProteinSequence pSequence = null;
+		try {
+			pSequence = new ProteinSequence(sequence);
+		} catch (CompoundNotFoundException e) {
+			// the sequence was checked with Utils.checkSequence, this shouldn't happen
+			logger.error("The protein sequence contains invalid characters ({}), this should not happen. This is most likely a bug in Utils.checkSequence()", e.getMessage());
+		}
 		IPeptideProperties pp = new PeptidePropertiesImpl();
 		return pp.getMolecularWeight(pSequence, aminoAcidCompositionFile);
 	}
@@ -164,7 +188,13 @@ public class PeptideProperties {
 	 */
 	public static double getMolecularWeightBasedOnXML(String sequence, AminoAcidCompositionTable aminoAcidCompositionTable){
 		sequence = Utils.checkSequence(sequence, aminoAcidCompositionTable.getSymbolSet());
-		ProteinSequence pSequence = new ProteinSequence(sequence, aminoAcidCompositionTable.getAminoAcidCompoundSet());
+		ProteinSequence pSequence = null;
+		try {
+			pSequence = new ProteinSequence(sequence, aminoAcidCompositionTable.getAminoAcidCompoundSet());
+		} catch (CompoundNotFoundException e) {
+			// the sequence was checked with Utils.checkSequence, this shouldn't happen
+			logger.error("The protein sequence contains invalid characters ({}), this should not happen. This is most likely a bug in Utils.checkSequence()", e.getMessage());
+		}
 		IPeptideProperties pp = new PeptidePropertiesImpl();
 		return pp.getMolecularWeightBasedOnXML(pSequence, aminoAcidCompositionTable);
 	}
@@ -183,7 +213,13 @@ public class PeptideProperties {
 	 */
 	public static final double getAbsorbance(String sequence, boolean assumeCysReduced){
 		sequence = Utils.checkSequence(sequence);
-		ProteinSequence pSequence = new ProteinSequence(sequence);
+		ProteinSequence pSequence = null;
+		try {
+			pSequence = new ProteinSequence(sequence);
+		} catch (CompoundNotFoundException e) {
+			// the sequence was checked with Utils.checkSequence, this shouldn't happen
+			logger.error("The protein sequence contains invalid characters ({}), this should not happen. This is most likely a bug in Utils.checkSequence()", e.getMessage());
+		}
 		IPeptideProperties pp = new PeptidePropertiesImpl();
 		return pp.getAbsorbance(pSequence, assumeCysReduced);
 	}
@@ -206,7 +242,13 @@ public class PeptideProperties {
 	 */
 	public static final double getExtinctionCoefficient(String sequence, boolean assumeCysReduced) {
 		sequence = Utils.checkSequence(sequence);
-		ProteinSequence pSequence = new ProteinSequence(sequence);
+		ProteinSequence pSequence = null;
+		try {
+			pSequence = new ProteinSequence(sequence);
+		} catch (CompoundNotFoundException e) {
+			// the sequence was checked with Utils.checkSequence, this shouldn't happen
+			logger.error("The protein sequence contains invalid characters ({}), this should not happen. This is most likely a bug in Utils.checkSequence()", e.getMessage());
+		}
 		IPeptideProperties pp = new PeptidePropertiesImpl();
 		return pp.getExtinctionCoefficient(pSequence, assumeCysReduced);
 	}
@@ -224,7 +266,13 @@ public class PeptideProperties {
 	 */
 	public static final double getInstabilityIndex(String sequence) {
 		sequence = Utils.checkSequence(sequence);
-		ProteinSequence pSequence = new ProteinSequence(sequence);
+		ProteinSequence pSequence = null;
+		try {
+			pSequence = new ProteinSequence(sequence);
+		} catch (CompoundNotFoundException e) {
+			// the sequence was checked with Utils.checkSequence, this shouldn't happen
+			logger.error("The protein sequence contains invalid characters ({}), this should not happen. This is most likely a bug in Utils.checkSequence()", e.getMessage());
+		}
 		IPeptideProperties pp = new PeptidePropertiesImpl();
 		return pp.getInstabilityIndex(pSequence);
 	}
@@ -245,7 +293,14 @@ public class PeptideProperties {
 	 */
 	public static final double getApliphaticIndex(String sequence) {
 		sequence = Utils.checkSequence(sequence);
-		ProteinSequence pSequence = new ProteinSequence(sequence);
+		ProteinSequence pSequence = null;
+		try {
+			pSequence = new ProteinSequence(sequence);
+ 		} catch (CompoundNotFoundException e) {
+			// the sequence was checked with Utils.checkSequence, this shouldn't happen
+			logger.error("The protein sequence contains invalid characters ({}), this should not happen. This is most likely a bug in Utils.checkSequence()", e.getMessage());
+		}
+
 		IPeptideProperties pp = new PeptidePropertiesImpl();
 		return pp.getApliphaticIndex(pSequence);
 	}
@@ -265,7 +320,13 @@ public class PeptideProperties {
 	 */
 	public static final double getAvgHydropathy(String sequence) {
 		sequence = Utils.checkSequence(sequence);
-		ProteinSequence pSequence = new ProteinSequence(sequence);
+		ProteinSequence pSequence = null;
+		try {
+			pSequence = new ProteinSequence(sequence);
+		} catch (CompoundNotFoundException e) {
+			// the sequence was checked with Utils.checkSequence, this shouldn't happen
+			logger.error("The protein sequence contains invalid characters ({}), this should not happen. This is most likely a bug in Utils.checkSequence()", e.getMessage());
+		}
 		IPeptideProperties pp = new PeptidePropertiesImpl();
 		return pp.getAvgHydropathy(pSequence);
 	}
@@ -291,7 +352,13 @@ public class PeptideProperties {
 	 */
 	public static final double getIsoelectricPoint(String sequence, boolean useExpasyValues) {
 		sequence = Utils.checkSequence(sequence);
-		ProteinSequence pSequence = new ProteinSequence(sequence);
+		ProteinSequence pSequence = null;
+		try {
+			pSequence = new ProteinSequence(sequence);
+		} catch (CompoundNotFoundException e) {
+			// the sequence was checked with Utils.checkSequence, this shouldn't happen
+			logger.error("The protein sequence contains invalid characters ({}), this should not happen. This is most likely a bug in Utils.checkSequence()", e.getMessage());
+		}
 		IPeptideProperties pp = new PeptidePropertiesImpl();
 		return pp.getIsoelectricPoint(pSequence, useExpasyValues);
 	}
@@ -321,7 +388,13 @@ public class PeptideProperties {
 	 */
 	public static final double getNetCharge(String sequence, boolean useExpasyValues, double pHPoint){
 		sequence = Utils.checkSequence(sequence);
-		ProteinSequence pSequence = new ProteinSequence(sequence);
+		ProteinSequence pSequence = null;
+		try {
+			pSequence = new ProteinSequence(sequence);
+		} catch (CompoundNotFoundException e) {
+			// the sequence was checked with Utils.checkSequence, this shouldn't happen
+			logger.error("The protein sequence contains invalid characters ({}), this should not happen. This is most likely a bug in Utils.checkSequence()", e.getMessage());
+		}
 		IPeptideProperties pp = new PeptidePropertiesImpl();
 		return pp.getNetCharge(pSequence, useExpasyValues, pHPoint);
 	}
@@ -387,7 +460,13 @@ public class PeptideProperties {
 	 */
 	public static final double getEnrichment(String sequence, String aminoAcidCode){
 		sequence = Utils.checkSequence(sequence);
-		ProteinSequence pSequence = new ProteinSequence(sequence);
+		ProteinSequence pSequence = null;
+		try {
+			pSequence = new ProteinSequence(sequence);
+		} catch (CompoundNotFoundException e) {
+			// the sequence was checked with Utils.checkSequence, this shouldn't happen
+			logger.error("The protein sequence contains invalid characters ({}), this should not happen. This is most likely a bug in Utils.checkSequence()", e.getMessage());
+		}
 		IPeptideProperties pp = new PeptidePropertiesImpl();
 		AminoAcidCompoundSet aaSet = new AminoAcidCompoundSet();
 		return pp.getEnrichment(pSequence, aaSet.getCompoundForString(aminoAcidCode));
@@ -407,7 +486,13 @@ public class PeptideProperties {
 	 */
 	public static final Map<AminoAcidCompound, Double> getAAComposition(String sequence) {
 		sequence = Utils.checkSequence(sequence);
-		ProteinSequence pSequence = new ProteinSequence(sequence);
+		ProteinSequence pSequence = null;
+		try {
+			pSequence = new ProteinSequence(sequence);
+		} catch (CompoundNotFoundException e) {
+			// the sequence was checked with Utils.checkSequence, this shouldn't happen
+			logger.error("The protein sequence contains invalid characters ({}), this should not happen. This is most likely a bug in Utils.checkSequence()", e.getMessage());
+		}
 		IPeptideProperties pp = new PeptidePropertiesImpl();
 		return pp.getAAComposition(pSequence);
 	}

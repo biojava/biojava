@@ -23,11 +23,12 @@ package org.biojava3.core.sequence.io;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.LinkedHashMap;
+
 import org.biojava3.core.sequence.DNASequence;
 import org.biojava3.core.sequence.ProteinSequence;
-
 import org.biojava3.core.sequence.compound.AminoAcidCompound;
 import org.biojava3.core.sequence.compound.AminoAcidCompoundSet;
 import org.biojava3.core.sequence.compound.DNACompoundSet;
@@ -46,9 +47,9 @@ public class FastaReaderHelper {
      * @param file
      * @param lazySequenceLoad
      * @return
-     * @throws Exception
+     * @throws IOException
      */
-    public static LinkedHashMap<String, DNASequence> readFastaDNASequence(File file, boolean lazySequenceLoad) throws Exception {
+    public static LinkedHashMap<String, DNASequence> readFastaDNASequence(File file, boolean lazySequenceLoad) throws IOException {
         if (!lazySequenceLoad) {
             return readFastaDNASequence(file);
         }
@@ -73,10 +74,10 @@ public class FastaReaderHelper {
      *
      * @param file
      * @return
-     * @throws Exception
+     * @throws IOException
      */
     public static LinkedHashMap<String, ProteinSequence> readFastaProteinSequence(
-            File file) throws Exception {
+            File file) throws IOException {
         FileInputStream inStream = new FileInputStream(file);
         LinkedHashMap<String, ProteinSequence> proteinSequences = readFastaProteinSequence(inStream);
         inStream.close();
@@ -89,10 +90,10 @@ public class FastaReaderHelper {
      *
      * @param inStream
      * @return
-     * @throws Exception
+     * @throws IOException
      */
     public static LinkedHashMap<String, ProteinSequence> readFastaProteinSequence(
-            InputStream inStream) throws Exception {
+            InputStream inStream) throws IOException {
         FastaReader<ProteinSequence, AminoAcidCompound> fastaReader = new FastaReader<ProteinSequence, AminoAcidCompound>(
                 inStream,
                 new GenericFastaHeaderParser<ProteinSequence, AminoAcidCompound>(),
@@ -104,10 +105,10 @@ public class FastaReaderHelper {
      * Read a fasta DNA sequence
      * @param inStream
      * @return
-     * @throws Exception
+     * @throws IOException
      */
     public static LinkedHashMap<String, DNASequence> readFastaDNASequence(
-            InputStream inStream) throws Exception {
+            InputStream inStream) throws IOException {
         FastaReader<DNASequence, NucleotideCompound> fastaReader = new FastaReader<DNASequence, NucleotideCompound>(
                 inStream,
                 new GenericFastaHeaderParser<DNASequence, NucleotideCompound>(),
@@ -119,10 +120,10 @@ public class FastaReaderHelper {
      *
      * @param file
      * @return
-     * @throws Exception
+     * @throws IOException
      */
     public static LinkedHashMap<String, DNASequence> readFastaDNASequence(
-            File file) throws Exception {
+            File file) throws IOException {
         FileInputStream inStream = new FileInputStream(file);
         LinkedHashMap<String, DNASequence> dnaSequences = readFastaDNASequence(inStream);
         inStream.close();

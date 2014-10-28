@@ -24,6 +24,7 @@ package org.biojava3.core.sequence.io;
 
 import java.util.List;
 
+import org.biojava3.core.exceptions.CompoundNotFoundException;
 import org.biojava3.core.sequence.DNASequence;
 import org.biojava3.core.sequence.compound.NucleotideCompound;
 import org.biojava3.core.sequence.io.template.SequenceCreatorInterface;
@@ -58,7 +59,7 @@ public class DNASequenceCreator implements
  * @return
  */
   public AbstractSequence<NucleotideCompound> getSequence(String sequence,
-      long index) {
+      long index) throws CompoundNotFoundException {
     return new DNASequence(sequence, compoundSet);
   }
 /**

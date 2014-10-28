@@ -36,6 +36,7 @@ import org.biojava.bio.structure.io.SeqRes2AtomAligner;
 import org.biojava.bio.structure.io.mmcif.ChemCompGroupFactory;
 import org.biojava.bio.structure.io.mmcif.chem.PolymerType;
 import org.biojava.bio.structure.io.mmcif.model.ChemComp;
+import org.biojava3.core.exceptions.CompoundNotFoundException;
 import org.biojava3.core.sequence.ProteinSequence;
 import org.biojava3.core.sequence.compound.AminoAcidCompound;
 import org.biojava3.core.sequence.template.Sequence;
@@ -582,26 +583,16 @@ public class ChainImpl implements Chain, Serializable {
 
 		Sequence<AminoAcidCompound> s = null;
 
-		s = new ProteinSequence(seq);
+		try {
+			s = new ProteinSequence(seq);
+		} catch (CompoundNotFoundException e) {
+			logger.error("Could not create sequence object from seqres sequence. Some unknown compound: {}",e.getMessage());
+		}
 
 		//TODO: return a DNA sequence if the content is DNA...
 		return s;
 
 	}
-
-
-
-	/** get amino acid sequence of the chain. for backwards compatibility this returns
-	 * the Atom sequence of the chain.
-	 * @return a String representing the sequence.
-	 * @deprecated use getAtomSequence instead
-	 * @see #getAtomSequence()
-	 * @see #getSeqResSequence()
-	 */
-	public String getSequence(){
-		return getAtomSequence();
-	}
-
 
 	/** {@inheritDoc}
 	 *

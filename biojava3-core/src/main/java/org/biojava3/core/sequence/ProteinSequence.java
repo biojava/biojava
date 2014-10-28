@@ -30,6 +30,7 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 
+import org.biojava3.core.exceptions.CompoundNotFoundException;
 import org.biojava3.core.sequence.compound.AmbiguityDNACompoundSet;
 import org.biojava3.core.sequence.compound.AminoAcidCompound;
 import org.biojava3.core.sequence.compound.AminoAcidCompoundSet;
@@ -69,8 +70,9 @@ public class ProteinSequence extends AbstractSequence<AminoAcidCompound> {
      * Create a protein from a string
      *
      * @param seqString
+     * @throws CompoundNotFoundException 
      */
-    public ProteinSequence(String seqString) {
+    public ProteinSequence(String seqString) throws CompoundNotFoundException { 
         this(seqString, AminoAcidCompoundSet.getAminoAcidCompoundSet());
     }
 
@@ -79,8 +81,9 @@ public class ProteinSequence extends AbstractSequence<AminoAcidCompound> {
      *
      * @param seqString
      * @param compoundSet
+     * @throws CompoundNotFoundException 
      */
-    public ProteinSequence(String seqString, CompoundSet<AminoAcidCompound> compoundSet) {
+    public ProteinSequence(String seqString, CompoundSet<AminoAcidCompound> compoundSet) throws CompoundNotFoundException {
         super(seqString, compoundSet);
     }
 
@@ -147,8 +150,13 @@ public class ProteinSequence extends AbstractSequence<AminoAcidCompound> {
 
             Location location = parser.parse(feature.getSource());
             // convert location into DNASequence
-            DNASequence dnaSeq = new DNASequence(getSequence(location), DNACompoundSet.getDNACompoundSet());
-            setParentDNASequence(dnaSeq, location.getStart().getPosition(), location.getEnd().getPosition());
+            try {
+            	DNASequence dnaSeq = new DNASequence(getSequence(location), DNACompoundSet.getDNACompoundSet());
+            	setParentDNASequence(dnaSeq, location.getStart().getPosition(), location.getEnd().getPosition());
+            } catch (CompoundNotFoundException e) {
+            	// TODO is there another solution to handle this exception?
+            	logger.error("Could not add 'coded_by' parent DNA location feature, unrecognised compounds found in DNA sequence: {}",e.getMessage());
+            }
         }
     }
 
@@ -170,7 +178,7 @@ public class ProteinSequence extends AbstractSequence<AminoAcidCompound> {
         String seqUrlTemplate = "http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=nuccore&id=%s&rettype=fasta&retmode=text";
         URL url = new URL(String.format(seqUrlTemplate, accessId));
         
-        logger.info("get parent DNA sequence: {}", url.toString());
+        logger.info("Getting parent DNA sequence from URL: {}", url.toString());
         
         InputStream is = url.openConnection().getInputStream();
 
@@ -197,6 +205,7 @@ public class ProteinSequence extends AbstractSequence<AminoAcidCompound> {
                 return cdna.getSubSequence(rawParent).getSequenceAsString();
             } catch (IOException e) {
                 // return null
+            	logger.error("Caught IOException when getting DNA sequence for id {}. Error: {}", cdna.getAccession().getID(), e.getMessage());
                 return null;
             }
         } else {
@@ -212,7 +221,7 @@ public class ProteinSequence extends AbstractSequence<AminoAcidCompound> {
         }
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
         ProteinSequence proteinSequence = new ProteinSequence("ARNDCEQGHILKMFPSTWYVBZJX");
         logger.info("Protein Sequence: {}", proteinSequence.toString());
 

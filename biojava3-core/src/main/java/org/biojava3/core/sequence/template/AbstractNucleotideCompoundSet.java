@@ -43,7 +43,7 @@ public abstract class AbstractNucleotideCompoundSet<C extends NucleotideCompound
   protected abstract C newNucleotideCompound(String base, String complement, String... equivalents);
 
   /**
-   * Loops through all known nucelotides and attempts to find which are
+   * Loops through all known nucleotides and attempts to find which are
    * equivalent to each other. Also takes into account lower casing
    * nucleotides as well as upper-cased ones.
    */

@@ -29,6 +29,7 @@ import java.util.Arrays;
 
 import org.biojava3.alignment.template.AlignedSequence;
 import org.biojava3.alignment.template.AlignedSequence.Step;
+import org.biojava3.core.exceptions.CompoundNotFoundException;
 import org.biojava3.core.sequence.ProteinSequence;
 import org.biojava3.core.sequence.Strand;
 import org.biojava3.core.sequence.compound.AminoAcidCompound;
@@ -45,7 +46,7 @@ public class SimpleAlignedSequenceTest {
     private AminoAcidCompoundSet cs;
 
     @Before
-    public void setup() {
+    public void setup() throws CompoundNotFoundException { 
         go = new ProteinSequence("ARND");
         lo = new ProteinSequence("CEQGHILKM");
         global = new SimpleAlignedSequence<ProteinSequence, AminoAcidCompound>(go, Arrays.asList(new Step[] {

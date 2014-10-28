@@ -25,13 +25,13 @@
  */
 package org.biojava3.core.exceptions;
 
-public class CompoundNotFoundError extends Error {
+public class CompoundNotFoundException extends Exception {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 
-	public CompoundNotFoundError(CharSequence compoundStr) {
-		super("Compound not found for: "+compoundStr);
+	public CompoundNotFoundException(String msg) {
+		super(msg);
 	}
 }

@@ -22,6 +22,7 @@
  */
 package org.biojava3.core.sequence;
 
+import org.biojava3.core.exceptions.CompoundNotFoundException;
 import org.biojava3.core.sequence.compound.DNACompoundSet;
 import org.biojava3.core.sequence.compound.NucleotideCompound;
 import org.biojava3.core.sequence.loader.StringProxySequenceReader;
@@ -34,7 +35,6 @@ import org.biojava3.core.sequence.transcription.Frame;
 import org.biojava3.core.sequence.transcription.TranscriptionEngine;
 import org.biojava3.core.sequence.views.ComplementSequenceView;
 import org.biojava3.core.sequence.views.ReversedSequenceView;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -64,8 +64,9 @@ public class DNASequence extends AbstractSequence<NucleotideCompound> {
     /**
      * String is king and create a sequence from DNA with default DNA compound set
      * @param seqString
+     * @throws CompoundNotFoundException
      */
-    public DNASequence(String seqString) {
+    public DNASequence(String seqString) throws CompoundNotFoundException {
         super(seqString, DNACompoundSet.getDNACompoundSet());
     }
 
@@ -81,8 +82,9 @@ public class DNASequence extends AbstractSequence<NucleotideCompound> {
      * Create a sequence from a string with user defined compound set
      * @param seqString
      * @param compoundSet
+     * @throws CompoundNotFoundException
      */
-    public DNASequence(String seqString, CompoundSet<NucleotideCompound> compoundSet) {
+    public DNASequence(String seqString, CompoundSet<NucleotideCompound> compoundSet) throws CompoundNotFoundException {
         super(seqString, compoundSet);
     }
 
@@ -169,7 +171,7 @@ public class DNASequence extends AbstractSequence<NucleotideCompound> {
         this.dnaType = dnaType;
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
         DNASequence dnaSequence = new DNASequence("ATCG");
         logger.info("DNA Sequence: {}", dnaSequence.toString());
 

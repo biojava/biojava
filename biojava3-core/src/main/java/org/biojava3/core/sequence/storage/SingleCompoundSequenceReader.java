@@ -2,6 +2,8 @@ package org.biojava3.core.sequence.storage;
 
 import java.util.Iterator;
 import java.util.List;
+
+import org.biojava3.core.exceptions.CompoundNotFoundException;
 import org.biojava3.core.sequence.AccessionID;
 import org.biojava3.core.sequence.template.Compound;
 import org.biojava3.core.sequence.template.CompoundSet;
@@ -55,7 +57,7 @@ public class SingleCompoundSequenceReader<C extends Compound> implements ProxySe
      * Unsupported
      */
     
-    public void setContents(String sequence) {
+    public void setContents(String sequence) throws CompoundNotFoundException {
         throw new UnsupportedOperationException("Not supported.");
     }
 

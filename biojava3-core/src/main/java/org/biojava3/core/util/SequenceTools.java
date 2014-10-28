@@ -1,5 +1,6 @@
 package org.biojava3.core.util;
 
+import org.biojava3.core.exceptions.CompoundNotFoundException;
 import org.biojava3.core.sequence.DNASequence;
 import org.biojava3.core.sequence.ProteinSequence;
 import org.biojava3.core.sequence.template.Sequence;
@@ -83,7 +84,7 @@ public class SequenceTools {
             return true;
     }
     
-    public Sequence<?> getSeqeunceFromString(String sequence){
+    public Sequence<?> getSequenceFromString(String sequence) throws CompoundNotFoundException {
     	
   
     	if( isNucleotideSequence(sequence)) {

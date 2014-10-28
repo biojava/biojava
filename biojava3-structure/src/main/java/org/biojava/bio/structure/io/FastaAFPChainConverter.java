@@ -44,6 +44,7 @@ import org.biojava.bio.structure.align.util.AlignmentTools;
 import org.biojava.bio.structure.align.xml.AFPChainXMLConverter;
 import org.biojava3.alignment.template.AlignedSequence;
 import org.biojava3.alignment.template.SequencePair;
+import org.biojava3.core.exceptions.CompoundNotFoundException;
 import org.biojava3.core.sequence.ProteinSequence;
 import org.biojava3.core.sequence.compound.AminoAcidCompound;
 import org.biojava3.core.sequence.compound.AminoAcidCompoundSet;
@@ -54,6 +55,8 @@ import org.biojava3.core.sequence.io.template.SequenceHeaderParserInterface;
 import org.biojava3.core.sequence.io.template.SequenceCreatorInterface;
 import org.biojava3.core.sequence.template.Sequence;
 import org.biojava3.core.util.SequenceTools;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A collection of static utilities to convert between {@link AFPChain AFPChains} and {@link FastaSequence FastaSequences}.
@@ -65,7 +68,10 @@ import org.biojava3.core.util.SequenceTools;
  */
 public class FastaAFPChainConverter {
 
-	public static AFPChain cpFastaToAfpChain(String first, String second, Structure structure, int cpSite) throws StructureException {
+	private final static Logger logger = LoggerFactory.getLogger(FastaAFPChainConverter.class);
+	
+		
+	public static AFPChain cpFastaToAfpChain(String first, String second, Structure structure, int cpSite) throws StructureException, CompoundNotFoundException {
 		ProteinSequence s1 = new ProteinSequence(first);
 		s1.setUserCollection(getAlignedUserCollection(first));
 		ProteinSequence s2 = new ProteinSequence(second);
@@ -106,6 +112,7 @@ public class FastaAFPChainConverter {
 	 * @param cpSite
 	 *            The number of residues from the beginning of the sequence at which the circular permutation site occurs; can be positive or negative; values greater than the length of the sequence
 	 *            are acceptable
+	 * @throws StructureException
 	 */
 	public static AFPChain cpFastaToAfpChain(ProteinSequence first, ProteinSequence second, Structure structure, int cpSite)
 			throws StructureException {
@@ -140,8 +147,14 @@ public class FastaAFPChainConverter {
 
 		Atom[] ca1 = StructureTools.getAtomCAArray(structure);
 		Atom[] ca2 =  StructureTools.getAtomCAArray(structure); // can't use cloneCAArray because it doesn't set parent group.chain.structure
-
-		ProteinSequence antipermuted = new ProteinSequence(SequenceTools.permuteCyclic(second.getSequenceAsString(), gappedCpShift));
+		
+		ProteinSequence antipermuted = null;
+		try {
+			antipermuted = new ProteinSequence(SequenceTools.permuteCyclic(second.getSequenceAsString(), gappedCpShift));
+		} catch (CompoundNotFoundException e) {
+			// this can't happen, the original sequence comes from a ProteinSequence
+			logger.error("Unexpected error while creating protein sequence: {}. This is most likely a bug.",e.getMessage() );
+		}
 
 		ResidueNumber[] residues = StructureSequenceMatcher.matchSequenceToStructure(first, structure);
 		ResidueNumber[] antipermutedResidues = StructureSequenceMatcher.matchSequenceToStructure(antipermuted, structure);
@@ -183,9 +196,11 @@ public class FastaAFPChainConverter {
 	 * {@link CasePreservingProteinSequenceCreator} and assumes that a residue is aligned if and only if it is given by an uppercase letter.
 	 * 
 	 * @see #fastaToAfpChain(ProteinSequence, ProteinSequence, Structure, Structure)
+	 * @throws IOException
+	 * @throws StructureException
 	 */
 	public static AFPChain fastaFileToAfpChain(File fastaFile, Structure structure1, Structure structure2)
-			throws Exception {
+			throws IOException, StructureException {
 		InputStream inStream = new FileInputStream(fastaFile);
 		SequenceCreatorInterface<AminoAcidCompound> creator = new CasePreservingProteinSequenceCreator(
 				AminoAcidCompoundSet.getAminoAcidCompoundSet());
@@ -200,9 +215,11 @@ public class FastaAFPChainConverter {
 	/**
 	 * Returns an AFPChain corresponding to the alignment between {@code structure1} and {@code structure2}, which is given by the gapped protein sequences {@code sequence1} and {@code sequence2}. The
 	 * sequences need not correspond to the entire structures, since local alignment is performed to match the sequences to structures.
+	 * @throws StructureException
+	 * @throws CompoundNotFoundException
 	 */
 	public static AFPChain fastaStringToAfpChain(String sequence1, String sequence2, Structure structure1,
-			Structure structure2) throws Exception {
+			Structure structure2) throws StructureException, CompoundNotFoundException {
 		ProteinSequence seq1 = new ProteinSequence(sequence1);
 		ProteinSequence seq2 = new ProteinSequence(sequence2);
 		return fastaToAfpChain(seq1, seq2, structure1, structure2);
@@ -214,6 +231,7 @@ public class FastaAFPChainConverter {
 	 * @param sequences
 	 *            A Map containing exactly two entries from sequence names as Strings to gapped ProteinSequences; the name is ignored
 	 * @see #fastaToAfpChain(ProteinSequence, ProteinSequence, Structure, Structure)
+	 * @throws StructureException
 	 */
 	public static AFPChain fastaToAfpChain(Map<String, ProteinSequence> sequences, Structure structure1,
 			Structure structure2) throws StructureException {
@@ -244,9 +262,10 @@ public class FastaAFPChainConverter {
 	 * @param structure2
 	 * @return
 	 * @throws StructureException
+	 * @throws CompoundNotFoundException 
 	 */
 	public static AFPChain fastaToAfpChain(String sequence1, String sequence2, Structure structure1,
-			Structure structure2) throws StructureException {
+			Structure structure2) throws StructureException, CompoundNotFoundException {
 		ProteinSequence s1 = new ProteinSequence(sequence1);
 		s1.setUserCollection(getAlignedUserCollection(sequence1));
 		ProteinSequence s2 = new ProteinSequence(sequence2);
@@ -259,6 +278,7 @@ public class FastaAFPChainConverter {
 	 * sequences need not correspond to the entire structures, since local alignment is performed to match the sequences to structures. Assumes that a residue is aligned if and only if it is given by
 	 * an uppercase letter.
 	 * @param sequence1 <em>Must</em> have {@link ProteinSequence#getUserCollection()} set to document upper- and lower-case as aligned and unaligned; see {@link #getAlignedUserCollection(String)}
+	 * @throws StructureException
 	 */
 	public static AFPChain fastaToAfpChain(ProteinSequence sequence1, ProteinSequence sequence2, Structure structure1,
 			Structure structure2) throws StructureException {
@@ -293,6 +313,7 @@ public class FastaAFPChainConverter {
 	 * Provided only for convenience.
 	 * 
 	 * @see #fastaToAfpChain(ProteinSequence, ProteinSequence, Structure, Structure)
+	 * @throws StructureException
 	 */
 	public static AFPChain fastaToAfpChain(SequencePair<Sequence<AminoAcidCompound>, AminoAcidCompound> alignment,
 			Structure structure1, Structure structure2) throws StructureException {
@@ -301,16 +322,21 @@ public class FastaAFPChainConverter {
 		for (AminoAcidCompound a : seqs.get(0)) {
 			sb1.append(a.getBase());
 		}
-		ProteinSequence seq1 = new ProteinSequence(sb1.toString());
-		StringBuilder sb2 = new StringBuilder();
-		for (AminoAcidCompound a : seqs.get(1)) {
-			sb1.append(a.getBase());
+		try {
+			ProteinSequence seq1 = new ProteinSequence(sb1.toString());
+			StringBuilder sb2 = new StringBuilder();
+			for (AminoAcidCompound a : seqs.get(1)) {
+				sb1.append(a.getBase());
+			}
+			ProteinSequence seq2 = new ProteinSequence(sb2.toString());
+			LinkedHashMap<String, ProteinSequence> map = new LinkedHashMap<String, ProteinSequence>();
+			map.put(structure1.getName(), seq1);
+			map.put(structure2.getName(), seq2);
+			return fastaToAfpChain(map, structure1, structure2);
+		} catch (CompoundNotFoundException e) {
+			logger.error("Unexpected error while creating protein sequences: {}. This is most likely a bug.",e.getMessage());
+			return null;
 		}
-		ProteinSequence seq2 = new ProteinSequence(sb2.toString());
-		LinkedHashMap<String, ProteinSequence> map = new LinkedHashMap<String, ProteinSequence>();
-		map.put(structure1.getName(), seq1);
-		map.put(structure2.getName(), seq2);
-		return fastaToAfpChain(map, structure1, structure2);
 	}
 
 	/**
@@ -324,6 +350,7 @@ public class FastaAFPChainConverter {
 	 *            An array of {@link ResidueNumber ResidueNumbers} in the first structure that are aligned. Only null ResidueNumbers are considered to be unaligned
 	 * @param residues2
 	 *            An array of {@link ResidueNumber ResidueNumbers} in the second structure that are aligned. Only null ResidueNumbers are considered to be unaligned
+	 * @throws StructureException
 	 */
 	private static AFPChain buildAlignment(Atom[] ca1, Atom[] ca2, ResidueNumber[] residues1, ResidueNumber[] residues2)
 			throws StructureException {
@@ -372,9 +399,10 @@ public class FastaAFPChainConverter {
 	 * 
 	 * @param args
 	 *            A String array of fasta-file structure-1-name structure-2-name
-	 * @throws Exception
+	 * @throws StructureException
+	 * @throws IOException
 	 */
-	public static void main(String[] args) throws Exception {
+	public static void main(String[] args) throws StructureException, IOException {
 		if (args.length != 3) {
 			System.err.println("Usage: FastaAFPChainConverter fasta-file structure-1-name structure-2-name");
 			return;

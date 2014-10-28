@@ -26,6 +26,7 @@ package org.biojava3.core.sequence;
  * @author Scooter Willis
  *
  */
+import org.biojava3.core.exceptions.CompoundNotFoundException;
 import org.biojava3.core.sequence.compound.NucleotideCompound;
 import org.biojava3.core.sequence.compound.RNACompoundSet;
 import org.biojava3.core.sequence.template.AbstractSequence;
@@ -46,8 +47,9 @@ public class RNASequence extends AbstractSequence<NucleotideCompound> {
     /**
      * Create a RNA sequence from a String
      * @param seqString
+     * @throws CompoundNotFoundException 
      */
-  public RNASequence(String seqString) {
+  public RNASequence(String seqString) throws CompoundNotFoundException { 
     super(seqString, RNACompoundSet.getRNACompoundSet());
   }
 
@@ -63,8 +65,9 @@ public class RNASequence extends AbstractSequence<NucleotideCompound> {
    * Create a RNA sequence from a string with a user defined RNA compound set
    * @param seqString
    * @param compoundSet
+   * @throws CompoundNotFoundException
    */
-  public RNASequence(String seqString, CompoundSet<NucleotideCompound> compoundSet) {
+  public RNASequence(String seqString, CompoundSet<NucleotideCompound> compoundSet) throws CompoundNotFoundException {
     super(seqString, compoundSet);
   }
 

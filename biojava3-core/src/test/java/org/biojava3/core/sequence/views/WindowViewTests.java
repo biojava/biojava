@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.biojava3.core.exceptions.CompoundNotFoundException;
 import org.biojava3.core.sequence.RNASequence;
 import org.biojava3.core.sequence.compound.NucleotideCompound;
 import org.biojava3.core.sequence.template.SequenceView;
@@ -17,7 +18,7 @@ import org.junit.Test;
 public class WindowViewTests {
 
   @Test
-  public void basicWindow() {
+  public void basicWindow() throws CompoundNotFoundException { 
     RNASequence rna = new RNASequence("AUGCCU");
     WindowedSequence<NucleotideCompound> window = new WindowedSequence<NucleotideCompound>(rna, 3);
 
@@ -36,7 +37,7 @@ public class WindowViewTests {
   }
 
   @Test
-  public void reaminderWindow() {
+  public void reaminderWindow() throws CompoundNotFoundException {
     RNASequence rna = new RNASequence("AUGCC");
     WindowedSequence<NucleotideCompound> window = new WindowedSequence<NucleotideCompound>(rna, 3);
     List<SequenceView<NucleotideCompound>> list = new ArrayList<SequenceView<NucleotideCompound>>();

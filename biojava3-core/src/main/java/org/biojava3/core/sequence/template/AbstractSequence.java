@@ -32,6 +32,7 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 
+import org.biojava3.core.exceptions.CompoundNotFoundException;
 import org.biojava3.core.sequence.AccessionID;
 import org.biojava3.core.sequence.Strand;
 import org.biojava3.core.sequence.TaxonomyID;
@@ -44,6 +45,8 @@ import org.biojava3.core.sequence.location.SequenceLocation;
 import org.biojava3.core.sequence.location.SimpleLocation;
 import org.biojava3.core.sequence.location.template.Location;
 import org.biojava3.core.sequence.storage.ArrayListSequenceReader;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -52,6 +55,8 @@ import org.biojava3.core.sequence.storage.ArrayListSequenceReader;
  */
 public abstract class AbstractSequence<C extends Compound> implements Sequence<C> {
 
+	private final static Logger logger = LoggerFactory.getLogger(AbstractSequence.class);
+	
     private TaxonomyID taxonomy;
     private AccessionID accession;
     private SequenceReader<C> sequenceStorage = null;
@@ -80,8 +85,9 @@ public abstract class AbstractSequence<C extends Compound> implements Sequence<C
      * Create a Sequence from a simple string where the values should be found in compoundSet
      * @param seqString
      * @param compoundSet
+     * @throws CompoundNotFoundException 
      */
-    public AbstractSequence(String seqString, CompoundSet<C> compoundSet) {
+    public AbstractSequence(String seqString, CompoundSet<C> compoundSet) throws CompoundNotFoundException {
         setCompoundSet(compoundSet);
         sequenceStorage = new ArrayListSequenceReader<C>();
         sequenceStorage.setCompoundSet(this.getCompoundSet());
@@ -91,8 +97,8 @@ public abstract class AbstractSequence<C extends Compound> implements Sequence<C
     /**
      * A ProxySequenceReader allows abstraction of both the storage of the sequence data and the location
      * of the sequence data. A variety of use cases are possible. A ProxySequenceReader that knows the offset and of the sequence in
-     * a large fasta file. A ProxySequenceReader that can pull Sequence data from Uniprot, NCBI or a custom database.
-     * If the ProxySequecneReader implements various interfaces then the sequence will set those interfaces so that calls to
+     * a large fasta file. A ProxySequenceReader that can pull Sequence data from UniProt, NCBI or a custom database.
+     * If the ProxySequenceReader implements various interfaces then the sequence will set those interfaces so that calls to
      * various methods will be valid.
      *
      * @param proxyLoader
@@ -506,7 +512,12 @@ public abstract class AbstractSequence<C extends Compound> implements Sequence<C
             if ( this.compoundSet.equals(parentSequence.getCompoundSet())){
             	sequenceStorage = new ArrayListSequenceReader<C>();
                 sequenceStorage.setCompoundSet(this.getCompoundSet());
-                sequenceStorage.setContents(parentSequence.getSequenceAsString());
+                try {
+                	sequenceStorage.setContents(parentSequence.getSequenceAsString());
+                } catch (CompoundNotFoundException e) {
+                	// TODO is there a better way to handle this exception?
+                	logger.error("Problem setting contents from parent sequence, some unrecognised compound: {}",e.getMessage());                	
+                }
                 return sequenceStorage;
             }
             

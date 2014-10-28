@@ -29,9 +29,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.biojava3.core.exceptions.CompoundNotFoundError;
 import org.biojava3.core.util.Equals;
 import org.biojava3.core.util.Hashcoder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -42,6 +43,8 @@ import org.biojava3.core.util.Hashcoder;
  */
 public abstract class AbstractCompoundSet<C extends Compound> implements CompoundSet<C> {
 
+	private final static Logger logger = LoggerFactory.getLogger(AbstractCompoundSet.class);
+	
   private Map<CharSequence, C> charSeqToCompound = new HashMap<CharSequence, C>();
   private int maxCompoundCharSequenceLength = -1;
   private Boolean compoundStringLengthEqual = null;
@@ -177,9 +180,11 @@ public abstract class AbstractCompoundSet<C extends Compound> implements Compoun
   private void assertCompound(C compound) {
     boolean okay = hasCompound(compound);
     if(! okay) {
-      throw new CompoundNotFoundError("The CompoundSet "+
-          getClass().getSimpleName()+" knows nothing about the compound "+
-          compound);
+    	// TODO this used to throw an error, now only warning, is this the best solution?
+    	logger.warn("The CompoundSet {} knows nothing about the compound {}", getClass().getSimpleName(), compound);
+      //throw new CompoundNotFoundError("The CompoundSet "+
+      //    getClass().getSimpleName()+" knows nothing about the compound "+
+      //    compound);
     }
   }
 

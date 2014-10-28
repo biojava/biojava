@@ -4,6 +4,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.biojava3.core.exceptions.CompoundNotFoundException;
 import org.biojava3.core.sequence.AccessionID;
 import org.biojava3.core.sequence.compound.NucleotideCompound;
 import org.biojava3.core.sequence.template.Compound;
@@ -49,24 +50,21 @@ public class BitSequenceReader<C extends Compound> implements ProxySequenceReade
 
     /**
      * Class is immutable & so this is unsupported
-     */
-    
+     */    
     public void setCompoundSet(CompoundSet<C> compoundSet) {
         throw new UnsupportedOperationException("Cannot reset the CompoundSet; object is immutable");
     }
 
     /**
      * Class is immutable & so this is unsupported
-     */
-    
-    public void setContents(String sequence) {
+     */    
+    public void setContents(String sequence) throws CompoundNotFoundException {
         throw new UnsupportedOperationException(getClass().getSimpleName() + " is an immutable data structure; cannot reset contents");
     }
 
     /**
      * Counts the number of times a compound appears in this sequence store
-     */
-    
+     */    
     public int countCompounds(C... compounds) {
         return SequenceMixin.countCompounds(this, compounds);
     }
@@ -78,24 +76,21 @@ public class BitSequenceReader<C extends Compound> implements ProxySequenceReade
 
     /**
      * Returns this Sequence store as a List
-     */
-    
+     */    
     public List<C> getAsList() {
         return SequenceMixin.toList(this);
     }
 
     /**
      * Returns the compound at the specified biological index
-     */
-    
+     */    
     public C getCompoundAt(int position) {
         return worker.getCompoundAt(position);
     }
 
     /**
      * Returns the compound set backing this store
-     */
-    
+     */    
     public CompoundSet<C> getCompoundSet() {
         return worker.getCompoundSet();
     }

@@ -35,6 +35,7 @@ import org.biojava3.alignment.template.PairwiseSequenceAligner;
 import org.biojava3.alignment.template.Profile;
 import org.biojava3.alignment.template.SequencePair;
 import org.biojava3.alignment.template.SubstitutionMatrix;
+import org.biojava3.core.exceptions.CompoundNotFoundException;
 import org.biojava3.core.sequence.DNASequence;
 import org.biojava3.core.sequence.compound.AmbiguityDNACompoundSet;
 import org.biojava3.core.sequence.compound.DNACompoundSet;
@@ -85,9 +86,9 @@ public class TestDNAAlignment extends TestCase {
     }
 
     /**
-     * @author brandstaetter
+     * @author brandstaetter 
      */
-    public void testDNAMultipleAlignmentWithMixedCompoundSets() {
+    public void testDNAMultipleAlignmentWithMixedCompoundSets() throws CompoundNotFoundException {
 
         DNASequence target = new DNASequence("ACTGACGTGTAGCTGACTGA", DNACompoundSet.getDNACompoundSet());
         DNASequence query = new DNASequence("ACTGACGTGTAGCTGACTGTA", AmbiguityDNACompoundSet.getDNACompoundSet());
@@ -108,7 +109,7 @@ public class TestDNAAlignment extends TestCase {
     /**
      * @author brandstaetter
      */
-    public void testDNAPairwiseAlignmentWithMixedCompoundSets() {
+    public void testDNAPairwiseAlignmentWithMixedCompoundSets() throws CompoundNotFoundException {
         DNASequence target = new DNASequence("ACTGACGTGTAGCTGACTGA", DNACompoundSet.getDNACompoundSet());
         DNASequence query = new DNASequence("ACTGACGTGTAGCTGACTGT", AmbiguityDNACompoundSet.getDNACompoundSet());
         SubstitutionMatrix<NucleotideCompound> matrix = SubstitutionMatrixHelper.getNuc4_4();
@@ -127,7 +128,7 @@ public class TestDNAAlignment extends TestCase {
     /**
      * @author Daniel Cameron
      */
-    public void testMixedCaseInputStringsMatchUnderlyingBases() {
+    public void testMixedCaseInputStringsMatchUnderlyingBases() throws CompoundNotFoundException {
         DNASequence target = new DNASequence("AAAAAAAAGTC", DNACompoundSet.getDNACompoundSet());
         DNASequence query = new DNASequence("aaaaaaaagtc", DNACompoundSet.getDNACompoundSet());
         SubstitutionMatrix<NucleotideCompound> matrix = SubstitutionMatrixHelper.getNuc4_4();
@@ -138,7 +139,7 @@ public class TestDNAAlignment extends TestCase {
     /**
      * @author Daniel Cameron
      */
-    public void testNoAlignedBases() {
+    public void testNoAlignedBases() throws CompoundNotFoundException {
         DNASequence target = new DNASequence("A", DNACompoundSet.getDNACompoundSet());
         DNASequence query = new DNASequence("T", DNACompoundSet.getDNACompoundSet());
         SubstitutionMatrix<NucleotideCompound> matrix = SubstitutionMatrixHelper.getNuc4_4();
@@ -149,7 +150,7 @@ public class TestDNAAlignment extends TestCase {
     /**
     * @author Daniel Cameron
     */
-	public void testLinearAlignment() {
+	public void testLinearAlignment() throws CompoundNotFoundException {
 		DNASequence query = new DNASequence("GTAAAAG", DNACompoundSet.getDNACompoundSet());
 		DNASequence target = new DNASequence("GAAAACGTTTTTTTTTT", DNACompoundSet.getDNACompoundSet());
 		SubstitutionMatrix<NucleotideCompound> matrix = SubstitutionMatrixHelper.getNuc4_4();

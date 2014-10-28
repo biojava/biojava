@@ -340,16 +340,7 @@ public interface Chain {
      * @throws IllegalSymbolException 
      */
     public Sequence<?> getBJSequence()  ;
-    
-    
-    /** return the amino acid sequence of this chain
-     * ( all aminos even if they do not have 3D data ...).
-     * @return the sequence as a string
-     * @deprecated use getAtomSequence instead
-     * @see #getAtomSequence()
-     */
-    public String getSequence() ;
-
+       
     /** 
      * Return the sequence of amino acids as it has been provided in the ATOM records.
      * 

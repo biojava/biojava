@@ -27,8 +27,6 @@ import java.io.StringReader;
 
 import java.net.URL;
 
-import com.google.common.io.InputSupplier;
-
 import junit.framework.TestCase;
 
 /**

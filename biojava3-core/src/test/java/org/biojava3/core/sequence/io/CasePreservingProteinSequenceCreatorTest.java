@@ -2,15 +2,18 @@ package org.biojava3.core.sequence.io;
 
 import java.util.Collection;
 
-import junit.framework.TestCase;
-
+import org.biojava3.core.exceptions.CompoundNotFoundException;
 import org.biojava3.core.sequence.ProteinSequence;
 import org.biojava3.core.sequence.compound.AminoAcidCompoundSet;
 import org.biojava3.core.sequence.io.CasePreservingProteinSequenceCreator;
 
-public class CasePreservingProteinSequenceCreatorTest extends TestCase {
+import org.junit.Test;
+import static org.junit.Assert.*;
 
-	public void testConstructor() {
+public class CasePreservingProteinSequenceCreatorTest {
+
+	@Test
+	public void testConstructor() throws CompoundNotFoundException {
 		CasePreservingProteinSequenceCreator creator = new CasePreservingProteinSequenceCreator(AminoAcidCompoundSet.getAminoAcidCompoundSet());
 		
 		String seq = "aCDEfgHI-Jkl";
