@@ -23,10 +23,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.biojava3.core.exceptions.CompoundNotFoundException;
 import org.biojava3.core.sequence.ProteinSequence;
 import org.biojava3.core.sequence.RNASequence;
 import org.biojava3.core.sequence.template.AbstractCompound;
 import org.biojava3.core.sequence.template.AbstractSequence;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Stores all the content of a Stockholm file. <i><b>N.B.: This structure will undergo several enhancements later on.
@@ -77,6 +80,8 @@ import org.biojava3.core.sequence.template.AbstractSequence;
  * 
  */
 public class StockholmStructure {
+	
+	private final static Logger logger = LoggerFactory.getLogger(StockholmStructure.class);
 
     public static final String PFAM = "PFAM";
     public static final String RFAM = "RFAM";
@@ -244,19 +249,23 @@ public class StockholmStructure {
         }
         List<AbstractSequence<? extends AbstractCompound>> seqs = new ArrayList<AbstractSequence<? extends AbstractCompound>>();
         for (String sequencename : sequences.keySet()) {
-            AbstractSequence<? extends AbstractCompound> seq;
+            AbstractSequence<? extends AbstractCompound> seq = null;
             String sequence = sequences.get(sequencename).toString();
             if (ignoreCase) {
                 sequence = sequence.toUpperCase();
             }
 
+            try {
             if (forcedSequenceType == null)
                 seq = fileAnnotation.isPFam() ? new ProteinSequence(sequence) : new RNASequence(sequence);
             else if (forcedSequenceType.equals(PFAM))
                 seq = new ProteinSequence(sequence);
             else
                 seq = new RNASequence(sequence);
-
+            } catch (CompoundNotFoundException e) {
+            	logger.warn("Could not create sequence because of unknown compounds ({}). Sequence {} will be ignored.",e.getMessage(),sequencename);
+            	continue;
+            }
             String[] seqDetails = splitSeqName(sequencename);
             seq.setDescription(seqDetails[0]);
             seq.setBioBegin((seqDetails[1] == null || seqDetails[1].trim().equals("") ? null : new Integer(

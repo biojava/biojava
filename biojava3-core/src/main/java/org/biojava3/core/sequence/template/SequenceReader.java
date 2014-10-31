@@ -25,9 +25,11 @@
  */
 package org.biojava3.core.sequence.template;
 
+import org.biojava3.core.exceptions.CompoundNotFoundException;
+
 public interface SequenceReader<C extends Compound> extends Sequence<C> {
 	
 	public void setCompoundSet(CompoundSet<C> compoundSet);
 	
-	public void setContents(String sequence);
+	public void setContents(String sequence) throws CompoundNotFoundException;
 }

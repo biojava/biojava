@@ -23,6 +23,7 @@
 package org.biojava3.core.sequence.io.template;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 
 /**
  *
@@ -36,5 +37,5 @@ public interface SequenceParserInterface {
  * @return
  * @throws Exception
  */
-    public String getSequence(BufferedReader bufferedReader,int sequenceLength) throws Exception;
+    public String getSequence(BufferedReader bufferedReader,int sequenceLength) throws IOException;
 }

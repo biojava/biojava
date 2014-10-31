@@ -5,8 +5,9 @@ import static org.junit.Assert.assertEquals;
 
 import java.util.Arrays;
 import java.util.List;
-import org.biojava3.core.sequence.DNASequence;
 
+import org.biojava3.core.exceptions.CompoundNotFoundException;
+import org.biojava3.core.sequence.DNASequence;
 import org.biojava3.core.sequence.Strand;
 import org.biojava3.core.sequence.compound.NucleotideCompound;
 import org.biojava3.core.sequence.location.template.Location;
@@ -16,7 +17,7 @@ import org.junit.Test;
 public class LocationTest {
 
     @Test
-    public void testSubLocations() {
+    public void testSubLocations() throws CompoundNotFoundException {
         List<SimpleLocation> expected = Arrays.asList(
                 new SimpleLocation(1, 2, Strand.UNDEFINED),
                 new SimpleLocation(3, 6, Strand.UNDEFINED),
@@ -41,7 +42,7 @@ public class LocationTest {
     }
 
     @Test
-    public void testBasicCircularLocation() {
+    public void testBasicCircularLocation() throws CompoundNotFoundException {
         Location circularLocation = new SimpleLocation(
                 new SimplePoint(3), new SimplePoint(52), Strand.POSITIVE, true,
                 new SimpleLocation(3, 20, Strand.POSITIVE),
@@ -68,7 +69,7 @@ public class LocationTest {
     }
 
     @Test
-    public void testWithStrandSwitch() {
+    public void testWithStrandSwitch() throws CompoundNotFoundException { 
         DNASequence s = new DNASequence("AAAAAAAAAATTTTTTTTTTCCCCCCCCCCGGGGGGGGGGAAATTTCCCG");
         Location location = new SimpleLocation(1, 50, Strand.UNDEFINED,
                 new SimpleLocation(1, 10, Strand.POSITIVE), //AAAAAAAAAA

@@ -32,7 +32,7 @@ import org.biojava3.core.sequence.AccessionID;
 
 import org.biojava3.core.sequence.template.SequenceProxyView;
 import org.biojava3.core.sequence.template.Compound;
-import org.biojava3.core.exceptions.CompoundNotFoundError;
+import org.biojava3.core.exceptions.CompoundNotFoundException;
 import org.biojava3.core.sequence.Strand;
 
 import org.biojava3.core.sequence.storage.SequenceAsStringHelper;
@@ -55,7 +55,7 @@ public class StringProxySequenceReader<C extends Compound> implements ProxySeque
 
     public StringProxySequenceReader() {}
 
-    public StringProxySequenceReader(String sequence, CompoundSet<C> compoundSet) {
+    public StringProxySequenceReader(String sequence, CompoundSet<C> compoundSet) throws CompoundNotFoundException { 
         this.sequence = sequence;
         setCompoundSet(compoundSet);
         setContents(sequence);
@@ -65,7 +65,7 @@ public class StringProxySequenceReader<C extends Compound> implements ProxySeque
         this.compoundSet = compoundSet;
     }
 
-    public void setContents(String sequence) {
+    public void setContents(String sequence) throws CompoundNotFoundException {
         // Horrendously inefficient - pretty much the way the old BJ did things.
         // TODO Should be optimised.
     	this.sequence = sequence;
@@ -78,7 +78,7 @@ public class StringProxySequenceReader<C extends Compound> implements ProxySeque
                 compound = compoundSet.getCompoundForString(compoundStr);
             }
             if (compound == null) {
-                throw new CompoundNotFoundError(compoundStr);
+                throw new CompoundNotFoundException("Compound "+compoundStr+" not found");
             } else {
                 i += compoundStr.length();
             }

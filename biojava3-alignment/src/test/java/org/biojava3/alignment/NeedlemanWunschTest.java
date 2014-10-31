@@ -29,6 +29,7 @@ import static org.junit.Assert.assertTrue;
 
 import org.biojava3.alignment.template.GapPenalty;
 import org.biojava3.alignment.template.SubstitutionMatrix;
+import org.biojava3.core.exceptions.CompoundNotFoundException;
 import org.biojava3.core.sequence.DNASequence;
 import org.biojava3.core.sequence.ProteinSequence;
 import org.biojava3.core.sequence.compound.AmbiguityDNACompoundSet;
@@ -48,7 +49,7 @@ public class NeedlemanWunschTest {
     private NeedlemanWunsch<ProteinSequence, AminoAcidCompound> alignment, self;
 
     @Before
-    public void setup() {
+    public void setup() throws CompoundNotFoundException { 
         query = new ProteinSequence("ARND");
         target = new ProteinSequence("RDG");
         gaps = new SimpleGapPenalty((short) 10, (short) 1);
@@ -190,10 +191,10 @@ public class NeedlemanWunschTest {
         assertEquals(self.getPair().toString(), String.format("ARND%nARND%n"));
     }
     /**
-     * @author Daniel Cameron
+     * @author Daniel Cameron 
      */
     @Test
-	public void should_align_all_anchored() {
+	public void should_align_all_anchored() throws CompoundNotFoundException {
     	DNASequence query = new DNASequence("ACG", AmbiguityDNACompoundSet.getDNACompoundSet());
 		DNASequence target = new DNASequence("CGT", AmbiguityDNACompoundSet.getDNACompoundSet());
 		NeedlemanWunsch<DNASequence, NucleotideCompound> aligner = new NeedlemanWunsch<DNASequence, NucleotideCompound>(query, target, new SimpleGapPenalty((short)0, (short)10), SubstitutionMatrixHelper.getNuc4_4());
@@ -201,10 +202,10 @@ public class NeedlemanWunschTest {
 		assertEquals(String.format("ACG%nCGT%n"), aligner.getPair().toString());
     }
     /**
-     * @author Daniel Cameron
+     * @author Daniel Cameron 
      */
     @Test
-	public void should_align_starting_anchor() {
+	public void should_align_starting_anchor() throws CompoundNotFoundException {
     	DNASequence query = new DNASequence("AAT", AmbiguityDNACompoundSet.getDNACompoundSet());
 		DNASequence target = new DNASequence("AATT", AmbiguityDNACompoundSet.getDNACompoundSet());
 		NeedlemanWunsch<DNASequence, NucleotideCompound> aligner = new NeedlemanWunsch<DNASequence, NucleotideCompound>(query, target, new SimpleGapPenalty((short)0, (short)10), SubstitutionMatrixHelper.getNuc4_4());
@@ -212,10 +213,10 @@ public class NeedlemanWunschTest {
 		assertEquals(String.format("-AAT%nAATT%n"), aligner.getPair().toString());
     }
     /**
-     * @author Daniel Cameron
+     * @author Daniel Cameron 
      */
     @Test
-	public void should_align_ending_anchor() {
+	public void should_align_ending_anchor() throws CompoundNotFoundException {
     	DNASequence query = new DNASequence("AAG", AmbiguityDNACompoundSet.getDNACompoundSet());
 		DNASequence target = new DNASequence("AATT", AmbiguityDNACompoundSet.getDNACompoundSet());
 		NeedlemanWunsch<DNASequence, NucleotideCompound> aligner = new NeedlemanWunsch<DNASequence, NucleotideCompound>(query, target, new SimpleGapPenalty((short)0, (short)10), SubstitutionMatrixHelper.getNuc4_4());
@@ -223,10 +224,10 @@ public class NeedlemanWunschTest {
 		assertEquals(String.format("AA-G%nAATT%n"), aligner.getPair().toString());
     }
     /**
-     * @author Daniel Cameron
+     * @author Daniel Cameron 
      */
     @Test
-	public void should_align_middle_anchor() {
+	public void should_align_middle_anchor() throws CompoundNotFoundException {
     	DNASequence query = new DNASequence("ACTTT", AmbiguityDNACompoundSet.getDNACompoundSet());
 		DNASequence target = new DNASequence("ACGTTT", AmbiguityDNACompoundSet.getDNACompoundSet());
 		NeedlemanWunsch<DNASequence, NucleotideCompound> aligner = new NeedlemanWunsch<DNASequence, NucleotideCompound>(query, target, new SimpleGapPenalty((short)0, (short)10), SubstitutionMatrixHelper.getNuc4_4());
@@ -234,10 +235,10 @@ public class NeedlemanWunschTest {
 		assertEquals(String.format("A-CTTT%nACGTTT%n"), aligner.getPair().toString());
     }
     /**
-     * @author Daniel Cameron
+     * @author Daniel Cameron 
      */
     @Test
-	public void should_align_multiple_anchors() {
+	public void should_align_multiple_anchors() throws CompoundNotFoundException {
     	DNASequence query = new DNASequence("ACGT", AmbiguityDNACompoundSet.getDNACompoundSet());
 		DNASequence target = new DNASequence("ATACGT", AmbiguityDNACompoundSet.getDNACompoundSet());
 		NeedlemanWunsch<DNASequence, NucleotideCompound> aligner = new NeedlemanWunsch<DNASequence, NucleotideCompound>(query, target, new SimpleGapPenalty((short)0, (short)10), SubstitutionMatrixHelper.getNuc4_4());
@@ -248,10 +249,10 @@ public class NeedlemanWunschTest {
 		assertEquals(String.format("ACG--T%nATACGT%n"), aligner.getPair().toString());
     }
     /**
-     * @author Daniel Cameron
+     * @author Daniel Cameron 
      */
     @Test
-	public void anchors_should_not_change_score() {
+	public void anchors_should_not_change_score() throws CompoundNotFoundException {
     	DNASequence query = new DNASequence("ACGT", AmbiguityDNACompoundSet.getDNACompoundSet());
 		DNASequence target = new DNASequence("ACGT", AmbiguityDNACompoundSet.getDNACompoundSet());
 		NeedlemanWunsch<DNASequence, NucleotideCompound> aligner = new NeedlemanWunsch<DNASequence, NucleotideCompound>(query, target, new SimpleGapPenalty((short)5, (short)10), SubstitutionMatrixHelper.getNuc4_4());
@@ -263,10 +264,10 @@ public class NeedlemanWunschTest {
 		assertEquals(aligner.getScore(), anchored.getScore(), PRECISION);
     }
     /**
-     * @author Daniel Cameron
+     * @author Daniel Cameron 
      */
 	@Test
-	public void testAnchoredDNAAlignment() {
+	public void testAnchoredDNAAlignment() throws CompoundNotFoundException {
 		DNASequence query = new DNASequence(  "ACGTACCGGTTTT", DNACompoundSet.getDNACompoundSet());
 		DNASequence target = new DNASequence("TACGTCCGGTTACGTACGTT", DNACompoundSet.getDNACompoundSet());
 		NeedlemanWunsch<DNASequence, NucleotideCompound> aligner = new NeedlemanWunsch<DNASequence, NucleotideCompound>(query, target, new SimpleGapPenalty((short)5, (short)2), SubstitutionMatrixHelper.getNuc4_4());

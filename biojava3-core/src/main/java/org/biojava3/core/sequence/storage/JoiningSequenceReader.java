@@ -6,6 +6,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
 
+import org.biojava3.core.exceptions.CompoundNotFoundException;
 import org.biojava3.core.sequence.AccessionID;
 import org.biojava3.core.sequence.template.Compound;
 import org.biojava3.core.sequence.template.CompoundSet;
@@ -255,7 +256,7 @@ public class JoiningSequenceReader<C extends Compound> implements ProxySequenceR
     }
 
     
-    public void setContents(String sequence) {
+    public void setContents(String sequence) throws CompoundNotFoundException {
         throw new UnsupportedOperationException();
     }
 

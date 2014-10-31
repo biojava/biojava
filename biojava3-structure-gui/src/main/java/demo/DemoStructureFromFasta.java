@@ -4,6 +4,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
+
 import org.biojava.bio.structure.ResidueNumber;
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureException;
@@ -73,7 +74,7 @@ public class DemoStructureFromFasta {
 		} catch (StructureException e) {
 			e.printStackTrace();
 			return;
-		}
+		} 
 
 		// Get info from the parser
 		ResidueNumber[][] residues = parser.getResidues();

@@ -23,6 +23,8 @@
 package org.biojava3.core.sequence;
 
 import java.util.LinkedHashMap;
+
+import org.biojava3.core.exceptions.CompoundNotFoundException;
 import org.biojava3.core.sequence.compound.DNACompoundSet;
 import org.biojava3.core.sequence.compound.NucleotideCompound;
 import org.biojava3.core.sequence.template.CompoundSet;
@@ -48,8 +50,9 @@ public class ChromosomeSequence extends DNASequence {
     /**
      * String is king and assume DNA
      * @param seqString
+     * @throws CompoundNotFoundException
      */
-    public ChromosomeSequence(String seqString) {
+    public ChromosomeSequence(String seqString) throws CompoundNotFoundException {
         super(seqString, DNACompoundSet.getDNACompoundSet());
     }
 
@@ -68,8 +71,9 @@ public class ChromosomeSequence extends DNASequence {
      * Allows the creation of a ChromosomeSequence using String for the sequence with a custom CompoundSet
      * @param seqString
      * @param compoundSet
+     * @throws CompoundNotFoundException
      */
-    public ChromosomeSequence(String seqString, CompoundSet<NucleotideCompound> compoundSet) {
+    public ChromosomeSequence(String seqString, CompoundSet<NucleotideCompound> compoundSet) throws CompoundNotFoundException {
         super(seqString, compoundSet);
     }
 

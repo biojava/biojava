@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.biojava3.core.exceptions.CompoundNotFoundError;
 import org.biojava3.core.sequence.compound.AminoAcidCompound;
 import org.biojava3.core.sequence.template.CompoundSet;
 import org.biojava3.core.sequence.template.Sequence;
@@ -54,16 +53,6 @@ public class ModifiedAminoAcidCompoundSet implements CompoundSet<AminoAcidCompou
     public boolean compoundsEquivalent(AminoAcidCompound compoundOne, AminoAcidCompound compoundTwo) {
         // TODO Auto-generated method stub
         return false;
-    }
-
-    @Deprecated
-    @Override
-    public void verifySequence(Sequence<AminoAcidCompound> sequence) throws CompoundNotFoundError {
-        for (AminoAcidCompound compound : sequence) {
-            if (!hasCompound(compound)) {
-                throw new CompoundNotFoundError("Compound (" + compound + ") not found in AminoAcidCompoundSet.");
-            }
-        }
     }
 
     @Override

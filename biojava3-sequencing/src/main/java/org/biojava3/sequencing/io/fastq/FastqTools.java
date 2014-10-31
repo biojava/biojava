@@ -25,6 +25,7 @@ import java.util.List;
 import com.google.common.collect.Lists;
 import com.google.common.collect.ImmutableList;
 
+import org.biojava3.core.exceptions.CompoundNotFoundException;
 import org.biojava3.core.sequence.DNASequence;
 import org.biojava3.core.sequence.compound.NucleotideCompound;
 import org.biojava3.core.sequence.features.QualityFeature;
@@ -53,8 +54,9 @@ public final class FastqTools
      *
      * @param fastq FASTQ formatted sequence, must not be null
      * @return a new {@link DNASequence} from the specified FASTQ formatted sequence
+     * @throws CompoundNotFoundException if DNA sequence in fastq contains unrecognised compounds
      */
-    public static DNASequence createDNASequence(final Fastq fastq)
+    public static DNASequence createDNASequence(final Fastq fastq) throws CompoundNotFoundException
     {
         if (fastq == null)
         {
@@ -72,8 +74,9 @@ public final class FastqTools
      *
      * @param fastq FASTQ formatted sequence, must not be null
      * @return a new {@link DNASequence} with quality scores from the specified FASTQ formatted sequence
+     * @throws CompoundNotFoundException if DNA sequence in fastq contains unrecognised compounds 
      */
-    public static DNASequence createDNASequenceWithQualityScores(final Fastq fastq)
+    public static DNASequence createDNASequenceWithQualityScores(final Fastq fastq) throws CompoundNotFoundException
     {
         DNASequence sequence = createDNASequence(fastq);
         sequence.addFeature(1, sequence.getLength(), createQualityScores(fastq));
@@ -87,8 +90,9 @@ public final class FastqTools
      *
      * @param fastq FASTQ formatted sequence, must not be null
      * @return a new {@link DNASequence} with error probabilities from the specified FASTQ formatted sequence
+     * @throws CompoundNotFoundException if DNA sequence in fastq contains unrecognised compounds 
      */
-    public static DNASequence createDNASequenceWithErrorProbabilities(final Fastq fastq)
+    public static DNASequence createDNASequenceWithErrorProbabilities(final Fastq fastq) throws CompoundNotFoundException
     {
         DNASequence sequence = createDNASequence(fastq);
         sequence.addFeature(1, sequence.getLength(), createErrorProbabilities(fastq));
@@ -105,8 +109,9 @@ public final class FastqTools
      * @param fastq FASTQ formatted sequence, must not be null
      * @return a new {@link DNASequence} with quality scores and error probabilities from the specified
      *    FASTQ formatted sequence
+     * @throws CompoundNotFoundException if DNA sequence in fastq contains unrecognised compounds     
      */
-    public static DNASequence createDNASequenceWithQualityScoresAndErrorProbabilities(final Fastq fastq)
+    public static DNASequence createDNASequenceWithQualityScoresAndErrorProbabilities(final Fastq fastq) throws CompoundNotFoundException
     {
         DNASequence sequence = createDNASequence(fastq);
         sequence.addFeature(1, sequence.getLength(), createQualityScores(fastq));

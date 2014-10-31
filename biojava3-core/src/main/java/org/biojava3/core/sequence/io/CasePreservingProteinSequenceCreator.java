@@ -5,13 +5,13 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
 
+import org.biojava3.core.exceptions.CompoundNotFoundException;
 import org.biojava3.core.sequence.ProteinSequence;
 import org.biojava3.core.sequence.compound.AminoAcidCompound;
 import org.biojava3.core.sequence.compound.AminoAcidCompoundSet;
 import org.biojava3.core.sequence.template.AbstractSequence;
 import org.biojava3.core.sequence.template.CompoundSet;
 import org.biojava3.core.sequence.template.ProxySequenceReader;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -57,7 +57,7 @@ public class CasePreservingProteinSequenceCreator extends ProteinSequenceCreator
 	 */
 	@Override
 	public AbstractSequence<AminoAcidCompound> getSequence(String sequence,
-			long index) {
+			long index) throws CompoundNotFoundException {
 		AbstractSequence<AminoAcidCompound> seq = super.getSequence(sequence.toUpperCase(Locale.ENGLISH), index);
 		seq.setUserCollection(getStringCase(sequence));
 		return seq;
@@ -96,7 +96,7 @@ public class CasePreservingProteinSequenceCreator extends ProteinSequenceCreator
 		return types;
 	}
 	
-	public static void main(String[] args) {
+	public static void main(String[] args) throws Exception {
 		CasePreservingProteinSequenceCreator creator = new CasePreservingProteinSequenceCreator(AminoAcidCompoundSet.getAminoAcidCompoundSet());
 		AbstractSequence<AminoAcidCompound> seq = creator.getSequence("aaAA",0);
 		logger.info("Sequence: {}", seq.getSequenceAsString()); //"AAAA"

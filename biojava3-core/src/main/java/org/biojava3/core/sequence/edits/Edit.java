@@ -3,10 +3,13 @@ package org.biojava3.core.sequence.edits;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.biojava3.core.exceptions.CompoundNotFoundException;
 import org.biojava3.core.sequence.BasicSequence;
 import org.biojava3.core.sequence.storage.JoiningSequenceReader;
 import org.biojava3.core.sequence.template.Compound;
 import org.biojava3.core.sequence.template.Sequence;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Interface for carrying out edit operations on a Sequence. The 3 major
@@ -37,6 +40,8 @@ public interface Edit<C extends Compound> {
      */
     public static abstract class AbstractEdit<C extends Compound> implements Edit<C> {
 
+    	private final static Logger logger = LoggerFactory.getLogger(AbstractEdit.class); 
+    			
         /**
          * Should return the 5-prime end of the given Sequence according to
          * the edit. An empty Sequence is valid.
@@ -92,8 +97,13 @@ public interface Edit<C extends Compound> {
          */
         public Sequence<C> getTargetSequence(Sequence<C> editingSequence) {
             if (sequence == null && stringSequence != null) {
-                sequence = new BasicSequence<C>(
-                        stringSequence, editingSequence.getCompoundSet());
+            	try {
+            		sequence = new BasicSequence<C>(
+            					stringSequence, editingSequence.getCompoundSet());
+            	} catch (CompoundNotFoundException e) {
+            		// TODO is there a better way to handle this exception?
+            		logger.error("Problem setting sequence, some unrecognised compounds: {}", e.getMessage());
+            	}
             }
             return sequence;
         }
@@ -103,7 +113,14 @@ public interface Edit<C extends Compound> {
          * sequence
          */
         protected Sequence<C> getEmptySequence(Sequence<C> editingSequence) {
-            return new BasicSequence<C>("", editingSequence.getCompoundSet());
+        	Sequence<C> s = null;
+        	try {
+        		s = new BasicSequence<C>("", editingSequence.getCompoundSet());
+        	} catch (CompoundNotFoundException e) {
+        		// should not happen
+        		logger.error("Could not construct empty sequence. {}. This is most likely a bug.", e.getMessage());
+        	}
+            return s;
         }
 
         public int getStart() {
