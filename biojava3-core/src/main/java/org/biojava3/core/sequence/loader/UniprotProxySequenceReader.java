@@ -27,24 +27,25 @@ package org.biojava3.core.sequence.loader;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPathExpressionException;
 
-import org.biojava3.core.sequence.AccessionID;
-import org.biojava3.core.sequence.template.SequenceProxyView;
-import org.biojava3.core.sequence.template.Compound;
 import org.biojava3.core.exceptions.CompoundNotFoundException;
+import org.biojava3.core.sequence.AccessionID;
 import org.biojava3.core.sequence.DataSource;
 import org.biojava3.core.sequence.ProteinSequence;
 import org.biojava3.core.sequence.Strand;
@@ -54,9 +55,11 @@ import org.biojava3.core.sequence.features.DBReferenceInfo;
 import org.biojava3.core.sequence.features.DatabaseReferenceInterface;
 import org.biojava3.core.sequence.features.FeaturesKeyWordInterface;
 import org.biojava3.core.sequence.storage.SequenceAsStringHelper;
+import org.biojava3.core.sequence.template.Compound;
 import org.biojava3.core.sequence.template.CompoundSet;
 import org.biojava3.core.sequence.template.ProxySequenceReader;
 import org.biojava3.core.sequence.template.SequenceMixin;
+import org.biojava3.core.sequence.template.SequenceProxyView;
 import org.biojava3.core.sequence.template.SequenceView;
 import org.biojava3.core.util.XMLHelper;
 import org.slf4j.Logger;
@@ -78,6 +81,13 @@ public class UniprotProxySequenceReader<C extends Compound> implements ProxySequ
 
 	private final static Logger logger = LoggerFactory.getLogger(UniprotProxySequenceReader.class);
 
+	/*
+	 * Taken from http://www.uniprot.org/help/accession_numbers
+	 */
+	private static final String SPID_PATTERN = "[OPQ][0-9][A-Z0-9]{3}[0-9]";
+	private static final String TREMBLID_PATTERN = "[A-NR-Z][0-9]([A-Z][A-Z0-9]{2}[0-9]){1,2}";
+	public static final Pattern UP_AC_PATTERN = Pattern.compile("(" + SPID_PATTERN + "|" + TREMBLID_PATTERN + ")");
+	
     private static String uniprotbaseURL = "http://www.uniprot.org"; //"http://pir.uniprot.org";
     private static String uniprotDirectoryCache = null;
     private String sequence;
@@ -95,7 +105,9 @@ public class UniprotProxySequenceReader<C extends Compound> implements ProxySequ
      * @throws IOException if problems while reading the UniProt XML
      */
     public UniprotProxySequenceReader(String accession, CompoundSet<C> compoundSet) throws CompoundNotFoundException, IOException {
-
+    	if (!UP_AC_PATTERN.matcher(accession.toUpperCase()).matches()) {
+    		throw new CompoundNotFoundException("Accession provided " + accession + " doesn't comply with the uniprot acession pattern.");
+    	}
         setCompoundSet(compoundSet);
         uniprotDoc = this.getUniprotXML(accession);
         String seq = this.getSequence(uniprotDoc);
@@ -326,61 +338,25 @@ public class UniprotProxySequenceReader<C extends Compound> implements ProxySequ
      * @return
      * @throws IOException
      */
-    private Document getUniprotXML(String accession) throws IOException {
-        int index = accession.lastIndexOf(".");
-        String key = accession;
-        if (index != -1) {
-            key = accession.substring(0, index);
-        }
-        StringBuilder sb = new StringBuilder();
-        File f = null;
+    private Document getUniprotXML(String accession) throws IOException, CompoundNotFoundException {
+		StringBuilder sb = new StringBuilder();
+		// try in cache
         if (uniprotDirectoryCache != null && uniprotDirectoryCache.length() > 0) {
-            f = new File(uniprotDirectoryCache + File.separatorChar + key + ".xml");
-            if (f.exists()) {
-                FileReader fr = new FileReader(f);
-                int size = (int) f.length();
-                char[] data = new char[size];
-                fr.read(data);
-                fr.close();
-                sb.append(data);
-                index = sb.indexOf("xmlns="); //strip out name space stuff to make it easier on xpath
-                if (index != -1) {
-                    int lastIndex = sb.indexOf(">", index);
-                    sb.replace(index, lastIndex, "");
-                }
-            }
-
+            sb = fetchFromCache(accession);
         }
-
-
         
         // http://www.uniprot.org/uniprot/?query=SORBIDRAFT_03g027040&format=xml
         if (sb.length() == 0) {
-        	String uniprotURL = getUniprotbaseURL() + "/uniprot/?query=" + key + "&format=xml";
-        	//String uniprotURL = getUniprotbaseURL() + "/uniprot/" + key + ".xml";
+        	String uniprotURL = getUniprotbaseURL() + "/uniprot/" + accession.toUpperCase() + "&format=xml";
             logger.info("Loading: {}", uniprotURL);
-            URL uniprot = new URL(uniprotURL);
-            URLConnection uniprotConnection = uniprot.openConnection();
-            uniprotConnection.setRequestProperty("User-Agent", "BioJava");
-            BufferedReader in = new BufferedReader(
-                    new InputStreamReader(
-                    uniprotConnection.getInputStream()));
-            String inputLine;
-
-            while ((inputLine = in.readLine()) != null) {
-                sb.append(inputLine);
-            }
-            in.close();
-            index = sb.indexOf("xmlns="); //strip out name space stuff to make it easier on xpath
+            sb = fetchUniprotXML(uniprotURL);
+            
+            int index = sb.indexOf("xmlns="); //strip out name space stuff to make it easier on xpath
             if (index != -1) {
                 int lastIndex = sb.indexOf(">", index);
                 sb.replace(index, lastIndex, "");
             }
-            if (f != null) {
-                FileWriter fw = new FileWriter(f);
-                fw.write(sb.toString());
-                fw.close();
-            }
+            writeCache(sb,accession);
         }
 
         logger.info("Load complete");
@@ -395,6 +371,70 @@ public class UniprotProxySequenceReader<C extends Compound> implements ProxySequ
         }
         return null;
     }
+
+	private void writeCache(StringBuilder sb, String accession) throws IOException {
+		File f = new File(uniprotDirectoryCache + File.separatorChar + accession + ".xml");
+		FileWriter fw = new FileWriter(f);
+        fw.write(sb.toString());
+        fw.close();
+	}
+
+	private StringBuilder fetchUniprotXML(String uniprotURL)
+			throws MalformedURLException, IOException, CompoundNotFoundException {
+		
+		StringBuilder sb = new StringBuilder();
+		URL uniprot = new URL(uniprotURL);
+		int attempt = 5;
+		List<String> errorCodes = new ArrayList<String>();
+		while(attempt > 0) {
+			HttpURLConnection uniprotConnection = (HttpURLConnection) uniprot.openConnection();
+			uniprotConnection.setRequestProperty("User-Agent", "BioJava");
+			uniprotConnection.connect();
+			int statusCode = uniprotConnection.getResponseCode();
+			if (statusCode == 200) {
+				BufferedReader in = new BufferedReader(
+				        new InputStreamReader(
+				        uniprotConnection.getInputStream()));
+				String inputLine;
+
+				while ((inputLine = in.readLine()) != null) {
+				    sb.append(inputLine);
+				}
+				in.close();
+				break;
+			}
+			attempt--;
+			errorCodes.add(String.valueOf(statusCode));
+		}
+		throw new CompoundNotFoundException("Couldn't fetch accession from the url " + uniprotURL + " error codes on 5 attempts are " + errorCodes.toString());
+	}
+
+	/**
+	 * @param key
+	 * @return A string containing the contents of entry specified by key and if not found returns an empty string
+	 * @throws FileNotFoundException
+	 * @throws IOException
+	 */
+	private StringBuilder fetchFromCache(String key)
+			throws FileNotFoundException, IOException {
+		int index;
+		File f = new File(uniprotDirectoryCache + File.separatorChar + key + ".xml");
+		StringBuilder sb = new StringBuilder();
+		if (f.exists()) {
+		    FileReader fr = new FileReader(f);
+		    int size = (int) f.length();
+		    char[] data = new char[size];
+		    fr.read(data);
+		    fr.close();
+		    sb.append(data);
+		    index = sb.indexOf("xmlns="); //strip out name space stuff to make it easier on xpath
+		    if (index != -1) {
+		        int lastIndex = sb.indexOf(">", index);
+		        sb.replace(index, lastIndex, "");
+		    }
+		}
+		return sb;
+	}
 
     /**
      *
