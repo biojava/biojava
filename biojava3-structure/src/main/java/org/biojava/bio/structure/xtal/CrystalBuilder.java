@@ -16,6 +16,8 @@ import org.biojava.bio.structure.StructureTools;
 import org.biojava.bio.structure.contact.AtomContactSet;
 import org.biojava.bio.structure.contact.StructureInterface;
 import org.biojava.bio.structure.contact.StructureInterfaceList;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 
@@ -57,7 +59,7 @@ public class CrystalBuilder {
 	private int numChainsAu;
 	private int numOperatorsSg;
 	
-	private boolean verbose;
+	private static final Logger logger = LoggerFactory.getLogger(CrystalBuilder.class);
 	
 	private int numCells;
 	
@@ -75,17 +77,8 @@ public class CrystalBuilder {
 			this.numOperatorsSg = this.crystallographicInfo.getSpaceGroup().getMultiplicity();
 		}
 		
-		this.verbose = false;
 		this.numCells = DEF_NUM_CELLS;				
 		
-	}
-	
-	/**
-	 * Set the verbose flag for verbose output of search algorithm to stdout
-	 * @param verbose
-	 */
-	public void setVerbose(boolean verbose) {
-		this.verbose = verbose;
 	}
 	
 	/**
@@ -167,18 +160,19 @@ public class CrystalBuilder {
 		// if not crystallographic there's no search to do in other cells, only chains within "AU" will be checked
 		if (!isCrystallographic) numCells = 0;
 		
+		boolean verbose = logger.isDebugEnabled();
 		if (verbose) {
 			trialCount = 0;
 			start= System.currentTimeMillis();
 			int neighbors = (2*numCells+1)*(2*numCells+1)*(2*numCells+1)-1;
 			int auTrials = (numChainsAu*(numChainsAu-1))/2;
 			int trials = numChainsAu*numOperatorsSg*numChainsAu*neighbors;
-			System.out.println("Chain clash trials within original AU: "+auTrials);
-			System.out.println(
+			logger.debug("Chain clash trials within original AU: "+auTrials);
+			logger.debug(
 					"Chain clash trials between the original AU and the neighbouring "+neighbors+
 					" whole unit cells ("+numCells+" neighbours)" +
 					"(2x"+numChainsAu+"chains x "+numOperatorsSg+"AUs x "+neighbors+"cells) : "+trials);
-			System.out.println("Total trials: "+(auTrials+trials));
+			logger.debug("Total trials: "+(auTrials+trials));
 		}
 
 
@@ -198,7 +192,7 @@ public class CrystalBuilder {
 						// short-cut strategies
 						// 1) we skip first of all if the bounding boxes of the AUs don't overlap
 						if (!bbGrid.getAuBoundingBox(0).overlaps(bbGridTrans.getAuBoundingBox(n), cutoff)) {
-							if (verbose) skippedAUsNoOverlap++;
+							skippedAUsNoOverlap++;
 							continue;
 						}
 
@@ -206,7 +200,7 @@ public class CrystalBuilder {
 						CrystalTransform tt = new CrystalTransform(this.crystallographicInfo.getSpaceGroup(), n);
 						tt.translate(trans);
 						if (isRedundant(tt)) { 								
-							if (verbose) skippedRedundant++;								
+							skippedRedundant++;								
 							continue;
 						}
 						addVisited(tt);
@@ -216,14 +210,14 @@ public class CrystalBuilder {
 
 						// 3) an operator can be "self redundant" if it is the inverse of itself (involutory, e.g. all pure 2-folds with no translation)						
 						if (tt.isEquivalent(tt)) { 
-							if (verbose) 
-								System.out.println("Transform "+tt+" is equivalent to itself, will skip half of i-chains to j-chains comparisons");
+							logger.debug("Transform "+tt+" is equivalent to itself, will skip half of i-chains to j-chains comparisons");
 							// in this case we can't skip the operator, but we can skip half of the matrix comparisons e.g. j>i
 							// we set a flag and do that within the loop below
 							selfEquivalent = true;
 						}
 						
-						if (verbose) System.out.print(tt+" ");
+						StringBuilder builder = null;
+						if (verbose) builder = new StringBuilder(tt+" ");
 						
 						// Now that we know that boxes overlap and operator is not redundant, we have to go to the details 
 						int contactsFound = 0;
@@ -241,13 +235,13 @@ public class CrystalBuilder {
 								
 								// before calculating the AtomContactSet we check for overlap, then we save putting atoms into the grid
 								if (!bbGrid.getChainBoundingBox(0,i).overlaps(bbGridTrans.getChainBoundingBox(n,j),cutoff)) {
+									skippedChainsNoOverlap++;
 									if (verbose) {
-										skippedChainsNoOverlap++;
-										System.out.print(".");
+										builder.append(".");
 									}
 									continue;
 								}
-								if (verbose) trialCount++;
+								trialCount++;
 
 								// finally we've gone through all short-cuts and the 2 chains seem to be close enough:
 								// we do the calculation of contacts
@@ -263,7 +257,7 @@ public class CrystalBuilder {
 									Calc.transform(chainj,m);
 								}
 								
-								StructureInterface interf = calcContacts(chaini, chainj, cutoff, tt);
+								StructureInterface interf = calcContacts(chaini, chainj, cutoff, tt, builder);
 								
 								if (interf!=null) {
 									contactsFound++;
@@ -271,38 +265,38 @@ public class CrystalBuilder {
 								}
 							}
 						}
-						if (verbose) {
+
+						if( verbose ) {
 							if (a==0 && b==0 && c==0 && n==0) 
-								System.out.println(" "+contactsFound+"("+(numChainsAu*(numChainsAu-1))/2+")");
-							else if (selfEquivalent) 								
-								System.out.println(" "+contactsFound+"("+(numChainsAu*(numChainsAu+1))/2+")");								
+								builder.append(" "+contactsFound+"("+(numChainsAu*(numChainsAu-1))/2+")");
+							else if (selfEquivalent) 
+								builder.append(" "+contactsFound+"("+(numChainsAu*(numChainsAu+1))/2+")");
 							else
-								System.out.println(" "+contactsFound+"("+numChainsAu*numChainsAu+")");
+								builder.append(" "+contactsFound+"("+numChainsAu*numChainsAu+")");
+
+							logger.debug(builder.toString());
 						}
 					}
 				}
 			}
 		}
 		
-		if (verbose) {
-			end = System.currentTimeMillis();
-			System.out.println("\n"+trialCount+" chain-chain clash trials done. Time "+(end-start)/1000+"s");
-			System.out.println("  skipped (not overlapping AUs)       : "+skippedAUsNoOverlap);
-			System.out.println("  skipped (not overlapping chains)    : "+skippedChainsNoOverlap);
-			System.out.println("  skipped (sym redundant op pairs)    : "+skippedRedundant);
-			System.out.println("  skipped (sym redundant self op)     : "+skippedSelfEquivalent);
+		end = System.currentTimeMillis();
+		logger.debug("\n"+trialCount+" chain-chain clash trials done. Time "+(end-start)/1000+"s");
+		logger.debug("  skipped (not overlapping AUs)       : "+skippedAUsNoOverlap);
+		logger.debug("  skipped (not overlapping chains)    : "+skippedChainsNoOverlap);
+		logger.debug("  skipped (sym redundant op pairs)    : "+skippedRedundant);
+		logger.debug("  skipped (sym redundant self op)     : "+skippedSelfEquivalent);
 
-			System.out.println("Found "+set.size()+" interfaces.");
-		}
+		logger.debug("Found "+set.size()+" interfaces.");
 	}
 
-	private StructureInterface calcContacts(Chain chaini, Chain chainj, double cutoff, CrystalTransform tt) {
-		
+	private StructureInterface calcContacts(Chain chaini, Chain chainj, double cutoff, CrystalTransform tt, StringBuilder builder) {
 		// note that we don't consider hydrogens when calculating contacts
 		AtomContactSet graph = StructureTools.getAtomsInContact(chaini, chainj, cutoff, INCLUDE_HETATOMS);
 		
 		if (graph.size()>0) {
-			if (verbose) System.out.print("x");
+			if (builder != null) builder.append("x");
 			
 			CrystalTransform transf = new CrystalTransform(this.crystallographicInfo.getSpaceGroup());
 			StructureInterface interf = new StructureInterface(
@@ -314,7 +308,7 @@ public class CrystalBuilder {
 			return interf;
 			
 		} else {
-			if (verbose) System.out.print("o");
+			if (builder != null) builder.append("o");
 			return null;
 		}		
 	}
@@ -338,7 +332,7 @@ public class CrystalBuilder {
 			
 			if (tt.isEquivalent(v)) {
 
-				if (verbose) System.out.println("Skipping redundant transformation: "+tt+", equivalent to "+v);
+				logger.debug("Skipping redundant transformation: "+tt+", equivalent to "+v);
 				
 				// there's only 1 possible equivalent partner for each visited matrix 
 				// (since the equivalent is its inverse matrix and the inverse matrix is unique)
@@ -353,9 +347,9 @@ public class CrystalBuilder {
 	}
 	
 	public void translate(Matrix4d m, Vector3d translation) {
-		m.m03 = m.m03+(double)translation.x;
-		m.m13 = m.m13+(double)translation.y;
-		m.m23 = m.m23+(double)translation.z;
+		m.m03 = m.m03+translation.x;
+		m.m13 = m.m13+translation.y;
+		m.m23 = m.m23+translation.z;
 		
 	}
 	

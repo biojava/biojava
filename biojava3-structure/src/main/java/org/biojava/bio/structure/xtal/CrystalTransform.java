@@ -100,9 +100,9 @@ public class CrystalTransform implements Serializable {
 	}
 	
 	public void translate(Point3i translation) {
-		matTransform.m03 = matTransform.m03+(double)translation.x;
-		matTransform.m13 = matTransform.m13+(double)translation.y;
-		matTransform.m23 = matTransform.m23+(double)translation.z;
+		matTransform.m03 = matTransform.m03+translation.x;
+		matTransform.m13 = matTransform.m13+translation.y;
+		matTransform.m23 = matTransform.m23+translation.z;
 		
 		crystalTranslation.add(translation); 
 
@@ -298,6 +298,7 @@ public class CrystalTransform implements Serializable {
 		this.transformId = transformId;
 	}
 	
+	@Override
 	public String toString() {
 		return String.format("[%2d-(%2d,%2d,%2d)]",transformId,crystalTranslation.x,crystalTranslation.y,crystalTranslation.z);
 	}

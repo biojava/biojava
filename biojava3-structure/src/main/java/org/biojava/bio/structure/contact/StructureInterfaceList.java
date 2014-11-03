@@ -10,6 +10,8 @@ import java.util.TreeMap;
 
 import org.biojava.bio.structure.Atom;
 import org.biojava.bio.structure.asa.AsaCalculator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -24,12 +26,11 @@ public class StructureInterfaceList implements Serializable, Iterable<StructureI
 	
 	private List<StructureInterface> list;
 	
-	private boolean debug;
+	private static final Logger logger = LoggerFactory.getLogger(StructureInterfaceList.class);
 	
 
 	public StructureInterfaceList() {
 		this.list = new ArrayList<StructureInterface>();
-		this.debug = false;
 	}
 	
 	public void add(StructureInterface interf) {
@@ -38,11 +39,6 @@ public class StructureInterfaceList implements Serializable, Iterable<StructureI
 	
 	public int size() {
 		return this.list.size();
-	}
-	
-	public void setDebug(boolean debug) {
-		// TODO do the debugging output through logging once we have slf4j in BJ
-		this.debug = debug;
 	}
 	
 	/**
@@ -102,8 +98,7 @@ public class StructureInterfaceList implements Serializable, Iterable<StructureI
 		}
 		long end = System.currentTimeMillis();
 		
-		if (debug) 
-			System.out.println("Calculated uncomplexed ASA for "+uniqAsaChains.size()+" orientation-unique chains. "
+		logger.debug("Calculated uncomplexed ASA for "+uniqAsaChains.size()+" orientation-unique chains. "
 					+ "Time: "+((end-start)/1000.0)+" s");
 		
 		start = System.currentTimeMillis();
@@ -119,8 +114,7 @@ public class StructureInterfaceList implements Serializable, Iterable<StructureI
 		}
 		end = System.currentTimeMillis();
 		
-		if (debug) 
-			System.out.println("Calculated complexes ASA for "+list.size()+" pairwise complexes. "
+		logger.debug("Calculated complexes ASA for "+list.size()+" pairwise complexes. "
 					+ "Time: "+((end-start)/1000.0)+" s");
 		
 		
