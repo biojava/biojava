@@ -27,6 +27,16 @@ public class StructureInterfaceList implements Serializable, Iterable<StructureI
 	 * @see #removeInterfacesBelowArea(double);
 	 */
 	public static final double DEFAULT_MINIMUM_INTERFACE_AREA = 35.0;
+	/**
+	 * Default number of points to use when calculating ASAs
+	 * @see #calcAsas(int, int, int)
+	 */
+	public static final int DEFAULT_ASA_SPHERE_POINTS = 3000;
+	/**
+	 * Default minimum size of cofactor molecule (non-chain HET atoms) that will be used
+	 * @see #calcAsas(int, int, int)
+	 */
+	public static final int DEFAULT_MIN_COFACTOR_SIZE = 40;
 
 	private static final long serialVersionUID = 1L;
 
@@ -57,6 +67,18 @@ public class StructureInterfaceList implements Serializable, Iterable<StructureI
 		return list.get(id-1);
 	}
 
+	/**
+	 * Calculates ASAs for all interfaces in list, both for the unbound 
+	 * chains and for the complex of the two chains together. 
+	 * Also sorts the interfaces based on calculated BSA areas (descending).
+	 * 
+	 * <p>Uses default parameters
+	 */
+	public void calcAsas() {
+		calcAsas( DEFAULT_ASA_SPHERE_POINTS,
+				Runtime.getRuntime().availableProcessors(),
+				DEFAULT_MIN_COFACTOR_SIZE );
+	}
 	/**
 	 * Calculates ASAs for all interfaces in list, both for the unbound 
 	 * chains and for the complex of the two chains together. 

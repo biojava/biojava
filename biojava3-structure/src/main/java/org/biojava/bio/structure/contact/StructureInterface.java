@@ -424,5 +424,12 @@ public class StructureInterface implements Serializable, Comparable<StructureInt
 		// this will sort descending on interface areas
 		return (Double.compare(o.totalArea,this.totalArea));
 	}
+
+	@Override
+	public String toString() {
+		return "StructureInterface [id=" + id + ", totalArea=" + totalArea
+				+ ", transforms=" + transforms
+				+ "]";
+	}
 	
 }
