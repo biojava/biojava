@@ -51,7 +51,7 @@ public class Dataset {
         return files;
     }
 
-    private File[] getLocalFiles(){
+    public File[] getLocalFiles(){
 
         String[] rfiles = getRemoteFiles();
 
@@ -90,7 +90,10 @@ public class Dataset {
 
     public void download(){
 
-       File dir = getLocalDir();
+        System.out.println("Downloading data from www.phosposite.org. Data is under CC-BY-NC-SA license. Please link to site and cite: ");
+        System.out.println("Hornbeck PV, Kornhauser JM, Tkachev S, Zhang B, Skrzypek E, Murray B, Latham V, Sullivan M (2012) PhosphoSitePlus: a comprehensive resource for investigating the structure and function of experimentally determined post-translational modifications in man and mouse. Nucleic Acids Res. 40(Database issue), D261–70.");
+
+        File dir = getLocalDir();
 
         if ( ! dir.exists()) {
 
