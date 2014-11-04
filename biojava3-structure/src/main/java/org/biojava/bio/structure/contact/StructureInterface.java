@@ -427,9 +427,7 @@ public class StructureInterface implements Serializable, Comparable<StructureInt
 
 	@Override
 	public String toString() {
-		return "StructureInterface [id=" + id + ", totalArea=" + totalArea
-				+ ", transforms=" + transforms
-				+ "]";
+		return String.format("StructureInterface %d (%s, %.0f A, <%s; %s>)", id, moleculeIds,totalArea,transforms.getFirst().toXYZString(),transforms.getSecond().toXYZString());
 	}
 	
 }
