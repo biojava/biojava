@@ -347,7 +347,7 @@ public class UniprotProxySequenceReader<C extends Compound> implements ProxySequ
         
         // http://www.uniprot.org/uniprot/?query=SORBIDRAFT_03g027040&format=xml
         if (sb.length() == 0) {
-        	String uniprotURL = getUniprotbaseURL() + "/uniprot/" + accession.toUpperCase() + "&format=xml";
+        	String uniprotURL = getUniprotbaseURL() + "/uniprot/" + accession.toUpperCase() + ".xml";
             logger.info("Loading: {}", uniprotURL);
             sb = fetchUniprotXML(uniprotURL);
             
@@ -356,7 +356,8 @@ public class UniprotProxySequenceReader<C extends Compound> implements ProxySequ
                 int lastIndex = sb.indexOf(">", index);
                 sb.replace(index, lastIndex, "");
             }
-            writeCache(sb,accession);
+            if (uniprotDirectoryCache != null && uniprotDirectoryCache.length() > 0) 
+            	writeCache(sb,accession);
         }
 
         logger.info("Load complete");
@@ -401,7 +402,7 @@ public class UniprotProxySequenceReader<C extends Compound> implements ProxySequ
 				    sb.append(inputLine);
 				}
 				in.close();
-				break;
+				return sb;
 			}
 			attempt--;
 			errorCodes.add(String.valueOf(statusCode));
