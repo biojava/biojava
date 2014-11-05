@@ -33,8 +33,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
+import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -106,7 +106,7 @@ public class UniprotProxySequenceReader<C extends Compound> implements ProxySequ
      */
     public UniprotProxySequenceReader(String accession, CompoundSet<C> compoundSet) throws CompoundNotFoundException, IOException {
     	if (!UP_AC_PATTERN.matcher(accession.toUpperCase()).matches()) {
-    		throw new CompoundNotFoundException("Accession provided " + accession + " doesn't comply with the uniprot acession pattern.");
+    		throw new IllegalArgumentException("Accession provided " + accession + " doesn't comply with the uniprot acession pattern.");
     	}
         setCompoundSet(compoundSet);
         uniprotDoc = this.getUniprotXML(accession);
@@ -381,7 +381,7 @@ public class UniprotProxySequenceReader<C extends Compound> implements ProxySequ
 	}
 
 	private StringBuilder fetchUniprotXML(String uniprotURL)
-			throws MalformedURLException, IOException, CompoundNotFoundException {
+			throws IOException, CompoundNotFoundException {
 		
 		StringBuilder sb = new StringBuilder();
 		URL uniprot = new URL(uniprotURL);
@@ -407,7 +407,7 @@ public class UniprotProxySequenceReader<C extends Compound> implements ProxySequ
 			attempt--;
 			errorCodes.add(String.valueOf(statusCode));
 		}
-		throw new CompoundNotFoundException("Couldn't fetch accession from the url " + uniprotURL + " error codes on 5 attempts are " + errorCodes.toString());
+		throw new RemoteException("Couldn't fetch accession from the url " + uniprotURL + " error codes on 5 attempts are " + errorCodes.toString());
 	}
 
 	/**
