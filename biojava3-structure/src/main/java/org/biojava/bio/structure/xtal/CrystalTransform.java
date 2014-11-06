@@ -7,6 +7,7 @@ import javax.vecmath.Matrix4d;
 import javax.vecmath.Point3i;
 import javax.vecmath.Vector3d;
 
+import static java.lang.Math.abs;
 
 
 /**
@@ -100,9 +101,9 @@ public class CrystalTransform implements Serializable {
 	}
 	
 	public void translate(Point3i translation) {
-		matTransform.m03 = matTransform.m03+(double)translation.x;
-		matTransform.m13 = matTransform.m13+(double)translation.y;
-		matTransform.m23 = matTransform.m23+(double)translation.z;
+		matTransform.m03 = matTransform.m03+translation.x;
+		matTransform.m13 = matTransform.m13+translation.y;
+		matTransform.m23 = matTransform.m23+translation.z;
 		
 		crystalTranslation.add(translation); 
 
@@ -298,8 +299,132 @@ public class CrystalTransform implements Serializable {
 		this.transformId = transformId;
 	}
 	
+	@Override
 	public String toString() {
 		return String.format("[%2d-(%2d,%2d,%2d)]",transformId,crystalTranslation.x,crystalTranslation.y,crystalTranslation.z);
+	}
+	
+	/**
+	 * Expresses this transformation in terms of x,y,z fractional coordinates.
+	 * 
+	 * Examples: 
+	 * @return
+	 */
+	public String toXYZString() {
+		StringBuilder str = new StringBuilder();
+
+		for(int i=0;i<3;i++) { //for each row
+			boolean emptyRow = true;
+			
+			double coef; // TODO work with rational numbers
+
+
+			// X
+			coef = matTransform.getElement(i, 0);
+
+			// Three cases for coef: zero, one, non-one
+			if(abs(coef) > 1e-6 ) { // Non-zero
+				if( abs( abs(coef)-1 ) < 1e-6 ) { // +/- 1
+					if( coef < 0 ) {
+						str.append("-");
+					}
+				} else {
+					str.append(formatCoef(coef));
+					str.append("*");
+				}
+				str.append("x");
+				emptyRow = false;
+			}
+
+			// Y
+			coef = matTransform.getElement(i, 1);
+
+			if(abs(coef) > 1e-6 ) { // Non-zero
+				if( abs( abs(coef)-1 ) < 1e-6 ) { // +/- 1
+					if( coef < 0 ) {
+						str.append("-");
+					} else if( !emptyRow ) {
+						str.append("+");
+					}
+				} else {
+					if( !emptyRow && coef > 0) {
+						str.append("+");
+					}
+					str.append(formatCoef(coef));
+					str.append("*");
+				}
+				str.append("y");
+				emptyRow = false;
+			}
+
+			// Z
+			coef = matTransform.getElement(i, 2);
+
+			if(abs(coef) > 1e-6 ) { // Non-zero
+				if( abs( abs(coef)-1 ) < 1e-6 ) { // +/- 1
+					if( coef < 0 ) {
+						str.append("-");
+					} else if( !emptyRow ) {
+						str.append("+");
+					}
+				} else {
+					if( !emptyRow && coef > 0) {
+						str.append("+");
+					}
+					str.append(formatCoef(coef));
+					str.append("*");
+				}
+				str.append("z");
+				emptyRow = false;
+			}
+
+			// Intercept
+			coef = matTransform.getElement(i, 3);
+
+			if(abs(coef) > 1e-6 ) { // Non-zero
+				if( !emptyRow && coef > 0) {
+					str.append("+");
+				}
+				str.append(formatCoef(coef));
+			}
+
+			if(i<2) {
+				str.append(",");
+			}
+		}
+
+
+		return str.toString();
+	}
+	/**
+	 * helper function to format simple fractions into rationals
+	 * @param coef
+	 * @return
+	 */
+	private String formatCoef(double coef) {
+		double tol = 1e-6; // rounding tolerance
+
+		// zero case
+		if( Math.abs(coef) < tol) {
+			return "0";
+		}
+
+		// integer case
+		long num = Math.round(coef);
+		if( Math.abs(num - coef) < tol) {
+			return Long.toString(num);
+		}
+
+		// Other small cases
+		for(int denom = 2; denom < 12; denom++ ) {
+			num = Math.round(coef*denom);
+			if( num - coef*denom < tol ) {
+				return String.format("%d/%d",num, denom);
+			}
+		}
+
+		// Give up and use floating point; 
+		return String.format("%.3f", coef);
 	}
 
 	/**

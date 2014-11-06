@@ -4,18 +4,15 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-
-
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
-
 import java.util.Random;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-
 import org.biojava.bio.structure.Atom;
+import org.biojava.bio.structure.StructureException;
 import org.biojava.bio.structure.align.fatcat.FatCatRigid;
 import org.biojava.bio.structure.align.model.AFPChain;
 import org.biojava.bio.structure.align.util.AtomCache;
@@ -28,8 +25,11 @@ import org.biojava.bio.structure.align.xml.PdbPairXMLConverter;
 import org.biojava.bio.structure.align.xml.PdbPairsMessage;
 import org.biojava.bio.structure.align.xml.PositionInQueueXMLConverter;
 import org.biojava.bio.structure.align.xml.RepresentativeXMLConverter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class JFatCatClient {
+	private final static Logger logger = LoggerFactory.getLogger(JFatCatClient.class);
 
 	private static ResourceManager resourceManager = ResourceManager.getResourceManager("jfatcat");
 
@@ -60,8 +60,6 @@ public class JFatCatClient {
 		generator = new Random();
 	
 	}
-
-	static final boolean debug = false;
 
 	public static void main(String[] args){
 		//System.out.println(hasPrecalculatedResult("http://source.rcsb.org/jfatcatserver/align/", "jCE Circular Permutation", "1CDG.A", "1TIM.A"));
@@ -112,14 +110,14 @@ public class JFatCatClient {
 			if ( stream != null) {
 
 				xml = convertStreamToString(stream);
-				if ( debug )
-					System.out.println(" has PrecalcResults got XML from server: " + xml);
+				logger.info(" has PrecalcResults got XML from server: " + xml);
 				HasResultXMLConverter conv = new HasResultXMLConverter();
 				hasResults = conv.fromXML(xml);
 			}
 
-		} catch (Exception e){
-			System.err.println("error in JFatCatClient: getAFPChainFromServer : " + e.getMessage());
+		} catch (IOException e){
+			// log error and return false
+			logger.error("error in JFatCatClient: getAFPChainFromServer",e);
 		}
 		return hasResults;
 	}
@@ -150,8 +148,8 @@ public class JFatCatClient {
 				position = conv.fromXML(xml);
 			}
 
-		} catch (Exception e){
-			System.err.println("error in JFatCatClient: getAFPChainFromServer : " + e.getMessage());
+		} catch (IOException e){
+			logger.error("error in JFatCatClient: getAFPChainFromServer",e);
 		}
 		return position;
 
@@ -173,7 +171,7 @@ public class JFatCatClient {
 				u+= "&method=" + URLEncoder.encode(method,"UTF-8");
 
 			URL url = new URL(u);
-			System.out.println("requesting alignment from server..."  + url);
+			logger.info("requesting alignment from server..."  + url);
 			// have a short timeout for this...
 			// 5 sec
 			InputStream stream = HTTPConnectionTools.getInputStream(url,timeout);
@@ -196,9 +194,10 @@ public class JFatCatClient {
 			} else {
 				return null;
 			} 
-		} catch (Exception e){
-			e.printStackTrace();
-			System.err.println("error in JFatCatClient: getAFPChainFromServer : " + e.getMessage());
+		} catch (IOException e){
+			logger.error("error in JFatCatClient: getAFPChainFromServer",e);
+		} catch (StructureException e) {
+			logger.error("error in JFatCatClient: getAFPChainFromServer",e);
 		}
 		return null;
 	}
@@ -219,7 +218,7 @@ public class JFatCatClient {
 			try {
 				stream.close();
 			} catch (IOException e) {
-				e.printStackTrace();
+				logger.error("Can't close stream", e);
 			}
 		}
 
@@ -251,7 +250,7 @@ public class JFatCatClient {
 				responseS = convertStreamToString(response);
 				submitted = true;
 				if (! responseS.contains("OK"))
-					System.err.println("server returned " + responseS);
+					logger.error("server returned " + responseS);
 
 				// server is busy... wait a bit and try again
 				if ( responseS.startsWith(COME_BACK_LATER)){
@@ -259,14 +258,14 @@ public class JFatCatClient {
 				}
 
 			} catch (Exception e){
-				System.err.println("Error in JFatCatClient: while sending results back to server : " + e.getMessage());
+				logger.error("Error in JFatCatClient: while sending results back to server",e);
 
 				try {
 					int randomSleep = getRandomSleepTime();
-					System.err.println("sleeping " + (randomSleep/1000) + " sec.");
+					logger.warn("sleeping " + (randomSleep/1000) + " sec.");
 					Thread.sleep(randomSleep);
 				} catch (InterruptedException ex){
-					ex.printStackTrace();
+					logger.error("Interrupted while sleeping",ex);
 				}
 			}
 		} 
@@ -294,7 +293,7 @@ public class JFatCatClient {
 	}
 
 
-	public static final void sendAFPChainToServer(String serverLocation, AFPChain afpChain,Atom[] ca1, Atom[] ca2) 
+	public static final void sendAFPChainToServer(String serverLocation, AFPChain afpChain,Atom[] ca1, Atom[] ca2) throws JobKillException 
 	{
 
 		String sendURL = serverLocation + sendAPPEND;
@@ -323,8 +322,8 @@ public class JFatCatClient {
 				throw new JobKillException("Server responded with KILL message.");
 			}
 
-		} catch (Exception e){
-			System.err.println("error in JFatCatClient: sendAFPChainToServer : " + e.getMessage());
+		} catch (IOException e){
+			logger.error("error in JFatCatClient: sendAFPChainToServer",e);
 		}
 
 	}
@@ -336,7 +335,7 @@ public class JFatCatClient {
 		try {
 			timeout = Integer.parseInt(timeoutS);
 		} catch (NumberFormatException ex ){
-			ex.printStackTrace();
+			logger.error("Bad connection.timeout parameter",ex);
 		}
 		return timeout;
 	}
@@ -392,7 +391,7 @@ public class JFatCatClient {
 		int timeout = getTimeout();
 		String u = String.format(representURL,cutoff);
 		
-		System.out.println(u);
+		logger.info("Fetching representatives from "+u);
 		try {
 			URL url = new URL(u);
 
@@ -408,8 +407,8 @@ public class JFatCatClient {
 			if (xml != null) {
 				representatives = RepresentativeXMLConverter.fromXML(xml);
 			}
-		} catch (Exception e){
-			e.printStackTrace();
+		} catch (IOException e){
+			logger.error("Error fetching representatives",e);
 		}
 		return representatives;
 	}
