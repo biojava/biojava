@@ -305,6 +305,6 @@ public class NeedlemanWunschTest {
 		//System.out.println("getMinScore: " + aligner.getMinScore());
 		//System.out.println("getSimilarity: " + aligner.getSimilarity());
 		
-		assertTrue(aligner.getSimilarity()>0);
+		assertTrue("Similarity must be positive, this must be an integer overflow bug!", aligner.getSimilarity()>0);
 	}      
 }
