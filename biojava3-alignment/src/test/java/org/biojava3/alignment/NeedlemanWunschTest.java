@@ -101,7 +101,7 @@ public class NeedlemanWunschTest {
 
     @Test
     public void testGetScoreMatrix() {
-        short[][][] scores = alignment.getScoreMatrix();
+        int[][][] scores = alignment.getScoreMatrix();
         assertEquals(scores[2][1][0], -6);
         scores = self.getScoreMatrix();
         assertEquals(scores[3][4][2], 4);

@@ -24,7 +24,6 @@
 package org.biojava3.alignment.routines;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import org.biojava3.alignment.SimpleSequencePair;

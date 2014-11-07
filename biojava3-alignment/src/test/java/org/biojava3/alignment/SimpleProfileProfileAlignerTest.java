@@ -121,7 +121,7 @@ public class SimpleProfileProfileAlignerTest {
 
     @Test
     public void testGetScoreMatrix() {
-        short[][][] scores = sppa1.getScoreMatrix();
+        int[][][] scores = sppa1.getScoreMatrix();
         assertEquals(scores[2][1][1], 1);
         scores = sppa2.getScoreMatrix();
         assertEquals(scores[3][4][0], -7);
