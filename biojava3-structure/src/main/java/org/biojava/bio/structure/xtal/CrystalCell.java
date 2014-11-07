@@ -7,6 +7,7 @@ import java.util.Collections;
 import javax.vecmath.Matrix3d;
 import javax.vecmath.Matrix4d;
 import javax.vecmath.Point3d;
+import javax.vecmath.Point3i;
 import javax.vecmath.Tuple3d;
 import javax.vecmath.Vector3d;
 
@@ -128,6 +129,40 @@ public class CrystalCell implements Serializable {
 		return volume;
 	}
 	
+	/**
+	 * Get the index of a unit cell to which the query point belongs.
+	 * 
+	 * <p>For instance, all points in the unit cell at the origin will return (0,0,0);
+	 * Points in the unit cell one unit further along the `a` axis will return (1,0,0),
+	 * etc.
+	 * @param pt
+	 * @return
+	 */
+	public Point3i getCellIndices(Tuple3d pt) {
+		Point3d p = new Point3d(pt);
+		this.transfToCrystal(p);
+
+		int x = (int)Math.floor(p.getX());
+		int y = (int)Math.floor(p.getY());
+		int z = (int)Math.floor(p.getZ());
+		return new Point3i(x,y,z);
+	}
+
+	/**
+	 * Converts the coordinates in pt so that they occur within the (0,0,0) unit cell
+	 * @param pt
+	 */
+	public void transfToOriginCell(Tuple3d pt) {
+		transfToCrystal(pt);
+
+		// convert all coordinates to [0,1) interval
+		pt.x = pt.x<0 ? (pt.x%1.0 + 1.0)%1.0 : pt.x%1.0;
+		pt.y = pt.y<0 ? (pt.y%1.0 + 1.0)%1.0 : pt.y%1.0;
+		pt.z = pt.z<0 ? (pt.z%1.0 + 1.0)%1.0 : pt.z%1.0;
+
+		transfToOrthonormal(pt);
+	}
+
 	/**
 	 * Transform given Matrix4d in crystal basis to the orthonormal basis using
 	 * the PDB axes convention (NCODE=1)
