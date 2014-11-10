@@ -8,8 +8,8 @@ import org.biojava3.core.sequence.template.Compound;
 import org.biojava3.core.sequence.template.Sequence;
 
 /**
- * TODO Write comments.
- * Scores using a substitution matrix.
+ * Scores using a substitution matrix. Specifically, the score is the sum of the substitution matrix entries
+ * corresponding to the alignment. Gaps are scored according to the substitution matrix, just as matches and mismatches.
  * @author dmyersturnbull
  *
  * @param <S>
@@ -36,6 +36,9 @@ implements PairwiseSequenceScorer<S, C> {
 		}
 	}
 
+	/**
+	 * @return The maximum score the query could be assigned when aligned against any target sequence.
+	 */
 	@Override
 	public double getMaxScore() {
 		// assume nothing about the matrix
@@ -50,6 +53,9 @@ implements PairwiseSequenceScorer<S, C> {
 		return score;
 	}
 
+	/**
+	 * @return The minimum score the query could be assigned when aligned against any target sequence.
+	 */
 	@Override
 	public double getMinScore() {
 		// assume nothing about the matrix
