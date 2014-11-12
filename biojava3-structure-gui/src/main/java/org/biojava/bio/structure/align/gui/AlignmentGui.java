@@ -210,15 +210,14 @@ public class AlignmentGui extends JFrame{
 
 		JLabel algoLabel = new JLabel("Select alignment algorithm: ");
 
-		JComboBox<String> algorithmList = new JComboBox<String>(algorithms);
+		JComboBox algorithmList = new JComboBox(algorithms);
 		algorithmList.setSelectedIndex(0);
 
 		Action actionAlgorithm = new AbstractAction("Algorithm") {
 			public static final long serialVersionUID = 0l;
 			// This method is called when the button is pressed
 			public void actionPerformed(ActionEvent evt) {
-				@SuppressWarnings("unchecked")
-				JComboBox<String> cb = (JComboBox<String>)evt.getSource();
+				JComboBox cb = (JComboBox)evt.getSource();
 				String algorithmName = (String)cb.getSelectedItem();
 				// Perform action...
 				//System.out.println("calc structure alignment");
