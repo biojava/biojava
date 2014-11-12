@@ -142,9 +142,9 @@ public class CrystalCell implements Serializable {
 		Point3d p = new Point3d(pt);
 		this.transfToCrystal(p);
 
-		int x = (int)Math.floor(p.getX());
-		int y = (int)Math.floor(p.getY());
-		int z = (int)Math.floor(p.getZ());
+		int x = (int)Math.floor(p.x);
+		int y = (int)Math.floor(p.y);
+		int z = (int)Math.floor(p.z);
 		return new Point3i(x,y,z);
 	}
 
