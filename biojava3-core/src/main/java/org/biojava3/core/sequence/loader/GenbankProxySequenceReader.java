@@ -38,7 +38,6 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 
 import org.biojava3.core.exceptions.CompoundNotFoundException;
-import org.biojava3.core.exceptions.HeaderParseException;
 import org.biojava3.core.sequence.AccessionID;
 import org.biojava3.core.sequence.DNASequence;
 import org.biojava3.core.sequence.ProteinSequence;
@@ -97,8 +96,8 @@ public class GenbankProxySequenceReader<C extends Compound> extends StringProxyS
 
         if (compoundSet.equals(AminoAcidCompoundSet.class)) {
             if (!genbankParser.getCompoundType().equals(compoundSet)) {
-                logger.error("Declared compount type {} does not mach the real", genbankParser.getCompoundType().toString());
-                throw new HeaderParseException("wrong declared compound type for: " + accessionID); //it is en Error not exception
+                logger.error("Declared compount type {} does not mach the real: {}", genbankParser.getCompoundType().toString(), compoundSet.toString());
+                throw new IOException("Wrong declared compound type for: " + accessionID); 
             }
         }
 

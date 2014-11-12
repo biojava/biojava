@@ -150,7 +150,7 @@ public abstract class AbstractPairwiseSequenceAligner<S extends Sequence<C>, C e
     }
 
     @Override
-    protected short getSubstitutionScore(int queryColumn, int targetColumn) {
+    protected int getSubstitutionScore(int queryColumn, int targetColumn) {
         return getSubstitutionMatrix().getValue(query.getCompoundAt(queryColumn), target.getCompoundAt(targetColumn));
     }
 
@@ -173,8 +173,8 @@ public abstract class AbstractPairwiseSequenceAligner<S extends Sequence<C>, C e
             for (C c : target) {
                 maxt += getSubstitutionMatrix().getValue(c, c);
             }
-            max = (short) Math.max(maxq, maxt);
-            score = min = isLocal() ? 0 : (short) (2 * getGapPenalty().getOpenPenalty() + (query.getLength() +
+            max = (int) Math.max(maxq, maxt);
+            score = min = isLocal() ? 0 : (int) (2 * getGapPenalty().getOpenPenalty() + (query.getLength() +
                     target.getLength()) * getGapPenalty().getExtensionPenalty());
         }
     }

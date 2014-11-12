@@ -202,7 +202,7 @@ public abstract class AbstractProfileProfileAligner<S extends Sequence<C>, C ext
     }
 
     @Override
-    protected short getSubstitutionScore(int queryColumn, int targetColumn) {
+    protected int getSubstitutionScore(int queryColumn, int targetColumn) {
         return getSubstitutionScore(qfrac[queryColumn - 1], tfrac[targetColumn - 1]);
     }
 
@@ -244,14 +244,14 @@ public abstract class AbstractProfileProfileAligner<S extends Sequence<C>, C ext
                 tfrac[i] = target.getCompoundWeightsAt(i + 1, cslist);
                 maxt += getSubstitutionScore(tfrac[i], tfrac[i]);
             }
-            max = (short) Math.max(maxq, maxt);
-            score = min = isLocal() ? 0 : (short) (2 * getGapPenalty().getOpenPenalty() + (query.getLength() +
+            max = (int) Math.max(maxq, maxt);
+            score = min = isLocal() ? 0 : (int) (2 * getGapPenalty().getOpenPenalty() + (query.getLength() +
                     target.getLength()) * getGapPenalty().getExtensionPenalty());
         }
     }
 
     // helper method that scores alignment of two column vectors
-    private short getSubstitutionScore(float[] qv, float[] tv) {
+    private int getSubstitutionScore(float[] qv, float[] tv) {
         float score = 0.0f;
         for (int q = 0; q < qv.length; q++) {
             if (qv[q] > 0.0f) {
@@ -262,7 +262,7 @@ public abstract class AbstractProfileProfileAligner<S extends Sequence<C>, C ext
                 }
             }
         }
-        return (short) Math.round(score);
+        return (int) Math.round(score);
     }
 
 }
