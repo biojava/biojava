@@ -301,7 +301,7 @@ public class CrystalTransform implements Serializable {
 	
 	@Override
 	public String toString() {
-		return String.format("[%2d-(%2d,%2d,%2d)]",transformId,crystalTranslation.x,crystalTranslation.y,crystalTranslation.z);
+		return String.format("[%2d-(%s)]",transformId,toXYZString());
 	}
 	
 	/**
