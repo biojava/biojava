@@ -135,8 +135,8 @@ public class CrystalCell implements Serializable {
 	 * <p>For instance, all points in the unit cell at the origin will return (0,0,0);
 	 * Points in the unit cell one unit further along the `a` axis will return (1,0,0),
 	 * etc.
-	 * @param pt
-	 * @return
+	 * @param pt Input point
+	 * @return A new point with the three indices of the cell containing pt
 	 */
 	public Point3i getCellIndices(Tuple3d pt) {
 		Point3d p = new Point3d(pt);
@@ -164,6 +164,34 @@ public class CrystalCell implements Serializable {
 	}
 
 	/**
+	 * Converts a set of points so that the reference point falls in the unit cell.
+	 *
+	 * This is useful to transform a whole chain at once, allowing some of the
+	 * atoms to be outside the unit cell, but forcing the centroid to be within it.
+	 *
+	 * @param points A set of points to transform
+	 * @param reference The reference point, which is unmodified but which would
+	 *    be in the unit cell were it to have been transformed. It is safe to
+	 *    use a member of the points array here.
+	 */
+	public void transfToOriginCell(Tuple3d[] points, Tuple3d reference) {
+		reference = new Point3d(reference);//clone
+		transfToCrystal(reference);
+
+		int x = (int)Math.floor(reference.x);
+		int y = (int)Math.floor(reference.y);
+		int z = (int)Math.floor(reference.z);
+
+		for( Tuple3d point: points ) {
+			transfToCrystal(point);
+			point.x -= x;
+			point.y -= y;
+			point.z -= z;
+			transfToOrthonormal(point);
+		}
+	}
+
+	/**
 	 * Transform given Matrix4d in crystal basis to the orthonormal basis using
 	 * the PDB axes convention (NCODE=1)
 	 * @param m
@@ -172,7 +200,7 @@ public class CrystalCell implements Serializable {
 	public Matrix4d transfToOrthonormal(Matrix4d m) {
 		Vector3d trans = new Vector3d(m.m03,m.m13,m.m23);
 		transfToOrthonormal(trans);
-		
+
 		Matrix3d rot = new Matrix3d();
 		m.getRotationScale(rot);
 		// see Giacovazzo section 2.E, eq. 2.E.1
