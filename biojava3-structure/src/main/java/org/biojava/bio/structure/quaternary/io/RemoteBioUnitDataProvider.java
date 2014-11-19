@@ -4,6 +4,7 @@ import java.io.InputStream;
 import java.io.StringReader;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -13,6 +14,7 @@ import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.align.client.JFatCatClient;
 import org.biojava.bio.structure.align.util.AtomCache;
 import org.biojava.bio.structure.align.util.HTTPConnectionTools;
+import org.biojava.bio.structure.io.mmcif.model.PdbxStructAssembly;
 import org.biojava.bio.structure.quaternary.BiologicalAssemblyTransformation;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
@@ -169,5 +171,10 @@ public class RemoteBioUnitDataProvider implements BioUnitDataProvider {
 	public AtomCache getAtomCache() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+	
+	@Override
+	public List<PdbxStructAssembly> getPdbxStructAssemblies() {
+		return Collections.emptyList();		
 	}
 }

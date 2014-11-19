@@ -29,7 +29,7 @@ public class AllChemCompProvider implements ChemCompProvider, Runnable{
 
 	private static String path; 
 
-	private static final String lineSplit = System.getProperty("file.separator");
+	//private static final String lineSplit = System.getProperty("file.separator");
 
 	private static String serverLocation = "ftp://ftp.wwpdb.org/pub/pdb/data/monomers/";
 
@@ -61,11 +61,12 @@ public class AllChemCompProvider implements ChemCompProvider, Runnable{
 	/** make sure all paths are initialized correctly
 	 * 
 	 */
-	public static void checkPath(){
-
-		UserConfiguration config = new UserConfiguration();
-		path = config.getCacheFilePath();
+	private static void initPath(){
 		
+		if (path==null) {
+			UserConfiguration config = new UserConfiguration();
+			path = config.getCacheFilePath();
+		}
 	}
 
 	private void ensureFileExists() {
@@ -91,7 +92,8 @@ public class AllChemCompProvider implements ChemCompProvider, Runnable{
 	 */
 	public static void downloadFile() throws IOException,FileNotFoundException{
 
-
+		initPath();
+		
 		String localName = getLocalFileName();
 
 		String u = serverLocation +  "components.cif.gz";
@@ -121,15 +123,14 @@ public class AllChemCompProvider implements ChemCompProvider, Runnable{
 
 	private static String getLocalFileName(){
 
-		String dir = path + DownloadChemCompProvider.CHEM_COMP_CACHE_DIRECTORY + lineSplit;
-
-		File f = new File(dir);
-		if (! f.exists()){
-			logger.info("Creating directory " + f);
-			f.mkdir();
+		File dir = new File(path, DownloadChemCompProvider.CHEM_COMP_CACHE_DIRECTORY);
+		
+		if (! dir.exists()){
+			logger.info("Creating directory {}", dir.toString());
+			dir.mkdir();
 		}
 
-		String fileName = path + DownloadChemCompProvider.CHEM_COMP_CACHE_DIRECTORY + lineSplit + "components.cif.gz";
+		String fileName = new File(dir, "components.cif.gz").toString();
 
 		return fileName;
 	}
@@ -177,8 +178,8 @@ public class AllChemCompProvider implements ChemCompProvider, Runnable{
 
 				Thread.sleep(500);
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				logger.error("Interrepted thread while waiting: "+e.getMessage());
+				//e.printStackTrace();
 			}
 		}
 		
@@ -194,7 +195,7 @@ public class AllChemCompProvider implements ChemCompProvider, Runnable{
 	public void run() {
 		long timeS = System.currentTimeMillis();
 
-		checkPath();
+		initPath();
 
 		ensureFileExists();
 

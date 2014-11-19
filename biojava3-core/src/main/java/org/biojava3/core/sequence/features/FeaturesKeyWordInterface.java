@@ -31,10 +31,10 @@ import java.util.ArrayList;
  * @author Scooter Willis <willishf at gmail dot com>
  */
 public interface FeaturesKeyWordInterface {
-/**
- *
- * @return
- * @throws Exception
- */
-    public ArrayList<String> getKeyWords() throws Exception;
+	
+	/**
+	 *
+	 * @return
+	 */
+	public ArrayList<String> getKeyWords() ;
 }

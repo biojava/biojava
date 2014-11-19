@@ -20,7 +20,6 @@
  */
 package org.biojava3.sequencing.io.fastq;
 
-import java.io.IOException;
 import java.io.StringReader;
 
 import junit.framework.TestCase;

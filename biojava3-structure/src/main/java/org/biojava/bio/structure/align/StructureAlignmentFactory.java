@@ -10,9 +10,13 @@ import org.biojava.bio.structure.align.ce.CeMain;
 import org.biojava.bio.structure.align.fatcat.FatCatFlexible;
 import org.biojava.bio.structure.align.fatcat.FatCatRigid;
 import org.biojava.bio.structure.align.seq.SmithWaterman3Daligner;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 public class StructureAlignmentFactory {
+
+	private final static Logger logger = LoggerFactory.getLogger(StructureAlignmentFactory.class);
 
 	private static List<StructureAlignment> algorithms = new ArrayList<StructureAlignment>();
 
@@ -93,7 +97,7 @@ public class StructureAlignmentFactory {
 					StructureAlignment sa = c.newInstance();
 					return sa;
 				} catch (Exception e){
-					e.printStackTrace();
+					logger.error("Exception: ", e);
 					return null;
 				}
 			}

@@ -4,11 +4,13 @@ import static org.biojava3.core.sequence.io.util.IOUtils.close;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.EnumMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.biojava3.core.exceptions.CompoundNotFoundException;
 import org.biojava3.core.sequence.compound.AminoAcidCompound;
 import org.biojava3.core.sequence.compound.AminoAcidCompoundSet;
 import org.biojava3.core.sequence.compound.DNACompoundSet;
@@ -68,7 +70,7 @@ public class TranslationTest {
 							aaCs));
 			volvoxPep = volvoxPepReader.process().values().iterator().next();
 		}
-		catch (Exception e) {
+		catch (IOException e) {
 			logger.error("Exception: ", e);
 			Assert.fail("Encountered exception");
 		}
@@ -87,7 +89,7 @@ public class TranslationTest {
 	}
 
 	@Test
-	public void basicTranslation() {
+	public void basicTranslation() throws CompoundNotFoundException {
 		TranscriptionEngine e = TranscriptionEngine.getDefault();
 		DNASequence dna = new DNASequence("ATG");
 		RNASequence rna = dna.getRNASequence(e);
@@ -97,7 +99,7 @@ public class TranslationTest {
 	}
 
 	@Test
-	public void translateN() {
+	public void translateN() throws CompoundNotFoundException {
 		TranscriptionEngine.Builder b = new TranscriptionEngine.Builder();
 		b.translateNCodons(true).initMet(true);
 		TranscriptionEngine e = b.build();
@@ -113,7 +115,7 @@ public class TranslationTest {
 
 	@SuppressWarnings("serial")
 	@Test
-	public void multiFrameTranslation() {
+	public void multiFrameTranslation() throws CompoundNotFoundException {
 		TranscriptionEngine e = TranscriptionEngine.getDefault();
 		DNASequence dna = new DNASequence("ATGGCGTGA");
 
@@ -140,7 +142,7 @@ public class TranslationTest {
 	}
 
 	@Test
-	public void lowerCases() {
+	public void lowerCases() throws CompoundNotFoundException {
 		TranscriptionEngine e = TranscriptionEngine.getDefault();
 		DNASequence dna = new DNASequence("atgcCt");
 		RNASequence rna = dna.getRNASequence(e);
@@ -150,7 +152,7 @@ public class TranslationTest {
 	}
 
 	@Test
-	public void translateBrca2ExonOne() {
+	public void translateBrca2ExonOne() throws CompoundNotFoundException {
 		TranscriptionEngine e = TranscriptionEngine.getDefault();
 		DNASequence dna = new DNASequence(
 				"ATGCCTATTGGATCCAAAGAGAGGCCAACATTTTTTGAAATTTTTAAGACACGCTGCAACAAAGCA");
@@ -190,7 +192,7 @@ public class TranslationTest {
 	}
 	
 	@Test
-	public void waitForStartCodon(){
+	public void waitForStartCodon() throws CompoundNotFoundException{
 		//Should not start translation until a start codon is encountered
 		TranscriptionEngine e = new TranscriptionEngine.Builder().waitForStartCodon(true).build();
 		RNASequence rna = new RNASequence("UCCAUGAGC");
@@ -204,7 +206,7 @@ public class TranslationTest {
 	}
 
 	@Test
-	public void translateInitMet() {
+	public void translateInitMet() throws CompoundNotFoundException {
 		TranscriptionEngine e = TranscriptionEngine.getDefault();
 		assertThat("Leucene (CTA) is not changed to init met", e.translate(new DNASequence("CTA")).toString(), is("L"));
 		assertThat("Leucene (CTG) is changed to init met", e.translate(new DNASequence("CTG")).toString(), is("M"));
@@ -213,9 +215,9 @@ public class TranslationTest {
 		assertThat("Leucene (CTG) is not changed to init met", e.translate(new DNASequence("CTG")).toString(), is("L"));
 	}
 
-	/** test for https://github.com/biojava/biojava/issues/53 */
+	/** test for https://github.com/biojava/biojava/issues/53  */
 	@Test
-	public void testHashCollision(){
+	public void testHashCollision() throws CompoundNotFoundException{
 		Builder builder = new TranscriptionEngine.Builder();
 		builder.initMet(false);
 		builder.translateNCodons(true);

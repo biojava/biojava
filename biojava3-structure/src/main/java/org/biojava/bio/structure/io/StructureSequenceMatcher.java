@@ -42,6 +42,7 @@ import org.biojava3.alignment.SimpleSubstitutionMatrix;
 import org.biojava3.alignment.template.AlignedSequence;
 import org.biojava3.alignment.template.SequencePair;
 import org.biojava3.alignment.template.SubstitutionMatrix;
+import org.biojava3.core.exceptions.CompoundNotFoundException;
 import org.biojava3.core.sequence.ProteinSequence;
 import org.biojava3.core.sequence.compound.AminoAcidCompound;
 import org.biojava3.core.sequence.compound.AminoAcidCompoundSet;
@@ -141,8 +142,16 @@ public class StructureSequenceMatcher {
 			}
 		}
 
-
-		return new ProteinSequence(seqStr.toString());	
+		ProteinSequence s = null;
+		try {
+			s = new ProteinSequence(seqStr.toString());
+		} catch (CompoundNotFoundException e) {
+			// I believe this can't happen, please correct this if I'm wrong - JD 2014-10-24
+			// we can log an error if it does, it would mean there's a bad bug somewhere
+			logger.error("Could not create protein sequence, unknown compounds in string: {}", e.getMessage());
+		}
+		
+		return s;	
 	}
 
 	/**
@@ -259,7 +268,13 @@ public class StructureSequenceMatcher {
 			}
 		}
 		
-		ProteinSequence ungapped = new ProteinSequence(seq.toString());
+		ProteinSequence ungapped = null;
+		try {
+			ungapped = new ProteinSequence(seq.toString());
+		} catch (CompoundNotFoundException e) {
+			// this can't happen, if it does there's a bug somewhere
+			logger.error("Could not create ungapped protein sequence, found unknown compounds: {}. This is most likely a bug.", e.getMessage());
+		}
 		
 		return ungapped;
 	}

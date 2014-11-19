@@ -38,11 +38,8 @@ import org.biojava.bio.structure.io.FileConvert;
  * @since 1.4
  * @version %I% %G%
  */
-public class AtomImpl implements Atom,Serializable, PDBRecord {
+public class AtomImpl implements Atom, Serializable, PDBRecord {
 
-    /**
-    *
-    */
    private static final long serialVersionUID = -2258364127420562883L;
    String name     ;
     Element element;

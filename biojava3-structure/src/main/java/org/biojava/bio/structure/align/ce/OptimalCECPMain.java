@@ -538,7 +538,7 @@ public class OptimalCECPMain extends CeMain {
 		try {
 			String name1, name2;
 
-			int[] cps= new int[] {};
+			//int[] cps= new int[] {};
 			
 			//Concanavalin
 			//name1 = "2pel.A";
@@ -597,14 +597,14 @@ public class OptimalCECPMain extends CeMain {
 			//displayAlignment(afpChain,ca1,ca2);
 			
 			// permuted alignment
-			for(int cp : cps) {
+			//for(int cp : cps) {
 				// new copy of ca2, since alignPermuted has side effects
 				//Atom[] ca2clone = cache.getAtoms(name2);
 				//afpChain = ce.alignPermuted(ca1, ca2clone, params, cp);
 				//displayAlignment(afpChain, ca1, ca2);
 				
 				//displayAlignment(alignments[cp],ca1,ca2);
-			}
+			//}
 			
 			// CECP alignment
 			CeCPMain cecp = new CeCPMain();
@@ -625,10 +625,11 @@ public class OptimalCECPMain extends CeMain {
 						Thread.sleep(1000);
 					}
 				} else {
-					String next = scanner.nextLine();
+					//String next = scanner.nextLine();
 				}
 				System.out.print("CP location [0,"+ca2.length+"): ");
 			}
+			scanner.close();
 			
 		} catch (Exception e) {
 			e.printStackTrace();

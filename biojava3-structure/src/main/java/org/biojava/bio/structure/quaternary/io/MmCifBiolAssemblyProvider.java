@@ -16,9 +16,10 @@ import org.biojava3.structure.StructureIO;
 
 public class MmCifBiolAssemblyProvider implements BioUnitDataProvider {
 
-	MmCifPDBBiolAssemblyProvider provider; 
+	private MmCifPDBBiolAssemblyProvider provider; 
 	
-	AtomCache cache = null;
+	// no initialisation here, this gives an opportunity to setAtomCache to initialise it
+	private AtomCache cache;
 	
 	public MmCifBiolAssemblyProvider(){
 		provider  = new MmCifPDBBiolAssemblyProvider();
@@ -43,9 +44,18 @@ public class MmCifBiolAssemblyProvider implements BioUnitDataProvider {
 
 		provider.setPdbId(pdbId);
 
+		List<PdbxStructAssembly> psas= provider.getPdbxStructAssemblies();
 		
+		PdbxStructAssembly psa = null;
+		if ( psas.size() >= biolAssemblyNr ){
+			psa = psas.get(biolAssemblyNr -1);
+		} else {
+			throw new IllegalArgumentException("Requested not existing biolAssemblyNr");
+			
+		}
+
 		// we start counting at 1!
-		PdbxStructAssembly psa = provider.getPdbxStructAssembly(biolAssemblyNr-1) ;
+		//PdbxStructAssembly psa = provider.getPdbxStructAssembly(biolAssemblyNr-1) ;
 		
 		List<PdbxStructAssemblyGen> psags = provider.getPdbxStructAssemblyGen(biolAssemblyNr-1);
 				
@@ -152,5 +162,11 @@ public class MmCifBiolAssemblyProvider implements BioUnitDataProvider {
 	public AtomCache getAtomCache() {
 		return cache;
 	}
+
+	@Override
+	public List<PdbxStructAssembly> getPdbxStructAssemblies() {
+		return provider.getPdbxStructAssemblies();
+	}
+
 
 }

@@ -203,7 +203,7 @@ public class ScopDescription implements Serializable,Cloneable{
 
 
 	@Override
-	protected Object clone() throws CloneNotSupportedException {
+	protected Object clone() {
 		ScopDescription n = new ScopDescription();
 		
 		n.setCategory(getCategory());

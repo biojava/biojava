@@ -60,6 +60,7 @@ public class BiologicalAssemblyBuilder {
 		s.setChains(new ArrayList<Chain>());
 
 		for (BiologicalAssemblyTransformation transformation : transformations){
+			
 			for (Chain c : asymUnit.getChains()){
                 
 				String intChainID = c.getInternalChainID();
@@ -70,23 +71,19 @@ public class BiologicalAssemblyBuilder {
 
 				if (transformation.getChainId().equals(intChainID)){
 					Chain chain = (Chain)c.clone();
-		//			System.out.println("Applying transformation to: " + intChainID);
-		//			System.out.println(m);
-		//			System.out.println(Arrays.toString(v.getCoords()));
+		//			
 					for (Group g : chain.getAtomGroups()) {
-	//					System.out.println("before");
+
 						for (Atom a: g.getAtoms()) {
-		//					System.out.println(a);
+
 							transformation.transformPoint(a.getCoords());
-//						System.out.println("after");
-//						for (Atom a: g.getAtoms()) {
-//							System.out.println(a);
+
 						}
 					}
-
-					int modelNumber = Integer.parseInt(transformation.getId());	
-	//				System.out.println("model: " + modelNumber);
-					addChainAndModel(s, chain, modelNumber);
+	
+					String transformId = transformation.getId();
+				
+					addChainAndModel(s, chain, transformId);
 				}								
 			}
 		}
@@ -131,8 +128,19 @@ public class BiologicalAssemblyBuilder {
 		}
 		return chainIds;
 	}
+
+	List<String> modelIndex = new ArrayList<String>();
+	private void addChainAndModel(Structure s, Chain newChain, String modelId) {
+		
+		if ( modelIndex.size() == 0)
+			modelIndex.add("PLACEHOLDER FOR ASYM UNIT");
+		
+		int modelCount = modelIndex.indexOf(modelId);
+		if ( modelCount == -1)  {
+			modelIndex.add(modelId);
+			modelCount = modelIndex.indexOf(modelId);
+		}
 	
-	private void addChainAndModel(Structure s, Chain newChain, int modelCount) {
 		if (modelCount == 0) {
 			s.addChain(newChain);
 		} else if (modelCount > s.nrModels()) {
@@ -157,7 +165,7 @@ public class BiologicalAssemblyBuilder {
 		init();
 		this.psags = psags;
 
-		psa.getId();
+		//psa.getId();
 		
 		for (PdbxStructOperList oper: operators){
 			BiologicalAssemblyTransformation transform = new BiologicalAssemblyTransformation();
@@ -229,7 +237,7 @@ public class BiologicalAssemblyBuilder {
 		
 		for ( PdbxStructAssemblyGen psag : psags){
 			if ( psag.getAssembly_id().equals(assemblyId)) {
-
+		
 				operatorResolver.parseOperatorExpressionString(psag.getOper_expression());
 				List<String> operators = operatorResolver.getUnaryOperators();
 				
@@ -238,7 +246,7 @@ public class BiologicalAssemblyBuilder {
 				// apply unary operators to the specified chains
 				for (String chainId : asymIds) {
 					for (String operator : operators) {
-						//System.out.println("transforming " + chainId + " " + operator);
+				
 						BiologicalAssemblyTransformation original = getModelTransformationMatrix(operator);
 						BiologicalAssemblyTransformation transform = new BiologicalAssemblyTransformation(original);
 						transform.setChainId(chainId);

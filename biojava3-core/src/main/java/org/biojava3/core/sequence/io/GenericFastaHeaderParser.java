@@ -23,6 +23,7 @@ package org.biojava3.core.sequence.io;
 
 import java.util.ArrayList;
 
+import org.biojava3.core.exceptions.CompoundNotFoundException;
 import org.biojava3.core.sequence.AccessionID;
 import org.biojava3.core.sequence.DataSource;
 import org.biojava3.core.sequence.ProteinSequence;
@@ -177,7 +178,13 @@ public class GenericFastaHeaderParser<S extends AbstractSequence<C>, C extends C
 
         logger.info("parseHeader");
         String header = "";
-        ProteinSequence sequence = new ProteinSequence("");
+        ProteinSequence sequence = null;
+        try {
+        	sequence = new ProteinSequence("");
+        } catch (CompoundNotFoundException e) {
+        	// this should not happen, in case it does we log error
+        	logger.error("Could not create empty protein sequence. Error: {}. This is most likely a bug.",e.getMessage());
+        }
         GenericFastaHeaderParser<ProteinSequence,AminoAcidCompound> instance =
           new GenericFastaHeaderParser<ProteinSequence,AminoAcidCompound>();
 

@@ -824,17 +824,19 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		// the more detailed mapping of chains to rotation operations happens in StructureIO...
 		// TODO clean this up and move it here...
 		//header.setBioUnitTranformationMap(tranformationMap);
-		Map<Integer,List<BiologicalAssemblyTransformation>> transformationMap = new HashMap<Integer, List<BiologicalAssemblyTransformation>>();
-		int total = strucAssemblies.size();
+		Map<String,List<BiologicalAssemblyTransformation>> transformationMap = new HashMap<String, List<BiologicalAssemblyTransformation>>();
+		//int total = strucAssemblies.size();
 
-		for ( int defaultBioAssembly = 1 ; defaultBioAssembly <= total; defaultBioAssembly++){
-			//List<ModelTransformationMatrix>tmp = getBioUnitTransformationList(pdbId, i +1);
+		//for ( int defaultBioAssembly = 1 ; defaultBioAssembly <= total; defaultBioAssembly++){
+		
+		for ( PdbxStructAssembly psa : strucAssemblies){
+		//List<ModelTransformationMatrix>tmp = getBioUnitTransformationList(pdbId, i +1);
 
-			PdbxStructAssembly psa = strucAssemblies.get(defaultBioAssembly-1);
+			//PdbxStructAssembly psa = strucAssemblies.get(asmbl.getId());
 			List<PdbxStructAssemblyGen> psags = new ArrayList<PdbxStructAssemblyGen>(1);
 
 			for ( PdbxStructAssemblyGen psag: strucAssemblyGens ) {
-				if ( psag.getAssembly_id().equals(defaultBioAssembly+"")) {
+				if ( psag.getAssembly_id().equals(psa.getId())) {
 					psags.add(psag);
 				}
 			}
@@ -845,7 +847,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 			// these are the transformations that need to be applied to our model
 			List<BiologicalAssemblyTransformation> transformations = builder.getBioUnitTransformationList(psa, psags, structOpers);
 
-			transformationMap.put(defaultBioAssembly,transformations);
+			transformationMap.put(psa.getId(),transformations);
 			//System.out.println("mmcif header: " + (defaultBioAssembly+1) + " " + transformations.size() +" " +  transformations);
 
 		}

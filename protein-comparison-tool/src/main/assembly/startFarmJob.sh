@@ -15,7 +15,7 @@ else
      else
         which java
         java -version
-        java  -Xmx1G -cp "$PWD/jars/*" org.biojava.bio.structure.align.FarmJob $args
+        java  -Xmx1G -cp "./${project.build.finalName}.jar" org.biojava.bio.structure.align.FarmJob $args
     fi
 fi
 

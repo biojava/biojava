@@ -17,7 +17,7 @@ public class TestDNANeedlemanWunsch {
 	
 	private final static Logger logger = LoggerFactory.getLogger(TestDNANeedlemanWunsch.class);
 
-	public static void main(String[] args){
+	public static void main(String[] args) throws Exception {
 
 		String query = "AGGATGAACGCTGGCGGCGTGCTTAACACATGCAAGTCGAACGGTGAAGCCCAGCTTGCTGGGTGGATCA" +
 		"GTGGCGAACGGGTGAGTAACACGTGAGCAACCTGCCCCTGACTCTGGGATAAGCGCTGGAAACGGTGTCT" +

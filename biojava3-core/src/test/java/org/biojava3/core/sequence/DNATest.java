@@ -10,7 +10,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-import org.biojava3.core.exceptions.CompoundNotFoundError;
+import org.biojava3.core.exceptions.CompoundNotFoundException;
 import org.biojava3.core.sequence.compound.AmbiguityDNACompoundSet;
 import org.biojava3.core.sequence.compound.DNACompoundSet;
 import org.biojava3.core.sequence.compound.NucleotideCompound;
@@ -33,19 +33,19 @@ public class DNATest {
     private AmbiguityDNACompoundSet ambiguity = new AmbiguityDNACompoundSet();
 
     @Test
-    public void reverseComplement() {
+    public void reverseComplement() throws CompoundNotFoundException {
         String s = getSeq().getInverse().getSequenceAsString();
         assertThat("Reversed Complemented sequence not as expected", s, is("GCAT"));
     }
 
     @Test
-    public void complement() {
+    public void complement() throws CompoundNotFoundException {
         String s = new ComplementSequenceView<NucleotideCompound>(getSeq()).getSequenceAsString();
         assertThat("Complemented sequence not as expected", s, is("TACG"));
     }
 
     @Test
-    public void reverse() {
+    public void reverse() throws CompoundNotFoundException {
         SequenceView<NucleotideCompound> r = new ReversedSequenceView<NucleotideCompound>(getSeq());
         assertThat("Reversed sequence not as expected", r.getSequenceAsString(), is("CGTA"));
         assertThat("Base at 2 not right", r.getCompoundAt(2).toString(), is("G"));
@@ -61,7 +61,7 @@ public class DNATest {
     }
 
     @Test
-    public void subSequence() {
+    public void subSequence() throws CompoundNotFoundException {
         DNASequence seq = getSeq("ACGTGGC");
         SequenceView<NucleotideCompound> subSeq = seq.getSubSequence(2, 4);
         assertThat("Index 2 is the same as index 1 in the sub sequence",
@@ -74,7 +74,7 @@ public class DNATest {
     }
 
     @Test
-    public void translateToRna() {
+    public void translateToRna() throws CompoundNotFoundException {
         String s = getSeq("ATGGCGGCGCTGAGCGGT").getRNASequence().getSequenceAsString();
         assertThat("RNA as expected", s, is("AUGGCGGCGCUGAGCGGU"));
         String s2 = getSeq("ATGGCGGCGCTGAGCGGT").getRNASequence(Frame.TWO).getSequenceAsString();
@@ -82,7 +82,7 @@ public class DNATest {
     }
 
     @Test
-    public void respectCase() {
+    public void respectCase() throws CompoundNotFoundException {
         String s = "ATgc";
         DNASequence dna = getSeq(s);
         assertThat("Sequence does not remember casing", dna.getSequenceAsString(), is(s));
@@ -90,8 +90,8 @@ public class DNATest {
                 dna.getInverse().getSequenceAsString(), is("gcAT"));
     }
 
-    @Test(expected = CompoundNotFoundError.class)
-    public void bogusSequence() {
+    @Test(expected = CompoundNotFoundException.class)
+    public void bogusSequence() throws CompoundNotFoundException {
         getSeq("ATGCx");
     }
 
@@ -116,7 +116,7 @@ public class DNATest {
     }
 
     @Test
-    public void gc() {
+    public void gc() throws CompoundNotFoundException {
         assertThat("GC content not as expected", SequenceMixin.countGC(getSeq("GCGC")), is(4));
         assertThat("GC content not as expected", getSeq("GCGC").getGCCount(), is(4));
         assertThat("GC content not as expected", SequenceMixin.countGC(getSeq("GAAC")), is(2));
@@ -126,7 +126,7 @@ public class DNATest {
     }
 
     @Test
-    public void at() {
+    public void at() throws CompoundNotFoundException {
         assertThat("AT content not as expected", SequenceMixin.countAT(getSeq("GCGC")), is(0));
         assertThat("AT content not as expected", SequenceMixin.countAT(getSeq("GCAT")), is(2));
         assertThat("AT content not as expected", SequenceMixin.countAT(getSeq("atAT")), is(4));
@@ -136,7 +136,7 @@ public class DNATest {
     }
 
     @Test
-    public void composition() {
+    public void composition() throws CompoundNotFoundException {
         DNASequence seq = getSeq("ATTGGGCCCC");
         CompoundSet<NucleotideCompound> set = seq.getCompoundSet();
         Map<NucleotideCompound, Double> distribution = SequenceMixin.getDistribution(seq);
@@ -147,7 +147,7 @@ public class DNATest {
     }
 
     @Test
-    public void twoBit() {
+    public void twoBit() throws CompoundNotFoundException {
         String expected = "ATGCAACTGA";
         DNASequence seq = getSeq(expected);
         SequenceReader<NucleotideCompound> twoBitFromSeq =
@@ -162,7 +162,7 @@ public class DNATest {
     }
 
     @Test
-    public void fourBit() {
+    public void fourBit() throws CompoundNotFoundException {
         String expected = "ATGCAACTGA";
         DNASequence seq = getSeq(expected);
         SequenceReader<NucleotideCompound> bitFromSeq =
@@ -177,7 +177,7 @@ public class DNATest {
     }
 
     @Test(expected = IllegalStateException.class)
-    public void badTwoBit() {
+    public void badTwoBit() throws CompoundNotFoundException {
         DNASequence seq = getSeq();
         new TwoBitSequenceReader<NucleotideCompound>("ATNGC", seq.getCompoundSet());
     }
@@ -214,7 +214,7 @@ public class DNATest {
     }
 
     @Test
-    public void kmerNonOverlap() {
+    public void kmerNonOverlap() throws CompoundNotFoundException { 
         DNASequence d = new DNASequence("ATGTGCA");
         List<SequenceView<NucleotideCompound>> l =
                 SequenceMixin.nonOverlappingKmers(d, 3);
@@ -224,7 +224,7 @@ public class DNATest {
     }
 
     @Test
-    public void kmerOverlap() {
+    public void kmerOverlap() throws CompoundNotFoundException { 
         DNASequence d = new DNASequence("ATGTT");
         List<SequenceView<NucleotideCompound>> l =
                 SequenceMixin.overlappingKmers(d, 3);
@@ -235,7 +235,7 @@ public class DNATest {
     }
 
     @Test
-    public void kmerOverlapExceedingSequenceLength() {
+    public void kmerOverlapExceedingSequenceLength() throws CompoundNotFoundException { 
         DNASequence d = new DNASequence("ATGTT");
         List<SequenceView<NucleotideCompound>> l =
                 SequenceMixin.overlappingKmers(d, 2);
@@ -246,7 +246,7 @@ public class DNATest {
     }
 
     @Test
-    public void sequenceEquality() {
+    public void sequenceEquality() throws CompoundNotFoundException {
         DNASequence d = getSeq("ATGC");
         assertTrue("Asserting sequences are identical", SequenceMixin.sequenceEquality(d, d));
         assertFalse("Sequence identical but case different", SequenceMixin.sequenceEquality(d, getSeq("ATGc")));
@@ -300,11 +300,11 @@ public class DNATest {
 ////
 ////    IOUtils.close(os);
 //  }
-    private DNASequence getSeq() {
+    private DNASequence getSeq() throws CompoundNotFoundException {
         return getSeq(null);
     }
 
-    private DNASequence getSeq(final String seq) {
+    private DNASequence getSeq(final String seq) throws CompoundNotFoundException { 
         String target = (seq == null) ? "ATGC" : seq;
         return new DNASequence(target);
     }

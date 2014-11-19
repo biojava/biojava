@@ -25,6 +25,7 @@
 package org.biojava.bio.structure.quaternary.io;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
 
 import org.biojava.bio.structure.PDBHeader;
@@ -33,22 +34,26 @@ import org.biojava.bio.structure.StructureTools;
 import org.biojava.bio.structure.align.util.AtomCache;
 import org.biojava.bio.structure.io.FileParsingParameters;
 import org.biojava.bio.structure.io.PDBFileReader;
+import org.biojava.bio.structure.io.mmcif.model.PdbxStructAssembly;
 import org.biojava.bio.structure.quaternary.BiologicalAssemblyTransformation;
 import org.biojava3.core.util.SoftHashMap;
 
 
-/** A biounit provider that loads the biol assembly from thepublic PDB file, rather than re-creating it on the fly out of the default PDB file for the asym unit
+/** 
+ * A biounit provider that loads the biol assembly from the public PDB file, 
+ * rather than re-creating it on the fly out of the default PDB file for the asym unit
  * 
  * @author Andreas Prlic
  *
  */
 public class FileBasedPDBBioUnitDataProvider implements BioUnitDataProvider{
 
-	SoftHashMap<String, PDBHeader> headerCache = new SoftHashMap<String, PDBHeader>(0);
+	private SoftHashMap<String, PDBHeader> headerCache = new SoftHashMap<String, PDBHeader>(0);
 
-	Structure s = null;
+	private Structure s = null;
 	
-	AtomCache cache = new AtomCache();
+	// no initialisation here, this gives an opportunity to setAtomCache to initialise it
+	private AtomCache cache;
 	
 	public Structure getBioUnit(String pdbId, int bioUnit) throws IOException{
 		//System.out.println("load PDB + bioUnit " + bioUnit + " " );
@@ -59,12 +64,17 @@ public class FileBasedPDBBioUnitDataProvider implements BioUnitDataProvider{
 			return s;
 		}
 		
-		PDBFileReader reader = new PDBFileReader();
+		if ( cache == null) {
+			cache = new AtomCache();
+		}
+		
+		PDBFileReader reader = new PDBFileReader(cache.getCachePath());
 		reader.setAutoFetch(cache.isAutoFetch());
 		reader.setFetchCurrent(cache.isFetchCurrent());
 		reader.setFetchFileEvenIfObsolete(cache.isFetchFileEvenIfObsolete());
+		reader.setAutoFetch(cache.isAutoFetch());
+		reader.setPdbDirectorySplit(cache.isSplit());
 		
-		reader.setPath(cache.getPath());
 		
 		FileParsingParameters params = cache.getFileParsingParams();
 		
@@ -96,7 +106,7 @@ public class FileBasedPDBBioUnitDataProvider implements BioUnitDataProvider{
 			header = s.getPDBHeader();
 			//System.out.println("got header: " + bioUnit + " " + header + " from parsing");
 			headerCache.put(s.getPDBCode(),header);
-		} catch (Exception e){
+		} catch (IOException e){
 			e.printStackTrace();
 		}	
 		return header ;
@@ -174,6 +184,10 @@ public class FileBasedPDBBioUnitDataProvider implements BioUnitDataProvider{
 		return cache;
 	}
 
+	@Override
+	public List<PdbxStructAssembly> getPdbxStructAssemblies() {
+		return Collections.emptyList();		
+	}
 	
 	
 }

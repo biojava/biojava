@@ -42,7 +42,7 @@ public interface MatrixAligner<S extends Sequence<C>, C extends Compound> extend
      *
      * @return the score matrix
      */
-    short[][][] getScoreMatrix();
+    int[][][] getScoreMatrix();
 
     /**
      * Returns a depiction of the score matrix as a {@link String}.  This may include additional description such as

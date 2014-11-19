@@ -53,7 +53,7 @@ public class PDBHeader implements PDBRecord, Serializable{
 
 	private DateFormat dateFormat;
 
-	private Map<Integer,List<BiologicalAssemblyTransformation>> tranformationMap ;
+	private Map<String,List<BiologicalAssemblyTransformation>> tranformationMap ;
 
 	public PDBHeader(){
 
@@ -61,7 +61,7 @@ public class PDBHeader implements PDBRecord, Serializable{
 		modDate = new Date(0);
 		dateFormat = new SimpleDateFormat("dd-MMM-yy",Locale.US);
 		resolution = DEFAULT_RESOLUTION;
-		tranformationMap = new HashMap<Integer, List<BiologicalAssemblyTransformation>>();
+		tranformationMap = new HashMap<String, List<BiologicalAssemblyTransformation>>();
 		nrBioAssemblies = -1;
 		crystallographicInfo = new PDBCrystallographicInfo();
 	}
@@ -602,11 +602,11 @@ public class PDBHeader implements PDBRecord, Serializable{
     }
 	
 	
-	public Map<Integer,List<BiologicalAssemblyTransformation>> getBioUnitTranformationMap() {
+	public Map<String,List<BiologicalAssemblyTransformation>> getBioUnitTranformationMap() {
 		return tranformationMap ;
 	}
 
-	public void setBioUnitTranformationMap(Map<Integer,List<BiologicalAssemblyTransformation>> tranformationMap) {
+	public void setBioUnitTranformationMap(Map<String,List<BiologicalAssemblyTransformation>> tranformationMap) {
 		this.tranformationMap = tranformationMap;
 	}
 

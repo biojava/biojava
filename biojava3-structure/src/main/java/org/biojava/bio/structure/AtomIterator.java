@@ -27,6 +27,9 @@ package org.biojava.bio.structure;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 /** an iterator over all atoms of a structure / group. 
  * @author Andreas Prlic
@@ -35,6 +38,9 @@ import java.util.NoSuchElementException;
  */
 
 public class AtomIterator implements Iterator<Atom> {
+
+	private final static Logger logger = LoggerFactory.getLogger(AtomIterator.class);
+
 	Structure structure     ;
 	Group     group         ;
 	int current_atom_pos    ;
@@ -149,7 +155,7 @@ public class AtomIterator implements Iterator<Atom> {
 		
 		a = group.getAtom(current_atom_pos);
 		if ( a == null) {
-			System.err.println("current_atom_pos " + current_atom_pos + " group " + group + "size:" + group.size());
+			logger.error("current_atom_pos {} group {} size: {}", current_atom_pos, group, group.size());
 			
 			throw new NoSuchElementException("error wile trying to retrieve atom");
 		}

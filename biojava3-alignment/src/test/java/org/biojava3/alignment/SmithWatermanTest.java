@@ -27,6 +27,7 @@ import static org.junit.Assert.*;
 
 import org.biojava3.alignment.template.GapPenalty;
 import org.biojava3.alignment.template.SubstitutionMatrix;
+import org.biojava3.core.exceptions.CompoundNotFoundException;
 import org.biojava3.core.sequence.ProteinSequence;
 import org.biojava3.core.sequence.compound.AminoAcidCompound;
 import org.junit.Before;
@@ -42,7 +43,7 @@ public class SmithWatermanTest {
     private SmithWaterman<ProteinSequence, AminoAcidCompound> alignment, self;
 
     @Before
-    public void setup() {
+    public void setup() throws CompoundNotFoundException { 
         query = new ProteinSequence("AERNDKK");
         target = new ProteinSequence("ERDNKGFPS");
         gaps = new SimpleGapPenalty((short) 2, (short) 1);
@@ -101,7 +102,7 @@ public class SmithWatermanTest {
 
     @Test
     public void testGetScoreMatrix() {
-        short[][][] scores = alignment.getScoreMatrix();
+        int[][][] scores = alignment.getScoreMatrix();
         assertEquals(scores[2][2][2], 2);
         assertEquals(scores[4][3][0], 11);
         scores = self.getScoreMatrix();

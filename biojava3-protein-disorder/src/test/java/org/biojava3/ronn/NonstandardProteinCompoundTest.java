@@ -2,6 +2,9 @@ package org.biojava3.ronn;
 
 import static org.junit.Assert.*;
 
+import java.io.IOException;
+
+import org.biojava3.core.exceptions.CompoundNotFoundException;
 import org.biojava3.core.sequence.ProteinSequence;
 import org.biojava3.core.sequence.compound.AminoAcidCompound;
 import org.biojava3.core.sequence.compound.AminoAcidCompoundSet;
@@ -22,7 +25,7 @@ Glx (Z), 14-3-3 protein gamma-1, UniProt Q6UFZ3
 public class NonstandardProteinCompoundTest  {
 
 	@Test
-	public void test() {
+	public void test() throws IOException, InterruptedException { 
 		
 		
 		String[] uniprotIDs = new String[]{"O30642","P59797","Q9N2D9","Q9N2D9","Q6UFZ3","O30642"};
@@ -31,17 +34,17 @@ public class NonstandardProteinCompoundTest  {
 			try {
 				testUniprot(id);
 				// throttle load on uniprot server
-				Thread.sleep(1000);
+				Thread.sleep(1000); 
 				
-			} catch (Exception e){
-				e.printStackTrace();
+			} catch (CompoundNotFoundException e){
+				
 				fail(e.getMessage());
 				
 			}
 		}
 	}
 	
-	public void testUniprot(String uniprotID) throws Exception{
+	private void testUniprot(String uniprotID) throws CompoundNotFoundException, IOException {
 		
 		ProteinSequence seq = getUniprot(uniprotID);
 		
@@ -51,12 +54,11 @@ public class NonstandardProteinCompoundTest  {
 			System.out.println(compound.getShortName() + " " + compound.getLongName() + " " + compound.getDescription() + " | " + compoundSet.getEquivalentCompounds(compound) + " " + compound.getMolecularWeight() + " " + compound.getBase());
 		} 
 		*/
-		compoundSet.verifySequence(seq);
+		assertTrue(compoundSet.isValidSequence(seq));
 		
 		
 		
-		@SuppressWarnings("unused")
-		float[] values = Jronn.getDisorderScores(seq);
+		Jronn.getDisorderScores(seq);
 		
 		
 	}
@@ -65,12 +67,14 @@ public class NonstandardProteinCompoundTest  {
 	 * 
 	 * @param uniProtID
 	 * @return a Protein Sequence
-	 * @throws Exception
+	 * @throws IOException 
+	 * @throws CompoundNotFoundException
 	 */
-	private static ProteinSequence getUniprot(String uniProtID) throws Exception {
+	private static ProteinSequence getUniprot(String uniProtID) throws CompoundNotFoundException, IOException {
 
 		AminoAcidCompoundSet set = AminoAcidCompoundSet.getAminoAcidCompoundSet();
-		UniprotProxySequenceReader<AminoAcidCompound> uniprotSequence = new UniprotProxySequenceReader<AminoAcidCompound>(uniProtID,set);
+		UniprotProxySequenceReader<AminoAcidCompound> uniprotSequence = 
+				new UniprotProxySequenceReader<AminoAcidCompound>(uniProtID,set);
 
 		ProteinSequence seq = new ProteinSequence(uniprotSequence);
 

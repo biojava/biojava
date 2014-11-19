@@ -42,7 +42,7 @@ public class PDBBioAssemblyParser {
 	private List<String> currentChainIDs = new ArrayList<String>();
 	private Matrix currentMatrix = null;
 	private double[] shift = null;
-	private Map<Integer,List<BiologicalAssemblyTransformation>> transformationMap = new HashMap<Integer, List<BiologicalAssemblyTransformation>>();
+	private Map<String,List<BiologicalAssemblyTransformation>> transformationMap = new HashMap<String, List<BiologicalAssemblyTransformation>>();
 	private int modelNumber = 1;
 	
 	private List<BiologicalAssemblyTransformation> transformations;
@@ -82,7 +82,7 @@ public class PDBBioAssemblyParser {
 	 * Returns a map of bioassembly transformations
 	 * @return
 	 */
-	public Map<Integer, List<BiologicalAssemblyTransformation>> getTransformationMap() {
+	public Map<String, List<BiologicalAssemblyTransformation>> getTransformationMap() {
 		return transformationMap;
 	}
 	
@@ -135,7 +135,7 @@ public class PDBBioAssemblyParser {
 			transformations.add(transformation);
 		}
 			
-		transformationMap.put(currentBioMolecule,transformations);
+		transformationMap.put(currentBioMolecule.toString(),transformations);
 	}
 
 	/**

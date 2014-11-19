@@ -36,9 +36,12 @@ import org.biojava.bio.structure.io.SeqRes2AtomAligner;
 import org.biojava.bio.structure.io.mmcif.ChemCompGroupFactory;
 import org.biojava.bio.structure.io.mmcif.chem.PolymerType;
 import org.biojava.bio.structure.io.mmcif.model.ChemComp;
+import org.biojava3.core.exceptions.CompoundNotFoundException;
 import org.biojava3.core.sequence.ProteinSequence;
 import org.biojava3.core.sequence.compound.AminoAcidCompound;
 import org.biojava3.core.sequence.template.Sequence;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -50,6 +53,8 @@ import org.biojava3.core.sequence.template.Sequence;
  * @since 1.4
  */
 public class ChainImpl implements Chain, Serializable {
+
+	private final static Logger logger = LoggerFactory.getLogger(ChainImpl.class);
 
 	/**
 	 *
@@ -161,7 +166,7 @@ public class ChainImpl implements Chain, Serializable {
 			try {
 				seqresaligner.mapSeqresRecords(n, tmp);
 			} catch (StructureException e){
-				e.printStackTrace();
+				logger.error("Exception: ", e);
 			}
 
 		} 
@@ -578,26 +583,16 @@ public class ChainImpl implements Chain, Serializable {
 
 		Sequence<AminoAcidCompound> s = null;
 
-		s = new ProteinSequence(seq);
+		try {
+			s = new ProteinSequence(seq);
+		} catch (CompoundNotFoundException e) {
+			logger.error("Could not create sequence object from seqres sequence. Some unknown compound: {}",e.getMessage());
+		}
 
 		//TODO: return a DNA sequence if the content is DNA...
 		return s;
 
 	}
-
-
-
-	/** get amino acid sequence of the chain. for backwards compatibility this returns
-	 * the Atom sequence of the chain.
-	 * @return a String representing the sequence.
-	 * @deprecated use getAtomSequence instead
-	 * @see #getAtomSequence()
-	 * @see #getSeqResSequence()
-	 */
-	public String getSequence(){
-		return getAtomSequence();
-	}
-
 
 	/** {@inheritDoc}
 	 *
@@ -652,7 +647,7 @@ public class ChainImpl implements Chain, Serializable {
 			for (Group g : seqResGroups) {
 				ChemComp cc = g.getChemComp();
 				if ( cc == null) {
-					System.err.println("Could not load ChemComp for group " + g);
+					logger.warn("Could not load ChemComp for group: ", g);
 					str.append("X");
 				} else if ( PolymerType.PROTEIN_ONLY.contains(cc.getPolymerType()) ||
 						PolymerType.POLYNUCLEOTIDE_ONLY.contains(cc.getPolymerType())){

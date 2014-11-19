@@ -51,7 +51,7 @@ import org.biojava3.alignment.template.GapPenalty;
 import org.biojava3.alignment.template.PairwiseSequenceAligner;
 import org.biojava3.alignment.template.SequencePair;
 import org.biojava3.alignment.template.SubstitutionMatrix;
-import org.biojava3.core.exceptions.CompoundNotFoundError;
+import org.biojava3.core.exceptions.CompoundNotFoundException;
 import org.biojava3.core.sequence.DNASequence;
 import org.biojava3.core.sequence.ProteinSequence;
 import org.biojava3.core.sequence.RNASequence;
@@ -341,7 +341,8 @@ public class SeqRes2AtomAligner {
 
 	}
 
-	/** returns the full sequence of the Atom records of a parent
+	/** 
+	 * Returns the full sequence of the Atom records of a parent
 	 * with X instead of HETATMSs. The advantage of this is
 	 * that it allows us to also align HETATM groups back to the SEQRES.
 	 * @param groups the list of groups in a parent
@@ -442,27 +443,51 @@ public class SeqRes2AtomAligner {
 
 		try {
 			s1 = new DNASequence(seq1,AmbiguityDNACompoundSet.getDNACompoundSet());
-		} catch (CompoundNotFoundError e){
+		} catch (CompoundNotFoundException e){
 			///oops perhaps a RNA sequence?
 			try {
 				s1 = new RNASequence(seq1,AmbiguityRNACompoundSet.getRNACompoundSet());
-			} catch (CompoundNotFoundError ex) {
+			} catch (CompoundNotFoundException ex) {
 				logger.warn("Could not determine compound set for sequence 1 " + seq1);
 				return false;
 			}
 		}
 		try {
 			s2 = new DNASequence(seq2,AmbiguityDNACompoundSet.getDNACompoundSet());
-		} catch (CompoundNotFoundError e){
+		} catch (CompoundNotFoundException e){
 			///oops perhaps a RNA sequence?
 			try {
 				s2 = new RNASequence(seq2,AmbiguityRNACompoundSet.getRNACompoundSet());
-			} catch (CompoundNotFoundError ex) {
+			} catch (CompoundNotFoundException ex) {
 				logger.warn("Could not determine compound set for sequence 2 " + seq2);
 				return false;
 			}
 		}
 
+		if ( ! s1.getCompoundSet().equals(s2.getCompoundSet()) ) {
+			// e.g. trying to align a DNA and an RNA sequence...
+			// test PDB ID: 1A34
+			// try to make both RNA sequence...
+			if ( ! s1.getCompoundSet().equals(AmbiguityRNACompoundSet.getRNACompoundSet())) {
+				try {
+					s1 = new RNASequence(seq1,AmbiguityRNACompoundSet.getRNACompoundSet());
+				} catch (CompoundNotFoundException ex) {
+					logger.warn("Could not align DNA and RNA compound sets: " + seq1);
+					return false;
+				}
+			}
+			
+			if( ! s2.getCompoundSet().equals(AmbiguityRNACompoundSet.getRNACompoundSet())) {
+					try {
+						s2 = new RNASequence(seq2,AmbiguityRNACompoundSet.getRNACompoundSet());
+					} catch (CompoundNotFoundException ex) {
+						logger.warn("Could not align DNA and RNA compound sets: " + seq2);
+						return false;
+					}
+				}
+		}
+		
+		
 		SubstitutionMatrix<NucleotideCompound> matrix = SubstitutionMatrixHelper.getNuc4_2();
 
 		GapPenalty penalty = new SimpleGapPenalty();
@@ -521,8 +546,15 @@ public class SeqRes2AtomAligner {
 		logger.debug("align seq1 ("+ seq1.length()+") " + seq1);
 		logger.debug("align seq2 ("+ seq2.length()+") " + seq2);
 		
-		ProteinSequence s1 = new ProteinSequence(seq1);
-		ProteinSequence s2 = new ProteinSequence(seq2);
+		ProteinSequence s1;
+		ProteinSequence s2;
+		try {
+			s1 = new ProteinSequence(seq1);
+			s2 = new ProteinSequence(seq2);
+		} catch (CompoundNotFoundException e) {
+			throw new StructureException("Could not align atom to seqres sequences. Either sequence contains an unknown compound: "+e.getMessage());
+		}
+		
 
 		SubstitutionMatrix<AminoAcidCompound> matrix = SubstitutionMatrixHelper.getBlosum65();
 
@@ -542,7 +574,7 @@ public class SeqRes2AtomAligner {
 
 
 		if ( pair == null)
-			throw new StructureException("could not align objects!");
+			throw new StructureException("Could not align objects!");
 
 
 		logger.debug(pair.toString(60));

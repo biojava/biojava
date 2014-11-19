@@ -87,7 +87,7 @@ public class FastaStructureParser {
 	 * @throws IOException
 	 * @throws StructureException
 	 */
-	public void process() throws IOException, StructureException {
+	public void process() throws IOException, StructureException { 
 		if(sequences == null) { // only process once, then return cached values
 			LinkedHashMap<String, ProteinSequence> sequenceMap = reader.process();
 			

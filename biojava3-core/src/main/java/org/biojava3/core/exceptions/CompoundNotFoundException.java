@@ -17,21 +17,21 @@
  *
  *      http://www.biojava.org/
  *
- * Created on DATE
+ * Created on 01-21-2010
+ *
+ * @author Richard Holland
+ *
  *
  */
-
 package org.biojava3.core.exceptions;
 
-/**
- * Currently not used
- * @author Scooter Willis <willishf at gmail dot com>
- */
-public class HeaderParseException extends Error{
+public class CompoundNotFoundException extends Exception {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
-  private static final long serialVersionUID = -8356845980320906455L;
-
-    public HeaderParseException(String error){
-        super(error);
-    }
+	public CompoundNotFoundException(String msg) {
+		super(msg);
+	}
 }

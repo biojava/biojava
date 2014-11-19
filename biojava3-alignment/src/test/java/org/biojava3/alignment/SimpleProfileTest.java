@@ -32,6 +32,7 @@ import org.biojava3.alignment.template.AlignedSequence;
 import org.biojava3.alignment.template.AlignedSequence.Step;
 import org.biojava3.alignment.template.Profile;
 import org.biojava3.alignment.template.Profile.StringFormat;
+import org.biojava3.core.exceptions.CompoundNotFoundException;
 import org.biojava3.core.sequence.AccessionID;
 import org.biojava3.core.sequence.ProteinSequence;
 import org.biojava3.core.sequence.compound.AminoAcidCompound;
@@ -46,7 +47,7 @@ public class SimpleProfileTest {
     private Profile<ProteinSequence, AminoAcidCompound> global, local, single;
 
     @Before
-    public void setup() {
+    public void setup() throws CompoundNotFoundException { 
         query = new ProteinSequence("ARND");
         target = new ProteinSequence("RDG");
         query.setAccession(new AccessionID("Query"));
@@ -107,7 +108,7 @@ public class SimpleProfileTest {
     }
 
     @Test
-    public void testGetAlignedSequenceS() {
+    public void testGetAlignedSequenceS() throws CompoundNotFoundException { 
         assertEquals(global.getAlignedSequence(query).toString(), "ARND-");
         assertEquals(global.getAlignedSequence(target).toString(), "-R-DG");
         assertNull(global.getAlignedSequence(new ProteinSequence("AR")));
@@ -225,7 +226,7 @@ public class SimpleProfileTest {
     }
 
     @Test
-    public void testGetCompoundAtSInt() {
+    public void testGetCompoundAtSInt() throws CompoundNotFoundException { 
         assertEquals(global.getCompoundAt(query, 2).getShortName(), "R");
         assertEquals(global.getCompoundAt(target, 5).getShortName(), "G");
         assertNull(global.getCompoundAt(new ProteinSequence("AR"), 3));

@@ -40,7 +40,6 @@ import org.biojava.bio.structure.ResidueRange;
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureException;
 import org.biojava.bio.structure.StructureTools;
-import org.biojava.bio.structure.align.ce.AbstractUserArgumentProcessor;
 import org.biojava.bio.structure.align.client.StructureName;
 import org.biojava.bio.structure.cath.CathDatabase;
 import org.biojava.bio.structure.cath.CathDomain;
@@ -51,6 +50,7 @@ import org.biojava.bio.structure.domain.RemotePDPProvider;
 import org.biojava.bio.structure.io.FileParsingParameters;
 import org.biojava.bio.structure.io.MMCIFFileReader;
 import org.biojava.bio.structure.io.PDBFileReader;
+import org.biojava.bio.structure.quaternary.io.BioUnitDataProviderFactory;
 import org.biojava.bio.structure.scop.CachedRemoteScopInstallation;
 import org.biojava.bio.structure.scop.ScopDatabase;
 import org.biojava.bio.structure.scop.ScopDescription;
@@ -95,18 +95,18 @@ public class AtomCache {
 	protected FileParsingParameters params;
 	protected PDPProvider pdpprovider;
 
-	boolean autoFetch;
+	private boolean autoFetch;
 
-	String cachePath;
+	private String cachePath;
 
 	// make sure IDs are loaded uniquely
-	Collection<String> currentlyLoading = Collections.synchronizedCollection(new TreeSet<String>());
+	private Collection<String> currentlyLoading = Collections.synchronizedCollection(new TreeSet<String>());
 
-	boolean isSplit;
-	String path;
+	private boolean isSplit;
+	private String path;
 
-	boolean strictSCOP;
-	boolean useMmCif;
+	private boolean strictSCOP;
+	private boolean useMmCif;
 
 	/**
 	 * Default AtomCache constructor.
@@ -120,15 +120,33 @@ public class AtomCache {
 	}
 
 	/**
-	 * Creates an instance of an AtomCache that is pointed to the a particular path in the file system.
+	 * Creates an instance of an AtomCache that is pointed to the a particular path in the file system. It will use the same value for pdbFilePath and cachePath.
 	 * 
 	 * @param pdbFilePath
 	 *            a directory in the file system to use as a location to cache files.
+
 	 * @param isSplit
 	 *            a flag to indicate if the directory organisation is "split" as on the PDB ftp servers, or if all files
 	 *            are contained in one directory.
 	 */
-	public AtomCache(String pdbFilePath, boolean isSplit) {
+	public AtomCache(String pdbFilePath,  boolean isSplit) {
+		this(pdbFilePath,pdbFilePath,isSplit);
+		
+	}
+	
+	/**
+	 * Creates an instance of an AtomCache that is pointed to the a particular path in the file system.
+	 * 
+	 * @param pdbFilePath
+	 *            a directory in the file system to use as a location to cache files.
+	 * @param cachePath
+	 * @param isSplit
+	 *            a flag to indicate if the directory organisation is "split" as on the PDB ftp servers, or if all files
+	 *            are contained in one directory.
+	 */
+	public AtomCache(String pdbFilePath, String cachePath, boolean isSplit) {
+		
+		logger.debug("Initialising AtomCache with pdbFilePath={}, cachePath={} and isSplit={}",pdbFilePath, cachePath, isSplit);
 
 		if (!pdbFilePath.endsWith(FILE_SEPARATOR)) {
 			pdbFilePath += FILE_SEPARATOR;
@@ -139,17 +157,10 @@ public class AtomCache {
 		// set the input stream provider to caching mode
 		System.setProperty(InputStreamProvider.CACHE_PROPERTY, "true");
 
-		path = pdbFilePath;
-		System.setProperty(AbstractUserArgumentProcessor.PDB_DIR, path);
-
-		String tmpCache = System.getProperty(AbstractUserArgumentProcessor.CACHE_DIR);
-		if (tmpCache == null || tmpCache.equals("")) {
-			tmpCache = pdbFilePath;
-		}
-
-		cachePath = tmpCache;
-		System.setProperty(AbstractUserArgumentProcessor.CACHE_DIR, cachePath);
-
+		this.path = pdbFilePath;
+		
+		this.cachePath = cachePath;
+		
 		// this.cache = cache;
 		this.isSplit = isSplit;
 
@@ -168,7 +179,7 @@ public class AtomCache {
 
 		strictSCOP = true;
 
-		useMmCif = true;
+		setUseMmCif(true);
 
 	}
 
@@ -179,7 +190,7 @@ public class AtomCache {
 	 *            the UserConfiguration to use for this cache.
 	 */
 	public AtomCache(UserConfiguration config) {
-		this(config.getPdbFilePath(), config.isSplit());
+		this(config.getPdbFilePath(), config.getCacheFilePath(), config.isSplit());
 		autoFetch = config.getAutoFetch();
 	}
 
@@ -208,28 +219,6 @@ public class AtomCache {
 	}
 
 	/**
-	 * Returns the CA atoms for the provided name. See {@link #getStructure(String)} for supported naming conventions.
-	 * 
-	 * @param name
-	 * @param clone
-	 *            flag to make sure that the atoms are getting coned
-	 * @return an array of Atoms.
-	 * @throws IOException
-	 * @throws StructureException
-	 * @deprecated does the same as {@link #getAtoms(String)} ;
-	 */
-	@Deprecated
-	public Atom[] getAtoms(String name, boolean clone) throws IOException, StructureException {
-		Atom[] atoms = getAtoms(name);
-
-		if (clone) {
-			return StructureTools.cloneCAArray(atoms);
-		}
-		return atoms;
-
-	}
-
-	/**
 	 * Loads the biological assembly for a given PDB ID and bioAssemblyId. If a bioAssemblyId > 0 is specified, the
 	 * corresponding biological assembly file will be loaded. Note, the number of available biological unit files
 	 * varies. Many entries don't have a biological assembly specified (i.e. NMR structures), many entries have only one
@@ -251,22 +240,16 @@ public class AtomCache {
 	 */
 	public Structure getBiologicalAssembly(String pdbId, int bioAssemblyId, boolean bioAssemblyFallback)
 			throws StructureException, IOException {
-		Structure s;
+
 		if (bioAssemblyId < 1) {
 			throw new StructureException("bioAssemblyID must be greater than zero: " + pdbId + " bioAssemblyId "
 					+ bioAssemblyId);
-		}
-		PDBFileReader reader = new PDBFileReader();
-		reader.setPath(path);
-		reader.setPdbDirectorySplit(isSplit);
-		reader.setAutoFetch(autoFetch);
-		reader.setFetchFileEvenIfObsolete(fetchFileEvenIfObsolete);
-		reader.setFetchCurrent(fetchCurrent);
-		reader.setFileParsingParameters(params);
-		reader.setBioAssemblyId(bioAssemblyId);
-		reader.setBioAssemblyFallback(bioAssemblyFallback);
-		s = reader.getStructureById(pdbId.toLowerCase());
-		s.setPDBCode(pdbId);
+		}	
+		Structure s = StructureIO.getBiologicalAssembly(pdbId, bioAssemblyId);
+		
+		if ( s == null && bioAssemblyFallback)
+			return StructureIO.getBiologicalAssembly(pdbId, 0);
+		
 		return s;
 	}
 
@@ -288,14 +271,11 @@ public class AtomCache {
 	}
 
 	/**
-	 * Returns the path that contains the caching file for utility data, such as domain definitons.
+	 * Returns the path that contains the caching file for utility data, such as domain definitions.
 	 * 
 	 * @return
 	 */
 	public String getCachePath() {
-		if (cachePath == null || cachePath.equals("")) {
-			return getPath();
-		}
 		return cachePath;
 	}
 
@@ -733,8 +713,6 @@ public class AtomCache {
 	 */
 	public void setCachePath(String cachePath) {
 		this.cachePath = cachePath;
-		System.setProperty(AbstractUserArgumentProcessor.CACHE_DIR, cachePath);
-
 	}
 
 	/**
@@ -773,7 +751,6 @@ public class AtomCache {
 	 *            to a directory
 	 */
 	public void setPath(String path) {
-		System.setProperty(AbstractUserArgumentProcessor.PDB_DIR, path);
 		this.path = path;
 	}
 
@@ -818,6 +795,17 @@ public class AtomCache {
 	 */
 	public void setUseMmCif(boolean useMmCif) {
 		this.useMmCif = useMmCif;
+		
+		if ( useMmCif) {
+			// get bio assembly from mmcif file
+
+			BioUnitDataProviderFactory.setBioUnitDataProvider(BioUnitDataProviderFactory.mmcifProviderClassName);
+
+		} else {
+		
+			BioUnitDataProviderFactory.setBioUnitDataProvider(BioUnitDataProviderFactory.pdbProviderClassName);
+			
+		}
 	}
 
 	private boolean checkLoading(String name) {
@@ -827,6 +815,7 @@ public class AtomCache {
 
 	private Structure getBioAssembly(String name) throws IOException, StructureException {
 
+	
 		// can be specified as:
 		// BIO:1fah - first one
 		// BIO:1fah:0 - asym unit
@@ -839,8 +828,9 @@ public class AtomCache {
 			biolNr = Integer.parseInt(name.substring(9, name.length()));
 		}
 
-		return StructureIO.getBiologicalAssembly(pdbId, biolNr);
+		Structure s= StructureIO.getBiologicalAssembly(pdbId, biolNr);
 
+		return s;
 	}
 
 	private Structure getPDPStructure(String pdpDomainName) {
@@ -982,8 +972,7 @@ public class AtomCache {
 		
 		
 
-		PDBFileReader reader = new PDBFileReader();
-		reader.setPath(path);
+		PDBFileReader reader = new PDBFileReader(path);
 		reader.setPdbDirectorySplit(isSplit);
 		reader.setAutoFetch(autoFetch);
 		reader.setFetchFileEvenIfObsolete(fetchFileEvenIfObsolete);
@@ -1081,8 +1070,7 @@ public class AtomCache {
 		Structure s;
 		flagLoading(pdbId);
 		try {
-			MMCIFFileReader reader = new MMCIFFileReader();
-			reader.setPath(path);
+			MMCIFFileReader reader = new MMCIFFileReader(path);
 			reader.setPdbDirectorySplit(isSplit);
 			reader.setAutoFetch(autoFetch);
 
@@ -1108,8 +1096,7 @@ public class AtomCache {
 		Structure s;
 		flagLoading(pdbId);
 		try {
-			PDBFileReader reader = new PDBFileReader();
-			reader.setPath(path);
+			PDBFileReader reader = new PDBFileReader(path);
 			reader.setPdbDirectorySplit(isSplit);
 			reader.setAutoFetch(autoFetch);
 			reader.setFetchFileEvenIfObsolete(fetchFileEvenIfObsolete);

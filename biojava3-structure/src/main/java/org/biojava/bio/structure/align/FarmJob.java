@@ -4,16 +4,18 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.biojava.bio.structure.align.ce.AbstractUserArgumentProcessor;
 import org.biojava.bio.structure.align.client.FarmJobParameters;
 import org.biojava.bio.structure.align.client.FarmJobRunnable;
 import org.biojava.bio.structure.align.events.AlignmentProgressListener;
 import org.biojava.bio.structure.align.util.CliTools;
 import org.biojava.bio.structure.align.util.ConfigurationException;
+import org.biojava.bio.structure.align.util.UserConfiguration;
 import org.biojava.bio.structure.scop.CachedRemoteScopInstallation;
 import org.biojava.bio.structure.scop.ScopDatabase;
 import org.biojava.bio.structure.scop.ScopFactory;
 import org.biojava3.core.util.InputStreamProvider;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /** A job as it can be run on the farm.
@@ -26,6 +28,8 @@ import org.biojava3.core.util.InputStreamProvider;
  *
  */
 public class FarmJob implements Runnable {
+
+	private final static Logger logger = LoggerFactory.getLogger(FarmJob.class);
 
 	private static final String[] mandParams = new String[] {"pdbFilePath"};
 
@@ -105,7 +109,7 @@ public class FarmJob implements Runnable {
 
 			} catch (ConfigurationException e){
 
-				e.printStackTrace();
+				logger.error("Exception: ", e);
 
 				if ( mandatoryArgs.contains(arg) ) {
 					// there must not be a ConfigurationException with mandatory arguments.
@@ -118,7 +122,7 @@ public class FarmJob implements Runnable {
 				
 		
 		if (( params.getNrAlignments() == -1) && (params.getTime() == -1)){
-			System.err.println("Please provide either the -time or the -nrAlignments argument!");
+			logger.error("Please provide either the -time or the -nrAlignments argument!");
 			return;
 		}
 		
@@ -138,14 +142,14 @@ public class FarmJob implements Runnable {
 		// set the system wide PDB path
 
 		String path = params.getPdbFilePath();
-		System.setProperty(AbstractUserArgumentProcessor.PDB_DIR,path);
+		System.setProperty(UserConfiguration.PDB_DIR,path);
 				
 		String cachePath = params.getCacheFilePath();
 		if ( cachePath != null && ! cachePath.equals(""))
-			System.setProperty(AbstractUserArgumentProcessor.CACHE_DIR,cachePath);
+			System.setProperty(UserConfiguration.PDB_CACHE_DIR,cachePath);
 		else {
 			// if not provided, we use pdbFilePath as the default CACHE path
-			System.setProperty(AbstractUserArgumentProcessor.CACHE_DIR,path);
+			System.setProperty(UserConfiguration.PDB_CACHE_DIR,path);
 		}
 		// declare SCOP to be locally cached, but fetching new stuff from remote
 		ScopDatabase scop = new CachedRemoteScopInstallation(true);

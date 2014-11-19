@@ -74,7 +74,70 @@
 
 	<build>
 		<plugins>
+
 			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-shade-plugin</artifactId>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>shade</goal>
+						</goals>
+						<configuration>
+							<!-- Minimizing removes jmol and log4j -->
+							<minimizeJar>false</minimizeJar>
+							<artifactSet>
+								<excludes>
+									<exclude>junit:junit</exclude>
+								</excludes>
+							</artifactSet>
+							<filters>
+								<filter>
+									<artifact>net.sourceforge.jmol:jmol</artifact>
+									<excludes>
+										<exclude>javax/vecmath/**</exclude>
+									</excludes>
+								</filter>
+								<filter>
+									<artifact>org.biojava:biojava3-structure</artifact>
+									<excludes>
+										<exclude>demo/DemoFATCAT*</exclude>
+										<exclude>demo/DemoCE*</exclude>
+									</excludes>
+								</filter>
+								<filter>
+									<!-- Exclude signature files -->
+									<artifact>*:*</artifact>
+									<excludes>
+										<exclude>META-INF/*.SF</exclude>
+										<exclude>META-INF/*.DSA</exclude>
+										<exclude>META-INF/*.RSA</exclude>
+									</excludes>
+								</filter>
+							</filters>
+							<transformers>
+								<transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+									<manifestEntries>
+										<Specification-Vendor>Open Bioinformatics Foundation</Specification-Vendor>
+										<Implementation-Vendor>Open Bioinformatics Foundation</Implementation-Vendor>
+										<Specification-Version>${project.version}</Specification-Version>
+										<Implementation-Version>${project.version}</Implementation-Version>
+										<Specification-Title>${project.name}</Specification-Title>
+										<Implementation-Title>${project.name}</Implementation-Title>
+										<Main-Class>org.biojava.bio.structure.align.gui.AlignmentGui</Main-Class>
+									</manifestEntries>
+								</transformer>
+								<!-- This bit merges the various META-INF/services files -->
+								<transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer" />
+							</transformers>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-assembly-plugin</artifactId>
 				<configuration>
 					<descriptors>
@@ -91,14 +154,15 @@
 							<goal>single</goal>
 						</goals>
 						<configuration>
-							<finalName>${project.name}_${timestamp}</finalName>
+							<finalName>${project.artifactId}-${project.version}</finalName>
 							<appendAssemblyId>false</appendAssemblyId>
 						</configuration>
 					</execution>
 				</executions>
 
 			</plugin>
-	</plugins>
+
+		</plugins>
 	</build>
 	
 </project>

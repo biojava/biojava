@@ -22,8 +22,10 @@
 package org.biojava3.core.sequence.io;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
+import org.biojava3.core.exceptions.CompoundNotFoundException;
 import org.biojava3.core.sequence.DNASequence;
 import org.biojava3.core.sequence.compound.NucleotideCompound;
 import org.biojava3.core.sequence.io.template.SequenceCreatorInterface;
@@ -71,9 +73,10 @@ public class FileProxyDNASequenceCreator implements
      * @param sequence
      * @param index
      * @return
+     * @throws CompoundNotFoundException  
+     * @throws IOException
      */
-
-    public AbstractSequence<NucleotideCompound> getSequence(String sequence, long index ) {
+    public AbstractSequence<NucleotideCompound> getSequence(String sequence, long index ) throws CompoundNotFoundException, IOException {
         SequenceFileProxyLoader<NucleotideCompound> sequenceFileProxyLoader = new SequenceFileProxyLoader<NucleotideCompound>(
                 file, 
                 sequenceParser, 

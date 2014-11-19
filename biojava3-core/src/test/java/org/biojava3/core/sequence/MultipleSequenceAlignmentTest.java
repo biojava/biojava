@@ -28,6 +28,7 @@ import static org.junit.Assert.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.biojava3.core.exceptions.CompoundNotFoundException;
 import org.biojava3.core.sequence.compound.AminoAcidCompound;
 import org.biojava3.core.sequence.compound.AminoAcidCompoundSet;
 import org.biojava3.core.sequence.compound.DNACompoundSet;
@@ -41,14 +42,14 @@ public class MultipleSequenceAlignmentTest {
     private MultipleSequenceAlignment<DNASequence,NucleotideCompound> msaDNA;
 
     @Before
-    public void setup() {
+    public void setup() throws CompoundNotFoundException {
         msaProteins = new MultipleSequenceAlignment<ProteinSequence, AminoAcidCompound>();
         for (int i = 0; i < 8; i++) {
             msaProteins.addAlignedSequence(new ProteinSequence("ARNDCEQGHILKMFPSTWYVBZJX"));
         }
         msaDNA = new MultipleSequenceAlignment<DNASequence, NucleotideCompound>();
         for (int i = 0; i < 7; i++) {
-            msaDNA.addAlignedSequence(new DNASequence("ATCGATCGATCGATCG"));
+            msaDNA.addAlignedSequence(new DNASequence("ATCGATCGATCGATCG")); 
         }
     }
 

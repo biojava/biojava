@@ -4,6 +4,7 @@
  */
 package org.biojava3.core.sequence.io;
 
+import org.biojava3.core.exceptions.CompoundNotFoundException;
 import org.biojava3.core.sequence.DataSource;
 import org.biojava3.core.sequence.ProteinSequence;
 import org.biojava3.core.sequence.compound.AminoAcidCompound;
@@ -60,10 +61,10 @@ public class GenericFastaHeaderParserTest {
      * NCBI Reference Sequence           ref|accession|locus
      * Local Sequence identifier         lcl|identifier
      *
-     * @author Scooter Willis <willishf at gmail dot com>
+     * @author Scooter Willis <willishf at gmail dot com> 
      */
     @Test
-    public void testParseHeader() {
+    public void testParseHeader() throws CompoundNotFoundException {
         logger.info("parseHeader");
         String header = "";
         ProteinSequence sequence = new ProteinSequence("");

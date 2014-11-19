@@ -28,6 +28,7 @@ import static org.junit.Assert.*;
 import org.biojava3.alignment.template.GapPenalty;
 import org.biojava3.alignment.template.PairwiseSequenceScorer;
 import org.biojava3.alignment.template.SubstitutionMatrix;
+import org.biojava3.core.exceptions.CompoundNotFoundException;
 import org.biojava3.core.sequence.ProteinSequence;
 import org.biojava3.core.sequence.compound.AminoAcidCompound;
 import org.junit.Before;
@@ -44,7 +45,7 @@ public class FractionalIdentityScorerTest {
     private PairwiseSequenceScorer<ProteinSequence, AminoAcidCompound> scorer1, scorer2;
 
     @Before
-    public void setup() {
+    public void setup() throws CompoundNotFoundException { 
         query = new ProteinSequence("ARND");
         target = new ProteinSequence("RDG");
         gaps = new SimpleGapPenalty((short) 10, (short) 1);

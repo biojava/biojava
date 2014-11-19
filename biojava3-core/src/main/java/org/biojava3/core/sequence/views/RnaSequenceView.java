@@ -25,6 +25,8 @@ package org.biojava3.core.sequence.views;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import org.biojava3.core.exceptions.CompoundNotFoundException;
 import org.biojava3.core.sequence.compound.NucleotideCompound;
 import org.biojava3.core.sequence.compound.RNACompoundSet;
 import org.biojava3.core.sequence.template.CompoundSet;
@@ -126,7 +128,7 @@ public class RnaSequenceView extends SequenceProxyView<NucleotideCompound> imple
     }
 
     @Override
-    public void setContents(String sequence) {
+    public void setContents(String sequence) throws CompoundNotFoundException {
         throw new UnsupportedOperationException("Unsupported operation; create a new viewed sequence");
     }
 }

@@ -1,6 +1,5 @@
 package org.biojava.bio.structure.align;
 
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
@@ -9,7 +8,6 @@ import java.util.zip.GZIPOutputStream;
 
 import org.biojava.bio.structure.Atom;
 import org.biojava.bio.structure.Structure;
-
 import org.biojava.bio.structure.StructureTools;
 import org.biojava.bio.structure.align.ce.ConfigStrucAligParams;
 import org.biojava.bio.structure.align.client.PdbPair;
@@ -17,9 +15,13 @@ import org.biojava.bio.structure.align.model.AFPChain;
 import org.biojava.bio.structure.align.util.AtomCache;
 import org.biojava.bio.structure.align.util.SynchronizedOutFile;
 import org.biojava.bio.structure.align.xml.AFPChainXMLConverter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class CallableStructureAlignment implements  Callable<AFPChain> {
 	
+	private final static Logger logger = LoggerFactory.getLogger(CallableStructureAlignment.class);
+
 	PdbPair pair ;
 	
 	AtomCache cache;
@@ -70,7 +72,7 @@ public class CallableStructureAlignment implements  Callable<AFPChain> {
 				desc2="";
 			afpChain.setDescription2(desc2);
 			String result = afpChain.toDBSearchResult();
-			System.out.print(result);
+			logger.info("{}", result);
 
 			outFile.write(result);
 
@@ -78,7 +80,7 @@ public class CallableStructureAlignment implements  Callable<AFPChain> {
 			writeXML(outFileDir,pair.getName1(), pair.getName2(), xml);
 
 		} catch ( Exception e){
-			e.printStackTrace();
+			logger.error("Exception: ", e);
 		}
 		return null;
 	}
@@ -128,10 +130,9 @@ public class CallableStructureAlignment implements  Callable<AFPChain> {
 			OutputStreamWriter writer = new OutputStreamWriter(gz);
 			writer.write(xml);
 			writer.close();
-		}catch (Exception e){//Catch exception if any
-			System.err.println("Error: " + e.getMessage());
+		} catch (Exception e){//Catch exception if any
+			logger.error("Exception: ", e);
 		}
-
 	}
 
 	public void setOutputDir(File outFileF) {
@@ -140,14 +141,10 @@ public class CallableStructureAlignment implements  Callable<AFPChain> {
 	}
 
 	public void setAlgorithmName(String algorithmName) {
-		this.algorithmName = algorithmName;
-		
+		this.algorithmName = algorithmName;		
 	}
 
 	public void setParameters(ConfigStrucAligParams parameters) {
-		this.params = parameters;
-		
+		this.params = parameters;		
 	}
-	
-
 }

@@ -5,6 +5,8 @@
 
 package org.biojava.bio.structure;
 
+import java.io.Serializable;
+
 /**
  * A simple bond -- it stores information about two atoms as well as information
  * about its bond order.
@@ -12,7 +14,9 @@ package org.biojava.bio.structure;
  * @author Jules Jacobsen <jacobsen@ebi.ac.uk>
  * @author Ulysse Carion
  */
-public class Bond {
+public class Bond implements Serializable {
+
+	private static final long serialVersionUID = 8836120946858134380L;
 	private Atom atomA;
 	private Atom atomB;
 	private int bondOrder;
