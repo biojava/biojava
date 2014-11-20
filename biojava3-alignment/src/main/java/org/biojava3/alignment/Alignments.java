@@ -322,11 +322,10 @@ public class Alignments {
         switch (type) {
         default:
         case GLOBAL:
-            return new NeedlemanWunschQuadratic<S, C>(query, target, gapPenalty, subMatrix);
+            return new NeedlemanWunsch<S, C>(query, target, gapPenalty, subMatrix);
         case LOCAL:
             return new SmithWaterman<S, C>(query, target, gapPenalty, subMatrix);
         case GLOBAL_LINEAR_SPACE:
-            return new NeedlemanWunsch<S, C>(query, target, gapPenalty, subMatrix);
         case LOCAL_LINEAR_SPACE:
             // TODO other alignment options (Myers-Miller, Thompson)
             throw new UnsupportedOperationException(Alignments.class.getSimpleName() + " does not yet support " +
