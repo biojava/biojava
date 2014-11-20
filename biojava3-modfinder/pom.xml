@@ -12,7 +12,6 @@
   <properties>  	   
   	  	<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.build.targetEncoding>UTF-8</project.build.targetEncoding> 
-		<jdk.version>1.6</jdk.version>
   </properties>
   <dependencies>
     <dependency>
@@ -51,11 +50,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <configuration>
-                    <source>1.6</source>
-                    <target>1.6</target>
-                    <debug>true</debug>
-                </configuration>
             </plugin>
         </plugins>
   </build>

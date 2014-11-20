@@ -102,7 +102,7 @@ public class SmithWatermanTest {
 
     @Test
     public void testGetScoreMatrix() {
-        short[][][] scores = alignment.getScoreMatrix();
+        int[][][] scores = alignment.getScoreMatrix();
         assertEquals(scores[2][2][2], 2);
         assertEquals(scores[4][3][0], 11);
         scores = self.getScoreMatrix();
