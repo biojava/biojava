@@ -91,14 +91,14 @@ public class Utils {
 	 */
 	public final static String cleanSequence(String sequence, Set<Character> cSet){
 		Set<Character> invalidCharSet = new HashSet<Character>();
-		String cleanSeq = "";
+		StringBuilder cleanSeq = new StringBuilder();
 		if(cSet == null) cSet = PeptideProperties.standardAASet; 
 		for(char c:sequence.toCharArray()){
 			if(!cSet.contains(c)){
-				cleanSeq += "-";
+				cleanSeq.append("-");
 				invalidCharSet.add(c);
 			}else{
-				cleanSeq += c;
+				cleanSeq.append(c);
 			}
 		}
 		
@@ -107,11 +107,11 @@ public class Utils {
 		for(char c: invalidCharSet){
 			stringBuilder.append("\'" + c + "\'");
 		}
-		stringBuilder.deleteCharAt(stringBuilder.length());
+		stringBuilder.deleteCharAt(stringBuilder.length()-1);
 		stringBuilder.append(" are being replaced with '-'");
 		logger.warn(stringBuilder.toString());
 		
-		return cleanSeq;
+		return cleanSeq.toString();
 	}
 	
 	/**
