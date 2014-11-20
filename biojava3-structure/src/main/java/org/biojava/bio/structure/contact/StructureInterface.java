@@ -251,7 +251,7 @@ public class StructureInterface implements Serializable, Comparable<StructureInt
 			atoms.add(a);
 			
 		}
-		return (Atom[]) atoms.toArray(new Atom[atoms.size()]);			
+		return atoms.toArray(new Atom[atoms.size()]);			
 	}
 	
 	/**
@@ -423,6 +423,11 @@ public class StructureInterface implements Serializable, Comparable<StructureInt
 	public int compareTo(StructureInterface o) {
 		// this will sort descending on interface areas
 		return (Double.compare(o.totalArea,this.totalArea));
+	}
+
+	@Override
+	public String toString() {
+		return String.format("StructureInterface %d (%s, %.0f A, <%s; %s>)", id, moleculeIds,totalArea,transforms.getFirst().toXYZString(),transforms.getSecond().toXYZString());
 	}
 	
 }

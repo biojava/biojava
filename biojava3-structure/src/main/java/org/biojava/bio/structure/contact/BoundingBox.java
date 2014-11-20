@@ -6,6 +6,8 @@ import java.util.Arrays;
 import javax.vecmath.Vector3d;
 
 import org.biojava.bio.structure.Atom;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -19,6 +21,8 @@ import org.biojava.bio.structure.Atom;
 public class BoundingBox implements Serializable {
 
 	private static final long serialVersionUID = 1L;
+	private static final Logger logger = LoggerFactory.getLogger(StructureInterfaceList.class);
+
 	
 	public double xmin;
 	public double xmax;
@@ -51,7 +55,7 @@ public class BoundingBox implements Serializable {
 	 */
 	public BoundingBox (Atom[] atoms) {
 		
-		if (atoms.length==0) System.err.println("Error! Empty list of atoms");
+		if (atoms.length==0) logger.error("Error! Empty list of atoms");
 		
 		xmax = atoms[0].getX();
 		xmin = xmax;
@@ -79,7 +83,7 @@ public class BoundingBox implements Serializable {
 	 */
 	public BoundingBox(BoundingBox[] boxes) {
 		
-		if (boxes.length==0) System.err.println("Error! Empty list of bounding boxes");
+		if (boxes.length==0) logger.error("Error! Empty list of bounding boxes");
 		
 		xmax = boxes[0].xmax;
 		xmin = boxes[0].xmin;
@@ -110,6 +114,7 @@ public class BoundingBox implements Serializable {
 		public int compareTo(Bound o) {
 			return Double.compare(this.value,o.value);
 		}
+		@Override
 		public String toString() {
 			return "["+cardinal+","+value+"]";
 		}
@@ -189,6 +194,7 @@ public class BoundingBox implements Serializable {
 		return minmax;
 	}
 	
+	@Override
 	public String toString() {
 		return String.format("[(%7.2f,%7.2f),(%7.2f,%7.2f),(%7.2f,%7.2f)]", xmin,xmax,ymin,ymax,zmin,zmax);
 	}

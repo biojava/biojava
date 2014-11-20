@@ -13,6 +13,7 @@ import javax.vecmath.Matrix3d;
 import javax.vecmath.Matrix4d;
 import javax.vecmath.Vector3d;
 import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -22,6 +23,8 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import org.biojava.bio.structure.jama.EigenvalueDecomposition;
 import org.biojava.bio.structure.jama.Matrix;
 import org.biojava.bio.structure.xtal.io.TransfAlgebraicAdapter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -41,6 +44,7 @@ import org.biojava.bio.structure.xtal.io.TransfAlgebraicAdapter;
 public class SpaceGroup implements Serializable {
 
 	private static final long serialVersionUID = 1L;
+	private static final Logger logger = LoggerFactory.getLogger(SpaceGroup.class);
 
 
 	private static final Pattern splitPat1 = Pattern.compile("((?:[+-]?[XYZ])+)([+-][0-9/.]+)");
@@ -99,7 +103,7 @@ public class SpaceGroup implements Serializable {
 		cellTranslations[0] = new Vector3d(0,0,0);
 
 		if ( transformations == null){
-			System.err.println("transformations == null" + this.toXML());
+			logger.warn("transformations == null" + this.toXML());
 		}
 
 		if (multiplicity==primitiveMultiplicity) {
@@ -111,8 +115,8 @@ public class SpaceGroup implements Serializable {
 
 		for (int n=1;n<fold;n++) {
 			if ( transformations.size() < (n* primitiveMultiplicity)){
-				System.err.println("WARNING number of transformations < " +(n*primitiveMultiplicity));
-				System.err.println(this.toXML());
+				logger.warn("WARNING number of transformations < " +(n*primitiveMultiplicity));
+				logger.warn(this.toXML());
 			}
 			Matrix4d t = transformations.get(n*primitiveMultiplicity);
 			cellTranslations[n] = new Vector3d(t.m03,t.m13,t.m23);
@@ -342,6 +346,7 @@ public class SpaceGroup implements Serializable {
 		return transfAlgebraic.get(i);
 	}
 
+	@Override
 	public boolean equals(Object o) {
 		if (! (o instanceof SpaceGroup)) {
 			return false;
@@ -554,6 +559,7 @@ public class SpaceGroup implements Serializable {
 		return axisType;
 	}
 
+	@Override
 	public String toString() {
 		return getShortSymbol();
 	}
@@ -565,8 +571,8 @@ public class SpaceGroup implements Serializable {
 
 		try {
 			jaxbContextStringSortedSet= JAXBContext.newInstance(SpaceGroup.class);
-		} catch (Exception e){
-			e.printStackTrace();
+		} catch (JAXBException e){
+			logger.error("Error converting to XML",e);
 			return null;
 		}
 
@@ -583,8 +589,8 @@ public class SpaceGroup implements Serializable {
 			m.marshal( this, ps);
 
 
-		} catch (Exception e){
-			e.printStackTrace();
+		} catch (JAXBException e){
+			logger.error("Error converting to XML",e);
 		}
 
 		return baos.toString();
