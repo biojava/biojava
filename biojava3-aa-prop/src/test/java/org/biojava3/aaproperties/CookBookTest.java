@@ -12,9 +12,9 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class CookBookTester {
+public class CookBookTest {
 	
-	private final static Logger logger = LoggerFactory.getLogger(CookBookTester.class);
+	private final static Logger logger = LoggerFactory.getLogger(CookBookTest.class);
 
 	@Test
 	public void shortExample1(){
