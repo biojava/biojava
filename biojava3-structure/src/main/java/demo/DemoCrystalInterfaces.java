@@ -37,8 +37,6 @@ public class DemoCrystalInterfaces {
 	
 	private static final int NTHREADS = Runtime.getRuntime().availableProcessors();
 	
-	private static final boolean DEBUG = true;
-	
 	private static final double CLASH_DISTANCE = 1.5; 
 	
 	
@@ -71,11 +69,9 @@ public class DemoCrystalInterfaces {
 		long start = System.currentTimeMillis();
 		
 		CrystalBuilder cb = new CrystalBuilder(structure);
-		cb.setVerbose(DEBUG); 
 		
 		
 		StructureInterfaceList interfaces = cb.getUniqueInterfaces(CUTOFF);
-		interfaces.setDebug(DEBUG);
 		interfaces.calcAsas(N_SPHERE_POINTS, NTHREADS, CONSIDER_COFACTORS);
 		interfaces.removeInterfacesBelowArea(MIN_AREA_TO_KEEP);
 

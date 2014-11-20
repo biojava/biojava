@@ -263,13 +263,13 @@ public class AlignmentGui extends JFrame{
 	private Box initButtons(){
 
 		//        Box hBox42 = Box.createHorizontalBox();
-		progress =new JProgressBar();      
+		progress =new JProgressBar();
 		progress.setIndeterminate(false);
 		progress.setMaximumSize(new Dimension(10,100));
 		progress.setVisible(false);
 
 		//        hBox42.add(Box.createGlue());
-		//        hBox42.add(progress);       
+		//        hBox42.add(progress);
 		//        hBox42.add(Box.createGlue());
 		//        vBox.add(hBox42);
 		Action action1 = new AbstractAction("Align") {

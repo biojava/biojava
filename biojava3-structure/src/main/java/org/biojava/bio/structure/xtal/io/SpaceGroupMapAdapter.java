@@ -31,8 +31,8 @@ import javax.xml.bind.annotation.adapters.XmlAdapter;
 import org.biojava.bio.structure.xtal.SpaceGroup;
 
 class SpaceGroupMapAdapter extends XmlAdapter<SpaceGroupMapElements[], Map<Integer, SpaceGroup>> {
-    
-	public SpaceGroupMapElements[] marshal(Map<Integer, SpaceGroup> arg0) throws Exception {
+    @Override
+    public SpaceGroupMapElements[] marshal(Map<Integer, SpaceGroup> arg0) throws Exception {
     	SpaceGroupMapElements[] mapElements = new SpaceGroupMapElements[arg0.size()];
         int i = 0;
         for (Map.Entry<Integer, SpaceGroup> entry : arg0.entrySet())
@@ -41,6 +41,7 @@ class SpaceGroupMapAdapter extends XmlAdapter<SpaceGroupMapElements[], Map<Integ
         return mapElements;
     }
 
+    @Override
     public Map<Integer, SpaceGroup> unmarshal(SpaceGroupMapElements[] arg0) throws Exception {
         Map<Integer, SpaceGroup> r = new TreeMap<Integer, SpaceGroup>();
         for (SpaceGroupMapElements mapelement : arg0)

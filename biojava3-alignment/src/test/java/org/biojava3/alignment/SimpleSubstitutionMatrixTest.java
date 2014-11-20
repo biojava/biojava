@@ -23,18 +23,19 @@
 
 package org.biojava3.alignment;
 
-import static org.junit.Assert.*;
-
-import java.io.File;
-import java.io.FileNotFoundException;
-
 import org.biojava3.alignment.template.SubstitutionMatrix;
+import org.biojava3.core.exceptions.CompoundNotFoundException;
+import org.biojava3.core.sequence.DNASequence;
 import org.biojava3.core.sequence.compound.AminoAcidCompound;
 import org.biojava3.core.sequence.compound.AminoAcidCompoundSet;
 import org.biojava3.core.sequence.compound.DNACompoundSet;
 import org.biojava3.core.sequence.compound.NucleotideCompound;
-import org.junit.Ignore;
 import org.junit.Test;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+
+import static org.junit.Assert.assertEquals;
 
 public class SimpleSubstitutionMatrixTest {
 
@@ -44,10 +45,16 @@ public class SimpleSubstitutionMatrixTest {
                 new File("blosum63.txt"));
     }
 
-    @Ignore // TODO why does this not cause ClassCastException? loses typing at runtime?
-    @Test(expected=ClassCastException.class)
-    public void testSimpleSubstitutionMatrixWrong() {
-        new SimpleSubstitutionMatrix<NucleotideCompound>();
+    @Test
+    public void test() throws CompoundNotFoundException {
+        NucleotideCompound A = new DNASequence("A").getCompoundAt(1);
+        NucleotideCompound a = new DNASequence("a").getCompoundAt(1);
+        NucleotideCompound c = new DNASequence("c").getCompoundAt(1);
+        SubstitutionMatrix<NucleotideCompound> matrix = new SimpleSubstitutionMatrix<NucleotideCompound>(DNACompoundSet.getDNACompoundSet(), (short)1, (short)0);
+        assertEquals(1, (matrix.getValue(A, A)));
+        assertEquals(1, (matrix.getValue(a, a)));
+        assertEquals(1, (matrix.getValue(A, a)));
+        assertEquals(0, (matrix.getValue(a, c)));
     }
 
     @Test()
@@ -105,8 +112,8 @@ public class SimpleSubstitutionMatrixTest {
         assertEquals(matrix.toString(),
                 String.format("# Test%n  A C G T%nA 5 0 0 0%nC 0 5 0 0%nG 0 0 5 0%nT 0 0 0 1%n"));
     }
-    /**
-     * @author Daniel Cameron
+    /*
+     * Author: Daniel Cameron
      */
     @Test
     public void testCaseEquivalence() {

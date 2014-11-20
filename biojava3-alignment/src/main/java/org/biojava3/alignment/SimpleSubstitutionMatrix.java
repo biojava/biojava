@@ -23,6 +23,12 @@
 
 package org.biojava3.alignment;
 
+import org.biojava3.alignment.template.SubstitutionMatrix;
+import org.biojava3.core.sequence.compound.AminoAcidCompound;
+import org.biojava3.core.sequence.compound.AminoAcidCompoundSet;
+import org.biojava3.core.sequence.template.Compound;
+import org.biojava3.core.sequence.template.CompoundSet;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -36,12 +42,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.StringTokenizer;
-
-import org.biojava3.alignment.template.SubstitutionMatrix;
-import org.biojava3.core.sequence.compound.AminoAcidCompound;
-import org.biojava3.core.sequence.compound.AminoAcidCompoundSet;
-import org.biojava3.core.sequence.template.Compound;
-import org.biojava3.core.sequence.template.CompoundSet;
 
 /**
  * Implements a data structure which holds the score (penalty or bonus) given during alignment for the exchange of one
@@ -61,12 +61,19 @@ public class SimpleSubstitutionMatrix<C extends Compound> implements Substitutio
     private short max, min;
     private List<C> rows, cols;
 
+    public static SubstitutionMatrix<AminoAcidCompound> getBlosum62() {
+        return new SimpleSubstitutionMatrix<AminoAcidCompound>(AminoAcidCompoundSet.getAminoAcidCompoundSet(), new InputStreamReader(
+                SimpleSubstitutionMatrix.class.getResourceAsStream("/blosum62.txt")), "blosum62");
+    }
+
     /**
      * Creates a substitution matrix using the defaults (BLOSUM 62).
      *
      * @throws ClassCastException if type parameter C is not {@link AminoAcidCompound}
+     * @deprecated Use {@link #getBlosum62} instead.
      */
-    @SuppressWarnings("unchecked") // TODO proper generic type checking instead of possible ClassCastException
+    @SuppressWarnings("unchecked")
+    @Deprecated
     public SimpleSubstitutionMatrix() {
         this((CompoundSet<C>) AminoAcidCompoundSet.getAminoAcidCompoundSet(), new InputStreamReader(
                 SimpleSubstitutionMatrix.class.getResourceAsStream("/blosum62.txt")), "blosum62");
