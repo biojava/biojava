@@ -65,8 +65,8 @@ public class SimpleGapPenalty implements GapPenalty {
     /**
      * Creates a new set of gap penalties.
      *
-     * @param gop the gap open penalty
-     * @param gep the gap extension penalty
+     * @param gop the gap open penalty; should be nonnegative
+     * @param gep the gap extension penalty; should be nonnegative
      */
     public SimpleGapPenalty(short gop, short gep) {
         this.gop = (short) -Math.abs(gop);
@@ -74,11 +74,17 @@ public class SimpleGapPenalty implements GapPenalty {
         setType();
     }
 
+    /**
+     * <strong>Returns the negative of the extension penalty passed to the constructor.</strong>
+     */
     @Override
     public short getExtensionPenalty() {
         return gep;
     }
 
+    /**
+     * <strong>Returns the negative of the opening penalty passed to the constructor.</strong>
+     */
     @Override
     public short getOpenPenalty() {
         return gop;
@@ -89,12 +95,18 @@ public class SimpleGapPenalty implements GapPenalty {
         return type;
     }
 
+    /**
+     * @param gep Should be nonnegative
+     */
     @Override
     public void setExtensionPenalty(short gep) {
         this.gep = (short) -Math.abs(gep);
         setType();
     }
 
+    /**
+     * @param gop Should be nonnegative
+     */
     @Override
     public void setOpenPenalty(short gop) {
         this.gop = (short) -Math.abs(gop);

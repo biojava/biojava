@@ -23,11 +23,6 @@
 
 package org.biojava3.alignment;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
-
 import org.biojava3.alignment.template.*;
 import org.biojava3.core.sequence.compound.AmbiguityDNACompoundSet;
 import org.biojava3.core.sequence.compound.AminoAcidCompoundSet;
@@ -38,6 +33,11 @@ import org.biojava3.core.sequence.template.Sequence;
 import org.biojava3.core.util.ConcurrencyTools;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 
 /**
  * Static utility to easily run alignment routines.  To exit cleanly after running any parallel method that mentions
@@ -328,7 +328,8 @@ public class Alignments {
         case GLOBAL_LINEAR_SPACE:
         case LOCAL_LINEAR_SPACE:
             // TODO other alignment options (Myers-Miller, Thompson)
-            return null;
+            throw new UnsupportedOperationException(Alignments.class.getSimpleName() + " does not yet support " +
+                    type + " alignment");
         }
     }
 
@@ -385,7 +386,8 @@ public class Alignments {
         case KMERS:
         case WU_MANBER:
             // TODO other scoring options
-            return null;
+            throw new UnsupportedOperationException(Alignments.class.getSimpleName() + " does not yet support " +
+                    type + " scoring");
         }
     }
 
@@ -414,7 +416,8 @@ public class Alignments {
         case LOCAL_LINEAR_SPACE:
         case LOCAL_CONSENSUS:
             // TODO other alignment options (Myers-Miller, consensus, local)
-            return null;
+            throw new UnsupportedOperationException(Alignments.class.getSimpleName() + " does not yet support " +
+                    type + " alignment");
         }
     }
 
@@ -443,7 +446,8 @@ public class Alignments {
         case LOCAL_LINEAR_SPACE:
         case LOCAL_CONSENSUS:
             // TODO other alignment options (Myers-Miller, consensus, local)
-            return null;
+            throw new UnsupportedOperationException(Alignments.class.getSimpleName() + " does not yet support " +
+                    type + " alignment");
         }
     }
 
@@ -472,7 +476,8 @@ public class Alignments {
         case LOCAL_LINEAR_SPACE:
         case LOCAL_CONSENSUS:
             // TODO other alignment options (Myers-Miller, consensus, local)
-            return null;
+            throw new UnsupportedOperationException(Alignments.class.getSimpleName() + " does not yet support " +
+                    type + " alignment");
         }
     }
 
@@ -501,7 +506,8 @@ public class Alignments {
         case LOCAL_LINEAR_SPACE:
         case LOCAL_CONSENSUS:
             // TODO other alignment options (Myers-Miller, consensus, local)
-            return null;
+            throw new UnsupportedOperationException(Alignments.class.getSimpleName() + " does not yet support " +
+                    type + " alignment");
         }
     }
 
