@@ -5,11 +5,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.zip.GZIPInputStream;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Created by ap3 on 31/10/2014.
  */
 public class Site {
 
+	private final static Logger logger = LoggerFactory.getLogger(Site.class);
+	
     public Site(){
 
 
@@ -63,38 +68,34 @@ public class Site {
             // fields are:
             String[] spl = line.split("\t");
             if ( spl.length  < 5){
-                System.err.println("Found wrong line length: " + line);
+                logger.info("Found wrong line length: " + line);
                 continue;
 
             }
-            try {
-                String protein = spl[proteinIndex];
-                String uniprot = spl[uniprotIndex];
-                //String geneSymb = spl[2];
-                //String chrLoc   = spl[3];
-                String modType = spl[modTypeIndex];
-                String residue = spl[residueIndex];
-                String group    = spl[groupIndex];
 
-                String organism = spl[orgIndex];
+            String protein = spl[proteinIndex];
+            String uniprot = spl[uniprotIndex];
+            //String geneSymb = spl[2];
+            //String chrLoc   = spl[3];
+            String modType = spl[modTypeIndex];
+            String residue = spl[residueIndex];
+            String group    = spl[groupIndex];
 
-                Site s = new Site();
-                s.setProtein(protein);
-                s.setUniprot(uniprot);
-                //s.setGeneSymb(geneSymb);
-                //s.setChrLoc(chrLoc);
-                s.setModType(modType);
-                s.setResidue(residue);
-                s.setGroup(group);
-                s.setOrganism(organism);
-                data.add(s);
-            } catch (Exception e){
-                System.err.println("error parsing file " + f.getAbsolutePath()  );
-                System.err.println("Error parsing line >" + line+"<");
-                return data;
-            }
+            String organism = spl[orgIndex];
+
+            Site s = new Site();
+            s.setProtein(protein);
+            s.setUniprot(uniprot);
+            //s.setGeneSymb(geneSymb);
+            //s.setChrLoc(chrLoc);
+            s.setModType(modType);
+            s.setResidue(residue);
+            s.setGroup(group);
+            s.setOrganism(organism);
+            data.add(s);
+            
         }
-
+        buf.close();
 
         return data;
 

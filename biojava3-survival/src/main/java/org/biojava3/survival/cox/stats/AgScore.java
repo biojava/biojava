@@ -24,8 +24,8 @@ public class AgScore {
      * @return
      */
     public static double[][] process(CoxMethod method, ArrayList<SurvivalInfo> survivalInfoList, CoxInfo coxInfo, boolean useStrata) {
-        int i, j, k;
-        double temp;
+        int i, k;
+        //double temp;
         int n = survivalInfoList.size();
 
         ArrayList<String> variables = new ArrayList<String>(coxInfo.getCoefficientsList().keySet());

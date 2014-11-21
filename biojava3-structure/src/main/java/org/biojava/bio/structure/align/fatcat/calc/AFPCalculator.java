@@ -60,6 +60,7 @@ public class AFPCalculator
 
 
 		int     p1, p2;
+		@SuppressWarnings("unused")
 		int n0, n, n1, n2;
 		double  filter1;
 		double rmsd = 0;

@@ -199,7 +199,7 @@ public class SurvFitKM {
         if (startTime == null && newTime != null) {
             startTime = newTime;
         }
-        int ny = 2; // setup for right censored versus counting
+        //int ny = 2; // setup for right censored versus counting
         if (startTime != null) {
             throw new Exception("Filter on startTime not implemented");
         }
@@ -227,7 +227,7 @@ public class SurvFitKM {
 
         }
 
-        int nstrat = levels.size();
+        //int nstrat = levels.size();
 
         LinkedHashMap<String, StrataInfo> strataInfoHashMap = new LinkedHashMap<String, StrataInfo>();
 
@@ -456,14 +456,14 @@ public class SurvFitKM {
         }
 
 
-        if (false) {
-            for (String strata : strataInfoHashMap.keySet()) {
-                StrataInfo strataInfo = strataInfoHashMap.get(strata);
-                System.out.println(strataInfo.toString());
-                System.out.println();
-            }
-            System.out.println();
-        }
+//        if (false) {
+//            for (String strata : strataInfoHashMap.keySet()) {
+//                StrataInfo strataInfo = strataInfoHashMap.get(strata);
+//                System.out.println(strataInfo.toString());
+//                System.out.println();
+//            }
+//            System.out.println();
+//        }
         
         return strataInfoHashMap;
     }

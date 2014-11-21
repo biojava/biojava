@@ -59,7 +59,7 @@ public class SimpleSubstitutionMatrixTest {
 
     @Test()
     public void testSimpleSubstitutionMatrix() {
-        SubstitutionMatrix<AminoAcidCompound> matrix = new SimpleSubstitutionMatrix<AminoAcidCompound>();
+        SubstitutionMatrix<AminoAcidCompound> matrix = SimpleSubstitutionMatrix.getBlosum62();
         assertEquals(matrix.getCompoundSet(), AminoAcidCompoundSet.getAminoAcidCompoundSet());
         assertEquals(matrix.getName(), "blosum62");
         assertEquals(matrix.getMaxValue(), 11);
@@ -89,7 +89,7 @@ public class SimpleSubstitutionMatrixTest {
 
     @Test
     public void testSetDescription() {
-        SubstitutionMatrix<AminoAcidCompound> matrix = new SimpleSubstitutionMatrix<AminoAcidCompound>();
+        SubstitutionMatrix<AminoAcidCompound> matrix = SimpleSubstitutionMatrix.getBlosum62();
         assertEquals(matrix.getDescription().substring(0, 2), "# ");
         matrix.setDescription("blah");
         assertEquals(matrix.getDescription().substring(0, 2), "bl");
@@ -97,7 +97,7 @@ public class SimpleSubstitutionMatrixTest {
 
     @Test
     public void testSetName() {
-        SubstitutionMatrix<AminoAcidCompound> matrix = new SimpleSubstitutionMatrix<AminoAcidCompound>();
+        SubstitutionMatrix<AminoAcidCompound> matrix = SimpleSubstitutionMatrix.getBlosum62();
         assertEquals(matrix.getName(), "blosum62");
         matrix.setName("blah");
         assertEquals(matrix.getName(), "blah");

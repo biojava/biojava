@@ -310,9 +310,12 @@ public class OboFileParser {
 		
 		// set the refs in the synonym
 		for (Map<String, Object> ref : refs){
+			@SuppressWarnings("unused")
 			String xref = (String) ref.get("xref");
+			@SuppressWarnings("unused")
 			String desc = (String) ref.get("desc");
 			//logger.info(xref + " " + desc);
+			@SuppressWarnings("unused")
 			NestedValue nv = (NestedValue) ref.get("nv");
 			//TODO: add implementation for this...
 		}
@@ -610,10 +613,6 @@ public class OboFileParser {
 
 class NestedValue {
 
-	/**
-	 *
-	 */
-	private static final long serialVersionUID = -7529450225162773796L;
 	protected Properties propertyValues = new Properties();
 	protected String name;
 	protected String suggestedComment;

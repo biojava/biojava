@@ -11,7 +11,8 @@ extends Term {
           extends Term.Impl
           implements Variable
  {
-    public Impl(Ontology ontology, String name, String description) {
+	private static final long serialVersionUID = 1L;
+	public Impl(Ontology ontology, String name, String description) {
       super(ontology, name, description);
     }
     public Impl(Ontology ontology, String name, String description, Object[] synonyms) {

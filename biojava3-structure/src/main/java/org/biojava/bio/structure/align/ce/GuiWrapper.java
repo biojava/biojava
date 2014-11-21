@@ -80,7 +80,7 @@ public class GuiWrapper {
 			throws ClassNotFoundException, NoSuchMethodException, 
 			InvocationTargetException, IllegalAccessException, InstantiationException{
 
-		Class structureAlignmentJmol = Class.forName(strucAligJmol);
+		Class<?> structureAlignmentJmol = Class.forName(strucAligJmol);
 
 		Object strucAligJ = structureAlignmentJmol.newInstance();		
 
@@ -178,7 +178,7 @@ public class GuiWrapper {
 		String tableClass = "org.biojava.bio.structure.align.gui.DBResultTable";
 		
 		try {
-			Class c = Class.forName(tableClass);
+			Class<?> c = Class.forName(tableClass);
 			Object table = c.newInstance();
 			
 			Method show = c.getMethod("show", new Class[]{File.class, UserConfiguration.class });

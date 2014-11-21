@@ -75,7 +75,7 @@ public class CookbookMSAProfiler {
 
         System.out.print("Stage 1: pairwise similarity calculation... ");
         GapPenalty gaps = new SimpleGapPenalty();
-        SubstitutionMatrix<AminoAcidCompound> blosum62 = new SimpleSubstitutionMatrix<AminoAcidCompound>();
+        SubstitutionMatrix<AminoAcidCompound> blosum62 = SimpleSubstitutionMatrix.getBlosum62();
         List<PairwiseSequenceScorer<ProteinSequence, AminoAcidCompound>> scorers = Alignments.getAllPairsScorers(list,
                 PairwiseSequenceScorerType.GLOBAL_IDENTITIES, gaps, blosum62);
         Alignments.runPairwiseScorers(scorers);

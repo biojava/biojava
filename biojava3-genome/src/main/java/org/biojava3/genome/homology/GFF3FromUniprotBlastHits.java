@@ -94,8 +94,9 @@ public class GFF3FromUniprotBlastHits {
 
                     SequencePair<ProteinSequence, AminoAcidCompound> alignment = Alignments.getPairwiseAlignment(
                             transcriptSequence.getProteinSequence(), proteinSequence,
-                            PairwiseSequenceAlignerType.LOCAL, new SimpleGapPenalty(),
-                            new SimpleSubstitutionMatrix<AminoAcidCompound>());
+                            PairwiseSequenceAlignerType.LOCAL, new SimpleGapPenalty(), 
+                            SimpleSubstitutionMatrix.getBlosum62()
+                            );
                     // System.out.println();
                     //    System.out.println(alignment.getSummary());
                     //   System.out.println(new Pair().format(alignment));

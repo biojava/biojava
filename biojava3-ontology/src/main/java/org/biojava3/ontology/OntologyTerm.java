@@ -63,7 +63,9 @@ public interface OntologyTerm extends Term {
     public final static class Impl
      
     implements OntologyTerm, java.io.Serializable {
-        private final Ontology ontology;
+        
+		private static final long serialVersionUID = 1L;
+		private final Ontology ontology;
         private final Ontology target;
         
         private Set synonyms;

@@ -8,7 +8,6 @@ import java.awt.BasicStroke;
 import java.awt.Color;
 import java.io.FileInputStream;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Properties;
 
 /**
