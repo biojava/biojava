@@ -1,7 +1,6 @@
 package org.biojava.bio.structure.quaternary.io;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
