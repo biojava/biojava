@@ -103,7 +103,7 @@ public class InsdcParser <S extends AbstractSequence<C>, C extends Compound>{
      * single mother feature will have a tree of features that will reflect the
      * construction in genbank file
      */
-    private complexFeaturesAppendEnum complexFeaturesAppendMode = complexFeaturesAppendEnum.FLATTEN;
+    private complexFeaturesAppendEnum complexFeaturesAppendMode = complexFeaturesAppendEnum.HIERARCHICAL;
 
     public void setComplexFeaturesAppendMode(complexFeaturesAppendEnum complexFeaturesAppendMode) {
         this.complexFeaturesAppendMode = complexFeaturesAppendMode;
