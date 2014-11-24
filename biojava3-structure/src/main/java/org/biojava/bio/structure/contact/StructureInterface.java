@@ -40,7 +40,7 @@ public class StructureInterface implements Serializable, Comparable<StructureInt
 
 	/**
 	 * The identifier for each of the atom arrays (usually a chain identifier, i.e. a single capital letter)
-	 * Servers to identify the molecules within the Asymmetric Unit of the crystal
+	 * Serves to identify the molecules within the Asymmetric Unit of the crystal
 	 */
 	private Pair<String> moleculeIds; 
 	
@@ -129,7 +129,7 @@ public class StructureInterface implements Serializable, Comparable<StructureInt
 	
 	/**
 	 * Return the 2 crystal transform operations performed on each of the 
-	 * chains of this interface.
+	 * molecules of this interface.
 	 * @return
 	 */
 	public Pair<CrystalTransform> getTransforms() {
@@ -305,7 +305,7 @@ public class StructureInterface implements Serializable, Comparable<StructureInt
 	/**
 	 * Returns true if the transformation applied to the second molecule of this interface
 	 * has an infinite character (pure translation or screw rotation)
-	 * and both chains of the interface have the same PDB chain code: in such cases the 
+	 * and both molecules of the interface have the same asymmetric unit identifier (chain id): in such cases the 
 	 * interface would lead to infinite fiber-like (linear or helical) assemblies
 	 * @return
 	 */
@@ -417,6 +417,33 @@ public class StructureInterface implements Serializable, Comparable<StructureInt
 		}
 		
 		return new Pair<List<Group>>(rim1, rim2);		
+	}
+	
+	/**
+	 * Returns the residues belonging to the interface, i.e. the residues 
+	 * at the surface with BSA>0
+	 * @param minAsaForSurface the minimum ASA to consider a residue on the surface
+	 * @return
+	 */
+	public Pair<List<Group>> getInterfacingResidues(double minAsaForSurface) {
+				
+		List<Group> interf1 = new ArrayList<Group>();
+		List<Group> interf2 = new ArrayList<Group>();
+		
+		for (GroupAsa groupAsa:groupAsas1.values()) {
+			
+			if (groupAsa.getAsaU()>minAsaForSurface && groupAsa.getBsa()>0) {
+				interf1.add(groupAsa.getGroup());
+			}
+		}
+		for (GroupAsa groupAsa:groupAsas2.values()) {
+			
+			if (groupAsa.getAsaU()>minAsaForSurface && groupAsa.getBsa()>0) {
+				interf2.add(groupAsa.getGroup());
+			}
+		}
+		
+		return new Pair<List<Group>>(interf1, interf2);		
 	}
 	
 	@Override
