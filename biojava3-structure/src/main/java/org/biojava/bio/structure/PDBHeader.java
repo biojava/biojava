@@ -1,6 +1,7 @@
 package org.biojava.bio.structure;
 
 import java.io.Serializable;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
@@ -15,6 +16,8 @@ import java.util.Map;
 import java.util.Set;
 
 import org.biojava.bio.structure.quaternary.BiologicalAssemblyTransformation;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /** A class that contains PDB Header information.
@@ -26,6 +29,8 @@ import org.biojava.bio.structure.quaternary.BiologicalAssemblyTransformation;
 public class PDBHeader implements PDBRecord, Serializable{
 
 	private static final long serialVersionUID = -5834326174085429508L;
+	
+	private static final Logger logger = LoggerFactory.getLogger(PDBHeader.class);
 	
 	private String method;
 	private String title;
@@ -74,8 +79,8 @@ public class PDBHeader implements PDBRecord, Serializable{
 
 		try {
 
-			@SuppressWarnings("rawtypes")
-			Class c = Class.forName("org.biojava.bio.structure.PDBHeader");
+			
+			Class<?> c = Class.forName(PDBHeader.class.getName());
 			Method[] methods  = c.getMethods();
 
 			for (int i = 0; i < methods.length; i++) {
@@ -98,8 +103,12 @@ public class PDBHeader implements PDBRecord, Serializable{
 					}
 				}
 			}
-		} catch (Exception e){
-			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			logger.error("Exception caught while creating toString  ",e);
+		} catch (InvocationTargetException e) {
+			logger.error("Exception caught while creating toString ",e);
+		} catch (IllegalAccessException e) {
+			logger.error("Exception caught while creating toString ",e);
 		}
 
 		return buf.toString();
@@ -196,7 +205,7 @@ public class PDBHeader implements PDBRecord, Serializable{
 
 	private void printMultiLine(StringBuffer buf, String lineStart, String data, char breakChar){
 		if ( lineStart.length() !=  9)
-			System.err.println("lineStart != 9, there will be problems :" + lineStart);
+			logger.info("lineStart != 9, there will be problems :" + lineStart);
 
 		if ( data.length() < 58) {
 			buf.append(lineStart);
@@ -376,9 +385,8 @@ public class PDBHeader implements PDBRecord, Serializable{
 	 */
 	public boolean equals(PDBHeader other){
 		try {
-
-			@SuppressWarnings("rawtypes")
-			Class c = Class.forName("org.biojava.bio.structure.PDBHeader");
+			
+			Class<?> c = Class.forName(PDBHeader.class.getName());
 			Method[] methods  = c.getMethods();
 
 			for (int i = 0; i < methods.length; i++) {
@@ -394,22 +402,28 @@ public class PDBHeader implements PDBRecord, Serializable{
 						if ( b == null ){
 							continue;
 						} else {
-							System.out.println(name + " a is null, where other is " + b);
+							logger.warn(name + " a is null, where other is " + b);
 							return false;
 						}
 					}
 					if ( b == null) {
-						System.out.println(name + " other is null, where a is " + a);
+						logger.warn(name + " other is null, where a is " + a);
 						return false;
 					}
 					if (! (a.equals(b))){
-						System.out.println("mismatch with " + name + " >" + a + "< >" + b + "<");
+						logger.warn("mismatch with " + name + " >" + a + "< >" + b + "<");
 						return false;
 					}
 				}
 			}
-		} catch (Exception e){
-			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			logger.error("Exception caught while comparing PDBHeader objects ",e);
+			return false;
+		} catch (InvocationTargetException e) {
+			logger.error("Exception caught while comparing PDBHeader objects ",e);
+			return false;
+		} catch (IllegalAccessException e) {
+			logger.error("Exception caught while comparing PDBHeader objects ",e);
 			return false;
 		}
 		return true;

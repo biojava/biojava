@@ -446,6 +446,31 @@ public class StructureInterface implements Serializable, Comparable<StructureInt
 		return new Pair<List<Group>>(interf1, interf2);		
 	}
 	
+	/**
+	 * Returns the residues belonging to the surface
+	 * @param minAsaForSurface the minimum ASA to consider a residue on the surface
+	 * @return
+	 */
+	public Pair<List<Group>> getSurfaceResidues(double minAsaForSurface) {
+		List<Group> surf1 = new ArrayList<Group>();
+		List<Group> surf2 = new ArrayList<Group>();
+		
+		for (GroupAsa groupAsa:groupAsas1.values()) {
+			
+			if (groupAsa.getAsaU()>minAsaForSurface) {
+				surf1.add(groupAsa.getGroup());
+			}
+		}
+		for (GroupAsa groupAsa:groupAsas2.values()) {
+			
+			if (groupAsa.getAsaU()>minAsaForSurface) {
+				surf2.add(groupAsa.getGroup());
+			}
+		}
+		
+		return new Pair<List<Group>>(surf1, surf2);		
+	}
+	
 	@Override
 	public int compareTo(StructureInterface o) {
 		// this will sort descending on interface areas

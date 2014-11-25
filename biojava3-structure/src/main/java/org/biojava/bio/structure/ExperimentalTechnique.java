@@ -111,4 +111,8 @@ public enum ExperimentalTechnique {
 		 
 		 return false;		
 	 }
+	 
+	 public String toString() {
+		 return getName();
+	 }
 }
