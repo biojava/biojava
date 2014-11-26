@@ -1393,58 +1393,14 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 
 	}
 
-
-	/** Handler for
-	 REMARK  2
-
-	 * For diffraction experiments:
-
-	 COLUMNS        DATA TYPE       FIELD               DEFINITION
-	 --------------------------------------------------------------------------------
-	 1 -  6        Record name     "REMARK"
-	 10             LString(1)      "2"
-	 12 - 22        LString(11)     "RESOLUTION."
-	 23 - 27        Real(5.2)       resolution          Resolution.
-	 29 - 38        LString(10)     "ANGSTROMS."
-	 */
-
-	private void pdb_REMARK_2_Handler(String line) {
-		//System.out.println(line);
-		int i = line.indexOf("ANGSTROM");
-		if ( i != -1) {
-			// line contains ANGSTROM info...
-			//get the chars between 22 and where Angstrom starts
-			// this is for backwards compatibility
-			// new PDB files start at 24!!!
-			//System.out.println(i);
-
-			String resolution = line.substring(22,i).trim();
-			//System.out.println(resolution);
-			// convert string to float
-			float res = PDBHeader.DEFAULT_RESOLUTION ;
-			try {
-				res = Float.parseFloat(resolution);
-			} catch (NumberFormatException e) {
-				logger.info("Could not parse resolution ("+e.getMessage()+"), ignoring it. Line: >" + line+"<");
-				return ;
-			}
-			//System.out.println("got resolution:" +res);
-			pdbHeader.setResolution(res);
-		}
-
-	}
-
-	/** Handler for REMARK lines
+	/** 
+	 * Handler for REMARK lines
 	 */
 	private void pdb_REMARK_Handler(String line) {
-		// finish off the compound handler!
-
-
+		
 		if ( line == null || line.length() < 11)
 			return;
-		
-		String l = line.substring(0,11).trim();
-		if (l.equals("REMARK   2")) pdb_REMARK_2_Handler(line);		
+			
 
 		if (line.startsWith("REMARK 800")) {
 			pdb_REMARK_800_Handler(line);
@@ -1461,6 +1417,8 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 			}
 			
 		// REMARK 3 (for R free)
+		// note: if more than 1 value present (occurring in hybrid experimental technique entries, e.g. 3ins, 4n9m)
+		// then last one encountered will be taken
 		} else if (line.startsWith("REMARK   3   FREE R VALUE")) {
 			
 			// Rfree annotation is not very consistent in PDB format, it varies depending on the software
@@ -1474,7 +1432,7 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 				try {
 					rfreeNoCutoffLine = Float.parseFloat(mR.group(1));					
 				} catch (NumberFormatException e) {
-					logger.info("Rfree value "+mR.group(1)+" does not look like a number, will continue without an Rfree value");
+					logger.info("Rfree value "+mR.group(1)+" does not look like a number, will ignore it");
 				}
 			}
 			pR = Pattern.compile("^REMARK   3   FREE R VALUE\\s+:\\s+(\\d?\\.\\d+).*");
@@ -1483,7 +1441,26 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 				try {
 					rfreeStandardLine = Float.parseFloat(mR.group(1));
 				} catch (NumberFormatException e) {
-					logger.info("Rfree value "+mR.group(1)+" does not look like a number, will continue without an Rfree value");
+					logger.info("Rfree value '{}' does not look like a number, will ignore it", mR.group(1));
+				}
+			}
+		
+		// REMARK 3 RESOLUTION (contains more info than REMARK 2, for instance multiple resolutions in hybrid experimental technique entries)
+		// note: if more than 1 value present (occurring in hybrid experimental technique entries, e.g. 3ins, 4n9m)
+		// then last one encountered will be taken
+		} else if (line.startsWith("REMARK   3   RESOLUTION RANGE HIGH")){
+			Pattern pR = Pattern.compile("^REMARK   3   RESOLUTION RANGE HIGH \\(ANGSTROMS\\) :\\s+(\\d+\\.\\d+).*");
+			Matcher mR = pR.matcher(line);
+			if (mR.matches()) {
+				try {
+					float res = Float.parseFloat(mR.group(1));
+					if (pdbHeader.getResolution()!=PDBHeader.DEFAULT_RESOLUTION) {
+						logger.warn("More than 1 resolution value present, will use last one {} and discard previous {} "
+								,mR.group(1), String.format("%4.2f",pdbHeader.getResolution()));			
+					} 
+					pdbHeader.setResolution(res);
+				} catch (NumberFormatException e) {
+					logger.info("Could not parse resolution '{}', ignoring it",mR.group(1));
 				}
 			}
 		}
