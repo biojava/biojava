@@ -1054,21 +1054,36 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 	}
 
 	public void newRefine(Refine r){
-		// copy the resolution to header
+		
 		PDBHeader pdbHeader = structure.getPDBHeader();
+		// RESOLUTION
 		// in very rare cases (for instance hybrid methods x-ray + neutron diffraction, e.g. 3ins)
 		// there are 2 resolution values, one for each method
 		// we take the first one found so that behaviour is like in PDB file parsing
 		if (pdbHeader.getResolution()!=PDBHeader.DEFAULT_RESOLUTION) {
-			logger.warn("more than 1 resolution value present (last encountered is "+r.getLs_d_res_high()+
-					"), will use only the first one ("+String.format("%4.2f",pdbHeader.getResolution())+")");
-			return;
+			logger.warn("More than 1 resolution value present (last encountered is "+r.getLs_d_res_high()+
+					"), will use only the first one ("+String.format("%4.2f",pdbHeader.getResolution())+")");			
+		} else {
+			try {
+				pdbHeader.setResolution(Float.parseFloat(r.getLs_d_res_high()));
+			} catch (NumberFormatException e){
+				logger.info("Could not parse resolution from " + r.getLs_d_res_high() + " " + e.getMessage());
+			}
 		}
-		try {
-			pdbHeader.setResolution(Float.parseFloat(r.getLs_d_res_high()));
-		} catch (NumberFormatException e){
-			logger.info("could not parse resolution from " + r.getLs_d_res_high() + " " + e.getMessage());
+
+		// RFREE
+		if (pdbHeader.getRfree()!=PDBHeader.DEFAULT_RFREE) {
+			logger.warn("More than 1 Rfree value present (last encountered is "+r.getLs_R_factor_R_free()+
+					"), will use only the first one ("+String.format("%4.2f",pdbHeader.getRfree())+")");
+		} else {
+			try {
+				pdbHeader.setRfree(Float.parseFloat(r.getLs_R_factor_R_free()));
+			} catch (NumberFormatException e){
+				// no rfree present ('?') is very usual, that's why we set it to debug
+				logger.debug("Could not parse Rfree from string '{}'", r.getLs_R_factor_R_free());
+			}
 		}
+		
 	}
 
 

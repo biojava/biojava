@@ -32,7 +32,6 @@ public class PDBHeader implements PDBRecord, Serializable{
 	
 	private static final Logger logger = LoggerFactory.getLogger(PDBHeader.class);
 	
-	private String method;
 	private String title;
 	private String description;
 	private String idCode;
@@ -46,12 +45,15 @@ public class PDBHeader implements PDBRecord, Serializable{
 	
 	private float resolution;
 	
+	private float rFree;
+	
 	private JournalArticle journalArticle;
 	private String authors;
 	
 	private int nrBioAssemblies ;
 	
 	public static final float DEFAULT_RESOLUTION = 99;
+	public static final float DEFAULT_RFREE = 1; // worst possible rfree is the default
 
 	private Long id;
 	public static final String newline = System.getProperty("line.separator");
@@ -66,6 +68,7 @@ public class PDBHeader implements PDBRecord, Serializable{
 		modDate = new Date(0);
 		dateFormat = new SimpleDateFormat("dd-MMM-yy",Locale.US);
 		resolution = DEFAULT_RESOLUTION;
+		rFree = DEFAULT_RFREE;
 		tranformationMap = new HashMap<String, List<BiologicalAssemblyTransformation>>();
 		nrBioAssemblies = -1;
 		crystallographicInfo = new PDBCrystallographicInfo();
@@ -532,6 +535,14 @@ public class PDBHeader implements PDBRecord, Serializable{
 		this.resolution = resolution;
 	}
 
+	public float getRfree() {
+		return rFree;
+	}
+	
+	public void setRfree(float rFree) {
+		this.rFree = rFree;
+	}
+	
 	public Date getModDate() {
 		return modDate;
 	}
@@ -540,22 +551,6 @@ public class PDBHeader implements PDBRecord, Serializable{
 		this.modDate = modDate;
 	}
 
-	@Deprecated 
-	/**
-	 * use getTecnhnique instead
-	 * @return
-	 */
-	public String getMethod() {
-		return method;
-	}
-	@Deprecated
-	/** use setTechnique instead
-	 * 
-	 * @param method
-	 */
-	public void setMethod(String method) {
-		this.method = method;
-	}
 	public String getTitle() {
 		return title;
 	}
@@ -569,7 +564,8 @@ public class PDBHeader implements PDBRecord, Serializable{
 		this.description = description;
 	}
 
-	/** Returns the names of the authors as listed in the AUTHORS section of a PDB file.
+	/** 
+	 * Return the names of the authors as listed in the AUTHORS section of a PDB file.
 	 * Not necessarily the same authors as listed in the AUTH section of the primary citation!
 	 *
 	 * @return Authors as a string

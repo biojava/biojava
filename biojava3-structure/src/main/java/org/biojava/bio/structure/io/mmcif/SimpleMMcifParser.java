@@ -95,7 +95,7 @@ import org.slf4j.LoggerFactory;
  */
 public class SimpleMMcifParser implements MMcifParser {
 
-	List<MMcifConsumer> consumers ;
+	private List<MMcifConsumer> consumers ;
 
 	public static final String LOOP_END = "#";
 	public static final String LOOP_START = "loop_";
@@ -105,9 +105,9 @@ public class SimpleMMcifParser implements MMcifParser {
 	private static final char s1 = '\'';
 	private static final char s2 = '\"';
 
-	Struct struct ;
+	private Struct struct ;
 
-	static final Logger logger = LoggerFactory.getLogger(SimpleMMcifParser.class);
+	private static final Logger logger = LoggerFactory.getLogger(SimpleMMcifParser.class);
 
 	public SimpleMMcifParser(){
 		consumers = new ArrayList<MMcifConsumer>();

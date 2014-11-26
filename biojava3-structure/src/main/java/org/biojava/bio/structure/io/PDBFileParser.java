@@ -41,6 +41,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.StringTokenizer;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.vecmath.Matrix4d;
 
@@ -197,6 +199,10 @@ public class PDBFileParser  {
 	private String continuationField;
 	private String continuationString = "";
 	private DateFormat dateFormat;
+	
+	// for rfree parsing
+	private float rfreeStandardLine = -1;
+	private float rfreeNoCutoffLine = -1;
 
 	private static  final List<String> compndFieldValues = new ArrayList<String>(
 			Arrays.asList(
@@ -1428,7 +1434,6 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 
 	}
 
-
 	/** Handler for REMARK lines
 	 */
 	private void pdb_REMARK_Handler(String line) {
@@ -1439,10 +1444,11 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 			return;
 		
 		String l = line.substring(0,11).trim();
-		if (l.equals("REMARK   2"))pdb_REMARK_2_Handler(line);
+		if (l.equals("REMARK   2")) pdb_REMARK_2_Handler(line);		
 
 		if (line.startsWith("REMARK 800")) {
 			pdb_REMARK_800_Handler(line);
+			
 		}  else if ( line.startsWith("REMARK 350")){
 			
 			if ( params.isParseBioAssembly()) {
@@ -1452,6 +1458,33 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 				}
 				
 				bioAssemblyParser.pdb_REMARK_350_Handler(line);
+			}
+			
+		// REMARK 3 (for R free)
+		} else if (line.startsWith("REMARK   3   FREE R VALUE")) {
+			
+			// Rfree annotation is not very consistent in PDB format, it varies depending on the software
+			// Here we follow this strategy:
+			// a) take the '(NO CUTOFF)' value if the only one available (shelx software, e.g. 1x7q)
+			// b) don't take it if also a line without '(NO CUTOFF)' is present (CNX software, e.g. 3lak) 
+			
+			Pattern pR = Pattern.compile("^REMARK   3   FREE R VALUE\\s+(?:\\(NO CUTOFF\\))?\\s+:\\s+(\\d?\\.\\d+).*");
+			Matcher mR = pR.matcher(line);
+			if (mR.matches()) {	
+				try {
+					rfreeNoCutoffLine = Float.parseFloat(mR.group(1));					
+				} catch (NumberFormatException e) {
+					logger.info("Rfree value "+mR.group(1)+" does not look like a number, will continue without an Rfree value");
+				}
+			}
+			pR = Pattern.compile("^REMARK   3   FREE R VALUE\\s+:\\s+(\\d?\\.\\d+).*");
+			mR = pR.matcher(line);
+			if (mR.matches()) {
+				try {
+					rfreeStandardLine = Float.parseFloat(mR.group(1));
+				} catch (NumberFormatException e) {
+					logger.info("Rfree value "+mR.group(1)+" does not look like a number, will continue without an Rfree value");
+				}
 			}
 		}
 
@@ -2995,6 +3028,21 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 			crystallographicInfo.setNcsOperators(
 				(Matrix4d[]) ncsOperators.toArray(new Matrix4d[ncsOperators.size()]));
 		}
+		
+		
+		// rfree end file check
+		// Rfree annotation is not very consistent in PDB format, it varies depending on the software
+		// Here we follow this strategy:
+		// a) take the '(NO CUTOFF)' value if the only one available (shelx software, e.g. 1x7q)
+		// b) don't take it if also a line without '(NO CUTOFF)' is present (CNX software, e.g. 3lak) 
+
+		if (rfreeNoCutoffLine>0 && rfreeStandardLine<0) {
+			pdbHeader.setRfree(rfreeNoCutoffLine);				
+		} else if (rfreeNoCutoffLine>0 && rfreeStandardLine>0) {
+			pdbHeader.setRfree(rfreeStandardLine);
+		} else if (rfreeNoCutoffLine<0 && rfreeStandardLine>0) {
+			pdbHeader.setRfree(rfreeStandardLine);
+		} // otherwise it remains default value: PDBHeader.DEFAULT_RFREE
 		
 	}
 

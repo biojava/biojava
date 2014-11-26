@@ -253,22 +253,24 @@ public interface Structure extends Cloneable, StructureIdentifier {
     public void setConnections(List<Map<String,Integer>> connections);
 
     /**
-     * Returns the connections value.
+     * Return the connections value.
      * @return a List object representing the connections value
      * @see #setConnections
      */
     public List<Map<String,Integer>> getConnections();
 
-    /** return number of Chains in this Structure.
+    /** 
+     * Return number of Chains in this Structure.
      * @return an int representing the number of Chains in this Structure
      */
     public int size() ;
 
-    /** return number of chains of model.
-    *
-    * @param modelnr  an int specifying the number of the Model that should be used
-    * @return an int representing the number of Chains in this Model
-    */
+    /** 
+     * Return number of chains of model.
+     *
+     * @param modelnr  an int specifying the number of the Model that should be used
+     * @return an int representing the number of Chains in this Model
+     */
     public int size(int modelnr);
 
     /** 
@@ -307,15 +309,17 @@ public interface Structure extends Cloneable, StructureIdentifier {
     public void setNmr(boolean nmr);
 
 
-    /** add a new model.
+    /** 
+     * Add a new model.
      *
      * @param model  a List object containing the Chains of the new Model
      */
     public void addModel(List<Chain> model);
 
 
-    /** a convenience function if one wants to edit and replace the
-     * models in a structure. allows to set (replace) the model at position
+    /** 
+     * A convenience function if one wants to edit and replace the
+     * models in a structure. Allows to set (replace) the model at position
      * with the new List of Chains.
      * @param position starting at 0
      * @param model
@@ -377,14 +381,14 @@ public interface Structure extends Cloneable, StructureIdentifier {
      */
     public void addChain(Chain chain, int modelnr);
 
-    /** retrieve a chain by it's position within the Structure .
+    /** retrieve a chain by its position within the Structure .
      *
      * @param pos  an int for the position in the List of Chains.
      * @return a Chain object
     */
     public Chain getChain(int pos);
 
-    /** retrieve a chain by it's position within the Structure and model number.
+    /** retrieve a chain by its position within the Structure and model number.
      *
      * @param pos      an int
      * @param modelnr  an int
@@ -443,7 +447,7 @@ public interface Structure extends Cloneable, StructureIdentifier {
      throws StructureException;
 
 
-     /** request a chain by it's PDB code
+     /** request a chain by its PDB code
       * by default takes only the first model
       *
       * @param chainId the chain identifier
@@ -453,7 +457,7 @@ public interface Structure extends Cloneable, StructureIdentifier {
      public Chain getChainByPDB(String chainId)
          throws StructureException;
 
-     /** request a chain by it's PDB code
+     /** request a chain by its PDB code
       * by default takes only the first model
       *
       * @param chainId the chain identifier

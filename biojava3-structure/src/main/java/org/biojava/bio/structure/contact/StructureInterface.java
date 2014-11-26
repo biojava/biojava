@@ -74,6 +74,14 @@ public class StructureInterface implements Serializable, Comparable<StructureInt
 		this.transforms = new Pair<CrystalTransform>(firstTransf, secondTransf);
 	}
 	
+	/**
+	 * Constructs an empty StructureInterface
+	 */
+	public StructureInterface() {
+		this.groupAsas1 = new TreeMap<ResidueNumber, GroupAsa>();
+		this.groupAsas2 = new TreeMap<ResidueNumber, GroupAsa>(); 
+	}
+	
 	public int getId() {
 		return id;
 	}
@@ -122,9 +130,17 @@ public class StructureInterface implements Serializable, Comparable<StructureInt
 	public Pair<Atom[]> getMolecules() {
 		return molecules;
 	}
+	
+	public void setMolecules(Pair<Atom[]> molecules) {
+		this.molecules = molecules;
+	}
 
 	public Pair<String> getMoleculeIds() {
 		return moleculeIds;
+	}
+	
+	public void setMoleculeIds(Pair<String> moleculeIds) {
+		this.moleculeIds = moleculeIds;
 	}
 	
 	/**
@@ -134,6 +150,10 @@ public class StructureInterface implements Serializable, Comparable<StructureInt
 	 */
 	public Pair<CrystalTransform> getTransforms() {
 		return transforms;
+	}
+	
+	public void setTransforms(Pair<CrystalTransform> transforms) {
+		this.transforms = transforms;
 	}
 
 	protected void setAsas(double[] asas1, double[] asas2, int nSpherePoints, int nThreads, int cofactorSizeToUse) {
@@ -330,12 +350,20 @@ public class StructureInterface implements Serializable, Comparable<StructureInt
 		return groupAsas1.get(resNum);
 	}
 	
+	public void setFirstGroupAsa(GroupAsa groupAsa) {
+		groupAsas1.put(groupAsa.getGroup().getResidueNumber(), groupAsa);
+	}
+	
 	/**
 	 * Gets a map of ResidueNumbers to GroupAsas for all groups of second chain.
 	 * @return
 	 */
 	public Map<ResidueNumber, GroupAsa> getSecondGroupAsas() {
 		return groupAsas2;
+	}
+	
+	public void setSecondGroupAsa(GroupAsa groupAsa) {
+		groupAsas2.put(groupAsa.getGroup().getResidueNumber(), groupAsa);
 	}
 
 	/**

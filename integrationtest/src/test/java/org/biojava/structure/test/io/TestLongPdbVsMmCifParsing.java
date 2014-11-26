@@ -61,6 +61,7 @@ public class TestLongPdbVsMmCifParsing {
 	
 	private static final float DELTA = 0.01f;
 	private static final float DELTA_RESOLUTION = 0.01f;
+	private static final float DELTA_RFREE = 0.01f;
 	
 	private static AtomCache cache;
 	private static FileParsingParameters params;
@@ -241,7 +242,17 @@ public class TestLongPdbVsMmCifParsing {
 					PDBHeader.DEFAULT_RESOLUTION, hPdb.getResolution(), DELTA_RESOLUTION);
 		}
 		
+		if (!isCrystallographic) {
+			assertEquals("rfree is not the default value in non-crystallographic structure in pdb", 
+					PDBHeader.DEFAULT_RFREE, DELTA_RFREE, hPdb.getRfree());
+			assertEquals("rfree is not the default value in non-crystallographic structure in cif", 
+					PDBHeader.DEFAULT_RFREE, DELTA_RFREE, hCif.getRfree());
+		}
+		
 		if (isCrystallographic) {
+			
+			assertEquals("failed for Rfree:",hPdb.getRfree(), hCif.getRfree(), DELTA_RFREE);
+			
 			assertNotNull("getCrystallographicInfo is null in pdb",hPdb.getCrystallographicInfo());
 			assertNotNull("getCrystallographicInfo is null in cif",hCif.getCrystallographicInfo());
 			
