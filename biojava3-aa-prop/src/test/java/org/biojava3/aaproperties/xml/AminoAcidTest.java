@@ -26,7 +26,9 @@ public class AminoAcidTest {
 	@Test
 	public void generateSchema() throws JAXBException, IOException{
 		JAXBContext context = JAXBContext.newInstance(AminoAcidCompositionTable.class);
-		context.generateSchema(new SchemaGenerator("./src/main/resources/AminoAcidComposition.xsd"));
+		File outputFile = new File(System.getProperty("java.io.tmpdir"),"AminoAcidComposition.xsd");
+		outputFile.deleteOnExit();
+		context.generateSchema(new SchemaGenerator(outputFile.toString()));
 	}
 	
 	@Test

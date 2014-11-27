@@ -61,24 +61,6 @@ public class PDBFileParserTest {
 		parser = new PDBFileParser();
 	}
 
-
-
-
-	/** parse the remark lines and return the resolution
-	 *
-	 * @param fakeFile
-	 * @return the resolution as a Float or null if no resolution found
-	 * @throws IOException 
-	 */
-	private float testREMARK2Parsing(String fakeFile) throws IOException {
-		BufferedReader br = new BufferedReader(new StringReader(fakeFile));
-
-		Structure s = parser.parsePDBFile(br);
-		
-		return s.getPDBHeader().getResolution();
-
-	}
-
 	@Test
 	public void test2LetterResidueName() {
 		try {
@@ -143,8 +125,8 @@ public class PDBFileParserTest {
 				"TITLE    2 INHIBITORS: PROBES OF THE S1' BINDING SITE              "+newline+
 				"EXPDTA    X-RAY DIFFRACTION                                        "+newline+
 				"AUTHOR    J.H.MATTHEWS,R.KRISHNAN,M.J.COSTANZO,B.E.MARYANOFF,      "+newline+
-				"AUTHOR   2 A.TULINSKY                                              "+newline+
-				"REMARK   2 RESOLUTION. 2.00 ANGSTROMS.                             "+newline;
+				"AUTHOR   2 A.TULINSKY                                              "+newline;
+				//"REMARK   2 RESOLUTION. 2.00 ANGSTROMS.                             "+newline;
 
 		BufferedReader br = new BufferedReader(new StringReader(t));
 		try {
@@ -160,55 +142,59 @@ public class PDBFileParserTest {
 			// we ignore the case here, since the month FEB is written as Feb, which should be ok...
 			assertTrue("the created header does not match the PDB file" ,pdb.equalsIgnoreCase(t));
 
-		} catch (Exception e){
+		} catch (IOException e){
 			fail(e.getMessage());
 		}
 
 	}
 
 	@Test
-	public void testREMARK200() {
+	public void testREMARK200() throws IOException {
 
-		// test that the resolution is only read from REMARK 2 lines
-		String w1 = "REMARK 200  RESOLUTION RANGE HIGH      (A) : 1.20"+newline+
+		// test that the resolution is only read from REMARK 3 lines
+		String w1 = 
+				"REMARK 200  RESOLUTION RANGE HIGH      (A) : 1.20"+newline+
 				"REMARK 200  RESOLUTION RANGE LOW       (A) : 20.00"+
 				"REMARK   200 RESOLUTION9.9  ANGSTROMS."; // this line could give wrong resolution info, but it should not be parsed;
-		boolean parsingOK = true;
-		String errorMsg   = "";
+		
+		BufferedReader br = new BufferedReader(new StringReader(w1));
 
-		try {
-			float resolution = testREMARK2Parsing(w1);
-			assertEquals(resolution,PDBHeader.DEFAULT_RESOLUTION,0.01);
-		} catch (Exception e){
-			parsingOK = false;
-			//e.printStackTrace();
-			errorMsg = e.getMessage();
-		}
-
-
-		assertEquals("parsing failed with error " + errorMsg, parsingOK, true);
+		Structure s = parser.parsePDBFile(br);
+		
+		float resolution =s.getPDBHeader().getResolution();
+		assertEquals(resolution,PDBHeader.DEFAULT_RESOLUTION,0.01);
 	}
 
 	@Test
-	public void testREMARK2(){
+	public void testREMARK3() throws IOException {
 
+		// note that we used to parse resolution from REMARK 2, now from REMARK 3 since it is more complete
+		// and more consistent with info in mmCIF
+		// taken from 4tnl
 		String w2 =
-				"REMARK   2 "+newline+
-				"REMARK   2 RESOLUTION. 1.2  ANGSTROMS."; // the correct line
+				"REMARK   3  DATA USED IN REFINEMENT.                  "+newline+                                          
+				"REMARK   3   RESOLUTION RANGE HIGH (ANGSTROMS) : 1.80 "+newline+                           
+				"REMARK   3   RESOLUTION RANGE LOW  (ANGSTROMS) : 34.27"+newline+                          
+				"REMARK   3   MIN(FOBS/SIGMA_FOBS)              : 1.421"+newline+                          
+				"REMARK   3   COMPLETENESS FOR RANGE        (%) : 99.9 "+newline+                           
+				"REMARK   3   NUMBER OF REFLECTIONS             : 58500"+newline+                          
+				"REMARK   3                                            "+newline+                                                                      
+				"REMARK   3  FIT TO DATA USED IN REFINEMENT.           "+newline+                                     
+				"REMARK   3   R VALUE     (WORKING + TEST SET) : 0.213 "+newline+                           
+				"REMARK   3   R VALUE            (WORKING SET) : 0.212 "+newline+                           
+				"REMARK   3   FREE R VALUE                     : 0.233 "+newline+                           
+				"REMARK   3   FREE R VALUE TEST SET SIZE   (%) : 5.236 "+newline+                           
+				"REMARK   3   FREE R VALUE TEST SET COUNT      : 3063  ";                            
+		BufferedReader br = new BufferedReader(new StringReader(w2));
 
-		boolean parsingOK = true;
-		String errorMsg   = "";
-		try {
-			float resolution = testREMARK2Parsing(w2);
-			assertEquals(resolution,1.2, 0.00001);
-		} catch (Exception e){
-			parsingOK = false;
-			//e.printStackTrace();
-			errorMsg = e.getMessage();
-		}
+		Structure s = parser.parsePDBFile(br);
+		
+		float resolution = s.getPDBHeader().getResolution();
+		float rfree = s.getPDBHeader().getRfree();
 
-
-		assertEquals("parsing failed with error " + errorMsg, parsingOK, true);
+		
+		assertEquals(resolution,1.8, 0.00001);
+		assertEquals(rfree,   0.233, 0.00001);
 	}
 
 	//        @Test
