@@ -26,7 +26,6 @@ package org.biojava.bio.structure.align.gui;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.io.File;
-import java.util.logging.Logger;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -54,6 +53,8 @@ import org.biojava.bio.structure.align.webstart.WebStartMain;
 import org.biojava.bio.structure.gui.util.PDBUploadPanel;
 import org.biojava.bio.structure.gui.util.ScopSelectPanel;
 import org.biojava.bio.structure.gui.util.StructurePairSelector;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /** A JFrame that allows to trigger a pairwise structure alignment,
@@ -71,7 +72,7 @@ public class AlignmentGui extends JFrame{
 
 	private final static long serialVersionUID =0l;
 
-	public static Logger logger =  Logger.getLogger("org.biojava.spice");
+	private static final Logger logger = LoggerFactory.getLogger(AlignmentGui.class);
 
 	StructureAlignment algorithm;
 

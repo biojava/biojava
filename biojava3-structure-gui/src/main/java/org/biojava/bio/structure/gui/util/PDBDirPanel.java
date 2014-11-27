@@ -28,7 +28,6 @@ import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.IOException;
-import java.util.logging.Logger;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -46,6 +45,8 @@ import org.biojava.bio.structure.StructureException;
 import org.biojava.bio.structure.StructureImpl;
 import org.biojava.bio.structure.align.util.UserConfiguration;
 import org.biojava.bio.structure.io.PDBFileReader;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /** A class to define where a structure for the alignment is coming from
  * 
@@ -69,8 +70,8 @@ implements StructurePairSelector{
 	JTextField c1;
 	JTextField c2;
 
-	public static Logger logger =  Logger.getLogger("org.biojava");
-
+	private static final Logger logger = LoggerFactory.getLogger(StructurePairSelector.class);
+	
 	/** load the PDB files from a local directory
 	 * 
 	 */
@@ -150,7 +151,7 @@ implements StructurePairSelector{
 			System.out.println("ok");
 
 		} catch (IOException e){
-			logger.warning(e.getMessage());
+			logger.warn(e.getMessage());
 			throw new StructureException(e);
 		}
 		return tmp1;	

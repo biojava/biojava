@@ -22,15 +22,17 @@
  */
 package org.biojava.bio.structure.align.gui.jmol;
 
-import java.util.logging.Logger;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.biojava.bio.structure.align.gui.jmol.AtomInfo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class AtomInfoParser {
 
-    static Logger    logger      = Logger.getLogger("org.biojava.spice");
+	private static final Logger logger = LoggerFactory.getLogger(AtomInfoParser.class);
     
     static Pattern pattern;
     
@@ -71,7 +73,7 @@ public class AtomInfoParser {
            
         boolean found = matcher.find();
         if ( ! found) {
-            logger.info("AtomInfoParser: could not parse the atomInfo string " + jmolAtomInfo);
+            logger.info("Could not parse the atomInfo string {}", jmolAtomInfo);
             return new AtomInfo();
         }
         String residueName   = matcher.group(1);        

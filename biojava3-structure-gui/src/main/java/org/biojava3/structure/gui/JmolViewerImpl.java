@@ -11,8 +11,7 @@ import java.awt.event.WindowEvent;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
 import javax.swing.Box;
 import javax.swing.JFrame;
 import javax.swing.JMenuBar;
@@ -21,8 +20,12 @@ import javax.swing.JTextField;
 
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.align.gui.MenuCreator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class JmolViewerImpl implements StructureViewer {
+	
+	private static final Logger logger = LoggerFactory.getLogger(JmolViewerImpl.class);
 
     public static final String viewer = "org.jmol.api.JmolSimpleViewer";
     public static final String adapter = "org.jmol.api.JmolAdapter";
@@ -197,15 +200,15 @@ public class JmolViewerImpl implements StructureViewer {
                 openStringInline = viewerC.getMethod("openStringInline", new Class[]{String.class});
 
             } catch (InstantiationException ex) {
-                Logger.getLogger(JmolViewerImpl.class.getName()).log(Level.SEVERE, null, ex);
+                logger.error("Exception caught", ex);
             } catch (IllegalAccessException ex) {
-                Logger.getLogger(JmolViewerImpl.class.getName()).log(Level.SEVERE, null, ex);
+            	logger.error("Exception caught", ex);
             } catch (IllegalArgumentException ex) {
-                Logger.getLogger(JmolViewerImpl.class.getName()).log(Level.SEVERE, null, ex);
+            	logger.error("Exception caught", ex);
             } catch (InvocationTargetException ex) {
-                Logger.getLogger(JmolViewerImpl.class.getName()).log(Level.SEVERE, null, ex);
+            	logger.error("Exception caught", ex);
             } catch (NoSuchMethodException e) {
-                e.printStackTrace();
+                logger.error("Exception caught", e);
             }
 
             evalString("set scriptQueue on;");

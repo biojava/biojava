@@ -28,10 +28,12 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
+
 import org.biojava.bio.structure.Chain;
 import org.biojava.bio.structure.gui.events.AlignmentPositionListener;
 import org.biojava.bio.structure.gui.SequenceDisplay;
+//import org.slf4j.Logger;
+//import org.slf4j.LoggerFactory;
 
 
 /** a mouse listener for the AbstractChainRenderer class
@@ -60,7 +62,7 @@ MouseMotionListener
 
 	CoordManager coordManager;
 
-	static Logger logger = Logger.getLogger("org.biojava");
+	//private static final Logger logger = LoggerFactory.getLogger(SequenceMouseListener.class);
 
 	SequenceDisplay parent;
 

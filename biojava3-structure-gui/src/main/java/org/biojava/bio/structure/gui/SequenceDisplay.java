@@ -27,7 +27,6 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -52,6 +51,8 @@ import org.biojava.bio.structure.gui.SequenceDisplay;
 import org.biojava.bio.structure.gui.util.AlignedPosition;
 import org.biojava.bio.structure.gui.util.SequenceMouseListener;
 import org.biojava.bio.structure.gui.util.SequenceScalePanel;
+//import org.slf4j.Logger;
+//import org.slf4j.LoggerFactory;
 
 /** A sequence display that can show the results of a protein structure alignment.
  * 
@@ -83,7 +84,7 @@ public class SequenceDisplay extends JPanel implements ChangeListener {
 	 */
 	public static final int MAX_SCALE               = 10;
 
-	Logger logger = Logger.getLogger("org.biojava");
+	//private static final Logger logger = LoggerFactory.getLogger(SequenceDisplay.class);
 
 	List<AlignedPosition> apos;
 

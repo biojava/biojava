@@ -30,10 +30,12 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
-import java.util.logging.*;
-import javax.swing.JPanel;
-import org.biojava.bio.structure.*;
 
+import javax.swing.JPanel;
+
+import org.biojava.bio.structure.*;
+//import org.slf4j.Logger;
+//import org.slf4j.LoggerFactory;
 
 import java.awt.Color;
 import java.util.*;
@@ -49,7 +51,7 @@ extends JPanel{
 
 	static final long serialVersionUID = 7893248902423l;
 
-	Logger logger = Logger.getLogger("org.biojava");
+	//private static final Logger logger = LoggerFactory.getLogger(SequenceScalePanel.class);
 
 	public static final int    DEFAULT_X_START          = 10  ;
 	public static final int    DEFAULT_X_RIGHT_BORDER   = 40 ;

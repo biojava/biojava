@@ -30,7 +30,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.text.MessageFormat;
 import java.util.List;
-import java.util.logging.Logger;
+
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -51,6 +51,8 @@ import org.biojava.bio.structure.jama.Matrix;
 import org.biojava.bio.structure.gui.BiojavaJmol;
 import org.biojava.bio.structure.gui.ScaleableMatrixPanel;
 import org.biojava.bio.structure.gui.SequenceDisplay;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /** a frame showing the alternative alignments, which are the result of a structure superimposition
@@ -64,8 +66,8 @@ extends JFrame{
 
 	private static final long serialVersionUID=0l;
 
-
-	public static Logger logger =  Logger.getLogger("org.biojava");
+	
+	private static final Logger logger = LoggerFactory.getLogger(AlternativeAlignmentFrame.class);
 
 	private static String[] columnNames = new String[]{"#","eqr","score", "rms", "gaps","cluster", "show distance matrix","show alignment"};
 
@@ -227,8 +229,6 @@ extends JFrame{
 		List<Chain> chains3 = s3.getChains();
 		n.addModel(chains3);
 	
-		n.setNmr(true);
-		
 		jmol.setStructure(n);
 		String[] cmds = createRasmolScripts(alig);
 		jmol.evalString("model 0 ; select * ; wireframe off ; spacefill off; backbone 0.3;");

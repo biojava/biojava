@@ -24,7 +24,6 @@ import java.awt.Dimension;
 import java.util.ArrayList;
 import java.util.List;
 
-
 import javax.swing.Box;
 import javax.swing.JFrame;
 import javax.swing.JMenuBar;
@@ -43,6 +42,8 @@ import org.biojava.bio.structure.align.gui.jmol.JmolTools;
 import org.biojava.bio.structure.align.gui.jmol.StructureAlignmentJmol;
 import org.biojava.bio.structure.align.model.AFPChain;
 import org.biojava.bio.structure.align.util.AFPAlignmentDisplay;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /** A utility class for visualistion of structure alignments
  * 
@@ -52,7 +53,8 @@ import org.biojava.bio.structure.align.util.AFPAlignmentDisplay;
 public class DisplayAFP
 {
 
-	public static final boolean debug =  false;
+	private static final Logger logger = LoggerFactory.getLogger(DisplayAFP.class);
+	
 
 
 	//TODO: same as getEqrPos??? !!!
@@ -458,8 +460,6 @@ public class DisplayAFP
 
 		Structure s = new StructureImpl();
 
-		s.setNmr(true);
-
 
 		List<Chain>model1 = getAlignedModel(ca1);
 		List<Chain>model2 = getAlignedModel(ca2);
@@ -478,8 +478,8 @@ public class DisplayAFP
 			atoms.add(a);         
 		}
 
-		if ( debug)
-			System.out.println("got " + hetatms.size() + " hetatoms");
+		logger.debug("got {} hetatoms", hetatms.size());
+		
 		// we only add atom nr 1, since the getAlignedStructure method actually adds the parent group, and not the atoms...
 		for (Group g : hetatms){
 			if (g.size() < 1)
