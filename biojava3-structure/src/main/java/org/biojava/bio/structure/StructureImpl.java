@@ -794,7 +794,7 @@ public class StructureImpl implements Structure, Serializable {
 		// if null, it hasn't been initialised yet, let's init it:		
 		chainIds2entities = new TreeMap<String,Entity>();
 
-		// finding out whether we have SEQRES: if at least 1 chain has seqres we will consider true
+		// finding out whether we have SEQRES: if at least 1 chain has seqres groups, we will consider true
 		boolean hasSeqRes = false;
 		for (Chain chain: getChains()) {
 			if (chain.getSeqResLength()>0) { 
@@ -805,7 +805,7 @@ public class StructureImpl implements Structure, Serializable {
 		
 		if (hasSeqRes) { // we have SEQRES
 
-			logger.info("Getting entities from SEQRES sequences");
+			logger.debug("Getting entities from SEQRES sequences");
 			// map of sequences to list of chain identifiers
 			Map<String, List<String>> uniqSequences = new HashMap<String, List<String>>();
 			// finding the entities (groups of identical chains)
@@ -845,7 +845,7 @@ public class StructureImpl implements Structure, Serializable {
 
 
 		} else {
-			logger.info("Getting entities from aligning ATOM sequences. If you have SEQRES in your file make sure you are using the right FileParsingParams");
+			logger.debug("Getting entities from aligning ATOM sequences. If you have SEQRES in your file make sure you are using the right FileParsingParams");
 
 			// TODO clustering based on aligning sequences, do we also need rmsd?
 
