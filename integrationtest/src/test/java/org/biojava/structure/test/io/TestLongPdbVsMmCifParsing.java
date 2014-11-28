@@ -173,6 +173,9 @@ public class TestLongPdbVsMmCifParsing {
 		// TODO journal article not parsed in mmCIF parser
 		//assertEquals("failed hasJournalArticle",sPdb.hasJournalArticle(),sCif.hasJournalArticle());
 		
+		// entities
+		assertEquals("failed number of entities", sPdb.getEntities().size(), sCif.getEntities().size());
+		
 	}
 	
 	private void testHeader(Structure sPdb, Structure sCif) {

@@ -643,13 +643,15 @@ public interface Structure extends Cloneable, StructureIdentifier {
     /**
      * Return all entities (groups of sequence-identical NCS-related chains)
      * @return
+     * @since 4.0
      */
     public List<Entity> getEntities();
     
     /**
      * Get the entity corresponding to the given chain identifier
      * @param chainId
-     * @return the Entity object or null if not such chain identifier exists
+     * @return the Entity object or null if no such chain identifier exists
+     * @since 4.0
      */
     public Entity getEntity(String chainId);
 }

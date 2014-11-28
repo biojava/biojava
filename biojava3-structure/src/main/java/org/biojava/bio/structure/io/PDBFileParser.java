@@ -281,7 +281,7 @@ public class PDBFileParser  {
 
 	}
 
-	FileParsingParameters params;
+	private FileParsingParameters params;
 
 	public PDBFileParser() {
 		params = new FileParsingParameters();
@@ -2978,11 +2978,12 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 		structure.setDBRefs(dbrefs);
 
 		if ( params.isAlignSeqRes() ){
-
+			logger.debug("Parsing mode align_seqres, will parse SEQRES and align to ATOM sequence");
 			SeqRes2AtomAligner aligner = new SeqRes2AtomAligner();
 			aligner.align(structure,seqResChains);
 
 		} else if ( params.getStoreEmptySeqRes() ){
+			logger.debug("Parsing mode unalign_seqres, will parse SEQRES but not align it to ATOM sequence");
 			// user wants to know about the seqres, but not align them
 
 			storeUnAlignedSeqRes(structure, seqResChains);
