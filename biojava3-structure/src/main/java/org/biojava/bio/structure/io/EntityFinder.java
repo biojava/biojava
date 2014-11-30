@@ -8,6 +8,7 @@ import java.util.TreeMap;
 import org.biojava.bio.structure.Chain;
 import org.biojava.bio.structure.Entity;
 import org.biojava.bio.structure.Group;
+import org.biojava.bio.structure.GroupType;
 import org.biojava.bio.structure.Structure;
 import org.biojava.bio.structure.StructureException;
 import org.biojava3.alignment.Alignments;
@@ -40,7 +41,10 @@ public class EntityFinder {
 		TreeMap<String, Entity> chainIds2entities = new TreeMap<String,Entity>();
 		List<String> chainIds = new ArrayList<String>();
 		for (Chain c:s.getChains()) {
-			chainIds.add(c.getChainID());
+			if ( c.getAtomGroups(GroupType.AMINOACID).size() > 1 &&
+					c.getAtomGroups(GroupType.NUCLEOTIDE).size() < 1) {	
+				chainIds.add(c.getChainID());
+			}
 		}
 		Collections.sort(chainIds); //making sure they are in alphabetical order
 		try {
@@ -110,7 +114,7 @@ public class EntityFinder {
 						logger.warn("\n"+pair.toString(100));
 					}
 					
-					if (chainIds2entities.size()==s.getChains().size()) // we've got all chains in entities
+					if (chainIds2entities.size()==chainIds.size()) // we've got all chains in entities
 						break outer;
 				}
 			}
