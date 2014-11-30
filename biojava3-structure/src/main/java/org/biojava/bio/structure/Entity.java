@@ -70,4 +70,5 @@ public class Entity implements Serializable {
 	public boolean addMember(Chain c) {
 		return members.add(c);		
 	}
+	
 }
