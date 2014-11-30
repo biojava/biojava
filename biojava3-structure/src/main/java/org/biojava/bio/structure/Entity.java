@@ -1,6 +1,7 @@
 package org.biojava.bio.structure;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -25,7 +26,7 @@ public class Entity implements Serializable {
 	private List<Chain> members;
 	
 	public Entity() {
-		
+		members = new ArrayList<Chain>();
 	}
 	
 	/**
@@ -64,5 +65,9 @@ public class Entity implements Serializable {
 	
 	public void setMembers(List<Chain> members) {
 		this.members = members;
+	}
+	
+	public boolean addMember(Chain c) {
+		return members.add(c);		
 	}
 }

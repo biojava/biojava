@@ -32,6 +32,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
+import org.biojava.bio.structure.io.EntityFinder;
 import org.biojava.bio.structure.io.FileConvert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -847,48 +848,9 @@ public class StructureImpl implements Structure, Serializable {
 		} else {
 			logger.debug("Getting entities from aligning ATOM sequences. If you have SEQRES in your file make sure you are using the right FileParsingParams");
 
-			// TODO clustering based on aligning sequences, do we also need rmsd?
-
-			// trivial implementation at the moment: use ATOM sequence as is, without trying aligning
+			EntityFinder ef = new EntityFinder(this);
 			
-			
-			// map of sequences to list of chain identifiers
-			Map<String, List<String>> uniqSequences = new HashMap<String, List<String>>();
-			// finding the entities (groups of identical chains)
-			for (Chain chain:getChains()) {
-
-				String seq = chain.getAtomSequence();
-
-				if (uniqSequences.containsKey(seq)) {
-					uniqSequences.get(seq).add(chain.getChainID());
-				} else {
-					List<String> list = new ArrayList<String>();
-					list.add(chain.getChainID());
-					uniqSequences.put(seq, list);
-				}		
-
-			}
-
-			for (List<String> chainIds:uniqSequences.values()) {
-				// sorting ids in alphabetic order
-				Collections.sort(chainIds);
-				List<Chain> chains = new ArrayList<Chain>();
-				for (String chainId:chainIds) {
-					// chains will be sorted in ids' alphabetic order
-					try {
-						chains.add(this.getChainByPDB(chainId));
-					} catch (StructureException e) {
-						// this basically can't happen, if it does it is some kind of bug
-						logger.error("Unexpected exception!",e);
-					}
-				}
-				// the representative will be the one with first chain id in alphabetic order 
-				Entity entity = new Entity(chains.get(0), chains);
-				for (Chain member:entity.getMembers()) {
-					chainIds2entities.put(member.getChainID(), entity);
-				}
-			}
-
+			chainIds2entities = ef.findEntities();
 		}
 
 		return findUniqueEntities();

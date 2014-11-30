@@ -266,7 +266,7 @@ public class SeqRes2AtomAligner {
 					startAt1 = false;
 				} else {
 					
-					logger.debug("SEQRES position 1  ({}) does not match ATOM PDB res num 0 ({})",
+					logger.debug("SEQRES position 1 ({}) does not match ATOM PDB res num 0 ({})",
 							seqResGroup.getPDBName(), atomResGroup.getPDBName());
 
 					
