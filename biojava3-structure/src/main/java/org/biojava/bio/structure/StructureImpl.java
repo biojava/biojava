@@ -884,4 +884,5 @@ public class StructureImpl implements Structure, Serializable {
 		}
 		return list;
 	} 
+	
 }

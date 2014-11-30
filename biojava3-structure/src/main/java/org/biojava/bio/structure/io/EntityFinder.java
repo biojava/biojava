@@ -1,12 +1,15 @@
 package org.biojava.bio.structure.io;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.TreeMap;
 
 import org.biojava.bio.structure.Chain;
 import org.biojava.bio.structure.Entity;
+import org.biojava.bio.structure.Group;
 import org.biojava.bio.structure.Structure;
+import org.biojava.bio.structure.StructureException;
 import org.biojava3.alignment.Alignments;
 import org.biojava3.alignment.SimpleGapPenalty;
 import org.biojava3.alignment.SubstitutionMatrixHelper;
@@ -35,50 +38,90 @@ public class EntityFinder {
 		
 		
 		TreeMap<String, Entity> chainIds2entities = new TreeMap<String,Entity>();
-
+		List<String> chainIds = new ArrayList<String>();
+		for (Chain c:s.getChains()) {
+			chainIds.add(c.getChainID());
+		}
+		Collections.sort(chainIds); //making sure they are in alphabetical order
 		try {
 			outer:
-			for (int i=0;i<s.getChains().size();i++) {
-				for (int j=i+1;j<s.getChains().size();j++) {
-					Chain c1 = s.getChain(i);
-					Chain c2 = s.getChain(j);
+			for (int i=0;i<chainIds.size();i++) {
+				for (int j=i+1;j<chainIds.size();j++) {
+					Chain c1 = null;
+					Chain c2 = null;
+					try {
+						c1 = s.getChainByPDB(chainIds.get(i));
+						c2 = s.getChainByPDB(chainIds.get(j));
+					} catch (StructureException e) {
+						logger.error("Unexpected exception!",e);
+					}
 					ProteinSequence s1 = new ProteinSequence(c1.getAtomSequence());
 					ProteinSequence s2 = new ProteinSequence(c2.getAtomSequence());
 
 					SequencePair<ProteinSequence, AminoAcidCompound> pair = align(s1,s2);
 					
-					double identity = (double)pair.getNumIdenticals()/(double)pair.getLength();
-					logger.info("Identity for chain pair {},{}: {}", c1.getChainID(), c2.getChainID(), identity);
+					int nonGaps = pair.getLength()-getNumGaps(pair); 
+					double identity = (double)pair.getNumIdenticals()/(double)nonGaps;
+					logger.debug("Identity for chain pair {},{}: {}", c1.getChainID(), c2.getChainID(), identity);
 					
-					if (identity > 0.9999) {
+					if (identity > 0.99999) {
 						if (	!chainIds2entities.containsKey(c1.getChainID()) &&
 								!chainIds2entities.containsKey(c2.getChainID())) {
-							logger.info("Creating entity with chains {},{}",c1.getChainID(),c2.getChainID());
-							Entity ent = new Entity();
-							ent.addMember(c1);
-							ent.setRepresentative(c1); // TODO this should be the first alphabetically
-							ent.addMember(c2);
-							chainIds2entities.put(c1.getChainID(), ent);
-							chainIds2entities.put(c2.getChainID(), ent);
+							logger.debug("Creating entity with chains {},{}",c1.getChainID(),c2.getChainID());
+							if (areResNumbersAligned(c1, c2)) { 
+								Entity ent = new Entity();
+								ent.addMember(c1);
+								ent.setRepresentative(c1); // this will be the first alphabetically since they are sorted
+								ent.addMember(c2);
+								chainIds2entities.put(c1.getChainID(), ent);
+								chainIds2entities.put(c2.getChainID(), ent);
+							} else {
+								logger.warn("Chains {},{} with 100% identity have residue numbers misaligned, can't include them in the same entity");
+							}
 						} else {
 							Entity ent = chainIds2entities.get(c1.getChainID());
 							
 							if (ent==null) {
-								logger.info("Adding chain {} to entity {}",c1.getChainID(),c2.getChainID());
+								logger.debug("Adding chain {} to entity {}",c1.getChainID(),c2.getChainID());
 								ent = chainIds2entities.get(c2.getChainID());
-								ent.addMember(c1);
-								chainIds2entities.put(c1.getChainID(), ent);
+								if (areResNumbersAligned(c1, c2)) { 
+									ent.addMember(c1);
+									chainIds2entities.put(c1.getChainID(), ent);
+								} else {
+									logger.warn("Chains {},{} with 100% identity have residue numbers misaligned, can't include them in the same entity");
+								}
 							} else {
-								logger.info("Adding chain {} to entity {}",c2.getChainID(),c1.getChainID());
-								ent.addMember(c2);
-								chainIds2entities.put(c2.getChainID(), ent);
+								logger.debug("Adding chain {} to entity {}",c2.getChainID(),c1.getChainID());
+								if (areResNumbersAligned(c1, c2)) {
+									ent.addMember(c2);
+									chainIds2entities.put(c2.getChainID(), ent);
+								} else {
+									logger.warn("Chains {},{} with 100% identity have residue numbers misaligned, can't include them in the same entity");
+								}
 							}
 						}
+					} else if (identity>0.95) {
+						logger.info("Identity for chains {},{} above 0.95. Mismatch in {} out of {} non-gap-aligned residues (identity {})",
+								c1.getChainID(),c2.getChainID(),nonGaps-pair.getNumIdenticals(),nonGaps,identity);
+						logger.info("\n"+pair.toString(100)); 
+					} else if (identity>1) {
+						logger.warn("Identity for chains {},{} above 1. {} identicals out of {} non-gap-aligned residues (identity {})",
+								c1.getChainID(),c2.getChainID(),pair.getNumIdenticals(),nonGaps,identity);
+						logger.warn("\n"+pair.toString(100));
 					}
+					
 					if (chainIds2entities.size()==s.getChains().size()) // we've got all chains in entities
 						break outer;
 				}
 			}
+			// anything not in an entity will be its own entity
+			for (Chain c:s.getChains()) {
+				if (!chainIds2entities.containsKey(c.getChainID())) {
+					logger.debug("Creating a 1-member entity for chain "+c.getChainID());
+					chainIds2entities.put(c.getChainID(),getTrivialEntity(c));
+				}
+			}
+		
 		} catch (CompoundNotFoundException e) {
 			logger.warn("Some unknown compounds in protein sequences, will use an entity per chain. Error: "+e.getMessage());
 			return getTrivialEntities();
@@ -109,12 +152,44 @@ public class EntityFinder {
 		TreeMap<String,Entity> list = new TreeMap<String,Entity>();
 		
 		for (Chain c:s.getChains()) {
-			List<Chain> members = new ArrayList<Chain>();
-			members.add(c);
-			Entity ent = new Entity(c,members);
-			list.put(c.getChainID(),ent);
+			list.put(c.getChainID(),getTrivialEntity(c)); 
 		}
 		
 		return list;
 	}
+	
+	private static Entity getTrivialEntity(Chain c) {
+		List<Chain> members = new ArrayList<Chain>();
+		members.add(c);
+		Entity ent = new Entity(c,members);
+		return ent;
+	}
+	
+	private static boolean areResNumbersAligned(Chain rep, Chain c) {
+
+		for (Group repG:rep.getAtomGroups()) {
+			try {
+				Group g = c.getGroupByPDB(repG.getResidueNumber());
+				if (!g.getPDBName().equals(repG.getPDBName())) {
+					logger.info("Mismatch of residues between chains of same entity {},{} for residue number {}",
+							rep.getChainID(),c.getChainID(),repG.getResidueNumber());
+					return false;
+				}
+			} catch (StructureException e) {
+				// the group doesn't exist (no density) in the chain, go on
+				continue;
+			}
+		}
+
+		return true;
+	}
+	
+	private static int getNumGaps(SequencePair<ProteinSequence, AminoAcidCompound> pair) {
+		int numGaps = 0;
+		for (int alignmentIndex=1;alignmentIndex<=pair.getLength();alignmentIndex++) {
+			if (pair.hasGap(alignmentIndex)) numGaps++;
+		}
+		return numGaps;
+	}
 }
+ 
