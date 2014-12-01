@@ -35,21 +35,21 @@ import org.biojava.bio.structure.align.StructureAlignment;
 public class CeUserArgumentProcessor extends AbstractUserArgumentProcessor {
 	
 	protected class CeStartupParams extends StartupParameters {
-		//protected int maxGapSize; //TODO move from superclass
+		protected int maxGapSize;
 		protected int winSize;
 		protected int scoringStrategy;
-		//protected double maxOptRMSD; //TODO
+		protected double maxOptRMSD;
 		protected double gapOpen;
 		protected double gapExtension;
-		//protected boolean showAFPRanges; //TODO
+		protected boolean showAFPRanges;
 
 		public CeStartupParams() {
 			super();
-			//maxGapSize = 30;
+			maxGapSize = 30;
 			winSize = 8;
 			scoringStrategy = CeParameters.DEFAULT_SCORING_STRATEGY;
-			//showAFPRanges = false;
-			//maxOptRMSD = 99d;
+			showAFPRanges = false;
+			maxOptRMSD = 99d;
 			gapOpen = CeParameters.DEFAULT_GAP_OPEN;
 			gapExtension = CeParameters.DEFAULT_GAP_EXTENSION;
 		}
@@ -86,13 +86,59 @@ public class CeUserArgumentProcessor extends AbstractUserArgumentProcessor {
 			this.gapExtension = gapExtension;
 		}
 
+		/** CE specific parameter: set the Max gap size parameter G (during AFP extension). Default: 30
+		 * 
+		 * @return the maximum gap size G parameter.
+		 */
+		public int getMaxGapSize() {
+			return maxGapSize;
+		}
+
+		/** CE specific parameter: set the Max gap size parameter G (during AFP extension). Default: 30
+		 * 
+		 * @param maxGapSize
+		 */
+		public void setMaxGapSize(int maxGapSize) {
+			this.maxGapSize = maxGapSize;
+		}
+
+		public boolean isShowAFPRanges()
+		{
+			return showAFPRanges;
+		}
+
+		public void setShowAFPRanges(boolean showAFP)
+		{
+			this.showAFPRanges = showAFP;
+		}
+
+
+		/**(jCE specific): maximum RMSD that shall be calculated for the alignment.
+		 * 
+		 * @return maxOptRMSD parameter
+		 */
+		public Double getMaxOptRMSD() {
+			return maxOptRMSD;
+		}
+
+		/** (jCE specific): maximum RMSD that shall be calculated for the alignment.
+		 * 
+		 * @param maxOptRMSD max RMSD to calculate
+		 */
+		public void setMaxOptRMSD(Double maxOptRMSD) {
+			this.maxOptRMSD = maxOptRMSD;
+		}
+
 		@Override
 		public String toString() {
 			StringBuilder builder = new StringBuilder();
-			builder.append("CeStartupParams [winSize=").append(winSize)
+			builder.append("CeStartupParams [maxGapSize=").append(maxGapSize)
+					.append(", winSize=").append(winSize)
 					.append(", scoringStrategy=").append(scoringStrategy)
+					.append(", maxOptRMSD=").append(maxOptRMSD)
 					.append(", gapOpen=").append(gapOpen)
 					.append(", gapExtension=").append(gapExtension)
+					.append(", showAFPRanges=").append(showAFPRanges)
 					.append(", pdbFilePath=").append(pdbFilePath)
 					.append(", cacheFilePath=").append(cacheFilePath)
 					.append(", outFile=").append(outFile).append(", pdb1=")
@@ -106,15 +152,12 @@ public class CeUserArgumentProcessor extends AbstractUserArgumentProcessor {
 					.append(", flexible=").append(flexible)
 					.append(", pdbDirSplit=").append(pdbDirSplit)
 					.append(", printCE=").append(printCE).append(", showMenu=")
-					.append(showMenu).append(", showAFPRanges=")
-					.append(showAFPRanges).append(", printPDB=")
-					.append(printPDB).append(", maxOptRMSD=")
-					.append(maxOptRMSD).append(", isDomainSplit=")
-					.append(isDomainSplit).append(", alignPairs=")
-					.append(alignPairs).append(", searchFile=")
-					.append(searchFile).append(", saveOutputDir=")
-					.append(saveOutputDir).append(", nrCPU=").append(nrCPU)
-					.append(", maxGapSize=").append(maxGapSize).append("]");
+					.append(showMenu).append(", printPDB=").append(printPDB)
+					.append(", isDomainSplit=").append(isDomainSplit)
+					.append(", alignPairs=").append(alignPairs)
+					.append(", searchFile=").append(searchFile)
+					.append(", saveOutputDir=").append(saveOutputDir)
+					.append(", nrCPU=").append(nrCPU).append("]");
 			return builder.toString();
 		}
 

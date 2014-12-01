@@ -56,8 +56,6 @@ public abstract class AbstractStructureAlignment implements StructureAlignment {
 		buf.append("   -autoFetch true/false if set to true PDB files will automatically get downloaded and stored in the right location. (default: false)").append(newline);
 		buf.append("   -pdbDirSplit true/false the directory containing PDB files has all PDBs in one level or is split into multiple subdirs, like the ftp site. (default: true)").append(newline);
 		buf.append("   -showMenu displays the menu that allows to run alignments through a user interface.").append(newline);
-		buf.append("   -maxGapSize (jCE specific): set the maximum gap size parameter G during AFP extension. default: 30. Set to 0 for unrestricted. ").append(newline);
-		buf.append("   -showAFPRanges (jCE specific): show the raw Aligned Fragment Pair positions, prior to optimization.").append(newline);
 		buf.append(newline);
 
 		buf.append("--- custom searches ---").append(newline);
@@ -73,18 +71,8 @@ public abstract class AbstractStructureAlignment implements StructureAlignment {
 		buf.append("   -saveOutputDir (optional) a directory that will contain the detailed outputs of the alignments. By default will write XML files, if used together with -outputPDB, will write PDB files of the alignment.").append(newline);
 		buf.append(newline);
 
-		buf.append("  Once DB seaches are complete it is possible to view the results with:").append(newline);
+		buf.append(" Once DB seaches are complete it is possible to view the results with:").append(newline);
 		buf.append("   -showDBresult (optional) path to a DB outFile to show. Also provide the -pdbFilePath parameter to enable visualisation of results.").append(newline);
-		buf.append(newline);
-
-		buf.append(" For boolean arguments: if neither the text >true< or >false< is provided it is assumed to mean >true<. Instead of >-argument false< it is also possible to write -noArgument.").append(newline);
-		buf.append(newline);
-
-		buf.append("--- How to specify what to align ---").append(newline);
-		buf.append(" If only a PDB code is provided, the whole structure will be used for the alignment.").append(newline);
-		buf.append(" To specify a particular chain write as: 4hhb.A (chain IDs are case sensitive, PDB ids are not)").append(newline);
-		buf.append(" To specify that the 1st chain in a structure should be used write: 4hhb:0 .").append(newline);
-		buf.append(" In order to align SCOP domains, provide pdb1/pdb2 as: d4hhba_ Note: if SCOP is not installed at the -pdbFilePath, will automatically download and install.").append(newline);
 		buf.append(newline);
 
 		ConfigStrucAligParams params = getParameters();
@@ -106,6 +94,17 @@ public abstract class AbstractStructureAlignment implements StructureAlignment {
 				buf.append(newline);
 			}
 		}
+		buf.append(newline);
+		
+		buf.append(" For boolean arguments: if neither the text >true< or >false< is provided it is assumed to mean >true<. Instead of >-argument false< it is also possible to write -noArgument.").append(newline);
+		buf.append(newline);
+		
+		buf.append("--- How to specify what to align ---").append(newline);
+		buf.append(" If only a PDB code is provided, the whole structure will be used for the alignment.").append(newline);
+		buf.append(" To specify a particular chain write as: 4hhb.A (chain IDs are case sensitive, PDB ids are not)").append(newline);
+		buf.append(" To specify that the 1st chain in a structure should be used write: 4hhb:0 .").append(newline);
+		buf.append(" In order to align SCOP domains, provide pdb1/pdb2 as: d4hhba_ Note: if SCOP is not installed at the -pdbFilePath, will automatically download and install.").append(newline);
+		buf.append(newline);
 
 		return buf.toString();
 	}

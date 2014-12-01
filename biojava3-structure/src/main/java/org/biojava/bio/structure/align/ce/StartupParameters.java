@@ -26,9 +26,7 @@ public class StartupParameters {
 	boolean pdbDirSplit;
 	boolean printCE;
 	boolean showMenu;
-	boolean showAFPRanges;
 	boolean printPDB;
-	Double maxOptRMSD;
 	boolean isDomainSplit;
 	
 	
@@ -38,7 +36,6 @@ public class StartupParameters {
 	String saveOutputDir;
 	int nrCPU;
 	
-	int maxGapSize;
 	
 	private static final String newline = System.getProperty("line.separator");
 	
@@ -50,10 +47,7 @@ public class StartupParameters {
 		autoFetch = false;
 		flexible = false;
 		pdbDirSplit = true;
-		maxGapSize = 30;
-		showAFPRanges = false;
 		showMenu = false;
-		maxOptRMSD = 99d;
 		isDomainSplit = true;
 		nrCPU = Runtime.getRuntime().availableProcessors() -1;
 		if ( nrCPU < 1)
@@ -218,22 +212,6 @@ public class StartupParameters {
 		this.nrCPU = nrCPU;
 	}
 
-	/** CE specific parameter: set the Max gap size parameter G (during AFP extension). Default: 30
-	 * 
-	 * @return the maximum gap size G parameter.
-	 */
-	public int getMaxGapSize() {
-		return maxGapSize;
-	}
-
-	/** CE specific parameter: set the Max gap size parameter G (during AFP extension). Default: 30
-	 * 
-	 * @param maxGapSize
-	 */
-	public void setMaxGapSize(int maxGapSize) {
-		this.maxGapSize = maxGapSize;
-	}
-
    public String getFile1()
    {
       return file1;
@@ -255,15 +233,6 @@ public class StartupParameters {
    }
 
 
-   public boolean isShowAFPRanges()
-   {
-      return showAFPRanges;
-   }
-
-   public void setShowAFPRanges(boolean showAFP)
-   {
-      this.showAFPRanges = showAFP;
-   }
 
 	/** When writing the results to a file, don;t write as XML but write aligned PDB file
 	 * 
@@ -281,21 +250,6 @@ public class StartupParameters {
 	}
 
 
-	/**(jCE specific): maximum RMSD that shall be calculated for the alignment.
-	 * 
-	 * @return maxOptRMSD parameter
-	 */
-	public Double getMaxOptRMSD() {
-		return maxOptRMSD;
-	}
-
-	/** (jCE specific): maximum RMSD that shall be calculated for the alignment.
-	 * 
-	 * @param maxOptRMSD max RMSD to calculate
-	 */
-	public void setMaxOptRMSD(Double maxOptRMSD) {
-		this.maxOptRMSD = maxOptRMSD;
-	}
 	
 	
 
@@ -317,12 +271,11 @@ public class StartupParameters {
 				+ ", " + newline + " show3d=" + show3d + ", " + newline + " autoFetch=" + autoFetch
 				+ ", " + newline + " flexible=" + flexible + ", " + newline + " pdbDirSplit=" + pdbDirSplit
 				+ ", " + newline + " printCE=" + printCE + ", " + newline + " showMenu=" + showMenu
-				+ ", " + newline + " showAFPRanges=" + showAFPRanges + ", " + newline + " printPDB=" + printPDB
-				+ ", " + newline + " maxOptRMSD=" + maxOptRMSD + ", " + newline + " isDomainSplit="
+				+ ", " + newline + " printPDB=" + printPDB
+				+ ", " + newline + " isDomainSplit="
 				+ isDomainSplit + ", " + newline + " alignPairs=" + alignPairs
 				+ ", " + newline + " searchFile=" + searchFile + ", " + newline + " saveOutputDir="
-				+ saveOutputDir + ", " + newline + " nrCPU=" + nrCPU + ", " + newline + " maxGapSize="
-				+ maxGapSize + "]";
+				+ saveOutputDir + ", " + newline + " nrCPU=" + nrCPU + "]";
 	}
 
 	
