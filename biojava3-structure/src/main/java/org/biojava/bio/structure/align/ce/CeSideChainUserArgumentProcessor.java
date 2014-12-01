@@ -2,12 +2,12 @@ package org.biojava.bio.structure.align.ce;
 
 import org.biojava.bio.structure.align.StructureAlignment;
 
-public class CeSideChainUserArgumentProcessor extends AbstractUserArgumentProcessor {
+public class CeSideChainUserArgumentProcessor extends CeUserArgumentProcessor {
 
+	@Override
 	public StructureAlignment getAlgorithm() {
 		return new CeSideChainMain();
 	}
-
 
 	@Override
 	public Object getParameters() {

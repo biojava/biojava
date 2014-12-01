@@ -33,8 +33,8 @@ public class SmithWaterman3DParameters implements ConfigStrucAligParams
 {
 
 
-	short gapOpen ;      
-	short gapExtend ;    
+	private short gapOpen ;
+	private short gapExtend ;
 
 	public SmithWaterman3DParameters(){
 		reset();

@@ -1,5 +1,9 @@
 package org.biojava.bio.structure.align;
 
+import java.beans.Introspector;
+import java.util.Iterator;
+import java.util.List;
+
 import org.biojava.bio.structure.Atom;
 import org.biojava.bio.structure.StructureException;
 import org.biojava.bio.structure.align.ce.ConfigStrucAligParams;
@@ -69,7 +73,7 @@ public abstract class AbstractStructureAlignment implements StructureAlignment {
 		buf.append("   -saveOutputDir (optional) a directory that will contain the detailed outputs of the alignments. By default will write XML files, if used together with -outputPDB, will write PDB files of the alignment.").append(newline);
 		buf.append(newline);
 
-		buf.append(" Once DB seaches are complete it is possible to view the results with:").append(newline);
+		buf.append("  Once DB seaches are complete it is possible to view the results with:").append(newline);
 		buf.append("   -showDBresult (optional) path to a DB outFile to show. Also provide the -pdbFilePath parameter to enable visualisation of results.").append(newline);
 		buf.append(newline);
 
@@ -83,6 +87,25 @@ public abstract class AbstractStructureAlignment implements StructureAlignment {
 		buf.append(" In order to align SCOP domains, provide pdb1/pdb2 as: d4hhba_ Note: if SCOP is not installed at the -pdbFilePath, will automatically download and install.").append(newline);
 		buf.append(newline);
 
+		ConfigStrucAligParams params = getParameters();
+		List<String> paramNames = params.getUserConfigParameters();
+		List<String> paramHelp = params.getUserConfigHelp();
+
+		assert(paramNames.size() == paramHelp.size());
+
+		int size = Math.min(paramNames.size(), paramHelp.size());
+		if(size > 0) {
+			Iterator<String> namesIt = paramNames.iterator();
+			Iterator<String> helpIt = paramHelp.iterator();
+
+			buf.append("--- ").append(getAlgorithmName()).append(" parameters: ---").append(newline);
+			for(int i = 0; i< size; i++) {
+				String name = namesIt.next();
+				buf.append("   -").append(Introspector.decapitalize(name));
+				buf.append(" ").append(helpIt.next());
+				buf.append(newline);
+			}
+		}
 
 		return buf.toString();
 	}
