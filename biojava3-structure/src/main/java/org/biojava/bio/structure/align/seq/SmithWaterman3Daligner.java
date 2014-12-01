@@ -36,12 +36,17 @@ public class SmithWaterman3Daligner extends AbstractStructureAlignment implement
 
 	public static final String algorithmName = "Smith-Waterman superposition";
 
-	private static final String version = "1.0";
+	/**
+	 *  version history:
+	 *  1.1 - Added more parameters to the command line, including -maxOptRMSD
+	 *  1.0 - Initial version
+	 */
+	private static final String version = "1.1";
 	SmithWaterman3DParameters params;
 
 	public static void main(String[] args){
 
-		args = new String[]{"-pdb1","1cdg.A","-pdb2","1tim.A","-pdbFilePath","/tmp/","-show3d","-printFatCat"};
+		//args = new String[]{"-pdb1","1cdg.A","-pdb2","1tim.A","-pdbFilePath","/tmp/","-show3d","-printFatCat"};
 		SmithWaterman3Daligner algorithm = new SmithWaterman3Daligner();
 		if (args.length  == 0 ) {			
 			System.out.println(algorithm.printHelp());

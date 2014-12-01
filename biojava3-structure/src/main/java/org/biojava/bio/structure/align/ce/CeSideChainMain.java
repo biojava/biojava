@@ -7,6 +7,11 @@ public class CeSideChainMain  extends CeMain implements StructureAlignment {
 
    public static final String algorithmName = "jCE-sidechain";
 
+   /**
+    *  version history:
+    *  2.4 - Added more parameters to the command line, including -maxOptRMSD
+    *  2.3 - Initial version
+    */
    private static final String version = "2.3";
 
    public CeSideChainMain(){

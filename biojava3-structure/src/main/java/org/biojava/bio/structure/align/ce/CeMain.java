@@ -50,7 +50,13 @@ public class CeMain extends AbstractStructureAlignment implements StructureAlign
 
 	public static final String algorithmName = "jCE";
 
-	public static final String version = "1.1";
+	/**
+	 *  version history:
+	 *  1.2 - Added more parameters to the command line, including -maxOptRMSD
+	 *  1.1 - Additional parameters
+	 *  1.0 - Initial port from C code
+	 */
+	public static final String version = "1.2";
 
 	protected CeParameters params;
 	protected CECalculator calculator;

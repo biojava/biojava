@@ -59,6 +59,10 @@ public class OptimalCECPMain extends CeMain {
 
 	public static final String algorithmName = "jCE Optimal Circular Permutation";
 
+	/**
+	 *  version history:
+	 *  1.0 - Initial version
+	 */
 	public static final String version = "1.0";
 
 	protected OptimalCECPParameters params;
