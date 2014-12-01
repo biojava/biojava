@@ -31,6 +31,17 @@ public class EntityFinder {
 	
 	private static final Logger logger = LoggerFactory.getLogger(EntityFinder.class);
 	
+	/**
+	 * Identity value for 2 chains to be considered part of same entity
+	 */
+	public static final double IDENTITY_THRESHOLD = 0.99999;
+	
+	/**
+	 * Gap coverage value (num gaps over length of sequence) for each chain of the match: 
+	 * 2 chains with more gap coverage than this value will not be considered part of the same entity
+	 */
+	public static final double GAP_COVERAGE_THRESHOLD = 0.3;
+	
 	public EntityFinder(Structure s) {
 		this.s = s;
 	}
@@ -64,11 +75,21 @@ public class EntityFinder {
 
 					SequencePair<ProteinSequence, AminoAcidCompound> pair = align(s1,s2);
 					
-					int nonGaps = pair.getLength()-getNumGaps(pair); 
-					double identity = (double)pair.getNumIdenticals()/(double)nonGaps;
-					logger.debug("Identity for chain pair {},{}: {}", c1.getChainID(), c2.getChainID(), identity);
+					int numGaps = getNumGaps(pair);
+					int numGaps1 = getNumGapsQuery(pair);
+					int numGaps2 = getNumGapsTarget(pair);
+
+					int nonGaps = pair.getLength() - numGaps;
 					
-					if (identity > 0.99999) {
+					double identity = (double)pair.getNumIdenticals()/(double)nonGaps;
+					double gapCov1 = (double) numGaps1 / (double) s1.getLength();
+					double gapCov2 = (double) numGaps2 / (double) s2.getLength();
+					
+					logger.debug("Alignment for chain pair {},{}: identity: {}, gap coverage 1: {}, gap coverage 2: {}", 
+							c1.getChainID(), c2.getChainID(), String.format("%4.2f",identity), String.format("%4.2f",gapCov1), String.format("%4.2f",gapCov2));
+					logger.debug("\n"+pair.toString(100));
+					
+					if (identity > IDENTITY_THRESHOLD && gapCov1<GAP_COVERAGE_THRESHOLD && gapCov2<GAP_COVERAGE_THRESHOLD) {
 						if (	!chainIds2entities.containsKey(c1.getChainID()) &&
 								!chainIds2entities.containsKey(c2.getChainID())) {
 							logger.debug("Creating entity with chains {},{}",c1.getChainID(),c2.getChainID());
@@ -80,7 +101,8 @@ public class EntityFinder {
 								chainIds2entities.put(c1.getChainID(), ent);
 								chainIds2entities.put(c2.getChainID(), ent);
 							} else {
-								logger.warn("Chains {},{} with 100% identity have residue numbers misaligned, can't include them in the same entity");
+								logger.warn("Chains {},{} with 100% identity have residue numbers misaligned, can't include them in the same entity",
+										c1.getChainID(),c2.getChainID());
 							}
 						} else {
 							Entity ent = chainIds2entities.get(c1.getChainID());
@@ -92,7 +114,8 @@ public class EntityFinder {
 									ent.addMember(c1);
 									chainIds2entities.put(c1.getChainID(), ent);
 								} else {
-									logger.warn("Chains {},{} with 100% identity have residue numbers misaligned, can't include them in the same entity");
+									logger.warn("Chains {},{} with 100% identity have residue numbers misaligned, can't include them in the same entity",
+											c1.getChainID(),c2.getChainID());
 								}
 							} else {
 								logger.debug("Adding chain {} to entity {}",c2.getChainID(),c1.getChainID());
@@ -100,15 +123,14 @@ public class EntityFinder {
 									ent.addMember(c2);
 									chainIds2entities.put(c2.getChainID(), ent);
 								} else {
-									logger.warn("Chains {},{} with 100% identity have residue numbers misaligned, can't include them in the same entity");
+									logger.warn("Chains {},{} with 100% identity have residue numbers misaligned, can't include them in the same entity",
+											c1.getChainID(),c2.getChainID());
 								}
 							}
 						}
-					} else if (identity>0.95) {
-						logger.info("Identity for chains {},{} above 0.95. Mismatch in {} out of {} non-gap-aligned residues (identity {})",
-								c1.getChainID(),c2.getChainID(),nonGaps-pair.getNumIdenticals(),nonGaps,identity);
-						logger.info("\n"+pair.toString(100)); 
-					} else if (identity>1) {
+					} 
+					
+					if (identity>1) {
 						logger.warn("Identity for chains {},{} above 1. {} identicals out of {} non-gap-aligned residues (identity {})",
 								c1.getChainID(),c2.getChainID(),pair.getNumIdenticals(),nonGaps,identity);
 						logger.warn("\n"+pair.toString(100));
@@ -121,7 +143,7 @@ public class EntityFinder {
 			// anything not in an entity will be its own entity
 			for (Chain c:s.getChains()) {
 				if (!chainIds2entities.containsKey(c.getChainID())) {
-					logger.debug("Creating a 1-member entity for chain "+c.getChainID());
+					logger.debug("Creating a 1-member entity for chain {}",c.getChainID());
 					chainIds2entities.put(c.getChainID(),getTrivialEntity(c));
 				}
 			}
@@ -136,8 +158,8 @@ public class EntityFinder {
 	}
 	
 	private SequencePair<ProteinSequence, AminoAcidCompound> align(ProteinSequence s1, ProteinSequence s2) {
-		SubstitutionMatrix<AminoAcidCompound> matrix = SubstitutionMatrixHelper.getBlosum65();
-
+		SubstitutionMatrix<AminoAcidCompound> matrix = SubstitutionMatrixHelper.getIdentity();
+		
 		GapPenalty penalty = new SimpleGapPenalty();
 
 		short gop = 8;
@@ -146,10 +168,10 @@ public class EntityFinder {
 		penalty.setExtensionPenalty(extend);
 
 
-		PairwiseSequenceAligner<ProteinSequence, AminoAcidCompound> smithWaterman =
-				Alignments.getPairwiseAligner(s1, s2, PairwiseSequenceAlignerType.LOCAL, penalty, matrix);
+		PairwiseSequenceAligner<ProteinSequence, AminoAcidCompound> nw =
+				Alignments.getPairwiseAligner(s1, s2, PairwiseSequenceAlignerType.GLOBAL, penalty, matrix);
 
-		return smithWaterman.getPair();
+		return nw.getPair();
 	}
 	
 	private TreeMap<String,Entity> getTrivialEntities() {
@@ -195,5 +217,26 @@ public class EntityFinder {
 		}
 		return numGaps;
 	}
+
+	private static int getNumGapsQuery(SequencePair<ProteinSequence, AminoAcidCompound> pair) {
+		int numGaps = 0;
+		for (int alignmentIndex=1;alignmentIndex<=pair.getLength();alignmentIndex++) {
+			if (pair.getCompoundInQueryAt(alignmentIndex).getShortName().equals("-")) {
+				numGaps++;
+			}			
+		}
+		return numGaps;
+	}
+
+	private static int getNumGapsTarget(SequencePair<ProteinSequence, AminoAcidCompound> pair) {
+		int numGaps = 0;
+		for (int alignmentIndex=1;alignmentIndex<=pair.getLength();alignmentIndex++) {
+			if (pair.getCompoundInTargetAt(alignmentIndex).getShortName().equals("-")) {
+				numGaps++;
+			}			
+		}
+		return numGaps;
+	}
+
 }
  
