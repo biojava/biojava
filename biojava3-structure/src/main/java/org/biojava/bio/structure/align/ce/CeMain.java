@@ -76,24 +76,8 @@ public class CeMain extends AbstractStructureAlignment implements StructureAlign
 	 * 
 	 */
 	public static void main(String[] args){
-
-		CeMain ce = new CeMain(); //Used only for printing help
-		if (args.length  == 0 ) {			
-			System.out.println(ce.printHelp());
-			return;			
-		}
-
-		if ( args.length == 1){
-			if (args[0].equalsIgnoreCase("-h") || args[0].equalsIgnoreCase("-help")|| args[0].equalsIgnoreCase("--help")){
-				System.out.println(ce.printHelp());								
-				return;
-			}
-
-		}
-
 		CeUserArgumentProcessor processor = new CeUserArgumentProcessor(); //Responsible for creating a CeMain instance
 		processor.process(args);
-
 	}
 
 	/**

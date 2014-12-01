@@ -25,6 +25,7 @@
 package org.biojava.bio.structure.align.ce;
 
 
+import java.beans.Introspector;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -34,13 +35,15 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
-
+import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import org.biojava.bio.structure.Atom;
 import org.biojava.bio.structure.Structure;
+import org.biojava.bio.structure.StructureException;
 import org.biojava.bio.structure.StructureTools;
 import org.biojava.bio.structure.align.MultiThreadedDBSearch;
 import org.biojava.bio.structure.align.StructureAlignment;
@@ -51,7 +54,6 @@ import org.biojava.bio.structure.align.util.CliTools;
 import org.biojava.bio.structure.align.util.ConfigurationException;
 import org.biojava.bio.structure.align.util.ResourceManager;
 import org.biojava.bio.structure.align.util.UserConfiguration;
-
 import org.biojava.bio.structure.align.xml.AFPChainXMLConverter;
 import org.biojava.bio.structure.io.PDBFileReader;
 
@@ -117,11 +119,28 @@ public abstract class AbstractUserArgumentProcessor implements UserArgumentProce
 	public void process(String[] argv){
 
 		printAboutMe();
-
-		List<String> mandatoryArgs = getMandatoryArgs();
+		
+//		if(argv.length == 0 ) {
+//			System.out.println(printHelp());
+//			return;
+//		}
 
 		for (int i = 0 ; i < argv.length; i++){
 			String arg   = argv[i];
+
+			// help string
+			if(arg.equalsIgnoreCase("-h") || arg.equalsIgnoreCase("-help")
+					|| arg.equalsIgnoreCase("--help") )
+			{
+				System.out.println(printHelp());
+				return;
+			}
+			// version
+			if(arg.equalsIgnoreCase("-version") || arg.equalsIgnoreCase("--version")) {
+				StructureAlignment alg = getAlgorithm();
+				System.out.println(alg.getAlgorithmName() + " v." + alg.getVersion() );
+				return;
+			}
 
 			String value = null;
 			if ( i < argv.length -1)
@@ -143,15 +162,8 @@ public abstract class AbstractUserArgumentProcessor implements UserArgumentProce
 				CliTools.configureBean(params, tmp);
 
 			} catch (ConfigurationException e){
-
-				e.printStackTrace();
-
-				if ( mandatoryArgs.contains(arg) ) {
-					// there must not be a ConfigurationException with mandatory arguments.
-					return;
-				} else {
-					// but there can be with optional ...
-				}
+				System.err.println("Error: "+e.getLocalizedMessage());
+				return;
 			}
 		}
 
@@ -191,18 +203,29 @@ public abstract class AbstractUserArgumentProcessor implements UserArgumentProce
 		String file1 = params.getFile1();
 
 
-		if (pdb1 != null || file1 != null){
-			runPairwise();
+		try {
+			if (pdb1 != null || file1 != null){
+				runPairwise();
+				return;
+			}
+
+			if ( params.getAlignPairs() != null){
+				runDBSearch();
+				return;
+			}
+
+			if ( params.getSearchFile() != null){
+				runDBSearch();
+				return;
+			}
+		} catch (ConfigurationException e) {
+			System.err.println(e.getLocalizedMessage());
+			return;
 		}
 
-		if ( params.getAlignPairs() != null){
-			runDBSearch();
-		}
-
-		if ( params.getSearchFile() != null){
-			runDBSearch();
-		}
-
+		System.out.println(printHelp());
+		System.err.println("Error: insufficient arguments.");
+		return;
 	}
 
 
@@ -225,16 +248,16 @@ public abstract class AbstractUserArgumentProcessor implements UserArgumentProce
 	}
 
 
-	private void runDBSearch(){
+	private void runDBSearch() throws ConfigurationException{
 
 
 		String pdbFilePath = params.getPdbFilePath();
 
 		if ( pdbFilePath == null || pdbFilePath.equals("")){
 
-			System.err.println("You did not specify the -pdbFilePath. Can not find PDB files in file system and will assume a temporary location.");
 			UserConfiguration c = new UserConfiguration();
 			pdbFilePath = c.getPdbFilePath();
+			System.err.println("You did not specify the -pdbFilePath parameter. Defaulting to "+pdbFilePath+".");
 		}
 
 		String cacheFilePath = params.getCacheFilePath();
@@ -253,16 +276,14 @@ public abstract class AbstractUserArgumentProcessor implements UserArgumentProce
 
 		if ( alignPairs == null || alignPairs.equals("")) {
 			if ( searchFile == null || searchFile.equals("")){
-				System.err.println("Please specify -alignPairs or -searchFile !");
-				return;
+				throw new ConfigurationException("Please specify -alignPairs or -searchFile !");
 			}
 		}
 
 		String outputFile = params.getOutFile();
 
 		if ( outputFile == null || outputFile.equals("")){
-			System.err.println("Please specify the mandatory argument -outFile!");
-			return;
+			throw new ConfigurationException("Please specify the mandatory argument -outFile!");
 		}
 
 		System.out.println("running DB search with parameters: " + params);
@@ -284,9 +305,10 @@ public abstract class AbstractUserArgumentProcessor implements UserArgumentProce
 	 * @param cache
 	 * @param searchFile
 	 * @param outputFile
+	 * @throws ConfigurationException 
 	 */
 	private void runDbSearch(AtomCache cache, String searchFile,
-			String outputFile,int useNrCPUs, StartupParameters params) {
+			String outputFile,int useNrCPUs, StartupParameters params) throws ConfigurationException {
 
 
 		System.out.println("will use " + useNrCPUs + " CPUs.");
@@ -296,10 +318,7 @@ public abstract class AbstractUserArgumentProcessor implements UserArgumentProce
 		try {
 			structure1 = reader.getStructure(searchFile);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			System.err.println("could not parse as PDB file: " + searchFile);
-			return;
+			throw new ConfigurationException("could not parse as PDB file: " + searchFile);
 		}
 
 		File searchF = new File(searchFile);
@@ -392,18 +411,18 @@ public abstract class AbstractUserArgumentProcessor implements UserArgumentProce
 	}
 
 
-	private void runPairwise(){
+	private void runPairwise() throws ConfigurationException{
 
 		String name1 = params.getPdb1();
 		String file1 = params.getFile1();
 
 		if ( name1 == null && file1 == null){
-			throw new RuntimeException("You did not specify the -pdb1 or -file1 parameter. Can not find query PDB id for alignment.");
+			throw new ConfigurationException("You did not specify the -pdb1 or -file1 parameter. Can not find query PDB id for alignment.");
 		}
 
 		if ( file1 == null) {
 			if ( name1.length() < 4) {
-				throw new RuntimeException("-pdb1 does not look like a PDB ID. Please specify PDB code or PDB.chainId.");
+				throw new ConfigurationException("-pdb1 does not look like a PDB ID. Please specify PDB code or PDB.chainId.");
 			}
 		}
 
@@ -412,12 +431,12 @@ public abstract class AbstractUserArgumentProcessor implements UserArgumentProce
 		String name2 = params.getPdb2();
 		String file2 = params.getFile2();
 		if ( name2 == null && file2 == null ){
-			throw new RuntimeException("You did not specify the -pdb2 or -file2 parameter. Can not find target PDB id for alignment.");
+			throw new ConfigurationException("You did not specify the -pdb2 or -file2 parameter. Can not find target PDB id for alignment.");
 		}
 
 		if ( file2 == null ){
 			if ( name2.length() < 4) {
-				throw new RuntimeException("-pdb2 does not look like a PDB ID. Please specify PDB code or PDB.chainId.");
+				throw new ConfigurationException("-pdb2 does not look like a PDB ID. Please specify PDB code or PDB.chainId.");
 			}
 		}
 
@@ -430,9 +449,9 @@ public abstract class AbstractUserArgumentProcessor implements UserArgumentProce
 
 		if ( file1 == null || file2 == null) {
 			if ( path == null){
-				System.err.println("You did not specify the -pdbFilePath parameter. Can not find the PDB files in your file system and assuming a temporary location.");
 				UserConfiguration c = new UserConfiguration();
 				path = c.getPdbFilePath();
+				System.err.println("You did not specify the -pdbFilePath parameter. Defaulting to "+path+".");
 			}
 
 			AtomCache cache = new AtomCache(path, path, params.isPdbDirSplit());
@@ -534,9 +553,22 @@ public abstract class AbstractUserArgumentProcessor implements UserArgumentProce
 				System.out.println(afpChain.toCE(ca1, ca2));
 			}
 
-
-
-		} catch (Exception e) {
+		} catch (IOException e) {
+			e.printStackTrace();
+			return;
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+			return;
+		} catch (NoSuchMethodException e) {
+			e.printStackTrace();
+			return;
+		} catch (InvocationTargetException e) {
+			e.printStackTrace();
+			return;
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+			return;
+		} catch (StructureException e) {
 			e.printStackTrace();
 			return;
 		}
@@ -548,9 +580,13 @@ public abstract class AbstractUserArgumentProcessor implements UserArgumentProce
 	 * @param afpChain
 	 * @param ca1
 	 * @param ca2
+	 * @throws IOException If an error occurs when writing the afpChain to XML
+	 * @throws ClassNotFoundException If an error occurs when invoking jmol
+	 * @throws NoSuchMethodException If an error occurs when invoking jmol
+	 * @throws InvocationTargetException If an error occurs when invoking jmol
+	 * @throws IllegalAccessException If an error occurs when invoking jmol
 	 */
-	private void checkWriteFile( AFPChain afpChain, Atom[] ca1, Atom[] ca2, boolean dbsearch)
-			throws Exception
+	private void checkWriteFile( AFPChain afpChain, Atom[] ca1, Atom[] ca2, boolean dbsearch) throws IOException, ClassNotFoundException, NoSuchMethodException, InvocationTargetException, IllegalAccessException
 			{
 		String output = null;
 		if ( params.isOutputPDB()){
@@ -613,8 +649,6 @@ public abstract class AbstractUserArgumentProcessor implements UserArgumentProce
 		FileOutputStream out; // declare a file output object
 		PrintStream p; // declare a print stream object
 
-		try
-		{
 			// Create a new file output stream
 			out = new FileOutputStream(fileName);
 
@@ -624,15 +658,10 @@ public abstract class AbstractUserArgumentProcessor implements UserArgumentProce
 			p.println (output);
 
 			p.close();
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-			System.err.println ("Error writing to file " + fileName);
-		}
+		
 
 
-			}
+	}
 
 
 	private String getAutoFileName(AFPChain afpChain){
@@ -705,17 +734,94 @@ public abstract class AbstractUserArgumentProcessor implements UserArgumentProce
 		return s;
 	}
 
-
-	public List<String> getMandatoryArgs() {
-		return mandatoryArgs;
-	}
-
 	public String getDbSearchResult(AFPChain afpChain){
 		return afpChain.toDBSearchResult();
 	}
 
+	public String printHelp() {
+		StringBuffer buf = new StringBuffer();
+		StructureAlignment alg = getAlgorithm();
+		
+		buf.append("-------------------").append(newline);
+		buf.append(alg.getAlgorithmName() + " v." + alg.getVersion() + " help: " + newline);
+		buf.append("-------------------").append(newline);
+		buf.append(newline);
 
+		buf.append(alg.getAlgorithmName() + " accepts the following parameters:" + newline);
+		buf.append(newline);
 
+		buf.append("--- pairwise alignments ---").append(newline);
+		buf.append(" two files to align can be specified by providing a path to a file, or a URL:").append(newline);
+		buf.append("   -file1 the first file to align").append(newline);
+		buf.append("   -file2 the second file to align").append(newline);
+		buf.append(" alternatively you can specify PDB files by their PDB ids:").append(newline);
+		buf.append("   -pdbFilePath  Path to the directory in your file system that contains the PDB files.").append(newline);
+		buf.append("   -pdb1  PDB ID of target structure. Chain IDs are optional. In order to specify chain IDs write e.g: 5pti.A").append(newline);
+		buf.append("   -pdb2  PDB ID of query structure. Chain IDs are optional. In order to specify chain IDs write e.g: 5pti.A").append(newline);
+		buf.append(newline);
 
+		buf.append("   -h / -help / --help : print this help string.").append(newline);
+		buf.append("   -version: print version info").append(newline);
+		buf.append("   -printXML true/false print the XML representation of the alignment on stdout.").append(newline);
+		buf.append("   -printFatCat true/false print the original FATCAT output to stdout.").append(newline);
+		buf.append("   -printCE true/false print the result in CE style").append(newline);
+		buf.append("   -show3d print a 3D visualisation of the alignment (requires jmolapplet.jar in classpath)").append(newline);
+		buf.append("   -outFile file to write the output to (default: writes XML representation).").append(newline);
+		buf.append("   -outputPDB use this flag together with -outFile to dump the PDB file of the aligned structures, instead of the XML representation, instead of XML").append(newline);
+		buf.append("   -autoFetch true/false if set to true PDB files will automatically get downloaded and stored in the right location. (default: false)").append(newline);
+		buf.append("   -pdbDirSplit true/false the directory containing PDB files has all PDBs in one level or is split into multiple subdirs, like the ftp site. (default: true)").append(newline);
+		buf.append("   -showMenu displays the menu that allows to run alignments through a user interface.").append(newline);
+		buf.append(newline);
+
+		buf.append("--- custom searches ---").append(newline);
+		buf.append("   -alignPairs (mandatory) path to a file that contains a set of pairs to compair").append(newline);
+		buf.append("   -outFile (mandatory) a file that will contain the summary of all the pairwise alignments").append(newline);
+		buf.append(newline);
+
+		buf.append("--- database searches ---").append(newline);
+		buf.append("   -searchFile (mandatory) path to a PDB file that should be used in the search").append(newline);
+		buf.append("   -outFile (mandatory) a directory that will contain the results of the DB search").append(newline);
+		buf.append("   -nrCPU (optional) Number of CPUs to use for the database search. By default will use the all, but one CPU in the system.").append(newline);
+		buf.append("   -pdbFilePath (mandatory) Path to the directory in your file system that contains the PDB files.").append(newline);
+		buf.append("   -saveOutputDir (optional) a directory that will contain the detailed outputs of the alignments. By default will write XML files, if used together with -outputPDB, will write PDB files of the alignment.").append(newline);
+		buf.append(newline);
+
+		buf.append(" Once DB seaches are complete it is possible to view the results with:").append(newline);
+		buf.append("   -showDBresult (optional) path to a DB outFile to show. Also provide the -pdbFilePath parameter to enable visualisation of results.").append(newline);
+		buf.append(newline);
+
+		ConfigStrucAligParams params = alg.getParameters();
+		List<String> paramNames = params.getUserConfigParameters();
+		List<String> paramHelp = params.getUserConfigHelp();
+
+		assert(paramNames.size() == paramHelp.size());
+
+		int size = Math.min(paramNames.size(), paramHelp.size());
+		if(size > 0) {
+			Iterator<String> namesIt = paramNames.iterator();
+			Iterator<String> helpIt = paramHelp.iterator();
+
+			buf.append("--- ").append(alg.getAlgorithmName()).append(" parameters: ---").append(newline);
+			for(int i = 0; i< size; i++) {
+				String name = namesIt.next();
+				buf.append("   -").append(Introspector.decapitalize(name));
+				buf.append(" ").append(helpIt.next());
+				buf.append(newline);
+			}
+		}
+		buf.append(newline);
+
+		buf.append(" For boolean arguments: if neither the text >true< or >false< is provided it is assumed to mean >true<. Instead of >-argument false< it is also possible to write -noArgument.").append(newline);
+		buf.append(newline);
+
+		buf.append("--- How to specify what to align ---").append(newline);
+		buf.append(" If only a PDB code is provided, the whole structure will be used for the alignment.").append(newline);
+		buf.append(" To specify a particular chain write as: 4hhb.A (chain IDs are case sensitive, PDB ids are not)").append(newline);
+		buf.append(" To specify that the 1st chain in a structure should be used write: 4hhb:0 .").append(newline);
+		buf.append(" In order to align SCOP domains, provide pdb1/pdb2 as: d4hhba_ Note: if SCOP is not installed at the -pdbFilePath, will automatically download and install.").append(newline);
+		buf.append(newline);
+
+		return buf.toString();
+	}
 
 }

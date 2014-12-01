@@ -78,8 +78,7 @@ public class CliTools {
 		}
 
 		Map<String,PropertyDescriptor> propertiesByName = new HashMap<String, PropertyDescriptor>();
-		for (Iterator<PropertyDescriptor> pi = Arrays.asList(bi.getPropertyDescriptors()).iterator(); pi.hasNext(); ) {
-			PropertyDescriptor pd =  pi.next();
+		for (PropertyDescriptor pd : bi.getPropertyDescriptors() ) {
 			propertiesByName.put(pd.getName(), pd);
 		}
 
@@ -149,10 +148,12 @@ public class CliTools {
 						if ( val == null )
 							propVal = Boolean.TRUE;
 						else {
-							if ( val.equalsIgnoreCase("true"))
+							if ( val.equalsIgnoreCase("true") || val.equalsIgnoreCase("t"))
 								propVal = Boolean.TRUE;
-							else
+							else if( val.equalsIgnoreCase("false") || val.equalsIgnoreCase("f"))
 								propVal = Boolean.FALSE;
+							else
+								throw new ConfigurationException("Option "+arg+" requires a boolean parameter");
 						}
 					} else if (File.class.isAssignableFrom(propType)) {
 						// can't distinguish if the file is for reading or writing

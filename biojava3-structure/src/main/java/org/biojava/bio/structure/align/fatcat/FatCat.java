@@ -62,28 +62,8 @@ public class FatCat
     * @param argv
     */
    public static void main(String[] argv){
-      FatCat cat = new FatCat();
-      if (argv.length  == 0 ) {			
-         System.out.println(cat.printHelp());
-         return;			
-      }
-
-      if ( argv.length == 1){
-         if (argv[0].equalsIgnoreCase("-h") || argv[0].equalsIgnoreCase("-help")|| argv[0].equalsIgnoreCase("--help")){
-            System.out.println(cat.printHelp());								
-            return;
-         }
-//         if ( argv[0].equalsIgnoreCase("-showMenu")){
-//
-//            AlignmentGui.getInstance();
-//            return;
-//         }
-      }
-
       FatCatUserArgumentProcessor processor = new FatCatUserArgumentProcessor();
       processor.process(argv);
-
-
    }
 
    public String toString(){

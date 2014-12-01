@@ -45,23 +45,8 @@ public class SmithWaterman3Daligner extends AbstractStructureAlignment implement
 	SmithWaterman3DParameters params;
 
 	public static void main(String[] args){
-
 		//args = new String[]{"-pdb1","1cdg.A","-pdb2","1tim.A","-pdbFilePath","/tmp/","-show3d","-printFatCat"};
-		SmithWaterman3Daligner algorithm = new SmithWaterman3Daligner();
-		if (args.length  == 0 ) {			
-			System.out.println(algorithm.printHelp());
-			return;			
-		}
-
-		if ( args.length == 1){
-			if (args[0].equalsIgnoreCase("-h") || args[0].equalsIgnoreCase("-help")|| args[0].equalsIgnoreCase("--help")){
-				System.out.println(algorithm.printHelp());								
-				return;
-			}			
-		}
-
 		UserArgumentProcessor processor = new SmithWatermanUserArgumentProcessor();
-
 		processor.process(args);
 	}
 

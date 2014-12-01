@@ -24,24 +24,8 @@ public class CeSideChainMain  extends CeMain implements StructureAlignment {
    }
 
    public static void main(String[] args){
-
-      CeSideChainMain ce = new CeSideChainMain();
-      if (args.length  == 0 ) {			
-         System.out.println(ce.printHelp());
-         return;			
-      }
-
-      if ( args.length == 1){
-         if (args[0].equalsIgnoreCase("-h") || args[0].equalsIgnoreCase("-help")|| args[0].equalsIgnoreCase("--help")){
-            System.out.println(ce.printHelp());								
-            return;
-         }
-
-      }
-
       CeSideChainUserArgumentProcessor processor = new CeSideChainUserArgumentProcessor();
       processor.process(args);
-
    }
 
 //   public AFPChain align(Atom[] ca1, Atom[] ca2, Object param) throws StructureException{

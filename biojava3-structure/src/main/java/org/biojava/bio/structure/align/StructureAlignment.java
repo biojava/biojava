@@ -51,17 +51,4 @@ public interface StructureAlignment {
 	 * @return the version of the algorithm
 	 */
 	public String getVersion();
-	
-	
-	
-	/** Returns some documentation on the command line arguments for this algorithm.
-	 * 
-	 * @return the help string
-	 */
-	public String printHelp();
-	
-	
-	/** Every alignment algorithm can be called from the command line. The possible arguments are documented in the printHelp method. 
-	 */
-	//public static void main(String[] argv);
 }

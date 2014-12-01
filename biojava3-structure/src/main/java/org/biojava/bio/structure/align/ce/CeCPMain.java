@@ -85,20 +85,6 @@ public class CeCPMain extends CeMain {
 	}
 
 	public static void main(String[] args){
-		CeCPMain ce = new CeCPMain(); //Used only for printing help
-		if (args.length  == 0 ) {
-			System.out.println(ce.printHelp());
-			return;
-		}
-
-		if ( args.length == 1){
-			if (args[0].equalsIgnoreCase("-h") || args[0].equalsIgnoreCase("-help")|| args[0].equalsIgnoreCase("--help")){
-				System.out.println(ce.printHelp());
-				return;
-			}
-
-		}
-
 		CeCPUserArgumentProcessor processor = new CeCPUserArgumentProcessor(); //Responsible for creating a CeCPMain instance
 		processor.process(args);
 	}

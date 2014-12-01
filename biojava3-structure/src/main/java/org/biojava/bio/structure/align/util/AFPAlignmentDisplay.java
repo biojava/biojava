@@ -19,6 +19,7 @@
 
 package org.biojava.bio.structure.align.util;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -381,9 +382,21 @@ public class AFPAlignmentDisplay
 	}
 
 
+	/**
+	 * 
+	 * @param afpChain
+	 * @param ca1
+	 * @param ca2
+	 * @return
+	 * @throws ClassNotFoundException If an error occurs when invoking jmol
+	 * @throws NoSuchMethodException If an error occurs when invoking jmol
+	 * @throws InvocationTargetException If an error occurs when invoking jmol
+	 * @throws IllegalAccessException If an error occurs when invoking jmol
+	 */
 	public static Structure createArtificalStructure(AFPChain afpChain, Atom[] ca1,
-			Atom[] ca2) throws Exception{
-
+			Atom[] ca2) throws ClassNotFoundException, NoSuchMethodException,
+			InvocationTargetException, IllegalAccessException
+	{
 
 		if ( afpChain.getNrEQR() < 1){
 			return GuiWrapper.getAlignedStructure(ca1, ca2);
