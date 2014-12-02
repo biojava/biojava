@@ -50,7 +50,13 @@ public class CeMain extends AbstractStructureAlignment implements StructureAlign
 
 	public static final String algorithmName = "jCE";
 
-	public static final String version = "1.1";
+	/**
+	 *  version history:
+	 *  1.2 - Added more parameters to the command line, including -maxOptRMSD
+	 *  1.1 - Additional parameters
+	 *  1.0 - Initial port from C code
+	 */
+	public static final String version = "1.2";
 
 	protected CeParameters params;
 	protected CECalculator calculator;
@@ -70,24 +76,8 @@ public class CeMain extends AbstractStructureAlignment implements StructureAlign
 	 * 
 	 */
 	public static void main(String[] args){
-
-		CeMain ce = new CeMain(); //Used only for printing help
-		if (args.length  == 0 ) {			
-			System.out.println(ce.printHelp());
-			return;			
-		}
-
-		if ( args.length == 1){
-			if (args[0].equalsIgnoreCase("-h") || args[0].equalsIgnoreCase("-help")|| args[0].equalsIgnoreCase("--help")){
-				System.out.println(ce.printHelp());								
-				return;
-			}
-
-		}
-
 		CeUserArgumentProcessor processor = new CeUserArgumentProcessor(); //Responsible for creating a CeMain instance
 		processor.process(args);
-
 	}
 
 	/**

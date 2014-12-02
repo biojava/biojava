@@ -60,13 +60,14 @@ public class CeCPMain extends CeMain {
 
 	/**
 	 *  version history:
-	 *  1.4 - Added DuplicationHint parameter
+	 *  1.5 - Added more parameters to the command line, including -maxOptRMSD
+	 *  1.4 - Added DuplicationHint parameter & default to duplicating the shorter chain
 	 *  1.3 - Short CPs are now discarded
 	 *  1.2 - now supports check AlignmentTools.isSequentialAlignment. XML protocol
 	 *  1.1 - skipped, (trying to avoid confusion with jfatcat in all vs. all comparisons) 
 	 *  1.0 - initial release
 	 */
-	public static final String version = "1.4";
+	public static final String version = "1.5";
 
 	public CeCPMain(){
 		super();
@@ -84,20 +85,6 @@ public class CeCPMain extends CeMain {
 	}
 
 	public static void main(String[] args){
-		CeCPMain ce = new CeCPMain(); //Used only for printing help
-		if (args.length  == 0 ) {
-			System.out.println(ce.printHelp());
-			return;
-		}
-
-		if ( args.length == 1){
-			if (args[0].equalsIgnoreCase("-h") || args[0].equalsIgnoreCase("-help")|| args[0].equalsIgnoreCase("--help")){
-				System.out.println(ce.printHelp());
-				return;
-			}
-
-		}
-
 		CeCPUserArgumentProcessor processor = new CeCPUserArgumentProcessor(); //Responsible for creating a CeCPMain instance
 		processor.process(args);
 	}

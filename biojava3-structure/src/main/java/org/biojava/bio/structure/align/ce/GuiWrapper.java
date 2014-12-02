@@ -134,6 +134,17 @@ public class GuiWrapper {
 
 	}
 
+	/**
+	 * 
+	 * @param afpChain
+	 * @param ca1
+	 * @param ca2
+	 * @return
+	 * @throws ClassNotFoundException If an error occurs when invoking jmol
+	 * @throws NoSuchMethodException If an error occurs when invoking jmol
+	 * @throws InvocationTargetException If an error occurs when invoking jmol
+	 * @throws IllegalAccessException If an error occurs when invoking jmol
+	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public static Group[] prepareGroupsForDisplay(AFPChain afpChain, Atom[] ca1,
 			Atom[] ca2)

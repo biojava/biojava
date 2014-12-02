@@ -41,7 +41,7 @@ public class CliTools {
 	 *
 	 * <p>
 	 * Currently supported property types are <code>int, double,
-	 * boolean, String, File, Reader, Writer, InputStream, OutputStream</code>,
+	 * boolean, String, File, Reader, Writer, InputStream, OutputStream, Enum</code>,
 	 * plus arrays of all the above types.  In the case of arrays, the option
 	 * may appear multiple times on the command line, otherwise recurrance of
 	 * the same option is an error.
@@ -78,8 +78,7 @@ public class CliTools {
 		}
 
 		Map<String,PropertyDescriptor> propertiesByName = new HashMap<String, PropertyDescriptor>();
-		for (Iterator<PropertyDescriptor> pi = Arrays.asList(bi.getPropertyDescriptors()).iterator(); pi.hasNext(); ) {
-			PropertyDescriptor pd =  pi.next();
+		for (PropertyDescriptor pd : bi.getPropertyDescriptors() ) {
 			propertiesByName.put(pd.getName(), pd);
 		}
 
@@ -149,10 +148,12 @@ public class CliTools {
 						if ( val == null )
 							propVal = Boolean.TRUE;
 						else {
-							if ( val.equalsIgnoreCase("true"))
+							if ( val.equalsIgnoreCase("true") || val.equalsIgnoreCase("t"))
 								propVal = Boolean.TRUE;
-							else
+							else if( val.equalsIgnoreCase("false") || val.equalsIgnoreCase("f"))
 								propVal = Boolean.FALSE;
+							else
+								throw new ConfigurationException("Option "+arg+" requires a boolean parameter");
 						}
 					} else if (File.class.isAssignableFrom(propType)) {
 						// can't distinguish if the file is for reading or writing
@@ -218,6 +219,29 @@ public class CliTools {
 								throw new ConfigurationException("Can't open " + name + " for output");
 							}
 						}
+					} else if( propType.isEnum()) {
+						String name = args[++i];
+						try {
+							propVal = Enum.valueOf(propType, name);
+						} catch (Exception ex) {
+							try {
+								// Try with uppercase version, as common for enums
+								propVal = Enum.valueOf(propType, name.toUpperCase());
+							}  catch (Exception ex2) {
+								//give up
+								StringBuilder errMsg = new StringBuilder();
+								errMsg.append("Option ").append(arg);
+								errMsg.append(" requires a ").append(propType.getSimpleName());
+								errMsg.append(" parameter. One of: ");
+								for(Object val: propType.getEnumConstants() ) {
+									Enum enumVal = (Enum) val;
+									errMsg.append(enumVal.name());
+									errMsg.append(" ");
+								}
+								throw new ConfigurationException(errMsg.toString());
+							}
+						}
+
 					} else {
 						System.err.println("Unsupported optionType for " + arg + " propType:" + propType);
 						System.exit(1);

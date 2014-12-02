@@ -39,7 +39,12 @@ import org.biojava.bio.structure.align.model.AFPChain;
 public class FatCat
 {
 
-   public static final float VERSION = 1.0f;
+   /**
+    *  version history:
+    *  1.1 - Added more parameters to the command line
+    *  1.0 - Initial version
+    */
+   public static final String VERSION = "1.1";
 
    public static String newline = System.getProperty("line.separator");
 
@@ -57,28 +62,8 @@ public class FatCat
     * @param argv
     */
    public static void main(String[] argv){
-      FatCat cat = new FatCat();
-      if (argv.length  == 0 ) {			
-         System.out.println(cat.printHelp());
-         return;			
-      }
-
-      if ( argv.length == 1){
-         if (argv[0].equalsIgnoreCase("-h") || argv[0].equalsIgnoreCase("-help")|| argv[0].equalsIgnoreCase("--help")){
-            System.out.println(cat.printHelp());								
-            return;
-         }
-//         if ( argv[0].equalsIgnoreCase("-showMenu")){
-//
-//            AlignmentGui.getInstance();
-//            return;
-//         }
-      }
-
       FatCatUserArgumentProcessor processor = new FatCatUserArgumentProcessor();
       processor.process(argv);
-
-
    }
 
    public String toString(){

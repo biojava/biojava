@@ -8,4 +8,10 @@ public interface UserArgumentProcessor {
 	 * @param argv
 	 */
 	public void process(String[] argv);
+	
+	/**
+	 * Print help about the arguments
+	 * @return
+	 */
+	public String printHelp();
 }
