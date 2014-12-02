@@ -21,15 +21,18 @@ public class EntityFinder {
 	private static final Logger logger = LoggerFactory.getLogger(EntityFinder.class);
 	
 	/**
-	 * Identity value for 2 chains to be considered part of same entity
+	 * Below this ratio of aminoacid/nucleotide residues to the sequence total,
+	 * we use simple majority of aminoacid/nucleotide residues to decide the character 
+	 * of the chain (protein/nucleotide) 
 	 */
-	public static final double IDENTITY_THRESHOLD = 0.99999;
+	public static final double RATIO_RESIDUES_TO_TOTAL = 0.95;
 	
 	/**
-	 * Gap coverage value (num gaps over length of sequence) for each chain of the match: 
-	 * 2 chains with more gap coverage than this value will not be considered part of the same entity
+	 * Above this ratio of mismatching residue types for same residue numbers we 
+	 * consider the 2 chains to be a mismatch and don't put them together in the same entity
 	 */
-	public static final double GAP_COVERAGE_THRESHOLD = 0.3;
+	public static final double RATIO_GAPS_FOR_MISMATCH = 0.50;
+	
 	
 	public EntityFinder(Structure s) {
 		this.s = s;
@@ -148,9 +151,9 @@ public class EntityFinder {
 			}
 		}
 		
-		if ((double)countGaps/(double)c1AtomGroups.size() > 0.50) {
-			logger.info("More than half the residues ({} out of {}) are gaps in chain {} when compared to chain {}. Will not group these 2 chains in an entity", 
-					countGaps, c1AtomGroups.size(), c2.getChainID(), c1.getChainID());
+		if ((double)countGaps/(double)c1AtomGroups.size() > RATIO_GAPS_FOR_MISMATCH) {
+			logger.info("More than {} of the residues ({} out of {}) are gaps in chain {} when compared to chain {}. Will not group these 2 chains in an entity", 
+					RATIO_GAPS_FOR_MISMATCH, countGaps, c1AtomGroups.size(), c2.getChainID(), c1.getChainID());
 			return false;
 		}
 
@@ -162,7 +165,7 @@ public class EntityFinder {
 	 * @param c
 	 * @return true if protein, false if nucleotide
 	 */
-	private static boolean isProtein(Chain c) {
+	public static boolean isProtein(Chain c) {
 		int sizeAminos = c.getAtomGroups(GroupType.AMINOACID).size();
 		int sizeNucleotides = c.getAtomGroups(GroupType.NUCLEOTIDE).size();
 		List<Group> hetAtoms = c.getAtomGroups(GroupType.HETATM);
@@ -173,28 +176,28 @@ public class EntityFinder {
 		}
 		int fullSize = sizeAminos + sizeNucleotides + sizeHetatoms - sizeWaters;
 		
-		if ((double)sizeAminos/(double)fullSize>0.95) return true;
+		if ((double)sizeAminos/(double)fullSize>RATIO_RESIDUES_TO_TOTAL) return true;
 		
-		if ((double)sizeNucleotides/(double)fullSize>0.95) return false;
+		if ((double)sizeNucleotides/(double)fullSize>RATIO_RESIDUES_TO_TOTAL) return false;
 		
 		// finally if neither condition works, we try based on majority
 		if (sizeAminos>sizeNucleotides) {
-			logger.debug("Ratio of residues to total for chain {} is below 95%. Assuming it is a protein chain. Counts: # aa residues: {}, # nuc residues: {}, # het residues: {}, # waters: {}, ratio aa/total: {}, ratio nuc/total: {}",
-				c.getChainID(), sizeAminos, sizeNucleotides, sizeHetatoms, sizeWaters,
+			logger.debug("Ratio of residues to total for chain {} is below {}. Assuming it is a protein chain. Counts: # aa residues: {}, # nuc residues: {}, # het residues: {}, # waters: {}, ratio aa/total: {}, ratio nuc/total: {}",
+				c.getChainID(), RATIO_RESIDUES_TO_TOTAL, sizeAminos, sizeNucleotides, sizeHetatoms, sizeWaters,
 				(double)sizeAminos/(double)fullSize,(double)sizeNucleotides/(double)fullSize) ;
 			
 			return true;
 			
 		} else {
-			logger.debug("Ratio of residues to total for chain {} is below 95%. Assuming it is a nucleotide chain. Counts: # aa residues: {}, # nuc residues: {}, # het residues: {}, # waters: {}, ratio aa/total: {}, ratio nuc/total: {}",
-					c.getChainID(), sizeAminos, sizeNucleotides, sizeHetatoms, sizeWaters,
+			logger.debug("Ratio of residues to total for chain {} is below {}. Assuming it is a nucleotide chain. Counts: # aa residues: {}, # nuc residues: {}, # het residues: {}, # waters: {}, ratio aa/total: {}, ratio nuc/total: {}",
+					c.getChainID(), RATIO_RESIDUES_TO_TOTAL, sizeAminos, sizeNucleotides, sizeHetatoms, sizeWaters,
 					(double)sizeAminos/(double)fullSize,(double)sizeNucleotides/(double)fullSize) ;
 
 			return false;
 		}
 		
 	}
-	
+
 
 }
  

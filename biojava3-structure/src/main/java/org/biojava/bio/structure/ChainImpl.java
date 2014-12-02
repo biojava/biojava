@@ -624,7 +624,7 @@ public class ChainImpl implements Chain, Serializable {
 		}
 
 		// not using ChemCOmp records...		
-		List<Group> aminos = getAtomGroups("amino");
+		List<Group> aminos = getAtomGroups(GroupType.AMINOACID);
 		StringBuffer sequence = new StringBuffer() ;
 		for ( int i=0 ; i< aminos.size(); i++){
 			AminoAcid a = (AminoAcid)aminos.get(i);
