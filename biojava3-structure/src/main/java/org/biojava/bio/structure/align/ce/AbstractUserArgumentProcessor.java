@@ -163,7 +163,7 @@ public abstract class AbstractUserArgumentProcessor implements UserArgumentProce
 
 			} catch (ConfigurationException e){
 				System.err.println("Error: "+e.getLocalizedMessage());
-				return;
+				System.exit(1); return;
 			}
 		}
 
@@ -220,12 +220,12 @@ public abstract class AbstractUserArgumentProcessor implements UserArgumentProce
 			}
 		} catch (ConfigurationException e) {
 			System.err.println(e.getLocalizedMessage());
-			return;
+			System.exit(1); return;
 		}
 
 		System.out.println(printHelp());
 		System.err.println("Error: insufficient arguments.");
-		return;
+		System.exit(1); return;
 	}
 
 
@@ -468,12 +468,12 @@ public abstract class AbstractUserArgumentProcessor implements UserArgumentProce
 
 		if ( structure1 == null){
 			System.err.println("structure 1 is null, can't run alignment.");
-			return;
+			System.exit(1); return;
 		}
 
 		if ( structure2 == null){
 			System.err.println("structure 2 is null, can't run alignment.");
-			return;
+			System.exit(1); return;
 		}
 
 		if ( name1 == null) {
@@ -555,22 +555,22 @@ public abstract class AbstractUserArgumentProcessor implements UserArgumentProce
 
 		} catch (IOException e) {
 			e.printStackTrace();
-			return;
+			System.exit(1); return;
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
-			return;
+			System.exit(1); return;
 		} catch (NoSuchMethodException e) {
 			e.printStackTrace();
-			return;
+			System.exit(1); return;
 		} catch (InvocationTargetException e) {
 			e.printStackTrace();
-			return;
+			System.exit(1); return;
 		} catch (IllegalAccessException e) {
 			e.printStackTrace();
-			return;
+			System.exit(1); return;
 		} catch (StructureException e) {
 			e.printStackTrace();
-			return;
+			System.exit(1); return;
 		}
 	}
 
@@ -642,7 +642,7 @@ public abstract class AbstractUserArgumentProcessor implements UserArgumentProce
 
 		if (fileName == null) {
 			System.err.println("Can't write outputfile. Either provide a filename using -outFile or set -autoOutputFile to true .");
-			return;
+			System.exit(1); return;
 		}
 		//System.out.println("writing results to " + fileName + " " + params.getSaveOutputDir());
 
