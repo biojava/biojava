@@ -194,8 +194,8 @@ public class CeParameters implements ConfigStrucAligParams  {
 		params.add(helpWinSize);
 		params.add(helpScoring);
 		params.add("The maximum RMSD at which to stop alignment optimization. (default: unlimited=99)");
-		params.add("Gap opening penalty during alignment optimization.");
-		params.add("Gap extension penalty during alignment optimization.");
+		params.add("Gap opening penalty during alignment optimization [default: "+DEFAULT_GAP_OPEN+"].");
+		params.add("Gap extension penalty during alignment optimization [default: "+DEFAULT_GAP_EXTENSION+"].");
 		return params;
 	}
 

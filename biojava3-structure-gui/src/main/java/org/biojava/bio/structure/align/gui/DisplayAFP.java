@@ -559,8 +559,6 @@ public class DisplayAFP
 		//String rot = afpChain.toRotMat();
 		//DisplayAFP.showAlignmentImage(afpChain, result + AFPChain.newline + rot);
 
-		System.out.println(result);
-
 		AligPanel me = new AligPanel();
 		me.setStructureAlignmentJmol(jmol);		
 		me.setAFPChain(afpChain);
