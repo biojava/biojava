@@ -811,6 +811,13 @@ public class StructureImpl implements Structure, Serializable {
 			Map<String, List<String>> uniqSequences = new HashMap<String, List<String>>();
 			// finding the entities (groups of identical chains)
 			for (Chain chain:getChains()) {
+				
+				// TODO chain.getSeqResSequence() below will get 'XXXXX' sequences for nucleotides, we need to change that to get the right sequence
+				// e.g. with this procedure 1g1n results in 2 entities, where there are actually 3
+				// in the meanwhile we warn about that:
+				if (!EntityFinder.isProtein(chain)) {
+					logger.warn("Chain {} looks like a nucleotide chain, entity finding will not be accurate for  it",chain.getChainID());
+				}
 
 				String seq = chain.getSeqResSequence();
 					
@@ -844,9 +851,9 @@ public class StructureImpl implements Structure, Serializable {
 				}
 			}
 
-
+		// NO SEQRES parsed
 		} else {
-			logger.debug("Getting entities from aligning ATOM sequences. If you have SEQRES in your file make sure you are using the right FileParsingParams");
+			logger.debug("Getting entities from matching of ATOM sequences numbering. If you have SEQRES in your file make sure you are using the right FileParsingParams");
 
 			EntityFinder ef = new EntityFinder(this);
 			
