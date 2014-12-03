@@ -180,7 +180,8 @@ public class SimpleMMcifParser implements MMcifParser {
 		}
 
 		while ( (line = buf.readLine ()) != null ){
-			//System.out.println(inLoop + " " + line);
+			
+			logger.debug(inLoop + " " + line);
 
 
 			if ( inLoop){
@@ -585,7 +586,7 @@ public class SimpleMMcifParser implements MMcifParser {
 					EntitySrcNat.class.getName(),
 					loopFields,lineData, loopWarnings);
 			triggerNewEntitySrcNat(entitySrcNat);
-		} else if ( category.equals("_entity_src_syn")){
+		} else if ( category.equals("_pdbx_entity_src_syn")){
 			EntitySrcSyn entitySrcSyn = (EntitySrcSyn) buildObject(
 					EntitySrcSyn.class.getName(),
 					loopFields,lineData, loopWarnings);

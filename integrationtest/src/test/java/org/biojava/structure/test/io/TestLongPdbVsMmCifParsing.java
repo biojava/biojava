@@ -325,12 +325,13 @@ public class TestLongPdbVsMmCifParsing {
 		assertEquals("chainID must be 1 character only, failed for pdb", 1, cPdb.getChainID().length());
 		assertEquals("chainID must be 1 character only, failed for cif", 1, cCif.getChainID().length());
 		
-		// getHeader() is some times null for badly formatted PDB files (e.g. 4a10, all waters are in a separate chain F)
+		// getCompound() is some times null for badly formatted PDB files (e.g. 4a10, all waters are in a separate chain F)
 		if (isPolymer(cPdb)) {
-			assertNotNull("getHeader is null in pdb (chain "+chainId+")",cPdb.getCompound());
+			assertNotNull("getCompound is null in pdb (chain "+chainId+")",cPdb.getCompound());
+			assertNotNull("getCompound is null in cif (chain "+chainId+")",cCif.getCompound());
+			assertEquals("compounds mol_ids differ pdb vs cif",cPdb.getCompound().getMolId(), cCif.getCompound().getMolId());
 		}
-		// TODO getHeader (Compound) not parsed in mmCIF parser 
-		//assertNotNull("getHeader is null in cif",cCif.getHeader());
+
 		
 		assertNotNull("getParent is null in pdb (chain "+chainId+")",cPdb.getParent());
 		assertNotNull("getParent is null in cif (chain "+chainId+")",cCif.getParent());

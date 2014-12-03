@@ -109,7 +109,6 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 	private Structure structure;
 	private Chain current_chain;
 	private Group current_group;
-	//private int atomCount; //not used, commenting out
 
 
 	private List<Chain>      current_model;
@@ -128,6 +127,8 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 	private List<StructNcsOper> structNcsOper;
 
 	private Map<String,String> asymStrandId;
+	
+	private Map<String,String> asymId2entityId;
 
 	private String current_nmr_model ;
 
@@ -140,7 +141,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 	}
 
 	public void newEntity(Entity entity) {
-		logger.debug(entity.toString());
+		logger.debug("New entity: {}",entity.toString());
 		entities.add(entity);
 	}
 
@@ -177,7 +178,6 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 	}
 
 	public void setStruct(Struct struct) {
-		//System.out.println(struct);
 
 		PDBHeader header = structure.getPDBHeader();
 		if ( header == null)
@@ -188,7 +188,6 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		//header.setDescription(struct.getPdbx_descriptor());
 		//header.setClassification(struct.getPdbx_descriptor());
 		//header.setDescription(struct.getPdbx_descriptor());
-		//System.out.println(struct.getPdbx_model_details());
 
 
 
@@ -607,6 +606,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 		entityChains  = new ArrayList<Chain>();
 		structAsyms   = new ArrayList<StructAsym>();
 		asymStrandId  = new HashMap<String, String>();
+		asymId2entityId = new HashMap<String,String>();
 		structOpers   = new ArrayList<PdbxStructOperList>();
 		strucAssemblies = new ArrayList<PdbxStructAssembly>();
 		strucAssemblyGens = new ArrayList<PdbxStructAssemblyGen>();
@@ -629,7 +629,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 				current_model.add(current_chain);
 			}
 		} else {
-			logger.debug("current chain is null at end of document.");			
+			logger.warn("current chain is null at end of document.");			
 		}
 
 		structure.addModel(current_model);
@@ -641,8 +641,10 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 
 
 		for (StructAsym asym : structAsyms) {
-			logger.debug("entity " + asym.getEntity_id() + " matches asym id:" + asym.getId() );
+			logger.debug("Entity {} matches asym_id: {}", asym.getEntity_id(), asym.getId() );
 
+			asymId2entityId.put(asym.getId(), asym.getEntity_id());
+			
 			Chain s = getEntityChain(asym.getEntity_id());
 			Chain seqres = (Chain)s.clone();
 			// to solve issue #160 (e.g. 3u7t)
@@ -652,10 +654,9 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 			seqResChains.add(seqres);
 			logger.debug(" seqres: " + asym.getId() + " " + seqres + "<") ;
 
-
+			
 			for (EntitySrcGen esg : entitySrcGens) {
 				String eId = esg.getEntity_id();
-				//System.out.println("Checking entity src gens: " + eId + " " + asym.getEntity_id());
 				if (! eId.equals(asym.getEntity_id()))
 					continue;
 
@@ -669,22 +670,18 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 				// found the matching EntitySrcGen
 				// get the corresponding Entity
 				Compound c = structure.getCompoundById(eIdInt);
-				if ( c == null){
+				if ( c == null){					
 					c = createNewCompoundFromESG(esg, eIdInt);
 					// add to chain
 					List<Compound> compounds  = structure.getCompounds();
 					compounds.add(c);
-					structure.setCompounds(compounds);
-
+					logger.debug("Adding Compound with entity id {} from _entity_src_syn, with name: {}",eIdInt,c.getMolName());
 				}
-
-				c.addChain(s);
 
 			}
 
 			for (EntitySrcNat esn : entitySrcNats) {
 				String eId = esn.getEntity_id();
-				//System.out.println("Checking entity src gens: " + eId + " " + asym.getEntity_id());
 				if (! eId.equals(asym.getEntity_id()))
 					continue;
 
@@ -697,22 +694,18 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 				// found the matching EntitySrcGen
 				// get the corresponding Entity
 				Compound c = structure.getCompoundById(eIdInt);
-				if ( c == null){
+				if ( c == null){					
 					c = createNewCompoundFromESN(esn, eIdInt);
 					// add to chain
 					List<Compound> compounds  = structure.getCompounds();
 					compounds.add(c);
-					structure.setCompounds(compounds);
-
+					logger.debug("Adding Compound with entity id {} from _entity_src_syn, with name: {}",eIdInt,c.getMolName());
 				}
-
-				c.addChain(s);
 
 			}
 
 			for (EntitySrcSyn ess : entitySrcSyns) {
 				String eId = ess.getEntity_id();
-				//System.out.println("Checking entity src gens: " + eId + " " + asym.getEntity_id());
 				if (! eId.equals(asym.getEntity_id()))
 					continue;
 
@@ -725,18 +718,41 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 				// found the matching EntitySrcGen
 				// get the corresponding Entity
 				Compound c = structure.getCompoundById(eIdInt);
-				if ( c == null){
+				if ( c == null){					
 					c = createNewCompoundFromESS(ess, eIdInt);
 					// add to chain
 					List<Compound> compounds  = structure.getCompounds();
 					compounds.add(c);
-					structure.setCompounds(compounds);
-
+					logger.debug("Adding Compound with entity id {} from _entity_src_syn, with name: {}",eIdInt,c.getMolName());
 				}
-
-				c.addChain(s);
-
 			}
+			
+			// for some mmCIF files like 1yrm all 3 of _entity_src_gen, _entity_src_nat and _pdbx_entity_src_syn are missing
+			// we need to fill the Compounds in some other way:
+
+			int eId = 0;
+			try {
+				eId = Integer.parseInt(asym.getEntity_id());
+			} catch (NumberFormatException e) {
+				logger.warn("Could not parse mol_id from string {}. Will use 0 for creating Compound",asym.getEntity_id());
+			}
+
+			Compound c = structure.getCompoundById(eId);
+
+			if (c==null) {
+				c = new Compound();
+				c.setMolId(eId);
+				Entity e = getEntity(eId);
+				// we only add the compound if a polymeric one (to match what the PDB parser does)
+				if (e!=null && e.getType().equals("polymer")) {
+					if ( e != null)
+						c.setMolName(e.getPdbx_description());
+					List<Compound> compounds = structure.getCompounds();
+					compounds.add(c);
+					logger.debug("Adding Compound with entity id {} from _entity, with name: {}",eId, c.getMolName());
+				}
+			}
+
 		}
 
 		if ( params.isAlignSeqRes() ){
@@ -784,13 +800,12 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 
 		}
 
-		
-       addBonds();
-		//TODO: add support for these:
 
+		addBonds();
+
+		//TODO: add support for these:
 		//structure.setConnections(connects);
-		//structure.setCompounds(compounds);
-		//linkChains2Compound(structure);
+		
 
 		// mismatching Author assigned chain IDS and PDB internal chain ids:
 		// fix the chain IDS in the current model:
@@ -807,7 +822,8 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 					if ( chain.getChainID().equals(asym)){
 						String newChainId = asymStrandId.get(asym);
 						
-						logger.debug("renaming " + asym  + " to : " + newChainId);
+						logger.debug("Renaming chain with asym_id {} ({} atom groups) to author_asym_id/strand_id  {}", 
+								asym, chain.getAtomGroups().size(), newChainId);
 
 						chain.setChainID(newChainId);
 						chain.setInternalChainID(asym);
@@ -837,8 +853,21 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 				}
 			}
 			structure.setModel(i,pdbChains);
-		}
+			
+			// finally setting chains to compounds and compounds to chains now that we have the final chains
+			for (Chain chain:pdbChains) {
+				String entityId = asymId2entityId.get(chain.getInternalChainID());
+				int eId = Integer.parseInt(entityId);
+				Compound compound = structure.getCompoundById(eId);
+				logger.debug("Adding chain with chain id {} (internal chain id {}) to compound with entity_id {}",
+						chain.getChainID(), chain.getInternalChainID(), eId);
+				compound.addChain(chain);
+				chain.setCompound(compound);
 
+			}			
+			
+		}
+		
 
 		// set the oligomeric state info in the header...
 
@@ -888,6 +917,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 			structure.getCrystallographicInfo().setNcsOperators(
 					(Matrix4d[]) ncsOperators.toArray(new Matrix4d[ncsOperators.size()]));
 		}
+		
 	}
 
 	/**
@@ -1319,7 +1349,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 
 	}
 
-	private Chain getChainFromList(List<Chain> chains, String name){
+	private static Chain getChainFromList(List<Chain> chains, String name){
 		for (Chain chain : chains) {
 			if ( chain.getChainID().equals(name)){
 
@@ -1436,7 +1466,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 
 			}
 		} catch (UnknownPdbAminoAcidException ex){
-			//logger.warning("no sure what to do with:" + epolseq.getMon_id()+ " " + ex.getMessage());
+			logger.debug("Residue {} {} is not a standard aminoacid, will create a het group for it", epolseq.getNum(),epolseq.getMon_id());
 			HetatomImpl h = new HetatomImpl();
 			h.setPDBName(epolseq.getMon_id());
 			//h.setAminoType('X');
@@ -1608,7 +1638,7 @@ public class SimpleMMcifConsumer implements MMcifConsumer {
 
 	public void newChemCompDescriptor(ChemCompDescriptor ccd) {
 
-		// todo: nothing happening here yet.
+		// TODO nothing happening here yet.
 
 	}
 

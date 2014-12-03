@@ -3135,7 +3135,7 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 				} catch (StructureException e){
 					// usually if this happens something is wrong with the PDB header
 					// e.g. 2brd - there is no Chain A, although it is specified in the header
-					e.printStackTrace();
+					logger.error("Unexpected exception",e);
 				}
 			}
 			comp.setChains(chains);
@@ -3169,7 +3169,7 @@ COLUMNS   DATA TYPE         FIELD          DEFINITION
 					Chain c = s.getChainByPDB(chainId);
 					c.setCompound(comp);
 				} catch (StructureException e){
-					e.printStackTrace();
+					logger.error("Unexpected exception",e);
 				}
 			}
 		}
